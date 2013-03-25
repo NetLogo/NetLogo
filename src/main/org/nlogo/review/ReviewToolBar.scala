@@ -9,7 +9,7 @@ import org.nlogo.api.ModelRun
 import org.nlogo.awt.UserCancelException
 import org.nlogo.util.Exceptions.ignoring
 
-import javax.swing.{AbstractAction, ImageIcon, JButton, JCheckBox, JFileChooser, JOptionPane}
+import javax.swing.{ AbstractAction, ImageIcon, JButton, JCheckBox, JFileChooser, JOptionPane }
 import javax.swing.filechooser.FileNameExtensionFilter
 
 class ActionButton(name: String, icon: String, fn: () => Unit)
@@ -84,7 +84,7 @@ object ReviewToolBar {
     val loadedRuns = results.flatMap(_.right.toOption)
     // select the last loaded run if we have one:
     loadedRuns.lastOption.foreach { run =>
-      reviewTab.RunList.setSelectedValue(run, true)
+      reviewTab.runList.setSelectedValue(run, true)
     }
     val errors = results.flatMap(_.left.toOption)
     if (errors.nonEmpty) {
@@ -121,7 +121,7 @@ object ReviewToolBar {
           "The current run has unsaved data. Are you sure you want to close the current run?")) {
         reviewTab.tabState.closeCurrentRun()
         // select the new current run if there is one:
-        reviewTab.tabState.currentRun.foreach(reviewTab.RunList.setSelectedValue(_, true))
+        reviewTab.tabState.currentRun.foreach(reviewTab.runList.setSelectedValue(_, true))
         reviewTab.refreshInterface()
       }
     }

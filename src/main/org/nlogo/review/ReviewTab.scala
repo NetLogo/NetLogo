@@ -15,8 +15,8 @@ import org.nlogo.util.Exceptions.ignoring
 import org.nlogo.window
 import org.nlogo.window.{ MonitorWidget, Widget, WidgetWrapperInterface }
 
-import javax.swing.{ BorderFactory, JList, JOptionPane, JPanel, JScrollPane, JSplitPane, ListSelectionModel }
-import javax.swing.event.{ ChangeEvent, ChangeListener, DocumentEvent, DocumentListener, ListSelectionEvent, ListSelectionListener }
+import javax.swing.{ JOptionPane, JPanel, JScrollPane, JSplitPane }
+import javax.swing.event.{ ChangeEvent, ChangeListener, DocumentEvent, DocumentListener }
 
 class ReviewTab(
   val ws: window.GUIWorkspace,
@@ -161,7 +161,7 @@ class ReviewTab(
       .getOrElse("Untitled")
     val run = new ModelRun(name, saveModel(), viewArea, viewSettings, image, "", Map())
     tabState.addRun(run)
-    RunList.setSelectedValue(run, true)
+    runList.setSelectedValue(run, true)
     refreshInterface()
   }
 
@@ -225,7 +225,7 @@ class ReviewTab(
     reviewToolBar.saveButton.setEnabled(run.map(_.dirty).getOrElse(false))
     Seq(notesPanel.notesArea, reviewToolBar.renameButton, reviewToolBar.closeCurrentButton, reviewToolBar.closeAllButton)
       .foreach(_.setEnabled(run.isDefined))
-    RunList.repaint()
+    runList.repaint()
     interfacePanel.repaint()
   }
 
@@ -241,25 +241,10 @@ class ReviewTab(
     }
   }
 
-  object RunList extends JList(tabState) {
-    setBorder(BorderFactory.createLoweredBevelBorder())
-    setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
-    this.getSelectionModel.addListSelectionListener(
-      new ListSelectionListener {
-        def valueChanged(p1: ListSelectionEvent) {
-          if (getSelectedIndex != -1) {
-            val run = RunList.getSelectedValue.asInstanceOf[ModelRun]
-            tabState.setCurrentRun(run)
-            loadModelIfNeeded(run.modelString)
-            refreshInterface()
-          }
-        }
-      })
-  }
-
+  val runList = new RunList(this)
   object RunListPanel extends JPanel {
     setLayout(new BorderLayout)
-    add(new JScrollPane(RunList), BorderLayout.CENTER)
+    add(new JScrollPane(runList), BorderLayout.CENTER)
   }
 
   object InterfaceScrollPane extends JScrollPane {
