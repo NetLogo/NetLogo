@@ -4,8 +4,8 @@ HubNet-SimpleConnection
   O> __hubnet-wait-for-clients 1 3000
   hubnet-clients-list => ["Local 0"]
 
-# commenting out because it fails Jenkins intermittently.
-# not every time, but not very rare either - ST 11/17/12
+# commenting out because they fail Jenkins intermittently.
+# not every time, but not very rare either - ST 9/6/12, 9/10/12, 11/17/12, 3/22/13
 #
 #HubNet-ClientsList
 #  O> hubnet-reset
@@ -13,16 +13,13 @@ HubNet-SimpleConnection
 #  O> __hubnet-wait-for-clients 5 15000
 #  length hubnet-clients-list => 5
 #  sort hubnet-clients-list => ["Local 0" "Local 1" "Local 2" "Local 3" "Local 4"]
-
-HubNet-KickClient
-  O> hubnet-reset
-  O> repeat 5 [ __hubnet-create-client ]
-  O> __hubnet-wait-for-clients 5 15000
-  O> hubnet-kick-client "Local 4"
-  sort hubnet-clients-list => ["Local 0" "Local 1" "Local 2" "Local 3"]
-
-# commenting out because they fail Jenkins intermittently.
-# not every time, but not very rare either - ST 9/6/12, 9/10/12
+#
+#HubNet-KickClient
+#  O> hubnet-reset
+#  O> repeat 5 [ __hubnet-create-client ]
+#  O> __hubnet-wait-for-clients 5 15000
+#  O> hubnet-kick-client "Local 4"
+#  sort hubnet-clients-list => ["Local 0" "Local 1" "Local 2" "Local 3"]
 #
 #HubNet-KickClient2
 #  O> hubnet-reset

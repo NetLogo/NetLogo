@@ -20,7 +20,7 @@ public final strictfp class _watch
   @Override
   public void perform(final org.nlogo.nvm.Context context) {
     org.nlogo.agent.Agent agent = argEvalAgent(context, 0);
-    if (agent.id == -1) {
+    if (agent.id() == -1) {
       throw new EngineException(context, this,
         I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
     }

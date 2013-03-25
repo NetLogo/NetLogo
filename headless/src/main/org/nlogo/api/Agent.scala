@@ -30,8 +30,6 @@ trait Agent {
    */
   def alpha: Int
 
-  def isPartiallyTransparent: Boolean
-
   /** Sets the variable in the position vn of the agent variable array to value
     * @param vn    the index into the agent variable array
     * @param value the new value for the variable

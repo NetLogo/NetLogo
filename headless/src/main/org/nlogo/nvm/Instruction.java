@@ -359,7 +359,7 @@ public abstract strictfp class Instruction
     Object obj = args[argIndex].report(context);
     try {
       org.nlogo.agent.Agent agent = (org.nlogo.agent.Agent) obj;
-      if (agent.id == -1) {
+      if (agent.id() == -1) {
         throw new EngineException(context, this,
           I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
       }

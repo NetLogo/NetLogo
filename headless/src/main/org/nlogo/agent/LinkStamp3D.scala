@@ -28,7 +28,6 @@ extends api.LinkStamp3D {
   override def world = null
   override def classDisplayName = ""
   override def alpha = api.Color.getColor(color).getAlpha
-  override def isPartiallyTransparent = { val a = alpha; a > 0 && a < 255 }
   override def getVariable(vn: Int) = unsupported
   override def setVariable(vn: Int, value: AnyRef) = unsupported
   override def variables = unsupported

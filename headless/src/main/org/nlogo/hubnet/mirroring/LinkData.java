@@ -570,7 +570,4 @@ public strictfp class LinkData
     throw new UnsupportedOperationException();
   }
 
-  public boolean isPartiallyTransparent() {
-    throw new UnsupportedOperationException();
-  }
 }

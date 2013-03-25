@@ -466,8 +466,4 @@ public strictfp class TurtleData
     throw new UnsupportedOperationException();
   }
 
-  public boolean isPartiallyTransparent() {
-    throw new UnsupportedOperationException();
-  }
-
 }

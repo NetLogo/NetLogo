@@ -32,27 +32,38 @@ object Realloc {
     for((name, breed) <- program.linkBreeds)
       world.linkBreedAgents.get(name).setDirected(breed.isDirected)
     // call Agent.realloc() on all the turtles
-    val doomedAgents = collection.mutable.Buffer[Agent]()
     if (world.turtles != null) {
+      val doomedAgents = collection.mutable.Buffer[Turtle]()
       val iter = world.turtles.iterator
       while(iter.hasNext) {
-        val agt = iter.next().realloc(true)
-        if (agt != null)
+        val agt = iter.next().asInstanceOf[Turtle]
+        // first check if we recompiled and our breed disappeared!
+        val breedGone =
+          (agt.getBreed ne world.turtles) &&
+            world.getBreed(agt.getBreed.printName) == null
+        if (breedGone)
           doomedAgents += agt
+        else
+          agt.realloc(true)
       }
-      doomedAgents.foreach(_.asInstanceOf[Turtle].die())
-      doomedAgents.clear()
+      doomedAgents.foreach(_.die())
     }
     // call Agent.realloc() on all links
     if (world.links != null) {
+      val doomedAgents = collection.mutable.Buffer[Link]()
       val iter = world.links.iterator
       while(iter.hasNext) {
-        val agt = iter.next().realloc(true)
-        if (agt != null)
+        val agt = iter.next().asInstanceOf[Link]
+        // first check if we recompiled and our breed disappeared!
+        val breedGone =
+          (agt.getBreed ne world.links) &&
+            world.getLinkBreed(agt.getBreed.printName) == null
+        if (breedGone)
           doomedAgents += agt
+        else
+          agt.realloc(true)
       }
-      doomedAgents.foreach(_.asInstanceOf[Link].die())
-      doomedAgents.clear()
+      doomedAgents.foreach(_.die())
     }
     // call Agent.realloc() on all the patches
     // Note: we only need to realloc() if the patch variables have changed.

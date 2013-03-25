@@ -22,7 +22,7 @@ public final strictfp class _towardsnowrap extends Reporter {
       throw new EngineException(context, this,
           I18N.errorsJ().get("org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink"));
     }
-    if (agent.id == -1) {
+    if (agent.id() == -1) {
       throw new EngineException(context, this,
           I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
     }

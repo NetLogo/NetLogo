@@ -146,7 +146,6 @@ class TurtleTestsDrawer extends MockSuite {
     override def hasLabel = label!=""
     override def labelString = label
     override def alpha = Color.getColor(color).getAlpha
-    override def isPartiallyTransparent = { val a = alpha; a > 0 && a < 255 }
     override def world: World = sys.error("unimplemented")
     override def setVariable(vn:Int,value:Object) = sys.error("unimplemented")
     override def getVariable(vn:Int) = sys.error("unimplemented")
