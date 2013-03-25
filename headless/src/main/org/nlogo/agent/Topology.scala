@@ -58,8 +58,6 @@ abstract class Topology(val world: World) {
 
   ///
 
-  def observerX: Double = world.observer.oxcor
-  def observerY: Double = world.observer.oycor
   def followOffsetX: Double = world.observer.followOffsetX
   def followOffsetY: Double = world.observer.followOffsetY
 

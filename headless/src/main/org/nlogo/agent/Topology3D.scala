@@ -29,7 +29,6 @@ trait Topology3D {
   def getPSED(source: Patch3D): Patch
   def getPSWD(source: Patch3D): Patch
   def getPNWD(source: Patch3D): Patch
-  def observerZ: Double
   def wrapZ(z: Double): Double
   def shortestPathZ(z1: Double, z2: Double): Double
 }

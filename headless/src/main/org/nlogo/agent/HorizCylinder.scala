@@ -69,7 +69,6 @@ class HorizCylinder(_world: World) extends Topology(_world) {
       y2
   }
 
-  override def observerX = 0.0
   override def followOffsetX = 0.0
 
   override def getNeighbors(source: Patch): AgentSet =

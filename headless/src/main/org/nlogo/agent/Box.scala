@@ -53,8 +53,6 @@ class Box(_world: World) extends Topology(_world) {
 
   override def shortestPathX(x1: Double, x2: Double) = x2
   override def shortestPathY(y1: Double, y2: Double) = y2
-  override def observerX = 0.0
-  override def observerY = 0.0
   override def followOffsetX = 0.0
   override def followOffsetY = 0.0
 

@@ -114,7 +114,6 @@ class VertCylinder(_world: World) extends Topology(_world) {
       }
     }
 
-  override def observerY = 0.0
   override def followOffsetY = 0.0
 
   override def getNeighbors4(source: Patch): AgentSet = {

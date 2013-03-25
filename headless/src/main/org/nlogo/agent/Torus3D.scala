@@ -118,8 +118,6 @@ class Torus3D(world: World3D) extends Torus(world) with Topology3D {
   def getPNWD(source: Patch3D): Patch =
     getPatchNorthWest(getPatchDown(source))
 
-  def observerZ = world.observer.ozcor
-
   def wrapZ(z: Double): Double =
     Topology.wrap(z, world.minPzcor - 0.5, world.maxPzcor + 0.5)
 
