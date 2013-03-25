@@ -4,25 +4,23 @@ package org.nlogo.review
 
 import java.awt.BorderLayout
 import java.awt.Color.{ GRAY, WHITE }
-import java.awt.Dimension
+
 import scala.Array.fallbackCanBuildFrom
 import scala.Option.option2Iterable
 import scala.collection.JavaConverters.asScalaBufferConverter
+
 import org.nlogo.api
 import org.nlogo.awt.UserCancelException
-import org.nlogo.mirror.{ FakeWorld, Mirrorables, ModelRun, ModelRunIO }
+import org.nlogo.mirror.{ FakeWorld, FixedViewSettings, Mirrorables, ModelRun, ModelRunIO }
 import org.nlogo.plot.PlotPainter
 import org.nlogo.swing.Implicits.thunk2runnable
 import org.nlogo.util.Exceptions.ignoring
 import org.nlogo.window
 import org.nlogo.window.{ MonitorWidget, PlotWidget, Widget, WidgetWrapperInterface }
-import javax.swing.{ AbstractAction, BorderFactory, ImageIcon, JButton, JCheckBox, JFileChooser, JLabel, JList, JOptionPane, JPanel, JScrollPane, JSlider, JSplitPane, JTextArea, ListSelectionModel }
+
+import javax.swing.{ AbstractAction, BorderFactory, ImageIcon, JButton, JCheckBox, JFileChooser, JLabel, JList, JOptionPane, JPanel, JScrollPane, JSplitPane, JTextArea, ListSelectionModel }
 import javax.swing.event.{ ChangeEvent, ChangeListener, DocumentEvent, DocumentListener, ListSelectionEvent, ListSelectionListener }
 import javax.swing.filechooser.FileNameExtensionFilter
-import org.nlogo.plot.PlotAction
-import org.nlogo.drawing.DrawingAction
-import org.nlogo.mirror.Frame
-import org.nlogo.mirror.FixedViewSettings
 
 class ReviewTab(
   ws: window.GUIWorkspace,
@@ -197,6 +195,16 @@ class ReviewTab(
     }
   }
 
+  val scrubberPanel = new ScrubberPanel(
+    () => tabState.currentFrameIndex,
+    () => tabState.currentFrame.flatMap(_.ticks))
+  scrubberPanel.scrubber.addChangeListener(new ChangeListener {
+    def stateChanged(evt: ChangeEvent) {
+      tabState.currentRun.foreach(_.currentFrameIndex = scrubberPanel.scrubber.getValue)
+      InterfacePanel.repaint()
+    }
+  })
+
   object InterfacePanel extends JPanel {
 
     def repaintView(g: java.awt.Graphics, viewArea: java.awt.geom.Area) {
@@ -291,17 +299,6 @@ class ReviewTab(
     }
   }
 
-  object Scrubber extends JSlider {
-    setValue(0)
-    addChangeListener(new ChangeListener {
-      def stateChanged(e: ChangeEvent) {
-        tabState.currentRun.foreach(_.currentFrameIndex = getValue)
-        TickPanel.updateValues
-        InterfacePanel.repaint()
-      }
-    })
-  }
-
   object EnabledAction extends AbstractAction("Recording") {
     def actionPerformed(e: java.awt.event.ActionEvent) {
       tabState.recordingEnabled = !tabState.recordingEnabled
@@ -333,16 +330,14 @@ class ReviewTab(
   def refreshInterface() {
     val run = tabState.currentRun
     val data = tabState.currentRunData
-    Scrubber.setValue(run.map(_.currentFrameIndex).getOrElse(0))
-    Scrubber.setMaximum(data.map(_.lastFrameIndex).getOrElse(0))
-    (Scrubber +: scrubButtons)
-      .foreach(_.setEnabled(data.filter(_.size > 1).isDefined))
+    scrubberPanel.scrubber.refresh(
+      value = run.map(_.currentFrameIndex).getOrElse(0),
+      max = data.map(_.lastFrameIndex).getOrElse(0),
+      enabled = data.filter(_.size > 1).isDefined)
     NotesArea.setText(run.map(_.generalNotes).getOrElse(""))
     saveButton.setEnabled(run.map(_.dirty).getOrElse(false))
     Seq(NotesArea, renameButton, closeCurrentButton, closeAllButton)
       .foreach(_.setEnabled(run.isDefined))
-    TickPanel.updateValues()
-    Scrubber.repaint()
     RunList.repaint()
     InterfacePanel.repaint()
   }
@@ -467,39 +462,8 @@ class ReviewTab(
     }
   }
 
-  class ReviewAction(name: String, icon: String, fn: () => Unit)
-    extends AbstractAction(name) {
-    val image = new ImageIcon(classOf[ReviewTab].getResource("/images/" + icon + ".gif"))
-    putValue(javax.swing.Action.SMALL_ICON, image)
-    def actionPerformed(e: java.awt.event.ActionEvent) { fn() }
-  }
   def actionButton(name: String, icon: String)(fn: () => Unit) = {
     new JButton(new ReviewAction(name, icon, fn))
-  }
-
-  val scrubButtons: Seq[JButton] = Seq[(String, String, Int => Int)](
-    ("all-back", "Go to beginning of run", { _ => 0 }),
-    ("big-back", "Go back five steps", { _ - 5 }),
-    ("back", "Go back one step", { _ - 1 }),
-    ("forward", "Go forward one step", { _ + 1 }),
-    ("big-forward", "Go forward five steps", { _ + 5 }),
-    ("all-forward", "Go to end of run", { _ => Scrubber.getMaximum }))
-    .map {
-      case (name, tip, newValue) =>
-        val setNewValue = { () => Scrubber.setValue(newValue(Scrubber.getValue)) }
-        val icon = name
-        val action = new ReviewAction(tip, icon, setNewValue)
-        val button = new JButton(action)
-        button.setToolTipText(tip)
-        button.setHideActionText(true)
-        button
-    }
-
-  object ScrubberButtonsPanel extends JPanel {
-    setLayout(new org.nlogo.awt.RowLayout(
-      1, java.awt.Component.LEFT_ALIGNMENT,
-      java.awt.Component.CENTER_ALIGNMENT))
-    scrubButtons.foreach(add)
   }
 
   object NotesArea extends JTextArea("") {
@@ -531,35 +495,6 @@ class ReviewTab(
     add(new JScrollPane(NotesArea), BorderLayout.CENTER)
   }
 
-  object TickPanel extends JPanel {
-    add(new JLabel("Frame:"))
-    val frame = new JLabel("-")
-    val bold = frame.getFont.deriveFont(frame.getFont.getStyle | java.awt.Font.BOLD)
-    frame.setFont(bold)
-    add(frame)
-    add(new JLabel("Tick:"))
-    val tick = new JLabel("-")
-    tick.setFont(bold)
-    add(tick)
-    def updateValues() {
-      frame.setText(tabState
-        .currentFrameIndex
-        .map(_.toString)
-        .getOrElse("-"))
-      tick.setText(tabState
-        .currentFrame
-        .flatMap(_.ticks)
-        .map(api.Dump.number)
-        .getOrElse("-"))
-    }
-  }
-  object ScrubberPanel extends JPanel {
-    setLayout(new BorderLayout)
-    add(ScrubberButtonsPanel, BorderLayout.WEST)
-    add(Scrubber, BorderLayout.CENTER)
-    add(TickPanel, BorderLayout.EAST)
-  }
-
   object RunListPanel extends JPanel {
     setLayout(new BorderLayout)
     add(new JScrollPane(RunList), BorderLayout.CENTER)
@@ -572,7 +507,7 @@ class ReviewTab(
   object RunPanel extends JPanel {
     setLayout(new BorderLayout)
     add(InterfaceScrollPane, BorderLayout.CENTER)
-    add(ScrubberPanel, BorderLayout.SOUTH)
+    add(scrubberPanel, BorderLayout.SOUTH)
   }
 
   object PrimarySplitPane extends JSplitPane(
