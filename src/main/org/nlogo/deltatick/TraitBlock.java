@@ -159,7 +159,6 @@ public strictfp class TraitBlock
         }
 
         label.setPreferredSize(new Dimension(100, y + 11));
-        newLabel();
         this.revalidate();
     }
 
@@ -305,24 +304,6 @@ public strictfp class TraitBlock
         this.getParent().repaint();
     }
 
-
-
-    public void newLabel() {
-//        for (Map.Entry<String, Color> entry : varColor.entrySet()) {
-//            String string = entry.getKey();
-//            if (dropdownList.getSelectedItem().toString().equals(string)) {
-//                setButtonColor(entry.getValue());
-//            }
-//        }
-        //commented this out because I don't want number to be on TraitBlock - Feb 14, 2013
-//        for (Map.Entry<String, Variation> entry : variationHashMap.entrySet()) {
-//            String variation = entry.getKey();
-//            int num = entry.getValue().number;
-//            if (dropdownList.getSelectedItem().toString().equals(variation)) {
-//                number.setText(Integer.toString(num));
-//            }
-//        }
-    }
 
     public void addRect(String text) {
         rectPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));

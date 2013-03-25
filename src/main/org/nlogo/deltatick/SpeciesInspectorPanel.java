@@ -258,7 +258,7 @@ public class SpeciesInspectorPanel extends JPanel {
 
     class traitTableModelListener implements TableModelListener {
         public void tableChanged(TableModelEvent e) {
-
+            if (e.getColumn() == 2) {
             traitPreview.updateVariationSelection(e);
             traitDisplay.validate();
 
@@ -272,6 +272,7 @@ public class SpeciesInspectorPanel extends JPanel {
             sidePanel.validate();
 
             myFrame.pack();
+            }
         }
     }
 

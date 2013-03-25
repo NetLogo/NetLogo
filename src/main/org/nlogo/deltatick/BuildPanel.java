@@ -278,7 +278,7 @@ public class BuildPanel
 
     // do we want variation to show up inside a breed block or to act like a condition block? - (feb 4)
     //public void addTrait(TraitBlock block) {
-    public void addTrait(TraitBlockNew block) {
+    public void addTrait(TraitBlock block) {
         block.setBounds(0,
                         0,
                         block.getPreferredSize().width,
@@ -289,7 +289,7 @@ public class BuildPanel
         block.validate();
         block.repaint();
         //myTraits.add(block);
-        myTraitsNew.add(block);
+        myTraits.add(block);
     }
 
     public void addOperator(OperatorBlock oBlock) {

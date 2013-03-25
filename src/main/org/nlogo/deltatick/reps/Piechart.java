@@ -109,7 +109,8 @@ public class Piechart extends JPanel {
 
         plot.setSectionOutlinesVisible(false);
         plot.setIgnoreZeroValues(true);
-        plot.setLabelFont(new Font("SansSerif", Font.PLAIN, 13));
+        plot.setLabelFont(new Font("SansSerif", Font.PLAIN, 12));
+        //plot.setSimpleLabels(true);
         plot.setNoDataMessage("No data available");
         plot.setCircular(false);
         plot.setLabelGap(0.02);

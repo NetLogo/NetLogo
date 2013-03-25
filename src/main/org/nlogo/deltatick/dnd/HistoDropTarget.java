@@ -5,6 +5,7 @@ import org.nlogo.deltatick.HistogramBlock;
 import org.nlogo.deltatick.PlotBlock;
 import org.nlogo.deltatick.QuantityBlock;
 
+import javax.swing.*;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
@@ -19,7 +20,7 @@ import java.io.IOException;
 public class HistoDropTarget
         extends DropTarget {
 
-    public HistoDropTarget (HistogramBlock block) {
+    public HistoDropTarget (PlotBlock block) {
         super(block);
     }
 
@@ -27,8 +28,14 @@ public class HistoDropTarget
             throws IOException, UnsupportedFlavorException {
         Object o = transferable.getTransferData(CodeBlock.quantityBlockFlavor);
         if (o instanceof QuantityBlock) {
+            if (((QuantityBlock) o).getHisto() == true) {
             addCodeBlock((QuantityBlock) o);
             return true;
+            }
+            else {
+                String message = new String(((QuantityBlock) o).getName() + " is a block for line graphs, not histograms.");
+                JOptionPane.showMessageDialog(null, message, "Oops!", JOptionPane.INFORMATION_MESSAGE);
+            }
         }
         return false;
     }

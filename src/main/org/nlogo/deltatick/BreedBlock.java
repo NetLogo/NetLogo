@@ -280,42 +280,43 @@ public strictfp class BreedBlock
             if (block instanceof TraitBlock) {
                 String traitName =  ((TraitBlock) block).getTraitName();
                 if (setTraits.contains(traitName) != true) {
-            code += "let all-" + plural() + "-" + traitName + " sort " + plural() + " \n";
+                    code += "let all-" + plural() + "-" + traitName + " sort " + plural() + " \n";
                     setTraits.add(traitName);
 
-            int i = 0;
-            int startValue = 0;
-            int endValue = 0;
+                    int i = 0;
+                    int startValue = 0;
+                    int endValue = 0;
 
-            //for (Map.Entry<String, Variation> entry : breedVariationHashMap.entrySet()) {
-            for (Map.Entry<String, Variation> entry : ((TraitBlock) block).getVariationHashMap().entrySet()) {
-                String variationType = entry.getKey();
-                Variation variation = entry.getValue();
+                    //for (Map.Entry<String, Variation> entry : breedVariationHashMap.entrySet()) {
+                    for (Map.Entry<String, Variation> entry : ((TraitBlock) block).getVariationHashMap().entrySet()) {
+                        String variationType = entry.getKey();
+                        Variation variation = entry.getValue();
 
-                // System.out.println("TraitName: " + traitName + " Variation: " + variationType + " Value: " + variation.value);
-                //int k = variation.percent;
-                int k =  (int) Math.round(((double) variation.percent/100) * Double.parseDouble(number.getText()));
+                        // System.out.println("TraitName: " + traitName + " Variation: " + variationType + " Value: " + variation.value);
+                        //int k = variation.percent;
+                        int k =  (int) Math.round(((double) variation.percent/100) * Double.parseDouble(number.getText()));
 
-                endValue = startValue + k - 1;
+                        endValue = startValue + k - 1;
 
-                if (endValue > (Integer.parseInt(number.getText()) - 1)) {
-                    endValue = Integer.parseInt(number.getText()) - 1;
+                        if (endValue > (Integer.parseInt(number.getText()) - 1)) {
+                            endValue = Integer.parseInt(number.getText()) - 1;
+                        }
+
+                        code += "let " + traitName + i + " sublist all-" + plural() + "-" + traitName +
+                                " " + startValue + " " + endValue + "\n";
+                        code += "foreach " + traitName + i + " [ ask ? [ set " + plural() + "-" + traitName + " " + variation.value + " \n";
+                        code += "set " + plural() + "-" + traitName + "-name " + variation.name + " \n";
+                        //code += " set color " + variation.color + " ]] \n";    //commented out because variations not differ by color now - march 6, 2013
+                        code += " ]] \n";
+
+                        i++;
+                        startValue = endValue + 1;
+                    }
+
                 }
-
-                code += "let " + traitName + i + " sublist all-" + plural() + "-" + traitName +
-                        " " + startValue + " " + endValue + "\n";
-                code += "foreach " + traitName + i + " [ ask ? [ set " + plural() + "-" + traitName + " " + variation.value + " \n";
-                //code += " set color " + variation.color + " ]] \n";    //commented out because variations not differ by color now - march 6, 2013
-                code += " ]] \n";
-
-                i++;
-                startValue = endValue + 1;
-            }
-
-            }
             }// if
         }
-    return code;
+        return code;
 
     }
 

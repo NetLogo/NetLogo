@@ -361,23 +361,23 @@ public class DeltaTickTab
             }
 
             for (TraitState traitState : speciesInspectorPanel.getTraitStateMap().values()) {
-                TraitBlockNew traitBlock;
-                traitBlock = new TraitBlockNew(myParent, traitState, traitState.getVariationHashMap(), traitState.getVariationsValuesList());
-                traitBlock.setMyParent(myParent);
+//                TraitBlockNew traitBlock;
+//                traitBlock = new TraitBlockNew(myParent, traitState, traitState.getVariationHashMap(), traitState.getVariationsValuesList());
+//                traitBlock.setMyParent(myParent);
 
 
 
                 //Commented out because trying new traitBlock -March 16, 2013
-                //TraitBlock traitBlock;
-                //traitBlock = new TraitBlock(myParent, traitState, traitState.getVariationHashMap(), traitState.getVariationsValuesList());
-                //traitBlock.setMyParent(myParent);
+                TraitBlock traitBlock;
+                traitBlock = new TraitBlock(myParent, traitState, traitState.getVariationHashMap(), traitState.getVariationsValuesList());
+                traitBlock.setMyParent(myParent);
                 speciesInspectorPanel.getSpeciesInspector().addToSelectedTraitsList(traitState);
                 userInput.addTraitAndVariations(myParent.getName(), traitState.getNameTrait(), traitState.getVariationsList());
                 buildPanel.addTrait(traitBlock);
                 libraryHolder.addTraittoTab(traitBlock, buildPanel.getMyTraits().size());
                 deltaTickTab.addDragSource(traitBlock);
-                //traitBlock.addRect("Drag to Species Block");
-                //new TraitDropTarget(traitBlock);
+                traitBlock.addRect("Drag to Species Block");
+                new TraitDropTarget(traitBlock);
                 contentPanel.validate();
 
             }
@@ -495,7 +495,7 @@ public class DeltaTickTab
                 PlotBlock hBlock = new PlotBlock(true);
                 buildPanel.addPlot( hBlock );
                 hBlock.getParent().setComponentZOrder(hBlock, 0 );
-                new PlotDropTarget(hBlock);
+                new HistoDropTarget(hBlock);
                 contentPanel.validate();
         }
     };

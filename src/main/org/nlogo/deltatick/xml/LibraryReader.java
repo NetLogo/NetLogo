@@ -69,26 +69,8 @@ public class LibraryReader {
             //NodeList variations = library.getElementsByTagName("variations");
             for (int i = 0; i < traits.getLength(); i++) {
                 Node trait = traits.item(i);
-                //for (int j = 0 ; j < variations.getLength(); j ++ ) {
-                  //  Node variation = variations.item(j);
-                //}
-                //block = new TraitBlock( trait.getAttributes().getNamedItem("name").getTextContent() );
-                //block = new TraitBlock();
-               // block = new TraitBlock( trait );
                 seekAndAttachInfo( trait );
-
-                // block = new TraitBlock( trait.getAttributes().getNamedItem("name").getTextContent() );
             }
-
-
-            /*
-            NodeList variations = library.getElementsByTagName("variation");
-            for (int i = 0 ; i < variations.getLength(); i ++) {
-                Node variation = variations.item(i);
-                newVariationsList = new ArrayList<Node>();
-                newVariationsList.add(variation);
-            }
-            */
 
             //makes patch blocks appear in library panel -A. (sept 13)
             NodeList patches = library.getElementsByTagName("patch");

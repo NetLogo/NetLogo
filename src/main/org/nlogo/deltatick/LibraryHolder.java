@@ -71,7 +71,7 @@ public class LibraryHolder extends JPanel {
 //        traits.add(block);
 //    }
 
-    public void addTraittoTab( TraitBlockNew block, int numberTraits ) {
+    public void addTraittoTab( TraitBlock block, int numberTraits ) {
         String tabName = new String("Your blocks" + numberTraits);
 
         if (numberTraits == 1) {
@@ -80,7 +80,7 @@ public class LibraryHolder extends JPanel {
         }
         panel.add(block);
         tabbedPane.addTab(tabName , panel);
-        traitsNew.add(block);
+        traits.add(block);
     }
 
     public void removeTraitBlock ( TraitBlock tBlock ) {

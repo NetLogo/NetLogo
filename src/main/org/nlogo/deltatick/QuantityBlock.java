@@ -164,21 +164,10 @@ public strictfp class QuantityBlock
                 }
             });
 
-            ////histoImage = ImageIO.read(getClass().getResource("/images/deltatick/bar-graph.png"));
-            ////histoImageIcon = new ImageIcon(histoImage);
-
-
             histoImageIcon = new ImageIcon(ImageIO.read(getClass().getResource("/images/deltatick/bar-graph.png")));
 
-
-//            lineImageIcon = new ImageIcon(lineImage);
-//            lineImage = ImageIO.read(getClass().getResource("/images/deltatick/line-graph.png"));
-
-            //lineImage = ImageIO.read(getClass().getResource("/images/deltatick/line-graph.png"));
             lineImageIcon = new ImageIcon(ImageIO.read(getClass().getResource("/images/deltatick/line-graph.png")));
             image.setTransferHandler(new TransferHandler("image"));
-
-
 
             if (histo == true) {
                 image.setIcon(histoImageIcon);
@@ -276,6 +265,11 @@ public strictfp class QuantityBlock
     */
     public String getPenUpdateCode() {
         return penUpdateCode;
+    }
+
+    public boolean getHisto() {
+        System.out.println("Qaunt " + histo);
+        return histo;
     }
 
 }
