@@ -41,16 +41,6 @@ class Box(_world: World) extends Topology(_world) {
       ((270 + StrictMath.toDegrees (StrictMath.PI + StrictMath.atan2(-headingY, headingX)))
         % 360)
 
-  @throws(classOf[AgentException])
-  override def getPatchAt(xc: Double, yc: Double): Patch =
-    if (yc >= world.maxPycor + 0.5 ||
-        yc <  world.minPycor - 0.5 ||
-        xc >= world.maxPxcor + 0.5 ||
-        xc <  world.minPxcor - 0.5)
-      null
-    else
-      world.getPatchAt(xc, yc)
-
   override def shortestPathX(x1: Double, x2: Double) = x2
   override def shortestPathY(y1: Double, y2: Double) = y2
   override def followOffsetX = 0.0

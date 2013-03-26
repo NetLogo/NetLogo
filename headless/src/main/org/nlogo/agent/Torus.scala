@@ -55,10 +55,6 @@ class Torus(_world: World) extends Topology(_world) {
         % 360)
   }
 
-  @throws(classOf[AgentException])
-  override def getPatchAt(xc: Double, yc: Double): Patch =
-    world.getPatchAt(xc, yc)
-
   override def getNeighbors(source: Patch): AgentSet =
     if (source.pxcor == world.maxPxcor && source.pxcor == world.minPxcor)
       if (source.pycor == world.maxPycor && source.pycor == world.minPycor)

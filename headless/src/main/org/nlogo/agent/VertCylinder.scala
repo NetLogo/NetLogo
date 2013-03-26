@@ -48,13 +48,6 @@ class VertCylinder(_world: World) extends Topology(_world) {
         % 360)
   }
 
-  @throws(classOf[AgentException])
-  override def getPatchAt(xc: Double, yc: Double): Patch =
-    if (yc > world.maxPycor + 0.5 || yc < world.minPycor - 0.5)
-      null
-    else
-      world.getPatchAt(xc, yc)
-
   override def shortestPathX(x1: Double, x2: Double): Double = {
     val xprime =
       if (x1 > x2)

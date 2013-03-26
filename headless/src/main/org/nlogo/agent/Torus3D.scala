@@ -57,10 +57,6 @@ class Torus3D(world: World3D) extends Torus(world) with Topology3D {
         (StrictMath.atan(dz2 / StrictMath.sqrt(dx2 * dx2 + dy2 * dy2)))) % 360
   }
 
-  @throws(classOf[AgentException])
-  def getPatchAt(xc: Double, yc: Double, zc: Double): Patch =
-    world.getPatchAt(xc, yc, zc)
-
   def getNeighbors3d(source: Patch3D): AgentSet =
     AgentSet.fromArray(AgentKind.Patch,
         Array[Agent](

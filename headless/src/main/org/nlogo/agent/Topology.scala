@@ -37,8 +37,6 @@ abstract class Topology(val world: World) {
   def wrapX(x: Double): Double
   @throws(classOf[AgentException])
   def wrapY(y: Double): Double
-  @throws(classOf[AgentException])
-  def getPatchAt(xc: Double, yc: Double): Patch
 
   def distanceWrap(dx: Double, dy: Double, x1: Double, y1: Double, x2: Double, y2: Double): Double
   def towardsWrap(headingX: Double, headingY: Double): Double

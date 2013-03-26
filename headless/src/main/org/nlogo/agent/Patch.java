@@ -299,7 +299,7 @@ public strictfp class Patch
   @Override
   public Patch getPatchAtOffsets(double dx, double dy)
       throws AgentException {
-    Patch target = world().getTopology().getPatchAt(pxcor + dx, pycor + dy);
+    Patch target = world().getPatchAt(pxcor + dx, pycor + dy);
     if (target == null) {
       throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Turtle.patchBeyondLimits"));
     }

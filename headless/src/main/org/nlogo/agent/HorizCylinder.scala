@@ -48,13 +48,6 @@ class HorizCylinder(_world: World) extends Topology(_world) {
       % 360)
   }
 
-  @throws(classOf[AgentException])
-  override def getPatchAt(xc: Double, yc: Double): Patch =
-    if (xc > world.maxPxcor + 0.5 || xc < world.minPxcor - 0.5)
-      null
-    else
-      world.getPatchAt(xc, yc)
-
   override def shortestPathX(x1: Double, x2: Double) = x2
 
   override def shortestPathY(y1: Double, y2: Double) = {
