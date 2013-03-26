@@ -49,7 +49,7 @@ object ReviewToolBar {
             " already exists. Do you want to overwrite it?"))
           throw new UserCancelException
         run.save(new java.io.FileOutputStream(path))
-        run.name = reviewTab.nameFromPath(path)
+        run.name = ReviewTab.removeExtension(path)
         reviewTab.tabState.undirty(run)
         reviewTab.refreshInterface()
       }
