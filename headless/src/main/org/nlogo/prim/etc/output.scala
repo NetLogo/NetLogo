@@ -2,93 +2,44 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api.{ Syntax, OutputDestination }
-import org.nlogo.nvm.{ Command, Context }
+import org.nlogo.{ api, nvm }
 
-class _print extends Command {
+object OutputCommand {
+  case class Options(
+    withOwner: Boolean = false,
+    addNewline: Boolean = false,
+    readable: Boolean = false,
+    destination: api.OutputDestination = api.OutputDestination.Normal)
+  val typeOptions  = Options()
+  val printOptions = Options(addNewline = true)
+  val writeOptions = Options(readable = true)
+  val showOptions  = Options(withOwner = true, addNewline = true, readable = true)
+}
+
+import OutputCommand._
+
+abstract class OutputCommand(options: Options) extends nvm.Command {
   override def syntax =
-    Syntax.commandSyntax(Array(Syntax.WildcardType))
-  override def perform(context: Context) {
+    api.Syntax.commandSyntax(Array(api.Syntax.WildcardType))
+  override def perform(context: nvm.Context) {
     workspace.outputObject(
-      args(0).report(context), null, true, false,
-      OutputDestination.Normal)
+      args(0).report(context),
+      owner = if (options.withOwner) context.agent else null,
+      addNewline = options.addNewline, readable = options.readable,
+      destination = options.destination)
     context.ip = next
   }
 }
 
-class _show extends Command {
-  override def syntax =
-    Syntax.commandSyntax(Array(Syntax.WildcardType))
-  override def perform(context: Context) {
-    workspace.outputObject(
-      args(0).report(context), context.agent,
-      true, true, OutputDestination.Normal)
-    context.ip = next
-  }
-}
+abstract class OutputAreaCommand(options: Options)
+    extends OutputCommand(options.copy(destination = api.OutputDestination.OutputArea))
 
-class _type extends Command {
-  override def syntax =
-    Syntax.commandSyntax(Array(Syntax.WildcardType))
-  override def perform(context: Context) {
-    workspace.outputObject(
-      args(0).report(context), null, false, false,
-      OutputDestination.Normal)
-    context.ip = next
-  }
-}
+class _type  extends OutputCommand(typeOptions)
+class _print extends OutputCommand(printOptions)
+class _write extends OutputCommand(writeOptions)
+class _show  extends OutputCommand(showOptions)
 
-class _write extends Command {
-  override def syntax =
-    Syntax.commandSyntax(Array(Syntax.ReadableType))
-  override def perform(context: Context) {
-    workspace.outputObject(
-      args(0).report(context), null, false, true,
-      OutputDestination.Normal)
-    context.ip = next
-  }
-}
-
-class _outputprint extends Command {
-  override def syntax =
-    Syntax.commandSyntax(Array(Syntax.WildcardType))
-  override def perform(context: Context) {
-    workspace.outputObject(
-      args(0).report(context), null, true, false,
-      OutputDestination.OutputArea)
-    context.ip = next
-  }
-}
-
-class _outputshow extends Command {
-  override def syntax =
-    Syntax.commandSyntax(Array(Syntax.WildcardType))
-  override def perform(context: Context) {
-    workspace.outputObject(
-      args(0).report(context), context.agent,
-      true, true, OutputDestination.OutputArea)
-    context.ip = next
-  }
-}
-
-class _outputtype extends Command {
-  override def syntax =
-    Syntax.commandSyntax(Array(Syntax.WildcardType))
-  override def perform(context: Context) {
-    workspace.outputObject(
-      args(0).report(context), null, false, false,
-      OutputDestination.OutputArea)
-    context.ip = next
-  }
-}
-
-class _outputwrite extends Command {
-  override def syntax =
-    Syntax.commandSyntax(Array(Syntax.ReadableType))
-  override def perform(context: Context) {
-    workspace.outputObject(
-      args(0).report(context), null, false, true,
-      OutputDestination.OutputArea)
-    context.ip = next
-  }
-}
+class _outputtype  extends OutputAreaCommand(typeOptions)
+class _outputprint extends OutputAreaCommand(printOptions)
+class _outputwrite extends OutputAreaCommand(writeOptions)
+class _outputshow  extends OutputAreaCommand(showOptions)
