@@ -856,7 +856,7 @@ public strictfp class World
          j < _observer.variables().length;
          j++) {
       try {
-        ValueConstraint con = _observer.variableConstraint(j);
+        ValueConstraint con = _observer.constraint(j);
         if (con != null) {
           _observer.setVariable(j, con.defaultValue());
         } else {
@@ -1093,11 +1093,11 @@ public strictfp class World
     throw new IllegalStateException("neither of the breeds exist, that's bad");
   }
 
-  public int getVariablesArraySize(Observer observer) {
+  public int getVariablesArraySize(org.nlogo.api.Observer observer) {
     return _program.globals().size();
   }
 
-  public int getVariablesArraySize(Patch patch) {
+  public int getVariablesArraySize(org.nlogo.api.Patch patch) {
     return _program.patchesOwn().size();
   }
 

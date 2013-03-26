@@ -18,11 +18,11 @@ public final strictfp class Observer3D
     super.home();
     World3D w = (World3D) world();
     double zOff = w.minPzcor() + ((w.maxPzcor() - w.minPzcor()) / 2.0);
-    ozcor(zOff + (StrictMath.max
+    ozcor_$eq(zOff + (StrictMath.max
         (world().worldWidth(),
          StrictMath.max(world().worldHeight(), w.worldDepth())) * 2));
 
-    rotationPoint = new Vect(oxcor(), oycor(), zOff);
+    setRotationPoint(new Vect(oxcor(), oycor(), zOff));
     right = new Vect(1, 0, 0);
     forward = new Vect(0, 0, 1);
   }
@@ -31,30 +31,30 @@ public final strictfp class Observer3D
   public boolean updatePosition() {
     boolean changed = false;
 
-    if (perspective == PerspectiveJ.OBSERVE()) {
+    if (perspective() == PerspectiveJ.OBSERVE()) {
       return false;
-    } else if (perspective == PerspectiveJ.WATCH()) {
-      if (targetAgent.id() == -1) {
+    } else if (perspective() == PerspectiveJ.WATCH()) {
+      if (targetAgent().id() == -1) {
         resetPerspective();
         return true;
       }
 
-      face(targetAgent);
+      face(targetAgent());
     } else // follow and ride are the same save initial conditions.
     {
-      if (targetAgent.id() == -1) // he's dead!
+      if (targetAgent().id() == -1) // he's dead!
       {
         resetPerspective();
         return true;
       }
 
-      Turtle3D turtle = (Turtle3D) targetAgent;
+      Turtle3D turtle = (Turtle3D) targetAgent();
       oxyandzcor(turtle.xcor(), turtle.ycor(), turtle.zcor());
       // don't smooth for now, some turns don't have continuous
       // angles and the smoothing doesn't work properly ev 5/32/06
-      heading(turtle.heading());
-      pitch(turtle.pitch());
-      roll(turtle.roll());
+      heading_$eq(turtle.heading());
+      pitch_$eq(turtle.pitch());
+      roll_$eq(turtle.roll());
     }
 
     return changed;
@@ -89,7 +89,7 @@ public final strictfp class Observer3D
   }
 
   public double followOffsetZ() {
-    if (perspective == PerspectiveJ.FOLLOW() || perspective == PerspectiveJ.RIDE()) {
+    if (perspective() == PerspectiveJ.FOLLOW() || perspective() == PerspectiveJ.RIDE()) {
       World3D w = (World3D) world();
       return ozcor() - ((w.minPzcor() + w.maxPzcor()) / 2.0);
     }
@@ -99,18 +99,18 @@ public final strictfp class Observer3D
 
   public void face(double x, double y, double z) {
     try {
-      heading(world().protractor().towards(this, x, y, false));
+      heading_$eq(world().protractor().towards(this, x, y, false));
     } catch (AgentException ex) {
-      heading(0.0);
+      heading_$eq(0.0);
     }
     try {
-      pitch(-world().protractor().towardsPitch(this, x, y, z, false));
+      pitch_$eq(-world().protractor().towardsPitch(this, x, y, z, false));
     } catch (AgentException ex) {
-      pitch(0.0);
+      pitch_$eq(0.0);
     }
 
     setRotationPoint(x, y, z);
-    Vect[] v = Vect.toVectors(heading, pitch, roll);
+    Vect[] v = Vect.toVectors(heading(), pitch(), roll());
     forward = v[0];
     right = v[1];
   }
@@ -124,7 +124,7 @@ public final strictfp class Observer3D
       Patch3D p = (Patch3D) otherAgent;
       oxyandzcor(p.pxcor, p.pycor, p.pzcor);
     }
-    face(rotationPoint.x(), rotationPoint.y(), rotationPoint.z());
+    face(rotationPoint().x(), rotationPoint().y(), rotationPoint().z());
   }
 
   public Patch3D getPatchAtOffsets(double dx, double dy, double dz)
@@ -158,17 +158,17 @@ public final strictfp class Observer3D
       delta = -delta;
     }
 
-    cors = cors.subtract(rotationPoint);
+    cors = cors.subtract(rotationPoint());
 
     cors = cors.rotateZ(delta);
     right = right.rotateZ(delta);
     forward = forward.rotateZ(delta);
 
-    cors = cors.add(rotationPoint);
+    cors = cors.add(rotationPoint());
 
     Vect rightxy = new Vect(right.x(), right.y(), 0);
     rightxy = rightxy.normalize();
-    heading = StrictMath.toDegrees(rightxy.angleTo(xaxis));
+    heading_$eq(StrictMath.toDegrees(rightxy.angleTo(xaxis)));
 
     oxyandzcor(cors.x(), cors.y(), cors.z());
   }
@@ -179,9 +179,9 @@ public final strictfp class Observer3D
   @Override
   public void orbitUp(double delta) {
     // translate the rotation point to the origin.
-    Vect pos = new Vect(oxcor() - rotationPoint.x(),
-        oycor() - rotationPoint.y(),
-        ozcor() - rotationPoint.z());
+    Vect pos = new Vect(oxcor() - rotationPoint().x(),
+                        oycor() - rotationPoint().y(),
+                        ozcor() - rotationPoint().z());
 
     // use the right vector rather than the forward vector
     // to determine the "heading" so it is continuous.
@@ -201,39 +201,39 @@ public final strictfp class Observer3D
     // can be made around the x-axis.
     pos = pos.rotateZ(angle).rotateX(-delta).rotateZ(-angle);
 
-    pitch(pitch + delta);
+    pitch_$eq(pitch() + delta);
 
-    Vect[] v = Vect.toVectors(heading, pitch, roll);
+    Vect[] v = Vect.toVectors(heading(), pitch(), roll());
 
     forward = v[0];
     right = v[1];
 
-    oxyandzcor(pos.x() + rotationPoint.x(),
-        pos.y() + rotationPoint.y(),
-        pos.z() + rotationPoint.z());
+    oxyandzcor(pos.x() + rotationPoint().x(),
+               pos.y() + rotationPoint().y(),
+               pos.z() + rotationPoint().z());
   }
 
   @Override
   public void translate(double thetaX, double thetaY) {
-    Vect[] v = Vect.toVectors(heading, pitch, roll);
+    Vect[] v = Vect.toVectors(heading(), pitch(), roll());
     Vect ortho = v[1].cross(v[0]);
 
-    oxcor(oxcor() - v[1].x() * thetaX * 0.1);
-    oycor(oycor() - v[1].y() * thetaX * 0.1);
-    ozcor(ozcor() + v[1].z() * thetaX * 0.1);
+    oxcor_$eq(oxcor() - v[1].x() * thetaX * 0.1);
+    oycor_$eq(oycor() - v[1].y() * thetaX * 0.1);
+    ozcor_$eq(ozcor() + v[1].z() * thetaX * 0.1);
 
-    rotationPoint = new Vect
-        (rotationPoint.x() - v[1].x() * thetaX * 0.1,
-         rotationPoint.y() - v[1].y() * thetaX * 0.1,
-         rotationPoint.z() + v[1].z() * thetaX * 0.1);
+    setRotationPoint(new Vect
+      (rotationPoint().x() - v[1].x() * thetaX * 0.1,
+       rotationPoint().y() - v[1].y() * thetaX * 0.1,
+       rotationPoint().z() + v[1].z() * thetaX * 0.1));
 
-    oxcor(oxcor() + ortho.x() * thetaY * 0.1);
-    oycor(oycor() + ortho.y() * thetaY * 0.1);
-    ozcor(ozcor() - ortho.z() * thetaY * 0.1);
+    oxcor_$eq(oxcor() + ortho.x() * thetaY * 0.1);
+    oycor_$eq(oycor() + ortho.y() * thetaY * 0.1);
+    ozcor_$eq(ozcor() - ortho.z() * thetaY * 0.1);
 
-    rotationPoint = new Vect
-        (rotationPoint.x() + ortho.x() * thetaY * 0.1,
-         rotationPoint.y() + ortho.y() * thetaY * 0.1,
-         rotationPoint.z() - ortho.z() * thetaY * 0.1);
+    setRotationPoint(
+      rotationPoint().x() + ortho.x() * thetaY * 0.1,
+      rotationPoint().y() + ortho.y() * thetaY * 0.1,
+      rotationPoint().z() - ortho.z() * thetaY * 0.1);
   }
 }

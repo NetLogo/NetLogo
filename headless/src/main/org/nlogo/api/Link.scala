@@ -52,6 +52,9 @@ trait Link extends Agent {
   /** Returns the size of end2. */
   def linkDestinationSize: Double
 
+  /** Returns the name of the current shape */
+  def shape: String
+
   /** Returns the value of the <code>hidden?</code> variable. */
   def hidden: Boolean
 

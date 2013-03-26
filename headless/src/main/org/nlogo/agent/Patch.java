@@ -503,10 +503,6 @@ public strictfp class Patch
     return BIT;
   }
 
-  public String shape() {
-    return "";
-  }
-
   public double size() {
     return 1;
   }

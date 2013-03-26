@@ -156,7 +156,7 @@ class TestConstraintModels extends AbstractTestModels {
 
     observer>>"setup"
     val index = world.observerOwnsIndexOf("X-LOC")
-    val con = world.observer().variableConstraint(index).asInstanceOf[SliderConstraint]
+    val con = world.observer().constraint(index).asInstanceOf[SliderConstraint]
 
     // the maximum should be 40
     var coerced = con.coerceValue(Double.box(41)).asInstanceOf[java.lang.Double]

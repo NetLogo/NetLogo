@@ -196,9 +196,8 @@ private class ShapeRenderer(world: World) {
     else
       size.toFloat
 
-  def renderHighlight(gl: GL, agent: Agent, coords: Array[Double], orientation: Array[Double]) {
+  def renderHighlight(gl: GL, agent: Agent, shape: GLShape, coords: Array[Double], orientation: Array[Double]) {
     gl.glPushMatrix()
-    val shape = shapeManager.getShape(agent.shape)
     alignAgent(gl, agent.size,
       coords(0) * Renderer.WORLD_SCALE,
       coords(1) * Renderer.WORLD_SCALE,

@@ -76,7 +76,7 @@ with java.awt.event.MouseWheelListener {
       val newDist = (observer.followDistance - zoomDist).toInt
       // slider values from ViewControlToolBar
       if (newDist <= 100)
-        observer.followDistance(newDist)
+        observer.followDistance_$eq(newDist)
     }
     else {
       val dist = observer.dist
@@ -123,7 +123,7 @@ with java.awt.event.MouseWheelListener {
       val newDist = (observer.followDistance - thetaY).toInt
       // slider values from ViewControlToolBar
       if (newDist >= 0 && newDist <= 100)
-        observer.followDistance(newDist)
+        observer.followDistance_$eq(newDist)
       view.signalViewUpdate()
     }
     else {
