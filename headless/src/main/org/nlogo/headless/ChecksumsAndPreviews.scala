@@ -47,6 +47,7 @@ object ChecksumsAndPreviews {
     def remake(path: String) {
       val previewPath = path.replaceFirst("\\.nlogo$", ".png")
       val workspace = HeadlessWorkspace.newInstance
+      workspace.silent = true
       try {
         // we set the random seed before opening the model, so that the random-seed will affect the
         // startup procedure if any - ST 7/12/06
@@ -98,6 +99,7 @@ object ChecksumsAndPreviews {
     }
     def updateOne(m: ChecksumMap, model: String) {
       val workspace = HeadlessWorkspace.newInstance
+      workspace.silent = true
       try {
         if(!new java.io.File(model).exists && m.contains(model)) {
           // if the model doesn't exist and it's in the checksum file just remove it. if it's not in
