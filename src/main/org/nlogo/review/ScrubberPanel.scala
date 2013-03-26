@@ -20,9 +20,9 @@ class ScrubberPanel(
   val scrubberButtonsPanel = new ScrubberButtonsPanel(scrubber)
 
   setLayout(new BorderLayout)
-  add(scrubberButtonsPanel, BorderLayout.WEST)
+  add(tickPanel, BorderLayout.WEST)
   add(scrubber, BorderLayout.CENTER)
-  add(tickPanel, BorderLayout.EAST)
+  add(scrubberButtonsPanel, BorderLayout.EAST)
 }
 
 class Scrubber extends JSlider {

@@ -20,7 +20,8 @@ class ReviewTabState(
   def currentRun = _currentRun
   def currentRunData = currentRun.flatMap(_.data)
   def currentFrame = currentRun.flatMap(_.currentFrame)
-  def currentFrameIndex = currentRun.map(_.currentFrameIndex)
+  def currentFrameIndex = currentRun.map(_.currentFrameIndex) // Returns 0 even if no frame. That's bad. NP 2013-03-26
+  def currentTicks = currentFrame.flatMap(_.ticks)
   def recordingEnabled = _recordingEnabled
   def recordingEnabled_=(b: Boolean) { _recordingEnabled = b }
   def currentlyRecording = _recordingEnabled && currentRun.map(_.stillRecording).getOrElse(false)

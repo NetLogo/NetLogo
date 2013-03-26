@@ -68,8 +68,8 @@ class ReviewTab(
 
   val scrubberPanel = new ScrubberPanel(
     () => tabState.currentFrameIndex,
-    () => tabState.currentFrame.flatMap(_.ticks))
-  val notesPanel = new NotesPanel(tabState)
+    () => tabState.currentTicks)
+  val notesTabbedPane = new NotesTabbedPane(tabState)
   val reviewToolBar = new ReviewToolBar(this)
   val interfacePanel = new InterfacePanel(this)
 
@@ -80,10 +80,10 @@ class ReviewTab(
     }
   })
 
-  notesPanel.notesArea.getDocument.addDocumentListener(new DocumentListener {
+  notesTabbedPane.generalNotes.getDocument.addDocumentListener(new DocumentListener {
     private def updateNotesInRun() {
       for (run <- tabState.currentRun) {
-        run.generalNotes = notesPanel.notesArea.getText
+        run.generalNotes = notesTabbedPane.generalNotes.getText
         reviewToolBar.saveButton.setEnabled(run.dirty)
       }
     }
@@ -99,9 +99,13 @@ class ReviewTab(
       value = run.map(_.currentFrameIndex).getOrElse(0),
       max = data.map(_.lastFrameIndex).getOrElse(0),
       enabled = data.filter(_.size > 1).isDefined)
-    notesPanel.notesArea.setText(run.map(_.generalNotes).getOrElse(""))
+    notesTabbedPane.generalNotes.setText(run.map(_.generalNotes).getOrElse(""))
     reviewToolBar.saveButton.setEnabled(run.map(_.dirty).getOrElse(false))
-    Seq(notesPanel.notesArea, reviewToolBar.renameButton, reviewToolBar.closeCurrentButton, reviewToolBar.closeAllButton)
+    Seq(
+      notesTabbedPane.generalNotes,
+      reviewToolBar.renameButton,
+      reviewToolBar.closeCurrentButton,
+      reviewToolBar.closeAllButton)
       .foreach(_.setEnabled(run.isDefined))
     runList.repaint()
     interfacePanel.repaint()
@@ -144,7 +148,7 @@ class ReviewTab(
   object SecondarySplitPane extends JSplitPane(
     JSplitPane.VERTICAL_SPLIT,
     RunPanel,
-    notesPanel) {
+    notesTabbedPane) {
     setResizeWeight(1.0)
     setDividerLocation(1.0)
   }
