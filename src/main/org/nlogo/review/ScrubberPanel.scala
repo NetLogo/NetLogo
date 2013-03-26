@@ -4,11 +4,11 @@ package org.nlogo.review
 
 import java.awt.BorderLayout
 import java.beans.{ PropertyChangeEvent, PropertyChangeListener }
-
 import org.nlogo.api
-
 import javax.swing.{ JButton, JLabel, JPanel, JSlider }
 import javax.swing.event.{ ChangeEvent, ChangeListener }
+import scala.math.BigDecimal
+import scala.math.BigDecimal.RoundingMode
 
 class ScrubberPanel(
   currentFrame: () => Option[Int],
@@ -66,7 +66,7 @@ class ScrubberButton(name: String, tip: String, newValue: Int => Int, scrubber: 
 
 class TickPanel(
   currentFrame: () => Option[Int],
-  currentTick: () => Option[Double],
+  currentTicks: () => Option[Double],
   scrubber: Scrubber)
   extends JPanel {
 
@@ -75,7 +75,7 @@ class TickPanel(
   val bold = frame.getFont.deriveFont(frame.getFont.getStyle | java.awt.Font.BOLD)
   frame.setFont(bold)
   add(frame)
-  add(new JLabel("Tick:"))
+  add(new JLabel("Ticks:"))
   val tick = new JLabel("-")
   tick.setFont(bold)
   add(tick)
@@ -83,7 +83,7 @@ class TickPanel(
   scrubber.addChangeListener(new ChangeListener {
     def stateChanged(e: ChangeEvent) {
       frame.setText(currentFrame().map(_.toString).getOrElse("-"))
-      tick.setText(currentTick().map(api.Dump.number).getOrElse("-"))
+      tick.setText(currentTicks().map("%.2f".format(_)).getOrElse("-")) // TODO be smarter about decimals?
     }
   })
 }
