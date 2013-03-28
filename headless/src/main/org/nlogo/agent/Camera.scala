@@ -107,7 +107,7 @@ trait Camera { self: Observer =>
   }
 
   @throws(classOf[api.AgentException])
-  def moveto(otherAgent: Agent) {
+  def moveTo(otherAgent: Agent) {
     otherAgent match {
       case t: api.Turtle =>
         oxyandzcor(t.xcor, t.ycor, 0)

@@ -32,7 +32,7 @@ public final strictfp class _moveto
       if (context.agent instanceof Turtle) {
         ((Turtle) context.agent).moveTo(otherAgent);
       } else {
-        world.observer().moveto(otherAgent);
+        world.observer().moveTo(otherAgent);
       }
     } catch (AgentException ex) {
       throw new EngineException(context, this, ex.getMessage());

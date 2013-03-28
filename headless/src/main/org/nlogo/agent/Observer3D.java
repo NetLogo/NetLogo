@@ -116,7 +116,7 @@ public final strictfp class Observer3D
   }
 
   @Override
-  public void moveto(Agent otherAgent) {
+  public void moveTo(Agent otherAgent) {
     if (otherAgent instanceof Turtle) {
       Turtle3D t = (Turtle3D) otherAgent;
       oxyandzcor(t.xcor(), t.ycor(), t.zcor());
