@@ -49,4 +49,4 @@ window.WidgetAdded - Widget widget
 window.WidgetEdited - Widget widget
 window.WidgetForegrounded - Widget widget
 window.WidgetRemoved - Widget widget
-window.Zoomed - double zoomFactor
+window.Zoomed - int action
