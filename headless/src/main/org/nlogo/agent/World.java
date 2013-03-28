@@ -1093,14 +1093,6 @@ public strictfp class World
     throw new IllegalStateException("neither of the breeds exist, that's bad");
   }
 
-  public int getVariablesArraySize(org.nlogo.api.Observer observer) {
-    return _program.globals().size();
-  }
-
-  public int getVariablesArraySize(org.nlogo.api.Patch patch) {
-    return _program.patchesOwn().size();
-  }
-
   public int getVariablesArraySize(org.nlogo.api.Turtle turtle, org.nlogo.api.AgentSet breed) {
     if (breed == _turtles) {
       return _program.turtlesOwn().size();

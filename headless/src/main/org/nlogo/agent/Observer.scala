@@ -19,7 +19,8 @@ with api.Observer with Constraints with Camera {
 
   override def realloc(forRecompile: Boolean) {
     val oldvars = variables
-    val newvars = Array.fill[AnyRef](world.getVariablesArraySize(this))(World.ZERO)
+    val size = world.program.globals.size
+    val newvars = Array.fill[AnyRef](size)(World.ZERO)
     if (oldvars != null && forRecompile)
       for (i <- 0 until (oldvars.length min world.oldProgram.globals.size)) {
         val name = world.oldProgram.globals(i)

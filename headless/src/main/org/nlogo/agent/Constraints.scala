@@ -8,7 +8,7 @@ trait Constraints extends Agent {
   private var constraints: Array[ValueConstraint] = null
   def clearConstraints() {
     constraints = new Array[ValueConstraint](
-      world.getVariablesArraySize(null: api.Observer)) // yuck - ST 3/27/13
+      world.program.globals.size)
   }
   def constraint(vn: Int) = constraints(vn)
   def setConstraint(vn: Int, con: ValueConstraint) {
