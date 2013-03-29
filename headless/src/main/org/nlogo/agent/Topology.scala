@@ -2,7 +2,7 @@
 
 package org.nlogo.agent
 
-import org.nlogo.api.AgentException
+import org.nlogo.api, api.AgentException
 
 @annotation.strictfp
 object Topology {
@@ -31,7 +31,8 @@ object Topology {
 
 }
 
-abstract class Topology(val world: World, val xWraps: Boolean, val yWraps: Boolean) {
+abstract class Topology(val world: World, val xWraps: Boolean, val yWraps: Boolean)
+extends Neighbors {
 
   @throws(classOf[AgentException])
   def wrapX(x: Double): Double
@@ -41,16 +42,6 @@ abstract class Topology(val world: World, val xWraps: Boolean, val yWraps: Boole
   def distanceWrap(dx: Double, dy: Double, x1: Double, y1: Double, x2: Double, y2: Double): Double
   def towardsWrap(headingX: Double, headingY: Double): Double
 
-  def getNeighbors(source: Patch): AgentSet
-  def getNeighbors4(source: Patch): AgentSet
-  def getPN(source: Patch): Patch
-  def getPE(source: Patch): Patch
-  def getPS(source: Patch): Patch
-  def getPW(source: Patch): Patch
-  def getPNE(source: Patch): Patch
-  def getPSE(source: Patch): Patch
-  def getPSW(source: Patch): Patch
-  def getPNW(source: Patch): Patch
   def shortestPathX(x1: Double, x2: Double): Double
   def shortestPathY(y1: Double, y2: Double): Double
 

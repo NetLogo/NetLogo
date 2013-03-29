@@ -56,50 +56,6 @@ extends Topology(_world, xWraps = true, yWraps = true) {
         % 360)
   }
 
-  override def getNeighbors(source: Patch): AgentSet =
-    if (source.pxcor == world.maxPxcor && source.pxcor == world.minPxcor)
-      if (source.pycor == world.maxPycor && source.pycor == world.minPycor)
-        world.noPatches
-      else
-        AgentSet.fromArray(
-          AgentKind.Patch, Array[Agent](
-            getPatchNorth(source),
-            getPatchSouth(source)))
-    else if (source.pycor == world.maxPycor && source.pycor == world.minPycor)
-      AgentSet.fromArray(
-        AgentKind.Patch, Array[Agent](
-          getPatchEast(source),
-          getPatchWest(source)))
-    else
-      AgentSet.fromArray(
-        AgentKind.Patch, Array[Agent](
-          getPatchNorth(source), getPatchEast(source),
-          getPatchSouth(source), getPatchWest(source),
-          getPatchNorthEast(source), getPatchSouthEast(source),
-          getPatchSouthWest(source), getPatchNorthWest(source)))
-
-  override def getNeighbors4(source: Patch): AgentSet =
-    if (source.pxcor == world.maxPxcor && source.pxcor == world.minPxcor)
-      if (source.pycor == world.maxPycor && source.pycor == world.minPycor)
-        world.noPatches
-      else
-        AgentSet.fromArray(
-          AgentKind.Patch, Array[Agent](
-            getPatchNorth(source),
-            getPatchSouth(source)))
-    else if (source.pycor == world.maxPycor && source.pycor == world.minPycor)
-      AgentSet.fromArray(
-        AgentKind.Patch, Array[Agent](
-          getPatchEast(source),
-          getPatchWest(source)))
-    else
-      AgentSet.fromArray(
-        AgentKind.Patch, Array[Agent](
-          getPatchNorth(source),
-          getPatchEast(source),
-          getPatchSouth(source),
-          getPatchWest(source)))
-
   override def getPN (source: Patch): Patch = getPatchNorth(source)
   override def getPE (source: Patch): Patch = getPatchEast(source)
   override def getPS (source: Patch): Patch = getPatchSouth(source)
