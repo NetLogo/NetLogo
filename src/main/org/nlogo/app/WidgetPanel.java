@@ -27,8 +27,7 @@ public strictfp class WidgetPanel
     java.awt.event.FocusListener,
     org.nlogo.window.Events.WidgetEditedEvent.Handler,
     org.nlogo.window.Events.WidgetRemovedEvent.Handler,
-    org.nlogo.window.Events.LoadBeginEvent.Handler,
-    org.nlogo.window.Events.ZoomedEvent.Handler {
+    org.nlogo.window.Events.LoadBeginEvent.Handler {
   static final int GRID_SNAP = 5;  // set the size of the grid, in pixels
 
   protected java.awt.Rectangle selectionRect;
@@ -36,7 +35,6 @@ public strictfp class WidgetPanel
   protected WidgetWrapper newWidget;
   protected List<WidgetWrapper> widgetsBeingDragged;
   protected final GUIWorkspace workspace;
-  final Zoomer zoomer = new Zoomer(this);
   protected final javax.swing.JComponent glassPane =
       new javax.swing.JComponent() {
         @Override
@@ -559,7 +557,7 @@ public strictfp class WidgetPanel
     wrapper.validate();
     wrapper.setVisible(true);
 
-    zoomer.zoomWidget(wrapper, true, loadingWidget, 1.0, zoomer.zoomFactor());
+    zoomer().zoomWidget(wrapper, true, loadingWidget, 1.0, zoomFactor());
 
     if (select) {
       newWidget = wrapper;
@@ -642,8 +640,9 @@ public strictfp class WidgetPanel
   }
 
   public void handle(org.nlogo.window.Events.ZoomedEvent e) {
+    super.handle(e);
     unselectWidgets();
-    zoomer.zoomWidgets(e.zoomFactor);
+    zoomer().zoomWidgets(zoomFactor());
     revalidate();
   }
 
@@ -674,7 +673,7 @@ public strictfp class WidgetPanel
 
   public void handle(org.nlogo.window.Events.WidgetEditedEvent e) {
     new org.nlogo.window.Events.DirtyEvent().raise(this);
-    zoomer.updateZoomInfo(e.widget);
+    zoomer().updateZoomInfo(e.widget);
   }
 
   public void handle(org.nlogo.window.Events.WidgetRemovedEvent e) {
@@ -701,7 +700,7 @@ public strictfp class WidgetPanel
   public void handle(org.nlogo.window.Events.LoadBeginEvent e) {
     unselectWidgets();
     removeAllWidgets();
-    zoomer.forgetAllZoomInfo();
+    zoomer().forgetAllZoomInfo();
   }
 
   @Override
@@ -847,11 +846,11 @@ public strictfp class WidgetPanel
   }
 
   public java.awt.Rectangle getUnzoomedBounds(java.awt.Component component) {
-    return zoomer.getUnzoomedBounds(component);
+    return zoomer().getUnzoomedBounds(component);
   }
 
   public void resetZoomInfo(Widget widget) {
-    zoomer.updateZoomInfo(widget);
+    zoomer().updateZoomInfo(widget);
   }
 
   public void resetSizeInfo(Widget widget) {
@@ -859,7 +858,7 @@ public strictfp class WidgetPanel
   }
 
   public boolean isZoomed() {
-    return zoomer.zoomFactor() != 1.0;
+    return zoomer().zoomFactor() != 1.0;
   }
 
   public boolean canAddWidget(String widget) {
