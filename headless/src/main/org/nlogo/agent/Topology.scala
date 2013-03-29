@@ -8,8 +8,8 @@ import org.nlogo.api.AgentException
 object Topology {
 
   // factory method
-  def get(world: World, xWrapping: Boolean, yWrapping: Boolean): Topology =
-    (xWrapping, yWrapping) match {
+  def get(world: World, xWraps: Boolean, yWraps: Boolean): Topology =
+    (xWraps, yWraps) match {
       case (true , true ) => new Torus(world)
       case (true , false) => new VertCylinder(world)
       case (false, true ) => new HorizCylinder(world)
@@ -31,7 +31,7 @@ object Topology {
 
 }
 
-abstract class Topology(val world: World) {
+abstract class Topology(val world: World, val xWraps: Boolean, val yWraps: Boolean) {
 
   @throws(classOf[AgentException])
   def wrapX(x: Double): Double

@@ -5,7 +5,8 @@ package org.nlogo.agent
 import org.nlogo.api.{ AgentException, AgentKind, I18N }
 
 @annotation.strictfp
-class Box(_world: World) extends Topology(_world) {
+class Box(_world: World)
+extends Topology(_world, xWraps = false, yWraps = false) {
 
   @throws(classOf[AgentException])
   override def wrapX(x: Double): Double  = {

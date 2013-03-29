@@ -4,10 +4,11 @@ package org.nlogo.agent
 
 import org.nlogo.api.{ AgentException, AgentKind }
 
-// world wraps in y but not x. imagine a cylinder lying on its side
+// imagine a cylinder lying on its side
 
 @annotation.strictfp
-class HorizCylinder(_world: World) extends Topology(_world) {
+class HorizCylinder(_world: World)
+extends Topology(_world, xWraps = false, yWraps = true) {
 
   @throws(classOf[AgentException])
   override def wrapX(x: Double): Double = {

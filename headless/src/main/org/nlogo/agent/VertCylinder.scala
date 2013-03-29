@@ -4,10 +4,11 @@ package org.nlogo.agent
 
 import org.nlogo.api.{ AgentException, AgentKind }
 
-// world wraps in x but not y. imagine a cylinder standing on end.
+// imagine a cylinder standing on end.
 
 @annotation.strictfp
-class VertCylinder(_world: World) extends Topology(_world) {
+class VertCylinder(_world: World)
+extends Topology(_world, xWraps = true, yWraps = false) {
 
   override def wrapX(x: Double): Double =
     Topology.wrap(x, world.minPxcor - 0.5, world.maxPxcor + 0.5)

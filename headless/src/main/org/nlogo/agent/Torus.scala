@@ -5,7 +5,8 @@ package org.nlogo.agent
 import org.nlogo.api.{ AgentException, AgentKind }
 
 @annotation.strictfp
-class Torus(_world: World) extends Topology(_world) {
+class Torus(_world: World)
+extends Topology(_world, xWraps = true, yWraps = true) {
 
   override def wrapX(x: Double): Double =
     Topology.wrap(x, world.minPxcor - 0.5, world.maxPxcor + 0.5)
