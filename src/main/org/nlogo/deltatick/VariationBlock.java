@@ -31,7 +31,7 @@ public class VariationBlock
 
     public void updateLabel() {
         if (myParent.getBehaviorInputs().size() > 0) {
-            for (Map.Entry<String, JTextField> entry: myParent.getBehaviorInputs().entrySet()) {
+            for (Map.Entry<String, PrettyInput> entry: myParent.getBehaviorInputs().entrySet()) {
                 this.addBehaviorInput(entry.getKey(), entry.getValue().getText(), entry.getValue().getToolTipText());
             }
         }

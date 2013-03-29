@@ -38,7 +38,7 @@ public abstract class CodeBlock
     // the following are linked so that they're always in order
     Map<String, JTextField> inputs = new LinkedHashMap<String, JTextField>();
     Map<String, JTextField> energyInputs = new LinkedHashMap<String, JTextField>();
-    Map<String, JTextField> behaviorInputs = new LinkedHashMap<String, JTextField>();
+    Map<String, PrettyInput> behaviorInputs = new LinkedHashMap<String, PrettyInput>();
     Map<String, JTextField> agentInputs = new LinkedHashMap<String, JTextField>();
     Map<String, JTextField> percentInputs = new LinkedHashMap<String, JTextField>();
     List<CodeBlock> myBlocks = new LinkedList<CodeBlock>();
@@ -347,7 +347,7 @@ public abstract class CodeBlock
         return inputs;
     }
 
-    public Map<String, JTextField> getBehaviorInputs() {
+    public Map<String, PrettyInput> getBehaviorInputs() {
         return behaviorInputs;
     }
 
@@ -561,21 +561,21 @@ public abstract class CodeBlock
 
         if (parent instanceof BreedBlock) {
             checkParent = true;
-            if (this instanceof TraitBlock) {
-                ((BuildPanel) pParent).removeTrait((TraitBlock) this);   // remove from myTraits & buildPanel -A.(Aug 8, 2012)
-                ((BreedBlock) parent).removeTraitBlock((TraitBlock) this);   // removes from BreedBlock -A. (Aug 8, 2012)
+            if (this instanceof TraitBlockNew) {
+                ((BuildPanel) pParent).removeTrait((TraitBlockNew) this);   // remove from myTraits & buildPanel -A.(Aug 8, 2012)
+                ((BreedBlock) parent).removeTraitBlock((TraitBlockNew) this);   // removes from BreedBlock -A. (Aug 8, 2012)
             }
         }
         if (parent instanceof JPanel) {
             if (this instanceof TraitBlock) {
                 for (Component child : pParent.getComponents()) {
                     if (child.getClass() == BuildPanel.class) {
-                        ((BuildPanel) child).removeTrait((TraitBlock) this);
+                        ((BuildPanel) child).removeTrait((TraitBlockNew) this);
                     }
                 }
                 for (Component child : parent.getComponents()) {
                     if (child.getClass() == LibraryHolder.class) {
-                        ((LibraryHolder) child).removeTraitBlock((TraitBlock) this);
+                        ((LibraryHolder) child).removeTraitBlock((TraitBlockNew) this);
                     }
                 }
             }
@@ -589,9 +589,9 @@ public abstract class CodeBlock
                 ((BuildPanel) parent).removeBreed((BreedBlock) this);
 
                 for (Component child : getComponents()) {
-                    if (child instanceof TraitBlock) {
-                        ((BreedBlock) this).removeTraitBlock((TraitBlock) child);
-                        ((BuildPanel) parent).removeTrait((TraitBlock) child);
+                    if (child instanceof TraitBlockNew) {
+                        ((BreedBlock) this).removeTraitBlock((TraitBlockNew) child);
+                        ((BuildPanel) parent).removeTrait((TraitBlockNew) child);
                     }
                 }
             }

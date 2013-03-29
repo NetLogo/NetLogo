@@ -129,14 +129,13 @@ public class TraitBlockNew
 
     public String unPackAsCommand() {
         String passBack = "";
-        //String variation = dropdownList.getSelectedVariation();
         String value = variationNamesValues.get(variation);
 
-        passBack += "if " + this.getMyParent().plural() + "-" + this.getTraitName() + " = " + value + " [\n";
-        for (CodeBlock block : myBlocks) {
-            passBack += block.unPackAsCode();
-        }
-        passBack += "] \n";
+        //passBack += "if " + this.getMyParent().plural() + "-" + this.getTraitName() + " = " + value + " [\n";
+//        for (CodeBlock block : myBlocks) {
+//            passBack += block.unPackAsCode();
+//        }
+        //passBack += "] \n";
         return passBack;
     }
 
@@ -154,8 +153,17 @@ public class TraitBlockNew
     }
 
     public String getBreedName() {
-        return breedName;
-        //return ((BreedBlock) myParent).plural();
+        //return breedName;
+        return ((BreedBlock) myParent).plural();
+    }
+
+    public void hideRemoveButton() {
+        //this.remove(removeButton);
+        removeButton.setVisible(false);
+    }
+
+    public String getMutateCode() {
+        return traitState.getMutateCode();
     }
 
 }

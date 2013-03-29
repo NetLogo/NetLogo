@@ -71,8 +71,8 @@ public class LibraryHolder extends JPanel {
 //        traits.add(block);
 //    }
 
-    public void addTraittoTab( TraitBlock block, int numberTraits ) {
-        String tabName = new String("Your blocks" + numberTraits);
+    public void addTraittoTab( TraitBlockNew block, int numberTraits ) {
+        String tabName = new String("Your blocks");
 
         if (numberTraits == 1) {
             panel = (JComponent) new JPanel();
@@ -80,10 +80,10 @@ public class LibraryHolder extends JPanel {
         }
         panel.add(block);
         tabbedPane.addTab(tabName , panel);
-        traits.add(block);
+        traitsNew.add(block);
     }
 
-    public void removeTraitBlock ( TraitBlock tBlock ) {
+    public void removeTraitBlock ( TraitBlockNew tBlock ) {
         traits.remove(tBlock);
         panel.remove(tBlock);
         for (int i = 0; i < tabbedPane.getTabCount(); i++) {
@@ -154,8 +154,8 @@ public class LibraryHolder extends JPanel {
         //traits.clear();
 
     }
-    public List<TraitBlock> getTraitBlocks() {
-        return traits;
+    public List<TraitBlockNew> getTraitBlocks() {
+        return traitsNew;
     }
 
 }

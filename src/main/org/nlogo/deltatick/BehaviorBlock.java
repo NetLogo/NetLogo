@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.nlogo.deltatick.dnd.BehaviorInput;
+import org.nlogo.deltatick.dnd.PrettyInput;
 import org.nlogo.deltatick.xml.Variation;
 
 import javax.swing.*;
@@ -14,6 +15,11 @@ import javax.swing.*;
 
 public strictfp class BehaviorBlock
         extends CodeBlock {
+
+    boolean isTrait;
+    boolean isMutate;
+    TraitBlockNew tBlockNew; // TODO need this to have trait Block work as an input in code (March, 25, 2013)
+    BreedBlock container;
 
     public BehaviorBlock(String name) {
         super(name, ColorSchemer.getColor(0).brighter());
@@ -34,54 +40,66 @@ public strictfp class BehaviorBlock
     }
       //TODO: Box bracket appears when it need not (March 9)
     //extracting the argument to be passed after name of procedure (March 2)
-    public String unPackAsProcedure() {
-        String passBack = "";
-        passBack += "to " + getName() + " ";
+      public String unPackAsProcedure() {
+          String passBack = "";
+          passBack += "to " + getName() + " ";
 
-        if ((agentInputs.size() > 0) || (inputs.size() > 0) || (behaviorInputs.size() > 0 || percentInputs.size() > 0) ) {
-            passBack += "[ ";
-        }
-        if (inputs.size() > 0) {
-            for (String input : inputs.keySet()) {
-                passBack += input + " ";
-            }
-        }
-        if (agentInputs.size() > 0) {
-            for (String s : agentInputs.keySet()) {
-                passBack += s + " ";
-            }
-        }
-        if (behaviorInputs.size() > 0) {
-            for (String s : behaviorInputs.keySet()) {
-                passBack += s + " ";
-            }
-        }
-        if (percentInputs.size() > 0) {
-            for (String s : percentInputs.keySet()) {
-                passBack += s + " ";
-            }
-        }
-        if ((agentInputs.size()  > 0) || (inputs.size() > 0) || (behaviorInputs.size() > 0 || (percentInputs.size() > 0)) ) {
-            passBack += " ]";
-        }
-        if ( ifCode != null ) {
-        passBack += "\n" + ifCode + "[\n" + code + "\n" + "]";
-        }
-        //TODO commented out on March 9, testing
+          if ((agentInputs.size() > 0) || (inputs.size() > 0) || (behaviorInputs.size() > 0 || percentInputs.size() > 0) || (isTrait == true) ) {
+              passBack += "[ ";
+          }
+          if (inputs.size() > 0) {
+              for (String input : inputs.keySet()) {
+                  passBack += input + " ";
+              }
+          }
+          if (agentInputs.size() > 0) {
+              for (String s : agentInputs.keySet()) {
+                  passBack += s + " ";
+              }
+          }
+          if (behaviorInputs.size() > 0) {
+              for (String s : behaviorInputs.keySet()) {
+                  passBack += s + " ";
+              }
+          }
+          if (percentInputs.size() > 0) {
+              for (String s : percentInputs.keySet()) {
+                  passBack += s + " ";
+              }
+          }
+          //when traitname appears as an input, it clashes with the trait defined as a breed-variable so using behaviorinput
+          //instead (March 29, 2013)
+//          if (isTrait == true) {
+//              passBack += tBlockNew.getTraitName() + " ";
+//          }
+          if ((agentInputs.size()  > 0) || (inputs.size() > 0) || (behaviorInputs.size() > 0 || (percentInputs.size() > 0)) || (isTrait == true) ) {
+              passBack += " ]";
+          }
 
-        else {
-            passBack += "\n" + code + "\n";
-        }
+          if ( ifCode != null ) {
+              passBack += "\n" + ifCode + "[\n" + code + "\n" + "]";
+          }
+          else {
+              passBack += "\n" + code + "\n";
+              if (isMutate == true) {
+                  for (TraitBlockNew traitBlock : ((BreedBlock) container).getMyTraitBlocks()) {
+                      //passBack += traitBlock.getMutateCode();
+                      String traitName = ((BreedBlock) container).plural() + "-" + traitBlock.getTraitName();
+                      passBack += "if random 100 <= " + this.getContainer().plural() + "-" + traitBlock.getTraitName() + "-mutation [\n";
+                      passBack += "set " + traitName + " " + traitName + " * 0.01 \n]";
+                  }
+              }
 
-        if (energyInputs.size() > 0) {
-            for (JTextField inputName : energyInputs.values()) {
-                passBack += "set energy energy " + inputName.getText() + "\n";
-            }
-        }
-        passBack += " end\n\n";
+          }
+          if (energyInputs.size() > 0) {
+              for (JTextField inputName : energyInputs.values()) {
+                  passBack += "set energy energy " + inputName.getText() + "\n";
+              }
+          }
+          passBack += " end\n\n";
 
-        return passBack;
-    }
+          return passBack;
+      }
 
     // extracting name of behavior into "to go" -A. (sept 24)
     public String unPackAsCommand() {
@@ -91,27 +109,25 @@ public strictfp class BehaviorBlock
         for (JTextField input : inputs.values()) {
             passBack += input.getText() + " ";
         }
+
         for (JTextField agentInput : agentInputs.values()) {
             passBack += agentInput.getText() + " ";
         }
-        for (JTextField behaviorInput : behaviorInputs.values()) {
-            passBack += behaviorInput.getText() + " ";
+        if (isTrait) {
+            passBack += tBlockNew.getTraitName();
+        }
+        else {
+            for (JTextField behaviorInput : behaviorInputs.values()) {
+                passBack += behaviorInput.getText() + " ";
+            }
         }
         for (JTextField percentInput : percentInputs.values()) {
             passBack += percentInput.getText() + " ";
         }
 
+
         passBack += "\n";
-        //Commented out because I don't want a fixed value to be set for a variable that's not a trait -Aditi (Feb 22, 2013)
-//        if (myParent instanceof BreedBlock) {
-//            for (String name : ((BreedBlock) myParent).myUsedBehaviorInputs) {
-//                for (String s : behaviorInputs.keySet()) {
-//                    if (name.equals(s)) {
-//                        passBack += "set " + name + " " + behaviorInputs.get(name).getText().toString() + "\n";
-//                    }
-//                }
-//                }
-//            }
+
         return passBack;
     }
 
@@ -130,6 +146,20 @@ public strictfp class BehaviorBlock
                     textField.setText(value);
                 }
             }
+        }
+    }
+
+    //remove behaviorInput from block if a TraitBlock has been added -(March 25, 2013)
+    //assumption that there's only one behaviorInput per block
+    public void removeBehaviorInput() {
+        for ( Map.Entry<String, PrettyInput> map : behaviorInputs.entrySet()) {
+            String s = map.getKey();
+            PrettyInput j = map.getValue();
+            //remove(j); // TODO: prefer that it is removed entirely because it can't be used alone again (March 25, 2013)
+            j.setVisible(false);
+            revalidate();
+            repaint();
+            //behaviorInputs.remove(s);  // need the behavior input to generate code esp when trait blocks are used (March 29,2013)
         }
     }
 
@@ -156,5 +186,35 @@ public strictfp class BehaviorBlock
             percentInputName = s;
             }
         return percentInputName;
+    }
+
+    public boolean getIsTrait() {
+        return isTrait;
+    }
+
+    public void setIsTrait(boolean value) {
+        isTrait = value;
+    }
+
+    public void setTrait(TraitBlockNew traitBlockNew) {
+        tBlockNew = traitBlockNew;
+    }
+
+    // check if I'm a reproduce block -(March 25, 2013)
+    public void setIsMutate(boolean value) {
+        isMutate = value;
+    }
+
+    public boolean getIsMutate() {
+        return isMutate;
+    }
+
+    //container to access the BreedBlock in which I'm dropped - March 26, 2013
+    public void setContainer(BreedBlock breedBlock) {
+        container = breedBlock;
+    }
+
+    public BreedBlock getContainer() {
+        return container;
     }
 }

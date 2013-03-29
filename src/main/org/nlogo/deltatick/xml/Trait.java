@@ -21,6 +21,7 @@ public class Trait {
     String setupReporter = new String();
     HashMap<String, Variation> variationHashMap = new HashMap<String, Variation>();
     String message = new String();
+    String mutateCode = new String();
 
 
     public Trait() {
@@ -35,6 +36,7 @@ public class Trait {
         setupReporter = new String(trait.setupReporter);
         message = new String(trait.message);
         variationHashMap = new HashMap<String, Variation>(trait.variationHashMap);
+        mutateCode = new String(trait.mutateCode);
     }
 
     public Trait(Node traitNode) {
@@ -58,6 +60,9 @@ public class Trait {
             }
             if (traitNodes.item(i).getNodeName() == "message") {
                 message = traitNodes.item(i).getTextContent();
+            }
+            if (traitNodes.item(i).getNodeName() == "mutateCode") {
+                mutateCode = traitNodes.item(i).getTextContent();
             }
         }
     }
@@ -111,5 +116,9 @@ public class Trait {
 
     public String getMessage() {
         return message;
+    }
+
+    public String getMutateCode() {
+        return mutateCode;
     }
 }

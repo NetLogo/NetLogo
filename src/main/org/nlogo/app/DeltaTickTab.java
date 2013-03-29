@@ -11,6 +11,7 @@ import org.nlogo.deltatick.dnd.*;
 import org.nlogo.deltatick.xml.*;
 import org.nlogo.window.*;
 
+
 import org.nlogo.plot.Plot;
 import org.nlogo.plot.PlotPen;
 import org.nlogo.plot.PlotManager;
@@ -76,6 +77,7 @@ public class DeltaTickTab
     JButton Not;
 
     boolean plotsAlive = false;
+    boolean reproduceUsed = false;
 
     int count;   // to make sure tabbedpane doesn't get created more than once (Feb 23, 2012)
     int interfaceCount; // to make sure setup and go button doesn't get created more than once (May 13, 2012)
@@ -85,6 +87,7 @@ public class DeltaTickTab
 
 
     HashMap<String, WidgetWrapper> plotWrappers = new HashMap<String, WidgetWrapper>();
+    HashMap<String, WidgetWrapper> sliderWidgets = new HashMap<String, WidgetWrapper>();
 
     //InterfaceTab it;
     ProceduresTab pt;
@@ -218,7 +221,6 @@ public class DeltaTickTab
 
                     new LibraryReader( workspace.getFrame() , deltaTickTab );
                     libraryHolder.setTabName( buildPanel.getBgInfo().getLibrary() );
-                    //addTrackSpecies.setEnabled(true);
                     addPlot.setEnabled(true);
                     addHisto.setEnabled(true);
                     addBreed.setEnabled(true);
@@ -338,46 +340,42 @@ public class DeltaTickTab
         public void actionPerformed(ActionEvent e) {
             myParent.setMaxAge(speciesInspectorPanel.getEndListSpan());
             myParent.setMaxEnergy(speciesInspectorPanel.getHighestEnergy());
-            //myParent.myBreed().setOwnVarMaxReporter("age", speciesInspectorPanel.getEndListSpan());
-            //myParent.myBreed().setOwnVarMaxReporter("energy", speciesInspectorPanel.getHighestEnergy());
             speciesInspectorPanel.getMyFrame().setVisible(false);
 
-            ArrayList<TraitBlock> removeBlocks = new ArrayList<TraitBlock>();
+            ArrayList<TraitBlockNew> removeBlocks = new ArrayList<TraitBlockNew>();
             for (Trait trait: speciesInspectorPanel.getSpeciesInspector().getSelectedTraitsList()) {
-                for (TraitBlock tBlock : buildPanel.getMyTraits()) {
+                for (TraitBlockNew tBlock : buildPanel.getMyTraits()) {
                     if (speciesInspectorPanel.getMyParent().plural().equalsIgnoreCase(tBlock.getBreedName())
-                        && (trait.getNameTrait().equalsIgnoreCase(tBlock.getName()))) {
+                            && (trait.getNameTrait().equalsIgnoreCase(tBlock.getName()))) {
                         removeBlocks.add(tBlock);
                     }
                 }
             }
 
-            for (TraitBlock tBlock : removeBlocks) {
+            for (TraitBlockNew tBlock : removeBlocks) {
                 libraryHolder.removeTraitBlock(tBlock);
                 buildPanel.removeTrait(tBlock);
                 userInput.removeTrait(tBlock.getBreedName(), tBlock.getTraitName());
                 speciesInspectorPanel.getSpeciesInspector().removeTrait(tBlock.getTraitName());
-
             }
 
             for (TraitState traitState : speciesInspectorPanel.getTraitStateMap().values()) {
-//                TraitBlockNew traitBlock;
-//                traitBlock = new TraitBlockNew(myParent, traitState, traitState.getVariationHashMap(), traitState.getVariationsValuesList());
-//                traitBlock.setMyParent(myParent);
-
-
-
-                //Commented out because trying new traitBlock -March 16, 2013
-                TraitBlock traitBlock;
-                traitBlock = new TraitBlock(myParent, traitState, traitState.getVariationHashMap(), traitState.getVariationsValuesList());
+                TraitBlockNew traitBlock;
+                traitBlock = new TraitBlockNew(myParent, traitState, traitState.getVariationHashMap(), traitState.getVariationsValuesList());
                 traitBlock.setMyParent(myParent);
+
+                //Commented out because trying new traitBlock -March 25, 2013
+//                TraitBlock traitBlock;
+//                traitBlock = new TraitBlock(myParent, traitState, traitState.getVariationHashMap(), traitState.getVariationsValuesList());
+//                traitBlock.setMyParent(myParent);
                 speciesInspectorPanel.getSpeciesInspector().addToSelectedTraitsList(traitState);
                 userInput.addTraitAndVariations(myParent.getName(), traitState.getNameTrait(), traitState.getVariationsList());
                 buildPanel.addTrait(traitBlock);
                 libraryHolder.addTraittoTab(traitBlock, buildPanel.getMyTraits().size());
                 deltaTickTab.addDragSource(traitBlock);
-                traitBlock.addRect("Drag to Species Block");
-                new TraitDropTarget(traitBlock);
+                myParent.addTraitBlocktoList(traitBlock);
+                //traitBlock.addRect("Drag to Species Block");
+                //new TraitDropTarget(traitBlock);
                 contentPanel.validate();
 
             }
@@ -409,39 +407,7 @@ public class DeltaTickTab
 		new javax.swing.AbstractAction( "Track change in species" ) {
             public void actionPerformed( java.awt.event.ActionEvent e ) {
                 popup = new PopupMenu();
-//                JMenuItem menuItem = new JMenuItem("Add line graph");
-//                menuItem.addActionListener(addPlotAction);
-//                popupMenu.add(menuItem);
-//                menuItem = new JMenuItem("Add histogram");
-//                //menuItem.addActionListener(addHistoAction);
-//                popupMenu.add(menuItem);
-//
-////                MouseListener popupListener = new PopupListener(popupMenu);
-////                addTrackSpecies.addMouseListener(popupListener);
-//            }
-//        };
-//
-//            class PopupListener extends MouseAdapter {
-//                JPopupMenu popup;
-//
-//                PopupListener(JPopupMenu popupMenu) {
-//                    popup = popupMenu;
-//                }
-//
-//                public void mousePressed(MouseEvent e) {
-//                    maybeShowPopup(e);
-//                }
-//
-//                public void mouseReleased(MouseEvent e) {
-//                    maybeShowPopup(e);
-//                }
-//
-//                private void maybeShowPopup(MouseEvent e) {
-//                    if (e.isPopupTrigger()) {
-//                        popup.show(e.getComponent(),
-//                           e.getX(), e.getY());
-//                    }
-//                }
+
             }
         };
 
@@ -464,7 +430,7 @@ public class DeltaTickTab
                 addBreed.setEnabled(true);
                 clearPlots();
                 variationSelector.getVariationList().clear();
-                for (TraitBlock tBlock : libraryHolder.getTraitBlocks()) {
+                for (TraitBlockNew tBlock : libraryHolder.getTraitBlocks()) {
                     libraryHolder.removeTraitBlock(tBlock);
                 }
                 contentPanel.repaint();
@@ -546,6 +512,7 @@ public class DeltaTickTab
             button.setForeverOn();
         }
 
+
             //Commented out because I don't want "draw" and "envtChooser" any more -Aditi (March 9, 2013)
 //        org.nlogo.window.Widget drawWidget = interfacePanel.makeWidget("BUTTON",false);
 //            interfacePanel.addWidget(drawWidget, 0, 130, true, false);
@@ -576,57 +543,36 @@ public class DeltaTickTab
         }
     }
 
-    public void populatePlots() {
-        try {
-            // for each plot block
-            for( PlotBlock plotBlock : buildPanel.getMyPlots() ) {
-                if( plotBlock.getNetLogoPlot() == null ) { // if this is the first time this plot has been created
-                    System.out.println("first time I'm going to interface");
-                    Plot newPlot = workspace.plotManager().newPlot(plotBlock.getName());
-                    for( QuantityBlock quantBlock : plotBlock.getMyBlocks() ) {
-                        String penName = "";
-                        penName += quantBlock.getName() + " ";
-                        //newPlot.setupCode() = "setup";
-                        for( JTextField input : quantBlock.getInputs().values() ) {
-                            penName += input.getText() + " ";
-                        }
-                        PlotPen newPen = newPlot.createPlotPen( penName , false );
-                        //newPen.defaultColor_$eq( quantBlock.getPenColor().getRGB() );
-                        //enters this loop when pressed Add histo and went to Run -A. (sept 26)
-                        if( plotBlock.isHistogram() ) {
-                            newPen.defaultMode_$eq( 1 );
-                        }
-                    }
-                    plotBlock.setNetLogoPlot(newPlot);
-                } else { // otherwise it has a plot already, update that guy
-                    //enters this when the plot block already exists, but another quantity block is added
-
-                    plotBlock.getNetLogoPlot().name( plotBlock.getName() );
-                    // additional pens needed?
-                    for( QuantityBlock quantBlock : plotBlock.getMyBlocks() ) {
-                        String penName = "";
-                        penName += quantBlock.getName() + " ";
-                        for( JTextField input : quantBlock.getInputs().values() ) {
-                            penName += input.getText() + " ";
-                        }
-                        if( ! plotBlock.getNetLogoPlot().getPen( penName ).isDefined() ) {
-                            PlotPen newPen = plotBlock.getNetLogoPlot().createPlotPen( penName , false );
-                            if( plotBlock.isHistogram() ) {
-                                newPen.defaultMode_$eq( 1 );
-
-                            }
-                        }
-                        //plotBlock.getNetLogoPlot().getPen( penName ).get().defaultColor_$eq( quantBlock.getPenColor().getRGB() );
-                    }
-                }
-            }
-        } catch ( Exception ex ) {
-            System.out.println(ex.getMessage());
+    //set if reproduce block is being used (March 25, 2013)
+    public void setReproduceUsed(boolean value)  {
+        if (buildPanel.getMyTraits().size() > 0) {
+            reproduceUsed = value;
         }
-        revalidate() ;
     }
 
-    public void populatePlotsTest() {
+    public void populateMutationSlider() {
+        if (reproduceUsed) {
+            for (TraitBlockNew tBlock : buildPanel.getMyTraits()) {
+                SliderWidget sliderWidget = ((SliderWidget) interfacePanel.makeWidget("SLIDER", false));
+                WidgetWrapper ww = interfacePanel.addWidget(sliderWidget, 0, 200, true, false);
+                //interfacePanel.addWidget(sliderWidget, 0, 200, true, false);
+                String sliderName = tBlock.getMyParent().plural() + "-" + tBlock.getTraitName() + "-mutation";
+                sliderWidget.name_$eq(sliderName);
+                sliderWidget.validate();
+                sliderWidgets.put(sliderName, ww);
+            }
+        }
+    }
+
+    public void removeMutationSlider() {
+        for (WidgetWrapper ww : sliderWidgets.values()) {
+            sliderWidgets.remove(ww);
+            interfacePanel.removeWidget(ww);
+        }
+    }
+
+
+    public void populatePlots() {
         try {
            for (PlotBlock plotBlock : buildPanel.getMyPlots().subList(interfacePlotCount, buildPanel.getMyPlots().size())) {
                org.nlogo.window.Widget plotWidget = interfacePanel.makeWidget("Plot", false);
@@ -635,8 +581,6 @@ public class DeltaTickTab
                org.nlogo.plot.Plot newPlot = workspace.plotManager().getPlot("plot " + (interfacePlotCount + 1));
                plotWrappers.put("plot " + (interfacePlotCount + 1), ww);
                interfacePlotCount++;
-
-               //System.out.println("deltatick ln 586 interfaceplotcount " + interfacePlotCount);
 
                for (QuantityBlock quantBlock : plotBlock.getMyBlocks()) {
                             if (newPlot.getPen(quantBlock.getName()).toString().equals("None")) {
@@ -654,11 +598,9 @@ public class DeltaTickTab
                         PlotPen newPlotPen = workspace.plotManager().getPlot(plotBlock.getName()).createPlotPen(qBlock.getName(), false);
                         newPlotPen.updateCode(qBlock.getPenUpdateCode());
                         //newPlotPen._hidden = true;
-
                     }
                 }
             }
-
             for (HistogramBlock hBlock : buildPanel.getMyHisto().subList(interfaceHistoCount, buildPanel.getMyHisto().size())) {
                 org.nlogo.window.Widget plotWidget = interfacePanel.makeWidget("Plot", false);
                 interfacePanel.addWidget(plotWidget, 5, 50, true, false);
@@ -676,7 +618,6 @@ public class DeltaTickTab
         catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
-
         revalidate();
     }
 
@@ -704,198 +645,6 @@ public class DeltaTickTab
 
     }
 
-    public void populatePlotsInterface() {
-        try {
-            for( PlotBlock plotBlock : buildPanel.getMyPlots() ) {
-                if (plotBlock.getNetLogoPlot() == null ) {
-                    Plot newPlot = workspace.plotManager().newPlot(plotBlock.getName());
-
-                    PlotPen newPen;
-                    for( QuantityBlock quantBlock : plotBlock.getMyBlocks() ) {
-                        String penName = "";
-                        penName += quantBlock.getName() + " ";
-                        String penUpdate = quantBlock.getPenUpdateCode();
-                        for( JTextField input : quantBlock.getInputs().values() ) {
-                            penName += input.getText() + " ";
-
-                        }
-                        newPen = newPlot.createPlotPen( penName , false, "setup ", penUpdate );
-                        //workspace.plotManager().compilePlot(newPlot);
-                    }
-
-                    //interfacePanel.makePlotWidget(plotManager, newPlot, newPen);
-                    Widget plotWidget = (Widget) new PlotWidget(newPlot, workspace.plotManager());
-                    plotWidget.displayName(plotBlock.getName());
-                    interfacePanel.addWidget(plotWidget, 30, 0, false, false);
-
-                    //plotManager.compilePlot(newPlot); -commented out by Aditi
-                    //workspace.plotManager().compilePlot(newPlot);
-
-                    plotBlock.setNetLogoPlot(newPlot);
-                } else { // otherwise it has a plot already, update that guy
-                    //enters this when the plot block already exists, but another quantity block is added
-
-
-                    plotBlock.getNetLogoPlot().name( plotBlock.getName() );
-                    // additional pens needed?
-                    for( QuantityBlock quantBlock : plotBlock.getMyBlocks() ) {
-                        String penName = "";
-                        penName += quantBlock.getName() + " ";
-                        String penUpdateCode ="";
-                        penUpdateCode += quantBlock.getPenUpdateCode();
-                        for( JTextField input : quantBlock.getInputs().values() ) {
-                            penName += input.getText() + " ";
-                        }
-                        if( ! plotBlock.getNetLogoPlot().getPen( penName ).isDefined() ) {
-                            PlotPen newPen = plotBlock.getNetLogoPlot().createPlotPen( penName , false );
-                            newPen.updateCode(penUpdateCode);
-                            if( plotBlock.isHistogram() ) {
-                                newPen.defaultMode_$eq( 1 );
-
-                            }
-                        }
-                       // plotBlock.getNetLogoPlot().getPen( penName ).get().defaultColor_$eq( quantBlock.getPenColor().getRGB() );
-                    }
-                }
-            }
-        } catch ( Exception ex ) {
-            System.out.println(ex.getMessage());
-        }
-        revalidate() ;
-    }
-
-    public void populateHisto() { // this method is not used
-        try {
-            // for each plot block
-            for( HistogramBlock histoBlock : buildPanel.getMyHisto() ) {
-                if( histoBlock.getNetLogoPlot() == null ) { // if this is the first time this plot has been created
-                    System.out.println("DTT 668 I'm reaching here");
-                    Plot newPlot = workspace.plotManager().newPlot(histoBlock.getName());
-                    for( QuantityBlock quantBlock : histoBlock.getMyBlocks() ) {
-                        String penName = "";
-                        penName += quantBlock.getName() + " ";
-                        for( JTextField input : quantBlock.getInputs().values() ) {
-                            penName += input.getText() + " ";
-
-                        }
-                        PlotPen newPen = newPlot.createPlotPen( penName , false );
-
-                        //newPen.defaultColor_$eq( quantBlock.getPenColor().getRGB() );
-                        //enters this loop when pressed Add histo and went to Run -A. (sept 26)
-                        if( histoBlock.histogram() ) {
-                            newPen.defaultMode_$eq( 1 );
-
-                        }
-
-                    }
-                    histoBlock.setNetLogoPlot(newPlot);
-                } else { // otherwise it has a plot already, update that guy
-                    //enters this when the plot block already exists, but another quantity block is added
-
-                    //histoBlock.getNetLogoPlot().name( histoBlock.getName() );
-                    histoBlock.getName();
-
-                    // additional pens needed?
-                    for( QuantityBlock quantBlock : histoBlock.getMyBlocks() ) {
-                        String penName = "";
-                        penName += quantBlock.getName() + " ";
-                        for( JTextField input : quantBlock.getInputs().values() ) {
-                            penName += input.getText() + " ";
-                        }
-                        if( ! histoBlock.getNetLogoPlot().getPen( penName ).isDefined() ) {
-                            PlotPen newPen = histoBlock.getNetLogoPlot().createPlotPen( penName , false );
-                            /*
-                            if( plotBlock.histogram() ) {
-                                newPen.defaultMode_$eq( 1 );
-
-                            }
-                            */
-                        }
-                        //histoBlock.getNetLogoPlot().getPen( penName ).get().defaultColor_$eq( quantBlock.getPenColor().getRGB() );
-                    }
-                }
-            }
-        } catch ( Exception ex ) {
-            System.out.println(ex.getMessage());
-        }
-        revalidate() ;
-    }
-
-    public void populateHistoInterface() {
-        try {
-            for( HistogramBlock hBlock : buildPanel.getMyHisto() ) {
-                if (hBlock.getNetLogoPlot() == null ) {
-                org.nlogo.window.Widget plotWidget = interfacePanel.makeWidget("Plot",false);
-                interfacePanel.addWidget(plotWidget, 0, 20, true, false);
-
-                if (plotWidget instanceof org.nlogo.window.PlotWidget) {
-                    org.nlogo.window.PlotWidget plot = (org.nlogo.window.PlotWidget) plotWidget;
-                    plot.displayName(hBlock.getName());
-                    //plot.wrapSource("setup");
-                }
-
-                Plot newPlot = workspace.plotManager().newPlot(hBlock.getName());
-                for( QuantityBlock quantBlock : hBlock.getMyBlocks() ) {
-                    String penName = "";
-                    penName += quantBlock.getName() + " ";
-                    for( JTextField input : quantBlock.getInputs().values() ) {
-                        penName += input.getText() + " ";
-                        }
-                    PlotPen newPen = newPlot.createPlotPen( penName , false );
-
-                        //newPen.defaultColor_$eq( quantBlock.getPenColor().getRGB() );
-                        //enters this loop when pressed Add histo and went to Run -A. (sept 26)
-                        /*
-                        if( plotBlock.histogram() ) {
-                            newPen.defaultMode_$eq( 1 );
-
-                        }
-                        */
-                }
-                hBlock.setNetLogoPlot(newPlot);
-
-                } else { // otherwise it has a plot already, update that guy
-                    //enters this when the plot block already exists, but another quantity block is added
-
-                    org.nlogo.window.Widget plotWidget = interfacePanel.makeWidget("Plot",false);
-                interfacePanel.addWidget(plotWidget, 0, 0, true, false);
-
-                if (plotWidget instanceof org.nlogo.window.PlotWidget) {
-                    org.nlogo.window.PlotWidget plot =
-                    (org.nlogo.window.PlotWidget) plotWidget;
-                    plot.displayName(hBlock.getName());
-                    //plot.wrapSource("setup");
-                }
-
-                    hBlock.getNetLogoPlot().name( hBlock.getName() );
-                    // additional pens needed?
-                    for( QuantityBlock quantBlock : hBlock.getMyBlocks() ) {
-                        String penName = "";
-                        penName += quantBlock.getName() + " ";
-                        for( JTextField input : quantBlock.getInputs().values() ) {
-                            penName += input.getText() + " ";
-                        }
-                        if( ! hBlock.getNetLogoPlot().getPen( penName ).isDefined() ) {
-                            PlotPen newPen = hBlock.getNetLogoPlot().createPlotPen( penName , false );
-                            if( hBlock.histogram() ) {
-                                newPen.defaultMode_$eq( 1 );
-
-                            }
-                        }
-                       // hBlock.getNetLogoPlot().getPen( penName ).get().defaultColor_$eq( quantBlock.getPenColor().getRGB() );
-                    }
-                }
-            }
-        } catch ( Exception ex ) {
-            System.out.println(ex.getMessage());
-        }
-        revalidate() ;
-    }
-
-
-
-
-
     // ordering of the buttons on the deltatick ToolBar -A. (sept 8)
     org.nlogo.swing.ToolBar getToolBar() {
 		return new org.nlogo.swing.ToolBar() {
@@ -907,16 +656,6 @@ public class DeltaTickTab
                 addBreed = new JButton( addBreedAction );
                 addBreed.setEnabled(false);
                 this.add(addBreed) ;
-                //JPopupMenu popupMenu = new JPopupMenu();
-                //MouseListener popupListener = new PopupListener(popupMenu);
-                //addTrackSpecies.addMouseListener(popupListener);
-                //addTrackSpecies = new JButton (addTrackSpeciesAction);
-                //addTrackSpecies = new JButton ("Add tracking");
-                //PopupListener newPopupListener = new PopupListener(popup);
-                //addTrackSpecies.addMouseListener();
-                //addTrackSpecies.addActionListener(addTrackSpeciesAction);
-                //addTrackSpecies.setEnabled(true);
-                //this.add(addTrackSpecies);
                 addPlot = new JButton( addPlotAction );
                 addPlot.setEnabled(false);
                 this.add(addPlot) ;
@@ -969,7 +708,9 @@ public class DeltaTickTab
             pt.select(0,0);
             populateInterface();
             removePlots();
-            populatePlotsTest();
+            populatePlots();
+            //removeMutationSlider();
+            populateMutationSlider();
             new org.nlogo.window.Events.CompileAllEvent()
 				.raise( DeltaTickTab.this ) ;
         }

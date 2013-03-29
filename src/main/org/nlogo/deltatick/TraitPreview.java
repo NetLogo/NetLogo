@@ -419,8 +419,6 @@ public class TraitPreview extends JPanel {
         int row = e.getFirstRow();
         int col = e.getColumn();
 
-        System.out.println("row: " + row + " col: " + col);
-
         if ((Boolean) model.getValueAt(row, col)) {
             while (!(s.matches("\\d+"))) {
                 s = (String)JOptionPane.showInputDialog(
@@ -431,8 +429,6 @@ public class TraitPreview extends JPanel {
                         null,
                         null,
                         null);
-                System.out.println("traitPreview " + s);
-
             }
             value = Integer.parseInt(s);
             model.setValueAt(s, row, col - 1);

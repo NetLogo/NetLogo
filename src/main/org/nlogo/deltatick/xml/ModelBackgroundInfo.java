@@ -43,7 +43,7 @@ public class ModelBackgroundInfo {
         traits.clear();
     }
 
-    public void populate(NodeList breedNodes, NodeList traitNodes, NodeList globalNodes, NodeList envtNodes, NodeList setup, NodeList go, NodeList library, NodeList draw) throws Exception {
+    public void populate(NodeList breedNodes, NodeList traitNodes, NodeList globalNodes, NodeList envtNodes, NodeList setup, NodeList go, NodeList library, NodeList draw, NodeList behavior) throws Exception {
         try {
             if (setup.getLength() > 0) {
                 this.setup = setup.item(0).getTextContent();

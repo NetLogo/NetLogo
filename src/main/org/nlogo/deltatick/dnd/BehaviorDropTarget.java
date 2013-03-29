@@ -29,11 +29,13 @@ public class BehaviorDropTarget
         Object o = transferable.getTransferData(CodeBlock.codeBlockFlavor);
         if (o instanceof Component) {
             if (o instanceof TraitBlockNew) {
-                for (String name : ((TraitBlockNew) o).getVariationHashMap().keySet()) {
-                    VariationBlock vBlock = new VariationBlock(((TraitBlockNew) o).getTraitName(), name, behBlock);
-                    addCodeBlock((VariationBlock) vBlock);
-                }
-
+                addCodeBlock((TraitBlockNew) o);
+                ((TraitBlockNew) o).setMyParent(behBlock.getContainer());
+                ((TraitBlockNew) o).hideRemoveButton();
+                behBlock.setIsTrait(true);
+                behBlock.removeBehaviorInput(); // assuming only one behaviorInput so will correspond to trait (March 25, 2013)
+                behBlock.setTrait((TraitBlockNew) o);
+                behBlock.getContainer().addBlock((TraitBlockNew) o);// so BreedBlock knows it has a traitBlock in one of its behBlocks (March 25, 2013)
                 return true;
             }
         }

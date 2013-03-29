@@ -78,22 +78,15 @@ public class BuildPanel
             // traitBlock declared as breed variable here -A. (Aug 8, 2012)
             HashSet<String> allTraits = new HashSet<String>(); // exclusive list of myTraits & myUsedBehInputs to add in breeds-own
                                                                         //-A. (Aug 10, 2012)
-            if ( myTraits.size() > 0 ) {
-                for ( TraitBlock traitBlock : myTraits ) {
-                    if ( traitBlock.getMyParent().plural().equals(breedBlock.plural()) ) {       // TODO check if works March 8, 2013
-                    //if ( traitBlock.getBreedName().equals(breedBlock.plural()) ) {
-                        allTraits.add(breedBlock.plural() + "-" + traitBlock.getName());
+            if ( myTraitsNew.size() > 0 ) {
+                for ( TraitBlockNew traitBlock : myTraitsNew ) {
+                    if ( traitBlock.getMyParent().plural().equals(breedBlock.plural()) ) {      // TODO check if works March 8, 2013
+                        //allTraits.add(breedBlock.plural() + "-" + traitBlock.getName());
+                        allTraits.add(traitBlock.getName());
 
                     }
                 }
             }
-            //commented out because I don't want beh inputs to appear as fixed values for variables when there are no traits -Aditi (feb 22, 2013)
-//            if ( breedBlock.myUsedBehaviorInputs.size() > 0) {
-//                for (String behInput : breedBlock.myUsedBehaviorInputs) {
-//                    allTraits.add(behInput);
-//
-//                }
-//            }
             for ( String string : allTraits ) {
                 passBack += string + "\n";
             }
@@ -278,7 +271,7 @@ public class BuildPanel
 
     // do we want variation to show up inside a breed block or to act like a condition block? - (feb 4)
     //public void addTrait(TraitBlock block) {
-    public void addTrait(TraitBlock block) {
+    public void addTrait(TraitBlockNew block) {
         block.setBounds(0,
                         0,
                         block.getPreferredSize().width,
@@ -289,7 +282,7 @@ public class BuildPanel
         block.validate();
         block.repaint();
         //myTraits.add(block);
-        myTraits.add(block);
+        myTraitsNew.add(block);
     }
 
     public void addOperator(OperatorBlock oBlock) {
@@ -386,8 +379,8 @@ public class BuildPanel
         return myHisto;
     }
 
-    public List<TraitBlock> getMyTraits() {
-        return myTraits;
+    public List<TraitBlockNew> getMyTraits() {
+        return myTraitsNew;
     }
 
 
@@ -523,7 +516,7 @@ public class BuildPanel
         remove(envtBlock);
     }
 
-    public void removeTrait(TraitBlock traitBlock) {
+    public void removeTrait(TraitBlockNew traitBlock) {
         myTraits.remove(traitBlock);
         remove(traitBlock);
     }

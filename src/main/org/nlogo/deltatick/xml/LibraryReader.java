@@ -52,15 +52,23 @@ public class LibraryReader {
                     library.getElementsByTagName("setup"),
                     library.getElementsByTagName("go"),
                     library.getElementsByTagName("library"),
-                    library.getElementsByTagName("draw")
+                    library.getElementsByTagName("draw"),
+                    library.getElementsByTagName("behavior")
             );
 
 
             NodeList behaviors = library.getElementsByTagName("behavior");
+
             for (int i = 0; i < behaviors.getLength(); i++) {
                 Node behavior = behaviors.item(i);
+                boolean b = false;
                 block = new BehaviorBlock(behavior.getAttributes().getNamedItem("name").getTextContent());
-
+                if (behavior.getAttributes().getNamedItem("mutate") != null) {
+                    b = behavior.getAttributes().getNamedItem("mutate").getTextContent().equalsIgnoreCase("true");
+                    if (b) {
+                        ((BehaviorBlock) block).setIsMutate(true);
+                    }
+                }
                 seekAndAttachInfo(behavior);
             }
 
@@ -133,9 +141,11 @@ public class LibraryReader {
         NodeList behaviorInfo = infoNode.getChildNodes();
         for (int j = 0; j < behaviorInfo.getLength(); j++) {
             if (behaviorInfo.item(j).getNodeName() == "commands") {
+                //NodeList childNodes = behaviorInfo.item(j).getChildNodes();
                 block.setCode(
                         reIntroduceLtGt(
                                 behaviorInfo.item(j).getTextContent()));
+
             } else if (behaviorInfo.item(j).getNodeName() == "test") {
                 block.setCode(
                         reIntroduceLtGt(
@@ -159,6 +169,7 @@ public class LibraryReader {
                                 behaviorInfo.item(j).getTextContent()));
 
             }
+
             //TODO: Figure out how setCode is fine for ENEGRYINPUT or should I switch to addInput
             else if (behaviorInfo.item(j).getNodeName() == "energyInput") {
                 //block.setCode( behaviorInfo.item(j).getAttributes().getNamedItem("default").getTextContent());
@@ -166,15 +177,7 @@ public class LibraryReader {
                         behaviorInfo.item(j).getAttributes().getNamedItem("default").getTextContent());
 
             }
-            /*
-            else if (behaviorInfo.item(j).getNodeName() == "variation") {
-                block.setCode(
-                        reIntroduceLtGt(
-                                behaviorInfo.item(j).getAttributes().getNamedItem("name").getTextContent()));
-                //System.out.println( "LR@" + behaviorInfo.item(j).getAttributes().getNamedItem("name").getTextContent());
 
-            }
-            */
             else if (behaviorInfo.item(j).getNodeName() == "behaviorInput") {
                 block.addBehaviorInput(behaviorInfo.item(j).getAttributes().getNamedItem("name").getTextContent(),
                         behaviorInfo.item(j).getAttributes().getNamedItem("default").getTextContent(),
