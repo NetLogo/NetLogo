@@ -507,39 +507,6 @@ public strictfp class Patch
     return 1;
   }
 
-  /// getPatch<DIRECTION> methods -- we pass these off to the topology's methods
-  public Patch getPatchNorth() {
-    return world().topology().getPN(this);
-  }
-
-  public Patch getPatchSouth() {
-    return world().topology().getPS(this);
-  }
-
-  public Patch getPatchEast() {
-    return world().topology().getPE(this);
-  }
-
-  public Patch getPatchWest() {
-    return world().topology().getPW(this);
-  }
-
-  public Patch getPatchNorthWest() {
-    return world().topology().getPNW(this);
-  }
-
-  public Patch getPatchSouthWest() {
-    return world().topology().getPSW(this);
-  }
-
-  public Patch getPatchSouthEast() {
-    return world().topology().getPSE(this);
-  }
-
-  public Patch getPatchNorthEast() {
-    return world().topology().getPNE(this);
-  }
-
   public int alpha() {
     return org.nlogo.api.Color.getColor(pcolor()).getAlpha();
   }
