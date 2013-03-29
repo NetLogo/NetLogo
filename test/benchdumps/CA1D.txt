@@ -2518,7 +2518,7 @@ procedure DO-RULE:[LEFT-ON? RIGHT-ON? NEW-VALUE]{-TP-}:
           ASTORE 5
          L6
           ALOAD 5
-          INVOKEVIRTUAL org/nlogo/agent/Topology.getPW (Lorg/nlogo/agent/Patch;)Lorg/nlogo/agent/Patch;
+          INVOKEINTERFACE org/nlogo/agent/Neighbors.getPW (Lorg/nlogo/agent/Patch;)Lorg/nlogo/agent/Patch;
           ASTORE 2
           ALOAD 2
           IFNONNULL L8
@@ -2686,7 +2686,7 @@ procedure DO-RULE:[LEFT-ON? RIGHT-ON? NEW-VALUE]{-TP-}:
           ASTORE 5
          L6
           ALOAD 5
-          INVOKEVIRTUAL org/nlogo/agent/Topology.getPE (Lorg/nlogo/agent/Patch;)Lorg/nlogo/agent/Patch;
+          INVOKEINTERFACE org/nlogo/agent/Neighbors.getPE (Lorg/nlogo/agent/Patch;)Lorg/nlogo/agent/Patch;
           ASTORE 2
           ALOAD 2
           IFNONNULL L8
@@ -4124,7 +4124,7 @@ procedure DO-RULE:[LEFT-ON? RIGHT-ON? NEW-VALUE]{-TP-}:
           ASTORE 5
          L2
           ALOAD 5
-          INVOKEVIRTUAL org/nlogo/agent/Topology.getPS (Lorg/nlogo/agent/Patch;)Lorg/nlogo/agent/Patch;
+          INVOKEINTERFACE org/nlogo/agent/Neighbors.getPS (Lorg/nlogo/agent/Patch;)Lorg/nlogo/agent/Patch;
           ASTORE 2
           ALOAD 2
           IFNONNULL L4
