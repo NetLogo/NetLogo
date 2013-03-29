@@ -1,24 +1,22 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.app;
+package org.nlogo.window;
 
 // There's a lot of carelessness here about Component vs.
 // Widget that should be cleaned up at some point
 //   - ST 8/9/03, 10/14/03
 
-import org.nlogo.window.Widget;
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-strictfp class Zoomer {
+public strictfp class Zoomer {
 
   private final java.awt.Container container;
 
   private double zoomFactor = 1.0;
 
-  double zoomFactor() {
+  public double zoomFactor() {
     return zoomFactor;
   }
 
@@ -41,22 +39,22 @@ strictfp class Zoomer {
 
   ///
 
-  void zoomWidgets(double newZoom) {
+  public void zoomWidgets(double newZoom) {
     container.setVisible(false);
     double oldZoom = zoomFactor;
     zoomFactor = newZoom;
     java.awt.Component[] comps = container.getComponents();
     for (int i = 0; i < comps.length; i++) {
-      if (comps[i] instanceof WidgetWrapper) {
-        WidgetWrapper wrapper = (WidgetWrapper) comps[i];
+      if (comps[i] instanceof WidgetWrapperInterface) {
+        WidgetWrapperInterface wrapper = (WidgetWrapperInterface) comps[i];
         zoomWidget(wrapper, false, false, oldZoom, zoomFactor);
       }
     }
     container.setVisible(true);
   }
 
-  void zoomWidget(WidgetWrapper wrapper, boolean newWidget, boolean loadingWidget,
-                  double oldZoom, double newZoom) {
+  public void zoomWidget(WidgetWrapperInterface wrapper, boolean newWidget, boolean loadingWidget,
+                         double oldZoom, double newZoom) {
     if (oldZoom == newZoom) {
       return;
     }
@@ -65,7 +63,7 @@ strictfp class Zoomer {
     zoomWidgetFont(wrapper, wrapper.widget(), newWidget, loadingWidget, oldZoom, newZoom);
   }
 
-  void zoomWidgetSize(WidgetWrapper wrapper, boolean newWidget, boolean loadingWidget,
+  public void zoomWidgetSize(WidgetWrapperInterface wrapper, boolean newWidget, boolean loadingWidget,
                       double oldZoom, double newZoom) {
     java.awt.Component component = wrapper.widget();
     java.awt.Dimension originalSize = sizes.get(component);
@@ -83,18 +81,18 @@ strictfp class Zoomer {
     }
   }
 
-  java.awt.Dimension zoomSize(java.awt.Dimension originalSize, double oldZoom, double newZoom) {
+  public java.awt.Dimension zoomSize(java.awt.Dimension originalSize, double oldZoom, double newZoom) {
     return new java.awt.Dimension
         ((int) StrictMath.ceil(originalSize.width * newZoom / oldZoom),
             (int) StrictMath.ceil(originalSize.height * newZoom / oldZoom));
   }
 
-  java.awt.Dimension zoomSize(java.awt.Dimension originalSize) {
+  public java.awt.Dimension zoomSize(java.awt.Dimension originalSize) {
     return zoomSize(originalSize, 1.0, zoomFactor);
   }
 
-  void zoomWidgetLocation(WidgetWrapper wrapper, boolean newWidget, boolean loadingWidget,
-                          double oldZoom, double newZoom) {
+  public void zoomWidgetLocation(WidgetWrapperInterface wrapper, boolean newWidget, boolean loadingWidget,
+                                 double oldZoom, double newZoom) {
     java.awt.Component component = wrapper.widget();
     java.awt.Point originalLocation = locations.get(component);
     Double originalZoom = locationZooms.get(component);
@@ -124,7 +122,7 @@ strictfp class Zoomer {
    * it may seems redundant to take both wrapper and widget as arguments,
    * but when we are used by CommandCenter, there is no wrapper - ST 7/13/04
    */
-  public void zoomWidgetFont(WidgetWrapper wrapper, Widget widget,
+  public void zoomWidgetFont(WidgetWrapperInterface wrapper, Widget widget,
                              boolean newWidget, boolean loadingWidget,
                              double oldZoom, double newZoom) {
     boolean recursive = widget.zoomSubcomponents();
@@ -143,7 +141,7 @@ strictfp class Zoomer {
     // want to remember what the font size at the 100% zoom level is, because
     // font sizes are so small that rounding error will mess us up unless we
     // always scale from the normal, unzoomed size
-    if (!(component instanceof org.nlogo.window.ViewWidgetInterface) ||
+    if (!(component instanceof ViewWidgetInterface) ||
         !newWidget ||
         loadingWidget) {
       fonts.put(component, component.getFont());
@@ -158,8 +156,8 @@ strictfp class Zoomer {
     }
   }
 
-  void scaleComponentFont(java.awt.Component component, double newZoom, double oldZoom,
-                          boolean recursive) {
+  public void scaleComponentFont(java.awt.Component component, double newZoom, double oldZoom,
+                                 boolean recursive) {
     if (fonts.get(component) == null) {
       storeComponentFont(component, recursive, false, false, oldZoom);
     }
@@ -179,7 +177,7 @@ strictfp class Zoomer {
     }
   }
 
-  void forgetAllZoomInfo() {
+  public void forgetAllZoomInfo() {
     sizes.clear();
     sizeZooms.clear();
     locations.clear();
@@ -189,17 +187,17 @@ strictfp class Zoomer {
     for (Iterator<java.awt.Component> comps = fonts.keySet().iterator();
          comps.hasNext();) {
       java.awt.Component comp = comps.next();
-      if (!(comp instanceof org.nlogo.window.View)) {
+      if (!(comp instanceof View)) {
         comps.remove();
         fontZooms.remove(comp);
       }
     }
   }
 
-  void updateZoomInfo(java.awt.Component component) {
+  public void updateZoomInfo(java.awt.Component component) {
     java.awt.Container parent = component.getParent();
-    if (parent instanceof WidgetWrapper) {
-      WidgetWrapper wrapper = (WidgetWrapper) parent;
+    if (parent instanceof WidgetWrapperInterface) {
+      WidgetWrapperInterface wrapper = (WidgetWrapperInterface) parent;
 
       java.awt.Dimension storedSize = sizes.get(component);
       if (storedSize != null &&
@@ -223,18 +221,18 @@ strictfp class Zoomer {
       // except for View, always go from original font
       // size, since at the moment the user can't the change
       // individual font sizes of other widget types
-      if (component instanceof org.nlogo.window.ViewWidget) {
+      if (component instanceof ViewWidget) {
         fonts.remove
-            (((org.nlogo.window.ViewWidget) component).view);
+            (((ViewWidget) component).view);
         fontZooms.remove
-            (((org.nlogo.window.ViewWidget) component).view);
+            (((ViewWidget) component).view);
       }
     }
   }
 
   /// called indirectly from the save() methods of the individual Widget classes
 
-  java.awt.Rectangle getUnzoomedBounds(java.awt.Component comp) {
+  public java.awt.Rectangle getUnzoomedBounds(java.awt.Component comp) {
     java.awt.Rectangle r = comp.getBounds();
     java.awt.Component parent = comp.getParent();
     if (parent != null) {

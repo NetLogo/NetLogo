@@ -261,6 +261,7 @@ class App extends
     ModelSavedEvent.Handler with
     Events.SwitchedTabsEvent.Handler with
     AboutToQuitEvent.Handler with
+    ZoomedEvent.Handler with
     Controllable {
 
   import App.{pico, logger, commandLineMagic, commandLineModel, commandLineURL, commandLineModelIsLaunch, loggingName}
@@ -419,7 +420,7 @@ class App extends
       add(fileMenu)
       add(new EditMenu(App.this))
       add(pico.getComponent(classOf[ToolsMenu]))
-      add(new ZoomMenu(App.this))
+      add(new ZoomMenu)
       add(tabs.tabsMenu)
     }
     // a little ugly we have to typecast here, but oh well - ST 10/11/05
@@ -476,7 +477,7 @@ class App extends
     def createFileMenu:  JMenu = pico.getComponent(classOf[FileMenu])
     def createEditMenu:  JMenu = new EditMenu(App.this)
     def createToolsMenu: JMenu = new ToolsMenu(App.this)
-    def createZoomMenu:  JMenu = new ZoomMenu(App.this)
+    def createZoomMenu:  JMenu = new ZoomMenu
     override def addHelpMenu(menuBar:JMenuBar) = {
       val newMenu = new HelpMenu (App.this, new EditorColorizer(workspace))
       menuBar.add(newMenu)
@@ -560,18 +561,14 @@ class App extends
     else fileMenu.newModel()
   }
 
-  /// zooming stuff
-  private var zoomSteps = 0
-  def zoomLarger(){ zoomSteps+=1; finishZoom() }
-  def resetZoom() { zoomSteps=0; finishZoom() }
-  def zoomSmaller() {
-    zoomSteps-=1
-    zoomSteps = StrictMath.max(-5, zoomSteps)
-    finishZoom()
-  }
-  private def finishZoom() {
-    new ZoomedEvent(1.0 + zoomSteps * 0.1).raise(this)
+  /// zooming
+
+  def handle(e: ZoomedEvent) {
     smartPack(frame.getPreferredSize)
+  }
+
+  def resetZoom() {
+    new ZoomedEvent(0).raise(this)
   }
 
   // AppEvent stuff (kludgy)
