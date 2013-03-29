@@ -515,7 +515,7 @@ public final strictfp class Turtle3D
 
     World3D w = (World3D) world();
 
-    z = ((Topology3D) world().getTopology()).wrapZ(z);
+    z = ((Topology3D) world().topology()).wrapZ(z);
 
     double zprime;
 
@@ -587,7 +587,7 @@ public final strictfp class Turtle3D
 
     drawLine(oldX, ycor, shortestPathX(xcor), ycor);
 
-    this.xcor = world().getTopology().wrapX(xcor);
+    this.xcor = world().topology().wrapX(xcor);
 
     variables()[VAR_XCOR3D] = null;
     currentPatch = null;
@@ -610,7 +610,7 @@ public final strictfp class Turtle3D
       throws AgentException {
     Patch originalPatch = getPatchHere();
     double x = xcor.doubleValue();
-    double wrapped = world().getTopology().wrapX(x);
+    double wrapped = world().topology().wrapX(x);
     double oldX = this.xcor;
 
     drawLine(this.xcor, ycor, shortestPathX(x), ycor);
@@ -701,7 +701,7 @@ public final strictfp class Turtle3D
 
     drawLine(xcor, oldY, xcor, shortestPathY(ycor));
 
-    this.ycor = world().getTopology().wrapY(ycor);
+    this.ycor = world().topology().wrapY(ycor);
 
     variables()[VAR_YCOR3D] = null;
     currentPatch = null;
@@ -725,7 +725,7 @@ public final strictfp class Turtle3D
     Patch originalPatch = getPatchHere();
     double oldY = this.ycor;
     double y = ycor.doubleValue();
-    double wrapped = world().getTopology().wrapY(y);
+    double wrapped = world().topology().wrapY(y);
 
     drawLine(xcor, this.ycor, xcor, shortestPathY(y));
 
@@ -756,8 +756,8 @@ public final strictfp class Turtle3D
     Patch originalPatch = getPatchHere();
     double oldX = this.xcor;
     double oldY = this.ycor;
-    double newX = world().getTopology().wrapX(xcor);
-    double newY = world().getTopology().wrapY(ycor);
+    double newX = world().topology().wrapX(xcor);
+    double newY = world().topology().wrapY(ycor);
     drawLine(this.xcor, this.ycor, xcor, ycor);
 
     this.xcor = newX;
@@ -790,8 +790,8 @@ public final strictfp class Turtle3D
     double x = xcor.doubleValue();
     double y = ycor.doubleValue();
 
-    double wrappedX = world().getTopology().wrapX(x);
-    double wrappedY = world().getTopology().wrapY(y);
+    double wrappedX = world().topology().wrapX(x);
+    double wrappedY = world().topology().wrapY(y);
 
     drawLine(this.xcor, this.ycor, x, y);
 

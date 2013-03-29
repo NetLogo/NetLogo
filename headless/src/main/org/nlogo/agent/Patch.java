@@ -312,14 +312,14 @@ public strictfp class Patch
 
   public AgentSet getNeighbors() {
     if (patchNeighbors == null) {
-      patchNeighbors = world().getTopology().getNeighbors(this);
+      patchNeighbors = world().topology().getNeighbors(this);
     }
     return patchNeighbors;
   }
 
   public AgentSet getNeighbors4() {
     if (patchNeighbors4 == null) {
-      patchNeighbors4 = world().getTopology().getNeighbors4(this);
+      patchNeighbors4 = world().topology().getNeighbors4(this);
     }
     return patchNeighbors4;
   }
@@ -509,35 +509,35 @@ public strictfp class Patch
 
   /// getPatch<DIRECTION> methods -- we pass these off to the topology's methods
   public Patch getPatchNorth() {
-    return world().getTopology().getPN(this);
+    return world().topology().getPN(this);
   }
 
   public Patch getPatchSouth() {
-    return world().getTopology().getPS(this);
+    return world().topology().getPS(this);
   }
 
   public Patch getPatchEast() {
-    return world().getTopology().getPE(this);
+    return world().topology().getPE(this);
   }
 
   public Patch getPatchWest() {
-    return world().getTopology().getPW(this);
+    return world().topology().getPW(this);
   }
 
   public Patch getPatchNorthWest() {
-    return world().getTopology().getPNW(this);
+    return world().topology().getPNW(this);
   }
 
   public Patch getPatchSouthWest() {
-    return world().getTopology().getPSW(this);
+    return world().topology().getPSW(this);
   }
 
   public Patch getPatchSouthEast() {
-    return world().getTopology().getPSE(this);
+    return world().topology().getPSE(this);
   }
 
   public Patch getPatchNorthEast() {
-    return world().getTopology().getPNE(this);
+    return world().topology().getPNE(this);
   }
 
   public int alpha() {

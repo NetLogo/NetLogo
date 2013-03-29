@@ -164,7 +164,7 @@ public strictfp class Protractor
     double distanceNoWrap = world.rootsTable.gridRoot(dx * dx + dy * dy);
 
     if (wrap) {
-      double distanceWrap = world.topology.distanceWrap(dx, dy, x1, y1, x2, y2);
+      double distanceWrap = world.topology().distanceWrap(dx, dy, x1, y1, x2, y2);
 
       if (distanceWrap < distanceNoWrap) {
         return distanceWrap;
@@ -278,7 +278,7 @@ public strictfp class Protractor
     double dx = toX - fromX;
     double dy = toY - fromY;
     if (wrap) {
-      return world.topology.towardsWrap(dx, dy);
+      return world.topology().towardsWrap(dx, dy);
     }
     if (dx == 0) {
       return dy > 0 ? 0 : 180;

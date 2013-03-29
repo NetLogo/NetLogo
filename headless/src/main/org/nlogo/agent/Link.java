@@ -410,11 +410,11 @@ public strictfp class Link
   }
 
   public double x2() {
-    return world().topology.shortestPathX(end1.xcor(), end2.xcor());
+    return world().topology().shortestPathX(end1.xcor(), end2.xcor());
   }
 
   public double y2() {
-    return world().topology.shortestPathY(end1.ycor(), end2.ycor());
+    return world().topology().shortestPathY(end1.ycor(), end2.ycor());
   }
 
   public double midpointX() {
