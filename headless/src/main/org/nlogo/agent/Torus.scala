@@ -56,14 +56,74 @@ extends Topology(_world, xWraps = true, yWraps = true) {
         % 360)
   }
 
-  override def getPN (source: Patch): Patch = getPatchNorth(source)
-  override def getPE (source: Patch): Patch = getPatchEast(source)
-  override def getPS (source: Patch): Patch = getPatchSouth(source)
-  override def getPW (source: Patch): Patch = getPatchWest(source)
-  override def getPNE(source: Patch): Patch = getPatchNorthEast(source)
-  override def getPSE(source: Patch): Patch = getPatchSouthEast(source)
-  override def getPSW(source: Patch): Patch = getPatchSouthWest(source)
-  override def getPNW(source: Patch): Patch = getPatchNorthWest(source)
+  override def getPN(source: Patch): Patch =
+    world.fastGetPatchAt(
+      source.pxcor,
+      if (source.pycor == world.maxPycor)
+        world.minPycor
+      else
+        source.pycor + 1)
+  override def getPE(source: Patch): Patch =
+    world.fastGetPatchAt(
+      if (source.pxcor == world.maxPxcor)
+        world.minPxcor
+      else
+        source.pxcor + 1,
+      source.pycor)
+  override def getPS(source: Patch): Patch =
+    world.fastGetPatchAt(
+      source.pxcor,
+      if (source.pycor == world.minPycor)
+        world.maxPycor
+      else
+        source.pycor - 1)
+  override def getPW(source: Patch): Patch =
+    world.fastGetPatchAt(
+      if (source.pxcor == world.minPxcor)
+        world.maxPxcor
+      else
+        source.pxcor - 1,
+      source.pycor)
+  override def getPNE(source: Patch): Patch =
+    world.fastGetPatchAt(
+      if (source.pxcor == world.maxPxcor)
+        world.minPxcor
+      else
+        source.pxcor + 1,
+      if (source.pycor == world.maxPycor)
+        world.minPycor
+      else
+        source.pycor + 1)
+  override def getPSE(source: Patch): Patch =
+    world.fastGetPatchAt(
+      if (source.pxcor == world.maxPxcor)
+        world.minPxcor
+      else
+        source.pxcor + 1,
+      if (source.pycor == world.minPycor)
+        world.maxPycor
+      else
+        source.pycor - 1)
+  override def getPSW(source: Patch): Patch =
+    world.fastGetPatchAt(
+      if (source.pxcor == world.minPxcor)
+        world.maxPxcor
+      else
+        source.pxcor - 1,
+      if (source.pycor == world.minPycor)
+        world.maxPycor
+      else
+        source.pycor - 1)
+  override def getPNW(source: Patch): Patch =
+    world.fastGetPatchAt(
+      if (source.pxcor == world.minPxcor)
+        world.maxPxcor
+      else
+        source.pxcor - 1,
+      if (source.pycor == world.maxPycor)
+        world.minPycor
+      else
+        source.pycor + 1)
 
   override def shortestPathX(x1: Double, x2: Double): Double = {
     val xprime =

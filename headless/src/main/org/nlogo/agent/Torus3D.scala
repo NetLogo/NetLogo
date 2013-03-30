@@ -60,11 +60,11 @@ class Torus3D(world: World3D) extends Torus(world) with Topology3D {
   def getNeighbors3d(source: Patch3D): AgentSet =
     AgentSet.fromArray(AgentKind.Patch,
         Array[Agent](
-          getPatchNorth(source), getPatchEast(source),
-          getPatchSouth(source), getPatchWest(source),
-          getPatchNorthEast(source), getPatchSouthEast(source),
-          getPatchSouthWest(source), getPatchNorthWest(source),
-          getPatchUp(source), getPatchDown(source),
+          getPN(source), getPE(source),
+          getPS(source), getPW(source),
+          getPNE(source), getPSE(source),
+          getPSW(source), getPNW(source),
+          getPU(source), getPD(source),
           getPNU(source), getPEU(source),
           getPSU(source), getPWU(source),
           getPNEU(source), getPSEU(source),
@@ -77,54 +77,131 @@ class Torus3D(world: World3D) extends Torus(world) with Topology3D {
   def getNeighbors6(source: Patch3D): AgentSet =
     AgentSet.fromArray(AgentKind.Patch,
       Array[Agent](
-        getPatchNorth(source), getPatchEast(source),
-        getPatchSouth(source), getPatchWest(source),
-        getPatchUp(source), getPatchDown(source)))
+        getPN(source), getPE(source),
+        getPS(source), getPW(source),
+        getPU(source), getPD(source)))
+
+  override def getPN(source: Patch): Patch =
+    world.fastGetPatchAt(
+      source.pxcor,
+      if (source.pycor == world.maxPycor)
+        world.minPycor
+      else
+        source.pycor + 1,
+      source.asInstanceOf[Patch3D].pzcor)
+  override def getPE(source: Patch): Patch =
+    world.fastGetPatchAt(
+      if (source.pxcor == world.maxPxcor)
+        world.minPxcor
+      else
+        source.pxcor + 1,
+      source.pycor,
+      source.asInstanceOf[Patch3D].pzcor)
+  override def getPS(source: Patch): Patch =
+    world.fastGetPatchAt(
+      source.pxcor,
+      if (source.pycor == world.minPycor)
+        world.maxPycor
+      else
+        source.pycor - 1,
+      source.asInstanceOf[Patch3D].pzcor)
+  override def getPW(source: Patch): Patch =
+    world.fastGetPatchAt(
+      if (source.pxcor == world.minPxcor)
+        world.maxPxcor
+      else
+        source.pxcor - 1,
+      source.pycor,
+      source.asInstanceOf[Patch3D].pzcor)
+  override def getPNE(source: Patch): Patch =
+    world.fastGetPatchAt(
+      if (source.pxcor == world.maxPxcor)
+        world.minPxcor
+      else
+        source.pxcor + 1,
+      if (source.pycor == world.maxPycor)
+        world.minPycor
+      else
+        source.pycor + 1,
+      source.asInstanceOf[Patch3D].pzcor)
+  override def getPSE(source: Patch): Patch =
+    world.fastGetPatchAt(
+      if (source.pxcor == world.maxPxcor)
+        world.minPxcor
+      else
+        source.pxcor + 1,
+      if (source.pycor == world.minPycor)
+        world.maxPycor
+      else
+        source.pycor - 1,
+      source.asInstanceOf[Patch3D].pzcor)
+  override def getPSW(source: Patch): Patch =
+    world.fastGetPatchAt(
+      if (source.pxcor == world.minPxcor)
+        world.maxPxcor
+      else
+        source.pxcor - 1,
+      if (source.pycor == world.minPycor)
+        world.maxPycor
+      else
+        source.pycor - 1,
+      source.asInstanceOf[Patch3D].pzcor)
+  override def getPNW(source: Patch): Patch =
+    world.fastGetPatchAt(
+      if (source.pxcor == world.minPxcor)
+        world.maxPxcor
+      else
+        source.pxcor - 1,
+      if (source.pycor == world.maxPycor)
+        world.minPycor
+      else
+        source.pycor + 1,
+      source.asInstanceOf[Patch3D].pzcor)
 
   def getPNU(source: Patch3D): Patch =
-    getPatchNorth(getPatchUp(source))
+    getPN(getPU(source))
   def getPEU(source: Patch3D): Patch =
-    getPatchEast(getPatchUp(source))
+    getPE(getPU(source))
   def getPSU(source: Patch3D): Patch =
-    getPatchSouth(getPatchUp(source))
+    getPS(getPU(source))
   def getPWU(source: Patch3D): Patch =
-    getPatchWest(getPatchUp(source))
+    getPW(getPU(source))
   def getPNEU(source: Patch3D): Patch =
-    getPatchNorthEast(getPatchUp(source))
+    getPNE(getPU(source))
   def getPSEU(source: Patch3D): Patch =
-    getPatchSouthEast(getPatchUp(source))
+    getPSE(getPU(source))
   def getPSWU(source: Patch3D): Patch =
-    getPatchSouthWest(getPatchUp(source))
+    getPSW(getPU(source))
   def getPNWU(source: Patch3D): Patch =
-    getPatchNorthWest(getPatchUp(source))
+    getPNW(getPU(source))
   def getPND(source: Patch3D): Patch =
-    getPatchNorth(getPatchDown(source))
+    getPN(getPD(source))
   def getPED(source: Patch3D): Patch =
-    getPatchEast(getPatchDown(source))
+    getPE(getPD(source))
   def getPSD(source: Patch3D): Patch =
-    getPatchSouth(getPatchDown(source))
+    getPS(getPD(source))
   def getPWD(source: Patch3D): Patch =
-    getPatchWest(getPatchDown(source))
+    getPW(getPD(source))
   def getPNED(source: Patch3D): Patch =
-    getPatchNorthEast(getPatchDown(source))
+    getPNE(getPD(source))
   def getPSED(source: Patch3D): Patch =
-    getPatchSouthEast(getPatchDown(source))
+    getPSE(getPD(source))
   def getPSWD(source: Patch3D): Patch =
-    getPatchSouthWest(getPatchDown(source))
+    getPSW(getPD(source))
   def getPNWD(source: Patch3D): Patch =
-    getPatchNorthWest(getPatchDown(source))
+    getPNW(getPD(source))
 
   def wrapZ(z: Double): Double =
     Topology.wrap(z, world.minPzcor - 0.5, world.maxPzcor + 0.5)
 
-  def getPatchUp(source: Patch3D): Patch =
+  def getPU(source: Patch3D): Patch =
     world.fastGetPatchAt(source.pxcor, source.pycor,
       if (source.pzcor == world.maxPzcor)
         world.minPzcor
       else
         source.pzcor + 1)
 
-  def getPatchDown(source: Patch3D): Patch =
+  def getPD(source: Patch3D): Patch =
     world.fastGetPatchAt(source.pxcor, source.pycor,
       if (source.pzcor == world.minPzcor)
         world.maxPzcor

@@ -182,11 +182,6 @@ public final strictfp class Patch3D
   }
 
   @Override
-  public Patch fastGetPatchAt(int x, int y) {
-    return ((World3D) world()).fastGetPatchAt(x, y, pzcor);
-  }
-
-  @Override
   public Turtle sprout(int c, int heading, AgentSet breed) {
     Turtle child = new Turtle3D((World3D) world(), breed,
         (Double) variables()[VAR_PXCOR3D],

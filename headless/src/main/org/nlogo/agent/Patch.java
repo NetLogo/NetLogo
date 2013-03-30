@@ -306,10 +306,6 @@ public strictfp class Patch
     return target;
   }
 
-  public Patch fastGetPatchAt(int x, int y) {
-    return world().fastGetPatchAt(x, y);
-  }
-
   public AgentSet getNeighbors() {
     if (patchNeighbors == null) {
       patchNeighbors = world().topology().getNeighbors(this);

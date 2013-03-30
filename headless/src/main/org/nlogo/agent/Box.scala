@@ -51,49 +51,42 @@ extends Topology(_world, xWraps = false, yWraps = false) {
     if (source.pycor == world.maxPycor)
       null
     else
-      getPatchNorth(source)
-
+      world.fastGetPatchAt(source.pxcor, source.pycor + 1)
   override def getPE(source: Patch): Patch =
     if (source.pxcor == world.maxPxcor)
       null
     else
-      getPatchEast(source)
-
+      world.fastGetPatchAt(source.pxcor + 1, source.pycor)
   override def getPS(source: Patch): Patch =
     if (source.pycor == world.minPycor)
       null
     else
-      getPatchSouth(source)
-
+      world.fastGetPatchAt(source.pxcor, source.pycor - 1)
   override def getPW(source: Patch): Patch =
     if (source.pxcor == world.minPxcor)
       null
     else
-      getPatchWest(source)
-
+      world.fastGetPatchAt(source.pxcor - 1, source.pycor)
   override def getPNE(source: Patch): Patch =
     if (source.pxcor == world.maxPxcor || source.pycor == world.maxPycor)
       null
     else
-      getPatchNorthEast(source)
-
+      world.fastGetPatchAt(source.pxcor + 1, source.pycor + 1)
   override def getPSE(source: Patch): Patch =
     if (source.pxcor == world.maxPxcor || source.pycor == world.minPycor)
       null
     else
-      getPatchSouthEast(source)
-
+      world.fastGetPatchAt(source.pxcor + 1, source.pycor - 1)
   override def getPSW(source: Patch): Patch =
     if (source.pxcor == world.minPxcor || source.pycor == world.minPycor)
       null
     else
-      getPatchSouthWest(source)
-
+      world.fastGetPatchAt(source.pxcor - 1, source.pycor - 1)
   override def getPNW(source: Patch): Patch =
     if (source.pxcor == world.minPxcor || source.pycor == world.maxPycor)
       null
     else
-      getPatchNorthWest(source)
+      world.fastGetPatchAt(source.pxcor - 1, source.pycor + 1)
 
   @throws(classOf[AgentException])
   @throws(classOf[PatchException])

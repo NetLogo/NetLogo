@@ -69,43 +69,66 @@ extends Topology(_world, xWraps = true, yWraps = false) {
     if (source.pycor == world.maxPycor)
       null
     else
-      getPatchNorth(source)
-
+      world.fastGetPatchAt(source.pxcor, source.pycor + 1)
   override def getPE(source: Patch): Patch =
-    getPatchEast(source)
-
+    world.fastGetPatchAt(
+      if (source.pxcor == world.maxPxcor)
+        world.minPxcor
+      else
+        source.pxcor + 1,
+      source.pycor)
   override def getPS(source: Patch): Patch =
     if (source.pycor == world.minPycor)
       null
     else
-      getPatchSouth(source)
-
+      world.fastGetPatchAt(source.pxcor, source.pycor - 1)
   override def getPW(source: Patch): Patch =
-    getPatchWest(source)
-
+    world.fastGetPatchAt(
+      if (source.pxcor == world.minPxcor)
+        world.maxPxcor
+      else
+        source.pxcor - 1,
+      source.pycor)
   override def getPNE(source: Patch): Patch =
     if (source.pycor == world.maxPycor)
       null
     else
-      getPatchNorthEast(source)
-
+      world.fastGetPatchAt(
+        if (source.pxcor == world.maxPxcor)
+          world.minPxcor
+        else
+          source.pxcor + 1,
+        source.pycor + 1)
   override def getPSE(source: Patch): Patch =
     if (source.pycor == world.minPycor)
       null
     else
-      getPatchSouthEast(source)
-
+      world.fastGetPatchAt(
+        if (source.pxcor == world.maxPxcor)
+          world.minPxcor
+        else
+          source.pxcor + 1,
+        source.pycor - 1)
   override def getPSW(source: Patch): Patch =
     if (source.pycor == world.minPycor)
       null
     else
-      getPatchSouthWest(source)
-
+      world.fastGetPatchAt(
+        if (source.pxcor == world.minPxcor)
+          world.maxPxcor
+        else
+          source.pxcor - 1,
+        source.pycor - 1)
   override def getPNW(source: Patch): Patch =
     if (source.pycor == world.maxPycor)
       null
     else
-      getPatchNorthWest(source)
+      world.fastGetPatchAt(
+        if (source.pxcor == world.minPxcor)
+          world.maxPxcor
+        else
+          source.pxcor - 1,
+        source.pycor + 1)
 
   @throws(classOf[AgentException])
   @throws(classOf[PatchException])
