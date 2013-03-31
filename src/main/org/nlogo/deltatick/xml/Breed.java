@@ -122,42 +122,6 @@ public class Breed {
         }
     }
 
-    /*
-    public String setup() {
-        String code = "";
-        if( needsSetupBlock() ) {
-            code += "create-" + plural + " " + startQuant + " [\n";
-            if( setupCommands != null ) { code += setupCommands; }
-            for( OwnVar var : ownVars ) {
-                if( var.setupReporter != null ) {
-                    code += "set " + var.name + " " + var.setupReporter + "\n";
-                }
-            }
-            code += "]\n";
-        }
-
-        return code;
-    }
-    */
-
-    /*
-    public String update() {
-        String code = "";
-        if( needsUpdateBlock() ) {
-            code += "ask " + plural + " [\n";
-            if( updateCommands != null ) { code += updateCommands; }
-            for( OwnVar var : ownVars ) {
-                if( var.updateReporter != null ) {
-                    code += "set " + var.name + " " + var.updateReporter + "\n";
-                }
-            }
-            code += "]\n";
-        }
-
-        return code;
-    }
-    */
-
     //goes through OwnVar (linked list) to see if it needs an update block -A. (sept 13)
     public boolean needsUpdateBlock() {
         boolean needs = false;
@@ -197,6 +161,4 @@ public class Breed {
     public String getStartQuant() {
         return startQuant;
     }
-
-
 }

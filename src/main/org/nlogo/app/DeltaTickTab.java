@@ -220,92 +220,106 @@ public class DeltaTickTab
     private final javax.swing.Action loadAction =
 		new javax.swing.AbstractAction( "Load Behavior Library" ) {
             public void actionPerformed( java.awt.event.ActionEvent e ) {
-                if ( count == 0 ) {
-                    libraryHolder = new LibraryHolder();
-                    libraryPanel.add(libraryHolder);
-                    libraryHolder.makeNewTab();
-
-                    libraryReader = new LibraryReader( workspace.getFrame() , deltaTickTab, null );
-                    libraryHolder.setTabName( buildPanel.getBgInfo().getLibrary() );
-                    addPlot.setEnabled(true);
-                    addHisto.setEnabled(true);
-                    addBreed.setEnabled(true);
-                    buildPanel.removeRect();
-                    if (buildPanel.getMyBreeds().size() == 0) {
-                        buildPanel.addRect("Click Add species to start building your model!");
-                        buildPanel.repaint();
-                        buildPanel.validate();
-                    }
-                    deltaTickTab.contentPanel.validate();
-                    count ++;
-                }
-                 else if (count > 0 ) {
-                    //TODO: Will eventually need a list of all libraries that are open (March 30, 2013)
-                    libraryHolder.makeNewTab();
-                    libraryReader = new LibraryReader( workspace.getFrame(), deltaTickTab, null );
-                    libraryHolder.setTabName( buildPanel.getBgInfo().getLibrary() );
-                    deltaTickTab.contentPanel.validate();
-                }
+                openLibrary(null);
             }
         };
 
     public void openLibrary(String  fileName) {
+        if ( count == 0 ) {
+            libraryHolder = new LibraryHolder();
+            libraryPanel.add(libraryHolder);
+            libraryHolder.makeNewTab();
 
+            libraryReader = new LibraryReader( workspace.getFrame() , deltaTickTab, fileName );
+            libraryHolder.setTabName( buildPanel.getBgInfo().getLibrary() );
+            addPlot.setEnabled(true);
+            addHisto.setEnabled(true);
+            addBreed.setEnabled(true);
+            buildPanel.removeRect();
+            if (buildPanel.getMyBreeds().size() == 0) {
+                buildPanel.addRect("Click Add species to start building your model!");
+                buildPanel.repaint();
+                buildPanel.validate();
+            }
+            deltaTickTab.contentPanel.validate();
+            count ++;
+        }
+        else if (count > 0 ) {
+            //TODO: Will eventually need a list of all libraries that are open (March 30, 2013)
+            libraryHolder.makeNewTab();
+            libraryReader = new LibraryReader( workspace.getFrame(), deltaTickTab, null );
+            libraryHolder.setTabName( buildPanel.getBgInfo().getLibrary() );
+            deltaTickTab.contentPanel.validate();
+        }
     }
 
     
     private final javax.swing.Action addBreedAction =
 		new javax.swing.AbstractAction( "Add Species" ) {
             public void actionPerformed( java.awt.event.ActionEvent e ) {
-                BreedBlock newBreed = new BreedBlock();
-                buildPanel.removeRect();
+                makeBreedBlock(null, null);
 
                 // if more than 1 breed available in XML -A. (oct 5)
+                //Commented this out because I'm not using breedTypeSelector anymore -Aditi (March 31, 2013)
+//                if( buildPanel.availBreeds().size() > 1 ) {
+//                    breedTypeSelector.showMe(buildPanel.getBgInfo());
+//                    if (breedTypeSelector.typedBreedType() != null) {
+//                        Breed breed = buildPanel.getBgInfo().getBreeds().get(0);
+//                        newBreed = new BreedBlock( breed, breedTypeSelector.typedBreedType(), workspace.getFrame() );
+//                        buildPanel.addBreed(newBreed);
+//                        userInput.addBreed(newBreed.plural());
+//                        newBreed.getParent().setComponentZOrder(newBreed, 0 );
+//                        new BreedDropTarget(newBreed, deltaTickTab);
+//                        newBreed.inspectSpeciesButton.addActionListener(new SpeciesButtonListener(newBreed));
+//                    }
+//                }
+//                    else if( breedTypeSelector.selectedBreedType() != null ) {
+//
+//                        for( Breed breed : buildPanel.getBgInfo().getBreeds() ) {
+//                            if (breed.plural()  == breedTypeSelector.selectedBreedType()) {
+//                                newBreed = new BreedBlock( breed, breed.plural(), workspace.getFrame() );
+//
+//                                buildPanel.addBreed(newBreed);
+//                                userInput.addBreed(newBreed.plural());
+//                                newBreed.getParent().setComponentZOrder(newBreed, 0 );
+//                                new BreedDropTarget(newBreed, deltaTickTab);
+//                                newBreed.inspectSpeciesButton.addActionListener(new SpeciesButtonListener(newBreed));
+//                            }
+//                        }
+//                } else {
 
-                if( buildPanel.availBreeds().size() > 1 ) {
-                    breedTypeSelector.showMe(buildPanel.getBgInfo());
-                    if (breedTypeSelector.typedBreedType() != null) {
-                        Breed breed = buildPanel.getBgInfo().getBreeds().get(0);
-                        newBreed = new BreedBlock( breed, breedTypeSelector.typedBreedType(), workspace.getFrame() );
-                        buildPanel.addBreed(newBreed);
-                        userInput.addBreed(newBreed.plural());
-                        newBreed.getParent().setComponentZOrder(newBreed, 0 );
-                        new BreedDropTarget(newBreed, deltaTickTab);
-                        newBreed.inspectSpeciesButton.addActionListener(new SpeciesButtonListener(newBreed));
-                    }
-                }
-                    else if( breedTypeSelector.selectedBreedType() != null ) {
 
-                        for( Breed breed : buildPanel.getBgInfo().getBreeds() ) {
-                            if (breed.plural()  == breedTypeSelector.selectedBreedType()) {
-                                newBreed = new BreedBlock( breed, breed.plural(), workspace.getFrame() );
-
-                                buildPanel.addBreed(newBreed);
-                                userInput.addBreed(newBreed.plural());
-                                newBreed.getParent().setComponentZOrder(newBreed, 0 );
-                                new BreedDropTarget(newBreed, deltaTickTab);
-                                newBreed.inspectSpeciesButton.addActionListener(new SpeciesButtonListener(newBreed));
-                            }
-                        }
-                } else {
-                    Breed breed = buildPanel.availBreeds().get(0);
-
-                    if( buildPanel.breedCount() == 0 ) {
-                        newBreed = new BreedBlock( breed , breed.plural(), workspace.getFrame() );
-                    } else {
-                        newBreed = new BreedBlock( breed , breed.plural() + buildPanel.breedCount(), workspace.getFrame() );
-                    }
-                    buildPanel.addBreed(newBreed);
-                    userInput.addBreed(newBreed.plural());
-                    newBreed.getParent().setComponentZOrder(newBreed, 0 );
-                    new BreedDropTarget(newBreed, deltaTickTab);
-                    newBreed.inspectSpeciesButton.addActionListener(new SpeciesButtonListener(newBreed));
-                }
-                //newBreed.inspectSpeciesButton.addActionListener(new SpeciesButtonListener(newBreed));
-
-                contentPanel.validate();
             }
+                //newBreed.inspectSpeciesButton.addActionListener(new SpeciesButtonListener(newBreed));
+            //}
       };
+
+    public BreedBlock makeBreedBlock(String plural, String setupNumber) {
+        BreedBlock newBreed = new BreedBlock();
+        buildPanel.removeRect();
+        Breed breed = buildPanel.availBreeds().get(0);
+
+        if( buildPanel.breedCount() == 0 ) {
+            newBreed = new BreedBlock( breed , breed.plural(), workspace.getFrame() );
+        } else {
+            newBreed = new BreedBlock( breed , breed.plural() + buildPanel.breedCount(), workspace.getFrame() );
+        }
+        buildPanel.addBreed(newBreed);
+        userInput.addBreed(newBreed.plural());
+        newBreed.getParent().setComponentZOrder(newBreed, 0 );
+        new BreedDropTarget(newBreed, deltaTickTab);
+        newBreed.inspectSpeciesButton.addActionListener(new SpeciesButtonListener(newBreed));
+
+        if (plural != null) {
+            newBreed.setPlural(plural);
+        }
+        if (setupNumber != null) {
+            newBreed.setNumber(setupNumber);
+        }
+
+        contentPanel.validate();
+        return newBreed;
+    }
 
 
     class SpeciesButtonListener implements ActionListener {

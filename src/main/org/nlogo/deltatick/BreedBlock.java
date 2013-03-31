@@ -328,6 +328,14 @@ public strictfp class BreedBlock
         return plural.getText();
     }
 
+    public void setPlural(String plural) {
+        this.plural.setText(plural);
+    }
+
+    public void setNumber(String number) {
+        this.number.setText(number);
+    }
+
     public void setMaxAge(String age) {
         maxAge = age;
     }
