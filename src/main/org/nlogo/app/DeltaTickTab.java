@@ -9,6 +9,8 @@ import org.nlogo.deltatick.PopupMenu;
 import org.nlogo.deltatick.dialogs.*;
 import org.nlogo.deltatick.dnd.*;
 import org.nlogo.deltatick.xml.*;
+import org.nlogo.hotlink.controller.ModelReader;
+import org.nlogo.widget.NoteWidget;
 import org.nlogo.window.*;
 
 
@@ -70,6 +72,8 @@ public class DeltaTickTab
     JButton addPlot;
     JButton addHisto;
     JButton addTrackSpecies;
+    JButton saveButton;
+    JButton openModelButton;
     PopupMenu popup;
 
     //JButton addEnvt;
@@ -77,13 +81,13 @@ public class DeltaTickTab
     JButton Not;
 
     boolean plotsAlive = false;
-    boolean reproduceUsed = false;
 
     int count;   // to make sure tabbedpane doesn't get created more than once (Feb 23, 2012)
     int interfaceCount; // to make sure setup and go button doesn't get created more than once (May 13, 2012)
     int interfacePlotCount;
     int interfaceHistoCount; // to make sure extra histos are not added (Jan 15, 2013)
     int interfaceGraphCount;
+    int interfaceNoteCount; //to make sure mutation note is created just once (March 29, 2013)
 
 
     HashMap<String, WidgetWrapper> plotWrappers = new HashMap<String, WidgetWrapper>();
@@ -96,6 +100,8 @@ public class DeltaTickTab
 
     DeltaTickTab deltaTickTab = this;
     PlotManager plotManager;
+
+    LibraryReader libraryReader;
 
     public final SimpleJobOwner defaultOwner ;
 
@@ -219,7 +225,7 @@ public class DeltaTickTab
                     libraryPanel.add(libraryHolder);
                     libraryHolder.makeNewTab();
 
-                    new LibraryReader( workspace.getFrame() , deltaTickTab );
+                    libraryReader = new LibraryReader( workspace.getFrame() , deltaTickTab, null );
                     libraryHolder.setTabName( buildPanel.getBgInfo().getLibrary() );
                     addPlot.setEnabled(true);
                     addHisto.setEnabled(true);
@@ -234,13 +240,18 @@ public class DeltaTickTab
                     count ++;
                 }
                  else if (count > 0 ) {
+                    //TODO: Will eventually need a list of all libraries that are open (March 30, 2013)
                     libraryHolder.makeNewTab();
-                    new LibraryReader( workspace.getFrame(), deltaTickTab );
+                    libraryReader = new LibraryReader( workspace.getFrame(), deltaTickTab, null );
                     libraryHolder.setTabName( buildPanel.getBgInfo().getLibrary() );
                     deltaTickTab.contentPanel.validate();
                 }
             }
         };
+
+    public void openLibrary(String  fileName) {
+
+    }
 
     
     private final javax.swing.Action addBreedAction =
@@ -482,6 +493,32 @@ public class DeltaTickTab
                 }
             };
 
+    private final Action saveModelAction =
+            new AbstractAction( "Save model" ) {
+                public void actionPerformed (ActionEvent e) {
+                    saveModel();
+                }
+    };
+
+    private final Action openModelAction =
+            new AbstractAction("Open model") {
+                public void actionPerformed (ActionEvent e) {
+                    openModel();
+                }
+    };
+
+    public void saveModel() {
+        //System.out.println("Det " + libraryReader.getFileName());
+        for (BreedBlock bBlock : buildPanel.getMyBreeds()) {
+            System.out.println("Breed " + bBlock.plural());
+            //System.out.println("Breed sing " + bBlock.singular());
+            System.out.println("Number " + bBlock.getNumber() + " breeshape " + bBlock.getBreedShape() + " Color " + bBlock.getColorName());
+        }
+    }
+
+    public void openModel() {
+        DeltaTickModelReader modelReader = new DeltaTickModelReader( workspace.getFrame(), this );
+    }
 
     public void populateProcedures() {
         pt.innerSource( buildPanel.unPackAsCode() );
@@ -543,32 +580,41 @@ public class DeltaTickTab
         }
     }
 
-    //set if reproduce block is being used (March 25, 2013)
-    public void setReproduceUsed(boolean value)  {
-        if (buildPanel.getMyTraits().size() > 0) {
-            reproduceUsed = value;
-        }
-    }
 
     public void populateMutationSlider() {
-        if (reproduceUsed) {
-            for (TraitBlockNew tBlock : buildPanel.getMyTraits()) {
-                SliderWidget sliderWidget = ((SliderWidget) interfacePanel.makeWidget("SLIDER", false));
-                WidgetWrapper ww = interfacePanel.addWidget(sliderWidget, 0, 200, true, false);
-                //interfacePanel.addWidget(sliderWidget, 0, 200, true, false);
-                String sliderName = tBlock.getMyParent().plural() + "-" + tBlock.getTraitName() + "-mutation";
-                sliderWidget.name_$eq(sliderName);
-                sliderWidget.validate();
-                sliderWidgets.put(sliderName, ww);
+        for (BreedBlock bBlock : buildPanel.getMyBreeds()) {
+            if (bBlock.getReproduceUsed() && buildPanel.getMyTraits().size() > 0) {
+                for (TraitBlockNew tBlock : bBlock.getMyTraitBlocks()) {
+                    SliderWidget sliderWidget = ((SliderWidget) interfacePanel.makeWidget("SLIDER", false));
+                    WidgetWrapper ww = interfacePanel.addWidget(sliderWidget, 0, 100, true, false);
+                    String sliderName = tBlock.getMyParent().plural() + "-" + tBlock.getTraitName() + "-mutation";
+                    sliderWidget.name_$eq(sliderName);
+                    sliderWidget.validate();
+                    sliderWidgets.put(sliderName, ww);
+                }
+                //make a note only once (March 29, 2013)
+                if (interfaceNoteCount == 0) {
+                    NoteWidget noteWidget = ((NoteWidget) interfacePanel.makeWidget("NOTE", false));
+                    WidgetWrapper widgetw = interfacePanel.addWidget(noteWidget, 0, 80, true, false);
+                    String note = "Chance of mutation when a baby is born";
+                    noteWidget.setBounds(0, 80, 20, 30);
+                    noteWidget.text_$eq(note);
+                    noteWidget.validate();
+                }
             }
+            interfaceNoteCount++;
+            revalidate();
         }
     }
 
     public void removeMutationSlider() {
-        for (WidgetWrapper ww : sliderWidgets.values()) {
-            sliderWidgets.remove(ww);
-            interfacePanel.removeWidget(ww);
+        for (Map.Entry<String, WidgetWrapper> entry : sliderWidgets.entrySet()) {
+            String p = entry.getKey();
+            WidgetWrapper w = entry.getValue();
+            sliderWidgets.remove(w);
+            interfacePanel.removeWidget(w);
         }
+        revalidate();
     }
 
 
@@ -666,9 +712,13 @@ public class DeltaTickTab
                 //addEnvt.setEnabled(false);
                 //this.add(addEnvt) ;
                 this.add( new org.nlogo.swing.ToolBar.Separator() ) ;
+                saveButton = new JButton( saveModelAction );
+                this.add( saveButton );
+                openModelButton = new JButton(openModelAction);
+                this.add(openModelButton);
                 //buildBlock = new JButton( toBuildBlock );
                 //this.add( buildBlock );
-                //this.add( new org.nlogo.swing.ToolBar.Separator() ) ;
+                this.add( new org.nlogo.swing.ToolBar.Separator() ) ;
                 this.add( new JButton( clearAction ) ) ;
                 //this.add( new JButton( procedureAction ) ) ;
             }
@@ -709,7 +759,7 @@ public class DeltaTickTab
             populateInterface();
             removePlots();
             populatePlots();
-            //removeMutationSlider();
+            removeMutationSlider();
             populateMutationSlider();
             new org.nlogo.window.Events.CompileAllEvent()
 				.raise( DeltaTickTab.this ) ;
@@ -762,6 +812,10 @@ public class DeltaTickTab
 
     public String libraryName() {
         return buildPanel.getBgInfo().getLibrary();
+    }
+
+    public LibraryReader getLibraryReader() {
+        return this.libraryReader;
     }
 
 

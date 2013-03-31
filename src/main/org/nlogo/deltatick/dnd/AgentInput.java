@@ -25,6 +25,6 @@ public class AgentInput extends PrettyInput {
         setFont(new java.awt.Font("Courier New", 1, 12));
         setSize(this.getWidth(), 10);
         this.createToolTip();
-        this.setToolTipText("Who?");
+        this.setToolTipText("<html><font size=\"4\">Who?</font></html>");
 }
 }

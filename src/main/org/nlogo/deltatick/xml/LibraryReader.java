@@ -3,6 +3,7 @@ package org.nlogo.deltatick.xml;
 import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
+import javax.swing.*;
 import javax.xml.parsers.*;
 
 import org.nlogo.app.DeltaTickTab;
@@ -27,16 +28,21 @@ public class LibraryReader {
 
     ArrayList<Node> newVariationsList = new ArrayList<Node>();
 
-    public LibraryReader(Frame frame, DeltaTickTab deltaTickTab) {
+    public LibraryReader(Frame frame, DeltaTickTab deltaTickTab, String libraryFileName) {
         this.deltaTickTab = deltaTickTab;
 
         // clear out any existing blocks
        // this.deltaTickTab.clearLibrary(); // TODo commented out on feb 22, 2012- will need to re-think this, might have to bring it back
-
-        fileLoader = new FileDialog(frame);
-        fileLoader.setVisible(true);
-        File file = new File(fileLoader.getDirectory() + fileLoader.getFile());
-
+        File file = null;
+        if (libraryFileName == null) {
+            fileLoader = new FileDialog(frame);
+            fileLoader.setVisible(true);
+            file = new File(fileLoader.getDirectory() + fileLoader.getFile());
+            fileName = new String (fileLoader.getDirectory() + fileLoader.getFile());
+        }
+        else {
+            file = new File(libraryFileName);
+        }
         //DocumentBuilder converts XML file into Document -A. (sept 13)
         try {
             DocumentBuilder builder =
@@ -72,9 +78,7 @@ public class LibraryReader {
                 seekAndAttachInfo(behavior);
             }
 
-
             NodeList traits = library.getElementsByTagName("trait");
-            //NodeList variations = library.getElementsByTagName("variations");
             for (int i = 0; i < traits.getLength(); i++) {
                 Node trait = traits.item(i);
                 seekAndAttachInfo( trait );
@@ -85,7 +89,6 @@ public class LibraryReader {
             for (int i = 0; i < patches.getLength(); i++) {
                 Node patch = patches.item(i);
                 block = new PatchBlock(patch.getAttributes().getNamedItem("name").getTextContent());
-
                 seekAndAttachInfo(patch);
             }
 
@@ -195,11 +198,18 @@ public class LibraryReader {
                 block.addPercentInput(behaviorInfo.item(j).getAttributes().getNamedItem("name").getTextContent(),
                         behaviorInfo.item(j).getAttributes().getNamedItem("default").getTextContent());
             }
+            else if (behaviorInfo.item(j).getNodeName() == "tooltip") {
+                block.setToolTipText("<html><font size=\"3.5\">" + behaviorInfo.item(j).getTextContent() + "</font></html>");
+            }
         }
 
         block.disableInputs();
         deltaTickTab.getLibraryHolder().addBlock( block );
         deltaTickTab.addDragSource(block);
         // the line above is what makes the blocks drag-able (Feb 14, 2012)
+    }
+
+    public String getFileName() {
+        return fileName;
     }
 }

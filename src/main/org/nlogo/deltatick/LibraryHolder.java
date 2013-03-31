@@ -108,31 +108,13 @@ public class LibraryHolder extends JPanel {
         sp.setVisible(true);
         tabbedPane.addTab( "name", panel );
         panel.revalidate();
-
-        //sp.setPreferredSize(new Dimension(100, 100));
-        //panel.add(sp);
-
-        //sp.getViewport().add();
-
-        //tabbedPane.add( new JLabel ("name" + countTabs));
-        /*
-        tabbedPane.addTab( "name" + countTabs, panel);
-        tabbedPane.setTabComponentAt( countTabs, new Tab(tabbedPane));
-        */ //Commented out on March 1, 2012 (Aditi)
-
-        //panel.add(sp);
-
         JButton close = new JButton();
-
-        //arrayPanels.add(countTabs, panel);
         countTabs++;
        }
 
 
     public void addBlock ( CodeBlock block ) {
         panel.add ( block );
-        //sp.add (block);
-        //sp.revalidate();
     }
 
     public void setTabName( String name ) {

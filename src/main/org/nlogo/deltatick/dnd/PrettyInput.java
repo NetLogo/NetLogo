@@ -28,7 +28,6 @@ public class PrettyInput extends javax.swing.JTextField {
         // Create the tooltip
         toolTip = super.createToolTip();
         toolTip.setForeground(Color.white);
-
     }
 
     public JToolTip createToolTip() {
@@ -41,12 +40,5 @@ public class PrettyInput extends javax.swing.JTextField {
     public JToolTip getToolTip() {
         return toolTip;
     }
-
-//    public void setToolTipText(String text) {
-//
-//        toolTip.setToolTipText(text);
-//        toolTip.setTipText(text);
-//        toolTip.setVisible(true);
-//
-//    }
 }
+

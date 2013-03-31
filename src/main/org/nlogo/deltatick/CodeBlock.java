@@ -308,7 +308,6 @@ public abstract class CodeBlock
     public void updatePercentLabel() {
         if (percentInputs.size() > 0) {
             JLabel percent = new JLabel("%");
-            System.out.println("I need a %");
             label.add(percent);
         }
     }
@@ -328,8 +327,7 @@ public abstract class CodeBlock
         BehaviorInput behaviorInput = new BehaviorInput(this);
         behaviorInput.setName(inputName);
         behaviorInput.setText(defaultValue);
-        //behaviorInput.getToolTip().setToolTipText(toolTipString);
-        behaviorInput.setToolTipText(toolTipString);
+        behaviorInput.setToolTipText("<html><font size=\"4\">" + toolTipString + "</font></html>");
         behaviorInputs.put(inputName, behaviorInput);
         label.add(behaviorInput);
     }
@@ -338,7 +336,6 @@ public abstract class CodeBlock
         AgentInput agentInput = new AgentInput(this);
         agentInput.setName(inputName);
         agentInput.setText(defaultValue);
-
         agentInputs.put(inputName, agentInput);
         label.add(agentInput);
     }

@@ -5,6 +5,7 @@ import java.awt.datatransfer.DataFlavor;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.sun.media.ui.ToolTip;
 import org.nlogo.deltatick.dnd.BehaviorInput;
 import org.nlogo.deltatick.dnd.PrettyInput;
 import org.nlogo.deltatick.xml.Variation;
@@ -20,6 +21,7 @@ public strictfp class BehaviorBlock
     boolean isMutate;
     TraitBlockNew tBlockNew; // TODO need this to have trait Block work as an input in code (March, 25, 2013)
     BreedBlock container;
+    private JToolTip toolTip;
 
     public BehaviorBlock(String name) {
         super(name, ColorSchemer.getColor(0).brighter());
@@ -81,15 +83,14 @@ public strictfp class BehaviorBlock
           }
           else {
               passBack += "\n" + code + "\n";
+              System.out.println("beh block " + code);
               if (isMutate == true) {
                   for (TraitBlockNew traitBlock : ((BreedBlock) container).getMyTraitBlocks()) {
-                      //passBack += traitBlock.getMutateCode();
-                      String traitName = ((BreedBlock) container).plural() + "-" + traitBlock.getTraitName();
+                      String traitName = traitBlock.getTraitName();
                       passBack += "if random 100 <= " + this.getContainer().plural() + "-" + traitBlock.getTraitName() + "-mutation [\n";
                       passBack += "set " + traitName + " " + traitName + " * 0.01 \n]";
                   }
               }
-
           }
           if (energyInputs.size() > 0) {
               for (JTextField inputName : energyInputs.values()) {
@@ -217,4 +218,13 @@ public strictfp class BehaviorBlock
     public BreedBlock getContainer() {
         return container;
     }
+
+    public JToolTip createToolTip() {
+        toolTip = super.createToolTip();
+        toolTip.setBackground(Color.white);
+        toolTip.setForeground(Color.black);
+        return toolTip;
+    }
+
+
 }

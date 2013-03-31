@@ -517,11 +517,9 @@ public class BuildPanel
     }
 
     public void removeTrait(TraitBlockNew traitBlock) {
-        myTraits.remove(traitBlock);
+        myTraitsNew.remove(traitBlock);
         remove(traitBlock);
     }
-
-
 
     public String library() {
         return bgInfo.getLibrary();

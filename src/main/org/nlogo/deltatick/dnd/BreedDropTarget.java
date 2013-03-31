@@ -21,7 +21,6 @@ public class BreedDropTarget
         super(block);
 
         this.deltaTickTab = deltaTickTab;
-        boolean breedwithTrait;
     }
 
     protected boolean dropComponent(Transferable transferable)
@@ -37,7 +36,8 @@ public class BreedDropTarget
                 ((BehaviorBlock) o).setContainer((BreedBlock)this.block);
                 //Inform buildPanel that a reproduce block is being used to make slider on interface
                 if (((BehaviorBlock) o).getIsMutate() == true) {
-                    deltaTickTab.setReproduceUsed(true);
+                    //deltaTickTab.setReproduceUsed(true);
+                    ((BreedBlock) block).setReproduceUsed(true);
                 }
                 new BehaviorDropTarget((BehaviorBlock) o);
                 return true;

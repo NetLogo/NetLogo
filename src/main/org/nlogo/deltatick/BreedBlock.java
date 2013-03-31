@@ -71,6 +71,7 @@ public strictfp class BreedBlock
 
     JPanel rectPanel;
     boolean removedRectPanel = false;
+    boolean reproduceUsed = false;
 
     //dummy constructor - Aditi (Jan 27, 2013)
    public BreedBlock() {
@@ -615,6 +616,26 @@ public strictfp class BreedBlock
 
     public List<TraitBlockNew> getMyTraitBlocks() {
         return myTraitBlocks;
+    }
+
+    public void setReproduceUsed (boolean value) {
+        reproduceUsed = value;
+    }
+
+    public boolean getReproduceUsed () {
+        return reproduceUsed;
+    }
+
+    public String getNumber() {
+        return number.getText();
+    }
+
+    public String getBreedShape() {
+        return breedShape;
+    }
+
+    public String getColorName() {
+        return colorName;
     }
 }
 
