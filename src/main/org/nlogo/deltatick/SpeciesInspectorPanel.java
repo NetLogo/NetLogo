@@ -63,6 +63,7 @@ public class SpeciesInspectorPanel extends JPanel {
     public void updateText() {
         energyBlank.setText(myParent.getMaxEnergy());
         lifeSpanBlank.setText(myParent.getMaxAge());
+        lifeSpanLabel.setText("How old do " + myParent.plural() + " live to be?");
     }
 
     public void addPanels(Container pane) {

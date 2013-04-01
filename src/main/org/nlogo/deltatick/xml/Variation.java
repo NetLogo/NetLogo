@@ -21,10 +21,17 @@ public class Variation implements Serializable {
     //public String color;
 
     public Variation(String trait, String name, String value, int percent) {
-        this.trait = trait;
-        this.name = name;
-        this.value = value;
+        this.trait = new String(trait);
+        this.name = new String(name);
+        this.value = new String(value);
         this.percent = percent;
-        //color = "gray";
+    }
+
+    //Copy constructor    (April 1, 2013)
+    public Variation(Variation variation) {
+        this.trait = new String(variation.trait);
+        this.name = new String(variation.name);
+        this.value = new String(variation.value);
+        this.percent = variation.percent;
     }
 }

@@ -50,8 +50,10 @@ public class TraitBlockNew
         this.breedName = breedBlock.plural();
         this.traitState = new TraitState(traitState);
         this.traitName = this.traitState.getNameTrait();
-        this.variationHashMap = variationHashMap;
-        this.variationNamesValues = variationValues;
+        //this.variationHashMap = variationHashMap;
+        this.variationHashMap.clear();
+        this.variationHashMap.putAll(variationHashMap);
+        //this.variationNamesValues = variationValues;
 
         java.util.List<Component> componentList = new ArrayList<Component>(2);
         name.setText(" of " + breedBlock.plural());
@@ -126,7 +128,7 @@ public class TraitBlockNew
 
     public String unPackAsCommand() {
         String passBack = "";
-        String value = variationNamesValues.get(variation);
+        //String value = variationNamesValues.get(variation);
 
         //passBack += "if " + this.getMyParent().plural() + "-" + this.getTraitName() + " = " + value + " [\n";
 //        for (CodeBlock block : myBlocks) {

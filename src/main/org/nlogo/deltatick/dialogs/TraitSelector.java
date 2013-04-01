@@ -8,7 +8,7 @@ import org.jdesktop.swingx.MultiSplitLayout;
 import org.jdesktop.swingx.MultiSplitPane;
 import org.nlogo.api.Property;
 import org.nlogo.deltatick.TraitBlock;
-import org.nlogo.deltatick.TraitDisplayPanel;
+//import org.nlogo.deltatick.TraitDisplayPanel;
 import org.nlogo.deltatick.TraitDistribution;
 import org.nlogo.deltatick.xml.Trait;
 import org.nlogo.deltatick.xml.Variation;

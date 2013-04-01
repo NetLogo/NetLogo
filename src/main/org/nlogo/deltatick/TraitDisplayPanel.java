@@ -39,7 +39,7 @@ public class TraitDisplayPanel extends JPanel {
             Object[] row = new Object[NUMBER_COLUMNS];
             row[0] = new String(key);
             row[1] = new String(var.value);
-            row[2] = new String(var.color);
+            row[2] = new String(var.value);
             row[3] = new String("Edit");
             //row[3] = new EditButton(traitInfoTable, traitTableModel.editAction, 3);
             tempTableData.add(row);

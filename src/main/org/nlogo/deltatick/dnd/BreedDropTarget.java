@@ -36,7 +36,6 @@ public class BreedDropTarget
                 ((BehaviorBlock) o).setContainer((BreedBlock)this.block);
                 //Inform buildPanel that a reproduce block is being used to make slider on interface
                 if (((BehaviorBlock) o).getIsMutate() == true) {
-                    //deltaTickTab.setReproduceUsed(true);
                     ((BreedBlock) block).setReproduceUsed(true);
                 }
                 new BehaviorDropTarget((BehaviorBlock) o);

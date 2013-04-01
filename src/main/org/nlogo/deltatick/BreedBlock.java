@@ -2,6 +2,7 @@ package org.nlogo.deltatick;
 
 import com.sun.java.swing.plaf.nimbus.LoweredBorder;
 import org.nlogo.api.Shape;
+import org.nlogo.app.DeltaTickTab;
 import org.nlogo.deltatick.buttons.DottedRect;
 import org.nlogo.deltatick.dialogs.ShapeSelector;
 import org.nlogo.deltatick.dialogs.Warning;
@@ -72,6 +73,10 @@ public strictfp class BreedBlock
     JPanel rectPanel;
     boolean removedRectPanel = false;
     boolean reproduceUsed = false;
+
+    // Each breedblock has a species inspector panel
+    // Deltaticktab simple 'gets' this panel when inspect species button is clicked and makes it visible
+    SpeciesInspectorPanel speciesInspectorPanel;
 
     //dummy constructor - Aditi (Jan 27, 2013)
    public BreedBlock() {
@@ -425,6 +430,20 @@ public strictfp class BreedBlock
         add(rectPanel);
 
     }
+     //being called from deltaticktab (march 31, 2013)
+//    public SpeciesInspectorPanel createSpeciesInspectorPanel() {
+//        JFrame jFrame = new JFrame("Species Inspector");
+//        //jFrame.setPreferredSize(new Dimension(1000, 700)); // testing jframe size
+//        speciesInspectorPanel = new SpeciesInspectorPanel(this, jFrame);
+//
+//        //speciesInspectorPanelMap.put(myParent, speciesInspectorPanel); // should be in deltaticktab
+//        speciesInspectorPanel.addPanels(jFrame.getContentPane());
+//        this.setHasSpeciesInspector(true);
+//        jFrame.setResizable(true);
+//        jFrame.pack();
+//        jFrame.setVisible(false);
+//        return speciesInspectorPanel;
+//    }
 
     public void addRect() {
         rectPanel = new JPanel();

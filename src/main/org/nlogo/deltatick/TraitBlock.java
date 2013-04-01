@@ -27,6 +27,7 @@ import javax.swing.event.DocumentEvent;
  * To change this template use File | Settings | File Templates.
  */
 
+// TraitBlock is not being used any more (March 31, 2013)
 // this block will hold behaviors for agents with this variation
 // not sure if this should be abstract -Feb 4
 public strictfp class TraitBlock
@@ -334,7 +335,7 @@ public strictfp class TraitBlock
         String name = dropdownList.getSelectedItem().toString();
         varColor.put(name, colorButton.getSelectedColor());
         Variation tmp = variationHashMap.get(name);
-        tmp.color = colorButton.getSelectedColorName();
+        //tmp.color = colorButton.getSelectedColorName();
         variationHashMap.put(name, tmp);
     }
 

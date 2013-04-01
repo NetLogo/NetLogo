@@ -3,6 +3,7 @@ package org.nlogo.deltatick.xml;
 import org.jdesktop.swingx.MultiSplitLayout;
 import org.nlogo.app.DeltaTickTab;
 import org.nlogo.deltatick.BreedBlock;
+import org.parboiled.support.Var;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -10,6 +11,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.awt.*;
 import java.io.File;
+import java.util.HashMap;
+
 import org.w3c.dom.*;
 
 /**
@@ -42,8 +45,6 @@ public class DeltaTickModelReader {
                 Node usedLibrary = usedLibraries.item(i);
                 String path = new String(usedLibrary.getAttributes().getNamedItem("path").getTextContent());
                 deltaTickTab.openLibrary(path);
-//                LibraryReader libraryReader = deltaTickTab.getLibraryReader();
-//                libraryReader = new LibraryReader(frame, deltaTickTab, path);
             }
 
             NodeList breedBlocks = model.getElementsByTagName("breedBlock");
@@ -71,19 +72,31 @@ public class DeltaTickModelReader {
 
                     if (setupNodes.item(j).getNodeName() == "trait") {
                         Node trait = setupNodes.item(j);
-                        System.out.println("DTMR " + trait.getAttributes().getNamedItem("name").getTextContent()); //traitname
+                        String traitName = new String(trait.getAttributes().getNamedItem("name").getTextContent()); //traitname
                         NodeList variationNodes = trait.getChildNodes();
-                        for (int k = 0; k < variationNodes.getLength(); k++) {
-                            if (variationNodes.item(k).getNodeName() == "variation") {
-                                Node variation = variationNodes.item(k);
-                                String varName = variation.getAttributes().getNamedItem("name").getTextContent();
-                                String varValue = variation.getAttributes().getNamedItem("value").getTextContent();
-                                String percent = variation.getAttributes().getNamedItem("percent").getTextContent();
+                        HashMap<String, String> selectedVariationsPercent = new HashMap<String, String>();
+
+                        for (Trait newTrait : deltaTickTab.getBuildPanel().getBgInfo().getTraits()) {
+                            if (traitName.equalsIgnoreCase(newTrait.getNameTrait())) {
+                                for (int k = 0; k < variationNodes.getLength(); k++) {
+                                    if (variationNodes.item(k).getNodeName() == "variation") {
+                                        Node variationNode = variationNodes.item(k);
+                                        String varName = variationNode.getAttributes().getNamedItem("name").getTextContent();
+                                        String varValue = variationNode.getAttributes().getNamedItem("value").getTextContent();
+                                        String percentage = variationNode.getAttributes().getNamedItem("percent").getTextContent();
+                                        int percent = Integer.parseInt(percentage);
+                                        Variation variation = new Variation(traitName, varName, varValue, percent);
+                                        //selectedVariationsPercent
+                                    }
+                                }
+                                //TraitState traitState = (newTrait, selectedVariationsPercentHashMap)
                             }
                         }
 
 
+                        //HashMap<String, TraitState> for TraitPreview to set (March 31, 2013)
                         //TODO: traitBlock setparent using breedBlock (march 31, 2013)
+                        // TODO: SpeciesInspectorPanel traitState update with this data (March 31, 2013)
 
 
                     }

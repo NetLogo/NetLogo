@@ -304,6 +304,23 @@ public class DeltaTickTab
         } else {
             newBreed = new BreedBlock( breed , breed.plural() + buildPanel.breedCount(), workspace.getFrame() );
         }
+
+        // Create speciesinspectorpanel for the breedblock
+        JFrame jFrame = new JFrame("Species Inspector");
+        speciesInspectorPanel = new SpeciesInspectorPanel(newBreed, jFrame);
+
+        speciesInspectorPanel.addPanels(jFrame.getContentPane());
+        newBreed.setHasSpeciesInspector(true);
+        jFrame.setResizable(true);
+        jFrame.pack();
+        jFrame.setVisible(false);
+
+        // Add action listeners here because the action listener is a member class of deltaticktab and not accessible in breedblock
+        speciesInspectorPanel.getOkayButton().addActionListener(new SpeciesPanelOkayListener(newBreed));
+        speciesInspectorPanel.getCancelButton().addActionListener(new SpeciesPanelCancelListener(newBreed));
+        // Put the speciesinspectorpanel in the map
+        speciesInspectorPanelMap.put(newBreed, speciesInspectorPanel);
+
         buildPanel.addBreed(newBreed);
         userInput.addBreed(newBreed.plural());
         newBreed.getParent().setComponentZOrder(newBreed, 0 );
@@ -316,7 +333,6 @@ public class DeltaTickTab
         if (setupNumber != null) {
             newBreed.setNumber(setupNumber);
         }
-
         contentPanel.validate();
         return newBreed;
     }
@@ -331,31 +347,34 @@ public class DeltaTickTab
         }
 
         public void actionPerformed(ActionEvent e) {
-            if (myParent.getHasSpeciesInspector()) {
-                speciesInspectorPanel = speciesInspectorPanelMap.get(myParent);
-                speciesInspectorPanel.updateText();
-                speciesInspectorPanel.getMyFrame().setVisible(true);
-            }
-            else {
-                jFrame = new JFrame("Species Inspector");
-                //jFrame.setPreferredSize(new Dimension(1000, 700)); // testing jframe size
-                speciesInspectorPanel = new SpeciesInspectorPanel(myParent, jFrame);
+            speciesInspectorPanel = speciesInspectorPanelMap.get(myParent);
+            speciesInspectorPanel.updateText();
+            speciesInspectorPanel.getMyFrame().setVisible(true);
 
-                //speciesInspectorPanelMap.put(myParent.plural(), speciesInspectorPanel);
-                speciesInspectorPanelMap.put(myParent, speciesInspectorPanel);
-                speciesInspectorPanel.addPanels(jFrame.getContentPane());
-                //speciesInspectorPanel.populateTraitTabs();
-                speciesInspectorPanel.getOkayButton().addActionListener(new SpeciesPanelOkayListener(myParent));
-                speciesInspectorPanel.getCancelButton().addActionListener(new SpeciesPanelCancelListener(myParent));
-                myParent.setHasSpeciesInspector(true);
-                jFrame.setResizable(true);
-                jFrame.pack();
-                jFrame.setVisible(true);
-            }
+
+//            if (myParent.getHasSpeciesInspector()) {
+//                speciesInspectorPanel = speciesInspectorPanelMap.get(myParent);
+//                speciesInspectorPanel.updateText();
+//                speciesInspectorPanel.getMyFrame().setVisible(true);
+//            }
+//            else {
+//                jFrame = new JFrame("Species Inspector");
+//                //jFrame.setPreferredSize(new Dimension(1000, 700)); // testing jframe size
+//                speciesInspectorPanel = new SpeciesInspectorPanel(myParent, jFrame);
+//
+//                speciesInspectorPanelMap.put(myParent, speciesInspectorPanel);
+//                speciesInspectorPanel.addPanels(jFrame.getContentPane());
+//                speciesInspectorPanel.getOkayButton().addActionListener(new SpeciesPanelOkayListener(myParent));
+//                speciesInspectorPanel.getCancelButton().addActionListener(new SpeciesPanelCancelListener(myParent));
+//                myParent.setHasSpeciesInspector(true);
+//                jFrame.setResizable(true);
+//                jFrame.pack();
+//                jFrame.setVisible(true);
+//            }
         }
     }
 
-    class SpeciesPanelOkayListener implements ActionListener {
+    public class SpeciesPanelOkayListener implements ActionListener {
         BreedBlock myParent;
 
         SpeciesPanelOkayListener(BreedBlock myParent) {
@@ -363,6 +382,9 @@ public class DeltaTickTab
         }
 
         public void actionPerformed(ActionEvent e) {
+            //SpeciesInspectorPanel
+            speciesInspectorPanel = speciesInspectorPanelMap.get(myParent);
+
             myParent.setMaxAge(speciesInspectorPanel.getEndListSpan());
             myParent.setMaxEnergy(speciesInspectorPanel.getHighestEnergy());
             speciesInspectorPanel.getMyFrame().setVisible(false);
@@ -416,7 +438,7 @@ public class DeltaTickTab
         }
     }
 
-    class SpeciesPanelCancelListener implements ActionListener {
+    public class SpeciesPanelCancelListener implements ActionListener {
         BreedBlock myParent;
 
         SpeciesPanelCancelListener(BreedBlock myParent) {
@@ -424,6 +446,8 @@ public class DeltaTickTab
         }
 
         public void actionPerformed(ActionEvent e) {
+            //SpeciesInspectorPanel
+                    speciesInspectorPanel = speciesInspectorPanelMap.get(myParent);
             speciesInspectorPanel.getMyFrame().setVisible(false);
         }
     }
