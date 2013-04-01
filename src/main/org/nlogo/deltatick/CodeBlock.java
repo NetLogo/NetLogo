@@ -65,9 +65,7 @@ public abstract class CodeBlock
 
         removeButtonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
         removeButtonPanel.add(removeButton);
-        //removeButton.setBounds(5, 5, 16, 16);
         removeButton.setVisible(false);
-        //add(removeButtonPanel);
 
         myLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
         this.setLayout(myLayout);
@@ -80,6 +78,13 @@ public abstract class CodeBlock
         makeLabel();
         add(label);
     }
+
+    //copy constructor for modelReader (April 1, 2013)
+//    public CodeBlock(CodeBlock codeBlock) {
+//        myLayout = codeBlock.myLayout;
+//
+//
+//    }
 
 
     //this method overrides other default definition is out there to getMinimumSize -A. (sept 10)

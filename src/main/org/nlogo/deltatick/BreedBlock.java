@@ -196,6 +196,10 @@ public strictfp class BreedBlock
         return "breed [ " + plural() + " " + singular() + " ]\n";
     }
 
+    public String declareBreedXML() {
+        return "<breedBlock singular=\"" + singular() + "\" plural=\"" + plural() + "\" number=\"" + number.getText() + "\"></breedBlock>\n";
+    }
+
     //this is where breeds-own variables show up in NetLogo code -A. (aug 25)
     public String breedVars() {
         String code = "";

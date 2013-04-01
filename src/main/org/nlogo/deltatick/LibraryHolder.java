@@ -8,6 +8,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.locks.Condition;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -41,6 +42,8 @@ public class LibraryHolder extends JPanel {
     List<TraitBlock> traits = new LinkedList<TraitBlock>();
     List<TraitBlockNew> traitsNew = new LinkedList<TraitBlockNew>();
     List<OperatorBlock> operatorBlocksList = new LinkedList<OperatorBlock>();
+    ArrayList<BehaviorBlock> behaviorBlocksList = new ArrayList<BehaviorBlock>();
+    ArrayList<ConditionBlock> conditionBlocksList = new ArrayList<ConditionBlock>();
     ArrayList<String> variations;
 
 
@@ -138,6 +141,14 @@ public class LibraryHolder extends JPanel {
     }
     public List<TraitBlockNew> getTraitBlocks() {
         return traitsNew;
+    }
+
+    public void addToBehaviorBlocksList(BehaviorBlock behBlock) {
+        behaviorBlocksList.add(behBlock);
+    }
+
+    public void addToConditionBlocksList(ConditionBlock conditionBlock) {
+        conditionBlocksList.add(conditionBlock);
     }
 
 }

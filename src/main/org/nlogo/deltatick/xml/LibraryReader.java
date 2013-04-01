@@ -76,6 +76,7 @@ public class LibraryReader {
                     }
                 }
                 seekAndAttachInfo(behavior);
+                deltaTickTab.getLibraryHolder().addToBehaviorBlocksList((BehaviorBlock) block);
             }
 
             NodeList traits = library.getElementsByTagName("trait");
@@ -99,6 +100,7 @@ public class LibraryReader {
                 block = new ConditionBlock(condition.getAttributes().getNamedItem("name").getTextContent());
 
                 seekAndAttachInfo(condition);
+                deltaTickTab.getLibraryHolder().addToConditionBlocksList((ConditionBlock) block);
             }
 
             // make the quantities
@@ -206,6 +208,7 @@ public class LibraryReader {
         block.disableInputs();
         deltaTickTab.getLibraryHolder().addBlock( block );
         deltaTickTab.addDragSource(block);
+
         // the line above is what makes the blocks drag-able (Feb 14, 2012)
     }
 

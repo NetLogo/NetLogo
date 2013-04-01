@@ -57,7 +57,7 @@ public class TraitDisplay extends JPanel {
 
         }
 
-        // Check is trait is to be removed
+        // Check if trait is to be removed
         if ((varPercent.size() == 0) &&
              (chartsPanelMap.containsKey(traitName))) {
             // Remove corresponding panel
@@ -76,8 +76,6 @@ public class TraitDisplay extends JPanel {
 
         HashMap<String, Piechart> selectedTraitPieChart = new HashMap<String, Piechart>();
         HashMap<String, Barchart> selectedTraitBarChart = new HashMap<String, Barchart>();
-
-
 
         public ChartsPanel(String traitName, HashMap<String, String> varPercent) {
 

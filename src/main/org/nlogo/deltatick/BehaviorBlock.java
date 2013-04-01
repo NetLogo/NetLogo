@@ -19,8 +19,8 @@ public strictfp class BehaviorBlock
 
     boolean isTrait;
     boolean isMutate;
-    TraitBlockNew tBlockNew; // TODO need this to have trait Block work as an input in code (March, 25, 2013)
-    BreedBlock container;
+    TraitBlockNew tBlockNew = null; // TODO need this to have trait Block work as an input in code (March, 25, 2013)
+    BreedBlock container = null;
     private JToolTip toolTip;
 
     public BehaviorBlock(String name) {
@@ -30,6 +30,16 @@ public strictfp class BehaviorBlock
                 CodeBlock.behaviorBlockFlavor,
                 CodeBlock.codeBlockFlavor,
         };
+
+    }
+
+    //Copy constructor for blocks from saved model to be added to buildPanel automatically -April 1, 2013
+    public BehaviorBlock(BehaviorBlock behaviorBlock) {
+        super(behaviorBlock.getName(), ColorSchemer.getColor(0).brighter());
+        isTrait = behaviorBlock.isTrait;
+        isMutate = behaviorBlock.isMutate;
+        //TODO: Do I need to copy traitBlock?
+
 
     }
     //codeBlockFlavor in Condition Block, Beh Block is what makes it a valid block for Breed   -A.

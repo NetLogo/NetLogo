@@ -3,10 +3,13 @@ package org.nlogo.deltatick.xml;
 import org.jdesktop.swingx.MultiSplitLayout;
 import org.nlogo.app.DeltaTickTab;
 import org.nlogo.deltatick.BreedBlock;
+import org.nlogo.deltatick.SpeciesInspectorPanel;
+import org.nlogo.deltatick.TraitState;
 import org.parboiled.support.Var;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
+import javax.swing.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.awt.*;
@@ -27,18 +30,18 @@ public class DeltaTickModelReader {
     FileDialog fileLoader;
     String fileName;
 
-    public DeltaTickModelReader(Frame frame, DeltaTickTab deltaTickTab) {
+    public DeltaTickModelReader(Frame frame, DeltaTickTab deltaTickTab, File modelFile) {
         this.deltaTickTab = deltaTickTab;
 
-        fileLoader = new FileDialog(frame);
-        fileLoader.setVisible(true);
-        File file = new File(fileLoader.getDirectory() + fileLoader.getFile());
-        fileName = new String (fileLoader.getDirectory() + fileLoader.getFile());
+        //fileLoader = new FileDialog(frame);
+        //fileLoader.setVisible(true);
+        //File file = new File(fileLoader.getDirectory() + fileLoader.getFile());
+        //fileName = new String (fileLoader.getDirectory() + fileLoader.getFile());
 
         try {
             DocumentBuilder builder =
                     DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            Document model = builder.parse(file);
+            Document model = builder.parse(modelFile);
 
             NodeList usedLibraries = model.getElementsByTagName("usedLibrary");
             for (int i = 0; i < usedLibraries.getLength(); i++) {
@@ -54,27 +57,31 @@ public class DeltaTickModelReader {
                 String number = breedBlock.getAttributes().getNamedItem("number").getTextContent();
                 String maxAge = new String();
                 String maxEnergy = new String();
+                BreedBlock bBlock = deltaTickTab.makeBreedBlock(plural, number);
 
                 NodeList setupNodes = breedBlock.getChildNodes();
+                //Ownvar childnodes for age & energy
                 for (int j = 0; j < setupNodes.getLength(); j++) {
                     if (setupNodes.item(j).getNodeName() == "ownVar") {
                         Node ownVar = setupNodes.item(j);
                         if (ownVar.getAttributes().getNamedItem("name").getTextContent().equals("age")) {
                             maxAge = ownVar.getAttributes().getNamedItem("maxReporter").getTextContent();
+                            bBlock.setMaxAge(maxAge);
                         }
                         if (ownVar.getAttributes().getNamedItem("name").getTextContent().equals("energy")) {
                             maxEnergy = ownVar.getAttributes().getNamedItem("maxReporter").getTextContent();
+                            bBlock.setMaxEnergy(maxEnergy);
                         }
                     }
-                    BreedBlock bBlock = deltaTickTab.makeBreedBlock(plural, number);
-                    bBlock.setMaxAge(maxAge);
-                    bBlock.setMaxEnergy(maxEnergy);
 
+                //TraitChildNodes for trait of breeds
                     if (setupNodes.item(j).getNodeName() == "trait") {
                         Node trait = setupNodes.item(j);
                         String traitName = new String(trait.getAttributes().getNamedItem("name").getTextContent()); //traitname
                         NodeList variationNodes = trait.getChildNodes();
                         HashMap<String, String> selectedVariationsPercent = new HashMap<String, String>();
+                        HashMap<String, Variation> selectedVariationsHashMap = new HashMap<String, Variation>();
+                        HashMap<String, TraitState> selectedTraitStateMap = new HashMap<String, TraitState>();
 
                         for (Trait newTrait : deltaTickTab.getBuildPanel().getBgInfo().getTraits()) {
                             if (traitName.equalsIgnoreCase(newTrait.getNameTrait())) {
@@ -86,26 +93,38 @@ public class DeltaTickModelReader {
                                         String percentage = variationNode.getAttributes().getNamedItem("percent").getTextContent();
                                         int percent = Integer.parseInt(percentage);
                                         Variation variation = new Variation(traitName, varName, varValue, percent);
-                                        //selectedVariationsPercent
+                                        selectedVariationsHashMap.put(varName, variation);
+                                        selectedVariationsPercent.put(varName, percentage);
                                     }
                                 }
-                                //TraitState traitState = (newTrait, selectedVariationsPercentHashMap)
+                                TraitState traitState = new TraitState(newTrait, selectedVariationsPercent);
+                                traitState.getVariationHashMap().clear();
+                                traitState.getVariationHashMap().putAll(selectedVariationsHashMap);
+                                selectedTraitStateMap.put(traitName, traitState);
                             }
                         }
+                        SpeciesInspectorPanel speciesInspectorPanel = deltaTickTab.getSpeciesInspectorPanel(bBlock);
+                        speciesInspectorPanel.getTraitPreview().setSelectedTraitsMap(selectedTraitStateMap);
 
+                        speciesInspectorPanel.getTraitPreview().setSelectedTrait(traitName);
 
-                        //HashMap<String, TraitState> for TraitPreview to set (March 31, 2013)
-                        //TODO: traitBlock setparent using breedBlock (march 31, 2013)
-                        // TODO: SpeciesInspectorPanel traitState update with this data (March 31, 2013)
+                        speciesInspectorPanel.updateTraitDisplay();
+
+                        for (TraitState traitState : selectedTraitStateMap.values()) {
+                            deltaTickTab.makeTraitBlock(bBlock, traitState);
+                        }
+                    }
+
+                    if (setupNodes.item(j).getNodeName() == "behaviorBlock") {
 
 
                     }
                 }
-
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        //this.deltaTickTab
 
     }
 

@@ -113,7 +113,7 @@ public strictfp class PlotTab
         // TODO: BIG HACK
         //clearButton.setEnabled(true);
         //intervalButton.setEnabled(true);
-        //saveButton.setEnabled(true);
+        //saveModelButton.setEnabled(true);
         //movieButton.setEnabled(true);
 
         dT.setPlotsAlive(true);

@@ -56,8 +56,6 @@ public class SpeciesInspectorPanel extends JPanel {
         lifeSpanBlank.setMaximumSize(new Dimension(20, 30));
         updateText();
         //activateButtons();
-
-
     }
 
     public void updateText() {
@@ -248,8 +246,6 @@ public class SpeciesInspectorPanel extends JPanel {
         public void valueChanged(ListSelectionEvent e) {
             //sidePanel.setVisible(true);
             traitPreview.updateTraitSelection(e, new traitTableModelListener());
-            //traitDisplay.validate();
-            //sidePanel.validate();
             myFrame.pack();
 
         } // valueChanged
@@ -258,22 +254,27 @@ public class SpeciesInspectorPanel extends JPanel {
     class traitTableModelListener implements TableModelListener {
         public void tableChanged(TableModelEvent e) {
             if (e.getColumn() == 2) {
-            traitPreview.updateVariationSelection(e);
-            traitDisplay.validate();
-
-            sidePanel.validate();
-            if (traitPreview.getTraitStateMap().size() == 0) {
-                sidePanel.setVisible(false);
-            }
-            else {
-                sidePanel.setVisible(true);
-            }
-            sidePanel.validate();
-
-            myFrame.pack();
+                traitPreview.updateVariationSelection(e);
+                updateTraitDisplay();
             }
         }
     }
+
+    public void updateTraitDisplay() {
+        traitDisplay.validate();
+        sidePanel.validate();
+        if (traitPreview.getTraitStateMap().size() == 0) {
+            sidePanel.setVisible(false);
+        }
+        else {
+            sidePanel.setVisible(true);
+        }
+        sidePanel.validate();
+
+        myFrame.pack();
+    }
+
+
 
 
 }

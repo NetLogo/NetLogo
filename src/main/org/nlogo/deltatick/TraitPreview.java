@@ -78,7 +78,7 @@ public class TraitPreview extends JPanel {
         String[] traitTypes = new String[traitsList.size()];
         int i = 0;
         for (Trait trait : traitsList) {
-            traitTypes[i] = trait.getNameTrait();
+            traitTypes[i] = new String(trait.getNameTrait());
             i++;
         }
          return traitTypes;
@@ -239,6 +239,10 @@ public class TraitPreview extends JPanel {
         return selectedTrait;
     }
 
+    public void setSelectedTrait(String traitName) {
+        myTraitsList.setSelectedValue(traitName, true);
+    }
+
     public LabelPanel getLabelPanel() {
         return labelPanel;
     }
@@ -325,13 +329,18 @@ public class TraitPreview extends JPanel {
                         Object[] row = new Object[NUMBER_COLUMNS];
 
                         row[0] = new String(key);
-                        row[1] = new String(var.value);
 
                         boolean varSelected = false;
+                        String value = new String (var.value);
                         if (selectedTraitsMap.containsKey(getSelectedTraitName())) {
-                            //check if the variationhashmap in trait state has the variation selected
+                            //check if the variationhashmap in trait state has the variation selected & update value from traitstate
                             varSelected = selectedTraitsMap.get(getSelectedTraitName()).getVariationHashMap().containsKey(key);
+                            if (varSelected) {
+                                value = new String(selectedTraitsMap.get(getSelectedTraitName()).getVariationHashMap().get(key).value);
+                            }
                         }
+
+                        row[1] = new String(value);
                         row[2] = new Boolean(varSelected);
                         tempTableData.add(row);
                     } // for map

@@ -1,7 +1,6 @@
 package org.nlogo.app;
 
 import org.nlogo.agent.Observer;
-import org.nlogo.api.LogoListBuilder;
 import org.nlogo.api.SimpleJobOwner;
 import org.nlogo.api.CompilerException;
 import org.nlogo.deltatick.*;
@@ -9,23 +8,18 @@ import org.nlogo.deltatick.PopupMenu;
 import org.nlogo.deltatick.dialogs.*;
 import org.nlogo.deltatick.dnd.*;
 import org.nlogo.deltatick.xml.*;
-import org.nlogo.hotlink.controller.ModelReader;
 import org.nlogo.widget.NoteWidget;
 import org.nlogo.window.*;
 
 
-import org.nlogo.plot.Plot;
 import org.nlogo.plot.PlotPen;
 import org.nlogo.plot.PlotManager;
-import org.parboiled.errors.ActionError;
 
 // java.awt contains all of the classes for creating user interfaces and for painting graphics and images -A. (sept 8)
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.IOException;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -72,13 +66,15 @@ public class DeltaTickTab
     JButton addPlot;
     JButton addHisto;
     JButton addTrackSpecies;
-    JButton saveButton;
+    JButton saveModelButton;
     JButton openModelButton;
     PopupMenu popup;
 
     //JButton addEnvt;
     JButton buildBlock;
     JButton Not;
+
+    JFileChooser jFileChooser;
 
     boolean plotsAlive = false;
 
@@ -350,27 +346,7 @@ public class DeltaTickTab
             speciesInspectorPanel = speciesInspectorPanelMap.get(myParent);
             speciesInspectorPanel.updateText();
             speciesInspectorPanel.getMyFrame().setVisible(true);
-
-
-//            if (myParent.getHasSpeciesInspector()) {
-//                speciesInspectorPanel = speciesInspectorPanelMap.get(myParent);
-//                speciesInspectorPanel.updateText();
-//                speciesInspectorPanel.getMyFrame().setVisible(true);
-//            }
-//            else {
-//                jFrame = new JFrame("Species Inspector");
-//                //jFrame.setPreferredSize(new Dimension(1000, 700)); // testing jframe size
-//                speciesInspectorPanel = new SpeciesInspectorPanel(myParent, jFrame);
-//
-//                speciesInspectorPanelMap.put(myParent, speciesInspectorPanel);
-//                speciesInspectorPanel.addPanels(jFrame.getContentPane());
-//                speciesInspectorPanel.getOkayButton().addActionListener(new SpeciesPanelOkayListener(myParent));
-//                speciesInspectorPanel.getCancelButton().addActionListener(new SpeciesPanelCancelListener(myParent));
-//                myParent.setHasSpeciesInspector(true);
-//                jFrame.setResizable(true);
-//                jFrame.pack();
-//                jFrame.setVisible(true);
-//            }
+            speciesInspectorPanel.updateTraitDisplay();
         }
     }
 
@@ -407,25 +383,9 @@ public class DeltaTickTab
             }
 
             for (TraitState traitState : speciesInspectorPanel.getTraitStateMap().values()) {
-                TraitBlockNew traitBlock;
-                traitBlock = new TraitBlockNew(myParent, traitState, traitState.getVariationHashMap(), traitState.getVariationsValuesList());
-                traitBlock.setMyParent(myParent);
-
-                //Commented out because trying new traitBlock -March 25, 2013
-//                TraitBlock traitBlock;
-//                traitBlock = new TraitBlock(myParent, traitState, traitState.getVariationHashMap(), traitState.getVariationsValuesList());
-//                traitBlock.setMyParent(myParent);
-                speciesInspectorPanel.getSpeciesInspector().addToSelectedTraitsList(traitState);
-                userInput.addTraitAndVariations(myParent.getName(), traitState.getNameTrait(), traitState.getVariationsList());
-                buildPanel.addTrait(traitBlock);
-                libraryHolder.addTraittoTab(traitBlock, buildPanel.getMyTraits().size());
-                deltaTickTab.addDragSource(traitBlock);
-                myParent.addTraitBlocktoList(traitBlock);
-                //traitBlock.addRect("Drag to Species Block");
-                //new TraitDropTarget(traitBlock);
-                contentPanel.validate();
-
+                makeTraitBlock(myParent, traitState);
             }
+
             myParent.getTraitLabels().clear();
             for (Map.Entry<String, JCheckBox> map : speciesInspectorPanel.getTraitPreview().getLabelPanel().getCheckBoxes().entrySet()) {
                 String trait = map.getKey();
@@ -436,6 +396,25 @@ public class DeltaTickTab
             }
                 //TODO: this is a hard-coded hack because "trait" becomes null. Fix it -Aditi (Feb 22, 2013)
         }
+    }
+
+    public void makeTraitBlock(BreedBlock bBlock, TraitState traitState) {
+        TraitBlockNew traitBlock;
+        traitBlock = new TraitBlockNew(bBlock, traitState, traitState.getVariationHashMap(), traitState.getVariationsValuesList());
+        traitBlock.setMyParent(bBlock);
+
+        speciesInspectorPanel.getSpeciesInspector().addToSelectedTraitsList(traitState);
+        userInput.addTraitAndVariations(bBlock.getName(), traitState.getNameTrait(), traitState.getVariationsList());
+        buildPanel.addTrait(traitBlock);
+        libraryHolder.addTraittoTab(traitBlock, buildPanel.getMyTraits().size());
+        deltaTickTab.addDragSource(traitBlock);
+        bBlock.addTraitBlocktoList(traitBlock);
+
+        contentPanel.validate();
+    }
+
+    public SpeciesInspectorPanel getSpeciesInspectorPanel(BreedBlock bBlock) {
+        return speciesInspectorPanelMap.get(bBlock);
     }
 
     public class SpeciesPanelCancelListener implements ActionListener {
@@ -534,28 +513,41 @@ public class DeltaTickTab
     private final Action saveModelAction =
             new AbstractAction( "Save model" ) {
                 public void actionPerformed (ActionEvent e) {
-                    saveModel();
+                    //saveModel();
                 }
     };
 
-    private final Action openModelAction =
-            new AbstractAction("Open model") {
+    private final Action opensaveModelAction =
+            new AbstractAction() {
+                JFileChooser fileChooser = new JFileChooser();
                 public void actionPerformed (ActionEvent e) {
-                    openModel();
+                    if (e.getSource() == openModelButton) {
+                        int returnVal = fileChooser.showOpenDialog(DeltaTickTab.this);
+
+                        if (returnVal == JFileChooser.APPROVE_OPTION) {
+                            File file = fileChooser.getSelectedFile();
+                            openModel(file);
+                        }
+
+                        //Handle save button action.
+                    } else if (e.getSource() == saveModelButton) {
+                        int returnVal = fileChooser.showSaveDialog(DeltaTickTab.this);
+                        if (returnVal == JFileChooser.APPROVE_OPTION) {
+                            File file = fileChooser.getSelectedFile();
+                            saveModel(file);
+                        }
+                    }
                 }
     };
 
-    public void saveModel() {
-        //System.out.println("Det " + libraryReader.getFileName());
-        for (BreedBlock bBlock : buildPanel.getMyBreeds()) {
-            System.out.println("Breed " + bBlock.plural());
-            //System.out.println("Breed sing " + bBlock.singular());
-            System.out.println("Number " + bBlock.getNumber() + " breeshape " + bBlock.getBreedShape() + " Color " + bBlock.getColorName());
-        }
+    public void saveModel(File modelFile) {
+        System.out.println("del " + buildPanel.newSaveAsXML());
+
+
     }
 
-    public void openModel() {
-        DeltaTickModelReader modelReader = new DeltaTickModelReader( workspace.getFrame(), this );
+    public void openModel(File file) {
+        DeltaTickModelReader modelReader = new DeltaTickModelReader( workspace.getFrame(), this , file);
     }
 
     public void populateProcedures() {
@@ -750,9 +742,13 @@ public class DeltaTickTab
                 //addEnvt.setEnabled(false);
                 //this.add(addEnvt) ;
                 this.add( new org.nlogo.swing.ToolBar.Separator() ) ;
-                saveButton = new JButton( saveModelAction );
-                this.add( saveButton );
-                openModelButton = new JButton(openModelAction);
+                saveModelButton = new JButton();
+                saveModelButton.setAction(opensaveModelAction);
+                saveModelButton.setText("Save Model");
+                this.add(saveModelButton);
+                openModelButton = new JButton();
+                openModelButton.setAction(opensaveModelAction);
+                openModelButton.setText("Open Model");
                 this.add(openModelButton);
                 //buildBlock = new JButton( toBuildBlock );
                 //this.add( buildBlock );
