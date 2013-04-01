@@ -60,16 +60,35 @@ public class DeltaTickModelReader {
                         Node ownVar = setupNodes.item(j);
                         if (ownVar.getAttributes().getNamedItem("name").getTextContent().equals("age")) {
                             maxAge = ownVar.getAttributes().getNamedItem("maxReporter").getTextContent();
-
                         }
                         if (ownVar.getAttributes().getNamedItem("name").getTextContent().equals("energy")) {
                             maxEnergy = ownVar.getAttributes().getNamedItem("maxReporter").getTextContent();
                         }
                     }
+                    BreedBlock bBlock = deltaTickTab.makeBreedBlock(plural, number);
+                    bBlock.setMaxAge(maxAge);
+                    bBlock.setMaxEnergy(maxEnergy);
+
+                    if (setupNodes.item(j).getNodeName() == "trait") {
+                        Node trait = setupNodes.item(j);
+                        System.out.println("DTMR " + trait.getAttributes().getNamedItem("name").getTextContent()); //traitname
+                        NodeList variationNodes = trait.getChildNodes();
+                        for (int k = 0; k < variationNodes.getLength(); k++) {
+                            if (variationNodes.item(k).getNodeName() == "variation") {
+                                Node variation = variationNodes.item(k);
+                                String varName = variation.getAttributes().getNamedItem("name").getTextContent();
+                                String varValue = variation.getAttributes().getNamedItem("value").getTextContent();
+                                String percent = variation.getAttributes().getNamedItem("percent").getTextContent();
+                            }
+                        }
+
+
+                        //TODO: traitBlock setparent using breedBlock (march 31, 2013)
+
+
+                    }
                 }
-                BreedBlock bBlock = deltaTickTab.makeBreedBlock(plural, number);
-                bBlock.setMaxAge(maxAge);
-                bBlock.setMaxEnergy(maxEnergy);
+
             }
         } catch (Exception e) {
             e.printStackTrace();

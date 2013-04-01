@@ -49,9 +49,7 @@ public class TraitBlockNew
                 CodeBlock.codeBlockFlavor};
         this.breedName = breedBlock.plural();
         this.traitState = new TraitState(traitState);
-        //this.variationHashMap = this.traitState.getVariationHashMap();//variationHashMap;
         this.traitName = this.traitState.getNameTrait();
-        //this.variationNamesValues = this.traitState.getVariationsValuesList();//variationValues;
         this.variationHashMap = variationHashMap;
         this.variationNamesValues = variationValues;
 
@@ -65,7 +63,6 @@ public class TraitBlockNew
           y += c.getPreferredSize().getHeight();
         }
         label.setPreferredSize(new Dimension(100, y + 11));
-
         this.revalidate();
     }
 

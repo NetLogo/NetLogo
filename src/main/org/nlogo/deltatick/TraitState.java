@@ -27,13 +27,6 @@ public class TraitState extends Trait {
     public TraitState(Trait t, HashMap<String, String> hm) {
         super(t);
 
-
-//        Iterator iterator = hm.entrySet().iterator();
-//        while(iterator.hasNext()) {
-//            Map.Entry pairs = (Map.Entry) iterator.next();
-//            System.out.println(pairs.getKey() + " " + pairs.getValue());
-//        }
-
         for (Map.Entry<String, String> entry : hm.entrySet()) {
             int percent = (int) Math.round(Double.parseDouble(entry.getValue()));
             if (percent > 0) {

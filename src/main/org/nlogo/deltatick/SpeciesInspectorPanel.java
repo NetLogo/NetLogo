@@ -162,10 +162,8 @@ public class SpeciesInspectorPanel extends JPanel {
         titleLabelPanel = BorderFactory.createTitledBorder("Set Labels");
         labelPanel.setBorder(titleLabelPanel);
         traitPreview = new TraitPreview(myParent.plural(), traitDisplay, labelPanel, myFrame);
-        //labelPanel.initiComponents();
         midPanel.add(traitPreview);
         traitPreview.setTraits(myParent.getTraits());
-        //traitPreview.showMe();
         traitPreview.setTraitsListListener(new TraitListSelectionHandler());
         traitPreview.setAlignmentX(Component.LEFT_ALIGNMENT);
 

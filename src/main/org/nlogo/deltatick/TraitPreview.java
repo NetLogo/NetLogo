@@ -57,7 +57,6 @@ public class TraitPreview extends JPanel {
     ArrayList<String> selectedVariations;
     //HashMap<Trait, Variation> selectedTraitVariations = new HashMap<Trait, Variation>(); //??
     HashMap<String, String> selectedTraitVariations = new HashMap<String, String>();
-    HashMap<String, String> selectedTraitValues = new HashMap<String, String>();
     public static final int NUMBER_COLUMNS = 3;
 
     // Holds final selected traits (and variations) as selected by the user
@@ -163,7 +162,6 @@ public class TraitPreview extends JPanel {
                 String variationName = (String) model.getValueAt(row, 0);
                 Variation tmpVariation = selectedTrait.getVariationHashMap().get(variationName);
                 tmpVariation.value = (String) model.getValueAt(row, 1);
-                //tmpVarHashMap.put(variationName, selectedTrait.getVariationHashMap().get(variationName));
                 tmpVarHashMap.put(variationName, tmpVariation);
             }
         } // for
@@ -194,7 +192,6 @@ public class TraitPreview extends JPanel {
             if ((Boolean) model.getValueAt(row, 2) == true) {
                 selectedVariations.add((String) model.getValueAt(row, 0));
                 selectedTraitVariations.put(selectedTraitName, model.getValueAt(row, 0).toString());
-                selectedTraitValues.put(selectedTraitName, model.getValueAt(row, 1).toString());
             }
         }
         traitDistriPanel.remove(traitDistribution);
@@ -202,6 +199,7 @@ public class TraitPreview extends JPanel {
         if (readPercent &&
             selectedTraitsMap.containsKey(selectedTraitName)) {
             //traitDistribution = new TraitDistribution(breed, selectedTraitName, selectedVariations);
+            //TODO: do not use traitState.selectedVariationsHashMap. Instead create a temp map by iterating over traitState.variations (March 31, 2013)
             traitDistribution = new TraitDistribution(breed, selectedTraitName, selectedVariations, selectedTraitsMap.get(selectedTraitName).selectedVariationsPercent);
         }
         else {
@@ -538,9 +536,7 @@ public class TraitPreview extends JPanel {
         return traitDistribution;
     }
 
-    public HashMap<String, String> getSelectedTraitValues() {
-        return selectedTraitValues;
-    }
+
 
     public HashMap<String, String> getSelectedTraitVariations() {
         return selectedTraitVariations;
