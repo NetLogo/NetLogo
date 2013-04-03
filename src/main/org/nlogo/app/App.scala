@@ -244,7 +244,6 @@ class App extends
   var fileMenu: FileMenu = null
   var colorDialog: ColorDialog = null
   private val listenerManager = new NetLogoListenerManager
-  lazy val modelingCommons = pico.getComponent(classOf[ModelingCommonsInterface])
   private val ImportWorldURLProp = "netlogo.world_state_url"
   private val ImportRawWorldURLProp = "netlogo.raw_world_state_url"
 
@@ -319,16 +318,6 @@ class App extends
   }
 
   private def finishStartup() {
-    pico.add(classOf[ModelingCommonsInterface],
-          "org.nlogo.mc.ModelingCommons",
-          Array[Parameter] (
-            new ConstantParameter(new ModelSaver(pico.getComponent(classOf[App])).save _),
-            new ComponentParameter(classOf[AppFrame]),
-            new ConstantParameter(() => workspace.exportView()),
-            new ConstantParameter(() => Boolean.box(
-              workspace.procedures.isDefinedAt("SETUP") &&
-                workspace.procedures.isDefinedAt("GO"))),
-            new ComponentParameter()))
     pico.addComponent(new MenuBarFactory())
     pico.addComponent(new EditorFactory(workspace))
 
