@@ -269,7 +269,6 @@ public strictfp class QuantityBlock
     }
 
     public boolean getHisto() {
-        System.out.println("Qaunt " + histo);
         return histo;
     }
 

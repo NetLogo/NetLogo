@@ -89,9 +89,18 @@ public strictfp class BehaviorBlock
                       for (TraitBlockNew traitBlock :  myBreedBlock.getMyTraitBlocks()) {
                           String traitName = traitBlock.getTraitName();
                           //TODO: this is likely to throw a bug if reproduce is in condition block (April 1, 2013)
-                          //passBack += "if random 100 <= " + ((BreedBlock) this.getMyBreedBlock()).plural() + "-" + traitBlock.getTraitName() + "-mutation [\n";
-                          passBack += "if random 100 <= " + this.getMyBreedBlock().plural() + "-" + traitBlock.getTraitName() + "-mutation [\n";
-                          passBack += "set " + traitName + " " + traitName + " * 0.01 \n]]]\n";
+                          //passBack += "if random 100 <= " + this.getMyBreedBlock().plural() + "-" + traitBlock.getTraitName() + "-mutation [\n";
+                          //passBack += "set " + traitName + " " + traitName + " * 0.01 \n]]]\n";
+                          passBack += "ifelse random 2 = 0 \n";
+                          passBack += "[set " + traitName + " (" + traitName + " - " + this.getMyBreedBlock().plural() + "-" +
+                                                        traitBlock.getTraitName() + "-mutation)]\n";
+                          passBack += "[set " + traitName + " (" + traitName + " + " + this.getMyBreedBlock().plural() + "-" +
+                                                        traitBlock.getTraitName() + "-mutation)]";
+                          passBack += "\n]]\n";
+                      }
+                      //If no trait or mutate code is being used, close brackets for reproduce block
+                      if (myBreedBlock.getMyTraitBlocks().size() == 0) {
+                          passBack += "]]\n";
                       }
                   }
               }
@@ -127,7 +136,7 @@ public strictfp class BehaviorBlock
             }
         }
         for (JTextField percentInput : percentInputs.values()) {
-            passBack += percentInput.getText() + " / 100";
+            passBack += percentInput.getText() + " ";
         }
 
         passBack += "\n";

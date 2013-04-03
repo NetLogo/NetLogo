@@ -659,6 +659,9 @@ public class DeltaTickTab
                 putNoteWidget = true;
                 for (TraitBlockNew tBlock : bBlock.getMyTraitBlocks()) {
                     SliderWidget sliderWidget = ((SliderWidget) interfacePanel.makeWidget("SLIDER", false));
+
+                    System.out.println("deltatick max " + sliderWidget.maximum() + " " + sliderWidget.increment());
+                    System.out.println("deltatick min " + sliderWidget.minimum());
                     WidgetWrapper ww = interfacePanel.addWidget(sliderWidget, 0, 120, true, false);
                     String sliderName = tBlock.getMyParent().plural() + "-" + tBlock.getTraitName() + "-mutation";
                     sliderWidget.name_$eq(sliderName);
