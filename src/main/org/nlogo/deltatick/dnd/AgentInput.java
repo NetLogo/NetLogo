@@ -1,7 +1,5 @@
 package org.nlogo.deltatick.dnd;
 
-import com.sun.tools.javac.tree.Pretty;
-
 import javax.swing.*;
 import java.awt.*;
 

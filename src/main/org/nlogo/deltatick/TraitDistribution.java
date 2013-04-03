@@ -1,19 +1,13 @@
 package org.nlogo.deltatick;
 
-import org.jdesktop.swingx.MultiSplitLayout;
-import org.jdesktop.swingx.MultiSplitPane;
-import org.nlogo.deltatick.xml.Variation;
-import org.nlogo.workspace.ModelsLibrary;
+import org.nlogo.swingx.MultiSplitLayout;
+import org.nlogo.swingx.MultiSplitPane;
 
 import javax.swing.*;
-import javax.swing.text.AbstractDocument;
 import java.awt.*;
-import java.awt.geom.CubicCurve2D;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.

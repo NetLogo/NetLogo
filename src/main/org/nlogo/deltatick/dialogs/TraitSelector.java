@@ -1,12 +1,5 @@
 package org.nlogo.deltatick.dialogs;
 
-import apple.laf.JRSUIConstants;
-import com.ibm.media.bean.multiplayer.RelatedLink;
-import org.jdesktop.layout.*;
-import org.jdesktop.layout.LayoutStyle;
-import org.jdesktop.swingx.MultiSplitLayout;
-import org.jdesktop.swingx.MultiSplitPane;
-import org.nlogo.api.Property;
 import org.nlogo.deltatick.TraitBlock;
 //import org.nlogo.deltatick.TraitDisplayPanel;
 import org.nlogo.deltatick.TraitDistribution;
@@ -14,7 +7,6 @@ import org.nlogo.deltatick.xml.Trait;
 import org.nlogo.deltatick.xml.Variation;
 
 import javax.swing.*;
-import javax.swing.GroupLayout;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.event.ActionEvent;
@@ -26,17 +18,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import org.jdesktop.swingx.MultiSplitLayout.Split;
-import java.util.Arrays;
-import java.util.List;
 import javax.swing.JButton;
-import org.jdesktop.swingx.MultiSplitLayout;
-import org.jdesktop.swingx.MultiSplitLayout.Leaf;
-import org.jdesktop.swingx.MultiSplitLayout.Divider;
-import org.jdesktop.swingx.MultiSplitLayout.Split;
-import org.jdesktop.swingx.MultiSplitPane;
 
 /**
  * Created by IntelliJ IDEA.
