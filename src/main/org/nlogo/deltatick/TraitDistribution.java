@@ -90,7 +90,8 @@ public class TraitDistribution
         String s = new String();
         String layout = new String();
         layout = "(ROW ";
-        double weights = (double ) 1.0 / selectedVariations.size();
+        //double weights = (double ) 1.0 / selectedVariations.size();
+        double weights = 1.0 / selectedVariations.size();
         double totalWeight = 0.0;
 
         String totalWeightStr = "";

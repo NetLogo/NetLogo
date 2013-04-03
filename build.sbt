@@ -5,11 +5,11 @@ name := "NetLogo"
 resourceDirectory in Compile <<= baseDirectory(_ / "resources")
 
 scalacOptions ++=
-  "-deprecation -unchecked -Xfatal-warnings -Xcheckinit -encoding us-ascii"
+  "-deprecation -unchecked -Xcheckinit -encoding us-ascii"
   .split(" ").toSeq
 
 javacOptions ++=
-  "-g -deprecation -encoding us-ascii -Werror -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path"
+  "-g -deprecation -encoding us-ascii -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path"
   .split(" ").toSeq
 
 scalaSource in Compile <<= baseDirectory(_ / "src" / "main")

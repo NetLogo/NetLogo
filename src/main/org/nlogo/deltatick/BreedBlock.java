@@ -31,7 +31,7 @@ import java.util.*;
 import java.util.List;
 
 import org.nlogo.deltatick.dialogs.TraitSelectorOld;
-import sun.jvm.hotspot.code.CodeBlob;
+//import sun.jvm.hotspot.code.CodeBlob;
 
 // BreedBlock contains code for how whatever happens in BreedBlock is converted into NetLogo code -A. (aug 25)
 
@@ -248,7 +248,7 @@ public strictfp class BreedBlock
         //for (CodeBlock block: myBlocks) {
         for (TraitBlockNew block : myTraitBlocks) {
             if (block instanceof TraitBlockNew) {
-                String traitName =  ((TraitBlockNew) block).getTraitName();
+                String traitName =  block.getTraitName();
                 if (setTraits.contains(traitName) != true) {
                     code += "let all-" + plural() + "-" + traitName + " sort " + plural() + " \n";
                     setTraits.add(traitName);
@@ -268,13 +268,15 @@ public strictfp class BreedBlock
 
                         // System.out.println("TraitName: " + traitName + " Variation: " + variationType + " Value: " + variation.value);
                         //int k = variation.percent;
-                        int k =  (int) Math.round(((double) (variation.percent/100.0)) * Double.parseDouble(number.getText()));
+                        //int k =  (int) Math.round(((double) (variation.percent/100.0)) * Double.parseDouble(number.getText()));
+                        int k =  (int) Math.round(((variation.percent/100.0)) * Double.parseDouble(number.getText()));
 
                         if (it.hasNext()) {
                             endValue = startValue + k - 1;
                         }
                         else {
-                            endValue = (int) (Integer.parseInt(number.getText()) - 1);
+                            //endValue = (int) (Integer.parseInt(number.getText()) - 1);
+                            endValue = (Integer.parseInt(number.getText()) - 1);
                         }
 
 

@@ -1,6 +1,6 @@
 package org.nlogo.deltatick.reps;
 
-import net.sf.cglib.core.Local;
+//import net.sf.cglib.core.Local;
 import org.jfree.chart.*;
 import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
 import org.jfree.chart.plot.PiePlot;

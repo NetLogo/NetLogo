@@ -706,7 +706,8 @@ public class DeltaTickTab
         try {
            for (PlotBlock plotBlock : buildPanel.getMyPlots().subList(interfacePlotCount, buildPanel.getMyPlots().size())) {
                org.nlogo.window.Widget plotWidget = interfacePanel.makeWidget("Plot", false);
-               WidgetWrapper ww = interfacePanel.addWidget(plotWidget, 660 + (((int) interfacePlotCount/3) * 200), 10 + ((interfacePlotCount%3)*160), true, false);
+               //WidgetWrapper ww = interfacePanel.addWidget(plotWidget, 660 + (((int) interfacePlotCount/3) * 200), 10 + ((interfacePlotCount%3)*160), true, false);
+               WidgetWrapper ww = interfacePanel.addWidget(plotWidget, 660 + ((interfacePlotCount/3) * 200), 10 + ((interfacePlotCount%3)*160), true, false);
                plotWidget.displayName(plotBlock.getName());
                org.nlogo.plot.Plot newPlot = workspace.plotManager().getPlot("plot " + (interfacePlotCount + 1));
                plotWrappers.put("plot " + (interfacePlotCount + 1), ww);

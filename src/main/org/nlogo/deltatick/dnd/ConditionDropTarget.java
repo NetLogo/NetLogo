@@ -22,9 +22,10 @@ public class ConditionDropTarget
             if (o instanceof BehaviorBlock) {
                 addCodeBlock((BehaviorBlock) o);
                 if (((BehaviorBlock) o).getIsMutate() == true) {
-                    ((BehaviorBlock) o).setMyBreedBlock(((BreedBlock) ((CodeBlock)block).getMyParent()));
+                    //((BehaviorBlock) o).setMyBreedBlock(((BreedBlock) ((CodeBlock)block).getMyParent()));
+                    ((BehaviorBlock) o).setMyBreedBlock(((BreedBlock) block.getMyParent()));
                     if (((BehaviorBlock) o).getIsMutate() == true) {
-                        ((BreedBlock) ((CodeBlock)block).getMyParent()).setReproduceUsed(true);
+                        ((BreedBlock) (block).getMyParent()).setReproduceUsed(true);
                     }
                 }
                 return true;

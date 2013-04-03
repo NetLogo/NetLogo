@@ -69,7 +69,8 @@ public class DeltaTickModelReader {
                 codeBlock.enableInputs();
                 //TODO: Get ismutate code from BreedDropTarget
                 if (((BehaviorBlock) o).getIsMutate() == true) {
-                    ((BreedBlock) myBreedBlock).setReproduceUsed(true);
+                    //((BreedBlock) myBreedBlock).setReproduceUsed(true);
+                    myBreedBlock.setReproduceUsed(true);
                 }
                 new BehaviorDropTarget((BehaviorBlock) o);
                 // Each behavior block MUST know its breed block
@@ -133,7 +134,8 @@ public class DeltaTickModelReader {
                 String maxAge = new String();
                 String maxEnergy = new String();
                 //BreedBlock bBlock = deltaTickTab.makeBreedBlock(plural, number);
-                CodeBlock bBlock = (BreedBlock) deltaTickTab.makeBreedBlock(plural, number);
+                //CodeBlock bBlock = (BreedBlock) deltaTickTab.makeBreedBlock(plural, number);
+                CodeBlock bBlock = deltaTickTab.makeBreedBlock(plural, number);
 
                 NodeList breedBlockChildNodes = breedBlock.getChildNodes();
                 //Ownvar childnodes for age & energy
