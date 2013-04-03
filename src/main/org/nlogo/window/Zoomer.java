@@ -141,9 +141,9 @@ public strictfp class Zoomer {
     // want to remember what the font size at the 100% zoom level is, because
     // font sizes are so small that rounding error will mess us up unless we
     // always scale from the normal, unzoomed size
-    if (!(component instanceof ViewWidgetInterface) ||
-        !newWidget ||
-        loadingWidget) {
+    if ((!(component instanceof ViewWidgetInterface) ||
+         !newWidget ||
+         loadingWidget) && fonts.get(component) == null) {
       fonts.put(component, component.getFont());
       fontZooms.put(component, Double.valueOf(oldZoom));
     }
