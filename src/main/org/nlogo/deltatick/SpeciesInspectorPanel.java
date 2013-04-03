@@ -225,9 +225,9 @@ public class SpeciesInspectorPanel extends JPanel {
         return myParent;
     }
 
-    public void setSelectedTrait() {
-        speciesInspector.addToSelectedTraitsList(traitPreview.getSelectedTrait());
-    }
+//    public void setSelectedTrait() {
+//        speciesInspector.addToSelectedTraitsList(traitPreview.getSelectedTrait());
+//    }
 
     public void setSelectedVariations(Trait trait, Variation variation) {
         speciesInspector.addtoSelectedVariations(trait, variation);
@@ -241,7 +241,7 @@ public class SpeciesInspectorPanel extends JPanel {
         return traitPreview;
     }
 
-
+    // Implements listener when a trait is clicked on
     class TraitListSelectionHandler implements ListSelectionListener {
         public void valueChanged(ListSelectionEvent e) {
             //sidePanel.setVisible(true);
@@ -251,6 +251,7 @@ public class SpeciesInspectorPanel extends JPanel {
         } // valueChanged
     } // TraitListSelectionHandler
 
+    // Implements listener when the variation table is modified
     class traitTableModelListener implements TableModelListener {
         public void tableChanged(TableModelEvent e) {
             if (e.getColumn() == 2) {

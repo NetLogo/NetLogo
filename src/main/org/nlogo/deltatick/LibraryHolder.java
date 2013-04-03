@@ -5,6 +5,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JPanel;
 import javax.swing.JComponent;
 import java.awt.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -147,8 +148,16 @@ public class LibraryHolder extends JPanel {
         behaviorBlocksList.add(behBlock);
     }
 
+    public ArrayList<BehaviorBlock> getBehaviorBlocksList() {
+        return behaviorBlocksList;
+    }
+
     public void addToConditionBlocksList(ConditionBlock conditionBlock) {
         conditionBlocksList.add(conditionBlock);
+    }
+
+    public ArrayList<ConditionBlock> getConditionBlocksList() {
+        return conditionBlocksList;
     }
 
 }

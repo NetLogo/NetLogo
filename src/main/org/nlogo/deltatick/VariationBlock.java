@@ -36,12 +36,12 @@ public class VariationBlock
             }
         }
         if (myParent.getAgentInputs().size() > 0) {
-            for (Map.Entry<String, JTextField> entry: myParent.getAgentInputs().entrySet()) {
+            for (Map.Entry<String, PrettyInput> entry: myParent.getAgentInputs().entrySet()) {
                 this.addAgentInput(entry.getKey(), entry.getValue().getText());
             }
         }
         if (myParent.getInputs().size() > 0) {
-            for (Map.Entry<String, JTextField> entry : myParent.getInputs().entrySet()) {
+            for (Map.Entry<String, PrettyInput> entry : myParent.getInputs().entrySet()) {
                 this.addInput(entry.getKey(), entry.getValue().getText());
             }
         }

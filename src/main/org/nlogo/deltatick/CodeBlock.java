@@ -30,28 +30,25 @@ public abstract class CodeBlock
 
     //flavors is an array initialized with codeBlockFlavor -A. (sept 10)
     DataFlavor[] flavors = new DataFlavor[]{codeBlockFlavor};
-    JLabel nameLabel;
+    //JLabel nameLabel;
     String code;
-    private JButton exitButton = new JButton();
+    //private JButton exitButton = new JButton();
     String ifCode;
 
     // the following are linked so that they're always in order
-    Map<String, JTextField> inputs = new LinkedHashMap<String, JTextField>();
-    Map<String, JTextField> energyInputs = new LinkedHashMap<String, JTextField>();
+    Map<String, PrettyInput> inputs = new LinkedHashMap<String, PrettyInput>();
+    Map<String, PrettyInput> energyInputs = new LinkedHashMap<String, PrettyInput>();
     Map<String, PrettyInput> behaviorInputs = new LinkedHashMap<String, PrettyInput>();
-    Map<String, JTextField> agentInputs = new LinkedHashMap<String, JTextField>();
-    Map<String, JTextField> percentInputs = new LinkedHashMap<String, JTextField>();
+    Map<String, PrettyInput> agentInputs = new LinkedHashMap<String, PrettyInput>();
+    Map<String, PrettyInput> percentInputs = new LinkedHashMap<String, PrettyInput>();
     List<CodeBlock> myBlocks = new LinkedList<CodeBlock>();
 
     //BoxLayout either stacks components on top of each other, or in a row -A. (sept 9)
-
     BoxLayout myLayout;
 
     //defining an object, myParent of class, CodeBlock -A. (sept 10)
     CodeBlock myParent;
-
     Color color;
-
     JPanel label = new JPanel();
     JPanel removeButtonPanel = new JPanel();
     RemoveButton removeButton = new RemoveButton(this);
@@ -60,6 +57,27 @@ public abstract class CodeBlock
     public CodeBlock() {
 
     }
+
+//    // Copy constructor
+//    public CodeBlock(CodeBlock block) {
+//        code = new String(block.code);
+//        ifCode = new String(block.ifCode);
+//        inputs = new LinkedHashMap<String, JTextField>(block.inputs);
+//        energyInputs = new LinkedHashMap<String, JTextField>(block.energyInputs);
+//        behaviorInputs = new LinkedHashMap<String, PrettyInput>(block.behaviorInputs);
+//        agentInputs = new LinkedHashMap<String, JTextField>(block.agentInputs);
+//        percentInputs = new LinkedHashMap<String, JTextField>(block.percentInputs);
+//        myBlocks = new LinkedList<CodeBlock>(block.myBlocks);
+//
+//        myLayout = block.myLayout;
+//        myParent = block.myParent;
+//        color = block.color;
+//        label = block.label;
+//        removeButtonPanel = block.removeButtonPanel;
+//        removeButton = block.removeButton;
+//
+//    }
+//
     //BoxLayout.Y_AXIS is why blocks stack one below each other -A. (sept 9)
     public CodeBlock(String name, Color color) {
 
@@ -77,6 +95,7 @@ public abstract class CodeBlock
         add(removeButtonPanel);
         makeLabel();
         add(label);
+
     }
 
     //copy constructor for modelReader (April 1, 2013)
@@ -322,7 +341,6 @@ public abstract class CodeBlock
         EnergyInput energyInput = new EnergyInput(this);
         energyInput.setName(inputName);
         energyInput.setText(defaultValue);
-
         energyInputs.put(inputName, energyInput);
         label.add(energyInput);
     }
@@ -345,7 +363,7 @@ public abstract class CodeBlock
         label.add(agentInput);
     }
 
-    public Map<String, JTextField> getInputs() {
+    public Map<String, PrettyInput> getInputs() {
         return inputs;
     }
 
@@ -353,8 +371,12 @@ public abstract class CodeBlock
         return behaviorInputs;
     }
 
-    public Map<String, JTextField> getAgentInputs() {
+    public Map<String, PrettyInput> getAgentInputs() {
         return agentInputs;
+    }
+
+    public Map<String, PrettyInput> getPercentInputs() {
+        return percentInputs;
     }
 
 
@@ -563,10 +585,11 @@ public abstract class CodeBlock
 
         if (parent instanceof BreedBlock) {
             checkParent = true;
-            if (this instanceof TraitBlockNew) {
-                ((BuildPanel) pParent).removeTrait((TraitBlockNew) this);   // remove from myTraits & buildPanel -A.(Aug 8, 2012)
-                ((BreedBlock) parent).removeTraitBlock((TraitBlockNew) this);   // removes from BreedBlock -A. (Aug 8, 2012)
-            }
+            // parent.removeTraitBlock() Not needed because traitblock does not directly go inside breedblock (like it used to)
+//            if (this instanceof TraitBlockNew) {
+//                ((BuildPanel) pParent).removeTrait((TraitBlockNew) this);   // remove from myTraits & buildPanel -A.(Aug 8, 2012)
+//                ((BreedBlock) parent).removeTraitBlock((TraitBlockNew) this);   // removes from BreedBlock -A. (Aug 8, 2012)
+//            }
         }
         if (parent instanceof JPanel) {
             if (this instanceof TraitBlock) {
@@ -591,10 +614,11 @@ public abstract class CodeBlock
                 ((BuildPanel) parent).removeBreed((BreedBlock) this);
 
                 for (Component child : getComponents()) {
-                    if (child instanceof TraitBlockNew) {
-                        ((BreedBlock) this).removeTraitBlock((TraitBlockNew) child);
-                        ((BuildPanel) parent).removeTrait((TraitBlockNew) child);
-                    }
+                    // parent.removeTraitBlock() Not needed because traitblock does not directly go inside breedblock (like it used to)
+//                    if (child instanceof TraitBlockNew) {
+//                        ((BreedBlock) this).removeTraitBlock((TraitBlockNew) child);
+//                        ((BuildPanel) parent).removeTrait((TraitBlockNew) child);
+//                    }
                 }
             }
             if (this instanceof PlotBlock) {

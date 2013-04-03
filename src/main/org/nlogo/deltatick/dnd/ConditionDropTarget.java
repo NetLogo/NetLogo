@@ -1,10 +1,7 @@
 package org.nlogo.deltatick.dnd;
 
 import org.nlogo.api.Patch;
-import org.nlogo.deltatick.BehaviorBlock;
-import org.nlogo.deltatick.CodeBlock;
-import org.nlogo.deltatick.ConditionBlock;
-import org.nlogo.deltatick.PatchBlock;
+import org.nlogo.deltatick.*;
 
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
@@ -24,6 +21,12 @@ public class ConditionDropTarget
         if (o instanceof Component) {
             if (o instanceof BehaviorBlock) {
                 addCodeBlock((BehaviorBlock) o);
+                if (((BehaviorBlock) o).getIsMutate() == true) {
+                    ((BehaviorBlock) o).setMyBreedBlock(((BreedBlock) ((CodeBlock)block).getMyParent()));
+                    if (((BehaviorBlock) o).getIsMutate() == true) {
+                        ((BreedBlock) ((CodeBlock)block).getMyParent()).setReproduceUsed(true);
+                    }
+                }
                 return true;
             }
             if (o instanceof ConditionBlock) {

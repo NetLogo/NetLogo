@@ -1,15 +1,16 @@
 package org.nlogo.deltatick;
 
+import org.nlogo.deltatick.dnd.PrettyInput;
 import org.nlogo.window.Widget;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
+import java.awt.List;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 
 public strictfp class ConditionBlock
         extends CodeBlock {
@@ -47,8 +48,11 @@ public strictfp class ConditionBlock
         String passBack = "";
 
         passBack += "if " + getName() + " ";
-        for (JTextField input : inputs.values()) {
+        for (PrettyInput input : inputs.values()) {
             passBack += input.getText() + " ";
+        }
+        for (PrettyInput agentInput : agentInputs.values()) {
+            passBack += agentInput.getText() + " ";
         }
         passBack += "[\n";
         for (CodeBlock block : myBlocks) {
@@ -67,13 +71,18 @@ public strictfp class ConditionBlock
 
         passBack += "to-report " + getName() + " ";
 
-        if (inputs.size() > 0) {
+        if (inputs.size() > 0 || agentInputs.size() > 0) {
             passBack += "[ ";
+
             for (String input : inputs.keySet()) {
                 passBack += input + " ";
             }
+            for (String agentInput : agentInputs.keySet()) {
+                passBack += agentInput + " ";
+            }
             passBack += "]";
         }
+
         passBack += "\n";
 
         passBack += code + "\n";
@@ -154,5 +163,9 @@ public strictfp class ConditionBlock
             agentInputName = s;
             }
         return agentInputName;
+    }
+
+    public java.util.List<CodeBlock> getMyBlocks() {
+        return myBlocks;
     }
 }

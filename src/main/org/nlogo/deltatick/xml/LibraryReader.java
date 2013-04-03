@@ -41,6 +41,7 @@ public class LibraryReader {
             fileName = new String (fileLoader.getDirectory() + fileLoader.getFile());
         }
         else {
+            fileName = new String(libraryFileName);
             file = new File(libraryFileName);
         }
         //DocumentBuilder converts XML file into Document -A. (sept 13)
@@ -62,7 +63,6 @@ public class LibraryReader {
                     library.getElementsByTagName("behavior")
             );
 
-
             NodeList behaviors = library.getElementsByTagName("behavior");
 
             for (int i = 0; i < behaviors.getLength(); i++) {
@@ -79,6 +79,16 @@ public class LibraryReader {
                 deltaTickTab.getLibraryHolder().addToBehaviorBlocksList((BehaviorBlock) block);
             }
 
+            // make the conditions
+            NodeList conditions = library.getElementsByTagName("condition");
+            for (int i = 0; i < conditions.getLength(); i++) {
+                Node condition = conditions.item(i);
+                block = new ConditionBlock(condition.getAttributes().getNamedItem("name").getTextContent());
+
+                seekAndAttachInfo(condition);
+                deltaTickTab.getLibraryHolder().addToConditionBlocksList((ConditionBlock) block);
+            }
+
             NodeList traits = library.getElementsByTagName("trait");
             for (int i = 0; i < traits.getLength(); i++) {
                 Node trait = traits.item(i);
@@ -93,15 +103,7 @@ public class LibraryReader {
                 seekAndAttachInfo(patch);
             }
 
-            // make the conditions
-            NodeList conditions = library.getElementsByTagName("condition");
-            for (int i = 0; i < conditions.getLength(); i++) {
-                Node condition = conditions.item(i);
-                block = new ConditionBlock(condition.getAttributes().getNamedItem("name").getTextContent());
 
-                seekAndAttachInfo(condition);
-                deltaTickTab.getLibraryHolder().addToConditionBlocksList((ConditionBlock) block);
-            }
 
             // make the quantities
             NodeList quantities = library.getElementsByTagName("quantity");

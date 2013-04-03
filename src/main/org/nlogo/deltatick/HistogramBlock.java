@@ -46,7 +46,7 @@ public class HistogramBlock
                 plotBlockFlavor
         };
         for (QuantityBlock quantBlock : getMyBlocks()) {
-            for (Map.Entry<String, JTextField> entry : inputs.entrySet()) {
+            for (Map.Entry<String, PrettyInput> entry : inputs.entrySet()) {
                 if (entry.getKey().equalsIgnoreCase("breed-type")) {
                     population = entry.getValue().toString();
 

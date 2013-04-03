@@ -5,8 +5,6 @@ import java.awt.datatransfer.DataFlavor;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.sun.media.ui.ToolTip;
-import org.nlogo.deltatick.dnd.BehaviorInput;
 import org.nlogo.deltatick.dnd.PrettyInput;
 import org.nlogo.deltatick.xml.Variation;
 
@@ -20,7 +18,8 @@ public strictfp class BehaviorBlock
     boolean isTrait;
     boolean isMutate;
     TraitBlockNew tBlockNew = null; // TODO need this to have trait Block work as an input in code (March, 25, 2013)
-    BreedBlock container = null;
+    CodeBlock container = null;
+    BreedBlock myBreedBlock = null;
     private JToolTip toolTip;
 
     public BehaviorBlock(String name) {
@@ -33,15 +32,7 @@ public strictfp class BehaviorBlock
 
     }
 
-    //Copy constructor for blocks from saved model to be added to buildPanel automatically -April 1, 2013
-    public BehaviorBlock(BehaviorBlock behaviorBlock) {
-        super(behaviorBlock.getName(), ColorSchemer.getColor(0).brighter());
-        isTrait = behaviorBlock.isTrait;
-        isMutate = behaviorBlock.isMutate;
-        //TODO: Do I need to copy traitBlock?
 
-
-    }
     //codeBlockFlavor in Condition Block, Beh Block is what makes it a valid block for Breed   -A.
 
     public String unPackAsCode() {
@@ -93,12 +84,15 @@ public strictfp class BehaviorBlock
           }
           else {
               passBack += "\n" + code + "\n";
-              System.out.println("beh block " + code);
               if (isMutate == true) {
-                  for (TraitBlockNew traitBlock : ((BreedBlock) container).getMyTraitBlocks()) {
-                      String traitName = traitBlock.getTraitName();
-                      passBack += "if random 100 <= " + this.getContainer().plural() + "-" + traitBlock.getTraitName() + "-mutation [\n";
-                      passBack += "set " + traitName + " " + traitName + " * 0.01 \n]";
+                  if (myBreedBlock != null) {
+                      for (TraitBlockNew traitBlock :  myBreedBlock.getMyTraitBlocks()) {
+                          String traitName = traitBlock.getTraitName();
+                          //TODO: this is likely to throw a bug if reproduce is in condition block (April 1, 2013)
+                          //passBack += "if random 100 <= " + ((BreedBlock) this.getMyBreedBlock()).plural() + "-" + traitBlock.getTraitName() + "-mutation [\n";
+                          passBack += "if random 100 <= " + this.getMyBreedBlock().plural() + "-" + traitBlock.getTraitName() + "-mutation [\n";
+                          passBack += "set " + traitName + " " + traitName + " * 0.01 \n]]]\n";
+                      }
                   }
               }
           }
@@ -133,13 +127,20 @@ public strictfp class BehaviorBlock
             }
         }
         for (JTextField percentInput : percentInputs.values()) {
-            passBack += percentInput.getText() + " ";
+            passBack += percentInput.getText() + " / 100";
         }
-
 
         passBack += "\n";
 
         return passBack;
+    }
+
+    public void die() {
+        super.die();
+        if (isMutate) {
+            isMutate = false;
+            myBreedBlock.setReproduceUsed(false);
+        }
     }
 
     public void updateBehaviorInput() {
@@ -221,12 +222,16 @@ public strictfp class BehaviorBlock
     }
 
     //container to access the BreedBlock in which I'm dropped - March 26, 2013
-    public void setContainer(BreedBlock breedBlock) {
-        container = breedBlock;
+    public void setMyBreedBlock(BreedBlock breedBlock) {
+        myBreedBlock = breedBlock;
     }
 
-    public BreedBlock getContainer() {
-        return container;
+    public BreedBlock getMyBreedBlock() {
+        return myBreedBlock;
+    }
+
+    public JPanel getLabel() {
+        return label;
     }
 
     public JToolTip createToolTip() {

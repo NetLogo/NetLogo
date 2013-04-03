@@ -25,6 +25,7 @@ import java.util.List;
 public class TraitDistribution
         extends MultiSplitPane {
 
+    final int traitDistributionWidth = 350;
     MultiSplitLayout.Node modelRoot;
     String breed;
     String trait;
@@ -79,8 +80,8 @@ public class TraitDistribution
 
     public void initComponents(String breed, String trait, ArrayList<String> selectedVariations) {
         boolean addDummy = (selectedVariations.size() == 1);
-        this.setMinimumSize(new Dimension(350, 30));    //to fix size of trait distribution
-        this.setMaximumSize(new Dimension(350, 30));
+        this.setMinimumSize(new Dimension(traitDistributionWidth, 30));    //to fix size of trait distribution
+        this.setMaximumSize(new Dimension(traitDistributionWidth, 30));
 
         this.breed = breed;
         this.trait = trait;
@@ -148,6 +149,7 @@ public class TraitDistribution
 
                     // For dummy, make divider zero-size
                     this.getMultiSplitLayout().setDividerSize(0);
+
                 }
                 else {
                     //JButton leaf = new JButton(variation + " " + breed);
@@ -192,25 +194,25 @@ public class TraitDistribution
 
 
 
-    //not used
-    public void calculatePercentage(Rectangle rect, List<MultiSplitLayout.Node> nodeList) {
-        //MultiSplitLayout.Split split = (MultiSplitLayout.Split) this.getMultiSplitLayout().getModel().getParent().getChildren().get(0);
-        for (MultiSplitLayout.Node node : nodeList){
-            if (node instanceof MultiSplitLayout.Leaf) {
-                //Rectangle rect = node.getBounds();
-                int width = rect.width;
-                int totalDivider = 1;
-                if (selectedVariations.size() == 1) {
-                    totalDivider = 2;
-                    int percentage = (width/ (350 - totalDivider)) * 100;
-                }
-                else {
-                    totalDivider = (selectedVariations.size() - 1) * 2;
-                    int percentage = (width/ (350 - totalDivider));
-                }
-            }
-        }
-    }
+//    //not used anymore
+//    public void calculatePercentage(Rectangle rect, List<MultiSplitLayout.Node> nodeList) {
+//        //MultiSplitLayout.Split split = (MultiSplitLayout.Split) this.getMultiSplitLayout().getModel().getParent().getChildren().get(0);
+//        for (MultiSplitLayout.Node node : nodeList){
+//            if (node instanceof MultiSplitLayout.Leaf) {
+//                //Rectangle rect = node.getBounds();
+//                int width = rect.width;
+//                int totalDivider = 1;
+//                if (selectedVariations.size() == 1) {
+//                    totalDivider = 2;
+//                    int percentage = (width/ (traitDistributionWidth - totalDivider)) * 100;
+//                }
+//                else {
+//                    totalDivider = (selectedVariations.size() - 1) * 2;
+//                    int percentage = (width/ (traitDistributionWidth - totalDivider));
+//                }
+//            }
+//        }
+//    }
 
     // This function is called when the divider is clicked-and-dragged to change widths
     // See TraitPreview. MouseMotionListener on traitDistribution
@@ -231,10 +233,11 @@ public class TraitDistribution
                         }
                         Rectangle rect = node.getBounds();
                         float width = rect.width;
-                        float percentage = (width/ (350 - totalDivider)) * 100;
+                        double percentage = ((double) width / (double) (traitDistributionWidth - (totalDivider * this.getMultiSplitLayout().getDividerSize()))) * 100.0;
                         BigDecimal per = new BigDecimal(percentage);
                         BigDecimal p = per.setScale(3, BigDecimal.ROUND_HALF_EVEN);
                         String perc = p.toString();
+
                         this.savePercentages(((MultiSplitLayout.Leaf) node).getName(), perc);
                         //System.out.println("ln 178 " + p + " " + percentage + " ");
                     }

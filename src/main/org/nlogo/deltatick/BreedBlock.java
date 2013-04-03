@@ -264,9 +264,10 @@ public strictfp class BreedBlock
 
                         // System.out.println("TraitName: " + traitName + " Variation: " + variationType + " Value: " + variation.value);
                         //int k = variation.percent;
-                        int k =  (int) Math.round(((double) variation.percent/100) * Double.parseDouble(number.getText()));
+                        int k =  (int) Math.round(((double) (variation.percent/100.0)) * Double.parseDouble(number.getText()));
 
                         endValue = startValue + k - 1;
+
 
                         if (endValue > (Integer.parseInt(number.getText()) - 1)) {
                             endValue = Integer.parseInt(number.getText()) - 1;
@@ -624,10 +625,12 @@ public strictfp class BreedBlock
         super.repaint();
     }
 
-    public void removeTraitBlock(TraitBlockNew traitBlock) {
-        remove(traitBlock);
-//        breedVariationHashMap.clear(); // Added March 2, 2013
-    }
+// not used any more
+// parent.removeTraitBlock() Not needed because traitblock does not directly go inside breedblock (like it used to) april 3, 2013
+//    public void removeTraitBlock(TraitBlockNew traitBlock) {
+//        remove(traitBlock);
+////        breedVariationHashMap.clear(); // Added March 2, 2013
+//    }
 
     public boolean getHasSpeciesInspector () {
         return hasSpeciesInspector;
@@ -643,6 +646,9 @@ public strictfp class BreedBlock
 
     public void addTraitBlocktoList(TraitBlockNew block) {
         myTraitBlocks.add(block);
+    }
+    public void removeAllTraitBlocks() {
+        myTraitBlocks.clear();
     }
 
     public List<TraitBlockNew> getMyTraitBlocks() {
@@ -667,6 +673,10 @@ public strictfp class BreedBlock
 
     public String getColorName() {
         return colorName;
+    }
+
+    public List<CodeBlock> getMyBlocks() {
+        return myBlocks;
     }
 }
 

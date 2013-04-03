@@ -39,6 +39,7 @@ public class TraitState extends Trait {
         selectedVariationsPercent = new HashMap<String, String>(hm);
     }
 
+
 //    @Override
 //    public HashMap<String, String> getValuesPercentList() {
 //        return selectedVariationsPercent;

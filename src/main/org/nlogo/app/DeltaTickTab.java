@@ -17,6 +17,7 @@ import org.nlogo.plot.PlotManager;
 
 // java.awt contains all of the classes for creating user interfaces and for painting graphics and images -A. (sept 8)
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -74,7 +75,7 @@ public class DeltaTickTab
     JButton buildBlock;
     JButton Not;
 
-    JFileChooser jFileChooser;
+    //JFileChooser jFileChooser;
 
     boolean plotsAlive = false;
 
@@ -88,6 +89,7 @@ public class DeltaTickTab
 
     HashMap<String, WidgetWrapper> plotWrappers = new HashMap<String, WidgetWrapper>();
     HashMap<String, WidgetWrapper> sliderWidgets = new HashMap<String, WidgetWrapper>();
+    HashMap<String, WidgetWrapper> noteWidgets = new HashMap<String, WidgetWrapper>();
 
     //InterfaceTab it;
     ProceduresTab pt;
@@ -98,6 +100,7 @@ public class DeltaTickTab
     PlotManager plotManager;
 
     LibraryReader libraryReader;
+    DeltaTickModelReader deltaTickModelParser;
 
     public final SimpleJobOwner defaultOwner ;
 
@@ -128,6 +131,9 @@ public class DeltaTickTab
         setLayout( new java.awt.BorderLayout() ) ;
 		add( toolBar , java.awt.BorderLayout.NORTH ) ;
         add( contentPanel, java.awt.BorderLayout.CENTER );
+
+        // Instantiate the DeltaTickModelParser
+        deltaTickModelParser = new DeltaTickModelReader(workspace.getFrame(), this);
 
         //actually instantiates the object, declaration above does not instantiate until the constructor is executed
         //-A. (sept 8)
@@ -380,6 +386,8 @@ public class DeltaTickTab
                 buildPanel.removeTrait(tBlock);
                 userInput.removeTrait(tBlock.getBreedName(), tBlock.getTraitName());
                 speciesInspectorPanel.getSpeciesInspector().removeTrait(tBlock.getTraitName());
+                //myParent.removeTraitBlockFromList(tBlock);
+                myParent.removeAllTraitBlocks();
             }
 
             for (TraitState traitState : speciesInspectorPanel.getTraitStateMap().values()) {
@@ -510,17 +518,49 @@ public class DeltaTickTab
                 }
             };
 
-    private final Action saveModelAction =
-            new AbstractAction( "Save model" ) {
-                public void actionPerformed (ActionEvent e) {
-                    //saveModel();
+    public class XMLFilter extends FileFilter {
+        public boolean accept(File f) {
+            if (f.isDirectory()) {
+                return true;
+            }
+
+            String extension = getExtension(f);
+            if (extension != null) {
+                if (extension.equalsIgnoreCase("xml")) {
+                    return true;
                 }
-    };
+                else {
+                    return false;
+                }
+            }
+
+            return false;
+        }
+
+        public String getDescription() {
+            return "XML File filter";
+        }
+
+        public String getExtension(File f) {
+            String ext = null;
+            String s = f.getName();
+            int i = s.lastIndexOf('.');
+
+            if (i > 0 &&  i < s.length() - 1) {
+                ext = s.substring(i+1).toLowerCase();
+            }
+            return ext;
+        }
+    }
 
     private final Action opensaveModelAction =
             new AbstractAction() {
                 JFileChooser fileChooser = new JFileChooser();
+
                 public void actionPerformed (ActionEvent e) {
+                    fileChooser.addChoosableFileFilter(new XMLFilter());
+                    fileChooser.setAcceptAllFileFilterUsed(false);
+
                     if (e.getSource() == openModelButton) {
                         int returnVal = fileChooser.showOpenDialog(DeltaTickTab.this);
 
@@ -541,13 +581,14 @@ public class DeltaTickTab
     };
 
     public void saveModel(File modelFile) {
-        System.out.println("del " + buildPanel.newSaveAsXML());
-
+        //System.out.println("del " + buildPanel.newSaveAsXML());
+        deltaTickModelParser.saveModel(modelFile);
 
     }
 
-    public void openModel(File file) {
-        DeltaTickModelReader modelReader = new DeltaTickModelReader( workspace.getFrame(), this , file);
+    public void openModel(File modelFile) {
+        deltaTickModelParser.openModel(modelFile);
+        //DeltaTickModelReader modelReader = new DeltaTickModelReader( workspace.getFrame(), this , file);
     }
 
     public void populateProcedures() {
@@ -612,28 +653,32 @@ public class DeltaTickTab
 
 
     public void populateMutationSlider() {
+        boolean putNoteWidget = false;
         for (BreedBlock bBlock : buildPanel.getMyBreeds()) {
             if (bBlock.getReproduceUsed() && buildPanel.getMyTraits().size() > 0) {
+                putNoteWidget = true;
                 for (TraitBlockNew tBlock : bBlock.getMyTraitBlocks()) {
                     SliderWidget sliderWidget = ((SliderWidget) interfacePanel.makeWidget("SLIDER", false));
-                    WidgetWrapper ww = interfacePanel.addWidget(sliderWidget, 0, 100, true, false);
+                    WidgetWrapper ww = interfacePanel.addWidget(sliderWidget, 0, 120, true, false);
                     String sliderName = tBlock.getMyParent().plural() + "-" + tBlock.getTraitName() + "-mutation";
                     sliderWidget.name_$eq(sliderName);
                     sliderWidget.validate();
                     sliderWidgets.put(sliderName, ww);
                 }
-                //make a note only once (March 29, 2013)
-                if (interfaceNoteCount == 0) {
-                    NoteWidget noteWidget = ((NoteWidget) interfacePanel.makeWidget("NOTE", false));
-                    WidgetWrapper widgetw = interfacePanel.addWidget(noteWidget, 0, 80, true, false);
-                    String note = "Chance of mutation when a baby is born";
-                    noteWidget.setBounds(0, 80, 20, 30);
-                    noteWidget.text_$eq(note);
-                    noteWidget.validate();
-                }
+
             }
             interfaceNoteCount++;
             revalidate();
+        }
+        //make a note only once (March 29, 2013)
+        if (putNoteWidget) {
+            NoteWidget noteWidget = ((NoteWidget) interfacePanel.makeWidget("NOTE", false));
+            WidgetWrapper widgetw = interfacePanel.addWidget(noteWidget, 0, 80, true, false);
+            String note = "Chance of mutation when a baby is born";
+            noteWidget.setBounds(0, 80, 20, 30);
+            noteWidget.text_$eq(note);
+            noteWidget.validate();
+            noteWidgets.put("MutationNote", widgetw);
         }
     }
 
@@ -642,6 +687,12 @@ public class DeltaTickTab
             String p = entry.getKey();
             WidgetWrapper w = entry.getValue();
             sliderWidgets.remove(w);
+            interfacePanel.removeWidget(w);
+        }
+        for (Map.Entry<String, WidgetWrapper> entry : noteWidgets.entrySet()) {
+            WidgetWrapper w = entry.getValue();
+
+            noteWidgets.remove(w);
             interfacePanel.removeWidget(w);
         }
         revalidate();

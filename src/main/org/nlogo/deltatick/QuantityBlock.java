@@ -1,6 +1,7 @@
 package org.nlogo.deltatick;
 
 import org.nlogo.deltatick.dialogs.ColorButton;
+import org.nlogo.deltatick.dnd.PrettyInput;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -121,7 +122,7 @@ public strictfp class QuantityBlock
 
             if (((PlotBlock) parent).isHisto == true) {
                 passBack += "set-plot-pen-mode 1 \n";
-                for (Map.Entry<String, JTextField> entry : inputs.entrySet()) {
+                for (Map.Entry<String, PrettyInput> entry : inputs.entrySet()) {
                 if (entry.getKey().equalsIgnoreCase("breed-type")) {
                     population = entry.getValue().getText().toString();
                 }
@@ -147,7 +148,7 @@ public strictfp class QuantityBlock
     }
 
 
-    public Map<String, JTextField> getInputs() {
+    public Map<String, PrettyInput> getInputs() {
         return inputs;
     }
 

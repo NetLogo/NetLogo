@@ -1,12 +1,8 @@
 package org.nlogo.deltatick.dnd;
 
-import ch.randelshofer.quaqua.QuaquaComboPopup;
 import org.nlogo.app.DeltaTickTab;
 import org.nlogo.deltatick.*;
-import org.nlogo.deltatick.xml.Trait;
-import org.picocontainer.Behavior;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -33,7 +29,7 @@ public class BreedDropTarget
                 return true;
             } else if (o instanceof BehaviorBlock) {
                 addCodeBlock((BehaviorBlock) o);
-                ((BehaviorBlock) o).setContainer((BreedBlock)this.block);
+                ((BehaviorBlock) o).setMyBreedBlock((BreedBlock) this.block);
                 //Inform buildPanel that a reproduce block is being used to make slider on interface
                 if (((BehaviorBlock) o).getIsMutate() == true) {
                     ((BreedBlock) block).setReproduceUsed(true);
