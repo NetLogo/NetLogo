@@ -262,7 +262,7 @@ public strictfp class WidgetWrapper
 
     if (getParent() instanceof WidgetPanel && !widget.isNote()) {
       WidgetPanel iP = (WidgetPanel) getParent();
-      dim = iP.zoomer.zoomSize(dim);
+      dim = iP.zoomer().zoomSize(dim);
     }
     if (selected()) {
       dim.width += BORDER_E + BORDER_W;
@@ -596,7 +596,7 @@ public strictfp class WidgetWrapper
   void doDrop() {
     selected(true, true); // 2nd true = change was temporary
     new org.nlogo.window.Events.DirtyEvent().raise(this);
-    ((WidgetPanel) getParent()).zoomer.updateZoomInfo(widget);
+    ((WidgetPanel) getParent()).zoomer().updateZoomInfo(widget);
   }
 
   private void enforceMinimumSize(java.awt.Rectangle r) {
@@ -604,7 +604,7 @@ public strictfp class WidgetWrapper
       java.awt.Dimension minWidgetSize = widget().getMinimumSize();
       if (getParent() instanceof WidgetPanel) {
         WidgetPanel iP = (WidgetPanel) getParent();
-        minWidgetSize = iP.zoomer.zoomSize(minWidgetSize);
+        minWidgetSize = iP.zoomer().zoomSize(minWidgetSize);
       }
       if (minWidgetSize == null) {
         minWidgetSize = new java.awt.Dimension(MIN_WIDGET_WIDTH, MIN_WIDGET_HEIGHT);
@@ -695,7 +695,7 @@ public strictfp class WidgetWrapper
       }
       if (getParent() instanceof WidgetPanel) {
         WidgetPanel iP = (WidgetPanel) getParent();
-        maxWidgetSize = iP.zoomer.zoomSize(maxWidgetSize);
+        maxWidgetSize = iP.zoomer().zoomSize(maxWidgetSize);
       }
 
       switch (mouseMode()) {
@@ -833,7 +833,7 @@ public strictfp class WidgetWrapper
   // return what our location would be if we *weren't* selected... this
   // is needed for the zooming code in InterfacePanel
 
-  java.awt.Point getUnselectedLocation() {
+  public java.awt.Point getUnselectedLocation() {
     java.awt.Point result = getLocation();
     if (selected()) {
       result.x += BORDER_E;

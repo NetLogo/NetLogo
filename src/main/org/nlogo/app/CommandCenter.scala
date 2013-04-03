@@ -11,6 +11,7 @@ import org.nlogo.api.{ AgentKind, I18N }
 
 class CommandCenter(workspace: org.nlogo.workspace.AbstractWorkspaceScala,
                     locationToggleAction: Action) extends JPanel
+  with org.nlogo.window.Zoomable
   with org.nlogo.window.CommandCenterInterface
   with org.nlogo.window.Events.LoadBeginEventHandler
   with org.nlogo.window.Events.ZoomedEventHandler {
@@ -142,14 +143,5 @@ class CommandCenter(workspace: org.nlogo.workspace.AbstractWorkspaceScala,
     }
     repaintPrompt()
     commandLine.requestFocus()
-  }
-  /// zooming
-  private lazy val zoomer: Zoomer = new Zoomer(this)
-  private var zoomFactor = 1.0
-  def zoomSubcomponents = true
-  def handle(e: org.nlogo.window.Events.ZoomedEvent) {
-    zoomer.scaleComponentFont(this, e.zoomFactor, zoomFactor, true)
-    zoomFactor = e.zoomFactor
-    revalidate()
   }
 }

@@ -273,16 +273,16 @@ strictfp class InterfacePanel
         parent.setSize(viewWidget.asWidget().getSize());
         enforceMinimumAndMaximumWidgetSizes(viewWidget.asWidget());
         parent.setLocation(x, y);
-        zoomer.zoomWidgetLocation
+        zoomer().zoomWidgetLocation
             (getWrapper(viewWidget.asWidget()),
-                true, true, 1.0, zoomer.zoomFactor());
-        zoomer.zoomWidgetSize
+                true, true, 1.0, zoomer().zoomFactor());
+        zoomer().zoomWidgetSize
             (getWrapper(viewWidget.asWidget()),
-                true, true, 1.0, zoomer.zoomFactor());
-        zoomer.scaleComponentFont
+                true, true, 1.0, zoomer().zoomFactor());
+        zoomer().scaleComponentFont
             (((org.nlogo.window.ViewWidget) viewWidget)
                 .view,
-                zoomer.zoomFactor(), 1.0, false);
+               zoomFactor(), 1.0, false);
       }
       return viewWidget.asWidget();
     } else {

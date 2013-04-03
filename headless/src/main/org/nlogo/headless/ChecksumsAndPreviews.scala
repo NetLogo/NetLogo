@@ -80,6 +80,8 @@ object ChecksumsAndPreviews {
     def okPath(path: String) = (for {
       (message, slices) <- Seq(
         None -> List("HUBNET", "/CURRICULAR MODELS/"),
+        Some("it renders slightly differently on Mac vs. Linux") -> List(
+          "/CODE EXAMPLES/LINK BREEDS EXAMPLE.NLOGO"), // see 407ddcdd49f88395915b1a87c663b13000758d35 in `models` repo
         Some("it uses the sound extension") -> List(
           "/GAMES/FROGGER.NLOGO",
           "/ART/SOUND MACHINES.NLOGO",
