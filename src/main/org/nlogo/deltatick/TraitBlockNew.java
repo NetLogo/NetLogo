@@ -55,16 +55,18 @@ public class TraitBlockNew
         this.variationHashMap.putAll(variationHashMap);
         //this.variationNamesValues = variationValues;
 
-        java.util.List<Component> componentList = new ArrayList<Component>(2);
+        java.util.List<Component> componentList = new ArrayList<Component>();
         name.setText(" of " + breedBlock.plural());
         componentList.add(name);
 
-        int y = 0;
+        //int y = 0;
         for (Component c : componentList) {
           label.add(c);
-          y += c.getPreferredSize().getHeight();
+          //y += c.getPreferredSize().getHeight();
         }
-        label.setPreferredSize(new Dimension(100, y + 11));
+        //label.setPreferredSize(new Dimension(100, y + 11));
+        this.setPreferredSize(getPreferredSize());
+        this.setMaximumSize(getPreferredSize());
         this.revalidate();
     }
 

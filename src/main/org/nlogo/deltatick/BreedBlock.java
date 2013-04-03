@@ -257,16 +257,25 @@ public strictfp class BreedBlock
                     int startValue = 0;
                     int endValue = 0;
 
-                    //for (Map.Entry<String, Variation> entry : breedVariationHashMap.entrySet()) {
-                    for (Map.Entry<String, Variation> entry : ((TraitBlockNew) block).getVariationHashMap().entrySet()) {
-                        String variationType = entry.getKey();
-                        Variation variation = entry.getValue();
+                    //for (Map.Entry<String, Variation> entry : ((TraitBlockNew) block).getVariationHashMap().entrySet()) {
+                    Iterator it = block.variationHashMap.entrySet().iterator();
+                    while (it.hasNext()) {
+//                        String variationType = entry.getKey();
+//                        Variation variation = entry.getValue();
+                        //String variationType = entry.getKey();
+                        Map.Entry entry = (Map.Entry) it.next();
+                        Variation variation = (Variation) entry.getValue();
 
                         // System.out.println("TraitName: " + traitName + " Variation: " + variationType + " Value: " + variation.value);
                         //int k = variation.percent;
                         int k =  (int) Math.round(((double) (variation.percent/100.0)) * Double.parseDouble(number.getText()));
 
-                        endValue = startValue + k - 1;
+                        if (it.hasNext()) {
+                            endValue = startValue + k - 1;
+                        }
+                        else {
+                            endValue = (int) (Integer.parseInt(number.getText()) - 1);
+                        }
 
 
                         if (endValue > (Integer.parseInt(number.getText()) - 1)) {

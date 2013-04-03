@@ -141,11 +141,11 @@ public abstract class CodeBlock
         if (this instanceof QuantityBlock) {
             ((QuantityBlock)this).setLabelImage();
         }
-        if (this instanceof TraitBlock) {
-            JLabel condition = new JLabel();
-            condition.setText("If");
-            label.add(condition);
-        }
+//        if (this instanceof TraitBlock) {
+//            JLabel condition = new JLabel();
+//            condition.setText("If");
+//            label.add(condition);
+//        }
         label.add(name);
     }
 

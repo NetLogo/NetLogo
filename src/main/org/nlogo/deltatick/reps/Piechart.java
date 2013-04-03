@@ -1,5 +1,6 @@
 package org.nlogo.deltatick.reps;
 
+import net.sf.cglib.core.Local;
 import org.jfree.chart.*;
 import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
 import org.jfree.chart.plot.PiePlot;
@@ -12,8 +13,11 @@ import org.nlogo.headless.Shell;
 
 import javax.swing.*;
 import java.awt.*;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -67,7 +71,7 @@ public class Piechart extends JPanel {
         chart = createChart(dataset);
 
         chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new Dimension(300, 250));
+        chartPanel.setPreferredSize(new Dimension(320, 250));
         //chartPanel.setMaximumSize(new Dimension(250,250));
         this.setVisible(true);
         this.validate();
@@ -109,13 +113,15 @@ public class Piechart extends JPanel {
 
         plot.setSectionOutlinesVisible(false);
         plot.setIgnoreZeroValues(true);
-        plot.setLabelFont(new Font("SansSerif", Font.PLAIN, 12));
+        plot.setLabelFont(new Font("SansSerif", Font.PLAIN, 10));
         //plot.setSimpleLabels(true);
         plot.setNoDataMessage("No data available");
         plot.setCircular(false);
         plot.setLabelGap(0.02);
         plot.setBackgroundPaint(null);
-        plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0} ({2})"));
+        DecimalFormat df = (DecimalFormat) NumberFormat.getPercentInstance(Locale.US);
+        df.applyPattern("##.##%");
+        plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0} ({2})", df, df));
         plot.setShadowPaint(null);
         plot.setStartAngle(startAngle);
         plot.setOutlineVisible(false);
