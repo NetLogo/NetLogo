@@ -130,7 +130,7 @@ public strictfp class Link
     // stage 0: get ready
     Object[] oldvars = variables();
     _variables_$eq(new Object[world().getVariablesArraySize(this, getBreed())]);
-    int linksOwnSize = world().getVariablesArraySize((Link) null, world().links());
+    int linksOwnSize = world().program().linksOwn().size();
 
     // stage 1: use arraycopy to copy over as many variables as possible
     // (if compiling it's just the predefined ones, if not compiling it's links-own too!)
@@ -410,11 +410,11 @@ public strictfp class Link
   }
 
   public double x2() {
-    return world().topology.shortestPathX(end1.xcor(), end2.xcor());
+    return world().topology().shortestPathX(end1.xcor(), end2.xcor());
   }
 
   public double y2() {
-    return world().topology.shortestPathY(end1.ycor(), end2.ycor());
+    return world().topology().shortestPathY(end1.ycor(), end2.ycor());
   }
 
   public double midpointX() {

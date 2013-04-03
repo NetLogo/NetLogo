@@ -50,4 +50,3 @@ window.WidgetAdded - widget: Widget
 window.WidgetEdited - widget: Widget
 window.WidgetForegrounded - widget: Widget
 window.WidgetRemoved - widget: Widget
-

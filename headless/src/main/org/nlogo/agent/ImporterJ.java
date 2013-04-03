@@ -355,9 +355,9 @@ public abstract strictfp class ImporterJ
 
   void handleSpecialObserverVariable(Observer observer, Object val, String header) {
     if (header.equals(PERSPECTIVE_HEADER)) {
-      observer.perspective(Perspective.load(((Double) val).intValue()));
+      observer.perspective_$eq(Perspective.load(((Double) val).intValue()));
     } else if (header.equals(SUBJECT_HEADER) && val instanceof Agent) {
-      observer.targetAgent((Agent) val);
+      observer.targetAgent_$eq((Agent) val);
     } else if (header.equals(NEXT_INDEX_HEADER)) {
       world.nextTurtleIndex(((Double) val).longValue());
     } else if (header.equals(DIRECTED_LINKS_HEADER)) {

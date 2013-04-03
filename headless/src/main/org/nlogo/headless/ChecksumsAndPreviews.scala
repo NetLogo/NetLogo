@@ -48,6 +48,7 @@ object ChecksumsAndPreviews {
     def remake(path: String) {
       val previewPath = path.replaceFirst("\\.nlogo$", ".png")
       val workspace = HeadlessWorkspace.newInstance
+      workspace.silent = true
       try {
         // we set the random seed before opening the model, so that the random-seed will affect the
         // startup procedure if any - ST 7/12/06
@@ -80,6 +81,8 @@ object ChecksumsAndPreviews {
     def okPath(path: String) = (for {
       (message, slices) <- Seq(
         None -> List("HUBNET", "/CURRICULAR MODELS/"),
+        Some("it renders slightly differently on Mac vs. Linux") -> List(
+          "/CODE EXAMPLES/LINK BREEDS EXAMPLE.NLOGO"), // see 407ddcdd49f88395915b1a87c663b13000758d35 in `models` repo
         Some("it uses the sound extension") -> List(
           "/GAMES/FROGGER.NLOGO",
           "/ART/SOUND MACHINES.NLOGO",
@@ -98,6 +101,7 @@ object ChecksumsAndPreviews {
     }
     def updateOne(m: ChecksumMap, model: String) {
       val workspace = HeadlessWorkspace.newInstance
+      workspace.silent = true
       try {
         if(!new java.io.File(model).exists && m.contains(model)) {
           // if the model doesn't exist and it's in the checksum file just remove it. if it's not in

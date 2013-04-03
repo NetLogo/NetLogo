@@ -106,7 +106,7 @@ public strictfp class Patch
   @Override
   public void realloc(boolean forRecompile) {
     Object[] oldvars = variables();
-    Object[] newvars = new Object[world().getVariablesArraySize(this)];
+    Object[] newvars = new Object[world().program().patchesOwn().size()];
     for (int i = 0; newvars.length != i; i++) {
       if (i < NUMBER_PREDEFINED_VARS) {
         newvars[i] = oldvars[i];
@@ -299,27 +299,23 @@ public strictfp class Patch
   @Override
   public Patch getPatchAtOffsets(double dx, double dy)
       throws AgentException {
-    Patch target = world().getTopology().getPatchAt(pxcor + dx, pycor + dy);
+    Patch target = world().getPatchAt(pxcor + dx, pycor + dy);
     if (target == null) {
       throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Turtle.patchBeyondLimits"));
     }
     return target;
   }
 
-  public Patch fastGetPatchAt(int x, int y) {
-    return world().fastGetPatchAt(x, y);
-  }
-
   public AgentSet getNeighbors() {
     if (patchNeighbors == null) {
-      patchNeighbors = world().getTopology().getNeighbors(this);
+      patchNeighbors = world().topology().getNeighbors(this);
     }
     return patchNeighbors;
   }
 
   public AgentSet getNeighbors4() {
     if (patchNeighbors4 == null) {
-      patchNeighbors4 = world().getTopology().getNeighbors4(this);
+      patchNeighbors4 = world().topology().getNeighbors4(this);
     }
     return patchNeighbors4;
   }
@@ -503,45 +499,8 @@ public strictfp class Patch
     return BIT;
   }
 
-  public String shape() {
-    return "";
-  }
-
   public double size() {
     return 1;
-  }
-
-  /// getPatch<DIRECTION> methods -- we pass these off to the topology's methods
-  public Patch getPatchNorth() {
-    return world().getTopology().getPN(this);
-  }
-
-  public Patch getPatchSouth() {
-    return world().getTopology().getPS(this);
-  }
-
-  public Patch getPatchEast() {
-    return world().getTopology().getPE(this);
-  }
-
-  public Patch getPatchWest() {
-    return world().getTopology().getPW(this);
-  }
-
-  public Patch getPatchNorthWest() {
-    return world().getTopology().getPNW(this);
-  }
-
-  public Patch getPatchSouthWest() {
-    return world().getTopology().getPSW(this);
-  }
-
-  public Patch getPatchSouthEast() {
-    return world().getTopology().getPSE(this);
-  }
-
-  public Patch getPatchNorthEast() {
-    return world().getTopology().getPNE(this);
   }
 
   public int alpha() {

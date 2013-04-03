@@ -62,12 +62,27 @@ public strictfp class World
   private double patchSize = 12.0; // keep the unzoomed patchSize here
   TrailDrawerInterface trailDrawer;
   private final Map<Agent, Double> lineThicknesses = new HashMap<Agent, Double>();
-  Topology topology;
   RootsTable rootsTable;
   protected Protractor _protractor;
 
   public Protractor protractor() {
     return _protractor;
+  }
+
+  protected Topology _topology;
+  /// get/set methods for World Topology
+  public Topology topology() {
+    return _topology;
+  }
+
+  public void changeTopology(boolean xWrapping, boolean yWrapping) {
+    _topology = Topology.get(this, xWrapping, yWrapping);
+    if (_patches != null) // is null during initialization
+    {
+      for (AgentIterator it = _patches.iterator(); it.hasNext();) {
+        ((Patch) it.next()).topologyChanged();
+      }
+    }
   }
 
   public LinkManager linkManager;
@@ -152,24 +167,9 @@ public strictfp class World
     return trailDrawer;
   }
 
-  /// get/set methods for World Topology
-  Topology getTopology() {
-    return topology;
-  }
-
-  public void changeTopology(boolean xWrapping, boolean yWrapping) {
-    topology = Topology.getTopology(this, xWrapping, yWrapping);
-    if (_patches != null) // is null during initialization
-    {
-      for (AgentIterator it = _patches.iterator(); it.hasNext();) {
-        ((Patch) it.next()).topologyChanged();
-      }
-    }
-  }
-
   public double wrappedObserverX(double x) {
     try {
-      x = topology.wrapX(x - topology.followOffsetX());
+      x = topology().wrapX(x - topology().followOffsetX());
     } catch (AgentException e) {
       org.nlogo.util.Exceptions.ignore(e);
     }
@@ -178,7 +178,7 @@ public strictfp class World
 
   public double wrappedObserverY(double y) {
     try {
-      y = topology.wrapY(y - topology.followOffsetY());
+      y = topology().wrapY(y - topology().followOffsetY());
     } catch (AgentException e) {
       org.nlogo.util.Exceptions.ignore(e);
     }
@@ -198,11 +198,11 @@ public strictfp class World
   //   All wrapping related behavior specific to a topology is/should-be hardcoded in the methods
   //   for each specific topological implementation.
   public boolean wrappingAllowedInX() {
-    return (topology instanceof Torus || topology instanceof VertCylinder);
+    return (topology() instanceof Torus || topology() instanceof VertCylinder);
   }
 
   public boolean wrappingAllowedInY() {
-    return (topology instanceof Torus || topology instanceof HorizCylinder);
+    return (topology() instanceof Torus || topology() instanceof HorizCylinder);
   }
 
   /// export world
@@ -337,12 +337,12 @@ public strictfp class World
 
   public double wrapX(double x)
       throws AgentException {
-    return topology.wrapX(x);
+    return topology().wrapX(x);
   }
 
   public double wrapY(double y)
       throws AgentException {
-    return topology.wrapY(y);
+    return topology().wrapY(y);
   }
 
   public double wrap(double pos, double min, double max) {
@@ -351,19 +351,19 @@ public strictfp class World
 
   public void diffuse(double param, int vn)
       throws AgentException, PatchException {
-    topology.diffuse(param, vn);
+    topology().diffuse(param, vn);
   }
 
   public void diffuse4(double param, int vn)
       throws AgentException, PatchException {
-    topology.diffuse4(param, vn);
+    topology().diffuse4(param, vn);
   }
 
   public int roundX(double x)
       throws AgentException {
     // floor() is slow so we don't use it
     try {
-      x = topology.wrapX(x);
+      x = topology().wrapX(x);
     } catch (AgentException ex) {
       throw new AgentException("Cannot access patches beyond the limits of current world.");
     }
@@ -380,7 +380,7 @@ public strictfp class World
       throws AgentException {
     // floor() is slow so we don't use it
     try {
-      y = topology.wrapY(y);
+      y = topology().wrapY(y);
     } catch (AgentException ex) {
       throw new AgentException("Cannot access patches beyond the limits of current world.");
     }
@@ -855,7 +855,7 @@ public strictfp class World
          j < _observer.variables().length;
          j++) {
       try {
-        ValueConstraint con = _observer.variableConstraint(j);
+        ValueConstraint con = _observer.constraint(j);
         if (con != null) {
           _observer.setVariable(j, con.defaultValue());
         } else {
@@ -1090,14 +1090,6 @@ public strictfp class World
     }
 
     throw new IllegalStateException("neither of the breeds exist, that's bad");
-  }
-
-  public int getVariablesArraySize(Observer observer) {
-    return _program.globals().size();
-  }
-
-  public int getVariablesArraySize(Patch patch) {
-    return _program.patchesOwn().size();
   }
 
   public int getVariablesArraySize(org.nlogo.api.Turtle turtle, org.nlogo.api.AgentSet breed) {

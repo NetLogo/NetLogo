@@ -215,5 +215,21 @@ class ExpressionParserTests extends FunSuite {
       "CommandBlock '[ ]' " +
       "Statements '' ")
   }
+  test("testWhile") {
+    testStartAndEnd("while [count turtles < 10] [ crt 1 ]",
+      "Statements 'while [count turtles < 10] [ crt 1 ]' " +
+      "Statement 'while [count turtles < 10] [ crt 1 ]' " +
+      "ReporterBlock '[count turtles < 10]' " +
+      "ReporterApp 'count turtles < 10' " +
+      "ReporterApp 'count turtles' " +
+      "ReporterApp 'turtles' " +
+      "ReporterApp '10' " +
+      "CommandBlock '[ crt 1 ]' " +
+      "Statements 'crt 1' " +
+      "Statement 'crt 1' " +
+      "ReporterApp '1' " +
+      "CommandBlock '' " +
+      "Statements '' ")
+  }
 
 }

@@ -632,7 +632,7 @@ public abstract strictfp class GUIWorkspaceJ
     int index = world().observerOwnsIndexOf(e.varname().toUpperCase());
 
     if (index != -1) {
-      world().observer().variableConstraint(index, con);
+      world().observer().setConstraint(index, con);
     }
   }
 
@@ -641,7 +641,7 @@ public abstract strictfp class GUIWorkspaceJ
     int index = world().observerOwnsIndexOf(e.varname().toUpperCase());
 
     if (index != -1) {
-      world().observer().variableConstraint(index, e.constraint());
+      world().observer().setConstraint(index, e.constraint());
     }
   }
 
@@ -650,7 +650,7 @@ public abstract strictfp class GUIWorkspaceJ
     int index = world().observerOwnsIndexOf(e.varname().toUpperCase());
 
     if (index != -1) {
-      world().observer().variableConstraint(index, e.constraint());
+      world().observer().setConstraint(index, e.constraint());
     }
   }
 
@@ -664,7 +664,7 @@ public abstract strictfp class GUIWorkspaceJ
       // now we set the constraint in the observer, so that it is enforced.
       int index = world().observerOwnsIndexOf(e.varname().toUpperCase());
       if (index != -1) {
-        world().observer().variableConstraint(index, con);
+        world().observer().setConstraint(index, con);
       }
     } catch (SliderConstraint.ConstraintExceptionHolder ex) {
       for (SliderConstraint.SliderConstraintException cce :
@@ -677,7 +677,7 @@ public abstract strictfp class GUIWorkspaceJ
   public void handle(Events.RemoveConstraintEvent e) {
     int index = world().observerOwnsIndexOf(e.varname().toUpperCase());
     if (index != -1) {
-      world().observer().variableConstraint(index, null);
+      world().observer().setConstraint(index, null);
     }
   }
 

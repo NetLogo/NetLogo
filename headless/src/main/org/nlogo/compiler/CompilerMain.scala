@@ -14,10 +14,22 @@ import org.nlogo.util.Femto
 
 private object CompilerMain {
 
-  def compile(source: String, displayName: Option[String], program: Program, subprogram: Boolean,
-    oldProcedures: Compiler.ProceduresMap, extensionManager: ExtensionManager,
-    flags: CompilerFlags): CompilerResults = {
+  // the frontEndOnly flag is currently just for Tortoise and can hopefully go away in the future.
+  // Tortoise currently needs SetVisitor to happen even though SetVisitor is technically part of the
+  // back end.  An example of how this might be redone in the future would be to fold the
+  // functionality of SetVisitor into IdentifierParser. - ST 1/24/13
 
+  def compile(source: String, displayName: Option[String], program: Program, subprogram: Boolean,
+      oldProcedures: Compiler.ProceduresMap, extensionManager: ExtensionManager,
+      flags: CompilerFlags): CompilerResults = {
+    val (defs, structureResults) =
+      frontEnd(source, displayName, program, subprogram, oldProcedures, extensionManager)
+    backEnd(defs, structureResults, source, extensionManager.profilingEnabled, flags)
+  }
+
+  def frontEnd(source: String, displayName: Option[String], program: Program, subprogram: Boolean,
+      oldProcedures: Compiler.ProceduresMap, extensionManager: ExtensionManager, frontEndOnly: Boolean = false)
+    : (Seq[ProcedureDefinition], StructureParser.Results) = {
     val structureResults = StructureParser.parseAll(
       Compiler.Tokenizer2D,
       source, displayName, program, subprogram, oldProcedures, extensionManager)
@@ -34,11 +46,17 @@ private object CompilerMain {
       new ExpressionParser(procedure, taskNumbers)
         .parse(identifiedTokens) // parse
     }
-    val defs: Vector[ProcedureDefinition] =
-      structureResults.procedures.values.flatMap(parseProcedure).toVector
-    // StructureParser found the top level Procedures for us.  ExpressionParser
-    // finds command tasks and makes Procedures out of them, too.  the remaining
-    // phases handle all ProcedureDefinitions from both sources. - ST 2/4/11
+    val procDefs = structureResults.procedures.values.flatMap(parseProcedure).toVector
+    if (frontEndOnly)  // for Tortoise
+      for(procdef <- procDefs)
+        procdef.accept(new SetVisitor)
+    (procDefs, structureResults)
+  }
+
+  // StructureParser found the top level Procedures for us.  ExpressionParser
+  // finds command tasks and makes Procedures out of them, too.  the remaining
+  // phases handle all ProcedureDefinitions from both sources. - ST 2/4/11
+  def backEnd(defs: Seq[ProcedureDefinition], structureResults: StructureParser.Results, source: String, profilingEnabled: Boolean, flags: CompilerFlags): CompilerResults = {
     for(procdef <- defs) {
       procdef.accept(new ReferenceVisitor)  // handle ReferenceType
       if (flags.foldConstants)
@@ -61,7 +79,7 @@ private object CompilerMain {
           Femto.get(classOf[GeneratorInterface], "org.nlogo.generator.Generator",
                     Array(source, procdef.procedure,
                           Boolean.box(
-                            extensionManager.profilingEnabled)))
+                            profilingEnabled)))
             .generate()
     }
     // only return top level procedures.

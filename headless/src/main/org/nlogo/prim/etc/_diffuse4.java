@@ -32,13 +32,13 @@ public final strictfp class _diffuse4
 
   @Override
   public void perform(final Context context) {
-    double diffuseparam = argEvalDoubleValue(context, 0);
-    if (diffuseparam < 0.0 || diffuseparam > 1.0) {
+    double amount = argEvalDoubleValue(context, 0);
+    if (amount < 0.0 || amount > 1.0) {
       throw new EngineException
-          (context, this, I18N.errorsJ().getN("org.nlogo.prim.$common.paramOutOfBounds", diffuseparam));
+          (context, this, I18N.errorsJ().getN("org.nlogo.prim.$common.paramOutOfBounds", amount));
     }
     try {
-      world.diffuse4(diffuseparam, reference.vn());
+      world.diffuse4(amount, reference.vn());
     } catch (AgentException e) {
       throw new EngineException(context, this, e.getMessage());
     } catch (PatchException e) {

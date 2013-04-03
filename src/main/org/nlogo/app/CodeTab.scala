@@ -15,6 +15,7 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
   with org.nlogo.window.ProceduresInterface
   with ProceduresMenuTarget
   with Events.SwitchedTabsEventHandler
+  with org.nlogo.window.Zoomable
   with org.nlogo.window.Events.CompiledEventHandler {
 
   private val listener = new TextListener() {
@@ -25,6 +26,7 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
   }
   val text = new EditorFactory(workspace).newEditor(100, 100, true, listener, true)
   text.setBorder(BorderFactory.createEmptyBorder(4, 7, 4, 7))
+  override def zoomTarget = text
 
   val errorLabel = new EditorAreaErrorLabel(text)
   val toolBar = getToolBar
@@ -85,8 +87,6 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
     if(_needsCompile && e.oldTab == this)
       recompile()
   }
-
-  private var originalFontSize = -1
 
   // Error code
 
