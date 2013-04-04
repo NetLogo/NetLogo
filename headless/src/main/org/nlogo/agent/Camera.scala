@@ -4,7 +4,7 @@ package org.nlogo.agent
 
 import org.nlogo.api
 
-trait Camera { self: Observer =>
+trait Camera extends api.Camera { self: Observer =>
 
   private var _heading = 0.0
   def heading = _heading
