@@ -15,7 +15,7 @@ class RunList(reviewTab: ReviewTab) extends JList(reviewTab.tabState) {
       def valueChanged(p1: ListSelectionEvent) {
         if (getSelectedIndex != -1) {
           val run = getSelectedValue.asInstanceOf[ModelRun]
-          reviewTab.tabState.setCurrentRun(run)
+          reviewTab.tabState.currentRun = Some(run)
           reviewTab.loadModelIfNeeded(run.modelString)
           reviewTab.refreshInterface()
         }

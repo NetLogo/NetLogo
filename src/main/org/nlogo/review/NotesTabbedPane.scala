@@ -6,37 +6,41 @@ import org.nlogo.swing.RichJButton
 
 import javax.swing.{ AbstractCellEditor, JButton, JPanel, JScrollPane, JTabbedPane, JTable, JTextArea }
 import javax.swing.table.{ AbstractTableModel, TableCellEditor, TableCellRenderer }
+
 import scala.language.existentials
 
 class NotesTabbedPane(tabState: ReviewTabState) extends JTabbedPane {
-  val indexedNotes = new IndexedNotesTable(tabState)
+  val indexedNotesPanel = new IndexedNotesPanel(tabState)
   val generalNotes = new GeneralNotesTextArea(tabState)
-  addTab("Indexed notes", new IndexedNotePanel(indexedNotes))
+  addTab("Indexed notes", indexedNotesPanel)
   addTab("General notes", new JScrollPane(generalNotes))
 }
 
-class IndexedNotePanel(table: IndexedNotesTable) extends JPanel {
+class IndexedNotesPanel(tabState: ReviewTabState) extends JPanel {
   setLayout(new BorderLayout)
+  val table = new IndexedNotesTable(tabState)
   add(new JScrollPane(table), BorderLayout.CENTER)
   val buttonPanel = new JPanel()
-  buttonPanel.add(new AddNoteButton(table))
+  val addNoteButton = new AddNoteButton(tabState, table)
+  buttonPanel.add(addNoteButton)
   add(buttonPanel, BorderLayout.SOUTH)
 }
 
-class GeneralNotesTextArea(tabState: ReviewTabState) extends JTextArea("") {
+class GeneralNotesTextArea(val hasCurrentRun: HasCurrentRun)
+  extends JTextArea("")
+  with EnabledWithCurrentRun {
   setLineWrap(true)
   setRows(3)
-  override def setText(text: String) {
-    for { // TODO this should instead be listening to (not yet implemented) "run change" events
-      run <- tabState.currentRun
-      if getText != run.generalNotes
-    } super.setText(text)
+
+  override def notify(pub: HasCurrentRun#Pub, event: CurrentRunChangeEvent) {
+    super.notify(pub, event) // enabled with current run
+    setText(event.newRun.map(_.generalNotes).getOrElse(""))
   }
 }
 
-class AddNoteButton(table: IndexedNotesTable)
+class AddNoteButton(val hasCurrentRun: HasCurrentRun, table: IndexedNotesTable)
   extends JButton(new ReviewAction("Add note", "add", () => table.addNote))
-// TODO disable button when no current run
+  with EnabledWithCurrentRun
 
 case class Note(frame: Int, ticks: Double, text: String = "") extends Ordered[Note] {
   def compare(that: Note) = frame.compareTo(that.frame)

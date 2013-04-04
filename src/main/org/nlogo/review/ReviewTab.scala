@@ -99,10 +99,8 @@ class ReviewTab(
       value = run.map(_.currentFrameIndex).getOrElse(0),
       max = data.map(_.lastFrameIndex).getOrElse(0),
       enabled = data.filter(_.size > 1).isDefined)
-    notesTabbedPane.generalNotes.setText(run.map(_.generalNotes).getOrElse(""))
     reviewToolBar.saveButton.setEnabled(run.map(_.dirty).getOrElse(false))
     Seq(
-      notesTabbedPane.generalNotes,
       reviewToolBar.renameButton,
       reviewToolBar.closeCurrentButton,
       reviewToolBar.closeAllButton)
