@@ -14,6 +14,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
   val workspaces = new collection.mutable.ListBuffer[HeadlessWorkspace]
   def newWorkspace() = {
     val w = HeadlessWorkspace.newInstance
+    w.silent = true
     workspaces += w
     w
   }

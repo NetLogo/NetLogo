@@ -164,7 +164,7 @@ public strictfp class Protractor
     double distanceNoWrap = world.rootsTable.gridRoot(dx * dx + dy * dy);
 
     if (wrap) {
-      double distanceWrap = world.topology.distanceWrap(dx, dy, x1, y1, x2, y2);
+      double distanceWrap = world.topology().distanceWrap(dx, dy, x1, y1, x2, y2);
 
       if (distanceWrap < distanceNoWrap) {
         return distanceWrap;
@@ -278,7 +278,7 @@ public strictfp class Protractor
     double dx = toX - fromX;
     double dy = toY - fromY;
     if (wrap) {
-      return world.topology.towardsWrap(dx, dy);
+      return world.topology().towardsWrap(dx, dy);
     }
     if (dx == 0) {
       return dy > 0 ? 0 : 180;
@@ -290,70 +290,6 @@ public strictfp class Protractor
         (270 + StrictMath.toDegrees
             (StrictMath.PI + StrictMath.atan2(-dy, dx)))
             % 360;
-  }
-
-  public double towardsPitch(org.nlogo.api.Agent fromAgent, org.nlogo.api.Agent toAgent,
-                             boolean wrap)
-      throws AgentException {
-    double x, y, z;
-    if (fromAgent == toAgent) {
-      throw new AgentException
-          ("no pitch is defined from an agent to itself");
-    }
-    if (toAgent instanceof Turtle) {
-      Turtle turtle = (Turtle) toAgent;
-      x = turtle.xcor();
-      y = turtle.ycor();
-      z = 0;
-    } else if (toAgent instanceof Link) {
-      Link link = (Link) toAgent;
-      x = link.midpointX();
-      y = link.midpointY();
-      z = 0;
-    } else {
-      Patch patch = (Patch) toAgent;
-      x = patch.pxcor;
-      y = patch.pycor;
-      z = 0;
-    }
-    return towardsPitch(fromAgent, x, y, z, wrap);
-  }
-
-  public double towardsPitch(org.nlogo.api.Agent fromAgent,
-                             double toX, double toY, double toZ,
-                             boolean wrap)
-      throws AgentException {
-    double fromX, fromY, fromZ;
-    if (fromAgent instanceof Observer) {
-      Observer obs = (Observer) fromAgent;
-      fromX = obs.oxcor();
-      fromY = obs.oycor();
-      fromZ = obs.ozcor();
-      return towardsPitch(fromX, fromY, fromZ, toX, toY, toZ, wrap);
-    } else {
-      throw new IllegalStateException("In towardsPitch: fromAgent must be the observer");
-    }
-  }
-
-  public double towardsPitch(double fromX, double fromY, double fromZ,
-                             double toX, double toY, double toZ,
-                             boolean wrap)
-      throws AgentException {
-    if (fromX == toX && fromY == toY && fromZ == toZ) {
-      throw new AgentException
-          ("no pitch is defined from a point (" +
-              fromX + "," + fromY + "," + fromZ + ") to that same point");
-    }
-    double dx = toX - fromX;
-    double dy = toY - fromY;
-    double dz = toZ - fromZ;
-    if (wrap) {
-      dx = Topology.wrap(dx, world._minPxcor - 0.5, world._maxPxcor + 0.5);
-      dy = Topology.wrap(dy, world._minPycor - 0.5, world._maxPycor + 0.5);
-    }
-
-    return StrictMath.toDegrees
-        (StrictMath.atan(dz / StrictMath.sqrt(dx * dx + dy * dy)));
   }
 
 }

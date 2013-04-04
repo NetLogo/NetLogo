@@ -9,9 +9,4 @@ trait Protractor {
               toX: Double, toY: Double,
               wrap: Boolean): Double
 
-  @throws(classOf[AgentException])
-  def towardsPitch(fromX: Double, fromY: Double, fromZ: Double,
-                   toX: Double, toY: Double, toZ: Double,
-                   wrap: Boolean): Double
-
 }

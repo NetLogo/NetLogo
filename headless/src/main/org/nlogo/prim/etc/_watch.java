@@ -24,7 +24,6 @@ public final strictfp class _watch
       throw new EngineException(context, this,
         I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
     }
-    world.observer().home();
     world.observer().setPerspective(PerspectiveJ.WATCH(), agent);
     context.ip = next;
   }

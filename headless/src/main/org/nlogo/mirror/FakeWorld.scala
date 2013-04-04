@@ -102,7 +102,6 @@ class FakeWorld(state: State) extends api.World {
     override def labelColor = vars(VAR_PLABELCOLOR)
     override def getPatchAtOffsets(dx: Double, dy: Double) = unsupported
     override def size = 1
-    override def shape = ""
   }
 
   override val patches =
@@ -163,7 +162,6 @@ class FakeWorld(state: State) extends api.World {
     def kind = api.AgentKind.Observer
     def id = 0
     def size = 0
-    def shape = ""
     def perspective: api.Perspective = unsupported
     def heading: Double = unsupported
     def pitch: Double = unsupported

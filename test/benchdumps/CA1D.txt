@@ -2491,6 +2491,9 @@ procedure DO-RULE:[LEFT-ON? RIGHT-ON? NEW-VALUE]{-TP-}:
           TRYCATCHBLOCK L0 L1 L1 org/nlogo/api/AgentException
           TRYCATCHBLOCK L2 L3 L1 org/nlogo/api/AgentException
          L4
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_proceduredorule_setprocedurevariable_0.world : Lorg/nlogo/agent/World;
+          INVOKEVIRTUAL org/nlogo/agent/World.topology ()Lorg/nlogo/agent/Topology;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
           ASTORE 3
@@ -2515,7 +2518,7 @@ procedure DO-RULE:[LEFT-ON? RIGHT-ON? NEW-VALUE]{-TP-}:
           ASTORE 5
          L6
           ALOAD 5
-          INVOKEVIRTUAL org/nlogo/agent/Patch.getPatchWest ()Lorg/nlogo/agent/Patch;
+          INVOKEINTERFACE org/nlogo/agent/Neighbors.getPW (Lorg/nlogo/agent/Patch;)Lorg/nlogo/agent/Patch;
           ASTORE 2
           ALOAD 2
           IFNONNULL L8
@@ -2656,6 +2659,9 @@ procedure DO-RULE:[LEFT-ON? RIGHT-ON? NEW-VALUE]{-TP-}:
           TRYCATCHBLOCK L0 L1 L1 org/nlogo/api/AgentException
           TRYCATCHBLOCK L2 L3 L1 org/nlogo/api/AgentException
          L4
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_proceduredorule_setprocedurevariable_1.world : Lorg/nlogo/agent/World;
+          INVOKEVIRTUAL org/nlogo/agent/World.topology ()Lorg/nlogo/agent/Topology;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
           ASTORE 3
@@ -2680,7 +2686,7 @@ procedure DO-RULE:[LEFT-ON? RIGHT-ON? NEW-VALUE]{-TP-}:
           ASTORE 5
          L6
           ALOAD 5
-          INVOKEVIRTUAL org/nlogo/agent/Patch.getPatchEast ()Lorg/nlogo/agent/Patch;
+          INVOKEINTERFACE org/nlogo/agent/Neighbors.getPE (Lorg/nlogo/agent/Patch;)Lorg/nlogo/agent/Patch;
           ASTORE 2
           ALOAD 2
           IFNONNULL L8
@@ -4091,6 +4097,9 @@ procedure DO-RULE:[LEFT-ON? RIGHT-ON? NEW-VALUE]{-TP-}:
 [3]_asm_proceduredorule_ask_3 "ask patch-at" Object => void
       _patchsouth => Object
          L0
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_proceduredorule_ask_3.world : Lorg/nlogo/agent/World;
+          INVOKEVIRTUAL org/nlogo/agent/World.topology ()Lorg/nlogo/agent/Topology;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
           ASTORE 3
@@ -4115,7 +4124,7 @@ procedure DO-RULE:[LEFT-ON? RIGHT-ON? NEW-VALUE]{-TP-}:
           ASTORE 5
          L2
           ALOAD 5
-          INVOKEVIRTUAL org/nlogo/agent/Patch.getPatchSouth ()Lorg/nlogo/agent/Patch;
+          INVOKEINTERFACE org/nlogo/agent/Neighbors.getPS (Lorg/nlogo/agent/Patch;)Lorg/nlogo/agent/Patch;
           ASTORE 2
           ALOAD 2
           IFNONNULL L4

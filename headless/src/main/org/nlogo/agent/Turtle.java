@@ -155,7 +155,7 @@ public strictfp class Turtle
   @Override
   public Patch getPatchAtOffsets(double dx, double dy)
       throws AgentException {
-    Patch target = world().getTopology().getPatchAt(xcor + dx, ycor + dy);
+    Patch target = world().getPatchAt(xcor + dx, ycor + dy);
     if (target == null) {
       // Cannot get patch beyond limits of current world.
       throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Turtle.patchBeyondLimits"));
@@ -173,7 +173,7 @@ public strictfp class Turtle
     // stage 0: get ready
     Object[] oldvars = variables();
     _variables_$eq(new Object[world().getVariablesArraySize(this, getBreed())]);
-    int turtlesOwnSize = world().getVariablesArraySize((Turtle) null, world().turtles());
+    int turtlesOwnSize = world().program().turtlesOwn().size();
 
     // stage 1: use arraycopy to copy over as many variables as possible
     // (if compiling it's just the predefined ones, if not compiling it's turtles-own too!)

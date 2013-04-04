@@ -19,9 +19,6 @@ trait Agent {
   /** Returns the kind of this agent (observer, turtle, patch, or link. */
   def kind: AgentKind
 
-  /** Returns the name of the current shape, empty string in the case of patches. */
-  def shape: String
-
   /** Returns the size of this agent */
   def size: Double
 

@@ -2,10 +2,11 @@
 
 package org.nlogo.compiler
 
-import org.nlogo.api.{ CompilerException, ExtensionManager, NumberParser, Program, Token,
-                       TokenizerInterface, TokenReaderInterface, TokenType, TokenMapperInterface, World }
-import org.nlogo.nvm.{ CompilerInterface, CompilerFlags, CompilerResults, Procedure, Workspace }
-import org.nlogo.util.Femto
+import org.nlogo.{api, nvm},
+  api.{ CompilerException, ExtensionManager, NumberParser, Program, Token,
+        TokenizerInterface, TokenReaderInterface, TokenType, TokenMapperInterface, World },
+  nvm.{ CompilerInterface, CompilerFlags, CompilerResults, Procedure, Workspace },
+  org.nlogo.util.Femto
 
 // This is intended to be called from Java as well as Scala, so @throws declarations are included.
 // No other classes in this package are public. - ST 2/20/08, 4/9/08, 1/21/09
@@ -27,6 +28,11 @@ object Compiler extends CompilerInterface {
   // used to compile a single procedures only, from outside the Code tab
   def compileMoreCode(source: String, displayName: Option[String], program: Program, oldProcedures: ProceduresMap, extensionManager: ExtensionManager, flags: CompilerFlags): CompilerResults =
     CompilerMain.compile(source, displayName, program, true, oldProcedures, extensionManager, flags)
+
+  // used by Tortoise. bails after parsing so we can put a different back end on.
+  def frontEnd(source: String, oldProcedures: ProceduresMap = CompilerInterface.NoProcedures, program: Program = Program.empty()): (Seq[ProcedureDefinition], StructureParser.Results) =
+    CompilerMain.frontEnd(source, None, program, true,
+      oldProcedures, new api.DummyExtensionManager, frontEndOnly = true)
 
   // these two used by input boxes
   def checkCommandSyntax(source: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean) {

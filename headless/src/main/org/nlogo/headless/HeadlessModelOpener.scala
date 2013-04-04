@@ -103,7 +103,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
               ws.getExtensionManager)
           new InputBoxConstraint(spec(2), defaultVal)
       }
-      ws.world.observer().variableConstraint(ws.world.observerOwnsIndexOf(vname.toUpperCase), con)
+      ws.world.observer().setConstraint(ws.world.observerOwnsIndexOf(vname.toUpperCase), con)
     }
     ws.command(interfaceGlobalCommands.toString)
   }
