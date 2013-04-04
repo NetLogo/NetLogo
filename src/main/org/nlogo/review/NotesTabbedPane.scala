@@ -23,7 +23,7 @@ class IndexedNotesPanel(tabState: ReviewTabState) extends JPanel {
   val buttonPanel = new JPanel()
   val addNoteButton = new AddNoteButton(tabState, table)
   buttonPanel.add(addNoteButton)
-  add(buttonPanel, BorderLayout.SOUTH)
+  add(buttonPanel, BorderLayout.WEST)
 }
 
 class GeneralNotesTextArea(val hasCurrentRun: HasCurrentRun)
