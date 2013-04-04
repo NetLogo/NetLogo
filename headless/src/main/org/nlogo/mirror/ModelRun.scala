@@ -18,7 +18,7 @@ class ModelRun(
   val fixedViewSettings: FixedViewSettings,
   val backgroundImage: BufferedImage,
   private var _generalNotes: String = "",
-  private var _annotations: Map[Int, String] = Map())
+  private var _indexedNotes: List[IndexedNote] = Nil)
   extends api.ModelRun
   with SavableRun {
   var stillRecording = true
@@ -39,6 +39,12 @@ class ModelRun(
   def generalNotes = _generalNotes
   def generalNotes_=(text: String) {
     _generalNotes = text
+    dirty = true
+  }
+
+  def indexedNotes = _indexedNotes
+  def indexedNotes_=(notes: List[IndexedNote]) {
+    _indexedNotes = notes
     dirty = true
   }
 

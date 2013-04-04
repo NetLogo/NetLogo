@@ -1,27 +1,26 @@
 package org.nlogo.review
 
 import java.awt.BorderLayout
-
 import org.nlogo.swing.RichJButton
-
 import javax.swing.{ AbstractCellEditor, JButton, JPanel, JScrollPane, JTabbedPane, JTable, JTextArea }
 import javax.swing.table.{ AbstractTableModel, TableCellEditor, TableCellRenderer }
-
+import org.nlogo.mirror.IndexedNote
 import scala.language.existentials
 
 class NotesTabbedPane(tabState: ReviewTabState) extends JTabbedPane {
-  val indexedNotesPanel = new IndexedNotesPanel(tabState)
+  val indexedNotesTable = new IndexedNotesTable(tabState)
+  val addNoteButton = new AddNoteButton(tabState, indexedNotesTable)
+  val indexedNotesPanel = new IndexedNotesPanel(indexedNotesTable, addNoteButton)
   val generalNotes = new GeneralNotesTextArea(tabState)
   addTab("Indexed notes", indexedNotesPanel)
   addTab("General notes", new JScrollPane(generalNotes))
 }
 
-class IndexedNotesPanel(tabState: ReviewTabState) extends JPanel {
+class IndexedNotesPanel(indexedNotesTable: IndexedNotesTable, addNoteButton: AddNoteButton)
+  extends JPanel {
   setLayout(new BorderLayout)
-  val table = new IndexedNotesTable(tabState)
-  add(new JScrollPane(table), BorderLayout.CENTER)
+  add(new JScrollPane(indexedNotesTable), BorderLayout.CENTER)
   val buttonPanel = new JPanel()
-  val addNoteButton = new AddNoteButton(tabState, table)
   buttonPanel.add(addNoteButton)
   add(buttonPanel, BorderLayout.WEST)
 }
@@ -42,18 +41,14 @@ class AddNoteButton(val hasCurrentRun: HasCurrentRun, table: IndexedNotesTable)
   extends JButton(new ReviewAction("Add note", "add", () => table.addNote))
   with EnabledWithCurrentRun
 
-case class Note(frame: Int, ticks: Double, text: String = "") extends Ordered[Note] {
-  def compare(that: Note) = frame.compareTo(that.frame)
-}
-
 case class Column(
   val name: String,
   val minWidth: Option[Int],
   val maxWidth: Option[Int],
   val editable: Boolean,
   val clazz: Class[_],
-  val getValue: Note => AnyRef,
-  val updatedValue: (AnyRef, Note) => Note)
+  val getValue: IndexedNote => AnyRef,
+  val updatedValue: (AnyRef, IndexedNote) => IndexedNote)
 
 class IndexedNotesTable(tabState: ReviewTabState) extends JTable { table =>
 
@@ -76,15 +71,10 @@ class IndexedNotesTable(tabState: ReviewTabState) extends JTable { table =>
       (value, note) => note)
   )
 
-  val model = new NotesTableModel(columns)
-
-  def setTo(notes: List[Note]) {
-    model.notes.clear();
-    model.notes ++= notes
-  }
+  val model = new NotesTableModel(tabState, columns)
 
   def scrollTo(frame: Int) {
-    val rowIndex = notes.indexWhere(_.frame == frame)
+    val rowIndex = model.notes.indexWhere(_.frame == frame)
     if (rowIndex != -1)
       table.scrollRectToVisible(table.getCellRect(rowIndex, 0, false))
   }
@@ -111,21 +101,19 @@ class IndexedNotesTable(tabState: ReviewTabState) extends JTable { table =>
     buttonsColumn.setHeaderValue("")
   }
 
-  def notes: List[Note] = model.notes.toList
-
   def addNote {
     // TODO figure out what's happening at frame 0
     // TODO maybe should not add if existing note at position?
     for {
       ticks <- tabState.currentTicks
       frame <- tabState.currentFrameIndex
-    } model.addNote(Note(frame, ticks, ""))
+    } model.addNote(IndexedNote(frame, ticks, ""))
   }
 
   // someone pressed the delete button in the notes row.
   def removeNote(index: Int) { model.removeNote(index) }
 
-  def openAdvancedNoteEditor(editingNote: Note) {
+  def openAdvancedNoteEditor(editingNote: IndexedNote) {
     //      val p = new NoteEditorAdvanced(editingNote)
     //      new org.nlogo.swing.Popup(frame, I18N.gui("editing") + " " + editingNote.name, p, (), {
     //        p.getResult match {
@@ -164,34 +152,47 @@ class IndexedNotesTable(tabState: ReviewTabState) extends JTable { table =>
     def getCellEditorValue = ""
   }
 
-  class NotesTableModel(columns: Seq[Column]) extends AbstractTableModel {
+  // TODO: the model should probably not be an inner class
+  class NotesTableModel(val hasCurrentRun: HasCurrentRun, columns: Seq[Column])
+    extends AbstractTableModel
+    with HasCurrentRun#Sub {
+    hasCurrentRun.subscribe(this)
 
-    var notes = scala.collection.mutable.ListBuffer[Note]()
+    override def notify(pub: HasCurrentRun#Pub, event: CurrentRunChangeEvent) {
+      _notes.clear()
+      _notes ++= event.newRun.toList.flatMap(_.indexedNotes)
+      removeEditor()
+      revalidate()
+      repaint()
+    }
+
+    private var _notes = scala.collection.mutable.ListBuffer[IndexedNote]()
+    def notes = _notes.toList
 
     override def getColumnCount = columns.length
-    override def getRowCount = notes.length
+    override def getRowCount = _notes.length
     override def getColumnName(col: Int) = columns(col).name
     override def isCellEditable(row: Int, col: Int) = columns(col).editable
     override def getValueAt(row: Int, col: Int) = columns(col).getValue(notes(row))
     override def getColumnClass(col: Int): Class[_] = columns(col).clazz
 
     override def setValueAt(value: Object, row: Int, col: Int) {
-      if (row < notes.size) {
+      if (row < _notes.size) {
         val note = notes(row)
-        notes(row) = columns(col).updatedValue(value, note)
+        _notes(row) = columns(col).updatedValue(value, note)
         fireTableCellUpdated(row, col)
       }
     }
 
-    def addNote(n: Note) {
-      notes += n;
-      notes = notes.sorted
+    def addNote(n: IndexedNote) {
+      _notes += n;
+      _notes = _notes.sorted
       fireTableDataChanged()
     }
 
     def removeNote(index: Int) {
       if (index != -1) {
-        notes.remove(index)
+        _notes.remove(index)
         fireTableRowsDeleted(index, index)
         removeEditor()
         revalidate()

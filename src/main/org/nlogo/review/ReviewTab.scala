@@ -14,6 +14,8 @@ import javax.swing.{ JOptionPane, JPanel, JScrollPane, JSplitPane }
 import javax.swing.event.{ ChangeEvent, ChangeListener, DocumentEvent, DocumentListener }
 import org.nlogo.window.Widget
 import org.nlogo.window.MonitorWidget
+import javax.swing.event.TableModelListener
+import javax.swing.event.TableModelEvent
 
 case class WidgetHook(
   val widget: Widget,
@@ -80,16 +82,27 @@ class ReviewTab(
     }
   })
 
+  // TODO: this should probably be in tabState
   notesTabbedPane.generalNotes.getDocument.addDocumentListener(new DocumentListener {
-    private def updateNotesInRun() {
+    private def updateGeneralNotesInRun() {
       for (run <- tabState.currentRun) {
         run.generalNotes = notesTabbedPane.generalNotes.getText
         reviewToolBar.saveButton.setEnabled(run.dirty)
       }
     }
-    def insertUpdate(e: DocumentEvent) { updateNotesInRun() }
-    def removeUpdate(e: DocumentEvent) { updateNotesInRun() }
-    def changedUpdate(e: DocumentEvent) { updateNotesInRun() }
+    def insertUpdate(e: DocumentEvent) { updateGeneralNotesInRun() }
+    def removeUpdate(e: DocumentEvent) { updateGeneralNotesInRun() }
+    def changedUpdate(e: DocumentEvent) { updateGeneralNotesInRun() }
+  })
+
+  // TODO: this should probably be in tabState
+  notesTabbedPane.indexedNotesTable.getModel.addTableModelListener(new TableModelListener {
+    override def tableChanged(event: TableModelEvent) {
+      for (run <- tabState.currentRun) {
+        run.indexedNotes = notesTabbedPane.indexedNotesTable.model.notes
+        reviewToolBar.saveButton.setEnabled(run.dirty)
+      }
+    }
   })
 
   def refreshInterface() {

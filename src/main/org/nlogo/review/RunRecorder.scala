@@ -112,7 +112,7 @@ class RunRecorder(
     val name = Option(ws.getModelFileName).map(ReviewTab.removeExtension)
       .orElse(tabState.currentRun.map(_.name))
       .getOrElse("Untitled")
-    val run = new ModelRun(name, saveModel(), viewArea, viewSettings, image, "", Map())
+    val run = new ModelRun(name, saveModel(), viewArea, viewSettings, image, "", Nil)
     tabState.addRun(run)
     runList.setSelectedValue(run, true)
     refreshInterface()
