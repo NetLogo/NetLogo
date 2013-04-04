@@ -70,7 +70,7 @@ class IndexedNotesTable(tabState: ReviewTabState) extends JTable { table =>
     Column("Notes", Some(200), None, true,
       classOf[String], _.text,
       (value, note) => note.copy(text = value.asInstanceOf[String])),
-    Column(buttonsColumnName, Some(105), Some(105), false,
+    Column(buttonsColumnName, Some(105), Some(105), true,
       classOf[Unit],
       _ => Unit,
       (value, note) => note)
