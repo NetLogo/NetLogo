@@ -137,18 +137,19 @@ class ReviewTab(
   }
 
   object PrimarySplitPane extends JSplitPane(
-    JSplitPane.HORIZONTAL_SPLIT,
-    RunListPanel,
-    SecondarySplitPane) {
-    setDividerLocation(200)
+    JSplitPane.VERTICAL_SPLIT,
+    SecondarySplitPane,
+    notesTabbedPane) {
+    setResizeWeight(0.8)
+    setDividerLocation(400)
   }
 
   object SecondarySplitPane extends JSplitPane(
-    JSplitPane.VERTICAL_SPLIT,
-    RunPanel,
-    notesTabbedPane) {
-    setResizeWeight(1.0)
-    setDividerLocation(1.0)
+    JSplitPane.HORIZONTAL_SPLIT,
+    RunListPanel,
+    RunPanel) {
+    setResizeWeight(0.0)
+    setDividerLocation(200)
   }
 
   locally {
