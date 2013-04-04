@@ -1,2 +1,2 @@
 Main-Class: org.nlogo.app.App
-Class-Path: lib/mrjadapter-1.2.jar lib/asm-all-3.3.1.jar lib/jhotdraw-6.0b1.jar lib/jmf-2.1.1e.jar lib/jogl-1.1.1.jar lib/gluegen-rt-1.1.1.jar lib/log4j-1.2.16.jar lib/quaqua-7.3.4.jar lib/swing-layout-7.3.4.jar lib/scala-library.jar lib/picocontainer-2.13.6.jar lib/parboiled-core-1.0.2.jar lib/parboiled-java-1.0.2.jar lib/pegdown-1.1.0.jar
+Class-Path: lib/mrjadapter-1.2.jar lib/asm-all-3.3.1.jar lib/jhotdraw-6.0b1.jar lib/jmf-2.1.1e.jar lib/jogl-1.1.1.jar lib/gluegen-rt-1.1.1.jar lib/log4j-1.2.16.jar lib/quaqua-7.3.4.jar lib/swing-layout-7.3.4.jar lib/scala-library.jar lib/picocontainer-2.13.6.jar lib/parboiled-core-1.0.2.jar lib/parboiled-java-1.0.2.jar lib/pegdown-1.1.0.jar lib/jfreechart-1.0.14.jar lib/jcommon-1.0.15.jar
