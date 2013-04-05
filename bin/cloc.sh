@@ -1,14 +1,10 @@
 #!/bin/sh
 
-# count lines of code
+# "count lines of code"
+#
+# `brew install cloc` first if needed - ST 4/5/13
 
-if [ ! -f tmp/cloc.pl ] ; then
-  mkdir -p tmp
-  curl -sS 'http://ccl.northwestern.edu/devel/cloc-1.53.pl' -o tmp/cloc.pl
-  chmod +x tmp/cloc.pl
-fi
-
-tmp/cloc.pl \
+cloc \
   --exclude-ext=m,xml,html,css,dtd \
   --exclude-dir=tmp,project/build/classycle,project/plugins/src_managed \
   --progress-rate=0 \
