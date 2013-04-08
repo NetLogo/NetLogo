@@ -48,8 +48,8 @@ object ReviewToolBar {
           !reviewTab.userConfirms("Save Model Run", "The file " + path +
             " already exists. Do you want to overwrite it?"))
           throw new UserCancelException
-        run.save(new java.io.FileOutputStream(path))
         run.name = ReviewTab.removeExtension(path)
+        run.save(new java.io.FileOutputStream(path))
         reviewTab.tabState.undirty(run)
         reviewTab.refreshInterface()
       }
