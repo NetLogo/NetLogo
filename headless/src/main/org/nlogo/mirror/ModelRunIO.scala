@@ -35,7 +35,8 @@ trait SavableRun {
       imageBytes,
       rawMirroredUpdates,
       actionFrames,
-      generalNotes)
+      generalNotes,
+      indexedNotes)
     thingsToSave.foreach(out.writeObject)
     out.close()
   }
@@ -53,10 +54,13 @@ object ModelRunIO {
     val rawMirroredUpdates = read[Seq[Array[Byte]]]()
     val actionFrames = read[Seq[IndexedSeq[Action]]]()
     val generalNotes = read[String]()
+    val indexedNotes = read[List[IndexedNote]]
     in.close()
     val viewArea = new java.awt.geom.Area(viewShape)
     val backgroundImage = ImageIO.read(new java.io.ByteArrayInputStream(imageBytes))
-    val run = new ModelRun(name, modelString, viewArea, fixedViewSettings, backgroundImage, generalNotes)
+    val run = new ModelRun(
+      name, modelString, viewArea, fixedViewSettings,
+      backgroundImage, generalNotes, indexedNotes)
     val plots = parsePlots(modelString)
     run.load(plots, rawMirroredUpdates, actionFrames)
     run
