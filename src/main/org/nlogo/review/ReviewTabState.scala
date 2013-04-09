@@ -56,7 +56,11 @@ class ReviewTabState(
   }
 
   override def notify(pub: ReviewTabState#Pub, event: CurrentRunChangeEvent) {
-    event.oldRun.foreach(_.stillRecording = false)
+    event match {
+      case BeforeCurrentRunChangeEvent(Some(oldRun), _) =>
+        oldRun.stillRecording = false
+      case _ =>
+    }
   }
 
   def undirty(run: ModelRun) {

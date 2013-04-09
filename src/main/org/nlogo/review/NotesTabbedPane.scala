@@ -52,6 +52,8 @@ case class Column(
 
 class IndexedNotesTable(tabState: ReviewTabState) extends JTable { table =>
 
+  putClientProperty("terminateEditOnFocusLost", Boolean.box(true))
+
   val buttonsColumnName = "buttons"
   val columns = List(
     Column("Frame", Some(50), Some(50), false,
@@ -159,6 +161,11 @@ class IndexedNotesTable(tabState: ReviewTabState) extends JTable { table =>
     hasCurrentRun.subscribe(this)
 
     override def notify(pub: HasCurrentRun#Pub, event: CurrentRunChangeEvent) {
+      event match {
+        case BeforeCurrentRunChangeEvent(_, _) if (isEditing) =>
+          getCellEditor.stopCellEditing()
+        case _ =>
+      }
       _notes.clear()
       _notes ++= event.newRun.toList.flatMap(_.indexedNotes)
       removeEditor()

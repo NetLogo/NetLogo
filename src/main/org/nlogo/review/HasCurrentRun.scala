@@ -4,9 +4,20 @@ import scala.collection.mutable.Publisher
 
 import org.nlogo.mirror.ModelRun
 
-case class CurrentRunChangeEvent(
+sealed trait CurrentRunChangeEvent {
+  val oldRun: Option[ModelRun]
+  val newRun: Option[ModelRun]
+}
+
+case class BeforeCurrentRunChangeEvent(
   val oldRun: Option[ModelRun],
   val newRun: Option[ModelRun])
+  extends CurrentRunChangeEvent
+
+case class AfterCurrentRunChangeEvent(
+  val oldRun: Option[ModelRun],
+  val newRun: Option[ModelRun])
+  extends CurrentRunChangeEvent
 
 trait HasCurrentRun extends Publisher[CurrentRunChangeEvent] {
   private var _currentRun: Option[ModelRun] = None
@@ -16,8 +27,9 @@ trait HasCurrentRun extends Publisher[CurrentRunChangeEvent] {
   def currentRun_=(newRun: Option[ModelRun]) {
     if (_currentRun != newRun) {
       val oldRun = _currentRun
+      publish(BeforeCurrentRunChangeEvent(oldRun, newRun))
       _currentRun = newRun
-      publish(CurrentRunChangeEvent(oldRun, newRun))
+      publish(AfterCurrentRunChangeEvent(oldRun, newRun))
     }
   }
 }
@@ -29,7 +41,7 @@ trait EnabledWithCurrentRun extends HasCurrentRun#Sub {
   hasCurrentRun.subscribe(this)
   override def notify(pub: ReviewTabState#Pub, event: CurrentRunChangeEvent) {
     event match {
-      case CurrentRunChangeEvent(_, newRun) =>
+      case AfterCurrentRunChangeEvent(_, newRun) =>
         setEnabled(newRun.isDefined)
       case _ =>
     }
