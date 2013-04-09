@@ -68,10 +68,11 @@ class ReviewTab(
     reviewToolBar.enabledCheckBox.setSelected(state.recordingEnabled)
   }
 
+  val notesTabbedPane = new NotesTabbedPane(state)
   val scrubberPanel = new ScrubberPanel(
+    notesTabbedPane.indexedNotesTable,
     () => state.currentFrameIndex,
     () => state.currentTicks)
-  val notesTabbedPane = new NotesTabbedPane(state)
   val reviewToolBar = new ReviewToolBar(this)
   val interfacePanel = new InterfacePanel(this)
 

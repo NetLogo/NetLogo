@@ -9,13 +9,16 @@ import javax.swing.{ JButton, JLabel, JPanel, JSlider }
 import javax.swing.event.{ ChangeEvent, ChangeListener }
 import scala.math.BigDecimal
 import scala.math.BigDecimal.RoundingMode
+import javax.swing.event.ListSelectionListener
+import javax.swing.event.ListSelectionEvent
 
 class ScrubberPanel(
+  indexedNotesTable: IndexedNotesTable,
   currentFrame: () => Option[Int],
   currentTick: () => Option[Double])
   extends JPanel {
 
-  val scrubber = new Scrubber
+  val scrubber = new Scrubber(indexedNotesTable)
   val tickPanel = new TickPanel(currentFrame, currentTick, scrubber)
   val scrubberButtonsPanel = new ScrubberButtonsPanel(scrubber)
 
@@ -25,8 +28,23 @@ class ScrubberPanel(
   add(scrubberButtonsPanel, BorderLayout.EAST)
 }
 
-class Scrubber extends JSlider {
+class Scrubber(indexedNotesTable: IndexedNotesTable) extends JSlider {
   setValue(0)
+
+  // Synchronize the scrubber with the indexed notes
+  indexedNotesTable.getSelectionModel.addListSelectionListener(
+    new ListSelectionListener {
+      override def valueChanged(event: ListSelectionEvent) {
+        if (!event.getValueIsAdjusting) {
+          val i = indexedNotesTable.getSelectionModel.getMinSelectionIndex
+          if (i != -1) {
+            val note = indexedNotesTable.model.notes(i)
+            setValue(note.frame)
+          }
+        }
+      }
+    }
+  )
   def refresh(value: Int, max: Int, enabled: Boolean) {
     setValue(value)
     setMaximum(max)
