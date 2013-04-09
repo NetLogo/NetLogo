@@ -13,6 +13,7 @@ public strictfp class NetLogoListenerManager
     Events.AddJobEventHandler,
     Events.InterfaceGlobalEventHandler,
     Events.BeforeLoadEventHandler,
+    Events.AfterLoadEventHandler,
     Events.JobRemovedEventHandler,
     Events.CompiledEventHandler {
   private final List<NetLogoListener> listeners =
@@ -21,6 +22,12 @@ public strictfp class NetLogoListenerManager
   public void handle(Events.BeforeLoadEvent e) {
     for (NetLogoListener listener : listeners) {
       listener.modelOpened(e.modelPath());
+    }
+  }
+
+  public void handle(Events.AfterLoadEvent e) {
+    for (NetLogoListener listener : listeners) {
+      listener.afterModelOpened();
     }
   }
 

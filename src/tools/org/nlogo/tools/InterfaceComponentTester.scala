@@ -205,6 +205,8 @@ class NoisyListener extends NetLogoListener {
   }
   override def modelOpened(name: String) =
     hey("modelOpened", name)
+  override def afterModelOpened() =
+    hey("afterModelOpened")
   override def buttonPressed(buttonName: String) =
     hey("buttonPressed", buttonName)
   override def buttonStopped(buttonName: String) =

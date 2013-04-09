@@ -12,6 +12,8 @@ trait LoggingListener extends NetLogoListener {
 
   override def requestedDisplayUpdate() {}
 
+  override def afterModelOpened() {} // modelOpened (triggered before) is already logged - NP 2013-04-09
+
   // no clue why we do nothing with these two - ST 8/6/11
   override def buttonPressed(buttonName: String) {}
   override def buttonStopped(buttonName: String) {}
