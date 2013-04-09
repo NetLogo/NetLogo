@@ -220,10 +220,6 @@ trait Camera extends api.Camera { self: Observer =>
     setRotationPoint(oxcor, oycor, 0)
   }
 
-  def atHome2D: Boolean =
-    perspective == api.Perspective.Observe &&
-      oxcor == 0 && oycor == 0
-
   var ozcor: Double = 0
 
   def oxyandzcor(_oxcor: Double, _oycor: Double, _ozcor: Double) {
