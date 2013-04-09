@@ -24,7 +24,7 @@ class ReviewToolBar(reviewTab: ReviewTab)
   val renameButton = new ActionButton("Rename", "edit", () => rename(reviewTab))
   val closeCurrentButton = new ActionButton("Close", "close", () => closeCurrentRun(reviewTab))
   val closeAllButton = new ActionButton("Close all", "close-all", () => closeAll(reviewTab))
-  val enabledCheckBox = new EnabledCheckBox(reviewTab.tabState)
+  val enabledCheckBox = new EnabledCheckBox(reviewTab.state)
   override def addControls() {
     add(saveButton)
     add(loadButton)
@@ -39,7 +39,7 @@ class ReviewToolBar(reviewTab: ReviewTab)
 object ReviewToolBar {
 
   def saveRun(reviewTab: ReviewTab) {
-    for (run <- reviewTab.tabState.currentRun) {
+    for (run <- reviewTab.state.currentRun) {
       ignoring(classOf[UserCancelException]) {
         val path = org.nlogo.swing.FileDialog.show(
           reviewTab, "Save Run", java.awt.FileDialog.SAVE,
@@ -50,7 +50,7 @@ object ReviewToolBar {
           throw new UserCancelException
         run.name = ReviewTab.removeExtension(path)
         run.save(new java.io.FileOutputStream(path))
-        reviewTab.tabState.undirty(run)
+        reviewTab.state.undirty(run)
         reviewTab.refreshInterface()
       }
     }
@@ -75,7 +75,7 @@ object ReviewToolBar {
         // in case of success or the path in case of failure
         try {
           reviewTab.loadRun(new java.io.FileInputStream(path))
-          val run = reviewTab.tabState.runs.last
+          val run = reviewTab.state.runs.last
           Right(run)
         } catch {
           case ex: Exception => Left(path)
@@ -100,7 +100,7 @@ object ReviewToolBar {
 
   def rename(reviewTab: ReviewTab) {
     for {
-      run <- reviewTab.tabState.currentRun
+      run <- reviewTab.state.currentRun
       icon = new ImageIcon(classOf[ReviewTab].getResource("/images/edit.gif"))
       answer <- Option(JOptionPane.showInputDialog(reviewTab,
         "Please enter new name:",
@@ -115,23 +115,23 @@ object ReviewToolBar {
   }
 
   def closeCurrentRun(reviewTab: ReviewTab) {
-    for (run <- reviewTab.tabState.currentRun) {
+    for (run <- reviewTab.state.currentRun) {
       if (!run.dirty ||
         reviewTab.userConfirms("Close current run",
           "The current run has unsaved data. Are you sure you want to close the current run?")) {
-        reviewTab.tabState.closeCurrentRun()
+        reviewTab.state.closeCurrentRun()
         // select the new current run if there is one:
-        reviewTab.tabState.currentRun.foreach(reviewTab.runList.setSelectedValue(_, true))
+        reviewTab.state.currentRun.foreach(reviewTab.runList.setSelectedValue(_, true))
         reviewTab.refreshInterface()
       }
     }
   }
 
   def closeAll(reviewTab: ReviewTab) {
-    if (!reviewTab.tabState.dirty ||
+    if (!reviewTab.state.dirty ||
       reviewTab.userConfirms("Close all runs",
         "Some runs have unsaved data. Are you sure you want to close all runs?")) {
-      reviewTab.tabState.reset()
+      reviewTab.state.reset()
       reviewTab.refreshInterface()
     }
   }

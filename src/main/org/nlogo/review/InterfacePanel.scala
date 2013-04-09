@@ -18,7 +18,7 @@ class InterfacePanel(reviewTab: ReviewTab) extends JPanel {
 
   def repaintView(g: java.awt.Graphics, viewArea: java.awt.geom.Area) {
     for {
-      run <- reviewTab.tabState.currentRun
+      run <- reviewTab.state.currentRun
       frame <- run.currentFrame
       fakeWorld = new FakeWorld(frame.mirroredState)
       paintArea = new java.awt.geom.Area(getBounds())
@@ -41,7 +41,7 @@ class InterfacePanel(reviewTab: ReviewTab) extends JPanel {
 
   def repaintWidgets(g: java.awt.Graphics) {
     for {
-      frame <- reviewTab.tabState.currentFrame
+      frame <- reviewTab.state.currentFrame
       values = frame.mirroredState
         .filterKeys(_.kind == org.nlogo.mirror.Mirrorables.WidgetValue)
         .toSeq
@@ -73,7 +73,7 @@ class InterfacePanel(reviewTab: ReviewTab) extends JPanel {
 
   def repaintPlots(g: java.awt.Graphics) {
     for {
-      frame <- reviewTab.tabState.currentFrame
+      frame <- reviewTab.state.currentFrame
       container = reviewTab.ws.viewWidget.findWidgetContainer
       widgets = plotWidgets
         .map { pw => pw.plotName -> pw }
@@ -95,10 +95,10 @@ class InterfacePanel(reviewTab: ReviewTab) extends JPanel {
 
   override def paintComponent(g: java.awt.Graphics) {
     super.paintComponent(g)
-    g.setColor(if (reviewTab.tabState.currentRun.isDefined) WHITE else GRAY)
+    g.setColor(if (reviewTab.state.currentRun.isDefined) WHITE else GRAY)
     g.fillRect(0, 0, getWidth, getHeight)
     for {
-      run <- reviewTab.tabState.currentRun
+      run <- reviewTab.state.currentRun
     } {
       g.drawImage(run.backgroundImage, 0, 0, null)
       repaintView(g, run.viewArea)

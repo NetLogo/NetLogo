@@ -7,7 +7,7 @@ import org.nlogo.mirror.ModelRun
 import javax.swing.{ BorderFactory, JList, ListSelectionModel }
 import javax.swing.event.{ ListSelectionEvent, ListSelectionListener }
 
-class RunList(reviewTab: ReviewTab) extends JList(reviewTab.tabState) {
+class RunList(reviewTab: ReviewTab) extends JList(reviewTab.state) {
   setBorder(BorderFactory.createLoweredBevelBorder())
   setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
   this.getSelectionModel.addListSelectionListener(
@@ -15,7 +15,7 @@ class RunList(reviewTab: ReviewTab) extends JList(reviewTab.tabState) {
       def valueChanged(p1: ListSelectionEvent) {
         if (getSelectedIndex != -1) {
           val run = getSelectedValue.asInstanceOf[ModelRun]
-          reviewTab.tabState.currentRun = Some(run)
+          reviewTab.state.currentRun = Some(run)
           reviewTab.loadModelIfNeeded(run.modelString)
           reviewTab.refreshInterface()
         }

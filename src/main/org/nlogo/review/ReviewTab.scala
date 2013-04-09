@@ -30,7 +30,7 @@ class ReviewTab(
   with window.ReviewTabInterface
   with window.Events.BeforeLoadEventHandler {
 
-  val tabState = new ReviewTabState()
+  val state = new ReviewTabState()
 
   def workspaceWidgets =
     Option(ws.viewWidget.findWidgetContainer)
@@ -43,49 +43,49 @@ class ReviewTab(
   val runList = new RunList(this)
 
   val runRecorder = new RunRecorder(
-    ws, tabState, runList, saveModel, () => widgetHooks,
+    ws, state, runList, saveModel, () => widgetHooks,
     () => disableRecording, () => refreshInterface)
 
-  override def loadedRuns: Seq[api.ModelRun] = tabState.runs
+  override def loadedRuns: Seq[api.ModelRun] = state.runs
   override def loadRun(inputStream: java.io.InputStream): Unit = {
     val run = ModelRunIO.load(inputStream)
-    tabState.addRun(run)
+    state.addRun(run)
     loadModelIfNeeded(run.modelString)
   }
-  override def currentRun: Option[api.ModelRun] = tabState.currentRun
+  override def currentRun: Option[api.ModelRun] = state.currentRun
 
   def userConfirms(title: String, message: String) =
     JOptionPane.showConfirmDialog(ReviewTab.this, message,
       title, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION
 
   def enableRecording() {
-    tabState.recordingEnabled = true
-    reviewToolBar.enabledCheckBox.setSelected(tabState.recordingEnabled)
+    state.recordingEnabled = true
+    reviewToolBar.enabledCheckBox.setSelected(state.recordingEnabled)
   }
 
   def disableRecording() {
-    tabState.recordingEnabled = false
-    reviewToolBar.enabledCheckBox.setSelected(tabState.recordingEnabled)
+    state.recordingEnabled = false
+    reviewToolBar.enabledCheckBox.setSelected(state.recordingEnabled)
   }
 
   val scrubberPanel = new ScrubberPanel(
-    () => tabState.currentFrameIndex,
-    () => tabState.currentTicks)
-  val notesTabbedPane = new NotesTabbedPane(tabState)
+    () => state.currentFrameIndex,
+    () => state.currentTicks)
+  val notesTabbedPane = new NotesTabbedPane(state)
   val reviewToolBar = new ReviewToolBar(this)
   val interfacePanel = new InterfacePanel(this)
 
   scrubberPanel.scrubber.addChangeListener(new ChangeListener {
     def stateChanged(evt: ChangeEvent) {
-      tabState.currentRun.foreach(_.currentFrameIndex = scrubberPanel.scrubber.getValue)
+      state.currentRun.foreach(_.currentFrameIndex = scrubberPanel.scrubber.getValue)
       interfacePanel.repaint()
     }
   })
 
-  // TODO: this should probably be in tabState
+  // TODO: this should probably be in state
   notesTabbedPane.generalNotes.getDocument.addDocumentListener(new DocumentListener {
     private def updateGeneralNotesInRun() {
-      for (run <- tabState.currentRun) {
+      for (run <- state.currentRun) {
         run.generalNotes = notesTabbedPane.generalNotes.getText
         reviewToolBar.saveButton.setEnabled(run.dirty)
       }
@@ -95,10 +95,10 @@ class ReviewTab(
     def changedUpdate(e: DocumentEvent) { updateGeneralNotesInRun() }
   })
 
-  // TODO: this should probably be in tabState
+  // TODO: this should probably be in state
   notesTabbedPane.indexedNotesTable.getModel.addTableModelListener(new TableModelListener {
     override def tableChanged(event: TableModelEvent) {
-      for (run <- tabState.currentRun) {
+      for (run <- state.currentRun) {
         run.indexedNotes = notesTabbedPane.indexedNotesTable.model.notes
         reviewToolBar.saveButton.setEnabled(run.dirty)
       }
@@ -106,8 +106,8 @@ class ReviewTab(
   })
 
   def refreshInterface() {
-    val run = tabState.currentRun
-    val data = tabState.currentRunData
+    val run = state.currentRun
+    val data = state.currentRunData
     scrubberPanel.scrubber.refresh(
       value = run.map(_.currentFrameIndex).getOrElse(0),
       max = data.map(_.lastFrameIndex).getOrElse(0),
