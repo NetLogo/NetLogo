@@ -1828,6 +1828,22 @@ if xcor &gt; 20 [ die ]
 ask links with [color = blue] [ die ]
 ;; all the blue links will die
 </pre>
+      <p>A dead agent ceases to exist.  The effects of this include:
+<ul>
+<li>The agent will not execute any further code.  So if you write
+<tt>ask turtles [ die print "last words?" ]</tt>, no last words will
+be printed, because the turtles are already dead before they have
+a chance to print anything.
+<li>The agent will disappear from any agentsets it was in, reducing
+the size of those agentsets by one.
+<li>Any variable that was storing the agent will now instead have
+<tt>nobody</tt> in it.  So for example <tt>let x one-of turtles ask x [ die ] print x</tt>
+prints <tt>nobody</tt>.
+<li>If the dead agent was a turtle, every link connected to it also dies.
+<li>If the observer was watching or following the agent,
+  the observer's perspective resets, as if <tt>reset-perspective</tt>
+  had been run.
+</ul>
       <p>
         See also: <a href="#clear-turtles">clear-turtles</a> <a href=
         "#clear-links">clear-links</a>
