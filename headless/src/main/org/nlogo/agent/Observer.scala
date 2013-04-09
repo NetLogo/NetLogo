@@ -41,6 +41,10 @@ with api.Observer with Constraints {
   var oxcor: Double = 0
   var oycor: Double = 0
 
+  def atHome2D: Boolean =
+    perspective == api.Perspective.Observe &&
+      oxcor == 0 && oycor == 0
+
   def followOffsetX: Double = perspective match {
     case api.Perspective.Follow | api.Perspective.Ride =>
       oxcor - (world.minPxcor - 0.5 + world.worldWidth / 2.0)

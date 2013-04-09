@@ -163,18 +163,9 @@ class FakeWorld(state: State) extends api.World {
     def id = 0
     def size = 0
     def perspective: api.Perspective = unsupported
-    def heading: Double = unsupported
-    def pitch: Double = unsupported
-    def roll: Double = unsupported
     def oxcor: Double = unsupported
     def oycor: Double = unsupported
-    def ozcor: Double = unsupported
-    def dx: Double = unsupported
-    def dy: Double = unsupported
-    def dz: Double = unsupported
     def setPerspective(p: api.Perspective, a: api.Agent) = unsupported
-    def dist: Double = unsupported
-    def followDistance: Int = unsupported
   }
 
   private def worldVar[T](i: Int) = worldVars(i).asInstanceOf[T]

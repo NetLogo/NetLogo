@@ -460,7 +460,7 @@ public strictfp class View
           }
         });
     menu.add(exportItem);
-    if (workspace.world().observer().perspective() != org.nlogo.api.PerspectiveJ.OBSERVE()) {
+    if (!workspace.world().observer().atHome2D()) {
       menu.add(new javax.swing.JPopupMenu.Separator());
       javax.swing.JMenuItem resetItem =
           new javax.swing.JMenuItem(
