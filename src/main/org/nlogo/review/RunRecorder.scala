@@ -41,12 +41,21 @@ class RunRecorder(
           refreshInterface()
         }
       }
-      override def modelOpened(name: String) {
+      override def afterModelOpened() {
         // clearing the ticks doesn't send tickCounterChanged if the ticks
         // were already at -1.0, so we make sure to clear the actions of a
         // potentially "tickless" model when we open a new one.
         actionBuffers.foreach(_.clear())
-        tabState.currentRun.foreach(_.stillRecording = false)
+        for (run <- tabState.currentRun) {
+          run.stillRecording = false
+          if (saveModel() != run.modelString) {
+            // if we just opened a model different from the
+            // one loaded from the previously current run...
+            tabState.currentRun = None
+            runList.clearSelection()
+            refreshInterface()
+          }
+        }
       }
       override def tickCounterChanged(ticks: Double) {
         ticks match {
