@@ -251,14 +251,6 @@ public abstract strictfp class Instruction
     }
   }
 
-  public void checkForBreedCompatibility(AgentSet breed, Context context)
-      throws EngineException {
-    if (!world.linkManager.checkBreededCompatibility(breed == world.links())) {
-      throw new EngineException
-          (context, this, I18N.errorsJ().get("org.nlogo.agent.Link.cantHaveBreededAndUnbreededLinks"));
-    }
-  }
-
   // checking of numeric types
 
   public long validLong(double d) {
