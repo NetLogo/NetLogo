@@ -13,7 +13,7 @@ class _createlinkwith(val breedName: String) extends Command with CustomAssemble
 
   override def syntax =
     Syntax.commandSyntax(
-      Array(Syntax.AgentType, Syntax.CommandBlockType | Syntax.OptionalType),
+      Array(Syntax.TurtleType, Syntax.CommandBlockType | Syntax.OptionalType),
       "-T--", "---L", true)
 
   override def toString =
