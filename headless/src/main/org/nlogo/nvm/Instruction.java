@@ -233,7 +233,7 @@ public abstract strictfp class Instruction
 
   // checking of breed directedness
 
-  protected void mustNotBeDirected(AgentSet breed, Context context)
+  public void mustNotBeDirected(AgentSet breed, Context context)
       throws EngineException {
     if (breed.isDirected()) {
       throw new EngineException
@@ -242,7 +242,7 @@ public abstract strictfp class Instruction
     }
   }
 
-  protected void mustNotBeUndirected(AgentSet breed, Context context)
+  public void mustNotBeUndirected(AgentSet breed, Context context)
       throws EngineException {
     if (breed.isUndirected()) {
       throw new EngineException
@@ -251,7 +251,7 @@ public abstract strictfp class Instruction
     }
   }
 
-  protected void checkForBreedCompatibility(AgentSet breed, Context context)
+  public void checkForBreedCompatibility(AgentSet breed, Context context)
       throws EngineException {
     if (!world.linkManager.checkBreededCompatibility(breed == world.links())) {
       throw new EngineException
@@ -338,7 +338,7 @@ public abstract strictfp class Instruction
     }
   }
 
-  protected static String agentKindDescription(AgentKind kind) {
+  public static String agentKindDescription(AgentKind kind) {
     if (kind == AgentKindJ.Observer()) {
       return "the observer";
     } else if (kind == AgentKindJ.Turtle()) {
