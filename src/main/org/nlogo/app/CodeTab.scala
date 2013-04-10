@@ -17,7 +17,7 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
   with ProceduresMenuTarget
   with Events.SwitchedTabsEventHandler
   with org.nlogo.window.Events.CompiledEventHandler
-  with org.nlogo.window.Events.ZoomedEventHandler
+  with org.nlogo.window.Zoomable
   with org.nlogo.swing.Printable {
 
   private val listener = new TextListener() {
@@ -28,6 +28,7 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
   }
   val text = new EditorFactory(workspace).newEditor(100, 100, true, listener, true)
   text.setBorder(BorderFactory.createEmptyBorder(4, 7, 4, 7))
+  override def zoomTarget = text
 
   val errorLabel = new EditorAreaErrorLabel(text)
   val toolBar = getToolBar
@@ -104,14 +105,12 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
   }
 
   private var originalFontSize = -1
-  private var zoomFactor = 1.0
-  def handle(e: org.nlogo.window.Events.ZoomedEvent) {
-    if(zoomFactor != e.zoomFactor) {
-      zoomFactor = e.zoomFactor
-      if(originalFontSize == -1) originalFontSize = text.getFont.getSize
-      text.setFont(text.getFont.deriveFont(StrictMath.ceil(originalFontSize * zoomFactor).toFloat))
-      errorLabel.zoom(zoomFactor)
-    }
+  override def handle(e: org.nlogo.window.Events.ZoomedEvent) {
+    super.handle(e)
+    if(originalFontSize == -1)
+      originalFontSize = text.getFont.getSize
+    text.setFont(text.getFont.deriveFont(StrictMath.ceil(originalFontSize * zoomFactor).toFloat))
+    errorLabel.zoom(zoomFactor)
   }
 
   // Error code

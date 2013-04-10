@@ -14,7 +14,7 @@ class _followme extends Command {
     world.observer.setPerspective(Perspective.Follow, turtle)
     // the following code is duplicated in _follow and _followme - ST 6/28/05
     val distance = (turtle.size * 5).toInt
-    world.observer.followDistance(1 max distance min 100)
+    world.observer.followDistance = 1 max distance min 100
     context.ip = next
   }
 }

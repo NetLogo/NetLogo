@@ -672,7 +672,7 @@ public strictfp class View
       case FOLLOW:
         workspace.world().observer().setPerspective(PerspectiveJ.FOLLOW(), item.agent);
         int distance = (int) ((org.nlogo.agent.Turtle) item.agent).size() * 5;
-        workspace.world().observer().followDistance(StrictMath.max
+        workspace.world().observer().followDistance_$eq(StrictMath.max
             (1, StrictMath.min(distance, 100)));
         break;
       case WATCH:

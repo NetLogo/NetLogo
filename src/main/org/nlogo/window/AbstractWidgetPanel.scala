@@ -2,7 +2,9 @@
 
 package org.nlogo.window
 
-abstract class AbstractWidgetPanel extends javax.swing.JLayeredPane {
+abstract class AbstractWidgetPanel
+extends javax.swing.JLayeredPane
+with Zoomable {
   def removeAllWidgets()
   def getWidgetsForSaving: java.util.List[Widget]
   def loadWidgets(widgets: Seq[String], version: String)

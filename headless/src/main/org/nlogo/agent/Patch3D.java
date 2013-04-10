@@ -182,11 +182,6 @@ public final strictfp class Patch3D
   }
 
   @Override
-  public Patch fastGetPatchAt(int x, int y) {
-    return ((World3D) world()).fastGetPatchAt(x, y, pzcor);
-  }
-
-  @Override
   public Turtle sprout(int c, int heading, AgentSet breed) {
     Turtle child = new Turtle3D((World3D) world(), breed,
         (Double) variables()[VAR_PXCOR3D],
@@ -311,14 +306,14 @@ public final strictfp class Patch3D
   @Override
   public AgentSet getNeighbors() {
     if (patchNeighbors == null) {
-      patchNeighbors = ((Topology3D) world().getTopology()).getNeighbors3d(this);
+      patchNeighbors = ((Topology3D) world().topology()).getNeighbors3d(this);
     }
     return patchNeighbors;
   }
 
   public AgentSet getNeighbors6() {
     if (patchNeighbors6 == null) {
-      patchNeighbors6 = ((Topology3D) world().getTopology()).getNeighbors6(this);
+      patchNeighbors6 = ((Topology3D) world().topology()).getNeighbors6(this);
     }
     return patchNeighbors6;
   }

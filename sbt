@@ -35,8 +35,8 @@ DISABLE_EXT_DIRS=-Djava.ext.dirs=
 BOOT=xsbt.boot.Boot
 
 
-SBT_LAUNCH=$HOME/.sbt/sbt-launch-0.12.2.jar
-URL='http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.12.2/sbt-launch.jar'
+SBT_LAUNCH=$HOME/.sbt/sbt-launch-0.12.3.jar
+URL='http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.12.3/sbt-launch.jar'
 
 if [ ! -f $SBT_LAUNCH ] ; then
   echo "downloading" $URL

@@ -26,7 +26,6 @@ MKDIR=mkdir
 MV=mv
 OPEN=open
 OSXSIGNAME="Developer ID Application"
-PACK200=pack200
 PERL=perl
 RM=rm
 RSYNC=rsync

@@ -10,7 +10,7 @@ class _rideme extends Command {
     Syntax.commandSyntax("-T--", true)
   override def perform(context: Context) {
     world.observer.setPerspective(Perspective.Ride, context.agent)
-    world.observer.followDistance(0)
+    world.observer.followDistance = 0
     context.ip = next
   }
 }

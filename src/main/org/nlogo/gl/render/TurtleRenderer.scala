@@ -46,7 +46,8 @@ extends AgentRenderer(world, shapeRenderer) {
 
   def renderHighlight(gl: GL, agent: Turtle) {
     shapeRenderer.renderHighlight(
-      gl, agent, getAgentCoords(agent, 1), getOrientation(agent))
+      gl, agent, shapeRenderer.shapeManager.getShape(agent.shape),
+      getAgentCoords(agent, 1), getOrientation(agent))
   }
 
   def getXYandZComponents(agent: Agent, dist: Double): Array[Double] = {

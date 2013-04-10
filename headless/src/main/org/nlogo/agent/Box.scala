@@ -5,7 +5,8 @@ package org.nlogo.agent
 import org.nlogo.api.{ AgentException, AgentKind, I18N }
 
 @annotation.strictfp
-class Box(_world: World) extends Topology(_world) {
+class Box(_world: World)
+extends Topology(_world, xWraps = false, yWraps = false) {
 
   @throws(classOf[AgentException])
   override def wrapX(x: Double): Double  = {
@@ -41,239 +42,51 @@ class Box(_world: World) extends Topology(_world) {
       ((270 + StrictMath.toDegrees (StrictMath.PI + StrictMath.atan2(-headingY, headingX)))
         % 360)
 
-  @throws(classOf[AgentException])
-  override def getPatchAt(xc: Double, yc: Double): Patch =
-    if (yc >= world.maxPycor + 0.5 ||
-        yc <  world.minPycor - 0.5 ||
-        xc >= world.maxPxcor + 0.5 ||
-        xc <  world.minPxcor - 0.5)
-      null
-    else
-      world.getPatchAt(xc, yc)
-
   override def shortestPathX(x1: Double, x2: Double) = x2
   override def shortestPathY(y1: Double, y2: Double) = y2
-  override def observerX = 0.0
-  override def observerY = 0.0
   override def followOffsetX = 0.0
   override def followOffsetY = 0.0
-
-  override def getNeighbors(source: Patch): AgentSet = {
-    val xLoc = source.pxcor
-    val yLoc = source.pycor
-    // special case: only one patch in world
-    if (xLoc == world.maxPxcor && xLoc == world.minPxcor &&
-        yLoc == world.maxPycor && yLoc == world.minPycor)
-      world.noPatches
-    else if (xLoc == world.maxPxcor)
-      if (xLoc == world.minPxcor)
-        if (yLoc == world.maxPycor)
-          AgentSet.fromArray(AgentKind.Patch, Array[Agent](
-            getPatchSouth(source)))
-        else if (yLoc == world.minPycor)
-          AgentSet.fromArray(AgentKind.Patch, Array[Agent](
-            getPatchNorth(source)))
-        else
-          AgentSet.fromArray(AgentKind.Patch, Array[Agent](
-            getPatchNorth(source),
-            getPatchSouth(source)))
-      else if (yLoc == world.maxPycor)
-        if (yLoc == world.minPycor)
-          AgentSet.fromArray(AgentKind.Patch, Array[Agent](
-            getPatchWest(source)))
-        else
-          AgentSet.fromArray(AgentKind.Patch, Array[Agent](
-            getPatchSouth(source),
-            getPatchWest(source),
-            getPatchSouthWest(source)))
-      else if (yLoc == world.minPycor)
-        AgentSet.fromArray(AgentKind.Patch, Array[Agent](
-          getPatchNorth(source),
-          getPatchWest(source),
-          getPatchNorthWest(source)))
-      else
-        AgentSet.fromArray(AgentKind.Patch, Array[Agent](
-          getPatchNorth(source),
-          getPatchSouth(source),
-          getPatchWest(source),
-          getPatchSouthWest(source),
-          getPatchNorthWest(source)))
-    else if (xLoc == world.minPxcor)
-      if (yLoc == world.maxPycor)
-        if (yLoc == world.minPycor)
-          AgentSet.fromArray(AgentKind.Patch, Array[Agent](
-            getPatchEast(source)))
-        else
-          AgentSet.fromArray(AgentKind.Patch, Array[Agent](
-            getPatchEast(source),
-            getPatchSouth(source),
-            getPatchSouthEast(source)))
-      else if (yLoc == world.minPycor)
-        AgentSet.fromArray(AgentKind.Patch, Array[Agent](
-          getPatchNorth(source),
-          getPatchEast(source),
-          getPatchNorthEast(source)))
-      else
-        AgentSet.fromArray(AgentKind.Patch, Array[Agent](
-          getPatchNorth(source),
-          getPatchEast(source),
-          getPatchSouth(source),
-          getPatchNorthEast(source),
-          getPatchSouthEast(source)))
-    else if (yLoc == world.maxPycor)
-      if (yLoc == world.minPycor)
-        AgentSet.fromArray(AgentKind.Patch, Array[Agent](
-          getPatchEast(source),
-          getPatchWest(source)))
-      else
-        AgentSet.fromArray(AgentKind.Patch, Array[Agent](
-          getPatchEast(source),
-          getPatchSouth(source),
-          getPatchWest(source),
-          getPatchSouthEast(source),
-          getPatchSouthWest(source)))
-    else if (yLoc == world.minPycor)
-      AgentSet.fromArray(AgentKind.Patch, Array[Agent](
-        getPatchNorth(source),
-        getPatchEast(source),
-        getPatchWest(source),
-        getPatchNorthEast(source),
-        getPatchNorthWest(source)))
-    else
-      AgentSet.fromArray(AgentKind.Patch, Array[Agent](
-        getPatchNorth(source),
-        getPatchEast(source),
-        getPatchSouth(source),
-        getPatchWest(source),
-        getPatchNorthEast(source),
-        getPatchSouthEast(source),
-        getPatchSouthWest(source),
-        getPatchNorthWest(source)))
-  }
-
-  override def getNeighbors4(source: Patch): AgentSet = {
-    val xLoc = source.pxcor
-    val yLoc = source.pycor
-    if (xLoc == world.maxPxcor)
-      if (xLoc == world.minPxcor)
-        if (yLoc == world.maxPycor)
-          if (yLoc == world.minPycor)
-            world.noPatches
-          else
-            AgentSet.fromArray(AgentKind.Patch, Array[Agent](
-              getPatchSouth(source)))
-        else if (yLoc == world.minPycor)
-          AgentSet.fromArray(AgentKind.Patch, Array[Agent](
-            getPatchNorth(source)))
-        else
-          AgentSet.fromArray(AgentKind.Patch, Array[Agent](
-            getPatchNorth(source),
-            getPatchSouth(source)))
-      else if (yLoc == world.maxPycor)
-        if (yLoc == world.minPycor)
-          AgentSet.fromArray(AgentKind.Patch, Array[Agent](
-            getPatchWest(source)))
-        else
-          AgentSet.fromArray(AgentKind.Patch, Array[Agent](
-            getPatchSouth(source),
-            getPatchWest(source)))
-      else if (yLoc == world.minPycor)
-        AgentSet.fromArray(AgentKind.Patch, Array[Agent](
-          getPatchNorth(source),
-          getPatchWest(source)))
-      else
-        AgentSet.fromArray(AgentKind.Patch, Array[Agent](
-          getPatchNorth(source),
-          getPatchSouth(source),
-          getPatchWest(source)))
-    else if (xLoc == world.minPxcor)
-      if (yLoc == world.maxPycor)
-        if (yLoc == world.minPycor)
-          AgentSet.fromArray(AgentKind.Patch, Array[Agent](
-            getPatchEast(source)))
-        else
-          AgentSet.fromArray(AgentKind.Patch, Array[Agent](
-            getPatchEast(source),
-            getPatchSouth(source)))
-      else if (yLoc == world.minPycor)
-        AgentSet.fromArray(AgentKind.Patch, Array[Agent](
-          getPatchNorth(source),
-          getPatchEast(source)))
-      else
-        AgentSet.fromArray(AgentKind.Patch, Array[Agent](
-          getPatchNorth(source),
-          getPatchEast(source),
-          getPatchSouth(source)))
-    else if (yLoc == world.maxPycor)
-      if (yLoc == world.minPycor)
-        AgentSet.fromArray(AgentKind.Patch, Array[Agent](
-          getPatchEast(source),
-          getPatchWest(source)))
-      else
-        AgentSet.fromArray(AgentKind.Patch, Array[Agent](
-          getPatchEast(source),
-          getPatchSouth(source),
-          getPatchWest(source)))
-    else if (yLoc == world.minPycor)
-      AgentSet.fromArray(AgentKind.Patch, Array[Agent](
-        getPatchNorth(source),
-        getPatchEast(source),
-        getPatchWest(source)))
-    else
-      AgentSet.fromArray(AgentKind.Patch, Array[Agent](
-        getPatchNorth(source),
-        getPatchEast(source),
-        getPatchSouth(source),
-        getPatchWest(source)))
-  }
 
   override def getPN(source: Patch): Patch =
     if (source.pycor == world.maxPycor)
       null
     else
-      getPatchNorth(source)
-
+      world.fastGetPatchAt(source.pxcor, source.pycor + 1)
   override def getPE(source: Patch): Patch =
     if (source.pxcor == world.maxPxcor)
       null
     else
-      getPatchEast(source)
-
+      world.fastGetPatchAt(source.pxcor + 1, source.pycor)
   override def getPS(source: Patch): Patch =
     if (source.pycor == world.minPycor)
       null
     else
-      getPatchSouth(source)
-
+      world.fastGetPatchAt(source.pxcor, source.pycor - 1)
   override def getPW(source: Patch): Patch =
     if (source.pxcor == world.minPxcor)
       null
     else
-      getPatchWest(source)
-
+      world.fastGetPatchAt(source.pxcor - 1, source.pycor)
   override def getPNE(source: Patch): Patch =
     if (source.pxcor == world.maxPxcor || source.pycor == world.maxPycor)
       null
     else
-      getPatchNorthEast(source)
-
+      world.fastGetPatchAt(source.pxcor + 1, source.pycor + 1)
   override def getPSE(source: Patch): Patch =
     if (source.pxcor == world.maxPxcor || source.pycor == world.minPycor)
       null
     else
-      getPatchSouthEast(source)
-
+      world.fastGetPatchAt(source.pxcor + 1, source.pycor - 1)
   override def getPSW(source: Patch): Patch =
     if (source.pxcor == world.minPxcor || source.pycor == world.minPycor)
       null
     else
-      getPatchSouthWest(source)
-
+      world.fastGetPatchAt(source.pxcor - 1, source.pycor - 1)
   override def getPNW(source: Patch): Patch =
     if (source.pxcor == world.minPxcor || source.pycor == world.maxPycor)
       null
     else
-      getPatchNorthWest(source)
+      world.fastGetPatchAt(source.pxcor - 1, source.pycor + 1)
 
   @throws(classOf[AgentException])
   @throws(classOf[PatchException])
