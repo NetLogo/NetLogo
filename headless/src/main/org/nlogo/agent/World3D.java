@@ -26,7 +26,7 @@ public final strictfp class World3D
   }
 
   @Override
-  public LinkManagerImpl createLinkManager() {
+  public LinkManager createLinkManager() {
     return new LinkManagerImpl(
       this, new LinkFactory() {
           @Override public Link apply(World world, Turtle src, Turtle dest, AgentSet breed) {
@@ -35,7 +35,7 @@ public final strictfp class World3D
   }
 
   public World3D() {
-    tieManager = new TieManager3D(this, _linkManager);
+    tieManager = new TieManager3D(this);
     drawing = new Drawing3D(this);
     inRadiusOrCone = new InRadiusOrCone3D(this);
     _protractor = new Protractor3D(this);

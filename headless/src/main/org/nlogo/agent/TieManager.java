@@ -11,12 +11,11 @@ import java.util.List;
 import java.util.Set;
 
 public strictfp class TieManager {
-  private final World world;
-  final LinkManagerImpl linkManager;
 
-  TieManager(World world, LinkManagerImpl linkManager) {
+  private final World world;
+
+  TieManager(World world) {
     this.world = world;
-    this.linkManager = linkManager;
   }
 
   public void reset() {
@@ -56,7 +55,7 @@ public strictfp class TieManager {
         weroot = true;
       }
       // update my leaf positions and tell
-      List<Turtle> myTies = linkManager.tiedTurtles(root);
+      List<Turtle> myTies = world.linkManager().tiedTurtles(root);
       Iterator<Turtle> i = myTies.iterator();
 
       // add my links to seen turtles
@@ -112,7 +111,7 @@ public strictfp class TieManager {
         seenTurtles.add(root);
         weroot = true;
       }
-      List<Turtle> myTies = linkManager.tiedTurtles(root);
+      List<Turtle> myTies = world.linkManager().tiedTurtles(root);
       Iterator<Turtle> i = myTies.iterator();
 
       // add my links to seen turtles
@@ -129,7 +128,7 @@ public strictfp class TieManager {
       // update positions
       for (Turtle t : myTies) {
         try {
-          Link link = linkManager.findLink(root, t, world.links(), true);
+          Link link = world.linkManager().findLink(root, t, world.links(), true);
           boolean rigid = link.mode().equals(Link.MODE_FIXED);
 
           double dh = Turtle.subtractHeadings(newHeading, originalHeading);

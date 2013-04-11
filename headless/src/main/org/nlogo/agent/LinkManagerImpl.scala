@@ -2,40 +2,22 @@
 
 package org.nlogo.agent
 
-import org.nlogo.api
 import collection.mutable.Buffer
 
-class LinkManagerImpl(val world: World, linkFactory: LinkFactory) extends LinkManager {
+class LinkManagerImpl(world: World, linkFactory: LinkFactory) extends LinkManager {
 
-  // Use LinkedHashMap not HashMap for these so model results are
-  // reproducible. - ST 12/21/05, 3/15/06, 7/20/07
+  // LinkedHashMap not HashMap, so results are reproducible
   private val srcMap  = new collection.mutable.LinkedHashMap[Turtle, Buffer[Link]]
   private val destMap = new collection.mutable.LinkedHashMap[Turtle, Buffer[Link]]
 
-  ///
-
-  def createLink(src: Turtle, dest: Turtle, breed: AgentSet): Link = {
-    val link = linkFactory(world, src, dest, breed)
-    link.colorDoubleUnchecked(Link.DEFAULT_COLOR)
-    bless(link)
-    link
-  }
-
-  ///
-
-  private var countUnbreededLinks = 0
+  private var unbreededLinkCount = 0
 
   def reset() {
     srcMap.clear()
     destMap.clear()
     world.tieManager.reset()
-    countUnbreededLinks = 0
-    resetLinkDirectedness()
-  }
-
-  private def resetLinkDirectedness() {
-    if (countUnbreededLinks == 0)
-      world.links.clearDirected()
+    unbreededLinkCount = 0
+    world.links.clearDirected()
   }
 
   def checkBreededCompatibility(unbreeded: Boolean): Boolean = {
@@ -43,7 +25,11 @@ class LinkManagerImpl(val world: World, linkFactory: LinkFactory) extends LinkMa
     !it.hasNext || unbreeded == (it.next().asInstanceOf[Link].getBreed eq world.links)
   }
 
-  ///
+  def createLink(src: Turtle, dest: Turtle, breed: AgentSet): Link = {
+    val link = linkFactory(world, src, dest, breed)
+    bless(link)
+    link
+  }
 
   private def bless(link: Link) {
     val end1 = link.end1
@@ -59,10 +45,10 @@ class LinkManagerImpl(val world: World, linkFactory: LinkFactory) extends LinkMa
     else
       destMap += end2 -> Buffer(link)
     if (link.getBreed eq world.links)
-      countUnbreededLinks += 1
+      unbreededLinkCount += 1
   }
 
-  def cleanup(link: Link) {
+  def cleanupLink(link: Link) {
     // keep tie bookkeeping up to date
     link.untie()
     // remove from source map
@@ -79,13 +65,15 @@ class LinkManagerImpl(val world: World, linkFactory: LinkFactory) extends LinkMa
       if (list.isEmpty)
         destMap -= end2
     }
-    if (link.getBreed eq world.links)
-      countUnbreededLinks -= 1
-    // were we the last link?
-    resetLinkDirectedness()
+    if (link.getBreed eq world.links) {
+      unbreededLinkCount -= 1
+      // were we the last link?
+      if (unbreededLinkCount == 0)
+        world.links.clearDirected()
+    }
   }
 
-  def cleanup(turtle: Turtle) {
+  def cleanupTurtle(turtle: Turtle) {
     // this part is a bit tricky -- we need to remove the turtle
     // from the src & dest maps first, so we don't end up in an
     // infinite loop where a dying node kills a link which tries

@@ -85,13 +85,14 @@ public strictfp class World
     }
   }
 
-  final LinkManagerImpl _linkManager;
+  private final LinkManager _linkManager;
   public LinkManager linkManager() { return _linkManager; }
+
   public TieManager tieManager;
 
   public InRadiusOrCone inRadiusOrCone;
 
-  public LinkManagerImpl createLinkManager() {
+  public LinkManager createLinkManager() {
     return new LinkManagerImpl(
       this, new LinkFactory() {
           @Override public Link apply(World world, Turtle src, Turtle dest, AgentSet breed) {
@@ -117,7 +118,7 @@ public strictfp class World
     _observers = AgentSet.fromAgent(_observer);
 
     _linkManager = createLinkManager();
-    tieManager = new TieManager(this, _linkManager);
+    tieManager = new TieManager(this);
 
     inRadiusOrCone = new InRadiusOrCone(this);
     _protractor = new Protractor(this);
@@ -594,7 +595,7 @@ public strictfp class World
   }
 
   public Link getLink(Object end1, Object end2, AgentSet breed) {
-    return _linkManager.findLink((Turtle) _turtles.getAgent(end1),
+    return linkManager().findLink((Turtle) _turtles.getAgent(end1),
         (Turtle) _turtles.getAgent(end2),
         breed, false);
   }
@@ -643,7 +644,7 @@ public strictfp class World
   public Link getOrCreateLink(Turtle end1, Turtle end2, AgentSet breed) {
     Link link = getLink(end1.agentKey(), end2.agentKey(), breed);
     if (link == null) {
-      link = _linkManager.createLink(end1, end2, breed);
+      link = linkManager().createLink(end1, end2, breed);
     }
     return link;
   }
@@ -836,7 +837,7 @@ public strictfp class World
     for (AgentIterator iter = _turtles.iterator(); iter.hasNext();) {
       Turtle turtle = (Turtle) iter.next();
       lineThicknesses.remove(turtle);
-      _linkManager.cleanup(turtle);
+      linkManager().cleanupTurtle(turtle);
       turtle._id_$eq(-1);
     }
     _turtles.clear();
@@ -857,7 +858,7 @@ public strictfp class World
     }
     _links.clear();
     nextLinkIndex = 0;
-    _linkManager.reset();
+    linkManager().reset();
   }
 
   public void clearGlobals() {

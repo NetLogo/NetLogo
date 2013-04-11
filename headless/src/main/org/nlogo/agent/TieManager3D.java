@@ -15,8 +15,8 @@ public strictfp class TieManager3D
     extends TieManager {
   World3D world3D;
 
-  TieManager3D(World3D world3D, LinkManagerImpl linkManager) {
-    super(world3D, linkManager);
+  TieManager3D(World3D world3D) {
+    super(world3D);
     this.world3D = world3D;
   }
 
@@ -38,7 +38,7 @@ public strictfp class TieManager3D
         weroot = true;
       }
       // update my leaf positions and tell
-      List<Turtle> myTies = linkManager.tiedTurtles(root);
+      List<Turtle> myTies = world3D.linkManager().tiedTurtles(root);
       Iterator<Turtle> i = myTies.iterator();
 
       // add my links to seen turtles
@@ -94,7 +94,7 @@ public strictfp class TieManager3D
         weroot = true;
       }
       // update my leaf positions and tell
-      List<Turtle> myTies = linkManager.tiedTurtles(root);
+      List<Turtle> myTies = world3D.linkManager().tiedTurtles(root);
       Iterator<Turtle> i = myTies.iterator();
 
       // add my links to seen turtles
@@ -132,7 +132,7 @@ public strictfp class TieManager3D
         for (Turtle t1 : myTies) {
           try {
             Turtle3D t = (Turtle3D) t1;
-            Link link = linkManager.findLink(root, t, world3D.links(), true);
+            Link link = world3D.linkManager().findLink(root, t, world3D.links(), true);
             boolean rigid = link.mode().equals(Link.MODE_FIXED);
 
             // In order to get wrapping and line drawing to work properly

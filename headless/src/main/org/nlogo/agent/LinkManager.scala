@@ -9,6 +9,9 @@ trait LinkManager {
 
   def reset()
 
+  def cleanupTurtle(turtle: Turtle)
+  def cleanupLink(link: Link)
+
   def checkBreededCompatibility(unbreeded: Boolean): Boolean
 
   def createLink(src: Turtle, dest: Turtle, breed: AgentSet): Link
@@ -24,5 +27,7 @@ trait LinkManager {
   def findLinksFrom(src: Turtle, breed: AgentSet): Iterator[Link]
   def findLinksTo(target: Turtle, breed: AgentSet): Iterator[Link]
   def findLinksWith(target: Turtle, breed: AgentSet): Iterator[Link]
+
+  def tiedTurtles(root: Turtle): java.util.List[Turtle]
 
 }
