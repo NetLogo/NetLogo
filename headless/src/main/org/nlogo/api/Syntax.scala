@@ -432,4 +432,11 @@ object Syntax {
       throw new IllegalArgumentException(
         "no Syntax type constant found for " + clazz)
 
+  def getAgentSetMask(kind: AgentKind): Int =
+    (kind: @unchecked) match {  // unchecked so Observer gives MatchError
+      case AgentKind.Turtle => Syntax.TurtlesetType
+      case AgentKind.Patch  => Syntax.PatchsetType
+      case AgentKind.Link   => Syntax.LinksetType
+    }
+
 }

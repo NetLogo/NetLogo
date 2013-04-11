@@ -352,7 +352,7 @@ public abstract strictfp class Instruction
       AgentSet set = (AgentSet) obj;
       if (set.kind() != kind) {
         throw new ArgumentTypeException(context, this, argIndex,
-            getAgentSetMask(kind), obj);
+            Syntax.getAgentSetMask(kind), obj);
       }
       return set;
     } catch (ClassCastException ex) {
@@ -457,19 +457,6 @@ public abstract strictfp class Instruction
     } catch (ClassCastException ex) {
       throw new ArgumentTypeException(context, this, argIndex, Syntax.CommandTaskType(), obj);
     }
-  }
-
-  private static int getAgentSetMask(AgentKind kind) {
-    if (kind == AgentKindJ.Turtle()) {
-      return Syntax.TurtlesetType();
-    }
-    if (kind == AgentKindJ.Patch()) {
-      return Syntax.PatchsetType();
-    }
-    if (kind == AgentKindJ.Link()) {
-      return Syntax.LinksetType();
-    }
-    return Syntax.AgentsetType();
   }
 
   public void copyFieldsFrom(Instruction sourceInstr) {
