@@ -3,7 +3,7 @@
 package org.nlogo.prim
 
 import org.nlogo.{ api, agent, nvm },
-  agent.{ Turtle, Link, AgentSet, AgentSetBuilder },
+  agent.{ Turtle, Link, LinkManager, AgentSet, AgentSetBuilder },
   nvm.{ Command, Context, EngineException }
 
 trait LinkCreationCommand extends Command with nvm.CustomAssembled {
@@ -93,7 +93,8 @@ trait Multiple extends LinkCreationCommand {
 
 trait Directed extends LinkCreationCommand {
   override def checkDirectedness(context: Context, breed: AgentSet) {
-    mustNotBeUndirected(breed, context)
+    for(err <- LinkManager.mustNotBeUndirected(breed))
+      throw new EngineException(context, this, err)
     checkForBreedCompatibility(context, breed)
     if (breed eq world.links)
       breed.setDirected(true)
@@ -111,7 +112,8 @@ trait DirectedFrom extends Directed {
 
 trait Undirected extends LinkCreationCommand {
   override def checkDirectedness(context: Context, breed: AgentSet) {
-    mustNotBeDirected(breed, context)
+    for(err <- LinkManager.mustNotBeDirected(breed))
+      throw new EngineException(context, this, err)
     checkForBreedCompatibility(context, breed)
     if (breed eq world.links)
       breed.setDirected(false)

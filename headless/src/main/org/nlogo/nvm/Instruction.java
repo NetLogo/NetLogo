@@ -231,26 +231,6 @@ public abstract strictfp class Instruction
     return parts[parts.length - 1];
   }
 
-  // checking of breed directedness
-
-  public void mustNotBeDirected(AgentSet breed, Context context)
-      throws EngineException {
-    if (breed.isDirected()) {
-      throw new EngineException
-          (context, this,
-              breed.printName() + " is a directed breed.");
-    }
-  }
-
-  public void mustNotBeUndirected(AgentSet breed, Context context)
-      throws EngineException {
-    if (breed.isUndirected()) {
-      throw new EngineException
-          (context, this,
-              breed.printName() + " is an undirected breed.");
-    }
-  }
-
   // checking of numeric types
 
   public long validLong(double d) {

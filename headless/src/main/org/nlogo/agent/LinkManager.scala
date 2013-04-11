@@ -2,6 +2,20 @@
 
 package org.nlogo.agent
 
+object LinkManager {
+  // checking of breed directedness. not sure where else to put this
+  def mustNotBeDirected(breed: AgentSet): Option[String] =
+    if (breed.isDirected)
+      Some(breed.printName + " is a directed breed.")
+    else
+      None
+  def mustNotBeUndirected(breed: AgentSet): Option[String] =
+    if (breed.isUndirected)
+      Some(breed.printName + " is an undirected breed.")
+    else
+      None
+}
+
 // It would be nice to move this to the api package, but it would take a lot of refactoring to make
 // all of the argument types and return types be the api types. - ST 4/11/13
 

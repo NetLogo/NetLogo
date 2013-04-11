@@ -2,9 +2,9 @@
 
 package org.nlogo.prim
 
-import org.nlogo.agent.{ AgentSet, Turtle }
+import org.nlogo.agent.{ AgentSet, Turtle, LinkManager }
 import org.nlogo.api, api.Syntax
-import org.nlogo.nvm.{ Reporter, Context }
+import org.nlogo.nvm.{ Reporter, Context, EngineException }
 
 class _myoutlinks(breedName: String) extends Reporter {
 
@@ -20,7 +20,8 @@ class _myoutlinks(breedName: String) extends Reporter {
     val breed =
       if (breedName == null) world.links
       else world.getLinkBreed(breedName)
-    mustNotBeUndirected(breed, context)
+    for(err <- LinkManager.mustNotBeUndirected(breed))
+      throw new EngineException(context, this, err)
     AgentSet.fromIterator(api.AgentKind.Link,
       world.linkManager.findLinksFrom(
         context.agent.asInstanceOf[Turtle], breed))
