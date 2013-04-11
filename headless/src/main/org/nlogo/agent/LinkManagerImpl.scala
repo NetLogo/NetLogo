@@ -144,21 +144,6 @@ class LinkManagerImpl(world: World, linkFactory: LinkFactory) extends LinkManage
         buf += link.end1
   }
 
-  /// tie
-
-  def tiedTurtles(root: Turtle): java.util.List[Turtle] = {
-    val myTies = new java.util.ArrayList[Turtle]
-    for { list <- srcMap.get(root)
-          link <- list }
-      if (link.isTied)
-        myTies.add(link.end2)
-    for { list <- destMap.get(root)
-          link <- list }
-      if (!link.getBreed.isDirected && link.isTied)
-        myTies.add(link.end1)
-    myTies
-  }
-
   /// single lookups
 
   def findLink(src: Turtle, dest: Turtle, breed: AgentSet, includeAllLinks: Boolean): Link =

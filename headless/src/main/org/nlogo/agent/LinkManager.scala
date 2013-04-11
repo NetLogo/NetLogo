@@ -28,6 +28,4 @@ trait LinkManager {
   def findLinksTo(target: Turtle, breed: AgentSet): Iterator[Link]
   def findLinksWith(target: Turtle, breed: AgentSet): Iterator[Link]
 
-  def tiedTurtles(root: Turtle): java.util.List[Turtle]
-
 }

@@ -26,6 +26,26 @@ public strictfp class TieManager {
 
   int tieCount = 0;
 
+  protected List<Turtle> tiedTurtles(Turtle root) {
+    List<Turtle> myTies = new ArrayList<Turtle>();
+    scala.collection.Iterator<Link> iter =
+      world.linkManager().findLinksFrom(root, world.links());
+    while (iter.hasNext()) {
+      Link link = iter.next();
+      if (link.isTied()) {
+        myTies.add(link.end2());
+      }
+    }
+    iter = world.linkManager().findLinksTo(root, world.links());
+    while (iter.hasNext()) {
+      Link link = iter.next();
+      if (!link.getBreed().isDirected() && link.isTied()) {
+        myTies.add(link.end1());
+      }
+    }
+    return myTies;
+  }
+
   public void setTieMode(Link link, String mode) {
     if (link.isTied()) {
       if (mode.equals(Link.MODE_NONE)) {
@@ -55,7 +75,7 @@ public strictfp class TieManager {
         weroot = true;
       }
       // update my leaf positions and tell
-      List<Turtle> myTies = world.linkManager().tiedTurtles(root);
+      List<Turtle> myTies = tiedTurtles(root);
       Iterator<Turtle> i = myTies.iterator();
 
       // add my links to seen turtles
@@ -111,7 +131,7 @@ public strictfp class TieManager {
         seenTurtles.add(root);
         weroot = true;
       }
-      List<Turtle> myTies = world.linkManager().tiedTurtles(root);
+      List<Turtle> myTies = tiedTurtles(root);
       Iterator<Turtle> i = myTies.iterator();
 
       // add my links to seen turtles
