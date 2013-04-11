@@ -12,9 +12,9 @@ import java.util.Set;
 
 public strictfp class TieManager {
   private final World world;
-  final LinkManager linkManager;
+  final LinkManagerImpl linkManager;
 
-  TieManager(World world, LinkManager linkManager) {
+  TieManager(World world, LinkManagerImpl linkManager) {
     this.world = world;
     this.linkManager = linkManager;
   }
@@ -37,28 +37,6 @@ public strictfp class TieManager {
     }
   }
 
-  List<Turtle> tiedTurtles(Turtle root) {
-    ArrayList<Turtle> myTies = new ArrayList<Turtle>();
-    if (linkManager.srcMap.containsKey(root)) {
-      for (Link link : linkManager.srcMap.get(root)) {
-        if (link.isTied()) {
-          Turtle t = link.end2();
-          myTies.add(t);
-        }
-      }
-    }
-    if (linkManager.destMap.containsKey(root)) {
-      for (Link link : linkManager.destMap.get(root)) {
-        if (!link.getBreed().isDirected()
-            && link.isTied()) {
-          Turtle t = link.end1();
-          myTies.add(t);
-        }
-      }
-    }
-    return myTies;
-  }
-
   void turtleMoved(Turtle root, double newX, double newY,
                    double originalXcor, double originalYcor) {
     turtleMoved(root, newX, newY, originalXcor, originalYcor,
@@ -78,7 +56,7 @@ public strictfp class TieManager {
         weroot = true;
       }
       // update my leaf positions and tell
-      List<Turtle> myTies = tiedTurtles(root);
+      List<Turtle> myTies = linkManager.tiedTurtles(root);
       Iterator<Turtle> i = myTies.iterator();
 
       // add my links to seen turtles
@@ -134,7 +112,7 @@ public strictfp class TieManager {
         seenTurtles.add(root);
         weroot = true;
       }
-      List<Turtle> myTies = tiedTurtles(root);
+      List<Turtle> myTies = linkManager.tiedTurtles(root);
       Iterator<Turtle> i = myTies.iterator();
 
       // add my links to seen turtles

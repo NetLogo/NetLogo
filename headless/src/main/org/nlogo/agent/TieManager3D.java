@@ -15,7 +15,7 @@ public strictfp class TieManager3D
     extends TieManager {
   World3D world3D;
 
-  TieManager3D(World3D world3D, LinkManager linkManager) {
+  TieManager3D(World3D world3D, LinkManagerImpl linkManager) {
     super(world3D, linkManager);
     this.world3D = world3D;
   }
@@ -38,7 +38,7 @@ public strictfp class TieManager3D
         weroot = true;
       }
       // update my leaf positions and tell
-      List<Turtle> myTies = tiedTurtles(root);
+      List<Turtle> myTies = linkManager.tiedTurtles(root);
       Iterator<Turtle> i = myTies.iterator();
 
       // add my links to seen turtles
@@ -94,7 +94,7 @@ public strictfp class TieManager3D
         weroot = true;
       }
       // update my leaf positions and tell
-      List<Turtle> myTies = tiedTurtles(root);
+      List<Turtle> myTies = linkManager.tiedTurtles(root);
       Iterator<Turtle> i = myTies.iterator();
 
       // add my links to seen turtles

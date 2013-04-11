@@ -114,7 +114,7 @@ public strictfp class Link
     if (breed != world().links()) {
       breed.remove(agentKey());
     }
-    world().linkManager.cleanup(this);
+    world()._linkManager.cleanup(this);
     _id_$eq(-1);
   }
 
@@ -265,7 +265,7 @@ public strictfp class Link
                   + " with endpoints "
                   + end1.toString() + " and " + end2.toString());
             }
-            if (!world().linkManager.checkBreededCompatibility(breed == world().links())) {
+            if (!world().linkManager().checkBreededCompatibility(breed == world().links())) {
               throw new AgentException
                   (I18N.errorsJ().get("org.nlogo.agent.Link.cantHaveBreededAndUnbreededLinks"));
             }
