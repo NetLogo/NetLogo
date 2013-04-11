@@ -9,11 +9,13 @@ import org.nlogo.agent.Link;
 import org.nlogo.agent.Observer;
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
+import org.nlogo.agent.World;
 import org.nlogo.api.AgentKind;
 import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.Syntax;
+import org.nlogo.api.Token;
 import org.nlogo.util.Thunk;
 
 import java.util.ArrayList;
@@ -23,19 +25,19 @@ public abstract strictfp class Instruction
     implements org.nlogo.api.TokenHolder {
 
   public Workspace workspace;
-  public org.nlogo.agent.World world;  // public so the engine can get to World.comeUpForAir easily
+  public World world;  // public so the engine can get to World.comeUpForAir easily
 
   public Reporter[] args = new Reporter[0];
 
   public abstract Syntax syntax();
 
-  private org.nlogo.api.Token token;
+  private Token token;
 
-  public org.nlogo.api.Token token() {
+  public Token token() {
     return token;
   }
 
-  public void token(org.nlogo.api.Token token) {
+  public void token(Token token) {
     this.token = token;
   }
 
@@ -44,13 +46,13 @@ public abstract strictfp class Instruction
   // for runtime errors since it's expecting a command
   // however, the type is actually limited by the variable
   // name not the set and we want to compiler to report that ev 7/13/07
-  private org.nlogo.api.Token token2 = null;
+  private Token token2 = null;
 
-  public org.nlogo.api.Token tokenLimitingType() {
+  public Token tokenLimitingType() {
     return token2 == null ? token : token2;
   }
 
-  public void tokenLimitingType(org.nlogo.api.Token token) {
+  public void tokenLimitingType(Token token) {
     this.token2 = token;
   }
 
@@ -77,7 +79,7 @@ public abstract strictfp class Instruction
   public void init(Workspace workspace) {
     if (workspace != null) {
       this.workspace = workspace;
-      world = (org.nlogo.agent.World) workspace.world();
+      world = (World) workspace.world();
     }
     for (int i = 0; i < args.length; i++) {
       args[i].init(workspace);
@@ -229,34 +231,6 @@ public abstract strictfp class Instruction
     return parts[parts.length - 1];
   }
 
-  // checking of breed directedness
-
-  protected void mustNotBeDirected(AgentSet breed, Context context)
-      throws EngineException {
-    if (breed.isDirected()) {
-      throw new EngineException
-          (context, this,
-              breed.printName() + " is a directed breed.");
-    }
-  }
-
-  protected void mustNotBeUndirected(AgentSet breed, Context context)
-      throws EngineException {
-    if (breed.isUndirected()) {
-      throw new EngineException
-          (context, this,
-              breed.printName() + " is an undirected breed.");
-    }
-  }
-
-  protected void checkForBreedCompatibility(AgentSet breed, Context context)
-      throws EngineException {
-    if (!world.linkManager.checkBreededCompatibility(breed == world.links())) {
-      throw new EngineException
-          (context, this, I18N.errorsJ().get("org.nlogo.agent.Link.cantHaveBreededAndUnbreededLinks"));
-    }
-  }
-
   // checking of numeric types
 
   public long validLong(double d) {
@@ -268,12 +242,6 @@ public abstract strictfp class Instruction
               d + " is too large to be represented exactly as an integer in NetLogo");
     }
     return (long) d;
-  }
-
-  public static boolean isValidLong(double d) {
-    // 9007199254740992 is the largest/smallest integer
-    // exactly representable in a double - ST 1/29/08
-    return d <= 9007199254740992L && d >= -9007199254740992L;
   }
 
   public Double newValidDouble(double d) {
@@ -336,7 +304,7 @@ public abstract strictfp class Instruction
     }
   }
 
-  protected static String agentKindDescription(AgentKind kind) {
+  private static String agentKindDescription(AgentKind kind) {
     if (kind == AgentKindJ.Observer()) {
       return "the observer";
     } else if (kind == AgentKindJ.Turtle()) {
@@ -355,10 +323,10 @@ public abstract strictfp class Instruction
   //
   // Convenience methods that do type checking and casting
 
-  public org.nlogo.agent.Agent argEvalAgent(Context context, int argIndex) {
+  public Agent argEvalAgent(Context context, int argIndex) {
     Object obj = args[argIndex].report(context);
     try {
-      org.nlogo.agent.Agent agent = (org.nlogo.agent.Agent) obj;
+      Agent agent = (Agent) obj;
       if (agent.id() == -1) {
         throw new EngineException(context, this,
           I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
@@ -369,22 +337,22 @@ public abstract strictfp class Instruction
     }
   }
 
-  public org.nlogo.agent.AgentSet argEvalAgentSet(Context context, int argIndex) {
+  public AgentSet argEvalAgentSet(Context context, int argIndex) {
     Object obj = args[argIndex].report(context);
     try {
-      return (org.nlogo.agent.AgentSet) obj;
+      return (AgentSet) obj;
     } catch (ClassCastException ex) {
       throw new ArgumentTypeException(context, this, argIndex, Syntax.AgentsetType(), obj);
     }
   }
 
-  public org.nlogo.agent.AgentSet argEvalAgentSet(Context context, int argIndex, AgentKind kind) {
+  public AgentSet argEvalAgentSet(Context context, int argIndex, AgentKind kind) {
     Object obj = args[argIndex].report(context);
     try {
-      AgentSet set = (org.nlogo.agent.AgentSet) obj;
+      AgentSet set = (AgentSet) obj;
       if (set.kind() != kind) {
         throw new ArgumentTypeException(context, this, argIndex,
-            getAgentSetMask(kind), obj);
+            Syntax.getAgentSetMask(kind), obj);
       }
       return set;
     } catch (ClassCastException ex) {
@@ -418,7 +386,7 @@ public abstract strictfp class Instruction
     return argEvalDouble(context, argIndex).intValue();
   }
 
-  public org.nlogo.api.LogoList argEvalList(Context context, int argIndex) {
+  public LogoList argEvalList(Context context, int argIndex) {
     Object obj = args[argIndex].report(context);
     try {
       return (LogoList) obj;
@@ -427,10 +395,10 @@ public abstract strictfp class Instruction
     }
   }
 
-  public org.nlogo.agent.Patch argEvalPatch(Context context, int argIndex) {
+  public Patch argEvalPatch(Context context, int argIndex) {
     Object obj = args[argIndex].report(context);
     try {
-      return (org.nlogo.agent.Patch) obj;
+      return (Patch) obj;
     } catch (ClassCastException ex) {
       throw new ArgumentTypeException(context, this, argIndex, Syntax.PatchType(), obj);
     }
@@ -455,19 +423,19 @@ public abstract strictfp class Instruction
     }
   }
 
-  public org.nlogo.agent.Turtle argEvalTurtle(Context context, int argIndex) {
+  public Turtle argEvalTurtle(Context context, int argIndex) {
     Object obj = args[argIndex].report(context);
     try {
-      return (org.nlogo.agent.Turtle) obj;
+      return (Turtle) obj;
     } catch (ClassCastException ex) {
       throw new ArgumentTypeException(context, this, argIndex, Syntax.TurtleType(), obj);
     }
   }
 
-  public org.nlogo.agent.Link argEvalLink(Context context, int argIndex) {
+  public Link argEvalLink(Context context, int argIndex) {
     Object obj = args[argIndex].report(context);
     try {
-      return (org.nlogo.agent.Link) obj;
+      return (Link) obj;
     } catch (ClassCastException ex) {
       throw new ArgumentTypeException(context, this, argIndex, Syntax.LinkType(), obj);
     }
@@ -489,19 +457,6 @@ public abstract strictfp class Instruction
     } catch (ClassCastException ex) {
       throw new ArgumentTypeException(context, this, argIndex, Syntax.CommandTaskType(), obj);
     }
-  }
-
-  private static int getAgentSetMask(AgentKind kind) {
-    if (kind == AgentKindJ.Turtle()) {
-      return Syntax.TurtlesetType();
-    }
-    if (kind == AgentKindJ.Patch()) {
-      return Syntax.PatchsetType();
-    }
-    if (kind == AgentKindJ.Link()) {
-      return Syntax.LinksetType();
-    }
-    return Syntax.AgentsetType();
   }
 
   public void copyFieldsFrom(Instruction sourceInstr) {

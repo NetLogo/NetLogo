@@ -287,7 +287,7 @@ class TestAllSyntaxes extends FunSuite {
                     |_createlinksto turtle agentset/command block (optional),-T--,---L,0,2,2 *
                     |_createlinkswith turtle agentset/command block (optional),-T--,---L,0,2,2 *
                     |_createlinkto turtle/command block (optional),-T--,---L,0,2,2 *
-                    |_createlinkwith agent/command block (optional),-T--,---L,0,2,2 *
+                    |_createlinkwith turtle/command block (optional),-T--,---L,0,2,2 *
                     |_createorderedturtles number/command block (optional),O---,-T--,0,2,2 *
                     |_createtemporaryplotpen string,OTPL,null,0,1,1
                     |_createturtles number/command block (optional),O---,-T--,0,2,2 *

@@ -74,12 +74,13 @@ public strictfp class Link
     for (int i = 2; i < variables().length; i++) {
       variables()[i] = World.ZERO;
     }
+    colorDoubleUnchecked(DEFAULT_COLOR);
   }
 
   Link(World world, Turtle end1, Turtle end2, AgentSet breed) {
     super(world);
     _variables_$eq(new Object[world.getVariablesArraySize(this, breed)]);
-    variables()[VAR_COLOR] = Color.BoxedBlack();
+    colorDoubleUnchecked(DEFAULT_COLOR);
     variables()[VAR_END1] = end1;
     variables()[VAR_END2] = end2;
     variables()[VAR_LABEL] = "";
@@ -114,7 +115,7 @@ public strictfp class Link
     if (breed != world().links()) {
       breed.remove(agentKey());
     }
-    world().linkManager.cleanup(this);
+    world().linkManager().cleanupLink(this);
     _id_$eq(-1);
   }
 
@@ -265,7 +266,7 @@ public strictfp class Link
                   + " with endpoints "
                   + end1.toString() + " and " + end2.toString());
             }
-            if (!world().linkManager.checkBreededCompatibility(breed == world().links())) {
+            if (!world().linkManager().checkBreededCompatibility(breed == world().links())) {
               throw new AgentException
                   (I18N.errorsJ().get("org.nlogo.agent.Link.cantHaveBreededAndUnbreededLinks"));
             }

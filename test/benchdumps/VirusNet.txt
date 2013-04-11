@@ -1116,47 +1116,64 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
                 INVOKEVIRTUAL org/nlogo/agent/World.getLinkBreed (Ljava/lang/String;)Lorg/nlogo/agent/AgentSet;
                L8
                 ASTORE 4
-                ALOAD 0
+                GETSTATIC org/nlogo/agent/LinkManager$.MODULE$ : Lorg/nlogo/agent/LinkManager$;
                 ALOAD 4
-                ALOAD 1
-                INVOKEVIRTUAL org/nlogo/nvm/Instruction.mustNotBeDirected (Lorg/nlogo/agent/AgentSet;Lorg/nlogo/nvm/Context;)V
+                INVOKEVIRTUAL org/nlogo/agent/LinkManager$.mustNotBeDirected (Lorg/nlogo/agent/AgentSet;)Lscala/Option;
+                DUP
+                ASTORE 5
+                INVOKEVIRTUAL scala/Option.isEmpty ()Z
+                IFEQ L9
                 ALOAD 0
                 GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_not_5.world : Lorg/nlogo/agent/World;
-                GETFIELD org/nlogo/agent/World.linkManager : Lorg/nlogo/agent/LinkManager;
+                INVOKEVIRTUAL org/nlogo/agent/World.linkManager ()Lorg/nlogo/agent/LinkManager;
                 ALOAD 3
                 ALOAD 2
                 ALOAD 4
                 ICONST_1
-                INVOKEVIRTUAL org/nlogo/agent/LinkManager.findLinkFrom (Lorg/nlogo/agent/Turtle;Lorg/nlogo/agent/Turtle;Lorg/nlogo/agent/AgentSet;Z)Lorg/nlogo/agent/Link;
-                IFNONNULL L9
+                INVOKEINTERFACE org/nlogo/agent/LinkManager.findLinkFrom (Lorg/nlogo/agent/Turtle;Lorg/nlogo/agent/Turtle;Lorg/nlogo/agent/AgentSet;Z)Lorg/nlogo/agent/Link;
+                IFNONNULL L10
                 ALOAD 0
                 GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_not_5.world : Lorg/nlogo/agent/World;
-                GETFIELD org/nlogo/agent/World.linkManager : Lorg/nlogo/agent/LinkManager;
+                INVOKEVIRTUAL org/nlogo/agent/World.linkManager ()Lorg/nlogo/agent/LinkManager;
                 ALOAD 2
                 ALOAD 3
                 ALOAD 4
                 ICONST_1
-                INVOKEVIRTUAL org/nlogo/agent/LinkManager.findLinkFrom (Lorg/nlogo/agent/Turtle;Lorg/nlogo/agent/Turtle;Lorg/nlogo/agent/AgentSet;Z)Lorg/nlogo/agent/Link;
-                IFNONNULL L9
+                INVOKEINTERFACE org/nlogo/agent/LinkManager.findLinkFrom (Lorg/nlogo/agent/Turtle;Lorg/nlogo/agent/Turtle;Lorg/nlogo/agent/AgentSet;Z)Lorg/nlogo/agent/Link;
+                IFNONNULL L10
                 ICONST_0
-                GOTO L10
-               L9
-                ICONST_1
+                GOTO L11
                L10
+                ICONST_1
+               L11
+                GOTO L12
+               L9
+                ALOAD 5
+                INVOKEVIRTUAL scala/Option.get ()Ljava/lang/Object;
+                CHECKCAST java/lang/String
+                ASTORE 7
+                NEW org/nlogo/nvm/EngineException
+                DUP
+                ALOAD 1
+                ALOAD 0
+                ALOAD 7
+                INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+                ATHROW
+               L12
                 ISTORE 2
                 ILOAD 2
-                IFEQ L11
-                ICONST_0
-                GOTO L12
-               L11
-                ICONST_1
-               L12
                 IFEQ L13
-                GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
+                ICONST_0
                 GOTO L14
                L13
-                GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
+                ICONST_1
                L14
+                IFEQ L15
+                GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
+                GOTO L16
+               L15
+                GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
+               L16
                 ARETURN
              L0
               ALOAD 0
@@ -2924,19 +2941,38 @@ procedure SPREAD-VIRUS:[]{OTPL}:
           INVOKEVIRTUAL org/nlogo/agent/World.getLinkBreed (Ljava/lang/String;)Lorg/nlogo/agent/AgentSet;
          L2
           ASTORE 2
-          ALOAD 0
+          GETSTATIC org/nlogo/agent/LinkManager$.MODULE$ : Lorg/nlogo/agent/LinkManager$;
           ALOAD 2
-          ALOAD 1
-          INVOKEVIRTUAL org/nlogo/nvm/Instruction.mustNotBeDirected (Lorg/nlogo/agent/AgentSet;Lorg/nlogo/nvm/Context;)V
+          INVOKEVIRTUAL org/nlogo/agent/LinkManager$.mustNotBeDirected (Lorg/nlogo/agent/AgentSet;)Lscala/Option;
+          DUP
+          ASTORE 3
+          INVOKEVIRTUAL scala/Option.isEmpty ()Z
+          IFEQ L3
+          GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
+          GETSTATIC org/nlogo/api/AgentKind$Turtle$.MODULE$ : Lorg/nlogo/api/AgentKind$Turtle$;
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurespreadvirus_ask_2.world : Lorg/nlogo/agent/World;
-          GETFIELD org/nlogo/agent/World.linkManager : Lorg/nlogo/agent/LinkManager;
+          INVOKEVIRTUAL org/nlogo/agent/World.linkManager ()Lorg/nlogo/agent/LinkManager;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
           CHECKCAST org/nlogo/agent/Turtle
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/LinkManager.findLinkedWith (Lorg/nlogo/agent/Turtle;Lorg/nlogo/agent/AgentSet;)Lorg/nlogo/agent/AgentSet;
+          INVOKEINTERFACE org/nlogo/agent/LinkManager.findLinkedWith (Lorg/nlogo/agent/Turtle;Lorg/nlogo/agent/AgentSet;)Lscala/collection/Iterator;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromIterator (Lorg/nlogo/api/AgentKind;Lscala/collection/Iterator;)Lorg/nlogo/agent/AgentSet;
+          GOTO L4
          L3
+          ALOAD 3
+          INVOKEVIRTUAL scala/Option.get ()Ljava/lang/Object;
+          CHECKCAST java/lang/String
+          ASTORE 5
+          NEW org/nlogo/nvm/EngineException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 5
+          INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L4
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurespreadvirus_ask_2.keptinstr4 : Lorg/nlogo/prim/_asm_procedurespreadvirus_not_3;
           ASTORE 3
@@ -2959,10 +2995,10 @@ procedure SPREAD-VIRUS:[]{OTPL}:
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.iterator ()Lorg/nlogo/agent/AgentIterator;
           ASTORE 4
-         L4
+         L5
           ALOAD 4
           INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z
-          IFEQ L5
+          IFEQ L6
           ALOAD 4
           INVOKEINTERFACE org/nlogo/agent/AgentIterator.next ()Lorg/nlogo/agent/Agent;
           ASTORE 7
@@ -2973,20 +3009,20 @@ procedure SPREAD-VIRUS:[]{OTPL}:
           ASTORE 8
           ALOAD 8
           INSTANCEOF java/lang/Boolean
-          IFEQ L6
+          IFEQ L7
           ALOAD 8
           CHECKCAST java/lang/Boolean
           ASTORE 6
           ALOAD 6
           INVOKEVIRTUAL java/lang/Boolean.booleanValue ()Z
-          IFEQ L7
+          IFEQ L8
           ALOAD 9
           ALOAD 7
           INVOKEVIRTUAL scala/collection/mutable/ArrayBuffer.$plus$eq (Ljava/lang/Object;)Lscala/collection/mutable/ArrayBuffer;
           POP
+         L8
+          GOTO L5
          L7
-          GOTO L4
-         L6
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -3017,7 +3053,7 @@ procedure SPREAD-VIRUS:[]{OTPL}:
           INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L5
+         L6
           GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/api/AgentKind;
@@ -3028,17 +3064,17 @@ procedure SPREAD-VIRUS:[]{OTPL}:
           INVOKEINTERFACE scala/collection/TraversableOnce.toArray (Lscala/reflect/ClassTag;)Ljava/lang/Object;
           CHECKCAST [Lorg/nlogo/agent/Agent;
           INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromArray (Lorg/nlogo/api/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
-         L8
+         L9
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
           INSTANCEOF org/nlogo/agent/Observer
-          IFNE L9
+          IFNE L10
           ALOAD 2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurespreadvirus_ask_2.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
-          IF_ACMPNE L10
+          IF_ACMPNE L11
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -3049,12 +3085,12 @@ procedure SPREAD-VIRUS:[]{OTPL}:
           INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L10
+         L11
           ALOAD 2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurespreadvirus_ask_2.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
-          IF_ACMPNE L9
+          IF_ACMPNE L10
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -3065,7 +3101,7 @@ procedure SPREAD-VIRUS:[]{OTPL}:
           INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L9
+         L10
           ALOAD 1
           ALOAD 2
           ICONST_2
@@ -3073,7 +3109,7 @@ procedure SPREAD-VIRUS:[]{OTPL}:
           ALOAD 1
           ICONST_5
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L11
+         L12
           RETURN
 [2]_asm_procedurespreadvirus_if_4 "if random-float 100 < virus-spread-chance" boolean => void
       _lessthan double,Object => boolean
