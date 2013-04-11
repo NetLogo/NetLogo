@@ -304,7 +304,7 @@ public abstract strictfp class Instruction
     }
   }
 
-  public static String agentKindDescription(AgentKind kind) {
+  private static String agentKindDescription(AgentKind kind) {
     if (kind == AgentKindJ.Observer()) {
       return "the observer";
     } else if (kind == AgentKindJ.Turtle()) {
