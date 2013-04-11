@@ -13,7 +13,7 @@ trait LinkCreationCommand extends Command with nvm.CustomAssembled {
   def swapEnds(me: Turtle, other: Turtle): Boolean
   def checkDirectedness(context: Context, breed: AgentSet)
   def linkAlreadyExists(src: Turtle, dest: Turtle, breed: AgentSet): Boolean
-  def create(context: Context, breed: AgentSet, me: Turtle)
+  def create(context: Context, breed: AgentSet, me: Turtle): AgentSet
   // overrides
   override def toString =
     super.toString + ":" + breedName + ",+" + offset
@@ -28,7 +28,9 @@ trait LinkCreationCommand extends Command with nvm.CustomAssembled {
       else
         world.getLinkBreed(breedName)
     checkDirectedness(context, breed)
-    create(context, breed, context.agent.asInstanceOf[Turtle])
+    val newAgents = create(context, breed, context.agent.asInstanceOf[Turtle])
+    if (offset - context.ip > 2 && !newAgents.isEmpty)
+      context.runExclusiveJob(newAgents, next)
     context.ip = offset
   }
   override def assemble(a: nvm.AssemblerAssistant) {
@@ -65,17 +67,15 @@ trait LinkCreationCommand extends Command with nvm.CustomAssembled {
 
 trait Single extends LinkCreationCommand {
   override def inputType = api.Syntax.TurtleType
-  override def create(context: Context, breed: AgentSet, me: Turtle) {
-    val other = argEvalTurtle(context, 0)
-    for (link <- perhapsLink(context, me, other, breed))
-      if (offset - context.ip > 2)
-        context.runExclusiveJob(AgentSet.fromAgent(link), next)
-  }
+  override def create(context: Context, breed: AgentSet, me: Turtle) =
+    perhapsLink(context, me, argEvalTurtle(context, 0), breed)
+      .map(AgentSet.fromAgent)
+      .getOrElse(world.noLinks)
 }
 
 trait Multiple extends LinkCreationCommand {
   override def inputType = api.Syntax.TurtlesetType
-  override def create(context: Context, breed: AgentSet, me: Turtle) {
+  override def create(context: Context, breed: AgentSet, me: Turtle) = {
     val others = argEvalAgentSet(context, 0)
     val builder = new AgentSetBuilder(api.AgentKind.Link, others.count)
     // we must shuffle so who number assignment is random - ST 3/15/06
@@ -85,9 +85,7 @@ trait Multiple extends LinkCreationCommand {
       for (link <- perhapsLink(context, me, other, breed))
         builder.add(link)
     }
-    val edgeset = builder.build()
-    if (offset - context.ip > 2 && edgeset.count > 0)
-      context.runExclusiveJob(edgeset, next)
+    builder.build()
   }
 }
 
