@@ -3,15 +3,14 @@
 package org.nlogo.agent
 
 import org.nlogo.api
+import collection.mutable.Buffer
 
 class LinkManagerImpl(val world: World, linkFactory: LinkFactory) extends LinkManager {
 
-  import collection.mutable.ArrayBuffer
-
   // Use LinkedHashMap not HashMap for these so model results are
   // reproducible. - ST 12/21/05, 3/15/06, 7/20/07
-  private val srcMap  = new collection.mutable.LinkedHashMap[Turtle, ArrayBuffer[Link]]
-  private val destMap = new collection.mutable.LinkedHashMap[Turtle, ArrayBuffer[Link]]
+  private val srcMap  = new collection.mutable.LinkedHashMap[Turtle, Buffer[Link]]
+  private val destMap = new collection.mutable.LinkedHashMap[Turtle, Buffer[Link]]
 
   ///
 
@@ -53,17 +52,17 @@ class LinkManagerImpl(val world: World, linkFactory: LinkFactory) extends LinkMa
     if (srcMap.contains(end1))
       srcMap(end1) += link
     else
-      srcMap += end1 -> ArrayBuffer(link)
+      srcMap += end1 -> Buffer(link)
     // add to destination map
     if (destMap.contains(end2))
       destMap(end2) += link
     else
-      destMap += end2 -> ArrayBuffer(link)
+      destMap += end2 -> Buffer(link)
     if (link.getBreed eq world.links)
       countUnbreededLinks += 1
   }
 
-  private[agent] def cleanup(link: Link) {
+  def cleanup(link: Link) {
     // keep tie bookkeeping up to date
     link.untie()
     // remove from source map
@@ -86,14 +85,13 @@ class LinkManagerImpl(val world: World, linkFactory: LinkFactory) extends LinkMa
     resetLinkDirectedness()
   }
 
-  // Turtle.die() calls this - ST 3/15/06, 7/21/07
-  private[agent] def cleanup(turtle: Turtle) {
+  def cleanup(turtle: Turtle) {
     // this part is a bit tricky -- we need to remove the turtle
     // from the src & dest maps first, so we don't end up in an
     // infinite loop where a dying node kills a link which tries
     // to kill the original node.  But we need the map entries
     // in order to find the links.  Hence the exact ordering
-    // inside each if statement below. - ST 3/15/06
+    // below. - ST 3/15/06
     for (links <- srcMap.get(turtle)) {
       srcMap -= turtle
       for (link <- links)
@@ -108,42 +106,27 @@ class LinkManagerImpl(val world: World, linkFactory: LinkFactory) extends LinkMa
 
   ///
 
-  def findLinkedFrom(src: Turtle, sourceSet: AgentSet): AgentSet =
-    srcMap.get(src) match {
-      case None =>
-        world.noTurtles
-      case Some(list) =>
-        val builder = new AgentSetBuilder(api.AgentKind.Turtle, list.size)
-        addLinkNeighborsFrom(builder, list, sourceSet, true)
-        builder.build()
-    }
+  def findLinkedFrom(src: Turtle, sourceSet: AgentSet): Iterator[Turtle] = {
+    val buf = Buffer[Turtle]()
+    for (list <- srcMap.get(src))
+      addLinkNeighborsFrom(buf, list, sourceSet, true)
+    buf.iterator
+  }
 
-  def findLinkedTo(target: Turtle, sourceSet: AgentSet): AgentSet =
-    destMap.get(target) match {
-      case None =>
-        world.noTurtles
-      case Some(list) =>
-        val builder = new AgentSetBuilder(api.AgentKind.Turtle, list.size)
-        addLinkNeighborsTo(builder, list, sourceSet, true)
-        builder.build()
-    }
+  def findLinkedTo(target: Turtle, sourceSet: AgentSet): Iterator[Turtle] = {
+    val buf = Buffer[Turtle]()
+    for (list <- destMap.get(target))
+      addLinkNeighborsTo(buf, list, sourceSet, true)
+    buf.iterator
+  }
 
-  def findLinkedWith(target: Turtle, sourceSet: AgentSet): AgentSet = {
-    val toList = destMap.get(target)
-    val fromList = srcMap.get(target)
-    val size =
-      fromList.map(_.size).getOrElse(0) +
-      toList.map(_.size).getOrElse(0)
-    if (size == 0)
-      world.noTurtles
-    else {
-      val builder = new AgentSetBuilder(api.AgentKind.Turtle, size)
-      for (l <- toList)
-        addLinkNeighborsTo(builder, l, sourceSet, false)
-      for (l <- fromList)
-        addLinkNeighborsFrom(builder, l, sourceSet, false)
-      builder.build()
-    }
+  def findLinkedWith(target: Turtle, sourceSet: AgentSet): Iterator[Turtle] = {
+    val buf = Buffer[Turtle]()
+    for (list <- destMap.get(target))
+      addLinkNeighborsTo(buf, list, sourceSet, false)
+    for (list <- srcMap.get(target))
+      addLinkNeighborsFrom(buf, list, sourceSet, false)
+    buf.iterator
   }
 
   // the next two methods are essentially the same but are separate for
@@ -151,16 +134,16 @@ class LinkManagerImpl(val world: World, linkFactory: LinkFactory) extends LinkMa
   // these are used in two cases, either for link-neighbors in which case
   // sourceSet will always be a breed. but layout-radial also uses it
   // and it might be any agentset.  ev 4/6/07
-  private def addLinkNeighborsFrom(builder: AgentSetBuilder, links: Iterable[Link], sourceSet: AgentSet, directed: Boolean) {
+  private def addLinkNeighborsFrom(buf: Buffer[Turtle], links: Iterable[Link], sourceSet: AgentSet, directed: Boolean) {
     val isBreed = sourceSet.printName != null
     val isAllLinks = sourceSet eq world.links
     val unbreededLinks = checkBreededCompatibility(true)
     for (link <- links)
-      if ((!isBreed && sourceSet.contains(link)) || (isAllLinks && (unbreededLinks || (directed == link.getBreed.isDirected && !builder.contains(link.end1)))) || (link.getBreed eq sourceSet))
-        builder.add(link.end2)
+      if ((!isBreed && sourceSet.contains(link)) || (isAllLinks && (unbreededLinks || (directed == link.getBreed.isDirected && !buf.contains(link.end1)))) || (link.getBreed eq sourceSet))
+        buf += link.end2
   }
 
-  private def addLinkNeighborsTo(builder: AgentSetBuilder, links: Iterable[Link], sourceSet: AgentSet, directed: Boolean) {
+  private def addLinkNeighborsTo(buf: Buffer[Turtle], links: Iterable[Link], sourceSet: AgentSet, directed: Boolean) {
     val isBreed = sourceSet.printName != null
     val isAllLinks = sourceSet eq world.links
     // if we have unbreeded links we know that there is only one possible link
@@ -169,8 +152,8 @@ class LinkManagerImpl(val world: World, linkFactory: LinkFactory) extends LinkMa
     // will take a performance hit ev 6/15/07
     val unbreededLinks = checkBreededCompatibility(true)
     for (link <- links)
-      if ((!isBreed && sourceSet.contains(link)) || (isAllLinks && (unbreededLinks || (directed == link.getBreed.isDirected && !builder.contains(link.end1)))) || (link.getBreed eq sourceSet))
-        builder.add(link.end1)
+      if ((!isBreed && sourceSet.contains(link)) || (isAllLinks && (unbreededLinks || (directed == link.getBreed.isDirected && !buf.contains(link.end1)))) || (link.getBreed eq sourceSet))
+        buf += link.end1
   }
 
   /// tie
@@ -224,34 +207,21 @@ class LinkManagerImpl(val world: World, linkFactory: LinkFactory) extends LinkMa
 
   /// plural lookups
 
-  def findLinksFrom(src: Turtle, breed: AgentSet): AgentSet = {
-    val builder = new AgentSetBuilder(api.AgentKind.Link)
+  def findLinksFrom(src: Turtle, breed: AgentSet): Iterator[Link] = {
     val isAllLinks = breed eq world.links
-    for { list <- srcMap.get(src); link <- list }
-      if (isAllLinks || (link.getBreed eq breed))
-        builder.add(link)
-    builder.build()
+    srcMap.getOrElse(src, Nil)
+      .iterator
+      .filter(link => isAllLinks || (link.getBreed eq breed))
   }
 
-  def findLinksTo(target: Turtle, breed: AgentSet): AgentSet = {
-    val builder = new AgentSetBuilder(api.AgentKind.Link)
+  def findLinksTo(target: Turtle, breed: AgentSet): Iterator[Link] = {
     val isAllLinks = breed eq world.links
-    for { list <- destMap.get(target); link <- list }
-      if (isAllLinks || (link.getBreed eq breed))
-        builder.add(link)
-    builder.build()
+    destMap.getOrElse(target, Nil)
+      .iterator
+      .filter(link => isAllLinks || (link.getBreed eq breed))
   }
 
-  def findLinksWith(target: Turtle, breed: AgentSet): AgentSet = {
-    val builder = new AgentSetBuilder(api.AgentKind.Link)
-    val isAllLinks = breed eq world.links
-    for { list <- destMap.get(target); link <- list }
-      if (isAllLinks || (link.getBreed eq breed))
-        builder.add(link)
-    for { list <- srcMap.get(target); link <- list }
-      if (isAllLinks || (link.getBreed eq breed))
-        builder.add(link)
-    builder.build()
-  }
+  def findLinksWith(target: Turtle, breed: AgentSet): Iterator[Link] =
+    findLinksTo(target, breed) ++ findLinksFrom(target, breed)
 
 }

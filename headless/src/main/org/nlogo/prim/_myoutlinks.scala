@@ -3,7 +3,7 @@
 package org.nlogo.prim
 
 import org.nlogo.agent.{ AgentSet, Turtle }
-import org.nlogo.api.Syntax
+import org.nlogo.api, api.Syntax
 import org.nlogo.nvm.{ Reporter, Context }
 
 class _myoutlinks(breedName: String) extends Reporter {
@@ -16,13 +16,14 @@ class _myoutlinks(breedName: String) extends Reporter {
   override def toString =
     super.toString + ":" + breedName
 
-  override def report(context: Context) = {
+  override def report(context: Context): AgentSet = {
     val breed =
       if (breedName == null) world.links
       else world.getLinkBreed(breedName)
     mustNotBeUndirected(breed, context)
-    world.linkManager.findLinksFrom(
-      context.agent.asInstanceOf[Turtle], breed)
+    AgentSet.fromIterator(api.AgentKind.Link,
+      world.linkManager.findLinksFrom(
+        context.agent.asInstanceOf[Turtle], breed))
   }
 
 }

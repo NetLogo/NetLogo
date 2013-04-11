@@ -7,6 +7,8 @@ import org.nlogo.{ api, util }
 object AgentSet {
   def fromAgent(agent: Agent): AgentSet =
     new ArrayAgentSet(agent.kind, null, Array(agent))
+  def fromIterator(kind: api.AgentKind, agents: Iterator[Agent]): AgentSet =
+    new ArrayAgentSet(kind, null, agents.toArray)
   // for convenience from Java, overload instead of using default arguments
   def fromArray(kind: api.AgentKind, agents: Array[Agent], printName: String = null): AgentSet =
     new ArrayAgentSet(kind, printName, agents)

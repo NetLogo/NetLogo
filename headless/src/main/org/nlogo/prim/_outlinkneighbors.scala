@@ -3,7 +3,7 @@
 package org.nlogo.prim
 
 import org.nlogo.agent.{ Turtle, AgentSet }
-import org.nlogo.api.Syntax
+import org.nlogo.api, api.Syntax
 import org.nlogo.nvm.{ Reporter, Context }
 
 class _outlinkneighbors(breedName: String) extends Reporter {
@@ -21,8 +21,9 @@ class _outlinkneighbors(breedName: String) extends Reporter {
       else
         world.getLinkBreed(breedName)
     mustNotBeUndirected(breed, context)
-    world.linkManager.findLinkedFrom(
-      context.agent.asInstanceOf[Turtle], breed)
+    AgentSet.fromIterator(api.AgentKind.Turtle,
+      world.linkManager.findLinkedFrom(
+        context.agent.asInstanceOf[Turtle], breed))
   }
 
 }
