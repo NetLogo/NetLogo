@@ -91,8 +91,12 @@ public strictfp class World
 
   public InRadiusOrCone inRadiusOrCone;
 
-  LinkManagerImpl createLinkManager() {
-    return new LinkManagerImpl(this);
+  public LinkManagerImpl createLinkManager() {
+    return new LinkManagerImpl(
+      this, new LinkFactory() {
+          @Override public Link apply(World world, Turtle src, Turtle dest, AgentSet breed) {
+            return new Link(world, src, dest, breed);
+          }});
   }
 
   // This is a flag that the engine checks in its tightest innermost loops

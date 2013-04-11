@@ -5,7 +5,7 @@ package org.nlogo.agent
 import org.nlogo.api
 import collection.JavaConverters._
 
-class LinkManagerImpl(val world: World) extends LinkManager {
+class LinkManagerImpl(val world: World, linkFactory: LinkFactory) extends LinkManager {
 
   // Use LinkedHashMap not HashMap for these so model results are
   // reproducible. - ST 12/21/05, 3/15/06, 7/20/07
@@ -15,15 +15,11 @@ class LinkManagerImpl(val world: World) extends LinkManager {
   ///
 
   def createLink(src: Turtle, dest: Turtle, breed: AgentSet): Link = {
-    val link = newLink(world, src, dest, breed)
+    val link = linkFactory(world, src, dest, breed)
     link.colorDoubleUnchecked(Link.DEFAULT_COLOR)
     bless(link)
     link
   }
-
-  // exists as separate method so we can override in LinkManager3D
-  protected[agent] def newLink(world: World, src: Turtle, dest: Turtle, breed: AgentSet) =
-    new Link(world, src, dest, breed)
 
   ///
 

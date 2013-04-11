@@ -27,7 +27,11 @@ public final strictfp class World3D
 
   @Override
   public LinkManagerImpl createLinkManager() {
-    return new LinkManager3D(this);
+    return new LinkManagerImpl(
+      this, new LinkFactory() {
+          @Override public Link apply(World world, Turtle src, Turtle dest, AgentSet breed) {
+            return new Link3D(world, src, dest, breed);
+          }});
   }
 
   public World3D() {
