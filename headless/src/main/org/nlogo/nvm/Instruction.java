@@ -244,12 +244,6 @@ public abstract strictfp class Instruction
     return (long) d;
   }
 
-  public static boolean isValidLong(double d) {
-    // 9007199254740992 is the largest/smallest integer
-    // exactly representable in a double - ST 1/29/08
-    return d <= 9007199254740992L && d >= -9007199254740992L;
-  }
-
   public Double newValidDouble(double d) {
     if (Double.isInfinite(d) || Double.isNaN(d)) {
       invalidDouble(d);
