@@ -674,6 +674,10 @@ public abstract strictfp class GUIWorkspaceJ
     drawingActionBroker.readImage(is);
   }
 
+  public void readImage(java.awt.image.BufferedImage image) throws java.io.IOException {
+    drawingActionBroker.readImage(image);
+  }
+
   public void rescaleDrawing() {
     drawingActionBroker.rescaleDrawing();
   }
