@@ -2061,19 +2061,38 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
                 INVOKEVIRTUAL org/nlogo/agent/World.getLinkBreed (Ljava/lang/String;)Lorg/nlogo/agent/AgentSet;
                L10
                 ASTORE 2
-                ALOAD 0
+                GETSTATIC org/nlogo/agent/LinkManager$.MODULE$ : Lorg/nlogo/agent/LinkManager$;
                 ALOAD 2
-                ALOAD 1
-                INVOKEVIRTUAL org/nlogo/nvm/Instruction.mustNotBeDirected (Lorg/nlogo/agent/AgentSet;Lorg/nlogo/nvm/Context;)V
+                INVOKEVIRTUAL org/nlogo/agent/LinkManager$.mustNotBeDirected (Lorg/nlogo/agent/AgentSet;)Lscala/Option;
+                DUP
+                ASTORE 3
+                INVOKEVIRTUAL scala/Option.isEmpty ()Z
+                IFEQ L11
+                GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
+                GETSTATIC org/nlogo/api/AgentKind$Turtle$.MODULE$ : Lorg/nlogo/api/AgentKind$Turtle$;
                 ALOAD 0
                 GETFIELD org/nlogo/prim/_asm_procedurepickteammembers_and_7.world : Lorg/nlogo/agent/World;
-                GETFIELD org/nlogo/agent/World.linkManager : Lorg/nlogo/agent/LinkManager;
+                INVOKEVIRTUAL org/nlogo/agent/World.linkManager ()Lorg/nlogo/agent/LinkManager;
                 ALOAD 1
                 GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
                 CHECKCAST org/nlogo/agent/Turtle
                 ALOAD 2
-                INVOKEVIRTUAL org/nlogo/agent/LinkManager.findLinkedWith (Lorg/nlogo/agent/Turtle;Lorg/nlogo/agent/AgentSet;)Lorg/nlogo/agent/AgentSet;
+                INVOKEINTERFACE org/nlogo/agent/LinkManager.findLinkedWith (Lorg/nlogo/agent/Turtle;Lorg/nlogo/agent/AgentSet;)Lscala/collection/Iterator;
+                INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromIterator (Lorg/nlogo/api/AgentKind;Lscala/collection/Iterator;)Lorg/nlogo/agent/AgentSet;
+                GOTO L12
                L11
+                ALOAD 3
+                INVOKEVIRTUAL scala/Option.get ()Ljava/lang/Object;
+                CHECKCAST java/lang/String
+                ASTORE 5
+                NEW org/nlogo/nvm/EngineException
+                DUP
+                ALOAD 1
+                ALOAD 0
+                ALOAD 5
+                INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+                ATHROW
+               L12
                 ALOAD 0
                 GETFIELD org/nlogo/prim/_asm_procedurepickteammembers_and_7.keptinstr5 : Lorg/nlogo/prim/_asm_procedurepickteammembers_not_8;
                 ASTORE 3
@@ -2091,10 +2110,10 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
                 ALOAD 2
                 INVOKEVIRTUAL org/nlogo/agent/AgentSet.iterator ()Lorg/nlogo/agent/AgentIterator;
                 ASTORE 4
-               L12
+               L13
                 ALOAD 4
                 INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z
-                IFEQ L13
+                IFEQ L14
                 ALOAD 4
                 INVOKEINTERFACE org/nlogo/agent/AgentIterator.next ()Lorg/nlogo/agent/Agent;
                 ASTORE 7
@@ -2105,17 +2124,17 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
                 ASTORE 8
                 ALOAD 8
                 INSTANCEOF java/lang/Boolean
-                IFEQ L14
+                IFEQ L15
                 ALOAD 8
                 CHECKCAST java/lang/Boolean
                 ASTORE 6
                 GETSTATIC scala/Predef$.MODULE$ : Lscala/Predef$;
                 ALOAD 6
                 INVOKEVIRTUAL scala/Predef$.Boolean2boolean (Ljava/lang/Boolean;)Z
-                IFEQ L12
+                IFEQ L13
                 ICONST_1
-                GOTO L15
-               L14
+                GOTO L16
+               L15
                 NEW org/nlogo/nvm/EngineException
                 DUP
                 ALOAD 1
@@ -2142,19 +2161,19 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
                 INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
                 INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
                 ATHROW
-               L13
-                ICONST_0
-               L15
-                GOTO L16
-               L7
+               L14
                 ICONST_0
                L16
-                IFEQ L17
-                GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
-                GOTO L18
+                GOTO L17
+               L7
+                ICONST_0
                L17
-                GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
+                IFEQ L18
+                GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
+                GOTO L19
                L18
+                GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
+               L19
                 ARETURN
          L0
           LDC 100.0
@@ -2406,19 +2425,38 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
               INVOKEVIRTUAL org/nlogo/agent/World.getLinkBreed (Ljava/lang/String;)Lorg/nlogo/agent/AgentSet;
              L12
               ASTORE 2
-              ALOAD 0
+              GETSTATIC org/nlogo/agent/LinkManager$.MODULE$ : Lorg/nlogo/agent/LinkManager$;
               ALOAD 2
-              ALOAD 1
-              INVOKEVIRTUAL org/nlogo/nvm/Instruction.mustNotBeDirected (Lorg/nlogo/agent/AgentSet;Lorg/nlogo/nvm/Context;)V
+              INVOKEVIRTUAL org/nlogo/agent/LinkManager$.mustNotBeDirected (Lorg/nlogo/agent/AgentSet;)Lscala/Option;
+              DUP
+              ASTORE 3
+              INVOKEVIRTUAL scala/Option.isEmpty ()Z
+              IFEQ L13
+              GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
+              GETSTATIC org/nlogo/api/AgentKind$Turtle$.MODULE$ : Lorg/nlogo/api/AgentKind$Turtle$;
               ALOAD 0
               GETFIELD org/nlogo/prim/_asm_procedurepickteammembers_and_10.world : Lorg/nlogo/agent/World;
-              GETFIELD org/nlogo/agent/World.linkManager : Lorg/nlogo/agent/LinkManager;
+              INVOKEVIRTUAL org/nlogo/agent/World.linkManager ()Lorg/nlogo/agent/LinkManager;
               ALOAD 1
               GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
               CHECKCAST org/nlogo/agent/Turtle
               ALOAD 2
-              INVOKEVIRTUAL org/nlogo/agent/LinkManager.findLinkedWith (Lorg/nlogo/agent/Turtle;Lorg/nlogo/agent/AgentSet;)Lorg/nlogo/agent/AgentSet;
+              INVOKEINTERFACE org/nlogo/agent/LinkManager.findLinkedWith (Lorg/nlogo/agent/Turtle;Lorg/nlogo/agent/AgentSet;)Lscala/collection/Iterator;
+              INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromIterator (Lorg/nlogo/api/AgentKind;Lscala/collection/Iterator;)Lorg/nlogo/agent/AgentSet;
+              GOTO L14
              L13
+              ALOAD 3
+              INVOKEVIRTUAL scala/Option.get ()Ljava/lang/Object;
+              CHECKCAST java/lang/String
+              ASTORE 5
+              NEW org/nlogo/nvm/EngineException
+              DUP
+              ALOAD 1
+              ALOAD 0
+              ALOAD 5
+              INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+              ATHROW
+             L14
               ALOAD 0
               GETFIELD org/nlogo/prim/_asm_procedurepickteammembers_and_10.keptinstr6 : Lorg/nlogo/prim/_asm_procedurepickteammembers_turtlevariable_11;
               ASTORE 3
@@ -2436,10 +2474,10 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
               ALOAD 2
               INVOKEVIRTUAL org/nlogo/agent/AgentSet.iterator ()Lorg/nlogo/agent/AgentIterator;
               ASTORE 4
-             L14
+             L15
               ALOAD 4
               INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z
-              IFEQ L15
+              IFEQ L16
               ALOAD 4
               INVOKEINTERFACE org/nlogo/agent/AgentIterator.next ()Lorg/nlogo/agent/Agent;
               ASTORE 7
@@ -2450,17 +2488,17 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
               ASTORE 8
               ALOAD 8
               INSTANCEOF java/lang/Boolean
-              IFEQ L16
+              IFEQ L17
               ALOAD 8
               CHECKCAST java/lang/Boolean
               ASTORE 6
               GETSTATIC scala/Predef$.MODULE$ : Lscala/Predef$;
               ALOAD 6
               INVOKEVIRTUAL scala/Predef$.Boolean2boolean (Ljava/lang/Boolean;)Z
-              IFEQ L14
+              IFEQ L15
               ICONST_1
-              GOTO L17
-             L16
+              GOTO L18
+             L17
               NEW org/nlogo/nvm/EngineException
               DUP
               ALOAD 1
@@ -2487,19 +2525,19 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
               INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
               INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
               ATHROW
-             L15
-              ICONST_0
-             L17
-              GOTO L18
-             L9
+             L16
               ICONST_0
              L18
-              IFEQ L19
-              GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
-              GOTO L20
+              GOTO L19
+             L9
+              ICONST_0
              L19
-              GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
+              IFEQ L20
+              GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
+              GOTO L21
              L20
+              GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
+             L21
               ARETURN
          L0
           ALOAD 0
@@ -6801,29 +6839,48 @@ procedure EXPLORE:[]{-T--}:
           INVOKEVIRTUAL org/nlogo/agent/World.getLinkBreed (Ljava/lang/String;)Lorg/nlogo/agent/AgentSet;
          L2
           ASTORE 2
-          ALOAD 0
+          GETSTATIC org/nlogo/agent/LinkManager$.MODULE$ : Lorg/nlogo/agent/LinkManager$;
           ALOAD 2
-          ALOAD 1
-          INVOKEVIRTUAL org/nlogo/nvm/Instruction.mustNotBeDirected (Lorg/nlogo/agent/AgentSet;Lorg/nlogo/nvm/Context;)V
+          INVOKEVIRTUAL org/nlogo/agent/LinkManager$.mustNotBeDirected (Lorg/nlogo/agent/AgentSet;)Lscala/Option;
+          DUP
+          ASTORE 3
+          INVOKEVIRTUAL scala/Option.isEmpty ()Z
+          IFEQ L3
+          GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
+          GETSTATIC org/nlogo/api/AgentKind$Turtle$.MODULE$ : Lorg/nlogo/api/AgentKind$Turtle$;
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedureexplore_ask_4.world : Lorg/nlogo/agent/World;
-          GETFIELD org/nlogo/agent/World.linkManager : Lorg/nlogo/agent/LinkManager;
+          INVOKEVIRTUAL org/nlogo/agent/World.linkManager ()Lorg/nlogo/agent/LinkManager;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
           CHECKCAST org/nlogo/agent/Turtle
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/LinkManager.findLinkedWith (Lorg/nlogo/agent/Turtle;Lorg/nlogo/agent/AgentSet;)Lorg/nlogo/agent/AgentSet;
+          INVOKEINTERFACE org/nlogo/agent/LinkManager.findLinkedWith (Lorg/nlogo/agent/Turtle;Lorg/nlogo/agent/AgentSet;)Lscala/collection/Iterator;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromIterator (Lorg/nlogo/api/AgentKind;Lscala/collection/Iterator;)Lorg/nlogo/agent/AgentSet;
+          GOTO L4
          L3
+          ALOAD 3
+          INVOKEVIRTUAL scala/Option.get ()Ljava/lang/Object;
+          CHECKCAST java/lang/String
+          ASTORE 5
+          NEW org/nlogo/nvm/EngineException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 5
+          INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L4
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
           INSTANCEOF org/nlogo/agent/Observer
-          IFNE L4
+          IFNE L5
           ALOAD 2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedureexplore_ask_4.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
-          IF_ACMPNE L5
+          IF_ACMPNE L6
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -6834,12 +6891,12 @@ procedure EXPLORE:[]{-T--}:
           INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L5
+         L6
           ALOAD 2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedureexplore_ask_4.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
-          IF_ACMPNE L4
+          IF_ACMPNE L5
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -6850,7 +6907,7 @@ procedure EXPLORE:[]{-T--}:
           INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L4
+         L5
           ALOAD 1
           ALOAD 2
           ICONST_5
@@ -6858,7 +6915,7 @@ procedure EXPLORE:[]{-T--}:
           ALOAD 1
           BIPUSH 7
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L6
+         L7
           RETURN
 [5]_asm_procedureexplore_recursefast_5 "explore" => void
          L0

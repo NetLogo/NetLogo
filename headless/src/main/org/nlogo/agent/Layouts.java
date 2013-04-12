@@ -331,7 +331,7 @@ public final strictfp class Layouts {
     double rootX = (world.minPxcor() + world.maxPxcor()) / 2.0;
     double rootY = (world.minPycor() + world.maxPycor()) / 2.0;
 
-    org.nlogo.agent.LinkManager linkManager = world.linkManager;
+    LinkManager linkManager = world.linkManager();
 
     Map<Turtle, TreeNode> nodeTable =
         new HashMap<Turtle, TreeNode>(nodeset.count());
@@ -347,11 +347,9 @@ public final strictfp class Layouts {
     while (!queue.isEmpty()) {
       TreeNode node = queue.remove(0);
       lastNode = node;
-      AgentSet neighbors = linkManager.findLinkedWith(node.val, linkset);
-
-      for (AgentIterator iter = neighbors.iterator(); iter.hasNext();) {
-        Turtle t = (Turtle) iter.next();
-
+      scala.collection.Iterator<Turtle> iter = linkManager.findLinkedWith(node.val, linkset);
+      while (iter.hasNext()) {
+        Turtle t = iter.next();
         if (nodeset.contains(t) && !nodeTable.containsKey(t)) {
           TreeNode child = new TreeNode(t, node);
           node.children.add(child);

@@ -3,7 +3,7 @@
 package org.nlogo.compiler
 
 import org.nlogo.agent.Patch
-import org.nlogo.api.LogoException
+import org.nlogo.api, api.LogoException
 import org.nlogo.nvm.{ Command, Instruction, Reporter }
 import org.nlogo.prim._
 
@@ -444,7 +444,7 @@ private class Optimizer extends DefaultAstVisitor {
     val clazz = classOf[_patchvariable]
     def munge(root: Match) {
       val vn = root.reporter.asInstanceOf[_patchvariable].vn
-      if(org.nlogo.api.AgentVariables.isDoublePatchVariable(vn)) {
+      if(api.AgentVariables.isDoublePatchVariable(vn)) {
         root.replace(classOf[_patchvariabledouble])
         root.reporter.asInstanceOf[_patchvariabledouble].vn = vn
       }
@@ -455,7 +455,7 @@ private class Optimizer extends DefaultAstVisitor {
     val clazz = classOf[_turtlevariable]
     def munge(root: Match) {
       val vn = root.reporter.asInstanceOf[_turtlevariable].vn
-      if(org.nlogo.api.AgentVariables.isDoubleTurtleVariable(vn)) {
+      if(api.AgentVariables.isDoubleTurtleVariable(vn)) {
         root.replace(classOf[_turtlevariabledouble])
         root.reporter.asInstanceOf[_turtlevariabledouble].vn = vn
       }
@@ -467,7 +467,7 @@ private class Optimizer extends DefaultAstVisitor {
     def munge(root: Match) {
       val d = root.matchArg(0, classOf[_constdouble])
                   .reporter.asInstanceOf[_constdouble].primitiveValue
-      if(d > 0 && d == d.toLong && Instruction.isValidLong(d)) {
+      if(d > 0 && d == d.toLong && api.Numbers.isValidLong(d)) {
         root.replace(classOf[_randomconst], d.toLong)
         root.strip()
       }

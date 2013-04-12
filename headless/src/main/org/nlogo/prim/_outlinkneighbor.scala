@@ -3,8 +3,8 @@
 package org.nlogo.prim
 
 import org.nlogo.api.Syntax
-import org.nlogo.nvm.{ Reporter, Context }
-import org.nlogo.agent.Turtle
+import org.nlogo.nvm.{ Reporter, Context, EngineException }
+import org.nlogo.agent.{ Turtle, LinkManager }
 
 class _outlinkneighbor(breedName: String) extends Reporter {
 
@@ -25,7 +25,8 @@ class _outlinkneighbor(breedName: String) extends Reporter {
         world.links
       else
         world.getLinkBreed(breedName)
-    mustNotBeUndirected(breed, context)
+    for(err <- LinkManager.mustNotBeUndirected(breed))
+      throw new EngineException(context, this, err)
     Boolean.box(null !=
       world.linkManager.findLinkFrom(
         context.agent.asInstanceOf[Turtle], target, breed, true))

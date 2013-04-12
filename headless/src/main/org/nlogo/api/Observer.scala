@@ -2,10 +2,6 @@
 
 package org.nlogo.api
 
-/**
- * Provides access to NetLogo observer
- */
-
 trait Observer extends Agent {
 
   /** Returns the currently watched or followed agent (or nobody) */
@@ -13,9 +9,9 @@ trait Observer extends Agent {
 
   /** Returns the current perspective */
   def perspective: Perspective
+  def setPerspective(p: Perspective, a: Agent)
 
   def oxcor: Double
   def oycor: Double
-  def setPerspective(p: Perspective, a: Agent)
 
 }
