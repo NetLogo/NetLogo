@@ -19,7 +19,11 @@ class ModelRun(
   private var _generalNotes: String = "",
   private var _indexedNotes: List[IndexedNote] = Nil)
   extends api.ModelRun
+  with FrameCache
   with SavableRun {
+
+  val minFrameCacheSize = 10
+  val maxFrameCacheSize = 20
 
   var stillRecording = true
   var dirty: Boolean = false
@@ -37,7 +41,7 @@ class ModelRun(
   var currentFrameIndex: Option[Int] = None
   def currentFrame: Option[Frame] = currentFrameIndex.flatMap(frame)
   def lastFrameIndex = if (size > 0) Some(size - 1) else None
-  def lastFrame: Option[Frame] = lastFrameIndex.flatMap(frameCache.get)
+  def lastFrame: Option[Frame] = lastFrameIndex.flatMap(frame)
 
   override def toString = (if (dirty) "* " else "") + name
 
@@ -46,14 +50,11 @@ class ModelRun(
     stillRecording = false
   }
 
-  private val frameCache = new FrameCache(deltas _, 10, 20)
-  def frame(index: Int) = frameCache.get(index)
-
   private def appendFrame(delta: Delta) {
     val newFrame = lastFrame
       .getOrElse(Frame(Map(), initialPlots, initialDrawingImage))
       .applyDelta(delta)
-    frameCache.add(size, newFrame)
+    addFrameToCache(size, newFrame)
     _deltas :+= delta // added at the end not to mess up lastFrameIndex and size
   }
 
