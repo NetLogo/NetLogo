@@ -78,7 +78,7 @@ class ReviewTab(
 
   scrubberPanel.scrubber.addChangeListener(new ChangeListener {
     def stateChanged(evt: ChangeEvent) {
-      state.currentRun.foreach(_.currentFrameIndex = scrubberPanel.scrubber.getValue)
+      state.currentRun.foreach(_.currentFrameIndex = Some(scrubberPanel.scrubber.getValue))
       interfacePanel.repaint()
     }
   })
@@ -108,11 +108,10 @@ class ReviewTab(
 
   def refreshInterface() {
     val run = state.currentRun
-    val data = state.currentRunData
     scrubberPanel.scrubber.refresh(
-      value = run.map(_.currentFrameIndex).getOrElse(0),
-      max = data.map(_.lastFrameIndex).getOrElse(0),
-      enabled = data.filter(_.size > 1).isDefined)
+      value = run.flatMap(_.currentFrameIndex).getOrElse(0),
+      max = run.flatMap(_.lastFrameIndex).getOrElse(0),
+      enabled = run.filter(_.size > 1).isDefined)
     reviewToolBar.saveButton.setEnabled(run.map(_.dirty).getOrElse(false))
     Seq(
       reviewToolBar.renameButton,

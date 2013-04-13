@@ -24,23 +24,17 @@ trait SavableRun {
       .getTranslateInstance(0, 0)
       .createTransformedShape(viewArea)
     val interfaceImageBytes = imageToBytes(interfaceImage)
-    val deltas = data.toSeq.flatMap(_.deltas)
-    val rawMirroredUpdates = deltas.map(_.rawMirroredUpdate)
-    val actionFrames = deltas.map(_.actions)
-    val initialPlots = data.toSeq.flatMap(_.initialPlots.map(SavablePlot.fromPlot))
-    val initialDrawingImage =
-      data.map(_.initialDrawingImage).map(imageToBytes)
-        .getOrElse(Array[Byte]())
+    val savableInitialPlots = initialPlots.map(SavablePlot.fromPlot)
+    val initialDrawingImageBytes = imageToBytes(initialDrawingImage)
     val thingsToSave = Seq(
       name,
       modelString,
       viewAreaShape,
       fixedViewSettings,
       interfaceImageBytes,
-      rawMirroredUpdates,
-      actionFrames,
-      initialPlots,
-      initialDrawingImage,
+      deltas,
+      savableInitialPlots,
+      initialDrawingImageBytes,
       generalNotes,
       indexedNotes)
     thingsToSave.foreach(out.writeObject)
@@ -58,8 +52,7 @@ object ModelRunIO {
     val viewArea = new java.awt.geom.Area(read[java.awt.Shape]())
     val fixedViewSettings = read[FixedViewSettings]
     val interfaceImage = imageFromBytes(read[Array[Byte]]())
-    val rawMirroredUpdates = read[Seq[Array[Byte]]]()
-    val actionFrames = read[Seq[IndexedSeq[Action]]]()
+    val deltas = read[Seq[Delta]]()
     val initialPlots = read[Seq[SavablePlot]].map(_.toPlot)
     val initialDrawingImage = imageFromBytes(read[Array[Byte]]())
     val generalNotes = read[String]()
@@ -67,8 +60,9 @@ object ModelRunIO {
     in.close()
     val run = new ModelRun(
       name, modelString, viewArea, fixedViewSettings,
-      interfaceImage, generalNotes, indexedNotes)
-    run.load(initialPlots, initialDrawingImage, rawMirroredUpdates, actionFrames)
+      interfaceImage, initialPlots, initialDrawingImage,
+      generalNotes, indexedNotes)
+    run.load(deltas)
     run
   }
 }

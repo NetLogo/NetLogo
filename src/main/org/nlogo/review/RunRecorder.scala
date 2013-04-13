@@ -68,14 +68,8 @@ class RunRecorder(
           .map(_.valueStringGetter.apply)
           .zipWithIndex
         val mirrorables = Mirrorables.allMirrorables(ws.world, widgetValues)
-        run.data match {
-          case None =>
-            actionBuffers.foreach(_.activate())
-            run.start(ws.plotManager.plots, ws.getAndCreateDrawing(false), mirrorables)
-          case Some(data) =>
-            val actions = actionBuffers.flatMap(_.grab())
-            data.append(mirrorables, actions)
-        }
+        val actions = actionBuffers.flatMap(_.grab())
+        run.appendData(mirrorables, actions)
       } catch {
         case e: java.lang.OutOfMemoryError =>
           JOptionPane.showMessageDialog(null,
@@ -120,13 +114,21 @@ class RunRecorder(
 
     val viewSettings = FixedViewSettings(ws.view)
 
-    val image = org.nlogo.awt.Images.paintToImage(
+    val interfaceImage = org.nlogo.awt.Images.paintToImage(
       ws.viewWidget.findWidgetContainer.asInstanceOf[java.awt.Component])
 
     val name = Option(ws.getModelFileName).map(ReviewTab.removeExtension)
       .orElse(tabState.currentRun.map(_.name))
       .getOrElse("Untitled")
-    val run = new ModelRun(name, saveModel(), viewArea, viewSettings, image, "", Nil)
+
+    val initialPlots = ws.plotManager.plots.map(_.clone)
+    val initialDrawingImage = org.nlogo.drawing.cloneImage(ws.getAndCreateDrawing(false))
+    val run = new ModelRun(
+      name, saveModel(),
+      viewArea, viewSettings, interfaceImage,
+      initialPlots, initialDrawingImage,
+      "", Nil)
+    actionBuffers.foreach(_.activate())
     tabState.addRun(run)
     runList.setSelectedValue(run, true)
     refreshInterface()
