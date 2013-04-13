@@ -30,8 +30,7 @@ class InterfacePanel(reviewTab: ReviewTab) extends JPanel {
         g2d.setClip(paintArea)
         g2d.translate(viewArea.getBounds.x, viewArea.getBounds.y)
         val renderer = fakeWorld.newRenderer
-        val image = new java.io.ByteArrayInputStream(frame.drawingImageBytes)
-        renderer.trailDrawer.readImage(image)
+        renderer.trailDrawer.readImage(frame.drawingImage)
         renderer.paint(g2d, viewSettings)
       } finally {
         g2d.dispose()
@@ -100,7 +99,7 @@ class InterfacePanel(reviewTab: ReviewTab) extends JPanel {
     for {
       run <- reviewTab.state.currentRun
     } {
-      g.drawImage(run.backgroundImage, 0, 0, null)
+      g.drawImage(run.interfaceImage, 0, 0, null)
       repaintView(g, run.viewArea)
       repaintWidgets(g)
       repaintPlots(g)

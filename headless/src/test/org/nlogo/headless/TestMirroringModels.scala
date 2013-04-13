@@ -20,6 +20,7 @@ class TestMirroringModels extends FunSuite with SlowTest {
   def modelRenderingTest(path: String) {
     withWorkspace { (ws, mirrorables) =>
       val drawingActionBuffer = new api.ActionBuffer(ws.drawingActionBroker)
+      drawingActionBuffer.activate()
 
       ws.open(path)
       Checksummer.initModelForChecksumming(ws)

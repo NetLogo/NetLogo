@@ -29,12 +29,14 @@ class RunRecorder(
   private val plotActionBuffer = new api.ActionBuffer(ws.plotManager)
   private val drawingActionBuffer = new api.ActionBuffer(ws.drawingActionBroker)
   private val actionBuffers = Vector(plotActionBuffer, drawingActionBuffer)
-  //  actionBuffers.foreach(_.clear()) // make sure object is constructed and subscribed
 
   ws.listenerManager.addListener(
     new api.NetLogoAdapter {
       override def requestedDisplayUpdate() {
-        if (tabState.currentlyRecording) {
+        if (tabState.recordingEnabled) {
+          if (!tabState.currentlyRecording) {
+            ws.waitFor(() => startNewRun())
+          }
           updateMonitors()
           // switch from job thread to event thread
           ws.waitFor(() => grab())
@@ -42,30 +44,20 @@ class RunRecorder(
         }
       }
       override def afterModelOpened() {
-        // clearing the ticks doesn't send tickCounterChanged if the ticks
-        // were already at -1.0, so we make sure to clear the actions of a
-        // potentially "tickless" model when we open a new one.
-        actionBuffers.foreach(_.clear())
-        for (run <- tabState.currentRun) {
-          run.stillRecording = false
-          if (saveModel() != run.modelString) {
-            // if we just opened a model different from the
-            // one loaded from the previously current run...
-            tabState.currentRun = None
-            runList.clearSelection()
-            refreshInterface()
-          }
+        stopRecording()
+        for {
+          run <- tabState.currentRun
+          if saveModel() != run.modelString
+        } {
+          // if we just opened a model different from the
+          // one loaded from the previously current run...
+          tabState.currentRun = None
+          runList.clearSelection()
+          refreshInterface()
         }
       }
       override def tickCounterChanged(ticks: Double) {
-        ticks match {
-          case -1.0 =>
-            actionBuffers.foreach(_.clear())
-            tabState.currentRun.foreach(_.stillRecording = false)
-          case 0.0 =>
-            ws.waitFor(() => startNewRun())
-          case _ => // requestedDisplayUpdate() takes care of the rest
-        }
+        if (ticks == -1.0) stopRecording()
       }
     })
 
@@ -76,10 +68,13 @@ class RunRecorder(
           .map(_.valueStringGetter.apply)
           .zipWithIndex
         val mirrorables = Mirrorables.allMirrorables(ws.world, widgetValues)
-        val actions = actionBuffers.flatMap(_.grab())
         run.data match {
-          case None       => run.start(ws.plotManager.plots, mirrorables, actions)
-          case Some(data) => data.append(mirrorables, actions)
+          case None =>
+            actionBuffers.foreach(_.activate())
+            run.start(ws.plotManager.plots, ws.getAndCreateDrawing(false), mirrorables)
+          case Some(data) =>
+            val actions = actionBuffers.flatMap(_.grab())
+            data.append(mirrorables, actions)
         }
       } catch {
         case e: java.lang.OutOfMemoryError =>
@@ -89,6 +84,16 @@ class RunRecorder(
           disableRecording()
       }
       refreshInterface()
+    }
+  }
+
+  def stopRecording() {
+    for (buffer <- actionBuffers) {
+      buffer.clear()
+      buffer.suspend()
+    }
+    for (run <- tabState.currentRun) {
+      run.stillRecording = false
     }
   }
 
