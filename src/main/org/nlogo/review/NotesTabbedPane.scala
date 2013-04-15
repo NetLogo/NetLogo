@@ -1,13 +1,10 @@
 package org.nlogo.review
 
 import scala.language.existentials
-
 import java.awt.BorderLayout
-
 import org.nlogo.mirror.IndexedNote
 import org.nlogo.swing.Implicits.thunk2action
 import org.nlogo.swing.RichJButton
-
 import javax.swing.{
   AbstractCellEditor,
   JButton,
@@ -127,11 +124,18 @@ class IndexedNotesTable(tabState: ReviewTabState) extends JTable { table =>
 
   def addNote {
     // TODO figure out what's happening at frame 0
-    // TODO maybe should not add if existing note at position?
     for {
       ticks <- tabState.currentTicks
       frame <- tabState.currentFrameIndex
-    } model.addNote(IndexedNote(frame, ticks, ""))
+    } {
+      if (!model.notes.exists(_.frame == frame))
+        model.addNote(IndexedNote(frame, ticks, ""))
+      scrollTo(frame)
+      val row = model.notes.indexWhere(_.frame == frame)
+      val col = columns.indexWhere(_.name == notesColumnName)
+      editCellAt(row, col)
+      transferFocus()
+    }
   }
 
   // someone pressed the delete button in the notes row.
