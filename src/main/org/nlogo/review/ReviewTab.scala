@@ -78,7 +78,9 @@ class ReviewTab(
 
   scrubberPanel.scrubber.addChangeListener(new ChangeListener {
     def stateChanged(evt: ChangeEvent) {
-      state.currentRun.foreach(_.currentFrameIndex = Some(scrubberPanel.scrubber.getValue))
+      val newFrame = scrubberPanel.scrubber.getValue
+      state.currentRun.foreach(_.currentFrameIndex = Some(newFrame))
+      notesTabbedPane.indexedNotesTable.scrollTo(newFrame)
       interfacePanel.repaint()
     }
   })
