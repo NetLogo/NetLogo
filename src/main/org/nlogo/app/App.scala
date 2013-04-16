@@ -276,6 +276,7 @@ class App extends
     Events.MagicOpenEventHandler with
     Events.ReloadEventHandler with
     Events.SwitchedTabsEventHandler with
+    ZoomedEventHandler with
     Controllable {
 
   import App.{pico, logger, commandLineMagic, commandLineModel, commandLineURL, commandLineModelIsLaunch, loggingName}
@@ -435,7 +436,7 @@ class App extends
       add(fileMenu)
       add(new EditMenu(App.this))
       add(pico.getComponent(classOf[ToolsMenu]))
-      add(new ZoomMenu(App.this))
+      add(new ZoomMenu)
       add(tabs.tabsMenu)
     }
     // a little ugly we have to typecast here, but oh well - ST 10/11/05
@@ -492,7 +493,7 @@ class App extends
     def createFileMenu:  JMenu = pico.getComponent(classOf[FileMenu])
     def createEditMenu:  JMenu = new EditMenu(App.this)
     def createToolsMenu: JMenu = new ToolsMenu(App.this)
-    def createZoomMenu:  JMenu = new ZoomMenu(App.this)
+    def createZoomMenu:  JMenu = new ZoomMenu
     override def addHelpMenu(menuBar:JMenuBar) = {
       val newMenu = new HelpMenu (App.this, new EditorColorizer(workspace))
       menuBar.add(newMenu)
@@ -577,21 +578,15 @@ class App extends
     else fileMenu.newModel()
   }
 
-  /// zooming stuff
-  private var zoomSteps = 0
-  def zoomLarger(){ zoomSteps+=1; finishZoom() }
-  def resetZoom() { zoomSteps=0; finishZoom() }
-  def zoomSmaller() {
-    zoomSteps-=1
-    zoomSteps = StrictMath.max(-5, zoomSteps)
-    finishZoom()
-  }
-  private def finishZoom() {
-    new ZoomedEvent(1.0 + zoomSteps * 0.1).raise(this)
+  /// zooming
+
+  def handle(e: ZoomedEvent) {
     smartPack(frame.getPreferredSize)
   }
 
-  /// more event handlers
+  def resetZoom() {
+    new ZoomedEvent(0).raise(this)
+  }
 
   def handle(e: Events.ReloadEvent) {
     val modelType = workspace.getModelType
@@ -984,21 +979,25 @@ class App extends
 
     tabs.interfaceTab.adjustTargetSize(targetSize)
 
-    // reduce our size ambitions if necessary
-    var newWidth  = StrictMath.min(targetSize.width, maxWidth )
-    var newHeight = StrictMath.min(targetSize.height, maxHeight)
+    import StrictMath.{ max, min }
+
+    val (currentWidth, currentHeight) = (frame.getWidth, frame.getHeight)
+
+    // Maybe grow the window, but never shrink it
+    var newWidth  = max(min(targetSize.width, maxWidth),   currentWidth)
+    var newHeight = max(min(targetSize.height, maxHeight), currentHeight)
 
     // move up/left to get more room if possible and necessary
-    val moveLeft = StrictMath.max(0, frame.getLocation().x + newWidth  - maxX)
-    val moveUp   = StrictMath.max(0, frame.getLocation().y + newHeight - maxY)
+    val moveLeft = max(0, frame.getLocation().x + newWidth  - maxX)
+    val moveUp   = max(0, frame.getLocation().y + newHeight - maxY)
 
     // now we can compute our new position
-    val newX = StrictMath.max(maxBoundsX, frame.getLocation().x - moveLeft)
-    val newY = StrictMath.max(maxBoundsY, frame.getLocation().y - moveUp  )
+    val newX = max(maxBoundsX, frame.getLocation().x - moveLeft)
+    val newY = max(maxBoundsY, frame.getLocation().y - moveUp)
 
     // and now that we know our position, we can compute our new size
-    newWidth  = StrictMath.min(newWidth, maxX - newX)
-    newHeight = StrictMath.min(newHeight, maxY - newY)
+    newWidth  = min(newWidth, maxX - newX)
+    newHeight = min(newHeight, maxY - newY)
 
     // now do it!
     frame.setBounds(newX, newY, newWidth, newHeight)

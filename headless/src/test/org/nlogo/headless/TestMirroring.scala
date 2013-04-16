@@ -16,6 +16,7 @@ import Mirrorables._
 object TestMirroring {
   def withWorkspace[T](body: (HeadlessWorkspace, () => Iterable[Mirrorable]) => T): T = {
     val ws = HeadlessWorkspace.newInstance
+    ws.silent = true
     try body(ws, () => allMirrorables(ws.world,
       Seq[(String, Int)]() // empty seq of widgets values for now - replace when we have them in headless NP 2012-09-17
       ))

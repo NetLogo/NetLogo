@@ -367,7 +367,7 @@ procedure SETUP:[]{O---}:
           ASTORE 4
           ALOAD 4
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/Observer.face (Lorg/nlogo/api/Agent;)V
+          INVOKEINTERFACE org/nlogo/agent/Camera.face (Lorg/nlogo/api/Agent;)V
          L13
           ALOAD 1
           ICONST_5
@@ -589,7 +589,7 @@ procedure GO:[]{O---}:
           ASTORE 4
           ALOAD 4
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/Observer.face (Lorg/nlogo/api/Agent;)V
+          INVOKEINTERFACE org/nlogo/agent/Camera.face (Lorg/nlogo/api/Agent;)V
          L13
           ALOAD 1
           ICONST_2

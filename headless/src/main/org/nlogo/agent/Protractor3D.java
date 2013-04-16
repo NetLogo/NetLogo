@@ -62,7 +62,7 @@ public strictfp class Protractor3D
     double distanceNoWrap = StrictMath.sqrt(dx * dx + dy * dy + dz * dz);
 
     if (wrap) {
-      double distanceWrap = ((Topology3D) world.topology).distanceWrap
+      double distanceWrap = ((Topology3D) world.topology()).distanceWrap
           (dx, dy, dz, x1, y1, z1, x2, y2, z2);
 
       if (distanceWrap < distanceNoWrap) {
@@ -179,7 +179,7 @@ public strictfp class Protractor3D
     double dy = toY - fromY;
     double dz = toZ - fromZ;
     if (wrap) {
-      return ((Topology3D) world.topology).towardsPitchWrap(dx, dy, dz);
+      return ((Topology3D) world.topology()).towardsPitchWrap(dx, dy, dz);
     }
 
     return ((360 + StrictMath.toDegrees

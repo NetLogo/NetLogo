@@ -25,9 +25,17 @@ public final strictfp class World3D
     return (org.nlogo.api.Protractor3D) _protractor;
   }
 
+  @Override
+  public LinkManager createLinkManager() {
+    return new LinkManagerImpl(
+      this, new LinkFactory() {
+          @Override public Link apply(World world, Turtle src, Turtle dest, AgentSet breed) {
+            return new Link3D(world, src, dest, breed);
+          }});
+  }
+
   public World3D() {
-    linkManager = new LinkManager3D(this);
-    tieManager = new TieManager3D(this, linkManager);
+    tieManager = new TieManager3D(this);
     drawing = new Drawing3D(this);
     inRadiusOrCone = new InRadiusOrCone3D(this);
     _protractor = new Protractor3D(this);
@@ -40,15 +48,15 @@ public final strictfp class World3D
 
   @Override
   public void changeTopology(boolean xWrapping, boolean yWrapping) {
-    topology = new Torus3D(this);
+    _topology = new Torus3D(this);
   }
 
   public void changeTopology(boolean xWrapping, boolean yWrapping, boolean zWrapping) {
-    topology = new Torus3D(this);
+    _topology = new Torus3D(this);
   }
 
   public double shortestPathZ(double z1, double z2) {
-    return ((Topology3D) topology).shortestPathZ(z1, z2);
+    return ((Topology3D) topology()).shortestPathZ(z1, z2);
   }
 
   public boolean wrappingAllowedInZ() {
@@ -56,7 +64,7 @@ public final strictfp class World3D
   }
 
   public double wrappedObserverZ(double z) {
-    z = ((Topology3D) topology).wrapZ(z - followOffsetZ());
+    z = ((Topology3D) topology()).wrapZ(z - followOffsetZ());
 
     return z;
   }
@@ -112,7 +120,7 @@ public final strictfp class World3D
 
   public int roundZ(double z) {
     // floor() is slow so we don't use it
-    z = ((Topology3D) topology).wrapZ(z);
+    z = ((Topology3D) topology()).wrapZ(z);
 
     if (z > 0) {
       return (int) (z + 0.5);

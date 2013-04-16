@@ -11,12 +11,11 @@ import java.util.List;
 import java.util.Set;
 
 public strictfp class TieManager {
-  private final World world;
-  final LinkManager linkManager;
 
-  TieManager(World world, LinkManager linkManager) {
+  private final World world;
+
+  TieManager(World world) {
     this.world = world;
-    this.linkManager = linkManager;
   }
 
   public void reset() {
@@ -27,6 +26,26 @@ public strictfp class TieManager {
 
   int tieCount = 0;
 
+  protected List<Turtle> tiedTurtles(Turtle root) {
+    List<Turtle> myTies = new ArrayList<Turtle>();
+    scala.collection.Iterator<Link> iter =
+      world.linkManager().findLinksFrom(root, world.links());
+    while (iter.hasNext()) {
+      Link link = iter.next();
+      if (link.isTied()) {
+        myTies.add(link.end2());
+      }
+    }
+    iter = world.linkManager().findLinksTo(root, world.links());
+    while (iter.hasNext()) {
+      Link link = iter.next();
+      if (!link.getBreed().isDirected() && link.isTied()) {
+        myTies.add(link.end1());
+      }
+    }
+    return myTies;
+  }
+
   public void setTieMode(Link link, String mode) {
     if (link.isTied()) {
       if (mode.equals(Link.MODE_NONE)) {
@@ -35,28 +54,6 @@ public strictfp class TieManager {
     } else if (!mode.equals(Link.MODE_NONE)) {
       tieCount++;
     }
-  }
-
-  List<Turtle> tiedTurtles(Turtle root) {
-    ArrayList<Turtle> myTies = new ArrayList<Turtle>();
-    if (linkManager.srcMap.containsKey(root)) {
-      for (Link link : linkManager.srcMap.get(root)) {
-        if (link.isTied()) {
-          Turtle t = link.end2();
-          myTies.add(t);
-        }
-      }
-    }
-    if (linkManager.destMap.containsKey(root)) {
-      for (Link link : linkManager.destMap.get(root)) {
-        if (!link.getBreed().isDirected()
-            && link.isTied()) {
-          Turtle t = link.end1();
-          myTies.add(t);
-        }
-      }
-    }
-    return myTies;
   }
 
   void turtleMoved(Turtle root, double newX, double newY,
@@ -151,7 +148,7 @@ public strictfp class TieManager {
       // update positions
       for (Turtle t : myTies) {
         try {
-          Link link = linkManager.findLink(root, t, world.links(), true);
+          Link link = world.linkManager().findLink(root, t, world.links(), true);
           boolean rigid = link.mode().equals(Link.MODE_FIXED);
 
           double dh = Turtle.subtractHeadings(newHeading, originalHeading);

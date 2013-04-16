@@ -301,7 +301,7 @@ class TestAllSyntaxes extends FunSuite {
                     |_createlinksto turtle agentset/command block (optional),-T--,---L,0,2,2 *
                     |_createlinkswith turtle agentset/command block (optional),-T--,---L,0,2,2 *
                     |_createlinkto turtle/command block (optional),-T--,---L,0,2,2 *
-                    |_createlinkwith agent/command block (optional),-T--,---L,0,2,2 *
+                    |_createlinkwith turtle/command block (optional),-T--,---L,0,2,2 *
                     |_createorderedturtles number/command block (optional),O---,-T--,0,2,2 *
                     |_createtemporaryplotpen string,OTPL,null,0,1,1
                     |_createturtles number/command block (optional),O---,-T--,0,2,2 *
@@ -405,7 +405,7 @@ class TestAllSyntaxes extends FunSuite {
                     |_outputprint anything,OTPL,null,0,1,1
                     |_outputshow anything,OTPL,null,0,1,1
                     |_outputtype anything,OTPL,null,0,1,1
-                    |_outputwrite number or TRUE/FALSE or string or list or NOBODY,OTPL,null,0,1,1
+                    |_outputwrite anything,OTPL,null,0,1,1
                     |_patchcode ,--P-,null,0,0,0
                     |_pendown ,-T--,null,0,0,0 *
                     |_penerase ,-T--,null,0,0,0 *
@@ -473,6 +473,6 @@ class TestAllSyntaxes extends FunSuite {
                     |_while TRUE/FALSE block/command block,OTPL,null,0,2,2
                     |_withlocalrandomness command block,OTPL,null,0,1,1
                     |_withoutinterruption command block,OTPL,null,0,1,1
-                    |_write number or TRUE/FALSE or string or list or NOBODY,OTPL,null,0,1,1
+                    |_write anything,OTPL,null,0,1,1
                     |_ziplogfiles string,O---,null,0,1,1 *""".stripMargin.replaceAll("\r\n", "\n")
 }

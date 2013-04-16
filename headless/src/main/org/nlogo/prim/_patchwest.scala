@@ -16,11 +16,11 @@ class _patchwest extends Reporter {
     report_1(context)
 
   def report_1(context: Context) = {
-    val result =
-      (context.agent match {
-         case p: Patch => p
-         case t: Turtle => t.getPatchHere
-      }).getPatchWest
+    val result = world.topology.getPW(
+      context.agent match {
+        case p: Patch => p
+        case t: Turtle => t.getPatchHere
+      })
     if (result == null) Nobody
     else result
   }

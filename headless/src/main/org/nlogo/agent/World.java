@@ -62,7 +62,6 @@ public strictfp class World
   private double patchSize = 12.0; // keep the unzoomed patchSize here
   TrailDrawerInterface trailDrawer;
   private final Map<Agent, Double> lineThicknesses = new HashMap<Agent, Double>();
-  Topology topology;
   RootsTable rootsTable;
   protected Protractor _protractor;
 
@@ -70,10 +69,36 @@ public strictfp class World
     return _protractor;
   }
 
-  public LinkManager linkManager;
+  protected Topology _topology;
+  /// get/set methods for World Topology
+  public Topology topology() {
+    return _topology;
+  }
+
+  public void changeTopology(boolean xWrapping, boolean yWrapping) {
+    _topology = Topology.get(this, xWrapping, yWrapping);
+    if (_patches != null) // is null during initialization
+    {
+      for (AgentIterator it = _patches.iterator(); it.hasNext();) {
+        ((Patch) it.next()).topologyChanged();
+      }
+    }
+  }
+
+  private final LinkManager _linkManager;
+  public LinkManager linkManager() { return _linkManager; }
+
   public TieManager tieManager;
 
   public InRadiusOrCone inRadiusOrCone;
+
+  public LinkManager createLinkManager() {
+    return new LinkManagerImpl(
+      this, new LinkFactory() {
+          @Override public Link apply(World world, Turtle src, Turtle dest, AgentSet breed) {
+            return new Link(world, src, dest, breed);
+          }});
+  }
 
   // This is a flag that the engine checks in its tightest innermost loops
   // to see if maybe it should stop running NetLogo code for a moment
@@ -92,8 +117,8 @@ public strictfp class World
     _observer = createObserver();
     _observers = AgentSet.fromAgent(_observer);
 
-    linkManager = new LinkManager(this);
-    tieManager = new TieManager(this, linkManager);
+    _linkManager = createLinkManager();
+    tieManager = new TieManager(this);
 
     inRadiusOrCone = new InRadiusOrCone(this);
     _protractor = new Protractor(this);
@@ -152,24 +177,9 @@ public strictfp class World
     return trailDrawer;
   }
 
-  /// get/set methods for World Topology
-  Topology getTopology() {
-    return topology;
-  }
-
-  public void changeTopology(boolean xWrapping, boolean yWrapping) {
-    topology = Topology.getTopology(this, xWrapping, yWrapping);
-    if (_patches != null) // is null during initialization
-    {
-      for (AgentIterator it = _patches.iterator(); it.hasNext();) {
-        ((Patch) it.next()).topologyChanged();
-      }
-    }
-  }
-
   public double wrappedObserverX(double x) {
     try {
-      x = topology.wrapX(x - topology.followOffsetX());
+      x = topology().wrapX(x - topology().followOffsetX());
     } catch (AgentException e) {
       org.nlogo.util.Exceptions.ignore(e);
     }
@@ -178,7 +188,7 @@ public strictfp class World
 
   public double wrappedObserverY(double y) {
     try {
-      y = topology.wrapY(y - topology.followOffsetY());
+      y = topology().wrapY(y - topology().followOffsetY());
     } catch (AgentException e) {
       org.nlogo.util.Exceptions.ignore(e);
     }
@@ -198,11 +208,11 @@ public strictfp class World
   //   All wrapping related behavior specific to a topology is/should-be hardcoded in the methods
   //   for each specific topological implementation.
   public boolean wrappingAllowedInX() {
-    return (topology instanceof Torus || topology instanceof VertCylinder);
+    return (topology() instanceof Torus || topology() instanceof VertCylinder);
   }
 
   public boolean wrappingAllowedInY() {
-    return (topology instanceof Torus || topology instanceof HorizCylinder);
+    return (topology() instanceof Torus || topology() instanceof HorizCylinder);
   }
 
   /// export world
@@ -337,12 +347,12 @@ public strictfp class World
 
   public double wrapX(double x)
       throws AgentException {
-    return topology.wrapX(x);
+    return topology().wrapX(x);
   }
 
   public double wrapY(double y)
       throws AgentException {
-    return topology.wrapY(y);
+    return topology().wrapY(y);
   }
 
   public double wrap(double pos, double min, double max) {
@@ -351,19 +361,19 @@ public strictfp class World
 
   public void diffuse(double param, int vn)
       throws AgentException, PatchException {
-    topology.diffuse(param, vn);
+    topology().diffuse(param, vn);
   }
 
   public void diffuse4(double param, int vn)
       throws AgentException, PatchException {
-    topology.diffuse4(param, vn);
+    topology().diffuse4(param, vn);
   }
 
   public int roundX(double x)
       throws AgentException {
     // floor() is slow so we don't use it
     try {
-      x = topology.wrapX(x);
+      x = topology().wrapX(x);
     } catch (AgentException ex) {
       throw new AgentException("Cannot access patches beyond the limits of current world.");
     }
@@ -380,7 +390,7 @@ public strictfp class World
       throws AgentException {
     // floor() is slow so we don't use it
     try {
-      y = topology.wrapY(y);
+      y = topology().wrapY(y);
     } catch (AgentException ex) {
       throw new AgentException("Cannot access patches beyond the limits of current world.");
     }
@@ -585,7 +595,7 @@ public strictfp class World
   }
 
   public Link getLink(Object end1, Object end2, AgentSet breed) {
-    return linkManager.findLink((Turtle) _turtles.getAgent(end1),
+    return linkManager().findLink((Turtle) _turtles.getAgent(end1),
         (Turtle) _turtles.getAgent(end2),
         breed, false);
   }
@@ -634,7 +644,7 @@ public strictfp class World
   public Link getOrCreateLink(Turtle end1, Turtle end2, AgentSet breed) {
     Link link = getLink(end1.agentKey(), end2.agentKey(), breed);
     if (link == null) {
-      link = linkManager.createLink(end1, end2, breed);
+      link = linkManager().createLink(end1, end2, breed);
     }
     return link;
   }
@@ -827,7 +837,7 @@ public strictfp class World
     for (AgentIterator iter = _turtles.iterator(); iter.hasNext();) {
       Turtle turtle = (Turtle) iter.next();
       lineThicknesses.remove(turtle);
-      linkManager.cleanup(turtle);
+      linkManager().cleanupTurtle(turtle);
       turtle._id_$eq(-1);
     }
     _turtles.clear();
@@ -848,7 +858,7 @@ public strictfp class World
     }
     _links.clear();
     nextLinkIndex = 0;
-    linkManager.reset();
+    linkManager().reset();
   }
 
   public void clearGlobals() {
@@ -856,7 +866,7 @@ public strictfp class World
          j < _observer.variables().length;
          j++) {
       try {
-        ValueConstraint con = _observer.variableConstraint(j);
+        ValueConstraint con = _observer.constraint(j);
         if (con != null) {
           _observer.setVariable(j, con.defaultValue());
         } else {
@@ -1091,14 +1101,6 @@ public strictfp class World
     }
 
     throw new IllegalStateException("neither of the breeds exist, that's bad");
-  }
-
-  public int getVariablesArraySize(Observer observer) {
-    return _program.globals().size();
-  }
-
-  public int getVariablesArraySize(Patch patch) {
-    return _program.patchesOwn().size();
   }
 
   public int getVariablesArraySize(org.nlogo.api.Turtle turtle, org.nlogo.api.AgentSet breed) {

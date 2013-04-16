@@ -9,8 +9,6 @@ trait Topology3D {
                    x1: Double, y1: Double, z1: Double,
                    x2: Double, y2: Double, z2: Double): Double
   def towardsPitchWrap(dx: Double, dy: Double, dz: Double): Double
-  @throws(classOf[AgentException])
-  def getPatchAt(xc: Double, yc: Double, zc: Double): Patch
   def getNeighbors3d(source: Patch3D): AgentSet
   def getNeighbors6(source: Patch3D): AgentSet
   def getPNU(source: Patch3D): Patch
@@ -29,7 +27,6 @@ trait Topology3D {
   def getPSED(source: Patch3D): Patch
   def getPSWD(source: Patch3D): Patch
   def getPNWD(source: Patch3D): Patch
-  def observerZ: Double
   def wrapZ(z: Double): Double
   def shortestPathZ(z1: Double, z2: Double): Double
 }
