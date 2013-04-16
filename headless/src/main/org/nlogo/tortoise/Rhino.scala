@@ -19,7 +19,7 @@ object Rhino {
   // at some point we'll need to have separate instances instead of a singleton
   val engine =
     (new javax.script.ScriptEngineManager)
-      .getEngineByName("JavaScript")
+      .getEngineByName("rhino")
       .ensuring(_ != null, "JavaScript engine unavailable")
 
   // the original CoffeeScript for these are in headless/src/main/coffee. sbt compiles
