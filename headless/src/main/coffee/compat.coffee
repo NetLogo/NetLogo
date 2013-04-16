@@ -1,9 +1,9 @@
 ##
-## stuff in this file papers over differences between Rhino and other
-## JS implementations such as Node as the ones in browsers.
+## stuff in this file papers over differences between Rhino, Nashorn,
+## and other JS implementations such as Node as the ones in browsers.
 ##
-## on Rhino, the goal is precisely bit-for-bit identical results as
-## JVM NetLogo.  on other JS impls, "close enough" is close enough
+## on Rhino/Nashorn, the goal is precisely bit-for-bit identical
+## results as JVM NetLogo.  elsewhere, "close enough" is close enough
 ##
 
 # from: http://coffeescriptcookbook.com/chapters/arrays/filtering-arrays
@@ -12,10 +12,13 @@ unless Array::filter
   Array::filter = (callback) ->
     element for element in this when callback(element)
 
-# Rhino has "print" and "println", V8 and browsers have "console.log".  we use println,
-# so ensure it is present
-unless println
-  println = console.log
+# Rhino has "println" already, Nashorn needs to borrow it from
+# System.out, V8 and browsers have "console.log". get it somehow!
+unless println?
+  if console?
+    println = console.log
+  unless println?
+    println = java.lang.System.out.println
 
 # surprisingly difficult to ask if something is an array or not
 typeIsArray = (value) ->
@@ -30,7 +33,7 @@ typeIsArray = (value) ->
 # we delegate to Math.random(), for speed.  we could swap in a JS
 # implementation of the Mersenne Twister (code for it is googlable),
 # but I fear (though have not measured) the performance impact
-unless Random
+unless Random?
   Random = {}
   Random.nextInt = (limit) -> Math.floor(Math.random() * limit)
   Random.nextLong = Random.nextInt
@@ -38,7 +41,7 @@ unless Random
 
 # on Rhino, we use the JVM StrictMath stuff so results are identical
 # with regular NetLogo. in browser, be satisfied with "close enough"
-unless StrictMath
+unless StrictMath?
   StrictMath = Math
   Math.toRadians = (degrees) ->
     degrees * Math.PI / 180
