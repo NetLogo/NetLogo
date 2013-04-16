@@ -136,7 +136,8 @@ public final strictfp class Context {
     // directly from another Context, e.g. _with - ST 6/12/06
     if (myself == null) {
       if (job.parentContext == null) {
-        throw new IllegalStateException("null parent context");
+        // let the caller figure out what to do about it - ST 4/16/13
+        return null;
       }
       // ...but if this Context was spawned by a Job (e.g. _ask)
       // then (to save time) we won't have bothered to fill in
