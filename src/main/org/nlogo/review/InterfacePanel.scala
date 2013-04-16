@@ -80,7 +80,7 @@ class InterfacePanel(reviewTab: ReviewTab) extends JPanel {
       plot <- frame.plots
       widget <- widgets.get(plot.name)
       widgetBounds = container.getUnzoomedBounds(widget)
-      canvasBounds = widget.canvas.getBounds()
+      canvasBounds = widget.gui.canvas.getBounds()
       g2d = g.create.asInstanceOf[java.awt.Graphics2D]
       painter = new PlotPainter(plot)
     } {

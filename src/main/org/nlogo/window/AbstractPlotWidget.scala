@@ -22,11 +22,8 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   import AbstractPlotWidget._
 
   private var fullyConstructed = false
-  val canvas = new PlotCanvas(plot)
-  private val legend = new PlotLegend(plot, this)
-  private val nameLabel = new JLabel("", javax.swing.SwingConstants.CENTER)
-  private val xAxis = new XAxisLabels()
-  private val yAxis = new YAxisLabels()
+
+  val gui = PlotWidgetGUI(plot, this)
 
   locally {
     displayName = plot.name
@@ -43,104 +40,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
 
     setBackground(InterfaceColors.PLOT_BACKGROUND)
     plot.clear() // set current values to defaults
-
-    val gridbag = new java.awt.GridBagLayout()
-    setLayout(gridbag)
-
-    val c = new java.awt.GridBagConstraints()
-    c.gridwidth = 1
-    c.gridheight = 1
-    c.weightx = 0.0
-    c.weighty = 0.0
-    c.fill = java.awt.GridBagConstraints.NONE
-
-    //ROW1
-    //-----------------------------------------
-    c.insets = new java.awt.Insets(0, 1, 1, 1)
-
-    c.gridx = 1
-    c.gridy = 0
-    c.gridwidth = 1
-    c.anchor = java.awt.GridBagConstraints.CENTER
-    c.fill = java.awt.GridBagConstraints.HORIZONTAL
-    gridbag.setConstraints(nameLabel, c)
-    add(nameLabel)
-    org.nlogo.awt.Fonts.adjustDefaultFont(nameLabel)
-    nameLabel.setFont(nameLabel.getFont().deriveFont(java.awt.Font.BOLD))
-    nameLabel.setText(plot.name)
-
-    //ROW2
-    //-----------------------------------------
-    c.insets = new java.awt.Insets(0, 1, 0, 1)
-
-    c.gridx = java.awt.GridBagConstraints.RELATIVE
-    c.gridy = 1
-    c.gridwidth = 1
-    c.gridheight = java.awt.GridBagConstraints.RELATIVE
-    c.weighty = 3.0
-    c.anchor = java.awt.GridBagConstraints.WEST
-    c.fill = java.awt.GridBagConstraints.VERTICAL
-    gridbag.setConstraints(yAxis, c)
-    add(yAxis);
-
-    c.gridwidth = java.awt.GridBagConstraints.RELATIVE
-    c.weightx = 3.0
-    c.anchor = java.awt.GridBagConstraints.CENTER
-    c.fill = java.awt.GridBagConstraints.BOTH
-    gridbag.setConstraints(canvas, c)
-    add(canvas)
-
-    c.gridwidth = REMAINDER
-    c.weightx = 0.0
-    c.anchor = java.awt.GridBagConstraints.NORTH
-    c.fill = java.awt.GridBagConstraints.NONE
-    c.insets = new java.awt.Insets(0, 3, 0, 1)
-    gridbag.setConstraints(legend, c)
-    add(legend)
-
-    //ROW3
-    //-----------------------------------------
-    c.insets = new java.awt.Insets(0, 0, 0, 0)
-    c.gridy = 2
-
-    val filler2 = new javax.swing.JLabel()
-    c.weightx = 0.0
-    c.weighty = 0.0
-    c.gridwidth = 1
-    c.gridheight = 1
-    c.anchor = java.awt.GridBagConstraints.WEST
-    c.fill = java.awt.GridBagConstraints.NONE
-    gridbag.setConstraints(filler2, c)
-    add(filler2)
-
-    c.gridwidth = java.awt.GridBagConstraints.RELATIVE
-    c.anchor = java.awt.GridBagConstraints.CENTER
-    c.fill = java.awt.GridBagConstraints.HORIZONTAL
-    gridbag.setConstraints(xAxis, c)
-    add(xAxis)
-
-    val filler3 = new javax.swing.JLabel()
-    c.weightx = 0.0
-    c.weighty = 0.0
-    c.gridwidth = 1
-    c.gridheight = 1
-    c.anchor = java.awt.GridBagConstraints.EAST
-    c.fill = java.awt.GridBagConstraints.NONE
-    gridbag.setConstraints(filler3, c)
-    add(filler3)
-
-    // make sure to update the gui components in case
-    // something changed underneath ev 8/26/08
-    refreshGUI()
-  }
-
-  def refreshGUI() {
-    def getLabel(d:Double) = if(d.toString.endsWith(".0")) d.toString.dropRight(2) else d.toString
-    xAxis.setMin(getLabel(plot.state.xMin))
-    xAxis.setMax(getLabel(plot.state.xMax))
-    yAxis.setMin(getLabel(plot.state.yMin))
-    yAxis.setMax(getLabel(plot.state.yMax))
-    legend.refresh()
+    gui.addToPanel(this)
   }
 
   /// satisfy the usual obligations of top-level widgets
@@ -149,8 +49,8 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   override def zoomSubcomponents = true
   override def helpLink = Some("docs/programming.html#plotting")
   def propertySet = Properties.plot
-  def showLegend = legend.open
-  def showLegend(open: Boolean){ legend.open=open }
+  def showLegend = gui.legend.open
+  def showLegend(open: Boolean) { gui.legend.open = open }
 
   /// some stuff relating to plot pen editing
   def editPlotPens: List[PlotPen] = plot.pens
@@ -159,29 +59,29 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   }
 
   ///
-  def togglePenList(){ legend.toggle }
-  def clear(){ plot.clear; legend.refresh }
+  def togglePenList(){ gui.legend.toggle }
+  def clear(){ plot.clear; gui.legend.refresh }
 
   /// these exist to support editing
   def plotName = plot.name
   def plotName(name: String){
     plot.name(name)
     displayName = plot.name
-    nameLabel.setText(name)
+    gui.nameLabel.setText(name)
   }
 
   private var _xAxisLabel: String = ""
-  def xLabel = xAxis.getLabel
+  def xLabel = gui.xAxis.getLabel
   def xLabel(label: String){
     _xAxisLabel = label
-    xAxis.setLabel(_xAxisLabel)
+    gui.xAxis.setLabel(_xAxisLabel)
   }
 
   private var _yAxisLabel: String = ""
-  def yLabel = yAxis.getLabel
+  def yLabel = gui.yAxis.getLabel
   def yLabel(label: String){
     _yAxisLabel = label
-    yAxis.setLabel(_yAxisLabel)
+    gui.yAxis.setLabel(_yAxisLabel)
   }
 
   def setupCode = plot.setupCode
@@ -228,7 +128,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     s.append(plot.defaultState.yMin + "\n")
     s.append(plot.defaultState.yMax + "\n")
     s.append(plot.defaultState.autoPlotOn + "\n")
-    s.append(legend.open + "\n")
+    s.append(gui.legend.open + "\n")
     s.append(plot.saveString + "\n")
     s.append("PENS\n")
     savePens(s)
@@ -251,7 +151,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
       xLabel(if (strings(6) == "NIL") "" else strings(6))
       yLabel(if (strings(7) == "NIL") "" else strings(7))
     }
-    if (13 < strings.length) { legend.open=strings(13).toBoolean }
+    if (13 < strings.length) { gui.legend.open=strings(13).toBoolean }
     PlotLoader.parsePlot(strings.toArray, plot, helper.convert(_, false))
     plotName(plot.name)
     clear()
@@ -266,7 +166,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   }
 
   private def recolor() {
-    nameLabel.setForeground(if(anyErrors) java.awt.Color.RED else java.awt.Color.BLACK)
+    gui.nameLabel.setForeground(if(anyErrors) java.awt.Color.RED else java.awt.Color.BLACK)
   }
 
   def handle(e: AfterLoadEvent){
@@ -295,11 +195,11 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   override def editFinished: Boolean = {
     super.editFinished
     plotManager.compilePlot(plot)
-    nameLabel.setText(plot.name)
-    xAxis.setLabel(_xAxisLabel)
-    yAxis.setLabel(_yAxisLabel)
+    gui.nameLabel.setText(plot.name)
+    gui.xAxis.setLabel(_xAxisLabel)
+    gui.yAxis.setLabel(_yAxisLabel)
     recolor()
-    legend.refresh
+    gui.legend.refresh
     true
   }
 
@@ -310,89 +210,4 @@ object AbstractPlotWidget {
   /// sizing
   val MIN_SIZE = new Dimension(160, 120)
   val PREF_SIZE = new Dimension(200, 150)
-
-  class XAxisLabels extends javax.swing.JPanel {
-    private val min: JLabel = new JLabel()
-    private val label: JLabel = new JLabel("", javax.swing.SwingConstants.CENTER)
-    private val max: JLabel = new JLabel()
-
-    setBackground(InterfaceColors.PLOT_BACKGROUND)
-    val gridbag: GridBagLayout = new GridBagLayout
-    setLayout(gridbag)
-    val c: GridBagConstraints = new GridBagConstraints
-    c.insets = new Insets(0, 0, 0, 3)
-    c.gridheight = 1
-    c.weighty = 0.0
-    c.fill = java.awt.GridBagConstraints.NONE
-    c.gridwidth = 1
-    c.weightx = 0.0
-    c.anchor = java.awt.GridBagConstraints.WEST
-    c.fill = java.awt.GridBagConstraints.NONE
-    gridbag.setConstraints(min, c)
-    add(min)
-    c.weightx = 100.0
-    c.anchor = java.awt.GridBagConstraints.CENTER
-    c.fill = java.awt.GridBagConstraints.HORIZONTAL
-    gridbag.setConstraints(label, c)
-    add(label)
-    c.gridwidth = REMAINDER
-    c.weightx = 0.0
-    c.anchor = java.awt.GridBagConstraints.EAST
-    c.fill = java.awt.GridBagConstraints.NONE
-    gridbag.setConstraints(max, c)
-    add(max)
-    org.nlogo.awt.Fonts.adjustDefaultFont(min)
-    org.nlogo.awt.Fonts.adjustDefaultFont(label)
-    org.nlogo.awt.Fonts.adjustDefaultFont(max)
-
-    def setLabel(text: String) {label.setText(text)}
-    def setMax(text: String) {max.setText(text)}
-    def setMin(text: String) {min.setText(text)}
-    def getLabel = label.getText
-  }
-
-  class YAxisLabels extends javax.swing.JPanel {
-    private val label: JLabel = new JLabel()
-    private var labelText: String = ""
-    private val max: JLabel = new JLabel()
-    private val labelIcon: VTextIcon = new VTextIcon(label, "", org.nlogo.swing.VTextIcon.ROTATE_LEFT)
-    private val min: JLabel = new JLabel()
-
-    setBackground(InterfaceColors.PLOT_BACKGROUND)
-    label.setIcon(labelIcon)
-    val gridbag: GridBagLayout = new GridBagLayout
-    setLayout(gridbag)
-    val c: GridBagConstraints = new GridBagConstraints
-    c.insets = new Insets(3, 0, 0, 0)
-    c.gridwidth = REMAINDER
-    c.gridheight = 1
-    c.weightx = 1.0
-    c.weighty = 0.0
-    c.anchor = java.awt.GridBagConstraints.EAST
-    c.fill = java.awt.GridBagConstraints.NONE
-    gridbag.setConstraints(max, c)
-    add(max)
-    c.weighty = 100.0
-    c.fill = java.awt.GridBagConstraints.VERTICAL
-    gridbag.setConstraints(label, c)
-    add(label)
-    c.gridheight = REMAINDER
-    c.weighty = 0.0
-    c.fill = java.awt.GridBagConstraints.NONE
-    gridbag.setConstraints(min, c)
-    add(min)
-    org.nlogo.awt.Fonts.adjustDefaultFont(min)
-    org.nlogo.awt.Fonts.adjustDefaultFont(label)
-    org.nlogo.awt.Fonts.adjustDefaultFont(max)
-
-    def setMin(text: String) {min.setText(text)}
-    def setMax(text: String): Unit = {max.setText(text)}
-    def getLabel = labelText
-    def setLabel(text: String) {
-      labelText = text
-      labelIcon.setLabel(labelText)
-      label.repaint()
-    }
-  }
-
 }

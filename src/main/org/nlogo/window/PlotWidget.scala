@@ -58,8 +58,8 @@ class PlotWidget(plot:Plot, plotManager: PlotManagerInterface) extends AbstractP
 
   def repaintIfNeeded() {
     if (plot.dirty) {
-      canvas.repaintIfNeeded()
-      refreshGUI()
+      gui.canvas.repaintIfNeeded()
+      gui.refresh()
       plot.dirty = false
     }
   }

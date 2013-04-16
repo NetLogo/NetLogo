@@ -15,7 +15,7 @@ extends javax.swing.JPanel {
 
   var open = false
 
-  def addPen(pen: PlotPen) {
+  private def addPen(pen: PlotPen) {
     if (open) {
       if (pen.inLegend) {
         add(new LegendItem(pen) { setFont(fontSource.getFont) })
