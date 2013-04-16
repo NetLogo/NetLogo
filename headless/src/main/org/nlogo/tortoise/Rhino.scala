@@ -20,6 +20,7 @@ object Rhino {
   val engine =
     (new javax.script.ScriptEngineManager)
       .getEngineByName("JavaScript")
+      .ensuring(_ != null, "JavaScript engine unavailable")
 
   // the original CoffeeScript for these are in headless/src/main/coffee. sbt compiles
   // them to JavaScript for us.  (and downloads json2.js direct from GitHub).
