@@ -23,7 +23,7 @@ object Rhino {
 
   // the original CoffeeScript for these are in headless/src/main/coffee. sbt compiles
   // them to JavaScript for us.  (and downloads json2.js direct from GitHub).
-  // unlike V8, RHino doesn't have JSON.stringify built-in, so we get it from json2.js
+  // unlike V8, Rhino doesn't have JSON.stringify built-in, so we get it from json2.js
   val libs = Seq("/json2.js", "/js/compat.js", "/js/engine.js", "/js/agentmodel.js")
   for (lib <- libs)
     engine.eval(getResourceAsString(lib))
