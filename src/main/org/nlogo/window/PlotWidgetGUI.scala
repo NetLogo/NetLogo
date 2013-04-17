@@ -8,7 +8,16 @@ import org.nlogo.plot.Plot
 
 import javax.swing.{ JLabel, JPanel }
 
-case class PlotWidgetGUI(val plot: Plot, fontSource: java.awt.Component) {
+class PlotWidgetGUI(
+  private var _plot: Plot,
+  fontSource: java.awt.Component) {
+
+  def plot_=(plot: Plot) {
+    _plot = plot
+    canvas.setPlot(plot)
+    legend.plot = plot
+  }
+  def plot = _plot
 
   val canvas = new PlotCanvas(plot)
   val legend = new PlotLegend(plot, fontSource)
@@ -108,12 +117,15 @@ case class PlotWidgetGUI(val plot: Plot, fontSource: java.awt.Component) {
 
   }
 
-  def refresh() {
+  def refreshAxisLabels() {
     def getLabel(d: Double) = if (d.toString.endsWith(".0")) d.toString.dropRight(2) else d.toString
     xAxis.setMin(getLabel(plot.state.xMin))
     xAxis.setMax(getLabel(plot.state.xMax))
     yAxis.setMin(getLabel(plot.state.yMin))
     yAxis.setMax(getLabel(plot.state.yMax))
+  }
+  def refresh() {
+    refreshAxisLabels()
     legend.refresh()
   }
 }

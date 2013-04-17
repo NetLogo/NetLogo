@@ -23,7 +23,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
 
   private var fullyConstructed = false
 
-  val gui = PlotWidgetGUI(plot, this)
+  val gui = new PlotWidgetGUI(plot, this)
 
   locally {
     displayName = plot.name

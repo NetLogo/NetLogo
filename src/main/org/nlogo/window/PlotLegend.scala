@@ -7,7 +7,7 @@ import org.nlogo.plot.{ Plot, PlotPen }
 // we use fontSource in order to keep the font sizes of the PlotPen objects
 // in sync with the current zoom level even when the PlotLegend is
 // closed.  a bit kludgy perhaps, but oh well - ST 9/2/04
-class PlotLegend(plot: Plot, fontSource: java.awt.Component)
+class PlotLegend(var plot: Plot, fontSource: java.awt.Component)
 extends javax.swing.JPanel {
 
   setLayout(new org.nlogo.awt.ColumnLayout(2)) // 2 pixel gap
