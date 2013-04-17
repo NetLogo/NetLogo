@@ -3,72 +3,15 @@
 package org.nlogo.review
 
 import java.awt.Color.{ GRAY, WHITE }
+
 import org.nlogo.mirror.FakeWorld
-import org.nlogo.plot.PlotPainter
 import org.nlogo.window
-import org.nlogo.window.PlotWidget
+
 import javax.swing.JPanel
-import org.nlogo.window.PlotWidgetGUI
-import org.nlogo.window.InterfaceColors
-import java.awt.Graphics
-import java.awt.Graphics2D
-import org.nlogo.plot.Plot
 
-class ReviewTabPlotPanel(
-  initialPlot: Plot,
-  bounds: java.awt.Rectangle,
-  val legendIsOpen: Boolean) extends JPanel {
-
-  setBounds(bounds)
-  setBorder(org.nlogo.swing.Utils.createWidgetBorder)
-  setBackground(InterfaceColors.PLOT_BACKGROUND)
-  val gui = new PlotWidgetGUI(initialPlot, this)
-  gui.legend.open = legendIsOpen
-  gui.addToPanel(this)
-
-  def refresh(plot: Plot) {
-    gui.plot = plot
-    gui.refreshAxisLabels()
-  }
-
-  override def paintComponent(g: Graphics): Unit = {
-    var g2d: Graphics2D = g.asInstanceOf[Graphics2D]
-    g2d.setRenderingHint(
-      java.awt.RenderingHints.KEY_ANTIALIASING,
-      java.awt.RenderingHints.VALUE_ANTIALIAS_ON)
-    super.paintComponent(g)
-  }
-}
-
-class InterfacePanel(reviewTab: ReviewTab)
+class InterfacePanel(val reviewTab: ReviewTab)
   extends JPanel
-  with HasCurrentRun#Sub {
-
-  private var plotPanels: Map[String, ReviewTabPlotPanel] = Map()
-
-  setLayout(null) // disable layout manager to use absolute positioning
-  reviewTab.state.subscribe(this) // subscribe to current run change events
-
-  override def notify(pub: ReviewTabState#Pub, event: CurrentRunChangeEvent) {
-    event match {
-      case AfterCurrentRunChangeEvent(_, _) =>
-        initPlotPanels()
-      case _ =>
-    }
-  }
-
-  def initPlotPanels() {
-    val container = reviewTab.ws.viewWidget.findWidgetContainer
-    plotPanels = reviewTab.workspaceWidgets.collect {
-      case plotWidget: PlotWidget =>
-        val panel = new ReviewTabPlotPanel(
-          plotWidget.plot,
-          container.getUnzoomedBounds(plotWidget),
-          plotWidget.gui.legend.open)
-        add(panel)
-        plotWidget.plot.name -> panel
-    }(scala.collection.breakOut)
-  }
+  with HasPlotPanels {
 
   def repaintView(g: java.awt.Graphics, viewArea: java.awt.geom.Area) {
     for {
@@ -124,16 +67,6 @@ class InterfacePanel(reviewTab: ReviewTab)
     }
   }
 
-  def repaintPlots(g: java.awt.Graphics) {
-    for {
-      frame <- reviewTab.state.currentFrame
-      plot <- frame.plots
-      panel <- plotPanels.get(plot.name)
-    } {
-      panel.refresh(plot)
-    }
-  }
-
   override def paintComponent(g: java.awt.Graphics) {
     super.paintComponent(g)
     g.setColor(if (reviewTab.state.currentRun.isDefined) WHITE else GRAY)
@@ -144,7 +77,7 @@ class InterfacePanel(reviewTab: ReviewTab)
       g.drawImage(run.interfaceImage, 0, 0, null)
       repaintView(g, run.viewArea)
       repaintWidgets(g)
-      repaintPlots(g)
+      refreshPlotPanels()
     }
   }
 }
