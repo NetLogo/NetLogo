@@ -19,13 +19,6 @@ class RunRecorder(
   refreshInterface: () => Unit // TODO replace with event
   ) {
 
-  /**
-   * The PlotActionBuffer logs all plotting actions, whether we are
-   * recording or not. This is important because if we want to start
-   * recording at some point, we need to mirror all actions from the
-   * start to bring the plots to their actual state. NP 2012-11-29
-   * Same logic goes for the drawingActionBuffer. NP 2013-01-28.
-   */
   private val plotActionBuffer = new api.ActionBuffer(ws.plotManager)
   private val drawingActionBuffer = new api.ActionBuffer(ws.drawingActionBroker)
   private val actionBuffers = Vector(plotActionBuffer, drawingActionBuffer)
