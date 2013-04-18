@@ -17,8 +17,9 @@ trait HasPlotPanels extends HasCurrentRun#Sub { this: JPanel =>
 
   override def notify(pub: ReviewTabState#Pub, event: CurrentRunChangeEvent) {
     event match {
-      case AfterCurrentRunChangeEvent(_, _) =>
-        initPlotPanels()
+      case AfterCurrentRunChangeEvent(_, newRun) =>
+        plotPanels.values.foreach(remove) // remove old panels
+        if (newRun.isDefined) initPlotPanels()
       case _ =>
     }
   }
