@@ -48,9 +48,9 @@ class ReviewTabState(
 
   def addRun(run: ModelRun) = {
     _runs :+= run
-    currentRun = Some(run)
     val lastIndex = _runs.size - 1
     fireIntervalAdded(this, lastIndex, lastIndex)
+    currentRun = Some(run)
     run
   }
 

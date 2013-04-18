@@ -12,7 +12,6 @@ import javax.swing.JOptionPane
 class RunRecorder(
   ws: GUIWorkspace,
   tabState: ReviewTabState,
-  runList: RunList,
   saveModel: () => String,
   widgetHooks: () => Seq[WidgetHook],
   disableRecording: () => Unit,
@@ -45,7 +44,6 @@ class RunRecorder(
           // if we just opened a model different from the
           // one loaded from the previously current run...
           tabState.currentRun = None
-          runList.clearSelection()
           refreshInterface()
         }
       }
@@ -123,7 +121,6 @@ class RunRecorder(
       "", Nil)
     actionBuffers.foreach(_.activate())
     tabState.addRun(run)
-    runList.setSelectedValue(run, true)
     refreshInterface()
   }
 

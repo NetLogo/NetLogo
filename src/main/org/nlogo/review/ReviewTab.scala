@@ -50,7 +50,7 @@ class ReviewTab(
   val runList = new RunList(this)
 
   val runRecorder = new RunRecorder(
-    ws, state, runList, saveModel, () => widgetHooks,
+    ws, state, saveModel, () => widgetHooks,
     () => disableRecording, () => refreshInterface)
 
   override def loadedRuns: Seq[api.ModelRun] = state.runs
