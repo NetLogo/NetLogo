@@ -11,7 +11,7 @@
 // - install sbt (and the scalas script) through conscript:
 //   cs sbt/sbt --branch 0.12.0
 // - edit ~/.conscript/sbt/sbt/scalas/launchconfig
-//   and change the Scala version from `auto` to `2.9.2`
+//   and change the Scala version from `auto` to `2.9.3`
 //   and change the cross-versioned settings from `true` to `false`
 // - ensure that ~/bin is included in your `PATH` environment variable
 //   (this is where Conscript places the scripts that it manages)
@@ -19,19 +19,19 @@
 //         wait at least a few minutes for it to try downloading the dependencies before panicking!
 
 /***
-scalaVersion := "2.9.2"
+scalaVersion := "2.9.3"
 
 onLoadMessage := ""
 
 scalacOptions ++= Seq("-deprecation", "-unchecked", "-Xfatal-warnings")
 
 libraryDependencies ++= Seq(
-  "net.databinder.dispatch" %% "dispatch-core" % "0.9.3",
-  "org.json4s" %% "json4s-native" % "3.0.0",
-  "org.slf4j" % "slf4j-nop" % "1.6.0")
+  "net.databinder.dispatch" %% "dispatch-core" % "0.10.0",
+  "net.databinder.dispatch" %% "dispatch-json4s-native" % "0.10.0",
+  "org.slf4j" % "slf4j-nop" % "1.7.5")
 */
 
-import dispatch._
+import dispatch._, Defaults._
 import org.json4s.JsonAST._
 import org.json4s.native.JsonParser
 
