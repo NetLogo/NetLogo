@@ -44,7 +44,6 @@ class Scrubber(
   runRecorderPub.subscribe(RunRecorderSub)
 
   object ReviewTabStateSub extends ReviewTabState#Sub {
-    reviewTabStatePub.subscribe(this)
     override def notify(pub: ReviewTabState#Pub, event: CurrentRunChangeEvent) {
       event match {
         case AfterCurrentRunChangeEvent(_, newRun) =>
@@ -57,7 +56,6 @@ class Scrubber(
   }
 
   object RunRecorderSub extends RunRecorder#Sub {
-    runRecorderPub.subscribe(this)
     override def notify(pub: RunRecorder#Pub, event: RunRecorderEvent) {
       event match {
         case FrameAddedEvent(run, _) =>
