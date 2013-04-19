@@ -50,20 +50,21 @@ class ModelRun(
     stillRecording = false
   }
 
-  private def appendFrame(delta: Delta) {
+  private def appendFrame(delta: Delta): Frame = {
     val newFrame = lastFrame
       .getOrElse(Frame(Map(), initialPlots, initialDrawingImage))
       .applyDelta(delta)
     addFrameToCache(size, newFrame)
     _deltas :+= delta // added at the end not to mess up lastFrameIndex and size
+    newFrame
   }
 
-  def appendData(mirrorables: Iterable[Mirrorable], actions: IndexedSeq[Action]) {
+  def appendData(mirrorables: Iterable[Mirrorable], actions: IndexedSeq[Action]): Frame = {
     val oldMirroredState = lastFrame.map(_.mirroredState).getOrElse(Map())
     val (newMirroredState, mirroredUpdate) = Mirroring.diffs(oldMirroredState, mirrorables)
     val delta = Delta(Serializer.toBytes(mirroredUpdate), actions)
-    appendFrame(delta)
     dirty = true
+    appendFrame(delta)
   }
 }
 
