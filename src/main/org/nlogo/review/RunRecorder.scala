@@ -2,12 +2,17 @@
 
 package org.nlogo.review
 
+import scala.collection.mutable.Publisher
+
 import org.nlogo.api
-import org.nlogo.mirror.{ FixedViewSettings, Mirrorables, ModelRun }
+import org.nlogo.mirror.{ FixedViewSettings, Frame, Mirrorables, ModelRun }
 import org.nlogo.swing.Implicits.thunk2runnable
-import org.nlogo.window.{ GUIWorkspace, MonitorWidget, Widget, WidgetWrapperInterface }
+import org.nlogo.window.{ GUIWorkspace, MonitorWidget, WidgetWrapperInterface }
 
 import javax.swing.JOptionPane
+
+sealed trait RunRecorderEvent
+case class FrameAddedEvent(run: ModelRun, frame: Frame) extends RunRecorderEvent
 
 class RunRecorder(
   ws: GUIWorkspace,
@@ -16,7 +21,8 @@ class RunRecorder(
   widgetHooks: () => Seq[WidgetHook],
   disableRecording: () => Unit,
   refreshInterface: () => Unit // TODO replace with event
-  ) {
+  ) extends Publisher[RunRecorderEvent] {
+  override type Pub = Publisher[RunRecorderEvent]
 
   private val plotActionBuffer = new api.ActionBuffer(ws.plotManager)
   private val drawingActionBuffer = new api.ActionBuffer(ws.drawingActionBroker)
@@ -60,7 +66,8 @@ class RunRecorder(
           .zipWithIndex
         val mirrorables = Mirrorables.allMirrorables(ws.world, widgetValues)
         val actions = actionBuffers.flatMap(_.grab())
-        run.appendData(mirrorables, actions)
+        val newFrame = run.appendData(mirrorables, actions)
+        publish(FrameAddedEvent(run, newFrame))
       } catch {
         case e: java.lang.OutOfMemoryError =>
           JOptionPane.showMessageDialog(null,
