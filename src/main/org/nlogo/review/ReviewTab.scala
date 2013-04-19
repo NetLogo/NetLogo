@@ -79,7 +79,9 @@ class ReviewTab(
   val scrubberPanel = new ScrubberPanel(
     notesTabbedPane.indexedNotesTable,
     () => state.currentFrameIndex,
-    () => state.currentTicks)
+    () => state.currentTicks,
+    state,
+    runRecorder)
   val reviewToolBar = new ReviewToolBar(this)
   val interfacePanel = new InterfacePanel(this)
 
@@ -117,10 +119,7 @@ class ReviewTab(
 
   def refreshInterface() {
     val run = state.currentRun
-    scrubberPanel.scrubber.refresh(
-      value = run.flatMap(_.currentFrameIndex).getOrElse(0),
-      max = run.flatMap(_.lastFrameIndex).getOrElse(0),
-      enabled = run.filter(_.size > 1).isDefined)
+
     reviewToolBar.saveButton.setEnabled(run.map(_.dirty).getOrElse(false))
     Seq(
       reviewToolBar.renameButton,

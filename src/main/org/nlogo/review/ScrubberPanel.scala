@@ -11,14 +11,18 @@ import scala.math.BigDecimal
 import scala.math.BigDecimal.RoundingMode
 import javax.swing.event.ListSelectionListener
 import javax.swing.event.ListSelectionEvent
+import scala.collection.mutable.Publisher
+import scala.collection.mutable.Subscriber
 
 class ScrubberPanel(
   indexedNotesTable: IndexedNotesTable,
   currentFrame: () => Option[Int],
-  currentTick: () => Option[Double])
+  currentTick: () => Option[Double],
+  reviewTabStatePub: ReviewTabState#Pub,
+  runRecorderPub: RunRecorder#Pub)
   extends JPanel {
 
-  val scrubber = new Scrubber(indexedNotesTable)
+  val scrubber = new Scrubber(indexedNotesTable, reviewTabStatePub, runRecorderPub)
   val tickPanel = new TickPanel(currentFrame, currentTick, scrubber)
   val scrubberButtonsPanel = new ScrubberButtonsPanel(scrubber)
 
@@ -28,8 +32,43 @@ class ScrubberPanel(
   add(scrubberButtonsPanel, BorderLayout.EAST)
 }
 
-class Scrubber(indexedNotesTable: IndexedNotesTable) extends JSlider {
+class Scrubber(
+  indexedNotesTable: IndexedNotesTable,
+  reviewTabStatePub: ReviewTabState#Pub,
+  runRecorderPub: RunRecorder#Pub)
+  extends JSlider {
+
   setValue(0)
+  setEnabled(false)
+  reviewTabStatePub.subscribe(ReviewTabStateSub)
+  runRecorderPub.subscribe(RunRecorderSub)
+
+  object ReviewTabStateSub extends ReviewTabState#Sub {
+    reviewTabStatePub.subscribe(this)
+    override def notify(pub: ReviewTabState#Pub, event: CurrentRunChangeEvent) {
+      event match {
+        case AfterCurrentRunChangeEvent(_, newRun) =>
+          setValue(newRun.flatMap(_.currentFrameIndex).getOrElse(0))
+          setMaximum(newRun.flatMap(_.lastFrameIndex).getOrElse(0))
+          setEnabled(newRun.filter(_.size > 1).isDefined)
+        case _ =>
+      }
+    }
+  }
+
+  object RunRecorderSub extends RunRecorder#Sub {
+    runRecorderPub.subscribe(this)
+    override def notify(pub: RunRecorder#Pub, event: RunRecorderEvent) {
+      event match {
+        case FrameAddedEvent(run, _) =>
+          run.lastFrameIndex.foreach { i =>
+            setMaximum(i)
+            setEnabled(i > 0)
+          }
+        case _ =>
+      }
+    }
+  }
 
   // Synchronize the scrubber with the indexed notes
   indexedNotesTable.getSelectionModel.addListSelectionListener(
@@ -45,12 +84,6 @@ class Scrubber(indexedNotesTable: IndexedNotesTable) extends JSlider {
       }
     }
   )
-  def refresh(value: Int, max: Int, enabled: Boolean) {
-    setValue(value)
-    setMaximum(max)
-    setEnabled(enabled)
-    repaint()
-  }
 }
 
 class ScrubberButtonsPanel(scrubber: JSlider) extends JPanel {
@@ -74,6 +107,7 @@ class ScrubberButton(name: String, tip: String, newValue: Int => Int, scrubber: 
   setAction(new ReviewAction(tip, icon, setNewValue))
   setToolTipText(tip)
   setHideActionText(true)
+  setEnabled(false)
 
   scrubber.addPropertyChangeListener("enabled", new PropertyChangeListener {
     def propertyChange(evt: PropertyChangeEvent) {
