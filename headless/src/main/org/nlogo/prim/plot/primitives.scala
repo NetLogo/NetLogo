@@ -2,11 +2,9 @@
 
 package org.nlogo.prim.plot
 
-import org.nlogo.api
-import api.Syntax
+import org.nlogo.api, api.{ Syntax, PlotAction }
 import org.nlogo.nvm.{ Command, Context, EngineException, Instruction, Reporter }
-import org.nlogo.plot
-import plot.{ PlotManager, PlotAction }
+import org.nlogo.plot.PlotManager
 
 //
 // base classes

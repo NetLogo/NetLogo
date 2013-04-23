@@ -1,8 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.plot
-
-import org.nlogo.api.Action
+package org.nlogo.api
 
 sealed trait PlotAction extends Action {
   val plotName: String

@@ -19,7 +19,6 @@ import org.nlogo.window.{ MonitorWidget, PlotWidget, Widget, WidgetWrapperInterf
 import javax.swing.{ AbstractAction, BorderFactory, ImageIcon, JButton, JCheckBox, JFileChooser, JLabel, JList, JOptionPane, JPanel, JScrollPane, JSlider, JSplitPane, JTextArea, ListSelectionModel }
 import javax.swing.event.{ ChangeEvent, ChangeListener, DocumentEvent, DocumentListener, ListSelectionEvent, ListSelectionListener }
 import javax.swing.filechooser.FileNameExtensionFilter
-import org.nlogo.plot.PlotAction
 import org.nlogo.drawing.DrawingAction
 import org.nlogo.mirror.Frame
 
