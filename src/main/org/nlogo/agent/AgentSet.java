@@ -47,7 +47,7 @@ public abstract strictfp class AgentSet
     isUndirected = false;
   }
 
-  // true only for the the TURTLES, PATCHES, and BREED AgentSets;
+  // true only for the TURTLES, PATCHES, and BREED AgentSets;
   // used by iterator() to discern which special cases to be aware of
   final boolean removableAgents;
 
