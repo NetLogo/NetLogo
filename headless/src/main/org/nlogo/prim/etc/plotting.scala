@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.prim.plot
+package org.nlogo.prim.etc
 
 import org.nlogo.api, api.{ Syntax, PlotAction }
 import org.nlogo.nvm.{ Command, Context, EngineException, Instruction, Reporter }
@@ -9,7 +9,7 @@ import org.nlogo.nvm.{ Command, Context, EngineException, Instruction, Reporter 
 // base classes
 //
 
-trait Helpers extends Instruction {
+trait PlotHelpers extends Instruction {
   import org.nlogo.plot
   def plotManager =
     workspace.plotManager.asInstanceOf[api.PlotManagerInterface]
@@ -29,7 +29,7 @@ trait Helpers extends Instruction {
 }
 
 abstract class PlotCommand(args: Int*)
-extends Command with Helpers {
+extends Command with PlotHelpers {
   override def syntax =
     Syntax.commandSyntax(args.toArray)
 }
@@ -46,7 +46,7 @@ extends PlotCommand(args: _*) {
 }
 
 abstract class PlotReporter(returnType: Int, args: Int*)
-extends Reporter with Helpers {
+extends Reporter with PlotHelpers {
   override def syntax =
     Syntax.reporterSyntax(args.toArray, returnType)
 }
