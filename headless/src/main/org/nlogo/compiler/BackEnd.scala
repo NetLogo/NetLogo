@@ -13,46 +13,7 @@ import org.nlogo.nvm.{ CompilerFlags, CompilerResults, GeneratorInterface, Proce
 import org.nlogo.util.Femto
 import org.nlogo.parse._
 
-private object CompilerMain {
-
-  // the frontEndOnly flag is currently just for Tortoise and can hopefully go away in the future.
-  // Tortoise currently needs SetVisitor to happen even though SetVisitor is technically part of the
-  // back end.  An example of how this might be redone in the future would be to fold the
-  // functionality of SetVisitor into IdentifierParser. - ST 1/24/13
-
-  def compile(source: String, displayName: Option[String], program: Program, subprogram: Boolean,
-      oldProcedures: Compiler.ProceduresMap, extensionManager: ExtensionManager,
-      flags: CompilerFlags): CompilerResults = {
-    val (defs, structureResults) =
-      frontEnd(source, displayName, program, subprogram, oldProcedures, extensionManager)
-    backEnd(defs, structureResults, source, extensionManager.profilingEnabled, flags)
-  }
-
-  def frontEnd(source: String, displayName: Option[String], program: Program, subprogram: Boolean,
-      oldProcedures: Compiler.ProceduresMap, extensionManager: ExtensionManager, frontEndOnly: Boolean = false)
-    : (Seq[ProcedureDefinition], StructureParser.Results) = {
-    val structureResults = StructureParser.parseAll(
-      if (program.is3D) Parser.Tokenizer3D else Parser.Tokenizer2D,
-      source, displayName, program, subprogram, oldProcedures, extensionManager)
-    val taskNumbers = Iterator.from(1)
-    // the return type is plural because tasks inside a procedure get
-    // lambda-lifted and become top level procedures
-    def parseProcedure(procedure: Procedure): Seq[ProcedureDefinition] = {
-      val rawTokens = structureResults.tokens(procedure)
-      new LetScoper(procedure, rawTokens, structureResults.program.usedNames ++ (structureResults.procedures.keys ++ oldProcedures.keys).map(_ -> "procedure")).scan()
-      val iP =
-        new IdentifierParser(structureResults.program, oldProcedures, structureResults.procedures, extensionManager, false)
-      val identifiedTokens =
-        iP.process(rawTokens.iterator, procedure)  // resolve references
-      new ExpressionParser(procedure, taskNumbers)
-        .parse(identifiedTokens) // parse
-    }
-    val procDefs = structureResults.procedures.values.flatMap(parseProcedure).toVector
-    if (frontEndOnly)  // for Tortoise
-      for(procdef <- procDefs)
-        procdef.accept(new SetVisitor)
-    (procDefs, structureResults)
-  }
+private object BackEnd {
 
   // StructureParser found the top level Procedures for us.  ExpressionParser
   // finds command tasks and makes Procedures out of them, too.  the remaining
