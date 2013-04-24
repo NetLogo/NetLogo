@@ -950,7 +950,7 @@ public abstract strictfp class GUIWorkspaceJ
 
   public void handle(Events.ExportPlotEvent e) {
     if (e.whichPlots() == PlotWidgetExportType.ALL) {
-      if (plotManager().getPlotNames().length == 0) {
+      if (plotManager().getPlotNames().isEmpty()) {
         org.nlogo.swing.OptionDialog.show
             (getFrame(), "Export Plot", "There are no plots to export.",
                 new String[]{I18N.guiJ().get("common.buttons.ok")});
@@ -982,24 +982,7 @@ public abstract strictfp class GUIWorkspaceJ
 
   /// exporting helpers
 
-  org.nlogo.plot.Plot choosePlot(java.awt.Frame frame) {
-    String[] plotNames = plotManager().getPlotNames();
-    if (plotNames.length == 0) {
-      String message = "There are no plots to export.";
-      String[] options = {I18N.guiJ().get("common.buttons.ok")};
-      org.nlogo.swing.OptionDialog.show(frame, "Export Plot", message, options);
-      return null;
-    }
-    String message = "Which plot would you like to export?";
-    int plotnum = org.nlogo.swing.OptionDialog.showAsList
-        (frame, "Export Plot",
-            message, plotNames);
-    if (plotnum < 0) {
-      return null;
-    } else {
-      return plotManager().getPlot(plotNames[plotnum]).getOrElse(null);
-    }
-  }
+  abstract org.nlogo.plot.Plot choosePlot(java.awt.Frame frame);
 
   /// runtime error handling
 

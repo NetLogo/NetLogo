@@ -45,7 +45,8 @@ extends PlotInterface {
   def currentPen_=(p: Option[PlotPen]): Unit = {
     this._currentPen = p
   }
-  def currentPen_=(penName: String): Unit = { currentPen=(getPen(penName)) }
+  def currentPenByName: String = currentPen.map(_.name).getOrElse(null)
+  def currentPenByName_=(penName: String): Unit = { currentPen=(getPen(penName)) }
   def getPen(penName: String): Option[PlotPen] = pens.find(_.name.toLowerCase==penName.toLowerCase)
 
   // This only affects the UI, not headless operation, but because it is included when a plot is
@@ -136,7 +137,7 @@ extends PlotInterface {
     }
   }
 
-  def histogramActions(pen: PlotPen, values: Seq[Double]): immutable.Seq[PlotAction] = {
+  def histogramActions(pen: PlotPenInterface, values: Seq[Double]): immutable.Seq[PlotAction] = {
     val histogram = new Histogram(state.xMin, state.xMax, pen.state.interval)
     values.foreach(histogram.nextValue)
     val actions = new VectorBuilder[PlotAction]

@@ -100,6 +100,26 @@ with Events.LoadSectionEventHandler {
 
   ///
 
+  override def choosePlot(frame: java.awt.Frame): org.nlogo.plot.Plot = {
+    val plotNames = plotManager.getPlotNames.toArray[AnyRef]
+    if (plotNames.isEmpty) {
+      val message = "There are no plots to export.";
+      val options = Array[AnyRef](api.I18N.gui.get("common.buttons.ok"))
+      org.nlogo.swing.OptionDialog.show(frame, "Export Plot", message, options)
+      return null
+    }
+    val message = "Which plot would you like to export?"
+    val plotnum = org.nlogo.swing.OptionDialog.showAsList(
+      frame, "Export Plot", message, plotNames)
+    if (plotnum < 0)
+      null
+    else
+      plotManager.getPlot(plotNames(plotnum).asInstanceOf[String])
+        .getOrElse(null)
+  }
+
+  ///
+
   @throws(classOf[java.io.IOException])
   def exportInterface(filename: String) {
     // there's a form of ImageIO.write that just takes a filename, but if we use that when the
