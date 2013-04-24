@@ -16,8 +16,11 @@ class ActionButton(name: String, icon: String, fn: () => Unit)
   extends JButton(new ReviewAction(name, icon, fn))
 
 class ReviewToolBar(reviewTab: ReviewTab)
-  extends org.nlogo.swing.ToolBar {
+  extends org.nlogo.swing.ToolBar
+  with ReviewTabState#Sub {
   import ReviewToolBar._
+
+  reviewTab.state.subscribe(this)
 
   val saveButton = new ActionButton("Save", "save", () => saveRun(reviewTab))
   val loadButton = new ActionButton("Load", "open", () => loadRun(reviewTab))
@@ -25,6 +28,10 @@ class ReviewToolBar(reviewTab: ReviewTab)
   val closeCurrentButton = new ActionButton("Close", "close", () => closeCurrentRun(reviewTab))
   val closeAllButton = new ActionButton("Close all", "close-all", () => closeAll(reviewTab))
   val enabledCheckBox = new EnabledCheckBox(reviewTab.state)
+
+  Seq(renameButton, closeCurrentButton, closeAllButton)
+    .foreach(_.setEnabled(false))
+
   override def addControls() {
     add(saveButton)
     add(loadButton)
@@ -33,6 +40,15 @@ class ReviewToolBar(reviewTab: ReviewTab)
     add(closeAllButton)
     add(new org.nlogo.swing.ToolBar.Separator)
     add(enabledCheckBox)
+  }
+
+  override def notify(pub: ReviewTabState#Pub, event: CurrentRunChangeEvent) {
+    event match {
+      case AfterCurrentRunChangeEvent(_, newRun) =>
+        Seq(renameButton, closeCurrentButton, closeAllButton)
+          .foreach(_.setEnabled(newRun.isDefined))
+      case _ =>
+    }
   }
 }
 

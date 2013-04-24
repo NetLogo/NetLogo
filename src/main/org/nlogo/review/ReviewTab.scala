@@ -121,11 +121,7 @@ class ReviewTab(
     val run = state.currentRun
 
     reviewToolBar.saveButton.setEnabled(run.map(_.dirty).getOrElse(false))
-    Seq(
-      reviewToolBar.renameButton,
-      reviewToolBar.closeCurrentButton,
-      reviewToolBar.closeAllButton)
-      .foreach(_.setEnabled(run.isDefined))
+
     runList.repaint()
     interfacePanel.repaint()
   }
