@@ -404,7 +404,7 @@ public strictfp class WidgetPanel
         type.equals("DUMMY CHOICE"))   // old name, used in old models
     {
       return new org.nlogo.window.DummyChooserWidget
-          (new org.nlogo.nvm.DefaultCompilerServices(workspace.compiler()));
+          (new org.nlogo.nvm.DefaultParserServices(workspace.parser()));
     } else if (type.equals("DUMMY BUTTON")) {
       return new org.nlogo.window.DummyButtonWidget();
     } else if (type.equals("DUMMY MONITOR")) {
@@ -419,7 +419,7 @@ public strictfp class WidgetPanel
               (1, 20, font, false, null, new EditorColorizer(workspace), I18N.guiJ().fn()),
               new org.nlogo.window.CodeEditor
                   (5, 20, font, true, null, new EditorColorizer(workspace), I18N.guiJ().fn()),
-              this, new org.nlogo.nvm.DefaultCompilerServices(workspace.compiler()));
+              this, new org.nlogo.nvm.DefaultParserServices(workspace.parser()));
     } else if (type.equals("DUMMY OUTPUT"))  // currently in saved models only - ST 3/17/04
     {
       return new org.nlogo.window.OutputWidget();

@@ -3,7 +3,7 @@
 package org.nlogo.hubnet.client
 
 import org.nlogo.util.Femto
-import org.nlogo.nvm.CompilerInterface
+import org.nlogo.nvm.ParserInterface
 import org.nlogo.workspace.AbstractWorkspace
 import org.nlogo.window.VMCheck
 
@@ -15,9 +15,9 @@ object App {
     AbstractWorkspace.isApp(true)
     AbstractWorkspace.isApplet(false)
     VMCheck.detectBadJVMs()
-    val compiler = new org.nlogo.nvm.DefaultCompilerServices(
-      Femto.scalaSingleton(classOf[CompilerInterface],
-                           "org.nlogo.compiler.Compiler"))
-    ClientApp.mainHelper(args, new EditorFactory(compiler), compiler)
+    val parser = new org.nlogo.nvm.DefaultParserServices(
+      Femto.scalaSingleton(classOf[ParserInterface],
+                           "org.nlogo.parse.Parser"))
+    ClientApp.mainHelper(args, new EditorFactory(parser), parser)
   }
 }

@@ -15,16 +15,16 @@ import org.nlogo.awt.EventQueue.invokeLater
 import org.nlogo.awt.Hierarchy.getFrame
 import org.nlogo.swing.Implicits._
 import org.nlogo.window.{MonitorWidget, InterfaceGlobalWidget, Widget, ButtonWidget}
-import org.nlogo.api.{I18N, Version, ModelSection, Dump, LogoList, DummyLogoThunkFactory, CompilerServices}
+import org.nlogo.api.{I18N, Version, ModelSection, Dump, LogoList, DummyLogoThunkFactory, ParserServices}
 import org.nlogo.hubnet.connection.{Streamable, ConnectionTypes, AbstractConnection}
 
 // Normally we try not to use the org.nlogo.window.Events stuff except in
 // the app and window packages.  But currently there's no better
 // way to find out when a button was pressed or a slider (etc.)
 // moved, so we use events.  - ST 8/24/03
-class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
-                  errorHandler:ErrorHandler,
-                  compiler:CompilerServices) extends JPanel with
+class ClientPanel(editorFactory: org.nlogo.window.EditorFactory,
+                  errorHandler: ErrorHandler,
+                  parser: ParserServices) extends JPanel with
         org.nlogo.window.Events.AddJobEventHandler with
         org.nlogo.window.Events.InterfaceGlobalEventHandler with
         org.nlogo.window.Events.AddSliderConstraintEventHandler {
@@ -94,7 +94,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
     activityName = handshake.activityName
     if (clientGUI != null) remove(clientGUI)
     viewWidget = new ClientView(this)
-    clientGUI = new ClientGUI(editorFactory, viewWidget, compiler)
+    clientGUI = new ClientGUI(editorFactory, viewWidget, parser)
     add(clientGUI, java.awt.BorderLayout.CENTER)
     clientGUI.setStatus(userid, activityName, hostip, port)
     val clientInterface = handshake.interfaceSpecList.head.asInstanceOf[ClientInterface]

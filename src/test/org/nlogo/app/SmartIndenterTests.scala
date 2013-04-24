@@ -3,7 +3,7 @@
 package org.nlogo.app
 
 import org.nlogo.api.EditorAreaInterface
-import org.nlogo.nvm.{CompilerInterface, DefaultCompilerServices}
+import org.nlogo.nvm.{ ParserInterface, DefaultParserServices }
 import org.nlogo.util.Femto
 import org.nlogo.api.FileIO.file2String
 import org.scalatest.FunSuite
@@ -40,9 +40,9 @@ class SmartIndenterTests extends FunSuite {
             }
   }
 
-  val compiler = new DefaultCompilerServices(
-    Femto.scalaSingleton(classOf[CompilerInterface],
-                         "org.nlogo.compiler.Compiler"))
+  val compiler = new DefaultParserServices(
+    Femto.scalaSingleton(classOf[ParserInterface],
+                         "org.nlogo.parse.Parser"))
 
   // call FunSuite's test method for each test read
   for(Array(name, in, out) <- data) {

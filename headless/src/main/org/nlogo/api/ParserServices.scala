@@ -2,7 +2,7 @@
 
 package org.nlogo.api
 
-trait CompilerServices {
+trait ParserServices {
   def isConstant(s: String): Boolean
   def readFromString(s: String): AnyRef
   def autoConvert(source: String, subprogram: Boolean, reporter: Boolean, modelVersion: String): String

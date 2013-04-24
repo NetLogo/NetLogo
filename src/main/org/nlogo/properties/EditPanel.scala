@@ -6,10 +6,10 @@ import org.nlogo.editor.Colorizer
 import org.nlogo.window.WidgetWrapperInterface
 import javax.swing.{JPanel, JLabel}
 import java.awt.{Component, Insets, GridBagConstraints, Dimension, GridBagLayout, BorderLayout}
-import org.nlogo.api.{I18N, CompilerException, CompilerServices, Editable, LogoList, Property, TokenType}
+import org.nlogo.api.{I18N, CompilerException, ParserServices, Editable, LogoList, Property, TokenType}
 // This is the contents of an EditDialog, except for the buttons at the bottom (OK/Apply/Cancel).
 
-class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer: Colorizer[TokenType])
+class EditPanel(val target: Editable, val parser: ParserServices, colorizer: Colorizer[TokenType])
   extends JPanel {
 
   val liveUpdate =
@@ -173,7 +173,7 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
         { override def get = super.get.filter(_ > 0) }
       case Property.Identifier =>
         new StringEditor(accessor) with Changed
-        { override def get = super.get.map(_.trim).filter(compiler.isValidIdentifier) }
+        { override def get = super.get.map(_.trim).filter(parser.isValidIdentifier) }
       case Property.InputBoxOptions =>
         new InputBoxEditor(accessor) with Changed
       case Property.Integer =>
@@ -183,7 +183,7 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
       case Property.LogoListString =>
         new CodeEditor(accessor, colorizer, false, false) with Changed
         { override def get = super.get.filter{x =>
-            try compiler.readFromString("[ " + x + " ]") match {
+            try parser.readFromString("[ " + x + " ]") match {
               case list: LogoList => !list.isEmpty
               case _ => false
             }

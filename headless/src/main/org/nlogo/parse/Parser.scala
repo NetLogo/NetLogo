@@ -5,7 +5,7 @@ package org.nlogo.parse
 import org.nlogo.{ api, nvm }
 import org.nlogo.util.Femto
 
-object Parser {
+object Parser extends Parser {
 
   // tokenizer singletons
   val Tokenizer2D =
@@ -20,7 +20,7 @@ object Parser {
 
 }
 
-trait Parser {
+trait Parser extends nvm.ParserInterface {
 
   type ProceduresMap = nvm.CompilerInterface.ProceduresMap
 

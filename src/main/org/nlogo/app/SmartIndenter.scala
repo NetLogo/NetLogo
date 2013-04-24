@@ -2,10 +2,10 @@
 
 package org.nlogo.app
 
-import org.nlogo.api.{ CompilerServices, EditorAreaInterface, Token, TokenType }
+import org.nlogo.api.{ ParserServices, EditorAreaInterface, Token, TokenType }
 import org.nlogo.editor.IndenterInterface
 
-class SmartIndenter(code: EditorAreaInterface, compiler: CompilerServices)
+class SmartIndenter(code: EditorAreaInterface, parser: ParserServices)
 extends IndenterInterface {
 
   /// first, the four handle* methods in IndenterInterface
@@ -79,7 +79,7 @@ extends IndenterInterface {
 
   // None return means "leave it where it is"
   private def computeNewSpaces(currentLine: String,lineNum: Int): Option[Int] = {
-    val token = compiler.tokenizeForColorization(currentLine).headOption.orNull
+    val token = parser.tokenizeForColorization(currentLine).headOption.orNull
     if(token != null && token.tpe == TokenType.CLOSE_BRACKET) {
       // first token is close bracket, so find matching opener and set it to the same indent level
       val opener = findMatchingOpenerBackward(
@@ -200,7 +200,7 @@ extends IndenterInterface {
   private def getComment(tokens: List[Token]): Option[Token] =
     tokens.reverse.find(_.tpe == TokenType.COMMENT)
   private def tokenize(line: String) =
-    compiler.tokenizeForColorization(line).toList
+    parser.tokenizeForColorization(line).toList
   private def isOpener(t: Token) =
     t.tpe == TokenType.OPEN_PAREN ||
     t.tpe == TokenType.OPEN_BRACKET ||

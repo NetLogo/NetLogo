@@ -3,12 +3,12 @@
 package org.nlogo.properties
 
 import org.nlogo.api.Editable
-import org.nlogo.api.{CompilerServices, TokenType}
+import org.nlogo.api.{ParserServices, TokenType}
 import org.nlogo.editor.Colorizer
 
 // see commentary in EditDialogFactoryInterface
 
-class EditDialogFactory(_compiler: CompilerServices, _colorizer: Colorizer[TokenType])
+class EditDialogFactory(_parser: ParserServices, _colorizer: Colorizer[TokenType])
   extends org.nlogo.window.EditDialogFactoryInterface
 {
   def canceled(frame: java.awt.Frame, _target: Editable) =
@@ -16,7 +16,7 @@ class EditDialogFactory(_compiler: CompilerServices, _colorizer: Colorizer[Token
        with EditDialog {
          override def window = frame
          override def target = _target
-         override def compiler = _compiler
+         override def parser = _parser
          override def colorizer = _colorizer
          override def getPreferredSize = limit(super.getPreferredSize)
        }).canceled
@@ -25,7 +25,7 @@ class EditDialogFactory(_compiler: CompilerServices, _colorizer: Colorizer[Token
        with EditDialog {
          override def window = dialog
          override def target = _target
-         override def compiler = _compiler
+         override def parser = _parser
          override def colorizer = _colorizer
          override def getPreferredSize = limit(super.getPreferredSize)
        }).canceled

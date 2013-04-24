@@ -4,7 +4,7 @@ package org.nlogo.hubnet.server.gui
 
 import org.nlogo.hubnet.connection.HubNetException
 import org.nlogo.hubnet.server.{HubNetManager, ClientEventListener, ConnectionManager}
-import org.nlogo.nvm.DefaultCompilerServices
+import org.nlogo.nvm.DefaultParserServices
 import org.nlogo.util.Femto
 import org.nlogo.api._
 import org.nlogo.awt.EventQueue.invokeLater
@@ -49,7 +49,7 @@ class GUIHubNetManager(workspace: GUIWorkspace,
     catch {case ex: java.net.UnknownHostException => None}
     // TODO: this seems like a bunch of bugs waiting to happen
     clientApp.startup(editorFactory, "", host.orNull, connectionManager.port, true,
-      isRobo, waitTime, new DefaultCompilerServices(workspace.compiler))
+      isRobo, waitTime, new DefaultParserServices(workspace.parser))
   }
 
   /// client editor

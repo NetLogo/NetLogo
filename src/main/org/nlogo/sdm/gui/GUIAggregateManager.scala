@@ -3,13 +3,13 @@
 package org.nlogo.sdm.gui
 
 import org.nlogo.agent.Observer
-import org.nlogo.api.{ AgentKind, CompilerServices, TokenType, ModelSection }
+import org.nlogo.api.{ AgentKind, ParserServices, TokenType, ModelSection }
 import org.nlogo.editor.Colorizer
 import org.nlogo.window.{ EditDialogFactoryInterface, MenuBarFactory }
 
 class GUIAggregateManager(linkParent: java.awt.Component,
                           menuBarFactory: MenuBarFactory,
-                          compiler: CompilerServices,
+                          parser: ParserServices,
                           colorizer: Colorizer[TokenType],
                           dialogFactory: EditDialogFactoryInterface)
 extends org.nlogo.api.AggregateManagerInterface
@@ -24,7 +24,7 @@ with org.nlogo.window.Events.LoadSectionEventHandler {
     // if it's the first time, make a new aggregate model editor
     if (editor == null)
       editor = new AggregateModelEditor(
-        linkParent, colorizer, menuBarFactory, compiler, dialogFactory)
+        linkParent, colorizer, menuBarFactory, parser, dialogFactory)
     editor.setVisible(true)
     editor.toFront()
   }
@@ -56,10 +56,10 @@ with org.nlogo.window.Events.LoadSectionEventHandler {
 
   override def handle(e: org.nlogo.window.Events.LoadSectionEvent) {
     if (e.section == ModelSection.SystemDynamics)
-      load(e.text, compiler)
+      load(e.text, parser)
   }
 
-  override def load(text: String, compiler: CompilerServices) {
+  override def load(text: String, parser: ParserServices) {
     if(text.trim.nonEmpty) {
       var text2 = org.nlogo.sdm.Loader.mungeClassNames(text)
       // first parse out dt on our own as jhotdraw does not deal with scientific notation
@@ -73,7 +73,7 @@ with org.nlogo.window.Events.LoadSectionEventHandler {
       val drawing = input.readStorable.asInstanceOf[AggregateDrawing]
       drawing.getModel.setDt(dt)
       editor = new AggregateModelEditor(
-        linkParent, colorizer, menuBarFactory, drawing, compiler, dialogFactory)
+        linkParent, colorizer, menuBarFactory, drawing, parser, dialogFactory)
       if (drawing.getModel.elements.isEmpty)
         editor.setVisible(false)
     }

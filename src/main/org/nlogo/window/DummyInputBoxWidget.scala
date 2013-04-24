@@ -3,12 +3,12 @@
 package org.nlogo.window
 
 import org.nlogo.editor.AbstractEditorArea
-import org.nlogo.api.CompilerServices
+import org.nlogo.api.ParserServices
 import java.awt.Component
 
 class DummyInputBoxWidget(textArea: AbstractEditorArea, dialogTextArea: AbstractEditorArea,
-                          nextComponent: Component, compiler: CompilerServices) extends
-  InputBox(textArea, dialogTextArea, compiler, nextComponent) {
+                          nextComponent: Component, parser: ParserServices) extends
+  InputBox(textArea, dialogTextArea, parser, nextComponent) {
 
   override def propertySet = Properties.dummyInput
 }

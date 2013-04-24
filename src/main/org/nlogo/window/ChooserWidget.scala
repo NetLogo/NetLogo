@@ -2,9 +2,9 @@
 
 package org.nlogo.window
 
-import org.nlogo.api.{I18N, CompilerServices, Dump, Editable, LogoList}
+import org.nlogo.api.{I18N, ParserServices, Dump, Editable, LogoList}
 
-class ChooserWidget(compiler: CompilerServices) extends Chooser(compiler) with Editable with
+class ChooserWidget(parser: ParserServices) extends Chooser(parser) with Editable with
         InterfaceGlobalWidget with Events.PeriodicUpdateEventHandler {
   setBorder(widgetBorder)
 
@@ -44,7 +44,7 @@ class ChooserWidget(compiler: CompilerServices) extends Chooser(compiler) with E
   }
 
   def choicesWrapper(choicesString: String) {
-    var obj: Object = compiler.readFromString("[ " + choicesString + " ]")
+    var obj: Object = parser.readFromString("[ " + choicesString + " ]")
     if (obj.isInstanceOf[LogoList]) {setChoices(obj.asInstanceOf[LogoList])}
     updateConstraints()
   }

@@ -18,6 +18,7 @@ trait Workspace extends api.Workspace with JobManagerOwner {
   def fileManager: FileManager
   def tick(c: Context, originalInstruction: Instruction)
   def compiler: CompilerInterface
+  def parser: ParserInterface
   def lastRunTimes: JWeakHashMap[Job, JWeakHashMap[Agent, JWeakHashMap[Command, MutableLong]]]  // for _every
   def completedActivations: JWeakHashMap[Activation, java.lang.Boolean]  // for _thunkdidfinish
   def profilingTracer: Tracer
