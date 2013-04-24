@@ -40,9 +40,11 @@ class ReviewTabState(
       val index = _runs.indexOf(run)
       _runs = _runs.filterNot(_ == run)
       fireIntervalRemoved(this, index, index)
+      val sameString = (_: ModelRun).modelString == run.modelString
       currentRun = _runs
         .lift(index) // keep same index if possible
-        .orElse(_runs.lastOption) // or use last (or None if empty)
+        .filter(sameString)
+        .orElse(_runs.filter(sameString).lastOption) // or use last (or None if empty)
     }
   }
 
