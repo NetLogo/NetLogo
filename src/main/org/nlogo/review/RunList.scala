@@ -25,7 +25,6 @@ class RunList(reviewTab: ReviewTab)
         for (run <- selectedRun) {
           reviewTab.state.currentRun = Some(run)
           reviewTab.loadModelIfNeeded(run.modelString)
-          reviewTab.refreshInterface()
         }
       }
     })

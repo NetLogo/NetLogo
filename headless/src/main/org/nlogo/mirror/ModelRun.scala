@@ -26,13 +26,15 @@ class ModelRun(
   val maxFrameCacheSize = 20
 
   var stillRecording = true
-  var dirty: Boolean = false
+  private var _dirty: Boolean = true
+  def dirty = _dirty
+  def dirty_=(value: Boolean) { _dirty = value }
 
   def generalNotes = _generalNotes
-  def generalNotes_=(text: String) { _generalNotes = text; dirty = true }
+  def generalNotes_=(text: String) { _generalNotes = text; _dirty = true }
 
   def indexedNotes = _indexedNotes
-  def indexedNotes_=(notes: List[IndexedNote]) { _indexedNotes = notes; dirty = true }
+  def indexedNotes_=(notes: List[IndexedNote]) { _indexedNotes = notes; _dirty = true }
 
   private var _deltas = IndexedSeq[Delta]()
   def deltas = _deltas
@@ -43,7 +45,7 @@ class ModelRun(
   def lastFrameIndex = if (size > 0) Some(size - 1) else None
   def lastFrame: Option[Frame] = lastFrameIndex.flatMap(frame)
 
-  override def toString = (if (dirty) "* " else "") + name
+  override def toString = (if (_dirty) "* " else "") + name
 
   def load(deltas: Seq[Delta]) {
     deltas.foreach(appendFrame)
@@ -63,7 +65,7 @@ class ModelRun(
     val oldMirroredState = lastFrame.map(_.mirroredState).getOrElse(Map())
     val (newMirroredState, mirroredUpdate) = Mirroring.diffs(oldMirroredState, mirrorables)
     val delta = Delta(Serializer.toBytes(mirroredUpdate), actions)
-    dirty = true
+    _dirty = true
     appendFrame(delta)
   }
 }

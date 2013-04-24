@@ -18,7 +18,6 @@ class ActionButton(name: String, icon: String, fn: () => Unit)
 class ReviewToolBar(reviewTab: ReviewTab)
   extends org.nlogo.swing.ToolBar
   with ReviewTabState#Sub {
-  import ReviewToolBar._
 
   reviewTab.state.subscribe(this)
 
@@ -29,7 +28,7 @@ class ReviewToolBar(reviewTab: ReviewTab)
   val closeAllButton = new ActionButton("Close all", "close-all", () => closeAll(reviewTab))
   val enabledCheckBox = new EnabledCheckBox(reviewTab.state)
 
-  Seq(renameButton, closeCurrentButton, closeAllButton)
+  Seq(saveButton, renameButton, closeCurrentButton, closeAllButton)
     .foreach(_.setEnabled(false))
 
   override def addControls() {
@@ -47,12 +46,10 @@ class ReviewToolBar(reviewTab: ReviewTab)
       case AfterCurrentRunChangeEvent(_, newRun) =>
         Seq(renameButton, closeCurrentButton, closeAllButton)
           .foreach(_.setEnabled(newRun.isDefined))
+        saveButton.setEnabled(newRun.map(_.dirty).getOrElse(false))
       case _ =>
     }
   }
-}
-
-object ReviewToolBar {
 
   def saveRun(reviewTab: ReviewTab) {
     for (run <- reviewTab.state.currentRun) {
@@ -66,8 +63,9 @@ object ReviewToolBar {
           throw new UserCancelException
         run.name = ReviewTab.removeExtension(path)
         run.save(new java.io.FileOutputStream(path))
-        reviewTab.state.undirty(run)
-        reviewTab.refreshInterface()
+        run.dirty = false
+        saveButton.setEnabled(false)
+        reviewTab.runList.repaint()
       }
     }
   }
@@ -101,6 +99,7 @@ object ReviewToolBar {
     // select the last loaded run if we have one:
     loadedRuns.lastOption.foreach { run =>
       reviewTab.runList.setSelectedValue(run, true)
+      saveButton.setEnabled(false)
     }
     val errors = results.flatMap(_.left.toOption)
     if (errors.nonEmpty) {
@@ -126,7 +125,8 @@ object ReviewToolBar {
       if answer.nonEmpty
     } {
       run.name = answer
-      reviewTab.refreshInterface()
+      run.dirty = true
+      saveButton.setEnabled(true)
     }
   }
 
@@ -138,18 +138,18 @@ object ReviewToolBar {
         reviewTab.state.closeCurrentRun()
         // select the new current run if there is one:
         reviewTab.state.currentRun.foreach(reviewTab.runList.setSelectedValue(_, true))
-        reviewTab.refreshInterface()
+        saveButton.setEnabled(reviewTab.state.currentRun.map(_.dirty).getOrElse(false))
       }
     }
   }
 
   def closeAll(reviewTab: ReviewTab) {
-    if (!reviewTab.state.dirty ||
-      reviewTab.userConfirms("Close all runs",
+    if (reviewTab.state.runs.exists(_.dirty))
+      if (reviewTab.userConfirms("Close all runs",
         "Some runs have unsaved data. Are you sure you want to close all runs?")) {
-      reviewTab.state.reset()
-      reviewTab.refreshInterface()
-    }
+        reviewTab.state.reset()
+        saveButton.setEnabled(false)
+      }
   }
 
 }

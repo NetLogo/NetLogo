@@ -19,8 +19,7 @@ class RunRecorder(
   tabState: ReviewTabState,
   saveModel: () => String,
   widgetHooks: () => Seq[WidgetHook],
-  disableRecording: () => Unit,
-  refreshInterface: () => Unit // TODO replace with event
+  disableRecording: () => Unit
   ) extends Publisher[RunRecorderEvent] {
   override type Pub = Publisher[RunRecorderEvent]
 
@@ -38,7 +37,6 @@ class RunRecorder(
           updateMonitors()
           // switch from job thread to event thread
           ws.waitFor(() => grab())
-          refreshInterface()
         }
       }
       override def afterModelOpened() {
@@ -50,7 +48,6 @@ class RunRecorder(
           // if we just opened a model different from the
           // one loaded from the previously current run...
           tabState.currentRun = None
-          refreshInterface()
         }
       }
       override def tickCounterChanged(ticks: Double) {
@@ -75,7 +72,6 @@ class RunRecorder(
             "Low memory", JOptionPane.WARNING_MESSAGE)
           disableRecording()
       }
-      refreshInterface()
     }
   }
 
@@ -128,7 +124,6 @@ class RunRecorder(
       "", Nil)
     actionBuffers.foreach(_.activate())
     tabState.addRun(run)
-    refreshInterface()
   }
 
   def updateMonitors() {

@@ -123,7 +123,6 @@ class IndexedNotesTable(tabState: ReviewTabState) extends JTable { table =>
   }
 
   def addNote {
-    // TODO figure out what's happening at frame 0
     for {
       ticks <- tabState.currentTicks
       frame <- tabState.currentFrameIndex

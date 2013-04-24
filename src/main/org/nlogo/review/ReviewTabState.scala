@@ -39,10 +39,10 @@ class ReviewTabState(
     for (run <- currentRun) {
       val index = _runs.indexOf(run)
       _runs = _runs.filterNot(_ == run)
+      fireIntervalRemoved(this, index, index)
       currentRun = _runs
         .lift(index) // keep same index if possible
         .orElse(_runs.lastOption) // or use last (or None if empty)
-      fireIntervalRemoved(this, index, index)
     }
   }
 
@@ -61,14 +61,4 @@ class ReviewTabState(
       case _ =>
     }
   }
-
-  def undirty(run: ModelRun) {
-    val index = _runs.indexOf(run)
-    if (index != -1) {
-      run.dirty = false
-      fireContentsChanged(this, index, index)
-    }
-  }
-
-  def dirty = runs.exists(_.dirty)
 }

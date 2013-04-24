@@ -34,8 +34,7 @@ class ReviewTab(
   offerSave: () => Unit,
   selectReviewTab: () => Unit)
   extends JPanel
-  with window.ReviewTabInterface
-  with window.Events.BeforeLoadEventHandler {
+  with window.ReviewTabInterface {
 
   val state = new ReviewTabState()
 
@@ -51,7 +50,7 @@ class ReviewTab(
 
   val runRecorder = new RunRecorder(
     ws, state, saveModel, () => widgetHooks,
-    () => disableRecording, () => refreshInterface)
+    () => disableRecording)
 
   override def loadedRuns: Seq[api.ModelRun] = state.runs
   override def loadRun(inputStream: java.io.InputStream): Unit = {
@@ -117,15 +116,6 @@ class ReviewTab(
     }
   })
 
-  def refreshInterface() {
-    val run = state.currentRun
-
-    reviewToolBar.saveButton.setEnabled(run.map(_.dirty).getOrElse(false))
-
-    runList.repaint()
-    interfacePanel.repaint()
-  }
-
   def loadModelIfNeeded(modelString: String) {
     val currentModelString = saveModel()
     if (modelString != currentModelString) {
@@ -172,11 +162,6 @@ class ReviewTab(
     setLayout(new BorderLayout)
     add(reviewToolBar, BorderLayout.NORTH)
     add(PrimarySplitPane, BorderLayout.CENTER)
-    refreshInterface()
-  }
-
-  override def handle(e: window.Events.BeforeLoadEvent) {
-    refreshInterface()
   }
 }
 
