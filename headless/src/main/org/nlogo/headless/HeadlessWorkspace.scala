@@ -37,7 +37,7 @@ object HeadlessWorkspace {
   def newInstance(subclass: Class[_ <: HeadlessWorkspace]): HeadlessWorkspace = {
     val pico = new Pico
     pico.addComponent(if (Version.is3D) classOf[World3D] else classOf[World])
-    pico.addScalaObject("org.nlogo.compiler.Compiler")
+    pico.addScalaObject("org.nlogo.compile.Compiler")
     pico.add("org.nlogo.sdm.AggregateManagerLite")
     pico.add("org.nlogo.render.Renderer")
     pico.add(classOf[HubNetInterface],
@@ -54,7 +54,7 @@ object HeadlessWorkspace {
 
   def newLab: LabInterface = {
     val pico = new Pico
-    pico.addScalaObject("org.nlogo.compiler.Compiler")
+    pico.addScalaObject("org.nlogo.compile.Compiler")
     pico.add("org.nlogo.lab.Lab")
     pico.add("org.nlogo.lab.ProtocolLoader")
     pico.addComponent(classOf[DefaultParserServices])

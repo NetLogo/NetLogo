@@ -82,7 +82,7 @@ object App{
     Logger.beQuiet()
     processCommandLineArguments(args)
     Splash.beginSplash() // also initializes AWT
-    pico.addScalaObject("org.nlogo.compiler.Compiler")
+    pico.addScalaObject("org.nlogo.compile.Compiler")
     pico.addComponent(classOf[App])
     pico.as(NO_CACHE).addComponent(classOf[FileMenu])
     pico.addComponent(classOf[ModelSaver])
