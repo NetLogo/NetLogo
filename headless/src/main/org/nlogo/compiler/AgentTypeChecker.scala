@@ -66,33 +66,32 @@ package org.nlogo.compiler
 import org.nlogo.api.Syntax
 import org.nlogo.nvm.{ Instruction, Procedure }
 import org.nlogo.prim.{ _call, _callreport, _task }
-import org.nlogo.parse._
-import Fail._
+import org.nlogo.parse, parse.Fail._
 
-private class AgentTypeChecker(defs: Seq[ProcedureDefinition]) {
+private class AgentTypeChecker(defs: Seq[parse.ProcedureDefinition]) {
 
-  def parse() {
+  def check() {
     def usables = defs.map(_.procedure.usableBy).toList
     val oldUsables = usables
     for(procdef <- defs)
       procdef.accept(new AgentTypeCheckerVisitor(procdef.procedure, "OTPL"))
-    if(usables != oldUsables) parse()
+    if(usables != oldUsables) check()
   }
 
-  class AgentTypeCheckerVisitor(currentProcedure: Procedure, var usableBy: String) extends DefaultAstVisitor {
+  class AgentTypeCheckerVisitor(currentProcedure: Procedure, var usableBy: String) extends parse.DefaultAstVisitor {
     // usableBy is "var" because it's where we accumulate our result.
     // it starts out as OTPL and the more code we see the more restricted
     // it may grow.  The use of mutable state in this way is characteristic
     // of the Visitor pattern.
 
-    override def visitProcedureDefinition(procdef: ProcedureDefinition) {
+    override def visitProcedureDefinition(procdef: parse.ProcedureDefinition) {
       super.visitProcedureDefinition(procdef)
       // after we've seen the whole procedure, store the result there
       procdef.procedure.usableBy = usableBy
     }
     // visitStatement and visitReporterApp are clones of each other
 
-    override def visitStatement(stmt: Statement) {
+    override def visitStatement(stmt: parse.Statement) {
       val c = stmt.command
       usableBy = typeCheck(currentProcedure, c, usableBy)
       if(c.syntax.blockAgentClassString != null)
@@ -103,7 +102,7 @@ private class AgentTypeChecker(defs: Seq[ProcedureDefinition]) {
     }
 
     // visitStatement and visitReporterApp are clones of each other
-    override def visitReporterApp(app: ReporterApp) {
+    override def visitReporterApp(app: parse.ReporterApp) {
       val r = app.reporter
       usableBy = typeCheck(currentProcedure, r, usableBy)
       if(r.isInstanceOf[_task])
@@ -115,22 +114,22 @@ private class AgentTypeChecker(defs: Seq[ProcedureDefinition]) {
       r.agentClassString = usableBy
     }
 
-    private def chooseVisitorAndContinue(blockAgentClassString: String, exps: Seq[Expression]) {
+    private def chooseVisitorAndContinue(blockAgentClassString: String, exps: Seq[parse.Expression]) {
       for(exp <- exps) {
         exp.accept(
           exp match {
-            case _: CommandBlock | _: ReporterBlock =>
+            case _: parse.CommandBlock | _: parse.ReporterBlock =>
               val argsAgentClassString =
                 if(blockAgentClassString != "?") blockAgentClassString
                 else exps match {
-                  case Seq(app: ReporterApp, _*) => getReportedAgentType(app)
+                  case Seq(app: parse.ReporterApp, _*) => getReportedAgentType(app)
                   case _ => "-TPL"
                 }
               new AgentTypeCheckerVisitor(currentProcedure, argsAgentClassString)
             case _ => this } ) }
     }
 
-    def getReportedAgentType(app: ReporterApp): String = {
+    def getReportedAgentType(app: parse.ReporterApp): String = {
       app.reporter.syntax.ret match {
         case Syntax.TurtleType | Syntax.TurtlesetType => "-T--"
         case Syntax.PatchType  | Syntax.PatchsetType  => "--P-"
@@ -141,7 +140,7 @@ private class AgentTypeChecker(defs: Seq[ProcedureDefinition]) {
         // could break someday. - ST 12/8/02, 12/15/05, 2/21/08
         case Syntax.AgentType  | Syntax.AgentsetType  =>
           app.args match {
-            case Seq(app: ReporterApp, _*) => getReportedAgentType(app)
+            case Seq(app: parse.ReporterApp, _*) => getReportedAgentType(app)
             case _ => "-TPL"
           }
         case _ => "-TPL"

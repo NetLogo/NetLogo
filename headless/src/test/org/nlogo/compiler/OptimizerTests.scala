@@ -4,17 +4,17 @@ package org.nlogo.compiler
 
 import org.scalatest.FunSuite
 import org.nlogo.api.{ DummyExtensionManager, Program }
-import org.nlogo.nvm
-import org.nlogo.parse._
+import org.nlogo.{ nvm, parse }
 
 class OptimizerTests extends FunSuite {
-  def compileReporter(source:String) =
+  def compileReporter(source: String) =
     compile("globals [glob1] breed [frogs frog] to-report __test [x] report " + source + "\nend")
       .statements.head.head.toString
-  def compileCommands(source:String) =
+  def compileCommands(source: String) =
     compile("globals [glob1] breed [frogs frog] to __test [x] " + source + "\nend")
       .statements.head.toString
-  def compile(source:String):ProcedureDefinition = {
+  def compile(source: String): parse.ProcedureDefinition = {
+    import parse._
     val results = new StructureParser(Parser.Tokenizer2D.tokenize(source), None,
                                       StructureParser.emptyResults())
       .parse(false)

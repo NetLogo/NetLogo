@@ -11,14 +11,14 @@ import org.nlogo.api
 import api.{ ExtensionManager, Program }
 import org.nlogo.nvm.{ CompilerFlags, CompilerResults, GeneratorInterface, Procedure }
 import org.nlogo.util.Femto
-import org.nlogo.parse._
+import org.nlogo.parse
 
 private object BackEnd {
 
   // StructureParser found the top level Procedures for us.  ExpressionParser
   // finds command tasks and makes Procedures out of them, too.  the remaining
   // phases handle all ProcedureDefinitions from both sources. - ST 2/4/11
-  def backEnd(defs: Seq[ProcedureDefinition], structureResults: StructureParser.Results, source: String, profilingEnabled: Boolean, flags: CompilerFlags): CompilerResults = {
+  def backEnd(defs: Seq[parse.ProcedureDefinition], structureResults: parse.StructureParser.Results, source: String, profilingEnabled: Boolean, flags: CompilerFlags): CompilerResults = {
     for(procdef <- defs) {
       procdef.accept(new ReferenceVisitor)  // handle ReferenceType
       if (flags.foldConstants)
@@ -27,12 +27,12 @@ private object BackEnd {
       procdef.accept(new SimpleOfVisitor)  // convert _of(_*variable) => _*variableof
       procdef.accept(new TaskVisitor)  // handle _reportertask
       procdef.accept(new LocalsVisitor)  // convert _let/_repeat to _locals
-      procdef.accept(new SetVisitor)   // convert _set to specific setters
+      procdef.accept(new parse.SetVisitor)   // convert _set to specific setters
       procdef.accept(new CarefullyVisitor)  // connect _carefully to _errormessage
       if (flags.useOptimizer)
         procdef.accept(new Optimizer(structureResults.program.is3D))   // do various code-improving rewrites
     }
-    new AgentTypeChecker(defs).parse()  // catch agent type inconsistencies
+    new AgentTypeChecker(defs).check()  // catch agent type inconsistencies
     for(procdef <- defs) {
       procdef.accept(new ArgumentStuffer) // fill args arrays in Commands & Reporters
       new Assembler().assemble(procdef)     // flatten tree to command array

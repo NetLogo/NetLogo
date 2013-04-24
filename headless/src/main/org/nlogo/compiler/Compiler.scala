@@ -6,10 +6,9 @@ import org.nlogo.{ api, nvm, parse },
   api.{ CompilerException, ExtensionManager, NumberParser, Program, Token,
         TokenReaderInterface, TokenType, World },
   nvm.{ CompilerInterface, CompilerFlags, CompilerResults, Procedure, Workspace },
-  org.nlogo.util.Femto,
-  parse._
+  org.nlogo.util.Femto
 
-object Compiler extends Parser with CompilerInterface {
+object Compiler extends parse.Parser with CompilerInterface {
 
   // used to compile the Code tab, including declarations
   def compileProgram(source: String, program: Program, extensionManager: ExtensionManager, flags: CompilerFlags): CompilerResults =

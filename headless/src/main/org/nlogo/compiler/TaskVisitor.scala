@@ -2,37 +2,33 @@
 
 package org.nlogo.compiler
 
-import org.nlogo.api.{ I18N, Let }
-import org.nlogo.nvm.Procedure
-import org.nlogo.prim.{ _reportertask, _letvariable, _taskvariable }
-import org.nlogo.parse._
-import Fail.cAssert
+import org.nlogo.{ api, nvm, prim, parse }, parse.Fail._
 
-private class TaskVisitor extends DefaultAstVisitor {
-  private var task = Option.empty[_reportertask]
-  private var procedure = Option.empty[Procedure]
-  override def visitProcedureDefinition(procdef: ProcedureDefinition) {
+private class TaskVisitor extends parse.DefaultAstVisitor {
+  private var task = Option.empty[prim._reportertask]
+  private var procedure = Option.empty[nvm.Procedure]
+  override def visitProcedureDefinition(procdef: parse.ProcedureDefinition) {
     procedure = Some(procdef.procedure)
     super.visitProcedureDefinition(procdef)
   }
-  override def visitReporterApp(expr: ReporterApp) {
+  override def visitReporterApp(expr: parse.ReporterApp) {
     expr.reporter match {
-      case l: _reportertask =>
+      case l: prim._reportertask =>
         val old = task
         task = Some(l)
         super.visitReporterApp(expr)
         task = old
-      case lv: _taskvariable =>
+      case lv: prim._taskvariable =>
         task match {
           case None =>
             cAssert(procedure.get.isTask,
-                    I18N.errors.get("compiler.TaskVisitor.notDefined"), expr)
-            val formal: Let = procedure.get.getTaskFormal(lv.varNumber, lv.token)
-            expr.reporter = new _letvariable(formal)
+                    api.I18N.errors.get("compiler.TaskVisitor.notDefined"), expr)
+            val formal: api.Let = procedure.get.getTaskFormal(lv.varNumber, lv.token)
+            expr.reporter = new prim._letvariable(formal)
             expr.reporter.token(lv.token)
-          case Some(l: _reportertask) =>
-            val formal: Let = l.getFormal(lv.varNumber)
-            expr.reporter = new _letvariable(formal)
+          case Some(l: prim._reportertask) =>
+            val formal: api.Let = l.getFormal(lv.varNumber)
+            expr.reporter = new prim._letvariable(formal)
             expr.reporter.token(lv.token)
         }
       case _ =>
