@@ -17,8 +17,8 @@ object DrawingAction {
   case class ReadImage(imageBytes: Array[Byte]) extends DrawingAction
   case class CreateDrawing(dirty: Boolean) extends DrawingAction
   case class ImportDrawing(filePath: String) extends DrawingAction // TODO: store actual image
-  case class ClearDrawing() extends DrawingAction
-  case class RescaleDrawing() extends DrawingAction
-  case class MarkClean() extends DrawingAction
-  case class MarkDirty() extends DrawingAction
+  case object ClearDrawing extends DrawingAction
+  case object RescaleDrawing extends DrawingAction
+  case object MarkClean extends DrawingAction
+  case object MarkDirty extends DrawingAction
 }

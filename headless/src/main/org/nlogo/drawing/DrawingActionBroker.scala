@@ -36,10 +36,10 @@ class DrawingActionBroker(
     publishWithoutRunning(imageToAction(image))
   }
 
-  override def clearDrawing() { publish(ClearDrawing()) }
-  override def rescaleDrawing() { publish(RescaleDrawing()) }
-  override def markClean() { publish(MarkClean()) }
-  override def markDirty() { publish(MarkDirty()) }
+  override def clearDrawing() { publish(ClearDrawing) }
+  override def rescaleDrawing() { publish(RescaleDrawing) }
+  override def markClean() { publish(MarkClean) }
+  override def markDirty() { publish(MarkDirty) }
 
   override def getAndCreateDrawing(dirty: Boolean): java.awt.image.BufferedImage = {
     publish(CreateDrawing(dirty))
