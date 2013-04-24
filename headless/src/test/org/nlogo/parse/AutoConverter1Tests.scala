@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.compiler
+package org.nlogo.parse
 
 import org.scalatest.FunSuite
 
@@ -14,7 +14,7 @@ class AutoConverter1Tests extends FunSuite {
 
   def test(version:String,before:String,after:String,subprogram:Boolean) {
     expectResult(after) {
-      new AutoConverter1(Compiler.Tokenizer2D)
+      new AutoConverter1(Parser.Tokenizer2D)
         .convert(before, subprogram, false,"NetLogo " + version)
     }
   }

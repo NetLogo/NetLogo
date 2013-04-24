@@ -2,25 +2,21 @@
 
 package org.nlogo.compiler
 
-import org.nlogo.{api, nvm},
+import org.nlogo.{ api, nvm, parse },
   api.{ CompilerException, ExtensionManager, NumberParser, Program, Token,
-        TokenizerInterface, TokenReaderInterface, TokenType, TokenMapperInterface, World },
+        TokenReaderInterface, TokenType, World },
   nvm.{ CompilerInterface, CompilerFlags, CompilerResults, Procedure, Workspace },
-  org.nlogo.util.Femto
+  org.nlogo.util.Femto,
+  parse._
 
 // This is intended to be called from Java as well as Scala, so @throws declarations are included.
 // No other classes in this package are public. - ST 2/20/08, 4/9/08, 1/21/09
 
 object Compiler extends CompilerInterface {
 
-  // tokenizer singletons
-  val Tokenizer2D = Femto.scalaSingleton(classOf[TokenizerInterface], "org.nlogo.lex.Tokenizer2D")
-  val Tokenizer3D = Femto.scalaSingleton(classOf[TokenizerInterface], "org.nlogo.lex.Tokenizer3D")
-  val TokenMapper2D = Femto.scalaSingleton(classOf[TokenMapperInterface], "org.nlogo.lex.TokenMapper2D")
-
   type ProceduresMap = CompilerInterface.ProceduresMap
 
-  private def tokenizer(is3D: Boolean) = if(is3D) Tokenizer3D else Tokenizer2D
+  private def tokenizer(is3D: Boolean) = if(is3D) Parser.Tokenizer3D else Parser.Tokenizer2D
 
   // used to compile the Code tab, including declarations
   def compileProgram(source: String, program: Program, extensionManager: ExtensionManager, flags: CompilerFlags): CompilerResults =

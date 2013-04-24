@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.compiler
+package org.nlogo.parse
 
 import Fail.{ cAssert, exception }
 import org.nlogo.api.{ Syntax, Token, TokenType, TypeNames }
@@ -23,8 +23,9 @@ import org.nlogo.prim._
  *       zero or more statements, while a reporter block contains exactly one expression.
  */
 
-private class ExpressionParser(procedure: Procedure,
-                               taskNumbers: Iterator[Int] = Iterator.from(1)) {
+class ExpressionParser(
+  procedure: Procedure,
+  taskNumbers: Iterator[Int] = Iterator.from(1)) {
   /**
    * one less than the lowest valid operator precedence. See
    * Syntax.

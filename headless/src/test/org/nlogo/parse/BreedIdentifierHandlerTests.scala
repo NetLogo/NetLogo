@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.compiler
+package org.nlogo.parse
 
 import org.scalatest.FunSuite
 import collection.immutable.ListMap
@@ -17,7 +17,7 @@ class BreedIdentifierHandlerTests extends FunSuite {
           "AS" -> Breed("AS", "A", isDirected = true),
           "BS" -> Breed("BS", "B", isDirected = false)))
     handler.process(
-      Compiler.Tokenizer2D.tokenize(code).find(_.name.equalsIgnoreCase(tokenString)).orNull,
+      Parser.Tokenizer2D.tokenize(code).find(_.name.equalsIgnoreCase(tokenString)).orNull,
       program)
       .get
   }

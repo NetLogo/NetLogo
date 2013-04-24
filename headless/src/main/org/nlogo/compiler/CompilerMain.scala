@@ -11,6 +11,7 @@ import org.nlogo.api
 import api.{ ExtensionManager, Program }
 import org.nlogo.nvm.{ CompilerFlags, CompilerResults, GeneratorInterface, Procedure }
 import org.nlogo.util.Femto
+import org.nlogo.parse._
 
 private object CompilerMain {
 
@@ -31,7 +32,7 @@ private object CompilerMain {
       oldProcedures: Compiler.ProceduresMap, extensionManager: ExtensionManager, frontEndOnly: Boolean = false)
     : (Seq[ProcedureDefinition], StructureParser.Results) = {
     val structureResults = StructureParser.parseAll(
-      if (program.is3D) Compiler.Tokenizer3D else Compiler.Tokenizer2D,
+      if (program.is3D) Parser.Tokenizer3D else Parser.Tokenizer2D,
       source, displayName, program, subprogram, oldProcedures, extensionManager)
     val taskNumbers = Iterator.from(1)
     // the return type is plural because tasks inside a procedure get

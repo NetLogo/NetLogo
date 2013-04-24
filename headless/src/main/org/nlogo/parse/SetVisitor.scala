@@ -1,11 +1,11 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.compiler
+package org.nlogo.parse
 
 import org.nlogo.api.I18N
-import org.nlogo.compiler.Fail.exception
 import org.nlogo.nvm.{ Command, Reporter }
 import org.nlogo.prim._
+import Fail.exception
 
 /**
  * an AstVisitor that handles the set command. We convert constructs like
@@ -13,7 +13,7 @@ import org.nlogo.prim._
  * "_setprocedurevariable(value)" or whatever, where the new set* command
  * knows internally the variable it's setting.
  */
-private class SetVisitor extends DefaultAstVisitor {
+class SetVisitor extends DefaultAstVisitor {
   private lazy val INVALID_SET =
     I18N.errors.get("compiler.SetVisitor.notSettable")
   override def visitStatement(stmt: Statement) {
@@ -31,7 +31,7 @@ private class SetVisitor extends DefaultAstVisitor {
   }
 }
 
-private object SetVisitor {
+object SetVisitor {
   type ReporterClass = Class[_ <: Reporter]
   type CommandClass = Class[_ <: Command]
   // pending resolution of https://issues.scala-lang.org/browse/SI-6723

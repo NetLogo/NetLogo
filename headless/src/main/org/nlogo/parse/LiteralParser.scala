@@ -1,8 +1,8 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.compiler
+package org.nlogo.parse
 
-import org.nlogo.compiler.Fail.{ cAssert, exception }
+import Fail.{ cAssert, exception }
 import org.nlogo.agent.{ AgentSet, AgentSetBuilder, Link, Observer, Patch, Turtle, World, World3D }
 import org.nlogo.nvm.Reporter
 import org.nlogo.prim._
@@ -15,7 +15,7 @@ import api.{ ExtensionManager, LogoList, Nobody, Token, TokenType }
  * from a Iterator[Token]. It implements all the complicated stuff surrounding
  * literal agents and literal agentsets, when necessary.
  */
-private object LiteralParser {
+object LiteralParser {
   def makeLiteralReporter(value: AnyRef): Reporter =
     value match {
       case b: java.lang.Boolean => new _constboolean(b)
@@ -27,7 +27,8 @@ private object LiteralParser {
     }
 }
 
-private class LiteralParser(world: World = null, extensionManager: ExtensionManager = null) {
+class LiteralParser(
+  world: World = null, extensionManager: ExtensionManager = null) {
 
   /// all error messages used in this class
   private val BAD_AGENT = "Not an agent"

@@ -5,12 +5,13 @@ package org.nlogo.compiler
 import org.scalatest.FunSuite
 import org.nlogo.api.{ CompilerException, DummyExtensionManager, Program }
 import org.nlogo.nvm
+import org.nlogo.parse._
 
 class ConstantFolderTests extends FunSuite {
 
   def compile(source: String): String = {
     val results = new StructureParser(
-      Compiler.Tokenizer2D.tokenize("to-report __test report " + source + "\nend"), None,
+      Parser.Tokenizer2D.tokenize("to-report __test report " + source + "\nend"), None,
       StructureParser.emptyResults())
       .parse(false)
     expectResult(1)(results.procedures.size)

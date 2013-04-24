@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.compiler
+package org.nlogo.parse
 
 // For each source file, input is Tokens, output is a Results -- which is mostly just a Program and
 // some Procedures.
@@ -19,6 +19,7 @@ package org.nlogo.compiler
 
 import org.nlogo.{ api, nvm }
 import api.{ Token, TokenType }
+import nvm.CompilerInterface.ProceduresMap
 import Fail._
 
 object StructureParser {
@@ -27,7 +28,7 @@ object StructureParser {
     Results(program = api.Program.empty(is3D))
   case class Results(
     program: api.Program,
-    procedures: Compiler.ProceduresMap = nvm.CompilerInterface.NoProcedures,
+    procedures: ProceduresMap = nvm.CompilerInterface.NoProcedures,
     tokens: Map[nvm.Procedure, Iterable[Token]] = Map(),
     includes: Seq[Token] = Seq(),
     extensions: Seq[Token] = Seq())
@@ -37,7 +38,7 @@ object StructureParser {
   def parseAll(
       tokenizer: api.TokenizerInterface,
       source: String, displayName: Option[String], program: api.Program, subprogram: Boolean,
-      oldProcedures: Compiler.ProceduresMap, extensionManager: api.ExtensionManager): Results = {
+      oldProcedures: ProceduresMap, extensionManager: api.ExtensionManager): Results = {
     if(!subprogram)
       extensionManager.startFullCompilation()
     val sources =
@@ -131,7 +132,7 @@ class StructureParser(
     }
   }
 
-  def usedNames(program: api.Program, procedures: Compiler.ProceduresMap): Map[String, String] =
+  def usedNames(program: api.Program, procedures: ProceduresMap): Map[String, String] =
     program.usedNames ++
       procedures.keys.map(_ -> "procedure")
 

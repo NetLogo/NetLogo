@@ -5,12 +5,13 @@ package org.nlogo.compiler
 import org.scalatest.FunSuite
 import org.nlogo.api.{ CompilerException, DummyExtensionManager, Program }
 import org.nlogo.nvm
+import org.nlogo.parse._
 
 class AgentTypeCheckerTests extends FunSuite {
 
   /// first some helpers
   def compile(source: String, is3D: Boolean): Seq[ProcedureDefinition] = {
-    val tokenizer = if (is3D) Compiler.Tokenizer3D else Compiler.Tokenizer2D
+    val tokenizer = if (is3D) Parser.Tokenizer3D else Parser.Tokenizer2D
     val results = new StructureParser(
       tokenizer.tokenize(source), None, StructureParser.emptyResults(is3D))
       .parse(false)

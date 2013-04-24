@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.compiler
+package org.nlogo.parse
 
 import org.scalatest.FunSuite
 import org.nlogo.api.{ CompilerException, DummyExtensionManager, Program }
@@ -15,7 +15,7 @@ class ExpressionParserTests extends FunSuite {
   def compile(source: String, is3D: Boolean): Seq[Statements] = {
     val wrappedSource = PREAMBLE + source + POSTAMBLE
     val program = Program.empty(is3D)
-    val tokenizer = if (is3D) Compiler.Tokenizer3D else Compiler.Tokenizer2D
+    val tokenizer = if (is3D) Parser.Tokenizer3D else Parser.Tokenizer2D
     val results = new StructureParser(
       tokenizer.tokenizeAllowingRemovedPrims(wrappedSource), None,
       StructureParser.emptyResults())

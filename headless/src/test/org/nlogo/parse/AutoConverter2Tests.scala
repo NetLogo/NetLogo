@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.compiler
+package org.nlogo.parse
 
 import org.scalatest.FunSuite
 import org.nlogo.nvm.DummyWorkspace
@@ -13,7 +13,7 @@ class AutoConverter2Tests extends FunSuite {
       interfaceGlobals = List("GLOB1"),
       breeds = collection.immutable.ListMap("FROGS" -> Breed("FROGS", "FROG"))))
   def tester(version: String, before: String, after: String, subprogram: Boolean = true) {
-    val converter = new AutoConverter2(workspace, false, Compiler.Tokenizer2D)
+    val converter = new AutoConverter2(workspace, false, Parser.Tokenizer2D)
     expectResult(after)(converter.convert(before, subprogram, false, "NetLogo " + version))
   }
   test("valuesFrom0") {

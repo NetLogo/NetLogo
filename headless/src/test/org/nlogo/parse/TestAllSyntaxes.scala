@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.compiler
+package org.nlogo.parse
 
 // We have this because in the future we might change how primitives specify their syntax, or how
 // the syntaxes are stored.  Having all of the syntaxes here in a simple textual format guards
@@ -21,8 +21,8 @@ class TestAllSyntaxes extends FunSuite {
     expectResult(expected)(
       classNames.toSeq.sortBy(shorten).map(entry).mkString("\n"))
   }
-  val c = Compiler.TokenMapper2D.allCommandClassNames
-  val r = Compiler.TokenMapper2D.allReporterClassNames
+  val c = Parser.TokenMapper2D.allCommandClassNames
+  val r = Parser.TokenMapper2D.allReporterClassNames
   test("commands") { doTest(c, COMMANDS) }
   test("reporters") { doTest(r, REPORTERS) }
   val REPORTERS = """|_abs number,number,OTPL,null,10,1,1

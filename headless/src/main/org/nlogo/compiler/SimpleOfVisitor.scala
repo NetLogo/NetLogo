@@ -1,8 +1,11 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.compiler
+
 import org.nlogo.prim._
 import org.nlogo.nvm.Reporter
+import org.nlogo.parse._
+
 /**
  * Converts _of(_turtlevariable,...) to _turtlevariableof(...)
  * and _of(_patchvariable,...) to _patchvariableof(...)

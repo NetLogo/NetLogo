@@ -9,6 +9,7 @@ package org.nlogo.compiler
 import org.nlogo.api.{ Token, TokenType }
 import org.nlogo.nvm.{ Command, CustomAssembled, AssemblerAssistant, Procedure }
 import org.nlogo.prim.{ _call, _done, _recursefast, _goto, _return, _returnreport }
+import org.nlogo.parse._
 
 /**
  * fills the code array of the Procedure object with Commands.

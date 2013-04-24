@@ -2,10 +2,11 @@
 
 package org.nlogo.compiler
 
-import Fail._
 import org.nlogo.api.I18N
 import org.nlogo.nvm.Procedure
 import org.nlogo.prim._
+import org.nlogo.parse._
+import Fail._
 
 /**
  * This is an AstVisitor that optimizes "let" variables by converting them to "locals" variables

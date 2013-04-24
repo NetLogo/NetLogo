@@ -15,11 +15,11 @@ package org.nlogo.compiler
 
 // I think compile time reporting is definitely good. - ST 2/12/09
 
-import org.nlogo.compiler.Fail._
-
 import org.nlogo.api.CompilerException
 import org.nlogo.api.LogoException
 import org.nlogo.nvm.Pure
+import org.nlogo.parse._
+import Fail._
 
 private class ConstantFolder extends DefaultAstVisitor {
   override def visitReporterApp(app: ReporterApp) {

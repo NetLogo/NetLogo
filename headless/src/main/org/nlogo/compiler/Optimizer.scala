@@ -6,6 +6,7 @@ import org.nlogo.agent.Patch
 import org.nlogo.api, api.LogoException
 import org.nlogo.nvm.{ Command, Instruction, Reporter }
 import org.nlogo.prim._
+import org.nlogo.parse._
 
 // "asInstanceOf" is everywhere here. Could I make it more type-safe? - ST 1/28/09
 
