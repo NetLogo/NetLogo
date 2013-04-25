@@ -473,7 +473,7 @@ class ExpressionParser(
    * a bit nicer, since we can point out the entire block if something goes wrong. */
   private def delayBlock(openBracket: Token, tokens: BufferedIterator[Token]): DelayedBlock = {
     // The purpose of the recursion here is to collect all of the tokens until we reach the match
-    // closing bracket for the the opening bracket at the front of tokens.   advance() takes
+    // closing bracket for the opening bracket at the front of tokens.   advance() takes
     // care of collecting the tokens as we go.
     val results = new collection.mutable.ListBuffer[Token]
     def advance() {

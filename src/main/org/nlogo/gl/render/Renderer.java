@@ -525,7 +525,7 @@ public class Renderer
           // or create some sort of Renderable interface (but this would create
           // more problems because we would need to make Agent implement
           // this Renderable interface, so either we have to create a bad dependency
-          // from the the org.nlogo.api package to the render package, or else we
+          // from the org.nlogo.api package to the render package, or else we
           // have to put the Renderable interface in the org.nlogo.api package).
           // There may also be a significant performance issue since the trails
           // consist of a large number of small line segments, all of which would

@@ -56,10 +56,10 @@ object Depend {
       "api" -> List("util"),
       "app" -> List("window"),
       "awt" -> Nil,
-      "compiler" -> List("parse"),
+      "compile" -> List("parse"),
       "drawing" -> List("api"),
       "editor" -> Nil,
-      "generator" -> List("prim","prim/dead","prim/threed"),
+      "generate" -> List("prim","prim/dead","prim/threed"),
       "gl/render" -> List("shape"),
       "gl/view" -> List("gl/render","window"),
       "headless" -> List("mirror", "workspace"),
@@ -149,7 +149,7 @@ check [gl.render] independentOf [Sun-Swing] [bad-AWT]
 [JOGL] = net.java.games.* javax.media.opengl.*
 check [JOGL-free-zone] independentOf [JOGL]
 
-[ASM-free-zone] = org.nlogo.* excluding [generator]
+[ASM-free-zone] = org.nlogo.* excluding [generate]
 check [ASM-free-zone] independentOf org.objectweb.*
 
 check org.nlogo.* independentOf com.wolfram.*

@@ -2,8 +2,8 @@
 
 package org.nlogo.tortoise
 
-import org.nlogo.{ api, compiler, nvm, parse, prim, workspace }
-import compiler.Compiler.ProceduresMap
+import org.nlogo.{ api, nvm, parse, prim, workspace }
+import nvm.CompilerInterface.ProceduresMap
 
 object Compiler {
 
@@ -21,7 +21,7 @@ object Compiler {
 
   def compileProcedures(logo: String, minPxcor: Int = 0, maxPxcor: Int = 0, minPycor: Int = 0, maxPycor: Int = 0): (String, api.Program, ProceduresMap) = {
     // (Seq[ProcedureDefinition], StructureParser.Results)
-    val (defs, sp) = compiler.Compiler.frontEnd(logo)
+    val (defs, sp) = parse.Parser.frontEnd(logo)
     val js =
       new RuntimeInit(sp.program, minPxcor, maxPycor, minPycor, maxPycor).init +
         defs.map(compileProcedureDef).mkString("\n")
@@ -46,12 +46,12 @@ object Compiler {
   //   actual reporter is the first (and only) argument to `report`
 
   def compile(logo: String, commands: Boolean,
-      oldProcedures: compiler.Compiler.ProceduresMap = nvm.CompilerInterface.NoProcedures,
+      oldProcedures: ProceduresMap = nvm.CompilerInterface.NoProcedures,
       program: api.Program = api.Program.empty()): String = {
     val wrapped =
       workspace.Evaluator.getHeader(api.AgentKind.Observer, commands) +
         logo + workspace.Evaluator.getFooter(commands)
-    val (defs, _) = compiler.Compiler.frontEnd(wrapped, oldProcedures, program)  // Seq[ProcedureDefinition]
+    val (defs, _) = parse.Parser.frontEnd(wrapped, oldProcedures, program)  // Seq[ProcedureDefinition]
     if (commands) generateCommands(defs.head.statements)
     else genArg(defs.head.statements.tail.head.args.head)
   }
