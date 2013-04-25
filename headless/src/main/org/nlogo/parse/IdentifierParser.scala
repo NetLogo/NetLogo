@@ -1,11 +1,12 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.compiler
+package org.nlogo.parse
 
 import Fail.{ cAssert, exception }
 import org.nlogo.{ api, nvm, prim }
 import api.{ CompilerException, Let, Program, Token, TokenType }
 import nvm.{ Instruction, Procedure, Reporter }
+import nvm.CompilerInterface.ProceduresMap
 
 /**
   * Converts identifier tokens into instances of primitives.
@@ -14,11 +15,12 @@ import nvm.{ Instruction, Procedure, Reporter }
   * compiler doesn't know about yet.
   */
 
-private class IdentifierParser(program: Program,
-                               oldProcedures: Compiler.ProceduresMap,
-                               newProcedures: Compiler.ProceduresMap,
-                               extensionManager: api.ExtensionManager,
-                               forgiving: Boolean = false) {
+class IdentifierParser(
+  program: Program,
+  oldProcedures: ProceduresMap,
+  newProcedures: ProceduresMap,
+  extensionManager: api.ExtensionManager,
+  forgiving: Boolean = false) {
 
   def process(tokens: Iterator[Token], procedure: Procedure): Seq[Token] = {
     // make sure the procedure name doesn't conflict with a special identifier -- CLB

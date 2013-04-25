@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.compiler
+package org.nlogo.parse
 
 import org.scalatest.FunSuite
 import org.nlogo.agent.{ Link, Patch, Turtle }

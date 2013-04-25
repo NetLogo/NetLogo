@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.compiler
+package org.nlogo.parse
 
 import org.scalatest.FunSuite
 import org.nlogo.{ api, nvm }
@@ -10,7 +10,7 @@ class LetScoperTests extends FunSuite {
   def compile(source: String): Iterable[api.Let] = {
     val wrappedSource = "to __test " + source + "\nend"
     val results = new StructureParser(
-      Compiler.Tokenizer2D.tokenize(wrappedSource), None,
+      Parser.Tokenizer2D.tokenize(wrappedSource), None,
       StructureParser.emptyResults())
       .parse(false)
     expectResult(1)(results.procedures.size)

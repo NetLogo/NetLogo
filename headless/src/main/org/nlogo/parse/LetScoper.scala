@@ -1,4 +1,4 @@
-package org.nlogo.compiler
+package org.nlogo.parse
 
 import Fail.{ cAssert, exception }
 import org.nlogo.{ api, nvm }

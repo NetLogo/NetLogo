@@ -2,7 +2,7 @@
 
 package org.nlogo.tortoise
 
-import org.nlogo.{ compiler, nvm, prim }
+import org.nlogo.{ parse, nvm, prim }
 
 object Prims {
 
@@ -56,7 +56,7 @@ object Prims {
       }
   }
 
-  def generateWhile(w: compiler.Statement): String = {
+  def generateWhile(w: parse.Statement): String = {
     val pred = Compiler.genReporterBlock(w.args.head)
     val body = Compiler.genCommandBlock(w.args.tail.head)
     s"""while ($pred) {
@@ -64,7 +64,7 @@ object Prims {
       |}""".stripMargin
   }
 
-  def generateIf(s: compiler.Statement): String = {
+  def generateIf(s: parse.Statement): String = {
     val pred = Compiler.genReporterApp(s.args.head)
     val body = Compiler.genCommandBlock(s.args.tail.head)
     s"""if ($pred) {
@@ -72,7 +72,7 @@ object Prims {
       |}""".stripMargin
   }
 
-  def generateIfElse(s: compiler.Statement): String = {
+  def generateIfElse(s: parse.Statement): String = {
     val pred      = Compiler.genReporterApp(s.args.head)
     val thenBlock = Compiler.genCommandBlock(s.args.tail.head)
     val elseBlock = Compiler.genCommandBlock(s.args.tail.tail.head)
@@ -83,7 +83,7 @@ object Prims {
       |}""".stripMargin
   }
 
-  def generateAsk(s: compiler.Statement): String = {
+  def generateAsk(s: parse.Statement): String = {
     val agents = Compiler.genReporterApp(s.args.head)
     val body   = Compiler.genCommandBlock(s.args.tail.head)
     s"AgentSet.ask($agents, ${fun(body)})"

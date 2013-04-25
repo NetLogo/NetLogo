@@ -1,4 +1,6 @@
-package org.nlogo.compiler
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
+
+package org.nlogo.parse
 
 import org.nlogo.api.{ TokenType, TokenizerInterface }
 
@@ -6,7 +8,7 @@ import org.nlogo.api.{ TokenType, TokenizerInterface }
 // we'd have to use a different grammar because we want these to work even on malformed code that
 // StructureParser would refuse to parse. - ST 12/7/12
 
-private class StructureParserExtras(tokenizer: TokenizerInterface) {
+class StructureParserExtras(tokenizer: TokenizerInterface) {
 
   /**
    * identifies the positions of all procedure definitions in the given

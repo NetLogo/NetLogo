@@ -4,6 +4,7 @@ package org.nlogo.compiler
 
 import org.nlogo.api.Syntax
 import org.nlogo.prim._
+import org.nlogo.parse._
 
 private class ReferenceVisitor extends DefaultAstVisitor {
   override def visitStatement(stmt: Statement) {

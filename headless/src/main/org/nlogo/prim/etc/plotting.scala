@@ -1,26 +1,26 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.prim.plot
+package org.nlogo.prim.etc
 
-import org.nlogo.api
-import api.Syntax
+import org.nlogo.api, api.{ Syntax, PlotAction }
 import org.nlogo.nvm.{ Command, Context, EngineException, Instruction, Reporter }
-import org.nlogo.plot
-import plot.{ PlotManager, PlotAction }
 
 //
 // base classes
 //
 
-trait Helpers extends Instruction {
+trait PlotHelpers extends Instruction {
+  import org.nlogo.plot
   def plotManager =
-    workspace.plotManager.asInstanceOf[PlotManager]
-  def currentPlot(context: Context) =
+    workspace.plotManager.asInstanceOf[api.PlotManagerInterface]
+  def currentPlotState(context: Context) =
+    currentPlot(context).state
+  def currentPlot(context: Context): api.PlotInterface =
     plotManager.currentPlot.getOrElse(
       throw new EngineException(
         context, this,
-        api.I18N.errors.get("org.nlogo.plot.noPlotSelected")))
-  def currentPen(context: Context) = {
+          api.I18N.errors.get("org.nlogo.plot.noPlotSelected")))
+  def currentPen(context: Context): api.PlotPenInterface = {
     val plot = currentPlot(context)
     plot.currentPen.getOrElse(
       throw new EngineException(
@@ -29,7 +29,7 @@ trait Helpers extends Instruction {
 }
 
 abstract class PlotCommand(args: Int*)
-extends Command with Helpers {
+extends Command with PlotHelpers {
   override def syntax =
     Syntax.commandSyntax(args.toArray)
 }
@@ -46,7 +46,7 @@ extends PlotCommand(args: _*) {
 }
 
 abstract class PlotReporter(returnType: Int, args: Int*)
-extends Reporter with Helpers {
+extends Reporter with PlotHelpers {
   override def syntax =
     Syntax.reporterSyntax(args.toArray, returnType)
 }
@@ -57,8 +57,8 @@ extends Reporter with Helpers {
 
 class _clearallplots extends PlotCommand() {
   override def perform(context: Context) {
-    for (plot <- plotManager.plots)
-      plotManager.publish(PlotAction.ClearPlot(plot.name))
+    for (name <- plotManager.getPlotNames)
+      plotManager.publish(PlotAction.ClearPlot(name))
     context.ip = next
   }
 }
@@ -80,11 +80,10 @@ class _updateplots extends PlotCommand() {
 class _setcurrentplot extends PlotCommand(Syntax.StringType) {
   override def perform(context: Context) {
     val name = argEvalString(context, 0)
-    val plot = plotManager.getPlot(name)
-    if (plot.isEmpty)
+    if (!plotManager.hasPlot(name))
       throw new EngineException(context, this,
         "no such plot: \"" + name + "\"")
-    plotManager.currentPlot = plot
+    plotManager.setCurrentPlot(name)
     context.ip = next
   }
 }
@@ -134,9 +133,9 @@ class _exportplot extends PlotCommand(Syntax.StringType, Syntax.StringType) {
   override def perform(context: Context) {
     val name = argEvalString(context, 0)
     val path = argEvalString(context, 1)
-    if (plotManager.getPlot(name).isEmpty) {
-      throw new EngineException(context, this, "no such plot: \"" + name + "\"")
-    }
+    if (plotManager.hasPlot(name))
+      throw new EngineException(
+        context, this, "no such plot: \"" + name + "\"")
     // Workspace.waitFor() switches to the event thread if we're running with a GUI - ST 12/17/04
     workspace.waitFor(new api.CommandRunnable {
       def run() {
@@ -155,7 +154,7 @@ class _exportplot extends PlotCommand(Syntax.StringType, Syntax.StringType) {
 class _exportplots extends PlotCommand(Syntax.StringType) {
   override def perform(context: Context) {
     val path = argEvalString(context, 0)
-    if (plotManager.getPlotNames.length == 0)
+    if (plotManager.getPlotNames.isEmpty)
       throw new EngineException(context, this, "there are no plots to export")
     // Workspace.waitFor() switches to the event thread if we're running with a GUI - ST 12/17/04
     workspace.waitFor(new api.CommandRunnable {
@@ -178,7 +177,7 @@ class _exportplots extends PlotCommand(Syntax.StringType) {
 
 class _autoplot extends PlotReporter(Syntax.BooleanType) {
   override def report(context: Context) =
-    Boolean.box(currentPlot(context).state.autoPlotOn)
+    Boolean.box(currentPlotState(context).autoPlotOn)
 }
 class _plotname extends PlotReporter(Syntax.StringType) {
   override def report(context: Context) =
@@ -186,19 +185,19 @@ class _plotname extends PlotReporter(Syntax.StringType) {
 }
 class _plotxmin extends PlotReporter(Syntax.NumberType) {
   override def report(context: Context) =
-    Double.box(currentPlot(context).state.xMin)
+    Double.box(currentPlotState(context).xMin)
 }
 class _plotxmax extends PlotReporter(Syntax.NumberType) {
   override def report(context: Context) =
-    Double.box(currentPlot(context).state.xMax)
+    Double.box(currentPlotState(context).xMax)
 }
 class _plotymin extends PlotReporter(Syntax.NumberType) {
   override def report(context: Context) =
-    Double.box(currentPlot(context).state.yMin)
+    Double.box(currentPlotState(context).yMin)
 }
 class _plotymax extends PlotReporter(Syntax.NumberType) {
   override def report(context: Context) =
-    Double.box(currentPlot(context).state.yMax)
+    Double.box(currentPlotState(context).yMax)
 }
 class _plotpenexists extends PlotReporter(Syntax.BooleanType, Syntax.StringType) {
   override def report(context: Context) =
@@ -326,11 +325,11 @@ class _setplotpencolor extends PlotActionCommand(Syntax.NumberType) {
 
 class _setcurrentplotpen extends PlotCommand(Syntax.StringType) {
   override def perform(context: Context) {
-    val penName = argEvalString(context, 0)
-    val plot = currentPlot(context)
-    plot.currentPen = plot.getPen(penName).getOrElse(
-      throw new EngineException(
-        context, this, "There is no pen named \"" + penName + "\" in the current plot"))
+    val name = argEvalString(context, 0)
+    if (!currentPlot(context).getPen(name).isDefined)
+      throw new EngineException(context, this,
+        "There is no pen named \"" + name + "\" in the current plot")
+    currentPlot(context).currentPenByName = name
     context.ip = next
   }
 }

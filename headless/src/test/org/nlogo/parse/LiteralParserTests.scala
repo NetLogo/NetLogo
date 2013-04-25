@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.compiler
+package org.nlogo.parse
 
 import org.scalatest.FunSuite
 import org.nlogo.agent.{AgentSet, Patch, Turtle, World}
@@ -20,9 +20,9 @@ class LiteralParserTests extends FunSuite with MockSuite {
                  world: World = defaultWorld,
                  extensionManager: ExtensionManager = null): AnyRef =
     new LiteralParser(world, extensionManager)
-      .getLiteralValue(Compiler.Tokenizer2D.tokenize(input).iterator)
+      .getLiteralValue(Parser.Tokenizer2D.tokenize(input).iterator)
   def toLiteralList(input: String, world: World = defaultWorld): LogoList = {
-    val tokens = Compiler.Tokenizer2D.tokenize(input).iterator
+    val tokens = Parser.Tokenizer2D.tokenize(input).iterator
     new LiteralParser(world, null).parseLiteralList(tokens.next(), tokens)
   }
 
@@ -117,7 +117,7 @@ class LiteralParser3DTests extends FunSuite {
   world.createPatches(-10, 10, -10, 10, -10, 10)
   world.realloc()
   def toLiteral(input: String): Object =
-    new LiteralParser(world, null).getLiteralValue(Compiler.Tokenizer3D.tokenize(input).iterator)
+    new LiteralParser(world, null).getLiteralValue(Parser.Tokenizer3D.tokenize(input).iterator)
   test("parsePatch") {
     val result = toLiteral("{patch 1 3 4}").asInstanceOf[Patch]
     expectResult("(patch 1 3 4)")(

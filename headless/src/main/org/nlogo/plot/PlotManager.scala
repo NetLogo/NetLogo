@@ -4,7 +4,7 @@ package org.nlogo.plot
 
 import scala.collection.mutable
 import org.nlogo.api.{CompilerException, LogoThunkFactory, CommandLogoThunk}
-import org.nlogo.api.ActionBroker
+import org.nlogo.api.{ PlotAction, ActionBroker }
 
 // handles compilation and execution of plot code
 // among a couple of other little tasks.
@@ -22,6 +22,9 @@ class PlotManager(factory: LogoThunkFactory)
   // the currently selected plot.
   // needed for backwards comp with pre 5.0 plotting style.
   var currentPlot: Option[Plot] = None
+  override def setCurrentPlot(name: String) {
+    currentPlot = getPlot(name)
+  }
 
   // plot creation
   def newPlot(name:String) = {
@@ -40,14 +43,14 @@ class PlotManager(factory: LogoThunkFactory)
     plot
   }
 
+  def hasPlot(name: String): Boolean = getPlot(name).isDefined
   def getPlot(name: String) = _plots.find(_.name.equalsIgnoreCase(name))
-//  def getPlotOrNull(name: String): Plot = getPlot(name).orNull
 
   def getPlotPen(plotName: String, penName: String) =
     getPlot(plotName).flatMap(_.getPen(penName))
 
   // used for letting the user choose which plot to export
-  def getPlotNames: Array[String] = _plots.map(_.name).toArray
+  def getPlotNames = _plots.map(_.name)
   def nextName = Stream.from(1).map("plot " + _).find(getPlot(_).isEmpty).get
 
   def forgetPlot(goner: Plot) {

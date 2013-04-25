@@ -3,8 +3,9 @@
 package org.nlogo.compiler
 
 import org.nlogo.api.I18N
-import org.nlogo.compiler.Fail._
 import org.nlogo.prim._
+import org.nlogo.parse._
+import Fail._
 
 /**
  * This is an AstVisitor that connects "error-message" reporters to
@@ -13,7 +14,7 @@ import org.nlogo.prim._
 
 private class CarefullyVisitor extends DefaultAstVisitor {
   private val stack = new collection.mutable.Stack[_carefully]
-  override def visitStatement(stmt:Statement) {
+  override def visitStatement(stmt: Statement) {
     stmt.command match {
       case c:_carefully =>
         // carefully takes two arguments, both command blocks.
@@ -25,7 +26,7 @@ private class CarefullyVisitor extends DefaultAstVisitor {
       case _ => super.visitStatement(stmt)
     }
   }
-  override def visitReporterApp(app:ReporterApp) {
+  override def visitReporterApp(app: ReporterApp) {
     app.reporter match {
       case em: _errormessage =>
         if(stack.isEmpty)

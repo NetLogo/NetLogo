@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.compiler
+package org.nlogo.parse
 
 import org.scalatest.FunSuite
 
@@ -10,7 +10,7 @@ import org.nlogo.nvm
 class StructureParserTests extends FunSuite {
 
   def compile(source: String): StructureParser.Results = {
-    new StructureParser(Compiler.Tokenizer2D.tokenize(source),
+    new StructureParser(Parser.Tokenizer2D.tokenize(source),
                         None, StructureParser.emptyResults())
       .parse(false)
   }

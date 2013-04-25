@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.compiler
+package org.nlogo.parse
 
 import org.scalatest.FunSuite
 import org.nlogo.api.{ DummyExtensionManager, Program, Token, TokenType }
@@ -12,7 +12,7 @@ class IdentifierParserTests extends FunSuite {
     val wrappedSource = "to __test " + source + "\nend"
     val program = Program.empty().copy(interfaceGlobals = Seq("X"))
     val results = new StructureParser(
-      Compiler.Tokenizer2D.tokenizeAllowingRemovedPrims(wrappedSource), None,
+      Parser.Tokenizer2D.tokenizeAllowingRemovedPrims(wrappedSource), None,
       StructureParser.Results(program))
       .parse(false)
     expectResult(1)(results.procedures.size)

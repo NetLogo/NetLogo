@@ -2,7 +2,7 @@
 
 package org.nlogo.tortoise
 
-import org.nlogo.{ api, compiler, nvm, prim, workspace }
+import org.nlogo.{ api, compiler, nvm, parse, prim, workspace }
 import compiler.Compiler.ProceduresMap
 
 object Compiler {
@@ -28,7 +28,7 @@ object Compiler {
     (js, sp.program, sp.procedures)
   }
 
-  private def compileProcedureDef(pd: compiler.ProcedureDefinition): String = {
+  private def compileProcedureDef(pd: parse.ProcedureDefinition): String = {
     val name = pd.procedure.name
     val body = generateCommands(pd.statements)
     val args = pd.procedure.args.mkString(", ")
@@ -58,14 +58,14 @@ object Compiler {
 
   ///
 
-  def generateCommands(cs: compiler.Statements): String =
+  def generateCommands(cs: parse.Statements): String =
     cs.map(generateCommand).filter(_.nonEmpty).mkString("\n")
 
   ///
 
-  def generateCommand(s: compiler.Statement): String = {
+  def generateCommand(s: parse.Statement): String = {
     def arg(i: Int) = genArg(s.args(i))
-    def args = s.args.collect{ case x: compiler.ReporterApp => genArg(x) }.mkString(", ")
+    def args = s.args.collect{ case x: parse.ReporterApp => genArg(x) }.mkString(", ")
     s.command match {
       case _: prim._done             => ""
       case _: prim.etc._observercode => ""
@@ -94,11 +94,11 @@ object Compiler {
     }
   }
 
-  def generateReporter(r: compiler.ReporterApp): String = {
+  def generateReporter(r: parse.ReporterApp): String = {
     def arg(i: Int) = genArg(r.args(i))
     def args = argsSep(", ")
     def argsSep(sep: String) =
-      r.args.collect{ case x: compiler.ReporterApp => genArg(x) }.mkString(sep)
+      r.args.collect{ case x: parse.ReporterApp => genArg(x) }.mkString(sep)
     r.reporter match {
       case pure: nvm.Pure if r.args.isEmpty => compileLiteral(pure.report(null))
       case lv: prim._letvariable            => lv.let.name
@@ -131,15 +131,15 @@ object Compiler {
   // but I think the resulting code would be confusing and potentially error prone.
   // having different functions for each is more clear.
 
-  def genReporterApp(e: compiler.Expression) = e match {
-    case r: compiler.ReporterApp => generateReporter(r)
+  def genReporterApp(e: parse.Expression) = e match {
+    case r: parse.ReporterApp => generateReporter(r)
   }
-  def genArg(e: compiler.Expression) = genReporterApp(e)
-  def genReporterBlock(e: compiler.Expression) = e match {
-    case r: compiler.ReporterBlock => Compiler.generateReporter(r.app)
+  def genArg(e: parse.Expression) = genReporterApp(e)
+  def genReporterBlock(e: parse.Expression) = e match {
+    case r: parse.ReporterBlock => Compiler.generateReporter(r.app)
   }
-  def genCommandBlock(e: compiler.Expression) = e match {
-    case cb: compiler.CommandBlock => Compiler.generateCommands(cb.statements)
+  def genCommandBlock(e: parse.Expression) = e match {
+    case cb: parse.CommandBlock => Compiler.generateCommands(cb.statements)
   }
 }
 

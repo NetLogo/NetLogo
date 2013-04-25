@@ -1,7 +1,8 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.compiler
-private object Instantiator {
+package org.nlogo.parse
+
+object Instantiator {
   def newInstance[T](clazz: Class[_ <: T], args: Any*) = {
     // if this exists in the stdlib, I can't seem to find it - ST 8/2/12
     def getClassOfAny(a: Any): Class[_] = a match {

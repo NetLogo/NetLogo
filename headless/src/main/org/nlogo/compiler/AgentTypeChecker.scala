@@ -63,10 +63,11 @@ package org.nlogo.compiler
 //
 // Whew!  Got all that?
 
-import org.nlogo.compiler.Fail._
 import org.nlogo.api.Syntax
 import org.nlogo.nvm.{ Instruction, Procedure }
 import org.nlogo.prim.{ _call, _callreport, _task }
+import org.nlogo.parse._
+import Fail._
 
 private class AgentTypeChecker(defs: Seq[ProcedureDefinition]) {
 
