@@ -23,6 +23,7 @@ class TestCompileAll extends FunSuite with SlowTest {
       pathMatches("GIS") ||
       pathMatches("QUICKTIME EXTENSION") ||
       pathMatches("HUBNET ACTIVITIES") ||
+      pathMatches("SOUND") ||
       path.containsSlice("GoGoMonitor") ||
       path.containsSlice("Movie Example") ||
       path.endsWith(".nlogo3d")
