@@ -48,7 +48,7 @@ trait AgentSet {
    */
   def isUndirected: Boolean
 
-  // true only for the the TURTLES, PATCHES, and BREED AgentSets;
+  // true only for the TURTLES, PATCHES, and BREED AgentSets;
   // used by iterator() to discern which special cases to be aware of
   def removableAgents: Boolean
 
