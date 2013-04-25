@@ -116,8 +116,6 @@ case class LanguageTest(suiteName: String, testName: String, commands: List[Stri
   }
 }
 
-// This is the parser:
-
 object TestParser {
   def parseFiles(files: Iterable[File]): Iterable[LanguageTest] = {
     (for (f <- files; if (!f.isDirectory)) yield parseFile(f)).flatten
@@ -206,7 +204,7 @@ class TestParser extends FunSuite {
     ("to-report p2 foreach [1 2 3] [ report 0 ] end", Proc("to-report p2 foreach [1 2 3] [ report 0 ] end")),
 
     ("extensions [ array ]", Proc("extensions [ array ]"))
-    )
+  )
   for((input, output) <- tests)
     test("parse: " + input) {
       assert(TestParser.parse(input) === output)
