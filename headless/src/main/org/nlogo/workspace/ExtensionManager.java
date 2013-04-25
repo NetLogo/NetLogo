@@ -58,6 +58,9 @@ import java.util.Map;
 public strictfp class ExtensionManager
     implements org.nlogo.api.ExtensionManager {
 
+  public static final String EXTENSION_NOT_FOUND =
+    "Can't find extension: ";
+
   private final Map<String, JarContainer> jars =
       new HashMap<String, JarContainer>();
   private final AbstractWorkspace workspace;
@@ -139,7 +142,7 @@ public strictfp class ExtensionManager
       jarPath = resolvePathAsURL(jarPath);
     } catch (RuntimeException ex) {
       ex.printStackTrace();
-      errors.signalError("Can't find extension: " + extName);
+      errors.signalError(EXTENSION_NOT_FOUND + extName);
       return;
     }
 
@@ -268,8 +271,7 @@ public strictfp class ExtensionManager
     }
 
     // Give up
-    throw new IllegalStateException
-        ("Can't find extension " + path);
+    throw new IllegalStateException(EXTENSION_NOT_FOUND + path);
   }
 
   public String getFullPath(String path)
@@ -358,7 +360,7 @@ public strictfp class ExtensionManager
             + "org.nlogo.api.ClassManager");
       }
     } catch (java.io.FileNotFoundException ex) {
-      errors.signalError("Can't find extension " + jarPath);
+      errors.signalError(EXTENSION_NOT_FOUND + jarPath);
     } catch (java.io.IOException ex) {
       errors.signalError("Can't open extension " + jarPath);
     } catch (InstantiationException ex) {
@@ -418,9 +420,9 @@ public strictfp class ExtensionManager
 
       return name;
     } catch (java.io.FileNotFoundException ex) {
-      errors.signalError("Can't find extension " + jarPath);
+      errors.signalError(EXTENSION_NOT_FOUND + jarPath);
     } catch (java.io.IOException ex) {
-      errors.signalError("Can't open extension " + jarPath);
+      errors.signalError(EXTENSION_NOT_FOUND + jarPath);
     }
 
     return null;
