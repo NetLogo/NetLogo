@@ -11,28 +11,10 @@ object TokenMapper extends TokenMapperInterface {
 
   /// public stuff
   def isCommand(s: String) = commands.contains(s.toUpperCase)
-  def isKeyword(s: String) = keywords.contains(s.toUpperCase) || s.toUpperCase.endsWith("-OWN")
-  def isVariable(s: String) = variables.contains(s.toUpperCase)
   def isReporter(s: String) = reporters.contains(s.toUpperCase)
-  def isConstant(s: String) = constants.contains(s.toUpperCase)
-  // caller's responsibility to validate input for these three
-  def getConstant(s: String) = constants.get(s.toUpperCase).get
+  // caller's responsibility to validate input for these two
   def getCommand(s: String) = instantiate[TokenHolder](commands(s.toUpperCase))
   def getReporter(s: String) = instantiate[TokenHolder](reporters(s.toUpperCase))
-  private val variables = Set() ++
-    AgentVariables.getImplicitObserverVariables ++
-    AgentVariables.getImplicitTurtleVariables ++
-    AgentVariables.getImplicitPatchVariables ++
-    AgentVariables.getImplicitLinkVariables
-  private val constants = Map(
-    "FALSE" -> false, "TRUE" -> true, "NOBODY" -> Nobody,
-    "E" -> StrictMath.E, "PI" -> StrictMath.PI) ++
-    (for ((name, index) <- Color.getColorNamesArray.zipWithIndex) yield (name.toUpperCase -> Color.getColorNumberByIndex(index))) +
-    ("GREY" -> Color.getColorNumberByIndex(Color.getColorNamesArray.indexOf("gray")))
-  private val keywords = Set(
-    "TO", "TO-REPORT", "END", "GLOBALS", "TURTLES-OWN", "LINKS-OWN",
-    "PATCHES-OWN", "EXTENSIONS", "__INCLUDES", "DIRECTED-LINK-BREED",
-    "UNDIRECTED-LINK-BREED") // no "BREED" here because it conflicts with BREED turtle variable -- CLB
   private def entries(entryType: String, path: String) =
     for {
       line <- Utils.getResourceLines(path)

@@ -70,7 +70,7 @@ import org.nlogo.api.TokenType;
 
   Token ident() {
     String text = yytext();
-    if (TokenMapper.isKeyword(text)) {
+    if (Keywords.isKeyword(text)) {
       return new Token(text, TokenType_KEYWORD, text.toUpperCase(),
                 yychar, yychar + text.length(), fileName);
     }
@@ -88,12 +88,12 @@ import org.nlogo.api.TokenType;
       instr.token(tok);
       return tok;
     }
-    else if (TokenMapper.isVariable(text)) {
+    else if (Variables.isVariable(text)) {
       return new Token(text, TokenType_VARIABLE, text.toUpperCase(),
                 yychar, yychar + text.length(), fileName);
     }
-    else if (TokenMapper.isConstant(text)) {
-      return new Token(text, TokenType_CONSTANT, TokenMapper.getConstant(text),
+    else if (Constants.isConstant(text)) {
+      return new Token(text, TokenType_CONSTANT, Constants.get(text),
                 yychar, yychar + text.length(), fileName);
     }
     else {
