@@ -251,9 +251,6 @@ class FakeWorld(state: State) extends api.World {
   def protractor: api.Protractor = unsupported
   def wrappedObserverX(x: Double): Double = unsupported
   def wrappedObserverY(y: Double): Double = unsupported
-  def patchColorsDirty: Boolean = unsupported
-  def markPatchColorsDirty() = unsupported
-  def markPatchColorsClean() = unsupported
   def getVariablesArraySize(link: api.Link, breed: api.AgentSet): Int = unsupported
   def getVariablesArraySize(turtle: api.Turtle, breed: api.AgentSet): Int = unsupported
   def linksOwnNameAt(i: Int): String = unsupported

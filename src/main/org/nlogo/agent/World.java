@@ -660,26 +660,7 @@ public strictfp class World
     return link;
   }
 
-  // possibly need another array for 3D colors
-  // since it seems messy to collapse 3D array into 2D
   int[] patchColors;
-
-  // GLView
-  // this is used by the OpenGL texture code to decide whether
-  // it needs to make a new texture or not - ST 2/9/05
-  boolean patchColorsDirty = true;
-
-  public boolean patchColorsDirty() {
-    return patchColorsDirty;
-  }
-
-  public void markPatchColorsDirty() {
-    patchColorsDirty = true;
-  }
-
-  public void markPatchColorsClean() {
-    patchColorsDirty = false;
-  }
 
   // performance optimization -- avoid drawing an all-black bitmap if we
   // could just paint one big black rectangle
@@ -747,7 +728,6 @@ public strictfp class World
     Agent[] patchArray = new Agent[_worldWidth * _worldHeight];
     patchColors = new int[_worldWidth * _worldHeight];
     Arrays.fill(patchColors, Color.getARGBbyPremodulatedColorNumber(0.0));
-    patchColorsDirty = true;
 
     int numVariables = _program.patchesOwn().size();
 

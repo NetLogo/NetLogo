@@ -44,9 +44,6 @@ trait World {
   def protractor: Protractor
   def wrappedObserverX(x: Double): Double
   def wrappedObserverY(y: Double): Double
-  def patchColorsDirty: Boolean
-  def markPatchColorsDirty()
-  def markPatchColorsClean()
   def getBreed(name: String): AgentSet
   def getLinkBreed(name: String): AgentSet
   def getVariablesArraySize(link: Link, breed: AgentSet): Int
