@@ -5,7 +5,7 @@
 scalaVersion in ThisBuild := "2.10.1"
 
 scalacOptions in ThisBuild ++=
-  "-deprecation -unchecked -feature -Xcheckinit -encoding us-ascii -target:jvm-1.6 -optimize -Xfatal-warnings -Ywarn-adapted-args -Yinline-warnings"
+  "-deprecation -unchecked -feature -Xcheckinit -encoding us-ascii -target:jvm-1.6 -optimize -Xlint -Xfatal-warnings"
   .split(" ").toSeq
 
 javacOptions in ThisBuild ++=
@@ -33,13 +33,9 @@ libraryDependencies in ThisBuild ++= Seq(
   "org.scalatest" %% "scalatest" % "2.0.M5b" % "test"
 )
 
-///
-/// top-level project only
-///
-
 name := "NetLogo"
 
-artifactName := { (_, _, _) => "NetLogo.jar" }
+artifactName := { (_, _, _) => "NetLogoHeadless.jar" }
 
 onLoadMessage := ""
 
@@ -53,26 +49,32 @@ javaSource in Compile <<= baseDirectory(_ / "src" / "main")
 
 javaSource in Test <<= baseDirectory(_ / "src" / "test")
 
-unmanagedSourceDirectories in Test <+= baseDirectory(_ / "src" / "tools")
-
 unmanagedResourceDirectories in Compile <+= baseDirectory { _ / "resources" }
 
-unmanagedResourceDirectories in Compile <+= baseDirectory { _ / "headless" / "resources" }
+sourceGenerators in Compile <+= JFlexRunner.task
+
+resourceGenerators in Compile <+= I18n.resourceGeneratorTask
 
 mainClass in Compile := Some("org.nlogo.headless.Main")
 
 Extensions.extensionsTask
 
+// so we can use native2ascii on Linux.  use JAVA_HOME not the java.home
+// system property because the latter may have "/jre" tacked onto it.
+unmanagedJars in Compile <+= (javaHome) map { home =>
+  home.getOrElse(file(System.getenv("JAVA_HOME"))) / "lib" / "tools.jar" }
+
 all := { () }
 
 all <<= all.dependsOn(
   packageBin in Compile,
-  packageBin in Compile in NetLogoBuild.headless,
   compile in Test,
   Extensions.extensions)
 
-///
-/// settings from project/*.scala
-///
+seq(Testing.settings: _*)
 
-seq(Packaging.settings: _*)
+seq(Depend.settings: _*)
+
+seq(Dump.settings: _*)
+
+seq(ChecksumsAndPreviews.settings: _*)

@@ -6,13 +6,6 @@ object NetLogoBuild extends Build {
   lazy val root =
     Project(id = "NetLogo", base = file("."))
       .configs(Testing.configs: _*)
-      .aggregate(headless)
-      .dependsOn(headless % "test->test;compile->compile")
-
-  lazy val headless =
-    Project(id = "headless",
-            base = file("headless"))
-      .configs(Testing.configs: _*)
 
   lazy val all = TaskKey[Unit]("all", "build all the things!!!")
 
