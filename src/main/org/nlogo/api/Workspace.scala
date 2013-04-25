@@ -38,8 +38,6 @@ trait Workspace extends ImporterUser with ParserServices with RandomServices {
   def outputObject(obj: AnyRef, owner: AnyRef, addNewline: Boolean, readable: Boolean, destination: OutputDestination)
   def clearOutput()
   def clearAll()
-  @throws(classOf[IOException])
-  def convertToNormal(): String
   def getModelPath: String
   def setModelPath(path: String)
   def getModelDir: String
@@ -67,15 +65,6 @@ trait Workspace extends ImporterUser with ParserServices with RandomServices {
   def updateMonitor(owner: JobOwner, value: AnyRef) { }
   @throws(classOf[IOException])
   def addCustomShapes(filename: String) { }
-  def movieIsOpen: Boolean = false
-  def movieAnyFramesCaptured: Boolean = false
-  def movieCancel() { }
-  def movieClose() { }
-  def movieGrabInterface() { }
-  def movieGrabView() { }
-  def movieSetRate(rate: Float) { }
-  def movieStart(path: String) { }
-  def movieStatus: String = "No movie."
   def userDirectory: Option[String] = None
   def userFile: Option[String] = None
   def userNewFile: Option[String] = None

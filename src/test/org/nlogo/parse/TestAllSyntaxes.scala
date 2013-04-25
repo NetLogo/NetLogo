@@ -298,7 +298,6 @@ class TestAllSyntaxes extends FunSuite {
                     |_done ,OTPL,null,0,0,0
                     |_downhill variable,-T--,null,0,1,1 *
                     |_downhill4 variable,-T--,null,0,1,1 *
-                    |_edit ,O---,null,0,0,0
                     |_error anything,OTPL,null,0,1,1
                     |_every number/command block,OTPL,null,0,2,2 *
                     |_experimentstepend ,O---,null,0,0,0

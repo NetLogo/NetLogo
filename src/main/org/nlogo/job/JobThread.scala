@@ -2,7 +2,7 @@
 
 package org.nlogo.job
 
-import org.nlogo.api.{ JobOwner, LogoException, PeriodicUpdateDelay }
+import org.nlogo.api.{ JobOwner, LogoException }
 import org.nlogo.nvm.{ ConcurrentJob, Job, JobManagerOwner }
 import java.util.{ Collections => JCollections, List => JList, ArrayList => JArrayList }
 import org.nlogo.util.Exceptions.{ ignoring, handling }
@@ -12,6 +12,8 @@ object JobThread {
   // too little limits recursion in user code, too much may cause OutOfMemoryErrors on Windows
   // and/or Linux (even if there's plenty of extra heap).
   private val defaultStackSize = 8   // megabytes
+
+  val PeriodicUpdateDelay = 200
 
   // allow override through property
   def stackSize: Int =
@@ -84,7 +86,7 @@ extends Thread(null, null, "JobThread", JobThread.stackSize * 1024 * 1024) {
             ignoring(classOf[InterruptedException]) {
               // only sleep for a short time, since there may still
               // be secondary jobs that need attention - ST 8/10/03
-              newJobsCondition.wait(PeriodicUpdateDelay.PERIODIC_UPDATE_DELAY)
+              newJobsCondition.wait(JobThread.PeriodicUpdateDelay)
             } } } }
   }
 
@@ -96,7 +98,7 @@ extends Thread(null, null, "JobThread", JobThread.stackSize * 1024 * 1024) {
       // tells us to; we want to take the time they take to run into account too, so we don't hog
       // the CPU; hence the lastSecondaryRunDuration variable - ST 8/10/03
       if (now - lastSecondaryRun >
-          PeriodicUpdateDelay.PERIODIC_UPDATE_DELAY / 2 + lastSecondaryRunDuration) {
+          JobThread.PeriodicUpdateDelay / 2 + lastSecondaryRunDuration) {
         compact(secondaryJobs)
         runSecondaryJobs()
         isTimeToRunSecondaryJobs = false

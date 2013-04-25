@@ -41,7 +41,6 @@ class DummyWorkspace extends DummyParserServices with Workspace {
   override def clearOutput() = unsupported
   override def clearAll() = unsupported
   override def compileForRun(source: String, context: Context, reporter: Boolean) = unsupported
-  override def convertToNormal() = unsupported
   override def getModelPath = unsupported
   override def setModelPath(path: String) = unsupported
   override def getModelDir = unsupported

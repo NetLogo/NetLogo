@@ -2,7 +2,6 @@ C __bench etc._bench
 C __change-topology etc._changetopology
 C __clear-all-and-reset-ticks etc._clearallandresetticks
 C __done _done
-C __edit etc._edit
 C __experimentstepend etc._experimentstepend
 C __export-drawing etc._exportdrawing
 C __foreverbuttonend etc._foreverbuttonend

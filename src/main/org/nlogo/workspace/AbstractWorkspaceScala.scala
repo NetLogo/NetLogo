@@ -331,20 +331,6 @@ object AbstractWorkspaceTraits {
      */
     private var _modelType: ModelType = ModelType.New
 
-    /**
-     * instantly converts the current model to ModelTypeJ.NORMAL. This is used
-     * by the __edit command to enable quick saving of library models. It
-     * probably shouldn't be used anywhere else.
-     */
-    @throws(classOf[java.io.IOException])
-    def convertToNormal() = {
-      val git = new java.io.File(".git")
-      if (!git.exists || !git.isDirectory)
-        throw new java.io.IOException("no .git directory found")
-      _modelType = ModelType.Normal
-      getModelPath
-    }
-
     def setModelType(modelType: ModelType) {
       _modelType = modelType
     }

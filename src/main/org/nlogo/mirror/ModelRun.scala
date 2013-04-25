@@ -18,8 +18,7 @@ class ModelRun(
   val backgroundImage: BufferedImage,
   private var _generalNotes: String = "",
   private var _annotations: Map[Int, String] = Map())
-  extends api.ModelRun
-  with SavableRun {
+  extends SavableRun {
   var stillRecording = true
 
   private var _dirty: Boolean = false
