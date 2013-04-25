@@ -6,7 +6,6 @@ import org.scalatest.{FunSuite, Tag}
 import org.nlogo.api.{AgentKind, SimpleJobOwner}
 import org.nlogo.api.FileIO.file2String
 import java.io.File
-import org.nlogo.agent.{Turtle, Patch, Link, Observer}
 import org.nlogo.util.SlowTest
 
 // We parse the tests first, then run them.

@@ -3,8 +3,7 @@
 package org.nlogo.headless
 
 import org.scalatest.Assertions
-import org.nlogo.agent.{Agent, Observer}
-import org.nlogo.api.{ AgentKind, Equality, CompilerException, JobOwner, LogoException, Program, Version, WorldDimensions }
+import org.nlogo.api.{ AgentKind, Equality, CompilerException, JobOwner, LogoException, Program, WorldDimensions }
 import org.nlogo.nvm.CompilerInterface
 import org.nlogo.util.Femto
 
@@ -34,7 +33,6 @@ abstract class AbstractTestLanguage extends Assertions {
 
   def defineProcedures(source: String) {
     val results = {
-      import collection.JavaConverters._
       compiler.compileProgram(
         HeadlessWorkspace.TestDeclarations + source,
         Program.empty,
