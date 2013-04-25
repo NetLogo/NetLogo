@@ -389,6 +389,8 @@ class App extends
     dirtyMonitor = new DirtyMonitor(frame)
     frame.addLinkComponent(dirtyMonitor)
 
+    frame.addLinkComponent(new ExtensionAssistant(frame))
+
     monitorManager = pico.getComponent(classOf[AgentMonitorManager])
     frame.addLinkComponent(monitorManager)
 
