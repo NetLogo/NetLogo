@@ -11,12 +11,10 @@ import org.nlogo.api.{ AgentKind, Program, Version, RendererInterface, WorldDime
                        ModelReader, CompilerException, LogoException, SimpleJobOwner,
                        CommandRunnable, ReporterRunnable, UpdateMode }
 import org.nlogo.agent.World
-import org.nlogo.nvm.{ LabInterface, Context,
+import org.nlogo.nvm.{ LabInterface, Context, ParserInterface,
                        Workspace, DefaultParserServices, CompilerInterface }
 import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala }
-import org.nlogo.util.Pico
-import org.picocontainer.Parameter
-import org.picocontainer.parameters.ComponentParameter
+import org.nlogo.util.Femto
 import org.nlogo.drawing.DrawingActionBroker
 
 /**
@@ -34,21 +32,24 @@ object HeadlessWorkspace {
    * If you derive your own subclass of HeadlessWorkspace, use this method to instantiate it.
    */
   def newInstance(subclass: Class[_ <: HeadlessWorkspace]): HeadlessWorkspace = {
-    val pico = new Pico
-    pico.addComponent(classOf[World])
-    pico.addScalaObject("org.nlogo.compile.Compiler")
-    pico.add("org.nlogo.render.Renderer")
-    pico.addComponent(subclass)
-    pico.getComponent(subclass)
+    val world = new World
+    Femto.get(classOf[HeadlessWorkspace], subclass.getName,
+      Array(world,
+        Femto.scalaSingleton(classOf[CompilerInterface],
+          "org.nlogo.compile.Compiler"),
+        Femto.get(classOf[RendererInterface],
+          "org.nlogo.render.Renderer", Array(world))))
   }
 
   def newLab: LabInterface = {
-    val pico = new Pico
-    pico.addScalaObject("org.nlogo.compile.Compiler")
-    pico.add("org.nlogo.lab.Lab")
-    pico.add("org.nlogo.lab.ProtocolLoader")
-    pico.addComponent(classOf[DefaultParserServices])
-    pico.getComponent(classOf[LabInterface])
+    val parser = Femto.scalaSingleton(
+      classOf[ParserInterface], "org.nlogo.parse.Parser")
+    // kludgy, use AnyRef here because ProtocolLoader doesn't implement an interface - ST 4/25/13
+    val protocolLoader =
+      Femto.get(classOf[AnyRef], "org.nlogo.lab.ProtocolLoader",
+        Array(new DefaultParserServices(parser)))
+    Femto.get(classOf[LabInterface], "org.nlogo.lab.Lab",
+      Array(protocolLoader))
   }
 
   /**

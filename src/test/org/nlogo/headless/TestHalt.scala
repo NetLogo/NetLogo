@@ -7,7 +7,7 @@ import org.nlogo.util.SlowTest
 import org.nlogo.{ api, agent, nvm }
 
 object TestHalt {
-  // This is ugly, but since we use PicoContainer to instantiate HeadlessWorkspace it's hard to
+  // This is ugly, but since we use reflection to instantiate HeadlessWorkspace it's hard to
   // subclass.  Oh well, this is only test code. - ST 3/4/09
   var finalized = false
   class MyWorkspace(world: agent.World, compiler: nvm.CompilerInterface,

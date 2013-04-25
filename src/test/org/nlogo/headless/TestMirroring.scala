@@ -5,7 +5,6 @@ package org.nlogo.headless
 import org.scalatest.FunSuite
 import org.scalatest.exceptions.TestFailedException
 import collection.JavaConverters._
-import org.nlogo.util.Pico
 import org.nlogo.api
 import api.AgentVariables
 import org.nlogo.mirror
