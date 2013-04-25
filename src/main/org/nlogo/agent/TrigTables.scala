@@ -2,7 +2,7 @@
 
 package org.nlogo.agent
 
-import org.nlogo.api.Constants.Infinitesimal
+import org.nlogo.api.Numbers.Infinitesimal
 
 @annotation.strictfp
 /**

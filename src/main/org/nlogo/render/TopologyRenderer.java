@@ -7,6 +7,8 @@ import org.nlogo.api.ViewSettings;
 
 public interface TopologyRenderer {
 
+  static java.awt.Color VIEW_BACKGROUND = new java.awt.Color(180, 180, 180);
+
   double wrapX(double pos);
 
   double wrapY(double pos);

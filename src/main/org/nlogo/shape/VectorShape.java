@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
-import static org.nlogo.api.Constants.ShapeWidth;
+import static org.nlogo.shape.Element.SHAPE_WIDTH;
 
 public strictfp class VectorShape
     extends Observable
@@ -246,8 +246,8 @@ public strictfp class VectorShape
         g.rotate(angle / 180.0 * StrictMath.PI, x, y, scale);
       }
       g.translate(x, y);
-      g.scale(scale, scale, ShapeWidth());
-      g.setStrokeFromLineThickness(lineThickness, scale, cellSize, ShapeWidth());
+      g.scale(scale, scale, SHAPE_WIDTH);
+      g.setStrokeFromLineThickness(lineThickness, scale, cellSize, SHAPE_WIDTH);
       for (int i = 0; i < elementList.size(); i++) {
         // we've already handled scaling & rotation ourselves,
         // but we need to let some element types know how much

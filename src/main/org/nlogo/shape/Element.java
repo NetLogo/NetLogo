@@ -11,6 +11,9 @@ import java.util.List;
 public abstract strictfp class Element
     implements java.io.Serializable, Cloneable {
 
+  static final int SHAPE_WIDTH =
+    org.nlogo.api.Shape$.MODULE$.Width();
+
   static final long serialVersionUID = 0L;
   protected boolean filled = false;
 

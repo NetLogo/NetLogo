@@ -2,7 +2,6 @@
 
 package org.nlogo.render;
 
-import org.nlogo.api.Constants;
 import org.nlogo.api.GraphicsInterface;
 
 public strictfp class VertCylinderRenderer extends AbstractTopologyRenderer {
@@ -13,7 +12,7 @@ public strictfp class VertCylinderRenderer extends AbstractTopologyRenderer {
   @Override
   public void fillBackground(GraphicsInterface g) {
     if (worldAndViewPreMultipliedX != 0) {
-      fillWith(g, Constants.ViewBackground());
+      fillWith(g, VIEW_BACKGROUND);
     }
   }
 

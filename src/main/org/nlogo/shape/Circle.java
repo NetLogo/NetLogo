@@ -8,8 +8,6 @@ import java.awt.Color;
 import java.awt.Point;
 import java.util.StringTokenizer;
 
-import static org.nlogo.api.Constants.ShapeWidth;
-
 public strictfp class Circle
     extends Element
     implements Cloneable {
@@ -114,7 +112,7 @@ public strictfp class Circle
   public void rotateLeft() {
     int oldX = x;
     x = y;
-    y = ShapeWidth() - oldX - yDiameter;
+    y = SHAPE_WIDTH - oldX - yDiameter;
     int oldXDiameter = xDiameter;
     xDiameter = yDiameter;
     yDiameter = oldXDiameter;
@@ -123,7 +121,7 @@ public strictfp class Circle
   @Override
   public void rotateRight() {
     int oldX = x;
-    x = ShapeWidth() - y - xDiameter;
+    x = SHAPE_WIDTH - y - xDiameter;
     y = oldX;
     int oldXDiameter = xDiameter;
     xDiameter = yDiameter;
@@ -132,12 +130,12 @@ public strictfp class Circle
 
   @Override
   public void flipHorizontal() {
-    x = ShapeWidth() - x - xDiameter;
+    x = SHAPE_WIDTH - x - xDiameter;
   }
 
   @Override
   public void flipVertical() {
-    y = ShapeWidth() - y - yDiameter;
+    y = SHAPE_WIDTH - y - yDiameter;
   }
 
   @Override

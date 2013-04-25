@@ -3,7 +3,7 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.agent.Turtle
-import org.nlogo.api.{ Constants, Syntax }
+import org.nlogo.api.{ Numbers, Syntax }
 import org.nlogo.nvm.{ Context, Reporter }
 
 class _dy extends Reporter {
@@ -13,7 +13,7 @@ class _dy extends Reporter {
     Double.box(report_1(context))
   def report_1(context: Context) = {
     val result = context.agent.asInstanceOf[Turtle].dy
-    if (StrictMath.abs(result) < Constants.Infinitesimal)
+    if (StrictMath.abs(result) < Numbers.Infinitesimal)
       0 else result
   }
 }

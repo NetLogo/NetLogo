@@ -180,18 +180,18 @@ public strictfp class TieManager {
             double ncos = StrictMath.cos(newHeadingRadians);
             double nsin = StrictMath.sin(newHeadingRadians);
 
-            if (StrictMath.abs(ocos) < org.nlogo.api.Constants.Infinitesimal()) {
+            if (StrictMath.abs(ocos) < org.nlogo.api.Numbers.Infinitesimal()) {
               ocos = 0;
             }
-            if (StrictMath.abs(osin) < org.nlogo.api.Constants.Infinitesimal()) {
+            if (StrictMath.abs(osin) < org.nlogo.api.Numbers.Infinitesimal()) {
               osin = 0;
             }
 
 
-            if (StrictMath.abs(ncos) < org.nlogo.api.Constants.Infinitesimal()) {
+            if (StrictMath.abs(ncos) < org.nlogo.api.Numbers.Infinitesimal()) {
               ncos = 0;
             }
-            if (StrictMath.abs(nsin) < org.nlogo.api.Constants.Infinitesimal()) {
+            if (StrictMath.abs(nsin) < org.nlogo.api.Numbers.Infinitesimal()) {
               nsin = 0;
             }
 

@@ -2,7 +2,7 @@
 
 package org.nlogo.prim
 
-import org.nlogo.api.{ AgentException, Let, Syntax, Constants }
+import org.nlogo.api.{ AgentException, Let, Syntax, Numbers }
 import org.nlogo.nvm.{ Command, Context, MutableDouble }
 import org.nlogo.agent.Turtle
 
@@ -22,7 +22,7 @@ class _fdinternal(let: Let) extends Command {
     val countdown = context.getLet(let).asInstanceOf[MutableDouble]
     val distance = countdown.value
     val distanceMagnitude = StrictMath.abs(distance)
-    if (distanceMagnitude <= Constants.Infinitesimal)
+    if (distanceMagnitude <= Numbers.Infinitesimal)
       context.ip = next
     else if (distanceMagnitude <= 1.0) {
       try turtle.jump(distance)

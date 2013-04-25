@@ -3,7 +3,7 @@
 package org.nlogo.agent;
 
 import org.nlogo.api.AgentException;
-import org.nlogo.api.Constants;
+import org.nlogo.api.Numbers;
 import org.nlogo.api.I18N;
 
 public strictfp class Protractor
@@ -200,10 +200,10 @@ public strictfp class Protractor
       double headingRadians = StrictMath.toRadians(heading);
       cos = StrictMath.cos(headingRadians);
       sin = StrictMath.sin(headingRadians);
-      if (StrictMath.abs(cos) < Constants.Infinitesimal()) {
+      if (StrictMath.abs(cos) < Numbers.Infinitesimal()) {
         cos = 0;
       }
-      if (StrictMath.abs(sin) < Constants.Infinitesimal()) {
+      if (StrictMath.abs(sin) < Numbers.Infinitesimal()) {
         sin = 0;
       }
     }

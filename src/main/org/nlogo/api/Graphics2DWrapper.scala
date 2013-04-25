@@ -57,7 +57,7 @@ class Graphics2DWrapper(g: Graphics2D, renderLabelsAsRectangles: Boolean = false
     var yCorrection = 0.0
     if (isQuartz) {
       // one pixel bigger
-      sizeCorrection = Constants.ShapeWidth / scale
+      sizeCorrection = Shape.Width / scale
       // adjust position to still be centered
       xCorrection = -0.5 * sizeCorrection
       yCorrection = xCorrection
@@ -72,7 +72,7 @@ class Graphics2DWrapper(g: Graphics2D, renderLabelsAsRectangles: Boolean = false
     var yCorrection = 0.0
     if (!isQuartz) {
       // one pixel smaller
-      sizeCorrection = -Constants.ShapeWidth / scale
+      sizeCorrection = -Shape.Width / scale
       xCorrection = getXCorrection(sizeCorrection, angle)
       yCorrection = getYCorrection(sizeCorrection, angle)
     }
@@ -86,7 +86,7 @@ class Graphics2DWrapper(g: Graphics2D, renderLabelsAsRectangles: Boolean = false
     var yCorrection = 0.0
     if (isQuartz) {
       // size: one pixel bigger
-      sizeCorrection = Constants.ShapeWidth / scale
+      sizeCorrection = Shape.Width / scale
       xCorrection = getXCorrection(sizeCorrection, angle)
       yCorrection = getYCorrection(sizeCorrection, angle)
     }
@@ -98,7 +98,7 @@ class Graphics2DWrapper(g: Graphics2D, renderLabelsAsRectangles: Boolean = false
     var sizeCorrection = 0.0
     if (!isQuartz)
       // size: one pixel smaller
-      sizeCorrection = -Constants.ShapeWidth / scale
+      sizeCorrection = -Shape.Width / scale
     g.draw(new java.awt.geom.Rectangle2D.Double(
       x, y, width + sizeCorrection, height + sizeCorrection))
   }

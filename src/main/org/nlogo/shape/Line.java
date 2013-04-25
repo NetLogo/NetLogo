@@ -8,8 +8,6 @@ import java.awt.Color;
 import java.awt.Point;
 import java.util.StringTokenizer;
 
-import static org.nlogo.api.Constants.ShapeWidth;
-
 public strictfp class Line
     extends Element
     implements Cloneable {
@@ -81,32 +79,32 @@ public strictfp class Line
   public void rotateLeft() {
     int temp = start.x;
     start.x = start.y;
-    start.y = ShapeWidth() - temp;
+    start.y = SHAPE_WIDTH - temp;
     temp = end.x;
     end.x = end.y;
-    end.y = ShapeWidth() - temp;
+    end.y = SHAPE_WIDTH - temp;
   }
 
   @Override
   public void rotateRight() {
     int temp = start.x;
-    start.x = ShapeWidth() - start.y;
+    start.x = SHAPE_WIDTH - start.y;
     start.y = temp;
     temp = end.x;
-    end.x = ShapeWidth() - end.y;
+    end.x = SHAPE_WIDTH - end.y;
     end.y = temp;
   }
 
   @Override
   public void flipHorizontal() {
-    start.x = ShapeWidth() - start.x;
-    end.x = ShapeWidth() - end.x;
+    start.x = SHAPE_WIDTH - start.x;
+    end.x = SHAPE_WIDTH - end.x;
   }
 
   @Override
   public void flipVertical() {
-    start.y = ShapeWidth() - start.y;
-    end.y = ShapeWidth() - end.y;
+    start.y = SHAPE_WIDTH - start.y;
+    end.y = SHAPE_WIDTH - end.y;
   }
 
   // Draws the line defined by the start and endpoint
