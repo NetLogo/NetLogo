@@ -4,9 +4,7 @@ package org.nlogo.lex
 
 import org.nlogo.api.{ CompilerException, ExtensionManager, Token, TokenizerInterface, TokenType }
 
-object Tokenizer2D extends Tokenizer(TokenMapper2D)
-
-class Tokenizer(tokenMapper: TokenMapper) extends TokenizerInterface {
+object Tokenizer extends TokenizerInterface {
 
   // this method never throws CompilerException, but use TokenType.BAD
   // instead, because if there's an error we want to still
@@ -37,7 +35,7 @@ class Tokenizer(tokenMapper: TokenMapper) extends TokenizerInterface {
                          fileName: String, stopAtFirstBadToken: Boolean): Seq[Token] =
   {
     val yy = new TokenLexer(
-      new java.io.StringReader(source), tokenMapper, fileName, allowRemovedPrimitives)
+      new java.io.StringReader(source), fileName, allowRemovedPrimitives)
     val eof = new Token("", TokenType.EOF, "")(0, 0, "")
     def yystream: Stream[Token] = {
       val t = yy.yylex()
@@ -52,7 +50,7 @@ class Tokenizer(tokenMapper: TokenMapper) extends TokenizerInterface {
   }
 
   def nextToken(reader: java.io.BufferedReader): Token =
-    new TokenLexer(reader, tokenMapper, null, false).yylex()
+    new TokenLexer(reader, null, false).yylex()
 
   def getTokenAtPosition(source: String, position: Int): Token = {
     // if the cursor is between two adjacent tokens we'll need to pick the token
@@ -105,6 +103,6 @@ class Tokenizer(tokenMapper: TokenMapper) extends TokenizerInterface {
     tokenizeForColorization(source).map(replaceImports)
   }
 
-  def checkInstructionMaps() { tokenMapper.checkInstructionMaps() }
+  def checkInstructionMaps() { TokenMapper.checkInstructionMaps() }
 
 }

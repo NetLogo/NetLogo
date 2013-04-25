@@ -9,10 +9,10 @@ object Parser extends Parser {
 
   val Tokenizer =
     Femto.scalaSingleton(classOf[api.TokenizerInterface],
-      "org.nlogo.lex.Tokenizer2D")
+      "org.nlogo.lex.Tokenizer")
   val TokenMapper =
     Femto.scalaSingleton(classOf[api.TokenMapperInterface],
-      "org.nlogo.lex.TokenMapper2D")
+      "org.nlogo.lex.TokenMapper")
 
 }
 
@@ -168,7 +168,7 @@ trait Parser extends nvm.ParserInterface {
     Set(OPEN_BRACKET, CONSTANT, IDENT, REPORTER, VARIABLE)
   }
 
-  // used by the indenter. we always use the 2D tokenizer since it doesn't matter in this context
+  // used by the indenter
   def getTokenAtPosition(source: String, position: Int): api.Token =
     tokenizer.getTokenAtPosition(source, position)
 

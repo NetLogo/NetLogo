@@ -11,7 +11,6 @@ import org.nlogo.api.TokenType;
 %%
 
 %{
-  private final TokenMapper tokenMapper;
   private final String fileName;
   private final boolean allowRemovedPrimitives;
   private StringBuilder literalBuilder = null;
@@ -71,30 +70,30 @@ import org.nlogo.api.TokenType;
 
   Token ident() {
     String text = yytext();
-    if (tokenMapper.isKeyword(text)) {
+    if (TokenMapper.isKeyword(text)) {
       return new Token(text, TokenType_KEYWORD, text.toUpperCase(),
                 yychar, yychar + text.length(), fileName);
     }
-    else if (tokenMapper.isCommand(text.toUpperCase())) {
-      org.nlogo.api.TokenHolder instr = tokenMapper.getCommand(text);
+    else if (TokenMapper.isCommand(text.toUpperCase())) {
+      org.nlogo.api.TokenHolder instr = TokenMapper.getCommand(text);
       Token tok = new Token(text, TokenType_COMMAND, instr,
                    yychar, yychar + text.length(), fileName);
       instr.token(tok);
       return tok;
     }
-    else if (tokenMapper.isReporter(text)) {
-      org.nlogo.api.TokenHolder instr = tokenMapper.getReporter(text);
+    else if (TokenMapper.isReporter(text)) {
+      org.nlogo.api.TokenHolder instr = TokenMapper.getReporter(text);
       Token tok = new Token(text, TokenType_REPORTER, instr,
                    yychar, yychar + text.length(), fileName);
       instr.token(tok);
       return tok;
     }
-    else if (tokenMapper.isVariable(text)) {
+    else if (TokenMapper.isVariable(text)) {
       return new Token(text, TokenType_VARIABLE, text.toUpperCase(),
                 yychar, yychar + text.length(), fileName);
     }
-    else if (tokenMapper.isConstant(text)) {
-      return new Token(text, TokenType_CONSTANT, tokenMapper.getConstant(text),
+    else if (TokenMapper.isConstant(text)) {
+      return new Token(text, TokenType_CONSTANT, TokenMapper.getConstant(text),
                 yychar, yychar + text.length(), fileName);
     }
     else {
@@ -106,11 +105,9 @@ import org.nlogo.api.TokenType;
 /* this option decreases code size; see JFlex documentation */
 %switch
 %class TokenLexer
-%ctorarg TokenMapper tokenMapper
 %ctorarg String fileName
 %ctorarg boolean allowRemovedPrimitives
 %init{
-  this.tokenMapper = tokenMapper;
   this.fileName = fileName;
   this.allowRemovedPrimitives = allowRemovedPrimitives;
 %init}

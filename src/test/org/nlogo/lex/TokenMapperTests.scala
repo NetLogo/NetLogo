@@ -3,7 +3,7 @@
 package org.nlogo.lex
 
 import org.scalatest.FunSuite
-import TokenMapper2D._
+import TokenMapper._
 
 class TokenMapperTests extends FunSuite {
   test("OneCommand1") { expectResult("_fd")(getCommand("FD").toString) }
@@ -36,9 +36,4 @@ class TokenMapperTests extends FunSuite {
   test("command3") { assert(!isCommand("random")) }
   test("command4") { assert(!isCommand("kjhgkfjg")) }
   test("command5") { assert(!isCommand("random-or-random-float")) }
-
-  test("patch2D") {
-    expectResult("org.nlogo.prim._patch")(
-      TokenMapper2D.getReporter("patch").getClass.getName)
-  }
 }

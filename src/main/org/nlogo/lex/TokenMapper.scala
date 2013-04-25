@@ -5,10 +5,7 @@ package org.nlogo.lex
 import org.nlogo.util.Utils
 import org.nlogo.api._
 
-// public for use from compiler.TestAllSyntaxes. yuck! - ST 1/21/09
-object TokenMapper2D extends TokenMapper
-
-class TokenMapper extends TokenMapperInterface {
+object TokenMapper extends TokenMapperInterface {
 
   val paths = Seq("/system/tokens.txt")
 
