@@ -13,7 +13,7 @@ import org.nlogo.util.SlowTest
 abstract class TestLanguage(files: Iterable[File]) extends FunSuite with SlowTest {
   for(t:LanguageTest <- TestParser.parseFiles(files); if(t.shouldRun))
     test(t.fullName, new Tag(t.suiteName){}, new Tag(t.fullName){}) {
-      t.run
+      t.run()
     }
 }
 
@@ -221,9 +221,8 @@ TurtleSet
 """
     val tests = TestParser.parseString("test", code)
 
-    val expectedCommandTest = LanguageTest("test", "TurtleSet",
-      List("O> crt 1", "[turtle-set self] of turtle 0 = turtles => true"))
+    val expectedOutputs = List(LanguageTest("test", "TurtleSet", List("O> crt 1", "[turtle-set self] of turtle 0 = turtles => true")))
 
-    assert(tests.toString === "List(LanguageTest(test,TurtleSet,List(O> crt 1, [turtle-set self] of turtle 0 = turtles => true)))")
+    assert(tests.toString === expectedOutputs.toString)
   }
 }
