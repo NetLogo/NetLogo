@@ -216,15 +216,15 @@ class TestParser extends FunSuite {
   // test entire path
   test("parse a simple test") {
     val code = """
-TurtleSet_2D
+TurtleSet
   O> crt 1
   [turtle-set self] of turtle 0 = turtles => true
 """
     val tests = TestParser.parseString("test", code)
 
-    val expectedCommandTest = LanguageTest("test", "TurtleSet_2D",
+    val expectedCommandTest = LanguageTest("test", "TurtleSet",
       List("O> crt 1", "[turtle-set self] of turtle 0 = turtles => true"))
 
-    assert(tests.toString === "List(LanguageTest(test,TurtleSet_2D,List(O> crt 1, [turtle-set self] of turtle 0 = turtles => true)))")
+    assert(tests.toString === "List(LanguageTest(test,TurtleSet,List(O> crt 1, [turtle-set self] of turtle 0 = turtles => true)))")
   }
 }

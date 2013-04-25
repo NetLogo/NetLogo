@@ -32,7 +32,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
   def stripLineFeeds(s: String) =
     s.replaceAll("\r\n", "\n")
 
-  def run2DExperiment(minX: Int, maxX: Int, minY: Int, maxY: Int, declarations: String, name: String) = {
+  def runExperiment(minX: Int, maxX: Int, minY: Int, maxY: Int, declarations: String, name: String) = {
     val workspace = newWorkspace()
     workspace.initForTesting(minX, maxX, minY, maxY, declarations)
     run("test/lab/" + name)(() => workspace, () => newWorker(name))
@@ -169,7 +169,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
     runExperimentFromModel("models/test/lab/FireWithExperiments.nlogo", "test2", "models/test/lab/FireWithExperiments2")
   }
   test("ResizingWorld3") {
-    run2DExperiment(0, 1, 0, 1, "", "testResizingWorld3")
+    runExperiment(0, 1, 0, 1, "", "testResizingWorld3")
   }
   test("Stopping1") {
     runExperiment(0, "globals [x]",
