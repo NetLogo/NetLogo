@@ -89,20 +89,12 @@ object Depend {
     }
     def generateFooter() {
       println("""
-### checks for packages with only one direct parent
-
-[not-job-not-workspace] = org.nlogo.* excluding [job] [workspace]
-check [not-job-not-workspace] directlyIndependentOf [job]
-
 ### checks on AWT, Swing
 
 [Sun-Swing] = javax.swing.* excluding javax.swing.tree.MutableTreeNode javax.swing.tree.DefaultMutableTreeNode
 [Sun-AWT] = java.awt.*
 [headless-AWT] = java.awt.geom.* java.awt.image.* java.awt.Color java.awt.Image java.awt.Shape java.awt.Graphics2D java.awt.Graphics java.awt.Stroke java.awt.Composite java.awt.BasicStroke java.awt.Point java.awt.Font java.awt.AlphaComposite java.awt.RenderingHints java.awt.Rectangle java.awt.FontMetrics java.awt.color.ColorSpace java.awt.Polygon java.awt.RenderingHints$Key
-# as a special case, we allow referring to java.awt.Frame, because ShapesManagerFactory
-# mentions it in its constructor, and I don't want to have to make a whole new package
-# just to put ShapesManagerFactory in - ST 2/27/09
-[bad-AWT] = java.awt.* excluding [headless-AWT] java.awt.Frame
+[bad-AWT] = java.awt.* excluding [headless-AWT]
 
 check [util+] independentOf [Sun-AWT]
 check [headless+] independentOf [Sun-Swing] [bad-AWT]
@@ -111,8 +103,6 @@ check [headless+] independentOf [Sun-Swing] [bad-AWT]
 
 [ASM-free-zone] = org.nlogo.* excluding [generate]
 check [ASM-free-zone] independentOf org.objectweb.*
-
-check org.nlogo.* independentOf com.wolfram.*
 
 """
               )
