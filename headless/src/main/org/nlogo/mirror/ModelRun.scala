@@ -5,11 +5,11 @@ package org.nlogo.mirror
 import java.awt.image.BufferedImage
 
 import org.nlogo.api
-import org.nlogo.api.Action
+import org.nlogo.api.{ Action, PlotAction }
 import org.nlogo.drawing.{ DrawingActionRunner, imageToBytes }
 import org.nlogo.drawing.DrawingAction
 import org.nlogo.drawing.DrawingAction.ReadImage
-import org.nlogo.plot.{ BasicPlotActionRunner, Plot, PlotAction }
+import org.nlogo.plot.{ BasicPlotActionRunner, Plot }
 
 class ModelRun(
   var name: String,

@@ -4,7 +4,7 @@ package org.nlogo.api
 
 import java.io.IOException
 
-trait Workspace extends ImporterUser with CompilerServices with RandomServices {
+trait Workspace extends ImporterUser with ParserServices with RandomServices {
   def world: World
   def getExtensionManager: ExtensionManager
   def waitFor(runnable: CommandRunnable)

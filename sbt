@@ -31,7 +31,6 @@ XX=-XX:MaxPermSize=512m
 ENCODING=-Dfile.encoding=UTF-8
 HEADLESS=-Djava.awt.headless=true
 USE_QUARTZ=-Dapple.awt.graphics.UseQuartz=false
-DISABLE_EXT_DIRS=-Djava.ext.dirs=
 BOOT=xsbt.boot.Boot
 
 
@@ -68,6 +67,5 @@ fi
     $HEADLESS \
     $TERMINAL \
     $USE_QUARTZ \
-    $DISABLE_EXT_DIRS \
     -classpath $SBT_LAUNCH \
     $BOOT "$@"

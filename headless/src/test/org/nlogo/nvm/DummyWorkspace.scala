@@ -4,10 +4,10 @@ package org.nlogo.nvm
 
 import org.nlogo.agent.{Agent, AgentSet, World}
 import org.nlogo.api
-import org.nlogo.api.{WorldDimensions, DummyCompilerServices, DummyExtensionManager, JobOwner,
+import org.nlogo.api.{WorldDimensions, DummyParserServices, DummyExtensionManager, JobOwner,
                       CommandRunnable, ReporterRunnable, ImportErrorHandler, OutputDestination}
 
-class DummyWorkspace extends DummyCompilerServices with Workspace {
+class DummyWorkspace extends DummyParserServices with Workspace {
   private def unsupported = throw new UnsupportedOperationException
   val world = new World
   override def procedures = CompilerInterface.NoProcedures
@@ -66,6 +66,7 @@ class DummyWorkspace extends DummyCompilerServices with Workspace {
   override def lastRunTimes = unsupported
   override def completedActivations = unsupported
   override def compiler = unsupported
+  override def parser = unsupported
   override def open(modelPath: String) = unsupported
   override def openString(modelContents: String) = unsupported
   override def dispose() { }

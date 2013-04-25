@@ -54,20 +54,20 @@ object Depend {
       "" -> Nil,
       "agent" -> List("api"),
       "api" -> List("util"),
-      "compiler" -> List("prim"),
+      "compile" -> List("parse"),
       "drawing" -> List("api"),
-      "generator" -> List("prim"),
+      "generate" -> List("prim"),
       "headless" -> List("mirror","workspace"),
       "job" -> List("nvm"),
       "lab" -> List("nvm"),
       "lex" -> List("api"),
       "mirror" -> List("drawing", "plot", "shape"),
       "nvm" -> List("agent"),
+      "parse" -> List("prim","prim/dead","prim/threed"),
       "plot" -> List("api"),
       "prim" -> List("nvm"),
       "prim/etc" -> List("nvm"),
       "prim/file" -> List("nvm"),
-      "prim/plot" -> List("nvm","plot"),
       "render" -> List("shape"),
       "review" -> List("mirror", "window"),
       "shape" -> List("api"),
@@ -109,7 +109,7 @@ check [headless+] independentOf [Sun-Swing] [bad-AWT]
 
 ### checks on external libraries
 
-[ASM-free-zone] = org.nlogo.* excluding [generator]
+[ASM-free-zone] = org.nlogo.* excluding [generate]
 check [ASM-free-zone] independentOf org.objectweb.*
 
 check org.nlogo.* independentOf com.wolfram.*

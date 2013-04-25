@@ -107,7 +107,7 @@ extends ImporterJ(_errorHandler, _world, _importerUser, _stringReader) {
         yMin = readNumber(line(2)),
         yMax = readNumber(line(3)),
         autoPlotOn = readBoolean(line(4)))
-      plot.currentPen_=(readString(line(5)))
+      plot.currentPenByName_=(readString(line(5)))
       plot.legendIsOpen_=(readBoolean(line(6)))
       readNumber(line(7)).toInt
     }
@@ -154,7 +154,7 @@ extends ImporterJ(_errorHandler, _world, _importerUser, _stringReader) {
           for (i <- 0 until pens.size) {
             plot.getPen(pens(i)) match {
               case Some(pen) =>
-                plot.currentPen_=(pen.name)
+                plot.currentPenByName_=(pen.name)
                 // there may be blank fields in the list of points
                 // since some pens may have more points than others.
                 if (data(i * 4).nonEmpty)

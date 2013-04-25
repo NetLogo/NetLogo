@@ -5,10 +5,10 @@ package org.nlogo.mirror
 import java.io.{ InputStream, ObjectOutputStream, OutputStream }
 import scala.Option.option2Iterable
 import org.nlogo.api.{ ModelReader, ModelSection }
-import org.nlogo.plot.{ Plot, PlotAction, PlotLoader }
+import org.nlogo.plot.{ Plot, PlotLoader }
 import javax.imageio.ImageIO
 import org.nlogo.drawing.DrawingAction
-import org.nlogo.api.Action
+import org.nlogo.api.{ Action, PlotAction }
 
 trait SavableRun {
   self: ModelRun =>

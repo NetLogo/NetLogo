@@ -2,8 +2,7 @@
 
 package org.nlogo.plot
 
-import org.nlogo.api.ActionRunner
-import PlotAction._
+import org.nlogo.api, api.ActionRunner, api.PlotAction, PlotAction._
 
 trait PlotActionRunner extends ActionRunner[PlotAction] {
 
