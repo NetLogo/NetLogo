@@ -2,7 +2,7 @@
 
 package org.nlogo.window;
 
-import org.nlogo.api.CompilerServices;
+import org.nlogo.api.ParserServices;
 import org.nlogo.api.ModelReader;
 import org.nlogo.api.ModelSectionJ;
 import org.nlogo.api.RandomServices;
@@ -29,18 +29,18 @@ public strictfp class InterfacePanelLite
     return viewWidget;
   }
 
-  private final CompilerServices compiler;
+  private final ParserServices parser;
   private final RandomServices random;
   private final org.nlogo.plot.PlotManager plotManager;
   private final EditorFactory editorFactory;
 
   public InterfacePanelLite(ViewWidgetInterface viewWidget,
-                            CompilerServices compiler,
+                            ParserServices parser,
                             RandomServices random,
                             org.nlogo.plot.PlotManager plotManager,
                             EditorFactory editorFactory) {
     this.viewWidget = viewWidget;
-    this.compiler = compiler;
+    this.parser = parser;
     this.random = random;
     this.plotManager = plotManager;
     this.editorFactory = editorFactory;
@@ -335,11 +335,11 @@ public strictfp class InterfacePanelLite
           } else if (type.equals("CHOOSER") || // new models use this
               type.equals("CHOICE"))   // old models use this
           {
-            newGuy = new ChooserWidget(compiler);
+            newGuy = new ChooserWidget(parser);
           } else if (type.equals("INPUTBOX")) {
             newGuy = new InputBoxWidget(editorFactory.newEditor(1, 20, false),
                 editorFactory.newEditor(5, 20, true),
-                compiler, this);
+                parser, this);
           } else if (type.equals("BUTTON")) {
             newGuy = new ButtonWidget(random.mainRNG());
           } else if (type.equals("OUTPUT")) {

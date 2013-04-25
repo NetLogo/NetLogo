@@ -4,7 +4,7 @@ package org.nlogo.api
 
 // just enough functionality to make the tests pass
 
-class DummyCompilerServices extends CompilerServices {
+class DummyParserServices extends ParserServices {
   private def unsupported = throw new UnsupportedOperationException
   def readFromString(s: String): AnyRef =
     try { s.toDouble: java.lang.Double }
@@ -14,7 +14,7 @@ class DummyCompilerServices extends CompilerServices {
           case "true" => true: java.lang.Boolean
           case "false" => false: java.lang.Boolean
           case _ => throw new CompilerException(
-            "not a constant recognized by DummyCompilerServices", 0, s.size, "")
+            "not a constant recognized by DummyParserServices", 0, s.size, "")
         }
     }
   def readNumberFromString(source: String) = source

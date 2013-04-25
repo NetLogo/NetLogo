@@ -11,8 +11,8 @@ import org.nlogo.api.{ AgentKind, Program, Version, RendererInterface, WorldDime
                        ModelReader, CompilerException, LogoException, SimpleJobOwner,
                        CommandRunnable, ReporterRunnable, UpdateMode }
 import org.nlogo.agent.World
-import org.nlogo.nvm.{ Context, LabInterface,
-                       Workspace, DefaultCompilerServices, CompilerInterface }
+import org.nlogo.nvm.{ LabInterface, Context,
+                       Workspace, DefaultParserServices, CompilerInterface }
 import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala }
 import org.nlogo.util.Pico
 import org.picocontainer.Parameter
@@ -36,7 +36,7 @@ object HeadlessWorkspace {
   def newInstance(subclass: Class[_ <: HeadlessWorkspace]): HeadlessWorkspace = {
     val pico = new Pico
     pico.addComponent(classOf[World])
-    pico.addScalaObject("org.nlogo.compiler.Compiler")
+    pico.addScalaObject("org.nlogo.compile.Compiler")
     pico.add("org.nlogo.render.Renderer")
     pico.addComponent(subclass)
     pico.getComponent(subclass)
@@ -44,10 +44,10 @@ object HeadlessWorkspace {
 
   def newLab: LabInterface = {
     val pico = new Pico
-    pico.addScalaObject("org.nlogo.compiler.Compiler")
+    pico.addScalaObject("org.nlogo.compile.Compiler")
     pico.add("org.nlogo.lab.Lab")
     pico.add("org.nlogo.lab.ProtocolLoader")
-    pico.addComponent(classOf[DefaultCompilerServices])
+    pico.addComponent(classOf[DefaultParserServices])
     pico.getComponent(classOf[LabInterface])
   }
 
@@ -97,6 +97,8 @@ extends AbstractWorkspaceScala(_world)
 with org.nlogo.workspace.Controllable
 with org.nlogo.workspace.WorldLoaderInterface
 with org.nlogo.api.ViewSettings {
+
+  override def parser = compiler
 
   val drawingActionBroker = new DrawingActionBroker(renderer.trailDrawer)
   world.trailDrawer(drawingActionBroker)

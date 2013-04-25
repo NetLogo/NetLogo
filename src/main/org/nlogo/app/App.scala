@@ -76,7 +76,7 @@ object App{
     org.nlogo.window.VMCheck.detectBadJVMs()
     processCommandLineArguments(args)
     Splash.beginSplash() // also initializes AWT
-    pico.addScalaObject("org.nlogo.compiler.Compiler")
+    pico.addScalaObject("org.nlogo.compile.Compiler")
     pico.addComponent(classOf[App])
     pico.as(NO_CACHE).addComponent(classOf[FileMenu])
     pico.addComponent(classOf[ModelSaver])
@@ -279,7 +279,8 @@ class App extends
     pico.addComponent(world)
     _workspace = new GUIWorkspace(world, GUIWorkspaceJ.KioskLevel.NONE,
                                   frame, frame, listenerManager) {
-      val compiler = pico.getComponent(classOf[CompilerInterface])
+      override val compiler = pico.getComponent(classOf[CompilerInterface])
+      override def parser = compiler
       // lazy to avoid initialization order snafu - ST 3/1/11
       lazy val updateManager = new UpdateManager {
         override def defaultFrameRate = _workspace.frameRate

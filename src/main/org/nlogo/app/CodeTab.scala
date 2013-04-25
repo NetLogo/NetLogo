@@ -30,7 +30,7 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
 
   val errorLabel = new EditorAreaErrorLabel(text)
   val toolBar = getToolBar
-  def compiler = workspace
+  override def parser = workspace
   def program = workspace.world.program
 
   locally {

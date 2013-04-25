@@ -7,10 +7,10 @@ package org.nlogo.app
 // strictly necessary since they're both in the app package, but it's still kind of nice. - ST
 // 2/2/09
 
-import org.nlogo.api.{CompilerServices, Program}
+import org.nlogo.api.{ParserServices, Program}
 
 trait ProceduresMenuTarget {
-  def compiler: CompilerServices
+  def parser: ParserServices
   def select(pos1: Int, pos2: Int): Unit
   def getText: String
   def program: Program

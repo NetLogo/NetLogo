@@ -6,7 +6,7 @@ import org.nlogo.api.AgentException;
 import org.nlogo.api.AgentKind;
 import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.Color;
-import org.nlogo.api.CompilerServices;
+import org.nlogo.api.ParserServices;
 import org.nlogo.api.ImporterUser;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.Nobody$;
@@ -1242,14 +1242,14 @@ public strictfp class World
         ("\"" + var + "\" not found");
   }
 
-  private CompilerServices _compiler;
+  private ParserServices _parser;
 
-  public void compiler_$eq(CompilerServices compiler) {
-    _compiler = compiler;
+  public void compiler_$eq(ParserServices parser) {
+    _parser = parser;
   }
 
-  public CompilerServices compiler() {
-    return _compiler;
+  public ParserServices parser() {
+    return _parser;
   }
 
   public scala.collection.Iterator<Object> allStoredValues() {

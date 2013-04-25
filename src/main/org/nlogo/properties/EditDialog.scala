@@ -8,7 +8,7 @@ import org.nlogo.editor.Colorizer
 import org.nlogo.swing.Implicits._
 import javax.swing.JButton
 import org.nlogo.swing.{BrowserLauncher, ButtonPanel, RichJButton}
-import org.nlogo.api.{I18N, CompilerServices, TokenType}
+import org.nlogo.api.{I18N, ParserServices, TokenType}
 
 // EditDialog is a trait because in EditDialogFactory we need to be able to call two different
 // constructors of JDialog.  See
@@ -26,7 +26,7 @@ trait EditDialog extends javax.swing.JDialog {
   // them abstract instead - ST 2/18/10
   def window: java.awt.Window
   def target: org.nlogo.api.Editable
-  def compiler: CompilerServices
+  def parser: ParserServices
   def colorizer: Colorizer[TokenType]
   var canceled = false
 
@@ -41,8 +41,8 @@ trait EditDialog extends javax.swing.JDialog {
   // forget the fancy dialog in 3D for now.
   private val editPanel =
     if(target.isInstanceOf[org.nlogo.window.WorldViewSettings])
-      new WorldEditPanel(target, compiler, colorizer)
-    else new EditPanel(target, compiler, colorizer)
+      new WorldEditPanel(target, parser, colorizer)
+    else new EditPanel(target, parser, colorizer)
 
   val okButton = new javax.swing.JButton(I18N.gui.get("common.buttons.ok"))
   okButton.addActionListener{() =>

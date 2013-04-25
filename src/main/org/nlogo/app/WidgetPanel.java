@@ -764,7 +764,7 @@ public strictfp class WidgetPanel
       // you can't add a plot to the client interface unless
       // there are plots in the server interface so enable the
       // plot button accordingly ev 1/25/07
-      return workspace.plotManager().getPlotNames().length > 0;
+      return workspace.plotManager().getPlotNames().nonEmpty();
     }
 
     return true;
