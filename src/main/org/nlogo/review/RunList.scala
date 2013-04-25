@@ -3,9 +3,9 @@
 package org.nlogo.review
 
 import org.nlogo.mirror.ModelRun
-
 import javax.swing.{ BorderFactory, JList, ListSelectionModel }
 import javax.swing.event.{ ListSelectionEvent, ListSelectionListener }
+import org.nlogo.awt.UserCancelException
 
 class RunList(reviewTab: ReviewTab)
   extends JList(reviewTab.state)
@@ -19,15 +19,19 @@ class RunList(reviewTab: ReviewTab)
 
   setBorder(BorderFactory.createLoweredBevelBorder())
   setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
-  this.getSelectionModel.addListSelectionListener(
-    new ListSelectionListener {
-      def valueChanged(p1: ListSelectionEvent) {
-        for (run <- selectedRun) {
-          reviewTab.state.currentRun = Some(run)
-          reviewTab.loadModelIfNeeded(run.modelString)
-        }
+
+  override def setSelectionInterval(anchor: Int, lead: Int) {
+    for (run <- reviewTab.state.runs.lift(anchor)) {
+      try {
+        reviewTab.loadModelIfNeeded(run.modelString)
+        reviewTab.state.currentRun = Some(run)
+        super.setSelectionInterval(anchor, lead)
+      } catch {
+        case _: UserCancelException => // do nothing
+        case e: Exception           => throw e // rethrow anything else
       }
-    })
+    }
+  }
 
   override def notify(pub: ReviewTabState#Pub, event: CurrentRunChangeEvent) {
     event match {

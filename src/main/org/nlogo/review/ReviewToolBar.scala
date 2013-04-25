@@ -83,33 +83,44 @@ class ReviewToolBar(reviewTab: ReviewTab)
   }
 
   def loadRun(reviewTab: ReviewTab) {
-    val results: Seq[Either[String, ModelRun]] =
-      chooseFiles.map { path =>
-        // Load a run from `path` and returns either the loaded run
-        // in case of success or the path in case of failure
-        try {
-          reviewTab.loadRun(new java.io.FileInputStream(path))
-          val run = reviewTab.state.runs.last
-          Right(run)
-        } catch {
-          case ex: Exception => Left(path)
+    // TODO: this whole thing is a bit convoluted.
+    // There might be a way to do it more cleanly
+    // and (more importantly) without loosing the
+    // full exception information when something
+    // goes wrong. NP 2013-04-25.
+    try {
+      val results: Seq[Either[String, ModelRun]] =
+        chooseFiles.map { path =>
+          // Load a run from `path` and returns either the loaded run
+          // in case of success or the path in case of failure
+          try {
+            reviewTab.loadRun(new java.io.FileInputStream(path))
+            val run = reviewTab.state.runs.last
+            Right(run)
+          } catch {
+            case e: UserCancelException => throw e // stop now if user cancels
+            case e: Exception           => Left(path) // accumulate other exceptions
+          }
         }
+      val loadedRuns = results.flatMap(_.right.toOption)
+      // select the last loaded run if we have one:
+      loadedRuns.lastOption.foreach { run =>
+        reviewTab.runList.setSelectedValue(run, true)
+        saveButton.setEnabled(false)
       }
-    val loadedRuns = results.flatMap(_.right.toOption)
-    // select the last loaded run if we have one:
-    loadedRuns.lastOption.foreach { run =>
-      reviewTab.runList.setSelectedValue(run, true)
-      saveButton.setEnabled(false)
-    }
-    val errors = results.flatMap(_.left.toOption)
-    if (errors.nonEmpty) {
-      val (notStr, fileStr) =
-        if (errors.size > 1) ("they are not", "files")
-        else ("it is not a", "file")
-      val msg = "Something went wrong while trying to load the following " +
-        fileStr + ":\n\n" + errors.mkString("\n") + "\n\n" +
-        "Maybe " + notStr + " proper NetLogo Model Run " + fileStr + "?"
-      JOptionPane.showMessageDialog(reviewTab, msg, "NetLogo", JOptionPane.ERROR_MESSAGE);
+      val errors = results.flatMap(_.left.toOption)
+      if (errors.nonEmpty) {
+        val (notStr, fileStr) =
+          if (errors.size > 1) ("they are not", "files")
+          else ("it is not a", "file")
+        val msg = "Something went wrong while trying to load the following " +
+          fileStr + ":\n\n" + errors.mkString("\n") + "\n\n" +
+          "Maybe " + notStr + " proper NetLogo Model Run " + fileStr + "?"
+        JOptionPane.showMessageDialog(reviewTab, msg, "NetLogo", JOptionPane.ERROR_MESSAGE);
+      }
+    } catch {
+      case _: UserCancelException => // do nothing
+      case e: Exception           => throw e // rethrow anything else
     }
   }
 

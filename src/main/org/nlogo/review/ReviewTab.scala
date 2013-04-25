@@ -55,8 +55,8 @@ class ReviewTab(
   override def loadedRuns: Seq[api.ModelRun] = state.runs
   override def loadRun(inputStream: java.io.InputStream): Unit = {
     val run = ModelRunIO.load(inputStream)
-    state.addRun(run)
     loadModelIfNeeded(run.modelString)
+    state.addRun(run)
   }
   override def currentRun: Option[api.ModelRun] = state.currentRun
 
@@ -119,9 +119,7 @@ class ReviewTab(
   def loadModelIfNeeded(modelString: String) {
     val currentModelString = saveModel()
     if (modelString != currentModelString) {
-      ignoring(classOf[UserCancelException]) {
-        offerSave()
-      }
+      offerSave()
       ModelLoader.load(ReviewTab.this, null, api.ModelType.Library, modelString)
       selectReviewTab()
     }
