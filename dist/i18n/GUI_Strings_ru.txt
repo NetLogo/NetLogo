@@ -79,11 +79,6 @@ menu.tools.behaviorSpace = Пространство поведения
 menu.tabs = Табы
 
 menu.help = Помощь
-menu.help.lookUpInDictionary(F1) = поиск в словаре (F1)
-menu.help.netLogoUserManual = NetLogo руководство
-menu.help.netLogoDictionary = NetLogo словарь
-menu.help.netLogoUsersGroup = NetLogo группа
-menu.help.donate = Поддержать
 
 tabs.run = Интерфейс
 tabs.run.editButton = Редактировать

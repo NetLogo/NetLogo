@@ -79,11 +79,6 @@ menu.tools.behaviorSpace = BehaviorSpace
 menu.tabs = Tabs
 
 menu.help = Help
-menu.help.lookUpInDictionary(F1) = Look Up In Dictionary (F1)
-menu.help.netLogoUserManual = NetLogo User Manual
-menu.help.netLogoDictionary = NetLogo Dictionary
-menu.help.netLogoUsersGroup = NetLogo Users Group
-menu.help.donate = Donate
 
 tabs.run = Interface
 tabs.run.editButton = Edit

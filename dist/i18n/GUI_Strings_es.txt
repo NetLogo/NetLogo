@@ -79,11 +79,6 @@ menu.tools.behaviorSpace = Analizador de Comportamiento
 menu.tabs = Pestañas
 
 menu.help = Ayuda
-menu.help.lookUpInDictionary(F1) = Buscar en el Diccionario (F1)
-menu.help.netLogoUserManual = Guía del Usuario NetLogo
-menu.help.netLogoDictionary = Diccionario NetLogo
-menu.help.netLogoUsersGroup = Comunidad de Usuarios de NetLogo
-menu.help.donate = Donar a NetLogo
 
 tabs.run = Ejecutar
 tabs.run.editButton = Editar

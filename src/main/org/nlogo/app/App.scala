@@ -369,7 +369,7 @@ class App extends
     def createEditMenu:  JMenu = new EditMenu(App.this)
     def createToolsMenu: JMenu = new ToolsMenu(App.this)
     override def addHelpMenu(menuBar:JMenuBar) = {
-      val newMenu = new HelpMenu (App.this, new EditorColorizer(workspace))
+      val newMenu = new HelpMenu(App.this)
       menuBar.add(newMenu)
       try if(AbstractWorkspace.isApp) menuBar.setHelpMenu(newMenu)
       catch{

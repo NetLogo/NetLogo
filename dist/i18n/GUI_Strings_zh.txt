@@ -79,11 +79,6 @@ menu.tools.behaviorSpace = 行为空间
 menu.tabs = 标签页
 
 menu.help = 帮助
-menu.help.lookUpInDictionary(F1) = 查看辞典(F1)
-menu.help.netLogoUserManual = NetLogo用户手册
-menu.help.netLogoDictionary = NetLogo辞典
-menu.help.netLogoUsersGroup = NetLogo用户组
-menu.help.donate = 捐赠
 
 tabs.run = 界面
 tabs.run.editButton = 编辑
