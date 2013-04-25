@@ -9,14 +9,14 @@ package org.nlogo.compiler
 import org.nlogo.api.{ Token, TokenType }
 import org.nlogo.nvm.{ Command, CustomAssembled, AssemblerAssistant, Procedure }
 import org.nlogo.prim.{ _call, _done, _recursefast, _goto, _return, _returnreport }
-import org.nlogo.parse._
+import org.nlogo.parse
 
 /**
  * fills the code array of the Procedure object with Commands.
  */
 private class Assembler {
   private val code = new collection.mutable.ArrayBuffer[Command]
-  def assemble(procdef: ProcedureDefinition) {
+  def assemble(procdef: parse.ProcedureDefinition) {
     val proc = procdef.procedure
     assembleStatements(procdef.statements)
     val ret =
@@ -42,7 +42,7 @@ private class Assembler {
     }
     proc.code = code.map(tailRecurse).toArray
   }
-  def assembleStatements(stmts: Statements): collection.mutable.ArrayBuffer[Command] = {
+  def assembleStatements(stmts: parse.Statements): collection.mutable.ArrayBuffer[Command] = {
     stmts.foreach(stmt =>
       stmt.command match {
         case ca: CustomAssembled => ca.assemble(new Assistant(stmt))
@@ -52,7 +52,7 @@ private class Assembler {
   }
   /// CustomAssembled Commands use this to direct their own assembly
   /// (without being privy to implementation details)
-  private class Assistant(stmt: Statement) extends AssemblerAssistant {
+  private class Assistant(stmt: parse.Statement) extends AssemblerAssistant {
     private var branchMark = -1
     private var gotoMark = -1
     private var storedGoto: Option[_goto] = None
@@ -82,11 +82,14 @@ private class Assembler {
       }
     }
     def block() { block(stmt.size - 1) }
-    def block(pos: Int) { assembleStatements(stmt(pos).asInstanceOf[CommandBlock].statements) }
+    def block(pos: Int) {
+      assembleStatements(stmt(pos).asInstanceOf[parse.CommandBlock].statements)
+    }
     def argCount = stmt.size
-    def arg(i: Int) = stmt(i).asInstanceOf[ReporterApp].reporter
+    def arg(i: Int) = stmt(i).asInstanceOf[parse.ReporterApp].reporter
     def removeArg(i: Int) {
-      stmt.command.args = (stmt.command.args.take(i) ++ stmt.command.args.drop(i + 1)).toArray
+      stmt.command.args =
+        (stmt.command.args.take(i) ++ stmt.command.args.drop(i + 1)).toArray
     }
     def resume() {
       if (branchMark == -1) branchMark = code.size

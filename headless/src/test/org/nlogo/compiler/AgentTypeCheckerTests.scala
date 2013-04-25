@@ -4,18 +4,18 @@ package org.nlogo.compiler
 
 import org.scalatest.FunSuite
 import org.nlogo.api.{ CompilerException, DummyExtensionManager, Program }
-import org.nlogo.nvm
-import org.nlogo.parse._
+import org.nlogo.{ nvm, parse }
 
 class AgentTypeCheckerTests extends FunSuite {
 
   /// first some helpers
-  def compile(source: String, is3D: Boolean): Seq[ProcedureDefinition] = {
-    val tokenizer = if (is3D) Parser.Tokenizer3D else Parser.Tokenizer2D
-    val results = new StructureParser(
-      tokenizer.tokenize(source), None, StructureParser.emptyResults(is3D))
+  def compile(source: String, is3D: Boolean): Seq[parse.ProcedureDefinition] = {
+    import parse._
+    val tokenizer = if (is3D) parse.Parser.Tokenizer3D else parse.Parser.Tokenizer2D
+    val results = new parse.StructureParser(
+      tokenizer.tokenize(source), None, parse.StructureParser.emptyResults(is3D))
       .parse(false)
-    val defs = new collection.mutable.ArrayBuffer[ProcedureDefinition]
+    val defs = new collection.mutable.ArrayBuffer[parse.ProcedureDefinition]
     for (procedure <- results.procedures.values) {
       new LetScoper(procedure, results.tokens(procedure), results.program.usedNames).scan()
       val tokens =
@@ -24,7 +24,7 @@ class AgentTypeCheckerTests extends FunSuite {
           .process(results.tokens(procedure).iterator, procedure)
       defs ++= new ExpressionParser(procedure).parse(tokens)
     }
-    new AgentTypeChecker(defs).parse()
+    new AgentTypeChecker(defs).check()
     defs
   }
   def testBoth(source: String, expected: String) {
@@ -35,7 +35,8 @@ class AgentTypeCheckerTests extends FunSuite {
     val defs = compile(source, is3D)
     val buf = new StringBuilder
     expectResult(expected)(
-      defs.map { pd: ProcedureDefinition => pd.procedure.name + ":" + pd.procedure.usableBy }
+      defs.map { pd: parse.ProcedureDefinition =>
+          pd.procedure.name + ":" + pd.procedure.usableBy }
         .mkString(" "))
   }
   def testError(source: String, error: String) {

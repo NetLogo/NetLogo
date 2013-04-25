@@ -18,28 +18,27 @@ package org.nlogo.compiler
 import org.nlogo.api.CompilerException
 import org.nlogo.api.LogoException
 import org.nlogo.nvm.Pure
-import org.nlogo.parse._
-import Fail._
+import org.nlogo.parse, parse.Fail._
 
-private class ConstantFolder extends DefaultAstVisitor {
-  override def visitReporterApp(app: ReporterApp) {
+private class ConstantFolder extends parse.DefaultAstVisitor {
+  override def visitReporterApp(app: parse.ReporterApp) {
     super.visitReporterApp(app)
     if (app.reporter.isInstanceOf[Pure] && !app.args.isEmpty && app.args.forall(isConstant)) {
-      val newReporter = LiteralParser.makeLiteralReporter(applyReporter(app))
+      val newReporter = parse.LiteralParser.makeLiteralReporter(applyReporter(app))
       newReporter.storedSourceStartPosition = app.reporter.getSourceStartPosition
       newReporter.storedSourceEndPosition = app.reporter.getSourceEndPosition
       app.reporter = newReporter
       app.clearArgs
     }
   }
-  private def isConstant(e: Expression) =
+  private def isConstant(e: parse.Expression) =
     e match {
-      case app: ReporterApp =>
+      case app: parse.ReporterApp =>
         app.reporter.isInstanceOf[Pure] && app.args.isEmpty
       case _ =>
         false
     }
-  private def applyReporter(app: ReporterApp): AnyRef = {
+  private def applyReporter(app: parse.ReporterApp): AnyRef = {
     val r = app.reporter
     app.accept(new ArgumentStuffer) // fill args array
     r.init(null)  // copy args array to arg0, arg1, etc.

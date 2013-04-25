@@ -6,8 +6,8 @@ import org.nlogo.editor.AbstractEditorArea
 import org.nlogo.api.Dump
 
 class InputBoxWidget(textArea: AbstractEditorArea, dialogTextArea: AbstractEditorArea,
-                     compiler: org.nlogo.api.CompilerServices, nextComponent: java.awt.Component)
-        extends InputBox(textArea, dialogTextArea, compiler, nextComponent)
+                     parser: org.nlogo.api.ParserServices, nextComponent: java.awt.Component)
+        extends InputBox(textArea, dialogTextArea, parser, nextComponent)
                 with InterfaceGlobalWidget
                 with Events.PeriodicUpdateEventHandler {
   def propertySet = Properties.input

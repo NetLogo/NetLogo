@@ -8,11 +8,11 @@ import org.nlogo.window.{WorldViewSettings, OriginConfiguration}
 import java.awt.{GridBagLayout, BorderLayout, GridBagConstraints}
 import javax.swing.{JLabel, JComboBox, JPanel}
 import java.awt.event.{ItemListener, ItemEvent}
-import org.nlogo.api.{I18N, Editable, CompilerServices, TokenType}
+import org.nlogo.api.{I18N, Editable, ParserServices, TokenType}
 import collection.JavaConverters._
 
-class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Colorizer[TokenType])
-  extends EditPanel(widget, compiler, colorizer){
+class WorldEditPanel(widget: Editable, parser: ParserServices, colorizer: Colorizer[TokenType])
+  extends EditPanel(widget, parser, colorizer){
 
   private implicit val i18nPrefix = I18N.Prefix("edit.viewSettings")
   private val previewPanel = new WorldPreview(200, 200)

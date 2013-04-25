@@ -5,10 +5,10 @@ package org.nlogo.compiler
 import org.scalatest.FunSuite
 import org.nlogo.nvm
 import org.nlogo.api.{ DummyExtensionManager, Program }
-import org.nlogo.parse._
 
 class AssemblerTests extends FunSuite {
   def compile(keyword: String, source: String): nvm.Procedure = {
+    import org.nlogo.parse._
     val results = new StructureParser(
       Parser.Tokenizer2D.tokenize(keyword + " foo " + source + "\nend"), None,
       StructureParser.emptyResults())

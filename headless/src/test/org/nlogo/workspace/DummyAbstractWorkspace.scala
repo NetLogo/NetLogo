@@ -3,7 +3,7 @@
 package org.nlogo.workspace
 
 import org.nlogo.agent.{Agent, World, World3D}
-import org.nlogo.nvm.CompilerInterface
+import org.nlogo.nvm, nvm.CompilerInterface
 import org.nlogo.api
 
 /**
@@ -47,17 +47,18 @@ extends AbstractWorkspaceScala(
   override def setDimensions(d: api.WorldDimensions, patchSize: Double) = unsupported
   override def resizeView(): Unit = unsupported
   override def runtimeError(owner: api.JobOwner,
-                            context: org.nlogo.nvm.Context,
-                            instruction: org.nlogo.nvm.Instruction,
+                            context: nvm.Context,
+                            instruction: nvm.Instruction,
                             ex: Exception) = unsupported
   override def ownerFinished(owner: api.JobOwner) = unsupported
   override def updateDisplay(haveWorldLockAlready: Boolean): Unit = unsupported
-  override def requestDisplayUpdate(context: org.nlogo.nvm.Context, force: Boolean) = unsupported
-  override def breathe(context: org.nlogo.nvm.Context): Unit = unsupported
+  override def requestDisplayUpdate(context: nvm.Context, force: Boolean) = unsupported
+  override def breathe(context: nvm.Context): Unit = unsupported
   override def periodicUpdate(): Unit = unsupported
-  override def addJobFromJobThread(job: org.nlogo.nvm.Job) = unsupported
+  override def addJobFromJobThread(job: nvm.Job) = unsupported
   override def startLogging(properties: String) = unsupported
   override def zipLogFiles(filename: String) = unsupported
   override def deleteLogFiles(): Unit = unsupported
-  override def compiler: CompilerInterface = unsupported
+  override def compiler = unsupported
+  override def parser = unsupported
 }

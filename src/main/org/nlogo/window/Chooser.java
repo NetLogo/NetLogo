@@ -3,7 +3,7 @@
 package org.nlogo.window;
 
 import org.nlogo.agent.ChooserConstraint;
-import org.nlogo.api.CompilerServices;
+import org.nlogo.api.ParserServices;
 import org.nlogo.api.Dump;
 import org.nlogo.api.LogoList;
 
@@ -13,7 +13,7 @@ public abstract strictfp class Chooser
     extends SingleErrorWidget
     implements MouseWheelListener {
 
-  protected final CompilerServices compiler;
+  protected final ParserServices parser;
 
   // The constraint track the list of choices, and ensures the
   // global is always one of them.  We use it to track our current
@@ -34,8 +34,8 @@ public abstract strictfp class Chooser
 
   /// setup and layout
 
-  public Chooser(CompilerServices compiler) {
-    this.compiler = compiler;
+  public Chooser(ParserServices parser) {
+    this.parser = parser;
     setOpaque(true);
     setBackground(InterfaceColors.SLIDER_BACKGROUND);
     setLayout(null);

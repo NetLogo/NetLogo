@@ -2,7 +2,7 @@
 
 package org.nlogo.agent
 
-import org.nlogo.api.{ CompilerException, CompilerServices, LogoException, LogoThunkFactory, ReporterLogoThunk, ValueConstraint }
+import org.nlogo.api.{ CompilerException, ParserServices, LogoException, LogoThunkFactory, ReporterLogoThunk, ValueConstraint }
 
 object SliderConstraint {
 
@@ -24,7 +24,7 @@ object SliderConstraint {
   @throws(classOf[ConstraintExceptionHolder])
   def makeSliderConstraint(agent: Agent, minCode: String, maxCode: String, incCode: String, defValue: Double,
                            ownerName: String, thunkFactory: LogoThunkFactory): SliderConstraint = {
-    val compiler: CompilerServices = agent.world.compiler
+    val parser: ParserServices = agent.world.parser
     abstract class ConstraintCompiler[T] {
       def compile(code: String, spec: Spec): Either[SliderConstraintException, T]
       def makeConstraint(minT: T, maxT: T, incT: T): SliderConstraint
@@ -38,7 +38,7 @@ object SliderConstraint {
     }
     object ConstantConstraintCompiler extends ConstraintCompiler[Double] {
       def compile(code: String, spec: Spec) = {
-        val o: Object = compiler.readFromString(code)
+        val o: Object = parser.readFromString(code)
         if (!(o.isInstanceOf[Double])) Left(new ConstraintRuntimeException(spec, "constraint must be a number."))
         else Right(o.asInstanceOf[Double])
       }
@@ -53,7 +53,7 @@ object SliderConstraint {
         new DynamicSliderConstraint(minT, maxT, incT)
     }
     val allConstants =
-      compiler.isConstant(minCode) && compiler.isConstant(maxCode) && compiler.isConstant(incCode)
+      parser.isConstant(minCode) && parser.isConstant(maxCode) && parser.isConstant(incCode)
     val constraintCompiler = if (allConstants) ConstantConstraintCompiler else DynamicConstraintCompiler
     val con: SliderConstraint = constraintCompiler.compileAll(minCode, maxCode, incCode)
     con.defaultValue=defValue

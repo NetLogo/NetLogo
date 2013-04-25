@@ -2,26 +2,25 @@
 
 package org.nlogo.compiler
 
-import org.nlogo.nvm.Reporter
-import org.nlogo.parse._
+import org.nlogo.{ nvm, parse }
 
 /**
  * Fills the args arrays, in all of the Instructions anywhere in
  * the Procedure, with Reporters.
  */
-private class ArgumentStuffer extends DefaultAstVisitor {
-  override def visitStatement(stmt: Statement) {
+private class ArgumentStuffer extends parse.DefaultAstVisitor {
+  override def visitStatement(stmt: parse.Statement) {
     stmt.command.args = gatherArgs(stmt.args)
     super.visitStatement(stmt)
   }
-  override def visitReporterApp(app: ReporterApp) {
+  override def visitReporterApp(app: parse.ReporterApp) {
     app.reporter.args = gatherArgs(app.args)
     super.visitReporterApp(app)
   }
-  private def gatherArgs(expressions: Seq[Expression]): Array[Reporter] =
+  private def gatherArgs(expressions: Seq[parse.Expression]): Array[nvm.Reporter] =
     expressions.flatMap{
-      case app:ReporterApp => Some(app.reporter)
-      case block:ReporterBlock => Some(block.app.reporter)
+      case app: parse.ReporterApp => Some(app.reporter)
+      case block: parse.ReporterBlock => Some(block.app.reporter)
       case _ => None
     }.toArray
 }

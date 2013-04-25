@@ -2,14 +2,14 @@
 
 package org.nlogo.sdm
 
-import org.nlogo.api.{ AggregateManagerInterface, CompilerServices }
+import org.nlogo.api.{ AggregateManagerInterface, ParserServices }
 
 class AggregateManagerLite extends AggregateManagerInterface {
 
   private def unsupported = throw new UnsupportedOperationException
 
-  def load(lines: String, compiler: CompilerServices) {
-    source = Loader.load(lines, compiler)
+  def load(lines: String, parser: ParserServices) {
+    source = Loader.load(lines, parser)
   }
 
   /// implementations of SourceOwner methods

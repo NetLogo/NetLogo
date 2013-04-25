@@ -338,7 +338,8 @@ class App extends
     pico.addComponent(world)
     _workspace = new GUIWorkspace(world, GUIWorkspaceJ.KioskLevel.NONE,
                                   frame, frame, hubNetManagerFactory, App.this, listenerManager) {
-      val compiler = pico.getComponent(classOf[CompilerInterface])
+      override val compiler = pico.getComponent(classOf[CompilerInterface])
+      override def parser = compiler
       // lazy to avoid initialization order snafu - ST 3/1/11
       lazy val updateManager = new UpdateManager {
         override def defaultFrameRate = _workspace.frameRate
