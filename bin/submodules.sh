@@ -12,7 +12,6 @@ git config submodule.extensions/matrix.url git@github.com:/NetLogo/Matrix-Extens
 git config submodule.extensions/profiler.url git@github.com:/NetLogo/Profiler-Extension.git
 git config submodule.extensions/sample.url git@github.com:/NetLogo/Sample-Extension.git
 git config submodule.extensions/sample-scala.url git@github.com:/NetLogo/Sample-Scala-Extension.git
-git config submodule.extensions/sound.url git@github.com:/NetLogo/Sound-Extension.git
 git config submodule.extensions/table.url git@github.com:/NetLogo/Table-Extension.git
 
 # The above seems not to be doing the trick unless you run it before cloning,
@@ -30,5 +29,4 @@ git config submodule.extensions/table.url git@github.com:/NetLogo/Table-Extensio
 ( cd extensions/qtj; git remote set-url origin git@github.com:/NetLogo/QTJ-Extension.git )
 ( cd extensions/sample; git remote set-url origin git@github.com:/NetLogo/Sample-Extension.git )
 ( cd extensions/sample-scala; git remote set-url origin git@github.com:/NetLogo/Sample-Scala-Extension.git )
-( cd extensions/sound; git remote set-url origin git@github.com:/NetLogo/Sound-Extension.git )
 ( cd extensions/table; git remote set-url origin git@github.com:/NetLogo/Table-Extension.git )

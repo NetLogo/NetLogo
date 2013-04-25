@@ -16,9 +16,6 @@
 [submodule "extensions/sample-scala"]
 	path = extensions/sample-scala
 	url = git://github.com/NetLogo/Sample-Scala-Extension.git
-[submodule "extensions/sound"]
-	path = extensions/sound
-	url = git://github.com/NetLogo/Sound-Extension.git
 [submodule "extensions/table"]
 	path = extensions/table
 	url = git://github.com/NetLogo/Table-Extension.git
