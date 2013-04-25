@@ -7505,8 +7505,8 @@ procedure SHOW-RULES:[RULES]{O---}:
           INVOKESTATIC java/lang/StrictMath.abs (D)D
           DSTORE 6
           DLOAD 6
-          GETSTATIC org/nlogo/api/Constants$.MODULE$ : Lorg/nlogo/api/Constants$;
-          INVOKEVIRTUAL org/nlogo/api/Constants$.Infinitesimal ()D
+          GETSTATIC org/nlogo/api/Numbers$.MODULE$ : Lorg/nlogo/api/Numbers$;
+          INVOKEVIRTUAL org/nlogo/api/Numbers$.Infinitesimal ()D
           DCMPG
           IFGT L6
           ALOAD 1
@@ -7667,8 +7667,8 @@ procedure SHOW-RULES:[RULES]{O---}:
           INVOKESTATIC java/lang/StrictMath.abs (D)D
           DSTORE 6
           DLOAD 6
-          GETSTATIC org/nlogo/api/Constants$.MODULE$ : Lorg/nlogo/api/Constants$;
-          INVOKEVIRTUAL org/nlogo/api/Constants$.Infinitesimal ()D
+          GETSTATIC org/nlogo/api/Numbers$.MODULE$ : Lorg/nlogo/api/Numbers$;
+          INVOKEVIRTUAL org/nlogo/api/Numbers$.Infinitesimal ()D
           DCMPG
           IFGT L6
           ALOAD 1
@@ -7829,8 +7829,8 @@ procedure SHOW-RULES:[RULES]{O---}:
           INVOKESTATIC java/lang/StrictMath.abs (D)D
           DSTORE 6
           DLOAD 6
-          GETSTATIC org/nlogo/api/Constants$.MODULE$ : Lorg/nlogo/api/Constants$;
-          INVOKEVIRTUAL org/nlogo/api/Constants$.Infinitesimal ()D
+          GETSTATIC org/nlogo/api/Numbers$.MODULE$ : Lorg/nlogo/api/Numbers$;
+          INVOKEVIRTUAL org/nlogo/api/Numbers$.Infinitesimal ()D
           DCMPG
           IFGT L6
           ALOAD 1
@@ -7992,8 +7992,8 @@ procedure SHOW-RULES:[RULES]{O---}:
           INVOKESTATIC java/lang/StrictMath.abs (D)D
           DSTORE 6
           DLOAD 6
-          GETSTATIC org/nlogo/api/Constants$.MODULE$ : Lorg/nlogo/api/Constants$;
-          INVOKEVIRTUAL org/nlogo/api/Constants$.Infinitesimal ()D
+          GETSTATIC org/nlogo/api/Numbers$.MODULE$ : Lorg/nlogo/api/Numbers$;
+          INVOKEVIRTUAL org/nlogo/api/Numbers$.Infinitesimal ()D
           DCMPG
           IFGT L6
           ALOAD 1
@@ -8120,8 +8120,8 @@ procedure SHOW-RULES:[RULES]{O---}:
           INVOKESTATIC java/lang/StrictMath.abs (D)D
           DSTORE 6
           DLOAD 6
-          GETSTATIC org/nlogo/api/Constants$.MODULE$ : Lorg/nlogo/api/Constants$;
-          INVOKEVIRTUAL org/nlogo/api/Constants$.Infinitesimal ()D
+          GETSTATIC org/nlogo/api/Numbers$.MODULE$ : Lorg/nlogo/api/Numbers$;
+          INVOKEVIRTUAL org/nlogo/api/Numbers$.Infinitesimal ()D
           DCMPG
           IFGT L6
           ALOAD 1
