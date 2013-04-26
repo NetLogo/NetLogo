@@ -25,19 +25,10 @@ object AgentVariables {
   def isDoubleTurtleVariable(vn: Int): Boolean =
     doubleTurtleVariables(vn)
 
-  def isSpecialTurtleVariable(vn: Int) =
-    vn == VAR_WHO
-
   def isDoublePatchVariable(vn: Int) =
-    vn == VAR_PXCOR || vn == VAR_PYCOR
-
-  def isSpecialPatchVariable(vn: Int) =
     vn == VAR_PXCOR || vn == VAR_PYCOR
 
   def isDoubleLinkVariable(vn: Int) =
     vn == VAR_THICKNESS
-
-  def isSpecialLinkVariable(vn: Int) =
-    vn == VAR_END1 || vn == VAR_END2 || vn == VAR_LBREED
 
 }
