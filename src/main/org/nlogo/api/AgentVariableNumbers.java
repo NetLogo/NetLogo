@@ -2,6 +2,12 @@
 
 package org.nlogo.api;
 
+// At least for now, we keep this in Java because agent.Turtle,
+// agent.Patch and so on are in Java too, and they do "switch(...) {
+// case VAR_..." which won't compile unless javac knows the numbers
+// are constants, which (as far as I know anyway) means they must be
+// defined in Java. - ST 4/26/13
+
 public final strictfp class AgentVariableNumbers {
 
   // this class is not instantiable

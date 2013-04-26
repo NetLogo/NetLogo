@@ -12,30 +12,31 @@ object Tokenizer extends TokenizerInterface {
   // be useless even if there's a tokenization error in the code
   // - ST 4/21/03, 5/24/03, 6/29/06
   def tokenizeRobustly(source: String): Seq[Token] =
-    doTokenize(source, false, false, "", false)
+    doTokenize(source, false, "", false)
 
   // and here's versions that throw CompilerException as soon as they hit a bad token - ST 2/20/08
   def tokenize(source: String): Seq[Token] =
     tokenize(source, "")
   def tokenize(source: String, fileName: String): Seq[Token] = {
-    val result = doTokenize(source, false, false, fileName, true)
+    val result = doTokenize(source, false, fileName, true)
     result.find(_.tpe == TokenType.BAD) match {
-      case Some(badToken) => throw new CompilerException(badToken)
-      case None => result
+      case Some(badToken) =>
+        throw new CompilerException(badToken)
+      case None =>
+        result
     }
   }
 
   // this is used e.g. when colorizing
   private def tokenizeIncludingComments(source: String): Seq[Token] =
-    doTokenize(source, true, false, "", false)
+    doTokenize(source, true, "", false)
 
-  // includeCommentTokens is used for syntax highlighting in the editor; allowRemovedPrimitives is
-  // used when doing auto-conversions that require the parser - ST 7/7/06
-  private def doTokenize(source: String, includeCommentTokens: Boolean, allowRemovedPrimitives: Boolean,
+  // includeCommentTokens is used for syntax highlighting in the editor - ST 7/7/06
+  private def doTokenize(source: String, includeCommentTokens: Boolean,
                          fileName: String, stopAtFirstBadToken: Boolean): Seq[Token] =
   {
     val yy = new TokenLexer(
-      new java.io.StringReader(source), fileName, allowRemovedPrimitives)
+      new java.io.StringReader(source), fileName)
     val eof = new Token("", TokenType.EOF, "")(0, 0, "")
     def yystream: Stream[Token] = {
       val t = yy.yylex()
@@ -50,7 +51,7 @@ object Tokenizer extends TokenizerInterface {
   }
 
   def nextToken(reader: java.io.BufferedReader): Token =
-    new TokenLexer(reader, null, false).yylex()
+    new TokenLexer(reader, null).yylex()
 
   def getTokenAtPosition(source: String, position: Int): Token = {
     // if the cursor is between two adjacent tokens we'll need to pick the token

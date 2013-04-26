@@ -12,7 +12,6 @@ import org.nlogo.api.TokenType;
 
 %{
   private final String fileName;
-  private final boolean allowRemovedPrimitives;
   private StringBuilder literalBuilder = null;
   private int literalStart = -1;
   private int literalNestingLevel = 0;
@@ -106,10 +105,8 @@ import org.nlogo.api.TokenType;
 %switch
 %class TokenLexer
 %ctorarg String fileName
-%ctorarg boolean allowRemovedPrimitives
 %init{
   this.fileName = fileName;
-  this.allowRemovedPrimitives = allowRemovedPrimitives;
 %init}
 %unicode
 %char
