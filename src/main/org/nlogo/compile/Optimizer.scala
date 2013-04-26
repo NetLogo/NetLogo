@@ -453,9 +453,12 @@ private object Optimizer extends parse.DefaultAstVisitor {
   // _patchvariable => _patchvariabledouble
   private object PatchVariableDouble extends RewritingReporterMunger {
     val clazz = classOf[_patchvariable]
+    def isDoubleVariable(vn: Int) =
+      vn == api.AgentVariableNumbers.VAR_PXCOR ||
+      vn == api.AgentVariableNumbers.VAR_PYCOR
     def munge(root: Match) {
       val vn = root.reporter.asInstanceOf[_patchvariable].vn
-      if(api.AgentVariables.isDoublePatchVariable(vn)) {
+      if(isDoubleVariable(vn)) {
         root.replace(classOf[_patchvariabledouble])
         root.reporter.asInstanceOf[_patchvariabledouble].vn = vn
       }
@@ -464,9 +467,13 @@ private object Optimizer extends parse.DefaultAstVisitor {
   // _turtlevariable => _turtlevariabledouble
   private object TurtleVariableDouble extends RewritingReporterMunger {
     val clazz = classOf[_turtlevariable]
+    val isDoubleVariable: Double => Boolean = {
+      import api.AgentVariableNumbers._
+      Set(VAR_WHO, VAR_HEADING, VAR_XCOR, VAR_YCOR, VAR_SIZE, VAR_PENSIZE)
+    }
     def munge(root: Match) {
       val vn = root.reporter.asInstanceOf[_turtlevariable].vn
-      if(api.AgentVariables.isDoubleTurtleVariable(vn)) {
+      if(isDoubleVariable(vn)) {
         root.replace(classOf[_turtlevariabledouble])
         root.reporter.asInstanceOf[_turtlevariabledouble].vn = vn
       }

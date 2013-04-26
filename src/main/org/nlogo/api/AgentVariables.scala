@@ -2,11 +2,10 @@
 
 package org.nlogo.api
 
-import AgentVariableNumbers._
-
 object AgentVariables {
 
-  val getImplicitObserverVariables = Seq[String]()
+  val getImplicitObserverVariables =
+    Seq[String]()
 
   val getImplicitTurtleVariables =
     Seq("WHO", "COLOR", "HEADING", "XCOR", "YCOR", "SHAPE", "LABEL", "LABEL-COLOR", "BREED",
@@ -18,17 +17,5 @@ object AgentVariables {
   val getImplicitLinkVariables =
     Seq("END1", "END2", "COLOR", "LABEL", "LABEL-COLOR", "HIDDEN?", "BREED",
         "THICKNESS", "SHAPE", "TIE-MODE")
-
-  private val doubleTurtleVariables = Set(
-    VAR_WHO, VAR_HEADING, VAR_XCOR, VAR_YCOR, VAR_SIZE, VAR_PENSIZE)
-
-  def isDoubleTurtleVariable(vn: Int): Boolean =
-    doubleTurtleVariables(vn)
-
-  def isDoublePatchVariable(vn: Int) =
-    vn == VAR_PXCOR || vn == VAR_PYCOR
-
-  def isDoubleLinkVariable(vn: Int) =
-    vn == VAR_THICKNESS
 
 }
