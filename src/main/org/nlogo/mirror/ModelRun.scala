@@ -149,6 +149,6 @@ case class Frame private (
   def ticks: Option[Double] =
     for {
       entry <- mirroredState.get(AgentKey(Mirrorables.World, 0))
-      ticks <- entry.lift(Mirrorables.MirrorableWorld.wvTicks)
+      ticks <- entry.lift(Mirrorables.MirrorableWorld.WorldVar.Ticks.id)
     } yield ticks.asInstanceOf[Double]
 }
