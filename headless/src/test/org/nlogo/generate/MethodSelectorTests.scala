@@ -6,6 +6,7 @@ import org.scalatest.FunSuite
 import java.lang.reflect.Method
 import org.nlogo.agent.{AgentSet, Agent, Turtle}
 import org.nlogo.prim._
+import org.nlogo.api.LogoList
 
 class MethodSelectorTests extends FunSuite {
   import MethodSelector._
@@ -52,6 +53,10 @@ class MethodSelectorTests extends FunSuite {
     assertResult("(Double,0)(double,0)")(
       dump(evaluate(new _constdouble(0.0),false)))
   }
+  test("const list") {
+    expectResult("(LogoList,0)")(
+      dump(evaluate(new _constlist(LogoList.Empty),false)))
+  }
   // _lessthan's report methods are as follows:
   // boolean report_1(Object,Object)
   // boolean report_2(String,String)
@@ -96,6 +101,21 @@ class MethodSelectorTests extends FunSuite {
     assertResult("(boolean,0)")(dump(evaluate(root,false)))
     assertResult("double,double => boolean")(
       dump(select(root,java.lang.Boolean.TYPE,false).get))
+  }
+  // check handling of "sum" on input known to be a list
+  test("sum list 1") {
+    val root = new _sum
+    root.args = Array(new _constlist(LogoList.Empty))
+    expectResult("(double,0)")(dump(evaluate(root,false)))
+    expectResult("LogoList => double")(
+      dump(select(root,java.lang.Double.TYPE,false).get))
+  }
+  test("sum list 2") {
+    val root = new _sum
+    root.args = Array(new _sentence)
+    expectResult("(double,0)")(dump(evaluate(root,false)))
+    expectResult("LogoList => double")(
+      dump(select(root,java.lang.Double.TYPE,false).get))
   }
   // check on handling of reporter blocks (which show up as Reporter arguments
   // in the args array)
