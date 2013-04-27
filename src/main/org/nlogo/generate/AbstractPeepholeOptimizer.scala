@@ -4,7 +4,7 @@ package org.nlogo.generate
 
 import org.objectweb.asm.{ Label, MethodAdapter, MethodVisitor }
 
-private abstract class AbstractPeepholeOptimizer(mv: MethodVisitor) extends MethodAdapter(mv) {
+abstract class AbstractPeepholeOptimizer(mv: MethodVisitor) extends MethodAdapter(mv) {
 
   def restartMatch() // abstract
 

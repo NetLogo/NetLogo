@@ -9,7 +9,7 @@ import org.nlogo.{ api, nvm }
 import api.CompilerException
 import nvm.{ ArgumentTypeException, Instruction }
 
-private object TypeConverter {
+object TypeConverter {
   /**
    * @param typeFrom - what we are converting from
    * @param typeTo - what we are converting to

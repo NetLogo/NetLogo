@@ -6,7 +6,7 @@ import java.lang.reflect.Method
 import org.nlogo.nvm.{ Command, CustomGenerated, Instruction, Reporter }
 import org.objectweb.asm.Type
 
-private object BytecodeUtils {
+object BytecodeUtils {
 
   // want each unrejiggered prim encountered to print a warning? - ST 2/6/09
   private val DEBUG_LOG_NOT_REJIGGERED = false

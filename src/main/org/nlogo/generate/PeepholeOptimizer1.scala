@@ -14,7 +14,7 @@ package org.nlogo.generate
 import org.objectweb.asm.Opcodes.GOTO
 import org.objectweb.asm.{ Label, MethodVisitor }
 
-private class PeepholeOptimizer1(mv: MethodVisitor) extends AbstractPeepholeOptimizer(mv) {
+class PeepholeOptimizer1(mv: MethodVisitor) extends AbstractPeepholeOptimizer(mv) {
 
   private var goto: Option[Label] = None
   private var extra: Option[Label] = None

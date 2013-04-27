@@ -28,7 +28,7 @@ import asm.Opcodes._
 import org.nlogo.nvm.CustomGenerated
 import org.nlogo.prim.{ _and, _call, _callreport, _list, _or, _sentence, _word }
 
-private class CustomGenerator(profilingEnabled: Boolean) {
+class CustomGenerator(profilingEnabled: Boolean) {
 
   def generate(instr: CustomGenerated, nlgen: GeneratorAdapter, thisInstrUID: Int, ip: Int) {
     instr match {
