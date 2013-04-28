@@ -3,19 +3,19 @@
 package org.nlogo.tortoise
 
 import org.nlogo.{ api, nvm, parse, prim, workspace }
-import nvm.CompilerInterface.ProceduresMap
+import nvm.CompilerInterface.{ ProceduresMap, NoProcedures }
 
 object Compiler {
 
   // three main entry points. input is NetLogo, result is JavaScript.
 
   def compileReporter(logo: String,
-    oldProcedures: ProceduresMap = nvm.CompilerInterface.NoProcedures,
+    oldProcedures: ProceduresMap = NoProcedures,
     program: api.Program = api.Program.empty()): String =
     compile(logo, commands = false, oldProcedures, program)
 
   def compileCommands(logo: String,
-    oldProcedures: ProceduresMap = nvm.CompilerInterface.NoProcedures,
+    oldProcedures: ProceduresMap = NoProcedures,
     program: api.Program = api.Program.empty()): String =
     compile(logo, commands = true, oldProcedures, program)
 
@@ -46,7 +46,7 @@ object Compiler {
   //   actual reporter is the first (and only) argument to `report`
 
   def compile(logo: String, commands: Boolean,
-      oldProcedures: ProceduresMap = nvm.CompilerInterface.NoProcedures,
+      oldProcedures: ProceduresMap = NoProcedures,
       program: api.Program = api.Program.empty()): String = {
     val wrapped =
       workspace.Evaluator.getHeader(api.AgentKind.Observer, commands) +
