@@ -1,29 +1,29 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.headless
+package org.nlogo.workspace
 
-import org.nlogo.api.{ RendererInterface, ViewSettings }
-import org.nlogo.workspace.AbstractWorkspaceScala
 import org.nlogo.util.HexString.toHexString
 import java.io.PrintWriter
+import org.nlogo.api.Workspace
 
 object Checksummer {
-  def initModelForChecksumming(workspace: HeadlessWorkspace) {
+  def initModelForChecksumming(workspace: Workspace) {
     workspace.renderer.renderLabelsAsRectangles_=(true)
-    if(workspace.previewCommands.containsSlice("need-to-manually-make-preview-for-this-model"))
-      workspace.previewCommands = AbstractWorkspaceScala.DefaultPreviewCommands
+    val commands =
+      Some(workspace.previewCommands)
+        .filterNot(_.containsSlice("need-to-manually-make-preview-for-this-model"))
+        .getOrElse(AbstractWorkspaceScala.DefaultPreviewCommands)
     workspace.command("random-seed 0")
     workspace.command(workspace.previewCommands)
   }
-  def calculateWorldChecksum(workspace: HeadlessWorkspace): String =
+  def calculateWorldChecksum(workspace: Workspace): String =
     calculateChecksum(workspace.exportWorld _)
-  def calculateGraphicsChecksum(renderer: RendererInterface, viewSettings: ViewSettings): String =
+  def calculateGraphicsChecksum(workspace: Workspace): String =
     calculateChecksum{writer =>
-      val raster = renderer.exportView(viewSettings)
+      val raster = workspace.renderer.exportView(workspace)
       raster.getData.getPixels(0, 0, raster.getWidth, raster.getHeight, null: Array[Int])
         .foreach(writer.println)
     }
-  // public for testing - ST 7/15/10
   def calculateChecksum(fn: PrintWriter => Unit): String = {
     val output = {
       val outputStream = new java.io.ByteArrayOutputStream

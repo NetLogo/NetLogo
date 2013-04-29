@@ -95,9 +95,7 @@ class HeadlessWorkspace(
   val compiler: CompilerInterface,
   val renderer: RendererInterface)
 extends AbstractWorkspaceScala(_world)
-with org.nlogo.workspace.Controllable
-with org.nlogo.workspace.WorldLoaderInterface
-with org.nlogo.api.ViewSettings {
+with org.nlogo.workspace.WorldLoaderInterface {
 
   override def parser = compiler
 

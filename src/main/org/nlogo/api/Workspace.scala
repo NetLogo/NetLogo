@@ -4,7 +4,8 @@ package org.nlogo.api
 
 import java.io.IOException
 
-trait Workspace extends ImporterUser with ParserServices with RandomServices {
+trait Workspace extends ImporterUser with ParserServices with RandomServices
+with ViewSettings with Controllable {
   def world: World
   def getExtensionManager: ExtensionManager
   def waitFor(runnable: CommandRunnable)
@@ -81,4 +82,7 @@ trait Workspace extends ImporterUser with ParserServices with RandomServices {
   def lastLogoException: LogoException
   def clearLastLogoException()
   def profilingEnabled: Boolean
+  def worldChecksum: String
+  def graphicsChecksum: String
+  def renderer: RendererInterface
 }

@@ -7,7 +7,7 @@ import org.nlogo.agent.{ Agent, AgentSet, World }
 import java.util.{ WeakHashMap => JWeakHashMap }
 import java.io.IOException
 
-trait Workspace extends api.Workspace with JobManagerOwner {
+trait Workspace extends api.Workspace with JobManagerOwner with api.ViewSettings {
   def breathe(context: Context) // called when engine comes up for air
   def requestDisplayUpdate(context: Context, force: Boolean)
   def updateUI(context: Context) { }

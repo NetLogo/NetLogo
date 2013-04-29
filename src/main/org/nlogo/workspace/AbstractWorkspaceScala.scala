@@ -3,8 +3,8 @@
 package org.nlogo.workspace
 
 import org.nlogo.agent.{ World, Agent, Observer, AbstractExporter, AgentSet }
-import org.nlogo.api.{ AgentKind, PlotInterface, Dump, CommandLogoThunk, ReporterLogoThunk,
-                       CompilerException, LogoException, JobOwner, SimpleJobOwner, Token, ModelType}
+import org.nlogo.api, api.{ AgentKind, PlotInterface, Dump, CommandLogoThunk, ReporterLogoThunk,
+  CompilerException, LogoException, JobOwner, SimpleJobOwner, Token, ModelType}
 import org.nlogo.nvm.{ CompilerInterface, FileManager, Instruction, EngineException, Context,
                        Procedure, Job, Command, MutableLong, Workspace, Activation }
 import org.nlogo.plot.{ PlotExporter, PlotManager }
@@ -20,7 +20,7 @@ object AbstractWorkspaceScala {
 abstract class AbstractWorkspaceScala(val world: World)
 extends AbstractWorkspace
 with Workspace with Procedures with Plotting with Exporting with Evaluating with Benchmarking
-with Compiling with Profiling with Extensions with BehaviorSpace with Paths {
+with Compiling with Profiling with Extensions with BehaviorSpace with Paths with Checksums {
 
   val fileManager: FileManager = new DefaultFileManager(this)
 
@@ -299,7 +299,14 @@ object AbstractWorkspaceTraits {
     }
   }
 
-  trait BehaviorSpace { this: org.nlogo.api.Workspace =>
+  trait Checksums { this: AbstractWorkspaceScala =>
+    override def worldChecksum =
+      Checksummer.calculateWorldChecksum(this)
+    override def graphicsChecksum =
+      Checksummer.calculateGraphicsChecksum(this)
+  }
+
+  trait BehaviorSpace { this: api.Workspace =>
     private var _behaviorSpaceRunNumber = 0
     override def behaviorSpaceRunNumber = _behaviorSpaceRunNumber
     override def behaviorSpaceRunNumber(n: Int) {

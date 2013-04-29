@@ -76,6 +76,19 @@ class DummyWorkspace extends DummyParserServices with Workspace {
   override def behaviorSpaceRunNumber(n: Int) = unsupported
   override def previewCommands = unsupported
   override def benchmark(minTime: Int, maxTime: Int) = unsupported
+  override def renderer = unsupported
+  override def worldChecksum = unsupported
+  override def graphicsChecksum = unsupported
+
+  // from ViewSettings
+  override def drawSpotlight = unsupported
+  override def fontSize = unsupported
+  override def perspective = unsupported
+  override def renderPerspective = unsupported
+  override def viewHeight = unsupported
+  override def viewOffsetX = unsupported
+  override def viewOffsetY = unsupported
+  override def viewWidth = unsupported
 
   // from ImporterUser
   override def setOutputAreaContents(text: String) = unsupported
@@ -99,6 +112,10 @@ class DummyWorkspace extends DummyParserServices with Workspace {
   // from RandomServices
   override def auxRNG = null
   override def mainRNG = null
+
+  // from Controllable
+  override def command(source: String) = unsupported
+  override def report(source: String) = unsupported
 
   override def profilingEnabled = false
   override def profilingTracer = unsupported
