@@ -44,6 +44,7 @@ class TestAllSyntaxes extends FunSuite {
                      |_butlast string or list,string or list,OTPL,null,10,1,1
                      |_canmove number,TRUE/FALSE,-T--,null,10,1,1
                      |_ceil number,number,OTPL,null,10,1,1
+                     |_checksum ,string,O---,null,10,0,0
                      |_checksyntax string,string,OTPL,null,10,1,1
                      |_cos number,number,OTPL,null,10,1,1
                      |_count agentset,number,OTPL,null,10,1,1
