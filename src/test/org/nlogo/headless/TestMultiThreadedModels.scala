@@ -3,6 +3,7 @@
 package org.nlogo.headless
 
 import org.nlogo.util.SlowTest
+import org.nlogo.api.ModelCreator._
 
 /**
  * This trait allows you to run model tests in parallel, in N threads.

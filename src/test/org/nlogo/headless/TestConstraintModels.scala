@@ -5,7 +5,8 @@ package org.nlogo.headless
 // This is in org.nlogo.headless and not org.nlogo.workspace because it uses workspace.open(), which
 // (at present!) DummyAbstractWorkspace does not support. - ST 4/8/08
 
-import org.nlogo.agent.{BooleanConstraint, ConstantSliderConstraint, DynamicSliderConstraint, SliderConstraint}
+import org.nlogo.agent.{ BooleanConstraint, ConstantSliderConstraint, DynamicSliderConstraint, SliderConstraint }
+import org.nlogo.api.ModelCreator._
 
 class TestConstraintModels extends AbstractTestModels {
 
