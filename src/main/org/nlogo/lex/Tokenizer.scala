@@ -2,9 +2,9 @@
 
 package org.nlogo.lex
 
-import org.nlogo.api.{ CompilerException, ExtensionManager, Token, TokenizerInterface, TokenType }
+import org.nlogo.api, api.{ Token, TokenType }
 
-object Tokenizer extends TokenizerInterface {
+object Tokenizer extends api.TokenizerInterface {
 
   // this method never throws CompilerException, but use TokenType.BAD
   // instead, because if there's an error we want to still
@@ -14,14 +14,12 @@ object Tokenizer extends TokenizerInterface {
   def tokenizeRobustly(source: String): Seq[Token] =
     doTokenize(source, false, "", false)
 
-  // and here's versions that throw CompilerException as soon as they hit a bad token - ST 2/20/08
-  def tokenize(source: String): Seq[Token] =
-    tokenize(source, "")
+  // and here's one that throws CompilerException as soon as it hits a bad token - ST 2/20/08
   def tokenize(source: String, fileName: String): Seq[Token] = {
     val result = doTokenize(source, false, fileName, true)
     result.find(_.tpe == TokenType.BAD) match {
       case Some(badToken) =>
-        throw new CompilerException(badToken)
+        throw new api.CompilerException(badToken)
       case None =>
         result
     }
@@ -77,13 +75,7 @@ object Tokenizer extends TokenizerInterface {
     tokenizeRobustly(ident).take(2).map(_.tpe) ==
       Seq(TokenType.IDENT, TokenType.EOF)
 
-  // this is for the syntax-highlighting editor in the HubNet client, where we don't have
-  // an extension manager.
-  def tokenizeForColorization(source: String): Seq[Token] =
-    tokenizeIncludingComments(source).takeWhile(_.tpe != TokenType.EOF)
-
-  // this is for the syntax-highlighting editor
-  def tokenizeForColorization(source: String, extensionManager: ExtensionManager): Seq[Token] = {
+  def tokenizeForColorization(source: String, extensionManager: api.ExtensionManager): Seq[Token] = {
     // In order for extension primitives to be the right color, we need to change
     // the type of the token from TokenType.IDENT to TokenType.COMMAND or TokenType.REPORTER
     // if the identifier is recognized by the extension.
@@ -101,7 +93,9 @@ object Tokenizer extends TokenizerInterface {
           new Token(token.name, newType, token.value)(
             token.startPos, token.endPos, token.fileName)
       }
-    tokenizeForColorization(source).map(replaceImports)
+    tokenizeIncludingComments(source)
+      .takeWhile(_.tpe != TokenType.EOF)
+      .map(replaceImports)
   }
 
   def checkInstructionMaps() { TokenMapper.checkInstructionMaps() }
