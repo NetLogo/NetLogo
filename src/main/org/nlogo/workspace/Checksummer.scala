@@ -13,8 +13,7 @@ object Checksummer {
       Some(workspace.previewCommands)
         .filterNot(_.containsSlice("need-to-manually-make-preview-for-this-model"))
         .getOrElse(AbstractWorkspaceScala.DefaultPreviewCommands)
-    workspace.command("random-seed 0")
-    workspace.command(commands)
+    workspace.command("random-seed 0\n" + commands)
   }
   def calculateWorldChecksum(workspace: Workspace): String =
     calculateChecksum(workspace.exportWorld _)
