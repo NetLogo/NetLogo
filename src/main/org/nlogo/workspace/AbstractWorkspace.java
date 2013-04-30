@@ -2,41 +2,25 @@
 
 package org.nlogo.workspace;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
 import org.nlogo.agent.Agent;
 import org.nlogo.api.*;
 import org.nlogo.agent.Importer;
 import org.nlogo.agent.ImporterJ;
 import org.nlogo.agent.World;
-import org.nlogo.nvm.Activation;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.CompilerInterface;
 import org.nlogo.nvm.ParserInterface;
 import org.nlogo.nvm.FileManager;
-import org.nlogo.nvm.Job;
-import org.nlogo.nvm.JobManagerInterface;
-import org.nlogo.nvm.MutableLong;
 import org.nlogo.nvm.Procedure;
 import org.nlogo.nvm.Workspace;
-import org.nlogo.util.Femto;
 
 public abstract strictfp class AbstractWorkspace
   implements org.nlogo.api.LogoThunkFactory, org.nlogo.api.ParserServices {
 
-  public final org.nlogo.nvm.JobManagerInterface jobManager;
-  public final Evaluator evaluator;
-
   /// startup
 
   protected AbstractWorkspace() {
-    evaluator = new Evaluator((AbstractWorkspaceScala) this);
     world().compiler_$eq((AbstractWorkspaceScala) this);
-    jobManager = Femto.get(JobManagerInterface.class, "org.nlogo.job.JobManager",
-                           new Object[]{this, world(), world()});
   }
 
   /**
@@ -121,33 +105,6 @@ public abstract strictfp class AbstractWorkspace
     return file.toURL();
   }
 
-  /// methods that may be called from the job thread by prims
-
-  public void joinForeverButtons(org.nlogo.agent.Agent agent) {
-    jobManager.joinForeverButtons(agent);
-  }
-
-  public void addJobFromJobThread(org.nlogo.nvm.Job job) {
-    jobManager.addJobFromJobThread(job);
-  }
-
-  // this is used to cache the compiled code used by the "run"
-  // and "runresult" prims - ST 6/7/07
-  public WeakHashMap<String, Procedure> codeBits =
-      new WeakHashMap<String, Procedure>();
-
-  public Procedure compileForRun(String source, org.nlogo.nvm.Context context,
-                                 boolean reporter) {
-    String key = source + "@" + context.activation.procedure().args().size() +
-        "@" + context.agentBit;
-    Procedure proc = codeBits.get(key);
-    if (proc == null) {
-      proc = evaluator.compileForRun(source, context, reporter);
-      codeBits.put(key, proc);
-    }
-    return proc;
-  }
-
   /// misc
 
   private UpdateMode updateMode = UpdateModeJ.CONTINUOUS();
@@ -165,11 +122,6 @@ public abstract strictfp class AbstractWorkspace
       throws java.io.IOException, LogoException;
 
   public abstract void openString(String modelContents);
-
-  public void halt() {
-    jobManager.haltPrimary();
-    world().displayOn(true);
-  }
 
   // called by _display from job thread
   public abstract void requestDisplayUpdate(org.nlogo.nvm.Context context, boolean force);

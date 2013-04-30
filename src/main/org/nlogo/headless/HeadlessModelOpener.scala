@@ -46,7 +46,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
           interfaceGlobals = interfaceGlobals), ws.getExtensionManager)
     }
     ws.procedures = results.proceduresMap
-    ws.codeBits.clear() //(WTH IS THIS? - JC 10/27/09)
+    ws.clearRunCache()
 
     // read preview commands. (if the model doesn't specify preview commands, allow the default ones
     // from our superclass to stand)

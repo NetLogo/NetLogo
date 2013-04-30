@@ -178,7 +178,7 @@ with org.nlogo.workspace.WorldLoaderInterface {
       source, Program.empty(),
       getExtensionManager)
     procedures = results.proceduresMap
-    codeBits.clear()
+    clearRunCache()
     init()
     world.program(results.program)
     world.realloc()

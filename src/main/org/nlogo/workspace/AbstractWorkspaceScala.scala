@@ -2,14 +2,17 @@
 
 package org.nlogo.workspace
 
-import org.nlogo.agent.{ World, Agent, Observer, AbstractExporter, AgentSet }
-import org.nlogo.api, api.{ AgentKind, PlotInterface, Dump, CommandLogoThunk, ReporterLogoThunk,
-  CompilerException, LogoException, JobOwner, SimpleJobOwner, Token, ModelType}
-import org.nlogo.nvm.{ ParserInterface, FileManager, Instruction, EngineException, Context,
-                       Procedure, Job, Command, MutableLong, Workspace, Activation }
-import org.nlogo.plot.{ PlotExporter, PlotManager }
-import java.io.{ IOException, PrintWriter }
-import java.util.WeakHashMap
+import
+  org.nlogo.{ agent, api, nvm, plot },
+  agent.{ World, Agent, Observer, AbstractExporter, AgentSet },
+  api.{ AgentKind, PlotInterface, Dump, CommandLogoThunk, ReporterLogoThunk,
+    CompilerException, LogoException, JobOwner, SimpleJobOwner, Token, ModelType },
+  nvm.{ ParserInterface, FileManager, Instruction, EngineException, Context,
+    Procedure, Job, Command, MutableLong, Workspace, Activation },
+  plot.{ PlotExporter, PlotManager },
+  org.nlogo.util.Femto,
+  java.io.{ IOException, PrintWriter },
+  java.util.WeakHashMap
 
 import AbstractWorkspaceTraits._
 
@@ -20,7 +23,8 @@ object AbstractWorkspaceScala {
 abstract class AbstractWorkspaceScala(val world: World)
 extends AbstractWorkspace
 with Workspace with Procedures with Plotting with Exporting with Evaluating with Benchmarking
-with Compiling with Profiling with Extensions with BehaviorSpace with Paths with Checksums {
+with Compiling with Profiling with Extensions with BehaviorSpace with Paths with Checksums
+with RunCache with Jobs {
 
   val fileManager: FileManager = new DefaultFileManager(this)
 
@@ -136,7 +140,7 @@ object AbstractWorkspaceTraits {
   }
 
 
-  trait Plotting { this: AbstractWorkspace =>
+  trait Plotting { this: AbstractWorkspace with Evaluating =>
 
     val plotManager = new PlotManager(this)
 
@@ -162,7 +166,7 @@ object AbstractWorkspaceTraits {
 
   }
 
-  trait Exporting extends Plotting { this: AbstractWorkspaceScala =>
+  trait Exporting extends Plotting { this: AbstractWorkspaceScala with Evaluating =>
 
     def exportDrawingToCSV(writer:PrintWriter)
     def exportOutputAreaToCSV(writer:PrintWriter)
@@ -224,6 +228,7 @@ object AbstractWorkspaceTraits {
   }
 
   trait Evaluating { this: AbstractWorkspaceScala =>
+    val evaluator = new Evaluator(this)
     def makeReporterThunk(source: String, jobOwnerName: String): ReporterLogoThunk =
       evaluator.makeReporterThunk(source, world.observer,
                                   new SimpleJobOwner(jobOwnerName, auxRNG))
@@ -395,6 +400,42 @@ object AbstractWorkspaceTraits {
       }
     }
 
+  }
+
+  // this is used to cache the compiled code used by the "run"
+  // and "runresult" prims - ST 6/7/07
+  trait RunCache { this: AbstractWorkspaceScala =>
+    private val runCache = new java.util.WeakHashMap[String, Procedure]
+    def clearRunCache() {
+      runCache.clear()
+    }
+    def compileForRun(source: String, context: Context, reporter: Boolean): Procedure = {
+      val key =
+        source + "@" + context.activation.procedure.args.size +
+          "@" + context.agentBit
+      Option(runCache.get(key)).getOrElse{
+        val proc = evaluator.compileForRun(source, context, reporter)
+        runCache.put(key, proc)
+        proc
+      }
+    }
+  }
+
+  trait Jobs { this: AbstractWorkspaceScala =>
+    val jobManager =
+      Femto.get(classOf[nvm.JobManagerInterface], "org.nlogo.job.JobManager",
+        Array[AnyRef](this, world, world))
+    def halt() {
+      jobManager.haltPrimary()
+      world.displayOn(true)
+    }
+    /// methods that may be called from the job thread by prims
+    def joinForeverButtons(agent: Agent) {
+      jobManager.joinForeverButtons(agent)
+    }
+    def addJobFromJobThread(job: Job) {
+      jobManager.addJobFromJobThread(job)
+    }
   }
 
 }
