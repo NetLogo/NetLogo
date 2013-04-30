@@ -16,10 +16,10 @@ class DefaultParserServices(parser: ParserInterface) extends api.ParserServices 
     parser.readNumberFromString(source, null, null)
   def checkReporterSyntax(source: String) =
     parser.checkReporterSyntax(source, api.Program.empty(),
-      CompilerInterface.NoProcedures, null, false)
+      ParserInterface.NoProcedures, null, false)
   def checkCommandSyntax(source: String) =
     parser.checkCommandSyntax(source, api.Program.empty(),
-      CompilerInterface.NoProcedures, null, true)
+      ParserInterface.NoProcedures, null, true)
   def readFromString(source: String) =
     parser.readFromString(source)
   def isConstant(s: String) =
@@ -27,7 +27,7 @@ class DefaultParserServices(parser: ParserInterface) extends api.ParserServices 
   def isValidIdentifier(s: String) =
     parser.isValidIdentifier(s)
   def isReporter(s: String) =
-    parser.isReporter(s, api.Program.empty(), CompilerInterface.NoProcedures,
+    parser.isReporter(s, api.Program.empty(), ParserInterface.NoProcedures,
       new org.nlogo.api.DummyExtensionManager)
   def tokenizeForColorization(source: String) =
     parser.tokenizeForColorization(

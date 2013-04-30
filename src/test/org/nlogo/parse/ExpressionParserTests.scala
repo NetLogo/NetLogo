@@ -23,7 +23,7 @@ class ExpressionParserTests extends FunSuite {
     expectResult(1)(results.procedures.size)
     val procedure = results.procedures.values.iterator.next()
     val tokens =
-      new IdentifierParser(program, nvm.CompilerInterface.NoProcedures,
+      new IdentifierParser(program, nvm.ParserInterface.NoProcedures,
         results.procedures, new DummyExtensionManager)
         .process(results.tokens(procedure).iterator, procedure)
     new ExpressionParser(procedure).parse(tokens).map(_.statements)

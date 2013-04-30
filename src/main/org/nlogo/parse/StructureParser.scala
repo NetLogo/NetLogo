@@ -19,7 +19,7 @@ package org.nlogo.parse
 
 import org.nlogo.{ api, nvm }
 import api.{ Token, TokenType }
-import nvm.CompilerInterface.ProceduresMap
+import nvm.ParserInterface.{ ProceduresMap, NoProcedures }
 import Fail._
 
 object StructureParser {
@@ -28,7 +28,7 @@ object StructureParser {
     Results(program = api.Program.empty)
   case class Results(
     program: api.Program,
-    procedures: ProceduresMap = nvm.CompilerInterface.NoProcedures,
+    procedures: ProceduresMap = NoProcedures,
     tokens: Map[nvm.Procedure, Iterable[Token]] = Map(),
     includes: Seq[Token] = Seq(),
     extensions: Seq[Token] = Seq())

@@ -18,13 +18,13 @@ object Parser extends Parser {
 
 trait Parser extends nvm.ParserInterface {
 
-  type ProceduresMap = nvm.CompilerInterface.ProceduresMap
+  import nvm.ParserInterface.ProceduresMap
 
   private def tokenizer = Parser.Tokenizer
 
   // entry points
 
-  def frontEnd(source: String, oldProcedures: ProceduresMap = nvm.CompilerInterface.NoProcedures, program: api.Program = api.Program.empty()): (Seq[ProcedureDefinition], StructureParser.Results) =
+  def frontEnd(source: String, oldProcedures: ProceduresMap = nvm.ParserInterface.NoProcedures, program: api.Program = api.Program.empty()): (Seq[ProcedureDefinition], StructureParser.Results) =
     frontEndHelper(source, None, program, true,
       oldProcedures, new api.DummyExtensionManager, frontEndOnly = true)
 
@@ -75,7 +75,7 @@ trait Parser extends nvm.ParserInterface {
     val results = new StructureParser(tokenizer.tokenizeRobustly(source), None,
                                       StructureParser.Results(program, oldProcedures))
       .parse(subprogram)
-    val identifierParser = new IdentifierParser(program, nvm.CompilerInterface.NoProcedures, results.procedures, extensionManager, !parse)
+    val identifierParser = new IdentifierParser(program, nvm.ParserInterface.NoProcedures, results.procedures, extensionManager, !parse)
     for(procedure <- results.procedures.values) {
       val tokens = identifierParser.process(results.tokens(procedure).iterator, procedure)
       if(parse)

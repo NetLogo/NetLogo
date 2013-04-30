@@ -5,7 +5,7 @@ package org.nlogo.workspace
 import org.nlogo.agent.{ World, Agent, Observer, AbstractExporter, AgentSet }
 import org.nlogo.api, api.{ AgentKind, PlotInterface, Dump, CommandLogoThunk, ReporterLogoThunk,
   CompilerException, LogoException, JobOwner, SimpleJobOwner, Token, ModelType}
-import org.nlogo.nvm.{ CompilerInterface, FileManager, Instruction, EngineException, Context,
+import org.nlogo.nvm.{ ParserInterface, FileManager, Instruction, EngineException, Context,
                        Procedure, Job, Command, MutableLong, Workspace, Activation }
 import org.nlogo.plot.{ PlotExporter, PlotManager }
 import java.io.{ IOException, PrintWriter }
@@ -128,8 +128,8 @@ object AbstractWorkspaceTraits {
   }
 
   trait Procedures { this: AbstractWorkspaceScala =>
-    var procedures: CompilerInterface.ProceduresMap =
-      CompilerInterface.NoProcedures
+    var procedures: ParserInterface.ProceduresMap =
+      ParserInterface.NoProcedures
     def init() {
       procedures.values.foreach(_.init(this))
     }

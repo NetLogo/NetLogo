@@ -6,7 +6,7 @@ import Fail.{ cAssert, exception }
 import org.nlogo.{ api, nvm, prim }
 import api.{ CompilerException, Let, Program, Token, TokenType }
 import nvm.{ Instruction, Procedure, Reporter }
-import nvm.CompilerInterface.ProceduresMap
+import nvm.ParserInterface.ProceduresMap
 
 /**
   * Converts identifier tokens into instances of primitives.

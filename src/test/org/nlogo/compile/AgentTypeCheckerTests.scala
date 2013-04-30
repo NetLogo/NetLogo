@@ -19,7 +19,7 @@ class AgentTypeCheckerTests extends FunSuite {
     for (procedure <- results.procedures.values) {
       new LetScoper(procedure, results.tokens(procedure), results.program.usedNames).scan()
       val tokens =
-        new IdentifierParser(results.program, nvm.CompilerInterface.NoProcedures,
+        new IdentifierParser(results.program, nvm.ParserInterface.NoProcedures,
                              results.procedures, new DummyExtensionManager)
           .process(results.tokens(procedure).iterator, procedure)
       defs ++= new ExpressionParser(procedure).parse(tokens)

@@ -13,8 +13,8 @@ trait Workspace extends api.Workspace with JobManagerOwner with api.ViewSettings
   def updateUI(context: Context) { }
   def joinForeverButtons(agent: Agent)
   def addJobFromJobThread(job: Job)
-  def procedures: CompilerInterface.ProceduresMap
-  def procedures_=(procedures: CompilerInterface.ProceduresMap)
+  def procedures: ParserInterface.ProceduresMap
+  def procedures_=(procedures: ParserInterface.ProceduresMap)
   def fileManager: FileManager
   def tick(c: Context, originalInstruction: Instruction)
   def compiler: CompilerInterface
