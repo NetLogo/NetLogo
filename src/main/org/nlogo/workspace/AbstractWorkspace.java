@@ -62,20 +62,6 @@ public abstract strictfp class AbstractWorkspace
     return true;
   }
 
-  /// isApp
-
-  // Note that if using the embedding API, isApp is false.
-
-  private static boolean isApp = false;
-
-  public static boolean isApp() {
-    return isApp;
-  }
-
-  public static void isApp(boolean isApp) {
-    AbstractWorkspace.isApp = isApp;
-  }
-
   /// model name utilities
 
   /**

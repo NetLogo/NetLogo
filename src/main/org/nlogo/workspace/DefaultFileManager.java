@@ -19,9 +19,6 @@ public final strictfp class DefaultFileManager
 
   public DefaultFileManager(AbstractWorkspace workspace) {
     this.workspace = workspace;
-    if (AbstractWorkspace.isApp()) {
-      setPrefix(System.getProperty("user.home"));
-    }
   }
 
   public String getErrorInfo()
@@ -351,8 +348,6 @@ public final strictfp class DefaultFileManager
   public void handleModelChange() {
     if (workspace.getModelDir() != null) {
       setPrefix(workspace.getModelDir());
-    } else if (AbstractWorkspace.isApp()) {
-      setPrefix(System.getProperty("user.home"));
     }
     try {
       closeAllFiles();
