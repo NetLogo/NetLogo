@@ -22,7 +22,7 @@ import java.util.Properties
  * used at all...
  */
 
-object JavaLibraryPath {
+object NativeLibraryPath {
 
   def setLibraryPath(myClass: Class[_], dirName: String) = {
     // Reset the "sys_paths" field of the ClassLoader to null.
