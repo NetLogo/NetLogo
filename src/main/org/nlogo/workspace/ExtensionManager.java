@@ -209,7 +209,7 @@ public strictfp class ExtensionManager
   }
 
   public void addToLibraryPath(Object classManager, String directory) {
-    org.nlogo.api.JavaLibraryPath.setLibraryPath(classManager.getClass(), directory);
+    JavaLibraryPath.setLibraryPath(classManager.getClass(), directory);
   }
 
   public String resolvePath(String path) {
