@@ -180,7 +180,7 @@ class StructureParserTests extends FunSuite {
 
   test("redeclaration of extensions") {
     val e = intercept[CompilerException] {
-      compile("extensions [sound] extensions [profiler]")
+      compile("extensions [foo] extensions [bar]")
     }
     expectResult("Redeclaration of EXTENSIONS")(e.getMessage.takeWhile(_ != ','))
   }
