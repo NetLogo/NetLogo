@@ -3,6 +3,7 @@ package org.nlogo.lex;
 
 import org.nlogo.api.Token;
 import org.nlogo.api.TokenType;
+import org.nlogo.api.TokenMapperInterface;
 
 // Since this is automatically generated code it's not surprising
 // it'd produce a few warnings - ST 3/6/08
@@ -12,6 +13,7 @@ import org.nlogo.api.TokenType;
 
 %{
   private final String fileName;
+  private final TokenMapperInterface tokenMapper;
   private StringBuilder literalBuilder = null;
   private int literalStart = -1;
   private int literalNestingLevel = 0;
@@ -73,15 +75,15 @@ import org.nlogo.api.TokenType;
       return new Token(text, TokenType_KEYWORD, text.toUpperCase(),
                 yychar, yychar + text.length(), fileName);
     }
-    else if (TokenMapper.isCommand(text.toUpperCase())) {
-      org.nlogo.api.TokenHolder instr = TokenMapper.getCommand(text);
+    else if (tokenMapper.isCommand(text.toUpperCase())) {
+      org.nlogo.api.TokenHolder instr = tokenMapper.getCommand(text);
       Token tok = new Token(text, TokenType_COMMAND, instr,
                    yychar, yychar + text.length(), fileName);
       instr.token(tok);
       return tok;
     }
-    else if (TokenMapper.isReporter(text)) {
-      org.nlogo.api.TokenHolder instr = TokenMapper.getReporter(text);
+    else if (tokenMapper.isReporter(text)) {
+      org.nlogo.api.TokenHolder instr = tokenMapper.getReporter(text);
       Token tok = new Token(text, TokenType_REPORTER, instr,
                    yychar, yychar + text.length(), fileName);
       instr.token(tok);
@@ -105,8 +107,10 @@ import org.nlogo.api.TokenType;
 %switch
 %class TokenLexer
 %ctorarg String fileName
+%ctorarg TokenMapperInterface tokenMapper
 %init{
   this.fileName = fileName;
+  this.tokenMapper = tokenMapper;
 %init}
 %unicode
 %char

@@ -4,7 +4,10 @@ package org.nlogo.lex
 
 import org.nlogo.api, api.{ Token, TokenType }
 
-object Tokenizer extends api.TokenizerInterface {
+object Tokenizer extends Tokenizer(TokenMapper)
+
+class Tokenizer(mapper: api.TokenMapperInterface)
+extends api.TokenizerInterface {
 
   // this method never throws CompilerException, but use TokenType.BAD
   // instead, because if there's an error we want to still
@@ -34,7 +37,7 @@ object Tokenizer extends api.TokenizerInterface {
                          fileName: String, stopAtFirstBadToken: Boolean): Seq[Token] =
   {
     val yy = new TokenLexer(
-      new java.io.StringReader(source), fileName)
+      new java.io.StringReader(source), fileName, mapper)
     val eof = new Token("", TokenType.EOF, "")(0, 0, "")
     def yystream: Stream[Token] = {
       val t = yy.yylex()
@@ -49,7 +52,7 @@ object Tokenizer extends api.TokenizerInterface {
   }
 
   def nextToken(reader: java.io.BufferedReader): Token =
-    new TokenLexer(reader, null).yylex()
+    new TokenLexer(reader, null, mapper).yylex()
 
   def getTokenAtPosition(source: String, position: Int): Token = {
     // if the cursor is between two adjacent tokens we'll need to pick the token
