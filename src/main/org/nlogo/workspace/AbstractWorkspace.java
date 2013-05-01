@@ -163,21 +163,6 @@ public abstract strictfp class AbstractWorkspace
         throws java.io.IOException;
   }
 
-  protected void exportInterfaceGlobals(java.io.PrintWriter writer) {
-    writer.println(Dump.csv().header("MODEL SETTINGS"));
-    scala.collection.Seq<String> globals = world().program().interfaceGlobals();
-    writer.println(Dump.csv().variableNameRow(globals));
-    Object[] values = new Object[globals.size()];
-    int i = 0;
-    for (scala.collection.Iterator<String> iter = globals.iterator(); iter.hasNext(); i++) {
-      values[i] =
-          world().getObserverVariableByName(iter.next());
-    }
-    writer.println(Dump.csv().dataRow(values));
-    writer.println();
-  }
-
-
   public abstract void clearAll();
 
   protected abstract org.nlogo.agent.ImporterJ.ErrorHandler importerErrorHandler();
@@ -261,38 +246,6 @@ public abstract strictfp class AbstractWorkspace
   protected void doImport(FileImporter importer)
       throws java.io.IOException {
     importer.doImport(new org.nlogo.api.LocalFile(importer.filename));
-  }
-
-  /// exporting
-
-  public String guessExportName(String defaultName) {
-    String modelName = getModelFileName();
-    int index;
-
-    if (modelName == null) {
-      return defaultName;
-    }
-
-    index = modelName.lastIndexOf(".nlogo");
-    if (index > -1) {
-      modelName = modelName.substring(0, index);
-    }
-
-    return modelName + " " + defaultName;
-  }
-
-  public org.nlogo.api.File exportBehaviors(String filename,
-                                            String experimentName,
-                                            boolean includeHeader)
-      throws java.io.IOException {
-    org.nlogo.api.File file = new org.nlogo.api.LocalFile(filename);
-    file.open(org.nlogo.api.FileModeJ.WRITE());
-    if (includeHeader) {
-      org.nlogo.agent.AbstractExporter.exportHeader
-        (file.getPrintWriter(), "BehaviorSpace", getModelFileName(), experimentName);
-      file.getPrintWriter().flush(); // perhaps not necessary, but just in case... - ST 2/23/05
-    }
-    return file;
   }
 
   public String getSource(String filename)

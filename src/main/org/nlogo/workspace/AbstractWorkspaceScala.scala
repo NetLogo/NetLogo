@@ -225,6 +225,44 @@ object AbstractWorkspaceTraits {
         }
       }.export("plots",getModelFileName,"")
     }
+
+    def exportInterfaceGlobals(writer: java.io.PrintWriter) {
+      writer.println(Dump.csv.header("MODEL SETTINGS"))
+      val globals = world.program.interfaceGlobals
+      writer.println(Dump.csv.variableNameRow(globals))
+      writer.println(
+        Dump.csv.dataRow(
+          globals.map(world.getObserverVariableByName).toArray))
+      writer.println()
+    }
+
+    def guessExportName(defaultName: String): String = {
+      val modelName = getModelFileName
+      if (modelName == null)
+        defaultName
+      else {
+        val index = modelName.lastIndexOf(".nlogo")
+        val trimmedName =
+          if (index == -1)
+            modelName
+          else
+            modelName.take(index)
+        trimmedName + " " + defaultName
+      }
+    }
+
+    @throws(classOf[java.io.IOException])
+    def exportBehaviors(filename: String, experimentName: String, includeHeader: Boolean): api.File = {
+      val file = new api.LocalFile(filename)
+      file.open(api.FileMode.Write)
+      if (includeHeader) {
+        agent.AbstractExporter.exportHeader(
+          file.getPrintWriter, "BehaviorSpace", getModelFileName, experimentName)
+        file.getPrintWriter.flush()
+      }
+      file
+    }
+
   }
 
   trait Evaluating { this: AbstractWorkspaceScala =>
