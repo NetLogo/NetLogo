@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.lex
+package org.nlogo.parse
 
 // We have this because in the future we might change how primitives specify their syntax, or how
 // the syntaxes are stored.  Having all of the syntaxes here in a simple textual format guards

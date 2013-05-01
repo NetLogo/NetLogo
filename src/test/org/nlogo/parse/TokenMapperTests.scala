@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.lex
+package org.nlogo.parse
 
 import org.scalatest.FunSuite
 import TokenMapper._

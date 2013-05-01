@@ -7,8 +7,8 @@ import org.nlogo.util.Femto
 
 object Parser extends Parser {
   val tokenizer =
-    Femto.scalaSingleton(classOf[api.TokenizerInterface],
-      "org.nlogo.lex.Tokenizer")
+    Femto.get(classOf[api.TokenizerInterface],
+      "org.nlogo.lex.Tokenizer", Array(TokenMapper))
 }
 
 trait Parser extends nvm.ParserInterface {

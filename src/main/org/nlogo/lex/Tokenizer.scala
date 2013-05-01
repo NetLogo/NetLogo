@@ -4,8 +4,6 @@ package org.nlogo.lex
 
 import org.nlogo.api, api.{ Token, TokenType }
 
-object Tokenizer extends Tokenizer(TokenMapper)
-
 class Tokenizer(mapper: api.TokenMapperInterface)
 extends api.TokenizerInterface {
 
@@ -100,7 +98,5 @@ extends api.TokenizerInterface {
       .takeWhile(_.tpe != TokenType.EOF)
       .map(replaceImports)
   }
-
-  def checkInstructionMaps() { TokenMapper.checkInstructionMaps() }
 
 }

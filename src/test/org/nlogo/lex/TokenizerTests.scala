@@ -3,16 +3,41 @@
 package org.nlogo.lex
 
 import org.scalatest.FunSuite
-import org.nlogo.api.{ Token, TokenType }
+import org.nlogo.api, api.{ Token, TokenType }
 
 class TokenizerTests extends FunSuite {
+
+  // we don't want to have a runtime dependency on the prim classes,
+  // so we use a mock mapper that doesn't instantiate any prims,
+  // but just puts the prim names in the Token.value slot - ST 4/30/13
+  object TokenMapper extends api.TokenMapperInterface {
+    case class Holder(name: String) extends api.TokenHolder {
+      override def token(t: Token) { }
+      override def toString = name
+    }
+    override def getCommand(s: String) =
+      PartialFunction.condOpt(s){
+        case "__IGNORE" => "_ignore"
+        case "ASK" => "_ask"
+        case "CRT" => "_createturtles"
+        case "SET" => "_set"
+      }.map(Holder)
+    override def getReporter(s: String) =
+      PartialFunction.condOpt(s){
+        case "ROUND" => "_round"
+      }.map(Holder)
+  }
+
+  val tokenizer = new Tokenizer(TokenMapper)
+  import tokenizer._
+
   def tokenize(s: String) = {
-    val result = Tokenizer.tokenize(s, "")
+    val result = tokenizer.tokenize(s, "")
     expectResult(TokenType.EOF)(result.last.tpe)
     result.toList.dropRight(1)
   }
   def tokenizeRobustly(s: String) = {
-    val result = Tokenizer.tokenizeRobustly(s)
+    val result = tokenizer.tokenizeRobustly(s)
     expectResult(TokenType.EOF)(result.last.tpe)
     result.toList.dropRight(1)
   }
@@ -94,66 +119,66 @@ class TokenizerTests extends FunSuite {
   }
 
   test("validIdentifier") {
-    assert(Tokenizer.isValidIdentifier("foo"))
+    assert(tokenizer.isValidIdentifier("foo"))
   }
   test("invalidIdentifier1") {
-    assert(!Tokenizer.isValidIdentifier("foo bar"))
+    assert(!tokenizer.isValidIdentifier("foo bar"))
   }
   test("invalidIdentifier2") {
-    assert(!Tokenizer.isValidIdentifier("33"))
+    assert(!tokenizer.isValidIdentifier("33"))
   }
   test("invalidIdentifier3") {
-    assert(!Tokenizer.isValidIdentifier("color"))
+    assert(!tokenizer.isValidIdentifier("color"))
   }
   // check extension primitives
   test("extensionCommand") {
-    val extensionManager = new org.nlogo.api.DummyExtensionManager {
-      class DummyCommand extends org.nlogo.api.Command {
+    val extensionManager = new api.DummyExtensionManager {
+      class DummyCommand extends api.Command {
         def getAgentClassString = ""
-        def getSyntax: org.nlogo.api.Syntax = null
+        def getSyntax: api.Syntax = null
         def getSwitchesBoolean = true
-        def newInstance(name: String): org.nlogo.api.Command = null
-        def perform(args: Array[org.nlogo.api.Argument], context: org.nlogo.api.Context) {}
+        def newInstance(name: String): api.Command = null
+        def perform(args: Array[api.Argument], context: api.Context) {}
       }
       override def anyExtensionsLoaded = true
-      override def replaceIdentifier(name: String): org.nlogo.api.Primitive =
+      override def replaceIdentifier(name: String): api.Primitive =
         if (name.equalsIgnoreCase("FOO")) new DummyCommand else null
     }
     expectResult("Token(foo,IDENT,FOO)")(
-      Tokenizer.tokenizeForColorization("foo").mkString)
+      tokenizer.tokenizeForColorization("foo").mkString)
     expectResult("Token(foo,COMMAND,FOO)")(
-      Tokenizer.tokenizeForColorization("foo", extensionManager).mkString)
+      tokenizer.tokenizeForColorization("foo", extensionManager).mkString)
   }
   // the method being tested here is used by the F1 key stuff - ST 1/23/08
   test("GetTokenAtPosition") {
-    expectResult("Token(ask,COMMAND,_ask:+0)")(
-      Tokenizer.getTokenAtPosition("ask turtles [set color blue]", 0).toString)
-    expectResult("Token(ask,COMMAND,_ask:+0)")(
-      Tokenizer.getTokenAtPosition("ask turtles [set color blue]", 1).toString)
-    expectResult("Token(ask,COMMAND,_ask:+0)")(
-      Tokenizer.getTokenAtPosition("ask turtles [set color blue]", 2).toString)
+    expectResult("Token(ask,COMMAND,_ask)")(
+      tokenizer.getTokenAtPosition("ask turtles [set color blue]", 0).toString)
+    expectResult("Token(ask,COMMAND,_ask)")(
+      tokenizer.getTokenAtPosition("ask turtles [set color blue]", 1).toString)
+    expectResult("Token(ask,COMMAND,_ask)")(
+      tokenizer.getTokenAtPosition("ask turtles [set color blue]", 2).toString)
     expectResult("Token([,OPEN_BRACKET,null)")(
-      Tokenizer.getTokenAtPosition("ask turtles [set color blue]", 12).toString)
+      tokenizer.getTokenAtPosition("ask turtles [set color blue]", 12).toString)
     expectResult("Token(set,COMMAND,_set)")(
-      Tokenizer.getTokenAtPosition("ask turtles [set color blue]", 13).toString)
+      tokenizer.getTokenAtPosition("ask turtles [set color blue]", 13).toString)
     expectResult("Token(set,COMMAND,_set)")(
-      Tokenizer.getTokenAtPosition("ask turtles [set color blue]", 14).toString)
+      tokenizer.getTokenAtPosition("ask turtles [set color blue]", 14).toString)
     expectResult("Token(blue,CONSTANT,105.0)")(
-      Tokenizer.getTokenAtPosition("ask turtles [set color blue]", 24).toString)
+      tokenizer.getTokenAtPosition("ask turtles [set color blue]", 24).toString)
   }
   // bug #88
   test("GetTokenAtPosition-bug88") {
-    expectResult("Token(crt,COMMAND,_createturtles:,+0)")(
-      Tokenizer.getTokenAtPosition("[crt", 1).toString)
+    expectResult("Token(crt,COMMAND,_createturtles)")(
+      tokenizer.getTokenAtPosition("[crt", 1).toString)
   }
   // bug #139
   test("GetTokenAtPosition-bug139") {
-    expectResult("Token(crt,COMMAND,_createturtles:,+0)")(
-      Tokenizer.getTokenAtPosition("crt]", 3).toString)
-    expectResult("Token(crt,COMMAND,_createturtles:,+0)")(
-      Tokenizer.getTokenAtPosition("crt", 0).toString)
-    expectResult("Token(crt,COMMAND,_createturtles:,+0)")(
-      Tokenizer.getTokenAtPosition("crt", 3).toString)
+    expectResult("Token(crt,COMMAND,_createturtles)")(
+      tokenizer.getTokenAtPosition("crt]", 3).toString)
+    expectResult("Token(crt,COMMAND,_createturtles)")(
+      tokenizer.getTokenAtPosition("crt", 0).toString)
+    expectResult("Token(crt,COMMAND,_createturtles)")(
+      tokenizer.getTokenAtPosition("crt", 3).toString)
   }
   // what about removed prims?
   test("RemovedPrims") {

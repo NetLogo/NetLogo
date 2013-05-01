@@ -1,16 +1,16 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.lex
+package org.nlogo.parse
 
 import org.nlogo.util.Utils
-import org.nlogo.api._
+import org.nlogo.api
 
-object TokenMapper extends TokenMapperInterface {
+object TokenMapper extends api.TokenMapperInterface {
   val Path = "/system/tokens.txt"
-  def getCommand(s: String): Option[TokenHolder] =
-    commands.get(s.toUpperCase).map(instantiate[TokenHolder])
-  def getReporter(s: String): Option[TokenHolder] =
-    reporters.get(s.toUpperCase).map(instantiate[TokenHolder])
+  def getCommand(s: String): Option[api.TokenHolder] =
+    commands.get(s.toUpperCase).map(instantiate[api.TokenHolder])
+  def getReporter(s: String): Option[api.TokenHolder] =
+    reporters.get(s.toUpperCase).map(instantiate[api.TokenHolder])
   private def entries(entryType: String): Iterator[(String, String)] =
     for {
       line <- Utils.getResourceLines(Path)
@@ -24,7 +24,7 @@ object TokenMapper extends TokenMapperInterface {
   private def instantiate[T](name: String) =
     Class.forName(name).newInstance.asInstanceOf[T]
   // for integration testing
-  def checkInstructionMaps() {
+  private[parse] def checkInstructionMaps() {
     commands.keySet.foreach(getCommand)
     reporters.keySet.foreach(getReporter)
   }
