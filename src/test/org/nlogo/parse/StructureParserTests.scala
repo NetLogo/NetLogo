@@ -4,14 +4,18 @@ package org.nlogo.parse
 
 import org.scalatest.FunSuite
 
-import org.nlogo.api.{ CompilerException, DummyExtensionManager, Program }
-import org.nlogo.nvm
+import org.nlogo.api, api.CompilerException
+import org.nlogo.util.Femto
 
 class StructureParserTests extends FunSuite {
 
-  def compile(source: String): StructureParser.Results = {
-    new StructureParser(Parser.tokenizer.tokenize(source),
-                        None, StructureParser.emptyResults)
+  val tokenizer =
+    Femto.get(classOf[api.TokenizerInterface],
+      "org.nlogo.lex.Tokenizer", Array(api.DummyTokenMapper))
+
+  def compile(source: String): StructureResults = {
+    new StructureParser(tokenizer.tokenize(source),
+                        None, StructureResults.empty)
       .parse(false)
   }
 

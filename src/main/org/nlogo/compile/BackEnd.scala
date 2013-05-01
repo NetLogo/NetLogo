@@ -11,14 +11,14 @@ import org.nlogo.api
 import api.{ ExtensionManager, Program }
 import org.nlogo.nvm.{ CompilerFlags, CompilerResults, GeneratorInterface, Procedure }
 import org.nlogo.util.Femto
-import org.nlogo.parse
+import org.nlogo.{ parse, parse0 }
 
 private object BackEnd {
 
   // StructureParser found the top level Procedures for us.  ExpressionParser
   // finds command tasks and makes Procedures out of them, too.  the remaining
   // phases handle all ProcedureDefinitions from both sources. - ST 2/4/11
-  def backEnd(defs: Seq[parse.ProcedureDefinition], structureResults: parse.StructureParser.Results, source: String, profilingEnabled: Boolean, flags: CompilerFlags): CompilerResults = {
+  def backEnd(defs: Seq[parse.ProcedureDefinition], structureResults: parse.StructureResults, source: String, profilingEnabled: Boolean, flags: CompilerFlags): CompilerResults = {
     for(procdef <- defs) {
       procdef.accept(new ReferenceVisitor)  // handle ReferenceType
       if (flags.foldConstants)

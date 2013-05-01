@@ -11,7 +11,7 @@ class LetScoperTests extends FunSuite {
     val wrappedSource = "to __test " + source + "\nend"
     val results = new StructureParser(
       Parser.tokenizer.tokenize(wrappedSource), None,
-      StructureParser.emptyResults)
+      StructureResults.empty)
       .parse(false)
     expectResult(1)(results.procedures.size)
     val procedure = results.procedures.values.iterator.next()

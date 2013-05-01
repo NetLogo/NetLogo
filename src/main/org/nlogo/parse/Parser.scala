@@ -2,7 +2,7 @@
 
 package org.nlogo.parse
 
-import org.nlogo.{ api, nvm }
+import org.nlogo.{ api, nvm, parse0 }
 import org.nlogo.util.Femto
 
 object Parser extends Parser {
@@ -18,7 +18,7 @@ trait Parser extends nvm.ParserInterface {
 
   // entry points
 
-  def frontEnd(source: String, oldProcedures: ProceduresMap = nvm.ParserInterface.NoProcedures, program: api.Program = api.Program.empty()): (Seq[ProcedureDefinition], StructureParser.Results) =
+  def frontEnd(source: String, oldProcedures: ProceduresMap = nvm.ParserInterface.NoProcedures, program: api.Program = api.Program.empty()): (Seq[ProcedureDefinition], StructureResults) =
     frontEndHelper(source, None, program, true,
       oldProcedures, new api.DummyExtensionManager, frontEndOnly = true)
 
@@ -29,7 +29,7 @@ trait Parser extends nvm.ParserInterface {
   // functionality of SetVisitor into IdentifierParser. - ST 1/24/13
   def frontEndHelper(source: String, displayName: Option[String], program: api.Program, subprogram: Boolean,
       oldProcedures: ProceduresMap, extensionManager: api.ExtensionManager, frontEndOnly: Boolean = false)
-    : (Seq[ProcedureDefinition], StructureParser.Results) = {
+    : (Seq[ProcedureDefinition], StructureResults) = {
     val structureResults = StructureParser.parseAll(
       tokenizer, source, displayName, program, subprogram, oldProcedures, extensionManager)
     val taskNumbers = Iterator.from(1)
@@ -67,7 +67,7 @@ trait Parser extends nvm.ParserInterface {
   // that we don't know about.
   private def checkSyntax(source: String, subprogram: Boolean, program: api.Program, oldProcedures: ProceduresMap, extensionManager: api.ExtensionManager, parse: Boolean) {
     val results = new StructureParser(tokenizer.tokenizeRobustly(source), None,
-                                      StructureParser.Results(program, oldProcedures))
+                                      StructureResults(program, oldProcedures))
       .parse(subprogram)
     val identifierParser = new IdentifierParser(program, nvm.ParserInterface.NoProcedures, results.procedures, extensionManager, !parse)
     for(procedure <- results.procedures.values) {
@@ -128,11 +128,11 @@ trait Parser extends nvm.ParserInterface {
 
   // used for procedures menu
   def findProcedurePositions(source: String): Map[String, (String, Int, Int, Int)] =
-    new StructureParserExtras(tokenizer).findProcedurePositions(source)
+    new parse0.StructureLite(tokenizer).findProcedurePositions(source)
 
   // used for includes menu
   def findIncludes(sourceFileName: String, source: String): Map[String, String] =
-    new StructureParserExtras(tokenizer).findIncludes(sourceFileName, source)
+    new parse0.StructureLite(tokenizer).findIncludes(sourceFileName, source)
 
   // used by VariableNameEditor
   def isValidIdentifier(s: String) = tokenizer.isValidIdentifier(s)
@@ -142,7 +142,7 @@ trait Parser extends nvm.ParserInterface {
     try {
       val results =
         new StructureParser(tokenizer.tokenize("to __is-reporter? report " + s + "\nend"),
-                            None, StructureParser.Results(program, procedures))
+                            None, StructureResults(program, procedures))
           .parse(subprogram = true)
       val identifierParser =
         new IdentifierParser(program, procedures, results.procedures, extensionManager, forgiving = false)

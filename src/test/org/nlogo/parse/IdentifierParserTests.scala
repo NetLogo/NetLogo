@@ -13,7 +13,7 @@ class IdentifierParserTests extends FunSuite {
     val program = Program.empty().copy(interfaceGlobals = Seq("X"))
     val results = new StructureParser(
       Parser.tokenizer.tokenize(wrappedSource), None,
-      StructureParser.Results(program))
+      StructureResults(program))
       .parse(false)
     expectResult(1)(results.procedures.size)
     val procedure = results.procedures.values.iterator.next()

@@ -7,28 +7,7 @@ import org.nlogo.api, api.{ Token, TokenType }
 
 class TokenizerTests extends FunSuite {
 
-  // we don't want to have a runtime dependency on the prim classes,
-  // so we use a mock mapper that doesn't instantiate any prims,
-  // but just puts the prim names in the Token.value slot - ST 4/30/13
-  object TokenMapper extends api.TokenMapperInterface {
-    case class Holder(name: String) extends api.TokenHolder {
-      override def token(t: Token) { }
-      override def toString = name
-    }
-    override def getCommand(s: String) =
-      PartialFunction.condOpt(s){
-        case "__IGNORE" => "_ignore"
-        case "ASK" => "_ask"
-        case "CRT" => "_createturtles"
-        case "SET" => "_set"
-      }.map(Holder)
-    override def getReporter(s: String) =
-      PartialFunction.condOpt(s){
-        case "ROUND" => "_round"
-      }.map(Holder)
-  }
-
-  val tokenizer = new Tokenizer(TokenMapper)
+  val tokenizer = new Tokenizer(api.DummyTokenMapper)
   import tokenizer._
 
   def tokenize(s: String) = {
