@@ -10,7 +10,7 @@ class LetScoperTests extends FunSuite {
   def compile(source: String): Iterable[api.Let] = {
     val wrappedSource = "to __test " + source + "\nend"
     val results = new StructureParser(
-      Parser.Tokenizer.tokenize(wrappedSource), None,
+      Parser.tokenizer.tokenize(wrappedSource), None,
       StructureParser.emptyResults)
       .parse(false)
     expectResult(1)(results.procedures.size)

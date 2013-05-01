@@ -10,7 +10,7 @@ import org.nlogo.nvm
 class StructureParserTests extends FunSuite {
 
   def compile(source: String): StructureParser.Results = {
-    new StructureParser(Parser.Tokenizer.tokenize(source),
+    new StructureParser(Parser.tokenizer.tokenize(source),
                         None, StructureParser.emptyResults)
       .parse(false)
   }

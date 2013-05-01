@@ -90,7 +90,7 @@ extends api.TokenizerInterface {
         case null => token
         case prim =>
           val newType =
-            if (prim.isInstanceOf[org.nlogo.api.Command])
+            if (prim.isInstanceOf[api.Command])
               TokenType.COMMAND
             else TokenType.REPORTER
           new Token(token.name, newType, token.value)(

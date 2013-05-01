@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.parse
+package org.nlogo.lex
 
 // We have this because in the future we might change how primitives specify their syntax, or how
 // the syntaxes are stored.  Having all of the syntaxes here in a simple textual format guards
@@ -9,6 +9,7 @@ package org.nlogo.parse
 
 import org.scalatest.FunSuite
 import org.nlogo.nvm.Instruction
+import org.nlogo.util.Femto
 
 class TestAllSyntaxes extends FunSuite {
   def shorten(name: String) =
@@ -21,8 +22,8 @@ class TestAllSyntaxes extends FunSuite {
     expectResult(expected)(
       classNames.toSeq.sortBy(shorten).map(entry).mkString("\n"))
   }
-  val c = Parser.TokenMapper.allCommandClassNames
-  val r = Parser.TokenMapper.allReporterClassNames
+  val c = TokenMapper.allCommandClassNames
+  val r = TokenMapper.allReporterClassNames
   test("commands") { doTest(c, COMMANDS) }
   test("reporters") { doTest(r, REPORTERS) }
   val REPORTERS = """|_abs number,number,OTPL,null,10,1,1

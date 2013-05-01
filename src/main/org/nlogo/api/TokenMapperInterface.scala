@@ -8,7 +8,4 @@ trait TokenMapperInterface {
   // caller's responsibility to validate input for these two
   def getCommand(s: String): TokenHolder
   def getReporter(s: String): TokenHolder
-  // for unit testing
-  def allCommandClassNames: Set[String]
-  def allReporterClassNames: Set[String]
 }

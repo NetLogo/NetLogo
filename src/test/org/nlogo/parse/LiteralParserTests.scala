@@ -20,9 +20,9 @@ class LiteralParserTests extends FunSuite with MockSuite {
                  world: World = defaultWorld,
                  extensionManager: ExtensionManager = null): AnyRef =
     new LiteralParser(world, extensionManager)
-      .getLiteralValue(Parser.Tokenizer.tokenize(input).iterator)
+      .getLiteralValue(Parser.tokenizer.tokenize(input).iterator)
   def toLiteralList(input: String, world: World = defaultWorld): LogoList = {
-    val tokens = Parser.Tokenizer.tokenize(input).iterator
+    val tokens = Parser.tokenizer.tokenize(input).iterator
     new LiteralParser(world, null).parseLiteralList(tokens.next(), tokens)
   }
 

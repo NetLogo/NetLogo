@@ -6,21 +6,15 @@ import org.nlogo.{ api, nvm }
 import org.nlogo.util.Femto
 
 object Parser extends Parser {
-
-  val Tokenizer =
+  val tokenizer =
     Femto.scalaSingleton(classOf[api.TokenizerInterface],
       "org.nlogo.lex.Tokenizer")
-  val TokenMapper =
-    Femto.scalaSingleton(classOf[api.TokenMapperInterface],
-      "org.nlogo.lex.TokenMapper")
-
 }
 
 trait Parser extends nvm.ParserInterface {
 
   import nvm.ParserInterface.ProceduresMap
-
-  private def tokenizer = Parser.Tokenizer
+  import Parser.tokenizer
 
   // entry points
 
