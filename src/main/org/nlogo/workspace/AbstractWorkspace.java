@@ -106,50 +106,6 @@ public abstract strictfp class AbstractWorkspace
   // called when the engine comes up for air
   public abstract void breathe(org.nlogo.nvm.Context context);
 
-  /// output
-
-  public void outputObject(Object object, Object owner,
-                           boolean addNewline, boolean readable,
-                           OutputDestination destination) {
-    org.nlogo.agent.OutputObject oo =
-        new org.nlogo.agent.OutputObject
-            (
-                // caption
-                owner instanceof org.nlogo.agent.Agent
-                    ? Dump.logoObject(owner)
-                    : "",
-                // message
-                (readable && !(owner instanceof org.nlogo.agent.Agent)
-                    ? " "
-                    : "")
-                    + Dump.logoObject(object, readable, false),
-                // other
-                addNewline, false);
-    if (destination == OutputDestinationJ.FILE()) {
-      fileManager().writeOutputObject(oo);
-    } else {
-      sendOutput(oo, destination == OutputDestinationJ.OUTPUT_AREA());
-    }
-  }
-
-  // called from job thread - ST 10/1/03
-  protected abstract void sendOutput(org.nlogo.agent.OutputObject oo,
-                                     boolean toOutputArea);
-
-  /// importing
-
-  public void setOutputAreaContents(String text) {
-    try {
-      clearOutput();
-      if (text.length() > 0) {
-        sendOutput(new org.nlogo.agent.OutputObject(
-            "", text, false, false), true);
-      }
-    } catch (LogoException e) {
-      org.nlogo.util.Exceptions.handle(e);
-    }
-  }
-
   public abstract void clearDrawing();
 
   protected abstract class FileImporter {
@@ -263,7 +219,6 @@ public abstract strictfp class AbstractWorkspace
   public abstract World world();
   public abstract CompilerInterface compiler();
   public abstract ParserInterface parser();
-  public abstract void clearOutput();
   public abstract scala.collection.immutable.ListMap<String, Procedure> procedures();
   public abstract FileManager fileManager();
   public abstract String getModelPath();

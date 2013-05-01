@@ -10,7 +10,7 @@ import
   nvm.{ ParserInterface, FileManager, Instruction, EngineException, Context,
     Procedure, Job, Command, MutableLong, Workspace, Activation },
   plot.{ PlotExporter, PlotManager },
-  org.nlogo.util.Femto,
+  org.nlogo.util.{ Exceptions, Femto },
   java.io.{ IOException, PrintWriter },
   java.util.WeakHashMap
 
@@ -24,7 +24,7 @@ abstract class AbstractWorkspaceScala(val world: World)
 extends AbstractWorkspace
 with Workspace with Procedures with Plotting with Exporting with Evaluating with Benchmarking
 with Compiling with Profiling with Extensions with BehaviorSpace with Paths with Checksums
-with RunCache with Jobs with Warning {
+with RunCache with Jobs with Warning with OutputArea {
 
   val fileManager: FileManager = new DefaultFileManager(this)
 
@@ -489,6 +489,46 @@ object AbstractWorkspaceTraits {
       // always continue
       true
     }
+  }
+
+  trait OutputArea { this: AbstractWorkspaceScala =>
+
+    def clearOutput()
+
+    // called from job thread - ST 10/1/03
+    def sendOutput(oo: agent.OutputObject, toOutputArea: Boolean)
+
+    /// importing
+    def setOutputAreaContents(text: String) {
+      try {
+        clearOutput()
+        if (text.nonEmpty)
+          sendOutput(new agent.OutputObject("", text, false, false), true)
+      }
+      catch { case e: LogoException => Exceptions.handle(e) }
+    }
+
+    def outputObject(obj: AnyRef, owner: AnyRef, addNewline: Boolean, readable: Boolean, destination: api.OutputDestination) {
+      val caption = owner match {
+        case _: agent.Agent =>
+          Dump.logoObject(owner)
+        case _ =>
+          ""
+      }
+      val message =
+        (if (readable && !(owner.isInstanceOf[agent.Agent]))
+          " "
+        else
+          "") + Dump.logoObject(obj, readable, false)
+      val oo = new agent.OutputObject(caption, message, addNewline, false)
+      destination match {
+        case api.OutputDestination.File =>
+          fileManager.writeOutputObject(oo)
+        case _ =>
+          sendOutput(oo, destination == api.OutputDestination.OutputArea)
+      }
+    }
+
   }
 
 }
