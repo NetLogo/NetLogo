@@ -14,7 +14,6 @@ class DummyAbstractWorkspace
 extends AbstractWorkspaceScala(new World)
 {
   private def unsupported = throw new UnsupportedOperationException
-  override val isHeadless = true
   override def compilerTestingMode = false
   override def waitFor(runnable: api.CommandRunnable): Unit = unsupported
   override def waitForResult[T](runnable: api.ReporterRunnable[T]): T = unsupported

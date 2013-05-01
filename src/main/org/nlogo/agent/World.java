@@ -1224,7 +1224,7 @@ public strictfp class World
 
   private ParserServices _parser;
 
-  public void compiler_$eq(ParserServices parser) {
+  public void parser_$eq(ParserServices parser) {
     _parser = parser;
   }
 

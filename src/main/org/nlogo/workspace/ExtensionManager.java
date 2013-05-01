@@ -14,6 +14,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import static org.nlogo.workspace.AbstractWorkspace.toURL;
+
 /**
  * Some simple notes on loading and unloading extensions:
  * - The load method is called when an extension appears in the extensions block when it wasn't
@@ -63,7 +65,7 @@ public strictfp class ExtensionManager
 
   private final Map<String, JarContainer> jars =
       new HashMap<String, JarContainer>();
-  private final AbstractWorkspace workspace;
+  private final AbstractWorkspaceScala workspace;
 
   private int jarsLoaded = 0;
 
@@ -79,7 +81,7 @@ public strictfp class ExtensionManager
     return workspace.profilingEnabled();
   }
 
-  public ExtensionManager(AbstractWorkspace workspace) {
+  public ExtensionManager(AbstractWorkspaceScala workspace) {
     this.workspace = workspace;
   }
 
@@ -730,17 +732,6 @@ public strictfp class ExtensionManager
       prefix = null;
       this.modified = modified;
     }
-  }
-
-  // for 4.1 we have too much fragile, difficult-to-understand,
-  // under-tested code involving URLs -- we can't get rid of our
-  // uses of toURL() until 4.2, the risk of breakage is too high.
-  // so for now, at least we make this a separate method so the
-  // SuppressWarnings annotation is narrowly targeted. - ST 12/7/09
-  @SuppressWarnings("deprecation")
-  private static java.net.URL toURL(java.io.File file)
-      throws java.net.MalformedURLException {
-    return file.toURL();
   }
 
 }

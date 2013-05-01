@@ -120,11 +120,6 @@ with org.nlogo.workspace.WorldLoaderInterface {
   /**
    * Internal use only.
    */
-  override def isHeadless = true
-
-  /**
-   * Internal use only.
-   */
   var compilerTestingMode = false
 
   /**

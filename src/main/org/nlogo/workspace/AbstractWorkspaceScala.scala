@@ -24,7 +24,7 @@ abstract class AbstractWorkspaceScala(val world: World)
 extends AbstractWorkspace
 with Workspace with Procedures with Plotting with Exporting with Evaluating with Benchmarking
 with Compiling with Profiling with Extensions with BehaviorSpace with Paths with Checksums
-with RunCache with Jobs {
+with RunCache with Jobs with Warning {
 
   val fileManager: FileManager = new DefaultFileManager(this)
 
@@ -435,6 +435,21 @@ object AbstractWorkspaceTraits {
     }
     def addJobFromJobThread(job: Job) {
       jobManager.addJobFromJobThread(job)
+    }
+  }
+
+  trait Warning {
+    /**
+     * Displays a warning to the user, and determine whether to continue.
+     * The default (non-GUI) implementation is to print the warning and
+     * always continue.
+     */
+    def warningMessage(message: String): Boolean = {
+      System.err.println()
+      System.err.println("WARNING: " + message)
+      System.err.println()
+      // always continue
+      true
     }
   }
 

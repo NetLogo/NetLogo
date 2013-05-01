@@ -20,30 +20,7 @@ public abstract strictfp class AbstractWorkspace
   /// startup
 
   protected AbstractWorkspace() {
-    world().compiler_$eq((AbstractWorkspaceScala) this);
-  }
-
-  /**
-   * Internal use only.
-   */
-  public abstract boolean compilerTestingMode();
-
-  /// headless?
-
-  public abstract boolean isHeadless();
-
-  /**
-   * Displays a warning to the user, and determine whether to continue.
-   * The default (non-GUI) implementation is to print the warning and
-   * always continue.
-   */
-  public boolean warningMessage(String message) {
-    System.err.println();
-    System.err.println("WARNING: " + message);
-    System.err.println();
-
-    // always continue.
-    return true;
+    world().parser_$eq(this);
   }
 
   /// model name utilities
@@ -328,11 +305,6 @@ public abstract strictfp class AbstractWorkspace
     // So we do the stripping of \r here, *before* we run the tokenizer,
     // and that avoids the problem. - ST 9/14/04
     return new org.nlogo.api.LocalFile(filename).readFile().replaceAll("\r\n", "\n");
-  }
-
-  public void loadWorld(scala.collection.Seq<String> strings, WorldLoaderInterface worldInterface) {
-    WorldLoader loader = new WorldLoader();
-    loader.load(strings, worldInterface);
   }
 
   public abstract World world();

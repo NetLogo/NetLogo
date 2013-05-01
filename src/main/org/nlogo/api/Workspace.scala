@@ -74,7 +74,6 @@ with ViewSettings with Controllable {
   def userYesOrNo(msg: String): Option[Boolean] = None
   def userMessage(msg: String): Boolean = false
   def benchmark(minTime: Int, maxTime: Int)
-  def isHeadless: Boolean
   def behaviorSpaceRunNumber: Int
   def behaviorSpaceRunNumber(n: Int)
   // for now this only works in HeadlessWorkspace, returns null in GUIWorkspace.  error handling
@@ -85,4 +84,6 @@ with ViewSettings with Controllable {
   def worldChecksum: String
   def graphicsChecksum: String
   def renderer: RendererInterface
+  def compilerTestingMode: Boolean
+  def warningMessage(message: String): Boolean
 }

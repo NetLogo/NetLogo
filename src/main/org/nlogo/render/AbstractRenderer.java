@@ -144,11 +144,7 @@ public abstract strictfp class AbstractRenderer
     paintPatches(g, settings.patchSize());
     // Since the drawing scales when we zoom, even drawing a blank
     // gets expensive very fast. -- 10/06/05 CLB
-    // but for some reason on Windows some models run a lot
-    // faster on some machines if we uselessly draw the blank
-    // layer -- go figure! it's only worth doing if there
-    // are turtles though - ST 11/23/05
-    if (!_trailDrawer.drawingBlank || (WINDOWS && anyTurtles() && !settings.isHeadless())) {
+    if (!_trailDrawer.drawingBlank) {
       topology.paintViewImage
           (g, _trailDrawer.getAndCreateDrawing(false));
     }

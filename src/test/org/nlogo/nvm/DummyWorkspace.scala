@@ -71,7 +71,6 @@ class DummyWorkspace extends DummyParserServices with Workspace {
   override def dispose() { }
   override def lastLogoException = unsupported
   override def clearLastLogoException() = unsupported
-  override def isHeadless = unsupported
   override def behaviorSpaceRunNumber = 0
   override def behaviorSpaceRunNumber(n: Int) = unsupported
   override def previewCommands = unsupported
@@ -120,9 +119,12 @@ class DummyWorkspace extends DummyParserServices with Workspace {
   override def profilingEnabled = false
   override def profilingTracer = unsupported
 
-  override def tick(c:Context, i:Instruction) = unsupported
-  override def resetTicks(c:Context) = unsupported
+  override def tick(c: Context, i: Instruction) = unsupported
+  override def resetTicks(c: Context) = unsupported
   override def clearTicks = unsupported
-  override def setupPlots(c:Context) = unsupported
-  override def updatePlots(c:Context) = unsupported
+  override def setupPlots(c: Context) = unsupported
+  override def updatePlots(c: Context) = unsupported
+
+  override def warningMessage(s: String) = unsupported
+  override def compilerTestingMode: Boolean = unsupported
 }
