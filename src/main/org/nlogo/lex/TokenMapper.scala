@@ -7,11 +7,10 @@ import org.nlogo.api._
 
 object TokenMapper extends TokenMapperInterface {
   val Path = "/system/tokens.txt"
-  def isCommand(s: String) = commands.contains(s.toUpperCase)
-  def isReporter(s: String) = reporters.contains(s.toUpperCase)
-  // caller's responsibility to validate input for these two
-  def getCommand(s: String) = instantiate[TokenHolder](commands(s.toUpperCase))
-  def getReporter(s: String) = instantiate[TokenHolder](reporters(s.toUpperCase))
+  def getCommand(s: String): Option[TokenHolder] =
+    commands.get(s.toUpperCase).map(instantiate[TokenHolder])
+  def getReporter(s: String): Option[TokenHolder] =
+    reporters.get(s.toUpperCase).map(instantiate[TokenHolder])
   private def entries(entryType: String): Iterator[(String, String)] =
     for {
       line <- Utils.getResourceLines(Path)

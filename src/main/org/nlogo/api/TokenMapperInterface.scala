@@ -3,9 +3,6 @@
 package org.nlogo.api
 
 trait TokenMapperInterface {
-  def isCommand(s: String): Boolean
-  def isReporter(s: String): Boolean
-  // caller's responsibility to validate input for these two
-  def getCommand(s: String): TokenHolder
-  def getReporter(s: String): TokenHolder
+  def getCommand(s: String): Option[TokenHolder]
+  def getReporter(s: String): Option[TokenHolder]
 }

@@ -2,6 +2,7 @@
 package org.nlogo.lex;
 
 import org.nlogo.api.Token;
+import org.nlogo.api.TokenHolder;
 import org.nlogo.api.TokenType;
 import org.nlogo.api.TokenMapperInterface;
 
@@ -75,15 +76,19 @@ import org.nlogo.api.TokenMapperInterface;
       return new Token(text, TokenType_KEYWORD, text.toUpperCase(),
                 yychar, yychar + text.length(), fileName);
     }
-    else if (tokenMapper.isCommand(text.toUpperCase())) {
-      org.nlogo.api.TokenHolder instr = tokenMapper.getCommand(text);
+    scala.Option<TokenHolder> command =
+      tokenMapper.getCommand(text.toUpperCase());
+    if (command.isDefined()) {
+      org.nlogo.api.TokenHolder instr = command.get();
       Token tok = new Token(text, TokenType_COMMAND, instr,
                    yychar, yychar + text.length(), fileName);
       instr.token(tok);
       return tok;
     }
-    else if (tokenMapper.isReporter(text)) {
-      org.nlogo.api.TokenHolder instr = tokenMapper.getReporter(text);
+    scala.Option<TokenHolder> reporter =
+      tokenMapper.getReporter(text.toUpperCase());
+    if (reporter.isDefined()) {
+      org.nlogo.api.TokenHolder instr = reporter.get();
       Token tok = new Token(text, TokenType_REPORTER, instr,
                    yychar, yychar + text.length(), fileName);
       instr.token(tok);
