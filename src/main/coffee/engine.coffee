@@ -51,16 +51,15 @@ updated = (obj, vars...) ->
   return
 
 class Turtle
-  _vars = []
+  vars: []
   constructor: (@id, @color, @heading, @xcor, @ycor, @shape = "default", @label = "", @labelcolor = 9.9, @breed ="TURTLES", @hidden = false, @size = 1.0, @pensize = 1.0, @penmode = "up") ->
     updated(this, turtleBuiltins...)
-    @_vars = (x for x in TurtlesOwn.vars)
+    @vars = (x for x in TurtlesOwn.vars)
   toString: -> "(turtle " + @id + ")"
   keepHeadingInRange: ->
     if (@heading < 0 || @heading >= 360)
       @heading = ((@heading % 360) + 360) % 360
     return
-  vars: -> @_vars
   fd: (amount) ->
     @xcor = world.topology().wrap(@xcor + amount * Trig.sin(@heading),
         world.minPxcor - 0.5, world.maxPxcor + 0.5)
@@ -88,33 +87,33 @@ class Turtle
     if (n < turtleBuiltins.length)
       this[turtleBuiltins[n]]
     else
-       @_vars[n - turtleBuiltins.length]
+       @vars[n - turtleBuiltins.length]
   setTurtleVariable: (n, v) ->
     if (n < turtleBuiltins.length)
       this[turtleBuiltins[n]] = v
       updated(this, turtleBuiltins[n])
     else
-       @_vars[n - turtleBuiltins.length] = v
+       @vars[n - turtleBuiltins.length] = v
   getPatchHere: -> world.getPatchAt(@xcor, @ycor)
   getPatchVariable: (n)    -> @getPatchHere().getPatchVariable(n)
   setPatchVariable: (n, v) -> @getPatchHere().setPatchVariable(n, v)
 
 class Patch
-  _vars = []
+  vars: []
   constructor: (@id, @pxcor, @pycor, @pcolor = 0.0, @plabel = "", @plabelcolor = 9.9) ->
-    @_vars = (x for x in PatchesOwn.vars)
+    @vars = (x for x in PatchesOwn.vars)
   toString: -> "(patch " + @pxcor + " " + @pycor + ")"
   getPatchVariable: (n) ->
     if (n < patchBuiltins.length)
       this[patchBuiltins[n]]
     else
-       @_vars[n - patchBuiltins.length]
+       @vars[n - patchBuiltins.length]
   setPatchVariable: (n, v) ->
     if (n < patchBuiltins.length)
       this[patchBuiltins[n]] = v
       updated(this, patchBuiltins[n])
     else
-       @_vars[n - patchBuiltins.length] = v
+       @vars[n - patchBuiltins.length] = v
   getNeighbors: -> world.getNeighbors(@pxcor, @pycor) # world.getTopology().getNeighbors(this)
   sprout: (n) ->
     (world.createturtle(@pxcor, @pycor, 5 + 10 * Random.nextInt(14), Random.nextInt(360)) for num in [0...n])
