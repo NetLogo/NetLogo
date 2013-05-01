@@ -77,7 +77,7 @@ object StructureParser {
 
 // we retain tokens so we can report error locations.
 
-trait StructureDeclarations {
+object StructureDeclarations {
   sealed trait Declaration
   case class Includes(token: Token, names: Seq[Token])
       extends Declaration
@@ -158,8 +158,9 @@ class StructureParser(
 // and discard input).
 
 trait StructureCombinators
-    extends scala.util.parsing.combinator.Parsers
-    with StructureDeclarations {
+    extends scala.util.parsing.combinator.Parsers {
+
+  import StructureDeclarations._
 
   // specify what kind of input we take
   override type Elem = Token
@@ -287,7 +288,9 @@ trait StructureCombinators
 // (I'm not very happy with the code for this stage, but as long as it's
 // well encapsulated, maybe it's good enough. - ST 12/7/12)
 
-trait DuplicateChecker extends StructureDeclarations {
+trait DuplicateChecker {
+
+  import StructureDeclarations._
 
   def rejectDuplicateDeclarations(declarations: Seq[Declaration]) {
     for {
@@ -388,7 +391,9 @@ trait DuplicateChecker extends StructureDeclarations {
 
 /// Stage #3: build results
 
-trait ResultsBuilder extends StructureDeclarations {
+trait ResultsBuilder {
+
+  import StructureDeclarations._
 
   def buildResults(declarations: Seq[Declaration],
       displayName: Option[String],
