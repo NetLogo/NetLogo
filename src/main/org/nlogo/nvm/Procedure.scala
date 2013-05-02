@@ -22,7 +22,6 @@ class Procedure(
   val children = collection.mutable.Buffer[Procedure]()
   var args = Vector[String]()
   def isTask = parent != null
-  var lets = Vector[api.Let]()
 
   // cache args.size() for efficiency with making Activations
   var size = 0

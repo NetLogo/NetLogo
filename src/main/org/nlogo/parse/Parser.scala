@@ -37,7 +37,7 @@ trait Parser extends nvm.ParserInterface {
     // lambda-lifted and become top level procedures
     def parseProcedure(procedure: nvm.Procedure): Seq[ProcedureDefinition] = {
       val rawTokens = structureResults.tokens(procedure)
-      procedure.lets = {
+      val lets = {
         val used1 = structureResults.program.usedNames
         val used2 = (structureResults.procedures.keys ++ oldProcedures.keys).map(_ -> "procedure")
         val used3 = procedure.args.map(_ -> "local variable here")
@@ -45,7 +45,7 @@ trait Parser extends nvm.ParserInterface {
           .scan()
       }
       val iP =
-        new IdentifierParser(structureResults.program, oldProcedures, structureResults.procedures, extensionManager, false)
+        new IdentifierParser(structureResults.program, oldProcedures, structureResults.procedures, extensionManager, lets, false)
       val identifiedTokens =
         iP.process(rawTokens.iterator, procedure)  // resolve references
       new ExpressionParser(procedure, taskNumbers)
@@ -75,7 +75,7 @@ trait Parser extends nvm.ParserInterface {
     val results = new StructureParser(tokenizer.tokenizeRobustly(source), None,
                                       StructureResults(program, oldProcedures))
       .parse(subprogram)
-    val identifierParser = new IdentifierParser(program, nvm.ParserInterface.NoProcedures, results.procedures, extensionManager, !parse)
+    val identifierParser = new IdentifierParser(program, nvm.ParserInterface.NoProcedures, results.procedures, extensionManager, Vector(), !parse)
     for(procedure <- results.procedures.values) {
       val tokens = identifierParser.process(results.tokens(procedure).iterator, procedure)
       if(parse)
@@ -151,7 +151,7 @@ trait Parser extends nvm.ParserInterface {
                             None, StructureResults(program, procedures))
           .parse(subprogram = true)
       val identifierParser =
-        new IdentifierParser(program, procedures, results.procedures, extensionManager, forgiving = false)
+        new IdentifierParser(program, procedures, results.procedures, extensionManager, Vector(), forgiving = false)
       val proc = results.procedures.values.head
       val tokens = identifierParser.process(results.tokens(proc).iterator, proc)
       tokens

@@ -20,6 +20,7 @@ class IdentifierParser(
   oldProcedures: ProceduresMap,
   newProcedures: ProceduresMap,
   extensionManager: api.ExtensionManager,
+  lets: Vector[Let],
   forgiving: Boolean = false) {
 
   def process(tokens: Iterator[Token], procedure: Procedure): Seq[Token] = {
@@ -67,13 +68,13 @@ class IdentifierParser(
     }
   }
 
-  private def getLetFromArg(p: Procedure, ident: String, tokPos: Int): Option[Let] = {
+  private def getLetFromArg(ident: String, tokPos: Int): Option[Let] = {
     def checkLet(let: Let): Option[Let] =
       if(tokPos < let.start || tokPos > let.end || let.name != ident)
         None
       else
         Some(let)
-    p.lets.map(checkLet).find(_.isDefined).getOrElse(None)
+    lets.map(checkLet).find(_.isDefined).getOrElse(None)
   }
 
   private def processToken2(tok: Token, procedure: Procedure, tokPos: Int): Token = {
@@ -95,8 +96,8 @@ class IdentifierParser(
     // so oh well... - ST 7/8/06
     else if(ident == "RANDOM-OR-RANDOM-FLOAT")
       exception(RandomOrRandomFloatError, tok)
-    else if(getLetFromArg(procedure, ident, tokPos).isDefined)
-      newToken(new prim._letvariable(getLetFromArg(procedure, ident, tokPos).get),
+    else if(getLetFromArg(ident, tokPos).isDefined)
+      newToken(new prim._letvariable(getLetFromArg(ident, tokPos).get),
                ident, TokenType.REPORTER, tok.startPos, tok.endPos, tok.fileName)
     else if(procedure.args.contains(ident))
       newToken(new prim._procedurevariable(procedure.args.indexOf(ident), ident),

@@ -6,8 +6,8 @@ import Fail._
 
 // Creates Let objects and stashes them in the `let` slot of the _let primitives.  The Let objects
 // created have start and end slots that restrict the scope of the variable.  Some error checking is
-// also performed along the way.  The Let objects created are also returned, so they can be stashed
-// in the Procedure object.
+// also performed along the way.  The Let objects created are also returned, so they can be used by
+// IdentifierParser to connect _letvariable references to the right Lets.
 
 class LetScoper(tokens: Iterable[Token], usedNames: Map[String, String]) {
 

@@ -12,8 +12,7 @@ import org.nlogo.parse, parse.Fail._
  * instead whenever possible, since the locals mechanism is speedier than the let mechanism.
  *
  * "Whenever possible" is "whenever it's not inside an ask". We must find and convert two prims:
- * _let and _letvariable.  We also must remove the variable from the procedure's lets list and add
- * it to the procedure's locals list.
+ * _let and _letvariable.  We also must add the variable to the procedure's locals list.
  *
  * We also do the same thing with "repeat", which by default uses the "let" mechanism, but must be
  * changed to use the "locals" mechanism when used outside "ask". */
@@ -50,7 +49,6 @@ extends parse.DefaultAstVisitor {
           alteredLets(procedure).put(l.let, procedure.args.size)
           procedure.localsCount += 1
           procedure.args :+= l.let.name
-          procedure.lets = procedure.lets.filterNot(_ eq l.let)
           super.visitStatement(stmt)
         }
         else stmt.drop(1).foreach(_.accept(this)) // drop(1) skips the _letvariable which won't be evaluated
@@ -60,7 +58,6 @@ extends parse.DefaultAstVisitor {
           vn = procedure.args.size
           stmt.command = new _repeatlocal(vn)
           procedure.localsCount += 1
-          procedure.lets = procedure.lets.filterNot(_ eq r.let)
           // actual name here doesn't really matter, I don't think - ST 11/10/05
           procedure.args :+= "_repeatlocal:" + vn
         }
