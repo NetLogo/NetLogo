@@ -9,37 +9,36 @@ import Fail._
 // also performed along the way.  The Let objects created are also returned, so they can be used by
 // IdentifierParser to connect _letvariable references to the right Lets.
 
-class LetScoper(tokens: Iterable[Token], usedNames: Map[String, String]) {
+class LetScoper(tokens: Iterable[Token]) {
 
   private val iter = new CountedIterator(tokens.iterator)
   private var result = Vector[Let]()
 
-  def scan(): Vector[Let] = {
-    recurse(List(Nil))
+  def scan(usedNames: Map[String, String]): Vector[Let] = {
+    recurse(usedNames)
     result
   }
 
-  def recurse(enclosingScopes: List[List[_let]]) {
+  def recurse(usedNames: Map[String, String]) {
 
     var currentScope: List[_let] = Nil
+    def namesInCurrentScope: Map[String, String] =
+      currentScope.map(_.let.name -> "local variable here").toMap
 
     def beginLet(prim: _let) {
       val nameToken = iter.next()
       cAssert(nameToken.tpe == TokenType.IDENT,
         "Expected variable name here", nameToken)
       val name = nameToken.value.asInstanceOf[String]
-      for (displayName <- usedNames.get(name))
+      for (displayName <- (usedNames ++ namesInCurrentScope).get(name))
         exception("There is already a " + displayName + " called " + name, nameToken)
-      val start = iter.count
-      cAssert(!(enclosingScopes.flatten ++ currentScope).exists(_.let.name == name),
-        "There is already a local variable called " + name + " here", nameToken)
       // we may change end later if we see a closing bracket
-      prim.let = Let(name, start, tokens.size)
+      prim.let = Let(name, iter.count, tokens.size)
       currentScope +:= prim
     }
 
-    def endLets(prims: List[_let]) =
-      for (prim <- prims)
+    def endLets(): List[Let] =
+      for (prim <- currentScope)
       yield {
         prim.let = prim.let.copy(end = iter.count - 1)
         prim.let
@@ -49,9 +48,9 @@ class LetScoper(tokens: Iterable[Token], usedNames: Map[String, String]) {
       val token = iter.next()
       token.tpe match {
         case TokenType.OPEN_BRACKET =>
-          recurse(currentScope :: enclosingScopes)
+          recurse(namesInCurrentScope ++ usedNames)
         case TokenType.CLOSE_BRACKET =>
-          result ++= endLets(currentScope)
+          result ++= endLets()
           return
         case TokenType.COMMAND =>
           token.value match {
@@ -64,7 +63,7 @@ class LetScoper(tokens: Iterable[Token], usedNames: Map[String, String]) {
     }
 
     // reached end of procedure body
-    result ++= endLets(currentScope)
+    result ++= endLets()
 
   }
 

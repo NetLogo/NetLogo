@@ -29,11 +29,11 @@ class TestCompiler extends FunSuite with OneInstancePerTest with BeforeAndAfterE
 
   test("LetSameVariableTwice1") {
     badCommand("let a 5 let a 6",
-               "There is already a local variable called A here")
+               "There is already a local variable here called A")
   }
   test("LetSameVariableTwice2") {
     badCommand("let a 5 ask patches [ let a 6 ]",
-               "There is already a local variable called A here")
+               "There is already a local variable here called A")
   }
   test("LetSameNameAsCommandProcedure1") {
     declare("to a end")
@@ -87,7 +87,7 @@ class TestCompiler extends FunSuite with OneInstancePerTest with BeforeAndAfterE
   }
   test("LetShadowsLet") {
     badCommand("let x 4 ask patches [ let x 0 ]",
-               "There is already a local variable called X here")
+               "There is already a local variable here called X")
   }
   test("LetNameSameAsEnclosingCommandProcedureName") {
     declareBad("to bazort let bazort 5 end",
@@ -107,7 +107,7 @@ class TestCompiler extends FunSuite with OneInstancePerTest with BeforeAndAfterE
   }
   test("SameLocalVariableTwice3") {
     declareBad("to a3 let b 5 let b 6 end",
-               "There is already a local variable called B here")
+               "There is already a local variable here called B")
   }
   test("SameLocalVariableTwice4") {
     declareBad("to a4 locals [b] let b 5 end",

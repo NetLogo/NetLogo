@@ -18,8 +18,8 @@ class IdentifierParserTests extends FunSuite {
     expectResult(1)(results.procedures.size)
     val procedure = results.procedures.values.iterator.next()
     val lets =
-      new LetScoper(results.tokens(procedure), results.program.usedNames)
-        .scan()
+      new LetScoper(results.tokens(procedure))
+        .scan(results.program.usedNames)
     new IdentifierParser(results.program, nvm.ParserInterface.NoProcedures,
       results.procedures, new DummyExtensionManager, lets)
       .process(results.tokens(procedure).iterator, procedure)
