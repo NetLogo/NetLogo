@@ -3,7 +3,7 @@
 package org.nlogo.parse
 
 import Fail.{ cAssert, exception }
-import org.nlogo.{ api, nvm, prim }
+import org.nlogo.{ api, nvm, parse0, prim }
 import api.{ CompilerException, Let, Program, Token, TokenType }
 import nvm.{ Instruction, Procedure, Reporter }
 import nvm.ParserInterface.ProceduresMap
@@ -26,12 +26,22 @@ class IdentifierParser(
   def process(tokens: Iterator[Token], procedure: Procedure): Seq[Token] = {
     // make sure the procedure name doesn't conflict with a special identifier -- CLB
     checkProcedureName(procedure)
-    val it = new CountedIterator(tokens)
-    def processToken(token: Token): Token = {
+    val it = new parse0.CountedIterator(tokens)
+    def processToken(token: Token): Token =
       if(token.tpe == TokenType.IDENT || token.tpe == TokenType.VARIABLE)
         processToken2(token, procedure, it.count)
-      else token
-    }
+      else {
+        if (token.tpe == TokenType.COMMAND)
+          token.value match {
+            case let: prim._let =>
+              // LetScoper constructed Let objects, but it didn't stash them
+              // in the prim._let objects. we do that here, so that LetScoper
+              // doesn't depend on prim._let - ST 5/2/13
+              let.let = lets.find(let => let.start == it.count + 1).get
+            case _ =>
+          }
+        token
+      }
     it.map(processTokenWithExtensionManager).map(processToken).toSeq
   }
 

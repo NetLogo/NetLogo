@@ -19,6 +19,7 @@ object DummyTokenMapper extends TokenMapperInterface {
       case "ASK" => "_ask"
       case "CRT" => "_createturtles"
       case "SET" => "_set"
+      case "LET" => "org.nlogo.prim._let"
     }.map(Holder)
   override def getReporter(s: String) =
     PartialFunction.condOpt(s){

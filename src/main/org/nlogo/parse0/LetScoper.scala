@@ -1,13 +1,12 @@
-package org.nlogo.parse
+package org.nlogo.parse0
 
 import org.nlogo.api.{ Token, TokenType, Let }
-import org.nlogo.prim._let
 import Fail._
 
-// Creates Let objects and stashes them in the `let` slot of the _let primitives.  The Let objects
-// created have start and end slots that restrict the scope of the variable.  Some error checking is
-// also performed along the way.  The Let objects created are also returned, so they can be used by
-// IdentifierParser to connect _letvariable references to the right Lets.
+// Finds uses of "let" and creates Let objects with start and end slots that restrict the scope of
+// the variable.  Some error checking is also performed along the way.  The Let objects created are
+// also returned, so they can be used by IdentifierParser to connect _letvariable references to the
+// right Lets.
 
 class LetScoper(tokens: Iterable[Token]) {
 
@@ -21,11 +20,11 @@ class LetScoper(tokens: Iterable[Token]) {
 
   def recurse(usedNames: Map[String, String]) {
 
-    var currentScope: List[_let] = Nil
+    var currentScope: List[Let] = Nil
     def namesInCurrentScope: Map[String, String] =
-      currentScope.map(_.let.name -> "local variable here").toMap
+      currentScope.map(_.name -> "local variable here").toMap
 
-    def beginLet(prim: _let) {
+    def beginLet() {
       val nameToken = iter.next()
       cAssert(nameToken.tpe == TokenType.IDENT,
         "Expected variable name here", nameToken)
@@ -33,16 +32,12 @@ class LetScoper(tokens: Iterable[Token]) {
       for (displayName <- (usedNames ++ namesInCurrentScope).get(name))
         exception("There is already a " + displayName + " called " + name, nameToken)
       // we may change end later if we see a closing bracket
-      prim.let = Let(name, iter.count, tokens.size)
-      currentScope +:= prim
+      currentScope +:= Let(name, iter.count, tokens.size)
     }
 
     def endLets(): List[Let] =
-      for (prim <- currentScope)
-      yield {
-        prim.let = prim.let.copy(end = iter.count - 1)
-        prim.let
-      }
+      for (let <- currentScope)
+      yield let.copy(end = iter.count - 1)
 
     while(iter.hasNext) {
       val token = iter.next()
@@ -53,11 +48,8 @@ class LetScoper(tokens: Iterable[Token]) {
           result ++= endLets()
           return
         case TokenType.COMMAND =>
-          token.value match {
-            case prim: _let =>
-              beginLet(prim)
-            case _ =>
-          }
+          if (List("LET", "__LET").contains(token.name.toUpperCase))
+            beginLet()
         case _ =>
       }
     }

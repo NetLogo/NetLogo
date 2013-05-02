@@ -41,7 +41,7 @@ trait Parser extends nvm.ParserInterface {
         val used1 = structureResults.program.usedNames
         val used2 = (structureResults.procedures.keys ++ oldProcedures.keys).map(_ -> "procedure")
         val used3 = procedure.args.map(_ -> "local variable here")
-        new LetScoper(rawTokens)
+        new parse0.LetScoper(rawTokens)
           .scan(used1 ++ used2 ++ used3)
       }
       val iP =

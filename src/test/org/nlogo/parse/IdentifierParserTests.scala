@@ -4,7 +4,7 @@ package org.nlogo.parse
 
 import org.scalatest.FunSuite
 import org.nlogo.api.{ DummyExtensionManager, Program, Token, TokenType }
-import org.nlogo.nvm
+import org.nlogo.{ nvm, parse0 }
 
 class IdentifierParserTests extends FunSuite {
 
@@ -18,7 +18,7 @@ class IdentifierParserTests extends FunSuite {
     expectResult(1)(results.procedures.size)
     val procedure = results.procedures.values.iterator.next()
     val lets =
-      new LetScoper(results.tokens(procedure))
+      new parse0.LetScoper(results.tokens(procedure))
         .scan(results.program.usedNames)
     new IdentifierParser(results.program, nvm.ParserInterface.NoProcedures,
       results.procedures, new DummyExtensionManager, lets)
