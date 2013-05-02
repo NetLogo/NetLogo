@@ -92,7 +92,7 @@ object StructureChecker {
           }
       cAssert(
         used._1 != occ.identifier.name || isBreedVariableException,
-        "You already defined " + occ.identifier.name + " as a " + used._2,
+        "There is already a " +  used._2 + " called " + occ.identifier.name,
         occ.identifier.token)
     }
     // O(n^2) -- maybe we should fold instead

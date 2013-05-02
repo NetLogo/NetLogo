@@ -9,7 +9,7 @@ class LetScoperTests extends FunSuite {
 
   val tokenizer =
     Femto.get(classOf[api.TokenizerInterface],
-      "org.nlogo.lex.Tokenizer", Array(api.DummyTokenMapper))
+      "org.nlogo.lex.Tokenizer", Array())
 
   def compile(source: String) =
     new LetScoper(tokenizer.tokenize(source))

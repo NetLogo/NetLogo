@@ -3,7 +3,7 @@
 package org.nlogo.parse
 
 import Fail.{ cAssert, exception }
-import org.nlogo.api.{ Syntax, Token, TokenType, TypeNames }
+import org.nlogo.api.{ LogoList, Nobody, Syntax, Token, TokenType, TypeNames }
 import Syntax.compatible
 import org.nlogo.nvm.{ Command, Instruction, Procedure, Referenceable, Reporter}
 import org.nlogo.prim._
@@ -352,7 +352,7 @@ class ExpressionParser(
           tokens.next()
           val (reporter, rApp) = token.tpe match {
             case TokenType.Constant =>
-              val r = LiteralParser.makeLiteralReporter(token.value)
+              val r = ExpressionParser.makeLiteralReporter(token.value)
               r.token(token)
               (r, new ReporterApp(r, token.startPos, token.endPos, token.fileName))
             case TokenType.Reporter =>
@@ -577,7 +577,8 @@ class ExpressionParser(
       // extensionManager here because we only ever use this code when we are parsing literal lists
       // while compiling code.  When we're reading lists from export files and such we go straight
       // to the LiteralParser through Compiler.readFromString ev 3/20/08
-      val tmp = LiteralParser.makeLiteralReporter(new LiteralParser(null, null).parseLiteralList(tokens.next(), tokens))
+      val tmp = ExpressionParser.makeLiteralReporter(
+        new LiteralParser(null, null).parseLiteralList(tokens.next(), tokens))
       val token = tokens.next()
       tmp.token(new Token("", TokenType.Constant, null)(openBracket.startPos, token.endPos, token.fileName))
       new ReporterApp(tmp, openBracket.startPos, token.endPos, token.fileName)
@@ -606,4 +607,16 @@ class ExpressionParser(
             .exists(t => t.tpe == TokenType.Command || t.tpe == TokenType.CloseBracket)
   }
 
+}
+
+object ExpressionParser {
+  def makeLiteralReporter(value: AnyRef): Reporter =
+    value match {
+      case b: java.lang.Boolean => new _constboolean(b)
+      case d: java.lang.Double => new _constdouble(d)
+      case l: LogoList => new _constlist(l)
+      case s: String => new _conststring(s)
+      case Nobody => new _nobody
+      case _ => throw new IllegalArgumentException(value.getClass.getName)
+    }
 }

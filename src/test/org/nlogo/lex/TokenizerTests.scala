@@ -7,7 +7,7 @@ import org.nlogo.api, api.{ Token, TokenType }
 
 class TokenizerTests extends FunSuite {
 
-  val tokenizer = new Tokenizer(api.DummyTokenMapper)
+  val tokenizer = new Tokenizer
   import tokenizer._
 
   def tokenize(s: String) = {
@@ -24,8 +24,8 @@ class TokenizerTests extends FunSuite {
     tokens.find(_.tpe == TokenType.Bad)
   ///
   test("TokenizeSimpleExpr") {
-    val expected = "Token(__ignore,Command,_ignore)" +
-      "Token(round,Reporter,_round)" +
+    val expected = "Token(__ignore,Ident,__IGNORE)" +
+      "Token(round,Ident,ROUND)" +
       "Token(0.5,Constant,0.5)"
     expectResult(expected)(
       tokenize("__ignore round 0.5").mkString)
@@ -33,16 +33,16 @@ class TokenizerTests extends FunSuite {
   test("TokenizeSimpleExprWithInitialWhitespace") {
     val tokens = tokenize("\n\n__ignore round 0.5")
     val expected =
-      "Token(__ignore,Command,_ignore)" +
-        "Token(round,Reporter,_round)" +
+      "Token(__ignore,Ident,__IGNORE)" +
+        "Token(round,Ident,ROUND)" +
         "Token(0.5,Constant,0.5)"
     expectResult(expected)(tokens.mkString)
   }
   test("TokenizeSimpleExprWithInitialReturn") {
     val tokens = tokenize("\r__ignore round 0.5")
     val expected =
-      "Token(__ignore,Command,_ignore)" +
-        "Token(round,Reporter,_round)" +
+      "Token(__ignore,Ident,__IGNORE)" +
+        "Token(round,Ident,ROUND)" +
         "Token(0.5,Constant,0.5)"
     expectResult(expected)(tokens.mkString)
   }
@@ -54,7 +54,7 @@ class TokenizerTests extends FunSuite {
   test("TokenizeQuestionMark") {
     val tokens = tokenize("round ?")
     val expected =
-      "Token(round,Reporter,_round)" +
+      "Token(round,Ident,ROUND)" +
         "Token(?,Ident,?)"
     expectResult(expected)(tokens.mkString)
   }
@@ -131,33 +131,33 @@ class TokenizerTests extends FunSuite {
   }
   // the method being tested here is used by the F1 key stuff - ST 1/23/08
   test("GetTokenAtPosition") {
-    expectResult("Token(ask,Command,_ask)")(
+    expectResult("Token(ask,Ident,ASK)")(
       tokenizer.getTokenAtPosition("ask turtles [set color blue]", 0).toString)
-    expectResult("Token(ask,Command,_ask)")(
+    expectResult("Token(ask,Ident,ASK)")(
       tokenizer.getTokenAtPosition("ask turtles [set color blue]", 1).toString)
-    expectResult("Token(ask,Command,_ask)")(
+    expectResult("Token(ask,Ident,ASK)")(
       tokenizer.getTokenAtPosition("ask turtles [set color blue]", 2).toString)
     expectResult("Token([,OpenBracket,null)")(
       tokenizer.getTokenAtPosition("ask turtles [set color blue]", 12).toString)
-    expectResult("Token(set,Command,_set)")(
+    expectResult("Token(set,Ident,SET)")(
       tokenizer.getTokenAtPosition("ask turtles [set color blue]", 13).toString)
-    expectResult("Token(set,Command,_set)")(
+    expectResult("Token(set,Ident,SET)")(
       tokenizer.getTokenAtPosition("ask turtles [set color blue]", 14).toString)
     expectResult("Token(blue,Constant,105.0)")(
       tokenizer.getTokenAtPosition("ask turtles [set color blue]", 24).toString)
   }
   // bug #88
   test("GetTokenAtPosition-bug88") {
-    expectResult("Token(crt,Command,_createturtles)")(
+    expectResult("Token(crt,Ident,CRT)")(
       tokenizer.getTokenAtPosition("[crt", 1).toString)
   }
   // bug #139
   test("GetTokenAtPosition-bug139") {
-    expectResult("Token(crt,Command,_createturtles)")(
+    expectResult("Token(crt,Ident,CRT)")(
       tokenizer.getTokenAtPosition("crt]", 3).toString)
-    expectResult("Token(crt,Command,_createturtles)")(
+    expectResult("Token(crt,Ident,CRT)")(
       tokenizer.getTokenAtPosition("crt", 0).toString)
-    expectResult("Token(crt,Command,_createturtles)")(
+    expectResult("Token(crt,Ident,CRT)")(
       tokenizer.getTokenAtPosition("crt", 3).toString)
   }
   // what about removed prims?

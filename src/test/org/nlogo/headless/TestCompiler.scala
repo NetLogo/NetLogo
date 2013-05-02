@@ -75,15 +75,15 @@ class TestCompiler extends FunSuite with OneInstancePerTest with BeforeAndAfterE
   }
   test("LetSameNameAsPrimitiveCommand") {
     badCommand("let fd 5",
-               "Expected variable name here")
+               "There is already a primitive command called FD")
   }
   test("LetSameNameAsPrimitiveReporter1") {
     badCommand("let timer 5",
-               "Expected variable name here")
+               "There is already a primitive reporter called TIMER")
   }
   test("LetSameNameAsPrimitiveReporter2") {
     badCommand("let sin 5",
-               "Expected variable name here")
+               "There is already a primitive reporter called SIN")
   }
   test("LetShadowsLet") {
     badCommand("let x 4 ask patches [ let x 0 ]",
@@ -136,7 +136,7 @@ class TestCompiler extends FunSuite with OneInstancePerTest with BeforeAndAfterE
                "edges-own [weight]\n" +
                "nodes-own [weight]\n" +
                "foos-own [weight] ",
-               "You already defined WEIGHT as a EDGES-OWN variable")
+               "There is already a EDGES-OWN variable called WEIGHT")
   }
   test("BreedOwnsNoConflict") {
     workspace.initForTesting(5,

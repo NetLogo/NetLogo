@@ -47,8 +47,8 @@ class LetScoper(tokens: Iterable[Token]) {
         case TokenType.CloseBracket =>
           result ++= endLets()
           return
-        case TokenType.Command =>
-          if (List("LET", "__LET").contains(token.name.toUpperCase))
+        case TokenType.Ident =>
+          if (List("LET", "__LET").contains(token.value))
             beginLet()
         case _ =>
       }

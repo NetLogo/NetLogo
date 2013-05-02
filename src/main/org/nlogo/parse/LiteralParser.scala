@@ -2,12 +2,9 @@
 
 package org.nlogo.parse
 
-import Fail.{ cAssert, exception }
+import org.nlogo.api, api.{ ExtensionManager, LogoList, Nobody, Token, TokenType }
 import org.nlogo.agent.{ AgentSet, AgentSetBuilder, Link, Observer, Patch, Turtle, World }
-import org.nlogo.nvm.Reporter
-import org.nlogo.prim._
-import org.nlogo.api
-import api.{ ExtensionManager, LogoList, Nobody, Token, TokenType }
+import Fail._
 
 /**
  * The literal parser.
@@ -15,18 +12,6 @@ import api.{ ExtensionManager, LogoList, Nobody, Token, TokenType }
  * from a Iterator[Token]. It implements all the complicated stuff surrounding
  * literal agents and literal agentsets, when necessary.
  */
-object LiteralParser {
-  def makeLiteralReporter(value: AnyRef): Reporter =
-    value match {
-      case b: java.lang.Boolean => new _constboolean(b)
-      case d: java.lang.Double => new _constdouble(d)
-      case l: LogoList => new _constlist(l)
-      case s: String => new _conststring(s)
-      case Nobody => new _nobody
-      case _ => throw new IllegalArgumentException(value.getClass.getName)
-    }
-}
-
 class LiteralParser(
   world: World = null, extensionManager: ExtensionManager = null) {
 
@@ -158,27 +143,26 @@ class LiteralParser(
   private def parseLiteralAgent(token: Token, tokens: Iterator[Token]) = {
     // we shouldn't get here if we aren't importing, but check just in case
     cAssert(world != null, ILLEGAL_AGENT_LITERAL, token)
-    val agentKind = token.value
-    if(agentKind.isInstanceOf[org.nlogo.prim._patch]) {
-      val pxcor = parsePcor(tokens)
-      val pycor = parsePcor(tokens)
-      try { world.getPatchAt(pxcor, pycor) }
-      catch { case _: org.nlogo.api.AgentException =>
-                exception("Invalid patch coordinates ( " + pxcor + " , " + pycor + " ) ", token) }
+    token.value match {
+      case "PATCH" =>
+        val pxcor = parsePcor(tokens)
+        val pycor = parsePcor(tokens)
+        try { world.getPatchAt(pxcor, pycor) }
+        catch { case _: org.nlogo.api.AgentException =>
+                  exception("Invalid patch coordinates ( " + pxcor + " , " + pycor + " ) ", token) }
+      case "TURTLE" =>
+        val token = tokens.next()
+        if(token.tpe != TokenType.Constant || !token.value.isInstanceOf[java.lang.Double])
+          exception(BAD_TURTLE_ARG, token)
+        world.getOrCreateTurtle(token.value.asInstanceOf[java.lang.Double].longValue)
+      case "LINK" =>
+        world.getOrCreateLink(
+          parseEnd(tokens),
+          parseEnd(tokens),
+          world.links)
+      case _ =>
+        exception(BAD_AGENT, token)
     }
-    else if(agentKind.isInstanceOf[org.nlogo.prim._turtle]) {
-      val token = tokens.next()
-      if(token.tpe != TokenType.Constant || !token.value.isInstanceOf[java.lang.Double])
-        exception(BAD_TURTLE_ARG, token)
-      world.getOrCreateTurtle(token.value.asInstanceOf[java.lang.Double].longValue)
-    }
-    else if(agentKind.isInstanceOf[org.nlogo.prim._link]) {
-      world.getOrCreateLink(
-        parseEnd(tokens),
-        parseEnd(tokens),
-        world.links)
-    }
-    else exception(BAD_AGENT, token)
   }
 
   /**
@@ -212,64 +196,61 @@ class LiteralParser(
     // and "patches" end up getting turned into Reporters when tokenizing, which is kind of ugly.
     cAssert(List(TokenType.Variable, TokenType.Ident, TokenType.Reporter).contains(token.tpe),
             EXPECTED_BREED, token)
-    if(token.tpe == TokenType.Variable || token.tpe == TokenType.Ident) {
-      val agentsetTypeString = token.value.asInstanceOf[String]
-      if(agentsetTypeString.equalsIgnoreCase(SET_TYPE_BREED)) {
-        // we have a breed agentset
-        val breedToken = tokens.next()
-        cAssert(breedToken.tpe == TokenType.Ident, EXPECTED_BREED, breedToken)
-        val closeBrace = tokens.next()
-        cAssert(closeBrace.tpe == TokenType.CloseBrace, EXPECTED_CloseBrace, closeBrace)
-        // this is safe since it must be an IDENT.
-        val breedString = breedToken.value.asInstanceOf[String]
-        val breed = {
-          val b = world.getBreed(breedString)
-          if(b != null) b
-          else world.getLinkBreed(breedString)
-        }
-        cAssert(breed != null, breedString + NOT_A_BREED, token)
-        breed
+    val agentsetTypeString = token.value.asInstanceOf[String]
+    if(agentsetTypeString.equalsIgnoreCase(SET_TYPE_BREED)) {
+      // we have a breed agentset
+      val breedToken = tokens.next()
+      cAssert(breedToken.tpe == TokenType.Ident, EXPECTED_BREED, breedToken)
+      val closeBrace = tokens.next()
+      cAssert(closeBrace.tpe == TokenType.CloseBrace, EXPECTED_CloseBrace, closeBrace)
+      // this is safe since it must be an IDENT.
+      val breedString = breedToken.value.asInstanceOf[String]
+      val breed = {
+        val b = world.getBreed(breedString)
+        if(b != null) b
+        else world.getLinkBreed(breedString)
       }
-      else if(List(SET_TYPE_ALLTURTLES, SET_TYPE_ALLPATCHES, SET_TYPE_ALLLINKS)
-              .contains(agentsetTypeString.toUpperCase)) {
-        // we have the turtles or patches agentset. make sure that's
-        // all we have...
-        val closeBrace = tokens.next()
-        cAssert(closeBrace.tpe == TokenType.CloseBrace, EXPECTED_CloseBrace, closeBrace)
-        agentsetTypeString.toUpperCase match {
-          case SET_TYPE_ALLTURTLES => world.turtles
-          case SET_TYPE_ALLLINKS => world.links
-          case SET_TYPE_ALLPATCHES => world.patches
-        }
-      }
-      else if(agentsetTypeString.equalsIgnoreCase(SET_TYPE_OBSERVER)) {
-        // we have the observer agentset. make sure that's all we have...
-        val closeBrace = tokens.next()
-        cAssert(closeBrace.tpe == TokenType.CloseBrace, EXPECTED_CloseBrace, closeBrace)
-        AgentSet.fromAgent(world.observer)
-      }
-      else if(world.program.breeds.values.exists(_.singular == agentsetTypeString.toUpperCase)) {
-        val token = tokens.next()
-        if(token.tpe != TokenType.Constant || !token.value.isInstanceOf[java.lang.Double])
-          exception(BAD_TURTLE_ARG, token)
-        val closeBrace = tokens.next()
-        cAssert(closeBrace.tpe == TokenType.CloseBrace, EXPECTED_CloseBrace, closeBrace)
-        world.getOrCreateTurtle(token.value.asInstanceOf[java.lang.Double].intValue)
-      }
-      else if(world.program.linkBreeds.values.exists(_.singular == agentsetTypeString.toUpperCase)) {
-        val end1 = parseEnd(tokens)
-        val end2 = parseEnd(tokens)
-        val closeBrace = tokens.next()
-        cAssert(closeBrace.tpe == TokenType.CloseBrace, EXPECTED_CloseBrace, closeBrace)
-        world.getOrCreateLink(
-          end1, end2,
-          world.getLinkBreed(
-            world.program.linkBreeds.values.find(
-              _.singular == agentsetTypeString.toUpperCase).get.name))
-      }
-      else exception(agentsetTypeString + NOT_AN_AGENTSET, token)
+      cAssert(breed != null, breedString + NOT_A_BREED, token)
+      breed
     }
-    else if(token.value.isInstanceOf[_turtles]) {
+    else if(List(SET_TYPE_ALLTURTLES, SET_TYPE_ALLPATCHES, SET_TYPE_ALLLINKS)
+            .contains(agentsetTypeString.toUpperCase)) {
+      // we have the turtles or patches agentset. make sure that's
+      // all we have...
+      val closeBrace = tokens.next()
+      cAssert(closeBrace.tpe == TokenType.CloseBrace, EXPECTED_CloseBrace, closeBrace)
+      agentsetTypeString.toUpperCase match {
+        case SET_TYPE_ALLTURTLES => world.turtles
+        case SET_TYPE_ALLLINKS => world.links
+        case SET_TYPE_ALLPATCHES => world.patches
+      }
+    }
+    else if(agentsetTypeString.equalsIgnoreCase(SET_TYPE_OBSERVER)) {
+      // we have the observer agentset. make sure that's all we have...
+      val closeBrace = tokens.next()
+      cAssert(closeBrace.tpe == TokenType.CloseBrace, EXPECTED_CloseBrace, closeBrace)
+      AgentSet.fromAgent(world.observer)
+    }
+    else if(world.program.breeds.values.exists(_.singular == agentsetTypeString.toUpperCase)) {
+      val token = tokens.next()
+      if(token.tpe != TokenType.Constant || !token.value.isInstanceOf[java.lang.Double])
+        exception(BAD_TURTLE_ARG, token)
+      val closeBrace = tokens.next()
+      cAssert(closeBrace.tpe == TokenType.CloseBrace, EXPECTED_CloseBrace, closeBrace)
+      world.getOrCreateTurtle(token.value.asInstanceOf[java.lang.Double].intValue)
+    }
+    else if(world.program.linkBreeds.values.exists(_.singular == agentsetTypeString.toUpperCase)) {
+      val end1 = parseEnd(tokens)
+      val end2 = parseEnd(tokens)
+      val closeBrace = tokens.next()
+      cAssert(closeBrace.tpe == TokenType.CloseBrace, EXPECTED_CloseBrace, closeBrace)
+      world.getOrCreateLink(
+        end1, end2,
+        world.getLinkBreed(
+          world.program.linkBreeds.values.find(
+            _.singular == agentsetTypeString.toUpperCase).get.name))
+    }
+    else if(token.value == "TURTLES") {
       // we have an agentset of turtles. parse arguments...
       val builder = new AgentSetBuilder(api.AgentKind.Turtle)
       var token = tokens.next()
@@ -281,7 +262,7 @@ class LiteralParser(
       }
       builder.build()
     }
-    else if(token.value.isInstanceOf[_links]) {
+    else if(token.value == "LINKS") {
       // we have an agentset of links. parse arguments...
       val builder = new AgentSetBuilder(api.AgentKind.Link)
       var token = tokens.next()
@@ -301,7 +282,7 @@ class LiteralParser(
       }
       builder.build()
     }
-    else if(token.value.isInstanceOf[_patches]) {
+    else if(token.value == "PATCHES") {
       // we have an agentset of patches. parse arguments...
       val builder = new AgentSetBuilder(api.AgentKind.Patch)
       var token = tokens.next()
@@ -322,15 +303,14 @@ class LiteralParser(
       }
       builder.build()
     }
-    else if(List(classOf[_turtle], classOf[_patch], classOf[_link])
-            .contains(token.value.getClass)) {
-      // we have a single agent, turtle patch or link
+    else if (List("TURTLE", "PATCH", "LINK").contains(token.value)) {
+      // we have a single agent
       val result = parseLiteralAgent(token, tokens)
       val closeBrace = tokens.next()
       cAssert(closeBrace.tpe == TokenType.CloseBrace, EXPECTED_CloseBrace, closeBrace)
       result
     }
-    else exception(token.name + NOT_AN_AGENTSET, token)
+    else exception(agentsetTypeString + NOT_AN_AGENTSET, token)
   }
 
 }

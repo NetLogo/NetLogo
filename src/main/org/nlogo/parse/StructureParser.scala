@@ -63,6 +63,10 @@ object StructureParser {
     results
   }
 
+  val alwaysUsedNames =
+    TokenMapper.allCommandNames.map(_ -> "primitive command") ++
+    TokenMapper.allReporterNames.map(_ -> "primitive reporter")
+
 }
 
 /// for each source file. knits stages together. throws CompilerException
@@ -89,6 +93,7 @@ class StructureParser(
 
   def usedNames(program: api.Program, procedures: ProceduresMap): Map[String, String] =
     program.usedNames ++
-      procedures.keys.map(_ -> "procedure")
+    procedures.keys.map(_ -> "procedure") ++
+    StructureParser.alwaysUsedNames
 
 }

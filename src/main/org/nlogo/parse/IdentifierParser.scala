@@ -28,21 +28,43 @@ class IdentifierParser(
     checkProcedureName(procedure)
     val it = new parse0.CountedIterator(tokens)
     def processToken(token: Token): Token =
-      if(token.tpe == TokenType.Ident || token.tpe == TokenType.Variable)
-        processToken2(token, procedure, it.count)
-      else {
-        if (token.tpe == TokenType.Command)
-          token.value match {
-            case let: prim._let =>
-              // LetScoper constructed Let objects, but it didn't stash them
-              // in the prim._let objects. we do that here, so that LetScoper
-              // doesn't depend on prim._let - ST 5/2/13
-              let.let = lets.find(let => let.start == it.count + 1).get
-            case _ =>
-          }
-        token
+      token.tpe match {
+        case TokenType.Variable =>
+          processToken2(token, procedure, it.count)
+        case TokenType.Ident =>
+          TokenMapper.getCommand(token.value.asInstanceOf[String])
+            .map{command =>
+              val newToken =
+                token.copy(tpe = TokenType.Command, value = command)(
+                  token.startPos, token.endPos, token.fileName)
+              command.token(newToken)
+              newToken
+            }
+            .getOrElse(TokenMapper.getReporter(token.value.asInstanceOf[String])
+              .map{reporter =>
+                val newToken =
+                  token.copy(tpe = TokenType.Reporter, value = reporter)(
+                    token.startPos, token.endPos, token.fileName)
+                reporter.token(newToken)
+                newToken
+              }
+              .getOrElse(
+                processToken2(token, procedure, it.count)))
+        case _ =>
+          token
       }
-    it.map(processTokenWithExtensionManager).map(processToken).toSeq
+    def stuffLet(token: Token): Token = {
+      (token.tpe, token.value) match {
+        case (TokenType.Command, let: prim._let) =>
+          // LetScoper constructed Let objects, but it didn't stash them
+          // in the prim._let objects. we do that here, so that LetScoper
+          // doesn't depend on prim._let - ST 5/2/13
+          let.let = lets.find(let => let.start == it.count + 1).get
+        case _ =>
+      }
+      token
+    }
+    it.map(processTokenWithExtensionManager).map(processToken).map(stuffLet).toSeq
   }
 
   // replaces an identifier token with its imported implementation, if necessary

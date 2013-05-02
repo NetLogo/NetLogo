@@ -11,7 +11,7 @@ class StructureParserTests extends FunSuite {
 
   val tokenizer =
     Femto.get(classOf[api.TokenizerInterface],
-      "org.nlogo.lex.Tokenizer", Array(api.DummyTokenMapper))
+      "org.nlogo.lex.Tokenizer", Array())
 
   def compile(source: String): StructureResults = {
     new StructureParser(tokenizer.tokenize(source),
@@ -165,7 +165,7 @@ class StructureParserTests extends FunSuite {
     val e = intercept[CompilerException] {
       compile("globals [turtle]")
     }
-    expectResult("closing bracket expected")(e.getMessage)
+    expectResult("There is already a primitive reporter called TURTLE")(e.getMessage)
   }
 
   test("redeclaration of globals") {

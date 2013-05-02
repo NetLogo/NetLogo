@@ -4,7 +4,6 @@ package org.nlogo.lex;
 import org.nlogo.api.Token;
 import org.nlogo.api.TokenHolder;
 import org.nlogo.api.TokenType;
-import org.nlogo.api.TokenMapperInterface;
 
 // Since this is automatically generated code it's not surprising
 // it'd produce a few warnings - ST 3/6/08
@@ -14,7 +13,6 @@ import org.nlogo.api.TokenMapperInterface;
 
 %{
   private final String fileName;
-  private final TokenMapperInterface tokenMapper;
   private StringBuilder literalBuilder = null;
   private int literalStart = -1;
   private int literalNestingLevel = 0;
@@ -30,8 +28,6 @@ import org.nlogo.api.TokenMapperInterface;
   private static final TokenType TokenType_CloseBrace = getTokenType("CloseBrace");
   private static final TokenType TokenType_Constant = getTokenType("Constant");
   private static final TokenType TokenType_Ident = getTokenType("Ident");
-  private static final TokenType TokenType_Command = getTokenType("Command");
-  private static final TokenType TokenType_Reporter = getTokenType("Reporter");
   private static final TokenType TokenType_Keyword = getTokenType("Keyword");
   private static final TokenType TokenType_Comma = getTokenType("Comma");
   private static final TokenType TokenType_Comment = getTokenType("Comment");
@@ -41,7 +37,9 @@ import org.nlogo.api.TokenMapperInterface;
 
   private static TokenType getTokenType(String name) {
     try {
-      return (TokenType) Class.forName("org.nlogo.api.TokenType$" + name + "$").getField("MODULE$").get(null);
+      return (TokenType)
+        Class.forName("org.nlogo.api.TokenType$" + name + "$")
+        .getField("MODULE$").get(null);
     }
     catch(IllegalAccessException ex) {
       throw new IllegalStateException(ex);
@@ -76,24 +74,6 @@ import org.nlogo.api.TokenMapperInterface;
       return new Token(text, TokenType_Keyword, text.toUpperCase(),
                 yychar, yychar + text.length(), fileName);
     }
-    scala.Option<TokenHolder> command =
-      tokenMapper.getCommand(text.toUpperCase());
-    if (command.isDefined()) {
-      org.nlogo.api.TokenHolder instr = command.get();
-      Token tok = new Token(text, TokenType_Command, instr,
-                   yychar, yychar + text.length(), fileName);
-      instr.token(tok);
-      return tok;
-    }
-    scala.Option<TokenHolder> reporter =
-      tokenMapper.getReporter(text.toUpperCase());
-    if (reporter.isDefined()) {
-      org.nlogo.api.TokenHolder instr = reporter.get();
-      Token tok = new Token(text, TokenType_Reporter, instr,
-                   yychar, yychar + text.length(), fileName);
-      instr.token(tok);
-      return tok;
-    }
     else if (Variables.isVariable(text)) {
       return new Token(text, TokenType_Variable, text.toUpperCase(),
                 yychar, yychar + text.length(), fileName);
@@ -112,10 +92,8 @@ import org.nlogo.api.TokenMapperInterface;
 %switch
 %class TokenLexer
 %ctorarg String fileName
-%ctorarg TokenMapperInterface tokenMapper
 %init{
   this.fileName = fileName;
-  this.tokenMapper = tokenMapper;
 %init}
 %unicode
 %char
