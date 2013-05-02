@@ -119,7 +119,7 @@ class TestCompiler extends FunSuite with OneInstancePerTest with BeforeAndAfterE
   }
   test("SameLocalVariableTwice6") {
     declareBad("to a6 [b] let b 5 end",
-               "There is already a local variable called B here")
+               "There is already a local variable here called B")
   }
   test("NonAsciiChars") {
     badCommand("blah " + 8211.toChar + " blah ",

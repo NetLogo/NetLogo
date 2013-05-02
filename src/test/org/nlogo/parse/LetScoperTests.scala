@@ -15,8 +15,8 @@ class LetScoperTests extends FunSuite {
       .parse(false)
     expectResult(1)(results.procedures.size)
     val procedure = results.procedures.values.iterator.next()
-    new LetScoper(procedure, results.tokens(procedure), results.program.usedNames).scan()
-    procedure.lets
+    new LetScoper(results.tokens(procedure), results.program.usedNames)
+      .scan()
   }
 
   test("empty") {

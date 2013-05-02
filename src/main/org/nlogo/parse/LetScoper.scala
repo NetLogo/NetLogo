@@ -1,22 +1,27 @@
 package org.nlogo.parse
 
-import Fail.{ cAssert, exception }
-import org.nlogo.{ api, nvm }
-import api.{ Token, TokenType, Let }
-import nvm.Procedure
+import org.nlogo.api.{ Token, TokenType, Let }
 import org.nlogo.prim._let
+import Fail._
 
-// Creates Let objects and stores them in the `lets` slot of the Procedure object as well as the
-// `let` slot of the _let primitives.  The Let objects created have start and end slots that
-// restrict the scope of the variable.  Some error checking is also performed along the way.
+// Creates Let objects and stashes them in the `let` slot of the _let primitives.  The Let objects
+// created have start and end slots that restrict the scope of the variable.  Some error checking is
+// also performed along the way.  The Let objects created are also returned, so they can be stashed
+// in the Procedure object.
 
-class LetScoper(procedure: Procedure, tokens: Iterable[Token], usedNames: Map[String, String]) {
+class LetScoper(tokens: Iterable[Token], usedNames: Map[String, String]) {
 
   private val iter = new CountedIterator(tokens.iterator)
+  private var result = Vector[Let]()
 
-  def scan(level: Int = 0, ancestors: List[List[_let]] = List(Nil)) {
+  def scan(): Vector[Let] = {
+    recurse(List(Nil))
+    result
+  }
 
-    var newLets: List[_let] = Nil
+  def recurse(enclosingScopes: List[List[_let]]) {
+
+    var currentScope: List[_let] = Nil
 
     def beginLet(prim: _let) {
       val nameToken = iter.next()
@@ -25,30 +30,28 @@ class LetScoper(procedure: Procedure, tokens: Iterable[Token], usedNames: Map[St
       val name = nameToken.value.asInstanceOf[String]
       for (displayName <- usedNames.get(name))
         exception("There is already a " + displayName + " called " + name, nameToken)
-      cAssert(!procedure.args.contains(name),
-        "There is already a local variable called " + name + " here", nameToken)
       val start = iter.count
-      cAssert(!(ancestors.flatten ++ newLets).exists(_.let.name == name),
+      cAssert(!(enclosingScopes.flatten ++ currentScope).exists(_.let.name == name),
         "There is already a local variable called " + name + " here", nameToken)
       // we may change end later if we see a closing bracket
       prim.let = Let(name, start, tokens.size)
-      newLets +:= prim
+      currentScope +:= prim
     }
 
-    def endLets(prims: List[_let]) {
-      for(prim <- prims) {
+    def endLets(prims: List[_let]) =
+      for (prim <- prims)
+      yield {
         prim.let = prim.let.copy(end = iter.count - 1)
-        procedure.lets :+= prim.let
+        prim.let
       }
-    }
 
     while(iter.hasNext) {
       val token = iter.next()
       token.tpe match {
         case TokenType.OPEN_BRACKET =>
-          scan(level + 1, newLets :: ancestors)
+          recurse(currentScope :: enclosingScopes)
         case TokenType.CLOSE_BRACKET =>
-          endLets(newLets)
+          result ++= endLets(currentScope)
           return
         case TokenType.COMMAND =>
           token.value match {
@@ -60,7 +63,8 @@ class LetScoper(procedure: Procedure, tokens: Iterable[Token], usedNames: Map[St
       }
     }
 
-    endLets(newLets)
+    // reached end of procedure body
+    result ++= endLets(currentScope)
 
   }
 

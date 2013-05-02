@@ -37,7 +37,13 @@ trait Parser extends nvm.ParserInterface {
     // lambda-lifted and become top level procedures
     def parseProcedure(procedure: nvm.Procedure): Seq[ProcedureDefinition] = {
       val rawTokens = structureResults.tokens(procedure)
-      new LetScoper(procedure, rawTokens, structureResults.program.usedNames ++ (structureResults.procedures.keys ++ oldProcedures.keys).map(_ -> "procedure")).scan()
+      procedure.lets = {
+        val used1 = structureResults.program.usedNames
+        val used2 = (structureResults.procedures.keys ++ oldProcedures.keys).map(_ -> "procedure")
+        val used3 = procedure.args.map(_ -> "local variable here")
+        new LetScoper(rawTokens, used1 ++ used2 ++ used3)
+          .scan()
+      }
       val iP =
         new IdentifierParser(structureResults.program, oldProcedures, structureResults.procedures, extensionManager, false)
       val identifiedTokens =
