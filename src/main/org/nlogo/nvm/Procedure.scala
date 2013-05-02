@@ -24,9 +24,6 @@ class Procedure(
   def isTask = parent != null
   var lets = Vector[api.Let]()
 
-  // each Int is the position of that variable in the procedure's args list
-  val alteredLets = collection.mutable.Map[api.Let, Int]()
-
   // cache args.size() for efficiency with making Activations
   var size = 0
 

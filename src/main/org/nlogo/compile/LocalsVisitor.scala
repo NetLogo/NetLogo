@@ -2,7 +2,7 @@
 
 package org.nlogo.compile
 
-import org.nlogo.api.I18N
+import org.nlogo.api.{ I18N, Let }
 import org.nlogo.nvm.Procedure
 import org.nlogo.prim._
 import org.nlogo.parse, parse.Fail._
@@ -18,7 +18,8 @@ import org.nlogo.parse, parse.Fail._
  * We also do the same thing with "repeat", which by default uses the "let" mechanism, but must be
  * changed to use the "locals" mechanism when used outside "ask". */
 
-private class LocalsVisitor extends parse.DefaultAstVisitor {
+private class LocalsVisitor(alteredLets: collection.mutable.Map[Procedure, collection.mutable.Map[Let, Int]])
+extends parse.DefaultAstVisitor {
 
   private var procedure: Procedure = null
   private var currentLet: _let = null  // for forbidding "let x x" and the like
@@ -27,6 +28,7 @@ private class LocalsVisitor extends parse.DefaultAstVisitor {
 
   override def visitProcedureDefinition(procdef: parse.ProcedureDefinition) {
     procedure = procdef.procedure
+    alteredLets(procedure) = collection.mutable.Map()
     super.visitProcedureDefinition(procdef)
   }
 
@@ -45,7 +47,7 @@ private class LocalsVisitor extends parse.DefaultAstVisitor {
           stmt.command = new _setprocedurevariable(new _procedurevariable(procedure.args.size, l.let.name))
           stmt.command.token(stmt.command.token)
           stmt.removeArgument(0)
-          procedure.alteredLets.put(l.let, procedure.args.size)
+          alteredLets(procedure).put(l.let, procedure.args.size)
           procedure.localsCount += 1
           procedure.args :+= l.let.name
           procedure.lets = procedure.lets.filterNot(_ eq l.let)
@@ -80,7 +82,7 @@ private class LocalsVisitor extends parse.DefaultAstVisitor {
                 I18N.errors.getN("compiler.LocalsVisitor.notDefined", l.token.name),
                 l.token)
         // it would be nice if the next line were easier to read - ST 2/6/11
-        for(index <- procedure.alteredLets.get(l.let).orElse(Option(procedure.parent).flatMap(_.alteredLets.get(l.let)))) {
+        for(index <- alteredLets(procedure).get(l.let).orElse(Option(procedure.parent).flatMap(parent => alteredLets(parent).get(l.let)))) {
           val oldToken = expr.reporter.token
           expr.reporter = new _procedurevariable(index.intValue, l.let.name)
           expr.reporter.token(oldToken)
