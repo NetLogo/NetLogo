@@ -62,8 +62,6 @@ class TestAllSyntaxes extends FunSuite {
                      |_dx ,number,-T--,null,10,0,0
                      |_dy ,number,-T--,null,10,0,0
                      |_empty string or list,TRUE/FALSE,OTPL,null,10,1,1
-                     |_end1 ,turtle,---L,null,10,0,0
-                     |_end2 ,turtle,---L,null,10,0,0
                      |_equal anything,anything,TRUE/FALSE,OTPL,null,5,1,1
                      |_errormessage ,string,OTPL,null,10,0,0
                      |_exp number,number,OTPL,null,10,1,1

@@ -239,8 +239,6 @@ R distancexy-nowrap etc._distancexynowrap
 R dx etc._dx
 R dy etc._dy
 R empty? etc._empty
-R end1 etc._end1
-R end2 etc._end2
 R error-message _errormessage
 R exp etc._exp
 R extract-hsb etc._extracthsb
