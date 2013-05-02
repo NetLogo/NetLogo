@@ -157,7 +157,7 @@ trait Parser extends nvm.ParserInterface {
       tokens
         .tail  // skip _report
         .map(_.tpe)
-        .dropWhile(_ == api.TokenType.OPEN_PAREN)
+        .dropWhile(_ == api.TokenType.OpenParen)
         .headOption
         .exists(reporterTokenTypes)
     }
@@ -165,7 +165,7 @@ trait Parser extends nvm.ParserInterface {
 
   private val reporterTokenTypes: Set[api.TokenType] = {
     import api.TokenType._
-    Set(OPEN_BRACKET, CONSTANT, IDENT, REPORTER, VARIABLE)
+    Set(OpenBracket, Constant, Ident, Reporter, Variable)
   }
 
   // used by the indenter

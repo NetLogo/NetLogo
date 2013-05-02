@@ -18,7 +18,7 @@ extends api.TokenizerInterface {
   // and here's one that throws CompilerException as soon as it hits a bad token - ST 2/20/08
   def tokenize(source: String, fileName: String): Seq[Token] = {
     val result = doTokenize(source, false, fileName, true)
-    result.find(_.tpe == TokenType.BAD) match {
+    result.find(_.tpe == TokenType.Bad) match {
       case Some(badToken) =>
         throw new api.CompilerException(badToken)
       case None =>
@@ -41,12 +41,12 @@ extends api.TokenizerInterface {
       val t = yy.yylex()
       if (t == null)
         Stream(eof)
-      else if (stopAtFirstBadToken && t.tpe == TokenType.BAD)
+      else if (stopAtFirstBadToken && t.tpe == TokenType.Bad)
         Stream(t, eof)
       else
         Stream.cons(t, yystream)
     }
-    yystream.filter(includeCommentTokens || _.tpe != TokenType.COMMENT).toList
+    yystream.filter(includeCommentTokens || _.tpe != TokenType.Comment).toList
   }
 
   def nextToken(reader: java.io.BufferedReader): Token =
@@ -56,8 +56,8 @@ extends api.TokenizerInterface {
     // if the cursor is between two adjacent tokens we'll need to pick the token
     // the user probably wants for F1 purposes. see bug #139 - ST 5/2/12
     val interestingTokenTypes =
-      List(TokenType.CONSTANT, TokenType.IDENT, TokenType.COMMAND, TokenType.REPORTER,
-           TokenType.KEYWORD, TokenType.VARIABLE)
+      List(TokenType.Constant, TokenType.Ident, TokenType.Command, TokenType.Reporter,
+           TokenType.Keyword, TokenType.Variable)
     val candidates =
       tokenizeIncludingComments(source)
         .dropWhile(_.endPos < position)
@@ -74,14 +74,14 @@ extends api.TokenizerInterface {
 
   def isValidIdentifier(ident: String): Boolean =
     tokenizeRobustly(ident).take(2).map(_.tpe) ==
-      Seq(TokenType.IDENT, TokenType.EOF)
+      Seq(TokenType.Ident, TokenType.EOF)
 
   def tokenizeForColorization(source: String, extensionManager: api.ExtensionManager): Seq[Token] = {
     // In order for extension primitives to be the right color, we need to change
-    // the type of the token from TokenType.IDENT to TokenType.COMMAND or TokenType.REPORTER
+    // the type of the token from TokenType.Ident to TokenType.Command or TokenType.Reporter
     // if the identifier is recognized by the extension.
     def replaceImports(token: Token): Token =
-      if (!extensionManager.anyExtensionsLoaded || token.tpe != TokenType.IDENT)
+      if (!extensionManager.anyExtensionsLoaded || token.tpe != TokenType.Ident)
         token
       // look up the replacement.
       else extensionManager.replaceIdentifier(token.value.asInstanceOf[String]) match {
@@ -89,8 +89,8 @@ extends api.TokenizerInterface {
         case prim =>
           val newType =
             if (prim.isInstanceOf[api.Command])
-              TokenType.COMMAND
-            else TokenType.REPORTER
+              TokenType.Command
+            else TokenType.Reporter
           new Token(token.name, newType, token.value)(
             token.startPos, token.endPos, token.fileName)
       }

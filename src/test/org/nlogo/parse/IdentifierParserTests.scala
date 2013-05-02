@@ -30,11 +30,15 @@ class IdentifierParserTests extends FunSuite {
     expectResult("")(compile("").mkString)
   }
   test("interface global") {
-    expectResult("Token(X,REPORTER,_observervariable:0)")(
+    expectResult("Token(X,Reporter,_observervariable:0)")(
       compile("print x").drop(1).mkString)
   }
   test("let") {
-    expectResult("Token(let,COMMAND,_let)" + "Token(Y,REPORTER,_letvariable(Y))" + "Token(5,CONSTANT,5.0)")(
+    val expected =
+      "Token(let,Command,_let)" +
+      "Token(Y,Reporter,_letvariable(Y))" +
+      "Token(5,Constant,5.0)"
+    expectResult(expected)(
       compile("let y 5").mkString)
   }
 

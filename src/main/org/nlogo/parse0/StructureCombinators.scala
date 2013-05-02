@@ -76,7 +76,7 @@ extends scala.util.parsing.combinator.Parsers with Cleanup {
 
   def breedVariables: Parser[Variables] =
     acceptMatch("<breed>-own", {
-      case token @ Token(_, TokenType.KEYWORD, value: String)
+      case token @ Token(_, TokenType.Keyword, value: String)
           if value.endsWith("-OWN") =>
         token }) ~!
       identifierList ^^ {
@@ -127,13 +127,13 @@ extends scala.util.parsing.combinator.Parsers with Cleanup {
     tokenType("eof", TokenType.EOF)
 
   def openBracket: Parser[Token] =
-    tokenType("opening bracket", TokenType.OPEN_BRACKET)
+    tokenType("opening bracket", TokenType.OpenBracket)
 
   def closeBracket: Parser[Token] =
-    tokenType("closing bracket", TokenType.CLOSE_BRACKET)
+    tokenType("closing bracket", TokenType.CloseBracket)
 
   def identifier: Parser[Identifier] =
-    tokenType("identifier", TokenType.IDENT) ^^ {
+    tokenType("identifier", TokenType.Ident) ^^ {
       token =>
         Identifier(token.value.asInstanceOf[String], token)}
 
@@ -145,23 +145,23 @@ extends scala.util.parsing.combinator.Parsers with Cleanup {
 
   def string: Parser[Token] =
     acceptMatch("string", {
-      case t @ Token(_, TokenType.CONSTANT, value: String) =>
+      case t @ Token(_, TokenType.Constant, value: String) =>
         t })
 
   def keyword(name: String): Parser[Token] =
     acceptMatch(name, {
-      case token @ Token(_, TokenType.KEYWORD, `name`) =>
+      case token @ Token(_, TokenType.Keyword, `name`) =>
         token })
 
   def agentVariable(name: String): Parser[Token] =
     acceptMatch(name, {
-      case token @ Token(_, TokenType.VARIABLE, `name`) =>
+      case token @ Token(_, TokenType.Variable, `name`) =>
         token })
 
   def nonKeyword: Parser[Token] =
     acceptMatch("?", {
       case token @ Token(_, tpe, _)
-          if (tpe != TokenType.KEYWORD) =>
+          if (tpe != TokenType.Keyword) =>
         token })
 
 }

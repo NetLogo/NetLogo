@@ -28,10 +28,10 @@ class IdentifierParser(
     checkProcedureName(procedure)
     val it = new parse0.CountedIterator(tokens)
     def processToken(token: Token): Token =
-      if(token.tpe == TokenType.IDENT || token.tpe == TokenType.VARIABLE)
+      if(token.tpe == TokenType.Ident || token.tpe == TokenType.Variable)
         processToken2(token, procedure, it.count)
       else {
-        if (token.tpe == TokenType.COMMAND)
+        if (token.tpe == TokenType.Command)
           token.value match {
             case let: prim._let =>
               // LetScoper constructed Let objects, but it didn't stash them
@@ -54,7 +54,7 @@ class IdentifierParser(
         case r: api.Reporter =>
           new prim._externreport(r)
       }
-    if(token.tpe != TokenType.IDENT ||
+    if(token.tpe != TokenType.Ident ||
        extensionManager == null || !extensionManager.anyExtensionsLoaded)
       token
     else {
@@ -67,8 +67,8 @@ class IdentifierParser(
         case primitive =>
           val newType =
             if(primitive.isInstanceOf[api.Command])
-              TokenType.COMMAND
-            else TokenType.REPORTER
+              TokenType.Command
+            else TokenType.Reporter
           val instruction = wrap(primitive, name)
           val newToken = Token(token.name, newType, instruction)(
             token.startPos, token.endPos, token.fileName)
@@ -100,7 +100,7 @@ class IdentifierParser(
             exception(InvalidTaskVariable, tok) }
       cAssert(varNumber > 0, InvalidTaskVariable, tok)
       newToken(new prim._taskvariable(varNumber),
-               ident, TokenType.REPORTER, tok.startPos, tok.endPos, tok.fileName)
+               ident, TokenType.Reporter, tok.startPos, tok.endPos, tok.fileName)
     }
     // kludgy to special case this, but we only have one such prim,
     // so oh well... - ST 7/8/06
@@ -108,10 +108,10 @@ class IdentifierParser(
       exception(RandomOrRandomFloatError, tok)
     else if(getLetFromArg(ident, tokPos).isDefined)
       newToken(new prim._letvariable(getLetFromArg(ident, tokPos).get),
-               ident, TokenType.REPORTER, tok.startPos, tok.endPos, tok.fileName)
+               ident, TokenType.Reporter, tok.startPos, tok.endPos, tok.fileName)
     else if(procedure.args.contains(ident))
       newToken(new prim._procedurevariable(procedure.args.indexOf(ident), ident),
-               ident, TokenType.REPORTER, tok.startPos, tok.endPos, tok.fileName)
+               ident, TokenType.Reporter, tok.startPos, tok.endPos, tok.fileName)
     else {
       // go thru our identifierHandlers, if one triggers, return the result
       BreedIdentifierHandler.process(tok, program).getOrElse{
@@ -119,12 +119,12 @@ class IdentifierParser(
           oldProcedures.getOrElse(ident,
             newProcedures.getOrElse(ident,
               return newToken(getAgentVariableReporter(ident, tok),
-                              ident, TokenType.REPORTER, tok.startPos, tok.endPos, tok.fileName)))
+                              ident, TokenType.Reporter, tok.startPos, tok.endPos, tok.fileName)))
         val (tokenType, caller) =
           if (callproc.isReporter)
-            (TokenType.REPORTER, new prim._callreport(callproc))
+            (TokenType.Reporter, new prim._callreport(callproc))
           else
-            (TokenType.COMMAND, new prim._call(callproc))
+            (TokenType.Command, new prim._call(callproc))
         newToken(caller, ident, tokenType, tok.startPos, tok.endPos, tok.fileName)
       }
     }

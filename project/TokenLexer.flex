@@ -22,22 +22,22 @@ import org.nlogo.api.TokenMapperInterface;
   // this is very annoying, but I can't figure out any other way to
   // get at the Scala inner objects from Java - ST 7/7/11
   private static final TokenType TokenType_EOF = getTokenType("EOF");
-  private static final TokenType TokenType_OPEN_PAREN = getTokenType("OPEN_PAREN");
-  private static final TokenType TokenType_CLOSE_PAREN = getTokenType("CLOSE_PAREN");
-  private static final TokenType TokenType_OPEN_BRACKET = getTokenType("OPEN_BRACKET");
-  private static final TokenType TokenType_CLOSE_BRACKET = getTokenType("CLOSE_BRACKET");
-  private static final TokenType TokenType_OPEN_BRACE = getTokenType("OPEN_BRACE");
-  private static final TokenType TokenType_CLOSE_BRACE = getTokenType("CLOSE_BRACE");
-  private static final TokenType TokenType_CONSTANT = getTokenType("CONSTANT");
-  private static final TokenType TokenType_IDENT = getTokenType("IDENT");
-  private static final TokenType TokenType_COMMAND = getTokenType("COMMAND");
-  private static final TokenType TokenType_REPORTER = getTokenType("REPORTER");
-  private static final TokenType TokenType_KEYWORD = getTokenType("KEYWORD");
-  private static final TokenType TokenType_COMMA = getTokenType("COMMA");
-  private static final TokenType TokenType_COMMENT = getTokenType("COMMENT");
-  private static final TokenType TokenType_VARIABLE = getTokenType("VARIABLE");
-  private static final TokenType TokenType_BAD = getTokenType("BAD");
-  private static final TokenType TokenType_LITERAL = getTokenType("LITERAL");
+  private static final TokenType TokenType_OpenParen = getTokenType("OpenParen");
+  private static final TokenType TokenType_CloseParen = getTokenType("CloseParen");
+  private static final TokenType TokenType_OpenBracket = getTokenType("OpenBracket");
+  private static final TokenType TokenType_CloseBracket = getTokenType("CloseBracket");
+  private static final TokenType TokenType_OpenBrace = getTokenType("OpenBrace");
+  private static final TokenType TokenType_CloseBrace = getTokenType("CloseBrace");
+  private static final TokenType TokenType_Constant = getTokenType("Constant");
+  private static final TokenType TokenType_Ident = getTokenType("Ident");
+  private static final TokenType TokenType_Command = getTokenType("Command");
+  private static final TokenType TokenType_Reporter = getTokenType("Reporter");
+  private static final TokenType TokenType_Keyword = getTokenType("Keyword");
+  private static final TokenType TokenType_Comma = getTokenType("Comma");
+  private static final TokenType TokenType_Comment = getTokenType("Comment");
+  private static final TokenType TokenType_Variable = getTokenType("Variable");
+  private static final TokenType TokenType_Bad = getTokenType("Bad");
+  private static final TokenType TokenType_Literal = getTokenType("Literal");
 
   private static TokenType getTokenType(String name) {
     try {
@@ -66,21 +66,21 @@ import org.nlogo.api.TokenMapperInterface;
   Token endLiteral() {
     String text = literalBuilder.toString();
     literalBuilder = null;
-    return new Token(text, TokenType_LITERAL, text,
+    return new Token(text, TokenType_Literal, text,
               literalStart, literalStart + text.length(), fileName);
   }
 
   Token ident() {
     String text = yytext();
     if (Keywords.isKeyword(text)) {
-      return new Token(text, TokenType_KEYWORD, text.toUpperCase(),
+      return new Token(text, TokenType_Keyword, text.toUpperCase(),
                 yychar, yychar + text.length(), fileName);
     }
     scala.Option<TokenHolder> command =
       tokenMapper.getCommand(text.toUpperCase());
     if (command.isDefined()) {
       org.nlogo.api.TokenHolder instr = command.get();
-      Token tok = new Token(text, TokenType_COMMAND, instr,
+      Token tok = new Token(text, TokenType_Command, instr,
                    yychar, yychar + text.length(), fileName);
       instr.token(tok);
       return tok;
@@ -89,21 +89,21 @@ import org.nlogo.api.TokenMapperInterface;
       tokenMapper.getReporter(text.toUpperCase());
     if (reporter.isDefined()) {
       org.nlogo.api.TokenHolder instr = reporter.get();
-      Token tok = new Token(text, TokenType_REPORTER, instr,
+      Token tok = new Token(text, TokenType_Reporter, instr,
                    yychar, yychar + text.length(), fileName);
       instr.token(tok);
       return tok;
     }
     else if (Variables.isVariable(text)) {
-      return new Token(text, TokenType_VARIABLE, text.toUpperCase(),
+      return new Token(text, TokenType_Variable, text.toUpperCase(),
                 yychar, yychar + text.length(), fileName);
     }
     else if (Constants.isConstant(text)) {
-      return new Token(text, TokenType_CONSTANT, Constants.get(text),
+      return new Token(text, TokenType_Constant, Constants.get(text),
                 yychar, yychar + text.length(), fileName);
     }
     else {
-      return new Token(text, TokenType_IDENT, text.toUpperCase(),
+      return new Token(text, TokenType_Ident, text.toUpperCase(),
                 yychar, yychar + text.length(), fileName);
     }
   }
@@ -157,24 +157,24 @@ IDENTIFIER_CHAR={LETTER} | {DIGIT} | [_\.?=\*!<>:#\+/%\$\^\'&-]
 
 <LITERAL> \n|\r {
   yybegin(YYINITIAL);
-  return new Token("", TokenType_BAD, "End of line reached unexpectedly",
+  return new Token("", TokenType_Bad, "End of line reached unexpectedly",
             yychar, yychar, fileName);
 }
 
 <LITERAL> <<EOF>> {
   yybegin(YYINITIAL);
-  return new Token("", TokenType_BAD, "End of file reached unexpectedly",
+  return new Token("", TokenType_Bad, "End of file reached unexpectedly",
             yychar, yychar, fileName);
 }
 
 
-<YYINITIAL> "," { return new Token(yytext(), TokenType_COMMA        , null, yychar, yychar + 1, fileName); }
-<YYINITIAL> "{" { return new Token(yytext(), TokenType_OPEN_BRACE   , null, yychar, yychar + 1, fileName); }
-<YYINITIAL> "}" { return new Token(yytext(), TokenType_CLOSE_BRACE  , null, yychar, yychar + 1, fileName); }
-<YYINITIAL> "[" { return new Token(yytext(), TokenType_OPEN_BRACKET , null, yychar, yychar + 1, fileName); }
-<YYINITIAL> "]" { return new Token(yytext(), TokenType_CLOSE_BRACKET, null, yychar, yychar + 1, fileName); }
-<YYINITIAL> "(" { return new Token(yytext(), TokenType_OPEN_PAREN   , null, yychar, yychar + 1, fileName); }
-<YYINITIAL> ")" { return new Token(yytext(), TokenType_CLOSE_PAREN  , null, yychar, yychar + 1, fileName); }
+<YYINITIAL> "," { return new Token(yytext(), TokenType_Comma        , null, yychar, yychar + 1, fileName); }
+<YYINITIAL> "{" { return new Token(yytext(), TokenType_OpenBrace   , null, yychar, yychar + 1, fileName); }
+<YYINITIAL> "}" { return new Token(yytext(), TokenType_CloseBrace  , null, yychar, yychar + 1, fileName); }
+<YYINITIAL> "[" { return new Token(yytext(), TokenType_OpenBracket , null, yychar, yychar + 1, fileName); }
+<YYINITIAL> "]" { return new Token(yytext(), TokenType_CloseBracket, null, yychar, yychar + 1, fileName); }
+<YYINITIAL> "(" { return new Token(yytext(), TokenType_OpenParen   , null, yychar, yychar + 1, fileName); }
+<YYINITIAL> ")" { return new Token(yytext(), TokenType_CloseParen  , null, yychar, yychar + 1, fileName); }
 
 <YYINITIAL> {NONNEWLINE_WHITE_SPACE_CHAR}+ { }
 
@@ -182,7 +182,7 @@ IDENTIFIER_CHAR={LETTER} | {DIGIT} | [_\.?=\*!<>:#\+/%\$\^\'&-]
 
 <YYINITIAL>;.* {
   String text = yytext();
-  return new Token(text, TokenType_COMMENT, null,
+  return new Token(text, TokenType_Comment, null,
             yychar, yychar + text.length(), fileName);
 }
 
@@ -190,7 +190,7 @@ IDENTIFIER_CHAR={LETTER} | {DIGIT} | [_\.?=\*!<>:#\+/%\$\^\'&-]
   String text = yytext();
   scala.util.Either<String, Double> result = org.nlogo.api.NumberParser.parse(text);
   TokenType resultType =
-    result.isLeft() ? TokenType_BAD : TokenType_CONSTANT;
+    result.isLeft() ? TokenType_Bad : TokenType_Constant;
   Object resultValue =
     result.isLeft() ? result.left().get() : result.right().get();
   return new Token(
@@ -206,24 +206,24 @@ IDENTIFIER_CHAR={LETTER} | {DIGIT} | [_\.?=\*!<>:#\+/%\$\^\'&-]
   String text = yytext();
   try {
     return new Token
-      (text, TokenType_CONSTANT,
+      (text, TokenType_Constant,
         org.nlogo.api.StringUtils.unEscapeString(text.substring(1, text.length() - 1)),
         yychar, yychar + text.length(), fileName);
   }
   catch(IllegalArgumentException ex) {
-    return new Token(text, TokenType_BAD, "Illegal character after backslash",
+    return new Token(text, TokenType_Bad, "Illegal character after backslash",
               yychar, yychar + text.length(), fileName);
   }
 }
 
 <YYINITIAL> \"{STRING_TEXT} {
   String text = yytext();
-  return new Token(text, TokenType_BAD, "Closing double quote is missing",
+  return new Token(text, TokenType_Bad, "Closing double quote is missing",
             yychar, yychar + yytext().length(), fileName);
 }
 
 . {
   String text = yytext();
-  return new Token(text, TokenType_BAD, "This non-standard character is not allowed.",
+  return new Token(text, TokenType_Bad, "This non-standard character is not allowed.",
             yychar, yychar + 1, fileName);
 }

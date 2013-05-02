@@ -26,7 +26,7 @@ class LetScoper(tokens: Iterable[Token]) {
 
     def beginLet() {
       val nameToken = iter.next()
-      cAssert(nameToken.tpe == TokenType.IDENT,
+      cAssert(nameToken.tpe == TokenType.Ident,
         "Expected variable name here", nameToken)
       val name = nameToken.value.asInstanceOf[String]
       for (displayName <- (usedNames ++ namesInCurrentScope).get(name))
@@ -42,12 +42,12 @@ class LetScoper(tokens: Iterable[Token]) {
     while(iter.hasNext) {
       val token = iter.next()
       token.tpe match {
-        case TokenType.OPEN_BRACKET =>
+        case TokenType.OpenBracket =>
           recurse(namesInCurrentScope ++ usedNames)
-        case TokenType.CLOSE_BRACKET =>
+        case TokenType.CloseBracket =>
           result ++= endLets()
           return
-        case TokenType.COMMAND =>
+        case TokenType.Command =>
           if (List("LET", "__LET").contains(token.name.toUpperCase))
             beginLet()
         case _ =>

@@ -25,20 +25,20 @@ class StructureLite(tokenizer: TokenizerInterface) {
     val tokens = tokenizer.tokenizeRobustly(source).iterator.buffered
     while(tokens.hasNext) {
       var token = tokens.next()
-      if(token.tpe == TokenType.KEYWORD) {
+      if(token.tpe == TokenType.Keyword) {
         val keyword = token.value.asInstanceOf[String]
         if(keyword == "TO" || keyword == "TO-REPORT") {
           // position of to/to-report
           val toPos = token.startPos
           // name of procedure
           val nameToken = tokens.head
-          if(nameToken.tpe == TokenType.IDENT) {
+          if(nameToken.tpe == TokenType.Ident) {
             val name = nameToken.name
             // position of end
             var done = false
             while(!done && tokens.hasNext) {
               token = tokens.next()
-              if(token.tpe == TokenType.KEYWORD && token.value == "END")
+              if(token.tpe == TokenType.Keyword && token.value == "END")
                 done = true
             }
             result += name -> ((name, toPos, nameToken.startPos, token.endPos))
@@ -55,19 +55,19 @@ class StructureLite(tokenizer: TokenizerInterface) {
     val myTokens = tokenizer.tokenizeRobustly(source).iterator.buffered
     while(myTokens.hasNext) {
       val token = myTokens.next()
-      if(token.tpe == TokenType.KEYWORD) {
+      if(token.tpe == TokenType.Keyword) {
         val keyword = token.value.asInstanceOf[String]
         if(keyword == "__INCLUDES") {
           while(true) {
             var filePath: String = null
             var pathToken = myTokens.head
-            if(pathToken.tpe == TokenType.OPEN_BRACKET) {
+            if(pathToken.tpe == TokenType.OpenBracket) {
               myTokens.next()
               pathToken = myTokens.head
             }
-            else if(pathToken.tpe == TokenType.CLOSE_BRACKET)
+            else if(pathToken.tpe == TokenType.CloseBracket)
               return result
-            else if(pathToken.tpe == TokenType.CONSTANT && pathToken.value.isInstanceOf[String]) {
+            else if(pathToken.tpe == TokenType.Constant && pathToken.value.isInstanceOf[String]) {
               pathToken = myTokens.next()
               filePath = resolvePath(sourceFileName, pathToken.value.asInstanceOf[String])
               result += pathToken.value.asInstanceOf[String] -> filePath
