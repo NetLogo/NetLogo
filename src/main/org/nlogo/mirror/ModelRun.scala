@@ -100,8 +100,8 @@ object Delta {
 }
 
 case class Delta(
-  val rawMirroredUpdate: Array[Byte],
-  val actions: IndexedSeq[Action]) {
+  rawMirroredUpdate: Array[Byte],
+  actions: IndexedSeq[Action]) {
   def mirroredUpdate: Update = Serializer.fromBytes(rawMirroredUpdate)
   def size = rawMirroredUpdate.size + actions.size // used in FrameCache cost calculations
 }
