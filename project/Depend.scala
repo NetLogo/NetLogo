@@ -98,11 +98,6 @@ object Depend {
     }
     def generateFooter() {
       println("""
-### checks for packages with only one direct parent
-
-[not-job-not-workspace] = org.nlogo.* excluding [job] [workspace]
-check [not-job-not-workspace] directlyIndependentOf [job]
-
 ### checks on AWT, Swing
 
 [Sun-Swing] = javax.swing.* excluding javax.swing.tree.MutableTreeNode javax.swing.tree.DefaultMutableTreeNode
