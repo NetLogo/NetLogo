@@ -7,6 +7,7 @@ import org.nlogo.api.{ LogoList, Nobody, Syntax, Token, TokenType, TypeNames }
 import Syntax.compatible
 import org.nlogo.nvm.{ Command, Instruction, Procedure, Referenceable, Reporter}
 import org.nlogo.prim._
+import org.nlogo.parse0.LiteralParser
 
 /**
  * The actual NetLogo parser.

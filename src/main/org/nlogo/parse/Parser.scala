@@ -11,9 +11,9 @@ object Parser extends Parser {
       "org.nlogo.lex.Tokenizer", Array())
   // well this is pretty ugly.  LiteralParser and LiteralAgentParser call each other,
   // so they're hard to instantiate, but we "tie the knot" using lazy val. - ST 5/3/13
-  def literalParser(world: api.World, extensionManager: api.ExtensionManager): LiteralParser = {
+  def literalParser(world: api.World, extensionManager: api.ExtensionManager): parse0.LiteralParser = {
     lazy val literalParser =
-      new LiteralParser(world, extensionManager, parseLiteralAgentOrAgentSet)
+      new parse0.LiteralParser(world, extensionManager, parseLiteralAgentOrAgentSet)
     lazy val parseLiteralAgentOrAgentSet: Iterator[api.Token] => AnyRef =
       new agent.LiteralAgentParser(
           world, literalParser.readLiteralPrefix _, Fail.cAssert _, Fail.exception _)
@@ -104,7 +104,7 @@ trait Parser extends nvm.ParserInterface {
 
   def readFromString(source: String): AnyRef =
     api.NumberParser.parse(source).right.getOrElse(
-      new LiteralParser(null, null, null).getLiteralValue(tokenizer.tokenize(source).iterator))
+      new parse0.LiteralParser(null, null, null).getLiteralValue(tokenizer.tokenize(source).iterator))
 
   def readFromString(source: String, world: api.World, extensionManager: api.ExtensionManager): AnyRef = {
     api.NumberParser.parse(source).right.getOrElse(

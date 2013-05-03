@@ -7,7 +7,13 @@ import org.nlogo.agent.{AgentSet, Patch, Turtle, World}
 import org.nlogo.api.{CompilerException, Dump, ExtensionManager, ExtensionObject, LogoList}
 import org.nlogo.util.MockSuite
 
-class LiteralParserTests extends FunSuite with MockSuite {
+// Even though LiteralParser is in parse0, we can't test it fully without
+// a LiteralAgentParser, and that's in the agent package, so these tests
+// are in parse not parse0 because of that runtime dependency.  (It would
+// be nice to separate the tests that require a LiteralAgentParser from
+// the ones that don't...) - ST 5/3/13
+
+class TestLiteralParser extends FunSuite with MockSuite {
 
   def defaultWorld = {
     val world = new World
