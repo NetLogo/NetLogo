@@ -578,7 +578,7 @@ class ExpressionParser(
       // while compiling code.  When we're reading lists from export files and such we go straight
       // to the LiteralParser through Compiler.readFromString ev 3/20/08
       val tmp = ExpressionParser.makeLiteralReporter(
-        new LiteralParser(null, null).parseLiteralList(tokens.next(), tokens))
+        new LiteralParser(null, null, null).parseLiteralList(tokens.next(), tokens))
       val token = tokens.next()
       tmp.token(new Token("", TokenType.Constant, null)(openBracket.startPos, token.endPos, token.fileName))
       new ReporterApp(tmp, openBracket.startPos, token.endPos, token.fileName)
