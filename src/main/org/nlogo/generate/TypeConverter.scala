@@ -16,7 +16,7 @@ object TypeConverter {
    * @param mv - ASM MethodVisitor to write bytes to
    * @param firstFreeJVMLocal - this tells us what local variable slots are
    *   free/available to use, to store temporary information.
-   * @param instr - we a reference to the instruction so we can throw a proper
+   * @param parentInstr - we a reference to the instruction so we can throw a proper
    *   exception when something goes wrong.
    * @param argIndex - this is the index of the argument that is being converted
    *   we need this, so we can create ArgumentTypeExceptions pointing to the

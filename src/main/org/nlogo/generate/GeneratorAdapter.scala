@@ -83,14 +83,14 @@ class GeneratorAdapter(mv: MethodVisitor, access: Int, name: String, desc: Strin
   override def storeLocal(local: Int) { throw new IllegalStateException }
   /**
    * Generates the instruction to load the given local variable on the stack.
-   * @param local a local variable index.
-   * @param type the type of this local variable.
+   * @param index a local variable index.
+   * @param tpe the type of this local variable.
    */
   override def loadLocal(index: Int, tpe: Type) { mv.visitVarInsn(tpe.getOpcode(ILOAD), index) }
   /**
    * Generates the instruction to store the top stack value in the given local variable.
-   * @param local a local variable index.
-   * @param type the type of this local variable.
+   * @param index a local variable index.
+   * @param tpe the type of this local variable.
    */
   override def storeLocal(index: Int, tpe: Type) { mv.visitVarInsn(tpe.getOpcode(ISTORE), index) }
   override def loadThis() { mv.visitVarInsn(ALOAD, 0) }
