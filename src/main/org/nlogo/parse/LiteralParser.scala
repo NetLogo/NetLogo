@@ -24,8 +24,9 @@ class LiteralParser(
   private val ERR_ILLEGAL_AGENT_LITERAL = "Can only have literal agents and agentsets if importing."
 
   private val parseLiteralAgentOrAgentSet =
-    new agent.LiteralAgentParser(world, extensionManager,
-      readLiteralPrefix _, cAssert _, exception _).parseLiteralAgentOrAgentSet _
+    new agent.LiteralAgentParser(
+        world, readLiteralPrefix _, cAssert _, exception _)
+      .parseLiteralAgentOrAgentSet _
 
   /**
   * reads a literal value from a token vector. The entire vector must denote a single literal
@@ -73,7 +74,8 @@ class LiteralParser(
       case TokenType.OpenBracket =>
         parseLiteralList(token, tokens)
       case TokenType.OpenBrace =>
-        parseLiteralAgentOrAgentSet(token, tokens)
+        cAssert(world != null, ERR_ILLEGAL_AGENT_LITERAL, token)
+        parseLiteralAgentOrAgentSet(tokens)
       case TokenType.OpenParen =>
         val result = readLiteralPrefix(tokens.next(), tokens)
         // if next is anything else other than ), we complain and point to the next token
@@ -114,7 +116,6 @@ class LiteralParser(
       "\\{\\{(\\S*):(\\S*)\\s(.*)\\}\\}");
 
   def parseExtensionLiteral(token: Token): AnyRef = {
-    // we shouldn't get here if we aren't importing, but check just in case
     cAssert(world != null, ERR_ILLEGAL_AGENT_LITERAL, token)
     val matcher = ExtensionTypePattern.matcher(token.value.asInstanceOf[String])
     if(matcher.matches)

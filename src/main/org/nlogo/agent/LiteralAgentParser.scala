@@ -7,7 +7,7 @@ import org.nlogo.api, api.{ Token, TokenType }
 // This is only used for importing worlds; the regular NetLogo language
 // doesn't have literal agents and agentsets.
 
-class LiteralAgentParser(_world: api.World, extensionManager: api.ExtensionManager,
+class LiteralAgentParser(_world: api.World,
   readLiteralPrefix: (Token, Iterator[Token]) => AnyRef,
   cAssert: (Boolean, =>String, Token) => Unit,
   exception: (String, Token) => Nothing) {
@@ -42,9 +42,7 @@ class LiteralAgentParser(_world: api.World, extensionManager: api.ExtensionManag
    *   {breed some-breed} {turtles 1 2 3 4 5} {patches [1 2] [3 4] [5 6]} {links [0 1] [1 2]}
    * To parse the turtle and patch forms, it uses parseLiteralAgent().
    */
-  def parseLiteralAgentOrAgentSet(braceToken: Token, tokens: Iterator[Token]): AnyRef = {  // returns Agent or AgentSet
-    // we shouldn't get here if we aren't importing, but check just in case
-    cAssert(world != null, ERR_ILLEGAL_AGENT_LITERAL, braceToken)
+  def parseLiteralAgentOrAgentSet(tokens: Iterator[Token]): AnyRef = {  // returns Agent or AgentSet
     val token = tokens.next()
     // next token should be an identifier or reporter. reporter is a special case because "turtles"
     // and "patches" end up getting turned into Reporters when tokenizing, which is kind of ugly.
@@ -87,8 +85,8 @@ class LiteralAgentParser(_world: api.World, extensionManager: api.ExtensionManag
     }
     else if(world.program.breeds.values.exists(_.singular == agentsetTypeString.toUpperCase)) {
       val token = tokens.next()
-      if(token.tpe != TokenType.Constant || !token.value.isInstanceOf[java.lang.Double])
-        exception(ERR_BAD_TURTLE_ARG, token)
+      cAssert(token.tpe == TokenType.Constant && token.value.isInstanceOf[java.lang.Double],
+        ERR_BAD_TURTLE_ARG, token)
       val closeBrace = tokens.next()
       cAssert(closeBrace.tpe == TokenType.CloseBrace, ERR_EXPECTED_CLOSEBRACE, closeBrace)
       world.getOrCreateTurtle(token.value.asInstanceOf[java.lang.Double].intValue)
@@ -175,8 +173,8 @@ class LiteralAgentParser(_world: api.World, extensionManager: api.ExtensionManag
           parsePcor(tokens), parsePcor(tokens))
       case "TURTLE" =>
         val token = tokens.next()
-        if(token.tpe != TokenType.Constant || !token.value.isInstanceOf[java.lang.Double])
-          exception(ERR_BAD_TURTLE_ARG, token)
+        cAssert(token.tpe == TokenType.Constant && token.value.isInstanceOf[java.lang.Double],
+          ERR_BAD_TURTLE_ARG, token)
         world.getOrCreateTurtle(token.value.asInstanceOf[java.lang.Double].longValue)
       case "LINK" =>
         world.getOrCreateLink(
