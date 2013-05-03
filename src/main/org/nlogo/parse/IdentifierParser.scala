@@ -32,24 +32,7 @@ class IdentifierParser(
         case TokenType.Variable =>
           processToken2(token, procedure, it.count)
         case TokenType.Ident =>
-          TokenMapper.getCommand(token.value.asInstanceOf[String])
-            .map{command =>
-              val newToken =
-                token.copy(tpe = TokenType.Command, value = command)(
-                  token.startPos, token.endPos, token.fileName)
-              command.token(newToken)
-              newToken
-            }
-            .getOrElse(TokenMapper.getReporter(token.value.asInstanceOf[String])
-              .map{reporter =>
-                val newToken =
-                  token.copy(tpe = TokenType.Reporter, value = reporter)(
-                    token.startPos, token.endPos, token.fileName)
-                reporter.token(newToken)
-                newToken
-              }
-              .getOrElse(
-                processToken2(token, procedure, it.count)))
+          processIdent(token, procedure, it.count)
         case _ =>
           token
       }
@@ -65,6 +48,22 @@ class IdentifierParser(
       token
     }
     it.map(processTokenWithExtensionManager).map(processToken).map(stuffLet).toSeq
+  }
+
+  private def processIdent(token: Token, procedure: Procedure, count: Int): Token = {
+    val primName = token.value.asInstanceOf[String]
+    def lookup(fn: String => Option[api.TokenHolder], newType: TokenType): Option[Token] =
+      fn(primName).map{holder =>
+        val newToken =
+          token.copy(tpe = newType, value = holder)(
+            token.startPos, token.endPos, token.fileName)
+        holder.token(newToken)
+        newToken
+      }
+    def command  = lookup(TokenMapper.getCommand  _, TokenType.Command )
+    def reporter = lookup(TokenMapper.getReporter _, TokenType.Reporter)
+    (command orElse reporter).getOrElse(
+      processToken2(token, procedure, count))
   }
 
   // replaces an identifier token with its imported implementation, if necessary
