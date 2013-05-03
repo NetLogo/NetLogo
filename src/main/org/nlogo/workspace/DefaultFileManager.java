@@ -356,18 +356,4 @@ public final strictfp class DefaultFileManager
     }
   }
 
-  // for 4.1 we have too much fragile, difficult-to-understand,
-  // under-tested code involving URLs -- we can't get rid of our
-  // uses of toURL() until 4.2, the risk of breakage is too high.
-  // so for now, at least we make this a separate method so the
-  // SuppressWarnings annotation is narrowly targeted. - ST 12/7/09
-  // commented out for now, need to resolve for 4.2 final,
-  // see ticket #964 - ST 6/9/10
-  // @SuppressWarnings("deprecation")
-  // private static java.net.URL toURL( java.io.File file )
-  //    throws java.net.MalformedURLException
-  // {
-  //    return file.toURL() ;
-  // }
-
 }
