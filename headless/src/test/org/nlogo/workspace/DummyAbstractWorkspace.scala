@@ -15,6 +15,7 @@ extends AbstractWorkspaceScala(
     if(api.Version.is3D) new World3D else new World,
     null) // no hubNetManagerFactory
 {
+  dispose() // don't leak a JobThread - ST 5/2/13
   private def unsupported = throw new UnsupportedOperationException
   override val isHeadless = true
   override def compilerTestingMode = false
