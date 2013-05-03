@@ -60,8 +60,8 @@ class IdentifierParser(
         holder.token(newToken)
         newToken
       }
-    def command  = lookup(TokenMapper.getCommand  _, TokenType.Command )
-    def reporter = lookup(TokenMapper.getReporter _, TokenType.Reporter)
+    def command  = lookup(Parser.tokenMapper.getCommand  _, TokenType.Command )
+    def reporter = lookup(Parser.tokenMapper.getReporter _, TokenType.Reporter)
     (command orElse reporter).getOrElse(
       processToken2(token, procedure, count))
   }

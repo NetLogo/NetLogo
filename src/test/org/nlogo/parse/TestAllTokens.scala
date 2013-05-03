@@ -8,6 +8,6 @@ import org.nlogo.util.Femto
 
 class TestAllTokens extends FunSuite {
   test("all listed primitives exist") {
-    TokenMapper.checkInstructionMaps()
+    Parser.tokenMapper.checkInstructionMaps()
   }
 }

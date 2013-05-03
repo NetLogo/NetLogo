@@ -9,6 +9,8 @@ object Parser extends Parser {
   val tokenizer =
     Femto.get(classOf[api.TokenizerInterface],
       "org.nlogo.lex.Tokenizer", Array())
+  val tokenMapper = new parse0.TokenMapper(
+    "/system/tokens.txt", "org.nlogo.prim.")
   // well this is pretty ugly.  LiteralParser and LiteralAgentParser call each other,
   // so they're hard to instantiate, but we "tie the knot" using lazy val. - ST 5/3/13
   def literalParser(world: api.World, extensionManager: api.ExtensionManager): parse0.LiteralParser = {

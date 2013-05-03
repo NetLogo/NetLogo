@@ -64,8 +64,8 @@ object StructureParser {
   }
 
   val alwaysUsedNames =
-    TokenMapper.allCommandNames.map(_ -> "primitive command") ++
-    TokenMapper.allReporterNames.map(_ -> "primitive reporter")
+    Parser.tokenMapper.allCommandNames.map(_ -> "primitive command") ++
+    Parser.tokenMapper.allReporterNames.map(_ -> "primitive reporter")
 
 }
 

@@ -3,9 +3,10 @@
 package org.nlogo.parse
 
 import org.scalatest.FunSuite
-import TokenMapper._
 
 class TokenMapperTests extends FunSuite {
+
+  import Parser.tokenMapper._
 
   test("all listed primitives exist") {
     checkInstructionMaps()
