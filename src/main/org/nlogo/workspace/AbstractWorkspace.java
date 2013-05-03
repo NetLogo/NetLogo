@@ -2,18 +2,6 @@
 
 package org.nlogo.workspace;
 
-import org.nlogo.agent.Agent;
-import org.nlogo.api.*;
-import org.nlogo.agent.Importer;
-import org.nlogo.agent.ImporterJ;
-import org.nlogo.agent.World;
-import org.nlogo.nvm.Command;
-import org.nlogo.nvm.CompilerInterface;
-import org.nlogo.nvm.ParserInterface;
-import org.nlogo.nvm.FileManager;
-import org.nlogo.nvm.Procedure;
-import org.nlogo.nvm.Workspace;
-
 public abstract strictfp class AbstractWorkspace
   implements org.nlogo.api.LogoThunkFactory, org.nlogo.api.ParserServices {
 
@@ -84,19 +72,19 @@ public abstract strictfp class AbstractWorkspace
 
   /// misc
 
-  private UpdateMode updateMode = UpdateModeJ.CONTINUOUS();
+  private org.nlogo.api.UpdateMode updateMode = org.nlogo.api.UpdateModeJ.CONTINUOUS();
 
-  public UpdateMode updateMode() {
+  public org.nlogo.api.UpdateMode updateMode() {
     return updateMode;
   }
 
-  public void updateMode(UpdateMode updateMode) {
+  public void updateMode(org.nlogo.api.UpdateMode updateMode) {
     this.updateMode = updateMode;
   }
 
   // called from an "other" thread (neither event thread nor job thread)
   public abstract void open(String path)
-      throws java.io.IOException, LogoException;
+      throws java.io.IOException, org.nlogo.api.LogoException;
 
   public abstract void openString(String modelContents);
 
@@ -106,109 +94,14 @@ public abstract strictfp class AbstractWorkspace
   // called when the engine comes up for air
   public abstract void breathe(org.nlogo.nvm.Context context);
 
+  public abstract void clearAll();
   public abstract void clearDrawing();
 
-  protected abstract class FileImporter {
-    public String filename;
-
-    FileImporter(String filename) {
-      this.filename = filename;
-    }
-
-    public abstract void doImport(org.nlogo.api.File reader)
-        throws java.io.IOException;
-  }
-
-  public abstract void clearAll();
-
-  protected abstract org.nlogo.agent.ImporterJ.ErrorHandler importerErrorHandler();
-
-  public void importWorld(String filename)
-      throws java.io.IOException {
-    // we need to clearAll before we import in case
-    // extensions are hanging on to old data. ev 4/10/09
-    clearAll();
-    doImport
-        (new BufferedReaderImporter(filename) {
-          @Override
-          public void doImport(java.io.BufferedReader reader)
-              throws java.io.IOException {
-            world().importWorld
-              (importerErrorHandler(), (Workspace) AbstractWorkspace.this,
-                    stringReader(), reader);
-          }
-        });
-  }
-
-  public void importWorld(java.io.Reader reader)
-      throws java.io.IOException {
-    // we need to clearAll before we import in case
-    // extensions are hanging on to old data. ev 4/10/09
-    clearAll();
-    world().importWorld
-        (importerErrorHandler(), (Workspace) AbstractWorkspace.this,
-            stringReader(), new java.io.BufferedReader(reader));
-  }
-
-  private final ImporterJ.StringReader stringReader() {
-    return new ImporterJ.StringReader() {
-      public Object readFromString(String s)
-          throws Importer.StringReaderException {
-        try {
-          return compiler().readFromString
-            (s, world(), getExtensionManager());
-        } catch (CompilerException ex) {
-          throw new Importer.StringReaderException
-              (ex.getMessage());
-        }
-      }
-    };
-  }
-
-  public void importDrawing(String filename)
-      throws java.io.IOException {
-    doImport
-        (new FileImporter(filename) {
-          @Override
-          public void doImport(org.nlogo.api.File file)
-              throws java.io.IOException {
-
-            importDrawing(file);
-          }
-        });
-  }
-
-  protected abstract void importDrawing(org.nlogo.api.File file)
-      throws java.io.IOException;
-
-  // overridden in subclasses - ST 9/8/03, 3/1/11
-  public void doImport(BufferedReaderImporter importer)
-      throws java.io.IOException {
-    org.nlogo.api.File file = new org.nlogo.api.LocalFile(importer.filename());
-    try {
-      file.open(org.nlogo.api.FileModeJ.READ());
-      importer.doImport(file.reader());
-    } finally {
-      try {
-        file.close(false);
-      } catch (java.io.IOException ex2) {
-        org.nlogo.util.Exceptions.ignore(ex2);
-      }
-    }
-  }
-
-
-  // protected because GUIWorkspace will override - ST 9/8/03
-  protected void doImport(FileImporter importer)
-      throws java.io.IOException {
-    importer.doImport(new org.nlogo.api.LocalFile(importer.filename));
-  }
-
-  public abstract World world();
-  public abstract CompilerInterface compiler();
-  public abstract ParserInterface parser();
-  public abstract scala.collection.immutable.ListMap<String, Procedure> procedures();
-  public abstract FileManager fileManager();
+  public abstract org.nlogo.agent.World world();
+  public abstract org.nlogo.nvm.CompilerInterface compiler();
+  public abstract org.nlogo.nvm.ParserInterface parser();
+  public abstract scala.collection.immutable.ListMap<String, org.nlogo.nvm.Procedure> procedures();
+  public abstract org.nlogo.nvm.FileManager fileManager();
   public abstract String getModelPath();
   public abstract String getModelFileName();
   public abstract ExtensionManager getExtensionManager();

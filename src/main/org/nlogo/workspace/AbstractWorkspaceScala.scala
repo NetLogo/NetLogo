@@ -24,7 +24,7 @@ abstract class AbstractWorkspaceScala(val world: World)
 extends AbstractWorkspace
 with Workspace with Procedures with Plotting with Exporting with Evaluating with Benchmarking
 with Compiling with Profiling with Extensions with BehaviorSpace with Paths with Checksums
-with RunCache with Jobs with Warning with OutputArea {
+with RunCache with Jobs with Warning with OutputArea with Importing {
 
   val fileManager: FileManager = new DefaultFileManager(this)
 
@@ -527,6 +527,87 @@ object AbstractWorkspaceTraits {
         case _ =>
           sendOutput(oo, destination == api.OutputDestination.OutputArea)
       }
+    }
+
+  }
+
+  trait Importing { this: nvm.Workspace =>
+
+    import agent.{ Importer, ImporterJ }
+
+    abstract class FileImporter(val filename: String) {
+      @throws(classOf[java.io.IOException])
+      def doImport(reader: api.File)
+    }
+
+    def importerErrorHandler: agent.ImporterJ.ErrorHandler
+
+    @throws(classOf[java.io.IOException])
+    def importWorld(filename: String) {
+      // we need to clearAll before we import in case
+      // extensions are hanging on to old data. ev 4/10/09
+      clearAll()
+      doImport(
+        new BufferedReaderImporter(filename) {
+          @throws(classOf[java.io.IOException])
+          override def doImport(reader: java.io.BufferedReader) {
+              world.asInstanceOf[agent.World].importWorld(
+                importerErrorHandler, Importing.this, stringReader, reader)
+          }})
+    }
+
+    @throws(classOf[java.io.IOException])
+    def importWorld(reader: java.io.Reader) {
+      // we need to clearAll before we import in case
+      // extensions are hanging on to old data. ev 4/10/09
+      clearAll()
+      world.asInstanceOf[agent.World].importWorld(
+        importerErrorHandler, Importing.this, stringReader,
+        new java.io.BufferedReader(reader))
+    }
+
+    private def stringReader: ImporterJ.StringReader =
+      new ImporterJ.StringReader {
+        @throws(classOf[agent.ImporterJ.StringReaderException])
+        def readFromString(s: String): AnyRef =
+          try compiler.readFromString(s, world, getExtensionManager)
+          catch { case ex: CompilerException =>
+              throw new agent.ImporterJ.StringReaderException(ex.getMessage)
+          }
+      }
+
+    @throws(classOf[java.io.IOException])
+    def importDrawing(filename: String) {
+      doImport(
+        new FileImporter(filename) {
+          @throws(classOf[java.io.IOException])
+          override def doImport(file: api.File) {
+            importDrawing(file)
+          }
+        })
+    }
+
+    @throws(classOf[java.io.IOException])
+    def importDrawing(file: api.File)
+
+    @throws(classOf[java.io.IOException])
+    def doImport(importer: BufferedReaderImporter) {
+      val file = new api.LocalFile(importer.filename)
+      try {
+        file.open(org.nlogo.api.FileMode.Read)
+        importer.doImport(file.reader)
+      }
+      finally
+        try file.close(false)
+        catch { case ex2: java.io.IOException =>
+            org.nlogo.util.Exceptions.ignore(ex2)
+        }
+    }
+
+    @throws(classOf[java.io.IOException])
+    def doImport(importer: FileImporter) {
+      importer.doImport(
+        new api.LocalFile(importer.filename))
     }
 
   }
