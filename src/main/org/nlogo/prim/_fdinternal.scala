@@ -14,8 +14,9 @@ class _fdinternal(let: Let) extends Command {
   override def syntax =
     Syntax.commandSyntax("-T--", true)
 
-  override def perform(context: Context) =
+  override def perform(context: Context) {
     perform_1(context)
+  }
 
   def perform_1(context: Context) {
     val turtle = context.agent.asInstanceOf[Turtle]

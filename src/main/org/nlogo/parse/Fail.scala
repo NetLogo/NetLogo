@@ -13,12 +13,14 @@ object Fail {
   // different names for the two methods), but choosing to leave it for now. - ST 10/4/12
 
   // "assert" is in Predef, so...
-  def cAssert(condition: Boolean, desc: =>String, token: Token) =
+  def cAssert(condition: Boolean, desc: =>String, token: Token) {
     if(!condition)
       exception(desc, token)
-  def cAssert(condition: Boolean, desc: =>String, node: AstNode) =
+  }
+  def cAssert(condition: Boolean, desc: =>String, node: AstNode) {
     if(!condition)
       exception(desc, node)
+  }
 
   def exception(message: String, startPos: Int, endPos: Int, fileName: String) =
     throw new CompilerException(message, startPos, endPos, fileName)

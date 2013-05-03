@@ -286,7 +286,7 @@ class Generator(source: String, procedure: Procedure, profilingEnabled: Boolean)
       keep(fieldName, obj, Type.getType(obj.getClass), ACC_PUBLIC)
       fieldName
     }
-    def loadInstruction(instrUID: Int) = {
+    def loadInstruction(instrUID: Int) {
       val fieldName = Generator.KEPT_INSTRUCTION_PREFIX + instrUID
       loadKept(fieldName)
     }

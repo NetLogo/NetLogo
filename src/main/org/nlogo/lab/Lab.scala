@@ -12,9 +12,10 @@ class Lab(loader: ProtocolLoader)
 {
   var protocols: List[Protocol] = Nil
   def names = protocols.map(_.name)
-  def load(s: String) =
+  def load(s: String) {
     if(s.trim.isEmpty) Nil
     else protocols = loader.loadAll(s)
+  }
   def newWorker(protocolName: String) =
     protocols.find(_.name == protocolName) match {
       case None =>

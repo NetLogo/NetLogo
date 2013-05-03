@@ -22,7 +22,7 @@ class DummyPlotManager extends PlotManagerInterface {
   override def nextName: String = names.next()
   override def newPlot(name: String) = new Plot(name)
   override def compilePlot(plot: Plot) = Nil
-  override def forgetPlot(plot: Plot) = {}
+  override def forgetPlot(plot: Plot) {}
   override def hasErrors(plot: Plot) = false
   override def getPlotSetupError(plot: Plot)= None
   override def getPlotUpdateError(plot: Plot) = None

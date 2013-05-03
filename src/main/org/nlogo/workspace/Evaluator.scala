@@ -12,7 +12,7 @@ class Evaluator(workspace: AbstractWorkspaceScala) {
   def evaluateCommands(owner: JobOwner,
                        source: String,
                        agentSet: AgentSet = workspace.world.observers,
-                       waitForCompletion: Boolean = true) = {
+                       waitForCompletion: Boolean = true) {
     val procedure = invokeCompiler(source, None, true, agentSet.kind)
     workspace.jobManager.addJob(
       workspace.jobManager.makeConcurrentJob(owner, agentSet, procedure),
