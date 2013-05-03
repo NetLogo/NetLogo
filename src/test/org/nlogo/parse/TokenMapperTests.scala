@@ -30,5 +30,4 @@ class TokenMapperTests extends FunSuite {
   test("command2") { assert(isCommand("forward")) }
   test("command3") { assert(!isCommand("random")) }
   test("command4") { assert(!isCommand("kjhgkfjg")) }
-  test("command5") { assert(!isCommand("random-or-random-float")) }
 }

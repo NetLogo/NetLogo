@@ -160,13 +160,6 @@ class TokenizerTests extends FunSuite {
     expectResult("Token(crt,Ident,CRT)")(
       tokenizer.getTokenAtPosition("crt", 3).toString)
   }
-  // what about removed prims?
-  test("RemovedPrims") {
-    expectResult(TokenType.Ident)(
-      tokenize("random-or-random-float").head.tpe)
-    expectResult(TokenType.Ident)(
-      tokenize("histogram-from").head.tpe)
-  }
   test("Empty1") {
     val tokens = tokenize("")
     expectResult("")(tokens.mkString)

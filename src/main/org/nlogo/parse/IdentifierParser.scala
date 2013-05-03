@@ -125,8 +125,6 @@ class IdentifierParser(
     }
     // kludgy to special case this, but we only have one such prim,
     // so oh well... - ST 7/8/06
-    else if(ident == "RANDOM-OR-RANDOM-FLOAT")
-      exception(RandomOrRandomFloatError, tok)
     else if(getLetFromArg(ident, tokPos).isDefined)
       newToken(new prim._letvariable(getLetFromArg(ident, tokPos).get),
                ident, TokenType.Reporter, tok.startPos, tok.endPos, tok.fileName)
@@ -197,12 +195,5 @@ class IdentifierParser(
   /// error texts
   private val InvalidTaskVariable =
     "variables may not begin with a question mark unless they are the special variables ?, ?1, ?2, ..."
-
-  private val RandomOrRandomFloatError =
-    "This code was written for an old version of NetLogo in which the RANDOM primitive sometimes reported " +
-    "an integer (e.g. 4), other times a floating point number (e.g. 4.326), depending on its input. " +
-    "That's no longer true in this version; instead, we now have two separate primitives. So you must " +
-    "replace this with either RANDOM or RANDOM-FLOAT depending on whether you want an integer or " +
-    "a floating point result."
 
 }
