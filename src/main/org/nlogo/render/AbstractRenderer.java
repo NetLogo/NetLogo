@@ -109,9 +109,6 @@ public abstract strictfp class AbstractRenderer
     return (int) StrictMath.round(world.worldHeight() * patchSize);
   }
 
-  private static final boolean WINDOWS =
-      System.getProperty("os.name").startsWith("Windows");
-
   org.nlogo.api.Agent outlineAgent;
 
   public void outlineAgent(org.nlogo.api.Agent agent) {
