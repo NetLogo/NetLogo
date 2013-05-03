@@ -92,7 +92,7 @@ object BreedIdentifierHandler {
         if (!isValidBreed(breed)) return None
         val instr = Instantiator.newInstance[nvm.Instruction](
           spec.primClass, breed.name)
-        val tok2 = new Token(tok.value.asInstanceOf[String], spec.tokenType, instr)(
+        val tok2 = new Token(tok.name, spec.tokenType, instr)(
           tok.startPos, tok.endPos, tok.fileName)
         instr.token(tok2)
         Some(tok2)
