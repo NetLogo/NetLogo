@@ -32,24 +32,7 @@ class IdentifierParser(
         case TokenType.Variable =>
           processToken2(token, procedure, it.count)
         case TokenType.Ident =>
-          TokenMapper.getCommand(token.value.asInstanceOf[String])
-            .map{command =>
-              val newToken =
-                token.copy(tpe = TokenType.Command, value = command)(
-                  token.startPos, token.endPos, token.fileName)
-              command.token(newToken)
-              newToken
-            }
-            .getOrElse(TokenMapper.getReporter(token.value.asInstanceOf[String])
-              .map{reporter =>
-                val newToken =
-                  token.copy(tpe = TokenType.Reporter, value = reporter)(
-                    token.startPos, token.endPos, token.fileName)
-                reporter.token(newToken)
-                newToken
-              }
-              .getOrElse(
-                processToken2(token, procedure, it.count)))
+          processIdent(token, procedure, it.count)
         case _ =>
           token
       }
@@ -65,6 +48,22 @@ class IdentifierParser(
       token
     }
     it.map(processTokenWithExtensionManager).map(processToken).map(stuffLet).toSeq
+  }
+
+  private def processIdent(token: Token, procedure: Procedure, count: Int): Token = {
+    val primName = token.value.asInstanceOf[String]
+    def lookup(fn: String => Option[api.TokenHolder], newType: TokenType): Option[Token] =
+      fn(primName).map{holder =>
+        val newToken =
+          token.copy(tpe = newType, value = holder)(
+            token.startPos, token.endPos, token.fileName)
+        holder.token(newToken)
+        newToken
+      }
+    def command  = lookup(Parser.tokenMapper.getCommand  _, TokenType.Command )
+    def reporter = lookup(Parser.tokenMapper.getReporter _, TokenType.Reporter)
+    (command orElse reporter).getOrElse(
+      processToken2(token, procedure, count))
   }
 
   // replaces an identifier token with its imported implementation, if necessary
@@ -126,8 +125,6 @@ class IdentifierParser(
     }
     // kludgy to special case this, but we only have one such prim,
     // so oh well... - ST 7/8/06
-    else if(ident == "RANDOM-OR-RANDOM-FLOAT")
-      exception(RandomOrRandomFloatError, tok)
     else if(getLetFromArg(ident, tokPos).isDefined)
       newToken(new prim._letvariable(getLetFromArg(ident, tokPos).get),
                ident, TokenType.Reporter, tok.startPos, tok.endPos, tok.fileName)
@@ -198,12 +195,5 @@ class IdentifierParser(
   /// error texts
   private val InvalidTaskVariable =
     "variables may not begin with a question mark unless they are the special variables ?, ?1, ?2, ..."
-
-  private val RandomOrRandomFloatError =
-    "This code was written for an old version of NetLogo in which the RANDOM primitive sometimes reported " +
-    "an integer (e.g. 4), other times a floating point number (e.g. 4.326), depending on its input. " +
-    "That's no longer true in this version; instead, we now have two separate primitives. So you must " +
-    "replace this with either RANDOM or RANDOM-FLOAT depending on whether you want an integer or " +
-    "a floating point result."
 
 }

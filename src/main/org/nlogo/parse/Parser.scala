@@ -2,13 +2,26 @@
 
 package org.nlogo.parse
 
-import org.nlogo.{ api, nvm, parse0 }
+import org.nlogo.{ agent, api, nvm, parse0 }
 import org.nlogo.util.Femto
 
 object Parser extends Parser {
   val tokenizer =
     Femto.get(classOf[api.TokenizerInterface],
       "org.nlogo.lex.Tokenizer", Array())
+  val tokenMapper = new parse0.TokenMapper(
+    "/system/tokens.txt", "org.nlogo.prim.")
+  // well this is pretty ugly.  LiteralParser and LiteralAgentParser call each other,
+  // so they're hard to instantiate, but we "tie the knot" using lazy val. - ST 5/3/13
+  def literalParser(world: api.World, extensionManager: api.ExtensionManager): parse0.LiteralParser = {
+    lazy val literalParser =
+      new parse0.LiteralParser(world, extensionManager, parseLiteralAgentOrAgentSet)
+    lazy val parseLiteralAgentOrAgentSet: Iterator[api.Token] => AnyRef =
+      new agent.LiteralAgentParser(
+          world, literalParser.readLiteralPrefix _, Fail.cAssert _, Fail.exception _)
+        .parseLiteralAgentOrAgentSet _
+    literalParser
+  }
 }
 
 trait Parser extends nvm.ParserInterface {
@@ -86,10 +99,6 @@ trait Parser extends nvm.ParserInterface {
 
   ///
 
-  /// TODO: There are a few places below where we downcast api.World to agent.World in order to pass
-  /// it to LiteralParser.  This should really be cleaned up so that LiteralParser uses api.World
-  /// too. - ST 2/23/09
-
   // In the following 3 methods, the initial call to NumberParser is a performance optimization.
   // During import-world, we're calling readFromString over and over again and most of the time
   // the result is a number.  So we try the fast path through NumberParser first before falling
@@ -97,25 +106,27 @@ trait Parser extends nvm.ParserInterface {
 
   def readFromString(source: String): AnyRef =
     api.NumberParser.parse(source).right.getOrElse(
-      new LiteralParser().getLiteralValue(tokenizer.tokenize(source).iterator))
+      new parse0.LiteralParser(null, null, null).getLiteralValue(tokenizer.tokenize(source).iterator))
 
-  def readFromString(source: String, world: api.World, extensionManager: api.ExtensionManager): AnyRef =
+  def readFromString(source: String, world: api.World, extensionManager: api.ExtensionManager): AnyRef = {
     api.NumberParser.parse(source).right.getOrElse(
-      new LiteralParser(world.asInstanceOf[org.nlogo.agent.World], extensionManager)
+      Parser.literalParser(world, extensionManager)
         .getLiteralValue(tokenizer.tokenize(source).iterator))
+  }
 
   def readNumberFromString(source: String, world: api.World, extensionManager: api.ExtensionManager): java.lang.Double =
     api.NumberParser.parse(source).right.getOrElse(
-      new LiteralParser(world.asInstanceOf[org.nlogo.agent.World], extensionManager)
-      .getNumberValue(tokenizer.tokenize(source).iterator))
+      Parser.literalParser(world, extensionManager)
+        .getNumberValue(tokenizer.tokenize(source).iterator))
 
   @throws(classOf[java.io.IOException])
   def readFromFile(currFile: api.File, world: api.World, extensionManager: api.ExtensionManager): AnyRef = {
     val tokens: Iterator[api.Token] =
       Femto.get(classOf[api.TokenReaderInterface], "org.nlogo.lex.TokenReader",
                 Array(currFile, tokenizer))
-    val result = new LiteralParser(world.asInstanceOf[org.nlogo.agent.World], extensionManager)
-      .getLiteralFromFile(tokens)
+    val result =
+      Parser.literalParser(world, extensionManager)
+        .getLiteralFromFile(tokens)
     // now skip whitespace, so that the model can use file-at-end? to see whether there are any
     // more values left - ST 2/18/04
     // org.nlogo.util.File requires us to maintain currFile.pos ourselves -- yuck!!! - ST 8/5/04

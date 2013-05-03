@@ -24,7 +24,7 @@ object Compiler extends parse.Parser with CompilerInterface {
       flags: CompilerFlags): CompilerResults = {
     val (defs, structureResults) =
       frontEndHelper(source, displayName, program, subprogram, oldProcedures, extensionManager)
-    BackEnd.backEnd(defs, structureResults, source, extensionManager.profilingEnabled, flags)
+    BackEnd.backEnd(defs, structureResults.program, source, extensionManager.profilingEnabled, flags)
   }
 
 }

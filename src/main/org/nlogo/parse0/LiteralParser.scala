@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.parse
+package org.nlogo.parse0
 
 import org.nlogo.{ api, agent }, api.{ Token, TokenType }, Fail._
 
@@ -11,7 +11,9 @@ import org.nlogo.{ api, agent }, api.{ Token, TokenType }, Fail._
  * involving literal agents and literal agentsets to LiteralAgentParser.)
  */
 class LiteralParser(
-  world: api.World = null, extensionManager: api.ExtensionManager = null) {
+  world: api.World,
+  extensionManager: api.ExtensionManager,
+  parseLiteralAgentOrAgentSet: Iterator[Token] => AnyRef) {
 
   /// all error messages used in this class
   private val ERR_EXPECTED_CLOSEPAREN = "Expected a closing parenthesis."
@@ -22,10 +24,6 @@ class LiteralParser(
   private val ERR_EXTRA_STUFF_AFTER_NUMBER = "Extra characters after number."
   private val ERR_MISSING_CLOSEBRACKET = "No closing bracket for this open bracket."
   private val ERR_ILLEGAL_AGENT_LITERAL = "Can only have literal agents and agentsets if importing."
-
-  private val parseLiteralAgentOrAgentSet =
-    new agent.LiteralAgentParser(world, extensionManager,
-      readLiteralPrefix _, cAssert _, exception _).parseLiteralAgentOrAgentSet _
 
   /**
   * reads a literal value from a token vector. The entire vector must denote a single literal
@@ -69,7 +67,8 @@ class LiteralParser(
       case TokenType.OpenBracket =>
         parseLiteralList(token, tokens)
       case TokenType.OpenBrace =>
-        parseLiteralAgentOrAgentSet(token, tokens)
+        cAssert(world != null, ERR_ILLEGAL_AGENT_LITERAL, token)
+        parseLiteralAgentOrAgentSet(tokens)
       case TokenType.OpenParen =>
         val result = readLiteralPrefix(tokens.next(), tokens)
         // if next is anything else other than ), we complain and point to the next token
@@ -105,7 +104,6 @@ class LiteralParser(
   }
 
   def parseExtensionLiteral(token: Token): AnyRef = {
-    // we shouldn't get here if we aren't importing, but check just in case
     cAssert(world != null, ERR_ILLEGAL_AGENT_LITERAL, token)
     val LiteralRegex = """\{\{(\S*):(\S*)\s(.*)\}\}""".r
     token.value match {

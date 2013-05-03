@@ -1,3 +1,5 @@
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.parse0
 
 import org.nlogo.api.{ Token, TokenType, Let }
@@ -7,6 +9,10 @@ import Fail._
 // the variable.  Some error checking is also performed along the way.  The Let objects created are
 // also returned, so they can be used by IdentifierParser to connect _letvariable references to the
 // right Lets.
+
+// (It's rather weird that this happens before ExpressionParser, so we have to resort to
+// bracket-counting to determine the scopes.  Perhaps this should be moved to happen after
+// ExpressionParser -- then we would have the actual tree structure to work with. - ST 5/3/13)
 
 class LetScoper(tokens: Iterable[Token]) {
 

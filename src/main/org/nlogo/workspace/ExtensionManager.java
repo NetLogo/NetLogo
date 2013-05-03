@@ -65,7 +65,7 @@ public strictfp class ExtensionManager
 
   private final Map<String, JarContainer> jars =
       new HashMap<String, JarContainer>();
-  private final AbstractWorkspaceScala workspace;
+  private final AbstractWorkspace workspace;
 
   private int jarsLoaded = 0;
 
@@ -81,7 +81,7 @@ public strictfp class ExtensionManager
     return workspace.profilingEnabled();
   }
 
-  public ExtensionManager(AbstractWorkspaceScala workspace) {
+  public ExtensionManager(AbstractWorkspace workspace) {
     this.workspace = workspace;
   }
 
@@ -98,11 +98,6 @@ public strictfp class ExtensionManager
       result.add(jar.classManager);
     }
     return result;
-  }
-
-  public String getSource(String filename)
-      throws java.io.IOException {
-    return workspace.getSource(filename);
   }
 
   public org.nlogo.api.File getFile(String path)

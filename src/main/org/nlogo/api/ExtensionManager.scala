@@ -81,9 +81,6 @@ trait ExtensionManager {
 
   def dumpExtensionPrimitives(): String
 
-  @throws(classOf[java.io.IOException])
-  def getSource(filename: String): String
-
   def addToLibraryPath(classManager: AnyRef, directory: String)
 
   @throws(classOf[ExtensionException])

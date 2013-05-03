@@ -3,9 +3,10 @@
 package org.nlogo.parse
 
 import org.scalatest.FunSuite
-import TokenMapper._
 
 class TokenMapperTests extends FunSuite {
+
+  import Parser.tokenMapper._
 
   test("all listed primitives exist") {
     checkInstructionMaps()
@@ -30,5 +31,4 @@ class TokenMapperTests extends FunSuite {
   test("command2") { assert(isCommand("forward")) }
   test("command3") { assert(!isCommand("random")) }
   test("command4") { assert(!isCommand("kjhgkfjg")) }
-  test("command5") { assert(!isCommand("random-or-random-float")) }
 }

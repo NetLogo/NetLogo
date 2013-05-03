@@ -22,8 +22,8 @@ class TestAllSyntaxes extends FunSuite {
     expectResult(expected)(
       classNames.toSeq.sortBy(shorten).map(entry).mkString("\n"))
   }
-  val c = TokenMapper.allCommandClassNames
-  val r = TokenMapper.allReporterClassNames
+  val c = Parser.tokenMapper.allCommandClassNames
+  val r = Parser.tokenMapper.allReporterClassNames
   test("commands") { doTest(c, COMMANDS) }
   test("reporters") { doTest(r, REPORTERS) }
   val REPORTERS = """|_abs number,number,OTPL,null,10,1,1
