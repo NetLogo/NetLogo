@@ -31,8 +31,6 @@ class LiteralParser(
   * reads a literal value from a token vector. The entire vector must denote a single literal
   * value; extra garbage at the end is illegal. Used for read-from-string and other things.
   * @param tokens the input tokens
-  * @param world  the current world. It's OK for this to be null, and if it
-  *               is, literal agents and agentsets will cause an error.
   */
   def getLiteralValue(tokens: Iterator[Token]): AnyRef = {
     val result = readLiteralPrefix(tokens.next(), tokens)
@@ -61,8 +59,6 @@ class LiteralParser(
   * after the literal is OK).
   *
   * @param tokens the input tokens
-  * @param world  the current world. It's OK for this to be null, and if it
-  *               is, literal agents and agentsets will cause an error.
   */
   def readLiteralPrefix(token: Token, tokens: Iterator[Token]): AnyRef = {
     token.tpe match {
