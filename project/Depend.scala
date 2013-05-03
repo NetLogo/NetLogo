@@ -122,11 +122,6 @@ check [HubNet-client] independentOf [workspace]
 # Someday this should be completely independent, not just directly independent - ST 12/4/08
 check [HubNet-client] directlyIndependentOf [nvm]
 
-### checks for packages with only one direct parent
-
-[not-job-not-workspace] = org.nlogo.* excluding [job] [workspace]
-check [not-job-not-workspace] directlyIndependentOf [job]
-
 ### checks on AWT, Swing, JOGL
 
 [Sun-Swing] = javax.swing.* excluding javax.swing.tree.MutableTreeNode javax.swing.tree.DefaultMutableTreeNode
