@@ -10,6 +10,7 @@ import Mirroring._
 import Mirrorables._
 import TestMirroring.withWorkspace
 import org.nlogo.drawing.DrawingActionRunner
+import org.nlogo.workspace.Checksummer
 
 class TestMirroringModels extends FunSuite with SlowTest {
 
@@ -38,9 +39,9 @@ class TestMirroringModels extends FunSuite with SlowTest {
       drawingActionBuffer.grab().foreach(runner.run)
 
       val realChecksum =
-        Checksummer.calculateGraphicsChecksum(ws.renderer, ws)
+        Checksummer.calculateGraphicsChecksum(ws)
       val mirrorChecksum =
-        Checksummer.calculateGraphicsChecksum(renderer, ws)
+        Checksummer.calculateGraphicsChecksum(ws)
 
       def exportPNG(r: api.RendererInterface, suffix: String) = {
         new java.io.File("tmp").mkdir()

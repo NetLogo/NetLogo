@@ -4,14 +4,18 @@ package org.nlogo.parse
 
 import org.scalatest.FunSuite
 
-import org.nlogo.api.{ CompilerException, DummyExtensionManager, Program }
-import org.nlogo.nvm
+import org.nlogo.api, api.CompilerException
+import org.nlogo.util.Femto
 
 class StructureParserTests extends FunSuite {
 
-  def compile(source: String): StructureParser.Results = {
-    new StructureParser(Parser.Tokenizer.tokenize(source),
-                        None, StructureParser.emptyResults)
+  val tokenizer =
+    Femto.get(classOf[api.TokenizerInterface],
+      "org.nlogo.lex.Tokenizer", Array())
+
+  def compile(source: String): StructureResults = {
+    new StructureParser(tokenizer.tokenize(source),
+                        None, StructureResults.empty)
       .parse(false)
   }
 
@@ -161,7 +165,7 @@ class StructureParserTests extends FunSuite {
     val e = intercept[CompilerException] {
       compile("globals [turtle]")
     }
-    expectResult("closing bracket expected")(e.getMessage)
+    expectResult("There is already a primitive reporter called TURTLE")(e.getMessage)
   }
 
   test("redeclaration of globals") {
@@ -180,7 +184,7 @@ class StructureParserTests extends FunSuite {
 
   test("redeclaration of extensions") {
     val e = intercept[CompilerException] {
-      compile("extensions [sound] extensions [profiler]")
+      compile("extensions [foo] extensions [bar]")
     }
     expectResult("Redeclaration of EXTENSIONS")(e.getMessage.takeWhile(_ != ','))
   }

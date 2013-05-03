@@ -24,6 +24,8 @@ class TestCompileAll extends FunSuite with SlowTest {
       pathMatches("QUICKTIME EXTENSION") ||
       pathMatches("HUBNET ACTIVITIES") ||
       pathMatches("SOUND") ||
+      path.containsSlice("Frogger") || // uses sound extension
+      path.containsSlice("Sound Machines") || // uses sound extension
       path.containsSlice("GoGoMonitor") ||
       path.containsSlice("Movie Example") ||
       path.endsWith(".nlogo3d")

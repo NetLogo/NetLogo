@@ -3,60 +3,65 @@
 package org.nlogo.lex
 
 import org.scalatest.FunSuite
-import org.nlogo.api.{ Token, TokenType }
+import org.nlogo.api, api.{ Token, TokenType }
 
 class TokenizerTests extends FunSuite {
+
+  val tokenizer = new Tokenizer
+  import tokenizer._
+
   def tokenize(s: String) = {
-    val result = Tokenizer.tokenize(s, "")
+    val result = tokenizer.tokenize(s, "")
     expectResult(TokenType.EOF)(result.last.tpe)
     result.toList.dropRight(1)
   }
   def tokenizeRobustly(s: String) = {
-    val result = Tokenizer.tokenizeRobustly(s)
+    val result = tokenizer.tokenizeRobustly(s)
     expectResult(TokenType.EOF)(result.last.tpe)
     result.toList.dropRight(1)
   }
-  def firstBadToken(tokens: Seq[Token]) = tokens.find(_.tpe == TokenType.BAD)
+  def firstBadToken(tokens: Seq[Token]) =
+    tokens.find(_.tpe == TokenType.Bad)
   ///
   test("TokenizeSimpleExpr") {
-    val expected = "Token(__ignore,COMMAND,_ignore)" +
-      "Token(round,REPORTER,_round)" +
-      "Token(0.5,CONSTANT,0.5)"
+    val expected = "Token(__ignore,Ident,__IGNORE)" +
+      "Token(round,Ident,ROUND)" +
+      "Token(0.5,Constant,0.5)"
     expectResult(expected)(
       tokenize("__ignore round 0.5").mkString)
   }
   test("TokenizeSimpleExprWithInitialWhitespace") {
     val tokens = tokenize("\n\n__ignore round 0.5")
     val expected =
-      "Token(__ignore,COMMAND,_ignore)" +
-        "Token(round,REPORTER,_round)" +
-        "Token(0.5,CONSTANT,0.5)"
+      "Token(__ignore,Ident,__IGNORE)" +
+        "Token(round,Ident,ROUND)" +
+        "Token(0.5,Constant,0.5)"
     expectResult(expected)(tokens.mkString)
   }
   test("TokenizeSimpleExprWithInitialReturn") {
     val tokens = tokenize("\r__ignore round 0.5")
     val expected =
-      "Token(__ignore,COMMAND,_ignore)" +
-        "Token(round,REPORTER,_round)" +
-        "Token(0.5,CONSTANT,0.5)"
+      "Token(__ignore,Ident,__IGNORE)" +
+        "Token(round,Ident,ROUND)" +
+        "Token(0.5,Constant,0.5)"
     expectResult(expected)(tokens.mkString)
   }
   test("TokenizeIdent") {
     val tokens = tokenize("foo")
-    val expected = "Token(foo,IDENT,FOO)"
+    val expected = "Token(foo,Ident,FOO)"
     expectResult(expected)(tokens.mkString)
   }
   test("TokenizeQuestionMark") {
     val tokens = tokenize("round ?")
     val expected =
-      "Token(round,REPORTER,_round)" +
-        "Token(?,IDENT,?)"
+      "Token(round,Ident,ROUND)" +
+        "Token(?,Ident,?)"
     expectResult(expected)(tokens.mkString)
   }
   test("TokenizeBreedOwn") {
     val tokens = tokenize("mice-own")
     val expected =
-      "Token(mice-own,KEYWORD,MICE-OWN)"
+      "Token(mice-own,Keyword,MICE-OWN)"
     expectResult(expected)(tokens.mkString)
   }
   test("TokenizeUnknownEscape") {
@@ -89,78 +94,71 @@ class TokenizerTests extends FunSuite {
   }
   test("TokenizeLooksLikePotentialNumber") {
     val tokens = tokenize("-.")
-    val expected = "Token(-.,IDENT,-.)"
+    val expected = "Token(-.,Ident,-.)"
     expectResult(expected)(tokens.mkString)
   }
 
   test("validIdentifier") {
-    assert(Tokenizer.isValidIdentifier("foo"))
+    assert(tokenizer.isValidIdentifier("foo"))
   }
   test("invalidIdentifier1") {
-    assert(!Tokenizer.isValidIdentifier("foo bar"))
+    assert(!tokenizer.isValidIdentifier("foo bar"))
   }
   test("invalidIdentifier2") {
-    assert(!Tokenizer.isValidIdentifier("33"))
+    assert(!tokenizer.isValidIdentifier("33"))
   }
   test("invalidIdentifier3") {
-    assert(!Tokenizer.isValidIdentifier("color"))
+    assert(!tokenizer.isValidIdentifier("color"))
   }
   // check extension primitives
   test("extensionCommand") {
-    val extensionManager = new org.nlogo.api.DummyExtensionManager {
-      class DummyCommand extends org.nlogo.api.Command {
+    val extensionManager = new api.DummyExtensionManager {
+      class DummyCommand extends api.Command {
         def getAgentClassString = ""
-        def getSyntax: org.nlogo.api.Syntax = null
+        def getSyntax: api.Syntax = null
         def getSwitchesBoolean = true
-        def newInstance(name: String): org.nlogo.api.Command = null
-        def perform(args: Array[org.nlogo.api.Argument], context: org.nlogo.api.Context) {}
+        def newInstance(name: String): api.Command = null
+        def perform(args: Array[api.Argument], context: api.Context) {}
       }
       override def anyExtensionsLoaded = true
-      override def replaceIdentifier(name: String): org.nlogo.api.Primitive =
+      override def replaceIdentifier(name: String): api.Primitive =
         if (name.equalsIgnoreCase("FOO")) new DummyCommand else null
     }
-    expectResult("Token(foo,IDENT,FOO)")(
-      Tokenizer.tokenizeForColorization("foo").mkString)
-    expectResult("Token(foo,COMMAND,FOO)")(
-      Tokenizer.tokenizeForColorization("foo", extensionManager).mkString)
+    expectResult("Token(foo,Ident,FOO)")(
+      tokenizer.tokenizeForColorization("foo").mkString)
+    expectResult("Token(foo,Command,FOO)")(
+      tokenizer.tokenizeForColorization("foo", extensionManager).mkString)
   }
   // the method being tested here is used by the F1 key stuff - ST 1/23/08
   test("GetTokenAtPosition") {
-    expectResult("Token(ask,COMMAND,_ask:+0)")(
-      Tokenizer.getTokenAtPosition("ask turtles [set color blue]", 0).toString)
-    expectResult("Token(ask,COMMAND,_ask:+0)")(
-      Tokenizer.getTokenAtPosition("ask turtles [set color blue]", 1).toString)
-    expectResult("Token(ask,COMMAND,_ask:+0)")(
-      Tokenizer.getTokenAtPosition("ask turtles [set color blue]", 2).toString)
-    expectResult("Token([,OPEN_BRACKET,null)")(
-      Tokenizer.getTokenAtPosition("ask turtles [set color blue]", 12).toString)
-    expectResult("Token(set,COMMAND,_set)")(
-      Tokenizer.getTokenAtPosition("ask turtles [set color blue]", 13).toString)
-    expectResult("Token(set,COMMAND,_set)")(
-      Tokenizer.getTokenAtPosition("ask turtles [set color blue]", 14).toString)
-    expectResult("Token(blue,CONSTANT,105.0)")(
-      Tokenizer.getTokenAtPosition("ask turtles [set color blue]", 24).toString)
+    expectResult("Token(ask,Ident,ASK)")(
+      tokenizer.getTokenAtPosition("ask turtles [set color blue]", 0).toString)
+    expectResult("Token(ask,Ident,ASK)")(
+      tokenizer.getTokenAtPosition("ask turtles [set color blue]", 1).toString)
+    expectResult("Token(ask,Ident,ASK)")(
+      tokenizer.getTokenAtPosition("ask turtles [set color blue]", 2).toString)
+    expectResult("Token([,OpenBracket,null)")(
+      tokenizer.getTokenAtPosition("ask turtles [set color blue]", 12).toString)
+    expectResult("Token(set,Ident,SET)")(
+      tokenizer.getTokenAtPosition("ask turtles [set color blue]", 13).toString)
+    expectResult("Token(set,Ident,SET)")(
+      tokenizer.getTokenAtPosition("ask turtles [set color blue]", 14).toString)
+    expectResult("Token(blue,Constant,105.0)")(
+      tokenizer.getTokenAtPosition("ask turtles [set color blue]", 24).toString)
   }
   // bug #88
   test("GetTokenAtPosition-bug88") {
-    expectResult("Token(crt,COMMAND,_createturtles:,+0)")(
-      Tokenizer.getTokenAtPosition("[crt", 1).toString)
+    expectResult("Token(crt,Ident,CRT)")(
+      tokenizer.getTokenAtPosition("[crt", 1).toString)
   }
   // bug #139
   test("GetTokenAtPosition-bug139") {
-    expectResult("Token(crt,COMMAND,_createturtles:,+0)")(
-      Tokenizer.getTokenAtPosition("crt]", 3).toString)
-    expectResult("Token(crt,COMMAND,_createturtles:,+0)")(
-      Tokenizer.getTokenAtPosition("crt", 0).toString)
-    expectResult("Token(crt,COMMAND,_createturtles:,+0)")(
-      Tokenizer.getTokenAtPosition("crt", 3).toString)
-  }
-  // what about removed prims?
-  test("RemovedPrims") {
-    expectResult(TokenType.IDENT)(
-      tokenize("random-or-random-float").head.tpe)
-    expectResult(TokenType.IDENT)(
-      tokenize("histogram-from").head.tpe)
+    expectResult("Token(crt,Ident,CRT)")(
+      tokenizer.getTokenAtPosition("crt]", 3).toString)
+    expectResult("Token(crt,Ident,CRT)")(
+      tokenizer.getTokenAtPosition("crt", 0).toString)
+    expectResult("Token(crt,Ident,CRT)")(
+      tokenizer.getTokenAtPosition("crt", 3).toString)
   }
   test("Empty1") {
     val tokens = tokenize("")
@@ -172,14 +170,14 @@ class TokenizerTests extends FunSuite {
   }
   test("underscore") {
     val tokens = tokenize("_")
-    expectResult("Token(_,IDENT,_)")(tokens.mkString)
+    expectResult("Token(_,Ident,_)")(tokens.mkString)
   }
   test("ListOfArrays") {
     val tokens = tokenize("[{{array: 0}} {{array: 1}}]")
-    expectResult("Token([,OPEN_BRACKET,null)" +
-                 "Token({{array: 0}},LITERAL,{{array: 0}})" +
-                 "Token({{array: 1}},LITERAL,{{array: 1}})" +
-                 "Token(],CLOSE_BRACKET,null)")(
+    expectResult("Token([,OpenBracket,null)" +
+                 "Token({{array: 0}},Literal,{{array: 0}})" +
+                 "Token({{array: 1}},Literal,{{array: 1}})" +
+                 "Token(],CloseBracket,null)")(
       tokens.mkString)
     expectResult(1)(tokens(1).startPos)
     expectResult(13)(tokens(1).endPos)
@@ -189,29 +187,29 @@ class TokenizerTests extends FunSuite {
 
   test("ArrayOfArrays") {
     val tokens = tokenize("{{array: 2: {{array: 0}} {{array: 1}}}}")
-    expectResult("Token({{array: 2: {{array: 0}} {{array: 1}}}},LITERAL,{{array: 2: {{array: 0}} {{array: 1}}}})")(
+    expectResult("Token({{array: 2: {{array: 0}} {{array: 1}}}},Literal,{{array: 2: {{array: 0}} {{array: 1}}}})")(
       tokens.mkString)
   }
 
   test("UnclosedExtensionLiteral1") {
     val tokens = tokenizeRobustly("{{array: 1: ")
-    expectResult("Token(,BAD,End of file reached unexpectedly)")(
+    expectResult("Token(,Bad,End of file reached unexpectedly)")(
       tokens.mkString)
   }
   test("UnclosedExtensionLiteral2") {
     val tokens = tokenizeRobustly("{{")
-    expectResult("Token(,BAD,End of file reached unexpectedly)")(
+    expectResult("Token(,Bad,End of file reached unexpectedly)")(
       tokens.mkString)
   }
   test("UnclosedExtensionLiteral3") {
     val tokens = tokenizeRobustly("{{\n")
-    expectResult("Token(,BAD,End of line reached unexpectedly)")(
+    expectResult("Token(,Bad,End of line reached unexpectedly)")(
       tokens.mkString)
   }
 
   test("carriageReturnsAreWhitespace") {
     val tokens = tokenize("a\rb")
-    expectResult("Token(a,IDENT,A)" + "Token(b,IDENT,B)")(
+    expectResult("Token(a,Ident,A)" + "Token(b,Ident,B)")(
       tokens.mkString)
   }
 
@@ -219,7 +217,7 @@ class TokenizerTests extends FunSuite {
   test("unicode") {
     val o ="\u00F6"  // lower case o with umlaut
     val tokens = tokenize(o)
-    expectResult("Token(" + o + ",IDENT," + o.toUpperCase + ")")(
+    expectResult("Token(" + o + ",Ident," + o.toUpperCase + ")")(
       tokens.mkString)
   }
   test("TokenizeBadCharactersInIdent") {
@@ -233,7 +231,7 @@ class TokenizerTests extends FunSuite {
   }
   test("TokenizeOddCharactersInString") {
     val tokens = tokenize("\"foo\u216C\"")
-    val expected = "Token(\"foo\u216C\",CONSTANT,foo\u216C)"
+    val expected = "Token(\"foo\u216C\",Constant,foo\u216C)"
     expectResult(expected)(tokens.mkString)
   }
 

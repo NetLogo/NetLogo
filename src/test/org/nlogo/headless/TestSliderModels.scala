@@ -2,6 +2,8 @@
 
 package org.nlogo.headless
 
+import org.nlogo.api.ModelCreator._
+
 /**
  * maybe we could use some more tests that test sliders.
  * they would be easy to add here.

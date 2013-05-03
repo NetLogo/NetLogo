@@ -2,6 +2,8 @@
 
 package org.nlogo.headless
 
+import org.nlogo.api.ModelCreator._
+
 // this test is modeled after info found in:
 // http://download.oracle.com/javase/tutorial/i18n/text/string.html
 class TestFilePrimsUTF8 extends AbstractTestModels {

@@ -17,13 +17,13 @@ class BreedIdentifierHandlerTests extends FunSuite {
           "AS" -> Breed("AS", "A", isDirected = true),
           "BS" -> Breed("BS", "B", isDirected = false)))
     handler.process(
-      Parser.Tokenizer.tokenize(code).find(_.name.equalsIgnoreCase(tokenString)).orNull,
+      Parser.tokenizer.tokenize(code).find(_.name.equalsIgnoreCase(tokenString)).orNull,
       program)
       .get
   }
 
   test("turtleBreedIdentifier") {
-    val token = tester(BreedIdentifierHandler.turtle("CREATE-*", TokenType.COMMAND, false,
+    val token = tester(BreedIdentifierHandler.turtle("CREATE-*", TokenType.Command, false,
       classOf[_createturtles]),
       "breed[frogs frog] to foo create-frogs 1 end", "CREATE-FROGS")
     assert(token.value.isInstanceOf[_createturtles])
@@ -32,7 +32,7 @@ class BreedIdentifierHandlerTests extends FunSuite {
 
   test("directedLinkBreedIdentifier1") {
     val token = tester(BreedIdentifierHandler.directedLink
-      ("CREATE-*-TO", TokenType.COMMAND, true,
+      ("CREATE-*-TO", TokenType.Command, true,
         classOf[_createlinkto]),
       "directed-link-breed[as a] to foo ask turtle 0 [ create-a-to turtle 1 ] end",
       "CREATE-A-TO")
@@ -42,7 +42,7 @@ class BreedIdentifierHandlerTests extends FunSuite {
 
   test("directedLinkBreedIdentifier2") {
     val token = tester(BreedIdentifierHandler.directedLink
-      ("OUT-*-NEIGHBOR?", TokenType.REPORTER, true,
+      ("OUT-*-NEIGHBOR?", TokenType.Reporter, true,
         classOf[_outlinkneighbor]),
       "directed-link-breed[as a] to foo ask turtle 0 [ print out-a-neighbor? turtle 1 ] end",
       "OUT-A-NEIGHBOR?")
@@ -52,7 +52,7 @@ class BreedIdentifierHandlerTests extends FunSuite {
 
   test("undirectedLinkBreedIdentifier") {
     val token = tester(BreedIdentifierHandler.undirectedLink
-      ("CREATE-*-WITH", TokenType.COMMAND, true,
+      ("CREATE-*-WITH", TokenType.Command, true,
         classOf[_createlinkwith]),
       "undirected-link-breed[bs b] to foo ask turtle 0 [ create-b-with turtle 1 ] end",
       "CREATE-B-WITH")

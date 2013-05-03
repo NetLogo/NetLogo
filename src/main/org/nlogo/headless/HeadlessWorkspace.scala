@@ -13,7 +13,7 @@ import org.nlogo.api.{ AgentKind, Program, Version, RendererInterface, WorldDime
 import org.nlogo.agent.World
 import org.nlogo.nvm.{ LabInterface, Context, ParserInterface,
                        Workspace, DefaultParserServices, CompilerInterface }
-import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala }
+import org.nlogo.workspace.AbstractWorkspace
 import org.nlogo.util.Femto
 import org.nlogo.drawing.DrawingActionBroker
 
@@ -94,10 +94,8 @@ class HeadlessWorkspace(
   _world: World,
   val compiler: CompilerInterface,
   val renderer: RendererInterface)
-extends AbstractWorkspaceScala(_world)
-with org.nlogo.workspace.Controllable
-with org.nlogo.workspace.WorldLoaderInterface
-with org.nlogo.api.ViewSettings {
+extends AbstractWorkspace(_world)
+with org.nlogo.workspace.WorldLoaderInterface {
 
   override def parser = compiler
 
@@ -118,11 +116,6 @@ with org.nlogo.api.ViewSettings {
    * If true, don't send anything to standard output.
    */
   var silent = false
-
-  /**
-   * Internal use only.
-   */
-  override def isHeadless = true
 
   /**
    * Internal use only.
@@ -180,7 +173,7 @@ with org.nlogo.api.ViewSettings {
       source, Program.empty(),
       getExtensionManager)
     procedures = results.proceduresMap
-    codeBits.clear()
+    clearRunCache()
     init()
     world.program(results.program)
     world.realloc()

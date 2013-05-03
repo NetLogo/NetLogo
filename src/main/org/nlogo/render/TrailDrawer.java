@@ -440,7 +440,4 @@ public strictfp class TrailDrawer
     return false;
   }
 
-  public boolean isHeadless() {
-    throw new UnsupportedOperationException();
-  }
 }

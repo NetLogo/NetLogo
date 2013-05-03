@@ -3,24 +3,14 @@
 package org.nlogo.compile
 
 import org.scalatest.FunSuite
-import org.nlogo.api.{ CompilerException, DummyExtensionManager, Program }
-import org.nlogo.nvm
+import org.nlogo.{ api, parse }
 
 class ConstantFolderTests extends FunSuite {
 
   def compile(source: String): String = {
-    import org.nlogo.parse._
-    val results = new StructureParser(
-      Parser.Tokenizer.tokenize("to-report __test report " + source + "\nend"), None,
-      StructureParser.emptyResults)
-      .parse(false)
-    expectResult(1)(results.procedures.size)
-    val procedure = results.procedures.values.iterator.next()
-    val tokens =
-      new IdentifierParser(results.program, nvm.CompilerInterface.NoProcedures,
-        results.procedures, new DummyExtensionManager)
-        .process(results.tokens(procedure).iterator, procedure)
-    val procdef = new ExpressionParser(procedure).parse(tokens).head
+    val (procdef +: _, _) =
+      parse.Parser.frontEnd(
+        "to-report __test report " + source + "\nend")
     procdef.accept(new ConstantFolder)
     procdef.statements.head.head.toString
   }
@@ -46,10 +36,10 @@ class ConstantFolderTests extends FunSuite {
   /// runtime errors
   test("testError") {
     // hmm, is there an easier way in ScalaTest to check the message in an exception? - ST 4/2/11
-    intercept[CompilerException] {
+    intercept[api.CompilerException] {
       try compile("1 / 0")
       catch {
-        case ex: CompilerException =>
+        case ex: api.CompilerException =>
           expectResult("Runtime error: Division by zero.")(ex.getMessage)
           throw ex
       }

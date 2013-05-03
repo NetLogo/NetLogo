@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.parse
+package org.nlogo.parse0
 
 class CountedIterator[T](it: Iterator[T]) extends Iterator[T] {
   private var _count = 0

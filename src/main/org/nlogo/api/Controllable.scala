@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.workspace
+package org.nlogo.api
 
 /**
  * Interface provides access to the NetLogo controlling API's report and command methods found in

@@ -24,7 +24,7 @@ private class ConstantFolder extends parse.DefaultAstVisitor {
   override def visitReporterApp(app: parse.ReporterApp) {
     super.visitReporterApp(app)
     if (app.reporter.isInstanceOf[Pure] && !app.args.isEmpty && app.args.forall(isConstant)) {
-      val newReporter = parse.LiteralParser.makeLiteralReporter(applyReporter(app))
+      val newReporter = parse.ExpressionParser.makeLiteralReporter(applyReporter(app))
       newReporter.storedSourceStartPosition = app.reporter.getSourceStartPosition
       newReporter.storedSourceEndPosition = app.reporter.getSourceEndPosition
       app.reporter = newReporter

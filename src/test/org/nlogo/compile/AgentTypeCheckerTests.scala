@@ -3,30 +3,18 @@
 package org.nlogo.compile
 
 import org.scalatest.FunSuite
-import org.nlogo.api.{ CompilerException, DummyExtensionManager, Program }
-import org.nlogo.{ nvm, parse }
+import org.nlogo.{ api, nvm, parse }
 
 class AgentTypeCheckerTests extends FunSuite {
 
   /// first some helpers
-  def compile(source: String): Seq[parse.ProcedureDefinition] = {
-    import parse._
-    val tokenizer = parse.Parser.Tokenizer
-    val results = new parse.StructureParser(
-      tokenizer.tokenize(source), None, parse.StructureParser.emptyResults)
-      .parse(false)
-    val defs = new collection.mutable.ArrayBuffer[parse.ProcedureDefinition]
-    for (procedure <- results.procedures.values) {
-      new LetScoper(procedure, results.tokens(procedure), results.program.usedNames).scan()
-      val tokens =
-        new IdentifierParser(results.program, nvm.CompilerInterface.NoProcedures,
-                             results.procedures, new DummyExtensionManager)
-          .process(results.tokens(procedure).iterator, procedure)
-      defs ++= new ExpressionParser(procedure).parse(tokens)
+  def compile(source: String): Seq[parse.ProcedureDefinition] =
+    parse.Parser.frontEnd(source) match {
+      case (defs, _) =>
+        new AgentTypeChecker(defs).check()
+        defs
     }
-    new AgentTypeChecker(defs).check()
-    defs
-  }
+
   def testBoth(source: String, expected: String) {
     testOne(source, expected)
   }
@@ -42,11 +30,12 @@ class AgentTypeCheckerTests extends FunSuite {
     doTestError(source, error)
   }
   def doTestError(source: String, error: String) {
-    val e = intercept[CompilerException] {
+    val e = intercept[api.CompilerException] {
       compile(source)
     }
     expectResult(error)(e.getMessage)
   }
+
   /// tests not involving blocks (easy)
   test("easy1") { testBoth("to foo end", "FOO:OTPL") }
   test("easy2") { testBoth("to foo fd 1 end", "FOO:-T--") }

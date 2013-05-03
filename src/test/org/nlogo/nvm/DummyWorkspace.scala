@@ -10,8 +10,8 @@ import org.nlogo.api.{WorldDimensions, DummyParserServices, DummyExtensionManage
 class DummyWorkspace extends DummyParserServices with Workspace {
   private def unsupported = throw new UnsupportedOperationException
   val world = new World
-  override def procedures = CompilerInterface.NoProcedures
-  override def procedures_=(procedures: CompilerInterface.ProceduresMap) = unsupported
+  override def procedures = ParserInterface.NoProcedures
+  override def procedures_=(procedures: ParserInterface.ProceduresMap) = unsupported
   override def requestDisplayUpdate(context: Context, force: Boolean) = unsupported
   override def breathe(context: Context) = unsupported
   override def joinForeverButtons(agent: Agent) = unsupported
@@ -71,11 +71,23 @@ class DummyWorkspace extends DummyParserServices with Workspace {
   override def dispose() { }
   override def lastLogoException = unsupported
   override def clearLastLogoException() = unsupported
-  override def isHeadless = unsupported
   override def behaviorSpaceRunNumber = 0
   override def behaviorSpaceRunNumber(n: Int) = unsupported
   override def previewCommands = unsupported
   override def benchmark(minTime: Int, maxTime: Int) = unsupported
+  override def renderer = unsupported
+  override def worldChecksum = unsupported
+  override def graphicsChecksum = unsupported
+
+  // from ViewSettings
+  override def drawSpotlight = unsupported
+  override def fontSize = unsupported
+  override def perspective = unsupported
+  override def renderPerspective = unsupported
+  override def viewHeight = unsupported
+  override def viewOffsetX = unsupported
+  override def viewOffsetY = unsupported
+  override def viewWidth = unsupported
 
   // from ImporterUser
   override def setOutputAreaContents(text: String) = unsupported
@@ -100,12 +112,19 @@ class DummyWorkspace extends DummyParserServices with Workspace {
   override def auxRNG = null
   override def mainRNG = null
 
+  // from Controllable
+  override def command(source: String) = unsupported
+  override def report(source: String) = unsupported
+
   override def profilingEnabled = false
   override def profilingTracer = unsupported
 
-  override def tick(c:Context, i:Instruction) = unsupported
-  override def resetTicks(c:Context) = unsupported
+  override def tick(c: Context, i: Instruction) = unsupported
+  override def resetTicks(c: Context) = unsupported
   override def clearTicks = unsupported
-  override def setupPlots(c:Context) = unsupported
-  override def updatePlots(c:Context) = unsupported
+  override def setupPlots(c: Context) = unsupported
+  override def updatePlots(c: Context) = unsupported
+
+  override def warningMessage(s: String) = unsupported
+  override def compilerTestingMode: Boolean = unsupported
 }

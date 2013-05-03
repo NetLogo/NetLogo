@@ -11,11 +11,11 @@ class TestSourcePositions extends FunSuite {
   val program = Program.empty()
   def compileReporter(source: String) =
     Compiler.compileMoreCode("to foo __ignore " + source + "\nend", None, program,
-      nvm.CompilerInterface.NoProcedures,
+      nvm.ParserInterface.NoProcedures,
       new DummyExtensionManager).head.code.head.args.head.source
   def compileCommand(source: String) =
     Compiler.compileMoreCode("to foo " + source + "\nend", None, program,
-      nvm.CompilerInterface.NoProcedures,
+      nvm.ParserInterface.NoProcedures,
       new DummyExtensionManager).head.code.head.source
   def reporter(s: String) { expectResult(s)(compileReporter(s)) }
   def command(s: String) { expectResult(s)(compileCommand(s)) }

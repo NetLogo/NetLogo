@@ -5,6 +5,7 @@ package org.nlogo.headless
 import org.nlogo.api.Version
 import java.util.concurrent.{Executors, TimeUnit}
 import org.nlogo.util.SlowTest
+import org.nlogo.workspace.Checksummer
 import org.scalatest._
 
 class TestChecksums extends FunSuite with SlowTest {
@@ -115,7 +116,7 @@ class ChecksumTester(info: String => Unit) {
       }
     }
     // test view contents checksum
-    val actual2 = Checksummer.calculateGraphicsChecksum(workspace.renderer, workspace)
+    val actual2 = Checksummer.calculateGraphicsChecksum(workspace)
     if (expectedGraphicsSum != actual2) {
       val message = model + "\n  expected graphics checksum " + expectedGraphicsSum + "\n  but got " + actual2 + "\n"
       if (revisionMatches) {

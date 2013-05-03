@@ -9,8 +9,8 @@ import org.nlogo.nvm.Instruction
 // TestBreedIdentifierHandler. - ST 12/22/08
 private object BreedIdentifierHandler {
   import org.nlogo.prim._
-  import TokenType.COMMAND
-  import TokenType.REPORTER
+  import TokenType.Command
+  import TokenType.Reporter
   def process(token: Token, program: Program): Option[Token] =
     handlers.toStream.flatMap(_.process(token, program)).headOption
   def turtle(patternString: String, tokenType: TokenType, singular: Boolean, primClass: Class[_ <: Instruction]) =
@@ -24,41 +24,41 @@ private object BreedIdentifierHandler {
                _.linkBreeds, !_.isDirected)
   private val handlers = List(
     // prims for turtle breeds
-    turtle("CREATE-*", COMMAND, false, classOf[_createturtles]),
-    turtle("CREATE-ORDERED-*", COMMAND, false, classOf[_createorderedturtles]),
-    turtle("HATCH-*", COMMAND, false, classOf[_hatch]),
-    turtle("SPROUT-*", COMMAND, false, classOf[_sprout]),
-    turtle("IS-*?", REPORTER, true, classOf[_isbreed]),
-    turtle("*-HERE", REPORTER, false, classOf[_breedhere]),
-    turtle("*-ON", REPORTER, false, classOf[_breedon]),
-    turtle("*", REPORTER, false, classOf[_breed]),
-    turtle("*", REPORTER, true, classOf[_breedsingular]),
-    turtle("*-AT", REPORTER, false, classOf[_breedat]),
+    turtle("CREATE-*"         , Command, false, classOf[_createturtles]),
+    turtle("CREATE-ORDERED-*" , Command, false, classOf[_createorderedturtles]),
+    turtle("HATCH-*"          , Command, false, classOf[_hatch]),
+    turtle("SPROUT-*"         , Command, false, classOf[_sprout]),
+    turtle("IS-*?"            , Reporter, true, classOf[_isbreed]),
+    turtle("*-HERE"           , Reporter, false, classOf[_breedhere]),
+    turtle("*-ON"             , Reporter, false, classOf[_breedon]),
+    turtle("*"                , Reporter, false, classOf[_breed]),
+    turtle("*"                , Reporter, true, classOf[_breedsingular]),
+    turtle("*-AT"             , Reporter, false, classOf[_breedat]),
     // prims for link breeds
-    directedLink("*", REPORTER, true, classOf[_linkbreedsingular]),
-    undirectedLink("*", REPORTER, true, classOf[_linkbreedsingular]),
-    directedLink("*", REPORTER, false, classOf[_linkbreed]),
-    undirectedLink("*", REPORTER, false, classOf[_linkbreed]),
-    directedLink("IS-*?", REPORTER, true, classOf[_isbreed]),
-    undirectedLink("IS-*?", REPORTER, true, classOf[_isbreed]),
-    directedLink("CREATE-*-FROM", COMMAND, true, classOf[_createlinkfrom]),
-    directedLink("CREATE-*-FROM", COMMAND, false, classOf[_createlinksfrom]),
-    directedLink("CREATE-*-TO", COMMAND, true, classOf[_createlinkto]),
-    directedLink("CREATE-*-TO", COMMAND, false, classOf[_createlinksto]),
-    undirectedLink("CREATE-*-WITH", COMMAND, true, classOf[_createlinkwith]),
-    undirectedLink("CREATE-*-WITH", COMMAND, false, classOf[_createlinkswith]),
-    directedLink("IN-*-NEIGHBOR?", REPORTER, true, classOf[_inlinkneighbor]),
-    directedLink("OUT-*-NEIGHBOR?", REPORTER, true, classOf[_outlinkneighbor]),
-    directedLink("IN-*-FROM", REPORTER, true, classOf[_inlinkfrom]),
-    directedLink("OUT-*-TO", REPORTER, true, classOf[_outlinkto]),
-    directedLink("OUT-*-NEIGHBORS", REPORTER, true, classOf[_outlinkneighbors]),
-    directedLink("IN-*-NEIGHBORS", REPORTER, true, classOf[_inlinkneighbors]),
-    directedLink("MY-IN-*", REPORTER, false, classOf[_myinlinks]),
-    directedLink("MY-OUT-*", REPORTER, false, classOf[_myoutlinks]),
-    undirectedLink("*-NEIGHBORS", REPORTER, true, classOf[_linkneighbors]),
-    undirectedLink("MY-*", REPORTER, false, classOf[_mylinks]),
-    undirectedLink("*-WITH", REPORTER, true, classOf[_linkwith]),
-    undirectedLink("*-NEIGHBOR?", REPORTER, true, classOf[_linkneighbor])
+    directedLink("*"               , Reporter, true, classOf[_linkbreedsingular]),
+    undirectedLink("*"             , Reporter, true, classOf[_linkbreedsingular]),
+    directedLink("*"               , Reporter, false, classOf[_linkbreed]),
+    undirectedLink("*"             , Reporter, false, classOf[_linkbreed]),
+    directedLink("IS-*?"           , Reporter, true, classOf[_isbreed]),
+    undirectedLink("IS-*?"         , Reporter, true, classOf[_isbreed]),
+    directedLink("CREATE-*-FROM"   , Command, true, classOf[_createlinkfrom]),
+    directedLink("CREATE-*-FROM"   , Command, false, classOf[_createlinksfrom]),
+    directedLink("CREATE-*-TO"     , Command, true, classOf[_createlinkto]),
+    directedLink("CREATE-*-TO"     , Command, false, classOf[_createlinksto]),
+    undirectedLink("CREATE-*-WITH" , Command, true, classOf[_createlinkwith]),
+    undirectedLink("CREATE-*-WITH" , Command, false, classOf[_createlinkswith]),
+    directedLink("IN-*-NEIGHBOR?"  , Reporter, true, classOf[_inlinkneighbor]),
+    directedLink("OUT-*-NEIGHBOR?" , Reporter, true, classOf[_outlinkneighbor]),
+    directedLink("IN-*-FROM"       , Reporter, true, classOf[_inlinkfrom]),
+    directedLink("OUT-*-TO"        , Reporter, true, classOf[_outlinkto]),
+    directedLink("OUT-*-NEIGHBORS" , Reporter, true, classOf[_outlinkneighbors]),
+    directedLink("IN-*-NEIGHBORS"  , Reporter, true, classOf[_inlinkneighbors]),
+    directedLink("MY-IN-*"         , Reporter, false, classOf[_myinlinks]),
+    directedLink("MY-OUT-*"        , Reporter, false, classOf[_myoutlinks]),
+    undirectedLink("*-NEIGHBORS"   , Reporter, true, classOf[_linkneighbors]),
+    undirectedLink("MY-*"          , Reporter, false, classOf[_mylinks]),
+    undirectedLink("*-WITH"        , Reporter, true, classOf[_linkwith]),
+    undirectedLink("*-NEIGHBOR?"   , Reporter, true, classOf[_linkneighbor])
   )
   class Helper
     (patternString: String, tokenType: TokenType, singular: Boolean, primClass: Class[_ <: Instruction],

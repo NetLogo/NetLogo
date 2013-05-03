@@ -3,32 +3,24 @@
 package org.nlogo.compile
 
 import org.scalatest.FunSuite
-import org.nlogo.api.{ DummyExtensionManager, Program }
-import org.nlogo.{ nvm, parse }
+import org.nlogo.{ api, nvm, parse }
 
 class OptimizerTests extends FunSuite {
+
   def compileReporter(source: String) =
     compile("globals [glob1] breed [frogs frog] to-report __test [x] report " + source + "\nend")
       .statements.head.head.toString
   def compileCommands(source: String) =
     compile("globals [glob1] breed [frogs frog] to __test [x] " + source + "\nend")
       .statements.head.toString
+
   def compile(source: String): parse.ProcedureDefinition = {
-    import parse._
-    val results = new StructureParser(Parser.Tokenizer.tokenize(source), None,
-                                      StructureParser.emptyResults)
-      .parse(false)
-    expectResult(1)(results.procedures.size)
-    val procedure = results.procedures.values.iterator.next()
-    val tokens =
-      new IdentifierParser(results.program, nvm.CompilerInterface.NoProcedures,
-                           results.procedures, new DummyExtensionManager)
-      .process(results.tokens(procedure).iterator, procedure)
-    val procdef = new ExpressionParser(procedure).parse(tokens).head
+    val (procdef +: _, _) = parse.Parser.frontEnd(source)
     procdef.accept(new ConstantFolder)
     procdef.accept(Optimizer)
     procdef
   }
+
   test("testForward1") { expectResult("_fd1[]")(compileCommands("fd 1")) }
   test("testForward2") { expectResult("_jump[_constdouble:0.1[]]")(compileCommands("fd 0.1")) }
   test("testForward3") { expectResult("_jump[_constdouble:-0.1[]]")(compileCommands("fd -0.1")) }

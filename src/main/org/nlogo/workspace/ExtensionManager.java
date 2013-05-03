@@ -14,6 +14,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import static org.nlogo.workspace.AbstractWorkspace.toURL;
+
 /**
  * Some simple notes on loading and unloading extensions:
  * - The load method is called when an extension appears in the extensions block when it wasn't
@@ -96,11 +98,6 @@ public strictfp class ExtensionManager
       result.add(jar.classManager);
     }
     return result;
-  }
-
-  public String getSource(String filename)
-      throws java.io.IOException {
-    return workspace.getSource(filename);
   }
 
   public org.nlogo.api.File getFile(String path)
@@ -209,7 +206,7 @@ public strictfp class ExtensionManager
   }
 
   public void addToLibraryPath(Object classManager, String directory) {
-    org.nlogo.api.JavaLibraryPath.setLibraryPath(classManager.getClass(), directory);
+    NativeLibraryPath.setLibraryPath(classManager.getClass(), directory);
   }
 
   public String resolvePath(String path) {
@@ -730,17 +727,6 @@ public strictfp class ExtensionManager
       prefix = null;
       this.modified = modified;
     }
-  }
-
-  // for 4.1 we have too much fragile, difficult-to-understand,
-  // under-tested code involving URLs -- we can't get rid of our
-  // uses of toURL() until 4.2, the risk of breakage is too high.
-  // so for now, at least we make this a separate method so the
-  // SuppressWarnings annotation is narrowly targeted. - ST 12/7/09
-  @SuppressWarnings("deprecation")
-  private static java.net.URL toURL(java.io.File file)
-      throws java.net.MalformedURLException {
-    return file.toURL();
   }
 
 }

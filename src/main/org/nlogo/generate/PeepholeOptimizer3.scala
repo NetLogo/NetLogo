@@ -35,10 +35,10 @@ import org.objectweb.asm.{ Label, MethodAdapter, MethodVisitor }
  *  (L3)
  *  ~Forrest (6/19/2006)
  */
-private object PeepholeOptimizer3 {
+object PeepholeOptimizer3 {
   val PEEPHOLE_FLAG_LABEL = new Label
 }
-private class PeepholeOptimizer3(mv: MethodVisitor) extends AbstractPeepholeOptimizer(mv) {
+class PeepholeOptimizer3(mv: MethodVisitor) extends AbstractPeepholeOptimizer(mv) {
 
   /* 0 = looking for pattern to start
    * 1 = found *STORE B  (opcode stored in A)
@@ -151,7 +151,7 @@ private class PeepholeOptimizer3(mv: MethodVisitor) extends AbstractPeepholeOpti
  *  ~Forrest (6/19/2006)
  */
 
-private class PeepholeOptimizer3B(mv: MethodVisitor) extends MethodAdapter(mv) {
+class PeepholeOptimizer3B(mv: MethodVisitor) extends MethodAdapter(mv) {
   override def visitLabel(label: Label) {
     if (label != PeepholeOptimizer3.PEEPHOLE_FLAG_LABEL)
       mv.visitLabel(label)

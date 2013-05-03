@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.headless
+package org.nlogo.workspace
 
 import org.scalatest.FunSuite
 import java.io.PrintWriter

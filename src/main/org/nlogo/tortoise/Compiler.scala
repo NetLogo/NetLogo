@@ -3,7 +3,7 @@
 package org.nlogo.tortoise
 
 import org.nlogo.{ api, nvm, parse, prim, workspace }
-import nvm.CompilerInterface.{ ProceduresMap, NoProcedures }
+import nvm.ParserInterface.{ ProceduresMap, NoProcedures }
 
 object Compiler {
 

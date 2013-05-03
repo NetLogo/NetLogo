@@ -3,10 +3,10 @@
 package org.nlogo.parse
 
 import Fail.{ cAssert, exception }
-import org.nlogo.{ api, nvm, prim }
+import org.nlogo.{ api, nvm, parse0, prim }
 import api.{ CompilerException, Let, Program, Token, TokenType }
 import nvm.{ Instruction, Procedure, Reporter }
-import nvm.CompilerInterface.ProceduresMap
+import nvm.ParserInterface.ProceduresMap
 
 /**
   * Converts identifier tokens into instances of primitives.
@@ -20,18 +20,50 @@ class IdentifierParser(
   oldProcedures: ProceduresMap,
   newProcedures: ProceduresMap,
   extensionManager: api.ExtensionManager,
+  lets: Vector[Let],
   forgiving: Boolean = false) {
 
   def process(tokens: Iterator[Token], procedure: Procedure): Seq[Token] = {
     // make sure the procedure name doesn't conflict with a special identifier -- CLB
     checkProcedureName(procedure)
-    val it = new CountedIterator(tokens)
-    def processToken(token: Token): Token = {
-      if(token.tpe == TokenType.IDENT || token.tpe == TokenType.VARIABLE)
-        processToken2(token, procedure, it.count)
-      else token
+    val it = new parse0.CountedIterator(tokens)
+    def processToken(token: Token): Token =
+      token.tpe match {
+        case TokenType.Variable =>
+          processToken2(token, procedure, it.count)
+        case TokenType.Ident =>
+          processIdent(token, procedure, it.count)
+        case _ =>
+          token
+      }
+    def stuffLet(token: Token): Token = {
+      (token.tpe, token.value) match {
+        case (TokenType.Command, let: prim._let) =>
+          // LetScoper constructed Let objects, but it didn't stash them
+          // in the prim._let objects. we do that here, so that LetScoper
+          // doesn't depend on prim._let - ST 5/2/13
+          let.let = lets.find(let => let.start == it.count + 1).get
+        case _ =>
+      }
+      token
     }
-    it.map(processTokenWithExtensionManager).map(processToken).toSeq
+    it.map(processTokenWithExtensionManager).map(processToken).map(stuffLet).toSeq
+  }
+
+  private def processIdent(token: Token, procedure: Procedure, count: Int): Token = {
+    val primName = token.value.asInstanceOf[String]
+    def lookup(fn: String => Option[api.TokenHolder], newType: TokenType): Option[Token] =
+      fn(primName).map{holder =>
+        val newToken =
+          token.copy(tpe = newType, value = holder)(
+            token.startPos, token.endPos, token.fileName)
+        holder.token(newToken)
+        newToken
+      }
+    def command  = lookup(Parser.tokenMapper.getCommand  _, TokenType.Command )
+    def reporter = lookup(Parser.tokenMapper.getReporter _, TokenType.Reporter)
+    (command orElse reporter).getOrElse(
+      processToken2(token, procedure, count))
   }
 
   // replaces an identifier token with its imported implementation, if necessary
@@ -43,7 +75,7 @@ class IdentifierParser(
         case r: api.Reporter =>
           new prim._externreport(r)
       }
-    if(token.tpe != TokenType.IDENT ||
+    if(token.tpe != TokenType.Ident ||
        extensionManager == null || !extensionManager.anyExtensionsLoaded)
       token
     else {
@@ -56,8 +88,8 @@ class IdentifierParser(
         case primitive =>
           val newType =
             if(primitive.isInstanceOf[api.Command])
-              TokenType.COMMAND
-            else TokenType.REPORTER
+              TokenType.Command
+            else TokenType.Reporter
           val instruction = wrap(primitive, name)
           val newToken = Token(token.name, newType, instruction)(
             token.startPos, token.endPos, token.fileName)
@@ -67,13 +99,13 @@ class IdentifierParser(
     }
   }
 
-  private def getLetFromArg(p: Procedure, ident: String, tokPos: Int): Option[Let] = {
+  private def getLetFromArg(ident: String, tokPos: Int): Option[Let] = {
     def checkLet(let: Let): Option[Let] =
       if(tokPos < let.start || tokPos > let.end || let.name != ident)
         None
       else
         Some(let)
-    p.lets.map(checkLet).find(_.isDefined).getOrElse(None)
+    lets.map(checkLet).find(_.isDefined).getOrElse(None)
   }
 
   private def processToken2(tok: Token, procedure: Procedure, tokPos: Int): Token = {
@@ -89,18 +121,16 @@ class IdentifierParser(
             exception(InvalidTaskVariable, tok) }
       cAssert(varNumber > 0, InvalidTaskVariable, tok)
       newToken(new prim._taskvariable(varNumber),
-               ident, TokenType.REPORTER, tok.startPos, tok.endPos, tok.fileName)
+               ident, TokenType.Reporter, tok.startPos, tok.endPos, tok.fileName)
     }
     // kludgy to special case this, but we only have one such prim,
     // so oh well... - ST 7/8/06
-    else if(ident == "RANDOM-OR-RANDOM-FLOAT")
-      exception(RandomOrRandomFloatError, tok)
-    else if(getLetFromArg(procedure, ident, tokPos).isDefined)
-      newToken(new prim._letvariable(getLetFromArg(procedure, ident, tokPos).get),
-               ident, TokenType.REPORTER, tok.startPos, tok.endPos, tok.fileName)
+    else if(getLetFromArg(ident, tokPos).isDefined)
+      newToken(new prim._letvariable(getLetFromArg(ident, tokPos).get),
+               ident, TokenType.Reporter, tok.startPos, tok.endPos, tok.fileName)
     else if(procedure.args.contains(ident))
       newToken(new prim._procedurevariable(procedure.args.indexOf(ident), ident),
-               ident, TokenType.REPORTER, tok.startPos, tok.endPos, tok.fileName)
+               ident, TokenType.Reporter, tok.startPos, tok.endPos, tok.fileName)
     else {
       // go thru our identifierHandlers, if one triggers, return the result
       BreedIdentifierHandler.process(tok, program).getOrElse{
@@ -108,12 +138,12 @@ class IdentifierParser(
           oldProcedures.getOrElse(ident,
             newProcedures.getOrElse(ident,
               return newToken(getAgentVariableReporter(ident, tok),
-                              ident, TokenType.REPORTER, tok.startPos, tok.endPos, tok.fileName)))
+                              ident, TokenType.Reporter, tok.startPos, tok.endPos, tok.fileName)))
         val (tokenType, caller) =
           if (callproc.isReporter)
-            (TokenType.REPORTER, new prim._callreport(callproc))
+            (TokenType.Reporter, new prim._callreport(callproc))
           else
-            (TokenType.COMMAND, new prim._call(callproc))
+            (TokenType.Command, new prim._call(callproc))
         newToken(caller, ident, tokenType, tok.startPos, tok.endPos, tok.fileName)
       }
     }
@@ -165,12 +195,5 @@ class IdentifierParser(
   /// error texts
   private val InvalidTaskVariable =
     "variables may not begin with a question mark unless they are the special variables ?, ?1, ?2, ..."
-
-  private val RandomOrRandomFloatError =
-    "This code was written for an old version of NetLogo in which the RANDOM primitive sometimes reported " +
-    "an integer (e.g. 4), other times a floating point number (e.g. 4.326), depending on its input. " +
-    "That's no longer true in this version; instead, we now have two separate primitives. So you must " +
-    "replace this with either RANDOM or RANDOM-FLOAT depending on whether you want an integer or " +
-    "a floating point result."
 
 }

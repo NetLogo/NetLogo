@@ -102,4 +102,4 @@ LetOfVarToItselfInsideAsk
   O> ask turtles [ let x x ] => COMPILER ERROR Nothing named X has been defined.
 
 LetTwice
-  O> let x 5 let x 6 => COMPILER ERROR There is already a local variable called X here
+  O> let x 5 let x 6 => COMPILER ERROR There is already a local variable here called X

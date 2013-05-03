@@ -6,7 +6,7 @@ import org.nlogo.api.Syntax
 import org.nlogo.nvm.{ Command, CustomGenerated, GeneratorInterface, Instruction, Procedure, Reporter }
 
 object Generator {
-  private[generate] val KEPT_INSTRUCTION_PREFIX = "keptinstr"
+  val KEPT_INSTRUCTION_PREFIX = "keptinstr"
   // If this is set to true, then it will slow down the compiler IMMENSELY.  What it does, is write
   // out the bytecode of all the GeneratedInstructions to the tmp/Generator folder.
   private val DEBUG_DUMP_CLASS_FILES = false
@@ -41,7 +41,7 @@ class Generator(source: String, procedure: Procedure, profilingEnabled: Boolean)
   // something to do with the fact that Femto instantiates Generator using Class.forName().  I don't
   // understand this getContextClassLoader thing, either. - ST 4/16/09
   private val loader = new CustomClassLoader(Thread.currentThread.getContextClassLoader)
-  private[generate] class InstructionGenerator[A <: Instruction](original: A) {
+  class InstructionGenerator[A <: Instruction](original: A) {
     import org.objectweb.asm
     import asm.Opcodes._
     import asm.{ ClassReader, ClassWriter, Label, Type }

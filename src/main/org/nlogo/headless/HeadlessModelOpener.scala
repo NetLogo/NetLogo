@@ -8,6 +8,7 @@ import org.nlogo.api.{CompilerException, FileIO, LogoList,
 import org.nlogo.plot.PlotLoader
 import org.nlogo.shape.{LinkShape, VectorShape}
 import org.nlogo.api.StringUtils.escapeString
+import org.nlogo.workspace.WorldLoader
 
 object HeadlessModelOpener {
   def protocolSection(path: String) =
@@ -46,7 +47,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
           interfaceGlobals = interfaceGlobals), ws.getExtensionManager)
     }
     ws.procedures = results.proceduresMap
-    ws.codeBits.clear() //(WTH IS THIS? - JC 10/27/09)
+    ws.clearRunCache()
 
     // read preview commands. (if the model doesn't specify preview commands, allow the default ones
     // from our superclass to stand)
@@ -194,7 +195,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
       }
 
       def parseGraphicsWindow(widget: Seq[String]) {
-        ws.loadWorld(widget, ws)
+        (new WorldLoader).load(widget, ws)
       }
 
       // finally parse all the widgets in the WIDGETS section
