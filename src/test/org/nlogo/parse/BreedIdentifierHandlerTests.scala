@@ -9,7 +9,7 @@ import BreedIdentifierHandler.Spec
 
 class BreedIdentifierHandlerTests extends FunSuite {
 
-  def tester(handler: BreedIdentifierHandler.Helper, code: String, tokenString: String): Token = {
+  def tester(handler: BreedIdentifierHandler.Helper, code: String, tokenString: String): (String, String, TokenType) = {
     val program =
       Program.empty.copy(
         breeds = ListMap("FROGS" -> Breed("FROGS", "FROG")),
@@ -23,37 +23,36 @@ class BreedIdentifierHandlerTests extends FunSuite {
   }
 
   test("turtleBreedIdentifier") {
-    val token = tester(BreedIdentifierHandler.turtle(Spec("CREATE-*", TokenType.Command, false,
-      "_createturtles")),
-      "breed[frogs frog] to foo create-frogs 1 end", "CREATE-FROGS")
-    expectResult("_createturtles:FROGS,+0")(token.value.toString)
+    expectResult(("_createturtles", "FROGS", TokenType.Command))(
+      tester(BreedIdentifierHandler.turtle(
+        Spec("CREATE-*", TokenType.Command, false, "_createturtles")),
+        "breed[frogs frog] to foo create-frogs 1 end", "CREATE-FROGS"))
   }
 
   test("directedLinkBreedIdentifier1") {
-    val token = tester(BreedIdentifierHandler.directedLink(Spec
-      ("CREATE-*-TO", TokenType.Command, true,
-        "_createlinkto")),
-      "directed-link-breed[as a] to foo ask turtle 0 [ create-a-to turtle 1 ] end",
-      "CREATE-A-TO")
-    expectResult("_createlinkto:AS,+0")(token.value.toString)
+    expectResult(("_createlinkto", "AS", TokenType.Command))(
+      tester(BreedIdentifierHandler.directedLink(Spec(
+        "CREATE-*-TO", TokenType.Command, true, "_createlinkto")),
+        "directed-link-breed[as a] to foo ask turtle 0 [ create-a-to turtle 1 ] end",
+        "CREATE-A-TO"))
   }
 
   test("directedLinkBreedIdentifier2") {
-    val token = tester(BreedIdentifierHandler.directedLink(Spec
-      ("OUT-*-NEIGHBOR?", TokenType.Reporter, true,
+    expectResult(("_outlinkneighbor", "AS", TokenType.Reporter))(
+      tester(BreedIdentifierHandler.directedLink(Spec(
+        "OUT-*-NEIGHBOR?", TokenType.Reporter, true,
         "_outlinkneighbor")),
       "directed-link-breed[as a] to foo ask turtle 0 [ print out-a-neighbor? turtle 1 ] end",
-      "OUT-A-NEIGHBOR?")
-    expectResult("_outlinkneighbor:AS")(token.value.toString)
+      "OUT-A-NEIGHBOR?"))
   }
 
   test("undirectedLinkBreedIdentifier") {
-    val token = tester(BreedIdentifierHandler.undirectedLink(Spec
-      ("CREATE-*-WITH", TokenType.Command, true,
-        "_createlinkwith")),
+    expectResult(("_createlinkwith", "BS", TokenType.Command))(
+    tester(BreedIdentifierHandler.undirectedLink(Spec(
+      "CREATE-*-WITH", TokenType.Command, true,
+      "_createlinkwith")),
       "undirected-link-breed[bs b] to foo ask turtle 0 [ create-b-with turtle 1 ] end",
-      "CREATE-B-WITH")
-    expectResult("_createlinkwith:BS,+0")(token.value.toString)
+      "CREATE-B-WITH"))
   }
 
 }

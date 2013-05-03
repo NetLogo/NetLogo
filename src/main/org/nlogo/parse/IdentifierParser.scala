@@ -8,6 +8,8 @@ import api.{ CompilerException, Let, Program, Token, TokenType }
 import nvm.{ Instruction, Procedure, Reporter }
 import nvm.ParserInterface.ProceduresMap
 
+// This class is in serious need of a total rewrite - ST 5/3/13
+
 /**
   * Converts identifier tokens into instances of primitives.
   * In "forgiving" mode, used by
@@ -131,22 +133,29 @@ class IdentifierParser(
     else if(procedure.args.contains(ident))
       newToken(new prim._procedurevariable(procedure.args.indexOf(ident), ident),
                ident, TokenType.Reporter, tok.startPos, tok.endPos, tok.fileName)
-    else {
+    else
       // go thru our identifierHandlers, if one triggers, return the result
-      BreedIdentifierHandler.process(tok, program).getOrElse{
-        val callproc =
-          oldProcedures.getOrElse(ident,
-            newProcedures.getOrElse(ident,
-              return newToken(getAgentVariableReporter(ident, tok),
-                              ident, TokenType.Reporter, tok.startPos, tok.endPos, tok.fileName)))
-        val (tokenType, caller) =
-          if (callproc.isReporter)
-            (TokenType.Reporter, new prim._callreport(callproc))
-          else
-            (TokenType.Command, new prim._call(callproc))
-        newToken(caller, ident, tokenType, tok.startPos, tok.endPos, tok.fileName)
+      BreedIdentifierHandler.process(tok, program) match {
+        case Some((className, breedName, tokenType)) =>
+          val instr = Instantiator.newInstance[api.TokenHolder](
+            Class.forName("org.nlogo.prim." + className), breedName)
+          val tok2 = new Token(tok.name, tokenType, instr)(
+            tok.startPos, tok.endPos, tok.fileName)
+          instr.token(tok2)
+          tok2
+        case None =>
+          val callproc =
+            oldProcedures.getOrElse(ident,
+              newProcedures.getOrElse(ident,
+                return newToken(getAgentVariableReporter(ident, tok),
+                                ident, TokenType.Reporter, tok.startPos, tok.endPos, tok.fileName)))
+          val (tokenType, caller) =
+            if (callproc.isReporter)
+              (TokenType.Reporter, new prim._callreport(callproc))
+            else
+              (TokenType.Command, new prim._call(callproc))
+          newToken(caller, ident, tokenType, tok.startPos, tok.endPos, tok.fileName)
       }
-    }
   }
 
   private def getAgentVariableReporter(varName: String, tok: Token): Reporter = {

@@ -8,7 +8,9 @@ import org.nlogo.api,
 
 object BreedIdentifierHandler {
 
-  def process(token: Token, program: Program): Option[Token] =
+  // example input:  Token("hatch-frogs", TokenType.Ident, "HATCH-FROGS")
+  // example result: Some(("_hatch", "FROGS", TokenType.Command))
+  def process(token: Token, program: Program): Option[(String, String, TokenType)] =
     handlers.toStream.flatMap(_.process(token, program))
       .headOption
 
@@ -73,7 +75,7 @@ object BreedIdentifierHandler {
     val pattern = Pattern.compile("\\A" +
       spec.patternString.replaceAll("\\?", "\\\\?")
       .replaceAll("\\*", "(.+)")+"\\Z")
-    def process(tok: Token, program: Program): Option[Token] = {
+    def process(tok: Token, program: Program): Option[(String, String, TokenType)] = {
       val matcher = pattern.matcher(tok.value.asInstanceOf[String])
       if(!matcher.matches())
         None
@@ -84,13 +86,10 @@ object BreedIdentifierHandler {
             .find{breed => name ==
               (if (spec.singular) breed.singular else breed.name)}
             .getOrElse(return None)
-        if (!isValidBreed(breed)) return None
-        val instr = Instantiator.newInstance[api.TokenHolder](
-          Class.forName("org.nlogo.prim." + spec.primClass), breed.name)
-        val tok2 = new Token(tok.name, spec.tokenType, instr)(
-          tok.startPos, tok.endPos, tok.fileName)
-        instr.token(tok2)
-        Some(tok2)
+        if (!isValidBreed(breed))
+          None
+        else
+          Some((spec.primClass, breed.name, spec.tokenType))
       }
     }
   }
