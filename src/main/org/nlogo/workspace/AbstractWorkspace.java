@@ -2,14 +2,7 @@
 
 package org.nlogo.workspace;
 
-public abstract strictfp class AbstractWorkspace
-  implements org.nlogo.api.LogoThunkFactory, org.nlogo.api.ParserServices {
-
-  /// startup
-
-  protected AbstractWorkspace() {
-    world().parser_$eq(this);
-  }
+public abstract strictfp class AbstractWorkspace {
 
   /// model name utilities
 
