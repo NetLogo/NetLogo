@@ -147,7 +147,7 @@ object TypeConverter {
     mv.visitLdcInsn(Int.box(api.Syntax.getTypeConstant(typeTo)))
     mv.visitVarInsn(ALOAD, firstFreeJVMLocal)
     mv.visitMethodInsn(INVOKESPECIAL, "org/nlogo/nvm/ArgumentTypeException", "<init>",
-      "(Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V");
+      "(Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V")
     mv.visitInsn(ATHROW)
     mv.visitLabel(lEnd)
   }

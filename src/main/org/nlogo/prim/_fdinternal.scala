@@ -36,7 +36,7 @@ class _fdinternal(let: Let) extends Command {
         countdown.value -= stepDistance
       }
       catch { case _: AgentException =>
-        context.ip = next;
+        context.ip = next
       }
     }
   }

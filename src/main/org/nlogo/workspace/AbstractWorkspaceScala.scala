@@ -337,7 +337,7 @@ object AbstractWorkspaceTraits {
     override def getExtensionManager =
       _extensionManager
     override def isExtensionName(name: String) =
-      _extensionManager.isExtensionName(name);
+      _extensionManager.isExtensionName(name)
     @throws(classOf[org.nlogo.api.ExtensionException])
     override def importExtensionData(name: String, data: java.util.List[Array[String]], handler: org.nlogo.api.ImportErrorHandler) {
       _extensionManager.importExtensionData(name, data, handler)

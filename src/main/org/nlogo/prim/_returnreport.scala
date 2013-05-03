@@ -10,7 +10,7 @@ class _returnreport extends Command {
     Syntax.commandSyntax
   override def displayName = "END"  // for use in error messages
   override def perform(context: Context) {
-    perform_1(context);
+    perform_1(context)
   }
   def perform_1(context: Context) {
     throw new EngineException(
