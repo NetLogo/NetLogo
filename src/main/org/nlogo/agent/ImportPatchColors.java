@@ -33,8 +33,8 @@ public strictfp class ImportPatchColors {
   }
 
   public static void doImport(BufferedImage image, World world, boolean asNetLogoColors) {
-    float scalex = (float) (world.worldWidth()) / (float) image.getWidth();
-    float scaley = (float) (world.worldHeight()) / (float) image.getHeight();
+    float scalex = world.worldWidth()  / (float) image.getWidth();
+    float scaley = world.worldHeight() / (float) image.getHeight();
     float scale = scalex < scaley ? scalex : scaley;
 
     java.awt.image.BufferedImage scaledImage = null;
