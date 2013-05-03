@@ -13,7 +13,7 @@ import org.nlogo.api.{ AgentKind, Program, Version, RendererInterface, WorldDime
 import org.nlogo.agent.World
 import org.nlogo.nvm.{ LabInterface, Context, ParserInterface,
                        Workspace, DefaultParserServices, CompilerInterface }
-import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala }
+import org.nlogo.workspace.AbstractWorkspace
 import org.nlogo.util.Femto
 import org.nlogo.drawing.DrawingActionBroker
 
@@ -94,7 +94,7 @@ class HeadlessWorkspace(
   _world: World,
   val compiler: CompilerInterface,
   val renderer: RendererInterface)
-extends AbstractWorkspaceScala(_world)
+extends AbstractWorkspace(_world)
 with org.nlogo.workspace.WorldLoaderInterface {
 
   override def parser = compiler

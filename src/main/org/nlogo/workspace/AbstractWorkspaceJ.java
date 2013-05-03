@@ -2,7 +2,7 @@
 
 package org.nlogo.workspace;
 
-public abstract strictfp class AbstractWorkspace {
+public abstract strictfp class AbstractWorkspaceJ {
 
   /// model name utilities
 

@@ -65,7 +65,7 @@ public strictfp class ExtensionManager
 
   private final Map<String, JarContainer> jars =
       new HashMap<String, JarContainer>();
-  private final AbstractWorkspaceScala workspace;
+  private final AbstractWorkspace workspace;
 
   private int jarsLoaded = 0;
 
@@ -81,7 +81,7 @@ public strictfp class ExtensionManager
     return workspace.profilingEnabled();
   }
 
-  public ExtensionManager(AbstractWorkspaceScala workspace) {
+  public ExtensionManager(AbstractWorkspace workspace) {
     this.workspace = workspace;
   }
 

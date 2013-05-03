@@ -16,14 +16,14 @@ import
 
 import AbstractWorkspaceTraits._
 
-object AbstractWorkspaceScala {
+object AbstractWorkspace {
   val DefaultPreviewCommands = "setup repeat 75 [ go ]"
 }
 
 // omg, what a rat's nest - ST 5/3/13
 
-abstract class AbstractWorkspaceScala(val world: World)
-extends AbstractWorkspace
+abstract class AbstractWorkspace(val world: World)
+extends AbstractWorkspaceJ
 with api.LogoThunkFactory with api.ParserServices
 with Workspace with Procedures with Plotting with Exporting with Evaluating with Benchmarking
 with Compiling with Profiling with Extensions with BehaviorSpace with Paths with Checksums
@@ -36,7 +36,7 @@ with RunCache with Jobs with Warning with OutputArea with Importing {
   /**
    * previewCommands used by make-preview and model test
    */
-  var previewCommands = AbstractWorkspaceScala.DefaultPreviewCommands
+  var previewCommands = AbstractWorkspace.DefaultPreviewCommands
 
   val lastRunTimes = new WeakHashMap[Job, WeakHashMap[Agent, WeakHashMap[Command, MutableLong]]]
 
@@ -97,7 +97,7 @@ with RunCache with Jobs with Warning with OutputArea with Importing {
 
 object AbstractWorkspaceTraits {
 
-  trait Compiling { this: AbstractWorkspaceScala =>
+  trait Compiling { this: AbstractWorkspace =>
 
     override def readNumberFromString(source: String) =
       compiler.readNumberFromString(
@@ -136,7 +136,7 @@ object AbstractWorkspaceTraits {
 
   }
 
-  trait Procedures { this: AbstractWorkspaceScala =>
+  trait Procedures { this: AbstractWorkspace =>
     var procedures: ParserInterface.ProceduresMap =
       ParserInterface.NoProcedures
     def init() {
@@ -145,7 +145,7 @@ object AbstractWorkspaceTraits {
   }
 
 
-  trait Plotting { this: AbstractWorkspaceScala with Evaluating =>
+  trait Plotting { this: AbstractWorkspace with Evaluating =>
 
     val plotManager = new PlotManager(this)
 
@@ -171,7 +171,7 @@ object AbstractWorkspaceTraits {
 
   }
 
-  trait Exporting extends Plotting { this: AbstractWorkspaceScala with Evaluating =>
+  trait Exporting extends Plotting { this: AbstractWorkspace with Evaluating =>
 
     def exportDrawingToCSV(writer:PrintWriter)
     def exportOutputAreaToCSV(writer:PrintWriter)
@@ -270,7 +270,7 @@ object AbstractWorkspaceTraits {
 
   }
 
-  trait Evaluating { this: AbstractWorkspaceScala =>
+  trait Evaluating { this: AbstractWorkspace =>
     val evaluator = new Evaluator(this)
     def makeReporterThunk(source: String, jobOwnerName: String): ReporterLogoThunk =
       evaluator.makeReporterThunk(source, world.observer,
@@ -315,7 +315,7 @@ object AbstractWorkspaceTraits {
       evaluator.readFromString(string)
   }
 
-  trait Benchmarking { this: AbstractWorkspaceScala =>
+  trait Benchmarking { this: AbstractWorkspace =>
     override def benchmark(minTime: Int, maxTime: Int) {
       new Thread("__bench") {
         override def run() {
@@ -325,7 +325,7 @@ object AbstractWorkspaceTraits {
     }
   }
 
-  trait Profiling { this: AbstractWorkspaceScala =>
+  trait Profiling { this: AbstractWorkspace =>
     private var _tracer: org.nlogo.nvm.Tracer = null
     override def profilingEnabled = _tracer != null
     override def profilingTracer = _tracer
@@ -334,7 +334,7 @@ object AbstractWorkspaceTraits {
     }
   }
 
-  trait Extensions { this: AbstractWorkspaceScala =>
+  trait Extensions { this: AbstractWorkspace =>
     private val _extensionManager: ExtensionManager =
       new ExtensionManager(this)
     override def getExtensionManager =
@@ -347,7 +347,7 @@ object AbstractWorkspaceTraits {
     }
   }
 
-  trait Checksums { this: AbstractWorkspaceScala =>
+  trait Checksums { this: AbstractWorkspace =>
     override def worldChecksum =
       Checksummer.calculateWorldChecksum(this)
     override def graphicsChecksum =
@@ -362,7 +362,7 @@ object AbstractWorkspaceTraits {
     }
   }
 
-  trait Paths { this: AbstractWorkspaceScala =>
+  trait Paths { this: AbstractWorkspace =>
 
     /**
      * name of the currently loaded model. Will be null if this is a new
@@ -425,7 +425,7 @@ object AbstractWorkspaceTraits {
       _modelType == ModelType.New || _modelType == ModelType.Library
 
     def modelNameForDisplay =
-      AbstractWorkspace.makeModelNameForDisplay(_modelFileName)
+      AbstractWorkspaceJ.makeModelNameForDisplay(_modelFileName)
 
     def setModelPath(modelPath: String) {
       if (modelPath == null) {
@@ -447,7 +447,7 @@ object AbstractWorkspaceTraits {
 
   // this is used to cache the compiled code used by the "run"
   // and "runresult" prims - ST 6/7/07
-  trait RunCache { this: AbstractWorkspaceScala =>
+  trait RunCache { this: AbstractWorkspace =>
     private val runCache = new java.util.WeakHashMap[String, Procedure]
     def clearRunCache() {
       runCache.clear()
@@ -464,7 +464,7 @@ object AbstractWorkspaceTraits {
     }
   }
 
-  trait Jobs { this: AbstractWorkspaceScala =>
+  trait Jobs { this: AbstractWorkspace =>
     val jobManager =
       Femto.get(classOf[nvm.JobManagerInterface], "org.nlogo.job.JobManager",
         Array[AnyRef](this, world, world))
@@ -496,7 +496,7 @@ object AbstractWorkspaceTraits {
     }
   }
 
-  trait OutputArea { this: AbstractWorkspaceScala =>
+  trait OutputArea { this: AbstractWorkspace =>
 
     def clearOutput()
 
