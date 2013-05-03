@@ -51,7 +51,7 @@ object StructureParser {
           "Included files must end with .nls",
           results.includes.head)
         val newResults =
-          parseOne(extensionManager.getSource(path), path, results)
+          parseOne(api.FileIO.file2String(path), path, results)
         newResults.copy(includes = newResults.includes.filterNot(_ == results.includes.head))
       }.dropWhile(_.includes.nonEmpty).next
     if(!subprogram) {

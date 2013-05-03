@@ -100,11 +100,6 @@ public strictfp class ExtensionManager
     return result;
   }
 
-  public String getSource(String filename)
-      throws java.io.IOException {
-    return workspace.getSource(filename);
-  }
-
   public org.nlogo.api.File getFile(String path)
       throws ExtensionException {
     org.nlogo.nvm.FileManager fm = workspace().fileManager();

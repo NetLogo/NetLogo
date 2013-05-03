@@ -204,18 +204,6 @@ public abstract strictfp class AbstractWorkspace
     importer.doImport(new org.nlogo.api.LocalFile(importer.filename));
   }
 
-  public String getSource(String filename)
-      throws java.io.IOException {
-    // when we stick a string into a JTextComponent, \r\n sequences
-    // on Windows will get translated to just \n.  This is a problem
-    // because when an error occurs we want to highlight the location
-    // using the token location information recorded by the tokenizer,
-    // but the removal of the \r characters will throw off that information.
-    // So we do the stripping of \r here, *before* we run the tokenizer,
-    // and that avoids the problem. - ST 9/14/04
-    return new org.nlogo.api.LocalFile(filename).readFile().replaceAll("\r\n", "\n");
-  }
-
   public abstract World world();
   public abstract CompilerInterface compiler();
   public abstract ParserInterface parser();
