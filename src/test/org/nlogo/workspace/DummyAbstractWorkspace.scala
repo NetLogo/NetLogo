@@ -13,6 +13,7 @@ import org.nlogo.api
 class DummyAbstractWorkspace
 extends AbstractWorkspaceScala(new World)
 {
+  dispose() // don't leak a JobThread - ST 5/2/13
   private def unsupported = throw new UnsupportedOperationException
   override def compilerTestingMode = false
   override def waitFor(runnable: api.CommandRunnable): Unit = unsupported
