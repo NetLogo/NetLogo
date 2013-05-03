@@ -104,20 +104,16 @@ class LiteralParser(
     list
   }
 
-  // First group: extension name; second group: extension type name; last group: all the data
-  private val ExtensionTypePattern =
-    java.util.regex.Pattern.compile(
-      "\\{\\{(\\S*):(\\S*)\\s(.*)\\}\\}");
-
   def parseExtensionLiteral(token: Token): AnyRef = {
     // we shouldn't get here if we aren't importing, but check just in case
     cAssert(world != null, ERR_ILLEGAL_AGENT_LITERAL, token)
-    val matcher = ExtensionTypePattern.matcher(token.value.asInstanceOf[String])
-    if(matcher.matches)
-      extensionManager.readExtensionObject(
-        matcher.group(1), matcher.group(2), matcher.group(3))
-    // if we can't deconstruct it, then return the whole LITERAL
-    else token.value
+    val LiteralRegex = """\{\{(\S*):(\S*)\s(.*)\}\}""".r
+    token.value match {
+      case LiteralRegex(extName, typeName, data) =>
+        extensionManager.readExtensionObject(extName, typeName, data)
+      case x =>
+        x
+    }
   }
 
 }
