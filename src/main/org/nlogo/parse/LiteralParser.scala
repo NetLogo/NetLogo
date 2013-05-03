@@ -7,42 +7,25 @@ import org.nlogo.{ api, agent }, api.{ Token, TokenType }, Fail._
 /**
  * The literal parser.
  * This class contains methods which are used to parse literal NetLogo values
- * from a Iterator[Token]. It implements all the complicated stuff surrounding
- * literal agents and literal agentsets, when necessary.
+ * from a Iterator[Token]. (It hands off all the complicated import-world stuff
+ * involving literal agents and literal agentsets to LiteralAgentParser.)
  */
 class LiteralParser(
-  world: agent.World = null, extensionManager: api.ExtensionManager = null) {
+  world: api.World = null, extensionManager: api.ExtensionManager = null) {
 
   /// all error messages used in this class
-  private val BAD_AGENT = "Not an agent"
-  private val BAD_PATCH_SET_ARGS = "Patch agentsets are given by a set of 2 element integer lists containing a patch's pxcor and pycor"
-  private val BAD_PATCH_ARGS = "pxcor and pycor must be floats"
-  private val BAD_LINK_ARGS = "end1 and end2 must be floats"
-  private val BAD_TURTLE_SET_ARGS = "Turtle agentsets are given by a set of turtles' who numbers"
-  private val BAD_LINK_SET_ARGS = "Link agentsets are given by a set of links' endpoints and breeds"
-  private val BAD_TURTLE_ARG = "a turtle's who number must be an integer"
-  private val EXPECTED_BREED = "Expected breed"
-  private val EXPECTED_CLOSEBRACE = "Expected closing brace."
-  private val EXPECTED_CLOSEPAREN = "Expected a closing parenthesis."
-  private val EXPECTED_LITERAL = "Expected a literal value."
-  private val EXPECTED_NUMBER = "Expected a number."
-  private val EXPECTED_INT_ETC = "Expected number, list, string or boolean"
-  private val EXTRA_STUFF_AFTER_LITERAL = "Extra characters after literal."
-  private val EXTRA_STUFF_AFTER_NUMBER = "Extra characters after number."
-  private val ILLEGAL_AGENT_LITERAL = "Can only have literal agents and agentsets if importing."
-  private val MISSING_CLOSEBRACKET = "No closing bracket for this open bracket."
-  private val NOT_AN_AGENTSET = " is not an agentset"
-  private val NOT_A_BREED = " is not a breed"
+  private val ERR_EXPECTED_CLOSEPAREN = "Expected a closing parenthesis."
+  private val ERR_EXPECTED_LITERAL = "Expected a literal value."
+  private val ERR_EXPECTED_NUMBER = "Expected a number."
+  private val ERR_EXPECTED_INT_ETC = "Expected number, list, string or boolean"
+  private val ERR_EXTRA_STUFF_AFTER_LITERAL = "Extra characters after literal."
+  private val ERR_EXTRA_STUFF_AFTER_NUMBER = "Extra characters after number."
+  private val ERR_MISSING_CLOSEBRACKET = "No closing bracket for this open bracket."
+  private val ERR_ILLEGAL_AGENT_LITERAL = "Can only have literal agents and agentsets if importing."
 
-  /// magic keys used to identify agent set types.
-  private val SET_TYPE_ALLPATCHES = "ALL-PATCHES"
-  private val SET_TYPE_ALLTURTLES = "ALL-TURTLES"
-  private val SET_TYPE_ALLLINKS   = "ALL-LINKS"
-  private val SET_TYPE_BREED      = "BREED"
-  private val SET_TYPE_OBSERVER   = "OBSERVER"
-
-  // First group: extension name; second group: extension type name; last group: all the data
-  private val EXTENSION_TYPE_PATTERN = java.util.regex.Pattern.compile("\\{\\{(\\S*):(\\S*)\\s(.*)\\}\\}");
+  private val parseLiteralAgentOrAgentSet =
+    new agent.LiteralAgentParser(world, extensionManager,
+      readLiteralPrefix _, cAssert _, exception _).parseLiteralAgentOrAgentSet _
 
   /**
   * reads a literal value from a token vector. The entire vector must denote a single literal
@@ -55,7 +38,7 @@ class LiteralParser(
     val result = readLiteralPrefix(tokens.next(), tokens)
     // make sure there's no extra stuff at the end...
     val extra = tokens.next()
-    cAssert(extra.tpe == TokenType.EOF, EXTRA_STUFF_AFTER_LITERAL, extra)
+    cAssert(extra.tpe == TokenType.EOF, ERR_EXTRA_STUFF_AFTER_LITERAL, extra)
     result
   }
 
@@ -66,13 +49,13 @@ class LiteralParser(
   def getNumberValue(tokens: Iterator[Token]) = {
     val token = tokens.next()
     if(token.tpe != TokenType.Constant || !token.value.isInstanceOf[java.lang.Double])
-      exception(EXPECTED_NUMBER, token)
+      exception(ERR_EXPECTED_NUMBER, token)
     val extra = tokens.next()
-    cAssert(extra.tpe == TokenType.EOF, EXTRA_STUFF_AFTER_NUMBER, extra)
+    cAssert(extra.tpe == TokenType.EOF, ERR_EXTRA_STUFF_AFTER_NUMBER, extra)
     token.value.asInstanceOf[java.lang.Double]
   }
 
-  /**
+ /**
   * reads a literal value from the beginning of a token vector. This
   * method leaves the rest of the token vector intact (i.e., extra garbage
   * after the literal is OK).
@@ -81,10 +64,10 @@ class LiteralParser(
   * @param world  the current world. It's OK for this to be null, and if it
   *               is, literal agents and agentsets will cause an error.
   */
-  private def readLiteralPrefix(token: Token, tokens: Iterator[Token]): AnyRef = {
+  def readLiteralPrefix(token: Token, tokens: Iterator[Token]): AnyRef = {
     token.tpe match {
       case TokenType.Literal =>
-        parseSimpleLiteral(token)
+        parseExtensionLiteral(token)
       case TokenType.Constant =>
         token.value
       case TokenType.OpenBracket =>
@@ -97,17 +80,17 @@ class LiteralParser(
         // itself. since we don't do syntax highlighting, it doesn't matter so much what the token
         // is, and we use a message which doesn't rely on that context.
         val closeParen = tokens.next()
-        cAssert(closeParen.tpe == TokenType.CloseParen, EXPECTED_CLOSEPAREN, closeParen)
+        cAssert(closeParen.tpe == TokenType.CloseParen, ERR_EXPECTED_CLOSEPAREN, closeParen)
         result
       case TokenType.Comment =>
         // just skip comments when reading a literal - ev 7/10/07
         readLiteralPrefix(tokens.next(), tokens)
       case _ =>
-        exception(EXPECTED_LITERAL, token)
+        exception(ERR_EXPECTED_LITERAL, token)
     }
   }
 
-  /**
+ /**
   * parses a literal list. Assumes the open bracket was already eaten.  Eats the list
   * contents and the close bracket.
   */
@@ -118,197 +101,27 @@ class LiteralParser(
       val token = tokens.next()
       token.tpe match {
         case TokenType.CloseBracket => done = true
-        case TokenType.EOF => exception(MISSING_CLOSEBRACKET, openBracket)
+        case TokenType.EOF => exception(ERR_MISSING_CLOSEBRACKET, openBracket)
         case _ => list = list.lput(readLiteralPrefix(token, tokens))
       }
     }
     list
   }
 
-  private def parseSimpleLiteral(token: Token): AnyRef = {
+  // First group: extension name; second group: extension type name; last group: all the data
+  private val ExtensionTypePattern =
+    java.util.regex.Pattern.compile(
+      "\\{\\{(\\S*):(\\S*)\\s(.*)\\}\\}");
+
+  def parseExtensionLiteral(token: Token): AnyRef = {
     // we shouldn't get here if we aren't importing, but check just in case
-    cAssert(world != null, ILLEGAL_AGENT_LITERAL, token)
-    val matcher = EXTENSION_TYPE_PATTERN.matcher(token.value.asInstanceOf[String])
+    cAssert(world != null, ERR_ILLEGAL_AGENT_LITERAL, token)
+    val matcher = ExtensionTypePattern.matcher(token.value.asInstanceOf[String])
     if(matcher.matches)
-      extensionManager.readExtensionObject(matcher.group(1), matcher.group(2), matcher.group(3))
+      extensionManager.readExtensionObject(
+        matcher.group(1), matcher.group(2), matcher.group(3))
     // if we can't deconstruct it, then return the whole LITERAL
     else token.value
-  }
-
-  /**
-  * parses a literal agent (e.g. "{turtle 3}" or "{patch 1 2}" or "{link 5 6}"
-  */
-  private def parseLiteralAgent(token: Token, tokens: Iterator[Token]) = {
-    // we shouldn't get here if we aren't importing, but check just in case
-    cAssert(world != null, ILLEGAL_AGENT_LITERAL, token)
-    token.value match {
-      case "PATCH" =>
-        val pxcor = parsePcor(tokens)
-        val pycor = parsePcor(tokens)
-        try world.getPatchAt(pxcor, pycor)
-        catch { case _: org.nlogo.api.AgentException =>
-                  exception("Invalid patch coordinates ( " + pxcor + " , " + pycor + " ) ", token) }
-      case "TURTLE" =>
-        val token = tokens.next()
-        if(token.tpe != TokenType.Constant || !token.value.isInstanceOf[java.lang.Double])
-          exception(BAD_TURTLE_ARG, token)
-        world.getOrCreateTurtle(token.value.asInstanceOf[java.lang.Double].longValue)
-      case "LINK" =>
-        world.getOrCreateLink(
-          parseEnd(tokens),
-          parseEnd(tokens),
-          world.links)
-      case _ =>
-        exception(BAD_AGENT, token)
-    }
-  }
-
-  /**
-   * parses a double. This is a helper method for parseLiteralAgent().
-   */
-  private def parsePcor(tokens: Iterator[Token]): Double = {
-    val token = tokens.next()
-    cAssert(token.tpe == TokenType.Constant && token.value.isInstanceOf[java.lang.Double],
-            BAD_PATCH_ARGS, token)
-    token.value.asInstanceOf[Double].doubleValue
-  }
-
-  private def parseEnd(tokens: Iterator[Token]): java.lang.Double = {
-    val token = tokens.next()
-    cAssert(token.tpe == TokenType.Constant && token.value.isInstanceOf[java.lang.Double],
-            BAD_LINK_ARGS, token)
-    token.value.asInstanceOf[java.lang.Double]
-  }
-
-  /**
-   * parses a literal agent or agentset. It recognizes a number of forms:
-   *   {turtle 4} {patch 0 1} {breed-singular 2} {all-turtles} {all-patches} {observer}
-   *   {breed some-breed} {turtles 1 2 3 4 5} {patches [1 2] [3 4] [5 6]} {links [0 1] [1 2]}
-   * To parse the turtle and patch forms, it uses parseLiteralAgent().
-   */
-  private def parseLiteralAgentOrAgentSet(braceToken: Token, tokens: Iterator[Token]): AnyRef = {  // returns Agent or AgentSet
-    // we shouldn't get here if we aren't importing, but check just in case
-    cAssert(world != null, ILLEGAL_AGENT_LITERAL, braceToken)
-    val token = tokens.next()
-    // next token should be an identifier or reporter. reporter is a special case because "turtles"
-    // and "patches" end up getting turned into Reporters when tokenizing, which is kind of ugly.
-    cAssert(List(TokenType.Variable, TokenType.Ident, TokenType.Reporter).contains(token.tpe),
-            EXPECTED_BREED, token)
-    val agentsetTypeString = token.value.asInstanceOf[String]
-    if(agentsetTypeString.equalsIgnoreCase(SET_TYPE_BREED)) {
-      // we have a breed agentset
-      val breedToken = tokens.next()
-      cAssert(breedToken.tpe == TokenType.Ident, EXPECTED_BREED, breedToken)
-      val closeBrace = tokens.next()
-      cAssert(closeBrace.tpe == TokenType.CloseBrace, EXPECTED_CLOSEBRACE, closeBrace)
-      // this is safe since it must be an IDENT.
-      val breedString = breedToken.value.asInstanceOf[String]
-      val breed = {
-        val b = world.getBreed(breedString)
-        if(b != null) b
-        else world.getLinkBreed(breedString)
-      }
-      cAssert(breed != null, breedString + NOT_A_BREED, token)
-      breed
-    }
-    else if(List(SET_TYPE_ALLTURTLES, SET_TYPE_ALLPATCHES, SET_TYPE_ALLLINKS)
-            .contains(agentsetTypeString.toUpperCase)) {
-      // we have the turtles or patches agentset. make sure that's
-      // all we have...
-      val closeBrace = tokens.next()
-      cAssert(closeBrace.tpe == TokenType.CloseBrace, EXPECTED_CLOSEBRACE, closeBrace)
-      agentsetTypeString.toUpperCase match {
-        case SET_TYPE_ALLTURTLES => world.turtles
-        case SET_TYPE_ALLLINKS => world.links
-        case SET_TYPE_ALLPATCHES => world.patches
-      }
-    }
-    else if(agentsetTypeString.equalsIgnoreCase(SET_TYPE_OBSERVER)) {
-      // we have the observer agentset. make sure that's all we have...
-      val closeBrace = tokens.next()
-      cAssert(closeBrace.tpe == TokenType.CloseBrace, EXPECTED_CLOSEBRACE, closeBrace)
-      agent.AgentSet.fromAgent(world.observer)
-    }
-    else if(world.program.breeds.values.exists(_.singular == agentsetTypeString.toUpperCase)) {
-      val token = tokens.next()
-      if(token.tpe != TokenType.Constant || !token.value.isInstanceOf[java.lang.Double])
-        exception(BAD_TURTLE_ARG, token)
-      val closeBrace = tokens.next()
-      cAssert(closeBrace.tpe == TokenType.CloseBrace, EXPECTED_CLOSEBRACE, closeBrace)
-      world.getOrCreateTurtle(token.value.asInstanceOf[java.lang.Double].intValue)
-    }
-    else if(world.program.linkBreeds.values.exists(_.singular == agentsetTypeString.toUpperCase)) {
-      val end1 = parseEnd(tokens)
-      val end2 = parseEnd(tokens)
-      val closeBrace = tokens.next()
-      cAssert(closeBrace.tpe == TokenType.CloseBrace, EXPECTED_CLOSEBRACE, closeBrace)
-      world.getOrCreateLink(
-        end1, end2,
-        world.getLinkBreed(
-          world.program.linkBreeds.values.find(
-            _.singular == agentsetTypeString.toUpperCase).get.name))
-    }
-    else if(token.value == "TURTLES") {
-      // we have an agentset of turtles. parse arguments...
-      val builder = new agent.AgentSetBuilder(api.AgentKind.Turtle)
-      var token = tokens.next()
-      while(token.tpe != TokenType.CloseBrace) {
-        val value = readLiteralPrefix(token, tokens)
-        cAssert(value.isInstanceOf[java.lang.Double], BAD_TURTLE_SET_ARGS, token)
-        builder.add(world.getOrCreateTurtle(value.asInstanceOf[java.lang.Double].intValue))
-        token = tokens.next()
-      }
-      builder.build()
-    }
-    else if(token.value == "LINKS") {
-      // we have an agentset of links. parse arguments...
-      val builder = new agent.AgentSetBuilder(api.AgentKind.Link)
-      var token = tokens.next()
-      while(token.tpe != TokenType.CloseBrace) {
-        cAssert(token.tpe == TokenType.OpenBracket, BAD_LINK_SET_ARGS, token)
-        val listVal = readLiteralPrefix(token, tokens).asInstanceOf[api.LogoList]
-        cAssert(listVal.size == 3 &&
-                listVal.get(0).isInstanceOf[java.lang.Double] &&
-                listVal.get(1).isInstanceOf[java.lang.Double] &&
-                listVal.get(2).isInstanceOf[agent.AgentSet],
-                BAD_LINK_SET_ARGS, token)
-        val link = world.getOrCreateLink(listVal.get(0).asInstanceOf[java.lang.Double],
-                                         listVal.get(1).asInstanceOf[java.lang.Double],
-                                         listVal.get(2).asInstanceOf[agent.AgentSet])
-        if(link != null) builder.add(link)
-        token = tokens.next()
-      }
-      builder.build()
-    }
-    else if(token.value == "PATCHES") {
-      // we have an agentset of patches. parse arguments...
-      val builder = new agent.AgentSetBuilder(api.AgentKind.Patch)
-      var token = tokens.next()
-      while(token.tpe != TokenType.CloseBrace) {
-        cAssert(token.tpe == TokenType.OpenBracket, BAD_PATCH_SET_ARGS, token)
-        val listVal = readLiteralPrefix(token, tokens).asInstanceOf[api.LogoList]
-        cAssert(listVal.size == 2 && listVal.scalaIterator.forall(_.isInstanceOf[java.lang.Double]),
-                BAD_PATCH_SET_ARGS, token)
-        try
-          builder.add(
-            world.getPatchAt(listVal.get(0).asInstanceOf[java.lang.Double].intValue,
-              listVal.get(1).asInstanceOf[java.lang.Double].intValue))
-        catch {
-          case _: org.nlogo.api.AgentException =>
-            exception("Invalid patch coordinates in one of the agents of this set.", token)
-        }
-        token = tokens.next()
-      }
-      builder.build()
-    }
-    else if (List("TURTLE", "PATCH", "LINK").contains(token.value)) {
-      // we have a single agent
-      val result = parseLiteralAgent(token, tokens)
-      val closeBrace = tokens.next()
-      cAssert(closeBrace.tpe == TokenType.CloseBrace, EXPECTED_CLOSEBRACE, closeBrace)
-      result
-    }
-    else exception(agentsetTypeString + NOT_AN_AGENTSET, token)
   }
 
 }
