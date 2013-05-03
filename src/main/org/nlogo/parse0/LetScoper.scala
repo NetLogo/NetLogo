@@ -8,6 +8,10 @@ import Fail._
 // also returned, so they can be used by IdentifierParser to connect _letvariable references to the
 // right Lets.
 
+// (It's rather weird that this happens before ExpressionParser, so we have to resort to
+// bracket-counting to determine the scopes.  Perhaps this should be moved to happen after
+// ExpressionParser -- then we would have the actual tree structure to work with. - ST 5/3/13)
+
 class LetScoper(tokens: Iterable[Token]) {
 
   private val iter = new CountedIterator(tokens.iterator)
