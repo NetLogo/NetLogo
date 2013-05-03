@@ -5,7 +5,6 @@ package org.nlogo.parse
 import org.scalatest.FunSuite
 import collection.immutable.ListMap
 import org.nlogo.api.{ Breed, Program, Token, TokenType }
-import org.nlogo.prim._
 import BreedIdentifierHandler.Spec
 
 class BreedIdentifierHandlerTests extends FunSuite {
@@ -25,39 +24,35 @@ class BreedIdentifierHandlerTests extends FunSuite {
 
   test("turtleBreedIdentifier") {
     val token = tester(BreedIdentifierHandler.turtle(Spec("CREATE-*", TokenType.Command, false,
-      classOf[_createturtles])),
+      "_createturtles")),
       "breed[frogs frog] to foo create-frogs 1 end", "CREATE-FROGS")
-    assert(token.value.isInstanceOf[_createturtles])
     expectResult("_createturtles:FROGS,+0")(token.value.toString)
   }
 
   test("directedLinkBreedIdentifier1") {
     val token = tester(BreedIdentifierHandler.directedLink(Spec
       ("CREATE-*-TO", TokenType.Command, true,
-        classOf[_createlinkto])),
+        "_createlinkto")),
       "directed-link-breed[as a] to foo ask turtle 0 [ create-a-to turtle 1 ] end",
       "CREATE-A-TO")
-    assert(token.value.isInstanceOf[_createlinkto])
     expectResult("_createlinkto:AS,+0")(token.value.toString)
   }
 
   test("directedLinkBreedIdentifier2") {
     val token = tester(BreedIdentifierHandler.directedLink(Spec
       ("OUT-*-NEIGHBOR?", TokenType.Reporter, true,
-        classOf[_outlinkneighbor])),
+        "_outlinkneighbor")),
       "directed-link-breed[as a] to foo ask turtle 0 [ print out-a-neighbor? turtle 1 ] end",
       "OUT-A-NEIGHBOR?")
-    assert(token.value.isInstanceOf[_outlinkneighbor])
     expectResult("_outlinkneighbor:AS")(token.value.toString)
   }
 
   test("undirectedLinkBreedIdentifier") {
     val token = tester(BreedIdentifierHandler.undirectedLink(Spec
       ("CREATE-*-WITH", TokenType.Command, true,
-        classOf[_createlinkwith])),
+        "_createlinkwith")),
       "undirected-link-breed[bs b] to foo ask turtle 0 [ create-b-with turtle 1 ] end",
       "CREATE-B-WITH")
-    assert(token.value.isInstanceOf[_createlinkwith])
     expectResult("_createlinkwith:BS,+0")(token.value.toString)
   }
 
