@@ -1,13 +1,18 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.parse
+package org.nlogo.parse0
 
 import org.scalatest.FunSuite
 import collection.immutable.ListMap
-import org.nlogo.api.{ Breed, Program, Token, TokenType }
+import org.nlogo.api, api.{ Breed, Program, Token, TokenType }
+import org.nlogo.util.Femto
 import BreedIdentifierHandler.Spec
 
 class BreedIdentifierHandlerTests extends FunSuite {
+
+  val tokenizer =
+    Femto.get(classOf[api.TokenizerInterface],
+      "org.nlogo.lex.Tokenizer", Array())
 
   def tester(handler: BreedIdentifierHandler.Helper, code: String, tokenString: String): (String, String, TokenType) = {
     val program =
@@ -17,7 +22,7 @@ class BreedIdentifierHandlerTests extends FunSuite {
           "AS" -> Breed("AS", "A", isDirected = true),
           "BS" -> Breed("BS", "B", isDirected = false)))
     handler.process(
-      Parser.tokenizer.tokenize(code).find(_.name.equalsIgnoreCase(tokenString)).orNull,
+      tokenizer.tokenize(code).find(_.name.equalsIgnoreCase(tokenString)).orNull,
       program)
       .get
   }

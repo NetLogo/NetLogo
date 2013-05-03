@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.parse
+package org.nlogo.parse0
 
 import org.nlogo.api,
   api.{ AgentSet, Breed, Program, Token, TokenType },

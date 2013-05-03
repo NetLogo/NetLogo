@@ -135,7 +135,7 @@ class IdentifierParser(
                ident, TokenType.Reporter, tok.startPos, tok.endPos, tok.fileName)
     else
       // go thru our identifierHandlers, if one triggers, return the result
-      BreedIdentifierHandler.process(tok, program) match {
+      parse0.BreedIdentifierHandler.process(tok, program) match {
         case Some((className, breedName, tokenType)) =>
           val instr = Instantiator.newInstance[api.TokenHolder](
             Class.forName("org.nlogo.prim." + className), breedName)
