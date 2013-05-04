@@ -19,14 +19,14 @@ object Depend {
     depend <<= (fullClasspath in Test, classDirectory in Compile, classDirectory in Test, streams, thisProject).map{
       (cp, classes, testClasses, s, project) => lock.synchronized {
         s.log.info("begin depend: " + project.id)
-        IO.write(file(".") / "tmp" / "depend.ddf", ddfContents)
+        IO.write(file(".") / "target" / "depend.ddf", ddfContents)
         import classycle.dependency.DependencyChecker
         def main() = TrapExit(
-          DependencyChecker.main(Array("-dependencies=@tmp/depend.ddf",
+          DependencyChecker.main(Array("-dependencies=@target/depend.ddf",
                                        classes.toString)),
           s.log)
         def test() = TrapExit(
-          DependencyChecker.main(Array("-dependencies=@tmp/depend.ddf",
+          DependencyChecker.main(Array("-dependencies=@target/depend.ddf",
                                        testClasses.toString)),
           s.log)
         s.log.info("depend: " + classes.toString)

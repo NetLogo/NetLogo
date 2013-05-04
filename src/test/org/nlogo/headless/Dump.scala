@@ -8,7 +8,7 @@ import org.nlogo.api.SimpleJobOwner
 
 // This is used by the "bench" target in the Makefile.  You can __dump a compiled model
 // to stdout, or replace all of the benchmark model dumps in test/benchdumps, or dump
-// the whole models library to tmp/dumps. - ST 2/11/09
+// the whole models library to target/dumps. - ST 2/11/09
 
 object Dump {
   def main(argv:Array[String]) {
@@ -38,14 +38,14 @@ object Dump {
                 dump(benchPath(name)))
   }
   def dumpAll() {
-    Runtime.getRuntime().exec("rm -r tmp/dumps").waitFor()
-    Runtime.getRuntime().exec("mkdir -p tmp/dumps").waitFor()
+    Runtime.getRuntime().exec("rm -r target/dumps").waitFor()
+    Runtime.getRuntime().exec("mkdir -p target/dumps").waitFor()
     //
     for(path <- ModelsLibrary.getModelPaths)
     {
       val name = path.split("/").last.toList.dropRight(".nlogo".size).mkString
       print('.')
-      writeFile("tmp/dumps/" + name + ".txt",dump(path))
+      writeFile("target/dumps/" + name + ".txt",dump(path))
     }
     println
   }

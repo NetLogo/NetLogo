@@ -16,16 +16,16 @@ object Classycle {
     }.dependsOn(compile in Compile)
 
   private def runClassycle(classes: java.io.File) {
-    "mkdir -p tmp".!
-    "cp -f project/classycle/reportXMLtoHTML.xsl tmp".!
-    "rm -rf tmp/images".!
-    "cp -rp project/classycle/images tmp/images".!
+    "mkdir -p target/classycle".!
+    "cp -f project/classycle/reportXMLtoHTML.xsl target/classycle".!
+    "rm -rf target/classycle/images".!
+    "cp -rp project/classycle/images target/classycle/images".!
     Analyser.main(
       Array(
-        "-xmlFile=tmp/classycle.xml",
+        "-xmlFile=target/classycle/classycle.xml",
         "-mergeInnerClasses",
         classes.getAbsolutePath.toString))
-    "open -a Safari tmp/classycle.xml".!
+    "open -a Safari target/classycle/classycle.xml".!
   }
 
 }
