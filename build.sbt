@@ -69,6 +69,8 @@ seq(Testing.settings: _*)
 
 seq(Depend.settings: _*)
 
+seq(Classycle.settings: _*)
+
 seq(Dump.settings: _*)
 
 seq(ChecksumsAndPreviews.settings: _*)
