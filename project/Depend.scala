@@ -83,32 +83,48 @@ object Depend {
     def generate(p: Package) {
       val name = p.dir.replaceAll("/",".")
       println("[" + name + "] = org.nlogo." + name + ".* excluding org.nlogo." + name + ".*.*")
-      println("[" + name + "+] = [" + name + "]" + p.depends.map(p2 => "[" + p2.dir.replaceAll("/",".") + "+]").mkString(" "," ",""))
-      println("[" + name + "-] = org.nlogo.* excluding [" + name + "+]")
-      println("check [" + name + "] independentOf [" + name + "-]")
+      println("[" + name + "+] = [" + name + "]" + p.depends.map(p2 => "[" + p2.dir.replaceAll("/",".") + "+]").mkString(" "," ","") + " [libs]")
+      println("check [" + name + "] dependentOnlyOn [" + name + "+]")
       println("")
     }
+    def generateHeader() {
+      println("""
+check absenceOfPackageCycles > 1 in org.nlogo.*
+
+[headless-AWT] = java.awt.geom.* java.awt.image.* java.awt.Color java.awt.Image java.awt.Shape java.awt.Graphics2D java.awt.Graphics java.awt.Stroke java.awt.Composite java.awt.BasicStroke java.awt.Point java.awt.Font java.awt.AlphaComposite java.awt.RenderingHints java.awt.Rectangle java.awt.FontMetrics java.awt.color.ColorSpace java.awt.Polygon java.awt.RenderingHints$Key javax.imageio.* javax.swing.tree.MutableTreeNode javax.swing.tree.DefaultMutableTreeNode
+
+[stdlib-j] = java.lang.* java.util.* java.io.* java.text.* java.net.* java.security.* org.w3c.dom.* org.xml.sax.* javax.xml.parsers.* [headless-AWT]
+
+[stdlib-s] = scala.Serializable scala.Predef* scala.collection.* scala.reflect.* scala.Function* scala.UninitializedFieldError scala.util.control.Exception* scala.Array* scala.LowPriorityImplicits scala.package$ scala.util.Properties$ scala.Option* scala.Tuple* scala.Product* scala.util.DynamicVariable scala.runtime.* scala.math.* scala.None* scala.Some* scala.MatchError scala.util.Left* scala.util.Right* scala.util.Either* scala.io.* scala.sys.package* scala.Console* scala.PartialFunction* scala.util.parsing* scala.util.matching.Regex* scala.Enumeration* scala.Proxy* scala.FallbackArrayBuilding scala.util.Sorting* scala.util.Random
+
+[asm] = org.objectweb.asm.*
+
+[testing] = org.scalatest.* org.scalacheck.* org.jmock.* org.hamcrest.*
+
+[libs] = [stdlib-j] [stdlib-s] [headless-AWT] [asm] [testing]
+""")
+    }
+
     def generateFooter() {
       println("""
 ### checks on AWT, Swing
 
 [Sun-Swing] = javax.swing.* excluding javax.swing.tree.MutableTreeNode javax.swing.tree.DefaultMutableTreeNode
 [Sun-AWT] = java.awt.*
-[headless-AWT] = java.awt.geom.* java.awt.image.* java.awt.Color java.awt.Image java.awt.Shape java.awt.Graphics2D java.awt.Graphics java.awt.Stroke java.awt.Composite java.awt.BasicStroke java.awt.Point java.awt.Font java.awt.AlphaComposite java.awt.RenderingHints java.awt.Rectangle java.awt.FontMetrics java.awt.color.ColorSpace java.awt.Polygon java.awt.RenderingHints$Key
 [bad-AWT] = java.awt.* excluding [headless-AWT]
 
 check [util+] independentOf [Sun-AWT]
-check [headless+] independentOf [Sun-Swing] [bad-AWT]
+check org.nlogo.* independentOf [Sun-Swing] [bad-AWT]
 
 ### checks on external libraries
 
 [ASM-free-zone] = org.nlogo.* excluding [generate]
 check [ASM-free-zone] independentOf org.objectweb.*
-
 """
               )
     }
 
+    generateHeader()
     var done = List(allPackages.find(_.dir == "").get)
     def eligible(p:Package) = !done.contains(p) && p.ancestors.forall(done.contains(_))
     while(true) {
