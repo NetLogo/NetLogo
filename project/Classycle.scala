@@ -16,6 +16,7 @@ object Classycle {
     }.dependsOn(compile in Compile)
 
   private def runClassycle(classes: java.io.File) {
+    "mkdir -p tmp".!
     "cp -f project/classycle/reportXMLtoHTML.xsl tmp".!
     "rm -rf tmp/images".!
     "cp -rp project/classycle/images tmp/images".!

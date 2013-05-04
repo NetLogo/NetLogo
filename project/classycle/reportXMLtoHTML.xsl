@@ -392,12 +392,13 @@
     <xsl:copy-of select="$infoLine"/>
     <table cellpadding="3" cellspacing="0" border="1" width="770">
       <tr>
-        <th>Class</th>
+        <th>Class/Package</th>
         <th>Size</th>
         <th>Used by</th>
         <th>Uses internal</th>
         <th>Uses external</th>
         <th>Layer</th>
+        <th>Source(s)</th>
       </tr>
       <xsl:for-each select="/classycle/classes/class|/classycle/packages/package">	
         <xsl:sort select="@name" case-order="upper-first" data-type="text"/>
@@ -479,6 +480,7 @@
             </td>
           </xsl:if>
           <td align="right"><xsl:value-of select="@layer"/></td>
+          <td align="left"><xsl:value-of select="@sources"/></td>
         </tr>
       </xsl:for-each>
     </table>
