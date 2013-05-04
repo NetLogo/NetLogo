@@ -16,8 +16,7 @@ import nvm.ParserInterface.ProceduresMap
 
 class IdentifierParser(
   program: Program,
-  oldProcedures: ProceduresMap,
-  newProcedures: ProceduresMap,
+  procedures: ProceduresMap,
   extensionManager: api.ExtensionManager,
   lets: Vector[Let]) {
 
@@ -141,10 +140,9 @@ class IdentifierParser(
           tok2
         case None =>
           val callproc =
-            oldProcedures.getOrElse(ident,
-              newProcedures.getOrElse(ident,
-                return newToken(getAgentVariableReporter(ident, tok),
-                                ident, TokenType.Reporter, tok.startPos, tok.endPos, tok.fileName)))
+            procedures.getOrElse(ident,
+              return newToken(getAgentVariableReporter(ident, tok),
+                              ident, TokenType.Reporter, tok.startPos, tok.endPos, tok.fileName))
           val (tokenType, caller) =
             if (callproc.isReporter)
               (TokenType.Reporter, new prim._callreport(callproc))

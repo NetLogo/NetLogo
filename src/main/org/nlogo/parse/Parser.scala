@@ -59,8 +59,9 @@ trait Parser extends nvm.ParserInterface {
           .scan(used1 ++ used2 ++ used3 ++ used4)
       }
       val iP =
-        new IdentifierParser(structureResults.program, oldProcedures,
-          structureResults.procedures, extensionManager, lets)
+        new IdentifierParser(structureResults.program,
+          oldProcedures ++ structureResults.procedures,
+          extensionManager, lets)
       val identifiedTokens =
         iP.process(rawTokens.iterator, procedure)  // resolve references
       new ExpressionParser(procedure, taskNumbers)
@@ -139,7 +140,8 @@ trait Parser extends nvm.ParserInterface {
                             None, StructureResults(program, procedures))
           .parse(subprogram = true)
       val identifierParser =
-        new IdentifierParser(program, procedures, results.procedures, extensionManager, Vector())
+        new IdentifierParser(program, procedures ++ results.procedures,
+          extensionManager, Vector())
       val proc = results.procedures.values.head
       val tokens = identifierParser.process(results.tokens(proc).iterator, proc)
       tokens
