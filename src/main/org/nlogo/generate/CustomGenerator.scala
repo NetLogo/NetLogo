@@ -193,7 +193,7 @@ class CustomGenerator(profilingEnabled: Boolean) {
       // operand stack: Activation Activation Activation Instruction
       mv.visitFieldInsn(GETFIELD, "org/nlogo/nvm/Instruction", "workspace", "Lorg/nlogo/nvm/Workspace;")
       // operand stack: Activation Activation Activation Workspace
-      mv.visitMethodInsn(INVOKEINTERFACE, "org/nlogo/nvm/Workspace", "profilingTracer", "()Lorg/nlogo/nvm/Tracer;");
+      mv.visitMethodInsn(INVOKEINTERFACE, "org/nlogo/nvm/Workspace", "profilingTracer", "()Lorg/nlogo/nvm/Tracer;")
       // operand stack: Activation Activation Activation Tracer
       mv.visitInsn(SWAP)
       // operand stack: Activation Activation Tracer Activation

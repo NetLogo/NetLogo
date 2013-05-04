@@ -11,7 +11,7 @@ class _right extends Command {
     Syntax.commandSyntax(
       Array(Syntax.NumberType), "-T--", true)
   override def perform(context: Context) {
-    perform_1(context, argEvalDoubleValue(context, 0));
+    perform_1(context, argEvalDoubleValue(context, 0))
   }
   def perform_1(context: Context, delta: Double) {
     context.agent.asInstanceOf[Turtle].turnRight(delta)

@@ -29,7 +29,7 @@ extends Job(owner, agentset, topLevelProcedure, address, parentContext, random) 
       context.activation =
         // if the Job was created by Evaluator, then we may have no parent context - ST 7/11/06
         if (parentContext == null)
-          new Activation(topLevelProcedure, null, address);
+          new Activation(topLevelProcedure, null, address)
         else
           parentContext.activation
       context.ip = address

@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.prim;
+package org.nlogo.prim
 
 import org.nlogo.api.{ Syntax, LogoList, LogoListBuilder }
 import org.nlogo.nvm.{ Context, Reporter, Pure, CustomGenerated }

@@ -51,7 +51,7 @@ class Graphics2DWrapper(g: Graphics2D, renderLabelsAsRectangles: Boolean = false
       g.drawString(label, 0, 0)
     }
   }
-  def fillCircle(x: Double, y: Double, xDiameter: Double, yDiameter: Double, scale: Double, angle: Double) = {
+  def fillCircle(x: Double, y: Double, xDiameter: Double, yDiameter: Double, scale: Double, angle: Double) {
     var sizeCorrection = 0.0
     var xCorrection = 0.0
     var yCorrection = 0.0
@@ -66,7 +66,7 @@ class Graphics2DWrapper(g: Graphics2D, renderLabelsAsRectangles: Boolean = false
       x + xCorrection, y + yCorrection,
       xDiameter + sizeCorrection, yDiameter + sizeCorrection))
   }
-  def drawCircle(x: Double, y: Double, xDiameter: Double, yDiameter: Double, scale: Double, angle: Double) = {
+  def drawCircle(x: Double, y: Double, xDiameter: Double, yDiameter: Double, scale: Double, angle: Double) {
     var sizeCorrection = 0.0
     var xCorrection = 0.0
     var yCorrection = 0.0
@@ -80,7 +80,7 @@ class Graphics2DWrapper(g: Graphics2D, renderLabelsAsRectangles: Boolean = false
       x + xCorrection, y + yCorrection,
       xDiameter + sizeCorrection, yDiameter + sizeCorrection))
   }
-  def fillRect(x: Double, y: Double, width: Double, height: Double, scale: Double, angle: Double) = {
+  def fillRect(x: Double, y: Double, width: Double, height: Double, scale: Double, angle: Double) {
     var sizeCorrection = 0.0
     var xCorrection = 0.0
     var yCorrection = 0.0
@@ -94,7 +94,7 @@ class Graphics2DWrapper(g: Graphics2D, renderLabelsAsRectangles: Boolean = false
       x + xCorrection, y + yCorrection,
       width + sizeCorrection, height + sizeCorrection))
   }
-  def drawRect(x: Double, y: Double, width: Double, height: Double, scale: Double, angle: Double) = {
+  def drawRect(x: Double, y: Double, width: Double, height: Double, scale: Double, angle: Double) {
     var sizeCorrection = 0.0
     if (!isQuartz)
       // size: one pixel smaller

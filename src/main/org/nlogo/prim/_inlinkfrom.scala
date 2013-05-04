@@ -19,7 +19,7 @@ class _inlinkfrom(breedName: String) extends Reporter {
     super.toString + ":" + breedName
 
   override def report(context: Context) = {
-    val target = argEvalTurtle(context, 0);
+    val target = argEvalTurtle(context, 0)
     val breed =
       if (breedName == null) world.links
       else world.getLinkBreed(breedName)

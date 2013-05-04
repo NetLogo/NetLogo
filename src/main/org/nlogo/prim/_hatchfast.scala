@@ -17,7 +17,7 @@ class _hatchfast(breedName: String) extends Command {
   override def toString =
     super.toString + ":" + breedName
 
-  override def perform(context: Context) = {
+  override def perform(context: Context) {
     val count = argEvalIntValue(context, 0)
     if (count > 0) {
       val parent = context.agent.asInstanceOf[Turtle]

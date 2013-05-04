@@ -29,8 +29,6 @@ class LiteralParser(
   * reads a literal value from a token vector. The entire vector must denote a single literal
   * value; extra garbage at the end is illegal. Used for read-from-string and other things.
   * @param tokens the input tokens
-  * @param world  the current world. It's OK for this to be null, and if it
-  *               is, literal agents and agentsets will cause an error.
   */
   def getLiteralValue(tokens: Iterator[Token]): AnyRef = {
     val result = readLiteralPrefix(tokens.next(), tokens)
@@ -59,8 +57,6 @@ class LiteralParser(
   * after the literal is OK).
   *
   * @param tokens the input tokens
-  * @param world  the current world. It's OK for this to be null, and if it
-  *               is, literal agents and agentsets will cause an error.
   */
   def readLiteralPrefix(token: Token, tokens: Iterator[Token]): AnyRef = {
     token.tpe match {
@@ -107,19 +103,15 @@ class LiteralParser(
     list
   }
 
-  // First group: extension name; second group: extension type name; last group: all the data
-  private val ExtensionTypePattern =
-    java.util.regex.Pattern.compile(
-      "\\{\\{(\\S*):(\\S*)\\s(.*)\\}\\}");
-
   def parseExtensionLiteral(token: Token): AnyRef = {
     cAssert(world != null, ERR_ILLEGAL_AGENT_LITERAL, token)
-    val matcher = ExtensionTypePattern.matcher(token.value.asInstanceOf[String])
-    if(matcher.matches)
-      extensionManager.readExtensionObject(
-        matcher.group(1), matcher.group(2), matcher.group(3))
-    // if we can't deconstruct it, then return the whole LITERAL
-    else token.value
+    val LiteralRegex = """\{\{(\S*):(\S*)\s(.*)\}\}""".r
+    token.value match {
+      case LiteralRegex(extName, typeName, data) =>
+        extensionManager.readExtensionObject(extName, typeName, data)
+      case x =>
+        x
+    }
   }
 
 }

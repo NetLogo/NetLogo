@@ -103,13 +103,15 @@ object AbstractWorkspaceTraits {
       compiler.readNumberFromString(
         source, world, getExtensionManager)
 
-    override def checkReporterSyntax(source: String) =
+    override def checkReporterSyntax(source: String) {
       compiler.checkReporterSyntax(
         source, world.program, procedures, getExtensionManager, false)
+    }
 
-    def checkCommandSyntax(source: String) =
+    def checkCommandSyntax(source: String) {
       compiler.checkCommandSyntax(
         source, world.program, procedures, getExtensionManager, false)
+    }
 
     def isConstant(s: String) =
       try {
@@ -340,7 +342,7 @@ object AbstractWorkspaceTraits {
     override def getExtensionManager =
       _extensionManager
     override def isExtensionName(name: String) =
-      _extensionManager.isExtensionName(name);
+      _extensionManager.isExtensionName(name)
     @throws(classOf[org.nlogo.api.ExtensionException])
     override def importExtensionData(name: String, data: java.util.List[Array[String]], handler: org.nlogo.api.ImportErrorHandler) {
       _extensionManager.importExtensionData(name, data, handler)

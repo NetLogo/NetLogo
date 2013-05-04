@@ -16,7 +16,7 @@ object TypeConverter {
    * @param mv - ASM MethodVisitor to write bytes to
    * @param firstFreeJVMLocal - this tells us what local variable slots are
    *   free/available to use, to store temporary information.
-   * @param instr - we a reference to the instruction so we can throw a proper
+   * @param parentInstr - we a reference to the instruction so we can throw a proper
    *   exception when something goes wrong.
    * @param argIndex - this is the index of the argument that is being converted
    *   we need this, so we can create ArgumentTypeExceptions pointing to the
@@ -147,7 +147,7 @@ object TypeConverter {
     mv.visitLdcInsn(Int.box(api.Syntax.getTypeConstant(typeTo)))
     mv.visitVarInsn(ALOAD, firstFreeJVMLocal)
     mv.visitMethodInsn(INVOKESPECIAL, "org/nlogo/nvm/ArgumentTypeException", "<init>",
-      "(Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V");
+      "(Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V")
     mv.visitInsn(ATHROW)
     mv.visitLabel(lEnd)
   }

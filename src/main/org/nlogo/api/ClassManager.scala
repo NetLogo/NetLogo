@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.api;
+package org.nlogo.api
 
 /**
  * Interface specifies the main class of a NetLogo extension.  All NetLogo extensions must include a

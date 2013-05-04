@@ -354,7 +354,7 @@ with org.nlogo.workspace.WorldLoaderInterface {
    * Get a snapshot of the 2D view, using an existing BufferedImage
    * object.
    */
-  def getGraphics(image: java.awt.image.BufferedImage) = {
+  def getGraphics(image: java.awt.image.BufferedImage) {
     val graphics = image.getGraphics.asInstanceOf[java.awt.Graphics2D]
     val font = graphics.getFont
     val newFont = new java.awt.Font(font.getName, font.getStyle, fontSize)

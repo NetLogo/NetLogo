@@ -16,8 +16,9 @@ class DrawingActionBroker(
 
   override def drawLine(
     x1: Double, y1: Double, x2: Double, y2: Double,
-    color: AnyRef, size: Double, mode: String) =
+    color: AnyRef, size: Double, mode: String) {
     publish(DrawLine(x1, y1, x2, y2, color, size, mode))
+  }
 
   override def setColors(colors: Array[Int]) { publish(SetColors(colors)) }
   override def sendPixels(dirty: Boolean) { publish(SendPixels(dirty)) }
@@ -66,8 +67,9 @@ class DrawingActionBroker(
   override def isBlank: Boolean = trailDrawer.isBlank
 
   // This one does have side effects, but we don't want to record it. Or do we?
-  override def exportDrawingToCSV(writer: java.io.PrintWriter) =
+  override def exportDrawingToCSV(writer: java.io.PrintWriter) {
     trailDrawer.exportDrawingToCSV(writer)
+  }
 
   /** Converts a java.awt.image.BufferedImage to a ReadImage drawing action. */
   private def imageToAction(image: java.awt.image.BufferedImage): ReadImage =

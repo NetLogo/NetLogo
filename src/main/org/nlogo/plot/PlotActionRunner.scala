@@ -9,19 +9,22 @@ trait PlotActionRunner extends ActionRunner[PlotAction] {
   def getPlot(name: String): Option[Plot]
   def getPlotPen(plotName: String, penName: String): Option[PlotPen]
 
-  def withPlot(plotName: String)(f: (Plot) => Unit) =
+  def withPlot(plotName: String)(f: (Plot) => Unit) {
     getPlot(plotName).foreach(f)
+  }
 
-  def withPen(plotName: String, penName: String)(f: (PlotPen) => Unit) =
+  def withPen(plotName: String, penName: String)(f: (PlotPen) => Unit) {
     getPlotPen(plotName, penName).foreach(f)
+  }
 
-  def withPlotAndPen(plotName: String, penName: String)(f: (Plot, PlotPen) => Unit) =
+  def withPlotAndPen(plotName: String, penName: String)(f: (Plot, PlotPen) => Unit) {
     for {
       plot <- getPlot(plotName)
       pen <- plot.getPen(penName)
     } f(plot, pen)
+  }
 
-  override def run(action: PlotAction) = {
+  override def run(action: PlotAction) {
 
     // any action on a plot makes it dirty
     withPlot(action.plotName) {

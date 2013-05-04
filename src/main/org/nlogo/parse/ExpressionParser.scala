@@ -93,7 +93,7 @@ class ExpressionParser(
    * whose arguments we're parsing. We expect exactly that number of args.  Type resolution is then
    * performed.
    */
-  private def parseArguments(app: Application, tokens: BufferedIterator[Token], precedence: Int) = {
+  private def parseArguments(app: Application, tokens: BufferedIterator[Token], precedence: Int) {
     val right = app.instruction.syntax.right
     val optional = app.instruction.syntax.takesOptionalCommandBlock
     for(i <- 0 until app.instruction.syntax.rightDefault) {

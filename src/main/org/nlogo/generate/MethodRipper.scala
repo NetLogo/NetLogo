@@ -45,8 +45,8 @@ class MethodRipper(method: Method, instr: Instruction, mvOut: MethodVisitor, bge
             val field = getField(instr.getClass)
             val accessCode = field.getModifiers
             field.setAccessible(true)
-            val obj = field.get(instr);
-            bgen.translateGetField(name, instrUID, obj, Type.getType(desc), accessCode);
+            val obj = field.get(instr)
+            bgen.translateGetField(name, instrUID, obj, Type.getType(desc), accessCode)
           } catch {
             case ex: NoSuchFieldException => errorLog.append("MethodRipper says: " + ex)
             case ex: IllegalAccessException => errorLog.append("MethodRipper says: " + ex)

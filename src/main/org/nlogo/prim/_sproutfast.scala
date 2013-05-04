@@ -18,7 +18,7 @@ class _sproutfast(breedName: String) extends Command {
   override def toString =
     super.toString + ":" + breedName
 
-  override def perform(context: Context) = {
+  override def perform(context: Context) {
     val parent = context.agent.asInstanceOf[Patch]
     val count = argEvalIntValue(context, 0)
     if (count > 0) {
