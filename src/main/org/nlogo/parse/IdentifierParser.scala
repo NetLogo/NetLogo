@@ -2,11 +2,10 @@
 
 package org.nlogo.parse
 
-import Fail.{ cAssert, exception }
-import org.nlogo.{ api, nvm, parse0, prim }
-import api.{ CompilerException, Let, Program, Token, TokenType }
-import nvm.{ Instruction, Procedure, Reporter }
-import nvm.ParserInterface.ProceduresMap
+import org.nlogo.{ api, nvm, parse0, prim },
+  api.{ Token, TokenType },
+  nvm.ParserInterface.ProceduresMap,
+  Fail._
 
 // This class is in serious need of a total rewrite - ST 5/3/13
 
@@ -15,12 +14,12 @@ import nvm.ParserInterface.ProceduresMap
   */
 
 class IdentifierParser(
-  program: Program,
+  program: api.Program,
   procedures: ProceduresMap,
   extensionManager: api.ExtensionManager,
-  lets: Vector[Let]) {
+  lets: Vector[api.Let]) {
 
-  def process(tokens: Iterator[Token], procedure: Procedure): Iterator[Token] = {
+  def process(tokens: Iterator[Token], procedure: nvm.Procedure): Iterator[Token] = {
     // make sure the procedure name doesn't conflict with a special identifier -- CLB
     checkProcedureName(procedure)
     val it = new parse0.CountedIterator(tokens)
@@ -49,7 +48,7 @@ class IdentifierParser(
       .map(stuffLet)
   }
 
-  private def processIdent(token: Token, procedure: Procedure, count: Int): Token = {
+  private def processIdent(token: Token, procedure: nvm.Procedure, count: Int): Token = {
     val primName = token.value.asInstanceOf[String]
     def lookup(fn: String => Option[api.TokenHolder], newType: TokenType): Option[Token] =
       fn(primName).map{holder =>
@@ -98,8 +97,8 @@ class IdentifierParser(
     }
   }
 
-  private def getLetFromArg(ident: String, tokPos: Int): Option[Let] = {
-    def checkLet(let: Let): Option[Let] =
+  private def getLetFromArg(ident: String, tokPos: Int): Option[api.Let] = {
+    def checkLet(let: api.Let): Option[api.Let] =
       if(tokPos < let.start || tokPos > let.end || let.name != ident)
         None
       else
@@ -107,7 +106,7 @@ class IdentifierParser(
     lets.map(checkLet).find(_.isDefined).getOrElse(None)
   }
 
-  private def processToken2(tok: Token, procedure: Procedure, tokPos: Int): Token = {
+  private def processToken2(tok: Token, procedure: nvm.Procedure, tokPos: Int): Token = {
     val ident = tok.value.asInstanceOf[String]
     if(ident.startsWith("?")) {
       val varNumber =
@@ -154,7 +153,7 @@ class IdentifierParser(
       }
   }
 
-  private def getAgentVariableReporter(varName: String, tok: Token): Reporter = {
+  private def getAgentVariableReporter(varName: String, tok: Token): nvm.Reporter = {
     if(program.turtlesOwn.contains(varName) && program.linksOwn.contains(varName))
       new prim._turtleorlinkvariable(varName)
     else if(program.turtlesOwn.contains(varName))
@@ -175,19 +174,19 @@ class IdentifierParser(
                   tok.startPos, tok.startPos + varName.length, tok.fileName))
   }
 
-  private def checkProcedureName(procedure: Procedure) {
+  private def checkProcedureName(procedure: nvm.Procedure) {
     val newVal: AnyRef =
       // if the proc name doesn't trigger any identifier rules it's treated as a variable reference,
       // and if there's no variable with that name, CompilerException is raised -- CLB
       try processToken2(procedure.nameToken, procedure, 0).value
-      catch { case ex: CompilerException => return }
+      catch { case ex: api.CompilerException => return }
     val ok = newVal.isInstanceOf[prim._call] ||
       newVal.isInstanceOf[prim._callreport]
     cAssert(ok, "Cannot use " + procedure.name + " as a procedure name.  Conflicts with: " + newVal,
             procedure.nameToken)
   }
 
-  private def newToken(instr: Instruction, name: String, tpe: TokenType,
+  private def newToken(instr: nvm.Instruction, name: String, tpe: TokenType,
       startPos: Int, endPos: Int, fileName: String) = {
     val tok = Token(name, tpe, instr)(startPos, endPos, fileName)
     instr.token(tok)
