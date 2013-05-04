@@ -2,6 +2,8 @@
 
 package org.nlogo.workspace
 
+// omg. rat's nest. - ST 5/3/13
+
 import
   org.nlogo.{ agent, api, nvm, plot },
   agent.{ World, Agent, Observer, AbstractExporter, AgentSet },
@@ -17,10 +19,28 @@ import
 import AbstractWorkspaceTraits._
 
 object AbstractWorkspace {
-  val DefaultPreviewCommands = "setup repeat 75 [ go ]"
-}
 
-// omg, what a rat's nest - ST 5/3/13
+  val DefaultPreviewCommands = "setup repeat 75 [ go ]"
+
+  /**
+   * converts a model's filename to an externally displayable model name.
+   * The argument may be null, the return value will never be.
+   */
+  def makeModelNameForDisplay(str: String): String =
+    if (str == null)
+      "Untitled"
+    else {
+      var result = str
+      var suffixIndex = str.lastIndexOf(".nlogo")
+      if (suffixIndex > 0 && suffixIndex == result.size - 6)
+        result = result.substring(0, result.size - 6)
+      suffixIndex = result.lastIndexOf(".nlogo3d")
+      if (suffixIndex > 0 && suffixIndex == result.size - 8)
+        result = result.substring(0, str.size - 8)
+      result
+    }
+
+}
 
 abstract class AbstractWorkspace(val world: World)
 extends AbstractWorkspaceJ
@@ -427,7 +447,7 @@ object AbstractWorkspaceTraits {
       _modelType == ModelType.New || _modelType == ModelType.Library
 
     def modelNameForDisplay =
-      AbstractWorkspaceJ.makeModelNameForDisplay(_modelFileName)
+      AbstractWorkspace.makeModelNameForDisplay(_modelFileName)
 
     def setModelPath(modelPath: String) {
       if (modelPath == null) {
@@ -444,6 +464,27 @@ object AbstractWorkspaceTraits {
           fileManager.setPrefix(_modelDir)
       }
     }
+
+    /**
+     * attaches the current model directory to a relative path, if necessary.
+     * If filePath is an absolute path, this method simply returns it.
+     * If it's a relative path, then the current model directory is prepended
+     * to it. If this is a new model, the user's platform-dependent home
+     * directory is prepended instead.
+     */
+    @throws(classOf[java.net.MalformedURLException])
+    def attachModelDir(filePath: String): String =
+      if (new java.io.File(filePath).isAbsolute)
+        filePath
+      else {
+        val path = Option(getModelPath).getOrElse(
+          System.getProperty("user.home") +
+            java.io.File.separatorChar + "dummy.txt")
+        val urlForm = new java.net.URL(
+          AbstractWorkspaceJ.toURL(new java.io.File(path)),
+          filePath)
+        new java.io.File(urlForm.getFile).getAbsolutePath
+      }
 
   }
 

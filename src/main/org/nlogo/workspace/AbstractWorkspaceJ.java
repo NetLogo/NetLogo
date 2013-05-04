@@ -4,54 +4,6 @@ package org.nlogo.workspace;
 
 public abstract strictfp class AbstractWorkspaceJ {
 
-  /// model name utilities
-
-  /**
-   * converts a model's filename to an externally displayable model name.
-   * The argument may be null, the return value will never be.
-   * <p/>
-   * Package protected for unit testing.
-   */
-  static String makeModelNameForDisplay(String str) {
-    if (str == null) {
-      return "Untitled";
-    }
-    int suffixIndex = str.lastIndexOf(".nlogo");
-    if (suffixIndex > 0 && suffixIndex == str.length() - 6) {
-      str = str.substring(0, str.length() - 6);
-    }
-    suffixIndex = str.lastIndexOf(".nlogo3d");
-    if (suffixIndex > 0 && suffixIndex == str.length() - 8) {
-      str = str.substring(0, str.length() - 8);
-    }
-    return str;
-  }
-
-  /**
-   * attaches the current model directory to a relative path, if necessary.
-   * If filePath is an absolute path, this method simply returns it.
-   * If it's a relative path, then the current model directory is prepended
-   * to it. If this is a new model, the user's platform-dependent home
-   * directory is prepended instead.
-   */
-  public String attachModelDir(String filePath)
-      throws java.net.MalformedURLException {
-    if (new java.io.File(filePath).isAbsolute()) {
-      return filePath;
-    }
-    String path = getModelPath();
-    if (path == null) {
-      path = System.getProperty("user.home")
-          + java.io.File.separatorChar + "dummy.txt";
-    }
-
-    java.net.URL urlForm =
-        new java.net.URL
-            (toURL(new java.io.File(path)), filePath);
-
-    return new java.io.File(urlForm.getFile()).getAbsolutePath();
-  }
-
   // for 4.1 we have too much fragile, difficult-to-understand,
   // under-tested code involving URLs -- we can't get rid of our
   // uses of toURL() until 4.2, the risk of breakage is too high.
