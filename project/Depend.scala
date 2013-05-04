@@ -93,33 +93,40 @@ check absenceOfPackageCycles > 1 in org.nlogo.*
 
 [headless-AWT] = java.awt.geom.* java.awt.image.* java.awt.Color java.awt.Image java.awt.Shape java.awt.Graphics2D java.awt.Graphics java.awt.Stroke java.awt.Composite java.awt.BasicStroke java.awt.Point java.awt.Font java.awt.AlphaComposite java.awt.RenderingHints java.awt.Rectangle java.awt.FontMetrics java.awt.color.ColorSpace java.awt.Polygon java.awt.RenderingHints$Key javax.imageio.* javax.swing.tree.MutableTreeNode javax.swing.tree.DefaultMutableTreeNode
 
-[stdlib-j] = java.lang.* java.util.* java.io.* java.text.* java.net.* java.security.* org.w3c.dom.* org.xml.sax.* javax.xml.parsers.* [headless-AWT]
+[stdlib-j] = java.lang.* java.util.* java.io.* java.text.* java.net.* java.security.*
 
-[stdlib-s] = scala.Serializable scala.Predef* scala.collection.* scala.reflect.* scala.Function* scala.UninitializedFieldError scala.util.control.Exception* scala.Array* scala.LowPriorityImplicits scala.package$ scala.util.Properties$ scala.Option* scala.Tuple* scala.Product* scala.util.DynamicVariable scala.runtime.* scala.math.* scala.None* scala.Some* scala.MatchError scala.util.Left* scala.util.Right* scala.util.Either* scala.io.* scala.sys.package* scala.Console* scala.PartialFunction* scala.util.parsing* scala.util.matching.Regex* scala.Enumeration* scala.Proxy* scala.FallbackArrayBuilding scala.util.Sorting* scala.util.Random
+[stdlib-s] = scala.Serializable scala.Predef* scala.collection.* scala.reflect.* scala.Function* scala.UninitializedFieldError scala.util.control.Exception* scala.Array* scala.LowPriorityImplicits scala.package$ scala.util.Properties$ scala.Option* scala.Tuple* scala.Product* scala.util.DynamicVariable scala.runtime.* scala.math.* scala.None* scala.Some* scala.MatchError scala.util.Left* scala.util.Right* scala.util.Either* scala.io.* scala.sys.package* scala.Console* scala.PartialFunction* scala.util.matching.Regex* scala.Enumeration* scala.Proxy* scala.FallbackArrayBuilding scala.util.Sorting* scala.util.Random
+
+[xml] = org.w3c.dom.* org.xml.sax.* javax.xml.parsers.*
 
 [asm] = org.objectweb.asm.*
 
+[parser-combinators] = scala.util.parsing*
+
 [testing] = org.scalatest.* org.scalacheck.* org.jmock.* org.hamcrest.*
 
-[libs] = [stdlib-j] [stdlib-s] [headless-AWT] [asm] [testing]
+[libs] = [stdlib-j] [stdlib-s] [headless-AWT] [xml] [asm] [parser-combinators] [testing]
 """)
     }
 
     def generateFooter() {
       println("""
-### checks on AWT, Swing
+### checks on library usage
 
 [Sun-Swing] = javax.swing.* excluding javax.swing.tree.MutableTreeNode javax.swing.tree.DefaultMutableTreeNode
 [Sun-AWT] = java.awt.*
 [bad-AWT] = java.awt.* excluding [headless-AWT]
-
 check [util+] independentOf [Sun-AWT]
 check org.nlogo.* independentOf [Sun-Swing] [bad-AWT]
 
-### checks on external libraries
-
 [ASM-free-zone] = org.nlogo.* excluding [generate]
 check [ASM-free-zone] independentOf org.objectweb.*
+
+[XML-free-zone] = org.nlogo.* excluding [lab]
+check [XML-free-zone] independentOf [xml]
+
+[parser-combinator-free-zone] = org.nlogo.* excluding org.nlogo.parse0.StructureCombinators* org.nlogo.parse0.SeqReader* org.nlogo.parse0.Cleanup
+check [parser-combinator-free-zone] directlyIndependentOf [parser-combinators]
 """
               )
     }
