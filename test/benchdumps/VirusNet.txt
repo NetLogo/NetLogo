@@ -2540,9 +2540,9 @@ procedure BECOME-RESISTANT:[]{-T--}:
 [3]_asm_procedurebecomeresistant_ask_3 "ask my-links" Object => void
       _mylinks:null
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurebecomeresistant_ask_3.keptinstr2 : Lorg/nlogo/prim/_mylinks;
+          GETFIELD org/nlogo/prim/_asm_procedurebecomeresistant_ask_3.keptinstr2 : Lorg/nlogo/prim/etc/_mylinks;
           ALOAD 1
-          INVOKEVIRTUAL org/nlogo/prim/_mylinks.report (Lorg/nlogo/nvm/Context;)Ljava/lang/Object;
+          INVOKEVIRTUAL org/nlogo/prim/etc/_mylinks.report (Lorg/nlogo/nvm/Context;)Ljava/lang/Object;
          L0
           ASTORE 2
           ALOAD 2

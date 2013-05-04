@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.prim
+package org.nlogo.prim.etc
 
 import org.nlogo.api.{ Syntax, AgentException, Nobody }
 import org.nlogo.nvm.{ Reporter, Context }

@@ -675,9 +675,9 @@ procedure SINGLE-CELL:[]{O---}:
              L1
               ARETURN
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresinglecell_ask_6.keptinstr2 : Lorg/nlogo/prim/_patch;
+          GETFIELD org/nlogo/prim/_asm_proceduresinglecell_ask_6.keptinstr2 : Lorg/nlogo/prim/etc/_patch;
           ALOAD 1
-          INVOKEVIRTUAL org/nlogo/prim/_patch.report (Lorg/nlogo/nvm/Context;)Ljava/lang/Object;
+          INVOKEVIRTUAL org/nlogo/prim/etc/_patch.report (Lorg/nlogo/nvm/Context;)Ljava/lang/Object;
          L0
           ASTORE 2
           ALOAD 2

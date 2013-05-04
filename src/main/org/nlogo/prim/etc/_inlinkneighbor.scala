@@ -1,12 +1,12 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.prim
+package org.nlogo.prim.etc
 
 import org.nlogo.api.Syntax
 import org.nlogo.nvm.{ Reporter, Context, EngineException }
 import org.nlogo.agent.{ Turtle, LinkManager }
 
-class _outlinkneighbor(breedName: String) extends Reporter {
+class _inlinkneighbor(breedName: String) extends Reporter {
 
   def this() = this(null)
 
@@ -29,7 +29,7 @@ class _outlinkneighbor(breedName: String) extends Reporter {
       throw new EngineException(context, this, err)
     Boolean.box(null !=
       world.linkManager.findLinkFrom(
-        context.agent.asInstanceOf[Turtle], target, breed, true))
+        target, context.agent.asInstanceOf[Turtle], breed, true))
   }
 
 }

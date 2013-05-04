@@ -7,6 +7,7 @@ import java.lang.reflect.Method
 import org.nlogo.agent.{ AgentSet, Agent, Turtle }
 import org.nlogo.prim._
 import org.nlogo.api.LogoList
+import org.nlogo.nvm.Reporter
 
 class MethodSelectorTests extends FunSuite {
   import MethodSelector._
@@ -24,6 +25,11 @@ class MethodSelectorTests extends FunSuite {
         .mkString("", ",", " => ")
     parms + m.getReturnType.getSimpleName
   }
+  // janky that we need actual prims at runtime to run the tests, but oh well - ST 5/4/13
+  def instantiate[T](name: String) =
+    Class.forName("org.nlogo.prim.etc." + name)
+      .newInstance
+      .asInstanceOf[T]
   // make sure our cost metric prefers specific types.  there is no actual conversion cost, but
   // presumably the method that knows to handle the specific type will be more efficient than the
   // method for the general type.
@@ -128,7 +134,7 @@ class MethodSelectorTests extends FunSuite {
   // in the args array)
   test("with 1") {
     val root = new _with
-    root.args = Array(new _turtles, new _constboolean(true))
+    root.args = Array(instantiate[Reporter]("_turtles"), new _constboolean(true))
     expectResult("(AgentSet,0)")(dump(evaluate(root, false)))
     expectResult("AgentSet,Reporter => AgentSet")(
       dump(select(root, classOf[AgentSet], false).get))
@@ -143,13 +149,13 @@ class MethodSelectorTests extends FunSuite {
   // it.  at the moment it is unrejiggered because the generator doesn't know what to do with the
   // AgentException try/catch in the body - ST 2/6/09
   test("unrejiggered reporter at root") {
-    val root = new _patch
+    val root = instantiate[Reporter]("_patch")
     root.args = Array(new _constdouble(0.0), new _constdouble(0.0))
     expectResult("(Object,0)")(dump(evaluate(root, false)))
   }
   test("unrejiggered reporter inside") {
     val root = new _equal
-    root.args = Array(new _patch, new _patch)
+    root.args = Array(instantiate[Reporter]("_patch"), instantiate[Reporter]("_patch"))
     root.args(0).args = Array(new _constdouble(0.0), new _constdouble(0.0))
     root.args(1).args = Array(new _constdouble(0.0), new _constdouble(0.0))
     expectResult("(boolean,0)")(dump(evaluate(root, false)))

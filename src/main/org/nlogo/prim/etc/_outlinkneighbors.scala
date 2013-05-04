@@ -1,12 +1,12 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.prim
+package org.nlogo.prim.etc
 
-import org.nlogo.api, api.Syntax
 import org.nlogo.agent.{ Turtle, AgentSet, LinkManager }
+import org.nlogo.api, api.Syntax
 import org.nlogo.nvm.{ Reporter, Context, EngineException }
 
-class _inlinkneighbors(breedName: String) extends Reporter {
+class _outlinkneighbors(breedName: String) extends Reporter {
 
   def this() = this(null)
 
@@ -23,7 +23,7 @@ class _inlinkneighbors(breedName: String) extends Reporter {
     for(err <- LinkManager.mustNotBeUndirected(breed))
       throw new EngineException(context, this, err)
     AgentSet.fromIterator(api.AgentKind.Turtle,
-      world.linkManager.findLinkedTo(
+      world.linkManager.findLinkedFrom(
         context.agent.asInstanceOf[Turtle], breed))
   }
 
