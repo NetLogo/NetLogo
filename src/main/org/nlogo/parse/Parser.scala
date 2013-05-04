@@ -59,7 +59,8 @@ trait Parser extends nvm.ParserInterface {
           .scan(used1 ++ used2 ++ used3 ++ used4)
       }
       val iP =
-        new IdentifierParser(structureResults.program, oldProcedures, structureResults.procedures, extensionManager, lets, false)
+        new IdentifierParser(structureResults.program, oldProcedures,
+          structureResults.procedures, extensionManager, lets)
       val identifiedTokens =
         iP.process(rawTokens.iterator, procedure)  // resolve references
       new ExpressionParser(procedure, taskNumbers)
@@ -70,31 +71,6 @@ trait Parser extends nvm.ParserInterface {
       for(procdef <- procDefs)
         procdef.accept(new SetVisitor)
     (procDefs, structureResults)
-  }
-
-  // these two used by input boxes
-  def checkCommandSyntax(source: String, program: api.Program, procedures: ProceduresMap, extensionManager: api.ExtensionManager, parse: Boolean) {
-    checkSyntax("to __bogus-name " + source + "\nend",
-                true, program, procedures, extensionManager, parse)
-  }
-  def checkReporterSyntax(source: String, program: api.Program, procedures: ProceduresMap, extensionManager: api.ExtensionManager, parse: Boolean) {
-    checkSyntax("to-report __bogus-name report " + source + "\nend",
-                true, program, procedures, extensionManager, parse)
-  }
-
-  // like in the auto-converter we want to compile as far as we can but
-  // we assume that any tokens we don't recognize are actually globals
-  // that we don't know about.
-  private def checkSyntax(source: String, subprogram: Boolean, program: api.Program, oldProcedures: ProceduresMap, extensionManager: api.ExtensionManager, parse: Boolean) {
-    val results = new StructureParser(tokenizer.tokenizeRobustly(source), None,
-                                      StructureResults(program, oldProcedures))
-      .parse(subprogram)
-    val identifierParser = new IdentifierParser(program, nvm.ParserInterface.NoProcedures, results.procedures, extensionManager, Vector(), !parse)
-    for(procedure <- results.procedures.values) {
-      val tokens = identifierParser.process(results.tokens(procedure).iterator, procedure)
-      if(parse)
-        new ExpressionParser(procedure).parse(tokens)
-    }
   }
 
   ///
@@ -163,7 +139,7 @@ trait Parser extends nvm.ParserInterface {
                             None, StructureResults(program, procedures))
           .parse(subprogram = true)
       val identifierParser =
-        new IdentifierParser(program, procedures, results.procedures, extensionManager, Vector(), forgiving = false)
+        new IdentifierParser(program, procedures, results.procedures, extensionManager, Vector())
       val proc = results.procedures.values.head
       val tokens = identifierParser.process(results.tokens(proc).iterator, proc)
       tokens

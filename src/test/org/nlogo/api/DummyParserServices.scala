@@ -18,8 +18,6 @@ class DummyParserServices extends ParserServices {
         }
     }
   def readNumberFromString(source: String) = source
-  def checkReporterSyntax(source: String) { }
-  def checkCommandSyntax(source: String) { }
   def isConstant(s: String): Boolean = unsupported
   def isValidIdentifier(s: String): Boolean = unsupported
   def isReporter(s: String): Boolean = unsupported

@@ -14,14 +14,6 @@ class DefaultParserServices(parser: ParserInterface) extends api.ParserServices 
     source
   def readNumberFromString(source: String) =
     parser.readNumberFromString(source, null, null)
-  def checkReporterSyntax(source: String) {
-    parser.checkReporterSyntax(source, api.Program.empty(),
-      ParserInterface.NoProcedures, null, false)
-  }
-  def checkCommandSyntax(source: String) {
-    parser.checkCommandSyntax(source, api.Program.empty(),
-      ParserInterface.NoProcedures, null, true)
-  }
   def readFromString(source: String) =
     parser.readFromString(source)
   def isConstant(s: String) =

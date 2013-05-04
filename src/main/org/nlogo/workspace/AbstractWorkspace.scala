@@ -123,16 +123,6 @@ object AbstractWorkspaceTraits {
       compiler.readNumberFromString(
         source, world, getExtensionManager)
 
-    override def checkReporterSyntax(source: String) {
-      compiler.checkReporterSyntax(
-        source, world.program, procedures, getExtensionManager, false)
-    }
-
-    def checkCommandSyntax(source: String) {
-      compiler.checkCommandSyntax(
-        source, world.program, procedures, getExtensionManager, false)
-    }
-
     def isConstant(s: String) =
       try {
         compiler.readFromString(s)

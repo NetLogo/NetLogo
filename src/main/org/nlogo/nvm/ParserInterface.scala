@@ -16,10 +16,6 @@ object ParserInterface {
 
 trait ParserInterface {
   import ParserInterface.ProceduresMap
-  def checkCommandSyntax(source: String, program: Program, procedures: ProceduresMap,
-                         extensionManager: ExtensionManager, parse: Boolean)
-  def checkReporterSyntax(source: String, program: Program, procedures: ProceduresMap,
-                          extensionManager: ExtensionManager, parse: Boolean)
   def readFromString(source: String): AnyRef
   def readFromString(source: String, world: World, extensionManager: ExtensionManager): AnyRef
   def readNumberFromString(source: String, world: World, extensionManager: ExtensionManager): AnyRef

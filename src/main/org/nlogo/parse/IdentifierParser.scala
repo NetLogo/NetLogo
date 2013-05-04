@@ -12,9 +12,6 @@ import nvm.ParserInterface.ProceduresMap
 
 /**
   * Converts identifier tokens into instances of primitives.
-  * In "forgiving" mode, used by
-  * AutoConverter, unknown identifiers are assumed to be references to global variables that the
-  * compiler doesn't know about yet.
   */
 
 class IdentifierParser(
@@ -22,8 +19,7 @@ class IdentifierParser(
   oldProcedures: ProceduresMap,
   newProcedures: ProceduresMap,
   extensionManager: api.ExtensionManager,
-  lets: Vector[Let],
-  forgiving: Boolean = false) {
+  lets: Vector[Let]) {
 
   def process(tokens: Iterator[Token], procedure: Procedure): Seq[Token] = {
     // make sure the procedure name doesn't conflict with a special identifier -- CLB
@@ -173,8 +169,6 @@ class IdentifierParser(
       new prim._breedvariable(varName)
     else if(program.linkBreeds.values.exists(_.owns.contains(varName)))
       new prim._linkbreedvariable(varName)
-    else if(forgiving)
-      new prim._unknownidentifier
     else
       exception("Nothing named " + varName + " has been defined",
                 Token(varName, tok.tpe, tok.value)(
@@ -188,8 +182,7 @@ class IdentifierParser(
       try processToken2(procedure.nameToken, procedure, 0).value
       catch { case ex: CompilerException => return }
     val ok = newVal.isInstanceOf[prim._call] ||
-      newVal.isInstanceOf[prim._callreport] ||
-      newVal.isInstanceOf[prim._unknownidentifier]
+      newVal.isInstanceOf[prim._callreport]
     cAssert(ok, "Cannot use " + procedure.name + " as a procedure name.  Conflicts with: " + newVal,
             procedure.nameToken)
   }
