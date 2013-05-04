@@ -20,7 +20,7 @@ class IdentifierParser(
   extensionManager: api.ExtensionManager,
   lets: Vector[Let]) {
 
-  def process(tokens: Iterator[Token], procedure: Procedure): Seq[Token] = {
+  def process(tokens: Iterator[Token], procedure: Procedure): Iterator[Token] = {
     // make sure the procedure name doesn't conflict with a special identifier -- CLB
     checkProcedureName(procedure)
     val it = new parse0.CountedIterator(tokens)
@@ -44,7 +44,9 @@ class IdentifierParser(
       }
       token
     }
-    it.map(processTokenWithExtensionManager).map(processToken).map(stuffLet).toSeq
+    it.map(processTokenWithExtensionManager)
+      .map(processToken)
+      .map(stuffLet)
   }
 
   private def processIdent(token: Token, procedure: Procedure, count: Int): Token = {

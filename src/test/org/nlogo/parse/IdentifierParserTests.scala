@@ -23,7 +23,7 @@ class IdentifierParserTests extends FunSuite {
     new IdentifierParser(results.program, results.procedures,
         new DummyExtensionManager, lets)
       .process(results.tokens(procedure).iterator, procedure)
-      .iterator.takeWhile(_.tpe != TokenType.EOF)
+      .takeWhile(_.tpe != TokenType.EOF)
   }
 
   test("empty") {

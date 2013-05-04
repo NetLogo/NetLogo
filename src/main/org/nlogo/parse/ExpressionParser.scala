@@ -49,12 +49,12 @@ class ExpressionParser(
   /**
    * parses a procedure. Procedures are a bunch of statements (not a block of statements, that's
    * something else), and so are parsed as such. */
-  def parse(tokensIterable: Iterable[Token]): Seq[ProcedureDefinition] = {
+  def parse(tokens: Iterator[Token]): Seq[ProcedureDefinition] = {
     result = Nil
-    val tokens = tokensIterable.iterator.buffered
-    val stmts = new Statements(tokens.head.fileName)
-    while(tokens.head.tpe != TokenType.EOF)
-      stmts.addStatement(parseStatement(tokens, false))
+    val buffered = tokens.buffered
+    val stmts = new Statements(buffered.head.fileName)
+    while(buffered.head.tpe != TokenType.EOF)
+      stmts.addStatement(parseStatement(buffered, false))
     result ::= new ProcedureDefinition(procedure, stmts)
     result
   }

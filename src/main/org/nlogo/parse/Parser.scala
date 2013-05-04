@@ -144,8 +144,8 @@ trait Parser extends nvm.ParserInterface {
           extensionManager, Vector())
       val proc = results.procedures.values.head
       val tokens = identifierParser.process(results.tokens(proc).iterator, proc)
-      tokens
-        .tail  // skip _report
+      tokens.toStream
+        .drop(1)  // skip _report
         .map(_.tpe)
         .dropWhile(_ == api.TokenType.OpenParen)
         .headOption
