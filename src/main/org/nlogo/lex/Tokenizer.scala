@@ -57,8 +57,6 @@ class Tokenizer extends api.TokenizerInterface {
   private def handleSpecialIdentifiers(t: Token): Token =
     if (Keywords.isKeyword(t.name))
       t.copy(tpe = TokenType.Keyword)
-    else if (Variables.isVariable(t.name))
-      t.copy(tpe = TokenType.Variable)
     else Constants.get(t.name) match {
       case Some(value) =>
         t.copy(tpe = TokenType.Literal, value = value)
@@ -75,7 +73,7 @@ class Tokenizer extends api.TokenizerInterface {
     // the user probably wants for F1 purposes. see bug #139 - ST 5/2/12
     val interestingTokenTypes =
       List(TokenType.Literal, TokenType.Ident, TokenType.Command, TokenType.Reporter,
-           TokenType.Keyword, TokenType.Variable)
+           TokenType.Keyword)
     val candidates =
       tokenizeIncludingComments(source)
         .dropWhile(_.endPos < position)

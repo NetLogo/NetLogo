@@ -108,7 +108,7 @@ class TokenizerTests extends FunSuite {
     assert(!tokenizer.isValidIdentifier("33"))
   }
   test("invalidIdentifier3") {
-    assert(!tokenizer.isValidIdentifier("color"))
+    assert(!tokenizer.isValidIdentifier("end"))
   }
   // check extension primitives
   test("extensionCommand") {

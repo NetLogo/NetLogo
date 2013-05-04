@@ -155,7 +155,7 @@ trait Parser extends nvm.ParserInterface {
 
   private val reporterTokenTypes: Set[api.TokenType] = {
     import api.TokenType._
-    Set(OpenBracket, Literal, Ident, Reporter, Variable)
+    Set(OpenBracket, Literal, Ident, Reporter)
   }
 
   // used by the indenter

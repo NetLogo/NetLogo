@@ -25,8 +25,6 @@ class IdentifierParser(
     val it = new parse0.CountedIterator(tokens)
     def processToken(token: Token): Token =
       token.tpe match {
-        case TokenType.Variable =>
-          processToken2(token, procedure, it.count)
         case TokenType.Ident =>
           processIdent(token, procedure, it.count)
         case _ =>
@@ -60,7 +58,7 @@ class IdentifierParser(
     def command  = lookup(Parser.tokenMapper.getCommand  _, TokenType.Command )
     def reporter = lookup(Parser.tokenMapper.getReporter _, TokenType.Reporter)
     (command orElse reporter).getOrElse(
-      processToken2(token, procedure, count))
+      processIdent2(token, procedure, count))
   }
 
   // replaces an identifier token with its imported implementation, if necessary
@@ -105,7 +103,8 @@ class IdentifierParser(
     lets.map(checkLet).find(_.isDefined).getOrElse(None)
   }
 
-  private def processToken2(tok: Token, procedure: nvm.Procedure, tokPos: Int): Token = {
+  private def processIdent2(tok: Token, procedure: nvm.Procedure, tokPos: Int): Token = {
+    assert(tok.tpe == TokenType.Ident)
     val ident = tok.value.asInstanceOf[String]
     if(ident.startsWith("?")) {
       val varNumber =
@@ -177,7 +176,7 @@ class IdentifierParser(
     val newVal: AnyRef =
       // if the proc name doesn't trigger any identifier rules it's treated as a variable reference,
       // and if there's no variable with that name, CompilerException is raised -- CLB
-      try processToken2(procedure.nameToken, procedure, 0).value
+      try processIdent(procedure.nameToken, procedure, 0).value
       catch { case ex: api.CompilerException => return }
     val ok = newVal.isInstanceOf[prim._call] ||
       newVal.isInstanceOf[prim._callreport]

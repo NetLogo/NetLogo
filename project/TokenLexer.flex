@@ -19,18 +19,18 @@ import org.nlogo.api.TokenType;
 
   // annoying, but I can't figure out any other way to get at the
   // Scala inner objects from Java - ST 7/7/11
-  private static final TokenType TokenType_OpenParen = getTokenType("OpenParen");
-  private static final TokenType TokenType_CloseParen = getTokenType("CloseParen");
-  private static final TokenType TokenType_OpenBracket = getTokenType("OpenBracket");
+  private static final TokenType TokenType_OpenParen    = getTokenType("OpenParen");
+  private static final TokenType TokenType_CloseParen   = getTokenType("CloseParen");
+  private static final TokenType TokenType_OpenBracket  = getTokenType("OpenBracket");
   private static final TokenType TokenType_CloseBracket = getTokenType("CloseBracket");
-  private static final TokenType TokenType_OpenBrace = getTokenType("OpenBrace");
-  private static final TokenType TokenType_CloseBrace = getTokenType("CloseBrace");
-  private static final TokenType TokenType_Literal = getTokenType("Literal");
-  private static final TokenType TokenType_Ident = getTokenType("Ident");
-  private static final TokenType TokenType_Comma = getTokenType("Comma");
-  private static final TokenType TokenType_Comment = getTokenType("Comment");
-  private static final TokenType TokenType_Bad = getTokenType("Bad");
-  private static final TokenType TokenType_Extension = getTokenType("Extension");
+  private static final TokenType TokenType_OpenBrace    = getTokenType("OpenBrace");
+  private static final TokenType TokenType_CloseBrace   = getTokenType("CloseBrace");
+  private static final TokenType TokenType_Literal      = getTokenType("Literal");
+  private static final TokenType TokenType_Ident        = getTokenType("Ident");
+  private static final TokenType TokenType_Comma        = getTokenType("Comma");
+  private static final TokenType TokenType_Comment      = getTokenType("Comment");
+  private static final TokenType TokenType_Bad          = getTokenType("Bad");
+  private static final TokenType TokenType_Extension    = getTokenType("Extension");
 
   private static TokenType getTokenType(String name) {
     try {

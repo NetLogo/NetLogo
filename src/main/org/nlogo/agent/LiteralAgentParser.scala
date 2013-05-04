@@ -46,7 +46,7 @@ class LiteralAgentParser(_world: api.World,
     val token = tokens.next()
     // next token should be an identifier or reporter. reporter is a special case because "turtles"
     // and "patches" end up getting turned into Reporters when tokenizing, which is kind of ugly.
-    cAssert(List(TokenType.Variable, TokenType.Ident, TokenType.Reporter).contains(token.tpe),
+    cAssert(List(TokenType.Ident, TokenType.Reporter).contains(token.tpe),
             ERR_EXPECTED_BREED, token)
     val agentsetTypeString = token.value.asInstanceOf[String]
     if(agentsetTypeString.equalsIgnoreCase(SET_TYPE_BREED)) {

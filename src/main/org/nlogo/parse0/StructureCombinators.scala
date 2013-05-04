@@ -83,9 +83,8 @@ extends scala.util.parsing.combinator.Parsers with Cleanup {
         case token ~ names =>
           Variables(Identifier(token.value.asInstanceOf[String], token), names) }
 
-  // kludge: special case because of naming conflict with BREED turtle variable - jrn 8/04/05
   def breed: Parser[Breed] =
-    agentVariable("BREED") ~! openBracket ~> identifier ~ opt(identifier) <~ closeBracket ^^ {
+    breedKeyword ~! openBracket ~> identifier ~ opt(identifier) <~ closeBracket ^^ {
       case plural ~ singularOption =>
         Breed(plural, singularOption.getOrElse(Identifier("TURTLE", plural.token))) }
 
@@ -153,9 +152,10 @@ extends scala.util.parsing.combinator.Parsers with Cleanup {
       case token @ Token(_, TokenType.Keyword, `name`) =>
         token })
 
-  def agentVariable(name: String): Parser[Token] =
-    acceptMatch(name, {
-      case token @ Token(_, TokenType.Variable, `name`) =>
+  // kludge: special case because of naming conflict with BREED turtle variable - jrn 8/04/05
+  def breedKeyword: Parser[Token] =
+    acceptMatch("BREED", {
+      case token @ Token(_, TokenType.Ident, "BREED") =>
         token })
 
   def nonKeyword: Parser[Token] =
