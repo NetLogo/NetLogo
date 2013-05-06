@@ -6,7 +6,7 @@ import org.scalatest.FunSuite
 import org.nlogo.api.{ DummyExtensionManager, Program, Token, TokenType }
 import org.nlogo.{ nvm, parse0 }
 
-class IdentifierParserTests extends FunSuite {
+class NamerTests extends FunSuite {
 
   def compile(source: String): Iterator[Token] = {
     val wrappedSource = "to __test " + source + "\nend"
@@ -20,7 +20,7 @@ class IdentifierParserTests extends FunSuite {
     val lets =
       new parse0.LetScoper(results.tokens(procedure))
         .scan(results.program.usedNames)
-    new IdentifierParser(results.program, results.procedures,
+    new Namer(results.program, results.procedures,
         new DummyExtensionManager, lets)
       .process(results.tokens(procedure).iterator, procedure)
       .takeWhile(_.tpe != TokenType.EOF)

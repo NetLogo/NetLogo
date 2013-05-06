@@ -38,7 +38,7 @@ trait Parser extends nvm.ParserInterface {
   // the frontEndOnly flag is currently just for Tortoise and can hopefully go away in the future.
   // Tortoise currently needs SetVisitor to happen even though SetVisitor is technically part of the
   // back end.  An example of how this might be redone in the future would be to fold the
-  // functionality of SetVisitor into IdentifierParser. - ST 1/24/13
+  // functionality of SetVisitor into Namer. - ST 1/24/13
   def frontEndHelper(source: String, displayName: Option[String], program: api.Program, subprogram: Boolean,
       oldProcedures: ProceduresMap, extensionManager: api.ExtensionManager, frontEndOnly: Boolean = false)
     : (Seq[ProcedureDefinition], StructureResults) = {
@@ -57,12 +57,12 @@ trait Parser extends nvm.ParserInterface {
         new parse0.LetScoper(rawTokens)
           .scan(used1 ++ used2 ++ used3 ++ used4)
       }
-      val iP =
-        new IdentifierParser(structureResults.program,
+      val namer =
+        new Namer(structureResults.program,
           oldProcedures ++ structureResults.procedures,
           extensionManager, lets)
       val identifiedTokens =
-        iP.process(rawTokens.iterator, procedure)  // resolve references
+        namer.process(rawTokens.iterator, procedure)  // resolve references
       new ExpressionParser(procedure, taskNumbers)
         .parse(identifiedTokens) // parse
     }
@@ -126,11 +126,10 @@ trait Parser extends nvm.ParserInterface {
         new StructureParser(tokenizer.tokenize("to __is-reporter? report " + s + "\nend"),
                             None, StructureResults(program, procedures))
           .parse(subprogram = true)
-      val identifierParser =
-        new IdentifierParser(program, procedures ++ results.procedures,
-          extensionManager, Vector())
+      val namer =
+        new Namer(program, procedures ++ results.procedures, extensionManager, Vector())
       val proc = results.procedures.values.head
-      val tokens = identifierParser.process(results.tokens(proc).iterator, proc)
+      val tokens = namer.process(results.tokens(proc).iterator, proc)
       tokens.toStream
         .drop(1)  // skip _report
         .map(_.tpe)

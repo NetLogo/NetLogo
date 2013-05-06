@@ -13,7 +13,7 @@ import org.nlogo.{ api, nvm, parse0, prim },
   * Converts identifier tokens into instances of primitives.
   */
 
-class IdentifierParser(
+class Namer(
   program: api.Program,
   procedures: ProceduresMap,
   extensionManager: api.ExtensionManager,

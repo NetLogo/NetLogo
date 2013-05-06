@@ -37,8 +37,8 @@ object Tokenizer extends api.TokenizerInterface {
       .map(handleSpecialIdentifiers)
   }
 
-  // this could be part of IdentifierParser, even. handling it here for
-  // now, pending a total rewrite of IdentifierParser - ST 5/6/13
+  // this could be part of Namer, even. handling it here for
+  // now, pending a total rewrite of Namer - ST 5/6/13
   private def handleSpecialIdentifiers(t: Token): Token =
     if (Keywords.isKeyword(t.name))
       t.copy(tpe = TokenType.Keyword)

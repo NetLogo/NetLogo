@@ -7,7 +7,7 @@ import Fail._
 
 // Finds uses of "let" and creates Let objects with start and end slots that restrict the scope of
 // the variable.  Some error checking is also performed along the way.  The Let objects created are
-// also returned, so they can be used by IdentifierParser to connect _letvariable references to the
+// also returned, so they can be used by Namer to connect _letvariable references to the
 // right Lets.
 
 // (It's rather weird that this happens before ExpressionParser, so we have to resort to
