@@ -8,8 +8,8 @@ import org.nlogo.api, org.nlogo.util.Femto
 class LetScoperTests extends FunSuite {
 
   val tokenizer =
-    Femto.get(classOf[api.TokenizerInterface],
-      "org.nlogo.lex.Tokenizer", Array())
+    Femto.scalaSingleton(classOf[api.TokenizerInterface],
+      "org.nlogo.lex.Tokenizer")
 
   def compile(source: String) =
     new LetScoper(tokenizer.tokenize(source))

@@ -11,8 +11,8 @@ import BreedIdentifierHandler.Spec
 class BreedIdentifierHandlerTests extends FunSuite {
 
   val tokenizer =
-    Femto.get(classOf[api.TokenizerInterface],
-      "org.nlogo.lex.Tokenizer", Array())
+    Femto.scalaSingleton(classOf[api.TokenizerInterface],
+      "org.nlogo.lex.Tokenizer")
 
   def tester(handler: BreedIdentifierHandler.Helper, code: String, tokenString: String): (String, String, TokenType) = {
     val program =

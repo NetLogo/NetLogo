@@ -7,8 +7,8 @@ import org.nlogo.util.Femto
 
 object Parser extends Parser {
   val tokenizer =
-    Femto.get(classOf[api.TokenizerInterface],
-      "org.nlogo.lex.Tokenizer", Array())
+    Femto.scalaSingleton(classOf[api.TokenizerInterface],
+      "org.nlogo.lex.Tokenizer")
   val tokenMapper = new parse0.TokenMapper(
     "/system/tokens.txt", "org.nlogo.prim.")
   // well this is pretty ugly.  LiteralParser and LiteralAgentParser call each other,

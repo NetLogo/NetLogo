@@ -4,7 +4,7 @@ package org.nlogo.lex
 
 import org.nlogo.api, api.{ Token, TokenType }
 
-class Tokenizer extends api.TokenizerInterface {
+object Tokenizer extends api.TokenizerInterface {
 
   // this method never throws CompilerException, but use TokenType.BAD
   // instead, because if there's an error we want to still

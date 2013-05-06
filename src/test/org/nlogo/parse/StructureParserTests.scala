@@ -10,8 +10,8 @@ import org.nlogo.util.Femto
 class StructureParserTests extends FunSuite {
 
   val tokenizer =
-    Femto.get(classOf[api.TokenizerInterface],
-      "org.nlogo.lex.Tokenizer", Array())
+    Femto.scalaSingleton(classOf[api.TokenizerInterface],
+      "org.nlogo.lex.Tokenizer")
 
   def compile(source: String): StructureResults = {
     new StructureParser(tokenizer.tokenize(source),
