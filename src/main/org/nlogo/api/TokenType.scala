@@ -21,5 +21,5 @@ object TokenType {
   case object Comment extends TokenType
   case object Variable extends TokenType   // built in variables only
   case object Bad extends TokenType        // characters the tokenizer couldn't digest
-  case object Literal extends TokenType    // a literal, untokened string (for external type dumps)
+  case object Extension extends TokenType  // extension literals (for export-world of extension types)
 }

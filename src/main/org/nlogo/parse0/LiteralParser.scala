@@ -60,7 +60,7 @@ class LiteralParser(
   */
   def readLiteralPrefix(token: Token, tokens: Iterator[Token]): AnyRef = {
     token.tpe match {
-      case TokenType.Literal =>
+      case TokenType.Extension =>
         parseExtensionLiteral(token)
       case TokenType.Constant =>
         token.value

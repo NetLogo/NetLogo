@@ -13,9 +13,9 @@ import org.nlogo.api.TokenType;
 
 %{
   private final String fileName;
-  private StringBuilder literalBuilder = null;
-  private int literalStart = -1;
-  private int literalNestingLevel = 0;
+  private StringBuilder extensionLiteralBuilder = null;
+  private int extensionLiteralStart = -1;
+  private int extensionLiteralNestingLevel = 0;
 
   // this is very annoying, but I can't figure out any other way to
   // get at the Scala inner objects from Java - ST 7/7/11
@@ -33,7 +33,7 @@ import org.nlogo.api.TokenType;
   private static final TokenType TokenType_Comment = getTokenType("Comment");
   private static final TokenType TokenType_Variable = getTokenType("Variable");
   private static final TokenType TokenType_Bad = getTokenType("Bad");
-  private static final TokenType TokenType_Literal = getTokenType("Literal");
+  private static final TokenType TokenType_Extension = getTokenType("Extension");
 
   private static TokenType getTokenType(String name) {
     try {
@@ -52,20 +52,20 @@ import org.nlogo.api.TokenType;
     }
   }
 
-  void beginLiteral() {
-    literalStart = yychar;
-    literalBuilder = new StringBuilder();
+  void beginExtensionLiteral() {
+    extensionLiteralStart = yychar;
+    extensionLiteralBuilder = new StringBuilder();
   }
 
-  void addToLiteral() {
-    literalBuilder.append(yytext());
+  void addToExtensionLiteral() {
+    extensionLiteralBuilder.append(yytext());
   }
 
-  Token endLiteral() {
-    String text = literalBuilder.toString();
-    literalBuilder = null;
-    return new Token(text, TokenType_Literal, text,
-              literalStart, literalStart + text.length(), fileName);
+  Token endExtensionLiteral() {
+    String text = extensionLiteralBuilder.toString();
+    extensionLiteralBuilder = null;
+    return new Token(text, TokenType_Extension, text,
+              extensionLiteralStart, extensionLiteralStart + text.length(), fileName);
   }
 
   Token ident() {
@@ -98,7 +98,7 @@ import org.nlogo.api.TokenType;
 %unicode
 %char
 %type Token
-%state LITERAL
+%state EXTENSION_LITERAL
 
 STRING_TEXT=(\\\"|\\r|\\n|\\t|\\\\|\\[^\"]|[^\r\n\"\\])*
 NONNEWLINE_WHITE_SPACE_CHAR=[ \t\b\012]
@@ -109,44 +109,44 @@ IDENTIFIER_CHAR={LETTER} | {DIGIT} | [_\.?=\*!<>:#\+/%\$\^\'&-]
 %%
 
 <YYINITIAL> \{\{ {
-  yybegin(LITERAL);
-  beginLiteral();
-  addToLiteral();
-  literalNestingLevel = 0;
+  yybegin(EXTENSION_LITERAL);
+  beginExtensionLiteral();
+  addToExtensionLiteral();
+  extensionLiteralNestingLevel = 0;
 }
 
-<LITERAL> \}\} {
-  addToLiteral();
-  if (literalNestingLevel == 0) {
+<EXTENSION_LITERAL> \}\} {
+  addToExtensionLiteral();
+  if (extensionLiteralNestingLevel == 0) {
     yybegin(YYINITIAL);
-    return endLiteral();
+    return endExtensionLiteral();
   }
-  literalNestingLevel--;
+  extensionLiteralNestingLevel--;
  }
 
-<LITERAL> \{\{ {
-  literalNestingLevel++;
-  addToLiteral();
+<EXTENSION_LITERAL> \{\{ {
+  extensionLiteralNestingLevel++;
+  addToExtensionLiteral();
  }
 
-<LITERAL> . {
-  addToLiteral();
+<EXTENSION_LITERAL> . {
+  addToExtensionLiteral();
 }
 
-<LITERAL> \n|\r {
+<EXTENSION_LITERAL> \n|\r {
   yybegin(YYINITIAL);
   return new Token("", TokenType_Bad, "End of line reached unexpectedly",
             yychar, yychar, fileName);
 }
 
-<LITERAL> <<EOF>> {
+<EXTENSION_LITERAL> <<EOF>> {
   yybegin(YYINITIAL);
   return new Token("", TokenType_Bad, "End of file reached unexpectedly",
             yychar, yychar, fileName);
 }
 
 
-<YYINITIAL> "," { return new Token(yytext(), TokenType_Comma        , null, yychar, yychar + 1, fileName); }
+<YYINITIAL> "," { return new Token(yytext(), TokenType_Comma       , null, yychar, yychar + 1, fileName); }
 <YYINITIAL> "{" { return new Token(yytext(), TokenType_OpenBrace   , null, yychar, yychar + 1, fileName); }
 <YYINITIAL> "}" { return new Token(yytext(), TokenType_CloseBrace  , null, yychar, yychar + 1, fileName); }
 <YYINITIAL> "[" { return new Token(yytext(), TokenType_OpenBracket , null, yychar, yychar + 1, fileName); }

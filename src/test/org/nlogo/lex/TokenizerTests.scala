@@ -175,8 +175,8 @@ class TokenizerTests extends FunSuite {
   test("ListOfArrays") {
     val tokens = tokenize("[{{array: 0}} {{array: 1}}]")
     expectResult("Token([,OpenBracket,null)" +
-                 "Token({{array: 0}},Literal,{{array: 0}})" +
-                 "Token({{array: 1}},Literal,{{array: 1}})" +
+                 "Token({{array: 0}},Extension,{{array: 0}})" +
+                 "Token({{array: 1}},Extension,{{array: 1}})" +
                  "Token(],CloseBracket,null)")(
       tokens.mkString)
     expectResult(1)(tokens(1).startPos)
@@ -187,7 +187,7 @@ class TokenizerTests extends FunSuite {
 
   test("ArrayOfArrays") {
     val tokens = tokenize("{{array: 2: {{array: 0}} {{array: 1}}}}")
-    expectResult("Token({{array: 2: {{array: 0}} {{array: 1}}}},Literal,{{array: 2: {{array: 0}} {{array: 1}}}})")(
+    expectResult("Token({{array: 2: {{array: 0}} {{array: 1}}}},Extension,{{array: 2: {{array: 0}} {{array: 1}}}})")(
       tokens.mkString)
   }
 
