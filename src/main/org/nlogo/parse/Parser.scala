@@ -46,7 +46,7 @@ trait Parser extends nvm.ParserInterface {
       tokenizer, source, displayName, program, subprogram, oldProcedures, extensionManager)
     val taskNumbers = Iterator.from(1)
     // the return type is plural because tasks inside a procedure get
-    // lambda-lifted and become top level procedures
+    // lambda-lifted and become procedures themselves
     def parseProcedure(procedure: nvm.Procedure): Seq[ProcedureDefinition] = {
       val rawTokens = structureResults.tokens(procedure)
       val lets = {
