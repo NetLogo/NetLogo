@@ -25,5 +25,4 @@ trait ParserInterface {
   def findIncludes(sourceFileName: String, source: String): Map[String, String]
   def isValidIdentifier(s: String): Boolean
   def isReporter(s: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager): Boolean
-  def getTokenAtPosition(source: String, position: Int): Token
 }

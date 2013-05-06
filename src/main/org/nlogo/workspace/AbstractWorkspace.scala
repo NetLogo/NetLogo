@@ -136,9 +136,6 @@ object AbstractWorkspaceTraits {
     override def isReporter(s: String) =
       compiler.isReporter(s, world.program, procedures, getExtensionManager)
 
-    override def getTokenAtPosition(s: String, pos: Int): Token =
-      compiler.getTokenAtPosition(s, pos)
-
     override def findProcedurePositions(source: String) =
       compiler.findProcedurePositions(source)
 

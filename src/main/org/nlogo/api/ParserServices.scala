@@ -8,6 +8,5 @@ trait ParserServices {
   def readNumberFromString(source: String): AnyRef
   def isReporter(s: String): Boolean
   def isValidIdentifier(s: String): Boolean
-  def getTokenAtPosition(source: String, position: Int): Token
   def findProcedurePositions(source: String): Map[String, (String, Int, Int, Int)]
 }

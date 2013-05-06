@@ -156,8 +156,4 @@ trait Parser extends nvm.ParserInterface {
     Set(OpenBracket, Literal, Ident, Reporter)
   }
 
-  // used by the indenter
-  def getTokenAtPosition(source: String, position: Int): api.Token =
-    tokenizer.getTokenAtPosition(source, position)
-
 }

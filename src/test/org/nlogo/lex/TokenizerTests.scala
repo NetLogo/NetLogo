@@ -107,37 +107,6 @@ class TokenizerTests extends FunSuite {
   test("invalidIdentifier3") {
     assert(!Tokenizer.isValidIdentifier("end"))
   }
-  // the method being tested here is used by the F1 key stuff - ST 1/23/08
-  test("GetTokenAtPosition") {
-    expectResult("Token(ask,Ident,ASK)")(
-      Tokenizer.getTokenAtPosition("ask turtles [set color blue]", 0).toString)
-    expectResult("Token(ask,Ident,ASK)")(
-      Tokenizer.getTokenAtPosition("ask turtles [set color blue]", 1).toString)
-    expectResult("Token(ask,Ident,ASK)")(
-      Tokenizer.getTokenAtPosition("ask turtles [set color blue]", 2).toString)
-    expectResult("Token([,OpenBracket,null)")(
-      Tokenizer.getTokenAtPosition("ask turtles [set color blue]", 12).toString)
-    expectResult("Token(set,Ident,SET)")(
-      Tokenizer.getTokenAtPosition("ask turtles [set color blue]", 13).toString)
-    expectResult("Token(set,Ident,SET)")(
-      Tokenizer.getTokenAtPosition("ask turtles [set color blue]", 14).toString)
-    expectResult("Token(blue,Literal,105.0)")(
-      Tokenizer.getTokenAtPosition("ask turtles [set color blue]", 24).toString)
-  }
-  // bug #88
-  test("GetTokenAtPosition-bug88") {
-    expectResult("Token(crt,Ident,CRT)")(
-      Tokenizer.getTokenAtPosition("[crt", 1).toString)
-  }
-  // bug #139
-  test("GetTokenAtPosition-bug139") {
-    expectResult("Token(crt,Ident,CRT)")(
-      Tokenizer.getTokenAtPosition("crt]", 3).toString)
-    expectResult("Token(crt,Ident,CRT)")(
-      Tokenizer.getTokenAtPosition("crt", 0).toString)
-    expectResult("Token(crt,Ident,CRT)")(
-      Tokenizer.getTokenAtPosition("crt", 3).toString)
-  }
   test("Empty1") {
     val tokens = tokenize("")
     expectResult("")(tokens.mkString)
