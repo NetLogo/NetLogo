@@ -24,7 +24,6 @@ class TokenTypeJ {
   static final TokenType Comma        = byName("Comma");
   static final TokenType Comment      = byName("Comment");
   static final TokenType Bad          = byName("Bad");
-  static final TokenType Extension    = byName("Extension");
 
   private static TokenType byName(String name) {
     try {

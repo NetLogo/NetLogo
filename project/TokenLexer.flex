@@ -12,39 +12,15 @@ import org.nlogo.api.TokenType;
 %%
 
 %{
-  private final String fileName;
-  private StringBuilder extensionLiteralBuilder = null;
-  private int extensionLiteralStart = -1;
-  private int extensionLiteralNestingLevel = 0;
-
-  void beginExtensionLiteral() {
-    extensionLiteralStart = yychar;
-    extensionLiteralBuilder = new StringBuilder();
-  }
-
-  void addToExtensionLiteral() {
-    extensionLiteralBuilder.append(yytext());
-  }
-
-  Token endExtensionLiteral() {
-    String text = extensionLiteralBuilder.toString();
-    extensionLiteralBuilder = null;
-    return new Token(text, TokenTypeJ.Extension, text,
-              extensionLiteralStart, extensionLiteralStart + text.length(), fileName);
-  }
-
-  Token ident() {
-    String text = yytext();
-    return new Token(text, TokenTypeJ.Ident, text.toUpperCase(),
-                     yychar, yychar + text.length(), fileName);
-  }
+  private final String filename;
+  private ExtensionLiteral extensionLiteral;
 %}
 /* this option decreases code size; see JFlex documentation */
 %switch
 %class TokenLexer
-%ctorarg String fileName
+%ctorarg String filename
 %init{
-  this.fileName = fileName;
+  this.filename = filename;
 %init}
 %unicode
 %char
@@ -61,49 +37,48 @@ IDENTIFIER_CHAR={LETTER} | {DIGIT} | [_\.?=\*!<>:#\+/%\$\^\'&-]
 
 <YYINITIAL> \{\{ {
   yybegin(EXTENSION_LITERAL);
-  beginExtensionLiteral();
-  addToExtensionLiteral();
-  extensionLiteralNestingLevel = 0;
+  extensionLiteral = new ExtensionLiteral(yychar, filename);
+  extensionLiteral.add(yytext());
 }
 
 <EXTENSION_LITERAL> \}\} {
-  addToExtensionLiteral();
-  if (extensionLiteralNestingLevel == 0) {
+  extensionLiteral.add(yytext());
+  if (extensionLiteral.nestingLevel() == 0) {
     yybegin(YYINITIAL);
-    return endExtensionLiteral();
+    return extensionLiteral.done();
   }
-  extensionLiteralNestingLevel--;
+  extensionLiteral.pop();
  }
 
 <EXTENSION_LITERAL> \{\{ {
-  extensionLiteralNestingLevel++;
-  addToExtensionLiteral();
+  extensionLiteral.push();
+  extensionLiteral.add(yytext());
  }
 
 <EXTENSION_LITERAL> . {
-  addToExtensionLiteral();
+  extensionLiteral.add(yytext());
 }
 
 <EXTENSION_LITERAL> \n|\r {
   yybegin(YYINITIAL);
   return new Token("", TokenTypeJ.Bad, "End of line reached unexpectedly",
-            yychar, yychar, fileName);
+            yychar, yychar, filename);
 }
 
 <EXTENSION_LITERAL> <<EOF>> {
   yybegin(YYINITIAL);
   return new Token("", TokenTypeJ.Bad, "End of file reached unexpectedly",
-            yychar, yychar, fileName);
+            yychar, yychar, filename);
 }
 
 
-<YYINITIAL> "," { return new Token(yytext(), TokenTypeJ.Comma       , null, yychar, yychar + 1, fileName); }
-<YYINITIAL> "{" { return new Token(yytext(), TokenTypeJ.OpenBrace   , null, yychar, yychar + 1, fileName); }
-<YYINITIAL> "}" { return new Token(yytext(), TokenTypeJ.CloseBrace  , null, yychar, yychar + 1, fileName); }
-<YYINITIAL> "[" { return new Token(yytext(), TokenTypeJ.OpenBracket , null, yychar, yychar + 1, fileName); }
-<YYINITIAL> "]" { return new Token(yytext(), TokenTypeJ.CloseBracket, null, yychar, yychar + 1, fileName); }
-<YYINITIAL> "(" { return new Token(yytext(), TokenTypeJ.OpenParen   , null, yychar, yychar + 1, fileName); }
-<YYINITIAL> ")" { return new Token(yytext(), TokenTypeJ.CloseParen  , null, yychar, yychar + 1, fileName); }
+<YYINITIAL> "," { return new Token(yytext(), TokenTypeJ.Comma       , null, yychar, yychar + 1, filename); }
+<YYINITIAL> "{" { return new Token(yytext(), TokenTypeJ.OpenBrace   , null, yychar, yychar + 1, filename); }
+<YYINITIAL> "}" { return new Token(yytext(), TokenTypeJ.CloseBrace  , null, yychar, yychar + 1, filename); }
+<YYINITIAL> "[" { return new Token(yytext(), TokenTypeJ.OpenBracket , null, yychar, yychar + 1, filename); }
+<YYINITIAL> "]" { return new Token(yytext(), TokenTypeJ.CloseBracket, null, yychar, yychar + 1, filename); }
+<YYINITIAL> "(" { return new Token(yytext(), TokenTypeJ.OpenParen   , null, yychar, yychar + 1, filename); }
+<YYINITIAL> ")" { return new Token(yytext(), TokenTypeJ.CloseParen  , null, yychar, yychar + 1, filename); }
 
 <YYINITIAL> {NONNEWLINE_WHITE_SPACE_CHAR}+ { }
 
@@ -112,7 +87,7 @@ IDENTIFIER_CHAR={LETTER} | {DIGIT} | [_\.?=\*!<>:#\+/%\$\^\'&-]
 <YYINITIAL>;.* {
   String text = yytext();
   return new Token(text, TokenTypeJ.Comment, null,
-            yychar, yychar + text.length(), fileName);
+            yychar, yychar + text.length(), filename);
 }
 
 <YYINITIAL> -?\.?[0-9]{IDENTIFIER_CHAR}* {
@@ -124,11 +99,13 @@ IDENTIFIER_CHAR={LETTER} | {DIGIT} | [_\.?=\*!<>:#\+/%\$\^\'&-]
     result.isLeft() ? result.left().get() : result.right().get();
   return new Token(
     text, resultType, resultValue,
-    yychar, yychar + text.length(), fileName);
+    yychar, yychar + text.length(), filename);
 }
 
 <YYINITIAL> {IDENTIFIER_CHAR}+ {
-  return ident();
+  String text = yytext();
+  return new Token(text, TokenTypeJ.Ident, text.toUpperCase(),
+                   yychar, yychar + text.length(), filename);
 }
 
 <YYINITIAL> \"{STRING_TEXT}\" {
@@ -137,22 +114,22 @@ IDENTIFIER_CHAR={LETTER} | {DIGIT} | [_\.?=\*!<>:#\+/%\$\^\'&-]
     return new Token
       (text, TokenTypeJ.Literal,
         org.nlogo.api.StringUtils.unEscapeString(text.substring(1, text.length() - 1)),
-        yychar, yychar + text.length(), fileName);
+        yychar, yychar + text.length(), filename);
   }
   catch(IllegalArgumentException ex) {
     return new Token(text, TokenTypeJ.Bad, "Illegal character after backslash",
-              yychar, yychar + text.length(), fileName);
+              yychar, yychar + text.length(), filename);
   }
 }
 
 <YYINITIAL> \"{STRING_TEXT} {
   String text = yytext();
   return new Token(text, TokenTypeJ.Bad, "Closing double quote is missing",
-            yychar, yychar + yytext().length(), fileName);
+            yychar, yychar + yytext().length(), filename);
 }
 
 . {
   String text = yytext();
   return new Token(text, TokenTypeJ.Bad, "This non-standard character is not allowed.",
-            yychar, yychar + 1, fileName);
+            yychar, yychar + 1, filename);
 }
