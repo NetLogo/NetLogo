@@ -22,7 +22,7 @@ class BooleanConstraint(_defaultValue: AnyRef) extends ValueConstraint {
   def coerceValue(value: AnyRef): java.lang.Boolean =
     value match {
       case b: java.lang.Boolean => b
-      case s: String => java.lang.Boolean.valueOf(s)
+      case s: String => java.lang.Boolean.valueOf(s)  // ugh, is this ever used? - ST 5/6/13
       case _ => defaultValue
     }
 
