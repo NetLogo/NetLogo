@@ -39,10 +39,8 @@ private object BackEnd {
       new Assembler().assemble(procdef)     // flatten tree to command array
       if (flags.useGenerator) // generate byte code
         procdef.procedure.code =
-          Femto.get(classOf[nvm.GeneratorInterface], "org.nlogo.generate.Generator",
-                    Array(source, procdef.procedure,
-                          Boolean.box(
-                            profilingEnabled)))
+          Femto.get[nvm.GeneratorInterface]("org.nlogo.generate.Generator",
+                    source, procdef.procedure, profilingEnabled)
             .generate()
     }
     // only return top level procedures.

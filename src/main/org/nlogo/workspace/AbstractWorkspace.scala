@@ -498,9 +498,9 @@ object AbstractWorkspaceTraits {
   }
 
   trait Jobs { this: AbstractWorkspace =>
-    val jobManager =
-      Femto.get(classOf[nvm.JobManagerInterface], "org.nlogo.job.JobManager",
-        Array[AnyRef](this, world, world))
+    val jobManager: nvm.JobManagerInterface =
+      Femto.get("org.nlogo.job.JobManager",
+        this, world, world)
     def halt() {
       jobManager.haltPrimary()
       world.displayOn(true)

@@ -28,10 +28,8 @@ class FakeWorld(state: State) extends api.World {
   }
 
   def newRenderer: api.RendererInterface = {
-    val renderer =
-      util.Femto.get(
-        classOf[api.RendererInterface],
-        "org.nlogo.render.Renderer", Array(this))
+    val renderer: api.RendererInterface =
+      util.Femto.get("org.nlogo.render.Renderer", this)
     renderer.resetCache(patchSize)
     renderer
   }

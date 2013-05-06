@@ -6,9 +6,8 @@ import org.nlogo.{ agent, api, nvm, parse0 }
 import org.nlogo.util.Femto
 
 object Parser extends Parser {
-  val tokenizer =
-    Femto.scalaSingleton(classOf[api.TokenizerInterface],
-      "org.nlogo.lex.Tokenizer")
+  val tokenizer: api.TokenizerInterface =
+    Femto.scalaSingleton("org.nlogo.lex.Tokenizer")
   val tokenMapper = new parse0.TokenMapper(
     "/system/tokens.txt", "org.nlogo.prim.")
   // well this is pretty ugly.  LiteralParser and LiteralAgentParser call each other,
@@ -99,8 +98,7 @@ trait Parser extends nvm.ParserInterface {
   @throws(classOf[java.io.IOException])
   def readFromFile(currFile: api.File, world: api.World, extensionManager: api.ExtensionManager): AnyRef = {
     val tokens: Iterator[api.Token] =
-      Femto.get(classOf[api.TokenReaderInterface], "org.nlogo.lex.TokenReader",
-                Array(currFile, tokenizer))
+      Femto.get("org.nlogo.lex.TokenReader", currFile, tokenizer)
     val result =
       Parser.literalParser(world, extensionManager)
         .getLiteralFromFile(tokens)
