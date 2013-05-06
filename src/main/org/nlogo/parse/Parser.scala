@@ -119,9 +119,6 @@ trait Parser extends nvm.ParserInterface {
     result
   }
 
-  // used by VariableNameEditor
-  def isValidIdentifier(s: String) = tokenizer.isValidIdentifier(s)
-
   // used by CommandLine
   def isReporter(s: String, program: api.Program, procedures: ProceduresMap, extensionManager: api.ExtensionManager) =
     try {

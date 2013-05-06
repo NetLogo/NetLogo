@@ -3,9 +3,7 @@
 package org.nlogo.api
 
 trait ParserServices {
-  def isConstant(s: String): Boolean
   def readFromString(s: String): AnyRef
   def readNumberFromString(source: String): AnyRef
   def isReporter(s: String): Boolean
-  def isValidIdentifier(s: String): Boolean
 }

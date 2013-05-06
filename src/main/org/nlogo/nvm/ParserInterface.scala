@@ -21,6 +21,5 @@ trait ParserInterface {
   def readNumberFromString(source: String, world: World, extensionManager: ExtensionManager): AnyRef
   @throws(classOf[java.io.IOException])
   def readFromFile(currFile: org.nlogo.api.File, world: World, extensionManager: ExtensionManager): AnyRef
-  def isValidIdentifier(s: String): Boolean
   def isReporter(s: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager): Boolean
 }

@@ -123,16 +123,6 @@ object AbstractWorkspaceTraits {
       compiler.readNumberFromString(
         source, world, getExtensionManager)
 
-    def isConstant(s: String) =
-      try {
-        compiler.readFromString(s)
-        true
-      }
-      catch { case _: CompilerException => false }
-
-    override def isValidIdentifier(s: String) =
-      compiler.isValidIdentifier(s)
-
     override def isReporter(s: String) =
       compiler.isReporter(s, world.program, procedures, getExtensionManager)
 

@@ -95,18 +95,6 @@ class TokenizerTests extends FunSuite {
     expectResult(expected)(tokens.mkString)
   }
 
-  test("validIdentifier") {
-    assert(Tokenizer.isValidIdentifier("foo"))
-  }
-  test("invalidIdentifier1") {
-    assert(!Tokenizer.isValidIdentifier("foo bar"))
-  }
-  test("invalidIdentifier2") {
-    assert(!Tokenizer.isValidIdentifier("33"))
-  }
-  test("invalidIdentifier3") {
-    assert(!Tokenizer.isValidIdentifier("end"))
-  }
   test("Empty1") {
     val tokens = tokenize("")
     expectResult("")(tokens.mkString)
