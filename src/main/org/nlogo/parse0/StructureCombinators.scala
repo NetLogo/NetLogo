@@ -145,7 +145,7 @@ extends scala.util.parsing.combinator.Parsers with Cleanup {
 
   def string: Parser[Token] =
     acceptMatch("string", {
-      case t @ Token(_, TokenType.Constant, value: String) =>
+      case t @ Token(_, TokenType.Literal, value: String) =>
         t })
 
   def keyword(name: String): Parser[Token] =

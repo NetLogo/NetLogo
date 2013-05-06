@@ -12,7 +12,7 @@ object TokenType {
   case object CloseBracket extends TokenType
   case object OpenBrace extends TokenType
   case object CloseBrace extends TokenType
-  case object Constant extends TokenType
+  case object Literal extends TokenType
   case object Ident extends TokenType
   case object Command extends TokenType
   case object Reporter extends TokenType

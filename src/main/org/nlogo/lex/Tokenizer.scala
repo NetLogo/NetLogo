@@ -56,7 +56,7 @@ class Tokenizer extends api.TokenizerInterface {
     // if the cursor is between two adjacent tokens we'll need to pick the token
     // the user probably wants for F1 purposes. see bug #139 - ST 5/2/12
     val interestingTokenTypes =
-      List(TokenType.Constant, TokenType.Ident, TokenType.Command, TokenType.Reporter,
+      List(TokenType.Literal, TokenType.Ident, TokenType.Command, TokenType.Reporter,
            TokenType.Keyword, TokenType.Variable)
     val candidates =
       tokenizeIncludingComments(source)

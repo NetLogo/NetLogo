@@ -349,10 +349,10 @@ class ExpressionParser(
           expr
         case TokenType.OpenBracket =>
           delayBlock(token, tokens)
-        case TokenType.Reporter | TokenType.Constant =>
+        case TokenType.Reporter | TokenType.Literal =>
           tokens.next()
           val (reporter, rApp) = token.tpe match {
-            case TokenType.Constant =>
+            case TokenType.Literal =>
               val r = ExpressionParser.makeLiteralReporter(token.value)
               r.token(token)
               (r, new ReporterApp(r, token.startPos, token.endPos, token.fileName))
@@ -581,7 +581,7 @@ class ExpressionParser(
       val tmp = ExpressionParser.makeLiteralReporter(
         new LiteralParser(null, null, null).parseLiteralList(tokens.next(), tokens))
       val token = tokens.next()
-      tmp.token(new Token("", TokenType.Constant, null)(openBracket.startPos, token.endPos, token.fileName))
+      tmp.token(new Token("", TokenType.Literal, null)(openBracket.startPos, token.endPos, token.fileName))
       new ReporterApp(tmp, openBracket.startPos, token.endPos, token.fileName)
     }
     // we weren't actually expecting a block at all!

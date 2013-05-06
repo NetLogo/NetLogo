@@ -37,7 +37,7 @@ class IdentifierParserTests extends FunSuite {
     val expected =
       "Token(let,Command,_let)" +
       "Token(Y,Reporter,_letvariable(Y))" +
-      "Token(5,Constant,5.0)"
+      "Token(5,Literal,5.0)"
     expectResult(expected)(
       compile("let y 5").mkString)
   }

@@ -44,7 +44,7 @@ class LiteralParser(
 
   def getNumberValue(tokens: Iterator[Token]) = {
     val token = tokens.next()
-    if(token.tpe != TokenType.Constant || !token.value.isInstanceOf[java.lang.Double])
+    if(token.tpe != TokenType.Literal || !token.value.isInstanceOf[java.lang.Double])
       exception(ERR_EXPECTED_NUMBER, token)
     val extra = tokens.next()
     cAssert(extra.tpe == TokenType.EOF, ERR_EXTRA_STUFF_AFTER_NUMBER, extra)
@@ -62,7 +62,7 @@ class LiteralParser(
     token.tpe match {
       case TokenType.Extension =>
         parseExtensionLiteral(token)
-      case TokenType.Constant =>
+      case TokenType.Literal =>
         token.value
       case TokenType.OpenBracket =>
         parseLiteralList(token, tokens)

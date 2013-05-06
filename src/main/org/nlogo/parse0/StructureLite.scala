@@ -67,7 +67,7 @@ class StructureLite(tokenizer: TokenizerInterface) {
             }
             else if(pathToken.tpe == TokenType.CloseBracket)
               return result
-            else if(pathToken.tpe == TokenType.Constant && pathToken.value.isInstanceOf[String]) {
+            else if(pathToken.tpe == TokenType.Literal && pathToken.value.isInstanceOf[String]) {
               pathToken = myTokens.next()
               filePath = resolvePath(sourceFileName, pathToken.value.asInstanceOf[String])
               result += pathToken.value.asInstanceOf[String] -> filePath

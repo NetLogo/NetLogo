@@ -26,7 +26,7 @@ import org.nlogo.api.TokenType;
   private static final TokenType TokenType_CloseBracket = getTokenType("CloseBracket");
   private static final TokenType TokenType_OpenBrace = getTokenType("OpenBrace");
   private static final TokenType TokenType_CloseBrace = getTokenType("CloseBrace");
-  private static final TokenType TokenType_Constant = getTokenType("Constant");
+  private static final TokenType TokenType_Literal = getTokenType("Literal");
   private static final TokenType TokenType_Ident = getTokenType("Ident");
   private static final TokenType TokenType_Keyword = getTokenType("Keyword");
   private static final TokenType TokenType_Comma = getTokenType("Comma");
@@ -79,7 +79,7 @@ import org.nlogo.api.TokenType;
                 yychar, yychar + text.length(), fileName);
     }
     else if (Constants.isConstant(text)) {
-      return new Token(text, TokenType_Constant, Constants.get(text),
+      return new Token(text, TokenType_Literal, Constants.get(text),
                 yychar, yychar + text.length(), fileName);
     }
     else {
@@ -168,7 +168,7 @@ IDENTIFIER_CHAR={LETTER} | {DIGIT} | [_\.?=\*!<>:#\+/%\$\^\'&-]
   String text = yytext();
   scala.util.Either<String, Double> result = org.nlogo.api.NumberParser.parse(text);
   TokenType resultType =
-    result.isLeft() ? TokenType_Bad : TokenType_Constant;
+    result.isLeft() ? TokenType_Bad : TokenType_Literal;
   Object resultValue =
     result.isLeft() ? result.left().get() : result.right().get();
   return new Token(
@@ -184,7 +184,7 @@ IDENTIFIER_CHAR={LETTER} | {DIGIT} | [_\.?=\*!<>:#\+/%\$\^\'&-]
   String text = yytext();
   try {
     return new Token
-      (text, TokenType_Constant,
+      (text, TokenType_Literal,
         org.nlogo.api.StringUtils.unEscapeString(text.substring(1, text.length() - 1)),
         yychar, yychar + text.length(), fileName);
   }

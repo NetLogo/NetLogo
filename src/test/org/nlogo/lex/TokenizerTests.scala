@@ -26,7 +26,7 @@ class TokenizerTests extends FunSuite {
   test("TokenizeSimpleExpr") {
     val expected = "Token(__ignore,Ident,__IGNORE)" +
       "Token(round,Ident,ROUND)" +
-      "Token(0.5,Constant,0.5)"
+      "Token(0.5,Literal,0.5)"
     expectResult(expected)(
       tokenize("__ignore round 0.5").mkString)
   }
@@ -35,7 +35,7 @@ class TokenizerTests extends FunSuite {
     val expected =
       "Token(__ignore,Ident,__IGNORE)" +
         "Token(round,Ident,ROUND)" +
-        "Token(0.5,Constant,0.5)"
+        "Token(0.5,Literal,0.5)"
     expectResult(expected)(tokens.mkString)
   }
   test("TokenizeSimpleExprWithInitialReturn") {
@@ -43,7 +43,7 @@ class TokenizerTests extends FunSuite {
     val expected =
       "Token(__ignore,Ident,__IGNORE)" +
         "Token(round,Ident,ROUND)" +
-        "Token(0.5,Constant,0.5)"
+        "Token(0.5,Literal,0.5)"
     expectResult(expected)(tokens.mkString)
   }
   test("TokenizeIdent") {
@@ -143,7 +143,7 @@ class TokenizerTests extends FunSuite {
       tokenizer.getTokenAtPosition("ask turtles [set color blue]", 13).toString)
     expectResult("Token(set,Ident,SET)")(
       tokenizer.getTokenAtPosition("ask turtles [set color blue]", 14).toString)
-    expectResult("Token(blue,Constant,105.0)")(
+    expectResult("Token(blue,Literal,105.0)")(
       tokenizer.getTokenAtPosition("ask turtles [set color blue]", 24).toString)
   }
   // bug #88
@@ -231,7 +231,7 @@ class TokenizerTests extends FunSuite {
   }
   test("TokenizeOddCharactersInString") {
     val tokens = tokenize("\"foo\u216C\"")
-    val expected = "Token(\"foo\u216C\",Constant,foo\u216C)"
+    val expected = "Token(\"foo\u216C\",Literal,foo\u216C)"
     expectResult(expected)(tokens.mkString)
   }
 
