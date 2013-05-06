@@ -17,38 +17,6 @@ import org.nlogo.api.TokenType;
   private int extensionLiteralStart = -1;
   private int extensionLiteralNestingLevel = 0;
 
-  // annoying, but I can't figure out any other way to get at the
-  // Scala inner objects from Java - ST 7/7/11
-  private static final TokenType TokenType_OpenParen    = getTokenType("OpenParen");
-  private static final TokenType TokenType_CloseParen   = getTokenType("CloseParen");
-  private static final TokenType TokenType_OpenBracket  = getTokenType("OpenBracket");
-  private static final TokenType TokenType_CloseBracket = getTokenType("CloseBracket");
-  private static final TokenType TokenType_OpenBrace    = getTokenType("OpenBrace");
-  private static final TokenType TokenType_CloseBrace   = getTokenType("CloseBrace");
-  private static final TokenType TokenType_Literal      = getTokenType("Literal");
-  private static final TokenType TokenType_Ident        = getTokenType("Ident");
-  private static final TokenType TokenType_Comma        = getTokenType("Comma");
-  private static final TokenType TokenType_Comment      = getTokenType("Comment");
-  private static final TokenType TokenType_Bad          = getTokenType("Bad");
-  private static final TokenType TokenType_Extension    = getTokenType("Extension");
-
-  private static TokenType getTokenType(String name) {
-    try {
-      return (TokenType)
-        Class.forName("org.nlogo.api.TokenType$" + name + "$")
-        .getField("MODULE$").get(null);
-    }
-    catch(IllegalAccessException ex) {
-      throw new IllegalStateException(ex);
-    }
-    catch(NoSuchFieldException ex) {
-      throw new IllegalStateException(ex);
-    }
-    catch(ClassNotFoundException ex) {
-      throw new IllegalStateException(ex);
-    }
-  }
-
   void beginExtensionLiteral() {
     extensionLiteralStart = yychar;
     extensionLiteralBuilder = new StringBuilder();
@@ -61,13 +29,13 @@ import org.nlogo.api.TokenType;
   Token endExtensionLiteral() {
     String text = extensionLiteralBuilder.toString();
     extensionLiteralBuilder = null;
-    return new Token(text, TokenType_Extension, text,
+    return new Token(text, TokenTypeJ.Extension, text,
               extensionLiteralStart, extensionLiteralStart + text.length(), fileName);
   }
 
   Token ident() {
     String text = yytext();
-    return new Token(text, TokenType_Ident, text.toUpperCase(),
+    return new Token(text, TokenTypeJ.Ident, text.toUpperCase(),
                      yychar, yychar + text.length(), fileName);
   }
 %}
@@ -118,24 +86,24 @@ IDENTIFIER_CHAR={LETTER} | {DIGIT} | [_\.?=\*!<>:#\+/%\$\^\'&-]
 
 <EXTENSION_LITERAL> \n|\r {
   yybegin(YYINITIAL);
-  return new Token("", TokenType_Bad, "End of line reached unexpectedly",
+  return new Token("", TokenTypeJ.Bad, "End of line reached unexpectedly",
             yychar, yychar, fileName);
 }
 
 <EXTENSION_LITERAL> <<EOF>> {
   yybegin(YYINITIAL);
-  return new Token("", TokenType_Bad, "End of file reached unexpectedly",
+  return new Token("", TokenTypeJ.Bad, "End of file reached unexpectedly",
             yychar, yychar, fileName);
 }
 
 
-<YYINITIAL> "," { return new Token(yytext(), TokenType_Comma       , null, yychar, yychar + 1, fileName); }
-<YYINITIAL> "{" { return new Token(yytext(), TokenType_OpenBrace   , null, yychar, yychar + 1, fileName); }
-<YYINITIAL> "}" { return new Token(yytext(), TokenType_CloseBrace  , null, yychar, yychar + 1, fileName); }
-<YYINITIAL> "[" { return new Token(yytext(), TokenType_OpenBracket , null, yychar, yychar + 1, fileName); }
-<YYINITIAL> "]" { return new Token(yytext(), TokenType_CloseBracket, null, yychar, yychar + 1, fileName); }
-<YYINITIAL> "(" { return new Token(yytext(), TokenType_OpenParen   , null, yychar, yychar + 1, fileName); }
-<YYINITIAL> ")" { return new Token(yytext(), TokenType_CloseParen  , null, yychar, yychar + 1, fileName); }
+<YYINITIAL> "," { return new Token(yytext(), TokenTypeJ.Comma       , null, yychar, yychar + 1, fileName); }
+<YYINITIAL> "{" { return new Token(yytext(), TokenTypeJ.OpenBrace   , null, yychar, yychar + 1, fileName); }
+<YYINITIAL> "}" { return new Token(yytext(), TokenTypeJ.CloseBrace  , null, yychar, yychar + 1, fileName); }
+<YYINITIAL> "[" { return new Token(yytext(), TokenTypeJ.OpenBracket , null, yychar, yychar + 1, fileName); }
+<YYINITIAL> "]" { return new Token(yytext(), TokenTypeJ.CloseBracket, null, yychar, yychar + 1, fileName); }
+<YYINITIAL> "(" { return new Token(yytext(), TokenTypeJ.OpenParen   , null, yychar, yychar + 1, fileName); }
+<YYINITIAL> ")" { return new Token(yytext(), TokenTypeJ.CloseParen  , null, yychar, yychar + 1, fileName); }
 
 <YYINITIAL> {NONNEWLINE_WHITE_SPACE_CHAR}+ { }
 
@@ -143,7 +111,7 @@ IDENTIFIER_CHAR={LETTER} | {DIGIT} | [_\.?=\*!<>:#\+/%\$\^\'&-]
 
 <YYINITIAL>;.* {
   String text = yytext();
-  return new Token(text, TokenType_Comment, null,
+  return new Token(text, TokenTypeJ.Comment, null,
             yychar, yychar + text.length(), fileName);
 }
 
@@ -151,7 +119,7 @@ IDENTIFIER_CHAR={LETTER} | {DIGIT} | [_\.?=\*!<>:#\+/%\$\^\'&-]
   String text = yytext();
   scala.util.Either<String, Double> result = org.nlogo.api.NumberParser.parse(text);
   TokenType resultType =
-    result.isLeft() ? TokenType_Bad : TokenType_Literal;
+    result.isLeft() ? TokenTypeJ.Bad : TokenTypeJ.Literal;
   Object resultValue =
     result.isLeft() ? result.left().get() : result.right().get();
   return new Token(
@@ -167,24 +135,24 @@ IDENTIFIER_CHAR={LETTER} | {DIGIT} | [_\.?=\*!<>:#\+/%\$\^\'&-]
   String text = yytext();
   try {
     return new Token
-      (text, TokenType_Literal,
+      (text, TokenTypeJ.Literal,
         org.nlogo.api.StringUtils.unEscapeString(text.substring(1, text.length() - 1)),
         yychar, yychar + text.length(), fileName);
   }
   catch(IllegalArgumentException ex) {
-    return new Token(text, TokenType_Bad, "Illegal character after backslash",
+    return new Token(text, TokenTypeJ.Bad, "Illegal character after backslash",
               yychar, yychar + text.length(), fileName);
   }
 }
 
 <YYINITIAL> \"{STRING_TEXT} {
   String text = yytext();
-  return new Token(text, TokenType_Bad, "Closing double quote is missing",
+  return new Token(text, TokenTypeJ.Bad, "Closing double quote is missing",
             yychar, yychar + yytext().length(), fileName);
 }
 
 . {
   String text = yytext();
-  return new Token(text, TokenType_Bad, "This non-standard character is not allowed.",
+  return new Token(text, TokenTypeJ.Bad, "This non-standard character is not allowed.",
             yychar, yychar + 1, fileName);
 }
