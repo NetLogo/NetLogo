@@ -46,11 +46,29 @@ class Tokenizer extends api.TokenizerInterface {
       else
         Stream.cons(t, yystream)
     }
-    yystream.filter(includeCommentTokens || _.tpe != TokenType.Comment).toList
+    yystream
+      .filter(includeCommentTokens || _.tpe != TokenType.Comment)
+      .map(handleSpecialIdentifiers)
+      .toList
   }
 
+  // this could be part of IdentifierParser, even. handling it here for
+  // now, pending a total rewrite of IdentifierParser - ST 5/6/13
+  private def handleSpecialIdentifiers(t: Token): Token =
+    if (Keywords.isKeyword(t.name))
+      t.copy(tpe = TokenType.Keyword)
+    else if (Variables.isVariable(t.name))
+      t.copy(tpe = TokenType.Variable)
+    else Constants.get(t.name) match {
+      case Some(value) =>
+        t.copy(tpe = TokenType.Literal, value = value)
+      case None =>
+        t
+    }
+
   def nextToken(reader: java.io.BufferedReader): Token =
-    new TokenLexer(reader, null).yylex()
+    handleSpecialIdentifiers(
+      new TokenLexer(reader, null).yylex())
 
   def getTokenAtPosition(source: String, position: Int): Token = {
     // if the cursor is between two adjacent tokens we'll need to pick the token

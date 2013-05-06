@@ -5,20 +5,18 @@ package org.nlogo.lex
 import org.nlogo.api.{ Color, Nobody }
 
 object Constants {
-  val colorConstants =
+  val colorConstants: Map[String, AnyRef] =
     (for ((name, index) <- Color.getColorNamesArray.zipWithIndex)
-     yield (name.toUpperCase -> Color.getColorNumberByIndex(index))).toMap +
-    ("GREY" -> Color.getColorNumberByIndex(Color.getColorNamesArray.indexOf("gray")))
-  val otherConstants = Map(
-    "FALSE" -> false,
-    "TRUE" -> true,
+     yield (name.toUpperCase -> Double.box(Color.getColorNumberByIndex(index)))).toMap +
+    ("GREY" -> Double.box(Color.getColorNumberByIndex(Color.getColorNamesArray.indexOf("gray"))))
+  val otherConstants = Map[String, AnyRef](
+    "FALSE" -> Boolean.box(false),
+    "TRUE" -> Boolean.box(true),
     "NOBODY" -> Nobody,
-    "E" -> StrictMath.E,
-    "PI" -> StrictMath.PI)
-  val constants = otherConstants ++ colorConstants
-  def isConstant(s: String) =
-    constants.contains(s.toUpperCase)
-  // caller's responsibility to validate s first
-  def get(s: String) =
-    constants.get(s.toUpperCase).get
+    "E" -> Double.box(StrictMath.E),
+    "PI" -> Double.box(StrictMath.PI))
+  val constants: Map[String, AnyRef] =
+    otherConstants ++ colorConstants
+  def get(s: String): Option[AnyRef] =
+    constants.get(s.toUpperCase)
 }

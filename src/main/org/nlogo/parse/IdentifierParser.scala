@@ -53,8 +53,7 @@ class IdentifierParser(
     def lookup(fn: String => Option[api.TokenHolder], newType: TokenType): Option[Token] =
       fn(primName).map{holder =>
         val newToken =
-          token.copy(tpe = newType, value = holder)(
-            token.startPos, token.endPos, token.fileName)
+          token.copy(tpe = newType, value = holder)
         holder.token(newToken)
         newToken
       }

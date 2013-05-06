@@ -17,9 +17,8 @@ import org.nlogo.api.TokenType;
   private int extensionLiteralStart = -1;
   private int extensionLiteralNestingLevel = 0;
 
-  // this is very annoying, but I can't figure out any other way to
-  // get at the Scala inner objects from Java - ST 7/7/11
-  private static final TokenType TokenType_EOF = getTokenType("EOF");
+  // annoying, but I can't figure out any other way to get at the
+  // Scala inner objects from Java - ST 7/7/11
   private static final TokenType TokenType_OpenParen = getTokenType("OpenParen");
   private static final TokenType TokenType_CloseParen = getTokenType("CloseParen");
   private static final TokenType TokenType_OpenBracket = getTokenType("OpenBracket");
@@ -28,10 +27,8 @@ import org.nlogo.api.TokenType;
   private static final TokenType TokenType_CloseBrace = getTokenType("CloseBrace");
   private static final TokenType TokenType_Literal = getTokenType("Literal");
   private static final TokenType TokenType_Ident = getTokenType("Ident");
-  private static final TokenType TokenType_Keyword = getTokenType("Keyword");
   private static final TokenType TokenType_Comma = getTokenType("Comma");
   private static final TokenType TokenType_Comment = getTokenType("Comment");
-  private static final TokenType TokenType_Variable = getTokenType("Variable");
   private static final TokenType TokenType_Bad = getTokenType("Bad");
   private static final TokenType TokenType_Extension = getTokenType("Extension");
 
@@ -70,22 +67,8 @@ import org.nlogo.api.TokenType;
 
   Token ident() {
     String text = yytext();
-    if (Keywords.isKeyword(text)) {
-      return new Token(text, TokenType_Keyword, text.toUpperCase(),
-                yychar, yychar + text.length(), fileName);
-    }
-    else if (Variables.isVariable(text)) {
-      return new Token(text, TokenType_Variable, text.toUpperCase(),
-                yychar, yychar + text.length(), fileName);
-    }
-    else if (Constants.isConstant(text)) {
-      return new Token(text, TokenType_Literal, Constants.get(text),
-                yychar, yychar + text.length(), fileName);
-    }
-    else {
-      return new Token(text, TokenType_Ident, text.toUpperCase(),
-                yychar, yychar + text.length(), fileName);
-    }
+    return new Token(text, TokenType_Ident, text.toUpperCase(),
+                     yychar, yychar + text.length(), fileName);
   }
 %}
 /* this option decreases code size; see JFlex documentation */

@@ -11,8 +11,12 @@ package org.nlogo.api
 // they're auxiliary information.  Also we don't want them in the toString output either since it
 // makes test cases annoying to write.
 
-case class Token(name: String, tpe: TokenType, value: AnyRef)
-                (val startPos: Int, val endPos: Int, val fileName: String)
 object Token {
   val eof = new Token("", TokenType.EOF, "")(0, 0, "")
+}
+case class Token(name: String, tpe: TokenType, value: AnyRef)
+                (val startPos: Int, val endPos: Int, val fileName: String) {
+  // the automatically generated `copy` method wouldn't copy the auxiliary fields
+  def copy(name: String = name, tpe: TokenType = tpe, value: AnyRef = value): Token =
+    new Token(name, tpe, value)(startPos, endPos, fileName)
 }
