@@ -11,16 +11,16 @@ class TestCompiler extends FunSuite with OneInstancePerTest with BeforeAndAfterE
   override def beforeEach() { workspace = HeadlessWorkspace.newInstance }
   override def afterEach() { workspace.dispose() }
 
-  def declare(source:String) {
+  def declare(source: String) {
     workspace.initForTesting(5, source)
   }
-  def declareBad(source:String,expectedError:String) {
+  def declareBad(source: String, expectedError: String) {
     val exception = intercept[CompilerException] {
       declare(source)
     }
     expectResult(expectedError)(exception.getMessage)
   }
-  def badCommand(command:String,expectedError:String) {
+  def badCommand(command: String, expectedError: String) {
     val exception = intercept[CompilerException] {
       workspace.command(command)
     }
