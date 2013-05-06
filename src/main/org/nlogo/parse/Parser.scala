@@ -83,23 +83,26 @@ trait Parser extends nvm.ParserInterface {
   def readFromString(source: String): AnyRef =
     api.NumberParser.parse(source).right.getOrElse(
       new parse0.LiteralParser(null, null, null)
-        .getLiteralValue(tokenizer.tokenize(source)))
+        .getLiteralValue(tokenizer.tokenize(source)
+          .map(parse0.Namer0)))
 
-  def readFromString(source: String, world: api.World, extensionManager: api.ExtensionManager): AnyRef = {
+  def readFromString(source: String, world: api.World, extensionManager: api.ExtensionManager): AnyRef =
     api.NumberParser.parse(source).right.getOrElse(
       Parser.literalParser(world, extensionManager)
-        .getLiteralValue(tokenizer.tokenize(source)))
-  }
+        .getLiteralValue(tokenizer.tokenize(source)
+          .map(parse0.Namer0)))
 
   def readNumberFromString(source: String, world: api.World, extensionManager: api.ExtensionManager): java.lang.Double =
     api.NumberParser.parse(source).right.getOrElse(
       Parser.literalParser(world, extensionManager)
-        .getNumberValue(tokenizer.tokenize(source)))
+        .getNumberValue(tokenizer.tokenize(source)
+          .map(parse0.Namer0)))
 
   @throws(classOf[java.io.IOException])
   def readFromFile(currFile: api.File, world: api.World, extensionManager: api.ExtensionManager): AnyRef = {
     val tokens: Iterator[api.Token] =
       new parse0.TokenReader(currFile, tokenizer)
+        .map(parse0.Namer0)
     val result =
       Parser.literalParser(world, extensionManager)
         .getLiteralFromFile(tokens)
@@ -124,7 +127,7 @@ trait Parser extends nvm.ParserInterface {
   def isReporter(s: String, program: api.Program, procedures: ProceduresMap, extensionManager: api.ExtensionManager) =
     try {
       val results =
-        new StructureParser(tokenizer.tokenize("to __is-reporter? report " + s + "\nend"),
+        new StructureParser(tokenizer.tokenize("to __is-reporter? report " + s + "\nend").map(parse0.Namer0),
                             None, StructureResults(program, procedures))
           .parse(subprogram = true)
       val namer =

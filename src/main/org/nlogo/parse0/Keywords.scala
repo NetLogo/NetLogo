@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.lex
+package org.nlogo.parse0
 
 // no "BREED" keyword because it conflicts with BREED turtle variable -- CLB
 

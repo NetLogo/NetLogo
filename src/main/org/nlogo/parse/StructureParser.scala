@@ -39,6 +39,7 @@ object StructureParser {
       val tokens =
         tokenizer.tokenize(source, filename)
           .filter(_.tpe != api.TokenType.Comment)
+          .map(parse0.Namer0)
       new StructureParser(tokens, displayName, previousResults)
         .parse(subprogram)
     }

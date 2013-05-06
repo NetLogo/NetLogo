@@ -12,8 +12,8 @@ class NamerTests extends FunSuite {
     val wrappedSource = "to __test " + source + "\nend"
     val program = Program.empty().copy(interfaceGlobals = Seq("X"))
     val results = new StructureParser(
-      Parser.tokenizer.tokenize(wrappedSource), None,
-      StructureResults(program))
+        Parser.tokenizer.tokenize(wrappedSource).map(parse0.Namer0),
+        None, StructureResults(program))
       .parse(false)
     expectResult(1)(results.procedures.size)
     val procedure = results.procedures.values.iterator.next()

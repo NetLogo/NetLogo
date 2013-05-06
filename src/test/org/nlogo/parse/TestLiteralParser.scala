@@ -6,6 +6,7 @@ import org.scalatest.FunSuite
 import org.nlogo.agent.{AgentSet, Patch, Turtle, World}
 import org.nlogo.api.{CompilerException, Dump, ExtensionManager, ExtensionObject, LogoList}
 import org.nlogo.util.MockSuite
+import org.nlogo.parse0
 
 // Even though LiteralParser is in parse0, we can't test it fully without
 // a LiteralAgentParser, and that's in the agent package, so these tests
@@ -26,9 +27,10 @@ class TestLiteralParser extends FunSuite with MockSuite {
                  world: World = defaultWorld,
                  extensionManager: ExtensionManager = null): AnyRef =
     Parser.literalParser(world, extensionManager)
-      .getLiteralValue(Parser.tokenizer.tokenize(input))
+      .getLiteralValue(Parser.tokenizer.tokenize(input).map(parse0.Namer0))
+
   def toLiteralList(input: String, world: World = defaultWorld): LogoList = {
-    val tokens = Parser.tokenizer.tokenize(input)
+    val tokens = Parser.tokenizer.tokenize(input).map(parse0.Namer0)
     Parser.literalParser(world, null).parseLiteralList(tokens.next(), tokens)
   }
 

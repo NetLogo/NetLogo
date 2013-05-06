@@ -4,8 +4,9 @@ package org.nlogo.parse
 
 import org.scalatest.FunSuite
 
-import org.nlogo.api, api.CompilerException
-import org.nlogo.util.Femto
+import org.nlogo.{ api, parse0 },
+  api.CompilerException,
+  org.nlogo.util.Femto
 
 class StructureParserTests extends FunSuite {
 
@@ -13,7 +14,7 @@ class StructureParserTests extends FunSuite {
     Femto.scalaSingleton("org.nlogo.lex.Tokenizer")
 
   def compile(source: String): StructureResults =
-    new StructureParser(tokenizer.tokenize(source),
+    new StructureParser(tokenizer.tokenize(source).map(parse0.Namer0),
                         None, StructureResults.empty)
       .parse(false)
 

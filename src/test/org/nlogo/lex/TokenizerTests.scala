@@ -55,12 +55,6 @@ class TokenizerTests extends FunSuite {
         "Token(?,Ident,?)"
     expectResult(expected)(tokens.mkString)
   }
-  test("TokenizeBreedOwn") {
-    val tokens = tokenize("mice-own")
-    val expected =
-      "Token(mice-own,Keyword,MICE-OWN)"
-    expectResult(expected)(tokens.mkString)
-  }
   test("TokenizeUnknownEscape") {
     val tokens = tokenizeRobustly("\"\\b\"")
     expectResult(0)(firstBadToken(tokens).get.start)
