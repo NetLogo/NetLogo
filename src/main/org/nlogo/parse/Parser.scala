@@ -119,10 +119,6 @@ trait Parser extends nvm.ParserInterface {
     result
   }
 
-  // used for includes menu
-  def findIncludes(sourceFileName: String, source: String): Map[String, String] =
-    new parse0.StructureLite(tokenizer).findIncludes(sourceFileName, source)
-
   // used by VariableNameEditor
   def isValidIdentifier(s: String) = tokenizer.isValidIdentifier(s)
 
