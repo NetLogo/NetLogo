@@ -22,7 +22,6 @@ object Tokenizer extends api.TokenizerInterface {
     val results =
       Iterator.continually(yy.yylex())
         .takeWhile(_ != null)
-        .filter(_.tpe != TokenType.Comment)
         .map(handleSpecialIdentifiers)
     results ++ Iterator(Token.eof)
   }
