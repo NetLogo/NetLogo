@@ -35,7 +35,7 @@ extends Iterator[api.Token] {
     // would become unreasonably slow again, but 356K is pretty big so I'm not going to worry about
     // it, at least until the day when the whole LocalFile mess gets straightened out. - ST 1/21/09
     reader.mark(65536)
-    val t = tokenizer.nextToken(reader)
+    val t = tokenizer.tokenizeRobustly(reader).next()
     if (t.tpe == api.TokenType.Bad)
       throw new api.CompilerException(t)
     // after Tokenizer has done its thing, we no longer know what relationship holds between

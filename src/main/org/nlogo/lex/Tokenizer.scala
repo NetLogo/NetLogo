@@ -38,8 +38,4 @@ object Tokenizer extends api.TokenizerInterface {
         t
     }
 
-  def nextToken(reader: java.io.BufferedReader): Token =
-    handleSpecialIdentifiers(
-      new TokenLexer(reader, null).yylex())
-
 }
