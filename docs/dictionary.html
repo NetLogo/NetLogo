@@ -8569,6 +8569,8 @@ ask turtle 0 [ show sort my-links ]
       <p>
         <a href="#tick">tick</a> has the same effect, so in models that use
         the tick counter, this primitive is not normally used.
+        Models that use fractional ticks may need <tt>update-plots</tt>, since
+        <a href="#tick-advance">tick-advance</a> does not update the plots.
       <p>
         See the <a href="programming.html#plotting">Plotting section</a> of
         the Programming Guide for more details.
