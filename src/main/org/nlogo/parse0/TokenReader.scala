@@ -1,16 +1,19 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.lex
+package org.nlogo.parse0
 
-import org.nlogo.api.{ CompilerException, File, FileMode, Token, TokenizerInterface, TokenReaderInterface, TokenType }
-import java.io.IOException
+import org.nlogo.api
 
 // This exists to support the file-read primitive, which uses LiteralParser.  During normal
 // compilation we just slurp all of the code into memory before doing any parsing, but it
 // wouldn't be OK for file-read to slurp a whole data file, so LiteralParser uses Iterator[Token].
 
-class TokenReader(file: File, tokenizer: TokenizerInterface) extends TokenReaderInterface {
-  def hasNext = true // code elsewhere is expected to detect eof for us
+class TokenReader(file: api.File, tokenizer: api.TokenizerInterface)
+extends Iterator[api.Token] {
+
+  // code elsewhere is expected to detect eof for us
+  def hasNext = true
+
   // Now for the tricky part.  This class is designed to work with api.File, which
   // provids a BufferedReader but also maintains its own notion of current position with the
   // file (LocalFile.pos).  The BufferedReader and file.pos need to be kept in sync.
@@ -19,7 +22,8 @@ class TokenReader(file: File, tokenizer: TokenizerInterface) extends TokenReader
   // It may be that the approach we take is the best that can be done given LocalFile's
   // complexities, but it's also possible that even within that constraint, this stuff
   // doesn't need to be so complex either.  I really don't know. - ST 12/19/08
-  def next(): Token = {
+
+  def next(): api.Token = {
     def reader = file.reader // def not val because we close & reopen the file below
     val pos = file.pos
     // here we set an arbitrary ceiling on amount of buffered lookahead we let ourselves do.  we
@@ -32,8 +36,8 @@ class TokenReader(file: File, tokenizer: TokenizerInterface) extends TokenReader
     // it, at least until the day when the whole LocalFile mess gets straightened out. - ST 1/21/09
     reader.mark(65536)
     val t = tokenizer.nextToken(reader)
-    if (t.tpe == TokenType.Bad)
-      throw new CompilerException(t)
+    if (t.tpe == api.TokenType.Bad)
+      throw new api.CompilerException(t)
     // after Tokenizer has done its thing, we no longer know what relationship holds between
     // the BufferedReader's position and file.pos, so the following code makes sure they are
     // both correct and in sync with each other.  Above we called reader.mark() so we could
@@ -43,11 +47,11 @@ class TokenReader(file: File, tokenizer: TokenizerInterface) extends TokenReader
     // Originally we didn't have the close/reopen thing, but it was added when we got a bug
     // report from a user having difficulty reading a long file; there are test cases in
     // test/commands/File.txt that cover the bug.
-    try { reader.reset() }
+    try reader.reset()
     catch {
-      case ex: IOException => // token too big to mark; close and reopen file to get back where we were
+      case ex: java.io.IOException => // token too big to mark; close and reopen file to get back where we were
         file.close(true)
-        file.open(FileMode.Read)
+        file.open(api.FileMode.Read)
         reader.skip(pos)
         file.pos = pos
     }
@@ -59,4 +63,5 @@ class TokenReader(file: File, tokenizer: TokenizerInterface) extends TokenReader
     file.pos += t.endPos
     t
   }
+
 }

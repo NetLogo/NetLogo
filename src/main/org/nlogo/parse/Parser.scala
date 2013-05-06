@@ -99,7 +99,7 @@ trait Parser extends nvm.ParserInterface {
   @throws(classOf[java.io.IOException])
   def readFromFile(currFile: api.File, world: api.World, extensionManager: api.ExtensionManager): AnyRef = {
     val tokens: Iterator[api.Token] =
-      Femto.get("org.nlogo.lex.TokenReader", currFile, tokenizer)
+      new parse0.TokenReader(currFile, tokenizer)
     val result =
       Parser.literalParser(world, extensionManager)
         .getLiteralFromFile(tokens)
