@@ -113,7 +113,7 @@ IDENTIFIER_CHAR={LETTER} | {DIGIT} | [_\.?=\*!<>:#\+/%\$\^\'&-]
   try {
     return new Token
       (text, TokenTypeJ.Literal,
-        org.nlogo.api.StringUtils.unEscapeString(text.substring(1, text.length() - 1)),
+        org.nlogo.api.StringUtils.unescapeString(text.substring(1, text.length() - 1)),
         yychar, yychar + text.length(), filename);
   }
   catch(IllegalArgumentException ex) {

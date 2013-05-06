@@ -3,7 +3,7 @@
 package org.nlogo.plot
 
 import org.nlogo.api
-import api.StringUtils.unEscapeString
+import api.StringUtils.unescapeString
 
 object PlotLoader {
 
@@ -25,8 +25,8 @@ object PlotLoader {
         case Nil => // old style model, no new plot code. this is ok.
         case setup :: update :: Nil =>
           // the correct amount of plot code.
-          plot.setupCode = unEscapeString(setup)
-          plot.updateCode = unEscapeString(update)
+          plot.setupCode = unescapeString(setup)
+          plot.updateCode = unescapeString(update)
         case _ =>
           // 1, or 3 or more bits of code...error.
           sys.error("Plot '" + plot.name + "' contains invalid setup and/or update code: " + plotLines(14))
@@ -77,8 +77,8 @@ object PlotLoader {
         case _ =>
           ("", "")
       }
-    PenSpec(unEscapeString(name), interval.toDouble, mode.toInt, color.toInt, inLegend.toBoolean,
-            unEscapeString(setup), unEscapeString(update))
+    PenSpec(unescapeString(name), interval.toDouble, mode.toInt, color.toInt, inLegend.toBoolean,
+            unescapeString(setup), unescapeString(update))
   }
 
   // This is tricky because the string literals may contain escaped double quotes, so it's
