@@ -119,10 +119,6 @@ trait Parser extends nvm.ParserInterface {
     result
   }
 
-  // used for procedures menu
-  def findProcedurePositions(source: String): Map[String, (String, Int, Int, Int)] =
-    new parse0.StructureLite(tokenizer).findProcedurePositions(source)
-
   // used for includes menu
   def findIncludes(sourceFileName: String, source: String): Map[String, String] =
     new parse0.StructureLite(tokenizer).findIncludes(sourceFileName, source)

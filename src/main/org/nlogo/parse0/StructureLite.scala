@@ -10,45 +10,6 @@ import org.nlogo.api.{ TokenType, TokenizerInterface }
 
 class StructureLite(tokenizer: TokenizerInterface) {
 
-  /**
-   * identifies the positions of all procedure definitions in the given
-   * source. Returns a Map mapping String procedure names to tuples.
-   * Each tuple contains 4 elements: the String procedure name, the Int
-   * position of the "to" or "to-report" keyword, the Int position of the
-   * procedure name, and the Int position of the "end" keyword.
-   *
-   * This data structure is used to populate the "procedures" menu in the GUI.
-   */
-  def findProcedurePositions(source: String): Map[String, (String, Int, Int, Int)] = {
-    var result = Map[String, (String, Int, Int, Int)]()
-    // Tokenize the current procedures window source
-    val tokens = tokenizer.tokenizeRobustly(source).iterator.buffered
-    while(tokens.hasNext) {
-      var token = tokens.next()
-      if(token.tpe == TokenType.Keyword) {
-        val keyword = token.value.asInstanceOf[String]
-        if(keyword == "TO" || keyword == "TO-REPORT") {
-          // position of to/to-report
-          val toPos = token.startPos
-          // name of procedure
-          val nameToken = tokens.head
-          if(nameToken.tpe == TokenType.Ident) {
-            val name = nameToken.name
-            // position of end
-            var done = false
-            while(!done && tokens.hasNext) {
-              token = tokens.next()
-              if(token.tpe == TokenType.Keyword && token.value == "END")
-                done = true
-            }
-            result += name -> ((name, toPos, nameToken.startPos, token.endPos))
-          }
-        }
-      }
-    }
-    result
-  }
-
   def findIncludes(sourceFileName: String, source: String): Map[String, String] = {
     var result = Map[String, String]()
     // Tokenize the current procedures window source

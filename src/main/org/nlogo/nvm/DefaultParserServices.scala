@@ -23,6 +23,4 @@ class DefaultParserServices(parser: ParserInterface) extends api.ParserServices 
   def isReporter(s: String) =
     parser.isReporter(s, api.Program.empty(), ParserInterface.NoProcedures,
       new org.nlogo.api.DummyExtensionManager)
-  def findProcedurePositions(source: String) =
-    parser.findProcedurePositions(source)
 }

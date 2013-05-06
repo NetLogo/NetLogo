@@ -21,5 +21,4 @@ class DummyParserServices extends ParserServices {
   def isConstant(s: String): Boolean = unsupported
   def isValidIdentifier(s: String): Boolean = unsupported
   def isReporter(s: String): Boolean = unsupported
-  def findProcedurePositions(source: String) = unsupported
 }
