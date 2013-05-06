@@ -107,25 +107,6 @@ class TokenizerTests extends FunSuite {
   test("invalidIdentifier3") {
     assert(!Tokenizer.isValidIdentifier("end"))
   }
-  // check extension primitives
-  test("extensionCommand") {
-    val extensionManager = new api.DummyExtensionManager {
-      class DummyCommand extends api.Command {
-        def getAgentClassString = ""
-        def getSyntax: api.Syntax = null
-        def getSwitchesBoolean = true
-        def newInstance(name: String): api.Command = null
-        def perform(args: Array[api.Argument], context: api.Context) {}
-      }
-      override def anyExtensionsLoaded = true
-      override def replaceIdentifier(name: String): api.Primitive =
-        if (name.equalsIgnoreCase("FOO")) new DummyCommand else null
-    }
-    expectResult("Token(foo,Ident,FOO)")(
-      Tokenizer.tokenizeForColorization("foo").mkString)
-    expectResult("Token(foo,Command,FOO)")(
-      Tokenizer.tokenizeForColorization("foo", extensionManager).mkString)
-  }
   // the method being tested here is used by the F1 key stuff - ST 1/23/08
   test("GetTokenAtPosition") {
     expectResult("Token(ask,Ident,ASK)")(

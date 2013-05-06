@@ -160,8 +160,4 @@ trait Parser extends nvm.ParserInterface {
   def getTokenAtPosition(source: String, position: Int): api.Token =
     tokenizer.getTokenAtPosition(source, position)
 
-  // this is for the syntax-highlighting editor
-  def tokenizeForColorization(source: String, extensionManager: api.ExtensionManager): Seq[api.Token] =
-    tokenizer.tokenizeForColorization(source, extensionManager)
-
 }

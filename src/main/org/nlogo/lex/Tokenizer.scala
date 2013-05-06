@@ -92,27 +92,4 @@ object Tokenizer extends api.TokenizerInterface {
     tokenizeRobustly(ident).take(2).map(_.tpe) ==
       Seq(TokenType.Ident, TokenType.EOF)
 
-  def tokenizeForColorization(source: String, extensionManager: api.ExtensionManager): Seq[Token] = {
-    // In order for extension primitives to be the right color, we need to change
-    // the type of the token from TokenType.Ident to TokenType.Command or TokenType.Reporter
-    // if the identifier is recognized by the extension.
-    def replaceImports(token: Token): Token =
-      if (!extensionManager.anyExtensionsLoaded || token.tpe != TokenType.Ident)
-        token
-      // look up the replacement.
-      else extensionManager.replaceIdentifier(token.value.asInstanceOf[String]) match {
-        case null => token
-        case prim =>
-          val newType =
-            if (prim.isInstanceOf[api.Command])
-              TokenType.Command
-            else TokenType.Reporter
-          new Token(token.name, newType, token.value)(
-            token.startPos, token.endPos, token.fileName)
-      }
-    tokenizeIncludingComments(source)
-      .takeWhile(_.tpe != TokenType.EOF)
-      .map(replaceImports)
-  }
-
 }

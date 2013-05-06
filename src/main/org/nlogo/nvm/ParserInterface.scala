@@ -26,5 +26,4 @@ trait ParserInterface {
   def isValidIdentifier(s: String): Boolean
   def isReporter(s: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager): Boolean
   def getTokenAtPosition(source: String, position: Int): Token
-  def tokenizeForColorization(source: String, extensionManager: ExtensionManager): Seq[Token]
 }
