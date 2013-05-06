@@ -11,7 +11,7 @@ class LetScoperTests extends FunSuite {
     Femto.scalaSingleton("org.nlogo.lex.Tokenizer")
 
   def compile(source: String) =
-    new LetScoper(tokenizer.tokenize(source))
+    new LetScoper(tokenizer.tokenize(source).toSeq)
       .scan(Map())
 
   test("empty") {

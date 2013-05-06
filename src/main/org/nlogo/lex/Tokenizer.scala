@@ -6,35 +6,25 @@ import org.nlogo.api, api.{ Token, TokenType }
 
 object Tokenizer extends api.TokenizerInterface {
 
-  // throws CompilerException as soon as it hits a bad token - ST 2/20/08
-  def tokenize(source: String, fileName: String = ""): Seq[Token] = {
-    val result = tokenizeRobustly(source, fileName)
-    result.find(_.tpe == TokenType.Bad) match {
-      case Some(badToken) =>
-        throw new api.CompilerException(badToken)
-      case None =>
-        result.toList
-    }
-  }
+  // throws CompilerException when it hits a bad token
+  def tokenize(source: String, filename: String = ""): Iterator[Token] =
+    tokenizeRobustly(new java.io.StringReader(source), filename)
+      .map{token =>
+        if (token.tpe == TokenType.Bad)
+          throw new api.CompilerException(token)
+        else
+          token}
 
-  // never throws CompilerException, but use TokenType.BAD
-  // instead, in case we want to keep going. at the moment, only used by
-  // TestTokenizer - ST 5/6/13
-  private[lex] def tokenizeRobustly(source: String, fileName: String = ""): Stream[Token] = {
-    val yy = new TokenLexer(
-      new java.io.StringReader(source),
-      fileName)
-    val eof = new Token("", TokenType.EOF, "")(0, 0, "")
-    def yystream: Stream[Token] = {
-      val t = yy.yylex()
-      if (t == null)
-        Stream(eof)
-      else
-        Stream.cons(t, yystream)
-    }
-    yystream
-      .filter(_.tpe != TokenType.Comment)
-      .map(handleSpecialIdentifiers)
+  // no CompilerExceptions, just keeps chugging spitting out TokenType.Bad
+  // as necessary
+  def tokenizeRobustly(reader: java.io.Reader, filename: String = ""): Iterator[Token] = {
+    val yy = new TokenLexer(reader, filename)
+    val results =
+      Iterator.continually(yy.yylex())
+        .takeWhile(_ != null)
+        .filter(_.tpe != TokenType.Comment)
+        .map(handleSpecialIdentifiers)
+    results ++ Iterator(Token.eof)
   }
 
   // this could be part of Namer, even. handling it here for

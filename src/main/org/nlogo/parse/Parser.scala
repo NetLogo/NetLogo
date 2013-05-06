@@ -82,18 +82,19 @@ trait Parser extends nvm.ParserInterface {
 
   def readFromString(source: String): AnyRef =
     api.NumberParser.parse(source).right.getOrElse(
-      new parse0.LiteralParser(null, null, null).getLiteralValue(tokenizer.tokenize(source).iterator))
+      new parse0.LiteralParser(null, null, null)
+        .getLiteralValue(tokenizer.tokenize(source)))
 
   def readFromString(source: String, world: api.World, extensionManager: api.ExtensionManager): AnyRef = {
     api.NumberParser.parse(source).right.getOrElse(
       Parser.literalParser(world, extensionManager)
-        .getLiteralValue(tokenizer.tokenize(source).iterator))
+        .getLiteralValue(tokenizer.tokenize(source)))
   }
 
   def readNumberFromString(source: String, world: api.World, extensionManager: api.ExtensionManager): java.lang.Double =
     api.NumberParser.parse(source).right.getOrElse(
       Parser.literalParser(world, extensionManager)
-        .getNumberValue(tokenizer.tokenize(source).iterator))
+        .getNumberValue(tokenizer.tokenize(source)))
 
   @throws(classOf[java.io.IOException])
   def readFromFile(currFile: api.File, world: api.World, extensionManager: api.ExtensionManager): AnyRef = {

@@ -12,11 +12,10 @@ class StructureParserTests extends FunSuite {
   val tokenizer: api.TokenizerInterface =
     Femto.scalaSingleton("org.nlogo.lex.Tokenizer")
 
-  def compile(source: String): StructureResults = {
+  def compile(source: String): StructureResults =
     new StructureParser(tokenizer.tokenize(source),
                         None, StructureResults.empty)
       .parse(false)
-  }
 
   test("empty") {
     val results = compile("")

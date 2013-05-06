@@ -29,8 +29,8 @@ import org.nlogo.api.{ Token, TokenType }
 import StructureDeclarations._
 
 object StructureCombinators {
-  def parse(tokens: Seq[Token]): Either[(String, Token), Seq[Declaration]] = {
-    val reader = new SeqReader[Token](tokens, _.startPos)
+  def parse(tokens: Iterator[Token]): Either[(String, Token), Seq[Declaration]] = {
+    val reader = new SeqReader[Token](tokens.toStream, _.startPos)
     val combinators = new StructureCombinators
     try combinators.program(reader) match {
       case combinators.Success(declarations, _) =>

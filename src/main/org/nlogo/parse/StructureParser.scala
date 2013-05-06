@@ -72,7 +72,7 @@ object StructureParser {
 /// for each source file. knits stages together. throws CompilerException
 
 class StructureParser(
-  tokens: Seq[Token],
+  tokens: Iterator[Token],
   displayName: Option[String],
   oldResults: StructureResults) {
 

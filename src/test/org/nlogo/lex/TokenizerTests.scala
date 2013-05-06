@@ -8,14 +8,14 @@ import org.nlogo.api, api.{ Token, TokenType }
 class TokenizerTests extends FunSuite {
 
   def tokenize(s: String) = {
-    val result = Tokenizer.tokenize(s, "")
+    val result = Tokenizer.tokenize(s, "").toSeq
     expectResult(TokenType.EOF)(result.last.tpe)
-    result.toList.dropRight(1)
+    result.dropRight(1)
   }
   def tokenizeRobustly(s: String) = {
-    val result = Tokenizer.tokenizeRobustly(s)
+    val result = Tokenizer.tokenizeRobustly(new java.io.StringReader(s)).toList
     expectResult(TokenType.EOF)(result.last.tpe)
-    result.toList.dropRight(1)
+    result.dropRight(1)
   }
   def firstBadToken(tokens: Seq[Token]) =
     tokens.find(_.tpe == TokenType.Bad)
