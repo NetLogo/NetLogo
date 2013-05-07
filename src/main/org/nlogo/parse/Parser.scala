@@ -61,10 +61,13 @@ trait Parser extends nvm.ParserInterface {
         new Namer(structureResults.program,
           oldProcedures ++ structureResults.procedures,
           extensionManager, lets)
-      val identifiedTokens =
-        namer.process(rawTokens.iterator, procedure)  // resolve references
+      val namedTokens =
+        new parse0.CountedIterator(
+          namer.process(rawTokens.iterator, procedure))  // resolve references
+      val stuffedTokens =
+        namedTokens.map(LetStuffer.stuffLet(_, lets, namedTokens))
       new ExpressionParser(procedure, taskNumbers)
-        .parse(identifiedTokens) // parse
+        .parse(stuffedTokens) // parse
     }
     val procDefs = structureResults.procedures.values.flatMap(parseProcedure).toVector
     if (frontEndOnly)  // for Tortoise

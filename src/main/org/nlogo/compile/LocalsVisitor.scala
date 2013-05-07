@@ -76,7 +76,7 @@ extends parse.DefaultAstVisitor {
     expr.reporter match {
       case l: _letvariable =>
         cAssert(currentLet == null || (currentLet.let ne l.let),
-                I18N.errors.getN("compiler.LocalsVisitor.notDefined", l.token.text),
+                I18N.errors.getN("compiler.LocalsVisitor.notDefined", l.token.text.toUpperCase),
                 l.token)
         // it would be nice if the next line were easier to read - ST 2/6/11
         for(index <- alteredLets(procedure).get(l.let).orElse(Option(procedure.parent).flatMap(parent => alteredLets(parent).get(l.let)))) {

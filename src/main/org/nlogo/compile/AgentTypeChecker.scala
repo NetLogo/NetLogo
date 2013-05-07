@@ -165,10 +165,11 @@ private class AgentTypeChecker(defs: Seq[parse.ProcedureDefinition]) {
           else instruction.syntax.agentClassString
         val result = combineRestrictions(usableBy, instructionUsableBy)
         if(result == "----") {
-          val name = instruction.tokenLimitingType.text
-          exception("You can't use " + name + " in " + usableByToEnglish(usableBy, true) +
-                    " context, because " + name + " is " + usableByToEnglish(instructionUsableBy, false) +
-                    "-only.", instruction.tokenLimitingType)
+          val name = instruction.tokenLimitingType.text.toUpperCase
+          exception(
+            "You can't use " + name + " in " + usableByToEnglish(usableBy, true) +
+              " context, because " + name + " is " + usableByToEnglish(instructionUsableBy, false) +
+              "-only.", instruction.tokenLimitingType)
         }
         result
       }
