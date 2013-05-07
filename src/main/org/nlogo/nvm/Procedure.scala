@@ -11,7 +11,7 @@ class Procedure(
   _displayName: Option[String] = None,
   val parent: Procedure = null) {
 
-  val fileName = nameToken.fileName; // used by cities include-file stuff
+  val filename = nameToken.filename; // used by cities include-file stuff
   val displayName = buildDisplayName(_displayName)
   var pos: Int = 0
   var end: Int = 0
@@ -43,7 +43,7 @@ class Procedure(
       "(command task from: " + parent.displayName + ")"
     else {
       def nameAndFile =
-        Option(fileName)
+        Option(filename)
           .filter(_.nonEmpty)
           .map(name + " (" + _ + ")")
           .getOrElse(name)

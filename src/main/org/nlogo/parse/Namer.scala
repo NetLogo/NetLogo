@@ -87,7 +87,7 @@ class Namer(
             else TokenType.Reporter
           val instruction = wrap(primitive, name)
           val newToken = Token(token.name, newType, instruction)(
-            token.start, token.end, token.fileName)
+            token.start, token.end, token.filename)
           instruction.token(newToken)
           newToken
       }
@@ -117,16 +117,16 @@ class Namer(
             exception(InvalidTaskVariable, tok) }
       cAssert(varNumber > 0, InvalidTaskVariable, tok)
       newToken(new prim._taskvariable(varNumber),
-               ident, TokenType.Reporter, tok.start, tok.end, tok.fileName)
+               ident, TokenType.Reporter, tok.start, tok.end, tok.filename)
     }
     // kludgy to special case this, but we only have one such prim,
     // so oh well... - ST 7/8/06
     else if(getLetFromArg(ident, tokPos).isDefined)
       newToken(new prim._letvariable(getLetFromArg(ident, tokPos).get),
-               ident, TokenType.Reporter, tok.start, tok.end, tok.fileName)
+               ident, TokenType.Reporter, tok.start, tok.end, tok.filename)
     else if(procedure.args.contains(ident))
       newToken(new prim._procedurevariable(procedure.args.indexOf(ident), ident),
-               ident, TokenType.Reporter, tok.start, tok.end, tok.fileName)
+               ident, TokenType.Reporter, tok.start, tok.end, tok.filename)
     else
       // go thru our identifierHandlers, if one triggers, return the result
       parse0.BreedIdentifierHandler.process(tok, program) match {
@@ -134,20 +134,20 @@ class Namer(
           val instr = Instantiator.newInstance[api.TokenHolder](
             Class.forName("org.nlogo.prim." + className), breedName)
           val tok2 = new Token(tok.name, tokenType, instr)(
-            tok.start, tok.end, tok.fileName)
+            tok.start, tok.end, tok.filename)
           instr.token(tok2)
           tok2
         case None =>
           val callproc =
             procedures.getOrElse(ident,
               return newToken(getAgentVariableReporter(ident, tok),
-                              ident, TokenType.Reporter, tok.start, tok.end, tok.fileName))
+                              ident, TokenType.Reporter, tok.start, tok.end, tok.filename))
           val (tokenType, caller) =
             if (callproc.isReporter)
               (TokenType.Reporter, new prim._callreport(callproc))
             else
               (TokenType.Command, new prim._call(callproc))
-          newToken(caller, ident, tokenType, tok.start, tok.end, tok.fileName)
+          newToken(caller, ident, tokenType, tok.start, tok.end, tok.filename)
       }
   }
 
@@ -169,7 +169,7 @@ class Namer(
     else
       exception("Nothing named " + varName + " has been defined",
                 Token(varName, tok.tpe, tok.value)(
-                  tok.start, tok.start + varName.length, tok.fileName))
+                  tok.start, tok.start + varName.length, tok.filename))
   }
 
   private def checkProcedureName(procedure: nvm.Procedure) {
@@ -185,8 +185,8 @@ class Namer(
   }
 
   private def newToken(instr: nvm.Instruction, name: String, tpe: TokenType,
-      start: Int, end: Int, fileName: String) = {
-    val tok = Token(name, tpe, instr)(start, end, fileName)
+      start: Int, end: Int, filename: String) = {
+    val tok = Token(name, tpe, instr)(start, end, filename)
     instr.token(tok)
     tok
   }

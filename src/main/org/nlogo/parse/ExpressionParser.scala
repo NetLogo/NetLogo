@@ -52,7 +52,7 @@ class ExpressionParser(
   def parse(tokens: Iterator[Token]): Seq[ProcedureDefinition] = {
     result = Nil
     val buffered = tokens.buffered
-    val stmts = new Statements(buffered.head.fileName)
+    val stmts = new Statements(buffered.head.filename)
     while(buffered.head.tpe != TokenType.EOF)
       stmts.addStatement(parseStatement(buffered, false))
     result ::= new ProcedureDefinition(procedure, stmts)
@@ -78,7 +78,7 @@ class ExpressionParser(
         stmt.end = token.end
         stmt
       case TokenType.Command =>
-        val stmt = new Statement(token.value.asInstanceOf[Command], token.start, token.end, token.fileName)
+        val stmt = new Statement(token.value.asInstanceOf[Command], token.start, token.end, token.filename)
         if(variadic && isVariadic(stmt.instruction)) parseVarArgs(stmt, tokens, MIN_PRECEDENCE)
         else parseArguments(stmt, tokens, MIN_PRECEDENCE)
         stmt
@@ -110,7 +110,7 @@ class ExpressionParser(
       else {
         // synthesize an empty block so that later phases of compilation will be dealing with a
         // consistent number of arguments - ST 3/4/08
-        val file = tokens.head.fileName
+        val file = tokens.head.filename
         app.addArgument(new CommandBlock(new Statements(file), app.end, app.end, file))
       }
     // check all types
@@ -355,13 +355,13 @@ class ExpressionParser(
             case TokenType.Literal =>
               val r = ExpressionParser.makeLiteralReporter(token.value)
               r.token(token)
-              (r, new ReporterApp(r, token.start, token.end, token.fileName))
+              (r, new ReporterApp(r, token.start, token.end, token.filename))
             case TokenType.Reporter =>
               val r = token.value.asInstanceOf[Reporter]
               // the "|| wantReporterTask" is needed or the concise syntax wouldn't work for infix
               // reporters, e.g. "map + ..."
               if(!r.syntax.isInfix || wantReporterTask)
-                (r, new ReporterApp(r, token.start, token.end, token.fileName))
+                (r, new ReporterApp(r, token.start, token.end, token.filename))
               else {
                 // this is a bit of a hack, but it's not terrible.  _minus is allowed to be unary
                 // (negation) but only if it's missing a left argument and is in a possibly variadic
@@ -370,7 +370,7 @@ class ExpressionParser(
                   throw new MissingPrefixException(token)
                 val r2 = new _unaryminus
                 r2.token(token)
-                (r2, new ReporterApp(r2, token.start, token.end, token.fileName))
+                (r2, new ReporterApp(r2, token.start, token.end, token.filename))
               }
             case _ =>
               sys.error("unexpected token type: " + token.tpe)
@@ -383,12 +383,12 @@ class ExpressionParser(
           if(wantReporterTask && !variadic && (wantAnyTask || reporter.syntax.totalDefault > 0)) {
             val task = new _reportertask
             task.token(reporter.token)
-            val taskApp = new ReporterApp(task, reporter.token.start, reporter.token.end, reporter.token.fileName)
+            val taskApp = new ReporterApp(task, reporter.token.start, reporter.token.end, reporter.token.filename)
             taskApp.addArgument(rApp)
             for(argNumber <- 1 to reporter.syntax.totalDefault) {
               var lv = new _taskvariable(argNumber)
               lv.token(reporter.token)
-              rApp.addArgument(new ReporterApp(lv, reporter.token.start, reporter.token.end, reporter.token.fileName))
+              rApp.addArgument(new ReporterApp(lv, reporter.token.start, reporter.token.end, reporter.token.filename))
             }
             taskApp
           }
@@ -404,8 +404,8 @@ class ExpressionParser(
         // instead of "foreach xs [ print ? ]"
         case TokenType.Command if wantCommandTask =>
           tokens.next()
-          val stmt = new Statement(token.value.asInstanceOf[Command], token.start, token.end, token.fileName)
-          val stmts = new Statements(token.fileName)
+          val stmt = new Statement(token.value.asInstanceOf[Command], token.start, token.end, token.filename)
+          val stmts = new Statements(token.filename)
           stmts.addStatement(stmt)
           val taskProcedure = new Procedure(
             false, "__task-" + taskNumbers.next(), token, parent = procedure)
@@ -418,15 +418,15 @@ class ExpressionParser(
           for(argNumber <- 1 to stmt.command.syntax.totalDefault) {
             var lv = new _taskvariable(argNumber)
             lv.token(token)
-            stmt.addArgument(new ReporterApp(lv, token.start, token.end, token.fileName))
+            stmt.addArgument(new ReporterApp(lv, token.start, token.end, token.filename))
           }
           if(stmt.command.syntax.takesOptionalCommandBlock)
             // synthesize an empty block so that later phases of compilation will be dealing with a
             // consistent number of arguments - ST 3/4/08
             stmt.addArgument(
               new CommandBlock(
-                new Statements(token.fileName), token.start, token.end, token.fileName))
-          new ReporterApp(task, token.start, token.end, token.fileName)
+                new Statements(token.filename), token.start, token.end, token.filename))
+          new ReporterApp(task, token.start, token.end, token.filename)
         case _ =>
           // here we throw a temporary exception, since we don't know yet what this error means... It
           // generally either means MISSING_INPUT_ON_RIGHT or EXPECTED_REPORTER.
@@ -455,7 +455,7 @@ class ExpressionParser(
           // note: this actually shouldn't be possible here, because this should never be called
           // with null expr, but better safe than sorry...
           cAssert(expr != null, MISSING_INPUT_ON_LEFT, token)
-          val tmp = new ReporterApp(reporter, expr.start, token.end, token.fileName)
+          val tmp = new ReporterApp(reporter, expr.start, token.end, token.filename)
           tmp.addArgument(expr)
           parseArguments(tmp, tokens, syntax.precedence)
           expr = tmp
@@ -494,7 +494,7 @@ class ExpressionParser(
     val end = results.last.end
     results += Token.eof
     new DelayedBlock(results.readOnly,
-                     results.head.start, end, openBracket.fileName)
+                     results.head.start, end, openBracket.filename)
   }
 
   /**
@@ -513,12 +513,12 @@ class ExpressionParser(
       cAssert(token.tpe == TokenType.CloseBracket, EXPECTED_CloseBracket, token)
       // the origin of the block are based on the positions of the brackets.
       tokens.next()
-      new ReporterBlock(expr.asInstanceOf[ReporterApp], openBracket.start, token.end, token.fileName)
+      new ReporterBlock(expr.asInstanceOf[ReporterApp], openBracket.start, token.end, token.filename)
     }
     else if(compatible(goalType, Syntax.CommandBlockType)) {
       tokens.next()
       var token = tokens.head
-      val stmts = new Statements(token.fileName)
+      val stmts = new Statements(token.filename)
       while(token.tpe != TokenType.CloseBracket) {
         // if next is an EOF, we complain and point to the open bracket. this should be impossible,
         // since it's a delayed block.
@@ -528,7 +528,7 @@ class ExpressionParser(
       }
       // the origin of the block are based on the positions of the brackets.
       tokens.next()
-      new CommandBlock(stmts, openBracket.start, token.end, token.fileName)
+      new CommandBlock(stmts, openBracket.start, token.end, token.filename)
     }
     else if(compatible(goalType, Syntax.ReporterTaskType) &&
             !block.isCommandTask &&
@@ -542,7 +542,7 @@ class ExpressionParser(
       tokens.next()
       val task = new _reportertask
       task.token(openBracket)
-      val app = new ReporterApp(task, openBracket.start, closeBracket.end, openBracket.fileName)
+      val app = new ReporterApp(task, openBracket.start, closeBracket.end, openBracket.filename)
       app.addArgument(expr)
       app
     }
@@ -551,7 +551,7 @@ class ExpressionParser(
             !compatible(goalType, Syntax.ListType)) {
       val openBracket = tokens.next()
       var token = tokens.head
-      val stmts = new Statements(token.fileName)
+      val stmts = new Statements(token.filename)
       while(token.tpe != TokenType.CloseBracket) {
         // if next is an EOF, we complain and point to the open bracket. this should be impossible,
         // since it's a delayed block.
@@ -570,7 +570,7 @@ class ExpressionParser(
       result ::= new ProcedureDefinition(taskProcedure, stmts)
       val task = new _commandtask(taskProcedure)
       task.token(openBracket)
-      new ReporterApp(task, openBracket.start, closeBracket.end, openBracket.fileName)
+      new ReporterApp(task, openBracket.start, closeBracket.end, openBracket.filename)
     }
     else if(compatible(goalType, Syntax.ListType)) {
       // parseLiteralList() deals with the open bracket itself, but it leaves the close bracket so
@@ -581,8 +581,8 @@ class ExpressionParser(
       val tmp = ExpressionParser.makeLiteralReporter(
         new LiteralParser(null, null, null).parseLiteralList(tokens.next(), tokens))
       val token = tokens.next()
-      tmp.token(new Token("", TokenType.Literal, null)(openBracket.start, token.end, token.fileName))
-      new ReporterApp(tmp, openBracket.start, token.end, token.fileName)
+      tmp.token(new Token("", TokenType.Literal, null)(openBracket.start, token.end, token.filename))
+      new ReporterApp(tmp, openBracket.start, token.end, token.filename)
     }
     // we weren't actually expecting a block at all!
     else exception("Expected " + TypeNames.aName(goalType) + " here, rather than a list or block.", block)

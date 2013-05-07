@@ -35,17 +35,17 @@ object StructureParser {
       extensionManager.startFullCompilation()
     val sources = Seq((source, ""))
     val oldResults = StructureResults(program, oldProcedures)
-    def parseOne(source: String, fileName: String, previousResults: StructureResults) = {
+    def parseOne(source: String, filename: String, previousResults: StructureResults) = {
       val tokens =
-        tokenizer.tokenize(source, fileName)
+        tokenizer.tokenize(source, filename)
           .filter(_.tpe != api.TokenType.Comment)
       new StructureParser(tokens, displayName, previousResults)
         .parse(subprogram)
     }
     val firstResults =
       sources.foldLeft(oldResults){
-        case (results, (source, fileName)) =>
-          parseOne(source, fileName, results)
+        case (results, (source, filename)) =>
+          parseOne(source, filename, results)
       }
     val results =
       Iterator.iterate(firstResults){results =>

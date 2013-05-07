@@ -88,7 +88,7 @@ trait Application extends AstNode with collection.SeqProxy[Expression] {
 class ProcedureDefinition(val procedure: Procedure, val statements: Statements) extends AstNode {
   def start = procedure.pos
   def end = procedure.end
-  def file = procedure.fileName
+  def file = procedure.filename
   def accept(v: AstVisitor) { v.visitProcedureDefinition(this) }
 }
 

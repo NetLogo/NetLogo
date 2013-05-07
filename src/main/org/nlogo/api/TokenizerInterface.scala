@@ -3,6 +3,6 @@
 package org.nlogo.api
 
 trait TokenizerInterface {
-  def tokenize(source: String, fileName: String = ""): Iterator[Token]
-  def tokenizeRobustly(reader: java.io.Reader, fileName: String = ""): Iterator[Token]
+  def tokenize(source: String, filename: String = ""): Iterator[Token]
+  def tokenizeRobustly(reader: java.io.Reader, filename: String = ""): Iterator[Token]
 }
