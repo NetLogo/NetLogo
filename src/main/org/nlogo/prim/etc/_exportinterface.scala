@@ -20,7 +20,7 @@ class _exportinterface extends Command {
           catch {
             case e: java.io.IOException =>
               throw new EngineException(
-                context, _exportinterface.this, token.name + ": " + e.getMessage)
+                context, _exportinterface.this, token.text + ": " + e.getMessage)
           }}})
     context.ip = next
   }

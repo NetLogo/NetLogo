@@ -21,7 +21,7 @@ public final strictfp class _exportview
             } catch (java.io.IOException ex) {
               throw new EngineException
                   (context, _exportview.this,
-                      token().name() +
+                      token().text() +
                           ": " + ex.getMessage());
             }
           }

@@ -29,7 +29,7 @@ private class CarefullyVisitor extends parse.DefaultAstVisitor {
     app.reporter match {
       case em: _errormessage =>
         if(stack.isEmpty)
-          exception(I18N.errors.getN("compiler.CarefullyVisitor.badNesting", em.token.name), app)
+          exception(I18N.errors.getN("compiler.CarefullyVisitor.badNesting", em.token.text), app)
         em.let = stack.top.let
       case _ => super.visitReporterApp(app)
     }

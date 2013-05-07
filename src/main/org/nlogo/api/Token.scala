@@ -14,9 +14,9 @@ package org.nlogo.api
 object Token {
   val eof = new Token("", TokenType.EOF, "")(0, 0, "")
 }
-case class Token(name: String, tpe: TokenType, value: AnyRef)
+case class Token(text: String, tpe: TokenType, value: AnyRef)
                 (val start: Int, val end: Int, val filename: String) {
   // the automatically generated `copy` method wouldn't copy the auxiliary fields
-  def copy(name: String = name, tpe: TokenType = tpe, value: AnyRef = value): Token =
-    new Token(name, tpe, value)(start, end, filename)
+  def copy(text: String = text, tpe: TokenType = tpe, value: AnyRef = value): Token =
+    new Token(text, tpe, value)(start, end, filename)
 }

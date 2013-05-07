@@ -19,7 +19,7 @@ class _runresult extends Reporter {
       case s: String =>
         if(args.size > 1)
           throw new EngineException(context, this,
-            token.name + " doesn't accept further inputs if the first is a string")
+            token.text + " doesn't accept further inputs if the first is a string")
         try {
           val procedure = workspace.compileForRun(
             argEvalString(context, 0), context, true)

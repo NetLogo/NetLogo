@@ -36,7 +36,7 @@ public final strictfp class _butfirst
       String string = (String) arg0;
       if (string.length() == 0) {
         throw new EngineException(context, this,
-            I18N.errorsJ().getN("org.nlogo.prim.etc.$common.emptyStringInput", token().name()));
+            I18N.errorsJ().getN("org.nlogo.prim.etc.$common.emptyStringInput", token().text()));
       }
       return string.substring(1);
     } else {
@@ -48,7 +48,7 @@ public final strictfp class _butfirst
   public String report_2(final org.nlogo.nvm.Context context, String arg0) {
     if (arg0.length() == 0) {
       throw new EngineException(context, this,
-          I18N.errorsJ().getN("org.nlogo.prim.etc.$common.emptyStringInput", token().name()));
+          I18N.errorsJ().getN("org.nlogo.prim.etc.$common.emptyStringInput", token().text()));
     }
     return arg0.substring(1);
   }

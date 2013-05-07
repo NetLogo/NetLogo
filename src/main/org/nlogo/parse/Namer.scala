@@ -86,7 +86,7 @@ class Namer(
               TokenType.Command
             else TokenType.Reporter
           val instruction = wrap(primitive, name)
-          val newToken = Token(token.name, newType, instruction)(
+          val newToken = Token(token.text, newType, instruction)(
             token.start, token.end, token.filename)
           instruction.token(newToken)
           newToken
@@ -133,7 +133,7 @@ class Namer(
         case Some((className, breedName, tokenType)) =>
           val instr = Instantiator.newInstance[api.TokenHolder](
             Class.forName("org.nlogo.prim." + className), breedName)
-          val tok2 = new Token(tok.name, tokenType, instr)(
+          val tok2 = new Token(tok.text, tokenType, instr)(
             tok.start, tok.end, tok.filename)
           instr.token(tok2)
           tok2

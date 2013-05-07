@@ -61,7 +61,7 @@ object StructureParser {
     if(!subprogram) {
       for(token <- results.extensions)
         extensionManager.importExtension(
-          token.name.toLowerCase, new api.ErrorSource(token))
+          token.text.toLowerCase, new api.ErrorSource(token))
       extensionManager.finishFullCompilation()
     }
     results

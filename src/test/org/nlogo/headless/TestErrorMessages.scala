@@ -30,7 +30,7 @@ class TestErrorMessages extends AbstractTestLanguage with FunSuite with BeforeAn
       testCommand("__ignore 0 < position 5 item 0 glob1")
     }
     expectResult("POSITION expected input to be a string or list but got the number 1.4 instead.")(ex.getMessage)
-    expectResult("POSITION")(ex.instruction.token.name.toUpperCase)
+    expectResult("POSITION")(ex.instruction.token.text.toUpperCase)
   }
   test("breedOwnRedeclaration") {
     val ex = intercept[CompilerException] {

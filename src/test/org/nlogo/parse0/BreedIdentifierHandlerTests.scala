@@ -21,7 +21,7 @@ class BreedIdentifierHandlerTests extends FunSuite {
           "AS" -> Breed("AS", "A", isDirected = true),
           "BS" -> Breed("BS", "B", isDirected = false)))
     handler.process(
-      tokenizer.tokenize(code).find(_.name.equalsIgnoreCase(tokenString)).orNull,
+      tokenizer.tokenize(code).find(_.text.equalsIgnoreCase(tokenString)).orNull,
       program)
       .get
   }
