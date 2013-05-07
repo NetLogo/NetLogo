@@ -62,8 +62,8 @@ class ExpressionParserTests extends FunSuite {
   def doFailure(input: String, message: String, start: Int, end: Int) {
     val e = intercept[CompilerException] { compile(input) }
     expectResult(message)(e.getMessage)
-    expectResult(start + PREAMBLE.length())(e.startPos)
-    expectResult(end + PREAMBLE.length())(e.endPos)
+    expectResult(start + PREAMBLE.length())(e.start)
+    expectResult(end + PREAMBLE.length())(e.end)
   }
 
   /// now, the actual tests

@@ -46,7 +46,7 @@ object TypeConverter {
         val tokenInstr = if (argIndex < parentInstr.args.length) parentInstr.args(argIndex)
         else parentInstr
         val token = tokenInstr.token
-        throw new CompilerException(argEx.getMessage, token.startPos, token.endPos, token.fileName)
+        throw new CompilerException(argEx.getMessage, token.start, token.end, token.fileName)
       }
   }
   // Conversion methods:

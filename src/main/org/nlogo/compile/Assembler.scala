@@ -26,7 +26,7 @@ private class Assembler {
         new _done
       else
         new _return
-    ret.token(new Token("END", TokenType.Keyword, ret)(proc.endPos, proc.endPos, proc.fileName))
+    ret.token(new Token("END", TokenType.Keyword, ret)(proc.end, proc.end, proc.fileName))
     code += ret
     for ((cmd, n) <- code.toList.zipWithIndex) {
       cmd.next = n + 1

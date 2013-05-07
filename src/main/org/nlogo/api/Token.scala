@@ -15,8 +15,8 @@ object Token {
   val eof = new Token("", TokenType.EOF, "")(0, 0, "")
 }
 case class Token(name: String, tpe: TokenType, value: AnyRef)
-                (val startPos: Int, val endPos: Int, val fileName: String) {
+                (val start: Int, val end: Int, val fileName: String) {
   // the automatically generated `copy` method wouldn't copy the auxiliary fields
   def copy(name: String = name, tpe: TokenType = tpe, value: AnyRef = value): Token =
-    new Token(name, tpe, value)(startPos, endPos, fileName)
+    new Token(name, tpe, value)(start, end, fileName)
 }

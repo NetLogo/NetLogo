@@ -14,7 +14,7 @@ class Procedure(
   val fileName = nameToken.fileName; // used by cities include-file stuff
   val displayName = buildDisplayName(_displayName)
   var pos: Int = 0
-  var endPos: Int = 0
+  var end: Int = 0
   var usableBy = "OTPL"
   var localsCount = 0
   var topLevel = false
@@ -32,7 +32,7 @@ class Procedure(
 
   def getTaskFormal(n: Int, token: api.Token): api.Let = {
     while (taskFormals.size < n)
-      taskFormals += api.Let("?" + n, token.startPos, token.endPos)
+      taskFormals += api.Let("?" + n, token.start, token.end)
     taskFormals.last
   }
 

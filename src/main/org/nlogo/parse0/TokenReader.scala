@@ -55,12 +55,12 @@ extends Iterator[api.Token] {
         reader.skip(pos)
         file.pos = pos
     }
-    // nextToken() makes a new TokenLexer every time, so endPos is just the size of the token,
+    // nextToken() makes a new TokenLexer every time, so end is just the size of the token,
     // not an absolute position.  so, once we've returned to our original position, before
-    // the token was read, token.endPos the amount we need to move both pointers forward
+    // the token was read, token.end the amount we need to move both pointers forward
     // in order to be in the position right after the token we read. - ST 12/18/08
-    reader.skip(t.endPos)
-    file.pos += t.endPos
+    reader.skip(t.end)
+    file.pos += t.end
     t
   }
 

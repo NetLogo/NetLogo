@@ -22,10 +22,10 @@ object Fail {
       exception(desc, node)
   }
 
-  def exception(message: String, startPos: Int, endPos: Int, fileName: String) =
-    throw new CompilerException(message, startPos, endPos, fileName)
+  def exception(message: String, start: Int, end: Int, fileName: String) =
+    throw new CompilerException(message, start, end, fileName)
   def exception(message: String, token: Token) =
-    throw new CompilerException(message, token.startPos, token.endPos, token.fileName)
+    throw new CompilerException(message, token.start, token.end, token.fileName)
   def exception(message: String, node: AstNode) =
     throw new CompilerException(message, node.start, node.end, node.file)
 

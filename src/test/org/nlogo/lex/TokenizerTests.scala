@@ -63,29 +63,29 @@ class TokenizerTests extends FunSuite {
   }
   test("TokenizeUnknownEscape") {
     val tokens = tokenizeRobustly("\"\\b\"")
-    expectResult(0)(firstBadToken(tokens).get.startPos)
-    expectResult(4)(firstBadToken(tokens).get.endPos)
+    expectResult(0)(firstBadToken(tokens).get.start)
+    expectResult(4)(firstBadToken(tokens).get.end)
     expectResult("Illegal character after backslash")(
       firstBadToken(tokens).get.value)
   }
   test("TokenizeWeirdCaseWithBackSlash") {
     val tokens = tokenizeRobustly("\"\\\"")
-    expectResult(0)(firstBadToken(tokens).get.startPos)
-    expectResult(3)(firstBadToken(tokens).get.endPos)
+    expectResult(0)(firstBadToken(tokens).get.start)
+    expectResult(3)(firstBadToken(tokens).get.end)
     expectResult("Closing double quote is missing")(
       firstBadToken(tokens).get.value)
   }
   test("TokenizeBadNumberFormat1") {
     val tokens = tokenizeRobustly("1.2.3")
-    expectResult(0)(firstBadToken(tokens).get.startPos)
-    expectResult(5)(firstBadToken(tokens).get.endPos)
+    expectResult(0)(firstBadToken(tokens).get.start)
+    expectResult(5)(firstBadToken(tokens).get.end)
     expectResult("Illegal number format")(
       firstBadToken(tokens).get.value)
   }
   test("TokenizeBadNumberFormat2") {
     val tokens = tokenizeRobustly("__ignore 3__ignore 4")
-    expectResult(9)(firstBadToken(tokens).get.startPos)
-    expectResult(18)(firstBadToken(tokens).get.endPos)
+    expectResult(9)(firstBadToken(tokens).get.start)
+    expectResult(18)(firstBadToken(tokens).get.end)
     expectResult("Illegal number format")(
       firstBadToken(tokens).get.value)
   }
@@ -114,10 +114,10 @@ class TokenizerTests extends FunSuite {
                  "Token({{array: 1}},Extension,{{array: 1}})" +
                  "Token(],CloseBracket,null)")(
       tokens.mkString)
-    expectResult(1)(tokens(1).startPos)
-    expectResult(13)(tokens(1).endPos)
-    expectResult(14)(tokens(2).startPos)
-    expectResult(26)(tokens(2).endPos)
+    expectResult(1)(tokens(1).start)
+    expectResult(13)(tokens(1).end)
+    expectResult(14)(tokens(2).start)
+    expectResult(26)(tokens(2).end)
   }
 
   test("ArrayOfArrays") {
@@ -159,8 +159,8 @@ class TokenizerTests extends FunSuite {
     // 216C is a Unicode character I chose pretty much at random.  it's a Roman numeral
     // for fifty, and *looks* just like an L, but is not a letter according to Unicode.
     val tokens = tokenizeRobustly("foo\u216Cbar")
-    expectResult(3)(firstBadToken(tokens).get.startPos)
-    expectResult(4)(firstBadToken(tokens).get.endPos)
+    expectResult(3)(firstBadToken(tokens).get.start)
+    expectResult(4)(firstBadToken(tokens).get.end)
     expectResult("This non-standard character is not allowed.")(
       firstBadToken(tokens).get.value)
   }
