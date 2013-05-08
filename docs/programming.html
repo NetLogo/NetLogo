@@ -3046,8 +3046,7 @@ ifelse patch-at (new-x - xcor) (new-y - ycor) = nobody
       Primitives specific to tasks are <tt>task</tt>,
       <tt>is-command-task?</tt>, and <tt>is-reporter-task?</tt>.
     <p>
-      The <tt>run</tt> command accepts command tasks as well as
-      strings.
+      The <tt>run</tt> command accepts command tasks as well as strings.
     <p>
       The <tt>runresult</tt> reporter accepts reporter tasks as well as
       strings.
@@ -3059,15 +3058,14 @@ ifelse patch-at (new-x - xcor) (new-y - ycor) = nobody
       turtles ]</tt> reports a reporter task, because <tt>count</tt> is a
       reporter.
     <p>
-      These primitives require tasks as input: <tt>foreach</tt>, <tt>map</tt>,
-      <tt>reduce</tt>, <tt>filter</tt>, <tt>n-values</tt>,
-      <tt>sort-by</tt>.  When calling these primitives, the <tt>task</tt>
-      primitive is optional,
-      so for example one may write simply <tt>foreach mylist [ print ? ]</tt>
-      instead of <tt>foreach mylist task [ print ? ]</tt>, though the latter
-      is also accepted.
-      (Because <tt>task</tt> is optional, the syntax for these primitives
-      is backward-compatible with existing code from previous NetLogo
+      These primitives require tasks as input: <tt>foreach</tt>,
+      <tt>map</tt>, <tt>reduce</tt>, <tt>filter</tt>, <tt>n-values</tt>,
+      <tt>sort-by</tt>. When calling these primitives, the <tt>task</tt>
+      primitive is optional, so for example one may write simply
+      <tt>foreach mylist [ print ? ]</tt> instead of <tt>foreach mylist
+      task [ print ? ]</tt>, though the latter is also accepted. (Because
+      <tt>task</tt> is optional, the syntax for these primitives is
+      backward-compatible with existing code from previous NetLogo
       versions.)
     <h3>
       Task inputs
@@ -3157,14 +3155,15 @@ foreach [1 2 3 4] [ print ? ]
       blocks. Only the primitives listed above accept tasks as input.
       Control primitives such as <tt>ifelse</tt> and <tt>while</tt> and
       agent primitives such as <tt>of</tt> and <tt>with</tt> don't
-      accept tasks. So for example if I have a reporter task <tt>r</tt> and two
-      command tasks <tt>c1</tt> and <tt>c2</tt>, I can't write <tt>ifelse r c1 c2</tt>, I
-      must write <tt>ifelse runresult r [ run c1 ] [ run c2 ]</tt>.
-      <li>The concise syntax where <tt>task</tt> may be omitted is
-      only available to primitives and extension primitives, not
-      ordinary procedures. So for example if I have a procedure <tt>p</tt>
-      that accepts a task as input, it must be called as e.g.
-      <tt>p task [ ... ]</tt> not <tt>p [ ... ]</tt>.
+      accept tasks. So for example if I have a reporter task <tt>r</tt> and
+      two command tasks <tt>c1</tt> and <tt>c2</tt>, I can't write <tt>
+        ifelse r c1 c2</tt>, I must write <tt>ifelse runresult r [ run c1 ]
+        [ run c2 ]</tt>.
+      <li>The concise syntax where <tt>task</tt> may be omitted is only
+      available to primitives and extension primitives, not ordinary
+      procedures. So for example if I have a procedure <tt>p</tt> that
+      accepts a task as input, it must be called as e.g. <tt>p task [ ...
+      ]</tt> not <tt>p [ ... ]</tt>.
       </ul>
     <h3>
       Code example
@@ -3457,9 +3456,9 @@ while [any? turtles with [steps &gt; 0]] [
       "dictionary.html#turtles-own"><tt>turtles-own</tt></a>, <a href=
       "dictionary.html#patches-own"><tt>patches-own</tt></a>, <a href=
       "dictionary.html#breeds-own"><tt>&lt;BREED&gt;-own</tt></a>, <a href=
-      "dictionary.html#extensions"><tt>extensions</tt></a>) in any
-      order, followed by zero or more procedure definitions. Multiple
-      breeds may be declared with separate <a href=
+      "dictionary.html#extensions"><tt>extensions</tt></a>) in any order,
+      followed by zero or more procedure definitions. Multiple breeds may
+      be declared with separate <a href=
       "dictionary.html#breed"><tt>breed</tt></a> declarations; the other
       declarations may appear once only.
     <p>
