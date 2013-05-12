@@ -77,6 +77,9 @@ trait Multiple extends LinkCreationCommand {
   override def inputType = api.Syntax.TurtlesetType
   override def create(context: Context, breed: AgentSet, me: Turtle) = {
     val others = argEvalAgentSet(context, 0)
+    if (others.kind != api.AgentKind.Turtle)
+      throw new nvm.ArgumentTypeException(
+        context, this, 0, api.Syntax.TurtlesetType, others)
     val builder = new AgentSetBuilder(api.AgentKind.Link, others.count)
     // we must shuffle so who number assignment is random - ST 3/15/06
     val iter = others.shufflerator(context.job.random)
