@@ -191,7 +191,7 @@ models/Sample Models/Mathematics/Probability/ProbLab/Stochastic Patchwork.nlogo 
 models/Sample Models/Mathematics/Probability/ProbLab/Unverified/9-Blocks.nlogo * 0FBDAC7C3B3A1AA2A503ADC1CE8223AAC5DCEC36 * A1524A25A451D1794C7E588E687126FA314F8EFA * 4662e17
 models/Sample Models/Mathematics/Probability/ProbLab/Unverified/Central Limit Theorem.nlogo * 19E6719DF4472F91370C9614F7DB45BD5E2D7997 * B921D6798D4A92F49E144DDB5F701E621570DB89 * 4662e17
 models/Sample Models/Mathematics/Probability/ProbLab/Unverified/Expected Value.nlogo * 480C327F035ECD853D3ED99E45B1232C2F5C7036 * A49C0849D537476C34EFDBD5B2E87050B984AAC6 * 4662e17
-models/Sample Models/Mathematics/Probability/ProbLab/Unverified/Expected Value Advanced.nlogo * FC0E303A6F3D496A47ACDA45576B052D59D4F0D3 * C8EAD6D04A8F5972B1B5E3A9807274A99DD7AD75 * 4662e17
+models/Sample Models/Mathematics/Probability/ProbLab/Unverified/Expected Value Advanced.nlogo * 7244B20A94850CA3A5D6FDF1DE5C49527480FF62 * E522D73F56AE233209C3E5D3F83CB139E4D45C60 * b03866e
 models/Sample Models/Mathematics/Probability/ProbLab/Unverified/Partition Perms Distrib.nlogo * 9AA21603CE15E5E2F64F4D5C4FCE840B1B05C5FE * F5BC323AA39EE701891F868FD0ACD8582F15B9DA * 4662e17
 models/Sample Models/Mathematics/Probability/ProbLab/Unverified/ProbLab Genetics.nlogo * A26CA83A9BB09019A3445E1E66841707E5FF38C0 * C8499FF948977D327286F97CE405FC822DD05737 * 4662e17
 models/Sample Models/Mathematics/Probability/ProbLab/Unverified/Random Basic Advanced.nlogo * F758116A7862EAABC658C7C02F70927DF324869C * 3106DF64CB2C59EEB016D9935F7B1DE14B045DF4 * 4662e17
