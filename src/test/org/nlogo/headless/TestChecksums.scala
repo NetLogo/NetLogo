@@ -40,9 +40,8 @@ class TestChecksums extends FunSuite with SlowTest {
 }
 
 object TestChecksums extends ChecksumTester(println _) {
-
   def checksums =
-    ChecksumsAndPreviews.Checksums.load("models/test/checksums.txt")
+    ChecksumsAndPreviews.Checksums.load("test/checksums.txt")
 
   def main(args: Array[String]) {
 
