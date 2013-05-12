@@ -92,8 +92,8 @@ object ChecksumsAndPreviews {
     }).isEmpty
 
     def update(paths: List[String]) {
-      val path = if(Version.is3D) "models/test/checksums3d.txt"
-                 else "models/test/checksums.txt"
+      val path = if(Version.is3D) "test/checksums3d.txt"
+                 else "test/checksums.txt"
       val m = load(path)
       paths.foreach(updateOne(m, _))
       write(m, path)
