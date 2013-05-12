@@ -37,7 +37,7 @@ View, California, 94041, USA.
 Much of NetLogo is written in the Scala language and uses the
 Scala standard libraries.  The license for Scala is as follows:
 
-Copyright (c) 2002-2011 EPFL, Lausanne, unless otherwise specified.
+Copyright (c) 2002-2013 EPFL, Lausanne, unless otherwise specified.
 All rights reserved.
 
 This software was developed by the Programming Methods Laboratory of the
