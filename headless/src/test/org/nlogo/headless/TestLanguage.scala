@@ -38,7 +38,9 @@ case object ExtensionTestsDotTxt extends TestFinder {
 class TestCommands extends TestLanguage(TxtsInDir("test/commands"))
 class TestReporters extends TestLanguage(TxtsInDir("test/reporters"))
 class TestExtensions extends TestLanguage(ExtensionTestsDotTxt)
-class TestModels extends TestLanguage(TxtsInDir("models/test"))
+class TestModels extends TestLanguage(
+  TxtsInDir("models/test")
+    .filterNot(_.getName.startsWith("checksums")))
 
 // The output of the parser is lists of instances of these classes:
 
