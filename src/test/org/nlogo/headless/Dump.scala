@@ -41,8 +41,10 @@ object Dump {
     Runtime.getRuntime().exec("rm -r target/dumps").waitFor()
     Runtime.getRuntime().exec("mkdir -p target/dumps").waitFor()
     //
-    for(path <- ModelsLibrary.getModelPaths)
-    {
+    for {
+      path <- ModelsLibrary.getModelPaths
+      if !TestCompileAll.badPath(path)
+    } {
       val name = path.split("/").last.toList.dropRight(".nlogo".size).mkString
       print('.')
       writeFile("target/dumps/" + name + ".txt",dump(path))

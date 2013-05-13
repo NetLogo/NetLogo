@@ -7,13 +7,7 @@ import org.nlogo.workspace.ModelsLibrary
 import org.scalatest.FunSuite
 import org.nlogo.util.SlowTest
 
-class TestCompileAll extends FunSuite with SlowTest {
-
-  for (path <- ModelsLibrary.getModelPaths.filterNot(badPath))
-    test("compile: " + path) {
-      compile(path)
-    }
-
+object TestCompileAll {
   // core branch doesn't have these features - ST 1/11/12
   def badPath(path: String): Boolean = {
     import java.io.File.separatorChar
@@ -30,6 +24,14 @@ class TestCompileAll extends FunSuite with SlowTest {
       path.containsSlice("Movie Example") ||
       path.endsWith(".nlogo3d")
   }
+}
+
+class TestCompileAll extends FunSuite with SlowTest {
+
+  for (path <- ModelsLibrary.getModelPaths.filterNot(TestCompileAll.badPath))
+    test("compile: " + path) {
+      compile(path)
+    }
 
   def compile(path: String) {
     val workspace = HeadlessWorkspace.newInstance
