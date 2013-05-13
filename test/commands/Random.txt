@@ -293,3 +293,10 @@ random-normal-2
 
 random-normal-3
   random-normal 10 -1 => ERROR random-normal's second input can't be negative.
+
+# https://github.com/NetLogo/NetLogo/issues/340
+one-of-evaluates-input-only-once
+  to-report foo set glob1 glob1 + 1 report (list glob1 glob1 glob1) end
+  O> random-seed 0
+  one-of foo => 1
+  one-of foo => 2
