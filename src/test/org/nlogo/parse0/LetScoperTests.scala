@@ -28,4 +28,13 @@ class LetScoperTests extends FunSuite {
       compile("ask turtles [ let x 5 ] print 0").mkString)
   }
 
+  // https://github.com/NetLogo/NetLogo/issues/348
+  test("let of task variable") {
+    val e = intercept[api.CompilerException] {
+      compile("foreach [1] [ let ? 0 ]") }
+    val message =
+      "Names beginning with ? are reserved for use as task inputs"
+    expectResult(message)(e.getMessage)
+  }
+
 }

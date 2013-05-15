@@ -188,4 +188,18 @@ class StructureParserTests extends FunSuite {
     expectResult("Redeclaration of EXTENSIONS")(e.getMessage.takeWhile(_ != ','))
   }
 
+  // https://github.com/NetLogo/NetLogo/issues/348
+  def testTaskVariableMisuse(source: String) {
+    val e = intercept[CompilerException] { compile(source) }
+    val message =
+      "Names beginning with ? are reserved for use as task inputs"
+    expectResult(message)(e.getMessage)
+  }
+  test("task variable as procedure name") {
+    testTaskVariableMisuse("to ?z end") }
+  test("task variable as procedure input") {
+    testTaskVariableMisuse("to x [?y] end") }
+  test("task variable as agent variable") {
+    testTaskVariableMisuse("turtles-own [?a]") }
+
 }

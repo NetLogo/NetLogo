@@ -18,9 +18,12 @@ object StructureChecker {
     for {
       Procedure(_, _, inputs, _) <- declarations
       input <- inputs
-    } cAssert(
-      inputs.count(_.name == input.name) == 1,
-      "There is already a local variable called " + input.name + " here", input.token)
+    } {
+      notTaskVariable(input)
+      cAssert(
+        inputs.count(_.name == input.name) == 1,
+        "There is already a local variable called " + input.name + " here", input.token)
+    }
     // O(n^2) -- maybe we should fold instead
     def checkPair(decl1: Declaration, decl2: Declaration): Option[(String, Token)] =
       (decl1, decl2) match {
@@ -100,6 +103,8 @@ object StructureChecker {
       check((o1.identifier.name, displayName(o1.declaration)), o2)
     for(used <- usedNames; o <- occurrences)
       check(used, o)
+    for(Occurrence(_, ident) <- occurrences)
+      notTaskVariable(ident)
   }
 
   def allPairs[T](xs: Seq[T]): Iterator[(T, T)] =
@@ -108,5 +113,11 @@ object StructureChecker {
       x1 <- rest.headOption.toSeq
       x2 <- rest.tail
     } yield (x1, x2)
+
+  def notTaskVariable(ident: Identifier) {
+    cAssert(!ident.name.startsWith("?"),
+      "Names beginning with ? are reserved for use as task inputs",
+      ident.token)
+  }
 
 }

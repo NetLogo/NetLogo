@@ -35,6 +35,8 @@ class LetScoper(tokens: Iterable[Token]) {
       cAssert(nameToken.tpe == TokenType.Ident,
         "Expected variable name here", nameToken)
       val name = nameToken.value.asInstanceOf[String]
+      cAssert(!name.startsWith("?"),
+        "Names beginning with ? are reserved for use as task inputs", nameToken)
       for (displayName <- (usedNames ++ namesInCurrentScope).get(name))
         exception("There is already a " + displayName + " called " + name, nameToken)
       // we may change end later if we see a closing bracket
