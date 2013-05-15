@@ -28,7 +28,8 @@ class Namer(
   def process(tokens: Iterator[Token], procedure: nvm.Procedure): Iterator[Token] = {
     val it = new parse0.CountedIterator(tokens)
     // the handlers are mutually exclusive (only one applies), so the order the handlers
-    // appear is arbitrary - ST 5/14/13
+    // appear is arbitrary, except that for checkProcedureName to work, CallHandler must
+    // be last - ST 5/14/13
     val handlers = Stream[Token => Option[Token]](
       CommandHandler,
       ReporterHandler,
@@ -36,19 +37,16 @@ class Namer(
       new LetVariableHandler(lets, () => it.count),
       new ProcedureVariableHandler(procedure.args),
       new BreedHandler(program),
-      new CallHandler(procedures),
       new AgentVariableReporterHandler(program),
-      new ExtensionPrimitiveHandler(extensionManager))
+      new ExtensionPrimitiveHandler(extensionManager),
+      new CallHandler(procedures))
     def processOne(token: Token): Option[Token] =
       handlers.flatMap(_(token)).headOption
     def checkProcedureName(procedure: nvm.Procedure) {
-      // if the proc name doesn't trigger any identifier rules it's treated as a variable reference,
-      // and if there's no variable with that name, CompilerException is raised -- CLB
-      for(newVal <- processOne(procedure.nameToken).map(_.value)) {
-        val ok = newVal.isInstanceOf[prim._call] ||
-          newVal.isInstanceOf[prim._callreport]
-        cAssert(ok, invalidProcedureName(procedure.name, newVal.toString), procedure.nameToken)
-      }
+      val newVal = processOne(procedure.nameToken).map(_.value).get
+      val ok = newVal.isInstanceOf[prim._call] ||
+        newVal.isInstanceOf[prim._callreport]
+      cAssert(ok, invalidProcedureName(procedure.name, newVal.toString), procedure.nameToken)
     }
     checkProcedureName(procedure)
     it.map{token => token.tpe match {
