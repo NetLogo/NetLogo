@@ -10,13 +10,19 @@ import org.nlogo.api.{ CompilerException, Program, Version }
 import org.nlogo.nvm.{ ArgumentTypeException, EngineException }
 
 class TestErrorMessages extends AbstractTestLanguage with FunSuite with BeforeAndAfterEach {
+
   override def beforeEach() { init() }
   override def afterEach() { workspace.dispose() }
+
   test("perspectiveChangeWithOf") {
-    testCommand("create-frogs 3 [ set spots turtle ((who + 1) mod count turtles) ]")
-    testCommand("ask frog 2 [ die ]")
+    testCommand(
+      "create-frogs 3 [ set spots turtle ((who + 1) mod count turtles) ]")
+    testCommand(
+      "ask frog 2 [ die ]")
     val ex = intercept[EngineException] {
-      testCommand("ask turtle 0 [ __ignore [who] of frogs with [age = ([age] of [spots] of self)]]")
+      testCommand(
+        "ask turtle 0 [ __ignore [who] of frogs with " +
+        "[age = ([age] of [spots] of self)]]")
     }
     // is the error message correct?
     expectResult("That frog is dead.")(ex.getMessage)
@@ -24,14 +30,17 @@ class TestErrorMessages extends AbstractTestLanguage with FunSuite with BeforeAn
     // but it's frog 1 that actually encountered the error
     expectResult("frog 1")(ex.context.agent.toString)
   }
+
   test("argumentTypeException") {
     testCommand("set glob1 [1.4]")
     val ex = intercept[ArgumentTypeException] {
-      testCommand("__ignore 0 < position 5 item 0 glob1")
-    }
-    expectResult("POSITION expected input to be a string or list but got the number 1.4 instead.")(ex.getMessage)
+      testCommand("__ignore 0 < position 5 item 0 glob1") }
+    val message =
+      "POSITION expected input to be a string or list but got the number 1.4 instead."
+    expectResult(message)(ex.getMessage)
     expectResult("POSITION")(ex.instruction.token.name.toUpperCase)
   }
+
   test("breedOwnRedeclaration") {
     val ex = intercept[CompilerException] {
       compiler.compileProgram(
