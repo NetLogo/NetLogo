@@ -27,33 +27,35 @@ class Namer(
 
   def process(tokens: Iterator[Token], procedure: nvm.Procedure): Iterator[Token] = {
     val it = new parse0.CountedIterator(tokens)
-    def checkProcedureName(procedure: nvm.Procedure) {
-      val newVal: AnyRef =
-        // if the proc name doesn't trigger any identifier rules it's treated as a variable reference,
-        // and if there's no variable with that name, CompilerException is raised -- CLB
-        try processOne(procedure.nameToken).value
-        catch { case ex: api.CompilerException => return }
-      val ok = newVal.isInstanceOf[prim._call] ||
-        newVal.isInstanceOf[prim._callreport]
-      cAssert(ok, invalidProcedureName(procedure.name, newVal.toString), procedure.nameToken)
-    }
     // the handlers are mutually exclusive (only one applies), so the order the handlers
     // appear is arbitrary - ST 5/14/13
-    def processOne(token: Token): Token =
-      new ExtensionPrimitiveHandler(extensionManager)(token)
-        .orElse(CommandHandler(token))
-        .orElse(ReporterHandler(token))
-        .orElse(TaskVariableHandler(token))
-        .orElse(new LetVariableHandler(lets, it.count)(token))
-        .orElse(new ProcedureVariableHandler(procedure.args)(token))
-        .orElse(new BreedHandler(program)(token))
-        .orElse(new CallHandler(procedures)(token))
-        .orElse(new AgentVariableReporterHandler(program)(token))
-        .getOrElse(fail(token))
+    val handlers = Stream[Token => Option[Token]](
+      CommandHandler,
+      ReporterHandler,
+      TaskVariableHandler,
+      new LetVariableHandler(lets, () => it.count),
+      new ProcedureVariableHandler(procedure.args),
+      new BreedHandler(program),
+      new CallHandler(procedures),
+      new AgentVariableReporterHandler(program),
+      new ExtensionPrimitiveHandler(extensionManager))
+    def processOne(token: Token): Option[Token] =
+      handlers.flatMap(_(token)).headOption
+    def checkProcedureName(procedure: nvm.Procedure) {
+      // if the proc name doesn't trigger any identifier rules it's treated as a variable reference,
+      // and if there's no variable with that name, CompilerException is raised -- CLB
+      for(newVal <- processOne(procedure.nameToken).map(_.value)) {
+        val ok = newVal.isInstanceOf[prim._call] ||
+          newVal.isInstanceOf[prim._callreport]
+        cAssert(ok, invalidProcedureName(procedure.name, newVal.toString), procedure.nameToken)
+      }
+    }
     checkProcedureName(procedure)
     it.map{token => token.tpe match {
-      case TokenType.Ident => processOne(token)
-      case _ => token
+      case TokenType.Ident =>
+        processOne(token).getOrElse(fail(token))
+      case _ =>
+        token
     }}
   }
 

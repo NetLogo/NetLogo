@@ -6,8 +6,8 @@ import org.nlogo.{ api, nvm, parse0, prim },
   api.{ Token, TokenType },
   Fail._
 
-abstract class NameHandler {
-  def apply(token: Token): Option[Token] =
+trait NameHandler extends (Token => Option[Token]) {
+  override def apply(token: Token) =
     handle(token).map{case (tpe, instr) =>
       val newToken = token.copy(tpe = tpe, value = instr)
       instr.token(newToken)
@@ -27,7 +27,7 @@ extends NameHandler {
 
 // kludgy to special case this, but we only have one such prim,
 // so oh well... - ST 7/8/06
-class LetVariableHandler(lets: Vector[api.Let], count: Int)
+class LetVariableHandler(lets: Vector[api.Let], count: () => Int)
 extends NameHandler {
   override def handle(token: Token) = {
     def getLetFromArg(ident: String, tokPos: Int): Option[api.Let] = {
@@ -40,7 +40,7 @@ extends NameHandler {
     }
     Some(token.value.asInstanceOf[String])
       .flatMap{ident =>
-        getLetFromArg(ident, count).map(let =>
+        getLetFromArg(ident, count()).map(let =>
           (TokenType.Reporter, new prim._letvariable(let)))}
   }
 }
