@@ -27,6 +27,8 @@ class LetScoper(procedure: Procedure, tokens: Iterable[Token], usedNames: Map[St
         exception("There is already a " + displayName + " called " + name, nameToken)
       cAssert(!procedure.args.contains(name),
         "There is already a local variable called " + name + " here", nameToken)
+      cAssert(!name.startsWith("?"),
+        "Names beginning with ? are reserved for use as task inputs", nameToken)
       val start = iter.count
       cAssert(!(ancestors.flatten ++ newLets).exists(_.let.name == name),
         "There is already a local variable called " + name + " here", nameToken)
