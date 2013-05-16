@@ -17,16 +17,6 @@ public abstract strictfp class AbstractWorkspaceJ {
 
   /// misc
 
-  private org.nlogo.api.UpdateMode updateMode = org.nlogo.api.UpdateModeJ.CONTINUOUS();
-
-  public org.nlogo.api.UpdateMode updateMode() {
-    return updateMode;
-  }
-
-  public void updateMode(org.nlogo.api.UpdateMode updateMode) {
-    this.updateMode = updateMode;
-  }
-
   // called from an "other" thread (neither event thread nor job thread)
   public abstract void open(String path)
       throws java.io.IOException, org.nlogo.api.LogoException;
