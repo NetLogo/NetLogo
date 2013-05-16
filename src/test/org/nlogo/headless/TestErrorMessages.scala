@@ -50,4 +50,58 @@ class TestErrorMessages extends AbstractTestLanguage with FunSuite with BeforeAn
     expectResult("Redeclaration of HUNTERS-OWN")(ex.getMessage)
   }
 
+  def testBadProcedureName(name: String, error: String, headerSource: String = "") {
+    def compile(source: String) {
+      val ex = intercept[api.CompilerException] {
+        compiler.compileProgram(
+          source, api.Program.empty, workspace.getExtensionManager)
+      }
+      expectResult(error)(ex.getMessage)
+    }
+    test("bad procedure name: " + name) {
+      compile(headerSource + "\nto " + name + " end")
+    }
+  }
+
+  testBadProcedureName("",
+    "identifier expected")
+  testBadProcedureName("3",
+    "identifier expected")
+  testBadProcedureName("to",
+    "identifier expected")
+  testBadProcedureName("fd",
+    "There is already a primitive command called FD")
+  testBadProcedureName("turtles",
+    "There is already a primitive reporter called TURTLES")
+  testBadProcedureName("???",
+    "Names beginning with ? are reserved for use as task inputs")
+  testBadProcedureName("kitten",
+    "There is already a breed called KITTEN", "breed [kittens kitten]")
+  testBadProcedureName("kittens",
+    "There is already a breed called KITTENS", "breed [kittens kitten]")
+  testBadProcedureName("turtles-at",
+    "There is already a primitive reporter called TURTLES-AT")
+  testBadProcedureName("shell",
+    "There is already a TURTLES-OWN variable called SHELL",
+    "turtles-own [shell]")
+  testBadProcedureName("silliness",
+    "There is already a KITTENS-OWN variable called SILLINESS",
+    "breed [kittens kitten] kittens-own [silliness]")
+  testBadProcedureName("end1",
+    "There is already a link variable called END1")
+  testBadProcedureName("size",
+    "There is already a turtle variable called SIZE")
+  testBadProcedureName("pcolor",
+    "There is already a patch variable called PCOLOR")
+
+  // at least we get errors on these, but the messages aren't great
+  testBadProcedureName("color",  // yeah it's a link variable, but it's more usual to think of it as a turtle variable
+    "There is already a link variable called COLOR")
+  testBadProcedureName("kittens-at",
+    "Cannot use KITTENS-AT as a procedure name.  Conflicts with: _breedat:KITTENS",
+    "breed [kittens kitten]")
+  testBadProcedureName("array:set",
+    "Cannot use ARRAY:SET as a procedure name.  Conflicts with: _extern:+0",
+    "extensions [array]")
+
 }
