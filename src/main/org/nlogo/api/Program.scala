@@ -28,16 +28,17 @@ case class Program private(
     AgentVariables.getImplicitObserverVariables ++
       interfaceGlobals.map(_.toUpperCase) ++ userGlobals
 
-  def usedNames: Map[String, String] =
+  def usedNames: Map[String, String] = {
     Map() ++
       globals.map(_ -> "global variable") ++
       turtlesOwn.map(_ -> "turtle variable") ++
       patchesOwn.map(_ -> "patch variable") ++
-      linksOwn.map(_ -> "link variable") ++
+      (linksOwn.filterNot(turtlesOwn.contains)).map(_ -> "link variable") ++
       breeds.keys.map(_ -> "breed") ++
       linkBreeds.keys.map(_ -> "link breed") ++
       (for(breed <- breeds.values ++ linkBreeds.values; own <- breed.owns)
        yield own -> (breed.name + " variable"))
+  }
 
   // for testing/debugging
   def dump = {

@@ -91,12 +91,12 @@ class TestErrorMessages extends AbstractTestLanguage with FunSuite with BeforeAn
     "There is already a link variable called END1")
   testBadProcedureName("size",
     "There is already a turtle variable called SIZE")
+  testBadProcedureName("color", // well, is actually both turtle and link variable - ST 5/16/03
+    "There is already a turtle variable called COLOR")
   testBadProcedureName("pcolor",
     "There is already a patch variable called PCOLOR")
 
   // at least we get errors on these, but the messages aren't great
-  testBadProcedureName("color",  // yeah it's a link variable, but it's more usual to think of it as a turtle variable
-    "There is already a link variable called COLOR")
   testBadProcedureName("kittens-at",
     "Cannot use KITTENS-AT as a procedure name.  Conflicts with: _breedat:KITTENS",
     "breed [kittens kitten]")
