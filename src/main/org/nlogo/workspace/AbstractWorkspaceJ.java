@@ -4,19 +4,6 @@ package org.nlogo.workspace;
 
 public abstract strictfp class AbstractWorkspaceJ {
 
-  // for 4.1 we have too much fragile, difficult-to-understand,
-  // under-tested code involving URLs -- we can't get rid of our
-  // uses of toURL() until 4.2, the risk of breakage is too high.
-  // so for now, at least we make this a separate method so the
-  // SuppressWarnings annotation is narrowly targeted. - ST 12/7/09
-  @SuppressWarnings("deprecation")
-  public static java.net.URL toURL(java.io.File file)
-      throws java.net.MalformedURLException {
-    return file.toURL();
-  }
-
-  /// misc
-
   // called from an "other" thread (neither event thread nor job thread)
   public abstract void open(String path)
       throws java.io.IOException, org.nlogo.api.LogoException;

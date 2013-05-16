@@ -435,27 +435,6 @@ object AbstractWorkspaceTraits {
       }
     }
 
-    /**
-     * attaches the current model directory to a relative path, if necessary.
-     * If filePath is an absolute path, this method simply returns it.
-     * If it's a relative path, then the current model directory is prepended
-     * to it. If this is a new model, the user's platform-dependent home
-     * directory is prepended instead.
-     */
-    @throws(classOf[java.net.MalformedURLException])
-    def attachModelDir(filePath: String): String =
-      if (new java.io.File(filePath).isAbsolute)
-        filePath
-      else {
-        val path = Option(getModelPath).getOrElse(
-          System.getProperty("user.home") +
-            java.io.File.separatorChar + "dummy.txt")
-        val urlForm = new java.net.URL(
-          AbstractWorkspaceJ.toURL(new java.io.File(path)),
-          filePath)
-        new java.io.File(urlForm.getFile).getAbsolutePath
-      }
-
   }
 
   // this is used to cache the compiled code used by the "run"

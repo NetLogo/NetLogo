@@ -17,18 +17,6 @@ trait Context {
   def importPcolors(image: java.awt.image.BufferedImage, asNetLogoColors: Boolean)
 
   /**
-   * Transforms a relative path to a model into an absolute path by prepending the current model
-   * directory.  If this is a new model, and therefore doesn't have a model directory yet, the
-   * user's platform-dependent home directory is prepended instead.  If <code>filePath</code> is an
-   * absolute path, it is returned unchanged.
-   *
-   * @param filePath the path to be processed
-   * @return an absolute path
-   */
-  @throws(classOf[java.net.MalformedURLException])
-  def attachModelDir(filePath: String): String
-
-  /**
    * Transforms a relative path to an absolute path by prepending the current working directory.  If
    * <code>filePath</code> is an absolute path, it is returned unchanged.
    *
