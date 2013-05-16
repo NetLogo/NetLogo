@@ -43,8 +43,7 @@ object AbstractWorkspace {
 }
 
 abstract class AbstractWorkspace(val world: World)
-extends AbstractWorkspaceJ
-with api.LogoThunkFactory with api.ParserServices
+extends api.LogoThunkFactory with api.ParserServices
 with Workspace with Procedures with Plotting with Exporting with Evaluating with Benchmarking
 with Compiling with Profiling with Extensions with BehaviorSpace with Paths with Checksums
 with RunCache with Jobs with Warning with OutputArea with Importing {
