@@ -14,10 +14,9 @@ import org.nlogo.{ api, nvm, parse0, prim },
   * replaced with a new token of type TokenType.Command or TokenType.Reporter,
   * with an instance of nvm.Command or nvm.Reporter stored in its value slot.
   *
-  * One additional check is performed: checkProcedureName makes sure the
-  * name of each procedure isn't also the name of anything else.  (That check
-  * happens here because here is where the knowledge of what names are taken
-  * resides.)
+  * One additional check is performed: checkProcedureName makes sure the name (and input names) of
+  * each procedure aren't also the name of anything else.  (That check happens here because here is
+  * where the knowledge of what names are taken resides.)
   */
 class Namer(
   program: api.Program,
@@ -28,27 +27,29 @@ class Namer(
   def process(tokens: Iterator[Token], procedure: nvm.Procedure): Iterator[Token] = {
     val it = new parse0.CountedIterator(tokens)
     // the handlers are mutually exclusive (only one applies), so the order the handlers
-    // appear is arbitrary, except that for checkProcedureName to work, CallHandler must
-    // be last - ST 5/14/13
+    // appear is arbitrary, except that for checkName to work, ProcedureVariableHandler
+    // and CallHandler must come last - ST 5/14/13, 5/16/13
     val handlers = Stream[Token => Option[Token]](
       CommandHandler,
       ReporterHandler,
       TaskVariableHandler,
       new LetVariableHandler(lets, () => it.count),
-      new ProcedureVariableHandler(procedure.args),
       new BreedHandler(program),
       new AgentVariableReporterHandler(program),
       new ExtensionPrimitiveHandler(extensionManager),
+      new ProcedureVariableHandler(procedure.args),
       new CallHandler(procedures))
     def processOne(token: Token): Option[Token] =
       handlers.flatMap(_(token)).headOption
-    def checkProcedureName(procedure: nvm.Procedure) {
-      val newVal = processOne(procedure.nameToken).map(_.value).get
+    def checkName(token: Token) {
+      val newVal = processOne(token).map(_.value).get
       val ok = newVal.isInstanceOf[prim._call] ||
-        newVal.isInstanceOf[prim._callreport]
-      cAssert(ok, invalidProcedureName(procedure.name, newVal.toString), procedure.nameToken)
+        newVal.isInstanceOf[prim._callreport] ||
+        newVal.isInstanceOf[prim._procedurevariable]
+      cAssert(ok, alreadyTaken(newVal.toString, token.text.toUpperCase), token)
     }
-    checkProcedureName(procedure)
+    for (token <- procedure.nameToken +: procedure.argTokens)
+      checkName(token)
     it.map{token => token.tpe match {
       case TokenType.Ident =>
         processOne(token).getOrElse(fail(token))
@@ -65,7 +66,7 @@ class Namer(
 
   private def unknownIdentifier(s: String) =
     "Nothing named " + s + " has been defined"
-  private def invalidProcedureName(theirs: String, ours: String) =
-    "Cannot use " + theirs + " as a procedure name.  Conflicts with: " + ours
+  private def alreadyTaken(theirs: String, ours: String) =
+    "There is already a " + theirs + " called " + ours
 
 }

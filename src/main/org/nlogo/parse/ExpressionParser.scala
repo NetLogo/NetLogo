@@ -408,7 +408,7 @@ class ExpressionParser(
           val stmts = new Statements(token.filename)
           stmts.addStatement(stmt)
           val taskProcedure = new Procedure(
-            false, "__task-" + taskNumbers.next(), token, parent = procedure)
+            false, "__task-" + taskNumbers.next(), token, Seq(), parent = procedure)
           procedure.children += taskProcedure
           taskProcedure.pos = token.start
           taskProcedure.end = token.end
@@ -563,7 +563,7 @@ class ExpressionParser(
       // the origin of the block are based on the positions of the brackets.
       tokens.next()
       val taskProcedure = new Procedure(
-        false, "__task-" + taskNumbers.next(), openBracket, parent = procedure)
+        false, "__task-" + taskNumbers.next(), openBracket, Seq(), parent = procedure)
       procedure.children += taskProcedure
       taskProcedure.pos = openBracket.start
       taskProcedure.end = closeBracket.end

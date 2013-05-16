@@ -50,7 +50,7 @@ class TestErrorMessages extends AbstractTestLanguage with FunSuite with BeforeAn
     expectResult("Redeclaration of HUNTERS-OWN")(ex.getMessage)
   }
 
-  def testBadProcedureName(name: String, error: String, headerSource: String = "") {
+  def testBadName(name: String, error: String, headerSource: String = "") {
     def compile(source: String) {
       val ex = intercept[api.CompilerException] {
         compiler.compileProgram(
@@ -58,50 +58,46 @@ class TestErrorMessages extends AbstractTestLanguage with FunSuite with BeforeAn
       }
       expectResult(error)(ex.getMessage)
     }
-    test("bad procedure name: " + name) {
+    test("bad name: " + name) {
       compile(headerSource + "\nto " + name + " end")
+      compile(headerSource + "\nto foo [" + name + "] end")
     }
   }
 
-  testBadProcedureName("",
-    "identifier expected")
-  testBadProcedureName("3",
-    "identifier expected")
-  testBadProcedureName("to",
-    "identifier expected")
-  testBadProcedureName("fd",
+  testBadName("fd",
     "There is already a primitive command called FD")
-  testBadProcedureName("turtles",
+  testBadName("turtles",
     "There is already a primitive reporter called TURTLES")
-  testBadProcedureName("???",
+  testBadName("???",
     "Names beginning with ? are reserved for use as task inputs")
-  testBadProcedureName("kitten",
+  testBadName("kitten",
     "There is already a breed called KITTEN", "breed [kittens kitten]")
-  testBadProcedureName("kittens",
+  testBadName("kittens",
     "There is already a breed called KITTENS", "breed [kittens kitten]")
-  testBadProcedureName("turtles-at",
+  testBadName("turtles-at",
     "There is already a primitive reporter called TURTLES-AT")
-  testBadProcedureName("shell",
+  testBadName("shell",
     "There is already a TURTLES-OWN variable called SHELL",
     "turtles-own [shell]")
-  testBadProcedureName("silliness",
+  testBadName("silliness",
     "There is already a KITTENS-OWN variable called SILLINESS",
     "breed [kittens kitten] kittens-own [silliness]")
-  testBadProcedureName("end1",
+  testBadName("end1",
     "There is already a link variable called END1")
-  testBadProcedureName("size",
+  testBadName("size",
     "There is already a turtle variable called SIZE")
-  testBadProcedureName("color", // well, is actually both turtle and link variable - ST 5/16/03
+  testBadName("color", // well, is actually both turtle and link variable - ST 5/16/03
     "There is already a turtle variable called COLOR")
-  testBadProcedureName("pcolor",
+  testBadName("pcolor",
     "There is already a patch variable called PCOLOR")
 
   // at least we get errors on these, but the messages aren't great
-  testBadProcedureName("kittens-at",
-    "Cannot use KITTENS-AT as a procedure name.  Conflicts with: _breedat:KITTENS",
+  // https://github.com/NetLogo/NetLogo/issues/352
+  testBadName("kittens-at",
+    "There is already a _breedat:KITTENS called KITTENS-AT",
     "breed [kittens kitten]")
-  testBadProcedureName("array:set",
-    "Cannot use ARRAY:SET as a procedure name.  Conflicts with: _extern:+0",
+  testBadName("array:set",
+    "There is already a _extern:+0 called ARRAY:SET",
     "extensions [array]")
 
 }

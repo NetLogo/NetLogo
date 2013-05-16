@@ -8,6 +8,7 @@ class Procedure(
   val isReporter: Boolean,
   val name: String,
   val nameToken: api.Token,
+  val argTokens: Seq[api.Token],
   _displayName: Option[String] = None,
   val parent: Procedure = null) {
 
