@@ -35,13 +35,13 @@ class ExpressionParser(
   // these are most of the compiler error messages. the ones actually in the code are those
   // that require some substitution, which are pretty much only type errors currently.
   private val EXPECTED_COMMAND = "Expected command."
-  private val EXPECTED_CloseBracket = "Expected closing bracket."
-  private val EXPECTED_CloseParen_HERE = "Expected a closing parenthesis here."
+  private val EXPECTED_CLOSE_BRACKET = "Expected closing bracket."
+  private val EXPECTED_CLOSE_PAREN_HERE = "Expected a closing parenthesis here."
   private val EXPECTED_REFERENCABLE = "Expected a patch variable here."
   private val EXPECTED_REPORTER = "Expected reporter."
   private val INVALID_VARIADIC_CONTEXT = "To use a non-default number of inputs, you need to put parentheses around this."
-  private val MISSING_CloseBracket = "No closing bracket for this open bracket."
-  private val MISSING_CloseParen = "No closing parenthesis for this open parenthesis."
+  private val MISSING_CLOSE_BRACKET = "No closing bracket for this open bracket."
+  private val MISSING_CLOSE_PAREN = "No closing parenthesis for this open parenthesis."
   private val MISSING_INPUT_ON_LEFT = "Missing input on the left."
 
   private var result = List[ProcedureDefinition]()
@@ -69,10 +69,10 @@ class ExpressionParser(
         val openParen = token
         val stmt = parseStatement(tokens, true)
         // if next is an EOF, we complain and point to the open paren.
-        cAssert(tokens.head.tpe != TokenType.EOF, MISSING_CloseParen, openParen)
+        cAssert(tokens.head.tpe != TokenType.EOF, MISSING_CLOSE_PAREN, openParen)
         val closeParen = tokens.next()
         // if next is anything else other than ), we complain and point to the next token itself.
-        cAssert(closeParen.tpe == TokenType.CloseParen, EXPECTED_CloseParen_HERE, closeParen)
+        cAssert(closeParen.tpe == TokenType.CloseParen, EXPECTED_CLOSE_PAREN_HERE, closeParen)
         // now tidy up the origin to reflect the parens.
         stmt.start = openParen.start
         stmt.end = token.end
@@ -336,12 +336,12 @@ class ExpressionParser(
           val expr = parseExpression(tokens, true, goalType)
           token = tokens.head
           // if next is an EOF, we complain and point to the open paren.
-          cAssert(tokens.head.tpe != TokenType.EOF, MISSING_CloseParen, openParen)
+          cAssert(tokens.head.tpe != TokenType.EOF, MISSING_CLOSE_PAREN, openParen)
           // we also special case an out-of-place command, since this is what the command center does
           // if you leave off a final paren (because of the __done at the end).
-          cAssert(token.tpe != TokenType.Command, MISSING_CloseParen, openParen)
+          cAssert(token.tpe != TokenType.Command, MISSING_CLOSE_PAREN, openParen)
           // if it's anything else other than ), we complain and point to the next token itself.
-          cAssert(token.tpe == TokenType.CloseParen, EXPECTED_CloseParen_HERE, token)
+          cAssert(token.tpe == TokenType.CloseParen, EXPECTED_CLOSE_PAREN_HERE, token)
           tokens.next()
           // now tidy up the origin to reflect the parens.
           expr.start = openParen.start
@@ -480,7 +480,7 @@ class ExpressionParser(
     def advance() {
       val token = tokens.next()
       if(token.tpe == TokenType.EOF)
-        exception(MISSING_CloseBracket, openBracket)
+        exception(MISSING_CLOSE_BRACKET, openBracket)
       results += token
     }
     def recurse() {
@@ -509,8 +509,8 @@ class ExpressionParser(
       tokens.next()
       val expr = resolveType(Syntax.WildcardType, parseExpression(tokens, false, goalType), null)
       val token = tokens.head
-      cAssert(token.tpe != TokenType.EOF, MISSING_CloseBracket, openBracket) // should be impossible for delayed block
-      cAssert(token.tpe == TokenType.CloseBracket, EXPECTED_CloseBracket, token)
+      cAssert(token.tpe != TokenType.EOF, MISSING_CLOSE_BRACKET, openBracket) // should be impossible for delayed block
+      cAssert(token.tpe == TokenType.CloseBracket, EXPECTED_CLOSE_BRACKET, token)
       // the origin of the block are based on the positions of the brackets.
       tokens.next()
       new ReporterBlock(expr.asInstanceOf[ReporterApp], openBracket.start, token.end, token.filename)
@@ -522,7 +522,7 @@ class ExpressionParser(
       while(token.tpe != TokenType.CloseBracket) {
         // if next is an EOF, we complain and point to the open bracket. this should be impossible,
         // since it's a delayed block.
-        cAssert(token.tpe != TokenType.EOF, MISSING_CloseBracket, openBracket)
+        cAssert(token.tpe != TokenType.EOF, MISSING_CLOSE_BRACKET, openBracket)
         stmts.addStatement(parseStatement(tokens, false))
         token = tokens.head
       }
@@ -536,8 +536,8 @@ class ExpressionParser(
       val openBracket = tokens.next()
       val expr = resolveType(Syntax.WildcardType, parseExpression(tokens, false, Syntax.WildcardType), null).asInstanceOf[ReporterApp]
       val closeBracket = tokens.head
-      cAssert(closeBracket.tpe != TokenType.EOF, MISSING_CloseBracket, openBracket) // should be impossible for delayed block
-      cAssert(closeBracket.tpe == TokenType.CloseBracket, EXPECTED_CloseBracket, closeBracket)
+      cAssert(closeBracket.tpe != TokenType.EOF, MISSING_CLOSE_BRACKET, openBracket) // should be impossible for delayed block
+      cAssert(closeBracket.tpe == TokenType.CloseBracket, EXPECTED_CLOSE_BRACKET, closeBracket)
       // the origin of the block are based on the positions of the brackets.
       tokens.next()
       val task = new _reportertask
@@ -555,7 +555,7 @@ class ExpressionParser(
       while(token.tpe != TokenType.CloseBracket) {
         // if next is an EOF, we complain and point to the open bracket. this should be impossible,
         // since it's a delayed block.
-        cAssert(token.tpe != TokenType.EOF, MISSING_CloseBracket, openBracket)
+        cAssert(token.tpe != TokenType.EOF, MISSING_CLOSE_BRACKET, openBracket)
         stmts.addStatement(parseStatement(tokens, false))
         token = tokens.head
       }
