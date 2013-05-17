@@ -7,8 +7,10 @@ package org.nlogo.headless
 // that framework should be extended so these tests could be done in it.)  - ST 3/18/08
 import org.scalatest.{ FunSuite, BeforeAndAfterEach }
 import org.nlogo.{ api, nvm }
+import org.nlogo.util.SlowTest
 
-class TestErrorMessages extends AbstractTestLanguage with FunSuite with BeforeAndAfterEach {
+class TestErrorMessages extends AbstractTestLanguage with FunSuite with BeforeAndAfterEach with SlowTest
+{
 
   override def beforeEach() { init() }
   override def afterEach() { workspace.dispose() }
