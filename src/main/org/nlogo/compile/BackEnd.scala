@@ -29,7 +29,7 @@ private object BackEnd {
       procdef.accept(new SimpleOfVisitor)  // convert _of(_*variable) => _*variableof
       procdef.accept(new TaskVisitor)  // handle _reportertask
       procdef.accept(new LocalsVisitor(alteredLets)) // convert _let/_repeat to _locals
-      procdef.accept(new parse.SetVisitor)   // convert _set to specific setters
+      procdef.accept(new SetVisitor)   // convert _set to specific setters
       procdef.accept(new CarefullyVisitor)  // connect _carefully to _errormessage
       if (flags.useOptimizer)
         procdef.accept(Optimizer)   // do various code-improving rewrites

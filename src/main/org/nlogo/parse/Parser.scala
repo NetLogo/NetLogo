@@ -36,15 +36,10 @@ trait ParserMain {
   def frontEnd(source: String, oldProcedures: ProceduresMap = nvm.ParserInterface.NoProcedures,
       program: api.Program = api.Program.empty()): (Seq[ProcedureDefinition], StructureResults) =
     frontEndHelper(source, None, program, true,
-      oldProcedures, new api.DummyExtensionManager, frontEndOnly = true)
+      oldProcedures, new api.DummyExtensionManager)
 
-  // used by Tortoise. bails after parsing so we can put a different back end on.
-  // the frontEndOnly flag is currently just for Tortoise and can hopefully go away in the future.
-  // Tortoise currently needs SetVisitor to happen even though SetVisitor is technically part of the
-  // back end.  An example of how this might be redone in the future would be to fold the
-  // functionality of SetVisitor into Namer. - ST 1/24/13
   def frontEndHelper(source: String, displayName: Option[String], program: api.Program, subprogram: Boolean,
-      oldProcedures: ProceduresMap, extensionManager: api.ExtensionManager, frontEndOnly: Boolean = false)
+      oldProcedures: ProceduresMap, extensionManager: api.ExtensionManager)
     : (Seq[ProcedureDefinition], StructureResults) = {
     val structureResults = StructureParser.parseAll(
       tokenizer, source, displayName, program, subprogram, oldProcedures, extensionManager)
@@ -74,9 +69,6 @@ trait ParserMain {
         .parse(stuffedTokens) // parse
     }
     val procDefs = structureResults.procedures.values.flatMap(parseProcedure).toVector
-    if (frontEndOnly)  // for Tortoise
-      for(procdef <- procDefs)
-        procdef.accept(new SetVisitor)
     (procDefs, structureResults)
   }
 
