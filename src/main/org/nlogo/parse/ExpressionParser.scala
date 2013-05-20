@@ -27,22 +27,12 @@ import org.nlogo.parse0.LiteralParser
 class ExpressionParser(
   procedure: Procedure,
   taskNumbers: Iterator[Int] = Iterator.from(1)) {
+
   /**
    * one less than the lowest valid operator precedence. See
    * Syntax.
    */
-  private val MIN_PRECEDENCE = -1
-  // these are most of the compiler error messages. the ones actually in the code are those
-  // that require some substitution, which are pretty much only type errors currently.
-  private val EXPECTED_COMMAND = "Expected command."
-  private val EXPECTED_CLOSE_BRACKET = "Expected closing bracket."
-  private val EXPECTED_CLOSE_PAREN_HERE = "Expected a closing parenthesis here."
-  private val EXPECTED_REFERENCABLE = "Expected a patch variable here."
-  private val EXPECTED_REPORTER = "Expected reporter."
-  private val INVALID_VARIADIC_CONTEXT = "To use a non-default number of inputs, you need to put parentheses around this."
-  private val MISSING_CLOSE_BRACKET = "No closing bracket for this open bracket."
-  private val MISSING_CLOSE_PAREN = "No closing parenthesis for this open parenthesis."
-  private val MISSING_INPUT_ON_LEFT = "Missing input on the left."
+  private val MinPrecedence = -1
 
   private var result = List[ProcedureDefinition]()
 
@@ -69,21 +59,21 @@ class ExpressionParser(
         val openParen = token
         val stmt = parseStatement(tokens, true)
         // if next is an EOF, we complain and point to the open paren.
-        cAssert(tokens.head.tpe != TokenType.EOF, MISSING_CLOSE_PAREN, openParen)
+        cAssert(tokens.head.tpe != TokenType.EOF, MissingCloseParen, openParen)
         val closeParen = tokens.next()
         // if next is anything else other than ), we complain and point to the next token itself.
-        cAssert(closeParen.tpe == TokenType.CloseParen, EXPECTED_CLOSE_PAREN_HERE, closeParen)
+        cAssert(closeParen.tpe == TokenType.CloseParen, ExpectedCloseParen, closeParen)
         // now tidy up the origin to reflect the parens.
         stmt.start = openParen.start
         stmt.end = token.end
         stmt
       case TokenType.Command =>
         val stmt = new Statement(token.value.asInstanceOf[Command], token.start, token.end, token.filename)
-        if(variadic && isVariadic(stmt.instruction)) parseVarArgs(stmt, tokens, MIN_PRECEDENCE)
-        else parseArguments(stmt, tokens, MIN_PRECEDENCE)
+        if(variadic && isVariadic(stmt.instruction)) parseVarArgs(stmt, tokens, MinPrecedence)
+        else parseArguments(stmt, tokens, MinPrecedence)
         stmt
       case _ =>
-        exception(EXPECTED_COMMAND, token)
+        exception(ExpectedCommand, token)
     }
   }
 
@@ -140,7 +130,7 @@ class ExpressionParser(
         // at this point is lower precedence, or we would already
         // have consumed it. so if we have a non-default number of
         // args, this is definitely illegal.
-        cAssert(app.size == app.instruction.syntax.totalDefault, INVALID_VARIADIC_CONTEXT, app)
+        cAssert(app.size == app.instruction.syntax.totalDefault, InvalidVariadicContext, app)
         done = true
       }
       // note: if it's a reporter, it must be the beginning
@@ -260,10 +250,10 @@ class ExpressionParser(
             TypeNames.aName(arg.reportedType) + " instead", arg)
     if(goalType == Syntax.ReferenceType) {
       // we can be sure this cast will work, because otherwise the assert above would've failed (no
-      // Expression other than a ReporterApp can have type TYPE_REFERENCE, which it must or we
+      // Expression other than a ReporterApp can have type ReferenceType, which it must or we
       // wouldn't be here). there has to be a better way to do this, though...
       val rApp = arg.asInstanceOf[ReporterApp]
-      cAssert(rApp.reporter.isInstanceOf[Referenceable], EXPECTED_REFERENCABLE, arg)
+      cAssert(rApp.reporter.isInstanceOf[Referenceable], ExpectedReferencable, arg)
       rApp.reporter = new _reference(rApp.reporter.asInstanceOf[Referenceable].makeReference)
     }
     arg
@@ -272,7 +262,7 @@ class ExpressionParser(
   /**
    * a wrapper around parseExpressionInternal for parsing expressions in non-argument positions
    * (basically only inside parens or reporter blocks). These expressions always have
-   * MIN_PRECEDENCE, so we don't need that arg.
+   * MinPrecedence, so we don't need that arg.
    *
    * Package protected for unit testing.
    *
@@ -280,10 +270,10 @@ class ExpressionParser(
    * @param variadic whether to treat this expression as possibly variadic
    */
   def parseExpression(tokens: BufferedIterator[Token], variadic: Boolean, goalType: Int): Expression = {
-    try { parseExpressionInternal(tokens, variadic, MIN_PRECEDENCE, goalType) }
+    try { parseExpressionInternal(tokens, variadic, MinPrecedence, goalType) }
     catch {
-      case e: MissingPrefixException => exception(MISSING_INPUT_ON_LEFT, e.token)
-      case e: UnexpectedTokenException => exception(EXPECTED_REPORTER, e.token)
+      case e: MissingPrefixException => exception(MissingInputOnLeft, e.token)
+      case e: UnexpectedTokenException => exception(ExpectedReporter, e.token)
     }
   }
 
@@ -309,8 +299,8 @@ class ExpressionParser(
    * parses an expression.
    *
    * Throws UnexpectedTokenException if it sees an unrecognized token, because this state of affairs
-   * must be interpreted in a context-dependent way. It generally indicates EXPECTED_REPORTER or
-   * MISSING_INPUT_ON_RIGHT, and it's up to the caller to interpret it properly.
+   * must be interpreted in a context-dependent way. It generally indicates ExpectedReporter or
+   * MissingInputOnRight, and it's up to the caller to interpret it properly.
    *
    * The same goes for MissingPrefixException, which indicates that an infix operator has been
    * encountered with no left argument.
@@ -336,12 +326,12 @@ class ExpressionParser(
           val expr = parseExpression(tokens, true, goalType)
           token = tokens.head
           // if next is an EOF, we complain and point to the open paren.
-          cAssert(tokens.head.tpe != TokenType.EOF, MISSING_CLOSE_PAREN, openParen)
+          cAssert(tokens.head.tpe != TokenType.EOF, MissingCloseParen, openParen)
           // we also special case an out-of-place command, since this is what the command center does
           // if you leave off a final paren (because of the __done at the end).
-          cAssert(token.tpe != TokenType.Command, MISSING_CLOSE_PAREN, openParen)
+          cAssert(token.tpe != TokenType.Command, MissingCloseParen, openParen)
           // if it's anything else other than ), we complain and point to the next token itself.
-          cAssert(token.tpe == TokenType.CloseParen, EXPECTED_CLOSE_PAREN_HERE, token)
+          cAssert(token.tpe == TokenType.CloseParen, ExpectedCloseParen, token)
           tokens.next()
           // now tidy up the origin to reflect the parens.
           expr.start = openParen.start
@@ -429,7 +419,7 @@ class ExpressionParser(
           new ReporterApp(task, token.start, token.end, token.filename)
         case _ =>
           // here we throw a temporary exception, since we don't know yet what this error means... It
-          // generally either means MISSING_INPUT_ON_RIGHT or EXPECTED_REPORTER.
+          // generally either means MissingInputOnRight or ExpectedReporter.
           throw new UnexpectedTokenException(token)
       }
     parseMore(expr, tokens, precedence)
@@ -454,7 +444,7 @@ class ExpressionParser(
           tokens.next()
           // note: this actually shouldn't be possible here, because this should never be called
           // with null expr, but better safe than sorry...
-          cAssert(expr != null, MISSING_INPUT_ON_LEFT, token)
+          cAssert(expr != null, MissingInputOnLeft, token)
           val tmp = new ReporterApp(reporter, expr.start, token.end, token.filename)
           tmp.addArgument(expr)
           parseArguments(tmp, tokens, syntax.precedence)
@@ -480,7 +470,7 @@ class ExpressionParser(
     def advance() {
       val token = tokens.next()
       if(token.tpe == TokenType.EOF)
-        exception(MISSING_CLOSE_BRACKET, openBracket)
+        exception(MissingCloseBracket, openBracket)
       results += token
     }
     def recurse() {
@@ -509,8 +499,8 @@ class ExpressionParser(
       tokens.next()
       val expr = resolveType(Syntax.WildcardType, parseExpression(tokens, false, goalType), null)
       val token = tokens.head
-      cAssert(token.tpe != TokenType.EOF, MISSING_CLOSE_BRACKET, openBracket) // should be impossible for delayed block
-      cAssert(token.tpe == TokenType.CloseBracket, EXPECTED_CLOSE_BRACKET, token)
+      cAssert(token.tpe != TokenType.EOF, MissingCloseBracket, openBracket) // should be impossible for delayed block
+      cAssert(token.tpe == TokenType.CloseBracket, ExpectedCloseBracket, token)
       // the origin of the block are based on the positions of the brackets.
       tokens.next()
       new ReporterBlock(expr.asInstanceOf[ReporterApp], openBracket.start, token.end, token.filename)
@@ -522,7 +512,7 @@ class ExpressionParser(
       while(token.tpe != TokenType.CloseBracket) {
         // if next is an EOF, we complain and point to the open bracket. this should be impossible,
         // since it's a delayed block.
-        cAssert(token.tpe != TokenType.EOF, MISSING_CLOSE_BRACKET, openBracket)
+        cAssert(token.tpe != TokenType.EOF, MissingCloseBracket, openBracket)
         stmts.addStatement(parseStatement(tokens, false))
         token = tokens.head
       }
@@ -536,8 +526,8 @@ class ExpressionParser(
       val openBracket = tokens.next()
       val expr = resolveType(Syntax.WildcardType, parseExpression(tokens, false, Syntax.WildcardType), null).asInstanceOf[ReporterApp]
       val closeBracket = tokens.head
-      cAssert(closeBracket.tpe != TokenType.EOF, MISSING_CLOSE_BRACKET, openBracket) // should be impossible for delayed block
-      cAssert(closeBracket.tpe == TokenType.CloseBracket, EXPECTED_CLOSE_BRACKET, closeBracket)
+      cAssert(closeBracket.tpe != TokenType.EOF, MissingCloseBracket, openBracket) // should be impossible for delayed block
+      cAssert(closeBracket.tpe == TokenType.CloseBracket, ExpectedCloseBracket, closeBracket)
       // the origin of the block are based on the positions of the brackets.
       tokens.next()
       val task = new _reportertask
@@ -555,7 +545,7 @@ class ExpressionParser(
       while(token.tpe != TokenType.CloseBracket) {
         // if next is an EOF, we complain and point to the open bracket. this should be impossible,
         // since it's a delayed block.
-        cAssert(token.tpe != TokenType.EOF, MISSING_CLOSE_BRACKET, openBracket)
+        cAssert(token.tpe != TokenType.EOF, MissingCloseBracket, openBracket)
         stmts.addStatement(parseStatement(tokens, false))
         token = tokens.head
       }
@@ -607,6 +597,18 @@ class ExpressionParser(
             .headOption
             .exists(t => t.tpe == TokenType.Command || t.tpe == TokenType.CloseBracket)
   }
+
+  // these are most of the compiler error messages. the ones actually in the code are those
+  // that require some substitution, which are pretty much only type errors currently.
+  private val ExpectedCommand = "Expected command."
+  private val ExpectedCloseBracket = "Expected closing bracket."
+  private val ExpectedCloseParen = "Expected a closing parenthesis here."
+  private val ExpectedReferencable = "Expected a patch variable here."
+  private val ExpectedReporter = "Expected reporter."
+  private val InvalidVariadicContext = "To use a non-default number of inputs, you need to put parentheses around this."
+  private val MissingCloseBracket = "No closing bracket for this open bracket."
+  private val MissingCloseParen = "No closing parenthesis for this open parenthesis."
+  private val MissingInputOnLeft = "Missing input on the left."
 
 }
 
