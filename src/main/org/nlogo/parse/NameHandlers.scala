@@ -6,30 +6,20 @@ import org.nlogo.{ api, nvm, parse0, prim },
   api.{ Token, TokenType },
   Fail._
 
-trait NameHandler extends (Token => Option[Token]) {
-  override def apply(token: Token) =
-    handle(token).map{case (tpe, instr) =>
-      val newToken = token.copy(tpe = tpe, value = instr)
-      instr.token(newToken)
-      newToken
-    }
-  def handle(token: Token): Option[(TokenType, nvm.Instruction)]
-}
+trait NameHandler extends (Token => Option[(TokenType, nvm.Instruction)])
 
 class ProcedureVariableHandler(args: Seq[String])
 extends NameHandler {
-  override def handle(token: Token) =
+  override def apply(token: Token) =
     Some(token.value.asInstanceOf[String])
       .filter(args.contains)
       .map(ident =>
         (TokenType.Reporter, new prim._procedurevariable(args.indexOf(ident), ident)))
 }
 
-// kludgy to special case this, but we only have one such prim,
-// so oh well... - ST 7/8/06
 class LetVariableHandler(lets: Vector[api.Let], count: () => Int)
 extends NameHandler {
-  override def handle(token: Token) = {
+  override def apply(token: Token) = {
     def getLetFromArg(ident: String, tokPos: Int): Option[api.Let] = {
       def checkLet(let: api.Let): Option[api.Let] =
         if(tokPos < let.start || tokPos > let.end || let.name != ident)
@@ -46,7 +36,7 @@ extends NameHandler {
 }
 
 class CallHandler(procedures: nvm.ParserInterface.ProceduresMap) extends NameHandler {
-  override def handle(token: Token) =
+  override def apply(token: Token) =
     Some(token.value.asInstanceOf[String])
       .flatMap{procedures.get}
       .map{callproc =>
@@ -63,18 +53,18 @@ abstract class PrimitiveHandler extends NameHandler {
 }
 
 object CommandHandler extends PrimitiveHandler {
-  override def handle(token: Token) =
+  override def apply(token: Token) =
     lookup(token, Parser.tokenMapper.getCommand  _, TokenType.Command)
 }
 
 object ReporterHandler extends PrimitiveHandler {
-  override def handle(token: Token) =
+  override def apply(token: Token) =
     lookup(token, Parser.tokenMapper.getReporter  _, TokenType.Reporter)
 }
 
 // go thru our breed prim handlers, if one triggers, return the result
 class BreedHandler(program: api.Program) extends NameHandler {
-  override def handle(token: Token) =
+  override def apply(token: Token) =
     parse0.BreedIdentifierHandler.process(token, program) map {
       case (className, breedName, tokenType) =>
         (tokenType, Instantiator.newInstance[nvm.Instruction](
@@ -84,7 +74,7 @@ class BreedHandler(program: api.Program) extends NameHandler {
 
 // replaces an identifier token with its imported implementation, if necessary
 class ExtensionPrimitiveHandler(extensionManager: api.ExtensionManager) extends NameHandler {
-  override def handle(token: Token) =
+  override def apply(token: Token) =
     if(token.tpe != TokenType.Ident ||
        extensionManager == null || !extensionManager.anyExtensionsLoaded)
       None
@@ -115,7 +105,7 @@ class ExtensionPrimitiveHandler(extensionManager: api.ExtensionManager) extends 
 // default number is 1 (i.e., if they just use "?")
 // if it's more than just "?", it needs to be an integer.
 object TaskVariableHandler extends NameHandler {
-  override def handle(token: Token) =
+  override def apply(token: Token) =
     Some(token.value.asInstanceOf[String])
       .filter(_.startsWith("?"))
       .map{ident =>
@@ -134,7 +124,7 @@ object TaskVariableHandler extends NameHandler {
 }
 
 class AgentVariableReporterHandler(program: api.Program) extends NameHandler {
-  override def handle(token: Token) =
+  override def apply(token: Token) =
     getAgentVariableReporter(token.value.asInstanceOf[String])
       .map{(TokenType.Reporter, _)}
   import PartialFunction.condOpt

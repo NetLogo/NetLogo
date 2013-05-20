@@ -29,7 +29,7 @@ class Namer(
     // the handlers are mutually exclusive (only one applies), so the order the handlers
     // appear is arbitrary, except that for checkName to work, ProcedureVariableHandler
     // and CallHandler must come last - ST 5/14/13, 5/16/13
-    val handlers = Stream[Token => Option[Token]](
+    val handlers = Stream[Token => Option[(TokenType, nvm.Instruction)]](
       CommandHandler,
       ReporterHandler,
       TaskVariableHandler,
@@ -39,8 +39,15 @@ class Namer(
       new ExtensionPrimitiveHandler(extensionManager),
       new ProcedureVariableHandler(procedure.args),
       new CallHandler(procedures))
-    def processOne(token: Token): Option[Token] =
-      handlers.flatMap(_(token)).headOption
+    def processOne(token: Token): Option[Token] = {
+      handlers.flatMap(_(token))
+        .headOption
+        .map{case (tpe, instr) =>
+          val newToken = token.copy(tpe = tpe, value = instr)
+          instr.token(newToken)
+          newToken
+        }
+    }
     def checkName(token: Token) {
       val newVal = processOne(token).map(_.value).get
       val ok = newVal.isInstanceOf[prim._call] ||
