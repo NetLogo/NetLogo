@@ -213,6 +213,8 @@
         or vice versa?</b></a>
       <li>
         <a href="#stoppingforeach"><b>How do I stop foreach?</b></a>
+      <li>
+        <a href="#listexpectedconstant"><b>I'm trying to make a list. Why do I keep getting the error &quot;Expected a constant&quot;?</b></a>
       </ul>
     <h3>
       BehaviorSpace
@@ -1193,6 +1195,16 @@ end
       from the current procedure so nothing after the foreach will be
       executed either. (If the procedure is a reporter procedure, use
       <tt>report</tt> instead of <tt>stop</tt>.)
+    <h3>
+      <a name="listexpectedconstant" id="listexpectedconstant"></a>I'm trying to make a list. Why do I keep getting the error &quot;Expected a constant&quot;?
+    </h3>
+    <p>
+      If a list contains only constants, you can write it down just by putting
+      square brackets around it, like <tt>[1 2 3]</tt>.
+    <p>
+      If you want your list to contain items that may vary at runtime, the list
+      cannot be written down directly.  Instead, you
+      build it using the <a href="dictionary.html#list">list</a> primitive.
     <h2>
       BehaviorSpace
     </h2>
