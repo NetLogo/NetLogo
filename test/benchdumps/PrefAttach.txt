@@ -748,24 +748,43 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
                   INVOKEVIRTUAL org/nlogo/agent/World.getLinkBreed (Ljava/lang/String;)Lorg/nlogo/agent/AgentSet;
                  L2
                   ASTORE 2
-                  ALOAD 0
+                  GETSTATIC org/nlogo/agent/LinkManager$.MODULE$ : Lorg/nlogo/agent/LinkManager$;
                   ALOAD 2
-                  ALOAD 1
-                  INVOKEVIRTUAL org/nlogo/nvm/Instruction.mustNotBeDirected (Lorg/nlogo/agent/AgentSet;Lorg/nlogo/nvm/Context;)V
+                  INVOKEVIRTUAL org/nlogo/agent/LinkManager$.mustNotBeDirected (Lorg/nlogo/agent/AgentSet;)Lscala/Option;
+                  DUP
+                  ASTORE 3
+                  INVOKEVIRTUAL scala/Option.isEmpty ()Z
+                  IFEQ L3
+                  GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
+                  GETSTATIC org/nlogo/api/AgentKind$Turtle$.MODULE$ : Lorg/nlogo/api/AgentKind$Turtle$;
                   ALOAD 0
                   GETFIELD org/nlogo/prim/_asm_procedurefindpartner_count_1.world : Lorg/nlogo/agent/World;
-                  GETFIELD org/nlogo/agent/World.linkManager : Lorg/nlogo/agent/LinkManager;
+                  INVOKEVIRTUAL org/nlogo/agent/World.linkManager ()Lorg/nlogo/agent/LinkManager;
                   ALOAD 1
                   GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
                   CHECKCAST org/nlogo/agent/Turtle
                   ALOAD 2
-                  INVOKEVIRTUAL org/nlogo/agent/LinkManager.findLinkedWith (Lorg/nlogo/agent/Turtle;Lorg/nlogo/agent/AgentSet;)Lorg/nlogo/agent/AgentSet;
+                  INVOKEINTERFACE org/nlogo/agent/LinkManager.findLinkedWith (Lorg/nlogo/agent/Turtle;Lorg/nlogo/agent/AgentSet;)Lscala/collection/Iterator;
+                  INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromIterator (Lorg/nlogo/api/AgentKind;Lscala/collection/Iterator;)Lorg/nlogo/agent/AgentSet;
+                  GOTO L4
                  L3
+                  ALOAD 3
+                  INVOKEVIRTUAL scala/Option.get ()Ljava/lang/Object;
+                  CHECKCAST java/lang/String
+                  ASTORE 5
+                  NEW org/nlogo/nvm/EngineException
+                  DUP
+                  ALOAD 1
+                  ALOAD 0
+                  ALOAD 5
+                  INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+                  ATHROW
+                 L4
                   ASTORE 2
                   ALOAD 2
                   INVOKEINTERFACE org/nlogo/api/AgentSet.count ()I
                   I2D
-                 L4
+                 L5
                   DSTORE 2
                   NEW java/lang/Double
                   DUP
@@ -954,24 +973,43 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
             INVOKEVIRTUAL org/nlogo/agent/World.getLinkBreed (Ljava/lang/String;)Lorg/nlogo/agent/AgentSet;
            L2
             ASTORE 2
-            ALOAD 0
+            GETSTATIC org/nlogo/agent/LinkManager$.MODULE$ : Lorg/nlogo/agent/LinkManager$;
             ALOAD 2
-            ALOAD 1
-            INVOKEVIRTUAL org/nlogo/nvm/Instruction.mustNotBeDirected (Lorg/nlogo/agent/AgentSet;Lorg/nlogo/nvm/Context;)V
+            INVOKEVIRTUAL org/nlogo/agent/LinkManager$.mustNotBeDirected (Lorg/nlogo/agent/AgentSet;)Lscala/Option;
+            DUP
+            ASTORE 3
+            INVOKEVIRTUAL scala/Option.isEmpty ()Z
+            IFEQ L3
+            GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
+            GETSTATIC org/nlogo/api/AgentKind$Turtle$.MODULE$ : Lorg/nlogo/api/AgentKind$Turtle$;
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_procedurefindpartner_count_6.world : Lorg/nlogo/agent/World;
-            GETFIELD org/nlogo/agent/World.linkManager : Lorg/nlogo/agent/LinkManager;
+            INVOKEVIRTUAL org/nlogo/agent/World.linkManager ()Lorg/nlogo/agent/LinkManager;
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
             CHECKCAST org/nlogo/agent/Turtle
             ALOAD 2
-            INVOKEVIRTUAL org/nlogo/agent/LinkManager.findLinkedWith (Lorg/nlogo/agent/Turtle;Lorg/nlogo/agent/AgentSet;)Lorg/nlogo/agent/AgentSet;
+            INVOKEINTERFACE org/nlogo/agent/LinkManager.findLinkedWith (Lorg/nlogo/agent/Turtle;Lorg/nlogo/agent/AgentSet;)Lscala/collection/Iterator;
+            INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromIterator (Lorg/nlogo/api/AgentKind;Lscala/collection/Iterator;)Lorg/nlogo/agent/AgentSet;
+            GOTO L4
            L3
+            ALOAD 3
+            INVOKEVIRTUAL scala/Option.get ()Ljava/lang/Object;
+            CHECKCAST java/lang/String
+            ASTORE 5
+            NEW org/nlogo/nvm/EngineException
+            DUP
+            ALOAD 1
+            ALOAD 0
+            ALOAD 5
+            INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+            ATHROW
+           L4
             ASTORE 2
             ALOAD 2
             INVOKEINTERFACE org/nlogo/api/AgentSet.count ()I
             I2D
-           L4
+           L5
             DSTORE 2
             NEW java/lang/Double
             DUP

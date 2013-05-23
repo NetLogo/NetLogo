@@ -25,9 +25,17 @@ public final strictfp class World3D
     return (org.nlogo.api.Protractor3D) _protractor;
   }
 
+  @Override
+  public LinkManager createLinkManager() {
+    return new LinkManagerImpl(
+      this, new LinkFactory() {
+          @Override public Link apply(World world, Turtle src, Turtle dest, AgentSet breed) {
+            return new Link3D(world, src, dest, breed);
+          }});
+  }
+
   public World3D() {
-    linkManager = new LinkManager3D(this);
-    tieManager = new TieManager3D(this, linkManager);
+    tieManager = new TieManager3D(this);
     drawing = new Drawing3D(this);
     inRadiusOrCone = new InRadiusOrCone3D(this);
     _protractor = new Protractor3D(this);

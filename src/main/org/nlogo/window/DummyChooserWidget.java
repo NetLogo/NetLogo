@@ -3,7 +3,7 @@
 package org.nlogo.window;
 
 import org.nlogo.api.CompilerException;
-import org.nlogo.api.CompilerServices;
+import org.nlogo.api.ParserServices;
 import org.nlogo.api.Dump;
 import org.nlogo.api.Editable;
 import org.nlogo.api.I18N;
@@ -17,8 +17,8 @@ public strictfp class DummyChooserWidget
     extends Chooser
     implements Editable {
 
-  public DummyChooserWidget(CompilerServices compiler) {
-    super(compiler);
+  public DummyChooserWidget(ParserServices parser) {
+    super(parser);
     setBorder(widgetBorder());
   }
 
@@ -56,7 +56,7 @@ public strictfp class DummyChooserWidget
   public void choicesWrapper(String choicesString) {
     try {
       Object oldValue = value();
-      LogoList newChoices = (LogoList) compiler.readFromString
+      LogoList newChoices = (LogoList) parser.readFromString
           ("[ " + choicesString + " ]");
 
       constraint.acceptedValues(newChoices);

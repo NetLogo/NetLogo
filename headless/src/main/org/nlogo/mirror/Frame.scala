@@ -5,8 +5,9 @@ package org.nlogo.mirror
 import java.awt.image.BufferedImage
 import java.io.IOException
 
+import org.nlogo.api.PlotAction
 import org.nlogo.drawing.{ DrawingAction, DrawingActionRunner }
-import org.nlogo.plot.{ BasicPlotActionRunner, Plot, PlotAction }
+import org.nlogo.plot.{ BasicPlotActionRunner, Plot }
 
 case class Frame(
   mirroredState: Mirroring.State,

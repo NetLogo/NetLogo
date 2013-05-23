@@ -7,11 +7,11 @@ package org.nlogo.sdm
 // loading stuff. we also use this in the applet since we don't want to have to include JHotDraw in
 // the lite jar - ST 1/24/05, 11/11/09, 11/23/11
 
-import org.nlogo.api.CompilerServices
+import org.nlogo.api.ParserServices
 
 object Loader {
 
-  def load(input: String, compiler: CompilerServices): String = {
+  def load(input: String, parser: ParserServices): String = {
     val lines =
       io.Source.fromString(mungeClassNames(input))
         .getLines
@@ -24,7 +24,7 @@ object Loader {
       case Some(dt) =>
         val model = buildModel(new Tokenizer(lines.tail.mkString("", "\n", "\n")),
                                dt.toDouble)
-        new Translator(model, compiler).source
+        new Translator(model, parser).source
     }
   }
 

@@ -15,6 +15,7 @@ import org.nlogo.agent.World;
 import org.nlogo.nvm.Activation;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.CompilerInterface;
+import org.nlogo.nvm.ParserInterface;
 import org.nlogo.nvm.FileManager;
 import org.nlogo.nvm.Job;
 import org.nlogo.nvm.JobManagerInterface;
@@ -24,7 +25,7 @@ import org.nlogo.nvm.Workspace;
 import org.nlogo.util.Femto;
 
 public abstract strictfp class AbstractWorkspace
-  implements org.nlogo.api.LogoThunkFactory, org.nlogo.api.CompilerServices {
+  implements org.nlogo.api.LogoThunkFactory, org.nlogo.api.ParserServices {
 
   public interface HubNetManagerFactory {
     HubNetInterface newInstance(AbstractWorkspace workspace);
@@ -442,6 +443,7 @@ public abstract strictfp class AbstractWorkspace
 
   public abstract World world();
   public abstract CompilerInterface compiler();
+  public abstract ParserInterface parser();
   public abstract void clearOutput();
   public abstract scala.collection.immutable.ListMap<String, Procedure> procedures();
   public abstract FileManager fileManager();

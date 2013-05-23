@@ -8,7 +8,7 @@ import java.awt.BorderLayout
 import org.nlogo.swing.{ModalProgressTask, OptionDialog}
 import org.nlogo.awt.{ Hierarchy, Images, Positioning, EventQueue }
 import org.nlogo.hubnet.connection.Ports
-import org.nlogo.api.{I18N, CompilerServices}
+import org.nlogo.api.{I18N, ParserServices}
 import javax.swing.{WindowConstants, JFrame}
 
 /**
@@ -18,7 +18,7 @@ object ClientApp {
   private var localClientIndex = 0
 
   // called by App.main()
-  def mainHelper(args: Array[String], editorFactory: EditorFactory, workspace: CompilerServices) {
+  def mainHelper(args: Array[String], editorFactory: EditorFactory, workspace: ParserServices) {
     try {
       val app = new ClientApp()
       if (System.getProperty("os.name").startsWith("Mac"))
@@ -66,7 +66,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
   }
 
   def startup(editorFactory: org.nlogo.window.EditorFactory, userid: String, hostip: String,
-              port: Int, isLocal: Boolean, isRobo: Boolean, waitTime: Long, workspace: CompilerServices) {
+              port: Int, isLocal: Boolean, isRobo: Boolean, waitTime: Long, workspace: ParserServices) {
     EventQueue.invokeLater(() => {
       Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
         def uncaughtException(t: Thread, e: Throwable) {

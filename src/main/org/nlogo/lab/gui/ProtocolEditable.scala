@@ -4,14 +4,14 @@ package org.nlogo.lab.gui
 
 import org.nlogo.lab.{EnumeratedValueSet,Protocol,SteppedValueSet,ValueSet}
 import java.awt.{GridBagConstraints,Window}
-import org.nlogo.api.{I18N, Dump, CompilerException, CompilerServices, Editable, LogoList, Property}
+import org.nlogo.api.{I18N, Dump, CompilerException, ParserServices, Editable, LogoList, Property}
 import collection.JavaConverters._
 
 // normally we'd be package-private but the org.nlogo.properties stuff requires we be public - ST 2/25/09
 
 class ProtocolEditable(protocol: Protocol,
                        window: Window,
-                       compiler: CompilerServices,
+                       parser: ParserServices,
                        worldLock: AnyRef)
   extends Editable {
   // these are for Editable
@@ -83,7 +83,7 @@ class ProtocolEditable(protocol: Protocol,
       {
         val list =
           try { worldLock.synchronized {
-            compiler.readFromString("[" + valueSets + "]").asInstanceOf[LogoList]
+            parser.readFromString("[" + valueSets + "]").asInstanceOf[LogoList]
           } }
         catch{ case ex: CompilerException => complain(ex.getMessage); return None }
         for(o <- list.asScala.toList) yield {

@@ -56,10 +56,10 @@ object Depend {
       "api" -> List("util"),
       "app" -> List("window"),
       "awt" -> Nil,
-      "compiler" -> List("prim","prim/dead","prim/threed"),
+      "compile" -> List("parse"),
       "drawing" -> List("api"),
       "editor" -> Nil,
-      "generator" -> List("prim","prim/dead","prim/threed"),
+      "generate" -> List("prim","prim/dead","prim/threed"),
       "gl/render" -> List("shape"),
       "gl/view" -> List("gl/render","window"),
       "headless" -> List("mirror", "workspace"),
@@ -79,13 +79,13 @@ object Depend {
       "mirror" -> List("drawing", "plot", "shape"),
       "mc" -> List("nvm", "swing"),
       "nvm" -> List("agent"),
+      "parse" -> List("prim","prim/dead","prim/threed"),
       "plot" -> List("api"),
       "prim" -> List("nvm"),
       "prim/dead" -> List("nvm"),
       "prim/etc" -> List("nvm"),
       "prim/file" -> List("nvm"),
       "prim/hubnet" -> List("nvm"),
-      "prim/plot" -> List("nvm","plot"),
       "prim/threed" -> List("nvm"),
       "properties" -> List("window"),
       "render" -> List("shape"),
@@ -122,11 +122,6 @@ check [HubNet-client] independentOf [workspace]
 # Someday this should be completely independent, not just directly independent - ST 12/4/08
 check [HubNet-client] directlyIndependentOf [nvm]
 
-### checks for packages with only one direct parent
-
-[not-job-not-workspace] = org.nlogo.* excluding [job] [workspace]
-check [not-job-not-workspace] directlyIndependentOf [job]
-
 ### checks on AWT, Swing, JOGL
 
 [Sun-Swing] = javax.swing.* excluding javax.swing.tree.MutableTreeNode javax.swing.tree.DefaultMutableTreeNode
@@ -148,7 +143,7 @@ check [gl.render] independentOf [Sun-Swing] [bad-AWT]
 [JOGL] = net.java.games.* javax.media.opengl.*
 check [JOGL-free-zone] independentOf [JOGL]
 
-[ASM-free-zone] = org.nlogo.* excluding [generator]
+[ASM-free-zone] = org.nlogo.* excluding [generate]
 check [ASM-free-zone] independentOf org.objectweb.*
 
 check org.nlogo.* independentOf com.wolfram.*

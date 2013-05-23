@@ -3,17 +3,12 @@
 package org.nlogo.mirror
 
 import java.io.{ InputStream, ObjectOutputStream, OutputStream }
-import scala.Option.option2Iterable
-import org.nlogo.api.{ ModelReader, ModelSection }
-import org.nlogo.plot.{ Plot, PlotAction, PlotLoader }
+
+import org.nlogo.api.{ PlotPenState, PlotState }
+import org.nlogo.drawing.imageToBytes
+import org.nlogo.plot.{ Plot, PlotPen, PlotPoint }
+
 import javax.imageio.ImageIO
-import org.nlogo.drawing.DrawingAction
-import org.nlogo.drawing._
-import org.nlogo.api.Action
-import org.nlogo.api.PlotState
-import org.nlogo.api.PlotPenState
-import org.nlogo.plot.PlotPoint
-import org.nlogo.plot.PlotPen
 
 trait SavableRun {
   self: ModelRun =>

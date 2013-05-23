@@ -10,7 +10,7 @@ import org.jhotdraw.framework.Tool;
 import org.jhotdraw.framework.ViewChangeListener;
 import org.jhotdraw.util.UndoManager;
 import org.nlogo.api.CompilerException;
-import org.nlogo.api.CompilerServices;
+import org.nlogo.api.ParserServices;
 import org.nlogo.api.I18N;
 import org.nlogo.api.TokenType;
 import org.nlogo.sdm.Model;
@@ -37,7 +37,7 @@ strictfp class AggregateModelEditor
   private final org.nlogo.editor.Colorizer<TokenType> colorizer;
   private final java.awt.Component linkParent;
   private final org.nlogo.window.MenuBarFactory menuBarFactory;
-  private final CompilerServices compiler;
+  private final ParserServices parser;
   private AggregateModelEditorToolBar toolbar;
   private final UndoManager undoManager;
   private Tool currentTool;
@@ -51,9 +51,9 @@ strictfp class AggregateModelEditor
       (java.awt.Component linkParent,
        org.nlogo.editor.Colorizer<TokenType> colorizer,
        org.nlogo.window.MenuBarFactory menuBarFactory,
-       CompilerServices compiler,
+       ParserServices parser,
        EditDialogFactoryInterface dialogFactory) {
-    this(linkParent, colorizer, menuBarFactory, null, compiler, dialogFactory);
+    this(linkParent, colorizer, menuBarFactory, null, parser, dialogFactory);
   }
 
   AggregateModelEditor
@@ -61,7 +61,7 @@ strictfp class AggregateModelEditor
        org.nlogo.editor.Colorizer<TokenType> colorizer,
        org.nlogo.window.MenuBarFactory menuBarFactory,
        AggregateDrawing drawing,
-       CompilerServices compiler,
+       ParserServices parser,
        EditDialogFactoryInterface dialogFactory) {
     super(I18N.guiJ().get("menu.tools.systemDynamicsModeler"), linkParent.getGraphicsConfiguration());
     undoManager = new UndoManager();
@@ -69,7 +69,7 @@ strictfp class AggregateModelEditor
     this.linkParent = linkParent;
     this.colorizer = colorizer;
     this.menuBarFactory = menuBarFactory;
-    this.compiler = compiler;
+    this.parser = parser;
     this.dialogFactory = dialogFactory;
 
     Wrapper.reset();
@@ -162,7 +162,7 @@ strictfp class AggregateModelEditor
 
     if (view() != null && view().drawing() != null) {
       org.nlogo.sdm.Translator translator =
-          new org.nlogo.sdm.Translator(getModel(), compiler);
+          new org.nlogo.sdm.Translator(getModel(), parser);
       src = translator.source();
     }
 

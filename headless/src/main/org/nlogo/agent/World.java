@@ -6,7 +6,7 @@ import org.nlogo.api.AgentException;
 import org.nlogo.api.AgentKind;
 import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.Color;
-import org.nlogo.api.CompilerServices;
+import org.nlogo.api.ParserServices;
 import org.nlogo.api.ImporterUser;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.Nobody$;
@@ -85,10 +85,20 @@ public strictfp class World
     }
   }
 
-  public LinkManager linkManager;
+  private final LinkManager _linkManager;
+  public LinkManager linkManager() { return _linkManager; }
+
   public TieManager tieManager;
 
   public InRadiusOrCone inRadiusOrCone;
+
+  public LinkManager createLinkManager() {
+    return new LinkManagerImpl(
+      this, new LinkFactory() {
+          @Override public Link apply(World world, Turtle src, Turtle dest, AgentSet breed) {
+            return new Link(world, src, dest, breed);
+          }});
+  }
 
   // This is a flag that the engine checks in its tightest innermost loops
   // to see if maybe it should stop running NetLogo code for a moment
@@ -107,8 +117,8 @@ public strictfp class World
     _observer = createObserver();
     _observers = AgentSet.fromAgent(_observer);
 
-    linkManager = new LinkManager(this);
-    tieManager = new TieManager(this, linkManager);
+    _linkManager = createLinkManager();
+    tieManager = new TieManager(this);
 
     inRadiusOrCone = new InRadiusOrCone(this);
     _protractor = new Protractor(this);
@@ -585,7 +595,7 @@ public strictfp class World
   }
 
   public Link getLink(Object end1, Object end2, AgentSet breed) {
-    return linkManager.findLink((Turtle) _turtles.getAgent(end1),
+    return linkManager().findLink((Turtle) _turtles.getAgent(end1),
         (Turtle) _turtles.getAgent(end2),
         breed, false);
   }
@@ -634,7 +644,7 @@ public strictfp class World
   public Link getOrCreateLink(Turtle end1, Turtle end2, AgentSet breed) {
     Link link = getLink(end1.agentKey(), end2.agentKey(), breed);
     if (link == null) {
-      link = linkManager.createLink(end1, end2, breed);
+      link = linkManager().createLink(end1, end2, breed);
     }
     return link;
   }
@@ -827,7 +837,7 @@ public strictfp class World
     for (AgentIterator iter = _turtles.iterator(); iter.hasNext();) {
       Turtle turtle = (Turtle) iter.next();
       lineThicknesses.remove(turtle);
-      linkManager.cleanup(turtle);
+      linkManager().cleanupTurtle(turtle);
       turtle._id_$eq(-1);
     }
     _turtles.clear();
@@ -848,7 +858,7 @@ public strictfp class World
     }
     _links.clear();
     nextLinkIndex = 0;
-    linkManager.reset();
+    linkManager().reset();
   }
 
   public void clearGlobals() {
@@ -1233,14 +1243,14 @@ public strictfp class World
         ("\"" + var + "\" not found");
   }
 
-  private CompilerServices _compiler;
+  private ParserServices _parser;
 
-  public void compiler_$eq(CompilerServices compiler) {
-    _compiler = compiler;
+  public void compiler_$eq(ParserServices parser) {
+    _parser = parser;
   }
 
-  public CompilerServices compiler() {
-    return _compiler;
+  public ParserServices parser() {
+    return _parser;
   }
 
   public scala.collection.Iterator<Object> allStoredValues() {

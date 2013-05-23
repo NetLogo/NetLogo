@@ -11,7 +11,7 @@ class ProceduresMenu(target: ProceduresMenuTarget)
         extends org.nlogo.swing.ToolBarMenu(I18N.gui.get("tabs.code.procedures")) {
   override def populate(menu: javax.swing.JPopupMenu) {
     val procsTable =
-      target.compiler.findProcedurePositions(target.getText)
+      target.parser.findProcedurePositions(target.getText)
     val procs = procsTable.values.map(_._1).toSeq
     if(procs.isEmpty)
       menu.add(new JMenuItem("<"+I18N.gui.get("tabs.code.procedures.none")+">") { setEnabled(false) })

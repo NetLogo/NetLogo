@@ -3,12 +3,12 @@
 package org.nlogo.window
 
 import java.awt.Color
-import org.nlogo.api.{ CompilerServices, Token, TokenType, Version }
+import org.nlogo.api.{ ParserServices, Token, TokenType, Version }
 import org.nlogo.editor.Colorizer
 import org.nlogo.swing.BrowserLauncher.openURL
 import collection.JavaConverters._
 
-class EditorColorizer(compiler: CompilerServices) extends Colorizer[TokenType] {
+class EditorColorizer(parser: ParserServices) extends Colorizer[TokenType] {
 
   // cache last studied line, so we don't retokenize the same string over and over again when the
   // user isn't even doing anything
@@ -72,7 +72,7 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer[TokenType] {
     token == TokenType.CLOSE_PAREN || token == TokenType.CLOSE_BRACKET
 
   def tokenizeForColorization(line: String): Seq[Token] =
-    compiler.tokenizeForColorization(line)
+    parser.tokenizeForColorization(line)
 
   ///
 
@@ -95,7 +95,7 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer[TokenType] {
     }
 
   def getTokenAtPosition(text: String, position: Int): String =
-    Option(compiler.getTokenAtPosition(text, position))
+    Option(parser.getTokenAtPosition(text, position))
       .map(_.name).orNull
 
   def doHelp(comp: java.awt.Component, name: String) {

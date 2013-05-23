@@ -3,14 +3,14 @@
 package org.nlogo.sdm
 
 import org.scalatest.FunSuite
-import org.nlogo.api.DummyCompilerServices
+import org.nlogo.api.DummyParserServices
 
 // actually this tests Translator too, since Loader calls Translator
 
 class LoaderTests extends FunSuite {
 
   test("scientific notation") {
-    expectResult(expected)(Loader.load(ScientificDT, new DummyCompilerServices))
+    expectResult(expected)(Loader.load(ScientificDT, new DummyParserServices))
   }
   val ScientificDT =
     """|1.0E-4
@@ -60,7 +60,7 @@ class LoaderTests extends FunSuite {
        |""".stripMargin.replaceAll("\r\n", "\n")
 
   test("issue #35") {
-    expectResult(issue35Expected)(Loader.load(issue35Input, new DummyCompilerServices))
+    expectResult(issue35Expected)(Loader.load(issue35Input, new DummyParserServices))
   }
   val issue35Input =
     """|0.01

@@ -12,8 +12,9 @@ import org.nlogo.workspace.BufferedReaderImporter
 
 class LiteWorkspace(appletPanel: AppletPanel, isApplet: Boolean, world: World, frame: java.awt.Frame, listenerManager: NetLogoListenerManager)
 extends GUIWorkspace(world, window.GUIWorkspaceJ.KioskLevel.MODERATE, frame, frame, null, null, listenerManager) {
-  val compiler = Femto.scalaSingleton(
-    classOf[CompilerInterface], "org.nlogo.compiler.Compiler")
+  override val compiler = Femto.scalaSingleton(
+    classOf[CompilerInterface], "org.nlogo.compile.Compiler")
+  override def parser = compiler
   // lazy to avoid initialization order snafu - ST 3/1/11
   lazy val updateManager = new UpdateManager() {
     override def defaultFrameRate = LiteWorkspace.this.frameRate

@@ -131,7 +131,7 @@ public strictfp class Turtle
     if (id() == -1) {
       return;
     }
-    world().linkManager.cleanup(this);
+    world().linkManager().cleanupTurtle(this);
     Patch patch = getPatchHere();
     patch.removeTurtle(this);
     TreeAgentSet breed = (TreeAgentSet) getBreed();

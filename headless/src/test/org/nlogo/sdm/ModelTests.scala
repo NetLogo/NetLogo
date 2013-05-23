@@ -3,7 +3,7 @@
 package org.nlogo.sdm
 
 import org.scalatest.FunSuite
-import org.nlogo.api.DummyCompilerServices
+import org.nlogo.api.DummyParserServices
 
 class ModelTests extends FunSuite {
   val model = {
@@ -19,7 +19,7 @@ class ModelTests extends FunSuite {
     testModel
   }
   test("translator") {
-    val translator = new Translator(model,new DummyCompilerServices)
+    val translator = new Translator(model,new DummyParserServices)
     val expected =
       ";; System dynamics model globals\nglobals [\n" +
       "  ;; stock values\n" +

@@ -2,7 +2,7 @@
 
 package org.nlogo.hubnet.protocol
 
-import org.nlogo.api.{LogoList, CompilerServices, Shape}
+import org.nlogo.api.{LogoList, ParserServices, Shape}
 
 /**
  * Holds the specification for the client-side interface.
@@ -16,7 +16,7 @@ case class ClientInterface(
   widgetDescriptions: Seq[String],
   turtleShapes: Seq[Shape],
   linkShapes: Seq[Shape],
-  @transient compiler: CompilerServices,
+  @transient parser: ParserServices,
   chooserChoices:collection.mutable.HashMap[String, LogoList] = collection.mutable.HashMap()) {
 
   /** Transient cache of valid tags */
@@ -28,7 +28,7 @@ case class ClientInterface(
         else {
           val tag = widget(5)
           if (widget(0) == "CHOOSER")
-            chooserChoices(tag) = compiler.readFromString("[ " + widget(7) + " ]").asInstanceOf[LogoList]
+            chooserChoices(tag) = parser.readFromString("[ " + widget(7) + " ]").asInstanceOf[LogoList]
           tag
         }
       }.toList

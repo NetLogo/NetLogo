@@ -204,7 +204,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
       for (metricNumber <- 0 until protocol.metrics.length) {
         val measurement = measurements(metricNumber)
         if (measurement.isInstanceOf[Number]) {
-          plotWidget.plot.currentPen_=(getPenName(metricNumber))
+          plotWidget.plot.currentPenByName_=(getPenName(metricNumber))
           plotWidget.plot.plot(steps, measurement.asInstanceOf[java.lang.Double].doubleValue)
         }
       }

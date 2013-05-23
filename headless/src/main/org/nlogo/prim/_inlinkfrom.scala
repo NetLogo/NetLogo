@@ -3,8 +3,8 @@
 package org.nlogo.prim
 
 import org.nlogo.api.{ Syntax, Nobody }
-import org.nlogo.nvm.{ Reporter, Context }
-import org.nlogo.agent.Turtle
+import org.nlogo.nvm.{ Reporter, Context, EngineException }
+import org.nlogo.agent.{ Turtle, LinkManager }
 
 class _inlinkfrom(breedName: String) extends Reporter {
 
@@ -23,7 +23,8 @@ class _inlinkfrom(breedName: String) extends Reporter {
     val breed =
       if (breedName == null) world.links
       else world.getLinkBreed(breedName)
-    mustNotBeUndirected(breed, context)
+    for(err <- LinkManager.mustNotBeUndirected(breed))
+      throw new EngineException(context, this, err)
     val link = world.linkManager.findLinkFrom(
       target, context.agent.asInstanceOf[Turtle], breed, true)
     if (link == null)

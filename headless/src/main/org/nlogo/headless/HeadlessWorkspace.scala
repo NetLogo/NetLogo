@@ -13,7 +13,7 @@ import org.nlogo.api.{ AgentKind, Program, Version, RendererInterface,
                        HubNetInterface, CommandRunnable, ReporterRunnable, UpdateMode }
 import org.nlogo.agent.{ World, World3D }
 import org.nlogo.nvm.{ LabInterface, Context,
-                       Workspace, DefaultCompilerServices, CompilerInterface }
+                       Workspace, DefaultParserServices, CompilerInterface }
 import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala }
 import org.nlogo.util.Pico
 import org.picocontainer.Parameter
@@ -37,7 +37,7 @@ object HeadlessWorkspace {
   def newInstance(subclass: Class[_ <: HeadlessWorkspace]): HeadlessWorkspace = {
     val pico = new Pico
     pico.addComponent(if (Version.is3D) classOf[World3D] else classOf[World])
-    pico.addScalaObject("org.nlogo.compiler.Compiler")
+    pico.addScalaObject("org.nlogo.compile.Compiler")
     pico.add("org.nlogo.sdm.AggregateManagerLite")
     pico.add("org.nlogo.render.Renderer")
     pico.add(classOf[HubNetInterface],
@@ -54,10 +54,10 @@ object HeadlessWorkspace {
 
   def newLab: LabInterface = {
     val pico = new Pico
-    pico.addScalaObject("org.nlogo.compiler.Compiler")
+    pico.addScalaObject("org.nlogo.compile.Compiler")
     pico.add("org.nlogo.lab.Lab")
     pico.add("org.nlogo.lab.ProtocolLoader")
-    pico.addComponent(classOf[DefaultCompilerServices])
+    pico.addComponent(classOf[DefaultParserServices])
     pico.getComponent(classOf[LabInterface])
   }
 
@@ -111,6 +111,8 @@ with org.nlogo.workspace.WorldLoaderInterface
 with org.nlogo.api.ViewSettings {
 
   AbstractWorkspace.isApplet(false)
+
+  override def parser = compiler
 
   val drawingActionBroker = new DrawingActionBroker(renderer.trailDrawer)
   world.trailDrawer(drawingActionBroker)
