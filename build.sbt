@@ -74,3 +74,5 @@ seq(Classycle.settings: _*)
 seq(Dump.settings: _*)
 
 seq(ChecksumsAndPreviews.settings: _*)
+
+org.scalastyle.sbt.ScalastylePlugin.Settings
