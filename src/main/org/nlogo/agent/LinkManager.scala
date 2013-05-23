@@ -169,7 +169,9 @@ class LinkManagerImpl(world: World, linkFactory: LinkFactory) extends LinkManage
     val isAllLinks = sourceSet eq world.links
     val unbreededLinks = checkBreededCompatibility(true)
     for (link <- links)
-      if ((!isBreed && sourceSet.contains(link)) || (isAllLinks && (unbreededLinks || (directed == link.getBreed.isDirected && !buf.contains(link.end1)))) || (link.getBreed eq sourceSet))
+      if ((!isBreed && sourceSet.contains(link)) ||
+          (isAllLinks && (unbreededLinks || (directed == link.getBreed.isDirected && !buf.contains(link.end1)))) ||
+          (link.getBreed eq sourceSet))
         buf += link.end2
   }
 
@@ -182,7 +184,9 @@ class LinkManagerImpl(world: World, linkFactory: LinkFactory) extends LinkManage
     // will take a performance hit ev 6/15/07
     val unbreededLinks = checkBreededCompatibility(true)
     for (link <- links)
-      if ((!isBreed && sourceSet.contains(link)) || (isAllLinks && (unbreededLinks || (directed == link.getBreed.isDirected && !buf.contains(link.end1)))) || (link.getBreed eq sourceSet))
+      if ((!isBreed && sourceSet.contains(link)) ||
+          (isAllLinks && (unbreededLinks || (directed == link.getBreed.isDirected && !buf.contains(link.end1)))) ||
+          (link.getBreed eq sourceSet))
         buf += link.end1
   }
 

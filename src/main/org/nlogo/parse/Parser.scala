@@ -33,7 +33,8 @@ trait ParserMain {
 
   // entry points
 
-  def frontEnd(source: String, oldProcedures: ProceduresMap = nvm.ParserInterface.NoProcedures, program: api.Program = api.Program.empty()): (Seq[ProcedureDefinition], StructureResults) =
+  def frontEnd(source: String, oldProcedures: ProceduresMap = nvm.ParserInterface.NoProcedures,
+      program: api.Program = api.Program.empty()): (Seq[ProcedureDefinition], StructureResults) =
     frontEndHelper(source, None, program, true,
       oldProcedures, new api.DummyExtensionManager, frontEndOnly = true)
 

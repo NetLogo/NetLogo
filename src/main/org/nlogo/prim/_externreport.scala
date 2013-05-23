@@ -15,12 +15,10 @@ class _externreport(reporter: api.Reporter) extends nvm.Reporter {
     if (acs.length >= 2) {
       if (acs(1).size < 4)
         acs(1) = Syntax.convertOldStyleAgentClassString(acs(1))
-      Syntax.reporterSyntax(
-        s.left, s.right, s.ret, s.precedence, s.dfault, false, acs(0), acs(1))
+      s.copy(agentClassString = acs(0), blockAgentClassString = acs(1))
     }
     else
-      Syntax.reporterSyntax(
-        s.left, s.right, s.ret, s.precedence, s.dfault, false, acs(0), null)
+      s.copy(agentClassString = acs(0), blockAgentClassString = null)
   }
 
   override def report(context: nvm.Context) = {

@@ -75,7 +75,7 @@ object BreedIdentifierHandler {
     isValidBreed: Breed => Boolean) {
     val pattern = Pattern.compile("\\A" +
       spec.patternString.replaceAll("\\?", "\\\\?")
-      .replaceAll("\\*", "(.+)")+"\\Z")
+      .replaceAll("\\*", "(.+)") + "\\Z")
     def process(tok: Token, program: Program): Option[(String, String, TokenType)] = {
       val matcher = pattern.matcher(tok.value.asInstanceOf[String])
       if(!matcher.matches())
