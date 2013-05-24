@@ -3832,7 +3832,7 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
             DLOAD 2
             DLOAD 4
             INVOKESTATIC java/lang/StrictMath.pow (DD)D
-            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforparticlecollision_minus_21.validDouble (D)D
+            INVOKEVIRTUAL org/nlogo/nvm/Instruction.validDouble (D)D
            L25
             DSTORE 4
             DSTORE 2
@@ -4183,7 +4183,7 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
             DLOAD 2
             DLOAD 4
             INVOKESTATIC java/lang/StrictMath.pow (DD)D
-            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforparticlecollision_minus_27.validDouble (D)D
+            INVOKEVIRTUAL org/nlogo/nvm/Instruction.validDouble (D)D
            L10
             LDC 4.0
            L11
