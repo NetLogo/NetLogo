@@ -68,8 +68,7 @@ class Evaluator(workspace: AbstractWorkspace) {
       context.job.random = workspace.world.mainRNG.clone
       try {
         context.runExclusiveJob(workspace.world.observers, 0)
-        val stopped = workspace.completedActivations.get(newActivation)
-        stopped == null || !stopped.booleanValue
+        !workspace.completedActivations.getOrElse(newActivation, false)
       }
       catch {
         case ex @ (_: LogoException | _: RuntimeException) =>

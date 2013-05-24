@@ -14,7 +14,7 @@ import
   plot.{ PlotExporter, PlotManager },
   org.nlogo.util.{ Exceptions, Femto },
   java.io.{ IOException, PrintWriter },
-  java.util.WeakHashMap
+  collection.mutable.WeakHashMap
 
 import AbstractWorkspaceTraits._
 
@@ -60,7 +60,7 @@ with RunCache with Jobs with Warning with OutputArea with Importing {
   val lastRunTimes = new WeakHashMap[Job, WeakHashMap[Agent, WeakHashMap[Command, MutableLong]]]
 
   // for _thunkdidfinish (says that a thunk finished running without having stop called)
-  val completedActivations = new WeakHashMap[Activation, java.lang.Boolean]
+  val completedActivations = new WeakHashMap[Activation, Boolean]
 
   // the original instruction here is _tick or a ScalaInstruction (currently still experimental)
   // it is only ever used if we need to generate an EngineException
