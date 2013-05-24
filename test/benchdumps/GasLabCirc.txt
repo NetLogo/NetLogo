@@ -12531,7 +12531,8 @@ procedure MAKE-BOX:[]{OTPL}:
              L4
               DSTORE 2
               DLOAD 2
-              DCONST_0
+              ICONST_0
+              I2D
               DCMPG
               IFGE L5
               DLOAD 2
@@ -12610,7 +12611,8 @@ procedure MAKE-BOX:[]{OTPL}:
              L18
               DSTORE 2
               DLOAD 2
-              DCONST_0
+              ICONST_0
+              I2D
               DCMPG
               IFGE L19
               DLOAD 2
@@ -12708,7 +12710,8 @@ procedure MAKE-BOX:[]{OTPL}:
              L32
               DSTORE 2
               DLOAD 2
-              DCONST_0
+              ICONST_0
+              I2D
               DCMPG
               IFGE L33
               DLOAD 2
@@ -12787,7 +12790,8 @@ procedure MAKE-BOX:[]{OTPL}:
              L46
               DSTORE 2
               DLOAD 2
-              DCONST_0
+              ICONST_0
+              I2D
               DCMPG
               IFGE L47
               DLOAD 2

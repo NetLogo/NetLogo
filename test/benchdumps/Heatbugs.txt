@@ -487,7 +487,8 @@ procedure SETUP:[]{O---}:
          L16
           DSTORE 2
           DLOAD 2
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPG
           IFGE L17
           DLOAD 2
@@ -677,7 +678,8 @@ procedure SETUP:[]{O---}:
          L16
           DSTORE 2
           DLOAD 2
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPG
           IFGE L17
           DLOAD 2
@@ -863,7 +865,8 @@ procedure SETUP:[]{O---}:
          L16
           DSTORE 2
           DLOAD 2
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPG
           IFGE L17
           DLOAD 2
@@ -1581,7 +1584,8 @@ procedure STEP:[TARGET]{-T--}:
          L16
           DSTORE 2
           DLOAD 2
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPG
           IFGE L17
           DLOAD 2

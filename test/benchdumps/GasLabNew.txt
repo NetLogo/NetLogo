@@ -4433,7 +4433,8 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
          L6
           DSTORE 2
           DLOAD 2
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPG
           IFGE L7
           DLOAD 2
@@ -4502,7 +4503,8 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
          L18
           DSTORE 2
           DLOAD 2
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPG
           IFGE L19
           DLOAD 2
@@ -4639,7 +4641,8 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
          L4
           DSTORE 2
           DLOAD 2
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPG
           IFGE L5
           DLOAD 2
@@ -4952,7 +4955,8 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
            L26
             DSTORE 2
             DLOAD 2
-            DCONST_0
+            ICONST_0
+            I2D
             DCMPG
             IFGE L27
             DLOAD 2
@@ -5050,7 +5054,8 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
          L4
           DSTORE 2
           DLOAD 2
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPG
           IFGE L5
           DLOAD 2
@@ -5368,7 +5373,8 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
            L26
             DSTORE 2
             DLOAD 2
-            DCONST_0
+            ICONST_0
+            I2D
             DCMPG
             IFGE L27
             DLOAD 2
@@ -10557,7 +10563,8 @@ procedure MAKE-BOX:[]{OTPL}:
              L4
               DSTORE 2
               DLOAD 2
-              DCONST_0
+              ICONST_0
+              I2D
               DCMPG
               IFGE L5
               DLOAD 2
@@ -10636,7 +10643,8 @@ procedure MAKE-BOX:[]{OTPL}:
              L18
               DSTORE 2
               DLOAD 2
-              DCONST_0
+              ICONST_0
+              I2D
               DCMPG
               IFGE L19
               DLOAD 2
@@ -10734,7 +10742,8 @@ procedure MAKE-BOX:[]{OTPL}:
              L32
               DSTORE 2
               DLOAD 2
-              DCONST_0
+              ICONST_0
+              I2D
               DCMPG
               IFGE L33
               DLOAD 2
@@ -10813,7 +10822,8 @@ procedure MAKE-BOX:[]{OTPL}:
              L46
               DSTORE 2
               DLOAD 2
-              DCONST_0
+              ICONST_0
+              I2D
               DCMPG
               IFGE L47
               DLOAD 2

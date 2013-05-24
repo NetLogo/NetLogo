@@ -2593,7 +2593,8 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
          L4
           DSTORE 2
           DLOAD 2
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPG
           IFGE L5
           DLOAD 2
@@ -2950,7 +2951,8 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
          L9
           DSTORE 2
           DLOAD 2
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPG
           IFGE L10
           DLOAD 2
