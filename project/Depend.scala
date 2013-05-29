@@ -84,7 +84,6 @@ object Depend {
       "prim" -> List("nvm"),
       "prim/dead" -> List("nvm"),
       "prim/etc" -> List("nvm"),
-      "prim/file" -> List("nvm"),
       "prim/hubnet" -> List("nvm"),
       "prim/threed" -> List("nvm"),
       "properties" -> List("window"),

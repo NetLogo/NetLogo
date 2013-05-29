@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.prim.file
+package org.nlogo.prim.etc
 
 import org.nlogo.api.{ CompilerException, FileMode, OutputDestination, Syntax }
 import org.nlogo.nvm.{ Command, Context, EngineException, Reporter }
