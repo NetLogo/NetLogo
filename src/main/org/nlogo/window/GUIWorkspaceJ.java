@@ -488,6 +488,9 @@ public abstract strictfp class GUIWorkspaceJ
     }
     updateDisplay(true); // haveWorldLockAlready = true
     notifyListeners(context);
+    // We call listenerManager.requestedDisplayUpdate() only from here and not from
+    // notifyListeners, because the latter is called more often. NP 2013-03-18.
+    listenerManager.requestedDisplayUpdate();
   }
 
   protected double lastTicksListenersHeard = -1.0;
@@ -556,6 +559,10 @@ public abstract strictfp class GUIWorkspaceJ
 
   public void readImage(java.io.InputStream is) throws java.io.IOException {
     drawingActionBroker.readImage(is);
+  }
+
+  public void readImage(java.awt.image.BufferedImage image) throws java.io.IOException {
+    drawingActionBroker.readImage(image);
   }
 
   public void rescaleDrawing() {

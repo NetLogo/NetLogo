@@ -7,8 +7,13 @@ import org.nlogo.plot.PlotPainter;
 
 strictfp public class PlotCanvas extends javax.swing.JPanel {
 
-  final Plot plot;
-  private final PlotPainter painter;
+  private Plot plot;
+  private PlotPainter painter;
+
+  public void setPlot(Plot plot) {
+    this.plot = plot;
+    painter = new PlotPainter(plot);
+  }
 
   void repaintIfNeeded() {
     painter.setupOffscreenImage(getWidth(), getHeight());

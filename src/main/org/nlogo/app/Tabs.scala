@@ -36,7 +36,7 @@ class Tabs(val workspace: GUIWorkspace,
   def showReviewTab() {
     if (indexOfComponent(reviewTab) == -1) {
       addTab("Review", reviewTab)
-      reviewTab.startRecording()
+      reviewTab.enableRecording()
     }
     org.nlogo.window.Event.rehash()
     setSelectedComponent(reviewTab)

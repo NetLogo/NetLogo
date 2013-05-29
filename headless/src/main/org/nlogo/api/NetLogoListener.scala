@@ -11,11 +11,17 @@ package org.nlogo.api
 trait NetLogoListener extends java.util.EventListener {
 
   /**
-   * Called when a model is opened.
+   * Called when a model is opened (but before it is actually loaded in the workspace).
    *
    * @param name name of the model that was opened
    */
   def modelOpened(name: String)
+
+  /**
+   * Called after a model is opened.
+   *
+   */
+  def afterModelOpened()
 
   /**
    * Called when the user presses a button in the NetLogo model.
@@ -98,5 +104,7 @@ trait NetLogoListener extends java.util.EventListener {
    * is sped up, etc.).
    */
   def possibleViewUpdate()
+
+  def requestedDisplayUpdate()
 
 }

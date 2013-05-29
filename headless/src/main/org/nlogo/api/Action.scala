@@ -40,7 +40,13 @@ trait ActionBroker[A <: Action]
 class ActionBuffer[A <: Action](broker: ActionBroker[A])
   extends Subscriber[A, Publisher[A]] {
   broker.subscribe(this)
+  suspend() // subscription needs to be explicitly turned on later
+
   private val buffer = ArrayBuffer[A]()
+
+  def suspend() { broker.suspendSubscription(this) }
+  def activate() { broker.activateSubscription(this) }
+
   override def notify(pub: Publisher[A], action: A) {
     buffer += action
   }

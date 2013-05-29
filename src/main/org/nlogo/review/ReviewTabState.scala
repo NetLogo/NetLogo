@@ -2,14 +2,18 @@
 
 package org.nlogo.review
 
-import javax.swing.AbstractListModel
 import org.nlogo.mirror.ModelRun
+
+import javax.swing.AbstractListModel
 
 class ReviewTabState(
   private var _runs: IndexedSeq[ModelRun] = IndexedSeq.empty,
-  private var _currentRun: Option[ModelRun] = None,
   private var _recordingEnabled: Boolean = false)
-  extends AbstractListModel {
+  extends AbstractListModel
+  with HasCurrentRun
+  with HasCurrentRun#Sub {
+
+  subscribe(this) // subscribe to our own CurrentRunChangeEvents
 
   // ListModel methods:
   override def getElementAt(index: Int): AnyRef = _runs(index)
@@ -17,10 +21,9 @@ class ReviewTabState(
 
   def runs = _runs
 
-  def currentRun = _currentRun
-  def currentRunData = currentRun.flatMap(_.data)
   def currentFrame = currentRun.flatMap(_.currentFrame)
-  def currentFrameIndex = currentRun.map(_.currentFrameIndex)
+  def currentFrameIndex = currentRun.flatMap(_.currentFrameIndex)
+  def currentTicks = currentFrame.flatMap(_.ticks)
   def recordingEnabled = _recordingEnabled
   def recordingEnabled_=(b: Boolean) { _recordingEnabled = b }
   def currentlyRecording = _recordingEnabled && currentRun.map(_.stillRecording).getOrElse(false)
@@ -28,7 +31,7 @@ class ReviewTabState(
   def reset() {
     val lastIndex = _runs.size - 1
     _runs = IndexedSeq[ModelRun]()
-    _currentRun = None
+    currentRun = None
     fireIntervalRemoved(this, 0, lastIndex)
   }
 
@@ -36,37 +39,28 @@ class ReviewTabState(
     for (run <- currentRun) {
       val index = _runs.indexOf(run)
       _runs = _runs.filterNot(_ == run)
-      _currentRun = _runs
-        .lift(index) // keep same index if possible
-        .orElse(_runs.lastOption) // or use last (or None if empty)
       fireIntervalRemoved(this, index, index)
+      val sameString = (_: ModelRun).modelString == run.modelString
+      currentRun = _runs
+        .lift(index) // keep same index if possible
+        .filter(sameString)
+        .orElse(_runs.filter(sameString).lastOption) // or use last (or None if empty)
     }
   }
 
   def addRun(run: ModelRun) = {
     _runs :+= run
-    setCurrentRun(run)
     val lastIndex = _runs.size - 1
     fireIntervalAdded(this, lastIndex, lastIndex)
+    currentRun = Some(run)
     run
   }
 
-  def setCurrentRun(run: ModelRun) {
-    for {
-      previousRun <- _currentRun
-      if previousRun != run
-    } previousRun.stillRecording = false
-    _currentRun = Some(run)
-  }
-
-  def undirty(run: ModelRun) {
-    val index = _runs.indexOf(run)
-    if (index != -1) {
-      run.dirty = false
-      fireContentsChanged(this, index, index)
+  override def notify(pub: ReviewTabState#Pub, event: CurrentRunChangeEvent) {
+    event match {
+      case BeforeCurrentRunChangeEvent(Some(oldRun), _) =>
+        oldRun.stillRecording = false
+      case _ =>
     }
   }
-
-  def dirty = runs.exists(_.dirty)
 }
-
