@@ -68,7 +68,6 @@ object Depend {
       "plot" -> List("api"),
       "prim" -> List("nvm"),
       "prim/etc" -> List("nvm"),
-      "prim/file" -> List("nvm"),
       "render" -> List("shape"),
       "review" -> List("mirror", "window"),
       "shape" -> List("api"),

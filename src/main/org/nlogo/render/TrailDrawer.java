@@ -135,12 +135,10 @@ public strictfp class TrailDrawer
     return drawingImage;
   }
 
-  // for hubnet client
-  public void readImage(java.io.InputStream is)
+  public void readImage(java.awt.image.BufferedImage image)
       throws java.io.IOException {
-    setUpDrawingImage();
 
-    java.awt.image.BufferedImage image = javax.imageio.ImageIO.read(is);
+    setUpDrawingImage();
 
     java.awt.Graphics2D dg = drawingImage.createGraphics();
 
@@ -148,6 +146,12 @@ public strictfp class TrailDrawer
 
     drawingBlank = false;
     drawingDirty = true;
+  }
+
+  // for hubnet client and DrawingActionRunner
+  public void readImage(java.io.InputStream is)
+      throws java.io.IOException {
+    readImage(javax.imageio.ImageIO.read(is));
   }
 
   public void importDrawing(java.io.InputStream is)
