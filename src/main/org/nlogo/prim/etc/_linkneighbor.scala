@@ -28,8 +28,9 @@ class _linkneighbor(breedName: String) extends Reporter {
         world.links
       else
         world.getLinkBreed(breedName)
-    for(err <- LinkManager.mustNotBeDirected(breed))
-      throw new EngineException(context, this, err)
+    val err = LinkManager.mustNotBeDirected(breed)
+    if (err.isDefined)
+      throw new EngineException(context, this, err.get)
     world.linkManager.findLinkFrom(parent, target, breed, true) != null ||
       world.linkManager.findLinkFrom(target, parent, breed, true) != null
   }

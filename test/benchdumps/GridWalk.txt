@@ -561,7 +561,7 @@ procedure GO:[]{O---}:
           INVOKEVIRTUAL org/nlogo/agent/Turtle.jump (D)V
           GOTO L2
          L1
-          POP
+          ASTORE 2
          L2
           ALOAD 1
           ICONST_3
