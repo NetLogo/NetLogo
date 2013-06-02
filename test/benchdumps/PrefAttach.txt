@@ -820,34 +820,40 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
          L3
           ASTORE 2
           DCONST_0
-          DSTORE 6
+          DSTORE 3
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/api/LogoList.iterator ()Ljava/util/Iterator;
-          ASTORE 3
+          ASTORE 5
          L4
-          ALOAD 3
+          ALOAD 5
           INVOKEINTERFACE java/util/Iterator.hasNext ()Z
           IFEQ L5
-          ALOAD 3
-          INVOKEINTERFACE java/util/Iterator.next ()Ljava/lang/Object;
-          ASTORE 4
-          ALOAD 4
-          INSTANCEOF java/lang/Double
-          IFEQ L4
-          ALOAD 4
-          CHECKCAST java/lang/Double
-          ASTORE 5
-          DLOAD 6
           ALOAD 5
+          INVOKEINTERFACE java/util/Iterator.next ()Ljava/lang/Object;
+          ASTORE 6
+          ALOAD 6
+          INSTANCEOF java/lang/Double
+          IFEQ L6
+          ALOAD 6
+          CHECKCAST java/lang/Double
+          ASTORE 7
+          DLOAD 3
+          ALOAD 7
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           DADD
-          DSTORE 6
+          DSTORE 3
+          GETSTATIC scala/runtime/BoxedUnit.UNIT : Lscala/runtime/BoxedUnit;
+          ASTORE 8
+          GOTO L4
+         L6
+          GETSTATIC scala/runtime/BoxedUnit.UNIT : Lscala/runtime/BoxedUnit;
+          ASTORE 8
           GOTO L4
          L5
           ALOAD 0
-          DLOAD 6
+          DLOAD 3
           INVOKEVIRTUAL org/nlogo/nvm/Instruction.validDouble (D)D
-         L6
+         L7
           DSTORE 2
           DLOAD 2
           ALOAD 1
@@ -855,7 +861,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
           INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextDouble ()D
           DMUL
-         L7
+         L8
           DSTORE 2
           NEW java/lang/Double
           DUP
@@ -871,7 +877,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           ALOAD 1
           ICONST_1
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L8
+         L9
           RETURN
 [1]_asm_procedurefindpartner_setprocedurevariable_3 "" Object => void
       _nobody => Nobody$
