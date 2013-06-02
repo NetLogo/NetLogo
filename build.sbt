@@ -5,7 +5,7 @@
 scalaVersion in ThisBuild := "2.10.1"
 
 scalacOptions in ThisBuild ++=
-  "-deprecation -unchecked -feature -Xcheckinit -encoding us-ascii -target:jvm-1.6 -optimize -Xfatal-warnings -Ywarn-adapted-args -Yinline-warnings"
+  "-deprecation -unchecked -feature -Xcheckinit -encoding us-ascii -target:jvm-1.6 -Xfatal-warnings -Ywarn-adapted-args -Yinline-warnings"
   .split(" ").toSeq
 
 javacOptions in ThisBuild ++=

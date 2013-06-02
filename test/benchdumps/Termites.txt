@@ -281,13 +281,15 @@ procedure SETUP:[]{O---}:
           ASTORE 4
           DSTORE 2
           ALOAD 4
+          ASTORE 5
+          ALOAD 5
           INSTANCEOF java/lang/Double
           IFEQ L3
-          ALOAD 4
-          CHECKCAST java/lang/Double
-          ASTORE 5
-          DLOAD 2
           ALOAD 5
+          CHECKCAST java/lang/Double
+          ASTORE 6
+          DLOAD 2
+          ALOAD 6
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           DCMPG
           IFGE L4
@@ -296,6 +298,8 @@ procedure SETUP:[]{O---}:
          L4
           ICONST_0
          L5
+          ISTORE 7
+          ILOAD 7
           GOTO L6
          L3
           NEW org/nlogo/nvm/EngineException
@@ -750,13 +754,15 @@ procedure SEARCH-FOR-CHIP:[]{-T--}:
           DSTORE 3
           ASTORE 2
           ALOAD 2
+          ASTORE 5
+          ALOAD 5
           INSTANCEOF java/lang/Double
           IFEQ L5
-          ALOAD 2
-          CHECKCAST java/lang/Double
-          ASTORE 5
-          DLOAD 3
           ALOAD 5
+          CHECKCAST java/lang/Double
+          ASTORE 6
+          DLOAD 3
+          ALOAD 6
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           DCMPL
           IFNE L6
@@ -765,13 +771,13 @@ procedure SEARCH-FOR-CHIP:[]{-T--}:
          L6
           ICONST_0
          L7
-          ISTORE 6
+          ISTORE 7
           GOTO L8
          L5
           ICONST_0
-          ISTORE 6
+          ISTORE 7
          L8
-          ILOAD 6
+          ILOAD 7
          L9
           ISTORE 2
           ALOAD 1
@@ -862,7 +868,7 @@ procedure SEARCH-FOR-CHIP:[]{-T--}:
           INVOKEVIRTUAL org/nlogo/agent/Turtle.jump (D)V
           GOTO L4
          L1
-          POP
+          ASTORE 4
          L4
           ALOAD 1
           ICONST_4
@@ -949,13 +955,15 @@ procedure FIND-NEW-PILE:[]{-T--}:
           DSTORE 3
           ASTORE 2
           ALOAD 2
+          ASTORE 5
+          ALOAD 5
           INSTANCEOF java/lang/Double
           IFEQ L5
-          ALOAD 2
-          CHECKCAST java/lang/Double
-          ASTORE 5
-          DLOAD 3
           ALOAD 5
+          CHECKCAST java/lang/Double
+          ASTORE 6
+          DLOAD 3
+          ALOAD 6
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           DCMPL
           IFEQ L6
@@ -964,13 +972,13 @@ procedure FIND-NEW-PILE:[]{-T--}:
          L6
           ICONST_0
          L7
-          ISTORE 6
+          ISTORE 7
           GOTO L8
          L5
           ICONST_1
-          ISTORE 6
+          ISTORE 7
          L8
-          ILOAD 6
+          ILOAD 7
          L9
           ISTORE 2
           ALOAD 1
@@ -1057,13 +1065,15 @@ procedure FIND-EMPTY-SPOT:[]{-T--}:
           DSTORE 3
           ASTORE 2
           ALOAD 2
+          ASTORE 5
+          ALOAD 5
           INSTANCEOF java/lang/Double
           IFEQ L5
-          ALOAD 2
-          CHECKCAST java/lang/Double
-          ASTORE 5
-          DLOAD 3
           ALOAD 5
+          CHECKCAST java/lang/Double
+          ASTORE 6
+          DLOAD 3
+          ALOAD 6
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           DCMPL
           IFNE L6
@@ -1072,13 +1082,13 @@ procedure FIND-EMPTY-SPOT:[]{-T--}:
          L6
           ICONST_0
          L7
-          ISTORE 6
+          ISTORE 7
           GOTO L8
          L5
           ICONST_0
-          ISTORE 6
+          ISTORE 7
          L8
-          ILOAD 6
+          ILOAD 7
          L9
           ISTORE 2
           ALOAD 1
@@ -1229,7 +1239,7 @@ procedure FIND-EMPTY-SPOT:[]{-T--}:
           INVOKEVIRTUAL org/nlogo/agent/Turtle.jump (D)V
           GOTO L2
          L1
-          POP
+          ASTORE 2
          L2
           ALOAD 1
           BIPUSH 7
@@ -1318,7 +1328,7 @@ procedure GET-AWAY:[]{-T--}:
           INVOKEVIRTUAL org/nlogo/agent/Turtle.jump (D)V
           GOTO L4
          L1
-          POP
+          ASTORE 4
          L4
           ALOAD 1
           ICONST_2
@@ -1353,13 +1363,15 @@ procedure GET-AWAY:[]{-T--}:
           DSTORE 3
           ASTORE 2
           ALOAD 2
+          ASTORE 5
+          ALOAD 5
           INSTANCEOF java/lang/Double
           IFEQ L5
-          ALOAD 2
-          CHECKCAST java/lang/Double
-          ASTORE 5
-          DLOAD 3
           ALOAD 5
+          CHECKCAST java/lang/Double
+          ASTORE 6
+          DLOAD 3
+          ALOAD 6
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           DCMPL
           IFEQ L6
@@ -1368,13 +1380,13 @@ procedure GET-AWAY:[]{-T--}:
          L6
           ICONST_0
          L7
-          ISTORE 6
+          ISTORE 7
           GOTO L8
          L5
           ICONST_1
-          ISTORE 6
+          ISTORE 7
          L8
-          ILOAD 6
+          ILOAD 7
          L9
           ISTORE 2
           ALOAD 1
@@ -1425,7 +1437,7 @@ procedure WIGGLE:[]{-T--}:
           INVOKEVIRTUAL org/nlogo/agent/Turtle.jump (D)V
           GOTO L2
          L1
-          POP
+          ASTORE 2
          L2
           ALOAD 1
           ICONST_1
