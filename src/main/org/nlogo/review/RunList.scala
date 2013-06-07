@@ -20,18 +20,21 @@ class RunList(reviewTab: ReviewTab)
   setBorder(BorderFactory.createLoweredBevelBorder())
   setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
 
-  override def setSelectionInterval(anchor: Int, lead: Int) {
-    for (run <- reviewTab.state.runs.lift(anchor)) {
-      try {
-        reviewTab.loadModelIfNeeded(run.modelString)
-        reviewTab.state.currentRun = Some(run)
-        super.setSelectionInterval(anchor, lead)
-      } catch {
-        case _: UserCancelException => // do nothing
-        case e: Exception           => throw e // rethrow anything else
+  addListSelectionListener(new ListSelectionListener {
+    override def valueChanged(e: ListSelectionEvent) {
+      if (!e.getValueIsAdjusting) {
+        for (run <- reviewTab.state.runs.lift(getSelectedIndex)) {
+          try {
+            reviewTab.loadModelIfNeeded(run.modelString)
+            reviewTab.state.currentRun = Some(run)
+          } catch {
+            case _: UserCancelException => // do nothing
+            case e: Exception           => throw e // rethrow anything else
+          }
+        }
       }
     }
-  }
+  })
 
   override def notify(pub: ReviewTabState#Pub, event: CurrentRunChangeEvent) {
     event match {
