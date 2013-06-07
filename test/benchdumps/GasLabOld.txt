@@ -87,7 +87,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           DUP
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/nvm/Instruction.validLong (D)J
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebenchmark_repeatlocal_2.validLong (D)J
           INVOKESPECIAL org/nlogo/nvm/MutableLong.<init> (J)V
           AASTORE
           ALOAD 1
@@ -177,7 +177,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5
@@ -293,7 +293,7 @@ procedure SETUP:[]{O---}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L14
@@ -343,7 +343,7 @@ procedure SETUP:[]{O---}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5
@@ -440,7 +440,7 @@ procedure SETUP:[]{O---}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5
@@ -474,7 +474,7 @@ procedure SETUP:[]{O---}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5
@@ -579,7 +579,7 @@ procedure SETUP:[]{O---}:
           DSTORE 2
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/nvm/Instruction.validLong (D)J
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_call_10.validLong (D)J
           LSTORE 4
           LLOAD 4
           L2D
@@ -677,7 +677,7 @@ procedure SETUP:[]{O---}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5
@@ -712,7 +712,7 @@ procedure SETUP:[]{O---}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5
@@ -871,7 +871,7 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L6
@@ -894,7 +894,7 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L7
@@ -930,7 +930,7 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L19
@@ -971,7 +971,7 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L21
@@ -1012,7 +1012,7 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L23
@@ -1064,7 +1064,7 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L26
@@ -1097,7 +1097,7 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
               ALOAD 1
               ALOAD 0
               ALOAD 2
-              INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+              INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
               INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
               ATHROW
              L3
@@ -1222,7 +1222,7 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           ALOAD 8
           INVOKEVIRTUAL org/nlogo/api/Dump$.logoObject (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/LowPriorityImplicits.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+          INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
           INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
@@ -1255,7 +1255,7 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L11
@@ -1281,7 +1281,7 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
               ALOAD 1
               ALOAD 0
               ALOAD 2
-              INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+              INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
               INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
               ATHROW
              L3
@@ -1406,7 +1406,7 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           ALOAD 8
           INVOKEVIRTUAL org/nlogo/api/Dump$.logoObject (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/LowPriorityImplicits.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+          INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
           INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
@@ -1439,7 +1439,7 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L11
@@ -1465,7 +1465,7 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
               ALOAD 1
               ALOAD 0
               ALOAD 2
-              INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+              INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
               INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
               ATHROW
              L3
@@ -1590,7 +1590,7 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           ALOAD 8
           INVOKEVIRTUAL org/nlogo/api/Dump$.logoObject (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/LowPriorityImplicits.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+          INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
           INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
@@ -1623,7 +1623,7 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L11
@@ -1674,7 +1674,7 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L10
@@ -1770,7 +1770,7 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L16
@@ -1821,7 +1821,7 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L10
@@ -1917,7 +1917,7 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L16
@@ -1965,7 +1965,7 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
                   ALOAD 5
                   INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
                   AASTORE
-                  INVOKEVIRTUAL scala/LowPriorityImplicits.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+                  INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
                   INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
                   INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
                   ATHROW
@@ -2032,7 +2032,7 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
                   ALOAD 1
                   ALOAD 0
                   ALOAD 3
-                  INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+                  INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
                   INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
                   ATHROW
                  L11
@@ -2102,7 +2102,7 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L10
@@ -2338,7 +2338,7 @@ procedure GO:[]{O---}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L10
@@ -2407,7 +2407,7 @@ procedure GO:[]{O---}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5
@@ -2895,7 +2895,7 @@ procedure BOUNCE:[]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L7
@@ -3211,7 +3211,7 @@ procedure BOUNCE:[]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L7
@@ -3249,7 +3249,7 @@ procedure MOVE:[]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L9
@@ -3426,7 +3426,7 @@ procedure MOVE:[]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L18
@@ -3498,7 +3498,7 @@ procedure MOVE:[]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5
@@ -3538,7 +3538,7 @@ procedure CHECK-FOR-COLLISION:[]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5
@@ -3673,7 +3673,7 @@ procedure CHECK-FOR-COLLISION:[]{-T--}:
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/api/AgentKind;
           ALOAD 2
-          INVOKEINTERFACE org/nlogo/api/AgentSet.count ()I
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet.count ()I
           INVOKESPECIAL org/nlogo/agent/AgentSetBuilder.<init> (Lorg/nlogo/api/AgentKind;I)V
           ASTORE 3
           ALOAD 2
@@ -3700,7 +3700,7 @@ procedure CHECK-FOR-COLLISION:[]{-T--}:
          L9
           ASTORE 2
           ALOAD 2
-          INVOKEINTERFACE org/nlogo/api/AgentSet.count ()I
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet.count ()I
           ISTORE 3
           ILOAD 3
           ICONST_0
@@ -3736,7 +3736,7 @@ procedure CHECK-FOR-COLLISION:[]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L12
@@ -3775,7 +3775,7 @@ procedure CHECK-FOR-COLLISION:[]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L14
@@ -3809,7 +3809,7 @@ procedure CHECK-FOR-COLLISION:[]{-T--}:
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/LowPriorityImplicits.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+          INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
           INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
@@ -3876,7 +3876,7 @@ procedure CHECK-FOR-COLLISION:[]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L20
@@ -3927,7 +3927,7 @@ procedure CHECK-FOR-COLLISION:[]{-T--}:
           ALOAD 4
           INVOKEVIRTUAL org/nlogo/api/TypeNames$.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/LowPriorityImplicits.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+          INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
           INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
@@ -3947,7 +3947,7 @@ procedure CHECK-FOR-COLLISION:[]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L10
@@ -3964,7 +3964,7 @@ procedure CHECK-FOR-COLLISION:[]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L26
@@ -4039,7 +4039,7 @@ procedure CHECK-FOR-COLLISION:[]{-T--}:
           DSTORE 2
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/nvm/Instruction.validLong (D)J
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforcollision_call_4.validLong (D)J
           LSTORE 4
           LLOAD 4
           L2D
@@ -4176,7 +4176,7 @@ procedure GET-TURTLE2-INFO:[]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L6
@@ -4199,7 +4199,7 @@ procedure GET-TURTLE2-INFO:[]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L7
@@ -4225,7 +4225,7 @@ procedure GET-TURTLE2-INFO:[]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L10
@@ -4259,7 +4259,7 @@ procedure GET-TURTLE2-INFO:[]{-T--}:
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/LowPriorityImplicits.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+          INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
           INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
@@ -4326,7 +4326,7 @@ procedure GET-TURTLE2-INFO:[]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L16
@@ -4349,7 +4349,7 @@ procedure GET-TURTLE2-INFO:[]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L17
@@ -4375,7 +4375,7 @@ procedure GET-TURTLE2-INFO:[]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L10
@@ -4409,7 +4409,7 @@ procedure GET-TURTLE2-INFO:[]{-T--}:
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/LowPriorityImplicits.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+          INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
           INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
@@ -4476,7 +4476,7 @@ procedure GET-TURTLE2-INFO:[]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L16
@@ -4499,7 +4499,7 @@ procedure GET-TURTLE2-INFO:[]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L17
@@ -4525,7 +4525,7 @@ procedure GET-TURTLE2-INFO:[]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L10
@@ -4559,7 +4559,7 @@ procedure GET-TURTLE2-INFO:[]{-T--}:
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/LowPriorityImplicits.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+          INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
           INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
@@ -4626,7 +4626,7 @@ procedure GET-TURTLE2-INFO:[]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L16
@@ -4649,7 +4649,7 @@ procedure GET-TURTLE2-INFO:[]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L17
@@ -4700,7 +4700,7 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5
@@ -4731,7 +4731,7 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L13
@@ -4766,7 +4766,7 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L14
@@ -4835,7 +4835,7 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L20
@@ -4866,7 +4866,7 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L13
@@ -4901,7 +4901,7 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L14
@@ -4970,7 +4970,7 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L20
@@ -5003,7 +5003,7 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L18
@@ -5038,7 +5038,7 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L19
@@ -5073,7 +5073,7 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L20
@@ -5136,7 +5136,7 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L25
@@ -5169,7 +5169,7 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L18
@@ -5204,7 +5204,7 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L19
@@ -5239,7 +5239,7 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L20
@@ -5302,7 +5302,7 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L25
@@ -5345,7 +5345,7 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L30
@@ -5380,7 +5380,7 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L31
@@ -5421,7 +5421,7 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L33
@@ -5456,7 +5456,7 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L34
@@ -5503,7 +5503,7 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L37
@@ -5538,7 +5538,7 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L38
@@ -5682,7 +5682,7 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L17
@@ -5734,7 +5734,7 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L20
@@ -5818,7 +5818,7 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L17
@@ -5870,7 +5870,7 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L20
@@ -5918,7 +5918,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L23
@@ -5953,7 +5953,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L24
@@ -5994,7 +5994,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L26
@@ -6029,7 +6029,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L27
@@ -6112,7 +6112,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L33
@@ -6141,7 +6141,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L6
@@ -6203,7 +6203,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L13
@@ -6293,7 +6293,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L18
@@ -6328,7 +6328,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L19
@@ -6363,7 +6363,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L20
@@ -6485,7 +6485,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L31
@@ -6521,7 +6521,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L6
@@ -6574,7 +6574,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           INVOKESTATIC scala/runtime/BoxesRunTime.boxToDouble (D)Ljava/lang/Double;
           INVOKEVIRTUAL org/nlogo/api/TypeNames$.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/LowPriorityImplicits.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+          INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
           INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
@@ -6594,7 +6594,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L13
@@ -6647,7 +6647,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           INVOKESTATIC scala/runtime/BoxesRunTime.boxToDouble (D)Ljava/lang/Double;
           INVOKEVIRTUAL org/nlogo/api/TypeNames$.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/LowPriorityImplicits.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+          INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
           INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
@@ -6697,7 +6697,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L18
@@ -6740,7 +6740,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L21
@@ -6775,7 +6775,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L22
@@ -6897,7 +6897,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L33
@@ -6933,7 +6933,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L6
@@ -6995,7 +6995,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L13
@@ -7048,7 +7048,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           INVOKESTATIC scala/runtime/BoxesRunTime.boxToDouble (D)Ljava/lang/Double;
           INVOKEVIRTUAL org/nlogo/api/TypeNames$.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/LowPriorityImplicits.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+          INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
           INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
@@ -7098,7 +7098,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L18
@@ -7141,7 +7141,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L21
@@ -7176,7 +7176,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L22
@@ -7298,7 +7298,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L33
@@ -7334,7 +7334,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L6
@@ -7387,7 +7387,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           INVOKESTATIC scala/runtime/BoxesRunTime.boxToDouble (D)Ljava/lang/Double;
           INVOKEVIRTUAL org/nlogo/api/TypeNames$.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/LowPriorityImplicits.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+          INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
           INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
@@ -7407,7 +7407,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L13
@@ -7497,7 +7497,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L18
@@ -7532,7 +7532,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L19
@@ -7567,7 +7567,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L20
@@ -7689,7 +7689,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L31
@@ -7725,7 +7725,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L20
@@ -7760,7 +7760,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L21
@@ -7801,7 +7801,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L23
@@ -7836,7 +7836,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L24
@@ -7929,7 +7929,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -8008,7 +8008,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 7
           INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/LowPriorityImplicits.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+          INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
           INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
@@ -8073,7 +8073,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5
@@ -8109,7 +8109,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L6
@@ -8171,7 +8171,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L13
@@ -8261,7 +8261,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L18
@@ -8296,7 +8296,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L19
@@ -8331,7 +8331,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L20
@@ -8453,7 +8453,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L31
@@ -8489,7 +8489,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L6
@@ -8542,7 +8542,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           INVOKESTATIC scala/runtime/BoxesRunTime.boxToDouble (D)Ljava/lang/Double;
           INVOKEVIRTUAL org/nlogo/api/TypeNames$.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/LowPriorityImplicits.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+          INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
           INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
@@ -8562,7 +8562,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L13
@@ -8615,7 +8615,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           INVOKESTATIC scala/runtime/BoxesRunTime.boxToDouble (D)Ljava/lang/Double;
           INVOKEVIRTUAL org/nlogo/api/TypeNames$.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/LowPriorityImplicits.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+          INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
           INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
@@ -8665,7 +8665,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L18
@@ -8708,7 +8708,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L21
@@ -8743,7 +8743,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L22
@@ -8865,7 +8865,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L33
@@ -8901,7 +8901,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L6
@@ -8963,7 +8963,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L13
@@ -9016,7 +9016,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           INVOKESTATIC scala/runtime/BoxesRunTime.boxToDouble (D)Ljava/lang/Double;
           INVOKEVIRTUAL org/nlogo/api/TypeNames$.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/LowPriorityImplicits.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+          INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
           INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
@@ -9066,7 +9066,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L18
@@ -9109,7 +9109,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L21
@@ -9144,7 +9144,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L22
@@ -9266,7 +9266,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L33
@@ -9302,7 +9302,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L6
@@ -9355,7 +9355,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           INVOKESTATIC scala/runtime/BoxesRunTime.boxToDouble (D)Ljava/lang/Double;
           INVOKEVIRTUAL org/nlogo/api/TypeNames$.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/LowPriorityImplicits.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+          INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
           INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
@@ -9375,7 +9375,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L13
@@ -9465,7 +9465,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L18
@@ -9500,7 +9500,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L19
@@ -9535,7 +9535,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L20
@@ -9657,7 +9657,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L31
@@ -9679,7 +9679,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -9712,7 +9712,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -9791,7 +9791,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 7
           INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/LowPriorityImplicits.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+          INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
           INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
@@ -9856,7 +9856,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5
@@ -9897,7 +9897,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L4
@@ -9968,7 +9968,7 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/LowPriorityImplicits.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+          INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
           INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
@@ -10035,7 +10035,7 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L13
@@ -10118,7 +10118,7 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           INVOKESTATIC scala/runtime/BoxesRunTime.boxToDouble (D)Ljava/lang/Double;
           INVOKEVIRTUAL org/nlogo/api/TypeNames$.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/LowPriorityImplicits.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+          INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
           INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
@@ -10219,7 +10219,7 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           ALOAD 7
           INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/LowPriorityImplicits.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+          INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
           INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
@@ -10281,7 +10281,7 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5
@@ -10347,7 +10347,7 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/LowPriorityImplicits.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+          INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
           INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
@@ -10414,7 +10414,7 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L13
@@ -10497,7 +10497,7 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           INVOKESTATIC scala/runtime/BoxesRunTime.boxToDouble (D)Ljava/lang/Double;
           INVOKEVIRTUAL org/nlogo/api/TypeNames$.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/LowPriorityImplicits.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+          INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
           INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
@@ -10598,7 +10598,7 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           ALOAD 7
           INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/LowPriorityImplicits.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+          INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
           INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
@@ -10660,7 +10660,7 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5
@@ -10763,7 +10763,7 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           ALOAD 7
           INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/LowPriorityImplicits.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+          INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
           INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
@@ -10825,7 +10825,7 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5
@@ -10872,7 +10872,7 @@ procedure FADE:[]{-TP-}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L8
@@ -10917,7 +10917,7 @@ procedure FADE:[]{-TP-}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L13
@@ -10988,7 +10988,7 @@ procedure FADE:[]{-TP-}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L8
@@ -11042,7 +11042,7 @@ procedure FADE:[]{-TP-}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L12
@@ -11068,7 +11068,7 @@ procedure FADE:[]{-TP-}:
           ALOAD 1
           ALOAD 0
           ALOAD 2
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5
@@ -11147,7 +11147,7 @@ procedure FADE:[]{-TP-}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5
@@ -11242,7 +11242,7 @@ procedure MAKE-BOX:[]{OTPL}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5
@@ -11679,7 +11679,7 @@ procedure MAKE-BOX:[]{OTPL}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5
@@ -11710,7 +11710,7 @@ procedure MAKE-BOX:[]{OTPL}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5
@@ -11836,7 +11836,7 @@ procedure RANDOM-POSITION:[]{-T--}:
           DSTORE 2
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/nvm/Instruction.validLong (D)J
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerandomposition_setxy_0.validLong (D)J
           LSTORE 4
           DLOAD 2
           LLOAD 4
@@ -11967,7 +11967,7 @@ procedure RANDOM-POSITION:[]{-T--}:
           DSTORE 2
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/nvm/Instruction.validLong (D)J
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerandomposition_setxy_0.validLong (D)J
           LSTORE 4
           DLOAD 2
           LLOAD 4
@@ -12641,7 +12641,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
                 ALOAD 1
                 ALOAD 0
                 ALOAD 2
-                INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+                INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
                 INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
                 ATHROW
                L3
@@ -12701,7 +12701,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ASTORE 4
             GETSTATIC scala/collection/mutable/ArrayBuffer$.MODULE$ : Lscala/collection/mutable/ArrayBuffer$;
             GETSTATIC scala/collection/immutable/Nil$.MODULE$ : Lscala/collection/immutable/Nil$;
-            INVOKEVIRTUAL scala/collection/generic/GenericCompanion.apply (Lscala/collection/Seq;)Lscala/collection/GenTraversable;
+            INVOKEVIRTUAL scala/collection/mutable/ArrayBuffer$.apply (Lscala/collection/Seq;)Lscala/collection/GenTraversable;
             CHECKCAST scala/collection/mutable/ArrayBuffer
             ASTORE 5
             ALOAD 3
@@ -12770,7 +12770,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ALOAD 8
             INVOKEVIRTUAL org/nlogo/api/Dump$.logoObject (Ljava/lang/Object;)Ljava/lang/String;
             AASTORE
-            INVOKEVIRTUAL scala/LowPriorityImplicits.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+            INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
             INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
@@ -12782,7 +12782,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             GETSTATIC scala/reflect/ClassTag$.MODULE$ : Lscala/reflect/ClassTag$;
             LDC Lorg/nlogo/agent/Agent;.class
             INVOKEVIRTUAL scala/reflect/ClassTag$.apply (Ljava/lang/Class;)Lscala/reflect/ClassTag;
-            INVOKEINTERFACE scala/collection/TraversableOnce.toArray (Lscala/reflect/ClassTag;)Ljava/lang/Object;
+            INVOKEVIRTUAL scala/collection/mutable/ArrayBuffer.toArray (Lscala/reflect/ClassTag;)Ljava/lang/Object;
             CHECKCAST [Lorg/nlogo/agent/Agent;
             INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromArray (Lorg/nlogo/api/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
            L11
@@ -12816,7 +12816,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ALOAD 5
             INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
             AASTORE
-            INVOKEVIRTUAL scala/LowPriorityImplicits.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+            INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
             INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
@@ -12883,7 +12883,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ALOAD 1
             ALOAD 0
             ALOAD 3
-            INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+            INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
            L17
@@ -12916,7 +12916,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
                 ALOAD 1
                 ALOAD 0
                 ALOAD 2
-                INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+                INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
                 INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
                 ATHROW
                L3
@@ -12976,7 +12976,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ASTORE 4
             GETSTATIC scala/collection/mutable/ArrayBuffer$.MODULE$ : Lscala/collection/mutable/ArrayBuffer$;
             GETSTATIC scala/collection/immutable/Nil$.MODULE$ : Lscala/collection/immutable/Nil$;
-            INVOKEVIRTUAL scala/collection/generic/GenericCompanion.apply (Lscala/collection/Seq;)Lscala/collection/GenTraversable;
+            INVOKEVIRTUAL scala/collection/mutable/ArrayBuffer$.apply (Lscala/collection/Seq;)Lscala/collection/GenTraversable;
             CHECKCAST scala/collection/mutable/ArrayBuffer
             ASTORE 5
             ALOAD 3
@@ -13045,7 +13045,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ALOAD 8
             INVOKEVIRTUAL org/nlogo/api/Dump$.logoObject (Ljava/lang/Object;)Ljava/lang/String;
             AASTORE
-            INVOKEVIRTUAL scala/LowPriorityImplicits.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+            INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
             INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
@@ -13057,7 +13057,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             GETSTATIC scala/reflect/ClassTag$.MODULE$ : Lscala/reflect/ClassTag$;
             LDC Lorg/nlogo/agent/Agent;.class
             INVOKEVIRTUAL scala/reflect/ClassTag$.apply (Ljava/lang/Class;)Lscala/reflect/ClassTag;
-            INVOKEINTERFACE scala/collection/TraversableOnce.toArray (Lscala/reflect/ClassTag;)Ljava/lang/Object;
+            INVOKEVIRTUAL scala/collection/mutable/ArrayBuffer.toArray (Lscala/reflect/ClassTag;)Ljava/lang/Object;
             CHECKCAST [Lorg/nlogo/agent/Agent;
             INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromArray (Lorg/nlogo/api/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
            L11
@@ -13091,7 +13091,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ALOAD 5
             INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
             AASTORE
-            INVOKEVIRTUAL scala/LowPriorityImplicits.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+            INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
             INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
@@ -13158,7 +13158,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ALOAD 1
             ALOAD 0
             ALOAD 3
-            INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+            INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
            L17
@@ -13191,7 +13191,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
                 ALOAD 1
                 ALOAD 0
                 ALOAD 2
-                INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+                INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
                 INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
                 ATHROW
                L3
@@ -13251,7 +13251,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ASTORE 4
             GETSTATIC scala/collection/mutable/ArrayBuffer$.MODULE$ : Lscala/collection/mutable/ArrayBuffer$;
             GETSTATIC scala/collection/immutable/Nil$.MODULE$ : Lscala/collection/immutable/Nil$;
-            INVOKEVIRTUAL scala/collection/generic/GenericCompanion.apply (Lscala/collection/Seq;)Lscala/collection/GenTraversable;
+            INVOKEVIRTUAL scala/collection/mutable/ArrayBuffer$.apply (Lscala/collection/Seq;)Lscala/collection/GenTraversable;
             CHECKCAST scala/collection/mutable/ArrayBuffer
             ASTORE 5
             ALOAD 3
@@ -13320,7 +13320,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ALOAD 8
             INVOKEVIRTUAL org/nlogo/api/Dump$.logoObject (Ljava/lang/Object;)Ljava/lang/String;
             AASTORE
-            INVOKEVIRTUAL scala/LowPriorityImplicits.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+            INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
             INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
@@ -13332,7 +13332,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             GETSTATIC scala/reflect/ClassTag$.MODULE$ : Lscala/reflect/ClassTag$;
             LDC Lorg/nlogo/agent/Agent;.class
             INVOKEVIRTUAL scala/reflect/ClassTag$.apply (Ljava/lang/Class;)Lscala/reflect/ClassTag;
-            INVOKEINTERFACE scala/collection/TraversableOnce.toArray (Lscala/reflect/ClassTag;)Ljava/lang/Object;
+            INVOKEVIRTUAL scala/collection/mutable/ArrayBuffer.toArray (Lscala/reflect/ClassTag;)Ljava/lang/Object;
             CHECKCAST [Lorg/nlogo/agent/Agent;
             INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromArray (Lorg/nlogo/api/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
            L11
@@ -13366,7 +13366,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ALOAD 5
             INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
             AASTORE
-            INVOKEVIRTUAL scala/LowPriorityImplicits.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+            INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
             INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
@@ -13433,7 +13433,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ALOAD 1
             ALOAD 0
             ALOAD 3
-            INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+            INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
            L17
@@ -13557,7 +13557,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
                 ALOAD 1
                 ALOAD 0
                 ALOAD 2
-                INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+                INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
                 INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
                 ATHROW
                L3
@@ -13617,7 +13617,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ASTORE 4
             GETSTATIC scala/collection/mutable/ArrayBuffer$.MODULE$ : Lscala/collection/mutable/ArrayBuffer$;
             GETSTATIC scala/collection/immutable/Nil$.MODULE$ : Lscala/collection/immutable/Nil$;
-            INVOKEVIRTUAL scala/collection/generic/GenericCompanion.apply (Lscala/collection/Seq;)Lscala/collection/GenTraversable;
+            INVOKEVIRTUAL scala/collection/mutable/ArrayBuffer$.apply (Lscala/collection/Seq;)Lscala/collection/GenTraversable;
             CHECKCAST scala/collection/mutable/ArrayBuffer
             ASTORE 5
             ALOAD 3
@@ -13686,7 +13686,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ALOAD 8
             INVOKEVIRTUAL org/nlogo/api/Dump$.logoObject (Ljava/lang/Object;)Ljava/lang/String;
             AASTORE
-            INVOKEVIRTUAL scala/LowPriorityImplicits.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+            INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
             INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
@@ -13698,7 +13698,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             GETSTATIC scala/reflect/ClassTag$.MODULE$ : Lscala/reflect/ClassTag$;
             LDC Lorg/nlogo/agent/Agent;.class
             INVOKEVIRTUAL scala/reflect/ClassTag$.apply (Ljava/lang/Class;)Lscala/reflect/ClassTag;
-            INVOKEINTERFACE scala/collection/TraversableOnce.toArray (Lscala/reflect/ClassTag;)Ljava/lang/Object;
+            INVOKEVIRTUAL scala/collection/mutable/ArrayBuffer.toArray (Lscala/reflect/ClassTag;)Ljava/lang/Object;
             CHECKCAST [Lorg/nlogo/agent/Agent;
             INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromArray (Lorg/nlogo/api/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
            L11
@@ -13732,7 +13732,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ALOAD 5
             INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
             AASTORE
-            INVOKEVIRTUAL scala/LowPriorityImplicits.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+            INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
             INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
@@ -13799,7 +13799,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ALOAD 1
             ALOAD 0
             ALOAD 3
-            INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+            INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
            L17
@@ -13832,7 +13832,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
                 ALOAD 1
                 ALOAD 0
                 ALOAD 2
-                INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+                INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
                 INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
                 ATHROW
                L3
@@ -13892,7 +13892,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ASTORE 4
             GETSTATIC scala/collection/mutable/ArrayBuffer$.MODULE$ : Lscala/collection/mutable/ArrayBuffer$;
             GETSTATIC scala/collection/immutable/Nil$.MODULE$ : Lscala/collection/immutable/Nil$;
-            INVOKEVIRTUAL scala/collection/generic/GenericCompanion.apply (Lscala/collection/Seq;)Lscala/collection/GenTraversable;
+            INVOKEVIRTUAL scala/collection/mutable/ArrayBuffer$.apply (Lscala/collection/Seq;)Lscala/collection/GenTraversable;
             CHECKCAST scala/collection/mutable/ArrayBuffer
             ASTORE 5
             ALOAD 3
@@ -13961,7 +13961,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ALOAD 8
             INVOKEVIRTUAL org/nlogo/api/Dump$.logoObject (Ljava/lang/Object;)Ljava/lang/String;
             AASTORE
-            INVOKEVIRTUAL scala/LowPriorityImplicits.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+            INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
             INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
@@ -13973,7 +13973,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             GETSTATIC scala/reflect/ClassTag$.MODULE$ : Lscala/reflect/ClassTag$;
             LDC Lorg/nlogo/agent/Agent;.class
             INVOKEVIRTUAL scala/reflect/ClassTag$.apply (Ljava/lang/Class;)Lscala/reflect/ClassTag;
-            INVOKEINTERFACE scala/collection/TraversableOnce.toArray (Lscala/reflect/ClassTag;)Ljava/lang/Object;
+            INVOKEVIRTUAL scala/collection/mutable/ArrayBuffer.toArray (Lscala/reflect/ClassTag;)Ljava/lang/Object;
             CHECKCAST [Lorg/nlogo/agent/Agent;
             INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromArray (Lorg/nlogo/api/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
            L11
@@ -14007,7 +14007,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ALOAD 5
             INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
             AASTORE
-            INVOKEVIRTUAL scala/LowPriorityImplicits.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+            INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
             INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
@@ -14074,7 +14074,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ALOAD 1
             ALOAD 0
             ALOAD 3
-            INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+            INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
            L17
@@ -14107,7 +14107,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
                 ALOAD 1
                 ALOAD 0
                 ALOAD 2
-                INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+                INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
                 INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
                 ATHROW
                L3
@@ -14167,7 +14167,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ASTORE 4
             GETSTATIC scala/collection/mutable/ArrayBuffer$.MODULE$ : Lscala/collection/mutable/ArrayBuffer$;
             GETSTATIC scala/collection/immutable/Nil$.MODULE$ : Lscala/collection/immutable/Nil$;
-            INVOKEVIRTUAL scala/collection/generic/GenericCompanion.apply (Lscala/collection/Seq;)Lscala/collection/GenTraversable;
+            INVOKEVIRTUAL scala/collection/mutable/ArrayBuffer$.apply (Lscala/collection/Seq;)Lscala/collection/GenTraversable;
             CHECKCAST scala/collection/mutable/ArrayBuffer
             ASTORE 5
             ALOAD 3
@@ -14236,7 +14236,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ALOAD 8
             INVOKEVIRTUAL org/nlogo/api/Dump$.logoObject (Ljava/lang/Object;)Ljava/lang/String;
             AASTORE
-            INVOKEVIRTUAL scala/LowPriorityImplicits.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+            INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
             INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
@@ -14248,7 +14248,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             GETSTATIC scala/reflect/ClassTag$.MODULE$ : Lscala/reflect/ClassTag$;
             LDC Lorg/nlogo/agent/Agent;.class
             INVOKEVIRTUAL scala/reflect/ClassTag$.apply (Ljava/lang/Class;)Lscala/reflect/ClassTag;
-            INVOKEINTERFACE scala/collection/TraversableOnce.toArray (Lscala/reflect/ClassTag;)Ljava/lang/Object;
+            INVOKEVIRTUAL scala/collection/mutable/ArrayBuffer.toArray (Lscala/reflect/ClassTag;)Ljava/lang/Object;
             CHECKCAST [Lorg/nlogo/agent/Agent;
             INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromArray (Lorg/nlogo/api/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
            L11
@@ -14282,7 +14282,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ALOAD 5
             INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
             AASTORE
-            INVOKEVIRTUAL scala/LowPriorityImplicits.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+            INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
             INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
@@ -14349,7 +14349,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ALOAD 1
             ALOAD 0
             ALOAD 3
-            INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+            INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
            L17

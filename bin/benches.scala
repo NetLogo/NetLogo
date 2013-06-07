@@ -10,7 +10,7 @@ val haveGoodResult = new HashSet[String]
 
 val classpath =
   Seq("target/classes",
-      System.getenv("HOME") + "/.sbt/boot/scala-2.10.1/lib/scala-library.jar",
+      System.getenv("HOME") + "/.sbt/boot/scala-2.10.2/lib/scala-library.jar",
       "resources",
       "lib_managed/jars/asm/asm-all/asm-all-3.3.1.jar")
     .mkString(":")
