@@ -17,8 +17,8 @@ object HubNetUtils {
   val SERVER_DISCOVERY_ANNOUNCE_INTERVAL = 1000
 
   // these are terrible - JC 8/21/10
-  var viewMirroring = false
-  var plotMirroring = false
+  var viewMirroring = true
+  var plotMirroring = true
 
   // this doesnt appear to be used - JC 8/21/10
   def checkPacketSize(obj: Object, message: String) {
