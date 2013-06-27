@@ -6,7 +6,8 @@ package org.nlogo.parse
 // some Procedures.
 
 // Each source file is handled in three stages, each represented as a separate trait.
-// 1. StructureCombinators parses input tokens, returns a Seq[Declaration].
+// 1. StructureCombinators parses input tokens according to a context-free grammar,
+//    returning a Seq[Declaration].
 // 2. DuplicateChecker checks the Seq[Declaration] for duplicates.
 // 3. ResultsBuilder converts the Seq[Declaration] to a StructureParser.Results.
 // By splitting it this way, we get separation of concerns between the (clean) mechanics of parsing
