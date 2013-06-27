@@ -32,27 +32,31 @@ object StructureCombinators {
   def parse(tokens: Iterator[Token]): Either[(String, Token), Seq[Declaration]] = {
     val reader = new SeqReader[Token](tokens.toStream, _.start)
     val combinators = new StructureCombinators
-    try combinators.program(reader) match {
+    combinators.program(reader) match {
       case combinators.Success(declarations, _) =>
         Right(declarations)
       case combinators.NoSuccess(msg, rest) =>
         Left((msg, rest.first))
     }
-    finally combinators.cleanup()
   }
 }
 
 class StructureCombinators
-extends scala.util.parsing.combinator.Parsers with Cleanup {
+extends scala.util.parsing.combinator.Parsers {
 
   // specify what kind of input we take
   override type Elem = Token
 
+  // wouldn't otherwise be necessary to use phrase() below, except that
+  // because of https://issues.scala-lang.org/browse/SI-4929 we'll
+  // leak a ThreadLocal if we don't - ST 1/3/13, 6/27/13
+
   // top level entry point. output will be a Seq[Declaration]
   def program: Parser[Seq[Declaration]] =
-    rep(declaration) ~ rep(procedure) <~ (eof | failure("keyword expected")) ^^ {
-      case decs ~ procs =>
-        decs ++ procs }
+    phrase(
+      rep(declaration) ~ rep(procedure) <~ (eof | failure("keyword expected"))) ^^ {
+        case decs ~ procs =>
+          decs ++ procs }
 
   def declaration: Parser[Declaration] =
     includes | extensions | breed | directedLinkBreed | undirectedLinkBreed |
@@ -164,24 +168,6 @@ extends scala.util.parsing.combinator.Parsers with Cleanup {
           if (tpe != TokenType.Keyword) =>
         token })
 
-}
-
-// avoid leaking ThreadLocals due to some deprecated stuff in
-// Scala 2.10 that will be removed in Scala 2.11.  see
-// https://issues.scala-lang.org/browse/SI-4929 and
-// https://github.com/scala/scala/commit/dce6b34c38a6d774961ca6f9fd50b11300ecddd6
-// - ST 1/3/13
-trait Cleanup extends scala.util.parsing.combinator.Parsers {
-  def cleanup() {
-    val field = getClass.getDeclaredField(
-      "scala$util$parsing$combinator$Parsers$$lastNoSuccessVar")
-    field.setAccessible(true)
-    val field2 = classOf[scala.util.DynamicVariable[_]].getDeclaredField("tl")
-    require(field2 != null)
-    field2.setAccessible(true)
-    field2.get(field.get(this)).asInstanceOf[java.lang.ThreadLocal[_]].remove()
-    field.set(this, null)
-  }
 }
 
 /// Allows our combinators to take their input from a Seq.
