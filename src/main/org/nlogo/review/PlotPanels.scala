@@ -33,6 +33,7 @@ trait HasPlotPanels extends HasCurrentRun#Sub { this: JPanel =>
         val panel = new PlotPanel(
           plotWidget.plot,
           container.getUnzoomedBounds(plotWidget),
+          plotWidget,
           plotWidget.gui.legend.open)
         add(panel)
         plotWidget.plot.name -> panel
@@ -53,13 +54,13 @@ trait HasPlotPanels extends HasCurrentRun#Sub { this: JPanel =>
 class PlotPanel(
   initialPlot: Plot,
   bounds: java.awt.Rectangle,
+  fontSource: java.awt.Component,
   val legendIsOpen: Boolean) extends JPanel {
 
-  org.nlogo.awt.Fonts.adjustDefaultFont(this)
   setBounds(bounds)
   setBorder(org.nlogo.swing.Utils.createWidgetBorder)
   setBackground(InterfaceColors.PLOT_BACKGROUND)
-  val gui = new PlotWidgetGUI(initialPlot, PlotPanel.this)
+  val gui = new PlotWidgetGUI(initialPlot, fontSource)
   gui.legend.open = legendIsOpen
   gui.addToPanel(PlotPanel.this)
 
