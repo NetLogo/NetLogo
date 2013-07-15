@@ -10,7 +10,7 @@ val haveGoodResult = new HashSet[String]
 
 val classpath =
   Seq("headless/target/classes",
-      System.getenv("HOME") + "/.sbt/boot/scala-2.10.1/lib/scala-library.jar",
+      System.getenv("HOME") + "/.sbt/boot/scala-2.10.2/lib/scala-library.jar",
       "resources",
       "lib_managed/jars/asm/asm-all/asm-all-3.3.1.jar",
       "lib_managed/bundles/log4j/log4j/log4j-1.2.17.jar",
