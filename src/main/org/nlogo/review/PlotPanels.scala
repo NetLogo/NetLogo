@@ -55,6 +55,7 @@ class PlotPanel(
   bounds: java.awt.Rectangle,
   val legendIsOpen: Boolean) extends JPanel {
 
+  org.nlogo.awt.Fonts.adjustDefaultFont(this)
   setBounds(bounds)
   setBorder(org.nlogo.swing.Utils.createWidgetBorder)
   setBackground(InterfaceColors.PLOT_BACKGROUND)
