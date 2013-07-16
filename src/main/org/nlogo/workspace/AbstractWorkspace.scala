@@ -2,6 +2,8 @@
 
 package org.nlogo.workspace
 
+// omg. rat's nest. - ST 5/3/13
+
 import
   org.nlogo.{ agent, api, nvm, plot },
   agent.{ World, Agent, Observer, AbstractExporter, AgentSet },
@@ -12,19 +14,36 @@ import
   plot.{ PlotExporter, PlotManager },
   org.nlogo.util.{ Exceptions, Femto },
   java.io.{ IOException, PrintWriter },
-  java.util.WeakHashMap
+  collection.mutable.WeakHashMap
 
 import AbstractWorkspaceTraits._
 
 object AbstractWorkspace {
+
   val DefaultPreviewCommands = "setup repeat 75 [ go ]"
+
+  /**
+   * converts a model's filename to an externally displayable model name.
+   * The argument may be null, the return value will never be.
+   */
+  def makeModelNameForDisplay(str: String): String =
+    if (str == null)
+      "Untitled"
+    else {
+      var result = str
+      var suffixIndex = str.lastIndexOf(".nlogo")
+      if (suffixIndex > 0 && suffixIndex == result.size - 6)
+        result = result.substring(0, result.size - 6)
+      suffixIndex = result.lastIndexOf(".nlogo3d")
+      if (suffixIndex > 0 && suffixIndex == result.size - 8)
+        result = result.substring(0, str.size - 8)
+      result
+    }
+
 }
 
-// omg, what a rat's nest - ST 5/3/13
-
 abstract class AbstractWorkspace(val world: World)
-extends AbstractWorkspaceJ
-with api.LogoThunkFactory with api.ParserServices
+extends api.LogoThunkFactory with api.ParserServices
 with Workspace with Procedures with Plotting with Exporting with Evaluating with Benchmarking
 with Compiling with Profiling with Extensions with BehaviorSpace with Paths with Checksums
 with RunCache with Jobs with Warning with OutputArea with Importing {
@@ -41,7 +60,7 @@ with RunCache with Jobs with Warning with OutputArea with Importing {
   val lastRunTimes = new WeakHashMap[Job, WeakHashMap[Agent, WeakHashMap[Command, MutableLong]]]
 
   // for _thunkdidfinish (says that a thunk finished running without having stop called)
-  val completedActivations = new WeakHashMap[Activation, java.lang.Boolean]
+  val completedActivations = new WeakHashMap[Activation, Boolean]
 
   // the original instruction here is _tick or a ScalaInstruction (currently still experimental)
   // it is only ever used if we need to generate an EngineException
@@ -103,38 +122,8 @@ object AbstractWorkspaceTraits {
       compiler.readNumberFromString(
         source, world, getExtensionManager)
 
-    override def checkReporterSyntax(source: String) {
-      compiler.checkReporterSyntax(
-        source, world.program, procedures, getExtensionManager, false)
-    }
-
-    def checkCommandSyntax(source: String) {
-      compiler.checkCommandSyntax(
-        source, world.program, procedures, getExtensionManager, false)
-    }
-
-    def isConstant(s: String) =
-      try {
-        compiler.readFromString(s)
-        true
-      }
-      catch { case _: CompilerException => false }
-
-    override def isValidIdentifier(s: String) =
-      compiler.isValidIdentifier(s)
-
     override def isReporter(s: String) =
       compiler.isReporter(s, world.program, procedures, getExtensionManager)
-
-    override def tokenizeForColorization(s: String): Seq[Token] =
-      compiler.tokenizeForColorization(
-        s, getExtensionManager)
-
-    override def getTokenAtPosition(s: String, pos: Int): Token =
-      compiler.getTokenAtPosition(s, pos)
-
-    override def findProcedurePositions(source: String) =
-      compiler.findProcedurePositions(source)
 
   }
 
@@ -427,7 +416,7 @@ object AbstractWorkspaceTraits {
       _modelType == ModelType.New || _modelType == ModelType.Library
 
     def modelNameForDisplay =
-      AbstractWorkspaceJ.makeModelNameForDisplay(_modelFileName)
+      AbstractWorkspace.makeModelNameForDisplay(_modelFileName)
 
     def setModelPath(modelPath: String) {
       if (modelPath == null) {
@@ -467,9 +456,9 @@ object AbstractWorkspaceTraits {
   }
 
   trait Jobs { this: AbstractWorkspace =>
-    val jobManager =
-      Femto.get(classOf[nvm.JobManagerInterface], "org.nlogo.job.JobManager",
-        Array[AnyRef](this, world, world))
+    val jobManager: nvm.JobManagerInterface =
+      Femto.get("org.nlogo.job.JobManager",
+        this, world, world)
     def halt() {
       jobManager.haltPrimary()
       world.displayOn(true)

@@ -47,7 +47,6 @@ class DummyWorkspace extends DummyParserServices with Workspace {
   override def getModelFileName = unsupported
   override def fileManager = unsupported
   override def plotManager = unsupported
-  override def attachModelDir(filePath: String) = unsupported
   override def evaluateCommands(owner: JobOwner, source: String) = unsupported
   override def evaluateCommands(owner: JobOwner, source: String, waitForCompletion: Boolean) = unsupported
   override def evaluateCommands(owner: JobOwner, source: String, agent: Agent, waitForCompletion: Boolean) = unsupported

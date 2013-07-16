@@ -7,12 +7,11 @@ import org.nlogo.api, org.nlogo.util.Femto
 
 class LetScoperTests extends FunSuite {
 
-  val tokenizer =
-    Femto.get(classOf[api.TokenizerInterface],
-      "org.nlogo.lex.Tokenizer", Array())
+  val tokenizer: api.TokenizerInterface =
+    Femto.scalaSingleton("org.nlogo.lex.Tokenizer")
 
   def compile(source: String) =
-    new LetScoper(tokenizer.tokenize(source))
+    new LetScoper(tokenizer.tokenize(source).toSeq)
       .scan(Map())
 
   test("empty") {
@@ -27,6 +26,15 @@ class LetScoperTests extends FunSuite {
   test("local let") {
     expectResult("Let(X,5,6)")(
       compile("ask turtles [ let x 5 ] print 0").mkString)
+  }
+
+  // https://github.com/NetLogo/NetLogo/issues/348
+  test("let of task variable") {
+    val e = intercept[api.CompilerException] {
+      compile("foreach [1] [ let ? 0 ]") }
+    val message =
+      "Names beginning with ? are reserved for use as task inputs"
+    expectResult(message)(e.getMessage)
   }
 
 }

@@ -45,15 +45,15 @@ class AgentTypeCheckerTests extends FunSuite {
   test("easy6") { testBoth("to foo set pcolor red end", "FOO:-TP-") }
   test("oneProcedure1") {
     testError("to foo fd 1 sprout 1 end",
-      "You can't use sprout in a turtle context, because sprout is patch-only.")
+      "You can't use SPROUT in a turtle context, because SPROUT is patch-only.")
   }
   test("oneProcedure2") {
     testError("to foo set pcolor red crt 1 end",
-      "You can't use crt in a turtle/patch context, because crt is observer-only.")
+      "You can't use CRT in a turtle/patch context, because CRT is observer-only.")
   }
   test("oneProcedure3") {
     testError("to foo set color red crt 1 end",
-      "You can't use crt in a turtle/link context, because crt is observer-only.")
+      "You can't use CRT in a turtle/link context, because CRT is observer-only.")
   }
   test("oneProcedure4") {
     testError("to foo crt 1 set color red end",
@@ -65,7 +65,7 @@ class AgentTypeCheckerTests extends FunSuite {
   }
   test("twoProcedures2") {
     testError("to foo bar fd 1 end  to bar sprout 1 end",
-      "You can't use fd in a patch context, because fd is turtle-only.")
+      "You can't use FD in a patch context, because FD is turtle-only.")
   }
   test("chained1") {
     testError("to foo1 fd 1 foo2 end  to foo2 foo3 end  to foo3 foo4 end  to foo4 foo5 end  to foo5 sprout 1 end",
@@ -84,19 +84,19 @@ class AgentTypeCheckerTests extends FunSuite {
 
   test("ifelse") {
     testError("to foo1 ifelse true [ fd 1 ] [ sprout 1 ] end",
-      "You can't use sprout in a turtle context, because sprout is patch-only.")
+      "You can't use SPROUT in a turtle context, because SPROUT is patch-only.")
   }
   test("sprout") {
     testError("to foo sprout 1 [ print link-length ] end",
-      "You can't use link-length in a turtle context, because link-length is link-only.")
+      "You can't use LINK-LENGTH in a turtle context, because LINK-LENGTH is link-only.")
   }
   test("ask1") {
     testError("to foo [x] ask x [ crt 1 ] end",
-      "You can't use crt in a turtle/patch/link context, because crt is observer-only.")
+      "You can't use CRT in a turtle/patch/link context, because CRT is observer-only.")
   }
   test("ask2") {
     testError("to foo ask turtles [ crt 1 ] end",
-      "You can't use crt in a turtle context, because crt is observer-only.")
+      "You can't use CRT in a turtle context, because CRT is observer-only.")
   }
   test("ask3") {
     testError("to foo ask patches [ set color red ] end",
@@ -104,12 +104,14 @@ class AgentTypeCheckerTests extends FunSuite {
   }
   test("askWith") {
     testError("to foo ask turtles with [color = red] [ crt 1 ] end",
-      "You can't use crt in a turtle context, because crt is observer-only.")
+      "You can't use CRT in a turtle context, because CRT is observer-only.")
   }
   test("crt1") {
     testBoth("to foo crt 1 [ print who ] end", "FOO:O---") }
   test("crt2") {
-    testError("to foo crt 1 [ sprout 1 ] end", "You can't use sprout in a turtle context, because sprout is patch-only.") }
+    testError("to foo crt 1 [ sprout 1 ] end",
+      "You can't use SPROUT in a turtle context, because SPROUT is patch-only.") }
   test("crt3") {
-    testError("to foo crt 1 [ crt 1 ] end", "You can't use crt in a turtle context, because crt is observer-only.") }
+    testError("to foo crt 1 [ crt 1 ] end",
+      "You can't use CRT in a turtle context, because CRT is observer-only.") }
 }

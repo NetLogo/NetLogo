@@ -94,10 +94,12 @@ extends ImporterJ(_errorHandler, _world, _importerUser, _stringReader) {
     }
   }
 
-  def importIntro(plot: PlotInterface): Int = {
+  def importIntro(plot: PlotInterface): Int =
     // this is the header line and we don't really care about it since
     // we have to set everything by hand anyway.
-    if (!hasMoreLines(false) || !hasMoreLines(false))
+    if (!hasMoreLines(false))
+      0
+    else if (!hasMoreLines(false))
       0
     else {
       val line = nextLine()
@@ -111,7 +113,6 @@ extends ImporterJ(_errorHandler, _world, _importerUser, _stringReader) {
       plot.legendIsOpen_=(readBoolean(line(6)))
       readNumber(line(7)).toInt
     }
-  }
 
   def importPens(plot: api.PlotInterface, numPens: Int) {
     if (hasMoreLines(false))

@@ -11,7 +11,9 @@ trait ExtensionObject {
   /**
    * @param readable  If true the result should be readable as NetLogo code
    * @param exporting If false the result is for display only
-   * @param reference If true the result may be a reference to a complete object exported in the extension section of the file if false the object should be recreatable from the result
+   * @param reference If true the result may be a reference to a complete object
+   *   exported in the extension section of the file if false the object should be
+   *   recreatable from the result
    * @return a string representation of the object.
    */
   def dump(readable: Boolean, exporting: Boolean, reference: Boolean): String

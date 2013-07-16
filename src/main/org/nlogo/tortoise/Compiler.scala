@@ -76,21 +76,28 @@ object Compiler {
         // arg 0 is the name but we don't access it because LetScoper took care of it.
         // arg 1 is the value.
                                      => s"var ${l.let.name} = ${arg(1)};"
-      case p: prim._setletvariable   => s"${p.let.name} = ${arg(0)};"
       case call: prim._call          => s"${call.procedure.name}($args)"
       case _: prim.etc._report       => s"return $args;"
       // we need ask, we just shouldn't rely on it for test results.
       case _: prim._ask              => Prims.generateAsk(s)
       case _: prim._asksorted        => Prims.generateAsk(s)
       case Prims.NormalCommand(op)   => s"$op($args)"
-      case s: prim._setobservervariable => s"Globals.setGlobal(${s.vn},${arg(0)})"
-      case s: prim._setturtlevariable   => s"AgentSet.setTurtleVariable(${s.vn},${arg(0)})"
-      case s: prim._setturtleorlinkvariable =>
-        val vn = api.AgentVariables.getImplicitTurtleVariables.indexOf(s.varName)
-        s"AgentSet.setTurtleVariable($vn,${arg(0)})"
-      case s: prim._setpatchvariable => s"AgentSet.setPatchVariable(${s.vn},${arg(0)})"
       case r: prim._repeat           =>
         s"for(var i = 0; i < ${arg(0)}; i++) { ${genCommandBlock(s.args(1))} }"
+      case _: prim._set              =>
+        s.args(0).asInstanceOf[parse.ReporterApp].reporter match {
+          case p: prim._letvariable =>
+            s"${p.let.name} = ${arg(1)};"
+          case p: prim._observervariable =>
+            s"Globals.setGlobal(${p.vn},${arg(1)})"
+          case p: prim._turtlevariable =>
+            s"AgentSet.setTurtleVariable(${p.vn},${arg(1)})"
+          case p: prim._turtleorlinkvariable =>
+            val vn = api.AgentVariables.getImplicitTurtleVariables.indexOf(p.varName)
+            s"AgentSet.setTurtleVariable($vn,${arg(1)})"
+          case p: prim._patchvariable =>
+            s"AgentSet.setPatchVariable(${p.vn},${arg(1)})"
+        }
     }
   }
 
@@ -117,7 +124,7 @@ object Compiler {
         val agents = arg(0)
         val filter = genReporterBlock(r.args(1))
         s"AgentSet.agentFilter($agents, function(){ return $filter })"
-      case p: prim._patch                   => s"Prims.patch($args)"
+      case p: prim.etc._patch               => s"Prims.patch($args)"
       case n: prim._neighbors               => s"Prims.getNeighbors()"
     }
   }

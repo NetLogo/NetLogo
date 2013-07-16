@@ -4,20 +4,19 @@ package org.nlogo.parse
 
 import org.scalatest.FunSuite
 
-import org.nlogo.api, api.CompilerException
-import org.nlogo.util.Femto
+import org.nlogo.{ api, parse0 },
+  api.CompilerException,
+  org.nlogo.util.Femto
 
 class StructureParserTests extends FunSuite {
 
-  val tokenizer =
-    Femto.get(classOf[api.TokenizerInterface],
-      "org.nlogo.lex.Tokenizer", Array())
+  val tokenizer: api.TokenizerInterface =
+    Femto.scalaSingleton("org.nlogo.lex.Tokenizer")
 
-  def compile(source: String): StructureResults = {
-    new StructureParser(tokenizer.tokenize(source),
+  def compile(source: String): StructureResults =
+    new StructureParser(tokenizer.tokenize(source).map(parse0.Namer0),
                         None, StructureResults.empty)
       .parse(false)
-  }
 
   test("empty") {
     val results = compile("")
@@ -188,5 +187,19 @@ class StructureParserTests extends FunSuite {
     }
     expectResult("Redeclaration of EXTENSIONS")(e.getMessage.takeWhile(_ != ','))
   }
+
+  // https://github.com/NetLogo/NetLogo/issues/348
+  def testTaskVariableMisuse(source: String) {
+    val e = intercept[CompilerException] { compile(source) }
+    val message =
+      "Names beginning with ? are reserved for use as task inputs"
+    expectResult(message)(e.getMessage)
+  }
+  test("task variable as procedure name") {
+    testTaskVariableMisuse("to ?z end") }
+  test("task variable as procedure input") {
+    testTaskVariableMisuse("to x [?y] end") }
+  test("task variable as agent variable") {
+    testTaskVariableMisuse("turtles-own [?a]") }
 
 }

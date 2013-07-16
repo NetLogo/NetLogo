@@ -18,9 +18,12 @@ object StructureChecker {
     for {
       Procedure(_, _, inputs, _) <- declarations
       input <- inputs
-    } cAssert(
-      inputs.count(_.name == input.name) == 1,
-      "There is already a local variable called " + input.name + " here", input.token)
+    } {
+      notTaskVariable(input)
+      cAssert(
+        inputs.count(_.name == input.name) == 1,
+        "There is already a local variable called " + input.name + " here", input.token)
+    }
     // O(n^2) -- maybe we should fold instead
     def checkPair(decl1: Declaration, decl2: Declaration): Option[(String, Token)] =
       (decl1, decl2) match {
@@ -42,7 +45,7 @@ object StructureChecker {
 
   def rejectDuplicateNames(declarations: Seq[Declaration], usedNames: Map[String, String]) {
     type Used = (String, String)
-    case class Occurrence(declaration: Declaration, identifier: Identifier)
+    case class Occurrence(declaration: Declaration, identifier: Identifier, isGlobal: Boolean = true)
     val (linkBreedNames, turtleBreedNames) = {
       val (linkBreeds, turtleBreeds) =
         declarations
@@ -60,8 +63,8 @@ object StructureChecker {
             Seq(Occurrence(decl, plural))
         case decl @ Variables(_, names) =>
           names.map(Occurrence(decl, _))
-        case decl @ Procedure(name, _, _, _) =>
-          Seq(Occurrence(decl, name))
+        case decl @ Procedure(name, _, inputs, _) =>
+          Occurrence(decl, name) +: inputs.map(Occurrence(decl, _, isGlobal = false))
         case _ =>
           Seq()
       }
@@ -97,16 +100,26 @@ object StructureChecker {
     }
     // O(n^2) -- maybe we should fold instead
     for((o1, o2) <- allPairs(occurrences))
-      check((o1.identifier.name, displayName(o1.declaration)), o2)
+      if (o1.isGlobal)
+        check((o1.identifier.name, displayName(o1.declaration)), o2)
     for(used <- usedNames; o <- occurrences)
       check(used, o)
+    for(Occurrence(_, ident, _) <- occurrences)
+      notTaskVariable(ident)
   }
 
-  def allPairs[T](xs: Seq[T]): Iterator[(T, T)] =
+  def allPairs[T <: AnyRef](xs: Seq[T]): Iterator[(T, T)] =
     for {
-      rest <- xs.tails
-      x1 <- rest.headOption.toSeq
-      x2 <- rest.tail
-    } yield (x1, x2)
+      x1 <- xs.iterator
+      x2 <- xs
+      if x1 ne x2
+    }
+    yield (x1, x2)
+
+  def notTaskVariable(ident: Identifier) {
+    cAssert(!ident.name.startsWith("?"),
+      "Names beginning with ? are reserved for use as task inputs",
+      ident.token)
+  }
 
 }

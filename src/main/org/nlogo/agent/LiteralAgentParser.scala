@@ -46,7 +46,7 @@ class LiteralAgentParser(_world: api.World,
     val token = tokens.next()
     // next token should be an identifier or reporter. reporter is a special case because "turtles"
     // and "patches" end up getting turned into Reporters when tokenizing, which is kind of ugly.
-    cAssert(List(TokenType.Variable, TokenType.Ident, TokenType.Reporter).contains(token.tpe),
+    cAssert(List(TokenType.Ident, TokenType.Reporter).contains(token.tpe),
             ERR_EXPECTED_BREED, token)
     val agentsetTypeString = token.value.asInstanceOf[String]
     if(agentsetTypeString.equalsIgnoreCase(SET_TYPE_BREED)) {
@@ -85,7 +85,7 @@ class LiteralAgentParser(_world: api.World,
     }
     else if(world.program.breeds.values.exists(_.singular == agentsetTypeString.toUpperCase)) {
       val token = tokens.next()
-      cAssert(token.tpe == TokenType.Constant && token.value.isInstanceOf[java.lang.Double],
+      cAssert(token.tpe == TokenType.Literal && token.value.isInstanceOf[java.lang.Double],
         ERR_BAD_TURTLE_ARG, token)
       val closeBrace = tokens.next()
       cAssert(closeBrace.tpe == TokenType.CloseBrace, ERR_EXPECTED_CLOSEBRACE, closeBrace)
@@ -173,7 +173,7 @@ class LiteralAgentParser(_world: api.World,
           parsePcor(tokens), parsePcor(tokens))
       case "TURTLE" =>
         val token = tokens.next()
-        cAssert(token.tpe == TokenType.Constant && token.value.isInstanceOf[java.lang.Double],
+        cAssert(token.tpe == TokenType.Literal && token.value.isInstanceOf[java.lang.Double],
           ERR_BAD_TURTLE_ARG, token)
         world.getOrCreateTurtle(token.value.asInstanceOf[java.lang.Double].longValue)
       case "LINK" =>
@@ -198,14 +198,14 @@ class LiteralAgentParser(_world: api.World,
    */
   private def parsePcor(tokens: Iterator[Token]): Double = {
     val token = tokens.next()
-    cAssert(token.tpe == TokenType.Constant && token.value.isInstanceOf[java.lang.Double],
+    cAssert(token.tpe == TokenType.Literal && token.value.isInstanceOf[java.lang.Double],
             ERR_BAD_PATCH_ARGS, token)
     token.value.asInstanceOf[Double].doubleValue
   }
 
   private def parseEnd(tokens: Iterator[Token]): java.lang.Double = {
     val token = tokens.next()
-    cAssert(token.tpe == TokenType.Constant && token.value.isInstanceOf[java.lang.Double],
+    cAssert(token.tpe == TokenType.Literal && token.value.isInstanceOf[java.lang.Double],
             ERR_BAD_LINK_ARGS, token)
     token.value.asInstanceOf[java.lang.Double]
   }

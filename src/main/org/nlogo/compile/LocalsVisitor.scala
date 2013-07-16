@@ -41,7 +41,7 @@ extends parse.DefaultAstVisitor {
         currentLet = l
         // Using "__let" instead of "let" to indicates that this is a let we don't want converted
         // to a local. This can be useful for testing. - ST 11/3/10, 2/6/11
-        val exempt = l.token.name.equalsIgnoreCase("__LET")
+        val exempt = l.token.text.equalsIgnoreCase("__LET")
         if(!procedure.isTask && askNestingLevel == 0 && !exempt) {
           stmt.command = new _setprocedurevariable(new _procedurevariable(procedure.args.size, l.let.name))
           stmt.command.token(stmt.command.token)
@@ -76,7 +76,7 @@ extends parse.DefaultAstVisitor {
     expr.reporter match {
       case l: _letvariable =>
         cAssert(currentLet == null || (currentLet.let ne l.let),
-                I18N.errors.getN("compiler.LocalsVisitor.notDefined", l.token.name),
+                I18N.errors.getN("compiler.LocalsVisitor.notDefined", l.token.text.toUpperCase),
                 l.token)
         // it would be nice if the next line were easier to read - ST 2/6/11
         for(index <- alteredLets(procedure).get(l.let).orElse(Option(procedure.parent).flatMap(parent => alteredLets(parent).get(l.let)))) {

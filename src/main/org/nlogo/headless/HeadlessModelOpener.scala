@@ -2,7 +2,7 @@
 
 package org.nlogo.headless
 
-import org.nlogo.agent.{BooleanConstraint, ChooserConstraint, InputBoxConstraint, SliderConstraint}
+import org.nlogo.agent.{BooleanConstraint, ChooserConstraint, InputBoxConstraint, NumericConstraint}
 import org.nlogo.api.{CompilerException, FileIO, LogoList,
                       ModelReader, ModelSection, Program, ValueConstraint, Version}
 import org.nlogo.plot.PlotLoader
@@ -88,8 +88,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     for ((vname, spec) <- constraints) {
       val con: ValueConstraint = spec(0) match {
         case "SLIDER" =>
-          SliderConstraint.makeSliderConstraint(
-            ws.world.observer(), spec(1), spec(2), spec(3), spec(4).toDouble, vname, ws)
+          new NumericConstraint(spec(4))
         case "CHOOSER" =>
           val vals = ws.compiler.readFromString(spec(1)).asInstanceOf[LogoList]
           val defaultIndex = spec(2).toInt

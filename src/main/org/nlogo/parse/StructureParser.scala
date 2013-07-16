@@ -6,7 +6,8 @@ package org.nlogo.parse
 // Program and some Procedures.
 
 // Each source file is handled in three stages, each represented as a separate trait.
-// 1. StructureCombinators parses input tokens, returns a Seq[Declaration].
+// 1. StructureCombinators parses input tokens according to a context-free grammar,
+//    returning a Seq[Declaration].
 // 2. StructureChecker checks the Seq[Declaration] for duplicates.
 // 3. StructureConverter converts the Seq[Declaration] to a StructureResults.
 // By splitting it this way, we get separation of concerns between the (clean) mechanics of parsing
@@ -35,13 +36,18 @@ object StructureParser {
       extensionManager.startFullCompilation()
     val sources = Seq((source, ""))
     val oldResults = StructureResults(program, oldProcedures)
-    def parseOne(source: String, fileName: String, previousResults: StructureResults) =
-      new StructureParser(tokenizer.tokenize(source, fileName), displayName, previousResults)
+    def parseOne(source: String, filename: String, previousResults: StructureResults) = {
+      val tokens =
+        tokenizer.tokenize(source, filename)
+          .filter(_.tpe != api.TokenType.Comment)
+          .map(parse0.Namer0)
+      new StructureParser(tokens, displayName, previousResults)
         .parse(subprogram)
+    }
     val firstResults =
       sources.foldLeft(oldResults){
-        case (results, (source, fileName)) =>
-          parseOne(source, fileName, results)
+        case (results, (source, filename)) =>
+          parseOne(source, filename, results)
       }
     val results =
       Iterator.iterate(firstResults){results =>
@@ -57,7 +63,7 @@ object StructureParser {
     if(!subprogram) {
       for(token <- results.extensions)
         extensionManager.importExtension(
-          token.name.toLowerCase, new api.ErrorSource(token))
+          token.text.toLowerCase, new api.ErrorSource(token))
       extensionManager.finishFullCompilation()
     }
     results
@@ -72,7 +78,7 @@ object StructureParser {
 /// for each source file. knits stages together. throws CompilerException
 
 class StructureParser(
-  tokens: Seq[Token],
+  tokens: Iterator[Token],
   displayName: Option[String],
   oldResults: StructureResults) {
 

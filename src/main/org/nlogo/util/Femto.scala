@@ -6,16 +6,16 @@ package org.nlogo.util
 // a compile-time dependency")
 
 object Femto {
-  def get[T, U](interfaceClass: Class[T], implementationClassName: String, args: Array[U]): T = {
-    val clazz = Class.forName(implementationClassName)
+  def get[T](className: String, args: Any*): T = {
+    val clazz = Class.forName(className)
     val constructors =
       clazz.getConstructors.filter(_.getParameterTypes.size == args.size)
     assert(constructors.size == 1)
     constructors.head
-      .newInstance(args.asInstanceOf[Array[AnyRef]]: _*)
+      .newInstance(args.map(_.asInstanceOf[AnyRef]): _*)
       .asInstanceOf[T]
   }
-  def scalaSingleton[T](interfaceClass: Class[T], implementationClassName: String): T =
-    Class.forName(implementationClassName + "$")
-      .getField( "MODULE$" ).get(null).asInstanceOf[T]
+  def scalaSingleton[T](className: String): T =
+    Class.forName(className + "$")
+      .getField("MODULE$").get(null).asInstanceOf[T]
 }

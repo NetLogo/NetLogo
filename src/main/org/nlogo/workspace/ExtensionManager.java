@@ -14,8 +14,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import static org.nlogo.workspace.AbstractWorkspace.toURL;
-
 /**
  * Some simple notes on loading and unloading extensions:
  * - The load method is called when an extension appears in the extensions block when it wasn't
@@ -211,7 +209,7 @@ public strictfp class ExtensionManager
 
   public String resolvePath(String path) {
     try {
-      java.io.File result = new java.io.File(workspace.attachModelDir(path));
+      java.io.File result = new java.io.File(attachModelDir(path));
       try {
         return result.getCanonicalPath();
       } catch (java.io.IOException ex) {
@@ -236,7 +234,7 @@ public strictfp class ExtensionManager
     // If it's a path, look for it relative to the model location
     if (path.contains(java.io.File.separator)) {
       try {
-        java.io.File jarFile = new java.io.File(workspace.attachModelDir(path));
+        java.io.File jarFile = new java.io.File(attachModelDir(path));
         if (jarFile.exists()) {
           return toURL(jarFile).toString();
         }
@@ -248,7 +246,7 @@ public strictfp class ExtensionManager
     // If it's not a path, try the model location
     try {
       java.io.File jarFile =
-          new java.io.File(workspace.attachModelDir(path));
+          new java.io.File(attachModelDir(path));
       if (jarFile.exists()) {
         return toURL(jarFile).toString();
       }
@@ -274,7 +272,7 @@ public strictfp class ExtensionManager
   public String getFullPath(String path)
       throws ExtensionException {
     try {
-      String fullPath = workspace.attachModelDir(path);
+      String fullPath = attachModelDir(path);
       java.io.File f = new java.io.File(fullPath);
       if (f.exists()) {
         return fullPath;
@@ -727,6 +725,40 @@ public strictfp class ExtensionManager
       prefix = null;
       this.modified = modified;
     }
+  }
+
+  /**
+   * attaches the current model directory to a relative path, if necessary.
+   * If filePath is an absolute path, this method simply returns it.
+   * If it's a relative path, then the current model directory is prepended
+   * to it. If this is a new model, the user's platform-dependent home
+   * directory is prepended instead.
+   */
+  private String attachModelDir(String filePath)
+      throws java.net.MalformedURLException {
+    if (new java.io.File(filePath).isAbsolute()) {
+      return filePath;
+    }
+    String path = workspace.getModelPath();
+    if (path == null) {
+      path = System.getProperty("user.home")
+          + java.io.File.separatorChar + "dummy.txt";
+    }
+    java.net.URL urlForm =
+        new java.net.URL
+            (toURL(new java.io.File(path)), filePath);
+    return new java.io.File(urlForm.getFile()).getAbsolutePath();
+  }
+
+  // for 4.1 we have too much fragile, difficult-to-understand,
+  // under-tested code involving URLs -- we can't get rid of our
+  // uses of toURL() until 4.2, the risk of breakage is too high.
+  // so for now, at least we make this a separate method so the
+  // SuppressWarnings annotation is narrowly targeted. - ST 12/7/09
+  @SuppressWarnings("deprecation")
+  private static java.net.URL toURL(java.io.File file)
+      throws java.net.MalformedURLException {
+    return file.toURL();
   }
 
 }

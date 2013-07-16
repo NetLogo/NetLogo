@@ -33,23 +33,22 @@ object HeadlessWorkspace {
    */
   def newInstance(subclass: Class[_ <: HeadlessWorkspace]): HeadlessWorkspace = {
     val world = new World
-    Femto.get(classOf[HeadlessWorkspace], subclass.getName,
-      Array(world,
-        Femto.scalaSingleton(classOf[CompilerInterface],
+    Femto.get(subclass.getName,
+      world,
+        Femto.scalaSingleton[CompilerInterface](
           "org.nlogo.compile.Compiler"),
-        Femto.get(classOf[RendererInterface],
-          "org.nlogo.render.Renderer", Array(world))))
+        Femto.get[RendererInterface](
+          "org.nlogo.render.Renderer", world))
   }
 
   def newLab: LabInterface = {
-    val parser = Femto.scalaSingleton(
-      classOf[ParserInterface], "org.nlogo.parse.Parser")
+    val parser: ParserInterface =
+      Femto.scalaSingleton("org.nlogo.parse.Parser")
     // kludgy, use AnyRef here because ProtocolLoader doesn't implement an interface - ST 4/25/13
-    val protocolLoader =
-      Femto.get(classOf[AnyRef], "org.nlogo.lab.ProtocolLoader",
-        Array(new DefaultParserServices(parser)))
-    Femto.get(classOf[LabInterface], "org.nlogo.lab.Lab",
-      Array(protocolLoader))
+    val protocolLoader: AnyRef =
+      Femto.get("org.nlogo.lab.ProtocolLoader",
+        new DefaultParserServices(parser))
+    Femto.get("org.nlogo.lab.Lab", protocolLoader)
   }
 
   /**

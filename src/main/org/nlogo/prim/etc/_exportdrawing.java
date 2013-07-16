@@ -21,7 +21,7 @@ public final strictfp class _exportdrawing
             } catch (java.io.IOException ex) {
               throw new EngineException
                   (context, _exportdrawing.this,
-                      token().name() +
+                      token().text() +
                           ": " + ex.getMessage());
             }
           }

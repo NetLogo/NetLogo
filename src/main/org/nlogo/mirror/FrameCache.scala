@@ -2,22 +2,22 @@
 
 package org.nlogo.mirror
 
-class FrameCache(
-  val deltas: () => IndexedSeq[Delta],
-  val minSize: Int,
-  val maxSize: Int) {
+trait FrameCache {
+  def deltas: IndexedSeq[Delta]
+  val minFrameCacheSize: Int
+  val maxFrameCacheSize: Int
 
   private var cache = Map[Int, Frame]()
 
   /** Get or reconstruct the Frame for specified index. */
-  def get(index: Int): Option[Frame] =
-    if (!deltas().isDefinedAt(index))
+  def frame(index: Int): Option[Frame] =
+    if (!deltas.isDefinedAt(index))
       None
     else
       cache.get(index).orElse {
-        get(index - 1).map { previousFrame =>
-          val newFrame = previousFrame.applyDelta(deltas()(index))
-          add(index, newFrame) // so we build up our cache
+        frame(index - 1).map { previousFrame =>
+          val newFrame = previousFrame.applyDelta(deltas(index))
+          addFrameToCache(index, newFrame) // so we build up our cache
           newFrame
         }
       }
@@ -26,13 +26,13 @@ class FrameCache(
    * Add a new frame in the cache, and make sure we keep only the
    * most valuable ones if we are busting maxSize. NP 2013-01-31
    */
-  def add(index: Int, frame: Frame) {
+  def addFrameToCache(index: Int, frame: Frame) {
     cache += index -> frame
-    if (cache.size > maxSize) {
+    if (cache.size > maxFrameCacheSize) {
       // if we are busting cache size
       val keepers = cache.keys.toSeq
         .sortBy(-utility(_, index))
-        .take(minSize)
+        .take(minFrameCacheSize)
       cache = cache.filterKeys(keepers.contains)
     }
   }
@@ -61,7 +61,7 @@ class FrameCache(
         Double.PositiveInfinity
       else
         (predecessors.max until index)
-          .map(deltas()(_).size)
+          .map(deltas(_).size)
           .sum
     }
     pow(cost, 2) * value

@@ -48,8 +48,6 @@ with ViewSettings with Controllable {
   def plotManager: AnyRef
   def previewCommands: String
   def clearTicks()
-  @throws(classOf[java.net.MalformedURLException])
-  def attachModelDir(filePath: String): String
   @throws(classOf[InterruptedException])
   def dispose()
   def patchSize: Double

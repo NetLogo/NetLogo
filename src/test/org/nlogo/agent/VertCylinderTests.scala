@@ -3,13 +3,12 @@
 package org.nlogo.agent
 
 import org.scalatest.FunSuite
-import util.Random
-import org.nlogo.util.WorldType
+import org.nlogo.util.{ WorldType, MersenneTwisterFast }
 import collection.JavaConverters._
 
 class VertCylinderTests extends FunSuite {
 
-  val random = new Random()
+  val random = new MersenneTwisterFast
 
   for(worldType <- WorldType.all; x <- List(0, 1, 2, 3, 10, 100); y <- List(0, 1, 2, 3, 10, 100)){
     test("diffuse, worldType: " + worldType + ", worldSize: " + ((x, y))){

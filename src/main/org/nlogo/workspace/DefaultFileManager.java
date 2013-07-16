@@ -58,8 +58,8 @@ public final strictfp class DefaultFileManager
     return prefix;
   }
 
-  public org.nlogo.api.File getFile(String fileName) {
-    return new org.nlogo.api.LocalFile(fileName);
+  public org.nlogo.api.File getFile(String filename) {
+    return new org.nlogo.api.LocalFile(filename);
   }
 
   public void setPrefix(String newPrefix) {
@@ -112,12 +112,12 @@ public final strictfp class DefaultFileManager
     return (currentFile != null && isFileOpen(currentFile.getAbsolutePath()));
   }
 
-  private boolean isFileOpen(String fileName) {
-    return (findOpenFile(fileName) != null);
+  private boolean isFileOpen(String filename) {
+    return (findOpenFile(filename) != null);
   }
 
-  public org.nlogo.api.File findOpenFile(String fileName) {
-    java.io.File newFile = new java.io.File(fileName);
+  public org.nlogo.api.File findOpenFile(String filename) {
+    java.io.File newFile = new java.io.File(filename);
 
     Iterator<org.nlogo.api.File> files = openFiles.iterator();
     while (files.hasNext()) {

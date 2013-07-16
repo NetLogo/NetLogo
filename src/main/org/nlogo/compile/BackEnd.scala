@@ -16,7 +16,8 @@ private object BackEnd {
   // StructureParser found the top level Procedures for us.  ExpressionParser
   // finds command tasks and makes Procedures out of them, too.  the remaining
   // phases handle all ProcedureDefinitions from both sources. - ST 2/4/11
-  def backEnd(defs: Seq[parse.ProcedureDefinition], program: api.Program, source: String, profilingEnabled: Boolean, flags: nvm.CompilerFlags): nvm.CompilerResults = {
+  def backEnd(defs: Seq[parse.ProcedureDefinition], program: api.Program, source: String,
+      profilingEnabled: Boolean, flags: nvm.CompilerFlags): nvm.CompilerResults = {
     // each Int is the position of that variable in the procedure's args list
     val alteredLets =
       collection.mutable.Map[Procedure, collection.mutable.Map[api.Let, Int]]()
@@ -28,7 +29,7 @@ private object BackEnd {
       procdef.accept(new SimpleOfVisitor)  // convert _of(_*variable) => _*variableof
       procdef.accept(new TaskVisitor)  // handle _reportertask
       procdef.accept(new LocalsVisitor(alteredLets)) // convert _let/_repeat to _locals
-      procdef.accept(new parse.SetVisitor)   // convert _set to specific setters
+      procdef.accept(new SetVisitor)   // convert _set to specific setters
       procdef.accept(new CarefullyVisitor)  // connect _carefully to _errormessage
       if (flags.useOptimizer)
         procdef.accept(Optimizer)   // do various code-improving rewrites
@@ -39,10 +40,8 @@ private object BackEnd {
       new Assembler().assemble(procdef)     // flatten tree to command array
       if (flags.useGenerator) // generate byte code
         procdef.procedure.code =
-          Femto.get(classOf[nvm.GeneratorInterface], "org.nlogo.generate.Generator",
-                    Array(source, procdef.procedure,
-                          Boolean.box(
-                            profilingEnabled)))
+          Femto.get[nvm.GeneratorInterface]("org.nlogo.generate.Generator",
+                    source, procdef.procedure, profilingEnabled)
             .generate()
     }
     // only return top level procedures.

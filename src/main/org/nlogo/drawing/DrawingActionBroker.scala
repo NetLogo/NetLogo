@@ -37,10 +37,10 @@ class DrawingActionBroker(
     publishWithoutRunning(imageToAction(image))
   }
 
-  override def clearDrawing() { publish(ClearDrawing()) }
-  override def rescaleDrawing() { publish(RescaleDrawing()) }
-  override def markClean() { publish(MarkClean()) }
-  override def markDirty() { publish(MarkDirty()) }
+  override def clearDrawing() { publish(ClearDrawing) }
+  override def rescaleDrawing() { publish(RescaleDrawing) }
+  override def markClean() { publish(MarkClean) }
+  override def markDirty() { publish(MarkDirty) }
 
   override def getAndCreateDrawing(dirty: Boolean): java.awt.image.BufferedImage = {
     publish(CreateDrawing(dirty))
@@ -53,8 +53,11 @@ class DrawingActionBroker(
   override def importDrawing(is: java.io.InputStream): Unit =
     trailDrawer.importDrawing(is) // TODO: serialize image into action for both importDrawing methods
 
-  override def readImage(is: java.io.InputStream): Unit =
-    publish(imageToAction(javax.imageio.ImageIO.read(is)))
+  override def readImage(inputStream: java.io.InputStream): Unit =
+    readImage(javax.imageio.ImageIO.read(inputStream))
+
+  override def readImage(image: java.awt.image.BufferedImage): Unit =
+    publish(imageToAction(image))
 
   // The following methods should be side-effect free. Thus, they
   // generate no actions and just delegate to the trailDrawer.

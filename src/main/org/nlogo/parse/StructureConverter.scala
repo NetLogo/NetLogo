@@ -38,7 +38,7 @@ object StructureConverter {
   def buildProcedure(p: Procedure, displayName: Option[String]): (nvm.Procedure, Iterable[Token]) = {
     val proc = new nvm.Procedure(
       p.isReporter, p.tokens.tail.head.value.asInstanceOf[String],
-      p.tokens.tail.head, displayName, null)
+      p.tokens.tail.head, p.inputs.map(_.token), displayName, null)
     proc.args = p.inputs.map(_.name).toVector
     (proc, p.tokens.drop(2).init :+ Token.eof)
   }

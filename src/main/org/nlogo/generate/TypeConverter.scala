@@ -24,17 +24,17 @@ object TypeConverter {
    */
   def generateConversion(typeFrom: Class[_], typeTo: Class[_], mv: MethodVisitor, firstFreeJVMLocal: Int, parentInstr: Instruction, argIndex: Int) {
     if (typeFrom == java.lang.Boolean.TYPE && (typeTo == classOf[Object] || typeTo == classOf[java.lang.Boolean]))
-      from_boolean_to_Object(mv)
+      frombooleantoObject(mv)
     else if (typeFrom == java.lang.Double.TYPE && (typeTo == classOf[Object] || typeTo == classOf[java.lang.Double]))
-      from_double_to_Object(mv, firstFreeJVMLocal)
+      fromdoubletoObject(mv, firstFreeJVMLocal)
     else if (typeFrom == classOf[java.lang.Double] && typeTo == java.lang.Double.TYPE)
-      from_Double_to_double(mv)
+      fromDoubletodouble(mv)
     else if (typeFrom == classOf[Object] && typeTo == java.lang.Double.TYPE)
-      from_Object_to_double(mv, firstFreeJVMLocal, argIndex)
+      fromObjecttodouble(mv, firstFreeJVMLocal, argIndex)
     else if (typeFrom == classOf[java.lang.Boolean] && typeTo == java.lang.Boolean.TYPE)
-      from_Boolean_to_boolean(mv)
+      fromBooleantoboolean(mv)
     else if (typeFrom == classOf[Object] && typeTo == java.lang.Boolean.TYPE)
-      from_Object_to_boolean(mv, firstFreeJVMLocal, argIndex)
+      fromObjecttoboolean(mv, firstFreeJVMLocal, argIndex)
     else if (typeTo != typeFrom && !typeTo.isAssignableFrom(typeFrom))
       if (typeFrom.isAssignableFrom(typeTo))
         // class typeTo inherits from class typeFrom, so we must cast, to narrow the type.
@@ -46,17 +46,17 @@ object TypeConverter {
         val tokenInstr = if (argIndex < parentInstr.args.length) parentInstr.args(argIndex)
         else parentInstr
         val token = tokenInstr.token
-        throw new CompilerException(argEx.getMessage, token.startPos, token.endPos, token.fileName)
+        throw new CompilerException(argEx.getMessage, token.start, token.end, token.filename)
       }
   }
   // Conversion methods:
   // method fromXtoY assumes that the top jvm stack value is of type X
   // the method generates code to convert the top stack value to type Y
   //   ~Forrest (5/16/2006)
-  private def from_Double_to_double(mv: MethodVisitor) {
+  private def fromDoubletodouble(mv: MethodVisitor) {
     mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Double", "doubleValue", "()D")
   }
-  private def from_Object_to_double(mv: MethodVisitor, firstFreeJVMLocal: Int, argIndex: Int) {
+  private def fromObjecttodouble(mv: MethodVisitor, firstFreeJVMLocal: Int, argIndex: Int) {
     mv.visitVarInsn(ASTORE, firstFreeJVMLocal)
     val l0 = new Label
     val l1 = new Label
@@ -81,10 +81,10 @@ object TypeConverter {
     mv.visitInsn(ATHROW)
     mv.visitLabel(lEnd)
   }
-  private def from_Boolean_to_boolean(mv: MethodVisitor) {
+  private def fromBooleantoboolean(mv: MethodVisitor) {
     mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Boolean", "booleanValue", "()Z")
   }
-  private def from_Object_to_boolean(mv: MethodVisitor, firstFreeJVMLocal: Int, argIndex: Int) {
+  private def fromObjecttoboolean(mv: MethodVisitor, firstFreeJVMLocal: Int, argIndex: Int) {
     mv.visitVarInsn(ASTORE, firstFreeJVMLocal)
     val l0 = new Label
     val l1 = new Label
@@ -109,14 +109,14 @@ object TypeConverter {
     mv.visitInsn(ATHROW)
     mv.visitLabel(lEnd)
   }
-  private def from_double_to_Object(mv: MethodVisitor, firstFreeJVMLocal: Int) {
+  private def fromdoubletoObject(mv: MethodVisitor, firstFreeJVMLocal: Int) {
     mv.visitVarInsn(DSTORE, firstFreeJVMLocal)
     mv.visitTypeInsn(NEW, "java/lang/Double")
     mv.visitInsn(DUP)
     mv.visitVarInsn(DLOAD, firstFreeJVMLocal)
     mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Double", "<init>", "(D)V")
   }
-  private def from_boolean_to_Object(mv: MethodVisitor) {
+  private def frombooleantoObject(mv: MethodVisitor) {
     // Code, roughly speaking:  bval ? Boolean.TRUE : Boolean.FALSE
     val l1 = new Label
     mv.visitJumpInsn(IFEQ, l1)

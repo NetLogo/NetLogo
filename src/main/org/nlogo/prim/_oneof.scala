@@ -14,15 +14,7 @@ class _oneof extends Reporter {
       Syntax.WildcardType)
 
   override def report(context: Context) =
-    args(0).report(context) match {
-      case agents: AgentSet =>
-        report_1(context, agents)
-      case list: LogoList =>
-        report_2(context, list)
-      case obj =>
-        throw new ArgumentTypeException(
-          context, this, 0, Syntax.ListType | Syntax.AgentsetType, obj)
-    }
+    report_3(context, args(0).report(context))
 
   def report_1(context: Context, agents: AgentSet): AnyRef = {
     val count = agents.count
@@ -42,7 +34,7 @@ class _oneof extends Reporter {
   }
 
   def report_3(context: Context, obj: AnyRef): AnyRef =
-    args(0).report(context) match {
+    obj match {
       case agents: AgentSet =>
         val count = agents.count
         if (count == 0)

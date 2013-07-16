@@ -14,12 +14,12 @@ object StringUtils {
       case '\"' => "\\\""
       case c => c.toString
     }
-  def unEscapeString(s: String): String = {
+  def unescapeString(s: String): String = {
     val (stuff, more) = s.span(_ != '\\')
     if(more.size < 2)
       s
     else
-      stuff + unescape(more(1)) + unEscapeString(more.drop(2))
+      stuff + unescape(more(1)) + unescapeString(more.drop(2))
   }
   def unescape(c: Char): Char =
     c match {

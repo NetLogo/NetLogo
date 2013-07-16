@@ -2,10 +2,15 @@
 
 package org.nlogo
 
+import java.awt.image.BufferedImage
+
 package object drawing {
-  def imageToBytes(image: java.awt.image.BufferedImage): Array[Byte] = {
+  def imageToBytes(image: BufferedImage): Array[Byte] = {
     val outputStream = new java.io.ByteArrayOutputStream
     javax.imageio.ImageIO.write(image, "png", outputStream)
     outputStream.toByteArray
   }
+  def cloneImage(image: BufferedImage): BufferedImage =
+    new BufferedImage(image.getColorModel, image.copyData(null),
+      image.getColorModel.isAlphaPremultiplied, null)
 }

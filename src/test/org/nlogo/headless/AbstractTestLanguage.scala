@@ -17,8 +17,8 @@ abstract class AbstractTestLanguage extends Assertions {
 
   import AbstractTestLanguage._
 
-  val compiler = Femto.scalaSingleton(classOf[CompilerInterface],
-                                      "org.nlogo.compile.Compiler")
+  val compiler: CompilerInterface =
+    Femto.scalaSingleton("org.nlogo.compile.Compiler")
   var workspace: HeadlessWorkspace = _
 
   def owner: JobOwner = workspace.defaultOwner

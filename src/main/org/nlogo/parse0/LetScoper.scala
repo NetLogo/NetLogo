@@ -7,7 +7,7 @@ import Fail._
 
 // Finds uses of "let" and creates Let objects with start and end slots that restrict the scope of
 // the variable.  Some error checking is also performed along the way.  The Let objects created are
-// also returned, so they can be used by IdentifierParser to connect _letvariable references to the
+// also returned, so they can be used by Namer to connect _letvariable references to the
 // right Lets.
 
 // (It's rather weird that this happens before ExpressionParser, so we have to resort to
@@ -35,6 +35,8 @@ class LetScoper(tokens: Iterable[Token]) {
       cAssert(nameToken.tpe == TokenType.Ident,
         "Expected variable name here", nameToken)
       val name = nameToken.value.asInstanceOf[String]
+      cAssert(!name.startsWith("?"),
+        "Names beginning with ? are reserved for use as task inputs", nameToken)
       for (displayName <- (usedNames ++ namesInCurrentScope).get(name))
         exception("There is already a " + displayName + " called " + name, nameToken)
       // we may change end later if we see a closing bracket

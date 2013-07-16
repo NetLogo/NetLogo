@@ -4,15 +4,18 @@ package org.nlogo.generate
 
 import org.scalatest.FunSuite
 import org.nlogo.nvm.Context
-import org.nlogo.prim.{_plus,_equal}
 
 class PeepholeSafeCheckerTests extends FunSuite {
 
   val checker = new PeepholeSafeChecker
   import checker._
 
+  // janky that we need actual prims at runtime to run the tests, but oh well - ST 5/4/13
+  def primClass(name: String) =
+    Class.forName("org.nlogo.prim.etc." + name)
+
   test("plusSafe") {
-    val m = classOf[_plus].getMethod(
+    val m = primClass("_plus").getMethod(
       "report_1",
       classOf[Context], java.lang.Double.TYPE, java.lang.Double.TYPE)
     assert(isSafe(m))

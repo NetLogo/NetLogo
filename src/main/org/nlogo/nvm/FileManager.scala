@@ -14,7 +14,7 @@ trait FileManager {
   @throws(classOf[java.io.IOException])
   def eof: Boolean
   def currentFile: File
-  def findOpenFile(fileName: String): File
+  def findOpenFile(filename: String): File
   def hasCurrentFile: Boolean
   @throws(classOf[java.io.IOException])
   def closeCurrentFile()

@@ -179,19 +179,19 @@ public strictfp class ModelsLibrary {
       grandparent.add(parent);
     }
     for (int i = 0; i < orderedEntries.size(); i++) {
-      String fileName = orderedEntries.get(i);
-      if (isBadName(fileName)) {
+      String filename = orderedEntries.get(i);
+      if (isBadName(filename)) {
         continue;
       }
-      java.io.File file = new java.io.File(directory, fileName);
-      Node child = new Node(translateNameForDisplay(fileName),
+      java.io.File file = new java.io.File(directory, filename);
+      Node child = new Node(translateNameForDisplay(filename),
           file.getAbsolutePath()
               + (file.isDirectory() ? "/" : ""),
           file.isDirectory());
       if (child.isFolder()) {
         scanDirectory(file, parent, child);
       } else {
-        if (fileName.toUpperCase().endsWith(".NLOGO")) {
+        if (filename.toUpperCase().endsWith(".NLOGO")) {
           parent.add(child);
         }
       }

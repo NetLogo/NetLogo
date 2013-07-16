@@ -8,13 +8,14 @@ class Procedure(
   val isReporter: Boolean,
   val name: String,
   val nameToken: api.Token,
+  val argTokens: Seq[api.Token],
   _displayName: Option[String] = None,
   val parent: Procedure = null) {
 
-  val fileName = nameToken.fileName; // used by cities include-file stuff
+  val filename = nameToken.filename; // used by cities include-file stuff
   val displayName = buildDisplayName(_displayName)
   var pos: Int = 0
-  var endPos: Int = 0
+  var end: Int = 0
   var usableBy = "OTPL"
   var localsCount = 0
   var topLevel = false
@@ -32,7 +33,7 @@ class Procedure(
 
   def getTaskFormal(n: Int, token: api.Token): api.Let = {
     while (taskFormals.size < n)
-      taskFormals += api.Let("?" + n, token.startPos, token.endPos)
+      taskFormals += api.Let("?" + n, token.start, token.end)
     taskFormals.last
   }
 
@@ -43,7 +44,7 @@ class Procedure(
       "(command task from: " + parent.displayName + ")"
     else {
       def nameAndFile =
-        Option(fileName)
+        Option(filename)
           .filter(_.nonEmpty)
           .map(name + " (" + _ + ")")
           .getOrElse(name)
