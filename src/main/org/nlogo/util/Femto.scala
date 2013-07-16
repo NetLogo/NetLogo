@@ -6,8 +6,9 @@ package org.nlogo.util
 // a compile-time dependency")
 
 object Femto {
-  def get[T](className: String, args: Any*): T = {
-    val clazz = Class.forName(className)
+  def get[T](className: String, args: Any*): T =
+    get(Class.forName(className), args: _*)
+  def get[T](clazz: Class[_], args: Any*): T = {
     val constructors =
       clazz.getConstructors.filter(_.getParameterTypes.size == args.size)
     assert(constructors.size == 1)
