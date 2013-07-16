@@ -33,12 +33,11 @@ object HeadlessWorkspace {
    */
   def newInstance(subclass: Class[_ <: HeadlessWorkspace]): HeadlessWorkspace = {
     val world = new World
-    Femto.get(subclass.getName,
-      world,
-        Femto.scalaSingleton[CompilerInterface](
-          "org.nlogo.compile.Compiler"),
-        Femto.get[RendererInterface](
-          "org.nlogo.render.Renderer", world))
+    Femto.get(subclass, world,
+      Femto.scalaSingleton[CompilerInterface](
+        "org.nlogo.compile.Compiler"),
+      Femto.get[RendererInterface](
+        "org.nlogo.render.Renderer", world))
   }
 
   def newLab: LabInterface = {
