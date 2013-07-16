@@ -24,12 +24,12 @@ public final strictfp class _importdrawing
     } catch (java.io.IOException ex) {
       throw new EngineException
           (context, _importdrawing.this,
-              token().name() +
+              token().text() +
                   ": " + ex.getMessage());
     } catch (RuntimeException ex) {
       throw new EngineException
           (context, _importdrawing.this,
-              token().name() +
+              token().text() +
                   ": " + ex.getMessage());
     }
     context.ip = next;

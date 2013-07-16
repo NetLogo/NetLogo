@@ -13,7 +13,7 @@ import org.nlogo.api.{ AgentKind, Program, Version, RendererInterface, WorldDime
 import org.nlogo.agent.World
 import org.nlogo.nvm.{ LabInterface, Context, ParserInterface,
                        Workspace, DefaultParserServices, CompilerInterface }
-import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala }
+import org.nlogo.workspace.AbstractWorkspace
 import org.nlogo.util.Femto
 import org.nlogo.drawing.DrawingActionBroker
 
@@ -33,23 +33,21 @@ object HeadlessWorkspace {
    */
   def newInstance(subclass: Class[_ <: HeadlessWorkspace]): HeadlessWorkspace = {
     val world = new World
-    Femto.get(classOf[HeadlessWorkspace], subclass.getName,
-      Array(world,
-        Femto.scalaSingleton(classOf[CompilerInterface],
-          "org.nlogo.compile.Compiler"),
-        Femto.get(classOf[RendererInterface],
-          "org.nlogo.render.Renderer", Array(world))))
+    Femto.get(subclass, world,
+      Femto.scalaSingleton[CompilerInterface](
+        "org.nlogo.compile.Compiler"),
+      Femto.get[RendererInterface](
+        "org.nlogo.render.Renderer", world))
   }
 
   def newLab: LabInterface = {
-    val parser = Femto.scalaSingleton(
-      classOf[ParserInterface], "org.nlogo.parse.Parser")
+    val parser: ParserInterface =
+      Femto.scalaSingleton("org.nlogo.parse.Parser")
     // kludgy, use AnyRef here because ProtocolLoader doesn't implement an interface - ST 4/25/13
-    val protocolLoader =
-      Femto.get(classOf[AnyRef], "org.nlogo.lab.ProtocolLoader",
-        Array(new DefaultParserServices(parser)))
-    Femto.get(classOf[LabInterface], "org.nlogo.lab.Lab",
-      Array(protocolLoader))
+    val protocolLoader: AnyRef =
+      Femto.get("org.nlogo.lab.ProtocolLoader",
+        new DefaultParserServices(parser))
+    Femto.get("org.nlogo.lab.Lab", protocolLoader)
   }
 
   /**
@@ -94,10 +92,8 @@ class HeadlessWorkspace(
   _world: World,
   val compiler: CompilerInterface,
   val renderer: RendererInterface)
-extends AbstractWorkspaceScala(_world)
-with org.nlogo.workspace.Controllable
-with org.nlogo.workspace.WorldLoaderInterface
-with org.nlogo.api.ViewSettings {
+extends AbstractWorkspace(_world)
+with org.nlogo.workspace.WorldLoaderInterface {
 
   override def parser = compiler
 
@@ -118,11 +114,6 @@ with org.nlogo.api.ViewSettings {
    * If true, don't send anything to standard output.
    */
   var silent = false
-
-  /**
-   * Internal use only.
-   */
-  override def isHeadless = true
 
   /**
    * Internal use only.
@@ -180,7 +171,7 @@ with org.nlogo.api.ViewSettings {
       source, Program.empty(),
       getExtensionManager)
     procedures = results.proceduresMap
-    codeBits.clear()
+    clearRunCache()
     init()
     world.program(results.program)
     world.realloc()
@@ -361,7 +352,7 @@ with org.nlogo.api.ViewSettings {
    * Get a snapshot of the 2D view, using an existing BufferedImage
    * object.
    */
-  def getGraphics(image: java.awt.image.BufferedImage) = {
+  def getGraphics(image: java.awt.image.BufferedImage) {
     val graphics = image.getGraphics.asInstanceOf[java.awt.Graphics2D]
     val font = graphics.getFont
     val newFont = new java.awt.Font(font.getName, font.getStyle, fontSize)

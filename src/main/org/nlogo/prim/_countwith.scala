@@ -20,7 +20,7 @@ class _countwith extends Reporter {
   def report_1(context: Context, sourceSet: AgentSet, block: Reporter): Double = {
     block.checkAgentSetClass(sourceSet, context)
     val freshContext = new Context(context, sourceSet)
-    var result = 0;
+    var result = 0
     val iter = sourceSet.iterator
     while(iter.hasNext) {
       val tester = iter.next()

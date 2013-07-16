@@ -21,7 +21,7 @@ class _importpatchcolors extends Command {
     catch {
       case ex: java.io.IOException =>
         throw new EngineException(
-          context, this, token.name + ": " + ex.getMessage)
+          context, this, token.text + ": " + ex.getMessage)
     }
     context.ip = next
   }

@@ -5,6 +5,7 @@ package org.nlogo.headless
 import org.scalatest.{ FunSuite, OneInstancePerTest, BeforeAndAfterEach }
 import org.nlogo.api.Perspective
 import org.nlogo.util.SlowTest
+import org.nlogo.workspace.Checksummer
 
 class TestImportExport extends AbstractTestLanguage with FunSuite
 with BeforeAndAfterEach with OneInstancePerTest with SlowTest {

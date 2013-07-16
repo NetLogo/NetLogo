@@ -3,13 +3,6 @@
 package org.nlogo.api
 
 trait TokenizerInterface {
-  def tokenizeRobustly(source: String): Seq[Token]
-  def tokenize(source: String): Seq[Token]
-  def tokenize(source: String, fileName: String): Seq[Token]
-  def getTokenAtPosition(source: String, position: Int): Token
-  def isValidIdentifier(ident: String): Boolean
-  def tokenizeForColorization(source: String): Seq[Token]
-  def tokenizeForColorization(source: String, extensionManager: ExtensionManager): Seq[Token]
-  def nextToken(reader: java.io.BufferedReader): Token
-  def checkInstructionMaps(): Unit  // for testing
+  def tokenize(source: String, filename: String = ""): Iterator[Token]
+  def tokenizeRobustly(reader: java.io.Reader, filename: String = ""): Iterator[Token]
 }

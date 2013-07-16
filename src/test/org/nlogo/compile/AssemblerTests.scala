@@ -3,27 +3,20 @@
 package org.nlogo.compile
 
 import org.scalatest.FunSuite
-import org.nlogo.nvm
-import org.nlogo.api.{ DummyExtensionManager, Program }
+import org.nlogo.{ nvm, parse }
 
 class AssemblerTests extends FunSuite {
+
   def compile(keyword: String, source: String): nvm.Procedure = {
-    import org.nlogo.parse._
-    val results = new StructureParser(
-      Parser.Tokenizer.tokenize(keyword + " foo " + source + "\nend"), None,
-      StructureParser.emptyResults)
-      .parse(false)
+    val (defs, results) =
+      parse.Parser.frontEnd(
+        keyword + " foo " + source + "\nend")
     expectResult(1)(results.procedures.size)
-    val procedure = results.procedures.values.iterator.next()
-    val tokens =
-      new IdentifierParser(results.program, nvm.CompilerInterface.NoProcedures,
-                           results.procedures, new DummyExtensionManager)
-        .process(results.tokens(procedure).iterator, procedure)
-    for (procdef <- new ExpressionParser(procedure).parse(tokens)) {
+    for (procdef <- defs) {
       procdef.accept(new ArgumentStuffer)
       new Assembler().assemble(procdef)
     }
-    procedure
+    results.procedures.values.head
   }
 
   // these tests focus more on assembly, ignoring argument stuffing.

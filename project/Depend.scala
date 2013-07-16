@@ -19,14 +19,14 @@ object Depend {
     depend <<= (fullClasspath in Test, classDirectory in Compile, classDirectory in Test, streams, thisProject).map{
       (cp, classes, testClasses, s, project) => lock.synchronized {
         s.log.info("begin depend: " + project.id)
-        IO.write(file(".") / "tmp" / "depend.ddf", ddfContents)
+        IO.write(file(".") / "target" / "depend.ddf", ddfContents)
         import classycle.dependency.DependencyChecker
         def main() = TrapExit(
-          DependencyChecker.main(Array("-dependencies=@tmp/depend.ddf",
+          DependencyChecker.main(Array("-dependencies=@target/depend.ddf",
                                        classes.toString)),
           s.log)
         def test() = TrapExit(
-          DependencyChecker.main(Array("-dependencies=@tmp/depend.ddf",
+          DependencyChecker.main(Array("-dependencies=@target/depend.ddf",
                                        testClasses.toString)),
           s.log)
         s.log.info("depend: " + classes.toString)
@@ -63,11 +63,11 @@ object Depend {
       "lex" -> List("api"),
       "mirror" -> List("drawing", "plot", "shape"),
       "nvm" -> List("agent"),
-      "parse" -> List("prim","prim/dead","prim/threed"),
+      "parse" -> List("parse0", "prim","prim/dead","prim/threed"),
+      "parse0" -> List("api"),
       "plot" -> List("api"),
       "prim" -> List("nvm"),
       "prim/etc" -> List("nvm"),
-      "prim/file" -> List("nvm"),
       "render" -> List("shape"),
       "review" -> List("mirror", "window"),
       "shape" -> List("api"),
@@ -83,32 +83,55 @@ object Depend {
     def generate(p: Package) {
       val name = p.dir.replaceAll("/",".")
       println("[" + name + "] = org.nlogo." + name + ".* excluding org.nlogo." + name + ".*.*")
-      println("[" + name + "+] = [" + name + "]" + p.depends.map(p2 => "[" + p2.dir.replaceAll("/",".") + "+]").mkString(" "," ",""))
-      println("[" + name + "-] = org.nlogo.* excluding [" + name + "+]")
-      println("check [" + name + "] independentOf [" + name + "-]")
+      println("[" + name + "+] = [" + name + "]" + p.depends.map(p2 => "[" + p2.dir.replaceAll("/",".") + "+]").mkString(" "," ","") + " [libs]")
+      println("check [" + name + "] dependentOnlyOn [" + name + "+]")
       println("")
     }
+    def generateHeader() {
+      println("""
+check absenceOfPackageCycles > 1 in org.nlogo.*
+
+[headless-AWT] = java.awt.geom.* java.awt.image.* java.awt.Color java.awt.Image java.awt.Shape java.awt.Graphics2D java.awt.Graphics java.awt.Stroke java.awt.Composite java.awt.BasicStroke java.awt.Point java.awt.Font java.awt.AlphaComposite java.awt.RenderingHints java.awt.Rectangle java.awt.FontMetrics java.awt.color.ColorSpace java.awt.Polygon java.awt.RenderingHints$Key javax.imageio.* javax.swing.tree.MutableTreeNode javax.swing.tree.DefaultMutableTreeNode
+
+[stdlib-j] = java.lang.* java.util.* java.io.* java.text.* java.net.* java.security.*
+
+[stdlib-s] = scala.Serializable scala.Predef* scala.collection.* scala.reflect.* scala.Function* scala.UninitializedFieldError scala.util.control.Exception* scala.Array* scala.LowPriorityImplicits scala.package$ scala.util.Properties$ scala.Option* scala.Tuple* scala.Product* scala.util.DynamicVariable scala.runtime.* scala.math.* scala.None* scala.Some* scala.MatchError scala.util.Left* scala.util.Right* scala.util.Either* scala.io.* scala.sys.package* scala.Console* scala.PartialFunction* scala.util.matching.Regex* scala.Enumeration* scala.Proxy* scala.FallbackArrayBuilding scala.util.Sorting*
+
+[xml] = org.w3c.dom.* org.xml.sax.* javax.xml.parsers.*
+
+[asm] = org.objectweb.asm.*
+
+[parser-combinators] = scala.util.parsing*
+
+[testing] = org.scalatest.* org.scalacheck.* org.jmock.* org.hamcrest.*
+
+[libs] = [stdlib-j] [stdlib-s] [headless-AWT] [xml] [asm] [parser-combinators] [testing]
+""")
+    }
+
     def generateFooter() {
       println("""
-### checks on AWT, Swing
+### checks on library usage
 
 [Sun-Swing] = javax.swing.* excluding javax.swing.tree.MutableTreeNode javax.swing.tree.DefaultMutableTreeNode
 [Sun-AWT] = java.awt.*
-[headless-AWT] = java.awt.geom.* java.awt.image.* java.awt.Color java.awt.Image java.awt.Shape java.awt.Graphics2D java.awt.Graphics java.awt.Stroke java.awt.Composite java.awt.BasicStroke java.awt.Point java.awt.Font java.awt.AlphaComposite java.awt.RenderingHints java.awt.Rectangle java.awt.FontMetrics java.awt.color.ColorSpace java.awt.Polygon java.awt.RenderingHints$Key
 [bad-AWT] = java.awt.* excluding [headless-AWT]
-
 check [util+] independentOf [Sun-AWT]
-check [headless+] independentOf [Sun-Swing] [bad-AWT]
-
-### checks on external libraries
+check org.nlogo.* independentOf [Sun-Swing] [bad-AWT]
 
 [ASM-free-zone] = org.nlogo.* excluding [generate]
 check [ASM-free-zone] independentOf org.objectweb.*
 
+[XML-free-zone] = org.nlogo.* excluding [lab]
+check [XML-free-zone] independentOf [xml]
+
+[parser-combinator-free-zone] = org.nlogo.* excluding org.nlogo.parse0.StructureCombinators* org.nlogo.parse0.SeqReader* org.nlogo.parse0.Cleanup
+check [parser-combinator-free-zone] directlyIndependentOf [parser-combinators]
 """
               )
     }
 
+    generateHeader()
     var done = List(allPackages.find(_.dir == "").get)
     def eligible(p:Package) = !done.contains(p) && p.ancestors.forall(done.contains(_))
     while(true) {

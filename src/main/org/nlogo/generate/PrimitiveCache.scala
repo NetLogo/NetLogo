@@ -11,7 +11,7 @@ import org.objectweb.asm.ClassReader
  * This resulted in a good speedup, though not as much as I had hoped for.
  * ~Forrest (7/9/2006)
  */
-private object PrimitiveCache {
+object PrimitiveCache {
   private val cache = new collection.mutable.HashMap[String, ClassReader]
   def getClassReader(c: Class[_]) =
     synchronized { // be threadsafe - ST 2/25/08

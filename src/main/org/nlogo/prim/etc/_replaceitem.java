@@ -40,7 +40,7 @@ public final strictfp class _replaceitem
             I18N.errorsJ().getN("org.nlogo.prim.etc.$common.indexExceedsStringSize",
                 index, Dump.logoObject(string), string.length()));
       }
-      return string.substring(0, index) + (String) elt + string.substring(index + 1);
+      return string.substring(0, index) + elt + string.substring(index + 1);
     } else {
       throw new ArgumentTypeException
           (context, this, 1, Syntax.ListType() | Syntax.StringType(), obj);

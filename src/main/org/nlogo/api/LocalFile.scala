@@ -12,7 +12,7 @@ class LocalFile(filepath: String) extends File {
     new java.io.FileInputStream(getPath)
 
   @throws(classOf[java.io.IOException])
-  override def open(mode: FileMode) = {
+  override def open(mode: FileMode) {
     if (w != null || reader != null)
       throw new java.io.IOException(
         "Attempted to open an already open file")

@@ -2,12 +2,13 @@
 
 package org.nlogo.headless
 
-import org.nlogo.agent.{BooleanConstraint, ChooserConstraint, InputBoxConstraint, SliderConstraint}
+import org.nlogo.agent.{BooleanConstraint, ChooserConstraint, InputBoxConstraint, NumericConstraint}
 import org.nlogo.api.{CompilerException, FileIO, LogoList,
                       ModelReader, ModelSection, Program, ValueConstraint, Version}
 import org.nlogo.plot.PlotLoader
 import org.nlogo.shape.{LinkShape, VectorShape}
 import org.nlogo.api.StringUtils.escapeString
+import org.nlogo.workspace.WorldLoader
 
 object HeadlessModelOpener {
   def protocolSection(path: String) =
@@ -46,7 +47,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
           interfaceGlobals = interfaceGlobals), ws.getExtensionManager)
     }
     ws.procedures = results.proceduresMap
-    ws.codeBits.clear() //(WTH IS THIS? - JC 10/27/09)
+    ws.clearRunCache()
 
     // read preview commands. (if the model doesn't specify preview commands, allow the default ones
     // from our superclass to stand)
@@ -87,8 +88,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     for ((vname, spec) <- constraints) {
       val con: ValueConstraint = spec(0) match {
         case "SLIDER" =>
-          SliderConstraint.makeSliderConstraint(
-            ws.world.observer(), spec(1), spec(2), spec(3), spec(4).toDouble, vname, ws)
+          new NumericConstraint(spec(4))
         case "CHOOSER" =>
           val vals = ws.compiler.readFromString(spec(1)).asInstanceOf[LogoList]
           val defaultIndex = spec(2).toInt
@@ -194,7 +194,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
       }
 
       def parseGraphicsWindow(widget: Seq[String]) {
-        ws.loadWorld(widget, ws)
+        (new WorldLoader).load(widget, ws)
       }
 
       // finally parse all the widgets in the WIDGETS section

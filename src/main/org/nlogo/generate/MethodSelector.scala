@@ -5,7 +5,7 @@ package org.nlogo.generate
 import org.nlogo.nvm.{ Instruction, Reporter }
 import java.lang.reflect.Method
 
-private object MethodSelector {
+object MethodSelector {
   // the Long is the total cost of using the method, including the costs of all its arguments
   type Result = List[(Method, Long)]
   def select(i: Instruction, returnType: Class[_], profilingEnabled: Boolean): Option[Method] =

@@ -7,13 +7,13 @@ package org.nlogo.api
  * compiled; indicates the code was invalid.  May be inspected to discover the location and nature
  * of the error.
  */
-class CompilerException(message: String, val startPos: Int, val endPos: Int, val fileName: String)
+class CompilerException(message: String, val start: Int, val end: Int, val filename: String)
 extends RuntimeException(message) {
-  def this(token: Token) = this({assert(token.tpe == TokenType.BAD); token.value.asInstanceOf[String]},
-                                 token.startPos, token.endPos, token.fileName)
+  def this(token: Token) = this({assert(token.tpe == TokenType.Bad); token.value.asInstanceOf[String]},
+                                 token.start, token.end, token.filename)
 
   override def toString =
-    getMessage + " at position " + startPos + " in " + fileName
+    getMessage + " at position " + start + " in " + filename
 }
 object CompilerException {
   val RuntimeErrorAtCompileTimePrefix = "Runtime error: "

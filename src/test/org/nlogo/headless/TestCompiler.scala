@@ -11,16 +11,16 @@ class TestCompiler extends FunSuite with OneInstancePerTest with BeforeAndAfterE
   override def beforeEach() { workspace = HeadlessWorkspace.newInstance }
   override def afterEach() { workspace.dispose() }
 
-  def declare(source:String) {
+  def declare(source: String) {
     workspace.initForTesting(5, source)
   }
-  def declareBad(source:String,expectedError:String) {
+  def declareBad(source: String, expectedError: String) {
     val exception = intercept[CompilerException] {
       declare(source)
     }
     expectResult(expectedError)(exception.getMessage)
   }
-  def badCommand(command:String,expectedError:String) {
+  def badCommand(command: String, expectedError: String) {
     val exception = intercept[CompilerException] {
       workspace.command(command)
     }
@@ -29,11 +29,11 @@ class TestCompiler extends FunSuite with OneInstancePerTest with BeforeAndAfterE
 
   test("LetSameVariableTwice1") {
     badCommand("let a 5 let a 6",
-               "There is already a local variable called A here")
+               "There is already a local variable here called A")
   }
   test("LetSameVariableTwice2") {
     badCommand("let a 5 ask patches [ let a 6 ]",
-               "There is already a local variable called A here")
+               "There is already a local variable here called A")
   }
   test("LetSameNameAsCommandProcedure1") {
     declare("to a end")
@@ -75,19 +75,19 @@ class TestCompiler extends FunSuite with OneInstancePerTest with BeforeAndAfterE
   }
   test("LetSameNameAsPrimitiveCommand") {
     badCommand("let fd 5",
-               "Expected variable name here")
+               "There is already a primitive command called FD")
   }
   test("LetSameNameAsPrimitiveReporter1") {
     badCommand("let timer 5",
-               "Expected variable name here")
+               "There is already a primitive reporter called TIMER")
   }
   test("LetSameNameAsPrimitiveReporter2") {
     badCommand("let sin 5",
-               "Expected variable name here")
+               "There is already a primitive reporter called SIN")
   }
   test("LetShadowsLet") {
     badCommand("let x 4 ask patches [ let x 0 ]",
-               "There is already a local variable called X here")
+               "There is already a local variable here called X")
   }
   test("LetNameSameAsEnclosingCommandProcedureName") {
     declareBad("to bazort let bazort 5 end",
@@ -107,7 +107,7 @@ class TestCompiler extends FunSuite with OneInstancePerTest with BeforeAndAfterE
   }
   test("SameLocalVariableTwice3") {
     declareBad("to a3 let b 5 let b 6 end",
-               "There is already a local variable called B here")
+               "There is already a local variable here called B")
   }
   test("SameLocalVariableTwice4") {
     declareBad("to a4 locals [b] let b 5 end",
@@ -119,7 +119,7 @@ class TestCompiler extends FunSuite with OneInstancePerTest with BeforeAndAfterE
   }
   test("SameLocalVariableTwice6") {
     declareBad("to a6 [b] let b 5 end",
-               "There is already a local variable called B here")
+               "There is already a local variable here called B")
   }
   test("NonAsciiChars") {
     badCommand("blah " + 8211.toChar + " blah ",
@@ -136,7 +136,7 @@ class TestCompiler extends FunSuite with OneInstancePerTest with BeforeAndAfterE
                "edges-own [weight]\n" +
                "nodes-own [weight]\n" +
                "foos-own [weight] ",
-               "You already defined WEIGHT as a EDGES-OWN variable")
+               "There is already a EDGES-OWN variable called WEIGHT")
   }
   test("BreedOwnsNoConflict") {
     workspace.initForTesting(5,

@@ -11,6 +11,7 @@ import api.AgentVariableNumbers._
 class FakeWorld(state: State) extends api.World {
 
   import MirrorableWorld._
+  import WorldVar._
 
   private val (worldVars, observerVars, patchStates, turtleStates, linkStates) = {
     // each group will be a seq of (agentId, vars):
@@ -27,10 +28,8 @@ class FakeWorld(state: State) extends api.World {
   }
 
   def newRenderer: api.RendererInterface = {
-    val renderer =
-      util.Femto.get(
-        classOf[api.RendererInterface],
-        "org.nlogo.render.Renderer", Array(this))
+    val renderer: api.RendererInterface =
+      util.Femto.get("org.nlogo.render.Renderer", this)
     renderer.resetCache(patchSize)
     renderer
   }
@@ -141,7 +140,7 @@ class FakeWorld(state: State) extends api.World {
     val agentSeq = linkStates
       .map { case (id, vars) => new FakeLink(id, vars) }
       .sortBy(_.id)
-    new FakeAgentSet(api.AgentKind.Link, agentSeq, worldVar[Boolean](wvUnbreededLinksAreDirected)) {
+    new FakeAgentSet(api.AgentKind.Link, agentSeq, worldVar[Boolean](UnbreededLinksAreDirected.id)) {
       override val agents =
         (agentSeq.sortBy(l => (l.end1.id, l.end2.id)): Iterable[api.Agent]).asJava
     }
@@ -170,20 +169,20 @@ class FakeWorld(state: State) extends api.World {
 
   private def worldVar[T](i: Int) = worldVars(i).asInstanceOf[T]
 
-  def ticks = worldVar[Double](wvTicks)
-  def patchesWithLabels = worldVar[Int](wvPatchesWithLabels)
-  def turtleShapeList = worldVar[api.ShapeList](wvTurtleShapeList)
-  def linkShapeList = worldVar[api.ShapeList](wvLinkShapeList)
-  def patchSize = worldVar[Double](wvPatchSize)
-  def worldWidth = worldVar[Int](wvWorldWidth)
-  def worldHeight = worldVar[Int](wvWorldHeight)
-  def minPxcor = worldVar[Int](wvMinPxcor)
-  def minPycor = worldVar[Int](wvMinPycor)
-  def maxPxcor = worldVar[Int](wvMaxPxcor)
-  def maxPycor = worldVar[Int](wvMaxPycor)
-  def wrappingAllowedInX = worldVar[Boolean](wvWrappingAllowedInX)
-  def wrappingAllowedInY = worldVar[Boolean](wvWrappingAllowedInY)
-  def patchesAllBlack = worldVar[Boolean](wvPatchesAllBlack)
+  def ticks = worldVar[Double](Ticks.id)
+  def patchesWithLabels = worldVar[Int](PatchesWithLabels.id)
+  def turtleShapeList = worldVar[api.ShapeList](TurtleShapeList.id)
+  def linkShapeList = worldVar[api.ShapeList](LinkShapeList.id)
+  def patchSize = worldVar[Double](PatchSize.id)
+  def worldWidth = worldVar[Int](WorldWidth.id)
+  def worldHeight = worldVar[Int](WorldHeight.id)
+  def minPxcor = worldVar[Int](MinPxcor.id)
+  def minPycor = worldVar[Int](MinPycor.id)
+  def maxPxcor = worldVar[Int](MaxPxcor.id)
+  def maxPycor = worldVar[Int](MaxPycor.id)
+  def wrappingAllowedInX = worldVar[Boolean](WrappingAllowedInX.id)
+  def wrappingAllowedInY = worldVar[Boolean](WrappingAllowedInY.id)
+  def patchesAllBlack = worldVar[Boolean](PatchesAllBlack.id)
 
   def program = {
     def makeBreedMap(breedsVar: Int) =
@@ -191,8 +190,8 @@ class FakeWorld(state: State) extends api.World {
         case (breedName, isDirected) => breedName -> api.Breed(breedName, "", Seq(), isDirected)
       }
     api.Program.empty.copy(
-      breeds = makeBreedMap(wvTurtleBreeds),
-      linkBreeds = makeBreedMap(wvLinkBreeds))
+      breeds = makeBreedMap(TurtleBreeds.id),
+      linkBreeds = makeBreedMap(LinkBreeds.id))
   }
 
   private def makeBreeds[A <: FakeAgent](
@@ -213,11 +212,11 @@ class FakeWorld(state: State) extends api.World {
   def getPatch(i: Int): api.Patch = patches.agentSeq(i)
 
   override lazy val observer: api.Observer =
-    new FakeObserver(observerVars, worldVar[Int](wvNbInterfaceGlobals))
+    new FakeObserver(observerVars, worldVar[Int](NbInterfaceGlobals.id))
 
   def wrap(pos: Double, min: Double, max: Double): Double =
     // This is basically copied from org.nlogo.agent.Topology to avoid a dependency to the latter.
-    // Maybe the Topology.wrap function should be made accessible from the api package. NP 2012-07-24 
+    // Maybe the Topology.wrap function should be made accessible from the api package. NP 2012-07-24
     if (pos >= max)
       (min + ((pos - max) % (max - min)))
     else if (pos < min) {

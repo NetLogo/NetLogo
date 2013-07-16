@@ -12,22 +12,12 @@ class ExpressionParserTests extends FunSuite {
   val POSTAMBLE = "\nend"
 
   /// helpers
-  def compile(source: String): Seq[Statements] = {
-    val wrappedSource = PREAMBLE + source + POSTAMBLE
-    val program = Program.empty
-    val tokenizer = Parser.Tokenizer
-    val results = new StructureParser(
-      Parser.Tokenizer.tokenize(wrappedSource), None,
-      StructureParser.emptyResults)
-      .parse(false)
-    expectResult(1)(results.procedures.size)
-    val procedure = results.procedures.values.iterator.next()
-    val tokens =
-      new IdentifierParser(program, nvm.CompilerInterface.NoProcedures,
-        results.procedures, new DummyExtensionManager)
-        .process(results.tokens(procedure).iterator, procedure)
-    new ExpressionParser(procedure).parse(tokens).map(_.statements)
-  }
+  def compile(source: String): Seq[Statements] =
+    Parser.frontEnd(PREAMBLE + source + POSTAMBLE) match {
+      case (procs, _) =>
+        procs.map(_.statements)
+    }
+
   /**
    * utility method useful for testing that start()
    * and end() return right answers everywhere
@@ -72,8 +62,8 @@ class ExpressionParserTests extends FunSuite {
   def doFailure(input: String, message: String, start: Int, end: Int) {
     val e = intercept[CompilerException] { compile(input) }
     expectResult(message)(e.getMessage)
-    expectResult(start + PREAMBLE.length())(e.startPos)
-    expectResult(end + PREAMBLE.length())(e.endPos)
+    expectResult(start + PREAMBLE.length())(e.start)
+    expectResult(end + PREAMBLE.length())(e.end)
   }
 
   /// now, the actual tests

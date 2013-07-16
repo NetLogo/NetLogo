@@ -26,7 +26,7 @@ public final strictfp class _importpcolorsrgb
     } catch (java.io.IOException ex) {
       throw new EngineException
           (context, this,
-              token().name() +
+              token().text() +
                   ": " + ex.getMessage());
     }
     context.ip = next;

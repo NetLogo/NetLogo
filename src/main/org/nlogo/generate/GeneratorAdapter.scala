@@ -6,7 +6,7 @@ import org.objectweb.asm.Opcodes._
 import org.nlogo.nvm.Instruction
 import org.objectweb.asm.{ Label, MethodVisitor, Type }
 
-private class GeneratorAdapter(mv: MethodVisitor, access: Int, name: String, desc: String, igen: Generator#InstructionGenerator[_])
+class GeneratorAdapter(mv: MethodVisitor, access: Int, name: String, desc: String, igen: Generator#InstructionGenerator[_])
     extends org.objectweb.asm.commons.GeneratorAdapter(mv, access, name, desc) {
   // We need to know what the lowest JVM local variable that we can play with is.  var 0 = "this",
   // and var 1 = "context", so we can't mess with these.  It could be in the future, we'll want to
@@ -83,14 +83,14 @@ private class GeneratorAdapter(mv: MethodVisitor, access: Int, name: String, des
   override def storeLocal(local: Int) { throw new IllegalStateException }
   /**
    * Generates the instruction to load the given local variable on the stack.
-   * @param local a local variable index.
-   * @param type the type of this local variable.
+   * @param index a local variable index.
+   * @param tpe the type of this local variable.
    */
   override def loadLocal(index: Int, tpe: Type) { mv.visitVarInsn(tpe.getOpcode(ILOAD), index) }
   /**
    * Generates the instruction to store the top stack value in the given local variable.
-   * @param local a local variable index.
-   * @param type the type of this local variable.
+   * @param index a local variable index.
+   * @param tpe the type of this local variable.
    */
   override def storeLocal(index: Int, tpe: Type) { mv.visitVarInsn(tpe.getOpcode(ISTORE), index) }
   override def loadThis() { mv.visitVarInsn(ALOAD, 0) }

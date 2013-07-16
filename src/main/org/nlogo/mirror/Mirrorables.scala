@@ -95,53 +95,55 @@ object Mirrorables {
   }
 
   object MirrorableWorld {
-    val Seq(
-      wvTicks,
-      wvPatchesWithLabels,
-      wvTurtleShapeList,
-      wvLinkShapeList,
-      wvPatchSize,
-      wvWorldWidth,
-      wvWorldHeight,
-      wvMinPxcor,
-      wvMinPycor,
-      wvMaxPxcor,
-      wvMaxPycor,
-      wvWrappingAllowedInX,
-      wvWrappingAllowedInY,
-      wvPatchesAllBlack,
-      wvTurtleBreeds,
-      wvLinkBreeds,
-      wvUnbreededLinksAreDirected,
-      wvNbInterfaceGlobals,
-      _*) = Stream.from(0)
+    object WorldVar extends Enumeration {
+      type WorldVar = Value
+      val Ticks = Value("ticks")
+      val PatchesWithLabels = Value("patchesWithLabels")
+      val TurtleShapeList = Value("turtleShapeList")
+      val LinkShapeList = Value("linkShapeList")
+      val PatchSize = Value("patchSize")
+      val WorldWidth = Value("worldWidth")
+      val WorldHeight = Value("worldHeight")
+      val MinPxcor = Value("minPxcor")
+      val MinPycor = Value("minPycor")
+      val MaxPxcor = Value("maxPxcor")
+      val MaxPycor = Value("maxPycor")
+      val WrappingAllowedInX = Value("wrappingAllowedInX")
+      val WrappingAllowedInY = Value("wrappingAllowedInY")
+      val PatchesAllBlack = Value("patchesAllBlack")
+      val TurtleBreeds = Value("turtleBreeds")
+      val LinkBreeds = Value("linkBreeds")
+      val UnbreededLinksAreDirected = Value("unbreededLinksAreDirected")
+      val NbInterfaceGlobals = Value("nbInterfaceGlobals")
+    }
   }
 
   class MirrorableWorld(world: api.World) extends Mirrorable {
     import MirrorableWorld._
+    import WorldVar._
     override def kind = World
     override def agentKey = AgentKey(kind, 0) // dummy id for the one and unique world
     // pending resolution of https://issues.scala-lang.org/browse/SI-6723
     // we avoid the `a -> b` syntax in favor of `(a, b)` - ST 1/9/13
     override val variables = Map(
-      (wvTicks, Double.box(world.ticks)),
-      (wvPatchesWithLabels, Int.box(world.patchesWithLabels)),
-      (wvTurtleShapeList, world.turtleShapeList), // probably not good enough to just pass the shapelists like that..
-      (wvLinkShapeList, world.linkShapeList),
-      (wvPatchSize, Double.box(world.patchSize)),
-      (wvWorldWidth, Int.box(world.worldWidth)),
-      (wvWorldHeight, Int.box(world.worldHeight)),
-      (wvMinPxcor, Int.box(world.minPxcor)),
-      (wvMinPycor, Int.box(world.minPycor)),
-      (wvMaxPxcor, Int.box(world.maxPxcor)),
-      (wvMaxPycor, Int.box(world.maxPycor)),
-      (wvWrappingAllowedInX, Boolean.box(world.wrappingAllowedInX)),
-      (wvWrappingAllowedInY, Boolean.box(world.wrappingAllowedInY)),
-      (wvPatchesAllBlack, Boolean.box(world.patchesAllBlack)),
-      (wvTurtleBreeds, world.program.breeds.map { case (breedName, breed) => breedName -> breed.isDirected }),
-      (wvLinkBreeds, world.program.linkBreeds.map { case (breedName, breed) => breedName -> breed.isDirected }),
-      (wvUnbreededLinksAreDirected, Boolean.box(world.links.isDirected)),
-      (wvNbInterfaceGlobals, Int.box(world.program.interfaceGlobals.size)))
+      (Ticks.id, Double.box(world.ticks)),
+      (PatchesWithLabels.id, Int.box(world.patchesWithLabels)),
+      (TurtleShapeList.id, world.turtleShapeList), // probably not good enough to just pass the shapelists like that..
+      (LinkShapeList.id, world.linkShapeList),
+      (PatchSize.id, Double.box(world.patchSize)),
+      (WorldWidth.id, Int.box(world.worldWidth)),
+      (WorldHeight.id, Int.box(world.worldHeight)),
+      (MinPxcor.id, Int.box(world.minPxcor)),
+      (MinPycor.id, Int.box(world.minPycor)),
+      (MaxPxcor.id, Int.box(world.maxPxcor)),
+      (MaxPycor.id, Int.box(world.maxPycor)),
+      (WrappingAllowedInX.id, Boolean.box(world.wrappingAllowedInX)),
+      (WrappingAllowedInY.id, Boolean.box(world.wrappingAllowedInY)),
+      (PatchesAllBlack.id, Boolean.box(world.patchesAllBlack)),
+      (TurtleBreeds.id, world.program.breeds.map { case (breedName, breed) => breedName -> breed.isDirected }),
+      (LinkBreeds.id, world.program.linkBreeds.map { case (breedName, breed) => breedName -> breed.isDirected }),
+      (UnbreededLinksAreDirected.id, Boolean.box(world.links.isDirected)),
+      (NbInterfaceGlobals.id, Int.box(world.program.interfaceGlobals.size)))
   }
 
   object MirrorableWidgetValue {
@@ -156,7 +158,7 @@ object Mirrorables {
       wvvValueString -> value)
   }
 
-  def allMirrorables(world: api.World, widgetValues: Seq[(String, Int)]): Iterable[Mirrorable] = {
+  def allMirrorables(world: api.World, widgetValues: Seq[(String, Int)] = Seq()): Iterable[Mirrorable] = {
     import collection.JavaConverters._
     val turtles = world.turtles.agents.asScala.map(t => new MirrorableTurtle(t.asInstanceOf[api.Turtle]))
     val patches = world.patches.agents.asScala.map(p => new MirrorablePatch(p.asInstanceOf[api.Patch]))

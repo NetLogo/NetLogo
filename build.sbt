@@ -2,14 +2,14 @@
 /// ThisBuild -- applies to subprojects too
 ///
 
-scalaVersion in ThisBuild := "2.10.1"
+scalaVersion in ThisBuild := "2.10.2"
 
 scalacOptions in ThisBuild ++=
-  "-deprecation -unchecked -feature -Xcheckinit -encoding us-ascii -target:jvm-1.6 -optimize -Xlint -Xfatal-warnings"
+  "-deprecation -unchecked -feature -Xcheckinit -encoding us-ascii -target:jvm-1.7 -Xlint -Xfatal-warnings"
   .split(" ").toSeq
 
 javacOptions in ThisBuild ++=
-  "-g -deprecation -encoding us-ascii -Werror -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path -source 1.6 -target 1.6"
+  "-g -deprecation -encoding us-ascii -Werror -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path -source 1.7 -target 1.7"
   .split(" ").toSeq
 
 // only log problems plz
@@ -69,6 +69,10 @@ seq(Testing.settings: _*)
 
 seq(Depend.settings: _*)
 
+seq(Classycle.settings: _*)
+
 seq(Dump.settings: _*)
 
 seq(ChecksumsAndPreviews.settings: _*)
+
+org.scalastyle.sbt.ScalastylePlugin.Settings

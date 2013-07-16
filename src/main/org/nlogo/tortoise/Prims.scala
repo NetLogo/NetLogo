@@ -9,7 +9,7 @@ object Prims {
   object InfixReporter {
     def unapply(r: nvm.Reporter): Option[String] =
       PartialFunction.condOpt(r) {
-        case _: prim._plus               => "+"
+        case _: prim.etc._plus           => "+"
         case _: prim._minus              => "-"
         case _: prim.etc._mult           => "*"
         case _: prim.etc._div            => "/"
@@ -28,8 +28,8 @@ object Prims {
     def unapply(r: nvm.Reporter): Option[String] =
       PartialFunction.condOpt(r) {
         case _: prim.etc._self       => "AgentSet.self"
-        case _: prim._patch          => "world.getPatchAt"
-        case _: prim._turtles        => "world.turtles"
+        case _: prim.etc._patch      => "world.getPatchAt"
+        case _: prim.etc._turtles    => "world.turtles"
         case _: prim._patches        => "world.patches"
         case _: prim._count          => "AgentSet.count"
         case _: prim._random         => "Random.nextLong"

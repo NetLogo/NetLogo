@@ -4,7 +4,8 @@ package org.nlogo.api
 
 import java.io.IOException
 
-trait Workspace extends ImporterUser with ParserServices with RandomServices {
+trait Workspace extends ImporterUser with ParserServices with RandomServices
+with ViewSettings with Controllable {
   def world: World
   def getExtensionManager: ExtensionManager
   def waitFor(runnable: CommandRunnable)
@@ -47,8 +48,6 @@ trait Workspace extends ImporterUser with ParserServices with RandomServices {
   def plotManager: AnyRef
   def previewCommands: String
   def clearTicks()
-  @throws(classOf[java.net.MalformedURLException])
-  def attachModelDir(filePath: String): String
   @throws(classOf[InterruptedException])
   def dispose()
   def patchSize: Double
@@ -73,7 +72,6 @@ trait Workspace extends ImporterUser with ParserServices with RandomServices {
   def userYesOrNo(msg: String): Option[Boolean] = None
   def userMessage(msg: String): Boolean = false
   def benchmark(minTime: Int, maxTime: Int)
-  def isHeadless: Boolean
   def behaviorSpaceRunNumber: Int
   def behaviorSpaceRunNumber(n: Int)
   // for now this only works in HeadlessWorkspace, returns null in GUIWorkspace.  error handling
@@ -81,4 +79,9 @@ trait Workspace extends ImporterUser with ParserServices with RandomServices {
   def lastLogoException: LogoException
   def clearLastLogoException()
   def profilingEnabled: Boolean
+  def worldChecksum: String
+  def graphicsChecksum: String
+  def renderer: RendererInterface
+  def compilerTestingMode: Boolean
+  def warningMessage(message: String): Boolean
 }

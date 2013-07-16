@@ -69,6 +69,9 @@ object Color {
     yield new JColor(
       getARGBbyPremodulatedColorNumber(i / 10.0))
 
+  val BaseColors = LogoList(
+    (0 to 13).map(n => Double.box(n * 10 + 5)): _*)
+
   def getColor(color: AnyRef): JColor = {
     color match {
       case d: java.lang.Double =>

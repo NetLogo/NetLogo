@@ -11,10 +11,10 @@ import org.nlogo.api
  */
 
 class DummyAbstractWorkspace
-extends AbstractWorkspaceScala(new World)
+extends AbstractWorkspace(new World)
 {
+  dispose() // don't leak a JobThread - ST 5/2/13
   private def unsupported = throw new UnsupportedOperationException
-  override val isHeadless = true
   override def compilerTestingMode = false
   override def waitFor(runnable: api.CommandRunnable): Unit = unsupported
   override def waitForResult[T](runnable: api.ReporterRunnable[T]): T = unsupported
@@ -55,4 +55,19 @@ extends AbstractWorkspaceScala(new World)
   override def addJobFromJobThread(job: nvm.Job) = unsupported
   override def compiler = unsupported
   override def parser = unsupported
+  override def renderer = unsupported
+  override def command(source: String) = unsupported
+  override def report(source: String) = unsupported
+  override def worldChecksum = unsupported
+  override def graphicsChecksum = unsupported
+
+  // from ViewSettings
+  override def drawSpotlight = unsupported
+  override def fontSize = unsupported
+  override def perspective = unsupported
+  override def renderPerspective = unsupported
+  override def viewHeight = unsupported
+  override def viewOffsetX = unsupported
+  override def viewOffsetY = unsupported
+  override def viewWidth = unsupported
 }

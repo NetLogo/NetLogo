@@ -10,6 +10,8 @@ trait TrailDrawerInterface extends DrawingInterface {
   def sendPixels(dirty: Boolean)
   def stamp(agent: Agent, erase: Boolean)
   @throws(classOf[java.io.IOException])
+  def readImage(is: java.awt.image.BufferedImage)
+  @throws(classOf[java.io.IOException])
   def readImage(is: java.io.InputStream)
   @throws(classOf[java.io.IOException])
   def importDrawing(is: java.io.InputStream)

@@ -16,7 +16,7 @@ class JobManager(jobManagerOwner: JobManagerOwner,
 
   /// misc public methods
   def isInterrupted = thread.isInterrupted()
-  def interrupt() = thread.interrupt()
+  def interrupt() { thread.interrupt() }
   @throws(classOf[InterruptedException])
   def die() {thread.die()}
   def timeToRunSecondaryJobs() { thread.isTimeToRunSecondaryJobs = true }

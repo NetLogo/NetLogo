@@ -517,7 +517,7 @@ public abstract strictfp class ImporterJ
         }
       }
 
-      Object value = values[i].equals("") ? (Object) new Junk() :
+      Object value = values[i].equals("") ? new Junk() :
           getTokenValue(values[i], turtleBreedVar, linkBreedVar);
 
       // check to see if this variable is an essential variable and if it is,

@@ -32,7 +32,7 @@ def dirs(root: String) =
     .filterNot(_.matches("extensions/.*/src/.*/.*"))
 
 def firstNumber(s: String) =
-  s.dropWhile(!_.isDigit).takeWhile(_.isDigit).mkString.toInt
+  s.split(' ').find(_.matches("\\d+")).get.toInt
 
 def sortAndPrint(root: String) {
   println(root + ":")

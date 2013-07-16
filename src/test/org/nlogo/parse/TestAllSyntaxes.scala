@@ -9,6 +9,7 @@ package org.nlogo.parse
 
 import org.scalatest.FunSuite
 import org.nlogo.nvm.Instruction
+import org.nlogo.util.Femto
 
 class TestAllSyntaxes extends FunSuite {
   def shorten(name: String) =
@@ -21,8 +22,8 @@ class TestAllSyntaxes extends FunSuite {
     expectResult(expected)(
       classNames.toSeq.sortBy(shorten).map(entry).mkString("\n"))
   }
-  val c = Parser.TokenMapper.allCommandClassNames
-  val r = Parser.TokenMapper.allReporterClassNames
+  val c = Parser.tokenMapper.allCommandClassNames
+  val r = Parser.tokenMapper.allReporterClassNames
   test("commands") { doTest(c, COMMANDS) }
   test("reporters") { doTest(r, REPORTERS) }
   val REPORTERS = """|_abs number,number,OTPL,null,10,1,1
@@ -44,6 +45,7 @@ class TestAllSyntaxes extends FunSuite {
                      |_butlast string or list,string or list,OTPL,null,10,1,1
                      |_canmove number,TRUE/FALSE,-T--,null,10,1,1
                      |_ceil number,number,OTPL,null,10,1,1
+                     |_checksum ,string,O---,null,10,0,0
                      |_checksyntax string,string,OTPL,null,10,1,1
                      |_cos number,number,OTPL,null,10,1,1
                      |_count agentset,number,OTPL,null,10,1,1
@@ -60,8 +62,6 @@ class TestAllSyntaxes extends FunSuite {
                      |_dx ,number,-T--,null,10,0,0
                      |_dy ,number,-T--,null,10,0,0
                      |_empty string or list,TRUE/FALSE,OTPL,null,10,1,1
-                     |_end1 ,turtle,---L,null,10,0,0
-                     |_end2 ,turtle,---L,null,10,0,0
                      |_equal anything,anything,TRUE/FALSE,OTPL,null,5,1,1
                      |_errormessage ,string,OTPL,null,10,0,0
                      |_exp number,number,OTPL,null,10,1,1

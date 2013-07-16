@@ -142,7 +142,7 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5
@@ -182,7 +182,7 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5
@@ -192,8 +192,8 @@ procedure BENCHMARK:[NAME SALT]{O---}:
         _basecolors => LogoList
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
-          GETSTATIC org/nlogo/prim/etc/_basecolors$.MODULE$ : Lorg/nlogo/prim/etc/_basecolors$;
-          INVOKEVIRTUAL org/nlogo/prim/etc/_basecolors$.cached ()Lorg/nlogo/api/LogoList;
+          GETSTATIC org/nlogo/api/Color$.MODULE$ : Lorg/nlogo/api/Color$;
+          INVOKEVIRTUAL org/nlogo/api/Color$.BaseColors ()Lorg/nlogo/api/LogoList;
          L4
           ASTORE 2
           ALOAD 2
@@ -216,7 +216,7 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           ICONST_0
           LDC "ONE-OF"
           AASTORE
-          INVOKEVIRTUAL scala/LowPriorityImplicits.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+          INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
           INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
@@ -248,7 +248,7 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L7
@@ -487,7 +487,7 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5

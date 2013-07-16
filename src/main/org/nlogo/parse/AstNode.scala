@@ -27,6 +27,34 @@ trait AstNode {
 }
 
 /**
+ * an interface for AST tree-walkers. This represents the usual Visitor
+ * pattern with double-dispatch.
+ */
+trait AstVisitor {
+  def visitProcedureDefinition(proc: ProcedureDefinition)
+  def visitCommandBlock(block: CommandBlock)
+  def visitReporterApp(app: ReporterApp)
+  def visitReporterBlock(block: ReporterBlock)
+  def visitStatement(stmt: Statement)
+  def visitStatements(stmts: Statements)
+}
+
+/**
+ * The default AST tree-walker. This simply visits each node of the
+ * tree, and visits any children of each node in turn. Subclasses can
+ * implement pre-order or post-order traversal, or a wide range of other
+ * strategies.
+ */
+class DefaultAstVisitor extends AstVisitor {
+  def visitProcedureDefinition(proc: ProcedureDefinition) { proc.statements.accept(this) }
+  def visitCommandBlock(block: CommandBlock) { block.statements.accept(this) }
+  def visitReporterApp(app: ReporterApp) { app.foreach(_.accept(this)) }
+  def visitReporterBlock(block: ReporterBlock) { block.app.accept(this) }
+  def visitStatement(stmt: Statement) { stmt.foreach(_.accept(this)) }
+  def visitStatements(stmts: Statements) { stmts.foreach(_.accept(this)) }
+}
+
+/**
  * represents a NetLogo expression. An expression is either a block or a
  * reporter application (variable references and constants (including lists),
  * are turned into reporter applications).
@@ -59,8 +87,8 @@ trait Application extends AstNode with collection.SeqProxy[Expression] {
  */
 class ProcedureDefinition(val procedure: Procedure, val statements: Statements) extends AstNode {
   def start = procedure.pos
-  def end = procedure.endPos
-  def file = procedure.fileName
+  def end = procedure.end
+  def file = procedure.filename
   def accept(v: AstVisitor) { v.visitProcedureDefinition(this) }
 }
 

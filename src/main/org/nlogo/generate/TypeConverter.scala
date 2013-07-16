@@ -9,14 +9,14 @@ import org.nlogo.{ api, nvm }
 import api.CompilerException
 import nvm.{ ArgumentTypeException, Instruction }
 
-private object TypeConverter {
+object TypeConverter {
   /**
    * @param typeFrom - what we are converting from
    * @param typeTo - what we are converting to
    * @param mv - ASM MethodVisitor to write bytes to
    * @param firstFreeJVMLocal - this tells us what local variable slots are
    *   free/available to use, to store temporary information.
-   * @param instr - we a reference to the instruction so we can throw a proper
+   * @param parentInstr - we a reference to the instruction so we can throw a proper
    *   exception when something goes wrong.
    * @param argIndex - this is the index of the argument that is being converted
    *   we need this, so we can create ArgumentTypeExceptions pointing to the
@@ -24,17 +24,17 @@ private object TypeConverter {
    */
   def generateConversion(typeFrom: Class[_], typeTo: Class[_], mv: MethodVisitor, firstFreeJVMLocal: Int, parentInstr: Instruction, argIndex: Int) {
     if (typeFrom == java.lang.Boolean.TYPE && (typeTo == classOf[Object] || typeTo == classOf[java.lang.Boolean]))
-      from_boolean_to_Object(mv)
+      frombooleantoObject(mv)
     else if (typeFrom == java.lang.Double.TYPE && (typeTo == classOf[Object] || typeTo == classOf[java.lang.Double]))
-      from_double_to_Object(mv, firstFreeJVMLocal)
+      fromdoubletoObject(mv, firstFreeJVMLocal)
     else if (typeFrom == classOf[java.lang.Double] && typeTo == java.lang.Double.TYPE)
-      from_Double_to_double(mv)
+      fromDoubletodouble(mv)
     else if (typeFrom == classOf[Object] && typeTo == java.lang.Double.TYPE)
-      from_Object_to_double(mv, firstFreeJVMLocal, argIndex)
+      fromObjecttodouble(mv, firstFreeJVMLocal, argIndex)
     else if (typeFrom == classOf[java.lang.Boolean] && typeTo == java.lang.Boolean.TYPE)
-      from_Boolean_to_boolean(mv)
+      fromBooleantoboolean(mv)
     else if (typeFrom == classOf[Object] && typeTo == java.lang.Boolean.TYPE)
-      from_Object_to_boolean(mv, firstFreeJVMLocal, argIndex)
+      fromObjecttoboolean(mv, firstFreeJVMLocal, argIndex)
     else if (typeTo != typeFrom && !typeTo.isAssignableFrom(typeFrom))
       if (typeFrom.isAssignableFrom(typeTo))
         // class typeTo inherits from class typeFrom, so we must cast, to narrow the type.
@@ -46,17 +46,17 @@ private object TypeConverter {
         val tokenInstr = if (argIndex < parentInstr.args.length) parentInstr.args(argIndex)
         else parentInstr
         val token = tokenInstr.token
-        throw new CompilerException(argEx.getMessage, token.startPos, token.endPos, token.fileName)
+        throw new CompilerException(argEx.getMessage, token.start, token.end, token.filename)
       }
   }
   // Conversion methods:
   // method fromXtoY assumes that the top jvm stack value is of type X
   // the method generates code to convert the top stack value to type Y
   //   ~Forrest (5/16/2006)
-  private def from_Double_to_double(mv: MethodVisitor) {
+  private def fromDoubletodouble(mv: MethodVisitor) {
     mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Double", "doubleValue", "()D")
   }
-  private def from_Object_to_double(mv: MethodVisitor, firstFreeJVMLocal: Int, argIndex: Int) {
+  private def fromObjecttodouble(mv: MethodVisitor, firstFreeJVMLocal: Int, argIndex: Int) {
     mv.visitVarInsn(ASTORE, firstFreeJVMLocal)
     val l0 = new Label
     val l1 = new Label
@@ -81,10 +81,10 @@ private object TypeConverter {
     mv.visitInsn(ATHROW)
     mv.visitLabel(lEnd)
   }
-  private def from_Boolean_to_boolean(mv: MethodVisitor) {
+  private def fromBooleantoboolean(mv: MethodVisitor) {
     mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Boolean", "booleanValue", "()Z")
   }
-  private def from_Object_to_boolean(mv: MethodVisitor, firstFreeJVMLocal: Int, argIndex: Int) {
+  private def fromObjecttoboolean(mv: MethodVisitor, firstFreeJVMLocal: Int, argIndex: Int) {
     mv.visitVarInsn(ASTORE, firstFreeJVMLocal)
     val l0 = new Label
     val l1 = new Label
@@ -109,14 +109,14 @@ private object TypeConverter {
     mv.visitInsn(ATHROW)
     mv.visitLabel(lEnd)
   }
-  private def from_double_to_Object(mv: MethodVisitor, firstFreeJVMLocal: Int) {
+  private def fromdoubletoObject(mv: MethodVisitor, firstFreeJVMLocal: Int) {
     mv.visitVarInsn(DSTORE, firstFreeJVMLocal)
     mv.visitTypeInsn(NEW, "java/lang/Double")
     mv.visitInsn(DUP)
     mv.visitVarInsn(DLOAD, firstFreeJVMLocal)
     mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Double", "<init>", "(D)V")
   }
-  private def from_boolean_to_Object(mv: MethodVisitor) {
+  private def frombooleantoObject(mv: MethodVisitor) {
     // Code, roughly speaking:  bval ? Boolean.TRUE : Boolean.FALSE
     val l1 = new Label
     mv.visitJumpInsn(IFEQ, l1)
@@ -147,7 +147,7 @@ private object TypeConverter {
     mv.visitLdcInsn(Int.box(api.Syntax.getTypeConstant(typeTo)))
     mv.visitVarInsn(ALOAD, firstFreeJVMLocal)
     mv.visitMethodInsn(INVOKESPECIAL, "org/nlogo/nvm/ArgumentTypeException", "<init>",
-      "(Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V");
+      "(Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V")
     mv.visitInsn(ATHROW)
     mv.visitLabel(lEnd)
   }

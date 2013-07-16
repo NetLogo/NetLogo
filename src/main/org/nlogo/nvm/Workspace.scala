@@ -4,23 +4,22 @@ package org.nlogo.nvm
 
 import org.nlogo.api
 import org.nlogo.agent.{ Agent, AgentSet, World }
-import java.util.{ WeakHashMap => JWeakHashMap }
-import java.io.IOException
+import collection.mutable.WeakHashMap
 
-trait Workspace extends api.Workspace with JobManagerOwner {
+trait Workspace extends api.Workspace with JobManagerOwner with api.ViewSettings {
   def breathe(context: Context) // called when engine comes up for air
   def requestDisplayUpdate(context: Context, force: Boolean)
   def updateUI(context: Context) { }
   def joinForeverButtons(agent: Agent)
   def addJobFromJobThread(job: Job)
-  def procedures: CompilerInterface.ProceduresMap
-  def procedures_=(procedures: CompilerInterface.ProceduresMap)
+  def procedures: ParserInterface.ProceduresMap
+  def procedures_=(procedures: ParserInterface.ProceduresMap)
   def fileManager: FileManager
   def tick(c: Context, originalInstruction: Instruction)
   def compiler: CompilerInterface
   def parser: ParserInterface
-  def lastRunTimes: JWeakHashMap[Job, JWeakHashMap[Agent, JWeakHashMap[Command, MutableLong]]]  // for _every
-  def completedActivations: JWeakHashMap[Activation, java.lang.Boolean]  // for _thunkdidfinish
+  def lastRunTimes: WeakHashMap[Job, WeakHashMap[Agent, WeakHashMap[Command, MutableLong]]]  // for _every
+  def completedActivations: WeakHashMap[Activation, Boolean]  // for _thunkdidfinish
   def profilingTracer: Tracer
   def updatePlots(c: Context)
   def setupPlots(c: Context)

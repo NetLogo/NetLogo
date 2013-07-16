@@ -20,21 +20,21 @@ public strictfp class ImportPatchColors {
                                        boolean asNetLogoColors)
       throws java.io.IOException {
 
-    String fileName = imageFile.getAbsolutePath();
+    String filename = imageFile.getAbsolutePath();
     BufferedImage image = ImageIO.read(imageFile.getInputStream());
     // sometime we have to throw the exception ourselves,
     // because we just get back null. Booo.  -CLB
     if (image == null) {
       throw new java.io.IOException(I18N.errorsJ().getN(
-          "org.nlogo.agent.ImportPatchColors.unsupportedImageFormat", fileName));
+          "org.nlogo.agent.ImportPatchColors.unsupportedImageFormat", filename));
     }
 
     doImport(image, world, asNetLogoColors);
   }
 
   public static void doImport(BufferedImage image, World world, boolean asNetLogoColors) {
-    float scalex = (float) (world.worldWidth()) / (float) image.getWidth();
-    float scaley = (float) (world.worldHeight()) / (float) image.getHeight();
+    float scalex = world.worldWidth()  / (float) image.getWidth();
+    float scaley = world.worldHeight() / (float) image.getHeight();
     float scale = scalex < scaley ? scalex : scaley;
 
     java.awt.image.BufferedImage scaledImage = null;

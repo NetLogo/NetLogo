@@ -29,7 +29,7 @@ public final strictfp class _importworld
             } catch (java.io.IOException ex) {
               throw new EngineException
                   (context, _importworld.this,
-                      token().name() +
+                      token().text() +
                           ": " + ex.getMessage());
             }
           }

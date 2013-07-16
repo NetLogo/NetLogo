@@ -2,7 +2,7 @@
 
 package org.nlogo.headless
 
-import org.nlogo.workspace.ModelsLibrary
+import org.nlogo.workspace.{ ModelsLibrary, Checksummer }
 
 object ChecksumsAndPreviews {
 
@@ -94,7 +94,7 @@ object ChecksumsAndPreviews {
     }).isEmpty
 
     def update(paths: List[String]) {
-      val path = "models/test/checksums.txt"
+      val path = "test/checksums.txt"
       val m = load(path)
       paths.foreach(updateOne(m, _))
       write(m, path)
@@ -122,7 +122,7 @@ object ChecksumsAndPreviews {
     def updateOneHelper(m: ChecksumMap, model: String, workspace: HeadlessWorkspace) {
       Checksummer.initModelForChecksumming(workspace)
       val newCheckSum = Checksummer.calculateWorldChecksum(workspace)
-      val newGraphicsChecksum = Checksummer.calculateGraphicsChecksum(workspace.renderer, workspace)
+      val newGraphicsChecksum = Checksummer.calculateGraphicsChecksum(workspace)
       val revision = getRevisionNumber(workspace.getModelPath)
       val oldEntry = m.get(model)
       val newEntry = Entry(model, newCheckSum, newGraphicsChecksum, revision)

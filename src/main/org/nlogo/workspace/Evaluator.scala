@@ -7,12 +7,12 @@ import org.nlogo.agent.{Agent, AgentSet, Observer, Turtle, Patch, Link}
 import org.nlogo.api.{AgentKind, CompilerException, JobOwner, LogoException, ReporterLogoThunk, CommandLogoThunk}
 import org.nlogo.nvm.{ExclusiveJob, Activation, Context, Procedure, Reporter}
 
-class Evaluator(workspace: AbstractWorkspaceScala) {
+class Evaluator(workspace: AbstractWorkspace) {
 
   def evaluateCommands(owner: JobOwner,
                        source: String,
                        agentSet: AgentSet = workspace.world.observers,
-                       waitForCompletion: Boolean = true) = {
+                       waitForCompletion: Boolean = true) {
     val procedure = invokeCompiler(source, None, true, agentSet.kind)
     workspace.jobManager.addJob(
       workspace.jobManager.makeConcurrentJob(owner, agentSet, procedure),
@@ -58,6 +58,7 @@ class Evaluator(workspace: AbstractWorkspaceScala) {
 
   object ProcedureRunner {
     private[Evaluator] var context: Context = null
+    def hasContext = context != null
     def report(reporter: Reporter, a: Agent = workspace.world.observer) =
       context.evaluateReporter(a, reporter)
     def run(p: Procedure): Boolean = {
@@ -68,8 +69,7 @@ class Evaluator(workspace: AbstractWorkspaceScala) {
       context.job.random = workspace.world.mainRNG.clone
       try {
         context.runExclusiveJob(workspace.world.observers, 0)
-        val stopped = workspace.completedActivations.get(newActivation) != true
-        stopped
+        !workspace.completedActivations.getOrElse(newActivation, false)
       }
       catch {
         case ex @ (_: LogoException | _: RuntimeException) =>

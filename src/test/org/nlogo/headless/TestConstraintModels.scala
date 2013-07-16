@@ -5,7 +5,8 @@ package org.nlogo.headless
 // This is in org.nlogo.headless and not org.nlogo.workspace because it uses workspace.open(), which
 // (at present!) DummyAbstractWorkspace does not support. - ST 4/8/08
 
-import org.nlogo.agent.{BooleanConstraint, ConstantSliderConstraint, DynamicSliderConstraint, SliderConstraint}
+import org.nlogo.agent.BooleanConstraint
+import org.nlogo.api.ModelCreator._
 
 class TestConstraintModels extends AbstractTestModels {
 
@@ -110,64 +111,12 @@ class TestConstraintModels extends AbstractTestModels {
     checkError("set commands max-pxcor")
   }
 
-  testModelFile("Slider Constraints1", "test/constraint/density-slider.nlogo") {
-    observer>>"set density 57.00001"
-    observer>>"set density 9999"
-    observer>>"set density -0001"
+  testModel("Slider Constraints",
+    Model(widgets = List(Slider(name="x-loc", min="0", max="100", current="10", inc="1")))) {
+    reporter("x-loc") -> 10d
+    observer>>("set x-loc 20")
+    reporter("x-loc") -> 20d
+    checkError("set x-loc false")
   }
 
-  testModelFile("Slider Constraint Constructor", "test/constraint/density-slider.nlogo") {
-    var con = SliderConstraint.makeSliderConstraint(
-      world.observer(), "0", "100", "1", 50d, "", workspace)
-    assert(con.isInstanceOf[ConstantSliderConstraint])
-    con = SliderConstraint.makeSliderConstraint(
-      world.observer(), "min-pxcor", "max-pxcor", "1",
-      50d, "", workspace)
-    assert(con.isInstanceOf[DynamicSliderConstraint])
-  }
-
-  testModel("Slider Constraints2",
-    Model("globals [ foo ] to setup set foo 10 end",
-      widgets = List(Slider(name="x-loc", min="min-pxcor", max="foo + 30", current="0", inc="1")))) {
-
-    // world is -16 16 -16 16 at start
-    observer>>"setup"
-    observer>>"set x-loc -16"
-    reporter("x-loc") -> -16d
-    observer>>"set x-loc foo + 30"
-    reporter("x-loc") -> 40d
-    observer>>"set x-loc -17"
-    reporter("x-loc") -> -17d
-    observer>>"set x-loc foo + 40"
-    reporter("x-loc") -> 50d
-  }
-
-  testModel("Slider Bounds Do Not Affect RNG",
-    Model(widgets = List(
-      Slider(name="foo", min="0", max="10 + random 10", current="0", inc="1")))) {
-    val randomState = workspace.report("__random-state")
-    observer>>"set foo 5"
-    reporter("__random-state") -> randomState
-  }
-
-  testModel("Slider Constraints Coercion",
-    Model("globals [ foo ] to setup set foo 10 end",
-      widgets = List(Slider(name="x-loc", min="min-pxcor", max="foo + 30", current="0", inc="1")))) {
-
-    observer>>"setup"
-    val index = world.observerOwnsIndexOf("X-LOC")
-    val con = world.observer().constraint(index).asInstanceOf[SliderConstraint]
-
-    // the maximum should be 40
-    var coerced = con.coerceValue(Double.box(41)).asInstanceOf[java.lang.Double]
-    assert(Double.box(41) === coerced)
-
-    // the minumum should be -16
-    coerced = con.coerceValue(Double.box(-17)).asInstanceOf[java.lang.Double]
-    assert(Double.box(-17) === coerced)
-
-    // the increment should be 1
-    coerced = con.coerceValue(Double.box(10.23123)).asInstanceOf[java.lang.Double]
-    assert(Double.box(10.23123) === coerced)
-  }
 }

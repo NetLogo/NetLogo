@@ -6,7 +6,7 @@ import java.lang.reflect.Method
 import org.nlogo.nvm.{ Command, CustomGenerated, Instruction, Reporter }
 import org.objectweb.asm.Type
 
-private object BytecodeUtils {
+object BytecodeUtils {
 
   // want each unrejiggered prim encountered to print a warning? - ST 2/6/09
   private val DEBUG_LOG_NOT_REJIGGERED = false
@@ -24,8 +24,24 @@ private object BytecodeUtils {
     }
 
   def getUnrejiggeredMethod(i: Instruction): Method = {
-    val name = i match { case _: Command => "perform"; case _: Reporter => "report" }
-    i.getClass.getMethods.find(_.getName == name).get
+    val name = i match {
+      case _: Command => "perform"
+      case _: Reporter => "report"
+    }
+    // if report() has been overridden to have a more specific type than Object,
+    // then both the override and the original will be included in the result
+    // of getMethods. we definitely want the override since the generator may
+    // be able to take advantage of its knowledge of the more specific type.
+    val candidates = i.getClass.getMethods.filter(_.getName == name)
+    if (name == "perform") {
+      assert(candidates.size == 1)
+      candidates.head
+    }
+    else {
+      assert(candidates.size <= 2)
+      candidates.find(_.getReturnType != classOf[AnyRef])
+        .getOrElse(candidates.head)
+    }
   }
 
   def getMethods(instrClass: Class[_], profilingEnabled: Boolean = false): List[Method] = {

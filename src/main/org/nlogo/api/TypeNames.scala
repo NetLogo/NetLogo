@@ -52,8 +52,9 @@ object TypeNames {
 
   def name(mask: Int): String = {
     var remainingMask = mask
-    def subtract(bits: Int) =
+    def subtract(bits: Int) {
       remainingMask -= (remainingMask & bits)
+    }
     def compatible(bits: Int) =
       (remainingMask & bits) != 0
     subtract(RepeatableType)

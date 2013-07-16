@@ -3,7 +3,7 @@
 package org.nlogo.parse
 
 object Instantiator {
-  def newInstance[T](clazz: Class[_ <: T], args: Any*) = {
+  def newInstance[T](clazz: Class[_], args: Any*) = {
     // if this exists in the stdlib, I can't seem to find it - ST 8/2/12
     def getClassOfAny(a: Any): Class[_] = a match {
       case l: Long => classOf[Long]

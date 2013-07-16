@@ -4,7 +4,6 @@ package org.nlogo.prim.etc
 
 import org.nlogo.api.Syntax
 import org.nlogo.nvm.{ Command, Context }
-import org.nlogo.workspace.{ AbstractWorkspaceScala, Benchmarker }
 
 class _bench extends Command {
   override def syntax =

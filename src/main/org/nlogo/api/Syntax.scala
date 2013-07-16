@@ -350,13 +350,6 @@ object Syntax {
     Syntax(left = left, right = right, ret = ret, precedence = precedence, isRightAssociative = isRightAssociative,
            agentClassString = agentClassString, blockAgentClassString = blockAgentClassString)
 
-  def reporterSyntax(left: Int, right: Array[Int], ret: Int, precedence: Int,
-                     dfault: Int, isRightAssociative: Boolean,
-                     agentClassString: String, blockAgentClassString: String) =
-    Syntax(left = left, right = right, ret = ret, precedence = precedence, defaultOption = Some(dfault),
-           isRightAssociative = isRightAssociative, agentClassString = agentClassString,
-           blockAgentClassString = blockAgentClassString)
-
   /**
    * Returns a <code>Syntax</code> for reporters with no arguments
    *

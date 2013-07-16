@@ -19,7 +19,7 @@ package org.nlogo.generate
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes.{ ALOAD, POP }
 
-private class PeepholeOptimizer2(mv: MethodVisitor) extends AbstractPeepholeOptimizer(mv) {
+class PeepholeOptimizer2(mv: MethodVisitor) extends AbstractPeepholeOptimizer(mv) {
 
   private var seenAload0 = false
 

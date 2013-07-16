@@ -2,9 +2,7 @@
 
 package org.nlogo.api
 
-object ModelCreator extends ModelCreator
-
-trait ModelCreator {
+object ModelCreator {
 
   private val template = """|<<CODE SECTION>>
                             |@#$#@#$#@

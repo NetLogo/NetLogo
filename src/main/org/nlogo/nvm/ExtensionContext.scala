@@ -24,10 +24,6 @@ extends api.Context {
     workspace.getAndCreateDrawing()
 
   @throws(classOf[java.net.MalformedURLException])
-  def attachModelDir(filePath: String): String =
-    workspace.attachModelDir(filePath)
-
-  @throws(classOf[java.net.MalformedURLException])
   def attachCurrentDirectory(path: String): String =
     workspace.fileManager.attachPrefix(path)
 

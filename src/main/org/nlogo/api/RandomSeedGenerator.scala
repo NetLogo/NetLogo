@@ -2,7 +2,7 @@
 
 package org.nlogo.api
 
-import org.nlogo.util.{MersenneTwisterFast}
+import org.nlogo.util.MersenneTwisterFast
 import org.nlogo.util.Exceptions.ignoring
 
 // This is a singleton so that random seeds will be unique VM-wide.  Because for example, we don't

@@ -39,7 +39,7 @@ class _of extends Reporter {
         builder.toLogoList
       case x =>
         throw new org.nlogo.nvm.ArgumentTypeException(
-          context, this, 1, Syntax.AgentsetType | Syntax.AgentType, x);
+          context, this, 1, Syntax.AgentsetType | Syntax.AgentType, x)
     }
 
 }

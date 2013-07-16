@@ -113,7 +113,7 @@ public abstract strictfp class Instruction
     if (token() == null) {
       return -1;
     }
-    int begin = token().startPos();
+    int begin = token().start();
     for (int i = 0; i < args.length; i++) {
       if (args[i].token() != null) {
         int argBegin = args[i].getSourceStartPosition();
@@ -131,7 +131,7 @@ public abstract strictfp class Instruction
     if (token() == null) {
       return -1;
     }
-    int end = token().endPos();
+    int end = token().end();
     for (int i = 0; i < args.length; i++) {
       if (args[i].token() != null) {
         int argEnd = args[i].getSourceEndPosition();
@@ -161,7 +161,7 @@ public abstract strictfp class Instruction
     */
   public String displayName() {
     if (token != null) {
-      return token.name().toUpperCase();
+      return token.text().toUpperCase();
     } else {
       // well, returning some weird ugly internal class name
       // is better than nothing, I guess

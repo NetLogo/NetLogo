@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.agent.Turtle;
+import org.nlogo.agent.Turtle
 import org.nlogo.api.Syntax
 import org.nlogo.nvm.{ Command, Context }
 

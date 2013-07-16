@@ -8,7 +8,7 @@ import org.objectweb.asm
 import asm.{ ClassReader, Label, MethodAdapter, MethodVisitor, Type }
 import org.nlogo.nvm.Instruction
 
-private class MethodRipper(method: Method, instr: Instruction, mvOut: MethodVisitor, bgen: Generator#InstructionGenerator[_], instrUID: Int) {
+class MethodRipper(method: Method, instr: Instruction, mvOut: MethodVisitor, bgen: Generator#InstructionGenerator[_], instrUID: Int) {
   private val errorLog = new StringBuilder
   def writeTransformedBytecode() {
     val reader = PrimitiveCache.getClassReader(instr.getClass)
@@ -45,8 +45,8 @@ private class MethodRipper(method: Method, instr: Instruction, mvOut: MethodVisi
             val field = getField(instr.getClass)
             val accessCode = field.getModifiers
             field.setAccessible(true)
-            val obj = field.get(instr);
-            bgen.translateGetField(name, instrUID, obj, Type.getType(desc), accessCode);
+            val obj = field.get(instr)
+            bgen.translateGetField(name, instrUID, obj, Type.getType(desc), accessCode)
           } catch {
             case ex: NoSuchFieldException => errorLog.append("MethodRipper says: " + ex)
             case ex: IllegalAccessException => errorLog.append("MethodRipper says: " + ex)
