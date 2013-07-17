@@ -43,16 +43,6 @@ class TestErrorMessages extends AbstractTestLanguage with FunSuite with BeforeAn
     expectResult("POSITION")(ex.instruction.token.text.toUpperCase)
   }
 
-  test("breedOwnRedeclaration") {
-    val ex = intercept[api.CompilerException] {
-      compiler.compileProgram(
-        "breed [hunters hunter] hunters-own [fear] hunters-own [loathing]",
-        api.Program.empty,
-        workspace.getExtensionManager)
-    }
-    expectResult("Redeclaration of HUNTERS-OWN")(ex.getMessage)
-  }
-
   def testBadName(name: String, error: String, headerSource: String = "") {
     def compile(source: String) {
       val ex = intercept[api.CompilerException] {
@@ -85,6 +75,14 @@ class TestErrorMessages extends AbstractTestLanguage with FunSuite with BeforeAn
   testBadName("silliness",
     "There is already a KITTENS-OWN variable called SILLINESS",
     "breed [kittens kitten] kittens-own [silliness]")
+  testBadName("weight",
+    "There is already a EDGES-OWN variable called WEIGHT",
+    "undirected-link-breed [edges edge] " +
+      "breed [nodes node] " +
+      "breed [monsters monster] " +
+      "edges-own [weight] " +
+      "nodes-own [weight] " +
+      "monsters-own [weight]")
   testBadName("end1",
     "There is already a link variable called END1")
   testBadName("size",
