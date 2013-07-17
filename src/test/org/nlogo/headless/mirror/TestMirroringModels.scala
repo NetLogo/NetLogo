@@ -1,6 +1,7 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.headless
+package mirror
 
 import org.scalatest.FunSuite
 import org.nlogo.{ api, mirror }
@@ -70,8 +71,11 @@ class TestMirroringModels extends FunSuite with SlowTest {
   // exclude features not existing on core branch
   val moreExclusions = Seq("/GIS/", "/System Dynamics/")
 
+  def checksums =
+    ChecksumsAndPreviews.Checksums.load("test/checksums.txt")
+
   for {
-    path <- TestChecksums.checksums.values.map(_.path)
+    path <- checksums.values.map(_.path)
     if !exclusions.exists(name => path.endsWith(name + ".nlogo"))
     if !moreExclusions.exists(name => path.containsSlice(name))
   } test("Mirroring: " + path) {

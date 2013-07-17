@@ -1,6 +1,7 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.headless
+package misc
 
 import org.scalatest.{ FunSuite, OneInstancePerTest, BeforeAndAfterEach }
 import org.nlogo.api.{ CompilerException }

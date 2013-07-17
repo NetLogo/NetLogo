@@ -1,6 +1,7 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.headless
+package render
 
 import org.nlogo.shape.VectorShape
 import org.nlogo.shape.TestHelpers._

@@ -1,6 +1,7 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.headless
+package lang
 
 import org.scalatest.Assertions
 import org.nlogo.api.{ AgentKind, Equality, CompilerException, JobOwner, LogoException, Program, WorldDimensions }
