@@ -41,24 +41,13 @@ class TestModels extends TestLanguage(
   TxtsInDir("models/test")
     .filterNot(_.getName.startsWith("checksums")))
 
-// The output of the parser is lists of instances of these classes:
-
-case class OpenModel(modelPath:String)
-case class Proc(content: String)
-case class Command(agentKind: String, command: String)
-case class CommandWithError(agentKind: String, command: String, message: String)
-case class CommandWithStackTrace(agentKind: String, command: String, stackTrace: String)
-case class CommandWithCompilerError(agentKind: String, command: String, message: String)
-case class ReporterWithResult(reporter: String, result: String)
-case class ReporterWithError(reporter: String, error: String)
-case class ReporterWithStackTrace(reporter: String, stackTrace: String)
-
 // This is the code that runs each test:
 
 case class LanguageTest(suiteName: String, testName: String, commands: List[String]) {
+  import Parser.Proc
   val lineItems = commands map Parser.parse
-  val (procs, nonProcs) = lineItems.partition(_.isInstanceOf[Proc])
-  val proc = Proc(procs.map {_.asInstanceOf[Proc].content}.mkString("\n"))
+  val proc = Proc(lineItems.collect{case p: Proc => p.content}.mkString("\n"))
+  val nonProcs = lineItems.filterNot(_.isInstanceOf[Proc])
 
   // on the core branch the _3D tests are gone, but extensions tests still have them since we
   // didn't branch the extensions, so we still need to filter those out - ST 1/13/12
@@ -91,6 +80,7 @@ case class LanguageTest(suiteName: String, testName: String, commands: List[Stri
       try {
         init()
         defineProcedures(proc.content)
+        import Parser._
         nonProcs.foreach {
           case OpenModel(modelPath) => workspace.open(modelPath)
           case Proc(content) =>

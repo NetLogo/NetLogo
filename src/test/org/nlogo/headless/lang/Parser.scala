@@ -8,6 +8,19 @@ import java.io.File
 import org.nlogo.api.FileIO.file2String
 
 object Parser {
+
+  // The output of the parser is lists of instances of these classes:
+  sealed trait Entry
+  case class OpenModel(modelPath:String) extends Entry
+  case class Proc(content: String) extends Entry
+  case class Command(agentKind: String, command: String) extends Entry
+  case class CommandWithError(agentKind: String, command: String, message: String) extends Entry
+  case class CommandWithStackTrace(agentKind: String, command: String, stackTrace: String) extends Entry
+  case class CommandWithCompilerError(agentKind: String, command: String, message: String) extends Entry
+  case class ReporterWithResult(reporter: String, result: String) extends Entry
+  case class ReporterWithError(reporter: String, error: String) extends Entry
+  case class ReporterWithStackTrace(reporter: String, stackTrace: String) extends Entry
+
   def parseFiles(files: Iterable[File]): Iterable[LanguageTest] = {
     (for (f <- files; if (!f.isDirectory)) yield parseFile(f)).flatten
   }
@@ -37,7 +50,7 @@ object Parser {
   val ReporterRegex = """^(.*)\s+=>\s+(.*)$""".r
   val CommandRegex = """^([OTPL])>\s+(.*)$""".r
   val OpenModelRegex = """^OPEN>\s+(.*)$""".r
-  def parse(line: String): AnyRef = {
+  def parse(line: String): Entry = {
     if (line.startsWith("to ") || line.startsWith("to-report ") || line.startsWith("extensions"))
       Proc(line)
     else line.trim match {
@@ -69,9 +82,11 @@ object Parser {
 
 class ParserTests extends FunSuite {
 
+  import Parser._
+
   // simple regex tests
   test("test command regex") {
-    val Parser.CommandRegex(agent, command) = "O> crt 1"
+    val CommandRegex(agent, command) = "O> crt 1"
     assert(agent === "O")
     assert(command === "crt 1")
   }
