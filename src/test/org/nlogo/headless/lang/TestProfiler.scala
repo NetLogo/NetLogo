@@ -14,7 +14,7 @@ package lang
 import org.scalatest.{ FunSuite, BeforeAndAfterEach, OneInstancePerTest }
 import org.nlogo.util.SlowTest
 
-class TestProfiler extends AbstractTestLanguage with FunSuite
+class TestProfiler extends LanguageTesting with FunSuite
 with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
 
   // change to true temporarily to enable timing sensitive tests.  disabled by default

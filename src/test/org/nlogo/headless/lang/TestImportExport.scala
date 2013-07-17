@@ -8,7 +8,7 @@ import org.nlogo.api.Perspective
 import org.nlogo.util.SlowTest
 import org.nlogo.workspace.Checksummer
 
-class TestImportExport extends AbstractTestLanguage with FunSuite
+class TestImportExport extends LanguageTesting with FunSuite
 with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
 
   override def beforeEach() {

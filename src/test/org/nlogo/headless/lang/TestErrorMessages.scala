@@ -10,7 +10,7 @@ import org.scalatest.{ FunSuite, BeforeAndAfterEach }
 import org.nlogo.{ api, nvm }
 import org.nlogo.util.SlowTest
 
-class TestErrorMessages extends AbstractTestLanguage with FunSuite with BeforeAndAfterEach with SlowTest
+class TestErrorMessages extends LanguageTesting with FunSuite with BeforeAndAfterEach with SlowTest
 {
 
   override def beforeEach() { init() }
