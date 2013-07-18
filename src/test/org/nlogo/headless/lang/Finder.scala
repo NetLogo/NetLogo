@@ -4,7 +4,7 @@ package org.nlogo.headless
 package lang
 
 import java.io.File
-import org.scalatest.FunSuite
+import org.scalatest.{ FunSuite, Tag }
 import org.nlogo.util.SlowTest
 
 /// top level entry points
@@ -38,8 +38,25 @@ class TestExtensions extends Finder {
 
 /// common infrastructure
 
-trait Finder extends FunSuite with SlowTest with Reader {
+trait Finder extends FunSuite with SlowTest {
   def files: Iterable[File]
+  def tests = Parser.parseFiles(files)
+  // parse tests first, then run them
+  for(t <- tests if shouldRun(t))
+    test(t.fullName, new Tag(t.suiteName){}, new Tag(t.fullName){}) {
+      Runner(t)
+    }
+  // on the core branch the _3D tests are gone, but extensions tests still have them since we
+  // didn't branch the extensions, so we still need to filter those out - ST 1/13/12
+  def shouldRun(t: LanguageTest) =
+    !t.testName.endsWith("_3D") && {
+      import org.nlogo.api.Version.useGenerator
+      if (t.testName.startsWith("Generator"))
+        useGenerator
+      else if (t.testName.startsWith("NoGenerator"))
+        !useGenerator
+      else true
+    }
 }
 
 case class TxtsInDir(dir: String) extends Iterable[File] {

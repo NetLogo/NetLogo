@@ -25,7 +25,8 @@ object Runner {
         init()
         defineProcedures(t.proc.content)
         t.nonProcs.foreach {
-          case OpenModel(modelPath) => workspace.open(modelPath)
+          case OpenModel(modelPath) =>
+            workspace.open(modelPath)
           case Proc(content) =>
             defineProcedures(content)
           case Command(agent, command) =>
