@@ -1,6 +1,7 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.headless
+package misc
 
 import org.nlogo.api.Version
 import java.util.concurrent.{Executors, TimeUnit}

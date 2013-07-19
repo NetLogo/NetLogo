@@ -1,6 +1,7 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.headless
+package lang
 
 // This stuff used to be in test/commands/ProfilerExtension.txt, but these tests tend
 // to intermittently fail if your computer is slow because it's doing something else,
@@ -13,7 +14,7 @@ package org.nlogo.headless
 import org.scalatest.{ FunSuite, BeforeAndAfterEach, OneInstancePerTest }
 import org.nlogo.util.SlowTest
 
-class TestProfiler extends AbstractTestLanguage with FunSuite
+class TestProfiler extends LanguageTesting with FunSuite
 with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
 
   // change to true temporarily to enable timing sensitive tests.  disabled by default

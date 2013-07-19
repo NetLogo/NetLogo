@@ -1,7 +1,7 @@
 package org.nlogo.headless
 
 import org.json4s.JsonDSL.string2jvalue
-import org.json4s.native.JsonMethods.{ compact, pretty, parse, render }
+import org.json4s.native.JsonMethods.{ compact, pretty, parse, render => jsRender }
 import org.json4s.string2JsonInput
 import org.nlogo.mirror.{ JSONSerializer, Mirroring }
 import org.nlogo.api.Version
@@ -59,17 +59,17 @@ class TestJSONSerializer extends FunSuite with ShouldMatchers {
            |}""".stripMargin)
       .map {
         case (cmd, json) => // prettify:
-          (cmd, render(parse(json)))
+          (cmd, jsRender(parse(json)))
       }
 
-    TestMirroring.withWorkspace { (ws, mirrorables) =>
+    mirror.TestMirroring.withWorkspace { (ws, mirrorables) =>
       ws.initForTesting(1)
       val (initialState, _) = Mirroring.diffs(Map(), mirrorables())
       commands.foldLeft(initialState) {
         case (previousState, (cmd, expectedJSON)) =>
           ws.command(cmd)
           val (nextState, update) = Mirroring.diffs(previousState, mirrorables())
-          val json = render(parse(JSONSerializer.serialize(update)))
+          val json = jsRender(parse(JSONSerializer.serialize(update)))
           val format = compact _
           format(json) should equal(format(expectedJSON))
           nextState

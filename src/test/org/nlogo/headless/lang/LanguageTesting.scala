@@ -1,21 +1,22 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.headless
+package lang
 
 import org.scalatest.Assertions
 import org.nlogo.api.{ AgentKind, Equality, CompilerException, JobOwner, LogoException, Program, WorldDimensions }
 import org.nlogo.nvm.CompilerInterface
 import org.nlogo.util.Femto
 
-object AbstractTestLanguage {
+object LanguageTesting {
   sealed abstract class TestMode
   case object NormalMode extends TestMode
   case object RunMode extends TestMode
 }
 
-abstract class AbstractTestLanguage extends Assertions {
+trait LanguageTesting extends Assertions {
 
-  import AbstractTestLanguage._
+  import LanguageTesting._
 
   val compiler: CompilerInterface =
     Femto.scalaSingleton("org.nlogo.compile.Compiler")

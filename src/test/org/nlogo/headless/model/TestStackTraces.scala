@@ -1,6 +1,7 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.headless
+package model
 
 /**
 Important Note:
@@ -149,21 +150,5 @@ error while observer running __BOOM
   called by run
   called by procedure __EVALUATOR""")
   }
-
-/*
-  // return address bug
-  val code2 =
-  """to go my-update-plots tick end
-     to my-update-plots print __boom end"""
-
-  testModel("hmmm", Model(code2)) {
-    intercept[LogoException] {observer >> "go"}
-    assert(trace === """boom!
-error while observer running __BOOM
-  called by procedure MY-UPDATE-PLOTS
-  called by procedure GO
-  called by procedure __EVALUATOR""")
-  }
-*/
 
 }

@@ -1,6 +1,7 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.headless
+package model
 
 // This is in org.nlogo.headless and not org.nlogo.workspace because it uses workspace.open(), which
 // (at present!) DummyAbstractWorkspace does not support. - ST 4/8/08
