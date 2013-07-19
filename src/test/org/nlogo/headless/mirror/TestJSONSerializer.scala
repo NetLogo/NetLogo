@@ -1,4 +1,5 @@
 package org.nlogo.headless
+package mirror
 
 import org.json4s.JsonDSL.string2jvalue
 import org.json4s.native.JsonMethods.{ compact, pretty, parse, render => jsRender }
@@ -62,7 +63,7 @@ class TestJSONSerializer extends FunSuite with ShouldMatchers {
           (cmd, jsRender(parse(json)))
       }
 
-    mirror.TestMirroring.withWorkspace { (ws, mirrorables) =>
+    TestMirroring.withWorkspace { (ws, mirrorables) =>
       ws.initForTesting(1)
       val (initialState, _) = Mirroring.diffs(Map(), mirrorables())
       commands.foldLeft(initialState) {
