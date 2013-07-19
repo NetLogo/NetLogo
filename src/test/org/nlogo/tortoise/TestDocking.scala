@@ -7,7 +7,7 @@ import
   org.nlogo.{ api, nvm, headless, mirror, prim },
   org.nlogo.util.{ Femto, MersenneTwisterFast }
 
-class TestTortoise extends FunSuite {
+class TestDocking extends FunSuite {
 
   var ws: headless.HeadlessWorkspace = null
   val owner = new api.SimpleJobOwner("Tortoise", new MersenneTwisterFast)
