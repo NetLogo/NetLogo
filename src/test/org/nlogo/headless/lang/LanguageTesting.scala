@@ -24,6 +24,10 @@ trait LanguageTesting extends Assertions {
 
   def owner: JobOwner = workspace.defaultOwner
 
+  def open(path: String) {
+    workspace.open(path)
+  }
+
   def init() {
     workspace = HeadlessWorkspace.newInstance
     workspace.silent = true
