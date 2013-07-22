@@ -5,10 +5,10 @@ import Keys._
 object JFlexRunner {
 
   val task =
-    (cacheDirectory, javaSource in Compile, baseDirectory, streams) map {
-      (cacheDir, src, base, s) =>
+    (javaSource in Compile, baseDirectory, streams) map {
+      (src, base, s) =>
         val cache =
-          FileFunction.cached(cacheDir / "lexers", inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
+          FileFunction.cached(s.cacheDirectory / "lexers", inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
             in: Set[File] =>
               Set(flex(s.log.info(_), base, src, "agent", "ImportLexer"),
                   flex(s.log.info(_), base, src, "lex", "TokenLexer"))
