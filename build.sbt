@@ -75,4 +75,5 @@ seq(Dump.settings: _*)
 
 seq(ChecksumsAndPreviews.settings: _*)
 
-org.scalastyle.sbt.ScalastylePlugin.Settings
+// supported yet in sbt 0.13?
+// org.scalastyle.sbt.ScalastylePlugin.Settings

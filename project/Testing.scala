@@ -58,7 +58,7 @@ object Testing {
       (argTask, streams, loadedTestFrameworks, testGrouping in key, testExecution in key, testLoader, fullClasspath in key, javaHome in key, state) flatMap {
         case (args, s, frameworks, groups, config, loader, cp, javaHome, st) =>
           implicit val display = Project.showContextKey(st)
-          val filter = Tests.Filter(Defaults.selectedFilter(Seq(key.key.description.get)))
+          val filter = Tests.Filters(Defaults.selectedFilter(Seq(key.key.description.get)))
           val mungedArgs =
             if(args.isEmpty) Nil
             else List("-n", args.mkString(" "))
