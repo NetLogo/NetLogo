@@ -1,4 +1,20 @@
 ///
+/// root project
+///
+
+val root =
+  Project(id = "NetLogo", base = file("."))
+    .configs(Testing.configs: _*)
+
+///
+/// task keys
+///
+
+val all = taskKey[Unit]("build all the things!!!")
+// surely there's some better way to do this - ST 5/30/12
+val nogen = taskKey[Unit]("disable bytecode generator")
+
+///
 /// ThisBuild -- applies to subprojects too
 ///
 
