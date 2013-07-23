@@ -4,19 +4,20 @@ import Keys._
 
 object JFlexRunner {
 
-  val task =
-    (javaSource in Compile, baseDirectory, streams) map {
-      (src, base, s) =>
-        val cache =
-          FileFunction.cached(s.cacheDirectory / "lexers", inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
-            in: Set[File] =>
-              Set(flex(s.log.info(_), base, src, "agent", "ImportLexer"),
-                  flex(s.log.info(_), base, src, "lex", "TokenLexer"))
-          }
-        cache(Set(base / "project" / "warning.txt",
-                  base / "project" / "ImportLexer.flex",
-                  base / "project" / "TokenLexer.flex")).toSeq
-    }
+  val task = Def.task[Seq[File]] {
+    val src = (javaSource in Compile).value
+    val base = baseDirectory.value
+    val s = streams.value
+    val cache =
+      FileFunction.cached(s.cacheDirectory / "lexers", inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
+        in: Set[File] =>
+          Set(flex(s.log.info(_), base, src, "agent", "ImportLexer"),
+              flex(s.log.info(_), base, src, "lex", "TokenLexer"))
+      }
+    cache(Set(base / "project" / "warning.txt",
+              base / "project" / "ImportLexer.flex",
+              base / "project" / "TokenLexer.flex")).toSeq
+  }
 
   // this used to be broken into two tasks, but jflex doesnt seem to be threadsafe
   // so we have to run them serially, which means we have to generate them both each time. -JC 6/8/10

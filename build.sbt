@@ -2,9 +2,7 @@
 /// root project
 ///
 
-val root =
-  Project(id = "NetLogo", base = file("."))
-    .configs(Testing.configs: _*)
+val root = project in file (".") configs(Testing.configs: _*)
 
 ///
 /// task keys
