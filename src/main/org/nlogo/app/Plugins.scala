@@ -33,7 +33,7 @@ object Plugins {
       val className = Option(attributes.getValue("Class-Name")).getOrElse(
         sys.error("Class-Name not found in manifest"))
       val loader = new java.net.URLClassLoader(Array(url),
-        Thread.currentThread.getContextClassLoader) {
+        this.getClass.getClassLoader) {
           def load(x: String) = findClass(x)  // findClass is protected
         }
       pico.addComponent(className, loader.load(className))

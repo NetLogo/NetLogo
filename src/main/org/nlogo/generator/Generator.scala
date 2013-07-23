@@ -40,7 +40,7 @@ class Generator(source: String, procedure: Procedure, profilingEnabled: Boolean)
   // NetLogo-Mathematica link to stop working, for reasons I don't understand.  Maybe it has
   // something to do with the fact that Femto instantiates Generator using Class.forName().  I don't
   // understand this getContextClassLoader thing, either. - ST 4/16/09
-  private val loader = new CustomClassLoader(Thread.currentThread.getContextClassLoader)
+  private val loader = new CustomClassLoader(this.getClass.getClassLoader)
   private[generator] class InstructionGenerator[A <: Instruction](original: A) {
     import org.objectweb.asm
     import asm.Opcodes._

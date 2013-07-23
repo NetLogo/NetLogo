@@ -16,9 +16,19 @@ private object PrimitiveCache {
   def getClassReader(c: Class[_]) =
     synchronized { // be threadsafe - ST 2/25/08
       def read = {
-        val in = Thread.currentThread
-          .getContextClassLoader
-          .getResourceAsStream(c.getName.replace('.', '/') + ".class")
+        val in = {
+
+          val name       = c.getName.replace('.', '/') + ".class"
+          val fromThread = Thread.currentThread.getContextClassLoader.getResourceAsStream(name)
+
+          // Due to a regression in the JRE (http://bugs.sun.com/view_bug.do?bug_id=8017776),
+          // try harder to get ahold of the `JNLPClassLoader` in WebStart --JAB (7/22/13)
+          if (fromThread != null)
+            fromThread
+          else
+            this.getClass.getClassLoader.getResourceAsStream(name)
+
+        }
         require(in != null)
         try new ClassReader(in)
         finally in.close()
