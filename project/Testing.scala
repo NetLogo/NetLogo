@@ -26,12 +26,13 @@ object Testing {
     inConfig(MediumTest)(Defaults.testTasks) ++
     inConfig(SlowTest)(Defaults.testTasks) ++
     Seq(
-      testOptions in FastTest <<= (fullClasspath in Test) map { path =>
-        Seq(Tests.Filter(fastFilter(path, _))) },
-      testOptions in MediumTest <<= (fullClasspath in Test) map { path =>
-        Seq(Tests.Filter(mediumFilter(path, _))) },
-      testOptions in SlowTest <<= (fullClasspath in Test) map { path =>
-        Seq(Tests.Filter(slowFilter(path, _))) })
+      testOptions in FastTest :=
+        Seq(Tests.Filter(fastFilter((fullClasspath in Test).value, _))),
+      testOptions in MediumTest :=
+        Seq(Tests.Filter(mediumFilter((fullClasspath in Test).value, _))),
+      testOptions in SlowTest :=
+        Seq(Tests.Filter(slowFilter((fullClasspath in Test).value, _)))
+    )
 
   lazy val specialTestTaskSettings =
     testKeys.flatMap(Defaults.defaultTestTasks) ++

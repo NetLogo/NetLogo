@@ -10,7 +10,6 @@ val root =
 /// task keys
 ///
 
-val all = taskKey[Unit]("build all the things!!!")
 // surely there's some better way to do this - ST 5/30/12
 val nogen = taskKey[Unit]("disable bytecode generator")
 
@@ -55,17 +54,17 @@ artifactName := { (_, _, _) => "NetLogoHeadless.jar" }
 
 onLoadMessage := ""
 
-resourceDirectory in Compile <<= baseDirectory(_ / "resources")
+resourceDirectory in Compile := baseDirectory.value / "resources"
 
-scalaSource in Compile <<= baseDirectory(_ / "src" / "main")
+scalaSource in Compile := baseDirectory.value / "src" / "main"
 
-scalaSource in Test <<= baseDirectory(_ / "src" / "test")
+scalaSource in Test := baseDirectory.value / "src" / "test"
 
-javaSource in Compile <<= baseDirectory(_ / "src" / "main")
+javaSource in Compile := baseDirectory.value / "src" / "main"
 
-javaSource in Test <<= baseDirectory(_ / "src" / "test")
+javaSource in Test := baseDirectory.value / "src" / "test"
 
-unmanagedResourceDirectories in Compile <+= baseDirectory { _ / "resources" }
+unmanagedResourceDirectories in Compile += baseDirectory.value / "resources"
 
 sourceGenerators in Compile <+= JFlexRunner.task
 
@@ -75,12 +74,13 @@ mainClass in Compile := Some("org.nlogo.headless.Main")
 
 Extensions.extensionsTask
 
-all := { () }
+val all = taskKey[Unit]("build all the things!!!")
 
-all <<= all.dependsOn(
-  packageBin in Compile,
-  compile in Test,
-  Extensions.extensions)
+all := { val _ = (
+  (packageBin in Compile).value,
+  (compile in Test).value,
+  Extensions.extensions.value
+)}
 
 seq(Testing.settings: _*)
 
