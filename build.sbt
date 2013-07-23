@@ -16,6 +16,7 @@ val nogen = taskKey[Unit]("disable bytecode generator")
 
 ///
 /// ThisBuild -- applies to subprojects too
+/// (at the moment we have no subprojects on this branch, but that could change - ST 7/23/13)
 ///
 
 scalaVersion in ThisBuild := "2.10.2"
