@@ -9,11 +9,11 @@ object Testing {
 
   val configs = Seq(FastTest, MediumTest, SlowTest)
 
-  lazy val tr = InputKey[Unit]("tr", "org.nlogo.headless.lang.TestReporters", test)
-  lazy val tc = InputKey[Unit]("tc", "org.nlogo.headless.lang.TestCommands", test)
-  lazy val te = InputKey[Unit]("te", "org.nlogo.headless.lang.TestExtensions", test)
-  lazy val tm = InputKey[Unit]("tm", "org.nlogo.headless.lang.TestModels", test)
-  lazy val testChecksums = InputKey[Unit]("test-checksums", "org.nlogo.headless.misc.TestChecksums", test)
+  lazy val tr            = inputKey[Unit]("org.nlogo.headless.lang.TestReporters")
+  lazy val tc            = inputKey[Unit]("org.nlogo.headless.lang.TestCommands")
+  lazy val te            = inputKey[Unit]("org.nlogo.headless.lang.TestExtensions")
+  lazy val tm            = inputKey[Unit]("org.nlogo.headless.lang.TestModels")
+  lazy val testChecksums = inputKey[Unit]("org.nlogo.headless.misc.TestChecksums")
 
   private val testKeys = Seq(tr, tc, te, tm, testChecksums)
 
