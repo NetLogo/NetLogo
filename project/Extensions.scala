@@ -4,8 +4,8 @@ import Keys._
 
 object Extensions {
 
-  val extensions = TaskKey[Seq[File]](
-    "extensions", "builds extensions")
+  val extensions = taskKey[Seq[File]](
+    "builds extensions")
 
   val extensionsTask =
     extensions <<= (baseDirectory, scalaInstance, streams) map {

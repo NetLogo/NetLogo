@@ -4,8 +4,8 @@ import classycle.Analyser
 
 object Classycle {
 
-  val classycle = TaskKey[Unit](
-    "classycle", "run Classycle and display a dependency report")
+  val classycle = taskKey[Unit](
+    "run Classycle and display a dependency report")
 
   val settings = Seq(classycleTask)
 

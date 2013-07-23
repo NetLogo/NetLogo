@@ -6,8 +6,8 @@ import Keys._
 
 object Depend {
 
-  val depend = TaskKey[Unit](
-    "depend", "use Classycle to ferret out forbidden dependencies")
+  val depend = taskKey[Unit](
+    "use Classycle to ferret out forbidden dependencies")
 
   val settings = Seq(dependTask)
 
