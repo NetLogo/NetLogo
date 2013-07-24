@@ -40,7 +40,7 @@ object StructureConverter {
       p.isReporter, p.tokens.tail.head.value.asInstanceOf[String],
       p.tokens.tail.head, p.inputs.map(_.token), displayName, null)
     proc.args = p.inputs.map(_.name).toVector
-    (proc, p.tokens.drop(2).init :+ Token.eof)
+    (proc, p.tokens.drop(2).init :+ Token.Eof)
   }
 
   def updateProgram(program: api.Program, declarations: Seq[Declaration]): api.Program = {
