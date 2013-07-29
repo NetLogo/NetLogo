@@ -166,7 +166,7 @@ public final strictfp class World3D
         + xc - _minPxcor);
 
 
-    return (Patch) _patches.agent(patchid);
+    return (Patch) _patches.array()[patchid];
   }
 
   public boolean validPatchCoordinates(int xc, int yc, int zc) {
@@ -180,9 +180,9 @@ public final strictfp class World3D
   }
 
   public Patch fastGetPatchAt(int xc, int yc, int zc) {
-    return (Patch) _patches.agent(((_worldWidth * _worldHeight * (_maxPzcor - zc)) +
-                                   (_worldWidth * (_maxPycor - yc))
-                                   + xc - _minPxcor));
+    return (Patch) _patches.array()[((_worldWidth * _worldHeight * (_maxPzcor - zc)) +
+                                     (_worldWidth * (_maxPycor - yc))
+                                     + xc - _minPxcor)];
   }
 
   @Override
@@ -390,7 +390,7 @@ public final strictfp class World3D
         (_worldWidth * (_maxPycor - yc))
         + xc - _minPxcor);
 
-    return (Patch3D) _patches.agent(id);
+    return (Patch3D) _patches.array()[id];
   }
 
   @Override
