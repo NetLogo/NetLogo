@@ -3,7 +3,6 @@
 package org.nlogo.agent;
 
 import org.nlogo.api.LogoList;
-import org.nlogo.api.SimpleChangeEventPublisher;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -18,9 +17,6 @@ public strictfp class TreeAgentSet
   // we get different results after an import and export. since we don't
   // know the order that the turtles entered the breed agentset.
   final Map<Object, Agent> agents = new TreeMap<Object, Agent>();
-
-  public final SimpleChangeEventPublisher simpleChangeEventPublisher =
-    new SimpleChangeEventPublisher();
 
   @Override
   public int count() {
@@ -85,20 +81,17 @@ public strictfp class TreeAgentSet
     }
     agents.put(agent.agentKey(), agent);
     nextIndex = StrictMath.max(nextIndex, agent.id + 1);
-    simpleChangeEventPublisher.publish();
   }
 
   // made public for mutable agentset operations
   @Override
   public void remove(Object key) {
     agents.remove(key);
-    simpleChangeEventPublisher.publish();
   }
 
   @Override
   void clear() {
     agents.clear();
-    simpleChangeEventPublisher.publish();
   }
 
   @Override
