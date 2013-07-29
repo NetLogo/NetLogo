@@ -34,8 +34,8 @@ USE_QUARTZ=-Dapple.awt.graphics.UseQuartz=false
 BOOT=xsbt.boot.Boot
 
 
-SBT_LAUNCH=$HOME/.sbt/sbt-launch-0.12.3.jar
-URL='http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.12.3/sbt-launch.jar'
+SBT_LAUNCH=$HOME/.sbt/sbt-launch-0.12.4.jar
+URL='http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.12.4/sbt-launch.jar'
 
 if [ ! -f $SBT_LAUNCH ] ; then
   echo "downloading" $URL
