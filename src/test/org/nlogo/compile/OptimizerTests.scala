@@ -3,7 +3,7 @@
 package org.nlogo.compile
 
 import org.scalatest.FunSuite
-import org.nlogo.{ api, nvm, parse }
+import org.nlogo.{ nvm, parse }
 
 class OptimizerTests extends FunSuite {
 

@@ -3,7 +3,7 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.api.{ ReporterRunnable, Syntax }
-import org.nlogo.nvm.{ Context, EngineException, HaltException, Reporter }
+import org.nlogo.nvm.{ Context, EngineException, Reporter }
 
 class _userfile extends Reporter {
 

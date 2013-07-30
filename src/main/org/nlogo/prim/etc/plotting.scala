@@ -10,7 +10,6 @@ import org.nlogo.nvm.{ Command, Context, EngineException, Instruction, Reporter 
 //
 
 trait PlotHelpers extends Instruction {
-  import org.nlogo.plot
   def plotManager =
     workspace.plotManager.asInstanceOf[api.PlotManagerInterface]
   def currentPlotState(context: Context) =

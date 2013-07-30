@@ -166,7 +166,6 @@ with org.nlogo.workspace.WorldLoaderInterface {
     world.turtleShapeList.add(org.nlogo.shape.VectorShape.getDefaultShape)
     world.linkShapeList.add(org.nlogo.shape.LinkShape.getDefaultLinkShape)
     world.createPatches(d)
-    import collection.JavaConverters._
     val results = compiler.compileProgram(
       source, Program.empty(),
       getExtensionManager)
