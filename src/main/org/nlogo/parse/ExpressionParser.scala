@@ -376,7 +376,7 @@ class ExpressionParser(
             val taskApp = new ReporterApp(task, reporter.token.start, reporter.token.end, reporter.token.filename)
             taskApp.addArgument(rApp)
             for(argNumber <- 1 to reporter.syntax.totalDefault) {
-              var lv = new _taskvariable(argNumber)
+              val lv = new _taskvariable(argNumber)
               lv.token(reporter.token)
               rApp.addArgument(new ReporterApp(lv, reporter.token.start, reporter.token.end, reporter.token.filename))
             }
@@ -406,7 +406,7 @@ class ExpressionParser(
           val task = new _commandtask(taskProcedure)
           task.token(token)
           for(argNumber <- 1 to stmt.command.syntax.totalDefault) {
-            var lv = new _taskvariable(argNumber)
+            val lv = new _taskvariable(argNumber)
             lv.token(token)
             stmt.addArgument(new ReporterApp(lv, token.start, token.end, token.filename))
           }
@@ -435,7 +435,7 @@ class ExpressionParser(
     var expr = originalExpr
     var done = false
     while(!done) {
-      var token = tokens.head
+      val token = tokens.head
       if(token.tpe == TokenType.Reporter) {
         val reporter = token.value.asInstanceOf[Reporter]
         val syntax = reporter.syntax
