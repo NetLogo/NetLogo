@@ -1,9 +1,4 @@
-language: scala
-before_install:
-  - git submodule update --init --recursive
-install:
-  - sbt update
-script:
-  - ./nightly.sh --noclean
-scala:
-  - 2.9.2
+# 5.0.x doesn't compile under OpenJDK 6 and Travis doesn't offer Oracle Java 6
+branches:
+  except:
+    - 5.0.x
