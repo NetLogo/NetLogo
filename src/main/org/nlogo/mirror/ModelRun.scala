@@ -63,7 +63,7 @@ class ModelRun(
 
   def appendData(mirrorables: Iterable[Mirrorable], actions: IndexedSeq[Action]): Frame = {
     val oldMirroredState = lastFrame.map(_.mirroredState).getOrElse(Map())
-    val (newMirroredState, mirroredUpdate) = Mirroring.diffs(oldMirroredState, mirrorables)
+    val (_, mirroredUpdate) = Mirroring.diffs(oldMirroredState, mirrorables)
     val delta = Delta(Serializer.toBytes(mirroredUpdate), actions)
     _dirty = true
     appendFrame(delta)
