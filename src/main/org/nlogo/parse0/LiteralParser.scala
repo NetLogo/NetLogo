@@ -34,7 +34,7 @@ class LiteralParser(
     val result = readLiteralPrefix(tokens.next(), tokens)
     // make sure there's no extra stuff at the end...
     val extra = tokens.next()
-    cAssert(extra.tpe == TokenType.EOF, ERR_EXTRA_STUFF_AFTER_LITERAL, extra)
+    cAssert(extra.tpe == TokenType.Eof, ERR_EXTRA_STUFF_AFTER_LITERAL, extra)
     result
   }
 
@@ -47,7 +47,7 @@ class LiteralParser(
     if(token.tpe != TokenType.Literal || !token.value.isInstanceOf[java.lang.Double])
       exception(ERR_EXPECTED_NUMBER, token)
     val extra = tokens.next()
-    cAssert(extra.tpe == TokenType.EOF, ERR_EXTRA_STUFF_AFTER_NUMBER, extra)
+    cAssert(extra.tpe == TokenType.Eof, ERR_EXTRA_STUFF_AFTER_NUMBER, extra)
     token.value.asInstanceOf[java.lang.Double]
   }
 
@@ -96,7 +96,7 @@ class LiteralParser(
       val token = tokens.next()
       token.tpe match {
         case TokenType.CloseBracket => done = true
-        case TokenType.EOF => exception(ERR_MISSING_CLOSEBRACKET, openBracket)
+        case TokenType.Eof => exception(ERR_MISSING_CLOSEBRACKET, openBracket)
         case _ => list = list.lput(readLiteralPrefix(token, tokens))
       }
     }

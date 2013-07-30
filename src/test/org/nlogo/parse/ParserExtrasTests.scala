@@ -18,7 +18,7 @@ class ParserExtrasTests extends FunSuite {
   val (proceduresMap, program) = {
     def dummyProcedure(p: ProcedureDefinition) =
       new nvm.Procedure(p.procedure.isReporter, p.procedure.name,
-        api.Token.eof, Seq())
+        api.Token.Eof, Seq())
     val (procedures, structureResults) = Parser.frontEnd(src)
     val proceduresMap =
       collection.immutable.ListMap(

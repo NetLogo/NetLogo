@@ -23,7 +23,7 @@ class AgentTypeCheckerTests extends FunSuite {
     val buf = new StringBuilder
     expectResult(expected)(
       defs.map { pd: parse.ProcedureDefinition =>
-          pd.procedure.name + ":" + pd.procedure.usableBy }
+          pd.procedure.name + ":" + pd.procedure.agentClassString }
         .mkString(" "))
   }
   def testError(source: String, error: String) {

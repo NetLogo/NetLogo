@@ -5,7 +5,7 @@ package org.nlogo.api
 abstract sealed trait TokenType
 
 object TokenType {
-  case object EOF extends TokenType
+  case object Eof extends TokenType
   case object OpenParen extends TokenType
   case object CloseParen extends TokenType
   case object OpenBracket extends TokenType

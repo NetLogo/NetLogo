@@ -23,7 +23,7 @@ class NamerTests extends FunSuite {
     new Namer(results.program, results.procedures,
         new DummyExtensionManager, lets)
       .process(results.tokens(procedure).iterator, procedure)
-      .takeWhile(_.tpe != TokenType.EOF)
+      .takeWhile(_.tpe != TokenType.Eof)
   }
 
   test("empty") {
