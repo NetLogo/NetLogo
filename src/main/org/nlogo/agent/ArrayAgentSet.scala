@@ -225,11 +225,11 @@ extends AgentSet(kind, printName, false, false, false) {
     while (index < array.size && array(index).id == -1)
       index += 1
     override def next() = {
-      var resultIndex = index
+      val result = index
       // skip to next live agent
       do index += 1
       while (index < array.size && array(index).id == -1)
-      array(resultIndex)
+      array(result)
     }
   }
 
