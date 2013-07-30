@@ -6,7 +6,6 @@ import scala.language.implicitConversions
 import org.nlogo.api.AgentVariableNumbers._
 import org.nlogo.api
 import org.nlogo.plot
-import collection.JavaConverters._
 
 object Mirrorables {
 

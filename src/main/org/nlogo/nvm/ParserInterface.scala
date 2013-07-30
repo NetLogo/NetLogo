@@ -4,7 +4,7 @@ package org.nlogo.nvm
 
 // ought to be in the api package, except oops, it depends on nvm.Procedure - ST 2/23/09
 
-import org.nlogo.api, api.{ Program, ExtensionManager, Token, World }
+import org.nlogo.api, api.{ Program, ExtensionManager, World }
 
 object ParserInterface {
   // use ListMap so procedures come out in the order they were defined (users expect errors in

@@ -4,10 +4,8 @@ package org.nlogo.prim
 
 import org.nlogo.{ api, nvm }
 import api.Syntax
-import nvm.{ Command, Context, Argument, EngineException,
-             ExtensionContext, CustomAssembled, AssemblerAssistant }
 
-class _extern(command: api.Command) extends Command with CustomAssembled {
+class _extern(command: api.Command) extends nvm.Command with nvm.CustomAssembled {
 
   override def syntax = {
     val s = command.getSyntax
@@ -28,14 +26,14 @@ class _extern(command: api.Command) extends Command with CustomAssembled {
   override def toString =
     super.toString + ":+" + offset
 
-  override def perform(context: Context) {
+  override def perform(context: nvm.Context) {
     val arguments =
       Array.tabulate[api.Argument](args.length)(i => new nvm.Argument(context, args(i)))
     try command.perform(
-      arguments, new ExtensionContext(workspace, context))
+      arguments, new nvm.ExtensionContext(workspace, context))
     catch {
       case ex: api.ExtensionException =>
-        val le = new EngineException(
+        val le = new nvm.EngineException(
           context, this, "Extension exception: " + ex.getMessage)
       // it might be better to use setCause(), for the long term... but then i think the handler
       // would have to be changed, too.
@@ -45,10 +43,10 @@ class _extern(command: api.Command) extends Command with CustomAssembled {
     context.ip = offset
   }
 
-  override def assemble(a: AssemblerAssistant) {
+  override def assemble(a: nvm.AssemblerAssistant) {
     a.add(this)
     command match {
-      case ca: CustomAssembled =>
+      case ca: nvm.CustomAssembled =>
         ca.assemble(a)
       case _ =>
     }

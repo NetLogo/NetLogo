@@ -2,7 +2,7 @@
 
 package org.nlogo.prim
 
-import org.nlogo.agent.{ AgentIterator, AgentSet, Patch, Turtle }
+import org.nlogo.agent.{ Patch, Turtle }
 import org.nlogo.api.{ Dump, I18N, Syntax, TypeNames }
 import org.nlogo.nvm.{ Context, EngineException, Reporter }
 

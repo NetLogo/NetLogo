@@ -3,7 +3,7 @@
 package org.nlogo.nvm
 
 import org.nlogo.api
-import org.nlogo.agent.{ Agent, AgentSet, World }
+import org.nlogo.agent.{ Agent, AgentSet }
 import collection.mutable.WeakHashMap
 
 trait Workspace extends api.Workspace with JobManagerOwner with api.ViewSettings {

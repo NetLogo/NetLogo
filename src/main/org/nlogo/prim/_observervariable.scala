@@ -4,7 +4,6 @@ package org.nlogo.prim
 
 import org.nlogo.api.{ Syntax, AgentKind }
 import org.nlogo.nvm.{ Reporter, Context, Reference }
-import org.nlogo.agent.Observer
 
 class _observervariable(_vn: Int) extends Reporter {
 
