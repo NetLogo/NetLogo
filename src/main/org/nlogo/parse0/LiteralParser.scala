@@ -105,11 +105,11 @@ class LiteralParser(
   def parseExtensionLiteral(token: Token): AnyRef = {
     cAssert(world != null, ERR_ILLEGAL_AGENT_LITERAL, token)
     val LiteralRegex = """\{\{(\S*):(\S*)\s(.*)\}\}""".r
-    token.value match {
+    token.value.asInstanceOf[String] match {
       case LiteralRegex(extName, typeName, data) =>
         extensionManager.readExtensionObject(extName, typeName, data)
-      case x =>
-        x
+      case s =>
+        s
     }
   }
 
