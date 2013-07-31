@@ -2,7 +2,7 @@
 
 package org.nlogo.prim
 
-import org.nlogo.agent.{ Agent, AgentSet, AgentSetBuilder }
+import org.nlogo.agent.{ AgentSet, AgentSetBuilder }
 import org.nlogo.api.Syntax
 import org.nlogo.nvm.{ Reporter, Context }
 

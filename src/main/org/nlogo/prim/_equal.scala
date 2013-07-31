@@ -4,7 +4,7 @@ package org.nlogo.prim
 
 import org.nlogo.api.{ Syntax, Equality, Nobody }
 import org.nlogo.nvm.{ Reporter, Pure, Context }
-import org.nlogo.agent.{ Agent, Turtle, Patch, Link }
+import org.nlogo.agent.{ Turtle, Patch, Link }
 
 class _equal extends Reporter with Pure {
 

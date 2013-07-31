@@ -4,7 +4,7 @@ package org.nlogo.parse
 
 import org.scalatest.FunSuite
 import org.nlogo.api.{ DummyExtensionManager, Program, Token, TokenType }
-import org.nlogo.{ nvm, parse0 }
+import org.nlogo.parse0
 
 class NamerTests extends FunSuite {
 
@@ -23,7 +23,7 @@ class NamerTests extends FunSuite {
     new Namer(results.program, results.procedures,
         new DummyExtensionManager, lets)
       .process(results.tokens(procedure).iterator, procedure)
-      .takeWhile(_.tpe != TokenType.EOF)
+      .takeWhile(_.tpe != TokenType.Eof)
   }
 
   test("empty") {

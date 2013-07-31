@@ -10,7 +10,10 @@ if [[ `uname -s` == *CYGWIN* ]] ; then
 else
   CURR_DIR=`dirname $0`
   if [ `uname -s` = Linux ] ; then
-    export JAVA_HOME=/usr/lib/jvm/java-7-sun
+    # use JAVA_HOME from Travis if there is one
+    if [ -z "$TRAVIS" ] ; then
+      export JAVA_HOME=/usr/lib/jvm/java-7-sun
+    fi
   else
     if [ `uname -s` = Darwin ] ; then
       export JAVA_HOME=`/usr/libexec/java_home -F -v1.7*`

@@ -14,3 +14,9 @@ ResizeWorldBad_2D
   O> resize-world 0 -1 0 0 => ERROR You must include the point (0, 0) in the world.
   O> resize-world 0 0 1 0 => ERROR You must include the point (0, 0) in the world.
   O> resize-world 0 0 0 -1 => ERROR You must include the point (0, 0) in the world.
+
+ResizeWorldBreedsEmptied_2D
+  O> create-mice 5
+  count mice => 5
+  O> resize-world 0 0 0 0
+  count mice => 0

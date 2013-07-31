@@ -22,7 +22,7 @@ object Tokenizer extends api.TokenizerInterface {
     val results =
       Iterator.continually(yy.yylex())
         .takeWhile(_ != null)
-    results ++ Iterator(Token.eof)
+    results ++ Iterator(Token.Eof)
   }
 
 }

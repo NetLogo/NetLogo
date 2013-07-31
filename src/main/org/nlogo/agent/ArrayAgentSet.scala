@@ -70,6 +70,17 @@ extends AgentSet(kind, printName, false, false, false) {
 
   /// one-agent queries
 
+  // Nicolas noticed that the nulling-out that happens here is
+  // questionable.  the idea behind it seems sound -- try to make dead
+  // agents eligible for GC -- but in order for it to really help we'd
+  // need to do nulling-out in more places, and we'd also need to add
+  // null checks elsewhere that currently don't exist.  the
+  // nulling-out here hasn't caused any trouble in practice because
+  // this method is actually never called except in Topology.diffuse,
+  // but in that context it's always a patch set so death isn't an
+  // issue.  this whole method should be removed outright, but I'm
+  // leaving it in on the 5.0.x branch on the offchance some random
+  // extension is using it. - ST 7/15/13
   override def agent(l: Long): Agent = {
     val i = l.toInt
     if (!kind.mortal)
@@ -183,7 +194,7 @@ extends AgentSet(kind, printName, false, false, false) {
     if (!kind.mortal)
       new Iterator
     else
-      new ReapingIterator
+      new DeadSkippingIterator
 
   // shuffling iterator = shufflerator! (Google hits: 0)
   // Update: Now 5 Google hits, the first 4 of which are NetLogo related,
@@ -209,16 +220,16 @@ extends AgentSet(kind, printName, false, false, false) {
   }
 
   // extended to skip dead agents
-  private class ReapingIterator extends Iterator {
+  private class DeadSkippingIterator extends Iterator {
     // skip initial dead agents
     while (index < array.size && array(index).id == -1)
       index += 1
     override def next() = {
-      var resultIndex = index
+      val result = index
       // skip to next live agent
       do index += 1
       while (index < array.size && array(index).id == -1)
-      array(resultIndex)
+      array(result)
     }
   }
 

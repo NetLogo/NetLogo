@@ -71,15 +71,15 @@ import org.nlogo.parse, parse.Fail._
 private class AgentTypeChecker(defs: Seq[parse.ProcedureDefinition]) {
 
   def check() {
-    def usables = defs.map(_.procedure.usableBy).toList
+    def usables = defs.map(_.procedure.agentClassString).toList
     val oldUsables = usables
     for(procdef <- defs)
       procdef.accept(new AgentTypeCheckerVisitor(procdef.procedure, "OTPL"))
     if(usables != oldUsables) check()
   }
 
-  class AgentTypeCheckerVisitor(currentProcedure: Procedure, var usableBy: String) extends parse.DefaultAstVisitor {
-    // usableBy is "var" because it's where we accumulate our result.
+  class AgentTypeCheckerVisitor(currentProcedure: Procedure, var agentClassString: String) extends parse.DefaultAstVisitor {
+    // agentClassString is "var" because it's where we accumulate our result.
     // it starts out as OTPL and the more code we see the more restricted
     // it may grow.  The use of mutable state in this way is characteristic
     // of the Visitor pattern.
@@ -87,31 +87,31 @@ private class AgentTypeChecker(defs: Seq[parse.ProcedureDefinition]) {
     override def visitProcedureDefinition(procdef: parse.ProcedureDefinition) {
       super.visitProcedureDefinition(procdef)
       // after we've seen the whole procedure, store the result there
-      procdef.procedure.usableBy = usableBy
+      procdef.procedure.agentClassString = agentClassString
     }
     // visitStatement and visitReporterApp are clones of each other
 
     override def visitStatement(stmt: parse.Statement) {
       val c = stmt.command
-      usableBy = typeCheck(currentProcedure, c, usableBy)
+      agentClassString = typeCheck(currentProcedure, c, agentClassString)
       if(c.syntax.blockAgentClassString != null)
         chooseVisitorAndContinue(c.syntax.blockAgentClassString, stmt.args)
       else
         super.visitStatement(stmt)
-      c.agentClassString = usableBy
+      c.agentClassString = agentClassString
     }
 
     // visitStatement and visitReporterApp are clones of each other
     override def visitReporterApp(app: parse.ReporterApp) {
       val r = app.reporter
-      usableBy = typeCheck(currentProcedure, r, usableBy)
+      agentClassString = typeCheck(currentProcedure, r, agentClassString)
       if(r.isInstanceOf[_task])
         app.args.head.accept(new AgentTypeCheckerVisitor(currentProcedure, "OTPL"))
       else if(r.syntax.blockAgentClassString != null)
         chooseVisitorAndContinue(r.syntax.blockAgentClassString, app.args)
       else
         super.visitReporterApp(app)
-      r.agentClassString = usableBy
+      r.agentClassString = agentClassString
     }
 
     private def chooseVisitorAndContinue(blockAgentClassString: String, exps: Seq[parse.Expression]) {
@@ -147,7 +147,7 @@ private class AgentTypeChecker(defs: Seq[parse.ProcedureDefinition]) {
       }
     }
 
-    def typeCheck(currentProcedure: Procedure, instruction: Instruction, usableBy: String): String = {
+    def typeCheck(currentProcedure: Procedure, instruction: Instruction, agentClassString: String): String = {
       // Check if dealing with a procedure or a primitive
       val calledProcedure: Option[Procedure] =
         instruction match {
@@ -156,19 +156,19 @@ private class AgentTypeChecker(defs: Seq[parse.ProcedureDefinition]) {
           case _ => None
         }
       if(calledProcedure.isDefined &&
-         (calledProcedure.get.usableBy == null ||
-          (calledProcedure.get.usableBy.indexOf('?') != -1 && calledProcedure.get != currentProcedure)))
-        usableBy + "?"
+         (calledProcedure.get.agentClassString == null ||
+          (calledProcedure.get.agentClassString.indexOf('?') != -1 && calledProcedure.get != currentProcedure)))
+        agentClassString + "?"
       else {
         val instructionUsableBy =
-          if(calledProcedure.isDefined) calledProcedure.get.usableBy
+          if(calledProcedure.isDefined) calledProcedure.get.agentClassString
           else instruction.syntax.agentClassString
-        val result = combineRestrictions(usableBy, instructionUsableBy)
+        val result = combineRestrictions(agentClassString, instructionUsableBy)
         if(result == "----") {
           val name = instruction.tokenLimitingType.text.toUpperCase
           exception(
-            "You can't use " + name + " in " + usableByToEnglish(usableBy, true) +
-              " context, because " + name + " is " + usableByToEnglish(instructionUsableBy, false) +
+            "You can't use " + name + " in " + agentClassStringToEnglish(agentClassString, true) +
+              " context, because " + name + " is " + agentClassStringToEnglish(instructionUsableBy, false) +
               "-only.", instruction.tokenLimitingType)
         }
         result
@@ -179,15 +179,15 @@ private class AgentTypeChecker(defs: Seq[parse.ProcedureDefinition]) {
     //   OTP- and -TPL equals -TP-
     //   OT-- and --PL equals ----
     // and so on.
-    def combineRestrictions(usableBy1: String, usableBy2: String): String =
-      usableBy1.map(c => if(c != '-' && usableBy2.indexOf(c) != -1) c
+    def combineRestrictions(agentClassString1: String, agentClassString2: String): String =
+      agentClassString1.map(c => if(c != '-' && agentClassString2.indexOf(c) != -1) c
                          else '-')
 
     // for error message generation
-    def usableByToEnglish(usableBy: String, addAOrAn: Boolean): String = {
+    def agentClassStringToEnglish(agentClassString: String, addAOrAn: Boolean): String = {
       val abbreviations = Map('O' -> "observer", 'T' -> "turtle",
                               'P' -> "patch", 'L' -> "link")
-      val english = usableBy.filter(_ != '-').map(abbreviations(_)).mkString("/")
+      val english = agentClassString.filter(_ != '-').map(abbreviations(_)).mkString("/")
       if(!addAOrAn) english
       else if(english.charAt(0) == 'o') "an " + english
       else "a " + english

@@ -6,13 +6,13 @@ package org.nlogo.headless
 // AbstractWorkspace are not, so if you want to document a method for everyone, override that method
 // here and document it here.  The overriding method can simply call super(). - ST 6/1/05, 7/28/11
 
-import org.nlogo.agent.{ Agent, Observer }
+import org.nlogo.agent.Agent
 import org.nlogo.api.{ AgentKind, Program, Version, RendererInterface, WorldDimensions,
                        ModelReader, CompilerException, LogoException, SimpleJobOwner,
                        CommandRunnable, ReporterRunnable, UpdateMode }
 import org.nlogo.agent.World
 import org.nlogo.nvm.{ LabInterface, Context, ParserInterface,
-                       Workspace, DefaultParserServices, CompilerInterface }
+                       DefaultParserServices, CompilerInterface }
 import org.nlogo.workspace.AbstractWorkspace
 import org.nlogo.util.Femto
 import org.nlogo.drawing.DrawingActionBroker
@@ -166,7 +166,6 @@ with org.nlogo.workspace.WorldLoaderInterface {
     world.turtleShapeList.add(org.nlogo.shape.VectorShape.getDefaultShape)
     world.linkShapeList.add(org.nlogo.shape.LinkShape.getDefaultLinkShape)
     world.createPatches(d)
-    import collection.JavaConverters._
     val results = compiler.compileProgram(
       source, Program.empty(),
       getExtensionManager)
@@ -267,11 +266,11 @@ with org.nlogo.workspace.WorldLoaderInterface {
     if (!compilerTestingMode)
       world.clearTurtles()
   }
-  override def inspectAgent(agent: org.nlogo.agent.Agent, radius: Double) {
+  override def inspectAgent(agent: Agent, radius: Double) {
     if (!silent)
       println(agent)
   }
-  override def inspectAgent(kind: AgentKind, agent: org.nlogo.agent.Agent, radius: Double) {
+  override def inspectAgent(kind: AgentKind, agent: Agent, radius: Double) {
     if (!silent) {
       println(agent)
     }

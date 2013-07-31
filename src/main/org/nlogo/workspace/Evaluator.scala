@@ -3,7 +3,7 @@
 package org.nlogo.workspace
 
 import java.util.ArrayList
-import org.nlogo.agent.{Agent, AgentSet, Observer, Turtle, Patch, Link}
+import org.nlogo.agent.{Agent, AgentSet, Turtle, Patch, Link}
 import org.nlogo.api.{AgentKind, CompilerException, JobOwner, LogoException, ReporterLogoThunk, CommandLogoThunk}
 import org.nlogo.nvm.{ExclusiveJob, Activation, Context, Procedure, Reporter}
 

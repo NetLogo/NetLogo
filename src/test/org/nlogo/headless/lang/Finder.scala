@@ -44,7 +44,7 @@ trait Finder extends FunSuite with SlowTest {
   // parse tests first, then run them
   for(t <- tests if shouldRun(t))
     test(t.fullName, new Tag(t.suiteName){}, new Tag(t.fullName){}) {
-      Runner(t)
+      new Runner(t).run()
     }
   // on the core branch the _3D tests are gone, but extensions tests still have them since we
   // didn't branch the extensions, so we still need to filter those out - ST 1/13/12

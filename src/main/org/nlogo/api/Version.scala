@@ -67,7 +67,7 @@ object Version {
     modelVersion == noVersion ||
       versionNumber(modelVersion).startsWith(versionNumber(appVersion))
 
-  // 5.1 hasn't incompatibly diverged from 5.0 yet
+  // 5.2 hasn't incompatibly diverged from 5.0 yet
   def versionForSaving =
     "NetLogo 5.0"
 

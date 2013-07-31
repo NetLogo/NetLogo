@@ -43,7 +43,7 @@ class ExpressionParser(
     result = Nil
     val buffered = tokens.buffered
     val stmts = new Statements(buffered.head.filename)
-    while(buffered.head.tpe != TokenType.EOF)
+    while(buffered.head.tpe != TokenType.Eof)
       stmts.addStatement(parseStatement(buffered, false))
     result ::= new ProcedureDefinition(procedure, stmts)
     result
@@ -58,8 +58,8 @@ class ExpressionParser(
       case TokenType.OpenParen =>
         val openParen = token
         val stmt = parseStatement(tokens, true)
-        // if next is an EOF, we complain and point to the open paren.
-        cAssert(tokens.head.tpe != TokenType.EOF, MissingCloseParen, openParen)
+        // if next is an Eof, we complain and point to the open paren.
+        cAssert(tokens.head.tpe != TokenType.Eof, MissingCloseParen, openParen)
         val closeParen = tokens.next()
         // if next is anything else other than ), we complain and point to the next token itself.
         cAssert(closeParen.tpe == TokenType.CloseParen, ExpectedCloseParen, closeParen)
@@ -325,8 +325,8 @@ class ExpressionParser(
           tokens.next()
           val expr = parseExpression(tokens, true, goalType)
           token = tokens.head
-          // if next is an EOF, we complain and point to the open paren.
-          cAssert(tokens.head.tpe != TokenType.EOF, MissingCloseParen, openParen)
+          // if next is an Eof, we complain and point to the open paren.
+          cAssert(tokens.head.tpe != TokenType.Eof, MissingCloseParen, openParen)
           // we also special case an out-of-place command, since this is what the command center does
           // if you leave off a final paren (because of the __done at the end).
           cAssert(token.tpe != TokenType.Command, MissingCloseParen, openParen)
@@ -376,7 +376,7 @@ class ExpressionParser(
             val taskApp = new ReporterApp(task, reporter.token.start, reporter.token.end, reporter.token.filename)
             taskApp.addArgument(rApp)
             for(argNumber <- 1 to reporter.syntax.totalDefault) {
-              var lv = new _taskvariable(argNumber)
+              val lv = new _taskvariable(argNumber)
               lv.token(reporter.token)
               rApp.addArgument(new ReporterApp(lv, reporter.token.start, reporter.token.end, reporter.token.filename))
             }
@@ -406,7 +406,7 @@ class ExpressionParser(
           val task = new _commandtask(taskProcedure)
           task.token(token)
           for(argNumber <- 1 to stmt.command.syntax.totalDefault) {
-            var lv = new _taskvariable(argNumber)
+            val lv = new _taskvariable(argNumber)
             lv.token(token)
             stmt.addArgument(new ReporterApp(lv, token.start, token.end, token.filename))
           }
@@ -435,7 +435,7 @@ class ExpressionParser(
     var expr = originalExpr
     var done = false
     while(!done) {
-      var token = tokens.head
+      val token = tokens.head
       if(token.tpe == TokenType.Reporter) {
         val reporter = token.value.asInstanceOf[Reporter]
         val syntax = reporter.syntax
@@ -469,7 +469,7 @@ class ExpressionParser(
     val results = new collection.mutable.ListBuffer[Token]
     def advance() {
       val token = tokens.next()
-      if(token.tpe == TokenType.EOF)
+      if(token.tpe == TokenType.Eof)
         exception(MissingCloseBracket, openBracket)
       results += token
     }
@@ -482,7 +482,7 @@ class ExpressionParser(
     }
     recurse()
     val end = results.last.end
-    results += Token.eof
+    results += Token.Eof
     new DelayedBlock(results.readOnly,
                      results.head.start, end, openBracket.filename)
   }
@@ -499,7 +499,7 @@ class ExpressionParser(
       tokens.next()
       val expr = resolveType(Syntax.WildcardType, parseExpression(tokens, false, goalType), null)
       val token = tokens.head
-      cAssert(token.tpe != TokenType.EOF, MissingCloseBracket, openBracket) // should be impossible for delayed block
+      cAssert(token.tpe != TokenType.Eof, MissingCloseBracket, openBracket) // should be impossible for delayed block
       cAssert(token.tpe == TokenType.CloseBracket, ExpectedCloseBracket, token)
       // the origin of the block are based on the positions of the brackets.
       tokens.next()
@@ -510,9 +510,9 @@ class ExpressionParser(
       var token = tokens.head
       val stmts = new Statements(token.filename)
       while(token.tpe != TokenType.CloseBracket) {
-        // if next is an EOF, we complain and point to the open bracket. this should be impossible,
+        // if next is an Eof, we complain and point to the open bracket. this should be impossible,
         // since it's a delayed block.
-        cAssert(token.tpe != TokenType.EOF, MissingCloseBracket, openBracket)
+        cAssert(token.tpe != TokenType.Eof, MissingCloseBracket, openBracket)
         stmts.addStatement(parseStatement(tokens, false))
         token = tokens.head
       }
@@ -526,7 +526,7 @@ class ExpressionParser(
       val openBracket = tokens.next()
       val expr = resolveType(Syntax.WildcardType, parseExpression(tokens, false, Syntax.WildcardType), null).asInstanceOf[ReporterApp]
       val closeBracket = tokens.head
-      cAssert(closeBracket.tpe != TokenType.EOF, MissingCloseBracket, openBracket) // should be impossible for delayed block
+      cAssert(closeBracket.tpe != TokenType.Eof, MissingCloseBracket, openBracket) // should be impossible for delayed block
       cAssert(closeBracket.tpe == TokenType.CloseBracket, ExpectedCloseBracket, closeBracket)
       // the origin of the block are based on the positions of the brackets.
       tokens.next()
@@ -543,9 +543,9 @@ class ExpressionParser(
       var token = tokens.head
       val stmts = new Statements(token.filename)
       while(token.tpe != TokenType.CloseBracket) {
-        // if next is an EOF, we complain and point to the open bracket. this should be impossible,
+        // if next is an Eof, we complain and point to the open bracket. this should be impossible,
         // since it's a delayed block.
-        cAssert(token.tpe != TokenType.EOF, MissingCloseBracket, openBracket)
+        cAssert(token.tpe != TokenType.Eof, MissingCloseBracket, openBracket)
         stmts.addStatement(parseStatement(tokens, false))
         token = tokens.head
       }

@@ -2,7 +2,7 @@
 
 package org.nlogo.prim
 
-import org.nlogo.agent.{ Agent, AgentIterator, AgentSet }
+import org.nlogo.agent.{ Agent, AgentSet }
 import org.nlogo.api.{ Syntax, I18N, LogoListBuilder }
 import org.nlogo.nvm.{ Reporter, Context, EngineException }
 
@@ -33,7 +33,7 @@ class _of extends Reporter {
         val builder = new LogoListBuilder
         val freshContext = new Context(context, sourceSet)
         args(0).checkAgentSetClass(sourceSet, context)
-        var iter = sourceSet.shufflerator(context.job.random)
+        val iter = sourceSet.shufflerator(context.job.random)
         while(iter.hasNext)
           builder.add(freshContext.evaluateReporter(iter.next(), args(0)))
         builder.toLogoList

@@ -31,24 +31,18 @@ object NativeLibraryPath {
       .getParent
     var libdir = basedir + filesep + dirName + filesep
     val osname = System.getProperty("os.name")
-    System.out.println("OS name is: " + osname) //@
     if (osname == "Mac OS X") {
-      System.out.println("We've taken the Mac OS branch") //@
       libdir ++= osname
     }
     else if (osname.startsWith("Windows")) {
-      System.out.println("We've taken the Windows branch") //@
       libdir ++= "Windows"
     }
     else {
-      System.out.println("We've taken the 'Other' branch") //@
       val arch = System.getProperty("os.arch")
       if (arch.endsWith("86")) {
-        System.out.println("We're using x86") //@
         libdir ++= osname + "-x86"
       }
       else {
-        System.out.println("We're using a different architecture: " + arch) //@
         libdir ++= osname + "-" + arch
       }
       // I lack any real understanding of what's going on here and I'm scared of breaking it since I

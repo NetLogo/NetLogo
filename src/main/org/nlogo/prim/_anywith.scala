@@ -4,7 +4,7 @@ package org.nlogo.prim
 
 import org.nlogo.api.{ Syntax, Dump, I18N }
 import org.nlogo.nvm.{ Reporter, Context, EngineException }
-import org.nlogo.agent.{ Agent, AgentSet }
+import org.nlogo.agent.AgentSet
 
 class _anywith extends Reporter {
 

@@ -467,7 +467,7 @@ private object Optimizer extends parse.DefaultAstVisitor {
   // _turtlevariable => _turtlevariabledouble
   private object TurtleVariableDouble extends RewritingReporterMunger {
     val clazz = classOf[_turtlevariable]
-    val isDoubleVariable: Double => Boolean = {
+    val isDoubleVariable: Int => Boolean = {
       import api.AgentVariableNumbers._
       Set(VAR_WHO, VAR_HEADING, VAR_XCOR, VAR_YCOR, VAR_SIZE, VAR_PENSIZE)
     }

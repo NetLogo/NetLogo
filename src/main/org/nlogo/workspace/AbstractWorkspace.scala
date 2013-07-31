@@ -6,7 +6,7 @@ package org.nlogo.workspace
 
 import
   org.nlogo.{ agent, api, nvm, plot },
-  agent.{ World, Agent, Observer, AbstractExporter, AgentSet },
+  agent.{ World, Agent, AbstractExporter, AgentSet },
   api.{ AgentKind, PlotInterface, Dump, CommandLogoThunk, ReporterLogoThunk,
     CompilerException, LogoException, JobOwner, SimpleJobOwner, Token, ModelType },
   nvm.{ ParserInterface, FileManager, Instruction, EngineException, Context,
@@ -529,8 +529,6 @@ object AbstractWorkspaceTraits {
 
   trait Importing { this: nvm.Workspace =>
 
-    import agent.{ Importer, ImporterJ }
-
     abstract class FileImporter(val filename: String) {
       @throws(classOf[java.io.IOException])
       def doImport(reader: api.File)
@@ -562,8 +560,8 @@ object AbstractWorkspaceTraits {
         new java.io.BufferedReader(reader))
     }
 
-    private def stringReader: ImporterJ.StringReader =
-      new ImporterJ.StringReader {
+    private def stringReader: agent.ImporterJ.StringReader =
+      new agent.ImporterJ.StringReader {
         @throws(classOf[agent.ImporterJ.StringReaderException])
         def readFromString(s: String): AnyRef =
           try compiler.readFromString(s, world, getExtensionManager)

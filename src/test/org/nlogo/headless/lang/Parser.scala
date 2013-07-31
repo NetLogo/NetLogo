@@ -6,6 +6,7 @@ package lang
 import org.scalatest.FunSuite
 import java.io.File
 import org.nlogo.api.FileIO.file2String
+import org.nlogo.api.AgentKind
 
 // Parsing is separate for clarity, and so we can write tests for the parser itself.
 
@@ -30,7 +31,7 @@ object Parser {
       if (xs.isEmpty) Nil
       else xs.tail.span(_.startsWith(" ")) match {
         case (some, rest) =>
-          LanguageTest(suiteName, xs.head.trim, some.map {_.trim}) :: split(rest)
+          LanguageTest(suiteName, xs.head.trim, some.map{_.trim}.map(parse)) :: split(rest)
       }
     }
     val lines = s.split("\n").filter(!_.trim.startsWith("#")).filter(!_.trim.isEmpty)
@@ -42,30 +43,45 @@ object Parser {
   val CommandRegex = """^([OTPL])>\s+(.*)$""".r
   val OpenModelRegex = """^OPEN>\s+(.*)$""".r
 
+  def agentKind(s: String) = s match {
+    case "O" => AgentKind.Observer
+    case "T" => AgentKind.Turtle
+    case "P" => AgentKind.Patch
+    case "L" => AgentKind.Link
+    case x => sys.error("unrecognized agent kind: " + x)
+  }
+
   def parse(line: String): Entry = {
     if (line.startsWith("to ") || line.startsWith("to-report ") || line.startsWith("extensions"))
-      Proc(line)
+      Procedure(line)
     else line.trim match {
-      case CommandAndErrorRegex(agentKind, command, err) =>
+      case CommandAndErrorRegex(kind, command, err) =>
         if (err startsWith "ERROR")
-          CommandWithError(agentKind, command, err.substring("ERROR".length + 1))
+          Command(agentKind(kind), command,
+            RuntimeError(err.substring("ERROR".length + 1)))
         else if (err startsWith "COMPILER ERROR")
-          CommandWithCompilerError(agentKind, command, err.substring("COMPILER ERROR".length + 1))
+          Command(agentKind(kind), command,
+            CompileError(err.substring("COMPILER ERROR".length + 1)))
         else if (err startsWith "STACKTRACE")
-          CommandWithStackTrace(agentKind, command, err.substring("STACKTRACE".length + 1).replace("\\n", "\n"))
+          Command(agentKind(kind), command,
+            StackTrace(err.substring("STACKTRACE".length + 1).replace("\\n", "\n")))
         else
           sys.error("error missing!: " + err)
       case ReporterRegex(reporter, result) =>
         if (result startsWith "ERROR")
-          ReporterWithError(reporter, result.substring("ERROR".length + 1))
+          Reporter(reporter,
+            RuntimeError(result.substring("ERROR".length + 1)))
         else if (result startsWith "STACKTRACE")
-          ReporterWithStackTrace(reporter, result.substring("STACKTRACE".length + 1).replace("\\n", "\n"))
+          Reporter(reporter,
+            StackTrace(result.substring("STACKTRACE".length + 1).replace("\\n", "\n")))
         else
-          ReporterWithResult(reporter, result)
-      case CommandRegex(agentKind, command) =>
-        Command(agentKind, command)
-      case OpenModelRegex(path) => OpenModel(path)
-      case _ => sys.error("unrecognized line" + line)
+          Reporter(reporter, Success(result))
+      case CommandRegex(kind, command) =>
+        Command(agentKind(kind), command)
+      case OpenModelRegex(path) => Open(path)
+      case _ =>
+        throw new IllegalArgumentException(
+          "could not parse: " + line)
     }
   }
 }
@@ -86,21 +102,21 @@ class ParserTests extends FunSuite {
   // we avoid the `a -> b` syntax in favor of `(a, b)` - ST 1/3/13)
   val tests = List(
     ("O> crt 1",
-      Command("O", "crt 1")),
+      Command(AgentKind.Observer, "crt 1")),
     ("O> crt 1 => ERROR some message",
-      CommandWithError("O", "crt 1", "some message")),
+      Command(AgentKind.Observer, "crt 1", RuntimeError("some message"))),
     ("O> crt 1 => COMPILER ERROR some message",
-      CommandWithCompilerError("O", "crt 1", "some message")),
+      Command(AgentKind.Observer, "crt 1", CompileError("some message"))),
     ("[turtle-set self] of turtle 0 = turtles => true",
-      ReporterWithResult("[turtle-set self] of turtle 0 = turtles", "true")),
+      Reporter("[turtle-set self] of turtle 0 = turtles", Success("true"))),
     ("[link-set self] of link 0 2 => ERROR some message",
-      ReporterWithError("[link-set self] of link 0 2", "some message")),
+      Reporter("[link-set self] of link 0 2", RuntimeError("some message"))),
     ("to p1 repeat 5 [ crt 1 __ignore p2 ] end",
-      Proc("to p1 repeat 5 [ crt 1 __ignore p2 ] end")),
+      Procedure("to p1 repeat 5 [ crt 1 __ignore p2 ] end")),
     ("to-report p2 foreach [1 2 3] [ report 0 ] end",
-      Proc("to-report p2 foreach [1 2 3] [ report 0 ] end")),
+      Procedure("to-report p2 foreach [1 2 3] [ report 0 ] end")),
     ("extensions [ array ]",
-      Proc("extensions [ array ]"))
+      Procedure("extensions [ array ]"))
   )
 
   for((input, output) <- tests)
@@ -117,7 +133,9 @@ class ParserTests extends FunSuite {
     val tests = Parser.parseString("test", code)
     val expectedOutputs =
       List(LanguageTest("test", "TurtleSet",
-        List("O> crt 1", "[turtle-set self] of turtle 0 = turtles => true")))
+        List(
+          Parser.parse("O> crt 1"),
+          Parser.parse("[turtle-set self] of turtle 0 = turtles => true"))))
     assert(tests.toString === expectedOutputs.toString)
   }
 
