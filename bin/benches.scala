@@ -68,13 +68,25 @@ def printResults() {
     println()
   }
   def geometricMean(xs: List[Double]) = math.pow(xs.reduceLeft(_ * _), 1.0 / xs.size)
-  def overall(oldResults: Map[String, Double]) =
-    geometricMean(allNames.filter(x => results(x).nonEmpty && oldResults.isDefinedAt(x))
-                          .map(name => results(name).min / oldResults(name)))
-  printf("                    (%3.0f%% vs 4.0, %3.0f%% vs 4.1)",
-         100 * overall(results40), 100 * overall(results41))
-  println(); println()
+
+  def overall(oldResults: Map[String, Double]): Option[Double] = {
+    val ratios = for {
+      name <- allNames
+      if results(name).nonEmpty
+      oldResult <- oldResults.get(name)
+    } yield results(name).min / oldResult
+    if (ratios.nonEmpty) Some(geometricMean(ratios))
+    else None
+  }
+
+  for {
+    overall40 <- overall(results40)
+    overall41 <- overall(results41)
+  } printf("%21s(%3.0f%% vs 4.0, %3.0f%% vs 4.1)%n", "", 100 * overall40, 100 * overall41)
+
+  println()
 }
+
 def runIt(name: String) {
   for(out <- outputLines(name))
     if(!out.startsWith("@@@@@@"))
