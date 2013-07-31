@@ -2,3 +2,4 @@
 # and Travis doesn't offer Oracle Java 6
 branches:
   only:
+    - headless
