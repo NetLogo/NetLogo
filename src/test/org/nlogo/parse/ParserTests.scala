@@ -11,7 +11,7 @@ class ParserTests extends FunSuite {
     val e = intercept[api.CompilerException] {
       Parser.frontEnd(s)
     }
-    expectResult(err)(e.getMessage)
+    assertResult(err)(e.getMessage)
   }
 
   /// duplicate name tests

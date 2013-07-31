@@ -107,7 +107,7 @@ check absenceOfPackageCycles > 1 in org.nlogo.*
 
 [parser-combinators] = scala.util.parsing*
 
-[testing] = org.scalatest.* org.scalacheck.* org.jmock.* org.hamcrest.*
+[testing] = org.scalatest.* org.scalautils.* org.scalacheck.* org.jmock.* org.hamcrest.*
 
 [libs] = [stdlib-j] [stdlib-s] [headless-AWT] [xml] [asm] [parser-combinators] [testing]
 """)

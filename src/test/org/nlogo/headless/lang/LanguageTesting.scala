@@ -65,7 +65,7 @@ trait LanguageTesting extends Assertions {
     // the same, but it's good to have a both, partially as a way of giving both
     // Utils.recursivelyEqual() and Dump.logoObject() lots of testing! - ST 5/8/03
     withClue(mode + ": not equals(): reporter \"" + reporter + "\"") {
-      expectResult(expectedResult)(
+      assertResult(expectedResult)(
         org.nlogo.api.Dump.logoObject(actualResult, true, false))
     }
     assert(api.Equality.equals(actualResult,
@@ -86,11 +86,11 @@ trait LanguageTesting extends Assertions {
         // errors, so we have to check for those
         import api.CompilerException.{RuntimeErrorAtCompileTimePrefix => prefix}
         if(ex.getMessage.startsWith(prefix))
-          expectResult(prefix + expectedError)(
+          assertResult(prefix + expectedError)(
             ex.getMessage)
         else
           withClue(mode + ": reporter: " + reporter) {
-            expectResult(expectedError)(actualError)
+            assertResult(expectedError)(actualError)
           }
     }
   }
@@ -121,7 +121,7 @@ trait LanguageTesting extends Assertions {
     catch {
       case ex: api.LogoException =>
         withClue(mode + ": command: " + command) {
-          expectResult(error)(ex.getMessage)
+          assertResult(error)(ex.getMessage)
         }
     }
   }
@@ -135,7 +135,7 @@ trait LanguageTesting extends Assertions {
     catch {
       case ex: api.LogoException =>
         withClue(mode + ": command: " + command) {
-          expectResult(stackTrace)(workspace.lastErrorReport.stackTrace.get)
+          assertResult(stackTrace)(workspace.lastErrorReport.stackTrace.get)
         }
     }
   }
@@ -148,7 +148,7 @@ trait LanguageTesting extends Assertions {
     }
     catch {
       case ex: api.CompilerException =>
-        expectResult(errorMessage)(ex.getMessage)
+        assertResult(errorMessage)(ex.getMessage)
     }
   }
 }

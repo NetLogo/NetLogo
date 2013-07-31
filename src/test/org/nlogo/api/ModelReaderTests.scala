@@ -68,35 +68,35 @@ class ModelReaderTests extends FunSuite {
 
   // strip/restoreLines
   test("StripSimple") {
-    expectResult("foo")(ModelReader.stripLines("foo"))
+    assertResult("foo")(ModelReader.stripLines("foo"))
   }
   test("StripLineBreak") {
-    expectResult("foo\\nbar")(ModelReader.stripLines("foo\nbar"))
+    assertResult("foo\\nbar")(ModelReader.stripLines("foo\nbar"))
   }
   test("StripConsecutiveLineBreaks") {
-    expectResult("foo\\n\\nbar")(ModelReader.stripLines("foo\n\nbar"))
+    assertResult("foo\\n\\nbar")(ModelReader.stripLines("foo\n\nbar"))
   }
   test("StripTrailingLineBreak") {
-    expectResult("foo\\n")(ModelReader.stripLines("foo\n"))
+    assertResult("foo\\n")(ModelReader.stripLines("foo\n"))
   }
   test("StripInnerNewLines") {
-    expectResult("foo\\n\\\"foo\\\\n\\\"")(
+    assertResult("foo\\n\\\"foo\\\\n\\\"")(
       ModelReader.stripLines("foo\n\"foo\\n\""))
   }
   test("RestoreSimple") {
-    expectResult("foo")(ModelReader.restoreLines("foo"))
+    assertResult("foo")(ModelReader.restoreLines("foo"))
   }
   test("RestoreLineBreak") {
-    expectResult("foo\nbar")(ModelReader.restoreLines("foo\\nbar"))
+    assertResult("foo\nbar")(ModelReader.restoreLines("foo\\nbar"))
   }
   test("RestoreConsecutiveLineBreaks") {
-    expectResult("foo\n\nbar")(ModelReader.restoreLines("foo\\n\\nbar"))
+    assertResult("foo\n\nbar")(ModelReader.restoreLines("foo\\n\\nbar"))
   }
   test("RestoreInitialLineBreaks") {
-    expectResult("\n\n\nfoo")(ModelReader.restoreLines("\\n\\n\\nfoo"))
+    assertResult("\n\n\nfoo")(ModelReader.restoreLines("\\n\\n\\nfoo"))
   }
   test("RestoreInnerNewLines") {
-    expectResult("foo\n\"foo\\n\"")(
+    assertResult("foo\n\"foo\\n\"")(
       ModelReader.restoreLines("foo\\n\"foo\\\\n\""))
   }
 

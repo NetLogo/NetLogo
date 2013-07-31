@@ -108,7 +108,7 @@ class ScalaConversionsTests extends FunSuite {
 
   def testConversion(input: Any, expected: Any) {
     val actual = input.toLogoObject
-    expectResult(expected)(actual)
+    assertResult(expected)(actual)
   }
 
 }

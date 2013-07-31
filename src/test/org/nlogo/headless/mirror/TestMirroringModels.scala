@@ -56,7 +56,7 @@ class TestMirroringModels extends FunSuite with SlowTest {
         exportPNG(renderer, "mirror")
       }
 
-      expectResult(realChecksum) { mirrorChecksum }
+      assertResult(realChecksum) { mirrorChecksum }
     }
   }
 

@@ -30,7 +30,7 @@ class ExpressionParserTests extends FunSuite {
     }).mkString
   /// helper
   def testStartAndEnd(source: String, preorderDump: String) {
-    expectResult(preorderDump)(statementsToString(compile(source), source))
+    assertResult(preorderDump)(statementsToString(compile(source), source))
   }
   // preorder traversal
   class PositionsCheckVisitor(source: String) extends DefaultAstVisitor {
@@ -54,16 +54,16 @@ class ExpressionParserTests extends FunSuite {
   }
 
   def runTest(input: String, result: String) {
-    expectResult(result)(compile(input).mkString)
+    assertResult(result)(compile(input).mkString)
   }
   def runFailure(input: String, message: String, start: Int, end: Int) {
     doFailure(input, message, start, end)
   }
   def doFailure(input: String, message: String, start: Int, end: Int) {
     val e = intercept[CompilerException] { compile(input) }
-    expectResult(message)(e.getMessage)
-    expectResult(start + PREAMBLE.length())(e.start)
-    expectResult(end + PREAMBLE.length())(e.end)
+    assertResult(message)(e.getMessage)
+    assertResult(start + PREAMBLE.length())(e.start)
+    assertResult(end + PREAMBLE.length())(e.end)
   }
 
   /// now, the actual tests

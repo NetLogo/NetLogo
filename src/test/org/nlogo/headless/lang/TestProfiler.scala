@@ -14,7 +14,7 @@ package lang
 import org.scalatest.{ FunSuite, BeforeAndAfterEach, OneInstancePerTest }
 import org.nlogo.util.SlowTest
 
-class TestProfiler extends LanguageTesting with FunSuite
+class TestProfiler extends FunSuite with LanguageTesting
 with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
 
   // change to true temporarily to enable timing sensitive tests.  disabled by default
@@ -166,9 +166,9 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
   // extensions, so we put it here because it's a SlowTest - ST 1/19/12
   test("isReporter on extension prims") {
     workspace.initForTesting(5, "extensions [profiler]")
-    expectResult(false) { workspace.isReporter("profiler:start") }
-    expectResult(true) { workspace.isReporter("profiler:report") }
-    expectResult(false) { workspace.isReporter("profiler:ghjfgjhkfhgjk") }
+    assertResult(false) { workspace.isReporter("profiler:start") }
+    assertResult(true) { workspace.isReporter("profiler:report") }
+    assertResult(false) { workspace.isReporter("profiler:ghjfgjhkfhgjk") }
   }
 
 }

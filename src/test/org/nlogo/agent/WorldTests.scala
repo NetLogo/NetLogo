@@ -5,7 +5,7 @@ package org.nlogo.agent
 import org.scalatest.FunSuite
 import org.nlogo.api.WorldDimensions
 
-class WorldTests extends AbstractTestWorld with FunSuite {
+class WorldTests extends FunSuite with AbstractTestWorld {
 
   val worldSquare = new WorldDimensions(-2, 2, -2, 2)
   val worldRectangle = new WorldDimensions(-3, 3, -2, 2)
@@ -48,7 +48,7 @@ class WorldTests extends AbstractTestWorld with FunSuite {
   test("ShortestPathHorizontalCylinder") {
     val world = makeWorld(worldRectangle)
     world.changeTopology(false, true)
-    expectResult(3.0)(world.topology.shortestPathY(2, -2))
-    expectResult(-2.0)(world.topology.shortestPathX(2, -2))
+    assertResult(3.0)(world.topology.shortestPathY(2, -2))
+    assertResult(-2.0)(world.topology.shortestPathX(2, -2))
   }
 }

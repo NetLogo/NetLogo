@@ -10,7 +10,7 @@ import org.scalatest.{ FunSuite, BeforeAndAfterEach }
 import org.nlogo.{ api, nvm }
 import org.nlogo.util.SlowTest
 
-class TestErrorMessages extends LanguageTesting with FunSuite with BeforeAndAfterEach with SlowTest
+class TestErrorMessages extends FunSuite with LanguageTesting with BeforeAndAfterEach with SlowTest
 {
 
   override def beforeEach() { init() }
@@ -27,10 +27,10 @@ class TestErrorMessages extends LanguageTesting with FunSuite with BeforeAndAfte
         "[age = ([age] of [spots] of self)]]")
     }
     // is the error message correct?
-    expectResult("That frog is dead.")(ex.getMessage)
+    assertResult("That frog is dead.")(ex.getMessage)
     // is the error message attributed to the right agent? frog 2 is dead,
     // but it's frog 1 that actually encountered the error
-    expectResult("frog 1")(ex.context.agent.toString)
+    assertResult("frog 1")(ex.context.agent.toString)
   }
 
   test("argumentTypeException") {
@@ -39,8 +39,8 @@ class TestErrorMessages extends LanguageTesting with FunSuite with BeforeAndAfte
       testCommand("__ignore 0 < position 5 item 0 glob1") }
     val message =
       "POSITION expected input to be a string or list but got the number 1.4 instead."
-    expectResult(message)(ex.getMessage)
-    expectResult("POSITION")(ex.instruction.token.text.toUpperCase)
+    assertResult(message)(ex.getMessage)
+    assertResult("POSITION")(ex.instruction.token.text.toUpperCase)
   }
 
   def testBadName(name: String, error: String, headerSource: String = "") {
@@ -49,7 +49,7 @@ class TestErrorMessages extends LanguageTesting with FunSuite with BeforeAndAfte
         compiler.compileProgram(
           source, api.Program.empty, workspace.getExtensionManager)
       }
-      expectResult(error)(ex.getMessage)
+      assertResult(error)(ex.getMessage)
     }
     test("bad name: " + name) {
       compile(headerSource + "\nto " + name + " end")

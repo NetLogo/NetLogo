@@ -11,7 +11,7 @@ class BytecodeUtilsTests extends FunSuite {
     val expected =
       "public org.nlogo.api.LogoList org.nlogo.prim._constlist.report(org.nlogo.nvm.Context)"
     val prim = new _constlist(LogoList.Empty)
-    expectResult(expected) {
+    assertResult(expected) {
       BytecodeUtils.getUnrejiggeredMethod(prim).toString
     }
   }
