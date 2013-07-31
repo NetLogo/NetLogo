@@ -18,6 +18,9 @@ trait LanguageTesting extends Assertions {
 
   import LanguageTesting._
 
+  // many individual tests expect this to exist - ST 7/31/13
+  new java.io.File("tmp").mkdir()
+
   val compiler: CompilerInterface =
     Femto.scalaSingleton("org.nlogo.compile.Compiler")
   var workspace: HeadlessWorkspace = _
