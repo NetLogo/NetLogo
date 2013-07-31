@@ -5,4 +5,4 @@ before_install:
 install:
   - sbt update
 script:
-  - ./nightly.sh --noclean
+  - ./tortoise.sh --noclean
