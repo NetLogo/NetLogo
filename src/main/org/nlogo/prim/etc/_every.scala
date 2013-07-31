@@ -2,7 +2,6 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.agent.Agent
 import org.nlogo.api.Syntax
 import org.nlogo.nvm, nvm.{ Command, Context, MutableLong }
 

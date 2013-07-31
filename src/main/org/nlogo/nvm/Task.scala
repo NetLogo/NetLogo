@@ -21,8 +21,8 @@ sealed trait Task {
   val lets: List[LetBinding]
   val locals: Array[AnyRef]
   def bindArgs(c: Context, args: Array[AnyRef]) {
+    val n = formals.size
     var i = 0
-    var n = formals.size
     while(i < n) {
       c.let(formals(i), args(i))
       i += 1

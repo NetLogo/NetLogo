@@ -152,7 +152,7 @@ class TestMirroring extends FunSuite {
     withWorkspace { (ws, mirrorables) =>
       ws.initForTesting(0)
       val (m0, u0) = diffs(Map(), mirrorables())
-      var state: State = Mirroring.merge(Map(), u0)
+      val state: State = Mirroring.merge(Map(), u0)
       // 1 patch + world + observer = 3 objects
       expectResult((3, (3, 0, 0))) { (m0.size, sizes(u0)) }
       checkAllAgents(ws, m0)

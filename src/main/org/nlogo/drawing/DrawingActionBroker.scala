@@ -2,7 +2,6 @@
 
 package org.nlogo.drawing
 
-import scala.collection.mutable
 import org.nlogo.api
 import DrawingAction._
 import org.nlogo.api.ActionBroker

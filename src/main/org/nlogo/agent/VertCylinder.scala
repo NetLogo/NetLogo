@@ -41,8 +41,8 @@ extends Topology(_world, xWraps = true, yWraps = false) {
       world.worldWidth / -2.0,
       world.worldWidth / 2.0)
     if (headingY == 0)
-      if (headingX > 0) 90 else 270
-    else if (headingX == 0)
+      if (headingX2 > 0) 90 else 270
+    else if (headingX2 == 0)
       if (headingY > 0) 0 else 180
     else
       ((270 + StrictMath.toDegrees(StrictMath.PI + StrictMath.atan2(-headingY, headingX2)))

@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api.{ Dump, I18N, ReporterRunnable, Syntax }
+import org.nlogo.api.{ Dump, ReporterRunnable, Syntax }
 import org.nlogo.nvm.{ Command, Context }
 
 class _usermessage extends Command {

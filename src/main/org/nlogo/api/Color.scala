@@ -199,10 +199,10 @@ object Color {
   def getClosestColorNumberByHSB(h: Float, s: Float, b: Float) = {
     // restrict to 0-255 range
     val hh = 0f max h min 255f
-    val ss = 0f max h min 255f
-    val bb = 0f max h min 255f
+    val ss = 0f max s min 255f
+    val bb = 0f max b min 255f
     // convert to RGB
-    val argb = JColor.HSBtoRGB(h / 255, s / 255, b / 255)
+    val argb = JColor.HSBtoRGB(hh / 255, ss / 255, bb / 255)
     rgbMap.get(argb).getOrElse(
       // try the new search mechanism
       estimateClosestColorNumberByRGB(argb))

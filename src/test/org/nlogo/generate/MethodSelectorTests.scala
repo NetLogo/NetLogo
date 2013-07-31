@@ -82,7 +82,6 @@ class MethodSelectorTests extends FunSuite {
   test("less than 1") {
     val root = new _lessthan
     root.args = Array(new _conststring(""), new _conststring(""))
-    val m = BytecodeUtils.getMethods(classOf[_conststring]).head
     expectResult("(boolean,0)")(dump(evaluate(root, false)))
     expectResult("String,String => boolean")(
       dump(select(root, java.lang.Boolean.TYPE, false).get))

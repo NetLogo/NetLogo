@@ -194,7 +194,7 @@ extends AgentSet(kind, printName, false, false, false) {
     if (!kind.mortal)
       new Iterator
     else
-      new ReapingIterator
+      new DeadSkippingIterator
 
   // shuffling iterator = shufflerator! (Google hits: 0)
   // Update: Now 5 Google hits, the first 4 of which are NetLogo related,
@@ -220,16 +220,16 @@ extends AgentSet(kind, printName, false, false, false) {
   }
 
   // extended to skip dead agents
-  private class ReapingIterator extends Iterator {
+  private class DeadSkippingIterator extends Iterator {
     // skip initial dead agents
     while (index < array.size && array(index).id == -1)
       index += 1
     override def next() = {
-      var resultIndex = index
+      val result = index
       // skip to next live agent
       do index += 1
       while (index < array.size && array(index).id == -1)
-      array(resultIndex)
+      array(result)
     }
   }
 

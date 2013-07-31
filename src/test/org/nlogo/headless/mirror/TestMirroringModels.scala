@@ -8,7 +8,6 @@ import org.nlogo.{ api, mirror }
 import org.nlogo.util.SlowTest
 import mirror._
 import Mirroring._
-import Mirrorables._
 import TestMirroring.withWorkspace
 import org.nlogo.drawing.DrawingActionRunner
 import org.nlogo.workspace.Checksummer
@@ -27,8 +26,8 @@ class TestMirroringModels extends FunSuite with SlowTest {
       ws.open(path)
       Checksummer.initModelForChecksumming(ws)
 
-      val (m0, u0) = diffs(Map(), mirrorables())
-      var state = Mirroring.merge(
+      val (_, u0) = diffs(Map(), mirrorables())
+      val state = Mirroring.merge(
         Map(),
         Serializer.fromBytes(
           Serializer.toBytes(u0)))
