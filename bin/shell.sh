@@ -7,6 +7,11 @@ else
   JAVA=$JAVA_HOME/bin/java
 fi
 
+if [ ! -f "target/NetLogoHeadless.jar" ]; then
+echo "missing target/NetLogoHeadless.jar; run 'sbt package'"
+exit 1
+fi
+
 rlwrap $JAVA -classpath \
 target/NetLogoHeadless.jar:\
 $HOME/.sbt/boot/scala-2.10.2/lib/scala-library.jar:\
