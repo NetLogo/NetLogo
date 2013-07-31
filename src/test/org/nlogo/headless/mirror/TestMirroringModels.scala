@@ -27,7 +27,7 @@ class TestMirroringModels extends FunSuite with SlowTest {
       Checksummer.initModelForChecksumming(ws)
 
       val (_, u0) = diffs(Map(), mirrorables())
-      var state = Mirroring.merge(
+      val state = Mirroring.merge(
         Map(),
         Serializer.fromBytes(
           Serializer.toBytes(u0)))
