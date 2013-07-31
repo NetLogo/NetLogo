@@ -1,0 +1,8 @@
+language: scala
+scala: 2.10.2
+before_install:
+  - git submodule update --init --recursive
+install:
+  - sbt update
+script:
+  - ./nightly.sh --noclean
