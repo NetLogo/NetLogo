@@ -94,11 +94,12 @@ def runIt(name: String) {
       else System.err.println(out)
   printResults()
 }
-while(true) {
-  allNames.foreach(runIt)
-  // make extra efforts to get at least one good result for each model
-  allNames.filter(!haveGoodResult(_)).foreach(runIt)
-}
+
+// run until we have one good result for each model
+Iterator
+  .continually(allNames.filterNot(haveGoodResult))
+  .takeWhile(_.nonEmpty)
+  .foreach(_.foreach(runIt))
 
 // Local Variables:
 // mode: scala
