@@ -19,7 +19,6 @@ class LiteralParser(
   private val ERR_EXPECTED_CLOSEPAREN = "Expected a closing parenthesis."
   private val ERR_EXPECTED_LITERAL = "Expected a literal value."
   private val ERR_EXPECTED_NUMBER = "Expected a number."
-  private val ERR_EXPECTED_INT_ETC = "Expected number, list, string or boolean"
   private val ERR_EXTRA_STUFF_AFTER_LITERAL = "Extra characters after literal."
   private val ERR_EXTRA_STUFF_AFTER_NUMBER = "Extra characters after number."
   private val ERR_MISSING_CLOSEBRACKET = "No closing bracket for this open bracket."
@@ -106,11 +105,11 @@ class LiteralParser(
   def parseExtensionLiteral(token: Token): AnyRef = {
     cAssert(world != null, ERR_ILLEGAL_AGENT_LITERAL, token)
     val LiteralRegex = """\{\{(\S*):(\S*)\s(.*)\}\}""".r
-    token.value match {
+    token.value.asInstanceOf[String] match {
       case LiteralRegex(extName, typeName, data) =>
         extensionManager.readExtensionObject(extName, typeName, data)
-      case x =>
-        x
+      case s =>
+        s
     }
   }
 

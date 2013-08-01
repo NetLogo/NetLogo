@@ -25,7 +25,6 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
   override def afterEach() { workspace.dispose() }
 
   def getUniqueFilename() = {
-    new java.io.File("tmp").mkdir()
     new java.io.File("tmp/TestImportExport").mkdir()
     val result = "tmp/TestImportExport/" + System.nanoTime + ".csv"
     delete(result)

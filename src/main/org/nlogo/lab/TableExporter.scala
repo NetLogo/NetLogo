@@ -45,7 +45,8 @@ class TableExporter(modelFileName: String,
     out.println(headers.map(Dump.csv.header).mkString(","))
   }
   def writeTableRow(runNumber: Int, step: Int, values: List[AnyRef]) {
-    val entries = runNumber :: settings(runNumber).map(_._2) ::: step :: values
+    val entries: List[Any] = // it's OK, CSV can handle Any
+      runNumber :: settings(runNumber).map(_._2) ::: step :: values
     out.println(entries.map(Dump.csv.data).mkString(","))
   }
 }
