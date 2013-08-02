@@ -4,8 +4,10 @@ exec bin/scala -nocompdaemon -deprecation -classpath bin -Dfile.encoding=UTF-8 "
 
 import sys.process.Process
 
+// it might be better to move this into sbt where we wouldn't need to
+// use a hand-maintained classpath like this - ST 8/2/13
 val classpath =
-  Seq("target/scala-2.9.2/classes",
+  Seq("target/classes",
       System.getenv("HOME") + "/.sbt/boot/scala-2.9.2/lib/scala-library.jar",
       "resources",
       "lib_managed/jars/asm/asm-all/asm-all-3.3.1.jar",
