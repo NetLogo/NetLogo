@@ -40,11 +40,11 @@ onLoadMessage := ""
 
 resourceDirectory in Compile <<= baseDirectory(_ / "resources")
 
-scalaSource in Compile <<= baseDirectory(_ / "src" / "main")
+scalaSource in Compile <<= baseDirectory(_ / "src" / "main" / "jvm")
 
 scalaSource in Test <<= baseDirectory(_ / "src" / "test")
 
-javaSource in Compile <<= baseDirectory(_ / "src" / "main")
+javaSource in Compile <<= baseDirectory(_ / "src" / "main" / "jvm")
 
 javaSource in Test <<= baseDirectory(_ / "src" / "test")
 

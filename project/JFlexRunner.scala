@@ -22,7 +22,7 @@ object JFlexRunner {
   // so we have to run them serially, which means we have to generate them both each time. -JC 6/8/10
   def flex(log: String => Unit, base: File, dir: File, ppackage: String, kind: String): File = {
     val project = base / "project"
-    val nlogoPackage = dir / "org" / "nlogo"
+    val nlogoPackage = dir / "jvm" / "org" / "nlogo"
     val result = nlogoPackage / ppackage / (kind + ".java")
     log("generating " + result)
     JFlex.Main.main(Array("--quiet", (project / (kind + ".flex")).asFile.toString))

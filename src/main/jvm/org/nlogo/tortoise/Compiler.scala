@@ -5,6 +5,8 @@ package org.nlogo.tortoise
 import org.nlogo.{ api, nvm, parse, prim, workspace }
 import nvm.ParserInterface.{ ProceduresMap, NoProcedures }
 
+import ScalaJSLookups._
+
 object Compiler {
 
   // three main entry points. input is NetLogo, result is JavaScript.
@@ -89,14 +91,14 @@ object Compiler {
           case p: prim._letvariable =>
             s"${p.let.name} = ${arg(1)};"
           case p: prim._observervariable =>
-            s"Globals.setGlobal(${p.vn},${arg(1)})"
+            s"$GlobalsObj.setGlobal(${p.vn},${arg(1)})"
           case p: prim._turtlevariable =>
-            s"AgentSet.setTurtleVariable(${p.vn},${arg(1)})"
+            s"$AgentSetObj.setTurtleVariable(${p.vn},${arg(1)})"
           case p: prim._turtleorlinkvariable =>
             val vn = api.AgentVariables.getImplicitTurtleVariables.indexOf(p.varName)
-            s"AgentSet.setTurtleVariable($vn,${arg(1)})"
+            s"$AgentSetObj.setTurtleVariable($vn,${arg(1)})"
           case p: prim._patchvariable =>
-            s"AgentSet.setPatchVariable(${p.vn},${arg(1)})"
+            s"$AgentSetObj.setPatchVariable(${p.vn},${arg(1)})"
         }
     }
   }
@@ -113,19 +115,19 @@ object Compiler {
       case call: prim._callreport           => s"${call.procedure.name}($args)"
       case Prims.InfixReporter(op)          => s"(${arg(0)} $op ${arg(1)})"
       case Prims.NormalReporter(op)         => s"$op($args)"
-      case tv: prim._turtlevariable         => s"AgentSet.getTurtleVariable(${tv.vn})"
+      case tv: prim._turtlevariable         => s"$AgentSetObj.getTurtleVariable(${tv.vn})"
       case tv: prim._turtleorlinkvariable   =>
         val vn = api.AgentVariables.getImplicitTurtleVariables.indexOf(tv.varName)
-        s"AgentSet.getTurtleVariable($vn)"
-      case pv: prim._patchvariable          => s"AgentSet.getPatchVariable(${pv.vn})"
-      case ov: prim._observervariable       => s"Globals.getGlobal(${ov.vn})"
+        s"$AgentSetObj.getTurtleVariable($vn)"
+      case pv: prim._patchvariable          => s"$AgentSetObj.getPatchVariable(${pv.vn})"
+      case ov: prim._observervariable       => s"$GlobalsObj.getGlobal(${ov.vn})"
       case s: prim._word                    => "\"\" + " + argsSep(" + ")
       case w: prim._with =>
         val agents = arg(0)
         val filter = genReporterBlock(r.args(1))
-        s"AgentSet.agentFilter($agents, function(){ return $filter })"
-      case p: prim.etc._patch               => s"Prims.patch($args)"
-      case n: prim._neighbors               => s"Prims.getNeighbors()"
+        s"$AgentSetObj.agentFilter($agents, ${Prims.fun(s"return $filter")})"
+      case p: prim.etc._patch               => s"$PrimsObj.patch($args)"
+      case n: prim._neighbors               => s"$PrimsObj.getNeighbors()"
     }
   }
 
@@ -148,6 +150,7 @@ object Compiler {
   def genCommandBlock(e: parse.Expression) = e match {
     case cb: parse.CommandBlock => Compiler.generateCommands(cb.statements)
   }
+
 }
 
 // RuntimeInit generates JavaScript code that does any initialization that needs to happen
@@ -157,12 +160,12 @@ class RuntimeInit(program: api.Program, minPxcor: Int, maxPxcor: Int, minPycor: 
 
   def init =
     globals + turtlesOwn + patchesOwn +
-      s"world = new World($minPxcor, $maxPxcor, $minPycor, $maxPycor);\n"
+      s"""world = new $WorldClass($minPxcor, $maxPxcor, $minPycor, $maxPycor);\n"""
 
   // if there are any globals,
   // tell the runtime how many there are, it will initialize them all to 0.
   // if not, do nothing.
-  def globals = vars(program.globals, "Globals")
+  def globals = vars(program.globals, GlobalsObj)
 
   // tell the runtime how many *-own variables there are
   val turtleBuiltinCount =
@@ -170,9 +173,9 @@ class RuntimeInit(program: api.Program, minPxcor: Int, maxPxcor: Int, minPycor: 
   val patchBuiltinCount =
     api.AgentVariables.getImplicitPatchVariables.size
   def turtlesOwn =
-    vars(program.turtlesOwn.drop(turtleBuiltinCount), "TurtlesOwn")
+    vars(program.turtlesOwn.drop(turtleBuiltinCount), TurtleObj)
   def patchesOwn =
-    vars(program.patchesOwn.drop(patchBuiltinCount), "PatchesOwn")
+    vars(program.patchesOwn.drop(patchBuiltinCount), PatchObj)
 
   private def vars(s: Seq[String], initPath: String) =
     if (s.nonEmpty) s"$initPath.init(${s.size})\n"

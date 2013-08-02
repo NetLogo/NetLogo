@@ -6,6 +6,8 @@ import org.nlogo.{ parse, nvm, prim }
 
 object Prims {
 
+  import ScalaJSLookups._
+
   object InfixReporter {
     def unapply(r: nvm.Reporter): Option[String] =
       PartialFunction.condOpt(r) {
@@ -27,14 +29,14 @@ object Prims {
   object NormalReporter {
     def unapply(r: nvm.Reporter): Option[String] =
       PartialFunction.condOpt(r) {
-        case _: prim.etc._self       => "AgentSet.self"
+        case _: prim.etc._self       => s"$AgentSetObj.self"
         case _: prim.etc._patch      => "world.getPatchAt"
         case _: prim.etc._turtles    => "world.turtles"
         case _: prim._patches        => "world.patches"
-        case _: prim._count          => "AgentSet.count"
+        case _: prim._count          => s"$AgentSetObj.count"
         case _: prim._random         => "Random.nextLong"
-        case _: prim.etc._randomxcor => "Prims.randomxcor"
-        case _: prim.etc._randomycor => "Prims.randomycor"
+        case _: prim.etc._randomxcor => s"$PrimsObj.randomxcor"
+        case _: prim.etc._randomycor => s"$PrimsObj.randomycor"
       }
   }
 
@@ -44,14 +46,14 @@ object Prims {
         case _: prim.etc._outputprint      => "println"
         case _: prim.etc._clearall         => "world.clearall"
         case _: prim._createturtles        => "world.createturtles"
-        case _: prim._sprout               => "Prims.sprout"
+        case _: prim._sprout               => s"$PrimsObj.sprout"
         case _: prim._createorderedturtles => "world.createorderedturtles"
-        case _: prim._fd                   => "Prims.fd"
-        case _: prim._bk                   => "Prims.bk"
-        case _: prim.etc._left             => "Prims.left"
-        case _: prim.etc._right            => "Prims.right"
-        case _: prim.etc._setxy            => "Prims.setxy"
-        case _: prim.etc._die              => "AgentSet.die"
+        case _: prim._fd                   => s"$PrimsObj.fd"
+        case _: prim._bk                   => s"$PrimsObj.bk"
+        case _: prim.etc._left             => s"$PrimsObj.left"
+        case _: prim.etc._right            => s"$PrimsObj.right"
+        case _: prim.etc._setxy            => s"$PrimsObj.setxy"
+        case _: prim.etc._die              => s"$AgentSetObj.die"
         case _: prim.etc._randomseed       => "Random.setSeed"
       }
   }
@@ -86,9 +88,10 @@ object Prims {
   def generateAsk(s: parse.Statement): String = {
     val agents = Compiler.genReporterApp(s.args.head)
     val body   = Compiler.genCommandBlock(s.args.tail.head)
-    s"AgentSet.ask($agents, ${fun(body)})"
+    s"$AgentSetObj.ask($agents, ${fun(body)})"
   }
 
-  def fun(body: String) = s"function(){ $body }"
+  // Ewwwwwwwww --JAB (7/30/13)
+  def fun(body: String) = "{ apply$mcZ$sp\ufe34Z: function() {" + body + "} }"
 
 }
