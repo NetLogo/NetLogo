@@ -6,12 +6,6 @@
 ## results as JVM NetLogo.  elsewhere, "close enough" is close enough
 ##
 
-# from: http://coffeescriptcookbook.com/chapters/arrays/filtering-arrays
-# this works with the coffee command, but is absent in Rhino.
-unless Array::filter
-  Array::filter = (callback) ->
-    element for element in this when callback(element)
-
 # Rhino has "println" already, Nashorn needs to borrow it from
 # System.out, V8 and browsers have "console.log". get it somehow!
 unless println?
@@ -19,15 +13,6 @@ unless println?
     println = console.log
   unless println?
     println = java.lang.System.out.println
-
-# surprisingly difficult to ask if something is an array or not
-typeIsArray = (value) ->
-  value and
-  typeof value is 'object' and
-  value instanceof Array and
-  typeof value.length is 'number' and
-  typeof value.splice is 'function' and
-  not ( value.propertyIsEnumerable 'length' )
 
 # on Rhino, we provide this via MersenneTwisterFast.  in the browser,
 # we delegate to Math.random(), for speed.  we could swap in a JS

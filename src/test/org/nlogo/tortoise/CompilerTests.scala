@@ -6,6 +6,8 @@ import org.scalatest.FunSuite
 
 class TestCompiler extends FunSuite {
 
+  import ScalaJSLookups._
+
   test("literals") {
     import Compiler.{compileReporter => compile}
     expectResult("1")(
@@ -46,8 +48,8 @@ class TestCompiler extends FunSuite {
 
   test("commands: turtle creation") {
     import Compiler.{compileCommands => compile}
-    val expected = """|world.createorderedturtles(5)
-                      |println(AgentSet.count(world.turtles()))""".stripMargin
+    val expected = s"""|world.createorderedturtles(5)
+                       |println($AgentSetObj.count(world.turtles()))""".stripMargin
     expectResult(expected)(
       compile("cro 5 output-print count turtles"))
   }
@@ -73,86 +75,86 @@ class TestCompiler extends FunSuite {
   test("command procedure") {
     import Compiler.{compileProcedures => compile}
     val input = "to foo output-print 5 end"
-    val expected = """world = new World(0, 0, 0, 0);
-                     |function FOO () {
-                     |println(5)
-                     |};""".stripMargin
+    val expected = s"""world = new $WorldClass(0, 0, 0, 0);
+                      |function FOO () {
+                      |println(5)
+                      |};""".stripMargin
     expectResult(expected)(compile(input)._1)
   }
 
   test("commands: ask simple") {
     import Compiler.{compileCommands => compile}
     val input = "__ask-sorted turtles [fd 1]"
-    val expected = "AgentSet.ask(world.turtles(), function(){ Prims.fd(1) })"
+    val expected = s"$AgentSetObj.ask(world.turtles(), function(){ $PrimsObj.fd(1) })"
     expectResult(expected)(compile(input))
   }
 
   test("commands: ask with turtle variable") {
     import Compiler.{compileCommands => compile}
     val input = "__ask-sorted turtles [output-print xcor]"
-    val expected = "AgentSet.ask(world.turtles(), function(){ println(AgentSet.getTurtleVariable(3)) })"
+    val expected = s"$AgentSetObj.ask(world.turtles(), function(){ println($AgentSetObj.getTurtleVariable(3)) })"
     expectResult(expected)(compile(input))
   }
 
   test("commands: die") {
     import Compiler.{compileCommands => compile}
     val input = "__ask-sorted turtles [die]"
-    val expected = "AgentSet.ask(world.turtles(), function(){ AgentSet.die() })"
+    val expected = s"$AgentSetObj.ask(world.turtles(), function(){ $AgentSetObj.die() })"
     expectResult(expected)(compile(input))
   }
 
   test("commands: ask patches with variable") {
     import Compiler.{compileCommands => compile}
     val input = "__ask-sorted patches [output-print pxcor]"
-    val expected = "AgentSet.ask(world.patches(), function(){ println(AgentSet.getPatchVariable(0)) })"
+    val expected = s"$AgentSetObj.ask(world.patches(), function(){ println($AgentSetObj.getPatchVariable(0)) })"
     expectResult(expected)(compile(input))
   }
 
   test("globals: access") {
     import Compiler.{compileProcedures => compile}
-    val input = "globals [x y z] to foo output-print z output-print y output-print x end"
+    val input    = "globals [x y z] to foo output-print z output-print y output-print x end"
     val expected =
-     """|Globals.init(3)
-        |world = new World(0, 0, 0, 0);
-        |function FOO () {
-        |println(Globals.getGlobal(2))
-        |println(Globals.getGlobal(1))
-        |println(Globals.getGlobal(0))
-        |};""".stripMargin
+      s"""|$GlobalsObj.init(3)
+          |world = new $WorldClass(0, 0, 0, 0);
+          |function FOO () {
+          |println($GlobalsObj.getGlobal(2))
+          |println($GlobalsObj.getGlobal(1))
+          |println($GlobalsObj.getGlobal(0))
+          |};""".stripMargin
     expectResult(expected)(compile(input)._1)
   }
 
   test("globals: set") {
     import Compiler.{compileProcedures => compile}
-    val input = "globals [x] to foo set x 5 output-print x end"
+    val input    = "globals [x] to foo set x 5 output-print x end"
     val expected =
-     """|Globals.init(1)
-        |world = new World(0, 0, 0, 0);
-        |function FOO () {
-        |Globals.setGlobal(0,5)
-        |println(Globals.getGlobal(0))
-        |};""".stripMargin
+      s"""|$GlobalsObj.init(1)
+          |world = new $WorldClass(0, 0, 0, 0);
+          |function FOO () {
+          |$GlobalsObj.setGlobal(0,5)
+          |println($GlobalsObj.getGlobal(0))
+          |};""".stripMargin
     expectResult(expected)(compile(input)._1)
   }
 
   test("commands: ask turtles to set color") {
     import Compiler.{compileCommands => compile}
     val input = "__ask-sorted turtles [set color green]"
-    val expected = "AgentSet.ask(world.turtles(), function(){ AgentSet.setTurtleVariable(1,55) })"
+    val expected = s"$AgentSetObj.ask(world.turtles(), function(){ $AgentSetObj.setTurtleVariable(1,55) })"
     expectResult(expected)(compile(input))
   }
 
   test("commands: ask turtles to set pcolor") {
     import Compiler.{compileCommands => compile}
     val input = "__ask-sorted turtles [set pcolor green]"
-    val expected = "AgentSet.ask(world.turtles(), function(){ AgentSet.setPatchVariable(2,55) })"
+    val expected = s"$AgentSetObj.ask(world.turtles(), function(){ $AgentSetObj.setPatchVariable(2,55) })"
     expectResult(expected)(compile(input))
   }
 
   test("commands: ask patches to set pcolor") {
     import Compiler.{compileCommands => compile}
     val input = "__ask-sorted patches [set pcolor green]"
-    val expected = "AgentSet.ask(world.patches(), function(){ AgentSet.setPatchVariable(2,55) })"
+    val expected = s"$AgentSetObj.ask(world.patches(), function(){ $AgentSetObj.setPatchVariable(2,55) })"
     expectResult(expected)(compile(input))
   }
 
@@ -160,8 +162,8 @@ class TestCompiler extends FunSuite {
     import Compiler.{compileCommands => compile}
     val input = "__ask-sorted patches with [pxcor = 1] [output-print pycor]"
     val expectedAgentFilter =
-      "AgentSet.agentFilter(world.patches(), function(){ return (AgentSet.getPatchVariable(0) === 1) })"
-    val expected = s"AgentSet.ask($expectedAgentFilter, function(){ println(AgentSet.getPatchVariable(1)) })"
+      s"$AgentSetObj.agentFilter(world.patches(), function(){ return ($AgentSetObj.getPatchVariable(0) === 1) })"
+    val expected = s"$AgentSetObj.ask($expectedAgentFilter, function(){ println($AgentSetObj.getPatchVariable(1)) })"
     expectResult(expected)(compile(input))
   }
 }
