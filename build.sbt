@@ -65,6 +65,10 @@ all <<= all.dependsOn(
   compile in Test,
   Extensions.extensions)
 
+ScalaJS.ScalaJSKeys.scalaJSSrcDir <<= baseDirectory(_ / "src" / "main" / "scalajs")
+
+ScalaJS.ScalaJSKeys.scalaJSOutDir <<= resourceManaged(_ / "main" / "js")
+
 seq(Testing.settings: _*)
 
 seq(Depend.settings: _*)
@@ -74,5 +78,7 @@ seq(Classycle.settings: _*)
 seq(Dump.settings: _*)
 
 seq(ChecksumsAndPreviews.settings: _*)
+
+seq(ScalaJS.scalaJSSettings: _*)
 
 org.scalastyle.sbt.ScalastylePlugin.Settings

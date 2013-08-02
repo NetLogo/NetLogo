@@ -11,3 +11,5 @@ libraryDependencies +=
   "classycle" % "classycle" % "1.4.1" from
     "http://ccl.northwestern.edu/devel/classycle-1.4.1.jar"
 
+libraryDependencies +=
+  "com.google.javascript" % "closure-compiler" % "v20130603"
