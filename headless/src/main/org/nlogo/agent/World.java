@@ -18,7 +18,6 @@ import org.nlogo.api.TrailDrawerInterface;
 import org.nlogo.api.ValueConstraint;
 import org.nlogo.api.WorldDimensionException;
 import org.nlogo.api.WorldDimensions;
-import org.nlogo.nvm.LetBinding;
 import org.nlogo.util.MersenneTwisterFast;
 
 import java.util.Arrays;
