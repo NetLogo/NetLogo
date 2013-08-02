@@ -4,7 +4,7 @@ package org.nlogo.headless
 package lang
 
 import org.scalatest.Assertions
-import org.nlogo.api.{ AgentKind, Equality, CompilerException, JobOwner, LogoException, Program, WorldDimensions }
+import org.nlogo.api
 import org.nlogo.nvm.CompilerInterface
 import org.nlogo.util.Femto
 
@@ -25,7 +25,7 @@ trait LanguageTesting extends Assertions {
     Femto.scalaSingleton("org.nlogo.compile.Compiler")
   var workspace: HeadlessWorkspace = _
 
-  def owner: JobOwner = workspace.defaultOwner
+  def owner: api.JobOwner = workspace.defaultOwner
 
   def open(path: String) {
     workspace.open(path)
@@ -35,7 +35,7 @@ trait LanguageTesting extends Assertions {
     workspace = HeadlessWorkspace.newInstance
     workspace.silent = true
     workspace.initForTesting(
-      new WorldDimensions(-5, 5, -5, 5),
+      new api.WorldDimensions(-5, 5, -5, 5),
       HeadlessWorkspace.TestDeclarations)
   }
 
@@ -43,7 +43,7 @@ trait LanguageTesting extends Assertions {
     val results = {
       compiler.compileProgram(
         HeadlessWorkspace.TestDeclarations + source,
-        Program.empty,
+        api.Program.empty,
         workspace.getExtensionManager)
     }
     workspace.procedures = results.proceduresMap
@@ -68,9 +68,9 @@ trait LanguageTesting extends Assertions {
       expectResult(expectedResult)(
         org.nlogo.api.Dump.logoObject(actualResult, true, false))
     }
-    assert(Equality.equals(actualResult,
-                           compiler.readFromString(expectedResult)),
-           mode + ": not recursivelyEqual(): reporter \"" + reporter + "\"")
+    assert(api.Equality.equals(actualResult,
+      compiler.readFromString(expectedResult)),
+      mode + ": not recursivelyEqual(): reporter \"" + reporter + "\"")
   }
   private def privateTestReporterError(reporter: String,
                                        expectedError: String,
@@ -84,8 +84,9 @@ trait LanguageTesting extends Assertions {
       case ex: Exception =>
         // PureConstantOptimizer turns some errors that would be runtime errors into compile-time
         // errors, so we have to check for those
-        if(ex.getMessage.startsWith(CompilerException.RuntimeErrorAtCompileTimePrefix))
-          expectResult(CompilerException.RuntimeErrorAtCompileTimePrefix + expectedError)(
+        import api.CompilerException.{RuntimeErrorAtCompileTimePrefix => prefix}
+        if(ex.getMessage.startsWith(prefix))
+          expectResult(prefix + expectedError)(
             ex.getMessage)
         else
           withClue(mode + ": reporter: " + reporter) {
@@ -100,7 +101,7 @@ trait LanguageTesting extends Assertions {
     privateTestReporterError(reporter, stackTrace, workspace.lastErrorReport.stackTrace.get, mode)
   }
   def testCommand(command: String,
-                  kind: AgentKind = AgentKind.Observer,
+                  kind: api.AgentKind = api.AgentKind.Observer,
                   mode: TestMode = NormalMode) {
     workspace.clearLastLogoException()
     workspace.evaluateCommands(owner,
@@ -111,42 +112,42 @@ trait LanguageTesting extends Assertions {
       throw workspace.lastLogoException
   }
   def testCommandError(command: String, error: String,
-                       kind: AgentKind = AgentKind.Observer,
+                       kind: api.AgentKind = api.AgentKind.Observer,
                        mode: TestMode = NormalMode) {
     try {
       testCommand(command, kind, mode)
       fail("failed to cause runtime error: \"" + command + "\"")
     }
     catch {
-      case ex: LogoException =>
+      case ex: api.LogoException =>
         withClue(mode + ": command: " + command) {
           expectResult(error)(ex.getMessage)
         }
     }
   }
   def testCommandErrorStackTrace(command: String, stackTrace: String,
-                       kind: AgentKind = AgentKind.Observer,
+                       kind: api.AgentKind = api.AgentKind.Observer,
                        mode: TestMode = NormalMode) {
     try {
       testCommand(command, kind, mode)
       fail("failed to cause runtime error: \"" + command + "\"")
     }
     catch {
-      case ex: LogoException =>
+      case ex: api.LogoException =>
         withClue(mode + ": command: " + command) {
           expectResult(stackTrace)(workspace.lastErrorReport.stackTrace.get)
         }
     }
   }
   def testCommandCompilerErrorMessage(command: String, errorMessage: String,
-                                      kind: AgentKind = AgentKind.Observer)
+                                      kind: api.AgentKind = api.AgentKind.Observer)
   {
     try {
       workspace.compileCommands(command, kind)
       fail("no CompilerException occurred")
     }
     catch {
-      case ex: CompilerException =>
+      case ex: api.CompilerException =>
         expectResult(errorMessage)(ex.getMessage)
     }
   }
