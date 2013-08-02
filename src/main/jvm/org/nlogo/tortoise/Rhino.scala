@@ -14,9 +14,8 @@ import sun.org.mozilla.javascript.internal.NativeArray
 // collects all the lines of output and JSON updates generated.  The latter runs a compiled reporter
 // and returns a single result value.
 
-object Rhino {
+class Rhino {
 
-  // at some point we'll need to have separate instances instead of a singleton
   val engine =
     (new javax.script.ScriptEngineManager)
       .getEngineByName("rhino")
@@ -26,10 +25,6 @@ object Rhino {
   // them to JavaScript for us.  (and downloads json2.js direct from GitHub).
   // unlike V8, Rhino doesn't have JSON.stringify built-in, so we get it from json2.js
 
-  // There has _got to_ be a better way --JAB (7/27/13)
-//  private val scalaJSLibs = Seq(
-//    "Agents", "Globals", "Overlord", "package", "Patch", "Prims", "Topology", "Trig", "Turtle", "World"
-//  ) map (x => s"/js/org/nlogo/engine/$x.js")
   private val scalaJSLibs = Seq("/js/engine.js")
 
   // The presence of 'global.js' leads me to believe that I might be the worst person I know.  --JAB (8/1/13)

@@ -16,13 +16,13 @@ class TestTortoise extends FunSuite {
     mirror.Mirrorables.allMirrorables(ws.world, Seq())
   var state: mirror.Mirroring.State = Map()
 
-  def compare(logo: String) {
+  def compare(logo: String) { implicit rhino: Rhino =>
     val expected = ws.report(logo)
     val actual = evalJS(Compiler.compileReporter(logo))
     expectResult(expected)(actual)
   }
 
-  def compareCommands(logo: String) {
+  def compareCommands(logo: String)(implicit rhino: Rhino) {
     // println(s"logo = $logo")
     ws.clearOutput()
     ws.command(logo)
@@ -36,12 +36,12 @@ class TestTortoise extends FunSuite {
     val (actualOutput, actualJson) =
       runJS(Compiler.compileCommands(logo, ws.procedures, ws.world.program))
     expectResult(expectedOutput)(actualOutput)
-    Rhino.eval("expectedUpdates = " + expectedJson)
-    Rhino.eval("actualUpdates = " + actualJson)
-    Rhino.eval("expectedModel.updates(expectedUpdates)")
-    Rhino.eval("actualModel.updates(actualUpdates)")
-    val expectedModel = Rhino.eval("JSON.stringify(expectedModel)").asInstanceOf[String]
-    val actualModel = Rhino.eval("JSON.stringify(actualModel)").asInstanceOf[String]
+    rhino.eval("expectedUpdates = " + expectedJson)
+    rhino.eval("actualUpdates = " + actualJson)
+    rhino.eval("expectedModel.updates(expectedUpdates)")
+    rhino.eval("actualModel.updates(actualUpdates)")
+    val expectedModel = rhino.eval("JSON.stringify(expectedModel)").asInstanceOf[String]
+    val actualModel = rhino.eval("JSON.stringify(actualModel)").asInstanceOf[String]
     // println(" exp upt = " + expectedJson)
     // println(" act upt = " + actualJson)
     // println("expected = " + expectedModel)
@@ -52,32 +52,34 @@ class TestTortoise extends FunSuite {
   }
 
   // use single-patch world by default to keep generated JSON to a minimum
-  def defineProcedures(logo: String, minPxcor: Int = 0, maxPxcor: Int = 0, minPycor: Int = 0, maxPycor: Int = 0) {
+  def defineProcedures(logo: String, minPxcor: Int = 0, maxPxcor: Int = 0, minPycor: Int = 0, maxPycor: Int = 0)
+                      (implicit rhino: Rhino) {
     val (js, _, _) = Compiler.compileProcedures(logo, minPxcor, maxPxcor, minPycor, maxPycor)
     evalJS(js)
     ws.initForTesting(minPxcor, maxPxcor, minPycor, maxPycor, logo)
     state = Map()
-    Rhino.eval("expectedModel = new AgentModel")
-    Rhino.eval("actualModel = new AgentModel")
+    rhino.eval("expectedModel = new AgentModel")
+    rhino.eval("actualModel = new AgentModel")
   }
 
   // these two are super helpful when running failing tests
   // the show the javascript before it gets executed.
   // TODO: what is the difference between eval and run?
-  def evalJS(javascript: String) = {
+  def evalJS(javascript: String)(implicit rhino: Rhino) = {
     //println(javascript)
-    Rhino.eval(javascript)
+    rhino.eval(javascript)
   }
 
-  def runJS(javascript: String): (String, String) = {
+  def runJS(javascript: String)(implicit rhino: Rhino): (String, String) = {
     //println(javascript)
-    Rhino.run(javascript)
+    rhino.run(javascript)
   }
 
   def tester(testName: String)(body: => Unit) {
     test(testName) {
       ws = headless.HeadlessWorkspace.newInstance
       ws.silent = true
+      implicit val rhino = new Rhino
       defineProcedures("")
       state = Map()
       compareCommands("clear-all")
@@ -87,12 +89,12 @@ class TestTortoise extends FunSuite {
 
   ///
 
-  tester("comments") {
+  tester("comments") { implicit rhino: Rhino =>
     compare("3 ; comment")
     compare("[1 ; comment\n2]")
   }
 
-  tester("simple literals") {
+  tester("simple literals") { implicit rhino: Rhino =>
     compare("false")
     compare("true")
     compare("2")
@@ -100,7 +102,7 @@ class TestTortoise extends FunSuite {
     compare("\"foo\"")
   }
 
-  tester("literal lists") {
+  tester("literal lists") { implicit rhino: Rhino =>
     compare("[]")
     compare("[1]")
     compare("[1 2]")
@@ -110,7 +112,7 @@ class TestTortoise extends FunSuite {
     compare("[false true]")
   }
 
-  tester("arithmetic") {
+  tester("arithmetic") { implicit rhino: Rhino =>
     compare("2 + 2")
     compare("1 + 2 + 3")
     compare("1 - 2 - 3")
@@ -120,35 +122,35 @@ class TestTortoise extends FunSuite {
     compare("6 / 2 + 12 / 6")
   }
 
-  tester("equality") {
+  tester("equality") { implicit rhino: Rhino =>
     compare("5 = 5")
     compare(""""hello" = "hello"""")
   }
 
-  tester("word 0") {
+  tester("word 0") { implicit rhino: Rhino =>
     compare("(word)")
   }
 
-  tester("word 1") {
+  tester("word 1") { implicit rhino: Rhino =>
     compare("(word 1)")
   }
 
-  tester("word") {
+  tester("word") { implicit rhino: Rhino =>
     compare("(word 1 2 3)") // 123, and hopefully not, god forbid, 6
   }
 
-  tester("empty commands") {
+  tester("empty commands") { implicit rhino: Rhino =>
     compareCommands("")
   }
 
-  tester("printing") {
+  tester("printing") { implicit rhino: Rhino =>
     compareCommands("output-print 1")
     compareCommands("output-print \"foo\"")
     compareCommands("output-print 2 + 2")
     compareCommands("output-print 1 output-print 2 output-print 3")
   }
 
-  tester("turtle creation") {
+  tester("turtle creation") { implicit rhino: Rhino =>
     compareCommands("output-print count turtles")
     compareCommands("cro 1")
     compareCommands("output-print count turtles")
@@ -158,41 +160,41 @@ class TestTortoise extends FunSuite {
     compareCommands("output-print count turtles")
   }
 
-  tester("while loops") {
+  tester("while loops") { implicit rhino: Rhino =>
     compareCommands("while [count turtles < 5] [cro 1]")
     compareCommands("output-print count turtles")
   }
 
-  tester("let") {
+  tester("let") { implicit rhino: Rhino =>
     compareCommands("let x 5  output-print x")
   }
 
-  tester("let + while") {
+  tester("let + while") { implicit rhino: Rhino =>
     compareCommands(
       "let x 10 " +
       "while [x > 0] [ set x x - 1 ] " +
       "output-print x")
   }
 
-  tester("procedure call") {
+  tester("procedure call") { implicit rhino: Rhino =>
     defineProcedures("to foo cro 1 end")
     compareCommands("foo foo foo")
     compareCommands("output-print count turtles")
   }
 
-  tester("procedure call with one input") {
+  tester("procedure call with one input") { implicit rhino: Rhino =>
     defineProcedures("to foo [x] cro x end")
     compareCommands("foo 1 foo 2 foo 3")
     compareCommands("output-print count turtles")
   }
 
-  tester("procedure call with three inputs") {
+  tester("procedure call with three inputs") { implicit rhino: Rhino =>
     defineProcedures("to foo [x y z] cro x + y cro z end")
     compareCommands("foo 1 2 3")
     compareCommands("output-print count turtles")
   }
 
-  tester("multiple procedures") {
+  tester("multiple procedures") { implicit rhino: Rhino =>
     defineProcedures("""|to foo [x y z] cro x + y cro z end
                         |to goo [z] cro z * 10 end""".stripMargin)
     compareCommands("foo 1 2 3")
@@ -200,71 +202,71 @@ class TestTortoise extends FunSuite {
     compareCommands("output-print count turtles")
   }
 
-  tester("if") {
+  tester("if") { implicit rhino: Rhino =>
     compareCommands("if true [ output-print 5 ]")
     compareCommands("if false [ output-print 5 ]")
   }
 
-  tester("simple recursive call") {
+  tester("simple recursive call") { implicit rhino: Rhino =>
     defineProcedures("to-report fact [n] ifelse n = 0 [ report 1 ] [ report n * fact (n - 1) ] end")
     compareCommands("output-print fact 6")
   }
 
-  tester("rng") {
+  tester("rng") { implicit rhino: Rhino =>
     compareCommands("random-seed 0 output-print random 100000")
   }
 
-  tester("crt") {
+  tester("crt") { implicit rhino: Rhino =>
     compareCommands("random-seed 0 crt 10")
     compareCommands("__ask-sorted turtles [ output-print color output-print heading ]")
   }
 
-  tester("random-xcor/ycor") {
+  tester("random-xcor/ycor") { implicit rhino: Rhino =>
     compareCommands("cro 10")
     compareCommands("random-seed 0 __ask-sorted turtles [ setxy random-xcor random-ycor ]")
   }
 
-  tester("ask") {
+  tester("ask") { implicit rhino: Rhino =>
     compareCommands("cro 3")
     compareCommands("__ask-sorted turtles [ output-print 0 ]")
   }
 
-  tester("turtle motion 1") {
+  tester("turtle motion 1") { implicit rhino: Rhino =>
     defineProcedures("", -1, 1, -1, 1)
     compareCommands("cro 4 __ask-sorted turtles [fd 1] __ask-sorted turtles [output-print xcor output-print ycor]")
   }
 
-  tester("turtle motion 2") {
+  tester("turtle motion 2") { implicit rhino: Rhino =>
     defineProcedures("", -1, 1, -1, 1)
     compareCommands("cro 8 __ask-sorted turtles [fd 1] __ask-sorted turtles [output-print xcor output-print ycor]")
   }
 
-  tester("turtle death") {
+  tester("turtle death") { implicit rhino: Rhino =>
     compareCommands("cro 8")
     compareCommands("__ask-sorted turtles [die]")
     compareCommands("__ask-sorted turtles [output-print xcor]")
   }
 
-  tester("turtle size") {
+  tester("turtle size") { implicit rhino: Rhino =>
     compareCommands("cro 1 __ask-sorted turtles [ set size 5 ]")
     compareCommands("__ask-sorted turtles [ output-print size ]")
   }
 
-  tester("turtle color") {
+  tester("turtle color") { implicit rhino: Rhino =>
     compareCommands("cro 1 __ask-sorted turtles [ set color blue ]")
     compareCommands("__ask-sorted turtles [ output-print blue ]")
   }
 
-  tester("patches") {
+  tester("patches") { implicit rhino: Rhino =>
     compareCommands("__ask-sorted patches [output-print pxcor]")
   }
 
-  tester("globals: set") {
+  tester("globals: set") { implicit rhino: Rhino =>
     defineProcedures("globals [x] to foo [i] set x i output-print x end")
     compareCommands("foo 5 foo 6 foo 7")
   }
 
-  tester("patch variables") {
+  tester("patch variables") { implicit rhino: Rhino =>
     val src =
       """
         |patches-own [ living? live-neighbors ]
@@ -276,18 +278,18 @@ class TestTortoise extends FunSuite {
     compareCommands("__ask-sorted patches [celldeath output-print living?]")
   }
 
-  tester("patch order"){
+  tester("patch order") { implicit rhino: Rhino =>
     defineProcedures("", -5, 5, -5, 5)
     compareCommands("""__ask-sorted patches [ output-print self ]""")
   }
 
-  tester("turtles get patch variables"){
+  tester("turtles get patch variables") { implicit rhino: Rhino =>
     defineProcedures("", -5, 5, -5, 5)
     compareCommands("cro 5 __ask-sorted turtles [ fd 1 ]")
     compareCommands("""__ask-sorted turtles [ output-print self ]""")
   }
 
-  tester("turtles set patch variables"){
+  tester("turtles set patch variables") { implicit rhino: Rhino =>
     defineProcedures("", -5, 5, -5, 5)
     compareCommands("cro 5 __ask-sorted turtles [ fd 1 set pcolor blue ]")
     compareCommands("__ask-sorted turtles [output-print color]")
@@ -295,65 +297,65 @@ class TestTortoise extends FunSuite {
     compareCommands("__ask-sorted patches [output-print pcolor]")
   }
 
-  tester("with"){
+  tester("with") { implicit rhino: Rhino =>
     defineProcedures("", -5, 5, -5, 5)
     compareCommands("__ask-sorted patches with [pxcor = 1] [output-print pycor]")
   }
 
-  tester("with 2"){
+  tester("with 2") { implicit rhino: Rhino =>
     defineProcedures("", -5, 5, -5, 5)
     compareCommands("__ask-sorted patches with [pxcor = -3 and pycor = 2] [ output-print self ]")
   }
 
-  tester("with + turtles accessing turtle and patch vars"){
+  tester("with + turtles accessing turtle and patch vars") { implicit rhino: Rhino =>
     defineProcedures("", -5, 5, -5, 5)
     compareCommands("cro 5 ask turtles [fd 1]")
     compareCommands("__ask-sorted turtles with [pxcor =  1] [output-print pycor]")
     compareCommands("__ask-sorted turtles with [pxcor = -1] [output-print ycor]")
   }
 
-  tester("get patch") {
+  tester("get patch") { implicit rhino: Rhino =>
     compareCommands("output-print patch 0 0")
   }
 
-  tester("get turtle") {
+  tester("get turtle") { implicit rhino: Rhino =>
     compareCommands("cro 5")
     compareCommands("__ask-sorted turtles [ output-print self ]")
   }
 
-  tester("patch set") {
+  tester("patch set") { implicit rhino: Rhino =>
     defineProcedures("", -5, 5, -5, 5)
     compareCommands("__ask-sorted patches with [pxcor = -1 and pycor = 0] [ set pcolor green ]")
     compareCommands("ask patch 0 0 [ set pcolor green ]")
     compareCommands("output-print count patches with [pcolor = green]")
   }
 
-  tester("and, or") {
+  tester("and, or") { implicit rhino: Rhino =>
     defineProcedures("", -5, 5, -5, 5)
     compareCommands("output-print count patches with [pxcor = 0 or pycor = 0]")
     compareCommands("output-print count patches with [pxcor = 0 and pycor = 0]")
   }
 
-//  tester("neighbors") {
+//  tester("neighbors") { implicit rhino: Rhino =>
 //    defineProcedures("", -5, 5, -5, 5)
 //    compareCommands("""__ask-sorted patches [ __ask-sorted neighbors [ output-print self ]]""")
 //  }
 
-  tester("setting a built-in patch variable") {
+  tester("setting a built-in patch variable") { implicit rhino: Rhino =>
     defineProcedures("", -5, 5, -5, 5)
     compareCommands("__ask-sorted patches with [pxcor = 2 and pycor = 3] [ set pcolor green ]")
     compareCommands("output-print count patches with [pcolor = green]")
     compareCommands("__ask-sorted patches [ output-print self output-print pcolor ]")
   }
 
-  tester("setting a patches-own variable") {
+  tester("setting a patches-own variable") { implicit rhino: Rhino =>
     defineProcedures("patches-own [foo]", -5, 5, -5, 5)
     compareCommands("__ask-sorted patches with [pxcor = 2 and pycor = 3] [ set foo green ]")
     compareCommands("output-print count patches with [foo = green]")
     compareCommands("__ask-sorted patches [ output-print self output-print foo ]")
   }
 
-  tester("clear-all clears globals") {
+  tester("clear-all clears globals") { implicit rhino: Rhino =>
     defineProcedures("globals [g1 g2]")
     compareCommands("set g1 88 set g2 99")
     compareCommands("output-print (word g1 g2)")
@@ -361,7 +363,7 @@ class TestTortoise extends FunSuite {
     compareCommands("output-print (word g1 g2)")
   }
 
-  tester("clear-all clears patches") {
+  tester("clear-all clears patches") { implicit rhino: Rhino =>
     defineProcedures("patches-own [p]")
     compareCommands("ask patches [ set p 123 ]")
     compareCommands("ask patches [ set pcolor green ]")
@@ -369,12 +371,12 @@ class TestTortoise extends FunSuite {
     compareCommands("output-print count patches with [pcolor = green]")
   }
 
-  tester("sprout") {
+  tester("sprout") { implicit rhino: Rhino =>
     compareCommands("random-seed 0 " +
       "__ask-sorted patches with [pxcor >= 0] [ sprout 1 ]")
   }
 
-  tester("life") {
+  tester("life") { implicit rhino: Rhino =>
     val lifeSrc =
       """
         |patches-own [ living? live-neighbors ]
@@ -409,7 +411,7 @@ class TestTortoise extends FunSuite {
     compareCommands("""__ask-sorted patches [output-print (word self " -> " living?) ]""")
   }
 
-  tester("turtle motion") {
+  tester("turtle motion") { implicit rhino: Rhino =>
     defineProcedures("", -5, 5, -5, 5)
     compareCommands("random-seed 0 crt 100")
     compareCommands("__ask-sorted turtles [ setxy random-xcor random-ycor ]")
@@ -417,7 +419,7 @@ class TestTortoise extends FunSuite {
       compareCommands("__ask-sorted turtles [ fd 1 ]")
   }
 
-  tester("termites") {
+  tester("termites") { implicit rhino: Rhino =>
     val code =
       """
        |turtles-own [next steps]
