@@ -58,7 +58,7 @@ Obviously, this methodology is ***full*** of imperfections.  I'm merely document
 
 ```
 $(function() {
-  var World   = ScalaJS.modules.org\ufe33nlogo\ufe33engine\ufe33World();
+  var World   = ScalaJS.modules.org\ufe33nlogo\ufe33tortoise\ufe33engine\ufe33World();
   var myWorld = new World(0, 0, 0, 0);
 });
 ```
@@ -67,7 +67,7 @@ $(function() {
 
 ```
 tortoise=<path to NetLogo/tortoise repo>
-cp $tortoise/src/main/scalajs/org/nlogo/engine/*.scala .
+cp $tortoise/src/main/scalajs/org/nlogo/tortoise/engine/*.scala .
 cd ../..
 sbt engine/optimize-js
 cd -
