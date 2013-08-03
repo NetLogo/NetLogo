@@ -6,7 +6,7 @@ trait Topology {
   def wrap(pos: Double, min: Double, max: Double): Double
 }
 
-class Torus(override val world: World, var minPxcor: XCor, var maxPxcor: XCor, var minPycor: YCor, var maxPycor: YCor) extends Topology {
+class Torus(override val world: World, minPxcor: XCor, maxPxcor: XCor, minPycor: YCor, maxPycor: YCor) extends Topology {
 
   override def wrap(pos: Double, min: Double, max: Double): Double =
     if (pos >= max)
