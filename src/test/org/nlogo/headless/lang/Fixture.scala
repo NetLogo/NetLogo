@@ -3,40 +3,81 @@
 package org.nlogo.headless
 package lang
 
-import org.scalatest.Assertions
+import org.scalatest, scalatest.Assertions
 import org.nlogo.api
 import org.nlogo.nvm.CompilerInterface
 import org.nlogo.util.Femto
 
-object LanguageTesting {
-  sealed abstract class TestMode
-  case object NormalMode extends TestMode
-  case object RunMode extends TestMode
+trait FixtureSuite extends scalatest.fixture.FunSuite {
+  type FixtureParam = Fixture
+  override def withFixture(test: OneArgTest) =
+    Fixture.withFixture(test.name) { fixture =>
+      withFixture(test.toNoArgTest(fixture))
+    }
 }
 
-trait LanguageTesting extends Assertions {
+object Fixture {
+  def withFixture[T](name: String)(fn: Fixture => T) = {
+    val fixture = new Fixture(name)
+    try fn(fixture)
+    finally fixture.dispose()
+  }
+}
 
-  import LanguageTesting._
+class Fixture(name: String) {
+
+  import Assertions._
 
   // many individual tests expect this to exist - ST 7/31/13
   new java.io.File("tmp").mkdir()
 
+  val workspace = HeadlessWorkspace.newInstance
+  workspace.silent = true
+  workspace.initForTesting(
+    new api.WorldDimensions(-5, 5, -5, 5),
+    HeadlessWorkspace.TestDeclarations)
+  // the default error handler just spits something to stdout or stderr or somewhere.
+  // we want to fail hard. - ST 7/21/10
+  workspace.importerErrorHandler =
+    new org.nlogo.agent.ImporterJ.ErrorHandler() {
+      def showError(title: String, errorDetails: String, fatalError: Boolean): Boolean =
+        sys.error(title + " / " + errorDetails + " / " + fatalError)
+    }
+
+  def dispose() { workspace.dispose() }
+
+  // to get the test name into the stack traces on JobThread - ST 1/26/11, 8/7/13
+  val owner =
+    new api.SimpleJobOwner(name, workspace.world.mainRNG)
+
   val compiler: CompilerInterface =
     Femto.scalaSingleton("org.nlogo.compile.Compiler")
-  var workspace: HeadlessWorkspace = _
 
-  def owner: api.JobOwner = workspace.defaultOwner
+  def runEntry(mode: TestMode, entry: Entry) {
+    entry match {
+      case Open(modelPath) =>
+        open(modelPath)
+      case Procedure(content) =>
+        defineProcedures(content)
+      case Command(kind, command, Success(_)) =>
+        testCommand(command, kind, mode)
+      case Command(kind, command, RuntimeError(message)) =>
+        testCommandError(command, message, kind, mode)
+      case Command(kind, command, CompileError(message)) =>
+        testCommandCompilerErrorMessage(command, message, kind)
+      case Command(kind, command, StackTrace(message)) =>
+        testCommandErrorStackTrace(command, message, kind, mode)
+      case Reporter(reporter, Success(message)) =>
+        testReporter(reporter, message, mode)
+      case Reporter(reporter, RuntimeError(message)) =>
+        testReporterError(reporter, message, mode)
+      case Reporter(reporter, StackTrace(message)) =>
+        testReporterErrorStackTrace(reporter, message, mode)
+    }
+  }
 
   def open(path: String) {
     workspace.open(path)
-  }
-
-  def init() {
-    workspace = HeadlessWorkspace.newInstance
-    workspace.silent = true
-    workspace.initForTesting(
-      new api.WorldDimensions(-5, 5, -5, 5),
-      HeadlessWorkspace.TestDeclarations)
   }
 
   def defineProcedures(source: String) {
@@ -151,4 +192,5 @@ trait LanguageTesting extends Assertions {
         assertResult(errorMessage)(ex.getMessage)
     }
   }
+
 }
