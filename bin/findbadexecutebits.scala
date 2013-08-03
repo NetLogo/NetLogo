@@ -1,6 +1,5 @@
-#!/bin/sh
-exec bin/scala -classpath bin -deprecation -nocompdaemon -Dfile.encoding=UTF-8 "$0" "$@"
-!#
+#!/usr/bin/env scala -deprecation -nocompdaemon -Dfile.encoding=UTF-8
+//!#
 
 /// Makes sure no files have their execute bit wrongly set or unset
 
@@ -44,7 +43,3 @@ for{path <- Process("find . -type f -perm +0100 -prune -o -type f -print").lines
      !path.startsWith("./scala/var/"))
     println(path)
 }
-
-// Local Variables:
-// mode: scala
-// End:

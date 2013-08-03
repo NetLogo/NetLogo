@@ -1,5 +1,5 @@
 #!/bin/sh
-exec bin/scala -nocompdaemon -deprecation -classpath bin -Dfile.encoding=UTF-8 "$0" "$@"
+exec bin/scala -nocompdaemon -deprecation -Dfile.encoding=UTF-8 "$0" "$@"
 !#
 
 import sys.process.Process
