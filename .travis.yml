@@ -1,8 +1,14 @@
-language: scala
-scala: 2.10.2
-before_install:
-  - git submodule update --init --recursive
-install:
-  - sbt update
-script:
-  - ./tortoise.sh --noclean
+# language: scala
+# scala: 2.10.2
+# before_install:
+#   - git submodule update --init --recursive
+# install:
+#   - sbt update
+# script:
+#   - ./tortoise.sh --noclean
+
+# This branch isn't currently set up to build easily.  As is, Travis _will_ fail.
+# Let's not pester everyone about that, though, and, instead, just disable Travis for this branch. --JAB (8/3/13)
+branches:
+  only:
+    - headless
