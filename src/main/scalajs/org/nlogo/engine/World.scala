@@ -69,7 +69,7 @@ class World(val minPxcor: Int, val maxPxcor: Int, val minPycor: Int, val maxPyco
     _nextId += 1
   }
 
-  // Defaults to generating random turtles at (0, 0)
+  // This method defaults to generating random turtles at (0, 0)
   private[engine] def createNTurtles(n: Int, pxcor: XCor = XCor(0), pycor: YCor = YCor(0),
                                        colorFunc:   (Int) => NLColor = _ => randomColor(),
                                        headingFunc: (Int) => Int     = _ => randomHeading()): Unit = {
