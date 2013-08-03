@@ -16,7 +16,7 @@ class Procedure(
   val displayName = buildDisplayName(_displayName)
   var pos: Int = 0
   var end: Int = 0
-  var usableBy = "OTPL"
+  var agentClassString = "OTPL"
   var localsCount = 0
   var topLevel = false
   private var _owner: api.SourceOwner = null
@@ -61,7 +61,7 @@ class Procedure(
 
   override def toString =
     super.toString + "[" + name + ":" + args.mkString("[", " ", "]") +
-      ":" + usableBy + "]"
+      ":" + agentClassString + "]"
 
   def dump: String = {
     val buf = new StringBuilder
@@ -75,7 +75,7 @@ class Procedure(
       buf ++= ":" + parent.displayName
     buf ++= ":"
     buf ++= args.mkString("[", " ", "]")
-    buf ++= "{" + usableBy + "}:\n"
+    buf ++= "{" + agentClassString + "}:\n"
     for (i <- code.indices) {
       if (indent)
         buf ++= "   "

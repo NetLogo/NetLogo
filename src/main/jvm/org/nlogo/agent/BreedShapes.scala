@@ -7,7 +7,6 @@ package org.nlogo.agent
 // self-contained. we don't want to synchronize on the world since other classes do that and this
 // really shouldn't affect their performance.  so we use a lock object.  --mag 10/03/03
 
-import collection.JavaConverters._
 import org.nlogo.api.Breed
 
 class BreedShapes(genericBreedName: String) {

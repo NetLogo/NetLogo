@@ -21,7 +21,6 @@ package org.nlogo.parse
 import org.nlogo.{ api, nvm, parse0 },
   api.Token,
   nvm.ParserInterface.{ ProceduresMap, NoProcedures },
-  parse0.StructureDeclarations._,
   Fail._
 
 object StructureParser {

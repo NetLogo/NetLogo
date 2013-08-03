@@ -2,7 +2,6 @@
 
 package org.nlogo.workspace
 
-import org.nlogo.agent.Observer
 import org.nlogo.api.SimpleJobOwner
 
 object Benchmarker {

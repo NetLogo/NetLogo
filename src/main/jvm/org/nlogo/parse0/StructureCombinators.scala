@@ -127,7 +127,7 @@ extends scala.util.parsing.combinator.Parsers {
     acceptMatch(expected, { case t @ Token(_, `tpe`, _) => t })
 
   def eof: Parser[Token] =
-    tokenType("eof", TokenType.EOF)
+    tokenType("eof", TokenType.Eof)
 
   def openBracket: Parser[Token] =
     tokenType("opening bracket", TokenType.OpenBracket)

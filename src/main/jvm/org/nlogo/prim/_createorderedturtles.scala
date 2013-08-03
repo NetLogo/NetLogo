@@ -25,7 +25,6 @@ class _createorderedturtles(val breedName: String) extends Command with CustomAs
       val breed =
         if(breedName.isEmpty) world.turtles
         else world.getBreed(breedName)
-      val random = context.job.random
       var i = 0
       while (i < count) {
         val turtle = world.createTurtle(breed)

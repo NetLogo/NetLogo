@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api.{ Dump, LogoException, Syntax }
+import org.nlogo.api.{ Dump, Syntax }
 import org.nlogo.nvm.{ Command, Context, EngineException }
 
 class _randomseed extends Command {

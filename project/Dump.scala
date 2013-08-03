@@ -21,7 +21,7 @@ object Dump {
         // oh god, I hope this doesn't break something. it doesn't work without it, the bytecode
         // generator can't load classes - ST 6/29/12
         Thread.currentThread.setContextClassLoader(loader)
-        loader.loadClass("org.nlogo.headless.Dump")
+        loader.loadClass("org.nlogo.headless.misc.Dump")
           .getMethod("main", classOf[Array[String]])
           .invoke(null, args.toArray)
       ()

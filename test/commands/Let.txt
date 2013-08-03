@@ -103,3 +103,38 @@ LetOfVarToItselfInsideAsk
 
 LetTwice
   O> let x 5 let x 6 => COMPILER ERROR There is already a local variable here called X
+
+LetTwice2
+  O> let a 5 ask patches [ let a 6 ] => COMPILER ERROR There is already a local variable here called A
+
+LetSameNameAsCommandProcedure1
+  to a end
+  O> let a 5 => COMPILER ERROR There is already a procedure called A
+
+LetSameNameAsReporterProcedure1
+  to-report a end
+  O> let a 5 => COMPILER ERROR There is already a procedure called A
+
+LetSameNameAsPrimitiveCommand
+  O> let fd 5 => COMPILER ERROR There is already a primitive command called FD
+
+LetSameNameAsPrimitiveReporter1
+  O> let timer 5 => COMPILER ERROR There is already a primitive reporter called TIMER
+
+LetSameNameAsPrimitiveReporter2
+  O> let sin 5 => COMPILER ERROR There is already a primitive reporter called SIN
+
+LetShadowsLet
+  O> let x 4 ask patches [ let x 0 ] => COMPILER ERROR There is already a local variable here called X
+
+LetSameNameAsGlobal
+  O> let glob1 5 => COMPILER ERROR There is already a global variable called GLOB1
+
+LetSameNameAsBreed
+  O> let mice 5 => COMPILER ERROR There is already a breed called MICE
+
+LetSameNameAsTurtleVariable
+  O> let tvar 5 => COMPILER ERROR There is already a turtle variable called TVAR
+
+LetSameNameAsBreedVariable
+  O> let fur 5 => COMPILER ERROR There is already a MICE variable called FUR

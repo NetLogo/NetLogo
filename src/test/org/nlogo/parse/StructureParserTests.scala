@@ -113,6 +113,22 @@ class StructureParserTests extends FunSuite {
     expectResult("foo.nls")(results.includes.head.value)
   }
 
+  /// allow breeds to share variables
+
+  test("breeds may share variables") {
+    val results = compile("undirected-link-breed [edges edge]\n" +
+      "breed [nodes node]\n" +
+      "breed [foos foo]\n" +
+      "edges-own [lweight]\n" +
+      "nodes-own [weight]\n" +
+      "foos-own [weight]")
+    val dump = results.program.dump
+    assert(dump.containsSlice(
+      "breeds NODES = Breed(NODES, NODE, WEIGHT, false)\n" +
+      "FOOS = Breed(FOOS, FOO, WEIGHT, false)\n" +
+      "link-breeds EDGES = Breed(EDGES, EDGE, LWEIGHT, false)"), dump)
+  }
+
   test("declarations1") {
     val results = compile("extensions [foo] globals [g1 g2] turtles-own [t1 t2] patches-own [p1 p2]")
     assert(results.procedures.isEmpty)
@@ -160,6 +176,13 @@ class StructureParserTests extends FunSuite {
     expectResult("closing bracket expected")(e.getMessage.takeWhile(_ != ','))
   }
 
+  test("missing close bracket in globals") {
+    val e = intercept[CompilerException] {
+      compile("globals [g turtles-own [t]")
+    }
+    expectResult("closing bracket expected")(e.getMessage.takeWhile(_ != ','))
+  }
+
   test("attempt primitive as variable") {
     val e = intercept[CompilerException] {
       compile("globals [turtle]")
@@ -179,6 +202,13 @@ class StructureParserTests extends FunSuite {
       compile("turtles-own [] turtles-own []")
     }
     expectResult("Redeclaration of TURTLES-OWN")(e.getMessage.takeWhile(_ != ','))
+  }
+
+  test("redeclaration of breed-own") {
+    val ex = intercept[CompilerException] {
+      compile("breed [hunters hunter] hunters-own [fear] hunters-own [loathing]")
+    }
+    expectResult("Redeclaration of HUNTERS-OWN")(ex.getMessage.takeWhile(_ != ','))
   }
 
   test("redeclaration of extensions") {

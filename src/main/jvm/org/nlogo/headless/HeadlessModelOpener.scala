@@ -41,7 +41,6 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     // read procedures, compile them.
     val results = {
       val code = map(ModelSection.Code).mkString("", "\n", "\n")
-      import collection.JavaConverters._
       ws.compiler.compileProgram(
         code, Program.empty.copy(
           interfaceGlobals = interfaceGlobals), ws.getExtensionManager)
@@ -198,10 +197,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
       }
 
       // finally parse all the widgets in the WIDGETS section
-      val widgets = ModelReader.parseWidgets(widgetsSection)
-
-      import collection.JavaConverters._
-      for (widget <- widgets)
+      for (widget <- ModelReader.parseWidgets(widgetsSection))
         widget.head match {
           case "SLIDER" => parseSlider(widget)
           case "SWITCH" => parseSwitch(widget)

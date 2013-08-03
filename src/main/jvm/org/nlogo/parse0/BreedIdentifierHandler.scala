@@ -3,7 +3,7 @@
 package org.nlogo.parse0
 
 import org.nlogo.api,
-  api.{ AgentSet, Breed, Program, Token, TokenType },
+  api.{ Breed, Program, Token, TokenType },
   TokenType.{ Command, Reporter }
 
 object BreedIdentifierHandler {

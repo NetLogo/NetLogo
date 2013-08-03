@@ -21,7 +21,7 @@ object ChecksumsAndPreviews {
     inputTask { (argTask: TaskKey[Seq[String]]) =>
       (argTask, fullClasspath in Compile, runner, streams) map {
         (args, cp, runner, s) =>
-          Run.run("org.nlogo.headless.ChecksumsAndPreviews",
+          Run.run("org.nlogo.headless.misc.ChecksumsAndPreviews",
                   cp.map(_.data), flag +: args, s.log)(runner)
       }}.dependsOn(compile in Compile)
 

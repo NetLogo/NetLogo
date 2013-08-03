@@ -10,7 +10,10 @@ if [[ `uname -s` == *CYGWIN* ]] ; then
 else
   CURR_DIR=`dirname $0`
   if [ `uname -s` = Linux ] ; then
-    export JAVA_HOME=/usr/lib/jvm/java-7-sun
+    # use JAVA_HOME from Travis if there is one
+    if [ -z "$TRAVIS" ] ; then
+      export JAVA_HOME=/usr/lib/jvm/java-7-sun
+    fi
   else
     if [ `uname -s` = Darwin ] ; then
       export JAVA_HOME=`/usr/libexec/java_home -F -v1.7*`
@@ -34,8 +37,8 @@ USE_QUARTZ=-Dapple.awt.graphics.UseQuartz=false
 BOOT=xsbt.boot.Boot
 
 
-SBT_LAUNCH=$HOME/.sbt/sbt-launch-0.12.3.jar
-URL='http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.12.3/sbt-launch.jar'
+SBT_LAUNCH=$HOME/.sbt/sbt-launch-0.12.4.jar
+URL='http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.12.4/sbt-launch.jar'
 
 if [ ! -f $SBT_LAUNCH ] ; then
   echo "downloading" $URL
