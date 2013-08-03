@@ -4,11 +4,7 @@ object Globals {
 
   val vars = Array[Any]()
 
-  /*
-   compiler generates call to init, which just
-   tells the runtime how many globals there are.
-   they are all initialized to 0
-  */
+  // Used by the compiler to reserve space for all global variables and initalize them to 0 --JAB (8/3/13)
   def init(n: Int): Unit = 0 until n foreach (x => vars(x) = 0)
 
   def getGlobal(n: Int):             Any  = vars(n)

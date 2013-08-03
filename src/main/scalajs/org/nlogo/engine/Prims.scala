@@ -19,6 +19,7 @@ object Prims {
   def patch(x: Double, y: Double): Patch      = getWorld().getPatchAt(XCor(x), YCor(y))
 
   // How the `w.minPxcor - 0.5` factors into this, I'm unsure --JAB (7/26/13)
+  // This logic belongs on the `World` object, itself. --JAB (8/3/13)
   def randomxcor: Double = {
     val w = getWorld()
     w.minPxcor - 0.5 + g.Random.nextDouble() * (w.maxPxcor - w.minPxcor + 1)

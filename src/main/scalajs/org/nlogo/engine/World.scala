@@ -4,9 +4,8 @@ import scala.js.Dynamic.{ global => g }
 
 class World(val minPxcor: Int, val maxPxcor: Int, val minPycor: Int, val maxPycor: Int) {
 
-  // These global accessors and my getters on `var`s...--they're not really referentially transparent.  I shouldn't act like they are.... --JAB (8/1/13)
-  private def Random     = g.Random
-  private def StrictMath = g.StrictMath
+  private def getRandom()     = g.Random
+  private def getStrictMath() = g.StrictMath
 
   private var _nextId:  Int         = 0
   private var _turtles: Seq[Turtle] = Seq()
@@ -38,12 +37,13 @@ class World(val minPxcor: Int, val maxPxcor: Int, val minPycor: Int, val maxPyco
 
   // TODO: this needs to support all topologies
   def getPatchAt(x: XCor, y: YCor): Patch = {
-    val index = (maxPycor - StrictMath.round(y.value)) * _width + (StrictMath.round(x.value) - minPxcor)
-    _patches(index.toInt)
+    import Dynamic2ScalaConverters.num2Int
+    val index = (maxPycor - getStrictMath().round(y.value).asScala) * _width + (getStrictMath().round(x.value).asScala - minPxcor)
+    _patches(index)
   }
 
   def removeTurtle(id: ID): Unit =
-    _turtles = _turtles.filterNot(_.id == id)
+    _turtles = _turtles.filterNot(_.id.value == id.value)
 
   def clearall(): Unit = {
     Globals.init(Globals.vars.length)
@@ -52,19 +52,38 @@ class World(val minPxcor: Int, val maxPxcor: Int, val minPycor: Int, val maxPyco
     _nextId = 0
   }
 
-  def createorderedturtles(n: Int): Unit =
-    0 until n foreach (x => createturtle(XCor(0), YCor(0), NLColor((x * 10 + 5) % 140), x * (360 / n)))
+  def getNeighbors(pxcor: XCor, pycor: YCor): Seq[Patch] =
+    _topology.getNeighbors(pxcor, pycor)
 
-  // The same as `Patch.sprout`, and very similar to `createorderedturtles` above --JAB (7/26/13)
+  def createorderedturtles(n: Int): Unit = {
+    val colorFunc   = (x: Int) => NLColor((x * 10 + 5) % 140)
+    val headingFunc = (x: Int) => x * (360 / n)
+    createNTurtles(n, colorFunc = colorFunc, headingFunc = headingFunc)
+  }
+
   def createturtles(n: Int): Unit =
-    0 until n foreach (_ => createturtle(XCor(0), YCor(0), NLColor(5 + 10 * Random.nextInt(14)), Random.nextInt(360)))
+    createNTurtles(n)
 
   def createturtle(x: XCor, y: YCor, color: NLColor, heading: Int): Unit = {
     _turtles = _turtles :+ new Turtle(ID(_nextId), this, color, heading, x, y)
     _nextId += 1
   }
 
-  def getNeighbors(pxcor: XCor, pycor: YCor): Seq[Patch] =
-    _topology.getNeighbors(pxcor, pycor)
+  // Defaults to generating random turtles at (0, 0)
+  private[engine] def createNTurtles(n: Int, pxcor: XCor = XCor(0), pycor: YCor = YCor(0),
+                                       colorFunc:   (Int) => NLColor = _ => randomColor(),
+                                       headingFunc: (Int) => Int     = _ => randomHeading()): Unit = {
+    0 until n foreach (x => createturtle(pxcor, pycor, colorFunc(x), headingFunc(x)))
+  }
+
+  private def randomColor(): NLColor = {
+    import Dynamic2ScalaConverters.num2Int
+    NLColor(5 + 10 * getRandom().nextInt(14).asScala)
+  }
+
+  private def randomHeading(): Int = {
+    import Dynamic2ScalaConverters.num2Int
+    getRandom().nextInt(360).asScala
+  }
 
 }
