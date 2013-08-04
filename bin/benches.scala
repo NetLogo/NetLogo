@@ -1,6 +1,5 @@
-#!/bin/sh
-exec bin/scala -nocompdaemon -deprecation -classpath bin -Dfile.encoding=UTF-8 "$0" "$@"
-!#
+#!/usr/bin/env scala -nocompdaemon -deprecation -Dfile.encoding=UTF-8
+//!#
 
 import sys.process.Process
 import collection.mutable.{ HashMap, ListBuffer, HashSet }
@@ -8,13 +7,7 @@ import collection.mutable.{ HashMap, ListBuffer, HashSet }
 val results = new HashMap[String, ListBuffer[Double]]
 val haveGoodResult = new HashSet[String]
 
-val classpath =
-  Seq("target/classes",
-      System.getenv("HOME") + "/.sbt/boot/scala-2.10.2/lib/scala-library.jar",
-      "resources",
-      "lib_managed/jars/asm/asm-all/asm-all-3.3.1.jar")
-    .mkString(":")
-Process("java -classpath " + classpath + " org.nlogo.headless.Main --fullversion")
+Process(Seq("./sbt", "run-main org.nlogo.headless.Main --fullversion"))
   .lines.foreach(println)
 
 // 4.0 & 4.1 numbers from my home iMac on Sep. 13 2011, running Mac OS X Lion.
@@ -41,11 +34,12 @@ val allNames: List[String] = {
 allNames.foreach(name => results += (name -> new ListBuffer[Double]))
 val width = allNames.map(_.size).max
 
-def outputLines(name: String): Stream[String] =
-  Process("java -classpath " + classpath +
-          " org.nlogo.headless.HeadlessBenchmarker " +
-          name + args.dropWhile(!_.head.isDigit).mkString(" ", " ", ""))
+def outputLines(name: String): Stream[String] = {
+  val command = "run-main org.nlogo.headless.HeadlessBenchmarker " +
+    name + args.dropWhile(!_.head.isDigit).mkString(" ", " ", "")
+  Process(Seq("./sbt", command))
     .lines
+}
 def record(name: String, line: String) {
   val Match = ("@@@ " + name + """ Benchmark: (\d+\.\d+)( \(hit time limit\))?""").r
   val Match(num, warning) = line
@@ -85,7 +79,3 @@ while(true) {
   // make extra efforts to get at least one good result for each model
   allNames.filter(!haveGoodResult(_)).foreach(runIt)
 }
-
-// Local Variables:
-// mode: scala
-// End:

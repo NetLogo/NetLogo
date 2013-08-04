@@ -24,6 +24,6 @@ object ChecksumsAndPreviews {
       val cp = (fullClasspath in Compile).value
       Run.run("org.nlogo.headless.misc.ChecksumsAndPreviews",
         cp.map(_.data), flag +: args, streams.value.log)(runner.value)
-    }.dependsOn(compile in Compile)
+    }
 
 }
