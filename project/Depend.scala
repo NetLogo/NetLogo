@@ -43,7 +43,7 @@ object Depend {
             sys.error(fail.toString)
         }
         s.log.info("end depend: " + project.id)
-      }}.dependsOn(compile in Test)
+      }}
 
   private def ddfContents: String = {
     val buf = new StringBuilder
