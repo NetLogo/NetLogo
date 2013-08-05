@@ -50,4 +50,7 @@ class World3DTests extends AbstractTestWorld with FunSuite
   test("ShortestPath_3D") {
     testShortestPath(worldRectangle)
   }
+  test("ChangePublishedAfterWorldResize_3D") {
+    testChangePublishedAfterWorldResize(worldSquare, worldRectangle)
+  }
 }
