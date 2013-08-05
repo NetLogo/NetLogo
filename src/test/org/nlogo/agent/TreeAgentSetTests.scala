@@ -2,21 +2,11 @@
 
 package org.nlogo.agent
 
-import org.nlogo.api.SimpleChangeEvent
-import org.nlogo.api.SimpleChangeEventPublisher
 import org.nlogo.headless.TestUsingWorkspace
 import org.scalatest.FunSuite
 import org.scalatest.GivenWhenThen
 
 class TreeAgentSetTests extends FunSuite with GivenWhenThen with TestUsingWorkspace {
-
-  class Sub(pub: SimpleChangeEventPublisher) extends SimpleChangeEventPublisher#Sub {
-    pub.subscribe(this)
-    var eventCount: Int = 0
-    override def notify(pub: SimpleChangeEventPublisher#Pub, event: SimpleChangeEvent.type) {
-      eventCount += 1
-    }
-  }
 
   testUsingWorkspace("TreeAgentSet should trigger SimpleChangeEvent") { ws =>
 
@@ -24,16 +14,16 @@ class TreeAgentSetTests extends FunSuite with GivenWhenThen with TestUsingWorksp
       agentSet.asInstanceOf[TreeAgentSet].simpleChangeEventPublisher
 
     given("a subscriber to turtles")
-    val turtlesSub = new Sub(ws.world.turtles)
+    val turtlesSub = new SimpleChangeEventCounter(ws.world.turtles)
     and("a subscriber to mice")
     println(ws.world.program.breeds)
-    val miceSub = new Sub(ws.world.program.breeds.get("MICE"))
+    val miceSub = new SimpleChangeEventCounter(ws.world.program.breeds.get("MICE"))
     and("a subscriber to frogs")
-    val frogSub = new Sub(ws.world.program.breeds.get("FROGS"))
+    val frogSub = new SimpleChangeEventCounter(ws.world.program.breeds.get("FROGS"))
     and("a subscriber to links")
-    val linksSub = new Sub(ws.world.links)
+    val linksSub = new SimpleChangeEventCounter(ws.world.links)
     and("a subscriber to undirected-links")
-    val undirLinksSub = new Sub(ws.world.program.linkBreeds.get("UNDIRECTED-LINKS"))
+    val undirLinksSub = new SimpleChangeEventCounter(ws.world.program.linkBreeds.get("UNDIRECTED-LINKS"))
 
     val allSubs = Seq(turtlesSub, miceSub, frogSub, linksSub, undirLinksSub)
 

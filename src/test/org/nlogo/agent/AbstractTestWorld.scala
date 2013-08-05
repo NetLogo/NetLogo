@@ -3,8 +3,6 @@
 package org.nlogo.agent
 
 import org.scalatest.Assertions
-import org.nlogo.api.SimpleChangeEvent
-import org.nlogo.api.SimpleChangeEventPublisher
 import org.nlogo.api.WorldDimensions
 
 // Exists to be separately extended in 2D and 3D versions. - ST 10/18/10
@@ -86,20 +84,15 @@ abstract class AbstractTestWorld extends Assertions {
   }
 
   def testChangePublishedAfterWorldResize(d1: WorldDimensions, d2: WorldDimensions) {
-    class Sub(pub: SimpleChangeEventPublisher) extends SimpleChangeEventPublisher#Sub {
-      pub.subscribe(this)
-      var events = Seq[SimpleChangeEvent.type]()
-      override def notify(pub: SimpleChangeEventPublisher#Pub, event: SimpleChangeEvent.type) {
-        events +:= event
-      }
-    }
     val world = makeWorld(d1)
-    val turtleSub = new Sub(world.turtles.asInstanceOf[TreeAgentSet].simpleChangeEventPublisher)
-    val linkSub = new Sub(world.links.asInstanceOf[TreeAgentSet].simpleChangeEventPublisher)
-    expect(0)(turtleSub.events.size)
-    expect(0)(linkSub.events.size)
+    val turtleSub =
+      new SimpleChangeEventCounter(world.turtles.asInstanceOf[TreeAgentSet].simpleChangeEventPublisher)
+    val linkSub =
+      new SimpleChangeEventCounter(world.links.asInstanceOf[TreeAgentSet].simpleChangeEventPublisher)
+    expect(0)(turtleSub.eventCount)
+    expect(0)(linkSub.eventCount)
     world.createPatches(d2)
-    expect(1)(turtleSub.events.size)
-    expect(1)(linkSub.events.size)
+    expect(1)(turtleSub.eventCount)
+    expect(1)(linkSub.eventCount)
   }
 }
