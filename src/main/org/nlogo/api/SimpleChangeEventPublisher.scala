@@ -4,15 +4,14 @@ package org.nlogo.api
 
 import scala.collection.mutable.Publisher
 
-sealed abstract trait SimpleChangeEvent
-case object SimpleChangeEvent extends SimpleChangeEvent
+object SimpleChangeEvent
 
 /**
  * A most basic event publisher only warning subscribers that "something has changed"
  *  Currently used by TreeAgentSet to allow the nw extension to listen for changes
  *  and update its graph context accordingly. NP 2013-05-14.
  */
-class SimpleChangeEventPublisher extends Publisher[SimpleChangeEvent] {
-  override type Pub = Publisher[SimpleChangeEvent]
+class SimpleChangeEventPublisher extends Publisher[SimpleChangeEvent.type] {
+  override type Pub = Publisher[SimpleChangeEvent.type]
   def publish() { publish(SimpleChangeEvent) }
 }

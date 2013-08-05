@@ -88,8 +88,8 @@ abstract class AbstractTestWorld extends Assertions {
   def testChangePublishedAfterWorldResize(d1: WorldDimensions, d2: WorldDimensions) {
     class Sub(pub: SimpleChangeEventPublisher) extends SimpleChangeEventPublisher#Sub {
       pub.subscribe(this)
-      var events = Seq[SimpleChangeEvent]()
-      override def notify(pub: SimpleChangeEventPublisher#Pub, event: SimpleChangeEvent) {
+      var events = Seq[SimpleChangeEvent.type]()
+      override def notify(pub: SimpleChangeEventPublisher#Pub, event: SimpleChangeEvent.type) {
         events +:= event
       }
     }
