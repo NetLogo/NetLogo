@@ -32,7 +32,6 @@ class Turtle private (world: World, variables: VarMap) extends Vassal with CanTa
     }.asInstanceOf[VarMap])
   }
 
-  // What's up with the '0.5's? --JAB (7/26/13)
   def fd(amount: Double): Unit = {
     variables(XCorKeyE) = XCor(world.topology.wrap(xcor.value + amount * Trig.sin(heading), world.minPxcor - 0.5, world.maxPxcor + 0.5))
     variables(YCorKeyE) = YCor(world.topology.wrap(ycor.value + amount * Trig.cos(heading), world.minPycor - 0.5, world.maxPycor + 0.5))

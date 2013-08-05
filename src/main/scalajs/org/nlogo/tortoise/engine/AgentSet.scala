@@ -38,25 +38,20 @@ object AgentSet {
   // Prims could/would/should be the compiler/runtime interface. --SAT
   // Seth was onto something!  --JAB (8/3/13)
 
-  // Links can also die --JAB (7/19/13)
+  // In the future: Links are also capable of dying --JAB (7/19/13)
   def die(): Unit = _self.asInstanceOf[Turtle].die()
 
-  // Because of this "compiler's not giving me a `JSW`" insanity, I think we need some well-established entrypoints into the ScalaJS code... --JAB (8/1/13)
-  // (See above, where Seth was onto something; we should have some interface layer where inputs are converted from ScalaJS types to Scala types,
-  // then forwarded to the rest of the ScalaJS engine)
+  // Because of some "te compiler's not giving me a `JSW`" insanity, I think we need some well-established entry points into the ScalaJS code...
+  // (See above, where Seth was "onto something"; we should have some interface layer where inputs are converted from ScalaJS types to Scala types,
+  // then forwarded to the rest of the ScalaJS engine) --JAB (8/1/13)
   def getTurtleVariable(n: Int): AnyJS = _self.asInstanceOf[Turtle].getTurtleVariable(n)
   def getPatchVariable(n: Int):  AnyJS = _self.asInstanceOf[CanTalkToPatches].getPatchVariable(n)
 
-  // Code redundancy! --JAB (8/1/13)
-  def setTurtleVariable(n: Int, value: AnyJS): Unit = {
-    val v = JS2WrapperConverter(value) getOrElse (throw new IllegalArgumentException("Could not convert input to JS wrapper!"))
-    _self.asInstanceOf[Turtle].setTurtleVariable(n, v)
-  }
+  def setTurtleVariable(n: Int, value: AnyJS): Unit =
+    _self.asInstanceOf[Turtle].setTurtleVariable(n, JS2WrapperConverter(value))
 
-  def setPatchVariable(n: Int, value: AnyJS): Unit = {
-    val v = JS2WrapperConverter(value) getOrElse (throw new IllegalArgumentException("Could not convert input to JS wrapper!"))
-    _self.asInstanceOf[CanTalkToPatches].setPatchVariable(n, v)
-  }
+  def setPatchVariable(n: Int, value: AnyJS): Unit =
+    _self.asInstanceOf[CanTalkToPatches].setPatchVariable(n, JS2WrapperConverter(value))
 
 }
 

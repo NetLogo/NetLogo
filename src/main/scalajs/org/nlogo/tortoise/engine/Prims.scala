@@ -5,8 +5,11 @@ import
 
 object Prims {
 
-  // BAAAAAAAD (world shouldn't be global) --JAB (7/22/13)
   // I don't think we can cache the objects from the global scope, for fear that they might get globally swapped out...? --JAB (7/26/13)
+
+  // We should have a concept of something crazy... like a "Workspace", or something, which has exactly one `World`.
+  // Everything that's currently being pull in from the global namespace (`World`, `Random`, `StrictMath`, even jQuery, if we wanted)
+  // Could then be injected into this "Workspace" when it was first created, and we wouldn't need to call into the global scope. --JAB (8/5/13)
   private def getWorld():  World = g.world.asInstanceOf[World]
 
   def fd(n: Double):               Unit       = AgentSet.self.asInstanceOf[Turtle].fd(n)
@@ -18,7 +21,6 @@ object Prims {
   def sprout(n: Int):              Unit       = AgentSet.self.asInstanceOf[Patch].sprout(n)
   def patch(x: Double, y: Double): Patch      = getWorld().getPatchAt(XCor(x), YCor(y))
 
-  // How the `w.minPxcor - 0.5` factors into this, I'm unsure --JAB (7/26/13)
   // This logic belongs on the `World` object, itself. --JAB (8/3/13)
   def randomxcor: Double = {
     val w = getWorld()
