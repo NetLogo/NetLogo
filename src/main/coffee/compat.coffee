@@ -30,3 +30,6 @@ unless StrictMath?
   StrictMath = Math
   Math.toRadians = (degrees) ->
     degrees * Math.PI / 180
+
+# So ScalaJS can check types
+`typeOf = function(x) { return typeof x; }`
