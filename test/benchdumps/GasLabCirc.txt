@@ -10674,32 +10674,28 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           I2D
           DCMPL
           IFLE L18
-          ICONST_0
+          DCONST_0
           GOTO L19
          L18
-          SIPUSH 180
-         L19
-          I2D
-          GOTO L20
+          LDC 180.0
+          GOTO L19
          L17
           DLOAD 4
           ICONST_0
           I2D
           DCMPL
-          IFNE L21
+          IFNE L20
           DLOAD 2
           ICONST_0
           I2D
           DCMPL
-          IFLE L22
-          BIPUSH 90
-          GOTO L23
-         L22
-          SIPUSH 270
-         L23
-          I2D
-          GOTO L20
+          IFLE L21
+          LDC 90.0
+          GOTO L19
          L21
+          LDC 270.0
+          GOTO L19
+         L20
           DLOAD 2
           DLOAD 4
           INVOKESTATIC java/lang/StrictMath.atan2 (DD)D
@@ -10710,13 +10706,13 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           SIPUSH 360
           I2D
           DREM
-         L20
+         L19
           DSTORE 4
           DSTORE 2
           DLOAD 2
           DLOAD 4
           DSUB
-         L24
+         L22
           DSTORE 2
           NEW java/lang/Double
           DUP
@@ -10733,7 +10729,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           ALOAD 1
           BIPUSH 14
           PUTFIELD org/nlogo/nvm/Context.ip : I
-          GOTO L25
+          GOTO L23
          L8
           ASTORE 3
           NEW org/nlogo/nvm/EngineException
@@ -10744,7 +10740,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L25
+         L23
           RETURN
 [14]_asm_procedurecollidewith_ask_17 "ask other-particle" Object => void
       _procedurevariable:OTHER-PARTICLE => Object
@@ -11367,32 +11363,28 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           I2D
           DCMPL
           IFLE L18
-          ICONST_0
+          DCONST_0
           GOTO L19
          L18
-          SIPUSH 180
-         L19
-          I2D
-          GOTO L20
+          LDC 180.0
+          GOTO L19
          L17
           DLOAD 4
           ICONST_0
           I2D
           DCMPL
-          IFNE L21
+          IFNE L20
           DLOAD 2
           ICONST_0
           I2D
           DCMPL
-          IFLE L22
-          BIPUSH 90
-          GOTO L23
-         L22
-          SIPUSH 270
-         L23
-          I2D
-          GOTO L20
+          IFLE L21
+          LDC 90.0
+          GOTO L19
          L21
+          LDC 270.0
+          GOTO L19
+         L20
           DLOAD 2
           DLOAD 4
           INVOKESTATIC java/lang/StrictMath.atan2 (DD)D
@@ -11403,13 +11395,13 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           SIPUSH 360
           I2D
           DREM
-         L20
+         L19
           DSTORE 4
           DSTORE 2
           DLOAD 2
           DLOAD 4
           DSUB
-         L24
+         L22
           DSTORE 2
           NEW java/lang/Double
           DUP
@@ -11426,7 +11418,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           ALOAD 1
           BIPUSH 20
           PUTFIELD org/nlogo/nvm/Context.ip : I
-          GOTO L25
+          GOTO L23
          L8
           ASTORE 3
           NEW org/nlogo/nvm/EngineException
@@ -11437,7 +11429,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L25
+         L23
           RETURN
 [20]_asm_procedurecollidewith_done_23 "" => void
          L0

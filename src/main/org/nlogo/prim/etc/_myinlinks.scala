@@ -16,7 +16,7 @@ class _myinlinks(breedName: String) extends Reporter {
   override def toString =
     super.toString + ":" + breedName
 
-  override def report(context: Context) = {
+  override def report(context: Context): AgentSet = {
     val breed =
       if (breedName == null) world.links
       else world.getLinkBreed(breedName)

@@ -20,7 +20,7 @@ class _turtleorlinkvariableof(_varName: String) extends Reporter {
   // so we must keep varName and _varName separate - ST 9/22/12
   def varName = _varName
 
-  override def report(context: Context) =
+  override def report(context: Context): AnyRef =
     report_1(context, args(0).report(context))
 
   def report_1(context: Context, agentOrSet: AnyRef): AnyRef =

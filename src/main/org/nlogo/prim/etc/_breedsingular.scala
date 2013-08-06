@@ -15,7 +15,7 @@ class _breedsingular(breedName: String) extends Reporter {
   override def toString =
     super.toString + ":" + breedName
 
-  override def report(context: Context) =
+  override def report(context: Context): AnyRef =
     report_1(context, argEvalDoubleValue(context, 0))
 
   def report_1(context: Context, idDouble: Double): AnyRef = {

@@ -18,7 +18,7 @@ class _outlinkto(breedName: String) extends Reporter {
   override def toString =
     super.toString + ":" + breedName
 
-  override def report(context: Context) = {
+  override def report(context: Context): AnyRef = {
     val parent = context.agent.asInstanceOf[Turtle]
     val target = argEvalTurtle(context, 0)
     val breed =

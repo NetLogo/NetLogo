@@ -22,7 +22,7 @@ class _patchvariabledouble(private[this] var _vn: Int) extends Reporter {
   def vn = _vn
   def vn_=(vn: Int) { _vn = vn }
 
-  override def report(context: Context) =
+  override def report(context: Context): java.lang.Double =
     report_1(context)
 
   def report_1(context: Context): java.lang.Double =

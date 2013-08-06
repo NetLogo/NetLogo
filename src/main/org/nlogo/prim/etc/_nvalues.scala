@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api.{ I18N, LogoListBuilder, Syntax }
+import org.nlogo.api.{ I18N, LogoList, LogoListBuilder, Syntax }
 import org.nlogo.nvm.{ Context, EngineException, Reporter }
 
 class _nvalues extends Reporter {
@@ -11,7 +11,7 @@ class _nvalues extends Reporter {
     Syntax.reporterSyntax(Array(Syntax.NumberType, Syntax.ReporterTaskType),
                           Syntax.ListType)
 
-  override def report(context: Context) = {
+  override def report(context: Context): LogoList = {
     // get the first argument...
     val n = argEvalIntValue(context, 0)
     if (n < 0)

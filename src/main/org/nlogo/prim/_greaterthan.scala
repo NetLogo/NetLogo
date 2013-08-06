@@ -15,7 +15,7 @@ class _greaterthan extends Reporter with Pure {
       ret = Syntax.BooleanType,
       precedence = Syntax.NormalPrecedence - 4)
 
-  override def report(context: Context) =
+  override def report(context: Context): java.lang.Boolean =
     Boolean.box(
       report_1(context,
                args(0).report(context),
@@ -39,22 +39,22 @@ class _greaterthan extends Reporter with Pure {
         TypeNames.aName(o1), TypeNames.aName(o2)))
   }
 
-  def report_2(context: Context, arg0: String, arg1: String) =
+  def report_2(context: Context, arg0: String, arg1: String): Boolean =
     arg0.compareTo(arg1) > 0
 
-  def report_3(context: Context, arg0: Double, arg1: Double) =
+  def report_3(context: Context, arg0: Double, arg1: Double): Boolean =
     arg0 > arg1
 
-  def report_4(context: Context, arg0: Turtle, arg1: Turtle) =
+  def report_4(context: Context, arg0: Turtle, arg1: Turtle): Boolean =
     arg0.compareTo(arg1) > 0
 
-  def report_5(context: Context, arg0: Patch, arg1: Patch) =
+  def report_5(context: Context, arg0: Patch, arg1: Patch): Boolean =
     arg0.compareTo(arg1) > 0
 
-  def report_6(context: Context, arg0: Link, arg1: Link) =
+  def report_6(context: Context, arg0: Link, arg1: Link): Boolean =
     arg0.compareTo(arg1) > 0
 
-  def report_7(context: Context, arg0: Double, arg1: AnyRef) =
+  def report_7(context: Context, arg0: Double, arg1: AnyRef): Boolean =
     arg1 match {
       case d: java.lang.Double =>
         arg0 > d.doubleValue
@@ -65,7 +65,7 @@ class _greaterthan extends Reporter with Pure {
             TypeNames.aName(Double.box(arg0)), TypeNames.aName(arg1)))
     }
 
-  def report_8(context: Context, arg0: AnyRef, arg1: Double) =
+  def report_8(context: Context, arg0: AnyRef, arg1: Double): Boolean =
     arg0 match {
       case d: java.lang.Double =>
         d.doubleValue > arg1

@@ -10,7 +10,7 @@ class _readfromstring extends Reporter {
     Syntax.reporterSyntax(
       Array(Syntax.StringType),
       Syntax.ReadableType)
-  override def report(context: Context) =
+  override def report(context: Context): AnyRef =
     try workspace.readFromString(argEvalString(context, 0))
     catch {
       case e: CompilerException =>

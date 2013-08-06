@@ -18,7 +18,7 @@ class _callreport(val procedure: Procedure) extends Reporter with CustomGenerate
   override def toString =
     super.toString + ":" + procedure.name
 
-  override def report(context: Context) = {
+  override def report(context: Context): AnyRef = {
     val newActivation = new Activation(procedure, context.activation, context.ip)
     val limit = procedure.args.size - procedure.localsCount
     var i = 0

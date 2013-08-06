@@ -17,7 +17,7 @@ class _breedon(breedName: String) extends Reporter {
   override def toString =
     super.toString + ":" + breedName
 
-  override def report(context: Context) =
+  override def report(context: Context): AgentSet =
     report_1(context, args(0).report(context))
 
   def report_1(context: Context, arg0: AnyRef): AgentSet = {

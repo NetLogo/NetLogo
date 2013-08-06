@@ -17,7 +17,7 @@ class _nsum4(vn: Int) extends Reporter {
     super.toString + ":" +
       Option(world).map(_.patchesOwnNameAt(vn)).getOrElse(vn.toString)
 
-  override def report(context: Context) =
+  override def report(context: Context): java.lang.Double =
     Double.box(report_1(context))
 
   def report_1(context: Context): Double = {

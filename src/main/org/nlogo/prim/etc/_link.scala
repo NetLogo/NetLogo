@@ -13,7 +13,7 @@ class _link extends Reporter {
       Array(Syntax.NumberType, Syntax.NumberType),
       Syntax.LinkType | Syntax.NobodyType)
 
-  override def report(context: Context) = {
+  override def report(context: Context): AnyRef = {
     val link =
       world.getLink(
         argEvalDouble(context, 0),

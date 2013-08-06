@@ -12,7 +12,7 @@ class _ifelsevalue extends Reporter with Pure {
             Syntax.ReporterBlockType,
             Syntax.ReporterBlockType),
       Syntax.WildcardType)
-  override def report(context: Context) =
+  override def report(context: Context): AnyRef =
     if (argEvalBooleanValue(context, 0))
       args(1).report(context)
     else

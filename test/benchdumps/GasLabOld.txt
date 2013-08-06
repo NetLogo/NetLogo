@@ -6418,32 +6418,28 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           I2D
           DCMPL
           IFLE L24
-          ICONST_0
+          DCONST_0
           GOTO L25
          L24
-          SIPUSH 180
-         L25
-          I2D
-          GOTO L26
+          LDC 180.0
+          GOTO L25
          L23
           DLOAD 4
           ICONST_0
           I2D
           DCMPL
-          IFNE L27
+          IFNE L26
           DLOAD 2
           ICONST_0
           I2D
           DCMPL
-          IFLE L28
-          BIPUSH 90
-          GOTO L29
-         L28
-          SIPUSH 270
-         L29
-          I2D
-          GOTO L26
+          IFLE L27
+          LDC 90.0
+          GOTO L25
          L27
+          LDC 270.0
+          GOTO L25
+         L26
           DLOAD 2
           DLOAD 4
           INVOKESTATIC java/lang/StrictMath.atan2 (DD)D
@@ -6454,13 +6450,13 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           SIPUSH 360
           I2D
           DREM
-         L26
+         L25
           DSTORE 4
           DSTORE 2
           DLOAD 2
           DLOAD 4
           DSUB
-         L30
+         L28
           DSTORE 2
           NEW java/lang/Double
           DUP
@@ -6477,7 +6473,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ICONST_3
           PUTFIELD org/nlogo/nvm/Context.ip : I
-          GOTO L31
+          GOTO L29
          L17
           ASTORE 3
           NEW org/nlogo/nvm/EngineException
@@ -6488,7 +6484,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L31
+         L29
           RETURN
 [3]_asm_proceduresetnewspeedandheadings_goto_3 "" => void
          L0
@@ -6830,32 +6826,28 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           I2D
           DCMPL
           IFLE L26
-          ICONST_0
+          DCONST_0
           GOTO L27
          L26
-          SIPUSH 180
-         L27
-          I2D
-          GOTO L28
+          LDC 180.0
+          GOTO L27
          L25
           DLOAD 4
           ICONST_0
           I2D
           DCMPL
-          IFNE L29
+          IFNE L28
           DLOAD 2
           ICONST_0
           I2D
           DCMPL
-          IFLE L30
-          BIPUSH 90
-          GOTO L31
-         L30
-          SIPUSH 270
-         L31
-          I2D
-          GOTO L28
+          IFLE L29
+          LDC 90.0
+          GOTO L27
          L29
+          LDC 270.0
+          GOTO L27
+         L28
           DLOAD 2
           DLOAD 4
           INVOKESTATIC java/lang/StrictMath.atan2 (DD)D
@@ -6866,13 +6858,13 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           SIPUSH 360
           I2D
           DREM
-         L28
+         L27
           DSTORE 4
           DSTORE 2
           DLOAD 2
           DLOAD 4
           DSUB
-         L32
+         L30
           DSTORE 2
           NEW java/lang/Double
           DUP
@@ -6889,7 +6881,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           BIPUSH 6
           PUTFIELD org/nlogo/nvm/Context.ip : I
-          GOTO L33
+          GOTO L31
          L17
           ASTORE 3
           NEW org/nlogo/nvm/EngineException
@@ -6900,7 +6892,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L33
+         L31
           RETURN
 [6]_asm_proceduresetnewspeedandheadings_goto_6 "" => void
          L0
@@ -7231,32 +7223,28 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           I2D
           DCMPL
           IFLE L26
-          ICONST_0
+          DCONST_0
           GOTO L27
          L26
-          SIPUSH 180
-         L27
-          I2D
-          GOTO L28
+          LDC 180.0
+          GOTO L27
          L25
           DLOAD 4
           ICONST_0
           I2D
           DCMPL
-          IFNE L29
+          IFNE L28
           DLOAD 2
           ICONST_0
           I2D
           DCMPL
-          IFLE L30
-          BIPUSH 90
-          GOTO L31
-         L30
-          SIPUSH 270
-         L31
-          I2D
-          GOTO L28
+          IFLE L29
+          LDC 90.0
+          GOTO L27
          L29
+          LDC 270.0
+          GOTO L27
+         L28
           DLOAD 2
           DLOAD 4
           INVOKESTATIC java/lang/StrictMath.atan2 (DD)D
@@ -7267,13 +7255,13 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           SIPUSH 360
           I2D
           DREM
-         L28
+         L27
           DSTORE 4
           DSTORE 2
           DLOAD 2
           DLOAD 4
           DSUB
-         L32
+         L30
           DSTORE 2
           NEW java/lang/Double
           DUP
@@ -7290,7 +7278,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           BIPUSH 9
           PUTFIELD org/nlogo/nvm/Context.ip : I
-          GOTO L33
+          GOTO L31
          L17
           ASTORE 3
           NEW org/nlogo/nvm/EngineException
@@ -7301,7 +7289,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L33
+         L31
           RETURN
 [9]_asm_proceduresetnewspeedandheadings_goto_9 "" => void
          L0
@@ -7622,32 +7610,28 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           I2D
           DCMPL
           IFLE L24
-          ICONST_0
+          DCONST_0
           GOTO L25
          L24
-          SIPUSH 180
-         L25
-          I2D
-          GOTO L26
+          LDC 180.0
+          GOTO L25
          L23
           DLOAD 4
           ICONST_0
           I2D
           DCMPL
-          IFNE L27
+          IFNE L26
           DLOAD 2
           ICONST_0
           I2D
           DCMPL
-          IFLE L28
-          BIPUSH 90
-          GOTO L29
-         L28
-          SIPUSH 270
-         L29
-          I2D
-          GOTO L26
+          IFLE L27
+          LDC 90.0
+          GOTO L25
          L27
+          LDC 270.0
+          GOTO L25
+         L26
           DLOAD 2
           DLOAD 4
           INVOKESTATIC java/lang/StrictMath.atan2 (DD)D
@@ -7658,13 +7642,13 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           SIPUSH 360
           I2D
           DREM
-         L26
+         L25
           DSTORE 4
           DSTORE 2
           DLOAD 2
           DLOAD 4
           DSUB
-         L30
+         L28
           DSTORE 2
           NEW java/lang/Double
           DUP
@@ -7681,7 +7665,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           BIPUSH 12
           PUTFIELD org/nlogo/nvm/Context.ip : I
-          GOTO L31
+          GOTO L29
          L17
           ASTORE 3
           NEW org/nlogo/nvm/EngineException
@@ -7692,7 +7676,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L31
+         L29
           RETURN
 [12]_asm_proceduresetnewspeedandheadings_setprocedurevariable_12 "" Object => void
       _sqrt double => double
@@ -8386,32 +8370,28 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           I2D
           DCMPL
           IFLE L24
-          ICONST_0
+          DCONST_0
           GOTO L25
          L24
-          SIPUSH 180
-         L25
-          I2D
-          GOTO L26
+          LDC 180.0
+          GOTO L25
          L23
           DLOAD 4
           ICONST_0
           I2D
           DCMPL
-          IFNE L27
+          IFNE L26
           DLOAD 2
           ICONST_0
           I2D
           DCMPL
-          IFLE L28
-          BIPUSH 90
-          GOTO L29
-         L28
-          SIPUSH 270
-         L29
-          I2D
-          GOTO L26
+          IFLE L27
+          LDC 90.0
+          GOTO L25
          L27
+          LDC 270.0
+          GOTO L25
+         L26
           DLOAD 2
           DLOAD 4
           INVOKESTATIC java/lang/StrictMath.atan2 (DD)D
@@ -8422,13 +8402,13 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           SIPUSH 360
           I2D
           DREM
-         L26
+         L25
           DSTORE 4
           DSTORE 2
           DLOAD 2
           DLOAD 4
           DSUB
-         L30
+         L28
           DSTORE 2
           NEW java/lang/Double
           DUP
@@ -8445,7 +8425,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           BIPUSH 18
           PUTFIELD org/nlogo/nvm/Context.ip : I
-          GOTO L31
+          GOTO L29
          L17
           ASTORE 3
           NEW org/nlogo/nvm/EngineException
@@ -8456,7 +8436,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L31
+         L29
           RETURN
 [18]_asm_proceduresetnewspeedandheadings_goto_18 "" => void
          L0
@@ -8798,32 +8778,28 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           I2D
           DCMPL
           IFLE L26
-          ICONST_0
+          DCONST_0
           GOTO L27
          L26
-          SIPUSH 180
-         L27
-          I2D
-          GOTO L28
+          LDC 180.0
+          GOTO L27
          L25
           DLOAD 4
           ICONST_0
           I2D
           DCMPL
-          IFNE L29
+          IFNE L28
           DLOAD 2
           ICONST_0
           I2D
           DCMPL
-          IFLE L30
-          BIPUSH 90
-          GOTO L31
-         L30
-          SIPUSH 270
-         L31
-          I2D
-          GOTO L28
+          IFLE L29
+          LDC 90.0
+          GOTO L27
          L29
+          LDC 270.0
+          GOTO L27
+         L28
           DLOAD 2
           DLOAD 4
           INVOKESTATIC java/lang/StrictMath.atan2 (DD)D
@@ -8834,13 +8810,13 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           SIPUSH 360
           I2D
           DREM
-         L28
+         L27
           DSTORE 4
           DSTORE 2
           DLOAD 2
           DLOAD 4
           DSUB
-         L32
+         L30
           DSTORE 2
           NEW java/lang/Double
           DUP
@@ -8857,7 +8833,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           BIPUSH 21
           PUTFIELD org/nlogo/nvm/Context.ip : I
-          GOTO L33
+          GOTO L31
          L17
           ASTORE 3
           NEW org/nlogo/nvm/EngineException
@@ -8868,7 +8844,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L33
+         L31
           RETURN
 [21]_asm_proceduresetnewspeedandheadings_goto_21 "" => void
          L0
@@ -9199,32 +9175,28 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           I2D
           DCMPL
           IFLE L26
-          ICONST_0
+          DCONST_0
           GOTO L27
          L26
-          SIPUSH 180
-         L27
-          I2D
-          GOTO L28
+          LDC 180.0
+          GOTO L27
          L25
           DLOAD 4
           ICONST_0
           I2D
           DCMPL
-          IFNE L29
+          IFNE L28
           DLOAD 2
           ICONST_0
           I2D
           DCMPL
-          IFLE L30
-          BIPUSH 90
-          GOTO L31
-         L30
-          SIPUSH 270
-         L31
-          I2D
-          GOTO L28
+          IFLE L29
+          LDC 90.0
+          GOTO L27
          L29
+          LDC 270.0
+          GOTO L27
+         L28
           DLOAD 2
           DLOAD 4
           INVOKESTATIC java/lang/StrictMath.atan2 (DD)D
@@ -9235,13 +9207,13 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           SIPUSH 360
           I2D
           DREM
-         L28
+         L27
           DSTORE 4
           DSTORE 2
           DLOAD 2
           DLOAD 4
           DSUB
-         L32
+         L30
           DSTORE 2
           NEW java/lang/Double
           DUP
@@ -9258,7 +9230,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           BIPUSH 24
           PUTFIELD org/nlogo/nvm/Context.ip : I
-          GOTO L33
+          GOTO L31
          L17
           ASTORE 3
           NEW org/nlogo/nvm/EngineException
@@ -9269,7 +9241,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L33
+         L31
           RETURN
 [24]_asm_proceduresetnewspeedandheadings_goto_24 "" => void
          L0
@@ -9590,32 +9562,28 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           I2D
           DCMPL
           IFLE L24
-          ICONST_0
+          DCONST_0
           GOTO L25
          L24
-          SIPUSH 180
-         L25
-          I2D
-          GOTO L26
+          LDC 180.0
+          GOTO L25
          L23
           DLOAD 4
           ICONST_0
           I2D
           DCMPL
-          IFNE L27
+          IFNE L26
           DLOAD 2
           ICONST_0
           I2D
           DCMPL
-          IFLE L28
-          BIPUSH 90
-          GOTO L29
-         L28
-          SIPUSH 270
-         L29
-          I2D
-          GOTO L26
+          IFLE L27
+          LDC 90.0
+          GOTO L25
          L27
+          LDC 270.0
+          GOTO L25
+         L26
           DLOAD 2
           DLOAD 4
           INVOKESTATIC java/lang/StrictMath.atan2 (DD)D
@@ -9626,13 +9594,13 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           SIPUSH 360
           I2D
           DREM
-         L26
+         L25
           DSTORE 4
           DSTORE 2
           DLOAD 2
           DLOAD 4
           DSUB
-         L30
+         L28
           DSTORE 2
           NEW java/lang/Double
           DUP
@@ -9649,7 +9617,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           BIPUSH 27
           PUTFIELD org/nlogo/nvm/Context.ip : I
-          GOTO L31
+          GOTO L29
          L17
           ASTORE 3
           NEW org/nlogo/nvm/EngineException
@@ -9660,7 +9628,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L31
+         L29
           RETURN
 [27]_asm_proceduresetnewspeedandheadings_setprocedurevariable_27 "" Object => void
       _turtlevariable:HEADING2 => Object

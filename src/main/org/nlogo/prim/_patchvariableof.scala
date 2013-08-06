@@ -2,7 +2,7 @@
 
 package org.nlogo.prim
 
-import org.nlogo.api.{ Syntax, I18N, AgentException, LogoListBuilder }
+import org.nlogo.api.{ Syntax, I18N, AgentException, LogoList, LogoListBuilder }
 import org.nlogo.nvm.{ Reporter, Context, EngineException, ArgumentTypeException }
 import org.nlogo.agent.{ Agent, AgentSet }
 
@@ -22,10 +22,10 @@ class _patchvariableof(_vn: Int) extends Reporter {
   // so we must keep vn and _vn separate - ST 9/22/12
   def vn = _vn
 
-  override def report(context: Context) =
+  override def report(context: Context): AnyRef =
     report_1(context, args(0).report(context))
 
-  def report_1(context: Context, arg0: AnyRef) =
+  def report_1(context: Context, arg0: AnyRef): AnyRef =
     try arg0 match {
       case agent: Agent =>
         if (agent.id == -1)
@@ -49,7 +49,7 @@ class _patchvariableof(_vn: Int) extends Reporter {
     catch { case ex: AgentException =>
       throw new EngineException(context, this, ex.getMessage) }
 
-  def report_2(context: Context, sourceSet: AgentSet) =
+  def report_2(context: Context, sourceSet: AgentSet): LogoList =
     try {
       val result = new LogoListBuilder
       val iter = sourceSet.shufflerator(context.job.random)
@@ -57,10 +57,10 @@ class _patchvariableof(_vn: Int) extends Reporter {
         result.add(iter.next().getPatchVariable(_vn))
       result.toLogoList
     }
-     catch { case ex: AgentException =>
+    catch { case ex: AgentException =>
       throw new EngineException(context, this, ex.getMessage) }
 
-  def report_3(context: Context, agent: Agent) =
+  def report_3(context: Context, agent: Agent): AnyRef =
     try {
       if (agent.id == -1)
         throw new EngineException(

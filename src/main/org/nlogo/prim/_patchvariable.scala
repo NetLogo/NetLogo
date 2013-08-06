@@ -23,10 +23,10 @@ class _patchvariable(_vn: Int) extends Reporter with Referenceable {
   // so we must keep vn and _vn separate - ST 9/22/12
   def vn = _vn
 
-  override def report(context: Context) =
+  override def report(context: Context): AnyRef =
     report_1(context)
 
-  def report_1(context: Context) =
+  def report_1(context: Context): AnyRef =
     try context.agent.getPatchVariable(_vn)
     catch { case ex: AgentException =>
       throw new EngineException(context, this, ex.getMessage) }

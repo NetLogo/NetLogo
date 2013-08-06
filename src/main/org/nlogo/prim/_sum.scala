@@ -12,7 +12,7 @@ class _sum extends Reporter with Pure {
       Array(Syntax.ListType),
       Syntax.NumberType)
 
-  override def report(context: Context) =
+  override def report(context: Context): java.lang.Double =
     Double.box(report_1(context, argEvalList(context, 0)))
 
   def report_1(context: Context, l0: LogoList): Double = {

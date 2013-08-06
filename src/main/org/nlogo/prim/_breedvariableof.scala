@@ -16,7 +16,7 @@ class _breedvariableof(name: String) extends Reporter {
   override def toString =
     super.toString + ":" + name
 
-  override def report(context: Context) =
+  override def report(context: Context): AnyRef =
     args(0).report(context) match {
       case agent: Agent =>
         if (agent.id == -1)

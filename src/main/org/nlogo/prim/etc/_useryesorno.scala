@@ -11,7 +11,7 @@ class _useryesorno extends Reporter {
     Syntax.reporterSyntax(Array(Syntax.WildcardType),
                           Syntax.BooleanType)
 
-  override def report(context: Context) = {
+  override def report(context: Context): java.lang.Boolean = {
     val message = Dump.logoObject(args(0).report(context))
     workspace.updateUI(context)
     val result =

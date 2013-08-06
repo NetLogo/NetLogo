@@ -16,7 +16,7 @@ class _patchat extends Reporter {
 
   // I've tried to rejigger this and the result gets past TryCatchSafeChecker but then
   // doesn't work at runtime ("Inconsistent stack height") - ST 2/10/09
-  override def report(context: Context) = {
+  override def report(context: Context): AnyRef = {
     val dx = argEvalDoubleValue(context, 0)
     val dy = argEvalDoubleValue(context, 1)
     try context.agent.getPatchAtOffsets(dx, dy)

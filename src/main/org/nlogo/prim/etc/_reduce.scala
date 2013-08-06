@@ -10,7 +10,7 @@ class _reduce extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(Array(Syntax.ReporterTaskType, Syntax.ListType), Syntax.WildcardType)
 
-  override def report(context: Context) = {
+  override def report(context: Context): AnyRef = {
     val task = argEvalReporterTask(context, 0)
     if(task.formals.size > 2)
       throw new EngineException(

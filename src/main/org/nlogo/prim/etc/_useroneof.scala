@@ -12,7 +12,7 @@ class _useroneof extends Reporter {
       Array(Syntax.WildcardType, Syntax.ListType),
       Syntax.WildcardType)
 
-  override def report(context: Context) = {
+  override def report(context: Context): AnyRef = {
     val message = Dump.logoObject(args(0).report(context))
     val list = argEvalList(context, 1)
     workspace.updateUI(context)

@@ -17,7 +17,7 @@ class _linkneighbors(breedName: String) extends Reporter {
   override def toString =
     super.toString + ":" + breedName
 
-  override def report(context: Context) =
+  override def report(context: Context): AgentSet =
     report_1(context)
 
   def report_1(context: Context): AgentSet = {
