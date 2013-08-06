@@ -131,7 +131,7 @@ class MethodSelectorTests extends FunSuite {
   }
   // check handling of "length" on input known to be a list
   test("length list 1") {
-    val root = new etc._length
+    val root = instantiate[Reporter]("_filter")
     root.args = Array(new etc._filter)
     assertResult("(double,0)")(dump(evaluate(root, false)))
     assertResult("LogoList => double")(
