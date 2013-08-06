@@ -129,6 +129,14 @@ class MethodSelectorTests extends FunSuite {
     assertResult("LogoList => double")(
       dump(select(root, java.lang.Double.TYPE, false).get))
   }
+  // check handling of "length" on input known to be a list
+  test("length list 1") {
+    val root = new etc._length
+    root.args = Array(new etc._filter)
+    assertResult("(double,0)")(dump(evaluate(root, false)))
+    assertResult("LogoList => double")(
+      dump(select(root, java.lang.Double.TYPE, false).get))
+  }
   // check on handling of reporter blocks (which show up as Reporter arguments
   // in the args array)
   test("with 1") {
