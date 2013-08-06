@@ -1,7 +1,5 @@
 package org.nlogo.tortoise.engine
 
-import scala.js.{ Number => NumberJS, Object => ObjectJS }
-
 object RandomJS extends ObjectJS {
   def nextDouble():              NumberJS = ???
   def nextInt(limit: NumberJS):  NumberJS = ???

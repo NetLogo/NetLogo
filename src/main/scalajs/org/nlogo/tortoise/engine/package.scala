@@ -4,6 +4,20 @@ import scala.collection.mutable.{ LinkedHashMap => LHM }
 
 package object engine {
 
+  type AnyJS      = scala.js.Any
+  type ArrayJS[T] = scala.js.Array[T]
+  type BooleanJS  = scala.js.Boolean
+  type NumberJS   = scala.js.Number
+  type ObjectJS   = scala.js.Object
+  type StringJS   = scala.js.String
+
+  val AnyJS     = scala.js.Any
+  val ArrayJS   = scala.js.Array
+  val BooleanJS = scala.js.Boolean
+  val NumberJS  = scala.js.Number
+  val ObjectJS  = scala.js.Object
+  val StringJS  = scala.js.String
+
   type JSW                           = JSWrapper[_]
   type VarMap                        = LHM[String, JSW]
   def  VarMap(items: (String, JSW)*) = LHM(items: _*)

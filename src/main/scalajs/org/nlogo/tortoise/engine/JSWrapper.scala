@@ -1,7 +1,5 @@
 package org.nlogo.tortoise.engine
 
-import scala.js.{ Any => AnyJS }
-
 trait JSWrapper[T] {
   def value: T
   def toJS: AnyJS

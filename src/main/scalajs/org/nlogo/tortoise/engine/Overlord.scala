@@ -1,6 +1,6 @@
 package org.nlogo.tortoise.engine
 
-import scala.js.{ Any => AnyJS, Array => ArrayJS, Dictionary }
+import scala.js.Dictionary
 
 object Overlord {
 

@@ -1,7 +1,5 @@
 package org.nlogo.tortoise.engine
 
-import scala.js.{ Any => AnyJS }
-
 // It bothers me that this agent type is `Any`.  Can't we improve it somehow?  --JAB (8/3/13)
 object AgentSet {
 

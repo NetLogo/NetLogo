@@ -1,7 +1,5 @@
 package org.nlogo.tortoise.engine
 
-import scala.js.{ Boolean => BooleanJS, Number => NumberJS, String => StringJS }
-
 trait JS2ScalaConverter[T] {
   def asScala: T
 }

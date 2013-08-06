@@ -1,9 +1,5 @@
 package org.nlogo.tortoise.engine
 
-import
-  scala.js.{ Any => AnyJS, Dynamic },
-    Dynamic.{ global => g }
-
 import EngineVariableNames.PatchE._
 
 class Patch private (override val id: ID, world: World, variables: VarMap) extends Vassal with CanTalkToPatches {

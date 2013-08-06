@@ -1,7 +1,5 @@
 package org.nlogo.tortoise.engine
 
-import scala.js.{ Any => AnyJS }
-
 import
   EngineVariableNames.{ CommonE, TurtleE },
     CommonE._,
