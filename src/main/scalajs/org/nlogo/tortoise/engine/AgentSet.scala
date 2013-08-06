@@ -41,7 +41,7 @@ object AgentSet {
   // In the future: Links are also capable of dying --JAB (7/19/13)
   def die(): Unit = _self.asInstanceOf[Turtle].die()
 
-  // Because of some "te compiler's not giving me a `JSW`" insanity, I think we need some well-established entry points into the ScalaJS code...
+  // Because of some "the compiler's not giving me a `JSW`" insanity, I think we need some well-established entry points into the ScalaJS code...
   // (See above, where Seth was "onto something"; we should have some interface layer where inputs are converted from ScalaJS types to Scala types,
   // then forwarded to the rest of the ScalaJS engine) --JAB (8/1/13)
   def getTurtleVariable(n: Int): AnyJS = _self.asInstanceOf[Turtle].getTurtleVariable(n)
