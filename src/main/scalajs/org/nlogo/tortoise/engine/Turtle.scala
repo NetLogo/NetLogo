@@ -23,9 +23,9 @@ class Turtle private (world: World, variables: VarMap) extends Vassal with CanTa
     this(world, {
       import Turtle._
       val builtins = VarMap(
-        IDKeyE -> id,       ColorKeyE -> color,     HeadingKeyE -> heading,       XCorKeyE -> xcor,   YCorKeyE -> ycor,
-        ShapeKeyE -> shape, LabelKeyE -> label,     LabelColorKeyE -> labelcolor, BreedKeyE -> breed, HiddenKeyE -> hidden,
-        SizeKeyE -> size,   PenSizeKeyE -> pensize, PenModeKeyE -> penmode
+        IDKeyE    -> id,    ColorKeyE   -> color,   HeadingKeyE    -> heading,    XCorKeyE  -> xcor,  YCorKeyE   -> ycor,
+        ShapeKeyE -> shape, LabelKeyE   -> label,   LabelColorKeyE -> labelcolor, BreedKeyE -> breed, HiddenKeyE -> hidden,
+        SizeKeyE  -> size,  PenSizeKeyE -> pensize, PenModeKeyE    -> penmode
       )
       builtins ++ (1 to varCount map (x => (x + builtins.size).toString -> (0: JSW)))
     }.asInstanceOf[VarMap])
