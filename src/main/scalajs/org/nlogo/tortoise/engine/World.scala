@@ -42,6 +42,12 @@ class World(val minPxcor: Int, val maxPxcor: Int, val minPycor: Int, val maxPyco
     _patches(index)
   }
 
+  def randomXCor(): XCor =
+    XCor(randomCor(minPxcor, maxPxcor))
+
+  def randomYCor(): YCor =
+    YCor(randomCor(minPycor, maxPycor))
+
   def removeTurtle(id: ID): Unit =
     _turtles = _turtles.filterNot(_.id.value == id.value)
 
@@ -85,5 +91,8 @@ class World(val minPxcor: Int, val maxPxcor: Int, val minPycor: Int, val maxPyco
     import Dynamic2ScalaConverters.num2Int
     getRandom().nextInt(360).asScala
   }
+
+  private def randomCor(min: Double, max: Double): Double =
+    min - 0.5 + Random.nextDouble() * (max - min + 1)
 
 }

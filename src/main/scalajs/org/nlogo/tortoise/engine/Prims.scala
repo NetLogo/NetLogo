@@ -20,16 +20,7 @@ object Prims {
   def getNeighbors:                Seq[Patch] = AgentSet.self.asInstanceOf[Patch].getNeighbors
   def sprout(n: Int):              Unit       = AgentSet.self.asInstanceOf[Patch].sprout(n)
   def patch(x: Double, y: Double): Patch      = getWorld().getPatchAt(XCor(x), YCor(y))
-
-  // This logic belongs on the `World` object, itself. --JAB (8/3/13)
-  def randomxcor: Double = {
-    val w = getWorld()
-    w.minPxcor - 0.5 + g.Random.nextDouble() * (w.maxPxcor - w.minPxcor + 1)
-  }
-
-  def randomycor: Double = {
-    val w = getWorld()
-    w.minPycor - 0.5 + g.Random.nextDouble() * (w.maxPycor - w.minPycor + 1)
-  }
+  def randomxcor():                Double     = getWorld().randomXCor().value
+  def randomycor():                Double     = getWorld().randomYCor().value
 
 }
