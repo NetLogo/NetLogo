@@ -103,10 +103,20 @@ def runIt(name: String) {
       else System.err.println(out)
   printResults()
 }
+
+def cleanUp() {
+  // remove files created by ImportWorld Benchmark
+  for {
+    files <- Option(new java.io.File("models/test/benchmarks/").listFiles)
+    file <- files if file.getName.matches("firebig-[0-9]*.csv")
+  } file.delete()
+}
+
 while(true) {
   allNames.foreach(runIt)
   // make extra efforts to get at least one good result for each model
   allNames.filter(!haveGoodResult(_)).foreach(runIt)
+  cleanUp()
 }
 
 // Local Variables:
