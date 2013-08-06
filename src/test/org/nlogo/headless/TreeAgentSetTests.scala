@@ -1,8 +1,13 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.agent
+package org.nlogo.headless
 
-import org.nlogo.headless.TestUsingWorkspace
+// Note: this is here instead of in the agent package because
+// of the dependency on headless.TestUsingWorkspace. NP 2013-08-05
+// See https://github.com/NetLogo/NetLogo/commit/9f35a477f071b746bea225b2294813970b04daf0#commitcomment-3793507.
+
+import org.nlogo.agent.SimpleChangeEventCounter
+import org.nlogo.agent.TreeAgentSet
 import org.scalatest.FunSuite
 import org.scalatest.GivenWhenThen
 
