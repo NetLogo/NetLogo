@@ -129,10 +129,10 @@ class MethodSelectorTests extends FunSuite {
     assertResult("LogoList => double")(
       dump(select(root, java.lang.Double.TYPE, false).get))
   }
-  // check handling of "length" on input known to be a list
+  // check handling of "length" on unrejiggered input known to be a list
   test("length list 1") {
-    val root = instantiate[Reporter]("_filter")
-    root.args = Array(new etc._filter)
+    val root = instantiate[Reporter]("_length")
+    root.args = Array(instantiate[Reporter]("_filter"))
     assertResult("(double,0)")(dump(evaluate(root, false)))
     assertResult("LogoList => double")(
       dump(select(root, java.lang.Double.TYPE, false).get))
