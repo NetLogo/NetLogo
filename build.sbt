@@ -15,9 +15,6 @@ javacOptions in ThisBuild ++=
 // only log problems plz
 ivyLoggingLevel in ThisBuild := UpdateLogging.Quiet
 
-// this makes script-writing easier
-retrieveManaged in ThisBuild := true
-
 // we're not cross-building for different Scala versions
 crossPaths in ThisBuild := false
 
