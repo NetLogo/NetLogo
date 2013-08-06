@@ -8,8 +8,6 @@ import EngineVariableNames.PatchE._
 
 class Patch private (override val id: ID, world: World, variables: VarMap) extends Vassal with CanTalkToPatches {
 
-  private val Random = g.Random
-
   override protected def updateType = Overlord.UpdateType.PatchType
   override protected def companion  = Patch
 
