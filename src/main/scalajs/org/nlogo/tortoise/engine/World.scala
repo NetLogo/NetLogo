@@ -92,7 +92,9 @@ class World(val minPxcor: Int, val maxPxcor: Int, val minPycor: Int, val maxPyco
     getRandom().nextInt(360).asScala
   }
 
-  private def randomCor(min: Double, max: Double): Double =
-    min - 0.5 + Random.nextDouble() * (max - min + 1)
+  private def randomCor(min: Double, max: Double): Double = {
+    import Dynamic2ScalaConverters.num2Double
+    min - 0.5 + getRandom().nextDouble().asScala * (max - min + 1)
+  }
 
 }
