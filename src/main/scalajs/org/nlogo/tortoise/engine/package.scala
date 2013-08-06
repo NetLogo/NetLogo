@@ -4,18 +4,6 @@ import scala.collection.mutable.{ LinkedHashMap => LHM }
 
 package object engine {
 
-// Annoying features of ScalaJS mean that I can't use this right now (if ever) --JAB (7/31/13)
-//  type RandomType = {
-//    def nextDouble(): Double
-//  }
-//
-//  type StrictMathType = {
-//    def abs      (d: Double): Double
-//    def sin      (d: Double): Double
-//    def cos      (d: Double): Double
-//    def toRadians(d: Double): Double
-//  }
-
   type JSW                           = JSWrapper[_]
   type VarMap                        = LHM[String, JSW]
   def  VarMap(items: (String, JSW)*) = LHM(items: _*)

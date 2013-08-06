@@ -1,11 +1,6 @@
 package org.nlogo.tortoise.engine
 
-import scala.js.Dynamic.{ global => g }
-
 class World(val minPxcor: Int, val maxPxcor: Int, val minPycor: Int, val maxPycor: Int) {
-
-  private def getRandom()     = g.Random
-  private def getStrictMath() = g.StrictMath
 
   private var _nextId:  Int         = 0
   private var _turtles: Seq[Turtle] = Seq()
@@ -37,8 +32,8 @@ class World(val minPxcor: Int, val maxPxcor: Int, val minPycor: Int, val maxPyco
 
   // TODO: this needs to support all topologies
   def getPatchAt(x: XCor, y: YCor): Patch = {
-    import Dynamic2ScalaConverters.num2Int
-    val index = (maxPycor - getStrictMath().round(y.value).asScala) * _width + (getStrictMath().round(x.value).asScala - minPxcor)
+    import JS2ScalaConverters.num2Int
+    val index = (maxPycor - StrictMathJS.round(y.value).asScala) * _width + (StrictMathJS.round(x.value).asScala - minPxcor)
     _patches(index)
   }
 
@@ -83,18 +78,18 @@ class World(val minPxcor: Int, val maxPxcor: Int, val minPycor: Int, val maxPyco
   }
 
   private def randomColor(): NLColor = {
-    import Dynamic2ScalaConverters.num2Int
-    NLColor(5 + 10 * getRandom().nextInt(14).asScala)
+    import JS2ScalaConverters.num2Int
+    NLColor(5 + 10 * RandomJS.nextInt(14).asScala)
   }
 
   private def randomHeading(): Int = {
-    import Dynamic2ScalaConverters.num2Int
-    getRandom().nextInt(360).asScala
+    import JS2ScalaConverters.num2Int
+    RandomJS.nextInt(360).asScala
   }
 
   private def randomCor(min: Double, max: Double): Double = {
-    import Dynamic2ScalaConverters.num2Double
-    min - 0.5 + getRandom().nextDouble().asScala * (max - min + 1)
+    import JS2ScalaConverters.num2Double
+    min - 0.5 + RandomJS.nextDouble().asScala * (max - min + 1)
   }
 
 }
