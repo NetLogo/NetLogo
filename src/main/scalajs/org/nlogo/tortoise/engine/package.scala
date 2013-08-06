@@ -32,5 +32,9 @@ package engine {
   case class XCor   (override val value: Double) extends AnyVal with ValueClass[Double]
   case class YCor   (override val value: Double) extends AnyVal with ValueClass[Double]
 
+  sealed trait PenMode
+  case object PenUp   extends PenMode
+  case object PenDown extends PenMode
+
 }
 

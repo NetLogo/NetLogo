@@ -41,6 +41,10 @@ object JSWrapper {
     override def toJS = AnyJS.fromLong(value)
   }
 
+  implicit class PenModeJSWrapper(override val value: PenMode) extends JSWrapper[PenMode] {
+    override def toJS = AnyJS.fromString(if (value == PenUp) "up" else "down")
+  }
+
   implicit class NLColorJSWrapper(override val value: NLColor) extends JSWrapper[NLColor] {
     override def toJS = AnyJS.fromDouble(value.value)
   }

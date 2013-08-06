@@ -16,11 +16,10 @@ class Turtle private (world: World, variables: VarMap) extends Vassal with CanTa
 
   registerUpdate(variables.toSeq: _*)
 
-  // `penmode` is a string?  Really?!  --JAB (7/26/13)
   def this(id:         ID,                     world:   World,              color:   NLColor,             heading: Int,
            xcor:       XCor,                   ycor:    YCor,               shape:   String  = "default", label:   String = "",
            labelcolor: NLColor = NLColor(9.9), breed:   String = "TURTLES", hidden:  Boolean = false,
-           size:       Double  = 1.0,          pensize: Double = 1.0,       penmode: String  = "up") {
+           size:       Double  = 1.0,          pensize: Double = 1.0,       penmode: PenMode = PenUp) {
     this(world, {
       import Turtle._
       val builtins = VarMap(
