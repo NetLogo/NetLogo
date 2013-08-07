@@ -109,8 +109,10 @@ public strictfp class LoginDialog extends JDialog {
           communicator.promptForLogin("Invalid email address or password");
         } else if(status.equals("MISSING_PARAMETERS")) {
           communicator.promptForLogin("Missing email address or password");
+        } else if(status.equals("INVALID_RESPONSE_FROM_SERVER")) {
+          communicator.promptForLogin("Invalid response from Modeling Commons");
         } else if(status.equals("CONNECTION_ERROR")) {
-          communicator.promptForLogin("Error connecting to Modeling Commons");
+          communicator.promptForLogin("Could not connect to Modeling Commons");
         } else if(status.equals("SUCCESS")) {
           communicator.setPerson(person);
           communicator.promptForUpload();

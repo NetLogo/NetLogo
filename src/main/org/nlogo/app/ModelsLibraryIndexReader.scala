@@ -11,7 +11,7 @@ import collection.JavaConverters._
 object ModelsLibraryIndexReader {
   def readInfoMap: java.util.Map[String, String] = {
     val result = new collection.mutable.HashMap[String, String]
-    val input = io.Source.fromFile("models/index.txt").getLines
+    val input = io.Source.fromFile("models/index.txt")("UTF-8").getLines
     handling(classOf[java.io.IOException]) {
       for(Seq(name, description) <- input.grouped(2))
         result(name) = description

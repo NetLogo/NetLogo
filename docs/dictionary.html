@@ -183,24 +183,22 @@ Go figure! - ST 12/2/04
       <a href="#is-agent">is-agent?</a> <a href=
       "#is-agentset">is-agentset?</a> <a href=
       "#is-patch-set">is-patch-set?</a> <a href=
-      "#is-turtle-set">is-turtle-set?</a> <a href=
-      "#link-heading">link-heading</a> <a href=
-      "#link-length">link-length</a> <a href="#link-set">link-set</a>
-      <a href="#link-shapes">link-shapes</a> <a href=
-      "#max-n-of">max-n-of</a> <a href="#max-one-of">max-one-of</a>
+      "#is-turtle-set">is-turtle-set?</a> <a href="#link-set">link-set</a>
+      <a href="#max-n-of">max-n-of</a> <a href="#max-one-of">max-one-of</a>
       <a href="#member">member?</a> <a href="#min-n-of">min-n-of</a>
       <a href="#min-one-of">min-one-of</a> <a href="#n-of">n-of</a>
       <a href="#neighbors">neighbors</a> <a href=
-      "#neighbors4">neighbors4</a> <a href="#no-patches">no-patches</a>
-      <a href="#no-turtles">no-turtles</a> <a href="#of">of</a> <a href=
+      "#neighbors4">neighbors4</a> <a href="#no-links">no-links</a>
+      <a href="#no-patches">no-patches</a> <a href=
+      "#no-turtles">no-turtles</a> <a href="#of">of</a> <a href=
       "#one-of">one-of</a> <a href="#other">other</a> <a href=
       "#patch-set">patch-set</a> <a href="#patches">patches</a> <a href=
       "#sort">sort</a> <a href="#sort-by">sort-by</a> <a href=
       "#sort-on">sort-on</a> <a href="#turtle-set">turtle-set</a> <a href=
-      "#turtles">turtles</a> <a href="#with">with</a> <a href=
-      "#with-max">with-max</a> <a href="#with-min">with-min</a> <a href=
-      "#turtles-at">turtles-at</a> <a href="#turtles-here">turtles-here</a>
-      <a href="#turtles-on">turtles-on</a>
+      "#turtles">turtles</a> <a href="#turtles-at">turtles-at</a> <a href=
+      "#turtles-here">turtles-here</a> <a href="#turtles-on">turtles-on</a>
+      <a href="#with">with</a> <a href="#with-max">with-max</a> <a href=
+      "#with-min">with-min</a>
       <!-- ======================================== -->
     <h3>
       <a name="colorgroup" id="colorgroup">Color</a>
@@ -988,15 +986,15 @@ crt 1 [ set heading 30  fd 1  print atan xcor ycor ]
         In the final example, note that the result of <tt>atan</tt> equals
         the turtle's heading.
       <p>
-        If you ever need to convert a turtle heading (obtained with atan
-        or otherwise) to a normal mathematical angle, the following should
-        be helpful:
-<pre>
+        If you ever need to convert a turtle heading (obtained with atan or
+        otherwise) to a normal mathematical angle, the following should be
+        helpful:
+      <pre>
 to-report heading-to-angle [ h ]
   report (90 - h) mod 360
 end
 </pre>
-      </div>
+    </div>
     <div class="dict_entry">
       <h3>
         <a name="autoplot" id="autoplot">autoplot?</a>
@@ -1338,9 +1336,8 @@ show ceiling -4.5
         <img alt="Observer Command" src="images/observer.gif">
       </h4>
       <p>
-        Resets all global variables to zero, and calls clear-ticks,
-        clear-turtles, clear-patches, clear-drawing, clear-all-plots, and
-        clear-output.
+        Combines the effects of clear-globals, clear-ticks, clear-turtles,
+        clear-patches, clear-drawing, clear-all-plots, and clear-output.
       </div>
     <div class="dict_entry">
       <h3>
@@ -1771,7 +1768,7 @@ end
         plot's Edit dialog.
       <p>
         If a temporary pen with that name already exists in the current
-        plot, no new pen is created, and the existing pen is set to the the
+        plot, no new pen is created, and the existing pen is set to the
         current pen. If a permanent pen with that name already exists in
         the current plot, you get a runtime error.
       <p>
@@ -1828,6 +1825,24 @@ if xcor &gt; 20 [ die ]
 ask links with [color = blue] [ die ]
 ;; all the blue links will die
 </pre>
+      <p>
+        A dead agent ceases to exist. The effects of this include:
+      <ul>
+        <li>The agent will not execute any further code. So if you write
+        <tt>ask turtles [ die print &quot;last words?&quot; ]</tt>, no last
+        words will be printed, because the turtles are already dead before
+        they have a chance to print anything.
+        <li>The agent will disappear from any agentsets it was in, reducing
+        the size of those agentsets by one.
+        <li>Any variable that was storing the agent will now instead have
+        <tt>nobody</tt> in it. So for example <tt>let x one-of turtles ask
+        x [ die ] print x</tt> prints <tt>nobody</tt>.
+        <li>If the dead agent was a turtle, every link connected to it also
+        dies.
+        <li>If the observer was watching or following the agent, the
+        observer's perspective resets, as if <tt>reset-perspective</tt>
+        had been run.
+        </ul>
       <p>
         See also: <a href="#clear-turtles">clear-turtles</a> <a href=
         "#clear-links">clear-links</a>
@@ -2333,7 +2348,7 @@ export-all-plots &quot;c:/My Documents/plots.csv&quot;
         may wish to use some method of generating fresh names. Examples:
       <pre>
 export-world user-new-file
-export-world (word &quot;results &quot; date-and-time &quot;.csv&quot;)
+export-world (word &quot;results &quot; date-and-time &quot;.csv&quot;) ;; Colon characters in the time cause errors on Windows
 export-world (word &quot;results &quot; random-float 1.0 &quot;.csv&quot;)
 </pre>
     </div>
@@ -3175,9 +3190,9 @@ histogram [color] of turtles
         hsb <i>hue saturation brightness</i>
       </h4>
       <p>
-        Reports a RGB list when given three numbers describing an HSB color. Hue,
-        saturation, and brightness are integers in the range 0-255. The RGB
-        list contains three integers in the same range.
+        Reports a RGB list when given three numbers describing an HSB
+        color. Hue, saturation, and brightness are integers in the range
+        0-255. The RGB list contains three integers in the same range.
       <p>
         See also <a href="#rgb">rgb</a>
       </div>
@@ -6908,8 +6923,8 @@ show reverse &quot;live&quot;
         rgb <i>red green blue</i>
       </h4>
       <p>
-        Reports a RGB list when given three numbers describing an RGB color. The
-        numbers are range checked to be between 0 and 255.
+        Reports a RGB list when given three numbers describing an RGB
+        color. The numbers are range checked to be between 0 and 255.
       <p>
         See also <a href="#hsb">hsb</a>
       </div>
@@ -7080,15 +7095,16 @@ ask turtles [ set color scale-color red age 0 50 ]
         self
         <br>
         <img alt="Turtle Command" src="images/turtle.gif"> <img alt=
-        "Patch Command" src="images/patch.gif">
+        "Patch Command" src="images/patch.gif"> <img alt="Link Command"
+        src="images/link.gif">
       </h4>
       <p>
-        Reports this turtle or patch.
+        Reports this turtle, patch, or link.
       <p>
         &quot;self&quot; and &quot;myself&quot; are very different.
         &quot;self&quot; is simple; it means &quot;me&quot;.
-        &quot;myself&quot; means &quot;the turtle or patch who asked me to
-        do what I'm doing right now.&quot;
+        &quot;myself&quot; means &quot;the agent who asked me to do what
+        I'm doing right now.&quot;
       <p>
         See also <a href="#myself">myself</a>.
       </div>
@@ -8545,6 +8561,8 @@ ask turtle 0 [ show sort my-links ]
       <p>
         <a href="#tick">tick</a> has the same effect, so in models that use
         the tick counter, this primitive is not normally used.
+        Models that use fractional ticks may need <tt>update-plots</tt>, since
+        <a href="#tick-advance">tick-advance</a> does not update the plots.
       <p>
         See the <a href="programming.html#plotting">Plotting section</a> of
         the Programming Guide for more details.
@@ -8648,7 +8666,7 @@ file-open user-new-file
         the example.
       <p>
         If the user chooses an existing file, they will be asked if they
-        wish to replace it or not, but the the reporter itself doesn't
+        wish to replace it or not, but the reporter itself doesn't
         cause the file to be replaced. To do that you would use
         <tt>file-delete</tt>.
       </div>
@@ -8764,6 +8782,9 @@ show variance [2 7 4 3 5]
       <pre>
 repeat 10 [ fd 1 wait 0.5 ]
 </pre>
+      <p>
+        While the agent is waiting, no other agents can do anything.
+        Everything stops until the agent is done.
       <p>
         See also <a href="#every">every</a>.
       </div>
@@ -9213,3 +9234,4 @@ if (pxcor &gt; 0) xor (pycor &gt; 0)
         See the <a href="programming.html#tasks">Tasks section</a> of the
         Programming Guide for more details.
       </div>
+

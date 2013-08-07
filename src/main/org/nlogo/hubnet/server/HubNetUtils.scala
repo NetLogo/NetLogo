@@ -17,7 +17,7 @@ object HubNetUtils {
   val SERVER_DISCOVERY_ANNOUNCE_INTERVAL = 1000
 
   // these are terrible - JC 8/21/10
-  var viewMirroring = false
+  var viewMirroring = true
   var plotMirroring = false
 
   // this doesnt appear to be used - JC 8/21/10

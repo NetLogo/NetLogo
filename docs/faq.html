@@ -61,7 +61,8 @@
         <a href="#threedsplit"><b>Will NetLogo and NetLogo 3D remain
         separate applications?</b></a>
       <li>
-        <a href="#mobile"><b>Can I run NetLogo on my tablet or phone?</b></a>
+        <a href="#mobile"><b>Can I run NetLogo on my tablet or
+        phone?</b></a>
       </ul>
     <h3>
       Downloading
@@ -212,6 +213,8 @@
         or vice versa?</b></a>
       <li>
         <a href="#stoppingforeach"><b>How do I stop foreach?</b></a>
+      <li>
+        <a href="#listexpectedconstant"><b>I'm trying to make a list. Why do I keep getting the error &quot;Expected a constant&quot;?</b></a>
       </ul>
     <h3>
       BehaviorSpace
@@ -345,7 +348,7 @@
       extensions are released under open source licenses. See each
       extension's README for details.
     <p>
-      The Code Examples in the the Models Library are in the public domain
+      The Code Examples in the Models Library are in the public domain
       (<a href="http://creativecommons.org/about/cc0">CC0 notice</a>).
     <p>
       The rest of the models in the Models Library are provided under a
@@ -366,7 +369,7 @@
     </h3>
     <p>
       We offer workshops from time to time. If a workshop has been
-      scheduled, we will announce it on the the <a href=
+      scheduled, we will announce it on the <a href=
       "http://groups.yahoo.com/group/netlogo-users/">NetLogo Users
       Group</a>.
     <h3>
@@ -478,19 +481,22 @@
       Models built in NetLogo 3D may require changes in order to run in the
       eventual unified application.
     <h3>
-      <a name="mobile" id="mobile"></a>Can I run NetLogo on my phone or tablet?
+      <a name="mobile" id="mobile"></a>Can I run NetLogo on my phone or
+      tablet?
     </h3>
     <p>
-      No.  Neither iOS nor Android supports running Java applications
-      such as NetLogo.
+      No. Neither iOS nor Android supports running Java applications such
+      as NetLogo.
     <p>
       We are working on an alternate implementation of NetLogo on a
-      JavaScript and HTML5 base, instead of Java. It will work on a
-      variety of tablets and phones. We don't know yet when it will be
-      ready, and we expect it will only support a subset of the
-      features in desktop NetLogo.  The many person-years of
-      development effort that have gone into the Java version can't
-      cheaply or easily be replicated on another platform.
+      JavaScript and HTML5 base, instead of Java. It will work on a variety
+      of tablets and phones. We don't know yet when it will be ready,
+      and we expect it will only support a subset of the features in
+      desktop NetLogo. The many person-years of development effort that
+      have gone into the Java version can't cheaply or easily be
+      replicated on another platform.
+    <p>For technical details on this new project, go
+       <a href="https://github.com/NetLogo/NetLogo/wiki/Tortoise">here</a>.
     <h2>
       Downloading
     </h2>
@@ -1189,6 +1195,16 @@ end
       from the current procedure so nothing after the foreach will be
       executed either. (If the procedure is a reporter procedure, use
       <tt>report</tt> instead of <tt>stop</tt>.)
+    <h3>
+      <a name="listexpectedconstant" id="listexpectedconstant"></a>I'm trying to make a list. Why do I keep getting the error &quot;Expected a constant&quot;?
+    </h3>
+    <p>
+      If a list contains only constants, you can write it down just by putting
+      square brackets around it, like <tt>[1 2 3]</tt>.
+    <p>
+      If you want your list to contain items that may vary at runtime, the list
+      cannot be written down directly.  Instead, you
+      build it using the <a href="dictionary.html#list">list</a> primitive.
     <h2>
       BehaviorSpace
     </h2>

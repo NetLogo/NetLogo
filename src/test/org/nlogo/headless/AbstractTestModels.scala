@@ -73,8 +73,12 @@ trait AbstractTestModels extends FunSuite with ModelCreator {
   private def run(openModel: HeadlessWorkspace => Unit)(f: => Unit) {
     if (!Version.is3D) {
       _workspace.withValue(HeadlessWorkspace.newInstance) {
-        openModel(workspace)
-        try f finally workspace.dispose()
+        try {
+          workspace.silent = true
+          openModel(workspace)
+          f
+        }
+        finally workspace.dispose()
       }
     }
   }
