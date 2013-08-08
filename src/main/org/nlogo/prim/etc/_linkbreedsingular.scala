@@ -16,7 +16,7 @@ class _linkbreedsingular(breedName: String) extends Reporter {
   override def toString =
     super.toString + ":" + breedName
 
-  override def report(context: Context) = {
+  override def report(context: Context): AnyRef = {
     val breed = world.getLinkBreed(breedName)
     val link = world.getLink(
       argEvalDouble(context, 0), argEvalDouble(context, 1), breed)

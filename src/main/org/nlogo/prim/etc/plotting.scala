@@ -176,31 +176,31 @@ class _exportplots extends PlotCommand(Syntax.StringType) {
 //
 
 class _autoplot extends PlotReporter(Syntax.BooleanType) {
-  override def report(context: Context) =
+  override def report(context: Context): java.lang.Boolean =
     Boolean.box(currentPlotState(context).autoPlotOn)
 }
 class _plotname extends PlotReporter(Syntax.StringType) {
-  override def report(context: Context) =
+  override def report(context: Context): String =
     currentPlot(context).name
 }
 class _plotxmin extends PlotReporter(Syntax.NumberType) {
-  override def report(context: Context) =
+  override def report(context: Context): java.lang.Double =
     Double.box(currentPlotState(context).xMin)
 }
 class _plotxmax extends PlotReporter(Syntax.NumberType) {
-  override def report(context: Context) =
+  override def report(context: Context): java.lang.Double =
     Double.box(currentPlotState(context).xMax)
 }
 class _plotymin extends PlotReporter(Syntax.NumberType) {
-  override def report(context: Context) =
+  override def report(context: Context): java.lang.Double =
     Double.box(currentPlotState(context).yMin)
 }
 class _plotymax extends PlotReporter(Syntax.NumberType) {
-  override def report(context: Context) =
+  override def report(context: Context): java.lang.Double =
     Double.box(currentPlotState(context).yMax)
 }
 class _plotpenexists extends PlotReporter(Syntax.BooleanType, Syntax.StringType) {
-  override def report(context: Context) =
+  override def report(context: Context): java.lang.Boolean =
     Boolean.box(currentPlot(context).getPen(argEvalString(context, 0)).isDefined)
 }
 

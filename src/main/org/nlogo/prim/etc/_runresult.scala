@@ -14,7 +14,7 @@ class _runresult extends Reporter {
       Syntax.WildcardType,
       1)
 
-  override def report(context: Context) =
+  override def report(context: Context): AnyRef =
     args(0).report(context) match {
       case s: String =>
         if(args.size > 1)

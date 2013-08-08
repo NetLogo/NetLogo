@@ -16,7 +16,7 @@ class _isbreed(breedName: String) extends Reporter {
   override def toString =
     super.toString + ":" + breedName
 
-  override def report(context: Context) =
+  override def report(context: Context): java.lang.Boolean =
     Boolean.box(
       args(0).report(context) match {
         case turtle: Turtle =>

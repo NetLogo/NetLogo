@@ -12,7 +12,7 @@ class _procedurevariable(_vn: Int, val name: String) extends Reporter {
     Syntax.reporterSyntax(Syntax.WildcardType)
   override def toString =
     super.toString + ":" + name
-  override def report(context: Context) =
+  override def report(context: Context): AnyRef =
     report_1(context)
   def report_1(context: Context): AnyRef =
     context.activation.args(_vn)

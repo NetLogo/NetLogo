@@ -8,7 +8,7 @@ import org.nlogo.nvm.{ Context, Reporter }
 class _dump extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(Syntax.StringType, "O---")
-  override def report(context: Context) =
+  override def report(context: Context): String =
     world.program.dump + "\n" +
     workspace.procedures.values
       .map(_.dump)

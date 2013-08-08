@@ -7,9 +7,9 @@ import org.json4s.string2JsonInput
 import org.nlogo.mirror.{ JSONSerializer, Mirroring }
 import org.nlogo.api.Version
 import org.scalatest.FunSuite
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.Matchers
 
-class TestJSONSerializer extends FunSuite with ShouldMatchers {
+class TestJSONSerializer extends FunSuite with Matchers {
 
   test("JSONSerializer basic commands") {
     val commands = Seq(

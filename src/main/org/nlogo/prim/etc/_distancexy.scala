@@ -12,7 +12,7 @@ class _distancexy extends Reporter {
       Array(Syntax.NumberType, Syntax.NumberType),
       Syntax.NumberType, "-TP-")
 
-  override def report(context: Context) =
+  override def report(context: Context): java.lang.Double =
     Double.box(
       report_1(context,
         argEvalDoubleValue(context, 0),

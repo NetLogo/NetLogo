@@ -13,7 +13,7 @@ class _oneof extends Reporter {
       Array(Syntax.AgentsetType | Syntax.ListType),
       Syntax.WildcardType)
 
-  override def report(context: Context) =
+  override def report(context: Context): AnyRef =
     report_3(context, args(0).report(context))
 
   def report_1(context: Context, agents: AgentSet): AnyRef = {

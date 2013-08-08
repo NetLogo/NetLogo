@@ -17,7 +17,7 @@ class _sortby extends Reporter {
                                 Syntax.ListType | Syntax.AgentsetType),
                           Syntax.ListType, "OTPL", "?")
 
-  override def report(context: Context) = {
+  override def report(context: Context): LogoList = {
     val task = argEvalReporterTask(context, 0)
     if(task.formals.size > 2)
       throw new EngineException(

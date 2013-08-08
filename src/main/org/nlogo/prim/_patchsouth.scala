@@ -12,10 +12,10 @@ class _patchsouth extends Reporter {
     Syntax.reporterSyntax(
       Syntax.PatchType, "-TP-")
 
-  override def report(context: Context) =
+  override def report(context: Context): AnyRef =
     report_1(context)
 
-  def report_1(context: Context) = {
+  def report_1(context: Context): AnyRef = {
     val result = world.topology.getPS(
       context.agent match {
         case p: Patch => p

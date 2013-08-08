@@ -12,7 +12,7 @@ class _or extends Reporter with Pure with CustomGenerated {
       Array(Syntax.BooleanType),
       Syntax.BooleanType,
       Syntax.NormalPrecedence - 6)
-  override def report(context: Context) =
+  override def report(context: Context): java.lang.Boolean =
     if (argEvalBooleanValue(context, 0))
       java.lang.Boolean.TRUE
     else

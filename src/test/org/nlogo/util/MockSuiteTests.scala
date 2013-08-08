@@ -76,4 +76,67 @@ class MockSuiteTests extends MockSuite{
     assert(e.toString === errorMessage)
   }
 
+  mockTest("order doesn't matter") {
+    val x = mock[X]
+    expecting {
+      one(x).i(10)
+      one(x).i(20)
+    }
+    when {
+      x.i(20)
+      x.i(10)
+    }
+  }
+
+  mockTest("extra calls do matter") {
+    val x = mock[X]
+    expecting {
+      one(x).i(10)
+    }
+    val e = intercept[AssertionError] {
+      when {
+        x.i(10)
+        x.i(20)
+      }
+    }
+    val expected =
+      """|unexpected invocation: x.i(<20>)
+         |expectations:
+         |  expected once, already invoked 1 time: x.i(<10>); returns a default value
+         |what happened before this:
+         |  x.i(<10>)""".stripMargin
+    assertResult(expected)(e.getMessage.trim)
+  }
+
+  mockTest("andThen accepts correct ordering") {
+    val x = mock[X]
+    expecting {
+      one(x).i(10) andThen one(x).i(20)
+    }
+    when {
+      x.i(10)
+      x.i(20)
+    }
+  }
+
+  mockTest("andThen rejects incorrect ordering") {
+    val x = mock[X]
+    expecting {
+      one(x).i(10) andThen one(x).i(20)
+    }
+    val e = intercept[AssertionError] {
+      when {
+        x.i(20)
+        x.i(10)
+      }
+    }
+    val expected =
+      """|unexpected invocation: x.i(<20>)
+         |expectations:
+         |  expected once, never invoked: x.i(<10>); in sequence s; returns a default value
+         |  expected once, never invoked: x.i(<20>); in sequence s; returns a default value
+         |what happened before this: nothing!""".stripMargin
+    assertResult(expected)(e.getMessage.trim)
+  }
+
 }

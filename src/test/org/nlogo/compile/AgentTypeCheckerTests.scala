@@ -20,7 +20,7 @@ class AgentTypeCheckerTests extends FunSuite {
   }
   def testOne(source: String, expected: String) {
     val defs = compile(source)
-    expectResult(expected)(
+    assertResult(expected)(
       defs.map { pd: parse.ProcedureDefinition =>
           pd.procedure.name + ":" + pd.procedure.agentClassString }
         .mkString(" "))
@@ -32,7 +32,7 @@ class AgentTypeCheckerTests extends FunSuite {
     val e = intercept[api.CompilerException] {
       compile(source)
     }
-    expectResult(error)(e.getMessage)
+    assertResult(error)(e.getMessage)
   }
 
   /// tests not involving blocks (easy)

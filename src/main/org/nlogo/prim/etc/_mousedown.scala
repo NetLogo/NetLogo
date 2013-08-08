@@ -8,6 +8,6 @@ import org.nlogo.nvm.{ Context, Reporter }
 class _mousedown extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(Syntax.BooleanType)
-  override def report(context: Context) =
+  override def report(context: Context): java.lang.Boolean =
     Boolean.box(workspace.mouseDown)
 }

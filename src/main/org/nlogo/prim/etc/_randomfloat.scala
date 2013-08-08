@@ -10,8 +10,8 @@ class _randomfloat extends Reporter {
     Syntax.reporterSyntax(
       Array(Syntax.NumberType),
       Syntax.NumberType)
-  override def report(context: Context) =
+  override def report(context: Context): java.lang.Double =
     Double.box(report_1(context, argEvalDoubleValue(context, 0)))
-  def report_1(context: Context, d: Double) =
+  def report_1(context: Context, d: Double): Double =
     d * context.job.random.nextDouble()
 }

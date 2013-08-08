@@ -13,7 +13,7 @@ class _oneofwith extends Reporter {
       Array(Syntax.AgentsetType, Syntax.BooleanBlockType),
       Syntax.AgentType | Syntax.NobodyType, "OTPL", "?")
 
-  override def report(context: Context) =
+  override def report(context: Context): AnyRef =
     report_1(context, argEvalAgentSet(context, 0), args(1))
 
   def report_1(context: Context, sourceSet: AgentSet, arg1: Reporter): AnyRef = {

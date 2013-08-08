@@ -13,7 +13,7 @@ class _countother extends Reporter {
       Array(Syntax.AgentsetType),
       Syntax.NumberType, "-TPL")
 
-  override def report(context: Context) =
+  override def report(context: Context): java.lang.Double =
     Double.box(report_1(context, argEvalAgentSet(context, 0)))
 
   def report_1(context: Context, arg0: AgentSet): Double = {

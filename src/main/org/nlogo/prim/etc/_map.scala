@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api.{ LogoListBuilder, Syntax }
+import org.nlogo.api.{ LogoList, LogoListBuilder, Syntax }
 import org.nlogo.nvm.{ EngineException, Context, Reporter }
 
 class _map extends Reporter {
@@ -17,7 +17,7 @@ class _map extends Reporter {
   // Perhaps we should have separate primitives for the variadic and
   // non-variadic cases and only attempt to generate the non-variadic
   // case. - ST 3/20/08
-  override def report(context: Context) = {
+  override def report(context: Context): LogoList = {
 
     val task = argEvalReporterTask(context, 0)
     val n = args.length - 1

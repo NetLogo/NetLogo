@@ -11,7 +11,7 @@ class _reference(_reference: Reference) extends Reporter {
     Syntax.reporterSyntax(Syntax.ReferenceType)
   override def toString =
     super.toString + ":" + reference.kind + "," + reference.vn
-  override def report(context: Context) =
+  override def report(context: Context): Nothing =
     // we're always supposed to get compiled out of existence
     throw new UnsupportedOperationException
 }

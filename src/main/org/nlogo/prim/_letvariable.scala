@@ -15,9 +15,9 @@ class _letvariable(_let: Let) extends Reporter {
   override def toString =
     super.toString + "(" + _let.name + ")"
 
-  override def report(context: Context) =
+  override def report(context: Context): AnyRef =
     report_1(context)
-  def report_1(context: Context) =
+  def report_1(context: Context): AnyRef =
     context.getLet(_let)
 
 }

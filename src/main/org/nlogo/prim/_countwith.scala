@@ -13,7 +13,7 @@ class _countwith extends Reporter {
       Array(Syntax.AgentsetType, Syntax.BooleanBlockType),
       Syntax.NumberType, "OTPL", "?")
 
-  override def report(context: Context) =
+  override def report(context: Context): java.lang.Double =
     Double.box(
       report_1(context, argEvalAgentSet(context, 0), args(1)))
 

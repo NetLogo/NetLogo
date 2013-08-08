@@ -14,7 +14,7 @@ class _patchhereinternal extends Reporter {
     Syntax.reporterSyntax(
       Syntax.PatchType, "-TP-")
 
-  override def report(context: Context) =
+  override def report(context: Context): Patch =
     report_1(context)
 
   def report_1(context: Context): Patch =

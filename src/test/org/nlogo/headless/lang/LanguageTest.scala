@@ -7,6 +7,11 @@ import org.nlogo.api.AgentKind
 
 case class LanguageTest(suiteName: String, testName: String, entries: List[Entry]) {
   val fullName = suiteName + "::" + testName
+  val modes =
+    if(testName.startsWith("*"))
+      List(NormalMode)
+    else
+      List(NormalMode, RunMode)
 }
 
 sealed trait Entry
@@ -21,3 +26,7 @@ case class Success       (message: String) extends Result
 case class CompileError  (message: String) extends Result
 case class RuntimeError  (message: String) extends Result
 case class StackTrace    (message: String) extends Result
+
+sealed abstract class TestMode
+case object NormalMode extends TestMode
+case object RunMode extends TestMode

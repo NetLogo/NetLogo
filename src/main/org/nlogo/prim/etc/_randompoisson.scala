@@ -10,9 +10,9 @@ class _randompoisson extends Reporter {
     Syntax.reporterSyntax(
       Array(Syntax.NumberType),
       Syntax.NumberType)
-  override def report(context: Context) =
+  override def report(context: Context): java.lang.Double =
     Double.box(report_1(context, argEvalDoubleValue(context, 0)))
-  def report_1(context: Context, mean: Double) = {
+  def report_1(context: Context, mean: Double): Double = {
     var q = 0
     var sum = -StrictMath.log(1 - context.job.random.nextDouble)
     while (sum <= mean) {

@@ -18,7 +18,7 @@ class TestDocking extends FunSuite {
   def compare(logo: String) {
     val expected = ws.report(logo)
     val actual = evalJS(Compiler.compileReporter(logo))
-    expectResult(expected)(actual)
+    assertResult(expected)(actual)
   }
 
   def compareCommands(logo: String) {
@@ -34,7 +34,7 @@ class TestDocking extends FunSuite {
     val expectedOutput = ws.outputAreaBuffer.toString
     val (actualOutput, actualJson) =
       runJS(Compiler.compileCommands(logo, ws.procedures, ws.world.program))
-    expectResult(expectedOutput)(actualOutput)
+    assertResult(expectedOutput)(actualOutput)
     Rhino.eval("expectedUpdates = " + expectedJson)
     Rhino.eval("actualUpdates = " + actualJson)
     Rhino.eval("expectedModel.updates(expectedUpdates)")

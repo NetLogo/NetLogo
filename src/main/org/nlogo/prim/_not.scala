@@ -12,10 +12,10 @@ class _not extends Reporter with Pure {
       Array(Syntax.BooleanType),
       Syntax.BooleanType)
 
-  override def report(context: Context) =
+  override def report(context: Context): java.lang.Boolean =
     Boolean.box(report_1(context, argEvalBooleanValue(context, 0)))
 
-  def report_1(context: Context, arg0: Boolean) =
+  def report_1(context: Context, arg0: Boolean): Boolean =
     !arg0
 
 }

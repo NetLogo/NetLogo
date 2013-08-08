@@ -1,6 +1,5 @@
-#!/bin/sh
-exec bin/scala -classpath bin -deprecation -nocompdaemon -Dfile.encoding=UTF-8 "$0" "$@"
-!#
+#!/usr/bin/env scala -deprecation -nocompdaemon -Dfile.encoding=UTF-8
+//!#
 
 // Check for problems with plain text files including:
 // 1) No newline at end of file
@@ -41,7 +40,3 @@ for(path <- paths.filterNot(ignore)) {
     problems.foreach(p => println("  " + p))
   }
 }
-
-// Local Variables:
-// mode: scala
-// End:

@@ -11,7 +11,7 @@ class AssemblerTests extends FunSuite {
     val (defs, results) =
       parse.Parser.frontEnd(
         keyword + " foo " + source + "\nend")
-    expectResult(1)(results.procedures.size)
+    assertResult(1)(results.procedures.size)
     for (procdef <- defs) {
       procdef.accept(new ArgumentStuffer)
       new Assembler().assemble(procdef)
@@ -22,23 +22,23 @@ class AssemblerTests extends FunSuite {
   // these tests focus more on assembly, ignoring argument stuffing.
   // the test strings omit arguments, to make them easier to read & write.
   def test1(source: String) = compile("to", source).code.mkString(" ")
-  test("assembleEmptyProcedure") { expectResult("_return")(test1("")) }
-  test("assembleSimpleProcedure1") { expectResult("_clearall _return")(test1("ca")) }
-  test("assembleSimpleProcedure2") { expectResult("_clearturtles _clearpatches _return")(test1("ct cp")) }
+  test("assembleEmptyProcedure") { assertResult("_return")(test1("")) }
+  test("assembleSimpleProcedure1") { assertResult("_clearall _return")(test1("ca")) }
+  test("assembleSimpleProcedure2") { assertResult("_clearturtles _clearpatches _return")(test1("ct cp")) }
   test("assembleIfElse") {
-    expectResult("_ifelse:+4 _fd _fdinternal _goto:6 _bk _fdinternal _return")(
+    assertResult("_ifelse:+4 _fd _fdinternal _goto:6 _bk _fdinternal _return")(
       test1("ifelse timer = 0 [ fd 1 ] [ bk 1 ]"))
   }
   test("assembleAsk") {
-    expectResult("_ask:+3 _die _done _return")(
+    assertResult("_ask:+3 _die _done _return")(
       test1("ask turtles [ die ]"))
   }
   test("assembleWhile") {
-    expectResult("_goto:3 _die _die _while:1 _return")(
+    assertResult("_goto:3 _die _die _while:1 _return")(
       test1("while [true] [die die]"))
   }
   test("assembleReporterProcedure") {
-    expectResult("_returnreport")(
+    assertResult("_returnreport")(
       compile("to-report", "").code.mkString(" "))
   }
 
@@ -51,12 +51,12 @@ class AssemblerTests extends FunSuite {
     dump.substring(prelude.length)
   }
   test("stuffEmpty") {
-    expectResult("""|[0]_return
+    assertResult("""|[0]_return
               |""".stripMargin.replaceAll("\r\n", "\n"))(
       test2(""))
   }
   test("stuffArithmetic") {
-    expectResult("""|[0]_print
+    assertResult("""|[0]_print
            |      _plus
            |        _constdouble:2.0
            |        _constdouble:2.0
@@ -65,7 +65,7 @@ class AssemblerTests extends FunSuite {
       test2("print 2 + 2"))
   }
   test("stuffReporterBlock") {
-    expectResult("""|[0]_print
+    assertResult("""|[0]_print
            |      _maxoneof
            |        _turtles
            |        _timer

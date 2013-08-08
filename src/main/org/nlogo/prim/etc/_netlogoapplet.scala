@@ -8,6 +8,6 @@ import org.nlogo.api.Syntax
 class _netlogoapplet extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(Syntax.BooleanType)
-  override def report(context: Context) =
+  override def report(context: Context): java.lang.Boolean =
     java.lang.Boolean.FALSE
 }

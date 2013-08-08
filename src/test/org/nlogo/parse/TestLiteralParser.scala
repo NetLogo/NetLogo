@@ -38,69 +38,69 @@ class TestLiteralParser extends FunSuite with MockSuite {
     val e = intercept[CompilerException] {
       toLiteral(input, world)
     }
-    expectResult(error)(e.getMessage)
+    assertResult(error)(e.getMessage)
   }
   def testListError(input: String, error: String, world: World = defaultWorld) {
     val e = intercept[CompilerException] {
       toLiteralList(input, world)
     }
-    expectResult(error)(e.getMessage)
+    assertResult(error)(e.getMessage)
   }
 
   test("booleans") {
-    expectResult(java.lang.Boolean.TRUE)(toLiteral("true"))
-    expectResult(java.lang.Boolean.FALSE)(toLiteral("false"))
+    assertResult(java.lang.Boolean.TRUE)(toLiteral("true"))
+    assertResult(java.lang.Boolean.FALSE)(toLiteral("false"))
   }
-  test("literalInt") { expectResult(Double.box(4))(toLiteral("4")) }
-  test("literalIntWhitespace") { expectResult(Double.box(4))(toLiteral("  4\t")) }
-  test("literalIntParens") { expectResult(Double.box(4))(toLiteral(" (4)\t")) }
-  test("literalIntParens2") { expectResult(Double.box(4))(toLiteral(" ((4)\t)")) }
+  test("literalInt") { assertResult(Double.box(4))(toLiteral("4")) }
+  test("literalIntWhitespace") { assertResult(Double.box(4))(toLiteral("  4\t")) }
+  test("literalIntParens") { assertResult(Double.box(4))(toLiteral(" (4)\t")) }
+  test("literalIntParens2") { assertResult(Double.box(4))(toLiteral(" ((4)\t)")) }
   test("literalIntBadParens") { testError("((4)", "Expected a closing parenthesis.") }
   test("literalIntBadParens2") { testError("((4)))", "Extra characters after literal.") }
   test("largeLiteral1") { testError("9999999999999999999999999999999999999999999999999", "Illegal number format") }
   test("largeLiteral2") { testError("-9999999999999999999999999999999999999999999999999", "Illegal number format") }
   test("largeLiteral3") { testError("9007199254740993", "9007199254740993 is too large to be represented exactly as an integer in NetLogo") }
   test("largeLiteral4") { testError("-9007199254740993", "-9007199254740993 is too large to be represented exactly as an integer in NetLogo") }
-  test("literalString") { expectResult("hi there")(toLiteral("\"hi there\"")) }
-  test("literalList") { expectResult("[1 2 3]")(Dump.logoObject(toLiteralList("[1 2 3]"))) }
-  test("literalList2") { expectResult("[1 [2] 3]")(Dump.logoObject(toLiteralList("[1 [2] 3]"))) }
-  test("literalList3") { expectResult("[[1 2 3]]")(Dump.logoObject(toLiteralList("[[1 2 3]]"))) }
-  test("literalList4") { expectResult("[1 hi true]")(Dump.logoObject(toLiteralList("[1 \"hi\" true]"))) }
-  test("literalList5") { expectResult("[[1 hi true]]")(Dump.logoObject(toLiteral("([([1 \"hi\" true])])"))) }
-  test("parseLiteralList") { expectResult("[1 2 3]")(Dump.logoObject(toLiteralList("[1 2 3]"))) }
-  test("parseLiteralList2a") { expectResult("[1 [2] 3]")(Dump.logoObject(toLiteralList("[1 [2] 3]"))) }
-  test("parseLiteralList2b") { expectResult("[[1] [2] [3]]")(Dump.logoObject(toLiteralList("[[1] [2] [3]]"))) }
-  test("parseLiteralList3") { expectResult("[[1 2 3]]")(Dump.logoObject(toLiteralList("[[1 2 3]]"))) }
-  test("parseLiteralList4") { expectResult("[1 hi true]")(Dump.logoObject(toLiteralList("[1 \"hi\" true]"))) }
+  test("literalString") { assertResult("hi there")(toLiteral("\"hi there\"")) }
+  test("literalList") { assertResult("[1 2 3]")(Dump.logoObject(toLiteralList("[1 2 3]"))) }
+  test("literalList2") { assertResult("[1 [2] 3]")(Dump.logoObject(toLiteralList("[1 [2] 3]"))) }
+  test("literalList3") { assertResult("[[1 2 3]]")(Dump.logoObject(toLiteralList("[[1 2 3]]"))) }
+  test("literalList4") { assertResult("[1 hi true]")(Dump.logoObject(toLiteralList("[1 \"hi\" true]"))) }
+  test("literalList5") { assertResult("[[1 hi true]]")(Dump.logoObject(toLiteral("([([1 \"hi\" true])])"))) }
+  test("parseLiteralList") { assertResult("[1 2 3]")(Dump.logoObject(toLiteralList("[1 2 3]"))) }
+  test("parseLiteralList2a") { assertResult("[1 [2] 3]")(Dump.logoObject(toLiteralList("[1 [2] 3]"))) }
+  test("parseLiteralList2b") { assertResult("[[1] [2] [3]]")(Dump.logoObject(toLiteralList("[[1] [2] [3]]"))) }
+  test("parseLiteralList3") { assertResult("[[1 2 3]]")(Dump.logoObject(toLiteralList("[[1 2 3]]"))) }
+  test("parseLiteralList4") { assertResult("[1 hi true]")(Dump.logoObject(toLiteralList("[1 \"hi\" true]"))) }
   test("parseAgentNoWorld") { testError("{turtle 3}", "Can only have literal agents and agentsets if importing.", world = null) }
   test("parseAgentSetNoWorld") { testError("{all-turtles}", "Can only have literal agents and agentsets if importing.", world = null) }
   test("parsePatch") {
     val result = toLiteral("{patch 1 3}").asInstanceOf[Patch]
-    expectResult("(patch 1 3)")(Dump.logoObject(result))
+    assertResult("(patch 1 3)")(Dump.logoObject(result))
   }
   test("parseTurtle") {
     val result = toLiteral("{turtle 3}").asInstanceOf[Turtle]
-    expectResult("(turtle 3)")(Dump.logoObject(result))
+    assertResult("(turtle 3)")(Dump.logoObject(result))
   }
   test("parseTurtles") {
     val input = "{turtles 1 2 3}"
     val result = toLiteral(input).asInstanceOf[AgentSet]
-    expectResult(input)(Dump.agentset(result, true))
+    assertResult(input)(Dump.agentset(result, true))
   }
   test("parsePatches") {
     val input = "{patches [1 2] [3 4]}"
     val result = toLiteral(input).asInstanceOf[AgentSet]
-    expectResult(input)(Dump.agentset(result, true))
+    assertResult(input)(Dump.agentset(result, true))
   }
   test("parseAllTurtles") {
     val input = "{all-turtles}"
     val result = toLiteral(input).asInstanceOf[AgentSet]
-    expectResult(input)(Dump.agentset(result, true))
+    assertResult(input)(Dump.agentset(result, true))
   }
   test("parseAllPatches") {
     val input = "{all-patches}"
     val result = toLiteral(input).asInstanceOf[AgentSet]
-    expectResult(input)(Dump.agentset(result, true))
+    assertResult(input)(Dump.agentset(result, true))
   }
   test("badAgent") { testError("{foobar}", "FOOBAR is not an agentset") }
   test("badLiteral") { testError("foobar", "Expected a literal value.") }

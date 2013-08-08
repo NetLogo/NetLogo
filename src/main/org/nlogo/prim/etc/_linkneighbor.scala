@@ -18,7 +18,7 @@ class _linkneighbor(breedName: String) extends Reporter {
   override def toString =
     super.toString + ":" + breedName
 
-  override def report(context: Context) =
+  override def report(context: Context): java.lang.Boolean =
     Boolean.box(report_1(context, argEvalTurtle(context, 0)))
 
   def report_1(context: Context, target: Turtle): Boolean = {

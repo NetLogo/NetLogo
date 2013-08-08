@@ -18,8 +18,8 @@ class _errormessage extends Reporter {
   def let_=(let: Let) { _let = let }  // compiler will call this
   override def syntax =
     Syntax.reporterSyntax(Syntax.StringType)
-  override def report(context: Context) =
+  override def report(context: Context): String =
     report_1(context)
-  def report_1(context: Context) =
+  def report_1(context: Context): String =
     context.getLet(_let).asInstanceOf[LogoException].getMessage
 }

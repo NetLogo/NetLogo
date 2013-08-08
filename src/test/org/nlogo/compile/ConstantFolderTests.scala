@@ -16,22 +16,22 @@ class ConstantFolderTests extends FunSuite {
   }
 
   /// not pure
-  test("testNonConstant") { expectResult("_timer[]")(compile("timer")) }
+  test("testNonConstant") { assertResult("_timer[]")(compile("timer")) }
   test("testNestedNonConstant") {
-    expectResult("_plus[_constdouble:1.0[], _timer[]]")(
+    assertResult("_plus[_constdouble:1.0[], _timer[]]")(
       compile("1 + timer"))
   }
 
   /// pure, easy
-  test("testNumber") { expectResult("_constdouble:1.0[]")(compile("1")) }
-  test("testBoolean") { expectResult("_constboolean:true[]")(compile("true")) }
-  test("testList") { expectResult("_constlist:[1 2 3][]")(compile("[1 2 3]")) }
-  test("testString") { expectResult("_conststring:\"foo\"[]")(compile("\"foo\"")) }
-  test("testNobody") { expectResult("_nobody[]")(compile("nobody")) }
+  test("testNumber") { assertResult("_constdouble:1.0[]")(compile("1")) }
+  test("testBoolean") { assertResult("_constboolean:true[]")(compile("true")) }
+  test("testList") { assertResult("_constlist:[1 2 3][]")(compile("[1 2 3]")) }
+  test("testString") { assertResult("_conststring:\"foo\"[]")(compile("\"foo\"")) }
+  test("testNobody") { assertResult("_nobody[]")(compile("nobody")) }
 
   /// pure, harder
-  test("testAddition") { expectResult("_constdouble:4.0[]")(compile("2 + 2")) }
-  test("testNesting") { expectResult("_constdouble:19.0[]")(compile("2 + 3 * 4 + 5")) }
+  test("testAddition") { assertResult("_constdouble:4.0[]")(compile("2 + 2")) }
+  test("testNesting") { assertResult("_constdouble:19.0[]")(compile("2 + 3 * 4 + 5")) }
 
   /// runtime errors
   test("testError") {
@@ -40,7 +40,7 @@ class ConstantFolderTests extends FunSuite {
       try compile("1 / 0")
       catch {
         case ex: api.CompilerException =>
-          expectResult("Runtime error: Division by zero.")(ex.getMessage)
+          assertResult("Runtime error: Division by zero.")(ex.getMessage)
           throw ex
       }
     }

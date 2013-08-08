@@ -9,7 +9,6 @@ tmp/
 
 # wildcards
 *.tmp
-*_managed/
 *~
 .#*
 \#*

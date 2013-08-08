@@ -14,7 +14,7 @@ class _anyotherwith extends Reporter {
       Syntax.BooleanType, "-TPL",
       "?")  // takes reporter block of unknown agent type
 
-  override def report(context: Context) =
+  override def report(context: Context): java.lang.Boolean =
     Boolean.box(report_1(context, argEvalAgentSet(context, 0), args(1)))
 
   def report_1(context: Context, sourceSet: AgentSet, reporterBlock: Reporter): Boolean = {

@@ -14,7 +14,7 @@ class _patch extends Reporter {
 
   // I've tried to rejigger this and the result gets past TryCatchSafeChecker but then doesn't work
   // at runtime ("Inconsistent stack height") - ST 2/10/09
-  override def report(context: Context) =
+  override def report(context: Context): AnyRef =
     try world.getPatchAt(
       argEvalDoubleValue(context, 0),
       argEvalDoubleValue(context, 1))

@@ -1,6 +1,5 @@
-#!/bin/sh
-exec bin/scala -classpath bin -deprecation -nocompdaemon -Dfile.encoding=UTF-8 "$0" "$@"
-!#
+#!/usr/bin/env scala -deprecation -nocompdaemon -Dfile.encoding=UTF-8
+//!#
 
 /// count lines of code in NetLogo source tree
 
@@ -69,7 +68,3 @@ sortAndPrint("bin")
 println(format.format("TOTAL",
                       tuj + tus, tj + ts,
                       percent(tus, tuj + tus)))
-
-// Local Variables:
-// mode: scala
-// End:

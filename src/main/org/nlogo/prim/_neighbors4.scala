@@ -9,7 +9,7 @@ import org.nlogo.nvm.{ Reporter, Context }
 class _neighbors4 extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(Syntax.PatchsetType, "-TP-")
-  override def report(context: Context) =
+  override def report(context: Context): AgentSet =
     report_1(context)
   def report_1(context: Context): AgentSet =
     (context.agent match {

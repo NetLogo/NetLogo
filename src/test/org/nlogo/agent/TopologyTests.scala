@@ -12,16 +12,16 @@ class TopologyTests extends FunSuite {
 
   test("wrap1") {
     // in the middle of range, leave input alone
-    expectResult(0.0)(wrap(0, -1, 1))
+    assertResult(0.0)(wrap(0, -1, 1))
     // at bottom of range, leave input alone
-    expectResult(0.0)(wrap(0, 0, 1))
+    assertResult(0.0)(wrap(0, 0, 1))
     // at top of range, wrap to bottom
-    expectResult(0.0)(wrap(1, 0, 1))
+    assertResult(0.0)(wrap(1, 0, 1))
   }
 
   // ticket #1038
   test("wrap2") {
-    expectResult(-0.5)(wrap(-0.5000000000000001, -0.5, 1.5))
+    assertResult(-0.5)(wrap(-0.5000000000000001, -0.5, 1.5))
   }
 
 }

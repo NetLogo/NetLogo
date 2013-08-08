@@ -9,6 +9,6 @@ class RendererTests extends FunSuite {
   // will fail (e.g. TestChecksums since the drawing checksums change depending on
   // the renderer). - ST 10/22/09
   test("Sun renderer") {
-    expectResult("false")(System.getProperty("apple.awt.graphics.UseQuartz"))
+    assertResult("false")(System.getProperty("apple.awt.graphics.UseQuartz"))
   }
 }

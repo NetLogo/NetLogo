@@ -15,7 +15,7 @@ class _pow extends Reporter with Pure {
       ret = Syntax.NumberType,
       precedence = Syntax.NormalPrecedence - 1)
 
-  override def report(context: Context) =
+  override def report(context: Context): java.lang.Double =
     Double.box(
       report_1(context,
         argEvalDoubleValue(context, 0),

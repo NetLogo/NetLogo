@@ -12,7 +12,7 @@ class _abs extends Reporter with Pure {
     Syntax.reporterSyntax(
       Array(Syntax.NumberType), Syntax.NumberType)
 
-  override def report(context: Context) =
+  override def report(context: Context): java.lang.Double =
     report_1(context, argEvalDoubleValue(context, 0))
 
   def report_1(context: Context, d: java.lang.Double): java.lang.Double = {

@@ -19,10 +19,10 @@ class _breedvariable(private[this] val _name: String) extends Reporter {
   // so we must keep vn and _vn separate - ST 9/22/12
   def name = _name
 
-  override def report(context: Context) =
+  override def report(context: Context): AnyRef =
     report_1(context)
 
-  def report_1(context: Context) =
+  def report_1(context: Context): AnyRef =
     try context.agent.getBreedVariable(_name)
     catch { case ex: AgentException =>
       throw new EngineException(context, this, ex.getMessage) }

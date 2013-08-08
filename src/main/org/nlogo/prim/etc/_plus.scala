@@ -14,13 +14,13 @@ class _plus extends Reporter with Pure {
       ret = Syntax.NumberType,
       precedence = Syntax.NormalPrecedence - 3)
 
-  override def report(context: Context) =
+  override def report(context: Context): java.lang.Double =
     Double.box(
       report_1(context,
                argEvalDoubleValue(context, 0),
                argEvalDoubleValue(context, 1)))
 
-  def report_1(context: Context, d1: Double, d2: Double) =
+  def report_1(context: Context, d1: Double, d2: Double): Double =
     d1 + d2
 
 }

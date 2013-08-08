@@ -15,9 +15,6 @@ javacOptions in ThisBuild ++=
 // only log problems plz
 ivyLoggingLevel in ThisBuild := UpdateLogging.Quiet
 
-// this makes script-writing easier
-retrieveManaged in ThisBuild := true
-
 // we're not cross-building for different Scala versions
 crossPaths in ThisBuild := false
 
@@ -29,7 +26,7 @@ libraryDependencies in ThisBuild ++= Seq(
   "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
   "org.jmock" % "jmock-junit4" % "2.5.1" % "test",
   "org.scalacheck" %% "scalacheck" % "1.10.1" % "test",
-  "org.scalatest" %% "scalatest" % "2.0.M5b" % "test"
+  "org.scalatest" %% "scalatest" % "2.0.M6-SNAP35" % "test"
 )
 
 name := "NetLogo"
