@@ -24,11 +24,12 @@ class TestProfiler extends FixtureSuite with SlowTest {
     test("no generator") { implicit fixture =>
       import fixture._
       defineProcedures("extensions [profiler]")
-      testCommandError(
+      testCommand(
         "profiler:start",
-        "Extension exception: The profiler extension requires the NetLogo bytecode " +
-        "generator, which is currently turned off. See the org.nlogo.noGenerator " +
-        "property.")
+        error = Some(
+          "Extension exception: The profiler extension requires the NetLogo bytecode " +
+            "generator, which is currently turned off. See the org.nlogo.noGenerator " +
+            "property."))
     }
   if(useGenerator)
     test("basics") { implicit fixture =>
