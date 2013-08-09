@@ -10,8 +10,8 @@ class ParserTests extends FunSuite {
   // simple regex tests
   test("test command regex") {
     val Parser.CommandRegex(agent, command) = "O> crt 1"
-    assert(agent === "O")
-    assert(command === "crt 1")
+    assertResult("O")(agent)
+    assertResult("crt 1")(command)
   }
 
   // tests for parsing line items.
@@ -38,7 +38,7 @@ class ParserTests extends FunSuite {
 
   for((input, output) <- tests)
     test(s"parse: $input") {
-      assert(Parser.parse(input) === output)
+      assertResult(output)(Parser.parse(input))
     }
 
   // test entire path
@@ -53,7 +53,7 @@ class ParserTests extends FunSuite {
         List(
           Parser.parse("O> crt 1"),
           Parser.parse("[turtle-set self] of turtle 0 = turtles => true"))))
-    assert(tests.toString === expectedOutputs.toString)
+    assertResult(expectedOutputs.toString)(tests.toString)
   }
 
 }

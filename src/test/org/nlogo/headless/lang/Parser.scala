@@ -7,8 +7,6 @@ import java.io.File
 import org.nlogo.api.FileIO.file2String
 import org.nlogo.api.AgentKind
 
-// Parsing is separate for clarity, and so we can write tests for the parser itself.
-
 object Parser {
 
   def parseFiles(files: Iterable[File]): Iterable[LanguageTest] =
@@ -83,7 +81,5 @@ object Parser {
           s"could not parse: $line")
     }
   }
+
 }
-
-// And here are tests for the parser:
-
