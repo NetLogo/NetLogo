@@ -48,7 +48,7 @@ trait Finder extends FunSuite with SlowTest {
   for(t <- Parser.parseFiles(files) if shouldRun(t))
     test(t.fullName, new Tag(t.suiteName){}, new Tag(t.fullName){}) {
       for (mode <- t.modes)
-        Fixture.withFixture("${t.fullName} ($mode)"){
+        Fixture.withFixture(s"${t.fullName} ($mode)"){
           fixture =>
             val nonProcs = t.entries.filterNot(_.isInstanceOf[Procedure])
             fixture.defineProcedures(t.entries.collect{
