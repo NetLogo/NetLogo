@@ -29,11 +29,11 @@ class ParserTests extends FunSuite {
     ("[link-set self] of link 0 2 => ERROR some message",
       Reporter("[link-set self] of link 0 2", RuntimeError("some message"))),
     ("to p1 repeat 5 [ crt 1 __ignore p2 ] end",
-      Procedure("to p1 repeat 5 [ crt 1 __ignore p2 ] end")),
+      Declaration("to p1 repeat 5 [ crt 1 __ignore p2 ] end")),
     ("to-report p2 foreach [1 2 3] [ report 0 ] end",
-      Procedure("to-report p2 foreach [1 2 3] [ report 0 ] end")),
+      Declaration("to-report p2 foreach [1 2 3] [ report 0 ] end")),
     ("extensions [ array ]",
-      Procedure("extensions [ array ]"))
+      Declaration("extensions [ array ]"))
   )
 
   for((input, output) <- tests)

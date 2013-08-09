@@ -50,10 +50,10 @@ trait Finder extends FunSuite with SlowTest {
       for (mode <- t.modes)
         Fixture.withFixture(s"${t.fullName} ($mode)"){
           fixture =>
-            val nonProcs = t.entries.filterNot(_.isInstanceOf[Procedure])
-            fixture.defineProcedures(t.entries.collect{
-              case p: Procedure => p.source}.mkString("\n"))
-            nonProcs.foreach(fixture.runEntry(mode, _))
+            val nonDecls = t.entries.filterNot(_.isInstanceOf[Declaration])
+            fixture.declare(t.entries.collect{
+              case d: Declaration => d.source}.mkString("\n"))
+            nonDecls.foreach(fixture.runEntry(mode, _))
         }
     }
   // on the core branch the _3D tests are gone, but extensions tests still have them since we

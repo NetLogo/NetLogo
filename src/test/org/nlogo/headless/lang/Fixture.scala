@@ -56,8 +56,8 @@ class Fixture(name: String) {
     entry match {
       case Open(path) =>
         workspace.open(path)
-      case Procedure(content) =>
-        defineProcedures(content)
+      case Declaration(content) =>
+        declare(content)
       case Command(kind, command, Success(_)) =>
         testCommand(command, kind, mode)
       case Command(kind, command, RuntimeError(message)) =>
@@ -75,7 +75,7 @@ class Fixture(name: String) {
     }
   }
 
-  def defineProcedures(source: String) {
+  def declare(source: String) {
     val results = {
       compiler.compileProgram(
         HeadlessWorkspace.TestDeclarations + source,

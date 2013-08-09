@@ -16,7 +16,7 @@ case class LanguageTest(suiteName: String, testName: String, entries: List[Entry
 
 sealed trait Entry
 case class Open(modelPath: String)                                   extends Entry
-case class Procedure(source: String)                                 extends Entry
+case class Declaration(source: String)                               extends Entry
 case class Command(
   kind: AgentKind, command: String, result: Result = Success(""))    extends Entry
 case class Reporter(reporter: String, result: Result)                extends Entry

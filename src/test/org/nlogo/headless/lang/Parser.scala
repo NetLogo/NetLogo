@@ -50,7 +50,7 @@ object Parser {
 
   def parse(line: String): Entry = {
     if (line.startsWith("to ") || line.startsWith("to-report ") || line.startsWith("extensions"))
-      Procedure(line)
+      Declaration(line)
     else line.trim match {
       case CommandAndErrorRegex(kind, command, err) =>
         if (err.startsWith("ERROR "))
