@@ -56,24 +56,24 @@ object Parser {
       Procedure(line)
     else line.trim match {
       case CommandAndErrorRegex(kind, command, err) =>
-        if (err startsWith "ERROR")
+        if (err.startsWith("ERROR "))
           Command(agentKind(kind), command,
-            RuntimeError(err.substring("ERROR".length + 1)))
-        else if (err startsWith "COMPILER ERROR")
+            RuntimeError(err.stripPrefix("ERROR ")))
+        else if (err.startsWith("COMPILER ERROR "))
           Command(agentKind(kind), command,
-            CompileError(err.substring("COMPILER ERROR".length + 1)))
-        else if (err startsWith "STACKTRACE")
+            CompileError(err.stripPrefix("COMPILER ERROR ")))
+        else if (err.startsWith("STACKTRACE "))
           Command(agentKind(kind), command,
-            StackTrace(err.substring("STACKTRACE".length + 1).replace("\\n", "\n")))
+            StackTrace(err.stripPrefix("STACKTRACE ").replace("\\n", "\n")))
         else
           sys.error("error missing!: " + err)
       case ReporterRegex(reporter, result) =>
-        if (result startsWith "ERROR")
+        if (result.startsWith("ERROR" ))
           Reporter(reporter,
-            RuntimeError(result.substring("ERROR".length + 1)))
-        else if (result startsWith "STACKTRACE")
+            RuntimeError(result.stripPrefix("ERROR ")))
+        else if (result.startsWith("STACKTRACE" ))
           Reporter(reporter,
-            StackTrace(result.substring("STACKTRACE".length + 1).replace("\\n", "\n")))
+            StackTrace(result.stripPrefix("STACKTRACE ").replace("\\n", "\n")))
         else
           Reporter(reporter, Success(result))
       case CommandRegex(kind, command) =>
