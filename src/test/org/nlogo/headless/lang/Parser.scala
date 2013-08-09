@@ -3,30 +3,11 @@
 package org.nlogo.headless
 package lang
 
-import java.io.File
-import org.nlogo.api.FileIO.file2String
 import org.nlogo.api.AgentKind
 
 object Parser {
 
-  def parseFiles(files: Iterable[File]): Iterable[LanguageTest] =
-    for {
-      f <- files if !f.isDirectory
-      test <- parseFile(f)
-    } yield test
-
-  def parseFile(f: File): List[LanguageTest] = {
-    def preprocessStackTraces(s: String) =
-      s.replace("\\\n  ", "\\n")
-    val suiteName =
-      if(f.getName == "tests.txt")
-        f.getParentFile.getName
-      else
-        f.getName.replace(".txt", "")
-    parseString(suiteName, preprocessStackTraces(file2String(f.getAbsolutePath)))
-  }
-
-  def parseString(suiteName: String, s: String): List[LanguageTest] = {
+  def parse(suiteName: String, s: String): List[LanguageTest] = {
     def split(xs: List[String]): List[LanguageTest] =
       if (xs.isEmpty) Nil
       else xs.tail.span(_.startsWith(" ")) match {

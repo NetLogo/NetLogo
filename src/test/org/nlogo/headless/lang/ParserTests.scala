@@ -47,7 +47,7 @@ class ParserTests extends FunSuite {
                |TurtleSet
                |  O> crt 1
                |  [turtle-set self] of turtle 0 = turtles => true""".stripMargin
-    val tests = Parser.parseString("test", code)
+    val tests = Parser.parse("test", code)
     val expectedOutputs =
       List(LanguageTest("test", "TurtleSet",
         List(
