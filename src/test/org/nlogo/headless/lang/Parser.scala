@@ -10,11 +10,14 @@ import org.nlogo.api.AgentKind
 object Parser {
 
   def parseFiles(files: Iterable[File]): Iterable[LanguageTest] =
-    (for (f <- files; if (!f.isDirectory))
-     yield parseFile(f)).flatten
+    for {
+      f <- files if !f.isDirectory
+      test <- parseFile(f)
+    } yield test
 
   def parseFile(f: File): List[LanguageTest] = {
-    def preprocessStackTraces(s: String) = s.replace("\\\n  ", "\\n")
+    def preprocessStackTraces(s: String) =
+      s.replace("\\\n  ", "\\n")
     val suiteName =
       if(f.getName == "tests.txt")
         f.getParentFile.getName
@@ -24,21 +27,23 @@ object Parser {
   }
 
   def parseString(suiteName: String, s: String): List[LanguageTest] = {
-    def split(xs: List[String]): List[LanguageTest] = {
+    def split(xs: List[String]): List[LanguageTest] =
       if (xs.isEmpty) Nil
       else xs.tail.span(_.startsWith(" ")) match {
         case (some, rest) =>
           LanguageTest(suiteName, xs.head.trim, some.map{_.trim}.map(parse)) :: split(rest)
       }
-    }
-    val lines = s.split("\n").filter(!_.trim.startsWith("#")).filter(!_.trim.isEmpty)
+    val lines =
+      s.split("\n")
+        .filter(!_.trim.startsWith("#"))
+        .filter(!_.trim.isEmpty)
     split(lines.toList)
   }
 
-  val CommandAndErrorRegex = """^([OTPL])>\s+(.*)\s+=>\s+(.*)$""".r
+  val CommandErrorRegex = """^([OTPL])>\s+(.*)\s+=>\s+(.*)$""".r
   val ReporterRegex = """^(.*)\s+=>\s+(.*)$""".r
   val CommandRegex = """^([OTPL])>\s+(.*)$""".r
-  val OpenModelRegex = """^OPEN>\s+(.*)$""".r
+  val OpenRegex = """^OPEN>\s+(.*)$""".r
 
   def agentKind(s: String) = s match {
     case "O" => AgentKind.Observer
@@ -52,7 +57,7 @@ object Parser {
     if (line.startsWith("to ") || line.startsWith("to-report ") || line.startsWith("extensions"))
       Declaration(line)
     else line.trim match {
-      case CommandAndErrorRegex(kind, command, err) =>
+      case CommandErrorRegex(kind, command, err) =>
         if (err.startsWith("ERROR "))
           Command(agentKind(kind), command,
             RuntimeError(err.stripPrefix("ERROR ")))
@@ -75,7 +80,7 @@ object Parser {
           Reporter(reporter, Success(result))
       case CommandRegex(kind, command) =>
         Command(agentKind(kind), command)
-      case OpenModelRegex(path) => Open(path)
+      case OpenRegex(path) => Open(path)
       case _ =>
         throw new IllegalArgumentException(
           s"could not parse: $line")
