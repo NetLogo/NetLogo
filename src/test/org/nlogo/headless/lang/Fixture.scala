@@ -42,7 +42,7 @@ class Fixture(name: String) {
   workspace.importerErrorHandler =
     new agent.ImporterJ.ErrorHandler() {
       def showError(title: String, errorDetails: String, fatalError: Boolean): Boolean =
-        sys.error(title + " / " + errorDetails + " / " + fatalError)
+        sys.error(s"$title / $errorDetails  / $fatalError")
     }
 
   // to get the test name into the stack traces on JobThread - ST 1/26/11, 8/7/13
@@ -105,20 +105,20 @@ class Fixture(name: String) {
       if(workspace.lastLogoException != null)
         throw workspace.lastLogoException
       if (error.isDefined || trace.isDefined)
-        fail("failed to cause runtime error: \"" + reporter + "\"")
+        fail(s"""failed to cause runtime error: "$reporter"""")
       // To be as safe as we can, let's do two separate checks here...  we'll compare the results both
       // as Logo values, and as printed representations.  Most of the time these checks will come out
       // the same, but it's good to have a both, partially as a way of giving both
       // Utils.recursivelyEqual() and Dump.logoObject() lots of testing! - ST 5/8/03
-      withClue(mode + ": not equals(): reporter \"" + reporter + "\"") {
+      withClue(s"""$mode: not equals(): reporter "$reporter"""") {
         assertResult(result.get)(
           api.Dump.logoObject(actualResult, true, false))
       }
       assert(api.Equality.equals(actualResult,
         compiler.readFromString(result.get)),
-        mode + ": not recursivelyEqual(): reporter \"" + reporter + "\"")
+        s"""$mode: not recursivelyEqual(): reporter "$reporter"""")
     }
-    catch catcher(mode + ": reporter: " + reporter, error, trace)
+    catch catcher(s"$mode: reporter: $reporter", error, trace)
   }
 
   def testCommand(command: String,
@@ -147,7 +147,7 @@ class Fixture(name: String) {
       workspace.compileCommands(command, kind)
       fail("no CompilerException occurred")
     }
-    catch catcher("command: " + command, error = Some(errorMessage))
+    catch catcher(s"command: $command", Some(errorMessage))
   }
 
   // ConstantFolder makes this complicated, by turning some runtime errors into
@@ -169,11 +169,8 @@ class Fixture(name: String) {
         checkMessage(ex, error.get)
       }
   }
-
   private def checkMessage(ex: Exception, expected: String) =
-    if(ex.getMessage.startsWith(runtimePrefix))
-      assertResult(runtimePrefix + expected)(ex.getMessage)
-    else
-      assertResult(expected)(ex.getMessage)
+    assertResult(expected)(
+      ex.getMessage.stripPrefix(runtimePrefix))
 
 }

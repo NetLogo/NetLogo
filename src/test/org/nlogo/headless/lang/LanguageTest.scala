@@ -6,7 +6,7 @@ package lang
 import org.nlogo.api.AgentKind
 
 case class LanguageTest(suiteName: String, testName: String, entries: List[Entry]) {
-  val fullName = suiteName + "::" + testName
+  val fullName = s"$suiteName::$testName"
   val modes =
     if(testName.startsWith("*"))
       List(NormalMode)

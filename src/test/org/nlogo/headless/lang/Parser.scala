@@ -48,7 +48,7 @@ object Parser {
     case "T" => AgentKind.Turtle
     case "P" => AgentKind.Patch
     case "L" => AgentKind.Link
-    case x => sys.error("unrecognized agent kind: " + x)
+    case x => sys.error(s"unrecognized agent kind: $x")
   }
 
   def parse(line: String): Entry = {
@@ -81,7 +81,7 @@ object Parser {
       case OpenModelRegex(path) => Open(path)
       case _ =>
         throw new IllegalArgumentException(
-          "could not parse: " + line)
+          s"could not parse: $line")
     }
   }
 }
@@ -120,7 +120,7 @@ class ParserTests extends FunSuite {
   )
 
   for((input, output) <- tests)
-    test("parse: " + input) {
+    test(s"parse: $input") {
       assert(Parser.parse(input) === output)
     }
 
