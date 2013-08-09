@@ -46,7 +46,8 @@ class Fixture(name: String) {
     }
 
   // to get the test name into the stack traces on JobThread - ST 1/26/11, 8/7/13
-  val owner = new api.SimpleJobOwner(name, workspace.world.mainRNG)
+  def owner(kind: api.AgentKind = api.AgentKind.Observer) =
+    new api.SimpleJobOwner(name, workspace.world.mainRNG, kind)
 
   val compiler: CompilerInterface =
     Femto.scalaSingleton("org.nlogo.compile.Compiler")
@@ -64,7 +65,7 @@ class Fixture(name: String) {
       case Command(kind, command, StackTrace(trace)) =>
         testCommand(command, kind, mode, trace = Some(trace))
       case Command(kind, command, CompileError(message)) =>
-        testCommandCompileError(command, message, kind)
+        testCommand(command, kind, mode, compileError = Some(message))
       case Reporter(reporter, Success(result)) =>
         testReporter(reporter, mode, result = Some(result))
       case Reporter(reporter, RuntimeError(message)) =>
@@ -98,10 +99,12 @@ class Fixture(name: String) {
                    trace: Option[String] = None) {
     try {
       workspace.clearLastLogoException()
-      val actualResult = workspace.evaluateReporter(owner,
-        if(mode == NormalMode) reporter
-        else ("runresult \"" + api.StringUtils.escapeString(reporter) + "\""),
-        workspace.world.observer())
+      val wrappedReporter = mode match {
+        case NormalMode => reporter
+        case RunMode    => s"""runresult "${api.StringUtils.escapeString(reporter)}""""
+      }
+      val compiled = workspace.compileReporter(wrappedReporter)
+      val actualResult = workspace.runCompiledReporter(owner(), compiled)
       if(workspace.lastLogoException != null)
         throw workspace.lastLogoException
       if (error.isDefined || trace.isDefined)
@@ -118,55 +121,56 @@ class Fixture(name: String) {
         compiler.readFromString(result.get)),
         s"""$mode: not recursivelyEqual(): reporter "$reporter"""")
     }
-    catch catcher(s"$mode: reporter: $reporter", error, trace)
+    catch catcher(s"$mode: reporter: $reporter", error = error, trace = trace)
   }
 
   def testCommand(command: String,
                   kind: api.AgentKind = api.AgentKind.Observer,
                   mode: TestMode = NormalMode,
+                  compileError: Option[String] = None,
                   error: Option[String] = None,
                   trace: Option[String] = None) {
     try {
       workspace.clearLastLogoException()
-      workspace.evaluateCommands(owner,
-        if(mode == NormalMode) command
-        else ("run \"" + api.StringUtils.escapeString(command) + "\""),
-        workspace.world.kindToAgentSet(kind), true)
+      val wrappedCommand = mode match {
+        case NormalMode => command
+        case RunMode    => s"""run "${api.StringUtils.escapeString(command)}""""
+      }
+      val compiled = workspace.compileCommands(wrappedCommand, kind)
+      if (mode == NormalMode && compileError.isDefined)
+        fail("no CompilerException occurred")
+      workspace.runCompiledCommands(owner(kind), compiled)
       if(workspace.lastLogoException != null)
         throw workspace.lastLogoException
       if (error.isDefined || trace.isDefined)
-        fail("failed to cause runtime error: \"" + command + "\"")
+        fail(s"""failed to cause runtime error: "$command"""")
     }
-    catch catcher(mode + ": command: " + command, error, trace)
-  }
-
-  def testCommandCompileError(command: String, errorMessage: String,
-                              kind: api.AgentKind = api.AgentKind.Observer)
-  {
-    try {
-      workspace.compileCommands(command, kind)
-      fail("no CompilerException occurred")
-    }
-    catch catcher(s"command: $command", Some(errorMessage))
+    catch catcher(s"command: $command", compileError, error, trace)
   }
 
   // ConstantFolder makes this complicated, by turning some runtime errors into
   // compile-time errors.  Furthermore in RunMode the compile-time error again
   // becomes a runtime error, but with "Runtime error: " tacked onto the front.
   private def catcher(clue: String,
+                      compileError: Option[String] = None,
                       error: Option[String] = None,
                       trace: Option[String] = None)
       : PartialFunction[Throwable, Unit] = {
-    case ex: api.LogoException if error.isDefined || trace.isDefined =>
+    case ex: api.LogoException if compileError.isDefined || error.isDefined || trace.isDefined =>
       withClue(clue) {
+        for (expected <- compileError)
+          checkMessage(ex, expected)
         for (expected <- error)
           checkMessage(ex, expected)
         for (expected <- trace)
           assertResult(expected)(workspace.lastErrorReport.stackTrace.get)
       }
-    case ex: api.CompilerException if error.isDefined =>
+    case ex: api.CompilerException if compileError.isDefined || error.isDefined =>
       withClue(clue) {
-        checkMessage(ex, error.get)
+        for (expected <- compileError)
+          checkMessage(ex, expected)
+        for (expected <- error)
+          checkMessage(ex, expected)
       }
   }
   private def checkMessage(ex: Exception, expected: String) =
