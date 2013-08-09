@@ -45,14 +45,16 @@ class ParserTests extends FunSuite {
   test("parse a simple test") {
     val code = """
                |TurtleSet
+               |  to foo fd 1 end
                |  O> crt 1
                |  [turtle-set self] of turtle 0 = turtles => true""".stripMargin
     val tests = Parser.parse("test", code)
     val expectedOutputs =
       List(LanguageTest("test", "TurtleSet",
         List(
-          Parser.parse("O> crt 1"),
-          Parser.parse("[turtle-set self] of turtle 0 = turtles => true"))))
+          Declaration("to foo fd 1 end"),
+          Command(AgentKind.Observer, "crt 1"),
+          Reporter("[turtle-set self] of turtle 0 = turtles", Success("true")))))
     assertResult(expectedOutputs.toString)(tests.toString)
   }
 
