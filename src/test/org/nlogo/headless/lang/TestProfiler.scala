@@ -23,17 +23,18 @@ class TestProfiler extends FixtureSuite with SlowTest {
   if(!useGenerator)
     test("no generator") { implicit fixture =>
       import fixture._
-      defineProcedures("extensions [profiler]")
-      testCommandError(
+      declare("extensions [profiler]")
+      testCommand(
         "profiler:start",
-        "Extension exception: The profiler extension requires the NetLogo bytecode " +
-        "generator, which is currently turned off. See the org.nlogo.noGenerator " +
-        "property.")
+        error = Some(
+          "Extension exception: The profiler extension requires the NetLogo bytecode " +
+            "generator, which is currently turned off. See the org.nlogo.noGenerator " +
+            "property."))
     }
   if(useGenerator)
     test("basics") { implicit fixture =>
       import fixture._
-      defineProcedures(
+      declare(
         "extensions [profiler]\n" +
         "to dosomething crt 5 [ rt random 360 fd random 30 ] end\n" +
         "to-report saysomething report count turtles end\n" +
@@ -53,7 +54,7 @@ class TestProfiler extends FixtureSuite with SlowTest {
   if(useGenerator)
     test("stop") { implicit fixture =>
       import fixture._
-      defineProcedures(
+      declare(
         "extensions [profiler]\n" +
         "to foo end")
       testCommand("profiler:start")
@@ -68,7 +69,7 @@ class TestProfiler extends FixtureSuite with SlowTest {
     // uses precision primitive to not be too picky about exact times
     test("wait") { implicit fixture =>
       import fixture._
-      defineProcedures(
+      declare(
         "extensions [profiler]\n" +
         "to test1 wait 1 end\n" +
         "to test2 wait 0.1 end\n" +
@@ -101,7 +102,7 @@ class TestProfiler extends FixtureSuite with SlowTest {
   if(useGenerator && timingSensitiveOK)
     test("ask turtles") { implicit fixture =>
       import fixture._
-      defineProcedures(
+      declare(
         "extensions [profiler]\n" +
         "to test1 ask turtles [ test2 ] end\n" +
         "to test2 wait 0.01 end")
@@ -120,7 +121,7 @@ class TestProfiler extends FixtureSuite with SlowTest {
   if(useGenerator && timingSensitiveOK)
     test("nested asks") { implicit fixture =>
       import fixture._
-      defineProcedures(
+      declare(
         "extensions [profiler]\n" +
         "to go ask turtles [ go-turtles1 ] ask patches [ go-patches ] end\n" +
         "to go-turtles1 wait 0.0001 go-turtles2 end\n" +
@@ -147,7 +148,7 @@ class TestProfiler extends FixtureSuite with SlowTest {
   if(useGenerator && timingSensitiveOK)
     test("reporter procedures") { implicit fixture =>
       import fixture._
-      defineProcedures(
+      declare(
         "extensions [profiler]\n" +
         "to-report some-value wait 0.1 report random 10 end")
       testCommand("crt 10")

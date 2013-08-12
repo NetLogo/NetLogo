@@ -28,9 +28,9 @@ echo "*** done: fast:test"
 if [ ${PIPESTATUS[0]} -ne 0 ] ; then echo "*** FAILED: nogen fast:test"; exit 1; fi
 echo "*** done: nogen fast:test"
 
-./sbt extensions 2>&1 | tee tmp/nightly/extensions.txt
-if [ ${PIPESTATUS[0]} -ne 0 ] ; then echo "*** FAILED: extensions"; exit 1; fi
-echo "*** done: extensions"
+./sbt all 2>&1 | tee tmp/nightly/2-sbt-all.txt
+if [ ${PIPESTATUS[0]} -ne 0 ] ; then echo "*** FAILED: sbt all"; exit 1; fi
+echo "*** done: sbt all"
 
 ./sbt slow:test 2>&1 | tee tmp/nightly/3-slow-test.txt
 if [ ${PIPESTATUS[0]} -ne 0 ] ; then echo "*** FAILED: slow:test"; exit 1; fi
@@ -40,15 +40,11 @@ echo "*** done: slow:test"
 if [ ${PIPESTATUS[0]} -ne 0 ] ; then echo "*** FAILED: nogen slow:test"; exit 1; fi
 echo "*** done: nogen slow:test"
 
-./sbt all 2>&1 | tee tmp/nightly/6-sbt-all.txt
-if [ ${PIPESTATUS[0]} -ne 0 ] ; then echo "*** FAILED: sbt all"; exit 1; fi
-echo "*** done: sbt all"
-
-./sbt depend 2>&1 | tee tmp/nightly/7-depend.txt
+./sbt depend 2>&1 | tee tmp/nightly/5-depend.txt
 if [ ${PIPESTATUS[0]} -ne 0 ] ; then echo "*** FAILED: depend"; exit 1; fi
 echo "*** done: depend"
 
-./sbt scalastyle 2>&1 | tee tmp/nightly/8-scalastyle.txt
+./sbt scalastyle 2>&1 | tee tmp/nightly/6-scalastyle.txt
 if [ `wc -l < target/scalastyle-result.xml` -ne 2 ] ; then echo "*** FAILED: scalastyle"; exit 1; fi
 echo "*** done: scalastyle"
 

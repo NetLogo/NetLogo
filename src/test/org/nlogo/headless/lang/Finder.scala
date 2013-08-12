@@ -4,6 +4,7 @@ package org.nlogo.headless
 package lang
 
 import java.io.File
+import org.nlogo.api.FileIO.file2String
 import org.scalatest.{ FunSuite, Tag }
 import org.nlogo.api
 import org.nlogo.util.SlowTest
@@ -45,17 +46,33 @@ class TestExtensions extends Finder {
 trait Finder extends FunSuite with SlowTest {
   def files: Iterable[File]
   // parse tests first, then run them
-  for(t <- Parser.parseFiles(files) if shouldRun(t))
+  for(t <- parseFiles(files) if shouldRun(t))
     test(t.fullName, new Tag(t.suiteName){}, new Tag(t.fullName){}) {
       for (mode <- t.modes)
-        Fixture.withFixture("${t.fullName} ($mode)"){
+        Fixture.withFixture(s"${t.fullName} ($mode)"){
           fixture =>
-            val nonProcs = t.entries.filterNot(_.isInstanceOf[Procedure])
-            fixture.defineProcedures(t.entries.collect{
-              case p: Procedure => p.source}.mkString("\n"))
-            nonProcs.foreach(fixture.runEntry(mode, _))
+            val nonDecls = t.entries.filterNot(_.isInstanceOf[Declaration])
+            fixture.declare(t.entries.collect{
+              case d: Declaration => d.source}.mkString("\n"))
+            nonDecls.foreach(fixture.runEntry(mode, _))
         }
     }
+  def parseFiles(files: Iterable[File]): Iterable[LanguageTest] =
+    for {
+      f <- files if !f.isDirectory
+      test <- parseFile(f)
+    } yield test
+
+  def parseFile(f: File): List[LanguageTest] = {
+    def preprocessStackTraces(s: String) =
+      s.replace("\\\n  ", "\\n")
+    val suiteName =
+      if(f.getName == "tests.txt")
+        f.getParentFile.getName
+      else
+        f.getName.replace(".txt", "")
+    Parser.parse(suiteName, preprocessStackTraces(file2String(f.getAbsolutePath)))
+  }
   // on the core branch the _3D tests are gone, but extensions tests still have them since we
   // didn't branch the extensions, so we still need to filter those out - ST 1/13/12
   def shouldRun(t: LanguageTest) =

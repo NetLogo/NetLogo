@@ -6,7 +6,7 @@ package lang
 import org.nlogo.api.AgentKind
 
 case class LanguageTest(suiteName: String, testName: String, entries: List[Entry]) {
-  val fullName = suiteName + "::" + testName
+  val fullName = s"$suiteName::$testName"
   val modes =
     if(testName.startsWith("*"))
       List(NormalMode)
@@ -16,7 +16,7 @@ case class LanguageTest(suiteName: String, testName: String, entries: List[Entry
 
 sealed trait Entry
 case class Open(modelPath: String)                                   extends Entry
-case class Procedure(source: String)                                 extends Entry
+case class Declaration(source: String)                               extends Entry
 case class Command(
   kind: AgentKind, command: String, result: Result = Success(""))    extends Entry
 case class Reporter(reporter: String, result: Result)                extends Entry
