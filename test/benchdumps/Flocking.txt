@@ -1647,32 +1647,28 @@ reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           I2D
           DCMPL
           IFLE L20
-          ICONST_0
+          DCONST_0
           GOTO L21
          L20
-          SIPUSH 180
-         L21
-          I2D
-          GOTO L22
+          LDC 180.0
+          GOTO L21
          L19
           DLOAD 4
           ICONST_0
           I2D
           DCMPL
-          IFNE L23
+          IFNE L22
           DLOAD 2
           ICONST_0
           I2D
           DCMPL
-          IFLE L24
-          BIPUSH 90
-          GOTO L25
-         L24
-          SIPUSH 270
-         L25
-          I2D
-          GOTO L22
+          IFLE L23
+          LDC 90.0
+          GOTO L21
          L23
+          LDC 270.0
+          GOTO L21
+         L22
           DLOAD 2
           DLOAD 4
           INVOKESTATIC java/lang/StrictMath.atan2 (DD)D
@@ -1683,7 +1679,7 @@ reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           SIPUSH 360
           I2D
           DREM
-         L22
+         L21
           DSTORE 2
           NEW java/lang/Double
           DUP
@@ -1704,15 +1700,15 @@ reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
-          IFEQ L26
+          IFEQ L24
           GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
-         L26
+         L24
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
-          IFNE L27
+          IFNE L25
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -1728,10 +1724,10 @@ reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L27
+         L25
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.atTopActivation ()Z
-          IFNE L28
+          IFNE L26
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -1747,7 +1743,7 @@ reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L28
+         L26
           RETURN
 [1]_asm_procedureaverageflockmateheading_returnreport_5 "" => void
          L0
@@ -2237,32 +2233,28 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           I2D
           DCMPL
           IFLE L20
-          ICONST_0
+          DCONST_0
           GOTO L21
          L20
-          SIPUSH 180
-         L21
-          I2D
-          GOTO L22
+          LDC 180.0
+          GOTO L21
          L19
           DLOAD 4
           ICONST_0
           I2D
           DCMPL
-          IFNE L23
+          IFNE L22
           DLOAD 2
           ICONST_0
           I2D
           DCMPL
-          IFLE L24
-          BIPUSH 90
-          GOTO L25
-         L24
-          SIPUSH 270
-         L25
-          I2D
-          GOTO L22
+          IFLE L23
+          LDC 90.0
+          GOTO L21
          L23
+          LDC 270.0
+          GOTO L21
+         L22
           DLOAD 2
           DLOAD 4
           INVOKESTATIC java/lang/StrictMath.atan2 (DD)D
@@ -2273,7 +2265,7 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           SIPUSH 360
           I2D
           DREM
-         L22
+         L21
           DSTORE 2
           NEW java/lang/Double
           DUP
@@ -2294,15 +2286,15 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
-          IFEQ L26
+          IFEQ L24
           GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
-         L26
+         L24
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
-          IFNE L27
+          IFNE L25
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -2318,10 +2310,10 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L27
+         L25
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.atTopActivation ()Z
-          IFNE L28
+          IFNE L26
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -2337,7 +2329,7 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L28
+         L26
           RETURN
 [1]_asm_procedureaverageheadingtowardsflockmates_returnreport_7 "" => void
          L0

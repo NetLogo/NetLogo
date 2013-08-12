@@ -9,9 +9,9 @@ import org.nlogo.nvm.{ Context, Reporter }
 class _dy extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(Syntax.NumberType, "-T--")
-  override def report(context: Context) =
+  override def report(context: Context): java.lang.Double =
     Double.box(report_1(context))
-  def report_1(context: Context) = {
+  def report_1(context: Context): Double = {
     val result = context.agent.asInstanceOf[Turtle].dy
     if (StrictMath.abs(result) < Numbers.Infinitesimal)
       0 else result

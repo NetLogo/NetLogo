@@ -18,7 +18,7 @@ class _with extends Reporter {
       "OTPL",
       "?")   // takes reporter block of unknown agent type
 
-  override def report(context: Context) =
+  override def report(context: Context): AgentSet =
     report_1(context, argEvalAgentSet(context, 0), args(1))
 
   def report_1(context: Context, sourceSet: AgentSet, reporterBlock: Reporter): AgentSet = {

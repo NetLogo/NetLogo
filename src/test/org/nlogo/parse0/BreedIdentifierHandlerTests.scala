@@ -27,14 +27,14 @@ class BreedIdentifierHandlerTests extends FunSuite {
   }
 
   test("turtleBreedIdentifier") {
-    expectResult(("_createturtles", "FROGS", TokenType.Command))(
+    assertResult(("_createturtles", "FROGS", TokenType.Command))(
       tester(BreedIdentifierHandler.turtle(
         Spec("CREATE-*", TokenType.Command, false, "_createturtles")),
         "breed[frogs frog] to foo create-frogs 1 end", "CREATE-FROGS"))
   }
 
   test("directedLinkBreedIdentifier1") {
-    expectResult(("_createlinkto", "AS", TokenType.Command))(
+    assertResult(("_createlinkto", "AS", TokenType.Command))(
       tester(BreedIdentifierHandler.directedLink(Spec(
         "CREATE-*-TO", TokenType.Command, true, "_createlinkto")),
         "directed-link-breed[as a] to foo ask turtle 0 [ create-a-to turtle 1 ] end",
@@ -42,7 +42,7 @@ class BreedIdentifierHandlerTests extends FunSuite {
   }
 
   test("directedLinkBreedIdentifier2") {
-    expectResult(("_outlinkneighbor", "AS", TokenType.Reporter))(
+    assertResult(("_outlinkneighbor", "AS", TokenType.Reporter))(
       tester(BreedIdentifierHandler.directedLink(Spec(
         "OUT-*-NEIGHBOR?", TokenType.Reporter, true,
         "_outlinkneighbor")),
@@ -51,7 +51,7 @@ class BreedIdentifierHandlerTests extends FunSuite {
   }
 
   test("undirectedLinkBreedIdentifier") {
-    expectResult(("_createlinkwith", "BS", TokenType.Command))(
+    assertResult(("_createlinkwith", "BS", TokenType.Command))(
     tester(BreedIdentifierHandler.undirectedLink(Spec(
       "CREATE-*-WITH", TokenType.Command, true,
       "_createlinkwith")),

@@ -34,13 +34,15 @@ class Evaluator(workspace: AbstractWorkspace) {
    * @return whether the code did a "stop" at the top level
    */
   def runCompiledCommands(owner: JobOwner, procedure: Procedure) = {
-    val job = workspace.jobManager.makeConcurrentJob(owner, workspace.world.observers, procedure)
+    val job = workspace.jobManager.makeConcurrentJob(
+      owner, workspace.world.kindToAgentSet(owner.kind), procedure)
     workspace.jobManager.addJob(job, true)
     job.stopping
   }
 
   def runCompiledReporter(owner: JobOwner, procedure: Procedure) =
-    workspace.jobManager.addReporterJobAndWait(owner, workspace.world.observers, procedure)
+    workspace.jobManager.addReporterJobAndWait(owner,
+      workspace.world.kindToAgentSet(owner.kind), procedure)
 
   ///
 

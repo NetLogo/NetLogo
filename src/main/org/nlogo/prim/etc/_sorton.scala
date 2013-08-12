@@ -3,7 +3,7 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.agent.Agent
-import org.nlogo.api.{ LogoListBuilder, Syntax, TypeNames }
+import org.nlogo.api.{ LogoList, LogoListBuilder, Syntax, TypeNames }
 import org.nlogo.nvm.{ Context, EngineException, Reporter }
 
 class _sorton extends Reporter {
@@ -14,7 +14,7 @@ class _sorton extends Reporter {
       Syntax.ListType,
       "OTPL", "?")  // ? = reporter block has unknown agent type
 
-  override def report(context: Context) = {
+  override def report(context: Context): LogoList = {
     val reporterBlock = args(0)
     val agents = argEvalAgentSet(context, 1)
     val freshContext = new Context(context, agents)

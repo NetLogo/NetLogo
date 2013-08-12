@@ -10,7 +10,7 @@ class _taskvariable(val varNumber: Int) extends Reporter {
     Syntax.reporterSyntax(Syntax.WildcardType)
   override def toString =
     super.toString + ":" + varNumber
-  override def report(context: Context) =
+  override def report(context: Context): Nothing =
     // TaskVisitor compiles us out of existence
     throw new IllegalStateException
 }

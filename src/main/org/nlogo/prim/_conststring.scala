@@ -10,8 +10,8 @@ class _conststring(value: String) extends Reporter with Pure {
     Syntax.reporterSyntax(Syntax.StringType)
   override def toString =
     super.toString + ":\"" + value + "\""
-  override def report(context: Context )=
+  override def report(context: Context): String =
     report_1(context)
-  def report_1(context: Context) =
+  def report_1(context: Context): String =
     value
 }

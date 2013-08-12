@@ -10,8 +10,8 @@ class _constlist(value: LogoList) extends Reporter with Pure {
     Syntax.reporterSyntax(Syntax.ListType)
   override def toString =
     super.toString + ":" + Dump.logoObject(value)
-  override def report(context: Context) =
+  override def report(context: Context): LogoList =
     report_1(context)
-  def report_1(context: Context) =
+  def report_1(context: Context): LogoList =
     value
 }

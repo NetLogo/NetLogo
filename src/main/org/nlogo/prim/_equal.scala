@@ -15,19 +15,19 @@ class _equal extends Reporter with Pure {
       ret = Syntax.BooleanType,
       precedence = Syntax.NormalPrecedence - 5)
 
-  override def report(context: Context) =
+  override def report(context: Context): java.lang.Boolean =
     Boolean.box(
       report_1(context,
                args(0).report(context),
                args(1).report(context)))
 
-  def report_1(context: Context, arg0: AnyRef, arg1: AnyRef) =
+  def report_1(context: Context, arg0: AnyRef, arg1: AnyRef): Boolean =
     Equality.equals(arg0, arg1)
 
-  def report_2(context: Context, d0: Double, d1: Double) =
+  def report_2(context: Context, d0: Double, d1: Double): Boolean =
     d0 == d1
 
-  def report_3(context: Context, d0: Double, arg1: AnyRef) =
+  def report_3(context: Context, d0: Double, arg1: AnyRef): Boolean =
     arg1 match {
       case d: java.lang.Double =>
         d0 == d.doubleValue
@@ -35,7 +35,7 @@ class _equal extends Reporter with Pure {
         false
     }
 
-  def report_4(context: Context, arg0: AnyRef, d1: Double) =
+  def report_4(context: Context, arg0: AnyRef, d1: Double): Boolean =
     arg0 match {
       case d: java.lang.Double =>
         d1 == d.doubleValue
@@ -43,10 +43,10 @@ class _equal extends Reporter with Pure {
         false
     }
 
-  def report_5(context: Context, arg0: Boolean, arg1: Boolean) =
+  def report_5(context: Context, arg0: Boolean, arg1: Boolean): Boolean =
     arg0 == arg1
 
-  def report_6(context: Context, arg0: Boolean, arg1: AnyRef) =
+  def report_6(context: Context, arg0: Boolean, arg1: AnyRef): Boolean =
     arg1 match {
       case b: java.lang.Boolean =>
         arg0 == b.booleanValue
@@ -54,7 +54,7 @@ class _equal extends Reporter with Pure {
         false
     }
 
-  def report_7(context: Context, arg0: AnyRef, arg1: Boolean) =
+  def report_7(context: Context, arg0: AnyRef, arg1: Boolean): Boolean =
     arg0 match {
       case b: java.lang.Boolean =>
         arg1 == b.booleanValue
@@ -62,22 +62,22 @@ class _equal extends Reporter with Pure {
         false
     }
 
-  def report_8(context: Context, arg0: String, arg1: String) =
+  def report_8(context: Context, arg0: String, arg1: String): Boolean =
     arg0 == arg1
 
-  def report_9(context: Context, arg0: AnyRef, arg1: String) =
+  def report_9(context: Context, arg0: AnyRef, arg1: String): Boolean =
     arg1 == arg0
 
-  def report_10(context: Context, arg0: String, arg1: AnyRef) =
+  def report_10(context: Context, arg0: String, arg1: AnyRef): Boolean =
     arg0 == arg1
 
-  def report_11(context: Context, arg0: Turtle, arg1: Turtle) =
+  def report_11(context: Context, arg0: Turtle, arg1: Turtle): Boolean =
     arg0.id == arg1.id
 
-  def report_12(context: Context, arg0: Patch, arg1: Patch) =
+  def report_12(context: Context, arg0: Patch, arg1: Patch): Boolean =
     arg0.id == arg1.id
 
-  def report_13(context: Context, arg0: Link, arg1: Link) =
+  def report_13(context: Context, arg0: Link, arg1: Link): Boolean =
     arg0.id == arg1.id
 
 }

@@ -18,7 +18,7 @@ class _inlinkneighbor(breedName: String) extends Reporter {
   override def toString =
     super.toString + ":" + breedName
 
-  override def report(context: Context) = {
+  override def report(context: Context): java.lang.Boolean = {
     val target = argEvalTurtle(context, 0)
     val breed =
       if (breedName == null)

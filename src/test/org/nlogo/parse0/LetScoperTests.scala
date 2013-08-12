@@ -15,16 +15,16 @@ class LetScoperTests extends FunSuite {
       .scan(Map())
 
   test("empty") {
-    expectResult("")(compile("").mkString)
+    assertResult("")(compile("").mkString)
   }
 
   test("let") {
-    expectResult("Let(Y,2,5)")(
+    assertResult("Let(Y,2,5)")(
       compile("let y 5 print y").mkString)
   }
 
   test("local let") {
-    expectResult("Let(X,5,6)")(
+    assertResult("Let(X,5,6)")(
       compile("ask turtles [ let x 5 ] print 0").mkString)
   }
 
@@ -34,7 +34,7 @@ class LetScoperTests extends FunSuite {
       compile("foreach [1] [ let ? 0 ]") }
     val message =
       "Names beginning with ? are reserved for use as task inputs"
-    expectResult(message)(e.getMessage)
+    assertResult(message)(e.getMessage)
   }
 
 }

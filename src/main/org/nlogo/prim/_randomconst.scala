@@ -10,7 +10,7 @@ class _randomconst(n: Long) extends Reporter {
     Syntax.reporterSyntax(Syntax.NumberType)
   override def toString =
     super.toString + ":" + n
-  override def report(context: Context) =
+  override def report(context: Context): java.lang.Double =
     Double.box(report_1(context))
   def report_1(context: Context): Double =
     context.job.random.nextLong(n)

@@ -10,7 +10,7 @@ class _precision extends Reporter with Pure {
     Syntax.reporterSyntax(
       Array(Syntax.NumberType, Syntax.NumberType),
       Syntax.NumberType)
-  override def report(context: Context) =
+  override def report(context: Context): java.lang.Double =
     newValidDouble(
       org.nlogo.api.Approximate.approximate(
         argEvalDoubleValue(context, 0),

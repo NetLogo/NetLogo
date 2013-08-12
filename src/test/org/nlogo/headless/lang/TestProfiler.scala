@@ -11,32 +11,30 @@ package lang
 // This would be nicer looking if it were done using Josh's model testing DSL.  (At the time I made
 // this, the DSL didn't support catching runtime errors, but now it does.) - ST 5/4/10
 
-import org.scalatest.{ FunSuite, BeforeAndAfterEach, OneInstancePerTest }
 import org.nlogo.util.SlowTest
 
-class TestProfiler extends LanguageTesting with FunSuite
-with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
+class TestProfiler extends FixtureSuite with SlowTest {
 
   // change to true temporarily to enable timing sensitive tests.  disabled by default
   // since they tend to fail intermittently if CPU load is high. - ST 6/10/10
   val timingSensitiveOK = false
 
-  override def beforeEach() { init() }
-  override def afterEach() { workspace.dispose() }
-
   val useGenerator = org.nlogo.api.Version.useGenerator
   if(!useGenerator)
-    test("no generator") {
-      defineProcedures("extensions [profiler]")
-      testCommandError(
+    test("no generator") { implicit fixture =>
+      import fixture._
+      declare("extensions [profiler]")
+      testCommand(
         "profiler:start",
-        "Extension exception: The profiler extension requires the NetLogo bytecode " +
-        "generator, which is currently turned off. See the org.nlogo.noGenerator " +
-        "property.")
+        error = Some(
+          "Extension exception: The profiler extension requires the NetLogo bytecode " +
+            "generator, which is currently turned off. See the org.nlogo.noGenerator " +
+            "property."))
     }
   if(useGenerator)
-    test("basics") {
-      defineProcedures(
+    test("basics") { implicit fixture =>
+      import fixture._
+      declare(
         "extensions [profiler]\n" +
         "to dosomething crt 5 [ rt random 360 fd random 30 ] end\n" +
         "to-report saysomething report count turtles end\n" +
@@ -54,8 +52,9 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
       testReporter("profiler:calls \"somethingelse\"", "52")
     }
   if(useGenerator)
-    test("stop") {
-      defineProcedures(
+    test("stop") { implicit fixture =>
+      import fixture._
+      declare(
         "extensions [profiler]\n" +
         "to foo end")
       testCommand("profiler:start")
@@ -68,8 +67,9 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     }
   if(useGenerator && timingSensitiveOK)
     // uses precision primitive to not be too picky about exact times
-    test("wait") {
-      defineProcedures(
+    test("wait") { implicit fixture =>
+      import fixture._
+      declare(
         "extensions [profiler]\n" +
         "to test1 wait 1 end\n" +
         "to test2 wait 0.1 end\n" +
@@ -100,8 +100,9 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
       testReporter("precision profiler:inclusive-time \"test3\" -1", "10")
     }
   if(useGenerator && timingSensitiveOK)
-    test("ask turtles") {
-      defineProcedures(
+    test("ask turtles") { implicit fixture =>
+      import fixture._
+      declare(
         "extensions [profiler]\n" +
         "to test1 ask turtles [ test2 ] end\n" +
         "to test2 wait 0.01 end")
@@ -118,8 +119,9 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
       testReporter("precision (glob1 - profiler:inclusive-time \"test1\") 8", "0")
     }
   if(useGenerator && timingSensitiveOK)
-    test("nested asks") {
-      defineProcedures(
+    test("nested asks") { implicit fixture =>
+      import fixture._
+      declare(
         "extensions [profiler]\n" +
         "to go ask turtles [ go-turtles1 ] ask patches [ go-patches ] end\n" +
         "to go-turtles1 wait 0.0001 go-turtles2 end\n" +
@@ -144,8 +146,9 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
       testReporter("precision (glob1 + glob2 + glob3 - profiler:inclusive-time \"go-turtles1\") 13", "0")
     }
   if(useGenerator && timingSensitiveOK)
-    test("reporter procedures") {
-      defineProcedures(
+    test("reporter procedures") { implicit fixture =>
+      import fixture._
+      declare(
         "extensions [profiler]\n" +
         "to-report some-value wait 0.1 report random 10 end")
       testCommand("crt 10")
@@ -164,11 +167,12 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
   // lets us test extensions stuff without having an actual extension jar in hand.  but we don't,
   // and we don't want anything in test-fast or test-medium to depend on submodules like models and
   // extensions, so we put it here because it's a SlowTest - ST 1/19/12
-  test("isReporter on extension prims") {
+  test("isReporter on extension prims") { implicit fixture =>
+    import fixture._
     workspace.initForTesting(5, "extensions [profiler]")
-    expectResult(false) { workspace.isReporter("profiler:start") }
-    expectResult(true) { workspace.isReporter("profiler:report") }
-    expectResult(false) { workspace.isReporter("profiler:ghjfgjhkfhgjk") }
+    assertResult(false) { workspace.isReporter("profiler:start") }
+    assertResult(true) { workspace.isReporter("profiler:report") }
+    assertResult(false) { workspace.isReporter("profiler:ghjfgjhkfhgjk") }
   }
 
 }

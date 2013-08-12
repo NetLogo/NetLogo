@@ -21,7 +21,7 @@ class _externreport(reporter: api.Reporter) extends nvm.Reporter {
       s.copy(agentClassString = acs(0), blockAgentClassString = null)
   }
 
-  override def report(context: nvm.Context) = {
+  override def report(context: nvm.Context): AnyRef = {
     val arguments = Array.tabulate[api.Argument](args.length)(i =>
       new nvm.Argument(context, args(i)))
     try reporter.report(

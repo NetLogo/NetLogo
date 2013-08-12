@@ -12,7 +12,7 @@ class _random extends Reporter {
       Array(Syntax.NumberType),
       Syntax.NumberType)
 
-  override def report(context: Context) =
+  override def report(context: Context): java.lang.Double =
     Double.box(report_1(context, argEvalDoubleValue(context, 0)))
 
   def report_1(context: Context, maxDouble: Double): Double = {

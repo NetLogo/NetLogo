@@ -13,7 +13,7 @@ class _subtractheadings extends Reporter with Pure {
       Array(Syntax.NumberType, Syntax.NumberType),
       Syntax.NumberType)
 
-  override def report(context: Context) =
+  override def report(context: Context): java.lang.Double =
     Double.box(
       report_1(context,
                argEvalDoubleValue(context, 0),

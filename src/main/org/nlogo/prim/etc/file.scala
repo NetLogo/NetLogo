@@ -9,7 +9,7 @@ import java.io.IOException
 class _fileatend extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(Syntax.BooleanType)
-  override def report(context: Context) =
+  override def report(context: Context): java.lang.Boolean =
     try Boolean.box(workspace.fileManager.eof)
     catch {
       case ex: IOException =>
@@ -69,7 +69,7 @@ class _fileexists extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(Array(Syntax.StringType),
                           Syntax.BooleanType)
-  override def report(context: Context) =
+  override def report(context: Context): java.lang.Boolean =
     try
       Boolean.box(
         workspace.fileManager.fileExists(
@@ -138,7 +138,7 @@ class _fileprint extends Command {
 class _fileread extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(Syntax.ReadableType)
-  override def report(context: Context) =
+  override def report(context: Context): AnyRef =
     try workspace.fileManager.read(world)
     catch {
       case ex: CompilerException =>
@@ -157,7 +157,7 @@ class _filereadchars extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(Array(Syntax.NumberType),
                           Syntax.StringType)
-  override def report(context: Context) =
+  override def report(context: Context): String =
     try workspace.fileManager.readChars(argEvalIntValue(context, 0))
     catch {
       case _: java.io.EOFException =>
@@ -171,7 +171,7 @@ class _filereadchars extends Reporter {
 class _filereadline extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(Syntax.StringType)
-  override def report(context: Context) =
+  override def report(context: Context): String =
     try workspace.fileManager.readLine()
     catch {
       case _: java.io.EOFException =>

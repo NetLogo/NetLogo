@@ -13,7 +13,7 @@ class _other extends Reporter {
       Array(Syntax.AgentsetType),
       Syntax.AgentsetType)
 
-  override def report(context: Context) =
+  override def report(context: Context): AgentSet =
     report_1(context, argEvalAgentSet(context, 0))
 
   def report_1(context: Context, sourceSet: AgentSet): AgentSet = {

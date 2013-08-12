@@ -16,7 +16,7 @@ class _constboolean(value: java.lang.Boolean) extends Reporter with Pure {
   override def toString =
     super.toString + ":" + primitiveValue
 
-  override def report(context: Context) =
+  override def report(context: Context): java.lang.Boolean =
     report_1(context)
 
   def report_1(context: Context): java.lang.Boolean =

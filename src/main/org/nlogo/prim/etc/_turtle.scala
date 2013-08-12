@@ -13,10 +13,10 @@ class _turtle extends Reporter {
       Array(Syntax.NumberType),
       Syntax.TurtleType | Syntax.NobodyType)
 
-  override def report(context: Context) =
+  override def report(context: Context): AnyRef =
     report_1(context, argEvalDoubleValue(context, 0))
 
-  def report_1(context: Context, idDouble: Double) = {
+  def report_1(context: Context, idDouble: Double): AnyRef = {
     val id = validLong(idDouble)
     if (id != idDouble)
       throw new EngineException(
