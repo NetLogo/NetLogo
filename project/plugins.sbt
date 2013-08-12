@@ -1,8 +1,7 @@
 // available for sbt 0.13?
 // addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "0.3.2")
 
-// available for sbt 0.13?
-// addSbtPlugin("org.ensime" % "ensime-sbt-cmd" % "0.1.1")
+addSbtPlugin("org.ensime" % "ensime-sbt-cmd" % "0.1.2")
 
 // available for sbt 0.13?
 // addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.4.0")
