@@ -29,8 +29,6 @@ libraryDependencies in ThisBuild ++= Seq(
   "org.scalatest" %% "scalatest" % "2.0.M6-SNAP35" % "test"
 )
 
-name := "NetLogo"
-
 artifactName := { (_, _, _) => "NetLogoHeadless.jar" }
 
 onLoadMessage := ""
