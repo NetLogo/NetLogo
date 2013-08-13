@@ -70,4 +70,6 @@ seq(Dump.settings: _*)
 
 seq(ChecksumsAndPreviews.settings: _*)
 
+seq(Scaladoc.settings: _*)
+
 org.scalastyle.sbt.ScalastylePlugin.Settings
