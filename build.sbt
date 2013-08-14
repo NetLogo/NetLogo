@@ -43,8 +43,6 @@ libraryDependencies in ThisBuild ++= Seq(
   "org.scalatest" %% "scalatest" % "2.0.M6-SNAP35" % "test"
 )
 
-name := "NetLogo"
-
 artifactName := { (_, _, _) => "NetLogoHeadless.jar" }
 
 onLoadMessage := ""
@@ -86,6 +84,8 @@ seq(Classycle.settings: _*)
 seq(Dump.settings: _*)
 
 seq(ChecksumsAndPreviews.settings: _*)
+
+seq(Scaladoc.settings: _*)
 
 // supported yet in sbt 0.13?
 // org.scalastyle.sbt.ScalastylePlugin.Settings
