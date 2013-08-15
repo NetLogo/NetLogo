@@ -21,7 +21,6 @@ class TreeAgentSetTests extends FunSuite with GivenWhenThen with TestUsingWorksp
     given("a subscriber to turtles")
     val turtlesSub = new SimpleChangeEventCounter(ws.world.turtles)
     and("a subscriber to mice")
-    println(ws.world.program.breeds)
     val miceSub = new SimpleChangeEventCounter(ws.world.program.breeds.get("MICE"))
     and("a subscriber to frogs")
     val frogSub = new SimpleChangeEventCounter(ws.world.program.breeds.get("FROGS"))
