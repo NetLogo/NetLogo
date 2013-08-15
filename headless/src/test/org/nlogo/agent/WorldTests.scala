@@ -51,4 +51,7 @@ class WorldTests extends AbstractTestWorld with FunSuite {
     expectResult(3.0)(world.topology.shortestPathY(2, -2))
     expectResult(-2.0)(world.topology.shortestPathX(2, -2))
   }
+  test("ChangePublishedAfterWorldResize_2D") {
+    testChangePublishedAfterWorldResize(worldSquare, worldRectangle)
+  }
 }
