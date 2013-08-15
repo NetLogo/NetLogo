@@ -30,13 +30,6 @@ trait AbstractTestModels extends FunSuite {
     }
   }
 
-  /**
-   * test a model loaded from a file
-   */
-  def testModelFile(testName: String, path: String)(f: => Unit) = {
-    test(testName){ runModelFromFile(path){ f } }
-  }
-
   // use DynamicVariable to simplify calls to testModel - ST 3/4/10
   private val _workspace = new DynamicVariable[HeadlessWorkspace](null)
   def workspace = _workspace.value
@@ -57,21 +50,10 @@ trait AbstractTestModels extends FunSuite {
     def >>(s: String) = workspace.command(s)
   }
 
-  def testError(f: => Unit, message:String){
-    val e = intercept[LogoException]{f}
-    assert(e.getMessage === message)
-  }
-
   // runs the given model in a new workspace
   def runModel(model:Model)(f: => Unit) = {
-    // very useful, do not just remove.
-    //println(model.toString)
-    // println(".")
     run(ws => ws.openFromSource(model.toString)){ f }
   }
-  // lods the model from the given file, and runs it in a new workspace
-  def runModelFromFile(path: String)(f: => Unit) = run(ws => ws.open(path)){ f }
-
   // run a model
   private def run(openModel: HeadlessWorkspace => Unit)(f: => Unit) {
     _workspace.withValue(HeadlessWorkspace.newInstance) {

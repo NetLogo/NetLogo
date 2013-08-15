@@ -53,12 +53,9 @@ class Fixture(name: String) {
     Femto.scalaSingleton("org.nlogo.compile.Compiler")
 
   def declare(source: String) {
-    val results = {
-      compiler.compileProgram(
-        HeadlessWorkspace.TestDeclarations + source,
-        api.Program.empty,
+    val results =
+      compiler.compileProgram(source, api.Program.empty,
         workspace.getExtensionManager)
-    }
     workspace.procedures = results.proceduresMap
     workspace.world.program(results.program)
     workspace.init()

@@ -1,15 +1,15 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.headless
-package model
+package lang
 
 import org.nlogo.api,
-  api.{ Observer, Turtle, Patch, Link, LogoList },
-  api.ModelCreator._
+  api.{ Observer, Turtle, Patch, Link, LogoList }
 
-class TestAllStoredValues extends AbstractTestModels {
-  testModel("all agents included", Model()) {
-    observer>> "crt 10 [ create-links-with other turtles ]"
+class TestAllStoredValues extends FixtureSuite {
+  test("all agents included") { implicit fixture =>
+    fixture.testCommand("crt 10 [ create-links-with other turtles ]")
+    val world = fixture.workspace.world
     val vals = world.allStoredValues.toStream
     assertResult(1) {
       vals.collect{case o: Observer => o}.size
@@ -25,14 +25,15 @@ class TestAllStoredValues extends AbstractTestModels {
       vals.collect{case l: Link => l}.size
     }
   }
-  testModel("sample agent variable included", Model()) {
+  test("sample agent variable included") { implicit fixture =>
+    val world = fixture.workspace.world
     assert(!world.allStoredValues.contains("foo"))
-    observer>> "ask one-of patches [ set plabel \"foo\" ]"
+    fixture.testCommand("ask one-of patches [ set plabel \"foo\" ]")
     assert(world.allStoredValues.contains("foo"))
   }
-  testModel("inside nested list", Model()) {
-    observer>> "ask one-of patches [ set plabel [[[[\"foo\"]]]] ]"
-    val vals = world.allStoredValues.toStream
+  test("inside nested list") { implicit fixture =>
+    fixture.testCommand("ask one-of patches [ set plabel [[[[\"foo\"]]]] ]")
+    val vals = fixture.workspace.world.allStoredValues.toStream
     assertResult(4) {
       vals.collect{case l: LogoList => l}.size
     }
