@@ -1,21 +1,18 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.headless
-package misc
-
-// Note: this is here instead of in the agent package because
-// of the dependency on headless.TestUsingWorkspace. NP 2013-08-05
-// See https://github.com/NetLogo/NetLogo/commit/9f35a477f071b746bea225b2294813970b04daf0#commitcomment-3793507.
+package lang
 
 import org.nlogo.agent.SimpleChangeEventCounter
 import org.nlogo.agent.TreeAgentSet
 import org.scalatest.FunSuite
 import org.scalatest.GivenWhenThen
 
-class TestTreeAgentSet extends FunSuite with GivenWhenThen with TestUsingWorkspace {
+class TestTreeAgentSet extends FixtureSuite with GivenWhenThen {
 
-  testUsingWorkspace("TreeAgentSet should trigger SimpleChangeEvent") { ws =>
+  test("TreeAgentSet should trigger SimpleChangeEvent") { implicit fixture =>
 
+    import fixture.{workspace => ws}
     import scala.language.implicitConversions
     implicit def anyToPub(agentSet: org.nlogo.agent.AgentSet) =
       agentSet.asInstanceOf[TreeAgentSet].simpleChangeEventPublisher
@@ -23,7 +20,6 @@ class TestTreeAgentSet extends FunSuite with GivenWhenThen with TestUsingWorkspa
     Given("a subscriber to turtles")
     val turtlesSub = new SimpleChangeEventCounter(ws.world.turtles)
     And("a subscriber to mice")
-    println(ws.world.program.breeds)
     val miceSub = new SimpleChangeEventCounter(ws.world.breedAgents.get("MICE"))
     And("a subscriber to frogs")
     val frogSub = new SimpleChangeEventCounter(ws.world.breedAgents.get("FROGS"))
@@ -112,4 +108,5 @@ class TestTreeAgentSet extends FunSuite with GivenWhenThen with TestUsingWorkspa
     And("other subscribers should get none")
     for (s <- allSubs if !Set(linksSub, undirLinksSub).contains(s)) assertResult(0)(s.eventCount)
   }
+
 }
