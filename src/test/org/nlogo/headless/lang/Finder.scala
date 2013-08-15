@@ -54,7 +54,16 @@ trait Finder extends FunSuite with SlowTest {
             val nonDecls = t.entries.filterNot(_.isInstanceOf[Declaration])
             fixture.declare(t.entries.collect{
               case d: Declaration => d.source}.mkString("\n"))
-            nonDecls.foreach(fixture.runEntry(mode, _))
+            nonDecls.foreach{
+              case Open(path) =>
+                fixture.workspace.open(path)
+              case Declaration(content) =>
+                fixture.declare(content)
+              case command: Command =>
+                fixture.runCommand(command, mode)
+              case reporter: Reporter =>
+                fixture.runReporter(reporter, mode)
+            }
         }
     }
   def parseFiles(files: Iterable[File]): Iterable[LanguageTest] =

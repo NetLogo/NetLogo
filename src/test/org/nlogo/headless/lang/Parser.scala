@@ -40,13 +40,13 @@ object Parser {
     else line.trim match {
       case CommandErrorRegex(kind, command, err) =>
         if (err.startsWith("ERROR "))
-          Command(agentKind(kind), command,
+          Command(command, agentKind(kind),
             RuntimeError(err.stripPrefix("ERROR ")))
         else if (err.startsWith("COMPILER ERROR "))
-          Command(agentKind(kind), command,
+          Command(command, agentKind(kind),
             CompileError(err.stripPrefix("COMPILER ERROR ")))
         else if (err.startsWith("STACKTRACE "))
-          Command(agentKind(kind), command,
+          Command(command, agentKind(kind),
             StackTrace(err.stripPrefix("STACKTRACE ").replace("\\n", "\n")))
         else
           sys.error("error missing!: " + err)
@@ -60,7 +60,7 @@ object Parser {
         else
           Reporter(reporter, Success(result))
       case CommandRegex(kind, command) =>
-        Command(agentKind(kind), command)
+        Command(command, agentKind(kind))
       case OpenRegex(path) => Open(path)
       case _ =>
         throw new IllegalArgumentException(
