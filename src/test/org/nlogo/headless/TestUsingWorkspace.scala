@@ -1,10 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-// At the moment this is only used by TestRenderer, but it could easily
-// be useful elsewhere - ST 7/17/13
-
 package org.nlogo.headless
-package render
 
 import org.nlogo.util.MockSuite
 import org.nlogo.api.{ModelReader, Version, ViewSettings, Perspective}

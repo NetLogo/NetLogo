@@ -122,7 +122,7 @@ without expressed or implied warranty.
 
 ===
 
-For Java bytecode generation, NetLogo uses the ASM library.  It is
+For JVM bytecode generation, NetLogo uses the ASM library.  It is
 distributed under the following license:
 
 Copyright (c) 2000-2010 INRIA, France Telecom
