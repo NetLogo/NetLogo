@@ -24,8 +24,9 @@ the stack traces, not the results.
  */
 
 import org.nlogo.api, api.LogoException, api.ModelCreator._
+import org.scalatest.FunSuite
 
-class TestStackTraces extends AbstractTestModels {
+class TestStackTraces extends FunSuite with Fixture {
 
   // these tests just call the primitive directly from the observer
   // the call should fail, and then we analyze the stack trace.
@@ -84,7 +85,7 @@ class TestStackTraces extends AbstractTestModels {
   def trace = workspace.lastErrorReport.stackTrace.get.trim
 
   def callPrimDirectly_Test(prim: String, codeType: CodeType) {
-    testModel("direct call to " + prim + " with failure in " + codeType,
+    test("direct call to " + prim + " with failure in " + codeType) { runModel(
       Model("globals [x]", widgets = List(codeType.plot("if x = 1 [plot __boom]")))) {
       observer >> "reset-ticks"
       observer >> "set x 1"
@@ -94,7 +95,7 @@ error while observer running __BOOM
   called by """ + codeType.procName + """
   called by """ + prim + """
   called by procedure __EVALUATOR""")
-    }
+    }}
   }
 
   def callToPrimIsNested_Test(prim: String, codeType: CodeType) {
@@ -107,7 +108,7 @@ error while observer running __BOOM
   to do-it if x = 1 [explode] end
   to explode print 1 / zero end
 """
-    testModel("nesting " + prim + " in " + codeType, Model(code, widgets = List(codeType.plot("do-it")))) {
+    test("nesting " + prim + " in " + codeType) { runModel(Model(code, widgets = List(codeType.plot("do-it")))) {
       observer >> "reset-ticks"
       observer >> "set x 1"
       intercept[LogoException] {observer >> "go1"}
@@ -121,7 +122,7 @@ error while observer running /
   called by procedure GO2
   called by procedure GO1
   called by procedure __EVALUATOR""")
-    }
+    }}
   }
 
   /// run/runresult tests
@@ -130,7 +131,7 @@ error while observer running /
     "to-report foo report bar end " +
     "to-report bar report __boom end"
 
-  testModel("error inside run", Model(code)) {
+  test("error inside run") { runModel(Model(code)) {
     intercept[LogoException] {observer >> "__ignore runresult \"foo\""}
     assert(trace === """boom!
 error while observer running __BOOM
@@ -138,10 +139,10 @@ error while observer running __BOOM
   called by procedure FOO
   called by runresult
   called by procedure __EVALUATOR""")
-  }
+  }}
 
   // ticket #1170
-  testModel("error inside runresult", Model(code)) {
+  test("error inside runresult") { runModel(Model(code)) {
     intercept[LogoException] {observer >> "run \"__ignore foo\""}
     assert(trace === """boom!
 error while observer running __BOOM
@@ -149,6 +150,6 @@ error while observer running __BOOM
   called by procedure FOO
   called by run
   called by procedure __EVALUATOR""")
-  }
+  }}
 
 }

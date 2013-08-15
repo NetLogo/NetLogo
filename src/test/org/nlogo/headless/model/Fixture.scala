@@ -4,7 +4,7 @@ package org.nlogo.headless
 package model
 
 import scala.util.DynamicVariable
-import org.scalatest.FunSuite
+import org.scalatest.Assertions
 import org.nlogo.api,
   api.{ LogoException, Version },
   api.ModelCreator._
@@ -12,23 +12,7 @@ import org.nlogo.api,
 /**
  * A DSL for testing models.
  */
-trait AbstractTestModels extends FunSuite {
-
-  /**
-   * test a model created in code
-   */
-  def testModel(testName: String, model: Model)(f: => Unit) = {
-    test(testName){ runModel(model){ f } }
-  }
-
-  def testModelCompileError(testName: String, model: Model)(f: Throwable => Unit) = {
-    test(testName){
-      val ex = intercept[Throwable]{
-        runModel(model){}
-      }
-      f(ex)
-    }
-  }
+trait Fixture extends Assertions {
 
   // use DynamicVariable to simplify calls to testModel - ST 3/4/10
   private val _workspace = new DynamicVariable[HeadlessWorkspace](null)
