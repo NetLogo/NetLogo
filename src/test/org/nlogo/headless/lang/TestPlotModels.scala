@@ -4,41 +4,50 @@ package org.nlogo.headless
 package lang
 
 import org.nlogo.plot.{ PlotPoint, PlotPen }
-import org.nlogo.api.ModelCreator._
+import ModelCreator._
 
 class TestPlotModels extends FixtureSuite {
 
-  implicit class PenContainsPoint(val pen: PlotPen) {
-    // couldnt call contains here because it seemed to call the java method instead.
-    def containsPoint(x:Double, y:Double) = {
-      pen.points.find((p:PlotPoint) => p.x == x && p.y == y).isDefined
-    }
-  }
+  // convenience
+  def containsPoint(pen: PlotPen, x: Double, y: Double) =
+    pen.points.exists(p => p.x == x && p.y == y)
 
   def onlyPlot(implicit fixture: Fixture) =
-    fixture.workspace.plotManager.plots(0)
+    fixture.workspace.plotManager.currentPlot
   def onlyPen(implicit fixture: Fixture) =
     fixture.workspace.plotManager.currentPlot.get.pens.head
 
-  val modelCode = "breed [dogs dog] to setup reset-ticks clear-all-plots end  to go create-dogs 1 tick end"
-  val theModel = Model(modelCode, widgets = List(Plot(pens = Pens(Pen(updateCode = "plot count dogs * 2")))))
+  val modelCode =
+    """|breed [dogs dog]
+       |to setup
+       |  clear-all
+       |  reset-ticks
+       |end
+       |to go
+       |  create-dogs 1
+       |  tick
+       |end""".stripMargin
+  val theModel =
+    Model(modelCode, widgets = List(
+      Plot(pens = Pens(Pen(name = "pen", updateCode = "plot count dogs * 2")))))
 
   test("plot on tick") { implicit fixture =>
     import fixture._
     open(theModel)
     testCommand("setup")
+    assert(containsPoint(onlyPen, 0.0, 0.0))
     testCommand("go")
     testReporter("count dogs", "1")
     testReporter("ticks", "1")
-    assert(onlyPen.containsPoint(0.0, 2.0))
+    assert(containsPoint(onlyPen, 1.0, 2.0))
 
     testCommand("go")
     testReporter("count dogs", "2")
     testReporter("ticks", "2")
-    assert(onlyPen.containsPoint(1.0, 4.0))
+    assert(containsPoint(onlyPen, 2.0, 4.0))
 
     testCommand("tick")
-    assert(onlyPen.containsPoint(2.0, 4.0))
+    assert(containsPoint(onlyPen, 3.0, 4.0))
   }
 
   test("several ticks") { implicit fixture =>
@@ -46,32 +55,40 @@ class TestPlotModels extends FixtureSuite {
     open(theModel)
     testCommand("setup")
     testCommand("tick")
-    assert(onlyPen.containsPoint(0.0, 0.0))
+    assert(containsPoint(onlyPen, 0.0, 0.0))
+    assert(containsPoint(onlyPen, 1.0, 0.0))
 
     testCommand("tick")
-    assert(onlyPen.containsPoint(1.0, 0.0))
+    assert(containsPoint(onlyPen, 2.0, 0.0))
 
     testCommand("create-dogs 1")
     testCommand("tick")
-    assert(onlyPen.containsPoint(2.0, 2.0))
+    assert(containsPoint(onlyPen, 3.0, 2.0))
   }
 
   test("update-plots") { implicit fixture =>
     import fixture._
     open(theModel)
     testCommand("setup")
+    assertResult(1)(onlyPen.points.size)
+    assert(containsPoint(onlyPen, 0.0, 0.0))
     testCommand("update-plots")
-    assert(onlyPen.containsPoint(0.0, 0.0))
+    assertResult(2)(onlyPen.points.size)
+    assert(containsPoint(onlyPen, 1.0, 0.0))
 
     testCommand("update-plots")
-    assert(onlyPen.containsPoint(1.0, 0.0))
+    assertResult(3)(onlyPen.points.size)
+    assert(containsPoint(onlyPen, 2.0, 0.0))
 
     testCommand("create-dogs 1")
+    testReporter("count dogs", "1")
     testCommand("update-plots")
-    assert(onlyPen.containsPoint(2.0, 2.0))
+    assertResult(4)(onlyPen.points.size)
+    assert(containsPoint(onlyPen, 3.0, 2.0))
 
     testCommand("update-plots")
-    assert(onlyPen.containsPoint(3.0, 2.0))
+    assertResult(5)(onlyPen.points.size)
+    assert(containsPoint(onlyPen, 4.0, 2.0))
   }
 
   test("setup-plots") { implicit fixture =>
@@ -112,7 +129,7 @@ class TestPlotModels extends FixtureSuite {
     assert(onlyPen.points.size === 0)
 
     testCommand("tick")
-    assert(onlyPen.containsPoint(0.0, 0.0))
+    assert(containsPoint(onlyPen, 0.0, 0.0))
     assert(onlyPen.points.size === 1)
   }
 

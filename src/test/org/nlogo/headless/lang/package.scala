@@ -17,6 +17,9 @@ package org.nlogo.headless.lang
  * Fixture and FixtureSuite are also useful even if you don't use Finder, Parser, and LanguageTest;
  * several suites in this directory use Fixture/FixtureSuite directly, rather than reading tests
  * out of .txt files.
+ *
+ * If you want to make a model with widgets, ModelCreator lets you do that in code, instead
+ * of having to keep an actual .nlogo file around.
  */
 
 package object lang

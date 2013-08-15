@@ -4,7 +4,7 @@ package org.nlogo.headless
 package lang
 
 import org.nlogo.agent.BooleanConstraint
-import org.nlogo.api, api.ModelCreator._
+import org.nlogo.api, ModelCreator._
 
 class TestConstraintModels extends FixtureSuite {
 

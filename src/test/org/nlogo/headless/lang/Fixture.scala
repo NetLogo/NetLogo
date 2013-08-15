@@ -148,7 +148,7 @@ class Fixture(name: String) {
     runCommand(Command(command, api.AgentKind.Observer, result))
 
   // more convenience
-  def open(model: api.ModelCreator.Model) =
+  def open(model: ModelCreator.Model) =
     workspace.openFromSource(model.toString)
 
 }
