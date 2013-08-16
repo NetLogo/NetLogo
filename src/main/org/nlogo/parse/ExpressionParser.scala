@@ -620,6 +620,6 @@ object ExpressionParser {
       case l: LogoList => new _constlist(l)
       case s: String => new _conststring(s)
       case Nobody => new _nobody
-      case _ => throw new IllegalArgumentException(value.getClass.getName)
+      case _ => new _const(value)
     }
 }
