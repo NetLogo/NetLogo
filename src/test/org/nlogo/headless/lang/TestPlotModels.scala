@@ -13,9 +13,11 @@ class TestPlotModels extends FixtureSuite {
     pen.points.exists(p => p.x == x && p.y == y)
 
   def onlyPlot(implicit fixture: Fixture) =
-    fixture.workspace.plotManager.currentPlot
+    fixture.workspace.plotManager.plots match {
+      case Seq(plot) => plot }
   def onlyPen(implicit fixture: Fixture) =
-    fixture.workspace.plotManager.currentPlot.get.pens.head
+    onlyPlot.pens match {
+      case Seq(pen) => pen }
 
   val modelCode =
     """|breed [dogs dog]
@@ -29,12 +31,15 @@ class TestPlotModels extends FixtureSuite {
        |end""".stripMargin
   val theModel =
     Model(modelCode, widgets = List(
-      Plot(pens = Pens(Pen(name = "pen", updateCode = "plot count dogs * 2")))))
+      Plot(pens = Pens(Pen(updateCode = "plot count dogs * 2")))))
 
   test("plot on tick") { implicit fixture =>
     import fixture._
     open(theModel)
+    assertResult(1)(workspace.plotManager.plots.size)
+    assertResult(1)(onlyPlot.pens.size)
     testCommand("setup")
+    assertResult(1)(onlyPen.points.size)
     assert(containsPoint(onlyPen, 0.0, 0.0))
     testCommand("go")
     testReporter("count dogs", "1")
