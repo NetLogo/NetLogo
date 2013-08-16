@@ -24,6 +24,8 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
 
   def openFromMap(map: ModelReader.ModelMap) {
 
+    ws.plotManager.forgetAll() // forget the ones from initForTesting
+
     // get out if the model is opened. (WHY? - JC 10/27/09)
     if (ws.modelOpened) throw new IllegalStateException
     ws.modelOpened = true
