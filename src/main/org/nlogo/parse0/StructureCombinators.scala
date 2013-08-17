@@ -36,7 +36,15 @@ object StructureCombinators {
       case combinators.Success(declarations, _) =>
         Right(declarations)
       case combinators.NoSuccess(msg, rest) =>
-        Left((msg, rest.first))
+        val token =
+          if (rest.atEnd)
+            if (tokens.hasNext)
+              tokens.next()
+            else
+              Token.Eof
+          else
+            rest.first
+        Left((msg, token))
     }
   }
 }
@@ -107,7 +115,7 @@ extends scala.util.parsing.combinator.Parsers {
       identifier ~
       formals ~
       rep(nonKeyword) ~
-      keyword("END") ^^ {
+      (keyword("END") | failure("END expected")) ^^ {
         case to ~ name ~ names ~ body ~ end =>
           Procedure(name,
             to.value == "TO-REPORT", names,
@@ -172,9 +180,10 @@ extends scala.util.parsing.combinator.Parsers {
 
 /// Allows our combinators to take their input from a Seq.
 
-class SeqReader[T](xs: Seq[T], fn: T => Int)
-    extends scala.util.parsing.input.Reader[T] {
-  case class Pos(pos: Int) extends scala.util.parsing.input.Position {
+import scala.util.parsing.input
+
+class SeqReader[T](xs: Seq[T], fn: T => Int) extends input.Reader[T] {
+  case class Pos(pos: Int) extends input.Position {
     def column = pos
     def line = 0
     def lineContents = ""
@@ -182,5 +191,7 @@ class SeqReader[T](xs: Seq[T], fn: T => Int)
   def atEnd = xs.isEmpty
   def first = xs.head
   def rest = new SeqReader(xs.tail, fn)
-  def pos = Pos(fn(xs.head))
+  def pos =
+    if (atEnd) Pos(Int.MaxValue)
+    else Pos(fn(xs.head))
 }

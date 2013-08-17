@@ -232,4 +232,31 @@ class StructureParserTests extends FunSuite {
   test("task variable as agent variable") {
     testTaskVariableMisuse("turtles-own [?a]") }
 
+  test("missing close bracket in last declaration") {
+    val e = intercept[CompilerException] {
+      compile("turtles-own [")
+    }
+    assertResult("closing bracket expected")(e.getMessage.takeWhile(_ != ','))
+  }
+
+  // https://github.com/NetLogo/NetLogo/issues/414
+  test("missing end 1") {
+    val e = intercept[CompilerException] {
+      compile("to foo to bar")
+    }
+    assertResult("END expected")(e.getMessage.takeWhile(_ != ','))
+  }
+  test("missing end 2") {
+    val e = intercept[CompilerException] {
+      compile("to foo fd 1")
+    }
+    assertResult("END expected")(e.getMessage.takeWhile(_ != ','))
+  }
+  test("missing end 3") {
+    val e = intercept[CompilerException] {
+      compile("to foo")
+    }
+    assertResult("END expected")(e.getMessage.takeWhile(_ != ','))
+  }
+
 }
