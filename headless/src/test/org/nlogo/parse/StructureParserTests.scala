@@ -199,4 +199,25 @@ class StructureParserTests extends FunSuite {
   test("task variable as agent variable") {
     testTaskVariableMisuse("turtles-own [?a]") }
 
+  // https://github.com/NetLogo/NetLogo/issues/414
+  test("missing end 1") {
+    val e = intercept[CompilerException] {
+      compile("to foo to bar")
+    }
+    expectResult("END expected")(e.getMessage.takeWhile(_ != ','))
+  }
+  // comment out failing tests pending resolution of #414
+  // test("missing end 2") {
+  //   val e = intercept[CompilerException] {
+  //     compile("to foo fd 1")
+  //   }
+  //   expectResult("Last procedure doesn't end with END")(e.getMessage.takeWhile(_ != ','))
+  // }
+  // test("missing end 3") {
+  //   val e = intercept[CompilerException] {
+  //     compile("to foo")
+  //   }
+  //   expectResult("Last procedure doesn't end with END")(e.getMessage.takeWhile(_ != ','))
+  // }
+
 }
