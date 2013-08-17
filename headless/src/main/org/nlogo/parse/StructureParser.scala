@@ -112,7 +112,14 @@ class StructureParser(
           else oldResults,
           subprogram)
       case NoSuccess(msg, rest) =>
-        exception(msg, rest.first)
+        exception(msg,
+          if (rest.atEnd)
+            if (tokens.isEmpty)
+              Token.eof
+            else
+              tokens.last
+          else
+            rest.first)
     }
     // avoid leaking ThreadLocals due to some deprecated stuff in
     // Scala 2.10 that will be removed in Scala 2.11.  see
@@ -221,7 +228,7 @@ trait StructureCombinators
       identifier ~
       formals ~
       rep(nonKeyword) ~
-      keyword("END") ^^ {
+      (keyword("END") | failure("END expected")) ^^ {
         case to ~ name ~ names ~ body ~ end =>
           Procedure(name,
             to.value == "TO-REPORT", names,
@@ -500,9 +507,10 @@ trait ResultsBuilder extends StructureDeclarations {
 
 /// Allows our combinators to take their input from a Seq.
 
-class SeqReader[T](xs: Seq[T], fn: T => Int)
-    extends scala.util.parsing.input.Reader[T] {
-  case class Pos(pos: Int) extends scala.util.parsing.input.Position {
+import scala.util.parsing.input
+
+class SeqReader[T](xs: Seq[T], fn: T => Int) extends input.Reader[T] {
+  case class Pos(pos: Int) extends input.Position {
     def column = pos
     def line = 0
     def lineContents = ""
@@ -510,5 +518,7 @@ class SeqReader[T](xs: Seq[T], fn: T => Int)
   def atEnd = xs.isEmpty
   def first = xs.head
   def rest = new SeqReader(xs.tail, fn)
-  def pos = Pos(fn(xs.head))
+  def pos =
+    if (atEnd) input.NoPosition
+    else Pos(fn(xs.head))
 }
