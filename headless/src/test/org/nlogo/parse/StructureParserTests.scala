@@ -199,6 +199,13 @@ class StructureParserTests extends FunSuite {
   test("task variable as agent variable") {
     testTaskVariableMisuse("turtles-own [?a]") }
 
+  test("missing close bracket in last declaration") {
+    val e = intercept[CompilerException] {
+      compile("turtles-own [")
+    }
+    expectResult("closing bracket expected")(e.getMessage.takeWhile(_ != ','))
+  }
+
   // https://github.com/NetLogo/NetLogo/issues/414
   test("missing end 1") {
     val e = intercept[CompilerException] {
@@ -206,18 +213,17 @@ class StructureParserTests extends FunSuite {
     }
     expectResult("END expected")(e.getMessage.takeWhile(_ != ','))
   }
-  // comment out failing tests pending resolution of #414
-  // test("missing end 2") {
-  //   val e = intercept[CompilerException] {
-  //     compile("to foo fd 1")
-  //   }
-  //   expectResult("Last procedure doesn't end with END")(e.getMessage.takeWhile(_ != ','))
-  // }
-  // test("missing end 3") {
-  //   val e = intercept[CompilerException] {
-  //     compile("to foo")
-  //   }
-  //   expectResult("Last procedure doesn't end with END")(e.getMessage.takeWhile(_ != ','))
-  // }
+  test("missing end 2") {
+    val e = intercept[CompilerException] {
+      compile("to foo fd 1")
+    }
+    expectResult("END expected")(e.getMessage.takeWhile(_ != ','))
+  }
+  test("missing end 3") {
+    val e = intercept[CompilerException] {
+      compile("to foo")
+    }
+    expectResult("END expected")(e.getMessage.takeWhile(_ != ','))
+  }
 
 }
