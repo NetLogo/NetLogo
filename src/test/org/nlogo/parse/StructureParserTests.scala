@@ -276,4 +276,11 @@ class StructureParserTests extends FunSuite {
     }
     assertResult("closing bracket expected")(e.getMessage.takeWhile(_ != ','))
   }
+  test("declaration after procedure") {
+    val e = intercept[CompilerException] {
+      compile("to foo end globals []")
+    }
+    assertResult("TO or TO-REPORT expected")(e.getMessage.takeWhile(_ != ','))
+  }
+
 }

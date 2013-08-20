@@ -64,7 +64,7 @@ extends scala.util.parsing.combinator.Parsers {
   // top level entry point. output will be a Seq[Declaration]
   def program: Parser[Seq[Declaration]] =
     phrase(
-      rep(declaration) ~ rep(procedure) <~ (eof | failure("keyword expected"))) ^^ {
+      rep(declaration) ~ (procedures | noProcedures)) ^^ {
         case decs ~ procs =>
           decs ++ procs }
 
@@ -111,6 +111,12 @@ extends scala.util.parsing.combinator.Parsers {
     keyword("UNDIRECTED-LINK-BREED") ~! openBracket ~> identifier ~ identifier <~ closeBracket ^^ {
       case plural ~ singular =>
         Breed(plural, singular, isLinkBreed = true, isDirected = false) }
+
+  def procedures: Parser[Seq[Procedure]] =
+    rep1(procedure) <~ (eof | failure("TO or TO-REPORT expected"))
+
+  def noProcedures: Parser[Seq[Procedure]] =
+    eof ^^ { case _ => Seq() } | failure("keyword expected")
 
   def procedure: Parser[Procedure] =
     (keyword("TO") | keyword("TO-REPORT")) ~!
