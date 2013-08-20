@@ -31,7 +31,8 @@ class TestLiteralParser extends FunSuite with MockSuite {
 
   def toLiteralList(input: String, world: World = defaultWorld): LogoList = {
     val tokens = Parser.tokenizer.tokenize(input).map(parse0.Namer0)
-    Parser.literalParser(world, null).parseLiteralList(tokens.next(), tokens)
+    val (result, _) = Parser.literalParser(world, null).parseLiteralList(tokens.next(), tokens)
+    result
   }
 
   def testError(input: String, error: String, world: World = defaultWorld) {

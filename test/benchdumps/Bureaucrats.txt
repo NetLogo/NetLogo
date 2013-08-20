@@ -1690,7 +1690,7 @@ procedure COLORIZE:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L11
           RETURN
-[1]_asm_procedurecolorize_setpatchvariable_1 "set pcolor item n" Object => void
+[1]_asm_procedurecolorize_setpatchvariable_1 "set pcolor item n [83 54 45 25]" Object => void
       _item
         _asm_procedurecolorize_patchvariable_2 "n" => Object
               TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -1713,7 +1713,7 @@ procedure COLORIZE:[]{-TP-}:
               ATHROW
              L3
               ARETURN
-        _asm_procedurecolorize_constlist_3 "" => LogoList
+        _asm_procedurecolorize_constlist_3 "[83 54 45 25]" => LogoList
              L0
               ALOAD 0
               GETFIELD org/nlogo/prim/_asm_procedurecolorize_constlist_3.kept1_value : Lorg/nlogo/api/LogoList;
