@@ -18,6 +18,13 @@ class StructureParserTests extends FunSuite {
                         None, StructureResults.empty)
       .parse(false)
 
+  def expectError(source: String, error: String) {
+    val e = intercept[CompilerException] {
+      compile(source)
+    }
+    assertResult(error)(e.getMessage.takeWhile(_ != ','))
+  }
+
   test("empty") {
     val results = compile("")
     assert(results.procedures.isEmpty)
@@ -29,15 +36,6 @@ class StructureParserTests extends FunSuite {
       "links-own [END1 END2 COLOR LABEL LABEL-COLOR HIDDEN? BREED THICKNESS SHAPE TIE-MODE]\n" +
       "breeds \n" +
       "link-breeds \n")(results.program.dump)
-  }
-
-  test("missing procedure name") {  // ticket #1183
-    intercept[CompilerException] {
-      compile("to")
-    }
-    intercept[CompilerException] {
-      compile("to-report")
-    }
   }
 
   test("globals") {
@@ -155,75 +153,38 @@ class StructureParserTests extends FunSuite {
       "link-breeds \n")(results.program.dump)
   }
 
+  test("missing procedure name") {  // ticket #1183
+    expectError("to", "identifier expected")
+    expectError("to-report", "identifier expected") }
   test("missing open bracket after globals") {
-    val e = intercept[CompilerException] {
-      compile("globals schmobals")
-    }
-    assertResult("opening bracket expected")(e.getMessage.takeWhile(_ != ','))
-  }
-
+    expectError("globals schmobals", "opening bracket expected") }
   test("bad top level keyword") {
-    val e = intercept[CompilerException] {
-      compile("schmobals")
-    }
-    assertResult("keyword expected")(e.getMessage.takeWhile(_ != ','))
-  }
-
+    expectError("schmobals", "keyword expected") }
   test("missing close bracket after globals") {
-    val e = intercept[CompilerException] {
-      compile("globals [")
-    }
-    assertResult("closing bracket expected")(e.getMessage.takeWhile(_ != ','))
-  }
-
+    expectError("globals [", "closing bracket expected") }
   test("missing close bracket in globals") {
-    val e = intercept[CompilerException] {
-      compile("globals [g turtles-own [t]")
-    }
-    assertResult("closing bracket expected")(e.getMessage.takeWhile(_ != ','))
-  }
-
+    expectError("globals [g turtles-own [t]",
+      "closing bracket expected") }
   test("attempt primitive as variable") {
-    val e = intercept[CompilerException] {
-      compile("globals [turtle]")
-    }
-    assertResult("There is already a primitive reporter called TURTLE")(e.getMessage)
-  }
-
+    expectError("globals [turtle]",
+      "There is already a primitive reporter called TURTLE") }
   test("redeclaration of globals") {
-    val e = intercept[CompilerException] {
-      compile("globals [] globals []")
-    }
-    assertResult("Redeclaration of GLOBALS")(e.getMessage.takeWhile(_ != ','))
-  }
-
+    expectError("globals [] globals []",
+      "Redeclaration of GLOBALS") }
   test("redeclaration of turtles-own") {
-    val e = intercept[CompilerException] {
-      compile("turtles-own [] turtles-own []")
-    }
-    assertResult("Redeclaration of TURTLES-OWN")(e.getMessage.takeWhile(_ != ','))
-  }
-
+    expectError("turtles-own [] turtles-own []",
+      "Redeclaration of TURTLES-OWN") }
   test("redeclaration of breed-own") {
-    val ex = intercept[CompilerException] {
-      compile("breed [hunters hunter] hunters-own [fear] hunters-own [loathing]")
-    }
-    assertResult("Redeclaration of HUNTERS-OWN")(ex.getMessage.takeWhile(_ != ','))
-  }
-
+    expectError("breed [hunters hunter] hunters-own [fear] hunters-own [loathing]",
+      "Redeclaration of HUNTERS-OWN") }
   test("redeclaration of extensions") {
-    val e = intercept[CompilerException] {
-      compile("extensions [foo] extensions [bar]")
-    }
-    assertResult("Redeclaration of EXTENSIONS")(e.getMessage.takeWhile(_ != ','))
-  }
+    expectError("extensions [foo] extensions [bar]",
+      "Redeclaration of EXTENSIONS") }
 
   // https://github.com/NetLogo/NetLogo/issues/348
   def testTaskVariableMisuse(source: String) {
-    val e = intercept[CompilerException] { compile(source) }
-    val message =
-      "Names beginning with ? are reserved for use as task inputs"
-    assertResult(message)(e.getMessage)
+    expectError(source,
+      "Names beginning with ? are reserved for use as task inputs")
   }
   test("task variable as procedure name") {
     testTaskVariableMisuse("to ?z end") }
@@ -233,54 +194,29 @@ class StructureParserTests extends FunSuite {
     testTaskVariableMisuse("turtles-own [?a]") }
 
   test("missing close bracket in last declaration") {
-    val e = intercept[CompilerException] {
-      compile("turtles-own [")
-    }
-    assertResult("closing bracket expected")(e.getMessage.takeWhile(_ != ','))
-  }
-
+    expectError("turtles-own [",
+      "closing bracket expected") }
   // https://github.com/NetLogo/NetLogo/issues/414
   test("missing end 1") {
-    val e = intercept[CompilerException] {
-      compile("to foo to bar")
-    }
-    assertResult("END expected")(e.getMessage.takeWhile(_ != ','))
-  }
+    expectError("to foo to bar",
+      "END expected") }
   test("missing end 2") {
-    val e = intercept[CompilerException] {
-      compile("to foo fd 1")
-    }
-    assertResult("END expected")(e.getMessage.takeWhile(_ != ','))
-  }
+    expectError("to foo fd 1",
+      "END expected") }
   test("missing end 3") {
-    val e = intercept[CompilerException] {
-      compile("to foo")
-    }
-    assertResult("END expected")(e.getMessage.takeWhile(_ != ','))
-  }
+    expectError("to foo",
+      "END expected") }
   test("missing end 4") {
-    val e = intercept[CompilerException] {
-      compile("to foo [")
-    }
-    assertResult("closing bracket expected")(e.getMessage.takeWhile(_ != ','))
-  }
+    expectError("to foo [",
+      "closing bracket expected") }
   test("missing close bracket in formals 1") {
-    val e = intercept[CompilerException] {
-      compile("to foo [ end")
-    }
-    assertResult("closing bracket expected")(e.getMessage.takeWhile(_ != ','))
-  }
+    expectError("to foo [ end",
+      "closing bracket expected") }
   test("missing close bracket in formals 2") {
-    val e = intercept[CompilerException] {
-      compile("to foo [ to")
-    }
-    assertResult("closing bracket expected")(e.getMessage.takeWhile(_ != ','))
-  }
+    expectError("to foo [ to",
+      "closing bracket expected") }
   test("declaration after procedure") {
-    val e = intercept[CompilerException] {
-      compile("to foo end globals []")
-    }
-    assertResult("TO or TO-REPORT expected")(e.getMessage.takeWhile(_ != ','))
-  }
+    expectError("to foo end globals []",
+      "TO or TO-REPORT expected") }
 
 }
