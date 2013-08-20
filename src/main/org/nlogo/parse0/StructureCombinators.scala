@@ -55,9 +55,11 @@ extends scala.util.parsing.combinator.Parsers {
   // specify what kind of input we take
   override type Elem = Token
 
-  // wouldn't otherwise be necessary to use phrase() below, except that
-  // because of https://issues.scala-lang.org/browse/SI-4929 we'll
-  // leak a ThreadLocal if we don't - ST 1/3/13, 6/27/13
+  // wouldn't be strictly necessary to use phrase() below except that because of
+  // https://issues.scala-lang.org/browse/SI-4929 we'll leak a ThreadLocal if we don't. besides,
+  // using phrase() may help with error reporting since it adds logic that chooses between multiple
+  // possible failures to report by reporting the one that parsed the most input
+  // - ST 1/3/13, 6/27/13, 8/20/13
 
   // top level entry point. output will be a Seq[Declaration]
   def program: Parser[Seq[Declaration]] =
