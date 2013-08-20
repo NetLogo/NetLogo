@@ -121,21 +121,13 @@ extends scala.util.parsing.combinator.Parsers {
   def procedure: Parser[Procedure] =
     (keyword("TO") | keyword("TO-REPORT")) ~!
       identifier ~
-      formals ~
+      opt(identifierList) ~
       rep(nonKeyword) ~
       (keyword("END") | failure("END expected")) ^^ {
         case to ~ name ~ names ~ body ~ end =>
           Procedure(name,
-            to.value == "TO-REPORT", names,
+            to.value == "TO-REPORT", names.getOrElse(Seq()),
             to +: name.token +: body :+ end) }
-
-  def formals: Parser[Seq[Identifier]] =
-    opt(openBracket ~! commit(rep(identifier) <~ closeBracket)) ^^ {
-      case Some(_ ~ names) =>
-        names
-      case _ =>
-        Seq()
-    }
 
   /// helpers
 
@@ -157,10 +149,10 @@ extends scala.util.parsing.combinator.Parsers {
         Identifier(token.value.asInstanceOf[String], token)}
 
   def identifierList: Parser[Seq[Identifier]] =
-    openBracket ~> rep(identifier) <~ closeBracket
+    openBracket ~> commit(rep(identifier) <~ closeBracket)
 
   def stringList: Parser[Seq[Token]] =
-    openBracket ~> rep(string) <~ closeBracket
+    openBracket ~> commit(rep(string) <~ closeBracket)
 
   def string: Parser[Token] =
     acceptMatch("string", {
