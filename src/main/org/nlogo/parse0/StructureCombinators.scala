@@ -124,7 +124,7 @@ extends scala.util.parsing.combinator.Parsers {
             to +: name.token +: body :+ end) }
 
   def formals: Parser[Seq[Identifier]] =
-    opt(openBracket ~! rep(identifier) <~ closeBracket) ^^ {
+    opt(openBracket ~! commit(rep(identifier) <~ closeBracket)) ^^ {
       case Some(_ ~ names) =>
         names
       case _ =>

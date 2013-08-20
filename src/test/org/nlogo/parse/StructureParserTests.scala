@@ -258,5 +258,22 @@ class StructureParserTests extends FunSuite {
     }
     assertResult("END expected")(e.getMessage.takeWhile(_ != ','))
   }
-
+  test("missing end 4") {
+    val e = intercept[CompilerException] {
+      compile("to foo [")
+    }
+    assertResult("closing bracket expected")(e.getMessage.takeWhile(_ != ','))
+  }
+  test("missing close bracket in formals 1") {
+    val e = intercept[CompilerException] {
+      compile("to foo [ end")
+    }
+    assertResult("closing bracket expected")(e.getMessage.takeWhile(_ != ','))
+  }
+  test("missing close bracket in formals 2") {
+    val e = intercept[CompilerException] {
+      compile("to foo [ to")
+    }
+    assertResult("closing bracket expected")(e.getMessage.takeWhile(_ != ','))
+  }
 }
