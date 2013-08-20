@@ -289,7 +289,7 @@ trait StructureCombinators
   def nonKeyword: Parser[Token] =
     acceptMatch("?", {
       case token @ Token(_, tpe, _)
-          if (tpe != TokenType.KEYWORD) =>
+          if (tpe != TokenType.KEYWORD && tpe != TokenType.EOF) =>
         token })
 
 }
