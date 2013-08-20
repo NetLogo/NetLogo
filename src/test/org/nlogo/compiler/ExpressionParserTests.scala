@@ -295,7 +295,7 @@ class ExpressionParserTests extends FunSuite {
     testStartAndEnd("print [1 2 3]",
       "Statements 'print [1 2 3]' " +
       "Statement 'print [1 2 3]' " +
-      "ReporterApp out of bounds: (6,-10) ")
+      "ReporterApp '[1 2 3]' ")
   }
 
 }
