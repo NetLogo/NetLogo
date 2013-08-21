@@ -9,8 +9,8 @@ import org.nlogo.api,
 
 class TestAllStoredValues extends FixtureSuite {
   test("all agents included") { implicit fixture =>
+    import fixture.workspace.world
     fixture.testCommand("crt 10 [ create-links-with other turtles ]")
-    val world = fixture.workspace.world
     val vals = world.allStoredValues.toStream
     assertResult(1) {
       vals.collect{case o: Observer => o}.size
@@ -27,7 +27,7 @@ class TestAllStoredValues extends FixtureSuite {
     }
   }
   test("sample agent variable included") { implicit fixture =>
-    val world = fixture.workspace.world
+    import fixture.workspace.world
     assert(!world.allStoredValues.contains("foo"))
     fixture.testCommand("ask one-of patches [ set plabel \"foo\" ]")
     assert(world.allStoredValues.contains("foo"))
