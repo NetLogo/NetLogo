@@ -94,40 +94,43 @@ class TestStackTraces extends FixtureSuite {
       testCommand("reset-ticks")
       testCommand("set x 1")
       intercept[LogoException] { testCommand(prim) }
-      assert(trace === """boom!
-error while observer running __BOOM
-  called by """ + codeType.procName + """
-  called by """ + prim + """
-  called by procedure __EVALUATOR""")
+      val expected =
+        s"""|boom!
+            |error while observer running __BOOM
+            |  called by ${codeType.procName}
+            |  called by $prim
+            |  called by procedure __EVALUATOR""".stripMargin
+      assertResult(expected)(trace)
     }
   }
 
   def callToPrimIsNested_Test(prim: String, codeType: CodeType) {
-    val code = """
-  globals [x]
-  to go1 go2 end
-  to go2 go3 end
-  to go3 """ + prim + """ end
-  to-report zero report 0 end
-  to do-it if x = 1 [explode] end
-  to explode print 1 / zero end
-"""
+    val code = s"""|globals [x]
+                   |to go1 go2 end
+                   |to go2 go3 end
+                   |to go3 $prim end
+                   |to-report zero report 0 end
+                   |to do-it if x = 1 [explode] end
+                   |to explode print 1 / zero end
+                   |""".stripMargin
     test("nesting " + prim + " in " + codeType) { implicit fixture =>
       import fixture._
       open(Model(code, widgets = List(codeType.plot("do-it"))))
       testCommand("reset-ticks")
       testCommand("set x 1")
       intercept[LogoException] {testCommand("go1")}
-      assert(trace === """Division by zero.
-error while observer running /
-  called by procedure EXPLODE
-  called by procedure DO-IT
-  called by """ + codeType.procName + """
-  called by """ + prim + """
-  called by procedure GO3
-  called by procedure GO2
-  called by procedure GO1
-  called by procedure __EVALUATOR""")
+      val expected =
+        s"""|Division by zero.
+            |error while observer running /
+            |  called by procedure EXPLODE
+            |  called by procedure DO-IT
+            |  called by ${codeType.procName}
+            |  called by $prim
+            |  called by procedure GO3
+            |  called by procedure GO2
+            |  called by procedure GO1
+            |  called by procedure __EVALUATOR""".stripMargin
+      assertResult(expected)(trace)
     }
   }
 
@@ -141,12 +144,14 @@ error while observer running /
     import fixture._
     open(Model(code))
     intercept[LogoException] {testCommand("__ignore runresult \"foo\"")}
-    assert(trace === """boom!
-error while observer running __BOOM
-  called by procedure BAR
-  called by procedure FOO
-  called by runresult
-  called by procedure __EVALUATOR""")
+    val expected =
+      """|boom!
+         |error while observer running __BOOM
+         |  called by procedure BAR
+         |  called by procedure FOO
+         |  called by runresult
+         |  called by procedure __EVALUATOR""".stripMargin
+    assertResult(expected)(trace)
   }
 
   // ticket #1170
@@ -154,12 +159,14 @@ error while observer running __BOOM
     import fixture._
     open(Model(code))
     intercept[LogoException] {testCommand("run \"__ignore foo\"")}
-    assert(trace === """boom!
-error while observer running __BOOM
-  called by procedure BAR
-  called by procedure FOO
-  called by run
-  called by procedure __EVALUATOR""")
+    val expected =
+      """|boom!
+         |error while observer running __BOOM
+         |  called by procedure BAR
+         |  called by procedure FOO
+         |  called by run
+         |  called by procedure __EVALUATOR""".stripMargin
+    assertResult(expected)(trace)
   }
 
 }
