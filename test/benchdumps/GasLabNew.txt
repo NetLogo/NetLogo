@@ -524,7 +524,7 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[10]_asm_proceduresetup_setobservervariable_9 "set" Object => void
+[10]_asm_proceduresetup_setobservervariable_9 "set pressure-history []" Object => void
       _constlist:[] => LogoList
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3

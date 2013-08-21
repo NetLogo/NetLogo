@@ -166,14 +166,14 @@ class PlotManager(factory: LogoThunkFactory)
     currentPlot = oldCurrentPlot
   }
 
-  abstract case class CodeType(name:String){
+  sealed abstract trait CodeType {
     def selector(r:Results): CompilationResult
     def call(r:Results): Boolean = selector(r).right.toOption.map(_.call).getOrElse(false)
   }
-  object Update extends CodeType("update"){
+  object Update extends CodeType {
     def selector(r:Results) = r.update
   }
-  object Setup extends CodeType("setup"){
+  object Setup extends CodeType {
     def selector(r:Results) = r.setup
   }
 

@@ -568,11 +568,11 @@ class ExpressionParser(
       // extensionManager here because we only ever use this code when we are parsing literal lists
       // while compiling code.  When we're reading lists from export files and such we go straight
       // to the LiteralParser through Compiler.readFromString ev 3/20/08
-      val tmp = ExpressionParser.makeLiteralReporter(
-        new LiteralParser(null, null, null).parseLiteralList(tokens.next(), tokens))
-      val token = tokens.next()
-      tmp.token(new Token("", TokenType.Literal, null)(openBracket.start, token.end, token.filename))
-      new ReporterApp(tmp, openBracket.start, token.end, token.filename)
+      val (list, closeBracket) =
+        new LiteralParser(null, null, null).parseLiteralList(tokens.next(), tokens)
+      val tmp = ExpressionParser.makeLiteralReporter(list)
+      tmp.token(new Token("", TokenType.Literal, null)(openBracket.start, closeBracket.end, closeBracket.filename))
+      new ReporterApp(tmp, openBracket.start, closeBracket.end, closeBracket.filename)
     }
     // we weren't actually expecting a block at all!
     else exception("Expected " + TypeNames.aName(goalType) + " here, rather than a list or block.", block)
@@ -620,6 +620,6 @@ object ExpressionParser {
       case l: LogoList => new _constlist(l)
       case s: String => new _conststring(s)
       case Nobody => new _nobody
-      case _ => throw new IllegalArgumentException(value.getClass.getName)
+      case _ => new _const(value)
     }
 }

@@ -1,6 +1,7 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.headless
+package render
 
 import org.nlogo.util.MockSuite
 import org.nlogo.api.{ModelReader, Version, ViewSettings, Perspective}
@@ -8,7 +9,8 @@ import org.nlogo.shape.{LinkShape, VectorShape}
 import org.nlogo.util.WorldType
 
 trait TestUsingWorkspace extends MockSuite {
-    case class SimpleViewSettings(
+
+  case class SimpleViewSettings(
     fontSize: Int = 10,
     patchSize:Double = 13,
     viewWidth: Double = 33,

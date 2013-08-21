@@ -5,7 +5,7 @@ package org.nlogo.workspace
 import java.util.ArrayList
 import org.nlogo.agent.{Agent, AgentSet, Turtle, Patch, Link}
 import org.nlogo.api.{AgentKind, CompilerException, JobOwner, LogoException, ReporterLogoThunk, CommandLogoThunk}
-import org.nlogo.nvm.{ExclusiveJob, Activation, Context, Procedure, Reporter}
+import org.nlogo.nvm.{ExclusiveJob, Activation, CompilerFlags, Context, Procedure, Reporter}
 
 class Evaluator(workspace: AbstractWorkspace) {
 
@@ -24,11 +24,12 @@ class Evaluator(workspace: AbstractWorkspace) {
     workspace.jobManager.addReporterJobAndWait(owner, agents, procedure)
   }
 
-  def compileCommands(source: String, kind: AgentKind): Procedure =
-    invokeCompiler(source, None, true, kind)
+  def compileCommands(source: String, kind: AgentKind = AgentKind.Observer,
+      flags: CompilerFlags = CompilerFlags()): Procedure =
+    invokeCompiler(source, None, true, kind, flags)
 
-  def compileReporter(source: String) =
-    invokeCompiler(source, None, false, AgentKind.Observer)
+  def compileReporter(source: String, flags: CompilerFlags = CompilerFlags()) =
+    invokeCompiler(source, None, false, AgentKind.Observer, flags)
 
   /**
    * @return whether the code did a "stop" at the top level
@@ -171,11 +172,11 @@ class Evaluator(workspace: AbstractWorkspace) {
   }
 
 
-  private def invokeCompiler(source: String, displayName: Option[String], commands: Boolean, kind: AgentKind) = {
+  private def invokeCompiler(source: String, displayName: Option[String], commands: Boolean, kind: AgentKind, flags: CompilerFlags = CompilerFlags()) = {
     val wrappedSource = Evaluator.getHeader(kind, commands) + source + Evaluator.getFooter(commands)
     val results =
       workspace.compiler.compileMoreCode(wrappedSource, displayName, workspace.world.program,
-        workspace.procedures, workspace.getExtensionManager)
+        workspace.procedures, workspace.getExtensionManager, flags)
     results.head.init(workspace)
     results.head
   }

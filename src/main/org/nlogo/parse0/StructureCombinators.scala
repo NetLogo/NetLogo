@@ -36,7 +36,15 @@ object StructureCombinators {
       case combinators.Success(declarations, _) =>
         Right(declarations)
       case combinators.NoSuccess(msg, rest) =>
-        Left((msg, rest.first))
+        val token =
+          if (rest.atEnd)
+            if (tokens.hasNext)
+              tokens.next()
+            else
+              Token.Eof
+          else
+            rest.first
+        Left((msg, token))
     }
   }
 }
@@ -47,14 +55,16 @@ extends scala.util.parsing.combinator.Parsers {
   // specify what kind of input we take
   override type Elem = Token
 
-  // wouldn't otherwise be necessary to use phrase() below, except that
-  // because of https://issues.scala-lang.org/browse/SI-4929 we'll
-  // leak a ThreadLocal if we don't - ST 1/3/13, 6/27/13
+  // wouldn't be strictly necessary to use phrase() below except that because of
+  // https://issues.scala-lang.org/browse/SI-4929 we'll leak a ThreadLocal if we don't. besides,
+  // using phrase() may help with error reporting since it adds logic that chooses between multiple
+  // possible failures to report by reporting the one that parsed the most input
+  // - ST 1/3/13, 6/27/13, 8/20/13
 
   // top level entry point. output will be a Seq[Declaration]
   def program: Parser[Seq[Declaration]] =
     phrase(
-      rep(declaration) ~ rep(procedure) <~ (eof | failure("keyword expected"))) ^^ {
+      rep(declaration) ~ (procedures | noProcedures)) ^^ {
         case decs ~ procs =>
           decs ++ procs }
 
@@ -102,24 +112,22 @@ extends scala.util.parsing.combinator.Parsers {
       case plural ~ singular =>
         Breed(plural, singular, isLinkBreed = true, isDirected = false) }
 
+  def procedures: Parser[Seq[Procedure]] =
+    rep1(procedure) <~ (eof | failure("TO or TO-REPORT expected"))
+
+  def noProcedures: Parser[Seq[Procedure]] =
+    eof ^^ { case _ => Seq() } | failure("keyword expected")
+
   def procedure: Parser[Procedure] =
     (keyword("TO") | keyword("TO-REPORT")) ~!
       identifier ~
-      formals ~
+      opt(identifierList) ~
       rep(nonKeyword) ~
-      keyword("END") ^^ {
+      (keyword("END") | failure("END expected")) ^^ {
         case to ~ name ~ names ~ body ~ end =>
           Procedure(name,
-            to.value == "TO-REPORT", names,
+            to.value == "TO-REPORT", names.getOrElse(Seq()),
             to +: name.token +: body :+ end) }
-
-  def formals: Parser[Seq[Identifier]] =
-    opt(openBracket ~! rep(identifier) <~ closeBracket) ^^ {
-      case Some(_ ~ names) =>
-        names
-      case _ =>
-        Seq()
-    }
 
   /// helpers
 
@@ -141,10 +149,10 @@ extends scala.util.parsing.combinator.Parsers {
         Identifier(token.value.asInstanceOf[String], token)}
 
   def identifierList: Parser[Seq[Identifier]] =
-    openBracket ~> rep(identifier) <~ closeBracket
+    openBracket ~> commit(rep(identifier) <~ closeBracket)
 
   def stringList: Parser[Seq[Token]] =
-    openBracket ~> rep(string) <~ closeBracket
+    openBracket ~> commit(rep(string) <~ closeBracket)
 
   def string: Parser[Token] =
     acceptMatch("string", {
@@ -172,9 +180,10 @@ extends scala.util.parsing.combinator.Parsers {
 
 /// Allows our combinators to take their input from a Seq.
 
-class SeqReader[T](xs: Seq[T], fn: T => Int)
-    extends scala.util.parsing.input.Reader[T] {
-  case class Pos(pos: Int) extends scala.util.parsing.input.Position {
+import scala.util.parsing.input
+
+class SeqReader[T](xs: Seq[T], fn: T => Int) extends input.Reader[T] {
+  case class Pos(pos: Int) extends input.Position {
     def column = pos
     def line = 0
     def lineContents = ""
@@ -182,5 +191,7 @@ class SeqReader[T](xs: Seq[T], fn: T => Int)
   def atEnd = xs.isEmpty
   def first = xs.head
   def rest = new SeqReader(xs.tail, fn)
-  def pos = Pos(fn(xs.head))
+  def pos =
+    if (atEnd) Pos(Int.MaxValue)
+    else Pos(fn(xs.head))
 }

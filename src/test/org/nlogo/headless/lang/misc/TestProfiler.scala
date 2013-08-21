@@ -2,6 +2,7 @@
 
 package org.nlogo.headless
 package lang
+package misc
 
 // This stuff used to be in test/commands/ProfilerExtension.txt, but these tests tend
 // to intermittently fail if your computer is slow because it's doing something else,
@@ -24,12 +25,10 @@ class TestProfiler extends FixtureSuite with SlowTest {
     test("no generator") { implicit fixture =>
       import fixture._
       declare("extensions [profiler]")
-      testCommand(
-        "profiler:start",
-        error = Some(
-          "Extension exception: The profiler extension requires the NetLogo bytecode " +
-            "generator, which is currently turned off. See the org.nlogo.noGenerator " +
-            "property."))
+      testCommand("profiler:start", result = RuntimeError(
+        "Extension exception: The profiler extension requires the NetLogo bytecode " +
+          "generator, which is currently turned off. See the org.nlogo.noGenerator " +
+          "property."))
     }
   if(useGenerator)
     test("basics") { implicit fixture =>

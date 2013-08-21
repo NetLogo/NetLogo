@@ -12,7 +12,7 @@ package org.nlogo.api
 // makes test cases annoying to write.
 
 object Token {
-  val Eof = new Token("", TokenType.Eof, "")(0, 0, "")
+  val Eof = new Token("", TokenType.Eof, "")(Int.MaxValue, Int.MaxValue, "")
 }
 case class Token(text: String, tpe: TokenType, value: AnyRef)
                 (val start: Int, val end: Int, val filename: String) {
