@@ -2,6 +2,7 @@
 
 package org.nlogo.headless
 package lang
+package misc
 
 // NetLogo's job manager lacks a way to submit a job along with inputs; you can only submit no-input
 // procedures.  This lack is issue #413.  This file contains semi-official sample code for working

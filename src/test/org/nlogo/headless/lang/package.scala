@@ -12,14 +12,12 @@ package org.nlogo.headless.lang
  * Fixture can actually run a LanguageTest. The fixture encapsulates all the messy details of
  * interacting with HeadlessWorkspace, including setup and teardown.
  *
- * Suites that need exactly one Fixture per test may extend FixtureSuite.
+ * Suites that need exactly one Fixture per test may extend FixtureSuite.  Fixture and FixtureSuite
+ * are also useful even if you don't use Finder, Parser, and LanguageTest.  The tests in the misc
+ * subirectory use Fixture/FixtureSuite directly, rather than reading tests out of .txt files.  Some
+ * of them also use ModelCreator, which lets you make a model with widgets in code, instead of
+ * having to keep an actual .nlogo file around.
  *
- * Fixture and FixtureSuite are also useful even if you don't use Finder, Parser, and LanguageTest;
- * several suites in this directory use Fixture/FixtureSuite directly, rather than reading tests
- * out of .txt files.
- *
- * If you want to make a model with widgets, ModelCreator lets you do that in code, instead
- * of having to keep an actual .nlogo file around.
  */
 
 package object lang

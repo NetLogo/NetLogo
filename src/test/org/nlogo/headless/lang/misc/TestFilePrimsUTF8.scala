@@ -2,6 +2,7 @@
 
 package org.nlogo.headless
 package lang
+package misc
 
 // this test is modeled after info found in:
 // http://download.oracle.com/javase/tutorial/i18n/text/string.html

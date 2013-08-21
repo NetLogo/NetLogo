@@ -2,6 +2,7 @@
 
 package org.nlogo.headless
 package lang
+package misc
 
 // This stuff used to be in test/commands/ProfilerExtension.txt, but these tests tend
 // to intermittently fail if your computer is slow because it's doing something else,

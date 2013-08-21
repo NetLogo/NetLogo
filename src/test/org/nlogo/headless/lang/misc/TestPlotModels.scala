@@ -2,6 +2,7 @@
 
 package org.nlogo.headless
 package lang
+package misc
 
 import org.nlogo.plot.{ PlotPoint, PlotPen }
 import ModelCreator._
