@@ -10,7 +10,7 @@ import org.nlogo.util.SlowTest
  * An example of using TestParallelModels
  * This runs gas lab gas in a box in parallel using 10 threads
  */
-class TestGasLabInParallel extends TestParallelModels with SlowTest {
+class TestGasLabInParallel extends ParallelSuite with SlowTest {
 
   val path = "models/Sample Models/Chemistry & Physics/GasLab/GasLab Gas in a Box.nlogo"
 
