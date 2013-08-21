@@ -38,24 +38,22 @@ class TestFilePrimsUTF8 extends FixtureSuite {
                 |end
     """.stripMargin
 
+  val expected = "A" + "\u00ea" + "\u00f1" + "\u00fc" + "C"
+
   test("file-read") { implicit fixture =>
-    fixture.declare(code)
-    val utfStringIn =
-      fixture.workspace.report(
-        """read-string "utf8-file.txt"""")
-    assert(utfStringIn === new String("A" + "\u00ea" + "\u00f1" + "\u00fc" + "C"))
-    fixture.testCommand(s"""set utf-string "${utfStringIn.toString}"""")
-    fixture.testCommand("write-out")
-    val utfStringReadInAfterWriting =
-      fixture.workspace.report(
-        """read-string "utf8-file-written-by-test.txt"""")
-    assert(utfStringIn === utfStringReadInAfterWriting)
+    import fixture._
+    declare(code)
+    testReporter("""read-string "utf8-file.txt"""", '"' + expected + '"')
+    testCommand(s"""set utf-string "$expected"""")
+    testCommand("write-out")
+    testReporter("""read-string "utf8-file-written-by-test.txt"""",
+      '"' + expected + '"')
   }
 
   test("file-read-line") { implicit fixture =>
-    fixture.declare(code)
-    val utfStringIn =
-      fixture.workspace.report("""read-line "utf8-file.txt"""").toString
-    assert(utfStringIn === new String(" \"A" + "\u00ea" + "\u00f1" + "\u00fc" + "C\""))
+    import fixture._
+    declare(code)
+    testReporter("""read-line "utf8-file.txt"""",
+      "\" \\\"" + expected + "\\\"\"")
   }
 }
