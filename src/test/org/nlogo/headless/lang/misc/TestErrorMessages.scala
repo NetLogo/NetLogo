@@ -19,6 +19,7 @@ class TestErrorMessages extends FixtureSuite {
 
   test("perspectiveChangeWithOf") { fixture =>
     import fixture._
+    declare("breed [frogs frog] frogs-own [age spots]")
     testCommand(
       "create-frogs 3 [ set spots turtle ((who + 1) mod count turtles) ]")
     testCommand(
@@ -38,9 +39,10 @@ class TestErrorMessages extends FixtureSuite {
 
   test("argumentTypeException") { fixture =>
     import fixture._
-    testCommand("set glob1 [1.4]")
+    declare("globals [g]")
+    testCommand("set g [1.4]")
     val ex = intercept[nvm.ArgumentTypeException] {
-      testCommand("__ignore 0 < position 5 item 0 glob1") }
+      testCommand("__ignore 0 < position 5 item 0 g") }
     val message =
       "POSITION expected input to be a string or list but got the number 1.4 instead."
     assertResult(message)(ex.getMessage)

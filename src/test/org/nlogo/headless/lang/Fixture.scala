@@ -34,9 +34,8 @@ class Fixture(name: String) {
 
   val workspace = HeadlessWorkspace.newInstance
   workspace.silent = true
-  workspace.initForTesting(
-    new api.WorldDimensions(-5, 5, -5, 5),
-    HeadlessWorkspace.TestDeclarations)
+  InitForTesting(workspace,
+    new api.WorldDimensions(-5, 5, -5, 5))
   // the default error handler just spits something to stdout or stderr or somewhere.
   // we want to fail hard. - ST 7/21/10
   workspace.importerErrorHandler =

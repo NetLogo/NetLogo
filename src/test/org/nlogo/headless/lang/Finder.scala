@@ -52,7 +52,7 @@ trait Finder extends FunSuite with SlowTest {
         Fixture.withFixture(s"${t.fullName} ($mode)"){
           fixture =>
             val nonDecls = t.entries.filterNot(_.isInstanceOf[Declaration])
-            fixture.declare(HeadlessWorkspace.TestDeclarations +
+            fixture.declare(StandardDeclarations +
               t.entries.collect{
                 case d: Declaration => d.source}.mkString("\n"))
             nonDecls.foreach{
@@ -94,6 +94,20 @@ trait Finder extends FunSuite with SlowTest {
         !useGenerator
       else true
     }
+  val StandardDeclarations =
+    """|globals [glob1 glob2 glob3 ]
+       |breed [mice mouse]
+       |breed [frogs frog]
+       |breed [nodes node]
+       |directed-link-breed [directed-links directed-link]
+       |undirected-link-breed [undirected-links undirected-link]
+       |turtles-own [tvar]
+       |patches-own [pvar]
+       |mice-own [age fur]
+       |frogs-own [age spots]
+       |directed-links-own [lvar]
+       |undirected-links-own [weight]
+       |""".stripMargin
 }
 
 case class TxtsInDir(dir: String) extends Iterable[File] {

@@ -35,20 +35,20 @@ with OneInstancePerTest with BeforeAndAfterEach {
 
   def runExperiment(minX: Int, maxX: Int, minY: Int, maxY: Int, declarations: String, name: String) = {
     val workspace = newWorkspace()
-    workspace.initForTesting(minX, maxX, minY, maxY, declarations)
+    InitForTesting(workspace, minX, maxX, minY, maxY, declarations)
     run("test/lab/" + name)(() => workspace, () => newWorker(name))
     workspace
   }
   def runExperiment(worldSize: Int, declarations: String, name: String) = {
     val workspace = newWorkspace()
-    workspace.initForTesting(worldSize, declarations)
+    InitForTesting(workspace, worldSize, declarations)
     run("test/lab/" + name)(() => workspace, () => newWorker(name))
     workspace
   }
   def runParallelExperiment(name: String, declarations: String = "") {
     def workspace = {
       val w = newWorkspace()
-      w.initForTesting(0, declarations)
+      InitForTesting(w, 0, declarations)
       w
     }
     // only get spreadsheet results, since parallel table results are in scrambled order - ST 3/4/09
@@ -135,7 +135,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
   }
   test("CarryoverBetweenRuns") {
     val workspace = newWorkspace()
-    workspace.initForTesting(0, "globals [foo]")
+    InitForTesting(workspace, 0, "globals [foo]")
     // no setup commands, so foo doesn't get reset
     newWorker("testCarryover")
       .run(workspace, () => workspace, 1)
@@ -248,7 +248,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
   */
   test("dontRunMetricsIfNoListener") {
     val workspace = newWorkspace()
-    workspace.initForTesting(0)
+    InitForTesting(workspace, 0)
     newWorker("metricGoBoom")
       .run(workspace, () => workspace, 1)
     // with no output being generated, the metrics shouldn't be run at all,

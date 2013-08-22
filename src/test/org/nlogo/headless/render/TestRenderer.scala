@@ -61,7 +61,7 @@ class TestRenderer extends AbstractTestRenderer {
   }
 
   testUsingWorkspace("More links", radius=16){ workspace: HeadlessWorkspace =>
-    workspace.command("create-nodes 2 [ ht setxy ((who - 1) * 5) 0 ] ask node 0 [ create-link-with node 1 ]")
+    workspace.command("create-turtles 2 [ ht setxy ((who - 1) * 5) 0 ] ask turtle 0 [ create-link-with turtle 1 ]")
     val g = new MockGraphics(this)
     workspace.renderer.paint(g,
       SimpleViewSettings(patchSize=61.285714285714285, viewOffsetX=13,viewOffsetY= -13, renderPerspective=true, perspective=Perspective.Follow))

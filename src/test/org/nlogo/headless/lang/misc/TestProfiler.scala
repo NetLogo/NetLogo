@@ -168,7 +168,7 @@ class TestProfiler extends FixtureSuite with SlowTest {
   // extensions, so we put it here because it's a SlowTest - ST 1/19/12
   test("isReporter on extension prims") { implicit fixture =>
     import fixture._
-    workspace.initForTesting(5, "extensions [profiler]")
+    InitForTesting(workspace, 5, "extensions [profiler]")
     assertResult(false) { workspace.isReporter("profiler:start") }
     assertResult(true) { workspace.isReporter("profiler:report") }
     assertResult(false) { workspace.isReporter("profiler:ghjfgjhkfhgjk") }
