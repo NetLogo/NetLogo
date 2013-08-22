@@ -3,10 +3,9 @@
 package org.nlogo.headless
 package render
 
-import org.nlogo.util.MockSuite
-import org.nlogo.api.{ModelReader, Version, ViewSettings, Perspective}
-import org.nlogo.shape.{LinkShape, VectorShape}
-import org.nlogo.util.WorldType
+import org.nlogo.api
+import org.nlogo.shape.{ LinkShape, VectorShape }
+import org.nlogo.util.{ MockSuite, WorldType }
 
 trait TestUsingWorkspace extends MockSuite {
 
@@ -19,7 +18,7 @@ trait TestUsingWorkspace extends MockSuite {
     viewOffsetY: Double = 0,
     drawSpotlight: Boolean = false,
     renderPerspective: Boolean = false,
-    perspective: Perspective = Perspective.Observe) extends ViewSettings
+    perspective: api.Perspective = api.Perspective.Observe) extends api.ViewSettings
 
   def testUsingWorkspace(testName: String, radius: Int = 5,
                          worldType: WorldType = WorldType.Torus)
@@ -42,14 +41,14 @@ trait TestUsingWorkspace extends MockSuite {
     val workspace: HeadlessWorkspace = HeadlessWorkspace.newInstance
     workspace.silent = true
     try {
-      InitForTesting(workspace, -radius, radius, -radius, radius)
+      InitForTesting(workspace, api.WorldDimensions.square(radius))
       workspace.changeTopology(worldType.xWrap, worldType.yWrap)
       workspace.world.turtleShapeList.replaceShapes(
         VectorShape.parseShapes(
-          ModelReader.defaultShapes.toArray, Version.version))
+          api.ModelReader.defaultShapes.toArray, api.Version.version))
       workspace.world.linkShapeList.replaceShapes(
         LinkShape.parseShapes(
-          ModelReader.defaultLinkShapes.toArray, Version.version))
+          api.ModelReader.defaultLinkShapes.toArray, api.Version.version))
       f(workspace)
     }
     finally {workspace.dispose()}

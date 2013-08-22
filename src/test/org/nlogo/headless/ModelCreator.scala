@@ -1,7 +1,8 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.headless
-package lang
+
+import org.nlogo.api
 
 object ModelCreator {
 
@@ -12,18 +13,22 @@ object ModelCreator {
                             |0
                             |0
                             |0
-                            |10
-                            |10
-                            |1.0
+                            |<<MAX-PXCOR-OR-MINUS-ONE>>
+                            |<<MAX-PYCOR-OR-MINUS-ONE>>
+                            |12.0
                             |0
                             |10
                             |1
                             |1
                             |1
-                            |-16
-                            |16
-                            |-16
-                            |16
+                            |0
+                            |1
+                            |1
+                            |1
+                            |<<MIN-PXCOR>>
+                            |<<MAX-PXCOR>>
+                            |<<MIN-PYCOR>>
+                            |<<MAX-PYCOR>>
                             |
                             |<<SLIDER SECTION>>
                             |<<SWITCH SECTION>>
@@ -33,11 +38,16 @@ object ModelCreator {
                             |
                             |@#$#@#$#@
                             |@#$#@#$#@
+                            |<<TURTLE SHAPES SECTION>>
                             |@#$#@#$#@
                             |NetLogo 5.0
                             |@#$#@#$#@
                             |<<PREVIEW SECTION>>
                             |@#$#@#$#@
+                            |@#$#@#$#@
+                            |@#$#@#$#@
+                            |@#$#@#$#@
+                            |<<LINK SHAPES SECTION>>
                             |@#$#@#$#@""".stripMargin
 
   //
@@ -47,22 +57,33 @@ object ModelCreator {
   // a can have N widgets. plots, sliders, etc are widgets.
   trait Widget
 
-  case class Model(code: String = "", previewCode: String = "", widgets: List[Widget] = Nil) {
+  case class Model(code: String = "", previewCode: String = "", widgets: List[Widget] = Nil, dimensions: api.WorldDimensions = api.WorldDimensions.square(16)) {
     val sliders = widgets.filter(_.isInstanceOf[Slider])
     val switches = widgets.filter(_.isInstanceOf[Switch])
     val choosers = widgets.filter(_.isInstanceOf[Chooser])
     val plots = widgets.filter(_.isInstanceOf[Plot])
     val inputBoxes = widgets.filter(_.isInstanceOf[InputBox[_]])
 
-    override def toString = {
+    override def toString =
       template.replace("<<CODE SECTION>>", code).
                replace("<<SLIDER SECTION>>\n",  sliders.mkString("\n\n") + "\n").
                replace("<<CHOOSER SECTION>>\n", choosers.mkString("\n\n") + "\n").
                replace("<<SWITCH SECTION>>\n",  switches.mkString("\n\n") + "\n").
                replace("<<INPUTBOX SECTION>>\n",  inputBoxes.mkString("\n\n") + "\n").
                replace("<<PLOT SECTION>>\n",    plots.mkString("\n\n") + "\n").
-               replace("<<PREVIEW SECTION>>", previewCode)
-    }
+               replace("<<PREVIEW SECTION>>", previewCode).
+               replace("<<TURTLE SHAPES SECTION>>", api.ModelReader.defaultShapes.mkString("\n")).
+               replace("<<LINK SHAPES SECTION>>", api.ModelReader.defaultLinkShapes.mkString("\n")).
+               replace("<<MAX-PXCOR-OR-MINUS-ONE>>",
+                 (if (dimensions.minPxcor == -dimensions.maxPxcor)
+                    dimensions.maxPxcor else -1).toString).
+               replace("<<MAX-PYCOR-OR-MINUS-ONE>>",
+                 (if (dimensions.minPycor == -dimensions.maxPycor)
+                    dimensions.maxPycor else -1).toString).
+               replace("<<MIN-PXCOR>>", dimensions.minPxcor.toString).
+               replace("<<MAX-PXCOR>>", dimensions.maxPxcor.toString).
+               replace("<<MIN-PYCOR>>", dimensions.minPycor.toString).
+               replace("<<MAX-PYCOR>>", dimensions.maxPycor.toString)
   }
 
   val counter = Iterator.from(0)
@@ -120,7 +141,7 @@ object ModelCreator {
   //
 
   case class Chooser(name:String = "Chooser" + counter.next, choices:List[Any] = Nil, index:Int = 0) extends Widget {
-    def dump(o:Any) = org.nlogo.api.Dump.logoObject(org.nlogo.api.ScalaConversions.toLogoObject(o), true, false)
+    def dump(o:Any) = api.Dump.logoObject(api.ScalaConversions.toLogoObject(o), true, false)
     override def toString =
       "CHOOSER\n5\n5\n5\n5\n" + name + "\n" + name + "\n" + choices.map(dump).mkString(" ") + "\n" + index + "\n"
   }

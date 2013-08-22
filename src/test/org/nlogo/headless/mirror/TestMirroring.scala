@@ -52,7 +52,7 @@ class TestMirroring extends FunSuite {
   test("init") {
     withWorkspace { (ws, mirrorables) =>
 
-      InitForTesting(ws, 1)
+      InitForTesting(ws, api.WorldDimensions.square(1))
       val (m0, u0) = diffs(Map(), mirrorables())
       // 9 patches + world + observer = 11 objects, 11 births
       assertResult((11, (11, 0, 0))) { (m0.size, sizes(u0)) }
@@ -101,7 +101,7 @@ class TestMirroring extends FunSuite {
         "patches-own [pfoo] " +
           "turtles-own [tfoo] " +
           "links-own   [lfoo]"
-      InitForTesting(ws, 1, declarations)
+      InitForTesting(ws, api.WorldDimensions.square(1), declarations)
       ws.command("create-turtles 3 [ create-links-with other turtles ]")
       val (m0, u0) = diffs(Map(), mirrorables())
       // 9 patches + 3 turtles + 3 links + world + observer = 17 objects
@@ -119,7 +119,7 @@ class TestMirroring extends FunSuite {
 
   test("merge") {
     withWorkspace { (ws, mirrorables) =>
-      InitForTesting(ws, 1)
+      InitForTesting(ws, api.WorldDimensions.square(1))
       val (m0, u0) = diffs(Map(), mirrorables())
       var state: State = Mirroring.merge(Map(), u0)
       checkAllAgents(ws, m0)
@@ -150,7 +150,7 @@ class TestMirroring extends FunSuite {
 
   test("tick counter") {
     withWorkspace { (ws, mirrorables) =>
-      InitForTesting(ws, 0)
+      InitForTesting(ws, api.WorldDimensions.square(0))
       val (m0, u0) = diffs(Map(), mirrorables())
       val state: State = Mirroring.merge(Map(), u0)
       // 1 patch + world + observer = 3 objects

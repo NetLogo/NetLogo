@@ -88,7 +88,9 @@ with org.nlogo.workspace.WorldLoaderInterface {
   /**
    * Has a model been opened in this workspace?
    */
-  var modelOpened = false
+  private[this] var _modelOpened = false
+  def modelOpened = _modelOpened
+  def setModelOpened() { _modelOpened = true }
 
   val outputAreaBuffer = new StringBuilder
 

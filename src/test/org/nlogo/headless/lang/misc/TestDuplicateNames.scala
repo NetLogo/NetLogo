@@ -14,17 +14,17 @@ import org.nlogo.util.SlowTest  // depends on array extension
 class TestDuplicateNames extends FixtureSuite with SlowTest {
 
   def testBadName(name: String, error: String, declarations: String = "") {
-    test("bad name: " + name) { fixture =>
-      import fixture._
-      def check(source: String) {
+    def check(source: String, note: String) {
+      test(s"$name - $note") { fixture =>
+        import fixture._
         val ex = intercept[api.CompilerException] {
           declare(source)
         }
         assertResult(error)(ex.getMessage)
       }
-      check(s"$declarations\nto $name end")
-      check(s"$declarations\nto foo [$name] end")
     }
+    check(s"$declarations\nto $name end", "as procedure name")
+    check(s"$declarations\nto foo [$name] end", "as input name")
   }
 
   testBadName("fd",

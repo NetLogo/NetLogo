@@ -34,8 +34,7 @@ class Fixture(name: String) {
 
   val workspace = HeadlessWorkspace.newInstance
   workspace.silent = true
-  InitForTesting(workspace,
-    new api.WorldDimensions(-5, 5, -5, 5))
+
   // the default error handler just spits something to stdout or stderr or somewhere.
   // we want to fail hard. - ST 7/21/10
   workspace.importerErrorHandler =
@@ -52,19 +51,27 @@ class Fixture(name: String) {
     Femto.scalaSingleton("org.nlogo.compile.Compiler")
 
   def declare(source: String) {
-    val results =
-      compiler.compileProgram(source, api.Program.empty,
-        workspace.getExtensionManager)
-    workspace.procedures = results.proceduresMap
-    workspace.world.program(results.program)
-    workspace.init()
-    workspace.world.realloc()
+    workspace.openFromSource(
+      ModelCreator.Model(
+        code = source,
+        dimensions = api.WorldDimensions.square(5),
+        widgets = StandardWidgets
+      ).toString)
+  }
+
+  // better confined to Finder? - ST 8/22/13
+  val StandardWidgets = {
+    import ModelCreator.{ Plot, Pens, Pen }
+    List(
+      Plot(name = "plot1", pens = Pens(Pen(name = "pen1"), Pen(name = "pen2"))),
+      Plot(name = "plot2", pens = Pens(Pen(name = "pen1"), Pen(name = "pen2"))))
   }
 
   // tempted to DRY runReporter and runCommand together since they're so similar, but refraining
   // since there are many little differences, too - ST 8/15/13
 
   def runReporter(reporter: Reporter, mode: TestMode = NormalMode) {
+    require(workspace.modelOpened)
     try {
       workspace.clearLastLogoException()
       val wrappedReporter = mode match {
@@ -98,6 +105,7 @@ class Fixture(name: String) {
   }
 
   def runCommand(command: Command, mode: TestMode = NormalMode) {
+    require(workspace.modelOpened)
     try {
       workspace.clearLastLogoException()
       val wrappedCommand = mode match {

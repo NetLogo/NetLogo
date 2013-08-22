@@ -10,6 +10,7 @@ import org.nlogo.api,
 class TestAllStoredValues extends FixtureSuite {
   test("all agents included") { implicit fixture =>
     import fixture.workspace.world
+    fixture.declare("")
     fixture.testCommand("crt 10 [ create-links-with other turtles ]")
     val vals = world.allStoredValues.toStream
     assertResult(1) {
@@ -28,11 +29,13 @@ class TestAllStoredValues extends FixtureSuite {
   }
   test("sample agent variable included") { implicit fixture =>
     import fixture.workspace.world
+    fixture.declare("")
     assert(!world.allStoredValues.contains("foo"))
     fixture.testCommand("ask one-of patches [ set plabel \"foo\" ]")
     assert(world.allStoredValues.contains("foo"))
   }
   test("inside nested list") { implicit fixture =>
+    fixture.declare("")
     fixture.testCommand("ask one-of patches [ set plabel [[[[\"foo\"]]]] ]")
     val vals = fixture.workspace.world.allStoredValues.toStream
     assertResult(4) {

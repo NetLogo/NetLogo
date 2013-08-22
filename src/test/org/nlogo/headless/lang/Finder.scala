@@ -52,9 +52,12 @@ trait Finder extends FunSuite with SlowTest {
         Fixture.withFixture(s"${t.fullName} ($mode)"){
           fixture =>
             val nonDecls = t.entries.filterNot(_.isInstanceOf[Declaration])
-            fixture.declare(StandardDeclarations +
-              t.entries.collect{
-                case d: Declaration => d.source}.mkString("\n"))
+            if (nonDecls.forall(!_.isInstanceOf[Open]))
+              fixture.declare(StandardDeclarations +
+                t.entries.collect{
+                  case d: Declaration => d.source}.mkString("\n"))
+            else
+              assert(t.entries.forall(!_.isInstanceOf[Declaration]))
             nonDecls.foreach{
               case Open(path) =>
                 fixture.workspace.open(path)
