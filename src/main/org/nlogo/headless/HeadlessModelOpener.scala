@@ -26,7 +26,6 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
 
     ws.plotManager.forgetAll() // forget the ones from initForTesting
 
-    // get out if the model is opened. (WHY? - JC 10/27/09)
     require(!ws.modelOpened, "HeadlessWorkspace can only open one model")
     ws.setModelOpened()
 
