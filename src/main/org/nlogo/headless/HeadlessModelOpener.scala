@@ -24,8 +24,6 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
 
   def openFromMap(map: ModelReader.ModelMap) {
 
-    ws.plotManager.forgetAll() // forget the ones from initForTesting
-
     require(!ws.modelOpened, "HeadlessWorkspace can only open one model")
     ws.setModelOpened()
 
