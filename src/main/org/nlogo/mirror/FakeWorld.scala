@@ -263,7 +263,6 @@ class FakeWorld(state: State) extends api.World {
   def auxRNG: util.MersenneTwisterFast = unsupported
   def mainRNG: util.MersenneTwisterFast = unsupported
   def equalDimensions(d: api.WorldDimensions): Boolean = unsupported
-  def setDimensionVariable(variableName: String, value: Int, d: api.WorldDimensions): api.WorldDimensions = unsupported
   def isDimensionVariable(variableName: String): Boolean = unsupported
   def getDimensions: api.WorldDimensions = unsupported
   def realloc(): Unit = unsupported

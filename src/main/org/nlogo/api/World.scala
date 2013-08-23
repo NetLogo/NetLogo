@@ -55,8 +55,6 @@ trait World {
   def realloc()
   def getDimensions: WorldDimensions
   def isDimensionVariable(variableName: String): Boolean
-  @throws(classOf[WorldDimensionException])
-  def setDimensionVariable(variableName: String, value: Int, d: WorldDimensions): WorldDimensions
   def equalDimensions(d: WorldDimensions): Boolean
   def mainRNG: MersenneTwisterFast
   def auxRNG: MersenneTwisterFast
