@@ -51,12 +51,11 @@ class Fixture(name: String) {
     Femto.scalaSingleton("org.nlogo.compile.Compiler")
 
   def declare(source: String) {
-    workspace.openString(
-      ModelCreator.Model(
-        code = source,
-        dimensions = api.WorldDimensions.square(5),
-        widgets = StandardWidgets
-      ).toString)
+    ModelCreator.open(
+      workspace,
+      dimensions = api.WorldDimensions.square(5),
+      source = source,
+      widgets = StandardWidgets)
   }
 
   // better confined to Finder? - ST 8/22/13

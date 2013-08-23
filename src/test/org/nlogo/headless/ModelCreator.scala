@@ -6,6 +6,12 @@ import org.nlogo.api
 
 object ModelCreator {
 
+  def open(ws: HeadlessWorkspace, dimensions: api.WorldDimensions, source: String = "", widgets: List[Widget] = Nil) {
+    ws.openString(
+      Model(code = source, dimensions = dimensions, widgets = widgets)
+        .toString)
+  }
+
   private val template = """|<<CODE SECTION>>
                             |@#$#@#$#@
                             |GRAPHICS-WINDOW
