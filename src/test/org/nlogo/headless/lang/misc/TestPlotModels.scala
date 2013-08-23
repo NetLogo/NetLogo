@@ -249,7 +249,7 @@ class TestPlotModels extends FixtureSuite {
 
   def testCompileError(model: Model)(f: Throwable => Unit)(implicit fixture: Fixture) = {
     val ex = intercept[Throwable] {
-      fixture.workspace.openFromSource(model.toString)
+      fixture.workspace.openString(model.toString)
     }
     f(ex)
   }

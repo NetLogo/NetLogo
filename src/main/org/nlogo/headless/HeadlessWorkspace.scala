@@ -382,24 +382,15 @@ with org.nlogo.workspace.WorldLoaderInterface {
   }
 
   /**
-   * Opens a model stored in a string
-   *
-   * @param modelContents
-   */
-  override def openString(modelContents: String) {
-    fileManager.handleModelChange()
-    new HeadlessModelOpener(this).openFromMap(ModelReader.parseModel(modelContents))
-  }
-
-  /**
    * Opens a model stored in a string.
    * Can only be called once per instance of HeadlessWorkspace
    *
    * @param source The complete model, including widgets and so forth,
    *               in the same format as it would be stored in a file.
    */
-  def openFromSource(source: String) {
-    new HeadlessModelOpener(this).openFromMap(ModelReader.parseModel(source))
+  def openString(modelContents: String) {
+    new HeadlessModelOpener(this)
+      .openFromMap(ModelReader.parseModel(modelContents))
   }
 
   /**

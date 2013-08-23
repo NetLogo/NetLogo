@@ -51,7 +51,7 @@ class Fixture(name: String) {
     Femto.scalaSingleton("org.nlogo.compile.Compiler")
 
   def declare(source: String) {
-    workspace.openFromSource(
+    workspace.openString(
       ModelCreator.Model(
         code = source,
         dimensions = api.WorldDimensions.square(5),
@@ -156,6 +156,6 @@ class Fixture(name: String) {
 
   // more convenience
   def open(model: ModelCreator.Model) =
-    workspace.openFromSource(model.toString)
+    workspace.openString(model.toString)
 
 }
