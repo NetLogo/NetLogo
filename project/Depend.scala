@@ -6,8 +6,8 @@ import Keys._
 
 object Depend {
 
-  val depend = TaskKey[Unit](
-    "depend", "use Classycle to ferret out forbidden dependencies")
+  val depend = taskKey[Unit](
+    "use Classycle to ferret out forbidden dependencies")
 
   val settings = Seq(dependTask)
 
@@ -16,34 +16,39 @@ object Depend {
   private val lock = new AnyRef
 
   private lazy val dependTask =
-    depend <<= (fullClasspath in Test, classDirectory in Compile, classDirectory in Test, streams, thisProject).map{
-      (cp, classes, testClasses, s, project) => lock.synchronized {
-        s.log.info("begin depend: " + project.id)
+    depend := {
+      val _ = (compile in Test).value
+      val s = streams.value
+      lock.synchronized {
+        val classes = (classDirectory in Compile).value.toString
+        val testClasses = (classDirectory in Test).value.toString
+        s.log.info("begin depend: " + thisProject.value.id)
         IO.write(file(".") / "target" / "depend.ddf", ddfContents)
         import classycle.dependency.DependencyChecker
         def main() = TrapExit(
           DependencyChecker.main(Array("-dependencies=@target/depend.ddf",
-                                       classes.toString)),
+                                       classes)),
           s.log)
         def test() = TrapExit(
           DependencyChecker.main(Array("-dependencies=@target/depend.ddf",
-                                       testClasses.toString)),
+                                       testClasses)),
           s.log)
-        s.log.info("depend: " + classes.toString)
+        s.log.info("depend: " + classes)
         main() match {
           case 0 =>
-            s.log.info("depend: " + testClasses.toString)
+            s.log.info("depend: " + testClasses)
             test() match {
               case 0 =>
               case fail =>
-                s.log.info("depend failed: " + testClasses.toString)
+                s.log.info("depend failed: " + testClasses)
                 sys.error(fail.toString) }
           case fail =>
-            s.log.info("depend failed: " + classes.toString)
+            s.log.info("depend failed: " + classes)
             sys.error(fail.toString)
         }
-        s.log.info("end depend: " + project.id)
-      }}
+        s.log.info("end depend: " + thisProject.value.id)
+      }
+    }
 
   private def ddfContents: String = {
     val buf = new StringBuilder

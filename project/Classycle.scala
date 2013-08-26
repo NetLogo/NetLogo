@@ -4,16 +4,15 @@ import classycle.Analyser
 
 object Classycle {
 
-  val classycle = TaskKey[Unit](
-    "classycle", "run Classycle and display a dependency report")
+  val classycle = taskKey[Unit](
+    "run Classycle and display a dependency report")
 
-  val settings = Seq(classycleTask)
-
-  private lazy val classycleTask =
-    classycle <<= (classDirectory in Compile).map{
-      (classes) =>
-        runClassycle(classes)
-    }.dependsOn(compile in Compile)
+  val settings = Seq(
+    classycle := {
+      val _ = (compile in Compile).value  // run it, ignore result
+      runClassycle((classDirectory in Compile).value)
+    }
+  )
 
   private def runClassycle(classes: java.io.File) {
     "mkdir -p target/classycle".!

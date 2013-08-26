@@ -44,8 +44,9 @@ echo "*** done: nogen slow:test"
 if [ ${PIPESTATUS[0]} -ne 0 ] ; then echo "*** FAILED: depend"; exit 1; fi
 echo "*** done: depend"
 
-./sbt scalastyle 2>&1 | tee tmp/nightly/6-scalastyle.txt
-if [ `wc -l < target/scalastyle-result.xml` -ne 2 ] ; then echo "*** FAILED: scalastyle"; exit 1; fi
-echo "*** done: scalastyle"
+# commenting out until plugin is available for sbt 0.13 - ST 8/11/13
+#./sbt scalastyle 2>&1 | tee tmp/nightly/6-scalastyle.txt
+#if [ `wc -l < target/scalastyle-result.xml` -ne 2 ] ; then echo "*** FAILED: scalastyle"; exit 1; fi
+#echo "*** done: scalastyle"
 
 echo "****** all done!"

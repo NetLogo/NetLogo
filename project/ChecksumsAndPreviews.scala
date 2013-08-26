@@ -5,24 +5,25 @@ object ChecksumsAndPreviews {
 
   // sbt already has a command called "checksums", so we prepend "all-" - ST 6/23/12
 
-  lazy val checksum = InputKey[Option[String]]("checksum", "update one model checksum")
-  lazy val allChecksums = InputKey[Option[String]]("all-checksums", "update all model checksums")
-  lazy val preview = InputKey[Option[String]]("preview", "update one model preview image")
-  lazy val allPreviews = InputKey[Option[String]]("all-previews", "update all model preview images")
+  val checksum = inputKey[Option[String]]("update one model checksum")
+  val allChecksums = inputKey[Option[String]]("update all model checksums")
+  val preview = inputKey[Option[String]]("update one model preview image")
+  val allPreviews = inputKey[Option[String]]("update all model preview images")
 
-  val settings = Seq(
-    checksum <<= makeTask("--checksum"),
-    allChecksums <<= makeTask("--checksums"),
-    preview <<= makeTask("--preview"),
-    allPreviews <<= makeTask("--previews")
-  )
+  val settings: Seq[Setting[InputTask[Option[String]]]] =
+    Seq(
+      checksum := makeTask("--checksum").evaluated,
+      allChecksums := makeTask("--checksums").evaluated,
+      preview := makeTask("--preview").evaluated,
+      allPreviews := makeTask("--previews").evaluated
+    )
 
-  private def makeTask(flag: String) =
-    inputTask { (argTask: TaskKey[Seq[String]]) =>
-      (argTask, fullClasspath in Compile, runner, streams) map {
-        (args, cp, runner, s) =>
-          Run.run("org.nlogo.headless.misc.ChecksumsAndPreviews",
-                  cp.map(_.data), flag +: args, s.log)(runner)
-      }}
+  private def makeTask(flag: String): Def.Initialize[InputTask[Option[String]]] =
+    Def.inputTask {
+      val args: Seq[String] = Def.spaceDelimited("<args>").parsed
+      val cp = (fullClasspath in Compile).value
+      Run.run("org.nlogo.headless.misc.ChecksumsAndPreviews",
+        cp.map(_.data), flag +: args, streams.value.log)(runner.value)
+    }
 
 }

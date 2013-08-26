@@ -16,9 +16,11 @@ import sun.org.mozilla.javascript.internal.NativeArray
 
 object Rhino {
 
-  // at some point we'll need to have separate instances instead of a singleton
+  // at some point we'll need to have separate instances instead of a singleton - ST 1/18/13
+  // the (null) became necessary when we upgraded to sbt 0.13. I don't understand why.
+  // classloaders, go figure! - ST 8/26/13
   val engine =
-    (new javax.script.ScriptEngineManager)
+    (new javax.script.ScriptEngineManager(null))
       .getEngineByName("rhino")
       .ensuring(_ != null, "JavaScript engine unavailable")
 

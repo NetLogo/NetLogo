@@ -9,11 +9,11 @@ object Testing {
 
   val configs = Seq(FastTest, MediumTest, SlowTest)
 
-  lazy val tr = InputKey[Unit]("tr", "org.nlogo.headless.lang.TestReporters", test)
-  lazy val tc = InputKey[Unit]("tc", "org.nlogo.headless.lang.TestCommands", test)
-  lazy val te = InputKey[Unit]("te", "org.nlogo.headless.lang.TestExtensions", test)
-  lazy val tm = InputKey[Unit]("tm", "org.nlogo.headless.lang.TestModels", test)
-  lazy val testChecksums = InputKey[Unit]("test-checksums", "org.nlogo.headless.misc.TestChecksums", test)
+  lazy val tr            = inputKey[Unit]("org.nlogo.headless.lang.TestReporters")
+  lazy val tc            = inputKey[Unit]("org.nlogo.headless.lang.TestCommands")
+  lazy val te            = inputKey[Unit]("org.nlogo.headless.lang.TestExtensions")
+  lazy val tm            = inputKey[Unit]("org.nlogo.headless.lang.TestModels")
+  lazy val testChecksums = inputKey[Unit]("org.nlogo.headless.misc.TestChecksums")
 
   private val testKeys = Seq(tr, tc, te, tm, testChecksums)
 
@@ -26,12 +26,13 @@ object Testing {
     inConfig(MediumTest)(Defaults.testTasks) ++
     inConfig(SlowTest)(Defaults.testTasks) ++
     Seq(
-      testOptions in FastTest <<= (fullClasspath in Test) map { path =>
-        Seq(Tests.Filter(fastFilter(path, _))) },
-      testOptions in MediumTest <<= (fullClasspath in Test) map { path =>
-        Seq(Tests.Filter(mediumFilter(path, _))) },
-      testOptions in SlowTest <<= (fullClasspath in Test) map { path =>
-        Seq(Tests.Filter(slowFilter(path, _))) })
+      testOptions in FastTest :=
+        Seq(Tests.Filter(fastFilter((fullClasspath in Test).value, _))),
+      testOptions in MediumTest :=
+        Seq(Tests.Filter(mediumFilter((fullClasspath in Test).value, _))),
+      testOptions in SlowTest :=
+        Seq(Tests.Filter(slowFilter((fullClasspath in Test).value, _)))
+    )
 
   lazy val specialTestTaskSettings =
     testKeys.flatMap(Defaults.defaultTestTasks) ++
@@ -51,25 +52,37 @@ object Testing {
     clazz("org.nlogo.util.SlowTest").isAssignableFrom(clazz(name))
   }
 
-  // mostly copy-and-pasted from Defaults.inputTests. there may well be a better
-  // way this could be done - ST 6/17/12
-  def oneTest(key: InputKey[Unit]): Project.Initialize[InputTask[Unit]] = {
-    inputTask { (argTask: TaskKey[Seq[String]]) =>
-      (argTask, streams, loadedTestFrameworks, testGrouping in key, testExecution in key, testLoader, fullClasspath in key, javaHome in key, state) flatMap {
-        case (args, s, frameworks, groups, config, loader, cp, javaHome, st) =>
-          implicit val display = Project.showContextKey(st)
-          val filter = Tests.Filter(Defaults.selectedFilter(Seq(key.key.description.get)))
-          val mungedArgs =
-            if(args.isEmpty) Nil
-            else List("-n", args.mkString(" "))
-          val modifiedOpts =
-            filter +: Tests.Argument(TestFrameworks.ScalaTest, mungedArgs: _*) +: config.options
-          val newConfig = config.copy(options = modifiedOpts)
-          Defaults.allTestGroupsTask(
-            s, frameworks, loader, groups, newConfig, cp, javaHome) map
-              (Tests.showResults(s.log, _, "not found"))
-      }
-    }
+  // mostly copy-and-pasted from Defaults.inputTests. is there a better way?
+  // - ST 6/17/12, 7/23/13
+  def oneTest(key: InputKey[Unit]): Def.Initialize[InputTask[Unit]] = {
+    val parser = Def.value((_: State) => Def.spaceDelimited())
+    InputTask.createDyn(parser)(
+      Def.task {
+        (args: Seq[String]) =>
+          val config = {
+            val oldConfig = (testExecution in key).value
+            val mungedArgs =
+              if(args.isEmpty) Nil
+              else List("-n", args.mkString(" "))
+            val className = key.key.description.get
+            val filter = Tests.Filters(Defaults.selectedFilter(Seq(className)))
+            val modifiedOpts = filter +:
+              Tests.Argument(TestFrameworks.ScalaTest, mungedArgs: _*) +:
+              oldConfig.options
+            oldConfig.copy(options = modifiedOpts)
+          }
+          val task: Task[Tests.Output] =
+            Defaults.allTestGroupsTask(
+              streams.value, loadedTestFrameworks.value, testLoader.value,
+              (testGrouping in key).value, config, (fullClasspath in key).value,
+              // here I want to write `(javaHome in key).value` but it fails with
+              // "Illegal dynamic reference: Def". don't understand why - ST 7/23/13
+              Some(new java.io.File(""))
+            )
+          val result: Task[Unit] =
+            task.map(Tests.showResults(streams.value.log, _, "not found"))
+          Def.value(result)
+      })
   }
 
 }
