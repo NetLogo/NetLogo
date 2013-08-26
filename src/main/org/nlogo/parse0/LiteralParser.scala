@@ -64,7 +64,8 @@ class LiteralParser(
       case TokenType.Literal =>
         token.value
       case TokenType.OpenBracket =>
-        parseLiteralList(token, tokens)
+        val (result, closeBracket) = parseLiteralList(token,tokens)
+        result
       case TokenType.OpenBrace =>
         cAssert(world != null, ERR_ILLEGAL_AGENT_LITERAL, token)
         parseLiteralAgentOrAgentSet(tokens)
@@ -86,20 +87,20 @@ class LiteralParser(
 
  /**
   * parses a literal list. Assumes the open bracket was already eaten.  Eats the list
-  * contents and the close bracket.
+  * contents and the close bracket; returns a LogoList and the close bracket token.
   */
-  def parseLiteralList(openBracket: Token, tokens: Iterator[Token]) = {
+  def parseLiteralList(openBracket: Token, tokens: Iterator[Token]): (api.LogoList, Token) = {
     var list = api.LogoList()
-    var done = false
-    while(!done) {
+    var closeBracket: Option[Token] = None
+    while(!closeBracket.isDefined) {
       val token = tokens.next()
       token.tpe match {
-        case TokenType.CloseBracket => done = true
+        case TokenType.CloseBracket => closeBracket = Some(token)
         case TokenType.Eof => exception(ERR_MISSING_CLOSEBRACKET, openBracket)
         case _ => list = list.lput(readLiteralPrefix(token, tokens))
       }
     }
-    list
+    (list, closeBracket.get)
   }
 
   def parseExtensionLiteral(token: Token): AnyRef = {

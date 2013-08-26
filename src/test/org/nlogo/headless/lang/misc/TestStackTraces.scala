@@ -1,7 +1,8 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.headless
-package model
+package lang
+package misc
 
 /**
 Important Note:
@@ -23,9 +24,11 @@ its ok that these tests don't run in 'run' mode because we are only testing
 the stack traces, not the results.
  */
 
-import org.nlogo.api, api.LogoException, api.ModelCreator._
+import org.nlogo.api, api.LogoException
+import org.scalatest.FunSuite
+import ModelCreator._
 
-class TestStackTraces extends AbstractTestModels {
+class TestStackTraces extends FixtureSuite {
 
   // these tests just call the primitive directly from the observer
   // the call should fail, and then we analyze the stack trace.
@@ -81,46 +84,53 @@ class TestStackTraces extends AbstractTestModels {
       Plot(name = "p", pens = Pens(Pen(name = "pp", updateCode = code)))
   }
 
-  def trace = workspace.lastErrorReport.stackTrace.get.trim
+  def trace(implicit fixture: Fixture) =
+    fixture.workspace.lastErrorReport.stackTrace.get.trim
 
   def callPrimDirectly_Test(prim: String, codeType: CodeType) {
-    testModel("direct call to " + prim + " with failure in " + codeType,
-      Model("globals [x]", widgets = List(codeType.plot("if x = 1 [plot __boom]")))) {
-      observer >> "reset-ticks"
-      observer >> "set x 1"
-      intercept[LogoException] {observer >> prim}
-      assert(trace === """boom!
-error while observer running __BOOM
-  called by """ + codeType.procName + """
-  called by """ + prim + """
-  called by procedure __EVALUATOR""")
+    test("direct call to " + prim + " with failure in " + codeType) { implicit fixture =>
+      import fixture._
+      open(Model("globals [x]", widgets = List(codeType.plot("if x = 1 [plot __boom]"))))
+      testCommand("reset-ticks")
+      testCommand("set x 1")
+      intercept[LogoException] { testCommand(prim) }
+      val expected =
+        s"""|boom!
+            |error while observer running __BOOM
+            |  called by ${codeType.procName}
+            |  called by $prim
+            |  called by procedure __EVALUATOR""".stripMargin
+      assertResult(expected)(trace)
     }
   }
 
   def callToPrimIsNested_Test(prim: String, codeType: CodeType) {
-    val code = """
-  globals [x]
-  to go1 go2 end
-  to go2 go3 end
-  to go3 """ + prim + """ end
-  to-report zero report 0 end
-  to do-it if x = 1 [explode] end
-  to explode print 1 / zero end
-"""
-    testModel("nesting " + prim + " in " + codeType, Model(code, widgets = List(codeType.plot("do-it")))) {
-      observer >> "reset-ticks"
-      observer >> "set x 1"
-      intercept[LogoException] {observer >> "go1"}
-      assert(trace === """Division by zero.
-error while observer running /
-  called by procedure EXPLODE
-  called by procedure DO-IT
-  called by """ + codeType.procName + """
-  called by """ + prim + """
-  called by procedure GO3
-  called by procedure GO2
-  called by procedure GO1
-  called by procedure __EVALUATOR""")
+    val code = s"""|globals [x]
+                   |to go1 go2 end
+                   |to go2 go3 end
+                   |to go3 $prim end
+                   |to-report zero report 0 end
+                   |to do-it if x = 1 [explode] end
+                   |to explode print 1 / zero end
+                   |""".stripMargin
+    test("nesting " + prim + " in " + codeType) { implicit fixture =>
+      import fixture._
+      open(Model(code, widgets = List(codeType.plot("do-it"))))
+      testCommand("reset-ticks")
+      testCommand("set x 1")
+      intercept[LogoException] {testCommand("go1")}
+      val expected =
+        s"""|Division by zero.
+            |error while observer running /
+            |  called by procedure EXPLODE
+            |  called by procedure DO-IT
+            |  called by ${codeType.procName}
+            |  called by $prim
+            |  called by procedure GO3
+            |  called by procedure GO2
+            |  called by procedure GO1
+            |  called by procedure __EVALUATOR""".stripMargin
+      assertResult(expected)(trace)
     }
   }
 
@@ -130,25 +140,33 @@ error while observer running /
     "to-report foo report bar end " +
     "to-report bar report __boom end"
 
-  testModel("error inside run", Model(code)) {
-    intercept[LogoException] {observer >> "__ignore runresult \"foo\""}
-    assert(trace === """boom!
-error while observer running __BOOM
-  called by procedure BAR
-  called by procedure FOO
-  called by runresult
-  called by procedure __EVALUATOR""")
+  test("error inside run") { implicit fixture =>
+    import fixture._
+    open(Model(code))
+    intercept[LogoException] {testCommand("__ignore runresult \"foo\"")}
+    val expected =
+      """|boom!
+         |error while observer running __BOOM
+         |  called by procedure BAR
+         |  called by procedure FOO
+         |  called by runresult
+         |  called by procedure __EVALUATOR""".stripMargin
+    assertResult(expected)(trace)
   }
 
   // ticket #1170
-  testModel("error inside runresult", Model(code)) {
-    intercept[LogoException] {observer >> "run \"__ignore foo\""}
-    assert(trace === """boom!
-error while observer running __BOOM
-  called by procedure BAR
-  called by procedure FOO
-  called by run
-  called by procedure __EVALUATOR""")
+  test("error inside runresult") { implicit fixture =>
+    import fixture._
+    open(Model(code))
+    intercept[LogoException] {testCommand("run \"__ignore foo\"")}
+    val expected =
+      """|boom!
+         |error while observer running __BOOM
+         |  called by procedure BAR
+         |  called by procedure FOO
+         |  called by run
+         |  called by procedure __EVALUATOR""".stripMargin
+    assertResult(expected)(trace)
   }
 
 }

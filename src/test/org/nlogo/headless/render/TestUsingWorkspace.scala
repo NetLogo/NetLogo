@@ -1,8 +1,5 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-// At the moment this is only used by TestRenderer, but it could easily
-// be useful elsewhere - ST 7/17/13
-
 package org.nlogo.headless
 package render
 
@@ -12,7 +9,8 @@ import org.nlogo.shape.{LinkShape, VectorShape}
 import org.nlogo.util.WorldType
 
 trait TestUsingWorkspace extends MockSuite {
-    case class SimpleViewSettings(
+
+  case class SimpleViewSettings(
     fontSize: Int = 10,
     patchSize:Double = 13,
     viewWidth: Double = 33,

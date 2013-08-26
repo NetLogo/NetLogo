@@ -6332,7 +6332,7 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
           RETURN
 
 procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
-[0]_asm_procedurefindallcomponents_setobservervariable_0 "set" Object => void
+[0]_asm_procedurefindallcomponents_setobservervariable_0 "set components []" Object => void
       _constlist:[] => LogoList
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3

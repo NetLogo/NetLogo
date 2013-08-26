@@ -47,26 +47,47 @@ def record(name: String, line: String) {
     haveGoodResult += name
   results(name) += num.toDouble
 }
+
 def printResults() {
-  println()
+  val stringWriter = new java.io.StringWriter
+  val pw = new java.io.PrintWriter(stringWriter)
+  pw.println()
   for(name <- allNames; numbers = results(name); if !numbers.isEmpty) {
     val min = numbers.min
-    printf("%" + width + "s  %7.3f", name, min)
-    if(results40.isDefinedAt(name) && results41.isDefinedAt(name))
-      printf(" (%3.0f%% vs 4.0, %3.0f%% vs 4.1)",
+    pw.print(("%" + width + "s  %7.3f").format(name, min))
+    if (results40.isDefinedAt(name) && results41.isDefinedAt(name))
+      pw.print(" (%3.0f%% vs 4.0, %3.0f%% vs 4.1)".format(
              100 * min / results40(name),
-             100 * min / results41(name))
-    if(!haveGoodResult(name)) print(" (no reliable result yet)")
-    println()
+             100 * min / results41(name)))
+    if (!haveGoodResult(name)) pw.print(" (no reliable result yet)")
+    pw.println()
   }
   def geometricMean(xs: List[Double]) = math.pow(xs.reduceLeft(_ * _), 1.0 / xs.size)
-  def overall(oldResults: Map[String, Double]) =
-    geometricMean(allNames.filter(x => results(x).nonEmpty && oldResults.isDefinedAt(x))
-                          .map(name => results(name).min / oldResults(name)))
-  printf("                    (%3.0f%% vs 4.0, %3.0f%% vs 4.1)",
-         100 * overall(results40), 100 * overall(results41))
-  println(); println()
+
+  def overall(oldResults: Map[String, Double]): Option[Double] = {
+    val ratios = for {
+      name <- allNames
+      if results(name).nonEmpty
+      oldResult <- oldResults.get(name)
+    } yield results(name).min / oldResult
+    if (ratios.nonEmpty) Some(geometricMean(ratios))
+    else None
+  }
+
+  for {
+    overall40 <- overall(results40)
+    overall41 <- overall(results41)
+  } pw.print("%21s(%3.0f%% vs 4.0, %3.0f%% vs 4.1)%n".format("", 100 * overall40, 100 * overall41))
+
+  pw.println()
+  val output = stringWriter.toString
+  pw.close()
+  print(output)
+
+  val fpw = new java.io.PrintWriter(new java.io.File("tmp/bench.txt"))
+  try { fpw.write(output) } finally { fpw.close() }
 }
+
 def runIt(name: String) {
   for(out <- outputLines(name))
     if(!out.startsWith("@@@@@@"))
@@ -74,8 +95,18 @@ def runIt(name: String) {
       else System.err.println(out)
   printResults()
 }
+
+def cleanUp() {
+  // remove files created by ImportWorld Benchmark
+  for {
+    files <- Option(new java.io.File("models/test/benchmarks/").listFiles)
+    file <- files if file.getName.matches("firebig-[0-9]*.csv")
+  } file.delete()
+}
+
 while(true) {
   allNames.foreach(runIt)
   // make extra efforts to get at least one good result for each model
   allNames.filter(!haveGoodResult(_)).foreach(runIt)
+  cleanUp()
 }

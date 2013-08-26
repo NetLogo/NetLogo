@@ -18,7 +18,6 @@ import org.nlogo.api.TrailDrawerInterface;
 import org.nlogo.api.ValueConstraint;
 import org.nlogo.api.WorldDimensionException;
 import org.nlogo.api.WorldDimensions;
-import org.nlogo.nvm.LetBinding;
 import org.nlogo.util.MersenneTwisterFast;
 
 import java.util.Arrays;
@@ -720,7 +719,9 @@ public strictfp class World
         agents.clear();
     }
 
+    if (_turtles != null) _turtles.clear(); // so a SimpleChangeEvent is published
     _turtles = new TreeAgentSet(AgentKindJ.Turtle(), "TURTLES");
+    if (_links != null) _links.clear(); // so a SimpleChangeEvent is published
     _links = new TreeAgentSet(AgentKindJ.Link(), "LINKS");
 
     int x = minPxcor;

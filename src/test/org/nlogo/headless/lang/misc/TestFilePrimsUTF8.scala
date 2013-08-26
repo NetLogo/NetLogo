@@ -1,13 +1,13 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.headless
-package model
-
-import org.nlogo.api.ModelCreator._
+package lang
+package misc
 
 // this test is modeled after info found in:
 // http://download.oracle.com/javase/tutorial/i18n/text/string.html
-class TestFilePrimsUTF8 extends AbstractTestModels {
+
+class TestFilePrimsUTF8 extends FixtureSuite {
 
   val code = """|globals [f utf-string]
                 |
@@ -38,22 +38,22 @@ class TestFilePrimsUTF8 extends AbstractTestModels {
                 |end
     """.stripMargin
 
-  testModel(testName="file-read", model=Model(code=code)){
-    val utfStringIn = reporter("read-string " + quoted("utf8-file.txt") ).get
-    assert(utfStringIn === new String("A" + "\u00ea" + "\u00f1" + "\u00fc" + "C"))
+  val expected = "A" + "\u00ea" + "\u00f1" + "\u00fc" + "C"
 
-    observer >> "set utf-string " +  quoted(utfStringIn.toString)
-
-    observer >> "write-out"
-
-    val utfStringReadInAfterWriting = reporter("read-string " + quoted("utf8-file-written-by-test.txt") ).get
-
-    assert(utfStringIn === utfStringReadInAfterWriting)
+  test("file-read") { implicit fixture =>
+    import fixture._
+    declare(code)
+    testReporter("""read-string "utf8-file.txt"""", '"' + expected + '"')
+    testCommand(s"""set utf-string "$expected"""")
+    testCommand("write-out")
+    testReporter("""read-string "utf8-file-written-by-test.txt"""",
+      '"' + expected + '"')
   }
 
-
-  testModel(testName="file-read-line", model=Model(code=code)){
-    val utfStringIn = reporter("read-line " + quoted("utf8-file.txt") ).get.toString
-    assert(utfStringIn === new String(" \"A" + "\u00ea" + "\u00f1" + "\u00fc" + "C\""))
+  test("file-read-line") { implicit fixture =>
+    import fixture._
+    declare(code)
+    testReporter("""read-line "utf8-file.txt"""",
+      "\" \\\"" + expected + "\\\"\"")
   }
 }

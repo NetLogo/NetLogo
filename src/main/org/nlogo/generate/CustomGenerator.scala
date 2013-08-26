@@ -14,8 +14,8 @@ package org.nlogo.generate
 // how to deal with things like _call/_callreport and short-circuiting prims like _and/_or.
 //
 // The fact that the list of custom generated prims also includes all of our variadic prims like
-// _list and _sentence is ugly, though.  Those prims really ought to be able to just tell the
-// compiler that they are variadic and have the compiler figure out the rest.  I'd like to fix that.
+// _list is ugly, though.  Those prims really ought to be able to just tell the compiler that they
+// are variadic and have the compiler figure out the rest.  I'd like to fix that.
 //
 // - ST 2/22/08
 
@@ -26,7 +26,7 @@ import org.objectweb.asm
 import asm.Label
 import asm.Opcodes._
 import org.nlogo.nvm.CustomGenerated
-import org.nlogo.prim.{ _and, _call, _callreport, _list, _or, _sentence, _word }
+import org.nlogo.prim.{ _and, _call, _callreport, _list, _or, _word }
 
 class CustomGenerator(profilingEnabled: Boolean) {
 
@@ -42,8 +42,6 @@ class CustomGenerator(profilingEnabled: Boolean) {
         generateCallReport(instr, nlgen, thisInstrUID, ip)
       case instr: _list =>
         generateList(instr, nlgen, thisInstrUID)
-      case instr: _sentence =>
-        generateSentence(instr, nlgen, thisInstrUID)
       case instr: _word =>
         generateWord(instr, nlgen, thisInstrUID)
     }
@@ -262,57 +260,6 @@ class CustomGenerator(profilingEnabled: Boolean) {
       mv.visitMethodInsn(INVOKEVIRTUAL, "org/nlogo/api/LogoListBuilder", "add", "(Ljava/lang/Object;)V")
     }
     mv.visitMethodInsn(INVOKEVIRTUAL, "org/nlogo/api/LogoListBuilder", "toLogoList", "()Lorg/nlogo/api/LogoList;")
-  }
-
-  /* Example code,just to show what bytecode is being generated
-   public LogoList report_N(Object o0,Object o1) {
-     LogoListBuilder list = new LogoListBuilder()
-     if(o0 instanceof LogoList) {
-       list.addAll((LogoList) o0)
-     }
-     else {
-       list.add(o0)
-     }
-     if(o1 instanceof LogoList) {
-       list.addAll((LogoList) o1)
-     }
-     else {
-       list.add(o1)
-     }
-     //...
-     return list.toLogoList()
-   }
-   */
-  private def generateSentence(instr: _sentence, mv: GeneratorAdapter, thisInstrUID: Int) {
-    mv.visitTypeInsn(NEW, "org/nlogo/api/LogoListBuilder")
-    // operand stack: BUILDER
-    mv.visitInsn(DUP)
-    // operand stack: BUILDER BUILDER
-    mv.visitMethodInsn(INVOKESPECIAL, "org/nlogo/api/LogoListBuilder", "<init>", "()V")
-    // operand stack: BUILDER
-    for (i <- 0 until instr.args.length) {
-      mv.visitInsn(DUP)
-      // operand stack: BUILDER BUILDER
-      mv.generateArgument(instr, i, classOf[Object], thisInstrUID)
-      // operand stack: BUILDER BUILDER OBJ
-      mv.visitInsn(DUP)
-      // operand stack: BUILDER BUILDER OBJ OBJ
-      mv.visitTypeInsn(INSTANCEOF, "org/nlogo/api/LogoList")
-      val l1 = new Label
-      mv.visitJumpInsn(IFEQ, l1)
-      // operand stack: BUILDER BUILDER OBJ
-      mv.visitMethodInsn(INVOKEVIRTUAL, "org/nlogo/api/LogoListBuilder", "addAll", "(Ljava/lang/Iterable;)V")
-      // operand stack: BUILDER
-      val lNext = new Label
-      mv.visitJumpInsn(GOTO, lNext)
-      mv.visitLabel(l1)
-      // operand stack: BUILDER BUILDER OBJ
-      mv.visitMethodInsn(INVOKEVIRTUAL, "org/nlogo/api/LogoListBuilder", "add", "(Ljava/lang/Object;)V")
-      mv.visitLabel(lNext)
-      // operand stack: BUILDER
-    }
-    mv.visitMethodInsn(INVOKEVIRTUAL, "org/nlogo/api/LogoListBuilder", "toLogoList", "()Lorg/nlogo/api/LogoList;")
-    // operand stack: LIST
   }
 
   /* Example code,just to show what bytecode is being generated

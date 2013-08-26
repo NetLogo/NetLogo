@@ -19,11 +19,11 @@ class ParserTests extends FunSuite {
   // we avoid the `a -> b` syntax in favor of `(a, b)` - ST 1/3/13)
   val tests = List(
     ("O> crt 1",
-      Command(AgentKind.Observer, "crt 1")),
+      Command("crt 1")),
     ("O> crt 1 => ERROR some message",
-      Command(AgentKind.Observer, "crt 1", RuntimeError("some message"))),
+      Command("crt 1", result = RuntimeError("some message"))),
     ("O> crt 1 => COMPILER ERROR some message",
-      Command(AgentKind.Observer, "crt 1", CompileError("some message"))),
+      Command("crt 1", result = CompileError("some message"))),
     ("[turtle-set self] of turtle 0 = turtles => true",
       Reporter("[turtle-set self] of turtle 0 = turtles", Success("true"))),
     ("[link-set self] of link 0 2 => ERROR some message",
@@ -53,7 +53,7 @@ class ParserTests extends FunSuite {
       List(LanguageTest("test", "TurtleSet",
         List(
           Declaration("to foo fd 1 end"),
-          Command(AgentKind.Observer, "crt 1"),
+          Command("crt 1"),
           Reporter("[turtle-set self] of turtle 0 = turtles", Success("true")))))
     assertResult(expectedOutputs.toString)(tests.toString)
   }

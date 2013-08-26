@@ -57,6 +57,9 @@ trait ParserExtras { this: nvm.ParserInterface =>
     result
   }
 
+  def makeLiteralReporter(value: AnyRef): nvm.Reporter =
+    ExpressionParser.makeLiteralReporter(value)
+
   // used by CommandLine
   def isReporter(s: String, program: api.Program, procedures: ProceduresMap, extensionManager: api.ExtensionManager) =
     try {

@@ -612,7 +612,7 @@ procedure SETUP:[]{O---}:
           RETURN
 
 procedure REBUILD-COLLISION-LIST:[]{OTPL}:
-[0]_asm_procedurerebuildcollisionlist_setobservervariable_0 "set" Object => void
+[0]_asm_procedurerebuildcollisionlist_setobservervariable_0 "set colliding-particles []" Object => void
       _constlist:[] => LogoList
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -7474,7 +7474,7 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
           ATHROW
          L5
           RETURN
-[4]_asm_proceduresortcollisions_if_10 "if colliding-particles =" boolean => void
+[4]_asm_proceduresortcollisions_if_10 "if colliding-particles = []" boolean => void
       _equal Object,Object => boolean
         _observervariable:COLLIDING-PARTICLES => Object
         _constlist:[] => LogoList

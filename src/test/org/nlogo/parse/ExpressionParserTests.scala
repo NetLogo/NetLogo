@@ -8,6 +8,16 @@ import org.nlogo.nvm
 
 class ExpressionParserTests extends FunSuite {
 
+  // first, a little test of something from the companion object
+
+  test("makeLiteralReporter not picky about type") {
+    case object Obj
+    assertResult("_const:Obj")(
+      ExpressionParser.makeLiteralReporter(Obj).toString)
+  }
+
+  // now, the main tests
+
   val PREAMBLE = "to __test "
   val POSTAMBLE = "\nend"
 
@@ -221,6 +231,13 @@ class ExpressionParserTests extends FunSuite {
       "ReporterApp '1' " +
       "CommandBlock '' " +
       "Statements '' ")
+  }
+  // issue #417 (source positions for literal lists)
+  test("literal list") {
+    testStartAndEnd("print [1 2 3]",
+      "Statements 'print [1 2 3]' " +
+      "Statement 'print [1 2 3]' " +
+      "ReporterApp '[1 2 3]' ")
   }
 
 }

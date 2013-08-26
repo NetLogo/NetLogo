@@ -82,4 +82,17 @@ trait AbstractTestWorld extends Assertions {
     assertResult(3)(world.topology.shortestPathY(2, -2))
     assertResult(5)(world.topology.shortestPathX(2, -2))
   }
+
+  def testChangePublishedAfterWorldResize(d1: WorldDimensions, d2: WorldDimensions) {
+    val world = makeWorld(d1)
+    val turtleSub =
+      new SimpleChangeEventCounter(world.turtles.asInstanceOf[TreeAgentSet].simpleChangeEventPublisher)
+    val linkSub =
+      new SimpleChangeEventCounter(world.links.asInstanceOf[TreeAgentSet].simpleChangeEventPublisher)
+    assertResult(0)(turtleSub.eventCount)
+    assertResult(0)(linkSub.eventCount)
+    world.createPatches(d2)
+    assertResult(1)(turtleSub.eventCount)
+    assertResult(1)(linkSub.eventCount)
+  }
 }
