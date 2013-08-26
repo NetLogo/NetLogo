@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.compile
+package org.nlogo.compile.middle
 
 import org.scalatest.FunSuite
 import org.nlogo.parse
@@ -16,7 +16,6 @@ class OptimizerTests extends FunSuite {
 
   def compile(source: String): parse.ProcedureDefinition = {
     val (procdef +: _, _) = parse.Parser.frontEnd(source)
-    procdef.accept(new ConstantFolder)
     procdef.accept(Optimizer)
     procdef
   }

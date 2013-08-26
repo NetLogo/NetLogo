@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.compile
+package org.nlogo.compile.back
 
 // see org.nlogo.nvm.AssemblerAssistant for an explanation of what assembly and custom assembly are,
 // and an explanation of each method in the AssemblerAssistant interface, which is implemented below

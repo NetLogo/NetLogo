@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.compile
+package org.nlogo.compile.middle
 
 // The purpose of this class is to determine which portions of the
 // code are usable by which agent types.  For example "fd 1" is

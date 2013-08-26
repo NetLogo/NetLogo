@@ -5,6 +5,11 @@ package org.nlogo.compile
 import org.nlogo.{ api, nvm, parse },
   nvm.ParserInterface.{ ProceduresMap, NoProcedures }
 
+// One design principle here is that calling the compiler shouldn't have any side effects that are
+// visible to the caller; it should only cause results to be constructed and returned.  There is a
+// big exception to that principle, though, which is that the ExtensionManager gets side-effected
+// as we load and unload extensions. - ST 2/21/08, 1/21/09, 12/7/12
+
 object Compiler extends parse.Parser with nvm.CompilerInterface {
 
   // used to compile the Code tab, including declarations
@@ -23,7 +28,8 @@ object Compiler extends parse.Parser with nvm.CompilerInterface {
       flags: nvm.CompilerFlags): nvm.CompilerResults = {
     val (defs, structureResults) =
       frontEndHelper(source, displayName, program, subprogram, oldProcedures, extensionManager)
-    BackEnd.backEnd(defs, structureResults.program, source, extensionManager.profilingEnabled, flags)
+    middle.MiddleEnd.middleEnd(defs, flags)
+    back.BackEnd.backEnd(defs, structureResults.program, source, extensionManager.profilingEnabled, flags)
   }
 
 }
