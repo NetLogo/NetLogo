@@ -73,7 +73,7 @@ object Depend {
       "lex" -> List("api"),
       "mirror" -> List("drawing", "plot", "shape"),
       "nvm" -> List("agent"),
-      "parse" -> List("parse0", "prim","prim/dead","prim/threed"),
+      "parse" -> List("parse0", "prim"),
       "parse0" -> List("api"),
       "plot" -> List("api"),
       "prim" -> List("nvm"),
