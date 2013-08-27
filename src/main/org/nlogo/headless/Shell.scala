@@ -23,7 +23,7 @@ object Shell {
     val workspace = HeadlessWorkspace.newInstance
     argv.headOption match {
       case None =>
-        workspace.openFromSource(url2String(ModelReader.emptyModelPath))
+        workspace.openString(url2String(ModelReader.emptyModelPath))
       case Some(path) =>
         workspace.open(path)
     }
