@@ -119,11 +119,11 @@ object AbstractWorkspaceTraits {
   trait Compiling { this: AbstractWorkspace =>
 
     override def readNumberFromString(source: String) =
-      compiler.readNumberFromString(
+      compiler.frontEnd.readNumberFromString(
         source, world, getExtensionManager)
 
     override def isReporter(s: String) =
-      compiler.isReporter(s, world.program, procedures, getExtensionManager)
+      compiler.frontEnd.isReporter(s, world.program, procedures, getExtensionManager)
 
   }
 
@@ -564,7 +564,7 @@ object AbstractWorkspaceTraits {
       new agent.ImporterJ.StringReader {
         @throws(classOf[agent.ImporterJ.StringReaderException])
         def readFromString(s: String): AnyRef =
-          try compiler.readFromString(s, world, getExtensionManager)
+          try compiler.frontEnd.readFromString(s, world, getExtensionManager)
           catch { case ex: CompilerException =>
               throw new agent.ImporterJ.StringReaderException(ex.getMessage)
           }

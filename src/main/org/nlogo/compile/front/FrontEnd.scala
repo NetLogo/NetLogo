@@ -1,6 +1,7 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.compile.front
+package org.nlogo.compile
+package front
 
 import org.nlogo.{ agent, api, nvm, parse }
 import org.nlogo.util.Femto
@@ -24,7 +25,7 @@ object FrontEnd extends FrontEnd {
 }
 
 class FrontEnd extends FrontEndMain
-    with nvm.FrontEndInterface with FrontEndExtras
+    with FrontEndInterface with FrontEndExtras
 
 trait FrontEndMain {
 
@@ -34,13 +35,13 @@ trait FrontEndMain {
   // entry points
 
   def frontEnd(source: String, oldProcedures: ProceduresMap = nvm.FrontEndInterface.NoProcedures,
-      program: api.Program = api.Program.empty()): (Seq[ProcedureDefinition], StructureResults) =
+      program: api.Program = api.Program.empty()): (Seq[ProcedureDefinition], nvm.StructureResults) =
     frontEndHelper(source, None, program, true,
       oldProcedures, new api.DummyExtensionManager)
 
   def frontEndHelper(source: String, displayName: Option[String], program: api.Program, subprogram: Boolean,
       oldProcedures: ProceduresMap, extensionManager: api.ExtensionManager)
-    : (Seq[ProcedureDefinition], StructureResults) = {
+    : (Seq[ProcedureDefinition], nvm.StructureResults) = {
     val structureResults = StructureParser.parseAll(
       tokenizer, source, displayName, program, subprogram, oldProcedures, extensionManager)
     val taskNumbers = Iterator.from(1)

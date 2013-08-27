@@ -1,6 +1,7 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.compile.front
+package org.nlogo.compile
+package front
 
 import org.scalatest.FunSuite
 import org.nlogo.api.{ CompilerException, DummyExtensionManager, Program }
@@ -13,7 +14,7 @@ class ExpressionParserTests extends FunSuite {
   test("makeLiteralReporter not picky about type") {
     case object Obj
     assertResult("_const:Obj")(
-      ExpressionParser.makeLiteralReporter(Obj).toString)
+      Literals.makeLiteralReporter(Obj).toString)
   }
 
   // now, the main tests

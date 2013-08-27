@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.compile.front
+package org.nlogo.compile
 
 // here is the AstNode (AST = Abstract Syntax Tree) trait, along with its extending traits
 // Expression and Application and their subclasses: ProcedureDefinition, Statements, Statement,

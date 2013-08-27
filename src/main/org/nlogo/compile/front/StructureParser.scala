@@ -1,6 +1,7 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.compile.front
+package org.nlogo.compile
+package front
 
 // For each source file, input is Tokens, output is a StructureResults -- which is mostly just a
 // Program and some Procedures.
@@ -21,6 +22,7 @@ package org.nlogo.compile.front
 import org.nlogo.{ api, nvm, parse },
   parse._,
   api.Token,
+  nvm.StructureResults,
   nvm.FrontEndInterface.{ ProceduresMap, NoProcedures },
   Fail._
 

@@ -1,16 +1,21 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.compile.middle
+package org.nlogo.compile
+package middle
 
 import org.scalatest.FunSuite
 import org.nlogo.{ api, nvm }
-import org.nlogo.compile.front
+import org.nlogo.util.Femto
 
 class AgentTypeCheckerTests extends FunSuite {
 
+  // cheating here - ST 8/27/13
+  val frontEnd = Femto.get[FrontEndInterface](
+    "org.nlogo.compile.front.FrontEnd")
+
   /// first some helpers
-  def compile(source: String): Seq[front.ProcedureDefinition] =
-    front.FrontEnd.frontEnd(source) match {
+  def compile(source: String): Seq[ProcedureDefinition] =
+    frontEnd.frontEnd(source) match {
       case (defs, _) =>
         new AgentTypeChecker(defs).check()
         defs
@@ -22,7 +27,7 @@ class AgentTypeCheckerTests extends FunSuite {
   def testOne(source: String, expected: String) {
     val defs = compile(source)
     assertResult(expected)(
-      defs.map { pd: front.ProcedureDefinition =>
+      defs.map { pd: ProcedureDefinition =>
           pd.procedure.name + ":" + pd.procedure.agentClassString }
         .mkString(" "))
   }

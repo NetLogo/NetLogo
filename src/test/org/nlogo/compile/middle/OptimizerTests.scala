@@ -1,11 +1,16 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.compile.middle
+package org.nlogo.compile
+package middle
 
 import org.scalatest.FunSuite
-import org.nlogo.compile.front
+import org.nlogo.util.Femto
 
 class OptimizerTests extends FunSuite {
+
+  // cheating here - ST 8/27/13
+  val frontEnd = Femto.get[FrontEndInterface](
+    "org.nlogo.compile.front.FrontEnd")
 
   def compileReporter(source: String) =
     compile("globals [glob1] breed [frogs frog] to-report __test [x] report " + source + "\nend")
@@ -14,8 +19,8 @@ class OptimizerTests extends FunSuite {
     compile("globals [glob1] breed [frogs frog] to __test [x] " + source + "\nend")
       .statements.head.toString
 
-  def compile(source: String): front.ProcedureDefinition = {
-    val (procdef +: _, _) = front.FrontEnd.frontEnd(source)
+  def compile(source: String): ProcedureDefinition = {
+    val (procdef +: _, _) = frontEnd.frontEnd(source)
     procdef.accept(Optimizer)
     procdef
   }

@@ -1,16 +1,21 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.compile.back
+package org.nlogo.compile
+package back
 
 import org.scalatest.FunSuite
 import org.nlogo.nvm
-import org.nlogo.compile.front
+import org.nlogo.util.Femto
 
 class AssemblerTests extends FunSuite {
 
+  // cheating here - ST 8/27/13
+  val frontEnd = Femto.get[FrontEndInterface](
+    "org.nlogo.compile.front.FrontEnd")
+
   def compile(keyword: String, source: String): nvm.Procedure = {
     val (defs, results) =
-      front.FrontEnd.frontEnd(
+      frontEnd.frontEnd(
         keyword + " foo " + source + "\nend")
     assertResult(1)(results.procedures.size)
     for (procdef <- defs) {

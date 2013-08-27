@@ -1,16 +1,21 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.compile.back
+package org.nlogo.compile
+package back
 
 import org.scalatest.FunSuite
 import org.nlogo.api
-import org.nlogo.compile.front
+import org.nlogo.util.Femto
 
 class ConstantFolderTests extends FunSuite {
 
+  // cheating here - ST 8/27/13
+  val frontEnd = Femto.get[FrontEndInterface](
+    "org.nlogo.compile.front.FrontEnd")
+
   def compile(source: String): String = {
     val (procdef +: _, _) =
-      front.FrontEnd.frontEnd(
+      frontEnd.frontEnd(
         "to-report __test report " + source + "\nend")
     procdef.accept(new ConstantFolder)
     procdef.statements.head.head.toString

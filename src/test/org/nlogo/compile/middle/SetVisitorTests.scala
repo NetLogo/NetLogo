@@ -1,19 +1,19 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.compile.middle
+package org.nlogo.compile
+package middle
 
 import org.scalatest.FunSuite
 import org.nlogo.agent.{ Link, Patch, Turtle }
 import org.nlogo.api.{ CompilerException, Let }
 import org.nlogo.nvm.{ Command, Reporter }
-import org.nlogo.compile.front
 import org.nlogo.prim._
 
 class SetVisitorTests extends FunSuite {
   def tester(r: Reporter, spec: String, setterClass: Class[_ <: Command]) {
-    val stmt = new front.Statement(new _set, 0, 0, "")
-    stmt.addArgument(new front.ReporterApp(r, 0, 0, ""))
-    stmt.addArgument(new front.ReporterApp(new _constdouble(Double.box(5)), 0, 0, ""))
+    val stmt = new Statement(new _set, 0, 0, "")
+    stmt.addArgument(new ReporterApp(r, 0, 0, ""))
+    stmt.addArgument(new ReporterApp(new _constdouble(Double.box(5)), 0, 0, ""))
     stmt.accept(new SetVisitor)
     assertResult(setterClass.getName.substring("org.nlogo.prim.".length) + ":" + spec + "[_constdouble:5.0[]]")(
       stmt.toString)

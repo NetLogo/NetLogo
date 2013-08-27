@@ -1,6 +1,7 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.compile.front
+package org.nlogo.compile
+package front
 
 import org.scalatest.FunSuite
 import org.nlogo.{ api, nvm }

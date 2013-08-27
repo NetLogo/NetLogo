@@ -1,9 +1,9 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.compile.middle
+package org.nlogo.compile
+package middle
 
-import org.nlogo.{ prim, nvm },
-  org.nlogo.compile.front
+import org.nlogo.{ prim, nvm }
 
 /**
  * Converts _of(_turtlevariable,...) to _turtlevariableof(...)
@@ -12,14 +12,14 @@ import org.nlogo.{ prim, nvm },
  */
 // This could be done in Optimizer instead, but this code is nice and simple and we already have it,
 // so why not keep it? - ST 2/8/09
-private class SimpleOfVisitor extends front.DefaultAstVisitor {
-  override def visitReporterApp(app: front.ReporterApp) {
+private class SimpleOfVisitor extends DefaultAstVisitor {
+  override def visitReporterApp(app: ReporterApp) {
     if(app.reporter.isInstanceOf[prim._of])
       process(app)
     super.visitReporterApp(app)
   }
-  private def process(app: front.ReporterApp) {
-    for(r <- convert(app.args(0).asInstanceOf[front.ReporterBlock].app.reporter)) {
+  private def process(app: ReporterApp) {
+    for(r <- convert(app.args(0).asInstanceOf[ReporterBlock].app.reporter)) {
       r.token(app.reporter.token)
       app.reporter = r
       app.removeArgument(0)

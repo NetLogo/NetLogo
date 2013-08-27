@@ -1,11 +1,11 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.compile.middle
+package org.nlogo.compile
+package middle
 
 import org.nlogo.{ api, nvm, prim },
   prim._,
-  org.nlogo.compile.front,
-  front.Fail._
+  Fail._
 
 /**
  * an AstVisitor that handles the set command. We convert constructs like
@@ -13,17 +13,17 @@ import org.nlogo.{ api, nvm, prim },
  * "_setprocedurevariable(value)" or whatever, where the new set* command
  * knows internally the variable it's setting.
  */
-class SetVisitor extends front.DefaultAstVisitor {
+class SetVisitor extends DefaultAstVisitor {
   private lazy val INVALID_SET =
     api.I18N.errors.get("compiler.SetVisitor.notSettable")
-  override def visitStatement(stmt: front.Statement) {
+  override def visitStatement(stmt: Statement) {
     super.visitStatement(stmt)
     if(stmt.command.isInstanceOf[_set]) {
-      val rApp = stmt(0).asInstanceOf[front.ReporterApp]
+      val rApp = stmt(0).asInstanceOf[ReporterApp]
       val newCommandClass = SetVisitor.classes.get(rApp.reporter.getClass)
         .getOrElse(exception(INVALID_SET, stmt))
       val newCommand =
-        front.Instantiator.newInstance[nvm.Command](
+        Instantiator.newInstance[nvm.Command](
           newCommandClass, rApp.reporter)
       newCommand.token(stmt.command.token)
       newCommand.tokenLimitingType(rApp.instruction.token)

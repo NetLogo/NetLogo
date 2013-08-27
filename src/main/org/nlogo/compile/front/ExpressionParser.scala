@@ -1,6 +1,7 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.compile.front
+package org.nlogo.compile
+package front
 
 import Fail.{ cAssert, exception }
 import org.nlogo.api.{ LogoList, Nobody, Syntax, Token, TokenType, TypeNames }
@@ -343,7 +344,7 @@ class ExpressionParser(
           tokens.next()
           val (reporter, rApp) = token.tpe match {
             case TokenType.Literal =>
-              val r = ExpressionParser.makeLiteralReporter(token.value)
+              val r = Literals.makeLiteralReporter(token.value)
               r.token(token)
               (r, new ReporterApp(r, token.start, token.end, token.filename))
             case TokenType.Reporter =>
@@ -570,7 +571,7 @@ class ExpressionParser(
       // to the LiteralParser through Compiler.readFromString ev 3/20/08
       val (list, closeBracket) =
         new LiteralParser(null, null, null).parseLiteralList(tokens.next(), tokens)
-      val tmp = ExpressionParser.makeLiteralReporter(list)
+      val tmp = Literals.makeLiteralReporter(list)
       tmp.token(new Token("", TokenType.Literal, null)(openBracket.start, closeBracket.end, closeBracket.filename))
       new ReporterApp(tmp, openBracket.start, closeBracket.end, closeBracket.filename)
     }
@@ -610,16 +611,4 @@ class ExpressionParser(
   private val MissingCloseParen = "No closing parenthesis for this open parenthesis."
   private val MissingInputOnLeft = "Missing input on the left."
 
-}
-
-object ExpressionParser {
-  def makeLiteralReporter(value: AnyRef): Reporter =
-    value match {
-      case b: java.lang.Boolean => new _constboolean(b)
-      case d: java.lang.Double => new _constdouble(d)
-      case l: LogoList => new _constlist(l)
-      case s: String => new _conststring(s)
-      case Nobody => new _nobody
-      case _ => new _const(value)
-    }
 }

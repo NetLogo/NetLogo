@@ -1,18 +1,19 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.compile.middle
+package org.nlogo.compile
+package middle
 
 import org.nlogo.{ api, nvm, prim },
-  org.nlogo.compile.front, front.Fail._
+  Fail._
 
-private class TaskVisitor extends front.DefaultAstVisitor {
+private class TaskVisitor extends DefaultAstVisitor {
   private var task = Option.empty[prim._reportertask]
   private var procedure = Option.empty[nvm.Procedure]
-  override def visitProcedureDefinition(procdef: front.ProcedureDefinition) {
+  override def visitProcedureDefinition(procdef: ProcedureDefinition) {
     procedure = Some(procdef.procedure)
     super.visitProcedureDefinition(procdef)
   }
-  override def visitReporterApp(expr: front.ReporterApp) {
+  override def visitReporterApp(expr: ReporterApp) {
     expr.reporter match {
       case l: prim._reportertask =>
         val old = task

@@ -1,6 +1,7 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.compile.front
+package org.nlogo.compile
+package front
 
 import org.nlogo.{ api, nvm, parse }
 
@@ -58,14 +59,14 @@ trait FrontEndExtras { this: nvm.FrontEndInterface =>
   }
 
   def makeLiteralReporter(value: AnyRef): nvm.Reporter =
-    ExpressionParser.makeLiteralReporter(value)
+    Literals.makeLiteralReporter(value)
 
   // used by CommandLine
   def isReporter(s: String, program: api.Program, procedures: ProceduresMap, extensionManager: api.ExtensionManager) =
     try {
       val results =
         new StructureParser(tokenizer.tokenize("to __is-reporter? report " + s + "\nend").map(parse.Namer0),
-                            None, StructureResults(program, procedures))
+                            None, nvm.StructureResults(program, procedures))
           .parse(subprogram = true)
       val namer =
         new Namer(program, procedures ++ results.procedures, extensionManager, Vector())
