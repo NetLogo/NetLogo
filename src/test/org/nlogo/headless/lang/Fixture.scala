@@ -86,7 +86,7 @@ class Fixture(name: String) {
               api.Dump.logoObject(actualResult, true, false))
           }
           assert(api.Equality.equals(actualResult,
-            compiler.readFromString(expectedResult)),
+            compiler.frontEnd.readFromString(expectedResult)),
             s"""$mode: not recursivelyEqual(): reporter "${reporter.reporter}"""")
         case _ =>
           fail(s"""failed to cause runtime error: "${reporter.reporter}"""")

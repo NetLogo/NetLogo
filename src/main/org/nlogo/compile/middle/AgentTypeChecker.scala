@@ -1,6 +1,7 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.compile.middle
+package org.nlogo.compile
+package middle
 
 // The purpose of this class is to determine which portions of the
 // code are usable by which agent types.  For example "fd 1" is
@@ -66,9 +67,9 @@ package org.nlogo.compile.middle
 import org.nlogo.api.Syntax
 import org.nlogo.nvm.{ Instruction, Procedure }
 import org.nlogo.prim.{ _call, _callreport, _task }
-import org.nlogo.parse, parse.Fail._
+import Fail._
 
-private class AgentTypeChecker(defs: Seq[parse.ProcedureDefinition]) {
+private class AgentTypeChecker(defs: Seq[ProcedureDefinition]) {
 
   def check() {
     def usables = defs.map(_.procedure.agentClassString).toList
@@ -78,20 +79,20 @@ private class AgentTypeChecker(defs: Seq[parse.ProcedureDefinition]) {
     if(usables != oldUsables) check()
   }
 
-  class AgentTypeCheckerVisitor(currentProcedure: Procedure, var agentClassString: String) extends parse.DefaultAstVisitor {
+  class AgentTypeCheckerVisitor(currentProcedure: Procedure, var agentClassString: String) extends DefaultAstVisitor {
     // agentClassString is "var" because it's where we accumulate our result.
     // it starts out as OTPL and the more code we see the more restricted
     // it may grow.  The use of mutable state in this way is characteristic
     // of the Visitor pattern.
 
-    override def visitProcedureDefinition(procdef: parse.ProcedureDefinition) {
+    override def visitProcedureDefinition(procdef: ProcedureDefinition) {
       super.visitProcedureDefinition(procdef)
       // after we've seen the whole procedure, store the result there
       procdef.procedure.agentClassString = agentClassString
     }
     // visitStatement and visitReporterApp are clones of each other
 
-    override def visitStatement(stmt: parse.Statement) {
+    override def visitStatement(stmt: Statement) {
       val c = stmt.command
       agentClassString = typeCheck(currentProcedure, c, agentClassString)
       if(c.syntax.blockAgentClassString != null)
@@ -102,7 +103,7 @@ private class AgentTypeChecker(defs: Seq[parse.ProcedureDefinition]) {
     }
 
     // visitStatement and visitReporterApp are clones of each other
-    override def visitReporterApp(app: parse.ReporterApp) {
+    override def visitReporterApp(app: ReporterApp) {
       val r = app.reporter
       agentClassString = typeCheck(currentProcedure, r, agentClassString)
       if(r.isInstanceOf[_task])
@@ -114,22 +115,22 @@ private class AgentTypeChecker(defs: Seq[parse.ProcedureDefinition]) {
       r.agentClassString = agentClassString
     }
 
-    private def chooseVisitorAndContinue(blockAgentClassString: String, exps: Seq[parse.Expression]) {
+    private def chooseVisitorAndContinue(blockAgentClassString: String, exps: Seq[Expression]) {
       for(exp <- exps) {
         exp.accept(
           exp match {
-            case _: parse.CommandBlock | _: parse.ReporterBlock =>
+            case _: CommandBlock | _: ReporterBlock =>
               val argsAgentClassString =
                 if(blockAgentClassString != "?") blockAgentClassString
                 else exps match {
-                  case Seq(app: parse.ReporterApp, _*) => getReportedAgentType(app)
+                  case Seq(app: ReporterApp, _*) => getReportedAgentType(app)
                   case _ => "-TPL"
                 }
               new AgentTypeCheckerVisitor(currentProcedure, argsAgentClassString)
             case _ => this } ) }
     }
 
-    def getReportedAgentType(app: parse.ReporterApp): String = {
+    def getReportedAgentType(app: ReporterApp): String = {
       app.reporter.syntax.ret match {
         case Syntax.TurtleType | Syntax.TurtlesetType => "-T--"
         case Syntax.PatchType  | Syntax.PatchsetType  => "--P-"
@@ -140,7 +141,7 @@ private class AgentTypeChecker(defs: Seq[parse.ProcedureDefinition]) {
         // could break someday. - ST 12/8/02, 12/15/05, 2/21/08
         case Syntax.AgentType  | Syntax.AgentsetType  =>
           app.args match {
-            case Seq(app: parse.ReporterApp, _*) => getReportedAgentType(app)
+            case Seq(app: ReporterApp, _*) => getReportedAgentType(app)
             case _ => "-TPL"
           }
         case _ => "-TPL"

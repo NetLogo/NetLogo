@@ -3,7 +3,7 @@
 package org.nlogo.lab
 
 import org.scalatest.FunSuite
-import org.nlogo.nvm.{ ParserInterface, DefaultParserServices }
+import org.nlogo.nvm.{ FrontEndInterface, DefaultParserServices }
 import org.nlogo.util.Femto
 import org.xml.sax.SAXException
 import java.io.{ File, FileNotFoundException }
@@ -11,7 +11,7 @@ import java.io.{ File, FileNotFoundException }
 class TestLoadAndSave extends FunSuite {
   val loader = new ProtocolLoader(
     new DefaultParserServices(
-      Femto.scalaSingleton("org.nlogo.parse.Parser")))
+      Femto.scalaSingleton("org.nlogo.compile.front.FrontEnd")))
   test("bad XML 1") {
     val xml = org.nlogo.api.FileIO.file2String("test/lab/protocols.xml")
       .replaceFirst("^<\\?xml.*\\n", "")

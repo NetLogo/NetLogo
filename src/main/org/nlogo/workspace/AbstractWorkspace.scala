@@ -9,7 +9,7 @@ import
   agent.{ World, Agent, AbstractExporter, AgentSet },
   api.{ AgentKind, PlotInterface, Dump, CommandLogoThunk, ReporterLogoThunk,
     CompilerException, LogoException, JobOwner, SimpleJobOwner, Token, ModelType },
-  nvm.{ ParserInterface, FileManager, Instruction, EngineException, Context,
+  nvm.{ FrontEndInterface, FileManager, Instruction, EngineException, Context,
     Procedure, Job, Command, MutableLong, Workspace, Activation },
   plot.{ PlotExporter, PlotManager },
   org.nlogo.util.{ Exceptions, Femto },
@@ -119,17 +119,17 @@ object AbstractWorkspaceTraits {
   trait Compiling { this: AbstractWorkspace =>
 
     override def readNumberFromString(source: String) =
-      compiler.readNumberFromString(
+      compiler.frontEnd.readNumberFromString(
         source, world, getExtensionManager)
 
     override def isReporter(s: String) =
-      compiler.isReporter(s, world.program, procedures, getExtensionManager)
+      compiler.frontEnd.isReporter(s, world.program, procedures, getExtensionManager)
 
   }
 
   trait Procedures { this: AbstractWorkspace =>
-    var procedures: ParserInterface.ProceduresMap =
-      ParserInterface.NoProcedures
+    var procedures: FrontEndInterface.ProceduresMap =
+      FrontEndInterface.NoProcedures
     def init() {
       procedures.values.foreach(_.init(this))
     }
@@ -564,7 +564,7 @@ object AbstractWorkspaceTraits {
       new agent.ImporterJ.StringReader {
         @throws(classOf[agent.ImporterJ.StringReaderException])
         def readFromString(s: String): AnyRef =
-          try compiler.readFromString(s, world, getExtensionManager)
+          try compiler.frontEnd.readFromString(s, world, getExtensionManager)
           catch { case ex: CompilerException =>
               throw new agent.ImporterJ.StringReaderException(ex.getMessage)
           }

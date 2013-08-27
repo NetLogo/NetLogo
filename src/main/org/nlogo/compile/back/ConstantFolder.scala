@@ -1,6 +1,7 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.compile.back
+package org.nlogo.compile
+package back
 
 // Performs constant folding (http://en.wikipedia.org/wiki/Constant_folding)
 
@@ -15,30 +16,35 @@ package org.nlogo.compile.back
 
 // I think compile time reporting is definitely good. - ST 2/12/09
 
+// One might expect this to be part of the middle end rather than the back end.  But
+// it needs to actually execute code in order to do its job, and for that it uses
+// ArgumentStuffer, which is definitely back end stuff. - ST 8/27/13
+
 import org.nlogo.api.CompilerException
 import org.nlogo.api.LogoException
 import org.nlogo.nvm.Pure
-import org.nlogo.parse, parse.Fail._
+import org.nlogo.compile.front
+import Fail._
 
-private class ConstantFolder extends parse.DefaultAstVisitor {
-  override def visitReporterApp(app: parse.ReporterApp) {
+private class ConstantFolder extends DefaultAstVisitor {
+  override def visitReporterApp(app: ReporterApp) {
     super.visitReporterApp(app)
     if (app.reporter.isInstanceOf[Pure] && !app.args.isEmpty && app.args.forall(isConstant)) {
-      val newReporter = parse.ExpressionParser.makeLiteralReporter(applyReporter(app))
+      val newReporter = Literals.makeLiteralReporter(applyReporter(app))
       newReporter.storedSourceStartPosition = app.reporter.getSourceStartPosition
       newReporter.storedSourceEndPosition = app.reporter.getSourceEndPosition
       app.reporter = newReporter
       app.clearArgs
     }
   }
-  private def isConstant(e: parse.Expression) =
+  private def isConstant(e: Expression) =
     e match {
-      case app: parse.ReporterApp =>
+      case app: ReporterApp =>
         app.reporter.isInstanceOf[Pure] && app.args.isEmpty
       case _ =>
         false
     }
-  private def applyReporter(app: parse.ReporterApp): AnyRef = {
+  private def applyReporter(app: ReporterApp): AnyRef = {
     val r = app.reporter
     app.accept(new ArgumentStuffer) // fill args array
     r.init(null)  // copy args array to arg0, arg1, etc.

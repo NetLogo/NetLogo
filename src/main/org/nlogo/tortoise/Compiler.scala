@@ -2,8 +2,9 @@
 
 package org.nlogo.tortoise
 
-import org.nlogo.{ api, nvm, parse, prim, workspace }
-import nvm.ParserInterface.{ ProceduresMap, NoProcedures }
+import org.nlogo.{ api, compile, nvm, prim, workspace },
+   compile._,
+   nvm.FrontEndInterface.{ ProceduresMap, NoProcedures }
 
 object Compiler {
 
@@ -21,14 +22,14 @@ object Compiler {
 
   def compileProcedures(logo: String, minPxcor: Int = 0, maxPxcor: Int = 0, minPycor: Int = 0, maxPycor: Int = 0): (String, api.Program, ProceduresMap) = {
     // (Seq[ProcedureDefinition], StructureParser.Results)
-    val (defs, sp) = parse.Parser.frontEnd(logo)
+    val (defs, sp) = front.FrontEnd.frontEnd(logo)
     val js =
       new RuntimeInit(sp.program, minPxcor, maxPycor, minPycor, maxPycor).init +
         defs.map(compileProcedureDef).mkString("\n")
     (js, sp.program, sp.procedures)
   }
 
-  private def compileProcedureDef(pd: parse.ProcedureDefinition): String = {
+  private def compileProcedureDef(pd: ProcedureDefinition): String = {
     val name = pd.procedure.name
     val body = generateCommands(pd.statements)
     val args = pd.procedure.args.mkString(", ")
@@ -51,21 +52,21 @@ object Compiler {
     val wrapped =
       workspace.Evaluator.getHeader(api.AgentKind.Observer, commands) +
         logo + workspace.Evaluator.getFooter(commands)
-    val (defs, _) = parse.Parser.frontEnd(wrapped, oldProcedures, program)  // Seq[ProcedureDefinition]
+    val (defs, _) = front.FrontEnd.frontEnd(wrapped, oldProcedures, program)  // Seq[ProcedureDefinition]
     if (commands) generateCommands(defs.head.statements)
     else genArg(defs.head.statements.tail.head.args.head)
   }
 
   ///
 
-  def generateCommands(cs: parse.Statements): String =
+  def generateCommands(cs: Statements): String =
     cs.map(generateCommand).filter(_.nonEmpty).mkString("\n")
 
   ///
 
-  def generateCommand(s: parse.Statement): String = {
+  def generateCommand(s: Statement): String = {
     def arg(i: Int) = genArg(s.args(i))
-    def args = s.args.collect{ case x: parse.ReporterApp => genArg(x) }.mkString(", ")
+    def args = s.args.collect{ case x: ReporterApp => genArg(x) }.mkString(", ")
     s.command match {
       case _: prim._done             => ""
       case _: prim.etc._observercode => ""
@@ -85,7 +86,7 @@ object Compiler {
       case r: prim._repeat           =>
         s"for(var i = 0; i < ${arg(0)}; i++) { ${genCommandBlock(s.args(1))} }"
       case _: prim._set              =>
-        s.args(0).asInstanceOf[parse.ReporterApp].reporter match {
+        s.args(0).asInstanceOf[ReporterApp].reporter match {
           case p: prim._letvariable =>
             s"${p.let.name} = ${arg(1)};"
           case p: prim._observervariable =>
@@ -101,11 +102,11 @@ object Compiler {
     }
   }
 
-  def generateReporter(r: parse.ReporterApp): String = {
+  def generateReporter(r: ReporterApp): String = {
     def arg(i: Int) = genArg(r.args(i))
     def args = argsSep(", ")
     def argsSep(sep: String) =
-      r.args.collect{ case x: parse.ReporterApp => genArg(x) }.mkString(sep)
+      r.args.collect{ case x: ReporterApp => genArg(x) }.mkString(sep)
     r.reporter match {
       case pure: nvm.Pure if r.args.isEmpty => compileLiteral(pure.report(null))
       case lv: prim._letvariable            => lv.let.name
@@ -138,15 +139,15 @@ object Compiler {
   // but I think the resulting code would be confusing and potentially error prone.
   // having different functions for each is more clear.
 
-  def genReporterApp(e: parse.Expression) = e match {
-    case r: parse.ReporterApp => generateReporter(r)
+  def genReporterApp(e: Expression) = e match {
+    case r: ReporterApp => generateReporter(r)
   }
-  def genArg(e: parse.Expression) = genReporterApp(e)
-  def genReporterBlock(e: parse.Expression) = e match {
-    case r: parse.ReporterBlock => Compiler.generateReporter(r.app)
+  def genArg(e: Expression) = genReporterApp(e)
+  def genReporterBlock(e: Expression) = e match {
+    case r: ReporterBlock => Compiler.generateReporter(r.app)
   }
-  def genCommandBlock(e: parse.Expression) = e match {
-    case cb: parse.CommandBlock => Compiler.generateCommands(cb.statements)
+  def genCommandBlock(e: Expression) = e match {
+    case cb: CommandBlock => Compiler.generateCommands(cb.statements)
   }
 }
 

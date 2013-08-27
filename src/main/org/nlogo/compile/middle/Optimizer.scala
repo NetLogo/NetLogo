@@ -1,24 +1,25 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.compile.middle
+package org.nlogo.compile
+package middle
 
-import org.nlogo.{ api, parse }, api.LogoException
+import org.nlogo.api, api.LogoException
 import org.nlogo.agent.Patch
 import org.nlogo.nvm.{ Command, Instruction, Reporter }
 import org.nlogo.prim._
 
 // "asInstanceOf" is everywhere here. Could I make it more type-safe? - ST 1/28/09
 
-private object Optimizer extends parse.DefaultAstVisitor {
+private object Optimizer extends DefaultAstVisitor {
 
-  override def visitStatement(stmt: parse.Statement) {
+  override def visitStatement(stmt: Statement) {
     super.visitStatement(stmt)
     val oldCommand = stmt.command
     commandMungers.filter(_.clazz eq oldCommand.getClass)
       .find{munger => munger.munge(stmt); stmt.command != oldCommand}
   }
 
-  override def visitReporterApp(app: parse.ReporterApp) {
+  override def visitReporterApp(app: ReporterApp) {
     super.visitReporterApp(app)
     val oldReporter = app.reporter
     reporterMungers.filter(_.clazz eq oldReporter.getClass)
@@ -34,46 +35,46 @@ private object Optimizer extends parse.DefaultAstVisitor {
          PatchVariableDouble, TurtleVariableDouble, RandomConst)
 
   private class MatchFailedException extends Exception
-  private abstract class CommandMunger { val clazz: Class[_ <: Command]; def munge(stmt: parse.Statement) }
-  private abstract class ReporterMunger { val clazz: Class[_ <: Reporter]; def munge(app: parse.ReporterApp) }
+  private abstract class CommandMunger { val clazz: Class[_ <: Command]; def munge(stmt: Statement) }
+  private abstract class ReporterMunger { val clazz: Class[_ <: Reporter]; def munge(app: ReporterApp) }
 
   private abstract class RewritingCommandMunger extends CommandMunger {
-    def munge(stmt: parse.Statement) {
+    def munge(stmt: Statement) {
       try munge(new Match(stmt))
       catch { case _: MatchFailedException => }
     }
     def munge(root: Match)
   }
   private abstract class RewritingReporterMunger extends ReporterMunger {
-    def munge(app: parse.ReporterApp) {
+    def munge(app: ReporterApp) {
       try munge(new Match(app))
       catch { case _: MatchFailedException => }
     }
     def munge(root: Match)
   }
 
-  private class Match(val node: parse.AstNode) {
+  private class Match(val node: AstNode) {
     def matchit(theClass: Class[_ <: Instruction]) =
       node match {
-        case app: parse.ReporterApp if theClass.isInstance(app.reporter) => this
-        case stmt: parse.Statement if theClass.isInstance(stmt.command) => this
+        case app: ReporterApp if theClass.isInstance(app.reporter) => this
+        case stmt: Statement if theClass.isInstance(stmt.command) => this
         case _ => throw new MatchFailedException
       }
     def command =
       node match {
-        case stmt: parse.Statement => stmt.command
+        case stmt: Statement => stmt.command
         case _ => throw new MatchFailedException
       }
     def reporter =
       node match {
-        case app: parse.ReporterApp => app.reporter
+        case app: ReporterApp => app.reporter
         case _ => throw new MatchFailedException
       }
     def matchEmptyCommandBlockIsLastArg =
       node match {
-        case stmt: parse.Statement if !stmt.args.isEmpty =>
+        case stmt: Statement if !stmt.args.isEmpty =>
           stmt.args.last match {
-            case block: parse.CommandBlock if block.statements.size == 0 =>
+            case block: CommandBlock if block.statements.size == 0 =>
               new Match(block)
             case _ =>
               throw new MatchFailedException
@@ -82,15 +83,15 @@ private object Optimizer extends parse.DefaultAstVisitor {
       }
     def matchArg(index: Int) = {
       val args = node match {
-                   case stmt: parse.Statement => stmt.args
-                   case app: parse.ReporterApp => app.args
+                   case stmt: Statement => stmt.args
+                   case app: ReporterApp => app.args
                    case _ => throw new MatchFailedException
                  }
       if(index >= args.size) throw new MatchFailedException
       args(index) match {
-        case app: parse.ReporterApp =>
+        case app: ReporterApp =>
           new Match(app)
-        case block: parse.ReporterBlock =>
+        case block: ReporterBlock =>
           new Match(block)
         case _ =>
           throw new MatchFailedException
@@ -98,19 +99,19 @@ private object Optimizer extends parse.DefaultAstVisitor {
     }
     def matchArg(index: Int, classes: Class[_ <: Instruction]*) = {
       val args = node match {
-                   case stmt: parse.Statement => stmt.args
-                   case app: parse.ReporterApp => app.args
+                   case stmt: Statement => stmt.args
+                   case app: ReporterApp => app.args
                    case _ => throw new MatchFailedException
                  }
       if(index >= args.size) throw new MatchFailedException
       args(index) match {
-        case app: parse.ReporterApp if classes.exists(_.isInstance(app.reporter)) => new Match(app)
+        case app: ReporterApp if classes.exists(_.isInstance(app.reporter)) => new Match(app)
         case _ => throw new MatchFailedException
       }
     }
     def matchReporterBlock() = {
       node match {
-        case block: parse.ReporterBlock =>
+        case block: ReporterBlock =>
           new Match(block.app)
         case _ =>
           throw new MatchFailedException
@@ -128,46 +129,46 @@ private object Optimizer extends parse.DefaultAstVisitor {
       else result
     }
     def report =
-      try node.asInstanceOf[parse.ReporterApp].reporter.report(null)
+      try node.asInstanceOf[ReporterApp].reporter.report(null)
       catch { case ex: LogoException =>
           throw new IllegalStateException(ex) }
     def strip() {
       node match {
-        case app: parse.ReporterApp =>
+        case app: ReporterApp =>
           while(!app.args.isEmpty) app.removeArgument(0)
-        case stmt: parse.Statement =>
+        case stmt: Statement =>
           while(!stmt.args.isEmpty) stmt.removeArgument(0)
       }
     }
     def graftArg(newArg: Match) {
       node match {
-        case app: parse.ReporterApp =>
-          app.addArgument(newArg.node.asInstanceOf[parse.Expression])
-        case stmt: parse.Statement =>
-          stmt.addArgument(newArg.node.asInstanceOf[parse.Expression])
+        case app: ReporterApp =>
+          app.addArgument(newArg.node.asInstanceOf[Expression])
+        case stmt: Statement =>
+          stmt.addArgument(newArg.node.asInstanceOf[Expression])
       }
     }
     def removeLastArg() {
       node match {
-        case app: parse.ReporterApp => app.removeArgument(app.args.size - 1)
-        case stmt: parse.Statement => stmt.removeArgument(stmt.args.size - 1)
+        case app: ReporterApp => app.removeArgument(app.args.size - 1)
+        case stmt: Statement => stmt.removeArgument(stmt.args.size - 1)
       }
     }
     def replace(theClass: Class[_ <: Instruction], constructorArgs: Any*) {
-      val newGuy = parse.Instantiator.newInstance[Instruction](theClass, constructorArgs: _*)
+      val newGuy = Instantiator.newInstance[Instruction](theClass, constructorArgs: _*)
       node match {
-        case app: parse.ReporterApp =>
+        case app: ReporterApp =>
           newGuy.token(app.reporter.token)
           app.reporter = newGuy.asInstanceOf[Reporter]
-        case stmt: parse.Statement =>
+        case stmt: Statement =>
           newGuy.token(stmt.command.token)
           stmt.command = newGuy.asInstanceOf[Command]
       }
     }
-    def addArg(theClass: Class[_ <: Reporter], original: parse.ReporterApp): Match = {
-      val newGuy = parse.Instantiator.newInstance[Reporter](theClass)
+    def addArg(theClass: Class[_ <: Reporter], original: ReporterApp): Match = {
+      val newGuy = Instantiator.newInstance[Reporter](theClass)
       newGuy.token(original.reporter.token)
-      val result = new Match(new parse.ReporterApp(
+      val result = new Match(new ReporterApp(
         newGuy, original.start, original.end, original.file))
       graftArg(result)
       result
@@ -441,7 +442,7 @@ private object Optimizer extends parse.DefaultAstVisitor {
       if(root.matchOtherArg(count, classOf[_constdouble]).reporter.asInstanceOf[_constdouble]
            .primitiveValue == 0)
       {
-        val oldRoot = root.node.asInstanceOf[parse.ReporterApp]
+        val oldRoot = root.node.asInstanceOf[ReporterApp]
         root.strip()
         root.replace(classOf[_not])
         val anywith = root.addArg(classOf[_anywith], oldRoot)

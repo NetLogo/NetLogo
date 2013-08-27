@@ -182,7 +182,7 @@ class Evaluator(workspace: AbstractWorkspace) {
   }
 
   def readFromString(string: String) =
-    workspace.compiler.readFromString(
+    workspace.compiler.frontEnd.readFromString(
       string, workspace.world, workspace.getExtensionManager)
 }
 

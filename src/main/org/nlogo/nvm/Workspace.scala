@@ -12,12 +12,12 @@ trait Workspace extends api.Workspace with JobManagerOwner with api.ViewSettings
   def updateUI(context: Context) { }
   def joinForeverButtons(agent: Agent)
   def addJobFromJobThread(job: Job)
-  def procedures: ParserInterface.ProceduresMap
-  def procedures_=(procedures: ParserInterface.ProceduresMap)
+  def procedures: FrontEndInterface.ProceduresMap
+  def procedures_=(procedures: FrontEndInterface.ProceduresMap)
   def fileManager: FileManager
   def tick(c: Context, originalInstruction: Instruction)
   def compiler: CompilerInterface
-  def parser: ParserInterface
+  def parser: FrontEndInterface
   def lastRunTimes: WeakHashMap[Job, WeakHashMap[Agent, WeakHashMap[Command, MutableLong]]]  // for _every
   def completedActivations: WeakHashMap[Activation, Boolean]  // for _thunkdidfinish
   def profilingTracer: Tracer

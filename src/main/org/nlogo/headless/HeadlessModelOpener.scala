@@ -88,7 +88,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
         case "SLIDER" =>
           new NumericConstraint(spec(4))
         case "CHOOSER" =>
-          val vals = ws.compiler.readFromString(spec(1)).asInstanceOf[LogoList]
+          val vals = ws.compiler.frontEnd.readFromString(spec(1)).asInstanceOf[LogoList]
           val defaultIndex = spec(2).toInt
           val defaultAsString = org.nlogo.api.Dump.logoObject(vals.get(defaultIndex), true, false)
           interfaceGlobalCommands.append("set " + vname + " " + defaultAsString + "\n")
@@ -97,7 +97,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
         case "INPUTBOX" =>
           var defaultVal: AnyRef = spec(1)
           if (spec(2) == "Number" || spec(2) == "Color")
-            defaultVal = ws.compiler.readNumberFromString(spec(1), ws.world,
+            defaultVal = ws.compiler.frontEnd.readNumberFromString(spec(1), ws.world,
               ws.getExtensionManager)
           new InputBoxConstraint(spec(2), defaultVal)
       }

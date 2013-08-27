@@ -1,19 +1,20 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.compile.middle
+package org.nlogo.compile
+package middle
 
 import org.nlogo.api.I18N
 import org.nlogo.prim._
-import org.nlogo.parse, parse.Fail._
+import Fail._
 
 /**
  * This is an AstVisitor that connects "error-message" reporters to
  * their enclosing "carefully" commands.
  */
 
-private class CarefullyVisitor extends parse.DefaultAstVisitor {
+private class CarefullyVisitor extends DefaultAstVisitor {
   private val stack = new collection.mutable.Stack[_carefully]
-  override def visitStatement(stmt: parse.Statement) {
+  override def visitStatement(stmt: Statement) {
     stmt.command match {
       case c:_carefully =>
         // carefully takes two arguments, both command blocks.
@@ -25,7 +26,7 @@ private class CarefullyVisitor extends parse.DefaultAstVisitor {
       case _ => super.visitStatement(stmt)
     }
   }
-  override def visitReporterApp(app: parse.ReporterApp) {
+  override def visitReporterApp(app: ReporterApp) {
     app.reporter match {
       case em: _errormessage =>
         if(stack.isEmpty)
