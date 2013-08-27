@@ -53,20 +53,25 @@ trait Finder extends FunSuite with SlowTest {
           fixture =>
             val nonDecls = t.entries.filterNot(_.isInstanceOf[Declaration])
             if (nonDecls.forall(!_.isInstanceOf[Open]))
-              fixture.declare(StandardDeclarations +
-                t.entries.collect{
-                  case d: Declaration => d.source}.mkString("\n"))
+              ModelCreator.open(
+                fixture.workspace,
+                dimensions = fixture.dimensions,
+                widgets = StandardWidgets,
+                source =
+                  StandardDeclarations +
+                    t.entries.collect{case d: Declaration => d.source}
+                    .mkString("\n"))
             else
               assert(t.entries.forall(!_.isInstanceOf[Declaration]))
             nonDecls.foreach{
               case Open(path) =>
                 fixture.workspace.open(path)
-              case Declaration(content) =>
-                fixture.declare(content)
               case command: Command =>
                 fixture.runCommand(command, mode)
               case reporter: Reporter =>
                 fixture.runReporter(reporter, mode)
+              case _ =>
+                throw new IllegalStateException
             }
         }
     }
@@ -111,6 +116,12 @@ trait Finder extends FunSuite with SlowTest {
        |directed-links-own [lvar]
        |undirected-links-own [weight]
        |""".stripMargin
+  val StandardWidgets = {
+    import ModelCreator.{ Plot, Pens, Pen }
+    List(
+      Plot(name = "plot1", pens = Pens(Pen(name = "pen1"), Pen(name = "pen2"))),
+      Plot(name = "plot2", pens = Pens(Pen(name = "pen1"), Pen(name = "pen2"))))
+  }
 }
 
 case class TxtsInDir(dir: String) extends Iterable[File] {

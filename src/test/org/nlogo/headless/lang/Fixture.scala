@@ -50,20 +50,12 @@ class Fixture(name: String) {
   val compiler: CompilerInterface =
     Femto.scalaSingleton("org.nlogo.compile.Compiler")
 
-  def declare(source: String) {
-    ModelCreator.open(
-      workspace,
-      dimensions = api.WorldDimensions.square(5),
-      source = source,
-      widgets = StandardWidgets)
-  }
+  def dimensions = api.WorldDimensions.square(5)
 
-  // better confined to Finder? - ST 8/22/13
-  val StandardWidgets = {
-    import ModelCreator.{ Plot, Pens, Pen }
-    List(
-      Plot(name = "plot1", pens = Pens(Pen(name = "pen1"), Pen(name = "pen2"))),
-      Plot(name = "plot2", pens = Pens(Pen(name = "pen1"), Pen(name = "pen2"))))
+  def declare(source: String) {
+    ModelCreator.open(workspace,
+      dimensions = dimensions,
+      source = source)
   }
 
   // tempted to DRY runReporter and runCommand together since they're so similar, but refraining
