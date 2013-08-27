@@ -54,10 +54,11 @@ class TestDocking extends FunSuite {
   def defineProcedures(logo: String, minPxcor: Int = 0, maxPxcor: Int = 0, minPycor: Int = 0, maxPycor: Int = 0) {
     val (js, _, _) = Compiler.compileProcedures(logo, minPxcor, maxPxcor, minPycor, maxPycor)
     evalJS(js)
-    headless.InitForTesting(ws, minPxcor, maxPxcor, minPycor, maxPycor, logo)
+    headless.InitForTesting(ws, api.WorldDimensions(minPxcor, maxPxcor, minPycor, maxPycor), logo)
     state = Map()
     Rhino.eval("expectedModel = new AgentModel")
     Rhino.eval("actualModel = new AgentModel")
+    compareCommands("clear-all")
   }
 
   // these two are super helpful when running failing tests
@@ -77,9 +78,7 @@ class TestDocking extends FunSuite {
     test(testName) {
       ws = headless.HeadlessWorkspace.newInstance
       ws.silent = true
-      defineProcedures("")
       state = Map()
-      compareCommands("clear-all")
       body
     }
   }
@@ -87,11 +86,13 @@ class TestDocking extends FunSuite {
   ///
 
   tester("comments") {
+    defineProcedures("")
     compare("3 ; comment")
     compare("[1 ; comment\n2]")
   }
 
   tester("simple literals") {
+    defineProcedures("")
     compare("false")
     compare("true")
     compare("2")
@@ -100,6 +101,7 @@ class TestDocking extends FunSuite {
   }
 
   tester("literal lists") {
+    defineProcedures("")
     compare("[]")
     compare("[1]")
     compare("[1 2]")
@@ -110,6 +112,7 @@ class TestDocking extends FunSuite {
   }
 
   tester("arithmetic") {
+    defineProcedures("")
     compare("2 + 2")
     compare("1 + 2 + 3")
     compare("1 - 2 - 3")
@@ -120,27 +123,33 @@ class TestDocking extends FunSuite {
   }
 
   tester("equality") {
+    defineProcedures("")
     compare("5 = 5")
     compare(""""hello" = "hello"""")
   }
 
   tester("word 0") {
+    defineProcedures("")
     compare("(word)")
   }
 
   tester("word 1") {
+    defineProcedures("")
     compare("(word 1)")
   }
 
   tester("word") {
+    defineProcedures("")
     compare("(word 1 2 3)") // 123, and hopefully not, god forbid, 6
   }
 
   tester("empty commands") {
+    defineProcedures("")
     compareCommands("")
   }
 
   tester("printing") {
+    defineProcedures("")
     compareCommands("output-print 1")
     compareCommands("output-print \"foo\"")
     compareCommands("output-print 2 + 2")
@@ -148,6 +157,7 @@ class TestDocking extends FunSuite {
   }
 
   tester("turtle creation") {
+    defineProcedures("")
     compareCommands("output-print count turtles")
     compareCommands("cro 1")
     compareCommands("output-print count turtles")
@@ -158,15 +168,18 @@ class TestDocking extends FunSuite {
   }
 
   tester("while loops") {
+    defineProcedures("")
     compareCommands("while [count turtles < 5] [cro 1]")
     compareCommands("output-print count turtles")
   }
 
   tester("let") {
+    defineProcedures("")
     compareCommands("let x 5  output-print x")
   }
 
   tester("let + while") {
+    defineProcedures("")
     compareCommands(
       "let x 10 " +
       "while [x > 0] [ set x x - 1 ] " +
@@ -200,6 +213,7 @@ class TestDocking extends FunSuite {
   }
 
   tester("if") {
+    defineProcedures("")
     compareCommands("if true [ output-print 5 ]")
     compareCommands("if false [ output-print 5 ]")
   }
@@ -210,20 +224,24 @@ class TestDocking extends FunSuite {
   }
 
   tester("rng") {
+    defineProcedures("")
     compareCommands("random-seed 0 output-print random 100000")
   }
 
   tester("crt") {
+    defineProcedures("")
     compareCommands("random-seed 0 crt 10")
     compareCommands("__ask-sorted turtles [ output-print color output-print heading ]")
   }
 
   tester("random-xcor/ycor") {
+    defineProcedures("")
     compareCommands("cro 10")
     compareCommands("random-seed 0 __ask-sorted turtles [ setxy random-xcor random-ycor ]")
   }
 
   tester("ask") {
+    defineProcedures("")
     compareCommands("cro 3")
     compareCommands("__ask-sorted turtles [ output-print 0 ]")
   }
@@ -239,22 +257,26 @@ class TestDocking extends FunSuite {
   }
 
   tester("turtle death") {
+    defineProcedures("")
     compareCommands("cro 8")
     compareCommands("__ask-sorted turtles [die]")
     compareCommands("__ask-sorted turtles [output-print xcor]")
   }
 
   tester("turtle size") {
+    defineProcedures("")
     compareCommands("cro 1 __ask-sorted turtles [ set size 5 ]")
     compareCommands("__ask-sorted turtles [ output-print size ]")
   }
 
   tester("turtle color") {
+    defineProcedures("")
     compareCommands("cro 1 __ask-sorted turtles [ set color blue ]")
     compareCommands("__ask-sorted turtles [ output-print blue ]")
   }
 
   tester("patches") {
+    defineProcedures("")
     compareCommands("__ask-sorted patches [output-print pxcor]")
   }
 
@@ -312,10 +334,12 @@ class TestDocking extends FunSuite {
   }
 
   tester("get patch") {
+    defineProcedures("")
     compareCommands("output-print patch 0 0")
   }
 
   tester("get turtle") {
+    defineProcedures("")
     compareCommands("cro 5")
     compareCommands("__ask-sorted turtles [ output-print self ]")
   }
@@ -369,6 +393,7 @@ class TestDocking extends FunSuite {
   }
 
   tester("sprout") {
+    defineProcedures("")
     compareCommands("random-seed 0 " +
       "__ask-sorted patches with [pxcor >= 0] [ sprout 1 ]")
   }

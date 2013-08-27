@@ -4,7 +4,7 @@ package org.nlogo.headless
 package misc
 
 import org.scalatest.{ FunSuite, OneInstancePerTest, BeforeAndAfterEach }
-import org.nlogo.api.{ FileIO, Version }
+import org.nlogo.api
 import org.nlogo.nvm.{ LabInterface, Workspace }
 import org.nlogo.workspace.AbstractWorkspace
 import org.nlogo.util.SlowTest
@@ -29,26 +29,24 @@ with OneInstancePerTest with BeforeAndAfterEach {
   def withoutFirst6Lines(s: String) =
     s.split("\n").drop(6).mkString("", "\n", "\n")
   def slurp(path: String) =
-    stripLineFeeds(FileIO.file2String(path))
+    stripLineFeeds(api.FileIO.file2String(path))
   def stripLineFeeds(s: String) =
     s.replaceAll("\r\n", "\n")
 
-  def runExperiment(minX: Int, maxX: Int, minY: Int, maxY: Int, declarations: String, name: String) = {
+  def runExperiment(dim: api.WorldDimensions, declarations: String, name: String): HeadlessWorkspace = {
     val workspace = newWorkspace()
-    InitForTesting(workspace, minX, maxX, minY, maxY, declarations)
+    InitForTesting(workspace, dim, declarations)
     run("test/lab/" + name)(() => workspace, () => newWorker(name))
     workspace
   }
-  def runExperiment(worldSize: Int, declarations: String, name: String) = {
-    val workspace = newWorkspace()
-    InitForTesting(workspace, worldSize, declarations)
-    run("test/lab/" + name)(() => workspace, () => newWorker(name))
-    workspace
-  }
+  def runExperiment(worldSize: Int, declarations: String, name: String): HeadlessWorkspace =
+    runExperiment(
+      api.WorldDimensions(-worldSize, worldSize, -worldSize, worldSize),
+      declarations, name)
   def runParallelExperiment(name: String, declarations: String = "") {
     def workspace = {
       val w = newWorkspace()
-      InitForTesting(w, 0, declarations)
+      InitForTesting(w, api.WorldDimensions.square(0), declarations)
       w
     }
     // only get spreadsheet results, since parallel table results are in scrambled order - ST 3/4/09
@@ -135,7 +133,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
   }
   test("CarryoverBetweenRuns") {
     val workspace = newWorkspace()
-    InitForTesting(workspace, 0, "globals [foo]")
+    InitForTesting(workspace, api.WorldDimensions.square(0), "globals [foo]")
     // no setup commands, so foo doesn't get reset
     newWorker("testCarryover")
       .run(workspace, () => workspace, 1)
@@ -170,7 +168,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
     runExperimentFromModel("models/test/lab/FireWithExperiments.nlogo", "test2", "models/test/lab/FireWithExperiments2")
   }
   test("ResizingWorld3") {
-    runExperiment(0, 1, 0, 1, "", "testResizingWorld3")
+    runExperiment(api.WorldDimensions(0, 1, 0, 1), "", "testResizingWorld3")
   }
   test("Stopping1") {
     runExperiment(0, "globals [x]",
@@ -248,7 +246,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
   */
   test("dontRunMetricsIfNoListener") {
     val workspace = newWorkspace()
-    InitForTesting(workspace, 0)
+    InitForTesting(workspace, api.WorldDimensions.square(0))
     newWorker("metricGoBoom")
       .run(workspace, () => workspace, 1)
     // with no output being generated, the metrics shouldn't be run at all,
