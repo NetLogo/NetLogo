@@ -83,7 +83,7 @@ object Depend {
       "render" -> List("shape"),
       "review" -> List("mirror", "window"),
       "shape" -> List("api"),
-      "tortoise" -> List("headless", "compiler", "prim/etc"),
+      "tortoise" -> List("headless", "compile", "prim/etc", "mirror"),
       "util" -> Nil,
       "workspace" -> List("nvm", "plot", "drawing"))
     case class Package(val dir: String, var depends: Set[Package]) {
@@ -107,17 +107,21 @@ check absenceOfPackageCycles > 1 in org.nlogo.*
 
 [stdlib-j] = java.lang.* java.util.* java.io.* java.text.* java.net.* java.security.*
 
-[stdlib-s] = scala.Serializable scala.Predef* scala.collection.* scala.reflect.* scala.Function* scala.UninitializedFieldError scala.util.control.Exception* scala.Array* scala.LowPriorityImplicits scala.package$ scala.util.Properties$ scala.Option* scala.Tuple* scala.Product* scala.util.DynamicVariable scala.runtime.* scala.math.* scala.None* scala.Some* scala.MatchError scala.util.Left* scala.util.Right* scala.util.Either* scala.io.* scala.sys.package* scala.Console* scala.PartialFunction* scala.util.matching.Regex* scala.Enumeration* scala.Proxy* scala.FallbackArrayBuilding scala.util.Sorting* scala.StringContext
+[stdlib-s] = scala.Serializable scala.Predef* scala.collection.* scala.reflect.* scala.Function* scala.UninitializedFieldError scala.util.control.Exception* scala.Array* scala.LowPriorityImplicits scala.package$ scala.util.Properties$ scala.Option* scala.Tuple* scala.Product* scala.util.DynamicVariable scala.runtime.* scala.math.* scala.None* scala.Some* scala.MatchError scala.util.Left* scala.util.Right* scala.util.Either* scala.io.* scala.sys.package* scala.Console* scala.PartialFunction* scala.util.matching.Regex* scala.Enumeration* scala.Proxy* scala.FallbackArrayBuilding scala.util.Sorting* scala.StringContext scala.text.Document scala.Symbol
 
 [xml] = org.w3c.dom.* org.xml.sax.* javax.xml.parsers.*
 
 [asm] = org.objectweb.asm.*
 
+[json] = org.json4s.* sun.org.mozilla.javascript.*
+
+[rhino] = javax.script.*
+
 [parser-combinators] = scala.util.parsing*
 
-[testing] = org.scalatest.* org.scalautils.* org.scalacheck.* org.jmock.* org.hamcrest.*
+[testing] = org.scalatest.* org.scalautils.* org.scalacheck.* org.jmock.* org.hamcrest.* org.skyscreamer.jsonassert.*
 
-[libs] = [stdlib-j] [stdlib-s] [headless-AWT] [xml] [asm] [parser-combinators] [testing]
+[libs] = [stdlib-j] [stdlib-s] [headless-AWT] [xml] [asm] [json] [rhino] [parser-combinators] [testing]
 """)
     }
 

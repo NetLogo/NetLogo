@@ -24,4 +24,8 @@ echo "*** done: test:compile"
 if [ ${PIPESTATUS[0]} -ne 0 ] ; then echo "*** FAILED: test-only tortoise"; exit 1; fi
 echo "*** done: test-only tortoise"
 
+./sbt depend 2>&1 | tee tmp/nightly/depend.txt
+if [ ${PIPESTATUS[0]} -ne 0 ] ; then echo "*** FAILED: depend"; exit 1; fi
+echo "*** done: depend"
+
 echo "****** all done!"

@@ -4,9 +4,13 @@ package org.nlogo.tortoise
 
 import org.nlogo.{ api, compile, nvm, prim, workspace },
    compile._,
-   nvm.FrontEndInterface.{ ProceduresMap, NoProcedures }
+   nvm.FrontEndInterface.{ ProceduresMap, NoProcedures },
+   org.nlogo.util.Femto
 
 object Compiler {
+
+  val frontEnd = Femto.get[FrontEndInterface](
+    "org.nlogo.compile.front.FrontEnd")
 
   // three main entry points. input is NetLogo, result is JavaScript.
 
@@ -22,7 +26,7 @@ object Compiler {
 
   def compileProcedures(logo: String, minPxcor: Int = 0, maxPxcor: Int = 0, minPycor: Int = 0, maxPycor: Int = 0): (String, api.Program, ProceduresMap) = {
     // (Seq[ProcedureDefinition], StructureParser.Results)
-    val (defs, sp) = front.FrontEnd.frontEnd(logo)
+    val (defs, sp) = frontEnd.frontEnd(logo)
     val js =
       new RuntimeInit(sp.program, minPxcor, maxPycor, minPycor, maxPycor).init +
         defs.map(compileProcedureDef).mkString("\n")
@@ -52,7 +56,7 @@ object Compiler {
     val wrapped =
       workspace.Evaluator.getHeader(api.AgentKind.Observer, commands) +
         logo + workspace.Evaluator.getFooter(commands)
-    val (defs, _) = front.FrontEnd.frontEnd(wrapped, oldProcedures, program)  // Seq[ProcedureDefinition]
+    val (defs, _) = frontEnd.frontEnd(wrapped, oldProcedures, program)  // Seq[ProcedureDefinition]
     if (commands) generateCommands(defs.head.statements)
     else genArg(defs.head.statements.tail.head.args.head)
   }
