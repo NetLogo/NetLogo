@@ -6,6 +6,12 @@ import org.scalatest.FunSuite
 
 class CompilerTests extends FunSuite {
 
+  test("clear-all") {
+    import Compiler.{compileCommands => compile}
+    assertResult("world.clearall()") {
+      compile("clear-all") }
+  }
+
   test("literals") {
     import Compiler.{compileReporter => compile}
     assertResult("1")(
