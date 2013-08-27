@@ -18,6 +18,12 @@ class TestTreeAgentSet extends FixtureSuite with GivenWhenThen {
     implicit def anyToPub(agentSet: org.nlogo.agent.AgentSet) =
       agentSet.asInstanceOf[TreeAgentSet].simpleChangeEventPublisher
 
+    fixture.declare(
+      """|breed [mice mouse]
+         |breed [frogs frog]
+         |undirected-link-breed [undirected-links undirected-link]
+         |""".stripMargin)
+
     Given("a subscriber to turtles")
     val turtlesSub = new SimpleChangeEventCounter(ws.world.turtles)
     And("a subscriber to mice")

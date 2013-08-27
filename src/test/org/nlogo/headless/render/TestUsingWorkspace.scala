@@ -42,7 +42,7 @@ trait TestUsingWorkspace extends MockSuite {
     val workspace: HeadlessWorkspace = HeadlessWorkspace.newInstance
     workspace.silent = true
     try {
-      workspace.initForTesting(-radius, radius, -radius, radius, HeadlessWorkspace.TestDeclarations)
+      InitForTesting(workspace, -radius, radius, -radius, radius)
       workspace.changeTopology(worldType.xWrap, worldType.yWrap)
       workspace.world.turtleShapeList.replaceShapes(
         VectorShape.parseShapes(

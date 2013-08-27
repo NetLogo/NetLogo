@@ -6,6 +6,7 @@ import org.json4s.native.JsonMethods.{ compact, pretty, parse, render => jsRende
 import org.json4s.string2JsonInput
 import org.nlogo.mirror.{ JSONSerializer, Mirroring }
 import org.nlogo.api.Version
+import org.nlogo.headless
 import org.scalatest.FunSuite
 import org.scalatest.Matchers
 
@@ -64,7 +65,7 @@ class TestJSONSerializer extends FunSuite with Matchers {
       }
 
     TestMirroring.withWorkspace { (ws, mirrorables) =>
-      ws.initForTesting(1)
+      headless.InitForTesting(ws, 1)
       val (initialState, _) = Mirroring.diffs(Map(), mirrorables())
       commands.foldLeft(initialState) {
         case (previousState, (cmd, expectedJSON)) =>

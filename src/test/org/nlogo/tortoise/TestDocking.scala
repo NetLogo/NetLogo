@@ -54,7 +54,7 @@ class TestDocking extends FunSuite {
   def defineProcedures(logo: String, minPxcor: Int = 0, maxPxcor: Int = 0, minPycor: Int = 0, maxPycor: Int = 0) {
     val (js, _, _) = Compiler.compileProcedures(logo, minPxcor, maxPxcor, minPycor, maxPycor)
     evalJS(js)
-    ws.initForTesting(minPxcor, maxPxcor, minPycor, maxPycor, logo)
+    headless.InitForTesting(ws, minPxcor, maxPxcor, minPycor, maxPycor, logo)
     state = Map()
     Rhino.eval("expectedModel = new AgentModel")
     Rhino.eval("actualModel = new AgentModel")

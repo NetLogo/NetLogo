@@ -50,24 +50,6 @@ object HeadlessWorkspace {
     Femto.get("org.nlogo.lab.Lab", protocolLoader)
   }
 
-  /**
-   * Internal use only.
-   */
-  // batrachomyomachia!
-  val TestDeclarations =
-    "globals [glob1 glob2 glob3 ]\n" +
-    "breed [mice mouse]\n " +
-    "breed [frogs frog]\n " +
-    "breed [nodes node]\n " +
-    "directed-link-breed [directed-links directed-link]\n" +
-    "undirected-link-breed [undirected-links undirected-link]\n" +
-    "turtles-own [tvar]\n" +
-    "patches-own [pvar]\n" +
-    "mice-own [age fur]\n" +
-    "frogs-own [age spots]\n" +
-    "directed-links-own [lvar]\n" +
-    "undirected-links-own [weight]\n"
-
 }
 
 /**
@@ -137,69 +119,6 @@ with org.nlogo.workspace.WorldLoaderInterface {
    * Internal use only.
    */
   def waitForQueuedEvents() { }
-
-  /**
-   * Internal use only.
-   */
-  def initForTesting(worldSize: Int) {
-    initForTesting(worldSize, "")
-  }
-
-  /**
-   * Internal use only.
-   */
-  def initForTesting(worldSize: Int, modelString: String) {
-    initForTesting(-worldSize, worldSize, -worldSize, worldSize, modelString)
-  }
-
-  /**
-   * Internal use only.
-   */
-  def initForTesting(minPxcor: Int, maxPxcor: Int, minPycor: Int, maxPycor: Int, source: String) {
-    initForTesting(new WorldDimensions(minPxcor, maxPxcor, minPycor, maxPycor), source)
-  }
-
-  /**
-   * Internal use only.
-   */
-  def initForTesting(d: WorldDimensions, source: String) {
-    world.turtleShapeList.add(org.nlogo.shape.VectorShape.getDefaultShape)
-    world.linkShapeList.add(org.nlogo.shape.LinkShape.getDefaultLinkShape)
-    world.createPatches(d)
-    val results = compiler.compileProgram(
-      source, Program.empty(),
-      getExtensionManager)
-    procedures = results.proceduresMap
-    clearRunCache()
-    init()
-    world.program(results.program)
-    world.realloc()
-
-    // setup some test plots.
-    plotManager.forgetAll()
-    val plot1 = plotManager.newPlot("plot1")
-    plot1.createPlotPen(name = "pen1")
-    plot1.createPlotPen(name = "pen2")
-    val plot2 = plotManager.newPlot("plot2")
-    plot2.createPlotPen(name = "pen1")
-    plot2.createPlotPen(name = "pen2")
-    plotManager.compileAllPlots()
-
-    clearDrawing()
-  }
-
-  def initForTesting(minPxcor: Int, maxPxcor: Int, minPycor: Int, maxPycor: Int) {
-    initForTesting(new WorldDimensions(minPxcor, maxPxcor, minPycor, maxPycor))
-  }
-
-  /**
-   * Internal use only.
-   */
-  def initForTesting(d: org.nlogo.api.WorldDimensions) {
-    world.createPatches(d)
-    world.realloc()
-    clearDrawing()
-  }
 
   /**
    * Kills all turtles, clears all patch variables, and makes a new patch grid.
