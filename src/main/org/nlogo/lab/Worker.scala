@@ -3,7 +3,7 @@
 package org.nlogo.lab
 
 import java.util.concurrent.{Callable, Executors, TimeUnit}
-import org.nlogo.api.{Dump,LogoException,
+import org.nlogo.api.{Dump,LogoException, World,
                       WorldDimensions, WorldDimensionException, SimpleJobOwner}
 import org.nlogo.nvm.{LabInterface, Workspace}
 import org.nlogo.util.MersenneTwisterFast
@@ -108,7 +108,7 @@ class Worker(val protocol: Protocol)
         for((name, value) <- settings) {
           if(world.isDimensionVariable(name)) {
             val v = value.asInstanceOf[java.lang.Double].intValue
-            try { d = world.setDimensionVariable(name, v, d) }
+            try { d = setDimensionVariable(world, name, v, d) }
             catch {
               case e: WorldDimensionException =>
                 throw new FailedException("You cannot set " + name + " to " + v)
@@ -196,4 +196,66 @@ class Worker(val protocol: Protocol)
       eachListener(_.runCompleted(ws, runNumber, steps))
     }
   }
+
+  /// dimension variable handling
+
+  // obviously hastily converted from Java to Scala; needs work - ST 8/22/13
+
+  def setDimensionVariable(world: World, variableName: String, value: Int, dim: WorldDimensions): WorldDimensions = {
+    case class MutableWorldDimensions(
+      var minPxcor: Int, var maxPxcor: Int,
+      var minPycor: Int, var maxPycor: Int)
+    val d = MutableWorldDimensions(
+      dim.minPxcor, dim.maxPxcor,
+      dim.minPycor, dim.maxPycor)
+    if (variableName.equalsIgnoreCase("MIN-PXCOR")) {
+      d.minPxcor_$eq(value);
+    } else if (variableName.equalsIgnoreCase("MAX-PXCOR")) {
+      d.maxPxcor_$eq(value);
+    } else if (variableName.equalsIgnoreCase("MIN-PYCOR")) {
+      d.minPycor_$eq(value);
+    } else if (variableName.equalsIgnoreCase("MAX-PYCOR")) {
+      d.maxPycor_$eq(value);
+    } else if (variableName.equalsIgnoreCase("WORLD-WIDTH")) {
+      d.minPxcor_$eq(growMin(world.minPxcor, world.maxPxcor, value, d.minPxcor));
+      d.maxPxcor_$eq(growMax(world.minPxcor, world.maxPxcor, value, d.maxPxcor));
+    } else if (variableName.equalsIgnoreCase("WORLD-HEIGHT")) {
+      d.minPycor_$eq(growMin(world.minPycor, world.maxPycor, value, d.minPycor));
+      d.maxPycor_$eq(growMax(world.minPycor, world.maxPycor, value, d.maxPycor));
+    }
+    WorldDimensions(
+      d.minPxcor, d.maxPxcor,
+      d.minPycor, d.maxPycor)
+  }
+
+  private def growMin(min: Int, max: Int, value: Int, d: Int): Int = {
+    if (value < 1) {
+      throw new WorldDimensionException
+    }
+    if (max == -min) {
+      if (value % 2 != 1) {
+        throw new WorldDimensionException
+      }
+      return -(value - 1) / 2;
+    } else if (max == 0) {
+      return -(value - 1);
+    }
+    d
+  }
+
+  private def growMax(min: Int, max: Int, value: Int, d: Int): Int = {
+    if (value < 1) {
+      throw new WorldDimensionException
+    }
+    if (max == -min) {
+      if (value % 2 != 1) {
+        throw new WorldDimensionException()
+      }
+      return (value - 1) / 2;
+    } else if (min == 0) {
+      return (value - 1);
+    }
+    d
+  }
+
 }
