@@ -65,7 +65,7 @@ class TestJSONSerializer extends FunSuite with Matchers {
       }
 
     TestMirroring.withWorkspace { (ws, mirrorables) =>
-      headless.InitForTesting(ws, api.WorldDimensions.square(1))
+      headless.ModelCreator.open(ws, api.WorldDimensions.square(1))
       val (initialState, _) = Mirroring.diffs(Map(), mirrorables())
       commands.foldLeft(initialState) {
         case (previousState, (cmd, expectedJSON)) =>

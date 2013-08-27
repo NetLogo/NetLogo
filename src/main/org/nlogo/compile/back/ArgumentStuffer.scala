@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.compile
+package org.nlogo.compile.back
 
 import org.nlogo.{ nvm, parse }
 

@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.compile
+package org.nlogo.compile.back
 
 // Performs constant folding (http://en.wikipedia.org/wiki/Constant_folding)
 
