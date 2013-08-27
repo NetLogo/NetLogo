@@ -3,13 +3,14 @@
 package org.nlogo.compile.back
 
 import org.scalatest.FunSuite
-import org.nlogo.{ api, parse }
+import org.nlogo.api
+import org.nlogo.compile.front
 
 class ConstantFolderTests extends FunSuite {
 
   def compile(source: String): String = {
     val (procdef +: _, _) =
-      parse.Parser.frontEnd(
+      front.FrontEnd.frontEnd(
         "to-report __test report " + source + "\nend")
     procdef.accept(new ConstantFolder)
     procdef.statements.head.head.toString

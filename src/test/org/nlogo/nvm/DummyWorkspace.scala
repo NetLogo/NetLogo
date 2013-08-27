@@ -10,8 +10,8 @@ import org.nlogo.api.{WorldDimensions, DummyParserServices, DummyExtensionManage
 class DummyWorkspace extends DummyParserServices with Workspace {
   private def unsupported = throw new UnsupportedOperationException
   val world = new World
-  override def procedures = ParserInterface.NoProcedures
-  override def procedures_=(procedures: ParserInterface.ProceduresMap) = unsupported
+  override def procedures = FrontEndInterface.NoProcedures
+  override def procedures_=(procedures: FrontEndInterface.ProceduresMap) = unsupported
   override def requestDisplayUpdate(context: Context, force: Boolean) = unsupported
   override def breathe(context: Context) = unsupported
   override def joinForeverButtons(agent: Agent) = unsupported

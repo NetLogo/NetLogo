@@ -5,7 +5,7 @@ package org.nlogo.compile.middle
 import org.nlogo.api.{ I18N, Let }
 import org.nlogo.nvm.Procedure
 import org.nlogo.prim._
-import org.nlogo.parse, parse.Fail._
+import org.nlogo.compile.front, front.Fail._
 
 /**
  * This is an AstVisitor that optimizes "let" variables by converting them to "locals" variables
@@ -18,20 +18,20 @@ import org.nlogo.parse, parse.Fail._
  * changed to use the "locals" mechanism when used outside "ask". */
 
 private class LocalsVisitor(alteredLets: collection.mutable.Map[Procedure, collection.mutable.Map[Let, Int]])
-extends parse.DefaultAstVisitor {
+extends front.DefaultAstVisitor {
 
   private var procedure: Procedure = null
   private var currentLet: _let = null  // for forbidding "let x x" and the like
   private var askNestingLevel = 0
   private var vn = 0   // used when converting _repeat to _repeatlocal
 
-  override def visitProcedureDefinition(procdef: parse.ProcedureDefinition) {
+  override def visitProcedureDefinition(procdef: front.ProcedureDefinition) {
     procedure = procdef.procedure
     alteredLets(procedure) = collection.mutable.Map()
     super.visitProcedureDefinition(procdef)
   }
 
-  override def visitStatement(stmt: parse.Statement) {
+  override def visitStatement(stmt: front.Statement) {
     stmt.command match {
       case _: _ask | _: _askconcurrent =>
         askNestingLevel += 1
@@ -72,7 +72,7 @@ extends parse.DefaultAstVisitor {
     }
   }
 
-  override def visitReporterApp(expr: parse.ReporterApp) {
+  override def visitReporterApp(expr: front.ReporterApp) {
     expr.reporter match {
       case l: _letvariable =>
         cAssert(currentLet == null || (currentLet.let ne l.let),

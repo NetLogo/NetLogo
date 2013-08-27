@@ -6,8 +6,8 @@ import org.nlogo.api, api.{ Program, ExtensionManager }
 
 // ought to be in the api package, except oops, it depends on nvm.Procedure - ST 2/23/09
 
-trait CompilerInterface extends ParserInterface {
-  import ParserInterface.ProceduresMap
+trait CompilerInterface extends FrontEndInterface {
+  import FrontEndInterface.ProceduresMap
   def compileProgram(source: String, program: Program, extensionManager: ExtensionManager,
     flags: CompilerFlags = CompilerFlags()): CompilerResults
   def compileMoreCode(source: String, displayName: Option[String], program: Program,

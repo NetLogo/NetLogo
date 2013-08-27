@@ -3,7 +3,7 @@
 package org.nlogo.compile.middle
 
 import org.scalatest.FunSuite
-import org.nlogo.parse
+import org.nlogo.compile.front
 
 class OptimizerTests extends FunSuite {
 
@@ -14,8 +14,8 @@ class OptimizerTests extends FunSuite {
     compile("globals [glob1] breed [frogs frog] to __test [x] " + source + "\nend")
       .statements.head.toString
 
-  def compile(source: String): parse.ProcedureDefinition = {
-    val (procdef +: _, _) = parse.Parser.frontEnd(source)
+  def compile(source: String): front.ProcedureDefinition = {
+    val (procdef +: _, _) = front.FrontEnd.frontEnd(source)
     procdef.accept(Optimizer)
     procdef
   }

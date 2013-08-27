@@ -9,12 +9,12 @@ import org.nlogo.api
 // HubNet client is one such context; also various testing contexts; also when reading
 // BehaviorSpace XML. - ST 2/23/09, 3/4/09
 
-class DefaultParserServices(parser: ParserInterface) extends api.ParserServices {
+class DefaultParserServices(parser: FrontEndInterface) extends api.ParserServices {
   def readNumberFromString(source: String) =
     parser.readNumberFromString(source, null, null)
   def readFromString(source: String) =
     parser.readFromString(source)
   def isReporter(s: String) =
-    parser.isReporter(s, api.Program.empty(), ParserInterface.NoProcedures,
+    parser.isReporter(s, api.Program.empty(), FrontEndInterface.NoProcedures,
       new org.nlogo.api.DummyExtensionManager)
 }

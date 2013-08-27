@@ -2,9 +2,10 @@
 
 package org.nlogo.compile.middle
 
-import org.nlogo.{ api, nvm, parse, prim },
+import org.nlogo.{ api, nvm, prim },
   prim._,
-  parse.Fail._
+  org.nlogo.compile.front,
+  front.Fail._
 
 /**
  * an AstVisitor that handles the set command. We convert constructs like
@@ -12,17 +13,17 @@ import org.nlogo.{ api, nvm, parse, prim },
  * "_setprocedurevariable(value)" or whatever, where the new set* command
  * knows internally the variable it's setting.
  */
-class SetVisitor extends parse.DefaultAstVisitor {
+class SetVisitor extends front.DefaultAstVisitor {
   private lazy val INVALID_SET =
     api.I18N.errors.get("compiler.SetVisitor.notSettable")
-  override def visitStatement(stmt: parse.Statement) {
+  override def visitStatement(stmt: front.Statement) {
     super.visitStatement(stmt)
     if(stmt.command.isInstanceOf[_set]) {
-      val rApp = stmt(0).asInstanceOf[parse.ReporterApp]
+      val rApp = stmt(0).asInstanceOf[front.ReporterApp]
       val newCommandClass = SetVisitor.classes.get(rApp.reporter.getClass)
         .getOrElse(exception(INVALID_SET, stmt))
       val newCommand =
-        parse.Instantiator.newInstance[nvm.Command](
+        front.Instantiator.newInstance[nvm.Command](
           newCommandClass, rApp.reporter)
       newCommand.token(stmt.command.token)
       newCommand.tokenLimitingType(rApp.instruction.token)

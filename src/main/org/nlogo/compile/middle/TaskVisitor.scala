@@ -2,16 +2,17 @@
 
 package org.nlogo.compile.middle
 
-import org.nlogo.{ api, nvm, prim, parse }, parse.Fail._
+import org.nlogo.{ api, nvm, prim },
+  org.nlogo.compile.front, front.Fail._
 
-private class TaskVisitor extends parse.DefaultAstVisitor {
+private class TaskVisitor extends front.DefaultAstVisitor {
   private var task = Option.empty[prim._reportertask]
   private var procedure = Option.empty[nvm.Procedure]
-  override def visitProcedureDefinition(procdef: parse.ProcedureDefinition) {
+  override def visitProcedureDefinition(procdef: front.ProcedureDefinition) {
     procedure = Some(procdef.procedure)
     super.visitProcedureDefinition(procdef)
   }
-  override def visitReporterApp(expr: parse.ReporterApp) {
+  override def visitReporterApp(expr: front.ReporterApp) {
     expr.reporter match {
       case l: prim._reportertask =>
         val old = task

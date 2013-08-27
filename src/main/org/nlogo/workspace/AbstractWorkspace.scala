@@ -9,7 +9,7 @@ import
   agent.{ World, Agent, AbstractExporter, AgentSet },
   api.{ AgentKind, PlotInterface, Dump, CommandLogoThunk, ReporterLogoThunk,
     CompilerException, LogoException, JobOwner, SimpleJobOwner, Token, ModelType },
-  nvm.{ ParserInterface, FileManager, Instruction, EngineException, Context,
+  nvm.{ FrontEndInterface, FileManager, Instruction, EngineException, Context,
     Procedure, Job, Command, MutableLong, Workspace, Activation },
   plot.{ PlotExporter, PlotManager },
   org.nlogo.util.{ Exceptions, Femto },
@@ -128,8 +128,8 @@ object AbstractWorkspaceTraits {
   }
 
   trait Procedures { this: AbstractWorkspace =>
-    var procedures: ParserInterface.ProceduresMap =
-      ParserInterface.NoProcedures
+    var procedures: FrontEndInterface.ProceduresMap =
+      FrontEndInterface.NoProcedures
     def init() {
       procedures.values.foreach(_.init(this))
     }

@@ -9,14 +9,14 @@ package org.nlogo.compile.back
 import org.nlogo.api.{ Token, TokenType }
 import org.nlogo.nvm.{ Command, CustomAssembled, AssemblerAssistant, Procedure }
 import org.nlogo.prim.{ _call, _done, _recursefast, _goto, _return, _returnreport }
-import org.nlogo.parse
+import org.nlogo.compile.front
 
 /**
  * fills the code array of the Procedure object with Commands.
  */
 private class Assembler {
   private val code = new collection.mutable.ArrayBuffer[Command]
-  def assemble(procdef: parse.ProcedureDefinition) {
+  def assemble(procdef: front.ProcedureDefinition) {
     val proc = procdef.procedure
     assembleStatements(procdef.statements)
     val ret =
@@ -42,7 +42,7 @@ private class Assembler {
     }
     proc.code = code.map(tailRecurse).toArray
   }
-  def assembleStatements(stmts: parse.Statements): collection.mutable.ArrayBuffer[Command] = {
+  def assembleStatements(stmts: front.Statements): collection.mutable.ArrayBuffer[Command] = {
     stmts.foreach(stmt =>
       stmt.command match {
         case ca: CustomAssembled => ca.assemble(new Assistant(stmt))
@@ -52,7 +52,7 @@ private class Assembler {
   }
   /// CustomAssembled Commands use this to direct their own assembly
   /// (without being privy to implementation details)
-  private class Assistant(stmt: parse.Statement) extends AssemblerAssistant {
+  private class Assistant(stmt: front.Statement) extends AssemblerAssistant {
     private var branchMark = -1
     private var gotoMark = -1
     private var storedGoto: Option[_goto] = None
@@ -83,10 +83,10 @@ private class Assembler {
     }
     def block() { block(stmt.size - 1) }
     def block(pos: Int) {
-      assembleStatements(stmt(pos).asInstanceOf[parse.CommandBlock].statements)
+      assembleStatements(stmt(pos).asInstanceOf[front.CommandBlock].statements)
     }
     def argCount = stmt.size
-    def arg(i: Int) = stmt(i).asInstanceOf[parse.ReporterApp].reporter
+    def arg(i: Int) = stmt(i).asInstanceOf[front.ReporterApp].reporter
     def removeArg(i: Int) {
       stmt.command.args =
         (stmt.command.args.take(i) ++ stmt.command.args.drop(i + 1)).toArray

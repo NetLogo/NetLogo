@@ -3,11 +3,12 @@
 package org.nlogo.compile.back
 
 import org.nlogo.{ api, nvm, parse },
+  org.nlogo.compile.front,
   org.nlogo.util.Femto
 
 object BackEnd {
 
-  def backEnd(defs: Seq[parse.ProcedureDefinition], program: api.Program, source: String,
+  def backEnd(defs: Seq[front.ProcedureDefinition], program: api.Program, source: String,
       profilingEnabled: Boolean, flags: nvm.CompilerFlags): nvm.CompilerResults = {
     for(procdef <- defs) {
       if (flags.foldConstants)

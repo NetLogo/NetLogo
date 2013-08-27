@@ -25,6 +25,7 @@ class TestDuplicateNames extends FixtureSuite with SlowTest {
     }
     check(s"$declarations\nto $name end", "as procedure name")
     check(s"$declarations\nto foo [$name] end", "as input name")
+    check(s"$declarations\nto foo let $name 0 end", "as let name")
   }
 
   testBadName("fd",

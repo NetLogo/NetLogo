@@ -3,13 +3,14 @@
 package org.nlogo.compile.back
 
 import org.scalatest.FunSuite
-import org.nlogo.{ nvm, parse }
+import org.nlogo.nvm
+import org.nlogo.compile.front
 
 class AssemblerTests extends FunSuite {
 
   def compile(keyword: String, source: String): nvm.Procedure = {
     val (defs, results) =
-      parse.Parser.frontEnd(
+      front.FrontEnd.frontEnd(
         keyword + " foo " + source + "\nend")
     assertResult(1)(results.procedures.size)
     for (procdef <- defs) {

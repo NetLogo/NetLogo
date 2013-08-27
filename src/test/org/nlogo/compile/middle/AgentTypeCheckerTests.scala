@@ -3,13 +3,14 @@
 package org.nlogo.compile.middle
 
 import org.scalatest.FunSuite
-import org.nlogo.{ api, nvm, parse }
+import org.nlogo.{ api, nvm }
+import org.nlogo.compile.front
 
 class AgentTypeCheckerTests extends FunSuite {
 
   /// first some helpers
-  def compile(source: String): Seq[parse.ProcedureDefinition] =
-    parse.Parser.frontEnd(source) match {
+  def compile(source: String): Seq[front.ProcedureDefinition] =
+    front.FrontEnd.frontEnd(source) match {
       case (defs, _) =>
         new AgentTypeChecker(defs).check()
         defs
@@ -21,7 +22,7 @@ class AgentTypeCheckerTests extends FunSuite {
   def testOne(source: String, expected: String) {
     val defs = compile(source)
     assertResult(expected)(
-      defs.map { pd: parse.ProcedureDefinition =>
+      defs.map { pd: front.ProcedureDefinition =>
           pd.procedure.name + ":" + pd.procedure.agentClassString }
         .mkString(" "))
   }

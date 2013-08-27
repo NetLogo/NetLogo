@@ -2,15 +2,15 @@
 
 package org.nlogo.compile
 
-import org.nlogo.{ api, nvm, parse },
-  nvm.ParserInterface.{ ProceduresMap, NoProcedures }
+import org.nlogo.{ api, nvm },
+  nvm.FrontEndInterface.{ ProceduresMap, NoProcedures }
 
 // One design principle here is that calling the compiler shouldn't have any side effects that are
 // visible to the caller; it should only cause results to be constructed and returned.  There is a
 // big exception to that principle, though, which is that the ExtensionManager gets side-effected
 // as we load and unload extensions. - ST 2/21/08, 1/21/09, 12/7/12
 
-object Compiler extends parse.Parser with nvm.CompilerInterface {
+object Compiler extends front.FrontEnd with nvm.CompilerInterface {
 
   // used to compile the Code tab, including declarations
   def compileProgram(source: String, program: api.Program,

@@ -14,7 +14,7 @@ class TestGenerator extends FunSuite {
   def compile(source: String, preamble: String) =
     Compiler.compileMoreCode(
       "to foo " + preamble + source + "\nend", None,
-      program, nvm.ParserInterface.NoProcedures,
+      program, nvm.FrontEndInterface.NoProcedures,
       new DummyExtensionManager).head.code.head
   def disassembleCommand(source: String): String =
     condense(compile(source, "").disassembly.value)
