@@ -35,12 +35,15 @@ class Generator(source: String, procedure: Procedure, profilingEnabled: Boolean)
     customClassNumUID += 1
     customClassNumUID
   }
-  // We only use this CustomClassLoader object in one place below, so you'd think it would be OK to
-  // instantiate it there rather than here, but making that apparently harmless change causes the
-  // NetLogo-Mathematica link to stop working, for reasons I don't understand.  Maybe it has
-  // something to do with the fact that Femto instantiates Generator using Class.forName().  I don't
-  // understand this getContextClassLoader thing, either. - ST 4/16/09
-  private val loader = new CustomClassLoader(Thread.currentThread.getContextClassLoader)
+  // At one time in 2009 I'd tried moving the CustomClassLoader instantiation down to the point where
+  // it is used, but that broke the Mathematica link for reasons I don't understand.  And as for
+  // what class loader to pass to the constructor, well...  we used to pass it
+  // Thread.currentThread.getContextClassLoader, and that worked fine everywhere and was fine
+  // for years, but then recently (August 2013) it started failing our builds on Travis.
+  // And only on Travis -- Jenkins and our devel setups are fine.  Totally mystifying.
+  // So with some trepidation, I'm changing it to just `getClass.getClassLoader`, in the hopes it
+  // will make Travis happy without breaking anything else. - ST 8/27/13
+  private val loader = new CustomClassLoader(getClass.getClassLoader)
   class InstructionGenerator[A <: Instruction](original: A) {
     import org.objectweb.asm
     import asm.Opcodes._
