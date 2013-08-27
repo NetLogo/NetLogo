@@ -35,7 +35,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
 
   def runExperiment(dim: api.WorldDimensions, declarations: String, name: String): HeadlessWorkspace = {
     val workspace = newWorkspace()
-    InitForTesting(workspace, dim, declarations)
+    ModelCreator.open(workspace, dim, declarations)
     run("test/lab/" + name)(() => workspace, () => newWorker(name))
     workspace
   }
@@ -46,7 +46,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
   def runParallelExperiment(name: String, declarations: String = "") {
     def workspace = {
       val w = newWorkspace()
-      InitForTesting(w, api.WorldDimensions.square(0), declarations)
+      ModelCreator.open(w, api.WorldDimensions.square(0), declarations)
       w
     }
     // only get spreadsheet results, since parallel table results are in scrambled order - ST 3/4/09
@@ -133,7 +133,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
   }
   test("CarryoverBetweenRuns") {
     val workspace = newWorkspace()
-    InitForTesting(workspace, api.WorldDimensions.square(0), "globals [foo]")
+    ModelCreator.open(workspace, api.WorldDimensions.square(0), "globals [foo]")
     // no setup commands, so foo doesn't get reset
     newWorker("testCarryover")
       .run(workspace, () => workspace, 1)
@@ -246,7 +246,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
   */
   test("dontRunMetricsIfNoListener") {
     val workspace = newWorkspace()
-    InitForTesting(workspace, api.WorldDimensions.square(0))
+    ModelCreator.open(workspace, api.WorldDimensions.square(0))
     newWorker("metricGoBoom")
       .run(workspace, () => workspace, 1)
     // with no output being generated, the metrics shouldn't be run at all,
