@@ -4,7 +4,7 @@ package org.nlogo.tortoise
 
 import org.scalatest.FunSuite
 
-class TestCompiler extends FunSuite {
+class CompilerTests extends FunSuite {
 
   test("literals") {
     import Compiler.{compileReporter => compile}
