@@ -14,6 +14,7 @@ Face1_2D
   sort remove-duplicates [ heading ] of turtles => [90 270]
 
 Face2_2D
+  globals [glob1]
   O> cro 2
   O> ask turtle 0 [ set glob1 heading face turtle 1 ]
   [heading] of turtle 0 = glob1 => true
@@ -113,6 +114,7 @@ FaceXY1
   sort remove-duplicates [ heading ] of turtles => [0 180]
 
 FaceXY2
+  globals [glob1]
   O> cro 2
   O> ask turtle 0 [ set glob1 heading facexy [xcor] of turtle 1 [ycor] of turtle 1 ]
   [heading] of turtle 0 = glob1 => true

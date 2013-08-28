@@ -1,4 +1,6 @@
 TurtleSet_2D
+  breed [mice mouse]
+  breed [frogs frog]
   O> crt 1
   [turtle-set self] of turtle 0 = turtles => true
   O> crt 10
@@ -26,6 +28,7 @@ TurtleSetNestedLists
   (turtle-set (list (list (list turtle 1)) (list (list (turtle 0))))) = turtles => true
 
 PatchSet2_2D
+  globals [glob1]
   O> crt 1 [ __ignore patch-set self ] => ERROR PATCH-SET expected input to be a patch agentset or patch but got the turtle (turtle 0) instead.
   O> ask patch 0 0 [ set glob1 patch-set self ]
   count glob1 => 1

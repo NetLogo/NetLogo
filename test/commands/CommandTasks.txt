@@ -12,14 +12,17 @@
   (word task [foo]) => "(command task from: procedure __EVALUATOR)"
 
 CallTask
+  globals [glob1]
   O> run [set glob1 5]
   glob1 => 5
 
 NestedCallTask
+  globals [glob1]
   O> run [ run [ set glob1 5 ] ]
   glob1 => 5
 
 CallTaskAgainAndAgain
+  globals [glob1 glob2]
   O> set glob1 task [set glob2 glob2 + 5]
   O> run glob1
   glob2 => 5
@@ -29,31 +32,38 @@ CallTaskAgainAndAgain
   glob2 => 25
 
 EasyForeach
+  globals [glob1]
   O> foreach [1 2 3] [ set glob1 glob1 + 1 ]
   glob1 => 3
 
 HarderForeach
+  globals [glob1]
   O> foreach [1 2 3] [ set glob1 glob1 + ? ]
   glob1 => 6
 
 NestedForeach1
+  globals [glob1]
   O> foreach [1 2 3] [ foreach [1 2 3] [ set glob1 glob1 + 1 ] ]
   glob1 => 9
 
 NestedForeach2
+  globals [glob1]
   O> foreach [1 2 3] [ foreach [10 20 30] [ set glob1 glob1 + ? ] ]
   glob1 => 180
 
 NestedForeach3
+  globals [glob1]
   O> foreach [1 2 3] [ __let x ? foreach [10 20 30] [ set glob1 glob1 + x + ? ] ]
   glob1 => 198
 
 CloseOverUnoptimizedLet
+  globals [glob1 glob2]
   O> __let x 5 set glob1 task [ set glob2 x ]
   O> run glob1
   glob2 => 5
 
 CloseOverOptimizedLet
+  globals [glob1 glob2]
   O> let x 5 set glob1 task [ set glob2 x ]
   O> run glob1
   glob2 => 5
@@ -132,6 +142,7 @@ turtle-executing-command-task-3
   [plabel] of turtle 0 => "hi"
 
 patch-executing-command-task
+  globals [glob1]
   O> set glob1 one-of patches
   O> let f task [set plabel "hi"] ask glob1 [run f]
   [plabel] of glob1 => "hi"
@@ -157,6 +168,7 @@ is-it-or-isnt-it
   is-command-task? task [timer] => false
 
 dont-close-over-current-agent
+  globals [glob1 glob2]
   O> crt 2
   O> ask turtle 0 [ set glob1 task [ set glob2 who ] ]
   O> ask turtle 1 [ run glob1 ]
@@ -190,6 +202,7 @@ concise-syntax-5
   glob1 => 6
 
 concise-syntax-6
+  globals [glob1]
   O> set glob1 task crt
   O> foreach [1 2 3] glob1
   count turtles => 6
@@ -206,11 +219,13 @@ concise-syntax 8
   glob1 => 10
 
 the-killing-task
+  globals [glob1]
   O> set glob1 task [ ask turtle 0 [ die ] ]
   O> crt 1
   T> run glob1  __stdout who  error "oops"
 
 empty-command-task-1
+  globals [glob1]
   O> set glob1 task [ ]
   is-command-task? glob1 => true
   O> run glob1  set glob1 5
@@ -226,6 +241,7 @@ command-task-body-gets-agent-type-check
   O> __ignore task [hatch 1 sprout 1] => COMPILER ERROR You can't use SPROUT in a turtle context, because SPROUT is patch-only.
 
 command-task-closes-over-let-inside-task-of-different-agent
+  globals [glob1]
   O> __let z 0 crt 1 [ set glob1 task [ __ignore z ] ]
   O> run glob1
 

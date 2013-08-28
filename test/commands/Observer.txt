@@ -1,4 +1,5 @@
 ClearGlobals
+  globals [glob1]
   O> crt 10
   O> set glob1 5
   glob1 => 5

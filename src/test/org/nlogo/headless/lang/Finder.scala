@@ -12,7 +12,6 @@ import org.nlogo.util.SlowTest
 /// top level entry points
 
 class TestCommands extends Finder {
-  override def useStandardDeclarations = true
   override def files =
     TxtsInDir("test/commands")
 }
@@ -45,7 +44,6 @@ class TestExtensions extends Finder {
 // one, and FixtureSuite assumes one - ST 8/7/13
 
 trait Finder extends FunSuite with SlowTest {
-  def useStandardDeclarations = false
   def files: Iterable[File]
   // parse tests first, then run them
   for(t <- parseFiles(files) if shouldRun(t))
@@ -62,11 +60,7 @@ trait Finder extends FunSuite with SlowTest {
                 fixture.workspace,
                 dimensions = fixture.dimensions,
                 widgets = StandardWidgets,
-                source =
-                  if (decls.nonEmpty || !useStandardDeclarations)
-                    decls
-                  else
-                    StandardDeclarations)
+                source = decls)
             else
               assert(t.entries.forall(!_.isInstanceOf[Declaration]))
             nonDecls.foreach{
@@ -108,20 +102,6 @@ trait Finder extends FunSuite with SlowTest {
         !useGenerator
       else true
     }
-  val StandardDeclarations =
-    """|globals [glob1 glob2 glob3 ]
-       |breed [mice mouse]
-       |breed [frogs frog]
-       |breed [nodes node]
-       |directed-link-breed [directed-links directed-link]
-       |undirected-link-breed [undirected-links undirected-link]
-       |turtles-own [tvar]
-       |patches-own [pvar]
-       |mice-own [age fur]
-       |frogs-own [age spots]
-       |directed-links-own [lvar]
-       |undirected-links-own [weight]
-       |""".stripMargin
   val StandardWidgets = {
     import ModelCreator.{ Plot, Pens, Pen }
     List(

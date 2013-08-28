@@ -5,6 +5,8 @@ Turtles1
   [who] of [self] of turtle 0 => 0
 
 Turtles1a
+  breed [mice mouse]
+  breed [frogs frog]
   O> crt 2
   turtle 0 = turtle 0.0 => true
   turtle 1 = turtle 1.0 => true

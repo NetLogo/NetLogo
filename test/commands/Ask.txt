@@ -45,6 +45,7 @@ AskInsideReporterProcedure
   glob1 => 1
 
 AskConcurrentDoesntWorkOnSingleAgent
+  globals [glob1]
   O> crt 1 [ set glob1 self ]
   O> ask-concurrent glob1 [ set pcolor red ] => ERROR ASK-CONCURRENT expected input to be an agentset but got the turtle (turtle 0) instead.
 

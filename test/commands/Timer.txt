@@ -1,4 +1,5 @@
 Timer1
+  globals [glob1]
   timer >= 0 => true
   O> reset-timer
   O> wait 0.5

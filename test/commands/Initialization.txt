@@ -6,6 +6,4 @@ InitialEnvironment_2D
   world-width => 11
   world-height => 11
   count turtles => 0
-  count frogs => 0
-  count mice => 0
   count patches => 121

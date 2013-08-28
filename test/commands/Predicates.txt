@@ -1,4 +1,7 @@
 Predicates1
+  breed [nodes node]
+  directed-link-breed [directed-links directed-link]
+  undirected-link-breed [undirected-links undirected-link]
   O> crt 2 [ create-undirected-links-with turtles with [ who > [who] of myself ] ]
   O> ask turtles [ create-directed-links-to other turtles ]
   is-agent? nobody => false
