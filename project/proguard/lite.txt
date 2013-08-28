@@ -94,6 +94,16 @@
     *;
 }
 
+# Package objects need it
+-keep class scala.runtime.EmptyMethodCache {
+    *;
+}
+
+# Structural types need it
+-keep class scala.runtime.ScalaRunTime$ {
+    public java.lang.reflect.Method ensureAccessible(java.lang.reflect.Method);
+}
+
 # needed or extensions written in Scala won't build
 -keep class scala.reflect.ScalaSignature {
     *;
