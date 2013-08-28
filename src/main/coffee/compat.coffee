@@ -43,5 +43,3 @@ unless Random?
 # with regular NetLogo. in browser, be satisfied with "close enough"
 unless StrictMath?
   StrictMath = Math
-  Math.toRadians = (degrees) ->
-    degrees * Math.PI / 180
