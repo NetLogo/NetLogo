@@ -252,13 +252,30 @@ public strictfp class ExtensionManager
     if (AbstractWorkspace.isApplet()) {
 
       try {
+
         String jarPath = workspace.fileManager().attachPrefix(path);
-        if (org.nlogo.api.RemoteFile.exists(jarPath)) {
+
+        org.nlogo.lite.Applet applet = getApplet();
+        String pathFromProp = getApplet().getParameter("nlogo.extensions.url") + '/' + path;
+
+        if (pathFromProp.startsWith("/")) {
+          java.net.URL url = applet.getDocumentBase();
+          String portStr = "";
+          if (url.getPort() != -1) {
+            portStr += (":" + url.getPort());
+          }
+          pathFromProp = url.getProtocol() + "://" + url.getHost() + portStr + pathFromProp;
+        }
+
+        if (org.nlogo.api.RemoteFile.exists(pathFromProp)) {
+          return pathFromProp;
+        } else if (org.nlogo.api.RemoteFile.exists(jarPath)) {
           return jarPath;
         } else {
           throw new IllegalStateException
-              (EXTENSION_NOT_FOUND + path + " using URL " + jarPath);
+              (EXTENSION_NOT_FOUND + path + " using URLs " + pathFromProp + " and " + jarPath);
         }
+
       } catch (java.net.MalformedURLException ex) {
         throw new IllegalStateException(path + " is not a valid pathname: " + ex);
       }
@@ -798,6 +815,24 @@ public strictfp class ExtensionManager
   private static java.net.URL toURL(java.io.File file)
       throws java.net.MalformedURLException {
     return file.toURL();
+  }
+
+  // I'm so mutable, hurrrrrr!  --JAB (8/22/13)
+  private org.nlogo.lite.Applet getApplet() {
+
+    boolean isLooping = true;
+    java.awt.Component component = ((java.awt.Component) ((org.nlogo.window.GUIWorkspace) workspace).getWidgetContainer());
+
+    while (isLooping) {
+      component = component.getParent();
+      if (component instanceof org.nlogo.lite.Applet)
+        isLooping = false;
+      else if (component == null)
+        throw new IllegalStateException("Can't try to `getApplet` when not in an applet!");
+    }
+
+    return (org.nlogo.lite.Applet) component;
+
   }
 
 }
