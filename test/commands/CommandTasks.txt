@@ -59,6 +59,7 @@ CloseOverOptimizedLet
   glob2 => 5
 
 CloseOverProcedureVariable
+  globals [glob1]
   to-report foo [x] report task [set glob1 x] end
   O> run foo 10
   glob1 => 10
@@ -76,6 +77,7 @@ NotEnoughInputsForeach
   O> foreach [1 2 3] [__ignore ?1 + ?2] => ERROR task expected 2 inputs, but only got 1
 
 command-and-reporter-tasks-close-over-same-let-variable
+  globals [glob1 glob2 glob3]
   to-report make-account let balance 0 report list task [balance] task [ set balance balance + ? ] end
   O> set glob1 make-account
   O> set glob2 item 0 glob1
@@ -90,6 +92,7 @@ command-and-reporter-tasks-close-over-same-let-variable
   runresult glob2 => 30
 
 command-and-reporter-tasks-close-over-same-procedure-input
+  globals [glob1 glob2 glob3]
   to-report make-account [balance] report list task [balance] task [ set balance balance + ? ] end
   O> set glob1 make-account 100
   O> set glob2 item 0 glob1
@@ -138,6 +141,7 @@ link-executing-command-task
   [label] of link 0 1 => "hi"
 
 deeply-nested-with-all-agent-types
+  globals [glob1]
   to-report f [x] report task [ ask turtle 0 [run x] ] end
   to-report g [x] report task [ ask link 0 1 [run x] ] end
   to-report h [x] report task [ ask glob1 [run x] ] end
@@ -174,11 +178,13 @@ concise-syntax-3
   count turtles => 6
 
 concise-syntax-4
+  globals [glob1]
   to foo set glob1 glob1 + 1 end
   O> foreach [1 1 1] foo
   glob1 => 3
 
 concise-syntax-5
+  globals [glob1]
   to foo [x] set glob1 glob1 + x end
   O> foreach [1 2 3] foo
   glob1 => 6
@@ -193,6 +199,7 @@ concise-syntax-7
   count turtles => 6
 
 concise-syntax 8
+  globals [glob1]
   to foo [x] ask x [ set glob1 glob1 + who ] end
   O> crt 5
   O> foreach sort turtles foo
@@ -223,6 +230,7 @@ command-task-closes-over-let-inside-task-of-different-agent
   O> run glob1
 
 foreach-plus-recursion
+  turtles-own [tvar]
   to explore if tvar = 0 [ set tvar 1 foreach sort turtles-on neighbors [ ask ? [ explore ] ] ] end
   O> ask patches [ sprout 1 ]
   O> ask one-of turtles [ explore ]

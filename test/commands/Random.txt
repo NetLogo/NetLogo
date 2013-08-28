@@ -187,6 +187,7 @@ RandomNOfIsFairForLinks
   ratio < 3 => true
 
 RandomNOfIsFairForABreed
+  breed [mice mouse]
   to-report ratio let x [label] of mice report max x / min x end
   O> random-seed 39823
   O> create-mice 200
@@ -212,6 +213,7 @@ RandomNOfIsFairForABreed
   ratio < 3 => true
 
 RandomNOfIsFairForAnAgentsetConstructedOnTheFly
+  globals [glob1]
   to-report ratio let x [label] of glob1 report max x / min x end
   O> random-seed 39823
   O> crt 200
@@ -296,6 +298,7 @@ random-normal-3
 
 # https://github.com/NetLogo/NetLogo/issues/340
 one-of-evaluates-input-only-once
+  globals [glob1]
   to-report foo set glob1 glob1 + 1 report (list glob1 glob1 glob1) end
   O> random-seed 0
   one-of foo => 1

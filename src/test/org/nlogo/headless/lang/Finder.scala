@@ -12,6 +12,7 @@ import org.nlogo.util.SlowTest
 /// top level entry points
 
 class TestCommands extends Finder {
+  override def useStandardDeclarations = true
   override def files =
     TxtsInDir("test/commands")
 }
@@ -44,6 +45,7 @@ class TestExtensions extends Finder {
 // one, and FixtureSuite assumes one - ST 8/7/13
 
 trait Finder extends FunSuite with SlowTest {
+  def useStandardDeclarations = false
   def files: Iterable[File]
   // parse tests first, then run them
   for(t <- parseFiles(files) if shouldRun(t))
@@ -52,15 +54,19 @@ trait Finder extends FunSuite with SlowTest {
         Fixture.withFixture(s"${t.fullName} ($mode)"){
           fixture =>
             val nonDecls = t.entries.filterNot(_.isInstanceOf[Declaration])
+            val decls =
+              t.entries.collect{case d: Declaration => d.source}
+                .mkString("\n").trim
             if (nonDecls.forall(!_.isInstanceOf[Open]))
               ModelCreator.open(
                 fixture.workspace,
                 dimensions = fixture.dimensions,
                 widgets = StandardWidgets,
                 source =
-                  StandardDeclarations +
-                    t.entries.collect{case d: Declaration => d.source}
-                    .mkString("\n"))
+                  if (decls.nonEmpty || !useStandardDeclarations)
+                    decls
+                  else
+                    StandardDeclarations)
             else
               assert(t.entries.forall(!_.isInstanceOf[Declaration]))
             nonDecls.foreach{

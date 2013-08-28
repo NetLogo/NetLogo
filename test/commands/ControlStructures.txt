@@ -1,4 +1,5 @@
 Loop1
+  globals [glob1]
   to foo loop [ if glob1 = 10 [ stop ] set glob1 glob1 + 1 ] end
   O> foo
   glob1 => 10
@@ -48,6 +49,7 @@ Run6
   glob1 => 18
 
 Run7
+  globals [glob1]
   to foo [a] foreach [1] [ run "set glob1 5" ] end
   O> foo 0
   glob1 => 5

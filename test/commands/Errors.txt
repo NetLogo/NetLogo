@@ -28,6 +28,7 @@ CarefullyStackInteraction3
   length glob1 => 1
 
 CarefullyAcrossCalls
+  globals [glob1]
   to p1 p2 end
   to p2 __ignore __boom end
   O> carefully [ p1 ] [ set glob1 error-message ]

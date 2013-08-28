@@ -42,6 +42,7 @@ Change-Closed-Over-Var
   glob2 => 106
 
 Downward-Funarg
+  globals [glob1]
   to-report call [fn] report (runresult fn 10) end
   O> set glob1 call task [? * ?]
   glob1 => 100
@@ -59,6 +60,7 @@ Upward-Funarg-3
   (runresult addx 10 20) => 30
 
 Upward-Funarg-4
+  globals [glob1]
   to-report foo __let x 5 report task [x] end
   O> set glob1 foo
   runresult glob1 => 5
@@ -283,6 +285,7 @@ empty-list-task-2
 # challenging to define it without.  nonetheless, this version makes a
 # nice test. - ST 4/3/11
 y-combinator
+  globals [glob1]
   to-report y [f] report task [(runresult f (y f) ?)] end
   to-report fact [f n] if n = 0 [ report 1 ] report n * (runresult f (n - 1)) end
   # variant 1: use fact procedure

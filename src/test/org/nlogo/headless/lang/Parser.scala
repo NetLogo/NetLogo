@@ -35,7 +35,8 @@ object Parser {
   }
 
   def parse(line: String): Entry = {
-    if (line.split(' ').headOption.exists(api.Keywords.isKeyword))
+    if (line.split(' ').headOption.exists(s =>
+        api.Keywords.isKeyword(s) || s.toUpperCase == "BREED"))
       Declaration(line)
     else line.trim match {
       case CommandErrorRegex(kind, command, err) =>

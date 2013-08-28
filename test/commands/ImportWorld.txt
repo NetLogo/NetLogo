@@ -7,6 +7,7 @@ AllTurtles
   count glob2 => 10
 
 AllTurtlesExport
+  globals [glob1 glob2]
   to export-round-trip let file (word "tmp/ImportWorld/test-file-" __nano-time ".csv" )  export-world file ca import-world file end
   O> __mkdir "tmp/ImportWorld"
   O> crt 10
@@ -55,6 +56,8 @@ AllLinkBreeds
   count glob3 => 2
 
 AllBreedsExport
+  globals [glob1 glob2 glob3]
+  breed [frogs frog]
   to export-round-trip let file (word "tmp/ImportWorld/test-file-" __nano-time ".csv" )  export-world file ca import-world file end
   O> __mkdir "tmp/ImportWorld"
   O> create-frogs 10
@@ -69,6 +72,10 @@ AllBreedsExport
   count glob3 => 30
 
 AllLinkBreedsExport
+  breed [frogs frog]
+  directed-link-breed [directed-links directed-link]
+  undirected-link-breed [undirected-links undirected-link]
+  globals [glob1 glob2 glob3]
   to export-round-trip let file (word "tmp/ImportWorld/test-file-" __nano-time ".csv" )  export-world file ca import-world file end
   O> __mkdir "tmp/ImportWorld"
   O> create-frogs 10
@@ -97,6 +104,8 @@ ImportExportBreedOrder
   [who] of one-of frogs => 7
 
 ImportExportLinkBreedOrder
+  globals [glob1]
+  directed-link-breed [directed-links directed-link]
   to export-round-trip let file (word "tmp/ImportWorld/test-file-" __nano-time ".csv" )  export-world file let the-turtle [list [who] of end1 [who] of end2 ] of one-of links import-world file set glob1 the-turtle end
   O> __mkdir "tmp/ImportWorld"
   O> random-seed 6924
@@ -107,6 +116,7 @@ ImportExportLinkBreedOrder
   [list [who] of end1 [who] of end2 ] of one-of links = glob1 => true
 
 RoundTripWithUTF8Chars
+  globals [glob1]
   to export-round-trip let file (word "tmp/ImportWorld/test-file-" __nano-time ".csv" )  export-world file ca import-world file end
   O> set glob1 "AêñüC"
   O> export-round-trip

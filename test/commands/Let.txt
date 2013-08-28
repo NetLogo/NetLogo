@@ -30,6 +30,7 @@ LetInsideForeach1
   glob1 => 10
 
 LetInsideForeach2
+  globals [glob1]
   to f let x 0 foreach [0] [ repeat 1 [ ] set glob1 x < 5 ] end
   O> f
   glob1 => true
@@ -39,11 +40,13 @@ LetWithLet
   glob1 => 5
 
 LetImmediatelyBeforeProcedureCall
+  globals [glob1]
   to foo [x] set glob1 x end
   O> let y 5 foo y
   glob1 => 5
 
 LetInsideAsk1
+  globals [glob1]
   to go ask turtles [ let x who fd 1 set glob1 glob1 + x ] end
   O> crt 10 set glob1 0
   O> set glob1 0

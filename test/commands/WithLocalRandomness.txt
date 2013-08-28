@@ -33,19 +33,21 @@ WithLocalRandomnessRandomSeed
   glob1 = glob2 => true
 
 WithLocalRandomnessStop
+  globals [glob1]
   to foo with-local-randomness [ set glob1 [who] of turtles stop set glob1 [who] of turtles ] end
   O> crt 4
   O> foo
   glob1 = [who] of turtles => true
 
 WithLocalRandomnessCarefully
+  globals [glob1]
   to foo carefully [ with-local-randomness [ set glob1 [who] of turtles error "boom" set glob1 [who] of turtles ] ] [] end
   O> crt 4
   O> foo
   glob1 = [who] of turtles => true
 
 WithLocalRandomnessReport
+  globals [glob1]
   to-report foo with-local-randomness [ report [who] of turtles set glob1 [who] of turtles ] end
   O> crt 4
   O> set glob1 foo => ERROR REPORT must be immediately inside a TO-REPORT.
-

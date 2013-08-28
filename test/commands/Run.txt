@@ -18,18 +18,21 @@ LuisIzquierdoRunResult1
 # causing a cached Procedure to be discarded - ST 5/14/09
 
 LuisIzquierdoRun2
+  globals [glob1]
   to setup crt 1 [ while [glob1 < 100000] [ foo 0 run "reset-timer" set glob1 glob1 + 1 ] ] end
   to foo [x] run "reset-timer" end
   O> setup
   glob1 => 100000
 
 LuisIzquierdoRunResult2
+  globals [glob1]
   to setup crt 1 [ while [glob1 < 100000] [ foo runresult "color" set glob1 glob1 + 1 ] ] end
   to foo [x] __ignore runresult "color" end
   O> setup
   glob1 => 100000
 
 run-evaluate-string-input-only-once
+  globals [glob1]
   to-report foo set glob1 glob1 + 1 report "__ignore glob1" end
   O> run foo
   glob1 => 1

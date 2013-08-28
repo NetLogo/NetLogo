@@ -77,6 +77,7 @@ sort-on-respects-with-local-randomness
   glob1 = glob2 => true
 
 sort-by-catches-java-7-general-contract-violation-error
+  globals [glob1]
   to test __ignore sort-by [?1 <= ?2] n-values 1000 [random 5] end
   O> carefully [ test set glob1 "success" ] [ set glob1 error-message ]
   glob1 = "success" or glob1 = "predicate is not a strictly-less-than or strictly-greater than relation" => true

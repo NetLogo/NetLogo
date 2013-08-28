@@ -34,12 +34,14 @@ DeadTurtles4
   glob1 => 0
 
 DeadTurtles5
+  globals [glob1]
   to-report foo ask turtle 0 [ die ] report 5 end
   O> crt 1
   O> ask turtle 0 [ set glob1 foo ] => ERROR the FOO procedure failed to report a result
   glob1 => 0
 
 DeadTurtles6
+  globals [glob1]
   to-report foo die report 5 end
   O> crt 1
   O> ask turtle 0 [ set glob1 foo ] => ERROR the FOO procedure failed to report a result
