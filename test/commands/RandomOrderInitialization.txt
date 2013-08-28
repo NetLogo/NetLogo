@@ -4,7 +4,7 @@ TestRandomOrderInitializationCRO
   O> cro 10 [ set glob1 who ]
   glob1 => 5
 
-TestRandomOrderInitializationSprout_2D
+TestRandomOrderInitializationSprout
   globals [glob1]
   O> random-seed 1717
   O> ask patch 0 0 [ sprout 10 [ set glob1 who ] ]

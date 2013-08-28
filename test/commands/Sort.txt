@@ -9,7 +9,7 @@ SortByDoesntExposeAgentsetOrder
   O> crt 3
   length remove-duplicates n-values 200 [sort-by [false] turtles] => 6
 
-SortingListsOfAgents_2D
+SortingListsOfAgents
   O> crt 5
   map [[who] of ?] sort (list (turtle 4) (turtle 2) (turtle 0) (turtle 3) (turtle 1)) => [0 1 2 3 4]
   map [list [pxcor] of ? [pycor] of ?] sort (list (patch 1 1) (patch -1 1) (patch 1 -1) (patch -1 -1)) => [[-1 1] [1 1] [-1 -1] [1 -1]]

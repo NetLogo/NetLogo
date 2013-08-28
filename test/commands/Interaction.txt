@@ -4,25 +4,25 @@ Interaction1Torus
   count turtles with [pcolor != red] => 0
   count patches with [pcolor = red] => 93
 
-Interaction1Box_2D
+Interaction1Box
   O> __change-topology false false
   O> cro 200 [ fd who set pcolor red ]
   count turtles with [pcolor != red] => 0
   count patches with [pcolor = red] => 45
 
-Interaction1VCylind_2D
+Interaction1VCylind
   O> __change-topology true false
   O> cro 200 [ fd who set pcolor red ]
   count turtles with [pcolor != red] => 0
   count patches with [pcolor = red] => 34
 
-Interaction1HCylind_2D
+Interaction1HCylind
   O> __change-topology false true
   O> cro 200 [ fd who set pcolor red ]
   count turtles with [pcolor != red] => 0
   count patches with [pcolor = red] => 38
 
-Interaction2_2D
+Interaction2
   O> cro 3
   O> ask turtle 0 [ fd 1 ]
   O> ask turtle 1 [ set color green ]
@@ -118,7 +118,7 @@ Interaction10
   T> repeat 5 [ hatch 2 ]
   count turtles => 11
 
-Interaction11_2D
+Interaction11
   O> random-seed 711
   P> sprout 1
   max [towards one-of turtles with [self != myself]] of turtles < 360 => true
@@ -144,7 +144,7 @@ Interaction13
   [towardsxy-nowrap 0 0] of turtle 0 => ERROR No heading is defined from a point (0,0) to that same point.
   [towards-nowrap patch-here] of turtle 0 => ERROR No heading is defined from a point (0,0) to that same point.
 
-Interaction14_2D
+Interaction14
   O> crt 2 [ set heading 0 ]
   T> repeat 2 [ hatch 1 rt 1 ]
   sort [heading] of turtles => [0 0 1 1 2 2]
@@ -185,7 +185,7 @@ Interaction19
   count turtles => 2
   count mice => 2
 
-Interaction20_2D
+Interaction20
   turtles-own [tvar]
   patches-own [pvar]
   O> ask patches with-max [ pxcor ] [ set pcolor red ]
@@ -242,7 +242,7 @@ PatchTriesTurtleReporter
   [dx + dy] of glob1 => ERROR this code can't be run by a patch
   O> ask glob1 [ __ignore dx ] => ERROR this code can't be run by a patch
 
-BreedAt_2D
+BreedAt
   breed [frogs frog]
   patches-own [pvar]
   P> set pvar 1 + count frogs-at 0 0

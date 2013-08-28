@@ -1,4 +1,4 @@
-DistanceWrapping_2D
+DistanceWrapping
   O> __change-topology true true
   [ distancexy -5 -5 ] of patch 5 5 => 1.4142135623730951
   [ distancexy 5 5 ] of patch -5 -5 => 1.4142135623730951
@@ -20,7 +20,7 @@ DistanceWrapping_2D
   [ distancexy 5 -5 ] of patch 5 5 => 1
   [ distancexy -5 5 ] of patch 5 5 => 10
 
-DistanceWrappingAsymetrical_2D
+DistanceWrappingAsymetrical
   O> resize-world 0 10 0 10
   O> __change-topology true true
   [ distancexy 0 0 ] of patch 10 10 => 1.4142135623730951

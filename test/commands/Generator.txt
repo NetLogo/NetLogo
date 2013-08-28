@@ -23,7 +23,7 @@ DoubleGreaterThanDouble
   2.0 > 1.0 => true
   2.0 > 2.0 => false
 
-PatchVariable_2D
+PatchVariable
   [pcolor] of patch 0 0 => 0
 
 Not1

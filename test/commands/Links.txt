@@ -643,7 +643,7 @@ LinksNotAllowed
   [glob1 in-cone 5 5] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
   [glob1 in-cone-nowrap 5 5] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
 
-LinkNotAllowed_2D
+LinkNotAllowed
   globals [glob1]
   O> crt 2 [ create-links-with other turtles [ set glob1 self ] ]
   [patch-at 0 1] of glob1 => ERROR this code can't be run by a link
@@ -697,7 +697,7 @@ LinkNeighborIsUndirectedOnly2
   T> __ignore directed-link-neighbor? one-of other turtles => COMPILER ERROR Nothing named DIRECTED-LINK-NEIGHBOR? has been defined
 
 # https://github.com/NetLogo/NetLogo/issues/338
-LinkCreationTypeChecking_2D
+LinkCreationTypeChecking
   O> crt 1
   T> create-link-with patch-here => COMPILER ERROR CREATE-LINK-WITH expected this input to be a turtle, but got a patch instead
   T> let x patch-here create-link-with x => ERROR CREATE-LINK-WITH expected input to be a turtle but got the patch (patch 0 0) instead.

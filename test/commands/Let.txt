@@ -19,7 +19,7 @@ LetWithSet
   O> let x 5 set x 6 set glob1 x
   glob1 => 6
 
-LetWithWith_2D
+LetWithWith
   globals [glob1]
   O> let x 5 set glob1 count patches with [pxcor = x]
   glob1 => 11

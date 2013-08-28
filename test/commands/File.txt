@@ -38,7 +38,7 @@ FileIO
   O> file-close
   O> file-delete glob1
 
-FileReadWrite_2D
+FileReadWrite
   globals [glob1]
   O> __mkdir "tmp/File"
   O> set glob1 (word "tmp/File/test-file-" __nano-time ".csv" )

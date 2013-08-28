@@ -35,7 +35,7 @@ ComparingTurtles
   turtle 0 < turtle 0 => false
   turtle 0 > turtle 0 => false
 
-ComparingPatches_2D
+ComparingPatches
   patch 0 0 > patch 0 1 => true
   patch 0 0 >= patch 0 1 => true
   patch 0 0 < patch 0 1 => false

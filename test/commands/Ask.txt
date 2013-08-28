@@ -1,7 +1,7 @@
 # This will probably fail if the way "ask" interacts with
 # the RNG changes.  If this fails, all the model checksums
 # are likely to change, too. - ST 1/9/07
-AskRNG_2D
+AskRNG
   O> random-seed 0
   O> ask n-of 4 patches [ sprout 1 ]
   [(list xcor ycor color heading)] of turtle 0 => [3 3 95 57]

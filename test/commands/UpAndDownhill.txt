@@ -15,7 +15,7 @@ UpAndDownhill1
   T> home uphill4 pvar
   [heading] of turtle 0 => 180
 
-Uphill1_2D
+Uphill1
   O> random-seed 287
   P> if patch 0 0 != self [ set pcolor 1 ]
   O> crt 100

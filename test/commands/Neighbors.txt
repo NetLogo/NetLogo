@@ -1,32 +1,32 @@
-Neighbors1Torus_2D
+Neighbors1Torus
   O> __change-topology true true
   min [count neighbors] of patches => 8
   max [count neighbors] of patches => 8
   min [count neighbors4] of patches => 4
   max [count neighbors4] of patches => 4
 
-Neighbors1Box_2D
+Neighbors1Box
   O> __change-topology false false
   min [count neighbors] of patches => 3
   max [count neighbors] of patches => 8
   min [count neighbors4] of patches => 2
   max [count neighbors4] of patches => 4
 
-Neighbors1VCylind_2D
+Neighbors1VCylind
   O> __change-topology true false
   min [count neighbors] of patches => 5
   max [count neighbors] of patches => 8
   min [count neighbors4] of patches => 3
   max [count neighbors4] of patches => 4
 
-Neighbors1HCylind_2D
+Neighbors1HCylind
   O> __change-topology false true
   min [count neighbors] of patches => 5
   max [count neighbors] of patches => 8
   min [count neighbors4] of patches => 3
   max [count neighbors4] of patches => 4
 
-Neighbors2Box_2D
+Neighbors2Box
   O> resize-world 0 0 0 0
   O> __change-topology false false
   count [neighbors] of patch 0 0 => 0
@@ -46,7 +46,7 @@ Neighbors2Box_2D
   count [neighbors] of patch 0 1 => 1
   count [neighbors4] of patch 0 1 => 1
 
-Neighbors2HorizontalCylinder_2D
+Neighbors2HorizontalCylinder
   O> resize-world 0 0 0 0
   O> __change-topology false true
   count [neighbors] of patch 0 0 => 0
@@ -66,7 +66,7 @@ Neighbors2HorizontalCylinder_2D
   count [neighbors] of patch 0 1 => 2
   count [neighbors4] of patch 0 1 => 2
 
-Neighbors2VerticalCylinder_2D
+Neighbors2VerticalCylinder
   O> resize-world 0 0 0 0
   O> __change-topology true false
   count [neighbors] of patch 0 0 => 0
@@ -86,7 +86,7 @@ Neighbors2VerticalCylinder_2D
   count [neighbors] of patch 1 0 => 2
   count [neighbors4] of patch 1 0 => 2
 
-Neighbors2Torus_2D
+Neighbors2Torus
   O> resize-world 0 0 0 0
   count [neighbors] of patch 0 0 => 0
   count [neighbors4] of patch 0 0 => 0
@@ -105,7 +105,7 @@ Neighbors2Torus_2D
   count [neighbors] of patch 1 0 => 2
   count [neighbors4] of patch 1 0 => 2
 
-NeighborsLots1_2D
+NeighborsLots1
   O> resize-world 0 0 0 0
   O> __change-topology true true
   count [neighbors] of patch 0 0 => 0
@@ -184,7 +184,7 @@ NeighborsLots1_2D
   count [neighbors4] of patch min-pxcor max-pycor => 0
   count [neighbors4] of patch max-pxcor max-pycor => 0
 
-NeighborsLots2_2D
+NeighborsLots2
   O> resize-world 0 5 0 0
   O> __change-topology true true
   count [neighbors] of patch 0 0 => 2
@@ -263,7 +263,7 @@ NeighborsLots2_2D
   count [neighbors4] of patch min-pxcor max-pycor => 1
   count [neighbors4] of patch max-pxcor max-pycor => 1
 
-NeighborsLots3_2D
+NeighborsLots3
   O> resize-world 0 0 0 5
   O> __change-topology true true
   count [neighbors] of patch 0 0 => 2
@@ -342,7 +342,7 @@ NeighborsLots3_2D
   count [neighbors4] of patch min-pxcor max-pycor => 2
   count [neighbors4] of patch max-pxcor max-pycor => 2
 
-NeighborsLots4_2D
+NeighborsLots4
   O> resize-world -5 5 0 0
   O> __change-topology true true
   count [neighbors] of patch 0 0 => 2
@@ -421,7 +421,7 @@ NeighborsLots4_2D
   count [neighbors4] of patch min-pxcor max-pycor => 1
   count [neighbors4] of patch max-pxcor max-pycor => 1
 
-NeighborsLots5_2D
+NeighborsLots5
   O> resize-world 0 0 -5 5
   O> __change-topology true true
   count [neighbors] of patch 0 0 => 2
@@ -500,7 +500,7 @@ NeighborsLots5_2D
   count [neighbors4] of patch min-pxcor max-pycor => 2
   count [neighbors4] of patch max-pxcor max-pycor => 2
 
-NeighborsWorldWidth2_2D
+NeighborsWorldWidth2
   to-report counts report sentence [count neighbors] of patches [count neighbors4] of patches end
   to-report all-topologies let result [] foreach [true false] [ let wrapx ? foreach [true false] [ let wrapy ? __change-topology wrapx wrapy set result lput counts result ] ] report result end
   O> resize-world 0 1 0 1

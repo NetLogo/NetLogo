@@ -1,4 +1,4 @@
-InitialEnvironment_2D
+InitialEnvironment
   min-pxcor => -5
   max-pxcor => 5
   min-pycor => -5

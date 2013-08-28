@@ -24,25 +24,25 @@ class WorldTests extends FunSuite with AbstractTestWorld {
   override def makeLink(world: World, ends: Array[Int]) =
     new Link(world, world.getTurtle(ends(0)),
              world.getTurtle(ends(1)), world.links)
-  test("IteratorSkipsDeadTurtles1_2D") {
+  test("IteratorSkipsDeadTurtles1") {
     testIteratorSkipsDeadTurtles1(worldSquare, turtles5)
   }
-  test("IteratorSkipsDeadTurtles2_2D") {
+  test("IteratorSkipsDeadTurtles2") {
     testIteratorSkipsDeadTurtles2(worldSquare, turtles5)
   }
-  test("IteratorSkipsDeadTurtles3_2D") {
+  test("IteratorSkipsDeadTurtles3") {
     testIteratorSkipsDeadTurtles3(worldSquare, turtles5)
   }
-  test("IteratorSkipsDeadTurtles4_2D") {
+  test("IteratorSkipsDeadTurtles4") {
     testIteratorSkipsDeadTurtles4(worldSquare, turtles5)
   }
-  test("Shufflerator1_2D") {
+  test("Shufflerator1") {
     testShufflerator1(worldSquare, turtles5)
   }
-  test("LinkDistance_2D") {
+  test("LinkDistance") {
     testLinkDistance(worldSquare, turtles2, link1)
   }
-  test("ShortestPath_2D") {
+  test("ShortestPath") {
     testShortestPath(worldRectangle)
   }
   test("ShortestPathHorizontalCylinder") {
@@ -51,7 +51,7 @@ class WorldTests extends FunSuite with AbstractTestWorld {
     assertResult(3.0)(world.topology.shortestPathY(2, -2))
     assertResult(-2.0)(world.topology.shortestPathX(2, -2))
   }
-  test("ChangePublishedAfterWorldResize_2D") {
+  test("ChangePublishedAfterWorldResize") {
     testChangePublishedAfterWorldResize(worldSquare, worldRectangle)
   }
 }

@@ -114,7 +114,7 @@ OneOfWithAgentSets
   [who] of one-of turtles => 9
   [list pxcor pycor] of one-of patches => [0 5]
 
-RandomNOfIsFairForPatches_2D
+RandomNOfIsFairForPatches
   to-report ratio let x [plabel] of patches report max x / min x end
   O> random-seed 39823
   P> set plabel 0

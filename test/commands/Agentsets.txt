@@ -46,7 +46,7 @@ Agentsets3
   count (n-of 50 patches) => 50
   count (n-of 50 patches) => 50
 
-Agentsets4_2D
+Agentsets4
   globals [glob1]
   O> random-seed 29020
   O> crt 100
@@ -95,7 +95,7 @@ Agentsets5Torus
   O> ask patches [ ask patches at-points [ [ 1 1 ] ] [ set pcolor blue ] ]
   count patches with [ pcolor != blue ] => 0
 
-Agentsets5Box_2D
+Agentsets5Box
   O> __change-topology false false
   O> random-seed 3782
   O> ask patches at-points [ [ 0 0 ] [ 1 1 ] [ 2 2 ] ] [ set pcolor 1 ]
@@ -111,7 +111,7 @@ Agentsets5Box_2D
   O> ask patches [ ask patches at-points [ [ 1 1 ] ] [ set pcolor green ] ]
   count patches with [ pcolor != green ] => 21
 
-Agentsets5VCylind_2D
+Agentsets5VCylind
   O> __change-topology true false
   O> random-seed 3782
   O> ask patches at-points [ [ 0 0 ] [ 1 1 ] [ 2 2 ] ] [ set pcolor 1 ]
@@ -127,7 +127,7 @@ Agentsets5VCylind_2D
   O> ask patches [ ask patches at-points [ [ 1 1 ] ] [ set pcolor green ] ]
   count patches with [ pcolor != green ] => 11
 
-Agentsets5HCylind_2D
+Agentsets5HCylind
   O> __change-topology false true
   O> random-seed 3782
   O> ask patches at-points [ [ 0 0 ] [ 1 1 ] [ 2 2 ] ] [ set pcolor 1 ]
@@ -175,7 +175,7 @@ Agentsets8
   [color] of turtles at-points [ 1 2 ] => ERROR Invalid list of points: [1 2]
   [color] of turtles at-points [ [ [ 1 2 ] ] ] => ERROR Invalid list of points: [[[1 2]]]
 
-InvalidAtPoints_2D
+InvalidAtPoints
   [color] of turtles at-points [ [ 1 2 3 ] ] => ERROR Invalid list of points: [[1 2 3]]
 
 Agentsets9
@@ -193,7 +193,7 @@ Agentsets11
   count mice at-points [[0 0] [0 0]] => 10
   count mice at-points [[0 0] [0 0] [0.5 0.5]] => 20
 
-Agentsets12_2D
+Agentsets12
   O> __change-topology true true
   count patches at-points [[2 7] [2 7] [1 6] [1.1 5.8]] => 2
   O> __change-topology false false
