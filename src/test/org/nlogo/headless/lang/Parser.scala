@@ -3,7 +3,7 @@
 package org.nlogo.headless
 package lang
 
-import org.nlogo.api.AgentKind
+import org.nlogo.api, api.AgentKind
 
 object Parser {
 
@@ -35,7 +35,7 @@ object Parser {
   }
 
   def parse(line: String): Entry = {
-    if (line.startsWith("to ") || line.startsWith("to-report ") || line.startsWith("extensions"))
+    if (line.split(' ').headOption.exists(api.Keywords.isKeyword))
       Declaration(line)
     else line.trim match {
       case CommandErrorRegex(kind, command, err) =>
