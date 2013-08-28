@@ -131,6 +131,9 @@ object Compiler {
         s"AgentSet.agentFilter($agents, function(){ return $filter })"
       case p: prim.etc._patch               => s"Prims.patch($args)"
       case n: prim._neighbors               => s"Prims.getNeighbors()"
+      case _ =>
+        throw new IllegalArgumentException(
+          "unknown primitive: " + r.reporter.getClass.getSimpleName)
     }
   }
 
