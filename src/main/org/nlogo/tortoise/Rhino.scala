@@ -14,7 +14,7 @@ import sun.org.mozilla.javascript.internal.NativeArray
 // collects all the lines of output and JSON updates generated.  The latter runs a compiled reporter
 // and returns a single result value.
 
-object Rhino {
+class Rhino {
 
   // at some point we'll need to have separate instances instead of a singleton - ST 1/18/13
   // the (null) became necessary when we upgraded to sbt 0.13. I don't understand why.

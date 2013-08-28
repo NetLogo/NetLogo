@@ -10,10 +10,12 @@ import
 
 object Shell {
 
+  val rhino = new Rhino
+
   def main(argv: Array[String]) {
     setHeadlessProperty()
     val (js, _, _) = Compiler.compileProcedures("", -16, 16, -16, 16)
-    Rhino.eval(js)
+    rhino.eval(js)
     System.err.println("Tortoise Shell 1.0")
     input.takeWhile(!isQuit(_))
       .foreach(run)
@@ -22,7 +24,7 @@ object Shell {
   def run(s: String) {
     try {
       val (output, json) =
-        Rhino.run(
+        rhino.run(
           Compiler.compileCommands(s))
       Seq(output) // , json)
         .filter(_.nonEmpty)

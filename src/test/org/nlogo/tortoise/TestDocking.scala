@@ -9,6 +9,7 @@ import
 
 class TestDocking extends FunSuite {
 
+  val rhino = new Rhino
   var ws: headless.HeadlessWorkspace = null
   val owner = new api.SimpleJobOwner("Tortoise", new MersenneTwisterFast)
   def mirrorables: Iterable[mirror.Mirrorable] =
@@ -35,12 +36,12 @@ class TestDocking extends FunSuite {
     val (actualOutput, actualJson) =
       runJS(Compiler.compileCommands(logo, ws.procedures, ws.world.program))
     assertResult(expectedOutput)(actualOutput)
-    Rhino.eval("expectedUpdates = " + expectedJson)
-    Rhino.eval("actualUpdates = " + actualJson)
-    Rhino.eval("expectedModel.updates(expectedUpdates)")
-    Rhino.eval("actualModel.updates(actualUpdates)")
-    val expectedModel = Rhino.eval("JSON.stringify(expectedModel)").asInstanceOf[String]
-    val actualModel = Rhino.eval("JSON.stringify(actualModel)").asInstanceOf[String]
+    rhino.eval("expectedUpdates = " + expectedJson)
+    rhino.eval("actualUpdates = " + actualJson)
+    rhino.eval("expectedModel.updates(expectedUpdates)")
+    rhino.eval("actualModel.updates(actualUpdates)")
+    val expectedModel = rhino.eval("JSON.stringify(expectedModel)").asInstanceOf[String]
+    val actualModel = rhino.eval("JSON.stringify(actualModel)").asInstanceOf[String]
     // println(" exp upt = " + expectedJson)
     // println(" act upt = " + actualJson)
     // println("expected = " + expectedModel)
@@ -56,8 +57,8 @@ class TestDocking extends FunSuite {
     evalJS(js)
     headless.ModelCreator.open(ws, api.WorldDimensions(minPxcor, maxPxcor, minPycor, maxPycor), logo)
     state = Map()
-    Rhino.eval("expectedModel = new AgentModel")
-    Rhino.eval("actualModel = new AgentModel")
+    rhino.eval("expectedModel = new AgentModel")
+    rhino.eval("actualModel = new AgentModel")
     compareCommands("clear-all")
   }
 
@@ -66,12 +67,12 @@ class TestDocking extends FunSuite {
   // TODO: what is the difference between eval and run?
   def evalJS(javascript: String) = {
     //println(javascript)
-    Rhino.eval(javascript)
+    rhino.eval(javascript)
   }
 
   def runJS(javascript: String): (String, String) = {
     //println(javascript)
-    Rhino.run(javascript)
+    rhino.run(javascript)
   }
 
   def tester(testName: String)(body: => Unit) {
