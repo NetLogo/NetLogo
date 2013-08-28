@@ -103,6 +103,9 @@ object Compiler {
           case p: prim._patchvariable =>
             s"AgentSet.setPatchVariable(${p.vn},${arg(1)})"
         }
+      case _ =>
+        throw new IllegalArgumentException(
+          "unknown primitive: " + s.command.getClass.getSimpleName)
     }
   }
 
