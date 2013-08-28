@@ -8,7 +8,7 @@ All2
   O> crt 1
   all? turtles [false] => false
 
-All3_2D
+All3
   all? patches [patch 0 0 = self] => false
   all? patches [patch-at 0 0 = self] => true
 
@@ -16,7 +16,7 @@ All4
   P> sprout 1
   all? patches [self = [patch-here] of one-of turtles-here] => true
 
-All5_2D
+All5
   O> random-seed 38923
   P> set plabel true
   all? patches [plabel] => true

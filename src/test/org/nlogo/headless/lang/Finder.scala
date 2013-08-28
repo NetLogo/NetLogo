@@ -52,15 +52,15 @@ trait Finder extends FunSuite with SlowTest {
         Fixture.withFixture(s"${t.fullName} ($mode)"){
           fixture =>
             val nonDecls = t.entries.filterNot(_.isInstanceOf[Declaration])
+            val decls =
+              t.entries.collect{case d: Declaration => d.source}
+                .mkString("\n").trim
             if (nonDecls.forall(!_.isInstanceOf[Open]))
               ModelCreator.open(
                 fixture.workspace,
                 dimensions = fixture.dimensions,
                 widgets = StandardWidgets,
-                source =
-                  StandardDeclarations +
-                    t.entries.collect{case d: Declaration => d.source}
-                    .mkString("\n"))
+                source = decls)
             else
               assert(t.entries.forall(!_.isInstanceOf[Declaration]))
             nonDecls.foreach{
@@ -102,20 +102,6 @@ trait Finder extends FunSuite with SlowTest {
         !useGenerator
       else true
     }
-  val StandardDeclarations =
-    """|globals [glob1 glob2 glob3 ]
-       |breed [mice mouse]
-       |breed [frogs frog]
-       |breed [nodes node]
-       |directed-link-breed [directed-links directed-link]
-       |undirected-link-breed [undirected-links undirected-link]
-       |turtles-own [tvar]
-       |patches-own [pvar]
-       |mice-own [age fur]
-       |frogs-own [age spots]
-       |directed-links-own [lvar]
-       |undirected-links-own [weight]
-       |""".stripMargin
   val StandardWidgets = {
     import ModelCreator.{ Plot, Pens, Pen }
     List(

@@ -1,4 +1,4 @@
-Nsum_2D
+Nsum
   O> __change-topology true true
   sort remove-duplicates [sum [pxcor] of neighbors  - pxcor * 8] of patches => [-33 0 33]
   sort remove-duplicates [sum [pxcor] of neighbors4 - pxcor * 4] of patches => [-11 0 11]

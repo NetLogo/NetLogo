@@ -1,4 +1,4 @@
-PatchAt_2D
+PatchAt
   [patch-at  0  0] of (patch 2 3) = (patch 2 3) => true
   [patch-at  1  0] of (patch 2 3) = (patch 3 3) => true
   [patch-at -1  0] of (patch 2 3) = (patch 1 3) => true

@@ -30,6 +30,7 @@ LinkWithBadEndPointsReturnsNobody
   link 3 2 => nobody
 
 LinksInitBlock
+  globals [glob1]
   O> set glob1 0
   O> crt 50
   T> create-links-with other turtles [ set glob1 glob1 + 1 ]
@@ -44,30 +45,32 @@ LinksInitBlock
   count links = glob1 => true
 
 CreateDuplicateLinks
- O> crt 2 [ create-links-with other turtles ]
- count links = 1 => true
- O> ask turtle 0 [ create-link-with turtle 1 ]
- count links = 1 => true
- O> ca
- O> crt 3 [ create-links-to other turtles ]
- count links = 6 => true
- O> ask turtle 0 [ create-link-to turtle 1 ]
- count links = 6 => true
- O> ca
- O> crt 3 [ create-links-from other turtles ]
- count links = 6 => true
- O> ask turtle 0 [ create-link-from turtle 1 ]
- count links = 6 => true
- O> ca
- O> crt 2
- O> ask turtle 0 [ create-link-with turtle 1 ]
- count [link-neighbors] of turtle 0 => 1
- count [link-neighbors] of turtle 1 => 1
- O> ask turtle 1 [ create-link-with turtle 0 ]
- count [link-neighbors] of turtle 0 => 1
- count [link-neighbors] of turtle 1 => 1
+  O> crt 2 [ create-links-with other turtles ]
+  count links = 1 => true
+  O> ask turtle 0 [ create-link-with turtle 1 ]
+  count links = 1 => true
+  O> ca
+  O> crt 3 [ create-links-to other turtles ]
+  count links = 6 => true
+  O> ask turtle 0 [ create-link-to turtle 1 ]
+  count links = 6 => true
+  O> ca
+  O> crt 3 [ create-links-from other turtles ]
+  count links = 6 => true
+  O> ask turtle 0 [ create-link-from turtle 1 ]
+  count links = 6 => true
+  O> ca
+  O> crt 2
+  O> ask turtle 0 [ create-link-with turtle 1 ]
+  count [link-neighbors] of turtle 0 => 1
+  count [link-neighbors] of turtle 1 => 1
+  O> ask turtle 1 [ create-link-with turtle 0 ]
+  count [link-neighbors] of turtle 0 => 1
+  count [link-neighbors] of turtle 1 => 1
 
 CreateLinksTo
+  breed [nodes node]
+  directed-link-breed [directed-links directed-link]
   O> crt 1
   O> create-nodes 2
   count links => 0
@@ -83,6 +86,8 @@ CreateLinksTo
   count links => 0
 
 CreateLinksFrom
+  breed [nodes node]
+  directed-link-breed [directed-links directed-link]
   O> crt 1
   O> create-nodes 2
   count links => 0
@@ -96,6 +101,8 @@ CreateLinksFrom
   count links => 0
 
 CreateLinksWith
+  breed [nodes node]
+  undirected-link-breed [undirected-links undirected-link]
   O> crt 1
   O> create-nodes 2
   count links => 0
@@ -137,6 +144,7 @@ LinkedTest3
   [link-neighbor? turtle 0] of turtle 1 => true
 
 NodeDies1
+  breed [nodes node]
   O> create-nodes 2
   O> ask turtle 0 [create-link-to turtle 1]
   count nodes => 2
@@ -146,6 +154,7 @@ NodeDies1
   count links => 0
 
 NodeDies2
+  breed [nodes node]
   O> create-nodes 2
   O> ask turtle 0 [create-link-from turtle 1]
   count nodes => 2
@@ -155,6 +164,7 @@ NodeDies2
   count links => 0
 
 NodeDies3
+  breed [nodes node]
   O> create-nodes 2
   O> ask turtle 0 [create-link-with turtle 1]
   count nodes => 2
@@ -163,8 +173,8 @@ NodeDies3
   count nodes => 1
   count links => 0
 
-
 LinkDies1
+  breed [nodes node]
   O> create-nodes 2
   O> ask turtle 0 [create-link-to turtle 1]
   O> ask link 0 1 [die]
@@ -173,6 +183,7 @@ LinkDies1
   [ out-link-neighbor? turtle 1] of turtle 0 => false
 
 LinkDies2
+  breed [nodes node]
   O> create-nodes 2
   O> ask turtle 0 [create-link-from turtle 1]
   O> ask link 1 0 [die]
@@ -181,6 +192,7 @@ LinkDies2
   [ in-link-neighbor? turtle 1] of turtle 0 => false
 
 LinkDies3
+  breed [nodes node]
   O> create-nodes 2
   O> ask turtle 0 [create-link-with turtle 1]
   O> ask link 0 1 [die]
@@ -189,6 +201,7 @@ LinkDies3
   [ link-neighbor? turtle 1] of turtle 0 => false
 
 LinkDestTest1
+  breed [nodes node]
   O> create-nodes 2
   O> ask turtle 0 [create-link-to turtle 1]
   [ end1 ] of link 0 1 = turtle 0 => true
@@ -199,6 +212,7 @@ LinkDestTest1
   [ end2 ] of link 1 0 = turtle 0 => true
 
 LinkDestTest2
+  breed [nodes node]
   O> create-nodes 2
   O> ask turtle 0 [create-link-with turtle 1]
   [ end1 ] of link 0 1 = turtle 0 => true
@@ -260,6 +274,7 @@ IsLink2
   is-link? link 0 1 => true
 
 LinkKillsNode1
+  breed [nodes node]
   O> create-nodes 2
   count nodes => 2
   count links => 0
@@ -268,6 +283,7 @@ LinkKillsNode1
   count links => 0
 
 LinkKillsNode2
+  breed [nodes node]
   O> create-nodes 2
   count nodes => 2
   count links => 0
@@ -276,6 +292,7 @@ LinkKillsNode2
   count links => 0
 
 LinkKillsNode3
+  breed [nodes node]
   O> create-nodes 2
   count nodes => 2
   count links => 0
@@ -370,6 +387,7 @@ LinksAllFromTo3
   map [ [ (list [who] of end1 [who] of end2 ) ] of ? ] sort [my-links ] of turtle 1 => [[0 1]]
 
 LinkKillsItself1
+  breed [nodes node]
   O> create-nodes 2
   O> ask turtle 0 [create-link-to turtle 1 [die]]
   count nodes => 2
@@ -388,6 +406,7 @@ LinkKillsItself1
   sort [who] of [my-out-links ] of turtle 1 => []
 
 LinkKillsItself2
+  breed [nodes node]
   O> create-nodes 2
   O> ask turtle 0 [create-link-from turtle 1 [die]]
   count nodes => 2
@@ -406,6 +425,7 @@ LinkKillsItself2
   sort [who] of [my-out-links ] of turtle 1 => []
 
 LinkKillsItself3
+  breed [nodes node]
   O> create-nodes 2
   O> ask turtle 0 [create-link-with turtle 1 [die]]
   count nodes => 2
@@ -495,6 +515,7 @@ RemoveWith
   sort [who] of [my-links ] of turtle 1 => []
 
 BreedTest1
+  directed-link-breed [directed-links directed-link]
   O> crt 2
   O> ask turtle 0 [create-link-to turtle 1]
   [in-directed-link-from turtle 1] of turtle 0 => nobody
@@ -511,6 +532,7 @@ BreedTest1
   sort [who] of [my-out-directed-links ] of turtle 1 => []
 
 BreedTest2
+  directed-link-breed [directed-links directed-link]
   O> crt 2
   O> ask turtle 0 [create-link-from turtle 1]
   [in-directed-link-from turtle 1] of turtle 0 => nobody
@@ -527,6 +549,7 @@ BreedTest2
   sort [who] of [my-out-directed-links ] of turtle 1 => []
 
 BreedTest3
+  undirected-link-breed [undirected-links undirected-link]
   O> crt 2
   O> ask turtle 0 [create-link-with turtle 1]
   [undirected-link-with turtle 1] of turtle 0 => nobody
@@ -537,6 +560,8 @@ BreedTest3
   sort [who] of [my-undirected-links ] of turtle 1 => []
 
 LinkCantChangeBreeds
+  globals [glob1]
+  breed [frogs frog]
   O> crt 2
   O> ask turtle 0 [ create-link-to turtle 1 [ set glob1 self ] ]
   [breed] of glob1 = links => true
@@ -548,6 +573,8 @@ LinkEquality
   link 0 1 = link 0 2 => false
 
 LinkBreedIdentifiers
+  directed-link-breed [directed-links directed-link]
+  undirected-link-breed [undirected-links undirected-link]
   O> crt 2
   O> ask turtle 0 [ create-link-with turtle 1 [ set color blue ] ]
   link 0 1 = one-of links with [color = blue] => true
@@ -573,6 +600,8 @@ LinkBreedIdentifiers
   link 0 1 = one-of links with [color = blue] => true
 
 LinkNeighborsUnbreeded
+  directed-link-breed [directed-links directed-link]
+  undirected-link-breed [undirected-links undirected-link]
   O> crt 5 [ create-undirected-links-with other turtles ]
   count links => 10
   count undirected-links => 10
@@ -592,53 +621,65 @@ LinkNeighborsUnbreeded
   [count in-link-neighbors] of turtle 0 => 4
 
 LinksNotAllowed
- O> crt 2 [ create-links-with other turtles [ set glob1 self ] ]
- [towards glob1] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
- [towards-nowrap glob1] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
- [distance glob1] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
- [distance-nowrap glob1] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
- [distance turtle 0] of glob1 => ERROR this code can't be run by a link
- [neighbors] of glob1 => ERROR this code can't be run by a link
- O> follow glob1 => ERROR FOLLOW expected input to be a turtle but got the link (link 0 1) instead.
- O> ride glob1 => ERROR RIDE expected input to be a turtle but got the link (link 0 1) instead.
- T> face glob1 => ERROR Expected a turtle or a patch but got a link.
- O> ask glob1 [ facexy 0 1 ] => ERROR this code can't be run by a link, only a turtle
- O> ask glob1 [ facexy-nowrap 0 1 ] => ERROR this code can't be run by a link, only a turtle
- O> ask glob1 [ face turtle 0 ] => ERROR this code can't be run by a link, only a turtle
- O> ask glob1 [ face-nowrap turtle 0 ] => ERROR this code can't be run by a link, only a turtle
- O> ask glob1 [ follow-me ] => ERROR this code can't be run by a link, only a turtle
- O> set glob1 links
- [glob1 in-radius 5] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
- [glob1 in-radius-nowrap 5] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
- [glob1 in-cone 5 5] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
- [glob1 in-cone-nowrap 5 5] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
+  globals [glob1]
+  O> crt 2 [ create-links-with other turtles [ set glob1 self ] ]
+  [towards glob1] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
+  [towards-nowrap glob1] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
+  [distance glob1] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
+  [distance-nowrap glob1] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
+  [distance turtle 0] of glob1 => ERROR this code can't be run by a link
+  [neighbors] of glob1 => ERROR this code can't be run by a link
+  O> follow glob1 => ERROR FOLLOW expected input to be a turtle but got the link (link 0 1) instead.
+  O> ride glob1 => ERROR RIDE expected input to be a turtle but got the link (link 0 1) instead.
+  T> face glob1 => ERROR Expected a turtle or a patch but got a link.
+  O> ask glob1 [ facexy 0 1 ] => ERROR this code can't be run by a link, only a turtle
+  O> ask glob1 [ facexy-nowrap 0 1 ] => ERROR this code can't be run by a link, only a turtle
+  O> ask glob1 [ face turtle 0 ] => ERROR this code can't be run by a link, only a turtle
+  O> ask glob1 [ face-nowrap turtle 0 ] => ERROR this code can't be run by a link, only a turtle
+  O> ask glob1 [ follow-me ] => ERROR this code can't be run by a link, only a turtle
+  O> set glob1 links
+  [glob1 in-radius 5] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
+  [glob1 in-radius-nowrap 5] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
+  [glob1 in-cone 5 5] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
+  [glob1 in-cone-nowrap 5 5] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
 
-LinkNotAllowed_2D
- O> crt 2 [ create-links-with other turtles [ set glob1 self ] ]
- [patch-at 0 1] of glob1 => ERROR this code can't be run by a link
+LinkNotAllowed
+  globals [glob1]
+  O> crt 2 [ create-links-with other turtles [ set glob1 self ] ]
+  [patch-at 0 1] of glob1 => ERROR this code can't be run by a link
 
 BadLinkBreeds
- O> crt 2 [ create-links-with turtles with [ who > [who] of myself ] ]
- L> set breed turtles => ERROR You can't set BREED to a non-link-breed agentset.
- L> set breed frogs => ERROR You can't set BREED to a non-link-breed agentset.
- L> set breed directed-links => ERROR You cannot have both breeded and unbreeded links in the same world.
- L> die
- O> ask turtle 0 [ create-directed-link-to turtle 1 ]
- L> set breed undirected-links
- O> ask turtle 0 [ create-directed-link-to turtle 1 ]
- L> set breed undirected-links => ERROR there is already a UNDIRECTED-LINK with endpoints turtle 0 and turtle 1
- L> set breed links => ERROR You cannot have both breeded and unbreeded links in the same world.
+  breed [frogs frog]
+  undirected-link-breed [undirected-links undirected-link]
+  directed-link-breed [directed-links directed-link]
+  O> crt 2 [ create-links-with turtles with [ who > [who] of myself ] ]
+  L> set breed turtles => ERROR You can't set BREED to a non-link-breed agentset.
+  L> set breed frogs => ERROR You can't set BREED to a non-link-breed agentset.
+  L> set breed directed-links => ERROR You cannot have both breeded and unbreeded links in the same world.
+  L> die
+  O> ask turtle 0 [ create-directed-link-to turtle 1 ]
+  L> set breed undirected-links
+  O> ask turtle 0 [ create-directed-link-to turtle 1 ]
+  L> set breed undirected-links => ERROR there is already a UNDIRECTED-LINK with endpoints turtle 0 and turtle 1
+  L> set breed links => ERROR You cannot have both breeded and unbreeded links in the same world.
 
 SetLinkVariable
+  undirected-link-breed [undirected-links undirected-link]
+  directed-link-breed [directed-links directed-link]
+  directed-links-own [lvar]
+  undirected-links-own [weight]
   O> crt 10
   T> create-directed-links-to other turtles [ set lvar 5 ]
   T> create-undirected-links-with other turtles [ set weight 5 ]
 
 LinkBreedsDying
- O> create-turtles 10 [ fd 10 repeat 5 [ ifelse one-of [true false] [ create-directed-link-to one-of other turtles ] [ create-undirected-link-with one-of other turtles ] ] ]
- O> set glob1 count links
- O> repeat glob1 [ ask one-of links [ die ] ]
- count links => 0
+  undirected-link-breed [undirected-links undirected-link]
+  directed-link-breed [directed-links directed-link]
+  globals [glob1]
+  O> create-turtles 10 [ fd 10 repeat 5 [ ifelse one-of [true false] [ create-directed-link-to one-of other turtles ] [ create-undirected-link-with one-of other turtles ] ] ]
+  O> set glob1 count links
+  O> repeat glob1 [ ask one-of links [ die ] ]
+  count links => 0
 
 LinkHeading
   O> cro 360 [ create-link-with turtle ((who + 1) mod 360) ]
@@ -651,11 +692,12 @@ LinkNeighborIsUndirectedOnly1
   T> __ignore link-neighbor? one-of other turtles => ERROR LINKS is a directed breed.
 
 LinkNeighborIsUndirectedOnly2
+  directed-link-breed [directed-links directed-link]
   O> crt 2 [ create-directed-links-to other turtles ]
   T> __ignore directed-link-neighbor? one-of other turtles => COMPILER ERROR Nothing named DIRECTED-LINK-NEIGHBOR? has been defined
 
 # https://github.com/NetLogo/NetLogo/issues/338
-LinkCreationTypeChecking_2D
+LinkCreationTypeChecking
   O> crt 1
   T> create-link-with patch-here => COMPILER ERROR CREATE-LINK-WITH expected this input to be a turtle, but got a patch instead
   T> let x patch-here create-link-with x => ERROR CREATE-LINK-WITH expected input to be a turtle but got the patch (patch 0 0) instead.

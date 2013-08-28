@@ -1,4 +1,4 @@
-MoveTo_2D
+MoveTo
   O> cro 2 [ fd 5 ]
   sort [heading] of turtles => [0 180]
   O> ask turtle 0 [ move-to one-of turtles with [false] ] => ERROR MOVE-TO expected input to be an agent but got NOBODY instead.

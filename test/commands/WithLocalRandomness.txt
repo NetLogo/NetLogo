@@ -1,4 +1,5 @@
 WithLocalRandomnessBasic
+  globals [glob1 glob2]
   O> set glob1 __random-state
   O> with-local-randomness [ set glob2 random 1 ]
   glob1 = __random-state => true
@@ -12,6 +13,7 @@ WithLocalRandomnessBasic
   glob2 = one-of patches => true
 
 WithLocalRandomnessAsk
+  globals [glob1]
   O> set glob1 __random-state
   O> with-local-randomness [ crt 10 [ set color random 140 ] ]
   glob1 = __random-state => true
@@ -21,11 +23,13 @@ WithLocalRandomnessAsk
   glob1 = __random-state => true
 
 WithLocalRandomnessNested
+  globals [glob1 glob2]
   O> set glob1 __random-state
   O> with-local-randomness [ with-local-randomness [ set glob2 random 10 ] set glob2 random 10 ]
   glob1 = __random-state => true
 
 WithLocalRandomnessRandomSeed
+  globals [glob1 glob2 glob3]
   O> random-seed 10
   O> set glob1 random 10
   O> with-local-randomness [ random-seed 10 set glob2 random 10  set glob3 random 20 ]
@@ -33,19 +37,21 @@ WithLocalRandomnessRandomSeed
   glob1 = glob2 => true
 
 WithLocalRandomnessStop
+  globals [glob1]
   to foo with-local-randomness [ set glob1 [who] of turtles stop set glob1 [who] of turtles ] end
   O> crt 4
   O> foo
   glob1 = [who] of turtles => true
 
 WithLocalRandomnessCarefully
+  globals [glob1]
   to foo carefully [ with-local-randomness [ set glob1 [who] of turtles error "boom" set glob1 [who] of turtles ] ] [] end
   O> crt 4
   O> foo
   glob1 = [who] of turtles => true
 
 WithLocalRandomnessReport
+  globals [glob1]
   to-report foo with-local-randomness [ report [who] of turtles set glob1 [who] of turtles ] end
   O> crt 4
   O> set glob1 foo => ERROR REPORT must be immediately inside a TO-REPORT.
-

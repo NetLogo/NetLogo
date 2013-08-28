@@ -1,4 +1,7 @@
 TurtlesHere1
+  breed [mice mouse]
+  breed [frogs frog]
+  globals [glob1]
   O> crt       10 [ set heading 0 fd 5 ]
   O> create-mice  10 [ set heading 0 fd 5 ]
   O> create-frogs 10 [ set heading 0 fd 5 ]
@@ -27,17 +30,23 @@ TurtlesHere2
   [label] of turtle 0 => "foo"
 
 PatchDoesOtherTurtlesHere
+  globals [glob1]
   O> create-turtles 1 [ set glob1 patch-here ]
   [length sort other turtles-here] of glob1 => 1
 
 PatchDoesOtherBreedHere
+  globals [glob1]
+  breed [frogs frog]
   O> create-frogs 1 [ set glob1 patch-here ]
   [length sort other frogs-here] of glob1 => 1
 
 PatchDoesCountOtherTurtlesHere
+  globals [glob1]
   O> create-turtles 1 [ set glob1 patch-here ]
   [count other turtles-here] of glob1 => 1
 
 PatchDoesCountOtherBreedHere
+  globals [glob1]
+  breed [frogs frog]
   O> create-frogs 1 [ set glob1 patch-here ]
   [count other frogs-here] of glob1 => 1

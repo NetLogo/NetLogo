@@ -1,9 +1,10 @@
-IncorrectlyTypedUseOfPatchPrimitiveOnAPatch_2D
+IncorrectlyTypedUseOfPatchPrimitiveOnAPatch
+  globals [glob1]
   O> set glob1 patch 0 0
   O> __ignore patch glob1 => COMPILER ERROR PATCH expected 2 inputs, a number and a number.
   O> ask patch glob1 [ ] => COMPILER ERROR Expected a number here, rather than a list or block.
 
-PatchWrapsAndRounds_2D
+PatchWrapsAndRounds
   O> __change-topology true true
   [list pxcor pycor] of patch 3 4 => [3 4]
   [list pxcor pycor] of patch 3.1 4 => [3 4]
@@ -37,5 +38,5 @@ PatchWrapsAndRounds_2D
   patch -6.5 6.5 => nobody
   patch 6.5 -6.5 => nobody
 
-SetVariableRuntime_2D
+SetVariableRuntime
   O> ask patch 0 0 [ set pcolor self ] => ERROR can't set patch variable PCOLOR to non-number (patch 0 0)

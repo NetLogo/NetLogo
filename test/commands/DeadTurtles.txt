@@ -1,6 +1,8 @@
 # this needs the error-ok? thing because the error is a little different depending
 # on whether we use the generator or not - ST 2/10/09
 DeadTurtles1
+  globals [glob1 glob2]
+  breed [mice mouse]
   O> create-mice 1 [ set glob1 self die ]
   O> crt 1
   [color] of glob1 => ERROR That mouse is dead.
@@ -14,6 +16,9 @@ DeadTurtles1
   glob2 => "That mouse is dead."
 
 DeadTurtles2
+  globals [glob1]
+  breed [mice mouse]
+  mice-own [age]
   O> create-mice 1 [ set glob1 self die ]
   O> follow glob1 => ERROR That mouse is dead.
   [color] of glob1 => ERROR That mouse is dead.
@@ -24,33 +29,39 @@ DeadTurtles2
   O> ask glob1 [ set age 11 ] => ERROR That mouse is dead.
 
 DeadTurtles3
+  globals [glob1]
   O> crt 2
   O> ask turtle 0 [ ask turtle 1 [ ask turtle 0 [ die ] ] set glob1 5 ]
   glob1 => 0
 
 DeadTurtles4
+  globals [glob1]
   O> crt 1
   T> hatch 1 [ ask myself [ die ] ] set glob1 5
   glob1 => 0
 
 DeadTurtles5
+  globals [glob1]
   to-report foo ask turtle 0 [ die ] report 5 end
   O> crt 1
   O> ask turtle 0 [ set glob1 foo ] => ERROR the FOO procedure failed to report a result
   glob1 => 0
 
 DeadTurtles6
+  globals [glob1]
   to-report foo die report 5 end
   O> crt 1
   O> ask turtle 0 [ set glob1 foo ] => ERROR the FOO procedure failed to report a result
   glob1 => 0
 
 DeadTurtles7
+  globals [glob1]
   O> crt 1
   T> without-interruption [ ask turtle 0 [ die ] ] set glob1 5
   glob1 => 0
 
 DeadTurtles8
+  globals [glob1]
   O> crt 1
   O> set glob1 turtles with [true]
   T> die

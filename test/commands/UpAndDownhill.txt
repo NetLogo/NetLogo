@@ -1,19 +1,21 @@
 UpAndDownhill1
- O> crt 1
- O> set glob1 1
- T> foreach sort neighbors [ ask ? [ set pvar glob1 set glob1 glob1 + 1 ] ]
- T> set pvar 100
- T> home downhill pvar
- [heading] of turtle 0 => 315
- T> home downhill4 pvar
- [heading] of turtle 0 => 0
- T> home set pvar -100
- T> home uphill pvar
- [heading] of turtle 0 => 135
- T> home uphill4 pvar
- [heading] of turtle 0 => 180
+  globals [glob1]
+  patches-own [pvar]
+  O> crt 1
+  O> set glob1 1
+  T> foreach sort neighbors [ ask ? [ set pvar glob1 set glob1 glob1 + 1 ] ]
+  T> set pvar 100
+  T> home downhill pvar
+  [heading] of turtle 0 => 315
+  T> home downhill4 pvar
+  [heading] of turtle 0 => 0
+  T> home set pvar -100
+  T> home uphill pvar
+  [heading] of turtle 0 => 135
+  T> home uphill4 pvar
+  [heading] of turtle 0 => 180
 
-Uphill1_2D
+Uphill1
   O> random-seed 287
   P> if patch 0 0 != self [ set pcolor 1 ]
   O> crt 100
@@ -31,6 +33,7 @@ Uphill1_2D
   any? turtles with [patch-here != patch 0 0] => false
 
 Uphill2
+  globals [glob1]
   O> crt 100
   O> ask turtle 0 [ set glob1 patch-here ask patches with [ self != glob1 ] [ set pcolor 1 ] ]
   T> uphill4 pcolor
@@ -43,6 +46,8 @@ Uphill2
   any? turtles with [patch-here != glob1] => false
 
 Uphill3
+  globals [glob1 glob2]
+  patches-own [pvar]
   O> crt 1 [ set glob2 patch-here ]
   O> set glob1 -1
   T> foreach sort neighbors [ ask ? [ set pvar glob1 set glob1 glob1 - 1 ] ]
@@ -53,6 +58,7 @@ Uphill3
   any? turtles with [patch-here != glob2] => false
 
 Downhill1
+  globals [glob1]
   O> crt 100
   O> ask turtle 0 [ set glob1 patch-here set pcolor 1 ]
   T> downhill pcolor
@@ -68,6 +74,7 @@ Downhill1
   any? turtles with [patch-here != glob1] => false
 
 Downhill2
+  globals [glob1]
   O> crt 100
   O> ask turtle 0 [ set glob1 patch-here set pcolor 1 ]
   T> downhill4 pcolor
@@ -78,4 +85,3 @@ Downhill2
   any? turtles with [heading mod 90 != 0] => false
   T> rt 180 fd 1 move-to patch-here
   any? turtles with [patch-here != glob1] => false
-

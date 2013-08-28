@@ -1,4 +1,4 @@
-Face1_2D
+Face1
   P> sprout 1 [ face patch-at 0 1 ]
   sort remove-duplicates [ heading ] of turtles => [0]
   O> __change-topology true false
@@ -13,7 +13,8 @@ Face1_2D
   P> sprout 1 [ let p patch-at 1 0 if p = nobody [ set p patch min-pxcor ycor ] face p ]
   sort remove-duplicates [ heading ] of turtles => [90 270]
 
-Face2_2D
+Face2
+  globals [glob1]
   O> cro 2
   O> ask turtle 0 [ set glob1 heading face turtle 1 ]
   [heading] of turtle 0 = glob1 => true
@@ -25,7 +26,7 @@ Face2_2D
   O> ask turtle 0 [ lt 90 fd 4 face turtle 1 ]
   [heading] of turtle 0 => 225
 
-Face3_2D
+Face3
   O> resize-world 0 10 0 10
   P> sprout 1 [ face patch-at 0 1 ]
   sort remove-duplicates [ heading ] of turtles => [0]
@@ -41,7 +42,7 @@ Face3_2D
   P> sprout 1 [ let p patch-at 1 0 if p = nobody [ set p patch min-pxcor ycor ] face p ]
   sort remove-duplicates [ heading ] of turtles => [90 270]
 
-Face4_2D
+Face4
   O> resize-world 0 11 0 11
   P> sprout 1 [ face patch-at 0 1 ]
   sort remove-duplicates [ heading ] of turtles => [0]
@@ -57,7 +58,7 @@ Face4_2D
   P> sprout 1 [ let p patch-at 1 0 if p = nobody [ set p patch min-pxcor ycor ] face p ]
   sort remove-duplicates [ heading ] of turtles => [90 270]
 
-Face5_2D
+Face5
   O> resize-world -10 0 -10 0
   P> sprout 1 [ face patch-at 0 1 ]
   sort remove-duplicates [ heading ] of turtles => [0]
@@ -73,7 +74,7 @@ Face5_2D
   P> sprout 1 [ let p patch-at 1 0 if p = nobody [ set p patch min-pxcor ycor ] face p ]
   sort remove-duplicates [ heading ] of turtles => [90 270]
 
-Face6_2D
+Face6
   O> resize-world -11 0 -11 0
   P> sprout 1 [ face patch-at 0 1 ]
   sort remove-duplicates [ heading ] of turtles => [0]
@@ -113,6 +114,7 @@ FaceXY1
   sort remove-duplicates [ heading ] of turtles => [0 180]
 
 FaceXY2
+  globals [glob1]
   O> cro 2
   O> ask turtle 0 [ set glob1 heading facexy [xcor] of turtle 1 [ycor] of turtle 1 ]
   [heading] of turtle 0 = glob1 => true
@@ -124,7 +126,7 @@ FaceXY2
   O> ask turtle 0 [ lt 90 fd 4 facexy [xcor] of turtle 1 [ycor] of turtle 1 ]
   [heading] of turtle 0 => 225
 
-FaceXY3_2D
+FaceXY3
   O> resize-world 0 10 0 10
   P> sprout 1 [ facexy pxcor pycor + 1 ]
   sort remove-duplicates [ heading ] of turtles => [0]
@@ -148,7 +150,7 @@ FaceXY3_2D
   T> set heading 0 facexy pxcor min-pycor
   sort remove-duplicates [ heading ] of turtles => [0 180]
 
-FaceXY4_2D
+FaceXY4
   O> resize-world 0 11 0 11
   P> sprout 1 [ facexy pxcor pycor + 1 ]
   sort remove-duplicates [ heading ] of turtles => [0]
@@ -172,7 +174,7 @@ FaceXY4_2D
   T> set heading 0 facexy pxcor min-pycor
   sort remove-duplicates [ heading ] of turtles => [0 180]
 
-FaceXY5_2D
+FaceXY5
   O> resize-world -10 0 -10 0
   P> sprout 1 [ facexy pxcor pycor + 1 ]
   sort remove-duplicates [ heading ] of turtles => [0]
@@ -196,7 +198,7 @@ FaceXY5_2D
   T> set heading 0 facexy pxcor min-pycor
   sort remove-duplicates [ heading ] of turtles => [0 180]
 
-FaceXY6_2D
+FaceXY6
   O> resize-world -11 0 -11 0
   P> sprout 1 [ facexy pxcor pycor + 1 ]
   sort remove-duplicates [ heading ] of turtles => [0]

@@ -15,10 +15,12 @@ FunCall-Simple
   runresult [5] => 5
 
 FunCall-With-Let
+  globals [glob1]
   O> let f task [5] set glob1 runresult f
   glob1 => 5
 
 Task-With-Args
+  globals [glob1]
   O> let id task [?] set glob1 (runresult id 6)
   glob1 => 6
 
@@ -32,16 +34,19 @@ Call-With-Too-Many-Args-Is-Ok-3
   (runresult [?1 + ?2] 5 6 7 8) => 11
 
 Call-Task-Twice
+  globals [glob1 glob2]
   O> let id task [?] set glob1 (runresult id 6) set glob2 (runresult id 7)
   glob1 => 6
   glob2 => 7
 
 Change-Closed-Over-Var
+  globals [glob1 glob2]
   O> let x 10 let addx task [? + x] set glob1 (runresult addx 6) set x 100 set glob2 (runresult addx 6)
   glob1 => 16
   glob2 => 106
 
 Downward-Funarg
+  globals [glob1]
   to-report call [fn] report (runresult fn 10) end
   O> set glob1 call task [? * ?]
   glob1 => 100
@@ -59,51 +64,63 @@ Upward-Funarg-3
   (runresult addx 10 20) => 30
 
 Upward-Funarg-4
+  globals [glob1]
   to-report foo __let x 5 report task [x] end
   O> set glob1 foo
   runresult glob1 => 5
 
 Two-Args-To-Task
+  globals [glob1]
   O> set glob1 (runresult [?1 * ?2] 10 20)
   glob1 => 200
 
 Two-Args-To-Task-In-Reverse-Order
+  globals [glob1]
   O> set glob1 (runresult [?2 * ?1] 10 20)
   glob1 => 200
 
 Two-Args-To-Task-First-Arg-Ignored
+  globals [glob1]
   O> set glob1 (runresult [?2 * ?2] 10 20)
   glob1 => 400
 
 Three-Args-To-Task
+  globals [glob1]
   O> set glob1 (runresult [?1 * ?2 * ?3] 10 20 30)
   glob1 => 6000
 
 Three-Args-To-Task-In-Reverse-Order
+  globals [glob1]
   O> set glob1 (runresult [?3 * ?2 * ?1] 10 20 30)
   glob1 => 6000
 
 Three-Args-To-Task-In-Random-Order
+  globals [glob1]
   O> set glob1 (runresult [?2 * ?1 * ?3] 10 20 30)
   glob1 => 6000
 
 Three-Args-To-Task-First-Arg-Ignored
+  globals [glob1]
   O> set glob1 (runresult [?2 * ?3] 10 20 30)
   glob1 => 600
 
 Three-Args-To-Task-Second-Arg-Ignored
+  globals [glob1]
   O> set glob1 (runresult [?1 * ?3] 10 20 30)
   glob1 => 300
 
 Three-Args-To-Task-First-And-Second-Args-Ignored
+  globals [glob1]
   O> set glob1 (runresult [?3 * ?3] 10 20 30)
   glob1 => 900
 
 Two-Args-To-Task-And-Use-Closed-Over-Var
+  globals [glob1]
   O> let x 5 set glob1 (runresult task [x * ?1 * ?2] 10 20)
   glob1 => 1000
 
 Two-Args-To-Task-And-Change-Closed-Over-Var
+  globals [glob1 glob2]
   O> let x 10 let f task [x * ?1 * ?2] set glob1 (runresult f 10 20) set x 100 set glob2 (runresult f 10 20)
   glob1 => 2000
   glob2 => 20000
@@ -130,6 +147,7 @@ Map-Three-Args
   (map [?1 + ?2 + ?3] [1 2 3] [10 20 30] [100 200 300]) => [111 222 333]
 
 Map-Id-With-Variable
+  globals [glob1]
   O> set glob1 task [?]
   map glob1 [1 2 3] => [1 2 3]
 
@@ -144,6 +162,7 @@ N-Values-Constant
   n-values 5 [5] => [5 5 5 5 5]
 
 N-Values-Id-With-Variable
+  globals [glob1]
   O> set glob1 task [?]
   n-values 5 glob1 => [0 1 2 3 4]
 
@@ -197,6 +216,7 @@ ConciseSyntax4
   (map + [1 2 3] [10 20 30]) => [11 22 33]
 
 ConciseSyntax5
+  globals [glob1]
   O> set glob1 task [reduce + ?]
   (runresult glob1 [1 2 3]) => 6
 
@@ -208,10 +228,12 @@ ConciseSyntax7
   (runresult (task +) 1 2) => 3
 
 ConciseSyntax8
+  globals [glob1]
   O> set glob1 99
   runresult task glob1 => 99
 
 ConciseSyntax9
+  globals [glob1 glob2]
   O> set glob1 99
   O> set glob2 task glob1
   runresult runresult task glob2 => 99
@@ -222,6 +244,7 @@ ConciseSyntax10
   (map [(runresult ?1 ?2)] map adder [10 20 30] [1 2 3]) => [11 22 33]
 
 ConciseSyntax11
+  globals [glob1]
   O> set glob1 task 5
   runresult glob1 => 5
 
@@ -246,32 +269,39 @@ is-it-or-isnt-it
   is-reporter-task? task [timer] => true
 
 dont-close-over-current-agent
+  globals [glob1]
   O> crt 2
   O> ask turtle 0 [ set glob1 task [who] ]
   [runresult glob1] of turtle 1 => 1
 
 recursive-factorial
+  globals [glob1]
   O> set glob1 task [ ifelse-value (? = 0) [ 1 ] [ ? * (runresult glob1 (? - 1)) ] ]
   map glob1 n-values 7 [?] => [1 1 2 6 24 120 720]
 
 recursive-fibonacci
+  globals [glob1]
   O> set glob1 task [ ifelse-value (? < 2) [ 1 ] [ (runresult glob1 (? - 1)) + (runresult glob1 (? - 2)) ] ]
   map glob1 n-values 10 [?] => [1 1 2 3 5 8 13 21 34 55]
 
 recursive-triangle-numbers-1
+  globals [glob1]
   O> set glob1 task [ ifelse-value (? = 0) [ 0 ] [ ? + (runresult glob1 (? - 1)) ] ]
   map glob1 n-values 10 [?] => [0 1 3 6 10 15 21 28 36 45]
 
 recursive-triangle-numbers-2
+  globals [glob1]
   O> set glob1 task [ ifelse-value (? = 0) [ 0 ] [ (runresult glob1 (? - 1)) + ? ] ]
   map glob1 n-values 10 [?] => [0 1 3 6 10 15 21 28 36 45]
 
 # by using __let here we're forcing a nonempty LetMap before the recursion starts - ST 2/27/11
 recursive-triangle-numbers-3
+  globals [glob1]
   O> __let g 0 set g task [ ifelse-value (? = 0) [ 0 ] [ (runresult g (? - 1)) + ? ] ] set glob1 g
   map glob1 n-values 10 [?] => [0 1 3 6 10 15 21 28 36 45]
 
 empty-list-task-1
+  globals [glob1]
   O> set glob1 task[[]]
   is-reporter-task? glob1 => true
   runresult glob1 => []
@@ -283,6 +313,7 @@ empty-list-task-2
 # challenging to define it without.  nonetheless, this version makes a
 # nice test. - ST 4/3/11
 y-combinator
+  globals [glob1]
   to-report y [f] report task [(runresult f (y f) ?)] end
   to-report fact [f n] if n = 0 [ report 1 ] report n * (runresult f (n - 1)) end
   # variant 1: use fact procedure
@@ -300,5 +331,6 @@ reporter-task-body-gets-agent-type-check
   O> __ignore task [size + link-length] => COMPILER ERROR You can't use LINK-LENGTH in a turtle context, because LINK-LENGTH is link-only.
 
 reporter-task-closes-over-let-inside-task-of-different-agent
+  globals [glob1]
   O> __let z 9 crt 1 [ set glob1 task [ z ] ]
   runresult glob1 => 9

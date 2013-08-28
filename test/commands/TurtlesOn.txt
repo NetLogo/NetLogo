@@ -1,4 +1,6 @@
-TurtlesOn1_2D
+TurtlesOn1
+  breed [mice mouse]
+  breed [frogs frog]
   P> sprout 1
   count turtles-on patches = count patches => true
   any? mice-on patches => false

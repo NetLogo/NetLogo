@@ -104,6 +104,7 @@ class TestProfiler extends FixtureSuite with SlowTest {
       import fixture._
       declare(
         "extensions [profiler]\n" +
+        "globals [glob1]\n" +
         "to test1 ask turtles [ test2 ] end\n" +
         "to test2 wait 0.01 end")
       testCommand("crt 10")
@@ -123,6 +124,7 @@ class TestProfiler extends FixtureSuite with SlowTest {
       import fixture._
       declare(
         "extensions [profiler]\n" +
+        "globals [glob1 glob2 glob3]\n" +
         "to go ask turtles [ go-turtles1 ] ask patches [ go-patches ] end\n" +
         "to go-turtles1 wait 0.0001 go-turtles2 end\n" +
         "to go-turtles2 ask turtles with [true] [ go-turtles3 ] end\n" +

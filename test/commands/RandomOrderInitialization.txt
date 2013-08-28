@@ -1,32 +1,38 @@
 TestRandomOrderInitializationCRO
+  globals [glob1]
   O> random-seed 1717
   O> cro 10 [ set glob1 who ]
   glob1 => 5
 
-TestRandomOrderInitializationSprout_2D
+TestRandomOrderInitializationSprout
+  globals [glob1]
   O> random-seed 1717
   O> ask patch 0 0 [ sprout 10 [ set glob1 who ] ]
   glob1 => 2
 
 TestRandomOrderInitializationHatch
+  globals [glob1]
   O> random-seed 1717
   O> crt 1
   O> ask turtle 0 [ hatch 10 [ set glob1 who ] ]
   glob1 => 2
 
 TestRandomOrderInitializationCreateLinksWith
+  globals [glob1]
   O> random-seed 73219
   O> crt 10
   O> ask turtle 0 [ create-links-with other turtles-here [ set glob1 (list [who] of end1 [who] of end2 ) ] ]
   glob1 => [0 1]
 
 TestRandomOrderInitializationCreateLinksTo
+  globals [glob1]
   O> random-seed 73219
   O> crt 10
   O> ask turtle 0 [ create-links-to other turtles-here [ set glob1 (list [who] of end1 [who] of end2 ) ] ]
   glob1 => [0 1]
 
 TestRandomOrderInitializationCreateLinksFrom
+  globals [glob1]
   O> random-seed 73219
   O> crt 10
   O> ask turtle 0 [ create-links-from other turtles-here [ set glob1 (list [who] of end1 [who] of end2 ) ] ]

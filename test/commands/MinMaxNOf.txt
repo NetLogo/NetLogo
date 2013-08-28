@@ -1,4 +1,6 @@
 MinNOf
+  globals [glob1]
+  turtles-own [tvar]
   count min-n-of 5 patches [pcolor] => 5
   any? (min-n-of 5 patches [pxcor]) with [pxcor != min-pxcor] => false
   O> crt 10
@@ -14,6 +16,8 @@ MinNOf
   min-n-of -1 links [color] => ERROR First input to MIN-N-OF can't be negative.
 
 MaxNOf
+  globals [glob1]
+  turtles-own [tvar]
   count max-n-of 5 patches [pcolor] => 5
   any? (max-n-of 5 patches [pxcor]) with [pxcor != max-pxcor] => false
   O> crt 10

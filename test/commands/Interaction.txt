@@ -4,25 +4,25 @@ Interaction1Torus
   count turtles with [pcolor != red] => 0
   count patches with [pcolor = red] => 93
 
-Interaction1Box_2D
+Interaction1Box
   O> __change-topology false false
   O> cro 200 [ fd who set pcolor red ]
   count turtles with [pcolor != red] => 0
   count patches with [pcolor = red] => 45
 
-Interaction1VCylind_2D
+Interaction1VCylind
   O> __change-topology true false
   O> cro 200 [ fd who set pcolor red ]
   count turtles with [pcolor != red] => 0
   count patches with [pcolor = red] => 34
 
-Interaction1HCylind_2D
+Interaction1HCylind
   O> __change-topology false true
   O> cro 200 [ fd who set pcolor red ]
   count turtles with [pcolor != red] => 0
   count patches with [pcolor = red] => 38
 
-Interaction2_2D
+Interaction2
   O> cro 3
   O> ask turtle 0 [ fd 1 ]
   O> ask turtle 1 [ set color green ]
@@ -47,6 +47,7 @@ Interaction3a
   map [[xcor] of ?] sort turtles => [0 2.938926261462366 4.755282581475767 4.755282581475768 2.9389262614623664 0 -2.938926261462365 -4.755282581475767 -2.938926261462367]
 
 Interaction3b
+  turtles-own [tvar]
   O> random-seed 2381
   O> crt 10
   O> ask turtles [ set color blue ]
@@ -63,6 +64,7 @@ Interaction3b
   [color] of turtle 3 = blue => true
 
 Interaction3c
+  turtles-own [tvar]
   min-one-of turtles [ xcor ] => nobody
   max-one-of turtles [ xcor ] => nobody
   O> crt 10
@@ -96,12 +98,16 @@ Interaction7
   count turtles => 2
 
 Interaction8
+  breed [mice mouse]
+  breed [frogs frog]
   O> create-mice 1 [ ask mice [ hatch 1 [ set breed frogs ] ] ]
   count turtles => 2
   count mice => 1
   count frogs => 1
 
 Interaction9
+  breed [mice mouse]
+  breed [frogs frog]
   O> create-mice 1 [ ask mice [ hatch 1 [ set breed frogs ] ] ]
   count turtles => 2
   count mice => 1
@@ -112,7 +118,7 @@ Interaction10
   T> repeat 5 [ hatch 2 ]
   count turtles => 11
 
-Interaction11_2D
+Interaction11
   O> random-seed 711
   P> sprout 1
   max [towards one-of turtles with [self != myself]] of turtles < 360 => true
@@ -138,40 +144,50 @@ Interaction13
   [towardsxy-nowrap 0 0] of turtle 0 => ERROR No heading is defined from a point (0,0) to that same point.
   [towards-nowrap patch-here] of turtle 0 => ERROR No heading is defined from a point (0,0) to that same point.
 
-Interaction14_2D
+Interaction14
   O> crt 2 [ set heading 0 ]
   T> repeat 2 [ hatch 1 rt 1 ]
   sort [heading] of turtles => [0 0 1 1 2 2]
 
 Interaction15
+  breed [mice mouse]
   O> create-mice 1 [ ask mice [ hatch 1 ] ]
   count turtles => 2
   count mice => 2
 
 Interaction16
+  breed [mice mouse]
+  breed [frogs frog]
   O> create-mice 1 [ ask mice [ hatch-frogs 1 [set color blue] ] ]
   count turtles => 2
   count mice => 1
   count frogs => 1
 
 Interaction17
+  breed [mice mouse]
+  breed [frogs frog]
   O> create-mice 1 [ ask mice [ hatch-frogs 1 ] ]
   count turtles => 2
   count mice => 1
   count frogs => 1
 
 Interaction18
+  breed [mice mouse]
+  breed [frogs frog]
   O> ask one-of patches [ sprout-mice 1 [ ask mice [ hatch-frogs 1 ] ] ]
   count turtles => 2
   count mice => 1
   count frogs => 1
 
 Interaction19
+  breed [mice mouse]
   O> ask one-of patches [ sprout-mice 2 ]
   count turtles => 2
   count mice => 2
 
-Interaction20_2D
+Interaction20
+  turtles-own [tvar]
+  patches-own [pvar]
   O> ask patches with-max [ pxcor ] [ set pcolor red ]
   count patches with [ pcolor = red ] => 11
   O> ask patches with-min [ pycor ] [ set pcolor blue ]
@@ -201,6 +217,7 @@ Interaction20_2D
   count turtles => 8
 
 Interaction21
+  globals [glob1]
   O> crt 1 [ set glob1 self ]
   is-turtle? turtle 0 => true
   is-agent? turtle 0 => true
@@ -219,11 +236,14 @@ Interaction21
   is-agent? glob1 => false
 
 PatchTriesTurtleReporter
+  globals [glob1]
   O> set glob1 one-of patches
   [dx] of glob1 => ERROR this code can't be run by a patch, only a turtle
   [dx + dy] of glob1 => ERROR this code can't be run by a patch
   O> ask glob1 [ __ignore dx ] => ERROR this code can't be run by a patch
 
-BreedAt_2D
+BreedAt
+  breed [frogs frog]
+  patches-own [pvar]
   P> set pvar 1 + count frogs-at 0 0
   all? patches [pvar = 1] => true

@@ -1,4 +1,5 @@
 OneOfDyingTurtles
+  globals [glob1]
   O> random-seed 5
   O> crt 2
   O> set glob1 turtles with [true]
@@ -6,12 +7,16 @@ OneOfDyingTurtles
   [who] of one-of glob1 => 1
 
 OneOfChangeBreed
+  breed [frogs frog]
+  breed [mice mouse]
   O> random-seed 5
   O> create-frogs 2
   O> ask turtle 0 [set breed mice]
   [who] of one-of frogs => 1
 
 OneOfChangeSameBreed
+  breed [frogs frog]
+  breed [mice mouse]
   O> random-seed 5
   O> create-frogs 2
   O> ask turtle 0 [set breed mice]

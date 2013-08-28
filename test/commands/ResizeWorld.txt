@@ -1,4 +1,4 @@
-ResizeWorld_2D
+ResizeWorld
   O> resize-world 0 0 0 0
   (list world-width world-height) => [1 1]
   (list min-pxcor max-pxcor min-pycor max-pycor) => [0 0 0 0]
@@ -9,13 +9,14 @@ ResizeWorld_2D
   (list world-width world-height) => [6 9]
   (list min-pxcor max-pxcor min-pycor max-pycor) => [-5 0 -8 0]
 
-ResizeWorldBad_2D
+ResizeWorldBad
   O> resize-world 1 0 0 0 => ERROR You must include the point (0, 0) in the world.
   O> resize-world 0 -1 0 0 => ERROR You must include the point (0, 0) in the world.
   O> resize-world 0 0 1 0 => ERROR You must include the point (0, 0) in the world.
   O> resize-world 0 0 0 -1 => ERROR You must include the point (0, 0) in the world.
 
-ResizeWorldBreedsEmptied_2D
+ResizeWorldBreedsEmptied
+  breed [mice mouse]
   O> create-mice 5
   count mice => 5
   O> resize-world 0 0 0 0

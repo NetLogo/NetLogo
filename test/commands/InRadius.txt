@@ -1,4 +1,4 @@
-InRadius1_2D
+InRadius1
   O> __change-topology true true
   [count patches in-radius 1] of patch 0 0 => 5
   [count patches in-radius 1] of patch -3 4 => 5
@@ -22,7 +22,7 @@ InRadius1_2D
   [count patches in-radius 1] of patch 0 max-pycor => 4
   [count patches in-radius 1] of patch max-pxcor max-pycor => 4
 
-InRadius2_2D
+InRadius2
   O> resize-world 0 10 0 10
   O> __change-topology true true
   [count patches in-radius 1] of patch 0 0 => 5
@@ -47,7 +47,7 @@ InRadius2_2D
   [count patches in-radius 1] of patch 0 max-pycor => 4
   [count patches in-radius 1] of patch max-pxcor max-pycor => 4
 
-InRadius3_2D
+InRadius3
   O> resize-world 0 11 0 11
   O> __change-topology true true
   [count patches in-radius 1] of patch 0 0 => 5
@@ -72,7 +72,7 @@ InRadius3_2D
   [count patches in-radius 1] of patch 0 max-pycor => 4
   [count patches in-radius 1] of patch max-pxcor max-pycor => 4
 
-InRadius4_2D
+InRadius4
   O> resize-world -10 0 -10 0
   O> __change-topology true true
   [count patches in-radius 1] of patch 0 0 => 5
@@ -97,7 +97,7 @@ InRadius4_2D
   [count patches in-radius 1] of patch 0 max-pycor => 4
   [count patches in-radius 1] of patch max-pxcor max-pycor => 4
 
-InRadius5_2D
+InRadius5
   O> resize-world -11 0 -11 0
   O> __change-topology true true
   [count patches in-radius 1] of patch 0 0 => 5
@@ -122,7 +122,7 @@ InRadius5_2D
   [count patches in-radius 1] of patch 0 max-pycor => 4
   [count patches in-radius 1] of patch max-pxcor max-pycor => 4
 
-InRadiusLargeRadius1_2D
+InRadiusLargeRadius1
   O> __change-topology true true
   [ count patches in-radius 14 ] of patch 0 0 => 121
   [ count patches in-radius 14 ] of patch -3 0 => 121
@@ -144,7 +144,7 @@ InRadiusLargeRadius1_2D
   [ count patches in-radius 14 ] of patch max-pxcor 0 => 121
   [ count patches in-radius 14 ] of patch 0 min-pycor => 121
 
-InRadiusLargeRadius2_2D
+InRadiusLargeRadius2
   O> resize-world 0 10 0 10
   O> __change-topology true true
   [ count patches in-radius 14 ] of patch 0 0 => 121
@@ -167,7 +167,7 @@ InRadiusLargeRadius2_2D
   [ count patches in-radius 14 ] of patch max-pxcor 0 => 121
   [ count patches in-radius 14 ] of patch 0 min-pycor => 121
 
-InRadiusLargeRadius3_2D
+InRadiusLargeRadius3
   O> resize-world 0 11 0 11
   O> __change-topology true true
   [ count patches in-radius 14 ] of patch 0 0 => 144
@@ -190,7 +190,7 @@ InRadiusLargeRadius3_2D
   [ count patches in-radius 16 ] of patch max-pxcor 0 => 144
   [ count patches in-radius 16 ] of patch 0 min-pycor => 144
 
-InRadiusLargeRadius4_2D
+InRadiusLargeRadius4
   O> resize-world -10 0 -10 0
   O> __change-topology true true
   [ count patches in-radius 14 ] of patch 0 0 => 121
@@ -213,7 +213,7 @@ InRadiusLargeRadius4_2D
   [ count patches in-radius 14 ] of patch max-pxcor 0 => 121
   [ count patches in-radius 14 ] of patch 0 min-pycor => 121
 
-InRadiusLargeRadius5_2D
+InRadiusLargeRadius5
   O> resize-world -11 0 -11 0
   O> __change-topology true true
   [ count patches in-radius 14 ] of patch 0 0 => 144

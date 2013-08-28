@@ -1,9 +1,9 @@
-Self1_2D
+Self1
   O> crt 10
   count turtles with [self = turtle who] => 10
   count patches with [self = patch pxcor pycor] = count patches => true
 
-Myself1_2D
+Myself1
   patch 0 0 = [[myself] of patch 3 5] of patch 0 0 => true
   O> ask patch 0 0 [ ask patches in-radius 3 [ set plabel myself ] ]
   count patches with [plabel = patch 0 0] => 29

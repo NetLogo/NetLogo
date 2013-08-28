@@ -62,6 +62,7 @@ RandomFloat2
   min [random-float -10] of patches < -9 => true
 
 RandomGamma
+  globals [glob1]
   O> random-seed 2722
   O> set glob1 n-values 100000 [random-gamma 50 5]
   abs (mean glob1 - 10) < 0.01 => true
@@ -91,6 +92,7 @@ RandomOneOfWithLists
   n-values 100 [?] = sort remove-duplicates n-values 1000 [one-of n-values 100 [?]] => true
 
 RandomNOfWithLists
+  globals [glob1]
   O> random-seed 27892
   n-of -1 [] => ERROR First input to N-OF can't be negative.
   n-of -1 [1 2 3] => ERROR First input to N-OF can't be negative.
@@ -112,7 +114,7 @@ OneOfWithAgentSets
   [who] of one-of turtles => 9
   [list pxcor pycor] of one-of patches => [0 5]
 
-RandomNOfIsFairForPatches_2D
+RandomNOfIsFairForPatches
   to-report ratio let x [plabel] of patches report max x / min x end
   O> random-seed 39823
   P> set plabel 0
@@ -187,6 +189,7 @@ RandomNOfIsFairForLinks
   ratio < 3 => true
 
 RandomNOfIsFairForABreed
+  breed [mice mouse]
   to-report ratio let x [label] of mice report max x / min x end
   O> random-seed 39823
   O> create-mice 200
@@ -212,6 +215,7 @@ RandomNOfIsFairForABreed
   ratio < 3 => true
 
 RandomNOfIsFairForAnAgentsetConstructedOnTheFly
+  globals [glob1]
   to-report ratio let x [label] of glob1 report max x / min x end
   O> random-seed 39823
   O> crt 200
@@ -296,6 +300,7 @@ random-normal-3
 
 # https://github.com/NetLogo/NetLogo/issues/340
 one-of-evaluates-input-only-once
+  globals [glob1]
   to-report foo set glob1 glob1 + 1 report (list glob1 glob1 glob1) end
   O> random-seed 0
   one-of foo => 1

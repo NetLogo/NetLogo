@@ -20,6 +20,8 @@ Agentsets1
   any? turtles => false
 
 Agentsets2
+  breed [frogs frog]
+  breed [mice mouse]
   O> ask one-of turtles [ die ] => ERROR ASK expected input to be an agent or agentset but got NOBODY instead.
   O> crt 10
   [who] of min-one-of turtles [who] => 0
@@ -44,7 +46,8 @@ Agentsets3
   count (n-of 50 patches) => 50
   count (n-of 50 patches) => 50
 
-Agentsets4_2D
+Agentsets4
+  globals [glob1]
   O> random-seed 29020
   O> crt 100
   T> fd 3
@@ -92,7 +95,7 @@ Agentsets5Torus
   O> ask patches [ ask patches at-points [ [ 1 1 ] ] [ set pcolor blue ] ]
   count patches with [ pcolor != blue ] => 0
 
-Agentsets5Box_2D
+Agentsets5Box
   O> __change-topology false false
   O> random-seed 3782
   O> ask patches at-points [ [ 0 0 ] [ 1 1 ] [ 2 2 ] ] [ set pcolor 1 ]
@@ -108,7 +111,7 @@ Agentsets5Box_2D
   O> ask patches [ ask patches at-points [ [ 1 1 ] ] [ set pcolor green ] ]
   count patches with [ pcolor != green ] => 21
 
-Agentsets5VCylind_2D
+Agentsets5VCylind
   O> __change-topology true false
   O> random-seed 3782
   O> ask patches at-points [ [ 0 0 ] [ 1 1 ] [ 2 2 ] ] [ set pcolor 1 ]
@@ -124,7 +127,7 @@ Agentsets5VCylind_2D
   O> ask patches [ ask patches at-points [ [ 1 1 ] ] [ set pcolor green ] ]
   count patches with [ pcolor != green ] => 11
 
-Agentsets5HCylind_2D
+Agentsets5HCylind
   O> __change-topology false true
   O> random-seed 3782
   O> ask patches at-points [ [ 0 0 ] [ 1 1 ] [ 2 2 ] ] [ set pcolor 1 ]
@@ -139,7 +142,6 @@ Agentsets5HCylind_2D
   count patches with [ pcolor != red ] => 11
   O> ask patches [ ask patches at-points [ [ 1 1 ] ] [ set pcolor green ] ]
   count patches with [ pcolor != green ] => 11
-
 
 Agentsets6
   O> random-seed 383
@@ -157,6 +159,8 @@ Agentsets7
   count patches with [ pcolor = .23456 ] at-points [ [ 0 0 ] [ 1 1 ] ] => 0
 
 Agentsets8
+  breed [frogs frog]
+  breed [mice mouse]
   O> random-seed 9119
   O> create-frogs 3
   O> create-mice 5
@@ -171,7 +175,7 @@ Agentsets8
   [color] of turtles at-points [ 1 2 ] => ERROR Invalid list of points: [1 2]
   [color] of turtles at-points [ [ [ 1 2 ] ] ] => ERROR Invalid list of points: [[[1 2]]]
 
-InvalidAtPoints_2D
+InvalidAtPoints
   [color] of turtles at-points [ [ 1 2 3 ] ] => ERROR Invalid list of points: [[1 2 3]]
 
 Agentsets9
@@ -183,12 +187,13 @@ Agentsets10
   count (turtles with [who != 37]) at-points [[0 0] [0 0] [-0.5 -0.5]] => 99
 
 Agentsets11
+  breed [mice mouse]
   O> create-mice 10
   O> create-mice 10 [ setxy 1 1 ]
   count mice at-points [[0 0] [0 0]] => 10
   count mice at-points [[0 0] [0 0] [0.5 0.5]] => 20
 
-Agentsets12_2D
+Agentsets12
   O> __change-topology true true
   count patches at-points [[2 7] [2 7] [1 6] [1.1 5.8]] => 2
   O> __change-topology false false
@@ -204,6 +209,7 @@ Agentsets13
   count (patches with [true]) at-points [[-3 -4] [-3 -4] [-3.5 -4.5]] => 1
 
 AgentSetEquality
+  globals [glob1]
   turtles = turtles => true
   turtles = patches => false
   links = links => true
@@ -253,6 +259,7 @@ CountTurtlesOptimization
   count turtles with [true] > 0 => true
 
 LinkAgentsetDeadLinks
+  globals [glob1]
   O> crt 10 [ create-links-with other turtles ]
   O> set glob1 links with [true]
   O> ask links [ die ]
@@ -262,6 +269,7 @@ LinkAgentsetDeadLinks
   n-of 5 glob1 => ERROR Requested 5 random agents from a set of only 0 agents.
 
 RemoveDuplicates
+  globals [glob1]
   O> set glob1 one-of patches
   length remove-duplicates (list (patch-set glob1) (patch-set glob1)) => 1
   O> crt 2

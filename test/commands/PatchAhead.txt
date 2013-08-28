@@ -1,4 +1,4 @@
-PatchAhead1_2D
+PatchAhead1
   O> random-seed 223
   O> crt 100 [ fd who ]
   any? turtles with [patch-here != patch-ahead 0] => false
@@ -38,7 +38,7 @@ PatchAtHeadingAndDistanceTorus
   P> sprout 1 [ if (patch-at-heading-and-distance 464643 178181) != nobody [ ask (patch-at-heading-and-distance 464643 178181) [ set pcolor blue ] ] ]
   any? patches with [pcolor != blue] => false
 
-PatchAtHeadingAndDistanceBox_2D
+PatchAtHeadingAndDistanceBox
   O> __change-topology false false
   O> random-seed 28222
   P> if (patch-at-heading-and-distance 48734 38923) != nobody [ ask (patch-at-heading-and-distance 48734 38923) [ set pcolor red ] ]
@@ -50,40 +50,40 @@ PatchAtHeadingAndDistanceBox_2D
   P> sprout 1 [ if (patch-at-heading-and-distance 464643 1 ) != nobody [ ask (patch-at-heading-and-distance 464643 1 ) [ set pcolor blue ] ] ]
   count patches with [pcolor != blue] => 11
 
-PatchAtHeadingAndDistanceCornerOrigin1_2D
+PatchAtHeadingAndDistanceCornerOrigin1
   O> resize-world 0 1 0 1
   remove-duplicates [is-patch? patch-at-heading-and-distance 209.99999999 1] of patches => [true]
   remove-duplicates [is-patch? patch-at-heading-and-distance 210.00000001 1] of patches => [true]
   remove-duplicates [is-patch? patch-at-heading-and-distance 210.00000000 1] of patches => [true]
 
-PatchAtHeadingAndDistanceCornerOrigin2_2D
+PatchAtHeadingAndDistanceCornerOrigin2
   O> resize-world 0 70 0 40
   remove-duplicates [is-patch? patch-at-heading-and-distance 209.99999999 1] of patches => [true]
   remove-duplicates [is-patch? patch-at-heading-and-distance 210.00000001 1] of patches => [true]
   remove-duplicates [is-patch? patch-at-heading-and-distance 210.00000000 1] of patches => [true]
 
-PatchAtCornerOrigin1_2D
+PatchAtCornerOrigin1
   O> resize-world 0 1 0 1
   remove-duplicates [is-patch? patch-at  0.5000000000000001  1] of patches => [true]
   remove-duplicates [is-patch? patch-at -0.5000000000000001  1] of patches => [true]
   remove-duplicates [is-patch? patch-at -0.5000000000000001 -1] of patches => [true]
   remove-duplicates [is-patch? patch-at  0.5000000000000001 -1] of patches => [true]
 
-PatchAtCornerOrigin2_2D
+PatchAtCornerOrigin2
   O> resize-world 0 1 0 1
   remove-duplicates [is-patch? patch-at  1  0.5000000000000001] of patches => [true]
   remove-duplicates [is-patch? patch-at  1 -0.5000000000000001] of patches => [true]
   remove-duplicates [is-patch? patch-at -1 -0.5000000000000001] of patches => [true]
   remove-duplicates [is-patch? patch-at -1  0.5000000000000001] of patches => [true]
 
-PatchAtCornerOrigin3_2D
+PatchAtCornerOrigin3
   O> resize-world 0 1 0 1
   remove-duplicates [is-patch? patch-at  0.4999999999999999  1] of patches => [true]
   remove-duplicates [is-patch? patch-at -0.4999999999999999  1] of patches => [true]
   remove-duplicates [is-patch? patch-at -0.4999999999999999 -1] of patches => [true]
   remove-duplicates [is-patch? patch-at  0.4999999999999999 -1] of patches => [true]
 
-PatchAtCornerOrigin4_2D
+PatchAtCornerOrigin4
   O> resize-world 0 1 0 1
   remove-duplicates [is-patch? patch-at  1  0.4999999999999999] of patches => [true]
   remove-duplicates [is-patch? patch-at  1 -0.4999999999999999] of patches => [true]

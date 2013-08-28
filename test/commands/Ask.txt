@@ -1,7 +1,7 @@
 # This will probably fail if the way "ask" interacts with
 # the RNG changes.  If this fails, all the model checksums
 # are likely to change, too. - ST 1/9/07
-AskRNG_2D
+AskRNG
   O> random-seed 0
   O> ask n-of 4 patches [ sprout 1 ]
   [(list xcor ycor color heading)] of turtle 0 => [3 3 95 57]
@@ -11,6 +11,7 @@ AskRNG_2D
 
 # version 1: use 1-input procedure to terminate the recursion
 RecursiveCallInsideAsk1
+  globals [glob1]
   to go1 crt 1 go2 5 crt 1 end
   to go2 [x] ask turtle 0 [ set glob1 glob1 + 1 if x > 0 [ go2 (x - 1) ] ] end
   O> set glob1 0
@@ -20,6 +21,7 @@ RecursiveCallInsideAsk1
 
 # version 2: 0-input procedure, use RNG to terminate the recursion
 RecursiveCallInsideAsk2
+  globals [glob1]
   to go1 crt 1 go2 crt 1 end
   to go2 ask turtle 0 [ set glob1 glob1 + 1 if random 10 > 0 [ go2 ] ] end
   O> set glob1 0
@@ -29,18 +31,21 @@ RecursiveCallInsideAsk2
   glob1 => 27
 
 recursion-over-ask
+  turtles-own [tvar]
   to explore if tvar = 0 [ set tvar 1 ask turtles-on neighbors [ explore ] ] end
   O> ask patches [ sprout 1 ]
   O> ask one-of turtles [ explore ]
   any? turtles with [tvar = 0] => false
 
 AskInsideReporterProcedure
+  globals [glob1]
   to-report foo ask turtle 1 [ set glob1 who ] report 10 end
   O> crt 2
   [foo] of turtle 0 => 10
   glob1 => 1
 
 AskConcurrentDoesntWorkOnSingleAgent
+  globals [glob1]
   O> crt 1 [ set glob1 self ]
   O> ask-concurrent glob1 [ set pcolor red ] => ERROR ASK-CONCURRENT expected input to be an agentset but got the turtle (turtle 0) instead.
 

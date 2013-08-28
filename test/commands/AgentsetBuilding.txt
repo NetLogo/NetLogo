@@ -1,4 +1,6 @@
-TurtleSet_2D
+TurtleSet
+  breed [mice mouse]
+  breed [frogs frog]
   O> crt 1
   [turtle-set self] of turtle 0 = turtles => true
   O> crt 10
@@ -25,7 +27,8 @@ TurtleSetNestedLists
   (turtle-set turtle 0 (list (list (list (list turtle 1))))) = turtles => true
   (turtle-set (list (list (list turtle 1)) (list (list (turtle 0))))) = turtles => true
 
-PatchSet2_2D
+PatchSet2
+  globals [glob1]
   O> crt 1 [ __ignore patch-set self ] => ERROR PATCH-SET expected input to be a patch agentset or patch but got the turtle (turtle 0) instead.
   O> ask patch 0 0 [ set glob1 patch-set self ]
   count glob1 => 1
@@ -41,12 +44,12 @@ EmptyPatchSet
   (patch-set nobody nobody) = no-patches => true
   (patch-set nobody nobody) = no-turtles => false
 
-PatchSetNestedLists_2D
+PatchSetNestedLists
   count patch-set (list (list (list (list patch 0 0)))) => 1
   count (patch-set patch 0 0 (list (list (list (list patch 0 1))))) => 2
   count patch-set (list (list (list patch 0 1)) (list (list (patch 0 0)))) => 2
 
-LinkSet_2D
+LinkSet
   O> crt 3
   O> ask turtle 0 [ create-link-with turtle 1 ]
   [link-set self] of link 0 2 => ERROR OF expected input to be an agent or agentset but got NOBODY instead.

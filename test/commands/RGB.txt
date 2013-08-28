@@ -1,14 +1,17 @@
 ColorValuesInvariantOnTripThroughRGB
+  globals [glob1]
   to-report round-trip [col] let vals extract-rgb col report approximate-rgb (item 0 vals) (item 1 vals) (item 2 vals) end
   O> set glob1 n-values 1400 [? / 10]
   glob1 = map [round-trip ?] glob1 => true
 
 ColorValuesInvariantOnTripThroughHSB
+  globals [glob1]
   to-report round-trip [col] let vals extract-hsb col report approximate-hsb (item 0 vals) (item 1 vals) (item 2 vals) end
   O> set glob1 n-values 1400 [? / 10]
   glob1 = map [round-trip ?] glob1 => true
 
-PatchesRGBColor_2D
+PatchesRGBColor
+  globals [glob1]
   O> cro 1 [ set glob1 patch-here die ]
   [pcolor] of glob1 => 0
   O> ask glob1 [ set pcolor [0 0 0] ]
@@ -81,7 +84,7 @@ LinksRGBColor
   L> set label-color [500 0 0] => ERROR RGB values must be 0-255
   L> set label-color [-1 0 0] => ERROR RGB values must be 0-255
 
-RGBColorImport_2D
+RGBColorImport
   O> crt 2 [ create-links-with other turtles [ set color [255 0 0] set label-color [255 0 0]] ]
   T> set color [0 255 0]
   T> set label-color [0 255 0]

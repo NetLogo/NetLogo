@@ -30,7 +30,7 @@ InConeMeTurtlesOnMe
   [color] of turtle 0  = yellow => true
   [color] of turtle 1  = cyan => true
 
-InconePatchWhoseCenterIAmOn_2D
+InconePatchWhoseCenterIAmOn
   O> cro 1
   T> ask patches in-cone 0 0 [set pcolor red]
   [pcolor] of patch 0 0 = red => true
@@ -50,6 +50,7 @@ InconeInvalidInputs
   T> ask patches in-cone 0 361 [set pcolor red] => ERROR IN-CONE cannot take an angle greater than 360.
 
 InconeLargeRadiusDuplicationCheck
+  globals [glob1]
   O> crt 1
   T> set glob1 count patches in-cone 100 360
   count patches = glob1 => true
@@ -59,7 +60,7 @@ InconeDontAskYourPatch
   T> ask patches with [distance-nowrap myself > 0] in-cone 20 30 [set pcolor red]
   [pcolor] of [patch-here] of turtle 0 = black => true
 
-InconeDontAskSomeOtherPatches_2D
+InconeDontAskSomeOtherPatches
   O> cro 1
   T> ask patches with [distance-nowrap myself > 3] in-cone 4 30 [set pcolor red]
   [pcolor] of patch 0 1 = black => true
@@ -113,7 +114,7 @@ Incone360DiffTestForTurtles
   [color] of turtle 0 = red => true
   [color] of turtle 1 = red => true
 
-Incone360DiffTestForPatches_2D
+Incone360DiffTestForPatches
   O> crt 1
   T> set heading -45
   O> ask turtle 0 [ask patches in-cone 4 150 [set pcolor red]]
@@ -125,7 +126,7 @@ InconeManyTurtlesCountingTorus
   length remove-duplicates [count patches in-cone 10 30] of turtles => 1
   length remove-duplicates [count turtles in-cone 10 30] of turtles => 1
 
-InconeManyTurtlesCounting_2D
+InconeManyTurtlesCounting
   P> sprout 1 [ set heading 0 ]
   O> __change-topology false false
   length remove-duplicates [count patches in-cone 10 30] of turtles => 20
@@ -172,13 +173,13 @@ InconeMultipleWrappings
   [color] of turtle 1 = cyan => true
   [color] of turtle 2 = cyan => true
 
-InConeCornerOrigin1_2D
+InConeCornerOrigin1
   O> resize-world 0 32 0 32
   O> cro 1 [ setxy 17 15 ]
   O> cro 10 [ setxy 17 15 fd 3 ]
   [count turtles in-cone 3 180] of turtle 0 => 6
 
-InConeCornerOrigin2_2D
+InConeCornerOrigin2
   O> resize-world 0 32 0 32
   O> ask patch 9 0 [ sprout 1 [ set heading 0 hatch 32 [ fd who ] ] ]
   [count turtles in-cone 15 0] of turtle 0 => 16
@@ -230,7 +231,7 @@ InConeCornerOrigin2_2D
   [count turtles in-cone 100 0] of turtle 0 => 33
   [count turtles in-cone 500 0] of turtle 0 => 33
 
-InConeCornerOrigin3_2D
+InConeCornerOrigin3
   O> resize-world -32 0 -32 0
   O> ask patch -9 2 [ sprout 1 [ set heading 0 hatch 32 [ fd who ] ] ]
   [count turtles in-cone 15 0] of turtle 0 => 16
@@ -282,7 +283,7 @@ InConeCornerOrigin3_2D
   [count turtles in-cone 100 0] of turtle 0 => 33
   [count turtles in-cone 500 0] of turtle 0 => 33
 
-InConeCornerOrigin4_2D
+InConeCornerOrigin4
   O> resize-world 0 5 0 5
   O> ask patch 1 2 [ sprout 1 [ set heading 0 hatch 5 [ fd who ] ] ]
   count turtles => 6
@@ -295,7 +296,7 @@ InConeCornerOrigin4_2D
   T> rt 180
   [count turtles in-cone 100 0] of turtle 0 => 6
 
-InConeCornerOrigin5_2D
+InConeCornerOrigin5
   O> resize-world -5 0 -5 0
   O> ask patch -2 -3 [ sprout 1 [ set heading 0 hatch 5 [ fd who ] ] ]
   count turtles => 6

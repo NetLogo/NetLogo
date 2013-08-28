@@ -1,9 +1,11 @@
 ShortCircuitAnd
+  globals [glob1]
   O> set glob1 0
   (glob1 = 3) and (1 / glob1 = 0) => false
   (glob1 = 0) and (1 / glob1 = 0) => ERROR Division by zero.
 
 ShortCircuitOr
+  globals [glob1]
   O> set glob1 0
   (glob1 = 0) or (1 / glob1 = 0) => true
   (glob1 = 3) or (1 / glob1 = 0) => ERROR Division by zero.

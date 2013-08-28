@@ -1,10 +1,10 @@
-ImportPcolors_2D
+ImportPcolors
   O> resize-world -1 1 -100 100 import-pcolors "test/import-pcolors/import-pcolors-test.png"
   O> resize-world -100 100 -1 1 import-pcolors "test/import-pcolors/import-pcolors-test.png"
   O> resize-world -1 1 -100 100 import-pcolors "test/import-pcolors/import-pcolors-test-vertical.png"
   O> resize-world -100 100 -1 1 import-pcolors "test/import-pcolors/import-pcolors-test-vertical.png"
 
-ImportPcolorsTopologyTest_2D
+ImportPcolorsTopologyTest
   O> resize-world -1 1 -100 100 import-pcolors "test/import-pcolors/import-pcolors-test.png"
   O> resize-world 0 200 0 2 import-pcolors "test/import-pcolors/import-pcolors-test.png"
   O> resize-world -200 0 -2 0 import-pcolors "test/import-pcolors/import-pcolors-test.png"
@@ -16,7 +16,7 @@ ImportPcolorsTopologyTest_2D
 #  O> resize-world -1 1 -100 100 import-pcolors "test/import-pcolors/import-pcolors-grayscale.png"
 #  count patches with [ pcolor = gray ] > 0 => true
 
-ImportDrawing_2D
+ImportDrawing
   O> resize-world -1 1 -100 100 import-drawing "test/import-pcolors/import-pcolors-test.png"
   O> resize-world -100 100 -1 1 import-drawing "test/import-pcolors/import-pcolors-test.png"
   O> resize-world -1 1 -100 100 import-drawing "test/import-pcolors/import-pcolors-test-vertical.png"
