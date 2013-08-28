@@ -33,14 +33,14 @@ TestLayoutCircleIsRandom
   sort-by [[heading] of ?1 < [heading] of ?2] turtles = sort turtles => false
 
 TestLayoutSpringLeaveSomeTurtlesOut
- O> crt 2
- O> ask turtle 0 [ create-link-with turtle 1 ]
- O> layout-spring turtles with [ color = red ] links 0.1 0.1 0.1
+  O> crt 2
+  O> ask turtle 0 [ create-link-with turtle 1 ]
+  O> layout-spring turtles with [ color = red ] links 0.1 0.1 0.1
 
 TestLayoutSpringLeaveSomeLinksOut
- O> crt 4
- O> ask turtles [ create-links-with other turtles ]
- O> layout-spring turtles [my-links] of turtle 0  0.1 0.1 0.1
+  O> crt 4
+  O> ask turtles [ create-links-with other turtles ]
+  O> layout-spring turtles [my-links] of turtle 0  0.1 0.1 0.1
 
 LayoutAnchors
   globals [glob1]
@@ -59,13 +59,13 @@ CircleRandom_2D
 
 CircleSorted_2D
   O> resize-world -10 10 -10 10
-   O> crt 10
-   O> layout-circle sort turtles 5
-   [distancexy 0 0] of turtles => [5 5 5 5 5 5 5 5 5 5]
-   [distancexy 0 0] of turtles => [5 5 5 5 5 5 5 5 5 5]
-   sort [[precision distance myself 12] of turtles] of turtle 0 = sort [[precision distance myself 12] of turtles] of turtle 1 => true
-   [list xcor ycor] of turtle 0 => [0 5]
-   [list xcor ycor] of turtle 5 => [0 -5]
+  O> crt 10
+  O> layout-circle sort turtles 5
+  [distancexy 0 0] of turtles => [5 5 5 5 5 5 5 5 5 5]
+  [distancexy 0 0] of turtles => [5 5 5 5 5 5 5 5 5 5]
+  sort [[precision distance myself 12] of turtles] of turtle 0 = sort [[precision distance myself 12] of turtles] of turtle 1 => true
+  [list xcor ycor] of turtle 0 => [0 5]
+  [list xcor ycor] of turtle 5 => [0 -5]
 
 Radial_2D
   O> resize-world -16 16 -16 16

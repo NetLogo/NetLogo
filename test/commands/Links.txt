@@ -45,28 +45,28 @@ LinksInitBlock
   count links = glob1 => true
 
 CreateDuplicateLinks
- O> crt 2 [ create-links-with other turtles ]
- count links = 1 => true
- O> ask turtle 0 [ create-link-with turtle 1 ]
- count links = 1 => true
- O> ca
- O> crt 3 [ create-links-to other turtles ]
- count links = 6 => true
- O> ask turtle 0 [ create-link-to turtle 1 ]
- count links = 6 => true
- O> ca
- O> crt 3 [ create-links-from other turtles ]
- count links = 6 => true
- O> ask turtle 0 [ create-link-from turtle 1 ]
- count links = 6 => true
- O> ca
- O> crt 2
- O> ask turtle 0 [ create-link-with turtle 1 ]
- count [link-neighbors] of turtle 0 => 1
- count [link-neighbors] of turtle 1 => 1
- O> ask turtle 1 [ create-link-with turtle 0 ]
- count [link-neighbors] of turtle 0 => 1
- count [link-neighbors] of turtle 1 => 1
+  O> crt 2 [ create-links-with other turtles ]
+  count links = 1 => true
+  O> ask turtle 0 [ create-link-with turtle 1 ]
+  count links = 1 => true
+  O> ca
+  O> crt 3 [ create-links-to other turtles ]
+  count links = 6 => true
+  O> ask turtle 0 [ create-link-to turtle 1 ]
+  count links = 6 => true
+  O> ca
+  O> crt 3 [ create-links-from other turtles ]
+  count links = 6 => true
+  O> ask turtle 0 [ create-link-from turtle 1 ]
+  count links = 6 => true
+  O> ca
+  O> crt 2
+  O> ask turtle 0 [ create-link-with turtle 1 ]
+  count [link-neighbors] of turtle 0 => 1
+  count [link-neighbors] of turtle 1 => 1
+  O> ask turtle 1 [ create-link-with turtle 0 ]
+  count [link-neighbors] of turtle 0 => 1
+  count [link-neighbors] of turtle 1 => 1
 
 CreateLinksTo
   breed [nodes node]
@@ -622,26 +622,26 @@ LinkNeighborsUnbreeded
 
 LinksNotAllowed
   globals [glob1]
- O> crt 2 [ create-links-with other turtles [ set glob1 self ] ]
- [towards glob1] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
- [towards-nowrap glob1] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
- [distance glob1] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
- [distance-nowrap glob1] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
- [distance turtle 0] of glob1 => ERROR this code can't be run by a link
- [neighbors] of glob1 => ERROR this code can't be run by a link
- O> follow glob1 => ERROR FOLLOW expected input to be a turtle but got the link (link 0 1) instead.
- O> ride glob1 => ERROR RIDE expected input to be a turtle but got the link (link 0 1) instead.
- T> face glob1 => ERROR Expected a turtle or a patch but got a link.
- O> ask glob1 [ facexy 0 1 ] => ERROR this code can't be run by a link, only a turtle
- O> ask glob1 [ facexy-nowrap 0 1 ] => ERROR this code can't be run by a link, only a turtle
- O> ask glob1 [ face turtle 0 ] => ERROR this code can't be run by a link, only a turtle
- O> ask glob1 [ face-nowrap turtle 0 ] => ERROR this code can't be run by a link, only a turtle
- O> ask glob1 [ follow-me ] => ERROR this code can't be run by a link, only a turtle
- O> set glob1 links
- [glob1 in-radius 5] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
- [glob1 in-radius-nowrap 5] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
- [glob1 in-cone 5 5] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
- [glob1 in-cone-nowrap 5 5] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
+  O> crt 2 [ create-links-with other turtles [ set glob1 self ] ]
+  [towards glob1] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
+  [towards-nowrap glob1] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
+  [distance glob1] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
+  [distance-nowrap glob1] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
+  [distance turtle 0] of glob1 => ERROR this code can't be run by a link
+  [neighbors] of glob1 => ERROR this code can't be run by a link
+  O> follow glob1 => ERROR FOLLOW expected input to be a turtle but got the link (link 0 1) instead.
+  O> ride glob1 => ERROR RIDE expected input to be a turtle but got the link (link 0 1) instead.
+  T> face glob1 => ERROR Expected a turtle or a patch but got a link.
+  O> ask glob1 [ facexy 0 1 ] => ERROR this code can't be run by a link, only a turtle
+  O> ask glob1 [ facexy-nowrap 0 1 ] => ERROR this code can't be run by a link, only a turtle
+  O> ask glob1 [ face turtle 0 ] => ERROR this code can't be run by a link, only a turtle
+  O> ask glob1 [ face-nowrap turtle 0 ] => ERROR this code can't be run by a link, only a turtle
+  O> ask glob1 [ follow-me ] => ERROR this code can't be run by a link, only a turtle
+  O> set glob1 links
+  [glob1 in-radius 5] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
+  [glob1 in-radius-nowrap 5] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
+  [glob1 in-cone 5 5] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
+  [glob1 in-cone-nowrap 5 5] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
 
 LinkNotAllowed_2D
   globals [glob1]

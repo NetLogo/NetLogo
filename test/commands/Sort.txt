@@ -38,25 +38,25 @@ SortingLinkAgentsets
   reverse sort links = sort-by [ [ [who] of end1 * 100 + [who] of end2 ] of ?1  > [ [who] of end1 * 100 + [who] of end2 ] of ?2 ] links => true
 
 SortingTypeErrors
- O> crt 10 [ create-links-with other turtles ]
- sort item 0 sort links => ERROR SORT expected input to be a list or agentset but got the link (link 0 1) instead.
- sort-by [[color] of ?] item 0 sort links => ERROR SORT-BY expected input to be a list or agentset but got the link (link 0 1) instead.
+  O> crt 10 [ create-links-with other turtles ]
+  sort item 0 sort links => ERROR SORT expected input to be a list or agentset but got the link (link 0 1) instead.
+  sort-by [[color] of ?] item 0 sort links => ERROR SORT-BY expected input to be a list or agentset but got the link (link 0 1) instead.
 
 sort-on-1
- O> crt 5
- map [[who] of ?] sort-on [who] turtles => [0 1 2 3 4]
+  O> crt 5
+  map [[who] of ?] sort-on [who] turtles => [0 1 2 3 4]
 
 sort-on-2
- O> crt 5
- map [[who] of ?] sort-on [(- who)] turtles => [4 3 2 1 0]
+  O> crt 5
+  map [[who] of ?] sort-on [(- who)] turtles => [4 3 2 1 0]
 
 sort-on-3
- O> crt 5
- map [[who] of ?] sort-on [(word (5 - who))] turtles => [4 3 2 1 0]
+  O> crt 5
+  map [[who] of ?] sort-on [(word (5 - who))] turtles => [4 3 2 1 0]
 
 sort-on-4
- O> crt 5
- map [[who] of ?] sort-on [self] turtles => [0 1 2 3 4]
+  O> crt 5
+  map [[who] of ?] sort-on [self] turtles => [0 1 2 3 4]
 
 sort-on-doesnt-expose-agentset-order
   O> crt 3
