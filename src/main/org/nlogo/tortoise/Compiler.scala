@@ -30,6 +30,10 @@ object Compiler {
     val js =
       new RuntimeInit(sp.program, minPxcor, maxPycor, minPycor, maxPycor).init +
         defs.map(compileProcedureDef).mkString("\n")
+    if (sp.program.breeds.nonEmpty)
+      throw new IllegalArgumentException("unknown language feature: turtle breeds")
+    if (sp.program.linkBreeds.nonEmpty)
+      throw new IllegalArgumentException("unknown language feature: link breeds")
     (js, sp.program, sp.procedures)
   }
 
@@ -102,6 +106,9 @@ object Compiler {
             s"AgentSet.setTurtleVariable($vn,${arg(1)})"
           case p: prim._patchvariable =>
             s"AgentSet.setPatchVariable(${p.vn},${arg(1)})"
+          case x =>
+            throw new IllegalArgumentException(
+              "unknown settable: " + x.getClass.getSimpleName)
         }
       case _ =>
         throw new IllegalArgumentException(
