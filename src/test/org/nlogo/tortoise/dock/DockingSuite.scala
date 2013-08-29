@@ -81,7 +81,8 @@ trait DockingSuite extends FunSuite {
       ws = headless.HeadlessWorkspace.newInstance
       ws.silent = true
       state = Map()
-      body
+      try body
+      finally ws.dispose()
     }
   }
 
