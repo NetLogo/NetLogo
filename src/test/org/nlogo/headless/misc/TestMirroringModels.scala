@@ -6,13 +6,20 @@ package misc
 import org.scalatest.FunSuite
 import org.nlogo.{ api, mirror }
 import org.nlogo.util.SlowTest
-import mirror._
-import Mirroring._
-import TestMirroring.withWorkspace
+import mirror._, Mirroring._, Mirrorables._
 import org.nlogo.drawing.DrawingActionRunner
 import org.nlogo.workspace.Checksummer
 
 class TestMirroringModels extends FunSuite with SlowTest {
+
+  def withWorkspace[T](body: (HeadlessWorkspace, () => Iterable[Mirrorable]) => T): T = {
+    val ws = HeadlessWorkspace.newInstance
+    ws.silent = true
+    try body(ws, () => allMirrorables(ws.world,
+      Seq[(String, Int)]() // empty seq of widgets values for now - replace when we have them in headless NP 2012-09-17
+      ))
+    finally ws.dispose()
+  }
 
   // prevent annoying JAI message on Linux when using JAI extension
   // (old.nabble.com/get-rid-of-%22Could-not-find-mediaLib-accelerator-wrapper-classes%22-td11025745.html)
