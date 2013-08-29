@@ -76,7 +76,7 @@ class TestTermitesModel extends DockingSuite {
        |    [ set next 1 ]
        |end
       """.stripMargin
-    defineProcedures(code, WorldDimensions.square(20))
+    defineProcedures(code, WorldDimensions.square(10))
     compareCommands("random-seed 0 setup")
     for (_ <- 1 to 20)
       compareCommands("go")
