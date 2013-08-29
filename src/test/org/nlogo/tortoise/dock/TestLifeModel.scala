@@ -7,7 +7,7 @@ import org.nlogo.api.WorldDimensions
 
 class TestLifeModel extends DockingSuite {
 
-  tester("life") {
+  test("life") { implicit fixture => import fixture._
     val lifeSrc =
       """
         |patches-own [ living? live-neighbors ]
@@ -35,11 +35,11 @@ class TestLifeModel extends DockingSuite {
         |        [ celldeath ] ] ]
         |end
       """.stripMargin
-    defineProcedures(lifeSrc, WorldDimensions.square(5))
-    compareCommands("setup")
+    declare(lifeSrc, WorldDimensions.square(5))
+    testCommand("setup")
     for (_ <- 1 to 5)
-      compareCommands("go")
-    compareCommands("""__ask-sorted patches [output-print (word self " -> " living?) ]""")
+      testCommand("go")
+    testCommand("""__ask-sorted patches [output-print (word self " -> " living?) ]""")
   }
 
 }

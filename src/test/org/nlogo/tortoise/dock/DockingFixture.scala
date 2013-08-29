@@ -3,39 +3,69 @@
 package org.nlogo.tortoise
 package dock
 
-import org.scalatest.FunSuite
 import
   org.nlogo.{ api, headless, mirror },
-  org.nlogo.util.MersenneTwisterFast
+  headless.lang._,
+  org.nlogo.util.MersenneTwisterFast,
+  org.scalatest.Assertions._
 
-trait DockingSuite extends FunSuite {
+trait DockingSuite extends org.scalatest.fixture.FunSuite {
+  type FixtureParam = DockingFixture
+  override def withFixture(test: OneArgTest) =
+    DockingFixture.withFixture(test.name) { fixture =>
+      withFixture(test.toNoArgTest(fixture))
+    }
+}
+
+object DockingFixture {
+  def withFixture[T](name: String)(fn: DockingFixture => T) = {
+    val fixture = new DockingFixture(name)
+    try fn(fixture)
+    finally fixture.workspace.dispose()
+  }
+}
+
+class DockingFixture(name: String) extends Fixture(name) {
 
   val rhino = new Rhino
-  var ws: headless.HeadlessWorkspace = null
-  val owner = new api.SimpleJobOwner("Tortoise", new MersenneTwisterFast)
   def mirrorables: Iterable[mirror.Mirrorable] =
-    mirror.Mirrorables.allMirrorables(ws.world, Seq())
+    mirror.Mirrorables.allMirrorables(workspace.world, Seq())
   var state: mirror.Mirroring.State = Map()
+  var opened = false
 
-  def compare(logo: String) {
-    val expected = ws.report(logo)
-    val actual = evalJS(Compiler.compileReporter(logo))
-    assertResult(expected)(actual)
+  def compare(reporter: String) {
+    runReporter(Reporter(reporter,
+      Success(api.Dump.logoObject(workspace.report(reporter)))))
   }
 
-  def compareCommands(logo: String) {
+  override def runReporter(reporter: Reporter, mode: TestMode) {
+    if (!opened) declare("")
+    reporter.result match {
+      case Success(expected) =>
+        assertResult(expected) {
+          api.Dump.logoObject(
+            evalJS(Compiler.compileReporter(reporter.reporter)))
+        }
+      case _ =>
+        throw new IllegalStateException
+    }
+  }
+
+  override def runCommand(command: Command, mode: TestMode) {
+    if (!opened) declare("")
+    import command.{ command => logo }
     // println(s"logo = $logo")
-    ws.clearOutput()
-    ws.command(logo)
+    workspace.clearOutput()
+    workspace.command(logo)
     val (newState, update) = mirror.Mirroring.diffs(state, mirrorables)
     state = newState
     // println(s"state = $state")
     // println(s"update = $update")
     val expectedJson = "[" + mirror.JSONSerializer.serialize(update) + "]"
     // println(s"expectedJson = $expectedJson")
-    val expectedOutput = ws.outputAreaBuffer.toString
+    val expectedOutput = workspace.outputAreaBuffer.toString
     val (actualOutput, actualJson) =
-      runJS(Compiler.compileCommands(logo, ws.procedures, ws.world.program))
+      runJS(Compiler.compileCommands(logo, workspace.procedures, workspace.world.program))
     assertResult(expectedOutput)(actualOutput)
     rhino.eval("expectedUpdates = " + expectedJson)
     rhino.eval("actualUpdates = " + actualJson)
@@ -53,14 +83,18 @@ trait DockingSuite extends FunSuite {
   }
 
   // use single-patch world by default to keep generated JSON to a minimum
-  def defineProcedures(logo: String, dimensions: api.WorldDimensions = api.WorldDimensions.square(0)) {
+  override val defaultDimensions = api.WorldDimensions.square(0)
+
+  override def declare(logo: String, dimensions: api.WorldDimensions = defaultDimensions) {
+    require(!opened)
+    super.declare(logo, dimensions)
     val (js, _, _) = Compiler.compileProcedures(logo, dimensions)
     evalJS(js)
-    headless.ModelCreator.open(ws, dimensions, logo)
     state = Map()
     rhino.eval("expectedModel = new AgentModel")
     rhino.eval("actualModel = new AgentModel")
-    compareCommands("clear-all")
+    opened = true
+    runCommand(Command("clear-all"))
   }
 
   // these two are super helpful when running failing tests
@@ -74,16 +108,6 @@ trait DockingSuite extends FunSuite {
   def runJS(javascript: String): (String, String) = {
     //println(javascript)
     rhino.run(javascript)
-  }
-
-  def tester(testName: String)(body: => Unit) {
-    test(testName) {
-      ws = headless.HeadlessWorkspace.newInstance
-      ws.silent = true
-      state = Map()
-      try body
-      finally ws.dispose()
-    }
   }
 
 }

@@ -7,7 +7,7 @@ import org.nlogo.api.WorldDimensions
 
 class TestTermitesModel extends DockingSuite {
 
-  tester("termites") {
+  test("termites") { implicit fixture => import fixture._
     val code =
       """
        |turtles-own [next steps]
@@ -76,10 +76,10 @@ class TestTermitesModel extends DockingSuite {
        |    [ set next 1 ]
        |end
       """.stripMargin
-    defineProcedures(code, WorldDimensions.square(10))
-    compareCommands("random-seed 0 setup")
+    declare(code, WorldDimensions.square(10))
+    testCommand("random-seed 0 setup")
     for (_ <- 1 to 20)
-      compareCommands("go")
+      testCommand("go")
   }
 
 }

@@ -5,14 +5,12 @@ package dock
 
 class TestBasics extends DockingSuite {
 
-  tester("comments") {
-    defineProcedures("")
+  test("comments") { implicit fixture => import fixture._
     compare("3 ; comment")
     compare("[1 ; comment\n2]")
   }
 
-  tester("simple literals") {
-    defineProcedures("")
+  test("simple literals") { implicit fixture => import fixture._
     compare("false")
     compare("true")
     compare("2")
@@ -20,8 +18,7 @@ class TestBasics extends DockingSuite {
     compare("\"foo\"")
   }
 
-  tester("literal lists") {
-    defineProcedures("")
+  test("literal lists") { implicit fixture => import fixture._
     compare("[]")
     compare("[1]")
     compare("[1 2]")
@@ -31,8 +28,7 @@ class TestBasics extends DockingSuite {
     compare("[false true]")
   }
 
-  tester("arithmetic") {
-    defineProcedures("")
+  test("arithmetic") { implicit fixture => import fixture._
     compare("2 + 2")
     compare("1 + 2 + 3")
     compare("1 - 2 - 3")
@@ -42,46 +38,41 @@ class TestBasics extends DockingSuite {
     compare("6 / 2 + 12 / 6")
   }
 
-  tester("equality") {
-    defineProcedures("")
+  test("equality") { implicit fixture => import fixture._
     compare("5 = 5")
     compare(""""hello" = "hello"""")
   }
 
-  tester("empty commands") {
-    defineProcedures("")
-    compareCommands("")
+  test("empty commands") { implicit fixture => import fixture._
+    testCommand("")
   }
 
-  tester("rng") {
-    defineProcedures("")
-    compareCommands("random-seed 0 output-print random 100000")
+  test("rng") { implicit fixture => import fixture._
+    testCommand("random-seed 0 output-print random 100000")
   }
 
-  tester("printing") {
-    defineProcedures("")
-    compareCommands("output-print 1")
-    compareCommands("output-print \"foo\"")
-    compareCommands("output-print 2 + 2")
-    compareCommands("output-print 1 output-print 2 output-print 3")
+  test("printing") { implicit fixture => import fixture._
+    testCommand("output-print 1")
+    testCommand("output-print \"foo\"")
+    testCommand("output-print 2 + 2")
+    testCommand("output-print 1 output-print 2 output-print 3")
   }
 
-  tester("let") {
-    defineProcedures("")
-    compareCommands("let x 5  output-print x")
+  test("let") { implicit fixture => import fixture._
+    testCommand("let x 5  output-print x")
   }
 
-  tester("globals: set") {
-    defineProcedures("globals [x] to foo [i] set x i output-print x end")
-    compareCommands("foo 5 foo 6 foo 7")
+  test("globals: set") { implicit fixture => import fixture._
+    declare("globals [x] to foo [i] set x i output-print x end")
+    testCommand("foo 5 foo 6 foo 7")
   }
 
-  tester("clear-all clears globals") {
-    defineProcedures("globals [g1 g2]")
-    compareCommands("set g1 88 set g2 99")
-    compareCommands("output-print (word g1 g2)")
-    compareCommands("clear-all")
-    compareCommands("output-print (word g1 g2)")
+  test("clear-all clears globals") { implicit fixture => import fixture._
+    declare("globals [g1 g2]")
+    testCommand("set g1 88 set g2 99")
+    testCommand("output-print (word g1 g2)")
+    testCommand("clear-all")
+    testCommand("output-print (word g1 g2)")
   }
 
 }

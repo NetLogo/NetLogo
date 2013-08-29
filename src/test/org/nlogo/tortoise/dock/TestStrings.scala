@@ -5,18 +5,15 @@ package dock
 
 class TestStrings extends DockingSuite {
 
-  tester("word 0") {
-    defineProcedures("")
+  test("word 0") { implicit fixture => import fixture._
     compare("(word)")
   }
 
-  tester("word 1") {
-    defineProcedures("")
+  test("word 1") { implicit fixture => import fixture._
     compare("(word 1)")
   }
 
-  tester("word") {
-    defineProcedures("")
+  test("word") { implicit fixture => import fixture._
     compare("(word 1 2 3)") // 123, and hopefully not, god forbid, 6
   }
 

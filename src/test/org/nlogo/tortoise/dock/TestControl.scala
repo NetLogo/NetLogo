@@ -5,24 +5,21 @@ package dock
 
 class TestControl extends DockingSuite {
 
-  tester("while loops") {
-    defineProcedures("")
-    compareCommands("while [count turtles < 5] [cro 1]")
-    compareCommands("output-print count turtles")
+  test("while loops") { implicit fixture => import fixture._
+    testCommand("while [count turtles < 5] [cro 1]")
+    testCommand("output-print count turtles")
   }
 
-  tester("let + while") {
-    defineProcedures("")
-    compareCommands(
+  test("let + while") { implicit fixture => import fixture._
+    testCommand(
       "let x 10 " +
       "while [x > 0] [ set x x - 1 ] " +
       "output-print x")
   }
 
-  tester("if") {
-    defineProcedures("")
-    compareCommands("if true [ output-print 5 ]")
-    compareCommands("if false [ output-print 5 ]")
+  test("if") { implicit fixture => import fixture._
+    testCommand("if true [ output-print 5 ]")
+    testCommand("if false [ output-print 5 ]")
   }
 
 }
