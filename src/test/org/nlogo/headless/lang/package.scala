@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.headless.lang
+package org.nlogo.headless
 
 /**
  * Finder knows where in the filesystem .txt files containing tests are stored.  (It also

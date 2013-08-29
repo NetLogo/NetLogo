@@ -24,7 +24,7 @@ trait TestUsingWorkspace extends MockSuite {
                          worldType: WorldType = WorldType.Torus)
                         (f: HeadlessWorkspace => Unit) {
     test(testName) {
-      runWorkspaceTest(radius, worldType){f}
+      runWorkspaceTest(radius, worldType){ f }
     }
   }
 
@@ -51,6 +51,6 @@ trait TestUsingWorkspace extends MockSuite {
           api.ModelReader.defaultLinkShapes.toArray, api.Version.version))
       f(workspace)
     }
-    finally {workspace.dispose()}
+    finally workspace.dispose()
   }
 }

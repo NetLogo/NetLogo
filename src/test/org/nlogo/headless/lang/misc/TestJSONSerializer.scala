@@ -1,18 +1,21 @@
 package org.nlogo.headless
-package mirror
+package lang
+package misc
 
 import org.json4s.JsonDSL.string2jvalue
 import org.json4s.native.JsonMethods.{ compact, pretty, parse, render => jsRender }
 import org.json4s.string2JsonInput
-import org.nlogo.mirror.{ JSONSerializer, Mirroring }
+import org.nlogo.mirror._, Mirroring._, Mirrorables._
 import org.nlogo.api, api.Version
-import org.nlogo.headless
 import org.scalatest.FunSuite
 import org.scalatest.Matchers
 
-class TestJSONSerializer extends FunSuite with Matchers {
+class TestJSONSerializer extends FixtureSuite with Matchers {
 
-  test("JSONSerializer basic commands") {
+  def mirrorables(implicit fixture: Fixture): Iterable[Mirrorable] =
+    Mirrorables.allMirrorables(fixture.workspace.world, Seq())
+
+  test("JSONSerializer basic commands") { implicit fixture =>
     val commands = Seq(
       "cro 1" ->
         """|{
@@ -64,18 +67,16 @@ class TestJSONSerializer extends FunSuite with Matchers {
           (cmd, jsRender(parse(json)))
       }
 
-    TestMirroring.withWorkspace { (ws, mirrorables) =>
-      headless.ModelCreator.open(ws, api.WorldDimensions.square(1))
-      val (initialState, _) = Mirroring.diffs(Map(), mirrorables())
-      commands.foldLeft(initialState) {
-        case (previousState, (cmd, expectedJSON)) =>
-          ws.command(cmd)
-          val (nextState, update) = Mirroring.diffs(previousState, mirrorables())
-          val json = jsRender(parse(JSONSerializer.serialize(update)))
-          val format = compact _
-          format(json) should equal(format(expectedJSON))
-          nextState
-      }
+    ModelCreator.open(fixture.workspace, api.WorldDimensions.square(1))
+    val (initialState, _) = Mirroring.diffs(Map(), mirrorables)
+    commands.foldLeft(initialState) {
+      case (previousState, (cmd, expectedJSON)) =>
+        fixture.workspace.command(cmd)
+        val (nextState, update) = Mirroring.diffs(previousState, mirrorables)
+        val json = jsRender(parse(JSONSerializer.serialize(update)))
+        val format = compact _
+        format(json) should equal(format(expectedJSON))
+        nextState
     }
   }
 
