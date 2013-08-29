@@ -3,6 +3,8 @@
 package org.nlogo.tortoise
 package dock
 
+import org.nlogo.api.WorldDimensions
+
 class TestTermitesModel extends DockingSuite {
 
   tester("termites") {
@@ -74,7 +76,7 @@ class TestTermitesModel extends DockingSuite {
        |    [ set next 1 ]
        |end
       """.stripMargin
-    defineProcedures(code, -20, 20, -20, 20)
+    defineProcedures(code, WorldDimensions.square(20))
     compareCommands("random-seed 0 setup")
     for (_ <- 1 to 20)
       compareCommands("go")

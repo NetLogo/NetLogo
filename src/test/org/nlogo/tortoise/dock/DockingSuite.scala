@@ -53,10 +53,10 @@ trait DockingSuite extends FunSuite {
   }
 
   // use single-patch world by default to keep generated JSON to a minimum
-  def defineProcedures(logo: String, minPxcor: Int = 0, maxPxcor: Int = 0, minPycor: Int = 0, maxPycor: Int = 0) {
-    val (js, _, _) = Compiler.compileProcedures(logo, minPxcor, maxPxcor, minPycor, maxPycor)
+  def defineProcedures(logo: String, dimensions: api.WorldDimensions = api.WorldDimensions.square(0)) {
+    val (js, _, _) = Compiler.compileProcedures(logo, dimensions)
     evalJS(js)
-    headless.ModelCreator.open(ws, api.WorldDimensions(minPxcor, maxPxcor, minPycor, maxPycor), logo)
+    headless.ModelCreator.open(ws, dimensions, logo)
     state = Map()
     rhino.eval("expectedModel = new AgentModel")
     rhino.eval("actualModel = new AgentModel")

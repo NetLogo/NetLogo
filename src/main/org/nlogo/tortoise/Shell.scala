@@ -4,7 +4,7 @@ package org.nlogo.tortoise
 
 import java.io.{ BufferedReader, InputStreamReader }
 import
-  org.nlogo.headless,
+  org.nlogo.{ api, headless },
   headless.Shell.{ input, isQuit },
   headless.Main.setHeadlessProperty
 
@@ -14,7 +14,7 @@ object Shell {
 
   def main(argv: Array[String]) {
     setHeadlessProperty()
-    val (js, _, _) = Compiler.compileProcedures("", -16, 16, -16, 16)
+    val (js, _, _) = Compiler.compileProcedures("", api.WorldDimensions.square(16))
     rhino.eval(js)
     System.err.println("Tortoise Shell 1.0")
     input.takeWhile(!isQuit(_))

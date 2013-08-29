@@ -24,11 +24,14 @@ object Compiler {
     program: api.Program = api.Program.empty()): String =
     compile(logo, commands = true, oldProcedures, program)
 
-  def compileProcedures(logo: String, minPxcor: Int = 0, maxPxcor: Int = 0, minPycor: Int = 0, maxPycor: Int = 0): (String, api.Program, ProceduresMap) = {
+  def compileProcedures(
+      logo: String,
+      dimensions: api.WorldDimensions = api.WorldDimensions.square(0))
+      : (String, api.Program, ProceduresMap) = {
     // (Seq[ProcedureDefinition], StructureParser.Results)
     val (defs, sp) = frontEnd.frontEnd(logo)
     val js =
-      new RuntimeInit(sp.program, minPxcor, maxPycor, minPycor, maxPycor).init +
+      new RuntimeInit(sp.program, dimensions).init +
         defs.map(compileProcedureDef).mkString("\n")
     if (sp.program.breeds.nonEmpty)
       throw new IllegalArgumentException("unknown language feature: turtle breeds")
@@ -171,11 +174,13 @@ object Compiler {
 // RuntimeInit generates JavaScript code that does any initialization that needs to happen
 // before any user code runs, for example creating patches
 
-class RuntimeInit(program: api.Program, minPxcor: Int, maxPxcor: Int, minPycor: Int, maxPycor: Int) {
+class RuntimeInit(program: api.Program, dimensions: api.WorldDimensions) {
 
-  def init =
+  def init = {
+    import dimensions._
     globals + turtlesOwn + patchesOwn +
       s"world = new World($minPxcor, $maxPxcor, $minPycor, $maxPycor);\n"
+  }
 
   // if there are any globals,
   // tell the runtime how many there are, it will initialize them all to 0.

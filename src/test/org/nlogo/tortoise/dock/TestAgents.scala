@@ -3,6 +3,8 @@
 package org.nlogo.tortoise
 package dock
 
+import org.nlogo.api.WorldDimensions
+
 class TestAgents extends DockingSuite {
 
   tester("turtle creation") {
@@ -35,12 +37,12 @@ class TestAgents extends DockingSuite {
   }
 
   tester("turtle motion 1") {
-    defineProcedures("", -1, 1, -1, 1)
+    defineProcedures("", WorldDimensions.square(1))
     compareCommands("cro 4 __ask-sorted turtles [fd 1] __ask-sorted turtles [output-print xcor output-print ycor]")
   }
 
   tester("turtle motion 2") {
-    defineProcedures("", -1, 1, -1, 1)
+    defineProcedures("", WorldDimensions.square(1))
     compareCommands("cro 8 __ask-sorted turtles [fd 1] __ask-sorted turtles [output-print xcor output-print ycor]")
   }
 
@@ -81,18 +83,18 @@ class TestAgents extends DockingSuite {
   }
 
   tester("patch order") {
-    defineProcedures("", -5, 5, -5, 5)
+    defineProcedures("", WorldDimensions.square(5))
     compareCommands("""__ask-sorted patches [ output-print self ]""")
   }
 
   tester("turtles get patch variables") {
-    defineProcedures("", -5, 5, -5, 5)
+    defineProcedures("", WorldDimensions.square(5))
     compareCommands("cro 5 __ask-sorted turtles [ fd 1 ]")
     compareCommands("""__ask-sorted turtles [ output-print self ]""")
   }
 
   tester("turtles set patch variables") {
-    defineProcedures("", -5, 5, -5, 5)
+    defineProcedures("", WorldDimensions.square(5))
     compareCommands("cro 5 __ask-sorted turtles [ fd 1 set pcolor blue ]")
     compareCommands("__ask-sorted turtles [output-print color]")
     compareCommands("__ask-sorted turtles [output-print pcolor]")
@@ -100,17 +102,17 @@ class TestAgents extends DockingSuite {
   }
 
   tester("with") {
-    defineProcedures("", -5, 5, -5, 5)
+    defineProcedures("", WorldDimensions.square(5))
     compareCommands("__ask-sorted patches with [pxcor = 1] [output-print pycor]")
   }
 
   tester("with 2") {
-    defineProcedures("", -5, 5, -5, 5)
+    defineProcedures("", WorldDimensions.square(5))
     compareCommands("__ask-sorted patches with [pxcor = -3 and pycor = 2] [ output-print self ]")
   }
 
   tester("with + turtles accessing turtle and patch vars") {
-    defineProcedures("", -5, 5, -5, 5)
+    defineProcedures("", WorldDimensions.square(5))
     compareCommands("cro 5 ask turtles [fd 1]")
     compareCommands("__ask-sorted turtles with [pxcor =  1] [output-print pycor]")
     compareCommands("__ask-sorted turtles with [pxcor = -1] [output-print ycor]")
@@ -128,32 +130,32 @@ class TestAgents extends DockingSuite {
   }
 
   tester("patch set") {
-    defineProcedures("", -5, 5, -5, 5)
+    defineProcedures("", WorldDimensions.square(5))
     compareCommands("__ask-sorted patches with [pxcor = -1 and pycor = 0] [ set pcolor green ]")
     compareCommands("ask patch 0 0 [ set pcolor green ]")
     compareCommands("output-print count patches with [pcolor = green]")
   }
 
   tester("and, or") {
-    defineProcedures("", -5, 5, -5, 5)
+    defineProcedures("", WorldDimensions.square(5))
     compareCommands("output-print count patches with [pxcor = 0 or pycor = 0]")
     compareCommands("output-print count patches with [pxcor = 0 and pycor = 0]")
   }
 
 //  tester("neighbors") {
-//    defineProcedures("", -5, 5, -5, 5)
+//    defineProcedures("", WorldDimensions.square(5))
 //    compareCommands("""__ask-sorted patches [ __ask-sorted neighbors [ output-print self ]]""")
 //  }
 
   tester("setting a built-in patch variable") {
-    defineProcedures("", -5, 5, -5, 5)
+    defineProcedures("", WorldDimensions.square(5))
     compareCommands("__ask-sorted patches with [pxcor = 2 and pycor = 3] [ set pcolor green ]")
     compareCommands("output-print count patches with [pcolor = green]")
     compareCommands("__ask-sorted patches [ output-print self output-print pcolor ]")
   }
 
   tester("setting a patches-own variable") {
-    defineProcedures("patches-own [foo]", -5, 5, -5, 5)
+    defineProcedures("patches-own [foo]", WorldDimensions.square(5))
     compareCommands("__ask-sorted patches with [pxcor = 2 and pycor = 3] [ set foo green ]")
     compareCommands("output-print count patches with [foo = green]")
     compareCommands("__ask-sorted patches [ output-print self output-print foo ]")
@@ -174,7 +176,7 @@ class TestAgents extends DockingSuite {
   }
 
   tester("turtle motion") {
-    defineProcedures("", -5, 5, -5, 5)
+    defineProcedures("", WorldDimensions.square(5))
     compareCommands("random-seed 0 crt 100")
     compareCommands("__ask-sorted turtles [ setxy random-xcor random-ycor ]")
     for (_ <- 1 to 10)

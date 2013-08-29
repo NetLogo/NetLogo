@@ -3,6 +3,8 @@
 package org.nlogo.tortoise
 package dock
 
+import org.nlogo.api.WorldDimensions
+
 class TestLifeModel extends DockingSuite {
 
   tester("life") {
@@ -33,7 +35,7 @@ class TestLifeModel extends DockingSuite {
         |        [ celldeath ] ] ]
         |end
       """.stripMargin
-    defineProcedures(lifeSrc, -5, 5, -5, 5)
+    defineProcedures(lifeSrc, WorldDimensions.square(5))
     compareCommands("setup")
     for (_ <- 1 to 5)
       compareCommands("go")
