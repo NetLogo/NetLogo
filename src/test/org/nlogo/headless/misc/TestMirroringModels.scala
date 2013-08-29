@@ -1,7 +1,7 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.headless
-package mirror
+package misc
 
 import org.scalatest.FunSuite
 import org.nlogo.{ api, mirror }
