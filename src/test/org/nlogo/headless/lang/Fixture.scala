@@ -29,8 +29,8 @@ object Fixture {
 // elsewhere by Tortoise - ST 8/28/13
 trait AbstractFixture {
   import Assertions._
-  def dimensions: api.WorldDimensions
-  def declare(source: String)
+  def defaultDimensions: api.WorldDimensions
+  def declare(source: String, dimensions: api.WorldDimensions = defaultDimensions)
   def open(path: String)
   def open(model: ModelCreator.Model)
   def runCommand(command: Command, mode: TestMode)
@@ -76,9 +76,9 @@ class Fixture(name: String) extends AbstractFixture {
   val compiler: CompilerInterface =
     Femto.scalaSingleton("org.nlogo.compile.Compiler")
 
-  def dimensions = api.WorldDimensions.square(5)
+  def defaultDimensions = api.WorldDimensions.square(5)
 
-  def declare(source: String) {
+  def declare(source: String, dimensions: api.WorldDimensions = defaultDimensions) {
     ModelCreator.open(workspace,
       dimensions = dimensions,
       source = source)

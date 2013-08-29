@@ -65,7 +65,7 @@ trait Finder extends FunSuite with SlowTest {
         if (nonDecls.forall(!_.isInstanceOf[Open]))
           fixture.open(ModelCreator.Model(
             code = decls,
-            dimensions = fixture.dimensions,
+            dimensions = fixture.defaultDimensions,
             widgets = StandardWidgets))
         else
           assert(t.entries.forall(!_.isInstanceOf[Declaration]))
