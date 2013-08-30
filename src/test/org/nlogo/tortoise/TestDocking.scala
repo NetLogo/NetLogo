@@ -16,7 +16,7 @@ class TestDocking extends FunSuite {
     mirror.Mirrorables.allMirrorables(ws.world, Seq())
   var state: mirror.Mirroring.State = Map()
 
-  def compare(logo: String) { implicit rhino: Rhino =>
+  def compare(logo: String)(implicit rhino: Rhino) {
     val expected = ws.report(logo)
     val actual = evalJS(Compiler.compileReporter(logo))
     expectResult(expected)(actual)
@@ -75,7 +75,7 @@ class TestDocking extends FunSuite {
     rhino.run(javascript)
   }
 
-  def tester(testName: String)(body: => Unit) {
+  def tester(testName: String)(body: (Rhino) => Unit) {
     test(testName) {
       ws = headless.HeadlessWorkspace.newInstance
       ws.silent = true
@@ -83,7 +83,7 @@ class TestDocking extends FunSuite {
       defineProcedures("")
       state = Map()
       compareCommands("clear-all")
-      body
+      body(rhino)
     }
   }
 
@@ -495,3 +495,4 @@ class TestDocking extends FunSuite {
   }
 
 }
+
