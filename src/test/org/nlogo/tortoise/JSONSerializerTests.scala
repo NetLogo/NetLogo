@@ -1,6 +1,4 @@
-package org.nlogo.headless
-package lang
-package misc
+package org.nlogo.tortoise
 
 import org.json4s.JsonDSL.string2jvalue
 import org.json4s.native.JsonMethods.{ compact, pretty, parse, render => jsRender }
@@ -9,8 +7,9 @@ import org.nlogo.mirror._, Mirroring._, Mirrorables._
 import org.nlogo.api, api.Version
 import org.scalatest.FunSuite
 import org.scalatest.Matchers
+import org.nlogo.headless._, lang._
 
-class TestJSONSerializer extends FixtureSuite with Matchers {
+class SONSerializerTests extends FixtureSuite with Matchers {
 
   def mirrorables(implicit fixture: Fixture): Iterable[Mirrorable] =
     Mirrorables.allMirrorables(fixture.workspace.world, Seq())

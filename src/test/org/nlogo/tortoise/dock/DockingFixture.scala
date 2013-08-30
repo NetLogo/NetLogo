@@ -54,7 +54,7 @@ class DockingFixture(name: String) extends Fixture(name) {
     state = newState
     // println(s"state = $state")
     // println(s"update = $update")
-    val expectedJson = "[" + mirror.JSONSerializer.serialize(update) + "]"
+    val expectedJson = "[" + JSONSerializer.serialize(update) + "]"
     // println(s"expectedJson = $expectedJson")
     val expectedOutput = workspace.outputAreaBuffer.toString
     val (actualOutput, actualJson) =
