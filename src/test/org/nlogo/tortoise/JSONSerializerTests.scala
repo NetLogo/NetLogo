@@ -9,7 +9,7 @@ import org.scalatest.FunSuite
 import org.scalatest.Matchers
 import org.nlogo.headless._, lang._
 
-class SONSerializerTests extends FixtureSuite with Matchers {
+class JSONSerializerTests extends FixtureSuite with Matchers {
 
   def mirrorables(implicit fixture: Fixture): Iterable[Mirrorable] =
     Mirrorables.allMirrorables(fixture.workspace.world, Seq())
