@@ -1,11 +1,16 @@
 package org.nlogo.tortoise.engine
 
+import
+  scala.js.annotation.JSName
+
+@JSName("Random")
 object RandomJS extends ObjectJS {
   def nextDouble():              NumberJS = ???
   def nextInt(limit: NumberJS):  NumberJS = ???
   def nextLong(limit: NumberJS): NumberJS = ???
 }
 
+@JSName("StrictMath")
 object StrictMathJS extends ObjectJS {
   def abs      (n: NumberJS): NumberJS = ???
   def sin      (n: NumberJS): NumberJS = ???
