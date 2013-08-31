@@ -2612,7 +2612,12 @@ file-open &quot;C:\\NetLogo\\my-file-out.txt&quot;
 file-print &quot;Hello World&quot; ;; File is in writing mode
 </pre>
       <p>
-        See also <a href="#file-close">file-close</a>.
+        Opening a file does not close previously opened files.
+        You can use <tt>file-open</tt> to switch back and forth
+        between multiple open files.
+      <p>
+        See also <a href="#file-close">file-close</a>
+        See also <a href="#file-close-all">file-close-all</a>.
       </div>
     <div class="dict_entry">
       <h3>
