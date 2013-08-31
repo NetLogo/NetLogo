@@ -1,6 +1,6 @@
 package org.nlogo.tortoise.engine
 
-class World(val minPxcor: Int, val maxPxcor: Int, val minPycor: Int, val maxPycor: Int) {
+case class World(minPxcor: Int, maxPxcor: Int, minPycor: Int, maxPycor: Int) {
 
   private var _nextId:  Int         = 0
   private var _turtles: Seq[Turtle] = Seq()

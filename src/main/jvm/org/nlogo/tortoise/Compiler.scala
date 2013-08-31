@@ -160,7 +160,7 @@ class RuntimeInit(program: api.Program, minPxcor: Int, maxPxcor: Int, minPycor: 
 
   def init =
     globals + turtlesOwn + patchesOwn +
-      s"""world = new $WorldClass($minPxcor, $maxPxcor, $minPycor, $maxPycor);\n"""
+      s"""world = $WorldObj.generate($minPxcor, $maxPxcor, $minPycor, $maxPycor);\n"""
 
   // if there are any globals,
   // tell the runtime how many there are, it will initialize them all to 0.

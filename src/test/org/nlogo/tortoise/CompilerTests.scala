@@ -75,7 +75,7 @@ class TestCompiler extends FunSuite {
   test("command procedure") {
     import Compiler.{compileProcedures => compile}
     val input = "to foo output-print 5 end"
-    val expected = s"""world = new $WorldClass(0, 0, 0, 0);
+    val expected = s"""world = $WorldObj.generate(0, 0, 0, 0);
                       |function FOO () {
                       |println(5)
                       |};""".stripMargin
@@ -115,7 +115,7 @@ class TestCompiler extends FunSuite {
     val input    = "globals [x y z] to foo output-print z output-print y output-print x end"
     val expected =
       s"""|$GlobalsObj.init(3)
-          |world = new $WorldClass(0, 0, 0, 0);
+          |world = $WorldObj.generate(0, 0, 0, 0);
           |function FOO () {
           |println($GlobalsObj.getGlobal(2))
           |println($GlobalsObj.getGlobal(1))
@@ -129,7 +129,7 @@ class TestCompiler extends FunSuite {
     val input    = "globals [x] to foo set x 5 output-print x end"
     val expected =
       s"""|$GlobalsObj.init(1)
-          |world = new $WorldClass(0, 0, 0, 0);
+          |world = $WorldObj.generate(0, 0, 0, 0);
           |function FOO () {
           |$GlobalsObj.setGlobal(0,5)
           |println($GlobalsObj.getGlobal(0))
