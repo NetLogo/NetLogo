@@ -2,7 +2,7 @@ package org.nlogo.tortoise.engine
 
 import EngineVariableNames.PatchE._
 
-class Patch private (override val id: ID, world: World, variables: VarMap) extends Vassal with CanTalkToPatches {
+class Patch private (override val id: ID, world: World, variables: VarMap) extends Agent with Vassal with CanTalkToPatches {
 
   override protected def updateType = Overlord.UpdateType.PatchType
   override protected def companion  = Patch

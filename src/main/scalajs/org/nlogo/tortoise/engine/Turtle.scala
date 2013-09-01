@@ -5,7 +5,7 @@ import
     CommonE._,
     TurtleE._
 
-class Turtle private (world: World, variables: VarMap) extends Vassal with CanTalkToPatches {
+class Turtle private (world: World, variables: VarMap) extends Agent with Vassal with CanTalkToPatches {
 
   import Turtle._
 
