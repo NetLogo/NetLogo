@@ -10,7 +10,7 @@ object Prims {
   // We should have a concept of something crazy... like a "Workspace", or something, which has exactly one `World`.
   // Everything that's currently being pull in from the global namespace (`World`, `Random`, `StrictMath`, even jQuery, if we wanted)
   // Could then be injected into this "Workspace" when it was first created, and we wouldn't need to call into the global scope. --JAB (8/5/13)
-  private def getWorld():  World = g.world.world().asInstanceOf[World]
+  private def getWorld():  World = g.world.value().asInstanceOf[World]
 
   def fd(n: Double):               Unit       = AgentSet.self.asInstanceOf[Turtle].fd(n)
   def bk(n: Double):               Unit       = AgentSet.self.asInstanceOf[Turtle].fd(-n)
