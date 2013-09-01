@@ -4,6 +4,7 @@ import scala.collection.mutable.{ LinkedHashMap => LHM }
 
 package object engine {
 
+  // Shouldn't most of this auto-cruft move to the API, where such translations are handled? --JAB (8/31/13)
   type AnyJS      = scala.js.Any
   type ArrayJS[T] = scala.js.Array[T]
   type BooleanJS  = scala.js.Boolean
