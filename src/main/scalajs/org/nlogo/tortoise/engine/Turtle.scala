@@ -93,7 +93,7 @@ class Turtle private (world: World, variables: VarMap) extends Vassal with CanTa
 
 object Turtle extends VassalCompanion {
 
-  private val DeadID     = ID(-1)
+  private val DeadID = ID(-1)
 
   override val trackedKeys = Set(BreedKeyE, ColorKeyE, HeadingKeyE, HiddenKeyE, IDKeyE, LabelKeyE, LabelColorKeyE,
                                  PenModeKeyE, PenSizeKeyE, ShapeKeyE, SizeKeyE, XCorKeyE, YCorKeyE)
