@@ -1,30 +1,28 @@
 package org.nlogo.tortoise.engine
 
-import scala.js.Dictionary
+import
+  scala.collection.mutable.ArrayBuffer
 
 object Overlord {
 
-  private type Change      = Map[String, AnyJS]
-  private type AgentUpdate = Map[ID, Change]
-
-  private var updates = Array[Update]()
+  private var updates = ArrayBuffer[Update]()
 
   def flushUpdates(): Unit =
-    updates = Array()
+    updates = ArrayBuffer[Update]()
 
-  def collectUpdates(): ArrayJS[Dictionary] = {
+  def collectUpdates(): Array[Update] = {
     val collected =
       if (updates.isEmpty)
-        Array(Update())
+        ArrayBuffer(Update())
       else
         updates
     flushUpdates()
-    AnyJS.fromArray(collected map updateToDictionary)
+    collected.result().toArray
   }
 
   // gross hack - ST 1/25/13
   private[engine] def registerDeath(id: ID): Unit =
-    updates = updates :+ Update(Map(id -> Map("WHO" -> -1)))
+    updates += Update(Map(id -> Map("WHO" -> -1)))
 
   private[engine] def registerUpdate(id: ID, updateType: UpdateType, changePairs: (String, JSW)*): Unit = {
 
@@ -38,21 +36,8 @@ object Overlord {
       case PatchType  => Update(Map(), fullChange)
     }
 
-    updates = updates :+ update
+    updates += update
 
-  }
-
-  private def updateToDictionary(update: Update): Dictionary = {
-    def changeToDict(change: Change)      = Dictionary(change.toSeq: _*)
-    def updateToDict(update: AgentUpdate) = Dictionary(update map { case (k, v) => (k.value.toString, changeToDict(v)) } toSeq: _*)
-    val turtlesEntry = "turtles" -> updateToDict(update.turtleUpdates)
-    val patchesEntry = "patches" -> updateToDict(update.patchUpdates)
-    Dictionary(turtlesEntry, patchesEntry)
-  }
-
-  private case class Update(turtleUpdates: AgentUpdate = Map(), patchUpdates: AgentUpdate = Map()) {
-    def mapTurtles[T](f: (AgentUpdate) => AgentUpdate): Update = this.copy(turtleUpdates = f(turtleUpdates))
-    def mapPatches[T](f: (AgentUpdate) => AgentUpdate): Update = this.copy(patchUpdates = f(patchUpdates))
   }
 
   sealed trait UpdateType
@@ -61,4 +46,9 @@ object Overlord {
     case object PatchType extends UpdateType
   }
 
+}
+
+case class Update(turtleUpdates: AgentUpdate = Map(), patchUpdates: AgentUpdate = Map()) {
+  def mapTurtles[T](f: (AgentUpdate) => AgentUpdate): Update = this.copy(turtleUpdates = f(turtleUpdates))
+  def mapPatches[T](f: (AgentUpdate) => AgentUpdate): Update = this.copy(patchUpdates = f(patchUpdates))
 }

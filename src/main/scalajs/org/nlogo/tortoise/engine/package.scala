@@ -19,6 +19,8 @@ package object engine {
   val ObjectJS  = scala.js.Object
   val StringJS  = scala.js.String
 
+  type Change                        = Map[String, AnyJS]
+  type AgentUpdate                   = Map[ID, Change]
   type JSW                           = JSWrapper[_]
   type VarMap                        = LHM[String, JSW]
   def  VarMap(items: (String, JSW)*) = LHM(items: _*)
