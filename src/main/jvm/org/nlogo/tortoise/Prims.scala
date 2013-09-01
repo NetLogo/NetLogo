@@ -92,6 +92,6 @@ object Prims {
   }
 
   // Ewwwwwwwww --JAB (7/30/13)
-  def fun(body: String) = "{ apply$mcZ$sp\ufe34Z: function() {" + body + "} }"
+  def fun(body: String) = "{ value: function() {" + body + "} }"
 
 }

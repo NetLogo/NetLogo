@@ -2,11 +2,14 @@ package org.nlogo.tortoise
 
 import
   scala.{ js, reflect },
+    js.{ Dynamic => DynamicJS },
     reflect.ClassTag
 
 package object api {
 
   import engine._, wrapper._
+
+  type JSFunc = DynamicJS // For now. --JAB (8/31/13)
 
   implicit def agent2Wrapper(agent: Agent): AgentWrapper =
     agent match {
@@ -26,6 +29,11 @@ package object api {
 
   implicit class EnhancedWrapperArrayJS[T <: Wrapper : ClassTag](xs: ArrayJS[T]) {
     def toUnwrappedSeq: Seq[T#ValueType] = AnyJS.toArray(xs) map (_.value) toSeq
+  }
+
+  implicit class Func2Thunk(jsFunc: JSFunc) {
+    def toBooleanThunk: () => Boolean = () => BooleanJS.toBoolean(jsFunc.value().asInstanceOf[BooleanJS])
+    def toThunk[T]: () => T = () => jsFunc.value().asInstanceOf[T]
   }
 
 }

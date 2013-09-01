@@ -1,33 +1,34 @@
 package org.nlogo.tortoise.engine
 
-// It bothers me that this agent type is `Any`.  Can't we improve it somehow?  --JAB (8/3/13)
 object AgentSet {
 
-  private var _self: Any = 0
+  private var _self: Option[Agent] = None
 
-  def self = _self
+  // The real source of our `self` return type woes.  Couldn't we fix this by
+  // just having the compiler output functions that take the agent as an argument? --JAB (8/31/13)
+
+  // The answer is a resounding "YES!".  I was worried that NetLogo might return `0` as a `self` value
+  // when no `self` is available (i.e. in the observer context), but it looks like that's not the case;
+  // only agents are even allowed to have `self` called on them. --JAB (8/31/13)
+  def self: Any = _self getOrElse 0
 
   def count[T <: { def length: Int }](x: T) = x.length
 
   // This might be one of the most atrocious things --JAB (7/19/13)
   // I mean... why not just make the function take the agent as an argument? --JAB (8/3/13)
-  def askAgent(a: Any, f: () => Boolean): Boolean = {
+  def askAgent[T](a: Agent, f: () => T): T = {
     val old    = _self
-    _self      = a
+    _self      = Option(a)
     val result = f()
     _self      = old
     result
   }
 
-  def ask(agentsOrAgent: Any, f: () => Boolean): Unit = {
-    val seq = agentsOrAgent match {
-      case agents: Seq[_] => agents
-      case x              => Seq(x)
-    }
-    seq foreach (a => askAgent(a, f))
+  def ask(agents: Seq[Agent], f: () => Unit): Unit = {
+    agents foreach (a => askAgent(a, f))
   }
 
-  def agentFilter(agents: Seq[Any], f: () => Boolean): Seq[Any] =
+  def agentFilter(agents: Seq[Agent], f: () => Boolean): Seq[Agent] =
     agents filter (agent => askAgent(agent, f))
 
   // I'm putting some things in Agents, and some in Prims
@@ -37,19 +38,19 @@ object AgentSet {
   // Seth was onto something!  --JAB (8/3/13)
 
   // In the future: Links are also capable of dying --JAB (7/19/13)
-  def die(): Unit = _self.asInstanceOf[Turtle].die()
+  def die(): Unit = self.asInstanceOf[Turtle].die()
 
   // Because of some "the compiler's not giving me a `JSW`" insanity, I think we need some well-established entry points into the ScalaJS code...
   // (See above, where Seth was "onto something"; we should have some interface layer where inputs are converted from ScalaJS types to Scala types,
   // then forwarded to the rest of the ScalaJS engine) --JAB (8/1/13)
-  def getTurtleVariable(n: Int): AnyJS = _self.asInstanceOf[Turtle].getTurtleVariable(n)
-  def getPatchVariable(n: Int):  AnyJS = _self.asInstanceOf[CanTalkToPatches].getPatchVariable(n)
+  def getTurtleVariable(n: Int): AnyJS = self.asInstanceOf[Turtle].getTurtleVariable(n)
+  def getPatchVariable(n: Int):  AnyJS = self.asInstanceOf[CanTalkToPatches].getPatchVariable(n)
 
   def setTurtleVariable(n: Int, value: AnyJS): Unit =
-    _self.asInstanceOf[Turtle].setTurtleVariable(n, JS2WrapperConverter(value))
+    self.asInstanceOf[Turtle].setTurtleVariable(n, JS2WrapperConverter(value))
 
   def setPatchVariable(n: Int, value: AnyJS): Unit =
-    _self.asInstanceOf[CanTalkToPatches].setPatchVariable(n, JS2WrapperConverter(value))
+    self.asInstanceOf[CanTalkToPatches].setPatchVariable(n, JS2WrapperConverter(value))
 
 }
 
