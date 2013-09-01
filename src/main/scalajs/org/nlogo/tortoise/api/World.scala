@@ -1,7 +1,7 @@
 package org.nlogo.tortoise.api
 
 import
-  scala.js.{ annotation, Array => ArrayJS, Dictionary },
+  scala.js.{ annotation, Any => AnyJS, Array => ArrayJS, Dictionary },
     annotation.expose
 
 import
@@ -10,9 +10,9 @@ import
     engine.{ Globals => EGlobals, Overlord => EOverlord, Patch => EPatch, Turtle => ETurtle, World => EWorld }
 
 object Globals {
-  @expose def init(count: Int):                   Unit = EGlobals.init(count)
-  @expose def getGlobal(varNum: Int):             Any  = EGlobals.getGlobal(varNum)
-  @expose def setGlobal(varNum: Int, value: Any): Unit = EGlobals.setGlobal(varNum, value)
+  @expose def init(count: Int):                     Unit  = EGlobals.init(count)
+  @expose def getGlobal(varNum: Int):               AnyJS = EGlobals.getGlobal(varNum)
+  @expose def setGlobal(varNum: Int, value: AnyJS): Unit  = EGlobals.setGlobal(varNum, value)
 }
 
 object Overlord {
