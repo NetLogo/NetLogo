@@ -91,5 +91,4 @@ seq(ChecksumsAndPreviews.settings: _*)
 
 seq(Scaladoc.settings: _*)
 
-// supported yet in sbt 0.13?
-// org.scalastyle.sbt.ScalastylePlugin.Settings
+org.scalastyle.sbt.ScalastylePlugin.Settings
