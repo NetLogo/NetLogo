@@ -25,7 +25,7 @@ class ChecksummerTests extends FunSuite {
     def tester(fn: PrintWriter) {
       foo(fn)
     }
-    expectResult("41ECD0D21169ED248C8499E22CF3CF636F5DADC1")(
+    assertResult("41ECD0D21169ED248C8499E22CF3CF636F5DADC1")(
       Checksummer.calculateChecksum(tester _))
   }
   test("two sections") {
@@ -34,7 +34,7 @@ class ChecksummerTests extends FunSuite {
       fn.println()
       bar(fn)
     }
-    expectResult("046F28A95D201F85B8C5664C36FDECF24D23213D")(
+    assertResult("046F28A95D201F85B8C5664C36FDECF24D23213D")(
       Checksummer.calculateChecksum(tester _))
   }
   test("three sections") {
@@ -45,7 +45,7 @@ class ChecksummerTests extends FunSuite {
       fn.println()
       emptySection(fn)
     }
-    expectResult("EA4F5E16376F2FC7242F9BF28328CC00B5A8190D")(
+    assertResult("EA4F5E16376F2FC7242F9BF28328CC00B5A8190D")(
       Checksummer.calculateChecksum(tester _))
   }
   test("two empty sections") {
@@ -54,7 +54,7 @@ class ChecksummerTests extends FunSuite {
       fn.println()
       emptySection(fn)
     }
-    expectResult("376368FF0F759FD60F473E56EA58D5E7D8305E0F")(
+    assertResult("376368FF0F759FD60F473E56EA58D5E7D8305E0F")(
       Checksummer.calculateChecksum(tester _))
   }
 }

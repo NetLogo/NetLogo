@@ -58,6 +58,6 @@ class ModelTests extends FunSuite {
       "    plotxy ticks stock\n" +
       "  ]\n" +
       "end\n\n"
-    expectResult(expected)(translator.source)
+    assertResult(expected)(translator.source)
   }
 }
