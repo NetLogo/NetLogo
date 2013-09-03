@@ -8,7 +8,7 @@ class EvaluatorTests extends fixture.FunSuite {
 
   type FixtureParam = Evaluator
 
-  override def withFixture(test: OneArgTest) {
+  override def withFixture(test: OneArgTest) = {
    test(new Evaluator(new DummyAbstractWorkspace))
  }
 

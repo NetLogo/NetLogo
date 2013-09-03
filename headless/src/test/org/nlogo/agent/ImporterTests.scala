@@ -46,12 +46,12 @@ class ImporterTests extends FunSuite with OneInstancePerTest {
                               IMPORTER_USER, new StringReaderTest())
   def testGetTokenValue(testString: String, turtleBreedVar: Boolean, expected: AnyRef) {
     val result = importer.getTokenValue(testString, turtleBreedVar, false)
-    expectResult(expected)(result)
+    assertResult(expected)(result)
   }
   def testInvalidGetTokenValue(testString: String, turtleBreedVar: Boolean) {
     val result = importer.getTokenValue(testString, turtleBreedVar, false)
     if(turtleBreedVar)
-      expectResult(world.turtles)(result)
+      assertResult(world.turtles)(result)
     else
       assert(result.isInstanceOf[ImporterJ.Junk])
   }

@@ -20,7 +20,7 @@ class ExpressionParserTests extends FunSuite {
       tokenizer.tokenizeAllowingRemovedPrims(wrappedSource), None,
       StructureParser.emptyResults())
       .parse(false)
-    expectResult(1)(results.procedures.size)
+    assertResult(1)(results.procedures.size)
     val procedure = results.procedures.values.iterator.next()
     val tokens =
       new IdentifierParser(program, nvm.CompilerInterface.NoProcedures,
@@ -40,8 +40,8 @@ class ExpressionParserTests extends FunSuite {
     }).mkString
   /// helper
   def testStartAndEnd(source: String, preorderDump: String) {
-    expectResult(preorderDump)(statementsToString(compile(source, false), source))
-    expectResult(preorderDump)(
+    assertResult(preorderDump)(statementsToString(compile(source, false), source))
+    assertResult(preorderDump)(
       statementsToString(compile(source, true), source))
   }
   // preorder traversal
@@ -66,12 +66,12 @@ class ExpressionParserTests extends FunSuite {
   }
 
   def runTest(input: String, result: String) {
-    expectResult(result)(compile(input, false).mkString)
-    expectResult(result)(compile(input, true).mkString)
+    assertResult(result)(compile(input, false).mkString)
+    assertResult(result)(compile(input, true).mkString)
   }
   def runTest(input: String, result2D: String, result3D: String) {
-    expectResult(result2D)(compile(input, false).mkString)
-    expectResult(result3D)(compile(input, true).mkString)
+    assertResult(result2D)(compile(input, false).mkString)
+    assertResult(result3D)(compile(input, true).mkString)
   }
   def runFailure(input: String, message: String, start: Int, end: Int) {
     doFailure(input, message, start, end, false)
@@ -81,9 +81,9 @@ class ExpressionParserTests extends FunSuite {
     val e = intercept[CompilerException] {
       compile(input, is3D)
     }
-    expectResult(message)(e.getMessage)
-    expectResult(start + PREAMBLE.length())(e.startPos)
-    expectResult(end + PREAMBLE.length())(e.endPos)
+    assertResult(message)(e.getMessage)
+    assertResult(start + PREAMBLE.length())(e.startPos)
+    assertResult(end + PREAMBLE.length())(e.endPos)
   }
 
   /// now, the actual tests

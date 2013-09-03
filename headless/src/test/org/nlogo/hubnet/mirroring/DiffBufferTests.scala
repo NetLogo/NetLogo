@@ -10,7 +10,7 @@ class DiffBufferTests extends FunSuite {
   test("empty -> byte array") {
     val out = new DiffBuffer
     val is = new DataInputStream(new ByteArrayInputStream(out.toByteArray))
-    expectResult(DiffBuffer.EMPTY)(is.readShort)
-    expectResult(0)(is.available)
+    assertResult(DiffBuffer.EMPTY)(is.readShort)
+    assertResult(0)(is.available)
   }
 }
