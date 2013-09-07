@@ -153,7 +153,7 @@ class ReviewTab(
     RunListPanel,
     RunPanel) {
     setResizeWeight(0.0)
-    setDividerLocation(200)
+    setDividerLocation(190)
   }
 
   locally {

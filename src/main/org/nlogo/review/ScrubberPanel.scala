@@ -13,6 +13,8 @@ import javax.swing.event.ListSelectionListener
 import javax.swing.event.ListSelectionEvent
 import scala.collection.mutable.Publisher
 import scala.collection.mutable.Subscriber
+import java.awt.Dimension
+import javax.swing.SwingConstants
 
 class ScrubberPanel(
   indexedNotesTable: IndexedNotesTable,
@@ -80,8 +82,7 @@ class Scrubber(
           }
         }
       }
-    }
-  )
+    })
 }
 
 class ScrubberButtonsPanel(scrubber: JSlider) extends JPanel {
@@ -114,6 +115,13 @@ class ScrubberButton(name: String, tip: String, newValue: Int => Int, scrubber: 
   })
 }
 
+class TickPanelLabel(sizeTemplate: String) extends JLabel(sizeTemplate) {
+  setPreferredSize(getPreferredSize) // fix to size of template...
+  setText("-") // ...but start with "-"
+  setFont(getFont.deriveFont(getFont.getStyle | java.awt.Font.BOLD))
+  setHorizontalAlignment(SwingConstants.CENTER)
+}
+
 class TickPanel(
   currentFrame: () => Option[Int],
   currentTicks: () => Option[Double],
@@ -121,13 +129,10 @@ class TickPanel(
   extends JPanel {
 
   add(new JLabel("Frame:"))
-  val frame = new JLabel("-")
-  val bold = frame.getFont.deriveFont(frame.getFont.getStyle | java.awt.Font.BOLD)
-  frame.setFont(bold)
+  val frame = new TickPanelLabel("999999")
   add(frame)
   add(new JLabel("Ticks:"))
-  val tick = new JLabel("-")
-  tick.setFont(bold)
+  val tick = new TickPanelLabel("999999.99")
   add(tick)
 
   scrubber.addChangeListener(new ChangeListener {
