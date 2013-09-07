@@ -18,7 +18,6 @@ import org.nlogo.api.TrailDrawerInterface;
 import org.nlogo.api.ValueConstraint;
 import org.nlogo.api.WorldDimensionException;
 import org.nlogo.api.WorldDimensions;
-import org.nlogo.nvm.LetBinding;
 import org.nlogo.util.MersenneTwisterFast;
 
 import java.util.Arrays;
@@ -540,7 +539,7 @@ public strictfp class World
   }
 
   public Patch getPatch(int id) {
-    return (Patch) _patches.agent(id);
+    return (Patch) _patches.array()[id];
   }
 
   public Patch getPatchAt(double x, double y)
@@ -549,7 +548,7 @@ public strictfp class World
     int yc = roundY(y);
     int id = ((_worldWidth * (_maxPycor - yc))
         + xc - _minPxcor);
-    return (Patch) _patches.agent(id);
+    return (Patch) _patches.array()[id];
   }
 
   // this procedure is the same as calling getPatchAt when the topology is a torus
@@ -574,7 +573,7 @@ public strictfp class World
       yc = (fractPart > 0.5) ? intPart - 1 : intPart;
     }
     int patchid = ((_worldWidth * (_maxPycor - yc)) + xc - _minPxcor);
-    return (Patch) _patches.agent(patchid);
+    return (Patch) _patches.array()[patchid];
   }
 
   public boolean validPatchCoordinates(int xc, int yc) {
@@ -586,12 +585,12 @@ public strictfp class World
   }
 
   public Patch fastGetPatchAt(int xc, int yc) {
-    return (Patch) _patches.agent((_worldWidth * (_maxPycor - yc))
-                                  + xc - _minPxcor);
+    return (Patch) _patches.array()[(_worldWidth * (_maxPycor - yc))
+                                    + xc - _minPxcor];
   }
 
   public Turtle getTurtle(long id) {
-    return (Turtle) _turtles.agent(id);
+    return (Turtle) _turtles.getAgent(Double.valueOf(id));
   }
 
   public Link getLink(Object end1, Object end2, AgentSet breed) {
@@ -739,7 +738,9 @@ public strictfp class World
         agents.clear();
     }
 
+    if (_turtles != null) _turtles.clear(); // so a SimpleChangeEvent is published
     _turtles = new TreeAgentSet(AgentKindJ.Turtle(), "TURTLES");
+    if (_links != null) _links.clear(); // so a SimpleChangeEvent is published
     _links = new TreeAgentSet(AgentKindJ.Link(), "LINKS");
 
     int x = minPxcor;

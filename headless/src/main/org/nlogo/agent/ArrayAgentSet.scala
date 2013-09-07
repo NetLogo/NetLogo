@@ -15,7 +15,7 @@ import
 class ArrayAgentSet(
   kind: api.AgentKind,
   printName: String,
-  array: Array[Agent])
+  val array: Array[Agent])
 extends AgentSet(kind, printName, false, false, false) {
 
   /// conversions
@@ -69,20 +69,6 @@ extends AgentSet(kind, printName, false, false, false) {
   }
 
   /// one-agent queries
-
-  override def agent(l: Long): Agent = {
-    val i = l.toInt
-    if (!kind.mortal)
-      array(i)
-    else {
-      val agent = array(i)
-      if (agent.id == -1) {
-        array(i) = null
-        null
-      }
-      else agent
-    }
-  }
 
   override def getAgent(id: AnyRef) =
     array(id.asInstanceOf[java.lang.Double].intValue)

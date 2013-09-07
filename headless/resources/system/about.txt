@@ -155,7 +155,7 @@ This software is not designed or intended for use in on-line control of aircraft
 
 ==
 
-For Java bytecode generation, NetLogo uses the ASM library.  It is distributed under the following license:
+For JVM bytecode generation, NetLogo uses the ASM library.  It is distributed under the following license:
 
 Copyright (c) 2000-2010 INRIA, France Telecom. All rights reserved.
 

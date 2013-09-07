@@ -4,7 +4,7 @@ package org.nlogo.agent
 
 import
   org.nlogo.api,
-    api.{ AgentKind, LogoList },
+    api.{ AgentKind, LogoList, SimpleChangeEventPublisher },
   org.nlogo.util.MersenneTwisterFast
 
 // Used only for the all-turtles, all-links, and breed agentsets.
@@ -21,6 +21,8 @@ extends AgentSet(kind, printName, true, false, false) {
   override val agents: java.lang.Iterable[api.Agent] =
     _agents.values.asInstanceOf[java.lang.Iterable[api.Agent]]
 
+  val simpleChangeEventPublisher = new SimpleChangeEventPublisher
+
   override def count = _agents.size
 
   override def isEmpty = _agents.isEmpty
@@ -32,24 +34,6 @@ extends AgentSet(kind, printName, true, false, false) {
       if (!contains(iter.next().asInstanceOf[Agent]))
         return false
     true
-  }
-
-  override def agent(i: Long): Agent = {
-    val index = Double.box(i)
-    kind match {
-      case AgentKind.Turtle | AgentKind.Link =>
-        val agent = _agents.get(index)
-        if (agent == null)
-          null
-        else if (agent.id == -1) {
-          _agents.remove(index)
-          null
-        }
-        else
-          agent
-      case _ =>
-        _agents.get(index)
-    }
   }
 
   override def getAgent(id: AnyRef): Agent =
@@ -65,15 +49,18 @@ extends AgentSet(kind, printName, true, false, false) {
     require(kind == agent.kind)
     _agents.put(agent.agentKey, agent)
     nextIndex = nextIndex max (agent.id + 1)
+    simpleChangeEventPublisher.publish()
   }
 
   // made public for mutable agentset operations
   def remove(key: AnyRef) {
     _agents.remove(key)
+    simpleChangeEventPublisher.publish()
   }
 
   def clear() {
     _agents.clear()
+    simpleChangeEventPublisher.publish()
   }
 
   override def contains(agent: api.Agent): Boolean =
