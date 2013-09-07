@@ -34,7 +34,7 @@ class AgentTypeCheckerTests extends FunSuite {
   def testOne(source: String, expected: String, is3D: Boolean) {
     val defs = compile(source, is3D)
     val buf = new StringBuilder
-    expectResult(expected)(
+    assertResult(expected)(
       defs.map { pd: parse.ProcedureDefinition =>
           pd.procedure.name + ":" + pd.procedure.usableBy }
         .mkString(" "))
@@ -47,7 +47,7 @@ class AgentTypeCheckerTests extends FunSuite {
     val e = intercept[CompilerException] {
       compile(source, is3D)
     }
-    expectResult(error)(e.getMessage)
+    assertResult(error)(e.getMessage)
   }
   /// tests not involving blocks (easy)
   test("easy1") { testBoth("to foo end", "FOO:OTPL") }

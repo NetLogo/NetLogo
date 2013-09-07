@@ -13,7 +13,7 @@ class AutoConverter1Tests extends FunSuite {
   }
 
   def test(version:String,before:String,after:String,subprogram:Boolean) {
-    expectResult(after) {
+    assertResult(after) {
       new AutoConverter1(Parser.Tokenizer2D)
         .convert(before, subprogram, false,"NetLogo " + version)
     }
