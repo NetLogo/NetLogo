@@ -173,7 +173,7 @@ extends scala.util.parsing.combinator.Parsers {
   def nonKeyword: Parser[Token] =
     acceptMatch("?", {
       case token @ Token(_, tpe, _)
-          if (tpe != TokenType.Keyword) =>
+          if (tpe != TokenType.Keyword && tpe != TokenType.Eof) =>
         token })
 
 }
