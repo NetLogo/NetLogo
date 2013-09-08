@@ -539,7 +539,7 @@ public strictfp class World
   }
 
   public Patch getPatch(int id) {
-    return (Patch) _patches.agent(id);
+    return (Patch) _patches.array()[id];
   }
 
   public Patch getPatchAt(double x, double y)
@@ -548,7 +548,7 @@ public strictfp class World
     int yc = roundY(y);
     int id = ((_worldWidth * (_maxPycor - yc))
         + xc - _minPxcor);
-    return (Patch) _patches.agent(id);
+    return (Patch) _patches.array()[id];
   }
 
   // this procedure is the same as calling getPatchAt when the topology is a torus
@@ -573,7 +573,7 @@ public strictfp class World
       yc = (fractPart > 0.5) ? intPart - 1 : intPart;
     }
     int patchid = ((_worldWidth * (_maxPycor - yc)) + xc - _minPxcor);
-    return (Patch) _patches.agent(patchid);
+    return (Patch) _patches.array()[patchid];
   }
 
   public boolean validPatchCoordinates(int xc, int yc) {
@@ -585,12 +585,12 @@ public strictfp class World
   }
 
   public Patch fastGetPatchAt(int xc, int yc) {
-    return (Patch) _patches.agent((_worldWidth * (_maxPycor - yc))
-                                  + xc - _minPxcor);
+    return (Patch) _patches.array()[(_worldWidth * (_maxPycor - yc))
+                                    + xc - _minPxcor];
   }
 
   public Turtle getTurtle(long id) {
-    return (Turtle) _turtles.agent(id);
+    return (Turtle) _turtles.getAgent(Double.valueOf(id));
   }
 
   public Link getLink(Object end1, Object end2, AgentSet breed) {

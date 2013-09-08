@@ -8,7 +8,7 @@ package org.nlogo.headless
 import org.scalatest.{ FunSuite, BeforeAndAfterEach }
 import org.nlogo.{ api, nvm }
 
-class TestErrorMessages extends AbstractTestLanguage with FunSuite with BeforeAndAfterEach {
+class TestErrorMessages extends FunSuite with AbstractTestLanguage with BeforeAndAfterEach {
 
   override def beforeEach() { init() }
   override def afterEach() { workspace.dispose() }
@@ -24,10 +24,10 @@ class TestErrorMessages extends AbstractTestLanguage with FunSuite with BeforeAn
         "[age = ([age] of [spots] of self)]]")
     }
     // is the error message correct?
-    expectResult("That frog is dead.")(ex.getMessage)
+    assertResult("That frog is dead.")(ex.getMessage)
     // is the error message attributed to the right agent? frog 2 is dead,
     // but it's frog 1 that actually encountered the error
-    expectResult("frog 1")(ex.context.agent.toString)
+    assertResult("frog 1")(ex.context.agent.toString)
   }
 
   test("argumentTypeException") {
@@ -36,8 +36,8 @@ class TestErrorMessages extends AbstractTestLanguage with FunSuite with BeforeAn
       testCommand("__ignore 0 < position 5 item 0 glob1") }
     val message =
       "POSITION expected input to be a string or list but got the number 1.4 instead."
-    expectResult(message)(ex.getMessage)
-    expectResult("POSITION")(ex.instruction.token.name.toUpperCase)
+    assertResult(message)(ex.getMessage)
+    assertResult("POSITION")(ex.instruction.token.name.toUpperCase)
   }
 
   test("breedOwnRedeclaration") {
@@ -47,7 +47,7 @@ class TestErrorMessages extends AbstractTestLanguage with FunSuite with BeforeAn
         api.Program.empty,
         workspace.getExtensionManager)
     }
-    expectResult("Redeclaration of HUNTERS-OWN")(ex.getMessage)
+    assertResult("Redeclaration of HUNTERS-OWN")(ex.getMessage)
   }
 
 }

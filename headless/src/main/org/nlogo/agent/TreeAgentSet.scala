@@ -36,24 +36,6 @@ extends AgentSet(kind, printName, true, false, false) {
     true
   }
 
-  override def agent(i: Long): Agent = {
-    val index = Double.box(i)
-    kind match {
-      case AgentKind.Turtle | AgentKind.Link =>
-        val agent = _agents.get(index)
-        if (agent == null)
-          null
-        else if (agent.id == -1) {
-          _agents.remove(index)
-          null
-        }
-        else
-          agent
-      case _ =>
-        _agents.get(index)
-    }
-  }
-
   override def getAgent(id: AnyRef): Agent =
     _agents.get(id)
 
