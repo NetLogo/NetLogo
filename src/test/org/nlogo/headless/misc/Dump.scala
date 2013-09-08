@@ -7,9 +7,10 @@ import org.nlogo.workspace.ModelsLibrary
 import org.nlogo.agent.Observer
 import org.nlogo.api.SimpleJobOwner
 
-// This is used by the "bench" target in the Makefile.  You can __dump a compiled model
-// to stdout, or replace all of the benchmark model dumps in test/benchdumps, or dump
-// the whole models library to target/dumps. - ST 2/11/09
+// This is accessible through the "bench" task in the sbt build.  It makes it convenient
+// to run the `__dump` command on a particular models, or on whole groups of models.
+// You can dump a compiled model to stdout, or replace all of the benchmark model dumps
+// in test/benchdumps, or dump the whole models library to tmp/dumps. - ST 2/11/09, 8/21/13
 
 object Dump {
   def main(argv:Array[String]) {

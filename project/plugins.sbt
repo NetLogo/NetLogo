@@ -1,5 +1,4 @@
-// available for sbt 0.13?  once it is, also reenable in nightly.sh
-// addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "0.3.2")
+ addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "0.3.2")
 
 addSbtPlugin("org.ensime" % "ensime-sbt-cmd" % "0.1.2")
 

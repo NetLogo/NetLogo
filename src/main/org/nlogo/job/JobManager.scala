@@ -88,7 +88,6 @@ class JobManager(jobManagerOwner: JobManagerOwner,
       case _ =>
         // this shouldn't happen because patches shouldn't be joining.
         // ev 9/29/06
-        println("erowiejrwoeijrwoeijr wtf")
         throw new IllegalStateException()
     }
   }

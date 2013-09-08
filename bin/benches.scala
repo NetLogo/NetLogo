@@ -7,6 +7,8 @@ import collection.mutable.{ HashMap, ListBuffer, HashSet }
 val results = new HashMap[String, ListBuffer[Double]]
 val haveGoodResult = new HashSet[String]
 
+Process(Seq("mkdir", "-p", "tmp")).!
+
 Process(Seq("./sbt", "run-main org.nlogo.headless.Main --fullversion"))
   .lines.foreach(println)
 

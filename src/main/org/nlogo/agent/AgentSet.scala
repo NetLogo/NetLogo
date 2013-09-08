@@ -29,7 +29,6 @@ extends api.AgentSet {
   def equalAgentSetsHelper(otherSet: api.AgentSet): Boolean
   def iterator: AgentIterator
   def shufflerator(rng: util.MersenneTwisterFast): AgentIterator
-  def agent(id: Long): Agent
   def getAgent(id: AnyRef): Agent
   def randomOne(precomputedCount: Int, random: Int): Agent
   def randomTwo(precomputedCount: Int, random1: Int, random2: Int): Array[Agent]

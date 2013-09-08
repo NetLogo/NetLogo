@@ -44,7 +44,7 @@ libraryDependencies in ThisBuild ++= Seq(
   "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
   "org.jmock" % "jmock-junit4" % "2.5.1" % "test",
   "org.scalacheck" %% "scalacheck" % "1.10.1" % "test",
-  "org.scalatest" %% "scalatest" % "2.0.RC1-SNAP4" % "test"
+  "org.scalatest" %% "scalatest" % "2.0.M6" % "test"
 )
 
 artifactName := { (_, _, _) => "NetLogoHeadless.jar" }
@@ -91,5 +91,4 @@ seq(ChecksumsAndPreviews.settings: _*)
 
 seq(Scaladoc.settings: _*)
 
-// supported yet in sbt 0.13?
-// org.scalastyle.sbt.ScalastylePlugin.Settings
+org.scalastyle.sbt.ScalastylePlugin.Settings
