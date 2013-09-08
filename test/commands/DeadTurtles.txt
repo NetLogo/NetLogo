@@ -66,3 +66,11 @@ DeadTurtles8
   O> set glob1 turtles with [true]
   T> die
   O> without-interruption [ ask glob1 [ die ] ]
+
+DeadTurtles9
+  globals [glob1]
+  O> crt 10
+  O> set glob1 turtles with [true]
+  O> ask turtle 5 [ die ]
+  turtle 5 => nobody
+  count glob1 => 9
