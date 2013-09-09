@@ -11,12 +11,7 @@ import java.util.HashSet;
 // ArrayAgentSets are only used for agentsets which are never added to
 // after they are initially created.  However note that turtles and
 // links can die, so we may end up with an array containing some dead
-// agents (agents with id -1).  There is some code below that attempts
-// to replace dead agents with nulls (so the dead agents can be
-// garbage colleted), but that's not guaranteed to happen, so the
-// contents of the array may be any mixture of live agents, dead
-// agents, and nulls. - ST 7/24/07
-
+// agents (agents with id -1). NP 2013-08-28.
 public final strictfp class ArrayAgentSet
     extends AgentSet {
   Agent[] agents;
@@ -106,30 +101,9 @@ public final strictfp class ArrayAgentSet
     capacity = initialCapacity;
   }
 
-  // Nicolas noticed that the nulling-out that happens here is
-  // questionable.  the idea behind it seems sound -- try to make dead
-  // agents eligible for GC -- but in order for it to really help we'd
-  // need to do nulling-out in more places, and we'd also need to add
-  // null checks elsewhere that currently don't exist.  the
-  // nulling-out here hasn't caused any trouble in practice because
-  // this method is actually never called except in Topology.diffuse,
-  // but in that context it's always a patch set so death isn't an
-  // issue.  this whole method should be removed outright, but I'm
-  // leaving it in on the 5.0.x branch on the offchance some random
-  // extension is using it. - ST 7/15/13
   @Override
   public Agent agent(long i) {
-    if (type == Turtle.class || type == Link.class) {
-      Agent agent = agents[(int) i];
-      if (agent.id == -1) {
-        agents[(int) i] = null;
-        return null;
-      } else {
-        return agent;
-      }
-    } else {
-      return agents[(int) i];
-    }
+    return agents[(int) i];
   }
 
   @Override
