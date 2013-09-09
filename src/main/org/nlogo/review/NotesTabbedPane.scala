@@ -2,28 +2,27 @@
 
 package org.nlogo.review
 
-import scala.language.existentials
 import java.awt.BorderLayout
+
+import scala.language.existentials
+
 import org.nlogo.mirror.IndexedNote
 import org.nlogo.swing.Implicits.thunk2action
 import org.nlogo.swing.RichJButton
-import javax.swing.{
-  AbstractCellEditor,
-  JButton,
-  JDialog,
-  JFrame,
-  JPanel,
-  JScrollPane,
-  JTabbedPane,
-  JTable,
-  JTextArea,
-  SwingUtilities
-}
-import javax.swing.table.{
-  AbstractTableModel,
-  TableCellEditor,
-  TableCellRenderer
-}
+
+import javax.swing.AbstractCellEditor
+import javax.swing.JButton
+import javax.swing.JDialog
+import javax.swing.JFrame
+import javax.swing.JPanel
+import javax.swing.JScrollPane
+import javax.swing.JTabbedPane
+import javax.swing.JTable
+import javax.swing.JTextArea
+import javax.swing.SwingUtilities
+import javax.swing.table.AbstractTableModel
+import javax.swing.table.TableCellEditor
+import javax.swing.table.TableCellRenderer
 
 class NotesTabbedPane(tabState: ReviewTabState) extends JTabbedPane {
   val indexedNotesTable = new IndexedNotesTable(tabState)

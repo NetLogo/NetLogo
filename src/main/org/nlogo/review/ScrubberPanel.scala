@@ -3,18 +3,18 @@
 package org.nlogo.review
 
 import java.awt.BorderLayout
-import java.beans.{ PropertyChangeEvent, PropertyChangeListener }
-import org.nlogo.api
-import javax.swing.{ JButton, JLabel, JPanel, JSlider }
-import javax.swing.event.{ ChangeEvent, ChangeListener }
-import scala.math.BigDecimal
-import scala.math.BigDecimal.RoundingMode
-import javax.swing.event.ListSelectionListener
-import javax.swing.event.ListSelectionEvent
-import scala.collection.mutable.Publisher
-import scala.collection.mutable.Subscriber
-import java.awt.Dimension
+import java.beans.PropertyChangeEvent
+import java.beans.PropertyChangeListener
+
+import javax.swing.JButton
+import javax.swing.JLabel
+import javax.swing.JPanel
+import javax.swing.JSlider
 import javax.swing.SwingConstants
+import javax.swing.event.ChangeEvent
+import javax.swing.event.ChangeListener
+import javax.swing.event.ListSelectionEvent
+import javax.swing.event.ListSelectionListener
 
 class ScrubberPanel(
   indexedNotesTable: IndexedNotesTable,

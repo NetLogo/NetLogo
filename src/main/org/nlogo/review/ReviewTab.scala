@@ -8,21 +8,22 @@ import scala.Option.option2Iterable
 import scala.collection.JavaConverters.asScalaBufferConverter
 
 import org.nlogo.api
-import org.nlogo.awt.UserCancelException
 import org.nlogo.mirror.ModelRunIO
-import org.nlogo.util.Exceptions.ignoring
 import org.nlogo.window
-import org.nlogo.window.{ InvalidVersionException, ModelLoader, MonitorWidget, Widget }
+import org.nlogo.window.ModelLoader
+import org.nlogo.window.MonitorWidget
+import org.nlogo.window.Widget
 
-import javax.swing.{ JOptionPane, JPanel, JScrollPane, JSplitPane }
-import javax.swing.event.{
-  ChangeEvent,
-  ChangeListener,
-  DocumentEvent,
-  DocumentListener,
-  TableModelEvent,
-  TableModelListener
-}
+import javax.swing.JOptionPane
+import javax.swing.JPanel
+import javax.swing.JScrollPane
+import javax.swing.JSplitPane
+import javax.swing.event.ChangeEvent
+import javax.swing.event.ChangeListener
+import javax.swing.event.DocumentEvent
+import javax.swing.event.DocumentListener
+import javax.swing.event.TableModelEvent
+import javax.swing.event.TableModelListener
 
 case class WidgetHook(
   val widget: Widget,

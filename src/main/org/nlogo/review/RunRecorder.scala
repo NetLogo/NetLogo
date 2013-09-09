@@ -5,9 +5,14 @@ package org.nlogo.review
 import scala.collection.mutable.Publisher
 
 import org.nlogo.api
-import org.nlogo.mirror.{ FixedViewSettings, Frame, Mirrorables, ModelRun }
+import org.nlogo.mirror.FixedViewSettings
+import org.nlogo.mirror.Frame
+import org.nlogo.mirror.Mirrorables
+import org.nlogo.mirror.ModelRun
 import org.nlogo.swing.Implicits.thunk2runnable
-import org.nlogo.window.{ GUIWorkspace, MonitorWidget, WidgetWrapperInterface }
+import org.nlogo.window.GUIWorkspace
+import org.nlogo.window.MonitorWidget
+import org.nlogo.window.WidgetWrapperInterface
 
 import javax.swing.JOptionPane
 

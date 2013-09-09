@@ -2,7 +2,8 @@
 
 package org.nlogo.review
 
-import java.awt.Color.{ GRAY, WHITE }
+import java.awt.Color.GRAY
+import java.awt.Color.WHITE
 
 import org.nlogo.mirror.FakeWorld
 import org.nlogo.window

@@ -4,8 +4,11 @@ package org.nlogo.review
 
 import scala.Array.fallbackCanBuildFrom
 import scala.Option.option2Iterable
+
 import org.nlogo.awt.UserCancelException
+import org.nlogo.mirror.ModelRun
 import org.nlogo.util.Exceptions.ignoring
+
 import javax.swing.AbstractAction
 import javax.swing.ImageIcon
 import javax.swing.JButton
@@ -13,7 +16,6 @@ import javax.swing.JCheckBox
 import javax.swing.JFileChooser
 import javax.swing.JOptionPane
 import javax.swing.filechooser.FileNameExtensionFilter
-import org.nlogo.mirror.ModelRun
 
 class ActionButton(name: String, icon: String, fn: () => Unit)
   extends JButton(new ReviewAction(name, icon, fn))

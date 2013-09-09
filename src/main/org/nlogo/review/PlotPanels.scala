@@ -2,10 +2,13 @@
 
 package org.nlogo.review
 
-import java.awt.{ Graphics, Graphics2D }
+import java.awt.Graphics
+import java.awt.Graphics2D
 
 import org.nlogo.plot.Plot
-import org.nlogo.window.{ InterfaceColors, PlotWidget, PlotWidgetGUI }
+import org.nlogo.window.InterfaceColors
+import org.nlogo.window.PlotWidget
+import org.nlogo.window.PlotWidgetGUI
 
 import javax.swing.JPanel
 

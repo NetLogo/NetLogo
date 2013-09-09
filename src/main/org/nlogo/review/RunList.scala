@@ -2,10 +2,14 @@
 
 package org.nlogo.review
 
-import org.nlogo.mirror.ModelRun
-import javax.swing.{ BorderFactory, JList, ListSelectionModel }
-import javax.swing.event.{ ListSelectionEvent, ListSelectionListener }
 import org.nlogo.awt.UserCancelException
+import org.nlogo.mirror.ModelRun
+
+import javax.swing.BorderFactory
+import javax.swing.JList
+import javax.swing.ListSelectionModel
+import javax.swing.event.ListSelectionEvent
+import javax.swing.event.ListSelectionListener
 
 class RunList(reviewTab: ReviewTab)
   extends JList(reviewTab.state)
