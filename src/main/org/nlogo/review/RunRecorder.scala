@@ -5,6 +5,7 @@ package org.nlogo.review
 import scala.collection.mutable.Publisher
 
 import org.nlogo.api
+import org.nlogo.api.ReporterRunnable.thunk2ReporterRunnable
 import org.nlogo.mirror.FixedViewSettings
 import org.nlogo.mirror.Frame
 import org.nlogo.mirror.Mirrorables
@@ -24,8 +25,8 @@ class RunRecorder(
   tabState: ReviewTabState,
   saveModel: () => String,
   widgetHooks: () => Seq[WidgetHook],
-  disableRecording: () => Unit
-  ) extends Publisher[RunRecorderEvent] {
+  disableRecording: () => Unit)
+  extends Publisher[RunRecorderEvent] {
   override type Pub = Publisher[RunRecorderEvent]
 
   private val plotActionBuffer = new api.ActionBuffer(ws.plotManager)
@@ -34,17 +35,16 @@ class RunRecorder(
 
   ws.listenerManager.addListener(
     new api.NetLogoAdapter {
-      override def requestedDisplayUpdate() {
-        if (tabState.recordingEnabled) {
-          if (!tabState.currentlyRecording) {
-            ws.waitFor(() => startNewRun())
+      override def requestedDisplayUpdate() { // called from job thread
+        if (ws.waitForResult(() => tabState.recordingEnabled)) {
+          ws.waitFor { () =>
+            if (!tabState.currentlyRecording) startNewRun()
           }
-          updateMonitors()
-          // switch from job thread to event thread
+          updateMonitors() // this must be called from job thread
           ws.waitFor(() => grab())
         }
       }
-      override def afterModelOpened() {
+      override def afterModelOpened() { // called from event thread
         stopRecording()
         for {
           run <- tabState.currentRun
@@ -55,8 +55,8 @@ class RunRecorder(
           tabState.currentRun = None
         }
       }
-      override def tickCounterChanged(ticks: Double) {
-        if (ticks == -1.0) stopRecording()
+      override def tickCounterChanged(ticks: Double) { // called from job thread
+        if (ticks == -1.0) ws.waitFor(() => stopRecording())
       }
     })
 
