@@ -81,7 +81,7 @@ class ReviewTab(
     () => state.currentTicks,
     state,
     runRecorder)
-  val reviewToolBar = new ReviewToolBar(this)
+  val reviewToolBar = new ReviewToolBar(this, runRecorder)
   val interfacePanel = new InterfacePanel(this)
 
   scrubberPanel.scrubber.addChangeListener(new ChangeListener {

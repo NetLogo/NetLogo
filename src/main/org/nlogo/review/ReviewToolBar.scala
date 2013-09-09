@@ -9,17 +9,43 @@ import org.nlogo.api.ModelRun
 import org.nlogo.awt.UserCancelException
 import org.nlogo.util.Exceptions.ignoring
 
-import javax.swing.{ AbstractAction, ImageIcon, JButton, JCheckBox, JFileChooser, JOptionPane }
+import javax.swing.AbstractAction
+import javax.swing.ImageIcon
+import javax.swing.JButton
+import javax.swing.JCheckBox
+import javax.swing.JFileChooser
+import javax.swing.JOptionPane
 import javax.swing.filechooser.FileNameExtensionFilter
 
 class ActionButton(name: String, icon: String, fn: () => Unit)
   extends JButton(new ReviewAction(name, icon, fn))
 
-class ReviewToolBar(reviewTab: ReviewTab)
-  extends org.nlogo.swing.ToolBar
-  with ReviewTabState#Sub {
+class RunRecorderSub(runRecorderPub: RunRecorder#Pub, saveButton: JButton) extends RunRecorder#Sub {
+  runRecorderPub.subscribe(this)
+  override def notify(pub: RunRecorder#Pub, event: RunRecorderEvent) {
+    event match {
+      case FrameAddedEvent(run, _) => saveButton.setEnabled(run.dirty)
+      case _ =>
+    }
+  }
+}
 
-  reviewTab.state.subscribe(this)
+class ReviewTabStateSub(reviewTabStatePub: ReviewTabState#Pub, reviewToolBar: ReviewToolBar)
+  extends ReviewTabState#Sub {
+  override def notify(reviewTabStatePub: ReviewTabState#Pub, event: CurrentRunChangeEvent) {
+    reviewTabStatePub.subscribe(this)
+    event match {
+      case AfterCurrentRunChangeEvent(_, newRun) =>
+        Seq(reviewToolBar.renameButton, reviewToolBar.closeCurrentButton, reviewToolBar.closeAllButton)
+          .foreach(_.setEnabled(newRun.isDefined))
+        reviewToolBar.saveButton.setEnabled(newRun.map(_.dirty).getOrElse(false))
+      case _ =>
+    }
+  }
+}
+
+class ReviewToolBar(reviewTab: ReviewTab, runRecorderPub: RunRecorder#Pub)
+  extends org.nlogo.swing.ToolBar {
 
   val saveButton = new ActionButton("Save", "save", () => saveRun(reviewTab))
   val loadButton = new ActionButton("Load", "open", () => loadRun(reviewTab))
@@ -31,6 +57,9 @@ class ReviewToolBar(reviewTab: ReviewTab)
   Seq(saveButton, renameButton, closeCurrentButton, closeAllButton)
     .foreach(_.setEnabled(false))
 
+  val runRecorderSub = new RunRecorderSub(runRecorderPub, saveButton)
+  val reviewTabStateSub = new ReviewTabStateSub(reviewTab.state, this)
+
   override def addControls() {
     add(saveButton)
     add(loadButton)
@@ -39,16 +68,6 @@ class ReviewToolBar(reviewTab: ReviewTab)
     add(closeAllButton)
     add(new org.nlogo.swing.ToolBar.Separator)
     add(enabledCheckBox)
-  }
-
-  override def notify(pub: ReviewTabState#Pub, event: CurrentRunChangeEvent) {
-    event match {
-      case AfterCurrentRunChangeEvent(_, newRun) =>
-        Seq(renameButton, closeCurrentButton, closeAllButton)
-          .foreach(_.setEnabled(newRun.isDefined))
-        saveButton.setEnabled(newRun.map(_.dirty).getOrElse(false))
-      case _ =>
-    }
   }
 
   def saveRun(reviewTab: ReviewTab) {
@@ -99,7 +118,7 @@ class ReviewToolBar(reviewTab: ReviewTab)
             Right(run)
           } catch {
             case e: UserCancelException => throw e // stop now if user cancels
-            case e: Exception           => Left(path) // accumulate other exceptions
+            case e: Exception => Left(path) // accumulate other exceptions
           }
         }
       val loadedRuns = results.flatMap(_.right.toOption)
@@ -120,7 +139,7 @@ class ReviewToolBar(reviewTab: ReviewTab)
       }
     } catch {
       case _: UserCancelException => // do nothing
-      case e: Exception           => throw e // rethrow anything else
+      case e: Exception => throw e // rethrow anything else
     }
   }
 
