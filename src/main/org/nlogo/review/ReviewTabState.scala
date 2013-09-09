@@ -7,7 +7,7 @@ import org.nlogo.mirror.ModelRun
 import javax.swing.AbstractListModel
 
 class ReviewTabState(
-  private var _runs: IndexedSeq[ModelRun] = IndexedSeq.empty,
+  private var _runs: Vector[ModelRun] = Vector.empty,
   private var _recordingEnabled: Boolean = false)
   extends AbstractListModel
   with HasCurrentRun
@@ -30,7 +30,7 @@ class ReviewTabState(
 
   def reset() {
     val lastIndex = _runs.size - 1
-    _runs = IndexedSeq[ModelRun]()
+    _runs = Vector[ModelRun]()
     currentRun = None
     fireIntervalRemoved(this, 0, lastIndex)
   }
