@@ -4,11 +4,8 @@ package org.nlogo.review
 
 import scala.Array.fallbackCanBuildFrom
 import scala.Option.option2Iterable
-
-import org.nlogo.api.ModelRun
 import org.nlogo.awt.UserCancelException
 import org.nlogo.util.Exceptions.ignoring
-
 import javax.swing.AbstractAction
 import javax.swing.ImageIcon
 import javax.swing.JButton
@@ -16,6 +13,7 @@ import javax.swing.JCheckBox
 import javax.swing.JFileChooser
 import javax.swing.JOptionPane
 import javax.swing.filechooser.FileNameExtensionFilter
+import org.nlogo.mirror.ModelRun
 
 class ActionButton(name: String, icon: String, fn: () => Unit)
   extends JButton(new ReviewAction(name, icon, fn))
@@ -47,8 +45,8 @@ class ReviewToolBar(reviewTab: ReviewTab, runRecorderPub: RunRecorder#Pub)
   val saveButton = new ActionButton("Save", "save", () => saveRun(reviewTab))
   val loadButton = new ActionButton("Load", "open", () => loadRun(reviewTab))
   val renameButton = new ActionButton("Rename", "edit", () => rename(reviewTab))
-  val closeCurrentButton = new ActionButton("Close", "close", () => closeCurrentRun(reviewTab))
-  val closeAllButton = new ActionButton("Close all", "close-all", () => closeAll(reviewTab))
+  val closeCurrentButton = new ActionButton("Close", "close", () => closeCurrentRun())
+  val closeAllButton = new ActionButton("Close all", "close-all", () => closeAll())
   val enabledCheckBox = new EnabledCheckBox(reviewTab.state)
 
   refreshButtons()
@@ -164,28 +162,41 @@ class ReviewToolBar(reviewTab: ReviewTab, runRecorderPub: RunRecorder#Pub)
     }
   }
 
-  def closeCurrentRun(reviewTab: ReviewTab) {
-    for (run <- reviewTab.state.currentRun) {
-      if (!run.dirty ||
-        reviewTab.userConfirms("Close current run",
-          "The current run has unsaved data. Are you sure you want to close the current run?")) {
-        reviewTab.state.closeCurrentRun()
-        // select the new current run if there is one:
-        reviewTab.state.currentRun.foreach(reviewTab.runList.setSelectedValue(_, true))
-        saveButton.setEnabled(reviewTab.state.currentRun.map(_.dirty).getOrElse(false))
-      }
+  def closeCurrentRun(): Int = {
+    import JOptionPane._
+    def confirm(run: ModelRun): Int = {
+      val message = "The following run:\n\n" + run.name + "\n\n" +
+        "...has unsaved data. Do you want to save it before closing?"
+      JOptionPane.showConfirmDialog(reviewTab, message,
+        "Close run", YES_NO_CANCEL_OPTION)
     }
-  }
-
-  def closeAll(reviewTab: ReviewTab) {
-    if (reviewTab.state.runs.exists(_.dirty))
-      if (reviewTab.userConfirms("Close all runs",
-        "Some runs have unsaved data. Are you sure you want to close all runs?")) {
-        reviewTab.state.reset()
-        saveButton.setEnabled(false)
+    def close() {
+      reviewTab.state.closeCurrentRun()
+      // select the new current run if there is one:
+      for (run <- reviewTab.state.currentRun)
+        reviewTab.runList.setSelectedValue(run, true)
+    }
+    reviewTab.state.currentRun.map { run =>
+      val answer =
+        if (run.dirty) confirm(run)
+        else NO_OPTION // if run not dirty, don't save
+      answer match {
+        case YES_OPTION =>
+          saveRun(reviewTab)
+          close()
+        case NO_OPTION =>
+          close()
+        case CANCEL_OPTION => // do nothing
       }
+      refreshButtons()
+      answer
+    }.getOrElse(CANCEL_OPTION) // no current run returns CANCEL
   }
 
+  def closeAll(): Unit = {
+    Iterator.continually(closeCurrentRun())
+      .find(_ == JOptionPane.CANCEL_OPTION) // user cancels or no more runs
+  }
 }
 
 class EnabledCheckBox(tabState: ReviewTabState) extends JCheckBox {
