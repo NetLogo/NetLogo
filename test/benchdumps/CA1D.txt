@@ -3195,7 +3195,7 @@ procedure LIST-RULES:[RULES]{OTPL}:
                 INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
                L1
                 ARETURN
-          _asm_procedurelistrules_constlist_3 "" => LogoList
+          _asm_procedurelistrules_constlist_3 "[false false false]" => LogoList
                L0
                 ALOAD 0
                 GETFIELD org/nlogo/prim/_asm_procedurelistrules_constlist_3.kept1_value : Lorg/nlogo/api/LogoList;
@@ -3238,7 +3238,7 @@ procedure LIST-RULES:[RULES]{OTPL}:
                 INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
                L1
                 ARETURN
-          _asm_procedurelistrules_constlist_7 "" => LogoList
+          _asm_procedurelistrules_constlist_7 "[false false true ]" => LogoList
                L0
                 ALOAD 0
                 GETFIELD org/nlogo/prim/_asm_procedurelistrules_constlist_7.kept1_value : Lorg/nlogo/api/LogoList;
@@ -3281,7 +3281,7 @@ procedure LIST-RULES:[RULES]{OTPL}:
                 INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
                L1
                 ARETURN
-          _asm_procedurelistrules_constlist_11 "" => LogoList
+          _asm_procedurelistrules_constlist_11 "[false true  false]" => LogoList
                L0
                 ALOAD 0
                 GETFIELD org/nlogo/prim/_asm_procedurelistrules_constlist_11.kept1_value : Lorg/nlogo/api/LogoList;
@@ -3324,7 +3324,7 @@ procedure LIST-RULES:[RULES]{OTPL}:
                 INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
                L1
                 ARETURN
-          _asm_procedurelistrules_constlist_15 "" => LogoList
+          _asm_procedurelistrules_constlist_15 "[false true  true ]" => LogoList
                L0
                 ALOAD 0
                 GETFIELD org/nlogo/prim/_asm_procedurelistrules_constlist_15.kept1_value : Lorg/nlogo/api/LogoList;
@@ -3367,7 +3367,7 @@ procedure LIST-RULES:[RULES]{OTPL}:
                 INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
                L1
                 ARETURN
-          _asm_procedurelistrules_constlist_19 "" => LogoList
+          _asm_procedurelistrules_constlist_19 "[true  false false]" => LogoList
                L0
                 ALOAD 0
                 GETFIELD org/nlogo/prim/_asm_procedurelistrules_constlist_19.kept1_value : Lorg/nlogo/api/LogoList;
@@ -3410,7 +3410,7 @@ procedure LIST-RULES:[RULES]{OTPL}:
                 INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
                L1
                 ARETURN
-          _asm_procedurelistrules_constlist_23 "" => LogoList
+          _asm_procedurelistrules_constlist_23 "[true  false true ]" => LogoList
                L0
                 ALOAD 0
                 GETFIELD org/nlogo/prim/_asm_procedurelistrules_constlist_23.kept1_value : Lorg/nlogo/api/LogoList;
@@ -3453,7 +3453,7 @@ procedure LIST-RULES:[RULES]{OTPL}:
                 INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
                L1
                 ARETURN
-          _asm_procedurelistrules_constlist_27 "" => LogoList
+          _asm_procedurelistrules_constlist_27 "[true  true  false]" => LogoList
                L0
                 ALOAD 0
                 GETFIELD org/nlogo/prim/_asm_procedurelistrules_constlist_27.kept1_value : Lorg/nlogo/api/LogoList;
@@ -3496,7 +3496,7 @@ procedure LIST-RULES:[RULES]{OTPL}:
                 INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
                L1
                 ARETURN
-          _asm_procedurelistrules_constlist_31 "" => LogoList
+          _asm_procedurelistrules_constlist_31 "[true  true  true ]" => LogoList
                L0
                 ALOAD 0
                 GETFIELD org/nlogo/prim/_asm_procedurelistrules_constlist_31.kept1_value : Lorg/nlogo/api/LogoList;
