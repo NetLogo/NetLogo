@@ -20,25 +20,22 @@ import javax.swing.filechooser.FileNameExtensionFilter
 class ActionButton(name: String, icon: String, fn: () => Unit)
   extends JButton(new ReviewAction(name, icon, fn))
 
-class RunRecorderSub(runRecorderPub: RunRecorder#Pub, saveButton: JButton) extends RunRecorder#Sub {
+class RunRecorderSub(runRecorderPub: RunRecorder#Pub, refreshButtons: () => Unit) extends RunRecorder#Sub {
   runRecorderPub.subscribe(this)
   override def notify(pub: RunRecorder#Pub, event: RunRecorderEvent) {
     event match {
-      case FrameAddedEvent(run, _) => saveButton.setEnabled(run.dirty)
+      case FrameAddedEvent(_, _) => refreshButtons()
       case _ =>
     }
   }
 }
 
-class ReviewTabStateSub(reviewTabStatePub: ReviewTabState#Pub, reviewToolBar: ReviewToolBar)
+class ReviewTabStateSub(reviewTabStatePub: ReviewTabState#Pub, refreshButtons: () => Unit)
   extends ReviewTabState#Sub {
   override def notify(reviewTabStatePub: ReviewTabState#Pub, event: CurrentRunChangeEvent) {
     reviewTabStatePub.subscribe(this)
     event match {
-      case AfterCurrentRunChangeEvent(_, newRun) =>
-        Seq(reviewToolBar.renameButton, reviewToolBar.closeCurrentButton, reviewToolBar.closeAllButton)
-          .foreach(_.setEnabled(newRun.isDefined))
-        reviewToolBar.saveButton.setEnabled(newRun.map(_.dirty).getOrElse(false))
+      case AfterCurrentRunChangeEvent(_, newRun) => refreshButtons()
       case _ =>
     }
   }
@@ -54,11 +51,10 @@ class ReviewToolBar(reviewTab: ReviewTab, runRecorderPub: RunRecorder#Pub)
   val closeAllButton = new ActionButton("Close all", "close-all", () => closeAll(reviewTab))
   val enabledCheckBox = new EnabledCheckBox(reviewTab.state)
 
-  Seq(saveButton, renameButton, closeCurrentButton, closeAllButton)
-    .foreach(_.setEnabled(false))
+  refreshButtons()
 
-  val runRecorderSub = new RunRecorderSub(runRecorderPub, saveButton)
-  val reviewTabStateSub = new ReviewTabStateSub(reviewTab.state, this)
+  val runRecorderSub = new RunRecorderSub(runRecorderPub, refreshButtons)
+  val reviewTabStateSub = new ReviewTabStateSub(reviewTab.state, refreshButtons)
 
   override def addControls() {
     add(saveButton)
@@ -68,6 +64,14 @@ class ReviewToolBar(reviewTab: ReviewTab, runRecorderPub: RunRecorder#Pub)
     add(closeAllButton)
     add(new org.nlogo.swing.ToolBar.Separator)
     add(enabledCheckBox)
+  }
+
+  def refreshButtons(): Unit = {
+    val currentRunDefined = reviewTab.state.currentRun.isDefined
+    val currentRunDirty = reviewTab.state.currentRun.map(_.dirty).getOrElse(false)
+    Seq(renameButton, closeCurrentButton, closeAllButton)
+      .foreach(_.setEnabled(currentRunDefined))
+    saveButton.setEnabled(currentRunDefined)
   }
 
   def saveRun(reviewTab: ReviewTab) {
