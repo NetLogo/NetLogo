@@ -16,4 +16,5 @@ class WorldWrapper(override val value: World) extends Wrapper {
   @expose def getPatchAt(x: Double, y: Double): PatchWrapper           = value.getPatchAt(XCor(x), YCor(y))
   @expose def patches:                          ArrayJS[PatchWrapper]  = value.patches
   @expose def turtles:                          ArrayJS[TurtleWrapper] = value.turtles
+  @expose def world:                            World                  = value
 }
