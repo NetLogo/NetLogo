@@ -55,8 +55,18 @@ class RunRecorder(
           tabState.currentRun = None
         }
       }
+      private var lastTickHeard = -1.0
       override def tickCounterChanged(ticks: Double) { // called from job thread
-        if (ticks == -1.0) ws.waitFor(() => stopRecording())
+        /* Normally, you'd want to do that only on ticks == -1.0,
+         * but there is actually no guarantee that *every* tick is
+         * caught (and, sometimes, -1.0 isn't, and that used to cause #372).
+         * Looking for (ticks < lastTickHeard) hopefully allows us to catch every
+         * call to clear-all/clear-ticks/reset-ticks. NP 2013-09-09.
+         */
+        if (ticks < lastTickHeard) {
+          ws.waitFor(() => stopRecording())
+        }
+        lastTickHeard = ticks
       }
     })
 
