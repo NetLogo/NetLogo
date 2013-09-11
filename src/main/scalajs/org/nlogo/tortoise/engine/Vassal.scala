@@ -9,8 +9,8 @@ trait Vassal {
   protected def companion:  VassalCompanion
 
   protected def registerUpdate(changePairs: (String, JSW)*): Unit = {
-    val filteredPairs = changePairs filter { case (k, v) => companion.trackedKeys(k) }
-    Overlord.registerUpdate(id, updateType, filteredPairs: _*)
+//    val filteredPairs = changePairs filter { case (k, v) => companion.trackedKeys(k) } //@ Make this work quickly (probably delegate into `Overlord`, doing it all at once) --JAB (9/11/13)
+    Overlord.registerUpdate(id, updateType, changePairs: _*)
   }
 
 }
