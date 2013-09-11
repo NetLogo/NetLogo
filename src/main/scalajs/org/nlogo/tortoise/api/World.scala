@@ -24,8 +24,23 @@ object Overlord {
   }
 
   private def updateToDictionary(update: Update): Dictionary = {
-    def changeToDict(change: Change)      = Dictionary(change.toSeq: _*)
-    def updateToDict(update: AgentUpdate) = Dictionary(update map { case (k, v) => (k.value.toString, changeToDict(v)) } toSeq: _*)
+    def updateToDict(update: AgentUpdate) = {
+      val dict = Dictionary()
+      update foreach {
+        case (k, v) =>
+          val key   = k.value.toString
+          val value = {
+            val d = Dictionary()
+            v foreach {
+              case (k, v) =>
+                d(k) = v
+            }
+            d
+          }
+          dict(key) = value
+      }
+      dict
+    }
     val turtlesEntry = "turtles" -> updateToDict(update.turtleUpdates)
     val patchesEntry = "patches" -> updateToDict(update.patchUpdates)
     Dictionary(turtlesEntry, patchesEntry)
