@@ -25,7 +25,7 @@ object AgentSet {
   @expose def die():                                                 Unit                  = EAS.die()
   @expose def getTurtleVariable(varNum: Int):                        AnyJS                 = EAS.getTurtleVariable(varNum)
   @expose def getPatchVariable(varNum: Int):                         AnyJS                 = EAS.getPatchVariable(varNum)
-  @expose def setTurtleVariable(varNum: Int, value: AnyJS):          Unit                  = EAS.setTurtleVariable(varNum, value)
+  @expose def setTurtleVariable(varNum: Int, value: AnyJS):          Unit                  = EAS.setTurtleVariable(varNum, value) // Use of `JS2WrapperConverter` should occur here --JAB (9/10/13)
   @expose def setPatchVariable(varNum: Int, value: AnyJS):           Unit                  = EAS.setPatchVariable(varNum, value)
 
 }
