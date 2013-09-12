@@ -42,6 +42,18 @@ class CompilerTests extends FunSuite {
     assertResult("""("hello" === "hello")""")(compile(""""hello" = "hello""""))
   }
 
+  test("list construction") {
+    import Compiler.{compileReporter => compile}
+    assertResult("Prims.list(1)")(compile("(list 1)"))
+    assertResult("Prims.list(1, 2)")(compile("list 1 2"))
+    assertResult("Prims.list(world.minPxcor)")(compile("(list min-pxcor)"))
+  }
+
+  test("max") {
+    import Compiler.{compileReporter => compile}
+    assertResult("Prims.max([1, 2, 3])")(compile("max [1 2 3]"))
+  }
+
   test("commands: arithmetic + printing") {
     import Compiler.{compileCommands => compile}
     val expected = """|println((2 + 2))
@@ -170,4 +182,5 @@ class CompilerTests extends FunSuite {
     val expected = s"AgentSet.ask($expectedAgentFilter, function(){ println(AgentSet.getPatchVariable(1)) })"
     assertResult(expected)(compile(input))
   }
+
 }

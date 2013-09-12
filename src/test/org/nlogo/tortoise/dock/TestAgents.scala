@@ -131,6 +131,19 @@ class TestAgents extends DockingSuite {
     testCommand("output-print count patches with [pcolor = green]")
   }
 
+  test("any") { implicit fixture => import fixture._
+    declare("", WorldDimensions.square(0))
+    testCommand("output-print any? patches")
+    testCommand("output-print any? turtles")
+    testCommand("cro 1")
+    testCommand("output-print any? turtles")
+  }
+
+  test("dimensions") { implicit fixture => import fixture._
+    declare("", WorldDimensions(-1, 2, -3, 4))
+    testCommand("output-print min-pxcor")
+  }
+
   test("and, or") { implicit fixture => import fixture._
     declare("", WorldDimensions.square(5))
     testCommand("output-print count patches with [pxcor = 0 or pycor = 0]")

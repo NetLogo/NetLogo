@@ -51,6 +51,10 @@ class TestBasics extends DockingSuite {
     testCommand("random-seed 0 output-print random 100000")
   }
 
+  test("rng 2") { implicit fixture => import fixture._
+    testCommand("random-seed 0 output-print random-float 2.0")
+  }
+
   test("printing") { implicit fixture => import fixture._
     testCommand("output-print 1")
     testCommand("output-print \"foo\"")

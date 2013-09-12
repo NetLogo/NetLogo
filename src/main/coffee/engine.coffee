@@ -171,6 +171,7 @@ class World
 
 class Agents
   count: (x) -> x.length
+  any: (x) -> x.length > 0
   _self: 0
   self: -> @_self
   askAgent: (a, f) ->
@@ -208,6 +209,10 @@ Prims =
   patch: (x, y) -> world.getPatchAt(x, y)
   randomxcor: -> world.minPxcor - 0.5 + Random.nextDouble() * (world.maxPxcor - world.minPxcor + 1)
   randomycor: -> world.minPycor - 0.5 + Random.nextDouble() * (world.maxPycor - world.minPycor + 1)
+  randomfloat: (n) -> n * Random.nextDouble()
+  list: (xs...) -> xs
+  max: (xs) -> Math.max(xs...)
+  min: (xs) -> Math.min(xs...)
 
 Globals =
   vars: []

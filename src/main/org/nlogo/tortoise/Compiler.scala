@@ -144,6 +144,10 @@ object Compiler {
         s"AgentSet.agentFilter($agents, function(){ return $filter })"
       case p: prim.etc._patch               => s"Prims.patch($args)"
       case n: prim._neighbors               => s"Prims.getNeighbors()"
+      case _: prim.etc._minpxcor            => "world.minPxcor"
+      case _: prim.etc._minpycor            => "world.minPycor"
+      case _: prim.etc._maxpxcor            => "world.maxPxcor"
+      case _: prim.etc._maxpycor            => "world.maxPycor"
       case _ =>
         throw new IllegalArgumentException(
           "unknown primitive: " + r.reporter.getClass.getSimpleName)
