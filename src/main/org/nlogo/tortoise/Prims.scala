@@ -36,11 +36,21 @@ object Prims {
         case _: prim._any             => "AgentSet.any"
         case _: prim._random          => "Random.nextLong"
         case _: prim._list            => "Prims.list"
+        case _: prim.etc._sort        => "Prims.sort"
         case _: prim.etc._max         => "Prims.max"
         case _: prim.etc._min         => "Prims.min"
+        case _: prim._sum             => "Prims.sum"
         case _: prim.etc._randomfloat => "Prims.randomfloat"
         case _: prim.etc._randomxcor  => "Prims.randomxcor"
         case _: prim.etc._randomycor  => "Prims.randomycor"
+        case _: prim._oneof           => "AgentSet.oneOf"
+        case _: prim.etc._removeduplicates => "Prims.removeDuplicates"
+        case _: prim._not             => "!"
+        case _: prim.etc._patchahead  => "AgentSet.self().patchAhead"
+        case _: prim.etc._shadeof     => "Prims.shadeOf"
+        case _: prim.etc._turtleshere => "AgentSet.self().turtlesHere"
+        case _: prim.etc._sin         => "Trig.unsquashedSin"
+        case _: prim.etc._cos         => "Trig.unsquashedCos"
       }
   }
 

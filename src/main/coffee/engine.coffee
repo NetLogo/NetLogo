@@ -60,6 +60,12 @@ class Turtle
     if (@heading < 0 || @heading >= 360)
       @heading = ((@heading % 360) + 360) % 360
     return
+  patchAhead: (amount) ->
+    newX = world.topology().wrap(@xcor + amount * Trig.sin(@heading),
+        world.minPxcor - 0.5, world.maxPxcor + 0.5)
+    newY = world.topology().wrap(@ycor + amount * Trig.cos(@heading),
+        world.minPycor - 0.5, world.maxPycor + 0.5)
+    return world.getPatchAt(newX, newY)
   fd: (amount) ->
     @xcor = world.topology().wrap(@xcor + amount * Trig.sin(@heading),
         world.minPxcor - 0.5, world.maxPxcor + 0.5)
@@ -87,16 +93,19 @@ class Turtle
     if (n < turtleBuiltins.length)
       this[turtleBuiltins[n]]
     else
-       @vars[n - turtleBuiltins.length]
+      @vars[n - turtleBuiltins.length]
   setTurtleVariable: (n, v) ->
     if (n < turtleBuiltins.length)
       this[turtleBuiltins[n]] = v
       updated(this, turtleBuiltins[n])
     else
-       @vars[n - turtleBuiltins.length] = v
+      @vars[n - turtleBuiltins.length] = v
   getPatchHere: -> world.getPatchAt(@xcor, @ycor)
   getPatchVariable: (n)    -> @getPatchHere().getPatchVariable(n)
   setPatchVariable: (n, v) -> @getPatchHere().setPatchVariable(n, v)
+  turtlesHere: ->
+    p = @getPatchHere()
+    t for t in world.turtles() when t.getPatchHere() == p
 
 class Patch
   vars: []
@@ -107,13 +116,13 @@ class Patch
     if (n < patchBuiltins.length)
       this[patchBuiltins[n]]
     else
-       @vars[n - patchBuiltins.length]
+      @vars[n - patchBuiltins.length]
   setPatchVariable: (n, v) ->
     if (n < patchBuiltins.length)
       this[patchBuiltins[n]] = v
       updated(this, patchBuiltins[n])
     else
-       @vars[n - patchBuiltins.length] = v
+      @vars[n - patchBuiltins.length] = v
   getNeighbors: -> world.getNeighbors(@pxcor, @pycor) # world.getTopology().getNeighbors(this)
   sprout: (n) ->
     (world.createturtle(@pxcor, @pycor, 5 + 10 * Random.nextInt(14), Random.nextInt(360)) for num in [0...n])
@@ -187,6 +196,8 @@ class Agents
     (@askAgent(a, f) for a in agents)
     return
   agentFilter: (agents, f) -> a for a in agents when @askAgent(a, f)
+  of: (agents, f) -> @askAgent(a, f) for a in agents
+  oneOf: (agents) -> agents[Random.nextInt(agents.length)]
   # I'm putting some things in Agents, and some in Prims
   # I did that on purpose to show how arbitrary/confusing this seems.
   # May we should put *everything* in Prims, and Agents can be private.
@@ -209,10 +220,17 @@ Prims =
   patch: (x, y) -> world.getPatchAt(x, y)
   randomxcor: -> world.minPxcor - 0.5 + Random.nextDouble() * (world.maxPxcor - world.minPxcor + 1)
   randomycor: -> world.minPycor - 0.5 + Random.nextDouble() * (world.maxPycor - world.minPycor + 1)
+  shadeOf: (c1, c2) -> Math.floor(c1 / 10) == Math.floor(c2 / 10)
   randomfloat: (n) -> n * Random.nextDouble()
   list: (xs...) -> xs
   max: (xs) -> Math.max(xs...)
   min: (xs) -> Math.min(xs...)
+  sum: (xs) -> xs.reduce((a, b) -> a + b)
+  sort: (xs) -> xs.sort()
+  removeDuplicates: (xs) ->
+    result = {}
+    result[xs[key]] = xs[key] for key in [0...xs.length]
+    value for key, value of result
 
 Globals =
   vars: []
@@ -243,6 +261,10 @@ Trig =
     @squash(StrictMath.sin(StrictMath.toRadians(degrees)))
   cos: (degrees) ->
     @squash(StrictMath.cos(StrictMath.toRadians(degrees)))
+  unsquashedSin: (degrees) ->
+    StrictMath.sin(StrictMath.toRadians(degrees))
+  unsquashedCos: (degrees) ->
+    StrictMath.cos(StrictMath.toRadians(degrees))
 
 
 class Torus

@@ -115,6 +115,17 @@ class TestAgents extends DockingSuite {
     testCommand("__ask-sorted turtles with [pxcor = -1] [output-print ycor]")
   }
 
+  test("of") { implicit fixture => import fixture._
+    declare("", WorldDimensions.square(0))
+    testCommand("cro 5")
+    testCommand("output-print sum [who] of turtles")
+  }
+
+  test("one-of") { implicit fixture => import fixture._
+    declare("", WorldDimensions.square(0))
+    testCommand("output-print one-of patches")
+  }
+
   test("get patch") { implicit fixture => import fixture._
     testCommand("output-print patch 0 0")
   }
@@ -188,6 +199,19 @@ class TestAgents extends DockingSuite {
     testCommand("__ask-sorted turtles [ setxy random-xcor random-ycor ]")
     for (_ <- 1 to 10)
       testCommand("__ask-sorted turtles [ fd 1 ]")
+  }
+
+  test("patch-ahead") { implicit fixture => import fixture._
+    declare("", WorldDimensions.square(2))
+    testCommand("cro 7")
+    testCommand("__ask-sorted turtles [ output-print patch-ahead 1 ]")
+  }
+
+  test("turtles-here") { implicit fixture => import fixture._
+    declare("", WorldDimensions.square(2))
+    testCommand("random-seed 0")
+    testCommand("__ask-sorted patches [ sprout 2 ]")
+    compare("sum [count turtles-here] of turtles")
   }
 
 }

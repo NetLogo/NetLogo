@@ -20,4 +20,12 @@ class TestLists extends DockingSuite {
     compare("min [3 2 1]")
   }
 
+  test("sort") { implicit fixture => import fixture._
+    compare("sort [4 2 3 1]")
+  }
+
+  test("remove-duplicates") { implicit fixture => import fixture._
+    compare("remove-duplicates [1 1 1 2 3 3 4 4 4 1 2 5 5]")
+  }
+
 }

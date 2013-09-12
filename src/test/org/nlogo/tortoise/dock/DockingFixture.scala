@@ -35,9 +35,11 @@ class DockingFixture(name: String) extends Fixture(name) {
     if (!opened) declare("")
     reporter.result match {
       case Success(expected) =>
-        assertResult(expected) {
-          api.Dump.logoObject(
-            evalJS(Compiler.compileReporter(reporter.reporter)))
+        withClue(reporter.reporter) {
+          assertResult(expected) {
+            api.Dump.logoObject(
+              evalJS(Compiler.compileReporter(reporter.reporter)))
+          }
         }
       case _ =>
         throw new IllegalStateException
