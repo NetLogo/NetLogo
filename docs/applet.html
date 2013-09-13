@@ -127,6 +127,8 @@
       Features not supported in applets
     </h2>
     <ul>
+      <li>Only some extensions work.  (Extension authors should document
+        whether their extensions work in applets.)
       <li>Extensions that require native libraries won't work.
       <li>The 3D view is not supported.
       <li>The bytecode generator is not used in applets (which means that
@@ -135,4 +137,16 @@
       exceptions. See the <a href="faq.html#applet200OK">FAQ</a> for the
       workaround.
       </ul>
-
+   <h3>Note to extension authors</h3>
+   <p>We recommend that you document whether your extension
+     works in applets.
+   <p>One reason an extension might fail to work is that
+   the NetLogo build process uses <a href="http://proguard.sourceforge.net">ProGuard</a> aggressively
+   to reduce the size of NetLogoLite.jar.  This can break some
+   extensions, but often the problem is trivially fixable by adding an
+   entry to the
+   <tt>project/proguard/lite.txt</tt> file in the NetLogo build.
+   If you discover that something your extension does works if you substitute NetLogo.jar,
+   but doesn't work with NetLogoLite.jar, the NetLogo development team may
+   be able to help you resolve the issue, if you ask about it on
+   <a href="http://groups.google.com/group/netlogo-devel">netlogo-devel</a>.
