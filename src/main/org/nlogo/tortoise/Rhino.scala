@@ -47,7 +47,11 @@ class Rhino {
   }
 
   def eval(script: String): AnyRef =
-    fromRhino(engine.eval(script))
+    try fromRhino(engine.eval(script))
+    catch { case ex: javax.script.ScriptException =>
+      println(script)
+      throw ex
+    }
 
   // translate from Rhino values to NetLogo values
   def fromRhino(x: AnyRef): AnyRef =

@@ -128,11 +128,11 @@ class CompilerTests extends FunSuite {
 
   test("globals: access") {
     import Compiler.{compileProcedures => compile}
-    val input = "globals [x y z] to foo output-print z output-print y output-print x end"
+    val input = "globals [x y z] to foo-bar? output-print z output-print y output-print x end"
     val expected =
      """|Globals.init(3)
         |world = new World(0, 0, 0, 0);
-        |function FOO () {
+        |function FOO_BAR_P () {
         |println(Globals.getGlobal(2))
         |println(Globals.getGlobal(1))
         |println(Globals.getGlobal(0))

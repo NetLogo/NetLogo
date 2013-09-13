@@ -14,25 +14,25 @@ class TestLifeModel extends DockingSuite {
         |
         |to setup
         |  clear-all
-        |  ask patches [ celldeath ]
-        |  ask patch  0  0 [ cellbirth ]
-        |  ask patch -1  0 [ cellbirth ]
-        |  ask patch  0 -1 [ cellbirth ]
-        |  ask patch  0  1 [ cellbirth ]
-        |  ask patch  1  1 [ cellbirth ]
+        |  ask patches [ cell-death ]
+        |  ask patch  0  0 [ cell-birth ]
+        |  ask patch -1  0 [ cell-birth ]
+        |  ask patch  0 -1 [ cell-birth ]
+        |  ask patch  0  1 [ cell-birth ]
+        |  ask patch  1  1 [ cell-birth ]
         |end
         |
-        |to cellbirth set living? true  set pcolor white end
-        |to celldeath set living? false set pcolor black end
+        |to cell-birth set living? true  set pcolor white end
+        |to cell-death set living? false set pcolor black end
         |
         |to go
         |  ask patches [
         |    set live-neighbors count neighbors with [living?] ]
         |  ask patches [
         |    ifelse live-neighbors = 3
-        |      [ cellbirth ]
+        |      [ cell-birth ]
         |      [ if live-neighbors != 2
-        |        [ celldeath ] ] ]
+        |        [ cell-death ] ] ]
         |end
       """.stripMargin
     declare(lifeSrc, WorldDimensions.square(5))

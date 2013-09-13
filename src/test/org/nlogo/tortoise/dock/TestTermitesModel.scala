@@ -42,15 +42,15 @@ class TestTermitesModel extends DockingSuite {
        |
        |to action
        |  ifelse next = 1
-       |    [ searchforchip ]
+       |    [ search-for-chip ]
        |    [ ifelse next = 2
-       |      [ findnewpile ]
+       |      [ find-new-pile ]
        |      [ ifelse next = 3
-       |        [ putdownchip ]
-       |        [ getaway ] ] ]
+       |        [ put-down-chip ]
+       |        [ get-away ] ] ]
        |end
        |
-       |to searchforchip
+       |to search-for-chip
        |  if pcolor = yellow
        |    [ set pcolor black
        |      set color orange
@@ -58,12 +58,12 @@ class TestTermitesModel extends DockingSuite {
        |      set next 2 ]
        |end
        |
-       |to findnewpile
+       |to find-new-pile
        |  if pcolor = yellow
        |    [ set next 3 ]
        |end
        |
-       |to putdownchip
+       |to put-down-chip
        |  if pcolor = black
        |   [ set pcolor yellow
        |     set color white
@@ -71,7 +71,7 @@ class TestTermitesModel extends DockingSuite {
        |     set next 4 ]
        |end
        |
-       |to getaway
+       |to get-away
        |  if pcolor = black
        |    [ set next 1 ]
        |end

@@ -41,11 +41,16 @@ object Compiler {
   }
 
   private def compileProcedureDef(pd: ProcedureDefinition): String = {
-    val name = pd.procedure.name
+    val name = ident(pd.procedure.name)
     val body = generateCommands(pd.statements)
-    val args = pd.procedure.args.mkString(", ")
+    val args = pd.procedure.args.map(ident).mkString(", ")
     s"function $name ($args) {\n$body\n};"
   }
+
+  // bogus, will need work - ST 9/13/13
+  def ident(s: String) =
+    s.replaceAll("-", "_")
+     .replaceAll("\\?", "_P")
 
   ///
 
@@ -87,8 +92,8 @@ object Compiler {
       case l: prim._let
         // arg 0 is the name but we don't access it because LetScoper took care of it.
         // arg 1 is the value.
-                                     => s"var ${l.let.name} = ${arg(1)};"
-      case call: prim._call          => s"${call.procedure.name}($args)"
+                                     => s"var ${ident(l.let.name)} = ${arg(1)};"
+      case call: prim._call          => s"${ident(call.procedure.name)}($args)"
       case _: prim.etc._report       => s"return $args;"
       // we need ask, we just shouldn't rely on it for test results.
       case _: prim._ask              => Prims.generateAsk(s)
@@ -99,7 +104,7 @@ object Compiler {
       case _: prim._set              =>
         s.args(0).asInstanceOf[ReporterApp].reporter match {
           case p: prim._letvariable =>
-            s"${p.let.name} = ${arg(1)};"
+            s"${ident(p.let.name)} = ${arg(1)};"
           case p: prim._observervariable =>
             s"Globals.setGlobal(${p.vn},${arg(1)})"
           case p: prim._turtlevariable =>
@@ -126,9 +131,9 @@ object Compiler {
       r.args.collect{ case x: ReporterApp => genArg(x) }.mkString(sep)
     r.reporter match {
       case pure: nvm.Pure if r.args.isEmpty => compileLiteral(pure.report(null))
-      case lv: prim._letvariable            => lv.let.name
-      case pv: prim._procedurevariable      => pv.name
-      case call: prim._callreport           => s"${call.procedure.name}($args)"
+      case lv: prim._letvariable            => ident(lv.let.name)
+      case pv: prim._procedurevariable      => ident(pv.name)
+      case call: prim._callreport           => s"${ident(call.procedure.name)}($args)"
       case Prims.InfixReporter(op)          => s"(${arg(0)} $op ${arg(1)})"
       case Prims.NormalReporter(op)         => s"$op($args)"
       case tv: prim._turtlevariable         => s"AgentSet.getTurtleVariable(${tv.vn})"

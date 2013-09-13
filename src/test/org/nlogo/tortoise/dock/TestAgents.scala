@@ -71,12 +71,12 @@ class TestAgents extends DockingSuite {
     val src =
       """
         |patches-own [ living? live-neighbors ]
-        |to cellbirth set living? true  set pcolor white end
-        |to celldeath set living? false set pcolor black end
+        |to cell-birth set living? true  set pcolor white end
+        |to cell-death set living? false set pcolor black end
       """.stripMargin
     declare(src)
-    testCommand("__ask-sorted patches [cellbirth output-print living?]")
-    testCommand("__ask-sorted patches [celldeath output-print living?]")
+    testCommand("__ask-sorted patches [cell-birth output-print living?]")
+    testCommand("__ask-sorted patches [cell-death output-print living?]")
   }
 
   test("patch order") { implicit fixture => import fixture._
