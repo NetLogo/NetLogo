@@ -158,17 +158,17 @@ class World
   clearTicks: -> _ticks = false
   tick: ->
     if(_ticks == false)
-      throw new Error("EngineException: Need to call reset-ticks")
+      throw new Error("Need to call reset-ticks")
     _ticks++
   advancetick: (n) ->
     if(_ticks == false)
-      throw new Error("EngineException: Need to call reset-ticks")
+      throw new Error("Need to call reset-ticks")
     if(n < 0)
-      throw new Error("EngineException: Cannot advance ticks by a negative amount")
+      throw new Error("Cannot advance ticks by a negative amount")
     _ticks += n
   ticks: ->
     if(_ticks == false)
-      throw new Error("EngineException: Need to call reset-ticks")
+      throw new Error("Need to call reset-ticks")
     _ticks
   # TODO: this needs to support all topologies
   getPatchAt: (x, y) ->
