@@ -5,9 +5,9 @@ package dock
 
 class TestBreeds extends DockingSuite {
   test("is breed") { implicit fixture => import fixture._
-    testCommand("breed [mice mouse]")
-    testCommand("breed [frogs frog]")
-    testCommand("globals [glob1]")
+    declare("breed [mice mouse]")
+    declare("breed [frogs frog]")
+    declare("globals [glob1]")
     compare("is-frog? nobody")
     compare("is-frog? turtle 0")
     testCommand("create-turtles 1")
@@ -24,9 +24,9 @@ class TestBreeds extends DockingSuite {
   }
 
   test("is link breed") { implicit fixture => import fixture._
-    testCommand("undirected-link-breed [undirected-links undirected-link]")
-    testCommand("directed-link-breed [directed-links directed-link]")
-    testCommand("globals [glob1]")
+    declare("undirected-link-breed [undirected-links undirected-link]")
+    declare("directed-link-breed [directed-links directed-link]")
+    declare("globals [glob1]")
     compare("is-directed-link? nobody")
     compare("is-directed-link? link 0 1")
     testCommand("crt 2")
@@ -43,7 +43,7 @@ class TestBreeds extends DockingSuite {
   }
 
   test("set breed to not breed") { implicit fixture => import fixture._
-    testCommand("breed [frogs frog]")
+    declare("breed [frogs frog]")
     testCommand("directed-link-breed [directed-links directed-link]")
     testCommand("crt 1 [ set breed turtles ]")
     testCommand("crt 1 [ set breed frogs ]")
