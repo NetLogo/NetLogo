@@ -4,7 +4,6 @@ package org.nlogo.tortoise
 package dock
 
 class TestBasics extends DockingSuite {
-
   test("comments") { implicit fixture => import fixture._
     compare("3 ; comment")
     compare("[1 ; comment\n2]")
@@ -79,4 +78,45 @@ class TestBasics extends DockingSuite {
     testCommand("output-print (word g1 g2)")
   }
 
+  test("ticks basic") { implicit fixture => import fixture._
+    testCommand("reset-ticks")
+    compare("ticks")
+    testCommand("tick")
+    compare("ticks")
+    testCommand("tick-advance 0.1")
+    compare("ticks")
+    testCommand("tick")
+    compare("ticks")
+    testCommand("reset-ticks")
+    compare("ticks")
+  }
+
+  test("ticks non-negative") { implicit fixture => import fixture._
+    testCommand("reset-ticks")
+    testCommand("tick-advance -1")
+    testCommand("tick")
+    testCommand("tick-advance -0.1")
+  }
+
+  test("ticks need reset") { implicit fixture => import fixture._
+    compare("ticks")
+    testCommand("tick")
+    testCommand("tick-advance 0.1")
+    testCommand("reset-ticks")
+    compare("ticks")
+  }
+
+  test("ticks clear") { implicit fixture => import fixture._
+    testCommand("reset-ticks")
+    compare("ticks")
+    testCommand("clear-ticks")
+    compare("ticks")
+  }
+
+  test("ticks clear all") { implicit fixture => import fixture._
+    testCommand("reset-ticks")
+    compare("ticks")
+    testCommand("clear-all")
+    compare("ticks")
+  }
 }

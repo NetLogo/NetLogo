@@ -20,6 +20,7 @@ class TestLifeModel extends DockingSuite {
         |  ask patch  0 -1 [ cellbirth ]
         |  ask patch  0  1 [ cellbirth ]
         |  ask patch  1  1 [ cellbirth ]
+        |  reset-ticks
         |end
         |
         |to cellbirth set living? true  set pcolor white end
@@ -33,6 +34,7 @@ class TestLifeModel extends DockingSuite {
         |      [ cellbirth ]
         |      [ if live-neighbors != 2
         |        [ celldeath ] ] ]
+        |  tick
         |end
       """.stripMargin
     declare(lifeSrc, WorldDimensions.square(5))
