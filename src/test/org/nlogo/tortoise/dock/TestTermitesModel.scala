@@ -24,6 +24,7 @@ class TestTermitesModel extends DockingSuite {
        |    set size 3
        |    set next 1
        |  ]
+       |  reset-ticks
        |end
        |
        |to go
@@ -33,6 +34,7 @@ class TestTermitesModel extends DockingSuite {
        |        [ action
        |          wiggle ]
        |      fd 1 ]
+       |  tick
        |end
        |
        |to wiggle
