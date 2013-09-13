@@ -253,16 +253,23 @@ class World
     @clearTicks()
     return
   getTurtle: (id) ->
-    filteredTurtles = (@turtles().filter (t) -> t.id == id)
+    filteredTurtles = (@turtles().items.filter (t) -> t.id == id)
     if filteredTurtles.length == 0 then Nobody else filteredTurtles[0]
-  createturtle: (x, y, color, heading) ->
+  createturtle: (x, y, color, heading, breed) ->
     t = new Turtle((_nextId++), color, heading, x, y)
+    #print(t.breed + "---")
+    if(breed != "")
+      t.breed = breed
+    #print(t.breed + "***")
     _turtles.push(t)
+    #if(_turtles[1])
+    #  print(_turtles[0].breed)
+    #  print(_turtles[1].breed)
     t
-  createorderedturtles: (n) ->
-    (@createturtle(0, 0, (num * 10 + 5) % 140, num * (360 / n)) for num in [0...n])
-  createturtles: (n) ->
-    (@createturtle(0, 0, 5 + 10 * Random.nextInt(14), Random.nextInt(360)) for num in [0...n])
+  createorderedturtles: (n, breed) ->
+    (@createturtle(0, 0, (num * 10 + 5) % 140, num * (360 / n), breed) for num in [0...n])
+  createturtles: (n, breed) ->
+    (@createturtle(0, 0, 5 + 10 * Random.nextInt(14), Random.nextInt(360), breed) for num in [0...n])
   getNeighbors: (pxcor, pycor) -> @topology().getNeighbors(pxcor, pycor)
 
 class Agents
