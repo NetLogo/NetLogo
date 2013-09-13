@@ -32,6 +32,7 @@ object Prims {
         case _: prim.etc._patch       => "world.getPatchAt"
         case _: prim.etc._turtles     => "world.turtles"
         case _: prim._patches         => "world.patches"
+        case _: prim.etc._ticks       => "world.ticks"
         case _: prim._count           => "AgentSet.count"
         case _: prim._any             => "AgentSet.any"
         case _: prim._random          => "Random.nextLong"
@@ -59,6 +60,10 @@ object Prims {
       PartialFunction.condOpt(c) {
         case _: prim.etc._outputprint      => "println"
         case _: prim.etc._clearall         => "world.clearall"
+        case _: prim.etc._clearticks       => "world.clearTicks"
+        case _: prim.etc._resetticks       => "world.resetTicks"
+        case _: prim.etc._tick             => "world.tick"
+        case _: prim.etc._tickadvance      => "world.advancetick"
         case _: prim._createturtles        => "world.createturtles"
         case _: prim._sprout               => "Prims.sprout"
         case _: prim._createorderedturtles => "world.createorderedturtles"

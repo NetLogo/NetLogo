@@ -136,6 +136,7 @@ class World
   _patches = []
   width = 0
   _topology = null
+  _ticks = false
   constructor: (@minPxcor, @maxPxcor, @minPycor, @maxPycor) ->
     collectUpdates()
     width = (@maxPxcor - @minPxcor) + 1
@@ -153,6 +154,22 @@ class World
   topology: -> _topology
   turtles:  -> _turtles
   patches:  -> _patches
+  resetTicks: -> _ticks = 0
+  clearTicks: -> _ticks = false
+  tick: ->
+    if(_ticks == false)
+      throw new Error("Need to call reset-ticks")
+    _ticks++
+  advancetick: (n) ->
+    if(_ticks == false)
+      throw new Error("Need to call reset-ticks")
+    if(n < 0)
+      throw new Error("Cannot advance ticks by a negative amount")
+    _ticks += n
+  ticks: ->
+    if(_ticks == false)
+      throw new Error("Need to call reset-ticks")
+    _ticks
   # TODO: this needs to support all topologies
   getPatchAt: (x, y) ->
     index  = (@maxPycor - StrictMath.round(y)) * width + (StrictMath.round(x) - @minPxcor)
@@ -166,6 +183,7 @@ class World
       t.die()
     @createPatches()
     _nextId = 0
+    _ticks = false
     return
   createturtle: (x, y, color, heading) ->
     _turtles.push(new Turtle((_nextId++), color, heading, x, y))

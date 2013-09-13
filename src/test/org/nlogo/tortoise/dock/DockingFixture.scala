@@ -28,18 +28,32 @@ class DockingFixture(name: String) extends Fixture(name) {
 
   def compare(reporter: String) {
     runReporter(Reporter(reporter,
-      Success(api.Dump.logoObject(workspace.report(reporter)))))
+        try {
+          Success(api.Dump.logoObject(workspace.report(reporter)))
+        } catch {
+          case ex : Exception => RuntimeError(ex.getMessage)
+        }
+        ))
   }
 
   override def runReporter(reporter: Reporter, mode: TestMode) {
     if (!opened) declare("")
+    val compiledJS = Compiler.compileReporter(reporter.reporter)
     reporter.result match {
       case Success(expected) =>
         withClue(reporter.reporter) {
           assertResult(expected) {
             api.Dump.logoObject(
-              evalJS(Compiler.compileReporter(reporter.reporter)))
+              evalJS(compiledJS))
           }
+        }
+      case _: RuntimeError =>
+        try {
+          evalJS(compiledJS)
+          throw new IllegalStateException("Error in headless, not in JS")
+        } catch {
+          case ex: IllegalStateException => throw ex
+          case _: Exception =>
         }
       case _ =>
         throw new IllegalStateException
@@ -51,7 +65,14 @@ class DockingFixture(name: String) extends Fixture(name) {
     import command.{ command => logo }
     // println(s"logo = $logo")
     workspace.clearOutput()
-    workspace.command(logo)
+    
+    val (headlessException, exceptionOccurredInHeadless) =
+      try {
+        workspace.command(logo)
+        (Unit, false)
+      } catch {
+        case ex: Exception => (ex, true)
+      }
     val (newState, update) = mirror.Mirroring.diffs(state, mirrorables)
     state = newState
     // println(s"state = $state")
@@ -59,21 +80,33 @@ class DockingFixture(name: String) extends Fixture(name) {
     val expectedJson = "[" + JSONSerializer.serialize(update) + "]"
     // println(s"expectedJson = $expectedJson")
     val expectedOutput = workspace.outputAreaBuffer.toString
-    val (actualOutput, actualJson) =
-      runJS(Compiler.compileCommands(logo, workspace.procedures, workspace.world.program))
-    assertResult(expectedOutput)(actualOutput)
-    rhino.eval("expectedUpdates = " + expectedJson)
-    rhino.eval("actualUpdates = " + actualJson)
-    rhino.eval("expectedModel.updates(expectedUpdates)")
-    rhino.eval("actualModel.updates(actualUpdates)")
-    val expectedModel = rhino.eval("JSON.stringify(expectedModel)").asInstanceOf[String]
-    val actualModel = rhino.eval("JSON.stringify(actualModel)").asInstanceOf[String]
-    // println(" exp upt = " + expectedJson)
-    // println(" act upt = " + actualJson)
-    // println("expected = " + expectedModel)
-    // println("  actual = " + actualModel)
-    org.skyscreamer.jsonassert.JSONAssert.assertEquals(
-      expectedModel, actualModel, true)  // strict = true
+    val compiledJS = Compiler.compileCommands(logo, workspace.procedures, workspace.world.program)
+    val (exceptionOccurredInJS, (actualOutput, actualJson)) = 
+      try {
+        (false, runJS(compiledJS))
+      } catch {
+        case _: Exception => (true, ("", ""))
+      }
+    if(exceptionOccurredInHeadless && !exceptionOccurredInJS) {
+      throw new IllegalStateException("Exception occurred in headless but not JS: " + headlessException)
+    } else if(!exceptionOccurredInHeadless && exceptionOccurredInJS) {
+      throw new IllegalStateException("Exception occurred in JS but not headless")
+    } else if(exceptionOccurredInHeadless && exceptionOccurredInJS) {
+    } else {
+      assertResult(expectedOutput)(actualOutput)
+      rhino.eval("expectedUpdates = " + expectedJson)
+      rhino.eval("actualUpdates = " + actualJson)
+      rhino.eval("expectedModel.updates(expectedUpdates)")
+      rhino.eval("actualModel.updates(actualUpdates)")
+      val expectedModel = rhino.eval("JSON.stringify(expectedModel)").asInstanceOf[String]
+      val actualModel = rhino.eval("JSON.stringify(actualModel)").asInstanceOf[String]
+      // println(" exp upt = " + expectedJson)
+      // println(" act upt = " + actualJson)
+      // println("expected = " + expectedModel)
+      // println("  actual = " + actualModel)
+      org.skyscreamer.jsonassert.JSONAssert.assertEquals(
+        expectedModel, actualModel, true)  // strict = true
+    }
     // println()
   }
 
