@@ -41,9 +41,11 @@ class DockingFixture(name: String) extends Fixture(name) {
     val compiledJS = Compiler.compileReporter(reporter.reporter)
     reporter.result match {
       case Success(expected) =>
-        assertResult(expected) {
-          api.Dump.logoObject(
-            evalJS(compiledJS))
+        withClue(reporter.reporter) {
+          assertResult(expected) {
+            api.Dump.logoObject(
+              evalJS(compiledJS))
+          }
         }
       case _: RuntimeError =>
         try {

@@ -142,6 +142,10 @@ object Compiler {
         val agents = arg(0)
         val filter = genReporterBlock(r.args(1))
         s"AgentSet.agentFilter($agents, function(){ return $filter })"
+      case o: prim._of =>
+        val agents = arg(1)
+        val body = genReporterBlock(r.args(0))
+        s"AgentSet.of($agents, function(){ return $body })"
       case p: prim.etc._patch               => s"Prims.patch($args)"
       case n: prim._neighbors               => s"Prims.getNeighbors()"
       case _: prim.etc._minpxcor            => "world.minPxcor"
