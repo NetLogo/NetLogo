@@ -1,0 +1,318 @@
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
+
+package org.nlogo.tortoise
+package dock
+
+import org.nlogo.api
+
+class TestClimateModel extends DockingSuite {
+
+  // differences from version in models library:
+  // - breeds removed
+  //   - use a string "kind" instead
+  //   - all breed-owns variables become turtles-own
+  // - asks changed to __ask-sorted
+  // - sliders replaced with global variables
+  // - tick counter replaced with "clock" global variable
+  // - no plotting or monitors
+  // - scale-color replaced with NL implementation "my-scale-color"
+  // - no vertical cylinder support yet, so "my-can-move?"
+  //   substitutes for can-move? primitive
+  // - use create-ordered-* instead of create-*
+
+  test("climate") { implicit fixture => import fixture._
+    val src =
+      """|globals [
+         |  sky-top      ;; y coordinate of top row of sky
+         |  earth-top    ;; y coordinate of top row of earth
+         |  temperature  ;; overall temperature
+         |  sun-brightness ;; slider
+         |  albedo         ;; slider
+         |  clock          ;; tick counter
+         |]
+         |
+         |turtles-own [
+         |  kind            ;; "ray" or "IR" or "heat" or "CO2"
+         |  cloud-speed     ;; N/A unless kind is "cloud"
+         |  cloud-id        ;; ditto
+         |]
+         |
+         |;;
+         |;; Setup Procedures
+         |;;
+         |
+         |to setup
+         |  clear-all
+         |  setup-sliders
+         |  setup-world
+         |  set temperature 12
+         |  my-reset-ticks
+         |end
+         |
+         |to setup-sliders
+         |  set sun-brightness 1.0
+         |  set albedo 0.60
+         |end
+         |
+         |to setup-world
+         |  set sky-top max-pycor - 5
+         |  set earth-top 0
+         |  __ask-sorted patches [  ;; set colors for the different sections of the world
+         |    if pycor > sky-top [  ;; space
+         |      set pcolor my-scale-color white pycor 22 15
+         |    ]
+         |    if pycor <= sky-top and pycor > earth-top [ ;; sky
+         |      set pcolor my-scale-color blue pycor -20 20
+         |    ]
+         |    if pycor < earth-top
+         |      [ set pcolor red + 3 ] ;; earth
+         |    if pycor = earth-top ;; earth surface
+         |      [ update-albedo ]
+         |  ]
+         |end
+         |
+         |;;
+         |;; Runtime Procedures
+         |;;
+         |
+         |to go
+         |  __ask-sorted clouds [ fd cloud-speed ]  ; move clouds along
+         |  run-sunshine   ;; step sunshine
+         |  ;; if the albedo slider has moved update the color of the "earth surface" patches
+         |  __ask-sorted patches with [pycor = earth-top]
+         |    [ update-albedo ]
+         |  run-heat  ;; step heat
+         |  run-IR    ;; step IR
+         |  run-CO2   ;; moves CO2 molecules
+         |  my-tick
+         |end
+         |
+         |to update-albedo ;; patch procedure
+         |  set pcolor my-scale-color green albedo 0 1
+         |end
+         |
+         |to add-cloud            ;; erase clouds and then create new ones, plus one
+         |  let sky-height sky-top - earth-top
+         |  ;; find a random altitude for the clouds but
+         |  ;; make sure to keep it in the sky area
+         |  let y earth-top + (random-float (sky-height - 4)) + 2
+         |  ;; no clouds should have speed 0
+         |  let speed (random-float 0.1) + 0.01
+         |  let x random-xcor
+         |  let id 0
+         |  ;; we don't care what the cloud-id is as long as
+         |  ;; all the turtles in this cluster have the same
+         |  ;; id and it is unique among cloud clusters
+         |  if any? clouds
+         |  [ set id max [cloud-id] of clouds + 1 ]
+         |
+         |  create-ordered-turtles 3 + random 20
+         |  [
+         |    set kind "cloud"
+         |    set shape "cloud"
+         |    set cloud-speed speed
+         |    set cloud-id id
+         |    ;; all the cloud turtles in each larger cloud should
+         |    ;; be nearby but not directly on top of the others so
+         |    ;; add a little wiggle room in the x and ycors
+         |    setxy x + random 9 - 4
+         |          ;; the clouds should generally be clustered around the
+         |          ;; center with occasional larger variations
+         |          y + random-normal 2.5 1
+         |    set color white
+         |    ;; varying size is also purely for visualization
+         |    ;; since we're only doing patch-based collisions
+         |    set size 2 + random 2
+         |    set heading 90
+         |  ]
+         |end
+         |
+         |to remove-cloud       ;; erase clouds and then create new ones, minus one
+         |  if any? clouds [
+         |    let doomed-id one-of remove-duplicates [cloud-id] of clouds
+         |    __ask-sorted clouds with [cloud-id = doomed-id]
+         |      [ die ]
+         |  ]
+         |end
+         |
+         |to run-sunshine
+         |  __ask-sorted rays [
+         |    if not my-can-move? 0.3 [ die ]  ;; kill them off at the edge
+         |    fd 0.3                        ;; otherwise keep moving
+         |  ]
+         |  create-sunshine  ;; start new sun rays from top
+         |  reflect-rays-from-clouds  ;; check for reflection off clouds
+         |  encounter-earth   ;; check for reflection off earth and absorption
+         |end
+         |
+         |to create-sunshine
+         |  ;; don't necessarily create a ray each tick
+         |  ;; as brightness gets higher make more
+         |  if 10 * sun-brightness > random 50 [
+         |    create-ordered-turtles 1 [
+         |      set kind "ray"
+         |      set shape "ray"
+         |      set heading 160
+         |      set color yellow
+         |      ;; rays only come from a small area
+         |      ;; near the top of the world
+         |      setxy (random 10) + min-pxcor max-pycor
+         |    ]
+         |  ]
+         |end
+         |
+         |to reflect-rays-from-clouds
+         | __ask-sorted rays with [any? clouds-here] [   ;; if ray shares patch with a cloud
+         |   set heading 180 - heading   ;; turn the ray around
+         | ]
+         |end
+         |
+         |to encounter-earth
+         |  __ask-sorted rays with [ycor <= earth-top] [
+         |    ;; depending on the albedo either
+         |    ;; the earth absorbs the heat or reflects it
+         |    ifelse 100 * albedo > random 100
+         |      [ set heading 180 - heading  ] ;; reflect
+         |      [ rt random 45 - random 45 ;; absorb into the earth
+         |        set color red - 2 + random 4
+         |        set kind "heat"
+         |        set shape "dot" ]
+         |  ]
+         |end
+         |
+         |to run-heat    ;; advances the heat energy turtles
+         |  ;; the temperature is related to the number of heat turtles
+         |  set temperature 0.99 * temperature + 0.01 * (12 + 0.1 * count heats)
+         |  __ask-sorted heats
+         |  [
+         |    let dist 0.5 * random-float 1
+         |    ifelse my-can-move? dist
+         |      [ fd dist ]
+         |      [ set heading 180 - heading ] ;; if we're hitting the edge of the world, turn around
+         |    if ycor >= earth-top [  ;; if heading back into sky
+         |      ifelse temperature > 20 + random 40
+         |              ;; heats only seep out of the earth from a small area
+         |              ;; this makes the model look nice but it also contributes
+         |              ;; to the rate at which heat can be lost
+         |              and xcor > 0 and xcor < max-pxcor - 8
+         |        [ set kind "IR"                    ;; let some escape as IR
+         |          set shape "ray"
+         |          set heading 20
+         |          set color magenta ]
+         |        [ set heading 100 + random 160 ] ;; return them to earth
+         |    ]
+         |  ]
+         |end
+         |
+         |to run-IR
+         |  __ask-sorted IRs [
+         |    if not my-can-move? 0.3 [ die ]
+         |    fd 0.3
+         |    if ycor <= earth-top [   ;; convert to heat if we hit the earth's surface again
+         |      set breed heats
+         |      rt random 45
+         |      lt random 45
+         |      set color red - 2 + random 4
+         |    ]
+         |    if any? CO2s-here    ;; check for collision with CO2
+         |      [ set heading 180 - heading ]
+         |  ]
+         |end
+         |
+         |to add-CO2  ;; randomly adds 25 CO2 molecules to atmosphere
+         |  let sky-height sky-top - earth-top
+         |  create-ordered-turtles 25 [
+         |    set kind "CO2"
+         |    set shape "CO2-molecule"
+         |    set color green
+         |    ;; pick a random position in the sky area
+         |    setxy random-xcor
+         |          earth-top + random-float sky-height
+         |  ]
+         |end
+         |
+         |to remove-CO2 ;; randomly remove 25 CO2 molecules
+         |  repeat 25 [
+         |    if any? CO2s [
+         |      __ask-sorted one-of CO2s [ die ]
+         |    ]
+         |  ]
+         |end
+         |
+         |to run-CO2
+         |  __ask-sorted CO2s [
+         |    rt random 51 - 25 ;; turn a bit
+         |    let dist 0.05 + random-float 0.1
+         |    ;; keep the CO2 in the sky area
+         |    if [not shade-of? blue pcolor] of patch-ahead dist
+         |      [ set heading 180 - heading ]
+         |    fd dist ;; move forward a bit
+         |  ]
+         |end
+         |
+         |;;; compensate for lack of breeds in Tortoise
+         |
+         |to-report CO2s
+         |  report turtles with [kind = "CO2"]
+         |end
+         |to-report CO2s-here
+         |  report turtles-here with [kind = "CO2"]
+         |end
+         |
+         |to-report clouds
+         |  report turtles with [kind = "cloud"]
+         |end
+         |to-report clouds-here
+         |  report turtles-here with [kind = "cloud"]
+         |end
+         |
+         |to-report rays
+         |  report turtles with [kind = "ray"]
+         |end
+         |
+         |to-report heats
+         |  report turtles with [kind = "heat"]
+         |end
+         |
+         |to-report IRs
+         |  report turtles with [kind = "IR"]
+         |end
+         |
+         |;;; compensate for lack of tick counter in Tortoise
+         |
+         |to my-reset-ticks
+         |  set clock 0
+         |end
+         |
+         |to my-tick
+         |  set clock clock + 1
+         |end
+         |
+         |;;; compensate for lack of scale-color in Tortoise
+         |
+         |to-report my-scale-color [base-color value min-value max-value]
+         |  report 0
+         |end
+         |
+         |;;; compensate for lack of can-move? in Tortoise
+         |
+         |;; this is only just good enough for this model only
+         |to-report my-can-move? [amount]
+         |  let new-y ycor + amount * cos heading
+         |  ifelse ycor > 0
+         |    [ report new-y < max-pycor + 0.5 ]
+         |    [ report new-y >= min-pycor - 0.5 ]
+         |end
+      """.stripMargin
+    declare(src, api.WorldDimensions(-24, 24, -8, 22))
+    workspace.world.turtleShapeList.add(new api.DummyShape("cloud"))
+    testCommand("random-seed 0 setup")
+    testCommand("add-cloud")
+    // testCommand("add-cloud")
+    // for (_ <- 1 to 10)
+    //   testCommand("repeat 50 [ go ]")
+    // testCommand("output-print temperature")
+    // testCommand("__ask-sorted turtles [ output-print (list kind xcor ycor) ]")
+  }
+
+}
