@@ -64,9 +64,6 @@ object Prims {
         case _: prim.etc._resetticks       => "world.resetTicks"
         case _: prim.etc._tick             => "world.tick"
         case _: prim.etc._tickadvance      => "world.advancetick"
-        case _: prim._createturtles        => "world.createturtles"
-        case _: prim._sprout               => "Prims.sprout"
-        case _: prim._createorderedturtles => "world.createorderedturtles"
         case _: prim._fd                   => "Prims.fd"
         case _: prim._bk                   => "Prims.bk"
         case _: prim.etc._left             => "Prims.left"
@@ -104,10 +101,26 @@ object Prims {
       |}""".stripMargin
   }
 
-  def generateAsk(s: Statement): String = {
+  def generateAsk(s: Statement, shuffle: Boolean): String = {
     val agents = Compiler.genReporterApp(s.args.head)
     val body   = Compiler.genCommandBlock(s.args.tail.head)
-    s"AgentSet.ask($agents, ${fun(body)})"
+    if (shuffle)
+      s"AgentSet.ask(Shuffler.shuffle($agents), ${fun(body)})"
+    else
+      s"AgentSet.ask($agents, ${fun(body)})"
+  }
+
+  def generateCreateTurtles(s: Statement, ordered: Boolean): String = {
+    val n = Compiler.genReporterApp(s.args.head)
+    val body = fun(Compiler.genCommandBlock(s.args.tail.head))
+    val name = if (ordered) "createorderedturtles" else "createturtles"
+    s"AgentSet.ask(Shuffler.shuffle(world.$name($n)), $body);"
+  }
+
+  def generateSprout(s: Statement): String = {
+    val n = Compiler.genReporterApp(s.args.head)
+    val body = fun(Compiler.genCommandBlock(s.args.tail.head))
+    s"AgentSet.ask(Shuffler.shuffle(Prims.sprout($n)), $body);"
   }
 
   def fun(body: String) = s"function(){ $body }"

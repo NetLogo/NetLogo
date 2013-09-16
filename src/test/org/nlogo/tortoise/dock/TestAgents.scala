@@ -22,14 +22,16 @@ class TestAgents extends DockingSuite {
     testCommand("output-print count turtles")
   }
 
-  test("crt") { implicit fixture => import fixture._
-    testCommand("random-seed 0 crt 10")
-    testCommand("__ask-sorted turtles [ output-print color output-print heading ]")
+  test("cro with init block") { implicit fixture => import fixture._
+    testCommand("random-seed 0 crt 4 [ output-print who ]")
+  }
+
+  test("crt with init block") { implicit fixture => import fixture._
+    testCommand("random-seed 0 crt 4 [ output-print color output-print heading ]")
   }
 
   test("random-xcor/ycor") { implicit fixture => import fixture._
-    testCommand("cro 10")
-    testCommand("random-seed 0 __ask-sorted turtles [ setxy random-xcor random-ycor ]")
+    testCommand("random-seed 0 cro 10 [ setxy random-xcor random-ycor ]")
   }
 
   test("ask") { implicit fixture => import fixture._
@@ -188,9 +190,14 @@ class TestAgents extends DockingSuite {
     testCommand("output-print count patches with [pcolor = green]")
   }
 
-  test("sprout") { implicit fixture => import fixture._
+  test("sprout 1") { implicit fixture => import fixture._
     testCommand("random-seed 0 " +
       "__ask-sorted patches with [pxcor >= 0] [ sprout 1 ]")
+  }
+
+  test("sprout 2") { implicit fixture => import fixture._
+    testCommand("random-seed 0 " +
+      "__ask-sorted patches [ sprout 1 [ set color red ] ]")
   }
 
   test("turtle motion") { implicit fixture => import fixture._

@@ -96,8 +96,11 @@ object Compiler {
       case call: prim._call          => s"${ident(call.procedure.name)}($args)"
       case _: prim.etc._report       => s"return $args;"
       // we need ask, we just shouldn't rely on it for test results.
-      case _: prim._ask              => Prims.generateAsk(s)
-      case _: prim._asksorted        => Prims.generateAsk(s)
+      case _: prim._ask              => Prims.generateAsk(s, shuffle = true)
+      case _: prim._asksorted        => Prims.generateAsk(s, shuffle = false)
+      case _: prim._createturtles        => Prims.generateCreateTurtles(s, ordered = false)
+      case _: prim._createorderedturtles => Prims.generateCreateTurtles(s, ordered = true)
+      case _: prim._sprout               => Prims.generateSprout(s)
       case Prims.NormalCommand(op)   => s"$op($args)"
       case r: prim._repeat           =>
         s"for(var i = 0; i < ${arg(0)}; i++) { ${genCommandBlock(s.args(1))} }"

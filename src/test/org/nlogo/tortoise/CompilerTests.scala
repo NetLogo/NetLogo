@@ -64,7 +64,7 @@ class CompilerTests extends FunSuite {
 
   test("commands: turtle creation") {
     import Compiler.{compileCommands => compile}
-    val expected = """|world.createorderedturtles(5)
+    val expected = """|AgentSet.ask(Shuffler.shuffle(world.createorderedturtles(5)), function(){  });
                       |println(AgentSet.count(world.turtles()))""".stripMargin
     assertResult(expected)(
       compile("cro 5 output-print count turtles"))
@@ -72,10 +72,10 @@ class CompilerTests extends FunSuite {
 
   test("commands: while true") {
     import Compiler.{compileCommands => compile}
-    val input = "while [true] [cro 1]"
+    val input = "while [true] [output-print 0]"
     val expected =
       """while (true) {
-        |world.createorderedturtles(1)
+        |println(0)
         |}""".stripMargin
     assertResult(expected)(compile(input))
   }

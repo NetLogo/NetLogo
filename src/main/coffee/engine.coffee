@@ -126,7 +126,6 @@ class Patch
   getNeighbors: -> world.getNeighbors(@pxcor, @pycor) # world.getTopology().getNeighbors(this)
   sprout: (n) ->
     (world.createturtle(@pxcor, @pycor, 5 + 10 * Random.nextInt(14), Random.nextInt(360)) for num in [0...n])
-    return
 
 class World
   # any variables used in the constructor should come
@@ -186,14 +185,13 @@ class World
     _ticks = false
     return
   createturtle: (x, y, color, heading) ->
-    _turtles.push(new Turtle((_nextId++), color, heading, x, y))
-    return
+    t = new Turtle((_nextId++), color, heading, x, y)
+    _turtles.push(t)
+    t
   createorderedturtles: (n) ->
     (@createturtle(0, 0, (num * 10 + 5) % 140, num * (360 / n)) for num in [0...n])
-    return
   createturtles: (n) ->
     (@createturtle(0, 0, 5 + 10 * Random.nextInt(14), Random.nextInt(360)) for num in [0...n])
-    return
   getNeighbors: (pxcor, pycor) -> @topology().getNeighbors(pxcor, pycor)
 
 class Agents
@@ -211,6 +209,8 @@ class Agents
     agents = agentsOrAgent
     if (! (typeIsArray agentsOrAgent))
       agents = [agentsOrAgent]
+    else
+      agents = Shuffler.shuffle(agents)
     (@askAgent(a, f) for a in agents)
     return
   agentFilter: (agents, f) -> a for a in agents when @askAgent(a, f)
@@ -284,6 +284,15 @@ Trig =
   unsquashedCos: (degrees) ->
     StrictMath.cos(StrictMath.toRadians(degrees))
 
+Shuffler =
+  shuffle: (xs) ->
+    copy = xs[..]
+    for i in [0...(xs.length - 1)]
+      r = i + Random.nextInt(copy.length - i)
+      tmp = copy[r]
+      copy[r] = copy[i]
+      copy[i] = tmp
+    copy
 
 class Torus
   constructor: (@minPxcor, @maxPxcor, @minPycor, @maxPycor) ->
