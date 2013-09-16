@@ -65,7 +65,7 @@ class DockingFixture(name: String) extends Fixture(name) {
     import command.{ command => logo }
     // println(s"logo = $logo")
     workspace.clearOutput()
-    
+
     val (headlessException, exceptionOccurredInHeadless) =
       try {
         workspace.command(logo)
@@ -81,7 +81,7 @@ class DockingFixture(name: String) extends Fixture(name) {
     // println(s"expectedJson = $expectedJson")
     val expectedOutput = workspace.outputAreaBuffer.toString
     val compiledJS = Compiler.compileCommands(logo, workspace.procedures, workspace.world.program)
-    val (exceptionOccurredInJS, (actualOutput, actualJson)) = 
+    val (exceptionOccurredInJS, (actualOutput, actualJson)) =
       try {
         (false, runJS(compiledJS))
       } catch {
