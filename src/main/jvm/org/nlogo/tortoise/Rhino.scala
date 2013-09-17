@@ -25,7 +25,8 @@ class Rhino {
   // them to JavaScript for us.  (and downloads json2.js direct from GitHub).
   // unlike V8, Rhino doesn't have JSON.stringify built-in, so we get it from json2.js
 
-  private val scalaJSLibs = Seq("/js/scalajs-runtime.js", "/js/engine.js")
+  private val scalaJSLibs = Seq("/js/dev/scalajs-corejslib.js", "/js/dev/engine.js")
+//  private val scalaJSLibs = Seq("/js/engine-opt.js")
 
   val libs = Seq("/json2.js", "/js/compat.js", "/js/agentmodel.js") ++ scalaJSLibs
   for (lib <- libs)
