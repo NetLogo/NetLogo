@@ -5,9 +5,10 @@ import
     annotation.expose
 
 import
-  org.nlogo.tortoise.{ api, engine },
+  org.nlogo.tortoise.{ adt, api, engine },
+    adt.{ ArrayJS, EnhancedArray },
     api.wrapper._,
-    engine.{ AgentSet => EAS, ArrayJS }
+    engine.{ AgentSet => EAS }
 
 object AgentSet {
 
@@ -18,10 +19,10 @@ object AgentSet {
   // This return type of `Any` sucks, but I don't see any way around it,
   // so long as `0` is a permissible return value. --JAB (8/31/13)
   @expose def self:                                                  Any                   = EAS.self
-  @expose def count(agents: ArrayJS[AgentWrapper]):                  Int                   = EAS.count(agents.toUnwrappedSeq)
-  @expose def ask(agent: AgentWrapper, f: JSFunc):                   Unit                  = EAS.ask(Seq(agent.value), f.toThunk[Unit])
-  @expose def ask(agents: ArrayJS[AgentWrapper], f: JSFunc):         Unit                  = EAS.ask(agents.toUnwrappedSeq, f.toThunk[Unit])
-  @expose def agentFilter(agents: ArrayJS[AgentWrapper], f: JSFunc): ArrayJS[AgentWrapper] = EAS.agentFilter(agents.toUnwrappedSeq, f.toBooleanThunk)
+  @expose def count(agents: ArrayJS[AgentWrapper]):                  Int                   = EAS.count(agents.E)
+  @expose def ask(agent: AgentWrapper, f: JSFunc):                   Unit                  = EAS.ask(ArrayJS(agent.value), f.toThunk[Unit])
+  @expose def ask(agents: ArrayJS[AgentWrapper], f: JSFunc):         Unit                  = EAS.ask(agents, f.toThunk[Unit])
+  @expose def agentFilter(agents: ArrayJS[AgentWrapper], f: JSFunc): ArrayJS[AgentWrapper] = EAS.agentFilter(agents, f.toBooleanThunk)
   @expose def die():                                                 Unit                  = EAS.die()
   @expose def getTurtleVariable(varNum: Int):                        AnyJS                 = EAS.getTurtleVariable(varNum)
   @expose def getPatchVariable(varNum: Int):                         AnyJS                 = EAS.getPatchVariable(varNum)

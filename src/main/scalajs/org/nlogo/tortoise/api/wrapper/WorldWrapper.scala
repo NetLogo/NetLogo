@@ -14,7 +14,7 @@ class WorldWrapper(override val value: World) extends Wrapper {
   @expose def createorderedturtles(n: Int):     Unit                   = value.createorderedturtles(n)
   @expose def createturtles(n: Int):            Unit                   = value.createturtles(n)
   @expose def getPatchAt(x: Double, y: Double): PatchWrapper           = value.getPatchAt(XCor(x), YCor(y))
-  @expose def patches:                          ArrayJS[PatchWrapper]  = value.patches
-  @expose def turtles:                          ArrayJS[TurtleWrapper] = value.turtles
+  @expose def patches:                          ArrayJS[PatchWrapper]  = agentArrUnwrapped2AgentArrWrapped(value.patches)
+  @expose def turtles:                          ArrayJS[TurtleWrapper] = agentArrUnwrapped2AgentArrWrapped(value.turtles)
   @expose def world:                            World                  = value
 }

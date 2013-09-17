@@ -1,29 +1,33 @@
 package org.nlogo.tortoise
 
-import scala.collection.mutable.{ LinkedHashMap => LHM }
+import adt.{ AnyJS, JSWrapper }
 
 package object engine {
 
-  // Shouldn't most of this auto-cruft move to the API, where such translations are handled? --JAB (8/31/13)
-  type AnyJS      = scala.js.Any
-  type ArrayJS[T] = scala.js.Array[T]
-  type BooleanJS  = scala.js.Boolean
-  type NumberJS   = scala.js.Number
-  type ObjectJS   = scala.js.Object
-  type StringJS   = scala.js.String
+  implicit class IDJSWrapper(override val value: ID) extends JSWrapper {
+    override type ValueType = ID
+    override def toJS = AnyJS.fromLong(value.value)
+  }
 
-  val AnyJS     = scala.js.Any
-  val ArrayJS   = scala.js.Array
-  val BooleanJS = scala.js.Boolean
-  val NumberJS  = scala.js.Number
-  val ObjectJS  = scala.js.Object
-  val StringJS  = scala.js.String
+  implicit class PenModeJSWrapper(override val value: PenMode) extends JSWrapper {
+    override type ValueType = PenMode
+    override def toJS = AnyJS.fromString(if (value == PenUp) "up" else "down")
+  }
 
-  type Change                        = Map[String, AnyJS]
-  type AgentUpdate                   = Map[ID, Change]
-  type JSW                           = JSWrapper[_]
-  type VarMap                        = LHM[String, JSW]
-  def  VarMap(items: (String, JSW)*) = LHM(items: _*)
+  implicit class NLColorJSWrapper(override val value: NLColor) extends JSWrapper {
+    override type ValueType = NLColor
+    override def toJS = AnyJS.fromDouble(value.value)
+  }
+
+  implicit class XCorJSWrapper(override val value: XCor) extends JSWrapper {
+    override type ValueType = XCor
+    override def toJS = AnyJS.fromDouble(value.value)
+  }
+
+  implicit class YCorJSWrapper(override val value: YCor) extends JSWrapper {
+    override type ValueType = YCor
+    override def toJS = AnyJS.fromDouble(value.value)
+  }
 
 }
 

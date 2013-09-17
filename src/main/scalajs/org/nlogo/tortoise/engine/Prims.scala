@@ -1,7 +1,8 @@
 package org.nlogo.tortoise.engine
 
 import
-  scala.js.Dynamic.{ global => g }
+  org.nlogo.tortoise.adt.{ ArrayJS, DynamicJS },
+    DynamicJS.{ global => g }
 
 object Prims {
 
@@ -12,15 +13,15 @@ object Prims {
   // Could then be injected into this "Workspace" when it was first created, and we wouldn't need to call into the global scope. --JAB (8/5/13)
   private def getWorld():  World = g.world.world().asInstanceOf[World]
 
-  def fd(n: Double):               Unit       = AgentSet.self.asInstanceOf[Turtle].fd(n)
-  def bk(n: Double):               Unit       = AgentSet.self.asInstanceOf[Turtle].fd(-n)
-  def right(n: Int):               Unit       = AgentSet.self.asInstanceOf[Turtle].right(n)
-  def left(n: Int):                Unit       = AgentSet.self.asInstanceOf[Turtle].right(-n)
-  def setxy(x: Double, y: Double): Unit       = AgentSet.self.asInstanceOf[Turtle].setxy(x, y)
-  def getNeighbors:                Seq[Patch] = AgentSet.self.asInstanceOf[Patch].getNeighbors
-  def sprout(n: Int):              Unit       = AgentSet.self.asInstanceOf[Patch].sprout(n)
-  def patch(x: Double, y: Double): Patch      = getWorld().getPatchAt(XCor(x), YCor(y))
-  def randomxcor():                Double     = getWorld().randomXCor().value
-  def randomycor():                Double     = getWorld().randomYCor().value
+  def fd(n: Double):               Unit           = AgentSet.self.asInstanceOf[Turtle].fd(n)
+  def bk(n: Double):               Unit           = AgentSet.self.asInstanceOf[Turtle].fd(-n)
+  def right(n: Int):               Unit           = AgentSet.self.asInstanceOf[Turtle].right(n)
+  def left(n: Int):                Unit           = AgentSet.self.asInstanceOf[Turtle].right(-n)
+  def setxy(x: Double, y: Double): Unit           = AgentSet.self.asInstanceOf[Turtle].setxy(x, y)
+  def getNeighbors:                ArrayJS[Patch] = AgentSet.self.asInstanceOf[Patch].getNeighbors
+  def sprout(n: Int):              Unit           = AgentSet.self.asInstanceOf[Patch].sprout(n)
+  def patch(x: Double, y: Double): Patch          = getWorld().getPatchAt(XCor(x), YCor(y))
+  def randomxcor():                Double         = getWorld().randomXCor().value
+  def randomycor():                Double         = getWorld().randomYCor().value
 
 }

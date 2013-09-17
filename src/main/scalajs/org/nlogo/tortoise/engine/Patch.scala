@@ -1,5 +1,8 @@
 package org.nlogo.tortoise.engine
 
+import
+  org.nlogo.tortoise.adt.{ AnyJS, ArrayJS, EnhancedArray, JSW, SetJS, VarMap }
+
 import EngineVariableNames.PatchE._
 
 class Patch private (override val id: ID, world: World, variables: VarMap) extends Agent with Vassal with CanTalkToPatches {
@@ -7,25 +10,26 @@ class Patch private (override val id: ID, world: World, variables: VarMap) exten
   override protected def updateType = Overlord.UpdateType.PatchType
   override protected def companion  = Patch
 
-  registerUpdate(PXCorKeyE -> pxcor, PYCorKeyE -> pycor, PColorKeyE -> pcolor, PLabelKeyE -> plabel, PLabelColorKeyE -> plabelcolor)
+  registerUpdate(ArrayJS(PXCorKeyE -> pxcor, PYCorKeyE -> pycor, PColorKeyE -> pcolor, PLabelKeyE -> plabel, PLabelColorKeyE -> plabelcolor))
 
   def this(id: ID, world: World, pxcor: XCor, pycor: YCor, pcolor: NLColor = NLColor(0.0),
            plabel: String = "",  plabelcolor: NLColor = NLColor(9.9)) {
     this(id, world, {
       import Patch._
       val builtins = VarMap(
-        PXCorKeyE -> pxcor, PYCorKeyE -> pycor, PColorKeyE -> pcolor, PLabelKeyE -> plabel, PLabelColorKeyE -> plabelcolor
+        ArrayJS(PXCorKeyE -> pxcor, PYCorKeyE -> pycor, PColorKeyE -> pcolor, PLabelKeyE -> plabel, PLabelColorKeyE -> plabelcolor)
       )
-      builtins ++ (1 to varCount map (x => (x + builtins.size).toString -> (0: JSW)))
-    }.asInstanceOf[VarMap])
+      builtins ++= ArrayJS(1 to varCount: _*).E map (x => (x + builtins.size).toString -> (0: JSW))
+      builtins
+    })
   }
 
   override def getPatchVariable(n: Int): AnyJS =
-    variables.toSeq(n)._2.toJS
+    variables(n)._2.toJS
 
   override def setPatchVariable(n: Int, value: JSW): Unit = {
 
-    val k      = variables.toSeq(n)._1
+    val k      = variables(n)._1
     val v: JSW = k match {
       case PXCorKeyE                    => XCor   (value.value.asInstanceOf[Double])
       case PYCorKeyE                    => YCor   (value.value.asInstanceOf[Double])
@@ -34,11 +38,11 @@ class Patch private (override val id: ID, world: World, variables: VarMap) exten
     }
 
     variables(k) = v
-    registerUpdate(k -> v)
+    registerUpdate(ArrayJS(k -> v))
 
   }
 
-  def getNeighbors: Seq[Patch] =
+  def getNeighbors: ArrayJS[Patch] =
     world.getNeighbors(pxcor, pycor)
 
   def sprout(n: Int): Unit =
@@ -56,7 +60,7 @@ class Patch private (override val id: ID, world: World, variables: VarMap) exten
 
 object Patch extends VassalCompanion {
 
-  override val trackedKeys = Set(PXCorKeyE, PYCorKeyE, PColorKeyE, PLabelKeyE, PLabelColorKeyE)
+  override val trackedKeys = SetJS(ArrayJS(PXCorKeyE, PYCorKeyE, PColorKeyE, PLabelKeyE, PLabelColorKeyE))
 
   private var varCount = 0
   def init(n: Int): Unit = varCount = n

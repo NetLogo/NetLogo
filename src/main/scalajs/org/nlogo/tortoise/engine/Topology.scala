@@ -1,8 +1,11 @@
 package org.nlogo.tortoise.engine
 
+import
+  org.nlogo.tortoise.adt.{ ArrayJS, EnhancedArray }
+
 trait Topology {
   def world: World
-  def getNeighbors(pxcor: XCor, pycor: YCor): Seq[Patch]
+  def getNeighbors(pxcor: XCor, pycor: YCor): ArrayJS[Patch]
   def wrap(pos: Double, min: Double, max: Double): Double
 }
 
@@ -21,20 +24,20 @@ class Torus(override val world: World, minPxcor: XCor, maxPxcor: XCor, minPycor:
     else
       pos
 
-  override def getNeighbors(pxcor: XCor, pycor: YCor): Seq[Patch] = {
+  override def getNeighbors(pxcor: XCor, pycor: YCor): ArrayJS[Patch] = {
 
     implicit val (xcor, ycor) = (pxcor, pycor)
 
     val (minX, maxX, minY, maxY) = (pxcor == minPxcor, pxcor == maxPxcor, pycor == minPycor, pycor == maxPycor)
     val coordFuncs = (minX, maxX, minY, maxY) match {
-      case (true, true, true, true) => Seq()
-      case (true, true, _, _)       => Seq(getPatchNorth, getPatchSouth)
-      case (_, _, true, true)       => Seq(getPatchEast,  getPatchWest)
-      case _                        => Seq(getPatchNorth,     getPatchEast,      getPatchSouth,     getPatchWest,
-                                           getPatchNorthEast, getPatchSouthEast, getPatchSouthWest, getPatchNorthWest)
+      case (true, true, true, true) => ArrayJS()
+      case (true, true, _, _)       => ArrayJS(getPatchNorth, getPatchSouth)
+      case (_, _, true, true)       => ArrayJS(getPatchEast,  getPatchWest)
+      case _                        => ArrayJS(getPatchNorth,     getPatchEast,      getPatchSouth,     getPatchWest,
+                                               getPatchNorthEast, getPatchSouthEast, getPatchSouthWest, getPatchNorthWest)
     }
 
-    coordFuncs map { case (x, y) => (world.getPatchAt(x, y)) }
+    coordFuncs.E map { case (x, y) => (world.getPatchAt(x, y)) }
 
   }
 

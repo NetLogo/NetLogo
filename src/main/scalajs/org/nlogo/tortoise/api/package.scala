@@ -1,15 +1,20 @@
 package org.nlogo.tortoise
 
 import
-  scala.{ js, reflect },
-    js.{ Dynamic => DynamicJS },
-    reflect.ClassTag
+  scala.reflect.ClassTag
+
+import
+  org.nlogo.tortoise.adt.{ ArrayJS, BooleanJS, DynamicJS, EnhancedArray }
 
 package object api {
 
   import engine._, wrapper._
 
   type JSFunc = DynamicJS // For now. --JAB (8/31/13)
+
+  implicit def agentArrWrapped2AgentArrUnwrapped(arr: ArrayJS[AgentWrapper]): ArrayJS[Agent] = arr.E map (_.value)
+
+  implicit def agentArrUnwrapped2AgentArrWrapped[T <: Agent : ClassTag, U <: AgentWrapper](arr: ArrayJS[T])(implicit f: (T) => U): ArrayJS[U] = arr.E map f
 
   implicit def agent2Wrapper(agent: Agent): AgentWrapper =
     agent match {
@@ -22,14 +27,9 @@ package object api {
   implicit def turtle2Wrapper(turtle: Turtle): TurtleWrapper = new TurtleWrapper(turtle)
   implicit def world2Wrapper (world: World):   WorldWrapper  = new WorldWrapper(world)
 
-  // Odd that I couldn't find a way to write this with a view bound (`<%`) --JAB (8/31/13)
-  implicit def seq2JS[T <: Wrapper : ClassTag, U](xs: Seq[U])(implicit f: U => T): ArrayJS[T] = AnyJS.fromArray(xs map f toArray)
-
   implicit def wrapper2Unwrapped[T <: Wrapper](wrapper: T): T#ValueType = wrapper.value
 
-  implicit class EnhancedWrapperArrayJS[T <: Wrapper : ClassTag](xs: ArrayJS[T]) {
-    def toUnwrappedSeq: Seq[T#ValueType] = AnyJS.toArray(xs) map (_.value) toSeq
-  }
+  def unwrap[T <: Wrapper] = wrapper2Unwrapped[T] _
 
   implicit class Func2Thunk(jsFunc: JSFunc) {
     def toBooleanThunk: () => Boolean = () => BooleanJS.toBoolean(jsFunc.value().asInstanceOf[BooleanJS])

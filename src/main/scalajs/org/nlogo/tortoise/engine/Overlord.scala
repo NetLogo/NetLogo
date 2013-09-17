@@ -1,54 +1,61 @@
 package org.nlogo.tortoise.engine
 
 import
-  scala.collection.mutable.ArrayBuffer
+  org.nlogo.tortoise.adt.{ ArrayJS, Dictionary, JSW, NumberJS, UpdateJS }
 
+// Abstractionize to reference `UpdateJS` --JAB (9/11/13)
+// Eww... all these references to `Dictionary`.... --JAB (9/11/13)
+// This code is used so heavily that writing it as idiomatic Scala isn't acceptable; it cripples performance --JAB (9/11/13)
 object Overlord {
 
-  private var updates = ArrayBuffer[Update]()
+  private var updates = ArrayJS[UpdateJS]()
 
   def flushUpdates(): Unit =
-    updates = ArrayBuffer[Update]()
+    updates = ArrayJS[UpdateJS]()
 
-  def collectUpdates(): Array[Update] = {
+  def collectUpdates(): ArrayJS[UpdateJS] = {
     val collected =
-      if (updates.isEmpty)
-        ArrayBuffer(Update())
+      if (NumberJS.toDouble(updates.length) == 0)
+        ArrayJS(UpdateJS())
       else
         updates
     flushUpdates()
-    collected.result().toArray
+    collected
   }
 
   // gross hack - ST 1/25/13
   private[engine] def registerDeath(id: ID): Unit =
-    updates += Update(Map(id -> Map("WHO" -> -1)))
+    updates.push(UpdateJS(Dictionary(id.value.toString -> Dictionary("WHO" -> -1))))
 
-  private[engine] def registerUpdate(id: ID, updateType: UpdateType, changePairs: (String, JSW)*): Unit = {
+  private[engine] def registerUpdate(id: ID, updateType: UpdateType, changePairs: ArrayJS[(String, JSW)]): Unit = {
 
-    val agentChange = changePairs.foldLeft(Map[String, AnyJS]()) { case (acc, (varName, value)) => acc + (VarNameMapper(varName) -> value.toJS) }
+    val agentChange = {
+      val dict = Dictionary()
+      changePairs.E foreach {
+        case (varName, value) =>
+          val key = VarNameMapper(varName)
+          dict(key) = value.toJS
+      }
+      dict
+    }
 
-    val fullChange = Map(id -> agentChange)
+    val fullChange = Dictionary(id.value.toString -> agentChange)
 
     import UpdateType._
     val update = updateType match {
-      case TurtleType => Update(fullChange, Map())
-      case PatchType  => Update(Map(), fullChange)
+      case TurtleType => UpdateJS(fullChange,   Dictionary())
+      case PatchType  => UpdateJS(Dictionary(), fullChange)
     }
 
-    updates += update
+    updates.push(update)
 
   }
 
   sealed trait UpdateType
   object UpdateType {
     case object TurtleType extends UpdateType
-    case object PatchType extends UpdateType
+    case object PatchType  extends UpdateType
   }
 
 }
 
-case class Update(turtleUpdates: AgentUpdate = Map(), patchUpdates: AgentUpdate = Map()) {
-  def mapTurtles[T](f: (AgentUpdate) => AgentUpdate): Update = this.copy(turtleUpdates = f(turtleUpdates))
-  def mapPatches[T](f: (AgentUpdate) => AgentUpdate): Update = this.copy(patchUpdates = f(patchUpdates))
-}

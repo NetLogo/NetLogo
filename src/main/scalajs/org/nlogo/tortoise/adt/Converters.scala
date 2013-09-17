@@ -1,4 +1,4 @@
-package org.nlogo.tortoise.engine
+package org.nlogo.tortoise.adt
 
 trait JS2ScalaConverter[T] {
   def asScala: T

@@ -3,6 +3,9 @@ package org.nlogo.tortoise.engine
 import
   scala.js.annotation.JSName
 
+import
+  org.nlogo.tortoise.adt.{ NumberJS, ObjectJS }
+
 @JSName("Random")
 object RandomJS extends ObjectJS {
   def nextDouble():              NumberJS = ???

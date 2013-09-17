@@ -1,5 +1,8 @@
 package org.nlogo.tortoise.engine
 
+import
+  org.nlogo.tortoise.adt.{ AnyJS, ArrayJS, EnhancedArray, JS2WrapperConverter }
+
 object AgentSet {
 
   private var _self: Option[Agent] = None
@@ -24,12 +27,12 @@ object AgentSet {
     result
   }
 
-  def ask(agents: Seq[Agent], f: () => Unit): Unit = {
-    agents foreach (a => askAgent(a, f))
+  def ask(agents: ArrayJS[Agent], f: () => Unit): Unit = {
+    agents.E foreach (a => askAgent(a, f))
   }
 
-  def agentFilter(agents: Seq[Agent], f: () => Boolean): Seq[Agent] =
-    agents filter (agent => askAgent(agent, f))
+  def agentFilter(agents: ArrayJS[Agent], f: () => Boolean): ArrayJS[Agent] =
+    agents.E filter (agent => askAgent(agent, f))
 
   // I'm putting some things in Agents, and some in Prims
   // I did that on purpose to show how arbitrary/confusing this seems.

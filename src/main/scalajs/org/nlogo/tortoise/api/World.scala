@@ -7,7 +7,7 @@ import
 import
   org.nlogo.tortoise.{ api, engine },
     api.wrapper.WorldWrapper,
-    engine.{ AgentUpdate, Change, Globals => EGlobals, Overlord => EOverlord, Patch => EPatch, Turtle => ETurtle, World => EWorld, Update }
+    engine.{ Globals => EGlobals, Overlord => EOverlord, Patch => EPatch, Turtle => ETurtle, World => EWorld }
 
 object Globals {
   @expose def init(count: Int):                     Unit  = EGlobals.init(count)
@@ -16,36 +16,7 @@ object Globals {
 }
 
 object Overlord {
-
-  @expose
-  def collectUpdates(): ArrayJS[Dictionary] = {
-    val collected = EOverlord.collectUpdates()
-    AnyJS.fromArray(collected map updateToDictionary)
-  }
-
-  private def updateToDictionary(update: Update): Dictionary = {
-    def updateToDict(update: AgentUpdate) = {
-      val dict = Dictionary()
-      update foreach {
-        case (k, v) =>
-          val key   = k.value.toString
-          val value = {
-            val d = Dictionary()
-            v foreach {
-              case (k, v) =>
-                d(k) = v
-            }
-            d
-          }
-          dict(key) = value
-      }
-      dict
-    }
-    val turtlesEntry = "turtles" -> updateToDict(update.turtleUpdates)
-    val patchesEntry = "patches" -> updateToDict(update.patchUpdates)
-    Dictionary(turtlesEntry, patchesEntry)
-  }
-
+  @expose def collectUpdates(): ArrayJS[Dictionary] = EOverlord.collectUpdates().E map (_.toDictionary)
 }
 
 object Patch {

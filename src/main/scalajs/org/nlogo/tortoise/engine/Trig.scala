@@ -1,5 +1,7 @@
 package org.nlogo.tortoise.engine
 
+import org.nlogo.tortoise.adt.JS2ScalaConverters
+
 object Trig {
 
   import JS2ScalaConverters.num2Double

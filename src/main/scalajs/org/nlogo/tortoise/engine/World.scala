@@ -1,10 +1,13 @@
 package org.nlogo.tortoise.engine
 
+import
+  org.nlogo.tortoise.adt.{ ArrayJS, EnhancedArray, JS2ScalaConverters, NumberJS }
+
 case class World(minPxcor: Int, maxPxcor: Int, minPycor: Int, maxPycor: Int) {
 
-  private var _nextId:  Int         = 0
-  private var _turtles: Seq[Turtle] = Seq()
-  private var _patches: Seq[Patch]  = Seq()
+  private var _nextId:  Int             = 0
+  private var _turtles: ArrayJS[Turtle] = ArrayJS()
+  private var _patches: ArrayJS[Patch]  = ArrayJS()
 
   private val _width:    Int      = maxPxcor - minPxcor + 1
   private val _topology: Topology = new Torus(this, XCor(minPxcor), XCor(maxPxcor), YCor(minPycor), YCor(maxPycor))
@@ -26,7 +29,7 @@ case class World(minPxcor: Int, maxPxcor: Int, minPycor: Int, maxPycor: Int) {
       new Patch(ID(id), this, XCor(x), YCor(y))
     }
 
-    _patches = nested
+    _patches = ArrayJS(nested: _*)
 
   }
 
@@ -44,16 +47,16 @@ case class World(minPxcor: Int, maxPxcor: Int, minPycor: Int, maxPycor: Int) {
     YCor(randomCor(minPycor, maxPycor))
 
   def removeTurtle(id: ID): Unit =
-    _turtles = _turtles.filterNot(_.id.value == id.value)
+    _turtles = _turtles.E filter (_.id.value != id.value)
 
   def clearall(): Unit = {
-    Globals.init(Globals.vars.length)
-    _turtles foreach (_.die())
+    Globals.init(NumberJS.toDouble(Globals.vars.length).toInt)
+    _turtles.E foreach (_.die())
     createPatches()
     _nextId = 0
   }
 
-  def getNeighbors(pxcor: XCor, pycor: YCor): Seq[Patch] =
+  def getNeighbors(pxcor: XCor, pycor: YCor): ArrayJS[Patch] =
     _topology.getNeighbors(pxcor, pycor)
 
   def createorderedturtles(n: Int): Unit = {
@@ -66,7 +69,7 @@ case class World(minPxcor: Int, maxPxcor: Int, minPycor: Int, maxPycor: Int) {
     createNTurtles(n)
 
   def createturtle(x: XCor, y: YCor, color: NLColor, heading: Int): Unit = {
-    _turtles = _turtles :+ new Turtle(ID(_nextId), this, color, heading, x, y)
+    _turtles.push(new Turtle(ID(_nextId), this, color, heading, x, y))
     _nextId += 1
   }
 

@@ -5,7 +5,9 @@ import
   scala.js.annotation.expose
 
 import
-  org.nlogo.tortoise.engine.{ Agent, AnyJS, JSW, Patch, Turtle }
+  org.nlogo.tortoise.{ adt, engine },
+    adt.{ AnyJS, JSW },
+    engine.{ Agent, Patch, Turtle }
 
 trait AgentWrapper extends Wrapper {
   override type ValueType <: Agent
