@@ -95,7 +95,6 @@ object Compiler {
                                      => s"var ${ident(l.let.name)} = ${arg(1)};"
       case call: prim._call          => s"${ident(call.procedure.name)}($args)"
       case _: prim.etc._report       => s"return $args;"
-      // we need ask, we just shouldn't rely on it for test results.
       case _: prim._ask              => Prims.generateAsk(s, shuffle = true)
       case _: prim._asksorted        => Prims.generateAsk(s, shuffle = false)
       case _: prim._createturtles        => Prims.generateCreateTurtles(s, ordered = false)

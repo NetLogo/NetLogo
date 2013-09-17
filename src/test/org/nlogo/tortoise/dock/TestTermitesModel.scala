@@ -7,10 +7,6 @@ import org.nlogo.api.WorldDimensions
 
 class TestTermitesModel extends DockingSuite {
 
-  // TODO:
-  // - change __ask-sorted back to ask
-  // - change create-ordered-turtles to create-turtles
-
   test("termites") { implicit fixture => import fixture._
     val code =
       """
@@ -18,21 +14,20 @@ class TestTermitesModel extends DockingSuite {
        |
        |to setup
        |  clear-all
-       |  __ask-sorted patches [
+       |  ask patches [
        |    if random 100 < 20
        |      [ set pcolor yellow ] ]
-       |  create-ordered-turtles 50 [
+       |  create-turtles 50 [
        |    set color white
        |    setxy random-xcor random-ycor
        |    set size 3
        |    set next 1
-       |    set heading random 360
        |  ]
        |  reset-ticks
        |end
        |
        |to go
-       |  __ask-sorted turtles
+       |  ask turtles
        |    [ ifelse steps > 0
        |        [ set steps steps - 1 ]
        |        [ action

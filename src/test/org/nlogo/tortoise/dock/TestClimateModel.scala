@@ -11,14 +11,12 @@ class TestClimateModel extends DockingSuite {
   // - breeds removed
   //   - use a string "kind" instead
   //   - all breed-owns variables become turtles-own
-  // - asks changed to __ask-sorted
   // - sliders replaced with global variables
   // - tick counter replaced with "clock" global variable
   // - no plotting or monitors
   // - scale-color replaced with NL implementation "my-scale-color"
   // - no vertical cylinder support yet, so "my-can-move?"
   //   substitutes for can-move? primitive
-  // - use create-ordered-* instead of create-*
 
   test("climate") { implicit fixture => import fixture._
     val src =
@@ -57,7 +55,7 @@ class TestClimateModel extends DockingSuite {
          |to setup-world
          |  set sky-top max-pycor - 5
          |  set earth-top 0
-         |  __ask-sorted patches [  ;; set colors for the different sections of the world
+         |  ask patches [  ;; set colors for the different sections of the world
          |    if pycor > sky-top [  ;; space
          |      set pcolor my-scale-color white pycor 22 15
          |    ]
@@ -76,10 +74,10 @@ class TestClimateModel extends DockingSuite {
          |;;
          |
          |to go
-         |  __ask-sorted clouds [ fd cloud-speed ]  ; move clouds along
+         |  ask clouds [ fd cloud-speed ]  ; move clouds along
          |  run-sunshine   ;; step sunshine
          |  ;; if the albedo slider has moved update the color of the "earth surface" patches
-         |  __ask-sorted patches with [pycor = earth-top]
+         |  ask patches with [pycor = earth-top]
          |    [ update-albedo ]
          |  run-heat  ;; step heat
          |  run-IR    ;; step IR
@@ -106,7 +104,7 @@ class TestClimateModel extends DockingSuite {
          |  if any? clouds
          |  [ set id max [cloud-id] of clouds + 1 ]
          |
-         |  create-ordered-turtles 3 + random 20
+         |  create-turtles 3 + random 20
          |  [
          |    set kind "cloud"
          |    set shape "cloud"
@@ -130,13 +128,13 @@ class TestClimateModel extends DockingSuite {
          |to remove-cloud       ;; erase clouds and then create new ones, minus one
          |  if any? clouds [
          |    let doomed-id one-of remove-duplicates [cloud-id] of clouds
-         |    __ask-sorted clouds with [cloud-id = doomed-id]
+         |    ask clouds with [cloud-id = doomed-id]
          |      [ die ]
          |  ]
          |end
          |
          |to run-sunshine
-         |  __ask-sorted rays [
+         |  ask rays [
          |    if not my-can-move? 0.3 [ die ]  ;; kill them off at the edge
          |    fd 0.3                        ;; otherwise keep moving
          |  ]
@@ -149,7 +147,7 @@ class TestClimateModel extends DockingSuite {
          |  ;; don't necessarily create a ray each tick
          |  ;; as brightness gets higher make more
          |  if 10 * sun-brightness > random 50 [
-         |    create-ordered-turtles 1 [
+         |    create-turtles 1 [
          |      set kind "ray"
          |      set shape "ray"
          |      set heading 160
@@ -162,13 +160,13 @@ class TestClimateModel extends DockingSuite {
          |end
          |
          |to reflect-rays-from-clouds
-         | __ask-sorted rays with [any? clouds-here] [   ;; if ray shares patch with a cloud
+         | ask rays with [any? clouds-here] [   ;; if ray shares patch with a cloud
          |   set heading 180 - heading   ;; turn the ray around
          | ]
          |end
          |
          |to encounter-earth
-         |  __ask-sorted rays with [ycor <= earth-top] [
+         |  ask rays with [ycor <= earth-top] [
          |    ;; depending on the albedo either
          |    ;; the earth absorbs the heat or reflects it
          |    ifelse 100 * albedo > random 100
@@ -183,7 +181,7 @@ class TestClimateModel extends DockingSuite {
          |to run-heat    ;; advances the heat energy turtles
          |  ;; the temperature is related to the number of heat turtles
          |  set temperature 0.99 * temperature + 0.01 * (12 + 0.1 * count heats)
-         |  __ask-sorted heats
+         |  ask heats
          |  [
          |    let dist 0.5 * random-float 1
          |    ifelse my-can-move? dist
@@ -205,7 +203,7 @@ class TestClimateModel extends DockingSuite {
          |end
          |
          |to run-IR
-         |  __ask-sorted IRs [
+         |  ask IRs [
          |    if not my-can-move? 0.3 [ die ]
          |    fd 0.3
          |    if ycor <= earth-top [   ;; convert to heat if we hit the earth's surface again
@@ -221,7 +219,7 @@ class TestClimateModel extends DockingSuite {
          |
          |to add-CO2  ;; randomly adds 25 CO2 molecules to atmosphere
          |  let sky-height sky-top - earth-top
-         |  create-ordered-turtles 25 [
+         |  create-turtles 25 [
          |    set kind "CO2"
          |    set shape "CO2-molecule"
          |    set color green
@@ -234,13 +232,13 @@ class TestClimateModel extends DockingSuite {
          |to remove-CO2 ;; randomly remove 25 CO2 molecules
          |  repeat 25 [
          |    if any? CO2s [
-         |      __ask-sorted one-of CO2s [ die ]
+         |      ask one-of CO2s [ die ]
          |    ]
          |  ]
          |end
          |
          |to run-CO2
-         |  __ask-sorted CO2s [
+         |  ask CO2s [
          |    rt random 51 - 25 ;; turn a bit
          |    let dist 0.05 + random-float 0.1
          |    ;; keep the CO2 in the sky area
@@ -312,7 +310,7 @@ class TestClimateModel extends DockingSuite {
     // for (_ <- 1 to 10)
     //   testCommand("repeat 50 [ go ]")
     // testCommand("output-print temperature")
-    // testCommand("__ask-sorted turtles [ output-print (list kind xcor ycor) ]")
+    // testCommand("ask turtles [ output-print (list kind xcor ycor) ]")
   }
 
 }

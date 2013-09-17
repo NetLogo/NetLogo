@@ -100,29 +100,29 @@ class CompilerTests extends FunSuite {
 
   test("commands: ask simple") {
     import Compiler.{compileCommands => compile}
-    val input = "__ask-sorted turtles [fd 1]"
-    val expected = "AgentSet.ask(world.turtles(), false, function(){ Prims.fd(1) });"
+    val input = "ask turtles [fd 1]"
+    val expected = "AgentSet.ask(world.turtles(), true, function(){ Prims.fd(1) });"
     assertResult(expected)(compile(input))
   }
 
   test("commands: ask with turtle variable") {
     import Compiler.{compileCommands => compile}
-    val input = "__ask-sorted turtles [output-print xcor]"
-    val expected = "AgentSet.ask(world.turtles(), false, function(){ println(AgentSet.getTurtleVariable(3)) });"
+    val input = "ask turtles [output-print xcor]"
+    val expected = "AgentSet.ask(world.turtles(), true, function(){ println(AgentSet.getTurtleVariable(3)) });"
     assertResult(expected)(compile(input))
   }
 
   test("commands: die") {
     import Compiler.{compileCommands => compile}
-    val input = "__ask-sorted turtles [die]"
-    val expected = "AgentSet.ask(world.turtles(), false, function(){ AgentSet.die() });"
+    val input = "ask turtles [die]"
+    val expected = "AgentSet.ask(world.turtles(), true, function(){ AgentSet.die() });"
     assertResult(expected)(compile(input))
   }
 
   test("commands: ask patches with variable") {
     import Compiler.{compileCommands => compile}
-    val input = "__ask-sorted patches [output-print pxcor]"
-    val expected = "AgentSet.ask(world.patches(), false, function(){ println(AgentSet.getPatchVariable(0)) });"
+    val input = "ask patches [output-print pxcor]"
+    val expected = "AgentSet.ask(world.patches(), true, function(){ println(AgentSet.getPatchVariable(0)) });"
     assertResult(expected)(compile(input))
   }
 
@@ -155,31 +155,31 @@ class CompilerTests extends FunSuite {
 
   test("commands: ask turtles to set color") {
     import Compiler.{compileCommands => compile}
-    val input = "__ask-sorted turtles [set color green]"
-    val expected = "AgentSet.ask(world.turtles(), false, function(){ AgentSet.setTurtleVariable(1,55) });"
+    val input = "ask turtles [set color green]"
+    val expected = "AgentSet.ask(world.turtles(), true, function(){ AgentSet.setTurtleVariable(1,55) });"
     assertResult(expected)(compile(input))
   }
 
   test("commands: ask turtles to set pcolor") {
     import Compiler.{compileCommands => compile}
-    val input = "__ask-sorted turtles [set pcolor green]"
-    val expected = "AgentSet.ask(world.turtles(), false, function(){ AgentSet.setPatchVariable(2,55) });"
+    val input = "ask turtles [set pcolor green]"
+    val expected = "AgentSet.ask(world.turtles(), true, function(){ AgentSet.setPatchVariable(2,55) });"
     assertResult(expected)(compile(input))
   }
 
   test("commands: ask patches to set pcolor") {
     import Compiler.{compileCommands => compile}
-    val input = "__ask-sorted patches [set pcolor green]"
-    val expected = "AgentSet.ask(world.patches(), false, function(){ AgentSet.setPatchVariable(2,55) });"
+    val input = "ask patches [set pcolor green]"
+    val expected = "AgentSet.ask(world.patches(), true, function(){ AgentSet.setPatchVariable(2,55) });"
     assertResult(expected)(compile(input))
   }
 
   test("commands: with") {
     import Compiler.{compileCommands => compile}
-    val input = "__ask-sorted patches with [pxcor = 1] [output-print pycor]"
+    val input = "ask patches with [pxcor = 1] [output-print pycor]"
     val expectedAgentFilter =
       "AgentSet.agentFilter(world.patches(), function(){ return (AgentSet.getPatchVariable(0) === 1) })"
-    val expected = s"AgentSet.ask($expectedAgentFilter, false, function(){ println(AgentSet.getPatchVariable(1)) });"
+    val expected = s"AgentSet.ask($expectedAgentFilter, true, function(){ println(AgentSet.getPatchVariable(1)) });"
     assertResult(expected)(compile(input))
   }
 

@@ -41,7 +41,7 @@ class TestLifeModel extends DockingSuite {
     testCommand("setup")
     for (_ <- 1 to 5)
       testCommand("go")
-    testCommand("""__ask-sorted patches [output-print (word self " -> " living?) ]""")
+    testCommand("""random-seed 0 ask patches [output-print (word self " -> " living?) ]""")
   }
 
 }
