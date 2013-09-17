@@ -41,7 +41,7 @@ class TestAgents extends DockingSuite {
 
   test("turtle motion 1") { implicit fixture => import fixture._
     declare("", WorldDimensions.square(1))
-    testCommand("cro 4 __ask-sorted turtles [fd 1] __ask-sorted turtles [output-print xcor output-print ycor]")
+    testCommand("random-seed 0 cro 4 __ask-sorted turtles [fd 1] __ask-sorted turtles [output-print xcor output-print ycor]")
   }
 
   test("turtle motion 2") { implicit fixture => import fixture._

@@ -85,7 +85,10 @@ class DockingFixture(name: String) extends Fixture(name) {
       try {
         (false, runJS(compiledJS))
       } catch {
-        case _: Exception => (true, ("", ""))
+        case e: Exception =>
+          if (!exceptionOccurredInHeadless)
+            e.printStackTrace()
+          (true, ("", ""))
       }
     if(exceptionOccurredInHeadless && !exceptionOccurredInJS) {
       throw new IllegalStateException("Exception occurred in headless but not JS: " + headlessException)

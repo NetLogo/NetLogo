@@ -103,24 +103,35 @@ object Prims {
 
   def generateAsk(s: Statement, shuffle: Boolean): String = {
     val agents = Compiler.genReporterApp(s.args.head)
-    val body   = Compiler.genCommandBlock(s.args.tail.head)
-    if (shuffle)
-      s"AgentSet.ask(Shuffler.shuffle($agents), ${fun(body)})"
-    else
-      s"AgentSet.ask($agents, ${fun(body)})"
+    val body   = fun(Compiler.genCommandBlock(s.args.tail.head))
+    s"AgentSet.ask($agents, $shuffle, $body);"
   }
 
   def generateCreateTurtles(s: Statement, ordered: Boolean): String = {
     val n = Compiler.genReporterApp(s.args.head)
-    val body = fun(Compiler.genCommandBlock(s.args.tail.head))
     val name = if (ordered) "createorderedturtles" else "createturtles"
-    s"AgentSet.ask(Shuffler.shuffle(world.$name($n)), $body);"
+    s.args.tail.head match {
+      case cb: CommandBlock =>
+        if (cb.statements.isEmpty)
+          s"world.$name($n);"
+        else {
+          val body = fun(Compiler.genCommandBlock(s.args.tail.head))
+          s"AgentSet.ask(world.$name($n), true, $body);"
+        }
+    }
   }
 
   def generateSprout(s: Statement): String = {
     val n = Compiler.genReporterApp(s.args.head)
-    val body = fun(Compiler.genCommandBlock(s.args.tail.head))
-    s"AgentSet.ask(Shuffler.shuffle(Prims.sprout($n)), $body);"
+    s.args.tail.head match {
+      case cb: CommandBlock =>
+        if (cb.statements.isEmpty)
+          s"Prims.sprout($n);"
+        else {
+          val body = fun(Compiler.genCommandBlock(s.args.tail.head))
+          s"AgentSet.ask(Prims.sprout($n), true, $body);"
+        }
+    }
   }
 
   def fun(body: String) = s"function(){ $body }"
