@@ -1,6 +1,6 @@
 ##
 ## stuff in this file papers over differences between Rhino, Nashorn,
-## and other JS implementations such as Node as the ones in browsers.
+## and other JS implementations such as Node and the ones in browsers.
 ##
 ## on Rhino/Nashorn, the goal is precisely bit-for-bit identical
 ## results as JVM NetLogo.  elsewhere, "close enough" is close enough
