@@ -16,6 +16,8 @@ class TestClimateModel extends DockingSuite {
   // - scale-color replaced with NL implementation "my-scale-color"
   // - no vertical cylinder support yet, so "my-can-move?"
   //   substitutes for can-move? primitive
+  // - random-normal replaced with my-random-normal
+  //   since Random.nextGaussian might be hard to implement in browser
 
   test("climate") { implicit fixture => import fixture._
     val src =
@@ -114,7 +116,7 @@ class TestClimateModel extends DockingSuite {
          |    setxy x + random 9 - 4
          |          ;; the clouds should generally be clustered around the
          |          ;; center with occasional larger variations
-         |          y + random-normal 2.5 1
+         |          y + my-random-normal 2.5 1
          |    set color white
          |    ;; varying size is also purely for visualization
          |    ;; since we're only doing patch-based collisions
@@ -288,6 +290,13 @@ class TestClimateModel extends DockingSuite {
          |  ifelse ycor > 0
          |    [ report new-y < max-pycor + 0.5 ]
          |    [ report new-y >= min-pycor - 0.5 ]
+         |end
+         |
+         |;;; compensate for lack of random-normal in Tortoise
+         |
+         |to-report my-random-normal [center sdev]
+         |  ;; not a bell curve, just a triangle
+         |  report center - random-float sdev + random-float sdev
          |end
       """.stripMargin
     declare(src, api.WorldDimensions(-24, 24, -8, 22))
