@@ -3,7 +3,7 @@
 # -e makes the whole thing die with an error if any command does
 # -v lets you see the commands as they happen
 
-if [ "$1" != --noclean ]; then
+if [ "$1" != --noclean ] && [ "$1" != --no-clean ] ; then
   git clean -fdX
   git submodule update --init
   git submodule foreach git clean -fdX
