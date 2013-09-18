@@ -300,14 +300,18 @@ class TestClimateModel extends DockingSuite {
          |end
       """.stripMargin
     declare(src, api.WorldDimensions(-24, 24, -8, 22))
-    workspace.world.turtleShapeList.add(new api.DummyShape("cloud"))
+    for (shape <- Seq("cloud", "ray", "dot", "CO2-molecule"))
+      workspace.world.turtleShapeList.add(new api.DummyShape(shape))
     testCommand("random-seed 0 setup")
     testCommand("add-cloud")
     testCommand("add-cloud")
+    testCommand("repeat 10 [ go ]")
+    // commented out because after enough ticks it stops working because "die"
+    // isn't right yet - ST 9/18/13
     // for (_ <- 1 to 10)
     //   testCommand("repeat 50 [ go ]")
-    // testCommand("output-print temperature")
-    // testCommand("ask turtles [ output-print (list kind xcor ycor) ]")
+    testCommand("output-print temperature")
+    testCommand("""ask turtles [ output-print (word kind " " xcor " "  ycor " ") ]""")
   }
 
 }
