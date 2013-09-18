@@ -8,7 +8,7 @@ import sys.process.Process
 // use a hand-maintained classpath like this - ST 8/2/13
 val classpath =
   Seq("headless/target/classes",
-      System.getenv("HOME") + "/.sbt/boot/scala-2.10.2/lib/scala-library.jar",
+      System.getenv("HOME") + "/.sbt/boot/scala-2.10.3-RC2/lib/scala-library.jar",
       "headless/resources",
       "lib_managed/jars/asm/asm-all/asm-all-3.3.1.jar",
       "lib_managed/jars/org.picocontainer/picocontainer/picocontainer-2.13.6.jar")
