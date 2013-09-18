@@ -303,7 +303,7 @@ class TestClimateModel extends DockingSuite {
     workspace.world.turtleShapeList.add(new api.DummyShape("cloud"))
     testCommand("random-seed 0 setup")
     testCommand("add-cloud")
-    // testCommand("add-cloud")
+    testCommand("add-cloud")
     // for (_ <- 1 to 10)
     //   testCommand("repeat 50 [ go ]")
     // testCommand("output-print temperature")
