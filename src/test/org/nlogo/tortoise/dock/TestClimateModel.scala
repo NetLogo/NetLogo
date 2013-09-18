@@ -12,7 +12,6 @@ class TestClimateModel extends DockingSuite {
   //   - use a string "kind" instead
   //   - all breed-owns variables become turtles-own
   // - sliders replaced with global variables
-  // - tick counter replaced with "clock" global variable
   // - no plotting or monitors
   // - scale-color replaced with NL implementation "my-scale-color"
   // - no vertical cylinder support yet, so "my-can-move?"
@@ -26,7 +25,6 @@ class TestClimateModel extends DockingSuite {
          |  temperature  ;; overall temperature
          |  sun-brightness ;; slider
          |  albedo         ;; slider
-         |  clock          ;; tick counter
          |]
          |
          |turtles-own [
@@ -44,7 +42,7 @@ class TestClimateModel extends DockingSuite {
          |  setup-sliders
          |  setup-world
          |  set temperature 12
-         |  my-reset-ticks
+         |  reset-ticks
          |end
          |
          |to setup-sliders
@@ -82,7 +80,7 @@ class TestClimateModel extends DockingSuite {
          |  run-heat  ;; step heat
          |  run-IR    ;; step IR
          |  run-CO2   ;; moves CO2 molecules
-         |  my-tick
+         |  tick
          |end
          |
          |to update-albedo ;; patch procedure
@@ -274,16 +272,6 @@ class TestClimateModel extends DockingSuite {
          |
          |to-report IRs
          |  report turtles with [kind = "IR"]
-         |end
-         |
-         |;;; compensate for lack of tick counter in Tortoise
-         |
-         |to my-reset-ticks
-         |  set clock 0
-         |end
-         |
-         |to my-tick
-         |  set clock clock + 1
          |end
          |
          |;;; compensate for lack of scale-color in Tortoise
