@@ -49,10 +49,16 @@ class TestAgents extends DockingSuite {
     testCommand("cro 8 ask turtles [fd 1] ask turtles [output-print xcor output-print ycor]")
   }
 
-  test("turtle death") { implicit fixture => import fixture._
+  test("turtle death 1") { implicit fixture => import fixture._
     testCommand("cro 8")
     testCommand("ask turtles [die]")
     testCommand("ask turtles [output-print xcor]")
+  }
+
+  test("turtle death 2") { implicit fixture => import fixture._
+    testCommand("cro 5")
+    testCommand("ask turtles with [who = 2] [ die ]")
+    testCommand("ask turtles [output-print who]")
   }
 
   test("turtle size") { implicit fixture => import fixture._
