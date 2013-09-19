@@ -109,6 +109,9 @@ class DockingFixture(name: String) extends Fixture(name) {
       // println("  actual = " + actualModel)
       org.skyscreamer.jsonassert.JSONAssert.assertEquals(
         expectedModel, actualModel, true)  // strict = true
+      assertResult(workspace.world.mainRNG.save) {
+        rhino.eval("Random.save()")
+      }
     }
     // println()
   }
@@ -125,7 +128,7 @@ class DockingFixture(name: String) extends Fixture(name) {
     rhino.eval("expectedModel = new AgentModel")
     rhino.eval("actualModel = new AgentModel")
     opened = true
-    runCommand(Command("clear-all"))
+    runCommand(Command("clear-all random-seed 0"))
   }
 
   // these two are super helpful when running failing tests

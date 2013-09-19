@@ -23,15 +23,15 @@ class TestAgents extends DockingSuite {
   }
 
   test("cro with init block") { implicit fixture => import fixture._
-    testCommand("random-seed 0 crt 4 [ output-print who ]")
+    testCommand("crt 4 [ output-print who ]")
   }
 
   test("crt with init block") { implicit fixture => import fixture._
-    testCommand("random-seed 0 crt 4 [ output-print color output-print heading ]")
+    testCommand("crt 4 [ output-print color output-print heading ]")
   }
 
   test("random-xcor/ycor") { implicit fixture => import fixture._
-    testCommand("random-seed 0 cro 10 [ setxy random-xcor random-ycor ]")
+    testCommand("cro 10 [ setxy random-xcor random-ycor ]")
   }
 
   test("ask") { implicit fixture => import fixture._
@@ -41,12 +41,12 @@ class TestAgents extends DockingSuite {
 
   test("turtle motion 1") { implicit fixture => import fixture._
     declare("", WorldDimensions.square(1))
-    testCommand("random-seed 0 cro 4 ask turtles [fd 1] ask turtles [output-print xcor output-print ycor]")
+    testCommand("cro 4 ask turtles [fd 1] ask turtles [output-print xcor output-print ycor]")
   }
 
   test("turtle motion 2") { implicit fixture => import fixture._
     declare("", WorldDimensions.square(1))
-    testCommand("random-seed 0 cro 8 ask turtles [fd 1] ask turtles [output-print xcor output-print ycor]")
+    testCommand("cro 8 ask turtles [fd 1] ask turtles [output-print xcor output-print ycor]")
   }
 
   test("turtle death") { implicit fixture => import fixture._
@@ -83,18 +83,18 @@ class TestAgents extends DockingSuite {
 
   test("patch order") { implicit fixture => import fixture._
     declare("", WorldDimensions.square(5))
-    testCommand("""random-seed 0 ask patches [ output-print self ]""")
+    testCommand("""ask patches [ output-print self ]""")
   }
 
   test("turtles get patch variables") { implicit fixture => import fixture._
     declare("", WorldDimensions.square(5))
-    testCommand("random-seed 0 cro 5 ask turtles [ fd 1 ]")
+    testCommand("cro 5 ask turtles [ fd 1 ]")
     testCommand("""ask turtles [ output-print self ]""")
   }
 
   test("turtles set patch variables") { implicit fixture => import fixture._
     declare("", WorldDimensions.square(5))
-    testCommand("random-seed 0 cro 5 ask turtles [ fd 1 set pcolor blue ]")
+    testCommand("cro 5 ask turtles [ fd 1 set pcolor blue ]")
     testCommand("ask turtles [output-print color]")
     testCommand("ask turtles [output-print pcolor]")
     testCommand("ask patches [output-print pcolor]")
@@ -103,7 +103,7 @@ class TestAgents extends DockingSuite {
   // currently failing for reasons which currently baffle me - ST 9/18/13
   // test("with") { implicit fixture => import fixture._
   //   declare("", WorldDimensions.square(5))
-  //   testCommand("random-seed 0 ask patches with [pxcor = 1] [output-print pycor]")
+  //   testCommand("ask patches with [pxcor = 1] [output-print pycor]")
   // }
 
   test("with 2") { implicit fixture => import fixture._
@@ -113,7 +113,7 @@ class TestAgents extends DockingSuite {
 
   test("with + turtles accessing turtle and patch vars") { implicit fixture => import fixture._
     declare("", WorldDimensions.square(5))
-    testCommand("random-seed 0 cro 5 ask turtles [fd 1]")
+    testCommand("cro 5 ask turtles [fd 1]")
     testCommand("ask turtles with [pxcor =  1] [output-print pycor]")
     testCommand("ask turtles with [pxcor = -1] [output-print ycor]")
   }
@@ -134,7 +134,7 @@ class TestAgents extends DockingSuite {
   }
 
   test("get turtle") { implicit fixture => import fixture._
-    testCommand("random-seed 0 cro 5")
+    testCommand("cro 5")
     testCommand("ask turtles [ output-print self ]")
   }
 
@@ -171,14 +171,14 @@ class TestAgents extends DockingSuite {
 
   test("setting a built-in patch variable") { implicit fixture => import fixture._
     declare("", WorldDimensions.square(5))
-    testCommand("random-seed 0 ask patches with [pxcor = 2 and pycor = 3] [ set pcolor green ]")
+    testCommand("ask patches with [pxcor = 2 and pycor = 3] [ set pcolor green ]")
     testCommand("output-print count patches with [pcolor = green]")
     testCommand("ask patches [ output-print self output-print pcolor ]")
   }
 
   test("setting a patches-own variable") { implicit fixture => import fixture._
     declare("patches-own [foo]", WorldDimensions.square(5))
-    testCommand("random-seed 0 ask patches with [pxcor = 2 and pycor = 3] [ set foo green ]")
+    testCommand("ask patches with [pxcor = 2 and pycor = 3] [ set foo green ]")
     testCommand("output-print count patches with [foo = green]")
     testCommand("ask patches [ output-print self output-print foo ]")
   }
@@ -192,18 +192,16 @@ class TestAgents extends DockingSuite {
   }
 
   test("sprout 1") { implicit fixture => import fixture._
-    testCommand("random-seed 0 " +
-      "ask patches with [pxcor >= 0] [ sprout 1 ]")
+    testCommand("ask patches with [pxcor >= 0] [ sprout 1 ]")
   }
 
   test("sprout 2") { implicit fixture => import fixture._
-    testCommand("random-seed 0 " +
-      "ask patches [ sprout 1 [ set color red ] ]")
+    testCommand("ask patches [ sprout 1 [ set color red ] ]")
   }
 
   test("turtle motion") { implicit fixture => import fixture._
     declare("", WorldDimensions.square(5))
-    testCommand("random-seed 0 crt 100")
+    testCommand("crt 100")
     testCommand("ask turtles [ setxy random-xcor random-ycor ]")
     for (_ <- 1 to 10)
       testCommand("ask turtles [ fd 1 ]")
@@ -211,13 +209,12 @@ class TestAgents extends DockingSuite {
 
   test("patch-ahead") { implicit fixture => import fixture._
     declare("", WorldDimensions.square(2))
-    testCommand("random-seed 0 cro 7")
+    testCommand("cro 7")
     testCommand("ask turtles [ output-print patch-ahead 1 ]")
   }
 
   test("turtles-here") { implicit fixture => import fixture._
     declare("", WorldDimensions.square(2))
-    testCommand("random-seed 0")
     testCommand("ask patches [ sprout 2 ]")
     compare("sum [count turtles-here] of turtles")
   }

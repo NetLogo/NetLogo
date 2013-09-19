@@ -302,7 +302,7 @@ class TestClimateModel extends DockingSuite {
     declare(src, api.WorldDimensions(-24, 24, -8, 22))
     for (shape <- Seq("cloud", "ray", "dot", "CO2-molecule"))
       workspace.world.turtleShapeList.add(new api.DummyShape(shape))
-    testCommand("random-seed 0 setup")
+    testCommand("setup")
     testCommand("add-cloud")
     testCommand("add-cloud")
     testCommand("repeat 10 [ go ]")

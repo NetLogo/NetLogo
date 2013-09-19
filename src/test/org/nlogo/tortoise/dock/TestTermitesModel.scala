@@ -78,7 +78,7 @@ class TestTermitesModel extends DockingSuite {
        |end
       """.stripMargin
     declare(code, WorldDimensions.square(10))
-    testCommand("random-seed 0 setup")
+    testCommand("setup")
     for (_ <- 1 to 20)
       testCommand("go")
   }
