@@ -244,4 +244,10 @@ class TestAgents extends DockingSuite {
     compare("sum [count turtles-here] of turtles")
   }
 
+  // TODO currently failing, haven't figured out why yet - ST 9/20/13
+  // test("turtle creation + procedure call") { implicit fixture => import fixture._
+  //   declare("to foo cro 2 end")
+  //   testCommand("foo")
+  // }
+
 }
