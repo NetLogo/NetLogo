@@ -52,6 +52,7 @@ object Prims {
         case _: prim.etc._turtleshere => "AgentSet.self().turtlesHere"
         case _: prim.etc._sin         => "Trig.unsquashedSin"
         case _: prim.etc._cos         => "Trig.unsquashedCos"
+        case _: prim.etc._round       => "StrictMath.round"
       }
   }
 
