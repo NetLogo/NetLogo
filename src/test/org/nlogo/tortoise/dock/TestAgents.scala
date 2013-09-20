@@ -12,7 +12,12 @@ class TestAgents extends DockingSuite {
     compare("count patches")
   }
 
-  test("turtle creation") { implicit fixture => import fixture._
+  test("turtle creation 1") { implicit fixture => import fixture._
+    testCommand("cro 2")
+    testCommand("cro 2")
+  }
+
+  test("turtle creation 2") { implicit fixture => import fixture._
     testCommand("output-print count turtles")
     testCommand("cro 1")
     testCommand("output-print count turtles")
@@ -106,13 +111,27 @@ class TestAgents extends DockingSuite {
     testCommand("ask patches [output-print pcolor]")
   }
 
-  // currently failing for reasons which currently baffle me - ST 9/18/13
-  // test("with") { implicit fixture => import fixture._
-  //   declare("", WorldDimensions.square(5))
-  //   testCommand("ask patches with [pxcor = 1] [output-print pycor]")
-  // }
+  test("with 1") { implicit fixture => import fixture._
+    declare("", WorldDimensions.square(5))
+    testCommand("ask patches with [true] [output-print pycor]")
+  }
+
+  test("with 1b") { implicit fixture => import fixture._
+    declare("", WorldDimensions.square(5))
+    testCommand("ask patches with [pcolor = black] [output-print pycor]")
+  }
+
+  test("with 2a") { implicit fixture => import fixture._
+    declare("", WorldDimensions.square(5))
+    testCommand("ask patches with [pxcor > 0 and pxcor < 2] [output-print pycor]")
+  }
 
   test("with 2") { implicit fixture => import fixture._
+    declare("", WorldDimensions.square(5))
+    testCommand("ask patches with [pxcor = 1] [output-print pycor]")
+  }
+
+  test("with 3") { implicit fixture => import fixture._
     declare("", WorldDimensions.square(5))
     testCommand("ask patches with [pxcor = -3 and pycor = 2] [ output-print self ]")
   }
