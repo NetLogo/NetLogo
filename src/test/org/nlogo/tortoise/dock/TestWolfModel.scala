@@ -14,6 +14,8 @@ class TestWolfModel extends DockingSuite {
     // - breeds removed:
     //   - use a string "kind" instead
     // - stop condition commented out
+    // - TODO: reproduction commented out
+    // - TODO: predation commented out
     val src =
       """|globals [grass grass? grass-regrowth-time initial-number-sheep initial-number-wolves sheep-gain-from-food wolf-gain-from-food sheep-reproduce wolf-reproduce show-energy?]
          |turtles-own [energy kind]       ;; both wolves and sheep have energy
@@ -75,14 +77,14 @@ class TestWolfModel extends DockingSuite {
          |      eat-grass
          |    ]
          |    death
-         |    reproduce-sheep
+         |    ;; TODO reproduce-sheep
          |  ]
          |  ask wolves [
          |    move
          |    set energy energy - 1  ;; wolves lose energy as they move
-         |    catch-sheep
+         |    ;; TODO catch-sheep
          |    death
-         |    reproduce-wolves
+         |    ;; TODO reproduce-wolves
          |  ]
          |  if grass? [ ask patches [ grow-grass ] ]
          |  set grass count patches with [pcolor = green]
@@ -169,9 +171,7 @@ class TestWolfModel extends DockingSuite {
     for (shape <- Seq("wolf", "sheep"))
       workspace.world.turtleShapeList.add(new api.DummyShape(shape))
     testCommand("setup")
-    // TODO needs "hatch" - ST 9/20/13
-    // testCommand("go")
-    // testCommand("repeat 10 [ go ]")
+    testCommand("repeat 10 [ go ]")
     testCommand("output-print count wolves output-print count sheep output-print grass")
   }
 
