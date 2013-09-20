@@ -4,7 +4,7 @@ package org.nlogo.tortoise
 package dock
 
 import
-  org.nlogo.{ api, headless, mirror },
+  org.nlogo.{ api, headless, mirror, nvm },
   headless.lang._,
   org.nlogo.util.MersenneTwisterFast,
   org.scalatest.Assertions._
@@ -25,6 +25,14 @@ class DockingFixture(name: String) extends Fixture(name) {
     mirror.Mirrorables.allMirrorables(workspace.world, Seq())
   var state: mirror.Mirroring.State = Map()
   var opened = false
+
+  workspace.flags =
+    nvm.CompilerFlags(
+      useOptimizer = false, // since the Tortoise compiler sees the unoptimized code
+                            //   and some optimizations may affect results ordering
+                            //   and/or RNG interaction
+      useGenerator = false  // just to save on compilation time
+    )
 
   def compare(reporter: String) {
     runReporter(Reporter(reporter,

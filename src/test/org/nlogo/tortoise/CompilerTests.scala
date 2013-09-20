@@ -64,7 +64,7 @@ class CompilerTests extends FunSuite {
 
   test("commands: turtle creation") {
     import Compiler.{compileCommands => compile}
-    val expected = """|world.createorderedturtles(5);
+    val expected = """|AgentSet.ask(world.createorderedturtles(5), true, function(){  });
                       |println(AgentSet.count(world.turtles()))""".stripMargin
     assertResult(expected)(
       compile("cro 5 output-print count turtles"))

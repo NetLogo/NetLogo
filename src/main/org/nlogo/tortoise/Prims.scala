@@ -110,28 +110,14 @@ object Prims {
   def generateCreateTurtles(s: Statement, ordered: Boolean): String = {
     val n = Compiler.genReporterApp(s.args.head)
     val name = if (ordered) "createorderedturtles" else "createturtles"
-    s.args.tail.head match {
-      case cb: CommandBlock =>
-        if (cb.statements.isEmpty)
-          s"world.$name($n);"
-        else {
-          val body = fun(Compiler.genCommandBlock(s.args.tail.head))
-          s"AgentSet.ask(world.$name($n), true, $body);"
-        }
-    }
+    val body = fun(Compiler.genCommandBlock(s.args.tail.head))
+    s"AgentSet.ask(world.$name($n), true, $body);"
   }
 
   def generateSprout(s: Statement): String = {
     val n = Compiler.genReporterApp(s.args.head)
-    s.args.tail.head match {
-      case cb: CommandBlock =>
-        if (cb.statements.isEmpty)
-          s"Prims.sprout($n);"
-        else {
-          val body = fun(Compiler.genCommandBlock(s.args.tail.head))
-          s"AgentSet.ask(Prims.sprout($n), true, $body);"
-        }
-    }
+    val body = fun(Compiler.genCommandBlock(s.args.tail.head))
+    s"AgentSet.ask(Prims.sprout($n), true, $body);"
   }
 
   def fun(body: String) = s"function(){ $body }"
