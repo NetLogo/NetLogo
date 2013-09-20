@@ -12,15 +12,18 @@ class Evaluator(workspace: AbstractWorkspace) {
   def evaluateCommands(owner: JobOwner,
                        source: String,
                        agentSet: AgentSet = workspace.world.observers,
-                       waitForCompletion: Boolean = true) {
-    val procedure = invokeCompiler(source, None, true, agentSet.kind)
+                       waitForCompletion: Boolean = true,
+                       flags: CompilerFlags = CompilerFlags()) {
+    val procedure = invokeCompiler(source, None, true, agentSet.kind, flags)
     workspace.jobManager.addJob(
       workspace.jobManager.makeConcurrentJob(owner, agentSet, procedure),
       waitForCompletion)
   }
 
-  def evaluateReporter(owner: JobOwner, source: String, agents: AgentSet = workspace.world.observers): Object = {
-    val procedure = invokeCompiler(source, None, false, agents.kind)
+  def evaluateReporter(owner: JobOwner, source: String,
+      agents: AgentSet = workspace.world.observers,
+      flags: CompilerFlags = CompilerFlags()): Object = {
+    val procedure = invokeCompiler(source, None, false, agents.kind, flags)
     workspace.jobManager.addReporterJobAndWait(owner, agents, procedure)
   }
 
