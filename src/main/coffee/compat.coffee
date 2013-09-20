@@ -52,5 +52,5 @@ Cloner = {
 # with regular NetLogo. in browser, be satisfied with "close enough"
 unless StrictMath?
   StrictMath = Cloner.clone(Math)
-  # For functions that are not "close enough," manually define them here!
+  # For functions that are not "close enough," or that don't exist in the browser, manually define them here!
   StrictMath.toRadians = (degrees) -> degrees * Math.PI / 180
