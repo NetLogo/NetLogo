@@ -117,9 +117,8 @@ class DockingFixture(name: String) extends Fixture(name) {
       // println("  actual = " + actualModel)
       org.skyscreamer.jsonassert.JSONAssert.assertEquals(
         expectedModel, actualModel, true)  // strict = true
-      assertResult(workspace.world.mainRNG.save) {
-        rhino.eval("Random.save()")
-      }
+      assert(workspace.world.mainRNG.save == rhino.eval("Random.save()"),
+        "divergent RNG state")
     }
     // println()
   }
