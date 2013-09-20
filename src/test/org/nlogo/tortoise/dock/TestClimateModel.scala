@@ -11,6 +11,7 @@ class TestClimateModel extends DockingSuite {
   // - breeds removed
   //   - use a string "kind" instead
   //   - all breed-owns variables become turtles-own
+  // - no set-default-shape, use "set shape" instead
   // - sliders replaced with global variables
   // - no plotting or monitors
   // - scale-color replaced with NL implementation "my-scale-color"
