@@ -38,7 +38,7 @@ unless Random?
   Random.nextLong = Random.nextInt
   Random.nextDouble = -> Math.random()
 
-# For divergances between Rhino and browsers, clone and extend!
+# For divergences between Rhino and browsers, clone and extend!
 Cloner = {
   clone: (obj) ->
     return obj if obj is null or typeof (obj) isnt "object"
