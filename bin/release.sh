@@ -34,7 +34,7 @@ TAR=tar
 XARGS=xargs
 
 # other
-SCALA_JAR=$HOME/.sbt/boot/scala-2.10.3-RC2/lib/scala-library.jar
+SCALA_JAR=$HOME/.sbt/boot/scala-2.10.3-RC3/lib/scala-library.jar
 IJVERSION=5.0.11
 IJDIR="/Applications/install4j 5"
 VM=windows-x86-1.6.0_45_server
