@@ -89,8 +89,8 @@ class Turtle
     @ycor = y
     updated(this, "xcor", "ycor")
     return
-  isBreed: (breedName) ->
-    @breed.name == breedName
+  isBreed: (breed) ->
+    @breed == breed
   die: ->
     if (@id != -1)
       world.removeTurtle(@id)
@@ -284,9 +284,6 @@ class World
     t.id = _nextId++
     updated(t, turtleBuiltins...)
     _turtles.push(t)
-    #if(_turtles[1])
-    #  print(_turtles[0].breed)
-    #  print(_turtles[1].breed)
     t
   createorderedturtles: (n, breedName) ->
     new Agents(@createturtle(new Turtle((num * 10 + 5) % 140, num * (360 / n), 0, 0, Breeds.get(breedName))) for num in [0...n])
