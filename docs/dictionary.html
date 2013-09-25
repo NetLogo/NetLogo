@@ -3156,11 +3156,11 @@ set hidden? not hidden?
         Any non-numeric values in the list are ignored.
       <p>
         The histogram is drawn on the current plot using the current plot
-        pen and pen color. Use set-plot-x-range to control the range of
-        values to be histogrammed, and set the pen interval (either
-        directly with set-plot-pen-interval, or indirectly via
-        set-histogram-num-bars) to control how many bars that range is
-        split up into.
+        pen and pen color. Auto scaling does not affect a histogram's
+        horizontal range, so set-plot-x-range should be used to control
+        the range, and the pen interval can then be set (either directly
+        with set-plot-pen-interval, or indirectly via set-histogram-num-bars)
+        to control how many bars that range is split up into.
       <p>
         Be sure that if you want the histogram drawn with bars that the
         current pen is in bar mode (mode 1).
