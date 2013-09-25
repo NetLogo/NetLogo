@@ -68,6 +68,7 @@ object Prims {
         case _: prim.etc._resetticks       => "world.resetTicks"
         case _: prim.etc._tick             => "world.tick"
         case _: prim.etc._tickadvance      => "world.advancetick"
+        case _: prim.etc._setdefaultshape  => "Breeds.setDefaultShape"
         case _: prim._fd                   => "Prims.fd"
         case _: prim._bk                   => "Prims.bk"
         case _: prim.etc._left             => "Prims.left"
@@ -111,11 +112,16 @@ object Prims {
     s"AgentSet.ask($agents, $shuffle, $body);"
   }
 
-  import org.nlogo.prim._createturtles
   def generateCreateTurtles(s: Statement, ordered: Boolean): String = {
+    import org.nlogo.prim._
     val n = Compiler.genReporterApp(s.args.head)
     val name = if (ordered) "createorderedturtles" else "createturtles"
-    val breed = s.command.asInstanceOf[_createturtles].breedName
+    val breed =
+      s.command match {
+        case x: _createturtles => x.breedName
+        case x: _createorderedturtles => x.breedName
+        case x => throw new IllegalArgumentException("How did you get here with class of type " + x.getClass.getName)
+      }
     val body = fun(Compiler.genCommandBlock(s.args.tail.head))
     s"""AgentSet.ask(world.$name($n, "$breed"), true, $body);"""
   }

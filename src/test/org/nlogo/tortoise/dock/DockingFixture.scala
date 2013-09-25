@@ -70,7 +70,7 @@ class DockingFixture(name: String) extends Fixture(name) {
   }
 
   def viewResult(reporter: String) {
-    println(api.Dump.logoObject(workspace.report(reporter)))
+    println("[View Result] " + api.Dump.logoObject(workspace.report(reporter)))
   }
 
   override def runCommand(command: Command, mode: TestMode) {
@@ -174,12 +174,12 @@ class DockingFixture(name: String) extends Fixture(name) {
   // the show the javascript before it gets executed.
   // TODO: what is the difference between eval and run?
   def evalJS(javascript: String) = {
-    //println(javascript)
+    println(javascript)
     rhino.eval(javascript)
   }
 
   def runJS(javascript: String): (String, String) = {
-    //println(javascript)
+    println(javascript)
     rhino.run(javascript)
   }
 

@@ -56,7 +56,9 @@ updated = (obj, vars...) ->
 
 class Turtle
   vars: []
-  constructor: (@id, @color, @heading, @xcor, @ycor, @shape = "default", @label = "", @labelcolor = 9.9, @breed ="TURTLES", @hidden = false, @size = 1.0, @pensize = 1.0, @penmode = "up") ->
+  constructor: (@id, @color, @heading, @xcor, @ycor, @label = "", @labelcolor = 9.9, @breed ="TURTLES", @hidden = false, @size = 1.0, @pensize = 1.0, @penmode = "up") ->
+    breed = Breeds.get(@breed)
+    @shape = breed.shape
     updated(this, turtleBuiltins...)
     @vars = (x for x in TurtlesOwn.vars)
   toString: -> "(turtle " + @id + ")"
@@ -449,6 +451,20 @@ Trig =
     StrictMath.sin(StrictMath.toRadians(degrees))
   unsquashedCos: (degrees) ->
     StrictMath.cos(StrictMath.toRadians(degrees))
+
+class Breed
+  constructor: (@name) ->
+  @shape = "default"
+
+Breeds = {
+  breeds: [new Breed("TURTLES")]
+  add: (name) ->
+    @breeds.push(new Breed(name))
+  get: (name) ->
+    (@breeds.filter (b) -> b.name == name)[0]
+  setDefaultShape: (name, shape) ->
+    ((@breeds.filter (b) -> b.name == name)[0]).shape = shape
+}
 
 class Torus
   constructor: (@minPxcor, @maxPxcor, @minPycor, @maxPycor) ->
