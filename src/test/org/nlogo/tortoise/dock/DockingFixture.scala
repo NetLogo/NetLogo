@@ -105,6 +105,8 @@ class DockingFixture(name: String) extends Fixture(name) {
       throw new IllegalStateException("Exception occurred in JS but not headless")
     } else if(exceptionOccurredInHeadless && exceptionOccurredInJS) {
     } else {
+      println(expectedJson)
+      println(actualJson)
       assertResult(expectedOutput)(actualOutput)
       rhino.eval("expectedUpdates = " + expectedJson)
       rhino.eval("actualUpdates = " + actualJson)

@@ -111,11 +111,15 @@ object Prims {
     s"AgentSet.ask($agents, $shuffle, $body);"
   }
 
+  import org.nlogo.prim._createturtles
   def generateCreateTurtles(s: Statement, ordered: Boolean): String = {
+    println(s.command.asInstanceOf[_createturtles].breedName)
+    println(s.command.asInstanceOf[_createturtles].breedName.getClass)
     val n = Compiler.genReporterApp(s.args.head)
     val name = if (ordered) "createorderedturtles" else "createturtles"
+    val breed = s.command.asInstanceOf[_createturtles].breedName
     val body = fun(Compiler.genCommandBlock(s.args.tail.head))
-    s"AgentSet.ask(world.$name($n), true, $body);"
+    s"""AgentSet.ask(world.$name($n, "$breed"), true, $body);"""
   }
 
   def generateSprout(s: Statement): String = {
