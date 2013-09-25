@@ -87,6 +87,8 @@ class Turtle
     @ycor = y
     updated(this, "xcor", "ycor")
     return
+  isBreed: (breed) ->
+    @breed == breed
   die: ->
     if (@id != -1)
       world.removeTurtle(@id)
@@ -237,6 +239,8 @@ class World
   getPatchAt: (x, y) ->
     index  = (@maxPycor - StrictMath.round(y)) * width + (StrictMath.round(x) - @minPxcor)
     return _patches[index]
+  getTurtle: (id) ->
+    (@turtles().filter (t) -> t.id == id)[0]
   removeTurtle: (id) ->
     _turtles = @turtles().filter (t) -> t.id != id
     return
@@ -256,15 +260,11 @@ class World
     filteredTurtles = (@turtles().items.filter (t) -> t.id == id)
     if filteredTurtles.length == 0 then Nobody else filteredTurtles[0]
   createturtle: (x, y, color, heading, breed) ->
-    t = new Turtle((_nextId++), color, heading, x, y)
-    #print(t.breed + "---")
     if(breed != "")
-      t.breed = breed
-    #print(t.breed + "***")
+      t = new Turtle((_nextId++), color, heading, x, y, "default", "", 9.9, breed)
+    else
+      t = new Turtle((_nextId++), color, heading, x, y)
     _turtles.push(t)
-    #if(_turtles[1])
-    #  print(_turtles[0].breed)
-    #  print(_turtles[1].breed)
     t
   createorderedturtles: (n, breed) ->
     (@createturtle(0, 0, (num * 10 + 5) % 140, num * (360 / n), breed) for num in [0...n])
