@@ -113,8 +113,6 @@ object Prims {
 
   import org.nlogo.prim._createturtles
   def generateCreateTurtles(s: Statement, ordered: Boolean): String = {
-    println(s.command.asInstanceOf[_createturtles].breedName)
-    println(s.command.asInstanceOf[_createturtles].breedName.getClass)
     val n = Compiler.genReporterApp(s.args.head)
     val name = if (ordered) "createorderedturtles" else "createturtles"
     val breed = s.command.asInstanceOf[_createturtles].breedName

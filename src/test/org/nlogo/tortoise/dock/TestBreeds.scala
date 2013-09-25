@@ -13,18 +13,12 @@ class TestBreeds extends DockingSuite {
     declare("""| breed [mice mouse]
                | breed [frogs frog]
                | globals [glob1]""".stripMargin)
-    testCommand("output-print is-frog? nobody")
-    testCommand("output-print is-frog? turtle 0")
     testCommand("create-turtles 1")
     testCommand("output-print is-frog? turtle 0")
     testCommand("create-frogs 1")
-    testCommand("is-frog? turtle 1")
-    //compare("is-mouse? turtle 1")
-    //testCommand("set glob1 turtle 1")
-    //testCommand("ask glob1 [ die ]")
-    //compare("is-frog? glob1")
-    //compare("is-mouse? glob1")
-    //testCommand("set glob1 55")
-    //compare("is-frog? glob1")
+    testCommand("output-print is-frog? turtle 1")
+    testCommand("output-print is-mouse? turtle 1")
+    testCommand("set glob1 turtle 1")
+    testCommand("output-print is-frog? glob1")
   }
 }
