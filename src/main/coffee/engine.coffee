@@ -84,7 +84,7 @@ class Turtle
     @keepHeadingInRange()
     updated(this, "heading")
     return
-  setxy: (x, y) ->
+  t setxy: (x, y) ->
     @xcor = x
     @ycor = y
     updated(this, "xcor", "ycor")

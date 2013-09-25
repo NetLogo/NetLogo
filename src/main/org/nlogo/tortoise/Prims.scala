@@ -112,7 +112,6 @@ object Prims {
     s"AgentSet.ask($agents, $shuffle, $body);"
   }
 
-  import org.nlogo.prim._createturtles
   def generateCreateTurtles(s: Statement, ordered: Boolean): String = {
     import org.nlogo.prim._
     val n = Compiler.genReporterApp(s.args.head)
