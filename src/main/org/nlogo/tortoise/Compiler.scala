@@ -39,8 +39,6 @@ object Compiler {
       new RuntimeInit(sp.program, dimensions, patchSize).init +
         defs.map(compileProcedureDef).mkString("", "\n", "\n") +
         compileCommands(interfaceGlobalCommands, program = sp.program)
-    if (sp.program.breeds.nonEmpty)
-      throw new IllegalArgumentException("unknown language feature: turtle breeds")
     if (sp.program.linkBreeds.nonEmpty)
       throw new IllegalArgumentException("unknown language feature: link breeds")
     (js, sp.program, sp.procedures)
@@ -142,6 +140,7 @@ object Compiler {
       args.mkString(sep)
     r.reporter match {
       case _: prim._nobody                  => "Nobody"
+      case _: prim.etc._isbreed             => "false"
       case pure: nvm.Pure if r.args.isEmpty => compileLiteral(pure.report(null))
       case lv: prim._letvariable            => ident(lv.let.name)
       case pv: prim._procedurevariable      => ident(pv.name)
