@@ -204,7 +204,7 @@ class RuntimeInit(program: api.Program, dimensions: api.WorldDimensions, patchSi
 
   def init = {
     import dimensions._
-    globals + turtlesOwn + patchesOwn +
+    globals + turtlesOwn + patchesOwn + breeds +
       s"world = new World($minPxcor, $maxPxcor, $minPycor, $maxPycor, $patchSize, " +
       s"${program.interfaceGlobals.size});\n"
   }
@@ -223,6 +223,7 @@ class RuntimeInit(program: api.Program, dimensions: api.WorldDimensions, patchSi
     vars(program.turtlesOwn.drop(turtleBuiltinCount), "TurtlesOwn")
   def patchesOwn =
     vars(program.patchesOwn.drop(patchBuiltinCount), "PatchesOwn")
+  def breeds = program.breeds.keys.map("Breeds.add(\"" + _ + "\");\n").mkString("")
 
   private def vars(s: Seq[String], initPath: String) =
     if (s.nonEmpty) s"$initPath.init(${s.size})\n"
