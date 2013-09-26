@@ -64,7 +64,7 @@ class PlotPanel(
 
   def refresh(plot: Plot) {
     gui.plot = plot
-    gui.refreshAxisLabels()
+    gui.refresh()
   }
 
   override def paintComponent(g: Graphics): Unit = {
