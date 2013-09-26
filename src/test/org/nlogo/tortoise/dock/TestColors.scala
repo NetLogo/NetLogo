@@ -15,4 +15,17 @@ class TestColors extends DockingSuite {
     compare("shade-of? blue (blue - 1)")
   }
 
+  test("scale-color") { implicit fixture => import fixture._
+    compare("scale-color white 10 22 15")
+    compare("scale-color white 15 22 15")
+    compare("scale-color white 20 22 15")
+    compare("scale-color white 25 22 15")
+    compare("scale-color blue -30 -20 20")
+    compare("scale-color blue -10 -20 20")
+    compare("scale-color blue 0 -20 20")
+    compare("scale-color blue 10 -20 20")
+    compare("scale-color blue 30 -20 20")
+
+    compare("scale-color 11 10 -20 20")
+  }
 }

@@ -49,6 +49,7 @@ object Prims {
         case _: prim._not             => "!"
         case _: prim.etc._patchahead  => "AgentSet.self().patchAhead"
         case _: prim.etc._shadeof     => "Prims.shadeOf"
+        case _: prim.etc._scalecolor  => "Prims.scaleColor"
         case _: prim.etc._turtleshere => "AgentSet.self().turtlesHere"
         case _: prim.etc._sin         => "Trig.unsquashedSin"
         case _: prim.etc._cos         => "Trig.unsquashedCos"
