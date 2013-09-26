@@ -14,7 +14,6 @@ class TestClimateModel extends DockingSuite {
   // - no set-default-shape, use "set shape" instead
   // - sliders replaced with global variables
   // - no plotting or monitors
-  // - scale-color replaced with NL implementation "my-scale-color"
   // - no vertical cylinder support yet, so "my-can-move?"
   //   substitutes for can-move? primitive
   // - random-normal replaced with my-random-normal
@@ -58,10 +57,10 @@ class TestClimateModel extends DockingSuite {
          |  set earth-top 0
          |  ask patches [  ;; set colors for the different sections of the world
          |    if pycor > sky-top [  ;; space
-         |      set pcolor my-scale-color white pycor 22 15
+         |      set pcolor scale-color white pycor 22 15
          |    ]
          |    if pycor <= sky-top and pycor > earth-top [ ;; sky
-         |      set pcolor my-scale-color blue pycor -20 20
+         |      set pcolor scale-color blue pycor -20 20
          |    ]
          |    if pycor < earth-top
          |      [ set pcolor red + 3 ] ;; earth
@@ -87,7 +86,7 @@ class TestClimateModel extends DockingSuite {
          |end
          |
          |to update-albedo ;; patch procedure
-         |  set pcolor my-scale-color green albedo 0 1
+         |  set pcolor scale-color green albedo 0 1
          |end
          |
          |to add-cloud            ;; erase clouds and then create new ones, plus one
@@ -275,12 +274,6 @@ class TestClimateModel extends DockingSuite {
          |
          |to-report IRs
          |  report turtles with [kind = "IR"]
-         |end
-         |
-         |;;; compensate for lack of scale-color in Tortoise
-         |
-         |to-report my-scale-color [base-color value min-value max-value]
-         |  report 0
          |end
          |
          |;;; compensate for lack of can-move? in Tortoise
