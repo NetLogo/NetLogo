@@ -282,6 +282,33 @@ Prims =
   randomxcor: -> world.minPxcor - 0.5 + Random.nextDouble() * (world.maxPxcor - world.minPxcor + 1)
   randomycor: -> world.minPycor - 0.5 + Random.nextDouble() * (world.maxPycor - world.minPycor + 1)
   shadeOf: (c1, c2) -> Math.floor(c1 / 10) == Math.floor(c2 / 10)
+  scaleColor: (color, number, min, max) ->
+    color = Math.floor(color / 10) * 10
+    perc = 0.0
+    if(min > max)
+      if(number < max)
+        perc = 1.0
+      else if (number > min)
+        perc = 0.0
+      else
+        tempval = min - number
+        tempmax = min - max
+        perc = tempval / tempmax
+    else
+      if(number > max)
+        perc = 1.0
+      else if (number < min)
+        perc = 0.0
+      else
+        tempval = number - min
+        tempmax = max - min
+        perc = tempval / tempmax
+    perc *= 10
+    if(perc >= 9.9999)
+      perc = 9.9999
+    if(perc < 0)
+      perc = 0
+    color + perc
   randomfloat: (n) -> n * Random.nextDouble()
   list: (xs...) -> xs
   max: (xs) -> Math.max(xs...)
