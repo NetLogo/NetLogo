@@ -220,6 +220,7 @@ class Agents
     return
   agentFilter: (agents, f) -> a for a in agents when @askAgent(a, f)
   of: (agents, f) ->
+    agents = [agents] if !agents.slice
     result = []
     iter = new Shufflerator(agents)
     while (iter.hasNext())
