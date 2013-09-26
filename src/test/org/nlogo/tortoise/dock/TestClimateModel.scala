@@ -221,7 +221,6 @@ class TestClimateModel extends DockingSuite {
          |  let sky-height sky-top - earth-top
          |  create-turtles 25 [
          |    set kind "CO2"
-         |    set shape "CO2-molecule"
          |    set color green
          |    ;; pick a random position in the sky area
          |    setxy random-xcor
@@ -299,6 +298,7 @@ class TestClimateModel extends DockingSuite {
     testCommand("setup")
     testCommand("add-cloud")
     testCommand("add-cloud")
+    testCommand("add-CO2")
     testCommand("repeat 10 [ go ]")
     // commented out because after enough ticks it stops working because "die"
     // isn't right yet - ST 9/18/13

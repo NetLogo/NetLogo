@@ -220,13 +220,17 @@ class Agents
     return
   agentFilter: (agents, f) -> a for a in agents when @askAgent(a, f)
   of: (agents, f) ->
-    agents = [agents] if !agents.slice
+    islist = agents.slice
+    agents = [agents] if !islist
     result = []
     iter = new Shufflerator(agents)
     while (iter.hasNext())
       a = iter.next()
       result.push(@askAgent(a, f))
-    result
+    if islist
+      result
+    else
+      result[0]
   oneOf: (agents) -> agents[Random.nextInt(agents.length)]
   # I'm putting some things in Agents, and some in Prims
   # I did that on purpose to show how arbitrary/confusing this seems.
