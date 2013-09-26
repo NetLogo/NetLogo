@@ -2,50 +2,37 @@
 
 package org.nlogo.review
 
-import scala.collection.mutable.Publisher
-
 import org.nlogo.mirror.ModelRun
 
-sealed trait CurrentRunChangeEvent {
-  val oldRun: Option[ModelRun]
-  val newRun: Option[ModelRun]
-}
-
-case class BeforeCurrentRunChangeEvent(
+case class BeforeRunChangeEvent(
   val oldRun: Option[ModelRun],
   val newRun: Option[ModelRun])
-  extends CurrentRunChangeEvent
 
-case class AfterCurrentRunChangeEvent(
+case class AfterRunChangeEvent(
   val oldRun: Option[ModelRun],
   val newRun: Option[ModelRun])
-  extends CurrentRunChangeEvent
 
-trait HasCurrentRun extends Publisher[CurrentRunChangeEvent] {
+trait HasCurrentRun {
   private var _currentRun: Option[ModelRun] = None
-  override type Pub = Publisher[CurrentRunChangeEvent]
+  val beforeRunChangePub = new SimplePublisher[BeforeRunChangeEvent]
+  val afterRunChangePub = new SimplePublisher[AfterRunChangeEvent]
 
   def currentRun = _currentRun
   def currentRun_=(newRun: Option[ModelRun]) {
     if (_currentRun != newRun) {
       val oldRun = _currentRun
-      publish(BeforeCurrentRunChangeEvent(oldRun, newRun))
+      beforeRunChangePub.publish(BeforeRunChangeEvent(oldRun, newRun))
       _currentRun = newRun
-      publish(AfterCurrentRunChangeEvent(oldRun, newRun))
+      afterRunChangePub.publish(AfterRunChangeEvent(oldRun, newRun))
     }
   }
 }
 
-trait EnabledWithCurrentRun extends HasCurrentRun#Sub {
+trait EnabledWithCurrentRun {
   val hasCurrentRun: HasCurrentRun
   def setEnabled(enabled: Boolean): Unit
   setEnabled(hasCurrentRun.currentRun.isDefined)
-  hasCurrentRun.subscribe(this)
-  override def notify(pub: ReviewTabState#Pub, event: CurrentRunChangeEvent) {
-    event match {
-      case AfterCurrentRunChangeEvent(_, newRun) =>
-        setEnabled(newRun.isDefined)
-      case _ =>
-    }
+  hasCurrentRun.afterRunChangePub.newSubscriber { event =>
+    setEnabled(event.newRun.isDefined)
   }
 }

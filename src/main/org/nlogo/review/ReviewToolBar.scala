@@ -20,28 +20,7 @@ import javax.swing.filechooser.FileNameExtensionFilter
 class ActionButton(name: String, icon: String, fn: () => Unit)
   extends JButton(new ReviewAction(name, icon, fn))
 
-class RunRecorderSub(runRecorderPub: RunRecorder#Pub, refreshButtons: () => Unit) extends RunRecorder#Sub {
-  runRecorderPub.subscribe(this)
-  override def notify(pub: RunRecorder#Pub, event: RunRecorderEvent) {
-    event match {
-      case FrameAddedEvent(_, _) => refreshButtons()
-      case _ =>
-    }
-  }
-}
-
-class ReviewTabStateSub(reviewTabStatePub: ReviewTabState#Pub, refreshButtons: () => Unit)
-  extends ReviewTabState#Sub {
-  override def notify(reviewTabStatePub: ReviewTabState#Pub, event: CurrentRunChangeEvent) {
-    reviewTabStatePub.subscribe(this)
-    event match {
-      case AfterCurrentRunChangeEvent(_, newRun) => refreshButtons()
-      case _ =>
-    }
-  }
-}
-
-class ReviewToolBar(reviewTab: ReviewTab, runRecorderPub: RunRecorder#Pub)
+class ReviewToolBar(reviewTab: ReviewTab, frameAddedPub: SimplePublisher[FrameAddedEvent])
   extends org.nlogo.swing.ToolBar {
 
   val saveButton = new ActionButton("Save", "save", () => saveRun(reviewTab))
@@ -53,8 +32,8 @@ class ReviewToolBar(reviewTab: ReviewTab, runRecorderPub: RunRecorder#Pub)
 
   refreshButtons()
 
-  val runRecorderSub = new RunRecorderSub(runRecorderPub, refreshButtons)
-  val reviewTabStateSub = new ReviewTabStateSub(reviewTab.state, refreshButtons)
+  frameAddedPub.newSubscriber { _ => refreshButtons() }
+  reviewTab.state.afterRunChangePub.newSubscriber { _ => refreshButtons() }
 
   override def addControls() {
     add(saveButton)

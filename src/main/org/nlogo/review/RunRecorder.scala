@@ -2,8 +2,6 @@
 
 package org.nlogo.review
 
-import scala.collection.mutable.Publisher
-
 import org.nlogo.api
 import org.nlogo.api.ReporterRunnable.thunk2ReporterRunnable
 import org.nlogo.mirror.FixedViewSettings
@@ -17,21 +15,20 @@ import org.nlogo.window.WidgetWrapperInterface
 
 import javax.swing.JOptionPane
 
-sealed trait RunRecorderEvent
-case class FrameAddedEvent(run: ModelRun, frame: Frame) extends RunRecorderEvent
+case class FrameAddedEvent(run: ModelRun, frame: Frame)
 
 class RunRecorder(
   ws: GUIWorkspace,
   tabState: ReviewTabState,
   saveModel: () => String,
   widgetHooks: () => Seq[WidgetHook],
-  disableRecording: () => Unit)
-  extends Publisher[RunRecorderEvent] {
-  override type Pub = Publisher[RunRecorderEvent]
+  disableRecording: () => Unit) {
 
   private val plotActionBuffer = new api.ActionBuffer(ws.plotManager)
   private val drawingActionBuffer = new api.ActionBuffer(ws.drawingActionBroker)
   private val actionBuffers = Vector(plotActionBuffer, drawingActionBuffer)
+
+  val frameAddedPub = new SimplePublisher[FrameAddedEvent]()
 
   ws.listenerManager.addListener(
     new api.NetLogoAdapter {
@@ -79,7 +76,7 @@ class RunRecorder(
         val mirrorables = Mirrorables.allMirrorables(ws.world, widgetValues)
         val actions = actionBuffers.flatMap(_.grab())
         val newFrame = run.appendData(mirrorables, actions)
-        publish(FrameAddedEvent(run, newFrame))
+        frameAddedPub.publish(FrameAddedEvent(run, newFrame))
       } catch {
         case e: java.lang.OutOfMemoryError =>
           JOptionPane.showMessageDialog(null,

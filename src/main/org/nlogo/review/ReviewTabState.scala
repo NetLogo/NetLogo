@@ -3,17 +3,13 @@
 package org.nlogo.review
 
 import org.nlogo.mirror.ModelRun
-
 import javax.swing.AbstractListModel
 
 class ReviewTabState(
   private var _runs: Vector[ModelRun] = Vector.empty,
   private var _recordingEnabled: Boolean = false)
   extends AbstractListModel
-  with HasCurrentRun
-  with HasCurrentRun#Sub {
-
-  subscribe(this) // subscribe to our own CurrentRunChangeEvents
+  with HasCurrentRun {
 
   // ListModel methods:
   override def getElementAt(index: Int): AnyRef = _runs(index)
@@ -56,11 +52,8 @@ class ReviewTabState(
     run
   }
 
-  override def notify(pub: ReviewTabState#Pub, event: CurrentRunChangeEvent) {
-    event match {
-      case BeforeCurrentRunChangeEvent(Some(oldRun), _) =>
-        oldRun.stillRecording = false
-      case _ =>
-    }
+  beforeRunChangePub.newSubscriber {
+    _.oldRun.foreach(_.stillRecording = false)
   }
+
 }

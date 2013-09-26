@@ -12,21 +12,16 @@ import org.nlogo.window.PlotWidgetGUI
 
 import javax.swing.JPanel
 
-trait HasPlotPanels extends HasCurrentRun#Sub { this: JPanel =>
+trait HasPlotPanels { this: JPanel =>
 
   val reviewTab: ReviewTab
   private var plotPanels: Map[String, PlotPanel] = Map()
 
   setLayout(null) // disable layout manager to use absolute positioning
-  reviewTab.state.subscribe(this) // subscribe to current run change events
 
-  override def notify(pub: ReviewTabState#Pub, event: CurrentRunChangeEvent) {
-    event match {
-      case AfterCurrentRunChangeEvent(_, newRun) =>
-        plotPanels.values.foreach(remove) // remove old panels
-        if (newRun.isDefined) initPlotPanels()
-      case _ =>
-    }
+  reviewTab.state.afterRunChangePub.newSubscriber { event =>
+    plotPanels.values.foreach(remove) // remove old panels
+    if (event.newRun.isDefined) initPlotPanels()
   }
 
   def initPlotPanels() {

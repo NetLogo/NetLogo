@@ -20,11 +20,11 @@ class ScrubberPanel(
   indexedNotesTable: IndexedNotesTable,
   currentFrame: () => Option[Int],
   currentTick: () => Option[Double],
-  reviewTabStatePub: ReviewTabState#Pub,
-  runRecorderPub: RunRecorder#Pub)
+  afterRunChangePub: SimplePublisher[AfterRunChangeEvent],
+  frameAddedPub: SimplePublisher[FrameAddedEvent])
   extends JPanel {
 
-  val scrubber = new Scrubber(indexedNotesTable, reviewTabStatePub, runRecorderPub)
+  val scrubber = new Scrubber(indexedNotesTable, afterRunChangePub, frameAddedPub)
   val tickPanel = new TickPanel(currentFrame, currentTick, scrubber)
   val scrubberButtonsPanel = new ScrubberButtonsPanel(scrubber)
 
@@ -36,37 +36,23 @@ class ScrubberPanel(
 
 class Scrubber(
   indexedNotesTable: IndexedNotesTable,
-  reviewTabStatePub: ReviewTabState#Pub,
-  runRecorderPub: RunRecorder#Pub)
+  afterRunChangePub: SimplePublisher[AfterRunChangeEvent],
+  frameAddedPub: SimplePublisher[FrameAddedEvent])
   extends JSlider {
 
   setValue(0)
   setEnabled(false)
-  reviewTabStatePub.subscribe(ReviewTabStateSub)
-  runRecorderPub.subscribe(RunRecorderSub)
 
-  object ReviewTabStateSub extends ReviewTabState#Sub {
-    override def notify(pub: ReviewTabState#Pub, event: CurrentRunChangeEvent) {
-      event match {
-        case AfterCurrentRunChangeEvent(_, newRun) =>
-          setValue(newRun.flatMap(_.currentFrameIndex).getOrElse(0))
-          setMaximum(newRun.flatMap(_.lastFrameIndex).getOrElse(0))
-          setEnabled(newRun.filter(_.size > 1).isDefined)
-        case _ =>
-      }
-    }
+  afterRunChangePub.newSubscriber { event =>
+    setValue(event.newRun.flatMap(_.currentFrameIndex).getOrElse(0))
+    setMaximum(event.newRun.flatMap(_.lastFrameIndex).getOrElse(0))
+    setEnabled(event.newRun.filter(_.size > 1).isDefined)
   }
 
-  object RunRecorderSub extends RunRecorder#Sub {
-    override def notify(pub: RunRecorder#Pub, event: RunRecorderEvent) {
-      event match {
-        case FrameAddedEvent(run, _) =>
-          run.lastFrameIndex.foreach { i =>
-            setMaximum(i)
-            setEnabled(i > 0)
-          }
-        case _ =>
-      }
+  frameAddedPub.newSubscriber {
+    _.run.lastFrameIndex.foreach { i =>
+      setMaximum(i)
+      setEnabled(i > 0)
     }
   }
 

@@ -47,9 +47,7 @@ class GeneralNotesTextArea(val hasCurrentRun: HasCurrentRun)
   with EnabledWithCurrentRun {
   setLineWrap(true)
   setRows(3)
-
-  override def notify(pub: HasCurrentRun#Pub, event: CurrentRunChangeEvent) {
-    super.notify(pub, event) // enabled with current run
+  hasCurrentRun.afterRunChangePub.newSubscriber { event =>
     setText(event.newRun.map(_.generalNotes).getOrElse(""))
   }
 }
@@ -201,16 +199,13 @@ class IndexedNotesTable(tabState: ReviewTabState) extends JTable { table =>
 
   // TODO: the model should probably not be an inner class
   class NotesTableModel(val hasCurrentRun: HasCurrentRun, columns: Seq[Column])
-    extends AbstractTableModel
-    with HasCurrentRun#Sub {
-    hasCurrentRun.subscribe(this)
+    extends AbstractTableModel {
 
-    override def notify(pub: HasCurrentRun#Pub, event: CurrentRunChangeEvent) {
-      event match {
-        case BeforeCurrentRunChangeEvent(_, _) if (isEditing) =>
-          getCellEditor.stopCellEditing()
-        case _ =>
-      }
+    hasCurrentRun.beforeRunChangePub.newSubscriber { _ =>
+      if (isEditing) getCellEditor.stopCellEditing()
+    }
+
+    hasCurrentRun.afterRunChangePub.newSubscriber { event =>
       _notes.clear()
       _notes ++= event.newRun.toList.flatMap(_.indexedNotes)
       removeEditor()
