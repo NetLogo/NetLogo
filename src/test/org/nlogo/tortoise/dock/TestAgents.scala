@@ -147,6 +147,7 @@ class TestAgents extends DockingSuite {
     declare("", WorldDimensions.square(0))
     testCommand("cro 5")
     testCommand("output-print sum [who] of turtles")
+    testCommand("output-print [ pxcor ] of patch 0 0")
   }
 
   test("one-of") { implicit fixture => import fixture._
