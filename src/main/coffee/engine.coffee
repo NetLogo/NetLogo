@@ -137,7 +137,7 @@ class World
   _patches = []
   width = 0
   _topology = null
-  _ticks = false
+  _ticks = -1
   constructor: (@minPxcor, @maxPxcor, @minPycor, @maxPycor) ->
     collectUpdates()
     Updates.push(
@@ -178,8 +178,12 @@ class World
   topology: -> _topology
   turtles:  -> _turtles
   patches:  -> _patches
-  resetTicks: -> _ticks = 0
-  clearTicks: -> _ticks = false
+  resetTicks: ->
+    _ticks = 0
+    Updates.push( world: { 0: { ticks: _ticks } } )
+  clearTicks: ->
+    _ticks = -1
+    Updates.push( world: { 0: { ticks: _ticks } } )
   resize: (minPxcor, maxPxcor, minPycor, maxPycor) ->
     if(minPxcor > 0 || maxPxcor < 0 || minPycor > 0 || maxPycor < 0)
       throw new Error("You must include the point (0, 0) in the world")
@@ -205,18 +209,21 @@ class World
       }
     )
   tick: ->
-    if(_ticks == false)
+    if(_ticks == -1)
       throw new Error("Need to call reset-ticks")
     _ticks++
+    Updates.push( world: { 0: { ticks: _ticks } } )
   advancetick: (n) ->
-    if(_ticks == false)
+    if(_ticks == -1)
       throw new Error("Need to call reset-ticks")
     if(n < 0)
       throw new Error("Cannot advance ticks by a negative amount")
     _ticks += n
+    Updates.push( world: { 0: { ticks: _ticks } } )
   ticks: ->
-    if(_ticks == false)
+    if(_ticks == -1)
       throw new Error("Need to call reset-ticks")
+    Updates.push( world: { 0: { ticks: _ticks } } )
     _ticks
   # TODO: this needs to support all topologies
   getPatchAt: (x, y) ->
@@ -231,7 +238,7 @@ class World
       t.die()
     @createPatches()
     _nextId = 0
-    _ticks = false
+    @clearTicks()
     return
   createturtle: (x, y, color, heading) ->
     t = new Turtle((_nextId++), color, heading, x, y)
