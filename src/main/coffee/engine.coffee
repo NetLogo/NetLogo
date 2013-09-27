@@ -122,6 +122,8 @@ class Patch
   setPatchVariable: (n, v) ->
     if (n < patchBuiltins.length)
       this[patchBuiltins[n]] = v
+      if(patchBuiltins[n] == "pcolor" && v != 0)
+        world.patchesAllBlack(false)
       updated(this, patchBuiltins[n])
     else
       @vars[n - patchBuiltins.length] = v
@@ -138,6 +140,7 @@ class World
   width = 0
   _topology = null
   _ticks = -1
+  _patchesAllBlack = true
   constructor: (@minPxcor, @maxPxcor, @minPycor, @maxPycor) ->
     collectUpdates()
     Updates.push(
@@ -154,7 +157,7 @@ class World
             linkBreeds: "XXX IMPLEMENT ME",
             linkShapeList: "XXX IMPLEMENT ME",
             patchSize: 12,
-            patchesAllBlack: true,
+            patchesAllBlack: _patchesAllBlack,
             patchesWithLabels: 0,
             ticks: _ticks,
             turtleBreeds: "XXX IMPLEMENT ME",
@@ -232,12 +235,16 @@ class World
   removeTurtle: (id) ->
     _turtles = @turtles().filter (t) -> t.id != id
     return
+  patchesAllBlack: (val) ->
+    _patchesAllBlack = val
+    Updates.push( world: { 0: { patchesAllBlack: _patchesAllBlack }})
   clearall: ->
     Globals.init(Globals.vars.length)
     for t in @turtles()
       t.die()
     @createPatches()
     _nextId = 0
+    @patchesAllBlack(true)
     @clearTicks()
     return
   createturtle: (x, y, color, heading) ->
