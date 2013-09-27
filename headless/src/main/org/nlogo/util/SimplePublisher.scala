@@ -1,14 +1,13 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.review
+package org.nlogo.util
 
 import scala.collection.mutable.Publisher
 import scala.collection.mutable.Subscriber
 
 /**
  * Convenience class to make scala.collection.mutable.{ Publisher, Subscriber }
- * simpler to use. Not review tab specific: could be moved to other package (api? util?)
- * and taken advantage of elsewhere if it proves useful. NP 2013-09-25.
+ * simpler to use. 
  */
 class SimplePublisher[E] extends Publisher[E] {
   override type Pub = SimplePublisher[E]

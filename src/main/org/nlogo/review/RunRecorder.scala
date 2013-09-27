@@ -9,6 +9,7 @@ import org.nlogo.mirror.Frame
 import org.nlogo.mirror.Mirrorables
 import org.nlogo.mirror.ModelRun
 import org.nlogo.swing.Implicits.thunk2runnable
+import org.nlogo.util.SimplePublisher
 import org.nlogo.window.GUIWorkspace
 import org.nlogo.window.MonitorWidget
 import org.nlogo.window.WidgetWrapperInterface

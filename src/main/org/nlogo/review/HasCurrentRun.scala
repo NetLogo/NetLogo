@@ -3,6 +3,7 @@
 package org.nlogo.review
 
 import org.nlogo.mirror.ModelRun
+import org.nlogo.util.SimplePublisher
 
 case class BeforeRunChangeEvent(
   val oldRun: Option[ModelRun],

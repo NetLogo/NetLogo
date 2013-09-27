@@ -6,6 +6,8 @@ import java.awt.BorderLayout
 import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
 
+import org.nlogo.util.SimplePublisher
+
 import javax.swing.JButton
 import javax.swing.JLabel
 import javax.swing.JPanel

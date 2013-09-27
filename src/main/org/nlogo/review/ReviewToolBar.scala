@@ -8,6 +8,7 @@ import scala.Option.option2Iterable
 import org.nlogo.awt.UserCancelException
 import org.nlogo.mirror.ModelRun
 import org.nlogo.util.Exceptions.ignoring
+import org.nlogo.util.SimplePublisher
 
 import javax.swing.AbstractAction
 import javax.swing.ImageIcon
