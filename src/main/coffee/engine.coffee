@@ -138,9 +138,7 @@ class World
   _ticks = false
   constructor: (@minPxcor, @maxPxcor, @minPycor, @maxPycor) ->
     collectUpdates()
-    width = (@maxPxcor - @minPxcor) + 1
-    _topology = new Torus(@minPxcor, @maxPxcor, @minPycor, @maxPycor)
-    @createPatches()
+    @resize(@minPxcor, @maxPxcor, @minPycor, @maxPycor)
   createPatches: ->
     nested =
       for y in [@maxPycor..@minPycor]
@@ -155,6 +153,18 @@ class World
   patches:  -> _patches
   resetTicks: -> _ticks = 0
   clearTicks: -> _ticks = false
+  resize: (minPxcor, maxPxcor, minPycor, maxPycor) ->
+    if(minPxcor > 0 || maxPxcor < 0 || minPycor > 0 || maxPycor < 0)
+      throw new Error("You must include the point (0, 0) in the world")
+    @minPxcor = minPxcor
+    @maxPxcor = maxPxcor
+    @minPycor = minPycor
+    @maxPycor = maxPycor
+    width = (@maxPxcor - @minPxcor) + 1
+    _topology = new Torus(@minPxcor, @maxPxcor, @minPycor, @maxPycor)
+    for t in @turtles()
+      t.die()
+    @createPatches()
   tick: ->
     if(_ticks == false)
       throw new Error("Need to call reset-ticks")

@@ -63,6 +63,7 @@ object Prims {
         case _: prim.etc._outputprint      => "println"
         case _: prim.etc._clearall         => "world.clearall"
         case _: prim.etc._clearticks       => "world.clearTicks"
+        case _: prim.etc._resizeworld      => "world.resize"
         case _: prim.etc._resetticks       => "world.resetTicks"
         case _: prim.etc._tick             => "world.tick"
         case _: prim.etc._tickadvance      => "world.advancetick"

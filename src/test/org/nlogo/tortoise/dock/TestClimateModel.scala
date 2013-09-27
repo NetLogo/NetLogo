@@ -19,6 +19,14 @@ class TestClimateModel extends DockingSuite {
   // - random-normal replaced with my-random-normal
   //   since Random.nextGaussian might be hard to implement in browser
 
+  // A note on performance: once we get the model working, if we find that performance is poor, one
+  // obvious possible culprit is the turtles-here primitive.  In JVM NetLogo, turtles register and
+  // deregister themselves as they enter and leave patches, so turtles-here is O(1)-ish (except in
+  // the pathological case where most or all of the turtles are on a single patch; I call it
+  // pathological but it's not that hard to hit, which is why there's an open issue on it at
+  // https://github.com/NetLogo/NetLogo/issues/148). Currently in Tortoise, we don't have code like
+  // that, so turtles-here has to check the location of every turtle, which is O(n).
+
   test("climate") { implicit fixture => import fixture._
     val src =
       """|globals [
@@ -304,6 +312,7 @@ class TestClimateModel extends DockingSuite {
     // isn't right yet - ST 9/18/13
     // for (_ <- 1 to 10)
     //   testCommand("repeat 50 [ go ]")
+    // we should also test add-CO2 and remove-CO2
     testCommand("output-print temperature")
     testCommand("""ask turtles [ output-print (word kind " " xcor " "  ycor " ") ]""")
   }
