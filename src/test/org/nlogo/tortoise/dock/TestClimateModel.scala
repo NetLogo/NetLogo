@@ -18,6 +18,8 @@ class TestClimateModel extends DockingSuite {
   //   substitutes for can-move? primitive
   // - random-normal replaced with my-random-normal
   //   since Random.nextGaussian might be hard to implement in browser
+  // - use all-lower-case shape names because of some unknown problem with
+  //   with capital letters in shape names
 
   // A note on performance: once we get the model working, if we find that performance is poor, one
   // obvious possible culprit is the turtles-here primitive.  In JVM NetLogo, turtles register and
@@ -229,6 +231,7 @@ class TestClimateModel extends DockingSuite {
          |  let sky-height sky-top - earth-top
          |  create-turtles 25 [
          |    set kind "CO2"
+         |    set shape "co2-molecule"
          |    set color green
          |    ;; pick a random position in the sky area
          |    setxy random-xcor
@@ -301,7 +304,7 @@ class TestClimateModel extends DockingSuite {
          |end
       """.stripMargin
     declare(src, api.WorldDimensions(-24, 24, -8, 22))
-    for (shape <- Seq("cloud", "ray", "dot", "CO2-molecule"))
+    for (shape <- Seq("cloud", "ray", "dot", "co2-molecule"))
       workspace.world.turtleShapeList.add(new api.DummyShape(shape))
     testCommand("setup")
     testCommand("add-cloud")
