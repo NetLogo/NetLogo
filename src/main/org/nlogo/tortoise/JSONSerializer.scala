@@ -42,7 +42,10 @@ object JSONSerializer {
 
     val keysToKind = Seq(
       "turtles" -> Turtle,
-      "patches" -> Patch)
+      "patches" -> Patch,
+      "world" -> World,
+      "links" -> Link
+    )
 
     val objectsByKey: Seq[(String, JObject)] =
       for {
@@ -62,14 +65,16 @@ object JSONSerializer {
     case i: java.lang.Integer => JInt(i.intValue)
     case b: java.lang.Boolean => JBool(b)
     case s: java.lang.String  => JString(s)
-    case x                    => JString(v.toString)
+    case x                    => JString("XXX IMPLEMENT ME") // JString(v.toString)
   }
 
+  import MirrorableWorld.WorldVar
   def getImplicitVariables(kind: Kind): Seq[String] =
     kind match {
       case Turtle => AgentVariables.getImplicitTurtleVariables
       case Patch  => AgentVariables.getImplicitPatchVariables
       case Link   => AgentVariables.getImplicitLinkVariables
+      case World  => 0 until WorldVar.maxId map (WorldVar.apply(_).toString)
       case _      => Seq() // TODO: raise exception instead?
     }
 

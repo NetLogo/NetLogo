@@ -140,6 +140,31 @@ class World
   _ticks = false
   constructor: (@minPxcor, @maxPxcor, @minPycor, @maxPycor) ->
     collectUpdates()
+    Updates.push(
+      {
+        world: {
+          0: {
+            worldWidth: Math.abs(@minPxcor - @maxPxcor) + 1,
+            worldHeight: Math.abs(@minPycor - @maxPycor) + 1,
+            minPxcor: @minPxcor,
+            minPycor: @minPycor,
+            maxPxcor: @maxPxcor,
+            maxPycor: @maxPycor,
+            nbInterfaceGlobals: 0,
+            linkBreeds: "XXX IMPLEMENT ME",
+            linkShapeList: "XXX IMPLEMENT ME",
+            patchSize: 12,
+            patchesAllBlack: true,
+            patchesWithLabels: 0,
+            ticks: _ticks,
+            turtleBreeds: "XXX IMPLEMENT ME",
+            turtleShapeList: "XXX IMPLEMENT ME",
+            unbreededLinksAreDirected: false
+            wrappingAllowedInX: true,
+            wrappingAllowedInY: true
+          }
+        }
+      })
     @resize(@minPxcor, @maxPxcor, @minPycor, @maxPycor)
   createPatches: ->
     nested =
@@ -167,6 +192,18 @@ class World
     for t in @turtles()
       t.die()
     @createPatches()
+    Updates.push(
+      world: {
+        0: {
+          worldWidth: Math.abs(@minPxcor - @maxPxcor) + 1,
+          worldHeight: Math.abs(@minPycor - @maxPycor) + 1,
+          minPxcor: @minPxcor,
+          minPycor: @minPycor,
+          maxPxcor: @maxPxcor,
+          maxPycor: @maxPycor
+        }
+      }
+    )
   tick: ->
     if(_ticks == false)
       throw new Error("Need to call reset-ticks")
