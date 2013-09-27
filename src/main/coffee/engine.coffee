@@ -336,6 +336,8 @@ Prims =
     result = {}
     result[xs[key]] = xs[key] for key in [0...xs.length]
     value for key, value of result
+  outputprint: (x) ->
+    println(Dump(x))
 
 Globals =
   vars: []
@@ -355,6 +357,14 @@ PatchesOwn =
   init: (n) -> @vars = (0 for x in [0..n-1])
 
 AgentSet = new Agents
+
+# like api.Dump. will need more cases. for now at least knows
+# about lists.
+Dump = (x) ->
+  if (typeIsArray(x))
+    "[" + (Dump(x2) for x2 in x).join(" ") + "]"
+  else
+    "" + x
 
 Trig =
   squash: (x) ->

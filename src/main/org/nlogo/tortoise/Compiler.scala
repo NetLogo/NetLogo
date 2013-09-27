@@ -128,23 +128,26 @@ object Compiler {
 
   def generateReporter(r: ReporterApp): String = {
     def arg(i: Int) = genArg(r.args(i))
-    def args = argsSep(", ")
+    def commaArgs = argsSep(", ")
+    def args =
+      r.args.collect{ case x: ReporterApp => genArg(x) }
     def argsSep(sep: String) =
-      r.args.collect{ case x: ReporterApp => genArg(x) }.mkString(sep)
+      args.mkString(sep)
     r.reporter match {
       case pure: nvm.Pure if r.args.isEmpty => compileLiteral(pure.report(null))
       case lv: prim._letvariable            => ident(lv.let.name)
       case pv: prim._procedurevariable      => ident(pv.name)
-      case call: prim._callreport           => s"${ident(call.procedure.name)}($args)"
+      case call: prim._callreport           => s"${ident(call.procedure.name)}($commaArgs)"
       case Prims.InfixReporter(op)          => s"(${arg(0)} $op ${arg(1)})"
-      case Prims.NormalReporter(op)         => s"$op($args)"
+      case Prims.NormalReporter(op)         => s"$op($commaArgs)"
       case tv: prim._turtlevariable         => s"AgentSet.getTurtleVariable(${tv.vn})"
       case tv: prim._turtleorlinkvariable   =>
         val vn = api.AgentVariables.getImplicitTurtleVariables.indexOf(tv.varName)
         s"AgentSet.getTurtleVariable($vn)"
       case pv: prim._patchvariable          => s"AgentSet.getPatchVariable(${pv.vn})"
       case ov: prim._observervariable       => s"Globals.getGlobal(${ov.vn})"
-      case s: prim._word                    => "\"\" + " + argsSep(" + ")
+      case s: prim._word                    =>
+        ("\"\"" +: args).map(arg => "Dump(" + arg + ")").mkString("(", " + ", ")")
       case w: prim._with =>
         val agents = arg(0)
         val filter = genReporterBlock(r.args(1))
@@ -153,7 +156,7 @@ object Compiler {
         val agents = arg(1)
         val body = genReporterBlock(r.args(0))
         s"AgentSet.of($agents, function(){ return $body })"
-      case p: prim.etc._patch               => s"Prims.patch($args)"
+      case p: prim.etc._patch               => s"Prims.patch($commaArgs)"
       case n: prim._neighbors               => s"Prims.getNeighbors()"
       case _: prim.etc._minpxcor            => "world.minPxcor"
       case _: prim.etc._minpycor            => "world.minPycor"

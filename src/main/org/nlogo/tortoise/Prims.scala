@@ -60,7 +60,7 @@ object Prims {
   object NormalCommand {
     def unapply(c: nvm.Command): Option[String] =
       PartialFunction.condOpt(c) {
-        case _: prim.etc._outputprint      => "println"
+        case _: prim.etc._outputprint      => "Prims.outputprint"
         case _: prim.etc._clearall         => "world.clearall"
         case _: prim.etc._clearticks       => "world.clearTicks"
         case _: prim.etc._resizeworld      => "world.resize"
