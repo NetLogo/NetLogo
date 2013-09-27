@@ -312,6 +312,7 @@ class TestClimateModel extends DockingSuite {
     // isn't right yet - ST 9/18/13
     // for (_ <- 1 to 10)
     //   testCommand("repeat 50 [ go ]")
+    // we should also test add-CO2 and remove-CO2
     testCommand("output-print temperature")
     testCommand("""ask turtles [ output-print (word kind " " xcor " "  ycor " ") ]""")
   }
