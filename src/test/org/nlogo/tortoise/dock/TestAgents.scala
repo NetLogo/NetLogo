@@ -245,6 +245,11 @@ class TestAgents extends DockingSuite {
     compare("sum [count turtles-here] of turtles")
   }
 
+  test("set heading negative") { implicit fixture => import fixture._
+    // should get normalized to 260
+    testCommand("crt 1 [ set heading -100 ]")
+  }
+
   // TODO currently failing, haven't figured out why yet - ST 9/20/13
   // test("turtle creation + procedure call") { implicit fixture => import fixture._
   //   declare("to foo cro 2 end")

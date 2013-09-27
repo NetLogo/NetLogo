@@ -306,13 +306,15 @@ class TestClimateModel extends DockingSuite {
     testCommand("setup")
     testCommand("add-cloud")
     testCommand("add-cloud")
-    testCommand("add-CO2")
-    testCommand("repeat 10 [ go ]")
+    for (_ <- 1 to 10)
+      testCommand("add-CO2")
+    for (_ <- 1 to 10)
+      testCommand("go")
     // commented out because after enough ticks it stops working because "die"
     // isn't right yet - ST 9/18/13
     // for (_ <- 1 to 10)
     //   testCommand("repeat 50 [ go ]")
-    // we should also test add-CO2 and remove-CO2
+    // we should also test remove-CO2
     testCommand("output-print temperature")
     testCommand("""ask turtles [ output-print (word kind " " xcor " "  ycor " ") ]""")
   }

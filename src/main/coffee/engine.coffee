@@ -97,6 +97,8 @@ class Turtle
   setTurtleVariable: (n, v) ->
     if (n < turtleBuiltins.length)
       this[turtleBuiltins[n]] = v
+      if (n == 2)  # heading
+        @keepHeadingInRange()
       updated(this, turtleBuiltins[n])
     else
       @vars[n - turtleBuiltins.length] = v
