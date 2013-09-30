@@ -38,6 +38,10 @@ class JSONSerializerTests extends FixtureSuite with Matchers {
            |  "patches":{
            |
            |  }
+           |  "world": {
+           |  }
+           |  "links": {
+           |  }
            |}""".stripMargin,
       "ask turtles [ fd 1 ]" ->
         """|{
@@ -49,6 +53,10 @@ class JSONSerializerTests extends FixtureSuite with Matchers {
            |  "patches":{
            |
            |  }
+           |  "world": {
+           |  }
+           |  "links": {
+           |  }
            |}""".stripMargin,
       "ask turtles [ die ]" ->
         """|{
@@ -59,6 +67,10 @@ class JSONSerializerTests extends FixtureSuite with Matchers {
            |  },
            |  "patches":{
            |
+           |  }
+           |  "world": {
+           |  }
+           |  "links": {
            |  }
            |}""".stripMargin)
       .map {
