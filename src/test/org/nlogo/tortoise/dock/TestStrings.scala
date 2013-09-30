@@ -17,4 +17,12 @@ class TestStrings extends DockingSuite {
     compare("(word 1 2 3)") // 123, and hopefully not, god forbid, 6
   }
 
+  test("word on list") { implicit fixture => import fixture._
+    compare("(word [1 [2 [3 4] 5] 6])")
+  }
+
+  test("print list") { implicit fixture => import fixture._
+    testCommand("output-print [1 [2 [3 4] 5] 6]")
+  }
+
 }

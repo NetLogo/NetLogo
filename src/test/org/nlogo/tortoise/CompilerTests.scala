@@ -56,8 +56,8 @@ class CompilerTests extends FunSuite {
 
   test("commands: arithmetic + printing") {
     import Compiler.{compileCommands => compile}
-    val expected = """|println((2 + 2))
-                      |println((3 * 3))""".stripMargin
+    val expected = """|Prims.outputprint((2 + 2))
+                      |Prims.outputprint((3 * 3))""".stripMargin
     assertResult(expected)(
       compile("output-print 2 + 2 output-print 3 * 3"))
   }
@@ -65,7 +65,7 @@ class CompilerTests extends FunSuite {
   test("commands: turtle creation") {
     import Compiler.{compileCommands => compile}
     val expected = """|AgentSet.ask(world.createorderedturtles(5), true, function(){  });
-                      |println(AgentSet.count(world.turtles()))""".stripMargin
+                      |Prims.outputprint(AgentSet.count(world.turtles()))""".stripMargin
     assertResult(expected)(
       compile("cro 5 output-print count turtles"))
   }
@@ -75,7 +75,7 @@ class CompilerTests extends FunSuite {
     val input = "while [true] [output-print 0]"
     val expected =
       """while (true) {
-        |println(0)
+        |Prims.outputprint(0)
         |}""".stripMargin
     assertResult(expected)(compile(input))
   }
@@ -84,7 +84,7 @@ class CompilerTests extends FunSuite {
     import Compiler.{compileCommands => compile}
     val input = "let x 5 output-print x"
     val expected = """|var X = 5;
-                      |println(X)""".stripMargin
+                      |Prims.outputprint(X)""".stripMargin
     assertResult(expected)(compile(input))
   }
 
@@ -93,7 +93,7 @@ class CompilerTests extends FunSuite {
     val input = "to foo output-print 5 end"
     val expected = """world = new World(0, 0, 0, 0);
                      |function FOO () {
-                     |println(5)
+                     |Prims.outputprint(5)
                      |};""".stripMargin
     assertResult(expected)(compile(input)._1)
   }
@@ -108,7 +108,7 @@ class CompilerTests extends FunSuite {
   test("commands: ask with turtle variable") {
     import Compiler.{compileCommands => compile}
     val input = "ask turtles [output-print xcor]"
-    val expected = "AgentSet.ask(world.turtles(), true, function(){ println(AgentSet.getTurtleVariable(3)) });"
+    val expected = "AgentSet.ask(world.turtles(), true, function(){ Prims.outputprint(AgentSet.getTurtleVariable(3)) });"
     assertResult(expected)(compile(input))
   }
 
@@ -122,7 +122,7 @@ class CompilerTests extends FunSuite {
   test("commands: ask patches with variable") {
     import Compiler.{compileCommands => compile}
     val input = "ask patches [output-print pxcor]"
-    val expected = "AgentSet.ask(world.patches(), true, function(){ println(AgentSet.getPatchVariable(0)) });"
+    val expected = "AgentSet.ask(world.patches(), true, function(){ Prims.outputprint(AgentSet.getPatchVariable(0)) });"
     assertResult(expected)(compile(input))
   }
 
@@ -133,9 +133,9 @@ class CompilerTests extends FunSuite {
      """|Globals.init(3)
         |world = new World(0, 0, 0, 0);
         |function FOO_BAR_P () {
-        |println(Globals.getGlobal(2))
-        |println(Globals.getGlobal(1))
-        |println(Globals.getGlobal(0))
+        |Prims.outputprint(Globals.getGlobal(2))
+        |Prims.outputprint(Globals.getGlobal(1))
+        |Prims.outputprint(Globals.getGlobal(0))
         |};""".stripMargin
     assertResult(expected)(compile(input)._1)
   }
@@ -148,7 +148,7 @@ class CompilerTests extends FunSuite {
         |world = new World(0, 0, 0, 0);
         |function FOO () {
         |Globals.setGlobal(0,5)
-        |println(Globals.getGlobal(0))
+        |Prims.outputprint(Globals.getGlobal(0))
         |};""".stripMargin
     assertResult(expected)(compile(input)._1)
   }
@@ -179,7 +179,14 @@ class CompilerTests extends FunSuite {
     val input = "ask patches with [pxcor = 1] [output-print pycor]"
     val expectedAgentFilter =
       "AgentSet.agentFilter(world.patches(), function(){ return (AgentSet.getPatchVariable(0) === 1) })"
-    val expected = s"AgentSet.ask($expectedAgentFilter, true, function(){ println(AgentSet.getPatchVariable(1)) });"
+    val expected = s"AgentSet.ask($expectedAgentFilter, true, function(){ Prims.outputprint(AgentSet.getPatchVariable(1)) });"
+    assertResult(expected)(compile(input))
+  }
+
+  test("reporters: word") {
+    import Compiler.{compileReporter => compile}
+    val input = "(word 1 2 3)"
+    val expected = """(Dump("") + Dump(1) + Dump(2) + Dump(3))"""
     assertResult(expected)(compile(input))
   }
 
