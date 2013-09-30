@@ -122,6 +122,8 @@ class Patch
   setPatchVariable: (n, v) ->
     if (n < patchBuiltins.length)
       this[patchBuiltins[n]] = v
+      if(patchBuiltins[n] == "pcolor" && v != 0)
+        world.patchesAllBlack(false)
       updated(this, patchBuiltins[n])
     else
       @vars[n - patchBuiltins.length] = v
@@ -137,9 +139,35 @@ class World
   _patches = []
   width = 0
   _topology = null
-  _ticks = false
+  _ticks = -1
+  _patchesAllBlack = true
   constructor: (@minPxcor, @maxPxcor, @minPycor, @maxPycor) ->
     collectUpdates()
+    Updates.push(
+      {
+        world: {
+          0: {
+            worldWidth: Math.abs(@minPxcor - @maxPxcor) + 1,
+            worldHeight: Math.abs(@minPycor - @maxPycor) + 1,
+            minPxcor: @minPxcor,
+            minPycor: @minPycor,
+            maxPxcor: @maxPxcor,
+            maxPycor: @maxPycor,
+            nbInterfaceGlobals: 0,
+            linkBreeds: "XXX IMPLEMENT ME",
+            linkShapeList: "XXX IMPLEMENT ME",
+            patchSize: 12,
+            patchesAllBlack: _patchesAllBlack,
+            patchesWithLabels: 0,
+            ticks: _ticks,
+            turtleBreeds: "XXX IMPLEMENT ME",
+            turtleShapeList: "XXX IMPLEMENT ME",
+            unbreededLinksAreDirected: false
+            wrappingAllowedInX: true,
+            wrappingAllowedInY: true
+          }
+        }
+      })
     @resize(@minPxcor, @maxPxcor, @minPycor, @maxPycor)
   createPatches: ->
     nested =
@@ -153,8 +181,12 @@ class World
   topology: -> _topology
   turtles:  -> _turtles
   patches:  -> _patches
-  resetTicks: -> _ticks = 0
-  clearTicks: -> _ticks = false
+  resetTicks: ->
+    _ticks = 0
+    Updates.push( world: { 0: { ticks: _ticks } } )
+  clearTicks: ->
+    _ticks = -1
+    Updates.push( world: { 0: { ticks: _ticks } } )
   resize: (minPxcor, maxPxcor, minPycor, maxPycor) ->
     if(minPxcor > 0 || maxPxcor < 0 || minPycor > 0 || maxPycor < 0)
       throw new Error("You must include the point (0, 0) in the world")
@@ -167,19 +199,34 @@ class World
     for t in @turtles()
       t.die()
     @createPatches()
+    Updates.push(
+      world: {
+        0: {
+          worldWidth: Math.abs(@minPxcor - @maxPxcor) + 1,
+          worldHeight: Math.abs(@minPycor - @maxPycor) + 1,
+          minPxcor: @minPxcor,
+          minPycor: @minPycor,
+          maxPxcor: @maxPxcor,
+          maxPycor: @maxPycor
+        }
+      }
+    )
   tick: ->
-    if(_ticks == false)
+    if(_ticks == -1)
       throw new Error("Need to call reset-ticks")
     _ticks++
+    Updates.push( world: { 0: { ticks: _ticks } } )
   advancetick: (n) ->
-    if(_ticks == false)
+    if(_ticks == -1)
       throw new Error("Need to call reset-ticks")
     if(n < 0)
       throw new Error("Cannot advance ticks by a negative amount")
     _ticks += n
+    Updates.push( world: { 0: { ticks: _ticks } } )
   ticks: ->
-    if(_ticks == false)
+    if(_ticks == -1)
       throw new Error("Need to call reset-ticks")
+    Updates.push( world: { 0: { ticks: _ticks } } )
     _ticks
   # TODO: this needs to support all topologies
   getPatchAt: (x, y) ->
@@ -188,13 +235,17 @@ class World
   removeTurtle: (id) ->
     _turtles = @turtles().filter (t) -> t.id != id
     return
+  patchesAllBlack: (val) ->
+    _patchesAllBlack = val
+    Updates.push( world: { 0: { patchesAllBlack: _patchesAllBlack }})
   clearall: ->
     Globals.init(Globals.vars.length)
     for t in @turtles()
       t.die()
     @createPatches()
     _nextId = 0
-    _ticks = false
+    @patchesAllBlack(true)
+    @clearTicks()
     return
   createturtle: (x, y, color, heading) ->
     t = new Turtle((_nextId++), color, heading, x, y)
