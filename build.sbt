@@ -16,7 +16,7 @@ val nogen = taskKey[Unit]("disable bytecode generator")
 /// (at the moment we have no subprojects on this branch, but that could change - ST 7/23/13)
 ///
 
-scalaVersion in ThisBuild := "2.10.2"
+scalaVersion in ThisBuild := "2.10.3"
 
 scalacOptions in ThisBuild ++=
   "-deprecation -unchecked -feature -Xcheckinit -encoding us-ascii -target:jvm-1.7 -Xlint -Xfatal-warnings"
