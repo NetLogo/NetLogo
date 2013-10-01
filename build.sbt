@@ -16,7 +16,7 @@ val nogen = taskKey[Unit]("disable bytecode generator")
 /// (at the moment we have no subprojects on this branch, but that could change - ST 7/23/13)
 ///
 
-scalaVersion in ThisBuild := "2.10.2"
+scalaVersion in ThisBuild := "2.10.3"
 
 scalacOptions in ThisBuild ++=
   "-deprecation -unchecked -feature -Xcheckinit -encoding us-ascii -target:jvm-1.7 -Xlint -Xfatal-warnings"
@@ -44,7 +44,7 @@ libraryDependencies in ThisBuild ++= Seq(
   "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
   "org.jmock" % "jmock-junit4" % "2.5.1" % "test",
   "org.scalacheck" %% "scalacheck" % "1.10.1" % "test",
-  "org.scalatest" %% "scalatest" % "2.0.M8" % "test"
+  "org.scalatest" %% "scalatest" % "2.0.RC1" % "test"
 )
 
 artifactName := { (_, _, _) => "NetLogoHeadless.jar" }

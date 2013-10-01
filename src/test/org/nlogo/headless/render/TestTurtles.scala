@@ -6,7 +6,6 @@ package render
 import org.nlogo.shape.VectorShape
 import org.nlogo.shape.TestHelpers._
 import org.nlogo.util.WorldType, WorldType._
-import org.nlogo.api.Perspective
 import MockGraphics._
 
 class TestTurtles extends AbstractTestRenderer {
