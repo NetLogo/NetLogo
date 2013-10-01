@@ -9,7 +9,6 @@ package misc
 // that framework should be extended so these tests could be done in it.)  - ST 3/18/08, 8/21/13
 
 import org.nlogo.nvm
-import org.nlogo.util.SlowTest
 
 class TestErrorMessages extends FixtureSuite {
 
