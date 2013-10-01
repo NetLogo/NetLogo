@@ -2,7 +2,7 @@
 /// ThisBuild -- applies to subprojects too
 ///
 
-scalaVersion in ThisBuild := "2.10.3-RC3"
+scalaVersion in ThisBuild := "2.10.3"
 
 scalacOptions in ThisBuild ++=
   "-deprecation -unchecked -feature -Xcheckinit -encoding us-ascii -target:jvm-1.6 -Xfatal-warnings -Ywarn-adapted-args -Yinline-warnings"
