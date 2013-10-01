@@ -46,7 +46,8 @@ class DockingFixture(name: String) extends Fixture(name) {
 
   override def runReporter(reporter: Reporter, mode: TestMode) {
     if (!opened) declare("")
-    val compiledJS = Compiler.compileReporter(reporter.reporter)
+    val compiledJS = Compiler.compileReporter(
+      reporter.reporter, workspace.procedures, workspace.world.program)
     reporter.result match {
       case Success(expected) =>
         withClue(reporter.reporter) {
