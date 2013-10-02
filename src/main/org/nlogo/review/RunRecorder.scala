@@ -22,8 +22,7 @@ class RunRecorder(
   ws: GUIWorkspace,
   tabState: ReviewTabState,
   saveModel: () => String,
-  widgetHooks: () => Seq[WidgetHook],
-  disableRecording: () => Unit) {
+  widgetHooks: () => Seq[WidgetHook]) {
 
   private val plotActionBuffer = new api.ActionBuffer(ws.plotManager)
   private val drawingActionBuffer = new api.ActionBuffer(ws.drawingActionBroker)
@@ -83,7 +82,7 @@ class RunRecorder(
           JOptionPane.showMessageDialog(null,
             "Not enough memory. Turning off recording.",
             "Low memory", JOptionPane.WARNING_MESSAGE)
-          disableRecording()
+          tabState.recordingEnabled = false
       }
     }
   }

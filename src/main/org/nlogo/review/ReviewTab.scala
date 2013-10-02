@@ -38,6 +38,8 @@ class ReviewTab(
   with window.ReviewTabInterface {
 
   val state = new ReviewTabState()
+  def recordingEnabled = state.recordingEnabled
+  def recordingEnabled_=(enabled: Boolean): Unit = state.recordingEnabled = enabled
 
   def workspaceWidgets =
     Option(ws.viewWidget.findWidgetContainer)
@@ -49,9 +51,7 @@ class ReviewTab(
 
   val runList = new RunList(this)
 
-  val runRecorder = new RunRecorder(
-    ws, state, saveModel, () => widgetHooks,
-    () => disableRecording)
+  val runRecorder = new RunRecorder(ws, state, saveModel, () => widgetHooks)
 
   override def loadedRuns: Seq[api.ModelRun] = state.runs
   override def loadRun(inputStream: java.io.InputStream): Unit = {
@@ -64,16 +64,6 @@ class ReviewTab(
   def userConfirms(title: String, message: String) =
     JOptionPane.showConfirmDialog(ReviewTab.this, message,
       title, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION
-
-  def enableRecording() {
-    state.recordingEnabled = true
-    reviewToolBar.enabledCheckBox.setSelected(state.recordingEnabled)
-  }
-
-  def disableRecording() {
-    state.recordingEnabled = false
-    reviewToolBar.enabledCheckBox.setSelected(state.recordingEnabled)
-  }
 
   val notesTabbedPane = new NotesTabbedPane(state)
   val scrubberPanel = new ScrubberPanel(

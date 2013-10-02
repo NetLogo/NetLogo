@@ -43,7 +43,7 @@ class Tabs(val workspace: GUIWorkspace,
     if (indexOfComponent(reviewTab) == -1) {
       addTab("Review", reviewTab)
       addMenuItem(getTabCount() - 1, "Review")
-      reviewTab.enableRecording()
+      reviewTab.recordingEnabled = true
     }
     org.nlogo.window.Event.rehash()
     setSelectedComponent(reviewTab)

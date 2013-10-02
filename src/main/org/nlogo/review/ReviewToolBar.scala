@@ -188,4 +188,7 @@ class EnabledCheckBox(tabState: ReviewTabState) extends JCheckBox {
       tabState.recordingEnabled = !tabState.recordingEnabled
     }
   })
+  tabState.recordingTogglingEventPublisher.newSubscriber { event =>
+    setSelected(event.enabled)
+  }
 }

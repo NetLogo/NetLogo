@@ -3,13 +3,14 @@
 package org.nlogo.review
 
 import org.nlogo.mirror.ModelRun
+
 import javax.swing.AbstractListModel
 
 class ReviewTabState(
-  private var _runs: Vector[ModelRun] = Vector.empty,
-  private var _recordingEnabled: Boolean = false)
+  private var _runs: Vector[ModelRun] = Vector.empty)
   extends AbstractListModel
-  with HasCurrentRun {
+  with HasCurrentRun
+  with RecordingToggling {
 
   // ListModel methods:
   override def getElementAt(index: Int): AnyRef = _runs(index)
@@ -20,9 +21,8 @@ class ReviewTabState(
   def currentFrame = currentRun.flatMap(_.currentFrame)
   def currentFrameIndex = currentRun.flatMap(_.currentFrameIndex)
   def currentTicks = currentFrame.flatMap(_.ticks)
-  def recordingEnabled = _recordingEnabled
-  def recordingEnabled_=(b: Boolean) { _recordingEnabled = b }
-  def currentlyRecording = _recordingEnabled && currentRun.map(_.stillRecording).getOrElse(false)
+  def currentlyRecording =
+    recordingEnabled && currentRun.map(_.stillRecording).getOrElse(false)
 
   def reset() {
     val lastIndex = _runs.size - 1
