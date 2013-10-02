@@ -6,8 +6,10 @@ import
   org.nlogo.api,
   org.nlogo.util.MersenneTwisterFast
 
-// However note that turtles and links can die, so we may end up with an array containing
-// some dead agents (agents with id -1). - ST 7/24/07, 9/18/13
+// ArrayAgentSets are only used for agentsets which are never added to
+// after they are initially created.  However note that turtles and
+// links can die, so we may end up with an array containing some dead
+// agents (agents with id -1). NP 2013-08-28.
 
 class ArrayAgentSet(
   kind: api.AgentKind,

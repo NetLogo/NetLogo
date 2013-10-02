@@ -64,7 +64,7 @@ class LiteralParser(
       case TokenType.Literal =>
         token.value
       case TokenType.OpenBracket =>
-        val (result, _) = parseLiteralList(token,tokens)
+        val (result, _) = parseLiteralList(token, tokens)
         result
       case TokenType.OpenBrace =>
         cAssert(world != null, ERR_ILLEGAL_AGENT_LITERAL, token)
