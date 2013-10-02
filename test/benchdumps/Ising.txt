@@ -310,7 +310,7 @@ procedure SETUP:[INITIAL-MAGNETIZATION]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L10
           RETURN
-[4]_asm_proceduresetup_setpatchvariable_2 "set spin one-of" Object => void
+[4]_asm_proceduresetup_setpatchvariable_2 "set spin one-of [-1 1]" Object => void
       _oneof LogoList => Object
         _constlist:[-1 1] => LogoList
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException

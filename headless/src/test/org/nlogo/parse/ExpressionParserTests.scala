@@ -216,6 +216,7 @@ class ExpressionParserTests extends FunSuite {
       "CommandBlock '[ ]' " +
       "Statements '' ")
   }
+
   test("testWhile") {
     testStartAndEnd("while [count turtles < 10] [ crt 1 ]",
       "Statements 'while [count turtles < 10] [ crt 1 ]' " +
@@ -231,6 +232,14 @@ class ExpressionParserTests extends FunSuite {
       "ReporterApp '1' " +
       "CommandBlock '' " +
       "Statements '' ")
+  }
+
+  // issue #417 (source positions for literal lists)
+  test("literal list") {
+    testStartAndEnd("print [1 2 3]",
+      "Statements 'print [1 2 3]' " +
+      "Statement 'print [1 2 3]' " +
+      "ReporterApp '[1 2 3]' ")
   }
 
 }

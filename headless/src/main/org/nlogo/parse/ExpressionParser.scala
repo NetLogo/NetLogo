@@ -577,10 +577,10 @@ class ExpressionParser(
       // extensionManager here because we only ever use this code when we are parsing literal lists
       // while compiling code.  When we're reading lists from export files and such we go straight
       // to the LiteralParser through Compiler.readFromString ev 3/20/08
-      val tmp = LiteralParser.makeLiteralReporter(new LiteralParser(null, null).parseLiteralList(tokens.next(), tokens))
-      val token = tokens.next()
-      tmp.token(new Token("", TokenType.CONSTANT, null)(openBracket.startPos, token.endPos, token.fileName))
-      new ReporterApp(tmp, openBracket.startPos, token.endPos, token.fileName)
+      val (list, closeBracket) = new LiteralParser(null, null).parseLiteralList(tokens.next(), tokens)
+      val tmp = LiteralParser.makeLiteralReporter(list)
+      tmp.token(Token("", TokenType.CONSTANT, null)(openBracket.startPos, closeBracket.endPos, closeBracket.fileName))
+      new ReporterApp(tmp, openBracket.startPos, closeBracket.endPos, closeBracket.fileName)
     }
     // we weren't actually expecting a block at all!
     else exception("Expected " + TypeNames.aName(goalType) + " here, rather than a list or block.", block)
