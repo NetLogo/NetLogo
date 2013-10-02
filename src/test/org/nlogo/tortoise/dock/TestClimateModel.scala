@@ -20,6 +20,8 @@ class TestClimateModel extends DockingSuite {
   //   since Random.nextGaussian might be hard to implement in browser
   // - use all-lower-case shape names because of some unknown problem with
   //   with capital letters in shape names
+  // - use separate ask blocks to kill turtles, since killing a turtle
+  //   doesn't prevent it executing the rest of the block yet
 
   // A note on performance: once we get the model working, if we find that performance is poor, one
   // obvious possible culprit is the turtles-here primitive.  In JVM NetLogo, turtles register and
@@ -146,6 +148,8 @@ class TestClimateModel extends DockingSuite {
          |to run-sunshine
          |  ask rays [
          |    if not my-can-move? 0.3 [ die ]  ;; kill them off at the edge
+         |  ]
+         |  ask rays [
          |    fd 0.3                        ;; otherwise keep moving
          |  ]
          |  create-sunshine  ;; start new sun rays from top
@@ -215,6 +219,8 @@ class TestClimateModel extends DockingSuite {
          |to run-IR
          |  ask IRs [
          |    if not my-can-move? 0.3 [ die ]
+         |  ]
+         |  ask IRs [
          |    fd 0.3
          |    if ycor <= earth-top [   ;; convert to heat if we hit the earth's surface again
          |      set breed heats
@@ -319,10 +325,8 @@ class TestClimateModel extends DockingSuite {
       testCommand("remove-CO2")
     }
     testCommand("remove-cloud")
-    // commented out because after enough ticks it stops working because "die"
-    // isn't right yet - ST 9/18/13
-    // for (_ <- 1 to 10)
-    //   testCommand("repeat 50 [ go ]")
+    for (_ <- 1 to 4)
+      testCommand("repeat 50 [ go ]")
     testCommand("output-print temperature")
     testCommand("""ask turtles [ output-print (word kind " " xcor " "  ycor " ") ]""")
   }
