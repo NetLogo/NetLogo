@@ -10,22 +10,25 @@ import
 
 object Shell {
 
+  val src = ""
+  val dim = api.WorldDimensions.square(16)
+
   val rhino = new Rhino
 
   def main(argv: Array[String]) {
     setHeadlessProperty()
-    val (js, _, _) = Compiler.compileProcedures("", api.WorldDimensions.square(16))
+    val (js, program, procedures) =
+      Compiler.compileProcedures(src, dim)
     rhino.eval(js)
     System.err.println("Tortoise Shell 1.0")
-    input.takeWhile(!isQuit(_))
-      .foreach(run)
+    for(line <- input.takeWhile(!isQuit(_)))
+      try run(Compiler.compileCommands(line, procedures, program))
+      catch { case e: Exception => println(e) }
   }
 
-  def run(s: String) {
+  def run(js: String) {
     try {
-      val (output, json) =
-        rhino.run(
-          Compiler.compileCommands(s))
+      val (output, json) = rhino.run(js)
       Seq(output) // , json)
         .filter(_.nonEmpty)
         .foreach(x => println(x.trim))
