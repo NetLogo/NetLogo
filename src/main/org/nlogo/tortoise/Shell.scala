@@ -18,7 +18,7 @@ object Shell {
   def main(argv: Array[String]) {
     setHeadlessProperty()
     val (js, program, procedures) =
-      Compiler.compileProcedures(src, dim)
+      Compiler.compileProcedures(src, dimensions = dim)
     rhino.eval(js)
     System.err.println("Tortoise Shell 1.0")
     for(line <- input.takeWhile(!isQuit(_)))

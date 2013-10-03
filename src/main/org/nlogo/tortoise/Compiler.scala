@@ -26,11 +26,14 @@ object Compiler {
 
   def compileProcedures(
       logo: String,
+      interfaceGlobals: Seq[String] = Seq(),
       dimensions: api.WorldDimensions = api.WorldDimensions.square(0),
       patchSize: Double = 12)
       : (String, api.Program, ProceduresMap) = {
     // (Seq[ProcedureDefinition], StructureParser.Results)
-    val (defs, sp) = frontEnd.frontEnd(logo)
+    val (defs, sp) =
+      frontEnd.frontEnd(logo,
+        program = api.Program.empty.copy(interfaceGlobals = interfaceGlobals))
     val js =
       new RuntimeInit(sp.program, dimensions, patchSize).init +
         defs.map(compileProcedureDef).mkString("\n")
@@ -198,7 +201,8 @@ class RuntimeInit(program: api.Program, dimensions: api.WorldDimensions, patchSi
   def init = {
     import dimensions._
     globals + turtlesOwn + patchesOwn +
-      s"world = new World($minPxcor, $maxPxcor, $minPycor, $maxPycor, $patchSize);\n"
+      s"world = new World($minPxcor, $maxPxcor, $minPycor, $maxPycor, $patchSize, " +
+      s"${program.interfaceGlobals.size});\n"
   }
 
   // if there are any globals,

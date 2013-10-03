@@ -133,23 +133,25 @@ class DockingFixture(name: String) extends Fixture(name) {
     val code =
       api.ModelReader.parseModel(api.FileIO.file2String(path))
         .apply(api.ModelSection.Code).mkString("\n")
-    declareHelper(code, workspace.world.getDimensions, workspace.world.patchSize)
+    declareHelper(code, workspace.world.program.interfaceGlobals,
+      workspace.world.getDimensions, workspace.world.patchSize)
   }
 
   override def open(model: headless.ModelCreator.Model) {
     require(!opened)
     super.open(model)
-    declareHelper(model.code, model.dimensions, 12)
+    declareHelper(model.code, workspace.world.program.interfaceGlobals,
+      model.dimensions)
   }
 
   override def declare(logo: String, dimensions: api.WorldDimensions = defaultDimensions) {
     require(!opened)
-    super.declare(logo, dimensions)
-    declareHelper(logo, dimensions, 12)
+    super.declare(logo, dimensions = dimensions)
+    declareHelper(logo, dimensions = dimensions)
   }
 
-  def declareHelper(logo: String, dimensions: api.WorldDimensions = defaultDimensions, patchSize: Double) {
-    val (js, _, _) = Compiler.compileProcedures(logo, dimensions, patchSize)
+  def declareHelper(logo: String, interfaceGlobals: Seq[String] = Seq(), dimensions: api.WorldDimensions = defaultDimensions, patchSize: Double = 12) {
+    val (js, _, _) = Compiler.compileProcedures(logo, interfaceGlobals, dimensions, patchSize)
     evalJS(js)
     state = Map()
     rhino.eval("expectedModel = new AgentModel")

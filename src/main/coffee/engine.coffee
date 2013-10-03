@@ -141,7 +141,7 @@ class World
   _topology = null
   _ticks = -1
   _patchesAllBlack = true
-  constructor: (@minPxcor, @maxPxcor, @minPycor, @maxPycor, @patchSize) ->
+  constructor: (@minPxcor, @maxPxcor, @minPycor, @maxPycor, @patchSize, @interfaceGlobalCount) ->
     collectUpdates()
     Updates.push(
       {
@@ -153,7 +153,7 @@ class World
             minPycor: @minPycor,
             maxPxcor: @maxPxcor,
             maxPycor: @maxPycor,
-            nbInterfaceGlobals: 0,
+            nbInterfaceGlobals: @interfaceGlobalCount,
             linkBreeds: "XXX IMPLEMENT ME",
             linkShapeList: "XXX IMPLEMENT ME",
             patchSize: @patchSize,
