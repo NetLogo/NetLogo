@@ -6,7 +6,7 @@ import org.nlogo.agent.AgentSet
 import org.nlogo.api.Syntax
 import org.nlogo.nvm.{ Reporter, Context }
 
-class _breed(breedName: String) extends Reporter {
+class _breed(val breedName: String) extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(Syntax.TurtlesetType)
   override def toString =

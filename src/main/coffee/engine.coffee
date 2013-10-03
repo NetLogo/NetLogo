@@ -30,6 +30,8 @@ updated = (obj, vars...) ->
   for v in vars
     if (v == "plabelcolor")
       change["PLABEL-COLOR"] = obj[v]
+    else if (v == "breed")
+      change["BREED"] = obj[v].name
     else if (v == "labelcolor")
       change["LABEL-COLOR"] = obj[v]
     else if (v == "pensize")
@@ -48,7 +50,7 @@ updated = (obj, vars...) ->
   if (obj instanceof Turtle)
     update.turtles = oneUpdate
     update.patches = {}
-  else
+  else if(obj instanceof Patch)
     update.turtles = {}
     update.patches = oneUpdate
   Updates.push(update)
@@ -56,9 +58,8 @@ updated = (obj, vars...) ->
 
 class Turtle
   vars: []
-  constructor: (@id, @color, @heading, @xcor, @ycor, @label = "", @labelcolor = 9.9, @breed ="TURTLES", @hidden = false, @size = 1.0, @pensize = 1.0, @penmode = "up") ->
-    breed = Breeds.get(@breed)
-    @shape = breed.shape
+  constructor: (@id, @color, @heading, @xcor, @ycor, @label = "", @labelcolor = 9.9, @breed = Breeds.get("TURTLES"), @hidden = false, @size = 1.0, @pensize = 1.0, @penmode = "up") ->
+    @shape = @breed.shape
     updated(this, turtleBuiltins...)
     @vars = (x for x in TurtlesOwn.vars)
   toString: -> "(turtle " + @id + ")"
@@ -89,8 +90,8 @@ class Turtle
     @ycor = y
     updated(this, "xcor", "ycor")
     return
-  isBreed: (breed) ->
-    @breed == breed
+  isBreed: (breedName) ->
+    @breed.name == breedName
   die: ->
     if (@id != -1)
       world.removeTurtle(@id)
@@ -117,7 +118,7 @@ class Turtle
   setPatchVariable: (n, v) -> @getPatchHere().setPatchVariable(n, v)
   turtlesHere: ->
     p = @getPatchHere()
-    t for t in world.turtles() when t.getPatchHere() == p
+    new Agents(t for t in world.turtles().items when t.getPatchHere() == p, Breeds.get("TURTLES"))
 
 class Patch
   vars: []
@@ -139,7 +140,7 @@ class Patch
       @vars[n - patchBuiltins.length] = v
   getNeighbors: -> world.getNeighbors(@pxcor, @pycor) # world.getTopology().getNeighbors(this)
   sprout: (n) ->
-    (world.createturtle(@pxcor, @pycor, 5 + 10 * Random.nextInt(14), Random.nextInt(360)) for num in [0...n])
+    new Agents(world.createturtle(@pxcor, @pycor, 5 + 10 * Random.nextInt(14), Random.nextInt(360)) for num in [0...n], Breeds.get("TURTLES"))
 
 class World
   # any variables used in the constructor should come
@@ -189,8 +190,11 @@ class World
     for p in _patches
       updated(p, "pxcor", "pycor", "pcolor", "plabel", "plabelcolor")
   topology: -> _topology
-  turtles:  -> _turtles
-  patches:  -> _patches
+  turtles: () -> new Agents(_turtles, Breeds.get("TURTLES"))
+  turtlesOfBreed: (breedName) ->
+    breed = Breeds.get(breedName)
+    new Agents((_turtles.filter (t) -> t.breed == breed ), breed)
+  patches: -> new Agents(_patches)
   resetTicks: ->
     _ticks = 0
     Updates.push( world: { 0: { ticks: _ticks } } )
@@ -206,7 +210,7 @@ class World
     @maxPycor = maxPycor
     width = (@maxPxcor - @minPxcor) + 1
     _topology = new Torus(@minPxcor, @maxPxcor, @minPycor, @maxPycor)
-    for t in @turtles()
+    for t in @turtles().items
       t.die()
     @createPatches()
     Updates.push(
@@ -242,41 +246,42 @@ class World
     index  = (@maxPycor - StrictMath.round(y)) * width + (StrictMath.round(x) - @minPxcor)
     return _patches[index]
   getTurtle: (id) ->
-    (@turtles().filter (t) -> t.id == id)[0]
+    filteredTurtles = (@turtles().items.filter (t) -> t.id == id)
+    if filteredTurtles.length == 0 then Nobody else filteredTurtles[0]
+  getTurtleOfBreed: (breedName, id) ->
+    filteredTurtles = (@turtlesOfBreed(breedName).items.filter (t) -> t.id == id)
+    if filteredTurtles.length == 0 then Nobody else filteredTurtles[0]
   removeTurtle: (id) ->
-    _turtles = @turtles().filter (t) -> t.id != id
+    _turtles = @turtles().items.filter (t) -> t.id != id
     return
   patchesAllBlack: (val) ->
     _patchesAllBlack = val
     Updates.push( world: { 0: { patchesAllBlack: _patchesAllBlack }})
   clearall: ->
     Globals.clear(@interfaceGlobalCount)
-    for t in @turtles()
+    for t in @turtles().items
       t.die()
     @createPatches()
     _nextId = 0
     @patchesAllBlack(true)
     @clearTicks()
     return
-  getTurtle: (id) ->
-    filteredTurtles = (@turtles().items.filter (t) -> t.id == id)
-    if filteredTurtles.length == 0 then Nobody else filteredTurtles[0]
-  createturtle: (x, y, color, heading, breed) ->
-    if(breed != "")
-      t = new Turtle((_nextId++), color, heading, x, y, "default", "", 9.9, breed)
+  createturtle: (x, y, color, heading, breedName) ->
+    if(breedName != "")
+      t = new Turtle((_nextId++), color, heading, x, y, "", 9.9, Breeds.get(breedName))
     else
       t = new Turtle((_nextId++), color, heading, x, y)
     _turtles.push(t)
     t
   createorderedturtles: (n, breed) ->
-    (@createturtle(0, 0, (num * 10 + 5) % 140, num * (360 / n), breed) for num in [0...n])
+    new Agents(@createturtle(0, 0, (num * 10 + 5) % 140, num * (360 / n), breed) for num in [0...n], Breeds.get("TURTLES"))
   createturtles: (n, breed) ->
-    (@createturtle(0, 0, 5 + 10 * Random.nextInt(14), Random.nextInt(360), breed) for num in [0...n])
+    new Agents(@createturtle(0, 0, 5 + 10 * Random.nextInt(14), Random.nextInt(360), breed) for num in [0...n], Breeds.get("TURTLES"))
   getNeighbors: (pxcor, pycor) -> @topology().getNeighbors(pxcor, pycor)
 
-class Agents
-  count: (x) -> x.length
-  any: (x) -> x.length > 0
+AgentSet =
+  count: (x) -> x.items.length
+  any: (x) -> x.items.length > 0
   _self: 0
   self: -> @_self
   askAgent: (a, f) ->
@@ -286,8 +291,9 @@ class Agents
     @_self = oldAgent
     res
   ask: (agentsOrAgent, shuffle, f) ->
-    agents = agentsOrAgent
-    if (! (typeIsArray agentsOrAgent))
+    if(agentsOrAgent.items)
+      agents = agentsOrAgent.items
+    else
       agents = [agentsOrAgent]
     iter =
       if (shuffle)
@@ -298,20 +304,29 @@ class Agents
       a = iter.next()
       @askAgent(a, f)
     return
-  agentFilter: (agents, f) -> a for a in agents when @askAgent(a, f)
-  of: (agents, f) ->
-    islist = agents.slice
-    agents = [agents] if !islist
+  agentFilter: (agents, f) -> new Agents(a for a in agents.items when @askAgent(a, f))
+  of: (agentsOrAgent, f) ->
+    isagentset = agentsOrAgent.items
+    if(isagentset)
+      agents = agentsOrAgent.items
+    else
+      agents = [agentsOrAgent]
     result = []
     iter = new Shufflerator(agents)
     while (iter.hasNext())
       a = iter.next()
       result.push(@askAgent(a, f))
-    if islist
+    if isagentset
       result
     else
       result[0]
-  oneOf: (agents) -> if agents.length == 0 then Nobody else agents[Random.nextInt(agents.length)]
+  oneOf: (agentsOrList) ->
+    isagentset = agentsOrList.items
+    if(isagentset)
+      l = agentsOrList.items
+    else
+      l = agentsOrList
+    if l.length == 0 then Nobody else l[Random.nextInt(l.length)]
   # I'm putting some things in Agents, and some in Prims
   # I did that on purpose to show how arbitrary/confusing this seems.
   # May we should put *everything* in Prims, and Agents can be private.
@@ -321,6 +336,9 @@ class Agents
   setTurtleVariable: (n, v) -> @_self.setTurtleVariable(n, v)
   getPatchVariable:  (n)    -> @_self.getPatchVariable(n)
   setPatchVariable:  (n, v) -> @_self.setPatchVariable(n, v)
+
+class Agents
+  constructor: (@items, @breed) ->
 
 class Iterator
   constructor: (@agents) ->
@@ -427,8 +445,6 @@ PatchesOwn =
   vars: []
   init: (n) -> @vars = (0 for x in [0..n-1])
 
-AgentSet = new Agents
-
 # like api.Dump. will need more cases. for now at least knows
 # about lists.
 Dump = (x) ->
@@ -454,7 +470,7 @@ Trig =
 
 class Breed
   constructor: (@name) ->
-  @shape = "default"
+  shape: "default"
 
 Breeds = {
   breeds: [new Breed("TURTLES")]
@@ -462,8 +478,8 @@ Breeds = {
     @breeds.push(new Breed(name))
   get: (name) ->
     (@breeds.filter (b) -> b.name == name)[0]
-  setDefaultShape: (name, shape) ->
-    ((@breeds.filter (b) -> b.name == name)[0]).shape = shape
+  setDefaultShape: (agents, shape) ->
+    agents.breed.shape = shape
 }
 
 class Torus
@@ -483,16 +499,19 @@ class Torus
       pos
 
   getNeighbors: (pxcor, pycor) ->
+    new Agents(@_getNeighbors(pxcor, pycor))
+
+  _getNeighbors: (pxcor, pycor) ->
     if (pxcor == @maxPxcor && pxcor == @minPxcor)
       if (pycor == @maxPycor && pycor == @minPycor) []
-      else  [@getPatchNorth(pxcor, pycor), @getPatchSouth(pxcor, pycor)]
+      else [@getPatchNorth(pxcor, pycor), @getPatchSouth(pxcor, pycor)]
     else if (pycor == @maxPycor && pycor == @minPycor)
       [@getPatchEast(pxcor, pycor), @getPatchWest(pxcor, pycor)]
     else [@getPatchNorth(pxcor, pycor),     @getPatchEast(pxcor, pycor),
           @getPatchSouth(pxcor, pycor),     @getPatchWest(pxcor, pycor),
           @getPatchNorthEast(pxcor, pycor), @getPatchSouthEast(pxcor, pycor),
           @getPatchSouthWest(pxcor, pycor), @getPatchNorthWest(pxcor, pycor)]
-
+ 
   getPatchNorth: (pxcor, pycor) ->
     if (pycor == @maxPycor)
       world.getPatchAt(pxcor, @minPycor)

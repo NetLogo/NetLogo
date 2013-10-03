@@ -141,6 +141,8 @@ object Compiler {
     r.reporter match {
       case _: prim._nobody                  => "Nobody"
       case x: prim.etc._isbreed             => s"""${arg(0)}.isBreed("${x.breedName}")"""
+      case b: prim.etc._breed               => s"""world.turtlesOfBreed("${b.breedName}")"""
+      case b: prim.etc._breedsingular       => s"""world.getTurtleOfBreed("${b.breedName}", ${arg(0)})"""
       case x: prim.etc._turtle              => s"world.getTurtle(${arg(0)})"
       case pure: nvm.Pure if r.args.isEmpty => compileLiteral(pure.report(null))
       case lv: prim._letvariable            => ident(lv.let.name)
