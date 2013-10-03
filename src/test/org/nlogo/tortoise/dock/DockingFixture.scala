@@ -127,10 +127,29 @@ class DockingFixture(name: String) extends Fixture(name) {
   // use single-patch world by default to keep generated JSON to a minimum
   override val defaultDimensions = api.WorldDimensions.square(0)
 
+  override def open(path: String) {
+    require(!opened)
+    super.open(path)
+    val code =
+      api.ModelReader.parseModel(api.FileIO.file2String(path))
+        .apply(api.ModelSection.Code).mkString("\n")
+    declareHelper(code, workspace.world.getDimensions, workspace.world.patchSize)
+  }
+
+  override def open(model: headless.ModelCreator.Model) {
+    require(!opened)
+    super.open(model)
+    declareHelper(model.code, model.dimensions, 12)
+  }
+
   override def declare(logo: String, dimensions: api.WorldDimensions = defaultDimensions) {
     require(!opened)
     super.declare(logo, dimensions)
-    val (js, _, _) = Compiler.compileProcedures(logo, dimensions)
+    declareHelper(logo, dimensions, 12)
+  }
+
+  def declareHelper(logo: String, dimensions: api.WorldDimensions = defaultDimensions, patchSize: Double) {
+    val (js, _, _) = Compiler.compileProcedures(logo, dimensions, patchSize)
     evalJS(js)
     state = Map()
     rhino.eval("expectedModel = new AgentModel")
