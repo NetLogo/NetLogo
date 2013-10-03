@@ -60,7 +60,7 @@ class TestWolfModel extends DockingSuite {
 //         |end
 //         |
 //         |to go
-//         |  if not any? turtles [ stop ]
+//         |  ;;if not any? turtles [ stop ]
 //         |  ask sheep [
 //         |    move
 //         |    if grass? [

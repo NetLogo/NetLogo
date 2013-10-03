@@ -132,6 +132,12 @@ object Prims {
     s"AgentSet.ask(Prims.sprout($n), true, $body);"
   }
 
+  def generateHatch(s: Statement, breedName: String): String = {
+    val n = Compiler.genReporterApp(s.args.head)
+    val body = fun(Compiler.genCommandBlock(s.args.tail.head))
+    s"""AgentSet.ask(Prims.hatch($n, "$breedName"), true, $body);"""
+  }
+
   def fun(body: String) = s"function(){ $body }"
 
 }

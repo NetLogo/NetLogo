@@ -119,6 +119,9 @@ class Turtle
   turtlesHere: ->
     p = @getPatchHere()
     new Agents(t for t in world.turtles().items when t.getPatchHere() == p, Breeds.get("TURTLES"))
+  hatch: (n, breedName) ->
+    breed = if breedName then Breeds.get(breedName) else @breed
+    new Agents(world.createturtle(@xcor, @ycor, @color, @heading, breed.name) for num in [0...n], breed)
 
 class Patch
   vars: []
@@ -273,10 +276,10 @@ class World
       t = new Turtle((_nextId++), color, heading, x, y)
     _turtles.push(t)
     t
-  createorderedturtles: (n, breed) ->
-    new Agents(@createturtle(0, 0, (num * 10 + 5) % 140, num * (360 / n), breed) for num in [0...n], Breeds.get("TURTLES"))
-  createturtles: (n, breed) ->
-    new Agents(@createturtle(0, 0, 5 + 10 * Random.nextInt(14), Random.nextInt(360), breed) for num in [0...n], Breeds.get("TURTLES"))
+  createorderedturtles: (n, breedName) ->
+    new Agents(@createturtle(0, 0, (num * 10 + 5) % 140, num * (360 / n), breedName) for num in [0...n], Breeds.get("TURTLES"))
+  createturtles: (n, breedName) ->
+    new Agents(@createturtle(0, 0, 5 + 10 * Random.nextInt(14), Random.nextInt(360), breedName) for num in [0...n], Breeds.get("TURTLES"))
   getNeighbors: (pxcor, pycor) -> @topology().getNeighbors(pxcor, pycor)
 
 AgentSet =
@@ -381,6 +384,7 @@ Prims =
   setxy: (x, y) -> AgentSet.self().setxy(x, y)
   getNeighbors: -> AgentSet.self().getNeighbors()
   sprout: (n) -> AgentSet.self().sprout(n)
+  hatch: (n, breedName) -> AgentSet.self().hatch(n, breedName)
   patch: (x, y) -> world.getPatchAt(x, y)
   randomxcor: -> world.minPxcor - 0.5 + Random.nextDouble() * (world.maxPxcor - world.minPxcor + 1)
   randomycor: -> world.minPycor - 0.5 + Random.nextDouble() * (world.maxPycor - world.minPycor + 1)
