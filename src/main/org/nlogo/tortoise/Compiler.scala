@@ -105,6 +105,7 @@ object Compiler {
       case _: prim._createturtles        => Prims.generateCreateTurtles(s, ordered = false)
       case _: prim._createorderedturtles => Prims.generateCreateTurtles(s, ordered = true)
       case _: prim._sprout               => Prims.generateSprout(s)
+      case h: prim._hatch                => Prims.generateHatch(s, h.breedName)
       case Prims.NormalCommand(op)   => s"$op($args)"
       case r: prim._repeat           =>
         s"for(var i = 0; i < ${arg(0)}; i++) { ${genCommandBlock(s.args(1))} }"
@@ -141,7 +142,7 @@ object Compiler {
     r.reporter match {
       case _: prim._nobody                  => "Nobody"
       case x: prim.etc._isbreed             => s"""${arg(0)}.isBreed("${x.breedName}")"""
-      case b: prim.etc._breed               => s"""world.turtlesOfBreed("${b.breedName}")"""
+      case b: prim.etc._breed               => s"""world.turtlesOfBreed("${b.getBreedName}")"""
       case b: prim.etc._breedsingular       => s"""world.getTurtleOfBreed("${b.breedName}", ${arg(0)})"""
       case x: prim.etc._turtle              => s"world.getTurtle(${arg(0)})"
       case pure: nvm.Pure if r.args.isEmpty => compileLiteral(pure.report(null))
