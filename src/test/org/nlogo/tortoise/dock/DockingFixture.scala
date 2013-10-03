@@ -130,18 +130,21 @@ class DockingFixture(name: String) extends Fixture(name) {
   override def open(path: String) {
     require(!opened)
     super.open(path)
-    val code =
-      api.ModelReader.parseModel(api.FileIO.file2String(path))
-        .apply(api.ModelSection.Code).mkString("\n")
-    declareHelper(code, workspace.world.program.interfaceGlobals,
+    val sections = api.ModelReader.parseModel(api.FileIO.file2String(path))
+    val code = sections(api.ModelSection.Code).mkString("\n")
+    val (interfaceGlobals, _, _, _, interfaceGlobalCommands) =
+      new headless.WidgetParser(workspace)
+        .parseWidgets(sections(api.ModelSection.Interface))
+    declareHelper(code, interfaceGlobals, interfaceGlobalCommands.toString,
       workspace.world.getDimensions, workspace.world.patchSize)
   }
 
   override def open(model: headless.ModelCreator.Model) {
     require(!opened)
     super.open(model)
-    declareHelper(model.code, workspace.world.program.interfaceGlobals,
-      model.dimensions)
+    declareHelper(model.code,
+      interfaceGlobals = workspace.world.program.interfaceGlobals,
+      dimensions = model.dimensions)
   }
 
   override def declare(logo: String, dimensions: api.WorldDimensions = defaultDimensions) {
@@ -150,9 +153,11 @@ class DockingFixture(name: String) extends Fixture(name) {
     declareHelper(logo, dimensions = dimensions)
   }
 
-  def declareHelper(logo: String, interfaceGlobals: Seq[String] = Seq(), dimensions: api.WorldDimensions = defaultDimensions, patchSize: Double = 12) {
+  def declareHelper(logo: String, interfaceGlobals: Seq[String] = Seq(), interfaceGlobalCommands: String = "",
+      dimensions: api.WorldDimensions = defaultDimensions, patchSize: Double = 12) {
     val (js, _, _) = Compiler.compileProcedures(logo, interfaceGlobals, dimensions, patchSize)
     evalJS(js)
+    evalJS(Compiler.compileCommands(interfaceGlobalCommands, workspace.procedures, workspace.world.program))
     state = Map()
     rhino.eval("expectedModel = new AgentModel")
     rhino.eval("actualModel = new AgentModel")

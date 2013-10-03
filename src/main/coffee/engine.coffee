@@ -241,7 +241,7 @@ class World
     _patchesAllBlack = val
     Updates.push( world: { 0: { patchesAllBlack: _patchesAllBlack }})
   clearall: ->
-    Globals.init(Globals.vars.length)
+    Globals.clear(@interfaceGlobalCount)
     for t in @turtles()
       t.die()
     @createPatches()
@@ -398,6 +398,9 @@ Globals =
   # tells the runtime how many globals there are.
   # they are all initialized to 0
   init: (n) -> @vars = (0 for x in [0...n])
+  clear: (n) ->
+    @vars[i] = 0 for i in [n...@vars.length]
+    return
   getGlobal: (n) -> @vars[n]
   setGlobal: (n, v) -> @vars[n] = v
 
