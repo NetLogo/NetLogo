@@ -10,6 +10,7 @@ import Mirroring._
 import Mirrorables._
 import TestMirroring.withWorkspace
 import org.nlogo.drawing.DrawingActionRunner
+import scala.sys.process.stringSeqToProcess
 
 class TestMirroringModels extends FunSuite with SlowTest {
 
@@ -43,16 +44,22 @@ class TestMirroringModels extends FunSuite with SlowTest {
       val mirrorChecksum =
         Checksummer.calculateGraphicsChecksum(renderer, ws)
 
-      def exportPNG(r: api.RendererInterface, suffix: String) = {
-        new java.io.File("tmp").mkdir()
-        val outputFile = new java.io.File(path).getName + "." + suffix + ".png"
-        val outputPath = new java.io.File("tmp/" + outputFile)
-        javax.imageio.ImageIO.write(r.exportView(ws), "png", outputPath)
+      def pngFileName(suffix: String): String =
+        "tmp/" + new java.io.File(path).getName + "." + suffix + ".png"
+
+      def exportPNG(r: api.RendererInterface, fileName: String): Unit = {
+        javax.imageio.ImageIO.write(r.exportView(ws), "png", new java.io.File(fileName))
       }
 
       if (mirrorChecksum != realChecksum) {
-        exportPNG(ws.renderer, "original")
-        exportPNG(renderer, "mirror")
+        new java.io.File("tmp").mkdir() // make sure tmp/ exists
+        val originalFN = pngFileName("original")
+        exportPNG(ws.renderer, originalFN)
+        val mirrorFN = pngFileName("mirror")
+        exportPNG(renderer, mirrorFN)
+        // create diff (requires ImageMagick)
+        val diffFN = pngFileName("diff")
+        Seq("compare", originalFN, mirrorFN, diffFN).!
       }
 
       assertResult(realChecksum) { mirrorChecksum }
