@@ -89,8 +89,8 @@ class Turtle
     @ycor = y
     updated(this, "xcor", "ycor")
     return
-  isBreed: (breed) ->
-    @breed == breed
+  isBreed: (breedName) ->
+    @breed.name == breedName
   die: ->
     if (@id != -1)
       world.removeTurtle(@id)
@@ -277,9 +277,6 @@ class World
     @patchesAllBlack(true)
     @clearTicks()
     return
-  getTurtle: (id) ->
-    filteredTurtles = (@turtles().items.filter (t) -> t.id == id)
-    if filteredTurtles.length == 0 then Nobody else filteredTurtles[0]
   createturtle: (t) ->
     t.id = _nextId++
     updated(t, turtleBuiltins...)
