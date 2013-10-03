@@ -206,6 +206,13 @@ class StructureParserTests extends FunSuite {
     assertResult("closing bracket expected")(e.getMessage.takeWhile(_ != ','))
   }
 
+  test("breed singular clash with global") { // ticket #446
+    val e = intercept[CompilerException] {
+      compile("breed[frogs frog] globals[frog]")
+    }
+    assertResult("You already defined FROG as a breed")(e.getMessage.takeWhile(_ != ','))
+  }
+
   // https://github.com/NetLogo/NetLogo/issues/414
   test("missing end 1") {
     val e = intercept[CompilerException] {
