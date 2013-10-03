@@ -6,7 +6,7 @@ import org.nlogo.agent.AgentSet
 import org.nlogo.api.Syntax
 import org.nlogo.nvm.{ Reporter, Context }
 
-class _breed(val breedName: String) extends Reporter {
+class _breed(breedName: String) extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(Syntax.TurtlesetType)
   override def toString =
@@ -15,4 +15,6 @@ class _breed(val breedName: String) extends Reporter {
     report_1(context)
   def report_1(context: Context): AgentSet =
     world.getBreed(breedName)
+  //MethodRipper died if I just made it a val above - F.D. (10/3/13)
+  def getBreedName: String = breedName
 }
