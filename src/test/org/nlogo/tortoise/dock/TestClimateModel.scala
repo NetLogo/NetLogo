@@ -7,29 +7,15 @@ import org.nlogo.api
 
 class TestClimateModel extends DockingSuite {
 
-  // differences from version in models library:
-  // - breeds removed
-  //   - use a string "kind" instead
-  //   - all breed-owns variables become turtles-own
-  // - no set-default-shape, use "set shape" instead
-  // - sliders replaced with global variables
-  // - no plotting or monitors
-  // - no vertical cylinder support yet, so "my-can-move?"
-  //   substitutes for can-move? primitive
-  // - random-normal replaced with my-random-normal
-  //   since Random.nextGaussian might be hard to implement in browser
-  // - use all-lower-case shape names because of some unknown problem with
-  //   with capital letters in shape names
-  // - use separate ask blocks to kill turtles, since killing a turtle
-  //   doesn't prevent it executing the rest of the block yet
+  // Tortoise issue numbers that required workarounds in this model:
+  // #4 (breeds), #5 (set-default-shape), #6 (sliders),
+  // #7 (vertical cylinder), #8 (random-normal),
+  // #9 (capital letters in shape names), #10 (turtle death)
 
-  // A note on performance: once we get the model working, if we find that performance is poor, one
-  // obvious possible culprit is the turtles-here primitive.  In JVM NetLogo, turtles register and
-  // deregister themselves as they enter and leave patches, so turtles-here is O(1)-ish (except in
-  // the pathological case where most or all of the turtles are on a single patch; I call it
-  // pathological but it's not that hard to hit, which is why there's an open issue on it at
-  // https://github.com/NetLogo/NetLogo/issues/148). Currently in Tortoise, we don't have code like
-  // that, so turtles-here has to check the location of every turtle, which is O(n).
+  // performance: #11 (slow turtles-here)
+
+  // not docked/tested: #12 (plots and monitors)
+
 
   test("climate") { implicit fixture => import fixture._
     val src =
