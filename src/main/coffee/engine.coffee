@@ -96,6 +96,8 @@ class Turtle
       @vars[n - turtleBuiltins.length]
   setTurtleVariable: (n, v) ->
     if (n < turtleBuiltins.length)
+      if (n == 5)  # shape
+        v = v.toLowerCase()
       this[turtleBuiltins[n]] = v
       if (n == 2)  # heading
         @keepHeadingInRange()

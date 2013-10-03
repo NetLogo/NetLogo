@@ -3,7 +3,7 @@
 package org.nlogo.tortoise
 package dock
 
-import org.nlogo.api.WorldDimensions
+import org.nlogo.api, api.WorldDimensions
 
 class TestAgents extends DockingSuite {
 
@@ -248,6 +248,11 @@ class TestAgents extends DockingSuite {
   test("set heading negative") { implicit fixture => import fixture._
     // should get normalized to 260
     testCommand("crt 1 [ set heading -100 ]")
+  }
+
+  test("shape downcasing") { implicit fixture => import fixture._
+    workspace.world.turtleShapeList.add(new api.DummyShape("turtle"))
+    testCommand("""crt 1 [ set shape "TURTLE" output-print shape ]""")
   }
 
   // TODO currently failing, haven't figured out why yet - ST 9/20/13
