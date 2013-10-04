@@ -99,6 +99,7 @@ object Compiler {
                                      => s"var ${ident(l.let.name)} = ${arg(1)};"
       case call: prim._call          => s"${ident(call.procedure.name)}($args)"
       case _: prim.etc._report       => s"return $args;"
+      case _: prim.etc._stop         => "return"
       case _: prim._ask              => Prims.generateAsk(s, shuffle = true)
       case _: prim._asksorted        => Prims.generateAsk(s, shuffle = false)
       case _: prim._createturtles        => Prims.generateCreateTurtles(s, ordered = false)
