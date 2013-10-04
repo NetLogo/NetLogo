@@ -129,4 +129,11 @@ class TestBasics extends DockingSuite {
     testCommand("resize-world 1 3 1 3")
     testCommand("resize-world 0 2 0 -2")
   }
+
+  test("nobody") { implicit fixture => import fixture._
+    testCommand("output-print nobody")
+    testCommand("""if one-of turtles = nobody [ output-print "TEST" ]""")
+    testCommand("cro 5")
+    testCommand("""if one-of turtles = nobody [ output-print "TEST" ]""")
+  }
 }

@@ -139,6 +139,7 @@ object Compiler {
     def argsSep(sep: String) =
       args.mkString(sep)
     r.reporter match {
+      case _: prim._nobody                  => "Nobody"
       case pure: nvm.Pure if r.args.isEmpty => compileLiteral(pure.report(null))
       case lv: prim._letvariable            => ident(lv.let.name)
       case pv: prim._procedurevariable      => ident(pv.name)
