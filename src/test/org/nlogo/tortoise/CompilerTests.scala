@@ -94,7 +94,8 @@ class CompilerTests extends FunSuite {
     val expected = """world = new World(0, 0, 0, 0, 12.0, 0);
                      |function FOO () {
                      |Prims.outputprint(5)
-                     |};""".stripMargin
+                     |};
+                     |""".stripMargin
     assertResult(expected)(compile(input)._1)
   }
 
@@ -136,7 +137,8 @@ class CompilerTests extends FunSuite {
         |Prims.outputprint(Globals.getGlobal(2))
         |Prims.outputprint(Globals.getGlobal(1))
         |Prims.outputprint(Globals.getGlobal(0))
-        |};""".stripMargin
+        |};
+        |""".stripMargin
     assertResult(expected)(compile(input)._1)
   }
 
@@ -149,7 +151,8 @@ class CompilerTests extends FunSuite {
         |function FOO () {
         |Globals.setGlobal(0,5)
         |Prims.outputprint(Globals.getGlobal(0))
-        |};""".stripMargin
+        |};
+        |""".stripMargin
     assertResult(expected)(compile(input)._1)
   }
 

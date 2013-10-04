@@ -155,9 +155,8 @@ class DockingFixture(name: String) extends Fixture(name) {
 
   def declareHelper(logo: String, interfaceGlobals: Seq[String] = Seq(), interfaceGlobalCommands: String = "",
       dimensions: api.WorldDimensions = defaultDimensions, patchSize: Double = 12) {
-    val (js, _, _) = Compiler.compileProcedures(logo, interfaceGlobals, dimensions, patchSize)
+    val (js, _, _) = Compiler.compileProcedures(logo, interfaceGlobals, interfaceGlobalCommands, dimensions, patchSize)
     evalJS(js)
-    evalJS(Compiler.compileCommands(interfaceGlobalCommands, workspace.procedures, workspace.world.program))
     state = Map()
     rhino.eval("expectedModel = new AgentModel")
     rhino.eval("actualModel = new AgentModel")

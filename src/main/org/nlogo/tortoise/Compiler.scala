@@ -27,6 +27,7 @@ object Compiler {
   def compileProcedures(
       logo: String,
       interfaceGlobals: Seq[String] = Seq(),
+      interfaceGlobalCommands: String = "",
       dimensions: api.WorldDimensions = api.WorldDimensions.square(0),
       patchSize: Double = 12)
       : (String, api.Program, ProceduresMap) = {
@@ -36,7 +37,8 @@ object Compiler {
         program = api.Program.empty.copy(interfaceGlobals = interfaceGlobals))
     val js =
       new RuntimeInit(sp.program, dimensions, patchSize).init +
-        defs.map(compileProcedureDef).mkString("\n")
+        defs.map(compileProcedureDef).mkString("", "\n", "\n") +
+        compileCommands(interfaceGlobalCommands, program = sp.program)
     if (sp.program.breeds.nonEmpty)
       throw new IllegalArgumentException("unknown language feature: turtle breeds")
     if (sp.program.linkBreeds.nonEmpty)
