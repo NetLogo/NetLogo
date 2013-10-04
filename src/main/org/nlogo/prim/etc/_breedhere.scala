@@ -6,7 +6,7 @@ import org.nlogo.api.{ Syntax, AgentKind }
 import org.nlogo.nvm.{ Reporter, Context }
 import org.nlogo.agent.{ AgentSet, AgentSetBuilder, Turtle, Patch }
 
-class _breedhere(val breedName: String) extends Reporter {
+class _breedhere(breedName: String) extends Reporter {
 
   override def syntax =
     Syntax.reporterSyntax(Syntax.TurtlesetType, "-TP-")
@@ -34,5 +34,6 @@ class _breedhere(val breedName: String) extends Reporter {
     }
     builder.build()
   }
-
+  //MethodRipper died if I just made it a val above - F.D. (10/3/13)
+  def getBreedName: String = breedName
 }
