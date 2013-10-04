@@ -6,7 +6,7 @@ import org.nlogo.api.{ Syntax, AgentKind }
 import org.nlogo.nvm.{ Reporter, Context }
 import org.nlogo.agent.{ AgentSet, AgentSetBuilder, Turtle, Patch }
 
-class _breedhere(breedName: String) extends Reporter {
+class _breedhere(val breedName: String) extends Reporter {
 
   override def syntax =
     Syntax.reporterSyntax(Syntax.TurtlesetType, "-TP-")

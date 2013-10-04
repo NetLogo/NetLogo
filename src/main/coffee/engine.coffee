@@ -119,6 +119,9 @@ class Turtle
   turtlesHere: ->
     p = @getPatchHere()
     new Agents(t for t in world.turtles().items when t.getPatchHere() == p, Breeds.get("TURTLES"))
+  breedHere: (breedName) ->
+    p = @getPatchHere()
+    new Agents(t for t in world.turtlesOfBreed(breedName).items when t.getPatchHere() == p, Breeds.get(breedName))
   hatch: (n, breedName) ->
     breed = if breedName then Breeds.get(breedName) else @breed
     new Agents(world.createturtle(@xcor, @ycor, @color, @heading, breed.name) for num in [0...n], breed)
