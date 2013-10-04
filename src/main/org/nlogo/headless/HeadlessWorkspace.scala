@@ -11,8 +11,8 @@ import org.nlogo.api.{ AgentKind, Program, Version, RendererInterface, WorldDime
                        ModelReader, CompilerException, LogoException, SimpleJobOwner,
                        CommandRunnable, ReporterRunnable, UpdateMode }
 import org.nlogo.agent.World
-import org.nlogo.nvm.{ LabInterface, Context, FrontEndInterface,
-                       DefaultParserServices, CompilerInterface }
+import org.nlogo.nvm, nvm.{ LabInterface, Context, FrontEndInterface,
+                            DefaultParserServices, CompilerInterface }
 import org.nlogo.workspace.AbstractWorkspace
 import org.nlogo.util.Femto
 import org.nlogo.drawing.DrawingActionBroker
@@ -84,6 +84,8 @@ with org.nlogo.workspace.WorldLoaderInterface {
 
   val defaultOwner =
     new SimpleJobOwner("HeadlessWorkspace", world.mainRNG)
+
+  var flags = nvm.CompilerFlags()
 
   /**
    * Has a model been opened in this workspace?
@@ -402,7 +404,7 @@ with org.nlogo.workspace.WorldLoaderInterface {
    * @throws LogoException if the code fails to run
    */
   def command(source: String) {
-    evaluateCommands(defaultOwner, source, true)
+    evaluator.evaluateCommands(defaultOwner, source, world.observers, true, flags)
     if (lastLogoException != null) {
       val ex = lastLogoException
       _lastLogoException = null
@@ -422,7 +424,7 @@ with org.nlogo.workspace.WorldLoaderInterface {
    * @throws LogoException if the code fails to run
    */
   def report(source: String): AnyRef = {
-    val result = evaluateReporter(defaultOwner, source, world.observer)
+    val result = evaluator.evaluateReporter(defaultOwner, source, world.observers, flags)
     if (lastLogoException != null) {
       val ex = lastLogoException
       _lastLogoException = null
