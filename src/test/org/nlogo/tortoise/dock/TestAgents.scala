@@ -195,10 +195,10 @@ class TestAgents extends DockingSuite {
     testCommand("output-print count patches with [pxcor = 0 and pycor = 0]")
   }
 
-//  test("neighbors") { implicit fixture => import fixture._
-//    declare("", WorldDimensions.square(5))
-//    testCommand("""ask patches [ ask neighbors [ output-print self ]]""")
-//  }
+  test("neighbors") { implicit fixture => import fixture._
+    declare("", WorldDimensions.square(5))
+    testCommand("""ask patches [ ask neighbors [ output-print self ]]""")
+  }
 
   test("setting a built-in patch variable") { implicit fixture => import fixture._
     declare("", WorldDimensions.square(5))
