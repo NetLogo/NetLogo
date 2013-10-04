@@ -80,7 +80,7 @@ class WidgetParser(ws: HeadlessWorkspace) {
         monitors += "__ignore (" + ModelReader.restoreLines(monitorSource) + "\n)"
     }
 
-    def parseGraphicsWindow(widget: Seq[String]) {
+    def parseView(widget: Seq[String]) {
       (new WorldLoader).load(widget, ws)
     }
 
@@ -94,7 +94,7 @@ class WidgetParser(ws: HeadlessWorkspace) {
         case "PLOT" => parsePlot(widget)
         case "BUTTON" if ws.compilerTestingMode => parseButton(widget)
         case "MONITOR" if ws.compilerTestingMode => parseMonitor(widget)
-        case "GRAPHICS-WINDOW" => parseGraphicsWindow(widget)
+        case "GRAPHICS-WINDOW" => parseView(widget)
         case _ => // ignore
       }
 
