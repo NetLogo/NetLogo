@@ -153,6 +153,9 @@ class TestAgents extends DockingSuite {
   test("one-of") { implicit fixture => import fixture._
     declare("", WorldDimensions.square(0))
     testCommand("output-print one-of patches")
+    testCommand("output-print one-of turtles")
+    testCommand("create-turtles 2")
+    testCommand("output-print one-of turtles")
   }
 
   test("get patch") { implicit fixture => import fixture._
@@ -162,6 +165,8 @@ class TestAgents extends DockingSuite {
   test("get turtle") { implicit fixture => import fixture._
     testCommand("cro 5")
     testCommand("ask turtles [ output-print self ]")
+    testCommand("output-print turtle 1")
+    testCommand("output-print turtle 8")
   }
 
   test("patch set") { implicit fixture => import fixture._
@@ -237,6 +242,7 @@ class TestAgents extends DockingSuite {
     declare("", WorldDimensions.square(2))
     testCommand("cro 7")
     testCommand("ask turtles [ output-print patch-ahead 1 ]")
+    testCommand("ask turtles [ output-print patch-ahead 100 ]")
   }
 
   test("turtles-here") { implicit fixture => import fixture._
