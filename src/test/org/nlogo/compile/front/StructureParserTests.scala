@@ -197,6 +197,11 @@ class StructureParserTests extends FunSuite {
   test("missing close bracket in last declaration") {
     expectError("turtles-own [",
       "closing bracket expected") }
+
+  test("breed singular clash with global") { // ticket #446
+    expectError("breed[frogs frog] globals[frog]",
+      "There is already a breed called FROG") }
+
   // https://github.com/NetLogo/NetLogo/issues/414
   test("missing end 1") {
     expectError("to foo to bar",
