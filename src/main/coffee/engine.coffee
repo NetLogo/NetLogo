@@ -3,6 +3,10 @@ patchBuiltins = ["pxcor", "pycor", "pcolor", "plabel", "plabelcolor"]
 
 Updates = []
 
+Nobody = {
+  toString: -> "nobody"
+}
+
 collectUpdates = ->
   result =
     if (Updates.length == 0)
@@ -248,6 +252,9 @@ class World
     @patchesAllBlack(true)
     @clearTicks()
     return
+  getTurtle: (id) ->
+    filteredTurtles = (@turtles().filter (t) -> t.id == id)
+    if filteredTurtles.length == 0 then Nobody else filteredTurtles[0]
   createturtle: (x, y, color, heading) ->
     t = new Turtle((_nextId++), color, heading, x, y)
     _turtles.push(t)
@@ -295,7 +302,7 @@ class Agents
       result
     else
       result[0]
-  oneOf: (agents) -> agents[Random.nextInt(agents.length)]
+  oneOf: (agents) -> if agents.length == 0 then Nobody else agents[Random.nextInt(agents.length)]
   # I'm putting some things in Agents, and some in Prims
   # I did that on purpose to show how arbitrary/confusing this seems.
   # May we should put *everything* in Prims, and Agents can be private.
