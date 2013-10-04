@@ -228,7 +228,6 @@ class World
   ticks: ->
     if(_ticks == -1)
       throw new Error("Need to call reset-ticks")
-    Updates.push( world: { 0: { ticks: _ticks } } )
     _ticks
   # TODO: this needs to support all topologies
   getPatchAt: (x, y) ->
