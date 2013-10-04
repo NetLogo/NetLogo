@@ -58,9 +58,8 @@ updated = (obj, vars...) ->
 
 class Turtle
   vars: []
-  constructor: (@id, @color, @heading, @xcor, @ycor, @label = "", @labelcolor = 9.9, @breed = Breeds.get("TURTLES"), @hidden = false, @size = 1.0, @pensize = 1.0, @penmode = "up") ->
+  constructor: (@color = 0, @heading = 0, @xcor = 0, @ycor = 0, @breed = Breeds.get("TURTLES"), @label = "", @labelcolor = 9.9, @hidden = false, @size = 1.0, @pensize = 1.0, @penmode = "up") ->
     @shape = @breed.shape
-    updated(this, turtleBuiltins...)
     @vars = (x for x in TurtlesOwn.vars)
   toString: -> "(turtle " + @id + ")"
   keepHeadingInRange: ->
@@ -124,7 +123,13 @@ class Turtle
     new Agents(t for t in world.turtlesOfBreed(breedName).items when t.getPatchHere() == p, Breeds.get(breedName))
   hatch: (n, breedName) ->
     breed = if breedName then Breeds.get(breedName) else @breed
-    new Agents(world.createturtle(@xcor, @ycor, @color, @heading, breed.name) for num in [0...n], breed)
+    newTurtles = []
+    for num in [0...n]
+      t = new Turtle(@color, @heading, @xcor, @ycor, breed, @label, @labelcolor, @hidden, @size, @pensize, @penmode)
+      for v in TurtlesOwn.vars
+        t.setTurtleVariable(turtleBuiltins.length + v, @getTurtleVariable(turtleBuiltins.length + v))
+      newTurtles.push(world.createturtle(t))
+    new Agents(newTurtles, breed)
 
 class Patch
   vars: []
@@ -146,7 +151,7 @@ class Patch
       @vars[n - patchBuiltins.length] = v
   getNeighbors: -> world.getNeighbors(@pxcor, @pycor) # world.getTopology().getNeighbors(this)
   sprout: (n) ->
-    new Agents(world.createturtle(@pxcor, @pycor, 5 + 10 * Random.nextInt(14), Random.nextInt(360)) for num in [0...n], Breeds.get("TURTLES"))
+    new Agents(world.createturtle(new Turtle(5 + 10 * Random.nextInt(14), Random.nextInt(360), @pxcor, @pycor)) for num in [0...n], Breeds.get("TURTLES"))
 
 class World
   # any variables used in the constructor should come
@@ -272,17 +277,15 @@ class World
     @patchesAllBlack(true)
     @clearTicks()
     return
-  createturtle: (x, y, color, heading, breedName) ->
-    if(breedName != "")
-      t = new Turtle((_nextId++), color, heading, x, y, "", 9.9, Breeds.get(breedName))
-    else
-      t = new Turtle((_nextId++), color, heading, x, y)
+  createturtle: (t) ->
+    t.id = _nextId++
+    updated(t, turtleBuiltins...)
     _turtles.push(t)
     t
   createorderedturtles: (n, breedName) ->
-    new Agents(@createturtle(0, 0, (num * 10 + 5) % 140, num * (360 / n), breedName) for num in [0...n], Breeds.get("TURTLES"))
+    new Agents(@createturtle(new Turtle((num * 10 + 5) % 140, num * (360 / n), 0, 0, Breeds.get(breedName))) for num in [0...n])
   createturtles: (n, breedName) ->
-    new Agents(@createturtle(0, 0, 5 + 10 * Random.nextInt(14), Random.nextInt(360), breedName) for num in [0...n], Breeds.get("TURTLES"))
+    new Agents(@createturtle(new Turtle(5 + 10 * Random.nextInt(14), Random.nextInt(360), 0, 0, Breeds.get(breedName))) for num in [0...n])
   getNeighbors: (pxcor, pycor) -> @topology().getNeighbors(pxcor, pycor)
 
 AgentSet =
