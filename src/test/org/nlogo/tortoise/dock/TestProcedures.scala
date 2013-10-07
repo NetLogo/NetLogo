@@ -43,9 +43,14 @@ class TestProcedures extends DockingSuite {
     compare("foo")
   }
 
-  test("simple recursive call") { implicit fixture => import fixture._
-    declare("to-report fact [n] ifelse n = 0 [ report 1 ] [ report n * fact (n - 1) ] end")
-    testCommand("output-print fact 6")
+  test("recursive reporter procedure") { implicit fixture => import fixture._
+    declare("""|to-report fact [n]
+               |  ifelse n = 0
+               |    [ report 1 ]
+               |    [ report n * fact (n - 1) ]
+               |end
+               |""".stripMargin)
+    compare("fact 6")
   }
 
 }
