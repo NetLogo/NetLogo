@@ -227,7 +227,7 @@ class RuntimeInit(program: api.Program, dimensions: api.WorldDimensions, patchSi
     vars(program.turtlesOwn.drop(turtleBuiltinCount), "TurtlesOwn")
   def patchesOwn =
     vars(program.patchesOwn.drop(patchBuiltinCount), "PatchesOwn")
-  def breeds = program.breeds.keys.map("Breeds.add(\"" + _ + "\");\n").mkString("")
+  def breeds = program.breeds.values.map(b => s"""Breeds.add("${b.name}", "${b.singular.toLowerCase}");\n""").mkString("")
 
   private def vars(s: Seq[String], initPath: String) =
     if (s.nonEmpty) s"$initPath.init(${s.size})\n"
