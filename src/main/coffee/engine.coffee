@@ -61,7 +61,7 @@ class Turtle
   constructor: (@color = 0, @heading = 0, @xcor = 0, @ycor = 0, @breed = Breeds.get("TURTLES"), @label = "", @labelcolor = 9.9, @hidden = false, @size = 1.0, @pensize = 1.0, @penmode = "up") ->
     @shape = @breed.shape
     @vars = (x for x in TurtlesOwn.vars)
-  toString: -> "(turtle " + @id + ")"
+  toString: -> "(" + @breed.singular + " " + @id + ")"
   keepHeadingInRange: ->
     if (@heading < 0 || @heading >= 360)
       @heading = ((@heading % 360) + 360) % 360
@@ -479,13 +479,13 @@ Trig =
     StrictMath.cos(StrictMath.toRadians(degrees))
 
 class Breed
-  constructor: (@name) ->
+  constructor: (@name, @singular) ->
   shape: "default"
 
 Breeds = {
-  breeds: [new Breed("TURTLES")]
-  add: (name) ->
-    @breeds.push(new Breed(name))
+  breeds: [new Breed("TURTLES", "turtle")]
+  add: (name, singular) ->
+    @breeds.push(new Breed(name, singular))
   get: (name) ->
     (@breeds.filter (b) -> b.name == name)[0]
   setDefaultShape: (agents, shape) ->

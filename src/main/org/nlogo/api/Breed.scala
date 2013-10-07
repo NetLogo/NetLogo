@@ -2,8 +2,8 @@
 
 package org.nlogo.api
 
-case class Breed(name: String,
-                 singular: String,
+case class Breed(val name: String,
+                 val singular: String,
                  owns: Seq[String] = Seq(),
                  isLinkBreed: Boolean = false,
                  isDirected: Boolean = false) {
