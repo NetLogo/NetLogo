@@ -9,7 +9,7 @@ class _clearall extends Command {
   override def syntax =
     Syntax.commandSyntax("O---", true)
   override def perform(context: Context) {
-    workspace.clearAll()
+    workspace.clearAll(context)
     context.ip = next
   }
 }

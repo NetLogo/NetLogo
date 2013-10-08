@@ -39,7 +39,6 @@ trait Workspace extends ImporterUser with ParserServices with RandomServices {
   def waitForQueuedEvents()
   def outputObject(obj: AnyRef, owner: AnyRef, addNewline: Boolean, readable: Boolean, destination: OutputDestination)
   def clearOutput()
-  def clearAll()
   @throws(classOf[IOException])
   def convertToNormal(): String
   def getModelPath: String

@@ -11,7 +11,7 @@ class _clearallandresetticks extends Command {
     Syntax.commandSyntax("O---", true)
   override def callsOtherCode = true
   override def perform(context: Context) {
-    workspace.clearAll()
+    workspace.clearAll(context)
     workspace.resetTicks(context)
     context.ip = next
   }

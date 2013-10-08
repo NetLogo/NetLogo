@@ -61,12 +61,13 @@ with Compiling with Profiling with Extensions with HubNet with BehaviorSpace wit
     world.tickCounter.clear()
   }
 
-  def clearAll() {
+  def clearAll(context: Context) {
     world.clearAll()
     clearOutput()
     clearDrawing()
     plotManager.clearAll()
     getExtensionManager.clearAll()
+    requestDisplayUpdate(context, false)
   }
 
   /**

@@ -24,6 +24,7 @@ trait Workspace extends api.Workspace with JobManagerOwner {
   def profilingTracer: Tracer
   def updatePlots(c: Context)
   def setupPlots(c: Context)
+  def clearAll(c: Context)
   def resetTicks(c: Context)
   def inspectAgent(agent: Agent, radius: Double)
   def inspectAgent(kind: api.AgentKind, agent: Agent, radius: Double)

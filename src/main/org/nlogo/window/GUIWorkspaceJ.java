@@ -559,7 +559,7 @@ public abstract strictfp class GUIWorkspaceJ
   // on the job thread,
   // - updateUI() calls requestDisplayUpdate(true)
   // - _display, _tick, _reset-ticks call requestDisplayUpdate(true)
-  // - _tickadvance calls requestDisplayUpdate(false)
+  // - _clearall, _tickadvance call requestDisplayUpdate(false)
   // - ST 1/4/07, 3/3/11
   @Override
   public void requestDisplayUpdate(org.nlogo.nvm.Context context, boolean force) {

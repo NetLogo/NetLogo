@@ -277,7 +277,7 @@ public abstract strictfp class AbstractWorkspace
   }
 
 
-  public abstract void clearAll();
+  public abstract void clearAll(org.nlogo.nvm.Context context);
 
   protected abstract org.nlogo.agent.ImporterJ.ErrorHandler importerErrorHandler();
 
