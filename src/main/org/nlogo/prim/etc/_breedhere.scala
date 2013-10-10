@@ -34,5 +34,6 @@ class _breedhere(breedName: String) extends Reporter {
     }
     builder.build()
   }
-
+  //MethodRipper died if I just made it a val above - F.D. (10/3/13)
+  def getBreedName: String = breedName
 }
