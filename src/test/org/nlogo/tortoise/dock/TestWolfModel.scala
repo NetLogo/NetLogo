@@ -17,7 +17,7 @@ class TestWolfModel extends DockingSuite {
   test("wolf real") { implicit fixture => import fixture._
     open("models/Sample Models/Biology/Wolf Sheep Predation.nlogo")
     testCommand("setup")
-    testCommand("repeat 1 [ go ]")
+    testCommand("repeat 30 [ go ]")
     testCommand("output-print count wolves output-print count sheep output-print grass")
   }
 }
