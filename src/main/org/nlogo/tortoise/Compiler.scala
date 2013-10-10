@@ -119,6 +119,8 @@ object Compiler {
             s"Globals.setGlobal(${p.vn},${arg(1)})"
           case p: prim._turtlevariable =>
             s"AgentSet.setTurtleVariable(${p.vn},${arg(1)})"
+          case p: prim._turtleorlinkvariable if p.varName == "BREED" =>
+            s"AgentSet.setBreed(${arg(1)})"
           case p: prim._turtleorlinkvariable =>
             val vn = api.AgentVariables.getImplicitTurtleVariables.indexOf(p.varName)
             s"AgentSet.setTurtleVariable($vn,${arg(1)})"

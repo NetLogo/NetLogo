@@ -61,6 +61,11 @@ class Turtle
   constructor: (@color = 0, @heading = 0, @xcor = 0, @ycor = 0, @breed = Breeds.get("TURTLES"), @label = "", @labelcolor = 9.9, @hidden = false, @size = 1.0, @pensize = 1.0, @penmode = "up") ->
     @shape = @breed.shape
     @vars = (x for x in TurtlesOwn.vars)
+  setBreed: (breed) ->
+    @breed = breed
+    @shape = @breed.shape
+    updated(this, "breed")
+    updated(this, "shape")
   toString: -> "(" + @breed.singular + " " + @id + ")"
   keepHeadingInRange: ->
     if (@heading < 0 || @heading >= 360)
@@ -343,6 +348,7 @@ AgentSet =
   die: -> @_self.die()
   getTurtleVariable: (n)    -> @_self.getTurtleVariable(n)
   setTurtleVariable: (n, v) -> @_self.setTurtleVariable(n, v)
+  setBreed: (agentSet) -> @_self.setBreed(agentSet.breed)
   getPatchVariable:  (n)    -> @_self.getPatchVariable(n)
   setPatchVariable:  (n, v) -> @_self.setPatchVariable(n, v)
 

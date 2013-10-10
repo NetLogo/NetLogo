@@ -78,4 +78,22 @@ class TestBreeds extends DockingSuite {
     testCommand("ask mice [ output-print count mice-here ]")
     testCommand("ask mice [ output-print count frogs-here ]")
   }
+
+  test("set breed") { implicit fixture => import fixture._
+    declare("""| breed [mice mouse]
+               | breed [frogs frog]""".stripMargin)
+    testCommand("""set-default-shape mice "sheep" """)
+    testCommand("create-mice 1")
+    testCommand("""set-default-shape frogs "WOLF" """)
+    testCommand("create-frogs 1")
+    testCommand("ask turtle 0 [ set breed frogs ]")
+    testCommand("output-print count frogs output-print count mice")
+    testCommand("ask turtle 0 [ set breed mice ]")
+    testCommand("output-print count frogs output-print count mice")
+    testCommand("ask turtle 1 [ set breed frogs ]")
+    testCommand("output-print count frogs output-print count mice")
+    testCommand("ask turtle 1 [ set breed mice ]")
+    testCommand("output-print count frogs output-print count mice")
+  }
+
 }
