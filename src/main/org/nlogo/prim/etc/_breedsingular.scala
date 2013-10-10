@@ -5,7 +5,7 @@ package org.nlogo.prim.etc
 import org.nlogo.api.{ Syntax, Nobody }
 import org.nlogo.nvm.{ Reporter, Context, EngineException }
 
-class _breedsingular(breedName: String) extends Reporter {
+class _breedsingular(val breedName: String) extends Reporter {
 
   override def syntax =
     Syntax.reporterSyntax(

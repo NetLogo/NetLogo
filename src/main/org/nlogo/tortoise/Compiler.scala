@@ -39,8 +39,8 @@ object Compiler {
       new RuntimeInit(sp.program, dimensions, patchSize).init +
         defs.map(compileProcedureDef).mkString("", "\n", "\n") +
         compileCommands(interfaceGlobalCommands, program = sp.program)
-    if (sp.program.breeds.nonEmpty)
-      throw new IllegalArgumentException("unknown language feature: turtle breeds")
+    if (sp.program.breeds.values.exists(_.owns.nonEmpty))
+      throw new IllegalArgumentException("unknown language feature: breed variables")
     if (sp.program.linkBreeds.nonEmpty)
       throw new IllegalArgumentException("unknown language feature: link breeds")
     (js, sp.program, sp.procedures)
@@ -107,6 +107,7 @@ object Compiler {
       case _: prim._createturtles        => Prims.generateCreateTurtles(s, ordered = false)
       case _: prim._createorderedturtles => Prims.generateCreateTurtles(s, ordered = true)
       case _: prim._sprout               => Prims.generateSprout(s)
+      case h: prim._hatch                => Prims.generateHatch(s, h.breedName)
       case Prims.NormalCommand(op)   => s"$op($args)"
       case r: prim._repeat           =>
         s"for(var i = 0; i < ${arg(0)}; i++) { ${genCommandBlock(s.args(1))} }"
@@ -118,6 +119,8 @@ object Compiler {
             s"Globals.setGlobal(${p.vn},${arg(1)})"
           case p: prim._turtlevariable =>
             s"AgentSet.setTurtleVariable(${p.vn},${arg(1)})"
+          case p: prim._turtleorlinkvariable if p.varName == "BREED" =>
+            s"AgentSet.setBreed(${arg(1)})"
           case p: prim._turtleorlinkvariable =>
             val vn = api.AgentVariables.getImplicitTurtleVariables.indexOf(p.varName)
             s"AgentSet.setTurtleVariable($vn,${arg(1)})"
@@ -142,6 +145,11 @@ object Compiler {
       args.mkString(sep)
     r.reporter match {
       case _: prim._nobody                  => "Nobody"
+      case x: prim.etc._isbreed             => s"""${arg(0)}.isBreed("${x.breedName}")"""
+      case b: prim.etc._breed               => s"""world.turtlesOfBreed("${b.getBreedName}")"""
+      case b: prim.etc._breedsingular       => s"""world.getTurtleOfBreed("${b.breedName}", ${arg(0)})"""
+      case b: prim.etc._breedhere           => s"""AgentSet.self().breedHere("${b.getBreedName}")"""
+      case x: prim.etc._turtle              => s"world.getTurtle(${arg(0)})"
       case pure: nvm.Pure if r.args.isEmpty => compileLiteral(pure.report(null))
       case lv: prim._letvariable            => ident(lv.let.name)
       case pv: prim._procedurevariable      => ident(pv.name)
@@ -204,7 +212,7 @@ class RuntimeInit(program: api.Program, dimensions: api.WorldDimensions, patchSi
 
   def init = {
     import dimensions._
-    globals + turtlesOwn + patchesOwn +
+    globals + turtlesOwn + patchesOwn + breeds +
       s"world = new World($minPxcor, $maxPxcor, $minPycor, $maxPycor, $patchSize, " +
       s"${program.interfaceGlobals.size});\n"
   }
@@ -223,6 +231,7 @@ class RuntimeInit(program: api.Program, dimensions: api.WorldDimensions, patchSi
     vars(program.turtlesOwn.drop(turtleBuiltinCount), "TurtlesOwn")
   def patchesOwn =
     vars(program.patchesOwn.drop(patchBuiltinCount), "PatchesOwn")
+  def breeds = program.breeds.values.map(b => s"""Breeds.add("${b.name}", "${b.singular.toLowerCase}");\n""").mkString("")
 
   private def vars(s: Seq[String], initPath: String) =
     if (s.nonEmpty) s"$initPath.init(${s.size})\n"

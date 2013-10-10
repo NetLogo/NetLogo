@@ -69,6 +69,10 @@ class DockingFixture(name: String) extends Fixture(name) {
     }
   }
 
+  def viewResult(reporter: String) {
+    println("[View Result] " + api.Dump.logoObject(workspace.report(reporter)))
+  }
+
   override def runCommand(command: Command, mode: TestMode) {
     if (!opened) declare("")
     import command.{ command => logo }
@@ -105,6 +109,8 @@ class DockingFixture(name: String) extends Fixture(name) {
       throw new IllegalStateException("Exception occurred in JS but not headless")
     } else if(exceptionOccurredInHeadless && exceptionOccurredInJS) {
     } else {
+      //println(expectedJson)
+      //println(actualJson)
       assertResult(expectedOutput)(actualOutput)
       rhino.eval("expectedUpdates = " + expectedJson)
       rhino.eval("actualUpdates = " + actualJson)
