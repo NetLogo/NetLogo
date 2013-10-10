@@ -39,6 +39,8 @@ object Compiler {
       new RuntimeInit(sp.program, dimensions, patchSize).init +
         defs.map(compileProcedureDef).mkString("", "\n", "\n") +
         compileCommands(interfaceGlobalCommands, program = sp.program)
+    if (sp.program.breeds.values.exists(_.owns.nonEmpty))
+      throw new IllegalArgumentException("unknown language feature: breed variables")
     if (sp.program.linkBreeds.nonEmpty)
       throw new IllegalArgumentException("unknown language feature: link breeds")
     (js, sp.program, sp.procedures)
