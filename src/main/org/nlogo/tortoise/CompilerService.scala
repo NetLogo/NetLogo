@@ -8,31 +8,35 @@ import
     api.{ ModelReader, ModelSection, WorldDimensions },
     headless.{ HeadlessWorkspace, WidgetParser }
 
-object CompilerService extends App {
+object CompilerService {
 
-  val source =
-    args match {
-      case Array(nlogoPath) => Source.fromFile(nlogoPath)
-      case _                => Source.fromInputStream(System.in)
-    }
+  def main(args: Array[String]) {
 
-  val contents = source.mkString
-  source.close()
+    val source =
+      args match {
+        case Array(nlogoPath) => Source.fromFile(nlogoPath)
+        case _                => Source.fromInputStream(System.in)
+      }
 
-  val modelMap  = ModelReader.parseModel(contents)
-  val interface = modelMap(ModelSection.Interface)
-  val nlogo     = modelMap(ModelSection.Code).mkString("\n")
+    val contents = source.mkString
+    source.close()
 
-  val (iGlobals, _, _, _, iGlobalCmds) = new WidgetParser(HeadlessWorkspace.newInstance).parseWidgets(interface)
+    val modelMap  = ModelReader.parseModel(contents)
+    val interface = modelMap(ModelSection.Interface)
+    val nlogo     = modelMap(ModelSection.Code).mkString("\n")
 
-  val Seq(minX, maxX, minY, maxY) = 17 to 20 map { x => interface(x).toInt }
-  val dimensions = WorldDimensions(minX, maxX, minY, maxY)
+    val (iGlobals, _, _, _, iGlobalCmds) = new WidgetParser(HeadlessWorkspace.newInstance).parseWidgets(interface)
 
-  val (js, _, _) = Compiler.compileProcedures(nlogo, iGlobals, iGlobalCmds.toString, dimensions)
+    val Seq(minX, maxX, minY, maxY) = 17 to 20 map { x => interface(x).toInt }
+    val dimensions = WorldDimensions(minX, maxX, minY, maxY)
 
-  System.out.println(js)
+    val (js, _, _) = Compiler.compileProcedures(nlogo, iGlobals, iGlobalCmds.toString, dimensions)
 
-  System.exit(0)
+    System.out.println(js)
+
+    System.exit(0)
+
+  }
 
 }
 
