@@ -8,7 +8,10 @@ import
     util.Utils.getResourceAsString,
     util.MersenneTwisterFast
 import java.io.{ PrintWriter, StringWriter }
+
+// scalastyle:off illegal.imports
 import sun.org.mozilla.javascript.internal.NativeArray
+// scalastyle:on illegal.imports
 
 // There are two main entry points here: run() and eval().  The former runs compiled commands and
 // collects all the lines of output and JSON updates generated.  The latter runs a compiled reporter
