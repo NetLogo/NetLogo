@@ -1,6 +1,9 @@
 package org.nlogo.tortoise
 
 import
+  scala.io.Source
+
+import
   org.nlogo.{ api, headless },
     api.{ ModelReader, ModelSection, WorldDimensions },
     headless.{ HeadlessWorkspace, WidgetParser }
@@ -9,10 +12,8 @@ object CompilerService extends App {
 
   val source =
     args match {
-      case Array(nlogoPath) =>
-        io.Source.fromFile(nlogoPath)
-      case _ =>
-        io.Source.fromInputStream(System.in)
+      case Array(nlogoPath) => Source.fromFile(nlogoPath)
+      case _                => Source.fromInputStream(System.in)
     }
 
   val contents = source.mkString
