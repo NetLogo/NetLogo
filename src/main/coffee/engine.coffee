@@ -489,7 +489,7 @@ Breeds = {
   get: (name) ->
     (@breeds.filter (b) -> b.name == name)[0]
   setDefaultShape: (agents, shape) ->
-    agents.breed.shape = shape
+    agents.breed.shape = shape.toLowerCase()
 }
 
 class Torus
