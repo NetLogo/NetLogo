@@ -22,6 +22,9 @@ class TestClimateModel extends DockingSuite {
       testCommand("remove-CO2")
     }
     testCommand("remove-cloud")
+    // unfortunately this takes quite a while on Rhino, but it isn't a good test unless we run the
+    // model for long enough for the turtles to start interacting with each other and with the world
+    // boundaries - ST 10/10/13
     for (_ <- 1 to 4)
       testCommand("repeat 50 [ go ]")
     compare("temperature")
