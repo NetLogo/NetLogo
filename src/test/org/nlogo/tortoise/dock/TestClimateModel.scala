@@ -24,8 +24,7 @@ class TestClimateModel extends DockingSuite {
     testCommand("remove-cloud")
     for (_ <- 1 to 4)
       testCommand("repeat 50 [ go ]")
-    testCommand("output-print temperature")
-    testCommand("""ask turtles [ output-print (word kind " " xcor " "  ycor " ") ]""")
+    compare("temperature")
   }
 
 }
