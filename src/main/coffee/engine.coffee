@@ -58,12 +58,19 @@ updated = (obj, vars...) ->
 
 class Turtle
   vars: []
-  constructor: (@color = 0, @heading = 0, @xcor = 0, @ycor = 0, @breed = Breeds.get("TURTLES"), @label = "", @labelcolor = 9.9, @hidden = false, @size = 1.0, @pensize = 1.0, @penmode = "up") ->
-    @shape = @breed.shape
+  constructor: (@color = 0, @heading = 0, @xcor = 0, @ycor = 0, breed = Breeds.get("TURTLES"), @label = "", @labelcolor = 9.9, @hidden = false, @size = 1.0, @pensize = 1.0, @penmode = "up") ->
+    @breedvars = {}
+    @updateBreed(breed)
     @vars = (x for x in TurtlesOwn.vars)
-  setBreed: (breed) ->
+  updateBreed: (breed) ->
     @breed = breed
     @shape = @breed.shape
+    if(@breed != Breeds.get("TURTLES"))
+      for x in @breed.vars
+        if(@breedvars[x] == undefined)
+          @breedvars[x] = 0
+  setBreed: (breed) ->
+    @updateBreed(breed)
     updated(this, "breed")
     updated(this, "shape")
   toString: -> "(" + @breed.singular + " " + @id + ")"
@@ -119,6 +126,8 @@ class Turtle
       updated(this, turtleBuiltins[n])
     else
       @vars[n - turtleBuiltins.length] = v
+  getBreedVariable: (n) -> @breedvars[n]
+  setBreedVariable: (n, v) -> @breedvars[n] = v
   getPatchHere: -> world.getPatchAt(@xcor, @ycor)
   getPatchVariable: (n)    -> @getPatchHere().getPatchVariable(n)
   setPatchVariable: (n, v) -> @getPatchHere().setPatchVariable(n, v)
@@ -359,6 +368,8 @@ AgentSet =
   die: -> @_self.die()
   getTurtleVariable: (n)    -> @_self.getTurtleVariable(n)
   setTurtleVariable: (n, v) -> @_self.setTurtleVariable(n, v)
+  getBreedVariable: (n)    -> @_self.getBreedVariable(n)
+  setBreedVariable: (n, v) -> @_self.setBreedVariable(n, v)
   setBreed: (agentSet) -> @_self.setBreed(agentSet.breed)
   getPatchVariable:  (n)    -> @_self.getPatchVariable(n)
   setPatchVariable:  (n, v) -> @_self.setPatchVariable(n, v)
@@ -498,6 +509,7 @@ Trig =
 class Breed
   constructor: (@name, @singular) ->
   shape: "default"
+  vars: []
 
 Breeds = {
   breeds: [new Breed("TURTLES", "turtle")]

@@ -29,5 +29,4 @@ class TestClimateModel extends DockingSuite {
       testCommand("repeat 50 [ go ]")
     compare("temperature")
   }
-
 }

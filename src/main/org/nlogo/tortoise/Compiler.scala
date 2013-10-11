@@ -39,8 +39,6 @@ object Compiler {
       new RuntimeInit(sp.program, dimensions, patchSize).init +
         defs.map(compileProcedureDef).mkString("", "\n", "\n") +
         compileCommands(interfaceGlobalCommands, program = sp.program)
-    if (sp.program.breeds.values.exists(_.owns.nonEmpty))
-      throw new IllegalArgumentException("unknown language feature: breed variables")
     if (sp.program.linkBreeds.nonEmpty)
       throw new IllegalArgumentException("unknown language feature: link breeds")
     (js, sp.program, sp.procedures)
@@ -117,6 +115,8 @@ object Compiler {
             s"${ident(p.let.name)} = ${arg(1)};"
           case p: prim._observervariable =>
             s"Globals.setGlobal(${p.vn},${arg(1)})"
+          case bv: prim._breedvariable =>
+            s"""AgentSet.setBreedVariable("${bv.name}",${arg(1)})"""
           case p: prim._turtlevariable =>
             s"AgentSet.setTurtleVariable(${p.vn},${arg(1)})"
           case p: prim._turtleorlinkvariable if p.varName == "BREED" =>
@@ -156,6 +156,7 @@ object Compiler {
       case call: prim._callreport           => s"${ident(call.procedure.name)}($commaArgs)"
       case Prims.InfixReporter(op)          => s"(${arg(0)} $op ${arg(1)})"
       case Prims.NormalReporter(op)         => s"$op($commaArgs)"
+      case bv: prim._breedvariable          => s"""AgentSet.getBreedVariable("${bv.name}")"""
       case tv: prim._turtlevariable         => s"AgentSet.getTurtleVariable(${tv.vn})"
       case tv: prim._turtleorlinkvariable   =>
         val vn = api.AgentVariables.getImplicitTurtleVariables.indexOf(tv.varName)
@@ -231,7 +232,14 @@ class RuntimeInit(program: api.Program, dimensions: api.WorldDimensions, patchSi
     vars(program.turtlesOwn.drop(turtleBuiltinCount), "TurtlesOwn")
   def patchesOwn =
     vars(program.patchesOwn.drop(patchBuiltinCount), "PatchesOwn")
-  def breeds = program.breeds.values.map(b => s"""Breeds.add("${b.name}", "${b.singular.toLowerCase}");\n""").mkString("")
+  def breeds =
+    program.breeds.values.map(
+      b =>
+        s"""Breeds.add("${b.name}", "${b.singular.toLowerCase}");\n""" +
+          s"""Breeds.get("${b.name}").vars =""" +
+          b.owns.mkString("[\"", "\", \"", "\"]") +
+          ";"
+    ).mkString("\n")
 
   private def vars(s: Seq[String], initPath: String) =
     if (s.nonEmpty) s"$initPath.init(${s.size})\n"
