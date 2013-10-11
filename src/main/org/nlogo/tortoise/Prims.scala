@@ -52,6 +52,7 @@ object Prims {
         case _: prim.etc._randomycor  => "Prims.randomycor"
         case _: prim._oneof           => "AgentSet.oneOf"
         case _: prim.etc._removeduplicates => "Prims.removeDuplicates"
+        case _: prim.etc._patchset    => "Prims.patchset"
         case _: prim._not             => "!"
         case _: prim.etc._patchahead  => "AgentSet.self().patchAhead"
         case _: prim.etc._shadeof     => "Prims.shadeOf"

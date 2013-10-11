@@ -463,6 +463,19 @@ Prims =
     value for key, value of result
   outputprint: (x) ->
     println(Dump(x))
+  patchset: (inputs...) ->
+    # O(n^2) -- should be smarter (use hashing for contains check)
+    result = []
+    recurse = (inputs) ->
+      for input in inputs
+        if (typeIsArray(input))
+          recurse(input)
+        else
+          for agent in input.items
+            if (!(agent in result))
+              result.push(agent)
+    recurse(inputs)
+    new Agents(result)
 
 Globals =
   vars: []
