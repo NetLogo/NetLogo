@@ -47,6 +47,7 @@ object Prims {
         case _: prim.etc._max         => "Prims.max"
         case _: prim.etc._min         => "Prims.min"
         case _: prim._sum             => "Prims.sum"
+        case _: prim.etc._abs         => "StrictMath.abs"
         case _: prim.etc._randomfloat => "Prims.randomfloat"
         case _: prim.etc._randomxcor  => "Prims.randomxcor"
         case _: prim.etc._randomycor  => "Prims.randomycor"
