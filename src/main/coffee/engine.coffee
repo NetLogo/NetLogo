@@ -444,6 +444,15 @@ Prims =
     color + perc
   randomfloat: (n) -> n * Random.nextDouble()
   list: (xs...) -> xs
+  first: (xs) -> xs[0]
+  last: (xs) -> xs[xs.length - 1]
+  fput: (x, xs) -> [x].concat(xs)
+  lput: (x, xs) ->
+    result = xs[..]
+    result.push(x)
+    result
+  butfirst: (xs) -> xs[1..]
+  butlast: (xs) -> xs[0..xs.length - 1]
   max: (xs) -> Math.max(xs...)
   min: (xs) -> Math.min(xs...)
   sum: (xs) -> xs.reduce((a, b) -> a + b)
