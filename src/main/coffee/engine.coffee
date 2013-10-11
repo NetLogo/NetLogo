@@ -101,7 +101,9 @@ class Turtle
       world.removeTurtle(@id)
       died(@id)
       @id = -1
-    return
+    deathError = new Error("Call only from inside an askAgent block")
+    deathError.death = true
+    throw deathError
   getTurtleVariable: (n) ->
     if (n < turtleBuiltins.length)
       this[turtleBuiltins[n]]
@@ -227,7 +229,10 @@ class World
     width = (@maxPxcor - @minPxcor) + 1
     _topology = new Torus(@minPxcor, @maxPxcor, @minPycor, @maxPycor)
     for t in @turtles().items
-      t.die()
+      try
+        t.die()
+      catch error
+        throw error if !error.death
     @createPatches()
     Updates.push(
       world: {
@@ -276,7 +281,10 @@ class World
   clearall: ->
     Globals.clear(@interfaceGlobalCount)
     for t in @turtles().items
-      t.die()
+      try
+        t.die()
+      catch error
+        throw error if !error.death
     @createPatches()
     _nextId = 0
     @patchesAllBlack(true)
@@ -301,7 +309,10 @@ AgentSet =
   askAgent: (a, f) ->
     oldAgent = @_self
     @_self = a
-    res = f()
+    try
+      res = f()
+    catch error
+      throw error if !error.death
     @_self = oldAgent
     res
   ask: (agentsOrAgent, shuffle, f) ->
