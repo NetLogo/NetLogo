@@ -174,6 +174,7 @@ object Compiler {
         s"AgentSet.of($agents, function(){ return $body })"
       case p: prim.etc._patch               => s"Prims.patch($commaArgs)"
       case n: prim._neighbors               => s"Prims.getNeighbors()"
+      case n: prim._neighbors4              => s"Prims.getNeighbors4()"
       case _: prim.etc._minpxcor            => "world.minPxcor"
       case _: prim.etc._minpycor            => "world.minPycor"
       case _: prim.etc._maxpxcor            => "world.maxPxcor"

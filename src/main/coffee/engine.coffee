@@ -157,6 +157,7 @@ class Patch
     else
       @vars[n - patchBuiltins.length] = v
   getNeighbors: -> world.getNeighbors(@pxcor, @pycor) # world.getTopology().getNeighbors(this)
+  getNeighbors4: -> world.getNeighbors4(@pxcor, @pycor) # world.getTopology().getNeighbors(this)
   sprout: (n) ->
     new Agents(world.createturtle(new Turtle(5 + 10 * Random.nextInt(14), Random.nextInt(360), @pxcor, @pycor)) for num in [0...n], Breeds.get("TURTLES"))
 
@@ -300,6 +301,7 @@ class World
   createturtles: (n, breedName) ->
     new Agents(@createturtle(new Turtle(5 + 10 * Random.nextInt(14), Random.nextInt(360), 0, 0, Breeds.get(breedName))) for num in [0...n])
   getNeighbors: (pxcor, pycor) -> @topology().getNeighbors(pxcor, pycor)
+  getNeighbors4: (pxcor, pycor) -> @topology().getNeighbors4(pxcor, pycor)
 
 AgentSet =
   count: (x) -> x.items.length
@@ -406,6 +408,7 @@ Prims =
   left: (n) -> AgentSet.self().right(-n)
   setxy: (x, y) -> AgentSet.self().setxy(x, y)
   getNeighbors: -> AgentSet.self().getNeighbors()
+  getNeighbors4: -> AgentSet.self().getNeighbors4()
   sprout: (n) -> AgentSet.self().sprout(n)
   hatch: (n, breedName) -> AgentSet.self().hatch(n, breedName)
   patch: (x, y) -> world.getPatchAt(x, y)
@@ -538,7 +541,19 @@ class Torus
           @getPatchSouth(pxcor, pycor),     @getPatchWest(pxcor, pycor),
           @getPatchNorthEast(pxcor, pycor), @getPatchSouthEast(pxcor, pycor),
           @getPatchSouthWest(pxcor, pycor), @getPatchNorthWest(pxcor, pycor)]
- 
+
+  getNeighbors4: (pxcor, pycor) ->
+    new Agents(@_getNeighbors4(pxcor, pycor))
+
+  _getNeighbors4: (pxcor, pycor) ->
+    if (pxcor == @maxPxcor && pxcor == @minPxcor)
+      if (pycor == @maxPycor && pycor == @minPycor) []
+      else [@getPatchNorth(pxcor, pycor), @getPatchSouth(pxcor, pycor)]
+    else if (pycor == @maxPycor && pycor == @minPycor)
+      [@getPatchEast(pxcor, pycor), @getPatchWest(pxcor, pycor)]
+    else [@getPatchNorth(pxcor, pycor),     @getPatchEast(pxcor, pycor),
+          @getPatchSouth(pxcor, pycor),     @getPatchWest(pxcor, pycor)]
+
   getPatchNorth: (pxcor, pycor) ->
     if (pycor == @maxPycor)
       world.getPatchAt(pxcor, @minPycor)
