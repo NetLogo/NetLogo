@@ -78,6 +78,7 @@ class Turtle
     if (@heading < 0 || @heading >= 360)
       @heading = ((@heading % 360) + 360) % 360
     return
+  canMove: (amount) -> @patchAhead(amount) != Nobody
   patchAhead: (amount) ->
     newX = world.topology().wrap(@xcor + amount * Trig.sin(@heading),
         world.minPxcor - 0.5, world.maxPxcor + 0.5)
@@ -179,7 +180,7 @@ class World
   _topology = null
   _ticks = -1
   _patchesAllBlack = true
-  constructor: (@minPxcor, @maxPxcor, @minPycor, @maxPycor, @patchSize, @interfaceGlobalCount) ->
+  constructor: (@minPxcor, @maxPxcor, @minPycor, @maxPycor, @patchSize, @wrappingAllowedInY, @wrappingAllowedInX, @interfaceGlobalCount) ->
     collectUpdates()
     Updates.push(
       {
@@ -201,8 +202,8 @@ class World
             turtleBreeds: "XXX IMPLEMENT ME",
             turtleShapeList: "XXX IMPLEMENT ME",
             unbreededLinksAreDirected: false
-            wrappingAllowedInX: true,
-            wrappingAllowedInY: true
+            wrappingAllowedInX: @wrappingAllowedInX,
+            wrappingAllowedInY: @wrappingAllowedInY
           }
         }
       })

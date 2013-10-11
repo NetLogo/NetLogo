@@ -29,14 +29,16 @@ object Compiler {
       interfaceGlobals: Seq[String] = Seq(),
       interfaceGlobalCommands: String = "",
       dimensions: api.WorldDimensions = api.WorldDimensions.square(0),
-      patchSize: Double = 12)
+      patchSize: Double = 12,
+      wrappingAllowedInY: Boolean = true,
+      wrappingAllowedInX: Boolean = true)
       : (String, api.Program, ProceduresMap) = {
     // (Seq[ProcedureDefinition], StructureParser.Results)
     val (defs, sp) =
       frontEnd.frontEnd(logo,
         program = api.Program.empty.copy(interfaceGlobals = interfaceGlobals))
     val js =
-      new RuntimeInit(sp.program, dimensions, patchSize).init +
+      new RuntimeInit(sp.program, dimensions, patchSize, wrappingAllowedInY, wrappingAllowedInX).init +
         defs.map(compileProcedureDef).mkString("", "\n", "\n") +
         compileCommands(interfaceGlobalCommands, program = sp.program)
     if (sp.program.linkBreeds.nonEmpty)
@@ -209,12 +211,13 @@ object Compiler {
 // RuntimeInit generates JavaScript code that does any initialization that needs to happen
 // before any user code runs, for example creating patches
 
-class RuntimeInit(program: api.Program, dimensions: api.WorldDimensions, patchSize: Double) {
+class RuntimeInit(program: api.Program, dimensions: api.WorldDimensions, patchSize: Double,
+  wrappingAllowedInY: Boolean, wrappingAllowedInX: Boolean) {
 
   def init = {
     import dimensions._
     globals + turtlesOwn + patchesOwn + breeds +
-      s"world = new World($minPxcor, $maxPxcor, $minPycor, $maxPycor, $patchSize, " +
+      s"world = new World($minPxcor, $maxPxcor, $minPycor, $maxPycor, $patchSize, $wrappingAllowedInY, $wrappingAllowedInX, " +
       s"${program.interfaceGlobals.size});\n"
   }
 
