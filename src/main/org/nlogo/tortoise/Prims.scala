@@ -48,6 +48,7 @@ object Prims {
         case _: prim.etc._removeduplicates => "Prims.removeDuplicates"
         case _: prim._not             => "!"
         case _: prim.etc._patchahead  => "AgentSet.self().patchAhead"
+        case _: prim.etc._canmove     => "AgentSet.self().canMove"
         case _: prim.etc._shadeof     => "Prims.shadeOf"
         case _: prim.etc._scalecolor  => "Prims.scaleColor"
         case _: prim.etc._turtleshere => "AgentSet.self().turtlesHere"

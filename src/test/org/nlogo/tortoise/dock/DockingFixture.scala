@@ -138,11 +138,10 @@ class DockingFixture(name: String) extends Fixture(name) {
     super.open(path)
     val sections = api.ModelReader.parseModel(api.FileIO.file2String(path))
     val code = sections(api.ModelSection.Code).mkString("\n")
-    val (interfaceGlobals, _, _, _, interfaceGlobalCommands) =
+    val (interfaceGlobals, a, b, c, interfaceGlobalCommands) =
       new headless.WidgetParser(workspace)
         .parseWidgets(sections(api.ModelSection.Interface))
-    declareHelper(code, interfaceGlobals, interfaceGlobalCommands.toString,
-      workspace.world.getDimensions, workspace.world.patchSize)
+    declareHelper(code, interfaceGlobals, interfaceGlobalCommands.toString, workspace.world.getDimensions)
   }
 
   override def open(model: headless.ModelCreator.Model) {
@@ -160,8 +159,8 @@ class DockingFixture(name: String) extends Fixture(name) {
   }
 
   def declareHelper(logo: String, interfaceGlobals: Seq[String] = Seq(), interfaceGlobalCommands: String = "",
-      dimensions: api.WorldDimensions = defaultDimensions, patchSize: Double = 12) {
-    val (js, _, _) = Compiler.compileProcedures(logo, interfaceGlobals, interfaceGlobalCommands, dimensions, patchSize)
+      dimensions: api.WorldDimensions = defaultDimensions) {
+    val (js, _, _) = Compiler.compileProcedures(logo, interfaceGlobals, interfaceGlobalCommands, dimensions)
     evalJS(js)
     state = Map()
     rhino.eval("expectedModel = new AgentModel")
