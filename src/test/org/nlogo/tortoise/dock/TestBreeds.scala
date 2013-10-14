@@ -96,4 +96,31 @@ class TestBreeds extends DockingSuite {
     testCommand("output-print count frogs output-print count mice")
   }
 
+  test("breeds own") { implicit fixture => import fixture._
+    declare("""| breed [mice mouse]
+               | mice-own [ cheese ]""".stripMargin)
+    testCommand("create-mice 1")
+    compare("[ cheese ] of mouse 0")
+    testCommand("ask mouse 0 [ set cheese 2 ]")
+    compare("[ cheese ] of mouse 0")
+    testCommand("ask mouse 0 [ set cheese \"Hello\" ]")
+    compare("[ cheese ] of mouse 0")
+  }
+
+  test("breeds own change") { implicit fixture => import fixture._
+    declare("""| breed [mice mouse]
+               | breed [cats cat]
+               | mice-own [ cheese life ]
+               | cats-own [ food life ]""".stripMargin)
+    testCommand("create-mice 1")
+    testCommand("create-cats 1")
+    testCommand("ask turtle 0 [ set cheese 2 set life 4]")
+    compare("[ cheese ] of turtle 0")
+    compare("[ food ] of turtle 1")
+    compare("[ life ] of turtle 0")
+    testCommand("ask turtle 0 [ set breed cats ]")
+    testCommand("ask mice [ output-print life ]")
+    testCommand("ask cats [ output-print life ]")
+    testCommand("ask cats [ output-print food ]")
+  }
 }

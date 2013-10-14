@@ -58,12 +58,19 @@ updated = (obj, vars...) ->
 
 class Turtle
   vars: []
-  constructor: (@color = 0, @heading = 0, @xcor = 0, @ycor = 0, @breed = Breeds.get("TURTLES"), @label = "", @labelcolor = 9.9, @hidden = false, @size = 1.0, @pensize = 1.0, @penmode = "up") ->
-    @shape = @breed.shape
+  constructor: (@color = 0, @heading = 0, @xcor = 0, @ycor = 0, breed = Breeds.get("TURTLES"), @label = "", @labelcolor = 9.9, @hidden = false, @size = 1.0, @pensize = 1.0, @penmode = "up") ->
+    @breedvars = {}
+    @updateBreed(breed)
     @vars = (x for x in TurtlesOwn.vars)
-  setBreed: (breed) ->
+  updateBreed: (breed) ->
     @breed = breed
     @shape = @breed.shape
+    if(@breed != Breeds.get("TURTLES"))
+      for x in @breed.vars
+        if(@breedvars[x] == undefined)
+          @breedvars[x] = 0
+  setBreed: (breed) ->
+    @updateBreed(breed)
     updated(this, "breed")
     updated(this, "shape")
   toString: -> "(" + @breed.singular + " " + @id + ")"
@@ -71,12 +78,16 @@ class Turtle
     if (@heading < 0 || @heading >= 360)
       @heading = ((@heading % 360) + 360) % 360
     return
+  canMove: (amount) -> @patchAhead(amount) != Nobody
   patchAhead: (amount) ->
-    newX = world.topology().wrap(@xcor + amount * Trig.sin(@heading),
-        world.minPxcor - 0.5, world.maxPxcor + 0.5)
-    newY = world.topology().wrap(@ycor + amount * Trig.cos(@heading),
-        world.minPycor - 0.5, world.maxPycor + 0.5)
-    return world.getPatchAt(newX, newY)
+    try
+      newX = world.topology().wrapX(@xcor + amount * Trig.sin(@heading),
+          world.minPxcor - 0.5, world.maxPxcor + 0.5)
+      newY = world.topology().wrapY(@ycor + amount * Trig.cos(@heading),
+          world.minPycor - 0.5, world.maxPycor + 0.5)
+      return world.getPatchAt(newX, newY)
+    catch error
+      return Nobody
   fd: (amount) ->
     @xcor = world.topology().wrap(@xcor + amount * Trig.sin(@heading),
         world.minPxcor - 0.5, world.maxPxcor + 0.5)
@@ -119,6 +130,8 @@ class Turtle
       updated(this, turtleBuiltins[n])
     else
       @vars[n - turtleBuiltins.length] = v
+  getBreedVariable: (n) -> @breedvars[n]
+  setBreedVariable: (n, v) -> @breedvars[n] = v
   getPatchHere: -> world.getPatchAt(@xcor, @ycor)
   getPatchVariable: (n)    -> @getPatchHere().getPatchVariable(n)
   setPatchVariable: (n, v) -> @getPatchHere().setPatchVariable(n, v)
@@ -171,7 +184,7 @@ class World
   _topology = null
   _ticks = -1
   _patchesAllBlack = true
-  constructor: (@minPxcor, @maxPxcor, @minPycor, @maxPycor, @patchSize, @interfaceGlobalCount) ->
+  constructor: (@minPxcor, @maxPxcor, @minPycor, @maxPycor, @patchSize, @wrappingAllowedInY, @wrappingAllowedInX, @interfaceGlobalCount) ->
     collectUpdates()
     Updates.push(
       {
@@ -193,8 +206,8 @@ class World
             turtleBreeds: "XXX IMPLEMENT ME",
             turtleShapeList: "XXX IMPLEMENT ME",
             unbreededLinksAreDirected: false
-            wrappingAllowedInX: true,
-            wrappingAllowedInY: true
+            wrappingAllowedInX: @wrappingAllowedInX,
+            wrappingAllowedInY: @wrappingAllowedInY
           }
         }
       })
@@ -228,7 +241,10 @@ class World
     @minPycor = minPycor
     @maxPycor = maxPycor
     width = (@maxPxcor - @minPxcor) + 1
-    _topology = new Torus(@minPxcor, @maxPxcor, @minPycor, @maxPycor)
+    if(@wrappingAllowedInX && @wrappingAllowedInY)
+      _topology = new Torus(@minPxcor, @maxPxcor, @minPycor, @maxPycor)
+    else if(@wrappingAllowedInX)
+      _topology = new VertCylinder(@minPxcor, @maxPxcor, @minPycor, @maxPycor)
     for t in @turtles().items
       try
         t.die()
@@ -361,6 +377,8 @@ AgentSet =
   die: -> @_self.die()
   getTurtleVariable: (n)    -> @_self.getTurtleVariable(n)
   setTurtleVariable: (n, v) -> @_self.setTurtleVariable(n, v)
+  getBreedVariable: (n)    -> @_self.getBreedVariable(n)
+  setBreedVariable: (n, v) -> @_self.setBreedVariable(n, v)
   setBreed: (agentSet) -> @_self.setBreed(agentSet.breed)
   getPatchVariable:  (n)    -> @_self.getPatchVariable(n)
   setPatchVariable:  (n, v) -> @_self.setPatchVariable(n, v)
@@ -523,6 +541,7 @@ Trig =
 class Breed
   constructor: (@name, @singular) ->
   shape: "default"
+  vars: []
 
 Breeds = {
   breeds: [new Breed("TURTLES", "turtle")]
@@ -549,6 +568,10 @@ class Torus
         min
     else
       pos
+  wrapX: (pos) ->
+    @wrap(pos, @minPxcor - 0.5, @maxPxcor + 0.5)
+  wrapY: (pos) ->
+    @wrap(pos, @minPycor - 0.5, @maxPycor + 0.5)
 
   getNeighbors: (pxcor, pycor) ->
     new Agents(@_getNeighbors(pxcor, pycor))
@@ -644,3 +667,26 @@ class Torus
       world.getPatchAt(@minPxcor, pycor + 1)
     else
       world.getPatchAt(pxcor + 1, pycor + 1)
+
+class VertCylinder
+  constructor: (@minPxcor, @maxPxcor, @minPycor, @maxPycor) ->
+
+  # based on agent.Topology.wrap()
+  wrap: (pos, min, max) ->
+    if (pos >= max)
+      (min + ((pos - max) % (max - min)))
+    else if (pos < min)
+      result = max - ((min - pos) % (max - min))
+      if (result < max)
+        result
+      else
+        min
+    else
+      pos
+
+  wrapX: (pos) ->
+    @wrap(pos, @minPxcor - 0.5, @maxPxcor + 0.5)
+  wrapY: (pos) ->
+    if(pos >= @maxPycor + 0.5 || pos <= @minPycor - 0.5)
+      throw new Error("Cannot move turtle beyond the world's edge.")
+    else pos

@@ -253,6 +253,13 @@ class TestAgents extends DockingSuite {
     testCommand("ask turtles [ output-print patch-ahead 100 ]")
   }
 
+  test("can-move") { implicit fixture => import fixture._
+    declare("", WorldDimensions.square(2))
+    testCommand("cro 7")
+    testCommand("ask turtles [ output-print can-move? 1 ]")
+    testCommand("ask turtles [ output-print can-move? 100 ]")
+  }
+
   test("turtles-here") { implicit fixture => import fixture._
     declare("", WorldDimensions.square(2))
     testCommand("ask patches [ sprout 2 ]")
