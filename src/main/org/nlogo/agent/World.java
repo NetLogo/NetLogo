@@ -462,7 +462,7 @@ public strictfp class World
   }
 
   public WorldDimensions getDimensions() {
-    return new WorldDimensions(_minPxcor, _maxPxcor, _minPycor, _maxPycor);
+    return new WorldDimensions(_minPxcor, _maxPxcor, _minPycor, _maxPycor, patchSize, wrappingAllowedInY(), wrappingAllowedInX());
   }
 
   public boolean isDimensionVariable(String variableName) {

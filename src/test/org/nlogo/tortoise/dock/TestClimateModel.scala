@@ -8,7 +8,7 @@ import org.nlogo.api
 class TestClimateModel extends DockingSuite {
 
   test("climate") { implicit fixture => import fixture._
-    open("models/test/tortoise/Climate Change.nlogo")
+    open("models/Sample Models/Earth Science/Climate Change.nlogo")
     testCommand("setup")
     testCommand("add-cloud")
     testCommand("add-cloud")

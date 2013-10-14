@@ -78,12 +78,16 @@ class Turtle
     if (@heading < 0 || @heading >= 360)
       @heading = ((@heading % 360) + 360) % 360
     return
+  canMove: (amount) -> @patchAhead(amount) != Nobody
   patchAhead: (amount) ->
-    newX = world.topology().wrap(@xcor + amount * Trig.sin(@heading),
-        world.minPxcor - 0.5, world.maxPxcor + 0.5)
-    newY = world.topology().wrap(@ycor + amount * Trig.cos(@heading),
-        world.minPycor - 0.5, world.maxPycor + 0.5)
-    return world.getPatchAt(newX, newY)
+    try
+      newX = world.topology().wrapX(@xcor + amount * Trig.sin(@heading),
+          world.minPxcor - 0.5, world.maxPxcor + 0.5)
+      newY = world.topology().wrapY(@ycor + amount * Trig.cos(@heading),
+          world.minPycor - 0.5, world.maxPycor + 0.5)
+      return world.getPatchAt(newX, newY)
+    catch error
+      return Nobody
   fd: (amount) ->
     @xcor = world.topology().wrap(@xcor + amount * Trig.sin(@heading),
         world.minPxcor - 0.5, world.maxPxcor + 0.5)
@@ -179,7 +183,7 @@ class World
   _topology = null
   _ticks = -1
   _patchesAllBlack = true
-  constructor: (@minPxcor, @maxPxcor, @minPycor, @maxPycor, @patchSize, @interfaceGlobalCount) ->
+  constructor: (@minPxcor, @maxPxcor, @minPycor, @maxPycor, @patchSize, @wrappingAllowedInY, @wrappingAllowedInX, @interfaceGlobalCount) ->
     collectUpdates()
     Updates.push(
       {
@@ -201,8 +205,8 @@ class World
             turtleBreeds: "XXX IMPLEMENT ME",
             turtleShapeList: "XXX IMPLEMENT ME",
             unbreededLinksAreDirected: false
-            wrappingAllowedInX: true,
-            wrappingAllowedInY: true
+            wrappingAllowedInX: @wrappingAllowedInX,
+            wrappingAllowedInY: @wrappingAllowedInY
           }
         }
       })
@@ -236,7 +240,10 @@ class World
     @minPycor = minPycor
     @maxPycor = maxPycor
     width = (@maxPxcor - @minPxcor) + 1
-    _topology = new Torus(@minPxcor, @maxPxcor, @minPycor, @maxPycor)
+    if(@wrappingAllowedInX && @wrappingAllowedInY)
+      _topology = new Torus(@minPxcor, @maxPxcor, @minPycor, @maxPycor)
+    else if(@wrappingAllowedInX)
+      _topology = new VertCylinder(@minPxcor, @maxPxcor, @minPycor, @maxPycor)
     for t in @turtles().items
       try
         t.die()
@@ -536,6 +543,10 @@ class Torus
         min
     else
       pos
+  wrapX: (pos) ->
+    @wrap(pos, @minPxcor - 0.5, @maxPxcor + 0.5)
+  wrapY: (pos) ->
+    @wrap(pos, @minPycor - 0.5, @maxPycor + 0.5)
 
   getNeighbors: (pxcor, pycor) ->
     new Agents(@_getNeighbors(pxcor, pycor))
@@ -619,3 +630,26 @@ class Torus
       world.getPatchAt(@minPxcor, pycor + 1)
     else
       world.getPatchAt(pxcor + 1, pycor + 1)
+
+class VertCylinder
+  constructor: (@minPxcor, @maxPxcor, @minPycor, @maxPycor) ->
+
+  # based on agent.Topology.wrap()
+  wrap: (pos, min, max) ->
+    if (pos >= max)
+      (min + ((pos - max) % (max - min)))
+    else if (pos < min)
+      result = max - ((min - pos) % (max - min))
+      if (result < max)
+        result
+      else
+        min
+    else
+      pos
+
+  wrapX: (pos) ->
+    @wrap(pos, @minPxcor - 0.5, @maxPxcor + 0.5)
+  wrapY: (pos) ->
+    if(pos >= @maxPycor + 0.5 || pos <= @minPycor - 0.5)
+      throw new Error("Cannot move turtle beyond the world's edge.")
+    else pos
