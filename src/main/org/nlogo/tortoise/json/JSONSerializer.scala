@@ -6,8 +6,15 @@ import org.json4s._
 import org.json4s.native.JsonMethods._
 import org.json4s.JsonDSL._
 
-import org.nlogo.{ api, mirror }, api.AgentVariables, mirror._
+import 
+  org.nlogo.{ api, mirror, shape },
+    api.{ AgentVariables, ShapeList, LogoList },
+    mirror._
 import Mirrorables._
+
+import scala.collection.JavaConverters._
+
+import ShapeToJsonConverters._
 
 object JSONSerializer {
 
@@ -65,6 +72,8 @@ object JSONSerializer {
     case i: java.lang.Integer => JInt(i.intValue)
     case b: java.lang.Boolean => JBool(b)
     case s: java.lang.String  => JString(s)
+    case s: ShapeList         => JObject((s.getShapes.asScala map (shape => shape.getName -> shape.toJsonObj)).toList)
+    case l: LogoList          => JArray((l.toVector map toJValue).toList)
     case x                    => JString("XXX IMPLEMENT ME") // JString(v.toString)
   }
 
