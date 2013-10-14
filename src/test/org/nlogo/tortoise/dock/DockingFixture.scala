@@ -9,6 +9,8 @@ import
   org.nlogo.util.MersenneTwisterFast,
   org.scalatest.Assertions._
 
+import json.JSONSerializer
+
 trait DockingSuite extends org.scalatest.fixture.FunSuite {
   type FixtureParam = DockingFixture
   override def withFixture(test: OneArgTest) = {

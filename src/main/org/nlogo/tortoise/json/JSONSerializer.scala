@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.tortoise
+package org.nlogo.tortoise.json
 
 import org.json4s._
 import org.json4s.native.JsonMethods._

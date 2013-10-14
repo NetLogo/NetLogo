@@ -8,6 +8,7 @@ import org.nlogo.api, api.Version
 import org.scalatest.FunSuite
 import org.scalatest.Matchers
 import org.nlogo.headless._, lang._
+import json.JSONSerializer
 
 class JSONSerializerTests extends FixtureSuite with Matchers {
 
