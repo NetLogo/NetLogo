@@ -170,6 +170,7 @@ class Patch
     else
       @vars[n - patchBuiltins.length] = v
   getNeighbors: -> world.getNeighbors(@pxcor, @pycor) # world.getTopology().getNeighbors(this)
+  getNeighbors4: -> world.getNeighbors4(@pxcor, @pycor) # world.getTopology().getNeighbors(this)
   sprout: (n) ->
     new Agents(world.createturtle(new Turtle(5 + 10 * Random.nextInt(14), Random.nextInt(360), @pxcor, @pycor)) for num in [0...n], Breeds.get("TURTLES"))
 
@@ -316,6 +317,7 @@ class World
   createturtles: (n, breedName) ->
     new Agents(@createturtle(new Turtle(5 + 10 * Random.nextInt(14), Random.nextInt(360), 0, 0, Breeds.get(breedName))) for num in [0...n])
   getNeighbors: (pxcor, pycor) -> @topology().getNeighbors(pxcor, pycor)
+  getNeighbors4: (pxcor, pycor) -> @topology().getNeighbors4(pxcor, pycor)
 
 AgentSet =
   count: (x) -> x.items.length
@@ -424,6 +426,7 @@ Prims =
   left: (n) -> AgentSet.self().right(-n)
   setxy: (x, y) -> AgentSet.self().setxy(x, y)
   getNeighbors: -> AgentSet.self().getNeighbors()
+  getNeighbors4: -> AgentSet.self().getNeighbors4()
   sprout: (n) -> AgentSet.self().sprout(n)
   hatch: (n, breedName) -> AgentSet.self().hatch(n, breedName)
   patch: (x, y) -> world.getPatchAt(x, y)
@@ -459,6 +462,15 @@ Prims =
     color + perc
   randomfloat: (n) -> n * Random.nextDouble()
   list: (xs...) -> xs
+  first: (xs) -> xs[0]
+  last: (xs) -> xs[xs.length - 1]
+  fput: (x, xs) -> [x].concat(xs)
+  lput: (x, xs) ->
+    result = xs[..]
+    result.push(x)
+    result
+  butfirst: (xs) -> xs[1..]
+  butlast: (xs) -> xs[0..xs.length - 1]
   max: (xs) -> Math.max(xs...)
   min: (xs) -> Math.min(xs...)
   sum: (xs) -> xs.reduce((a, b) -> a + b)
@@ -469,6 +481,19 @@ Prims =
     value for key, value of result
   outputprint: (x) ->
     println(Dump(x))
+  patchset: (inputs...) ->
+    # O(n^2) -- should be smarter (use hashing for contains check)
+    result = []
+    recurse = (inputs) ->
+      for input in inputs
+        if (typeIsArray(input))
+          recurse(input)
+        else
+          for agent in input.items
+            if (!(agent in result))
+              result.push(agent)
+    recurse(inputs)
+    new Agents(result)
 
 Globals =
   vars: []
@@ -561,7 +586,19 @@ class Torus
           @getPatchSouth(pxcor, pycor),     @getPatchWest(pxcor, pycor),
           @getPatchNorthEast(pxcor, pycor), @getPatchSouthEast(pxcor, pycor),
           @getPatchSouthWest(pxcor, pycor), @getPatchNorthWest(pxcor, pycor)]
- 
+
+  getNeighbors4: (pxcor, pycor) ->
+    new Agents(@_getNeighbors4(pxcor, pycor))
+
+  _getNeighbors4: (pxcor, pycor) ->
+    if (pxcor == @maxPxcor && pxcor == @minPxcor)
+      if (pycor == @maxPycor && pycor == @minPycor) []
+      else [@getPatchNorth(pxcor, pycor), @getPatchSouth(pxcor, pycor)]
+    else if (pycor == @maxPycor && pycor == @minPycor)
+      [@getPatchEast(pxcor, pycor), @getPatchWest(pxcor, pycor)]
+    else [@getPatchNorth(pxcor, pycor),     @getPatchEast(pxcor, pycor),
+          @getPatchSouth(pxcor, pycor),     @getPatchWest(pxcor, pycor)]
+
   getPatchNorth: (pxcor, pycor) ->
     if (pycor == @maxPycor)
       world.getPatchAt(pxcor, @minPycor)

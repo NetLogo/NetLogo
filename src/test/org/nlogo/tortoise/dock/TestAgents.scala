@@ -282,4 +282,19 @@ class TestAgents extends DockingSuite {
   //   testCommand("foo")
   // }
 
+  test("patch-set construction") { implicit fixture => import fixture._
+    declare("globals [p]", WorldDimensions.square(2))
+    testCommand("set p no-patches")
+    compare("count p")
+    compare("any? p")
+    testCommand("set p (patch-set no-patches)")
+    compare("count p")
+    testCommand("set p (patch-set [neighbors] of patch 0 0)")
+    compare("count p")
+    testCommand("set p (patch-set [neighbors] of patch 0 0 [neighbors] of patch 1 0)")
+    compare("count p")
+    testCommand("set p (patch-set [neighbors] of [neighbors] of patch 0 0)")
+    compare("count p")
+  }
+
 }
