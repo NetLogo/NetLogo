@@ -3,7 +3,7 @@
 package org.nlogo.app
 
 import org.nlogo.agent.{Agent, World3D, World}
-import org.nlogo.api.{LogoException, I18N, APIVersion, CompilerException, ModelType, RendererInterface, Shape, Version, Observer, SimpleJobOwner, HubNetInterface, AggregateManagerInterface, FileIO, ModelSection, ModelReader}
+import org.nlogo.api.{LogoException, I18N, APIVersion, CompilerException, ModelingCommonsInterface, ModelType, RendererInterface, Shape, Version, Observer, SimpleJobOwner, HubNetInterface, AggregateManagerInterface, FileIO, ModelSection, ModelReader}
 import org.nlogo.awt.UserCancelException
 import org.nlogo.log.{Logger, LogSendingMode, WebStartXMLWriterAppender}
 import org.nlogo.nvm.{CompilerInterface, Workspace, WorkspaceFactory}
@@ -419,8 +419,6 @@ class App extends
 
     dirtyMonitor = new DirtyMonitor(frame)
     frame.addLinkComponent(dirtyMonitor)
-
-    frame.addLinkComponent(new ExtensionAssistant(frame))
 
     monitorManager = pico.getComponent(classOf[AgentMonitorManager])
     frame.addLinkComponent(monitorManager)

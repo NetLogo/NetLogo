@@ -81,7 +81,6 @@ libraryDependencies ++= Seq(
   "org.scalacheck" %% "scalacheck" % "1.10.0" % "test",
   "org.scalatest" %% "scalatest" % "1.8" % "test",
   "com.tristanhunt" %% "knockoff" % "0.8.1",
-  "org.apache.httpcomponents" % "httpclient" % "4.2"
   "org.apache.httpcomponents" % "httpclient" % "4.2",
   "org.apache.httpcomponents" % "httpmime" % "4.2",
   "com.googlecode.json-simple" % "json-simple" % "1.1.1"
