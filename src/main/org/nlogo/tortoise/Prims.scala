@@ -25,6 +25,9 @@ object Prims {
       }
   }
 
+  // Scalastyle is right to complain about this gruesomely large match statement,
+  // but it isn't worth failing the build over (for the time being) - ST 10/14/13
+  // scalastyle:off cyclomatic.complexity
   object NormalReporter {
     def unapply(r: nvm.Reporter): Option[String] =
       PartialFunction.condOpt(r) {
@@ -66,6 +69,7 @@ object Prims {
         case _: prim.etc._turtle      => "world.getTurtle"
       }
   }
+  // scalastyle:on cyclomatic.complexity
 
   object NormalCommand {
     def unapply(c: nvm.Command): Option[String] =

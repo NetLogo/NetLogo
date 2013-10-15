@@ -83,6 +83,9 @@ object Compiler {
 
   ///
 
+  // Scalastyle is right to complain about these gruesomely large match statements,
+  // but it isn't worth failing the build over (for the time being) - ST 10/14/13
+  // scalastyle:off cyclomatic.complexity
   def generateCommand(s: Statement): String = {
     def arg(i: Int) = genArg(s.args(i))
     def args = s.args.collect{ case x: ReporterApp => genArg(x) }.mkString(", ")
@@ -186,6 +189,7 @@ object Compiler {
           "unknown primitive: " + r.reporter.getClass.getSimpleName)
     }
   }
+  // scalastyle:on cyclomatic.complexity
 
   def compileLiteral(x: AnyRef): String = x match {
     case ll: api.LogoList => ll.map(compileLiteral).mkString("[", ", ", "]")
