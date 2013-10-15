@@ -308,6 +308,7 @@ class App extends
     ModelSavedEvent.Handler with
     Events.SwitchedTabsEvent.Handler with
     AboutToQuitEvent.Handler with
+    ZoomedEvent.Handler with
     Controllable {
 
   import App.{pico, logger, commandLineMagic, commandLineModel, commandLineURL, commandLineModelIsLaunch,
@@ -329,6 +330,7 @@ class App extends
   var colorDialog: ColorDialog = null
   var labManager:LabManagerInterface = null
   private val listenerManager = new NetLogoListenerManager
+  lazy val modelingCommons = pico.getComponent(classOf[ModelingCommonsInterface])
   private val ImportWorldURLProp = "netlogo.world_state_url"
   private val ImportRawWorldURLProp = "netlogo.raw_world_state_url"
 
@@ -418,6 +420,8 @@ class App extends
     dirtyMonitor = new DirtyMonitor(frame)
     frame.addLinkComponent(dirtyMonitor)
 
+    frame.addLinkComponent(new ExtensionAssistant(frame))
+
     monitorManager = pico.getComponent(classOf[AgentMonitorManager])
     frame.addLinkComponent(monitorManager)
 
@@ -436,6 +440,16 @@ class App extends
   }
 
   private def finishStartup() {
+    pico.add(classOf[ModelingCommonsInterface],
+          "org.nlogo.mc.ModelingCommons",
+          Array[Parameter] (
+            new ConstantParameter(new ModelSaver(pico.getComponent(classOf[App])).save _),
+            new ComponentParameter(classOf[AppFrame]),
+            new ConstantParameter(() => workspace.exportView()),
+            new ConstantParameter(() => Boolean.box(
+              workspace.getProcedures.get("SETUP") != null &&
+                workspace.getProcedures.get("GO") != null)),
+            new ComponentParameter()))
     pico.addComponent(new MenuBarFactory())
     aggregateManager = pico.getComponent(classOf[AggregateManagerInterface])
     frame.addLinkComponent(aggregateManager)
@@ -456,7 +470,7 @@ class App extends
       add(fileMenu)
       add(new EditMenu(App.this))
       add(pico.getComponent(classOf[ToolsMenu]))
-      add(new ZoomMenu(App.this))
+      add(new ZoomMenu)
       add(tabs.tabsMenu)
     }
     // a little ugly we have to typecast here, but oh well - ST 10/11/05
@@ -559,7 +573,7 @@ class App extends
     def createFileMenu:  JMenu = pico.getComponent(classOf[FileMenu])
     def createEditMenu:  JMenu = new EditMenu(App.this)
     def createToolsMenu: JMenu = new ToolsMenu(App.this)
-    def createZoomMenu:  JMenu = new ZoomMenu(App.this)
+    def createZoomMenu:  JMenu = new ZoomMenu
     override def addHelpMenu(menuBar:JMenuBar) = {
       val newMenu = new HelpMenu (App.this, new EditorColorizer(workspace))
       menuBar.add(newMenu)
@@ -588,60 +602,69 @@ class App extends
     else if (commandLineMagic != null)
       workspace.magicOpen(commandLineMagic)
     else if (commandLineURL != null) {
-      fileMenu.openFromSource(
-        org.nlogo.util.Utils.url2String(commandLineURL),
-        java.net.URLDecoder.decode(commandLineURL.reverse takeWhile (_ != '/') reverse, "UTF-8"), "Starting...", ModelType.Library)
 
-      import org.nlogo.awt.EventQueue, org.nlogo.swing.Implicits.thunk2runnable
-      Option(System.getProperty(ImportRawWorldURLProp)) map {
-        url => // `io.Source.fromURL(url).bufferedReader` steps up to bat and... manages to fail gloriously here! --JAB (8/22/12)
-          import java.io.{ BufferedReader, InputStreamReader }, java.net.URL
-          EventQueue.invokeLater {
-            () =>
-              workspace.importWorld(new BufferedReader(new InputStreamReader(new URL(url).openStream())))
-              workspace.view.dirty()
-              workspace.view.repaint()
-          }
-      } getOrElse (Option(System.getProperty(ImportWorldURLProp)) map {
-        url =>
+      try {
 
-          import java.util.zip.GZIPInputStream, java.io.{ ByteArrayInputStream, InputStreamReader }, scala.io.{ Codec, Source }
+        fileMenu.openFromSource(
+          org.nlogo.util.Utils.url2String(commandLineURL),
+          java.net.URLDecoder.decode(commandLineURL.reverse takeWhile (_ != '/') reverse, "UTF-8"), "Starting...", ModelType.Library)
 
-          val source = Source.fromURL(url)(Codec.ISO8859)
-          val bytes  = source.map(_.toByte).toArray
-          val bais   = new ByteArrayInputStream(bytes)
-          val gis    = new GZIPInputStream(bais)
-          val reader = new InputStreamReader(gis)
-
-          EventQueue.invokeLater {
-            () => {
-              workspace.importWorld(reader)
-              workspace.view.dirty()
-              workspace.view.repaint()
-              source.close()
-              bais.close()
-              gis.close()
-              reader.close()
+        import org.nlogo.awt.EventQueue, org.nlogo.swing.Implicits.thunk2runnable
+        Option(System.getProperty(ImportRawWorldURLProp)) map {
+          url => // `io.Source.fromURL(url).bufferedReader` steps up to bat and... manages to fail gloriously here! --JAB (8/22/12)
+            import java.io.{ BufferedReader, InputStreamReader }, java.net.URL
+            EventQueue.invokeLater {
+              () =>
+                workspace.importWorld(new BufferedReader(new InputStreamReader(new URL(url).openStream())))
+                workspace.view.dirty()
+                workspace.view.repaint()
             }
-          }
+        } getOrElse (Option(System.getProperty(ImportWorldURLProp)) map {
+          url =>
 
-      })
+            import java.util.zip.GZIPInputStream, java.io.{ ByteArrayInputStream, InputStreamReader }, scala.io.{ Codec, Source }
+
+            val source = Source.fromURL(url)(Codec.ISO8859)
+            val bytes  = source.map(_.toByte).toArray
+            val bais   = new ByteArrayInputStream(bytes)
+            val gis    = new GZIPInputStream(bais)
+            val reader = new InputStreamReader(gis)
+
+            EventQueue.invokeLater {
+              () => {
+                workspace.importWorld(reader)
+                workspace.view.dirty()
+                workspace.view.repaint()
+                source.close()
+                bais.close()
+                gis.close()
+                reader.close()
+              }
+            }
+
+        })
+
+      }
+      catch {
+        case ex: java.net.ConnectException =>
+          fileMenu.newModel()
+          JOptionPane.showConfirmDialog(null,
+            "Could not obtain NetLogo model from URL '%s'.\nNetLogo will instead start without any model loaded.".format(commandLineURL),
+            "Connection Failed", JOptionPane.DEFAULT_OPTION)
+      }
+
     }
     else fileMenu.newModel()
   }
 
-  /// zooming stuff
-  private var zoomSteps = 0
-  def zoomLarger(){ zoomSteps+=1; finishZoom() }
-  def resetZoom() { zoomSteps=0; finishZoom() }
-  def zoomSmaller() {
-    zoomSteps-=1
-    zoomSteps = StrictMath.max(-5, zoomSteps)
-    finishZoom()
-  }
-  private def finishZoom() {
-    new ZoomedEvent(1.0 + zoomSteps * 0.1).raise(this)
+  /// zooming
+
+  def handle(e: ZoomedEvent) {
     smartPack(frame.getPreferredSize)
+  }
+
+  def resetZoom() {
+    new ZoomedEvent(0).raise(this)
   }
 
   // AppEvent stuff (kludgy)
@@ -1105,21 +1128,25 @@ class App extends
 
     tabs.interfaceTab.adjustTargetSize(targetSize)
 
-    // reduce our size ambitions if necessary
-    var newWidth  = StrictMath.min(targetSize.width, maxWidth )
-    var newHeight = StrictMath.min(targetSize.height, maxHeight)
+    import StrictMath.{ max, min }
+
+    val (currentWidth, currentHeight) = (frame.getWidth, frame.getHeight)
+
+    // Maybe grow the window, but never shrink it
+    var newWidth  = max(min(targetSize.width, maxWidth),   currentWidth)
+    var newHeight = max(min(targetSize.height, maxHeight), currentHeight)
 
     // move up/left to get more room if possible and necessary
-    val moveLeft = StrictMath.max(0, frame.getLocation.x + newWidth  - maxX)
-    val moveUp   = StrictMath.max(0, frame.getLocation.y + newHeight - maxY)
+    val moveLeft = max(0, frame.getLocation().x + newWidth  - maxX)
+    val moveUp   = max(0, frame.getLocation().y + newHeight - maxY)
 
     // now we can compute our new position
-    val newX = StrictMath.max(maxBoundsX, frame.getLocation.x - moveLeft)
-    val newY = StrictMath.max(maxBoundsY, frame.getLocation.y - moveUp  )
+    val newX = max(maxBoundsX, frame.getLocation().x - moveLeft)
+    val newY = max(maxBoundsY, frame.getLocation().y - moveUp)
 
     // and now that we know our position, we can compute our new size
-    newWidth  = StrictMath.min(newWidth, maxX - newX)
-    newHeight = StrictMath.min(newHeight, maxY - newY)
+    newWidth  = min(newWidth, maxX - newX)
+    newHeight = min(newHeight, maxY - newY)
 
     // now do it!
     frame.setBounds(newX, newY, newWidth, newHeight)

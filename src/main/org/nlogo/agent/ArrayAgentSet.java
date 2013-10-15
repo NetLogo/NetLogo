@@ -11,12 +11,7 @@ import java.util.HashSet;
 // ArrayAgentSets are only used for agentsets which are never added to
 // after they are initially created.  However note that turtles and
 // links can die, so we may end up with an array containing some dead
-// agents (agents with id -1).  There is some code below that attempts
-// to replace dead agents with nulls (so the dead agents can be
-// garbage colleted), but that's not guaranteed to happen, so the
-// contents of the array may be any mixture of live agents, dead
-// agents, and nulls. - ST 7/24/07
-
+// agents (agents with id -1). NP 2013-08-28.
 public final strictfp class ArrayAgentSet
     extends AgentSet {
   Agent[] agents;
@@ -108,17 +103,7 @@ public final strictfp class ArrayAgentSet
 
   @Override
   public Agent agent(long i) {
-    if (type == Turtle.class || type == Link.class) {
-      Agent agent = agents[(int) i];
-      if (agent.id == -1) {
-        agents[(int) i] = null;
-        return null;
-      } else {
-        return agent;
-      }
-    } else {
-      return agents[(int) i];
-    }
+    return agents[(int) i];
   }
 
   @Override

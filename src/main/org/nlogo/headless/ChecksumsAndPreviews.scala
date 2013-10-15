@@ -68,25 +68,32 @@ object ChecksumsAndPreviews {
   /// checksums
 
   object Checksums {
+    val separator = " * " // used to separate fields in checksums.txt
     case class Entry(path: String, worldSum: String, graphicsSum: String, revision: String) {
       def equalsExceptRevision(other: Entry) =
         path == other.path && worldSum == other.worldSum && graphicsSum == other.graphicsSum
-      override def toString = List(path, worldSum, graphicsSum, revision).mkString(" - ")
+      override def toString = List(path, worldSum, graphicsSum, revision).mkString(separator)
     }
     type ChecksumMap = collection.mutable.LinkedHashMap[String, Entry]
-    def okPath(path: String) =
-      !List("HUBNET", "/CURRICULAR MODELS/")
-            .exists(path.toUpperCase.containsSlice(_)) &&
-        (if(List("/GAMES/FROGGER.NLOGO", "/ART/SOUND MACHINES.NLOGO", "/CODE EXAMPLES/SOUND/")
-           .exists(path.toUpperCase.containsSlice(_))) {
-          println("SKIPPING MODEL: " +  path)
-          println("  because it uses the sound extension")
-          false
-        }
-        else true)
+
+    def okPath(path: String) = (for {
+      (message, slices) <- Seq(
+        None -> List("HUBNET", "/CURRICULAR MODELS/"),
+        Some("it renders slightly differently on Mac vs. Linux") -> List(
+          "/CODE EXAMPLES/LINK BREEDS EXAMPLE.NLOGO"), // see 407ddcdd49f88395915b1a87c663b13000758d35 in `models` repo
+        Some("it uses the sound extension") -> List(
+          "/GAMES/FROGGER.NLOGO",
+          "/ART/SOUND MACHINES.NLOGO",
+          "/CODE EXAMPLES/SOUND/"))
+      slice <- slices
+      if path.toUpperCase.containsSlice(slice)
+    } yield {
+      for (msg <- message) println("SKIPPING MODEL: " + path + "  because " + msg)
+    }).isEmpty
+
     def update(paths: List[String]) {
-      val path = if(Version.is3D) "models/test/checksums3d.txt"
-                 else "models/test/checksums.txt"
+      val path = if(Version.is3D) "test/checksums3d.txt"
+                 else "test/checksums.txt"
       val m = load(path)
       paths.foreach(updateOne(m, _))
       write(m, path)
@@ -125,14 +132,14 @@ object ChecksumsAndPreviews {
         else "* Changed"
       m.put(model, newEntry)
       if(action != "Didn't change")
-        println(action + ": \"" + model + " - " + newCheckSum
-                + " - " + newGraphicsChecksum + " - " + revision + "\"")
+        println(action + ": \"" + model + separator + newCheckSum
+                + separator + newGraphicsChecksum + separator + revision + "\"")
     }
     def load(path: String): ChecksumMap = {
       val m = new ChecksumMap
       for(line <- io.Source.fromFile(path).getLines.map(_.trim))
         if(!line.startsWith("#") && !line.isEmpty) {
-          val strs = line.split(" - ")
+          val strs = line.split(java.util.regex.Pattern.quote(separator))
           if(strs.size != 4)
             throw new IllegalStateException("bad line: " + line)
           m.put(strs(0), Entry(strs(0), strs(1), strs(2), strs(3)))

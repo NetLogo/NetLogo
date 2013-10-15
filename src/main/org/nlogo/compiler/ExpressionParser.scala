@@ -460,7 +460,7 @@ private class ExpressionParser(procedure: Procedure,
    * a bit nicer, since we can point out the entire block if something goes wrong. */
   private def delayBlock(openBracket:Token,tokens:BufferedIterator[Token]):DelayedBlock = {
     // The purpose of the recursion here is to collect all of the tokens until we reach the match
-    // closing bracket for the the opening bracket at the front of tokens.   advance() takes
+    // closing bracket for the opening bracket at the front of tokens.   advance() takes
     // care of collecting the tokens as we go.
     val results = new collection.mutable.ListBuffer[Token]
     def advance() {
@@ -563,10 +563,10 @@ private class ExpressionParser(procedure: Procedure,
       // extensionManager here because we only ever use this code when we are parsing constant lists
       // while compiling code.  When we're reading lists from export files and such we go straight
       // to the ConstantParser through Compiler.readFromString ev 3/20/08
-      val tmp = ConstantParser.makeConstantReporter(new ConstantParser(null,null).parseConstantList(tokens.next(),tokens))
-      val token = tokens.next()
-      tmp.token(new Token("",TokenType.CONSTANT,null)(openBracket.startPos,token.endPos,token.fileName))
-      new ReporterApp(tmp,openBracket.startPos,token.endPos,token.fileName)
+      val (list, closeBracket) = new ConstantParser(null,null).parseConstantList(tokens.next(),tokens)
+      val tmp = ConstantParser.makeConstantReporter(list)
+      tmp.token(new Token("",TokenType.CONSTANT,null)(openBracket.startPos,closeBracket.endPos,closeBracket.fileName))
+      new ReporterApp(tmp,openBracket.startPos,closeBracket.endPos,closeBracket.fileName)
     }
     // we weren't actually expecting a block at all!
     else exception("Expected " + TypeNames.aName(goalType) + " here, rather than a list or block.",block)

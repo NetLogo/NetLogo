@@ -96,7 +96,8 @@ private class ConstantParser(world:World,extensionManager:ExtensionManager) {
       case TokenType.CONSTANT =>
         token.value
       case TokenType.OPEN_BRACKET =>
-        parseConstantList(token,tokens)
+        val (result, closeBracket) = parseConstantList(token,tokens)
+        result
       case TokenType.OPEN_BRACE =>
         parseConstantAgentOrAgentSet(token,tokens)
       case TokenType.OPEN_PAREN =>
@@ -116,20 +117,20 @@ private class ConstantParser(world:World,extensionManager:ExtensionManager) {
   }
   /**
   * parses a constant list. Assumes the open bracket was already eaten.  Eats the list
-  * contents and the close bracket.
+  * contents and the close bracket; returns a LogoList and the close bracket token.
   */
-  def parseConstantList(openBracket:Token,tokens:Iterator[Token]) = {
+  def parseConstantList(openBracket:Token,tokens:Iterator[Token]): (LogoList, Token) = {
     var list = LogoList()
-    var done = false
-    while(!done) {
+    var closeBracket: Option[Token] = None
+    while(!closeBracket.isDefined) {
       val token = tokens.next()
       token.tyype match {
-        case TokenType.CLOSE_BRACKET => done = true
+        case TokenType.CLOSE_BRACKET => closeBracket = Some(token)
         case TokenType.EOF => exception(MISSING_CLOSE_BRACKET,openBracket)
         case _ => list = list.lput(readConstantPrefix(token,tokens))
       }
     }
-    list
+    (list, closeBracket.get)
   }
 
   private def parseConstantLiteral(token:Token):AnyRef = {

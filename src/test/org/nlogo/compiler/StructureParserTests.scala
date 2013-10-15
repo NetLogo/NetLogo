@@ -9,7 +9,7 @@ import org.nlogo.nvm.Procedure
 
 class StructureParserTests extends FunSuite {
   // private so StructureParser.Results doesn't escape compiler package
-  private def compile(source: String, program: Program): StructureParser.Results = {
+  private def compile(source: String, program: Program = new Program(false)): StructureParser.Results = {
     implicit val tokenizer = Compiler.Tokenizer2D
     new StructureParser(tokenizer.tokenize(source), None, program,
       java.util.Collections.emptyMap[String, Procedure], new DummyExtensionManager)
@@ -72,5 +72,23 @@ class StructureParserTests extends FunSuite {
       "B2S = [B21, B22]\n" +
       "link-breeds \n" +
       "link-breeds-own \n")(program.dump)
+  }
+  test("missing end 1") {
+    val e = intercept[CompilerException] {
+      compile("to foo to bar")
+    }
+    expect("This doesn't make sense here")(e.getMessage.takeWhile(_ != ','))
+  }
+  test("missing end 2") {
+    val e = intercept[CompilerException] {
+      compile("to foo fd 1")
+    }
+    expect("Last procedure doesn't end with END")(e.getMessage.takeWhile(_ != ','))
+  }
+  test("missing end 3") {
+    val e = intercept[CompilerException] {
+      compile("to foo")
+    }
+    expect("Last procedure doesn't end with END")(e.getMessage.takeWhile(_ != ','))
   }
 }

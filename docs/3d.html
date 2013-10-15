@@ -71,18 +71,18 @@ p.c1 {font-style: italic}
       cubes. In addition to <tt><a href=
       "dictionary.html#pxcor">pxcor</a></tt> and <tt><a href=
       "dictionary.html#pycor">pycor</a></tt>, patches have <tt><a href=
-      "3dprims.html#pzcor">pzcor</a></tt>.
+      "#pzcor">pzcor</a></tt>.
     <p>
       Turtles have three Cartesian coordinates, instead of two, to describe
       position. In addition to <tt><a href=
       "dictionary.html#xcor">xcor</a></tt> and <tt><a href=
       "dictionary.html#ycor">ycor</a></tt>, turtles have <tt><a href=
-      "3dprims.html#zcor">zcor</a></tt>.
+      "#zcor">zcor</a></tt>.
     <p>
       A turtle's orientation is defined by three turtle variables,
       <tt><a href="dictionary.html#heading">heading</a></tt>, <tt><a href=
-      "3dprims.html#pitch">pitch</a></tt> and <tt><a href=
-      "3dprims.html#roll">roll</a></tt>. You can imagine the turtle as
+      "#pitch">pitch</a></tt> and <tt><a href=
+      "#roll">roll</a></tt>. You can imagine the turtle as
       having two vectors to define its orientation in 3D space. One vector
       comes straight out of the nose of the turtle, this is the direction
       the turtle will travel when it moves forward. The second vector is
@@ -127,7 +127,7 @@ p.c1 {font-style: italic}
     <p>
       NetLogo automatically interprets 2D shapes so they are extruded, like
       a cookie cutter shape in the 3D view. You can also use the primitive
-      <a href="3dprims.html#load-shapes-3d"><tt>load-shapes-3d</tt></a> to
+      <a href="#load-shapes-3d"><tt>load-shapes-3d</tt></a> to
       load shapes described in an external file in a custom format
       described here. Currently we do not import shapes in any standard
       formats.
@@ -204,8 +204,8 @@ end-shape
       &quot;Settings...&quot; button at the top of the 3D View. You'll
       notice in addition to <tt>max-pxcor</tt>, <tt>min-pxcor</tt>,
       <tt>max-pycor</tt>, and <tt>min-pycor</tt>, there is also <a href=
-      "3dprims.html#max-pxcor"><tt>max-pzcor</tt></a> and <a href=
-      "3dprims.html#min-pzcor"><tt>min-pzcor</tt></a>.
+      "#max-pxcor"><tt>max-pzcor</tt></a> and <a href=
+      "#min-pzcor"><tt>min-pzcor</tt></a>.
     <p class="screenshot">
       <img alt="screen shot" src="images/threed/properties.png">
     <p>
@@ -387,14 +387,14 @@ end-shape
         </ul>
     </blockquote>
     <p>
-      The direction of the the orbit commands refer to the direction that
-      the observer moves. That is, imagine that the observer is on the
-      surface of a sphere, the center of the sphere is the point that the
-      observer is facing represented by the blue cross, by default (0,0,0).
-      The observer will always face the center of the sphere and the radius
-      of the sphere will remain constant. The directions, up, down, left,
-      and right, refer to moving along the lines of latitude and the lines
-      of longitude of the sphere. When you zoom the radius of the sphere
+      The direction of the orbit commands refer to the direction that the
+      observer moves. That is, imagine that the observer is on the surface
+      of a sphere, the center of the sphere is the point that the observer
+      is facing represented by the blue cross, by default (0,0,0). The
+      observer will always face the center of the sphere and the radius of
+      the sphere will remain constant. The directions, up, down, left, and
+      right, refer to moving along the lines of latitude and the lines of
+      longitude of the sphere. When you zoom the radius of the sphere
       changes but the center and the observer's orientation in relation
       to the center of the sphere will remain the same.
     <blockquote>
@@ -460,8 +460,8 @@ end-shape
     </h4><a href="#face">face</a> <a href="#facexyz">facexyz</a> <a href=
     "#orbit-down">orbit-down</a> <a href="#orbit-left">orbit-left</a>
     <a href="#orbit-right">orbit-right</a> <a href="#orbit-up">orbit-up</a>
-    <a href="#oxcor">oxcor</a> <a href="#oycor">oycor</a> <a href=
-    "#ozcor">ozcor</a> <a href="#setxyz">setxyz</a> <a href=
+    <a href="#oxcor">__oxcor</a> <a href="#oycor">__oycor</a> <a href=
+    "#ozcor">__ozcor</a> <a href="#setxyz">setxyz</a> <a href=
     "#zoom">zoom</a>
     <h4>
       Link primitives
@@ -729,18 +729,18 @@ ask neighbors6 [ set pcolor red ]
       </div>
     <div class="dict_entry">
       <h3>
-        <a name="oxcor" id="oxcor">oxcor</a>
+        <a name="oxcor" id="oxcor">__oxcor</a>
         <br>
-        <a name="oycor" id="oycor">oycor</a>
+        <a name="oycor" id="oycor">__oycor</a>
         <br>
-        <a name="ozcor" id="ozcor">ozcor</a>
+        <a name="ozcor" id="ozcor">__ozcor</a>
       </h3>
       <h4>
-        oxcor
+        __oxcor
         <br>
-        oycor
+        __oycor
         <br>
-        ozcor
+        __ozcor
         <br>
         <img alt="Observer Command" src="images/observer.gif">
       </h4>
@@ -1172,7 +1172,7 @@ show [count turtles-at 0 0 0] of turtle 0
       <p>
         Move the observer toward the point it is facing, <i>number</i>
         steps. The observer will never move beyond the point it is facing
-        so if <i>number</i> is greater than the the distance to that point
-        it will only move as far as the point it is facing.
+        so if <i>number</i> is greater than the distance to that point it
+        will only move as far as the point it is facing.
       </div>
 

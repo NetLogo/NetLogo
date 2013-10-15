@@ -714,7 +714,9 @@ public strictfp class World
         ((AgentSet) iter.next()).clear();
       }
     }
+    if (_turtles != null) _turtles.clear(); // so a SimpleChangeEvent is published
     _turtles = new TreeAgentSet(Turtle.class, "TURTLES", this);
+    if (_links != null) _links.clear(); // so a SimpleChangeEvent is published
     _links = new TreeAgentSet(Link.class, "LINKS", this);
 
     int x = minPxcor;

@@ -10,6 +10,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
+import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.EngineException;
 
 public final strictfp class _createlinksto
@@ -41,6 +42,10 @@ public final strictfp class _createlinksto
   @Override
   public void perform(final Context context) throws LogoException {
     AgentSet agentset = argEvalAgentSet(context, 0);
+    if (agentset.type() != Turtle.class) {
+      throw new ArgumentTypeException(
+        context, this, 0, Syntax.TurtlesetType(), agentset);
+    }
     AgentSet breed = breedName == null ? world.links() : world.getLinkBreed(breedName);
     mustNotBeUndirected(breed, context);
     checkForBreedCompatibility(breed, context);

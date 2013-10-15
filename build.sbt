@@ -11,7 +11,8 @@ scalacOptions ++=
   .split(" ").toSeq
 
 javacOptions ++=
-  "-bootclasspath dist/java5/classes.jar:dist/java5/ui.jar -g -deprecation -encoding us-ascii -Werror -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path -source 1.5 -target 1.5"
+  "-bootclasspath dist/java5/classes.jar%sdist/java5/ui.jar -g -deprecation -encoding us-ascii -Werror -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path -source 1.5 -target 1.5"
+  .format(java.io.File.pathSeparator)
   .split(" ").toSeq
 
 // only log problems plz
@@ -81,6 +82,9 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "1.8" % "test",
   "com.tristanhunt" %% "knockoff" % "0.8.1",
   "org.apache.httpcomponents" % "httpclient" % "4.2"
+  "org.apache.httpcomponents" % "httpclient" % "4.2",
+  "org.apache.httpcomponents" % "httpmime" % "4.2",
+  "com.googlecode.json-simple" % "json-simple" % "1.1.1"
 )
 
 all <<= (baseDirectory, streams) map { (base, s) =>
