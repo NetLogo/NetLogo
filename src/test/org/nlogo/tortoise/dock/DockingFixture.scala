@@ -7,7 +7,10 @@ import
   org.nlogo.{ api, headless, mirror, nvm },
   headless.lang._,
   org.nlogo.util.MersenneTwisterFast,
-  org.scalatest.Assertions._
+  org.scalatest.Assertions._,
+  org.nlogo.shape.{LinkShape, VectorShape}
+
+import collection.JavaConverters._
 
 import json.JSONSerializer
 
@@ -143,7 +146,8 @@ class DockingFixture(name: String) extends Fixture(name) {
     val (interfaceGlobals, a, b, c, interfaceGlobalCommands) =
       new headless.WidgetParser(workspace)
         .parseWidgets(sections(api.ModelSection.Interface))
-    declareHelper(code, interfaceGlobals, interfaceGlobalCommands.toString, workspace.world.getDimensions)
+    declareHelper(code, interfaceGlobals, interfaceGlobalCommands.toString,
+      workspace.world.getDimensions, workspace.world.turtleShapeList, workspace.world.linkShapeList)
   }
 
   override def open(model: headless.ModelCreator.Model) {
@@ -161,8 +165,10 @@ class DockingFixture(name: String) extends Fixture(name) {
   }
 
   def declareHelper(logo: String, interfaceGlobals: Seq[String] = Seq(), interfaceGlobalCommands: String = "",
-      dimensions: api.WorldDimensions = defaultDimensions) {
-    val (js, _, _) = Compiler.compileProcedures(logo, interfaceGlobals, interfaceGlobalCommands, dimensions)
+      dimensions: api.WorldDimensions = defaultDimensions,
+      turtleShapeList: api.ShapeList = new api.ShapeList(api.AgentKind.Turtle, VectorShape.parseShapes(api.ModelReader.defaultShapes.toArray, api.Version.version).asScala),
+      linkShapeList: api.ShapeList = new api.ShapeList(api.AgentKind.Link, LinkShape.parseShapes(api.ModelReader.defaultLinkShapes.toArray, api.Version.version).asScala)) {
+    val (js, _, _) = Compiler.compileProcedures(logo, interfaceGlobals, interfaceGlobalCommands, dimensions, turtleShapeList, linkShapeList)
     evalJS(js)
     state = Map()
     rhino.eval("expectedModel = new AgentModel")
