@@ -471,6 +471,7 @@ Prims =
     result
   butfirst: (xs) -> xs[1..]
   butlast: (xs) -> xs[0..xs.length - 1]
+  length: (xs) -> xs.length
   max: (xs) -> Math.max(xs...)
   min: (xs) -> Math.min(xs...)
   sum: (xs) -> xs.reduce((a, b) -> a + b)

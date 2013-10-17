@@ -48,6 +48,7 @@ object Prims {
         case _: prim.etc._butlast     => "Prims.butlast"
         case _: prim.etc._sort        => "Prims.sort"
         case _: prim.etc._max         => "Prims.max"
+        case _: prim.etc._length      => "Prims.length"
         case _: prim.etc._min         => "Prims.min"
         case _: prim._sum             => "Prims.sum"
         case _: prim.etc._abs         => "StrictMath.abs"
