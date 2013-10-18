@@ -3,9 +3,9 @@
 package org.nlogo.tortoise
 package dock
 
-import org.nlogo.api
+import org.nlogo.util.SlowTest
 
-class TestClimateModel extends DockingSuite {
+class TestClimateModel extends DockingSuite with SlowTest {
 
   test("climate") { implicit fixture => import fixture._
     open("models/Sample Models/Earth Science/Climate Change.nlogo")

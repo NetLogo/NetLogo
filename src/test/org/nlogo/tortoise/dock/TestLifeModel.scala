@@ -3,9 +3,9 @@
 package org.nlogo.tortoise
 package dock
 
-import org.nlogo.api.WorldDimensions
+import org.nlogo.util.SlowTest
 
-class TestLifeModel extends DockingSuite {
+class TestLifeModel extends DockingSuite with SlowTest {
 
   test("life") { implicit fixture => import fixture._
     open("models/test/tortoise/Life Simple.nlogo")
