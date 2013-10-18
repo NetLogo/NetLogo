@@ -196,7 +196,6 @@ class World
   _nextId = 0
   _turtles = []
   _patches = []
-  width = 0
   _topology = null
   _ticks = -1
   _timer = Date.now()
@@ -233,7 +232,7 @@ class World
     nested =
       for y in [@maxPycor..@minPycor]
         for x in [@minPxcor..@maxPxcor]
-          new Patch((width * (@maxPycor - y)) + x - @minPxcor, x, y)
+          new Patch((@width() * (@maxPycor - y)) + x - @minPxcor, x, y)
     # http://stackoverflow.com/questions/4631525/concatenating-an-array-of-arrays-in-coffeescript
     _patches = [].concat nested...
     for p in _patches
@@ -259,7 +258,6 @@ class World
     @maxPxcor = maxPxcor
     @minPycor = minPycor
     @maxPycor = maxPycor
-    width = (@maxPxcor - @minPxcor) + 1
     if(@wrappingAllowedInX && @wrappingAllowedInY)
       _topology = new Torus(@minPxcor, @maxPxcor, @minPycor, @maxPycor)
     else if(@wrappingAllowedInX)
@@ -301,8 +299,10 @@ class World
       throw new Error("Need to call reset-ticks")
     _ticks
   # TODO: this needs to support all topologies
+  width: () -> 1 + @maxPxcor - @minPxcor
+  height: () -> 1 + @maxPycor - @minPycor
   getPatchAt: (x, y) ->
-    index  = (@maxPycor - StrictMath.round(y)) * width + (StrictMath.round(x) - @minPxcor)
+    index  = (@maxPycor - StrictMath.round(y)) * @width() + (StrictMath.round(x) - @minPxcor)
     return _patches[index]
   getTurtle: (id) ->
     filteredTurtles = (@turtles().items.filter (t) -> t.id == id)
@@ -596,14 +596,31 @@ class Torus
     @wrap(pos, @minPycor - 0.5, @maxPycor + 0.5)
   shortestX: (x1, x2) ->
     if(StrictMath.abs(x1 - x2) > (1 + @maxPxcor - @minPxcor) / 2)
-      (1 + @maxPxcor - @minPxcor) - StrictMath.abs(x1 - x2)
+      world.width() - StrictMath.abs(x1 - x2)
     else
       StrictMath.abs(x1 - x2)
   shortestY: (y1, y2) ->
     if(StrictMath.abs(y1 - y2) > (1 + @maxPycor - @minPycor) / 2)
-      (1 + @maxPycor - @minPycor) - StrictMath.abs(y1 - y2)
+      world.height() - StrictMath.abs(y1 - y2)
     else
       StrictMath.abs(y1 - y2)
+  diffuse: (vn, amount) ->
+    scratch = for x in [0...world.width()]
+      []
+    for patch in world.patches().items
+      scratch[patch.pxcor - @minPxcor][patch.pycor - @minPycor] = patch.getPatchVariable(vn)
+    for patch in world.patches().items
+      pxcor = patch.pxcor
+      pycor = patch.pycor
+      # We have to order the neighbors exactly how Torus.java:diffuse does them so we don't get floating discrepancies.  FD 10/19/2013
+      diffusallyOrderedNeighbors =
+        [@getPatchSouthWest(pxcor, pycor), @getPatchWest(pxcor, pycor),
+         @getPatchNorthWest(pxcor, pycor), @getPatchSouth(pxcor, pycor),
+         @getPatchNorth(pxcor, pycor), @getPatchSouthEast(pxcor, pycor),
+         @getPatchEast(pxcor, pycor), @getPatchNorthEast(pxcor, pycor)]
+      diffusalSum = (scratch[n.pxcor - @minPxcor][n.pycor - @minPycor] for n in diffusallyOrderedNeighbors).reduce((a, b) -> a + b)
+      patch.setPatchVariable(vn, patch.getPatchVariable(vn) * (1.0 - amount) + (diffusalSum / 8) * amount)
+
   getNeighbors: (pxcor, pycor) ->
     new Agents(@_getNeighbors(pxcor, pycor))
 
