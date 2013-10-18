@@ -15,7 +15,7 @@ trait JsonConverter[T] extends JsonWritable {
   protected def extraProps: JObject
   protected def baseProps : JObject = JObject(List())
 
-  final override def toJsonObj: JValue = extraProps ++ baseProps
+  final override def toJsonObj: JObject = extraProps merge baseProps
 
 }
 
