@@ -8,7 +8,7 @@ import org.json4s.JsonDSL._
 
 import
   org.nlogo.{ api, mirror, shape },
-    api.{ AgentVariables, ShapeList, LogoList },
+    api.{ AgentVariables, ShapeList, LogoList, Shape },
     mirror._
 import Mirrorables._
 
@@ -77,6 +77,7 @@ object JSONSerializer {
     case b: java.lang.Boolean => JBool(b)
     case s: java.lang.String  => JString(s)
     case s: ShapeList         => JObject((s.getShapes.asScala map (shape => shape.getName -> shape.toJsonObj)).toList)
+    case s: Shape             => s.toJsonObj
     case l: LogoList          => JArray((l.toVector map toJValue).toList)
     case x                    => JString("XXX IMPLEMENT ME") // JString(v.toString)
   }
