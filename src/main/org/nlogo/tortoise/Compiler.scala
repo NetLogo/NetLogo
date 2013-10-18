@@ -221,20 +221,15 @@ object Compiler {
 // before any user code runs, for example creating patches
 
 class RuntimeInit(program: api.Program, dimensions: api.WorldDimensions, turtleShapeList: api.ShapeList, linkShapeList: api.ShapeList) {
-  import org.json4s._
-  import org.json4s.native.JsonMethods._
-  import org.json4s.JsonDSL._
   import scala.collection.JavaConverters._
-  import org.nlogo.tortoise.json.ShapeToJsonConverters._
+  import org.nlogo.tortoise.json.JSONSerializer
 
   def init = {
     import dimensions._
     var turtleShapesJson = "{}"
-    if(!turtleShapeList.getNames.isEmpty)
-      turtleShapesJson = compact(render(JObject((turtleShapeList.getShapes.asScala map (shape => shape.getName -> shape.toJsonObj)).toList)))
+    if(!turtleShapeList.getNames.isEmpty) turtleShapesJson = JSONSerializer.serialize(turtleShapeList)
     var linkShapesJson = "{}"
-    if(!linkShapeList.getNames.isEmpty)
-      linkShapesJson = compact(render(JObject((linkShapeList.getShapes.asScala map (shape => shape.getName -> shape.toJsonObj)).toList)))
+    if(!linkShapeList.getNames.isEmpty) linkShapesJson = JSONSerializer.serialize(linkShapeList)
     globals + turtlesOwn + patchesOwn + breeds +
       s"world = new World($minPxcor, $maxPxcor, $minPycor, $maxPycor, $patchSize, " +
       s"$wrappingAllowedInY, $wrappingAllowedInX, $turtleShapesJson, $linkShapesJson, " +

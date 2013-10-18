@@ -63,6 +63,10 @@ object JSONSerializer {
     compact(render(JObject(objectsByKey: _*)))
   }
 
+  def serialize(v: AnyRef): String = {
+    compact(render(toJValue(v)));
+  }
+
   def toJValue(v: AnyRef): JValue = v match {
     case d: java.lang.Double  =>
       if (d.intValue == d.doubleValue)

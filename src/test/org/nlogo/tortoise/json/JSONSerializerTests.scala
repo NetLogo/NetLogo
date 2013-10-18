@@ -1,4 +1,4 @@
-package org.nlogo.tortoise
+package org.nlogo.tortoise.json
 
 import org.json4s.JsonDSL.string2jvalue
 import org.json4s.native.JsonMethods.{ compact, pretty, parse, render => jsRender }
@@ -8,7 +8,6 @@ import org.nlogo.api, api.Version
 import org.scalatest.FunSuite
 import org.scalatest.Matchers
 import org.nlogo.headless._, lang._
-import json.JSONSerializer
 
 class JSONSerializerTests extends FixtureSuite with Matchers {
 
