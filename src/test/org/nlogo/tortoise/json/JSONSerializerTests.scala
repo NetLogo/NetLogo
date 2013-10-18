@@ -1,4 +1,4 @@
-package org.nlogo.tortoise
+package org.nlogo.tortoise.json
 
 import org.json4s.JsonDSL.string2jvalue
 import org.json4s.native.JsonMethods.{ compact, pretty, parse, render => jsRender }

@@ -1,13 +1,20 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.tortoise
+package org.nlogo.tortoise.json
 
 import org.json4s._
 import org.json4s.native.JsonMethods._
 import org.json4s.JsonDSL._
 
-import org.nlogo.{ api, mirror }, api.AgentVariables, mirror._
+import
+  org.nlogo.{ api, mirror, shape },
+    api.{ AgentVariables, ShapeList, LogoList },
+    mirror._
 import Mirrorables._
+
+import scala.collection.JavaConverters._
+
+import ShapeToJsonConverters._
 
 object JSONSerializer {
 
@@ -56,6 +63,10 @@ object JSONSerializer {
     compact(render(JObject(objectsByKey: _*)))
   }
 
+  def serialize(v: AnyRef): String = {
+    compact(render(toJValue(v)));
+  }
+
   def toJValue(v: AnyRef): JValue = v match {
     case d: java.lang.Double  =>
       if (d.intValue == d.doubleValue)
@@ -65,6 +76,8 @@ object JSONSerializer {
     case i: java.lang.Integer => JInt(i.intValue)
     case b: java.lang.Boolean => JBool(b)
     case s: java.lang.String  => JString(s)
+    case s: ShapeList         => JObject((s.getShapes.asScala map (shape => shape.getName -> shape.toJsonObj)).toList)
+    case l: LogoList          => JArray((l.toVector map toJValue).toList)
     case x                    => JString("XXX IMPLEMENT ME") // JString(v.toString)
   }
 

@@ -5,7 +5,10 @@ package org.nlogo.tortoise
 import org.nlogo.{ api, compile, nvm, prim, workspace },
    compile._,
    nvm.FrontEndInterface.{ ProceduresMap, NoProcedures },
-   org.nlogo.util.Femto
+   org.nlogo.util.Femto,
+   org.nlogo.shape.{LinkShape, VectorShape}
+
+import collection.JavaConverters._
 
 object Compiler {
 
@@ -28,14 +31,16 @@ object Compiler {
       logo: String,
       interfaceGlobals: Seq[String] = Seq(),
       interfaceGlobalCommands: String = "",
-      dimensions: api.WorldDimensions = api.WorldDimensions.square(0))
+      dimensions: api.WorldDimensions = api.WorldDimensions.square(0),
+      turtleShapeList: api.ShapeList = new api.ShapeList(api.AgentKind.Turtle),
+      linkShapeList: api.ShapeList = new api.ShapeList(api.AgentKind.Link))
       : (String, api.Program, ProceduresMap) = {
     // (Seq[ProcedureDefinition], StructureParser.Results)
     val (defs, sp) =
       frontEnd.frontEnd(logo,
         program = api.Program.empty.copy(interfaceGlobals = interfaceGlobals))
     val js =
-      new RuntimeInit(sp.program, dimensions).init +
+      new RuntimeInit(sp.program, dimensions, turtleShapeList, linkShapeList).init +
         defs.map(compileProcedureDef).mkString("", "\n", "\n") +
         compileCommands(interfaceGlobalCommands, program = sp.program)
     if (sp.program.linkBreeds.nonEmpty)
@@ -215,12 +220,19 @@ object Compiler {
 // RuntimeInit generates JavaScript code that does any initialization that needs to happen
 // before any user code runs, for example creating patches
 
-class RuntimeInit(program: api.Program, dimensions: api.WorldDimensions) {
+class RuntimeInit(program: api.Program, dimensions: api.WorldDimensions, turtleShapeList: api.ShapeList, linkShapeList: api.ShapeList) {
+  import scala.collection.JavaConverters._
+  import org.nlogo.tortoise.json.JSONSerializer
 
   def init = {
     import dimensions._
+    var turtleShapesJson = "{}"
+    if(!turtleShapeList.getNames.isEmpty) turtleShapesJson = JSONSerializer.serialize(turtleShapeList)
+    var linkShapesJson = "{}"
+    if(!linkShapeList.getNames.isEmpty) linkShapesJson = JSONSerializer.serialize(linkShapeList)
     globals + turtlesOwn + patchesOwn + breeds +
-      s"world = new World($minPxcor, $maxPxcor, $minPycor, $maxPycor, $patchSize, $wrappingAllowedInY, $wrappingAllowedInX, " +
+      s"world = new World($minPxcor, $maxPxcor, $minPycor, $maxPycor, $patchSize, " +
+      s"$wrappingAllowedInY, $wrappingAllowedInX, $turtleShapesJson, $linkShapesJson, " +
       s"${program.interfaceGlobals.size});\n"
   }
 

@@ -184,7 +184,7 @@ class World
   _topology = null
   _ticks = -1
   _patchesAllBlack = true
-  constructor: (@minPxcor, @maxPxcor, @minPycor, @maxPycor, @patchSize, @wrappingAllowedInY, @wrappingAllowedInX, @interfaceGlobalCount) ->
+  constructor: (@minPxcor, @maxPxcor, @minPycor, @maxPycor, @patchSize, @wrappingAllowedInY, @wrappingAllowedInX, turtleShapeList, linkShapeList, @interfaceGlobalCount) ->
     collectUpdates()
     Updates.push(
       {
@@ -198,13 +198,13 @@ class World
             maxPycor: @maxPycor,
             nbInterfaceGlobals: @interfaceGlobalCount,
             linkBreeds: "XXX IMPLEMENT ME",
-            linkShapeList: "XXX IMPLEMENT ME",
+            linkShapeList: linkShapeList,
             patchSize: @patchSize,
             patchesAllBlack: _patchesAllBlack,
             patchesWithLabels: 0,
             ticks: _ticks,
             turtleBreeds: "XXX IMPLEMENT ME",
-            turtleShapeList: "XXX IMPLEMENT ME",
+            turtleShapeList: turtleShapeList,
             unbreededLinksAreDirected: false
             wrappingAllowedInX: @wrappingAllowedInX,
             wrappingAllowedInY: @wrappingAllowedInY
