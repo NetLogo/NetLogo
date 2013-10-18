@@ -28,4 +28,11 @@ class TestLists extends DockingSuite {
     compare("remove-duplicates [1 1 1 2 3 3 4 4 4 1 2 5 5]")
   }
 
+  test("length") { implicit fixture => import fixture._
+    compare("length [1 1 1 2 3 3 4 4 4 1 2 5 5]")
+    compare("length []")
+    compare("length [ who ] of turtles")
+    testCommand("cro 10")
+    compare("length [ who ] of turtles")
+  }
 }

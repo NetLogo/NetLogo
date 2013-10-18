@@ -62,6 +62,8 @@ class Rhino {
             .take(a.getLength.toInt))
       // this should probably reject unknown types instead of passing them through.
       // known types: java.lang.Double, java.lang.Boolean, String
+      case i: java.lang.Integer =>
+        i.toDouble : java.lang.Double
       case x =>
         x
     }

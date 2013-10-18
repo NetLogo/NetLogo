@@ -25,4 +25,8 @@ class TestStrings extends DockingSuite {
     testCommand("output-print [1 [2 [3 4] 5] 6]")
   }
 
+  test("length") { implicit fixture => import fixture._
+    compare("length \"\"")
+    compare("length \"HELLO WORLD\"")
+  }
 }
