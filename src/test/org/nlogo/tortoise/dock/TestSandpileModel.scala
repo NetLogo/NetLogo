@@ -3,9 +3,9 @@
 package org.nlogo.tortoise
 package dock
 
-import org.nlogo.api
+import org.nlogo.util.SlowTest
 
-class TestSandpileModel extends DockingSuite {
+class TestSandpileModel extends DockingSuite with SlowTest {
 
   test("sandpile") { implicit fixture => import fixture._
     open("models/test/tortoise/Sandpile.nlogo")

@@ -3,9 +3,9 @@
 package org.nlogo.tortoise
 package dock
 
-import org.nlogo.api.WorldDimensions
+import org.nlogo.util.SlowTest
 
-class TestTermitesModel extends DockingSuite {
+class TestTermitesModel extends DockingSuite with SlowTest {
 
   test("termites") { implicit fixture => import fixture._
     open("models/test/tortoise/Termites.nlogo")
