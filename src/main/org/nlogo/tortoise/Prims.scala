@@ -65,6 +65,7 @@ object Prims {
         case _: prim.etc._distance    => "AgentSet.self().distance"
         case _: prim.etc._distancexy  => "AgentSet.self().distancexy"
         case _: prim.etc._patchahead  => "AgentSet.self().patchAhead"
+        case _: prim.etc._patchrightandahead  => "AgentSet.self().patchRightAndAhead"
         case _: prim.etc._canmove     => "AgentSet.self().canMove"
         case _: prim.etc._shadeof     => "Prims.shadeOf"
         case _: prim.etc._scalecolor  => "Prims.scaleColor"
@@ -98,6 +99,9 @@ object Prims {
         case _: prim.etc._die              => "AgentSet.die"
         case _: prim.etc._randomseed       => "Random.setSeed"
         case _: prim.etc._diffuse          => "world.topology().diffuse"
+        case _: prim.etc._setcurrentplot   => "noop"
+        case _: prim.etc._setcurrentplotpen => "noop"
+        case _: prim.etc._plot             => "noop"
       }
   }
 

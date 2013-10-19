@@ -23,6 +23,8 @@ died = (id) ->
   Updates.push(update)
   return
 
+noop = (vars...) ->
+
 updated = (obj, vars...) ->
   # is there some less simpleminded way we could build this? surely there
   # must be. my CoffeeScript fu is stoppable - ST 1/24/13
@@ -87,15 +89,20 @@ class Turtle
       @distancexy(agent.xcor, agent.ycor)
     else if(agent instanceof Patch)
       @distancexy(agent.pxcor, agent.pycor)
-  patchAhead: (amount) ->
+  patchRightAndAhead: (angle, amount) ->
+    heading = @heading + angle
+    if (heading < 0 || heading >= 360)
+      heading = ((heading % 360) + 360) % 360
     try
-      newX = world.topology().wrapX(@xcor + amount * Trig.sin(@heading),
+      newX = world.topology().wrapX(@xcor + amount * Trig.sin(heading),
           world.minPxcor - 0.5, world.maxPxcor + 0.5)
-      newY = world.topology().wrapY(@ycor + amount * Trig.cos(@heading),
+      newY = world.topology().wrapY(@ycor + amount * Trig.cos(heading),
           world.minPycor - 0.5, world.maxPycor + 0.5)
       return world.getPatchAt(newX, newY)
     catch error
       return Nobody
+  patchAhead: (amount) ->
+    @patchRightAndAhead(0, amount)
   fd: (amount) ->
     if amount > 0
       while amount >= 1 and @canMove(1)
