@@ -199,6 +199,7 @@ class World
   width = 0
   _topology = null
   _ticks = -1
+  _timer = Date.now()
   _patchesAllBlack = true
   constructor: (@minPxcor, @maxPxcor, @minPycor, @maxPycor, @patchSize, @wrappingAllowedInY, @wrappingAllowedInX, turtleShapeList, linkShapeList, @interfaceGlobalCount) ->
     collectUpdates()
@@ -243,6 +244,8 @@ class World
     breed = Breeds.get(breedName)
     new Agents((_turtles.filter (t) -> t.breed == breed ), breed)
   patches: -> new Agents(_patches)
+  resetTimer: ->
+    _timer = Date.now()
   resetTicks: ->
     _ticks = 0
     Updates.push( world: { 0: { ticks: _ticks } } )
@@ -291,6 +294,8 @@ class World
       throw new Error("Cannot advance ticks by a negative amount")
     _ticks += n
     Updates.push( world: { 0: { ticks: _ticks } } )
+  timer: ->
+    (Date.now() - _timer) / 1000
   ticks: ->
     if(_ticks == -1)
       throw new Error("Need to call reset-ticks")

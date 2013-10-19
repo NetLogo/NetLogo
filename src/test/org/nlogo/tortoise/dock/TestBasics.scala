@@ -120,6 +120,14 @@ class TestBasics extends DockingSuite {
     compare("ticks")
   }
 
+  test("timer") { implicit fixture => import fixture._
+    compare("floor timer")
+    testCommand("reset-timer")
+    compare("floor timer")
+    testCommand("clear-all")
+    compare("floor timer")
+  }
+
   test("resize world") { implicit fixture => import fixture._
     testCommand("resize-world -2 2 -2 2")
     testCommand("resize-world -5 5 -5 5")

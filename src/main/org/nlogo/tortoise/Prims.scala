@@ -36,6 +36,7 @@ object Prims {
         case _: prim.etc._turtles     => "world.turtles"
         case _: prim._patches         => "world.patches"
         case _: prim.etc._ticks       => "world.ticks"
+        case _: prim.etc._timer       => "world.timer"
         case _: prim._count           => "AgentSet.count"
         case _: prim._any             => "AgentSet.any"
         case _: prim._random          => "Random.nextLong"
@@ -68,6 +69,7 @@ object Prims {
         case _: prim.etc._turtleshere => "AgentSet.self().turtlesHere"
         case _: prim.etc._sin         => "Trig.unsquashedSin"
         case _: prim.etc._cos         => "Trig.unsquashedCos"
+        case _: prim.etc._floor       => "StrictMath.floor"
         case _: prim.etc._round       => "StrictMath.round"
         case _: prim.etc._turtle      => "world.getTurtle"
       }
@@ -82,6 +84,7 @@ object Prims {
         case _: prim.etc._clearticks       => "world.clearTicks"
         case _: prim.etc._resizeworld      => "world.resize"
         case _: prim.etc._resetticks       => "world.resetTicks"
+        case _: prim.etc._resettimer       => "world.resetTimer"
         case _: prim.etc._tick             => "world.tick"
         case _: prim.etc._tickadvance      => "world.advancetick"
         case _: prim.etc._setdefaultshape  => "Breeds.setDefaultShape"
