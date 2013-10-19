@@ -95,6 +95,7 @@ object Prims {
         case _: prim.etc._setxy            => "Prims.setxy"
         case _: prim.etc._die              => "AgentSet.die"
         case _: prim.etc._randomseed       => "Random.setSeed"
+        case _: prim.etc._diffuse          => "world.topology().diffuse"
       }
   }
 

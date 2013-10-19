@@ -30,4 +30,18 @@ class TestTopologies extends DockingSuite {
     testCommand("ask turtles [ fd 5 ]")
     testCommand("ask turtles [ output-print distancexy -2.2 -5.3 ]")
   }
+
+  test("diffuse") { implicit fixture => import fixture._
+    declare("patches-own [ chemical ]", WorldDimensions.square(4))
+    testCommand("ask patches [ set chemical (random 168) / ((random 24) + 1) ]")
+    compare("[ chemical ] of patches")
+    testCommand("diffuse chemical 0.6")
+    compare("[ chemical ] of patches")
+    testCommand("diffuse chemical 0.6")
+    compare("[ chemical ] of patches")
+    testCommand("diffuse chemical 0.6")
+    compare("[ chemical ] of patches")
+    testCommand("diffuse chemical .99")
+    compare("[ chemical ] of patches")
+  }
 }

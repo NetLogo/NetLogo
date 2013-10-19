@@ -169,6 +169,7 @@ object Compiler {
         val vn = api.AgentVariables.getImplicitTurtleVariables.indexOf(tv.varName)
         s"AgentSet.getTurtleVariable($vn)"
       case pv: prim._patchvariable          => s"AgentSet.getPatchVariable(${pv.vn})"
+      case r: prim._reference               => s"${r.reference.vn}"
       case ov: prim._observervariable       => s"Globals.getGlobal(${ov.vn})"
       case s: prim._word                    =>
         ("\"\"" +: args).map(arg => "Dump(" + arg + ")").mkString("(", " + ", ")")
