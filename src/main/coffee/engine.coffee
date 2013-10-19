@@ -79,6 +79,14 @@ class Turtle
       @heading = ((@heading % 360) + 360) % 360
     return
   canMove: (amount) -> @patchAhead(amount) != Nobody
+  distancexy: (x, y) ->
+    StrictMath.sqrt(StrictMath.pow(world.topology().shortestX(@xcor, x), 2) +
+                    StrictMath.pow(world.topology().shortestY(@ycor, y), 2))
+  distance: (agent) ->
+    if (agent instanceof Turtle)
+      @distancexy(agent.xcor, agent.ycor)
+    else if(agent instanceof Patch)
+      @distancexy(agent.pxcor, agent.pycor)
   patchAhead: (amount) ->
     try
       newX = world.topology().wrapX(@xcor + amount * Trig.sin(@heading),
@@ -169,6 +177,14 @@ class Patch
       updated(this, patchBuiltins[n])
     else
       @vars[n - patchBuiltins.length] = v
+  distancexy: (x, y) ->
+    StrictMath.sqrt(StrictMath.pow(world.topology().shortestX(@pxcor, x), 2) +
+                    StrictMath.pow(world.topology().shortestY(@pycor, y), 2))
+  distance: (agent) ->
+    if (agent instanceof Turtle)
+      @distancexy(agent.xcor, agent.ycor)
+    else if(agent instanceof Patch)
+      @distancexy(agent.pxcor, agent.pycor)
   getNeighbors: -> world.getNeighbors(@pxcor, @pycor) # world.getTopology().getNeighbors(this)
   getNeighbors4: -> world.getNeighbors4(@pxcor, @pycor) # world.getTopology().getNeighbors(this)
   sprout: (n) ->
@@ -573,7 +589,16 @@ class Torus
     @wrap(pos, @minPxcor - 0.5, @maxPxcor + 0.5)
   wrapY: (pos) ->
     @wrap(pos, @minPycor - 0.5, @maxPycor + 0.5)
-
+  shortestX: (x1, x2) ->
+    if(StrictMath.abs(x1 - x2) > (1 + @maxPxcor - @minPxcor) / 2)
+      (1 + @maxPxcor - @minPxcor) - StrictMath.abs(x1 - x2)
+    else
+      StrictMath.abs(x1 - x2)
+  shortestY: (y1, y2) ->
+    if(StrictMath.abs(y1 - y2) > (1 + @maxPycor - @minPycor) / 2)
+      (1 + @maxPycor - @minPycor) - StrictMath.abs(y1 - y2)
+    else
+      StrictMath.abs(y1 - y2)
   getNeighbors: (pxcor, pycor) ->
     new Agents(@_getNeighbors(pxcor, pycor))
 
