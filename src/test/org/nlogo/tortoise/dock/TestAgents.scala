@@ -12,6 +12,12 @@ class TestAgents extends DockingSuite {
     compare("count patches")
   }
 
+  test("world dimensions 2") { implicit fixture => import fixture._
+    declare("", WorldDimensions(-3, 4, -5, 6))
+    compare("(list min-pxcor max-pxcor min-pycor max-pycor)")
+    compare("(list world-width world-height)")
+  }
+
   test("turtle creation 1") { implicit fixture => import fixture._
     testCommand("cro 2")
     testCommand("cro 2")
