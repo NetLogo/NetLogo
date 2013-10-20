@@ -97,11 +97,26 @@ class Turtle
     catch error
       return Nobody
   fd: (amount) ->
-    @xcor = world.topology().wrap(@xcor + amount * Trig.sin(@heading),
-        world.minPxcor - 0.5, world.maxPxcor + 0.5)
-    @ycor = world.topology().wrap(@ycor + amount * Trig.cos(@heading),
-        world.minPycor - 0.5, world.maxPycor + 0.5)
-    updated(this, "xcor", "ycor")
+    if amount > 0
+      while amount >= 1 and @canMove(1)
+        @jump(1)
+        amount -= 1
+      if amount > 0 and @canMove(amount)
+        @jump(amount)
+    else if amount < 0
+      while amount <= -1 and @canMove(-1)
+        @jump(-1)
+        amount += 1
+      if amount < 0 and @canMove(amount)
+        @jump(amount)
+    return
+  jump: (amount) ->
+    if @canMove(amount)
+      @xcor = world.topology().wrapX(@xcor + amount * Trig.sin(@heading),
+          world.minPxcor - 0.5, world.maxPxcor + 0.5)
+      @ycor = world.topology().wrapY(@ycor + amount * Trig.cos(@heading),
+          world.minPycor - 0.5, world.maxPycor + 0.5)
+      updated(this, "xcor", "ycor")
     return
   right: (amount) ->
     @heading += amount
@@ -262,6 +277,9 @@ class World
       _topology = new Torus(@minPxcor, @maxPxcor, @minPycor, @maxPycor)
     else if(@wrappingAllowedInX)
       _topology = new VertCylinder(@minPxcor, @maxPxcor, @minPycor, @maxPycor)
+    else if(@wrappingAllowedInY)
+    else
+      _topology = new Box(@minPxcor, @maxPxcor, @minPycor, @maxPycor)
     for t in @turtles().items
       try
         t.die()
@@ -738,3 +756,106 @@ class VertCylinder
     if(pos >= @maxPycor + 0.5 || pos <= @minPycor - 0.5)
       throw new Error("Cannot move turtle beyond the world's edge.")
     else pos
+
+class Box
+  constructor: (@minPxcor, @maxPxcor, @minPycor, @maxPycor) ->
+
+  # based on agent.Topology.wrap()
+  wrap: (pos, min, max) ->
+    if (pos >= max)
+      (min + ((pos - max) % (max - min)))
+    else if (pos < min)
+      result = max - ((min - pos) % (max - min))
+      if (result < max)
+        result
+      else
+        min
+    else
+      pos
+
+  shortestX: (x1, x2) -> StrictMath.abs(x1 - x2)
+  shortestY: (y1, y2) -> StrictMath.abs(y1 - y2)
+  wrapX: (pos) ->
+    if(pos >= @maxPxcor + 0.5 || pos <= @minPxcor - 0.5)
+      throw new Error("Cannot move turtle beyond the world's edge.")
+    else pos
+  wrapY: (pos) ->
+    if(pos >= @maxPycor + 0.5 || pos <= @minPycor - 0.5)
+      throw new Error("Cannot move turtle beyond the world's edge.")
+    else pos
+  diffuse: (vn, amount) ->
+    yy = world.height()
+    xx = world.width()
+    scratch = for x in [0...xx]
+      for y in [0...yy]
+        world.getPatchAt(x + @minPxcor, y + @minPycor).getPatchVariable(vn)
+    scratch2 = for x in [0...xx]
+      for y in [0...yy]
+        0
+    for y in [0...yy]
+      for x in [0...xx]
+        diffuseVal = (scratch[x][y] / 8) * amount
+        if (y > 0 && y < yy - 1 && x > 0 && x < xx - 1)
+          scratch2[x    ][y    ] += scratch[x][y] - (8 * diffuseVal)
+          scratch2[x - 1][y - 1] += diffuseVal
+          scratch2[x - 1][y    ] += diffuseVal
+          scratch2[x - 1][y + 1] += diffuseVal
+          scratch2[x    ][y + 1] += diffuseVal
+          scratch2[x    ][y - 1] += diffuseVal
+          scratch2[x + 1][y - 1] += diffuseVal
+          scratch2[x + 1][y    ] += diffuseVal
+          scratch2[x + 1][y + 1] += diffuseVal
+        else if (y > 0 && y < yy - 1)
+          if (x == 0)
+            scratch2[x    ][y    ] += scratch[x][y] - (5 * diffuseVal)
+            scratch2[x    ][y + 1] += diffuseVal
+            scratch2[x    ][y - 1] += diffuseVal
+            scratch2[x + 1][y - 1] += diffuseVal
+            scratch2[x + 1][y    ] += diffuseVal
+            scratch2[x + 1][y + 1] += diffuseVal
+          else
+            scratch2[x    ][y    ] += scratch[x][y] - (5 * diffuseVal)
+            scratch2[x    ][y + 1] += diffuseVal
+            scratch2[x    ][y - 1] += diffuseVal
+            scratch2[x - 1][y - 1] += diffuseVal
+            scratch2[x - 1][y    ] += diffuseVal
+            scratch2[x - 1][y + 1] += diffuseVal
+        else if (x > 0 && x < xx - 1)
+          if (y == 0)
+            scratch2[x    ][y    ] += scratch[x][y] - (5 * diffuseVal)
+            scratch2[x - 1][y    ] += diffuseVal
+            scratch2[x - 1][y + 1] += diffuseVal
+            scratch2[x    ][y + 1] += diffuseVal
+            scratch2[x + 1][y    ] += diffuseVal
+            scratch2[x + 1][y + 1] += diffuseVal
+          else
+            scratch2[x    ][y    ] += scratch[x][y] - (5 * diffuseVal)
+            scratch2[x - 1][y    ] += diffuseVal
+            scratch2[x - 1][y - 1] += diffuseVal
+            scratch2[x    ][y - 1] += diffuseVal
+            scratch2[x + 1][y    ] += diffuseVal
+            scratch2[x + 1][y - 1] += diffuseVal
+        else if (x == 0)
+          if (y == 0)
+            scratch2[x    ][y    ] += scratch[x][y] - (3 * diffuseVal)
+            scratch2[x    ][y + 1] += diffuseVal
+            scratch2[x + 1][y    ] += diffuseVal
+            scratch2[x + 1][y + 1] += diffuseVal
+          else
+            scratch2[x    ][y    ] += scratch[x][y] - (3 * diffuseVal)
+            scratch2[x    ][y - 1] += diffuseVal
+            scratch2[x + 1][y    ] += diffuseVal
+            scratch2[x + 1][y - 1] += diffuseVal
+        else if (y == 0)
+          scratch2[x    ][y    ] += scratch[x][y] - (3 * diffuseVal)
+          scratch2[x    ][y + 1] += diffuseVal
+          scratch2[x - 1][y    ] += diffuseVal
+          scratch2[x - 1][y + 1] += diffuseVal
+        else
+          scratch2[x    ][y    ] += scratch[x][y] - (3 * diffuseVal)
+          scratch2[x    ][y - 1] += diffuseVal
+          scratch2[x - 1][y    ] += diffuseVal
+          scratch2[x - 1][y - 1] += diffuseVal
+    for y in [0...yy]
+      for x in [0...xx]
+        world.getPatchAt(x + @minPxcor, y + @minPycor).setPatchVariable(vn, scratch2[x][y])
