@@ -163,6 +163,7 @@ object Compiler {
       case call: prim._callreport           => s"${ident(call.procedure.name)}($commaArgs)"
       case Prims.InfixReporter(op)          => s"(${arg(0)} $op ${arg(1)})"
       case Prims.NormalReporter(op)         => s"$op($commaArgs)"
+      case _: prim._unaryminus              => s"(- ${arg(0)})"
       case bv: prim._breedvariable          => s"""AgentSet.getBreedVariable("${bv.name}")"""
       case tv: prim._turtlevariable         => s"AgentSet.getTurtleVariable(${tv.vn})"
       case tv: prim._turtleorlinkvariable   =>
