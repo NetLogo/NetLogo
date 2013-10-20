@@ -190,6 +190,8 @@ object Compiler {
       case _: prim.etc._minpycor            => "world.minPycor"
       case _: prim.etc._maxpxcor            => "world.maxPxcor"
       case _: prim.etc._maxpycor            => "world.maxPycor"
+      case _: prim.etc._worldwidth          => "world.width()"
+      case _: prim.etc._worldheight         => "world.height()"
       case _ =>
         throw new IllegalArgumentException(
           "unknown primitive: " + r.reporter.getClass.getSimpleName)
