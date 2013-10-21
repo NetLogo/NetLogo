@@ -1,6 +1,6 @@
 [submodule "models"]
 	path = models
-	url = git://git.assembla.com/models.git
+	url = git://github.com/NetLogo/models.git
 [submodule "extensions/array"]
 	path = extensions/array
 	url = git://github.com/NetLogo/Array-Extension.git

@@ -6,7 +6,8 @@
 # script after cloning the main repo will override the URLs in .git/config
 # so you can push to all repos.
 
-git config submodule.models.url git@git.assembla.com:models.git
+git config submodule.models.url git@github.com:/NetLogo/models.git
+git config submodule.Mathematica-Link.url git@github.com:/NetLogo/Mathematica-Link.git
 git config submodule.extensions/array.url git@github.com:/NetLogo/Array-Extension.git
 git config submodule.extensions/matrix.url git@github.com:/NetLogo/Matrix-Extension.git
 git config submodule.extensions/profiler.url git@github.com:/NetLogo/Profiler-Extension.git
@@ -17,8 +18,8 @@ git config submodule.extensions/table.url git@github.com:/NetLogo/Table-Extensio
 # The above seems not to be doing the trick unless you run it before cloning,
 # which is hard to remember to do.  So we bring out the big hammer:
 
-( cd models; git remote set-url origin git@git.assembla.com:models.git )
-( cd Mathematica-Link; git remote set-url origin git@github.com:NetLogo/Mathematica-Link.git )
+( cd models; git remote set-url origin git@github.com:/NetLogo/models.git )
+( cd Mathematica-Link; git remote set-url origin git@github.com:/NetLogo/Mathematica-Link.git )
 ( cd extensions/array; git remote set-url origin git@github.com:/NetLogo/Array-Extension.git )
 ( cd extensions/matrix; git remote set-url origin git@github.com:/NetLogo/Matrix-Extension.git )
 ( cd extensions/profiler; git remote set-url origin git@github.com:/NetLogo/Profiler-Extension.git )

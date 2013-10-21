@@ -44,7 +44,7 @@ libraryDependencies in ThisBuild ++= Seq(
   "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
   "org.jmock" % "jmock-junit4" % "2.5.1" % "test",
   "org.scalacheck" %% "scalacheck" % "1.10.1" % "test",
-  "org.scalatest" %% "scalatest" % "2.0.RC1" % "test"
+  "org.scalatest" %% "scalatest" % "2.0.RC2" % "test"
 )
 
 artifactName := { (_, _, _) => "NetLogoHeadless.jar" }
