@@ -2,7 +2,6 @@
 
 package org.nlogo.mirror
 
-import scala.collection.mutable
 // no dependencies except Scala standard library
 
 abstract class Kind
