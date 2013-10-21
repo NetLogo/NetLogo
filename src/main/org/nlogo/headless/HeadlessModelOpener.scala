@@ -2,6 +2,7 @@
 
 package org.nlogo.headless
 
+import org.nlogo.workspace
 import org.nlogo.agent.{BooleanConstraint, ChooserConstraint, InputBoxConstraint, NumericConstraint}
 import org.nlogo.api.{CompilerException, FileIO, LogoList,
                       ModelReader, ModelSection, Program, ValueConstraint, Version}
@@ -31,7 +32,8 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
 
     // parse all the widgets in the WIDGETS section
     val (interfaceGlobals, constraints, buttonCode, monitorCode, interfaceGlobalCommands) =
-      new WidgetParser(ws).parseWidgets(map(ModelSection.Interface), netLogoVersion)
+      new workspace.WidgetParser(ws, ws.plotManager, ws.compilerTestingMode)
+        .parseWidgets(map(ModelSection.Interface), netLogoVersion)
 
     // read procedures, compile them.
     val results = {
