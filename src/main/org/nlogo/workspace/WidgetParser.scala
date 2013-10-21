@@ -8,7 +8,8 @@ import org.nlogo.{ api, plot },
 
 class WidgetParser(worldLoader: WorldLoaderInterface, plotManager: plot.PlotManagerInterface, compilerTestingMode: Boolean) {
 
-  def parseWidgets(widgetsSection: Seq[String], netLogoVersion: String = api.Version.version) = {
+  def parseWidgets(widgetsSection: Seq[String], netLogoVersion: String = api.Version.version):
+      (Seq[String], Map[String, List[String]], Seq[String], Seq[String], String)  = {
 
     // parsing widgets dumps information into these four mutable vals.
     // as well as a few places in the workspace.
@@ -97,7 +98,7 @@ class WidgetParser(worldLoader: WorldLoaderInterface, plotManager: plot.PlotMana
         case _ => // ignore
       }
 
-    (interfaceGlobals, constraints, buttons, monitors, interfaceGlobalCommands)
+    (interfaceGlobals, constraints.toMap, buttons, monitors, interfaceGlobalCommands.toString)
 
   }
 

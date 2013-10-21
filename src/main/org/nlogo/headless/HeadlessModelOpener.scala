@@ -75,7 +75,8 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     if (linkShapeLines.isEmpty) ws.world.linkShapeList.add(LinkShape.getDefaultLinkShape)
   }
 
-  private def finish(constraints: Map[String, List[String]], program: Program, interfaceGlobalCommands: StringBuilder) {
+  private def finish(constraints: Map[String, List[String]], program: Program, interfaceGlobalCommands: String) {
+    val interfaceGlobalCommandsBuffer = new StringBuilder(interfaceGlobalCommands)
     ws.world.realloc()
 
     val errors = ws.plotManager.compileAllPlots()
@@ -89,7 +90,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
           val vals = ws.compiler.frontEnd.readFromString(spec(1)).asInstanceOf[LogoList]
           val defaultIndex = spec(2).toInt
           val defaultAsString = org.nlogo.api.Dump.logoObject(vals.get(defaultIndex), true, false)
-          interfaceGlobalCommands.append("set " + vname + " " + defaultAsString + "\n")
+          interfaceGlobalCommandsBuffer.append("set " + vname + " " + defaultAsString + "\n")
           new ChooserConstraint(vals, defaultIndex)
         case "SWITCH" => new BooleanConstraint(spec(1))
         case "INPUTBOX" =>
@@ -101,7 +102,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
       }
       ws.world.observer().setConstraint(ws.world.observerOwnsIndexOf(vname.toUpperCase), con)
     }
-    ws.command(interfaceGlobalCommands.toString)
+    ws.command(interfaceGlobalCommandsBuffer.toString)
   }
 
   private def testCompileWidgets(program: Program, netLogoVersion: String, buttons: List[String], monitors:List[String]) {
