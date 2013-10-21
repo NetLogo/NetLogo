@@ -70,6 +70,13 @@ class TestAgents extends DockingSuite {
     testCommand("ask turtles [rt random-float 360]")
   }
 
+  test("turtle move-to") { implicit fixture => import fixture._
+    declare("", WorldDimensions.square(4))
+    testCommand("create-turtles 20 ask turtles [ fd random 4 ]")
+    testCommand("ask turtles [ move-to turtle random 20 ]")
+    testCommand("ask turtles [ move-to patch (random 7 - 3) (random 7 - 3) ]")
+  }
+
   test("turtle death 1") { implicit fixture => import fixture._
     testCommand("cro 8")
     testCommand("ask turtles [die]")

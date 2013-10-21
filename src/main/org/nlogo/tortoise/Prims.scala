@@ -91,6 +91,7 @@ object Prims {
         case _: prim.etc._tick             => "world.tick"
         case _: prim.etc._tickadvance      => "world.advancetick"
         case _: prim.etc._setdefaultshape  => "Breeds.setDefaultShape"
+        case _: prim.etc._moveto           => "AgentSet.self().moveto"
         case _: prim._fd                   => "Prims.fd"
         case _: prim._bk                   => "Prims.bk"
         case _: prim.etc._left             => "Prims.left"

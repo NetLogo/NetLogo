@@ -180,6 +180,11 @@ class Turtle
         t.setTurtleVariable(turtleBuiltins.length + v, @getTurtleVariable(turtleBuiltins.length + v))
       newTurtles.push(world.createturtle(t))
     new Agents(newTurtles, breed)
+  moveto: (agent) ->
+    if (agent instanceof Turtle)
+      @setxy(agent.xcor, agent.ycor)
+    else if(agent instanceof Patch)
+      @setxy(agent.pxcor, agent.pycor)
 
 class Patch
   vars: []
