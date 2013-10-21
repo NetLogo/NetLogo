@@ -359,7 +359,7 @@ class World
     _turtles.push(t)
     t
   createorderedturtles: (n, breedName) ->
-    new Agents(@createturtle(new Turtle((num * 10 + 5) % 140, num * (360 / n), 0, 0, Breeds.get(breedName))) for num in [0...n])
+    new Agents(@createturtle(new Turtle((10 * num + 5) % 140, (360 * num) / n, 0, 0, Breeds.get(breedName))) for num in [0...n])
   createturtles: (n, breedName) ->
     new Agents(@createturtle(new Turtle(5 + 10 * Random.nextInt(14), Random.nextInt(360), 0, 0, Breeds.get(breedName))) for num in [0...n])
   getNeighbors: (pxcor, pycor) -> @topology().getNeighbors(pxcor, pycor)
