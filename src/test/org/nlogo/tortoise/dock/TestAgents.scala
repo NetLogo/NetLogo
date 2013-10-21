@@ -33,6 +33,10 @@ class TestAgents extends DockingSuite {
     testCommand("output-print count turtles")
   }
 
+  test("turtle creation 3") { implicit fixture => import fixture._
+    testCommand("cro 300")
+  }
+
   test("cro with init block") { implicit fixture => import fixture._
     testCommand("crt 4 [ output-print who ]")
   }
@@ -58,6 +62,19 @@ class TestAgents extends DockingSuite {
   test("turtle motion 2") { implicit fixture => import fixture._
     declare("", WorldDimensions.square(1))
     testCommand("cro 8 ask turtles [fd 1] ask turtles [output-print xcor output-print ycor]")
+  }
+
+  test("turtle motion 3") { implicit fixture => import fixture._
+    declare("", WorldDimensions.square(4))
+    testCommand("cro 20 ask turtles [rt random 90 left random 90]")
+    testCommand("ask turtles [rt random-float 360]")
+  }
+
+  test("turtle move-to") { implicit fixture => import fixture._
+    declare("", WorldDimensions.square(4))
+    testCommand("create-turtles 20 ask turtles [ fd random 4 ]")
+    testCommand("ask turtles [ move-to turtle random 20 ]")
+    testCommand("ask turtles [ move-to patch (random 7 - 3) (random 7 - 3) ]")
   }
 
   test("turtle death 1") { implicit fixture => import fixture._

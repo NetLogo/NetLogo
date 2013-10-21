@@ -23,6 +23,8 @@ died = (id) ->
   Updates.push(update)
   return
 
+noop = (vars...) ->
+
 updated = (obj, vars...) ->
   # is there some less simpleminded way we could build this? surely there
   # must be. my CoffeeScript fu is stoppable - ST 1/24/13
@@ -87,15 +89,20 @@ class Turtle
       @distancexy(agent.xcor, agent.ycor)
     else if(agent instanceof Patch)
       @distancexy(agent.pxcor, agent.pycor)
-  patchAhead: (amount) ->
+  patchRightAndAhead: (angle, amount) ->
+    heading = @heading + angle
+    if (heading < 0 || heading >= 360)
+      heading = ((heading % 360) + 360) % 360
     try
-      newX = world.topology().wrapX(@xcor + amount * Trig.sin(@heading),
+      newX = world.topology().wrapX(@xcor + amount * Trig.sin(heading),
           world.minPxcor - 0.5, world.maxPxcor + 0.5)
-      newY = world.topology().wrapY(@ycor + amount * Trig.cos(@heading),
+      newY = world.topology().wrapY(@ycor + amount * Trig.cos(heading),
           world.minPycor - 0.5, world.maxPycor + 0.5)
       return world.getPatchAt(newX, newY)
     catch error
       return Nobody
+  patchAhead: (amount) ->
+    @patchRightAndAhead(0, amount)
   fd: (amount) ->
     if amount > 0
       while amount >= 1 and @canMove(1)
@@ -173,6 +180,11 @@ class Turtle
         t.setTurtleVariable(turtleBuiltins.length + v, @getTurtleVariable(turtleBuiltins.length + v))
       newTurtles.push(world.createturtle(t))
     new Agents(newTurtles, breed)
+  moveto: (agent) ->
+    if (agent instanceof Turtle)
+      @setxy(agent.xcor, agent.ycor)
+    else if(agent instanceof Patch)
+      @setxy(agent.pxcor, agent.pycor)
 
 class Patch
   vars: []
@@ -352,7 +364,7 @@ class World
     _turtles.push(t)
     t
   createorderedturtles: (n, breedName) ->
-    new Agents(@createturtle(new Turtle((num * 10 + 5) % 140, num * (360 / n), 0, 0, Breeds.get(breedName))) for num in [0...n])
+    new Agents(@createturtle(new Turtle((10 * num + 5) % 140, (360 * num) / n, 0, 0, Breeds.get(breedName))) for num in [0...n])
   createturtles: (n, breedName) ->
     new Agents(@createturtle(new Turtle(5 + 10 * Random.nextInt(14), Random.nextInt(360), 0, 0, Breeds.get(breedName))) for num in [0...n])
   getNeighbors: (pxcor, pycor) -> @topology().getNeighbors(pxcor, pycor)
