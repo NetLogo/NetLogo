@@ -6,7 +6,7 @@ import org.nlogo.{ api, plot },
   api.ModelReader, api.StringUtils.escapeString,
   plot.PlotLoader
 
-class WidgetParser(worldLoader: WorldLoaderInterface, plotManager: plot.PlotManagerInterface, compilerTestingMode: Boolean) {
+class WidgetParser(worldLoader: WorldLoaderInterface, plotManager: plot.PlotManagerInterface, parser: api.ParserServices, compilerTestingMode: Boolean) {
 
   def parseWidgets(widgetsSection: Seq[String], netLogoVersion: String = api.Version.version):
       (Seq[String], Map[String, List[String]], Seq[String], Seq[String], String)  = {
@@ -40,6 +40,10 @@ class WidgetParser(worldLoader: WorldLoaderInterface, plotManager: plot.PlotMana
       interfaceGlobals += widget(6)
       val valSpec = "[" + widget(7) + "]"
       constraints(widget(6)) = List("CHOOSER", valSpec, widget(8))
+      val vals = parser.readFromString(valSpec).asInstanceOf[api.LogoList]
+      val defaultAsString = api.Dump.logoObject(vals.get(widget(8).toInt), true, false)
+      interfaceGlobalCommands.append(
+        "set " + widget(6) + " " + defaultAsString + "\n")
     }
 
     def parseInputBox(widget: Seq[String]) {

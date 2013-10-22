@@ -32,7 +32,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
 
     // parse all the widgets in the WIDGETS section
     val (interfaceGlobals, constraints, buttonCode, monitorCode, interfaceGlobalCommands) =
-      new workspace.WidgetParser(ws, ws.plotManager, ws.compilerTestingMode)
+      new workspace.WidgetParser(ws, ws.plotManager, ws, ws.compilerTestingMode)
         .parseWidgets(map(ModelSection.Interface), netLogoVersion)
 
     // read procedures, compile them.
@@ -76,7 +76,6 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
   }
 
   private def finish(constraints: Map[String, List[String]], program: Program, interfaceGlobalCommands: String) {
-    val interfaceGlobalCommandsBuffer = new StringBuilder(interfaceGlobalCommands)
     ws.world.realloc()
 
     val errors = ws.plotManager.compileAllPlots()
@@ -89,8 +88,6 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
         case "CHOOSER" =>
           val vals = ws.compiler.frontEnd.readFromString(spec(1)).asInstanceOf[LogoList]
           val defaultIndex = spec(2).toInt
-          val defaultAsString = org.nlogo.api.Dump.logoObject(vals.get(defaultIndex), true, false)
-          interfaceGlobalCommandsBuffer.append("set " + vname + " " + defaultAsString + "\n")
           new ChooserConstraint(vals, defaultIndex)
         case "SWITCH" => new BooleanConstraint(spec(1))
         case "INPUTBOX" =>
@@ -102,7 +99,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
       }
       ws.world.observer().setConstraint(ws.world.observerOwnsIndexOf(vname.toUpperCase), con)
     }
-    ws.command(interfaceGlobalCommandsBuffer.toString)
+    ws.command(interfaceGlobalCommands)
   }
 
   private def testCompileWidgets(program: Program, netLogoVersion: String, buttons: List[String], monitors:List[String]) {
