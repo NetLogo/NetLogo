@@ -1,15 +1,15 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.headless
+package org.nlogo.workspace
 
-import org.nlogo.{ api, plot, workspace },
+import org.nlogo.{ api, plot },
   api.ModelReader, api.StringUtils.escapeString,
-  workspace.WorldLoader,
   plot.PlotLoader
 
-class WidgetParser(ws: HeadlessWorkspace) {
+class WidgetParser(worldLoader: WorldLoaderInterface, plotManager: plot.PlotManagerInterface, compilerTestingMode: Boolean) {
 
-  def parseWidgets(widgetsSection: Seq[String], netLogoVersion: String = api.Version.version) = {
+  def parseWidgets(widgetsSection: Seq[String], netLogoVersion: String = api.Version.version):
+      (Seq[String], Map[String, List[String]], Seq[String], Seq[String], String)  = {
 
     // parsing widgets dumps information into these four mutable vals.
     // as well as a few places in the workspace.
@@ -56,7 +56,7 @@ class WidgetParser(ws: HeadlessWorkspace) {
       // ick, side effects.
       // might replace identity soon as we might actually convert old models for headless.
       // JC - 9/14/10
-      PlotLoader.parsePlot(widget.toArray, ws.plotManager.newPlot(""))
+      PlotLoader.parsePlot(widget.toArray, plotManager.newPlot(""))
     }
 
     def parseButton(widget: Seq[String]) {
@@ -81,7 +81,7 @@ class WidgetParser(ws: HeadlessWorkspace) {
     }
 
     def parseView(widget: Seq[String]) {
-      (new WorldLoader).load(widget, ws)
+      (new WorldLoader).load(widget, worldLoader)
     }
 
     // finally parse all the widgets in the WIDGETS section
@@ -92,13 +92,13 @@ class WidgetParser(ws: HeadlessWorkspace) {
         case "CHOICE" | "CHOOSER" => parseChoiceOrChooser(widget)
         case "INPUTBOX" => parseInputBox(widget)
         case "PLOT" => parsePlot(widget)
-        case "BUTTON" if ws.compilerTestingMode => parseButton(widget)
-        case "MONITOR" if ws.compilerTestingMode => parseMonitor(widget)
+        case "BUTTON" if compilerTestingMode => parseButton(widget)
+        case "MONITOR" if compilerTestingMode => parseMonitor(widget)
         case "GRAPHICS-WINDOW" => parseView(widget)
         case _ => // ignore
       }
 
-    (interfaceGlobals, constraints, buttons, monitors, interfaceGlobalCommands)
+    (interfaceGlobals, constraints.toMap, buttons, monitors, interfaceGlobalCommands.toString)
 
   }
 
