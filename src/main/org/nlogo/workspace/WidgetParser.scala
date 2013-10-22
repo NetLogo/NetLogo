@@ -6,7 +6,12 @@ import org.nlogo.{ api, plot },
   api.ModelReader, api.StringUtils.escapeString,
   plot.PlotLoader
 
-class WidgetParser(worldLoader: WorldLoaderInterface, plotManager: plot.PlotManagerInterface, compilerTestingMode: Boolean) {
+class WidgetParser(
+  parser: api.ParserServices,
+  worldLoader: Option[WorldLoaderInterface] = None,
+  plotManager: Option[plot.PlotManagerInterface] = None,
+  compilerTestingMode: Boolean = false
+) {
 
   def parseWidgets(widgetsSection: Seq[String], netLogoVersion: String = api.Version.version):
       (Seq[String], Map[String, List[String]], Seq[String], Seq[String], String)  = {
@@ -40,6 +45,10 @@ class WidgetParser(worldLoader: WorldLoaderInterface, plotManager: plot.PlotMana
       interfaceGlobals += widget(6)
       val valSpec = "[" + widget(7) + "]"
       constraints(widget(6)) = List("CHOOSER", valSpec, widget(8))
+      val vals = parser.readFromString(valSpec).asInstanceOf[api.LogoList]
+      val defaultAsString = api.Dump.logoObject(vals.get(widget(8).toInt), true, false)
+      interfaceGlobalCommands.append(
+        "set " + widget(6) + " " + defaultAsString + "\n")
     }
 
     def parseInputBox(widget: Seq[String]) {
@@ -56,7 +65,8 @@ class WidgetParser(worldLoader: WorldLoaderInterface, plotManager: plot.PlotMana
       // ick, side effects.
       // might replace identity soon as we might actually convert old models for headless.
       // JC - 9/14/10
-      PlotLoader.parsePlot(widget.toArray, plotManager.newPlot(""))
+      for(manager <- plotManager)
+        PlotLoader.parsePlot(widget.toArray, manager.newPlot(""))
     }
 
     def parseButton(widget: Seq[String]) {
@@ -81,7 +91,8 @@ class WidgetParser(worldLoader: WorldLoaderInterface, plotManager: plot.PlotMana
     }
 
     def parseView(widget: Seq[String]) {
-      (new WorldLoader).load(widget, worldLoader)
+      for(loader <- worldLoader)
+        (new WorldLoader).load(widget, loader)
     }
 
     // finally parse all the widgets in the WIDGETS section
