@@ -42,6 +42,7 @@ object Prims {
         case _: prim._any             => "AgentSet.any"
         case _: prim._random          => "Random.nextLong"
         case _: prim._list            => "Prims.list"
+        case _: prim.etc._item        => "Prims.item"
         case _: prim.etc._first       => "Prims.first"
         case _: prim.etc._last        => "Prims.last"
         case _: prim.etc._fput        => "Prims.fput"

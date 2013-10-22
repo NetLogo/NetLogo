@@ -513,6 +513,7 @@ Prims =
     color + perc
   randomfloat: (n) -> n * Random.nextDouble()
   list: (xs...) -> xs
+  item: (n, xs) -> xs[n]
   first: (xs) -> xs[0]
   last: (xs) -> xs[xs.length - 1]
   fput: (x, xs) -> [x].concat(xs)
@@ -541,6 +542,8 @@ Prims =
       for input in inputs
         if (typeIsArray(input))
           recurse(input)
+        else if (input instanceof Patch)
+          result.push(input)
         else
           for agent in input.items
             if (!(agent in result))

@@ -14,4 +14,10 @@ class TestBenchmarks extends DockingSuite with SlowTest {
     testCommand("ask turtle 0 [ move-to one-of patches with [shade-of? pcolor blue] ]")
     testCommand("repeat 20 [ go ]")
   }
+
+  test("bureaucrats") { implicit fixture => import fixture._
+    open("models/test/benchmarks/Bureaucrats Benchmark.nlogo")
+    testCommand("setup")
+    testCommand("repeat 50 [ go ]")
+  }
 }
