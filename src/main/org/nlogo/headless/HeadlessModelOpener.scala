@@ -32,7 +32,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
 
     // parse all the widgets in the WIDGETS section
     val (interfaceGlobals, constraints, buttonCode, monitorCode, interfaceGlobalCommands) =
-      new workspace.WidgetParser(ws, ws.plotManager, ws, ws.compilerTestingMode)
+      new workspace.WidgetParser(ws, Some(ws), Some(ws.plotManager), ws.compilerTestingMode)
         .parseWidgets(map(ModelSection.Interface), netLogoVersion)
 
     // read procedures, compile them.
