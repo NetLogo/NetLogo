@@ -1,15 +1,20 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.headless
+package org.nlogo.workspace
 
-import org.nlogo.{ api, plot, workspace },
+import org.nlogo.{ api, plot },
   api.ModelReader, api.StringUtils.escapeString,
-  workspace.WorldLoader,
   plot.PlotLoader
 
-class WidgetParser(ws: HeadlessWorkspace) {
+class WidgetParser(
+  parser: api.ParserServices,
+  worldLoader: Option[WorldLoaderInterface] = None,
+  plotManager: Option[plot.PlotManagerInterface] = None,
+  compilerTestingMode: Boolean = false
+) {
 
-  def parseWidgets(widgetsSection: Seq[String], netLogoVersion: String = api.Version.version) = {
+  def parseWidgets(widgetsSection: Seq[String], netLogoVersion: String = api.Version.version):
+      (Seq[String], Map[String, List[String]], Seq[String], Seq[String], String)  = {
 
     // parsing widgets dumps information into these four mutable vals.
     // as well as a few places in the workspace.
@@ -40,6 +45,10 @@ class WidgetParser(ws: HeadlessWorkspace) {
       interfaceGlobals += widget(6)
       val valSpec = "[" + widget(7) + "]"
       constraints(widget(6)) = List("CHOOSER", valSpec, widget(8))
+      val vals = parser.readFromString(valSpec).asInstanceOf[api.LogoList]
+      val defaultAsString = api.Dump.logoObject(vals.get(widget(8).toInt), true, false)
+      interfaceGlobalCommands.append(
+        "set " + widget(6) + " " + defaultAsString + "\n")
     }
 
     def parseInputBox(widget: Seq[String]) {
@@ -56,7 +65,8 @@ class WidgetParser(ws: HeadlessWorkspace) {
       // ick, side effects.
       // might replace identity soon as we might actually convert old models for headless.
       // JC - 9/14/10
-      PlotLoader.parsePlot(widget.toArray, ws.plotManager.newPlot(""))
+      for(manager <- plotManager)
+        PlotLoader.parsePlot(widget.toArray, manager.newPlot(""))
     }
 
     def parseButton(widget: Seq[String]) {
@@ -81,7 +91,8 @@ class WidgetParser(ws: HeadlessWorkspace) {
     }
 
     def parseView(widget: Seq[String]) {
-      (new WorldLoader).load(widget, ws)
+      for(loader <- worldLoader)
+        (new WorldLoader).load(widget, loader)
     }
 
     // finally parse all the widgets in the WIDGETS section
@@ -92,13 +103,13 @@ class WidgetParser(ws: HeadlessWorkspace) {
         case "CHOICE" | "CHOOSER" => parseChoiceOrChooser(widget)
         case "INPUTBOX" => parseInputBox(widget)
         case "PLOT" => parsePlot(widget)
-        case "BUTTON" if ws.compilerTestingMode => parseButton(widget)
-        case "MONITOR" if ws.compilerTestingMode => parseMonitor(widget)
+        case "BUTTON" if compilerTestingMode => parseButton(widget)
+        case "MONITOR" if compilerTestingMode => parseMonitor(widget)
         case "GRAPHICS-WINDOW" => parseView(widget)
         case _ => // ignore
       }
 
-    (interfaceGlobals, constraints, buttons, monitors, interfaceGlobalCommands)
+    (interfaceGlobals, constraints.toMap, buttons, monitors, interfaceGlobalCommands.toString)
 
   }
 

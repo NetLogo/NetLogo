@@ -6,9 +6,10 @@ import
   scala.io.Source
 
 import
-  org.nlogo.{ api, headless },
+  org.nlogo.util.Femto,
+  org.nlogo.{ api, nvm, workspace },
     api.{ ModelReader, ModelSection, WorldDimensions },
-    headless.{ HeadlessWorkspace, WidgetParser }
+    workspace.WidgetParser
 
 object CompilerService {
 
@@ -27,7 +28,12 @@ object CompilerService {
     val interface = modelMap(ModelSection.Interface)
     val nlogo     = modelMap(ModelSection.Code).mkString("\n")
 
-    val (iGlobals, _, _, _, iGlobalCmds) = new WidgetParser(HeadlessWorkspace.newInstance).parseWidgets(interface)
+    val frontEnd: nvm.FrontEndInterface =
+      Femto.scalaSingleton("org.nlogo.compile.front.FrontEnd")
+
+    val (iGlobals, _, _, _, iGlobalCmds) =
+      new WidgetParser(new nvm.DefaultParserServices(frontEnd))
+        .parseWidgets(interface)
 
     val Seq(minX, maxX, minY, maxY) = 17 to 20 map { x => interface(x).toInt }
     val dimensions = WorldDimensions(minX, maxX, minY, maxY)

@@ -144,7 +144,7 @@ class DockingFixture(name: String) extends Fixture(name) {
     val sections = api.ModelReader.parseModel(api.FileIO.file2String(path))
     val code = sections(api.ModelSection.Code).mkString("\n")
     val (interfaceGlobals, _, _, _, interfaceGlobalCommands) =
-      new headless.WidgetParser(workspace)
+      new org.nlogo.workspace.WidgetParser(workspace)
         .parseWidgets(sections(api.ModelSection.Interface))
     declareHelper(code, interfaceGlobals, interfaceGlobalCommands.toString,
       workspace.world.getDimensions, workspace.world.turtleShapeList, workspace.world.linkShapeList)
