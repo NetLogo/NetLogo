@@ -89,7 +89,8 @@ class DockingFixture(name: String) extends Fixture(name) {
         workspace.command(logo)
         (Unit, false)
       } catch {
-        case ex: Exception => (ex, true)
+        case ex: Exception =>
+          (ex.getMessage, true)
       }
     val (newState, update) = mirror.Mirroring.diffs(state, mirrorables)
     state = newState
@@ -104,15 +105,29 @@ class DockingFixture(name: String) extends Fixture(name) {
         (false, runJS(compiledJS))
       } catch {
         case e: Exception =>
-          if (!exceptionOccurredInHeadless)
-            e.printStackTrace()
-          (true, ("", ""))
+          e.getCause match {
+            case inner: sun.org.mozilla.javascript.internal.JavaScriptException =>
+              inner.getValue match {
+                case obj: sun.org.mozilla.javascript.internal.NativeObject =>
+                  (true, (obj.get("message"), ""))
+                case _ =>
+                  if (!exceptionOccurredInHeadless)
+                    e.printStackTrace()
+                  (true, ("", ""))
+              }
+            case _ =>
+              if (!exceptionOccurredInHeadless)
+                e.printStackTrace()
+              (true, ("", ""))
+          }
       }
     if(exceptionOccurredInHeadless && !exceptionOccurredInJS) {
       throw new IllegalStateException("Exception occurred in headless but not JS: " + headlessException)
     } else if(!exceptionOccurredInHeadless && exceptionOccurredInJS) {
-      throw new IllegalStateException("Exception occurred in JS but not headless")
+      throw new IllegalStateException("Exception occurred in JS but not headless: " + actualOutput)
     } else if(exceptionOccurredInHeadless && exceptionOccurredInJS) {
+      if(headlessException != actualOutput)
+        throw new IllegalStateException(s"""Exception in JS was "$actualOutput" but exception in headless was "${headlessException}" """)
     } else {
       //println(expectedJson)
       //println(actualJson)

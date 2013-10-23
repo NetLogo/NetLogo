@@ -1,6 +1,11 @@
 turtleBuiltins = ["id", "color", "heading", "xcor", "ycor", "shape", "label", "labelcolor", "breed", "hidden", "size", "pensize", "penmode"]
 patchBuiltins = ["pxcor", "pycor", "pcolor", "plabel", "plabelcolor"]
 
+class NetLogoException
+  constructor: (@message) ->
+class DeathInterrupt extends NetLogoException
+class TopologyInterrupt extends NetLogoException
+
 Updates = []
 
 Nobody = {
@@ -100,7 +105,7 @@ class Turtle
           world.minPycor - 0.5, world.maxPycor + 0.5)
       return world.getPatchAt(newX, newY)
     catch error
-      return Nobody
+      if error instanceof TopologyInterrupt then Nobody else throw error
   patchAhead: (amount) ->
     @patchRightAndAhead(0, amount)
   fd: (amount) ->
@@ -142,9 +147,7 @@ class Turtle
       world.removeTurtle(@id)
       died(@id)
       @id = -1
-    deathError = new Error("Call only from inside an askAgent block")
-    deathError.death = true
-    throw deathError
+    throw new DeathInterrupt("Call only from inside an askAgent block")
   getTurtleVariable: (n) ->
     if (n < turtleBuiltins.length)
       this[turtleBuiltins[n]]
@@ -283,7 +286,7 @@ class World
     Updates.push( world: { 0: { ticks: _ticks } } )
   resize: (minPxcor, maxPxcor, minPycor, maxPycor) ->
     if(minPxcor > 0 || maxPxcor < 0 || minPycor > 0 || maxPycor < 0)
-      throw new Error("You must include the point (0, 0) in the world")
+      throw new NetLogoException("You must include the point (0, 0) in the world.")
     @minPxcor = minPxcor
     @maxPxcor = maxPxcor
     @minPycor = minPycor
@@ -299,7 +302,7 @@ class World
       try
         t.die()
       catch error
-        throw error if !error.death
+        throw error if !(error instanceof DeathInterrupt)
     @createPatches()
     Updates.push(
       world: {
@@ -315,21 +318,21 @@ class World
     )
   tick: ->
     if(_ticks == -1)
-      throw new Error("Need to call reset-ticks")
+      throw new NetLogoException("The tick counter has not been started yet. Use RESET-TICKS.")
     _ticks++
     Updates.push( world: { 0: { ticks: _ticks } } )
   advancetick: (n) ->
     if(_ticks == -1)
-      throw new Error("Need to call reset-ticks")
+      throw new NetLogoException("The tick counter has not been started yet. Use RESET-TICKS.")
     if(n < 0)
-      throw new Error("Cannot advance ticks by a negative amount")
+      throw new NetLogoException("Cannot advance the tick counter by a negative amount.")
     _ticks += n
     Updates.push( world: { 0: { ticks: _ticks } } )
   timer: ->
     (Date.now() - _timer) / 1000
   ticks: ->
     if(_ticks == -1)
-      throw new Error("Need to call reset-ticks")
+      throw new NetLogoException("The tick counter has not been started yet. Use RESET-TICKS.")
     _ticks
   # TODO: this needs to support all topologies
   width: () -> 1 + @maxPxcor - @minPxcor
@@ -355,7 +358,7 @@ class World
       try
         t.die()
       catch error
-        throw error if !error.death
+        throw error if !(error instanceof DeathInterrupt)
     @createPatches()
     _nextId = 0
     @patchesAllBlack(true)
@@ -384,7 +387,7 @@ AgentSet =
     try
       res = f()
     catch error
-      throw error if !error.death
+      throw error if!(error instanceof DeathInterrupt)
     @_self = oldAgent
     res
   ask: (agentsOrAgent, shuffle, f) ->
@@ -770,7 +773,7 @@ class VertCylinder extends Topology
     @wrap(pos, @minPxcor - 0.5, @maxPxcor + 0.5)
   wrapY: (pos) ->
     if(pos >= @maxPycor + 0.5 || pos <= @minPycor - 0.5)
-      throw new Error("Cannot move turtle beyond the world's edge.")
+      throw new TopologyInterrupt ("Cannot move turtle beyond the world's edge.")
     else pos
 
 class Box extends Topology
@@ -780,11 +783,11 @@ class Box extends Topology
   shortestY: (y1, y2) -> StrictMath.abs(y1 - y2)
   wrapX: (pos) ->
     if(pos >= @maxPxcor + 0.5 || pos <= @minPxcor - 0.5)
-      throw new Error("Cannot move turtle beyond the world's edge.")
+      throw new TopologyInterrupt ("Cannot move turtle beyond the world's edge.")
     else pos
   wrapY: (pos) ->
     if(pos >= @maxPycor + 0.5 || pos <= @minPycor - 0.5)
-      throw new Error("Cannot move turtle beyond the world's edge.")
+      throw new TopologyInterrupt ("Cannot move turtle beyond the world's edge.")
     else pos
 
   getPatchNorth: (pxcor, pycor) -> (pycor != @maxPycor) && world.getPatchAt(pxcor, pycor + 1)
