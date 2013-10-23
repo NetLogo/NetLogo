@@ -66,7 +66,7 @@ class Turtle
     @vars = (x for x in TurtlesOwn.vars)
   updateBreed: (breed) ->
     @breed = breed
-    @shape = @breed.shape
+    @shape = @breed.shape()
     if(@breed != Breeds.get("TURTLES"))
       for x in @breed.vars
         if(@breedvars[x] == undefined)
@@ -214,8 +214,9 @@ class Patch
       @distancexy(agent.pxcor, agent.pycor)
   getNeighbors: -> world.getNeighbors(@pxcor, @pycor) # world.getTopology().getNeighbors(this)
   getNeighbors4: -> world.getNeighbors4(@pxcor, @pycor) # world.getTopology().getNeighbors(this)
-  sprout: (n) ->
-    new Agents(world.createturtle(new Turtle(5 + 10 * Random.nextInt(14), Random.nextInt(360), @pxcor, @pycor)) for num in [0...n], Breeds.get("TURTLES"))
+  sprout: (n, breedName) ->
+    breed = if("" == breedName) then Breeds.get("TURTLES") else Breeds.get(breedName)
+    new Agents(world.createturtle(new Turtle(5 + 10 * Random.nextInt(14), Random.nextInt(360), @pxcor, @pycor, breed)) for num in [0...n])
 
 class World
   # any variables used in the constructor should come
@@ -478,7 +479,7 @@ Prims =
   setxy: (x, y) -> AgentSet.self().setxy(x, y)
   getNeighbors: -> AgentSet.self().getNeighbors()
   getNeighbors4: -> AgentSet.self().getNeighbors4()
-  sprout: (n) -> AgentSet.self().sprout(n)
+  sprout: (n, breedName) -> AgentSet.self().sprout(n, breedName)
   hatch: (n, breedName) -> AgentSet.self().hatch(n, breedName)
   patch: (x, y) -> world.getPatchAt(x, y)
   randomxcor: -> world.minPxcor - 0.5 + Random.nextDouble() * (world.maxPxcor - world.minPxcor + 1)
@@ -595,18 +596,18 @@ Trig =
     StrictMath.cos(StrictMath.toRadians(degrees))
 
 class Breed
-  constructor: (@name, @singular) ->
-  shape: "default"
+  constructor: (@name, @singular, @_shape = false) ->
+  shape: () -> if @_shape then @_shape else Breeds.get("TURTLES")._shape
   vars: []
 
 Breeds = {
-  breeds: [new Breed("TURTLES", "turtle")]
+  breeds: [new Breed("TURTLES", "turtle", "default")]
   add: (name, singular) ->
     @breeds.push(new Breed(name, singular))
   get: (name) ->
     (@breeds.filter (b) -> b.name == name)[0]
   setDefaultShape: (agents, shape) ->
-    agents.breed.shape = shape.toLowerCase()
+    agents.breed._shape = shape.toLowerCase()
 }
 
 class Torus

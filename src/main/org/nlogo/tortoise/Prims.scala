@@ -157,7 +157,8 @@ object Prims {
   def generateSprout(s: Statement): String = {
     val n = Compiler.genReporterApp(s.args.head)
     val body = fun(Compiler.genCommandBlock(s.args.tail.head))
-    s"AgentSet.ask(Prims.sprout($n), true, $body);"
+    val breedName = s.command.asInstanceOf[prim._sprout].breedName
+    s"""AgentSet.ask(Prims.sprout($n, "$breedName"), true, $body);"""
   }
 
   def generateHatch(s: Statement, breedName: String): String = {
