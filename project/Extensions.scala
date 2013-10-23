@@ -4,18 +4,18 @@ import Keys._
 
 object Extensions {
 
-  val extensions = TaskKey[Seq[File]](
-    "extensions", "builds extensions")
+  val extensions = taskKey[Seq[File]](
+    "builds extensions")
 
   val extensionsTask =
-    extensions <<= (baseDirectory, scalaInstance, streams) map {
-      (base, scala, s) =>
-        "git submodule --quiet update --init" ! s.log
-        val isDirectory = new java.io.FileFilter {
-          override def accept(f: File) = f.isDirectory
-        }
-        for(dir <- IO.listFiles(isDirectory)(base / "extensions").toSeq)
-        yield buildExtension(dir, scala.libraryJar, s.log)
+    extensions := {
+      "git submodule --quiet update --init" ! streams.value.log
+      val isDirectory = new java.io.FileFilter {
+        override def accept(f: File) = f.isDirectory
+      }
+      val dirs = IO.listFiles(isDirectory)(baseDirectory.value / "extensions")
+      for(dir <- dirs.toSeq)
+      yield buildExtension(dir, scalaInstance.value.libraryJar, streams.value.log)
     }
 
   private def buildExtension(dir: File, scalaLibrary: File, log: Logger): File = {

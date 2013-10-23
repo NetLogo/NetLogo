@@ -1,8 +1,10 @@
 lists-of-agentsets-can-be-equal
+  globals [glob1]
   O> set glob1 one-of patches
   (list (patch-set glob1)) = (list (patch-set glob1)) => true
 
 two-dead-turtles-are-equal
+  globals [glob1 glob2]
   O> crt 1 [ set glob1 (list self) ]
   O> crt 1 [ set glob2 (list self) ]
   first glob1 = first glob2 => false
@@ -12,6 +14,7 @@ two-dead-turtles-are-equal
   glob1 = glob2 => true
 
 dead-turtle-equals-nobody
+  globals [glob1 glob2]
   O> crt 1 [ set glob1 self set glob2 (list self) die ]
   glob1 = nobody => true
   nobody = glob1 => true
@@ -19,6 +22,7 @@ dead-turtle-equals-nobody
   (list nobody) = glob2 => true
 
 two-dead-links-are-equal
+  globals [glob1 glob2]
   O> crt 3 [ create-links-with other turtles ]
   O> set glob1 (list first sort links)
   O> set glob2 (list last sort links)
@@ -29,6 +33,7 @@ two-dead-links-are-equal
   glob1 = glob2 => true
 
 dead-link-equals-nobody
+  globals [glob1 glob2]
   O> crt 2 [ create-links-with other turtles [ set glob1 self set glob2 (list self) die ] ]
   glob1 = nobody => true
   nobody = glob1 => true

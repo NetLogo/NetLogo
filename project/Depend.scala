@@ -6,8 +6,8 @@ import Keys._
 
 object Depend {
 
-  val depend = TaskKey[Unit](
-    "depend", "use Classycle to ferret out forbidden dependencies")
+  val depend = taskKey[Unit](
+    "use Classycle to ferret out forbidden dependencies")
 
   val settings = Seq(dependTask)
 
@@ -16,34 +16,39 @@ object Depend {
   private val lock = new AnyRef
 
   private lazy val dependTask =
-    depend <<= (fullClasspath in Test, classDirectory in Compile, classDirectory in Test, streams, thisProject).map{
-      (cp, classes, testClasses, s, project) => lock.synchronized {
-        s.log.info("begin depend: " + project.id)
-        IO.write(file(".") / "tmp" / "depend.ddf", ddfContents)
+    depend := {
+      val _ = (compile in Test).value
+      val s = streams.value
+      lock.synchronized {
+        val classes = (classDirectory in Compile).value.toString
+        val testClasses = (classDirectory in Test).value.toString
+        s.log.info("begin depend: " + thisProject.value.id)
+        IO.write(file(".") / "target" / "depend.ddf", ddfContents)
         import classycle.dependency.DependencyChecker
         def main() = TrapExit(
-          DependencyChecker.main(Array("-dependencies=@tmp/depend.ddf",
-                                       classes.toString)),
+          DependencyChecker.main(Array("-dependencies=@target/depend.ddf",
+                                       classes)),
           s.log)
         def test() = TrapExit(
-          DependencyChecker.main(Array("-dependencies=@tmp/depend.ddf",
-                                       testClasses.toString)),
+          DependencyChecker.main(Array("-dependencies=@target/depend.ddf",
+                                       testClasses)),
           s.log)
-        s.log.info("depend: " + classes.toString)
+        s.log.info("depend: " + classes)
         main() match {
           case 0 =>
-            s.log.info("depend: " + testClasses.toString)
+            s.log.info("depend: " + testClasses)
             test() match {
               case 0 =>
               case fail =>
-                s.log.info("depend failed: " + testClasses.toString)
+                s.log.info("depend failed: " + testClasses)
                 sys.error(fail.toString) }
           case fail =>
-            s.log.info("depend failed: " + classes.toString)
+            s.log.info("depend failed: " + classes)
             sys.error(fail.toString)
         }
-        s.log.info("end depend: " + project.id)
-      }}.dependsOn(compile in Test)
+        s.log.info("end depend: " + thisProject.value.id)
+      }
+    }
 
   private def ddfContents: String = {
     val buf = new StringBuilder
@@ -54,49 +59,33 @@ object Depend {
       "" -> Nil,
       "agent" -> List("api"),
       "api" -> List("util"),
-      "app" -> List("window"),
-      "awt" -> Nil,
-      "compile" -> List("parse"),
+      "compile" -> List("prim"),
+      "compile/back" -> List("compile"),
+      "compile/front" -> List("compile", "parse"),
+      "compile/middle" -> List("compile"),
       "drawing" -> List("api"),
-      "editor" -> Nil,
-      "generate" -> List("prim","prim/dead","prim/threed"),
-      "gl/render" -> List("shape"),
-      "gl/view" -> List("gl/render","window"),
-      "headless" -> List("mirror", "workspace"),
-      "headless/hubnet" -> List("headless", "hubnet/protocol"),
-      "hubnet/client" -> List("hubnet/connection","hubnet/mirroring","hubnet/protocol","render","widget"),
-      "hubnet/connection" -> List("api"),
-      "hubnet/mirroring" -> List("api"),
-      "hubnet/protocol" -> List("api"),
-      "hubnet/server" -> List("workspace","hubnet/connection","hubnet/mirroring","hubnet/protocol"),
-      "hubnet/server/gui" -> List("hubnet/server","window"),
+      "generate" -> List("prim"),
+      "headless" -> List("mirror","workspace"),
+      "headless/lang" -> List("headless"),
+      "headless/lang/misc" -> List("headless/lang"),
+      "headless/misc" -> List("headless"),
+      "headless/render" -> List("headless"),
       "job" -> List("nvm"),
       "lab" -> List("nvm"),
-      "lab/gui" -> List("lab","window"),
       "lex" -> List("api"),
-      "lite" -> List("window"),
-      "log" -> List("api"),
       "mirror" -> List("drawing", "plot", "shape"),
-      "mc" -> List("nvm", "swing"),
       "nvm" -> List("agent"),
-      "parse" -> List("prim","prim/dead","prim/threed"),
+      "parse" -> List("api"),
       "plot" -> List("api"),
       "prim" -> List("nvm"),
-      "prim/dead" -> List("nvm"),
       "prim/etc" -> List("nvm"),
-      "prim/hubnet" -> List("nvm"),
-      "prim/threed" -> List("nvm"),
-      "properties" -> List("window"),
       "render" -> List("shape"),
       "review" -> List("mirror", "window"),
-      "sdm" -> List("api"),
-      "sdm/gui" -> List("sdm","window"),
       "shape" -> List("api"),
-      "shape/editor" -> List("shape","swing"),
-      "swing" -> List("awt"),
+      "tortoise" -> List("compile", "workspace", "prim/etc", "tortoise/json"),
+      "tortoise/dock" -> List("tortoise", "headless/lang"),
+      "tortoise/json" -> List("shape", "mirror", "api"),
       "util" -> Nil,
-      "widget" -> List("window"),
-      "window" -> List("editor","log","shape","swing","workspace"),
       "workspace" -> List("nvm", "plot", "drawing"))
     case class Package(val dir: String, var depends: Set[Package]) {
       def ancestors:Set[Package] = depends ++ depends.flatMap(_.ancestors)
@@ -107,69 +96,62 @@ object Depend {
     def generate(p: Package) {
       val name = p.dir.replaceAll("/",".")
       println("[" + name + "] = org.nlogo." + name + ".* excluding org.nlogo." + name + ".*.*")
-      println("[" + name + "+] = [" + name + "]" + p.depends.map(p2 => "[" + p2.dir.replaceAll("/",".") + "+]").mkString(" "," ",""))
-      println("[" + name + "-] = org.nlogo.* excluding [" + name + "+]")
-      println("check [" + name + "] independentOf [" + name + "-]")
+      println("[" + name + "+] = [" + name + "]" + p.depends.map(p2 => "[" + p2.dir.replaceAll("/",".") + "+]").mkString(" "," ","") + " [libs]")
+      println("check [" + name + "] dependentOnlyOn [" + name + "+]")
       println("")
     }
+    def generateHeader() {
+      println("""
+check absenceOfPackageCycles > 1 in org.nlogo.*
+
+[headless-AWT] = java.awt.geom.* java.awt.image.* java.awt.Color java.awt.Image java.awt.Shape java.awt.Graphics2D java.awt.Graphics java.awt.Stroke java.awt.Composite java.awt.BasicStroke java.awt.Point java.awt.Font java.awt.AlphaComposite java.awt.RenderingHints java.awt.Rectangle java.awt.FontMetrics java.awt.color.ColorSpace java.awt.Polygon java.awt.RenderingHints$Key javax.imageio.* javax.swing.tree.MutableTreeNode javax.swing.tree.DefaultMutableTreeNode
+
+[stdlib-j] = java.lang.* java.util.* java.io.* java.text.* java.net.* java.security.*
+
+[stdlib-s] = scala.Serializable scala.Predef* scala.collection.* scala.reflect.* scala.Function* scala.UninitializedFieldError scala.util.control.Exception* scala.Array* scala.LowPriorityImplicits scala.package$ scala.util.Properties$ scala.Option* scala.Tuple* scala.Product* scala.util.DynamicVariable scala.runtime.* scala.math.* scala.None* scala.Some* scala.MatchError scala.util.Left* scala.util.Right* scala.util.Either* scala.io.* scala.sys.package* scala.Console* scala.PartialFunction* scala.util.matching.Regex* scala.Enumeration* scala.Proxy* scala.FallbackArrayBuilding scala.util.Sorting* scala.StringContext scala.text.Document scala.Symbol scala.Unit$
+
+[xml] = org.w3c.dom.* org.xml.sax.* javax.xml.parsers.*
+
+[asm] = org.objectweb.asm.*
+
+[json] = org.json4s.*
+
+[rhino] = javax.script.* sun.org.mozilla.javascript.*
+
+[parser-combinators] = scala.util.parsing*
+
+[testing] = org.scalatest.* org.scalautils.* org.scalacheck.* org.jmock.* org.hamcrest.* org.skyscreamer.jsonassert.*
+
+[libs] = [stdlib-j] [stdlib-s] [headless-AWT] [xml] [asm] [json] [rhino] [parser-combinators] [testing]
+""")
+    }
+
     def generateFooter() {
       println("""
-### HubNet client dependencies
-
-[HubNet-client] = [hubnet.client] [hubnet.connection] [hubnet.mirroring] [hubnet.protocol] excluding org.nlogo.hubnet.client.App org.nlogo.hubnet.client.App$ org.nlogo.hubnet.client.ClientApp
-check [HubNet-client] independentOf [workspace]
-# Someday this should be completely independent, not just directly independent - ST 12/4/08
-check [HubNet-client] directlyIndependentOf [nvm]
-
-### checks on AWT, Swing, JOGL
+### checks on library usage
 
 [Sun-Swing] = javax.swing.* excluding javax.swing.tree.MutableTreeNode javax.swing.tree.DefaultMutableTreeNode
 [Sun-AWT] = java.awt.*
-[headless-AWT] = java.awt.geom.* java.awt.image.* java.awt.Color java.awt.Image java.awt.Shape java.awt.Graphics2D java.awt.Graphics java.awt.Stroke java.awt.Composite java.awt.BasicStroke java.awt.Point java.awt.Font java.awt.AlphaComposite java.awt.RenderingHints java.awt.Rectangle java.awt.FontMetrics java.awt.color.ColorSpace java.awt.Polygon java.awt.RenderingHints$Key
-# as a special case, we allow referring to java.awt.Frame, because ShapesManagerFactory
-# mentions it in its constructor, and I don't want to have to make a whole new package
-# just to put ShapesManagerFactory in - ST 2/27/09
-[bad-AWT] = java.awt.* excluding [headless-AWT] java.awt.Frame
-
+[bad-AWT] = java.awt.* excluding [headless-AWT]
 check [util+] independentOf [Sun-AWT]
-check [awt+] independentOf [Sun-Swing]
-check [headless+] independentOf [Sun-Swing] [bad-AWT]
-check [gl.render] independentOf [Sun-Swing] [bad-AWT]
-
-### checks on external libraries
-
-[JOGL-free-zone] = org.nlogo.* excluding [gl.render] [gl.view]
-[JOGL] = net.java.games.* javax.media.opengl.*
-check [JOGL-free-zone] independentOf [JOGL]
+check org.nlogo.* independentOf [Sun-Swing] [bad-AWT]
 
 [ASM-free-zone] = org.nlogo.* excluding [generate]
 check [ASM-free-zone] independentOf org.objectweb.*
 
-check org.nlogo.* independentOf com.wolfram.*
+[XML-free-zone] = org.nlogo.* excluding [lab]
+check [XML-free-zone] independentOf [xml]
 
-[MRJAdapter-free-zone] = org.nlogo.* excluding [app] [hubnet.client] [swing]
-check [MRJAdapter-free-zone] directlyIndependentOf net.roydesign.*
+[json-free-zone] = org.nlogo.* excluding [tortoise.json] [tortoise.dock]
+check [json-free-zone] directlyIndependentOf [json]
 
-[JHotDraw-free-zone] = org.nlogo.* excluding [sdm.gui]
-check [JHotDraw-free-zone] independentOf org.jhotdraw.*
-
-[JMF-free-zone] = org.nlogo.* excluding org.nlogo.awt.JMFMovieEncoder org.nlogo.awt.JMFMovieEncoderDataStream org.nlogo.awt.JMFMovieEncoderDataSource
-[JMF] = javax.media.* excluding javax.media.opengl.*
-check [JMF-free-zone] directlyIndependentOf [JMF]
-
-[Log4J-free-zone] = org.nlogo.* excluding [log] org.nlogo.app.App org.nlogo.app.App$ org.nlogo.lite.InterfaceComponent
-check [Log4J-free-zone] directlyIndependentOf org.apache.log4j.*
-
-[Quaqua-free-zone] = org.nlogo.* excluding org.nlogo.swing.Utils
-check [Quaqua-free-zone] directlyIndependentOf ch.randelshofer.*
-
-[PicoContainer-free-zone] = org.nlogo.* excluding org.nlogo.util.Pico [app] [headless]
-check [PicoContainer-free-zone] independentOf org.picocontainer.*
-
+[parser-combinator-free-zone] = org.nlogo.* excluding org.nlogo.parse.StructureCombinators* org.nlogo.parse.SeqReader* org.nlogo.parse.Cleanup
+check [parser-combinator-free-zone] directlyIndependentOf [parser-combinators]
 """
               )
     }
 
+    generateHeader()
     var done = List(allPackages.find(_.dir == "").get)
     def eligible(p:Package) = !done.contains(p) && p.ancestors.forall(done.contains(_))
     while(true) {

@@ -21,6 +21,7 @@ TurtlesRepeat4
   remove-duplicates [precision (distancexy 0 0) 15] of turtles => [4]
 
 RepeatInsideRecursiveProcedure1
+  globals [glob1]
   to make-tree [depth] set glob1 lput depth glob1 if depth < 1 [ stop ] repeat 2 [ make-tree depth - 1 ] end
   O> set glob1 []
   O> make-tree 3

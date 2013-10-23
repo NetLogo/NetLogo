@@ -150,8 +150,6 @@ org.nlogo.prim.$common.expectedBooleanValue = {0} 期望从 {1} 获得布尔值�
 
 
 org.nlogo.prim.etc._turtleset.listInputsMustBeTurtleOrTurtleAgentset = {0} 的输入列表应只包含海龟、海龟集或列表元素. 列表 {1} 包含了其他类型的主体集: {2}.
-org.nlogo.prim.etc._importdrawing.cantImportDrawingin3D = 3D模式不能导入图片.
-
 
 org.nlogo.prim.etc._linkheading.noLinkHeadingWithSameEndpoints = 两端在一个位置的连接没有方向值.
 

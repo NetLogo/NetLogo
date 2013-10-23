@@ -5,6 +5,8 @@ Turtles1
   [who] of [self] of turtle 0 => 0
 
 Turtles1a
+  breed [mice mouse]
+  breed [frogs frog]
   O> crt 2
   turtle 0 = turtle 0.0 => true
   turtle 1 = turtle 1.0 => true
@@ -89,19 +91,19 @@ Turtles5Torus
   T> fd 5.5
   map [list [xcor] of ? [ycor] of ?] sort turtles => [[0 -5.5] [-5.5 0] [0 -5.5] [-5.5 0]]
 
-Turtles5Box_2D
+Turtles5Box
   O> __change-topology false false
   O> cro 4
   T> fd 5.5
   map [list [xcor] of ? [ycor] of ?] sort turtles => [[0 5] [5 0] [0 -5.5] [-5.5 0]]
 
-Turtles5VCylind_2D
+Turtles5VCylind
   O> __change-topology true false
   O> cro 4
   T> fd 5.5
   map [list [xcor] of ? [ycor] of ?] sort turtles => [[0 5] [-5.5 0] [0 -5.5] [-5.5 0]]
 
-Turtles5HCylind_2D
+Turtles5HCylind
   O> __change-topology false true
   O> cro 4
   T> fd 5.5
@@ -118,7 +120,7 @@ Turtles6Torus
   precision (sum [ycor] of turtles) 11 => -7.0041492675
 
 # ditto - ST 3/9/06
-Turtles6Box_2D
+Turtles6Box
   O> __change-topology false false
   O> cro 1000
   T> fd who mod 37
@@ -187,12 +189,12 @@ EmptyHatch
   T> hatch -1 [ set color __boom ]
   count turtles => 1
 
-ForwardToBoundary1_2D
+ForwardToBoundary1
   O> __change-topology true false
   O> cro 1 [ fd max-pycor + 0.6 bk max-pycor]
   [list precision xcor 10 precision ycor 10] of turtles => [[0 0]]
 
-ForwardToBoundary2_2D
+ForwardToBoundary2
   O> __change-topology true false
   O> cro 1 [ fd (max-pycor * 10) + 0.1 bk max-pycor ]
   [list precision xcor 10 precision ycor 10] of turtles => [[0 0]]

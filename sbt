@@ -6,14 +6,17 @@
 # an intermediary JH variable --JAB (3/22/13)
 if [[ `uname -s` == *CYGWIN* ]] ; then
   CURR_DIR="$( cd "$( dirname "$0" )" && pwd )"
-  JH=`cygpath -up "\Java\jdk1.6.0_31"`
+  JH=`cygpath -up "\Java\jdk1.7.0_21"`
 else
   CURR_DIR=`dirname $0`
   if [ `uname -s` = Linux ] ; then
-    export JAVA_HOME=/usr/lib/jvm/java-6-sun
+    # use JAVA_HOME from Travis if there is one
+    if [ -z "$TRAVIS" ] ; then
+      export JAVA_HOME=/usr/lib/jvm/java-7-sun
+    fi
   else
     if [ `uname -s` = Darwin ] ; then
-      export JAVA_HOME=`/usr/libexec/java_home -F -v1.6*`
+      export JAVA_HOME=`/usr/libexec/java_home -F -v1.7*`
     else
       export JAVA_HOME=/usr
     fi
@@ -34,8 +37,8 @@ USE_QUARTZ=-Dapple.awt.graphics.UseQuartz=false
 BOOT=xsbt.boot.Boot
 
 
-SBT_LAUNCH=$HOME/.sbt/sbt-launch-0.12.4.jar
-URL='http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.12.4/sbt-launch.jar'
+SBT_LAUNCH=$HOME/.sbt/sbt-launch-0.13.0.jar
+URL='http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.13.0/sbt-launch.jar'
 
 if [ ! -f $SBT_LAUNCH ] ; then
   echo "downloading" $URL

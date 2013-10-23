@@ -7,33 +7,39 @@ Carefully2
   count turtles => 7
 
 Carefully3
+  globals [glob1]
   O> carefully [ crt __boom ] [ set glob1 error-message ]
   is-string? glob1 => true
 
 CarefullyStackInteraction1
+  globals [glob1]
   O> set glob1 []
   O> carefully [ __ignore __boom ] [ repeat 2 [ set glob1 fput error-message glob1] ]
   length glob1 => 2
   item 0 glob1 = item 1 glob1 => true
 
 CarefullyStackInteraction2
+  globals [glob1]
   O> set glob1 []
   O> repeat 2 [ carefully [ __ignore __boom ] [ set glob1 fput error-message glob1] ]
   length glob1 => 2
   item 0 glob1 = item 1 glob1 => true
 
 CarefullyStackInteraction3
+  globals [glob1]
   O> set glob1 []
   O> carefully [ repeat 2 [ __ignore __boom ] ] [ set glob1 fput error-message glob1]
   length glob1 => 1
 
 CarefullyAcrossCalls
+  globals [glob1]
   to p1 p2 end
   to p2 __ignore __boom end
   O> carefully [ p1 ] [ set glob1 error-message ]
   is-string? glob1 => true
 
 CarefullyNested
+  globals [glob1]
   O> carefully [ __ignore __boom ] [ carefully [ set glob1 error-message ] [ ] ]
   is-string? glob1 => true
 
@@ -47,6 +53,7 @@ error-non-string
   O> error 5 => ERROR 5
 
 carefully-with-error-and-message
+  globals [glob1]
   O> carefully [ error "foo" ] [ set glob1 error-message ]
   glob1 => "foo"
 

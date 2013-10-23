@@ -5,9 +5,11 @@ SetVariable
   O> ask patches [ set color red ] => COMPILER ERROR You can't use COLOR in a patch context, because COLOR is turtle/link-only.
 
 AgentClassChecking1
+  globals [glob1]
   O> set glob1 one-of patches ask glob1 [ die ] => ERROR this code can't be run by a patch
 
 AgentClassChecking2
+  globals [glob1]
   O> crt 1 [ set glob1 self ] __ignore [link-length] of glob1 => ERROR this code can't be run by a turtle, only a link
 
 # 3a and 3b are so similar because runtime error reporting is

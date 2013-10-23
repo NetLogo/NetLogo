@@ -192,8 +192,8 @@ procedure BENCHMARK:[NAME SALT]{O---}:
         _basecolors => LogoList
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
-          GETSTATIC org/nlogo/prim/etc/_basecolors$.MODULE$ : Lorg/nlogo/prim/etc/_basecolors$;
-          INVOKEVIRTUAL org/nlogo/prim/etc/_basecolors$.cached ()Lorg/nlogo/api/LogoList;
+          GETSTATIC org/nlogo/api/Color$.MODULE$ : Lorg/nlogo/api/Color$;
+          INVOKEVIRTUAL org/nlogo/api/Color$.BaseColors ()Lorg/nlogo/api/LogoList;
          L4
           ASTORE 2
           ALOAD 2

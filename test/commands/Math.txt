@@ -7,11 +7,13 @@ NegativeZero1
   [(- xcor) = 0] of turtle 0 => true
 
 NegativeZero2
+  globals [glob1]
   O> set glob1 0
   O> set glob1 (- glob1)
   glob1 => 0
 
 OptimizedSubtraction1
+  globals [glob1]
   O> set glob1 one-of patches
   O> ask glob1 [ set pcolor 10 ]
   O> ask glob1 [ set pcolor pcolor - 4 ]
@@ -19,6 +21,7 @@ OptimizedSubtraction1
   [pcolor] of glob1 => 126
 
 SqrtDoubleEvaluation
+  globals [glob1 glob2]
   O> random-seed 0
   O> set glob1 sqrt random-float 100
   O> random-seed 0
@@ -32,6 +35,7 @@ CatchNumbersOutsideDoubleRangeOfIntegers
   O> __ignore random -1E16 => ERROR -1.0E16 is too large to be represented exactly as an integer in NetLogo
 
 NotEqualBugsIFoundWhileTryingToPlayFrogger
+  turtles-own [tvar]
   O> crt 1 [ set tvar true ]
   count turtles with [ycor != max-pycor] => 1
   count turtles with [ycor != 0] => 0
@@ -42,6 +46,7 @@ DivideByZero
   3 / count turtles => ERROR Division by zero.
 
 IntegerExponentiation
+  globals [glob1]
   O> set glob1 2
   glob1 ^ 0 => 1
   glob1 ^ 1 => 2

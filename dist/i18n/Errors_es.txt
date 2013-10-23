@@ -162,8 +162,6 @@ org.nlogo.prim.$common.expectedBooleanValue = {0} expectabla un verdad/falso val
 
 org.nlogo.prim.etc._turtleset.listInputsMustBeTurtleOrTurtleAgentset = entradas de la lista a {0} sólo debe contener elementos de tortuga o tortuga agentset. La lista {1} contiene un tipo diferente agentset: {2}.
 
-org.nlogo.prim.etc._importdrawing.cantImportDrawingin3D = No se puede importar un dibujo en 3D.
-
 org.nlogo.prim.etc._linkheading.noLinkHeadingWithSameEndpoints = No hay un heading de un link que tiene endpoints en el mismo lugar.
 
 org.nlogo.prim.etc.$common.notThatManyAgentsExist = Pidió a {0} agentes azar de un conjunto de sólo {1} agentes.

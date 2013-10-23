@@ -1,4 +1,5 @@
 Loop1
+  globals [glob1]
   to foo loop [ if glob1 = 10 [ stop ] set glob1 glob1 + 1 ] end
   O> foo
   glob1 => 10
@@ -31,28 +32,33 @@ Run3
   [color] of turtle 0 = green => true
 
 Run4
+  globals [glob1]
   O> set glob1 0
   O> foreach [1 2 3] [ crt ? set glob1 glob1 + runresult "count turtles" ]
   glob1 => 10
   count turtles => 6
 
 Run5
+  globals [glob1]
   O> set glob1 0
   O> foreach [1 2 3] [ crt ? run "set glob1 glob1 + count turtles" ]
   glob1 => 10
   count turtles => 6
 
 Run6
+  globals [glob1]
   O> set glob1 0
   O> run "(foreach [ 1 2 3 ] [ 2 4 6 ] [ set glob1 ( glob1 + ?1 + ?2 ) ])"
   glob1 => 18
 
 Run7
+  globals [glob1]
   to foo [a] foreach [1] [ run "set glob1 5" ] end
   O> foo 0
   glob1 => 5
 
 Run8
+  globals [glob1]
   O> set glob1 "5"
   runresult glob1 => 5
   [runresult glob1] of one-of patches => 5
