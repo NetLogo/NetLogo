@@ -229,6 +229,9 @@ class TestAgents extends DockingSuite {
   test("neighbors") { implicit fixture => import fixture._
     declare("", WorldDimensions.square(5))
     testCommand("""ask patches [ ask neighbors [ output-print self ]]""")
+    testCommand("""ask patches [ ask neighbors4 [ output-print self ]]""")
+    testCommand("ask patches [ sprout 1 ]")
+    testCommand("""ask turtles [ ask neighbors4 [ output-print self ]]""")
   }
 
   test("setting a built-in patch variable") { implicit fixture => import fixture._

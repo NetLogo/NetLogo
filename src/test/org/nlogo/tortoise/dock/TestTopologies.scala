@@ -85,4 +85,20 @@ class TestTopologies extends DockingSuite {
     val world = new WorldDimensions(-4, 4, -4, 4, 12.0, false, false);
     testDiffuse(world)
   }
+
+  def testNeighbors(world: WorldDimensions)(implicit fixture: DockingFixture) : Unit = { import fixture._
+    declare("", world)
+    testCommand("""ask patches [ ask neighbors [ output-print self ]]""")
+    testCommand("""ask patches [ ask neighbors4 [ output-print self ]]""")
+    testCommand("ask patches [ sprout 1 ]")
+    testCommand("""ask turtles [ ask neighbors4 [ output-print self ]]""")
+  }
+
+  test("torus neighbors") { implicit fixture => import fixture._
+    testNeighbors(WorldDimensions.square(4))
+  }
+
+  test("box neighbors") { implicit fixture => import fixture._
+    testNeighbors(new WorldDimensions(-4, 4, -4, 4, 12.0, false, false))
+  }
 }

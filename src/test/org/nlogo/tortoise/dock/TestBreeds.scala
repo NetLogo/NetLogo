@@ -29,14 +29,19 @@ class TestBreeds extends DockingSuite {
   }
 
   test("breed shapes") { implicit fixture => import fixture._
-    declare("""| breed [frogs frog]""".stripMargin)
+    declare("""| breed [frogs frog] breed [mice mouse]""".stripMargin)
     testCommand("""set-default-shape turtles "sheep" """)
     testCommand("create-turtles 1")
-    testCommand("""set-default-shape frogs "WOLF" """)
     testCommand("create-frogs 1")
-    testCommand("output-print [ shape ] of turtle 0")
-    testCommand("output-print [ shape ] of turtle 1")
-    testCommand("output-print [ shape ] of frog 0")
+    testCommand("""set-default-shape frogs "WOLF" """)
+    testCommand("create-turtles 1")
+    testCommand("create-frogs 1")
+    testCommand("create-mice 1")
+    testCommand("""set-default-shape turtles "Square" """)
+    testCommand("create-turtles 1")
+    testCommand("create-frogs 1")
+    testCommand("create-mice 1")
+    compare("[ shape ] of turtles")
   }
 
   test("breed hatch") { implicit fixture => import fixture._
@@ -52,6 +57,12 @@ class TestBreeds extends DockingSuite {
     testCommand("ask turtles [ hatch-frogs 3 ]")
     testCommand("output-print count turtles")
     testCommand("output-print count frogs")
+  }
+
+  test("breed sprout") { implicit fixture => import fixture._
+    declare("""| breed [frogs frog]""".stripMargin)
+    testCommand("ask patches [ sprout 1 ]")
+    testCommand("ask patches [ sprout-frogs 1 ]")
   }
 
   test("hatch other variables") { implicit fixture => import fixture._
