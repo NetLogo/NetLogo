@@ -35,4 +35,23 @@ class TestLists extends DockingSuite {
     testCommand("cro 10")
     compare("length [ who ] of turtles")
   }
+
+  test("equality") { implicit fixture => import fixture._
+    declare("""|to-report my-length [l]
+               |  if-else (l != []) [
+               |    report 1 + my-length but-first l
+               |  ]
+               |  [
+               |    report 0
+               |  ]
+               |end""".stripMargin)
+    compare("my-length [1 2 3]")
+    compare("my-length []")
+    compare("[] = []")
+    compare("[] != []")
+    compare("[1 2] = []")
+    compare("[1 2] = [1 2]")
+    compare("[] = [1 2]")
+    compare("sort [3 2] = [2 3]")
+  }
 }
