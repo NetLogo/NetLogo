@@ -165,6 +165,8 @@ class Turtle
   getPatchHere: -> world.getPatchAt(@xcor, @ycor)
   getPatchVariable: (n)    -> @getPatchHere().getPatchVariable(n)
   setPatchVariable: (n, v) -> @getPatchHere().setPatchVariable(n, v)
+  getNeighbors: -> @getPatchHere().getNeighbors()
+  getNeighbors4: -> @getPatchHere().getNeighbors4()
   turtlesHere: ->
     p = @getPatchHere()
     new Agents(t for t in world.turtles().items when t.getPatchHere() == p, Breeds.get("TURTLES"))
@@ -609,10 +611,7 @@ Breeds = {
   setDefaultShape: (agents, shape) ->
     agents.breed._shape = shape.toLowerCase()
 }
-
-class Torus
-  constructor: (@minPxcor, @maxPxcor, @minPycor, @maxPycor) ->
-
+class Topology
   # based on agent.Topology.wrap()
   wrap: (pos, min, max) ->
     if (pos >= max)
@@ -625,6 +624,36 @@ class Torus
         min
     else
       pos
+
+  getNeighbors: (pxcor, pycor) ->
+    new Agents((patch for patch in @_getNeighbors(pxcor, pycor) when patch != false))
+
+  _getNeighbors: (pxcor, pycor) ->
+    if (pxcor == @maxPxcor && pxcor == @minPxcor)
+      if (pycor == @maxPycor && pycor == @minPycor) []
+      else [@getPatchNorth(pxcor, pycor), @getPatchSouth(pxcor, pycor)]
+    else if (pycor == @maxPycor && pycor == @minPycor)
+      [@getPatchEast(pxcor, pycor), @getPatchWest(pxcor, pycor)]
+    else [@getPatchNorth(pxcor, pycor),     @getPatchEast(pxcor, pycor),
+          @getPatchSouth(pxcor, pycor),     @getPatchWest(pxcor, pycor),
+          @getPatchNorthEast(pxcor, pycor), @getPatchSouthEast(pxcor, pycor),
+          @getPatchSouthWest(pxcor, pycor), @getPatchNorthWest(pxcor, pycor)]
+
+  getNeighbors4: (pxcor, pycor) ->
+    new Agents((patch for patch in @_getNeighbors4(pxcor, pycor) when patch != false))
+
+  _getNeighbors4: (pxcor, pycor) ->
+    if (pxcor == @maxPxcor && pxcor == @minPxcor)
+      if (pycor == @maxPycor && pycor == @minPycor) []
+      else [@getPatchNorth(pxcor, pycor), @getPatchSouth(pxcor, pycor)]
+    else if (pycor == @maxPycor && pycor == @minPycor)
+      [@getPatchEast(pxcor, pycor), @getPatchWest(pxcor, pycor)]
+    else [@getPatchNorth(pxcor, pycor),     @getPatchEast(pxcor, pycor),
+          @getPatchSouth(pxcor, pycor),     @getPatchWest(pxcor, pycor)]
+
+class Torus extends Topology
+  constructor: (@minPxcor, @maxPxcor, @minPycor, @maxPycor) ->
+
   wrapX: (pos) ->
     @wrap(pos, @minPxcor - 0.5, @maxPxcor + 0.5)
   wrapY: (pos) ->
@@ -655,32 +684,6 @@ class Torus
          @getPatchEast(pxcor, pycor), @getPatchNorthEast(pxcor, pycor)]
       diffusalSum = (scratch[n.pxcor - @minPxcor][n.pycor - @minPycor] for n in diffusallyOrderedNeighbors).reduce((a, b) -> a + b)
       patch.setPatchVariable(vn, patch.getPatchVariable(vn) * (1.0 - amount) + (diffusalSum / 8) * amount)
-
-  getNeighbors: (pxcor, pycor) ->
-    new Agents(@_getNeighbors(pxcor, pycor))
-
-  _getNeighbors: (pxcor, pycor) ->
-    if (pxcor == @maxPxcor && pxcor == @minPxcor)
-      if (pycor == @maxPycor && pycor == @minPycor) []
-      else [@getPatchNorth(pxcor, pycor), @getPatchSouth(pxcor, pycor)]
-    else if (pycor == @maxPycor && pycor == @minPycor)
-      [@getPatchEast(pxcor, pycor), @getPatchWest(pxcor, pycor)]
-    else [@getPatchNorth(pxcor, pycor),     @getPatchEast(pxcor, pycor),
-          @getPatchSouth(pxcor, pycor),     @getPatchWest(pxcor, pycor),
-          @getPatchNorthEast(pxcor, pycor), @getPatchSouthEast(pxcor, pycor),
-          @getPatchSouthWest(pxcor, pycor), @getPatchNorthWest(pxcor, pycor)]
-
-  getNeighbors4: (pxcor, pycor) ->
-    new Agents(@_getNeighbors4(pxcor, pycor))
-
-  _getNeighbors4: (pxcor, pycor) ->
-    if (pxcor == @maxPxcor && pxcor == @minPxcor)
-      if (pycor == @maxPycor && pycor == @minPycor) []
-      else [@getPatchNorth(pxcor, pycor), @getPatchSouth(pxcor, pycor)]
-    else if (pycor == @maxPycor && pycor == @minPycor)
-      [@getPatchEast(pxcor, pycor), @getPatchWest(pxcor, pycor)]
-    else [@getPatchNorth(pxcor, pycor),     @getPatchEast(pxcor, pycor),
-          @getPatchSouth(pxcor, pycor),     @getPatchWest(pxcor, pycor)]
 
   getPatchNorth: (pxcor, pycor) ->
     if (pycor == @maxPycor)
@@ -751,21 +754,8 @@ class Torus
     else
       world.getPatchAt(pxcor + 1, pycor + 1)
 
-class VertCylinder
+class VertCylinder extends Topology
   constructor: (@minPxcor, @maxPxcor, @minPycor, @maxPycor) ->
-
-  # based on agent.Topology.wrap()
-  wrap: (pos, min, max) ->
-    if (pos >= max)
-      (min + ((pos - max) % (max - min)))
-    else if (pos < min)
-      result = max - ((min - pos) % (max - min))
-      if (result < max)
-        result
-      else
-        min
-    else
-      pos
 
   wrapX: (pos) ->
     @wrap(pos, @minPxcor - 0.5, @maxPxcor + 0.5)
@@ -774,21 +764,8 @@ class VertCylinder
       throw new Error("Cannot move turtle beyond the world's edge.")
     else pos
 
-class Box
+class Box extends Topology
   constructor: (@minPxcor, @maxPxcor, @minPycor, @maxPycor) ->
-
-  # based on agent.Topology.wrap()
-  wrap: (pos, min, max) ->
-    if (pos >= max)
-      (min + ((pos - max) % (max - min)))
-    else if (pos < min)
-      result = max - ((min - pos) % (max - min))
-      if (result < max)
-        result
-      else
-        min
-    else
-      pos
 
   shortestX: (x1, x2) -> StrictMath.abs(x1 - x2)
   shortestY: (y1, y2) -> StrictMath.abs(y1 - y2)
@@ -800,6 +777,17 @@ class Box
     if(pos >= @maxPycor + 0.5 || pos <= @minPycor - 0.5)
       throw new Error("Cannot move turtle beyond the world's edge.")
     else pos
+
+  getPatchNorth: (pxcor, pycor) -> (pycor != @maxPycor) && world.getPatchAt(pxcor, pycor + 1)
+  getPatchSouth: (pxcor, pycor) -> (pycor != @minPycor) && world.getPatchAt(pxcor, pycor - 1)
+  getPatchEast: (pxcor, pycor) -> (pxcor != @maxPxcor) && world.getPatchAt(pxcor + 1, pycor)
+  getPatchWest: (pxcor, pycor) -> (pxcor != @minPxcor) && world.getPatchAt(pxcor - 1, pycor)
+
+  getPatchNorthWest: (pxcor, pycor) -> (pycor != @maxPycor) && (pxcor != @minPxcor) && world.getPatchAt(pxcor - 1, pycor + 1)
+  getPatchSouthWest: (pxcor, pycor) -> (pycor != @minPycor) && (pxcor != @minPxcor) && world.getPatchAt(pxcor - 1, pycor - 1)
+  getPatchSouthEast: (pxcor, pycor) -> (pycor != @minPycor) && (pxcor != @maxPxcor) && world.getPatchAt(pxcor + 1, pycor - 1)
+  getPatchNorthEast: (pxcor, pycor) -> (pycor != @maxPycor) && (pxcor != @maxPxcor) && world.getPatchAt(pxcor + 1, pycor + 1)
+
   diffuse: (vn, amount) ->
     yy = world.height()
     xx = world.width()
