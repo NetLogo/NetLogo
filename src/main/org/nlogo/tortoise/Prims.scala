@@ -15,8 +15,6 @@ object Prims {
         case _: prim.etc._mult           => "*"
         case _: prim.etc._div            => "/"
         case _: prim.etc._mod            => "%"
-        case _: prim._equal              => "==="
-        case _: prim._notequal           => "!=="
         case _: prim._lessthan           => "<"
         case _: prim._greaterthan        => ">"
         case _: prim.etc._greaterorequal => ">="
@@ -32,6 +30,8 @@ object Prims {
   object NormalReporter {
     def unapply(r: nvm.Reporter): Option[String] =
       PartialFunction.condOpt(r) {
+        case _: prim._equal           => "Prims.equality"
+        case _: prim._notequal        => "!Prims.equality"
         case _: prim.etc._self        => "AgentSet.self"
         case _: prim.etc._patch       => "world.getPatchAt"
         case _: prim.etc._turtles     => "world.turtles"

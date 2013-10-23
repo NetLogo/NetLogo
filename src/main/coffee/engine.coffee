@@ -484,6 +484,15 @@ Prims =
   randomxcor: -> world.minPxcor - 0.5 + Random.nextDouble() * (world.maxPxcor - world.minPxcor + 1)
   randomycor: -> world.minPycor - 0.5 + Random.nextDouble() * (world.maxPycor - world.minPycor + 1)
   shadeOf: (c1, c2) -> Math.floor(c1 / 10) == Math.floor(c2 / 10)
+  equality: (a, b) ->
+    if(a == undefined || b == undefined)
+      throw new Error("Checking equality on undefined is an invalid condition")
+    if(a == b)
+      true
+    else if (typeIsArray(a) && typeIsArray(b))
+      a.length == b.length && a.every (elem, i) -> elem is b[i]
+    else
+      false
   scaleColor: (color, number, min, max) ->
     color = Math.floor(color / 10) * 10
     perc = 0.0

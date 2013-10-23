@@ -38,8 +38,8 @@ class CompilerTests extends FunSuite {
 
   test("equality"){
     import Compiler.{compileReporter => compile}
-    assertResult("(2 === 2)")(compile("2 = 2"))
-    assertResult("""("hello" === "hello")""")(compile(""""hello" = "hello""""))
+    assertResult("Prims.equality(2, 2)")(compile("2 = 2"))
+    assertResult("""Prims.equality("hello", "hello")""")(compile(""""hello" = "hello""""))
   }
 
   test("reporters: word") {
@@ -77,7 +77,7 @@ class CompilerTests extends FunSuite {
     import Compiler.{compileCommands => compile}
     val input = "ask patches with [pxcor = 1] [output-print pycor]"
     val expectedAgentFilter =
-      "AgentSet.agentFilter(world.patches(), function(){ return (AgentSet.getPatchVariable(0) === 1) })"
+      "AgentSet.agentFilter(world.patches(), function(){ return Prims.equality(AgentSet.getPatchVariable(0), 1) })"
     val expected = s"AgentSet.ask($expectedAgentFilter, true, function(){ Prims.outputprint(AgentSet.getPatchVariable(1)) });"
     assertResult(expected)(compile(input))
   }
