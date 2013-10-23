@@ -82,9 +82,9 @@ object Depend {
       "render" -> List("shape"),
       "review" -> List("mirror", "window"),
       "shape" -> List("api"),
-      "tortoise" -> List("compile", "prim/etc", "mirror", "headless/lang", "tortoise/json"),
-      "tortoise/dock" -> List("tortoise"),
-      "tortoise/json" -> List("shape", "mirror", "api", "headless/lang"),
+      "tortoise" -> List("compile", "workspace", "prim/etc", "tortoise/json"),
+      "tortoise/dock" -> List("tortoise", "headless/lang"),
+      "tortoise/json" -> List("shape", "mirror", "api"),
       "util" -> Nil,
       "workspace" -> List("nvm", "plot", "drawing"))
     case class Package(val dir: String, var depends: Set[Package]) {
@@ -142,7 +142,7 @@ check [ASM-free-zone] independentOf org.objectweb.*
 [XML-free-zone] = org.nlogo.* excluding [lab]
 check [XML-free-zone] independentOf [xml]
 
-[json-free-zone] = org.nlogo.* excluding [tortoise.json]
+[json-free-zone] = org.nlogo.* excluding [tortoise.json] [tortoise.dock]
 check [json-free-zone] directlyIndependentOf [json]
 
 [parser-combinator-free-zone] = org.nlogo.* excluding org.nlogo.parse.StructureCombinators* org.nlogo.parse.SeqReader* org.nlogo.parse.Cleanup

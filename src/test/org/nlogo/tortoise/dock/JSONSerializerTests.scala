@@ -1,4 +1,4 @@
-package org.nlogo.tortoise.json
+package org.nlogo.tortoise.dock
 
 import org.json4s.JsonDSL.string2jvalue
 import org.json4s.native.JsonMethods.{ compact, pretty, parse, render => jsRender }
@@ -9,6 +9,7 @@ import org.scalatest.FunSuite
 import org.scalatest.Matchers
 import org.nlogo.headless._, lang._
 import org.nlogo.shape.VectorShape
+import org.nlogo.tortoise.json.JSONSerializer
 
 import collection.JavaConverters._
 

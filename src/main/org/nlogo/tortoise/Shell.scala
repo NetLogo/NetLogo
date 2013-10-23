@@ -2,13 +2,9 @@
 
 package org.nlogo.tortoise
 
-import java.io.{ BufferedReader, InputStreamReader }
-import
-  org.nlogo.{ api, headless },
-  headless.Shell.{ input, isQuit },
-  headless.Main.setHeadlessProperty
+import org.nlogo.{ api, workspace }
 
-object Shell {
+object Shell extends workspace.Shell {
 
   val src = ""
   val dim = api.WorldDimensions.square(16)
@@ -16,7 +12,7 @@ object Shell {
   val rhino = new Rhino
 
   def main(argv: Array[String]) {
-    setHeadlessProperty()
+    workspace.AbstractWorkspace.setHeadlessProperty()
     val (js, program, procedures) =
       Compiler.compileProcedures(src, dimensions = dim)
     rhino.eval(js)

@@ -2,7 +2,7 @@
 
 package org.nlogo.headless
 
-import org.nlogo.workspace.{ ModelsLibrary, Checksummer }
+import org.nlogo.workspace.{ AbstractWorkspace, ModelsLibrary, Checksummer }
 
 object ChecksumsAndPreviews {
 
@@ -12,7 +12,7 @@ object ChecksumsAndPreviews {
          "Team", "Termites", "VirusNet", "Wealth", "Wolf", "ImportWorld")
 
   def main(argv: Array[String]) {
-    Main.setHeadlessProperty()
+    AbstractWorkspace.setHeadlessProperty()
     def paths(fn: String => Boolean, includeBenchmarks: Boolean) = {
       val benchmarks = allBenchmarks.map("models/test/benchmarks/" + _ + " Benchmark.nlogo")
       val library =
