@@ -40,7 +40,8 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
       val code = map(ModelSection.Code).mkString("", "\n", "\n")
       ws.compiler.compileProgram(
         code, Program.empty.copy(
-          interfaceGlobals = interfaceGlobals), ws.getExtensionManager)
+          interfaceGlobals = interfaceGlobals),
+        ws.getExtensionManager, ws.flags)
     }
     ws.procedures = results.proceduresMap
     ws.clearRunCache()
