@@ -39,7 +39,7 @@ object JSONSerializer {
 
     def deaths: Seq[(Kind, JField)] =
       for {
-        Death(AgentKey(kind, id)) <- update.deaths
+        Death(AgentKey(kind, id)) <- update.deaths if kind != Patch
       } yield kind -> JField(id.toString, JObject(JField("WHO", -1)))
 
     val fieldsByKind: Map[Kind, Seq[JField]] =
