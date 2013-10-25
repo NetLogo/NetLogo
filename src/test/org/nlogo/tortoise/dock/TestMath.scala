@@ -46,4 +46,14 @@ class TestMath extends DockingSuite {
     testCommand("ask patches [ output-print compute ]")
   }
 
+  test("int") { implicit fixture => import fixture._
+    declare("globals [g]")
+    testCommand("set g 5.3")
+    compare("int g")
+    compare("int (g / 2)")
+    testCommand("set g -5.3")
+    compare("int g")
+    compare("int (g / 2)")
+  }
+
 }
