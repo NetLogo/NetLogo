@@ -149,6 +149,10 @@ class Turtle
     @ycor = y
     updated(this, "xcor", "ycor")
     return
+  hideTurtle: (flag) ->
+    @hidden = flag
+    updated(this, "hidden")
+    return
   isBreed: (breedName) ->
     @breed.name == breedName
   die: ->

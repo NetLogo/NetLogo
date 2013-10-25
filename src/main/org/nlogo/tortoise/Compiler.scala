@@ -113,6 +113,8 @@ object Compiler {
       case _: prim._createorderedturtles => Prims.generateCreateTurtles(s, ordered = true)
       case _: prim._sprout               => Prims.generateSprout(s)
       case h: prim._hatch                => Prims.generateHatch(s, h.breedName)
+      case _: prim.etc._hideturtle       => "AgentSet.self().hideTurtle(true);"
+      case _: prim.etc._showturtle       => "AgentSet.self().hideTurtle(false);"
       case Prims.NormalCommand(op)   => s"$op($args)"
       case r: prim._repeat           =>
         s"for(var i = 0; i < ${arg(0)}; i++) { ${genCommandBlock(s.args(1))} }"
