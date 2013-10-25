@@ -425,6 +425,8 @@ class World
     @unbreededLinksAreDirected = true
     Updates.push({ world: { 0: { unbreededLinksAreDirected: true } } })
     @createlink(new Link(true, from, to))
+  createUndirectedLinks: (source, others) ->
+    @createlink(new Link(false, source, t)) for t in others.items
   getLink: (fromId, toId) ->
     filteredLinks = (@links().items.filter (l) -> (l.end2.id == toId && l.end1.id == fromId))
     if filteredLinks.length == 0 then Nobody else filteredLinks[0]
@@ -530,6 +532,13 @@ AgentSet =
   getPatchVariable:  (n)    -> @_self.getPatchVariable(n)
   setPatchVariable:  (n, v) -> @_self.setPatchVariable(n, v)
   createLinkTo: (other) -> world.createDirectedLink(@_self, other)
+  createLinksWith: (others) -> world.createUndirectedLinks(@_self, @shuffle(others))
+  shuffle: (agents) ->
+    result = []
+    iter = new Shufflerator(agents.items)
+    while (iter.hasNext())
+      result.push(iter.next())
+    new Agents(result, agents.breed)
 
 class Agents
   constructor: (@items, @breed) ->

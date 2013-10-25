@@ -36,6 +36,7 @@ object Prims {
         case _: prim.etc._myself      => "AgentSet.myself"
         case _: prim.etc._patch       => "world.getPatchAt"
         case _: prim.etc._turtles     => "world.turtles"
+        case _: prim.etc._links       => "world.links"
         case _: prim._patches         => "world.patches"
         case _: prim.etc._ticks       => "world.ticks"
         case _: prim.etc._timer       => "world.timer"
@@ -113,6 +114,7 @@ object Prims {
         case _: prim.etc._setcurrentplotpen => "noop"
         case _: prim.etc._plot             => "noop"
         case _: prim.etc._createlinkto     => "AgentSet.createLinkTo"
+        case _: prim.etc._createlinkswith  => "AgentSet.createLinksWith"
       }
   }
 

@@ -20,17 +20,18 @@ class TestLinks extends DockingSuite {
     compare("[shape] of link 0 1")
   }
 
-  /*
   test("Links2") { implicit fixture => import fixture._
-    testCommand("crt 2 [ create-links-with turtles with [ who > [who] of myself ] ]")
-    testCommand("ask link 0 1 [ set color 140 ]")
-    compare("[color] of link 0 1")
-    testCommand("ask link 0 1 [ set color -10 ]")
-    compare("[color] of link 0 1")
-    testCommand("ask link 0 1 [ set color 150 ]")
-    compare("[color] of link 0 1")
+    testCommand("crt 4 [ create-links-with turtles with [ who > [who] of myself ] ]")
+    //testCommand("ask links [ output-print self ]")
+    //testCommand("ask link 0 1 [ set color 140 ]")
+    //testCommand("output-print [color] of link 0 1")
+    //testCommand("ask link 0 1 [ set color -10 ]")
+    //compare("[color] of link 0 1")
+    //testCommand("ask link 0 1 [ set color 150 ]")
+    //compare("[color] of link 0 1")
   }
 
+  /*
   test("LinkWithBadEndPointsReturnsNobody") { implicit fixture => import fixture._
     testCommand("crt 2")
     testCommand("ask turtle 0 [ create-link-with turtle 1 ]")
