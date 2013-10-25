@@ -69,6 +69,7 @@ object Prims {
         case _: prim._patchat         => "AgentSet.self().patchAt"
         case _: prim.etc._patchahead  => "AgentSet.self().patchAhead"
         case _: prim.etc._patchrightandahead  => "AgentSet.self().patchRightAndAhead"
+        case _: prim.etc._patchleftandahead   => "AgentSet.self().patchLeftAndAhead"
         case _: prim.etc._canmove     => "AgentSet.self().canMove"
         case _: prim.etc._shadeof     => "Prims.shadeOf"
         case _: prim.etc._scalecolor  => "Prims.scaleColor"

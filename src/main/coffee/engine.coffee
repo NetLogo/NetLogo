@@ -115,6 +115,8 @@ class Turtle
       return world.getPatchAt(newX, newY)
     catch error
       if error instanceof TopologyInterrupt then Nobody else throw error
+  patchLeftAndAhead: (angle, amount) ->
+    @patchRightAndAhead(-angle, amount)
   patchAhead: (amount) ->
     @patchRightAndAhead(0, amount)
   fd: (amount) ->
