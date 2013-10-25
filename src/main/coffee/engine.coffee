@@ -170,9 +170,7 @@ class Turtle
   setPatchVariable: (n, v) -> @getPatchHere().setPatchVariable(n, v)
   getNeighbors: -> @getPatchHere().getNeighbors()
   getNeighbors4: -> @getPatchHere().getNeighbors4()
-  turtlesHere: ->
-    p = @getPatchHere()
-    new Agents(t for t in world.turtles().items when t.getPatchHere() == p, Breeds.get("TURTLES"))
+  turtlesHere: -> @getPatchHere().turtlesHere()
   breedHere: (breedName) ->
     p = @getPatchHere()
     new Agents(t for t in world.turtlesOfBreed(breedName).items when t.getPatchHere() == p, Breeds.get(breedName))
@@ -217,6 +215,7 @@ class Patch
       @distancexy(agent.xcor, agent.ycor)
     else if(agent instanceof Patch)
       @distancexy(agent.pxcor, agent.pycor)
+  turtlesHere: -> new Agents(t for t in world.turtles().items when t.getPatchHere() == this, Breeds.get("TURTLES"))
   getNeighbors: -> world.getNeighbors(@pxcor, @pycor) # world.getTopology().getNeighbors(this)
   getNeighbors4: -> world.getNeighbors4(@pxcor, @pycor) # world.getTopology().getNeighbors(this)
   sprout: (n, breedName) ->
@@ -380,15 +379,20 @@ AgentSet =
   count: (x) -> x.items.length
   any: (x) -> x.items.length > 0
   _self: 0
+  _myself: 0
   self: -> @_self
+  myself: -> if @_myself != 0 then @_myself else throw new NetLogoException("There is no agent for MYSELF to refer to.")
   askAgent: (a, f) ->
+    oldMyself = @_myself
     oldAgent = @_self
+    @_myself = @_self
     @_self = a
     try
       res = f()
     catch error
       throw error if!(error instanceof DeathInterrupt)
     @_self = oldAgent
+    @_myself = oldMyself
     res
   ask: (agentsOrAgent, shuffle, f) ->
     if(agentsOrAgent.items)

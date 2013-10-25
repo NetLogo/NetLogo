@@ -323,4 +323,18 @@ class TestAgents extends DockingSuite {
     compare("count p")
   }
 
+  test("myself") { implicit fixture => import fixture._
+    declare("""|to f1 [ ]
+               |  set heading [ pxcor ] of myself
+               |end
+               |to f2 [ ] f1 end
+               |to f3 [ ] ask one-of turtles-here [ f2 ] end
+               """.stripMargin)
+    testCommand("ask patches [ sprout 2 [ set heading [ pycor ] of myself ] ]")
+    testCommand("ask turtles [ output-print myself ]")
+    testCommand("ask patches [ ask turtles-here [ f1 ] ]")
+    testCommand("ask turtles [ ask patch-here [ ask turtles-here [ hatch 3 [ set heading [ pxcor ] of myself ] ] output-print myself ] ]")
+    testCommand("ask patches [ f3 ]")
+  }
+
 }
