@@ -1,5 +1,6 @@
 turtleBuiltins = ["id", "color", "heading", "xcor", "ycor", "shape", "label", "labelcolor", "breed", "hidden", "size", "pensize", "penmode"]
 patchBuiltins = ["pxcor", "pycor", "pcolor", "plabel", "plabelcolor"]
+linkBuiltins = ["end1", "end2", "lcolor", "llabel", "llabelcolor", "lhidden", "lbreed", "thickness", "lshape", "tiemode"]
 
 class NetLogoException
   constructor: (@message) ->
@@ -239,12 +240,36 @@ class Patch
     breed = if("" == breedName) then Breeds.get("TURTLES") else Breeds.get(breedName)
     new Agents(world.createturtle(new Turtle(5 + 10 * Random.nextInt(14), Random.nextInt(360), @pxcor, @pycor, breed)) for num in [0...n])
 
+class Link
+  color: 5
+  label: ""
+  labelcolor: 9.9
+  hidden: false
+  shape: "default"
+  constructor: (@directed, @end1, @end2) ->
+  getLinkVariable: (n) ->
+    println("HAHAHAHAH: " + n)
+    if (n < linkBuiltins.length)
+      this[linkBuiltins[n]]
+    else
+      @vars[n - linkBuiltins.length]
+  setLinkVariable: (n, v) ->
+    if (n < linkBuiltins.length)
+      this[linkBuiltins[n]] = v
+      updated(this, linkBuiltins[n])
+    else
+      @vars[n - linkBuiltins.length] = v
+  getTurtleVariable: (n) -> this[turtleBuiltins[n]]
+  setTurtleVariable: (n, v) -> this[turtleBuiltins[n]] = v
+  toString: -> "(link " + @end1.id + " " + @end2.id + ")"
+
 class World
   # any variables used in the constructor should come
   # before the constructor, else they get overwritten after it.
   _nextId = 0
   _turtles = []
   _patches = []
+  _links = []
   _topology = null
   _ticks = -1
   _timer = Date.now()
@@ -287,6 +312,7 @@ class World
     for p in _patches
       updated(p, "pxcor", "pycor", "pcolor", "plabel", "plabelcolor")
   topology: -> _topology
+  links: () -> new Agents(_links)
   turtles: () -> new Agents(_turtles, Breeds.get("TURTLES"))
   turtlesOfBreed: (breedName) ->
     breed = Breeds.get(breedName)
@@ -385,12 +411,23 @@ class World
     updated(t, turtleBuiltins...)
     _turtles.push(t)
     t
+  createlink: (l) ->
+    updated(l, linkBuiltins...)
+    _links.push(l)
+    l
   createorderedturtles: (n, breedName) ->
     new Agents(@createturtle(new Turtle((10 * num + 5) % 140, (360 * num) / n, 0, 0, Breeds.get(breedName))) for num in [0...n])
   createturtles: (n, breedName) ->
     new Agents(@createturtle(new Turtle(5 + 10 * Random.nextInt(14), Random.nextInt(360), 0, 0, Breeds.get(breedName))) for num in [0...n])
   getNeighbors: (pxcor, pycor) -> @topology().getNeighbors(pxcor, pycor)
   getNeighbors4: (pxcor, pycor) -> @topology().getNeighbors4(pxcor, pycor)
+  createDirectedLink: (from, to) ->
+    @unbreededLinksAreDirected = true
+    Updates.push({ world: { 0: { unbreededLinksAreDirected: true } } })
+    @createlink(new Link(true, from, to))
+  getLink: (fromId, toId) ->
+    filteredLinks = (@links().items.filter (l) -> (l.end2.id == toId && l.end1.id == fromId))
+    if filteredLinks.length == 0 then Nobody else filteredLinks[0]
 
 AgentSet =
   count: (x) -> x.items.length
@@ -485,11 +522,14 @@ AgentSet =
   die: -> @_self.die()
   getTurtleVariable: (n)    -> @_self.getTurtleVariable(n)
   setTurtleVariable: (n, v) -> @_self.setTurtleVariable(n, v)
+  getLinkVariable: (n)    -> @_self.getLinkVariable(n)
+  setLinkVariable: (n, v) -> @_self.setLinkVariable(n, v)
   getBreedVariable: (n)    -> @_self.getBreedVariable(n)
   setBreedVariable: (n, v) -> @_self.setBreedVariable(n, v)
   setBreed: (agentSet) -> @_self.setBreed(agentSet.breed)
   getPatchVariable:  (n)    -> @_self.getPatchVariable(n)
   setPatchVariable:  (n, v) -> @_self.setPatchVariable(n, v)
+  createLinkTo: (other) -> world.createDirectedLink(@_self, other)
 
 class Agents
   constructor: (@items, @breed) ->

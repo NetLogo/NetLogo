@@ -126,6 +126,8 @@ object Compiler {
             s"Globals.setGlobal(${p.vn},${arg(1)})"
           case bv: prim._breedvariable =>
             s"""AgentSet.setBreedVariable("${bv.name}",${arg(1)})"""
+          case p: prim._linkvariable =>
+            s"AgentSet.setLinkVariable(${p.vn},${arg(1)})"
           case p: prim._turtlevariable =>
             s"AgentSet.setTurtleVariable(${p.vn},${arg(1)})"
           case p: prim._turtleorlinkvariable if p.varName == "BREED" =>
@@ -170,6 +172,7 @@ object Compiler {
       case _: prim._unaryminus              => s"(- ${arg(0)})"
       case bv: prim._breedvariable          => s"""AgentSet.getBreedVariable("${bv.name}")"""
       case tv: prim._turtlevariable         => s"AgentSet.getTurtleVariable(${tv.vn})"
+      case tv: prim._linkvariable           => s"AgentSet.getLinkVariable(${tv.vn})"
       case tv: prim._turtleorlinkvariable   =>
         val vn = api.AgentVariables.getImplicitTurtleVariables.indexOf(tv.varName)
         s"AgentSet.getTurtleVariable($vn)"

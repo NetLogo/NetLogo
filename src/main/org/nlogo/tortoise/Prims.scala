@@ -83,6 +83,7 @@ object Prims {
         case _: prim.etc._int         => "Prims._int"
         case _: prim.etc._round       => "StrictMath.round"
         case _: prim.etc._turtle      => "world.getTurtle"
+        case _: prim.etc._link        => "world.getLink"
       }
   }
   // scalastyle:on cyclomatic.complexity
@@ -111,6 +112,7 @@ object Prims {
         case _: prim.etc._setcurrentplot   => "noop"
         case _: prim.etc._setcurrentplotpen => "noop"
         case _: prim.etc._plot             => "noop"
+        case _: prim.etc._createlinkto     => "AgentSet.createLinkTo"
       }
   }
 
