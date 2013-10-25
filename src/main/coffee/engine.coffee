@@ -94,6 +94,15 @@ class Turtle
       @distancexy(agent.xcor, agent.ycor)
     else if(agent instanceof Patch)
       @distancexy(agent.pxcor, agent.pycor)
+  patchAt: (dx, dy) ->
+    try
+      newX = world.topology().wrapX(@xcor + dx,
+          world.minPxcor - 0.5, world.maxPxcor + 0.5)
+      newY = world.topology().wrapY(@ycor + dy,
+          world.minPycor - 0.5, world.maxPycor + 0.5)
+      return world.getPatchAt(newX, newY)
+    catch error
+      if error instanceof TopologyInterrupt then Nobody else throw error
   patchRightAndAhead: (angle, amount) ->
     heading = @heading + angle
     if (heading < 0 || heading >= 360)
