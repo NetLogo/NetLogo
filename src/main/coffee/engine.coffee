@@ -94,6 +94,8 @@ class Turtle
       @distancexy(agent.xcor, agent.ycor)
     else if(agent instanceof Patch)
       @distancexy(agent.pxcor, agent.pycor)
+  inRadius: (agents, radius) ->
+    new Agents(a for a in agents.items when @distance(a) <= radius)
   patchAt: (dx, dy) ->
     try
       newX = world.topology().wrapX(@xcor + dx,

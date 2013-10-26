@@ -66,6 +66,7 @@ object Prims {
         case _: prim._not             => "!"
         case _: prim.etc._distance    => "AgentSet.self().distance"
         case _: prim.etc._distancexy  => "AgentSet.self().distancexy"
+        case _: prim.etc._inradius    => "AgentSet.self().inRadius"
         case _: prim._patchat         => "AgentSet.self().patchAt"
         case _: prim.etc._patchahead  => "AgentSet.self().patchAhead"
         case _: prim.etc._patchrightandahead  => "AgentSet.self().patchRightAndAhead"

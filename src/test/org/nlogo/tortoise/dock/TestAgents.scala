@@ -351,4 +351,10 @@ class TestAgents extends DockingSuite {
     testCommand("ask turtles [ output-print patch-at random-float 1000 random-float 1000 ]")
   }
 
+  test("in-radius") { implicit fixture => import fixture._
+    declare("", api.WorldDimensions.square(5))
+    testCommand("crt 50 [ setxy random-xcor random-ycor ]")
+    testCommand("ask turtles [ let s count turtles in-radius 2 ]")
+  }
+
 }
