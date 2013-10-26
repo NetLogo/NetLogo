@@ -337,4 +337,18 @@ class TestAgents extends DockingSuite {
     testCommand("ask patches [ f3 ]")
   }
 
+  test("hide and show") { implicit fixture => import fixture._
+    testCommand("crt 5")
+    testCommand("ask turtles [ hide-turtle ]")
+    testCommand("ask turtles [ hide-turtle ]")
+    testCommand("ask turtles [ show-turtle ]")
+    testCommand("ask turtles [ show-turtle ]")
+  }
+
+  test("patch-at") { implicit fixture => import fixture._
+    testCommand("crt 100 [ setxy random-xcor random-ycor ]")
+    // patch-at takes offsets, but we're giving it big numbers, to test wrapping
+    testCommand("ask turtles [ output-print patch-at random-float 1000 random-float 1000 ]")
+  }
+
 }
