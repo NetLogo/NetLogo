@@ -61,6 +61,7 @@ object Prims {
         case _: prim.etc._randomxcor  => "Prims.randomxcor"
         case _: prim.etc._randomycor  => "Prims.randomycor"
         case _: prim._oneof           => "AgentSet.oneOf"
+        case _: prim.etc._nof         => "AgentSet.nOf"
         case _: prim.etc._removeduplicates => "Prims.removeDuplicates"
         case _: prim.etc._patchset    => "Prims.patchset"
         case _: prim._not             => "!"

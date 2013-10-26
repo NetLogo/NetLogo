@@ -357,4 +357,16 @@ class TestAgents extends DockingSuite {
     testCommand("ask turtles [ let s count turtles in-radius 2 ]")
   }
 
+  test("n-of patches") { implicit fixture => import fixture._
+    declare("", api.WorldDimensions.square(5))
+    testCommand("ask n-of 15 patches [ output-print (list pxcor pycor) ]")
+  }
+
+  test("n-of turtles") { implicit fixture => import fixture._
+    testCommand("crt 40")
+    testCommand("ask n-of 20 turtles [ die ]")
+    testCommand("ask n-of 10 turtles [ die ]")
+    testCommand("ask n-of 5 turtles [ die ]")
+  }
+
 }
