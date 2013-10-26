@@ -331,8 +331,8 @@ class App extends
   var labManager:LabManagerInterface = null
   private val listenerManager = new NetLogoListenerManager
   lazy val modelingCommons = pico.getComponent(classOf[ModelingCommonsInterface])
-  private val ImportWorldURLProp = "netlogo.world_state_url"
-  private val ImportRawWorldURLProp = "netlogo.raw_world_state_url"
+  private val ImportWorldURLProp    = (if (isWebStart) "jnlp." else "") + "netlogo.world_state_url"
+  private val ImportRawWorldURLProp = (if (isWebStart) "jnlp." else "") + "netlogo.raw_world_state_url"
 
   /**
    * Quits NetLogo by exiting the JVM.  Asks user for confirmation first
@@ -548,7 +548,7 @@ class App extends
     if(new java.io.File(properties).exists) {
       val username = {
         if (isWebStart)
-          System.getProperty("netlogo.user_id", "<redacted>")
+          System.getProperty("jnlp.netlogo.user_id", "<redacted>")
         else
           JOptionPane.showInputDialog(null, "Enter your name:", "", JOptionPane.QUESTION_MESSAGE, null, null, "").asInstanceOf[String]
       }
