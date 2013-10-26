@@ -446,6 +446,8 @@ AgentSet =
 
 class Agents
   constructor: (@items, @breed) ->
+  toString: ->
+    "(" + @items.length + " " + @breed.name + ")"
 
 class Iterator
   constructor: (@agents) ->
