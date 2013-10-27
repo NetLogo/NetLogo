@@ -94,6 +94,17 @@ class Turtle
       @distancexy(agent.xcor, agent.ycor)
     else if(agent instanceof Patch)
       @distancexy(agent.pxcor, agent.pycor)
+  inRadius: (agents, radius) ->
+    new Agents(a for a in agents.items when @distance(a) <= radius)
+  patchAt: (dx, dy) ->
+    try
+      newX = world.topology().wrapX(@xcor + dx,
+          world.minPxcor - 0.5, world.maxPxcor + 0.5)
+      newY = world.topology().wrapY(@ycor + dy,
+          world.minPycor - 0.5, world.maxPycor + 0.5)
+      return world.getPatchAt(newX, newY)
+    catch error
+      if error instanceof TopologyInterrupt then Nobody else throw error
   patchRightAndAhead: (angle, amount) ->
     heading = @heading + angle
     if (heading < 0 || heading >= 360)
@@ -106,6 +117,8 @@ class Turtle
       return world.getPatchAt(newX, newY)
     catch error
       if error instanceof TopologyInterrupt then Nobody else throw error
+  patchLeftAndAhead: (angle, amount) ->
+    @patchRightAndAhead(-angle, amount)
   patchAhead: (amount) ->
     @patchRightAndAhead(0, amount)
   fd: (amount) ->
@@ -139,6 +152,10 @@ class Turtle
     @xcor = x
     @ycor = y
     updated(this, "xcor", "ycor")
+    return
+  hideTurtle: (flag) ->
+    @hidden = flag
+    updated(this, "hidden")
     return
   isBreed: (breedName) ->
     @breed.name == breedName
@@ -431,6 +448,36 @@ AgentSet =
     else
       l = agentsOrList
     if l.length == 0 then Nobody else l[Random.nextInt(l.length)]
+  nOf: (resultSize, agentsOrList) ->
+    items = agentsOrList.items
+    if(!items)
+      throw new Error("n-of not implemented on lists yet")
+    new Agents(
+      switch resultSize
+        when 0
+          []
+        when 1
+          [items[Random.nextInt(items.length)]]
+        when 2
+          index1 = Random.nextInt(items.length)
+          index2 = Random.nextInt(items.length - 1)
+          [index1, index2] =
+            if index2 >= index1
+              [index1, index2 + 1]
+            else
+              [index2, index1]
+          [items[index1], items[index2]]
+        else
+          i = 0
+          j = 0
+          result = []
+          while j < resultSize
+            if Random.nextInt(items.length - i) < resultSize - j
+              result.push(items[i])
+              j += 1
+            i += 1
+          result
+    )
   # I'm putting some things in Agents, and some in Prims
   # I did that on purpose to show how arbitrary/confusing this seems.
   # May we should put *everything* in Prims, and Agents can be private.
@@ -446,6 +493,8 @@ AgentSet =
 
 class Agents
   constructor: (@items, @breed) ->
+  toString: ->
+    "(" + @items.length + " " + @breed.name + ")"
 
 class Iterator
   constructor: (@agents) ->

@@ -337,4 +337,36 @@ class TestAgents extends DockingSuite {
     testCommand("ask patches [ f3 ]")
   }
 
+  test("hide and show") { implicit fixture => import fixture._
+    testCommand("crt 5")
+    testCommand("ask turtles [ hide-turtle ]")
+    testCommand("ask turtles [ hide-turtle ]")
+    testCommand("ask turtles [ show-turtle ]")
+    testCommand("ask turtles [ show-turtle ]")
+  }
+
+  test("patch-at") { implicit fixture => import fixture._
+    testCommand("crt 100 [ setxy random-xcor random-ycor ]")
+    // patch-at takes offsets, but we're giving it big numbers, to test wrapping
+    testCommand("ask turtles [ output-print patch-at random-float 1000 random-float 1000 ]")
+  }
+
+  test("in-radius") { implicit fixture => import fixture._
+    declare("", api.WorldDimensions.square(5))
+    testCommand("crt 50 [ setxy random-xcor random-ycor ]")
+    testCommand("ask turtles [ let s count turtles in-radius 2 ]")
+  }
+
+  test("n-of patches") { implicit fixture => import fixture._
+    declare("", api.WorldDimensions.square(5))
+    testCommand("ask n-of 15 patches [ output-print (list pxcor pycor) ]")
+  }
+
+  test("n-of turtles") { implicit fixture => import fixture._
+    testCommand("crt 40")
+    testCommand("ask n-of 20 turtles [ die ]")
+    testCommand("ask n-of 10 turtles [ die ]")
+    testCommand("ask n-of 5 turtles [ die ]")
+  }
+
 }
