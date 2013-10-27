@@ -135,6 +135,8 @@ object Compiler {
             s"AgentSet.setTurtleVariable($vn,${arg(1)})"
           case p: prim._patchvariable =>
             s"AgentSet.setPatchVariable(${p.vn},${arg(1)})"
+          case p: prim._procedurevariable =>
+            s"${ident(p.name)} = ${arg(1)};"
           case x =>
             throw new IllegalArgumentException(
               "unknown settable: " + x.getClass.getSimpleName)
