@@ -48,8 +48,14 @@ updated = (obj, vars...) ->
       change["PEN-MODE"] = obj[v]
     else if (v == "hidden")
       change["HIDDEN?"] = obj[v]
-    else if (v == "id")
+    else if (v == "tiemode")
+      change["TIE-MODE"] = obj[v]
+    else if (v == "id" and !(obj instanceof Link))
       change["WHO"] = obj[v]
+    else if (v == "end1")
+      change["END1"] = obj[v].id
+    else if (v == "end2")
+      change["END2"] = obj[v].id
     else
       change[v.toUpperCase()] = obj[v]
   oneUpdate = {}
@@ -57,10 +63,16 @@ updated = (obj, vars...) ->
   update = {}
   if (obj instanceof Turtle)
     update.turtles = oneUpdate
+    update.links = {}
     update.patches = {}
   else if(obj instanceof Patch)
     update.turtles = {}
+    update.links = {}
     update.patches = oneUpdate
+  else if(obj instanceof Link)
+    update.turtles = {}
+    update.patches = {}
+    update.links = oneUpdate
   Updates.push(update)
   return
 
@@ -240,15 +252,38 @@ class Patch
     breed = if("" == breedName) then Breeds.get("TURTLES") else Breeds.get(breedName)
     new Agents(world.createturtle(new Turtle(5 + 10 * Random.nextInt(14), Random.nextInt(360), @pxcor, @pycor, breed)) for num in [0...n])
 
+Links =
+  compare: (a, b) ->
+    if (a == b)
+      0
+    else if(a.end1.id < b.end1.id)
+      -1
+    else if(a.end1.id > b.end1.id)
+      1
+    else if(a.end2.id < b.end2.id)
+      -1
+    else if(a.end2.id > b.end2.id)
+      1
+    else if(a.breed == b.breed)
+      0
+    else if(a.breed == Breeds.get("LINKS"))
+      -1
+    else if(b.breed == Breeds.get("LINKS"))
+      1
+    else
+      throw new Error("We have yet to implement link breed comparison")
+
 class Link
   color: 5
   label: ""
   labelcolor: 9.9
   hidden: false
   shape: "default"
+  thickness: 0
+  tiemode: "none"
   constructor: (@directed, @end1, @end2) ->
+    @breed = Breeds.get("LINKS")
   getLinkVariable: (n) ->
-    println("HAHAHAHAH: " + n)
     if (n < linkBuiltins.length)
       this[linkBuiltins[n]]
     else
@@ -260,13 +295,16 @@ class Link
     else
       @vars[n - linkBuiltins.length] = v
   getTurtleVariable: (n) -> this[turtleBuiltins[n]]
-  setTurtleVariable: (n, v) -> this[turtleBuiltins[n]] = v
-  toString: -> "(link " + @end1.id + " " + @end2.id + ")"
+  setTurtleVariable: (n, v) ->
+    this[turtleBuiltins[n]] = v
+    updated(this, turtleBuiltins[n])
+  toString: -> "(" + @breed.singular + " " + @end1.id + " " + @end2.id + ")"
 
 class World
   # any variables used in the constructor should come
   # before the constructor, else they get overwritten after it.
-  _nextId = 0
+  _nextLinkId = 0
+  _nextTurtleId = 0
   _turtles = []
   _patches = []
   _links = []
@@ -312,7 +350,8 @@ class World
     for p in _patches
       updated(p, "pxcor", "pycor", "pcolor", "plabel", "plabelcolor")
   topology: -> _topology
-  links: () -> new Agents(_links)
+  links: () ->
+    new Agents(_links.sort(Links.compare))
   turtles: () -> new Agents(_turtles, Breeds.get("TURTLES"))
   turtlesOfBreed: (breedName) ->
     breed = Breeds.get(breedName)
@@ -402,17 +441,20 @@ class World
       catch error
         throw error if !(error instanceof DeathInterrupt)
     @createPatches()
-    _nextId = 0
+    _nextTurtleId = 0
+    _nextLinkId = 0
     @patchesAllBlack(true)
     @clearTicks()
     return
   createturtle: (t) ->
-    t.id = _nextId++
+    t.id = _nextTurtleId++
     updated(t, turtleBuiltins...)
     _turtles.push(t)
     t
   createlink: (l) ->
+    l.id = _nextLinkId++
     updated(l, linkBuiltins...)
+    updated(l, turtleBuiltins.slice(1)...)
     _links.push(l)
     l
   createorderedturtles: (n, breedName) ->
@@ -718,7 +760,7 @@ class Breed
   vars: []
 
 Breeds = {
-  breeds: [new Breed("TURTLES", "turtle", "default")]
+  breeds: [new Breed("TURTLES", "turtle", "default"), new Breed("LINKS", "link", "default")]
   add: (name, singular) ->
     @breeds.push(new Breed(name, singular))
   get: (name) ->

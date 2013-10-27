@@ -22,13 +22,13 @@ class TestLinks extends DockingSuite {
 
   test("Links2") { implicit fixture => import fixture._
     testCommand("crt 4 [ create-links-with turtles with [ who > [who] of myself ] ]")
-    //testCommand("ask links [ output-print self ]")
-    //testCommand("ask link 0 1 [ set color 140 ]")
-    //testCommand("output-print [color] of link 0 1")
-    //testCommand("ask link 0 1 [ set color -10 ]")
-    //compare("[color] of link 0 1")
-    //testCommand("ask link 0 1 [ set color 150 ]")
-    //compare("[color] of link 0 1")
+    testCommand("ask links [ output-print self ]")
+    testCommand("ask link 0 1 [ set color red ]")
+    compare("[color] of link 0 1")
+    testCommand("ask link 1 3 [ set color 40 ]")
+    compare("[color] of link 1 3")
+    testCommand("ask link 1 2 [ set color 30 ]")
+    compare("[color] of link 1 2")
   }
 
   /*

@@ -27,6 +27,11 @@ class AgentModel
       p = @patches[patchId]
       p ?= @patches[patchId] = {}
       mergeObjectInto(varUpdates, p)
+    for linkId, varUpdates of modelUpdate.links
+      anyUpdates = true
+      l = @links[linkId]
+      l ?= @links[linkId] = {}
+      mergeObjectInto(varUpdates, l)
     mergeObjectInto(modelUpdate.observer, @observer)
     if(modelUpdate.world && modelUpdate.world[0])
       mergeObjectInto(modelUpdate.world[0], @world)

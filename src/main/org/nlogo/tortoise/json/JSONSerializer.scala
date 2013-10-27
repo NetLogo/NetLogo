@@ -74,6 +74,7 @@ object JSONSerializer {
       else
         JDouble(d.doubleValue)
     case i: java.lang.Integer => JInt(i.intValue)
+    case i: java.lang.Long    => JInt(i.intValue)
     case b: java.lang.Boolean => JBool(b)
     case s: java.lang.String  => JString(s)
     case s: ShapeList         => JObject((s.getShapes.asScala map (shape => shape.getName -> shape.toJsonObj)).toList)
