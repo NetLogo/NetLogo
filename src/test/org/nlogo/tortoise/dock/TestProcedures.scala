@@ -53,4 +53,13 @@ class TestProcedures extends DockingSuite {
     compare("fact 6")
   }
 
+  test("set procedure input") { implicit fixture => import fixture._
+    declare("""|to-report square [n]
+               |  set n n * n
+               |  report n
+               |end
+               |""".stripMargin)
+    compare("square 5")
+  }
+
 }
