@@ -242,7 +242,7 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
       add(Box.createVerticalGlue())
     }
 
-    private def findLocalHostAddress() =
+    private def findLocalHostAddress(): String =
       try
         if (!InetAddress.getLocalHost.isLoopbackAddress)
           InetAddress.getLocalHost.getHostAddress
