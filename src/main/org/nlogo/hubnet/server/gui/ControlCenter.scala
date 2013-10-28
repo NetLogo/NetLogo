@@ -4,7 +4,7 @@ package org.nlogo.hubnet.server.gui
 
 import javax.swing.event.{ListSelectionEvent, ListSelectionListener}
 import javax.swing.border.EmptyBorder
-import java.net.{UnknownHostException, InetAddress}
+import java.net.{ Inet4Address, InetAddress, NetworkInterface, UnknownHostException }
 import java.text.SimpleDateFormat
 import org.nlogo.swing.{SelectableJLabel, TextFieldBox, NonemptyTextFieldButtonEnabler}
 import java.awt.event.{ItemEvent, ItemListener, ActionEvent, ActionListener}
@@ -230,8 +230,7 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
         addField(I18N.gui.get("menu.tools.hubnetControlCenter.name"), new SelectableJLabel(serverId))
         addField(I18N.gui.get("menu.tools.hubnetControlCenter.activity"), new SelectableJLabel(activityName))
         add(Box.createVerticalStrut(12))
-        val serverIP = try InetAddress.getLocalHost.getHostAddress catch {case e: UnknownHostException =>
-            I18N.gui.get("menu.tools.hubnetControlCenter.unknown")}
+        val serverIP = findLocalHostAddress()
         addField(I18N.gui.get("menu.tools.hubnetControlCenter.serverAddress"), new SelectableJLabel(serverIP))
         addField(I18N.gui.get("menu.tools.hubnetControlCenter.portNumber"), new SelectableJLabel(server.port.toString))
       })
@@ -242,6 +241,22 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
       add(mirrorPlotsCheckBox)
       add(Box.createVerticalGlue())
     }
+
+    private def findLocalHostAddress() =
+      try
+        if (!InetAddress.getLocalHost.isLoopbackAddress)
+          InetAddress.getLocalHost.getHostAddress
+        else {
+          import scala.collection.JavaConverters._
+          NetworkInterface.getNetworkInterfaces.asScala.toSeq flatMap {
+            _.getInetAddresses.asScala.toSeq
+          } collectFirst {
+            case addr: Inet4Address if (!addr.isLoopbackAddress) => addr.getHostAddress
+          } getOrElse (throw new UnknownHostException)
+        }
+      catch {
+        case _: UnknownHostException => I18N.gui.get("menu.tools.hubnetControlCenter.unknown")
+      }
 
     /**
      * Updates server options.
