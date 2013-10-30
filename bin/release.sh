@@ -4,7 +4,6 @@
 # add -v if you want to see the commands as they happen
 
 # all binaries we use
-BUNZIP=bunzip2
 CHMOD=chmod
 CP=cp
 CURL=curl
@@ -20,11 +19,9 @@ else
   JAVA=`/usr/libexec/java_home -F -v1.6*`/bin/java
 fi
 LN=ln
-LS=ls
 MAKE=make
 MKDIR=mkdir
 MV=mv
-OPEN=open
 OSXSIGNAME="Developer ID Application"
 PACK200=pack200
 PERL=perl
@@ -36,7 +33,6 @@ XARGS=xargs
 
 # other
 SCALA_JAR=$HOME/.sbt/boot/scala-2.9.2/lib/scala-library.jar
-IJVERSION=5.0.11
 IJDIR="/Applications/install4j 5"
 VM=windows-x86-1.6.0_45_server
 
@@ -204,7 +200,7 @@ $CP -p $SCALA_JAR lib/scala-library.jar
 
 # Mathematica link stuff
 $CP -rp ../../Mathematica-Link Mathematica\ Link
-(cd Mathematica\ Link; NETLOGO=.. make) || exit 1
+(cd Mathematica\ Link; NETLOGO=.. $MAKE) || exit 1
 $RM Mathematica\ Link/JLink.jar
 
 # stuff version number etc. into readme
