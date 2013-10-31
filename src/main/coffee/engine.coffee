@@ -121,6 +121,18 @@ class Turtle
       return world.getPatchAt(newX, newY)
     catch error
       if error instanceof TopologyInterrupt then Nobody else throw error
+  linkNeighbors: (directed, isSource) ->
+    if directed
+      new Agents([], Breeds.get("TURLTES"))
+    else
+      me = this
+      new Agents(world.links().items.map((l) ->
+        if l.end1 == me
+          l.end2
+        else if l.end2 == me
+          l.end1
+        else
+          null).filter((o) -> o != null), Breeds.get("TURTLES"))
   patchRightAndAhead: (angle, amount) ->
     heading = @heading + angle
     if (heading < 0 || heading >= 360)
@@ -604,6 +616,7 @@ AgentSet =
   # May we should put *everything* in Prims, and Agents can be private.
   # Prims could/would/should be the compiler/runtime interface.
   die: -> @_self.die()
+  linkNeighbors: (directed, isSource) -> @_self.linkNeighbors(directed, isSource)
   getTurtleVariable: (n)    -> @_self.getTurtleVariable(n)
   setTurtleVariable: (n, v) -> @_self.setTurtleVariable(n, v)
   getLinkVariable: (n)    -> @_self.getLinkVariable(n)

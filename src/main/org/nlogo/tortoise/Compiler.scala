@@ -147,11 +147,11 @@ object Compiler {
             s"${ident(p.name)} = ${arg(1)};"
           case x =>
             throw new IllegalArgumentException(
-              "unknown settable: " + x.getClass.getSimpleName)
+              "unknown settable: " + x.getClass.getName)
         }
       case _ =>
         throw new IllegalArgumentException(
-          "unknown primitive: " + s.command.getClass.getSimpleName)
+          "unknown primitive: " + s.command.getClass.getName)
     }
   }
 
@@ -206,9 +206,10 @@ object Compiler {
       case _: prim.etc._maxpycor            => "world.maxPycor"
       case _: prim.etc._worldwidth          => "world.width()"
       case _: prim.etc._worldheight         => "world.height()"
+      case _: prim.etc._linkneighbors       => "AgentSet.linkNeighbors(false, false)"
       case _ =>
         throw new IllegalArgumentException(
-          "unknown primitive: " + r.reporter.getClass.getSimpleName)
+          "unknown primitive: " + r.reporter.getClass.getName)
     }
   }
   // scalastyle:on cyclomatic.complexity
