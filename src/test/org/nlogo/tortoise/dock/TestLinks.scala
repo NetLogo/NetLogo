@@ -113,7 +113,6 @@ class TestLinks extends DockingSuite {
     compare("[link-neighbor? turtle 0] of turtle 1")
   }
 
-  /*
   test("NodeDies1") { implicit fixture => import fixture._
     declare("breed [nodes node]")
     testCommand("create-nodes 2")
@@ -125,6 +124,7 @@ class TestLinks extends DockingSuite {
     compare("count links")
   }
 
+  /*
   test("NodeDies2") { implicit fixture => import fixture._
     declare("breed [nodes node]")
     testCommand("create-nodes 2")

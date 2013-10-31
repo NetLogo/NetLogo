@@ -199,6 +199,11 @@ class Turtle
     if (@id != -1)
       world.removeTurtle(@id)
       died(this)
+      for l in world.links().items
+        try
+          l.die() if (l.end1.id == @id or l.end2.id == @id)
+        catch error
+          throw error if !(error instanceof DeathInterrupt)
       @id = -1
     throw new DeathInterrupt("Call only from inside an askAgent block")
   getTurtleVariable: (n) ->
@@ -473,11 +478,6 @@ class World
     for t in @turtles().items
       try
         t.die()
-      catch error
-        throw error if !(error instanceof DeathInterrupt)
-    for l in @links().items
-      try
-        l.die()
       catch error
         throw error if !(error instanceof DeathInterrupt)
     @createPatches()
