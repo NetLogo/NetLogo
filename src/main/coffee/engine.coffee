@@ -332,6 +332,7 @@ class Link
   setTurtleVariable: (n, v) ->
     this[turtleBuiltins[n]] = v
     updated(this, turtleBuiltins[n])
+  bothEnds: -> new Agents([@end1, @end2], Breeds.get("TURTLES"))
   toString: -> "(" + @breed.singular + " " + @end1.id + " " + @end2.id + ")"
 
 class World

@@ -196,7 +196,6 @@ class TestLinks extends DockingSuite {
     compare("[ end2 ] of link 0 1 = turtle 1")
   }
 
-  /*
   test("BothEnds1") { implicit fixture => import fixture._
     testCommand("crt 2")
     testCommand("ask turtle 0 [create-link-to turtle 1]")
@@ -215,6 +214,7 @@ class TestLinks extends DockingSuite {
     compare("[sort [who] of both-ends] of link 0 1")
   }
 
+  /*
   test("OtherEnd1") { implicit fixture => import fixture._
     testCommand("crt 2")
     testCommand("ask turtle 0 [create-link-to turtle 1]")
