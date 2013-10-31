@@ -241,7 +241,6 @@ class TestLinks extends DockingSuite {
     compare("[[[who] of other-end] of turtle 1] of link 0 1")
   }
 
-  /*
   test("IsLink1") { implicit fixture => import fixture._
     testCommand("crt 2")
     testCommand("ask turtle 0 [create-link-to turtle 1]")
@@ -260,6 +259,7 @@ class TestLinks extends DockingSuite {
     compare("is-link? link 0 1")
   }
 
+  /*
   test("LinkKillsNode1") { implicit fixture => import fixture._
     declare("breed [nodes node]")
     testCommand("create-nodes 2")
