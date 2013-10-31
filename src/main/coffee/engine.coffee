@@ -141,6 +141,24 @@ class Turtle
           null).filter((o) -> o != null), Breeds.get("TURTLES"))
   isLinkNeighbor: (directed, isSource, other) ->
     @linkNeighbors(directed, isSource).items.filter((o) -> o == other).length > 0
+  findLinkViaNeighbor: (directed, isSource, other) ->
+    me = this
+    links = []
+    if directed
+      links = world.links().items.map((l) ->
+        if ((l.directed and l.end1 == me and l.end2 == other and isSource) or (l.directed and l.end1 == other and l.end2 == me and !isSource))
+          l
+        else
+          null).filter((o) -> o != null)
+    else
+      throw new NetLogoException("LINKS is a directed breed.") if world.unbreededLinksAreDirected
+      links = world.links().items.map((l) ->
+        if ((!l.directed and l.end1 == me and l.end2 == other) or (!l.directed and l.end2 == me and l.end1 == other))
+          l
+        else
+          null).filter((o) -> o != null)
+    if links.length == 0 then Nobody else links[0]
+    
   otherEnd: -> if this == AgentSet.myself().end1 then AgentSet.myself().end2 else AgentSet.myself().end1
   patchRightAndAhead: (angle, amount) ->
     heading = @heading + angle
@@ -631,6 +649,9 @@ AgentSet =
   isLinkNeighbor: (directed, isSource) ->
     t = @_self
     ((other) -> t.isLinkNeighbor(directed, isSource, other))
+  findLinkViaNeighbor: (directed, isSource) ->
+    t = @_self
+    ((other) -> t.findLinkViaNeighbor(directed, isSource, other))
   getTurtleVariable: (n)    -> @_self.getTurtleVariable(n)
   setTurtleVariable: (n, v) -> @_self.setTurtleVariable(n, v)
   getLinkVariable: (n)    -> @_self.getLinkVariable(n)

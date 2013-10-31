@@ -259,60 +259,29 @@ class TestLinks extends DockingSuite {
     compare("is-link? link 0 1")
   }
 
-  /*
-  test("LinkKillsNode1") { implicit fixture => import fixture._
-    declare("breed [nodes node]")
-    testCommand("create-nodes 2")
-    compare("count nodes")
-    compare("count links")
-    testCommand("ask turtle 0 [create-link-to turtle 1 [ask myself [die]]]")
-    compare("count nodes")
-    compare("count links")
-  }
-
-  test("LinkKillsNode2") { implicit fixture => import fixture._
-    declare("breed [nodes node]")
-    testCommand("create-nodes 2")
-    compare("count nodes")
-    compare("count links")
-    testCommand("ask turtle 0 [create-link-from turtle 1 [ask myself [die]]]")
-    compare("count nodes")
-    compare("count links")
-  }
-
-  test("LinkKillsNode3") { implicit fixture => import fixture._
-    declare("breed [nodes node]")
-    testCommand("create-nodes 2")
-    compare("count nodes")
-    compare("count links")
-    testCommand("ask turtle 0 [create-link-with turtle 1 [ask myself [die]]]")
-    compare("count nodes")
-    compare("count links")
-  }
-
   test("LinkFromToWith1") { implicit fixture => import fixture._
     testCommand("crt 2")
-    compare("[in-link-from turtle 1] of turtle 0")
-    compare("[out-link-to turtle 1] of turtle 0")
-    compare("[in-link-from turtle 0] of turtle 1")
-    compare("[out-link-to turtle 0] of turtle 1")
-    compare("[link-with turtle 1] of turtle 0")
-    compare("[link-with turtle 0] of turtle 1")
+    testCommand("output-print [in-link-from turtle 1] of turtle 0")
+    testCommand("output-print [out-link-to turtle 1] of turtle 0")
+    testCommand("output-print [in-link-from turtle 0] of turtle 1")
+    testCommand("output-print [out-link-to turtle 0] of turtle 1")
+    testCommand("output-print [link-with turtle 1] of turtle 0")
+    testCommand("output-print [link-with turtle 0] of turtle 1")
     testCommand("ask turtle 0 [ create-link-to turtle 1 ]")
-    compare("[in-link-from turtle 1] of turtle 0")
-    compare("[(list [who] of end1 [who] of end2 )] of [out-link-to turtle 1] of turtle 0")
-    compare("[(list [who] of end1 [who] of end2 )] of [in-link-from turtle 0] of turtle 1")
-    compare("[out-link-to turtle 0] of turtle 1")
-    compare("[link-with turtle 1] of turtle 0")
-    compare("[link-with turtle 0] of turtle 1")
+    testCommand("output-print [in-link-from turtle 1] of turtle 0")
+    testCommand("output-print [(list [who] of end1 [who] of end2 )] of [out-link-to turtle 1] of turtle 0")
+    testCommand("output-print [(list [who] of end1 [who] of end2 )] of [in-link-from turtle 0] of turtle 1")
+    testCommand("output-print [out-link-to turtle 0] of turtle 1")
+    testCommand("output-print [link-with turtle 1] of turtle 0")
+    testCommand("output-print [link-with turtle 0] of turtle 1")
   }
 
   test("LinkFromToWith2") { implicit fixture => import fixture._
     testCommand("crt 2")
     testCommand("ask turtle 0 [create-link-from turtle 1]")
     compare("[(list [who] of end1 [who] of end2 )] of [in-link-from turtle 1] of turtle 0")
-    compare("[out-link-to turtle 1] of turtle 0")
-    compare("[in-link-from turtle 0] of turtle 1")
+    testCommand("output-print [out-link-to turtle 1] of turtle 0")
+    testCommand("output-print [in-link-from turtle 0] of turtle 1")
     compare("[(list [who] of end1 [who] of end2 )] of [out-link-to turtle 0] of turtle 1")
   }
 
@@ -323,6 +292,7 @@ class TestLinks extends DockingSuite {
     compare("[(list [who] of end1 [who] of end2 )] of [link-with turtle 0] of turtle 1")
   }
 
+  /*
   test("LinkedFromToWith1") { implicit fixture => import fixture._
     testCommand("crt 2")
     compare("sort [who] of [in-link-neighbors] of turtle 0")
