@@ -369,4 +369,13 @@ class TestAgents extends DockingSuite {
     testCommand("ask n-of 5 turtles [ die ]")
   }
 
+  test("other") { implicit fixture => import fixture._
+    declare("", api.WorldDimensions.square(2))
+    testCommand("crt 10")
+    testCommand("ask turtle 0 [ ask other turtles [ output-print self ] ]")
+    testCommand("ask turtles [ ask other turtles-here [ output-print self ] ]")
+    testCommand("ask patches [ ask other patches [ output-print self ] ]")
+    testCommand("ask patches [ ask other turtles [ output-print self ] ]")
+  }
+
 }

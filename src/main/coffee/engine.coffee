@@ -578,6 +578,10 @@ AgentSet =
   createLinkTo: (other) -> world.createDirectedLink(@_self, other)
   createLinkWith: (other) -> world.createUndirectedLink(@_self, other)
   createLinksWith: (others) -> world.createUndirectedLinks(@_self, @shuffle(others))
+  other: (agentSet) ->
+    self = @_self
+    filteredAgents = (agentSet.items.filter((o) -> o != self))
+    new Agents(filteredAgents, agentSet.breed)
   shuffle: (agents) ->
     result = []
     iter = new Shufflerator(agents.items)
