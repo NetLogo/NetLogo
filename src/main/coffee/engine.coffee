@@ -121,6 +121,20 @@ class Turtle
       return world.getPatchAt(newX, newY)
     catch error
       if error instanceof TopologyInterrupt then Nobody else throw error
+  connectedLinks: (directed, isSource) ->
+    me = this
+    if directed
+      new Agents(world.links().items.map((l) ->
+        if (l.directed and l.end1 == me and isSource) or (l.directed and l.end2 == me and !isSource)
+          l
+        else
+          null).filter((o) -> o != null), Breeds.get("LINKS"))
+    else
+      new Agents(world.links().items.map((l) ->
+        if (!l.directed and l.end1 == me) or (!l.directed and l.end2 == me)
+          l
+        else
+          null).filter((o) -> o != null), Breeds.get("LINKS"))
   linkNeighbors: (directed, isSource) ->
     me = this
     if directed
@@ -645,6 +659,7 @@ AgentSet =
   # May we should put *everything* in Prims, and Agents can be private.
   # Prims could/would/should be the compiler/runtime interface.
   die: -> @_self.die()
+  connectedLinks: (directed, isSource) -> @_self.connectedLinks(directed, isSource)
   linkNeighbors: (directed, isSource) -> @_self.linkNeighbors(directed, isSource)
   isLinkNeighbor: (directed, isSource) ->
     t = @_self
@@ -682,6 +697,13 @@ class Agents
   constructor: (@items, @breed) ->
   toString: ->
     "(" + @items.length + " " + @breed.name + ")"
+  sort: ->
+    if(@items.length == 0)
+      @items
+    else if(@items[0] instanceof Link)
+      @items.sort(Links.compare)
+    else
+      throw new Error("We don't know how to sort your kind here!")
 
 class Iterator
   constructor: (@agents) ->
