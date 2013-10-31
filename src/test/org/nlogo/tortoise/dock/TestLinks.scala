@@ -41,23 +41,23 @@ class TestLinks extends DockingSuite {
     testCommand("output-print link 3 2")
   }
 
-  /*
   test("LinksInitBlock") { implicit fixture => import fixture._
     declare("globals [glob1]")
     testCommand("set glob1 0")
-    testCommand("crt 50")
+    testCommand("crt 5")
     testCommand("ask turtles [ create-links-with other turtles [ set glob1 glob1 + 1 ] ]")
     compare("count links = glob1")
-    testCommand("ask links die")
+    testCommand("ask links [ die ]")
     testCommand("set glob1 0")
     testCommand("ask turtles [ create-links-to other turtles [ set glob1 glob1 + 1 ] ]")
     compare("count links = glob1")
-    testCommand("ask links die")
+    testCommand("ask links [ die ]")
     testCommand("set glob1 0")
     testCommand("ask turtles [ create-links-from other turtles [ set glob1 glob1 + 1 ] ]")
     compare("count links = glob1")
   }
 
+  /*
   test("CreateDuplicateLinks") { implicit fixture => import fixture._
     testCommand("crt 2 [ create-links-with other turtles ]")
     compare("count links = 1")

@@ -438,6 +438,9 @@ class World
     if filteredTurtles.length == 0 then Nobody else filteredTurtles[0]
   removeLink: (id) ->
     _links = @links().items.filter (l) -> l.id != id
+    if _links.length == 0
+      @unbreededLinksAreDirected = false
+      Updates.push({ world: { 0: { unbreededLinksAreDirected: false } } })
     return
   removeTurtle: (id) ->
     _turtles = @turtles().items.filter (t) -> t.id != id
@@ -493,6 +496,10 @@ class World
     @unbreededLinksAreDirected = true
     Updates.push({ world: { 0: { unbreededLinksAreDirected: true } } })
     new Agents((@createlink(true, source, t) for t in others.items).filter((o) -> o != Nobody), Breeds.get("LINKS"))
+  createReverseDirectedLinks: (source, others) ->
+    @unbreededLinksAreDirected = true
+    Updates.push({ world: { 0: { unbreededLinksAreDirected: true } } })
+    new Agents((@createlink(true, t, source) for t in others.items).filter((o) -> o != Nobody), Breeds.get("LINKS"))
   createUndirectedLink: (source, other) ->
     @createlink(false, source, other)
   createUndirectedLinks: (source, others) ->
@@ -601,6 +608,8 @@ AgentSet =
   setBreed: (agentSet) -> @_self.setBreed(agentSet.breed)
   getPatchVariable:  (n)    -> @_self.getPatchVariable(n)
   setPatchVariable:  (n, v) -> @_self.setPatchVariable(n, v)
+  createLinkFrom: (other) -> world.createDirectedLink(other, @_self)
+  createLinksFrom: (others) -> world.createReverseDirectedLinks(@_self, @shuffle(others))
   createLinkTo: (other) -> world.createDirectedLink(@_self, other)
   createLinksTo: (others) -> world.createDirectedLinks(@_self, @shuffle(others))
   createLinkWith: (other) -> world.createUndirectedLink(@_self, other)

@@ -112,6 +112,8 @@ object Compiler {
       case _: prim._createturtles        => Prims.generateCreateTurtles(s, ordered = false)
       case _: prim._createorderedturtles => Prims.generateCreateTurtles(s, ordered = true)
       case _: prim._sprout               => Prims.generateSprout(s)
+      case _: prim.etc._createlinkfrom   => Prims.generateCreateLink(s, "createLinkFrom")
+      case _: prim.etc._createlinksfrom  => Prims.generateCreateLink(s, "createLinksFrom")
       case _: prim.etc._createlinkto     => Prims.generateCreateLink(s, "createLinkTo")
       case _: prim.etc._createlinksto    => Prims.generateCreateLink(s, "createLinksTo")
       case _: prim.etc._createlinkwith   => Prims.generateCreateLink(s, "createLinkWith")
