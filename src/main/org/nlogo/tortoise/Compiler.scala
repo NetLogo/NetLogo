@@ -113,6 +113,7 @@ object Compiler {
       case _: prim._createorderedturtles => Prims.generateCreateTurtles(s, ordered = true)
       case _: prim._sprout               => Prims.generateSprout(s)
       case _: prim.etc._createlinkto     => Prims.generateCreateLink(s, "createLinkTo")
+      case _: prim.etc._createlinksto    => Prims.generateCreateLink(s, "createLinksTo")
       case _: prim.etc._createlinkwith   => Prims.generateCreateLink(s, "createLinkWith")
       case _: prim.etc._createlinkswith  => Prims.generateCreateLink(s, "createLinksWith")
       case h: prim._hatch                => Prims.generateHatch(s, h.breedName)
