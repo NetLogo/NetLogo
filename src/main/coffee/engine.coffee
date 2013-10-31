@@ -451,12 +451,22 @@ class World
     updated(t, turtleBuiltins...)
     _turtles.push(t)
     t
-  createlink: (l) ->
-    l.id = _nextLinkId++
-    updated(l, linkBuiltins...)
-    updated(l, turtleBuiltins.slice(1)...)
-    _links.push(l)
-    l
+  createlink: (directed, from, to) ->
+    if(from.id < to.id or directed)
+      end1 = from
+      end2 = to
+    else
+      end1 = to
+      end2 = from
+    if Nobody == @getLink(end1.id, end2.id)
+      l = new Link(directed, end1, end2)
+      l.id = _nextLinkId++
+      updated(l, linkBuiltins...)
+      updated(l, turtleBuiltins.slice(1)...)
+      _links.push(l)
+      l
+    else
+      Nobody
   createorderedturtles: (n, breedName) ->
     new Agents(@createturtle(new Turtle((10 * num + 5) % 140, (360 * num) / n, 0, 0, Breeds.get(breedName))) for num in [0...n])
   createturtles: (n, breedName) ->
@@ -466,13 +476,13 @@ class World
   createDirectedLink: (from, to) ->
     @unbreededLinksAreDirected = true
     Updates.push({ world: { 0: { unbreededLinksAreDirected: true } } })
-    @createlink(new Link(true, from, to))
+    @createlink(true, from, to)
   createUndirectedLink: (source, other) ->
-    @createlink(new Link(false, source, other))
+    @createlink(false, source, other)
   createUndirectedLinks: (source, others) ->
-    @createlink(new Link(false, source, t)) for t in others.items
+    new Agents((@createlink(false, source, t) for t in others.items).filter((o) -> o != Nobody), Breeds.get("LINKS"))
   getLink: (fromId, toId) ->
-    filteredLinks = (@links().items.filter (l) -> (l.end2.id == toId && l.end1.id == fromId))
+    filteredLinks = (@links().items.filter (l) -> (l.end1.id == fromId && l.end2.id == toId))
     if filteredLinks.length == 0 then Nobody else filteredLinks[0]
 
 AgentSet =

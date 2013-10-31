@@ -114,9 +114,6 @@ object Prims {
         case _: prim.etc._setcurrentplot   => "noop"
         case _: prim.etc._setcurrentplotpen => "noop"
         case _: prim.etc._plot             => "noop"
-        case _: prim.etc._createlinkto     => "AgentSet.createLinkTo"
-        case _: prim.etc._createlinkwith   => "AgentSet.createLinkWith"
-        case _: prim.etc._createlinkswith  => "AgentSet.createLinksWith"
       }
   }
 
@@ -151,6 +148,15 @@ object Prims {
     val agents = Compiler.genReporterApp(s.args.head)
     val body   = fun(Compiler.genCommandBlock(s.args.tail.head))
     s"AgentSet.ask($agents, $shuffle, $body);"
+  }
+
+  def generateCreateLink(s: Statement, name: String): String = {
+    import org.nlogo.prim._
+    val other = Compiler.genReporterApp(s.args.head)
+    // This is so that we don't shuffle unnecessarily.  FD 10/31/2013
+    val nonEmptyCommandBlock = s.args.tail.head.asInstanceOf[CommandBlock].statements.size != 0
+    val body = fun(Compiler.genCommandBlock(s.args.tail.head))
+    s"""AgentSet.ask(AgentSet.$name($other), $nonEmptyCommandBlock, $body);"""
   }
 
   def generateCreateTurtles(s: Statement, ordered: Boolean): String = {
