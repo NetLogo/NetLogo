@@ -455,6 +455,11 @@ class World
         t.die()
       catch error
         throw error if !(error instanceof DeathInterrupt)
+    for l in @links().items
+      try
+        l.die()
+      catch error
+        throw error if !(error instanceof DeathInterrupt)
     @createPatches()
     _nextTurtleId = 0
     _nextLinkId = 0
