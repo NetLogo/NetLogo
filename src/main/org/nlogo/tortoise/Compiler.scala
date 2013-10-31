@@ -207,6 +207,8 @@ object Compiler {
       case _: prim.etc._worldwidth          => "world.width()"
       case _: prim.etc._worldheight         => "world.height()"
       case _: prim.etc._linkneighbors       => "AgentSet.linkNeighbors(false, false)"
+      case _: prim.etc._inlinkneighbors     => "AgentSet.linkNeighbors(true, false)"
+      case _: prim.etc._outlinkneighbors    => "AgentSet.linkNeighbors(true, true)"
       case _: prim.etc._islink              => s"(${arg(0)} instanceof Link)"
       case _ =>
         throw new IllegalArgumentException(

@@ -292,7 +292,6 @@ class TestLinks extends DockingSuite {
     compare("[(list [who] of end1 [who] of end2 )] of [link-with turtle 0] of turtle 1")
   }
 
-  /*
   test("LinkedFromToWith1") { implicit fixture => import fixture._
     testCommand("crt 2")
     compare("sort [who] of [in-link-neighbors] of turtle 0")
@@ -324,6 +323,7 @@ class TestLinks extends DockingSuite {
     compare("sort [who] of [link-neighbors ] of turtle 0")
   }
 
+  /*
   test("LinksAllFromTo1") { implicit fixture => import fixture._
     testCommand("crt 2")
     compare("sort [my-in-links] of turtle 0")
