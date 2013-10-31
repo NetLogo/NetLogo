@@ -23,9 +23,12 @@ collectUpdates = ->
   result
 
 # gross hack - ST 1/25/13
-died = (id) ->
-  update = patches: {}, turtles: {}
-  update.turtles[id] = WHO: -1
+died = (agent) ->
+  update = patches: {}, turtles: {}, links: {}
+  if agent instanceof Turtle
+    update.turtles[agent.id] = WHO: -1
+  else if agent instanceof Link
+    update.links[agent.id] = WHO: -1
   Updates.push(update)
   return
 
@@ -175,7 +178,7 @@ class Turtle
   die: ->
     if (@id != -1)
       world.removeTurtle(@id)
-      died(@id)
+      died(this)
       @id = -1
     throw new DeathInterrupt("Call only from inside an askAgent block")
   getTurtleVariable: (n) ->
@@ -294,6 +297,12 @@ class Link
       updated(this, linkBuiltins[n])
     else
       @vars[n - linkBuiltins.length] = v
+  die: ->
+    if (@id != -1)
+      world.removeLink(@id)
+      died(this)
+      @id = -1
+    throw new DeathInterrupt("Call only from inside an askAgent block")
   getTurtleVariable: (n) -> this[turtleBuiltins[n]]
   setTurtleVariable: (n, v) ->
     this[turtleBuiltins[n]] = v
@@ -427,6 +436,9 @@ class World
   getTurtleOfBreed: (breedName, id) ->
     filteredTurtles = (@turtlesOfBreed(breedName).items.filter (t) -> t.id == id)
     if filteredTurtles.length == 0 then Nobody else filteredTurtles[0]
+  removeLink: (id) ->
+    _links = @links().items.filter (l) -> l.id != id
+    return
   removeTurtle: (id) ->
     _turtles = @turtles().items.filter (t) -> t.id != id
     return
