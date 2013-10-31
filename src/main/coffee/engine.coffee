@@ -141,6 +141,7 @@ class Turtle
           null).filter((o) -> o != null), Breeds.get("TURTLES"))
   isLinkNeighbor: (directed, isSource, other) ->
     @linkNeighbors(directed, isSource).items.filter((o) -> o == other).length > 0
+  otherEnd: -> if this == AgentSet.myself().end1 then AgentSet.myself().end2 else AgentSet.myself().end1
   patchRightAndAhead: (angle, amount) ->
     heading = @heading + angle
     if (heading < 0 || heading >= 360)
@@ -333,6 +334,7 @@ class Link
     this[turtleBuiltins[n]] = v
     updated(this, turtleBuiltins[n])
   bothEnds: -> new Agents([@end1, @end2], Breeds.get("TURTLES"))
+  otherEnd: -> if @end1 == AgentSet.myself() then @end2 else @end1
   toString: -> "(" + @breed.singular + " " + @end1.id + " " + @end2.id + ")"
 
 class World

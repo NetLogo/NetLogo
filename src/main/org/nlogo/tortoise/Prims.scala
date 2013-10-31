@@ -90,6 +90,7 @@ object Prims {
         case _: prim.etc._inlinkneighbor => "AgentSet.isLinkNeighbor(true, false)"
         case _: prim.etc._outlinkneighbor => "AgentSet.isLinkNeighbor(true, true)"
         case _: prim.etc._bothends    => "AgentSet.self().bothEnds"
+        case _: prim.etc._otherend    => "AgentSet.self().otherEnd"
       }
   }
   // scalastyle:on cyclomatic.complexity
