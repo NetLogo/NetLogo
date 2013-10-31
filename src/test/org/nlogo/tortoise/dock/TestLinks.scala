@@ -82,7 +82,6 @@ class TestLinks extends DockingSuite {
     compare("count [link-neighbors] of turtle 1")
   }
 
-  /*
   test("LinkedTest1") { implicit fixture => import fixture._
     testCommand("crt 2")
     compare("[in-link-neighbor? turtle 1] of turtle 0")
@@ -91,13 +90,14 @@ class TestLinks extends DockingSuite {
     compare("[out-link-neighbor? turtle 0] of turtle 1")
     compare("[link-neighbor? turtle 1] of turtle 0")
     compare("[link-neighbor? turtle 0] of turtle 1")
-    testCommand("ask turtle 0[ create-link-to turtle 1]")
+    testCommand("ask turtle 0 [ create-link-to turtle 1]")
     compare("[in-link-neighbor? turtle 1] of turtle 0")
     compare("[in-link-neighbor? turtle 0] of turtle 1")
     compare("[out-link-neighbor? turtle 1] of turtle 0")
     compare("[out-link-neighbor? turtle 0] of turtle 1")
   }
 
+  /*
   test("LinkedTest2") { implicit fixture => import fixture._
     testCommand("crt 2")
     testCommand("ask turtle 0[ create-link-from turtle 1]")

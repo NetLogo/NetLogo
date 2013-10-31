@@ -86,6 +86,9 @@ object Prims {
         case _: prim.etc._round       => "StrictMath.round"
         case _: prim.etc._turtle      => "world.getTurtle"
         case _: prim.etc._link        => "world.getLink"
+        case _: prim.etc._linkneighbor => "AgentSet.isLinkNeighbor(false, false)"
+        case _: prim.etc._inlinkneighbor => "AgentSet.isLinkNeighbor(true, false)"
+        case _: prim.etc._outlinkneighbor => "AgentSet.isLinkNeighbor(true, true)"
       }
   }
   // scalastyle:on cyclomatic.complexity
