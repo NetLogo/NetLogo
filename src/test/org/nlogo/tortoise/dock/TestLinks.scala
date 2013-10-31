@@ -31,17 +31,17 @@ class TestLinks extends DockingSuite {
     compare("[color] of link 1 2")
   }
 
-  /*
   test("LinkWithBadEndPointsReturnsNobody") { implicit fixture => import fixture._
     testCommand("crt 2")
     testCommand("ask turtle 0 [ create-link-with turtle 1 ]")
-    compare("link 0 2")
-    compare("link 2 0")
-    compare("link 2 2")
-    compare("link 2 3")
-    compare("link 3 2")
+    testCommand("output-print link 0 2")
+    testCommand("output-print link 2 0")
+    testCommand("output-print link 2 2")
+    testCommand("output-print link 2 3")
+    testCommand("output-print link 3 2")
   }
 
+  /*
   test("LinksInitBlock") { implicit fixture => import fixture._
     declare("globals [glob1]")
     testCommand("set glob1 0")

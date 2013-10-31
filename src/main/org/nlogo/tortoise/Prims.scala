@@ -114,6 +114,7 @@ object Prims {
         case _: prim.etc._setcurrentplotpen => "noop"
         case _: prim.etc._plot             => "noop"
         case _: prim.etc._createlinkto     => "AgentSet.createLinkTo"
+        case _: prim.etc._createlinkwith   => "AgentSet.createLinkWith"
         case _: prim.etc._createlinkswith  => "AgentSet.createLinksWith"
       }
   }
