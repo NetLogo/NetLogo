@@ -304,6 +304,17 @@ class TestAgents extends DockingSuite {
     compare("[ who ] of turtles-on turtles with [ who > 3 ]")
   }
 
+  test("turtles-at") { implicit fixture => import fixture._
+    declare("", WorldDimensions.square(2))
+    compare("[ who ] of [ turtles-at 0 0 ] of patch 0 0")
+    compare("[ who ] of [ turtles-at 1 1 ] of patch 0 0")
+    testCommand("ask patches [ sprout 2 ]")
+    compare("[ who ] of [ turtles-at 0 0 ] of turtle 3")
+    compare("[ who ] of [ turtles-at 1 1 ] of turtle 3")
+    compare("[ who ] of [ turtles-at 0 0 ] of patch 0 0")
+    compare("[ who ] of [ turtles-at 1 1 ] of patch 0 0")
+  }
+
   test("set heading negative") { implicit fixture => import fixture._
     // should get normalized to 260
     testCommand("crt 1 [ set heading -100 ]")

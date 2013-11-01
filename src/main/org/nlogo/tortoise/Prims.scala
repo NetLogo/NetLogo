@@ -79,6 +79,7 @@ object Prims {
         case _: prim.etc._patchhere   => "AgentSet.self().getPatchHere"
         case _: prim.etc._turtleshere => "AgentSet.self().turtlesHere"
         case _: prim.etc._turtleson   => "AgentSet.turtlesOn"
+        case _: prim.etc._turtlesat   => "AgentSet.self().turtlesAt"
         case _: prim._other           => "AgentSet.other"
         case _: prim.etc._sin         => "Trig.unsquashedSin"
         case _: prim.etc._cos         => "Trig.unsquashedCos"

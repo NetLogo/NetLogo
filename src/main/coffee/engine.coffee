@@ -113,14 +113,9 @@ class Turtle
   inRadius: (agents, radius) ->
     new Agents(a for a in agents.items when @distance(a) <= radius)
   patchAt: (dx, dy) ->
-    try
-      newX = world.topology().wrapX(@xcor + dx,
-          world.minPxcor - 0.5, world.maxPxcor + 0.5)
-      newY = world.topology().wrapY(@ycor + dy,
-          world.minPycor - 0.5, world.maxPycor + 0.5)
-      return world.getPatchAt(newX, newY)
-    catch error
-      if error instanceof TopologyInterrupt then Nobody else throw error
+    @getPatchHere().patchAt(dx, dy)
+  turtlesAt: (dx, dy) ->
+    @getPatchHere().turtlesAt(dx, dy)
   connectedLinks: (directed, isSource) ->
     me = this
     if directed
@@ -312,6 +307,17 @@ class Patch
   sprout: (n, breedName) ->
     breed = if("" == breedName) then Breeds.get("TURTLES") else Breeds.get(breedName)
     new Agents(world.createturtle(new Turtle(5 + 10 * Random.nextInt(14), Random.nextInt(360), @pxcor, @pycor, breed)) for num in [0...n])
+  turtlesAt: (dx, dy) ->
+    @patchAt(dx, dy).turtlesHere()
+  patchAt: (dx, dy) ->
+    try
+      newX = world.topology().wrapX(@pxcor + dx,
+          world.minPxcor - 0.5, world.maxPxcor + 0.5)
+      newY = world.topology().wrapY(@pycor + dy,
+          world.minPycor - 0.5, world.maxPycor + 0.5)
+      return world.getPatchAt(newX, newY)
+    catch error
+      if error instanceof TopologyInterrupt then Nobody else throw error
 
 Links =
   compare: (a, b) ->
