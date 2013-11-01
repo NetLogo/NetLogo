@@ -600,6 +600,9 @@ AgentSet =
     while (iter.hasNext())
       a = iter.next()
       @askAgent(a, f)
+    # If an asker indirectly commits suicide, the exception should propogate.  FD 11/1/2013
+    if(@_self.id && @_self.id == -1)
+      throw new DeathInterrupt
     return
   agentFilter: (agents, f) -> new Agents(a for a in agents.items when @askAgent(a, f))
   of: (agentsOrAgent, f) ->
