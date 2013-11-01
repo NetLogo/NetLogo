@@ -661,6 +661,13 @@ AgentSet =
   # I did that on purpose to show how arbitrary/confusing this seems.
   # May we should put *everything* in Prims, and Agents can be private.
   # Prims could/would/should be the compiler/runtime interface.
+  turtlesOn: (agentsOrAgent) ->
+    if(agentsOrAgent.items)
+      agents = agentsOrAgent.items
+    else
+      agents = [agentsOrAgent]
+    turtles = [].concat (agent.turtlesHere().items for agent in agents)...
+    new Agents(turtles, agentsOrAgent.breed)
   die: -> @_self.die()
   connectedLinks: (directed, isSource) -> @_self.connectedLinks(directed, isSource)
   linkNeighbors: (directed, isSource) -> @_self.linkNeighbors(directed, isSource)
