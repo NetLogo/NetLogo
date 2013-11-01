@@ -423,7 +423,7 @@ class TestLinks extends DockingSuite {
     testCommand("ask turtles [ create-links-with other turtles [ ask turtles with [true] [ die ] ] ]")
     compare("count turtles")
     compare("count links")
-  }
+  }*/
 
   test("SwitchDirectednessOfUnbreededLinks1") { implicit fixture => import fixture._
     testCommand("crt 2")
@@ -449,10 +449,10 @@ class TestLinks extends DockingSuite {
     testCommand("crt 2")
     testCommand("ask turtle 0 [create-link-from turtle 1]")
     testCommand("ask turtle 0 [ask link 1 0 [ die ] ]")
-    compare("[in-link-from turtle 1] of turtle 0")
-    compare("[out-link-to turtle 1] of turtle 0")
-    compare("[in-link-from turtle 0] of turtle 1")
-    compare("[out-link-to turtle 0] of turtle 1")
+    testCommand("output-print [in-link-from turtle 1] of turtle 0")
+    testCommand("output-print [out-link-to turtle 1] of turtle 0")
+    testCommand("output-print [in-link-from turtle 0] of turtle 1")
+    testCommand("output-print [out-link-to turtle 0] of turtle 1")
     compare("sort [who] of [in-link-neighbors] of turtle 0")
     compare("sort [who] of [out-link-neighbors] of turtle 0")
     compare("sort [who] of [in-link-neighbors ] of turtle 1")
@@ -466,13 +466,13 @@ class TestLinks extends DockingSuite {
     testCommand("crt 2")
     testCommand("ask turtle 0 [create-link-to turtle 1]")
     testCommand("ask turtle 0 [ask link 0 1 [die]]")
-    compare("[in-link-from turtle 1] of turtle 0")
-    compare("[out-link-to turtle 1] of turtle 0")
-    compare("[in-link-from turtle 0] of turtle 1")
-    compare("[out-link-to turtle 0] of turtle 1")
+    testCommand("output-print [in-link-from turtle 1] of turtle 0")
+    testCommand("output-print [out-link-to turtle 1] of turtle 0")
+    testCommand("output-print [in-link-from turtle 0] of turtle 1")
+    testCommand("output-print [out-link-to turtle 0] of turtle 1")
     compare("sort [who] of [in-link-neighbors] of turtle 0")
     compare("sort [who] of [out-link-neighbors] of turtle 0")
     compare("sort [who] of [in-link-neighbors ] of turtle 1")
     compare("sort [who] of [out-link-neighbors ] of turtle 1")
-  }*/
+  }
 }
