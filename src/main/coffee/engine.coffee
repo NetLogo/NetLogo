@@ -118,14 +118,8 @@ class Turtle
       @heading = ((@heading % 360) + 360) % 360
     return
   canMove: (amount) -> @patchAhead(amount) != Nobody
-  distancexy: (x, y) ->
-    StrictMath.sqrt(StrictMath.pow(world.topology().shortestX(@xcor(), x), 2) +
-                    StrictMath.pow(world.topology().shortestY(@ycor(), y), 2))
-  distance: (agent) ->
-    if (agent instanceof Turtle)
-      @distancexy(agent.xcor(), agent.ycor())
-    else if(agent instanceof Patch)
-      @distancexy(agent.pxcor, agent.pycor)
+  distancexy: (x, y) -> world.topology().distancexy(@xcor(), @ycor(), x, y)
+  distance: (agent) -> world.topology().distance(@xcor(), @ycor(), agent)
   inRadius: (agents, radius) ->
     new Agents(a for a in agents.items when @distance(a) <= radius)
   patchAt: (dx, dy) ->
@@ -323,14 +317,8 @@ class Patch
       updated(this, patchBuiltins[n])
     else
       @vars[n - patchBuiltins.length] = v
-  distancexy: (x, y) ->
-    StrictMath.sqrt(StrictMath.pow(world.topology().shortestX(@pxcor, x), 2) +
-                    StrictMath.pow(world.topology().shortestY(@pycor, y), 2))
-  distance: (agent) ->
-    if (agent instanceof Turtle)
-      @distancexy(agent.xcor(), agent.ycor())
-    else if(agent instanceof Patch)
-      @distancexy(agent.pxcor, agent.pycor)
+  distancexy: (x, y) -> world.topology().distancexy(@pxcor, @pycor, x, y)
+  distance: (agent) -> world.topology().distance(@pxcor, @pycor, agent)
   turtlesHere: -> new Agents(t for t in world.turtles().items when t.getPatchHere() == this, Breeds.get("TURTLES"))
   getNeighbors: -> world.getNeighbors(@pxcor, @pycor) # world.getTopology().getNeighbors(this)
   getNeighbors4: -> world.getNeighbors4(@pxcor, @pycor) # world.getTopology().getNeighbors(this)
@@ -407,13 +395,10 @@ class Link
   bothEnds: -> new Agents([@end1, @end2], Breeds.get("TURTLES"))
   otherEnd: -> if @end1 == AgentSet.myself() then @end2 else @end1
   updateEndRelatedVars: ->
-    dx = @end2.xcor() - @end1.xcor()
-    dy = @end2.ycor() - @end1.ycor()
-    @heading = (270 + StrictMath.toDegrees (StrictMath.PI() + StrictMath.atan2(-dy, dx))) % 360
-    @size = StrictMath.sqrt(StrictMath.pow(world.topology().shortestX(@end1.xcor(), @end2.xcor()), 2) +
-                            StrictMath.pow(world.topology().shortestY(@end1.ycor(), @end2.ycor()), 2))
-    @midpointx = (@end1.xcor() + @end2.xcor()) / 2
-    @midpointy = (@end1.ycor() + @end2.ycor()) / 2
+    @heading = world.topology().towards(@end1.xcor(), @end1.ycor(), @end2.xcor(), @end2.ycor())
+    @size = world.topology().distancexy(@end1.xcor(), @end1.ycor(), @end2.xcor(), @end2.ycor())
+    @midpointx = world.topology().midpointx(@end1.xcor(), @end2.xcor())
+    @midpointy = world.topology().midpointy(@end1.ycor(), @end2.ycor())
     updated(this, linkBuiltins...)
   toString: -> "(" + @breed.singular + " " + @end1.id + " " + @end2.id + ")"
 
@@ -983,6 +968,26 @@ class Topology
     else [@getPatchNorth(pxcor, pycor),     @getPatchEast(pxcor, pycor),
           @getPatchSouth(pxcor, pycor),     @getPatchWest(pxcor, pycor)]
 
+  distancexy: (x1, y1, x2, y2) ->
+    StrictMath.sqrt(StrictMath.pow(@shortestX(x1, x2), 2) + StrictMath.pow(@shortestY(y1, y2), 2))
+  distance: (x1, y1, agent) ->
+    if (agent instanceof Turtle)
+      @distancexy(x1, y1, agent.xcor(), agent.ycor())
+    else if(agent instanceof Patch)
+      @distancexy(x1, y1, agent.pxcor, agent.pycor)
+
+  towards: (x1, y1, x2, y2) ->
+    dx = @shortestX(x1, x2)
+    dy = @shortestY(y1, y2)
+    if dx == 0
+      if dy >= 0 then 0 else 180
+    else if dy == 0
+      if dx >= 0 then 90 else 270
+    else
+      (270 + StrictMath.toDegrees (StrictMath.PI() + StrictMath.atan2(-dy, dx))) % 360
+  midpointx: (x1, x2) -> @wrap((x1 + @shortestX(x1, x2) / 2), world.minPxcor - 0.5, world.maxPxcor + 0.5)
+  midpointy: (y1, y2) -> @wrap((y1 + @shortestY(y1, y2) / 2), world.minPycor - 0.5, world.maxPycor + 0.5)
+
 class Torus extends Topology
   constructor: (@minPxcor, @maxPxcor, @minPycor, @maxPycor) ->
 
@@ -992,14 +997,14 @@ class Torus extends Topology
     @wrap(pos, @minPycor - 0.5, @maxPycor + 0.5)
   shortestX: (x1, x2) ->
     if(StrictMath.abs(x1 - x2) > (1 + @maxPxcor - @minPxcor) / 2)
-      world.width() - StrictMath.abs(x1 - x2)
+      (world.width() - StrictMath.abs(x1 - x2)) * (if x2 > x1 then -1 else 1)
     else
-      StrictMath.abs(x1 - x2)
+      Math.abs(x1 - x2) * (if x1 > x2 then -1 else 1)
   shortestY: (y1, y2) ->
     if(StrictMath.abs(y1 - y2) > (1 + @maxPycor - @minPycor) / 2)
-      world.height() - StrictMath.abs(y1 - y2)
+      (world.height() - StrictMath.abs(y1 - y2)) * (if y2 > y1 then -1 else 1)
     else
-      StrictMath.abs(y1 - y2)
+      Math.abs(y1 - y2) * (if y1 > y2 then -1 else 1)
   diffuse: (vn, amount) ->
     scratch = for x in [0...world.width()]
       []
@@ -1099,8 +1104,8 @@ class VertCylinder extends Topology
 class Box extends Topology
   constructor: (@minPxcor, @maxPxcor, @minPycor, @maxPycor) ->
 
-  shortestX: (x1, x2) -> StrictMath.abs(x1 - x2)
-  shortestY: (y1, y2) -> StrictMath.abs(y1 - y2)
+  shortestX: (x1, x2) -> Math.abs(x1 - x2) * (if x1 > x2 then -1 else 1)
+  shortestY: (y1, y2) -> Math.abs(y1 - y2) * (if y1 > y2 then -1 else 1)
   wrapX: (pos) ->
     if(pos >= @maxPxcor + 0.5 || pos <= @minPxcor - 0.5)
       throw new TopologyInterrupt ("Cannot move turtle beyond the world's edge.")
