@@ -4,9 +4,6 @@ import Keys._
 
 object Tortoise {
 
-  lazy val tortoiseLibsTask = TaskKey[Seq[File]](
-    "tortoise-libs", "download JavaScript libraries for Tortoise")
-
   lazy val settings = Seq(
     resourceGenerators in Compile <+= tortoiseLibs
   )
