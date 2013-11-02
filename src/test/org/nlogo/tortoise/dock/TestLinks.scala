@@ -353,38 +353,6 @@ class TestLinks extends DockingSuite {
     compare("sort [who] of [link-neighbors ] of turtle 0")
   }
 
-  /*
-  test("LinksAllFromTo1") { implicit fixture => import fixture._
-    testCommand("crt 2")
-    compare("sort [my-in-links] of turtle 0")
-    compare("sort [my-out-links] of turtle 0")
-    compare("sort [my-in-links ] of turtle 1")
-    compare("sort [my-out-links ] of turtle 1")
-    compare("sort [my-links ] of turtle 0")
-    compare("sort [my-links ] of turtle 1")
-    testCommand("ask turtle 0 [create-link-to turtle 1]")
-    compare("map [ [ (list [who] of end1 [who] of end2 ) ] of ? ] sort [my-out-links ] of turtle 0")
-    compare("map [ [ (list [who] of end1 [who] of end2 ) ] of ? ] sort [my-in-links ] of turtle 1")
-    compare("sort [my-in-links] of turtle 0")
-    compare("sort [my-out-links ] of turtle 1")
-  }
-
-  test("LinksAllFromTo2") { implicit fixture => import fixture._
-    testCommand("crt 2")
-    testCommand("ask turtle 0 [create-link-from turtle 1]")
-    compare("map [ [ (list [who] of end1 [who] of end2 ) ] of ? ] sort [my-in-links ] of turtle 0")
-    compare("sort [my-out-links ] of turtle 0")
-    compare("sort [my-in-links] of turtle 1")
-    compare("map [ [ (list [who] of end1 [who] of end2 ) ] of ? ] sort [my-out-links ] of turtle 1")
-  }
-
-  test("LinksAllFromTo3") { implicit fixture => import fixture._
-    testCommand("crt 2")
-    testCommand("ask turtle 0 [create-link-with turtle 1]")
-    compare("map [ [ (list [who] of end1 [who] of end2 ) ] of ? ] sort [my-links ] of turtle 0")
-    compare("map [ [ (list [who] of end1 [who] of end2 ) ] of ? ] sort [my-links ] of turtle 1")
-  }*/
-
   test("LinkKillsItself1") { implicit fixture => import fixture._
     declare("breed [nodes node]")
     testCommand("create-nodes 2")
