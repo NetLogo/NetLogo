@@ -120,6 +120,15 @@ class Turtle
   canMove: (amount) -> @patchAhead(amount) != Nobody
   distancexy: (x, y) -> world.topology().distancexy(@xcor(), @ycor(), x, y)
   distance: (agent) -> world.topology().distance(@xcor(), @ycor(), agent)
+  facexy: (x, y) ->
+    if(x != @xcor() or y != @ycor())
+      @heading = world.topology().towards(@xcor(), @ycor(), x, y)
+      updated(this, "heading")
+  face: (agent) ->
+    if(agent instanceof Turtle)
+      @facexy(agent.xcor(), agent.ycor())
+    else if (agent instanceof Patch)
+      @facexy(agent.pxcor, agent.pycor)
   inRadius: (agents, radius) ->
     new Agents(a for a in agents.items when @distance(a) <= radius)
   patchAt: (dx, dy) ->
