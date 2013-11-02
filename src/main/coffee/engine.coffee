@@ -1,6 +1,6 @@
 turtleBuiltins = ["id", "color", "heading", "xcor", "ycor", "shape", "label", "labelcolor", "breed", "hidden", "size", "pensize", "penmode"]
 patchBuiltins = ["pxcor", "pycor", "pcolor", "plabel", "plabelcolor"]
-linkBuiltins = ["end1", "end2", "lcolor", "llabel", "llabelcolor", "lhidden", "lbreed", "thickness", "lshape", "tiemode"]
+linkBuiltins = ["end1", "end2", "lcolor", "llabel", "llabelcolor", "lhidden", "lbreed", "thickness", "lshape", "tiemode", "size", "heading", "midpointx", "midpointy"]
 
 class NetLogoException
   constructor: (@message) ->
@@ -59,6 +59,10 @@ updated = (obj, vars...) ->
       change["END1"] = obj[v].id
     else if (v == "end2")
       change["END2"] = obj[v].id
+    else if (v == "xcor")
+      change["XCOR"] = obj.xcor()
+    else if (v == "ycor")
+      change["YCOR"] = obj.ycor()
     else
       change[v.toUpperCase()] = obj[v]
   oneUpdate = {}
@@ -81,7 +85,11 @@ updated = (obj, vars...) ->
 
 class Turtle
   vars: []
-  constructor: (@color = 0, @heading = 0, @xcor = 0, @ycor = 0, breed = Breeds.get("TURTLES"), @label = "", @labelcolor = 9.9, @hidden = false, @size = 1.0, @pensize = 1.0, @penmode = "up") ->
+  _xcor: 0
+  _ycor: 0
+  constructor: (@color = 0, @heading = 0, xcor = 0, ycor = 0, breed = Breeds.get("TURTLES"), @label = "", @labelcolor = 9.9, @hidden = false, @size = 1.0, @pensize = 1.0, @penmode = "up") ->
+    @_xcor = xcor
+    @_ycor = ycor
     @breedvars = {}
     @updateBreed(breed)
     @vars = (x for x in TurtlesOwn.vars)
@@ -92,6 +100,14 @@ class Turtle
       for x in @breed.vars
         if(@breedvars[x] == undefined)
           @breedvars[x] = 0
+  xcor: -> @_xcor
+  setxcor: (newX) ->
+    @_xcor = newX
+    @refreshLinks()
+  ycor: -> @_ycor
+  setycor: (newY) ->
+    @_ycor = newY
+    @refreshLinks()
   setBreed: (breed) ->
     @updateBreed(breed)
     updated(this, "breed")
@@ -103,11 +119,11 @@ class Turtle
     return
   canMove: (amount) -> @patchAhead(amount) != Nobody
   distancexy: (x, y) ->
-    StrictMath.sqrt(StrictMath.pow(world.topology().shortestX(@xcor, x), 2) +
-                    StrictMath.pow(world.topology().shortestY(@ycor, y), 2))
+    StrictMath.sqrt(StrictMath.pow(world.topology().shortestX(@xcor(), x), 2) +
+                    StrictMath.pow(world.topology().shortestY(@ycor(), y), 2))
   distance: (agent) ->
     if (agent instanceof Turtle)
-      @distancexy(agent.xcor, agent.ycor)
+      @distancexy(agent.xcor(), agent.ycor())
     else if(agent instanceof Patch)
       @distancexy(agent.pxcor, agent.pycor)
   inRadius: (agents, radius) ->
@@ -130,6 +146,10 @@ class Turtle
           l
         else
           null).filter((o) -> o != null), Breeds.get("LINKS"))
+  refreshLinks: ->
+    l.updateEndRelatedVars() for l in (@connectedLinks(true, true).items)
+    l.updateEndRelatedVars() for l in (@connectedLinks(true, false).items)
+    l.updateEndRelatedVars() for l in (@connectedLinks(false, false).items)
   linkNeighbors: (directed, isSource) ->
     me = this
     if directed
@@ -174,9 +194,9 @@ class Turtle
     if (heading < 0 || heading >= 360)
       heading = ((heading % 360) + 360) % 360
     try
-      newX = world.topology().wrapX(@xcor + amount * Trig.sin(heading),
+      newX = world.topology().wrapX(@xcor() + amount * Trig.sin(heading),
           world.minPxcor - 0.5, world.maxPxcor + 0.5)
-      newY = world.topology().wrapY(@ycor + amount * Trig.cos(heading),
+      newY = world.topology().wrapY(@ycor() + amount * Trig.cos(heading),
           world.minPycor - 0.5, world.maxPycor + 0.5)
       return world.getPatchAt(newX, newY)
     catch error
@@ -201,10 +221,10 @@ class Turtle
     return
   jump: (amount) ->
     if @canMove(amount)
-      @xcor = world.topology().wrapX(@xcor + amount * Trig.sin(@heading),
-          world.minPxcor - 0.5, world.maxPxcor + 0.5)
-      @ycor = world.topology().wrapY(@ycor + amount * Trig.cos(@heading),
-          world.minPycor - 0.5, world.maxPycor + 0.5)
+      @setxcor(world.topology().wrapX(@xcor() + amount * Trig.sin(@heading),
+          world.minPxcor - 0.5, world.maxPxcor + 0.5))
+      @setycor(world.topology().wrapY(@ycor() + amount * Trig.cos(@heading),
+          world.minPycor - 0.5, world.maxPycor + 0.5))
       updated(this, "xcor", "ycor")
     return
   right: (amount) ->
@@ -213,8 +233,8 @@ class Turtle
     updated(this, "heading")
     return
   setxy: (x, y) ->
-    @xcor = x
-    @ycor = y
+    @setxcor(x)
+    @setycor(y)
     updated(this, "xcor", "ycor")
     return
   hideTurtle: (flag) ->
@@ -236,22 +256,32 @@ class Turtle
     throw new DeathInterrupt("Call only from inside an askAgent block")
   getTurtleVariable: (n) ->
     if (n < turtleBuiltins.length)
-      this[turtleBuiltins[n]]
+      if(n == 3) #xcor
+        @xcor()
+      else if(n == 4) #ycor
+        @ycor()
+      else
+        this[turtleBuiltins[n]]
     else
       @vars[n - turtleBuiltins.length]
   setTurtleVariable: (n, v) ->
     if (n < turtleBuiltins.length)
-      if (n == 5)  # shape
-        v = v.toLowerCase()
-      this[turtleBuiltins[n]] = v
-      if (n == 2)  # heading
-        @keepHeadingInRange()
+      if(n == 3) #xcor
+        @setxcor(v)
+      else if(n == 4) #ycor
+        @setycor(v)
+      else
+        if (n == 5)  # shape
+          v = v.toLowerCase()
+        this[turtleBuiltins[n]] = v
+        if (n == 2)  # heading
+          @keepHeadingInRange()
       updated(this, turtleBuiltins[n])
     else
       @vars[n - turtleBuiltins.length] = v
   getBreedVariable: (n) -> @breedvars[n]
   setBreedVariable: (n, v) -> @breedvars[n] = v
-  getPatchHere: -> world.getPatchAt(@xcor, @ycor)
+  getPatchHere: -> world.getPatchAt(@xcor(), @ycor())
   getPatchVariable: (n)    -> @getPatchHere().getPatchVariable(n)
   setPatchVariable: (n, v) -> @getPatchHere().setPatchVariable(n, v)
   getNeighbors: -> @getPatchHere().getNeighbors()
@@ -264,14 +294,14 @@ class Turtle
     breed = if breedName then Breeds.get(breedName) else @breed
     newTurtles = []
     for num in [0...n]
-      t = new Turtle(@color, @heading, @xcor, @ycor, breed, @label, @labelcolor, @hidden, @size, @pensize, @penmode)
+      t = new Turtle(@color, @heading, @xcor(), @ycor(), breed, @label, @labelcolor, @hidden, @size, @pensize, @penmode)
       for v in TurtlesOwn.vars
         t.setTurtleVariable(turtleBuiltins.length + v, @getTurtleVariable(turtleBuiltins.length + v))
       newTurtles.push(world.createturtle(t))
     new Agents(newTurtles, breed)
   moveto: (agent) ->
     if (agent instanceof Turtle)
-      @setxy(agent.xcor, agent.ycor)
+      @setxy(agent.xcor(), agent.ycor())
     else if(agent instanceof Patch)
       @setxy(agent.pxcor, agent.pycor)
 
@@ -298,7 +328,7 @@ class Patch
                     StrictMath.pow(world.topology().shortestY(@pycor, y), 2))
   distance: (agent) ->
     if (agent instanceof Turtle)
-      @distancexy(agent.xcor, agent.ycor)
+      @distancexy(agent.xcor(), agent.ycor())
     else if(agent instanceof Patch)
       @distancexy(agent.pxcor, agent.pycor)
   turtlesHere: -> new Agents(t for t in world.turtles().items when t.getPatchHere() == this, Breeds.get("TURTLES"))
@@ -348,8 +378,11 @@ class Link
   shape: "default"
   thickness: 0
   tiemode: "none"
-  constructor: (@directed, @end1, @end2) ->
+  xcor: ->
+  ycor: ->
+  constructor: (@id, @directed, @end1, @end2) ->
     @breed = Breeds.get("LINKS")
+    @updateEndRelatedVars()
   getLinkVariable: (n) ->
     if (n < linkBuiltins.length)
       this[linkBuiltins[n]]
@@ -373,6 +406,15 @@ class Link
     updated(this, turtleBuiltins[n])
   bothEnds: -> new Agents([@end1, @end2], Breeds.get("TURTLES"))
   otherEnd: -> if @end1 == AgentSet.myself() then @end2 else @end1
+  updateEndRelatedVars: ->
+    dx = @end2.xcor() - @end1.xcor()
+    dy = @end2.ycor() - @end1.ycor()
+    @heading = (270 + StrictMath.toDegrees (StrictMath.PI() + StrictMath.atan2(-dy, dx))) % 360
+    @size = StrictMath.sqrt(StrictMath.pow(world.topology().shortestX(@end1.xcor(), @end2.xcor()), 2) +
+                            StrictMath.pow(world.topology().shortestY(@end1.ycor(), @end2.ycor()), 2))
+    @midpointx = (@end1.xcor() + @end2.xcor()) / 2
+    @midpointy = (@end1.ycor() + @end2.ycor()) / 2
+    updated(this, linkBuiltins...)
   toString: -> "(" + @breed.singular + " " + @end1.id + " " + @end2.id + ")"
 
 class World
@@ -540,8 +582,7 @@ class World
       end1 = to
       end2 = from
     if Nobody == @getLink(end1.id, end2.id)
-      l = new Link(directed, end1, end2)
-      l.id = _nextLinkId++
+      l = new Link(_nextLinkId++, directed, end1, end2)
       updated(l, linkBuiltins...)
       updated(l, turtleBuiltins.slice(1)...)
       _links.push(l)
