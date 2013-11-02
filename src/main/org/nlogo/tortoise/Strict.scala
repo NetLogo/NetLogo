@@ -7,7 +7,7 @@ object Strict {
   def sin(x: Double) = StrictMath.sin(x)
   def cos(x: Double) = StrictMath.cos(x)
   def atan2(x: Double, y: Double) = StrictMath.atan2(x, y)
-  def PI() = StrictMath.PI
+  def pi = StrictMath.PI
   def toRadians(x: Double) = StrictMath.toRadians(x)
   def round(x: Double) = StrictMath.round(x)
   def floor(x: Double) = StrictMath.floor(x)
