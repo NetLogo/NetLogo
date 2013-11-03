@@ -292,6 +292,29 @@ class TestAgents extends DockingSuite {
     compare("sum [count turtles-here] of turtles")
   }
 
+  test("turtles-on") { implicit fixture => import fixture._
+    declare("", WorldDimensions.square(2))
+    testCommand("ask patches [ sprout 2 ]")
+    compare("[ who ] of turtles-on turtle 0")
+    compare("[ who ] of turtles-on patch 0 0")
+    compare("[ [ who ] of turtles-on neighbors4 ] of patch 0 0")
+    compare("[ [ who ] of turtles-on neighbors ] of patch 0 0")
+    compare("[ [ who ] of turtles-on neighbors4 ] of turtle 0")
+    compare("[ [ who ] of turtles-on neighbors ] of turtle 0")
+    compare("[ who ] of turtles-on turtles with [ who > 3 ]")
+  }
+
+  test("turtles-at") { implicit fixture => import fixture._
+    declare("", WorldDimensions.square(2))
+    compare("[ who ] of [ turtles-at 0 0 ] of patch 0 0")
+    compare("[ who ] of [ turtles-at 1 1 ] of patch 0 0")
+    testCommand("ask patches [ sprout 2 ]")
+    compare("[ who ] of [ turtles-at 0 0 ] of turtle 3")
+    compare("[ who ] of [ turtles-at 1 1 ] of turtle 3")
+    compare("[ who ] of [ turtles-at 0 0 ] of patch 0 0")
+    compare("[ who ] of [ turtles-at 1 1 ] of patch 0 0")
+  }
+
   test("set heading negative") { implicit fixture => import fixture._
     // should get normalized to 260
     testCommand("crt 1 [ set heading -100 ]")
@@ -367,6 +390,15 @@ class TestAgents extends DockingSuite {
     testCommand("ask n-of 20 turtles [ die ]")
     testCommand("ask n-of 10 turtles [ die ]")
     testCommand("ask n-of 5 turtles [ die ]")
+  }
+
+  test("other") { implicit fixture => import fixture._
+    declare("", api.WorldDimensions.square(2))
+    testCommand("crt 10")
+    testCommand("ask turtle 0 [ ask other turtles [ output-print self ] ]")
+    testCommand("ask turtles [ ask other turtles-here [ output-print self ] ]")
+    testCommand("ask patches [ ask other patches [ output-print self ] ]")
+    testCommand("ask patches [ ask other turtles [ output-print self ] ]")
   }
 
 }

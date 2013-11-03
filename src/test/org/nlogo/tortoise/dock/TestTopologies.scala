@@ -101,4 +101,43 @@ class TestTopologies extends DockingSuite {
   test("box neighbors") { implicit fixture => import fixture._
     testNeighbors(new WorldDimensions(-4, 4, -4, 4, 12.0, false, false))
   }
+
+  def testFace(world: WorldDimensions)(implicit fixture: DockingFixture) : Unit = { import fixture._
+    declare("", world)
+    testCommand("ask patches [ sprout 1 ]")
+    for(i <- 1 to 80)
+      testCommand(s"ask turtles [ face turtle $i ]")
+    for(x <- -4 to 4)
+      for(y <- -4 to 4)
+        testCommand(s"ask turtles [ face patch $x $y ]")
+    for(_ <- 0 to 10)
+      testCommand("ask turtles [ facexy ((random 8) / ((random 8) + 1) - 4) ((random 8) / ((random 8) + 1) - 4) ]")
+  }
+
+  test("torus face") { implicit fixture => import fixture._
+    testFace(WorldDimensions.square(4))
+  }
+
+  test("box face") { implicit fixture => import fixture._
+    testFace(new WorldDimensions(-4, 4, -4, 4, 12.0, false, false))
+  }
+
+  def testLinkWraps(world: WorldDimensions)(implicit fixture: DockingFixture) : Unit = { import fixture._
+    declare("", world)
+    testCommand("ask patch 3 0 [ sprout 1 ]")
+    testCommand("ask patch -3 0 [ sprout 1 ]")
+    testCommand("ask patch 0 -3 [ sprout 1 ]")
+    testCommand("ask patch 0 0 [ sprout 1 ]")
+    testCommand("ask patch 0 3 [ sprout 1 ]")
+    testCommand("ask turtles [ create-links-with other turtles ]")
+    testCommand("ask turtles [ set xcor xcor - 1 ]")
+  }
+
+  test("torus link wraps") { implicit fixture => import fixture._
+    testLinkWraps(WorldDimensions.square(4))
+  }
+
+  test("box link wraps") { implicit fixture => import fixture._
+    testLinkWraps(new WorldDimensions(-4, 4, -4, 4, 12.0, false, false))
+  }
 }

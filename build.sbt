@@ -34,17 +34,13 @@ crossPaths in ThisBuild := false
 
 nogen in ThisBuild  := { System.setProperty("org.nlogo.noGenerator", "true") }
 
-// temporarily needed for ScalaTest build which hasn't propagated
-// to Maven Central yet - ST 8/14/13
-resolvers += Resolver.sonatypeRepo("releases")
-
 libraryDependencies in ThisBuild ++= Seq(
   "asm" % "asm-all" % "3.3.1",
   "org.jmock" % "jmock" % "2.5.1" % "test",
   "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
   "org.jmock" % "jmock-junit4" % "2.5.1" % "test",
   "org.scalacheck" %% "scalacheck" % "1.10.1" % "test",
-  "org.scalatest" %% "scalatest" % "2.0.RC2" % "test"
+  "org.scalatest" %% "scalatest" % "2.0.RC3" % "test"
 )
 
 artifactName := { (_, _, _) => "NetLogoHeadless.jar" }

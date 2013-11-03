@@ -112,6 +112,12 @@ object Compiler {
       case _: prim._createturtles        => Prims.generateCreateTurtles(s, ordered = false)
       case _: prim._createorderedturtles => Prims.generateCreateTurtles(s, ordered = true)
       case _: prim._sprout               => Prims.generateSprout(s)
+      case _: prim.etc._createlinkfrom   => Prims.generateCreateLink(s, "createLinkFrom")
+      case _: prim.etc._createlinksfrom  => Prims.generateCreateLink(s, "createLinksFrom")
+      case _: prim.etc._createlinkto     => Prims.generateCreateLink(s, "createLinkTo")
+      case _: prim.etc._createlinksto    => Prims.generateCreateLink(s, "createLinksTo")
+      case _: prim.etc._createlinkwith   => Prims.generateCreateLink(s, "createLinkWith")
+      case _: prim.etc._createlinkswith  => Prims.generateCreateLink(s, "createLinksWith")
       case h: prim._hatch                => Prims.generateHatch(s, h.breedName)
       case _: prim.etc._hideturtle       => "AgentSet.self().hideTurtle(true);"
       case _: prim.etc._showturtle       => "AgentSet.self().hideTurtle(false);"
@@ -126,6 +132,8 @@ object Compiler {
             s"Globals.setGlobal(${p.vn},${arg(1)})"
           case bv: prim._breedvariable =>
             s"""AgentSet.setBreedVariable("${bv.name}",${arg(1)})"""
+          case p: prim._linkvariable =>
+            s"AgentSet.setLinkVariable(${p.vn},${arg(1)})"
           case p: prim._turtlevariable =>
             s"AgentSet.setTurtleVariable(${p.vn},${arg(1)})"
           case p: prim._turtleorlinkvariable if p.varName == "BREED" =>
@@ -139,11 +147,11 @@ object Compiler {
             s"${ident(p.name)} = ${arg(1)};"
           case x =>
             throw new IllegalArgumentException(
-              "unknown settable: " + x.getClass.getSimpleName)
+              "unknown settable: " + x.getClass.getName)
         }
       case _ =>
         throw new IllegalArgumentException(
-          "unknown primitive: " + s.command.getClass.getSimpleName)
+          "unknown primitive: " + s.command.getClass.getName)
     }
   }
 
@@ -170,6 +178,7 @@ object Compiler {
       case _: prim._unaryminus              => s"(- ${arg(0)})"
       case bv: prim._breedvariable          => s"""AgentSet.getBreedVariable("${bv.name}")"""
       case tv: prim._turtlevariable         => s"AgentSet.getTurtleVariable(${tv.vn})"
+      case tv: prim._linkvariable           => s"AgentSet.getLinkVariable(${tv.vn})"
       case tv: prim._turtleorlinkvariable   =>
         val vn = api.AgentVariables.getImplicitTurtleVariables.indexOf(tv.varName)
         s"AgentSet.getTurtleVariable($vn)"
@@ -197,9 +206,16 @@ object Compiler {
       case _: prim.etc._maxpycor            => "world.maxPycor"
       case _: prim.etc._worldwidth          => "world.width()"
       case _: prim.etc._worldheight         => "world.height()"
+      case _: prim.etc._linkneighbors       => "AgentSet.linkNeighbors(false, false)"
+      case _: prim.etc._inlinkneighbors     => "AgentSet.linkNeighbors(true, false)"
+      case _: prim.etc._outlinkneighbors    => "AgentSet.linkNeighbors(true, true)"
+      case _: prim.etc._mylinks             => "AgentSet.connectedLinks(false, false)"
+      case _: prim.etc._myinlinks           => "AgentSet.connectedLinks(true, false)"
+      case _: prim.etc._myoutlinks          => "AgentSet.connectedLinks(true, true)"
+      case _: prim.etc._islink              => s"(${arg(0)} instanceof Link)"
       case _ =>
         throw new IllegalArgumentException(
-          "unknown primitive: " + r.reporter.getClass.getSimpleName)
+          "unknown primitive: " + r.reporter.getClass.getName)
     }
   }
   // scalastyle:on cyclomatic.complexity
