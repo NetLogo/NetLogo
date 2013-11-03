@@ -74,6 +74,7 @@ object JSONSerializer {
       else
         JDouble(d.doubleValue)
     case i: java.lang.Integer => JInt(i.intValue)
+    case i: java.lang.Long    => JInt(i.intValue)
     case b: java.lang.Boolean => JBool(b)
     case s: java.lang.String  => JString(s)
     case s: ShapeList         => JObject((s.getShapes.asScala map (shape => shape.getName -> shape.toJsonObj)).toList)
@@ -87,7 +88,7 @@ object JSONSerializer {
     kind match {
       case Turtle => AgentVariables.getImplicitTurtleVariables
       case Patch  => AgentVariables.getImplicitPatchVariables
-      case Link   => AgentVariables.getImplicitLinkVariables
+      case Link   => AgentVariables.getImplicitLinkVariables ++ Array("SIZE", "HEADING", "MIDPOINTX", "MIDPOINTY")
       case World  => 0 until WorldVar.maxId map (WorldVar.apply(_).toString)
       case _      => Seq() // TODO: raise exception instead?
     }

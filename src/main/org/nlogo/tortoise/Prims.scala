@@ -36,6 +36,7 @@ object Prims {
         case _: prim.etc._myself      => "AgentSet.myself"
         case _: prim.etc._patch       => "world.getPatchAt"
         case _: prim.etc._turtles     => "world.turtles"
+        case _: prim.etc._links       => "world.links"
         case _: prim._patches         => "world.patches"
         case _: prim.etc._ticks       => "world.ticks"
         case _: prim.etc._timer       => "world.timer"
@@ -77,12 +78,24 @@ object Prims {
         case _: prim.etc._scalecolor  => "Prims.scaleColor"
         case _: prim.etc._patchhere   => "AgentSet.self().getPatchHere"
         case _: prim.etc._turtleshere => "AgentSet.self().turtlesHere"
+        case _: prim.etc._turtleson   => "AgentSet.turtlesOn"
+        case _: prim.etc._turtlesat   => "AgentSet.self().turtlesAt"
+        case _: prim._other           => "AgentSet.other"
         case _: prim.etc._sin         => "Trig.unsquashedSin"
         case _: prim.etc._cos         => "Trig.unsquashedCos"
         case _: prim.etc._floor       => "StrictMath.floor"
         case _: prim.etc._int         => "Prims._int"
         case _: prim.etc._round       => "StrictMath.round"
         case _: prim.etc._turtle      => "world.getTurtle"
+        case _: prim.etc._link        => "world.getLink"
+        case _: prim.etc._linkneighbor => "AgentSet.isLinkNeighbor(false, false)"
+        case _: prim.etc._inlinkneighbor => "AgentSet.isLinkNeighbor(true, false)"
+        case _: prim.etc._outlinkneighbor => "AgentSet.isLinkNeighbor(true, true)"
+        case _: prim.etc._inlinkfrom  => "AgentSet.findLinkViaNeighbor(true, false)"
+        case _: prim.etc._outlinkto   => "AgentSet.findLinkViaNeighbor(true, true)"
+        case _: prim.etc._linkwith    => "AgentSet.findLinkViaNeighbor(false, false)"
+        case _: prim.etc._bothends    => "AgentSet.self().bothEnds"
+        case _: prim.etc._otherend    => "AgentSet.self().otherEnd"
       }
   }
   // scalastyle:on cyclomatic.complexity
@@ -100,6 +113,8 @@ object Prims {
         case _: prim.etc._tickadvance      => "world.advancetick"
         case _: prim.etc._setdefaultshape  => "Breeds.setDefaultShape"
         case _: prim.etc._moveto           => "AgentSet.self().moveto"
+        case _: prim.etc._face             => "AgentSet.self().face"
+        case _: prim.etc._facexy           => "AgentSet.self().facexy"
         case _: prim._fd                   => "Prims.fd"
         case _: prim._bk                   => "Prims.bk"
         case _: prim.etc._left             => "Prims.left"
@@ -145,6 +160,15 @@ object Prims {
     val agents = Compiler.genReporterApp(s.args.head)
     val body   = fun(Compiler.genCommandBlock(s.args.tail.head))
     s"AgentSet.ask($agents, $shuffle, $body);"
+  }
+
+  def generateCreateLink(s: Statement, name: String): String = {
+    import org.nlogo.prim._
+    val other = Compiler.genReporterApp(s.args.head)
+    // This is so that we don't shuffle unnecessarily.  FD 10/31/2013
+    val nonEmptyCommandBlock = s.args.tail.head.asInstanceOf[CommandBlock].statements.size != 0
+    val body = fun(Compiler.genCommandBlock(s.args.tail.head))
+    s"""AgentSet.ask(AgentSet.$name($other), $nonEmptyCommandBlock, $body);"""
   }
 
   def generateCreateTurtles(s: Statement, ordered: Boolean): String = {

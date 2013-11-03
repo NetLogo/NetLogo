@@ -69,8 +69,6 @@ public strictfp class Link
     this.end1 = end1;
     this.end2 = end2;
 
-    _id_$eq(world.newLinkId());
-
     for (int i = 2; i < variables().length; i++) {
       variables()[i] = World.ZERO;
     }
@@ -91,8 +89,6 @@ public strictfp class Link
     variables()[VAR_TIEMODE] = MODE_NONE;
     this.end1 = end1;
     this.end2 = end2;
-
-    _id_$eq(world.newLinkId());
 
     variables()[VAR_BREED] = breed;
     world._links.add(this);
