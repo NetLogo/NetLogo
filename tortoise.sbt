@@ -7,4 +7,13 @@ seq(coffeeSettings: _*)
 
 (CoffeeKeys.bare in (Compile, CoffeeKeys.coffee)) := true
 
-seq(Tortoise.settings: _*)
+resourceGenerators in Compile <+= Def.task {
+  val path = resourceManaged.value / "json2.js"
+  if (!path.exists) {
+    streams.value.log.info("downloading json2.js")
+    IO.download(
+      new java.net.URL("http://ccl.northwestern.edu/devel/json2-43d7836c.js"),
+      path)
+  }
+  Seq(path)
+}
