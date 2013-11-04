@@ -54,3 +54,4 @@ unless StrictMath?
   StrictMath = Cloner.clone(Math)
   # For functions that are not "close enough," or that don't exist in the browser, manually define them here!
   StrictMath.toRadians = (degrees) -> degrees * Math.PI / 180
+  StrictMath.toDegrees = (radians) -> radians * 180 / Math.PI

@@ -993,7 +993,7 @@ class Topology
     else if dy == 0
       if dx >= 0 then 90 else 270
     else
-      (270 + StrictMath.toDegrees (StrictMath.pi() + StrictMath.atan2(-dy, dx))) % 360
+      (270 + StrictMath.toDegrees (StrictMath.PI + StrictMath.atan2(-dy, dx))) % 360
   midpointx: (x1, x2) -> @wrap((x1 + @shortestX(x1, x2) / 2), world.minPxcor - 0.5, world.maxPxcor + 0.5)
   midpointy: (y1, y2) -> @wrap((y1 + @shortestY(y1, y2) / 2), world.minPycor - 0.5, world.maxPycor + 0.5)
 
