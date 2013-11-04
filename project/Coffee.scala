@@ -4,6 +4,8 @@ import Keys._
 
 object Coffee {
 
+  val version = "1.6.3"
+
   lazy val settings = Seq(
     resourceGenerators in Compile <+= coffee,
     watchSources <++= coffeeSources
@@ -22,15 +24,14 @@ object Coffee {
   lazy val coffeeCompiler = Def.setting[File] {
     val node = baseDirectory.value / "node_modules"
     val compiler = node / "coffee-script" / "bin" / "coffee"
-    val expected = "1.6.3"
     def coffeeInstalled(): Boolean = {
       util.Try(Process(Seq(compiler.toString, "--version")).lines.head).toOption ==
-        Some(s"CoffeeScript version $expected")
+        Some(s"CoffeeScript version $version")
     }
     if (!coffeeInstalled()) {
       IO.createDirectory(node)
-      Process(Seq("npm", "install", s"coffee-script@$expected")).!
-      assert(coffeeInstalled(), s"couldn't install/run CoffeeScript $expected")
+      Process(Seq("npm", "install", s"coffee-script@$version")).!
+      assert(coffeeInstalled(), s"couldn't install/run CoffeeScript $version")
     }
     compiler
   }
@@ -44,8 +45,7 @@ object Coffee {
       val outName = src.getName.stripSuffix(".coffee") + ".js"
       val outPath = outDir / outName
       if (src.newerThan(outPath)) {
-        val info: String => Unit = streams.value.log.info(_)
-        info(s"generating $outName")
+        streams.value.log.info(s"generating $outName")
         Process(Seq(coffeeCompiler.value.toString, "-b", "-c", "-o", outDir.toString, src.toString)).!
       }
       outPath
