@@ -27,18 +27,19 @@ class Rhino {
       .getEngineByName("rhino")
       .ensuring(_ != null, "JavaScript engine unavailable")
 
+  // make a random number generator available
+  engine.put("Random", new MersenneTwisterFast)
+
+  // ensure exact matching results
+  engine.put("StrictMath", new Strict)
+
+  // These (specifically, 'compat.js') ought to be loaded after the Rhino runtime objects are loaded --JAB (11/5/13)
   // the original CoffeeScript for these are in headless/src/main/coffee. sbt compiles
   // them to JavaScript for us.  (and downloads json2.js direct from GitHub).
   // unlike V8, Rhino doesn't have JSON.stringify built-in, so we get it from json2.js
   val libs = Seq("/json2.js", "/js/compat.js", "/js/engine.js", "/js/agentmodel.js")
   for (lib <- libs)
     engine.eval(getResourceAsString(lib))
-
-  // make a random number generator available
-  engine.put("Random", new MersenneTwisterFast)
-
-  // ensure exact matching results
-  engine.put("StrictMath", Strict)
 
   // returns anything that got output-printed along the way, and any JSON
   // generated too
