@@ -1,8 +1,9 @@
-import java.io.File
 import sbt._
 import Keys._
 
 object Coffee {
+
+  private val npmCmd = "npm"
 
   val version = "1.6.3"
 
@@ -29,15 +30,15 @@ object Coffee {
         Some(s"CoffeeScript version $version")
     }
     if (!coffeeInstalled()) {
+      assert(Process(Seq(npmCmd, "-v")).!!.matches("""\s*\d+\.\d+\.\d+\s*"""), "NPM not installed or on $PATH")
       IO.createDirectory(node)
-      Process(Seq("npm", "install", s"coffee-script@$version")).!
+      Process(Seq(npmCmd, "install", s"coffee-script@$version")).!
       assert(coffeeInstalled(), s"couldn't install/run CoffeeScript $version")
     }
     compiler
   }
 
   lazy val coffee = Def.task[Seq[File]] {
-    val base = baseDirectory.value
     val outDir = (resourceManaged in Compile).value / "js"
     IO.createDirectory(outDir)
     for (src <- coffeeSources.value)
