@@ -334,6 +334,8 @@ class Patch
   sprout: (n, breedName) ->
     breed = if("" == breedName) then Breeds.get("TURTLES") else Breeds.get(breedName)
     new Agents(world.createturtle(new Turtle(5 + 10 * Random.nextInt(14), Random.nextInt(360), @pxcor, @pycor, breed)) for num in [0...n])
+  breedHere: (breedName) ->
+    new Agents(t for t in world.turtlesOfBreed(breedName).items when t.getPatchHere() == this, Breeds.get(breedName))
   turtlesAt: (dx, dy) ->
     @patchAt(dx, dy).turtlesHere()
   patchAt: (dx, dy) ->
