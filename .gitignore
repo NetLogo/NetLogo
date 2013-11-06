@@ -28,6 +28,7 @@ tmp/
 # other
 /.ensime
 /.ensime_lucene/
+/node_modules/
 /build/
 /lib/
 /out/
