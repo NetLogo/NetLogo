@@ -25,8 +25,11 @@ class TestTopologies extends DockingSuite {
   }
 
   test("box distance") { implicit fixture => import fixture._
-    val world = new WorldDimensions(-10, 10, -10, 10, 12.0, false, false);
-    testDistance(world)
+    testDistance(new WorldDimensions(-10, 10, -10, 10, 12.0, false, false))
+  }
+
+  test("vertcyl distance") { implicit fixture => import fixture._
+    testDistance(new WorldDimensions(-10, 10, -10, 10, 12.0, false, true))
   }
 
   def testDistancexy(world: WorldDimensions)(implicit fixture: DockingFixture) : Unit = { import fixture._
@@ -44,8 +47,11 @@ class TestTopologies extends DockingSuite {
   }
 
   test("box distancexy") { implicit fixture => import fixture._
-    val world = new WorldDimensions(-10, 10, -10, 10, 12.0, false, false);
-    testDistancexy(world)
+    testDistancexy(new WorldDimensions(-10, 10, -10, 10, 12.0, false, false))
+  }
+
+  test("vertcyl distancexy") { implicit fixture => import fixture._
+    testDistancexy(new WorldDimensions(-10, 10, -10, 10, 12.0, false, true))
   }
 
   def testEdgeWrapping(world: WorldDimensions)(implicit fixture: DockingFixture) : Unit = { import fixture._
@@ -59,8 +65,11 @@ class TestTopologies extends DockingSuite {
   }
 
   test("box edge wrapping") { implicit fixture => import fixture._
-    val world = new WorldDimensions(-4, 4, -4, 4, 12.0, false, false);
-    testEdgeWrapping(world)
+    testEdgeWrapping(new WorldDimensions(-4, 4, -4, 4, 12.0, false, false))
+  }
+
+  test("vertcyl edge wrapping") { implicit fixture => import fixture._
+    testEdgeWrapping(new WorldDimensions(-4, 4, -4, 4, 12.0, false, true))
   }
 
   def testDiffuse(world: WorldDimensions)(implicit fixture: DockingFixture) : Unit = { import fixture._
@@ -82,8 +91,11 @@ class TestTopologies extends DockingSuite {
   }
 
   test("box diffuse") { implicit fixture => import fixture._
-    val world = new WorldDimensions(-4, 4, -4, 4, 12.0, false, false);
-    testDiffuse(world)
+    testDiffuse(new WorldDimensions(-4, 4, -4, 4, 12.0, false, false))
+  }
+
+  test("vertcyl diffuse") { implicit fixture => import fixture._
+    testDiffuse(new WorldDimensions(-4, 4, -4, 4, 12.0, false, true))
   }
 
   def testNeighbors(world: WorldDimensions)(implicit fixture: DockingFixture) : Unit = { import fixture._
@@ -100,6 +112,10 @@ class TestTopologies extends DockingSuite {
 
   test("box neighbors") { implicit fixture => import fixture._
     testNeighbors(new WorldDimensions(-4, 4, -4, 4, 12.0, false, false))
+  }
+
+  test("vertcyl neighbors") { implicit fixture => import fixture._
+    testNeighbors(new WorldDimensions(-4, 4, -4, 4, 12.0, false, true))
   }
 
   def testFace(world: WorldDimensions)(implicit fixture: DockingFixture) : Unit = { import fixture._
@@ -122,6 +138,10 @@ class TestTopologies extends DockingSuite {
     testFace(new WorldDimensions(-4, 4, -4, 4, 12.0, false, false))
   }
 
+  test("vertcyl face") { implicit fixture => import fixture._
+    testFace(new WorldDimensions(-4, 4, -4, 4, 12.0, false, true))
+  }
+
   def testLinkWraps(world: WorldDimensions)(implicit fixture: DockingFixture) : Unit = { import fixture._
     declare("", world)
     testCommand("ask patch 3 0 [ sprout 1 ]")
@@ -139,5 +159,9 @@ class TestTopologies extends DockingSuite {
 
   test("box link wraps") { implicit fixture => import fixture._
     testLinkWraps(new WorldDimensions(-4, 4, -4, 4, 12.0, false, false))
+  }
+
+  test("vertcyl link wraps") { implicit fixture => import fixture._
+    testLinkWraps(new WorldDimensions(-4, 4, -4, 4, 12.0, false, true))
   }
 }
