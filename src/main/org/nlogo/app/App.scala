@@ -504,7 +504,7 @@ class App extends
 
   private def generateWebStartAppender: Appender = {
 
-    // Ignored; we simply default to "One-Off Mode", at Corey's request
+    // Ignored; we simply default to "Continuous Mode", at Arthur's request
     /*
 
     import annotation.tailrec
@@ -538,7 +538,7 @@ class App extends
     val loggingMode = nameModePairs(result)._2
     */
 
-    val loggingMode = LogSendingMode.AfterLoggingCompletes
+    val loggingMode = LogSendingMode.Continuous
     val url = new java.net.URL(System.getProperty("jnlp.connectpath"))
     new WebStartXMLWriterAppender(loggingMode, url)
 
