@@ -47,7 +47,11 @@ object Coffee {
       val outPath = outDir / outName
       if (src.newerThan(outPath)) {
         streams.value.log.info(s"generating $outName")
-        Process(Seq(coffeeCompiler.value.toString, "-b", "-c", "-o", outDir.toString, src.toString)).!
+        val cmd = Seq(coffeeCompiler.value.toString,
+          "-b", "-c", "-o", outDir.toString, src.toString)
+        val exitCode = Process(cmd).!
+        assert(exitCode == 0,
+          s"CoffeeScript compilation failed, exit code = $exitCode")
       }
       outPath
     }
