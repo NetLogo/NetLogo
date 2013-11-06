@@ -490,6 +490,7 @@ class World
     else if(@wrappingAllowedInX)
       _topology = new VertCylinder(@minPxcor, @maxPxcor, @minPycor, @maxPycor)
     else if(@wrappingAllowedInY)
+      throw new Error("Horz Cyl is not yet implemented!")
     else
       _topology = new Box(@minPxcor, @maxPxcor, @minPycor, @maxPycor)
     for t in @turtles().items
@@ -1064,7 +1065,7 @@ class Torus extends Topology
       else
         world.getPatchAt(pxcor - 1, @minPycor)
 
-     else if (pxcor == @minPxcor)
+    else if (pxcor == @minPxcor)
       world.getPatchAt(@maxPxcor, pycor + 1)
     else
       world.getPatchAt(pxcor - 1, pycor + 1)
@@ -1105,12 +1106,107 @@ class Torus extends Topology
 class VertCylinder extends Topology
   constructor: (@minPxcor, @maxPxcor, @minPycor, @maxPycor) ->
 
+  shortestX: (x1, x2) ->
+    if(StrictMath.abs(x1 - x2) > (1 + @maxPxcor - @minPxcor) / 2)
+      (world.width() - StrictMath.abs(x1 - x2)) * (if x2 > x1 then -1 else 1)
+    else
+      Math.abs(x1 - x2) * (if x1 > x2 then -1 else 1)
+  shortestY: (y1, y2) -> Math.abs(y1 - y2) * (if y1 > y2 then -1 else 1)
   wrapX: (pos) ->
     @wrap(pos, @minPxcor - 0.5, @maxPxcor + 0.5)
   wrapY: (pos) ->
     if(pos >= @maxPycor + 0.5 || pos <= @minPycor - 0.5)
       throw new TopologyInterrupt ("Cannot move turtle beyond the world's edge.")
     else pos
+  getPatchNorth: (pxcor, pycor) -> (pycor != @maxPycor) && world.getPatchAt(pxcor, pycor + 1)
+  getPatchSouth: (pxcor, pycor) -> (pycor != @minPycor) && world.getPatchAt(pxcor, pycor - 1)
+  getPatchEast: (pxcor, pycor) ->
+    if (pxcor == @maxPxcor)
+      world.getPatchAt(@minPxcor, pycor)
+    else
+      world.getPatchAt(pxcor + 1, pycor)
+
+  getPatchWest: (pxcor, pycor) ->
+    if (pxcor == @minPxcor)
+      world.getPatchAt(@maxPxcor, pycor)
+    else
+      world.getPatchAt(pxcor - 1, pycor)
+
+  getPatchNorthWest: (pxcor, pycor) -> (pycor != @maxPycor) && (pxcor != @minPxcor) && world.getPatchAt(pxcor - 1, pycor + 1)
+  getPatchSouthWest: (pxcor, pycor) -> (pycor != @minPycor) && (pxcor != @minPxcor) && world.getPatchAt(pxcor - 1, pycor - 1)
+  getPatchSouthEast: (pxcor, pycor) -> (pycor != @minPycor) && (pxcor != @maxPxcor) && world.getPatchAt(pxcor + 1, pycor - 1)
+  getPatchNorthEast: (pxcor, pycor) -> (pycor != @maxPycor) && (pxcor != @maxPxcor) && world.getPatchAt(pxcor + 1, pycor + 1)
+
+  getPatchNorthWest: (pxcor, pycor) ->
+    if (pycor == @maxPycor)
+      false
+    else if (pxcor == @minPxcor)
+      world.getPatchAt(@maxPxcor, pycor + 1)
+    else
+      world.getPatchAt(pxcor - 1, pycor + 1)
+
+  getPatchSouthWest: (pxcor, pycor) ->
+    if (pycor == @minPycor)
+      false
+    else if (pxcor == @minPxcor)
+      world.getPatchAt(@maxPxcor, pycor - 1)
+    else
+      world.getPatchAt(pxcor - 1, pycor - 1)
+
+  getPatchSouthEast: (pxcor, pycor) ->
+    if (pycor == @minPycor)
+      false
+    else if (pxcor == @maxPxcor)
+      world.getPatchAt(@minPxcor, pycor - 1)
+    else
+      world.getPatchAt(pxcor + 1, pycor - 1)
+
+  getPatchNorthEast: (pxcor, pycor) ->
+    if (pycor == @maxPycor)
+      false
+    else if (pxcor == @maxPxcor)
+      world.getPatchAt(@minPxcor, pycor + 1)
+    else
+      world.getPatchAt(pxcor + 1, pycor + 1)
+  diffuse: (vn, amount) ->
+    yy = world.height()
+    xx = world.width()
+    scratch = for x in [0...xx]
+      for y in [0...yy]
+        world.getPatchAt(x + @minPxcor, y + @minPycor).getPatchVariable(vn)
+    scratch2 = for x in [0...xx]
+      for y in [0...yy]
+        0
+    for y in [yy...(yy * 2)]
+      for x in [xx...(xx * 2)]
+        diffuseVal = (scratch[x - xx][y - yy] / 8) * amount
+        if (y > yy && y < (yy * 2) - 1)
+          scratch2[(x    ) - xx][(y    ) - yy] += scratch[x - xx][y - yy] - (8 * diffuseVal)
+          scratch2[(x - 1) % xx][(y - 1) % yy] += diffuseVal
+          scratch2[(x - 1) % xx][(y    ) % yy] += diffuseVal
+          scratch2[(x - 1) % xx][(y + 1) % yy] += diffuseVal
+          scratch2[(x    ) % xx][(y + 1) % yy] += diffuseVal
+          scratch2[(x    ) % xx][(y - 1) % yy] += diffuseVal
+          scratch2[(x + 1) % xx][(y - 1) % yy] += diffuseVal
+          scratch2[(x + 1) % xx][(y    ) % yy] += diffuseVal
+          scratch2[(x + 1) % xx][(y + 1) % yy] += diffuseVal
+        else if (y == yy)
+          scratch2[(x    ) - xx][(y    ) - yy] += scratch[x - xx][y - yy] - (5 * diffuseVal)
+          scratch2[(x - 1) % xx][(y    ) % yy] += diffuseVal
+          scratch2[(x - 1) % xx][(y + 1) % yy] += diffuseVal
+          scratch2[(x    ) % xx][(y + 1) % yy] += diffuseVal
+          scratch2[(x + 1) % xx][(y    ) % yy] += diffuseVal
+          scratch2[(x + 1) % xx][(y + 1) % yy] += diffuseVal
+        else
+          scratch2[(x    ) - xx][(y    ) - yy] += scratch[x - xx][y - yy] - (5 * diffuseVal)
+          scratch2[(x - 1) % xx][(y    ) % yy] += diffuseVal
+          scratch2[(x - 1) % xx][(y - 1) % yy] += diffuseVal
+          scratch2[(x    ) % xx][(y - 1) % yy] += diffuseVal
+          scratch2[(x + 1) % xx][(y    ) % yy] += diffuseVal
+          scratch2[(x + 1) % xx][(y - 1) % yy] += diffuseVal
+    for y in [0...yy]
+      for x in [0...xx]
+        world.getPatchAt(x + @minPxcor, y + @minPycor).setPatchVariable(vn, scratch2[x][y])
 
 class Box extends Topology
   constructor: (@minPxcor, @maxPxcor, @minPycor, @maxPycor) ->
