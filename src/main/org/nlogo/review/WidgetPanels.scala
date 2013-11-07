@@ -12,14 +12,18 @@ import javax.swing.JPanel
 object WidgetPanels {
 
   def create(ws: GUIWorkspace, run: ModelRun): Seq[JPanel] = {
-    newPlotPanels(ws, run) :+ newViewPanel(ws, run)
+    newPlotPanels(ws, run) :+ newViewWidgetPanel(ws, run)
   }
 
-  private def newViewPanel(ws: GUIWorkspace, run: ModelRun) = {
+  private def newViewWidgetPanel(ws: GUIWorkspace, run: ModelRun) = {
     val container = ws.viewWidget.findWidgetContainer
-    val bounds = container.getUnzoomedBounds(ws.view)
-    val settings = FixedViewSettings(ws.view)
-    new ViewPanel(run, bounds, settings)
+    val viewWidgetBounds = container.getUnzoomedBounds(ws.viewWidget)
+    val viewWidgetPanel = new ViewWidgetPanel(viewWidgetBounds)
+
+    val viewBounds = container.getUnzoomedBounds(ws.view)
+    val viewSettings = FixedViewSettings(ws.view)
+    viewWidgetPanel.add(new ViewPanel(run, viewBounds, viewSettings))
+    viewWidgetPanel
   }
 
   private def newPlotPanels(ws: GUIWorkspace, run: ModelRun): Seq[PlotPanel] = {

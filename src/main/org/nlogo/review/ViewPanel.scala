@@ -9,12 +9,19 @@ import org.nlogo.mirror.ModelRun
 import javax.swing.JPanel
 import org.nlogo.mirror.FixedViewSettings
 
+/** This class is just a stub for now: it should eventually draw 
+ *  a proper ViewWidgetPanel */
+class ViewWidgetPanel(bounds: java.awt.Rectangle) extends JPanel {
+  setLayout(null)
+  setBounds(bounds)
+}
+
 class ViewPanel(
   run: ModelRun,
-  viewBounds: java.awt.Rectangle,
+  bounds: java.awt.Rectangle,
   viewSettings: FixedViewSettings)
   extends JPanel {
-  setBounds(viewBounds)
+  setBounds(bounds)
   override def paintComponent(g: Graphics) {
     super.paintComponent(g)
     for (frame <- run.currentFrame) {
