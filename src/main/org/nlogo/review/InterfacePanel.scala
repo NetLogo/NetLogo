@@ -5,25 +5,35 @@ package org.nlogo.review
 import java.awt.Color.GRAY
 import java.awt.Color.WHITE
 
-import org.nlogo.mirror.FakeWorld
+import org.nlogo.mirror.ModelRun
 import org.nlogo.window
+import org.nlogo.window.PlotWidget
 
 import javax.swing.JPanel
 
-class InterfacePanel(val reviewTab: ReviewTab)
-  extends JPanel
-  with HasPlotPanels {
+class InterfacePanel(val reviewTab: ReviewTab) extends JPanel {
 
   setLayout(null) // disable layout manager to use absolute positioning
 
-  private var viewPanel: Option[ViewPanel] = None
+  private var widgetPanels: Seq[JPanel] = Seq.empty
 
   reviewTab.state.afterRunChangePub.newSubscriber { event =>
-    for (vp <- viewPanel) remove(vp)
-    for (run <- event.newRun) {
-      val vp = new ViewPanel(run)
-      add(vp)
-      viewPanel = Some(vp)
+    widgetPanels.foreach(remove)
+    for (run <- event.newRun)
+      widgetPanels = newPlotPanels(run) :+ new ViewPanel(run)
+    widgetPanels.foreach(add)
+  }
+
+  def newPlotPanels(run: ModelRun): Seq[PlotPanel] = {
+    val container = reviewTab.ws.viewWidget.findWidgetContainer
+    reviewTab.workspaceWidgets.collect {
+      case plotWidget: PlotWidget =>
+        new PlotPanel(
+          run,
+          plotWidget.plot,
+          container.getUnzoomedBounds(plotWidget),
+          plotWidget,
+          plotWidget.gui.legend.open)
     }
   }
 
@@ -70,7 +80,6 @@ class InterfacePanel(val reviewTab: ReviewTab)
       setPreferredSize(new java.awt.Dimension(img.getWidth, img.getHeight))
       g.drawImage(img, 0, 0, null)
       repaintWidgets(g)
-      refreshPlotPanels()
     }
   }
 }
