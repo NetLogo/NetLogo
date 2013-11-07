@@ -115,8 +115,6 @@ class RunRecorder(
       widgetArea = new java.awt.geom.Area(bounds)
     } viewArea.subtract(widgetArea)
 
-    val viewSettings = FixedViewSettings(ws.view)
-
     val interfaceImage = org.nlogo.awt.Images.paintToImage(
       container.asInstanceOf[java.awt.Component])
 
@@ -128,7 +126,7 @@ class RunRecorder(
     val initialDrawingImage = org.nlogo.drawing.cloneImage(ws.getAndCreateDrawing(false))
     val run = new ModelRun(
       name, saveModel(),
-      viewSettings, interfaceImage,
+      interfaceImage,
       initialPlots, initialDrawingImage,
       "", Nil)
     actionBuffers.foreach(_.activate())

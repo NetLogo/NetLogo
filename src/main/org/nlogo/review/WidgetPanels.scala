@@ -2,6 +2,7 @@ package org.nlogo.review
 
 import scala.collection.JavaConverters._
 
+import org.nlogo.mirror.FixedViewSettings
 import org.nlogo.mirror.ModelRun
 import org.nlogo.window.GUIWorkspace
 import org.nlogo.window.PlotWidget
@@ -16,7 +17,9 @@ object WidgetPanels {
 
   private def newViewPanel(ws: GUIWorkspace, run: ModelRun) = {
     val container = ws.viewWidget.findWidgetContainer
-    new ViewPanel(run, container.getUnzoomedBounds(ws.view))
+    val bounds = container.getUnzoomedBounds(ws.view)
+    val settings = FixedViewSettings(ws.view)
+    new ViewPanel(run, bounds, settings)
   }
 
   private def newPlotPanels(ws: GUIWorkspace, run: ModelRun): Seq[PlotPanel] = {

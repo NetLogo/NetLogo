@@ -2,11 +2,16 @@
 
 package org.nlogo.mirror
 
-import java.io.{ InputStream, ObjectOutputStream, OutputStream }
+import java.io.InputStream
+import java.io.ObjectOutputStream
+import java.io.OutputStream
 
-import org.nlogo.api.{ PlotPenState, PlotState }
+import org.nlogo.api.PlotPenState
+import org.nlogo.api.PlotState
 import org.nlogo.drawing.imageToBytes
-import org.nlogo.plot.{ Plot, PlotPen, PlotPoint }
+import org.nlogo.plot.Plot
+import org.nlogo.plot.PlotPen
+import org.nlogo.plot.PlotPoint
 
 import javax.imageio.ImageIO
 
@@ -20,7 +25,6 @@ trait SavableRun {
     val thingsToSave = Seq(
       name,
       modelString,
-      fixedViewSettings,
       interfaceImageBytes,
       deltas,
       savableInitialPlots,
@@ -39,7 +43,6 @@ object ModelRunIO {
     def read[A]() = in.readObject().asInstanceOf[A]
     val name = read[String]()
     val modelString = read[String]()
-    val fixedViewSettings = read[FixedViewSettings]
     val interfaceImage = imageFromBytes(read[Array[Byte]]())
     val deltas = read[Seq[Delta]]()
     val initialPlots = read[Seq[SavablePlot]].map(_.toPlot)
@@ -48,8 +51,8 @@ object ModelRunIO {
     val indexedNotes = read[List[IndexedNote]]
     in.close()
     val run = new ModelRun(
-      name, modelString, fixedViewSettings,
-      interfaceImage, initialPlots, initialDrawingImage,
+      name, modelString, interfaceImage,
+      initialPlots, initialDrawingImage,
       generalNotes, indexedNotes)
     run.load(deltas)
     run
