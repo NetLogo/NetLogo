@@ -5,11 +5,8 @@ package org.nlogo.review
 import java.awt.Color.GRAY
 import java.awt.Color.WHITE
 
-import org.nlogo.mirror.ModelRun
-import org.nlogo.window
-import org.nlogo.window.PlotWidget
-
 import javax.swing.JPanel
+import org.nlogo.window
 
 class InterfacePanel(val reviewTab: ReviewTab) extends JPanel {
 
@@ -19,22 +16,10 @@ class InterfacePanel(val reviewTab: ReviewTab) extends JPanel {
 
   reviewTab.state.afterRunChangePub.newSubscriber { event =>
     widgetPanels.foreach(remove)
-    for (run <- event.newRun)
-      widgetPanels = newPlotPanels(run) :+ new ViewPanel(run)
-    widgetPanels.foreach(add)
-  }
-
-  def newPlotPanels(run: ModelRun): Seq[PlotPanel] = {
-    val container = reviewTab.ws.viewWidget.findWidgetContainer
-    reviewTab.workspaceWidgets.collect {
-      case plotWidget: PlotWidget =>
-        new PlotPanel(
-          run,
-          plotWidget.plot,
-          container.getUnzoomedBounds(plotWidget),
-          plotWidget,
-          plotWidget.gui.legend.open)
+    widgetPanels = event.newRun.toSeq.flatMap {
+      WidgetPanels.create(reviewTab.ws, _)
     }
+    widgetPanels.foreach(add)
   }
 
   def repaintWidgets(g: java.awt.Graphics) {
