@@ -93,6 +93,7 @@ class Turtle
     @breedvars = {}
     @updateBreed(breed)
     @vars = (x for x in TurtlesOwn.vars)
+    @getPatchHere().arrive(this)
   updateBreed: (breed) ->
     @breed = breed
     @shape = @breed.shape()
@@ -102,11 +103,19 @@ class Turtle
           @breedvars[x] = 0
   xcor: -> @_xcor
   setxcor: (newX) ->
+    originPatch = @getPatchHere()
     @_xcor = newX
+    if originPatch != @getPatchHere()
+      originPatch.leave(this)
+      @getPatchHere().arrive(this)
     @refreshLinks()
   ycor: -> @_ycor
   setycor: (newY) ->
+    originPatch = @getPatchHere()
     @_ycor = newY
+    if originPatch != @getPatchHere()
+      originPatch.leave(this)
+      @getPatchHere().arrive(this)
     @refreshLinks()
   setBreed: (breed) ->
     @updateBreed(breed)
@@ -256,6 +265,7 @@ class Turtle
         catch error
           throw error if !(error instanceof DeathInterrupt)
       @id = -1
+      @getPatchHere().leave(this)
     throw new DeathInterrupt("Call only from inside an askAgent block")
   getTurtleVariable: (n) ->
     if (n < turtleBuiltins.length)
@@ -290,9 +300,7 @@ class Turtle
   getNeighbors: -> @getPatchHere().getNeighbors()
   getNeighbors4: -> @getPatchHere().getNeighbors4()
   turtlesHere: -> @getPatchHere().turtlesHere()
-  breedHere: (breedName) ->
-    p = @getPatchHere()
-    new Agents(t for t in world.turtlesOfBreed(breedName).items when t.getPatchHere() == p, Breeds.get(breedName))
+  breedHere: (breedName) -> @getPatchHere().breedHere(breedName)
   hatch: (n, breedName) ->
     breed = if breedName then Breeds.get(breedName) else @breed
     newTurtles = []
@@ -312,6 +320,7 @@ class Patch
   vars: []
   constructor: (@id, @pxcor, @pycor, @pcolor = 0.0, @plabel = "", @plabelcolor = 9.9) ->
     @vars = (x for x in PatchesOwn.vars)
+    @turtles = []
   toString: -> "(patch " + @pxcor + " " + @pycor + ")"
   getPatchVariable: (n) ->
     if (n < patchBuiltins.length)
@@ -326,16 +335,20 @@ class Patch
       updated(this, patchBuiltins[n])
     else
       @vars[n - patchBuiltins.length] = v
+  leave: (t) -> @turtles = @turtles.filter (o) -> o.id != t.id
+  arrive: (t) ->
+    @turtles.push(t)
   distancexy: (x, y) -> world.topology().distancexy(@pxcor, @pycor, x, y)
   distance: (agent) -> world.topology().distance(@pxcor, @pycor, agent)
-  turtlesHere: -> new Agents(t for t in world.turtles().items when t.getPatchHere() == this, Breeds.get("TURTLES"))
+  turtlesHere: -> new Agents(@turtles, Breeds.get("TURTLES"))
   getNeighbors: -> world.getNeighbors(@pxcor, @pycor) # world.getTopology().getNeighbors(this)
   getNeighbors4: -> world.getNeighbors4(@pxcor, @pycor) # world.getTopology().getNeighbors(this)
   sprout: (n, breedName) ->
     breed = if("" == breedName) then Breeds.get("TURTLES") else Breeds.get(breedName)
     new Agents(world.createturtle(new Turtle(5 + 10 * Random.nextInt(14), Random.nextInt(360), @pxcor, @pycor, breed)) for num in [0...n])
   breedHere: (breedName) ->
-    new Agents(t for t in world.turtlesOfBreed(breedName).items when t.getPatchHere() == this, Breeds.get(breedName))
+    breed = Breeds.get(breedName)
+    new Agents(t for t in @turtles when t.breed == breed, breed)
   turtlesAt: (dx, dy) ->
     @patchAt(dx, dy).turtlesHere()
   patchAt: (dx, dy) ->

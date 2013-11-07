@@ -3,6 +3,8 @@
 package org.nlogo.tortoise
 package dock
 
+import org.nlogo.api, api.WorldDimensions
+
 class TestBreeds extends DockingSuite {
   test("create breeds") { implicit fixture => import fixture._
     declare("""| breed [mice mouse]
@@ -77,17 +79,20 @@ class TestBreeds extends DockingSuite {
 
   test("breed here") { implicit fixture => import fixture._
     declare("""| breed [mice mouse]
-               | breed [frogs frog]""".stripMargin)
-    testCommand("create-frogs 2")
-    testCommand("create-mice 2")
-    testCommand("output-print count mice")
-    testCommand("output-print count frogs")
-    testCommand("ask frogs [ output-print count mice-here ]")
-    testCommand("ask mice [ output-print count frogs-here ]")
-    testCommand("ask mice [ output-print count mice-here ]")
-    testCommand("ask mice [ fd 1 ]")
-    testCommand("ask mice [ output-print count mice-here ]")
-    testCommand("ask mice [ output-print count frogs-here ]")
+               | breed [frogs frog]""".stripMargin, WorldDimensions.square(1))
+    testCommand("create-frogs 40")
+    testCommand("create-mice 40")
+    compare("count mice")
+    compare("count frogs")
+    compare("[ [ who ] of mice-here ] of frogs")
+    compare("[ [ who ] of frogs-here ] of mice")
+    compare("[ [ who ] of mice-here ] of mice")
+    testCommand("ask mice [ fd 2 ]")
+    compare("[ [ who ] of mice-here ] of mice")
+    compare("[ [ who ] of frogs-here ] of mice")
+    testCommand("ask frogs [ fd 2 ]")
+    compare("[ [ who ] of mice-here ] of frogs")
+    compare("[ [ who ] of frogs-here ] of mice")
   }
 
   test("set breed") { implicit fixture => import fixture._
