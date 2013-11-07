@@ -10,8 +10,8 @@ import org.nlogo.mirror.ModelRun
 
 import javax.swing.JPanel
 
-class ViewPanel(run: ModelRun) extends JPanel {
-  setBounds(run.viewArea.getBounds)
+class ViewPanel(run: ModelRun, viewBounds: java.awt.Rectangle) extends JPanel {
+  setBounds(viewBounds)
   override def paintComponent(g: Graphics) {
     super.paintComponent(g)
     for (frame <- run.currentFrame) {

@@ -105,13 +105,10 @@ class RunRecorder(
 
     // The position is the position of the view, but the image is the
     // whole interface, including the view.
-    val view = ws.viewWidget.view
-    val viewArea = new java.awt.geom.Area(new java.awt.Rectangle(
-      wrapperPos.x + view.getLocation().x, wrapperPos.y + view.getLocation().y,
-      view.getWidth, view.getHeight))
+    val container = ws.viewWidget.findWidgetContainer
+    val viewArea = new java.awt.geom.Area(container.getUnzoomedBounds(ws.view))
 
     // remove widgets from the clip area of the view:
-    val container = ws.viewWidget.findWidgetContainer
     for {
       w <- widgetHooks().map(_.widget)
       bounds = container.getUnzoomedBounds(w)
@@ -121,7 +118,7 @@ class RunRecorder(
     val viewSettings = FixedViewSettings(ws.view)
 
     val interfaceImage = org.nlogo.awt.Images.paintToImage(
-      ws.viewWidget.findWidgetContainer.asInstanceOf[java.awt.Component])
+      container.asInstanceOf[java.awt.Component])
 
     val name = Option(ws.getModelFileName).map(ReviewTab.removeExtension)
       .orElse(tabState.currentRun.map(_.name))
@@ -131,7 +128,7 @@ class RunRecorder(
     val initialDrawingImage = org.nlogo.drawing.cloneImage(ws.getAndCreateDrawing(false))
     val run = new ModelRun(
       name, saveModel(),
-      viewArea, viewSettings, interfaceImage,
+      viewSettings, interfaceImage,
       initialPlots, initialDrawingImage,
       "", Nil)
     actionBuffers.foreach(_.activate())

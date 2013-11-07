@@ -14,17 +14,12 @@ trait SavableRun {
   self: ModelRun =>
   def save(outputStream: OutputStream) {
     val out = new ObjectOutputStream(outputStream)
-    // Area is not serializable so we save a shape instead:
-    val viewAreaShape = java.awt.geom.AffineTransform
-      .getTranslateInstance(0, 0)
-      .createTransformedShape(viewArea)
     val interfaceImageBytes = imageToBytes(interfaceImage)
     val savableInitialPlots = initialPlots.map(SavablePlot.fromPlot)
     val initialDrawingImageBytes = imageToBytes(initialDrawingImage)
     val thingsToSave = Seq(
       name,
       modelString,
-      viewAreaShape,
       fixedViewSettings,
       interfaceImageBytes,
       deltas,
@@ -44,7 +39,6 @@ object ModelRunIO {
     def read[A]() = in.readObject().asInstanceOf[A]
     val name = read[String]()
     val modelString = read[String]()
-    val viewArea = new java.awt.geom.Area(read[java.awt.Shape]())
     val fixedViewSettings = read[FixedViewSettings]
     val interfaceImage = imageFromBytes(read[Array[Byte]]())
     val deltas = read[Seq[Delta]]()
@@ -54,7 +48,7 @@ object ModelRunIO {
     val indexedNotes = read[List[IndexedNote]]
     in.close()
     val run = new ModelRun(
-      name, modelString, viewArea, fixedViewSettings,
+      name, modelString, fixedViewSettings,
       interfaceImage, initialPlots, initialDrawingImage,
       generalNotes, indexedNotes)
     run.load(deltas)
