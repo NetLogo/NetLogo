@@ -121,9 +121,7 @@ class ReviewTab(
     add(new JScrollPane(runList), BorderLayout.CENTER)
   }
 
-  object InterfaceScrollPane extends JScrollPane {
-    setViewportView(interfacePanel)
-  }
+  object InterfaceScrollPane extends JScrollPane(interfacePanel)
 
   object RunPanel extends JPanel {
     setLayout(new BorderLayout)

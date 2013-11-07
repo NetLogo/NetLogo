@@ -14,25 +14,16 @@ class InterfacePanel(val reviewTab: ReviewTab)
   extends JPanel
   with HasPlotPanels {
 
-  def repaintView(g: java.awt.Graphics, viewArea: java.awt.geom.Area) {
-    for {
-      run <- reviewTab.state.currentRun
-      frame <- run.currentFrame
-      fakeWorld = new FakeWorld(frame.mirroredState)
-      paintArea = new java.awt.geom.Area(getBounds())
-      viewSettings = run.fixedViewSettings
-      g2d = g.create.asInstanceOf[java.awt.Graphics2D]
-    } {
-      paintArea.intersect(viewArea) // avoid spilling outside interface panel
-      try {
-        g2d.setClip(paintArea)
-        g2d.translate(viewArea.getBounds.x, viewArea.getBounds.y)
-        val renderer = fakeWorld.newRenderer
-        renderer.trailDrawer.readImage(frame.drawingImage)
-        renderer.paint(g2d, viewSettings)
-      } finally {
-        g2d.dispose()
-      }
+  setLayout(null) // disable layout manager to use absolute positioning
+
+  private var viewPanel: Option[ViewPanel] = None
+
+  reviewTab.state.afterRunChangePub.newSubscriber { event =>
+    for (vp <- viewPanel) remove(vp)
+    for (run <- event.newRun) {
+      val vp = new ViewPanel(run)
+      add(vp)
+      viewPanel = Some(vp)
     }
   }
 
@@ -74,9 +65,10 @@ class InterfacePanel(val reviewTab: ReviewTab)
     g.fillRect(0, 0, getWidth, getHeight)
     for {
       run <- reviewTab.state.currentRun
+      img = run.interfaceImage
     } {
-      g.drawImage(run.interfaceImage, 0, 0, null)
-      repaintView(g, run.viewArea)
+      setPreferredSize(new java.awt.Dimension(img.getWidth, img.getHeight))
+      g.drawImage(img, 0, 0, null)
       repaintWidgets(g)
       refreshPlotPanels()
     }
