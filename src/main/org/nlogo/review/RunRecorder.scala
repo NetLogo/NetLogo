@@ -2,9 +2,11 @@
 
 package org.nlogo.review
 
+import java.awt.Image
+import java.awt.image.BufferedImage
+
 import org.nlogo.api
 import org.nlogo.api.ReporterRunnable.thunk2ReporterRunnable
-import org.nlogo.mirror.FixedViewSettings
 import org.nlogo.mirror.Frame
 import org.nlogo.mirror.Mirrorables
 import org.nlogo.mirror.ModelRun
@@ -12,8 +14,8 @@ import org.nlogo.swing.Implicits.thunk2runnable
 import org.nlogo.util.SimplePublisher
 import org.nlogo.window.GUIWorkspace
 import org.nlogo.window.MonitorWidget
-import org.nlogo.window.WidgetWrapperInterface
 
+import javax.swing.GrayFilter
 import javax.swing.JOptionPane
 
 case class FrameAddedEvent(run: ModelRun, frame: Frame)
@@ -97,12 +99,21 @@ class RunRecorder(
     }
   }
 
+  private def grayOut(img: Image): BufferedImage = {
+    val bufferedImage = new BufferedImage(
+      img.getWidth(null), img.getHeight(null),
+      BufferedImage.TYPE_INT_ARGB)
+    val g = bufferedImage.createGraphics()
+    g.drawImage(GrayFilter.createDisabledImage(img), 0, 0, null)
+    g.dispose()
+    bufferedImage
+  }
+
   def startNewRun() {
 
     val container = ws.viewWidget.findWidgetContainer
-    val interfaceImage = org.nlogo.awt.Images.paintToImage(
-      container.asInstanceOf[java.awt.Component])
-
+    val interfaceImage = grayOut(org.nlogo.awt.Images.paintToImage(
+      container.asInstanceOf[java.awt.Component]))
     val name = Option(ws.getModelFileName).map(ReviewTab.removeExtension)
       .orElse(tabState.currentRun.map(_.name))
       .getOrElse("Untitled")
