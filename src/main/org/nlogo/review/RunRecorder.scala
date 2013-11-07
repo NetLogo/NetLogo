@@ -99,22 +99,7 @@ class RunRecorder(
 
   def startNewRun() {
 
-    val wrapper = org.nlogo.awt.Hierarchy.findAncestorOfClass(
-      ws.viewWidget, classOf[WidgetWrapperInterface])
-    val wrapperPos = wrapper.map(_.getLocation).getOrElse(new java.awt.Point(0, 0))
-
-    // The position is the position of the view, but the image is the
-    // whole interface, including the view.
     val container = ws.viewWidget.findWidgetContainer
-    val viewArea = new java.awt.geom.Area(container.getUnzoomedBounds(ws.view))
-
-    // remove widgets from the clip area of the view:
-    for {
-      w <- widgetHooks().map(_.widget)
-      bounds = container.getUnzoomedBounds(w)
-      widgetArea = new java.awt.geom.Area(bounds)
-    } viewArea.subtract(widgetArea)
-
     val interfaceImage = org.nlogo.awt.Images.paintToImage(
       container.asInstanceOf[java.awt.Component])
 
