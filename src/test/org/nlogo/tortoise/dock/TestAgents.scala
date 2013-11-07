@@ -289,7 +289,17 @@ class TestAgents extends DockingSuite {
   test("turtles-here") { implicit fixture => import fixture._
     declare("", WorldDimensions.square(2))
     testCommand("ask patches [ sprout 2 ]")
+    testCommand("output-print sum [count turtles-here] of turtles")
     compare("sum [count turtles-here] of turtles")
+  }
+
+  test("turtles-here 2") { implicit fixture => import fixture._
+    declare("", WorldDimensions.square(2))
+    testCommand("crt 20")
+    testCommand("ask turtles [ set heading 0 fd .3 ]")
+    testCommand("ask turtle 0 [ ask turtles-here [ output-print self ] ]")
+    testCommand("ask turtles [ fd .3 ]")
+    testCommand("ask turtle 0 [ ask turtles-here [ output-print self ] ]")
   }
 
   test("turtles-on") { implicit fixture => import fixture._
