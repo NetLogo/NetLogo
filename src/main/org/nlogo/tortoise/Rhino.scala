@@ -30,7 +30,7 @@ class Rhino {
   val libs = Seq(
     // unlike V8, Rhino doesn't have JSON.stringify built-in, so we get it from json2.js
     "/META-INF/resources/webjars/json2/20110223/json2.js",
-    // the original CoffeeScript for these are in headless/src/main/coffee. sbt compiles
+    // the original CoffeeScript for these are in src/main/coffee. sbt compiles
     // them to JavaScript for us.
     "/js/compat.js", "/js/engine.js", "/js/agentmodel.js")
   for (lib <- libs)
