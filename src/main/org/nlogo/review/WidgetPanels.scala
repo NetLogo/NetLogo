@@ -17,13 +17,14 @@ object WidgetPanels {
 
   private def newViewWidgetPanel(ws: GUIWorkspace, run: ModelRun) = {
     val container = ws.viewWidget.findWidgetContainer
-    val viewWidgetBounds = container.getUnzoomedBounds(ws.viewWidget)
-    val viewWidgetPanel = new ViewWidgetPanel(viewWidgetBounds)
-
-    val viewBounds = container.getUnzoomedBounds(ws.view)
     val viewSettings = FixedViewSettings(ws.view)
-    viewWidgetPanel.add(new ViewPanel(run, viewBounds, viewSettings))
-    viewWidgetPanel
+    val viewWidgetBounds = container.getUnzoomedBounds(ws.viewWidget)
+    val viewBounds = container.getUnzoomedBounds(ws.view)
+    new ViewWidgetPanel(
+      run,
+      viewWidgetBounds,
+      viewBounds,
+      viewSettings)
   }
 
   private def newPlotPanels(ws: GUIWorkspace, run: ModelRun): Seq[PlotPanel] = {

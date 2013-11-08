@@ -69,7 +69,6 @@ class ReviewTab(
   val scrubberPanel = new ScrubberPanel(
     notesTabbedPane.indexedNotesTable,
     () => state.currentFrameIndex,
-    () => state.currentTicks,
     state.afterRunChangePub,
     runRecorder.frameAddedPub)
   val reviewToolBar = new ReviewToolBar(this, runRecorder.frameAddedPub)

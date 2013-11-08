@@ -21,13 +21,12 @@ import javax.swing.event.ListSelectionListener
 class ScrubberPanel(
   indexedNotesTable: IndexedNotesTable,
   currentFrame: () => Option[Int],
-  currentTick: () => Option[Double],
   afterRunChangePub: SimplePublisher[AfterRunChangeEvent],
   frameAddedPub: SimplePublisher[FrameAddedEvent])
   extends JPanel {
 
   val scrubber = new Scrubber(indexedNotesTable, afterRunChangePub, frameAddedPub)
-  val tickPanel = new TickPanel(currentFrame, currentTick, scrubber)
+  val tickPanel = new FrameCounterPanel(currentFrame, scrubber)
   val scrubberButtonsPanel = new ScrubberButtonsPanel(scrubber)
 
   setLayout(new BorderLayout)
@@ -103,30 +102,25 @@ class ScrubberButton(name: String, tip: String, newValue: Int => Int, scrubber: 
   })
 }
 
-class TickPanelLabel(sizeTemplate: String) extends JLabel(sizeTemplate) {
+class FrameCounterPanelLabel(sizeTemplate: String) extends JLabel(sizeTemplate) {
   setPreferredSize(getPreferredSize) // fix to size of template...
   setText("-") // ...but start with "-"
   setFont(getFont.deriveFont(getFont.getStyle | java.awt.Font.BOLD))
   setHorizontalAlignment(SwingConstants.CENTER)
 }
 
-class TickPanel(
+class FrameCounterPanel(
   currentFrame: () => Option[Int],
-  currentTicks: () => Option[Double],
   scrubber: Scrubber)
   extends JPanel {
 
   add(new JLabel("Frame:"))
-  val frame = new TickPanelLabel("999999")
+  val frame = new FrameCounterPanelLabel("999999")
   add(frame)
-  add(new JLabel("Ticks:"))
-  val tick = new TickPanelLabel("999999.99")
-  add(tick)
 
   scrubber.addChangeListener(new ChangeListener {
     def stateChanged(e: ChangeEvent) {
       frame.setText(currentFrame().map(_.toString).getOrElse("-"))
-      tick.setText(currentTicks().map("%.2f".format(_)).getOrElse("-")) // TODO be smarter about decimals?
     }
   })
 }
