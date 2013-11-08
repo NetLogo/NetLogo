@@ -104,7 +104,7 @@ class Turtle
   xcor: -> @_xcor
   setxcor: (newX) ->
     originPatch = @getPatchHere()
-    @_xcor = newX
+    @_xcor = world.topology().wrapX(newX)
     if originPatch != @getPatchHere()
       originPatch.leave(this)
       @getPatchHere().arrive(this)
@@ -112,7 +112,7 @@ class Turtle
   ycor: -> @_ycor
   setycor: (newY) ->
     originPatch = @getPatchHere()
-    @_ycor = newY
+    @_ycor = world.topology().wrapY(newY)
     if originPatch != @getPatchHere()
       originPatch.leave(this)
       @getPatchHere().arrive(this)
@@ -245,8 +245,18 @@ class Turtle
     updated(this, "heading")
     return
   setxy: (x, y) ->
-    @setxcor(x)
-    @setycor(y)
+    origXcor = @xcor()
+    origYcor = @ycor()
+    try
+      @setxcor(x)
+      @setycor(y)
+    catch error
+      @setxcor(origXcor)
+      @setycor(origYcor)
+      if error instanceof TopologyInterrupt
+        throw new TopologyInterrupt("The point [ #{x} , #{y} ] is outside of the boundaries of the world and wrapping is not permitted in one or both directions.")
+      else
+        throw error
     updated(this, "xcor", "ycor")
     return
   hideTurtle: (flag) ->
@@ -1228,11 +1238,11 @@ class Box extends Topology
   shortestY: (y1, y2) -> Math.abs(y1 - y2) * (if y1 > y2 then -1 else 1)
   wrapX: (pos) ->
     if(pos >= @maxPxcor + 0.5 || pos <= @minPxcor - 0.5)
-      throw new TopologyInterrupt ("Cannot move turtle beyond the world's edge.")
+      throw new TopologyInterrupt ("Cannot move turtle beyond the worlds edge.")
     else pos
   wrapY: (pos) ->
     if(pos >= @maxPycor + 0.5 || pos <= @minPycor - 0.5)
-      throw new TopologyInterrupt ("Cannot move turtle beyond the world's edge.")
+      throw new TopologyInterrupt ("Cannot move turtle beyond the worlds edge.")
     else pos
 
   getPatchNorth: (pxcor, pycor) -> (pycor != @maxPycor) && world.getPatchAt(pxcor, pycor + 1)

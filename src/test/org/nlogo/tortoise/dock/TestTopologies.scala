@@ -54,6 +54,26 @@ class TestTopologies extends DockingSuite {
     testDistancexy(new WorldDimensions(-10, 10, -10, 10, 12.0, false, true))
   }
 
+  def testSetxyWraps(world: WorldDimensions)(implicit fixture: DockingFixture) : Unit = { import fixture._
+    declare("", world)
+    testCommand("crt 20")
+    testCommand("ask turtles [ setxy random 20 random 20 ]")
+    testCommand("ask turtles [ set xcor random 20 ]")
+    testCommand("ask turtles [ set ycor random 20 ]")
+  }
+
+  test("torus setxy wraps") { implicit fixture => import fixture._
+    testSetxyWraps(WorldDimensions.square(10))
+  }
+
+  test("box setxy wraps") { implicit fixture => import fixture._
+    testSetxyWraps(new WorldDimensions(-10, 10, -10, 10, 12.0, false, false))
+  }
+
+  test("vertcyl setxy wraps") { implicit fixture => import fixture._
+    testSetxyWraps(new WorldDimensions(-10, 8, -9, 5, 12.0, false, true))
+  }
+
   def testEdgeWrapping(world: WorldDimensions)(implicit fixture: DockingFixture) : Unit = { import fixture._
     declare("", world)
     testCommand("cro 20")
