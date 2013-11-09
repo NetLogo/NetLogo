@@ -14,6 +14,7 @@ import org.nlogo.swing.Implicits.thunk2runnable
 import org.nlogo.util.SimplePublisher
 import org.nlogo.window.GUIWorkspace
 import org.nlogo.window.MonitorWidget
+import org.nlogo.window.Widget
 
 import javax.swing.GrayFilter
 import javax.swing.JOptionPane
@@ -23,8 +24,15 @@ case class FrameAddedEvent(run: ModelRun, frame: Frame)
 class RunRecorder(
   ws: GUIWorkspace,
   tabState: ReviewTabState,
-  saveModel: () => String,
-  widgetHooks: () => Seq[WidgetHook]) {
+  saveModel: () => String) {
+
+  case class WidgetHook(
+    val widget: Widget,
+    val valueStringGetter: () => String)
+
+  def widgetHooks = workspaceWidgets(ws)
+    .collect { case m: MonitorWidget => m }
+    .map(m => WidgetHook(m, () => m.valueString))
 
   private val plotActionBuffer = new api.ActionBuffer(ws.plotManager)
   private val drawingActionBuffer = new api.ActionBuffer(ws.drawingActionBroker)
@@ -72,7 +80,7 @@ class RunRecorder(
   def grab() {
     for (run <- tabState.currentRun) {
       try {
-        val widgetValues = widgetHooks()
+        val widgetValues = widgetHooks
           .map(_.valueStringGetter.apply)
           .zipWithIndex
         val mirrorables = Mirrorables.allMirrorables(ws.world, widgetValues)
@@ -130,7 +138,7 @@ class RunRecorder(
   }
 
   def updateMonitors() {
-    widgetHooks()
+    widgetHooks
       .collect { case WidgetHook(m: MonitorWidget, _) => m }
       .foreach(updateMonitor)
   }

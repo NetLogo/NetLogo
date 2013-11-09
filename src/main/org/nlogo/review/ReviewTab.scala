@@ -22,10 +22,6 @@ import javax.swing.event.DocumentListener
 import javax.swing.event.TableModelEvent
 import javax.swing.event.TableModelListener
 
-case class WidgetHook(
-  val widget: Widget,
-  val valueStringGetter: () => String)
-
 class ReviewTab(
   val ws: window.GUIWorkspace,
   val saveModel: () => String,
@@ -38,13 +34,9 @@ class ReviewTab(
   def recordingEnabled = state.recordingEnabled
   def recordingEnabled_=(enabled: Boolean): Unit = state.recordingEnabled = enabled
 
-  def widgetHooks = workspaceWidgets(ws)
-    .collect { case m: MonitorWidget => m }
-    .map(m => WidgetHook(m, () => m.valueString))
-
   val runList = new RunList(this)
 
-  val runRecorder = new RunRecorder(ws, state, saveModel, () => widgetHooks)
+  val runRecorder = new RunRecorder(ws, state, saveModel)
 
   override def loadedRuns: Seq[api.ModelRun] = state.runs
   override def loadRun(inputStream: java.io.InputStream): Unit = {
