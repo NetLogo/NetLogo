@@ -4,9 +4,6 @@ package org.nlogo.review
 
 import java.awt.BorderLayout
 
-import scala.Option.option2Iterable
-import scala.collection.JavaConverters.asScalaBufferConverter
-
 import org.nlogo.api
 import org.nlogo.mirror.ModelRunIO
 import org.nlogo.window
@@ -41,11 +38,7 @@ class ReviewTab(
   def recordingEnabled = state.recordingEnabled
   def recordingEnabled_=(enabled: Boolean): Unit = state.recordingEnabled = enabled
 
-  def workspaceWidgets =
-    Option(ws.viewWidget.findWidgetContainer)
-      .toSeq.flatMap(_.getWidgetsForSaving.asScala)
-
-  def widgetHooks = workspaceWidgets
+  def widgetHooks = workspaceWidgets(ws)
     .collect { case m: MonitorWidget => m }
     .map(m => WidgetHook(m, () => m.valueString))
 
