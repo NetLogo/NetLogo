@@ -139,7 +139,7 @@ class Turtle
     else if (agent instanceof Patch)
       @facexy(agent.pxcor, agent.pycor)
   inRadius: (agents, radius) ->
-    new Agents(a for a in agents.items when @distance(a) <= radius)
+    world.topology().inRadius(this, @xcor(), @ycor(), agents, radius)
   patchAt: (dx, dy) ->
     @getPatchHere().patchAt(dx, dy)
   turtlesAt: (dx, dy) ->
@@ -1022,6 +1022,36 @@ class Topology
       (270 + StrictMath.toDegrees (Math.PI + StrictMath.atan2(-dy, dx))) % 360
   midpointx: (x1, x2) -> @wrap((x1 + @shortestX(x1, x2) / 2), world.minPxcor - 0.5, world.maxPxcor + 0.5)
   midpointy: (y1, y2) -> @wrap((y1 + @shortestY(y1, y2) / 2), world.minPycor - 0.5, world.maxPycor + 0.5)
+
+  inRadius: (origin, x, y, agents, radius) ->
+    result = []
+
+    r = Math.ceil(radius)
+    width = world.width() / 2
+    height = world.height() / 2
+    if(r < width || !world.wrappingAllowedInX)
+      minDX = -r
+      maxDX = r
+    else
+      maxDX = StrictMath.floor(width)
+      minDX = -Math.ceil(width - 1)
+    if(r < height || !world.wrappingAllowedInY)
+      minDY = -r
+      maxDY = r
+    else
+      maxDY = StrictMath.floor(height)
+      minDY = -Math.ceil(height - 1)
+
+    for dy in [minDY..maxDY]
+      for dx in [minDX..maxDX]
+        p = origin.patchAt(dx, dy)
+        if p != Nobody
+          if(@distancexy(p.pxcor, p.pycor, x, y) <= radius && agents.items.filter((o) -> o == p).length > 0)
+            result.push(p)
+          for t in p.turtlesHere().items
+            if(@distancexy(t.xcor(), t.ycor(), x, y) <= radius && agents.items.filter((o) -> o == t).length > 0)
+              result.push(t)
+    new Agents(result, agents.breed)
 
 class Torus extends Topology
   constructor: (@minPxcor, @maxPxcor, @minPycor, @maxPycor) ->

@@ -411,9 +411,9 @@ class TestLinks extends DockingSuite {
     testCommand("crt 2 [ create-links-with turtles with [ who > [who] of myself  ] [ ask both-ends [die] ] ]")
     compare("count links = 0")
     compare("count turtles = 0")
-    //testCommand("crt 2 [ create-links-with turtles with [ who > [who] of myself  ] [ ask end1 [die] ask end2 [die ] ] ]")
-    //compare("count links = 0")
-    //compare("count turtles = 1")
+    testCommand("crt 2 [ create-links-with turtles with [ who > [who] of myself  ] [ ask end1 [die] ask end2 [die ] ] ]")
+    compare("count links = 0")
+    compare("count turtles = 1")
   }
 
   test("LinkKillsParents2") { implicit fixture => import fixture._

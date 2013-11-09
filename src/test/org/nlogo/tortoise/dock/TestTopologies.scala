@@ -184,4 +184,23 @@ class TestTopologies extends DockingSuite {
   test("vertcyl link wraps") { implicit fixture => import fixture._
     testLinkWraps(new WorldDimensions(-4, 4, -4, 4, 12.0, false, true))
   }
+
+  def testInRadius(world: WorldDimensions)(implicit fixture: DockingFixture) : Unit = { import fixture._
+    declare("", world)
+    testCommand("crt 50 [ setxy random-xcor random-ycor ]")
+    testCommand("ask turtles [ output-print [ who ] of turtles in-radius random 8 ]")
+    testCommand("ask turtles [ output-print [ who ] of turtles in-radius random-float 17.3934 ]")
+  }
+
+  test("torusinradius") { implicit fixture => import fixture._
+    testInRadius(WorldDimensions.square(3))
+  }
+
+  test("box in radius") { implicit fixture => import fixture._
+    testInRadius(new WorldDimensions(-4, 3, -2, 6, 12.0, false, false))
+  }
+
+  test("vertcyl in radius") { implicit fixture => import fixture._
+    testInRadius(new WorldDimensions(-4, 3, -2, 6, 12.0, false, true))
+  }
 }
