@@ -143,7 +143,3 @@ class ReviewTab(
     add(PrimarySplitPane, BorderLayout.CENTER)
   }
 }
-
-object ReviewTab {
-  def removeExtension(path: String) = new java.io.File(path).getName.replaceAll("\\.[^.]*$", "")
-}

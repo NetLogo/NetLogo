@@ -64,7 +64,7 @@ class ReviewToolBar(reviewTab: ReviewTab, frameAddedPub: SimplePublisher[FrameAd
           !reviewTab.userConfirms("Save Model Run", "The file " + path +
             " already exists. Do you want to overwrite it?"))
           throw new UserCancelException
-        run.name = ReviewTab.removeExtension(path)
+        run.name = removeExtension(path)
         run.save(new java.io.FileOutputStream(path))
         run.dirty = false
         saveButton.setEnabled(false)

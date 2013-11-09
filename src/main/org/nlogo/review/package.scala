@@ -15,4 +15,8 @@ package object review {
     Option(ws.viewWidget.findWidgetContainer)
       .toSeq.flatMap(_.getWidgetsForSaving.asScala)
 
+  /** Returns a path with the file extension removed */
+  def removeExtension(path: String): String =
+    new java.io.File(path).getName.replaceAll("\\.[^.]*$", "")
+
 }

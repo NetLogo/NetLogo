@@ -114,7 +114,7 @@ class RunRecorder(
     val container = ws.viewWidget.findWidgetContainer
     val interfaceImage = grayOut(org.nlogo.awt.Images.paintToImage(
       container.asInstanceOf[java.awt.Component]))
-    val name = Option(ws.getModelFileName).map(ReviewTab.removeExtension)
+    val name = Option(ws.getModelFileName).map(removeExtension)
       .orElse(tabState.currentRun.map(_.name))
       .getOrElse("Untitled")
 
