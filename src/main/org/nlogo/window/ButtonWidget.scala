@@ -84,8 +84,6 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   locally {
     addMouseListener(this)
     addMouseMotionListener(this)
-    setBackground(InterfaceColors.BUTTON_BACKGROUND)
-    setBorder(widgetBorder)
     org.nlogo.awt.Fonts.adjustDefaultFont(this)
   }
 

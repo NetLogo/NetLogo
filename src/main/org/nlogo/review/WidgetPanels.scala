@@ -7,8 +7,8 @@ import org.nlogo.window.GUIWorkspace
 import org.nlogo.window.MonitorWidget
 import org.nlogo.window.PlotWidget
 import org.nlogo.window.WidgetContainer
-
 import javax.swing.JPanel
+import org.nlogo.window.ButtonWidget
 
 trait WidgetPanel extends JPanel {
   val panelBounds: java.awt.Rectangle
@@ -25,6 +25,7 @@ object WidgetPanels {
       workspaceWidgets(ws).zipWithIndex.collect {
         case (w: PlotWidget, _) => newPlotPanel(container, w, run)
         case (w: MonitorWidget, i) => newMonitorPanel(container, w, run, i)
+        case (w: ButtonWidget, _) => newButtonPanel(container, w)
       }
   }
 
@@ -66,4 +67,15 @@ object WidgetPanels {
       plotWidget.plot,
       plotWidget.gui.legend.open)
   }
+
+  def newButtonPanel(
+    container: WidgetContainer,
+    buttonWidget: ButtonWidget): ButtonPanel =
+    new ButtonPanel(
+      container.getUnzoomedBounds(buttonWidget),
+      buttonWidget.originalFont,
+      buttonWidget.actionKeyString,
+      buttonWidget.buttonType,
+      buttonWidget.displayName,
+      buttonWidget.forever)
 }

@@ -5,13 +5,17 @@ package org.nlogo.window
 import java.awt.Color
 import java.awt.Graphics
 import java.awt.Graphics2D
-import java.awt.RenderingHints
+import java.awt.RenderingHints.KEY_ANTIALIASING
+import java.awt.RenderingHints.VALUE_ANTIALIAS_ON
+
 import org.nlogo.swing.Utils.createWidgetBorder
 
 import ButtonWidget.ButtonType
 import ButtonWidget.FOREVER_GRAPHIC
 import ButtonWidget.FOREVER_GRAPHIC_DARK
+import InterfaceColors.BUTTON_BACKGROUND
 import javax.swing.JComponent
+
 
 trait PaintableButton {
   self: JComponent =>
@@ -26,12 +30,12 @@ trait PaintableButton {
   def displayName: String
   def error: Exception
 
+  setBackground(BUTTON_BACKGROUND)
   setBorder(createWidgetBorder)
 
   /// painting
   override def paintComponent(g: Graphics) {
-    val g2d = g.asInstanceOf[Graphics2D]
-    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g.asInstanceOf[Graphics2D].setRenderingHint(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON)
     def drawAsUp = buttonUp && !running
     def getPaintColor = if (drawAsUp) getBackground else getForeground
     def paintButtonRectangle(g: Graphics) {
