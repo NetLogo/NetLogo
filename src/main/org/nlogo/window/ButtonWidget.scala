@@ -73,11 +73,13 @@ object ButtonWidget {
 }
 class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
         with Editable with MouseListener with MouseMotionListener
-        with Events.JobRemovedEventHandler with Events.TickStateChangeEventHandler {
+        with Events.JobRemovedEventHandler with Events.TickStateChangeEventHandler
+        with PaintableButton {
 
   import ButtonWidget._
 
-  private var buttonType: ButtonType = ButtonType.ObserverButton
+  private var _buttonType: ButtonType = ButtonType.ObserverButton
+  def buttonType = _buttonType
 
   locally {
     addMouseListener(this)
@@ -90,12 +92,12 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   // buttonType now controls the kind. no one should ever be setting
   // the kind from outside of this class anyway.
   // the ui edits work through agent options, which now just set the button type
-  override def kind = buttonType.kind
+  override def kind = _buttonType.kind
   override def kind(kind: AgentKind) { /** ignoring, no one should call this. */ }
-  def agentOptions = buttonType.toAgentOptions
+  def agentOptions = _buttonType.toAgentOptions
   def agentOptions(newAgentOptions:Options[String]){
     if (newAgentOptions.chosenValue != this.agentOptions.chosenValue){
-      this.buttonType = ButtonType(newAgentOptions.chosenValue)
+      this._buttonType = ButtonType(newAgentOptions.chosenValue)
       recompile()
       repaint()
     }
@@ -140,7 +142,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
       case _ => Some(newActionKey)
     }
   }
-  private def actionKeyString = _actionKey.map(_.toString).getOrElse("")
+  def actionKeyString = _actionKey.map(_.toString).getOrElse("")
 
   private var _keyEnabled = false
   def keyEnabled = _keyEnabled
@@ -174,7 +176,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
     }
   }
 
-  private def disabledWaitingForSetup = goTime && ! setupFinished
+  def disabledWaitingForSetup = goTime && ! setupFinished
 
   private def respondToClick(inBounds: Boolean) {
     if(disabledWaitingForSetup){
@@ -228,8 +230,8 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   var running = false
   var stopping = false
   override def isButton = true
-  override def isTurtleForeverButton = buttonType == ButtonType.TurtleButton && forever
-  override def isLinkForeverButton = buttonType == ButtonType.LinkButton && forever
+  override def isTurtleForeverButton = _buttonType == ButtonType.TurtleButton && forever
+  override def isLinkForeverButton = _buttonType == ButtonType.LinkButton && forever
   private var _name = ""
   def name = _name
   def name_=(newName:String){
@@ -346,7 +348,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   }
 
   def recompile(){
-    val header = "to __button [] " + buttonType.toHeaderCode + (if(forever) " loop [ " else "")
+    val header = "to __button [] " + _buttonType.toHeaderCode + (if(forever) " loop [ " else "")
     val footer = "\n" + // protect against comments
       (if(forever) "__foreverbuttonend ] " else "__done ") + "end"
     new Events.RemoveJobEvent(this).raise(this)
@@ -362,58 +364,6 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
     size.height = StrictMath.max(size.height,
       getFontMetrics(font).getMaxDescent() + getFontMetrics(font).getMaxAscent() + 12)
     size
-  }
-
-  /// painting
-  override def paintComponent(g: Graphics) {
-    val g2d = g.asInstanceOf[Graphics2D]
-    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-    def drawAsUp = buttonUp && !running
-    def getPaintColor = if (drawAsUp) getBackground else getForeground
-    def paintButtonRectangle(g: Graphics) {
-      g.setColor(getPaintColor)
-      g.fillRect(0, 0, getWidth(), getHeight())
-      def renderImages(g: Graphics, dark: Boolean) {
-        def maybePaintForeverImage() {
-          if (forever) {
-            val image = if (dark) FOREVER_GRAPHIC_DARK else FOREVER_GRAPHIC
-            image.paintIcon(this, g, getWidth() - image.getIconWidth - 4, getHeight() - image.getIconHeight - 4)
-          }
-        }
-        def maybePaintAgentImage() {
-          buttonType.img(dark).map(_.paintIcon(this, g, 3, 3))
-        }
-        maybePaintForeverImage()
-        maybePaintAgentImage()
-      }
-      renderImages(g, !drawAsUp)
-    }
-    def paintKeyboardShortcut(g: Graphics) {
-      if (actionKeyString != "") {
-        val ax = getSize().width - 4 - g.getFontMetrics.stringWidth(actionKeyString)
-        val ay = g.getFontMetrics.getMaxAscent + 2
-        if (drawAsUp) g.setColor(if (keyEnabled) Color.BLACK else Color.GRAY)
-        else g.setColor(if (keyEnabled && forever) getBackground else Color.BLACK)
-        g.drawString(actionKeyString, ax - 1, ay)
-      }
-    }
-    def paintButtonText(g: Graphics) {
-      val stringWidth = g.getFontMetrics.stringWidth(displayName)
-      val color = {
-        val c = if (drawAsUp) getForeground else getBackground
-        if(error != null) c else if (disabledWaitingForSetup) Color.GRAY else c
-      }
-      g.setColor(color)
-      val availableWidth = getSize().width - 8
-      val shortString = org.nlogo.awt.Fonts.shortenStringToFit(displayName, availableWidth, g.getFontMetrics)
-      val nx = if (stringWidth > availableWidth) 4 else (getSize().width / 2) - (stringWidth / 2)
-      val labelHeight = g.getFontMetrics.getMaxDescent + g.getFontMetrics.getMaxAscent
-      val ny = (getSize().height / 2) + (labelHeight / 2)
-      g.drawString(shortString, nx, ny)  //if (disabledWaitingForSetup) Color.GRAY
-    }
-    paintButtonRectangle(g)
-    paintButtonText(g)
-    paintKeyboardShortcut(g)
   }
 
   // saving and loading
@@ -434,7 +384,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
     s.append("T\n")  // show display name
 
     // agent type
-    s.append(buttonType.name.toUpperCase + "\n")
+    s.append(_buttonType.name.toUpperCase + "\n")
 
     // former autoUpdate flag
     s.append("NIL\n")
@@ -454,7 +404,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   override def load(strings: Seq[String], helper: Widget.LoadHelper) = {
     forever = strings(7) == "T"
     // ButtonType handles converting the saved button type name into a ButtonType object.
-    if (10 < strings.length) buttonType = ButtonType(strings(10).toLowerCase)
+    if (10 < strings.length) _buttonType = ButtonType(strings(10).toLowerCase)
 
     // strings[11] used to control the autoUpdate flag,
     // but that's now a global setting
