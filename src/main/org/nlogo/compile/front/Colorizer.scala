@@ -22,11 +22,11 @@ object Colorizer {
     val Command  = new Color(0, 0, 170)   // blue
     val Reporter = new Color(102, 0, 150) // purple
     val Keyword  = new Color(0, 127, 105) // bluish green
-    val Constant = new Color(150, 55, 0)  // orange
+    val Literal  = new Color(150, 55, 0)  // orange
     val Default  = Color.BLACK            // black
     def apply(tpe: TokenType): Color =
       tpe match {
-        case TokenType.Literal  => Constant
+        case TokenType.Literal  => Literal
         case TokenType.Command  => Command
         case TokenType.Reporter => Reporter
         case TokenType.Keyword  => Keyword
