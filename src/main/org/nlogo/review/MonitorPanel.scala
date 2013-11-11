@@ -12,23 +12,17 @@ import org.nlogo.mirror.AgentKey
 import org.nlogo.mirror.Mirrorables.MirrorableWidgetValue.wvvValueString
 import org.nlogo.mirror.Mirrorables.WidgetValue
 import org.nlogo.mirror.ModelRun
-import org.nlogo.swing.Utils.createWidgetBorder
 import org.nlogo.window.InterfaceColors.MONITOR_BACKGROUND
 import org.nlogo.window.MonitorPainter
 
-import javax.swing.JPanel
-
 class MonitorPanel(
-  bounds: java.awt.Rectangle,
-  font:java.awt.Font,
+  val panelBounds: java.awt.Rectangle,
+  val originalFont: java.awt.Font,
   displayName: String,
   run: ModelRun,
   index: Int)
-  extends JPanel {
-  setBounds(bounds)
+  extends WidgetPanel {
   setBackground(MONITOR_BACKGROUND)
-  setBorder(createWidgetBorder)
-  setFont(font)
 
   override def paintComponent(g: Graphics): Unit = {
     g.asInstanceOf[Graphics2D].setRenderingHint(

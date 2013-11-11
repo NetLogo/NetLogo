@@ -2,7 +2,6 @@
 
 package org.nlogo.review
 
-import java.awt.Font
 import java.awt.Graphics
 import java.awt.Graphics2D
 import java.awt.RenderingHints.KEY_ANTIALIASING
@@ -13,17 +12,12 @@ import org.nlogo.plot.Plot
 import org.nlogo.window.InterfaceColors
 import org.nlogo.window.PlotWidgetGUI
 
-import javax.swing.JPanel
-
 class PlotPanel(
+  val panelBounds: java.awt.Rectangle,
+  val originalFont: java.awt.Font,
   run: ModelRun,
-  font: Font,
   initialPlot: Plot,
-  bounds: java.awt.Rectangle,
-  legendIsOpen: Boolean) extends JPanel {
-  setFont(font)
-  setBounds(bounds)
-  setBorder(org.nlogo.swing.Utils.createWidgetBorder)
+  legendIsOpen: Boolean) extends WidgetPanel {
   setBackground(InterfaceColors.PLOT_BACKGROUND)
   val gui = new PlotWidgetGUI(initialPlot, this)
   gui.legend.open = legendIsOpen
