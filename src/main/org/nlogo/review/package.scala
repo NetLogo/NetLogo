@@ -10,7 +10,8 @@ import org.nlogo.window.Widget
 
 package object review {
 
-  /** Returns all widgets in workspace */
+  /** Returns all widgets in workspace. Note that getWidgetsForSaving
+   *  returns widgets in back-to-front order, a feature we rely on. */
   def workspaceWidgets(ws: GUIWorkspace): Seq[Widget] =
     Option(ws.viewWidget.findWidgetContainer)
       .toSeq.flatMap(_.getWidgetsForSaving.asScala)

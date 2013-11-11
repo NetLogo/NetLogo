@@ -28,11 +28,15 @@ class RunRecorder(
 
   case class WidgetHook(
     val widget: Widget,
+    val index: Int,
     val valueStringGetter: () => String)
 
-  def widgetHooks = workspaceWidgets(ws)
-    .collect { case m: MonitorWidget => m }
-    .map(m => WidgetHook(m, () => m.valueString))
+  def widgetHooks =
+    workspaceWidgets(ws)
+      .zipWithIndex
+      .collect {
+        case (m: MonitorWidget, i) => WidgetHook(m, i, () => m.valueString)
+      }
 
   private val plotActionBuffer = new api.ActionBuffer(ws.plotManager)
   private val drawingActionBuffer = new api.ActionBuffer(ws.drawingActionBroker)
@@ -80,9 +84,9 @@ class RunRecorder(
   def grab() {
     for (run <- tabState.currentRun) {
       try {
-        val widgetValues = widgetHooks
-          .map(_.valueStringGetter.apply)
-          .zipWithIndex
+        val widgetValues = widgetHooks.map { wh =>
+          (wh.valueStringGetter(), wh.index)
+        }
         val mirrorables = Mirrorables.allMirrorables(ws.world, widgetValues)
         val actions = actionBuffers.flatMap(_.grab())
         val newFrame = run.appendData(mirrorables, actions)
@@ -139,7 +143,7 @@ class RunRecorder(
 
   def updateMonitors() {
     widgetHooks
-      .collect { case WidgetHook(m: MonitorWidget, _) => m }
+      .collect { case WidgetHook(m: MonitorWidget, _, _) => m }
       .foreach(updateMonitor)
   }
 

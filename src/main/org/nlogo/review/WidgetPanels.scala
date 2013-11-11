@@ -1,22 +1,29 @@
 package org.nlogo.review
 
-import scala.collection.JavaConverters._
-
 import org.nlogo.mirror.FixedViewSettings
 import org.nlogo.mirror.ModelRun
 import org.nlogo.window.GUIWorkspace
+import org.nlogo.window.MonitorWidget
 import org.nlogo.window.PlotWidget
+import org.nlogo.window.WidgetContainer
 
 import javax.swing.JPanel
 
 object WidgetPanels {
 
   def create(ws: GUIWorkspace, run: ModelRun): Seq[JPanel] = {
-    newPlotPanels(ws, run) :+ newViewWidgetPanel(ws, run)
+    val container = ws.viewWidget.findWidgetContainer
+    newViewWidgetPanel(ws, container, run) +:
+      workspaceWidgets(ws).zipWithIndex.collect {
+        case (w: PlotWidget, _)    => newPlotPanel(container, w, run)
+        case (w: MonitorWidget, i) => newMonitorPanel(container, w, run, i)
+      }
   }
 
-  private def newViewWidgetPanel(ws: GUIWorkspace, run: ModelRun) = {
-    val container = ws.viewWidget.findWidgetContainer
+  def newViewWidgetPanel(
+    ws: GUIWorkspace,
+    container: WidgetContainer,
+    run: ModelRun): ViewWidgetPanel = {
     val viewSettings = FixedViewSettings(ws.view)
     val viewWidgetBounds = container.getUnzoomedBounds(ws.viewWidget)
     val viewBounds = container.getUnzoomedBounds(ws.view)
@@ -27,16 +34,27 @@ object WidgetPanels {
       viewSettings)
   }
 
-  private def newPlotPanels(ws: GUIWorkspace, run: ModelRun): Seq[PlotPanel] = {
-    val container = ws.viewWidget.findWidgetContainer
-    container.getWidgetsForSaving.asScala.collect {
-      case plotWidget: PlotWidget =>
-        new PlotPanel(
-          run,
-          plotWidget.plot,
-          container.getUnzoomedBounds(plotWidget),
-          plotWidget,
-          plotWidget.gui.legend.open)
-    }
+  def newMonitorPanel(
+    container: WidgetContainer,
+    monitorWidget: MonitorWidget,
+    run: ModelRun,
+    index: Int): MonitorPanel = {
+    new MonitorPanel(
+      container.getUnzoomedBounds(monitorWidget),
+      monitorWidget.originalFont,
+      monitorWidget.displayName,
+      run,
+      index)
+  }
+
+  def newPlotPanel(
+    container: WidgetContainer,
+    plotWidget: PlotWidget,
+    run: ModelRun): PlotPanel = {
+    new PlotPanel(
+      run,
+      plotWidget.plot,
+      container.getUnzoomedBounds(plotWidget),
+      plotWidget.gui.legend.open)
   }
 }

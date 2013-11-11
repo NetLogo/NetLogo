@@ -5,8 +5,9 @@ package org.nlogo.review
 import java.awt.Color.GRAY
 import java.awt.Color.WHITE
 
+import scala.Option.option2Iterable
+
 import javax.swing.JPanel
-import org.nlogo.window
 
 class InterfacePanel(val reviewTab: ReviewTab) extends JPanel {
 
@@ -22,38 +23,6 @@ class InterfacePanel(val reviewTab: ReviewTab) extends JPanel {
     widgetPanels.foreach(add)
   }
 
-  def repaintWidgets(g: java.awt.Graphics) {
-    for {
-      frame <- reviewTab.state.currentFrame
-      values = frame.mirroredState
-        .filterKeys(_.kind == org.nlogo.mirror.Mirrorables.WidgetValue)
-        .toSeq
-        .sortBy { case (agentKey, vars) => agentKey.id } // should be z-order
-        .map { case (agentKey, vars) => vars(0).asInstanceOf[String] }
-      (w, v) <- reviewTab.widgetHooks.map(_.widget) zip values
-    } {
-      val g2d = g.create.asInstanceOf[java.awt.Graphics2D]
-      try {
-        val container = reviewTab.ws.viewWidget.findWidgetContainer
-        val bounds = container.getUnzoomedBounds(w)
-        g2d.setRenderingHint(
-          java.awt.RenderingHints.KEY_ANTIALIASING,
-          java.awt.RenderingHints.VALUE_ANTIALIAS_ON)
-        g2d.setFont(w.getFont)
-        g2d.clipRect(bounds.x, bounds.y, w.getSize().width, w.getSize().height) // make sure text doesn't overflow
-        g2d.translate(bounds.x, bounds.y)
-        w match {
-          case m: window.MonitorWidget =>
-            window.MonitorPainter.paint(
-              g2d, m.getSize, m.getForeground, m.displayName, v)
-          case _ => // ignore for now
-        }
-      } finally {
-        g2d.dispose()
-      }
-    }
-  }
-
   override def paintComponent(g: java.awt.Graphics) {
     super.paintComponent(g)
     g.setColor(if (reviewTab.state.currentRun.isDefined) WHITE else GRAY)
@@ -64,7 +33,6 @@ class InterfacePanel(val reviewTab: ReviewTab) extends JPanel {
     } {
       setPreferredSize(new java.awt.Dimension(img.getWidth, img.getHeight))
       g.drawImage(img, 0, 0, null)
-      repaintWidgets(g)
     }
   }
 }
