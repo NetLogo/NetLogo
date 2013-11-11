@@ -3,10 +3,12 @@ package org.nlogo.review
 import org.nlogo.mirror.FixedViewSettings
 import org.nlogo.mirror.ModelRun
 import org.nlogo.swing.Utils.createWidgetBorder
+import org.nlogo.widget.NoteWidget
 import org.nlogo.window.GUIWorkspace
 import org.nlogo.window.MonitorWidget
 import org.nlogo.window.PlotWidget
 import org.nlogo.window.WidgetContainer
+
 import javax.swing.JPanel
 import org.nlogo.window.ButtonWidget
 
@@ -26,6 +28,7 @@ object WidgetPanels {
         case (w: PlotWidget, _) => newPlotPanel(container, w, run)
         case (w: MonitorWidget, i) => newMonitorPanel(container, w, run, i)
         case (w: ButtonWidget, _) => newButtonPanel(container, w)
+        case (w: NoteWidget, _) => newNotePanel(container, w)
       }
   }
 
@@ -78,4 +81,13 @@ object WidgetPanels {
       buttonWidget.buttonType,
       buttonWidget.displayName,
       buttonWidget.forever)
+
+  def newNotePanel(
+    container: WidgetContainer,
+    noteWidget: NoteWidget): NotePanel =
+    new NotePanel(
+      container.getUnzoomedBounds(noteWidget),
+      noteWidget.originalFont,
+      noteWidget.text,
+      noteWidget.color)
 }
