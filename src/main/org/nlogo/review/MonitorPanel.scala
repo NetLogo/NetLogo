@@ -14,6 +14,7 @@ import org.nlogo.mirror.Mirrorables.WidgetValue
 import org.nlogo.mirror.ModelRun
 import org.nlogo.window.InterfaceColors.MONITOR_BACKGROUND
 import org.nlogo.window.MonitorPainter
+import org.nlogo.swing.Utils.createWidgetBorder
 
 class MonitorPanel(
   val panelBounds: java.awt.Rectangle,
@@ -22,6 +23,8 @@ class MonitorPanel(
   run: ModelRun,
   index: Int)
   extends WidgetPanel {
+
+  setBorder(createWidgetBorder)
   setBackground(MONITOR_BACKGROUND)
 
   override def paintComponent(g: Graphics): Unit = {

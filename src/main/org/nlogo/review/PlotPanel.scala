@@ -9,6 +9,7 @@ import java.awt.RenderingHints.VALUE_ANTIALIAS_ON
 
 import org.nlogo.mirror.ModelRun
 import org.nlogo.plot.Plot
+import org.nlogo.swing.Utils.createWidgetBorder
 import org.nlogo.window.InterfaceColors
 import org.nlogo.window.PlotWidgetGUI
 
@@ -18,6 +19,7 @@ class PlotPanel(
   run: ModelRun,
   initialPlot: Plot,
   legendIsOpen: Boolean) extends WidgetPanel {
+  setBorder(createWidgetBorder)
   setBackground(InterfaceColors.PLOT_BACKGROUND)
   val gui = new PlotWidgetGUI(initialPlot, this)
   gui.legend.open = legendIsOpen

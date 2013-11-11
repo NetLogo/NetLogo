@@ -6,6 +6,7 @@ import java.awt.Color
 import java.awt.Graphics
 import java.awt.Graphics2D
 import java.awt.RenderingHints
+import org.nlogo.swing.Utils.createWidgetBorder
 
 import ButtonWidget.ButtonType
 import ButtonWidget.FOREVER_GRAPHIC
@@ -24,6 +25,8 @@ trait PaintableButton {
   def actionKeyString: String
   def displayName: String
   def error: Exception
+
+  setBorder(createWidgetBorder)
 
   /// painting
   override def paintComponent(g: Graphics) {

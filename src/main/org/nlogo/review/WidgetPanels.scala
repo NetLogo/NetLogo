@@ -14,7 +14,6 @@ trait WidgetPanel extends JPanel {
   val panelBounds: java.awt.Rectangle
   val originalFont: java.awt.Font
   setBounds(panelBounds)
-  setBorder(createWidgetBorder)
   setFont(originalFont)
 }
 
