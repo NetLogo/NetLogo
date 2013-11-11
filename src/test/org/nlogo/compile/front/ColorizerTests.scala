@@ -22,6 +22,8 @@ class ColorizerTests extends FunSuite {
   test("command")    { simple("fd"     , Colors.Command  ) }
   test("reporter")   { simple("timer"  , Colors.Reporter ) }
   test("turtle var") { simple("xcor"   , Colors.Reporter ) }
+  test("number")     { simple("345"    , Colors.Literal  ) }
+  test("string")     { simple("\"ha\"" , Colors.Literal  ) }
   test("breed 1")    { simple("breed"  , Colors.Keyword  ) }
 
   test("breed 2") {
