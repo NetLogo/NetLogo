@@ -88,7 +88,7 @@ object Depend {
       "prim/threed" -> List("nvm"),
       "properties" -> List("window"),
       "render" -> List("shape"),
-      "review" -> List("mirror", "window"),
+      "review" -> List("mirror", "widget"),
       "sdm" -> List("api"),
       "sdm/gui" -> List("sdm","window"),
       "shape" -> List("api"),
