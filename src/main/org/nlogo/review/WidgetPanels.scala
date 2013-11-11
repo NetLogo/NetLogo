@@ -53,6 +53,7 @@ object WidgetPanels {
     run: ModelRun): PlotPanel = {
     new PlotPanel(
       run,
+      plotWidget.originalFont,
       plotWidget.plot,
       container.getUnzoomedBounds(plotWidget),
       plotWidget.gui.legend.open)
