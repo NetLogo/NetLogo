@@ -2,15 +2,15 @@ package org.nlogo.review
 
 import org.nlogo.mirror.FixedViewSettings
 import org.nlogo.mirror.ModelRun
-import org.nlogo.swing.Utils.createWidgetBorder
 import org.nlogo.widget.NoteWidget
+import org.nlogo.widget.SwitchWidget
+import org.nlogo.window.ButtonWidget
 import org.nlogo.window.GUIWorkspace
 import org.nlogo.window.MonitorWidget
 import org.nlogo.window.PlotWidget
 import org.nlogo.window.WidgetContainer
 
 import javax.swing.JPanel
-import org.nlogo.window.ButtonWidget
 
 trait WidgetPanel extends JPanel {
   val panelBounds: java.awt.Rectangle
@@ -29,6 +29,10 @@ object WidgetPanels {
         case (w: MonitorWidget, i) => newMonitorPanel(container, w, run, i)
         case (w: ButtonWidget, _) => newButtonPanel(container, w)
         case (w: NoteWidget, _) => newNotePanel(container, w)
+        case (w: SwitchWidget, i) => newSwitchPanel(container, w, run, i)
+        //        case (w: SliderWidget, _) =>
+        //        case (w: ChooserWidget, _) =>
+        //        case (w: InputBoxWidget, _) =>
       }
   }
 
@@ -90,4 +94,17 @@ object WidgetPanels {
       noteWidget.originalFont,
       noteWidget.text,
       noteWidget.color)
+
+  def newSwitchPanel(
+    container: WidgetContainer,
+    switchWidget: SwitchWidget,
+    run: ModelRun,
+    index: Int): SwitchPanel = {
+    new SwitchPanel(
+      container.getUnzoomedBounds(switchWidget),
+      switchWidget.originalFont,
+      switchWidget.displayName,
+      run,
+      index)
+  }
 }
