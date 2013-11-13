@@ -84,6 +84,7 @@ val all = taskKey[Unit]("build all the things!!!")
 
 all := { val _ = (
   (packageBin in Compile).value,
+  (packageBin in Test).value,
   (compile in Test).value,
   Extensions.extensions.value
 )}
