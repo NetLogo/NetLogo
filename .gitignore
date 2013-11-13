@@ -9,6 +9,7 @@ tmp/
 
 # wildcards
 *.tmp
+*.swp
 *~
 .#*
 \#*

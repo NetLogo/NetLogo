@@ -28,8 +28,8 @@ object ModelCreator {
                             |1
                             |1
                             |0
-                            |1
-                            |1
+                            |<<WRAPPING-ALLOWED-IN-X>>
+                            |<<WRAPPING-ALLOWED-IN-Y>>
                             |1
                             |<<MIN-PXCOR>>
                             |<<MAX-PXCOR>>
@@ -80,6 +80,8 @@ object ModelCreator {
                replace("<<PREVIEW SECTION>>", previewCode).
                replace("<<TURTLE SHAPES SECTION>>", api.ModelReader.defaultShapes.mkString("\n")).
                replace("<<LINK SHAPES SECTION>>", api.ModelReader.defaultLinkShapes.mkString("\n")).
+               replace("<<WRAPPING-ALLOWED-IN-X>>", (if (dimensions.wrappingAllowedInX) "1" else "0")).
+               replace("<<WRAPPING-ALLOWED-IN-Y>>", (if (dimensions.wrappingAllowedInY) "1" else "0")).
                replace("<<MAX-PXCOR-OR-MINUS-ONE>>",
                  (if (dimensions.minPxcor == -dimensions.maxPxcor)
                     dimensions.maxPxcor else -1).toString).

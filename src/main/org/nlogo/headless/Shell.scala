@@ -3,22 +3,13 @@
 package org.nlogo.headless
 
 import org.nlogo.api.{ CompilerException, ModelReader, Version }
-import java.io.{ BufferedReader, InputStreamReader }
 import org.nlogo.util.Utils.url2String
+import org.nlogo.workspace, workspace.AbstractWorkspace.setHeadlessProperty
 
-object Shell {
-
-  val input: Iterator[String] = {
-    val reader = new BufferedReader(new InputStreamReader(System.in))
-    Iterator.continually(reader.readLine())
-      .takeWhile(_ != null)
-  }
-
-  def isQuit(s: String) =
-    List(":QUIT", ":EXIT").contains(s.trim.toUpperCase)
+object Shell extends workspace.Shell {
 
   def main(argv: Array[String]) {
-    Main.setHeadlessProperty()
+    setHeadlessProperty()
     System.err.println(Version.fullVersion)
     val workspace = HeadlessWorkspace.newInstance
     argv.headOption match {

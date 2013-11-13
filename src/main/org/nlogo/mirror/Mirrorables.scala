@@ -23,12 +23,9 @@ object Mirrorables {
     case api.AgentKind.Link     => Link
   }
 
-  // so we don't fill up memory with duplicate AgentKey objects
-  val keyCache = collection.mutable.WeakHashMap[api.Agent, AgentKey]()
-  def getAgentKey(agent: api.Agent) = keyCache.getOrElseUpdate(agent, AgentKey(agent.kind, agent.id))
   abstract class MirrorableAgent[T <: api.Agent](agent: T) extends Mirrorable {
     override def getVariable(index: Int) = variables.getOrElse(index, agent.getVariable(index))
-    override def agentKey = getAgentKey(agent)
+    override val agentKey = AgentKey(agent.kind, agent.id)
   }
 
   object MirrorableTurtle {
@@ -87,8 +84,7 @@ object Mirrorables {
     override def nbVariables = nbInterfaceGlobals + 1
     private def targetAgent =
       Option(observer.targetAgent)
-        .map(getAgentKey)
-        .map(key => (Serializer.agentKindToInt(key.kind), key.id))
+        .map(agent => (Serializer.agentKindToInt(agent.kind), agent.id))
     override val variables = Map(
       ovTargetAgent(nbInterfaceGlobals) -> targetAgent)
   }
