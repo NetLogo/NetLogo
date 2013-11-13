@@ -40,6 +40,16 @@ object AbstractWorkspace {
       result
     }
 
+  def setHeadlessProperty() {
+    // force headless mode if it is not set.  This is necessary for the headless workspace to run
+    // on most platforms when a display is not available. --CLB
+    // note that since our check is for null, so the user can still force the property to false and
+    // not be overridden by this - ST 4/21/05
+    val p = "java.awt.headless"
+    if(System.getProperty(p) == null)
+      System.setProperty(p, "true")
+  }
+
 }
 
 abstract class AbstractWorkspace(val world: World)
