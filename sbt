@@ -29,7 +29,7 @@ JAVA=$JH/bin/java
 
 # Most of these settings are fine for everyone
 XSS=-Xss2m
-XMX=-Xmx1536m
+XMX=-Xmx2048m
 XX=-XX:MaxPermSize=512m
 ENCODING=-Dfile.encoding=UTF-8
 HEADLESS=-Djava.awt.headless=true
@@ -52,7 +52,7 @@ if [[ `uname -s` == *CYGWIN* ]] ; then
   # While you might want the max heap size lower, you'll run out
   # of heap space from running the tests if you don't crank it up
   # (namely, from TestChecksums)
-  XMX=-Xmx1350m
+  XMX=-Xmx2048m
   SBT_LAUNCH=`cygpath -w $SBT_LAUNCH`
 
   # This gets SBT working properly in my heavily-modded version of Cygwin --JAB (2/7/2012)
