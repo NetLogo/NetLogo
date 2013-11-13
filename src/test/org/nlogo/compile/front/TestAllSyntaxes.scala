@@ -264,7 +264,6 @@ class TestAllSyntaxes extends FunSuite {
                      |_xor TRUE/FALSE,TRUE/FALSE,TRUE/FALSE,OTPL,null,4,1,1""".stripMargin.replaceAll("\r\n", "\n")
   val COMMANDS = """|_ask agent or agentset/command block,OTPL,?,0,2,2 *
                     |_askconcurrent agentset/command block,OTPL,?,0,2,2 *
-                    |_asksorted agentset/command block,OTPL,?,0,2,2 *
                     |_autoplotoff ,OTPL,null,0,0,0
                     |_autoploton ,OTPL,null,0,0,0
                     |_beep ,OTPL,null,0,0,0
