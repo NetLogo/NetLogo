@@ -45,6 +45,19 @@ libraryDependencies in ThisBuild ++= Seq(
 
 artifactName := { (_, _, _) => "NetLogoHeadless.jar" }
 
+artifactName in Test := { (_, _, _) => "NetLogoHeadlessTests.jar" }
+
+publishArtifact in Test := true
+
+// In English: Put the 'test' dir into 'NetLogoHeadlessTests.jar' at the path
+// 'test' --JAB (11/13/13)
+mappings in (Test, packageBin) ++= {
+  val testDir = baseDirectory.value / "test"
+  (testDir.*** --- testDir) x relativeTo(testDir) map {
+    case (file, relativePath) => file -> s"test/$relativePath"
+  }
+}
+
 onLoadMessage := ""
 
 resourceDirectory in Compile := baseDirectory.value / "resources"
@@ -71,6 +84,7 @@ val all = taskKey[Unit]("build all the things!!!")
 
 all := { val _ = (
   (packageBin in Compile).value,
+  (packageBin in Test).value,
   (compile in Test).value,
   Extensions.extensions.value
 )}
