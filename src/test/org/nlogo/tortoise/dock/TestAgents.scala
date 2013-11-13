@@ -331,7 +331,7 @@ class TestAgents extends DockingSuite {
   }
 
   test("shape downcasing") { implicit fixture => import fixture._
-    workspace.world.turtleShapeList.add(new api.DummyShape("turtle"))
+    workspace.world.turtleShapeList.add(new DummyShape("turtle"))
     testCommand("""crt 1 [ set shape "TURTLE" output-print shape ]""")
   }
 
