@@ -1,6 +1,5 @@
 package org.nlogo.review
 
-import org.nlogo.mirror.FixedViewSettings
 import org.nlogo.mirror.ModelRun
 import org.nlogo.widget.NoteWidget
 import org.nlogo.widget.SwitchWidget
@@ -40,14 +39,14 @@ object WidgetPanels {
     ws: GUIWorkspace,
     container: WidgetContainer,
     run: ModelRun): ViewWidgetPanel = {
-    val viewSettings = FixedViewSettings(ws.view)
+    val viewSettings = ReviewTabViewSettings(ws.view)
     val viewWidgetBounds = container.getUnzoomedBounds(ws.viewWidget)
-    val viewBounds = container.getUnzoomedBounds(ws.view)
     new ViewWidgetPanel(
       run,
       viewWidgetBounds,
-      viewBounds,
-      viewSettings)
+      viewSettings,
+      ws.world.worldHeight,
+      ws.viewWidget.getInsideBorderHeight)
   }
 
   def newMonitorPanel(

@@ -8,10 +8,10 @@ import java.awt.Graphics2D
 import org.nlogo.api.Dump
 import org.nlogo.awt.Fonts.adjustDefaultFont
 import org.nlogo.mirror.FakeWorld
-import org.nlogo.mirror.FixedViewSettings
 import org.nlogo.mirror.ModelRun
 import org.nlogo.swing.Utils.createWidgetBorder
 import org.nlogo.window.InterfaceColors.GRAPHICS_BACKGROUND
+import org.nlogo.window.ViewBoundsCalculator.calculateViewBounds
 
 import javax.swing.BorderFactory
 import javax.swing.JLabel
@@ -20,8 +20,9 @@ import javax.swing.JPanel
 class ViewWidgetPanel(
   run: ModelRun,
   viewWidgetBounds: java.awt.Rectangle,
-  viewBounds: java.awt.Rectangle,
-  viewSettings: FixedViewSettings)
+  viewSettings: ReviewTabViewSettings,
+  worldHeight: Int,
+  insideBorderHeight: Int)
   extends JPanel {
   setBounds(viewWidgetBounds)
   setLayout(null)
@@ -32,19 +33,17 @@ class ViewWidgetPanel(
     setBorder(BorderFactory.createCompoundBorder(createWidgetBorder, matteBorder))
   }
 
-  locally {
-    val viewPanel = new ViewPanel(run, viewSettings)
-    add(viewPanel)
-    viewPanel.setBounds(viewBounds)
-  }
+  val viewPanel = new ViewPanel(run, viewSettings)
+  val viewBounds = calculateViewBounds(this, 1,
+    viewSettings.patchSize, worldHeight)
+  add(viewPanel)
+  viewPanel.setBounds(viewBounds)
 
-  locally {
-    val ticksCounter = new TicksCounter(run)
-    ticksCounter.setBounds(
-      viewBounds.x, getInsets.top,
-      viewBounds.width, viewBounds.y - getInsets.top - 1)
-    add(ticksCounter)
-  }
+  val ticksCounter = new TicksCounter(run)
+  ticksCounter.setBounds(
+    viewBounds.x, getInsets.top,
+    viewBounds.width, viewBounds.y - getInsets.top - 1)
+  add(ticksCounter)
 }
 
 class TicksCounter(run: ModelRun) extends JLabel {
@@ -60,7 +59,7 @@ class TicksCounter(run: ModelRun) extends JLabel {
 
 class ViewPanel(
   run: ModelRun,
-  viewSettings: FixedViewSettings)
+  viewSettings: ReviewTabViewSettings)
   extends JPanel {
   override def paintComponent(g: Graphics) {
     super.paintComponent(g)

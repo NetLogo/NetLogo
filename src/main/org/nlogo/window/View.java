@@ -381,6 +381,10 @@ public strictfp class View
     return patchSize + zoom;
   }
 
+  public double unzoomedPatchSize() {
+    return patchSize;
+  }
+
   public void visualPatchSize(double patchSize) {
     double oldZoom = zoom;
     zoom = patchSize - this.patchSize;

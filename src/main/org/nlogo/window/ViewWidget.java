@@ -28,6 +28,9 @@ public strictfp class ViewWidget
   public final DisplaySwitch displaySwitch;
 
   private static final int INSIDE_BORDER_HEIGHT = 1;
+  public final int getInsideBorderHeight() {
+    return INSIDE_BORDER_HEIGHT;
+  }
 
   public final int getExtraHeight() {
     return getInsets().top + getInsets().bottom + INSIDE_BORDER_HEIGHT;
@@ -78,9 +81,8 @@ public strictfp class ViewWidget
     // view.setBounds will force the Renderer to a particular size, overriding the
     // calculation the Render makes internally if need be -- CLB
     view.visualPatchSize(patchSize);
-    view.setBounds
-        (getInsets().left, getInsets().top + INSIDE_BORDER_HEIGHT + stripHeight,
-            availableWidth, graphicsHeight);
+    view.setBounds(ViewBoundsCalculator.calculateViewBounds(
+      this, INSIDE_BORDER_HEIGHT, patchSize, workspace.world().worldHeight()));
     controlStrip.setBounds
         (getInsets().left, getInsets().top,
             availableWidth, stripHeight);
