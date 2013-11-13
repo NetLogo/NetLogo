@@ -95,7 +95,9 @@ public strictfp class World
     return new LinkManagerImpl(
       this, new LinkFactory() {
           @Override public Link apply(World world, Turtle src, Turtle dest, AgentSet breed) {
-            return new Link(world, src, dest, breed);
+            Link link = new Link(world, src, dest, breed);
+            link._id_$eq(newLinkId());
+            return link;
           }});
   }
 
