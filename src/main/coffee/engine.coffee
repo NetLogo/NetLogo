@@ -1020,8 +1020,8 @@ class Topology
       if dx >= 0 then 90 else 270
     else
       (270 + StrictMath.toDegrees (Math.PI + StrictMath.atan2(-dy, dx))) % 360
-  midpointx: (x1, x2) -> @wrap(x1 + @shortestX(x1, x2) / 2, world.minPxcor - 0.5, world.maxPxcor + 0.5)
-  midpointy: (y1, y2) -> @wrap(y1 + @shortestY(y1, y2) / 2, world.minPycor - 0.5, world.maxPycor + 0.5)
+  midpointx: (x1, x2) -> @wrap((x1 + (x1 + @shortestX(x1, x2))) / 2, world.minPxcor - 0.5, world.maxPxcor + 0.5)
+  midpointy: (y1, y2) -> @wrap((y1 + (y1 + @shortestY(y1, y2))) / 2, world.minPycor - 0.5, world.maxPycor + 0.5)
 
   inRadius: (origin, x, y, agents, radius) ->
     result = []

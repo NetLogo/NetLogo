@@ -207,6 +207,7 @@ class TestTopologies extends DockingSuite {
   def testFloatingDistanceMove(world: WorldDimensions)(implicit fixture: DockingFixture) : Unit = { import fixture._
     declare("", world)
     testCommand("crt 50 [ setxy random-xcor random-ycor ]")
+    testCommand("ask turtles [ create-link-with one-of other turtles ]")
     for(_ <- 1 to 5) {
       testCommand("ask turtles [ face one-of other turtles ]")
       testCommand("ask turtles [ fd 0.1 * distance one-of other turtles ]")
