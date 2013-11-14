@@ -7,6 +7,7 @@ import org.nlogo.window.ButtonWidget
 import org.nlogo.window.GUIWorkspace
 import org.nlogo.window.MonitorWidget
 import org.nlogo.window.PlotWidget
+import org.nlogo.window.SliderWidget
 import org.nlogo.window.WidgetContainer
 
 import javax.swing.JPanel
@@ -29,7 +30,7 @@ object WidgetPanels {
         case (w: ButtonWidget, _) => newButtonPanel(container, w)
         case (w: NoteWidget, _) => newNotePanel(container, w)
         case (w: SwitchWidget, i) => newSwitchPanel(container, w, run, i)
-        //        case (w: SliderWidget, _) =>
+        case (w: SliderWidget, i) => newSliderPanel(container, w, run, i)
         //        case (w: ChooserWidget, _) =>
         //        case (w: InputBoxWidget, _) =>
       }
@@ -107,4 +108,23 @@ object WidgetPanels {
       run,
       index)
   }
+
+  def newSliderPanel(
+    container: WidgetContainer,
+    sliderWidget: SliderWidget,
+    run: ModelRun,
+    index: Int): SliderPanel = {
+    val sliderPanel = new SliderPanel(
+      container.getUnzoomedBounds(sliderWidget),
+      run,
+      index)
+    sliderPanel.name = sliderWidget.name
+    sliderPanel.originalFont = sliderWidget.originalFont
+    sliderPanel.setSliderConstraint(sliderWidget.constraint)
+    sliderPanel.units = sliderWidget.units
+    sliderPanel.vertical = sliderWidget.vertical
+    sliderPanel.removeAllListeners() // needs to be called AFTER setting `vertical`
+    sliderPanel
+  }
+
 }
