@@ -89,16 +89,16 @@ all := { val _ = (
   Extensions.extensions.value
 )}
 
-seq(Testing.settings: _*)
+Testing.settings
 
-seq(Depend.settings: _*)
+Depend.settings
 
-seq(Classycle.settings: _*)
+Classycle.settings
 
-seq(Dump.settings: _*)
+Dump.settings
 
-seq(ChecksumsAndPreviews.settings: _*)
+ChecksumsAndPreviews.settings
 
-seq(Scaladoc.settings: _*)
+Scaladoc.settings
 
 org.scalastyle.sbt.ScalastylePlugin.Settings
