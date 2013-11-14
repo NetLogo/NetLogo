@@ -46,7 +46,8 @@ object WidgetPanels {
       viewWidgetBounds,
       viewSettings,
       ws.world.worldHeight,
-      ws.viewWidget.getInsideBorderHeight)
+      ws.viewWidget.getInsideBorderHeight,
+      ws.view.unzoomedFont)
   }
 
   def newMonitorPanel(

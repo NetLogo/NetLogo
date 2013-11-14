@@ -4,7 +4,6 @@ package org.nlogo.review
 
 import java.awt.Graphics
 import java.awt.Graphics2D
-
 import org.nlogo.api.Dump
 import org.nlogo.awt.Fonts.adjustDefaultFont
 import org.nlogo.mirror.FakeWorld
@@ -12,17 +11,18 @@ import org.nlogo.mirror.ModelRun
 import org.nlogo.swing.Utils.createWidgetBorder
 import org.nlogo.window.InterfaceColors.GRAPHICS_BACKGROUND
 import org.nlogo.window.ViewBoundsCalculator.calculateViewBounds
-
 import javax.swing.BorderFactory
 import javax.swing.JLabel
 import javax.swing.JPanel
+import java.awt.Font
 
 class ViewWidgetPanel(
   run: ModelRun,
   viewWidgetBounds: java.awt.Rectangle,
   viewSettings: ReviewTabViewSettings,
   worldHeight: Int,
-  insideBorderHeight: Int)
+  insideBorderHeight: Int,
+  originalViewFont: Font)
   extends JPanel {
   setBounds(viewWidgetBounds)
   setLayout(null)
@@ -33,7 +33,7 @@ class ViewWidgetPanel(
     setBorder(BorderFactory.createCompoundBorder(createWidgetBorder, matteBorder))
   }
 
-  val viewPanel = new ViewPanel(run, viewSettings)
+  val viewPanel = new ViewPanel(run, viewSettings, originalViewFont)
   val viewBounds = calculateViewBounds(this, 1,
     viewSettings.patchSize, worldHeight)
   add(viewPanel)
@@ -59,8 +59,10 @@ class TicksCounter(run: ModelRun) extends JLabel {
 
 class ViewPanel(
   run: ModelRun,
-  viewSettings: ReviewTabViewSettings)
+  viewSettings: ReviewTabViewSettings,
+  font: Font)
   extends JPanel {
+  setFont(font)
   override def paintComponent(g: Graphics) {
     super.paintComponent(g)
     for (frame <- run.currentFrame) {

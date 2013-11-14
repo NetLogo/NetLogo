@@ -384,6 +384,11 @@ public strictfp class View
   public double unzoomedPatchSize() {
     return patchSize;
   }
+  
+  public java.awt.Font unzoomedFont() {
+    java.awt.Font font = getFont();
+    return new java.awt.Font(font.getName(), font.getStyle(), fontSize);
+  }
 
   public void visualPatchSize(double patchSize) {
     double oldZoom = zoom;
