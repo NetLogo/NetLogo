@@ -1020,8 +1020,8 @@ class Topology
       if dx >= 0 then 90 else 270
     else
       (270 + StrictMath.toDegrees (Math.PI + StrictMath.atan2(-dy, dx))) % 360
-  midpointx: (x1, x2) -> @wrap((x1 + @shortestX(x1, x2) / 2), world.minPxcor - 0.5, world.maxPxcor + 0.5)
-  midpointy: (y1, y2) -> @wrap((y1 + @shortestY(y1, y2) / 2), world.minPycor - 0.5, world.maxPycor + 0.5)
+  midpointx: (x1, x2) -> @wrap(x1 + @shortestX(x1, x2) / 2, world.minPxcor - 0.5, world.maxPxcor + 0.5)
+  midpointy: (y1, y2) -> @wrap(y1 + @shortestY(y1, y2) / 2, world.minPycor - 0.5, world.maxPycor + 0.5)
 
   inRadius: (origin, x, y, agents, radius) ->
     result = []
@@ -1061,12 +1061,12 @@ class Torus extends Topology
   wrapY: (pos) ->
     @wrap(pos, @minPycor - 0.5, @maxPycor + 0.5)
   shortestX: (x1, x2) ->
-    if(StrictMath.abs(x1 - x2) > (1 + @maxPxcor - @minPxcor) / 2)
+    if(StrictMath.abs(x1 - x2) > world.width() / 2)
       (world.width() - StrictMath.abs(x1 - x2)) * (if x2 > x1 then -1 else 1)
     else
       Math.abs(x1 - x2) * (if x1 > x2 then -1 else 1)
   shortestY: (y1, y2) ->
-    if(StrictMath.abs(y1 - y2) > (1 + @maxPycor - @minPycor) / 2)
+    if(StrictMath.abs(y1 - y2) > world.height() / 2)
       (world.height() - StrictMath.abs(y1 - y2)) * (if y2 > y1 then -1 else 1)
     else
       Math.abs(y1 - y2) * (if y1 > y2 then -1 else 1)
