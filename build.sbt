@@ -40,7 +40,7 @@ libraryDependencies in ThisBuild ++= Seq(
   "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
   "org.jmock" % "jmock-junit4" % "2.5.1" % "test",
   "org.scalacheck" %% "scalacheck" % "1.10.1" % "test",
-  "org.scalatest" %% "scalatest" % "2.0.RC3" % "test"
+  "org.scalatest" %% "scalatest" % "2.0" % "test"
 )
 
 artifactName := { (_, _, _) => "NetLogoHeadless.jar" }
@@ -89,16 +89,16 @@ all := { val _ = (
   Extensions.extensions.value
 )}
 
-seq(Testing.settings: _*)
+Testing.settings
 
-seq(Depend.settings: _*)
+Depend.settings
 
-seq(Classycle.settings: _*)
+Classycle.settings
 
-seq(Dump.settings: _*)
+Dump.settings
 
-seq(ChecksumsAndPreviews.settings: _*)
+ChecksumsAndPreviews.settings
 
-seq(Scaladoc.settings: _*)
+Scaladoc.settings
 
 org.scalastyle.sbt.ScalastylePlugin.Settings
