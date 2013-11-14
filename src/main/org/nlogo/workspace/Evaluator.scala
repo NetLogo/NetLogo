@@ -13,7 +13,7 @@ class Evaluator(workspace: AbstractWorkspace) {
                        source: String,
                        agentSet: AgentSet = workspace.world.observers,
                        waitForCompletion: Boolean = true,
-                       flags: CompilerFlags = CompilerFlags()) {
+                       flags: CompilerFlags = workspace.flags) {
     val procedure = invokeCompiler(source, None, true, agentSet.kind, flags)
     workspace.jobManager.addJob(
       workspace.jobManager.makeConcurrentJob(owner, agentSet, procedure),
@@ -22,16 +22,16 @@ class Evaluator(workspace: AbstractWorkspace) {
 
   def evaluateReporter(owner: JobOwner, source: String,
       agents: AgentSet = workspace.world.observers,
-      flags: CompilerFlags = CompilerFlags()): Object = {
+      flags: CompilerFlags = workspace.flags): Object = {
     val procedure = invokeCompiler(source, None, false, agents.kind, flags)
     workspace.jobManager.addReporterJobAndWait(owner, agents, procedure)
   }
 
   def compileCommands(source: String, kind: AgentKind = AgentKind.Observer,
-      flags: CompilerFlags = CompilerFlags()): Procedure =
+      flags: CompilerFlags = workspace.flags): Procedure =
     invokeCompiler(source, None, true, kind, flags)
 
-  def compileReporter(source: String, flags: CompilerFlags = CompilerFlags()) =
+  def compileReporter(source: String, flags: CompilerFlags = workspace.flags) =
     invokeCompiler(source, None, false, AgentKind.Observer, flags)
 
   /**
@@ -175,7 +175,7 @@ class Evaluator(workspace: AbstractWorkspace) {
   }
 
 
-  private def invokeCompiler(source: String, displayName: Option[String], commands: Boolean, kind: AgentKind, flags: CompilerFlags = CompilerFlags()) = {
+  private def invokeCompiler(source: String, displayName: Option[String], commands: Boolean, kind: AgentKind, flags: CompilerFlags = workspace.flags) = {
     val wrappedSource = Evaluator.getHeader(kind, commands) + source + Evaluator.getFooter(commands)
     val results =
       workspace.compiler.compileMoreCode(wrappedSource, displayName, workspace.world.program,

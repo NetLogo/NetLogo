@@ -85,11 +85,6 @@ with org.nlogo.workspace.WorldLoaderInterface {
   val defaultOwner =
     new SimpleJobOwner("HeadlessWorkspace", world.mainRNG)
 
-  // beware! this should be used everywhere the workspace invokes the compiler, but I doubt that's
-  // been achieved. for now, we're only sure that it is used in enough places for the Tortoise
-  // docking tests to pass. - ST 10/24/13
-  var flags = nvm.CompilerFlags()
-
   /**
    * Has a model been opened in this workspace?
    */
