@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="ScalacSettings">
-    <option name="COMPILER_LIBRARY_NAME" value="Scala 2.9.2" />
-    <option name="COMPILER_LIBRARY_LEVEL" value="Global" />
-  </component>
-</project>
-

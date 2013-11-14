@@ -1,121 +1,104 @@
 ///
+/// root project
+///
+
+val root = project in file (".") configs(Testing.configs: _*)
+
+///
+/// task keys
+///
+
+// surely there's some better way to do this - ST 5/30/12
+val nogen = taskKey[Unit]("disable bytecode generator")
+
+///
 /// ThisBuild -- applies to subprojects too
+/// (at the moment we have no subprojects on this branch, but that could change - ST 7/23/13)
 ///
 
 scalaVersion in ThisBuild := "2.10.3"
 
 scalacOptions in ThisBuild ++=
-  "-deprecation -unchecked -feature -Xcheckinit -encoding us-ascii -target:jvm-1.6 -Xfatal-warnings -Ywarn-adapted-args -Yinline-warnings"
+  "-deprecation -unchecked -feature -Xcheckinit -encoding us-ascii -target:jvm-1.7 -Xlint -Xfatal-warnings"
   .split(" ").toSeq
 
 javacOptions in ThisBuild ++=
-  "-g -deprecation -encoding us-ascii -Werror -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path -source 1.6 -target 1.6"
+  "-g -deprecation -encoding us-ascii -Werror -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path -source 1.7 -target 1.7"
   .split(" ").toSeq
 
 // only log problems plz
 ivyLoggingLevel in ThisBuild := UpdateLogging.Quiet
 
-// this makes jar-building and script-writing easier
-retrieveManaged in ThisBuild := true
-
 // we're not cross-building for different Scala versions
 crossPaths in ThisBuild := false
-
-threed in ThisBuild := { System.setProperty("org.nlogo.is3d", "true") }
 
 nogen in ThisBuild  := { System.setProperty("org.nlogo.noGenerator", "true") }
 
 libraryDependencies in ThisBuild ++= Seq(
   "asm" % "asm-all" % "3.3.1",
-  "org.picocontainer" % "picocontainer" % "2.13.6",
   "org.jmock" % "jmock" % "2.5.1" % "test",
   "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
   "org.jmock" % "jmock-junit4" % "2.5.1" % "test",
-  "org.scalacheck" %% "scalacheck" % "1.10.0" % "test",
-  "org.scalatest" %% "scalatest" % "2.0.M6" % "test"
+  "org.scalacheck" %% "scalacheck" % "1.10.1" % "test",
+  "org.scalatest" %% "scalatest" % "2.0.RC3" % "test"
 )
 
-///
-/// top-level project only
-///
+artifactName := { (_, _, _) => "NetLogoHeadless.jar" }
 
-name := "NetLogo"
+artifactName in Test := { (_, _, _) => "NetLogoHeadlessTests.jar" }
 
-artifactName := { (_, _, _) => "NetLogo.jar" }
+publishArtifact in Test := true
+
+// In English: Put the 'test' dir into 'NetLogoHeadlessTests.jar' at the path
+// 'test' --JAB (11/13/13)
+mappings in (Test, packageBin) ++= {
+  val testDir = baseDirectory.value / "test"
+  (testDir.*** --- testDir) x relativeTo(testDir) map {
+    case (file, relativePath) => file -> s"test/$relativePath"
+  }
+}
 
 onLoadMessage := ""
 
-resourceDirectory in Compile <<= baseDirectory(_ / "resources")
+resourceDirectory in Compile := baseDirectory.value / "resources"
 
-scalaSource in Compile <<= baseDirectory(_ / "src" / "main")
+scalaSource in Compile := baseDirectory.value / "src" / "main"
 
-scalaSource in Test <<= baseDirectory(_ / "src" / "test")
+scalaSource in Test := baseDirectory.value / "src" / "test"
 
-javaSource in Compile <<= baseDirectory(_ / "src" / "main")
+javaSource in Compile := baseDirectory.value / "src" / "main"
 
-javaSource in Test <<= baseDirectory(_ / "src" / "test")
+javaSource in Test := baseDirectory.value / "src" / "test"
 
-unmanagedSourceDirectories in Test <+= baseDirectory(_ / "src" / "tools")
+unmanagedResourceDirectories in Compile += baseDirectory.value / "resources"
 
-unmanagedResourceDirectories in Compile <+= baseDirectory { _ / "resources" }
+sourceGenerators in Compile <+= JFlexRunner.task
 
-unmanagedResourceDirectories in Compile <+= baseDirectory { _ / "headless" / "resources" }
+resourceGenerators in Compile <+= I18n.resourceGeneratorTask
 
-mainClass in Compile := Some("org.nlogo.app.App")
-
-sourceGenerators in Compile <+= EventsGenerator.task
+mainClass in Compile := Some("org.nlogo.headless.Main")
 
 Extensions.extensionsTask
 
-InfoTab.infoTabTask
+val all = taskKey[Unit]("build all the things!!!")
 
-ModelIndex.modelIndexTask
-
-NativeLibs.nativeLibsTask
-
-moduleConfigurations += ModuleConfiguration("javax.media", JavaNet2Repository)
-
-libraryDependencies ++= Seq(
-  "log4j" % "log4j" % "1.2.17",
-  "javax.media" % "jmf" % "2.1.1e",
-  "org.pegdown" % "pegdown" % "1.1.0",
-  "org.parboiled" % "parboiled-java" % "1.0.2",
-  "steveroy" % "mrjadapter" % "1.2" from "http://ccl.northwestern.edu/devel/mrjadapter-1.2.jar",
-  "org.jhotdraw" % "jhotdraw" % "6.0b1" from "http://ccl.northwestern.edu/devel/jhotdraw-6.0b1.jar",
-  "ch.randelshofer" % "quaqua" % "7.3.4" from "http://ccl.northwestern.edu/devel/quaqua-7.3.4.jar",
-  "ch.randelshofer" % "swing-layout" % "7.3.4" from "http://ccl.northwestern.edu/devel/swing-layout-7.3.4.jar",
-  "org.jogl" % "jogl" % "1.1.1" from "http://ccl.northwestern.edu/devel/jogl-1.1.1.jar",
-  "org.gluegen-rt" % "gluegen-rt" % "1.1.1" from "http://ccl.northwestern.edu/devel/gluegen-rt-1.1.1.jar",
-  "org.apache.httpcomponents" % "httpclient" % "4.2",
-  "org.apache.httpcomponents" % "httpmime" % "4.2",
-  "com.googlecode.json-simple" % "json-simple" % "1.1.1"
-)
-
-all <<= (baseDirectory, streams) map { (base, s) =>
-  s.log.info("making resources/system/dict.txt and docs/dict folder")
-  IO.delete(base / "docs" / "dict")
-  Process("python bin/dictsplit.py").!!
-}
-
-all <<= all.dependsOn(
-  packageBin in Compile,
-  packageBin in Compile in NetLogoBuild.headless,
-  Extensions.extensions,
-  NativeLibs.nativeLibs,
-  ModelIndex.modelIndex,
-  InfoTab.infoTab,
-  Scaladoc.docSmaller)
-
-///
-/// settings from project/*.scala
-///
+all := { val _ = (
+  (packageBin in Compile).value,
+  (packageBin in Test).value,
+  (compile in Test).value,
+  Extensions.extensions.value
+)}
 
 seq(Testing.settings: _*)
 
-seq(Packaging.settings: _*)
-
-seq(Running.settings: _*)
-
 seq(Depend.settings: _*)
 
+seq(Classycle.settings: _*)
+
+seq(Dump.settings: _*)
+
+seq(ChecksumsAndPreviews.settings: _*)
+
 seq(Scaladoc.settings: _*)
+
+org.scalastyle.sbt.ScalastylePlugin.Settings

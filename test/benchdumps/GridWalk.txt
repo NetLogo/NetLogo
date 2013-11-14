@@ -346,44 +346,14 @@ procedure SETUP:[]{O---}:
          L11
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-          ASTORE 3
-          ALOAD 3
-          INSTANCEOF org/nlogo/agent/Turtle
-          IFEQ L12
-          ALOAD 3
           CHECKCAST org/nlogo/agent/Turtle
-          ASTORE 4
-          ALOAD 4
           ALOAD 2
           ICONST_1
           INVOKEVIRTUAL org/nlogo/agent/Turtle.face (Lorg/nlogo/agent/Agent;Z)V
-          GETSTATIC scala/runtime/BoxedUnit.UNIT : Lscala/runtime/BoxedUnit;
-          ASTORE 5
-          GOTO L13
-         L12
-          ALOAD 3
-          INSTANCEOF org/nlogo/agent/Observer
-          IFEQ L14
-          ALOAD 3
-          CHECKCAST org/nlogo/agent/Observer
-          ASTORE 6
-          ALOAD 6
-          ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/Observer.face (Lorg/nlogo/api/Agent;)V
-          GETSTATIC scala/runtime/BoxedUnit.UNIT : Lscala/runtime/BoxedUnit;
-          ASTORE 5
-         L13
           ALOAD 1
           ICONST_5
           PUTFIELD org/nlogo/nvm/Context.ip : I
-          GOTO L15
-         L14
-          NEW scala/MatchError
-          DUP
-          ALOAD 3
-          INVOKESPECIAL scala/MatchError.<init> (Ljava/lang/Object;)V
-          ATHROW
-         L15
+         L12
           RETURN
 [5]_asm_proceduresetup_done_3 "" => void
          L0
@@ -572,44 +542,14 @@ procedure GO:[]{O---}:
          L11
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-          ASTORE 3
-          ALOAD 3
-          INSTANCEOF org/nlogo/agent/Turtle
-          IFEQ L12
-          ALOAD 3
           CHECKCAST org/nlogo/agent/Turtle
-          ASTORE 4
-          ALOAD 4
           ALOAD 2
           ICONST_1
           INVOKEVIRTUAL org/nlogo/agent/Turtle.face (Lorg/nlogo/agent/Agent;Z)V
-          GETSTATIC scala/runtime/BoxedUnit.UNIT : Lscala/runtime/BoxedUnit;
-          ASTORE 5
-          GOTO L13
-         L12
-          ALOAD 3
-          INSTANCEOF org/nlogo/agent/Observer
-          IFEQ L14
-          ALOAD 3
-          CHECKCAST org/nlogo/agent/Observer
-          ASTORE 6
-          ALOAD 6
-          ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/Observer.face (Lorg/nlogo/api/Agent;)V
-          GETSTATIC scala/runtime/BoxedUnit.UNIT : Lscala/runtime/BoxedUnit;
-          ASTORE 5
-         L13
           ALOAD 1
           ICONST_2
           PUTFIELD org/nlogo/nvm/Context.ip : I
-          GOTO L15
-         L14
-          NEW scala/MatchError
-          DUP
-          ALOAD 3
-          INVOKESPECIAL scala/MatchError.<init> (Ljava/lang/Object;)V
-          ATHROW
-         L15
+         L12
           RETURN
 [2]_asm_procedurego_fd1_2 "fd" => void
           TRYCATCHBLOCK L0 L1 L1 org/nlogo/api/AgentException

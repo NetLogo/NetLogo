@@ -172,27 +172,6 @@
     <exitCondition>one-of [false false]</exitCondition>
     <metric>random-float 1.0</metric>
   </experiment>
-  <experiment name="testResizingWorld13d" repetitions="1" runMetricsEveryStep="false">
-    <exitCondition>true</exitCondition>
-    <metric>count patches</metric>
-    <steppedValueSet variable="max-pxcor" first="0" step="1" last="5"/>
-    <steppedValueSet variable="max-pycor" first="0" step="1" last="5"/>
-    <steppedValueSet variable="max-pzcor" first="0" step="1" last="5"/>
-  </experiment>
-  <experiment name="testResizingWorld23d" repetitions="1" runMetricsEveryStep="false">
-    <exitCondition>true</exitCondition>
-    <metric>count patches</metric>
-    <steppedValueSet variable="world-width" first="1" step="2" last="11"/>
-    <steppedValueSet variable="world-height" first="1" step="2" last="11"/>
-    <steppedValueSet variable="world-depth" first="1" step="2" last="11"/>
-  </experiment>
-  <experiment name="testResizingWorld23d" repetitions="1" runMetricsEveryStep="false">
-    <exitCondition>true</exitCondition>
-    <metric>count patches</metric>
-    <steppedValueSet variable="world-width" first="1" step="2" last="11"/>
-    <steppedValueSet variable="world-height" first="1" step="2" last="11"/>
-    <steppedValueSet variable="world-depth" first="1" step="2" last="11"/>
-  </experiment>
   <experiment name="wait1" repetitions="4" runMetricsEveryStep="true">
     <setup>reset-timer</setup>
     <go>wait 1</go>

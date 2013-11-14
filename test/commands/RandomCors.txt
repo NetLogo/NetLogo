@@ -8,11 +8,3 @@ RandomCoords1
   max [      random-pycor] of patches = max-pycor => true
   min [round random-ycor ] of patches = min-pycor => true
   max [round random-ycor ] of patches = max-pycor => true
-
-RandomCoords1_3D
-  O> random-seed 38923
-  min [      random-pzcor] of patches = min-pzcor => true
-  max [      random-pzcor] of patches = max-pzcor => true
-  min [round random-zcor ] of patches = min-pzcor => true
-  max [round random-zcor ] of patches = max-pzcor => true
-

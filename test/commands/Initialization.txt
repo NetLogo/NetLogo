@@ -1,4 +1,4 @@
-InitialEnvironment_2D
+InitialEnvironment
   min-pxcor => -5
   max-pxcor => 5
   min-pycor => -5
@@ -6,22 +6,4 @@ InitialEnvironment_2D
   world-width => 11
   world-height => 11
   count turtles => 0
-  count frogs => 0
-  count mice => 0
   count patches => 121
-
-InitialEnvironment_3D
-  min-pxcor => -5
-  max-pxcor => 5
-  min-pycor => -5
-  max-pycor => 5
-  min-pzcor => -5
-  max-pzcor => 5
-  world-width => 11
-  world-height => 11
-  world-depth => 11
-  count turtles => 0
-  count frogs => 0
-  count mice => 0
-  count patches => 1331
-

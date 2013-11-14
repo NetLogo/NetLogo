@@ -1,5 +1,16 @@
-# this branch doesn't compile under OpenJDK 6;
-# and Travis doesn't offer Oracle Java 6
-branches:
-  only:
-    - headless
+language: scala
+scala: 2.10.3
+before_install:
+  - git submodule update --init --recursive
+install:
+  - sbt update
+script:
+  - ./tortoise.sh --noclean
+
+notifications:
+  irc:
+    channels:
+      - "irc.freenode.org#netlogo"
+    skip_join: true
+    template:
+      - "\x0313NetLogo\x03/\x0306%{branch}\x03 \x0314%{commit}\x03 %{build_url} %{message}"

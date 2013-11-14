@@ -33,40 +33,41 @@ TestLayoutCircleIsRandom
   sort-by [[heading] of ?1 < [heading] of ?2] turtles = sort turtles => false
 
 TestLayoutSpringLeaveSomeTurtlesOut
- O> crt 2
- O> ask turtle 0 [ create-link-with turtle 1 ]
- O> layout-spring turtles with [ color = red ] links 0.1 0.1 0.1
+  O> crt 2
+  O> ask turtle 0 [ create-link-with turtle 1 ]
+  O> layout-spring turtles with [ color = red ] links 0.1 0.1 0.1
 
 TestLayoutSpringLeaveSomeLinksOut
- O> crt 4
- O> ask turtles [ create-links-with other turtles ]
- O> layout-spring turtles [my-links] of turtle 0  0.1 0.1 0.1
+  O> crt 4
+  O> ask turtles [ create-links-with other turtles ]
+  O> layout-spring turtles [my-links] of turtle 0  0.1 0.1 0.1
 
 LayoutAnchors
+  globals [glob1]
   O> crt 10 [ setxy random-xcor random-ycor ]
   T> ask other turtles [ if random-float 100 < 12 [ carefully [ create-link-with myself ] [] ] ]
   O> set glob1 map [ [list xcor ycor] of ? ] sort turtles
   O> layout-spring no-turtles links 0.2 5 0.2
   glob1 = map [ [list xcor ycor] of ? ] sort turtles => true
 
-CircleRandom_2D
+CircleRandom
   O> resize-world -10 10 -10 10
   O> crt 10
   O> layout-circle turtles 5
   [distancexy 0 0] of turtles => [5 5 5 5 5 5 5 5 5 5]
   sort [[precision distance myself 12] of turtles] of turtle 0 = sort [[precision distance myself 12] of turtles] of turtle 1 => true
 
-CircleSorted_2D
+CircleSorted
   O> resize-world -10 10 -10 10
-   O> crt 10
-   O> layout-circle sort turtles 5
-   [distancexy 0 0] of turtles => [5 5 5 5 5 5 5 5 5 5]
-   [distancexy 0 0] of turtles => [5 5 5 5 5 5 5 5 5 5]
-   sort [[precision distance myself 12] of turtles] of turtle 0 = sort [[precision distance myself 12] of turtles] of turtle 1 => true
-   [list xcor ycor] of turtle 0 => [0 5]
-   [list xcor ycor] of turtle 5 => [0 -5]
+  O> crt 10
+  O> layout-circle sort turtles 5
+  [distancexy 0 0] of turtles => [5 5 5 5 5 5 5 5 5 5]
+  [distancexy 0 0] of turtles => [5 5 5 5 5 5 5 5 5 5]
+  sort [[precision distance myself 12] of turtles] of turtle 0 = sort [[precision distance myself 12] of turtles] of turtle 1 => true
+  [list xcor ycor] of turtle 0 => [0 5]
+  [list xcor ycor] of turtle 5 => [0 -5]
 
-Radial_2D
+Radial
   O> resize-world -16 16 -16 16
   O> crt 10
   O> ask turtle 0 [ create-links-with other turtles ]
@@ -77,7 +78,7 @@ Radial_2D
   precision sum [distancexy 0 0] of turtles with [ count link-neighbors = 1 ] 11 => 392.72727272727
   sum [distancexy 0 0] of turtles with [ count link-neighbors = 4 ] => 65.45454545454545
 
-Tutte_2D
+Tutte
   O> resize-world -16 16 -16 16
   O> crt 4
   O> ask turtles [create-links-with other turtles]
