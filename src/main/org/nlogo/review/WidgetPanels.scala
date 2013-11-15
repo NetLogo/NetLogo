@@ -4,6 +4,7 @@ import org.nlogo.mirror.ModelRun
 import org.nlogo.widget.NoteWidget
 import org.nlogo.widget.SwitchWidget
 import org.nlogo.window.ButtonWidget
+import org.nlogo.window.ChooserWidget
 import org.nlogo.window.GUIWorkspace
 import org.nlogo.window.MonitorWidget
 import org.nlogo.window.PlotWidget
@@ -31,7 +32,7 @@ object WidgetPanels {
         case (w: NoteWidget, _) => newNotePanel(container, w)
         case (w: SwitchWidget, i) => newSwitchPanel(container, w, run, i)
         case (w: SliderWidget, i) => newSliderPanel(container, w, run, i)
-        //        case (w: ChooserWidget, _) =>
+        case (w: ChooserWidget, i) => newChooserPanel(container, w, run, i)
         //        case (w: InputBoxWidget, _) =>
       }
   }
@@ -119,7 +120,6 @@ object WidgetPanels {
       run,
       index)
     sliderPanel.name = sliderWidget.name
-    sliderPanel.originalFont = sliderWidget.originalFont
     sliderPanel.setSliderConstraint(sliderWidget.constraint)
     sliderPanel.units = sliderWidget.units
     sliderPanel.vertical = sliderWidget.vertical
@@ -127,4 +127,17 @@ object WidgetPanels {
     sliderPanel
   }
 
+  def newChooserPanel(
+    container: WidgetContainer,
+    chooserWidget: ChooserWidget,
+    run: ModelRun,
+    index: Int): ChooserPanel = {
+    new ChooserPanel(
+      container.getUnzoomedBounds(chooserWidget),
+      chooserWidget.originalFont,
+      chooserWidget.getMargin,
+      chooserWidget.name,
+      run,
+      index)
+  }
 }
