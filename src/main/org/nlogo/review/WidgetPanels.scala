@@ -74,7 +74,9 @@ object WidgetPanels {
       plotWidget.originalFont,
       run,
       plotWidget.plot,
-      plotWidget.gui.legend.open)
+      plotWidget.gui.legend.open,
+      plotWidget.gui.xAxis.getLabel,
+      plotWidget.gui.yAxis.getLabel)
   }
 
   def newButtonPanel(

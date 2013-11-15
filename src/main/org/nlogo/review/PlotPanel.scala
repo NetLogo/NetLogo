@@ -18,12 +18,17 @@ class PlotPanel(
   val originalFont: java.awt.Font,
   run: ModelRun,
   initialPlot: Plot,
-  legendIsOpen: Boolean) extends WidgetPanel {
+  legendIsOpen: Boolean,
+  xAxisLabel: String,
+  yAxisLabel: String)
+  extends WidgetPanel {
   setBorder(createWidgetBorder)
   setBackground(InterfaceColors.PLOT_BACKGROUND)
   val gui = new PlotWidgetGUI(initialPlot, this)
   gui.legend.open = legendIsOpen
   gui.addToPanel(this)
+  gui.xAxis.setLabel(xAxisLabel)
+  gui.yAxis.setLabel(yAxisLabel)
 
   override def paintComponent(g: Graphics): Unit = {
     g.asInstanceOf[Graphics2D].setRenderingHint(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON)
