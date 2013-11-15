@@ -28,16 +28,12 @@ class MonitorPanel(
   setBackground(MONITOR_BACKGROUND)
 
   override def paintComponent(g: Graphics): Unit = {
-    g.asInstanceOf[Graphics2D].setRenderingHint(
-      KEY_ANTIALIASING, VALUE_ANTIALIAS_ON)
+    g.asInstanceOf[Graphics2D].setRenderingHint(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON)
     super.paintComponent(g)
-    for {
+    val value = for {
       frame <- run.currentFrame
       variables <- frame.mirroredState.get(AgentKey(WidgetValue, index))
-      value = variables(wvvValueString).asInstanceOf[String]
-    } {
-      MonitorPainter.paint(
-        g, getSize, BLACK, displayName, value)
-    }
+    } yield variables(wvvValueString).asInstanceOf[String]
+    MonitorPainter.paint(g, getSize, BLACK, displayName, value.getOrElse(""))
   }
 }

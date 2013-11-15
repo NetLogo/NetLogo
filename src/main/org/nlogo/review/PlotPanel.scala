@@ -25,14 +25,14 @@ class PlotPanel(
   gui.legend.open = legendIsOpen
   gui.addToPanel(this)
 
-  override def paintComponent(g: Graphics): Unit =
+  override def paintComponent(g: Graphics): Unit = {
+    g.asInstanceOf[Graphics2D].setRenderingHint(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON)
+    super.paintComponent(g)
     for {
       frame <- run.currentFrame
       plot <- frame.plots.find(_.name == initialPlot.name)
     } {
-      g.asInstanceOf[Graphics2D].setRenderingHint(
-        KEY_ANTIALIASING, VALUE_ANTIALIAS_ON)
       gui.plot = plot
-      super.paintComponent(g)
     }
+  }
 }
