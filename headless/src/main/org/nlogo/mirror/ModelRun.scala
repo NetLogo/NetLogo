@@ -11,7 +11,6 @@ import org.nlogo.plot.Plot
 class ModelRun(
   var name: String,
   val modelString: String,
-  val interfaceImage: BufferedImage,
   val initialPlots: Seq[Plot],
   val initialDrawingImage: BufferedImage,
   private var _generalNotes: String = "",

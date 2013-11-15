@@ -111,21 +111,9 @@ class RunRecorder(
     }
   }
 
-  private def grayOut(img: Image): BufferedImage = {
-    val bufferedImage = new BufferedImage(
-      img.getWidth(null), img.getHeight(null),
-      BufferedImage.TYPE_INT_ARGB)
-    val g = bufferedImage.createGraphics()
-    g.drawImage(GrayFilter.createDisabledImage(img), 0, 0, null)
-    g.dispose()
-    bufferedImage
-  }
-
   def startNewRun() {
 
     val container = ws.viewWidget.findWidgetContainer
-    val interfaceImage = grayOut(org.nlogo.awt.Images.paintToImage(
-      container.asInstanceOf[java.awt.Component]))
     val name = Option(ws.getModelFileName).map(removeExtension)
       .orElse(tabState.currentRun.map(_.name))
       .getOrElse("Untitled")
@@ -134,7 +122,6 @@ class RunRecorder(
     val initialDrawingImage = org.nlogo.drawing.cloneImage(ws.getAndCreateDrawing(false))
     val run = new ModelRun(
       name, saveModel(),
-      interfaceImage,
       initialPlots, initialDrawingImage,
       "", Nil)
     actionBuffers.foreach(_.activate())

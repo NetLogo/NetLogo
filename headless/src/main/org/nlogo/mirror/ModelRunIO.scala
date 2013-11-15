@@ -19,13 +19,11 @@ trait SavableRun {
   self: ModelRun =>
   def save(outputStream: OutputStream) {
     val out = new ObjectOutputStream(outputStream)
-    val interfaceImageBytes = imageToBytes(interfaceImage)
     val savableInitialPlots = initialPlots.map(SavablePlot.fromPlot)
     val initialDrawingImageBytes = imageToBytes(initialDrawingImage)
     val thingsToSave = Seq(
       name,
       modelString,
-      interfaceImageBytes,
       deltas,
       savableInitialPlots,
       initialDrawingImageBytes,
@@ -51,7 +49,7 @@ object ModelRunIO {
     val indexedNotes = read[List[IndexedNote]]
     in.close()
     val run = new ModelRun(
-      name, modelString, interfaceImage,
+      name, modelString,
       initialPlots, initialDrawingImage,
       generalNotes, indexedNotes)
     run.load(deltas)

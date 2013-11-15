@@ -11,6 +11,7 @@ import javax.swing.JPanel
 
 class InterfacePanel(val reviewTab: ReviewTab) extends JPanel {
 
+  setOpaque(true)
   setLayout(null) // disable layout manager to use absolute positioning
 
   private var widgetPanels: Seq[JPanel] = Seq.empty
@@ -24,15 +25,7 @@ class InterfacePanel(val reviewTab: ReviewTab) extends JPanel {
   }
 
   override def paintComponent(g: java.awt.Graphics) {
+    setBackground(if (reviewTab.state.currentRun.isDefined) WHITE else GRAY)
     super.paintComponent(g)
-    g.setColor(if (reviewTab.state.currentRun.isDefined) WHITE else GRAY)
-    g.fillRect(0, 0, getWidth, getHeight)
-    for {
-      run <- reviewTab.state.currentRun
-      img = run.interfaceImage
-    } {
-      setPreferredSize(new java.awt.Dimension(img.getWidth, img.getHeight))
-      g.drawImage(img, 0, 0, null)
-    }
   }
 }
