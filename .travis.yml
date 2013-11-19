@@ -5,7 +5,7 @@ before_install:
 install:
   - sbt update
 script:
-  - ./nightly.sh --noclean
+  - ./nightly.sh
 
 notifications:
   irc:
