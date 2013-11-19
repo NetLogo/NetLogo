@@ -22,7 +22,7 @@ object ChecksumsAndPreviews {
     Def.inputTask {
       val args: Seq[String] = Def.spaceDelimited("<args>").parsed
       val cp = (fullClasspath in Compile).value
-      Run.run("org.nlogo.headless.misc.ChecksumsAndPreviews",
+      Run.run("org.nlogo.headless.ChecksumsAndPreviews",
         cp.map(_.data), flag +: args, streams.value.log)(runner.value)
     }
 
