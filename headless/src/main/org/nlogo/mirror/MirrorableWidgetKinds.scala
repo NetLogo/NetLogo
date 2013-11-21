@@ -24,7 +24,7 @@ object WidgetKinds {
 
   case object Slider extends Kind {
     object Variables extends Enumeration {
-      val ValueObject = Value("valueObject")
+      val SliderValue = Value("sliderValue")
       val Minimum = Value("minimum")
       val Increment = Value("increment")
       val Maximum = Value("maximum")

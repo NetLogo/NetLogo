@@ -41,7 +41,7 @@ class MirrorableSlider(slider: SliderWidget, val index: Int) extends MirrorableW
   import Slider.Variables._
   override def kind = Slider
   override val variables = Map(
-    ValueObject.id -> slider.valueObject,
+    SliderValue.id -> Double.box(slider.value),
     Minimum.id -> Double.box(slider.constraint.minimum),
     Increment.id -> Double.box(slider.constraint.increment),
     Maximum.id -> Double.box(slider.constraint.maximum)
