@@ -6,7 +6,11 @@
 
 resourceGenerators in Compile <+= Def.task {
   val names: Set[String] =
-    IO.listFiles(file(".") / "dist" / "i18n").map(_.getName).filter(_.endsWith(".txt")).map(_.dropRight(4)).toSet
+    IO.listFiles(file(".") / "dist" / "i18n")
+      .map(_.getName)
+      .filter(_.endsWith(".txt"))
+      .map(_.dropRight(4))
+      .toSet
   val cache =
     FileFunction.cached(streams.value.cacheDirectory / "native2ascii",
         inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
