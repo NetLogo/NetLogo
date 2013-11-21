@@ -21,7 +21,10 @@ class InterfacePanel(val reviewTab: ReviewTab) extends JPanel {
     widgetPanels = event.newRun.toSeq.flatMap {
       WidgetPanels.create(reviewTab.ws, _)
     }
-    widgetPanels.foreach(add)
+    // we go the panels in back-to-front order but we
+    // need to add them in front-to-back order so
+    // that they're painted in the correct z-order:
+    widgetPanels.reverse.foreach(add)
   }
 
   override def paintComponent(g: java.awt.Graphics) {
