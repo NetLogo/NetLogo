@@ -10,6 +10,8 @@ import scala.Option.option2Iterable
 import javax.swing.JPanel
 
 class InterfacePanel(val reviewTab: ReviewTab) extends JPanel {
+  
+  override def isOptimizedDrawingEnabled = false
 
   setOpaque(true)
   setLayout(null) // disable layout manager to use absolute positioning
