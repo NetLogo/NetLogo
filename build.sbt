@@ -74,8 +74,6 @@ Testing.settings
 
 Depend.settings
 
-Dump.settings
-
 Scaladoc.settings
 
 /// plugins

@@ -63,3 +63,16 @@ classycle := {
   "open -a Safari target/classycle/classycle.xml".!
   baseDirectory.value / "target" / "classycle" / "classycle.xml"
 }
+
+///
+/// dump
+///
+
+// e.g. dump "models/Sample\ Models/Earth\ Science/Fire.nlogo"
+// e.g. dump Fire   (to dump a benchmark model)
+// e.g. dump bench  (to replace all of the benchmark model dumps in test/bench)
+// e.g. dump all    (to dump all models to target/dumps)
+
+val dumper = InputKey[Unit]("dump", "dump compiled models")
+
+fullRunInputTask(dumper, Test, "org.nlogo.headless.misc.Dump")
