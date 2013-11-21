@@ -30,7 +30,6 @@ class MonitorPanel(
   setBackground(MONITOR_BACKGROUND)
 
   override def paintComponent(g: Graphics): Unit = {
-    g.asInstanceOf[Graphics2D].setRenderingHint(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON)
     super.paintComponent(g)
     val value = mirroredVar[String](ValueString.id).getOrElse("")
     MonitorPainter.paint(g, getSize, BLACK, displayName, value)

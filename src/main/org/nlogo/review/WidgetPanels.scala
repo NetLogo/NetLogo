@@ -15,13 +15,6 @@ import org.nlogo.window.WidgetContainer
 
 import javax.swing.JPanel
 
-trait WidgetPanel extends JPanel {
-  val panelBounds: java.awt.Rectangle
-  val originalFont: java.awt.Font
-  setBounds(panelBounds)
-  setFont(originalFont)
-}
-
 object WidgetPanels {
 
   def create(ws: GUIWorkspace, run: ModelRun): Seq[JPanel] = {

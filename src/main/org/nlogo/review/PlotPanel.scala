@@ -39,9 +39,4 @@ class PlotPanel(
       gui.plot = plot
     }
   }
-
-  override def paintComponent(g: Graphics): Unit = {
-    g.asInstanceOf[Graphics2D].setRenderingHint(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON)
-    super.paintComponent(g)
-  }
 }
