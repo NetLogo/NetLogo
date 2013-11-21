@@ -60,10 +60,6 @@ javaSource in Test := baseDirectory.value / "src" / "test"
 
 unmanagedResourceDirectories in Compile += baseDirectory.value / "resources"
 
-sourceGenerators in Compile <+= JFlexRunner.task
-
-resourceGenerators in Compile <+= I18n.resourceGeneratorTask
-
 mainClass in Compile := Some("org.nlogo.headless.Main")
 
 /// get stuff from project/*.scala
