@@ -2,22 +2,25 @@
 
 package org.nlogo.review
 
-import org.nlogo.window.AbstractSliderWidget
+import java.awt.Graphics
+
+import org.nlogo.mirror.Kind
 import org.nlogo.mirror.ModelRun
-import org.nlogo.window.Widget.LoadHelper
-import java.awt.event.MouseWheelListener
 import org.nlogo.mirror.WidgetKinds.Slider
 import org.nlogo.mirror.WidgetKinds.Slider.Variables._
-import java.awt.Graphics
+import org.nlogo.window.AbstractSliderWidget
+import org.nlogo.window.Widget.LoadHelper
 
 class SliderPanel(
   panelBounds: java.awt.Rectangle,
   val run: ModelRun,
   val index: Int)
-  extends AbstractSliderWidget
+  extends {
+    // early definition because indirectly needed 
+    // by AbstractSliderWidget constructor:
+    val kind: Kind = Slider
+  } with AbstractSliderWidget
   with MirroredWidget {
-
-  override val kind = Slider
 
   setBounds(panelBounds)
 
