@@ -9,8 +9,7 @@ import java.awt.RenderingHints.KEY_ANTIALIASING
 import java.awt.RenderingHints.VALUE_ANTIALIAS_ON
 
 import org.nlogo.mirror.AgentKey
-import org.nlogo.mirror.Mirrorables.MirrorableWidgetValue.wvvValueString
-import org.nlogo.mirror.Mirrorables.WidgetValue
+import org.nlogo.mirror.WidgetKinds
 import org.nlogo.mirror.ModelRun
 import org.nlogo.window.InterfaceColors.MONITOR_BACKGROUND
 import org.nlogo.window.MonitorPainter
@@ -23,6 +22,8 @@ class MonitorPanel(
   run: ModelRun,
   index: Int)
   extends WidgetPanel {
+  
+  val agentKey = AgentKey(WidgetKinds.Monitor, index)
 
   setBorder(createWidgetBorder)
   setBackground(MONITOR_BACKGROUND)
@@ -32,8 +33,8 @@ class MonitorPanel(
     super.paintComponent(g)
     val value = for {
       frame <- run.currentFrame
-      variables <- frame.mirroredState.get(AgentKey(WidgetValue, index))
-    } yield variables(wvvValueString).asInstanceOf[String]
+      variables <- frame.mirroredState.get(agentKey)
+    } yield variables(WidgetKinds.Monitor.Variables.ValueString.id).asInstanceOf[String]
     MonitorPainter.paint(g, getSize, BLACK, displayName, value.getOrElse(""))
   }
 }

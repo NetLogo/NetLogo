@@ -26,21 +26,12 @@ class RunRecorder(
   tabState: ReviewTabState,
   saveModel: () => String) {
 
-  case class WidgetHook(
-    val widget: Widget,
-    val index: Int,
-    val valueStringGetter: () => String)
-
-  def widgetHooks =
-    workspaceWidgets(ws)
-      .zipWithIndex
-      .collect {
-        case (m: MonitorWidget, i) => WidgetHook(m, i, () => m.valueString)
-      }
-
   private val plotActionBuffer = new api.ActionBuffer(ws.plotManager)
   private val drawingActionBuffer = new api.ActionBuffer(ws.drawingActionBroker)
   private val actionBuffers = Vector(plotActionBuffer, drawingActionBuffer)
+
+  val widgets = workspaceWidgets(ws)
+  val monitors = widgets.collect { case m: MonitorWidget => m }
 
   val frameAddedPub = new SimplePublisher[FrameAddedEvent]()
 
@@ -51,7 +42,7 @@ class RunRecorder(
           ws.waitFor { () =>
             if (!tabState.currentlyRecording) startNewRun()
           }
-          updateMonitors() // this must be called from job thread
+          monitors.foreach(updateMonitor) // this must be called from job thread
           ws.waitFor(() => grab())
         }
       }
@@ -84,10 +75,9 @@ class RunRecorder(
   def grab() {
     for (run <- tabState.currentRun) {
       try {
-        val widgetValues = widgetHooks.map { wh =>
-          (wh.valueStringGetter(), wh.index)
-        }
-        val mirrorables = Mirrorables.allMirrorables(ws.world, widgetValues)
+        val mirrorables =
+          Mirrorables.allMirrorables(ws.world) ++
+            MirrorableWidgets(workspaceWidgets(ws))
         val actions = actionBuffers.flatMap(_.grab())
         val newFrame = run.appendData(mirrorables, actions)
         frameAddedPub.publish(FrameAddedEvent(run, newFrame))
@@ -126,12 +116,6 @@ class RunRecorder(
       "", Nil)
     actionBuffers.foreach(_.activate())
     tabState.addRun(run)
-  }
-
-  def updateMonitors() {
-    widgetHooks
-      .collect { case WidgetHook(m: MonitorWidget, _, _) => m }
-      .foreach(updateMonitor)
   }
 
   // only callable from the job thread, and only once evaluator.withContext(...) has properly
