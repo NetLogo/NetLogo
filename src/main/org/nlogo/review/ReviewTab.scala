@@ -64,6 +64,7 @@ class ReviewTab(
       val newFrame = scrubberPanel.scrubber.getValue
       state.currentRun.foreach(_.currentFrameIndex = Some(newFrame))
       notesTabbedPane.indexedNotesTable.scrollTo(newFrame)
+      interfacePanel.widgetPanels.foreach(_.invalidate())
       interfacePanel.repaint()
     }
   })

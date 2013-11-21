@@ -14,17 +14,18 @@ class InterfacePanel(val reviewTab: ReviewTab) extends JPanel {
   setOpaque(true)
   setLayout(null) // disable layout manager to use absolute positioning
 
-  private var widgetPanels: Seq[JPanel] = Seq.empty
+  private var _widgetPanels: Seq[JPanel] = Seq.empty
+  def widgetPanels = _widgetPanels
 
   reviewTab.state.afterRunChangePub.newSubscriber { event =>
-    widgetPanels.foreach(remove)
-    widgetPanels = event.newRun.toSeq.flatMap {
+    _widgetPanels.foreach(remove)
+    _widgetPanels = event.newRun.toSeq.flatMap {
       WidgetPanels.create(reviewTab.ws, _)
     }
     // we go the panels in back-to-front order but we
     // need to add them in front-to-back order so
     // that they're painted in the correct z-order:
-    widgetPanels.reverse.foreach(add)
+    _widgetPanels.reverse.foreach(add)
   }
 
   override def paintComponent(g: java.awt.Graphics) {

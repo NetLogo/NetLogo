@@ -29,11 +29,6 @@ class SliderPanel(
   override def maximum = mirroredVar[Double](Maximum.id).getOrElse(0.0)
   override def increment = mirroredVar[Double](Increment.id).getOrElse(0.0)
 
-  override def paintComponent(g: Graphics) {
-    doLayout()
-    super.paintComponent(g)
-  }
-
   def load(strings: Seq[String], helper: LoadHelper): Object = ???
   def save: String = ???
 

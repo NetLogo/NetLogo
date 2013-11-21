@@ -28,9 +28,4 @@ class SwitchPanel(
 
   add(dragger)
   add(channel)
-  
-  override def paintComponent(g: Graphics): Unit = {
-    doLayout()
-    super.paintComponent(g)
-  }
 }

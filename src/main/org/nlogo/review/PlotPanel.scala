@@ -29,15 +29,19 @@ class PlotPanel(
   gui.addToPanel(this)
   gui.xAxis.setLabel(xAxisLabel)
   gui.yAxis.setLabel(yAxisLabel)
-
-  override def paintComponent(g: Graphics): Unit = {
-    g.asInstanceOf[Graphics2D].setRenderingHint(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON)
-    super.paintComponent(g)
+  
+  override def doLayout() {
+    super.doLayout()
     for {
       frame <- run.currentFrame
       plot <- frame.plots.find(_.name == initialPlot.name)
     } {
       gui.plot = plot
     }
+  }
+
+  override def paintComponent(g: Graphics): Unit = {
+    g.asInstanceOf[Graphics2D].setRenderingHint(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON)
+    super.paintComponent(g)
   }
 }
