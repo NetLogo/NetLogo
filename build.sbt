@@ -8,7 +8,9 @@ onLoadMessage := ""
 
 ivyLoggingLevel := UpdateLogging.Quiet
 
+///
 /// building
+///
 
 scalacOptions ++=
   "-deprecation -unchecked -feature -Xcheckinit -encoding us-ascii -target:jvm-1.7 -Xlint -Xfatal-warnings"
@@ -37,7 +39,9 @@ javaSource in Test := baseDirectory.value / "src" / "test"
 
 unmanagedResourceDirectories in Compile += baseDirectory.value / "resources"
 
+///
 /// packaging and publishing
+///
 
 // don't cross-build for different Scala versions
 crossPaths := false
@@ -57,14 +61,49 @@ mappings in (Test, packageBin) ++= {
   }
 }
 
+///
+/// Scaladoc
+///
+
+val netlogoVersion = taskKey[String]("from api.Version")
+
+netlogoVersion := {
+  (testLoader in Test).value
+    .loadClass("org.nlogo.api.Version")
+    .getMethod("version")
+    .invoke(null).asInstanceOf[String]
+    .replaceFirst("NetLogo ", "")
+}
+
+scalacOptions in (Compile, doc) ++= {
+  val version = netlogoVersion.value
+  Seq("-encoding", "us-ascii") ++
+    Opts.doc.title("NetLogo") ++
+    Opts.doc.version(version) ++
+    Opts.doc.sourceUrl("https://github.com/NetLogo/NetLogo/blob/" +
+                       version + "/src/main€{FILE_PATH}.scala")
+}
+
+// compensate for issues.scala-lang.org/browse/SI-5388
+doc in Compile := {
+  val path = (doc in Compile).value
+  for (file <- Process(Seq("find", path.toString, "-name", "*.html")).lines)
+    IO.write(
+      new File(file),
+      IO.read(new File(file)).replaceAll("\\.java\\.scala", ".java"))
+  path
+}
+
+///
 /// plugins
+///
 
 org.scalastyle.sbt.ScalastylePlugin.Settings
 
+///
 /// get stuff from project/*.scala
+///
 
 Testing.settings
 
 Depend.settings
-
-Scaladoc.settings
