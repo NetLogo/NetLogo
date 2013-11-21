@@ -1,15 +1,14 @@
-/// preferences
-
-onLoadMessage := ""
-
-// only log problems plz
-ivyLoggingLevel := UpdateLogging.Quiet
-
-/// building
-
 val root = project in file (".") configs(Testing.configs: _*)
 
 scalaVersion := "2.10.3"
+
+mainClass in Compile := Some("org.nlogo.headless.Main")
+
+onLoadMessage := ""
+
+ivyLoggingLevel := UpdateLogging.Quiet
+
+/// building
 
 scalacOptions ++=
   "-deprecation -unchecked -feature -Xcheckinit -encoding us-ascii -target:jvm-1.7 -Xlint -Xfatal-warnings"
@@ -27,6 +26,16 @@ libraryDependencies ++= Seq(
   "org.scalacheck" %% "scalacheck" % "1.10.1" % "test",
   "org.scalatest" %% "scalatest" % "2.0" % "test"
 )
+
+scalaSource in Compile := baseDirectory.value / "src" / "main"
+
+scalaSource in Test := baseDirectory.value / "src" / "test"
+
+javaSource in Compile := baseDirectory.value / "src" / "main"
+
+javaSource in Test := baseDirectory.value / "src" / "test"
+
+unmanagedResourceDirectories in Compile += baseDirectory.value / "resources"
 
 /// packaging and publishing
 
@@ -48,19 +57,9 @@ mappings in (Test, packageBin) ++= {
   }
 }
 
-resourceDirectory in Compile := baseDirectory.value / "resources"
+/// plugins
 
-scalaSource in Compile := baseDirectory.value / "src" / "main"
-
-scalaSource in Test := baseDirectory.value / "src" / "test"
-
-javaSource in Compile := baseDirectory.value / "src" / "main"
-
-javaSource in Test := baseDirectory.value / "src" / "test"
-
-unmanagedResourceDirectories in Compile += baseDirectory.value / "resources"
-
-mainClass in Compile := Some("org.nlogo.headless.Main")
+org.scalastyle.sbt.ScalastylePlugin.Settings
 
 /// get stuff from project/*.scala
 
@@ -71,7 +70,3 @@ Testing.settings
 Depend.settings
 
 Scaladoc.settings
-
-/// plugins
-
-org.scalastyle.sbt.ScalastylePlugin.Settings
