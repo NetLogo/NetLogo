@@ -63,8 +63,6 @@ org.scalastyle.sbt.ScalastylePlugin.Settings
 
 /// get stuff from project/*.scala
 
-Extensions.extensionsTask
-
 Testing.settings
 
 Depend.settings

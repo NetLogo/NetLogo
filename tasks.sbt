@@ -1,17 +1,4 @@
 ///
-/// all
-///
-
-val all = taskKey[Unit]("build all the things!!!")
-
-all := { val _ = (
-  (packageBin in Compile).value,
-  (packageBin in Test).value,
-  (compile in Test).value,
-  Extensions.extensions.value
-)}
-
-///
 /// nogen
 ///
 
@@ -19,6 +6,36 @@ val nogen = taskKey[Unit]("disable bytecode generator")
 
 nogen := {
   System.setProperty("org.nlogo.noGenerator", "true")
+}
+
+///
+/// extensions
+///
+
+val extensions = taskKey[Seq[File]]("builds extensions")
+
+extensions := {
+  "git submodule --quiet update --init" ! streams.value.log
+  val isDirectory = new java.io.FileFilter {
+    override def accept(f: File) = f.isDirectory
+  }
+  val dirs = IO.listFiles(isDirectory)(baseDirectory.value / "extensions")
+  for(dir <- dirs.toSeq)
+  yield buildExtension(dir, scalaInstance.value.libraryJar, streams.value.log)
+}
+
+def buildExtension(dir: File, scalaLibrary: File, log: Logger): File = {
+  log.info("extension: " + dir.getName)
+  val jar = dir / (dir.getName + ".jar")
+  val exitCode =
+    if((dir / "build.sbt").exists)
+      Process(Seq("./sbt", "package"), dir,
+              "SCALA_JAR" -> scalaLibrary.getPath) ! log
+    else
+      Process(Seq("make", "-s", jar.getName), dir,
+              "SCALA_JAR" -> scalaLibrary.getPath) ! log
+  assert(exitCode == 0, "extension build failed, exitCode = " + exitCode)
+  jar
 }
 
 ///
@@ -76,3 +93,16 @@ classycle := {
 val dumper = InputKey[Unit]("dump", "dump compiled models")
 
 fullRunInputTask(dumper, Test, "org.nlogo.headless.misc.Dump")
+
+///
+/// all
+///
+
+val all = taskKey[Unit]("build all the things!!!")
+
+all := { val _ = (
+  (packageBin in Compile).value,
+  (packageBin in Test).value,
+  (compile in Test).value,
+  extensions.value
+)}
