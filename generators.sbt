@@ -9,7 +9,7 @@ resourceGenerators in Compile <+= Def.task {
     IO.listFiles(file(".") / "dist" / "i18n")
       .map(_.getName)
       .filter(_.endsWith(".txt"))
-      .map(_.dropRight(4))
+      .map(_.stripSuffix(".txt"))
       .toSet
   val cache =
     FileFunction.cached(streams.value.cacheDirectory / "native2ascii",

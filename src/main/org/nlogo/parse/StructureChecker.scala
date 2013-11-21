@@ -84,7 +84,7 @@ object StructureChecker {
         if (!used._2.endsWith(" variable"))
           false
         else
-          (used._2.dropRight(" variable".size), occ.declaration) match {
+          (used._2.stripSuffix(" variable"), occ.declaration) match {
             case (name1, Variables(kind2, _))
                 if (name1 != kind2.name &&
                   turtleBreedNames.contains(name1) == turtleBreedNames.contains(kind2.name) &&

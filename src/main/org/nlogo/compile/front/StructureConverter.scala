@@ -58,7 +58,7 @@ object StructureConverter {
         case (program, Variables(Identifier("LINKS-OWN", _), identifiers)) =>
           program.copy(linksOwn = program.linksOwn ++ identifiers.map(_.name))
         case (program, Variables(Identifier(breedOwn, _), identifiers)) =>
-          updateBreedVariables(program, breedOwn.dropRight(4), identifiers.map(_.name))
+          updateBreedVariables(program, breedOwn.stripSuffix("-OWN"), identifiers.map(_.name))
         case (program, _) =>
           program
       }
