@@ -59,11 +59,6 @@ object Mirrorables {
       val UnbreededLinksAreDirected = Value("unbreededLinksAreDirected")
     }
   }
-  case object WidgetValue extends Kind {
-    object Variables extends Enumeration {
-      val ValueString = Value("valueString")
-    }
-  }
 
   implicit def agentKindToMirrorKind(agentKind: api.AgentKind) = agentKind match {
     case api.AgentKind.Observer => Observer
