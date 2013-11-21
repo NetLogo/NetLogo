@@ -132,6 +132,10 @@ public strictfp class OutputArea
       text.select(text.getText().length() - buf.length(), text.getText().length());
       lastTemporaryAddition = text.getSelectedText();
     }
+    scrollToEnd();
+  }
+  
+  public void scrollToEnd() {
     // doesn't always work unless we wait til later to do it - ST 8/18/03
     org.nlogo.awt.EventQueue.invokeLater
         (new Runnable() {

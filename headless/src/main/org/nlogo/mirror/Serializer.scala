@@ -206,7 +206,8 @@ object Serializer {
         WidgetKinds.Monitor,
         WidgetKinds.Switch,
         WidgetKinds.Chooser,
-        WidgetKinds.Slider)
+        WidgetKinds.Slider,
+        WidgetKinds.Output)
 
   implicit def agentKindToInt(kind: Kind): Int =
     kind match {
@@ -219,6 +220,6 @@ object Serializer {
       case WidgetKinds.Switch => 6
       case WidgetKinds.Chooser => 7
       case WidgetKinds.Slider => 8
+      case WidgetKinds.Output => 9
     }
-
 }

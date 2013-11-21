@@ -6,11 +6,13 @@ import org.nlogo.mirror.AgentKey
 import org.nlogo.mirror.Mirrorable
 import org.nlogo.mirror.WidgetKinds.Chooser
 import org.nlogo.mirror.WidgetKinds.Monitor
+import org.nlogo.mirror.WidgetKinds.Output
 import org.nlogo.mirror.WidgetKinds.Slider
 import org.nlogo.mirror.WidgetKinds.Switch
 import org.nlogo.widget.SwitchWidget
 import org.nlogo.window.ChooserWidget
 import org.nlogo.window.MonitorWidget
+import org.nlogo.window.OutputWidget
 import org.nlogo.window.SliderWidget
 import org.nlogo.window.Widget
 
@@ -48,6 +50,12 @@ class MirrorableSlider(slider: SliderWidget, val index: Int) extends MirrorableW
   )
 }
 
+class MirrorableOutput(output: OutputWidget, val index: Int) extends MirrorableWidget {
+  import Output.Variables._
+  override def kind = Output
+  override val variables = Map(Text.id -> output.outputArea.text.getText)
+}
+
 object MirrorableWidgets {
   def apply(widgets: Iterable[Widget]): Iterable[MirrorableWidget] =
     widgets.zipWithIndex.collect {
@@ -55,5 +63,6 @@ object MirrorableWidgets {
       case (w: SwitchWidget, i)  => new MirrorableSwitch(w, i)
       case (w: SliderWidget, i)  => new MirrorableSlider(w, i)
       case (w: ChooserWidget, i) => new MirrorableChooser(w, i)
+      case (w: OutputWidget, i) => new MirrorableOutput(w, i)
     }
 }

@@ -30,4 +30,10 @@ object WidgetKinds {
       val Maximum = Value("maximum")
     }
   }
+  
+  case object Output extends Kind {
+    object Variables extends Enumeration {
+      val Text = Value("text")
+    }
+  }
 }
