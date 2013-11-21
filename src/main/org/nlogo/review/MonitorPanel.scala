@@ -8,22 +8,23 @@ import java.awt.Graphics2D
 import java.awt.RenderingHints.KEY_ANTIALIASING
 import java.awt.RenderingHints.VALUE_ANTIALIAS_ON
 
-import org.nlogo.mirror.AgentKey
-import org.nlogo.mirror.WidgetKinds
 import org.nlogo.mirror.ModelRun
+import org.nlogo.mirror.WidgetKinds.Monitor
+import org.nlogo.mirror.WidgetKinds.Monitor.Variables.ValueString
+import org.nlogo.swing.Utils.createWidgetBorder
 import org.nlogo.window.InterfaceColors.MONITOR_BACKGROUND
 import org.nlogo.window.MonitorPainter
-import org.nlogo.swing.Utils.createWidgetBorder
 
 class MonitorPanel(
   val panelBounds: java.awt.Rectangle,
   val originalFont: java.awt.Font,
   displayName: String,
-  run: ModelRun,
-  index: Int)
-  extends WidgetPanel {
-  
-  val agentKey = AgentKey(WidgetKinds.Monitor, index)
+  val run: ModelRun,
+  val index: Int)
+  extends WidgetPanel
+  with MirroredWidget {
+
+  override val kind = Monitor
 
   setBorder(createWidgetBorder)
   setBackground(MONITOR_BACKGROUND)
@@ -31,10 +32,7 @@ class MonitorPanel(
   override def paintComponent(g: Graphics): Unit = {
     g.asInstanceOf[Graphics2D].setRenderingHint(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON)
     super.paintComponent(g)
-    val value = for {
-      frame <- run.currentFrame
-      variables <- frame.mirroredState.get(agentKey)
-    } yield variables(WidgetKinds.Monitor.Variables.ValueString.id).asInstanceOf[String]
-    MonitorPainter.paint(g, getSize, BLACK, displayName, value.getOrElse(""))
+    val value = mirroredVar[String](ValueString.id).getOrElse("")
+    MonitorPainter.paint(g, getSize, BLACK, displayName, value)
   }
 }
