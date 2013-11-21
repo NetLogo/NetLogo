@@ -80,6 +80,28 @@ mainClass in Compile := Some("org.nlogo.headless.Main")
 
 Extensions.extensionsTask
 
+/// checksums and previews
+
+val csap = "org.nlogo.headless.ChecksumsAndPreviews"
+
+val checksum = inputKey[Unit]("update one model checksum")
+
+fullRunInputTask(checksum, Compile, csap, "--checksum")
+
+val allChecksums = inputKey[Unit]("update all model checksums")
+
+fullRunInputTask(allChecksums, Compile, csap, "--checksums")
+
+val preview = inputKey[Unit]("update one model preview image")
+
+fullRunInputTask(preview,   Compile, csap, "--preview")
+
+val allPreviews = inputKey[Unit]("update all model preview images")
+
+fullRunInputTask(allPreviews, Compile, csap, "--previews")
+
+/// all
+
 val all = taskKey[Unit]("build all the things!!!")
 
 all := { val _ = (
@@ -89,6 +111,8 @@ all := { val _ = (
   Extensions.extensions.value
 )}
 
+/// get stuff from project/*.scala
+
 Testing.settings
 
 Depend.settings
@@ -97,8 +121,8 @@ Classycle.settings
 
 Dump.settings
 
-ChecksumsAndPreviews.settings
-
 Scaladoc.settings
+
+/// plugins
 
 org.scalastyle.sbt.ScalastylePlugin.Settings
