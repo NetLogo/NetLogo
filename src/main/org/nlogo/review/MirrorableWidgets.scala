@@ -52,8 +52,8 @@ object MirrorableWidgets {
   def apply(widgets: Iterable[Widget]): Iterable[MirrorableWidget] =
     widgets.zipWithIndex.collect {
       case (w: MonitorWidget, i) => new MirrorableMonitor(w, i)
-      case (w: SwitchWidget, i) => new MirrorableSwitch(w, i)
-      case (w: SliderWidget, i) => new MirrorableSlider(w, i)
+      case (w: SwitchWidget, i)  => new MirrorableSwitch(w, i)
+      case (w: SliderWidget, i)  => new MirrorableSlider(w, i)
       case (w: ChooserWidget, i) => new MirrorableChooser(w, i)
     }
 }

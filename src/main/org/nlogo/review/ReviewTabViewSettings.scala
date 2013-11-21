@@ -8,7 +8,7 @@ import org.nlogo.window.View
 
 object ReviewTabViewSettings {
   /**
-   * Constructs new ReviewTabViewSettings from the original view 
+   * Constructs new ReviewTabViewSettings from the original view
    */
   def apply(originalView: View) =
     new ReviewTabViewSettings(

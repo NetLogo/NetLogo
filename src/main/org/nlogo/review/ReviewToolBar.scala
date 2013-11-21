@@ -102,7 +102,7 @@ class ReviewToolBar(reviewTab: ReviewTab, frameAddedPub: SimplePublisher[FrameAd
             Right(run)
           } catch {
             case e: UserCancelException => throw e // stop now if user cancels
-            case e: Exception => Left(path) // accumulate other exceptions
+            case e: Exception           => Left(path) // accumulate other exceptions
           }
         }
       val loadedRuns = results.flatMap(_.right.toOption)
@@ -123,7 +123,7 @@ class ReviewToolBar(reviewTab: ReviewTab, frameAddedPub: SimplePublisher[FrameAd
       }
     } catch {
       case _: UserCancelException => // do nothing
-      case e: Exception => throw e // rethrow anything else
+      case e: Exception           => throw e // rethrow anything else
     }
   }
 

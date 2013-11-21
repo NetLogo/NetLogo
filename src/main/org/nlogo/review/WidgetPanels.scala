@@ -21,12 +21,12 @@ object WidgetPanels {
     val container = ws.viewWidget.findWidgetContainer
     newViewWidgetPanel(ws, container, run) +:
       workspaceWidgets(ws).zipWithIndex.collect {
-        case (w: PlotWidget, _) => newPlotPanel(container, w, run)
+        case (w: PlotWidget, _)    => newPlotPanel(container, w, run)
         case (w: MonitorWidget, i) => newMonitorPanel(container, w, run, i)
-        case (w: ButtonWidget, _) => newButtonPanel(container, w)
-        case (w: NoteWidget, _) => newNotePanel(container, w)
-        case (w: SwitchWidget, i) => newSwitchPanel(container, w, run, i)
-        case (w: SliderWidget, i) => newSliderPanel(container, w, run, i)
+        case (w: ButtonWidget, _)  => newButtonPanel(container, w)
+        case (w: NoteWidget, _)    => newNotePanel(container, w)
+        case (w: SwitchWidget, i)  => newSwitchPanel(container, w, run, i)
+        case (w: SliderWidget, i)  => newSliderPanel(container, w, run, i)
         case (w: ChooserWidget, i) => newChooserPanel(container, w, run, i)
         //        case (w: InputBoxWidget, _) =>
       }

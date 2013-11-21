@@ -29,7 +29,7 @@ class PlotPanel(
   gui.addToPanel(this)
   gui.xAxis.setLabel(xAxisLabel)
   gui.yAxis.setLabel(yAxisLabel)
-  
+
   override def doLayout() {
     super.doLayout()
     for {

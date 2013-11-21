@@ -32,7 +32,7 @@ class RunList(reviewTab: ReviewTab)
             reviewTab.interfacePanel.repaint()
           } catch {
             case _: UserCancelException => // do nothing
-            case e: Exception => throw e // rethrow anything else
+            case e: Exception           => throw e // rethrow anything else
           }
         }
       }
@@ -41,7 +41,7 @@ class RunList(reviewTab: ReviewTab)
 
   reviewTab.state.afterRunChangePub.newSubscriber {
     _.newRun match {
-      case None => clearSelection()
+      case None                                  => clearSelection()
       case Some(newRun) if newRun != selectedRun => setSelectedValue(newRun, true)
     }
   }
