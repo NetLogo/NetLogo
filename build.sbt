@@ -56,7 +56,7 @@ publishArtifact in Test := true
 // 'test' --JAB (11/13/13)
 mappings in (Test, packageBin) ++= {
   val testDir = baseDirectory.value / "test"
-  (testDir.*** --- testDir) x relativeTo(testDir) map {
+  (testDir.*** --- testDir) pair relativeTo(testDir) map {
     case (file, relativePath) => file -> s"test/$relativePath"
   }
 }
