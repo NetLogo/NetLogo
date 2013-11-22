@@ -9,7 +9,7 @@ val haveGoodResult = new HashSet[String]
 
 Process(Seq("mkdir", "-p", "tmp")).!
 
-Process(Seq("./sbt", "run-main org.nlogo.headless.Main --fullversion"))
+Process(Seq("./sbt", "--warn", "run-main org.nlogo.headless.Main --fullversion"))
   .lines.foreach(println)
 
 // 4.0 & 4.1 numbers from my home iMac on Sep. 13 2011, running Mac OS X Lion.
@@ -39,7 +39,7 @@ val width = allNames.map(_.size).max
 def outputLines(name: String): Stream[String] = {
   val command = "run-main org.nlogo.headless.HeadlessBenchmarker " +
     name + args.dropWhile(!_.head.isDigit).mkString(" ", " ", "")
-  Process(Seq("./sbt", command))
+  Process(Seq("./sbt", "--warn", command))
     .lines
 }
 def record(name: String, line: String) {

@@ -10,7 +10,7 @@ val allNames: List[String] =
 Process("rm -rf tmp/profiles").!
 Process("mkdir -p tmp/profiles").!
 for(name <- allNames) {
-  val command = Seq("./sbt",
+  val command = Seq("./sbt", "--warn",
     "run-main org.nlogo.headless.HeadlessBenchmarker " + name + " 10 10")
   val javaOpts = "-Xrunhprof:cpu=samples,depth=40,file=tmp/profiles/" + name + ".txt"
   Process(command, None, "JAVA_OPTS" -> javaOpts).!
