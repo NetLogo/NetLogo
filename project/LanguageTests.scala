@@ -1,13 +1,7 @@
 import sbt._
 import Keys._
 
-object Testing {
-
-  val FastTest = config("fast") extend(Test)
-  val MediumTest = config("medium") extend(Test)
-  val SlowTest = config("slow") extend(Test)
-
-  val configs = Seq(FastTest, MediumTest, SlowTest)
+object LanguageTests {
 
   lazy val tr            = inputKey[Unit]("org.nlogo.headless.lang.TestReporters")
   lazy val tc            = inputKey[Unit]("org.nlogo.headless.lang.TestCommands")
@@ -15,42 +9,14 @@ object Testing {
   lazy val tm            = inputKey[Unit]("org.nlogo.headless.lang.TestModels")
   lazy val testChecksums = inputKey[Unit]("org.nlogo.headless.misc.TestChecksums")
 
-  private val testKeys = Seq(tr, tc, te, tm, testChecksums)
+  private val keys = Seq(tr, tc, te, tm, testChecksums)
 
-  lazy val settings =
-    fastMediumSlowSettings ++
-    inConfig(Test)(specialTestTaskSettings)
-
-  lazy val fastMediumSlowSettings =
-    inConfig(FastTest)(Defaults.testTasks) ++
-    inConfig(MediumTest)(Defaults.testTasks) ++
-    inConfig(SlowTest)(Defaults.testTasks) ++
-    Seq(
-      testOptions in FastTest :=
-        Seq(Tests.Filter(fastFilter((fullClasspath in Test).value, _))),
-      testOptions in MediumTest :=
-        Seq(Tests.Filter(mediumFilter((fullClasspath in Test).value, _))),
-      testOptions in SlowTest :=
-        Seq(Tests.Filter(slowFilter((fullClasspath in Test).value, _)))
-    )
-
-  lazy val specialTestTaskSettings =
-    testKeys.flatMap(Defaults.defaultTestTasks) ++
-    testKeys.flatMap(Defaults.testTaskOptions) ++
-    testKeys.map(key => key <<= oneTest(key)) ++
-    testKeys.map(key => logBuffered in key := false)
-
-  private def fastFilter(path: Classpath, name: String): Boolean = !slowFilter(path, name)
-  private def mediumFilter(path: Classpath, name: String): Boolean =
-    fastFilter(path, name) ||
-    name == "org.nlogo.headless.lang.TestReporters" ||
-    name == "org.nlogo.headless.lang.TestCommands"
-  private def slowFilter(path: Classpath, name: String): Boolean = {
-    val jars = path.files.map(_.asURL).toArray[java.net.URL]
-    val loader = new java.net.URLClassLoader(jars, getClass.getClassLoader)
-    def clazz(name: String) = Class.forName(name, false, loader)
-    clazz("org.nlogo.util.SlowTest").isAssignableFrom(clazz(name))
-  }
+  lazy val settings = inConfig(Test)(
+    keys.flatMap(Defaults.defaultTestTasks) ++
+    keys.flatMap(Defaults.testTaskOptions) ++
+    keys.map(key => key <<= oneTest(key)) ++
+    keys.map(key => logBuffered in key := false)
+  )
 
   // mostly copy-and-pasted from Defaults.inputTests. is there a better way?
   // - ST 6/17/12, 7/23/13

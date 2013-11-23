@@ -1,4 +1,4 @@
-val root = project in file (".") configs(Testing.configs: _*)
+val root = project in file (".") configs(FastMediumSlow.configs: _*)
 
 scalaVersion := "2.10.3"
 
@@ -104,6 +104,8 @@ org.scalastyle.sbt.ScalastylePlugin.Settings
 /// get stuff from project/*.scala
 ///
 
-Testing.settings
+LanguageTests.settings
+
+FastMediumSlow.settings
 
 Depend.settings
