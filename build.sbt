@@ -8,6 +8,8 @@ onLoadMessage := ""
 
 ivyLoggingLevel := UpdateLogging.Quiet
 
+logBuffered in testOnly in Test := false
+
 ///
 /// building
 ///
