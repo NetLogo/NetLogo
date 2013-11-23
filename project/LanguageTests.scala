@@ -3,13 +3,13 @@ import Keys._
 
 object LanguageTests {
 
-  lazy val tr            = inputKey[Unit]("org.nlogo.headless.lang.TestReporters")
-  lazy val tc            = inputKey[Unit]("org.nlogo.headless.lang.TestCommands")
-  lazy val te            = inputKey[Unit]("org.nlogo.headless.lang.TestExtensions")
-  lazy val tm            = inputKey[Unit]("org.nlogo.headless.lang.TestModels")
-  lazy val testChecksums = inputKey[Unit]("org.nlogo.headless.misc.TestChecksums")
+  lazy val tr = inputKey[Unit]("org.nlogo.headless.lang.TestReporters")
+  lazy val tc = inputKey[Unit]("org.nlogo.headless.lang.TestCommands")
+  lazy val te = inputKey[Unit]("org.nlogo.headless.lang.TestExtensions")
+  lazy val tm = inputKey[Unit]("org.nlogo.headless.lang.TestModels")
+  lazy val ts = inputKey[Unit]("org.nlogo.headless.misc.TestChecksums")
 
-  private val keys = Seq(tr, tc, te, tm, testChecksums)
+  private val keys = Seq(tr, tc, te, tm, ts)
 
   lazy val settings = inConfig(Test)(
     keys.flatMap(Defaults.defaultTestTasks) ++
