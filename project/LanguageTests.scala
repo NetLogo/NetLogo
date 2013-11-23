@@ -8,16 +8,14 @@ object LanguageTests {
   // and `tr Lists Strings` is short for
   //   test-only org.nlogo.headless.lang.TestReporters -- -n "Lists Strings"
 
-  lazy val tr = inputKey[Unit]("org.nlogo.headless.lang.TestReporters")
-  lazy val tc = inputKey[Unit]("org.nlogo.headless.lang.TestCommands")
-  lazy val te = inputKey[Unit]("org.nlogo.headless.lang.TestExtensions")
-  lazy val tm = inputKey[Unit]("org.nlogo.headless.lang.TestModels")
-  lazy val ts = inputKey[Unit]("org.nlogo.headless.misc.TestChecksums")
+  val tr = inputKey[Unit]("org.nlogo.headless.lang.TestReporters")
+  val tc = inputKey[Unit]("org.nlogo.headless.lang.TestCommands")
+  val te = inputKey[Unit]("org.nlogo.headless.lang.TestExtensions")
+  val tm = inputKey[Unit]("org.nlogo.headless.lang.TestModels")
+  val ts = inputKey[Unit]("org.nlogo.headless.misc.TestChecksums")
 
-  private val keys = Seq(tr, tc, te, tm, ts)
-
-  lazy val settings = inConfig(Test)(
-    keys.flatMap(key =>
+  val settings = inConfig(Test)(
+    Seq(tr, tc, te, tm, ts).flatMap(key =>
       Defaults.defaultTestTasks(key) ++
       Defaults.testTaskOptions(key) ++
       Seq(key <<= oneTest(key),
