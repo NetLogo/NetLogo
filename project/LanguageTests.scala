@@ -3,6 +3,13 @@ import Keys._
 
 object LanguageTests {
 
+  // Each of our custom test tasks has two things special about it:
+  // - It runs one suite in particular
+  // - If we pass arguments to it, it runs only a subset of the suite,
+  //   e.g. `tr Lists Strings`
+  // So e.g. `tr Lists Strings` is the equivalent of:
+  //   test-only org.nlogo.headless.lang.TestReporters -- -n "Lists Strings"
+
   lazy val tr = inputKey[Unit]("org.nlogo.headless.lang.TestReporters")
   lazy val tc = inputKey[Unit]("org.nlogo.headless.lang.TestCommands")
   lazy val te = inputKey[Unit]("org.nlogo.headless.lang.TestExtensions")
@@ -12,14 +19,14 @@ object LanguageTests {
   private val keys = Seq(tr, tc, te, tm, ts)
 
   lazy val settings = inConfig(Test)(
-    keys.flatMap(Defaults.defaultTestTasks) ++
-    keys.flatMap(Defaults.testTaskOptions) ++
-    keys.map(key => key <<= oneTest(key)) ++
-    keys.map(key => logBuffered in key := false)
-  )
+    keys.flatMap(key =>
+      Defaults.defaultTestTasks(key) ++
+      Defaults.testTaskOptions(key) ++
+      Seq(key <<= oneTest(key),
+          logBuffered in key := false)))
 
-  // mostly copy-and-pasted from Defaults.inputTests. is there a better way?
-  // - ST 6/17/12, 7/23/13
+  // The code for this mostly copy-and-pasted from Defaults.inputTests in the sbt sources.
+  // Could this be done better? - ST 6/17/12, 7/23/13
   def oneTest(key: InputKey[Unit]): Def.Initialize[InputTask[Unit]] = {
     val parser = Def.value((_: State) => Def.spaceDelimited())
     InputTask.createDyn(parser)(
