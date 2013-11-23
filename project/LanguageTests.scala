@@ -3,11 +3,9 @@ import Keys._
 
 object LanguageTests {
 
-  // Each of our custom test tasks has two things special about it:
-  // - It runs one suite in particular
-  // - If we pass arguments to it, it runs only a subset of the suite,
-  //   e.g. `tr Lists Strings`
-  // So e.g. `tr Lists Strings` is the equivalent of:
+  // so e.g. `tr` is short for
+  //   test-only org.nlogo.headless.lang.TestReporters
+  // and `tr Lists Strings` is short for
   //   test-only org.nlogo.headless.lang.TestReporters -- -n "Lists Strings"
 
   lazy val tr = inputKey[Unit]("org.nlogo.headless.lang.TestReporters")
