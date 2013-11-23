@@ -3,6 +3,7 @@
 package org.nlogo.api
 
 import java.awt.Graphics2D
+import scala.util.Properties.isMac
 
 // implements GraphicsInterface, wrapper around Graphics2D
 
@@ -12,8 +13,6 @@ class Graphics2DWrapper(g: Graphics2D, renderLabelsAsRectangles: Boolean = false
   // don't get the benefit of default arguments - ST 6/23/12
   def this(g: Graphics2D) = this(g, false)
 
-  val isMac =
-    System.getProperty("os.name").startsWith("Mac")
   // re: the try/catch, see issue #199 - ST 9/5/12
   val isQuartz =
     try isMac && java.lang.Boolean.getBoolean("apple.awt.graphics.UseQuartz")
