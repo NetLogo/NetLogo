@@ -22,7 +22,6 @@ class TestReporters extends Finder {
 class TestModels extends Finder {
   override def files =
     TxtsInDir("models/test")
-      .filterNot(_.getName.startsWith("checksums"))
 }
 class TestExtensions extends Finder {
   override def files = new Iterable[File] {
