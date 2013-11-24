@@ -37,7 +37,7 @@ javaSource in Compile := baseDirectory.value / "src" / "main"
 
 javaSource in Test := baseDirectory.value / "src" / "test"
 
-unmanagedResourceDirectories in Compile += baseDirectory.value / "resources"
+resourceDirectory in Compile := baseDirectory.value / "resources"
 
 ///
 /// packaging and publishing
