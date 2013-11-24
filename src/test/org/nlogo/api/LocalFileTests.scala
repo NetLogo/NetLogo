@@ -6,6 +6,6 @@ import org.scalatest.FunSuite
 
 class LocalFileTests extends FunSuite {
   test("file path") {
-    new LocalFile("resources/system/tokens.txt").readFile()
+    new LocalFile("resources/main/system/tokens.txt").readFile()
   }
 }

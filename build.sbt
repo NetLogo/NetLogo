@@ -21,12 +21,25 @@ javacOptions ++=
   .split(" ").toSeq
 
 libraryDependencies ++= Seq(
-  "asm" % "asm-all" % "3.3.1",
-  "org.jmock" % "jmock" % "2.5.1" % "test",
-  "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
-  "org.jmock" % "jmock-junit4" % "2.5.1" % "test",
+  "asm" % "asm-all" % "3.3.1"
+)
+
+libraryDependencies ++= Seq(
+  "org.jmock" % "jmock" % "2.5.1"             % "test",
+  "org.jmock" % "jmock-legacy" % "2.5.1"      % "test",
+  "org.jmock" % "jmock-junit4" % "2.5.1"      % "test",
   "org.scalacheck" %% "scalacheck" % "1.10.1" % "test",
-  "org.scalatest" %% "scalatest" % "2.0" % "test"
+  "org.scalatest" %% "scalatest" % "2.0"      % "test"
+)
+
+// reflections depends on some extra jars but for some reason we need to
+// explicitly list the transitive dependencies
+libraryDependencies ++= Seq(
+  "org.reflections" % "reflections" % "0.9.9-RC1" % "test",
+  "com.google.code.findbugs" % "jsr305" % "2.0.1" % "test",
+  "com.google.guava" % "guava" % "12.0"           % "test",
+  "org.javassist" % "javassist" % "3.16.1-GA"     % "test",
+  "org.slf4j" % "slf4j-nop" % "1.7.5"             % "test"
 )
 
 scalaSource in Compile := baseDirectory.value / "src" / "main"
@@ -37,7 +50,9 @@ javaSource in Compile := baseDirectory.value / "src" / "main"
 
 javaSource in Test := baseDirectory.value / "src" / "test"
 
-resourceDirectory in Compile := baseDirectory.value / "resources"
+resourceDirectory in Compile := baseDirectory.value / "resources" / "main"
+
+resourceDirectory in Test := baseDirectory.value / "resources" / "test"
 
 ///
 /// packaging and publishing
@@ -51,15 +66,6 @@ artifactName := { (_, _, _) => "NetLogoHeadless.jar" }
 artifactName in Test := { (_, _, _) => "NetLogoHeadlessTests.jar" }
 
 publishArtifact in Test := true
-
-// In English: Put the 'test' dir into 'NetLogoHeadlessTests.jar' at the path
-// 'test' --JAB (11/13/13)
-mappings in (Test, packageBin) ++= {
-  val testDir = baseDirectory.value / "test"
-  (testDir.*** --- testDir) x relativeTo(testDir) map {
-    case (file, relativePath) => file -> s"test/$relativePath"
-  }
-}
 
 ///
 /// Scaladoc
