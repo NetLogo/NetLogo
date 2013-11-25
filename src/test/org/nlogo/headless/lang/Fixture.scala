@@ -29,6 +29,7 @@ object Fixture {
 // elsewhere by Tortoise - ST 8/28/13
 trait AbstractFixture {
   import Assertions._
+  def name: String
   def defaultDimensions: api.WorldDimensions
   def declare(source: String, dimensions: api.WorldDimensions = defaultDimensions)
   def open(path: String)
