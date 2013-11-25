@@ -42,8 +42,11 @@ extends Topology(_world, xWraps = false, yWraps = false) {
       ((270 + StrictMath.toDegrees (StrictMath.PI + StrictMath.atan2(-headingY, headingX)))
         % 360)
 
-  override def shortestPathX(x1: Double, x2: Double) = x2
-  override def shortestPathY(y1: Double, y2: Double) = y2
+  // These are odd in order to match how tortoise calculates shortest paths and maintain floating point equality
+  // Suffice it to say that while it is true that x2 == x1 - abs(x1 - x2) when x1 > x2, that is not computationaly true when
+  // considering floating point operations.  FD 11/14/13
+  override def shortestPathX(x1: Double, x2: Double) = if (x1 > x2) x1 - StrictMath.abs(x1 - x2) else x1 + StrictMath.abs(x1 - x2)
+  override def shortestPathY(y1: Double, y2: Double) = if (y1 > y2) y1 - StrictMath.abs(y1 - y2) else y1 + StrictMath.abs(y1 - y2)
   override def followOffsetX = 0.0
   override def followOffsetY = 0.0
 
