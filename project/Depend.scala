@@ -113,9 +113,11 @@ check absenceOfPackageCycles > 1 in org.nlogo.*
 
 [parser-combinators] = scala.util.parsing*
 
+[reflections] = org.reflections.*
+
 [testing] = org.scalatest.* org.scalautils.* org.scalacheck.* org.jmock.* org.hamcrest.*
 
-[libs] = [stdlib-j] [stdlib-s] [headless-AWT] [xml] [asm] [parser-combinators] [testing]
+[libs] = [stdlib-j] [stdlib-s] [headless-AWT] [xml] [asm] [parser-combinators] [reflections] [testing]
 """)
     }
 
@@ -134,6 +136,9 @@ check [ASM-free-zone] independentOf org.objectweb.*
 
 [XML-free-zone] = org.nlogo.* excluding [lab]
 check [XML-free-zone] independentOf [xml]
+
+[reflections-free-zone] = org.nlogo.* excluding org.nlogo.headless.lang.*
+check [reflections-free-zone] independentOf [reflections]
 
 [parser-combinator-free-zone] = org.nlogo.* excluding org.nlogo.parse.StructureCombinators* org.nlogo.parse.SeqReader* org.nlogo.parse.Cleanup
 check [parser-combinator-free-zone] directlyIndependentOf [parser-combinators]
