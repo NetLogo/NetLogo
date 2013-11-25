@@ -51,7 +51,7 @@ trait AbstractFixture {
   }
 }
 
-class Fixture(name: String) extends AbstractFixture {
+class Fixture(val name: String) extends AbstractFixture {
 
   import Assertions._
 
