@@ -46,7 +46,7 @@ object LanguageTests {
               (testGrouping in key).value, config, (fullClasspath in key).value,
               // here I want to write `(javaHome in key).value` but it fails with
               // "Illegal dynamic reference: Def". don't understand why - ST 7/23/13
-              Some(new java.io.File(""))
+              Some(file(""))
             )
           val result: Task[Unit] =
             task.map(Tests.showResults(streams.value.log, _, "not found"))
