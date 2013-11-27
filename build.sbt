@@ -10,6 +10,10 @@ ivyLoggingLevel := UpdateLogging.Quiet
 
 logBuffered in testOnly in Test := false
 
+// work around https://github.com/sbt/sbt/issues/979 ;
+// remove once we move to 0.13.1-RC4
+trapExit in Global := false
+
 ///
 /// building
 ///
