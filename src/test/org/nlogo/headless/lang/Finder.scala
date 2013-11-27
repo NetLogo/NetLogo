@@ -76,12 +76,11 @@ trait Finder extends FunSuite with SlowTest {
     test(t.fullName, new Tag(t.suiteName){}, new Tag(t.fullName){}) {
       for (mode <- t.modes)
         if (shouldRun(t, mode))
-          withFixture(s"${t.fullName} ($mode)")(
-            fixture => runTest(t, mode, fixture))
+          runTest(t, mode)
     }
   def withFixture[T](name: String)(body: AbstractFixture => T): T =
     Fixture.withFixture(name)(body)
-  def runTest(t: LanguageTest, mode: TestMode, fixture: AbstractFixture) {
+  def runTest(t: LanguageTest, mode: TestMode) {
     withFixture(s"${t.fullName} ($mode)") {
       fixture =>
         val nonDecls = t.entries.filterNot(_.isInstanceOf[Declaration])
