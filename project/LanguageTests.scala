@@ -18,7 +18,7 @@ object LanguageTests {
     Seq(tr, tc, te, tm, ts).flatMap(key =>
       Defaults.defaultTestTasks(key) ++
       Defaults.testTaskOptions(key) ++
-      Seq(key <<= oneTest(key.key.description.get))))
+      Seq(key := oneTest(key.key.description.get).evaluated)))
 
   def oneTest(name: String): Def.Initialize[InputTask[Unit]] =
     Def.inputTaskDyn {
