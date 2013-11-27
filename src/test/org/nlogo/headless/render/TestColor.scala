@@ -5,7 +5,6 @@ package render
 
 import org.nlogo.shape.VectorShape
 import org.nlogo.shape.TestHelpers._
-import MockGraphics._
 
 class TestColorRendering extends AbstractTestRenderer {
 

@@ -4,7 +4,6 @@ package org.nlogo.headless
 package render
 
 import org.nlogo.shape.VectorShape
-import org.nlogo.shape.TestHelpers._
 import org.nlogo.api.Perspective
 import org.nlogo.util.WorldType, WorldType._
 import MockGraphics._
