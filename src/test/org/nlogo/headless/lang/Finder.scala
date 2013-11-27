@@ -13,27 +13,28 @@ import org.nlogo.util.SlowTest
 
 class TestCommands extends Finder {
   override def files =
-    TxtsInDir("test/commands")
+    TxtsInResources("commands")
 }
 class TestReporters extends Finder {
   override def files =
-    TxtsInDir("test/reporters")
+    TxtsInResources("reporters")
 }
 class TestModels extends Finder {
   override def files =
     TxtsInDir("models/test")
-      .filterNot(_.getName.startsWith("checksums"))
 }
 class TestExtensions extends Finder {
-  override def files = new Iterable[File] {
+  override def files = new Iterable[(String, String)] {
     override def iterator = {
-    def filesInDir(parent: File): Iterable[File] =
-      parent.listFiles.flatMap{f =>
-        if(f.isDirectory) filesInDir(f)
-        else List(f)}
-    filesInDir(new File("extensions"))
-      .filter(_.getName == "tests.txt")
-      .iterator
+      def filesInDir(parent: File): Iterable[File] =
+        parent.listFiles.flatMap{f =>
+          if(f.isDirectory)
+            filesInDir(f)
+          else
+            List(f).filter(_.getName == "tests.txt")}
+      filesInDir(new File("extensions"))
+        .iterator
+        .map(f => (suiteName(f), file2String(f.getAbsolutePath)))
     }
   }
 }
@@ -44,18 +45,42 @@ class TestExtensions extends Finder {
 // one, and FixtureSuite assumes one - ST 8/7/13
 
 trait Finder extends FunSuite with SlowTest {
-  def files: Iterable[File]
+  def files: Iterable[(String, String)]
+  def suiteName(f: File): String =
+    if (f.getName == "tests.txt")
+      f.getParentFile.getName
+    else
+      f.getName.stripSuffix(".txt")
+  case class TxtsInDir(dir: String) extends Iterable[(String, String)] {
+    override def iterator =
+      new File(dir).listFiles
+        .filter(_.getName.endsWith(".txt"))
+        .filterNot(_.getName.containsSlice("SDM"))
+        .filterNot(_.getName.containsSlice("HubNet"))
+        .iterator
+        .map(f => (suiteName(f), file2String(f.getAbsolutePath)))
+  }
+  case class TxtsInResources(path: String) extends Iterable[(String, String)] {
+    import org.reflections._
+    import collection.JavaConverters._
+    override def iterator =
+      new Reflections(path, new scanners.ResourcesScanner())
+        .getResources(java.util.regex.Pattern.compile(".*\\.txt"))
+        .asScala.toSeq.sorted.iterator
+        .map(s =>
+          (s.stripPrefix(path + "/").stripSuffix(".txt"),
+           org.nlogo.util.Utils.getResourceAsString("/" + s)))
+  }
   // parse tests first, then run them
-  for(t <- parseFiles(files))
+  for (t <- files.flatMap(Function.tupled(parseFile)))
     test(t.fullName, new Tag(t.suiteName){}, new Tag(t.fullName){}) {
       for (mode <- t.modes)
         if (shouldRun(t, mode))
-          withFixture(s"${t.fullName} ($mode)")(
-            fixture => runTest(t, mode, fixture))
+          runTest(t, mode)
     }
   def withFixture[T](name: String)(body: AbstractFixture => T): T =
     Fixture.withFixture(name)(body)
-  def runTest(t: LanguageTest, mode: TestMode, fixture: AbstractFixture) {
+  def runTest(t: LanguageTest, mode: TestMode) {
     withFixture(s"${t.fullName} ($mode)") {
       fixture =>
         val nonDecls = t.entries.filterNot(_.isInstanceOf[Declaration])
@@ -81,21 +106,10 @@ trait Finder extends FunSuite with SlowTest {
         }
     }
   }
-  def parseFiles(files: Iterable[File]): Iterable[LanguageTest] =
-    for {
-      f <- files if !f.isDirectory
-      test <- parseFile(f)
-    } yield test
-
-  def parseFile(f: File): List[LanguageTest] = {
+  def parseFile(suiteName: String, contents: String): List[LanguageTest] = {
     def preprocessStackTraces(s: String) =
       s.replace("\\\n  ", "\\n")
-    val suiteName =
-      if(f.getName == "tests.txt")
-        f.getParentFile.getName
-      else
-        f.getName.replace(".txt", "")
-    Parser.parse(suiteName, preprocessStackTraces(file2String(f.getAbsolutePath)))
+    Parser.parse(suiteName, preprocessStackTraces(contents))
   }
   // on the core branch the _3D tests are gone, but extensions tests still have them since we
   // didn't branch the extensions, so we still need to filter those out - ST 1/13/12
@@ -114,13 +128,4 @@ trait Finder extends FunSuite with SlowTest {
       Plot(name = "plot1", pens = Pens(Pen(name = "pen1"), Pen(name = "pen2"))),
       Plot(name = "plot2", pens = Pens(Pen(name = "pen1"), Pen(name = "pen2"))))
   }
-}
-
-case class TxtsInDir(dir: String) extends Iterable[File] {
-  override def iterator =
-    new File(dir).listFiles
-      .filter(_.getName.endsWith(".txt"))
-      .filterNot(_.getName.containsSlice("SDM"))
-      .filterNot(_.getName.containsSlice("HubNet"))
-      .iterator
 }
