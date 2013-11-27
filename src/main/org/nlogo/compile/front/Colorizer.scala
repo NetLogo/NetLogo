@@ -107,8 +107,8 @@ object Colorizer {
   private def encode(source: Seq[Char], color: Color) = {
     def toHex(i: Int) =
       (if(i < 16) "0" else "") + i.toHexString
-    def escape(c: Char) =
-      escapeMap.getOrElse(c, c)
+    def escape(c: Char): String =
+      escapeMap.getOrElse(c, c.toString)
     "<font color=\"#" +
       toHex(color.getRed) +
       toHex(color.getGreen) +
