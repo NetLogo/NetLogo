@@ -48,10 +48,10 @@ trait AstVisitor {
 class DefaultAstVisitor extends AstVisitor {
   def visitProcedureDefinition(proc: ProcedureDefinition) { proc.statements.accept(this) }
   def visitCommandBlock(block: CommandBlock) { block.statements.accept(this) }
-  def visitReporterApp(app: ReporterApp) { app.foreach(_.accept(this)) }
+  def visitReporterApp(app: ReporterApp) { app.args.foreach(_.accept(this)) }
   def visitReporterBlock(block: ReporterBlock) { block.app.accept(this) }
-  def visitStatement(stmt: Statement) { stmt.foreach(_.accept(this)) }
-  def visitStatements(stmts: Statements) { stmts.foreach(_.accept(this)) }
+  def visitStatement(stmt: Statement) { stmt.args.foreach(_.accept(this)) }
+  def visitStatements(stmts: Statements) { stmts.stmts.foreach(_.accept(this)) }
 }
 
 /**
@@ -74,7 +74,8 @@ trait Expression extends AstNode {
  * of a command application). This is used when parsing arguments, when we
  * don't care what kind of application the args are for.
  */
-trait Application extends AstNode with collection.SeqProxy[Expression] {
+trait Application extends AstNode {
+  def args: Seq[Expression]
   def instruction: Instruction
   def end_=(end: Int)
   def addArgument(arg: Expression)
@@ -98,16 +99,16 @@ class ProcedureDefinition(val procedure: Procedure, val statements: Statements) 
  * (enclosed in [], in particular). This class is used to represent other
  * groups of statements as well, for instance procedure bodies.
  */
-class Statements(val file: String) extends AstNode with collection.SeqProxy[Statement] {
+class Statements(val file: String) extends AstNode {
   var start: Int = _
   var end: Int = _
-  def self = stmts // for SeqProxy
   /**
    * a List of the actual Statement objects.
    */
-  private val stmts = new collection.mutable.ArrayBuffer[Statement]
+  private val _stmts = collection.mutable.Buffer[Statement]()
+  def stmts: Seq[Statement] = _stmts
   def addStatement(stmt: Statement) {
-    stmts.append(stmt)
+    _stmts.append(stmt)
     recomputeStartAndEnd()
   }
   private def recomputeStartAndEnd() {
@@ -123,15 +124,15 @@ class Statements(val file: String) extends AstNode with collection.SeqProxy[Stat
  * application.
  */
 class Statement(var command: Command, var start: Int, var end: Int, val file: String)
-    extends Application with collection.SeqProxy[Expression] {
-  val args = new collection.mutable.ArrayBuffer[Expression]
+    extends Application {
+  private val _args = collection.mutable.Buffer[Expression]()
+  override def args: Seq[Expression] = _args
   def instruction = command // for Application
-  def self = args // for SeqProxy
-  def addArgument(arg: Expression) { args.append(arg) }
+  def addArgument(arg: Expression) { _args.append(arg) }
   override def toString = command.toString + "[" + args.mkString(", ") + "]"
   def accept(v: AstVisitor) { v.visitStatement(this) }
-  def replaceArg(index: Int, expr: Expression) { args(index) = expr }
-  def removeArgument(index: Int) { args.remove(index) }
+  def replaceArg(index: Int, expr: Expression) { _args(index) = expr }
+  def removeArgument(index: Int) { _args.remove(index) }
 }
 
 /**
@@ -182,18 +183,18 @@ class ReporterBlock(val app: ReporterApp, var start: Int, var end: Int, val file
  * applications as they're parsed.
  */
 class ReporterApp(var reporter: Reporter, var start: Int, var end: Int, val file: String)
-extends Expression with Application with collection.SeqProxy[Expression] {
+extends Expression with Application {
   /**
    * the args for this application.
    */
-  val args = new collection.mutable.ArrayBuffer[Expression]
-  def self = args // for SeqProxy
+  private val _args = collection.mutable.Buffer[Expression]()
+  override def args: Seq[Expression] = _args
   def instruction = reporter // for Application
-  def addArgument(arg: Expression) { args.append(arg) }
+  def addArgument(arg: Expression) { _args.append(arg) }
   def reportedType() = reporter.syntax.ret
   def accept(v: AstVisitor) { v.visitReporterApp(this) }
-  def removeArgument(index: Int) { args.remove(index) }
-  def replaceArg(index: Int, expr: Expression) { args(index) = expr }
-  def clearArgs() { args.clear() }
+  def removeArgument(index: Int) { _args.remove(index) }
+  def replaceArg(index: Int, expr: Expression) { _args(index) = expr }
+  def clearArgs() { _args.clear() }
   override def toString = reporter.toString + "[" + args.mkString(", ") + "]"
 }
