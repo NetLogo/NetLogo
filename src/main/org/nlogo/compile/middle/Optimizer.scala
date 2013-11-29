@@ -74,7 +74,7 @@ private object Optimizer extends DefaultAstVisitor {
       node match {
         case stmt: Statement if !stmt.args.isEmpty =>
           stmt.args.last match {
-            case block: CommandBlock if block.statements.size == 0 =>
+            case block: CommandBlock if block.statements.stmts.isEmpty =>
               new Match(block)
             case _ =>
               throw new MatchFailedException

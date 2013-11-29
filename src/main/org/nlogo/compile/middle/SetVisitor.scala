@@ -19,7 +19,7 @@ class SetVisitor extends DefaultAstVisitor {
   override def visitStatement(stmt: Statement) {
     super.visitStatement(stmt)
     if(stmt.command.isInstanceOf[_set]) {
-      val rApp = stmt(0).asInstanceOf[ReporterApp]
+      val rApp = stmt.args(0).asInstanceOf[ReporterApp]
       val newCommandClass = SetVisitor.classes.get(rApp.reporter.getClass)
         .getOrElse(exception(INVALID_SET, stmt))
       val newCommand =

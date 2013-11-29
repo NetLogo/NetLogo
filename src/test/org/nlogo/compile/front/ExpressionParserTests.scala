@@ -51,7 +51,8 @@ class ExpressionParserTests extends FunSuite {
     override def visitReporterBlock(node: ReporterBlock) { visit(node); super.visitReporterBlock(node) }
     override def visitStatement(node: Statement) { visit(node); super.visitStatement(node) }
     override def visitStatements(node: Statements) {
-      if (node.size == 0) buf.append(node.getClass.getSimpleName + " '' ")
+      if (node.stmts.isEmpty)
+        buf.append(node.getClass.getSimpleName + " '' ")
       else visit(node)
       super.visitStatements(node)
     }
