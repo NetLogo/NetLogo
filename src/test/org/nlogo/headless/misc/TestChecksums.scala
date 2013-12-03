@@ -4,10 +4,10 @@ package org.nlogo.headless
 package misc
 
 import org.nlogo.api.Version
-import java.util.concurrent.{Executors, TimeUnit}
+import java.util.concurrent.{ Executors, TimeUnit }
 import org.nlogo.util.SlowTest
 import org.nlogo.workspace.Checksummer
-import org.scalatest._
+import org.scalatest.{ FunSuite, Args, Status, SucceededStatus }
 
 class TestChecksums extends FunSuite with SlowTest {
 
@@ -28,27 +28,32 @@ class TestChecksums extends FunSuite with SlowTest {
   // prevent annoying JAI message on Linux when using JAI extension
   // (old.nabble.com/get-rid-of-%22Could-not-find-mediaLib-accelerator-wrapper-classes%22-td11025745.html)
   System.setProperty("com.sun.media.jai.disableMediaLib", "true")
-  for {
-    entry <- TestChecksums.checksums.values
-    if !entry.path.containsSlice("/GIS/")
-    if !entry.path.containsSlice("/System Dynamics/")
-    if !entry.path.containsSlice("Movie Example")
-  } {
-    test(entry.path) {
-      val tester = new ChecksumTester(info(_))
-      tester.testChecksum(entry.path, entry.worldSum, entry.graphicsSum, entry.revision)
-      val failures = tester.failures.toString
-      if (failures.nonEmpty)
-        fail(failures)
-    }
-  }
+
+  def skip(path: String): Boolean =
+    Seq("/GIS/", "/System Dynamics/", "Movie Example")
+      .exists(path.containsSlice(_))
+
+  for(entry <- TestChecksums.checksums.values)
+    if (!skip(entry.path))
+      test(entry.path) {
+        val tester = new ChecksumTester(info(_))
+        tester.testChecksum(entry.path, entry.worldSum, entry.graphicsSum, entry.revision)
+        val failures = tester.failures.toString
+        if (failures.nonEmpty)
+          fail(failures)
+      }
+
 }
 
 object TestChecksums extends ChecksumTester(println _) {
+
   def checksums =
     ChecksumsAndPreviews.Checksums.load("test/checksums.txt")
 
   def main(args: Array[String]) {
+
+    // I copied and pasted the thread pool stuff from TestCompileAll.  If I ever make a third copy,
+    // it's time to abstract, maybe using ExecutorServices.invokeAll - ST 2/12/09, 3/29/09
 
     val runTimes = new collection.mutable.HashMap[String, Long]
             with collection.mutable.SynchronizedMap[String, Long]
@@ -57,7 +62,7 @@ object TestChecksums extends ChecksumTester(println _) {
     val checksums = this.checksums
 
     for (entry <- checksums.values) {
-      def doit() {
+      def doIt() {
         try {
           print(".")
           runTimes.update(entry.path, System.currentTimeMillis)
@@ -73,10 +78,7 @@ object TestChecksums extends ChecksumTester(println _) {
             addFailure(entry.path + ": " + t.getMessage)
         }
       }
-      import language.implicitConversions
-      implicit def thunk2runnable(fn: () => Unit): Runnable =
-        new Runnable {def run() {fn()}}
-      executor.execute(doit _)
+      executor.execute(new Runnable { def run() { doIt() }})
     }
     executor.shutdown()
     executor.awaitTermination(java.lang.Integer.MAX_VALUE, TimeUnit.SECONDS)
@@ -94,9 +96,8 @@ object TestChecksums extends ChecksumTester(println _) {
 }
 
 class ChecksumTester(info: String => Unit) {
+
   def addFailure(s: String) = failures.synchronized {failures ++= s}
-  // I copied and pasted the thread pool stuff from TestCompileAll.  If I ever make a third copy,
-  // it's time to abstract - ST 2/12/09  maybe using ExecutorServices.invokeAll - ST 3/29/09
   val failures = new StringBuilder
 
   def testChecksum(model: String, expectedWorldSum: String, expectedGraphicsSum: String, revision: String) {
@@ -147,7 +148,9 @@ class ChecksumTester(info: String => Unit) {
     info("  exporting world to " + path)
     try workspace.exportWorld(path)
     catch {
-      case t: Throwable => t.printStackTrace; throw t
+      case t: Throwable =>
+        t.printStackTrace
+        throw t
     }
   }
 
