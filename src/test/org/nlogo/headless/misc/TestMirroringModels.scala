@@ -78,7 +78,7 @@ class TestMirroringModels extends FunSuite with SlowTest {
   val moreExclusions = Seq("/GIS/", "/System Dynamics/")
 
   def checksums =
-    ChecksumsAndPreviews.Checksums.load("test/checksums.txt")
+    ChecksumsAndPreviews.Checksums.load()
 
   for {
     path <- checksums.values.map(_.path)
