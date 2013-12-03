@@ -11,10 +11,14 @@ import org.scalatest._
 
 class TestChecksums extends FunSuite with SlowTest {
 
-  // overriding this so we can pass in a model filter to run checksums against a single model.
-  // example   sbt> checksums model=Echo
-  override def runTest (testName : java.lang.String, args: Args): Status = {
-    val shouldRun = args.configMap.get("model").map(testName contains _.asInstanceOf[String]).getOrElse(true)
+  // overriding this so we can pass in a model filter to run checksums against one
+  // model, or a subset. example:
+  //   testOnly org.nlogo.headless.misc.TestChecksums -- -Dmodel=GenDrift
+  override def runTest(testName: String, args: Args): Status = {
+    val shouldRun =
+      args.configMap.get("model")
+        .collect{case s: String => s}
+        .forall(testName.containsSlice(_))
     if(shouldRun)
       super.runTest(testName, args)
     else

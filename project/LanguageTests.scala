@@ -4,9 +4,11 @@ import Keys._
 object LanguageTests {
 
   // so e.g. `tr` is short for
-  //   test-only org.nlogo.headless.lang.TestReporters
+  //   testOnly org.nlogo.headless.lang.TestReporters
   // and `tr Lists Strings` is short for
-  //   test-only org.nlogo.headless.lang.TestReporters -- -n "Lists Strings"
+  //   testOnly org.nlogo.headless.lang.TestReporters -- -n "Lists Strings"
+  // you can run individual tests too with e.g.:
+  //   tr Numbers::Sqrt1 Numbers::Sqrt2
 
   val tr = inputKey[Unit]("org.nlogo.headless.lang.TestReporters")
   val tc = inputKey[Unit]("org.nlogo.headless.lang.TestCommands")

@@ -73,6 +73,8 @@ trait Finder extends FunSuite with SlowTest {
   }
   // parse tests first, then run them
   for (t <- files.flatMap(Function.tupled(parseFile)))
+    // by tagging each test with both its suite name and its full name,
+    // we support both e.g. `tc Lists` and `tc Lists::Remove`
     test(t.fullName, new Tag(t.suiteName){}, new Tag(t.fullName){}) {
       for (mode <- t.modes)
         if (shouldRun(t, mode))
