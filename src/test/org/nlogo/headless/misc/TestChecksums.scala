@@ -11,8 +11,7 @@ import org.scalatest.{ FunSuite, Args, Status, SucceededStatus }
 class TestChecksums extends FunSuite with SlowTest {
 
   // overriding this so we can pass in a model filter to run checksums against one
-  // model, or a subset. example:
-  //   testOnly org.nlogo.headless.misc.TestChecksums -- -Dmodel=GenDrift
+  // model, or a subset. example: `ts GenDrift`
   override def runTest(testName: String, args: Args): Status = {
     val shouldRun =
       args.configMap.get("model")

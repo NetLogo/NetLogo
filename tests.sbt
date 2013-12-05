@@ -2,6 +2,7 @@
 //   testOnly org.nlogo.headless.lang.TestReporters
 // and `tr Lists Strings` is short for
 //   testOnly org.nlogo.headless.lang.TestReporters -- -n "Lists Strings"
+// where -n tells ScalaTest to look for the given Tag names.
 // you can run individual tests too with e.g.:
 //   tr Numbers::Sqrt1 Numbers::Sqrt2
 
@@ -9,19 +10,40 @@ val tr = inputKey[Unit]("org.nlogo.headless.lang.TestReporters")
 val tc = inputKey[Unit]("org.nlogo.headless.lang.TestCommands")
 val te = inputKey[Unit]("org.nlogo.headless.lang.TestExtensions")
 val tm = inputKey[Unit]("org.nlogo.headless.lang.TestModels")
+
+// `ts` is a little different. the argument if any is a substring
+// to match in the model path, so e.g. `ts GenDrift` is short for
+//   testOnly org.nlogo.headless.misc.TestChecksums -- -Dmodel=GenDrift
+// where TestChecksums.runTest will take care of interpreting that
+// as a substring match.
+
 val ts = inputKey[Unit]("org.nlogo.headless.misc.TestChecksums")
 
-def oneTest(name: String): Def.Initialize[InputTask[Unit]] =
+def taggedTest(name: String): Def.Initialize[InputTask[Unit]] =
   Def.inputTaskDyn {
     val args = Def.spaceDelimited("<arg>").parsed
     val scalaTestArgs =
       if (args.isEmpty) ""
       else args.mkString(" -- -n \"", " ", "\"")
-    (testOnly in Test).toTask(" " + name + scalaTestArgs)
+    (testOnly in Test).toTask(s" $name$scalaTestArgs")
+  }
+
+def keyValueTest(name: String, key: String): Def.Initialize[InputTask[Unit]] =
+  Def.inputTaskDyn {
+    val args = Def.spaceDelimited("<arg>").parsed
+    require(args.size <= 1)
+    val scalaTestArgs = args match {
+      case Seq() => ""
+      case Seq(value) => s" -- -D$key=$value"
+    }
+    (testOnly in Test).toTask(s" $name$scalaTestArgs")
   }
 
 inConfig(Test)(
   Seq(tr, tc, te, tm, ts).flatMap(key =>
     Defaults.defaultTestTasks(key) ++
-    Defaults.testTaskOptions(key) ++
-    Seq(key := oneTest(key.key.description.get).evaluated)))
+    Defaults.testTaskOptions(key)) ++
+  Seq(tr, tc, te, tm).flatMap(key =>
+    Seq(key := taggedTest(key.key.description.get).evaluated)) ++
+  Seq(ts).flatMap(key =>
+    Seq(key := keyValueTest(key.key.description.get, "model").evaluated)))
