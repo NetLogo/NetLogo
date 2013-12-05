@@ -32,19 +32,28 @@ class TestChecksums extends FunSuite with SlowTest {
     Seq("/GIS/", "/System Dynamics/", "Movie Example")
       .exists(path.containsSlice(_))
 
-  for(entry <- ChecksumsAndPreviews.Checksums.load().values)
-    if (!skip(entry.path))
-      test(entry.path) {
-        val tester = new ChecksumTester(info(_))
-        tester.testChecksum(entry.path, entry.worldSum, entry.graphicsSum, entry.revision)
-        val failures = tester.failures.toString
-        if (failures.nonEmpty)
-          fail(failures)
-      }
+  val entries =
+    ChecksumsAndPreviews.Checksums.load().values
+      .filterNot(entry => skip(entry.path))
+  var versionMismatchCount = 0
+
+  for(entry <- entries)
+    test(entry.path) {
+      val tester = new ChecksumTester(info(_), () => versionMismatchCount += 1)
+      tester.testChecksum(entry.path, entry.worldSum, entry.graphicsSum, entry.revision)
+      val failures = tester.failures.toString
+      if (failures.nonEmpty)
+        fail(failures)
+    }
+
+  test("not too many version mismatches") {
+    assert(versionMismatchCount.toDouble / entries.size <= 0.02,
+      s"${versionMismatchCount} failures ignored for version mismatches (more than 2%)")
+  }
 
 }
 
-class ChecksumTester(val info: String => Unit) {
+class ChecksumTester(val info: String => Unit, versionMismatch: () => Unit = () => ()) {
 
   def addFailure(s: String) = failures.synchronized {failures ++= s}
   val failures = new StringBuilder
@@ -71,6 +80,7 @@ class ChecksumTester(val info: String => Unit) {
         }
         else {
           info("version mismatch, ignoring: " + message)
+          versionMismatch()
           return
         }
       }
@@ -84,6 +94,7 @@ class ChecksumTester(val info: String => Unit) {
         }
         else {
           info("version mismatch, ignoring: " + message)
+          versionMismatch()
           return
         }
       }
