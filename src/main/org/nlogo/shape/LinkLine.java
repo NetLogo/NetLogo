@@ -114,8 +114,11 @@ public strictfp class LinkLine
       // should never happen since we implement Cloneable
       throw new IllegalStateException(ex);
     }
-    line.dashes = new float[dashes.length];
-    System.arraycopy(dashes, 0, line.dashes, 0, dashes.length);
+    // though it is scary to share mutable data like this,
+    // it is expected that line.dashes will point to a member
+    // of LinkLine.dashChoices, so it makes no sense to copy the
+    // array (like we did before, causing #517) - NP 2013-12-05
+    line.dashes = dashes;
     return line;
   }
 
