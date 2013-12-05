@@ -112,8 +112,6 @@ org.scalastyle.sbt.ScalastylePlugin.Settings
 /// get stuff from project/*.scala
 ///
 
-LanguageTests.settings
-
 FastMediumSlow.settings
 
 Depend.settings
