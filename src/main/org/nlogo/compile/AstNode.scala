@@ -6,8 +6,6 @@ package org.nlogo.compile
 // Expression and Application and their subclasses: ProcedureDefinition, Statements, Statement,
 // ReporterApp, ReporterBlock, CommandBlock, DelayedBlock.
 
-// see also AstVisitor.scala which implements the Visitor pattern on these AST's.
-
 import org.nlogo.api.Syntax
 import org.nlogo.nvm.{ Procedure, Command, Reporter, Instruction }
 
