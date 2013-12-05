@@ -48,7 +48,7 @@ class TestChecksums extends FunSuite with SlowTest {
 
   test("not too many version mismatches") {
     assert(versionMismatchCount.toDouble / entries.size <= 0.02,
-      s"${versionMismatchCount} failures ignored for version mismatches (more than 2%)")
+      s"${versionMismatchCount} models have version mismatches (more than 2%)")
   }
 
 }
@@ -65,9 +65,14 @@ class ChecksumTester(val info: String => Unit, versionMismatch: () => Unit = () 
     finally ws.dispose()
   }
 
-  def testChecksum(model: String, expectedWorldSum: String, expectedGraphicsSum: String, revision: String) {
+  def testChecksum(model: String, expectedWorldSum: String, expectedGraphicsSum: String, expectedRevision: String) {
     withWorkspace { workspace =>
-      val revisionMatches = revision == ChecksumsAndPreviews.Checksums.getRevisionNumber(model)
+      val actualRevision = ChecksumsAndPreviews.Checksums.getRevisionNumber(model)
+      val revisionMatches = expectedRevision == actualRevision
+      if (!revisionMatches) {
+        versionMismatch()
+        info(s"checksums.txt has $expectedRevision but model is $actualRevision")
+      }
       workspace.open(model)
       Checksummer.initModelForChecksumming(workspace)
       val actual = Checksummer.calculateWorldChecksum(workspace)
@@ -80,7 +85,6 @@ class ChecksumTester(val info: String => Unit, versionMismatch: () => Unit = () 
         }
         else {
           info("version mismatch, ignoring: " + message)
-          versionMismatch()
           return
         }
       }
@@ -94,7 +98,6 @@ class ChecksumTester(val info: String => Unit, versionMismatch: () => Unit = () 
         }
         else {
           info("version mismatch, ignoring: " + message)
-          versionMismatch()
           return
         }
       }
