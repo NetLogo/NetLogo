@@ -44,7 +44,7 @@ class TestChecksums extends FunSuite with SlowTest {
 
 }
 
-class ChecksumTester(info: String => Unit) {
+class ChecksumTester(val info: String => Unit) {
 
   def addFailure(s: String) = failures.synchronized {failures ++= s}
   val failures = new StringBuilder
