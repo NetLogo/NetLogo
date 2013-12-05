@@ -147,11 +147,13 @@ public strictfp class LinkLine
     StringTokenizer tokenizer = new StringTokenizer(shapes[index]);
     line.xcor = Double.parseDouble(tokenizer.nextToken());
     line.isVisible = Integer.parseInt(tokenizer.nextToken()) != 0;
-    float[] d = new float[tokenizer.countTokens()];
-    for (int i = 0; tokenizer.hasMoreTokens(); i++) {
-      d[i] = Float.parseFloat(tokenizer.nextToken());
-    }
-    line.dashes = dashChoices[getDashIndex(d)];
+    if (line.isVisible) {
+      float[] d = new float[tokenizer.countTokens()];
+      for (int i = 0; tokenizer.hasMoreTokens(); i++) {
+        d[i] = Float.parseFloat(tokenizer.nextToken());
+      }
+      line.dashes = dashChoices[getDashIndex(d)];
+    } else line.dashes = dashChoices[0]; // invisible line
     return ++index;
   }
 }
