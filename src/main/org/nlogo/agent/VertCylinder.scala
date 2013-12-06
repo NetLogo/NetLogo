@@ -23,11 +23,7 @@ extends Topology(_world, xWraps = true, yWraps = false) {
   }
 
   override def distanceWrap(dx: Double, dy: Double, x1: Double, y1: Double, x2: Double, y2: Double): Double = {
-    val dx2 =
-      if (x1 > x2)
-        x2 + world.worldWidth - x1
-      else
-        x2 - world.worldWidth - x1
+    val dx2 = world.worldWidth - StrictMath.abs(x1 - x2)
     val dxMin =
       if (StrictMath.abs(dx2) < StrictMath.abs(dx))
         dx2
@@ -52,16 +48,19 @@ extends Topology(_world, xWraps = true, yWraps = false) {
   override def shortestPathX(x1: Double, x2: Double): Double = {
     val xprime =
       if (x1 > x2)
-        x2 + world.worldWidth
+        x1 + (world.worldWidth - StrictMath.abs(x1 - x2))
       else
-        x2 - world.worldWidth
+        x1 - (world.worldWidth - StrictMath.abs(x1 - x2))
     if (StrictMath.abs(x2 - x1) > StrictMath.abs(xprime - x1))
       xprime
     else
-      x2
+      if (x1 > x2)
+        x1 - StrictMath.abs(x1 - x2)
+      else
+        x1 + StrictMath.abs(x1 - x2)
   }
 
-  override def shortestPathY(y1: Double, y2: Double) = y2
+  override def shortestPathY(y1: Double, y2: Double) = if (y1 > y2) y1 - StrictMath.abs(y1 - y2) else y1 + StrictMath.abs(y1 - y2)
 
   override def followOffsetY = 0.0
 
