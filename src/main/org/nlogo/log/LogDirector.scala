@@ -40,8 +40,8 @@ import collection.mutable.ListBuffer
 // An actor controller; receives logging data and figures out what to do with it
 class LogDirector(val mode: LogSendingMode, destinations: URL*) extends Actor {
 
-  import LogManagementMessage.{Write, Abandon, Flush, Read, Finalize}
-  import LoggingServerMessage.{ToServerWrite, ToServerPulse, ToServerAbandon, ToServerFinalize}
+  import LogManagementMessage.{ Abandon, Finalize, Flush, PoisonPill, Read, Write }
+  import LoggingServerMessage.{ ToServerWrite, ToServerPulse, ToServerAbandon, ToServerFinalize }
 
   require(destinations.size > 0)
 
@@ -54,6 +54,7 @@ class LogDirector(val mode: LogSendingMode, destinations: URL*) extends Actor {
     import DirectorMessage._
     loop {
       react {
+
         case Flush =>
           transmitFormatted((LogBufferManager !? Read).asInstanceOf[Seq[String]])
 
@@ -72,6 +73,10 @@ class LogDirector(val mode: LogSendingMode, destinations: URL*) extends Actor {
           finalizeLog()
           replyClosing()
           exit("That's a cut!")
+
+        case PoisonPill =>
+          harekare()
+
       }
     }
   }
@@ -87,7 +92,19 @@ class LogDirector(val mode: LogSendingMode, destinations: URL*) extends Actor {
   }
 
   private def transmit(message: String) {
-    destinations foreach (LoggingServerHttpHandler.sendMessage(message, _))
+
+    val resultCodes = destinations map (LoggingServerHttpHandler.sendMessage(message, _))
+
+    // Not the most beautiful way of doing things (to terminate all if one fails), but good enough for me --JAB (12/5/13)
+    if (resultCodes exists (_.contains("408 Request Timeout")))
+      harekare()
+
+  }
+
+  private def harekare(): Unit = {
+    actorConditionTuple foreach { case (actor, _) => actor ! PoisonPill }
+    replyClosing()
+    exit("Fatal error!  Shutting down...")
   }
 
 
@@ -119,6 +136,7 @@ class LogDirector(val mode: LogSendingMode, destinations: URL*) extends Actor {
           case Read        => reply(flushBuffer())
           case Finalize    => reply(flushBuffer()); exit("Mission complete")
           case Abandon     => exit("Mission aborted")
+          case PoisonPill  => exit("Mission cancelled")
         }
       }
     }
@@ -174,13 +192,14 @@ class LogDirector(val mode: LogSendingMode, destinations: URL*) extends Actor {
 
   // Essentially, a timer that reminds the Director to request buffer flushes from the LogBufferManager
   private object LogFlushReminder extends Actor {
-    val FlushIntervalMs = 3000
+    val FlushIntervalMs = 10000
     def act() {
       loop {
         reactWithin(FlushIntervalMs) {
-          case TIMEOUT  => LogDirector.this ! Flush
-          case Finalize => exit("Flushing complete")
-          case Abandon  => exit("Flushing aborted")
+          case TIMEOUT    => LogDirector.this ! Flush
+          case Finalize   => exit("Flushing complete")
+          case Abandon    => exit("Flushing aborted")
+          case PoisonPill => exit("Flushing cancelled")
         }
       }
     }
@@ -195,6 +214,7 @@ class LogDirector(val mode: LogSendingMode, destinations: URL*) extends Actor {
     case object Abandon extends LogManagementMessage
     case object Finalize extends LogManagementMessage
     case object Flush extends LogManagementMessage
+    case object PoisonPill extends LogManagementMessage
   }
 
 }

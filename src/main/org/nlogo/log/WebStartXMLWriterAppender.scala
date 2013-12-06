@@ -2,6 +2,10 @@ package org.nlogo.log
 
 import java.io.Writer
 import java.net.URL
+
+import
+  scala.actors.Actor
+
 import org.apache.log4j.{Appender, WriterAppender}
 
 /*
@@ -28,10 +32,26 @@ trait WebStartAppender extends Appender {
 
 // A `Writer` subclass for writing log entries to remote locations
 class RemoteLogWriter(mode: LogSendingMode, destinations: URL*) extends Writer {
-  import DirectorMessage.{ToDirectorWrite, ToDirectorAbandon, ToDirectorFinalize}
+
+  import DirectorMessage.{ ToDirectorAbandon, ToDirectorFinalize, ToDirectorWrite }
+
   private val director = new LogDirector(mode, destinations: _*).start()
-  override def write(cbuf: Array[Char], off: Int, len: Int) { director ! ToDirectorWrite(cbuf.subSequence(off, off + len).toString) }
-  override def flush()  { /* While the Director manages its own flushing, making this throw an exception breaks everything; ignore operation */ }
-  /*none*/ def delete() { director !? ToDirectorAbandon }
-  override def close()  { director !? ToDirectorFinalize } // It's important that this blocks while waiting for operation to complete
+
+  override def write(cbuf: Array[Char], off: Int, len: Int): Unit =
+    ifDirector { _ ! ToDirectorWrite(cbuf.subSequence(off, off + len).toString) }
+
+  // While the Director manages its own flushing, making this throw an exception breaks everything; ignore operation
+  override def flush(): Unit = ()
+
+  def delete(): Unit =
+    ifDirector { _ !? ToDirectorAbandon }
+
+  // It's important that this blocks while waiting for operation to complete
+  override def close(): Unit =
+    ifDirector { _ !? ToDirectorFinalize }
+
+  private def ifDirector(f: (Actor) => Unit): Unit =
+    if (director.getState != Actor.State.Terminated)
+      f(director)
+
 }

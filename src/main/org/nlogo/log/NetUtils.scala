@@ -25,16 +25,18 @@ object NetUtils {
 
   protected def generateClient = new org.apache.http.impl.client.DefaultHttpClient
 
-  def httpGet(dest: URL): String = readResponse(generateClient.execute(new HttpGet(dest.toURI)))
+  def httpGet(dest: URL): (String, String) =
+    readResponse(generateClient.execute(new HttpGet(dest.toURI)))
 
-  def httpPost(postKVs: Map[String, String], dest: URL, encoding: String = DefaultByteEncoding): String = {
+  def httpPost(postKVs: Map[String, String], dest: URL, encoding: String = DefaultByteEncoding): (String, String) = {
     import collection.JavaConverters.seqAsJavaListConverter
     val post = new HttpPost(dest.toURI)
     post.setEntity(new UrlEncodedFormEntity((postKVs map { case (key, value) => new BasicNameValuePair(key, value) } toSeq) asJava, Charset.forName("UTF-8")))
     readResponse(generateClient.execute(post))
   }
 
-  private def readResponse(response: HttpResponse) = Source.fromInputStream(response.getEntity.getContent).mkString.trim
+  private def readResponse(response: HttpResponse): (String, String) =
+    (Source.fromInputStream(response.getEntity.getContent).mkString.trim, response.getStatusLine.toString)
 
   /**
    * @param from  The path of the file to download

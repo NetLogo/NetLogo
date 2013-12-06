@@ -16,10 +16,10 @@ private object LoggingServerHttpHandler {
    */
   private val rootToLogMap = new HashMap[String, URL]
 
-  def sendMessage(message: String, url: URL) {
+  def sendMessage(message: String, url: URL): String = {
     val dest = rootToLogMap.getOrElse(url.toString, obtainSendingURL(url))
     val packet = ZipUtils.gzipAsString(message)
-    NetUtils.httpPost(Map(LogPostKey -> packet), dest)
+    NetUtils.httpPost(Map(LogPostKey -> packet), dest)._2
   }
 
   private def obtainSendingURL(url: URL): URL = {
@@ -29,7 +29,7 @@ private object LoggingServerHttpHandler {
   }
 
   private def queryFor(url: URL): URL = {
-    new URL(url.toString + NetUtils.httpGet(url))
+    new URL(url.toString + NetUtils.httpGet(url)._1)
   }
 
 }
