@@ -1,6 +1,12 @@
 import sbt._
 import Keys._
 
+// At the time we first made this, the state of sbt/ScalaTest integration was
+// more primitive and this was the best way we could figure out how to do it.
+// Now we could maybe instead use a Tag or something. But the marker trait
+// approach works, so, leaving it alone for now.  If it ever becomes difficult
+// to maintain, consider replacing it. - ST 12/5/13
+
 object FastMediumSlow {
 
   val configs =
