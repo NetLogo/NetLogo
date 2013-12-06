@@ -27,13 +27,7 @@ class TestChecksums extends FunSuite with SlowTest {
   // (old.nabble.com/get-rid-of-%22Could-not-find-mediaLib-accelerator-wrapper-classes%22-td11025745.html)
   System.setProperty("com.sun.media.jai.disableMediaLib", "true")
 
-  def skip(path: String): Boolean =
-    Seq("/GIS/", "/System Dynamics/", "Movie Example")
-      .exists(path.containsSlice(_))
-
-  val entries =
-    ChecksumsAndPreviews.Checksums.load().values
-      .filterNot(entry => skip(entry.path))
+  val entries = ChecksumsAndPreviews.Checksums.load().values
   var versionMismatchCount = 0
 
   for(entry <- entries)
