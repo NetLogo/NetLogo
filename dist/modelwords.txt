@@ -3773,3 +3773,7 @@ zpos
 zpos's
 zs
 zvel
+dissipative
+backpropagation
+atm
+reradiated
