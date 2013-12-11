@@ -42,3 +42,23 @@ class UtilsTests2 extends PropSpec with PropertyChecks {
           Utils.reader2String(new java.io.StringReader(ns), bufferSize)))}
 
 }
+
+class UniqueNameUtilTests extends FunSuite {
+  test("uniqueName") {
+    assert(Utils.uniqueName("foo", Seq.empty) == "foo")
+    assert(Utils.uniqueName("foo", Seq("foo")) == "foo (1)")
+    assert(Utils.uniqueName("foo (1)", Seq("foo (1)")) == "foo (2)")
+    assert(Utils.uniqueName("foo (1)", Seq("foo(1)")) == "foo (2)")
+    assert(Utils.uniqueName("foo(1)", Seq("foo (1)")) == "foo (2)")
+    assert(Utils.uniqueName("foo(1)", Seq("foo(1)")) == "foo (2)")
+    assert(Utils.uniqueName("foo", Seq("foo", "foo (1)")) == "foo (2)")
+    assert(Utils.uniqueName("foo", Seq("foo (1)", "foo (2)")) == "foo (3)")
+    assert(Utils.uniqueName("foo", Seq("foo", "foo (2)")) == "foo (3)")
+    assert(Utils.uniqueName("foo (99)", Seq("foo (99)")) == "foo (100)")
+    assert(Utils.uniqueName("foo (100)", Seq("foo (1)")) == "foo (100)")
+    assert(Utils.uniqueName("foo (100)", Seq("foo (100)")) == "foo (101)")
+    assert(Utils.uniqueName("foo (100)", Seq("foo (baz)")) == "foo (100)")
+    assert(Utils.uniqueName("foo (bar)", Seq("foo (baz)")) == "foo (bar)")
+    assert(Utils.uniqueName("foo (bar)", Seq("foo (100)")) == "foo (bar)")
+  }
+}
