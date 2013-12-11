@@ -42,4 +42,9 @@ class SliderPanel(
       c.getMouseMotionListeners.foreach(c.removeMouseMotionListener)
     }
   }
+
+  // override add/removeNotify so we don't get WidgetAdded/Removed
+  // events making the model dirty
+  override def removeNotify: Unit = {}
+  override def addNotify: Unit = {}
 }
