@@ -12,12 +12,14 @@ import org.nlogo.mirror.Mirrorables
 import org.nlogo.mirror.ModelRun
 import org.nlogo.swing.Implicits.thunk2runnable
 import org.nlogo.util.SimplePublisher
+import org.nlogo.util.Utils.uniqueName
 import org.nlogo.window.GUIWorkspace
 import org.nlogo.window.MonitorWidget
 import org.nlogo.window.Widget
 
 import javax.swing.GrayFilter
 import javax.swing.JOptionPane
+
 
 case class FrameAddedEvent(run: ModelRun, frame: Frame)
 
@@ -104,9 +106,10 @@ class RunRecorder(
   def startNewRun() {
 
     val container = ws.viewWidget.findWidgetContainer
-    val name = Option(ws.getModelFileName).map(removeExtension)
+    val baseName = Option(ws.getModelFileName).map(removeExtension)
       .orElse(tabState.currentRun.map(_.name))
       .getOrElse("Untitled")
+    val name = uniqueName(baseName, tabState.runs.map(_.name))
 
     val initialPlots = ws.plotManager.plots.map(_.clone)
     val initialDrawingImage = org.nlogo.drawing.cloneImage(ws.getAndCreateDrawing(false))
