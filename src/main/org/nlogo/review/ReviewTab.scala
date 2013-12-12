@@ -8,8 +8,6 @@ import org.nlogo.api
 import org.nlogo.mirror.ModelRunIO
 import org.nlogo.window
 import org.nlogo.window.ModelLoader
-import org.nlogo.window.MonitorWidget
-import org.nlogo.window.Widget
 
 import javax.swing.JOptionPane
 import javax.swing.JPanel
