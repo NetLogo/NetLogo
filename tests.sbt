@@ -20,9 +20,9 @@ def taggedTest(name: String): Def.Initialize[InputTask[Unit]] =
     (testOnly in Test).toTask(s" $name$scalaTestArgs")
   }
 
-// `ts` is a little different. the argument if any is a substring
-// to match in the model path, so e.g. `ts GenDrift` is short for
-//   testOnly org.nlogo.headless.misc.TestChecksums -- -Dmodel=GenDrift
+// `ts` is a little different. the arguments if any are a substring
+// to match in the model path, so e.g. `ts Particle Swarm` is short for
+//   testOnly org.nlogo.headless.misc.TestChecksums -- "-Dmodel=Particle Swarm"
 // where TestChecksums.runTest will take care of interpreting that
 // as a substring match.
 
@@ -31,11 +31,11 @@ val ts = inputKey[Unit]("org.nlogo.headless.misc.TestChecksums")
 def keyValueTest(name: String, key: String): Def.Initialize[InputTask[Unit]] =
   Def.inputTaskDyn {
     val args = Def.spaceDelimited("<arg>").parsed
-    require(args.size <= 1)
-    val scalaTestArgs = args match {
-      case Seq() => ""
-      case Seq(value) => s" -- -D$key=$value"
-    }
+    val scalaTestArgs =
+      if (args.isEmpty)
+        ""
+      else
+        s""" -- "-D$key=${args.mkString(" ")}""""
     (testOnly in Test).toTask(s" $name$scalaTestArgs")
   }
 
