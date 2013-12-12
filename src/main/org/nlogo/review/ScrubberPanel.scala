@@ -3,27 +3,30 @@
 package org.nlogo.review
 
 import java.awt.BorderLayout
-import java.beans.{ PropertyChangeEvent, PropertyChangeListener }
-import org.nlogo.api
-import javax.swing.{ JButton, JLabel, JPanel, JSlider }
-import javax.swing.event.{ ChangeEvent, ChangeListener }
-import scala.math.BigDecimal
-import scala.math.BigDecimal.RoundingMode
-import javax.swing.event.ListSelectionListener
+import java.beans.PropertyChangeEvent
+import java.beans.PropertyChangeListener
+
+import org.nlogo.util.SimplePublisher
+
+import javax.swing.JButton
+import javax.swing.JLabel
+import javax.swing.JPanel
+import javax.swing.JSlider
+import javax.swing.SwingConstants
+import javax.swing.event.ChangeEvent
+import javax.swing.event.ChangeListener
 import javax.swing.event.ListSelectionEvent
-import scala.collection.mutable.Publisher
-import scala.collection.mutable.Subscriber
+import javax.swing.event.ListSelectionListener
 
 class ScrubberPanel(
   indexedNotesTable: IndexedNotesTable,
   currentFrame: () => Option[Int],
-  currentTick: () => Option[Double],
-  reviewTabStatePub: ReviewTabState#Pub,
-  runRecorderPub: RunRecorder#Pub)
+  afterRunChangePub: SimplePublisher[AfterRunChangeEvent],
+  frameAddedPub: SimplePublisher[FrameAddedEvent])
   extends JPanel {
 
-  val scrubber = new Scrubber(indexedNotesTable, reviewTabStatePub, runRecorderPub)
-  val tickPanel = new TickPanel(currentFrame, currentTick, scrubber)
+  val scrubber = new Scrubber(indexedNotesTable, afterRunChangePub, frameAddedPub)
+  val tickPanel = new FrameCounterPanel(currentFrame, scrubber)
   val scrubberButtonsPanel = new ScrubberButtonsPanel(scrubber)
 
   setLayout(new BorderLayout)
@@ -34,37 +37,23 @@ class ScrubberPanel(
 
 class Scrubber(
   indexedNotesTable: IndexedNotesTable,
-  reviewTabStatePub: ReviewTabState#Pub,
-  runRecorderPub: RunRecorder#Pub)
+  afterRunChangePub: SimplePublisher[AfterRunChangeEvent],
+  frameAddedPub: SimplePublisher[FrameAddedEvent])
   extends JSlider {
 
   setValue(0)
   setEnabled(false)
-  reviewTabStatePub.subscribe(ReviewTabStateSub)
-  runRecorderPub.subscribe(RunRecorderSub)
 
-  object ReviewTabStateSub extends ReviewTabState#Sub {
-    override def notify(pub: ReviewTabState#Pub, event: CurrentRunChangeEvent) {
-      event match {
-        case AfterCurrentRunChangeEvent(_, newRun) =>
-          setValue(newRun.flatMap(_.currentFrameIndex).getOrElse(0))
-          setMaximum(newRun.flatMap(_.lastFrameIndex).getOrElse(0))
-          setEnabled(newRun.filter(_.size > 1).isDefined)
-        case _ =>
-      }
-    }
+  afterRunChangePub.newSubscriber { event =>
+    setValue(event.newRun.flatMap(_.currentFrameIndex).getOrElse(0))
+    setMaximum(event.newRun.flatMap(_.lastFrameIndex).getOrElse(0))
+    setEnabled(event.newRun.filter(_.size > 1).isDefined)
   }
 
-  object RunRecorderSub extends RunRecorder#Sub {
-    override def notify(pub: RunRecorder#Pub, event: RunRecorderEvent) {
-      event match {
-        case FrameAddedEvent(run, _) =>
-          run.lastFrameIndex.foreach { i =>
-            setMaximum(i)
-            setEnabled(i > 0)
-          }
-        case _ =>
-      }
+  frameAddedPub.newSubscriber {
+    _.run.lastFrameIndex.foreach { i =>
+      setMaximum(i)
+      setEnabled(i > 0)
     }
   }
 
@@ -80,8 +69,7 @@ class Scrubber(
           }
         }
       }
-    }
-  )
+    })
 }
 
 class ScrubberButtonsPanel(scrubber: JSlider) extends JPanel {
@@ -114,26 +102,25 @@ class ScrubberButton(name: String, tip: String, newValue: Int => Int, scrubber: 
   })
 }
 
-class TickPanel(
+class FrameCounterPanelLabel(sizeTemplate: String) extends JLabel(sizeTemplate) {
+  setPreferredSize(getPreferredSize) // fix to size of template...
+  setText("-") // ...but start with "-"
+  setFont(getFont.deriveFont(getFont.getStyle | java.awt.Font.BOLD))
+  setHorizontalAlignment(SwingConstants.CENTER)
+}
+
+class FrameCounterPanel(
   currentFrame: () => Option[Int],
-  currentTicks: () => Option[Double],
   scrubber: Scrubber)
   extends JPanel {
 
   add(new JLabel("Frame:"))
-  val frame = new JLabel("-")
-  val bold = frame.getFont.deriveFont(frame.getFont.getStyle | java.awt.Font.BOLD)
-  frame.setFont(bold)
+  val frame = new FrameCounterPanelLabel("999999")
   add(frame)
-  add(new JLabel("Ticks:"))
-  val tick = new JLabel("-")
-  tick.setFont(bold)
-  add(tick)
 
   scrubber.addChangeListener(new ChangeListener {
     def stateChanged(e: ChangeEvent) {
       frame.setText(currentFrame().map(_.toString).getOrElse("-"))
-      tick.setText(currentTicks().map("%.2f".format(_)).getOrElse("-")) // TODO be smarter about decimals?
     }
   })
 }

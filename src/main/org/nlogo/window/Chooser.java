@@ -75,6 +75,10 @@ public abstract strictfp class Chooser
   public Object value() {
     return constraint.defaultValue();
   }
+  
+  public int getMargin() {
+    return MARGIN;
+  }
 
   @Override
   public void updateConstraints() {
@@ -87,11 +91,7 @@ public abstract strictfp class Chooser
 
   @Override
   public void doLayout() {
-    int controlHeight = getHeight() / 2;
-    control.setBounds(MARGIN,
-        getHeight() - MARGIN - controlHeight,
-        getWidth() - 2 * MARGIN,
-        controlHeight);
+    ChooserPainter.doLayout(this, control, MARGIN);
   }
 
   /// size calculations
@@ -165,61 +165,10 @@ public abstract strictfp class Chooser
     }
   }
 
-  ///
-
   @Override
   public void paintComponent(java.awt.Graphics g) {
     super.paintComponent(g); // paint background
-    java.awt.Dimension size = getSize();
-    java.awt.Rectangle cb = control.getBounds();
-
-    g.setColor(getForeground());
-    java.awt.FontMetrics metrics = g.getFontMetrics();
-    int fontAscent = metrics.getMaxAscent();
-    int fontHeight = fontAscent + metrics.getMaxDescent();
-
-    String shortenedName =
-        org.nlogo.awt.Fonts.shortenStringToFit
-            (name, size.width - 2 * MARGIN, metrics);
-    g.drawString
-        (shortenedName,
-            MARGIN,
-            MARGIN + (cb.y - MARGIN - fontHeight) / 2 + fontAscent);
-
-    String shortenedValue =
-        org.nlogo.awt.Fonts.shortenStringToFit
-            (Dump.logoObject(value()),
-                cb.width - MARGIN * 3 - triangleSize() - 2, // extra 2 for triangle shadow
-                metrics);
-    g.drawString
-        (shortenedValue,
-            cb.x + MARGIN,
-            cb.y + (cb.height - fontHeight) / 2 + fontAscent);
-
-    ((java.awt.Graphics2D) g).setRenderingHint
-        (java.awt.RenderingHints.KEY_ANTIALIASING,
-            java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
-    filledDownTriangle
-        (g,
-            cb.x + cb.width - MARGIN - triangleSize() - 2,  // extra 2 for triangle shadow
-            cb.y + (cb.height - triangleSize()) / 2 + 1,
-            triangleSize());
-  }
-
-  private static void filledDownTriangle(java.awt.Graphics g, int x, int y, int size) {
-    java.awt.Polygon shadowTriangle = new java.awt.Polygon();
-    shadowTriangle.addPoint(x + size / 2, y + size + 2);
-    shadowTriangle.addPoint(x - 1, y - 1);
-    shadowTriangle.addPoint(x + size + 2, y - 1);
-    g.setColor(java.awt.Color.DARK_GRAY);
-    g.fillPolygon(shadowTriangle);
-
-    java.awt.Polygon downTriangle = new java.awt.Polygon();
-    downTriangle.addPoint(x + size / 2, y + size);
-    downTriangle.addPoint(x, y);
-    downTriangle.addPoint(x + size, y);
-    g.setColor(InterfaceColors.SLIDER_HANDLE);
-    g.fillPolygon(downTriangle);
+    ChooserPainter.paint(g, this, MARGIN, control.getBounds(), name, value());
   }
 
   private strictfp class ChooserClickControl

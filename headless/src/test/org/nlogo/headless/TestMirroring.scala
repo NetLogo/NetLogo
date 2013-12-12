@@ -17,9 +17,7 @@ object TestMirroring {
   def withWorkspace[T](body: (HeadlessWorkspace, () => Iterable[Mirrorable]) => T): T = {
     val ws = HeadlessWorkspace.newInstance
     ws.silent = true
-    try body(ws, () => allMirrorables(ws.world,
-      Seq[(String, Int)]() // empty seq of widgets values for now - replace when we have them in headless NP 2012-09-17
-      ))
+    try body(ws, () => allMirrorables(ws.world))
     finally ws.dispose()
   }
 }
@@ -160,11 +158,11 @@ class TestMirroring extends FunSuite {
       ws.command("reset-ticks tick")
       val (m1, u1) = diffs(m0, mirrorables())
       assertResult((3, (0, 0, 1))) { (m1.size, sizes(u1)) }
-      assertResult(1.0)(m1(AgentKey(World, 0))(MirrorableWorld.WorldVar.Ticks.id))
+      assertResult(1.0)(m1(AgentKey(World, 0))(Mirrorables.World.Variables.Ticks.id))
       ws.command("tick-advance 0.1")
       val (m2, u2) = diffs(m1, mirrorables())
       assertResult((3, (0, 0, 1))) { (m2.size, sizes(u2)) }
-      assertResult(1.1)(m2(AgentKey(World, 0))(MirrorableWorld.WorldVar.Ticks.id))
+      assertResult(1.1)(m2(AgentKey(World, 0))(Mirrorables.World.Variables.Ticks.id))
     }
   }
 

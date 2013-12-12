@@ -11,9 +11,6 @@ import org.nlogo.plot.Plot
 class ModelRun(
   var name: String,
   val modelString: String,
-  val viewArea: java.awt.geom.Area,
-  val fixedViewSettings: FixedViewSettings,
-  val interfaceImage: BufferedImage,
   val initialPlots: Seq[Plot],
   val initialDrawingImage: BufferedImage,
   private var _generalNotes: String = "",

@@ -87,9 +87,18 @@ private class ManagerDialog(manager: LabManager,
   private def run() {
     try {
       manager.prepareForRun()
+      confirmModelRunRecordingDisabled()
       new Supervisor(this, manager.workspace, selectedProtocol, manager.workspaceFactory, dialogFactory).start()
     }
     catch { case ex: org.nlogo.awt.UserCancelException => org.nlogo.util.Exceptions.ignore(ex) }
+  }
+  private def confirmModelRunRecordingDisabled() {
+    if (manager.reviewTab.recordingEnabled) {
+      val msg = I18N.gui("turnOffRunRecording")
+      if (!manager.workspace.warningMessage(msg))
+        throw new org.nlogo.awt.UserCancelException
+      manager.reviewTab.recordingEnabled = false
+    }
   }
   private def makeNew {
     import collection.JavaConverters._

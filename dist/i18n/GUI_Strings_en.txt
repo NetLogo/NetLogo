@@ -363,6 +363,8 @@ tools.behaviorSpace.finalCommands.info = run at the end of each run
 tools.behaviorSpace.timeLimit = Time limit
 tools.behaviorSpace.timeLimit.info = stop after this many steps (0 = no limit)
 
+tools.behaviorSpace.turnOffRunRecording = Running the experiment will turn off model runs recording. Do you want to continue?
+
 # Models Library
 
 modelsLibrary.clear = Clear

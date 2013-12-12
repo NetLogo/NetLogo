@@ -78,4 +78,28 @@ object Utils {
     sb.toString
   }
 
+  /**
+   * Given a `requestedName` and some already `usedNames`, produces a unique name by
+   *  appending a new (or incremented) parenthesized index to the `requestedBaseName`
+   */
+  def uniqueName(requestedName: String, usedNames: Iterable[String]): String = {
+    val Pattern = """(.*?) *(?:\((\d+)\))?""".r
+    val (requestedBaseName: String, requestedIndex: Option[Int]) =
+      requestedName match {
+        case Pattern(baseName, index) =>
+          (baseName, Option(index).map(_.toInt))
+      }
+    val usedIndices: Iterable[Int] = usedNames.collect {
+      case Pattern(baseName, index) if baseName == requestedBaseName =>
+        Option(index).map(_.toInt).getOrElse(0)
+    }
+    val newIndex = usedIndices
+      .filter(i => requestedIndex.map(i >= _).getOrElse(true))
+      .reduceOption(_ max _)
+      .map(_ + 1)
+      .orElse(requestedIndex)
+      .map(i => s" (${i})")
+      .getOrElse("")
+    requestedBaseName + newIndex
+  }
 }

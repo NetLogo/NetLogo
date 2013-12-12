@@ -3,17 +3,16 @@
 package org.nlogo.review
 
 import org.nlogo.mirror.ModelRun
+import org.nlogo.window.GUIWorkspace
 
 import javax.swing.AbstractListModel
 
 class ReviewTabState(
-  private var _runs: IndexedSeq[ModelRun] = IndexedSeq.empty,
-  private var _recordingEnabled: Boolean = false)
+  val ws: GUIWorkspace,
+  private var _runs: Vector[ModelRun] = Vector.empty)
   extends AbstractListModel
   with HasCurrentRun
-  with HasCurrentRun#Sub {
-
-  subscribe(this) // subscribe to our own CurrentRunChangeEvents
+  with RecordingToggling {
 
   // ListModel methods:
   override def getElementAt(index: Int): AnyRef = _runs(index)
@@ -24,14 +23,13 @@ class ReviewTabState(
   def currentFrame = currentRun.flatMap(_.currentFrame)
   def currentFrameIndex = currentRun.flatMap(_.currentFrameIndex)
   def currentTicks = currentFrame.flatMap(_.ticks)
-  def recordingEnabled = _recordingEnabled
-  def recordingEnabled_=(b: Boolean) { _recordingEnabled = b }
-  def currentlyRecording = _recordingEnabled && currentRun.map(_.stillRecording).getOrElse(false)
+  def currentlyRecording =
+    recordingEnabled && currentRun.map(_.stillRecording).getOrElse(false)
 
   def reset() {
     val lastIndex = _runs.size - 1
-    _runs = IndexedSeq[ModelRun]()
-    currentRun = None
+    _runs = Vector[ModelRun]()
+    setCurrentRun(None, true)
     fireIntervalRemoved(this, 0, lastIndex)
   }
 
@@ -41,10 +39,11 @@ class ReviewTabState(
       _runs = _runs.filterNot(_ == run)
       fireIntervalRemoved(this, index, index)
       val sameString = (_: ModelRun).modelString == run.modelString
-      currentRun = _runs
+      val newCurrentRun = _runs
         .lift(index) // keep same index if possible
         .filter(sameString)
         .orElse(_runs.filter(sameString).lastOption) // or use last (or None if empty)
+      setCurrentRun(newCurrentRun, true)
     }
   }
 
@@ -52,15 +51,14 @@ class ReviewTabState(
     _runs :+= run
     val lastIndex = _runs.size - 1
     fireIntervalAdded(this, lastIndex, lastIndex)
-    currentRun = Some(run)
+    setCurrentRun(Some(run), false)
     run
   }
 
-  override def notify(pub: ReviewTabState#Pub, event: CurrentRunChangeEvent) {
-    event match {
-      case BeforeCurrentRunChangeEvent(Some(oldRun), _) =>
-        oldRun.stillRecording = false
-      case _ =>
-    }
+  beforeRunChangePub.newSubscriber { event =>
+    event.oldRun.foreach(_.stillRecording = false)
+    if (event.requestHalt && ws.jobManager.anyPrimaryJobs)
+      ws.halt() // if requested, halt the running model
   }
+
 }

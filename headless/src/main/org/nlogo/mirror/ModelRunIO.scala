@@ -2,11 +2,16 @@
 
 package org.nlogo.mirror
 
-import java.io.{ InputStream, ObjectOutputStream, OutputStream }
+import java.io.InputStream
+import java.io.ObjectOutputStream
+import java.io.OutputStream
 
-import org.nlogo.api.{ PlotPenState, PlotState }
+import org.nlogo.api.PlotPenState
+import org.nlogo.api.PlotState
 import org.nlogo.drawing.imageToBytes
-import org.nlogo.plot.{ Plot, PlotPen, PlotPoint }
+import org.nlogo.plot.Plot
+import org.nlogo.plot.PlotPen
+import org.nlogo.plot.PlotPoint
 
 import javax.imageio.ImageIO
 
@@ -14,19 +19,11 @@ trait SavableRun {
   self: ModelRun =>
   def save(outputStream: OutputStream) {
     val out = new ObjectOutputStream(outputStream)
-    // Area is not serializable so we save a shape instead:
-    val viewAreaShape = java.awt.geom.AffineTransform
-      .getTranslateInstance(0, 0)
-      .createTransformedShape(viewArea)
-    val interfaceImageBytes = imageToBytes(interfaceImage)
     val savableInitialPlots = initialPlots.map(SavablePlot.fromPlot)
     val initialDrawingImageBytes = imageToBytes(initialDrawingImage)
     val thingsToSave = Seq(
       name,
       modelString,
-      viewAreaShape,
-      fixedViewSettings,
-      interfaceImageBytes,
       deltas,
       savableInitialPlots,
       initialDrawingImageBytes,
@@ -44,8 +41,6 @@ object ModelRunIO {
     def read[A]() = in.readObject().asInstanceOf[A]
     val name = read[String]()
     val modelString = read[String]()
-    val viewArea = new java.awt.geom.Area(read[java.awt.Shape]())
-    val fixedViewSettings = read[FixedViewSettings]
     val interfaceImage = imageFromBytes(read[Array[Byte]]())
     val deltas = read[Seq[Delta]]()
     val initialPlots = read[Seq[SavablePlot]].map(_.toPlot)
@@ -54,8 +49,8 @@ object ModelRunIO {
     val indexedNotes = read[List[IndexedNote]]
     in.close()
     val run = new ModelRun(
-      name, modelString, viewArea, fixedViewSettings,
-      interfaceImage, initialPlots, initialDrawingImage,
+      name, modelString,
+      initialPlots, initialDrawingImage,
       generalNotes, indexedNotes)
     run.load(deltas)
     run

@@ -4,84 +4,69 @@ package org.nlogo.review
 
 import java.awt.BorderLayout
 
-import scala.Option.option2Iterable
-import scala.collection.JavaConverters.asScalaBufferConverter
-
 import org.nlogo.api
-import org.nlogo.awt.UserCancelException
+import org.nlogo.mirror.IndexedNote
 import org.nlogo.mirror.ModelRunIO
-import org.nlogo.util.Exceptions.ignoring
 import org.nlogo.window
-import org.nlogo.window.{ InvalidVersionException, ModelLoader, MonitorWidget, Widget }
+import org.nlogo.window.ModelLoader
 
-import javax.swing.{ JOptionPane, JPanel, JScrollPane, JSplitPane }
-import javax.swing.event.{
-  ChangeEvent,
-  ChangeListener,
-  DocumentEvent,
-  DocumentListener,
-  TableModelEvent,
-  TableModelListener
-}
-
-case class WidgetHook(
-  val widget: Widget,
-  val valueStringGetter: () => String)
+import javax.swing.JOptionPane
+import javax.swing.JPanel
+import javax.swing.JScrollPane
+import javax.swing.JSplitPane
+import javax.swing.event.ChangeEvent
+import javax.swing.event.ChangeListener
+import javax.swing.event.DocumentEvent
+import javax.swing.event.DocumentListener
+import javax.swing.event.TableModelEvent
+import javax.swing.event.TableModelListener
 
 class ReviewTab(
   val ws: window.GUIWorkspace,
-  val saveModel: () => String,
+  val getCurrentModelString: () => String,
   offerSave: () => Unit,
   selectReviewTab: () => Unit)
   extends JPanel
   with window.ReviewTabInterface {
 
-  val state = new ReviewTabState()
-
-  def workspaceWidgets =
-    Option(ws.viewWidget.findWidgetContainer)
-      .toSeq.flatMap(_.getWidgetsForSaving.asScala)
-
-  def widgetHooks = workspaceWidgets
-    .collect { case m: MonitorWidget => m }
-    .map(m => WidgetHook(m, () => m.valueString))
+  val state = new ReviewTabState(ws)
+  def recordingEnabled = state.recordingEnabled
+  def recordingEnabled_=(enabled: Boolean): Unit = state.recordingEnabled = enabled
 
   val runList = new RunList(this)
 
-  val runRecorder = new RunRecorder(
-    ws, state, saveModel, () => widgetHooks,
-    () => disableRecording)
+  val runRecorder = new RunRecorder(ws, state, getCurrentModelString)
 
   override def loadedRuns: Seq[api.ModelRun] = state.runs
   override def loadRun(inputStream: java.io.InputStream): Unit = {
     val run = ModelRunIO.load(inputStream)
-    loadModelIfNeeded(run.modelString)
+    if (!isLoaded(run.modelString)) loadModel(run.modelString)
     state.addRun(run)
   }
   override def currentRun: Option[api.ModelRun] = state.currentRun
+
+  override def addNote(text: String) {
+    for {
+      run <- state.currentRun
+      if state.currentlyRecording
+      frameIndex <- run.lastFrameIndex
+      ticks = ws.world.ticks
+      notesModel = notesTabbedPane.indexedNotesTable.model
+      note = new IndexedNote(frameIndex, ticks, text)
+    } notesModel.addNote(note)
+  }
 
   def userConfirms(title: String, message: String) =
     JOptionPane.showConfirmDialog(ReviewTab.this, message,
       title, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION
 
-  def enableRecording() {
-    state.recordingEnabled = true
-    reviewToolBar.enabledCheckBox.setSelected(state.recordingEnabled)
-  }
-
-  def disableRecording() {
-    state.recordingEnabled = false
-    reviewToolBar.enabledCheckBox.setSelected(state.recordingEnabled)
-  }
-
   val notesTabbedPane = new NotesTabbedPane(state)
   val scrubberPanel = new ScrubberPanel(
     notesTabbedPane.indexedNotesTable,
     () => state.currentFrameIndex,
-    () => state.currentTicks,
-    state,
-    runRecorder)
-  val reviewToolBar = new ReviewToolBar(this)
+    state.afterRunChangePub,
+    runRecorder.frameAddedPub)
+  val reviewToolBar = new ReviewToolBar(this, runRecorder.frameAddedPub)
   val interfacePanel = new InterfacePanel(this)
 
   scrubberPanel.scrubber.addChangeListener(new ChangeListener {
@@ -89,6 +74,7 @@ class ReviewTab(
       val newFrame = scrubberPanel.scrubber.getValue
       state.currentRun.foreach(_.currentFrameIndex = Some(newFrame))
       notesTabbedPane.indexedNotesTable.scrollTo(newFrame)
+      interfacePanel.widgetPanels.foreach(_.invalidate())
       interfacePanel.repaint()
     }
   })
@@ -116,13 +102,13 @@ class ReviewTab(
     }
   })
 
-  def loadModelIfNeeded(modelString: String) {
-    val currentModelString = saveModel()
-    if (modelString != currentModelString) {
-      offerSave()
-      ModelLoader.load(ReviewTab.this, null, api.ModelType.Library, modelString)
-      selectReviewTab()
-    }
+  def isLoaded(modelString: String): Boolean =
+    getCurrentModelString() == modelString
+
+  def loadModel(modelString: String) {
+    offerSave()
+    ModelLoader.load(ReviewTab.this, null, api.ModelType.Library, modelString)
+    selectReviewTab()
   }
 
   object RunListPanel extends JPanel {
@@ -130,9 +116,7 @@ class ReviewTab(
     add(new JScrollPane(runList), BorderLayout.CENTER)
   }
 
-  object InterfaceScrollPane extends JScrollPane {
-    setViewportView(interfacePanel)
-  }
+  object InterfaceScrollPane extends JScrollPane(interfacePanel)
 
   object RunPanel extends JPanel {
     setLayout(new BorderLayout)
@@ -153,7 +137,7 @@ class ReviewTab(
     RunListPanel,
     RunPanel) {
     setResizeWeight(0.0)
-    setDividerLocation(200)
+    setDividerLocation(190)
   }
 
   locally {
@@ -161,8 +145,4 @@ class ReviewTab(
     add(reviewToolBar, BorderLayout.NORTH)
     add(PrimarySplitPane, BorderLayout.CENTER)
   }
-}
-
-object ReviewTab {
-  def removeExtension(path: String) = new java.io.File(path).getName.replaceAll("\\.[^.]*$", "")
 }

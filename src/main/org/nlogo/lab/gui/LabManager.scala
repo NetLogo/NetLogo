@@ -8,10 +8,12 @@ import org.nlogo.window.{GUIWorkspace, EditDialogFactoryInterface, LabManagerInt
 import org.nlogo.nvm.WorkspaceFactory
 import org.nlogo.window.Events._
 import scala.collection.mutable.ListBuffer
+import org.nlogo.window.ReviewTabInterface
 
 class LabManager(val workspace: GUIWorkspace,
                  dialogFactory: EditDialogFactoryInterface,
-                 val workspaceFactory: WorkspaceFactory)
+                 val workspaceFactory: WorkspaceFactory,
+                 val reviewTab: ReviewTabInterface)
   extends LabManagerInterface
   with CompiledEventHandler
   with LoadBeginEventHandler

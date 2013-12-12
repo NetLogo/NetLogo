@@ -2,14 +2,20 @@
 
 package org.nlogo.widget
 
-import org.nlogo.api.{Editable, I18N, ModelReader}
-import org.nlogo.window.{InterfaceColors, SingleErrorWidget,Widget}
-import java.awt.{Font, Color, FontMetrics, Graphics, Dimension, Rectangle}
+import java.awt.Color
+import java.awt.Dimension
+import java.awt.Font
+import java.awt.Rectangle
 
-class NoteWidget extends SingleErrorWidget with Editable {
+import org.nlogo.api.Editable
+import org.nlogo.api.I18N
+import org.nlogo.api.ModelReader
+import org.nlogo.window.InterfaceColors
+import org.nlogo.window.SingleErrorWidget
+import org.nlogo.window.Widget
 
-  setBackground(InterfaceColors.TRANSPARENT)
-  setOpaque(false)
+class NoteWidget extends SingleErrorWidget with Editable with PaintableNote {
+
   org.nlogo.awt.Fonts.adjustDefaultFont(this)
 
   val MIN_WIDTH = 15
@@ -24,7 +30,7 @@ class NoteWidget extends SingleErrorWidget with Editable {
   override def propertySet = Properties.text
   override def classDisplayName = I18N.gui.get("tabs.run.widgets.note")
   override def isNote = true
-  override def widgetWrapperOpaque = ! transparency
+  override def widgetWrapperOpaque = !transparency
 
   def text = _text
   def text_=(newText: String) {
@@ -45,8 +51,7 @@ class NoteWidget extends SingleErrorWidget with Editable {
     if (isZoomed && originalFont != null) {
       val zoomDiff: Int = getFont.getSize - originalFont.getSize
       setFont(getFont.deriveFont((size + zoomDiff).toFloat))
-    }
-    else setFont(getFont.deriveFont(size.toFloat))
+    } else setFont(getFont.deriveFont(size.toFloat))
     if (originalFont != null) originalFont = (originalFont.deriveFont(size.toFloat))
     resetZoomInfo()
     resetSizeInfo()
@@ -69,25 +74,12 @@ class NoteWidget extends SingleErrorWidget with Editable {
   }
   override def needsPreferredWidthFudgeFactor = false
 
-  override def paintComponent(g: Graphics) {
-    super.paintComponent(g)
-    g.setFont(getFont)
-    val metrics: FontMetrics = g.getFontMetrics
-    val stringHeight: Int = metrics.getMaxDescent + metrics.getMaxAscent
-    val stringAscent: Int = metrics.getMaxAscent
-    val lines = org.nlogo.awt.LineBreaker.breakLines(_text, metrics, _width)
-    g.setColor(color)
-    import collection.JavaConverters._
-    for((line, i) <- lines.asScala.zipWithIndex)
-      g.drawString(line, 0, i * stringHeight + stringAscent)
-  }
-
   def save: String = {
     val s = new StringBuilder
     s.append("TEXTBOX\n")
     s.append(getBoundsString)
     if (_text.trim == "") s.append("NIL\n")
-    else  s.append(ModelReader.stripLines(_text) + "\n")
+    else s.append(ModelReader.stripLines(_text) + "\n")
     s.append(fontSize + "\n")
     s.append(org.nlogo.api.Color.getClosestColorNumberByARGB(color.getRGB) + "\n")
     s.append((if (transparency) "1" else "0") + "\n")

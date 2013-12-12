@@ -2,82 +2,43 @@
 
 package org.nlogo.review
 
-import java.awt.Color.{ GRAY, WHITE }
+import java.awt.Color.GRAY
+import java.awt.Color.WHITE
 
-import org.nlogo.mirror.FakeWorld
-import org.nlogo.window
+import scala.Option.option2Iterable
 
 import javax.swing.JPanel
 
-class InterfacePanel(val reviewTab: ReviewTab)
-  extends JPanel
-  with HasPlotPanels {
+class InterfacePanel(val reviewTab: ReviewTab) extends JPanel {
 
-  def repaintView(g: java.awt.Graphics, viewArea: java.awt.geom.Area) {
-    for {
-      run <- reviewTab.state.currentRun
-      frame <- run.currentFrame
-      fakeWorld = new FakeWorld(frame.mirroredState)
-      paintArea = new java.awt.geom.Area(getBounds())
-      viewSettings = run.fixedViewSettings
-      g2d = g.create.asInstanceOf[java.awt.Graphics2D]
-    } {
-      paintArea.intersect(viewArea) // avoid spilling outside interface panel
-      try {
-        g2d.setClip(paintArea)
-        g2d.translate(viewArea.getBounds.x, viewArea.getBounds.y)
-        val renderer = fakeWorld.newRenderer
-        renderer.trailDrawer.readImage(frame.drawingImage)
-        renderer.paint(g2d, viewSettings)
-      } finally {
-        g2d.dispose()
-      }
-    }
-  }
+  override def isOptimizedDrawingEnabled = false
 
-  def repaintWidgets(g: java.awt.Graphics) {
-    for {
-      frame <- reviewTab.state.currentFrame
-      values = frame.mirroredState
-        .filterKeys(_.kind == org.nlogo.mirror.Mirrorables.WidgetValue)
-        .toSeq
-        .sortBy { case (agentKey, vars) => agentKey.id } // should be z-order
-        .map { case (agentKey, vars) => vars(0).asInstanceOf[String] }
-      (w, v) <- reviewTab.widgetHooks.map(_.widget) zip values
-    } {
-      val g2d = g.create.asInstanceOf[java.awt.Graphics2D]
-      try {
-        val container = reviewTab.ws.viewWidget.findWidgetContainer
-        val bounds = container.getUnzoomedBounds(w)
-        g2d.setRenderingHint(
-          java.awt.RenderingHints.KEY_ANTIALIASING,
-          java.awt.RenderingHints.VALUE_ANTIALIAS_ON)
-        g2d.setFont(w.getFont)
-        g2d.clipRect(bounds.x, bounds.y, w.getSize().width, w.getSize().height) // make sure text doesn't overflow
-        g2d.translate(bounds.x, bounds.y)
-        w match {
-          case m: window.MonitorWidget =>
-            window.MonitorPainter.paint(
-              g2d, m.getSize, m.getForeground, m.displayName, v)
-          case _ => // ignore for now
-        }
-      } finally {
-        g2d.dispose()
-      }
+  setOpaque(true)
+  setLayout(null) // disable layout manager to use absolute positioning
+
+  private var _widgetPanels: Seq[JPanel] = Seq.empty
+  def widgetPanels = _widgetPanels
+
+  reviewTab.state.afterRunChangePub.newSubscriber { event =>
+    _widgetPanels.foreach(remove)
+    _widgetPanels = event.newRun.toSeq.flatMap {
+      WidgetPanels.create(reviewTab.ws, _)
     }
+    // we go the panels in back-to-front order but we
+    // need to add them in front-to-back order so
+    // that they're painted in the correct z-order:
+    _widgetPanels.reverse.foreach(add)
   }
 
   override def paintComponent(g: java.awt.Graphics) {
+    setBackground(if (reviewTab.state.currentRun.isDefined) WHITE else GRAY)
     super.paintComponent(g)
-    g.setColor(if (reviewTab.state.currentRun.isDefined) WHITE else GRAY)
-    g.fillRect(0, 0, getWidth, getHeight)
-    for {
-      run <- reviewTab.state.currentRun
-    } {
-      g.drawImage(run.interfaceImage, 0, 0, null)
-      repaintView(g, run.viewArea)
-      repaintWidgets(g)
-      refreshPlotPanels()
-    }
   }
+
+  override def getPreferredSize: java.awt.Dimension =
+    if (_widgetPanels.nonEmpty) {
+      val maxX = _widgetPanels.map(p => p.getLocation().x + p.getSize().width).max
+      val maxY = _widgetPanels.map(p => p.getLocation().y + p.getSize().height).max
+      new java.awt.Dimension(maxX, maxY)
+    } else new java.awt.Dimension(0, 0)
 }
