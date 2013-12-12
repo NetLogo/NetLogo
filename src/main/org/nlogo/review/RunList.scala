@@ -30,6 +30,7 @@ class RunList(reviewTab: ReviewTab)
               reviewTab.loadModel(run.modelString)
             reviewTab.state.currentRun = Some(run)
             requestFocusInWindow()
+            reviewTab.interfacePanel.widgetPanels.foreach(_.revalidate())
             reviewTab.interfacePanel.repaint()
           } catch {
             case _: UserCancelException => // do nothing
