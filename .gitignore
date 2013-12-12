@@ -39,5 +39,6 @@ tmp/
 /resources/system/dict.txt
 /resources/system/dict3d.txt
 
-# ignore nw extension until bundled
+# ignore some unbundled but commonly present extensions
 /extensions/nw
+/extensions/runs
