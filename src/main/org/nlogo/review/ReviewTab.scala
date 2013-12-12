@@ -30,7 +30,7 @@ class ReviewTab(
   extends JPanel
   with window.ReviewTabInterface {
 
-  val state = new ReviewTabState()
+  val state = new ReviewTabState(ws)
   def recordingEnabled = state.recordingEnabled
   def recordingEnabled_=(enabled: Boolean): Unit = state.recordingEnabled = enabled
 

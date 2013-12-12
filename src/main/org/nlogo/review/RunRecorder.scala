@@ -56,7 +56,7 @@ class RunRecorder(
         } {
           // if we just opened a model different from the
           // one loaded from the previously current run...
-          tabState.currentRun = None
+          tabState.setCurrentRun(None, false)
         }
       }
       private var lastTickHeard = -1.0

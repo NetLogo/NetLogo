@@ -3,10 +3,12 @@
 package org.nlogo.review
 
 import org.nlogo.mirror.ModelRun
+import org.nlogo.window.GUIWorkspace
 
 import javax.swing.AbstractListModel
 
 class ReviewTabState(
+  val ws: GUIWorkspace,
   private var _runs: Vector[ModelRun] = Vector.empty)
   extends AbstractListModel
   with HasCurrentRun
@@ -27,7 +29,7 @@ class ReviewTabState(
   def reset() {
     val lastIndex = _runs.size - 1
     _runs = Vector[ModelRun]()
-    currentRun = None
+    setCurrentRun(None, true)
     fireIntervalRemoved(this, 0, lastIndex)
   }
 
@@ -37,10 +39,11 @@ class ReviewTabState(
       _runs = _runs.filterNot(_ == run)
       fireIntervalRemoved(this, index, index)
       val sameString = (_: ModelRun).modelString == run.modelString
-      currentRun = _runs
+      val newCurrentRun = _runs
         .lift(index) // keep same index if possible
         .filter(sameString)
         .orElse(_runs.filter(sameString).lastOption) // or use last (or None if empty)
+      setCurrentRun(newCurrentRun, true)
     }
   }
 
@@ -48,12 +51,14 @@ class ReviewTabState(
     _runs :+= run
     val lastIndex = _runs.size - 1
     fireIntervalAdded(this, lastIndex, lastIndex)
-    currentRun = Some(run)
+    setCurrentRun(Some(run), false)
     run
   }
 
-  beforeRunChangePub.newSubscriber {
-    _.oldRun.foreach(_.stillRecording = false)
+  beforeRunChangePub.newSubscriber { event =>
+    event.oldRun.foreach(_.stillRecording = false)
+    if (event.requestHalt && ws.jobManager.anyPrimaryJobs)
+      ws.halt() // if requested, halt the running model
   }
 
 }

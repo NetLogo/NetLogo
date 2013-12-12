@@ -7,7 +7,8 @@ import org.nlogo.util.SimplePublisher
 
 case class BeforeRunChangeEvent(
   val oldRun: Option[ModelRun],
-  val newRun: Option[ModelRun])
+  val newRun: Option[ModelRun],
+  val requestHalt: Boolean)
 
 case class AfterRunChangeEvent(
   val oldRun: Option[ModelRun],
@@ -19,10 +20,10 @@ trait HasCurrentRun {
   val afterRunChangePub = new SimplePublisher[AfterRunChangeEvent]
 
   def currentRun = _currentRun
-  def currentRun_=(newRun: Option[ModelRun]) {
+  def setCurrentRun(newRun: Option[ModelRun], requestHalt: Boolean) {
     if (_currentRun != newRun) {
       val oldRun = _currentRun
-      beforeRunChangePub.publish(BeforeRunChangeEvent(oldRun, newRun))
+      beforeRunChangePub.publish(BeforeRunChangeEvent(oldRun, newRun, requestHalt))
       _currentRun = newRun
       afterRunChangePub.publish(AfterRunChangeEvent(oldRun, newRun))
     }

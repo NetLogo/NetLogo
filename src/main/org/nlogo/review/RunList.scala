@@ -28,7 +28,7 @@ class RunList(reviewTab: ReviewTab)
           try {
             if (!reviewTab.isLoaded(run.modelString))
               reviewTab.loadModel(run.modelString)
-            reviewTab.state.currentRun = Some(run)
+            reviewTab.state.setCurrentRun(Some(run), true)
             requestFocusInWindow()
             reviewTab.interfacePanel.widgetPanels.foreach(_.revalidate())
             reviewTab.interfacePanel.repaint()
