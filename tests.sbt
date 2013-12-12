@@ -11,14 +11,6 @@ val tc = inputKey[Unit]("org.nlogo.headless.lang.TestCommands")
 val te = inputKey[Unit]("org.nlogo.headless.lang.TestExtensions")
 val tm = inputKey[Unit]("org.nlogo.headless.lang.TestModels")
 
-// `ts` is a little different. the argument if any is a substring
-// to match in the model path, so e.g. `ts GenDrift` is short for
-//   testOnly org.nlogo.headless.misc.TestChecksums -- -Dmodel=GenDrift
-// where TestChecksums.runTest will take care of interpreting that
-// as a substring match.
-
-val ts = inputKey[Unit]("org.nlogo.headless.misc.TestChecksums")
-
 def taggedTest(name: String): Def.Initialize[InputTask[Unit]] =
   Def.inputTaskDyn {
     val args = Def.spaceDelimited("<arg>").parsed
@@ -27,6 +19,14 @@ def taggedTest(name: String): Def.Initialize[InputTask[Unit]] =
       else args.mkString(" -- -n \"", " ", "\"")
     (testOnly in Test).toTask(s" $name$scalaTestArgs")
   }
+
+// `ts` is a little different. the argument if any is a substring
+// to match in the model path, so e.g. `ts GenDrift` is short for
+//   testOnly org.nlogo.headless.misc.TestChecksums -- -Dmodel=GenDrift
+// where TestChecksums.runTest will take care of interpreting that
+// as a substring match.
+
+val ts = inputKey[Unit]("org.nlogo.headless.misc.TestChecksums")
 
 def keyValueTest(name: String, key: String): Def.Initialize[InputTask[Unit]] =
   Def.inputTaskDyn {
@@ -38,6 +38,8 @@ def keyValueTest(name: String, key: String): Def.Initialize[InputTask[Unit]] =
     }
     (testOnly in Test).toTask(s" $name$scalaTestArgs")
   }
+
+/// wire it all together
 
 inConfig(Test)(
   Seq(tr, tc, te, tm, ts).flatMap(key =>
