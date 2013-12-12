@@ -5,6 +5,7 @@ package org.nlogo.review
 import java.awt.BorderLayout
 
 import org.nlogo.api
+import org.nlogo.mirror.IndexedNote
 import org.nlogo.mirror.ModelRunIO
 import org.nlogo.window
 import org.nlogo.window.ModelLoader
@@ -43,6 +44,17 @@ class ReviewTab(
     state.addRun(run)
   }
   override def currentRun: Option[api.ModelRun] = state.currentRun
+
+  override def addNote(text: String) {
+    for {
+      run <- state.currentRun
+      if state.currentlyRecording
+      frameIndex <- run.lastFrameIndex
+      ticks = ws.world.ticks
+      notesModel = notesTabbedPane.indexedNotesTable.model
+      note = new IndexedNote(frameIndex, ticks, text)
+    } notesModel.addNote(note)
+  }
 
   def userConfirms(title: String, message: String) =
     JOptionPane.showConfirmDialog(ReviewTab.this, message,

@@ -10,4 +10,5 @@ trait ReviewTabInterface extends java.awt.Component {
   def currentRun: Option[api.ModelRun]
   def loadedRuns: Seq[api.ModelRun]
   def loadRun(inputStream: java.io.InputStream): Unit
+  def addNote(note: String): Unit
 }
