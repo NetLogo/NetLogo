@@ -20,7 +20,6 @@ import javax.swing.JTabbedPane
 import javax.swing.JTable
 import javax.swing.JTextArea
 import javax.swing.SwingUtilities
-import javax.swing.table.AbstractTableModel
 import javax.swing.table.TableCellEditor
 import javax.swing.table.TableCellRenderer
 
@@ -90,6 +89,16 @@ class IndexedNotesTable(tabState: ReviewTabState) extends JTable { table =>
   )
 
   val model = new NotesTableModel(tabState, columns)
+
+  tabState.beforeRunChangePub.newSubscriber { _ =>
+    if (isEditing) getCellEditor.stopCellEditing()
+  }
+
+  tabState.afterRunChangePub.newSubscriber { event =>
+    removeEditor()
+    revalidate()
+    repaint()
+  }
 
   def scrollTo(frame: Int) {
     val rowIndex = model.notes.indexWhere(_.frame == frame)
@@ -195,56 +204,5 @@ class IndexedNotesTable(tabState: ReviewTabState) extends JTable { table =>
     override def getTableCellEditorComponent(table: JTable, value: Object,
       isSelected: Boolean, row: Int, col: Int) = buttonPanel
     override def getCellEditorValue = ""
-  }
-
-  // TODO: the model should probably not be an inner class
-  class NotesTableModel(val hasCurrentRun: HasCurrentRun, columns: Seq[Column])
-    extends AbstractTableModel {
-
-    hasCurrentRun.beforeRunChangePub.newSubscriber { _ =>
-      if (isEditing) getCellEditor.stopCellEditing()
-    }
-
-    hasCurrentRun.afterRunChangePub.newSubscriber { event =>
-      _notes.clear()
-      _notes ++= event.newRun.toList.flatMap(_.indexedNotes)
-      removeEditor()
-      revalidate()
-      repaint()
-    }
-
-    private var _notes = scala.collection.mutable.ListBuffer[IndexedNote]()
-    def notes = _notes.toList
-
-    override def getColumnCount = columns.length
-    override def getRowCount = _notes.length
-    override def getColumnName(col: Int) = columns(col).name
-    override def isCellEditable(row: Int, col: Int) = columns(col).editable
-    override def getValueAt(row: Int, col: Int) = columns(col).getValue(notes(row))
-    override def getColumnClass(col: Int): Class[_] = columns(col).clazz
-
-    override def setValueAt(value: Object, row: Int, col: Int) {
-      if (row < _notes.size) {
-        val note = notes(row)
-        _notes(row) = columns(col).updatedValue(value, note)
-        fireTableCellUpdated(row, col)
-      }
-    }
-
-    def addNote(n: IndexedNote) {
-      _notes += n;
-      _notes = _notes.sorted
-      fireTableDataChanged()
-    }
-
-    def removeNote(index: Int) {
-      if (index != -1) {
-        _notes.remove(index)
-        fireTableRowsDeleted(index, index)
-        removeEditor()
-        revalidate()
-        repaint()
-      }
-    }
   }
 }
