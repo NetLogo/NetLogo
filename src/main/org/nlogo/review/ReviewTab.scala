@@ -41,7 +41,7 @@ class ReviewTab(
   override def loadedRuns: Seq[api.ModelRun] = state.runs
   override def loadRun(inputStream: java.io.InputStream): Unit = {
     val run = ModelRunIO.load(inputStream)
-    loadModelIfNeeded(run.modelString)
+    if (!isLoaded(run.modelString)) loadModel(run.modelString)
     state.addRun(run)
   }
   override def currentRun: Option[api.ModelRun] = state.currentRun
@@ -91,14 +91,14 @@ class ReviewTab(
       }
     }
   })
-  
-  def loadModelIfNeeded(modelString: String) {
-    val currentModelString = getCurrentModelString()
-    if (modelString != currentModelString) {
-      offerSave()
-      ModelLoader.load(ReviewTab.this, null, api.ModelType.Library, modelString)
-      selectReviewTab()
-    }
+
+  def isLoaded(modelString: String): Boolean =
+    getCurrentModelString() == modelString
+
+  def loadModel(modelString: String) {
+    offerSave()
+    ModelLoader.load(ReviewTab.this, null, api.ModelType.Library, modelString)
+    selectReviewTab()
   }
 
   object RunListPanel extends JPanel {

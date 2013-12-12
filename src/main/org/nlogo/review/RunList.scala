@@ -26,7 +26,8 @@ class RunList(reviewTab: ReviewTab)
       if (!e.getValueIsAdjusting) {
         for (run <- reviewTab.state.runs.lift(getSelectedIndex)) {
           try {
-            reviewTab.loadModelIfNeeded(run.modelString)
+            if (!reviewTab.isLoaded(run.modelString))
+              reviewTab.loadModel(run.modelString)
             reviewTab.state.currentRun = Some(run)
             requestFocusInWindow()
             reviewTab.interfacePanel.repaint()
