@@ -1,6 +1,6 @@
 NetLogo author: Uri Wilensky
 Lead developer: Seth Tisue
-Development team: Jason Bertsche, Nicolas Payette
+Development team: Jason Bertsche, Frank Duncan, Nicolas Payette
 
 We also thank the following for their substantial contributions: Eamon McKenzie, Geoff Hulette, Chuck Shubert, Walter Stroup, Damon Centola, Ben Shargel, Matt Goto, Brent Collins, Matt Hellige, James Newell, Andrei Scheinkman, Esther Verreau, Craig Brozefsky, Eric Russell, Josh Cough
 
