@@ -24,7 +24,7 @@ import javax.swing.event.TableModelListener
 
 class ReviewTab(
   val ws: window.GUIWorkspace,
-  val saveModel: () => String,
+  val getCurrentModelString: () => String,
   offerSave: () => Unit,
   selectReviewTab: () => Unit)
   extends JPanel
@@ -36,7 +36,7 @@ class ReviewTab(
 
   val runList = new RunList(this)
 
-  val runRecorder = new RunRecorder(ws, state, saveModel)
+  val runRecorder = new RunRecorder(ws, state, getCurrentModelString)
 
   override def loadedRuns: Seq[api.ModelRun] = state.runs
   override def loadRun(inputStream: java.io.InputStream): Unit = {
@@ -91,9 +91,9 @@ class ReviewTab(
       }
     }
   })
-
+  
   def loadModelIfNeeded(modelString: String) {
-    val currentModelString = saveModel()
+    val currentModelString = getCurrentModelString()
     if (modelString != currentModelString) {
       offerSave()
       ModelLoader.load(ReviewTab.this, null, api.ModelType.Library, modelString)

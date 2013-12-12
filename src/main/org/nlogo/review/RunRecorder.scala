@@ -26,7 +26,7 @@ case class FrameAddedEvent(run: ModelRun, frame: Frame)
 class RunRecorder(
   ws: GUIWorkspace,
   tabState: ReviewTabState,
-  saveModel: () => String) {
+  getCurrentModelString: () => String) {
 
   private val plotActionBuffer = new api.ActionBuffer(ws.plotManager)
   private val drawingActionBuffer = new api.ActionBuffer(ws.drawingActionBroker)
@@ -52,7 +52,7 @@ class RunRecorder(
         stopRecording()
         for {
           run <- tabState.currentRun
-          if saveModel() != run.modelString
+          if getCurrentModelString() != run.modelString
         } {
           // if we just opened a model different from the
           // one loaded from the previously current run...
@@ -114,7 +114,7 @@ class RunRecorder(
     val initialPlots = ws.plotManager.plots.map(_.clone)
     val initialDrawingImage = org.nlogo.drawing.cloneImage(ws.getAndCreateDrawing(false))
     val run = new ModelRun(
-      name, saveModel(),
+      name, getCurrentModelString(),
       initialPlots, initialDrawingImage,
       "", Nil)
     actionBuffers.foreach(_.activate())
