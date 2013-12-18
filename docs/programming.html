@@ -926,7 +926,7 @@ breed [sheep a-sheep]
       Others have the singular name of the breed in them, such as <a href=
       "dictionary.html#turtle"><tt>&lt;breed&gt;</tt></a>
     <p>
-      The order in which breeds are declared is also the order order in
+      The order in which breeds are declared is also the order in
       which they are layered in the view. So breeds defined later will
       appear on top of breeds defined earlier; in this example, sheep will
       be drawn over wolves.
@@ -1950,10 +1950,10 @@ ask turtles [ set shape one-of shapes ]
       behavior.
       </ol>
     <p>
-      As mentioned above, most models in our Models Library now uses
+      Nearly every model in our Models Library uses
       tick-based updates.
     <p>
-      Continuous updates are useful for models in which execution is not
+      Continuous updates are occasionally useful for those rare models in which execution is not
       divided into short, discrete phases. An example in the Models Library
       is Termites. (See also, however, the State Machine Example model,
       which shows how to re-code Termites using ticks.)
@@ -2149,6 +2149,11 @@ end</code>
       change a pen's default mode by editing the plot in the Interface
       tab.)
     <p>
+      Like other types of plots, histograms can be set to auto scale. However,
+      auto scaled histograms do not automatically resize themselves
+      horizontally like other plot types do. To set the range programmatically,
+      you can use the <code>set-plot-x-range</code> primitive.
+    <p>
       The width of the bars in a histogram is controlled by the plot
       pen's interval. You can set a plot pen's default interval by
       editing the plot in the Interface tab. You can also change the
@@ -2196,7 +2201,8 @@ end</code>
       By default, all NetLogo plots have the auto scaling feature enabled.
       This means that if the model tries to plot a point which is outside
       the current displayed range, the range of the plot will grow along
-      one or both axes so that the new point is visible.
+      one or both axes so that the new point is visible. Histogram plots,
+      however, do not auto scale horizontally.
     <p>
       In the hope that the ranges won't have to change every time a new
       point is added, when the ranges grow they leave some extra room: 25%

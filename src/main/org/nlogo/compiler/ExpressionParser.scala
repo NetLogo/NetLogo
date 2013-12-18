@@ -563,10 +563,10 @@ private class ExpressionParser(procedure: Procedure,
       // extensionManager here because we only ever use this code when we are parsing constant lists
       // while compiling code.  When we're reading lists from export files and such we go straight
       // to the ConstantParser through Compiler.readFromString ev 3/20/08
-      val tmp = ConstantParser.makeConstantReporter(new ConstantParser(null,null).parseConstantList(tokens.next(),tokens))
-      val token = tokens.next()
-      tmp.token(new Token("",TokenType.CONSTANT,null)(openBracket.startPos,token.endPos,token.fileName))
-      new ReporterApp(tmp,openBracket.startPos,token.endPos,token.fileName)
+      val (list, closeBracket) = new ConstantParser(null,null).parseConstantList(tokens.next(),tokens)
+      val tmp = ConstantParser.makeConstantReporter(list)
+      tmp.token(new Token("",TokenType.CONSTANT,null)(openBracket.startPos,closeBracket.endPos,closeBracket.fileName))
+      new ReporterApp(tmp,openBracket.startPos,closeBracket.endPos,closeBracket.fileName)
     }
     // we weren't actually expecting a block at all!
     else exception("Expected " + TypeNames.aName(goalType) + " here, rather than a list or block.",block)

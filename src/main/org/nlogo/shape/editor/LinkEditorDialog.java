@@ -98,7 +98,7 @@ strictfp class LinkEditorDialog
     c.gridwidth = 1;
     add(new javax.swing.JLabel("left line"), c);
     c.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-    add(dashes[0], c);
+    add(dashes[2], c);
 
     c.gridwidth = 1;
     add(new javax.swing.JLabel("middle line"), c);
@@ -108,7 +108,7 @@ strictfp class LinkEditorDialog
     c.gridwidth = 1;
     add(new javax.swing.JLabel("right line"), c);
     c.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-    add(dashes[2], c);
+    add(dashes[0], c);
 
     javax.swing.JButton cancel = new javax.swing.JButton(I18N.guiJ().get("common.buttons.cancel"));
     cancel.addActionListener

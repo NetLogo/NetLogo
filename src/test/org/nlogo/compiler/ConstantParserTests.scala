@@ -23,7 +23,9 @@ class ConstantParserTests extends FunSuite with MockSuite {
       .getConstantValue(Compiler.Tokenizer2D.tokenize(input).iterator)
   def toConstantList(input: String, world: World = defaultWorld): LogoList = {
     val tokens = Compiler.Tokenizer2D.tokenize(input).iterator
-    new ConstantParser(world, null).parseConstantList(tokens.next(), tokens)
+    val (result, closeBracket) =
+      new ConstantParser(world, null).parseConstantList(tokens.next(), tokens)
+    result
   }
 
   def testError(input: String, error: String, world: World = defaultWorld) {

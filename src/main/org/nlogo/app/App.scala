@@ -445,7 +445,7 @@ class App extends
     // than its preferred size, so we have to explicitly set the
     // command center to the size we want - ST 1/7/05
     tabs.interfaceTab.commandCenter.setSize(tabs.interfaceTab.commandCenter.getPreferredSize)
-    smartPack(frame.getPreferredSize)
+    smartPack(frame.getPreferredSize, true)
 
     if(! System.getProperty("os.name").startsWith("Mac")){ org.nlogo.awt.Positioning.center(frame, null) }
 
@@ -566,7 +566,7 @@ class App extends
   /// zooming
 
   def handle(e: ZoomedEvent) {
-    smartPack(frame.getPreferredSize)
+    smartPack(frame.getPreferredSize, false)
   }
 
   def resetZoom() {
@@ -712,7 +712,7 @@ class App extends
       // if we don't call revalidate() here we don't get up-to-date
       // preferred size information - ST 11/4/03
       tabs.interfaceTab.getInterfacePanel.revalidate()
-      if(wasAtPreferredSizeBeforeLoadBegan) smartPack(frame.getPreferredSize)
+      if(wasAtPreferredSizeBeforeLoadBegan) smartPack(frame.getPreferredSize, true)
       else{
         val currentSize = frame.getSize
         val preferredSize = frame.getPreferredSize
@@ -720,7 +720,7 @@ class App extends
         if(preferredSize.width > newWidth) newWidth = preferredSize.width
         var newHeight = currentSize.height
         if(preferredSize.height > newHeight) newHeight = preferredSize.height
-        if(newWidth != currentSize.width || newHeight != currentSize.height) smartPack(new Dimension(newWidth, newHeight))
+        if(newWidth != currentSize.width || newHeight != currentSize.height) smartPack(new Dimension(newWidth, newHeight), true)
       }
       preferredSizeAtLoadEndTime = frame.getPreferredSize()
     }
@@ -949,7 +949,7 @@ class App extends
       .getOrElse{throw new IllegalArgumentException(
         "button '" + name + "' not found")}
 
-  def smartPack(targetSize:Dimension) {
+  def smartPack(targetSize:Dimension, allowShrink: Boolean) {
     val gc = frame.getGraphicsConfiguration
     val maxBounds = gc.getBounds
     val insets = Toolkit.getDefaultToolkit.getScreenInsets(gc)
@@ -967,8 +967,12 @@ class App extends
     val (currentWidth, currentHeight) = (frame.getWidth, frame.getHeight)
 
     // Maybe grow the window, but never shrink it
-    var newWidth  = max(min(targetSize.width, maxWidth),   currentWidth)
-    var newHeight = max(min(targetSize.height, maxHeight), currentHeight)
+    var newWidth  = min(targetSize.width, maxWidth)
+    var newHeight = min(targetSize.height, maxHeight)
+    if (!allowShrink) {
+      newWidth = max(newWidth, currentWidth)
+      newHeight = max(newHeight, currentHeight)
+    }
 
     // move up/left to get more room if possible and necessary
     val moveLeft = max(0, frame.getLocation().x + newWidth  - maxX)

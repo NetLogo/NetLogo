@@ -2612,7 +2612,12 @@ file-open &quot;C:\\NetLogo\\my-file-out.txt&quot;
 file-print &quot;Hello World&quot; ;; File is in writing mode
 </pre>
       <p>
-        See also <a href="#file-close">file-close</a>.
+        Opening a file does not close previously opened files.
+        You can use <tt>file-open</tt> to switch back and forth
+        between multiple open files.
+      <p>
+        See also <a href="#file-close">file-close</a>
+        See also <a href="#file-close-all">file-close-all</a>.
       </div>
     <div class="dict_entry">
       <h3>
@@ -3151,11 +3156,11 @@ set hidden? not hidden?
         Any non-numeric values in the list are ignored.
       <p>
         The histogram is drawn on the current plot using the current plot
-        pen and pen color. Use set-plot-x-range to control the range of
-        values to be histogrammed, and set the pen interval (either
-        directly with set-plot-pen-interval, or indirectly via
-        set-histogram-num-bars) to control how many bars that range is
-        split up into.
+        pen and pen color. Auto scaling does not affect a histogram's
+        horizontal range, so set-plot-x-range should be used to control
+        the range, and the pen interval can then be set (either directly
+        with set-plot-pen-interval, or indirectly via set-histogram-num-bars)
+        to control how many bars that range is split up into.
       <p>
         Be sure that if you want the histogram drawn with bars that the
         current pen is in bar mode (mode 1).
@@ -8061,6 +8066,11 @@ show sum [energy] of turtles
         Advances the tick counter by <i>number</i>. The input may be an
         integer or a floating point number. (Some models divide ticks more
         finely than by ones.) The input may not be negative.
+      <p>
+        When using <a href="programming.html#updates">tick-based view updates</a>,
+        the view is normally updated every 1.0 ticks, so using <tt>tick-advance</tt> with
+        a number less then 1.0 may not always trigger an update. If you want to
+        make sure that the view is updated, you can use the <tt>display</tt> command.
       <p>
         If the tick counter has not been started yet with
         <tt>reset-ticks</tt>, an error results.

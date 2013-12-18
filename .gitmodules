@@ -1,42 +1,42 @@
 [submodule "models"]
 	path = models
-	url = git://git.assembla.com/models.git
+	url = https://github.com/NetLogo/models.git
 [submodule "extensions/array"]
 	path = extensions/array
-	url = git://github.com/NetLogo/Array-Extension.git
+	url = https://github.com/NetLogo/Array-Extension.git
 [submodule "extensions/bitmap"]
 	path = extensions/bitmap
-	url = git://github.com/NetLogo/Bitmap-Extension.git
+	url = https://github.com/NetLogo/Bitmap-Extension.git
 [submodule "extensions/gis"]
 	path = extensions/gis
-	url = git://github.com/NetLogo/GIS-Extension.git
+	url = https://github.com/NetLogo/GIS-Extension.git
 [submodule "extensions/gogo"]
 	path = extensions/gogo
-	url = git://github.com/NetLogo/GoGo-Extension.git
+	url = https://github.com/NetLogo/GoGo-Extension.git
 [submodule "extensions/matrix"]
 	path = extensions/matrix
-	url = git://github.com/NetLogo/Matrix-Extension.git
+	url = https://github.com/NetLogo/Matrix-Extension.git
 [submodule "extensions/network"]
 	path = extensions/network
-	url = git://github.com/NetLogo/Network-Extension.git
+	url = https://github.com/NetLogo/Network-Extension.git
 [submodule "extensions/profiler"]
 	path = extensions/profiler
-	url = git://github.com/NetLogo/Profiler-Extension.git
+	url = https://github.com/NetLogo/Profiler-Extension.git
 [submodule "extensions/qtj"]
 	path = extensions/qtj
-	url = git://github.com/NetLogo/QTJ-Extension.git
+	url = https://github.com/NetLogo/QTJ-Extension.git
 [submodule "extensions/sample"]
 	path = extensions/sample
-	url = git://github.com/NetLogo/Sample-Extension.git
+	url = https://github.com/NetLogo/Sample-Extension.git
 [submodule "extensions/sample-scala"]
 	path = extensions/sample-scala
-	url = git://github.com/NetLogo/Sample-Scala-Extension.git
+	url = https://github.com/NetLogo/Sample-Scala-Extension.git
 [submodule "extensions/sound"]
 	path = extensions/sound
-	url = git://github.com/NetLogo/Sound-Extension.git
+	url = https://github.com/NetLogo/Sound-Extension.git
 [submodule "extensions/table"]
 	path = extensions/table
-	url = git://github.com/NetLogo/Table-Extension.git
+	url = https://github.com/NetLogo/Table-Extension.git
 [submodule "Mathematica-Link"]
 	path = Mathematica-Link
-	url = git://github.com/NetLogo/Mathematica-Link.git
+	url = https://github.com/NetLogo/Mathematica-Link.git
