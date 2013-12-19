@@ -1,3 +1,6 @@
+// note: in sbt 0.13.2 https://github.com/sbt/sbt/issues/866 will give us the `.taskValue` method
+// for use with `+=`. til then we keep using the obsolete `<+=` operator. - ST 12/19/13
+
 ///
 /// I18n
 ///
