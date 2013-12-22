@@ -4,7 +4,6 @@ package org.nlogo.mirror
 
 import scala.collection.JavaConverters.iterableAsScalaIterableConverter
 import scala.language.implicitConversions
-
 import org.nlogo.api
 import org.nlogo.api.AgentVariableNumbers._
 import org.nlogo.api.AgentVariables.getImplicitLinkVariables
@@ -36,6 +35,7 @@ object Mirrorables {
   case object Observer extends Kind {
     object Variables extends Enumeration {
       val TargetAgent = Value("targetAgent")
+      val Perspective = Value("perspective")
     }
   }
   case object World extends Kind {
@@ -117,7 +117,8 @@ object Mirrorables {
       Option(observer.targetAgent)
         .map(agent => (Serializer.agentKindToInt(agent.kind), agent.id))
     override val variables = Map(
-      TargetAgent.id -> targetAgent)
+      TargetAgent.id -> targetAgent,
+      Perspective.id -> Int.box(observer.perspective.export))
   }
 
   class MirrorableWorld(world: api.World) extends Mirrorable {
