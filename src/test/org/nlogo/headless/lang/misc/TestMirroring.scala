@@ -11,7 +11,7 @@ import org.nlogo.mirror._, Mirroring._, Mirrorables._
 class TestMirroring extends FixtureSuite {
 
   def mirrorables(implicit fixture: Fixture): Iterable[Mirrorable] =
-    allMirrorables(fixture.workspace.world, Seq())
+    allMirrorables(fixture.workspace.world)
 
   def sizes(u: Update) =
     (u.births.size, u.deaths.size, u.changes.size)

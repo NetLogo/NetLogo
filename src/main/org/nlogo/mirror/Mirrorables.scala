@@ -148,22 +148,13 @@ object Mirrorables {
     )
   }
 
-  class MirrorableWidgetValue(value: String, index: Int) extends Mirrorable {
-    import WidgetValue.Variables._
-    def kind = WidgetValue
-    def agentKey = AgentKey(kind, index)
-    override val variables = Map(
-      ValueString.id -> value)
-  }
-
-  def allMirrorables(world: api.World, widgetValues: Seq[(String, Int)] = Seq()): Iterable[Mirrorable] = {
+  def allMirrorables(world: api.World): Iterable[Mirrorable] = {
     import collection.JavaConverters._
     val turtles = world.turtles.agents.asScala.map(t => new MirrorableTurtle(t.asInstanceOf[api.Turtle]))
     val patches = world.patches.agents.asScala.map(p => new MirrorablePatch(p.asInstanceOf[api.Patch]))
     val links = world.links.agents.asScala.map(l => new MirrorableLink(l.asInstanceOf[api.Link]))
     val worldIterable = Iterable(new MirrorableWorld(world))
     val observerIterable = Iterable(new MirrorableObserver(world.observer))
-    val widgetValuesIterable = widgetValues.map { case (v, i) => new MirrorableWidgetValue(v, i) }
-    (worldIterable ++ observerIterable ++ widgetValuesIterable ++ turtles ++ patches ++ links)
+    (worldIterable ++ observerIterable ++ turtles ++ patches ++ links)
   }
 }
