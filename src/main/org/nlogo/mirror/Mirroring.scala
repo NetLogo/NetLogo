@@ -4,7 +4,9 @@ package org.nlogo.mirror
 
 // no dependencies except Scala standard library
 
-abstract class Kind
+abstract class Kind {
+  val Variables: Enumeration
+}
 case class AgentKey(kind: Kind, id: Long)
 case class Birth(agent: AgentKey, values: Seq[AnyRef])
 case class Death(agent: AgentKey)
@@ -17,8 +19,8 @@ trait Mirrorable {
   def agentKey: AgentKey
   def kind: Kind
   val variables: Map[Int, AnyRef]
-  def nbVariables = variables.size
   def getVariable(index: Int) = variables(index)
+  def getVariable(name: String) = variables(kind.Variables.withName(name).id)
 }
 
 object Mirroring {
@@ -38,7 +40,7 @@ object Mirroring {
     for (obj <- mirrorables) {
       val key = obj.agentKey
       seen += key
-      val vars = (0 until obj.nbVariables).map(obj.getVariable)
+      val vars = obj.kind.Variables.values.toSeq.map(v => obj.getVariable(v.id))
       if (oldState.contains(key)) {
         val vd = valueDiffs(was = oldState(key), now = vars)
         if (vd.nonEmpty) {

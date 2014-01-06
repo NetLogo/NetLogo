@@ -10,8 +10,7 @@ import api.AgentVariableNumbers._
 
 class FakeWorld(state: State) extends api.World {
 
-  import MirrorableWorld._
-  import WorldVar._
+  import World.Variables._
 
   private val (worldVars, observerVars, patchStates, turtleStates, linkStates) = {
     // each group will be a seq of (agentId, vars):
@@ -33,7 +32,6 @@ class FakeWorld(state: State) extends api.World {
     renderer.resetCache(patchSize)
     renderer
   }
-
 
   def patchColors: Array[Int] =
     patches.agentSeq
@@ -63,14 +61,14 @@ class FakeWorld(state: State) extends api.World {
 
   class FakeTurtle(agentId: Long, val vars: Seq[AnyRef])
     extends api.Turtle with FakeAgent {
-    import MirrorableTurtle._
+    import Turtle.Variables._
     override def kind = api.AgentKind.Turtle
     override def id = agentId
     override def xcor = vars(VAR_XCOR).asInstanceOf[Double]
     override def ycor = vars(VAR_YCOR).asInstanceOf[Double]
     override def heading = vars(VAR_HEADING).asInstanceOf[Double]
     override def hidden = vars(VAR_HIDDEN).asInstanceOf[Boolean]
-    override def lineThickness = vars(tvLineThickness).asInstanceOf[Double]
+    override def lineThickness = vars(LineThickness.id).asInstanceOf[Double]
     override def color: AnyRef = vars(VAR_COLOR)
     override def labelString = org.nlogo.api.Dump.logoObject(vars(VAR_LABEL))
     override def hasLabel = labelString.nonEmpty
@@ -109,7 +107,7 @@ class FakeWorld(state: State) extends api.World {
     }.sortBy(_.id))
 
   class FakeLink(agentId: Long, val vars: Seq[AnyRef]) extends api.Link with FakeAgent {
-    import MirrorableLink._
+    import Link.Variables._
     override def id = agentId
     override def kind = api.AgentKind.Link
     override def getBreedIndex: Int = unsupported
@@ -120,18 +118,18 @@ class FakeWorld(state: State) extends api.World {
     override def lineThickness: Double = vars(VAR_THICKNESS).asInstanceOf[Double]
     override def hidden: Boolean = vars(VAR_LHIDDEN).asInstanceOf[Boolean]
     override def linkDestinationSize: Double = end2.size
-    override def heading: Double = vars(lvHeading).asInstanceOf[Double]
+    override def heading: Double = vars(Heading.id).asInstanceOf[Double]
     override def isDirectedLink: Boolean = getBreed.isDirected
     override def x1: Double = end1.xcor
     override def y1: Double = end1.ycor
     override def x2: Double = shortestPathX(end1.xcor, end2.xcor)
     override def y2: Double = shortestPathY(end1.ycor, end2.ycor)
-    override def midpointX: Double = vars(lvMidpointX).asInstanceOf[Double]
-    override def midpointY: Double = vars(lvMidpointY).asInstanceOf[Double]
+    override def midpointX: Double = vars(MidpointX.id).asInstanceOf[Double]
+    override def midpointY: Double = vars(MidpointY.id).asInstanceOf[Double]
     override def getBreed: api.AgentSet = linkBreeds.getOrElse(vars(VAR_LBREED).asInstanceOf[String], links)
     override lazy val end1 = turtles.agentSeq.find(_.id == vars(VAR_END1).asInstanceOf[Long]).get
     override lazy val end2 = turtles.agentSeq.find(_.id == vars(VAR_END2).asInstanceOf[Long]).get
-    override def size: Double = vars(lvSize).asInstanceOf[Double]
+    override def size: Double = vars(Size.id).asInstanceOf[Double]
     override def shape = vars(VAR_LSHAPE).asInstanceOf[String]
     override def toString = "link " + end1.id + " " + end2.id // TODO: get breed name in there
   }
@@ -146,17 +144,17 @@ class FakeWorld(state: State) extends api.World {
     }
   }
 
-  class FakeObserver(val vars: Seq[AnyRef], val nbInterfaceGlobals: Int) extends api.Observer with FakeAgent {
-    import MirrorableObserver._
+  class FakeObserver(val vars: Seq[AnyRef]) extends api.Observer with FakeAgent {
+    import Observer.Variables._
     def targetAgent: api.Agent = {
-      vars(ovTargetAgent(nbInterfaceGlobals)).asInstanceOf[Option[(Int, Long)]].flatMap {
+      vars(TargetAgent.id).asInstanceOf[Option[(Int, Long)]].flatMap {
         case (agentKind, id) =>
-        Serializer.agentKindFromInt(agentKind) match {
-          case Turtle => turtles.agentSeq.find(_.id == id)
-          case Link   => links.agentSeq.find(_.id == id)
-          case Patch  => patches.agentSeq.find(_.id == id)
-        }
-    }.orNull
+          Serializer.agentKindFromInt(agentKind) match {
+            case Turtle => turtles.agentSeq.find(_.id == id)
+            case Link => links.agentSeq.find(_.id == id)
+            case Patch => patches.agentSeq.find(_.id == id)
+          }
+      }.orNull
     }
     def kind = api.AgentKind.Observer
     def id = 0
@@ -212,7 +210,7 @@ class FakeWorld(state: State) extends api.World {
   def getPatch(i: Int): api.Patch = patches.agentSeq(i)
 
   override lazy val observer: api.Observer =
-    new FakeObserver(observerVars, worldVar[Int](NbInterfaceGlobals.id))
+    new FakeObserver(observerVars)
 
   def wrap(pos: Double, min: Double, max: Double): Double =
     // This is basically copied from org.nlogo.agent.Topology to avoid a dependency to the latter.
