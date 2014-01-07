@@ -38,6 +38,9 @@ class TestMirroring extends FunSuite {
         val realVars = agent.variables
         assert((mirrorVars zip realVars).zipWithIndex.forall {
           // for each pair, check if they're equal OR if they are overridden
+          // "Overriden" variables are those where the mirrored value is purposely
+          // different from the original value: e.g., storing the breed's name
+          // instead of the breed agentset.
           case ((mv, rv), i) => mv == rv || m.variables.keySet.contains(i)
         })
       }
