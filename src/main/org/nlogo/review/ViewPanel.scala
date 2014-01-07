@@ -5,6 +5,7 @@ package org.nlogo.review
 import java.awt.Graphics
 import java.awt.Graphics2D
 import org.nlogo.api.Dump
+import org.nlogo.api.ViewSettings
 import org.nlogo.awt.Fonts.adjustDefaultFont
 import org.nlogo.mirror.FakeWorld
 import org.nlogo.mirror.ModelRun
@@ -19,10 +20,11 @@ import java.awt.Font
 class ViewWidgetPanel(
   run: ModelRun,
   viewWidgetBounds: java.awt.Rectangle,
-  viewSettings: ReviewTabViewSettings,
+  originalViewSettings: ViewSettings,
   worldHeight: Int,
   insideBorderHeight: Int,
-  originalViewFont: Font)
+  originalViewFont: Font,
+  unzoomedPatchSize: Double)
   extends JPanel {
   setBounds(viewWidgetBounds)
   setLayout(null)
@@ -33,9 +35,9 @@ class ViewWidgetPanel(
     setBorder(BorderFactory.createCompoundBorder(createWidgetBorder, matteBorder))
   }
 
-  val viewPanel = new ViewPanel(run, viewSettings, originalViewFont)
+  val viewPanel = new ViewPanel(run, originalViewSettings, originalViewFont, unzoomedPatchSize)
   val viewBounds = calculateViewBounds(this, 1,
-    viewSettings.patchSize, worldHeight)
+    originalViewSettings.patchSize, worldHeight)
   add(viewPanel)
   viewPanel.setBounds(viewBounds)
 
@@ -59,8 +61,9 @@ class TicksCounter(run: ModelRun) extends JLabel {
 
 class ViewPanel(
   run: ModelRun,
-  viewSettings: ReviewTabViewSettings,
-  font: Font)
+  originalViewSettings: ViewSettings,
+  font: Font,
+  unzoomedPatchSize: Double)
   extends JPanel {
   setFont(font)
   override def paintComponent(g: Graphics) {
@@ -68,7 +71,13 @@ class ViewPanel(
     for (frame <- run.currentFrame) {
       val g2d = g.create.asInstanceOf[Graphics2D]
       try {
-        val renderer = new FakeWorld(frame.mirroredState).newRenderer
+        val fakeWorld = new FakeWorld(frame.mirroredState)
+        val renderer = fakeWorld.newRenderer
+        val viewSettings =
+          ReviewTabViewSettings(
+            originalViewSettings,
+            unzoomedPatchSize,
+            fakeWorld.observer)
         renderer.trailDrawer.readImage(frame.drawingImage)
         renderer.paint(g2d, viewSettings)
       } finally {

@@ -37,15 +37,15 @@ object WidgetPanels {
     ws: GUIWorkspace,
     container: WidgetContainer,
     run: ModelRun): ViewWidgetPanel = {
-    val viewSettings = ReviewTabViewSettings(ws.view)
     val viewWidgetBounds = container.getUnzoomedBounds(ws.viewWidget)
     new ViewWidgetPanel(
       run,
       viewWidgetBounds,
-      viewSettings,
+      ws.view,
       ws.world.worldHeight,
       ws.viewWidget.getInsideBorderHeight,
-      ws.view.unzoomedFont)
+      ws.view.unzoomedFont,
+      ws.view.unzoomedPatchSize)
   }
 
   def newMonitorPanel(

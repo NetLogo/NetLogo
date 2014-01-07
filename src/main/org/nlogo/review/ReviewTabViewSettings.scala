@@ -2,22 +2,29 @@
 
 package org.nlogo.review
 
+import org.nlogo.api.Observer
 import org.nlogo.api.Perspective
 import org.nlogo.api.ViewSettings
-import org.nlogo.window.View
 
 object ReviewTabViewSettings {
   /**
    * Constructs new ReviewTabViewSettings from the original view
    */
-  def apply(originalView: View) =
+  def apply(
+    originalViewSettings: ViewSettings,
+    unzoomedPatchSize: Double,
+    observer: Observer) =
     new ReviewTabViewSettings(
-      fontSize = originalView.fontSize,
-      patchSize = originalView.unzoomedPatchSize,
-      viewWidth = originalView.viewWidth,
-      viewHeight = originalView.viewHeight,
-      viewOffsetX = originalView.viewOffsetX,
-      viewOffsetY = originalView.viewOffsetY)
+      fontSize = originalViewSettings.fontSize,
+      patchSize = unzoomedPatchSize,
+      viewWidth = originalViewSettings.viewWidth,
+      viewHeight = originalViewSettings.viewHeight,
+      viewOffsetX = observer.followOffsetX,
+      viewOffsetY = observer.followOffsetY,
+      drawSpotlight = originalViewSettings.drawSpotlight,
+      renderPerspective = originalViewSettings.renderPerspective,
+      perspective = observer.perspective
+    )
 }
 
 case class ReviewTabViewSettings private (
@@ -26,11 +33,10 @@ case class ReviewTabViewSettings private (
   override val viewWidth: Double,
   override val viewHeight: Double,
   override val viewOffsetX: Double,
-  override val viewOffsetY: Double)
+  override val viewOffsetY: Double,
+  override val drawSpotlight: Boolean,
+  override val renderPerspective: Boolean,
+  override val perspective: Perspective)
   extends ViewSettings {
-  // the next few method disregard original view settings
-  override def drawSpotlight = false
-  override def renderPerspective = false
   override def isHeadless = false
-  override def perspective = Perspective.Observe
 }

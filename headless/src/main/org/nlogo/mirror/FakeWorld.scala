@@ -166,7 +166,10 @@ class FakeWorld(state: State) extends api.World {
     def kind = api.AgentKind.Observer
     def id = 0
     def size = 0
-    def perspective: api.Perspective = unsupported
+    def perspective: api.Perspective =
+      api.Perspective.load(vars(Perspective.id).asInstanceOf[Int])
+    def followOffsetX: Double = vars(FollowOffsetX.id).asInstanceOf[Double]
+    def followOffsetY: Double = vars(FollowOffsetY.id).asInstanceOf[Double]
     def heading: Double = unsupported
     def pitch: Double = unsupported
     def roll: Double = unsupported
@@ -227,6 +230,8 @@ class FakeWorld(state: State) extends api.World {
 
   override lazy val observer: api.Observer =
     new FakeObserver(observerVars)
+  def followOffsetX: Double = observer.followOffsetX
+  def followOffsetY: Double = observer.followOffsetY
 
   def wrap(pos: Double, min: Double, max: Double): Double =
     // This is basically copied from org.nlogo.agent.Topology to avoid a dependency to the latter.
@@ -254,8 +259,6 @@ class FakeWorld(state: State) extends api.World {
 
   def getPatchAt(x: Double, y: Double): api.Patch = unsupported
   def fastGetPatchAt(x: Int, y: Int): api.Patch = unsupported
-  def followOffsetX: Double = unsupported
-  def followOffsetY: Double = unsupported
   def wrapX(x: Double): Double = unsupported
   def wrapY(y: Double): Double = unsupported
   def getDrawing: AnyRef = unsupported
