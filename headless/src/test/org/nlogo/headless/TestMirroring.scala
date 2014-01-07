@@ -169,4 +169,101 @@ class TestMirroring extends FunSuite {
     }
   }
 
+  if (!api.Version.is3D) test("perspective") {
+    withWorkspace { (ws, mirrorables) =>
+
+      var state: State = Map()
+
+      /* Updates the state by taking diffs and checks for the value of observer variables */
+      def checkObserverVars(variablesAndValues: (Observer.Variables.Value, Any)*) = {
+        val observerKey = AgentKey(Observer, 0)
+        state = diffs(Map(), mirrorables())._1
+        for ((variable, value) <- variablesAndValues)
+          assertResult(value)(state(observerKey)(variable.id))
+      }
+
+      def target(kind: Kind, id: Long) = Some((Serializer.agentKindToInt(kind), id))
+
+      import org.nlogo.api.Perspective._
+      import Mirrorables.Observer.Variables._
+
+      ws.initForTesting(0)
+      checkObserverVars(
+        Perspective -> Observe.export,
+        TargetAgent -> None,
+        FollowOffsetX -> 0.0,
+        FollowOffsetY -> 0.0)
+
+      ws.command("watch patch 0 0")
+      checkObserverVars(
+        Perspective -> Watch.export,
+        TargetAgent -> target(Patch, 0),
+        FollowOffsetX -> 0.0,
+        FollowOffsetY -> 0.0)
+
+      ws.command("crt 10")
+      ws.command("watch turtle 0")
+      checkObserverVars(
+        Perspective -> Watch.export,
+        TargetAgent -> target(Turtle, 0),
+        FollowOffsetX -> 0.0,
+        FollowOffsetY -> 0.0)
+
+      ws.command("ask turtle 1 [ watch-me ]")
+      checkObserverVars(
+        Perspective -> Watch.export,
+        TargetAgent -> target(Turtle, 1),
+        FollowOffsetX -> 0.0,
+        FollowOffsetY -> 0.0)
+
+      ws.command("follow turtle 0")
+      checkObserverVars(
+        Perspective -> Follow.export,
+        TargetAgent -> target(Turtle, 0),
+        FollowOffsetX -> 0.0,
+        FollowOffsetY -> 0.0)
+
+      ws.command("ask turtle 0 [ setxy 0.5 0.5 ]")
+      checkObserverVars(
+        Perspective -> Follow.export,
+        TargetAgent -> target(Turtle, 0),
+        FollowOffsetX -> -0.5,
+        FollowOffsetY -> -0.5)
+
+      ws.command("ask turtle 1 [ follow-me set heading 0 fd 0.25 ]")
+      checkObserverVars(
+        Perspective -> Follow.export,
+        TargetAgent -> target(Turtle, 1),
+        FollowOffsetX -> 0,
+        FollowOffsetY -> 0.25)
+
+      ws.command("ride turtle 2")
+      checkObserverVars(
+        Perspective -> Ride.export,
+        TargetAgent -> target(Turtle, 2),
+        FollowOffsetX -> 0.0,
+        FollowOffsetY -> 0.0)
+
+      ws.command("ask turtle 2 [ setxy 0.5 0.5 ]")
+      checkObserverVars(
+        Perspective -> Ride.export,
+        TargetAgent -> target(Turtle, 2),
+        FollowOffsetX -> -0.5,
+        FollowOffsetY -> -0.5)
+
+      ws.command("ask turtle 3 [ ride-me set heading 0 fd 0.25 ]")
+      checkObserverVars(
+        Perspective -> Ride.export,
+        TargetAgent -> target(Turtle, 3),
+        FollowOffsetX -> 0,
+        FollowOffsetY -> 0.25)
+
+      ws.command("reset-perspective")
+      checkObserverVars(
+        Perspective -> Observe.export,
+        TargetAgent -> None,
+        FollowOffsetX -> 0.0,
+        FollowOffsetY -> 0.0)
+    }
+  }
 }
