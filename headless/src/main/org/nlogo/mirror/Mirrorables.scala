@@ -36,6 +36,8 @@ object Mirrorables {
     object Variables extends Enumeration {
       val TargetAgent = Value("targetAgent")
       val Perspective = Value("perspective")
+      val FollowOffsetX = Value("followOffsetX")
+      val FollowOffsetY = Value("followOffsetY")
     }
   }
   case object World extends Kind {
@@ -112,7 +114,9 @@ object Mirrorables {
         .map(key => (Serializer.agentKindToInt(key.kind), key.id))
     override val variables = Map(
       TargetAgent.id -> targetAgent,
-      Perspective.id -> Int.box(observer.perspective.export))
+      Perspective.id -> Int.box(observer.perspective.export),
+      FollowOffsetX.id -> Double.box(observer.followOffsetX),
+      FollowOffsetY.id -> Double.box(observer.followOffsetY))
   }
 
   class MirrorableWorld(world: api.World) extends Mirrorable {

@@ -10,6 +10,9 @@ trait Observer extends Agent with Camera {
   /** Returns the current perspective */
   def perspective: Perspective
   def setPerspective(p: Perspective, a: Agent)
+  
+  def followOffsetX: Double
+  def followOffsetY: Double
 
   /** Returns the current distance behind the followed turtle the 3D view is displaying */
   def followDistance: Int
