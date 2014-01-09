@@ -202,13 +202,14 @@ class FakeWorld(state: State) extends api.World {
   def patchesAllBlack = worldVar[Boolean](PatchesAllBlack.id)
 
   def program = {
-    def makeBreedMap(breedsVar: Int) =
+    def makeBreedMap(breedsVar: Int, isLinkBreed: Boolean) =
       worldVar[collection.immutable.ListMap[String, Boolean]](breedsVar).map {
-        case (breedName, isDirected) => breedName -> api.Breed(breedName, "", Seq(), isDirected)
+        case (breedName, isDirected) =>
+          breedName -> api.Breed(breedName, "", Seq(), isLinkBreed, isDirected)
       }
     api.Program.empty(FakeWorld.is3D).copy(
-      breeds = makeBreedMap(TurtleBreeds.id),
-      linkBreeds = makeBreedMap(LinkBreeds.id))
+      breeds = makeBreedMap(TurtleBreeds.id, false),
+      linkBreeds = makeBreedMap(LinkBreeds.id, true))
   }
 
   private def makeBreeds[A <: FakeAgent](
