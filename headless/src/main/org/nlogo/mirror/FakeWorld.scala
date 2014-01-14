@@ -144,11 +144,8 @@ class FakeWorld(state: State) extends api.World {
   override val links = {
     val agentSeq = linkStates
       .map { case (id, vars) => new FakeLink(id, vars) }
-      .sortBy(_.id)
-    new FakeAgentSet(api.AgentKind.Link, agentSeq, worldVar[Boolean](UnbreededLinksAreDirected.id)) {
-      override val agents =
-        (agentSeq.sortBy(l => (l.end1.id, l.end2.id)): Iterable[api.Agent]).asJava
-    }
+      .sortBy(l => (l.end1.id, l.end2.id))
+    new FakeAgentSet(api.AgentKind.Link, agentSeq, worldVar[Boolean](UnbreededLinksAreDirected.id))
   }
 
   class FakeObserver(val vars: Seq[AnyRef]) extends api.Observer with FakeAgent {
