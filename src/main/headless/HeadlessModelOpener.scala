@@ -31,7 +31,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
       throw new IllegalStateException("unknown NetLogo version: " + netLogoVersion)
 
     // parse all the widgets in the WIDGETS section
-    val (interfaceGlobals, constraints, buttonCode, monitorCode, interfaceGlobalCommands) =
+    val (interfaceGlobals, constraints, buttonCode, monitorCode, interfaceGlobalCommands, _) =
       new workspace.WidgetParser(ws, Some(ws), Some(ws.plotManager), ws.compilerTestingMode)
         .parseWidgets(map(ModelSection.Interface), netLogoVersion)
 
