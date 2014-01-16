@@ -24,6 +24,7 @@ class PlotPanel(
   extends WidgetPanel {
   setBorder(createWidgetBorder)
   setBackground(InterfaceColors.PLOT_BACKGROUND)
+  setOpaque(true)
   val gui = new PlotWidgetGUI(initialPlot, this)
   gui.legend.open = legendIsOpen
   gui.addToPanel(this)

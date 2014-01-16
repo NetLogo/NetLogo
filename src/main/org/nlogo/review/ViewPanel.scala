@@ -50,12 +50,14 @@ class ViewWidgetPanel(
 
 class TicksCounter(run: ModelRun) extends JLabel {
   adjustDefaultFont(this)
+  setOpaque(true)
+  setBackground(GRAPHICS_BACKGROUND)
   override def paintComponent(g: Graphics): Unit = {
     super.paintComponent(g)
     for {
       frame <- run.currentFrame
       ticks <- frame.ticks
-    } setText("ticks: " + Dump.number(ticks))
+    } setText(" ticks: " + Dump.number(ticks))
   }
 }
 
