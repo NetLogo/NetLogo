@@ -27,6 +27,7 @@ class MonitorPanel(
   override val kind = Monitor
 
   setBorder(createWidgetBorder)
+  setOpaque(true)
   setBackground(MONITOR_BACKGROUND)
 
   override def paintComponent(g: Graphics): Unit = {
