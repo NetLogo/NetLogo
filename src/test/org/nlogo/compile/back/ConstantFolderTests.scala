@@ -18,7 +18,7 @@ class ConstantFolderTests extends FunSuite {
       frontEnd.frontEnd(
         "to-report __test report " + source + "\nend")
     procdef.accept(new ConstantFolder)
-    procdef.statements.head.head.toString
+    procdef.statements.stmts.head.args.head.toString
   }
 
   /// not pure

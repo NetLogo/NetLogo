@@ -3,7 +3,7 @@
 # -e makes the whole thing die with an error if any command does
 # -v lets you see the commands as they happen
 
-if [ "$1" != --noclean ] && [ "$1" != --no-clean ] ; then
+if [ "$1" == --clean ] ; then
   git clean -fdX
   git submodule update --init
   git submodule foreach git clean -fdX
@@ -16,7 +16,7 @@ mkdir -p tmp/nightly
 # maybe there's an easier way, than I've done it below, I don't know.
 # I suck at shell scripting - ST 2/15/11
 
-./sbt test:compile 2>&1 | tee tmp/nightly/compile.txt
+./sbt test:compile "ensime generate" 2>&1 | tee tmp/nightly/compile.txt
 if [ ${PIPESTATUS[0]} -ne 0 ] ; then echo "*** FAILED: test:compile"; exit 1; fi
 echo "*** done: test:compile"
 

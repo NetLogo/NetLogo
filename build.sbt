@@ -1,45 +1,47 @@
+val root = project in file (".") configs(FastMediumSlow.configs: _*)
+
+scalaVersion := "2.10.3"
+
+mainClass in Compile := Some("org.nlogo.headless.Main")
+
+onLoadMessage := ""
+
+ivyLoggingLevel := UpdateLogging.Quiet
+
+logBuffered in testOnly in Test := false
+
+name := "NetLogoHeadless"
+
+organization := "org.nlogo"
+
+licenses += ("GPL-2.0", url("http://opensource.org/licenses/GPL-2.0"))
+
+// Used by the publish-versioned plugin
+isSnapshot := true
+
+version := "5.1.0"
+
 ///
-/// root project
+/// building
 ///
 
-val root = project in file (".") configs(Testing.configs: _*)
-
-///
-/// task keys
-///
-
-// surely there's some better way to do this - ST 5/30/12
-val nogen = taskKey[Unit]("disable bytecode generator")
-
-///
-/// ThisBuild -- applies to subprojects too
-/// (at the moment we have no subprojects on this branch, but that could change - ST 7/23/13)
-///
-
-scalaVersion in ThisBuild := "2.10.3"
-
-scalacOptions in ThisBuild ++=
+scalacOptions ++=
   "-deprecation -unchecked -feature -Xcheckinit -encoding us-ascii -target:jvm-1.7 -Xlint -Xfatal-warnings"
   .split(" ").toSeq
 
-javacOptions in ThisBuild ++=
+javacOptions ++=
   "-g -deprecation -encoding us-ascii -Werror -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path -source 1.7 -target 1.7"
   .split(" ").toSeq
 
-// only log problems plz
-ivyLoggingLevel in ThisBuild := UpdateLogging.Quiet
-
-// we're not cross-building for different Scala versions
-crossPaths in ThisBuild := false
-
-nogen in ThisBuild  := { System.setProperty("org.nlogo.noGenerator", "true") }
+libraryDependencies ++= Seq(
+  "asm" % "asm-all" % "3.3.1"
+)
 
 // temporarily needed for ScalaTest build which hasn't propagated
 // to Maven Central yet - ST 8/14/13
 resolvers += Resolver.sonatypeRepo("snapshots")
 
 libraryDependencies in ThisBuild ++= Seq(
-  "asm" % "asm-all" % "3.3.1",
   "org.jmock" % "jmock" % "2.5.1" % "test",
   "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
   "org.jmock" % "jmock-junit4" % "2.5.1" % "test",
@@ -47,11 +49,15 @@ libraryDependencies in ThisBuild ++= Seq(
   "org.scalatest" %% "scalatest" % "2.0.1-SNAP" % "test"
 )
 
-artifactName := { (_, _, _) => "NetLogoHeadless.jar" }
-
-onLoadMessage := ""
-
-resourceDirectory in Compile := baseDirectory.value / "resources"
+// reflections depends on some extra jars but for some reason we need to
+// explicitly list the transitive dependencies
+libraryDependencies ++= Seq(
+  "org.reflections" % "reflections" % "0.9.9-RC1" % "test",
+  "com.google.code.findbugs" % "jsr305" % "2.0.1" % "test",
+  "com.google.guava" % "guava" % "12.0"           % "test",
+  "org.javassist" % "javassist" % "3.16.1-GA"     % "test",
+  "org.slf4j" % "slf4j-nop" % "1.7.5"             % "test"
+)
 
 scalaSource in Compile := baseDirectory.value / "src" / "main"
 
@@ -61,34 +67,70 @@ javaSource in Compile := baseDirectory.value / "src" / "main"
 
 javaSource in Test := baseDirectory.value / "src" / "test"
 
-unmanagedResourceDirectories in Compile += baseDirectory.value / "resources"
+resourceDirectory in Compile := baseDirectory.value / "resources" / "main"
 
-sourceGenerators in Compile <+= JFlexRunner.task
+resourceDirectory in Test := baseDirectory.value / "resources" / "test"
 
-resourceGenerators in Compile <+= I18n.resourceGeneratorTask
+///
+/// packaging and publishing
+///
 
-mainClass in Compile := Some("org.nlogo.headless.Main")
+// don't cross-build for different Scala versions
+crossPaths := false
 
-Extensions.extensionsTask
+publishArtifact in Test := true
 
-val all = taskKey[Unit]("build all the things!!!")
+///
+/// Scaladoc
+///
 
-all := { val _ = (
-  (packageBin in Compile).value,
-  (compile in Test).value,
-  Extensions.extensions.value
-)}
+val netlogoVersion = taskKey[String]("from api.Version")
 
-seq(Testing.settings: _*)
+netlogoVersion := {
+  (testLoader in Test).value
+    .loadClass("org.nlogo.api.Version")
+    .getMethod("version")
+    .invoke(null).asInstanceOf[String]
+    .replaceFirst("NetLogo ", "")
+}
 
-seq(Depend.settings: _*)
+scalacOptions in (Compile, doc) ++= {
+  val version = netlogoVersion.value
+  Seq("-encoding", "us-ascii") ++
+    Opts.doc.title("NetLogo") ++
+    Opts.doc.version(version) ++
+    Opts.doc.sourceUrl("https://github.com/NetLogo/NetLogo/blob/" +
+                       version + "/src/main€{FILE_PATH}.scala")
+}
 
-seq(Classycle.settings: _*)
+// compensate for issues.scala-lang.org/browse/SI-5388
+doc in Compile := {
+  val path = (doc in Compile).value
+  for (file <- Process(Seq("find", path.toString, "-name", "*.html")).lines)
+    IO.write(
+      new File(file),
+      IO.read(new File(file)).replaceAll("\\.java\\.scala", ".java"))
+  path
+}
 
-seq(Dump.settings: _*)
-
-seq(ChecksumsAndPreviews.settings: _*)
-
-seq(Scaladoc.settings: _*)
+///
+/// plugins
+///
 
 org.scalastyle.sbt.ScalastylePlugin.Settings
+
+///
+/// get stuff from project/*.scala
+///
+
+FastMediumSlow.settings
+
+bintrayPublishSettings
+
+PublishVersioned.settings
+
+bintray.Keys.repository in bintray.Keys.bintray := "NetLogoHeadless"
+
+bintray.Keys.bintrayOrganization in bintray.Keys.bintray := Some("netlogo")
+
+Depend.settings

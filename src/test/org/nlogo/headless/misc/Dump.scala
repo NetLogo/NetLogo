@@ -47,7 +47,7 @@ object Dump {
       path <- ModelsLibrary.getModelPaths
       if !TestCompileAll.badPath(path)
     } {
-      val name = path.split("/").last.toList.dropRight(".nlogo".size).mkString
+      val name = path.split("/").last.toList.mkString.stripSuffix(".nlogo")
       print('.')
       writeFile("target/dumps/" + name + ".txt",dump(path))
     }

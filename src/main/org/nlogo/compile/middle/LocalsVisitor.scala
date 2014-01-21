@@ -52,7 +52,7 @@ extends DefaultAstVisitor {
           procedure.args :+= l.let.name
           super.visitStatement(stmt)
         }
-        else stmt.drop(1).foreach(_.accept(this)) // drop(1) skips the _letvariable which won't be evaluated
+        else stmt.args.drop(1).foreach(_.accept(this)) // drop(1) skips the _letvariable which won't be evaluated
         currentLet = null
       case r: _repeat =>
         if(!procedure.isTask && askNestingLevel == 0) {

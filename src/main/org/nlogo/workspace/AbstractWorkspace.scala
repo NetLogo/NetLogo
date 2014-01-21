@@ -40,6 +40,16 @@ object AbstractWorkspace {
       result
     }
 
+  def setHeadlessProperty() {
+    // force headless mode if it is not set.  This is necessary for the headless workspace to run
+    // on most platforms when a display is not available. --CLB
+    // note that since our check is for null, so the user can still force the property to false and
+    // not be overridden by this - ST 4/21/05
+    val p = "java.awt.headless"
+    if(System.getProperty(p) == null)
+      System.setProperty(p, "true")
+  }
+
 }
 
 abstract class AbstractWorkspace(val world: World)
@@ -117,6 +127,11 @@ with RunCache with Jobs with Warning with OutputArea with Importing {
 object AbstractWorkspaceTraits {
 
   trait Compiling { this: AbstractWorkspace =>
+
+    // beware! this should be used everywhere the workspace invokes the compiler, but I doubt that's
+    // been achieved. for now, we're only sure that it is used in enough places for the Tortoise
+    // docking tests to pass. - ST 10/24/13
+    var flags = nvm.CompilerFlags()
 
     override def readNumberFromString(source: String) =
       compiler.frontEnd.readNumberFromString(

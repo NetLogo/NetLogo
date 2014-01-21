@@ -544,7 +544,6 @@ class TestImportExport extends FixtureSuite with SlowTest {
   }
 
   test("utf 8 string") { implicit fixture =>
-    import fixture._
     val x = new String("A" + "\u00ea" + "\u00f1" + "\u00fc" + "C")
     roundTripHelper(setup="set t \"" + x + "\"", model="globals [t]")
   }

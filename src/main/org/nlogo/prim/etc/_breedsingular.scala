@@ -5,7 +5,7 @@ package org.nlogo.prim.etc
 import org.nlogo.api.{ Syntax, Nobody }
 import org.nlogo.nvm.{ Reporter, Context, EngineException }
 
-class _breedsingular(breedName: String) extends Reporter {
+class _breedsingular(_breedName: String) extends Reporter {
 
   override def syntax =
     Syntax.reporterSyntax(
@@ -13,7 +13,7 @@ class _breedsingular(breedName: String) extends Reporter {
       Syntax.TurtleType | Syntax.NobodyType)
 
   override def toString =
-    super.toString + ":" + breedName
+    super.toString + ":" + _breedName
 
   override def report(context: Context): AnyRef =
     report_1(context, argEvalDoubleValue(context, 0))
@@ -27,7 +27,7 @@ class _breedsingular(breedName: String) extends Reporter {
     if (turtle == null)
       Nobody
     else {
-      val breed = world.getBreed(breedName)
+      val breed = world.getBreed(_breedName)
       if (!breed.contains(turtle))
         throw new EngineException(
           context, this,
@@ -36,4 +36,6 @@ class _breedsingular(breedName: String) extends Reporter {
     }
   }
 
+  // MethodRipper won't let us call a public method from perform_1() - FD 10/10/13
+  def breedName: String = _breedName
 }

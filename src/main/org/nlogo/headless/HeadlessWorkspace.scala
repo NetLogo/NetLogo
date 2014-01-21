@@ -85,8 +85,6 @@ with org.nlogo.workspace.WorldLoaderInterface {
   val defaultOwner =
     new SimpleJobOwner("HeadlessWorkspace", world.mainRNG)
 
-  var flags = nvm.CompilerFlags()
-
   /**
    * Has a model been opened in this workspace?
    */

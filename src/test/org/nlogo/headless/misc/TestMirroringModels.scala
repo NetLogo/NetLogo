@@ -15,9 +15,7 @@ class TestMirroringModels extends FunSuite with SlowTest {
   def withWorkspace[T](body: (HeadlessWorkspace, () => Iterable[Mirrorable]) => T): T = {
     val ws = HeadlessWorkspace.newInstance
     ws.silent = true
-    try body(ws, () => allMirrorables(ws.world,
-      Seq[(String, Int)]() // empty seq of widgets values for now - replace when we have them in headless NP 2012-09-17
-      ))
+    try body(ws, () => allMirrorables(ws.world))
     finally ws.dispose()
   }
 
@@ -78,7 +76,7 @@ class TestMirroringModels extends FunSuite with SlowTest {
   val moreExclusions = Seq("/GIS/", "/System Dynamics/")
 
   def checksums =
-    ChecksumsAndPreviews.Checksums.load("test/checksums.txt")
+    ChecksumsAndPreviews.Checksums.load()
 
   for {
     path <- checksums.values.map(_.path)

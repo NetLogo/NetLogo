@@ -2,9 +2,11 @@
 
 package org.nlogo.headless
 
-import org.nlogo.workspace.{ ModelsLibrary, Checksummer }
+import org.nlogo.workspace.{ AbstractWorkspace, ModelsLibrary, Checksummer }
 
 object ChecksumsAndPreviews {
+
+  val Path = "test/checksums.txt"
 
   val allBenchmarks =
     List("Ants", "Bureaucrats", "BZ", "CA1D", "Erosion", "Fire", "FireBig", "Flocking", "GasLabCirc",
@@ -12,7 +14,7 @@ object ChecksumsAndPreviews {
          "Team", "Termites", "VirusNet", "Wealth", "Wolf", "ImportWorld")
 
   def main(argv: Array[String]) {
-    Main.setHeadlessProperty()
+    AbstractWorkspace.setHeadlessProperty()
     def paths(fn: String => Boolean, includeBenchmarks: Boolean) = {
       val benchmarks = allBenchmarks.map("models/test/benchmarks/" + _ + " Benchmark.nlogo")
       val library =
@@ -70,7 +72,7 @@ object ChecksumsAndPreviews {
   /// checksums
 
   object Checksums {
-    val separator = " * " // used to separate fields in checksums.txt
+    val separator = " * " // used to separate fields in the checksums file
     case class Entry(path: String, worldSum: String, graphicsSum: String, revision: String) {
       def equalsExceptRevision(other: Entry) =
         path == other.path && worldSum == other.worldSum && graphicsSum == other.graphicsSum
@@ -94,10 +96,9 @@ object ChecksumsAndPreviews {
     }).isEmpty
 
     def update(paths: List[String]) {
-      val path = "test/checksums.txt"
-      val m = load(path)
+      val m = load()
       paths.foreach(updateOne(m, _))
-      write(m, path)
+      write(m, Path)
     }
     def updateOne(m: ChecksumMap, model: String) {
       val workspace = HeadlessWorkspace.newInstance
@@ -137,9 +138,9 @@ object ChecksumsAndPreviews {
         println(action + ": \"" + model + separator + newCheckSum
                 + separator + newGraphicsChecksum + separator + revision + "\"")
     }
-    def load(path: String): ChecksumMap = {
+    def load(): ChecksumMap = {
       val m = new ChecksumMap
-      for(line <- io.Source.fromFile(path).getLines.map(_.trim))
+      for(line <- io.Source.fromFile(Path).getLines.map(_.trim))
         if(!line.startsWith("#") && !line.isEmpty) {
           val strs = line.split(java.util.regex.Pattern.quote(separator))
           if(strs.size != 4)

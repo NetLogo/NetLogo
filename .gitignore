@@ -9,6 +9,7 @@ tmp/
 
 # wildcards
 *.tmp
+*.swp
 *~
 .#*
 \#*
@@ -27,12 +28,12 @@ tmp/
 # other
 /.ensime
 /.ensime_lucene/
+/project/project/
+/node_modules/
 /build/
 /lib/
 /out/
 /docs/
-/resources/system/dict.txt
-/resources/Errors_??.properties
 
 # ignore nw extension until bundled
 /extensions/nw

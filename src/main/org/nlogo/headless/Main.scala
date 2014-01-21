@@ -4,7 +4,7 @@ package org.nlogo.headless
 
 import org.nlogo.api.WorldDimensions
 import org.nlogo.api.{ APIVersion, Version }
-import org.nlogo.workspace.AbstractWorkspace
+import org.nlogo.workspace.AbstractWorkspace.setHeadlessProperty
 import org.nlogo.nvm.LabInterface.Settings
 
 object Main {
@@ -21,15 +21,6 @@ object Main {
     val lab = HeadlessWorkspace.newLab
     lab.load(HeadlessModelOpener.protocolSection(settings.model))
     lab.run(settings, newWorkspace _)
-  }
-  def setHeadlessProperty() {
-    // force headless mode if it is not set.  This is necessary for the headless workspace to run
-    // on most platforms when a display is not available. --CLB
-    // note that since our check is for null, so the user can still force the property to false and
-    // not be overridden by this - ST 4/21/05
-    val p = "java.awt.headless"
-    if(System.getProperty(p) == null)
-      System.setProperty(p, "true")
   }
   private def parseArgs(args: Array[String]): Option[Settings] = {
     var model: Option[String] = None

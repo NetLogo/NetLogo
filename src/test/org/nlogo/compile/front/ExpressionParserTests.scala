@@ -51,15 +51,18 @@ class ExpressionParserTests extends FunSuite {
     override def visitReporterBlock(node: ReporterBlock) { visit(node); super.visitReporterBlock(node) }
     override def visitStatement(node: Statement) { visit(node); super.visitStatement(node) }
     override def visitStatements(node: Statements) {
-      if (node.size == 0) buf.append(node.getClass.getSimpleName + " '' ")
+      if (node.stmts.isEmpty)
+        buf.append(node.getClass.getSimpleName + " '' ")
       else visit(node)
       super.visitStatements(node)
     }
     def visit(node: AstNode) {
       val start = node.start - PREAMBLE.length
       val end = node.end - PREAMBLE.length
-      val text = try { "'" + source.substring(start, end) + "'" }
-      catch { case ex: StringIndexOutOfBoundsException => "out of bounds: " + ((start, end)) }
+      val text =
+        try "'" + source.substring(start, end) + "'"
+        catch { case _: StringIndexOutOfBoundsException =>
+          "out of bounds: " + ((start, end)) }
       buf.append(node.getClass.getSimpleName + " " + text + " ")
     }
   }

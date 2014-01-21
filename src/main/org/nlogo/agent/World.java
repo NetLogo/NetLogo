@@ -95,7 +95,9 @@ public strictfp class World
     return new LinkManagerImpl(
       this, new LinkFactory() {
           @Override public Link apply(World world, Turtle src, Turtle dest, AgentSet breed) {
-            return new Link(world, src, dest, breed);
+            Link link = new Link(world, src, dest, breed);
+            link._id_$eq(newLinkId());
+            return link;
           }});
   }
 
@@ -462,7 +464,7 @@ public strictfp class World
   }
 
   public WorldDimensions getDimensions() {
-    return new WorldDimensions(_minPxcor, _maxPxcor, _minPycor, _maxPycor);
+    return new WorldDimensions(_minPxcor, _maxPxcor, _minPycor, _maxPycor, patchSize, wrappingAllowedInY(), wrappingAllowedInX());
   }
 
   public boolean isDimensionVariable(String variableName) {
