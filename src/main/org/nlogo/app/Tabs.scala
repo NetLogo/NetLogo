@@ -39,15 +39,17 @@ class Tabs(val workspace: GUIWorkspace,
     tabsMenu = new org.nlogo.swing.TabsMenu(I18N.gui.get("menu.tabs"), this)
   }
 
-  def showReviewTab() {
+  def showReviewTab(selectReviewTab: Boolean = true) {
     if (indexOfComponent(reviewTab) == -1) {
       addTab("Review", reviewTab)
       addMenuItem(getTabCount() - 1, "Review")
       reviewTab.recordingEnabled = true
     }
     org.nlogo.window.Event.rehash()
-    setSelectedComponent(reviewTab)
-    org.nlogo.awt.EventQueue.invokeLater(() => requestFocus())
+    if (selectReviewTab) {
+      setSelectedComponent(reviewTab)
+      org.nlogo.awt.EventQueue.invokeLater(() => requestFocus())
+    }
   }
 
   def stateChanged(e: javax.swing.event.ChangeEvent) {
