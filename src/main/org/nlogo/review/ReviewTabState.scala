@@ -35,14 +35,25 @@ class ReviewTabState(
 
   def closeCurrentRun() {
     for (run <- currentRun) {
+
+      val runsOfSameModel = _runs.filter(r => r.modelString == run.modelString)
+
+      val (candidates, targetIndex) = {
+        val rs = Option(runsOfSameModel)
+          .filter(_.size > 1)
+          .getOrElse(_runs)
+        (rs.filterNot(_ == run), rs.indexOf(run))
+      }
+
+      val newCurrentRun =
+        candidates
+          .filterNot(_ == run)
+          .lift(targetIndex)
+          .orElse(candidates.lastOption)
+
       val index = _runs.indexOf(run)
       _runs = _runs.filterNot(_ == run)
       fireIntervalRemoved(this, index, index)
-      val sameString = (_: ModelRun).modelString == run.modelString
-      val newCurrentRun = _runs
-        .lift(index) // keep same index if possible
-        .filter(sameString)
-        .orElse(_runs.filter(sameString).lastOption) // or use last (or None if empty)
       setCurrentRun(newCurrentRun, true)
     }
   }
