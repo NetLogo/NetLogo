@@ -123,6 +123,38 @@
       here</a>. In the <i>Advanced</i> tab of the Control Panel add the
       following to the <i>Java Runtime Parameters</i> field:
       &quot;-Xmx1024m&quot;.
+    <h3>
+      <a name="security" id="security"></a> Handling Java applet security requirements
+    </h3>
+    <p>
+      Over time, Java applets have repeatedly become subject to stricter
+      and stricter security measures. As of Java 7u51, applet authors must
+      <a href=
+      "http://www.oracle.com/technetwork/java/javase/tech/java-code-signing-1915323.html">
+      properly sign</a> their applets. If you want to use applets with a
+      modern version of Java, you will need to do one of the following:
+      <ol>
+        <li>Get your applet signed (which essentially requires buying a signing certificate from a certificate authority)</li>
+        <li>Have your applet's URL added as a security exception on the machine attempting to access the applet</li>
+        <li>Lower the Java security settings on the machine attempting to access the applet</li>
+      </ol>
+    <p>
+      None of these options is particularly nice, and option (3) should
+      especially be avoided unless you have a very good reason to employ
+      it. The situation is surely unpleasant and difficult for applet
+      authors, but this is something that's largely out of the NetLogo
+      team's control, since Oracle decide how security works for all Java
+      applets.
+    <p>
+      If you're interested in knowing how to accomplish options (2) or (3),
+      they require making changes through the Java Control Panel on the
+      machine trying to access the applet. Since it varies from system to
+      system, please see <a href=
+      "http://www.java.com/en/download/help/jcp_security.xml">Oracle's
+      documentation</a> for how to open the Java Control Panel, as
+      described in the "Find the Java Control Panel" section. Inside the
+      Java Control Panel, go to the "Security" tab, where you can then
+      adjust the Java security slider or add security exception URLs.
     <h2>
       Features not supported in applets
     </h2>
