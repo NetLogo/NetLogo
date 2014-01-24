@@ -45,8 +45,6 @@ object App{
   private var commandLineMagic: String = null
   private var commandLineURL: String = null
   private var loggingName: String = null
-  
-  private var showReviewTabAtStart = false
 
   /**
    * Should be called once at startup to create the application and
@@ -203,7 +201,6 @@ object App{
         commandLineURL = nextToken()
       }
       else if (token == "--version") printAndExit(Version.version)
-      else if (token == "--review") showReviewTabAtStart = true
       else if (token == "--extension-api-version") printAndExit(APIVersion.version)
       else if (token == "--builddate") printAndExit(Version.buildDate)
       else if (token == "--logging") loggingName = nextToken()
@@ -470,9 +467,11 @@ class App extends
     if(! System.getProperty("os.name").startsWith("Mac")){ org.nlogo.awt.Positioning.center(frame, null) }
 
     FindDialog.init(frame)
-    
-    if (App.showReviewTabAtStart)
-      org.nlogo.awt.EventQueue.invokeLater(() => tabs.showReviewTab(false))
+
+    for {
+      enableReviewTab <- Option(System.getProperty("EnableReviewTab"))
+      if enableReviewTab.toLowerCase == "true"
+    } org.nlogo.awt.EventQueue.invokeLater(() => tabs.showReviewTab(false))
 
     Splash.endSplash()
     frame.setVisible(true)
