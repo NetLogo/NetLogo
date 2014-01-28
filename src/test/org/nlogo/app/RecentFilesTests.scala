@@ -7,21 +7,23 @@ class RecentFilesTests extends FunSuite {
   val rf = new RecentFiles
   val paths = List("/a/x.nlogo", "/b/y.nlogo", "/c/z.nlogo")
 
-  test("empty pref store should yield empty path list") {
-    rf.prefs.put(rf.key, "")
+  def putAndLoad(s: String) {
+    rf.prefs.put(rf.key, s)
     rf.loadFromPrefs()
+  }
+
+  test("empty pref store should yield empty path list") {
+    putAndLoad("")
     assert(rf.paths.size === 0)
   }
 
   test("paths in pref store should get loaded into class") {
-    rf.prefs.put(rf.key, paths.mkString("\n"))
-    rf.loadFromPrefs()
+    putAndLoad(paths.mkString("\n"))
     assert(rf.paths === paths)
   }
 
   test("start empty, add paths one by one") {
-    rf.prefs.put(rf.key, "")
-    rf.loadFromPrefs()
+    putAndLoad("")
     paths.foreach(rf.add)
     assert(rf.paths === paths.reverse)
     assert(rf.prefs.get(rf.key, "") ===
@@ -29,8 +31,7 @@ class RecentFilesTests extends FunSuite {
   }
 
   test("adding already existing path should move it to head") {
-    rf.prefs.put(rf.key, paths.mkString("\n"))
-    rf.loadFromPrefs()
+    putAndLoad(paths.mkString("\n"))
     rf.add(paths.head)
     assert(rf.paths === paths)
     rf.add(paths.last)
@@ -38,8 +39,7 @@ class RecentFilesTests extends FunSuite {
   }
 
   test("calling clear should clear paths and prefs") {
-    rf.prefs.put(rf.key, paths.mkString("\n"))
-    rf.loadFromPrefs()
+    putAndLoad(paths.mkString("\n"))
     assert(rf.paths === paths)
     rf.clear()
     assert(rf.paths === Nil)
@@ -53,17 +53,15 @@ class RecentFilesTests extends FunSuite {
     assert(rf.paths.last === "2")
   }
 
-  test("max entries should be respected when loading from pref store") {
-    rf.prefs.put(rf.key, (rf.maxEntries + 1 to 1 by -1).mkString("\n"))
-    rf.loadFromPrefs()
+  test("max entries should be respected when loading from prefs store") {
+    putAndLoad((rf.maxEntries + 1 to 1 by -1).mkString("\n"))
     assert(rf.paths.size === rf.maxEntries)
     assert(rf.paths.head === (rf.maxEntries + 1).toString)
     assert(rf.paths.last === "2")
   }
 
   test("distinct paths should be respected when loading from prefs store") {
-    rf.prefs.put(rf.key, (paths ++ paths).mkString("\n"))
-    rf.loadFromPrefs()
+    putAndLoad((paths ++ paths).mkString("\n"))
     assert(rf.paths === paths)
   }
 }
