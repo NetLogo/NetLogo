@@ -13,13 +13,17 @@ class RecentFiles {
   val prefs = Preferences.userNodeForPackage(getClass)
   val key = "recent_files"
   val maxEntries = 8
+  val maxEntryLength = 4096
 
   loadFromPrefs()
 
   private var _paths: List[String] = _
   def paths = _paths
   def paths_=(newPaths: List[String]) {
-    _paths = newPaths.distinct.take(maxEntries)
+    _paths = newPaths
+      .filter(_.length <= maxEntryLength)
+      .distinct
+      .take(maxEntries)
     prefs.put(key, _paths.mkString("\n"))
   }
 

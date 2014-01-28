@@ -64,4 +64,21 @@ class RecentFilesTests extends FunSuite {
     putAndLoad((paths ++ paths).mkString("\n"))
     assert(rf.paths === paths)
   }
+  
+  test("max entry length should be < max prefs store value length") {
+    assert(rf.maxEntryLength < java.util.prefs.Preferences.MAX_VALUE_LENGTH)
+  }
+  
+  test("a path with length == maxEntryLength should be accepted") {
+    val longPath = "x" * rf.maxEntryLength
+    putAndLoad(longPath)
+    assert(rf.paths.head === longPath)
+  }
+
+  test("a path with length > maxEntryLength should be refused") {
+    val tooLongPath = "x" * (rf.maxEntryLength + 1)
+    putAndLoad(tooLongPath)
+    assert(rf.paths.isEmpty)
+  }
+
 }
