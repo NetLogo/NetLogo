@@ -46,10 +46,24 @@ class RecentFilesTests extends FunSuite {
     assert(rf.prefs.get(rf.key, "default") === "")
   }
 
-  test("max entries should be respected") {
+  test("max entries should be respected when adding one by one") {
     for (n <- 1 to rf.maxEntries + 1) rf.add(n.toString)
     assert(rf.paths.size === rf.maxEntries)
     assert(rf.paths.head === (rf.maxEntries + 1).toString)
     assert(rf.paths.last === "2")
+  }
+
+  test("max entries should be respected when loading from pref store") {
+    rf.prefs.put(rf.key, (rf.maxEntries + 1 to 1 by -1).mkString("\n"))
+    rf.loadFromPrefs()
+    assert(rf.paths.size === rf.maxEntries)
+    assert(rf.paths.head === (rf.maxEntries + 1).toString)
+    assert(rf.paths.last === "2")
+  }
+
+  test("distinct paths should be respected when loading from prefs store") {
+    rf.prefs.put(rf.key, (paths ++ paths).mkString("\n"))
+    rf.loadFromPrefs()
+    assert(rf.paths === paths)
   }
 }

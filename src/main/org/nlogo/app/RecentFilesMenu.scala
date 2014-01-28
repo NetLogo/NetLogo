@@ -14,22 +14,25 @@ class RecentFiles {
   val key = "recent_files"
   val maxEntries = 8
 
-  private var _paths: List[String] = _
   loadFromPrefs()
+
+  private var _paths: List[String] = _
   def paths = _paths
-
-  def loadFromPrefs() {
-    _paths = prefs.get(key, "").lines.toList
-  }
-
-  def add(path: String) {
-    _paths = (path :: _paths).distinct.take(maxEntries)
+  def paths_=(newPaths: List[String]) {
+    _paths = newPaths.distinct.take(maxEntries)
     prefs.put(key, _paths.mkString("\n"))
   }
 
+  def loadFromPrefs() {
+    paths = prefs.get(key, "").lines.toList
+  }
+
+  def add(path: String) {
+    paths = (path :: _paths)
+  }
+
   def clear() {
-    _paths = Nil
-    prefs.put(key, "")
+    paths = Nil
   }
 }
 
