@@ -34,7 +34,7 @@ class ToolsMenu(app: App) extends org.nlogo.swing.Menu(I18N.gui.get("menu.tools"
   addMenuItem(I18N.gui("hubNetClientEditor"), openHubNetClientEditor _)
   addMenuItem('H', true, app.workspace.hubNetControlCenterAction)
   addSeparator()
-  addMenuItem("Show Review Tab", 'R', true, app.tabs.showReviewTab _)
+  addMenuItem("Show Review Tab", 'R', true, () => app.tabs.showReviewTab(true))
 
   def openColorDialog() {
     if(app.colorDialog == null) {

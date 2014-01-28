@@ -468,6 +468,11 @@ class App extends
 
     FindDialog.init(frame)
 
+    for {
+      enableReviewTab <- Option(System.getProperty("EnableReviewTab"))
+      if enableReviewTab.toLowerCase == "true"
+    } org.nlogo.awt.EventQueue.invokeLater(() => tabs.showReviewTab(false))
+
     Splash.endSplash()
     frame.setVisible(true)
     if(System.getProperty("os.name").startsWith("Mac")){ MacHandlers.ready(this) }
