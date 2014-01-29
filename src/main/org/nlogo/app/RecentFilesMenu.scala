@@ -58,13 +58,22 @@ class RecentFilesMenu(workspace: window.GUIWorkspace, fileMenu: FileMenu)
       }
     })
 
+  private def trimForDisplay(path: String): String = {
+    val maxDisplayLength = 100
+    val prefix = "..."
+    if (path.length > maxDisplayLength)
+      prefix + path.takeRight(maxDisplayLength - prefix.length)
+    else
+      path
+  }
+
   def refreshMenu() {
     removeAll()
     if (recentFiles.paths.isEmpty)
       addMenuItem("<empty>").setEnabled(false)
     else {
       for (path <- recentFiles.paths)
-        addMenuItem(path, () => open(path))
+        addMenuItem(trimForDisplay(path), () => open(path))
       addSeparator()
       addMenuItem("Clear Items", () => {
         recentFiles.clear
