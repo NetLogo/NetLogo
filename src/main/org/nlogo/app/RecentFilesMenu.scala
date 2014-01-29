@@ -13,7 +13,6 @@ class RecentFiles {
   val prefs = Preferences.userNodeForPackage(getClass)
   val key = "recent_files"
   val maxEntries = 8
-  val maxEntryLength = 4096
 
   loadFromPrefs()
 
@@ -21,11 +20,20 @@ class RecentFiles {
   def paths = _paths
   def paths_=(newPaths: List[String]) {
     _paths = newPaths
-      .filter(_.length <= maxEntryLength)
+      .flatMap(toCanonicalPath)
       .distinct
       .take(maxEntries)
     prefs.put(key, _paths.mkString("\n"))
   }
+
+  /**
+   * File.getCanonicalPath does some validation on the path
+   * (without checking if the file actually exists) rejecting,
+   * e.g., paths that are too long. NP 2014-01-29.
+   */
+  private def toCanonicalPath(path: String): Option[String] =
+    try Some(new java.io.File(path).getCanonicalPath())
+    catch { case _ => None }
 
   def loadFromPrefs() {
     paths = prefs.get(key, "").lines.toList

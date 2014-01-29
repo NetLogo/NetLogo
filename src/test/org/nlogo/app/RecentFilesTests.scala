@@ -5,7 +5,9 @@ import org.scalatest.FunSuite
 class RecentFilesTests extends FunSuite {
 
   val rf = new RecentFiles
-  val paths = List("/a/x.nlogo", "/b/y.nlogo", "/c/z.nlogo")
+  val paths = (1 to rf.maxEntries).map(makePath).toList
+  val extraPath = makePath(rf.maxEntries + 1)
+  def makePath(n: Int) = "/" + n + ".nlogo"
 
   def putAndLoad(s: String) {
     rf.prefs.put(rf.key, s)
@@ -47,38 +49,27 @@ class RecentFilesTests extends FunSuite {
   }
 
   test("max entries should be respected when adding one by one") {
-    for (n <- 1 to rf.maxEntries + 1) rf.add(n.toString)
+    (paths :+ extraPath).foreach(rf.add)
     assert(rf.paths.size === rf.maxEntries)
-    assert(rf.paths.head === (rf.maxEntries + 1).toString)
-    assert(rf.paths.last === "2")
+    assert(rf.paths.head === extraPath)
+    assert(rf.paths.last === paths(1))
   }
 
   test("max entries should be respected when loading from prefs store") {
-    putAndLoad((rf.maxEntries + 1 to 1 by -1).mkString("\n"))
+    putAndLoad((paths :+ extraPath).reverse.mkString("\n"))
     assert(rf.paths.size === rf.maxEntries)
-    assert(rf.paths.head === (rf.maxEntries + 1).toString)
-    assert(rf.paths.last === "2")
+    assert(rf.paths.head === extraPath)
+    assert(rf.paths.last === paths(1))
   }
 
   test("distinct paths should be respected when loading from prefs store") {
     putAndLoad((paths ++ paths).mkString("\n"))
     assert(rf.paths === paths)
   }
-  
-  test("max entry length should be < max prefs store value length") {
-    assert(rf.maxEntryLength < java.util.prefs.Preferences.MAX_VALUE_LENGTH)
-  }
-  
-  test("a path with length == maxEntryLength should be accepted") {
-    val longPath = "x" * rf.maxEntryLength
-    putAndLoad(longPath)
-    assert(rf.paths.head === longPath)
-  }
 
-  test("a path with length > maxEntryLength should be refused") {
-    val tooLongPath = "x" * (rf.maxEntryLength + 1)
+  test("a very long path should be refused") {
+    val tooLongPath = "/" + ("x" * 4096) + ".nlogo"
     putAndLoad(tooLongPath)
     assert(rf.paths.isEmpty)
   }
-
 }
