@@ -9,18 +9,18 @@ import org.nlogo.{ core, api, plot },
 
 object WidgetParser {
   sealed trait Widget
-  class Button(val display: String, val left: Integer, val top: Integer, val right: Integer, val bottom: Integer,
-               val source: String, val forever: Boolean) extends Widget
-  class Switch(val display: String, val left: Integer, val top: Integer, val right: Integer, val bottom: Integer,
-               val varName: String) extends Widget
-  class Slider(val display: String, val left: Integer, val top: Integer, val right: Integer, val bottom: Integer,
-               val varName: String, val min: String, val max: String, val default: Float, val step: String) extends Widget
-  class Monitor(val display: String, val left: Integer, val top: Integer, val right: Integer, val bottom: Integer,
-               val source: String, val precision: Integer) extends Widget
-  class Graph(val display: String, val left: Integer, val top: Integer, val right: Integer, val bottom: Integer,
-               val ymin: Float, val ymax: Float, val xmin: Float, val xmax: Float) extends Widget
-  class Output(val left: Integer, val top: Integer, val right: Integer, val bottom: Integer) extends Widget
-  class View(val left: Integer, val top: Integer, val right: Integer, val bottom: Integer) extends Widget
+  case class Button(display: String, left: Integer, top: Integer, right: Integer, bottom: Integer,
+               source: String, forever: Boolean) extends Widget
+  case class Switch(display: String, left: Integer, top: Integer, right: Integer, bottom: Integer,
+               varName: String) extends Widget
+  case class Slider(display: String, left: Integer, top: Integer, right: Integer, bottom: Integer,
+               varName: String, min: String, max: String, default: Float, step: String) extends Widget
+  case class Monitor(display: String, left: Integer, top: Integer, right: Integer, bottom: Integer,
+               source: String, precision: Integer) extends Widget
+  case class Graph(display: String, left: Integer, top: Integer, right: Integer, bottom: Integer,
+               ymin: Float, ymax: Float, xmin: Float, xmax: Float) extends Widget
+  case class Output(left: Integer, top: Integer, right: Integer, bottom: Integer) extends Widget
+  case class View(left: Integer, top: Integer, right: Integer, bottom: Integer) extends Widget
 }
 
 class WidgetParser(
