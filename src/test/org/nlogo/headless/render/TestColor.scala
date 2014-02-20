@@ -6,7 +6,7 @@ package render
 import org.nlogo.shape.VectorShape
 import org.nlogo.shape.TestHelpers._
 
-class TestColorRendering extends AbstractTestRenderer {
+class TestColor extends AbstractTestRenderer {
 
   testUsingWorkspace("non-recolorable shapes dont respond to 'set color' with no alpha"){ workspace: HeadlessWorkspace =>
     workspace.setShapes(makeSquarePolygon(recolorable = false))

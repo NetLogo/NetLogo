@@ -87,7 +87,7 @@ netlogoVersion := {
     .loadClass("org.nlogo.api.Version")
     .getMethod("version")
     .invoke(null).asInstanceOf[String]
-    .replaceFirst("NetLogo ", "")
+    .stripPrefix("NetLogo ")
 }
 
 scalacOptions in (Compile, doc) ++= {
