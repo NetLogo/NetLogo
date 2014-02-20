@@ -7123,6 +7123,9 @@ ask turtles [ set color scale-color red age 0 50 ]
         &quot;myself&quot; means &quot;the agent who asked me to do what
         I'm doing right now.&quot;
       <p>
+        Note that it is always redundant to write <tt>[foo] of self</tt>.
+        This is always equivalent to simply writing <tt>foo</tt>.
+      <p>
         See also <a href="#myself">myself</a>.
       </div>
     <div class="dict_entry">
@@ -8074,6 +8077,11 @@ show sum [energy] of turtles
         Advances the tick counter by <i>number</i>. The input may be an
         integer or a floating point number. (Some models divide ticks more
         finely than by ones.) The input may not be negative.
+      <p>
+        When using <a href="programming.html#updates">tick-based view updates</a>,
+        the view is normally updated every 1.0 ticks, so using <tt>tick-advance</tt> with
+        a number less then 1.0 may not always trigger an update. If you want to
+        make sure that the view is updated, you can use the <tt>display</tt> command.
       <p>
         If the tick counter has not been started yet with
         <tt>reset-ticks</tt>, an error results.
