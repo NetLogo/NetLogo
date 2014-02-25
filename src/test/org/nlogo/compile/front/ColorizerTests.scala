@@ -61,7 +61,7 @@ class ColorizerTests2 extends FunSuite with SlowTest {
   // slow, hence SlowTest
   test("don't blow stack") {
     import org.nlogo.api.FileIO.file2String
-    val path = "models/test/applet/Really Long Code.nls"
+    val path = "models/test/Really Long Code.nls"
     assertResult(1010916)(
       Colorizer.toHtml(file2String(path)).size)
   }
