@@ -49,14 +49,10 @@ object Utils {
           else sampleURL
         }
         else sampleURL
-
-      // UTF-8 is needed directly here because it seems that applets can't be
-      // passed -D params. So, we can't use -Dfile.encoding=UTF-8 like we normally do.
-      // This shouldn't hurt anything.
       reader2String(
         new java.io.InputStreamReader(
           new java.net.URL(massagedURL)
-          .openStream(), "UTF-8"))
+          .openStream()))
     }
   }
 

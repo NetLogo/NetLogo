@@ -315,8 +315,8 @@ public strictfp class ExtensionManager
       folder = new java.io.File("extensions");
       urls.addAll(getAdditionalJars(folder));
 
-      // We use the URLClassLoader.newInstance method because that works with
-      // the applet SecurityManager, even tho newLClassLoader(..) does not.
+      // `URLClassLoader.newInstance` may be allowed by security manager
+      // even if `new URLClassLoader` isn't
       return java.net.URLClassLoader.newInstance
           (urls.toArray(new java.net.URL[urls.size()]), parentLoader);
 

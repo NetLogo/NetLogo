@@ -17,8 +17,8 @@ import java.util.Properties
  * The username of the original post has no name or email associated with it.
  *
  * Adds a path to the java.library.path System property and updates the ClassLoader. Uses reflection
- * to allow update to private system members. Will not work if JVM security policy gets in the way
- * (like in an applet).  Will not work if Sun changes the private members.  This really shouldn't be
+ * to allow update to private system members. Will not work if JVM security manager objects.
+ * Will not work if Sun changes the private members.  This really shouldn't be
  * used at all...
  */
 

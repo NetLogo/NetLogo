@@ -26,14 +26,12 @@ object Version {
   // in a different state. - ST 3/9/06
   def useOptimizer =
     try !java.lang.Boolean.getBoolean("org.nlogo.noOptimizer")
-    // can't check arbitrary properties from applets... - ST 10/4/04, 1/31/05
+    // security manager might prohibit checking arbitrary properties
     catch {
       case _: java.security.AccessControlException =>
         false
     }
 
-  // don't use the generator in the applet because it requires CustomClass loading which is not
-  // allowed in the applet.
   def useGenerator =
     try
       !java.lang.Boolean.getBoolean("org.nlogo.noGenerator") && {
@@ -43,7 +41,9 @@ object Version {
     catch {
       case _: ClassNotFoundException =>
         false
-      // can't check arbitrary properties from applets... - ST 10/4/04, 1/31/05
+      // security manager might prohibit checking arbitrary properties.
+      // if so we're probably not going to be allowed to load classes
+      // on the fly, either. (ideally we'd check for that specifically)
       case _: java.security.AccessControlException =>
         false
     }

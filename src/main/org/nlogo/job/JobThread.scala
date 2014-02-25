@@ -18,7 +18,7 @@ object JobThread {
   // allow override through property
   def stackSize: Int =
     try java.lang.Integer.getInteger("org.nlogo.stackSize", defaultStackSize)
-    // can't check arbitrary properties from applets... - ST 10/4/04, 1/31/05
+    // security manager might prohibit access to properties
     catch {
       case _: java.security.AccessControlException =>
         defaultStackSize
@@ -59,8 +59,7 @@ extends Thread(null, null, "JobThread", JobThread.stackSize * 1024 * 1024) {
     // Sun's Java bug #4515956, though it looks like that was fixed before 1.5 so I don't know.
     // Anyway, I don't think there's any harm in ignoring this exception, since no one else was
     // being affected by it anyway.   ~Forrest (8/11/2009)
-    // ignore ACE because we might get this during applet shutdown on Mac OS X 10.3 ev 12/4/07
-    ignoring(classOf[NullPointerException], classOf[java.security.AccessControlException]) {
+    ignoring(classOf[NullPointerException]) {
       // I don't understand why this line should be necessary, but without it, this method runs
       // very slowly (a noticeable fraction of a second) on Windows.  Or maybe it's not a Windows
       // thing, but a single-CPU thing...? - ST 1/19/05
