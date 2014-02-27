@@ -34,8 +34,9 @@ object I18N {
           Option(netLogoPrefs.get(p, "")).filter(_.nonEmpty)
         }
         catch {
+          // security manager might say no
           case _: java.security.AccessControlException =>
-            None  // we must be in the applet
+            None
         }
       // loads the locale data from the users preferences
       // but only if that locale is available.

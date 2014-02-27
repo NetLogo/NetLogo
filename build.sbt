@@ -10,6 +10,17 @@ ivyLoggingLevel := UpdateLogging.Quiet
 
 logBuffered in testOnly in Test := false
 
+name := "NetLogoHeadless"
+
+organization := "org.nlogo"
+
+licenses += ("GPL-2.0", url("http://opensource.org/licenses/GPL-2.0"))
+
+// Used by the publish-versioned plugin
+isSnapshot := true
+
+version := "5.1.0"
+
 ///
 /// building
 ///
@@ -26,12 +37,12 @@ libraryDependencies ++= Seq(
   "asm" % "asm-all" % "3.3.1"
 )
 
-libraryDependencies ++= Seq(
-  "org.jmock" % "jmock" % "2.5.1"             % "test",
-  "org.jmock" % "jmock-legacy" % "2.5.1"      % "test",
-  "org.jmock" % "jmock-junit4" % "2.5.1"      % "test",
-  "org.scalacheck" %% "scalacheck" % "1.10.1" % "test",
-  "org.scalatest" %% "scalatest" % "2.0"      % "test"
+libraryDependencies in ThisBuild ++= Seq(
+  "org.jmock" % "jmock" % "2.5.1" % "test",
+  "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
+  "org.jmock" % "jmock-junit4" % "2.5.1" % "test",
+  "org.scalacheck" %% "scalacheck" % "1.11.3" % "test",
+  "org.scalatest" %% "scalatest" % "2.1.0-RC3" % "test"
 )
 
 // reflections depends on some extra jars but for some reason we need to
@@ -63,10 +74,6 @@ resourceDirectory in Test := baseDirectory.value / "resources" / "test"
 // don't cross-build for different Scala versions
 crossPaths := false
 
-artifactName := { (_, _, _) => "NetLogoHeadless.jar" }
-
-artifactName in Test := { (_, _, _) => "NetLogoHeadlessTests.jar" }
-
 publishArtifact in Test := true
 
 ///
@@ -80,7 +87,7 @@ netlogoVersion := {
     .loadClass("org.nlogo.api.Version")
     .getMethod("version")
     .invoke(null).asInstanceOf[String]
-    .replaceFirst("NetLogo ", "")
+    .stripPrefix("NetLogo ")
 }
 
 scalacOptions in (Compile, doc) ++= {
@@ -113,5 +120,13 @@ org.scalastyle.sbt.ScalastylePlugin.Settings
 ///
 
 FastMediumSlow.settings
+
+bintrayPublishSettings
+
+PublishVersioned.settings
+
+bintray.Keys.repository in bintray.Keys.bintray := "NetLogoHeadless"
+
+bintray.Keys.bintrayOrganization in bintray.Keys.bintray := Some("netlogo")
 
 Depend.settings
