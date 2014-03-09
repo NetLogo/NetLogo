@@ -2,9 +2,9 @@
 
 @@@DATE@@@
 
-## What's new in this version?
+## Release notes
 
-See the "What's New?" section in the User Manual.
+See our [online release notes](https://github.com/NetLogo/NetLogo/wiki/Release-notes).
 
 ## Upgrading
 
@@ -20,30 +20,38 @@ contains links to NetLogo mailing lists, books, add-ons, and more.
 
 ## How to run
 
-- Windows users: Choose NetLogo from the Start menu.
+### Windows
 
-- Mac users: Double click on the NetLogo icon in the NetLogo
-  folder.  (You may wish to drag this icon to the dock for easy
-  access.)
+Choose NetLogo from the Start menu.
 
-- Other platforms: You may be able to just double-click netlogo.sh in
-  your file manager.  Or, from the command line, typical Unix shell
-  commands would be:
-  $ cd @@@UNIXNAME@@@
-  $ ./netlogo.sh
-  You must have Java 5 or higher installed.
+### Mac OS
+
+Double click on the NetLogo icon in the NetLogo folder.  (You may wish
+to drag this icon to the dock for easy access.)
+
+### Linux et al
+
+You may be able to just double-click `netlogo.sh` in your file manager.
+Or, from the command line, typical Unix shell commands would be:
+
+    $ cd @@@UNIXNAME@@@
+    $ ./netlogo.sh
 
 ## Citing
 
 If you use or refer to NetLogo in a publication, we ask that you cite
-it.  The correct citation is: Wilensky, U. (1999). NetLogo.
-http://ccl.northwestern.edu/netlogo.  Center for Connected Learning
-and Computer-Based Modeling, Northwestern University, Evanston, IL.
+it.  The correct citation is:
 
-For HubNet, cite: Wilensky, U. & Stroup, W., 1999. HubNet.
-http://ccl.northwestern.edu/netlogo/hubnet.html. Center for
-Connected Learning and Computer-Based Modeling, Northwestern
-University. Evanston, IL.
+> Wilensky, U. (1999). NetLogo. http://ccl.northwestern.edu/netlogo.
+> Center for Connected Learning and Computer-Based Modeling,
+> Northwestern University, Evanston, IL.
+
+For HubNet, cite:
+
+> Wilensky, U. & Stroup, W., 1999. HubNet.
+> http://ccl.northwestern.edu/netlogo/hubnet.html. Center
+> for Connected Learning and Computer-Based Modeling, Northwestern
+> University. Evanston, IL.
 
 For models in the Models Library, the correct citation is included in
 the "Credits and References" section of each model's Info tab.
@@ -61,7 +69,7 @@ Brady Fund, and the Northwestern Institute on Complex Systems.
 
 ## License
 
-NetLogo
+NetLogo  
 Copyright (C) 1999-2013 Uri Wilensky
 
 This program is free software; you can redistribute it and/or
@@ -84,9 +92,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 Commercial licenses are also available. To inquire about commercial
 licenses, please contact Uri Wilensky at uri@northwestern.edu .
 
-## License for user manual
+### User Manual license
 
-NetLogo User Manual
+NetLogo User Manual  
 Copyright (C) 1999-2013 Uri Wilensky
 
 This work is licensed under the Creative Commons
@@ -138,13 +146,14 @@ SUCH DAMAGE.
 For random number generation, NetLogo uses the MersenneTwisterFast class
 by Sean Luke.  The copyright for that code is as follows:
 
-Copyright (c) 2003 by Sean Luke.
-Portions copyright (c) 1993 by Michael Lecuyer
+Copyright (c) 2003 by Sean Luke.  
+Portions copyright (c) 1993 by Michael Lecuyer  
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
+
 - Redistributions of source code must retain the above copyright
   notice, this list of conditions and the following disclaimer.
 - Redistributions in binary form must reproduce the above copyright
@@ -375,7 +384,7 @@ redistribute the Software for such purposes.
 For Java bytecode generation, NetLogo uses the ASM library.  It is
 distributed under the following license:
 
-Copyright (c) 2000-2010 INRIA, France Telecom
+Copyright (c) 2000-2010 INRIA, France Telecom  
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -410,11 +419,10 @@ for the library are as follows:
 
 Copyright 2007 The Apache Software Foundation
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
+Licensed under the Apache License, Version 2.0 (the "License"); you
+may not use this file except in compliance with the License.  You may
+obtain a copy of the License at
+http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -427,20 +435,18 @@ limitations under the License.
 For dependency injection, NetLogo uses the PicoContainer library.  The
 copyright and license for the library are as follows:
 
-Copyright (c) 2003-2006, PicoContainer Organization
+Copyright (c) 2003-2006, PicoContainer Organization  
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
 
-  Redistributions of source code must retain the above copyright notice, this
+- Redistributions of source code must retain the above copyright notice, this
   list of conditions and the following disclaimer.
-
-  Redistributions in binary form must reproduce the above copyright notice,
+- Redistributions in binary form must reproduce the above copyright notice,
   this list of conditions and the following disclaimer in the documentation
   and/or other materials provided with the distribution.
-
-  Neither the name of the PicoContainer Organization nor the names of its
+- Neither the name of the PicoContainer Organization nor the names of its
   contributors may be used to endorse or promote products derived from this
   software without specific prior written permission.
 
