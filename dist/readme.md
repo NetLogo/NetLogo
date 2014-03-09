@@ -9,14 +9,15 @@ See our [online release notes](https://github.com/NetLogo/NetLogo/wiki/Release-n
 ## Upgrading
 
 Most models created in earlier versions of NetLogo will work in
-NetLogo @@@VERSION@@@ with only minor updates to the code.  If you
-have trouble, please consult our
+this release with only minor updates to the code.  If you have
+trouble, please consult our
 [Transition Guide](http://ccl.northwestern.edu/netlogo/docs/transition.html).
 
-## Community / getting help
+## Community
 
 Our [resources page](http://ccl.northwestern.edu/netlogo/resources.shtml)
-contains links to NetLogo mailing lists, books, add-ons, and more.
+contains links to NetLogo mailing lists, places to get help, books,
+add-ons, and more.
 
 ## How to run
 
@@ -24,7 +25,7 @@ contains links to NetLogo mailing lists, books, add-ons, and more.
 
 Choose NetLogo from the Start menu.
 
-### Mac OS
+### Mac
 
 Double click on the NetLogo icon in the NetLogo folder.  (You may wish
 to drag this icon to the dock for easy access.)
@@ -90,7 +91,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 ### Commercial licensing
 
 Commercial licenses are also available. To inquire about commercial
-licenses, please contact Uri Wilensky at uri@northwestern.edu .
+licenses, please contact Uri Wilensky at
+[uri@northwestern.edu](mailto:uri@northwestern.edu).
 
 ### User Manual license
 
