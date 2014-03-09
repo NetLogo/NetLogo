@@ -1,18 +1,20 @@
-===
-===  NetLogo @@@VERSION@@@
-===  @@@DATE@@@
-===
+# NetLogo @@@VERSION@@@
+
+@@@DATE@@@
 
 WHAT'S NEW IN THIS VERSION?
+
 See the "What's New?" section in the User Manual.
 
 UPGRADING
+
 Most models created in earlier versions of NetLogo will work in
 NetLogo @@@VERSION@@@ with only minor updates to the code.  If
 you have trouble, please consult
 http://ccl.northwestern.edu/netlogo/docs/transition.html.
 
 COMMUNITY / GETTING HELP
+
 http://ccl.northwestern.edu/netlogo/resources.shtml contains
 links to NetLogo mailing lists, books, add-ons, and more.
 

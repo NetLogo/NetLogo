@@ -167,7 +167,7 @@ cd tmp/netlogo-$COMPRESSEDVERSION
 
 # put most of the files in
 $CP -rp ../../docs .
-$CP -p ../../dist/readme.txt .
+$CP -p ../../dist/readme.md .
 $CP -p ../../dist/netlogo_logging.xml .
 $CP -p ../../NetLogo.jar ../../HubNet.jar .
 $CP ../../NetLogoLite.jar .
@@ -204,9 +204,9 @@ $CP -rp ../../Mathematica-Link Mathematica\ Link
 $RM Mathematica\ Link/JLink.jar
 
 # stuff version number etc. into readme
-$PERL -pi -e "s/\@\@\@VERSION\@\@\@/$VERSION/g" readme.txt
-$PERL -pi -e "s/\@\@\@DATE\@\@\@/$DATE/g" readme.txt
-$PERL -pi -e "s/\@\@\@UNIXNAME\@\@\@/netlogo-$COMPRESSEDVERSION/g" readme.txt
+$PERL -pi -e "s/\@\@\@VERSION\@\@\@/$VERSION/g" readme.md
+$PERL -pi -e "s/\@\@\@DATE\@\@\@/$DATE/g" readme.md
+$PERL -pi -e "s/\@\@\@UNIXNAME\@\@\@/netlogo-$COMPRESSEDVERSION/g" readme.md
 
 # include extensions
 $MKDIR extensions
@@ -412,7 +412,7 @@ $RM -rf lib/Mac\ OS\ X/
 # Mac done. Windows time!
 
 # convert readme to Windows line endings
-$PERL -p -i -e "s/\n/\r\n/g" readme.txt
+$PERL -p -i -e "s/\n/\r\n/g" readme.md
 
 # add Windows-only stuff, remove others
 $CP -r ../../lib/Windows/ lib/Windows
