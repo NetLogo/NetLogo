@@ -2,23 +2,23 @@
 
 @@@DATE@@@
 
-WHAT'S NEW IN THIS VERSION?
+## What's new in this version?
 
 See the "What's New?" section in the User Manual.
 
-UPGRADING
+## Upgrading
 
 Most models created in earlier versions of NetLogo will work in
-NetLogo @@@VERSION@@@ with only minor updates to the code.  If
-you have trouble, please consult
-http://ccl.northwestern.edu/netlogo/docs/transition.html.
+NetLogo @@@VERSION@@@ with only minor updates to the code.  If you
+have trouble, please consult our
+[Transition Guide](http://ccl.northwestern.edu/netlogo/docs/transition.html).
 
-COMMUNITY / GETTING HELP
+## Community / getting help
 
-http://ccl.northwestern.edu/netlogo/resources.shtml contains
-links to NetLogo mailing lists, books, add-ons, and more.
+Our [resources page](http://ccl.northwestern.edu/netlogo/resources.shtml)
+contains links to NetLogo mailing lists, books, add-ons, and more.
 
-HOW TO RUN
+## How to run
 
 - Windows users: Choose NetLogo from the Start menu.
 
@@ -33,7 +33,7 @@ HOW TO RUN
   $ ./netlogo.sh
   You must have Java 5 or higher installed.
 
-CITING
+## Citing
 
 If you use or refer to NetLogo in a publication, we ask that you cite
 it.  The correct citation is: Wilensky, U. (1999). NetLogo.
@@ -48,7 +48,7 @@ University. Evanston, IL.
 For models in the Models Library, the correct citation is included in
 the "Credits and References" section of each model's Info tab.
 
-ACKNOWLEDGMENTS
+## Acknowledgments
 
 The CCL gratefully acknowledges almost two decades of support for our
 NetLogo work. Much of that support came from the National Science
@@ -59,7 +59,7 @@ DRL-RED-9552950, DRL-REC-9632612, and DRL-DRK12-1020101. Additional
 support came from the Spencer Foundation, Texas Instruments, the
 Brady Fund, and the Northwestern Institute on Complex Systems.
 
-===
+## License
 
 NetLogo
 Copyright (C) 1999-2013 Uri Wilensky
@@ -79,12 +79,12 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 02110-1301, USA.
 
-==
+### Commercial licensing
 
 Commercial licenses are also available. To inquire about commercial
 licenses, please contact Uri Wilensky at uri@northwestern.edu .
 
-===
+## License for user manual
 
 NetLogo User Manual
 Copyright (C) 1999-2013 Uri Wilensky
@@ -95,7 +95,9 @@ license, visit http://creativecommons.org/licenses/by-sa/3.0/ or send
 a letter to Creative Commons, 444 Castro Street, Suite 900, Mountain
 View, California, 94041, USA.
 
-===
+## Third party licenses
+
+### Scala
 
 Much of NetLogo is written in the Scala language and uses the
 Scala standard libraries.  The license for Scala is as follows:
@@ -110,16 +112,14 @@ Permission to use, copy, modify, and distribute this software in source
 or binary form for any purpose with or without fee is hereby granted,
 provided that the following conditions are met:
 
-   1. Redistributions of source code must retain the above copyright
-      notice, this list of conditions and the following disclaimer.
-
-   2. Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-
-   3. Neither the name of the EPFL nor the names of its contributors
-      may be used to endorse or promote products derived from this
-      software without specific prior written permission.
+1. Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+3. Neither the name of the EPFL nor the names of its contributors
+   may be used to endorse or promote products derived from this
+   software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
 ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -133,7 +133,7 @@ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
 OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 
-===
+### MersenneTwisterFast
 
 For random number generation, NetLogo uses the MersenneTwisterFast class
 by Sean Luke.  The copyright for that code is as follows:
@@ -167,7 +167,7 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-===
+### Colt
 
 Parts of this software (specifically, the random-gamma primitive) are
 based on code from the Colt library
@@ -183,14 +183,14 @@ supporting documentation.  CERN makes no representations about the
 suitability of this software for any purpose.  It is provided "as is"
 without expressed or implied warranty.
 
-===
+### MRJAdapter
 
 This software uses the MRJ Adapter library, which is Copyright (c)
 2003-2005 Steve Roy <sroy@roydesign.net>.  The library is covered by
 the Artistic License.  MRJ Adapter is available from
 https://mrjadapter.dev.java.net/ .
 
-===
+### Quaqua
 
 This software uses the Quaqua Look and Feel library, which is
 Copyright (c) 2003-2005 Werner Randelshofer,
@@ -200,7 +200,7 @@ General Public License).  This license is available online from
 http://www.gnu.org/copyleft/lesser.html and is also included with
 every download of NetLogo (in the "docs" folder).
 
-===
+### JHotDraw
 
 For the system dynamics modeler, NetLogo uses the JHotDraw library,
 which is Copyright (c) 1996, 1997 by IFA Informatik and Erich Gamma.
@@ -209,7 +209,7 @@ License).  The text of that license is included in the "docs" folder
 which accompanies the NetLogo download, and is also available from
 http://www.gnu.org/copyleft/lesser.html .
 
-===
+### MovieEncoder
 
 For movie-making, NetLogo uses code adapted from
 sim.util.media.MovieEncoder.java by Sean Luke, distributed under the
@@ -267,7 +267,7 @@ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
 THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-===
+### JpegImagesToMovie
 
 For movie-making, NetLogo uses code adapted from
 JpegImagesToMovie.java by Sun Microsystems. The copyright for that
@@ -300,7 +300,7 @@ communications; or in the design, construction, operation or
 maintenance of any nuclear facility. Licensee represents and warrants
 that it will not use or redistribute the Software for such purposes.
 
-===
+### JOGL
 
 For 3D graphics rendering, NetLogo uses JOGL, a Java API for OpenGL.
 For more information about JOGL, see http://jogl.dev.java.net/.
@@ -314,7 +314,6 @@ met:
 
 - Redistribution of source code must retain the above copyright
   notice, this list of conditions and the following disclaimer.
-
 - Redistribution in binary form must reproduce the above copyright
   notice, this list of conditions and the following disclaimer in the
   documentation and/or other materials provided with the distribution.
@@ -340,7 +339,7 @@ You acknowledge that this software is not designed or intended for use
 in the design, construction, operation or maintenance of any nuclear
 facility.
 
-===
+### Matrix3D
 
 For 3D matrix operations, NetLogo uses the Matrix3D class.  It is
 distributed under the following license:
@@ -371,7 +370,7 @@ the design, construction, operation or maintenance of any nuclear
 facility. Licensee represents and warrants that it will not use or
 redistribute the Software for such purposes.
 
-===
+### ASM
 
 For Java bytecode generation, NetLogo uses the ASM library.  It is
 distributed under the following license:
@@ -385,11 +384,9 @@ are met:
 
 1. Redistributions of source code must retain the above copyright
    notice, this list of conditions and the following disclaimer.
-
 2. Redistributions in binary form must reproduce the above copyright
    notice, this list of conditions and the following disclaimer in the
    documentation and/or other materials provided with the distribution.
-
 3. Neither the name of the copyright holders nor the names of its
    contributors may be used to endorse or promote products derived from
    this software without specific prior written permission.
@@ -406,7 +403,7 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
 THE POSSIBILITY OF SUCH DAMAGE.
 
-===
+### Log4j
 
 For logging, NetLogo uses the Log4j library.  The copyright and license
 for the library are as follows:
@@ -417,7 +414,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+  http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -425,7 +422,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-===
+### PicoContainer
 
 For dependency injection, NetLogo uses the PicoContainer library.  The
 copyright and license for the library are as follows:
@@ -459,7 +456,7 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 
-===
+### Pegdown & Parboiled
 
 For the Info tab, NetLogo uses the Pegdown and Parboiled libraries.
 
