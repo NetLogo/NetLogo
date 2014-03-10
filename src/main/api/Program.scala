@@ -45,7 +45,7 @@ case class Program private(
     def seq(xs: Seq[_]) =
       xs.mkString("[", " ", "]")
     def map[K, V](xs: collection.Map[K, V]) =
-      xs.map{case (k, v) => k + " = " + v}
+      xs.map{case (k, v) => s"$k = $v"}
         .mkString("", "\n", "\n")
         .trim
     "globals " + seq(globals) + "\n" +

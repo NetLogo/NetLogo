@@ -31,7 +31,7 @@ class _breedsingular(_breedName: String) extends Reporter {
       if (!breed.contains(turtle))
         throw new EngineException(
           context, this,
-          turtle + " is not a " + world.getBreedSingular(breed))
+          s"$turtle is not a ${world.getBreedSingular(breed)}")
       turtle
     }
   }
