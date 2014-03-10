@@ -42,9 +42,9 @@ public strictfp class FileMenu
     addSeparator();
     addMenuItem('S', new SaveAction());
     addMenuItem('S', true, new SaveAsAction());
-    addMenuItem(new SaveAppletAction());
     addMenuItem(new SaveModelingCommonsAction());
-
+    addSeparator();
+    addMenuItem(new SaveAppletAction());
     addSeparator();
     addMenuItem(I18N.guiJ().get("menu.file.print"), 'P', app.tabs().printAction());
     addSeparator();
@@ -208,6 +208,8 @@ private class SaveModelingCommonsAction extends FileMenuAction {
     }
   }
 
+  private boolean appletWarningIgnored = false;
+
   private class SaveAppletAction extends FileMenuAction {
     SaveAppletAction(String title) {
       super(title);
@@ -222,6 +224,26 @@ private class SaveModelingCommonsAction extends FileMenuAction {
     @Override
     void action()
         throws UserCancelException {
+
+      while(!appletWarningIgnored) {
+        final int choice =
+            org.nlogo.swing.OptionDialog.show
+                (app.workspace().getFrame(),
+                    "Applets Are Deprecated",
+                    "Use of this feature is no longer recommended.",
+                    new String[]{"Why?", "Continue anyway", I18N.guiJ().get("common.buttons.cancel")});
+        if (choice == 1) {
+          break;
+        }
+        if (choice == 2) {
+           throw new UserCancelException();
+        }
+        org.nlogo.swing.BrowserLauncher.openURL
+          (FileMenu.this, "https://github.com/NetLogo/NetLogo/wiki/Applets", false);
+      }
+
+      appletWarningIgnored = true;
+
       // first, force the user to save.
       save();
 
