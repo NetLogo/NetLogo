@@ -4,6 +4,10 @@ scalaVersion := "2.10.3"
 
 mainClass in Compile := Some("org.nlogo.headless.Main")
 
+// show test failures again at end, after all tests complete.
+// T gives truncated stack traces; change to G if you need full.
+testOptions in Test += Tests.Argument("-oT")
+
 onLoadMessage := ""
 
 ivyLoggingLevel := UpdateLogging.Quiet
