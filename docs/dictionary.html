@@ -917,6 +917,9 @@ ask turtle 4 [ rt 90 ]
         ask-concurrent <i>agentset</i> [<i>commands</i>]
       </h4>
       <p>
+         This primitive exists only for backwards compatibility.
+         We don't recommend using it new models.
+      <p>
         The agents in the given agentset run the given commands, using a
         turn-taking mechanism to produce simulated concurrency. See the
         <a href="programming.html#ask-concurrent">Ask-Concurrent</a>
@@ -9043,6 +9046,9 @@ print n-values 10 [random 10]
       <h4>
         without-interruption [ <i>commands</i> ]
       </h4>
+      <p>
+         This primitive exists only for backwards compatibility.
+         We don't recommend using it new models.
       <p>
         The agent runs all the commands in the block without allowing other
         agents using <tt>ask-concurrent</tt> to &quot;interrupt&quot;. That
