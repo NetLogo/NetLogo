@@ -46,7 +46,7 @@ libraryDependencies in ThisBuild ++= Seq(
   "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
   "org.jmock" % "jmock-junit4" % "2.5.1" % "test",
   "org.scalacheck" %% "scalacheck" % "1.11.3" % "test",
-  "org.scalatest" %% "scalatest" % "2.1.0" % "test"
+  "org.scalatest" %% "scalatest" % "2.1.1" % "test"
 )
 
 // reflections depends on some extra jars but for some reason we need to
