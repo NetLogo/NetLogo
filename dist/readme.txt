@@ -12,26 +12,11 @@ NetLogo @@@VERSION@@@ with only minor updates to the code.  If
 you have trouble, please consult
 http://ccl.northwestern.edu/netlogo/docs/transition.html.
 
-MAILING LISTS
-We have three mailing lists for NetLogo:
-- netlogo-announce: occasional release announcements only
-- netlogo-users: discussions about NetLogo
-- netlogo-educators: discussions about teaching with NetLogo
-http://ccl.northwestern.edu/netlogo/ has info on all three.
+COMMUNITY / GETTING HELP
+http://ccl.northwestern.edu/netlogo/resources.shtml contains
+links to NetLogo mailing lists, books, add-ons, and more.
 
-CONTACT US!
-The NetLogo home page is at:
-  http://ccl.northwestern.edu/netlogo/
-for contact information, or to report a bug, visit
-  http://ccl.northwestern.edu/netlogo/contact.shtml
-the source code is hosted here:
-  https://github.com/NetLogo/NetLogo
-development discussion here:
-  http://groups.google.com/group/netlogo-devel
-
-===
-
-HOW TO RUN NETLOGO
+HOW TO RUN
 
 - Windows users: Choose NetLogo from the Start menu.
 
@@ -48,25 +33,7 @@ HOW TO RUN NETLOGO
 
 ===
 
-MANIFEST
-
-The release package for this version of NetLogo includes:
-* "NetLogo" application
-* "NetLogo 3D" application (see 3D section of User Manual)
-* "NetLogo Logging" application (see Logging section of User Manual)
-* "HubNet Client" application
-* "NetLogo.jar","NetLogoHeadless.jar", "netlogo_logging.xml",
-  "lib" internal support files and folder
-* "Docs" folder containing a "NetLogo User Manual" -- complete
-  documentation in HTML and printable PDF formats
-* "Models" folder with several hundred NetLogo models and HubNet
-  activities
-* "Extensions" folder containing support for extra features.
-* "Mathematica Link" folder containing support for the
-  NetLogo-Mathematica link
-* this "readme.txt" file
-
-===
+CITING
 
 If you use or refer to NetLogo in a publication, we ask that you cite
 it.  The correct citation is: Wilensky, U. (1999). NetLogo.
@@ -80,6 +47,8 @@ University. Evanston, IL.
 
 For models in the Models Library, the correct citation is included in
 the "Credits and References" section of each model's Info tab.
+
+ACKNOWLEDGMENTS
 
 The CCL gratefully acknowledges almost two decades of support for our
 NetLogo work. Much of that support came from the National Science
