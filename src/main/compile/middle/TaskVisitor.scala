@@ -6,7 +6,7 @@ package middle
 import org.nlogo.{ api, nvm, prim },
   Fail._
 
-private class TaskVisitor extends DefaultAstVisitor {
+class TaskVisitor extends DefaultAstVisitor {
   private var task = Option.empty[prim._reportertask]
   private var procedure = Option.empty[nvm.Procedure]
   override def visitProcedureDefinition(procdef: ProcedureDefinition) {

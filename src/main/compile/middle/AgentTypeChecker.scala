@@ -69,7 +69,7 @@ import org.nlogo.nvm.{ Instruction, Procedure }
 import org.nlogo.prim.{ _call, _callreport, _task }
 import Fail._
 
-private class AgentTypeChecker(defs: Seq[ProcedureDefinition]) {
+class AgentTypeChecker(defs: Seq[ProcedureDefinition]) {
 
   def check() {
     def usables = defs.map(_.procedure.agentClassString).toList
