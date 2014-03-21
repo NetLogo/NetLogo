@@ -704,10 +704,6 @@ ask turtles [ set color red ]
 </pre>
     <p>
       first all the turtles move, then they all turn red.
-    <p>
-      (Another form of the <a href="dictionary.html#ask"><tt>ask</tt></a>
-      command, with a different ordering rule, is also available. See
-      <a href="#ask-concurrent">Ask-Concurrent</a> below.)
     <h2>
       <a name="agentsets" id="agentsets">Agentsets</a>
     </h2>
@@ -3179,6 +3175,10 @@ foreach [1 2 3 4] [ print ? ]
       <a name="ask-concurrent" id="ask-concurrent">Ask-Concurrent</a>
     </h2>
     <p>
+      <b>NOTE:</b> The following information is included only for backwards compatibility.
+      We don't recommend using the <tt>ask-concurrent</tt> primitive
+      at all in new models.
+    <p>
       In very old versions of NetLogo, <a href=
       "dictionary.html#ask"><tt>ask</tt></a> was concurrent by default.
       Since NetLogo 4.0 (2007), <a href=
@@ -3284,11 +3284,12 @@ while [any? turtles with [steps &gt; 0]] [
       same version of NetLogo and begin your model run with the same random
       seed).
     <p>
-      In general, we suggest you write your model so that it does not
-      depend on the exact details of how <a href=
-      "dictionary.html#ask-concurrent"><tt>ask-concurrent</tt></a> works.
+      In general, we suggest you not use <tt>ask-concurrent</tt> at all.
+      If you do, we suggest you write your model so that it does not
+      depend on the exact details of how  <tt>ask-concurrent</tt> works.
       We make no guarantees that its semantics will remain the same in
-      future versions of NetLogo.
+      future versions of NetLogo, or that it will continue to be supported
+      at all.
     <h2>
       <a name="tie" id="tie">Tie</a>
     </h2>
