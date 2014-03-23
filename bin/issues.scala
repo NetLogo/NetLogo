@@ -50,7 +50,7 @@ val host = :/("api.github.com").secure
 val base = host / "repos" / "NetLogo" / "NetLogo" / "issues"
 
 def getIssues(state: String): List[Issue] = {
-  val req = base <<? Map("milestone" -> "16",
+  val req = base <<? Map("milestone" -> "18",
                          "state" -> state,
                          "per_page" -> "1000")
   // println(req.build.getRawUrl)  useful for debugging
