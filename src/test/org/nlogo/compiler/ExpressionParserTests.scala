@@ -290,6 +290,21 @@ class ExpressionParserTests extends FunSuite {
       "CommandBlock '[ ]' " +
       "Statements '' ")
   }
+  test("testStartAndEndPositions10") {
+    testStartAndEnd("ask turtles with [color = red ] [ fd 1 ]",
+      "Statements 'ask turtles with [color = red ] [ fd 1 ]' " +
+      "Statement 'ask turtles with [color = red ] [ fd 1 ]' " +
+      "ReporterApp 'turtles with [color = red ]' " +
+      "ReporterApp 'turtles' " +
+      "ReporterBlock '[color = red ]' " +
+      "ReporterApp 'color = red' " +
+      "ReporterApp 'color' " +
+      "ReporterApp 'red' " +
+      "CommandBlock '[ fd 1 ]' " +
+      "Statements 'fd 1' " +
+      "Statement 'fd 1' " +
+      "ReporterApp '1' ")
+  }
   // issue #417 (source positions for literal lists)
   test("literal list") {
     testStartAndEnd("print [1 2 3]",
