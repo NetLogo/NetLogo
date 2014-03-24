@@ -1,4 +1,5 @@
-#!/usr/bin/env scalas
+#!/bin/sh
+exec scalas "$0" "$@"
 !#
 
 // This generates Markdown suitable for pasting into
@@ -19,15 +20,16 @@
 //         wait at least a few minutes for it to try downloading the dependencies before panicking!
 
 /***
-scalaVersion := "2.9.3"
+scalaVersion := "2.10.3"
 
 onLoadMessage := ""
 
-scalacOptions ++= Seq("-deprecation", "-unchecked", "-Xfatal-warnings")
+scalacOptions ++= Seq(
+  "-deprecation", "-unchecked", "-feature", "-Xfatal-warnings")
 
 libraryDependencies ++= Seq(
   "net.databinder.dispatch" %% "dispatch-core" % "0.11.0",
-  "org.json4s" %% "json4s-native" % "3.2.7",
+  "net.databinder.dispatch" %% "dispatch-json4s-native" % "0.11.0",
   "org.slf4j" % "slf4j-nop" % "1.7.6")
 */
 
@@ -53,9 +55,10 @@ def getIssues(state: String): List[Issue] = {
   val req = base <<? Map("milestone" -> "18",
                          "state" -> state,
                          "per_page" -> "1000")
-  // println(req.build.getRawUrl)  useful for debugging
-  val stream = Http(req OK as.Response(_.getResponseBodyAsStream)).apply
-  val JArray(array) = JsonParser.parse(new java.io.InputStreamReader(stream))
+  // println(req.build.getRawUrl)  // useful for debugging
+  val response = Http(req OK as.json4s.Json)
+  import concurrent.Await, concurrent.duration._
+  val JArray(array) = Await.result(response, 30.seconds)
   for (item <- array)
   yield Issue.fromJson(item)
 }
