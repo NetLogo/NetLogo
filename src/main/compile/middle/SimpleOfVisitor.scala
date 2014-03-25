@@ -12,7 +12,7 @@ import org.nlogo.{ prim, nvm }
  */
 // This could be done in Optimizer instead, but this code is nice and simple and we already have it,
 // so why not keep it? - ST 2/8/09
-private class SimpleOfVisitor extends DefaultAstVisitor {
+class SimpleOfVisitor extends DefaultAstVisitor {
   override def visitReporterApp(app: ReporterApp) {
     if(app.reporter.isInstanceOf[prim._of])
       process(app)

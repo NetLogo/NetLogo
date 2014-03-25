@@ -4,6 +4,10 @@ scalaVersion := "2.10.4-RC3"
 
 mainClass in Compile := Some("org.nlogo.headless.Main")
 
+// show test failures again at end, after all tests complete.
+// T gives truncated stack traces; change to G if you need full.
+testOptions in Test += Tests.Argument("-oT")
+
 onLoadMessage := ""
 
 ivyLoggingLevel := UpdateLogging.Quiet
@@ -42,7 +46,7 @@ libraryDependencies in ThisBuild ++= Seq(
   "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
   "org.jmock" % "jmock-junit4" % "2.5.1" % "test",
   "org.scalacheck" %% "scalacheck" % "1.11.3" % "test",
-  "org.scalatest" %% "scalatest" % "2.1.0-RC3" % "test"
+  "org.scalatest" %% "scalatest" % "2.1.1" % "test"
 )
 
 // reflections depends on some extra jars but for some reason we need to

@@ -12,7 +12,7 @@ import Fail._
  * their enclosing "carefully" commands.
  */
 
-private class CarefullyVisitor extends DefaultAstVisitor {
+class CarefullyVisitor extends DefaultAstVisitor {
   private val stack = new collection.mutable.Stack[_carefully]
   override def visitStatement(stmt: Statement) {
     stmt.command match {

@@ -74,3 +74,17 @@ DeadTurtles9
   O> ask turtle 5 [ die ]
   turtle 5 => nobody
   count glob1 => 9
+
+DeadTurtles10
+  globals [g]
+  O> crt 1 [ set g self ]
+  (word g) => "(turtle 0)"
+  T> die
+  (word g) => "nobody"
+
+DeadLinks1
+  globals [g]
+  O> cro 2 [ create-links-with other turtles [ set g self ] ]
+  (word g) => "(link 0 1)"
+  L> die
+  (word g) => "nobody"

@@ -1,16 +1,8 @@
+jdk: oraclejdk7
 language: scala
-scala: 2.10.4-RC3
 before_install:
   - git submodule update --init --recursive
 install:
   - sbt update
 script:
   - ./nightly.sh
-
-notifications:
-  irc:
-    channels:
-      - "irc.freenode.org#netlogo"
-    skip_join: true
-    template:
-      - "\x0313NetLogo\x03/\x0306%{branch}\x03 \x0314%{commit}\x03 %{build_url} %{message}"

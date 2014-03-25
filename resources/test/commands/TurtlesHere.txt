@@ -29,6 +29,41 @@ TurtlesHere2
   O> crt 1 [ ask turtles-here [ set label "foo" ] ]
   [label] of turtle 0 => "foo"
 
+TurtlesHereCheckOrder1
+  O> random-seed 70000
+  O> crt 10
+  [[who] of turtles-here] of turtle 0 => [6 5 4 7 9 8 0 3 2 1]
+
+TurtlesHereCheckOrder2
+  O> random-seed 20154
+  O> crt 20
+  [[who] of turtles-here] of turtle 7 => [8 7 0 12 2 10 13 15 1 5 17 9 14 4 19 3 11 18 6 16]
+
+TurtlesHereCheckOrder3
+  globals [glob1]
+  O> set glob1 []
+  O> random-seed 70000
+  O> crt 10
+  O> ask turtle 0 [ ask turtles-here [ set glob1 (lput who glob1) ] ]
+  glob1 => [6 5 4 7 9 8 0 3 2 1]
+
+TurtlesHereCheckOrder4
+  O> random-seed 70000
+  O> crt 10
+  [who] of [turtles-here] of turtle 0 => [6 5 4 7 9 8 0 3 2 1]
+
+TurtlesHereCheckOrder5
+  O> random-seed 70000
+  O> repeat 10 [ crt 1 ]
+  [[who] of turtles-here] of turtle 0 => [6 5 4 7 9 8 0 3 2 1]
+
+TurtlesHereInVariable
+  globals [glob1]
+  O> crt 1 [ set glob1 turtles-here ]
+  count glob1 => 1
+  O> crt 1
+  count glob1 => 1
+
 PatchDoesOtherTurtlesHere
   globals [glob1]
   O> create-turtles 1 [ set glob1 patch-here ]

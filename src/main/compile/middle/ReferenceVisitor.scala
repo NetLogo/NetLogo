@@ -5,7 +5,7 @@ package middle
 
 import org.nlogo.{ api, prim }
 
-private class ReferenceVisitor extends DefaultAstVisitor {
+class ReferenceVisitor extends DefaultAstVisitor {
   override def visitStatement(stmt: Statement) {
     super.visitStatement(stmt)
     val index = stmt.command.syntax.right.indexWhere(_ == api.Syntax.ReferenceType)

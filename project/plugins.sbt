@@ -15,7 +15,7 @@ libraryDependencies +=
   "classycle" % "classycle" % "1.4.1" from
     "http://ccl.northwestern.edu/devel/classycle-1.4.1.jar"
 
-addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "0.3.2")
+addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "0.4.0")
 
 addSbtPlugin("org.ensime" % "ensime-sbt-cmd" % "0.1.2")
 

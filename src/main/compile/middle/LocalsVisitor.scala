@@ -18,7 +18,7 @@ import Fail._
  * We also do the same thing with "repeat", which by default uses the "let" mechanism, but must be
  * changed to use the "locals" mechanism when used outside "ask". */
 
-private class LocalsVisitor(alteredLets: collection.mutable.Map[Procedure, collection.mutable.Map[Let, Int]])
+class LocalsVisitor(alteredLets: collection.mutable.Map[Procedure, collection.mutable.Map[Let, Int]])
 extends DefaultAstVisitor {
 
   private var procedure: Procedure = null

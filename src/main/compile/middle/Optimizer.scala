@@ -10,7 +10,7 @@ import org.nlogo.prim._
 
 // "asInstanceOf" is everywhere here. Could I make it more type-safe? - ST 1/28/09
 
-private object Optimizer extends DefaultAstVisitor {
+object Optimizer extends DefaultAstVisitor {
 
   override def visitStatement(stmt: Statement) {
     super.visitStatement(stmt)
