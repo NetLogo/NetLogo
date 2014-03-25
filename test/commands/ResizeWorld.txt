@@ -43,7 +43,7 @@ ResizeWorldBreedsEmptied_2D
 # not clear if this is a bug or a feature. I guess feature since you
 # can always do `clear-turtles` if you want the other behavior?
 # Note that this behavior changes between gui and headless. See #563
-ResizeWorldDoesntRestartWhoNumbering
+ResizeWorldDoesntRestartWhoNumbering_2D
   O> crt 1
   sort [who] of turtles => [0]
   O> resize-world 0 0 0 0
