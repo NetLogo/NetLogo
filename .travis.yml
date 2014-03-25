@@ -5,4 +5,9 @@ before_install:
 install:
   - sbt update
 script:
-  - ./nightly.sh
+- ./nightly.sh
+
+notifications:
+  hipchat:
+    rooms:
+      secure: "HMQGjxdbYDteMXt+DnxSFEhy08v9i8SgJ3Suctj1+vJK2tXeAnZY1SpKpTX3d5/Umc8elfyrr9deWKAB0p1eY3Iu60u+BXou9RiS6WrPj4CYYuwQKBMYmvnKWayJPe1E8iB8F5HKywzpoKQsnigd4TZox7N9xzUxEpGJr7vK9sY="
