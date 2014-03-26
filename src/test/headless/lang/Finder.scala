@@ -7,6 +7,8 @@ import java.io.File
 import org.nlogo.api.FileIO.file2String
 import org.scalatest.{ FunSuite, Tag }
 import org.nlogo.api
+import org.nlogo.api.model
+import org.nlogo.api.model.Model
 import org.nlogo.util.SlowTest
 
 /// top level entry points
@@ -86,13 +88,10 @@ trait Finder extends FunSuite with SlowTest {
     withFixture(s"${t.fullName} ($mode)") {
       fixture =>
         val nonDecls = t.entries.filterNot(_.isInstanceOf[Declaration])
-        val decls =
-          t.entries.collect{case d: Declaration => d.source}
-            .mkString("\n").trim
+        val decls = t.entries.collect{case d: Declaration => d.source}
         if (nonDecls.forall(!_.isInstanceOf[Open]))
-          fixture.open(ModelCreator.Model(
-            code = decls,
-            dimensions = fixture.defaultDimensions,
+          fixture.open(new Model(
+            code = decls.mkString("\n"),
             widgets = StandardWidgets))
         else
           assert(t.entries.forall(!_.isInstanceOf[Declaration]))
@@ -125,9 +124,10 @@ trait Finder extends FunSuite with SlowTest {
       else true
     }
   val StandardWidgets = {
-    import ModelCreator.{ Plot, Pens, Pen }
+    import model.{ Plot, Pens, Pen, View }
     List(
-      Plot(name = "plot1", pens = Pens(Pen(name = "pen1"), Pen(name = "pen2"))),
-      Plot(name = "plot2", pens = Pens(Pen(name = "pen1"), Pen(name = "pen2"))))
+      View(),
+      Plot(display = "plot1", pens = Pens(List(Pen(display = "pen1"), Pen(display = "pen2")))),
+      Plot(display = "plot2", pens = Pens(List(Pen(display = "pen1"), Pen(display = "pen2")))))
   }
 }

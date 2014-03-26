@@ -7,6 +7,8 @@ import org.nlogo.api.Resource.getResourceAsString
 import org.nlogo.workspace, workspace.AbstractWorkspace.setHeadlessProperty
 
 object Shell extends workspace.Shell {
+  val modelSuffix = "nlogo"
+  val emptyModelPath = "/system/empty." + modelSuffix
 
   def main(argv: Array[String]) {
     setHeadlessProperty()
@@ -14,9 +16,7 @@ object Shell extends workspace.Shell {
     val workspace = HeadlessWorkspace.newInstance
     argv.headOption match {
       case None =>
-        workspace.openString(
-          getResourceAsString(
-            ModelReader.emptyModelPath))
+        workspace.open(emptyModelPath)
       case Some(path) =>
         workspace.open(path)
     }

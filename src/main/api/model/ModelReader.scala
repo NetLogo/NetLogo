@@ -1,9 +1,10 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.api
+package org.nlogo.api.model
 
 import org.nlogo.api.Resource.getResourceLines
 
+/*
 object ModelReader {
 
   val modelSuffix = "nlogo"
@@ -84,4 +85,4 @@ object ModelReader {
     loop(Vector(), s).mkString
   }
 
-}
+}*/

@@ -1,23 +1,11 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.api
+package org.nlogo.api.model
 
+/*
 abstract sealed trait ModelSection
 
 object ModelSection {
-  case object Code extends ModelSection
-  case object Interface extends ModelSection
-  case object Info extends ModelSection
-  case object TurtleShapes extends ModelSection
-  case object Version extends ModelSection
-  case object PreviewCommands extends ModelSection
-  case object SystemDynamics extends ModelSection
-  case object BehaviorSpace extends ModelSection
-  case object HubNetClient extends ModelSection
-  case object LinkShapes extends ModelSection
-  case object ModelSettings extends ModelSection
-  case object DeltaTick extends ModelSection
-
   def allSections =
     Seq(Code, Interface, Info, TurtleShapes, Version, PreviewCommands, SystemDynamics,
         BehaviorSpace, HubNetClient, LinkShapes, ModelSettings, DeltaTick)
@@ -40,4 +28,4 @@ object ModelSectionJ {
   val LINK_SHAPES = LinkShapes
   val MODEL_SETTINGS = ModelSettings
   val DELTA_TICK = DeltaTick
-}
+}*/

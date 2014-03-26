@@ -41,14 +41,14 @@ trait TestUsingWorkspace extends MockSuite {
     val workspace: HeadlessWorkspace = HeadlessWorkspace.newInstance
     workspace.silent = true
     try {
-      ModelCreator.open(workspace, core.WorldDimensions.square(radius))
+      workspace.openModel(api.model.Model())
       workspace.changeTopology(worldType.xWrap, worldType.yWrap)
       workspace.world.turtleShapeList.replaceShapes(
         VectorShape.parseShapes(
-          api.ModelReader.defaultShapes.toArray, api.Version.version))
+          api.model.Model.defaultShapes.toArray, api.Version.version))
       workspace.world.linkShapeList.replaceShapes(
         LinkShape.parseShapes(
-          api.ModelReader.defaultLinkShapes.toArray, api.Version.version))
+          api.model.Model.defaultLinkShapes.toArray, api.Version.version))
       f(workspace)
     }
     finally workspace.dispose()

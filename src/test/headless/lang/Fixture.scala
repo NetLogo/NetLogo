@@ -4,7 +4,8 @@ package org.nlogo.headless
 package lang
 
 import org.scalatest, scalatest.Assertions
-import org.nlogo.{ api, core, agent }
+import org.nlogo.{ api, agent }
+import org.nlogo.api.model.Model
 import api.CompilerException.{RuntimeErrorAtCompileTimePrefix => runtimePrefix}
 import org.nlogo.nvm.CompilerInterface
 import org.nlogo.api.Femto
@@ -32,7 +33,7 @@ trait AbstractFixture {
   def defaultDimensions: core.WorldDimensions
   def declare(source: String, dimensions: core.WorldDimensions = defaultDimensions)
   def open(path: String)
-  def open(model: ModelCreator.Model)
+  def open(model: Model)
   def runCommand(command: Command, mode: TestMode)
   def runReporter(reporter: Reporter, mode: TestMode)
   def readFromString(literal: String): AnyRef
@@ -41,13 +42,13 @@ trait AbstractFixture {
     // as values and as printed representations.  Most of the time these checks will come out
     // the same, but it might be good to have both, partially as a way of giving both Equality and
     // Dump lots of testing! - ST 5/8/03, 8/21/13
-    withClue(s"""$mode: not equals(): reporter "$reporter"""") {
+    withClue(s"""$mode: not equals(): reporter "$reporter" """) {
       assertResult(expectedResult)(
         api.Dump.logoObject(actualResult, true, false))
     }
     assert(api.Equality.equals(actualResult,
       readFromString(expectedResult)),
-      s"""$mode: not recursivelyEqual(): reporter "$reporter"""")
+      s"""$mode: not recursivelyEqual(): reporter "$reporter" """)
   }
 }
 
@@ -78,10 +79,8 @@ class Fixture(name: String) extends AbstractFixture {
 
   def defaultDimensions = core.WorldDimensions.square(5)
 
-  def declare(source: String, dimensions: core.WorldDimensions = defaultDimensions) {
-    ModelCreator.open(workspace,
-      dimensions = dimensions,
-      source = source)
+  def declare(source: String, dimensions: api.WorldDimensions = defaultDimensions) {
+    workspace.openModel(Model(code = source))
   }
 
   def readFromString(literal: String): AnyRef =
@@ -167,7 +166,7 @@ class Fixture(name: String) extends AbstractFixture {
   // more convenience
   def open(path: String) =
     workspace.open(path)
-  def open(model: ModelCreator.Model) =
-    workspace.openString(model.toString)
+  def open(model: Model) =
+    workspace.openModel(model)
 
 }

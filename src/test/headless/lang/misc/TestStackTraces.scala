@@ -24,9 +24,8 @@ its ok that these tests don't run in 'run' mode because we are only testing
 the stack traces, not the results.
  */
 
-import org.nlogo.api, api.LogoException
+import org.nlogo.api, api.LogoException, api.model.{Model, Plot, Pens, Pen}
 import org.scalatest.FunSuite
-import ModelCreator._
 
 class TestStackTraces extends FixtureSuite {
 
@@ -66,22 +65,22 @@ class TestStackTraces extends FixtureSuite {
   case object PlotSetup extends CodeType {
     val procName = "plot 'p' setup code"
     def plot(code: String) =
-      Plot(name = "p", pens = Pens(Pen(name = "pp")), setupCode = code)
+      Plot(display = "p", pens = Pens(List(Pen(display = "pp"))), setupCode = code)
   }
   case object PlotUpdate extends CodeType {
     val procName = "plot 'p' update code"
     def plot(code: String) =
-      Plot(name = "p", pens = Pens(Pen(name = "pp")), updateCode = code)
+      Plot(display = "p", pens = Pens(List(Pen(display = "pp"))), updateCode = code)
   }
   case object PenSetup extends CodeType {
     val procName = "plot 'p' pen 'pp' setup code"
     def plot(code: String) =
-      Plot(name = "p", pens = Pens(Pen(name = "pp", setupCode = code)))
+      Plot(display = "p", pens = Pens(List(Pen(display = "pp", setupCode = code))))
   }
   case object PenUpdate extends CodeType {
     val procName = "plot 'p' pen 'pp' update code"
     def plot(code: String) =
-      Plot(name = "p", pens = Pens(Pen(name = "pp", updateCode = code)))
+      Plot(display = "p", pens = Pens(List(Pen(display = "pp", updateCode = code))))
   }
 
   def trace(implicit fixture: Fixture) =

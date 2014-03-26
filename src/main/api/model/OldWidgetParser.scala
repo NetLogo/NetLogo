@@ -1,13 +1,14 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.workspace
+package org.nlogo.api.model
 
 import org.nlogo.{ core, api, plot },
   api.ModelReader,
   core.StringEscaper.escapeString,
   plot.PlotLoader
 
-object WidgetParser {
+/*
+object OldWidgetParser {
   sealed trait Widget
   case class Button(display: String, left: Integer, top: Integer, right: Integer, bottom: Integer,
                source: String, forever: Boolean) extends Widget
@@ -23,7 +24,7 @@ object WidgetParser {
   case class View(left: Integer, top: Integer, right: Integer, bottom: Integer) extends Widget
 }
 
-class WidgetParser(
+class OldWidgetParser(
   parser: api.ParserServices,
   worldLoader: Option[WorldLoaderInterface] = None,
   plotManager: Option[plot.PlotManagerInterface] = None,
@@ -147,4 +148,4 @@ class WidgetParser(
 
   }
 
-}
+}*/

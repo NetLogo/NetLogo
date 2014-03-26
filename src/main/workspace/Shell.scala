@@ -5,7 +5,6 @@ package org.nlogo.workspace
 import java.io.{ BufferedReader, InputStreamReader }
 
 abstract class Shell {
-
   val input: Iterator[String] = {
     val reader = new BufferedReader(new InputStreamReader(System.in))
     Iterator.continually(reader.readLine())

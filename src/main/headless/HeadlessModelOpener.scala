@@ -4,14 +4,14 @@ package org.nlogo.headless
 
 import org.nlogo.workspace
 import org.nlogo.agent.{BooleanConstraint, ChooserConstraint, InputBoxConstraint, NumericConstraint}
-import org.nlogo.api.{CompilerException, FileIO, LogoList,
-                      ModelReader, ModelSection, Program, ValueConstraint, Version}
+import org.nlogo.api.{CompilerException, FileIO, LogoList, Program, ValueConstraint, Version}
+import org.nlogo.api.model.{Model, ModelReader, Widget}
+
 import org.nlogo.shape.{LinkShape, VectorShape}
 
 object HeadlessModelOpener {
   def protocolSection(path: String) =
-    ModelReader.parseModel(FileIO.file2String(path))(
-      ModelSection.BehaviorSpace).mkString("", "\n", "\n")
+    ModelReader.parseModel(FileIO.file2String(path)).behaviorSpace.mkString("", "\n", "\n")
 }
 
 // this class is an abomination
@@ -19,25 +19,41 @@ object HeadlessModelOpener {
 // but not only that, some of the internals of this class work off side effects as well
 // when they don't have to. - JC 10/27/09
 class HeadlessModelOpener(ws: HeadlessWorkspace) {
+  def stripLines(st: String): String =
+    st.flatMap{
+      case '\n' => "\\n"
+      case '\\' => "\\\\"
+      case '\"' => "\\\""
+      case c => c.toString
+    }
 
-  def openFromMap(map: ModelReader.ModelMap) {
+  def openFromModel(model: Model) {
+
 
     require(!ws.modelOpened, "HeadlessWorkspace can only open one model")
     ws.setModelOpened()
 
     // get out if unknown version
-    val netLogoVersion = map(ModelSection.Version).head
+    val netLogoVersion = model.version
     if (!Version.knownVersion(netLogoVersion))
       throw new IllegalStateException("unknown NetLogo version: " + netLogoVersion)
 
     // parse all the widgets in the WIDGETS section
-    val (interfaceGlobals, constraints, buttonCode, monitorCode, interfaceGlobalCommands, _) =
-      new workspace.WidgetParser(ws, Some(ws), Some(ws.plotManager), ws.compilerTestingMode)
-        .parseWidgets(map(ModelSection.Interface), netLogoVersion)
+
+    val interfaceGlobals = new collection.mutable.ArrayBuffer[String]
+    val widgets = new collection.mutable.ArrayBuffer[Widget]
+    val constraints = new collection.mutable.HashMap[String, List[String]]
+    val buttonCode = new collection.mutable.ArrayBuffer[String] // for TestCompileAll
+    val monitorCode = new collection.mutable.ArrayBuffer[String] // for TestCompileAll
+    val interfaceGlobalCommands = new StringBuilder
+
+//    val (interfaceGlobals, constraints, buttonCode, monitorCode, interfaceGlobalCommands, _) =
+//      new workspace.WidgetParser(ws, Some(ws), Some(ws.plotManager), ws.compilerTestingMode)
+//        .parseWidgets(map(ModelSection.Interface), netLogoVersion)
 
     // read procedures, compile them.
     val results = {
-      val code = map(ModelSection.Code).mkString("", "\n", "\n")
+      val code = model.code.mkString("", "\n", "\n")
       ws.compiler.compileProgram(
         code, Program.empty.copy(
           interfaceGlobals = interfaceGlobals),
@@ -48,12 +64,12 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
 
     // read preview commands. (if the model doesn't specify preview commands, allow the default ones
     // from our superclass to stand)
-    val previewCommands = map(ModelSection.PreviewCommands).mkString("", "\n", "\n")
+    val previewCommands = model.previewCommands.mkString("", "\n", "\n")
     if (!previewCommands.trim.isEmpty) ws.previewCommands = previewCommands
 
     // parse turtle and link shapes, updating the workspace.
-    parseShapes(map(ModelSection.TurtleShapes).toArray,
-                map(ModelSection.LinkShapes).toArray,
+    parseShapes(model.turtleShapes.toArray,
+                model.linkShapes.toArray,
                 netLogoVersion)
 
     ws.init()
@@ -63,7 +79,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     if (ws.compilerTestingMode)
       testCompileWidgets(results.program, netLogoVersion, buttonCode.toList, monitorCode.toList)
     else
-      finish(Map() ++ constraints, results.program, interfaceGlobalCommands)
+      finish(Map() ++ constraints, results.program, interfaceGlobalCommands.toString)
   }
 
 
@@ -110,7 +126,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
       try ws.compileCommands(widgetSource)
       catch {
         case ex: CompilerException =>
-          println("compiling: \"" + ModelReader.stripLines(widgetSource) + "\"")
+          println("compiling: \"" + stripLines(widgetSource) + "\"")
           throw ex
       }
   }
