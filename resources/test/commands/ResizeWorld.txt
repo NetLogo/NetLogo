@@ -21,3 +21,14 @@ ResizeWorldBreedsEmptied
   count mice => 5
   O> resize-world 0 0 0 0
   count mice => 0
+
+# not clear if this is a bug or a feature. I guess feature since you
+# can always do `clear-turtles` if you want the other behavior?
+# Note that this behavior changes between gui and headless. See #563
+ResizeWorldDoesntRestartWhoNumbering
+  O> crt 1
+  sort [who] of turtles => [0]
+  O> resize-world 0 0 0 0
+  sort [who] of turtles => []
+  O> crt 1
+  sort [who] of turtles => [1]

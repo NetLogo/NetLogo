@@ -221,6 +221,22 @@ class ExpressionParserTests extends FunSuite {
       "Statements '' ")
   }
 
+  test("testStartAndEndPositions10") {
+    testStartAndEnd("ask turtles with [color = red ] [ fd 1 ]",
+      "Statements 'ask turtles with [color = red ] [ fd 1 ]' " +
+      "Statement 'ask turtles with [color = red ] [ fd 1 ]' " +
+      "ReporterApp 'turtles with [color = red ]' " +
+      "ReporterApp 'turtles' " +
+      "ReporterBlock '[color = red ]' " +
+      "ReporterApp 'color = red' " +
+      "ReporterApp 'color' " +
+      "ReporterApp 'red' " +
+      "CommandBlock '[ fd 1 ]' " +
+      "Statements 'fd 1' " +
+      "Statement 'fd 1' " +
+      "ReporterApp '1' ")
+  }
+
   test("testWhile") {
     testStartAndEnd("while [count turtles < 10] [ crt 1 ]",
       "Statements 'while [count turtles < 10] [ crt 1 ]' " +
