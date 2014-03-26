@@ -44,6 +44,26 @@ trait LinkManager {
 
 }
 
+//
+// About the data structures used here:
+//
+// Note first that LinkManager isn't actually the main place links are stored.  That would be
+// World.links, which is a TreeAgentSet, which uses a TreeMap to support looking up a link
+// efficiently (in O(log n) time) if both of the endpoints are known.  See the calls to
+// `world.links.getAgent` below; those calls involve passing a DummyLink which we have filled
+// in with a description of the actual link we're trying to find.  (This works because
+// DummyLink extends Link, and Link has an appropriate implementation of compareTo().)
+//
+// To support efficient lookups when only one endpoint is known, LinkManager contains two
+// LinkedHashMaps, srcMap and destMap.  These maps are technically redundant, in the sense that they
+// don't contain any unique information of their own.  srcMap supports efficiently answering the
+// question, "what outgoing links exist from a turtle?", and destMap, the same but for incoming.
+// Undirected links count as both ongoing and incoming.
+//
+// LinkManager is responsible for keeping srcMap and destMap in sync with the contents of
+// World.links.
+//
+
 import collection.mutable.Buffer
 
 class LinkManagerImpl(world: World, linkFactory: LinkFactory) extends LinkManager {
