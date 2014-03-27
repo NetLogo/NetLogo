@@ -1,4 +1,4 @@
-jdk: oraclejdk7
+jdk: oraclejdk8
 language: scala
 before_install:
   - git submodule update --init --recursive

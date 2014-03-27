@@ -34,7 +34,7 @@ scalacOptions ++=
   .split(" ").toSeq
 
 javacOptions ++=
-  "-g -deprecation -encoding us-ascii -Werror -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path -source 1.7 -target 1.7"
+  "-g -deprecation -encoding us-ascii -Werror -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path -source 1.8 -target 1.8"
   .split(" ").toSeq
 
 libraryDependencies ++= Seq(
