@@ -1790,6 +1790,8 @@ procedure GO:[]{O---}:
           ANEWARRAY java/lang/Object
           DUP
           ICONST_0
+          ALOAD 0
+          POP
           LDC "ALL?"
           AASTORE
           DUP
