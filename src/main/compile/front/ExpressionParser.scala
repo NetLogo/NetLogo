@@ -11,23 +11,10 @@ import org.nlogo.prim._
 import org.nlogo.parse.LiteralParser
 
 /**
- * The actual NetLogo parser.
- * The jargon here is a bit different from the usual NetLogo terminology:
- *  - "command" is an actual command token itself, e.g., show, run.
- *  - "reporter" is an actual reporter itself, e.g., +, round, with.
- *  - "statement" is a syntactic form with no value and a command as head (e.g., show 5)
- *  - "expression" is a syntactic form which can occur as an argument to a command or to a
- *    reporter. expressions denote values. there are two basic kinds of expression:
- *     - reporter applications (infix or prefix). Note that this is reporter in the internal sense,
- *       which includes variables and literals. So these include, e.g., turtles with [ true ], 5 +
- *       10, 5, [1 2 3].
- *     - blocks. command and reporter blocks are expressions of this type.  a command block contains
- *       zero or more statements, while a reporter block contains exactly one expression.
+ * Parses procedure bodies.
  */
 
-class ExpressionParser(
-  procedure: Procedure,
-  taskNumbers: Iterator[Int] = Iterator.from(1)) {
+class ExpressionParser(procedure: Procedure) {
 
   /**
    * one less than the lowest valid operator precedence. See
@@ -35,19 +22,15 @@ class ExpressionParser(
    */
   private val MinPrecedence = -1
 
-  private var result = List[ProcedureDefinition]()
-
   /**
    * parses a procedure. Procedures are a bunch of statements (not a block of statements, that's
    * something else), and so are parsed as such. */
-  def parse(tokens: Iterator[Token]): Seq[ProcedureDefinition] = {
-    result = Nil
+  def parse(tokens: Iterator[Token]): ProcedureDefinition = {
     val buffered = tokens.buffered
     val stmts = new Statements(buffered.head.filename)
     while(buffered.head.tpe != TokenType.Eof)
       stmts.addStatement(parseStatement(buffered, false))
-    result ::= new ProcedureDefinition(procedure, stmts)
-    result
+    new ProcedureDefinition(procedure, stmts)
   }
 
   /**
@@ -395,16 +378,9 @@ class ExpressionParser(
         // instead of "foreach xs [ print ? ]"
         case TokenType.Command if wantCommandTask =>
           tokens.next()
-          val stmt = new Statement(token.value.asInstanceOf[Command], token.start, token.end, token.filename)
-          val stmts = new Statements(token.filename)
-          stmts.addStatement(stmt)
-          val taskProcedure = new Procedure(
-            false, "__task-" + taskNumbers.next(), token, Seq(), parent = procedure)
-          procedure.children += taskProcedure
-          taskProcedure.pos = token.start
-          taskProcedure.end = token.end
-          result ::= new ProcedureDefinition(taskProcedure, stmts)
-          val task = new _commandtask(taskProcedure)
+          val stmt = new Statement(token.value.asInstanceOf[Command],
+            token.start, token.end, token.filename)
+          val task = new _commandtask(null) // LambdaLifter will fill in
           task.token(token)
           for(argNumber <- 1 to stmt.command.syntax.totalDefault) {
             val lv = new _taskvariable(argNumber)
@@ -416,8 +392,17 @@ class ExpressionParser(
             // consistent number of arguments - ST 3/4/08
             stmt.addArgument(
               new CommandBlock(
-                new Statements(token.filename), token.start, token.end, token.filename))
-          new ReporterApp(task, token.start, token.end, token.filename)
+                new Statements(token.filename),
+                token.start, token.end, token.filename))
+          val stmts = new Statements(token.filename)
+          stmts.addStatement(stmt)
+          val rapp =
+            new ReporterApp(
+              task, token.start, token.end, token.filename)
+          rapp.addArgument(
+            new CommandBlock(
+              stmts, token.start, token.end, token.filename))
+          rapp
         case _ =>
           // here we throw a temporary exception, since we don't know yet what this error means... It
           // generally either means MissingInputOnRight or ExpectedReporter.
@@ -553,15 +538,15 @@ class ExpressionParser(
       val closeBracket = token
       // the origin of the block are based on the positions of the brackets.
       tokens.next()
-      val taskProcedure = new Procedure(
-        false, "__task-" + taskNumbers.next(), openBracket, Seq(), parent = procedure)
-      procedure.children += taskProcedure
-      taskProcedure.pos = openBracket.start
-      taskProcedure.end = closeBracket.end
-      result ::= new ProcedureDefinition(taskProcedure, stmts)
-      val task = new _commandtask(taskProcedure)
+      val task = new _commandtask(null) // LambdaLifter will fill in
       task.token(openBracket)
-      new ReporterApp(task, openBracket.start, closeBracket.end, openBracket.filename)
+      val rapp =
+        new ReporterApp(
+          task, openBracket.start, closeBracket.end, openBracket.filename)
+      rapp.addArgument(
+        new CommandBlock(
+          stmts, openBracket.start, closeBracket.end, openBracket.filename))
+      rapp
     }
     else if(compatible(goalType, Syntax.ListType)) {
       // parseLiteralList() deals with the open bracket itself, but it leaves the close bracket so

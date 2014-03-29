@@ -34,10 +34,10 @@ object Compiler extends nvm.CompilerInterface {
   private def compile(source: String, displayName: Option[String], program: api.Program, subprogram: Boolean,
       oldProcedures: ProceduresMap, extensionManager: api.ExtensionManager,
       flags: nvm.CompilerFlags): nvm.CompilerResults = {
-    val (defs, structureResults) =
+    val (topLevelDefs, structureResults) =
       frontEnd.frontEndHelper(source, displayName, program, subprogram, oldProcedures, extensionManager)
-    middleEnd.middleEnd(defs, flags)
-    backEnd.backEnd(defs, structureResults.program, source, extensionManager.profilingEnabled, flags)
+    val allDefs = middleEnd.middleEnd(topLevelDefs, flags)
+    backEnd.backEnd(allDefs, structureResults.program, source, extensionManager.profilingEnabled, flags)
   }
 
 }

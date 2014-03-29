@@ -265,7 +265,7 @@ FoldAndFlip
 
 is-it-or-isnt-it
   is-reporter-task? 5 => false
-  is-reporter-task? task [print timer] => false
+  is-reporter-task? task [__ignore timer] => false
   is-reporter-task? task [timer] => true
 
 dont-close-over-current-agent

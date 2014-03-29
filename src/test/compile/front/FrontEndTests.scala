@@ -7,17 +7,10 @@ import org.scalatest.FunSuite
 import org.nlogo.api.{ CompilerException, DummyExtensionManager, Program }
 import org.nlogo.nvm
 
-class ExpressionParserTests extends FunSuite {
+// This is where ExpressionParser gets most of its testing.  (It's a lot easier to test it as part
+// of the overall front end than it would be to test in strict isolation.)
 
-  // first, a little test of something from the companion object
-
-  test("makeLiteralReporter not picky about type") {
-    case object Obj
-    assertResult("_const:Obj")(
-      Literals.makeLiteralReporter(Obj).toString)
-  }
-
-  // now, the main tests
+class FrontEndTests extends FunSuite {
 
   val PREAMBLE = "to __test "
   val POSTAMBLE = "\nend"
@@ -119,8 +112,7 @@ class ExpressionParserTests extends FunSuite {
   }
   test("testDoParseForeach") {
     runTest("foreach [1 2 3] [__ignore ?]",
-      "_foreach[_constlist:[1 2 3][], _commandtask:(command task from: procedure __TEST)[]]" +
-      "_ignore[_taskvariable:1[]]")
+      "_foreach[_constlist:[1 2 3][], _commandtask[[_ignore[_taskvariable:1[]]]]]")
   }
   test("testDoParseParenthesizedCommand") {
     runTest("(__ignore 5)", "_ignore[_constdouble:5.0[]]")
@@ -164,20 +156,17 @@ class ExpressionParserTests extends FunSuite {
   }
   test("testParseCommandTask1") {
     runTest("__ignore task [print ?]",
-      "_ignore[_task[_commandtask:(command task from: procedure __TEST)[]]]" +
-      "_print[_taskvariable:1[]]")
+      "_ignore[_task[_commandtask[[_print[_taskvariable:1[]]]]]]")
   }
   test("testParseCommandTask2") {
     runTest("__ignore task [print 5]",
-      "_ignore[_task[_commandtask:(command task from: procedure __TEST)[]]]" +
-      "_print[_constdouble:5.0[]]")
+      "_ignore[_task[_commandtask[[_print[_constdouble:5.0[]]]]]]")
   }
   test("testParseCommandTask3") {
     // it would be nice if this resulted in a CompilerException instead
     // of failing at runtime - ST 2/6/11
     runTest("__ignore runresult task [__ignore 5]",
-      "_ignore[_runresult[_task[_commandtask:(command task from: procedure __TEST)[]]]]" +
-        "_ignore[_constdouble:5.0[]]")
+      "_ignore[_runresult[_task[_commandtask[[_ignore[_constdouble:5.0[]]]]]]]")
   }
   test("testParseDiffuse") {
     runTest("diffuse pcolor 1",

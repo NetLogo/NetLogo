@@ -1,8 +1,8 @@
 *ToString3
-  (word task [print ?]) => "(command task from: procedure __EVALUATOR)"
+  (word task [__ignore ?]) => "(command task from: procedure __EVALUATOR)"
 
 *ToString4
-  (word task [print 5]) => "(command task from: procedure __EVALUATOR)"
+  (word task [__ignore 5]) => "(command task from: procedure __EVALUATOR)"
 
 *ToString5
   (word task [(foreach [1 2] [3 4] [ __ignore ? + ? ])]) => "(command task from: procedure __EVALUATOR)"
@@ -117,13 +117,13 @@ command-and-reporter-tasks-close-over-same-procedure-input
   runresult glob2 => 130
 
 *command-task-stack-trace
-  O> run task [print __boom] => STACKTRACE boom!\
+  O> run task [__ignore __boom] => STACKTRACE boom!\
   error while observer running __BOOM\
     called by (command task from: procedure __EVALUATOR)\
     called by procedure __EVALUATOR
 
 *command-task-in-command-task-stack-trace
-  O> run task [run task [print __boom]] => STACKTRACE boom!\
+  O> run task [run task [__ignore __boom]] => STACKTRACE boom!\
   error while observer running __BOOM\
     called by (command task from: procedure __EVALUATOR)\
     called by (command task from: procedure __EVALUATOR)\
@@ -164,7 +164,7 @@ deeply-nested-with-all-agent-types
 
 is-it-or-isnt-it
   is-command-task? 5 => false
-  is-command-task? task [print timer] => true
+  is-command-task? task [__ignore timer] => true
   is-command-task? task [timer] => false
 
 dont-close-over-current-agent
@@ -217,6 +217,17 @@ concise-syntax 8
   O> crt 5
   O> foreach sort turtles foo
   glob1 => 10
+
+foreach-multiple-lists
+  globals [glob1]
+  O> set glob1 []
+  O> (foreach [1 2] [10 20] [100 200] [ set glob1 lput (list ?1 ?2 ?3) glob1 ])
+  glob1 => [[1 10 100] [2 20 200]]
+
+foreach-multiple-lists-length-mismatch
+  globals [glob1]
+  O> (foreach [1 2] [10 20] [100 200 300] [ ]) => ERROR All the list arguments to FOREACH must be the same length.
+  O> (foreach [1 2 3] [10 20] [100 200] [ ]) => ERROR All the list arguments to FOREACH must be the same length.
 
 the-killing-task
   globals [glob1]

@@ -5,13 +5,17 @@ package org.nlogo.prim
 import org.nlogo.api.Syntax
 import org.nlogo.nvm.{ CommandTask, Context, Procedure, Reporter }
 
-class _commandtask(proc: Procedure) extends Reporter {
+class _commandtask(var proc: Procedure) extends Reporter {
 
   override def syntax =
     Syntax.reporterSyntax(Syntax.CommandTaskType)
 
   override def toString =
-    super.toString + ":" + proc.displayName
+    super.toString +
+      // proc is null after ExpressionParser but before LambdaLifter
+      Option(proc)
+        .map(p => ":" + p.displayName)
+        .getOrElse("")
 
   override def report(c: Context): AnyRef =
     CommandTask(procedure = proc,
