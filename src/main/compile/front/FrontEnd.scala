@@ -63,11 +63,14 @@ trait FrontEndMain {
           extensionManager, lets)
       val namedTokens =
         new parse.CountedIterator(
-          namer.process(rawTokens.iterator, procedure))  // resolve references
+          namer.process(rawTokens.iterator, procedure))
       val stuffedTokens =
         namedTokens.map(LetStuffer.stuffLet(_, lets, namedTokens))
-      new ExpressionParser(procedure, taskNumbers)
-        .parse(stuffedTokens) // parse
+      val procDef =
+        new ExpressionParser(procedure).parse(stuffedTokens)
+      val lifter = new LambdaLifter(taskNumbers)
+      procDef.accept(lifter)
+      procDef +: lifter.children
     }
     val procDefs = structureResults.procedures.values.flatMap(parseProcedure).toVector
     (procDefs, structureResults)
