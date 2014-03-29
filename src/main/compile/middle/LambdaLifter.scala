@@ -1,7 +1,7 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.compile
-package front
+package middle
 
 import org.nlogo.{ nvm, prim }
 

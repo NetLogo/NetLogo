@@ -16,7 +16,7 @@ trait FrontEndInterface extends nvm.FrontEndInterface {
 }
 
 trait MiddleEndInterface {
-  def middleEnd(defs: Seq[ProcedureDefinition], flags: nvm.CompilerFlags): Unit
+  def middleEnd(defs: Seq[ProcedureDefinition], flags: nvm.CompilerFlags): Seq[ProcedureDefinition]
 }
 
 trait BackEndInterface {

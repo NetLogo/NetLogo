@@ -44,10 +44,7 @@ trait FrontEndMain {
     : (Seq[ProcedureDefinition], nvm.StructureResults) = {
     val structureResults = StructureParser.parseAll(
       tokenizer, source, displayName, program, subprogram, oldProcedures, extensionManager)
-    val taskNumbers = Iterator.from(1)
-    // the return type is plural because tasks inside a procedure get
-    // lambda-lifted and become procedures themselves
-    def parseProcedure(procedure: nvm.Procedure): Seq[ProcedureDefinition] = {
+    def parseProcedure(procedure: nvm.Procedure): ProcedureDefinition = {
       val rawTokens = structureResults.tokens(procedure)
       val lets = {
         val used1 = structureResults.program.usedNames
@@ -66,13 +63,9 @@ trait FrontEndMain {
           namer.process(rawTokens.iterator, procedure))
       val stuffedTokens =
         namedTokens.map(LetStuffer.stuffLet(_, lets, namedTokens))
-      val procDef =
-        new ExpressionParser(procedure).parse(stuffedTokens)
-      val lifter = new LambdaLifter(taskNumbers)
-      procDef.accept(lifter)
-      procDef +: lifter.children
+      new ExpressionParser(procedure).parse(stuffedTokens)
     }
-    val procDefs = structureResults.procedures.values.flatMap(parseProcedure).toVector
+    val procDefs = structureResults.procedures.values.map(parseProcedure).toVector
     (procDefs, structureResults)
   }
 
