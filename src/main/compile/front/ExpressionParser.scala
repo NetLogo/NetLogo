@@ -11,18 +11,7 @@ import org.nlogo.prim._
 import org.nlogo.parse.LiteralParser
 
 /**
- * The actual NetLogo parser.
- * The jargon here is a bit different from the usual NetLogo terminology:
- *  - "command" is an actual command token itself, e.g., show, run.
- *  - "reporter" is an actual reporter itself, e.g., +, round, with.
- *  - "statement" is a syntactic form with no value and a command as head (e.g., show 5)
- *  - "expression" is a syntactic form which can occur as an argument to a command or to a
- *    reporter. expressions denote values. there are two basic kinds of expression:
- *     - reporter applications (infix or prefix). Note that this is reporter in the internal sense,
- *       which includes variables and literals. So these include, e.g., turtles with [ true ], 5 +
- *       10, 5, [1 2 3].
- *     - blocks. command and reporter blocks are expressions of this type.  a command block contains
- *       zero or more statements, while a reporter block contains exactly one expression.
+ * Parses procedure bodies.
  */
 
 class ExpressionParser(procedure: Procedure) {
