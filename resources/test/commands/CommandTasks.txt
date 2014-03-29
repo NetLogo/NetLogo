@@ -218,6 +218,17 @@ concise-syntax 8
   O> foreach sort turtles foo
   glob1 => 10
 
+foreach-multiple-lists
+  globals [glob1]
+  O> set glob1 []
+  O> (foreach [1 2] [10 20] [100 200] [ set glob1 lput (list ?1 ?2 ?3) glob1 ])
+  glob1 => [[1 10 100] [2 20 200]]
+
+foreach-multiple-lists-length-mismatch
+  globals [glob1]
+  O> (foreach [1 2] [10 20] [100 200 300] [ ]) => ERROR All the list arguments to FOREACH must be the same length.
+  O> (foreach [1 2 3] [10 20] [100 200] [ ]) => ERROR All the list arguments to FOREACH must be the same length.
+
 the-killing-task
   globals [glob1]
   O> set glob1 task [ ask turtle 0 [ die ] ]
