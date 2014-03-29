@@ -7,7 +7,10 @@ import org.scalatest.FunSuite
 import org.nlogo.api.{ CompilerException, DummyExtensionManager, Program }
 import org.nlogo.nvm
 
-class ExpressionParserTests extends FunSuite {
+// This is where ExpressionParser gets most of its testing.  (It's a lot easier to test it as part
+// of the overall front end than it would be to test in strict isolation.)
+
+class FrontEndTests extends FunSuite {
 
   val PREAMBLE = "to __test "
   val POSTAMBLE = "\nend"
