@@ -1,8 +1,8 @@
 *ToString3
-  (word task [print ?]) => "(command task from: procedure __EVALUATOR)"
+  (word task [__ignore ?]) => "(command task from: procedure __EVALUATOR)"
 
 *ToString4
-  (word task [print 5]) => "(command task from: procedure __EVALUATOR)"
+  (word task [__ignore 5]) => "(command task from: procedure __EVALUATOR)"
 
 *ToString5
   (word task [(foreach [1 2] [3 4] [ __ignore ? + ? ])]) => "(command task from: procedure __EVALUATOR)"
@@ -117,13 +117,13 @@ command-and-reporter-tasks-close-over-same-procedure-input
   runresult glob2 => 130
 
 *command-task-stack-trace
-  O> run task [print __boom] => STACKTRACE boom!\
+  O> run task [__ignore __boom] => STACKTRACE boom!\
   error while observer running __BOOM\
     called by (command task from: procedure __EVALUATOR)\
     called by procedure __EVALUATOR
 
 *command-task-in-command-task-stack-trace
-  O> run task [run task [print __boom]] => STACKTRACE boom!\
+  O> run task [run task [__ignore __boom]] => STACKTRACE boom!\
   error while observer running __BOOM\
     called by (command task from: procedure __EVALUATOR)\
     called by (command task from: procedure __EVALUATOR)\
@@ -164,7 +164,7 @@ deeply-nested-with-all-agent-types
 
 is-it-or-isnt-it
   is-command-task? 5 => false
-  is-command-task? task [print timer] => true
+  is-command-task? task [__ignore timer] => true
   is-command-task? task [timer] => false
 
 dont-close-over-current-agent
