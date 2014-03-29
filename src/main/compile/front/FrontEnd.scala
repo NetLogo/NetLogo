@@ -65,8 +65,8 @@ trait FrontEndMain {
         namedTokens.map(LetStuffer.stuffLet(_, lets, namedTokens))
       new ExpressionParser(procedure).parse(stuffedTokens)
     }
-    val procDefs = structureResults.procedures.values.map(parseProcedure).toVector
-    (procDefs, structureResults)
+    val procdefs = structureResults.procedures.values.map(parseProcedure).toVector
+    (procdefs, structureResults)
   }
 
 }

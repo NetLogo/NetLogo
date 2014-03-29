@@ -13,10 +13,10 @@ object MiddleEnd extends MiddleEndInterface {
   def middleEnd(defs: Seq[ProcedureDefinition], flags: nvm.CompilerFlags): Seq[ProcedureDefinition] = {
     val allDefs = {
       val taskNumbers = Iterator.from(1)
-      defs.flatMap{procDef =>
+      defs.flatMap{procdef =>
         val lifter = new LambdaLifter(taskNumbers)
-        procDef.accept(lifter)
-        procDef +: lifter.children
+        procdef.accept(lifter)
+        procdef +: lifter.children
       }
     }
     // each Int is the position of that variable in the procedure's args list
