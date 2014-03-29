@@ -9,16 +9,6 @@ import org.nlogo.nvm
 
 class ExpressionParserTests extends FunSuite {
 
-  // first, a little test of something from the companion object
-
-  test("makeLiteralReporter not picky about type") {
-    case object Obj
-    assertResult("_const:Obj")(
-      Literals.makeLiteralReporter(Obj).toString)
-  }
-
-  // now, the main tests
-
   val PREAMBLE = "to __test "
   val POSTAMBLE = "\nend"
 
