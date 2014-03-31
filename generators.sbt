@@ -1,30 +1,30 @@
-// note: in sbt 0.13.2 https://github.com/sbt/sbt/issues/866 will give us the `.taskValue` method
-// for use with `+=`. til then we keep using the obsolete `<+=` operator. - ST 12/19/13
-
 ///
 /// I18n
 ///
 
 // path handling details are inelegant/repetitive, should be cleaned up - ST 5/30/12
 
-resourceGenerators in Compile <+= Def.task {
+resourceGenerators in Compile += Def.task {
   val names: Set[String] =
     IO.listFiles(file(".") / "dist" / "i18n")
       .map(_.getName)
       .filter(_.endsWith(".txt"))
       .map(_.stripSuffix(".txt"))
       .toSet
+  val s = streams.value
   val cache =
-    FileFunction.cached(streams.value.cacheDirectory / "native2ascii",
+    FileFunction.cached(s.cacheDirectory / "native2ascii",
         inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
       in: Set[File] =>
-        names.map(name => native2ascii(streams.value.log.info(_), resourceManaged.value, name))
+        names.map{name =>
+          s.log.info(s"native2ascii: $name")
+          native2ascii(resourceManaged.value, name)
+        }
     }
   cache(names.map(name => file(".") / "dist" / "i18n" / (name + ".txt"))).toSeq
-}
+}.taskValue
 
-def native2ascii(log: String => Unit, dir: File, name: String): File = {
-  log("native2ascii: " + name)
+def native2ascii(dir: File, name: String): File = {
   val in = file(".") / "dist" / "i18n" / (name + ".txt")
   val result = dir / (name + ".properties")
   IO.createDirectory(dir)
@@ -37,7 +37,7 @@ def native2ascii(log: String => Unit, dir: File, name: String): File = {
 /// JFlex
 ///
 
-sourceGenerators in Compile <+= Def.task[Seq[File]] {
+sourceGenerators in Compile += Def.task[Seq[File]] {
   val src = (sourceManaged in Compile).value
   val base = baseDirectory.value
   val s = streams.value
@@ -50,7 +50,7 @@ sourceGenerators in Compile <+= Def.task[Seq[File]] {
   cache(Set(base / "project" / "flex" / "warning.txt",
             base / "project" / "flex" / "ImportLexer.flex",
             base / "project" / "flex" / "TokenLexer.flex")).toSeq
-}
+}.taskValue
 
 def flex(log: String => Unit, base: File, dir: File, kind: String): File = {
   val project = base / "project" / "flex"
