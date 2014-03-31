@@ -1367,4 +1367,40 @@ public strictfp class World
     return AllStoredValues.apply(this);
   }
 
+  public static interface VariableWatcher {
+    public void update(Agent agent, String variableName, Object value);
+  }
+
+  // Variable watching *must* be done on variable name, not number. Numbers
+  // can change in the middle of runs if, for instance, the user rearranges
+  // the order of declarations in turtles-own and then keeps running.
+  // -- BCH (4/1/2014)
+
+  private Map<String, List<VariableWatcher>> variableWatchers = null;
+
+  public void addWatcher(String variableName, VariableWatcher watcher) {
+    if (variableWatchers == null) {
+      variableWatchers =  new HashMap<String, List<VariableWatcher>>();
+    }
+    if (!variableWatchers.containsKey(variableName)) {
+      variableWatchers.put(variableName, new ArrayList<VariableWatcher>());
+    }
+    variableWatchers.get(variableName).add(watcher);
+  }
+
+  public void deleteWatcher(String variableName, VariableWatcher watcher) {
+    if (variableWatchers != null && variableWatchers.containsKey(variableName)) {
+      variableWatchers.get(variableName).remove(watcher);
+    }
+  }
+
+  void notifyWatchers(Agent agent, String variableName, Object value) {
+    // This needs to be crazy fast if there are no watchers. Thus, null check. -- BCH (3/31/2014)
+    if (variableWatchers != null && variableWatchers.containsKey(variableName)) {
+      for (VariableWatcher watcher : variableWatchers.get(variableName)) {
+        watcher.update(agent, variableName, value);
+      }
+    }
+  }
+
 }

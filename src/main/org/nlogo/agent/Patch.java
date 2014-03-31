@@ -171,6 +171,10 @@ public strictfp class Patch
     return getPatchVariable(vn);
   }
 
+  public String variableName(int vn) {
+    return world.patchesOwnNameAt(vn);
+  }
+
   @Override
   public void setObserverVariable(int vn, Object value)
       throws AgentException, LogoException {
@@ -270,6 +274,7 @@ public strictfp class Patch
           throw new IllegalStateException(I18N.errorsJ().getN("org.nlogo.agent.Agent.cantSetUnknownVariable", vn));
       }
     }
+    world.notifyWatchers(this, variableName(vn), value);
   }
 
   @Override

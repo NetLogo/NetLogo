@@ -9,6 +9,10 @@ import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.ValueConstraint;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Observable;
 
 public abstract strictfp class Agent
@@ -28,6 +32,7 @@ public abstract strictfp class Agent
   }
 
   public Object[] variables() { return variables; }
+
   public Object[] variables = null; // public ONLY for __fire
   ValueConstraint[] variableConstraints = null;
 
@@ -55,6 +60,12 @@ public abstract strictfp class Agent
   }
 
   public abstract Object getVariable(int vn);
+
+  /**
+   * Returns the name of the variable with the given index. Works for built-in, *-own, and breed variables.
+   * @param vn the index of the variable
+   */
+  abstract String variableName(int vn);
 
   public abstract void setVariable(int vn, Object value)
       throws AgentException, LogoException;
