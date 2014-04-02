@@ -1391,6 +1391,9 @@ public strictfp class World
   public void deleteWatcher(String variableName, VariableWatcher watcher) {
     if (variableWatchers != null && variableWatchers.containsKey(variableName)) {
       variableWatchers.get(variableName).remove(watcher);
+      if (variableWatchers.isEmpty()) {
+        variableWatchers = null;
+      }
     }
   }
 
