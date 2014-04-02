@@ -332,7 +332,7 @@ public strictfp class Link
           break;
       }
     }
-    world.notifyWatchers(this, variableName(vn), value);
+    world.notifyWatchers(this, vn, value);
   }
 
   @Override

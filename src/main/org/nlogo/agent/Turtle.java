@@ -541,7 +541,7 @@ public strictfp class Turtle
           throw new IllegalStateException(I18N.errorsJ().getN("org.nlogo.agent.Agent.cantSetUnknownVariable", vn));
       }
     }
-    world.notifyWatchers(this, variableName(vn), value);
+    world.notifyWatchers(this, vn, value);
   }
 
   @Override

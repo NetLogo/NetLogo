@@ -1394,11 +1394,14 @@ public strictfp class World
     }
   }
 
-  void notifyWatchers(Agent agent, String variableName, Object value) {
+  void notifyWatchers(Agent agent, int vn, Object value) {
     // This needs to be crazy fast if there are no watchers. Thus, null check. -- BCH (3/31/2014)
-    if (variableWatchers != null && variableWatchers.containsKey(variableName)) {
-      for (VariableWatcher watcher : variableWatchers.get(variableName)) {
-        watcher.update(agent, variableName, value);
+    if (variableWatchers != null) {
+      String variableName = agent.variableName(vn);
+      if (variableWatchers.containsKey(variableName)) {
+        for (VariableWatcher watcher : variableWatchers.get(variableName)) {
+          watcher.update(agent, variableName, value);
+        }
       }
     }
   }

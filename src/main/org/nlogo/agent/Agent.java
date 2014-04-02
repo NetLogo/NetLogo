@@ -9,10 +9,6 @@ import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.ValueConstraint;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Observable;
 
 public abstract strictfp class Agent
@@ -32,7 +28,6 @@ public abstract strictfp class Agent
   }
 
   public Object[] variables() { return variables; }
-
   public Object[] variables = null; // public ONLY for __fire
   ValueConstraint[] variableConstraints = null;
 

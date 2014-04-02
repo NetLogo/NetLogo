@@ -118,7 +118,7 @@ public strictfp class Observer
       throws AgentException, LogoException {
     assertVariableConstraint(vn, value);
     variables[vn] = value;
-    world.notifyWatchers(this, variableName(vn), value);
+    world.notifyWatchers(this, vn, value);
   }
 
   @Override
