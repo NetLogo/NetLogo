@@ -15,29 +15,26 @@ class TestAgentVariableObservers extends AbstractTestModels with GivenWhenThen {
   val declarations =
     """
       |breed [ dogs dog ]
+      |breed [ cats cat ]
       |globals [ my-global ]
-      |dogs-own [ my-dog-var ]
+      |dogs-own [ my-dog-var my-shared-var ]
+      |cats-own [ my-shared-var ]
       |turtles-own [ my-turtle-var ]
       |links-own [ my-link-var ]
       |patches-own [ my-patch-var ]
     """.stripMargin
 
   testModel("agents call variable observers", Model(declarations)) {
-    val globalVar = world.observerOwnsIndexOf("MY-GLOBAL")
-    val xcorVar = world.turtlesOwnIndexOf("XCOR")
-    val turtleVar = world.turtlesOwnIndexOf("MY-TURTLE-VAR")
-    val dogVar = world.breedsOwnIndexOf(world.getBreed("DOGS"), "MY-DOG-VAR")
-    val linkVar = world.linksOwnIndexOf("MY-LINK-VAR")
-    val patchVar = world.patchesOwnIndexOf("MY-PATCH-VAR")
-
     val watcher = new ObservationQueue
 
     observer>> "crt 10 [ create-links-with other turtles ]"
     observer>> "create-dogs 10"
+    observer>> "create-cats 10"
     world.addWatcher("MY-GLOBAL", watcher)
     world.addWatcher("XCOR", watcher)
     world.addWatcher("MY-TURTLE-VAR", watcher)
     world.addWatcher("MY-DOG-VAR", watcher)
+    world.addWatcher("MY-SHARED-VAR", watcher)
     world.addWatcher("MY-LINK-VAR", watcher)
     world.addWatcher("MY-PATCH-VAR", watcher)
 
@@ -89,6 +86,18 @@ class TestAgentVariableObservers extends AbstractTestModels with GivenWhenThen {
     and("those responses contain the new value")
     watcher.queue.foreach {
       case (t: Turtle, vn: String, value: AnyRef) => expect(t.id)(value)
+      case _ => fail("Got response from non-turtle")
+    }
+    watcher.queue.clear()
+
+    when("setting a shared breeds-own variable with a watch")
+    observer>> "ask dogs [ set my-shared-var who ]"
+    observer>> "ask cats [ set my-shared-var who ]"
+    then("one response per turtle of the breeds with that variable is given")
+    expect(world.getBreed("DOGS").count + world.getBreed("CATS").count)(watcher.queue.size)
+    and("those responses contain the new value")
+    watcher.queue.foreach {
+      case (t: Turtle, vn: String, value: AnyRef) => { expect(t.id)(value); expect("MY-SHARED-VAR")(vn) }
       case _ => fail("Got response from non-turtle")
     }
     watcher.queue.clear()
