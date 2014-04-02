@@ -1374,6 +1374,9 @@ public strictfp class World
   // Variable watching *must* be done on variable name, not number. Numbers
   // can change in the middle of runs if, for instance, the user rearranges
   // the order of declarations in turtles-own and then keeps running.
+  //
+  // I didn't use SimpleChangeEvent here since I wanted the observers to know
+  // what the change actually was.
   // -- BCH (4/1/2014)
 
   private Map<String, List<VariableWatcher>> variableWatchers = null;
