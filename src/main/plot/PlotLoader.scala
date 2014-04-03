@@ -2,8 +2,8 @@
 
 package org.nlogo.plot
 
-import org.nlogo.api
-import api.StringUtils.unescapeString
+import org.nlogo.{ core, api },
+  core.StringEscaper.unescapeString
 
 object PlotLoader {
 

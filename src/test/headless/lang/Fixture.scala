@@ -98,7 +98,7 @@ class Fixture(name: String) extends AbstractFixture {
         case NormalMode =>
           reporter.reporter
         case RunMode    =>
-          s"""runresult "${api.StringUtils.escapeString(reporter.reporter)}""""
+          s"""runresult "${core.StringEscaper.escapeString(reporter.reporter)}""""
       }
       val compiled = workspace.compileReporter(wrappedReporter)
       val actualResult = workspace.runCompiledReporter(owner(), compiled)
@@ -122,7 +122,7 @@ class Fixture(name: String) extends AbstractFixture {
         case NormalMode =>
           command.command
         case RunMode    =>
-          s"""run "${api.StringUtils.escapeString(command.command)}""""
+          s"""run "${core.StringEscaper.escapeString(command.command)}""""
       }
       val compiled = workspace.compileCommands(wrappedCommand, command.kind)
       if (mode == NormalMode && command.result.isInstanceOf[CompileError])

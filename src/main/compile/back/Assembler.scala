@@ -7,7 +7,7 @@ package back
 // and an explanation of each method in the AssemblerAssistant interface, which is implemented below
 // - ST 2/22/08
 
-import org.nlogo.api.{ Token, TokenType }
+import org.nlogo.core.{ Token, TokenType }
 import org.nlogo.nvm.{ Command, CustomAssembled, AssemblerAssistant, Procedure }
 import org.nlogo.prim.{ _call, _done, _recursefast, _goto, _return, _returnreport }
 

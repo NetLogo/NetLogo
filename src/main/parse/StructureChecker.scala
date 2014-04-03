@@ -8,7 +8,8 @@ package org.nlogo.parse
 // (I'm not very happy with the code for this stage, but as long as it's
 // well encapsulated, maybe it's good enough. - ST 12/7/12)
 
-import org.nlogo.api.Token, Fail._
+import org.nlogo.core.Token,
+  Fail._
 
 object StructureChecker {
 

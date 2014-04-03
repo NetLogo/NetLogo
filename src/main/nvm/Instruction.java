@@ -5,6 +5,7 @@ package org.nlogo.nvm;
 import org.nlogo.core.AgentKind;
 import org.nlogo.core.AgentKindJ;
 import org.nlogo.core.Syntax;
+import org.nlogo.core.Token;
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentBit;
 import org.nlogo.agent.AgentSet;
@@ -15,14 +16,13 @@ import org.nlogo.agent.Turtle;
 import org.nlogo.agent.World;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoList;
-import org.nlogo.api.Token;
 import org.nlogo.util.Thunk;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract strictfp class Instruction
-    implements org.nlogo.api.TokenHolder {
+    implements org.nlogo.core.TokenHolder {
 
   public Workspace workspace;
   public World world;  // public so the engine can get to World.comeUpForAir easily

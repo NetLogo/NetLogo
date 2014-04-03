@@ -61,7 +61,7 @@ extends PlotInterface {
   var updateCode:String = ""
 
   def saveString = {
-    import org.nlogo.api.StringUtils.escapeString
+    import org.nlogo.core.StringEscaper.escapeString
     "\"" + escapeString(setupCode.trim) + "\"" + " " + "\"" + escapeString(updateCode.trim) + "\""
   }
 

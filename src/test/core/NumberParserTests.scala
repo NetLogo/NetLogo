@@ -1,13 +1,12 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.api
+package org.nlogo.core
 
 import org.scalatest.FunSuite
-import NumberParser.parse
 
 class NumberParserTests extends FunSuite {
   for(input <- List("", "-", ".", "-.", ".-"))
     test(input) {
-      assert(parse(input).isLeft)
+      assert(NumberParser.parse(input).isLeft)
     }
 }

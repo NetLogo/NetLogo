@@ -3,8 +3,8 @@
 package org.nlogo.compile
 package front
 
-import org.nlogo.{ api, nvm, parse, prim },
-  api.{ Token, TokenType },
+import org.nlogo.{ core, api, nvm, parse, prim },
+  core.{ Token, TokenType },
   Fail._
 
 trait NameHandler extends (Token => Option[(TokenType, nvm.Instruction)])
@@ -48,7 +48,7 @@ class CallHandler(procedures: nvm.FrontEndInterface.ProceduresMap) extends NameH
 }
 
 abstract class PrimitiveHandler extends NameHandler {
-  def lookup(token: Token, fn: String => Option[api.TokenHolder], newType: TokenType): Option[(TokenType, nvm.Instruction)] =
+  def lookup(token: Token, fn: String => Option[core.TokenHolder], newType: TokenType): Option[(TokenType, nvm.Instruction)] =
     fn(token.value.asInstanceOf[String]).map{holder =>
       (newType, holder.asInstanceOf[nvm.Instruction])}
 }

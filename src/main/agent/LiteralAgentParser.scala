@@ -3,7 +3,7 @@
 package org.nlogo.agent
 
 import org.nlogo.{ api, core },
-  api.{ Token, TokenType }
+  core.{ Token, TokenType }
 
 // This is only used for importing worlds; the regular NetLogo language
 // doesn't have literal agents and agentsets.

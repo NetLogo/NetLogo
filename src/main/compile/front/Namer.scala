@@ -3,8 +3,8 @@
 package org.nlogo.compile
 package front
 
-import org.nlogo.{ api, nvm, parse, prim },
-  api.{ Token, TokenType },
+import org.nlogo.{ core, api, nvm, parse, prim },
+  core.{ Token, TokenType },
   Fail._
 
 /**

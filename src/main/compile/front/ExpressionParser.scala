@@ -4,9 +4,9 @@ package org.nlogo.compile
 package front
 
 import Fail.{ cAssert, exception }
-import org.nlogo.{ api, core },
-  core.Syntax,
-  api.{ LogoList, Nobody, Token, TokenType }
+import org.nlogo.{ core, api },
+  core.{ Syntax, Token, TokenType },
+  api.{ LogoList, Nobody }
 import Syntax.compatible
 import org.nlogo.nvm.{ Command, Instruction, Procedure, Referenceable, Reporter}
 import org.nlogo.prim._

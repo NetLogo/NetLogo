@@ -48,7 +48,7 @@ object Dump {
         number(d)
       case s: String =>
         if (readable)
-          "\"" + StringUtils.escapeString(s) + "\""
+          "\"" + core.StringEscaper.escapeString(s) + "\""
         else s
       case a: AgentSet =>
         agentset(a, exporting)

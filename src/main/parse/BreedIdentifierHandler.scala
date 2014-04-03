@@ -2,9 +2,10 @@
 
 package org.nlogo.parse
 
-import org.nlogo.api,
-  api.{ Breed, Program, Token, TokenType },
-  TokenType.{ Command, Reporter }
+import org.nlogo.{ core, api },
+  core.{ Token, TokenType },
+    TokenType.{ Command, Reporter },
+  api.{ Breed, Program }
 
 object BreedIdentifierHandler {
 

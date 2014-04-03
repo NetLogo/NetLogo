@@ -6,10 +6,10 @@ package org.nlogo.workspace
 
 import
   org.nlogo.{ agent, api, core, nvm, plot },
-  core.AgentKind,
+  core.{ AgentKind, Token },
   agent.{ World, Agent, AbstractExporter, AgentSet },
   api.{ PlotInterface, Dump, CommandLogoThunk, ReporterLogoThunk,
-    CompilerException, LogoException, JobOwner, SimpleJobOwner, Token, ModelType },
+    CompilerException, LogoException, JobOwner, SimpleJobOwner, ModelType },
   nvm.{ FrontEndInterface, FileManager, Instruction, EngineException, Context,
     Procedure, Job, Command, MutableLong, Workspace, Activation },
   plot.{ PlotExporter, PlotManager },

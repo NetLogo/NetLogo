@@ -1,8 +1,8 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.api
+package org.nlogo.core
 
-// This is highly performance-criticial code for import-world. - ST 4/7/11
+// This is highly performance-critical code for import-world. - ST 4/7/11
 
 import java.lang.{ Double => JDouble, Long => JLong }
 

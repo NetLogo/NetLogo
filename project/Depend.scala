@@ -73,7 +73,7 @@ object Depend {
       "headless/render" -> List("headless"),
       "job" -> List("nvm"),
       "lab" -> List("nvm"),
-      "lex" -> List("api"),
+      "lex" -> List("core"),
       "mirror" -> List("drawing", "plot", "shape"),
       "nvm" -> List("agent"),
       "parse" -> List("api"),

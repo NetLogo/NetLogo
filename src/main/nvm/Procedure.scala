@@ -7,8 +7,8 @@ import org.nlogo.{ api, core }
 class Procedure(
   val isReporter: Boolean,
   val name: String,
-  val nameToken: api.Token,
-  val argTokens: Seq[api.Token],
+  val nameToken: core.Token,
+  val argTokens: Seq[core.Token],
   _displayName: Option[String] = None,
   val parent: Procedure = null) {
 
@@ -31,7 +31,7 @@ class Procedure(
   // that's determined by TaskVisitor. so for now this is mutable - ST 2/4/11
   val taskFormals = collection.mutable.Buffer[api.Let]()
 
-  def getTaskFormal(n: Int, token: api.Token): api.Let = {
+  def getTaskFormal(n: Int, token: core.Token): api.Let = {
     while (taskFormals.size < n)
       taskFormals += api.Let("?" + n, token.start, token.end)
     taskFormals.last

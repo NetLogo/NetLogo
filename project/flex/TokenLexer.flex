@@ -1,9 +1,9 @@
 // -*- Java -*- (tell Emacs to use Java mode)
 package org.nlogo.lex;
 
-import org.nlogo.api.Token;
-import org.nlogo.api.TokenHolder;
-import org.nlogo.api.TokenType;
+import org.nlogo.core.Token;
+import org.nlogo.core.TokenHolder;
+import org.nlogo.core.TokenType;
 
 // Since this is automatically generated code it's not surprising
 // it'd produce a few warnings - ST 3/6/08
@@ -92,7 +92,7 @@ IDENTIFIER_CHAR={LETTER} | {DIGIT} | [_\.?=\*!<>:#\+/%\$\^\'&-]
 
 <YYINITIAL> -?\.?[0-9]{IDENTIFIER_CHAR}* {
   String text = yytext();
-  scala.util.Either<String, Double> result = org.nlogo.api.NumberParser.parse(text);
+  scala.util.Either<String, Double> result = org.nlogo.core.NumberParser.parse(text);
   TokenType resultType =
     result.isLeft() ? TokenTypeJ.Bad() : TokenTypeJ.Literal();
   Object resultValue =
@@ -113,7 +113,7 @@ IDENTIFIER_CHAR={LETTER} | {DIGIT} | [_\.?=\*!<>:#\+/%\$\^\'&-]
   try {
     return new Token
       (text, TokenTypeJ.Literal(),
-        org.nlogo.api.StringUtils.unescapeString(text.substring(1, text.length() - 1)),
+        org.nlogo.core.StringEscaper.unescapeString(text.substring(1, text.length() - 1)),
         yychar, yychar + text.length(), filename);
   }
   catch(IllegalArgumentException ex) {

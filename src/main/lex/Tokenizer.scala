@@ -2,22 +2,16 @@
 
 package org.nlogo.lex
 
-import org.nlogo.api, api.{ Token, TokenType }
+import org.nlogo.core, core.{ Token, TokenType }
 
-object Tokenizer extends api.TokenizerInterface {
+// caller's responsibility to check for TokenType.Bad!
 
-  // throws CompilerException when it hits a bad token
-  def tokenize(source: String, filename: String = ""): Iterator[Token] =
-    tokenizeRobustly(new java.io.StringReader(source), filename)
-      .map{token =>
-        if (token.tpe == TokenType.Bad)
-          throw new api.CompilerException(token)
-        else
-          token}
+object Tokenizer extends core.TokenizerInterface {
 
-  // no CompilerExceptions, just keeps chugging spitting out TokenType.Bad
-  // as necessary
-  def tokenizeRobustly(reader: java.io.Reader, filename: String = ""): Iterator[Token] = {
+  def tokenizeString(source: String, filename: String = ""): Iterator[Token] =
+    tokenize(new java.io.StringReader(source), filename)
+
+  def tokenize(reader: java.io.Reader, filename: String = ""): Iterator[Token] = {
     val yy = new TokenLexer(reader, filename)
     val results =
       Iterator.continually(yy.yylex())

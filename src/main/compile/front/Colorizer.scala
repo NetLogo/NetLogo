@@ -4,7 +4,8 @@ package org.nlogo.compile.front
 
 import
   java.awt.Color,
-  org.nlogo.api, api.{ Token, TokenType }
+  org.nlogo.{ core, api },
+    core.{ Token, TokenType }
 
 // code in, HTML out!
 
@@ -75,7 +76,7 @@ object Colorizer {
   def colorizeLine(line: String): Vector[Color] = {
     val result = Array.fill(line.size)(Colorizer.Colors.Default)
     for {
-      tok <- FrontEnd.tokenizer.tokenize(line)
+      tok <- FrontEnd.tokenizer.tokenizeString(line)
       j <- tok.start until tok.end
       // guard against any bugs in tokenization causing out-of-bounds positions
       if result.isDefinedAt(j)

@@ -2,7 +2,9 @@
 
 package org.nlogo.api
 
-class ErrorSource(token:Token) {
+import org.nlogo.core.Token
+
+class ErrorSource(token: Token) {
   /**
    * Throws a CompilerException with the given message.
    * This procedure will never return.
