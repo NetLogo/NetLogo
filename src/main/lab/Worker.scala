@@ -71,7 +71,7 @@ class Worker(val protocol: Protocol)
       else Some(workspace.compileReporter(protocol.exitCondition))
     val metricProcedures = protocol.metrics.map(workspace.compileReporter(_))
   }
-  class Runner(runNumber: Int, settings: List[Pair[String, Any]], fn: ()=>Workspace)
+  class Runner(runNumber: Int, settings: List[(String, Any)], fn: ()=>Workspace)
     extends Callable[Unit]
   {
     class FailedException(message: String) extends LogoException(message)
@@ -103,7 +103,7 @@ class Worker(val protocol: Protocol)
           newProcedures
         }
       import procedures._
-      def setVariables(settings: List[Pair[String, Any]]) {
+      def setVariables(settings: List[(String, Any)]) {
         val world = ws.world
         var d = world.getDimensions
         for((name, value) <- settings) {
