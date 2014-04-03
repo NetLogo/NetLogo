@@ -4,7 +4,7 @@ package org.nlogo.nvm
 
 import org.nlogo.agent.{Agent, AgentSet, World}
 import org.nlogo.{ api, core }
-import org.nlogo.api.{WorldDimensions, DummyParserServices, DummyExtensionManager, JobOwner,
+import org.nlogo.api.{DummyParserServices, DummyExtensionManager, JobOwner,
                       CommandRunnable, ReporterRunnable, ImportErrorHandler, OutputDestination}
 
 class DummyWorkspace extends DummyParserServices with Workspace {
@@ -98,8 +98,8 @@ class DummyWorkspace extends DummyParserServices with Workspace {
   // from WorldResizer
   override def resizeView() = unsupported
   override def patchSize(patchSize: Double) = unsupported
-  override def setDimensions(dim: WorldDimensions) = unsupported
-  override def setDimensions(dim: WorldDimensions, patchSize: Double) = unsupported
+  override def setDimensions(dim: core.WorldDimensions) = unsupported
+  override def setDimensions(dim: core.WorldDimensions, patchSize: Double) = unsupported
 
   // from JobManagerOwner
   override def runtimeError(owner: JobOwner, context: Context, instruction: Instruction, ex: Exception) = unsupported

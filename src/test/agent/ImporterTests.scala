@@ -3,7 +3,8 @@
 package org.nlogo.agent
 
 import org.scalatest.{ FunSuite, OneInstancePerTest }
-import org.nlogo.api.{ ImporterUser, WorldDimensions }
+import org.nlogo.core.WorldDimensions
+import org.nlogo.api.ImporterUser
 
 class ImporterTests extends FunSuite with OneInstancePerTest {
   val IGNORE_ERROR_HANDLER =

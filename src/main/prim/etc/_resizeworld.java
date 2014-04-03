@@ -41,7 +41,7 @@ public final strictfp class _resizeworld
           (new org.nlogo.api.CommandRunnable() {
             public void run() {
               workspace.setDimensions
-                  (new org.nlogo.api.WorldDimensions(newMinX, newMaxX,
+                  (new org.nlogo.core.WorldDimensions(newMinX, newMaxX,
                       newMinY, newMaxY));
             }
           });

@@ -2,7 +2,7 @@
 
 package org.nlogo.headless
 
-import org.nlogo.api.WorldDimensions
+import org.nlogo.core.WorldDimensions
 import org.nlogo.api.{ APIVersion, Version }
 import org.nlogo.workspace.AbstractWorkspace.setHeadlessProperty
 import org.nlogo.nvm.LabInterface.Settings

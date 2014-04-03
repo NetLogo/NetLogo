@@ -260,9 +260,9 @@ class FakeWorld(state: State) extends api.World {
   def observerOwnsIndexOf(name: String): Int = unsupported
   def auxRNG: util.MersenneTwisterFast = unsupported
   def mainRNG: util.MersenneTwisterFast = unsupported
-  def equalDimensions(d: api.WorldDimensions): Boolean = unsupported
+  def equalDimensions(d: core.WorldDimensions): Boolean = unsupported
   def isDimensionVariable(variableName: String): Boolean = unsupported
-  def getDimensions: api.WorldDimensions = unsupported
+  def getDimensions: core.WorldDimensions = unsupported
   def realloc(): Unit = unsupported
   def clearGlobals(): Unit = unsupported
 

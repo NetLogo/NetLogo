@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.api
+package org.nlogo.core
 
 case class WorldDimensions(
     minPxcor: Int, maxPxcor: Int,

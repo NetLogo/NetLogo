@@ -40,8 +40,8 @@ extends AbstractWorkspace(new World)
   override def patchSize: Double = unsupported
   override def changeTopology(wrapX: Boolean, wrapY: Boolean) = unsupported
   override def setOutputAreaContents(text: String) = unsupported
-  override def setDimensions(d: api.WorldDimensions) = unsupported
-  override def setDimensions(d: api.WorldDimensions, patchSize: Double) = unsupported
+  override def setDimensions(d: core.WorldDimensions) = unsupported
+  override def setDimensions(d: core.WorldDimensions, patchSize: Double) = unsupported
   override def resizeView(): Unit = unsupported
   override def runtimeError(owner: api.JobOwner,
                             context: nvm.Context,

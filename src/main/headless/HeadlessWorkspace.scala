@@ -6,12 +6,11 @@ package org.nlogo.headless
 // AbstractWorkspace are not, so if you want to document a method for everyone, override that method
 // here and document it here.  The overriding method can simply call super(). - ST 6/1/05, 7/28/11
 
-import org.nlogo.agent.Agent
-import org.nlogo.core.AgentKind
-import org.nlogo.api.{ Program, Version, RendererInterface, WorldDimensions,
+import org.nlogo.core.{ AgentKind, WorldDimensions }
+import org.nlogo.api.{ Program, Version, RendererInterface,
                        ModelReader, CompilerException, LogoException, SimpleJobOwner,
                        CommandRunnable, ReporterRunnable, UpdateMode }
-import org.nlogo.agent.World
+import org.nlogo.agent.{ Agent, World }
 import org.nlogo.nvm, nvm.{ LabInterface, Context, FrontEndInterface,
                             DefaultParserServices, CompilerInterface }
 import org.nlogo.workspace.AbstractWorkspace
