@@ -2,7 +2,7 @@
 
 package org.nlogo.prim
 
-import org.nlogo.api.Syntax
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Context, Reporter, Pure, CustomGenerated }
 
 class _or extends Reporter with Pure with CustomGenerated {

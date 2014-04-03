@@ -2,11 +2,11 @@
 
 package org.nlogo.headless
 
-import org.nlogo.api
+import org.nlogo.{ core, api }
 
 object ModelCreator {
 
-  def open(ws: HeadlessWorkspace, dimensions: api.WorldDimensions, source: String = "", widgets: List[Widget] = Nil) {
+  def open(ws: HeadlessWorkspace, dimensions: core.WorldDimensions, source: String = "", widgets: List[Widget] = Nil) {
     ws.openString(
       Model(code = source, dimensions = dimensions, widgets = widgets)
         .toString)
@@ -63,7 +63,7 @@ object ModelCreator {
   // a can have N widgets. plots, sliders, etc are widgets.
   trait Widget
 
-  case class Model(code: String = "", previewCode: String = "", widgets: List[Widget] = Nil, dimensions: api.WorldDimensions = api.WorldDimensions.square(16)) {
+  case class Model(code: String = "", previewCode: String = "", widgets: List[Widget] = Nil, dimensions: core.WorldDimensions = core.WorldDimensions.square(16)) {
     val sliders = widgets.filter(_.isInstanceOf[Slider])
     val switches = widgets.filter(_.isInstanceOf[Switch])
     val choosers = widgets.filter(_.isInstanceOf[Chooser])

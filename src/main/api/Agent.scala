@@ -2,6 +2,8 @@
 
 package org.nlogo.api
 
+import org.nlogo.core
+
 /**
  * NetLogo agents include turtles, patches, links and the observer.
  */
@@ -17,7 +19,7 @@ trait Agent {
   def id: Long
 
   /** Returns the kind of this agent (observer, turtle, patch, or link. */
-  def kind: AgentKind
+  def kind: core.AgentKind
 
   /** Returns the size of this agent */
   def size: Double

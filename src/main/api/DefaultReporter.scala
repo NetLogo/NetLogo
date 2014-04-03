@@ -2,6 +2,8 @@
 
 package org.nlogo.api
 
+import org.nlogo.core.Syntax
+
 /**
  * Partial implementation of Reporter provides common implementations of some methods.  Implements
  * every method except <code>report(...)</code>.

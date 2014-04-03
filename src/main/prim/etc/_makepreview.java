@@ -3,7 +3,7 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.CompilerException;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Procedure;
@@ -24,7 +24,7 @@ public final strictfp class _makepreview
         throw new EngineException(context, this, "no model loaded");
       }
       String previewPath = modelPath.substring(0, modelPath.lastIndexOf(".nlogo")) + ".png";
-      String escaped = org.nlogo.api.StringUtils.escapeString(previewPath);
+      String escaped = org.nlogo.core.StringEscaper.escapeString(previewPath);
       Procedure procedure =
           workspace.compileForRun
               ("random-seed 0 " + workspace.previewCommands() +

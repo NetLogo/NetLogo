@@ -2,7 +2,8 @@
 
 package org.nlogo.prim
 
-import org.nlogo.api.{ Syntax, Let }
+import org.nlogo.core.Syntax
+import org.nlogo.api.Let
 import org.nlogo.nvm.{ Command, Context }
 
 class _setletvariable(val let: Let) extends Command {

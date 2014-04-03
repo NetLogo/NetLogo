@@ -2,8 +2,9 @@
 
 package org.nlogo.nvm
 
-import org.nlogo.api
-import api.{ Dump, Nobody, Syntax, TypeNames, ExtensionException }
+import org.nlogo.{ api, core },
+  core.{ Syntax, TypeNames },
+  api.{ Dump, Nobody, ExtensionException }
 
 /**
  * Passes arguments to extension primitives.
@@ -150,7 +151,7 @@ class Argument(context: Context, arg: Reporter) extends api.Argument {
     "Expected this input to be " +
       TypeNames.aName(wantedType) + " but got " +
        (if(badValue == api.Nobody) "NOBODY"
-        else ("the " + TypeNames.name(badValue) + " " +
+        else ("the " + api.TypeNames.name(badValue) + " " +
               Dump.logoObject(badValue)) +
               " instead.")
 

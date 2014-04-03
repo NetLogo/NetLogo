@@ -2,7 +2,8 @@
 
 package org.nlogo.prim
 
-import org.nlogo.api.{ Syntax, Let }
+import org.nlogo.core.Syntax
+import org.nlogo.api.Let
 import org.nlogo.nvm.{ Context, Reporter }
 
 class _letvariable(_let: Let) extends Reporter {

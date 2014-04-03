@@ -2,6 +2,8 @@
 
 package org.nlogo.api
 
+import org.nlogo.core
+
 import java.util.{ Collection => JCollection, List => JList, Set => JSet }
 import collection.JavaConverters._
 
@@ -15,9 +17,9 @@ object ShapeList {
       .asJava
 }
 
-class ShapeList(val kind: AgentKind, _shapes: Seq[Shape]) {
+class ShapeList(val kind: core.AgentKind, _shapes: Seq[Shape]) {
 
-  def this(kind: AgentKind) = this(kind, Seq())
+  def this(kind: core.AgentKind) = this(kind, Seq())
 
   private val shapes = collection.mutable.HashMap[String, Shape]()
 

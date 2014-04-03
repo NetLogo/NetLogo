@@ -3,17 +3,17 @@
 package org.nlogo.lex
 
 import org.scalatest.FunSuite
-import org.nlogo.api, api.{ Token, TokenType }
+import org.nlogo.core.{ Token, TokenType }
 
 class TokenizerTests extends FunSuite {
 
   def tokenize(s: String) = {
-    val result = Tokenizer.tokenize(s, "").toSeq
+    val result = Tokenizer.tokenizeString(s, "").toSeq
     assertResult(TokenType.Eof)(result.last.tpe)
     result.dropRight(1)
   }
   def tokenizeRobustly(s: String) = {
-    val result = Tokenizer.tokenizeRobustly(new java.io.StringReader(s)).toList
+    val result = Tokenizer.tokenize(new java.io.StringReader(s)).toList
     assertResult(TokenType.Eof)(result.last.tpe)
     result.dropRight(1)
   }

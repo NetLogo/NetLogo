@@ -3,8 +3,9 @@
 package org.nlogo.lab
 
 import java.util.concurrent.{Callable, Executors, TimeUnit}
+import org.nlogo.core.WorldDimensions
 import org.nlogo.api.{Dump,LogoException, World,
-                      WorldDimensions, WorldDimensionException, SimpleJobOwner}
+                      WorldDimensionException, SimpleJobOwner}
 import org.nlogo.nvm.{LabInterface, Workspace}
 import org.nlogo.util.MersenneTwisterFast
 import LabInterface.ProgressListener

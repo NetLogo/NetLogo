@@ -2,8 +2,9 @@
 
 package org.nlogo.prim.etc
 
+import org.nlogo.core.Syntax
+import org.nlogo.api.LogoException
 import org.nlogo.agent.Turtle
-import org.nlogo.api.{ LogoException, Syntax }
 import org.nlogo.nvm.{ Context, Pure, Reporter }
 
 class _subtractheadings extends Reporter with Pure {

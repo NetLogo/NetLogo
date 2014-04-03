@@ -2,22 +2,22 @@
 
 package org.nlogo.agent
 
-import org.nlogo.{ api, util }
+import org.nlogo.{ api, core, util }
 
 object AgentSet {
   def fromAgent(agent: Agent): AgentSet =
     new ArrayAgentSet(agent.kind, null, Array(agent))
-  def fromIterator(kind: api.AgentKind, agents: Iterator[Agent]): AgentSet =
+  def fromIterator(kind: core.AgentKind, agents: Iterator[Agent]): AgentSet =
     new ArrayAgentSet(kind, null, agents.toArray)
   // for convenience from Java, overload instead of using default arguments
-  def fromArray(kind: api.AgentKind, agents: Array[Agent], printName: String = null): AgentSet =
+  def fromArray(kind: core.AgentKind, agents: Array[Agent], printName: String = null): AgentSet =
     new ArrayAgentSet(kind, printName, agents)
-  def fromArray(kind: api.AgentKind, agents: Array[Agent]): AgentSet =
+  def fromArray(kind: core.AgentKind, agents: Array[Agent]): AgentSet =
     new ArrayAgentSet(kind, null, agents)
 }
 
 abstract class AgentSet(
-  val kind: api.AgentKind,
+  val kind: core.AgentKind,
   val printName: String,
   val removableAgents: Boolean,
   // yuck, vars

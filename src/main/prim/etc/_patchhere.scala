@@ -3,7 +3,7 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.agent.{ Patch, Turtle }
-import org.nlogo.api.Syntax
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Context, Reporter }
 
 class _patchhere extends Reporter {

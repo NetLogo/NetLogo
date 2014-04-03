@@ -2,6 +2,8 @@
 
 package org.nlogo.api
 
+import org.nlogo.core.{ Token, TokenType }
+
 /**
  * Exception thrown by various methods that accept NetLogo code as input and cause that code to be
  * compiled; indicates the code was invalid.  May be inspected to discover the location and nature

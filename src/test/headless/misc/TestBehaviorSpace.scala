@@ -4,7 +4,7 @@ package org.nlogo.headless
 package misc
 
 import org.scalatest.{ FunSuite, OneInstancePerTest, BeforeAndAfterEach }
-import org.nlogo.api
+import org.nlogo.{ core, api }
 import org.nlogo.nvm.{ LabInterface, Workspace }
 import org.nlogo.workspace.AbstractWorkspace
 import org.nlogo.util.SlowTest
@@ -33,7 +33,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
   def stripLineFeeds(s: String) =
     s.replaceAll("\r\n", "\n")
 
-  def runExperiment(dim: api.WorldDimensions, declarations: String, name: String): HeadlessWorkspace = {
+  def runExperiment(dim: core.WorldDimensions, declarations: String, name: String): HeadlessWorkspace = {
     val workspace = newWorkspace()
     ModelCreator.open(workspace, dim, declarations)
     run("test/lab/" + name)(() => workspace, () => newWorker(name))
@@ -41,12 +41,12 @@ with OneInstancePerTest with BeforeAndAfterEach {
   }
   def runExperiment(worldSize: Int, declarations: String, name: String): HeadlessWorkspace =
     runExperiment(
-      api.WorldDimensions(-worldSize, worldSize, -worldSize, worldSize),
+      core.WorldDimensions(-worldSize, worldSize, -worldSize, worldSize),
       declarations, name)
   def runParallelExperiment(name: String, declarations: String = "") {
     def workspace = {
       val w = newWorkspace()
-      ModelCreator.open(w, api.WorldDimensions.square(0), declarations)
+      ModelCreator.open(w, core.WorldDimensions.square(0), declarations)
       w
     }
     // only get spreadsheet results, since parallel table results are in scrambled order - ST 3/4/09
@@ -133,7 +133,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
   }
   test("CarryoverBetweenRuns") {
     val workspace = newWorkspace()
-    ModelCreator.open(workspace, api.WorldDimensions.square(0), "globals [foo]")
+    ModelCreator.open(workspace, core.WorldDimensions.square(0), "globals [foo]")
     // no setup commands, so foo doesn't get reset
     newWorker("testCarryover")
       .run(workspace, () => workspace, 1)
@@ -168,7 +168,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
     runExperimentFromModel("models/test/lab/FireWithExperiments.nlogo", "test2", "models/test/lab/FireWithExperiments2")
   }
   test("ResizingWorld3") {
-    runExperiment(api.WorldDimensions(0, 1, 0, 1), "", "testResizingWorld3")
+    runExperiment(core.WorldDimensions(0, 1, 0, 1), "", "testResizingWorld3")
   }
   test("Stopping1") {
     runExperiment(0, "globals [x]",
@@ -246,7 +246,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
   */
   test("dontRunMetricsIfNoListener") {
     val workspace = newWorkspace()
-    ModelCreator.open(workspace, api.WorldDimensions.square(0))
+    ModelCreator.open(workspace, core.WorldDimensions.square(0))
     newWorker("metricGoBoom")
       .run(workspace, () => workspace, 1)
     // with no output being generated, the metrics shouldn't be run at all,

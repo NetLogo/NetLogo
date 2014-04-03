@@ -5,7 +5,7 @@ package misc
 
 import org.scalatest.FunSuite
 import org.nlogo.util.SlowTest
-import org.nlogo.{ api, agent, nvm }
+import org.nlogo.{ core, api, agent, nvm }
 
 object TestHalt {
   // This is ugly, but since we use reflection to instantiate HeadlessWorkspace it's hard to
@@ -60,7 +60,7 @@ class TestHalt extends FunSuite with SlowTest {
       }
     }
     withWorkspace {
-      ModelCreator.open(workspace, api.WorldDimensions.square(0), "globals [x]")
+      ModelCreator.open(workspace, core.WorldDimensions.square(0), "globals [x]")
       thread.start()
       def loop() {
         if (ex != null) throw ex

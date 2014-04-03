@@ -3,7 +3,7 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.agent.Patch
-import org.nlogo.api.Syntax
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Context, Pure, Reporter }
 
 class _ispatch extends Reporter with Pure {

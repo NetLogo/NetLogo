@@ -2,7 +2,8 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api.{ Syntax, I18N, AgentKind }
+import org.nlogo.core.{ Syntax, AgentKind }
+import org.nlogo.api.I18N
 import org.nlogo.nvm.{ Reporter, Context, EngineException, ArgumentTypeException }
 import org.nlogo.agent.{ Agent, Turtle, Patch, AgentSet }
 

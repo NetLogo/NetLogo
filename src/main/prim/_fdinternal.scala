@@ -2,7 +2,8 @@
 
 package org.nlogo.prim
 
-import org.nlogo.api.{ AgentException, Let, Syntax, Numbers }
+import org.nlogo.core.Syntax
+import org.nlogo.api.{ AgentException, Let, Numbers }
 import org.nlogo.nvm.{ Command, Context, MutableDouble }
 import org.nlogo.agent.Turtle
 

@@ -766,7 +766,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
                   ATHROW
                  L3
                   GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
-                  GETSTATIC org/nlogo/api/AgentKind$Turtle$.MODULE$ : Lorg/nlogo/api/AgentKind$Turtle$;
+                  GETSTATIC org/nlogo/core/AgentKind$Turtle$.MODULE$ : Lorg/nlogo/core/AgentKind$Turtle$;
                   ALOAD 0
                   GETFIELD org/nlogo/prim/_asm_procedurefindpartner_count_1.world : Lorg/nlogo/agent/World;
                   INVOKEVIRTUAL org/nlogo/agent/World.linkManager ()Lorg/nlogo/agent/LinkManager;
@@ -775,7 +775,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
                   CHECKCAST org/nlogo/agent/Turtle
                   ALOAD 2
                   INVOKEINTERFACE org/nlogo/agent/LinkManager.findLinkedWith (Lorg/nlogo/agent/Turtle;Lorg/nlogo/agent/AgentSet;)Lscala/collection/Iterator;
-                  INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromIterator (Lorg/nlogo/api/AgentKind;Lscala/collection/Iterator;)Lorg/nlogo/agent/AgentSet;
+                  INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromIterator (Lorg/nlogo/core/AgentKind;Lscala/collection/Iterator;)Lorg/nlogo/agent/AgentSet;
                  L4
                   ASTORE 2
                   ALOAD 2
@@ -994,7 +994,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
             ATHROW
            L3
             GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
-            GETSTATIC org/nlogo/api/AgentKind$Turtle$.MODULE$ : Lorg/nlogo/api/AgentKind$Turtle$;
+            GETSTATIC org/nlogo/core/AgentKind$Turtle$.MODULE$ : Lorg/nlogo/core/AgentKind$Turtle$;
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_procedurefindpartner_count_6.world : Lorg/nlogo/agent/World;
             INVOKEVIRTUAL org/nlogo/agent/World.linkManager ()Lorg/nlogo/agent/LinkManager;
@@ -1003,7 +1003,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
             CHECKCAST org/nlogo/agent/Turtle
             ALOAD 2
             INVOKEINTERFACE org/nlogo/agent/LinkManager.findLinkedWith (Lorg/nlogo/agent/Turtle;Lorg/nlogo/agent/AgentSet;)Lscala/collection/Iterator;
-            INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromIterator (Lorg/nlogo/api/AgentKind;Lscala/collection/Iterator;)Lorg/nlogo/agent/AgentSet;
+            INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromIterator (Lorg/nlogo/core/AgentKind;Lscala/collection/Iterator;)Lorg/nlogo/agent/AgentSet;
            L4
             ASTORE 2
             ALOAD 2

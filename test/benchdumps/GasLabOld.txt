@@ -2017,10 +2017,10 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
                   ALOAD 1
                   ALOAD 0
                   ICONST_0
-                  GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-                  INVOKEVIRTUAL org/nlogo/api/Syntax$.TurtlesetType ()I
-                  GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-                  INVOKEVIRTUAL org/nlogo/api/Syntax$.TurtleType ()I
+                  GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+                  INVOKEVIRTUAL org/nlogo/core/Syntax$.TurtlesetType ()I
+                  GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+                  INVOKEVIRTUAL org/nlogo/core/Syntax$.TurtleType ()I
                   IOR
                   ALOAD 2
                   INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -3671,10 +3671,10 @@ procedure CHECK-FOR-COLLISION:[]{-T--}:
           NEW org/nlogo/agent/AgentSetBuilder
           DUP
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/api/AgentKind;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/core/AgentKind;
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.count ()I
-          INVOKESPECIAL org/nlogo/agent/AgentSetBuilder.<init> (Lorg/nlogo/api/AgentKind;I)V
+          INVOKESPECIAL org/nlogo/agent/AgentSetBuilder.<init> (Lorg/nlogo/core/AgentKind;I)V
           ASTORE 3
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.iterator ()Lorg/nlogo/agent/AgentIterator;
@@ -3861,10 +3861,10 @@ procedure CHECK-FOR-COLLISION:[]{-T--}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.TurtlesetType ()I
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.TurtleType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.TurtlesetType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.TurtleType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -4311,10 +4311,10 @@ procedure GET-TURTLE2-INFO:[]{-T--}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.TurtlesetType ()I
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.TurtleType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.TurtlesetType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.TurtleType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -4461,10 +4461,10 @@ procedure GET-TURTLE2-INFO:[]{-T--}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.TurtlesetType ()I
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.TurtleType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.TurtlesetType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.TurtleType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -4611,10 +4611,10 @@ procedure GET-TURTLE2-INFO:[]{-T--}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.TurtlesetType ()I
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.TurtleType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.TurtlesetType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.TurtleType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -8018,10 +8018,10 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.AgentsetType ()I
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.AgentType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.AgentsetType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.AgentType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -9785,10 +9785,10 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.AgentsetType ()I
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.AgentType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.AgentsetType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.AgentType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -9988,10 +9988,10 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.TurtlesetType ()I
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.TurtleType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.TurtlesetType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.TurtleType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -10213,10 +10213,10 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.AgentsetType ()I
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.AgentType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.AgentsetType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.AgentType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -10367,10 +10367,10 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.TurtlesetType ()I
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.TurtleType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.TurtlesetType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.TurtleType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -10592,10 +10592,10 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.AgentsetType ()I
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.AgentType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.AgentsetType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.AgentType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -10757,10 +10757,10 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.AgentsetType ()I
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.AgentType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.AgentsetType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.AgentType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -12745,14 +12745,14 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
            L7
             GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
             ALOAD 2
-            INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/api/AgentKind;
+            INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/core/AgentKind;
             ALOAD 5
             GETSTATIC scala/reflect/ClassTag$.MODULE$ : Lscala/reflect/ClassTag$;
             LDC Lorg/nlogo/agent/Agent;.class
             INVOKEVIRTUAL scala/reflect/ClassTag$.apply (Ljava/lang/Class;)Lscala/reflect/ClassTag;
             INVOKEVIRTUAL scala/collection/mutable/ArrayBuffer.toArray (Lscala/reflect/ClassTag;)Ljava/lang/Object;
             CHECKCAST [Lorg/nlogo/agent/Agent;
-            INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromArray (Lorg/nlogo/api/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
+            INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromArray (Lorg/nlogo/core/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
            L11
             ASTORE 2
            L2
@@ -12836,10 +12836,10 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ALOAD 1
             ALOAD 0
             ICONST_0
-            GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-            INVOKEVIRTUAL org/nlogo/api/Syntax$.TurtlesetType ()I
-            GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-            INVOKEVIRTUAL org/nlogo/api/Syntax$.TurtleType ()I
+            GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+            INVOKEVIRTUAL org/nlogo/core/Syntax$.TurtlesetType ()I
+            GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+            INVOKEVIRTUAL org/nlogo/core/Syntax$.TurtleType ()I
             IOR
             ALOAD 2
             INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -13020,14 +13020,14 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
            L7
             GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
             ALOAD 2
-            INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/api/AgentKind;
+            INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/core/AgentKind;
             ALOAD 5
             GETSTATIC scala/reflect/ClassTag$.MODULE$ : Lscala/reflect/ClassTag$;
             LDC Lorg/nlogo/agent/Agent;.class
             INVOKEVIRTUAL scala/reflect/ClassTag$.apply (Ljava/lang/Class;)Lscala/reflect/ClassTag;
             INVOKEVIRTUAL scala/collection/mutable/ArrayBuffer.toArray (Lscala/reflect/ClassTag;)Ljava/lang/Object;
             CHECKCAST [Lorg/nlogo/agent/Agent;
-            INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromArray (Lorg/nlogo/api/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
+            INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromArray (Lorg/nlogo/core/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
            L11
             ASTORE 2
            L2
@@ -13111,10 +13111,10 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ALOAD 1
             ALOAD 0
             ICONST_0
-            GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-            INVOKEVIRTUAL org/nlogo/api/Syntax$.TurtlesetType ()I
-            GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-            INVOKEVIRTUAL org/nlogo/api/Syntax$.TurtleType ()I
+            GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+            INVOKEVIRTUAL org/nlogo/core/Syntax$.TurtlesetType ()I
+            GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+            INVOKEVIRTUAL org/nlogo/core/Syntax$.TurtleType ()I
             IOR
             ALOAD 2
             INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -13295,14 +13295,14 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
            L7
             GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
             ALOAD 2
-            INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/api/AgentKind;
+            INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/core/AgentKind;
             ALOAD 5
             GETSTATIC scala/reflect/ClassTag$.MODULE$ : Lscala/reflect/ClassTag$;
             LDC Lorg/nlogo/agent/Agent;.class
             INVOKEVIRTUAL scala/reflect/ClassTag$.apply (Ljava/lang/Class;)Lscala/reflect/ClassTag;
             INVOKEVIRTUAL scala/collection/mutable/ArrayBuffer.toArray (Lscala/reflect/ClassTag;)Ljava/lang/Object;
             CHECKCAST [Lorg/nlogo/agent/Agent;
-            INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromArray (Lorg/nlogo/api/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
+            INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromArray (Lorg/nlogo/core/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
            L11
             ASTORE 2
            L2
@@ -13386,10 +13386,10 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ALOAD 1
             ALOAD 0
             ICONST_0
-            GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-            INVOKEVIRTUAL org/nlogo/api/Syntax$.TurtlesetType ()I
-            GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-            INVOKEVIRTUAL org/nlogo/api/Syntax$.TurtleType ()I
+            GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+            INVOKEVIRTUAL org/nlogo/core/Syntax$.TurtlesetType ()I
+            GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+            INVOKEVIRTUAL org/nlogo/core/Syntax$.TurtleType ()I
             IOR
             ALOAD 2
             INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -13661,14 +13661,14 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
            L7
             GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
             ALOAD 2
-            INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/api/AgentKind;
+            INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/core/AgentKind;
             ALOAD 5
             GETSTATIC scala/reflect/ClassTag$.MODULE$ : Lscala/reflect/ClassTag$;
             LDC Lorg/nlogo/agent/Agent;.class
             INVOKEVIRTUAL scala/reflect/ClassTag$.apply (Ljava/lang/Class;)Lscala/reflect/ClassTag;
             INVOKEVIRTUAL scala/collection/mutable/ArrayBuffer.toArray (Lscala/reflect/ClassTag;)Ljava/lang/Object;
             CHECKCAST [Lorg/nlogo/agent/Agent;
-            INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromArray (Lorg/nlogo/api/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
+            INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromArray (Lorg/nlogo/core/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
            L11
             ASTORE 2
            L2
@@ -13752,10 +13752,10 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ALOAD 1
             ALOAD 0
             ICONST_0
-            GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-            INVOKEVIRTUAL org/nlogo/api/Syntax$.TurtlesetType ()I
-            GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-            INVOKEVIRTUAL org/nlogo/api/Syntax$.TurtleType ()I
+            GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+            INVOKEVIRTUAL org/nlogo/core/Syntax$.TurtlesetType ()I
+            GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+            INVOKEVIRTUAL org/nlogo/core/Syntax$.TurtleType ()I
             IOR
             ALOAD 2
             INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -13936,14 +13936,14 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
            L7
             GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
             ALOAD 2
-            INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/api/AgentKind;
+            INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/core/AgentKind;
             ALOAD 5
             GETSTATIC scala/reflect/ClassTag$.MODULE$ : Lscala/reflect/ClassTag$;
             LDC Lorg/nlogo/agent/Agent;.class
             INVOKEVIRTUAL scala/reflect/ClassTag$.apply (Ljava/lang/Class;)Lscala/reflect/ClassTag;
             INVOKEVIRTUAL scala/collection/mutable/ArrayBuffer.toArray (Lscala/reflect/ClassTag;)Ljava/lang/Object;
             CHECKCAST [Lorg/nlogo/agent/Agent;
-            INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromArray (Lorg/nlogo/api/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
+            INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromArray (Lorg/nlogo/core/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
            L11
             ASTORE 2
            L2
@@ -14027,10 +14027,10 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ALOAD 1
             ALOAD 0
             ICONST_0
-            GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-            INVOKEVIRTUAL org/nlogo/api/Syntax$.TurtlesetType ()I
-            GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-            INVOKEVIRTUAL org/nlogo/api/Syntax$.TurtleType ()I
+            GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+            INVOKEVIRTUAL org/nlogo/core/Syntax$.TurtlesetType ()I
+            GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+            INVOKEVIRTUAL org/nlogo/core/Syntax$.TurtleType ()I
             IOR
             ALOAD 2
             INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -14211,14 +14211,14 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
            L7
             GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
             ALOAD 2
-            INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/api/AgentKind;
+            INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/core/AgentKind;
             ALOAD 5
             GETSTATIC scala/reflect/ClassTag$.MODULE$ : Lscala/reflect/ClassTag$;
             LDC Lorg/nlogo/agent/Agent;.class
             INVOKEVIRTUAL scala/reflect/ClassTag$.apply (Ljava/lang/Class;)Lscala/reflect/ClassTag;
             INVOKEVIRTUAL scala/collection/mutable/ArrayBuffer.toArray (Lscala/reflect/ClassTag;)Ljava/lang/Object;
             CHECKCAST [Lorg/nlogo/agent/Agent;
-            INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromArray (Lorg/nlogo/api/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
+            INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromArray (Lorg/nlogo/core/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
            L11
             ASTORE 2
            L2
@@ -14302,10 +14302,10 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ALOAD 1
             ALOAD 0
             ICONST_0
-            GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-            INVOKEVIRTUAL org/nlogo/api/Syntax$.TurtlesetType ()I
-            GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-            INVOKEVIRTUAL org/nlogo/api/Syntax$.TurtleType ()I
+            GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+            INVOKEVIRTUAL org/nlogo/core/Syntax$.TurtlesetType ()I
+            GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+            INVOKEVIRTUAL org/nlogo/core/Syntax$.TurtleType ()I
             IOR
             ALOAD 2
             INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V

@@ -3,7 +3,7 @@
 package org.nlogo.prim
 
 import org.nlogo.agent.{ AgentSet, AgentSetBuilder }
-import org.nlogo.api.Syntax
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Reporter, Context }
 
 class _other extends Reporter {

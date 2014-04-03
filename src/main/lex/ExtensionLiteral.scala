@@ -2,7 +2,7 @@
 
 package org.nlogo.lex
 
-import org.nlogo.api, api.{ Token, TokenType }
+import org.nlogo.core, core.{ Token, TokenType }
 
 class ExtensionLiteral(start: Int, filename: String) {
 

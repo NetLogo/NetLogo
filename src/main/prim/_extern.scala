@@ -2,8 +2,8 @@
 
 package org.nlogo.prim
 
-import org.nlogo.{ api, nvm }
-import api.Syntax
+import org.nlogo.{ api, core, nvm },
+  core.Syntax
 
 class _extern(command: api.Command) extends nvm.Command with nvm.CustomAssembled {
 

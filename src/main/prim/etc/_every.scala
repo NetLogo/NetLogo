@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api.Syntax
+import org.nlogo.core.Syntax
 import org.nlogo.nvm, nvm.{ Command, Context, MutableLong }
 
 import collection.mutable.WeakHashMap;

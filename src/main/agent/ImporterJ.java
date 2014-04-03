@@ -2,14 +2,14 @@
 
 package org.nlogo.agent;
 
+import org.nlogo.core.AgentKind;
+import org.nlogo.core.AgentKindJ;
+import org.nlogo.core.WorldDimensions;
 import org.nlogo.api.AgentException;
-import org.nlogo.api.AgentKind;
-import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.AgentVariables;
 import org.nlogo.api.Breed;
 import org.nlogo.api.ImporterUser;
 import org.nlogo.api.Perspective;
-import org.nlogo.api.WorldDimensions;
 
 import scala.collection.Seq;
 

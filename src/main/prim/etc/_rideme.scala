@@ -2,8 +2,9 @@
 
 package org.nlogo.prim.etc
 
+import org.nlogo.core.Syntax
+import org.nlogo.api.Perspective
 import org.nlogo.nvm.{ Command, Context }
-import org.nlogo.api.{ Perspective, Syntax }
 
 class _rideme extends Command {
   override def syntax =

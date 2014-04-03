@@ -2,7 +2,8 @@
 
 package org.nlogo.prim
 
-import org.nlogo.api.{ Syntax, LogoList }
+import org.nlogo.core.Syntax
+import org.nlogo.api.LogoList
 import org.nlogo.nvm.{ Reporter, Pure, Context }
 
 class _sum extends Reporter with Pure {

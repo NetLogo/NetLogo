@@ -2,8 +2,9 @@
 
 package org.nlogo.workspace
 
-import org.nlogo.{ api, plot },
-  api.ModelReader, api.StringUtils.escapeString,
+import org.nlogo.{ core, api, plot },
+  api.ModelReader,
+  core.StringEscaper.escapeString,
   plot.PlotLoader
 
 class WidgetParser(

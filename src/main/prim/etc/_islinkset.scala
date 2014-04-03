@@ -2,8 +2,8 @@
 
 package org.nlogo.prim.etc
 
+import org.nlogo.core.{ AgentKind, Syntax }
 import org.nlogo.agent.{ AgentSet, Link }
-import org.nlogo.api.{ AgentKind, Syntax }
 import org.nlogo.nvm.{ Context, Pure, Reporter }
 
 class _islinkset extends Reporter with Pure {

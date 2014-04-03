@@ -3,7 +3,7 @@
 package org.nlogo.prim
 
 import org.nlogo.agent.Patch
-import org.nlogo.api.Syntax
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Command, Context }
 
 // replaces _sprout when initialization block is empty

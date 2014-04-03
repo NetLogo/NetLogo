@@ -2,7 +2,8 @@
 
 package org.nlogo.prim
 
-import org.nlogo.api.{ Syntax, Let, LogoException }
+import org.nlogo.core.Syntax
+import org.nlogo.api.{ Let, LogoException }
 import org.nlogo.nvm.{ Reporter, Context }
 
 /**

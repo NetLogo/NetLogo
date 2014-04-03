@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.api
+package org.nlogo.core
 
 // What kind of object is stored in the value slot is will vary depending on the token type.  If the
 // type is COMMAND or REPORTER, a Command or Reporter object will be stored.  If the type is

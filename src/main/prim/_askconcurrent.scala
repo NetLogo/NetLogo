@@ -2,7 +2,8 @@
 
 package org.nlogo.prim
 
-import org.nlogo.api.{ Syntax, I18N }
+import org.nlogo.core.Syntax
+import org.nlogo.api.I18N
 import org.nlogo.nvm.{ Command, CustomAssembled, Context,
                        EngineException, AssemblerAssistant }
 import org.nlogo.agent.Observer

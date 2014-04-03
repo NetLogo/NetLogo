@@ -2,11 +2,11 @@
 
 package org.nlogo.agent
 
-import org.nlogo.api
+import org.nlogo.core
 
-class AgentSetBuilder(kind: api.AgentKind, capacity: Int) {
+class AgentSetBuilder(kind: core.AgentKind, capacity: Int) {
   // for convenience from Java
-  def this(kind: api.AgentKind) =
+  def this(kind: core.AgentKind) =
     this(kind, 1)
   private[this] var buf =
     collection.mutable.ArrayBuffer[Agent]()

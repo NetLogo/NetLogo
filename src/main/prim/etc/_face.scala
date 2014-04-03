@@ -2,8 +2,9 @@
 
 package org.nlogo.prim.etc
 
+import org.nlogo.core.Syntax
+import org.nlogo.api.I18N
 import org.nlogo.agent.{ Agent, Link, Turtle }
-import org.nlogo.api.{ I18N, Syntax }
 import org.nlogo.nvm.{ Command, Context, EngineException }
 
 class _face extends Command {

@@ -2,13 +2,13 @@
 
 package org.nlogo.nvm
 
-import org.nlogo.api
+import org.nlogo.{ api, core }
 
 class Procedure(
   val isReporter: Boolean,
   val name: String,
-  val nameToken: api.Token,
-  val argTokens: Seq[api.Token],
+  val nameToken: core.Token,
+  val argTokens: Seq[core.Token],
   _displayName: Option[String] = None,
   val parent: Procedure = null) {
 
@@ -31,7 +31,7 @@ class Procedure(
   // that's determined by TaskVisitor. so for now this is mutable - ST 2/4/11
   val taskFormals = collection.mutable.Buffer[api.Let]()
 
-  def getTaskFormal(n: Int, token: api.Token): api.Let = {
+  def getTaskFormal(n: Int, token: core.Token): api.Let = {
     while (taskFormals.size < n)
       taskFormals += api.Let("?" + n, token.start, token.end)
     taskFormals.last
@@ -51,12 +51,12 @@ class Procedure(
       displayName.getOrElse("procedure " + nameAndFile)
     }
 
-  def syntax: api.Syntax = {
-    val right = Array.fill(args.size - localsCount)(api.Syntax.WildcardType)
+  def syntax: core.Syntax = {
+    val right = Array.fill(args.size - localsCount)(core.Syntax.WildcardType)
     if (isReporter)
-      api.Syntax.reporterSyntax(right, api.Syntax.WildcardType)
+      core.Syntax.reporterSyntax(right, core.Syntax.WildcardType)
     else
-      api.Syntax.commandSyntax(right)
+      core.Syntax.commandSyntax(right)
   }
 
   override def toString =

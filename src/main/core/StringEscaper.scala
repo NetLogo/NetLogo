@@ -1,10 +1,10 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.api
+package org.nlogo.core
 
 // This object holds methods that are used specifically with NetLogo strings.
 
-object StringUtils {
+object StringEscaper {
   def escapeString(s: String): String =
     s.flatMap{
       case '\n' => "\\n"

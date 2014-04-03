@@ -2,8 +2,8 @@
 
 package org.nlogo.prim
 
+import org.nlogo.core.{ Syntax, AgentKind }
 import org.nlogo.agent.{ Turtle, AgentSet, AgentSetBuilder }
-import org.nlogo.api.{ Syntax, AgentKind }
 import org.nlogo.nvm.{ Command, Context, CustomAssembled, AssemblerAssistant }
 
 class _createturtles(val breedName: String) extends Command with CustomAssembled {

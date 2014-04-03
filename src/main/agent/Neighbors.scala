@@ -2,7 +2,7 @@
 
 package org.nlogo.agent
 
-import org.nlogo.api
+import org.nlogo.core
 
 trait Neighbors {
 
@@ -21,7 +21,7 @@ trait Neighbors {
   // this is very general and therefore has poor performance,
   // but we don't care because Patch caches the results - ST 3/29/13
   private def fromGetters(source: Patch, getters: Seq[Patch => Patch]): AgentSet =
-    AgentSet.fromArray(api.AgentKind.Patch,
+    AgentSet.fromArray(core.AgentKind.Patch,
       getters.map(_(source))
         .filter(p => p != null && (p ne source))
         .distinct

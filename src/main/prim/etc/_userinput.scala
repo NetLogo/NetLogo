@@ -2,7 +2,8 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api.{ Dump, I18N, ReporterRunnable, Syntax }
+import org.nlogo.core.Syntax
+import org.nlogo.api.{ Dump, I18N, ReporterRunnable }
 import org.nlogo.nvm.{ Context, EngineException, HaltException, Reporter }
 
 class _userinput extends Reporter {

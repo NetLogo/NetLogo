@@ -2,7 +2,8 @@
 
 package org.nlogo.api
 
-import collection.JavaConverters._
+import org.nlogo.core,
+  collection.JavaConverters._
 
 object Dump {
 
@@ -47,7 +48,7 @@ object Dump {
         number(d)
       case s: String =>
         if (readable)
-          "\"" + StringUtils.escapeString(s) + "\""
+          "\"" + core.StringEscaper.escapeString(s) + "\""
         else s
       case a: AgentSet =>
         agentset(a, exporting)
@@ -104,19 +105,19 @@ object Dump {
         val buf = new StringBuilder
         buf ++= "(agentset, " + as.count + " "
         as.kind match {
-          case AgentKind.Turtle =>
+          case core.AgentKind.Turtle =>
             buf ++= "turtle"
             if (as.count != 1)
               buf += 's'
-          case AgentKind.Link =>
+          case core.AgentKind.Link =>
             buf ++= "link"
             if (as.count != 1)
               buf += 's'
-          case AgentKind.Patch =>
+          case core.AgentKind.Patch =>
             buf ++= "patch"
             if (as.count != 1)
               buf ++= "es"
-          case AgentKind.Observer =>
+          case core.AgentKind.Observer =>
             buf ++= "observer"
         }
         buf += ')'
@@ -127,7 +128,7 @@ object Dump {
       buf += '{'
       buf ++=
         (as.kind match {
-          case AgentKind.Turtle =>
+          case core.AgentKind.Turtle =>
             Option(as.printName).map(_.toLowerCase) match {
               case None =>
                 val ids = as.agents.asScala.map(_.id.toString).toSeq
@@ -137,7 +138,7 @@ object Dump {
               case Some(breed) =>
                 "breed " + breed
             }
-          case AgentKind.Link =>
+          case core.AgentKind.Link =>
             Option(as.printName).map(_.toLowerCase) match {
               case None =>
                 def linkString(link: Link) =
@@ -149,7 +150,7 @@ object Dump {
               case Some(breed) =>
                 "breed " + breed
             }
-          case AgentKind.Patch =>
+          case core.AgentKind.Patch =>
             Option(as.printName).map(_.toLowerCase) match {
               case None =>
                 def patchString(p: Patch) =
@@ -161,7 +162,7 @@ object Dump {
               case Some(x) =>
                 x
             }
-          case AgentKind.Observer =>
+          case core.AgentKind.Observer =>
             "observer"
         })
       buf ++= "}"

@@ -2,7 +2,7 @@
 
 package org.nlogo.agent
 
-import org.nlogo.api
+import org.nlogo.core
 import collection.JavaConverters._
 
 // this exists to support recompiling a model without causing agent state information to be lost.
@@ -23,11 +23,11 @@ object Realloc {
     for(breedName <- program.breeds.keys)
       world.breedAgents.put(breedName,
         Option(world.breedAgents.get(breedName)).getOrElse(
-          new TreeAgentSet(api.AgentKind.Turtle, breedName.toUpperCase)))
+          new TreeAgentSet(core.AgentKind.Turtle, breedName.toUpperCase)))
     for(breedName <- program.linkBreeds.keys)
       world.linkBreedAgents.put(breedName,
         Option(world.linkBreedAgents.get(breedName)).getOrElse(
-          new TreeAgentSet(api.AgentKind.Link, breedName.toUpperCase)))
+          new TreeAgentSet(core.AgentKind.Link, breedName.toUpperCase)))
     // make sure directednesses are up-to-date
     for((name, breed) <- program.linkBreeds)
       world.linkBreedAgents.get(name).setDirected(breed.isDirected)

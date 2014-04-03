@@ -2,7 +2,8 @@
 
 package org.nlogo.prim
 
-import org.nlogo.api.{ Let, Syntax }
+import org.nlogo.core.Syntax
+import org.nlogo.api.Let
 import org.nlogo.nvm.{ ReporterTask, Context, Reporter }
 
 class _reportertask extends Reporter {

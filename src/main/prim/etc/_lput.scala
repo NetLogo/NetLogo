@@ -2,7 +2,8 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api.{ Syntax, LogoList }
+import org.nlogo.core.Syntax
+import org.nlogo.api.LogoList
 import org.nlogo.nvm.{ Context, Pure, Reporter }
 
 class _lput extends Reporter with Pure {

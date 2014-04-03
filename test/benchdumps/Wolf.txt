@@ -2939,10 +2939,10 @@ procedure CATCH-SHEEP:[]{-T--}:
           ASTORE 2
           NEW org/nlogo/agent/AgentSetBuilder
           DUP
-          GETSTATIC org/nlogo/api/AgentKind$Turtle$.MODULE$ : Lorg/nlogo/api/AgentKind$Turtle$;
+          GETSTATIC org/nlogo/core/AgentKind$Turtle$.MODULE$ : Lorg/nlogo/core/AgentKind$Turtle$;
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Patch.turtleCount ()I
-          INVOKESPECIAL org/nlogo/agent/AgentSetBuilder.<init> (Lorg/nlogo/api/AgentKind;I)V
+          INVOKESPECIAL org/nlogo/agent/AgentSetBuilder.<init> (Lorg/nlogo/core/AgentKind;I)V
           ASTORE 7
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurecatchsheep_setturtlevariable_0.world : Lorg/nlogo/agent/World;
@@ -3194,10 +3194,10 @@ procedure CATCH-SHEEP:[]{-T--}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.AgentsetType ()I
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.AgentType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.AgentsetType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.AgentType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V

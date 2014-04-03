@@ -2,7 +2,8 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api.{ Syntax, OutputDestination }
+import org.nlogo.core.Syntax
+import org.nlogo.api.OutputDestination
 import org.nlogo.nvm.{ Command, Context }
 
 class _pwd extends Command {

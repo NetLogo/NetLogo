@@ -24,7 +24,7 @@ extends PlotPenInterface {
   def setupCode(code: String) { setupCode = if(code == null) "" else code }
   def updateCode(code: String) { updateCode = if(code == null) "" else code }
   def saveString = {
-    import org.nlogo.api.StringUtils.escapeString
+    import org.nlogo.core.StringEscaper.escapeString
     "\"" + escapeString(setupCode.trim) + "\"" + " " + "\"" + escapeString(updateCode.trim) + "\""
   }
 

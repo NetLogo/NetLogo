@@ -2,7 +2,8 @@
 
 package org.nlogo.prim
 
-import org.nlogo.api.{ Syntax, AgentException }
+import org.nlogo.core.Syntax
+import org.nlogo.api.AgentException
 import org.nlogo.nvm.{ Command, Context, EngineException }
 
 class _setlinkvariable(_vn: Int) extends Command {

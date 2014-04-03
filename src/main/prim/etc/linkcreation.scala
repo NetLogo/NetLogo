@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.{ api, agent, nvm },
+import org.nlogo.{ api, agent, core, nvm },
   agent.{ Turtle, Link, LinkManager, AgentSet, AgentSetBuilder },
   nvm.{ Command, Context, EngineException }
 
@@ -18,8 +18,8 @@ trait LinkCreationCommand extends Command with nvm.CustomAssembled {
   override def toString =
     super.toString + ":" + breedName + ",+" + offset
   override def syntax =
-    api.Syntax.commandSyntax(
-      Array(inputType, api.Syntax.CommandBlockType | api.Syntax.OptionalType),
+    core.Syntax.commandSyntax(
+      Array(inputType, core.Syntax.CommandBlockType | core.Syntax.OptionalType),
       "-T--", "---L", true)
   override def perform(context: Context) {
     val breed =
@@ -66,7 +66,7 @@ trait LinkCreationCommand extends Command with nvm.CustomAssembled {
 }
 
 trait Single extends LinkCreationCommand {
-  override def inputType = api.Syntax.TurtleType
+  override def inputType = core.Syntax.TurtleType
   override def create(context: Context, breed: AgentSet, me: Turtle) =
     perhapsLink(context, me, argEvalTurtle(context, 0), breed)
       .map(AgentSet.fromAgent)
@@ -74,13 +74,13 @@ trait Single extends LinkCreationCommand {
 }
 
 trait Multiple extends LinkCreationCommand {
-  override def inputType = api.Syntax.TurtlesetType
+  override def inputType = core.Syntax.TurtlesetType
   override def create(context: Context, breed: AgentSet, me: Turtle) = {
     val others = argEvalAgentSet(context, 0)
-    if (others.kind != api.AgentKind.Turtle)
+    if (others.kind != core.AgentKind.Turtle)
       throw new nvm.ArgumentTypeException(
-        context, this, 0, api.Syntax.TurtlesetType, others)
-    val builder = new AgentSetBuilder(api.AgentKind.Link, others.count)
+        context, this, 0, core.Syntax.TurtlesetType, others)
+    val builder = new AgentSetBuilder(core.AgentKind.Link, others.count)
     // we must shuffle so who number assignment is random - ST 3/15/06
     val iter = others.shufflerator(context.job.random)
     while(iter.hasNext) {

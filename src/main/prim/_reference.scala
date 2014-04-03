@@ -2,7 +2,7 @@
 
 package org.nlogo.prim
 
-import org.nlogo.api.Syntax
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Reporter, Reference, Context }
 
 class _reference(_reference: Reference) extends Reporter {

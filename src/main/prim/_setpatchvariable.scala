@@ -2,7 +2,8 @@
 
 package org.nlogo.prim
 
-import org.nlogo.api.{ Syntax, AgentException }
+import org.nlogo.core.Syntax
+import org.nlogo.api.AgentException
 import org.nlogo.nvm.{ Context, Command, EngineException }
 
 class _setpatchvariable(_vn: Int) extends Command {

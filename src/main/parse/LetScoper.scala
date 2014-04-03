@@ -2,7 +2,8 @@
 
 package org.nlogo.parse
 
-import org.nlogo.api.{ Token, TokenType, Let }
+import org.nlogo.core.{ Token, TokenType }
+import org.nlogo.api.Let
 import Fail._
 
 // Finds uses of "let" and creates Let objects with start and end slots that restrict the scope of

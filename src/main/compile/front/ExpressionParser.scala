@@ -4,7 +4,9 @@ package org.nlogo.compile
 package front
 
 import Fail.{ cAssert, exception }
-import org.nlogo.api.{ LogoList, Nobody, Syntax, Token, TokenType, TypeNames }
+import org.nlogo.{ core, api },
+  core.{ Syntax, Token, TokenType },
+  api.{ LogoList, Nobody }
 import Syntax.compatible
 import org.nlogo.nvm.{ Command, Instruction, Procedure, Referenceable, Reporter}
 import org.nlogo.prim._
@@ -143,7 +145,7 @@ class ExpressionParser(procedure: Procedure) {
    */
   private def missingInput(app: Application, right: Boolean): String = {
     val syntax = app.instruction.syntax
-    val rightArgs = syntax.right.map(TypeNames.aName(_).replaceFirst("anything", "any input"))
+    val rightArgs = syntax.right.map(core.TypeNames.aName(_).replaceFirst("anything", "any input"))
     val left = syntax.left
     val result =
       if(right && isVariadic(app.instruction) && syntax.minimum == 0)
@@ -153,7 +155,7 @@ class ExpressionParser(procedure: Procedure) {
         app.instruction.displayName + " expected " + (if(isVariadic(app.instruction)) "at least " else "") +
         (if(right) syntax.rightDefault + " input" + (if(syntax.rightDefault > 1) "s" else "") +
                     (if(syntax.isInfix) " on the right" else "")
-         else TypeNames.aName(left) + " on the left.")
+         else core.TypeNames.aName(left) + " on the left.")
     if(!right)
       result
     else if(rightArgs.forall(_ == "any input"))
@@ -230,8 +232,8 @@ class ExpressionParser(procedure: Procedure) {
       case _ => originalArg
     }
     cAssert(compatible(goalType, arg.reportedType),
-            instruction + " expected this input to be " + TypeNames.aName(goalType) + ", but got " +
-            TypeNames.aName(arg.reportedType) + " instead", arg)
+            instruction + " expected this input to be " + core.TypeNames.aName(goalType) + ", but got " +
+            core.TypeNames.aName(arg.reportedType) + " instead", arg)
     if(goalType == Syntax.ReferenceType) {
       // we can be sure this cast will work, because otherwise the assert above would've failed (no
       // Expression other than a ReporterApp can have type ReferenceType, which it must or we
@@ -561,7 +563,7 @@ class ExpressionParser(procedure: Procedure) {
       new ReporterApp(tmp, openBracket.start, closeBracket.end, closeBracket.filename)
     }
     // we weren't actually expecting a block at all!
-    else exception("Expected " + TypeNames.aName(goalType) + " here, rather than a list or block.", block)
+    else exception("Expected " + core.TypeNames.aName(goalType) + " here, rather than a list or block.", block)
   }
 
   private class MissingPrefixException(val token: Token) extends Exception

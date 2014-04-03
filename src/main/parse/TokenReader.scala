@@ -2,14 +2,14 @@
 
 package org.nlogo.parse
 
-import org.nlogo.api
+import org.nlogo.{ core, api }
 
 // This exists to support the file-read primitive, which uses LiteralParser.  During normal
 // compilation we just slurp all of the code into memory before doing any parsing, but it
 // wouldn't be OK for file-read to slurp a whole data file, so LiteralParser uses Iterator[Token].
 
-class TokenReader(file: api.File, tokenizer: api.TokenizerInterface)
-extends Iterator[api.Token] {
+class TokenReader(file: api.File, tokenizer: core.TokenizerInterface)
+extends Iterator[core.Token] {
 
   // code elsewhere is expected to detect eof for us
   def hasNext = true
@@ -23,7 +23,7 @@ extends Iterator[api.Token] {
   // complexities, but it's also possible that even within that constraint, this stuff
   // doesn't need to be so complex either.  I really don't know. - ST 12/19/08
 
-  def next(): api.Token = {
+  def next(): core.Token = {
     def reader = file.reader // def not val because we close & reopen the file below
     val pos = file.pos
     // here we set an arbitrary ceiling on amount of buffered lookahead we let ourselves do.  we
@@ -35,8 +35,8 @@ extends Iterator[api.Token] {
     // would become unreasonably slow again, but 356K is pretty big so I'm not going to worry about
     // it, at least until the day when the whole LocalFile mess gets straightened out. - ST 1/21/09
     reader.mark(65536)
-    val t = tokenizer.tokenizeRobustly(reader).next()
-    if (t.tpe == api.TokenType.Bad)
+    val t = tokenizer.tokenize(reader).next()
+    if (t.tpe == core.TokenType.Bad)
       throw new api.CompilerException(t)
     // after Tokenizer has done its thing, we no longer know what relationship holds between
     // the BufferedReader's position and file.pos, so the following code makes sure they are

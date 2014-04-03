@@ -2,7 +2,7 @@
 
 package org.nlogo.prim
 
-import org.nlogo.api.Syntax
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Command, Context }
 
 // We insert this as the last command in top-level procedures that we don't want to return.  That

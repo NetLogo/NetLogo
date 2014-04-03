@@ -2,7 +2,7 @@
 
 package org.nlogo.generate
 
-import org.nlogo.api.Syntax
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Command, CustomGenerated, GeneratorInterface, Instruction, Procedure, Reporter }
 
 object Generator {

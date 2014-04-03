@@ -4,7 +4,7 @@ package org.nlogo.compile
 package front
 
 import org.scalatest.FunSuite
-import org.nlogo.{ api, nvm }
+import org.nlogo.{ core, api, nvm }
 
 class FrontEndExtrasTests extends FunSuite {
 
@@ -19,7 +19,7 @@ class FrontEndExtrasTests extends FunSuite {
   val (proceduresMap, program) = {
     def dummyProcedure(p: ProcedureDefinition) =
       new nvm.Procedure(p.procedure.isReporter, p.procedure.name,
-        api.Token.Eof, Seq())
+        core.Token.Eof, Seq())
     val (procedures, structureResults) = FrontEnd.frontEnd(src)
     val proceduresMap =
       collection.immutable.ListMap(

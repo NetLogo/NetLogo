@@ -6,7 +6,7 @@ import scala.language.implicitConversions
 import java.io.{ ByteArrayOutputStream, DataOutputStream, DataOutput,
                  ByteArrayInputStream, DataInputStream }
 import collection.immutable.{ ListMap, Vector }
-import org.nlogo.{ api, shape }
+import org.nlogo.{ api, core, shape }
 
 object Serializer {
 
@@ -165,9 +165,9 @@ object Serializer {
           val result = new api.ShapeList(
             kind match {
               case "Turtle" =>
-                api.AgentKind.Turtle
+                core.AgentKind.Turtle
               case "Link" =>
-                api.AgentKind.Link
+                core.AgentKind.Link
             })
           result.replaceShapes(
             parser(

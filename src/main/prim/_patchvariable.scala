@@ -2,7 +2,8 @@
 
 package org.nlogo.prim
 
-import org.nlogo.api.{ Syntax, AgentException, AgentKind }
+import org.nlogo.core.{ AgentKind, Syntax }
+import org.nlogo.api.AgentException
 import org.nlogo.nvm.{ Reporter, Context, EngineException, Reference, Referenceable }
 import org.nlogo.agent.Patch
 
