@@ -2,17 +2,12 @@
 
 package org.nlogo.prim
 
-import org.nlogo.core.Syntax
 import org.nlogo.api.AgentException
 import org.nlogo.nvm.{ Context, Command, EngineException }
 
 class _setpatchvariable(_vn: Int) extends Command {
 
   def this(original: _patchvariable) = this(original.vn)
-
-  override def syntax =
-    Syntax.commandSyntax(
-      Array(Syntax.WildcardType), "-TP-", true)
 
   override def toString =
     super.toString + ":" +

@@ -4,15 +4,10 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.agent.Link;
 import org.nlogo.agent.Turtle;
-import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 
 public final strictfp class _die
     extends Command {
-  @Override
-  public Syntax syntax() {
-    return Syntax.commandSyntax("-T-L", true);
-  }
 
   @Override
   public void perform(final org.nlogo.nvm.Context context) {

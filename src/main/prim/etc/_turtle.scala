@@ -2,21 +2,13 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.Syntax
 import org.nlogo.api.Nobody
 import org.nlogo.agent.Turtle
 import org.nlogo.nvm.{ Reporter, Context, EngineException }
 
 class _turtle extends Reporter {
-
-  override def syntax =
-    Syntax.reporterSyntax(
-      Array(Syntax.NumberType),
-      Syntax.TurtleType | Syntax.NobodyType)
-
   override def report(context: Context): AnyRef =
     report_1(context, argEvalDoubleValue(context, 0))
-
   def report_1(context: Context, idDouble: Double): AnyRef = {
     val id = validLong(idDouble)
     if (id != idDouble)
@@ -26,5 +18,4 @@ class _turtle extends Reporter {
     if (turtle == null) Nobody
     else turtle
   }
-
 }

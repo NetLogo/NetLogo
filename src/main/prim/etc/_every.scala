@@ -2,17 +2,11 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.Syntax
 import org.nlogo.nvm, nvm.{ Command, Context, MutableLong }
 
 import collection.mutable.WeakHashMap;
 
 class _every extends Command with nvm.CustomAssembled {
-
-  override def syntax =
-    Syntax.commandSyntax(
-      Array(Syntax.NumberType, Syntax.CommandBlockType),
-      true)
 
   override def toString =
     super.toString + ":+" + offset

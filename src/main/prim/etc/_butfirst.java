@@ -12,12 +12,6 @@ import org.nlogo.nvm.Reporter;
 public final strictfp class _butfirst
     extends Reporter
     implements org.nlogo.nvm.Pure {
-  @Override
-  public Syntax syntax() {
-    int[] right = {Syntax.ListType() | Syntax.StringType()};
-    int ret = Syntax.ListType() | Syntax.StringType();
-    return Syntax.reporterSyntax(right, ret);
-  }
 
   @Override
   public Object report(final org.nlogo.nvm.Context context) {

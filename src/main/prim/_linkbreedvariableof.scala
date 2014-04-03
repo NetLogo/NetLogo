@@ -9,11 +9,6 @@ import org.nlogo.agent.{ Agent, AgentSet }
 
 class _linkbreedvariableof(name: String) extends Reporter {
 
-  override def syntax =
-    Syntax.reporterSyntax(
-      Array(Syntax.LinkType | Syntax.LinksetType),
-      Syntax.WildcardType)
-
   override def toString =
     super.toString + ":" + name
 

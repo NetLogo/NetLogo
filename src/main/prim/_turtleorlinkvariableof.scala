@@ -12,11 +12,6 @@ class _turtleorlinkvariableof(_varName: String) extends Reporter {
   override def toString =
     super.toString + ":" + varName
 
-  override def syntax =
-    Syntax.reporterSyntax(
-      Array(Syntax.LinkType | Syntax.LinksetType | Syntax.TurtleType | Syntax.TurtlesetType),
-      Syntax.WildcardType)
-
   // MethodRipper won't let us call a public method from report_1()
   // so we must keep varName and _varName separate - ST 9/22/12
   def varName = _varName

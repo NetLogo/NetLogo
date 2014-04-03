@@ -4,18 +4,12 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.I18N;
-import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 
 public final strictfp class _setxy
     extends Command {
-  @Override
-  public Syntax syntax() {
-    int[] right = {Syntax.NumberType(), Syntax.NumberType()};
-    return Syntax.commandSyntax(right, "-T--", true);
-  }
 
   @Override
   public void perform(final Context context) {

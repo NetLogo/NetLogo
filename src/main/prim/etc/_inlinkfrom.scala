@@ -2,7 +2,6 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.Syntax
 import org.nlogo.api.Nobody
 import org.nlogo.agent.{ Turtle, LinkManager }
 import org.nlogo.nvm.{ Reporter, Context, EngineException }
@@ -10,11 +9,6 @@ import org.nlogo.nvm.{ Reporter, Context, EngineException }
 class _inlinkfrom(breedName: String) extends Reporter {
 
   def this() = this(null)
-
-  override def syntax =
-    Syntax.reporterSyntax(
-      Array(Syntax.AgentType),
-      Syntax.AgentType, "-T--")
 
   override def toString =
     super.toString + ":" + breedName

@@ -8,13 +8,6 @@ import org.nlogo.nvm.{ Activation, ArgumentTypeException, Command, CommandTask, 
                        EngineException, NonLocalExit, Procedure }
 
 class _run extends Command {
-
-  override def syntax =
-    Syntax.commandSyntax(
-      Array(Syntax.StringType | Syntax.CommandTaskType,
-            Syntax.RepeatableType | Syntax.WildcardType),
-      1)
-
   override def perform(context: Context) {
     args(0).report(context) match {
       case s: String =>
@@ -60,5 +53,4 @@ class _run extends Command {
           context, this, 0, Syntax.CommandTaskType | Syntax.StringType, obj)
     }
   }
-
 }

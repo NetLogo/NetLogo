@@ -2,14 +2,11 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.{ Syntax, AgentKind }
+import org.nlogo.core.AgentKind
 import org.nlogo.agent.{ AgentSet, AgentSetBuilder, Turtle, Patch }
 import org.nlogo.nvm.{ Reporter, Context }
 
 class _breedhere(breedName: String) extends Reporter {
-
-  override def syntax =
-    Syntax.reporterSyntax(Syntax.TurtlesetType, "-TP-")
 
   override def toString =
     super.toString + ":" + breedName

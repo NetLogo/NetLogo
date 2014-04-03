@@ -2,19 +2,12 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 
 public final strictfp class _git
     extends Command {
-  @Override
-  public Syntax syntax() {
-    return Syntax.commandSyntax
-        (new int[]{Syntax.StringType()},
-            "O---");
-  }
 
   @Override
   public void perform(final Context context) {

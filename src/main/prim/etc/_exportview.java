@@ -2,7 +2,6 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.core.Syntax;
 import org.nlogo.nvm.EngineException;
 
 public final strictfp class _exportview
@@ -29,9 +28,4 @@ public final strictfp class _exportview
     context.ip = next;
   }
 
-  @Override
-  public Syntax syntax() {
-    int[] right = {Syntax.StringType()};
-    return Syntax.commandSyntax(right);
-  }
 }

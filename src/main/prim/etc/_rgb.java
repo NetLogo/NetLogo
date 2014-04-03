@@ -4,18 +4,11 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.api.LogoList;
 import org.nlogo.api.LogoListBuilder;
-import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _rgb
     extends Reporter {
-  @Override
-  public Syntax syntax() {
-    int[] right = {Syntax.NumberType(), Syntax.NumberType(), Syntax.NumberType()};
-    int ret = Syntax.ListType();
-    return Syntax.reporterSyntax(right, ret);
-  }
 
   @Override
   public Object report(final org.nlogo.nvm.Context context) {

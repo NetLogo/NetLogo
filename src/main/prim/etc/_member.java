@@ -88,11 +88,4 @@ public final strictfp class _member
     }
   }
 
-  @Override
-  public Syntax syntax() {
-    int[] right = {Syntax.WildcardType(),
-        Syntax.ListType() | Syntax.StringType() | Syntax.AgentsetType()};
-    int ret = Syntax.BooleanType();
-    return Syntax.reporterSyntax(right, ret);
-  }
 }

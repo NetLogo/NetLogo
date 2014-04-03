@@ -17,12 +17,6 @@ import java.util.TreeMap;
 
 public final strictfp class _minnof
     extends Reporter {
-  @Override
-  public Syntax syntax() {
-    int[] right = {Syntax.NumberType(), Syntax.AgentsetType(), Syntax.NumberBlockType()};
-    int ret = Syntax.AgentsetType();
-    return Syntax.reporterSyntax(right, ret, "OTPL", "?");
-  }
 
   @Override
   public Object report(final org.nlogo.nvm.Context context) {

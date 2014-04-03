@@ -8,25 +8,22 @@ package org.nlogo.compile.front
 // are added to tokens.txt.) - ST 12/5/09
 
 import org.scalatest.FunSuite
-import org.nlogo.nvm.Instruction
-import org.nlogo.api.Femto
+import org.nlogo.core.Syntaxes
 
 class TestAllSyntaxes extends FunSuite {
   def shorten(name: String) =
-    Class.forName(name).getSimpleName
-  def instruction(name: String) =
-    Class.forName(name).newInstance().asInstanceOf[Instruction]
+    name.reverse.takeWhile(_ != '.').reverse
   def entry(name: String) =
-    shorten(name) + " " + instruction(name).syntax.dump
-  def doTest(classNames: Set[String], expected: String) {
-    assertResult(expected)(
-      classNames.toSeq.sortBy(shorten).map(entry).mkString("\n"))
+    shorten(name) + " " + Syntaxes.syntaxes(shorten(name)).dump
+  def doTests(classNames: Set[String], expecteds: String) {
+    for ((expected, name) <- expecteds.lines.toSeq zip classNames.map(shorten).toSeq.sorted)
+      test(name) {
+        assertResult(expected)(entry(name))
+      }
   }
-  val c = FrontEnd.tokenMapper.allCommandClassNames
-  val r = FrontEnd.tokenMapper.allReporterClassNames
-  test("commands") { doTest(c, COMMANDS) }
-  test("reporters") { doTest(r, REPORTERS) }
-  val REPORTERS = """|_abs number,number,OTPL,null,10,1,1
+  doTests(FrontEnd.tokenMapper.allCommandClassNames,  COMMANDS)
+  doTests(FrontEnd.tokenMapper.allReporterClassNames, REPORTERS)
+  def REPORTERS = """|_abs number,number,OTPL,null,10,1,1
                      |_acos number,number,OTPL,null,10,1,1
                      |_all agentset/TRUE/FALSE block,TRUE/FALSE,OTPL,?,10,2,2
                      |_and TRUE/FALSE,TRUE/FALSE,TRUE/FALSE,OTPL,null,4,1,1
@@ -262,7 +259,7 @@ class TestAllSyntaxes extends FunSuite {
                      |_worldwidth ,number,OTPL,null,10,0,0
                      |_wrapcolor number,number,OTPL,null,10,1,1
                      |_xor TRUE/FALSE,TRUE/FALSE,TRUE/FALSE,OTPL,null,4,1,1""".stripMargin.replaceAll("\r\n", "\n")
-  val COMMANDS = """|_ask agent or agentset/command block,OTPL,?,0,2,2 *
+  def COMMANDS = """|_ask agent or agentset/command block,OTPL,?,0,2,2 *
                     |_askconcurrent agentset/command block,OTPL,?,0,2,2 *
                     |_autoplotoff ,OTPL,null,0,0,0
                     |_autoploton ,OTPL,null,0,0,0

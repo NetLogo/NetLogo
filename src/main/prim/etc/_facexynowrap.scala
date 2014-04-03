@@ -3,14 +3,9 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.agent.Turtle
-import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Command, Context }
 
 class _facexynowrap extends Command {
-  override def syntax =
-    Syntax.commandSyntax(
-      Array(Syntax.NumberType, Syntax.NumberType),
-      "-T--", true)
   override def perform(context: Context) {
     context.agent match {
       case turtle: Turtle =>

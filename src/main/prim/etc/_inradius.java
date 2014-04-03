@@ -6,7 +6,6 @@ import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.core.AgentKindJ;
 import org.nlogo.api.I18N;
-import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
@@ -15,15 +14,6 @@ import java.util.List;
 
 public final strictfp class _inradius
     extends Reporter {
-  @Override
-  public Syntax syntax() {
-    int left = Syntax.TurtlesetType() | Syntax.PatchsetType();
-    int[] right = {Syntax.NumberType()};
-    int ret = Syntax.TurtlesetType() | Syntax.PatchsetType();
-    return Syntax.reporterSyntax
-        (left, right, ret, org.nlogo.core.Syntax.NormalPrecedence() + 2,
-            false, "-TP-", null);
-  }
 
   @Override
   public Object report(final Context context) {

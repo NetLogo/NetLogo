@@ -2,15 +2,11 @@
 
 package org.nlogo.prim
 
-import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Command, Context }
 
 class _setprocedurevariable(vn: Int, name: String) extends Command {
   def this(original: _procedurevariable) =
     this(original.vn, original.name)
-  override def syntax =
-    Syntax.commandSyntax(
-      Array(Syntax.WildcardType))
   override def toString =
     super.toString + ":" + name
   override def perform(context: Context) {

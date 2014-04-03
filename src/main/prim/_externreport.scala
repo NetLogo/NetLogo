@@ -7,19 +7,7 @@ import org.nlogo.{ api, core, nvm },
 
 class _externreport(reporter: api.Reporter) extends nvm.Reporter {
 
-  override def syntax = {
-    val s = reporter.getSyntax
-    val acs = reporter.getAgentClassString.split(":")
-    if (acs(0).size < 4)
-      acs(0) = Syntax.convertOldStyleAgentClassString(acs(0))
-    if (acs.length >= 2) {
-      if (acs(1).size < 4)
-        acs(1) = Syntax.convertOldStyleAgentClassString(acs(1))
-      s.copy(agentClassString = acs(0), blockAgentClassString = acs(1))
-    }
-    else
-      s.copy(agentClassString = acs(0), blockAgentClassString = null)
-  }
+  override def syntax = reporter.getSyntax
 
   override def report(context: nvm.Context): AnyRef = {
     val arguments = Array.tabulate[api.Argument](args.length)(i =>
@@ -36,4 +24,5 @@ class _externreport(reporter: api.Reporter) extends nvm.Reporter {
         throw ee
     }
   }
+
 }

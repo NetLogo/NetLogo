@@ -2,16 +2,12 @@
 
 package org.nlogo.prim
 
-import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Reporter, Pure, Context }
 
 class _constdouble(value: java.lang.Double) extends Reporter with Pure {
 
   private[this] val _primitiveValue = value.doubleValue
   def primitiveValue = _primitiveValue
-
-  override def syntax =
-    Syntax.reporterSyntax(Syntax.NumberType)
 
   override def toString =
     super.toString + ":" + primitiveValue

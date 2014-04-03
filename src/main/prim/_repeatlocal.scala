@@ -2,15 +2,10 @@
 
 package org.nlogo.prim
 
-import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Command, Context, MutableLong,
                        CustomAssembled, AssemblerAssistant }
 
 class _repeatlocal(vn: Int) extends Command with CustomAssembled {
-
-  override def syntax =
-    Syntax.commandSyntax(Array(Syntax.NumberType,
-                               Syntax.CommandBlockType))
 
   override def toString =
     super.toString + ":" + vn + ",+" + offset

@@ -3,20 +3,12 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.I18N;
-import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Pure;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _div extends Reporter implements Pure {
-  @Override
-  public Syntax syntax() {
-    int left = Syntax.NumberType();
-    int[] right = {Syntax.NumberType()};
-    return Syntax.reporterSyntax(left, right, Syntax.NumberType(),
-        org.nlogo.core.Syntax.NormalPrecedence() - 2);
-  }
 
   @Override
   public Object report(Context context) {
