@@ -2,7 +2,7 @@
 
 package org.nlogo.nvm
 
-import org.nlogo.api
+import org.nlogo.{ api, core }
 import org.nlogo.agent.{ Agent, AgentSet }
 import collection.mutable.WeakHashMap
 
@@ -25,11 +25,11 @@ trait Workspace extends api.Workspace with JobManagerOwner with api.ViewSettings
   def setupPlots(c: Context)
   def resetTicks(c: Context)
   def inspectAgent(agent: Agent, radius: Double)
-  def inspectAgent(kind: api.AgentKind, agent: Agent, radius: Double)
+  def inspectAgent(kind: core.AgentKind, agent: Agent, radius: Double)
 
   def compileForRun(source: String, context: Context, reporter: Boolean): Procedure
   def compileCommands(source: String): Procedure
-  def compileCommands(source: String, kind: api.AgentKind): Procedure
+  def compileCommands(source: String, kind: core.AgentKind): Procedure
   def compileReporter(source: String): Procedure
   def runCompiledCommands(owner: api.JobOwner, procedure: Procedure): Boolean
   def runCompiledReporter(owner: api.JobOwner, procedure: Procedure): AnyRef

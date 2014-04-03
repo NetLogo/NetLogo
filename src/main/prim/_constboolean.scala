@@ -2,7 +2,7 @@
 
 package org.nlogo.prim
 
-import org.nlogo.api.Syntax
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Reporter, Pure, Context }
 
 class _constboolean(value: java.lang.Boolean) extends Reporter with Pure {

@@ -2,12 +2,13 @@
 
 package org.nlogo.generate
 
-import org.objectweb.asm
-import asm.Opcodes._
-import asm.{ Label, MethodVisitor }
-import org.nlogo.{ api, nvm }
-import api.CompilerException
-import nvm.{ ArgumentTypeException, Instruction }
+import
+  org.objectweb.asm,
+    asm.Opcodes._,
+    asm.{ Label, MethodVisitor },
+  org.nlogo.{ api, core, nvm },
+    api.CompilerException,
+    nvm.{ ArgumentTypeException, Instruction }
 
 object TypeConverter {
   /**
@@ -42,7 +43,7 @@ object TypeConverter {
         castObjectToObject(typeTo, mv, firstFreeJVMLocal, argIndex)
       else {
         // conversion from typeFrom to typeTo is impossible.
-        val argEx = new ArgumentTypeException(null, parentInstr, argIndex, api.Syntax.getTypeConstant(typeTo), typeFrom)
+        val argEx = new ArgumentTypeException(null, parentInstr, argIndex, api.TypeNames.getTypeConstant(typeTo), typeFrom)
         val tokenInstr = if (argIndex < parentInstr.args.length) parentInstr.args(argIndex)
         else parentInstr
         val token = tokenInstr.token
@@ -74,7 +75,7 @@ object TypeConverter {
     mv.visitVarInsn(ALOAD, 1) // context
     mv.visitVarInsn(ALOAD, 0) // this (GeneratedInstruction)
     mv.visitIntInsn(BIPUSH, argIndex) // index of argument that was wrong type
-    mv.visitLdcInsn(api.Syntax.NumberType.toInt)
+    mv.visitLdcInsn(core.Syntax.NumberType.toInt)
     mv.visitVarInsn(ALOAD, firstFreeJVMLocal)
     mv.visitMethodInsn(INVOKESPECIAL, "org/nlogo/nvm/ArgumentTypeException", "<init>",
       "(Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V")
@@ -102,7 +103,7 @@ object TypeConverter {
     mv.visitVarInsn(ALOAD, 1) // context
     mv.visitVarInsn(ALOAD, 0) // this (GeneratedInstruction)
     mv.visitIntInsn(BIPUSH, argIndex) // index of argument that was wrong type
-    mv.visitLdcInsn(Int.box(api.Syntax.BooleanType))
+    mv.visitLdcInsn(Int.box(core.Syntax.BooleanType))
     mv.visitVarInsn(ALOAD, firstFreeJVMLocal)
     mv.visitMethodInsn(INVOKESPECIAL, "org/nlogo/nvm/ArgumentTypeException", "<init>",
       "(Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V")
@@ -144,7 +145,7 @@ object TypeConverter {
     mv.visitVarInsn(ALOAD, 1) // context
     mv.visitVarInsn(ALOAD, 0) // this (GeneratedInstruction)
     mv.visitIntInsn(BIPUSH, argIndex) // index of argument that was wrong type
-    mv.visitLdcInsn(Int.box(api.Syntax.getTypeConstant(typeTo)))
+    mv.visitLdcInsn(Int.box(api.TypeNames.getTypeConstant(typeTo)))
     mv.visitVarInsn(ALOAD, firstFreeJVMLocal)
     mv.visitMethodInsn(INVOKESPECIAL, "org/nlogo/nvm/ArgumentTypeException", "<init>",
       "(Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V")

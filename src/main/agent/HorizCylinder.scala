@@ -2,7 +2,7 @@
 
 package org.nlogo.agent
 
-import org.nlogo.api.{ AgentException, AgentKind }
+import org.nlogo.api.AgentException
 
 // imagine a cylinder lying on its side
 

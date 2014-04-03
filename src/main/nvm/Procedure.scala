@@ -2,7 +2,7 @@
 
 package org.nlogo.nvm
 
-import org.nlogo.api
+import org.nlogo.{ api, core }
 
 class Procedure(
   val isReporter: Boolean,
@@ -51,12 +51,12 @@ class Procedure(
       displayName.getOrElse("procedure " + nameAndFile)
     }
 
-  def syntax: api.Syntax = {
-    val right = Array.fill(args.size - localsCount)(api.Syntax.WildcardType)
+  def syntax: core.Syntax = {
+    val right = Array.fill(args.size - localsCount)(core.Syntax.WildcardType)
     if (isReporter)
-      api.Syntax.reporterSyntax(right, api.Syntax.WildcardType)
+      core.Syntax.reporterSyntax(right, core.Syntax.WildcardType)
     else
-      api.Syntax.commandSyntax(right)
+      core.Syntax.commandSyntax(right)
   }
 
   override def toString =

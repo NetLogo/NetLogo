@@ -3,7 +3,7 @@
 package org.nlogo.prim
 
 import org.nlogo.agent.{ AgentSet, Turtle, Patch }
-import org.nlogo.api.Syntax
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Reporter, Context }
 
 class _neighbors4 extends Reporter {

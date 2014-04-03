@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.api
+package org.nlogo.core
 
 /**
  * Specifies the arguments accepted by a primitive.
@@ -394,36 +394,6 @@ object Syntax {
 
   def convertOldStyleAgentClassString(oldStyle: String) =
     "OTPL".map(c => if (oldStyle.contains(c)) c else '-')
-
-  def getTypeConstant(clazz: Class[_]): Int =
-    if (classOf[Agent].isAssignableFrom(clazz))
-      AgentType
-    else if (classOf[AgentSet].isAssignableFrom(clazz))
-      AgentsetType
-    else if (classOf[LogoList].isAssignableFrom(clazz))
-      ListType
-    else if (classOf[Turtle].isAssignableFrom(clazz))
-      TurtleType
-    else if (classOf[Patch].isAssignableFrom(clazz))
-      PatchType
-    else if (classOf[Link].isAssignableFrom(clazz))
-      LinkType
-    else if (classOf[ReporterTask].isAssignableFrom(clazz))
-      ReporterTaskType
-    else if (classOf[CommandTask].isAssignableFrom(clazz))
-      CommandTaskType
-    else if (classOf[String].isAssignableFrom(clazz))
-      StringType
-    else if (classOf[java.lang.Double].isAssignableFrom(clazz) || clazz == java.lang.Double.TYPE)
-      NumberType
-    else if (classOf[java.lang.Boolean].isAssignableFrom(clazz) || clazz == java.lang.Boolean.TYPE)
-      BooleanType
-    else if (classOf[AnyRef] eq clazz)
-      WildcardType
-    else
-      // Sorry, probably should handle this better somehow.  ~Forrest (2/16/2007)
-      throw new IllegalArgumentException(
-        "no Syntax type constant found for " + clazz)
 
   def getAgentSetMask(kind: AgentKind): Int =
     (kind: @unchecked) match {  // unchecked so Observer gives MatchError

@@ -2,8 +2,9 @@
 
 package org.nlogo.prim
 
+import org.nlogo.core.Syntax
+import org.nlogo.api.{ I18N, LogoListBuilder }
 import org.nlogo.agent.{ Agent, AgentSet }
-import org.nlogo.api.{ Syntax, I18N, LogoListBuilder }
 import org.nlogo.nvm.{ Reporter, Context, EngineException }
 
 class _of extends Reporter {
@@ -13,7 +14,7 @@ class _of extends Reporter {
       left = Syntax.ReporterBlockType,
       right = Array(Syntax.AgentType | Syntax.AgentsetType),
       ret = Syntax.WildcardType,
-      precedence = org.nlogo.api.Syntax.NormalPrecedence + 1,
+      precedence = Syntax.NormalPrecedence + 1,
       isRightAssociative = true,
       agentClassString = "OTPL",
       blockAgentClassString = "?")

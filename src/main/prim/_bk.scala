@@ -2,7 +2,8 @@
 
 package org.nlogo.prim
 
-import org.nlogo.api.{ Let, LogoException, Syntax }
+import org.nlogo.core.Syntax
+import org.nlogo.api.{ Let, LogoException }
 import org.nlogo.nvm.{ Command, Context, MutableDouble, CustomAssembled, AssemblerAssistant }
 
 // note that this and _fd are pretty much carbon copies of each other

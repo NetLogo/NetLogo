@@ -20,7 +20,7 @@ package org.nlogo.compile
  *       zero or more statements, while a reporter block contains exactly one expression.
  */
 
-import org.nlogo.api.Syntax
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Procedure, Command, Reporter, Instruction }
 
 /**

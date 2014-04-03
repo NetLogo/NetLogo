@@ -58,11 +58,12 @@ object Depend {
     val packageDefs = Map(
       "" -> Nil,
       "agent" -> List("api"),
-      "api" -> List("util"),
+      "api" -> List("core", "util"),
       "compile" -> List("prim"),
       "compile/back" -> List("compile"),
       "compile/front" -> List("compile", "parse"),
       "compile/middle" -> List("compile"),
+      "core" -> Nil,
       "drawing" -> List("api"),
       "generate" -> List("prim"),
       "headless" -> List("mirror","workspace"),

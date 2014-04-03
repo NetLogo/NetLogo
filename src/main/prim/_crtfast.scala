@@ -3,7 +3,7 @@
 package org.nlogo.prim
 
 import org.nlogo.agent.Turtle
-import org.nlogo.api.Syntax
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Command, Context }
 
 class _crtfast(breedName: String) extends Command {

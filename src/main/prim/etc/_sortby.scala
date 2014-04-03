@@ -2,8 +2,9 @@
 
 package org.nlogo.prim.etc
 
+import org.nlogo.core.Syntax
+import org.nlogo.api.{ LogoException, LogoList }
 import org.nlogo.agent.AgentSet
-import org.nlogo.api.{ LogoException, LogoList, Syntax }
 import org.nlogo.nvm.{ ArgumentTypeException, Context, EngineException, Reporter, ReporterTask  }
 
 class _sortby extends Reporter {

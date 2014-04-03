@@ -2,9 +2,9 @@
 
 package org.nlogo.agent;
 
+import org.nlogo.core.AgentKind;
+import org.nlogo.core.AgentKindJ;
 import org.nlogo.api.AgentException;
-import org.nlogo.api.AgentKind;
-import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.Color;
 import org.nlogo.api.ParserServices;
 import org.nlogo.api.ImporterUser;

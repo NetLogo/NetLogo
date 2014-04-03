@@ -2,6 +2,8 @@
 
 package org.nlogo.api
 
+import org.nlogo.core
+
 /**
  * Interface provides access to NetLogo agentsets.  NetLogo agentsets may be composed of turtles,
  * patches, or links (but an agentset may not contain a mix of different agent types.)
@@ -22,7 +24,7 @@ trait AgentSet {
   def isEmpty: Boolean
 
   /** Returns the type of agents in the AgentSet. */
-  def kind: AgentKind
+  def kind: core.AgentKind
 
   /** Returns an iterable that cn be used to iterate through the agents in this set. */
   def agents: java.lang.Iterable[Agent]

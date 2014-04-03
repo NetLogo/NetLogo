@@ -2,7 +2,8 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api.{ I18N, Syntax }
+import org.nlogo.core.Syntax
+import org.nlogo.api.I18N
 import org.nlogo.nvm.{ Command, Context, EngineException, NonLocalExit, Procedure }
 
 class _foreach extends Command {

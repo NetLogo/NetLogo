@@ -2,8 +2,9 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api, api.{ Syntax, PlotAction }
-import org.nlogo.nvm.{ Command, Context, EngineException, Instruction, Reporter }
+import org.nlogo.{ core, api, nvm },
+  core.Syntax, api.PlotAction,
+  nvm.{ Command, Context, EngineException, Instruction, Reporter }
 
 //
 // base classes

@@ -2,6 +2,8 @@
 
 package org.nlogo.api
 
+import org.nlogo.core
+
 /**
  * Partial implementation of Command provides common implentations of some methods.  Implements
  * every method except <code>Command.perform(...)</code>.
@@ -20,7 +22,7 @@ abstract class DefaultCommand extends Command {
    *
    * @return <code>Syntax.commandSyntax()</code>
    */
-  override def getSyntax = Syntax.commandSyntax()
+  override def getSyntax = core.Syntax.commandSyntax()
 
   /**
    * Indicates that NetLogo does not need to switch agents after executing this command.

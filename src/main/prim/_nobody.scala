@@ -2,7 +2,8 @@
 
 package org.nlogo.prim
 
-import org.nlogo.api.{ Nobody, Syntax }
+import org.nlogo.core.Syntax
+import org.nlogo.api.Nobody
 import org.nlogo.nvm.{ Context, Pure, Reporter }
 
 class _nobody extends Reporter with Pure {

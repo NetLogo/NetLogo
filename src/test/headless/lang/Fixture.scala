@@ -4,7 +4,7 @@ package org.nlogo.headless
 package lang
 
 import org.scalatest, scalatest.Assertions
-import org.nlogo.{ api, agent }
+import org.nlogo.{ api, core, agent }
 import api.CompilerException.{RuntimeErrorAtCompileTimePrefix => runtimePrefix}
 import org.nlogo.nvm.CompilerInterface
 import org.nlogo.util.Femto
@@ -70,7 +70,7 @@ class Fixture(name: String) extends AbstractFixture {
     }
 
   // to get the test name into the stack traces on JobThread - ST 1/26/11, 8/7/13
-  def owner(kind: api.AgentKind = api.AgentKind.Observer) =
+  def owner(kind: core.AgentKind = core.AgentKind.Observer) =
     new api.SimpleJobOwner(name, workspace.world.mainRNG, kind)
 
   val compiler: CompilerInterface =
@@ -162,7 +162,7 @@ class Fixture(name: String) extends AbstractFixture {
   def testReporter(reporter: String, result: String) =
     runReporter(Reporter(reporter, Success(result)))
   def testCommand(command: String, result: Result = Success("")) =
-    runCommand(Command(command, api.AgentKind.Observer, result))
+    runCommand(Command(command, core.AgentKind.Observer, result))
 
   // more convenience
   def open(path: String) =

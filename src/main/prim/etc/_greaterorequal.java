@@ -7,7 +7,7 @@ import org.nlogo.agent.Link;
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.I18N;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.api.TypeNames;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
@@ -21,7 +21,7 @@ public final strictfp class _greaterorequal
     int left = Syntax.NumberType() | Syntax.StringType() | Syntax.AgentType();
     int[] right = {Syntax.NumberType() | Syntax.StringType() | Syntax.AgentType()};
     int ret = Syntax.BooleanType();
-    return Syntax.reporterSyntax(left, right, ret, org.nlogo.api.Syntax.NormalPrecedence() - 4);
+    return Syntax.reporterSyntax(left, right, ret, org.nlogo.core.Syntax.NormalPrecedence() - 4);
   }
 
   @Override

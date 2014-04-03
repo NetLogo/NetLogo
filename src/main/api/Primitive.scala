@@ -2,6 +2,8 @@
 
 package org.nlogo.api
 
+import org.nlogo.core
+
 /**
  * Top-level interface for primitives (commands or reporters).  Not to be implemented directly; the
  * <code>Command</code> or <code>Reporter</code> interface should be used instead.
@@ -34,6 +36,6 @@ trait Primitive {
    * @return the Syntax for the primitive.
    * @see Syntax
    */
-  def getSyntax: Syntax
+  def getSyntax: core.Syntax
 
 }

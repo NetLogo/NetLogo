@@ -5,9 +5,10 @@ package org.nlogo.workspace
 // omg. rat's nest. - ST 5/3/13
 
 import
-  org.nlogo.{ agent, api, nvm, plot },
+  org.nlogo.{ agent, api, core, nvm, plot },
+  core.AgentKind,
   agent.{ World, Agent, AbstractExporter, AgentSet },
-  api.{ AgentKind, PlotInterface, Dump, CommandLogoThunk, ReporterLogoThunk,
+  api.{ PlotInterface, Dump, CommandLogoThunk, ReporterLogoThunk,
     CompilerException, LogoException, JobOwner, SimpleJobOwner, Token, ModelType },
   nvm.{ FrontEndInterface, FileManager, Instruction, EngineException, Context,
     Procedure, Job, Command, MutableLong, Workspace, Activation },

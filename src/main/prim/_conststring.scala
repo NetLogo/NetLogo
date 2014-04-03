@@ -2,7 +2,7 @@
 
 package org.nlogo.prim
 
-import org.nlogo.api.Syntax
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Reporter, Pure, Context }
 
 class _conststring(value: String) extends Reporter with Pure {

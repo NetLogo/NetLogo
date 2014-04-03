@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api.Syntax
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Context, EngineException, Reporter }
 
 // In testing I sometimes use this as an example of an unrejiggered primitive, so don't rejigger it

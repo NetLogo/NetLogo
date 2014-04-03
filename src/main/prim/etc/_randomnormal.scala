@@ -2,8 +2,9 @@
 
 package org.nlogo.prim.etc
 
+import org.nlogo.core.Syntax
+import org.nlogo.api.I18N
 import org.nlogo.nvm.{ Context, EngineException, Reporter }
-import org.nlogo.api.{ I18N, Syntax }
 
 class _randomnormal extends Reporter {
   override def syntax =

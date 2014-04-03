@@ -3,7 +3,7 @@
 package org.nlogo.headless
 package lang
 
-import org.nlogo.api.AgentKind
+import org.nlogo.core.AgentKind
 
 case class LanguageTest(suiteName: String, testName: String, entries: List[Entry]) {
   val fullName = s"$suiteName::$testName"

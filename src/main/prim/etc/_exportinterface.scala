@@ -2,7 +2,8 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api.{ CommandRunnable, Syntax }
+import org.nlogo.core.Syntax
+import org.nlogo.api.CommandRunnable
 import org.nlogo.nvm.{ Command, Context, EngineException }
 
 class _exportinterface extends Command {

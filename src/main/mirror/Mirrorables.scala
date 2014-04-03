@@ -4,7 +4,7 @@ package org.nlogo.mirror
 
 import scala.collection.JavaConverters.iterableAsScalaIterableConverter
 import scala.language.implicitConversions
-import org.nlogo.api
+import org.nlogo.{ api, core }
 import org.nlogo.api.AgentVariableNumbers._
 import org.nlogo.api.AgentVariables.getImplicitLinkVariables
 import org.nlogo.api.AgentVariables.getImplicitPatchVariables
@@ -65,11 +65,11 @@ object Mirrorables {
     }
   }
 
-  implicit def agentKindToMirrorKind(agentKind: api.AgentKind) = agentKind match {
-    case api.AgentKind.Observer => Observer
-    case api.AgentKind.Turtle => Turtle
-    case api.AgentKind.Patch => Patch
-    case api.AgentKind.Link => Link
+  implicit def agentKindToMirrorKind(agentKind: core.AgentKind) = agentKind match {
+    case core.AgentKind.Observer => Observer
+    case core.AgentKind.Turtle => Turtle
+    case core.AgentKind.Patch => Patch
+    case core.AgentKind.Link => Link
   }
 
   abstract class MirrorableAgent[T <: api.Agent](agent: T) extends Mirrorable {

@@ -2,7 +2,8 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api.{ Dump, Syntax }
+import org.nlogo.core.Syntax
+import org.nlogo.api.Dump
 import org.nlogo.nvm.{ Command, Context, EngineException }
 
 class _error extends Command {

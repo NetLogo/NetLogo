@@ -2,6 +2,9 @@
 
 package org.nlogo.nvm;
 
+import org.nlogo.core.AgentKind;
+import org.nlogo.core.AgentKindJ;
+import org.nlogo.core.Syntax;
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentBit;
 import org.nlogo.agent.AgentSet;
@@ -10,11 +13,8 @@ import org.nlogo.agent.Observer;
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
 import org.nlogo.agent.World;
-import org.nlogo.api.AgentKind;
-import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoList;
-import org.nlogo.api.Syntax;
 import org.nlogo.api.Token;
 import org.nlogo.util.Thunk;
 

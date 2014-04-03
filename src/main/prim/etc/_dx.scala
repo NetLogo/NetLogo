@@ -2,8 +2,9 @@
 
 package org.nlogo.prim.etc
 
+import org.nlogo.core.Syntax
+import org.nlogo.api.Numbers
 import org.nlogo.agent.Turtle
-import org.nlogo.api.{ Numbers, Syntax }
 import org.nlogo.nvm.{ Context, Reporter }
 
 class _dx extends Reporter {

@@ -5,9 +5,9 @@ package org.nlogo.prim.etc;
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Turtle;
-import org.nlogo.api.AgentKindJ;
+import org.nlogo.core.AgentKindJ;
 import org.nlogo.api.I18N;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
@@ -22,7 +22,7 @@ public final strictfp class _incone
         (Syntax.TurtlesetType() | Syntax.PatchsetType(),          // left
             new int[]{Syntax.NumberType(), Syntax.NumberType()}, // right
             Syntax.TurtlesetType() | Syntax.PatchsetType(),          // return
-            org.nlogo.api.Syntax.NormalPrecedence() + 2, false, "OTPL", "-T--");
+            org.nlogo.core.Syntax.NormalPrecedence() + 2, false, "OTPL", "-T--");
   }
 
   @Override

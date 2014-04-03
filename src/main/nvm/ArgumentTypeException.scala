@@ -2,7 +2,9 @@
 
 package org.nlogo.nvm
 
-import org.nlogo.api.{ Dump, Nobody, Syntax, TypeNames }
+import org.nlogo.{ core, api },
+  core.{ Syntax, TypeNames },
+  api.{ Dump, Nobody }
 
 class ArgumentTypeException(context: Context, problemInstr: Instruction, badArgIndex: Int, wantedType: Int, badValue: AnyRef)
 extends EngineException(context, problemInstr, "") { // message will be built later
@@ -25,13 +27,13 @@ extends EngineException(context, problemInstr, "") { // message will be built la
       // if badValue is a Class object, then it's not REALLY a value at all -- it's just something
       // to tell us what kind of bad value was returned.
       case c: Class[_] =>
-        Some(TypeNames.aName(Syntax.getTypeConstant(c)))
+        Some(TypeNames.aName(api.TypeNames.getTypeConstant(c)))
       case Nobody =>
         Some("NOBODY")
       case null =>
         None
       case _ =>
-        Some("the " + TypeNames.name(badValue) + " " + Dump.logoObject(badValue, true, false))
+        Some("the " + api.TypeNames.name(badValue) + " " + Dump.logoObject(badValue, true, false))
     }
 
 }

@@ -2,11 +2,13 @@
 
 package org.nlogo.api
 
+import org.nlogo.core
+
 trait SourceOwner {
   def classDisplayName: String
   def headerSource: String
   def innerSource: String
   def innerSource(s: String)
   def source: String
-  def kind: AgentKind
+  def kind: core.AgentKind
 }

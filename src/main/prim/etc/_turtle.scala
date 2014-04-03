@@ -2,8 +2,9 @@
 
 package org.nlogo.prim.etc
 
+import org.nlogo.core.Syntax
+import org.nlogo.api.Nobody
 import org.nlogo.agent.Turtle
-import org.nlogo.api.{ Syntax, Nobody }
 import org.nlogo.nvm.{ Reporter, Context, EngineException }
 
 class _turtle extends Reporter {

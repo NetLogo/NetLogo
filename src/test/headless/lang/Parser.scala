@@ -3,7 +3,8 @@
 package org.nlogo.headless
 package lang
 
-import org.nlogo.api, api.AgentKind
+import org.nlogo.{ core, api },
+  core.AgentKind
 
 object Parser {
 

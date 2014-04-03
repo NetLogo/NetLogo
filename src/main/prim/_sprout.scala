@@ -2,8 +2,8 @@
 
 package org.nlogo.prim
 
+import org.nlogo.core.{ AgentKind, Syntax }
 import org.nlogo.agent.{ Turtle, Patch, AgentSet, AgentSetBuilder }
-import org.nlogo.api.{ Syntax, AgentKind }
 import org.nlogo.nvm.{ AssemblerAssistant, Command, CustomAssembled, Context }
 
 class _sprout(val breedName: String) extends Command with CustomAssembled {

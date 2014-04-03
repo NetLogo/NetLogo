@@ -2,7 +2,8 @@
 
 package org.nlogo.prim
 
-import org.nlogo.api.{ Syntax, Let }
+import org.nlogo.core.Syntax
+import org.nlogo.api.Let
 import org.nlogo.nvm.{ Command, Context }
 
 // This isn't rejiggered yet because of the extra, unevaluated argument. (I say "yet" because this
