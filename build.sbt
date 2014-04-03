@@ -23,7 +23,7 @@ licenses += ("GPL-2.0", url("http://opensource.org/licenses/GPL-2.0"))
 // Used by the publish-versioned plugin
 isSnapshot := true
 
-version := "5.1.0"
+version := "5.2.0"
 
 ///
 /// building
