@@ -7,7 +7,7 @@ import collection.immutable.ListMap
 import org.nlogo.{ core, api },
   core.{ Token, TokenType },
   api.{ Breed, Program }
-import org.nlogo.util.Femto
+import org.nlogo.api.Femto
 import BreedIdentifierHandler.Spec
 
 class BreedIdentifierHandlerTests extends FunSuite {

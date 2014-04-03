@@ -3,7 +3,7 @@
 package org.nlogo.compile.front
 
 import org.scalatest.FunSuite
-import org.nlogo.util.Femto
+import org.nlogo.api.Femto
 import org.nlogo.api
 import java.awt.Color
 

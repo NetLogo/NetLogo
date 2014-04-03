@@ -3,7 +3,7 @@
 package org.nlogo.agent
 
 import java.io.{ IOException, PrintWriter }
-import org.nlogo.util.Exceptions.ignoring
+import org.nlogo.api.Exceptions.ignoring
 import org.nlogo.api.{ FileMode, Version }
 import org.nlogo.api.Dump.csv
 

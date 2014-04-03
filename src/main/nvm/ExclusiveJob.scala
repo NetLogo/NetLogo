@@ -4,7 +4,7 @@ package org.nlogo.nvm
 
 import org.nlogo.agent.AgentSet
 import org.nlogo.api.JobOwner
-import org.nlogo.util.MersenneTwisterFast
+import org.nlogo.api.MersenneTwisterFast
 
 class ExclusiveJob(owner: JobOwner, agentset: AgentSet, topLevelProcedure: Procedure,
                    address: Int, parentContext: Context, random: MersenneTwisterFast)

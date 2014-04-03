@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.util
+package org.nlogo.api
 
 import org.scalatest.{ FunSuite, PropSpec }
 import org.scalatest.prop.PropertyChecks
@@ -22,7 +22,6 @@ class HexStringTests extends FunSuite {
 // now let's throw ScalaCheck at it.
 
 class HexStringTests2 extends PropSpec with PropertyChecks {
-
 
   property("8 characters per Int") {
     forAll((ns: Array[Int]) =>

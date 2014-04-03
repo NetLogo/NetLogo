@@ -28,7 +28,7 @@ public final strictfp class _withlocalrandomness
 
   public void perform_1(final Context context) {
     AgentSet agentset = AgentSet.fromAgent(context.agent);
-    org.nlogo.util.MersenneTwisterFast random = context.job.random;
+    org.nlogo.api.MersenneTwisterFast random = context.job.random;
     context.job.random = world.mainRNG().clone();
     context.runExclusiveJob(agentset, next);
     context.job.random = random;

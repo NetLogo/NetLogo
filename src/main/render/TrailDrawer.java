@@ -4,6 +4,7 @@ package org.nlogo.render;
 
 import org.nlogo.api.Dump;
 import org.nlogo.api.Graphics2DWrapper;
+import org.nlogo.api.HexString;
 
 public strictfp class TrailDrawer
     implements org.nlogo.api.TrailDrawerInterface,
@@ -224,7 +225,7 @@ public strictfp class TrailDrawer
 
       writer.println(Dump.csv().encode(Double.toString(world.patchSize())));
 
-      String colorString = org.nlogo.util.HexString.toHexString(colors());
+      String colorString = HexString.toHexString(colors());
 
       Dump.csv().stringToCSV(writer, colorString);
     }

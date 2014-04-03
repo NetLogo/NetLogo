@@ -1,4 +1,4 @@
-package org.nlogo.util;
+package org.nlogo.api;
 
 import java.io.Serializable;
 

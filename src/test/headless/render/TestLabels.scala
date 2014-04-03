@@ -4,8 +4,7 @@ package org.nlogo.headless
 package render
 
 import org.nlogo.shape.VectorShape
-import org.nlogo.api.Perspective
-import org.nlogo.util.WorldType, WorldType._
+import org.nlogo.api.{ Perspective, WorldType }, WorldType._
 import MockGraphics._
 
 class TestPatchLabels extends AbstractTestRenderer {

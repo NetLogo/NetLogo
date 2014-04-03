@@ -5,7 +5,7 @@ package middle
 
 import org.scalatest.FunSuite
 import org.nlogo.{ api, nvm }
-import org.nlogo.util.Femto
+import org.nlogo.api.Femto
 
 class AgentTypeCheckerTests extends FunSuite {
 

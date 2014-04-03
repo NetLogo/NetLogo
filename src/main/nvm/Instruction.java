@@ -16,7 +16,6 @@ import org.nlogo.agent.Turtle;
 import org.nlogo.agent.World;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoList;
-import org.nlogo.util.Thunk;
 
 import java.util.ArrayList;
 import java.util.List;

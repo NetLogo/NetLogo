@@ -401,7 +401,7 @@ object Color {
       }
       catch { case e: ClassCastException =>
         // just fall through and throw the error below
-        org.nlogo.util.Exceptions.ignore(e)
+        org.nlogo.api.Exceptions.ignore(e)
       }
     val key = "org.nlogo.agent.Agent." +
       (if (allowAlpha) "rgbListSizeError.3or4"

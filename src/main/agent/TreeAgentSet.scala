@@ -6,7 +6,7 @@ import
   org.nlogo.{ api, core },
     core.AgentKind,
     api.{ LogoList, SimpleChangeEventPublisher },
-  org.nlogo.util.MersenneTwisterFast
+  org.nlogo.api.MersenneTwisterFast
 
 // Used only for the all-turtles, all-links, and breed agentsets.
 //

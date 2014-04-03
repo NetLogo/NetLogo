@@ -4,7 +4,7 @@ package org.nlogo.nvm
 
 import org.nlogo.agent.{ Agent, AgentSet }
 import org.nlogo.api.{ JobOwner, LogoException }
-import org.nlogo.util.MersenneTwisterFast
+import org.nlogo.api.MersenneTwisterFast
 
 class ConcurrentJob(owner: JobOwner, agentset: AgentSet, topLevelProcedure: Procedure,
                     address: Int, parentContext: Context, random: MersenneTwisterFast)

@@ -9,7 +9,7 @@ package org.nlogo.compile.front
 
 import org.scalatest.FunSuite
 import org.nlogo.nvm.Instruction
-import org.nlogo.util.Femto
+import org.nlogo.api.Femto
 
 class TestAllSyntaxes extends FunSuite {
   def shorten(name: String) =

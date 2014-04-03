@@ -4,7 +4,7 @@ package org.nlogo.compile
 
 import org.nlogo.{ api, nvm },
   nvm.FrontEndInterface.{ ProceduresMap, NoProcedures },
-  org.nlogo.util.Femto
+  org.nlogo.api.Femto
 
 // One design principle here is that calling the compiler shouldn't have any side effects that are
 // visible to the caller; it should only cause results to be constructed and returned.  There is a

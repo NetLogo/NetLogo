@@ -4,7 +4,7 @@ package org.nlogo.parse
 
 import org.scalatest.FunSuite
 import org.nlogo.{ core, api },
-  org.nlogo.util.Femto
+  org.nlogo.api.Femto
 
 class LetScoperTests extends FunSuite {
 
