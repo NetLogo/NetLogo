@@ -228,7 +228,7 @@ public strictfp class ExtensionManager
       jarURL = new java.net.URL(path);
       return jarURL.toString();
     } catch (java.net.MalformedURLException ex) {
-      org.nlogo.util.Exceptions.ignore(ex);
+      org.nlogo.api.Exceptions.ignore(ex);
     }
 
     // If it's a path, look for it relative to the model location
@@ -239,7 +239,7 @@ public strictfp class ExtensionManager
           return toURL(jarFile).toString();
         }
       } catch (java.net.MalformedURLException ex) {
-        org.nlogo.util.Exceptions.ignore(ex);
+        org.nlogo.api.Exceptions.ignore(ex);
       }
     }
 
@@ -251,7 +251,7 @@ public strictfp class ExtensionManager
         return toURL(jarFile).toString();
       }
     } catch (java.net.MalformedURLException ex) {
-      org.nlogo.util.Exceptions.ignore(ex);
+      org.nlogo.api.Exceptions.ignore(ex);
     }
 
     // Then try the extensions folder
@@ -262,7 +262,7 @@ public strictfp class ExtensionManager
         return toURL(jarFile).toString();
       }
     } catch (java.net.MalformedURLException ex) {
-      org.nlogo.util.Exceptions.ignore(ex);
+      org.nlogo.api.Exceptions.ignore(ex);
     }
 
     // Give up
@@ -278,7 +278,7 @@ public strictfp class ExtensionManager
         return fullPath;
       }
     } catch (java.net.MalformedURLException ex) {
-      org.nlogo.util.Exceptions.ignore(ex);
+      org.nlogo.api.Exceptions.ignore(ex);
     }
 
     // Then try the extensions folder

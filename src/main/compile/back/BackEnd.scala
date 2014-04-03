@@ -4,7 +4,7 @@ package org.nlogo.compile
 package back
 
 import org.nlogo.{ api, nvm },
-  org.nlogo.util.Femto
+  org.nlogo.api.Femto
 
 object BackEnd extends BackEndInterface {
 

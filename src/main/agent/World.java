@@ -18,7 +18,7 @@ import org.nlogo.api.TrailDrawerInterface;
 import org.nlogo.api.ValueConstraint;
 import org.nlogo.api.WorldDimensionException;
 import org.nlogo.core.WorldDimensions;
-import org.nlogo.util.MersenneTwisterFast;
+import org.nlogo.api.MersenneTwisterFast;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -182,7 +182,7 @@ public strictfp class World
     try {
       x = topology().wrapX(x - topology().followOffsetX());
     } catch (AgentException e) {
-      org.nlogo.util.Exceptions.ignore(e);
+      org.nlogo.api.Exceptions.ignore(e);
     }
     return x;
   }
@@ -191,7 +191,7 @@ public strictfp class World
     try {
       y = topology().wrapY(y - topology().followOffsetY());
     } catch (AgentException e) {
-      org.nlogo.util.Exceptions.ignore(e);
+      org.nlogo.api.Exceptions.ignore(e);
     }
     return y;
   }

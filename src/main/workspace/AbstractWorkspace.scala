@@ -8,12 +8,11 @@ import
   org.nlogo.{ agent, api, core, nvm, plot },
   core.{ AgentKind, Token },
   agent.{ World, Agent, AbstractExporter, AgentSet },
-  api.{ PlotInterface, Dump, CommandLogoThunk, ReporterLogoThunk,
-    CompilerException, LogoException, JobOwner, SimpleJobOwner, ModelType },
+  api.{ PlotInterface, Dump, CommandLogoThunk, ReporterLogoThunk, Femto,
+    CompilerException, LogoException, JobOwner, SimpleJobOwner, ModelType, Exceptions },
   nvm.{ FrontEndInterface, FileManager, Instruction, EngineException, Context,
     Procedure, Job, Command, MutableLong, Workspace, Activation },
   plot.{ PlotExporter, PlotManager },
-  org.nlogo.util.{ Exceptions, Femto },
   java.io.{ IOException, PrintWriter },
   collection.mutable.WeakHashMap
 
@@ -610,7 +609,7 @@ object AbstractWorkspaceTraits {
       finally
         try file.close(false)
         catch { case ex2: java.io.IOException =>
-            org.nlogo.util.Exceptions.ignore(ex2)
+            org.nlogo.api.Exceptions.ignore(ex2)
         }
     }
 

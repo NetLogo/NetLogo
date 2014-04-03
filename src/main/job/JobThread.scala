@@ -5,7 +5,7 @@ package org.nlogo.job
 import org.nlogo.api.{ JobOwner, LogoException }
 import org.nlogo.nvm.{ ConcurrentJob, Job, JobManagerOwner }
 import java.util.{ Collections => JCollections, List => JList, ArrayList => JArrayList }
-import org.nlogo.util.Exceptions.{ ignoring, handling }
+import org.nlogo.api.Exceptions.{ ignoring, handling }
 
 object JobThread {
 

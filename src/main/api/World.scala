@@ -3,7 +3,6 @@
 package org.nlogo.api
 
 import org.nlogo.core
-import org.nlogo.util.MersenneTwisterFast
 
 trait World {
   def patchSize: Double

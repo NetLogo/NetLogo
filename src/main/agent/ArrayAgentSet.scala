@@ -4,7 +4,7 @@ package org.nlogo.agent
 
 import
   org.nlogo.{ api, core },
-  org.nlogo.util.MersenneTwisterFast
+  org.nlogo.api.MersenneTwisterFast
 
 // ArrayAgentSets are only used for agentsets which are never added to
 // after they are initially created.  However note that turtles and

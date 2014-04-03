@@ -2,8 +2,6 @@
 
 package org.nlogo.api
 
-import org.nlogo.util.MersenneTwisterFast
-
 trait JobOwner extends SourceOwner {
   def displayName: String
   def isButton: Boolean

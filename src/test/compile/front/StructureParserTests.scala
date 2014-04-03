@@ -7,7 +7,7 @@ import org.scalatest.FunSuite
 
 import org.nlogo.{ core, api, nvm, parse },
   api.CompilerException,
-  org.nlogo.util.Femto
+  org.nlogo.api.Femto
 
 class StructureParserTests extends FunSuite {
 

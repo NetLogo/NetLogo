@@ -2,7 +2,7 @@
 
 package org.nlogo.parse
 
-import org.nlogo.util.Utils
+import org.nlogo.api.Resource
 import org.nlogo.core.TokenHolder
 
 class TokenMapper(path: String, prefix: String) {
@@ -12,7 +12,7 @@ class TokenMapper(path: String, prefix: String) {
     reporters.get(s.toUpperCase).map(instantiate[TokenHolder])
   private def entries(entryType: String): Iterator[(String, String)] =
     for {
-      line <- Utils.getResourceLines(path)
+      line <- Resource.getResourceLines(path)
       if !line.startsWith("#")
       Array(tpe, primName, className) = line.split(" ")
       if tpe == entryType

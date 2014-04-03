@@ -3,7 +3,7 @@
 package org.nlogo.headless
 package render
 
-import org.nlogo.util.WorldType, WorldType._
+import org.nlogo.api.WorldType, WorldType._
 import MockGraphics._
 
 class TestTurtles extends AbstractTestRenderer {

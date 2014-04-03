@@ -2,7 +2,7 @@
 
 package org.nlogo.mirror
 
-import org.nlogo.{ api, core, util }
+import org.nlogo.{ api, core }
 import Mirrorables._
 import Mirroring.State
 import collection.JavaConverters._
@@ -28,7 +28,7 @@ class FakeWorld(state: State) extends api.World {
 
   def newRenderer: api.RendererInterface = {
     val renderer: api.RendererInterface =
-      util.Femto.get("org.nlogo.render.Renderer", this)
+      org.nlogo.api.Femto.get("org.nlogo.render.Renderer", this)
     renderer.resetCache(patchSize)
     renderer
   }
@@ -258,8 +258,8 @@ class FakeWorld(state: State) extends api.World {
   def timer: api.Timer = unsupported
   def setObserverVariableByName(variableName: String, value: AnyRef): Unit = unsupported
   def observerOwnsIndexOf(name: String): Int = unsupported
-  def auxRNG: util.MersenneTwisterFast = unsupported
-  def mainRNG: util.MersenneTwisterFast = unsupported
+  def auxRNG: api.MersenneTwisterFast = unsupported
+  def mainRNG: api.MersenneTwisterFast = unsupported
   def equalDimensions(d: core.WorldDimensions): Boolean = unsupported
   def isDimensionVariable(variableName: String): Boolean = unsupported
   def getDimensions: core.WorldDimensions = unsupported

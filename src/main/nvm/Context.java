@@ -335,7 +335,7 @@ public final strictfp class Context {
       // well we tried to report the original exception to the user,
       // but a new exception happened. so we'll report the original
       // using plan B. - ST 8/29/07
-      org.nlogo.util.Exceptions.handle(ex);
+      org.nlogo.api.Exceptions.handle(ex);
     }
   }
 

@@ -45,7 +45,7 @@ public final strictfp class Layouts {
   }
 
   public static void circle(World world, AgentSet nodes, double radius,
-                            org.nlogo.util.MersenneTwisterFast random)
+                            org.nlogo.api.MersenneTwisterFast random)
       throws AgentException {
     int i = 0;
     int n = nodes.count();
@@ -65,13 +65,13 @@ public final strictfp class Layouts {
   /// spring
   public static void spring(World world, AgentSet nodeset, AgentSet linkset,
                             double spr, double len, double rep,
-                            org.nlogo.util.MersenneTwisterFast random) {
+                            org.nlogo.api.MersenneTwisterFast random) {
     spring2D(world, nodeset, linkset, spr, len, rep, random);
   }
 
   public static void spring2D(World world, AgentSet nodeset, AgentSet linkset,
                               double spr, double len, double rep,
-                              org.nlogo.util.MersenneTwisterFast random) {
+                              org.nlogo.api.MersenneTwisterFast random) {
     int nodeCount = nodeset.count();
     if (nodeCount == 0) {
       return;
@@ -228,7 +228,7 @@ public final strictfp class Layouts {
   /// Tutte
 
   public static void tutte(World world, AgentSet nodeset, AgentSet linkset,
-                           double radius, org.nlogo.util.MersenneTwisterFast random)
+                           double radius, org.nlogo.api.MersenneTwisterFast random)
       throws AgentException {
     java.util.ArrayList<Turtle> anchors = new java.util.ArrayList<Turtle>();
     for (AgentIterator iter = linkset.iterator();

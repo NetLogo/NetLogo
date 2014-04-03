@@ -2,8 +2,7 @@
 
 package org.nlogo.api
 
-import org.nlogo.core,
-  org.nlogo.util.MersenneTwisterFast
+import org.nlogo.core
 
 class SimpleJobOwner(override val displayName: String,
                      override val random: MersenneTwisterFast,

@@ -25,11 +25,4 @@ abstract class File {
   def getInputStream: java.io.InputStream
   def getAbsolutePath: String
   def getPath: String
-
-  @throws(classOf[java.io.IOException])
-  def readFile(): String = {
-    if (reader == null)
-      open(FileMode.Read)
-    org.nlogo.util.Utils.reader2String(reader)
-  }
 }

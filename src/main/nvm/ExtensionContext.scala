@@ -4,7 +4,7 @@ package org.nlogo.nvm
 
 import java.awt.image.BufferedImage
 import org.nlogo.{ api, agent }
-import org.nlogo.util.MersenneTwisterFast
+import org.nlogo.api.MersenneTwisterFast
 
 /**
  * workspace and nvmContext are public vals, even though that violates the org.nlogo.api

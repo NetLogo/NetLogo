@@ -4,7 +4,7 @@ package org.nlogo.compile
 package front
 
 import org.nlogo.{ core, api, agent, nvm, parse }
-import org.nlogo.util.Femto
+import org.nlogo.api.Femto
 
 object FrontEnd extends FrontEnd {
   val tokenizer: core.TokenizerInterface =

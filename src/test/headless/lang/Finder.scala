@@ -69,7 +69,7 @@ trait Finder extends FunSuite with SlowTest {
         .asScala.toSeq.sorted.iterator
         .map(s =>
           (s.stripPrefix(path + "/").stripSuffix(".txt"),
-           org.nlogo.util.Utils.getResourceAsString("/" + s)))
+           org.nlogo.api.Resource.getResourceAsString("/" + s)))
   }
   // parse tests first, then run them
   for (t <- files.flatMap(Function.tupled(parseFile)))

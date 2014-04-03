@@ -3,7 +3,7 @@
 package org.nlogo.agent
 
 import org.scalatest.FunSuite
-import org.nlogo.util.{ WorldType, MersenneTwisterFast }
+import org.nlogo.api.{ MersenneTwisterFast, WorldType }
 import collection.JavaConverters._
 
 class VertCylinderTests extends FunSuite {

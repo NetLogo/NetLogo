@@ -421,8 +421,8 @@ class TestImportExport extends FixtureSuite with SlowTest {
 
   test("testTrailingCommas") { implicit fixture =>
     import fixture._
-    ModelCreator.open(workspace, core.WorldDimensions.square(35), new org.nlogo.api.LocalFile(
-      "test/import/trailing-commas.nlogo").readFile())
+    ModelCreator.open(workspace, core.WorldDimensions.square(35),
+      org.nlogo.api.FileIO.file2String("test/import/trailing-commas.nlogo"))
     testCommand("import-world \"test/import/trailing-commas.csv\"")
   }
 
@@ -451,8 +451,8 @@ class TestImportExport extends FixtureSuite with SlowTest {
 
   test("ExtraFieldValue") { implicit fixture =>
     import fixture._
-    ModelCreator.open(workspace, core.WorldDimensions.square(35), new org.nlogo.api.LocalFile(
-      "test/import/trailing-commas.nlogo").readFile())
+    ModelCreator.open(workspace, core.WorldDimensions.square(35),
+      org.nlogo.api.FileIO.file2String("test/import/trailing-commas.nlogo"))
     val errorNumber = Array(0)
     workspace.importerErrorHandler =
       new org.nlogo.agent.ImporterJ.ErrorHandler() {
