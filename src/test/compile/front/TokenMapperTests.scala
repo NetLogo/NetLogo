@@ -6,20 +6,18 @@ import org.scalatest.FunSuite
 
 class TokenMapperTests extends FunSuite {
 
-  import FrontEnd.tokenMapper
-
   def isCommand(s: String) =
-    tokenMapper(s).exists(!_._2.isReporter)
+    TokenMapper(s).exists(!_._2.isReporter)
   def isReporter(s: String) =
-    tokenMapper(s).exists(_._2.isReporter)
+    TokenMapper(s).exists(_._2.isReporter)
 
   def getCommand(s: String) = {
-    val Some((name, syntax)) = tokenMapper(s)
+    val Some((name, syntax)) = TokenMapper(s)
     assert(!syntax.isReporter)
     name
   }
   def getReporter(s: String) = {
-    val Some((name, syntax)) = tokenMapper(s)
+    val Some((name, syntax)) = TokenMapper(s)
     assert(syntax.isReporter)
     name
   }

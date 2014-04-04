@@ -18,6 +18,6 @@ class TestAllSyntaxes extends FunSuite {
     shorten(name) + " " + Syntaxes.syntaxes(shorten(name)).dump
   test("syntaxes match") {
     assertResult(Resource.getResourceLines("/syntaxes.txt").toSeq)(
-      FrontEnd.tokenMapper.allClassNames.map(entry).toSeq.sorted)
+      TokenMapper.allClassNames.map(entry).toSeq.sorted)
   }
 }

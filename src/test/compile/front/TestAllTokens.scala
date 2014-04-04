@@ -5,11 +5,10 @@ package front
 
 import org.scalatest.FunSuite
 import org.nlogo.nvm
-import FrontEnd.tokenMapper._
 
 class TestAllTokens extends FunSuite {
   test("all listed primitives exist") {
-    for (className <- FrontEnd.tokenMapper.allClassNames)
+    for (className <- TokenMapper.allClassNames)
       Instantiator.newInstance[nvm.Instruction](Class.forName(className))
   }
 }

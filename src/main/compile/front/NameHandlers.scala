@@ -49,7 +49,7 @@ class CallHandler(procedures: nvm.FrontEndInterface.ProceduresMap) extends NameH
 
 object PrimitiveHandler extends NameHandler {
   override def apply(token: Token) =
-    FrontEnd.tokenMapper.apply(token.value.asInstanceOf[String])
+    TokenMapper.apply(token.value.asInstanceOf[String])
       .map{case (className, syntax) =>
         (if (syntax.isReporter) TokenType.Reporter
          else TokenType.Command,
