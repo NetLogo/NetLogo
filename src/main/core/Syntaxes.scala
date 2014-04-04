@@ -5,8 +5,8 @@ package org.nlogo.core
 import Syntax._
 
 object Syntaxes {
-  val syntaxes = internalSyntaxes ++ externalSyntaxes
-  def internalSyntaxes = Map[String, Syntax](
+  lazy val syntaxes = internalSyntaxes ++ externalSyntaxes
+  val internalSyntaxes = Map[String, Syntax](
     ("_anyother", reporterSyntax(right = List(AgentsetType), ret = BooleanType, agentClassString = "-TPL")),
     ("_anyotherwith", reporterSyntax(right = List(AgentsetType, BooleanBlockType), ret = BooleanType, agentClassString = "OTPL", blockAgentClassString = "?")),
     ("_anywith", reporterSyntax(right = List(AgentsetType, BooleanBlockType), ret = BooleanType, agentClassString = "OTPL", blockAgentClassString = "?")),
@@ -85,7 +85,7 @@ object Syntaxes {
     ("_unaryminus", reporterSyntax(right = List(NumberType), ret = NumberType)),
     ("_waitinternal", commandSyntax(switches = true))
   )
-  def externalSyntaxes = Map[String, Syntax](
+  val externalSyntaxes = Map[String, Syntax](
     ("_abs", reporterSyntax(right = List(NumberType), ret = NumberType)),
     ("_acos", reporterSyntax(right = List(NumberType), ret = NumberType)),
     ("_all", reporterSyntax(right = List(AgentsetType, BooleanBlockType), ret = BooleanType, blockAgentClassString = "?")),
