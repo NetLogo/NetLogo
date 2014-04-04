@@ -5,8 +5,8 @@ package org.nlogo.api
 import org.nlogo.core.Syntax
 
 /**
- * Partial implementation of Command provides common implentations of some methods.  Implements
- * every method except <code>Command.perform(...)</code>.
+ * Partial implementation of Command provides common implementations of some methods.
+ * Implements every method except <code>Command.perform(...)</code>.
  */
 abstract class DefaultCommand extends Command {
 
