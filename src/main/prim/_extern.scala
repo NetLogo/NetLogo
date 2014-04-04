@@ -7,21 +7,7 @@ import org.nlogo.{ api, core, nvm },
 
 class _extern(command: api.Command) extends nvm.Command with nvm.CustomAssembled {
 
-  override def syntax = {
-    val s = command.getSyntax
-    val acs = command.getAgentClassString.split(":")
-    if (acs(0).size < 4)
-      acs(0) = Syntax.convertOldStyleAgentClassString(acs(0))
-    if (acs.length >= 2) {
-      if (acs(1).size < 4)
-        acs(1) = Syntax.convertOldStyleAgentClassString(acs(1))
-      Syntax.commandSyntax(
-        s.right, s.dfault, acs(0), acs(1), command.getSwitchesBoolean)
-    }
-    else
-      Syntax.commandSyntax(
-        s.right, s.dfault, acs(0), null, command.getSwitchesBoolean)
-  }
+  override def syntax = command.getSyntax
 
   override def toString =
     super.toString + ":+" + offset

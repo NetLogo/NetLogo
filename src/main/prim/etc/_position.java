@@ -41,12 +41,4 @@ public final strictfp class _position
           (context, this, 1, Syntax.ListType() | Syntax.StringType(), obj);
     }
   }
-
-  @Override
-  public Syntax syntax() {
-    int[] right = {Syntax.WildcardType(),
-        Syntax.ListType() | Syntax.StringType()};
-    int ret = Syntax.NumberType() | Syntax.BooleanType();
-    return Syntax.reporterSyntax(right, ret);
-  }
 }

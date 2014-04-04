@@ -2,16 +2,12 @@
 
 package org.nlogo.prim
 
-import org.nlogo.core.{ AgentKind, Syntax }
+import org.nlogo.core.AgentKind
 import org.nlogo.api.AgentException
 import org.nlogo.nvm.{ Reporter, Context, EngineException, Reference, Referenceable }
 import org.nlogo.agent.Patch
 
 class _patchvariable(_vn: Int) extends Reporter with Referenceable {
-
-  override def syntax =
-    Syntax.reporterSyntax(
-      Syntax.WildcardType | Syntax.ReferenceType, "-TP-")
 
   override def toString =
     super.toString + ":" +

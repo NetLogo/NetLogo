@@ -2,16 +2,9 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.Syntax
 import org.nlogo.nvm, nvm.{ Command, Context }
 
 class _ifelse extends Command with nvm.CustomAssembled {
-
-  override def syntax =
-    Syntax.commandSyntax(
-      Array(Syntax.BooleanType,
-            Syntax.CommandBlockType,
-            Syntax.CommandBlockType))
 
   override def toString =
     super.toString + ":+" + offset

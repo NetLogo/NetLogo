@@ -2,7 +2,6 @@
 
 package org.nlogo.prim
 
-import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Command, Context }
 
 // We insert this as the last command in top-level procedures that we don't want to return.  That
@@ -14,7 +13,6 @@ import org.nlogo.nvm.{ Command, Context }
 // commands after the _ask.
 
 class _done extends Command {
-  override def syntax = Syntax.commandSyntax
   override def perform(context: Context) {
     perform_1(context)
   }

@@ -2,7 +2,6 @@
 
 package org.nlogo.prim
 
-import org.nlogo.core.Syntax
 import org.nlogo.api.{ AgentException, Let, Numbers }
 import org.nlogo.nvm.{ Command, Context, MutableDouble }
 import org.nlogo.agent.Turtle
@@ -11,9 +10,6 @@ class _fdinternal(let: Let) extends Command {
 
   def this(original: _fd) = this(original.let)
   def this(original: _bk) = this(original.let)
-
-  override def syntax =
-    Syntax.commandSyntax("-T--", true)
 
   override def perform(context: Context) {
     perform_1(context)

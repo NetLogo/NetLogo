@@ -2,18 +2,11 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _patchatheadinganddistance
     extends Reporter {
-  @Override
-  public Syntax syntax() {
-    return Syntax.reporterSyntax
-        (new int[]{Syntax.NumberType(), Syntax.NumberType()},
-            Syntax.PatchType(), "-TP-");
-  }
 
   @Override
   public Object report(final Context context) {

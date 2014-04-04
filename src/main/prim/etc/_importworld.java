@@ -2,17 +2,10 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.core.Syntax;
 import org.nlogo.nvm.EngineException;
 
 public final strictfp class _importworld
     extends org.nlogo.nvm.Command {
-  @Override
-  public Syntax syntax() {
-    return Syntax.commandSyntax
-        (new int[]{Syntax.StringType()},
-            "O---", true);
-  }
 
   @Override
   public void perform(final org.nlogo.nvm.Context context) {

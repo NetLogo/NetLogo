@@ -2,16 +2,10 @@
 
 package org.nlogo.prim
 
-import org.nlogo.core.Syntax
 import org.nlogo.api.LogoList
 import org.nlogo.nvm.{ Reporter, Pure, Context }
 
 class _sum extends Reporter with Pure {
-
-  override def syntax =
-    Syntax.reporterSyntax(
-      Array(Syntax.ListType),
-      Syntax.NumberType)
 
   override def report(context: Context): java.lang.Double =
     Double.box(report_1(context, argEvalList(context, 0)))

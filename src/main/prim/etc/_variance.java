@@ -5,7 +5,6 @@ package org.nlogo.prim.etc;
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoList;
-import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Pure;
@@ -14,12 +13,6 @@ import org.nlogo.nvm.Reporter;
 import java.util.Iterator;
 
 public final strictfp class _variance extends Reporter implements Pure {
-  @Override
-  public Syntax syntax() {
-    return Syntax.reporterSyntax
-        (new int[]{Syntax.ListType()},
-            Syntax.NumberType());
-  }
 
   @Override
   public Object report(Context context) {

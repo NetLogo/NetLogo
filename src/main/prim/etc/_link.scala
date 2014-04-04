@@ -2,18 +2,11 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.Syntax
 import org.nlogo.api.Nobody
 import org.nlogo.agent.Link
 import org.nlogo.nvm.{ Reporter, Context }
 
 class _link extends Reporter {
-
-  override def syntax =
-    Syntax.reporterSyntax(
-      Array(Syntax.NumberType, Syntax.NumberType),
-      Syntax.LinkType | Syntax.NobodyType)
-
   override def report(context: Context): AnyRef = {
     val link =
       world.getLink(
@@ -22,5 +15,4 @@ class _link extends Reporter {
     if (link == null) Nobody
     else link
   }
-
 }

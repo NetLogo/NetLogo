@@ -2,14 +2,11 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.{ AgentKind, Syntax }
+import org.nlogo.core.AgentKind
 import org.nlogo.agent.{ AgentSet, Turtle }
 import org.nlogo.nvm.{ Context, Pure, Reporter }
 
 class _isturtleset extends Reporter with Pure {
-  override def syntax =
-    Syntax.reporterSyntax(Array(Syntax.WildcardType),
-                          Syntax.BooleanType)
   override def report(context: Context): java.lang.Boolean =
     Boolean.box(
       args(0).report(context) match {

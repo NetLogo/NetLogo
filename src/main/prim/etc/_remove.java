@@ -58,11 +58,4 @@ public final strictfp class _remove
     }
   }
 
-  @Override
-  public Syntax syntax() {
-    int[] right = {Syntax.WildcardType(),
-        Syntax.ListType() | Syntax.StringType()};
-    int ret = Syntax.ListType() | Syntax.StringType();
-    return Syntax.reporterSyntax(right, ret);
-  }
 }

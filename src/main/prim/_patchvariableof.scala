@@ -9,11 +9,6 @@ import org.nlogo.nvm.{ Reporter, Context, EngineException, ArgumentTypeException
 
 class _patchvariableof(_vn: Int) extends Reporter {
 
-  override def syntax =
-    Syntax.reporterSyntax(
-      Array(Syntax.TurtleType | Syntax.PatchType | Syntax.TurtlesetType | Syntax.PatchsetType),
-      Syntax.WildcardType)
-
   override def toString =
     super.toString + ":" +
       Option(world).map(_.patchesOwnNameAt(vn))

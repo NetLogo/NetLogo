@@ -21,14 +21,6 @@ import java.util.Set;
 
 public final strictfp class _patchset
     extends Reporter {
-  @Override
-  public Syntax syntax() {
-    int[] right = {Syntax.RepeatableType() | Syntax.PatchType()
-        | Syntax.PatchsetType() | Syntax.NobodyType()
-        | Syntax.ListType()};
-    int ret = Syntax.PatchsetType();
-    return Syntax.reporterSyntax(right, ret, 1, 0);
-  }
 
   @Override
   public Object report(final Context context) {

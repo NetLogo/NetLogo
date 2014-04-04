@@ -22,11 +22,4 @@ public final strictfp class _reverse
           (context, this, 0, Syntax.ListType() | Syntax.StringType(), obj);
     }
   }
-
-  @Override
-  public Syntax syntax() {
-    int[] right = {Syntax.ListType() | Syntax.StringType()};
-    int ret = Syntax.ListType() | Syntax.StringType();
-    return Syntax.reporterSyntax(right, ret);
-  }
 }

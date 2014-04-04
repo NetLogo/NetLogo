@@ -18,11 +18,9 @@ abstract class DefaultReporter extends Reporter {
   override def getAgentClassString = "OTPL"
 
   /**
-   * Indicates that this reporter takes no arguments and returns a number.
+   * Indicates that this reporter takes no arguments and returns any type.
    *
-   * @return <code>Syntax.reporterSyntax(Syntax.NumberType)</code>
+   * @return <code>Syntax.reporterSyntax(Syntax.WildcardType)</code>
    */
-  override def getSyntax =
-    Syntax.reporterSyntax(Syntax.NumberType)
-
+  override def getSyntax = Syntax.reporterSyntax(ret = Syntax.WildcardType)
 }

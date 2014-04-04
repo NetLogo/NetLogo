@@ -4,13 +4,13 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoList;
-import org.nlogo.core.Syntax;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _sublist
     extends Reporter
     implements org.nlogo.nvm.Pure {
+
   @Override
   public Object report(final org.nlogo.nvm.Context context) {
     LogoList list = argEvalList(context, 0);
@@ -31,10 +31,4 @@ public final strictfp class _sublist
     return list.logoSublist(start, stop);
   }
 
-  @Override
-  public Syntax syntax() {
-    return Syntax.reporterSyntax
-        (new int[]{Syntax.ListType(), Syntax.NumberType(), Syntax.NumberType()},
-            Syntax.ListType());
-  }
 }

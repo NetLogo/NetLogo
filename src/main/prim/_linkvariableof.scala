@@ -13,11 +13,6 @@ class _linkvariableof(_vn: Int) extends Reporter {
     super.toString + ":" +
       Option(world).map(_.linksOwnNameAt(vn)).getOrElse(vn.toString)
 
-  override def syntax =
-    Syntax.reporterSyntax(
-      Array(Syntax.LinkType | Syntax.LinksetType),
-      Syntax.WildcardType)
-
   // MethodRipper won't let us call a public method from report_1()
   // so we must keep vn and _vn separate - ST 9/22/12
   def vn = _vn

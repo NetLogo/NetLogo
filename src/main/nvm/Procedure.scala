@@ -52,11 +52,11 @@ class Procedure(
     }
 
   def syntax: core.Syntax = {
-    val right = Array.fill(args.size - localsCount)(core.Syntax.WildcardType)
+    val right = List.fill(args.size - localsCount)(core.Syntax.WildcardType)
     if (isReporter)
-      core.Syntax.reporterSyntax(right, core.Syntax.WildcardType)
+      core.Syntax.reporterSyntax(right = right, ret = core.Syntax.WildcardType)
     else
-      core.Syntax.commandSyntax(right)
+      core.Syntax.commandSyntax(right = right)
   }
 
   override def toString =

@@ -5,6 +5,7 @@ package org.nlogo.nvm;
 import org.nlogo.core.AgentKind;
 import org.nlogo.core.AgentKindJ;
 import org.nlogo.core.Syntax;
+import org.nlogo.core.Syntaxes;
 import org.nlogo.core.Token;
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentBit;
@@ -28,7 +29,9 @@ public abstract strictfp class Instruction
 
   public Reporter[] args = new Reporter[0];
 
-  public abstract Syntax syntax();
+  public Syntax syntax() {
+    return Syntaxes.syntaxes().apply(getClass().getSimpleName().toString());
+  }
 
   private Token token;
 

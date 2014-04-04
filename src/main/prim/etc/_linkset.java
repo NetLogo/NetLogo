@@ -6,10 +6,10 @@ import org.nlogo.agent.AgentIterator;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Link;
 import org.nlogo.core.AgentKindJ;
+import org.nlogo.core.Syntax;
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoList;
-import org.nlogo.core.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
@@ -20,14 +20,6 @@ import java.util.Set;
 
 public final strictfp class _linkset
     extends Reporter {
-  @Override
-  public Syntax syntax() {
-    int[] right = {Syntax.RepeatableType() | Syntax.LinkType()
-        | Syntax.LinksetType() | Syntax.NobodyType()
-        | Syntax.ListType()};
-    int ret = Syntax.LinksetType();
-    return Syntax.reporterSyntax(right, ret, 1, 0);
-  }
 
   @Override
   public Object report(final Context context) {

@@ -2,15 +2,11 @@
 
 package org.nlogo.prim
 
-import org.nlogo.core.{ Syntax, AgentKind }
+import org.nlogo.core.AgentKind
 import org.nlogo.agent.{ Patch, AgentSetBuilder }
 import org.nlogo.nvm.{ Reporter, Context }
 
 class _patchcol extends Reporter {
-
-  override def syntax =
-    Syntax.reporterSyntax(Array(Syntax.NumberType),
-                          Syntax.PatchsetType)
 
   override def report(context: Context): AnyRef = {
     val builder = new AgentSetBuilder(AgentKind.Patch, world.worldHeight)

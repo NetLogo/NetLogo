@@ -5,17 +5,11 @@ package org.nlogo.prim.etc;
 import org.nlogo.agent.Link;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.I18N;
-import org.nlogo.core.Syntax;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _otherend
     extends Reporter {
-  @Override
-  public Syntax syntax() {
-    return Syntax.reporterSyntax
-        (Syntax.AgentType(), "-T-L");
-  }
 
   @Override
   public Object report(final org.nlogo.nvm.Context context) {

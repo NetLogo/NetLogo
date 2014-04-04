@@ -11,7 +11,6 @@ import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoList;
 import org.nlogo.core.AgentKindJ;
-import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
@@ -142,11 +141,4 @@ public final strictfp class _atpoints
     return result;
   }
 
-  @Override
-  public Syntax syntax() {
-    int left = Syntax.TurtlesetType() | Syntax.PatchsetType();
-    int[] right = {Syntax.ListType()};
-    int ret = Syntax.AgentsetType();
-    return Syntax.reporterSyntax(left, right, ret, org.nlogo.core.Syntax.NormalPrecedence() + 2);
-  }
 }

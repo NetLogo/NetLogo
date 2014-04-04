@@ -42,12 +42,4 @@ public final strictfp class _item
           (context, this, 1, Syntax.ListType() | Syntax.StringType(), obj);
     }
   }
-
-  @Override
-  public Syntax syntax() {
-    int[] right = {Syntax.NumberType(),
-        Syntax.ListType() | Syntax.StringType()};
-    int ret = Syntax.WildcardType();
-    return Syntax.reporterSyntax(right, ret);
-  }
 }

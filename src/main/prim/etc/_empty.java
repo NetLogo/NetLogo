@@ -23,11 +23,4 @@ public final strictfp class _empty
       throw new ArgumentTypeException(context, this, 0, Syntax.ListType() | Syntax.StringType(), obj);
     }
   }
-
-  @Override
-  public Syntax syntax() {
-    int[] right = {Syntax.ListType() | Syntax.StringType()};
-    int ret = Syntax.BooleanType();
-    return Syntax.reporterSyntax(right, ret);
-  }
 }

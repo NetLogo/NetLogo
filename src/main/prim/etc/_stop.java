@@ -3,17 +3,12 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.I18N;
-import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Procedure;
 
 public final strictfp class _stop
     extends Command {
-  @Override
-  public Syntax syntax() {
-    return Syntax.commandSyntax();
-  }
 
   @Override
   public void perform(final org.nlogo.nvm.Context context) {

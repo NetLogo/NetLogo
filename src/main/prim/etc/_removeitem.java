@@ -46,11 +46,4 @@ public final strictfp class _removeitem
     }
   }
 
-  @Override
-  public Syntax syntax() {
-    return Syntax.reporterSyntax
-        (new int[]{Syntax.NumberType(),
-            Syntax.ListType() | Syntax.StringType()},
-            Syntax.ListType() | Syntax.StringType());
-  }
 }

@@ -2,18 +2,12 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 
 public final strictfp class _while
     extends Command
     implements org.nlogo.nvm.CustomAssembled {
-  @Override
-  public Syntax syntax() {
-    int[] right = {Syntax.BooleanBlockType(), Syntax.CommandBlockType()};
-    return Syntax.commandSyntax(right);
-  }
 
   @Override
   public String toString() {
