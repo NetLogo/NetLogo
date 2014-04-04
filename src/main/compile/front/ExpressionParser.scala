@@ -8,8 +8,8 @@ import org.nlogo.{ core, api },
   core.{ Syntax, Token, TokenType },
   api.{ LogoList, Nobody }
 import Syntax.compatible
-import org.nlogo.nvm.{ Command, Instruction, Procedure, Referenceable, Reporter}
-import org.nlogo.prim._
+import org.nlogo.nvm.{ Command, Reporter, Procedure, Referenceable }
+import org.nlogo.prim.{ _minus, _reference, _unaryminus, _taskvariable, _reportertask, _commandtask }
 import org.nlogo.parse.LiteralParser
 
 /**
@@ -55,7 +55,7 @@ class ExpressionParser(procedure: Procedure) {
         stmt
       case TokenType.Command =>
         val stmt = new Statement(token.value.asInstanceOf[Command], token.start, token.end, token.filename)
-        if(variadic && isVariadic(stmt.instruction)) parseVarArgs(stmt, tokens, MinPrecedence)
+        if(variadic && isVariadic(stmt)) parseVarArgs(stmt, tokens, MinPrecedence)
         else parseArguments(stmt, tokens, MinPrecedence)
         stmt
       case _ =>
@@ -70,9 +70,9 @@ class ExpressionParser(procedure: Procedure) {
    * performed.
    */
   private def parseArguments(app: Application, tokens: BufferedIterator[Token], precedence: Int) {
-    val right = app.instruction.syntax.right
-    val optional = app.instruction.syntax.takesOptionalCommandBlock
-    for(i <- 0 until app.instruction.syntax.rightDefault) {
+    val right = app.syntax.right
+    val optional = app.syntax.takesOptionalCommandBlock
+    for(i <- 0 until app.syntax.rightDefault) {
       val arg = parseArgExpression(tokens, precedence, app, right(i min (right.size - 1)))
       app.addArgument(arg)
       app.end = arg.end
@@ -104,7 +104,7 @@ class ExpressionParser(procedure: Procedure) {
     var done = false
     var token = tokens.head
     var argNumber = 0
-    val right = app.instruction.syntax.right
+    val right = app.syntax.right
     def goalType = right(argNumber min (right.size - 1))
     while(!done) {
       if(token.tpe == TokenType.CloseParen)
@@ -116,7 +116,7 @@ class ExpressionParser(procedure: Procedure) {
         // at this point is lower precedence, or we would already
         // have consumed it. so if we have a non-default number of
         // args, this is definitely illegal.
-        cAssert(app.args.size == app.instruction.syntax.totalDefault, InvalidVariadicContext, app)
+        cAssert(app.args.size == app.syntax.totalDefault, InvalidVariadicContext, app)
         done = true
       }
       // note: if it's a reporter, it must be the beginning
@@ -137,22 +137,22 @@ class ExpressionParser(procedure: Procedure) {
    * determines whether an instruction allows a variable number of args. This should maybe be moved
    * into Syntax, where it could be made more efficient.
    */
-  private def isVariadic(ins: Instruction): Boolean =
-    ins.syntax.right.exists(compatible(_, Syntax.RepeatableType))
+  private def isVariadic(app: Application): Boolean =
+    app.syntax.right.exists(compatible(_, Syntax.RepeatableType))
 
   /**
    * this is used for generating an error message when some arguments are found to be missing
    */
   private def missingInput(app: Application, right: Boolean): String = {
-    val syntax = app.instruction.syntax
+    val syntax = app.syntax
     val rightArgs = syntax.right.map(core.TypeNames.aName(_).replaceFirst("anything", "any input"))
     val left = syntax.left
     val result =
-      if(right && isVariadic(app.instruction) && syntax.minimum == 0)
-        app.instruction.displayName + " expected " + syntax.rightDefault + " input" + (if(syntax.rightDefault > 1) "s" else "") +
+      if(right && isVariadic(app) && syntax.minimum == 0)
+        app.displayName + " expected " + syntax.rightDefault + " input" + (if(syntax.rightDefault > 1) "s" else "") +
         " on the right or any number of inputs when surrounded by parentheses"
       else
-        app.instruction.displayName + " expected " + (if(isVariadic(app.instruction)) "at least " else "") +
+        app.displayName + " expected " + (if(isVariadic(app)) "at least " else "") +
         (if(right) syntax.rightDefault + " input" + (if(syntax.rightDefault > 1) "s" else "") +
                     (if(syntax.isInfix) " on the right" else "")
          else core.TypeNames.aName(left) + " on the left.")
@@ -177,14 +177,14 @@ class ExpressionParser(procedure: Procedure) {
    * pertaining to left-hand args to infix operators.
    */
   private def resolveTypes(app: Application) {
-    val syntax = app.instruction.syntax
+    val syntax = app.syntax
     var actual1 = 0
     // first look at left arg, if any
     if(syntax.isInfix) {
       val tpe = syntax.left
       // this shouldn't really be possible here...
       cAssert(app.args.size >= 1, missingInput(app, false), app)
-      app.replaceArg(0, resolveType(tpe, app.args(0), app.instruction.displayName))
+      app.replaceArg(0, resolveType(tpe, app.args(0), app.displayName))
       // the first right arg is the second arg.
       actual1 = 1
     }
@@ -196,7 +196,7 @@ class ExpressionParser(procedure: Procedure) {
          compatible(Syntax.OptionalType, types(formal1)))
         return
       cAssert(app.args.size > actual1, missingInput(app, true), app)
-      app.replaceArg(actual1, resolveType(types(formal1), app.args(actual1), app.instruction.displayName))
+      app.replaceArg(actual1, resolveType(types(formal1), app.args(actual1), app.displayName))
       formal1 += 1
       actual1 += 1
     }
@@ -206,13 +206,13 @@ class ExpressionParser(procedure: Procedure) {
       var formal2 = types.length - 1
       while(formal2 >= 0 && !compatible(Syntax.RepeatableType, types(formal2))) {
         cAssert(app.args.size > actual2 && actual2 > -1, missingInput(app, true), app)
-        app.replaceArg(actual2, resolveType(types(formal2), app.args(actual2), app.instruction.displayName))
+        app.replaceArg(actual2, resolveType(types(formal2), app.args(actual2), app.displayName))
         formal2 -= 1
         actual2 -= 1
       }
       // now we check any repeatable args...
       while(actual1 <= actual2) {
-        app.replaceArg(actual1, resolveType(types(formal1), app.args(actual1), app.instruction.displayName))
+        app.replaceArg(actual1, resolveType(types(formal1), app.args(actual1), app.displayName))
         actual1 += 1
       }
     }
@@ -370,7 +370,7 @@ class ExpressionParser(procedure: Procedure) {
           }
           // the normal case
           else {
-            if(variadic && isVariadic(rApp.instruction))
+            if(variadic && isVariadic(rApp))
               parseVarArgs(rApp, tokens, reporter.syntax.precedence)
             else
               parseArguments(rApp, tokens, reporter.syntax.precedence)

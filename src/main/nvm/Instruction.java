@@ -163,7 +163,7 @@ public abstract strictfp class Instruction
     */
   public String displayName() {
     if (token != null) {
-      return token.text().toUpperCase();
+      return token.displayName();
     } else {
       // well, returning some weird ugly internal class name
       // is better than nothing, I guess

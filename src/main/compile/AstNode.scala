@@ -89,6 +89,8 @@ trait Expression extends AstNode {
 trait Application extends AstNode {
   def args: Seq[Expression]
   def instruction: Instruction
+  def displayName = instruction.token.displayName
+  def syntax = instruction.syntax
   def end_=(end: Int)
   def addArgument(arg: Expression)
   def replaceArg(index: Int, expr: Expression)
