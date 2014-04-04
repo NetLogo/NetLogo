@@ -43,9 +43,9 @@ IDENTIFIER_CHAR={LETTER} | {DIGIT} | [_\.?=\*!<>:#\+/%\$\^\'&-]
 
 <EXTENSION_LITERAL> \}\} {
   extensionLiteral.add(yytext());
-  if (extensionLiteral.nestingLevel() == 0) {
+  if (extensionLiteral.isFinished()) {
     yybegin(YYINITIAL);
-    return extensionLiteral.done();
+    return extensionLiteral.token();
   }
   extensionLiteral.pop();
  }
