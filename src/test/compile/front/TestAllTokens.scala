@@ -8,12 +8,8 @@ import org.nlogo.nvm
 import FrontEnd.tokenMapper._
 
 class TestAllTokens extends FunSuite {
-  test("all listed commands exist") {
-    for (className <- FrontEnd.tokenMapper.allCommandClassNames)
-      Instantiator.newInstance[nvm.Command](Class.forName(className))
-  }
-  test("all listed reporters exist") {
-    for (className <- FrontEnd.tokenMapper.allReporterClassNames)
-      Instantiator.newInstance[nvm.Reporter](Class.forName(className))
+  test("all listed primitives exist") {
+    for (className <- FrontEnd.tokenMapper.allClassNames)
+      Instantiator.newInstance[nvm.Instruction](Class.forName(className))
   }
 }

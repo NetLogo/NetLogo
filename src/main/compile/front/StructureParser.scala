@@ -71,9 +71,14 @@ object StructureParser {
     results
   }
 
-  val alwaysUsedNames =
-    FrontEnd.tokenMapper.allCommandNames.map(_ -> "primitive command") ++
-    FrontEnd.tokenMapper.allReporterNames.map(_ -> "primitive reporter")
+  val alwaysUsedNames: Map[String, String] =
+    FrontEnd.tokenMapper.entries.mapValues{
+      className =>
+        if (core.Syntaxes.syntaxes(className.dropWhile(_ != '_')).isReporter)
+          "primitive reporter"
+        else
+          "primitive command"
+    }.toMap
 
 }
 

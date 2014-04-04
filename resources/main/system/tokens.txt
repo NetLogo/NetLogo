@@ -1,426 +1,426 @@
-C __bench etc._bench
-C __change-topology etc._changetopology
-C __clear-all-and-reset-ticks etc._clearallandresetticks
-C __done _done
-C __experimentstepend etc._experimentstepend
-C __export-drawing etc._exportdrawing
-C __foreverbuttonend etc._foreverbuttonend
-C __git etc._git
-C __ignore etc._ignore
-C __let _let
-C __linkcode etc._linkcode
-C __make-preview etc._makepreview
-C __mkdir etc._mkdir
-C __observercode etc._observercode
-C __patchcode etc._patchcode
-C __plot-pen-hide etc._plotpenhide
-C __plot-pen-show etc._plotpenshow
-C __pwd etc._pwd
-C __reload-extensions etc._reloadextensions
-C __set-line-thickness etc._setlinethickness
-C __stderr etc._stderr
-C __stdout etc._stdout
-C __thunk-did-finish etc._thunkdidfinish
-C __turtlecode etc._turtlecode
-C __updatemonitor etc._updatemonitor
-C ask _ask
-C ask-concurrent _askconcurrent
-C auto-plot-off etc._autoplotoff
-C auto-plot-on etc._autoploton
-C back _bk
-C beep etc._beep
-C bk _bk
-C ca etc._clearall
-C carefully _carefully
-C cd etc._cleardrawing
-C clear-all etc._clearall
-C clear-all-plots etc._clearallplots
-C clear-drawing etc._cleardrawing
-C clear-globals etc._clearglobals
-C clear-links etc._clearlinks
-C clear-output etc._clearoutput
-C clear-patches etc._clearpatches
-C clear-plot etc._clearplot
-C clear-ticks etc._clearticks
-C clear-turtles etc._clearturtles
-C cp etc._clearpatches
-C create-link-from etc._createlinkfrom
-C create-link-to etc._createlinkto
-C create-link-with etc._createlinkwith
-C create-links-from etc._createlinksfrom
-C create-links-to etc._createlinksto
-C create-links-with etc._createlinkswith
-C create-ordered-turtles _createorderedturtles
-C create-temporary-plot-pen etc._createtemporaryplotpen
-C create-turtles _createturtles
-C cro _createorderedturtles
-C crt _createturtles
-C ct etc._clearturtles
-C die etc._die
-C diffuse etc._diffuse
-C diffuse4 etc._diffuse4
-C display etc._display
-C downhill etc._downhill
-C downhill4 etc._downhill4
-C error etc._error
-C every etc._every
-C export-all-plots etc._exportplots
-C export-interface etc._exportinterface
-C export-output etc._exportoutput
-C export-plot etc._exportplot
-C export-view etc._exportview
-C export-world etc._exportworld
-C face etc._face
-C face-nowrap etc._facenowrap
-C facexy etc._facexy
-C facexy-nowrap etc._facexynowrap
-C fd _fd
-C file-close etc._fileclose
-C file-close-all etc._filecloseall
-C file-delete etc._filedelete
-C file-flush etc._fileflush
-C file-open etc._fileopen
-C file-print etc._fileprint
-C file-show etc._fileshow
-C file-type etc._filetype
-C file-write etc._filewrite
-C follow etc._follow
-C follow-me etc._followme
-C foreach etc._foreach
-C forward _fd
-C hatch _hatch
-C hide-link etc._hidelink
-C hide-turtle etc._hideturtle
-C histogram etc._histogram
-C home etc._home
-C ht etc._hideturtle
-C if etc._if
-C if-else etc._ifelse
-C ifelse etc._ifelse
-C import-drawing etc._importdrawing
-C import-pcolors etc._importpatchcolors
-C import-pcolors-rgb etc._importpcolorsrgb
-C import-world etc._importworld
-C inspect etc._inspect
-C jump _jump
-C layout-circle etc._layoutcircle
-C layout-radial etc._layoutradial
-C layout-spring etc._layoutspring
-C layout-tutte etc._layouttutte
-C left etc._left
-C let _let
-C loop etc._loop
-C lt etc._left
-C move-to etc._moveto
-C no-display etc._nodisplay
-C output-print etc._outputprint
-C output-show etc._outputshow
-C output-type etc._outputtype
-C output-write etc._outputwrite
-C pd etc._pendown
-C pe etc._penerase
-C pen-down etc._pendown
-C pen-erase etc._penerase
-C pen-up etc._penup
-C pendown etc._pendown
-C penup etc._penup
-C plot etc._plot
-C plot-pen-down etc._plotpendown
-C plot-pen-reset etc._plotpenreset
-C plot-pen-up etc._plotpenup
-C plotxy etc._plotxy
-C print etc._print
-C pu etc._penup
-C random-seed etc._randomseed
-C repeat _repeat
-C report etc._report
-C reset-perspective etc._resetperspective
-C reset-ticks etc._resetticks
-C reset-timer etc._resettimer
-C resize-world etc._resizeworld
-C ride etc._ride
-C ride-me etc._rideme
-C right etc._right
-C rp etc._resetperspective
-C rt etc._right
-C run etc._run
-C set _set
-C set-current-directory etc._setcurdir
-C set-current-plot etc._setcurrentplot
-C set-current-plot-pen etc._setcurrentplotpen
-C set-default-shape etc._setdefaultshape
-C set-histogram-num-bars etc._sethistogramnumbars
-C set-patch-size etc._setpatchsize
-C set-plot-pen-color etc._setplotpencolor
-C set-plot-pen-interval etc._setplotpeninterval
-C set-plot-pen-mode etc._setplotpenmode
-C set-plot-x-range etc._setplotxrange
-C set-plot-y-range etc._setplotyrange
-C setup-plots etc._setupplots
-C setxy etc._setxy
-C show etc._show
-C show-link etc._showlink
-C show-turtle etc._showturtle
-C sprout _sprout
-C st etc._showturtle
-C stamp etc._stamp
-C stamp-erase etc._stamperase
-C stop etc._stop
-C tick etc._tick
-C tick-advance etc._tickadvance
-C tie etc._tie
-C type etc._type
-C untie etc._untie
-C update-plots etc._updateplots
-C uphill etc._uphill
-C uphill4 etc._uphill4
-C user-message etc._usermessage
-C wait etc._wait
-C watch etc._watch
-C watch-me etc._watchme
-C while etc._while
-C with-local-randomness etc._withlocalrandomness
-C without-interruption etc._withoutinterruption
-C write etc._write
-R != _notequal
-R * etc._mult
-R + etc._plus
-R - _minus
-R / etc._div
-R < _lessthan
-R <= etc._lessorequal
-R = _equal
-R > _greaterthan
-R >= etc._greaterorequal
-R ^ etc._pow
-R __boom etc._boom
-R __check-syntax etc._checksyntax
-R __checksum etc._checksum
-R __dump etc._dump
-R __dump-extension-prims etc._dumpextensionprims
-R __dump-extensions etc._dumpextensions
-R __dump1 etc._dump1
-R __nano-time etc._nanotime
-R __patchcol _patchcol
-R __patchrow _patchrow
-R __processors etc._processors
-R __random-state etc._randomstate
-R __stack-trace etc._stacktrace
-R __to-string etc._tostring
-R abs etc._abs
-R acos etc._acos
-R all? etc._all
-R and _and
-R any? _any
-R approximate-hsb etc._approximatehsb
-R approximate-rgb etc._approximatergb
-R asin etc._asin
-R at-points etc._atpoints
-R atan etc._atan
-R autoplot? etc._autoplot
-R base-colors etc._basecolors
-R behaviorspace-run-number etc._behaviorspacerunnumber
-R bf etc._butfirst
-R bl etc._butlast
-R both-ends etc._bothends
-R but-first etc._butfirst
-R but-last etc._butlast
-R butfirst etc._butfirst
-R butlast etc._butlast
-R can-move? etc._canmove
-R ceiling etc._ceil
-R cos etc._cos
-R count _count
-R date-and-time etc._dateandtime
-R distance etc._distance
-R distance-nowrap etc._distancenowrap
-R distancexy etc._distancexy
-R distancexy-nowrap etc._distancexynowrap
-R dx etc._dx
-R dy etc._dy
-R empty? etc._empty
-R error-message _errormessage
-R exp etc._exp
-R extract-hsb etc._extracthsb
-R extract-rgb etc._extractrgb
-R file-at-end? etc._fileatend
-R file-exists? etc._fileexists
-R file-read etc._fileread
-R file-read-characters etc._filereadchars
-R file-read-line etc._filereadline
-R filter etc._filter
-R first etc._first
-R floor etc._floor
-R fput etc._fput
-R hsb etc._hsb
-R ifelse-value etc._ifelsevalue
-R in-cone etc._incone
-R in-cone-nowrap etc._inconenowrap
-R in-link-from etc._inlinkfrom
-R in-link-neighbor? etc._inlinkneighbor
-R in-link-neighbors etc._inlinkneighbors
-R in-radius etc._inradius
-R in-radius-nowrap etc._inradiusnowrap
-R int etc._int
-R is-agent? etc._isagent
-R is-agentset? etc._isagentset
-R is-boolean? etc._isboolean
-R is-command-task? etc._iscommandtask
-R is-directed-link? etc._isdirectedlink
-R is-link-set? etc._islinkset
-R is-link? etc._islink
-R is-list? etc._islist
-R is-number? etc._isnumber
-R is-patch-set? etc._ispatchset
-R is-patch? etc._ispatch
-R is-reporter-task? etc._isreportertask
-R is-string? etc._isstring
-R is-turtle-set? etc._isturtleset
-R is-turtle? etc._isturtle
-R is-undirected-link? etc._isundirectedlink
-R item etc._item
-R last etc._last
-R length etc._length
-R link etc._link
-R link-heading etc._linkheading
-R link-length etc._linklength
-R link-neighbor? etc._linkneighbor
-R link-neighbors etc._linkneighbors
-R link-set etc._linkset
-R link-shapes etc._linkshapes
-R link-with etc._linkwith
-R links etc._links
-R list _list
-R ln etc._ln
-R log etc._log
-R lput etc._lput
-R map etc._map
-R max etc._max
-R max-n-of etc._maxnof
-R max-one-of etc._maxoneof
-R max-pxcor etc._maxpxcor
-R max-pycor etc._maxpycor
-R mean etc._mean
-R median etc._median
-R member? etc._member
-R min etc._min
-R min-n-of etc._minnof
-R min-one-of etc._minoneof
-R min-pxcor etc._minpxcor
-R min-pycor etc._minpycor
-R mod etc._mod
-R modes etc._modes
-R mouse-down? etc._mousedown
-R mouse-inside? etc._mouseinside
-R mouse-xcor etc._mousexcor
-R mouse-ycor etc._mouseycor
-R my-in-links etc._myinlinks
-R my-links etc._mylinks
-R my-out-links etc._myoutlinks
-R myself etc._myself
-R n-of etc._nof
-R n-values etc._nvalues
-R neighbors _neighbors
-R neighbors4 _neighbors4
-R netlogo-applet? etc._netlogoapplet
-R netlogo-version etc._netlogoversion
-R new-seed etc._newseed
-R no-links etc._nolinks
-R no-patches etc._nopatches
-R no-turtles etc._noturtles
-R not _not
-R of _of
-R one-of _oneof
-R or _or
-R other _other
-R other-end etc._otherend
-R out-link-neighbor? etc._outlinkneighbor
-R out-link-neighbors etc._outlinkneighbors
-R out-link-to etc._outlinkto
-R patch etc._patch
-R patch-ahead etc._patchahead
-R patch-at _patchat
-R patch-at-heading-and-distance etc._patchatheadinganddistance
-R patch-here etc._patchhere
-R patch-left-and-ahead etc._patchleftandahead
-R patch-right-and-ahead etc._patchrightandahead
-R patch-set etc._patchset
-R patch-size etc._patchsize
-R patches _patches
-R plot-name etc._plotname
-R plot-pen-exists? etc._plotpenexists
-R plot-x-max etc._plotxmax
-R plot-x-min etc._plotxmin
-R plot-y-max etc._plotymax
-R plot-y-min etc._plotymin
-R position etc._position
-R precision etc._precision
-R random _random
-R random-exponential etc._randomexponential
-R random-float etc._randomfloat
-R random-gamma etc._randomgamma
-R random-normal etc._randomnormal
-R random-poisson etc._randompoisson
-R random-pxcor etc._randompxcor
-R random-pycor etc._randompycor
-R random-xcor etc._randomxcor
-R random-ycor etc._randomycor
-R read-from-string etc._readfromstring
-R reduce etc._reduce
-R remainder etc._remainder
-R remove etc._remove
-R remove-duplicates etc._removeduplicates
-R remove-item etc._removeitem
-R replace-item etc._replaceitem
-R reverse etc._reverse
-R rgb etc._rgb
-R round etc._round
-R run-result etc._runresult
-R runresult etc._runresult
-R scale-color etc._scalecolor
-R se _sentence
-R self etc._self
-R sentence _sentence
-R shade-of? etc._shadeof
-R shapes etc._shapes
-R shuffle etc._shuffle
-R sin etc._sin
-R sort etc._sort
-R sort-by etc._sortby
-R sort-on etc._sorton
-R sqrt etc._sqrt
-R standard-deviation etc._standarddeviation
-R subject etc._subject
-R sublist etc._sublist
-R substring etc._substring
-R subtract-headings etc._subtractheadings
-R sum _sum
-R tan etc._tan
-R task _task
-R ticks etc._ticks
-R timer etc._timer
-R towards etc._towards
-R towards-nowrap etc._towardsnowrap
-R towardsxy etc._towardsxy
-R towardsxy-nowrap etc._towardsxynowrap
-R turtle etc._turtle
-R turtle-set etc._turtleset
-R turtles etc._turtles
-R turtles-at etc._turtlesat
-R turtles-here etc._turtleshere
-R turtles-on etc._turtleson
-R user-directory etc._userdirectory
-R user-file etc._userfile
-R user-input etc._userinput
-R user-new-file etc._usernewfile
-R user-one-of etc._useroneof
-R user-yes-or-no? etc._useryesorno
-R variance etc._variance
-R with _with
-R with-max etc._withmax
-R with-min etc._withmin
-R word _word
-R world-height etc._worldheight
-R world-width etc._worldwidth
-R wrap-color etc._wrapcolor
-R xor etc._xor
+!= _notequal
+* etc._mult
++ etc._plus
+- _minus
+/ etc._div
+< _lessthan
+<= etc._lessorequal
+= _equal
+> _greaterthan
+>= etc._greaterorequal
+^ etc._pow
+__bench etc._bench
+__boom etc._boom
+__change-topology etc._changetopology
+__check-syntax etc._checksyntax
+__checksum etc._checksum
+__clear-all-and-reset-ticks etc._clearallandresetticks
+__done _done
+__dump etc._dump
+__dump-extension-prims etc._dumpextensionprims
+__dump-extensions etc._dumpextensions
+__dump1 etc._dump1
+__experimentstepend etc._experimentstepend
+__export-drawing etc._exportdrawing
+__foreverbuttonend etc._foreverbuttonend
+__git etc._git
+__ignore etc._ignore
+__let _let
+__linkcode etc._linkcode
+__make-preview etc._makepreview
+__mkdir etc._mkdir
+__nano-time etc._nanotime
+__observercode etc._observercode
+__patchcode etc._patchcode
+__patchcol _patchcol
+__patchrow _patchrow
+__plot-pen-hide etc._plotpenhide
+__plot-pen-show etc._plotpenshow
+__processors etc._processors
+__pwd etc._pwd
+__random-state etc._randomstate
+__reload-extensions etc._reloadextensions
+__set-line-thickness etc._setlinethickness
+__stack-trace etc._stacktrace
+__stderr etc._stderr
+__stdout etc._stdout
+__thunk-did-finish etc._thunkdidfinish
+__to-string etc._tostring
+__turtlecode etc._turtlecode
+__updatemonitor etc._updatemonitor
+abs etc._abs
+acos etc._acos
+all? etc._all
+and _and
+any? _any
+approximate-hsb etc._approximatehsb
+approximate-rgb etc._approximatergb
+asin etc._asin
+ask _ask
+ask-concurrent _askconcurrent
+at-points etc._atpoints
+atan etc._atan
+auto-plot-off etc._autoplotoff
+auto-plot-on etc._autoploton
+autoplot? etc._autoplot
+back _bk
+base-colors etc._basecolors
+beep etc._beep
+behaviorspace-run-number etc._behaviorspacerunnumber
+bf etc._butfirst
+bk _bk
+bl etc._butlast
+both-ends etc._bothends
+but-first etc._butfirst
+but-last etc._butlast
+butfirst etc._butfirst
+butlast etc._butlast
+ca etc._clearall
+can-move? etc._canmove
+carefully _carefully
+cd etc._cleardrawing
+ceiling etc._ceil
+clear-all etc._clearall
+clear-all-plots etc._clearallplots
+clear-drawing etc._cleardrawing
+clear-globals etc._clearglobals
+clear-links etc._clearlinks
+clear-output etc._clearoutput
+clear-patches etc._clearpatches
+clear-plot etc._clearplot
+clear-ticks etc._clearticks
+clear-turtles etc._clearturtles
+cos etc._cos
+count _count
+cp etc._clearpatches
+create-link-from etc._createlinkfrom
+create-link-to etc._createlinkto
+create-link-with etc._createlinkwith
+create-links-from etc._createlinksfrom
+create-links-to etc._createlinksto
+create-links-with etc._createlinkswith
+create-ordered-turtles _createorderedturtles
+create-temporary-plot-pen etc._createtemporaryplotpen
+create-turtles _createturtles
+cro _createorderedturtles
+crt _createturtles
+ct etc._clearturtles
+date-and-time etc._dateandtime
+die etc._die
+diffuse etc._diffuse
+diffuse4 etc._diffuse4
+display etc._display
+distance etc._distance
+distance-nowrap etc._distancenowrap
+distancexy etc._distancexy
+distancexy-nowrap etc._distancexynowrap
+downhill etc._downhill
+downhill4 etc._downhill4
+dx etc._dx
+dy etc._dy
+empty? etc._empty
+error etc._error
+error-message _errormessage
+every etc._every
+exp etc._exp
+export-all-plots etc._exportplots
+export-interface etc._exportinterface
+export-output etc._exportoutput
+export-plot etc._exportplot
+export-view etc._exportview
+export-world etc._exportworld
+extract-hsb etc._extracthsb
+extract-rgb etc._extractrgb
+face etc._face
+face-nowrap etc._facenowrap
+facexy etc._facexy
+facexy-nowrap etc._facexynowrap
+fd _fd
+file-at-end? etc._fileatend
+file-close etc._fileclose
+file-close-all etc._filecloseall
+file-delete etc._filedelete
+file-exists? etc._fileexists
+file-flush etc._fileflush
+file-open etc._fileopen
+file-print etc._fileprint
+file-read etc._fileread
+file-read-characters etc._filereadchars
+file-read-line etc._filereadline
+file-show etc._fileshow
+file-type etc._filetype
+file-write etc._filewrite
+filter etc._filter
+first etc._first
+floor etc._floor
+follow etc._follow
+follow-me etc._followme
+foreach etc._foreach
+forward _fd
+fput etc._fput
+hatch _hatch
+hide-link etc._hidelink
+hide-turtle etc._hideturtle
+histogram etc._histogram
+home etc._home
+hsb etc._hsb
+ht etc._hideturtle
+if etc._if
+if-else etc._ifelse
+ifelse etc._ifelse
+ifelse-value etc._ifelsevalue
+import-drawing etc._importdrawing
+import-pcolors etc._importpatchcolors
+import-pcolors-rgb etc._importpcolorsrgb
+import-world etc._importworld
+in-cone etc._incone
+in-cone-nowrap etc._inconenowrap
+in-link-from etc._inlinkfrom
+in-link-neighbor? etc._inlinkneighbor
+in-link-neighbors etc._inlinkneighbors
+in-radius etc._inradius
+in-radius-nowrap etc._inradiusnowrap
+inspect etc._inspect
+int etc._int
+is-agent? etc._isagent
+is-agentset? etc._isagentset
+is-boolean? etc._isboolean
+is-command-task? etc._iscommandtask
+is-directed-link? etc._isdirectedlink
+is-link-set? etc._islinkset
+is-link? etc._islink
+is-list? etc._islist
+is-number? etc._isnumber
+is-patch-set? etc._ispatchset
+is-patch? etc._ispatch
+is-reporter-task? etc._isreportertask
+is-string? etc._isstring
+is-turtle-set? etc._isturtleset
+is-turtle? etc._isturtle
+is-undirected-link? etc._isundirectedlink
+item etc._item
+jump _jump
+last etc._last
+layout-circle etc._layoutcircle
+layout-radial etc._layoutradial
+layout-spring etc._layoutspring
+layout-tutte etc._layouttutte
+left etc._left
+length etc._length
+let _let
+link etc._link
+link-heading etc._linkheading
+link-length etc._linklength
+link-neighbor? etc._linkneighbor
+link-neighbors etc._linkneighbors
+link-set etc._linkset
+link-shapes etc._linkshapes
+link-with etc._linkwith
+links etc._links
+list _list
+ln etc._ln
+log etc._log
+loop etc._loop
+lput etc._lput
+lt etc._left
+map etc._map
+max etc._max
+max-n-of etc._maxnof
+max-one-of etc._maxoneof
+max-pxcor etc._maxpxcor
+max-pycor etc._maxpycor
+mean etc._mean
+median etc._median
+member? etc._member
+min etc._min
+min-n-of etc._minnof
+min-one-of etc._minoneof
+min-pxcor etc._minpxcor
+min-pycor etc._minpycor
+mod etc._mod
+modes etc._modes
+mouse-down? etc._mousedown
+mouse-inside? etc._mouseinside
+mouse-xcor etc._mousexcor
+mouse-ycor etc._mouseycor
+move-to etc._moveto
+my-in-links etc._myinlinks
+my-links etc._mylinks
+my-out-links etc._myoutlinks
+myself etc._myself
+n-of etc._nof
+n-values etc._nvalues
+neighbors _neighbors
+neighbors4 _neighbors4
+netlogo-applet? etc._netlogoapplet
+netlogo-version etc._netlogoversion
+new-seed etc._newseed
+no-display etc._nodisplay
+no-links etc._nolinks
+no-patches etc._nopatches
+no-turtles etc._noturtles
+not _not
+of _of
+one-of _oneof
+or _or
+other _other
+other-end etc._otherend
+out-link-neighbor? etc._outlinkneighbor
+out-link-neighbors etc._outlinkneighbors
+out-link-to etc._outlinkto
+output-print etc._outputprint
+output-show etc._outputshow
+output-type etc._outputtype
+output-write etc._outputwrite
+patch etc._patch
+patch-ahead etc._patchahead
+patch-at _patchat
+patch-at-heading-and-distance etc._patchatheadinganddistance
+patch-here etc._patchhere
+patch-left-and-ahead etc._patchleftandahead
+patch-right-and-ahead etc._patchrightandahead
+patch-set etc._patchset
+patch-size etc._patchsize
+patches _patches
+pd etc._pendown
+pe etc._penerase
+pen-down etc._pendown
+pen-erase etc._penerase
+pen-up etc._penup
+pendown etc._pendown
+penup etc._penup
+plot etc._plot
+plot-name etc._plotname
+plot-pen-down etc._plotpendown
+plot-pen-exists? etc._plotpenexists
+plot-pen-reset etc._plotpenreset
+plot-pen-up etc._plotpenup
+plot-x-max etc._plotxmax
+plot-x-min etc._plotxmin
+plot-y-max etc._plotymax
+plot-y-min etc._plotymin
+plotxy etc._plotxy
+position etc._position
+precision etc._precision
+print etc._print
+pu etc._penup
+random _random
+random-exponential etc._randomexponential
+random-float etc._randomfloat
+random-gamma etc._randomgamma
+random-normal etc._randomnormal
+random-poisson etc._randompoisson
+random-pxcor etc._randompxcor
+random-pycor etc._randompycor
+random-seed etc._randomseed
+random-xcor etc._randomxcor
+random-ycor etc._randomycor
+read-from-string etc._readfromstring
+reduce etc._reduce
+remainder etc._remainder
+remove etc._remove
+remove-duplicates etc._removeduplicates
+remove-item etc._removeitem
+repeat _repeat
+replace-item etc._replaceitem
+report etc._report
+reset-perspective etc._resetperspective
+reset-ticks etc._resetticks
+reset-timer etc._resettimer
+resize-world etc._resizeworld
+reverse etc._reverse
+rgb etc._rgb
+ride etc._ride
+ride-me etc._rideme
+right etc._right
+round etc._round
+rp etc._resetperspective
+rt etc._right
+run etc._run
+run-result etc._runresult
+runresult etc._runresult
+scale-color etc._scalecolor
+se _sentence
+self etc._self
+sentence _sentence
+set _set
+set-current-directory etc._setcurdir
+set-current-plot etc._setcurrentplot
+set-current-plot-pen etc._setcurrentplotpen
+set-default-shape etc._setdefaultshape
+set-histogram-num-bars etc._sethistogramnumbars
+set-patch-size etc._setpatchsize
+set-plot-pen-color etc._setplotpencolor
+set-plot-pen-interval etc._setplotpeninterval
+set-plot-pen-mode etc._setplotpenmode
+set-plot-x-range etc._setplotxrange
+set-plot-y-range etc._setplotyrange
+setup-plots etc._setupplots
+setxy etc._setxy
+shade-of? etc._shadeof
+shapes etc._shapes
+show etc._show
+show-link etc._showlink
+show-turtle etc._showturtle
+shuffle etc._shuffle
+sin etc._sin
+sort etc._sort
+sort-by etc._sortby
+sort-on etc._sorton
+sprout _sprout
+sqrt etc._sqrt
+st etc._showturtle
+stamp etc._stamp
+stamp-erase etc._stamperase
+standard-deviation etc._standarddeviation
+stop etc._stop
+subject etc._subject
+sublist etc._sublist
+substring etc._substring
+subtract-headings etc._subtractheadings
+sum _sum
+tan etc._tan
+task _task
+tick etc._tick
+tick-advance etc._tickadvance
+ticks etc._ticks
+tie etc._tie
+timer etc._timer
+towards etc._towards
+towards-nowrap etc._towardsnowrap
+towardsxy etc._towardsxy
+towardsxy-nowrap etc._towardsxynowrap
+turtle etc._turtle
+turtle-set etc._turtleset
+turtles etc._turtles
+turtles-at etc._turtlesat
+turtles-here etc._turtleshere
+turtles-on etc._turtleson
+type etc._type
+untie etc._untie
+update-plots etc._updateplots
+uphill etc._uphill
+uphill4 etc._uphill4
+user-directory etc._userdirectory
+user-file etc._userfile
+user-input etc._userinput
+user-message etc._usermessage
+user-new-file etc._usernewfile
+user-one-of etc._useroneof
+user-yes-or-no? etc._useryesorno
+variance etc._variance
+wait etc._wait
+watch etc._watch
+watch-me etc._watchme
+while etc._while
+with _with
+with-local-randomness etc._withlocalrandomness
+with-max etc._withmax
+with-min etc._withmin
+without-interruption etc._withoutinterruption
+word _word
+world-height etc._worldheight
+world-width etc._worldwidth
+wrap-color etc._wrapcolor
+write etc._write
+xor etc._xor
