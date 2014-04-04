@@ -3,13 +3,13 @@
 package org.nlogo.parse
 
 import org.nlogo.api.Resource
-import org.nlogo.core.TokenHolder
+import org.nlogo.core.{ Syntax, Syntaxes }
 
 class TokenMapper(path: String, prefix: String) {
-  def getCommand(s: String): Option[TokenHolder] =
-    commands.get(s.toUpperCase).map(instantiate[TokenHolder])
-  def getReporter(s: String): Option[TokenHolder] =
-    reporters.get(s.toUpperCase).map(instantiate[TokenHolder])
+  def apply(s: String): Option[(String, Syntax)] =
+    commands.get(s.toUpperCase)
+      .orElse(reporters.get(s.toUpperCase))
+      .map(s => (s, Syntaxes.syntaxes(s.dropWhile(_ != '_'))))
   private def entries(entryType: String): Iterator[(String, String)] =
     for {
       line <- Resource.getResourceLines(path)
@@ -21,14 +21,7 @@ class TokenMapper(path: String, prefix: String) {
   private val reporters = entries("R").toMap
   def allCommandNames = commands.keySet
   def allReporterNames = reporters.keySet
-  /// private helper
-  private def instantiate[T](name: String) =
-    Class.forName(name).newInstance.asInstanceOf[T]
   // for integration testing
   def allCommandClassNames = commands.values.toSet
   def allReporterClassNames = reporters.values.toSet
-  def checkInstructionMaps() {
-    commands.keySet.foreach(getCommand)
-    reporters.keySet.foreach(getReporter)
-  }
 }

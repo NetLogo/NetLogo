@@ -6,21 +6,30 @@ import org.scalatest.FunSuite
 
 class TokenMapperTests extends FunSuite {
 
-  import FrontEnd.tokenMapper._
+  import FrontEnd.tokenMapper
 
-  test("all listed primitives exist") {
-    checkInstructionMaps()
+  def isCommand(s: String) =
+    tokenMapper(s).exists(!_._2.isReporter)
+  def isReporter(s: String) =
+    tokenMapper(s).exists(_._2.isReporter)
+
+  def getCommand(s: String) = {
+    val Some((name, syntax)) = tokenMapper(s)
+    assert(!syntax.isReporter)
+    name
+  }
+  def getReporter(s: String) = {
+    val Some((name, syntax)) = tokenMapper(s)
+    assert(syntax.isReporter)
+    name
   }
 
-  def isCommand(s: String) = getCommand(s).isDefined
-  def isReporter(s: String) = getReporter(s).isDefined
-
-  test("OneCommand1") { assertResult("_fd")(getCommand("FD").get.toString) }
-  test("OneCommand2") { assertResult("_fd")(getCommand("fd").get.toString) }
+  test("OneCommand1") { assertResult("org.nlogo.prim._fd")(getCommand("FD")) }
+  test("OneCommand2") { assertResult("org.nlogo.prim._fd")(getCommand("fd")) }
   test("BadCommand") { assertResult(false)(isCommand("gkhgjkh")) }
 
-  test("OneReporter1") { assertResult("_timer")(getReporter("TIMER").get.toString) }
-  test("OneReporter2") { assertResult("_timer")(getReporter("timer").get.toString) }
+  test("OneReporter1") { assertResult("org.nlogo.prim.etc._timer")(getReporter("TIMER")) }
+  test("OneReporter2") { assertResult("org.nlogo.prim.etc._timer")(getReporter("timer")) }
   test("BadReporter") { assertResult(false)(isReporter("gkhgjkh")) }
 
   test("reporter1") { assert(isReporter("random")) }
