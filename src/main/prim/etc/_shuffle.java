@@ -3,6 +3,8 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.LogoList;
+import org.nlogo.core.Syntax;
+import org.nlogo.core.SyntaxJ;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 
@@ -19,6 +21,12 @@ public final strictfp class _shuffle
         new ArrayList<Object>(argEvalList(context, 0));
     Collections.shuffle(result, context.job.random);
     return LogoList.fromJava(result);
+  }
+
+  @Override
+  public Syntax syntax() {
+    return SyntaxJ.reporterSyntax(new int[]{Syntax.ListType()},
+        Syntax.ListType());
   }
 
   public LogoList report_1(Context context, LogoList l0) {

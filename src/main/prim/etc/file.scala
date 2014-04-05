@@ -2,11 +2,14 @@
 
 package org.nlogo.prim.etc
 
+import org.nlogo.core.{ Syntax, SyntaxJ }
 import org.nlogo.api.{ CompilerException, FileMode, OutputDestination }
 import org.nlogo.nvm.{ Command, Context, EngineException, Reporter }
 import java.io.IOException
 
 class _fileatend extends Reporter {
+  override def syntax =
+    SyntaxJ.reporterSyntax(Syntax.BooleanType)
   override def report(context: Context): java.lang.Boolean =
     try Boolean.box(workspace.fileManager.eof)
     catch {
@@ -16,6 +19,8 @@ class _fileatend extends Reporter {
 }
 
 class _fileclose extends Command {
+  override def syntax =
+    SyntaxJ.commandSyntax
   override def perform(context: Context) {
     try
       if (workspace.fileManager.hasCurrentFile)
@@ -29,6 +34,8 @@ class _fileclose extends Command {
 }
 
 class _filecloseall extends Command {
+  override def syntax =
+    SyntaxJ.commandSyntax
   override def perform(context: Context) {
     try workspace.fileManager.closeAllFiles()
     catch {
@@ -40,6 +47,8 @@ class _filecloseall extends Command {
 }
 
 class _filedelete extends Command {
+  override def syntax =
+    SyntaxJ.commandSyntax(Array(Syntax.StringType))
   override def perform(context: Context) {
     try
       workspace.fileManager.deleteFile(
@@ -58,6 +67,9 @@ class _filedelete extends Command {
 }
 
 class _fileexists extends Reporter {
+  override def syntax =
+    SyntaxJ.reporterSyntax(Array(Syntax.StringType),
+                          Syntax.BooleanType)
   override def report(context: Context): java.lang.Boolean =
     try
       Boolean.box(
@@ -75,6 +87,8 @@ class _fileexists extends Reporter {
 }
 
 class _fileflush extends Command {
+  override def syntax =
+    SyntaxJ.commandSyntax
   override def perform(context: Context) {
     try
       if (workspace.fileManager.hasCurrentFile)
@@ -88,6 +102,8 @@ class _fileflush extends Command {
 }
 
 class _fileopen extends Command {
+  override def syntax =
+    SyntaxJ.commandSyntax(Array(Syntax.StringType))
   override def perform(context: Context) {
     try
       // DefaultFileManager.openFile attaches the prefix for us, so we need not normalize our path
@@ -103,6 +119,8 @@ class _fileopen extends Command {
 }
 
 class _fileprint extends Command {
+  override def syntax =
+    SyntaxJ.commandSyntax(Array(Syntax.WildcardType))
   override def perform(context: Context) {
     try
       workspace.fileManager.ensureMode(
@@ -119,6 +137,8 @@ class _fileprint extends Command {
 }
 
 class _fileread extends Reporter {
+  override def syntax =
+    SyntaxJ.reporterSyntax(Syntax.ReadableType)
   override def report(context: Context): AnyRef =
     try workspace.fileManager.read(world)
     catch {
@@ -135,6 +155,9 @@ class _fileread extends Reporter {
 }
 
 class _filereadchars extends Reporter {
+  override def syntax =
+    SyntaxJ.reporterSyntax(Array(Syntax.NumberType),
+                          Syntax.StringType)
   override def report(context: Context): String =
     try workspace.fileManager.readChars(argEvalIntValue(context, 0))
     catch {
@@ -147,6 +170,8 @@ class _filereadchars extends Reporter {
 }
 
 class _filereadline extends Reporter {
+  override def syntax =
+    SyntaxJ.reporterSyntax(Syntax.StringType)
   override def report(context: Context): String =
     try workspace.fileManager.readLine()
     catch {
@@ -159,6 +184,8 @@ class _filereadline extends Reporter {
 }
 
 class _fileshow extends Command {
+  override def syntax =
+    SyntaxJ.commandSyntax(Array(Syntax.WildcardType))
   override def perform(context: Context) {
     val s = args(0).report(context)
     try
@@ -174,6 +201,8 @@ class _fileshow extends Command {
 }
 
 class _filetype extends Command {
+  override def syntax =
+    SyntaxJ.commandSyntax(Array(Syntax.WildcardType))
   override def perform(context: Context) {
     val s = args(0).report(context)
     try workspace.fileManager.ensureMode(FileMode.Append)
@@ -188,6 +217,8 @@ class _filetype extends Command {
 }
 
 class _filewrite extends Command {
+  override def syntax =
+    SyntaxJ.commandSyntax(Array(Syntax.ReadableType))
   override def perform(context: Context) {
     val s = args(0).report(context)
     try

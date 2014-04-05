@@ -17,6 +17,10 @@ trait LinkCreationCommand extends Command with nvm.CustomAssembled {
   // overrides
   override def toString =
     super.toString + ":" + breedName + ",+" + offset
+  override def syntax =
+    core.SyntaxJ.commandSyntax(
+      Array(inputType, core.Syntax.CommandBlockType | core.Syntax.OptionalType),
+      "-T--", "---L", true)
   override def perform(context: Context) {
     val breed =
       if (breedName.isEmpty)

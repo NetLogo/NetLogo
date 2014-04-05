@@ -2,12 +2,17 @@
 
 package org.nlogo.prim
 
+import org.nlogo.core.{ Syntax, SyntaxJ }
 import org.nlogo.api.Let
 import org.nlogo.nvm.{ ReporterTask, Context, Reporter }
 
 class _reportertask extends Reporter {
 
   val formals = collection.mutable.ArrayBuffer[Let]()
+
+  override def syntax = SyntaxJ.reporterSyntax(
+    Array(Syntax.WildcardType),
+    Syntax.ReporterTaskType)
 
   override def report(c: Context): AnyRef =
     ReporterTask(body = args(0),

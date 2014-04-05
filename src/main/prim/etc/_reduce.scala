@@ -2,10 +2,15 @@
 
 package org.nlogo.prim.etc
 
+import org.nlogo.core.{ Syntax, SyntaxJ }
 import org.nlogo.api.I18N
 import org.nlogo.nvm.{ EngineException, Context, Reporter }
 
 class _reduce extends Reporter {
+
+  override def syntax =
+    SyntaxJ.reporterSyntax(Array(Syntax.ReporterTaskType, Syntax.ListType), Syntax.WildcardType)
+
   override def report(context: Context): AnyRef = {
     val task = argEvalReporterTask(context, 0)
     if(task.formals.size > 2)
@@ -20,4 +25,5 @@ class _reduce extends Reporter {
       result = task.report(context, Array(result, it.next()))
     result
   }
+
 }

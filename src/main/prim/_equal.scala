@@ -2,11 +2,19 @@
 
 package org.nlogo.prim
 
+import org.nlogo.core.{ Syntax, SyntaxJ }
 import org.nlogo.api.{ Equality, Nobody }
 import org.nlogo.agent.{ Turtle, Patch, Link }
 import org.nlogo.nvm.{ Reporter, Pure, Context }
 
 class _equal extends Reporter with Pure {
+
+  override def syntax =
+    SyntaxJ.reporterSyntax(
+      left = Syntax.WildcardType,
+      right = Array(Syntax.WildcardType),
+      ret = Syntax.BooleanType,
+      precedence = Syntax.NormalPrecedence - 5)
 
   override def report(context: Context): java.lang.Boolean =
     Boolean.box(

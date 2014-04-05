@@ -2,6 +2,7 @@
 
 package org.nlogo.prim
 
+import org.nlogo.core.{ Syntax, SyntaxJ }
 import org.nlogo.api.Let
 import org.nlogo.nvm.{ Context, Reporter }
 
@@ -10,6 +11,8 @@ class _letvariable(_let: Let) extends Reporter {
   // MethodRipper won't let us call a public method from perform_1() - ST 7/20/12
   def let = _let
 
+  override def syntax =
+    SyntaxJ.reporterSyntax(Syntax.WildcardType)
   override def toString =
     super.toString + "(" + _let.name + ")"
 

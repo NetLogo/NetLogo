@@ -3,11 +3,19 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.I18N;
+import org.nlogo.core.Syntax;
+import org.nlogo.core.SyntaxJ;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _randomgamma extends Reporter {
+  @Override
+  public Syntax syntax() {
+    return SyntaxJ.reporterSyntax
+        (new int[]{Syntax.NumberType(), Syntax.NumberType()},
+            Syntax.NumberType());
+  }
 
   @Override
   public Object report(Context context) {

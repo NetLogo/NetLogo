@@ -2,9 +2,13 @@
 
 package org.nlogo.prim
 
+import org.nlogo.core.{ Syntax, SyntaxJ }
 import org.nlogo.nvm.{ Command, Context }
 
 class _return extends Command {
+
+  override def syntax =
+    SyntaxJ.commandSyntax
 
   // for use in error messages
   override def displayName =

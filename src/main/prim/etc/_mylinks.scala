@@ -2,13 +2,16 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.AgentKind
+import org.nlogo.core.{ Syntax, SyntaxJ, AgentKind }
 import org.nlogo.agent.{ AgentSet, LinkManager, Turtle }
 import org.nlogo.nvm.{ Reporter, Context, EngineException }
 
 class _mylinks(breedName: String) extends Reporter {
 
   def this() = this(null)
+
+  override def syntax =
+    SyntaxJ.reporterSyntax(Syntax.LinksetType, "-T--")
 
   override def toString =
     super.toString + ":" + breedName

@@ -2,12 +2,16 @@
 
 package org.nlogo.prim
 
+import org.nlogo.core.{ Syntax, SyntaxJ }
 import org.nlogo.nvm.{ Reporter, Pure, Context }
 
 class _constboolean(value: java.lang.Boolean) extends Reporter with Pure {
 
   private[this] val _primitiveValue = value.booleanValue
   def primitiveValue = _primitiveValue
+
+  override def syntax =
+    SyntaxJ.reporterSyntax(Syntax.BooleanType)
 
   override def toString =
     super.toString + ":" + primitiveValue

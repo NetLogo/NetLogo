@@ -6,6 +6,8 @@ import org.nlogo.agent.PatchException;
 import org.nlogo.api.AgentException;
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
+import org.nlogo.core.Syntax;
+import org.nlogo.core.SyntaxJ;
 import org.nlogo.api.TypeNames;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
@@ -13,6 +15,12 @@ import org.nlogo.nvm.EngineException;
 
 public final strictfp class _diffuse4
     extends Command {
+  @Override
+  public Syntax syntax() {
+    return SyntaxJ.commandSyntax
+        (new int[]{Syntax.ReferenceType(), Syntax.NumberType()},
+            "O---", true);
+  }
 
   @Override
   public String toString() {

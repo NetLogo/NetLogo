@@ -2,10 +2,15 @@
 
 package org.nlogo.prim.etc
 
+import org.nlogo.core.{ Syntax, SyntaxJ }
 import org.nlogo.api.I18N
 import org.nlogo.nvm.{ Context, Reporter, Pure, EngineException }
 
 class _atan extends Reporter with Pure {
+  override def syntax =
+    SyntaxJ.reporterSyntax(
+      Array(Syntax.NumberType, Syntax.NumberType),
+      Syntax.NumberType)
   override def report(context: Context): java.lang.Double =
     Double.box(
       report_1(context,

@@ -3,6 +3,8 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.I18N;
+import org.nlogo.core.Syntax;
+import org.nlogo.core.SyntaxJ;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
@@ -11,6 +13,11 @@ import org.nlogo.nvm.Procedure;
 
 public final strictfp class _report
     extends Command {
+  @Override
+  public Syntax syntax() {
+    return SyntaxJ.commandSyntax
+        (new int[]{Syntax.WildcardType()});
+  }
 
   @Override
   public void perform(Context context) {

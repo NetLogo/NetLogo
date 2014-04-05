@@ -10,6 +10,7 @@ import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoList;
 import org.nlogo.core.Syntax;
+import org.nlogo.core.SyntaxJ;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
@@ -21,6 +22,14 @@ import java.util.Set;
 
 public final strictfp class _patchset
     extends Reporter {
+  @Override
+  public Syntax syntax() {
+    int[] right = {Syntax.RepeatableType() | Syntax.PatchType()
+        | Syntax.PatchsetType() | Syntax.NobodyType()
+        | Syntax.ListType()};
+    int ret = Syntax.PatchsetType();
+    return SyntaxJ.reporterSyntax(right, ret, 1, 0);
+  }
 
   @Override
   public Object report(final Context context) {

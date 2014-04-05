@@ -2,10 +2,17 @@
 
 package org.nlogo.prim
 
+import org.nlogo.core.Syntax
 import org.nlogo.agent.AgentSet
 import org.nlogo.nvm.{ Reporter, Context }
 
 class _anyother extends Reporter {
+
+  override def syntax =
+    Syntax.reporterSyntax(
+      right = List(Syntax.AgentsetType),
+      ret = Syntax.BooleanType,
+      agentClassString = "-TPL")
 
   override def report(context: Context): java.lang.Boolean =
     Boolean.box(report_1(context, argEvalAgentSet(context, 0)))

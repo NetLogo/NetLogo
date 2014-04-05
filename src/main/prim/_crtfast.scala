@@ -3,9 +3,14 @@
 package org.nlogo.prim
 
 import org.nlogo.agent.Turtle
+import org.nlogo.core.{ Syntax, SyntaxJ }
 import org.nlogo.nvm.{ Command, Context }
 
 class _crtfast(breedName: String) extends Command {
+
+  override def syntax =
+    SyntaxJ.commandSyntax(
+      Array(Syntax.NumberType), "O---", true)
 
   override def toString =
     super.toString + ":" + breedName

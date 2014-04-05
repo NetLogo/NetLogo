@@ -2,10 +2,16 @@
 
 package org.nlogo.prim
 
+import org.nlogo.core.{ Syntax, SyntaxJ }
 import org.nlogo.api.AgentException
 import org.nlogo.nvm.{ Reporter, Context, EngineException }
 
 class _breedvariable(private[this] val _name: String) extends Reporter {
+
+  override def syntax =
+    SyntaxJ.reporterSyntax(
+      ret = Syntax.WildcardType | Syntax.ReferenceType,
+      agentClassString = "-T--")
 
   override def toString =
     super.toString + ":" + name

@@ -2,6 +2,8 @@
 
 package org.nlogo.prim.etc;
 
+import org.nlogo.core.Syntax;
+import org.nlogo.core.SyntaxJ;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _xor
@@ -18,4 +20,12 @@ public final strictfp class _xor
     }
   }
 
+  @Override
+  public Syntax syntax() {
+    int left = Syntax.BooleanType();
+    int[] right = {Syntax.BooleanType()};
+    int ret = Syntax.BooleanType();
+    return SyntaxJ.reporterSyntax(left, right, ret,
+        org.nlogo.core.Syntax.NormalPrecedence() - 6);
+  }
 }

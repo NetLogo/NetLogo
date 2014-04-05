@@ -2,6 +2,7 @@
 
 package org.nlogo.prim
 
+import org.nlogo.core.{ Syntax, SyntaxJ }
 import org.nlogo.api.{ Let, LogoException }
 import org.nlogo.nvm.{ Reporter, Context }
 
@@ -16,6 +17,8 @@ class _errormessage extends Reporter {
   private[this] var _let: Let = null
   def let = _let
   def let_=(let: Let) { _let = let }  // compiler will call this
+  override def syntax =
+    SyntaxJ.reporterSyntax(Syntax.StringType)
   override def report(context: Context): String =
     report_1(context)
   def report_1(context: Context): String =

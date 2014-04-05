@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.Syntax
+import org.nlogo.core.{ Syntax, SyntaxJ }
 import org.nlogo.api.{ LogoException, LogoList }
 import org.nlogo.agent.AgentSet
 import org.nlogo.nvm.{ ArgumentTypeException, Context, EngineException, Reporter, ReporterTask  }
@@ -12,6 +12,11 @@ class _sortby extends Reporter {
   // see issue #172
   private val Java7SoPicky =
     "Comparison method violates its general contract!"
+
+  override def syntax =
+    SyntaxJ.reporterSyntax(Array(Syntax.ReporterTaskType,
+                                Syntax.ListType | Syntax.AgentsetType),
+                          Syntax.ListType, "OTPL", "?")
 
   override def report(context: Context): LogoList = {
     val task = argEvalReporterTask(context, 0)

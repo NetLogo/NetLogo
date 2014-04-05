@@ -2,10 +2,13 @@
 
 package org.nlogo.prim.etc
 
+import org.nlogo.core.{ Syntax, SyntaxJ }
 import org.nlogo.nvm.{ Command, Context }
 
 // true here because resetTicks calls other code
 class _clearallandresetticks extends Command {
+  override def syntax =
+    SyntaxJ.commandSyntax("O---", true)
   override def callsOtherCode = true
   override def perform(context: Context) {
     workspace.clearAll()

@@ -2,11 +2,19 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.Syntax
+import org.nlogo.core.{ Syntax, SyntaxJ }
 import org.nlogo.api.{ CompilerException, LogoException }
 import org.nlogo.nvm.{ Activation, ArgumentTypeException, Context, EngineException, Reporter, ReporterTask }
 
 class _runresult extends Reporter {
+
+  override def syntax =
+    SyntaxJ.reporterSyntax(
+      Array(Syntax.StringType | Syntax.ReporterTaskType,
+        Syntax.RepeatableType | Syntax.WildcardType),
+      Syntax.WildcardType,
+      1)
+
   override def report(context: Context): AnyRef =
     args(0).report(context) match {
       case s: String =>
@@ -48,4 +56,5 @@ class _runresult extends Reporter {
         throw new ArgumentTypeException(
           context, this, 0, Syntax.ReporterTaskType | Syntax.StringType, obj)
     }
+
 }
