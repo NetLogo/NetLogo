@@ -31,8 +31,7 @@ class Namer(
     // appear is arbitrary, except that for checkName to work, ProcedureVariableHandler
     // and CallHandler must come last - ST 5/14/13, 5/16/13
     val handlers = Stream[Token => Option[(TokenType, nvm.Instruction)]](
-      CommandHandler,
-      ReporterHandler,
+      PrimitiveHandler,
       TaskVariableHandler,
       new LetVariableHandler(lets, () => it.count),
       new BreedHandler(program),

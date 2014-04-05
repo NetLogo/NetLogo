@@ -2,7 +2,6 @@
 package org.nlogo.lex;
 
 import org.nlogo.core.Token;
-import org.nlogo.core.TokenHolder;
 import org.nlogo.core.TokenType;
 
 // Since this is automatically generated code it's not surprising

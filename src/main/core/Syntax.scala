@@ -57,6 +57,8 @@ case class Syntax private(
           blockAgentClassString.size == 4 ||
           blockAgentClassString == "?")
 
+  def isReporter = ret != VoidType
+
   /**
    * indicates whether this instruction should be parsed as infix. Infix
    * instructions expect exactly one argument on the left and should not

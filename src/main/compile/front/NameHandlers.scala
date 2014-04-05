@@ -47,20 +47,13 @@ class CallHandler(procedures: nvm.FrontEndInterface.ProceduresMap) extends NameH
           (TokenType.Command, new prim._call(callproc))}
 }
 
-abstract class PrimitiveHandler extends NameHandler {
-  def lookup(token: Token, fn: String => Option[core.TokenHolder], newType: TokenType): Option[(TokenType, nvm.Instruction)] =
-    fn(token.value.asInstanceOf[String]).map{holder =>
-      (newType, holder.asInstanceOf[nvm.Instruction])}
-}
-
-object CommandHandler extends PrimitiveHandler {
+object PrimitiveHandler extends NameHandler {
   override def apply(token: Token) =
-    lookup(token, FrontEnd.tokenMapper.getCommand  _, TokenType.Command)
-}
-
-object ReporterHandler extends PrimitiveHandler {
-  override def apply(token: Token) =
-    lookup(token, FrontEnd.tokenMapper.getReporter  _, TokenType.Reporter)
+    TokenMapper.apply(token.value.asInstanceOf[String])
+      .map{case (className, syntax) =>
+        (if (syntax.isReporter) TokenType.Reporter
+         else TokenType.Command,
+         Instantiator.newInstance[nvm.Instruction](Class.forName(className)))}
 }
 
 // go thru our breed prim handlers, if one triggers, return the result

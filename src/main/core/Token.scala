@@ -19,4 +19,5 @@ case class Token(text: String, tpe: TokenType, value: AnyRef)
   // the automatically generated `copy` method wouldn't copy the auxiliary fields
   def copy(text: String = text, tpe: TokenType = tpe, value: AnyRef = value): Token =
     new Token(text, tpe, value)(start, end, filename)
+  def displayName = text.toUpperCase
 }
