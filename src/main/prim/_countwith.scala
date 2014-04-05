@@ -2,7 +2,7 @@
 
 package org.nlogo.prim
 
-import org.nlogo.core.{ Syntax, SyntaxJ }
+import org.nlogo.core.Syntax
 import org.nlogo.api.{ Dump, I18N }
 import org.nlogo.agent.AgentSet
 import org.nlogo.nvm.{ Reporter, Context, EngineException }
@@ -10,9 +10,11 @@ import org.nlogo.nvm.{ Reporter, Context, EngineException }
 class _countwith extends Reporter {
 
   override def syntax =
-    SyntaxJ.reporterSyntax(
-      Array(Syntax.AgentsetType, Syntax.BooleanBlockType),
-      Syntax.NumberType, "OTPL", "?")
+    Syntax.reporterSyntax(
+      right = List(Syntax.AgentsetType, Syntax.BooleanBlockType),
+      ret = Syntax.NumberType,
+      agentClassString = "OTPL",
+      blockAgentClassString = "?")
 
   override def report(context: Context): java.lang.Double =
     Double.box(

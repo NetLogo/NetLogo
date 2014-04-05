@@ -2,13 +2,14 @@
 
 package org.nlogo.prim
 
-import org.nlogo.core.{ Syntax, SyntaxJ }
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Reporter, Reference, Context }
 
 class _reference(_reference: Reference) extends Reporter {
   reference = _reference
   override def syntax =
-    SyntaxJ.reporterSyntax(Syntax.ReferenceType)
+    Syntax.reporterSyntax(
+      ret = Syntax.ReferenceType)
   override def toString =
     super.toString + ":" + reference.kind + "," + reference.vn
   override def report(context: Context): Nothing =

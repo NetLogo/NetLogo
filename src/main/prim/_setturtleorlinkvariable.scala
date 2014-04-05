@@ -2,7 +2,7 @@
 
 package org.nlogo.prim
 
-import org.nlogo.core.{ Syntax, SyntaxJ }
+import org.nlogo.core.Syntax
 import org.nlogo.api.AgentException
 import org.nlogo.nvm.{ Command, Context, EngineException }
 
@@ -11,8 +11,10 @@ class _setturtleorlinkvariable(_varName: String) extends Command {
   def this(original: _turtleorlinkvariable) = this(original.varName)
 
   override def syntax =
-    SyntaxJ.commandSyntax(
-      Array(Syntax.WildcardType), "-T-L", true)
+    Syntax.commandSyntax(
+      right = List(Syntax.WildcardType),
+      agentClassString = "-T-L",
+      switches = true)
 
   override def toString =
     super.toString + ":" + varName

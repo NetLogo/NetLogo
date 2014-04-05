@@ -2,7 +2,7 @@
 
 package org.nlogo.prim
 
-import org.nlogo.core.{ Syntax, SyntaxJ }
+import org.nlogo.core.Syntax
 import org.nlogo.api.{ I18N, AgentException, LogoList, LogoListBuilder }
 import org.nlogo.nvm.{ Reporter, Context, EngineException, ArgumentTypeException }
 import org.nlogo.agent.{ Agent, AgentSet }
@@ -14,9 +14,9 @@ class _turtlevariableof(_vn: Int) extends Reporter {
       Option(world).map(_.turtlesOwnNameAt(vn)).getOrElse(vn.toString)
 
   override def syntax =
-    SyntaxJ.reporterSyntax(
-      Array(Syntax.TurtleType | Syntax.TurtlesetType),
-      Syntax.WildcardType)
+    Syntax.reporterSyntax(
+      right = List(Syntax.TurtleType | Syntax.TurtlesetType),
+      ret = Syntax.WildcardType)
 
   // MethodRipper won't let us call a public method from report_1()
   // so we must keep vn and _vn separate - ST 9/22/12

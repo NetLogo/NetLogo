@@ -3,7 +3,7 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.{ core, api, nvm },
-  core.{ Syntax, SyntaxJ },
+  core.Syntax,
   api.PlotAction,
   nvm.{ Command, Context, EngineException, Instruction, Reporter }
 
@@ -32,13 +32,15 @@ trait PlotHelpers extends Instruction {
 abstract class PlotCommand(args: Int*)
 extends Command with PlotHelpers {
   override def syntax =
-    SyntaxJ.commandSyntax(args.toArray)
+    Syntax.commandSyntax(
+      right = args.toList)
 }
 
 abstract class PlotActionCommand(args: Int*)
 extends PlotCommand(args: _*) {
   override def syntax =
-    SyntaxJ.commandSyntax(args.toArray)
+    Syntax.commandSyntax(
+      right = args.toList)
   override def perform(context: Context) {
     plotManager.publish(action(context))
     context.ip = next
@@ -49,7 +51,9 @@ extends PlotCommand(args: _*) {
 abstract class PlotReporter(returnType: Int, args: Int*)
 extends Reporter with PlotHelpers {
   override def syntax =
-    SyntaxJ.reporterSyntax(args.toArray, returnType)
+    Syntax.reporterSyntax(
+      right = args.toList,
+      ret = returnType)
 }
 
 //

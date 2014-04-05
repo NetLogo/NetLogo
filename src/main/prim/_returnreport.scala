@@ -2,13 +2,13 @@
 
 package org.nlogo.prim
 
-import org.nlogo.core.{ Syntax, SyntaxJ }
+import org.nlogo.core.Syntax
 import org.nlogo.api.I18N
 import org.nlogo.nvm.{ Command, Context, EngineException }
 
 class _returnreport extends Command {
   override def syntax =
-    SyntaxJ.commandSyntax
+    Syntax.commandSyntax()
   override def displayName = "END"  // for use in error messages
   override def perform(context: Context) {
     perform_1(context)

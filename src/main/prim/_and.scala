@@ -2,7 +2,7 @@
 
 package org.nlogo.prim
 
-import org.nlogo.core.{ Syntax, SyntaxJ }
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Context, Reporter, Pure, CustomGenerated }
 
 class _and extends Reporter with Pure with CustomGenerated {

@@ -2,7 +2,7 @@
 
 package org.nlogo.prim
 
-import org.nlogo.core.{ Syntax, SyntaxJ }
+import org.nlogo.core.Syntax
 import org.nlogo.api.Let
 import org.nlogo.nvm.{ Context, Reporter }
 
@@ -12,7 +12,8 @@ class _letvariable(_let: Let) extends Reporter {
   def let = _let
 
   override def syntax =
-    SyntaxJ.reporterSyntax(Syntax.WildcardType)
+    Syntax.reporterSyntax(
+      ret = Syntax.WildcardType)
   override def toString =
     super.toString + "(" + _let.name + ")"
 

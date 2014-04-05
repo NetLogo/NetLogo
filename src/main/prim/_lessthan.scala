@@ -2,7 +2,7 @@
 
 package org.nlogo.prim
 
-import org.nlogo.core.{ Syntax, SyntaxJ }
+import org.nlogo.core.Syntax
 import org.nlogo.api.{ I18N, TypeNames }
 import org.nlogo.nvm.{ Reporter, Pure, Context, EngineException }
 import org.nlogo.agent.{ Agent, Turtle, Patch, Link }
@@ -10,9 +10,9 @@ import org.nlogo.agent.{ Agent, Turtle, Patch, Link }
 class _lessthan extends Reporter with Pure {
 
   override def syntax =
-    SyntaxJ.reporterSyntax(
+    Syntax.reporterSyntax(
       left = Syntax.NumberType | Syntax.StringType | Syntax.AgentType,
-      right = Array(Syntax.NumberType | Syntax.StringType | Syntax.AgentType),
+      right = List(Syntax.NumberType | Syntax.StringType | Syntax.AgentType),
       ret = Syntax.BooleanType,
       precedence = Syntax.NormalPrecedence - 4)
 

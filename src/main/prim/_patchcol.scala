@@ -2,7 +2,7 @@
 
 package org.nlogo.prim
 
-import org.nlogo.core.{ Syntax, SyntaxJ, AgentKind }
+import org.nlogo.core.{ Syntax, AgentKind }
 import org.nlogo.agent.{ Patch, AgentSetBuilder }
 import org.nlogo.nvm.{ Reporter, Context }
 

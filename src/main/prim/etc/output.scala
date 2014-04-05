@@ -20,7 +20,8 @@ import OutputCommand._
 
 abstract class OutputCommand(options: Options) extends nvm.Command {
   override def syntax =
-    core.SyntaxJ.commandSyntax(Array(core.Syntax.WildcardType))
+    core.Syntax.commandSyntax(
+      right = List(core.Syntax.WildcardType))
   override def perform(context: nvm.Context) {
     workspace.outputObject(
       args(0).report(context),

@@ -2,9 +2,11 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.{ api, agent, core, nvm },
-  agent.{ Turtle, Link, LinkManager, AgentSet, AgentSetBuilder },
-  nvm.{ Command, Context, EngineException }
+import
+  org.nlogo.{ api, agent, core, nvm },
+    core.{ Syntax, AgentKind },
+    agent.{ Turtle, Link, LinkManager, AgentSet, AgentSetBuilder },
+    nvm.{ Command, Context, EngineException }
 
 trait LinkCreationCommand extends Command with nvm.CustomAssembled {
   // abstract
@@ -18,9 +20,11 @@ trait LinkCreationCommand extends Command with nvm.CustomAssembled {
   override def toString =
     super.toString + ":" + breedName + ",+" + offset
   override def syntax =
-    core.SyntaxJ.commandSyntax(
-      Array(inputType, core.Syntax.CommandBlockType | core.Syntax.OptionalType),
-      "-T--", "---L", true)
+    Syntax.commandSyntax(
+      right = List(inputType, Syntax.CommandBlockType | Syntax.OptionalType),
+      agentClassString = "-T--",
+      blockAgentClassString = "---L",
+      switches = true)
   override def perform(context: Context) {
     val breed =
       if (breedName.isEmpty)
@@ -66,7 +70,7 @@ trait LinkCreationCommand extends Command with nvm.CustomAssembled {
 }
 
 trait Single extends LinkCreationCommand {
-  override def inputType = core.Syntax.TurtleType
+  override def inputType = Syntax.TurtleType
   override def create(context: Context, breed: AgentSet, me: Turtle) =
     perhapsLink(context, me, argEvalTurtle(context, 0), breed)
       .map(AgentSet.fromAgent)
@@ -74,12 +78,12 @@ trait Single extends LinkCreationCommand {
 }
 
 trait Multiple extends LinkCreationCommand {
-  override def inputType = core.Syntax.TurtlesetType
+  override def inputType = Syntax.TurtlesetType
   override def create(context: Context, breed: AgentSet, me: Turtle) = {
     val others = argEvalAgentSet(context, 0)
     if (others.kind != core.AgentKind.Turtle)
       throw new nvm.ArgumentTypeException(
-        context, this, 0, core.Syntax.TurtlesetType, others)
+        context, this, 0, Syntax.TurtlesetType, others)
     val builder = new AgentSetBuilder(core.AgentKind.Link, others.count)
     // we must shuffle so who number assignment is random - ST 3/15/06
     val iter = others.shufflerator(context.job.random)

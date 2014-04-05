@@ -2,16 +2,16 @@
 
 package org.nlogo.prim
 
-import org.nlogo.core.{ Syntax, SyntaxJ }
+import org.nlogo.core.Syntax
 import org.nlogo.api.AgentException
 import org.nlogo.nvm.{ Reporter, Context, EngineException }
 
 class _turtlevariable(_vn: Int) extends Reporter {
 
   override def syntax =
-    SyntaxJ.reporterSyntax(
-      Syntax.WildcardType | Syntax.ReferenceType,
-      "-T--")
+    Syntax.reporterSyntax(
+      ret = Syntax.WildcardType | Syntax.ReferenceType,
+      agentClassString = "-T--")
 
   override def toString =
     super.toString + ":" +

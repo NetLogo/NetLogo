@@ -7,7 +7,9 @@ import org.nlogo.nvm.{ Command, Context }
 
 class _fd1 extends Command {
   override def syntax =
-    core.SyntaxJ.commandSyntax("-T--", true)
+    core.Syntax.commandSyntax(
+      agentClassString = "-T--",
+      switches = true)
   override def perform(context: Context) {
     perform_1(context)
   }

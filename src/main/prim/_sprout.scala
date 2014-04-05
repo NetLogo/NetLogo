@@ -2,7 +2,7 @@
 
 package org.nlogo.prim
 
-import org.nlogo.core.{ AgentKind, Syntax, SyntaxJ }
+import org.nlogo.core.{ AgentKind, Syntax }
 import org.nlogo.agent.{ Turtle, Patch, AgentSet, AgentSetBuilder }
 import org.nlogo.nvm.{ AssemblerAssistant, Command, CustomAssembled, Context }
 
@@ -11,9 +11,11 @@ class _sprout(val breedName: String) extends Command with CustomAssembled {
   def this() = this("")
 
   override def syntax =
-    SyntaxJ.commandSyntax(
-      Array(Syntax.NumberType, Syntax.CommandBlockType | Syntax.OptionalType),
-      "--P-", "-T--", true)
+    Syntax.commandSyntax(
+      right = List(Syntax.NumberType, Syntax.CommandBlockType | Syntax.OptionalType),
+      agentClassString = "--P-",
+      blockAgentClassString = "-T--",
+      switches = true)
 
   override def toString =
     super.toString + ":" + breedName + ",+" + offset

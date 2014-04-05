@@ -2,7 +2,7 @@
 
 package org.nlogo.prim
 
-import org.nlogo.core.{ Syntax, SyntaxJ }
+import org.nlogo.core.Syntax
 import org.nlogo.api.{ AgentException, Nobody }
 import org.nlogo.agent.Patch
 import org.nlogo.nvm.{ Reporter, Context }
@@ -10,10 +10,10 @@ import org.nlogo.nvm.{ Reporter, Context }
 class _patchat extends Reporter {
 
   override def syntax =
-    SyntaxJ.reporterSyntax(
-      Array(Syntax.NumberType, Syntax.NumberType),
-      Syntax.PatchType | Syntax.NobodyType,
-      "-TP-")
+    Syntax.reporterSyntax(
+      right = List(Syntax.NumberType, Syntax.NumberType),
+      ret =Syntax.PatchType | Syntax.NobodyType,
+      agentClassString = "-TP-")
 
   // I've tried to rejigger this and the result gets past TryCatchSafeChecker but then
   // doesn't work at runtime ("Inconsistent stack height") - ST 2/10/09

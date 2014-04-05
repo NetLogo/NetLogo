@@ -2,7 +2,7 @@
 
 package org.nlogo.prim
 
-import org.nlogo.core.{ Syntax, SyntaxJ }
+import org.nlogo.core.Syntax
 import org.nlogo.api.{ Dump, I18N }
 import org.nlogo.agent.{ Agent, AgentSet }
 import org.nlogo.nvm.{ Reporter, Context, EngineException }
@@ -10,14 +10,14 @@ import org.nlogo.nvm.{ Reporter, Context, EngineException }
 class _with extends Reporter {
 
   override def syntax =
-    SyntaxJ.reporterSyntax(
-      Syntax.AgentsetType,
-      Array(Syntax.BooleanBlockType),
-      Syntax.AgentsetType,
-      Syntax.NormalPrecedence + 2,
-      false, // left associative
-      "OTPL",
-      "?")   // takes reporter block of unknown agent type
+    Syntax.reporterSyntax(
+      left = Syntax.AgentsetType,
+      right = List(Syntax.BooleanBlockType),
+      ret = Syntax.AgentsetType,
+      precedence = Syntax.NormalPrecedence + 2,
+      isRightAssociative = false,
+      agentClassString = "OTPL",
+      blockAgentClassString = "?")
 
   override def report(context: Context): AgentSet =
     report_1(context, argEvalAgentSet(context, 0), args(1))

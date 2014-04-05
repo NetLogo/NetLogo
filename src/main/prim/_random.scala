@@ -2,15 +2,15 @@
 
 package org.nlogo.prim
 
-import org.nlogo.core.{ Syntax, SyntaxJ }
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Reporter, Context }
 
 class _random extends Reporter {
 
   override def syntax =
-    SyntaxJ.reporterSyntax(
-      Array(Syntax.NumberType),
-      Syntax.NumberType)
+    Syntax.reporterSyntax(
+      right = List(Syntax.NumberType),
+      ret = Syntax.NumberType)
 
   override def report(context: Context): java.lang.Double =
     Double.box(report_1(context, argEvalDoubleValue(context, 0)))

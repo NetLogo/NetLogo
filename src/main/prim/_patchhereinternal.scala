@@ -2,7 +2,7 @@
 
 package org.nlogo.prim
 
-import org.nlogo.core.{ Syntax, SyntaxJ }
+import org.nlogo.core.Syntax
 import org.nlogo.agent.{ Turtle, Patch }
 import org.nlogo.nvm.{ Reporter, Context }
 
@@ -11,7 +11,7 @@ import org.nlogo.nvm.{ Reporter, Context }
 class _patchhereinternal extends Reporter {
 
   override def syntax =
-    SyntaxJ.reporterSyntax(
+    Syntax.reporterSyntax(
       ret = Syntax.PatchType,
       agentClassString = "-TP-")
 
