@@ -3,12 +3,19 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.I18N;
+import org.nlogo.core.Syntax;
+import org.nlogo.core.SyntaxJ;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Pure;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _sqrt extends Reporter implements Pure {
+  @Override
+  public Syntax syntax() {
+    int[] right = {Syntax.NumberType()};
+    return SyntaxJ.reporterSyntax(right, Syntax.NumberType());
+  }
 
   @Override
   public Object report(Context context) {

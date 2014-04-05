@@ -2,12 +2,17 @@
 
 package org.nlogo.prim
 
+import org.nlogo.core.{ Syntax, SyntaxJ }
 import org.nlogo.agent.Turtle
 import org.nlogo.nvm.{ Command, Context }
 
 // replaces _hatch when initialization block is empty
 
 class _hatchfast(breedName: String) extends Command {
+
+  override def syntax =
+    SyntaxJ.commandSyntax(
+      Array(Syntax.NumberType), "-T--", true)
 
   override def toString =
     super.toString + ":" + breedName

@@ -7,6 +7,8 @@ import org.nlogo.agent.AgentIterator;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.AgentSetBuilder;
 import org.nlogo.api.I18N;
+import org.nlogo.core.Syntax;
+import org.nlogo.core.SyntaxJ;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
 
@@ -17,6 +19,12 @@ import java.util.TreeMap;
 
 public final strictfp class _maxnof
     extends Reporter {
+  @Override
+  public Syntax syntax() {
+    int[] right = {Syntax.NumberType(), Syntax.AgentsetType(), Syntax.NumberBlockType()};
+    int ret = Syntax.AgentsetType();
+    return SyntaxJ.reporterSyntax(right, ret, "OTPL", "?");
+  }
 
   @Override
   public Object report(final org.nlogo.nvm.Context context) {

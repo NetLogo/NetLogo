@@ -5,11 +5,19 @@ package org.nlogo.prim.etc;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.AgentSetBuilder;
 import org.nlogo.core.AgentKindJ;
+import org.nlogo.core.Syntax;
+import org.nlogo.core.SyntaxJ;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _turtlesat
     extends Reporter {
+  @Override
+  public Syntax syntax() {
+    return SyntaxJ.reporterSyntax
+        (new int[]{Syntax.NumberType(), Syntax.NumberType()},
+            Syntax.TurtlesetType(), "-TP-");
+  }
 
   @Override
   public Object report(final Context context) {

@@ -5,6 +5,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoList;
 import org.nlogo.core.Syntax;
+import org.nlogo.core.SyntaxJ;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
@@ -12,6 +13,12 @@ import org.nlogo.nvm.Reporter;
 public final strictfp class _butlast
     extends Reporter
     implements org.nlogo.nvm.Pure {
+  @Override
+  public Syntax syntax() {
+    int[] right = {Syntax.ListType() | Syntax.StringType()};
+    int ret = Syntax.ListType() | Syntax.StringType();
+    return SyntaxJ.reporterSyntax(right, ret);
+  }
 
   @Override
   public Object report(final org.nlogo.nvm.Context context) {

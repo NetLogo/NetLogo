@@ -8,22 +8,25 @@ package org.nlogo.compile.front
 // are added to tokens.txt.) - ST 12/5/09
 
 import org.scalatest.FunSuite
-import org.nlogo.core.Syntaxes
+import org.nlogo.nvm.Instruction
+import org.nlogo.api.Femto
 
 class TestAllSyntaxes extends FunSuite {
   def shorten(name: String) =
-    name.reverse.takeWhile(_ != '.').reverse
+    Class.forName(name).getSimpleName
+  def instruction(name: String) =
+    Class.forName(name).newInstance().asInstanceOf[Instruction]
   def entry(name: String) =
-    shorten(name) + " " + Syntaxes.syntaxes(shorten(name)).dump
-  def doTests(classNames: Set[String], expecteds: String) {
-    for ((expected, name) <- expecteds.lines.toSeq zip classNames.map(shorten).toSeq.sorted)
-      test(name) {
-        assertResult(expected)(entry(name))
-      }
+    shorten(name) + " " + instruction(name).syntax.dump
+  def doTest(classNames: Set[String], expected: String) {
+    assertResult(expected)(
+      classNames.toSeq.sortBy(shorten).map(entry).mkString("\n"))
   }
-  doTests(FrontEnd.tokenMapper.allCommandClassNames,  COMMANDS)
-  doTests(FrontEnd.tokenMapper.allReporterClassNames, REPORTERS)
-  def REPORTERS = """|_abs number,number,OTPL,null,10,1,1
+  val c = FrontEnd.tokenMapper.allCommandClassNames
+  val r = FrontEnd.tokenMapper.allReporterClassNames
+  test("commands") { doTest(c, COMMANDS) }
+  test("reporters") { doTest(r, REPORTERS) }
+  val REPORTERS = """|_abs number,number,OTPL,null,10,1,1
                      |_acos number,number,OTPL,null,10,1,1
                      |_all agentset/TRUE/FALSE block,TRUE/FALSE,OTPL,?,10,2,2
                      |_and TRUE/FALSE,TRUE/FALSE,TRUE/FALSE,OTPL,null,4,1,1
@@ -259,7 +262,7 @@ class TestAllSyntaxes extends FunSuite {
                      |_worldwidth ,number,OTPL,null,10,0,0
                      |_wrapcolor number,number,OTPL,null,10,1,1
                      |_xor TRUE/FALSE,TRUE/FALSE,TRUE/FALSE,OTPL,null,4,1,1""".stripMargin.replaceAll("\r\n", "\n")
-  def COMMANDS = """|_ask agent or agentset/command block,OTPL,?,0,2,2 *
+  val COMMANDS = """|_ask agent or agentset/command block,OTPL,?,0,2,2 *
                     |_askconcurrent agentset/command block,OTPL,?,0,2,2 *
                     |_autoplotoff ,OTPL,null,0,0,0
                     |_autoploton ,OTPL,null,0,0,0

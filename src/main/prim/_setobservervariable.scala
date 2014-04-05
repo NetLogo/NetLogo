@@ -2,12 +2,17 @@
 
 package org.nlogo.prim
 
+import org.nlogo.core.{ Syntax, SyntaxJ }
 import org.nlogo.api.AgentException
 import org.nlogo.nvm.{ Command, Context }
 
 class _setobservervariable(_vn: Int) extends Command {
 
   def this(original: _observervariable) = this(original.vn)
+
+  override def syntax =
+    SyntaxJ.commandSyntax(
+      Array(Syntax.WildcardType), true)
 
   override def toString =
     super.toString + ":" +

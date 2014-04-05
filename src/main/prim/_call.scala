@@ -2,7 +2,7 @@
 
 package org.nlogo.prim
 
-import org.nlogo.core.Syntax
+import org.nlogo.core.{ Syntax, SyntaxJ }
 import org.nlogo.nvm.{ Command, CustomGenerated, Context, Activation, Procedure }
 
 // Note that _call is "CustomGenerated".  That means that the bytecode generator generates custom

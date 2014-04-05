@@ -2,13 +2,17 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.AgentKind
+import org.nlogo.core.{ Syntax, SyntaxJ, AgentKind }
 import org.nlogo.agent.{ Turtle, AgentSet, LinkManager }
 import org.nlogo.nvm.{ Reporter, Context, EngineException }
 
 class _outlinkneighbors(breedName: String) extends Reporter {
 
   def this() = this(null)
+
+  override def syntax =
+    SyntaxJ.reporterSyntax(
+      Syntax.AgentsetType, "-T--")
 
   override def report(context: Context): AgentSet = {
     val breed =

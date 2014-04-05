@@ -2,9 +2,12 @@
 
 package org.nlogo.prim
 
+import org.nlogo.core.{ Syntax, SyntaxJ }
 import org.nlogo.nvm.{ Command, Context }
 
 class _goto extends Command {
+  override def syntax =
+    SyntaxJ.commandSyntax
   override def toString =
     super.toString + ":" + offset
   override def perform(context: Context) {

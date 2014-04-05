@@ -6,6 +6,7 @@ import org.nlogo.api.Equality;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.LogoListBuilder;
 import org.nlogo.core.Syntax;
+import org.nlogo.core.SyntaxJ;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Reporter;
 
@@ -58,4 +59,11 @@ public final strictfp class _remove
     }
   }
 
+  @Override
+  public Syntax syntax() {
+    int[] right = {Syntax.WildcardType(),
+        Syntax.ListType() | Syntax.StringType()};
+    int ret = Syntax.ListType() | Syntax.StringType();
+    return SyntaxJ.reporterSyntax(right, ret);
+  }
 }

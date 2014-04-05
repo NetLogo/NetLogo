@@ -6,6 +6,7 @@ import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoList;
 import org.nlogo.core.Syntax;
+import org.nlogo.core.SyntaxJ;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
@@ -41,5 +42,13 @@ public final strictfp class _item
       throw new ArgumentTypeException
           (context, this, 1, Syntax.ListType() | Syntax.StringType(), obj);
     }
+  }
+
+  @Override
+  public Syntax syntax() {
+    int[] right = {Syntax.NumberType(),
+        Syntax.ListType() | Syntax.StringType()};
+    int ret = Syntax.WildcardType();
+    return SyntaxJ.reporterSyntax(right, ret);
   }
 }

@@ -2,9 +2,12 @@
 
 package org.nlogo.prim
 
+import org.nlogo.core.{ Syntax, SyntaxJ }
 import org.nlogo.nvm.{ Context, Reporter }
 
 class _taskvariable(val varNumber: Int) extends Reporter {
+  override def syntax =
+    SyntaxJ.reporterSyntax(Syntax.WildcardType)
   override def toString =
     super.toString + ":" + varNumber
   override def report(context: Context): Nothing =

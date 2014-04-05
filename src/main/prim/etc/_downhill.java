@@ -7,6 +7,8 @@ import org.nlogo.agent.AgentIterator;
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.AgentException;
+import org.nlogo.core.Syntax;
+import org.nlogo.core.SyntaxJ;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 
@@ -15,6 +17,12 @@ import java.util.List;
 
 public final strictfp class _downhill
     extends Command {
+  @Override
+  public Syntax syntax() {
+    return SyntaxJ.commandSyntax
+        (new int[]{Syntax.ReferenceType()},
+            "-T--", true);
+  }
 
   @Override
   public String toString() {

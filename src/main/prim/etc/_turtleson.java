@@ -9,6 +9,7 @@ import org.nlogo.agent.Turtle;
 import org.nlogo.core.AgentKindJ;
 import org.nlogo.api.I18N;
 import org.nlogo.core.Syntax;
+import org.nlogo.core.SyntaxJ;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
@@ -18,6 +19,12 @@ import java.util.List;
 
 public final strictfp class _turtleson
     extends Reporter {
+  @Override
+  public Syntax syntax() {
+    return SyntaxJ.reporterSyntax
+        (new int[]{Syntax.AgentType() | Syntax.AgentsetType()},
+            Syntax.TurtlesetType());
+  }
 
   @Override
   public Object report(final org.nlogo.nvm.Context context) {

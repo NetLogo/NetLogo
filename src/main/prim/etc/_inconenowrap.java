@@ -7,6 +7,8 @@ import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Turtle;
 import org.nlogo.core.AgentKindJ;
 import org.nlogo.api.I18N;
+import org.nlogo.core.Syntax;
+import org.nlogo.core.SyntaxJ;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
 
@@ -14,6 +16,14 @@ import java.util.List;
 
 public final strictfp class _inconenowrap
     extends Reporter {
+  @Override
+  public Syntax syntax() {
+    int left = Syntax.AgentsetType();
+    int[] right = {Syntax.NumberType(), Syntax.NumberType()};
+    int ret = Syntax.AgentsetType();
+    return SyntaxJ.reporterSyntax(left, right, ret, org.nlogo.core.Syntax.NormalPrecedence() + 2,
+        false, "OTPL", "-T--");
+  }
 
   @Override
   public Object report(final org.nlogo.nvm.Context context) {

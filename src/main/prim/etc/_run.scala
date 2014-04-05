@@ -2,12 +2,19 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.Syntax
+import org.nlogo.core.{ Syntax, SyntaxJ }
 import org.nlogo.api.CompilerException
 import org.nlogo.nvm.{ Activation, ArgumentTypeException, Command, CommandTask, Context,
                        EngineException, NonLocalExit, Procedure }
 
 class _run extends Command {
+
+  override def syntax =
+    SyntaxJ.commandSyntax(
+      Array(Syntax.StringType | Syntax.CommandTaskType,
+            Syntax.RepeatableType | Syntax.WildcardType),
+      1)
+
   override def perform(context: Context) {
     args(0).report(context) match {
       case s: String =>
@@ -53,4 +60,5 @@ class _run extends Command {
           context, this, 0, Syntax.CommandTaskType | Syntax.StringType, obj)
     }
   }
+
 }

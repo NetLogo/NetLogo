@@ -2,7 +2,7 @@
 
 package org.nlogo.prim
 
-import org.nlogo.core.Syntax
+import org.nlogo.core.{ Syntax, SyntaxJ }
 import org.nlogo.nvm.{ Reporter, CustomGenerated, Context, Procedure,
                        Activation, EngineException }
 

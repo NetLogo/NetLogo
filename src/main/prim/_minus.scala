@@ -2,9 +2,17 @@
 
 package org.nlogo.prim
 
+import org.nlogo.core.{ Syntax, SyntaxJ }
 import org.nlogo.nvm.{ Reporter, Pure, Context }
 
 class _minus extends Reporter with Pure {
+
+  override def syntax =
+    SyntaxJ.reporterSyntax(
+      left = Syntax.NumberType,
+      right = Array(Syntax.NumberType),
+      ret = Syntax.NumberType,
+      precedence = Syntax.NormalPrecedence - 3)
 
   override def report(context: Context): java.lang.Double =
     Double.box(

@@ -2,10 +2,17 @@
 
 package org.nlogo.prim.etc
 
+import org.nlogo.core.{ Syntax, SyntaxJ }
 import org.nlogo.api.{ Dump, I18N, ReporterRunnable }
 import org.nlogo.nvm.{ Context, EngineException, HaltException, Reporter }
 
 class _useroneof extends Reporter {
+
+  override def syntax =
+    SyntaxJ.reporterSyntax(
+      Array(Syntax.WildcardType, Syntax.ListType),
+      Syntax.WildcardType)
+
   override def report(context: Context): AnyRef = {
     val message = Dump.logoObject(args(0).report(context))
     val list = argEvalList(context, 1)
@@ -18,4 +25,5 @@ class _useroneof extends Reporter {
         })
     choice.getOrElse(throw new HaltException(true))
   }
+
 }

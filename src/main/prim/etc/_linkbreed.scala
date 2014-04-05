@@ -3,9 +3,12 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.agent.AgentSet
+import org.nlogo.core.{ Syntax, SyntaxJ }
 import org.nlogo.nvm.{ Reporter, Context }
 
 class _linkbreed(breedName: String) extends Reporter {
+  override def syntax =
+    SyntaxJ.reporterSyntax(Syntax.LinksetType)
   override def toString =
     super.toString + ":" + breedName
   override def report(context: Context): AgentSet =

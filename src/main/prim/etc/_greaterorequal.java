@@ -7,6 +7,8 @@ import org.nlogo.agent.Link;
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.I18N;
+import org.nlogo.core.Syntax;
+import org.nlogo.core.SyntaxJ;
 import org.nlogo.api.TypeNames;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
@@ -15,6 +17,13 @@ import org.nlogo.nvm.Reporter;
 
 public final strictfp class _greaterorequal
     extends Reporter implements Pure {
+  @Override
+  public Syntax syntax() {
+    int left = Syntax.NumberType() | Syntax.StringType() | Syntax.AgentType();
+    int[] right = {Syntax.NumberType() | Syntax.StringType() | Syntax.AgentType()};
+    int ret = Syntax.BooleanType();
+    return SyntaxJ.reporterSyntax(left, right, ret, org.nlogo.core.Syntax.NormalPrecedence() - 4);
+  }
 
   @Override
   public Object report(Context context) {

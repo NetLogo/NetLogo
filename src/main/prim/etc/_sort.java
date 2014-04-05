@@ -6,6 +6,7 @@ import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.LogoList;
 import org.nlogo.core.Syntax;
+import org.nlogo.core.SyntaxJ;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Pure;
@@ -18,6 +19,12 @@ import java.util.Iterator;
 public final strictfp class _sort
     extends Reporter
     implements Pure {
+  @Override
+  public Syntax syntax() {
+    return SyntaxJ.reporterSyntax
+        (new int[]{Syntax.ListType() | Syntax.AgentsetType()},
+            Syntax.ListType());
+  }
 
   @Override
   public Object report(final Context context) {

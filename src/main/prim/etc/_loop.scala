@@ -2,9 +2,13 @@
 
 package org.nlogo.prim.etc
 
+import org.nlogo.core.{ Syntax, SyntaxJ }
 import org.nlogo.nvm.{ AssemblerAssistant, Command, Context, CustomAssembled }
 
 class _loop extends Command with CustomAssembled {
+  override def syntax =
+    SyntaxJ.commandSyntax(
+      Array(Syntax.CommandBlockType))
   override def perform(context: Context) {
     // we get custom-assembled out of existence
     throw new IllegalStateException()
