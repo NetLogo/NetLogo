@@ -2,15 +2,16 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.{ Syntax, SyntaxOld }
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Context, Pure, Reporter }
 
 @annotation.strictfp
 class _abs extends Reporter with Pure {
 
   override def syntax =
-    SyntaxOld.reporterSyntax(
-      Array(Syntax.NumberType), Syntax.NumberType)
+    Syntax.reporterSyntax(
+      right = List(Syntax.NumberType),
+      ret = Syntax.NumberType)
 
   override def report(context: Context): java.lang.Double =
     report_1(context, argEvalDoubleValue(context, 0))

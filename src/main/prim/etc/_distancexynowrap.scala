@@ -2,15 +2,16 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.{ Syntax, SyntaxOld }
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Context, Reporter }
 
 class _distancexynowrap extends Reporter {
 
   override def syntax =
-    SyntaxOld.reporterSyntax(
-      Array(Syntax.NumberType, Syntax.NumberType),
-      Syntax.NumberType, "-TP-")
+    Syntax.reporterSyntax(
+      right = List(Syntax.NumberType, Syntax.NumberType),
+      ret = Syntax.NumberType,
+      agentClassString = "-TP-")
 
   override def report(context: Context): java.lang.Double =
     Double.box(

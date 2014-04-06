@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.{ Syntax, SyntaxOld }
+import org.nlogo.core.Syntax
 import org.nlogo.api.LogoException
 import org.nlogo.agent.Turtle
 import org.nlogo.nvm.{ Context, Pure, Reporter }
@@ -10,9 +10,9 @@ import org.nlogo.nvm.{ Context, Pure, Reporter }
 class _subtractheadings extends Reporter with Pure {
 
   override def syntax =
-    SyntaxOld.reporterSyntax(
-      Array(Syntax.NumberType, Syntax.NumberType),
-      Syntax.NumberType)
+    Syntax.reporterSyntax(
+      right = List(Syntax.NumberType, Syntax.NumberType),
+      ret = Syntax.NumberType)
 
   override def report(context: Context): java.lang.Double =
     Double.box(

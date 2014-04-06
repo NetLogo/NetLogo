@@ -2,12 +2,13 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.{ Syntax, SyntaxOld }
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Command, Context }
 
 class _mkdir extends Command {
   override def syntax =
-    SyntaxOld.commandSyntax(Array(Syntax.StringType))
+    Syntax.commandSyntax(
+      right = List(Syntax.StringType))
   override def perform(c: Context) {
     // leaving this double-underscored for now sine it isn't relative to the model's location, like
     // it ought to be - ST 2/7/11

@@ -2,16 +2,16 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.{ Syntax, SyntaxOld }
+import org.nlogo.core.Syntax
 import org.nlogo.api.{ Dump, I18N, ReporterRunnable }
 import org.nlogo.nvm.{ Context, EngineException, HaltException, Reporter }
 
 class _useroneof extends Reporter {
 
   override def syntax =
-    SyntaxOld.reporterSyntax(
-      Array(Syntax.WildcardType, Syntax.ListType),
-      Syntax.WildcardType)
+    Syntax.reporterSyntax(
+      right = List(Syntax.WildcardType, Syntax.ListType),
+      ret = Syntax.WildcardType)
 
   override def report(context: Context): AnyRef = {
     val message = Dump.logoObject(args(0).report(context))

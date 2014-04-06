@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.{ Syntax, SyntaxOld }
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Command, Context }
 
 // This is only used for testing purposes.  It's better not to rejigger this, because when we test
@@ -11,8 +11,8 @@ import org.nlogo.nvm.{ Command, Context }
 
 class _ignore extends Command {
   override def syntax =
-    SyntaxOld.commandSyntax(
-      Array(Syntax.WildcardType))
+    Syntax.commandSyntax(
+      right = List(Syntax.WildcardType))
   override def perform(context: Context) {
     args(0).report(context)
     context.ip = next

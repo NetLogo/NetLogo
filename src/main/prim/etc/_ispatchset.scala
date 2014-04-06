@@ -2,14 +2,15 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.{ AgentKind, Syntax, SyntaxOld }
+import org.nlogo.core.{ AgentKind, Syntax }
 import org.nlogo.agent.{ AgentSet, Patch }
 import org.nlogo.nvm.{ Context, Pure, Reporter }
 
 class _ispatchset extends Reporter with Pure {
   override def syntax =
-    SyntaxOld.reporterSyntax(Array(Syntax.WildcardType),
-                          Syntax.BooleanType)
+    Syntax.reporterSyntax(
+      right = List(Syntax.WildcardType),
+      ret = Syntax.BooleanType)
   override def report(context: Context): java.lang.Boolean =
     Boolean.box(
       args(0).report(context) match {

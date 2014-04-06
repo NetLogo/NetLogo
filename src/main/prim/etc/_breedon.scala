@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.{ Syntax, SyntaxOld, AgentKind }
+import org.nlogo.core.{ Syntax, AgentKind }
 import org.nlogo.api.I18N
 import org.nlogo.nvm.{ Reporter, Context, EngineException, ArgumentTypeException }
 import org.nlogo.agent.{ Agent, Turtle, Patch, AgentSet }
@@ -10,10 +10,9 @@ import org.nlogo.agent.{ Agent, Turtle, Patch, AgentSet }
 class _breedon(breedName: String) extends Reporter {
 
   override def syntax =
-    SyntaxOld.reporterSyntax(
-      Array(Syntax.TurtleType | Syntax.PatchType |
-            Syntax.TurtlesetType | Syntax.PatchsetType),
-      Syntax.TurtlesetType)
+    Syntax.reporterSyntax(
+      right = List(Syntax.TurtleType | Syntax.PatchType | Syntax.TurtlesetType | Syntax.PatchsetType),
+      ret = Syntax.TurtlesetType)
 
   override def toString =
     super.toString + ":" + breedName
