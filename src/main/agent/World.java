@@ -26,12 +26,6 @@ import java.util.Map;
 
 import scala.collection.Seq;
 
-// A note on wrapping: normally whether x and y coordinates wrap is a
-// product of the topology.  But we also have the old "-nowrap" primitives
-// that don't wrap regardless of what the topology is.  So that's why many
-// methods like distance() and towards() take a boolean argument "wrap";
-// it's true for the normal prims, false for the nowrap prims. - ST 5/24/06
-
 public strictfp class World
     implements org.nlogo.api.World {
 

@@ -8,11 +8,7 @@ DeadTurtles1
   [color] of glob1 => ERROR That mouse is dead.
   T> set glob2 "" carefully [ __ignore distance glob1 ] [ set glob2 error-message ]
   glob2 => "That mouse is dead."
-  T> set glob2 "" carefully [ __ignore distance-nowrap glob1 ] [ set glob2 error-message ]
-  glob2 => "That mouse is dead."
   T> set glob2 "" carefully [ __ignore towards glob1 ] [ set glob2 error-message ]
-  glob2 => "That mouse is dead."
-  T> set glob2 "" carefully [ __ignore towards-nowrap glob1 ] [ set glob2 error-message ]
   glob2 => "That mouse is dead."
 
 DeadTurtles2
