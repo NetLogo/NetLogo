@@ -80,8 +80,8 @@ class TestAllSyntaxes extends FunSuite {
                      |_greaterthan agent or number or string,agent or number or string,TRUE/FALSE,OTPL,null,6,1,1
                      |_hsb number/number/number,list,OTPL,null,10,3,3
                      |_ifelsevalue TRUE/FALSE/reporter block/reporter block,anything,OTPL,null,10,3,3
-                     |_incone turtle agentset or patch agentset,number/number,turtle agentset or patch agentset,OTPL,-T--,12,2,2
-                     |_inconenowrap agentset,number/number,agentset,OTPL,-T--,12,2,2
+                     |_incone turtle agentset or patch agentset,number/number,turtle agentset or patch agentset,-T--,null,12,2,2
+                     |_inconenowrap agentset,number/number,agentset,-T--,null,12,2,2
                      |_inlinkfrom agent,agent,-T--,null,10,1,1
                      |_inlinkneighbor agent,TRUE/FALSE,-T--,null,10,1,1
                      |_inlinkneighbors ,agentset,-T--,null,10,0,0

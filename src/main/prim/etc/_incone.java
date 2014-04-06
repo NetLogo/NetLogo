@@ -23,7 +23,7 @@ public final strictfp class _incone
         (Syntax.TurtlesetType() | Syntax.PatchsetType(),          // left
             new int[]{Syntax.NumberType(), Syntax.NumberType()}, // right
             Syntax.TurtlesetType() | Syntax.PatchsetType(),          // return
-            org.nlogo.core.Syntax.NormalPrecedence() + 2, false, "OTPL", "-T--");
+            org.nlogo.core.Syntax.NormalPrecedence() + 2, false, "-T--", null);
   }
 
   @Override
