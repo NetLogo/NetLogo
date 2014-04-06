@@ -326,7 +326,6 @@ class TestAllSyntaxes extends FunSuite {
                     |_followme ,-T--,null,0,0,0 *
                     |_foreach list/command task,OTPL,null,0,2,2
                     |_foreverbuttonend ,OTPL,null,0,0,0 *
-                    |_git string,O---,null,0,1,1
                     |_hatch number/command block (optional),-T--,-T--,0,2,2 *
                     |_hidelink ,---L,null,0,0,0 *
                     |_hideturtle ,-T--,null,0,0,0 *

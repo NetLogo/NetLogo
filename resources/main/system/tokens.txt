@@ -5,7 +5,6 @@ C __done _done
 C __experimentstepend etc._experimentstepend
 C __export-drawing etc._exportdrawing
 C __foreverbuttonend etc._foreverbuttonend
-C __git etc._git
 C __ignore etc._ignore
 C __let _let
 C __linkcode etc._linkcode
