@@ -2,12 +2,12 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.{ Syntax, SyntaxJ }
+import org.nlogo.core.{ Syntax, SyntaxOld }
 import org.nlogo.nvm.{ Context, Pure, Reporter }
 
 class _ifelsevalue extends Reporter with Pure {
   override def syntax =
-    SyntaxJ.reporterSyntax(
+    SyntaxOld.reporterSyntax(
       Array(Syntax.BooleanType,
             Syntax.ReporterBlockType,
             Syntax.ReporterBlockType),

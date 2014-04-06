@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.{ Syntax, SyntaxJ }
+import org.nlogo.core.Syntax
 import org.nlogo.api.CompilerException
 import org.nlogo.nvm.{ Activation, ArgumentTypeException, Command, CommandTask, Context,
                        EngineException, NonLocalExit, Procedure }
@@ -10,10 +10,11 @@ import org.nlogo.nvm.{ Activation, ArgumentTypeException, Command, CommandTask, 
 class _run extends Command {
 
   override def syntax =
-    SyntaxJ.commandSyntax(
-      Array(Syntax.StringType | Syntax.CommandTaskType,
-            Syntax.RepeatableType | Syntax.WildcardType),
-      1)
+    Syntax.commandSyntax(
+      right = List(
+        Syntax.StringType | Syntax.CommandTaskType,
+        Syntax.RepeatableType | Syntax.WildcardType),
+      defaultOption = Some(1))
 
   override def perform(context: Context) {
     args(0).report(context) match {

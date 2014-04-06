@@ -2,13 +2,13 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.{ Syntax, SyntaxJ }
+import org.nlogo.core.{ Syntax, SyntaxOld }
 import org.nlogo.nvm, nvm.{ Command, Context }
 
 class _ifelse extends Command with nvm.CustomAssembled {
 
   override def syntax =
-    SyntaxJ.commandSyntax(
+    SyntaxOld.commandSyntax(
       Array(Syntax.BooleanType,
             Syntax.CommandBlockType,
             Syntax.CommandBlockType))

@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.{ Syntax, SyntaxJ }
+import org.nlogo.core.{ Syntax, SyntaxOld }
 import org.nlogo.api.LogoException
 import org.nlogo.nvm.{ Command, Context, EngineException }
 import org.nlogo.agent.ImportPatchColors.importPatchColors
@@ -10,7 +10,7 @@ import org.nlogo.agent.ImportPatchColors.importPatchColors
 class _importpatchcolors extends Command {
 
   override def syntax =
-    SyntaxJ.commandSyntax(
+    SyntaxOld.commandSyntax(
       Array(Syntax.StringType), "O---", true)
 
   override def perform(context: Context) {

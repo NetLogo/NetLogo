@@ -2,13 +2,13 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.{ Syntax, SyntaxJ }
+import org.nlogo.core.{ Syntax, SyntaxOld }
 import org.nlogo.api.LogoList
 import org.nlogo.nvm.{ Context, Pure, Reporter }
 
 class _lput extends Reporter with Pure {
   override def syntax =
-    SyntaxJ.reporterSyntax(
+    SyntaxOld.reporterSyntax(
       Array(Syntax.WildcardType, Syntax.ListType),
       Syntax.ListType)
   override def report(context: Context): LogoList = {

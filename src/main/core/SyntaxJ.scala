@@ -40,30 +40,25 @@ object SyntaxJ {
     Syntax.commandSyntax(agentClassString = agentClassString,
       switches = switches)
 
-  // for use by commands
   def commandSyntax(right: Array[Int], switches: Boolean) =
     Syntax.commandSyntax(right = right.toList,
       switches = switches)
 
-  // for use by commands
   def commandSyntax(right: Array[Int], agentClassString: String) =
     Syntax.commandSyntax(right = right.toList,
       agentClassString = agentClassString)
 
-  // for use by commands
   def commandSyntax(right: Array[Int], agentClassString: String, switches: Boolean) =
     Syntax.commandSyntax(right = right.toList,
       agentClassString = agentClassString,
       switches = switches)
 
-  // for use by commands
   def commandSyntax(right: Array[Int], agentClassString: String, blockAgentClassString: String, switches: Boolean) =
     Syntax.commandSyntax(right = right.toList,
       agentClassString = agentClassString,
       blockAgentClassString = blockAgentClassString,
       switches = switches)
 
-  // for use by commands
   def commandSyntax(right: Array[Int], dfault: Int, agentClassString: String, blockAgentClassString: String, switches: Boolean) =
     Syntax.commandSyntax(right = right.toList,
       defaultOption = Some(dfault),

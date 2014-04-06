@@ -3,11 +3,12 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.nvm.{ Context, Reporter }
-import org.nlogo.core.{ Syntax, SyntaxJ }
+import org.nlogo.core.{ Syntax }
 
 class _netlogoapplet extends Reporter {
   override def syntax =
-    SyntaxJ.reporterSyntax(Syntax.BooleanType)
+    Syntax.reporterSyntax(
+      ret = Syntax.BooleanType)
   override def report(context: Context): java.lang.Boolean =
     java.lang.Boolean.FALSE
 }

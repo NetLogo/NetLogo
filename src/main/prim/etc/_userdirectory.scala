@@ -2,14 +2,15 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.{ Syntax, SyntaxJ }
+import org.nlogo.core.{ Syntax }
 import org.nlogo.api.ReporterRunnable
 import org.nlogo.nvm.{ Context, EngineException, Reporter }
 
 class _userdirectory extends Reporter {
 
   override def syntax =
-    SyntaxJ.reporterSyntax(Syntax.StringType | Syntax.BooleanType)
+    Syntax.reporterSyntax(
+      ret = Syntax.StringType | Syntax.BooleanType)
 
   override def report(context: Context): AnyRef = {
     workspace.updateUI(context)

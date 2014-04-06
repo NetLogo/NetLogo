@@ -2,13 +2,13 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.{ Syntax, SyntaxJ }
+import org.nlogo.core.{ Syntax, SyntaxOld }
 import org.nlogo.api.CompilerException
 import org.nlogo.nvm.{ Context, EngineException, Reporter }
 
 class _readfromstring extends Reporter {
   override def syntax =
-    SyntaxJ.reporterSyntax(
+    SyntaxOld.reporterSyntax(
       Array(Syntax.StringType),
       Syntax.ReadableType)
   override def report(context: Context): AnyRef =

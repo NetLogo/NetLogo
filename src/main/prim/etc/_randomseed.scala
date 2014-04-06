@@ -2,14 +2,14 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.{ Syntax, SyntaxJ }
+import org.nlogo.core.{ Syntax, SyntaxOld }
 import org.nlogo.api.Dump
 import org.nlogo.nvm.{ Command, Context, EngineException }
 
 class _randomseed extends Command {
 
   override def syntax =
-    SyntaxJ.commandSyntax(Array(Syntax.NumberType))
+    SyntaxOld.commandSyntax(Array(Syntax.NumberType))
 
   override def perform(context: Context) {
     perform_1(context, argEvalDoubleValue(context, 0))

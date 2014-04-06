@@ -2,14 +2,14 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.{ Syntax, SyntaxJ }
+import org.nlogo.core.{ Syntax, SyntaxOld }
 import org.nlogo.api.{ Dump, I18N, ReporterRunnable }
 import org.nlogo.nvm.{ Context, EngineException, HaltException, Reporter }
 
 class _userinput extends Reporter {
 
   override def syntax =
-    SyntaxJ.reporterSyntax(Array(Syntax.WildcardType),
+    SyntaxOld.reporterSyntax(Array(Syntax.WildcardType),
                           Syntax.StringType)
 
   override def report(context: Context): String = {

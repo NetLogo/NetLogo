@@ -2,14 +2,14 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.{ Syntax, SyntaxJ }
+import org.nlogo.core.{ Syntax, SyntaxOld }
 import org.nlogo.nvm.{ Reporter, Context }
 import org.nlogo.agent.{ Turtle, Link }
 
 class _isbreed(val breedName: String) extends Reporter {
 
   override def syntax =
-    SyntaxJ.reporterSyntax(
+    SyntaxOld.reporterSyntax(
       Array(Syntax.WildcardType),
       Syntax.BooleanType)
 

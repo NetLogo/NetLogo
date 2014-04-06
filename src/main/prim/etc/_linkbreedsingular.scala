@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.{ Syntax, SyntaxJ }
+import org.nlogo.core.{ Syntax, SyntaxOld }
 import org.nlogo.api.Nobody
 import org.nlogo.agent.{ AgentSet, Link }
 import org.nlogo.nvm.{ Reporter, Context }
@@ -10,7 +10,7 @@ import org.nlogo.nvm.{ Reporter, Context }
 class _linkbreedsingular(breedName: String) extends Reporter {
 
   override def syntax =
-    SyntaxJ.reporterSyntax(
+    SyntaxOld.reporterSyntax(
       Array(Syntax.NumberType, Syntax.NumberType),
       Syntax.LinkType | Syntax.NobodyType)
 

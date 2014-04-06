@@ -2,14 +2,14 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.{ Syntax, SyntaxJ }
+import org.nlogo.core.{ Syntax, SyntaxOld }
 import org.nlogo.api.{ Dump, ReporterRunnable }
 import org.nlogo.nvm.{ Command, Context }
 
 class _usermessage extends Command {
 
   def syntax =
-    SyntaxJ.commandSyntax(Array(Syntax.WildcardType))
+    SyntaxOld.commandSyntax(Array(Syntax.WildcardType))
 
   override def perform(context: Context) {
     val message = Dump.logoObject(args(0).report(context))

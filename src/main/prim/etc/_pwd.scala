@@ -2,13 +2,14 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.{ Syntax, SyntaxJ }
+import org.nlogo.core.Syntax
 import org.nlogo.api.OutputDestination
 import org.nlogo.nvm.{ Command, Context }
 
 class _pwd extends Command {
   override def syntax =
-    SyntaxJ.commandSyntax("O---", false)
+    Syntax.commandSyntax(
+      agentClassString = "O---")
   override def perform(context: Context) {
     val path =
       Option(workspace.getModelPath)

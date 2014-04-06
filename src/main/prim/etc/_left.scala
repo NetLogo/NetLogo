@@ -3,12 +3,12 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.agent.Turtle
-import org.nlogo.core.{ Syntax, SyntaxJ }
+import org.nlogo.core.{ Syntax, SyntaxOld }
 import org.nlogo.nvm.{ Command, Context }
 
 class _left extends Command {
   override def syntax =
-    SyntaxJ.commandSyntax(
+    SyntaxOld.commandSyntax(
       Array(Syntax.NumberType), "-T--", true)
   override def perform(context: Context) {
     perform_1(context, argEvalDoubleValue(context, 0))

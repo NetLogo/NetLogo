@@ -2,12 +2,14 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.{ Syntax, SyntaxJ }
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Context, Reporter }
 
 class _dump extends Reporter {
   override def syntax =
-    SyntaxJ.reporterSyntax(Syntax.StringType, "O---")
+    Syntax.reporterSyntax(
+      ret = Syntax.StringType,
+      agentClassString = "O---")
   override def report(context: Context): String =
     world.program.dump + "\n" +
     workspace.procedures.values

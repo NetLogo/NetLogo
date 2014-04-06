@@ -2,13 +2,13 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.{ Syntax, SyntaxJ }
+import org.nlogo.core.{ Syntax, SyntaxOld }
 import org.nlogo.api.CommandRunnable
 import org.nlogo.nvm.{ Command, Context, EngineException }
 
 class _exportinterface extends Command {
   override def syntax =
-    SyntaxJ.commandSyntax(Array(Syntax.StringType))
+    SyntaxOld.commandSyntax(Array(Syntax.StringType))
   override def perform(context: Context) {
     val path =
       workspace.fileManager.attachPrefix(

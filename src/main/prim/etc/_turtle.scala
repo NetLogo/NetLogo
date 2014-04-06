@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.{ Syntax, SyntaxJ }
+import org.nlogo.core.{ Syntax, SyntaxOld }
 import org.nlogo.api.Nobody
 import org.nlogo.agent.Turtle
 import org.nlogo.nvm.{ Reporter, Context, EngineException }
@@ -10,7 +10,7 @@ import org.nlogo.nvm.{ Reporter, Context, EngineException }
 class _turtle extends Reporter {
 
   override def syntax =
-    SyntaxJ.reporterSyntax(
+    SyntaxOld.reporterSyntax(
       Array(Syntax.NumberType),
       Syntax.TurtleType | Syntax.NobodyType)
 

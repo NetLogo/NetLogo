@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.{ Syntax, SyntaxJ }
+import org.nlogo.core.{ Syntax, SyntaxOld }
 import org.nlogo.api.I18N
 import org.nlogo.agent.{ Agent, Link, Turtle }
 import org.nlogo.nvm.{ Command, Context, EngineException }
@@ -10,7 +10,7 @@ import org.nlogo.nvm.{ Command, Context, EngineException }
 class _facenowrap extends Command {
   // turtle only since face for the observer is always nowrap -- AZS 4/12/05
   override def syntax =
-    SyntaxJ.commandSyntax(
+    SyntaxOld.commandSyntax(
       Array(Syntax.TurtleType | Syntax.PatchType),
       "-T--", true)
   override def perform(context: Context) {

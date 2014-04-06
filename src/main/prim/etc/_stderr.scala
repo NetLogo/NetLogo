@@ -2,13 +2,13 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.{ Syntax, SyntaxJ }
+import org.nlogo.core.{ Syntax, SyntaxOld }
 import org.nlogo.api.Dump
 import org.nlogo.nvm.{ Command, Context }
 
 class _stderr extends Command {
   override def syntax =
-    SyntaxJ.commandSyntax(Array(Syntax.WildcardType))
+    SyntaxOld.commandSyntax(Array(Syntax.WildcardType))
   override def perform(context: Context) {
     System.err.println(
       Dump.logoObject(args(0).report(context)))
