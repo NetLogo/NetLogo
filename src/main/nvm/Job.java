@@ -13,7 +13,7 @@ public abstract strictfp class Job {
 
   abstract boolean exclusive();
 
-  public final JobOwner owner;                    // public for _updatemonitor
+  public final JobOwner owner;
   public byte state = RUNNING;
   public boolean stopping = false;
   public boolean buttonTurnIsOver = false;

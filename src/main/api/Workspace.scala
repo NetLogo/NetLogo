@@ -61,7 +61,6 @@ with ViewSettings with Controllable {
   def mouseYCor: Double = 0
   def beep() { }
   def updateUI() { }
-  def updateMonitor(owner: JobOwner, value: AnyRef) { }
   @throws(classOf[IOException])
   def addCustomShapes(filename: String) { }
   def userDirectory: Option[String] = None

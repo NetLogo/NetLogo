@@ -413,7 +413,6 @@ class TestAllSyntaxes extends FunSuite {
                     |_turtlecode ,-T--,null,0,0,0
                     |_type anything,OTPL,null,0,1,1
                     |_untie ,---L,null,0,0,0 *
-                    |_updatemonitor anything,O---,null,0,1,1 *
                     |_updateplots ,OTPL,null,0,0,0
                     |_uphill variable,-T--,null,0,1,1 *
                     |_uphill4 variable,-T--,null,0,1,1 *

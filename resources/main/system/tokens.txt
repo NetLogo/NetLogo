@@ -21,7 +21,6 @@ C __stderr etc._stderr
 C __stdout etc._stdout
 C __thunk-did-finish etc._thunkdidfinish
 C __turtlecode etc._turtlecode
-C __updatemonitor etc._updatemonitor
 C ask _ask
 C ask-concurrent _askconcurrent
 C auto-plot-off etc._autoplotoff
