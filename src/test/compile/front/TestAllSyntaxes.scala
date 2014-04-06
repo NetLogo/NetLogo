@@ -51,9 +51,7 @@ class TestAllSyntaxes extends FunSuite {
                      |_count agentset,number,OTPL,null,10,1,1
                      |_dateandtime ,string,OTPL,null,10,0,0
                      |_distance turtle or patch,number,-TP-,null,10,1,1
-                     |_distancenowrap turtle or patch,number,-TP-,null,10,1,1
                      |_distancexy number/number,number,-TP-,null,10,2,2
-                     |_distancexynowrap number/number,number,-TP-,null,10,2,2
                      |_div number,number,number,OTPL,null,8,1,1
                      |_dump ,string,O---,null,10,0,0
                      |_dump1 ,string,OTPL,null,10,0,0
@@ -81,12 +79,10 @@ class TestAllSyntaxes extends FunSuite {
                      |_hsb number/number/number,list,OTPL,null,10,3,3
                      |_ifelsevalue TRUE/FALSE/reporter block/reporter block,anything,OTPL,null,10,3,3
                      |_incone turtle agentset or patch agentset,number/number,turtle agentset or patch agentset,-T--,null,12,2,2
-                     |_inconenowrap agentset,number/number,agentset,-T--,null,12,2,2
                      |_inlinkfrom agent,agent,-T--,null,10,1,1
                      |_inlinkneighbor agent,TRUE/FALSE,-T--,null,10,1,1
                      |_inlinkneighbors ,agentset,-T--,null,10,0,0
                      |_inradius turtle agentset or patch agentset,number,turtle agentset or patch agentset,-TP-,null,12,1,1
-                     |_inradiusnowrap agentset,number,agentset,-TP-,null,12,1,1
                      |_int number,number,OTPL,null,10,1,1
                      |_isagent anything,TRUE/FALSE,OTPL,null,10,1,1
                      |_isagentset anything,TRUE/FALSE,OTPL,null,10,1,1
@@ -238,9 +234,7 @@ class TestAllSyntaxes extends FunSuite {
                      |_timer ,number,OTPL,null,10,0,0
                      |_tostring anything,string,OTPL,null,10,1,1
                      |_towards turtle or patch,number,-TP-,null,10,1,1
-                     |_towardsnowrap turtle or patch,number,-TP-,null,10,1,1
                      |_towardsxy number/number,number,-TP-,null,10,2,2
-                     |_towardsxynowrap number/number,number,-TP-,null,10,2,2
                      |_turtle number,turtle,OTPL,null,10,1,1
                      |_turtles ,turtle agentset,OTPL,null,10,0,0
                      |_turtlesat number/number,turtle agentset,-TP-,null,10,2,2
@@ -308,9 +302,7 @@ class TestAllSyntaxes extends FunSuite {
                     |_exportview string,OTPL,null,0,1,1
                     |_exportworld string,OTPL,null,0,1,1
                     |_face turtle or patch,-T--,null,0,1,1 *
-                    |_facenowrap turtle or patch,-T--,null,0,1,1 *
                     |_facexy number/number,-T--,null,0,2,2 *
-                    |_facexynowrap number/number,-T--,null,0,2,2 *
                     |_fd number,-T--,null,0,1,1
                     |_fileclose ,OTPL,null,0,0,0
                     |_filecloseall ,OTPL,null,0,0,0
