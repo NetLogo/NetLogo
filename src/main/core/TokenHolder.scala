@@ -3,5 +3,5 @@
 package org.nlogo.core
 
 trait TokenHolder {
-  def token(t: Token)
+  def token_=(t: Token)
 }

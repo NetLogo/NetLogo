@@ -45,7 +45,7 @@ class Namer(
         .headOption
         .map{case (tpe, instr) =>
           val newToken = token.copy(tpe = tpe, value = instr)
-          instr.token(newToken)
+          instr.token = newToken
           newToken
         }
     }
