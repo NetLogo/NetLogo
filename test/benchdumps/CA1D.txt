@@ -154,11 +154,11 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L3
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           LLOAD 4
           L2I
           I2L
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.setSeed (J)V
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.setSeed (J)V
           ALOAD 1
           ICONST_1
           PUTFIELD org/nlogo/nvm/Context.ip : I
@@ -579,10 +579,10 @@ procedure SINGLE-CELL:[]{O---}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.AgentsetType ()I
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.AgentType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.AgentsetType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.AgentType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -784,10 +784,10 @@ procedure SINGLE-CELL:[]{O---}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.AgentsetType ()I
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.AgentType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.AgentsetType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.AgentType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -1013,10 +1013,10 @@ procedure SETUP-RANDOM:[]{O---}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.AgentsetType ()I
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.AgentType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.AgentsetType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.AgentType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -1031,9 +1031,9 @@ procedure SETUP-RANDOM:[]{O---}:
          L3
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           LDC 100
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextLong (J)J
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
          L4
           ALOAD 0
@@ -1342,8 +1342,8 @@ procedure SETUP-CONTINUE:[ON?-LIST]{O---}:
                 ALOAD 7
                 ALOAD 1
                 GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-                GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
-                INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/util/MersenneTwisterFast;)Lorg/nlogo/agent/AgentIterator;
+                GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
+                INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/api/MersenneTwisterFast;)Lorg/nlogo/agent/AgentIterator;
                 ASTORE 9
                L9
                 ALOAD 9
@@ -1370,16 +1370,16 @@ procedure SETUP-CONTINUE:[ON?-LIST]{O---}:
                 ALOAD 1
                 ALOAD 0
                 ICONST_0
-                GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-                INVOKEVIRTUAL org/nlogo/api/Syntax$.TurtleType ()I
-                GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-                INVOKEVIRTUAL org/nlogo/api/Syntax$.PatchType ()I
+                GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+                INVOKEVIRTUAL org/nlogo/core/Syntax$.TurtleType ()I
+                GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+                INVOKEVIRTUAL org/nlogo/core/Syntax$.PatchType ()I
                 IOR
-                GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-                INVOKEVIRTUAL org/nlogo/api/Syntax$.TurtlesetType ()I
+                GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+                INVOKEVIRTUAL org/nlogo/core/Syntax$.TurtlesetType ()I
                 IOR
-                GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-                INVOKEVIRTUAL org/nlogo/api/Syntax$.PatchsetType ()I
+                GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+                INVOKEVIRTUAL org/nlogo/core/Syntax$.PatchsetType ()I
                 IOR
                 ALOAD 4
                 INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -1509,8 +1509,8 @@ procedure SETUP-CONTINUE:[ON?-LIST]{O---}:
               ALOAD 1
               ALOAD 0
               ICONST_0
-              INVOKESTATIC org/nlogo/api/Syntax.ListType ()I
-              INVOKESTATIC org/nlogo/api/Syntax.AgentsetType ()I
+              INVOKESTATIC org/nlogo/core/Syntax.ListType ()I
+              INVOKESTATIC org/nlogo/core/Syntax.AgentsetType ()I
               IOR
               ALOAD 2
               INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -1669,10 +1669,10 @@ procedure SETUP-CONTINUE:[ON?-LIST]{O---}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.AgentsetType ()I
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.AgentType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.AgentsetType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.AgentType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -2218,10 +2218,10 @@ procedure GO:[]{O---}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.AgentsetType ()I
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.AgentType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.AgentsetType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.AgentType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -2439,10 +2439,10 @@ procedure GO:[]{O---}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.AgentsetType ()I
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.AgentType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.AgentsetType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.AgentType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -2622,8 +2622,8 @@ procedure DO-RULE:[LEFT-ON? RIGHT-ON? NEW-VALUE]{-TP-}:
           ALOAD 7
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/util/MersenneTwisterFast;)Lorg/nlogo/agent/AgentIterator;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/api/MersenneTwisterFast;)Lorg/nlogo/agent/AgentIterator;
           ASTORE 9
          L14
           ALOAD 9
@@ -2650,16 +2650,16 @@ procedure DO-RULE:[LEFT-ON? RIGHT-ON? NEW-VALUE]{-TP-}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.TurtleType ()I
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.PatchType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.TurtleType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.PatchType ()I
           IOR
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.TurtlesetType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.TurtlesetType ()I
           IOR
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.PatchsetType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.PatchsetType ()I
           IOR
           ALOAD 4
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -2791,8 +2791,8 @@ procedure DO-RULE:[LEFT-ON? RIGHT-ON? NEW-VALUE]{-TP-}:
           ALOAD 7
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/util/MersenneTwisterFast;)Lorg/nlogo/agent/AgentIterator;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/api/MersenneTwisterFast;)Lorg/nlogo/agent/AgentIterator;
           ASTORE 9
          L14
           ALOAD 9
@@ -2819,16 +2819,16 @@ procedure DO-RULE:[LEFT-ON? RIGHT-ON? NEW-VALUE]{-TP-}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.TurtleType ()I
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.PatchType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.TurtleType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.PatchType ()I
           IOR
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.TurtlesetType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.TurtlesetType ()I
           IOR
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.PatchsetType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.PatchsetType ()I
           IOR
           ALOAD 4
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -4277,10 +4277,10 @@ procedure DO-RULE:[LEFT-ON? RIGHT-ON? NEW-VALUE]{-TP-}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.AgentsetType ()I
-          GETSTATIC org/nlogo/api/Syntax$.MODULE$ : Lorg/nlogo/api/Syntax$;
-          INVOKEVIRTUAL org/nlogo/api/Syntax$.AgentType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.AgentsetType ()I
+          GETSTATIC org/nlogo/core/Syntax$.MODULE$ : Lorg/nlogo/core/Syntax$;
+          INVOKEVIRTUAL org/nlogo/core/Syntax$.AgentType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -7059,14 +7059,14 @@ procedure SHOW-RULES:[RULES]{O---}:
          L3
           GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/api/AgentKind;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/core/AgentKind;
           ALOAD 5
           GETSTATIC scala/reflect/ClassTag$.MODULE$ : Lscala/reflect/ClassTag$;
           LDC Lorg/nlogo/agent/Agent;.class
           INVOKEVIRTUAL scala/reflect/ClassTag$.apply (Ljava/lang/Class;)Lscala/reflect/ClassTag;
           INVOKEVIRTUAL scala/collection/mutable/ArrayBuffer.toArray (Lscala/reflect/ClassTag;)Ljava/lang/Object;
           CHECKCAST [Lorg/nlogo/agent/Agent;
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromArray (Lorg/nlogo/api/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromArray (Lorg/nlogo/core/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
          L7
           ASTORE 2
           ALOAD 1
@@ -7445,14 +7445,14 @@ procedure SHOW-RULES:[RULES]{O---}:
          L3
           GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/api/AgentKind;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/core/AgentKind;
           ALOAD 5
           GETSTATIC scala/reflect/ClassTag$.MODULE$ : Lscala/reflect/ClassTag$;
           LDC Lorg/nlogo/agent/Agent;.class
           INVOKEVIRTUAL scala/reflect/ClassTag$.apply (Ljava/lang/Class;)Lscala/reflect/ClassTag;
           INVOKEVIRTUAL scala/collection/mutable/ArrayBuffer.toArray (Lscala/reflect/ClassTag;)Ljava/lang/Object;
           CHECKCAST [Lorg/nlogo/agent/Agent;
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromArray (Lorg/nlogo/api/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromArray (Lorg/nlogo/core/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
          L7
           ASTORE 2
           ALOAD 1

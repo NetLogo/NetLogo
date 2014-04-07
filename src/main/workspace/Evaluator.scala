@@ -3,8 +3,9 @@
 package org.nlogo.workspace
 
 import java.util.ArrayList
+import org.nlogo.core.AgentKind
+import org.nlogo.api.{CompilerException, JobOwner, LogoException, ReporterLogoThunk, CommandLogoThunk}
 import org.nlogo.agent.{Agent, AgentSet, Turtle, Patch, Link}
-import org.nlogo.api.{AgentKind, CompilerException, JobOwner, LogoException, ReporterLogoThunk, CommandLogoThunk}
 import org.nlogo.nvm.{ExclusiveJob, Activation, CompilerFlags, Context, Procedure, Reporter}
 
 class Evaluator(workspace: AbstractWorkspace) {

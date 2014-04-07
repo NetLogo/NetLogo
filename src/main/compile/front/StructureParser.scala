@@ -19,9 +19,9 @@ package front
 // will be discovered as we parse, through __include declarations.  (Included files might themselves
 // include further files.)
 
-import org.nlogo.{ api, nvm, parse },
+import org.nlogo.{ core, api, nvm, parse },
   parse._,
-  api.Token,
+  core.Token,
   nvm.StructureResults,
   nvm.FrontEndInterface.{ ProceduresMap, NoProcedures },
   Fail._
@@ -31,7 +31,7 @@ object StructureParser {
   /// main entry point.  handles gritty extensions stuff and includes stuff.
 
   def parseAll(
-      tokenizer: api.TokenizerInterface,
+      tokenizer: core.TokenizerInterface,
       source: String, displayName: Option[String], program: api.Program, subprogram: Boolean,
       oldProcedures: ProceduresMap, extensionManager: api.ExtensionManager): StructureResults = {
     if(!subprogram)
@@ -40,8 +40,8 @@ object StructureParser {
     val oldResults = StructureResults(program, oldProcedures)
     def parseOne(source: String, filename: String, previousResults: StructureResults) = {
       val tokens =
-        tokenizer.tokenize(source, filename)
-          .filter(_.tpe != api.TokenType.Comment)
+        tokenizer.tokenizeString(source, filename)
+          .filter(_.tpe != core.TokenType.Comment)
           .map(parse.Namer0)
       new StructureParser(tokens, displayName, previousResults)
         .parse(subprogram)

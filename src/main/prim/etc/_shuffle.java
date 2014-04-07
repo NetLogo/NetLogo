@@ -3,7 +3,8 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.LogoList;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
+import org.nlogo.core.SyntaxJ;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 
@@ -24,7 +25,7 @@ public final strictfp class _shuffle
 
   @Override
   public Syntax syntax() {
-    return Syntax.reporterSyntax(new int[]{Syntax.ListType()},
+    return SyntaxJ.reporterSyntax(new int[]{Syntax.ListType()},
         Syntax.ListType());
   }
 

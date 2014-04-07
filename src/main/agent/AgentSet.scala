@@ -2,22 +2,22 @@
 
 package org.nlogo.agent
 
-import org.nlogo.{ api, util }
+import org.nlogo.{ core, api }
 
 object AgentSet {
   def fromAgent(agent: Agent): AgentSet =
     new ArrayAgentSet(agent.kind, null, Array(agent))
-  def fromIterator(kind: api.AgentKind, agents: Iterator[Agent]): AgentSet =
+  def fromIterator(kind: core.AgentKind, agents: Iterator[Agent]): AgentSet =
     new ArrayAgentSet(kind, null, agents.toArray)
   // for convenience from Java, overload instead of using default arguments
-  def fromArray(kind: api.AgentKind, agents: Array[Agent], printName: String = null): AgentSet =
+  def fromArray(kind: core.AgentKind, agents: Array[Agent], printName: String = null): AgentSet =
     new ArrayAgentSet(kind, printName, agents)
-  def fromArray(kind: api.AgentKind, agents: Array[Agent]): AgentSet =
+  def fromArray(kind: core.AgentKind, agents: Array[Agent]): AgentSet =
     new ArrayAgentSet(kind, null, agents)
 }
 
 abstract class AgentSet(
-  val kind: api.AgentKind,
+  val kind: core.AgentKind,
   val printName: String,
   val removableAgents: Boolean,
   // yuck, vars
@@ -28,11 +28,11 @@ extends api.AgentSet {
   // abstract methods
   def equalAgentSetsHelper(otherSet: api.AgentSet): Boolean
   def iterator: AgentIterator
-  def shufflerator(rng: util.MersenneTwisterFast): AgentIterator
+  def shufflerator(rng: api.MersenneTwisterFast): AgentIterator
   def getAgent(id: AnyRef): Agent
   def randomOne(precomputedCount: Int, random: Int): Agent
   def randomTwo(precomputedCount: Int, random1: Int, random2: Int): Array[Agent]
-  def randomSubsetGeneral(resultSize: Int, precomputedCount: Int, rng: util.MersenneTwisterFast): Array[Agent]
+  def randomSubsetGeneral(resultSize: Int, precomputedCount: Int, rng: api.MersenneTwisterFast): Array[Agent]
   def toLogoList: api.LogoList
 
   ///
@@ -66,7 +66,7 @@ extends api.AgentSet {
         }
     }
 
-  def randomSubset(resultSize: Int, precomputedCount: Int, rng: util.MersenneTwisterFast): AgentSet = {
+  def randomSubset(resultSize: Int, precomputedCount: Int, rng: api.MersenneTwisterFast): AgentSet = {
     val array: Array[Agent] =
       resultSize match {
         case 0 =>

@@ -2,16 +2,17 @@
 
 package org.nlogo.prim
 
-import org.nlogo.api.{ Syntax, I18N, AgentException, LogoList, LogoListBuilder }
-import org.nlogo.nvm.{ Reporter, Context, EngineException, ArgumentTypeException }
+import org.nlogo.core.Syntax
+import org.nlogo.api.{ I18N, AgentException, LogoList, LogoListBuilder }
 import org.nlogo.agent.{ Agent, AgentSet }
+import org.nlogo.nvm.{ Reporter, Context, EngineException, ArgumentTypeException }
 
 class _patchvariableof(_vn: Int) extends Reporter {
 
   override def syntax =
     Syntax.reporterSyntax(
-      Array(Syntax.TurtleType | Syntax.PatchType | Syntax.TurtlesetType | Syntax.PatchsetType),
-      Syntax.WildcardType)
+      right = List(Syntax.TurtleType | Syntax.PatchType | Syntax.TurtlesetType | Syntax.PatchsetType),
+      ret = Syntax.WildcardType)
 
   override def toString =
     super.toString + ":" +

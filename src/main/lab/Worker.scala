@@ -3,10 +3,11 @@
 package org.nlogo.lab
 
 import java.util.concurrent.{Callable, Executors, TimeUnit}
+import org.nlogo.core.WorldDimensions
 import org.nlogo.api.{Dump,LogoException, World,
-                      WorldDimensions, WorldDimensionException, SimpleJobOwner}
+                      WorldDimensionException, SimpleJobOwner}
 import org.nlogo.nvm.{LabInterface, Workspace}
-import org.nlogo.util.MersenneTwisterFast
+import org.nlogo.api.MersenneTwisterFast
 import LabInterface.ProgressListener
 
 class Worker(val protocol: Protocol)
@@ -70,7 +71,7 @@ class Worker(val protocol: Protocol)
       else Some(workspace.compileReporter(protocol.exitCondition))
     val metricProcedures = protocol.metrics.map(workspace.compileReporter(_))
   }
-  class Runner(runNumber: Int, settings: List[Pair[String, Any]], fn: ()=>Workspace)
+  class Runner(runNumber: Int, settings: List[(String, Any)], fn: ()=>Workspace)
     extends Callable[Unit]
   {
     class FailedException(message: String) extends LogoException(message)
@@ -102,7 +103,7 @@ class Worker(val protocol: Protocol)
           newProcedures
         }
       import procedures._
-      def setVariables(settings: List[Pair[String, Any]]) {
+      def setVariables(settings: List[(String, Any)]) {
         val world = ws.world
         var d = world.getDimensions
         for((name, value) <- settings) {

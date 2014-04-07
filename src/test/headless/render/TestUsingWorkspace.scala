@@ -3,9 +3,9 @@
 package org.nlogo.headless
 package render
 
-import org.nlogo.api
+import org.nlogo.{ api, core }
 import org.nlogo.shape.{ LinkShape, VectorShape }
-import org.nlogo.util.{ MockSuite, WorldType }
+import org.nlogo.util.MockSuite
 
 trait TestUsingWorkspace extends MockSuite {
 
@@ -21,7 +21,7 @@ trait TestUsingWorkspace extends MockSuite {
     perspective: api.Perspective = api.Perspective.Observe) extends api.ViewSettings
 
   def testUsingWorkspace(testName: String, radius: Int = 5,
-                         worldType: WorldType = WorldType.Torus)
+                         worldType: api.WorldType = api.WorldType.Torus)
                         (f: HeadlessWorkspace => Unit) {
     test(testName) {
       runWorkspaceTest(radius, worldType){ f }
@@ -29,19 +29,19 @@ trait TestUsingWorkspace extends MockSuite {
   }
 
   def mockTestUsingWorkspace(name:String, radius: Int = 5,
-                             worldType: WorldType = WorldType.Torus)
+                             worldType: api.WorldType = api.WorldType.Torus)
                             (f: HeadlessWorkspace => Unit){
     mockTest(name){
       runWorkspaceTest(radius, worldType){ f }
     }
   }
 
-  def runWorkspaceTest(radius: Int = 5, worldType: WorldType = WorldType.Torus)
+  def runWorkspaceTest(radius: Int = 5, worldType: api.WorldType = api.WorldType.Torus)
                       (f: HeadlessWorkspace => Unit) {
     val workspace: HeadlessWorkspace = HeadlessWorkspace.newInstance
     workspace.silent = true
     try {
-      ModelCreator.open(workspace, api.WorldDimensions.square(radius))
+      ModelCreator.open(workspace, core.WorldDimensions.square(radius))
       workspace.changeTopology(worldType.xWrap, worldType.yWrap)
       workspace.world.turtleShapeList.replaceShapes(
         VectorShape.parseShapes(

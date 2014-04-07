@@ -3,7 +3,7 @@
 package org.nlogo.lab
 
 import org.nlogo.api.Dump
-import org.nlogo.api.WorldDimensions
+import org.nlogo.core.WorldDimensions
 import org.nlogo.nvm.Workspace
 
 // Currently this class contains two kinds of code: code for remembering run data in memory using
@@ -19,7 +19,7 @@ class SpreadsheetExporter(modelFileName: String,
   extends Exporter(modelFileName, initialDims, protocol, out)
 {
   val runs = new collection.mutable.HashMap[Int,Run]
-  override def runStarted(w: Workspace, runNumber: Int, settings: List[Pair[String,Any]]) {
+  override def runStarted(w: Workspace, runNumber: Int, settings: List[(String,Any)]) {
     runs(runNumber) = new Run(settings)
   }
   override def measurementsTaken(w: Workspace, runNumber: Int, step: Int, values: List[AnyRef]) {
@@ -133,7 +133,7 @@ class SpreadsheetExporter(modelFileName: String,
     }
   }
   ///
-  class Run(val settings: List[Pair[String,Any]]) {
+  class Run(val settings: List[(String, Any)]) {
     var done = false
     var steps = 0
     // values for the metrics at each time step; the values are often Doubles, but not necessarily.

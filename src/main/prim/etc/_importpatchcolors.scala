@@ -2,7 +2,8 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api.{ LogoException, Syntax }
+import org.nlogo.core.Syntax
+import org.nlogo.api.LogoException
 import org.nlogo.nvm.{ Command, Context, EngineException }
 import org.nlogo.agent.ImportPatchColors.importPatchColors
 
@@ -10,7 +11,9 @@ class _importpatchcolors extends Command {
 
   override def syntax =
     Syntax.commandSyntax(
-      Array(Syntax.StringType), "O---", true)
+      right = List(Syntax.StringType),
+      agentClassString = "O---",
+      switches = true)
 
   override def perform(context: Context) {
     try importPatchColors(

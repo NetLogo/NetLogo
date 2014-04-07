@@ -13,7 +13,7 @@ object LogoList {
     fromIterator(objs.iterator.asScala)
   }
   def fromIterator(it: scala.Iterator[AnyRef]) =
-    new LogoList(Vector[AnyRef]() ++ it)
+    new LogoList(it.toVector)
   def fromVector(v: Vector[AnyRef]) =
     new LogoList(v)
   implicit def toIterator(ll:LogoList) = ll.scalaIterator

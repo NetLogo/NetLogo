@@ -44,11 +44,11 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L3
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           LLOAD 4
           L2I
           I2L
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.setSeed (J)V
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.setSeed (J)V
           ALOAD 1
           ICONST_1
           PUTFIELD org/nlogo/nvm/Context.ip : I
@@ -595,9 +595,9 @@ procedure MAKE-NODE:[OLD-NODE]{O---}:
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           LDC 360
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextLong (J)J
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
          L1
           DSTORE 2
@@ -766,7 +766,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
                   ATHROW
                  L3
                   GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
-                  GETSTATIC org/nlogo/api/AgentKind$Turtle$.MODULE$ : Lorg/nlogo/api/AgentKind$Turtle$;
+                  GETSTATIC org/nlogo/core/AgentKind$Turtle$.MODULE$ : Lorg/nlogo/core/AgentKind$Turtle$;
                   ALOAD 0
                   GETFIELD org/nlogo/prim/_asm_procedurefindpartner_count_1.world : Lorg/nlogo/agent/World;
                   INVOKEVIRTUAL org/nlogo/agent/World.linkManager ()Lorg/nlogo/agent/LinkManager;
@@ -775,7 +775,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
                   CHECKCAST org/nlogo/agent/Turtle
                   ALOAD 2
                   INVOKEINTERFACE org/nlogo/agent/LinkManager.findLinkedWith (Lorg/nlogo/agent/Turtle;Lorg/nlogo/agent/AgentSet;)Lscala/collection/Iterator;
-                  INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromIterator (Lorg/nlogo/api/AgentKind;Lscala/collection/Iterator;)Lorg/nlogo/agent/AgentSet;
+                  INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromIterator (Lorg/nlogo/core/AgentKind;Lscala/collection/Iterator;)Lorg/nlogo/agent/AgentSet;
                  L4
                   ASTORE 2
                   ALOAD 2
@@ -858,8 +858,8 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           DLOAD 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextDouble ()D
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextDouble ()D
           DMUL
          L8
           DSTORE 2
@@ -994,7 +994,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
             ATHROW
            L3
             GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
-            GETSTATIC org/nlogo/api/AgentKind$Turtle$.MODULE$ : Lorg/nlogo/api/AgentKind$Turtle$;
+            GETSTATIC org/nlogo/core/AgentKind$Turtle$.MODULE$ : Lorg/nlogo/core/AgentKind$Turtle$;
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_procedurefindpartner_count_6.world : Lorg/nlogo/agent/World;
             INVOKEVIRTUAL org/nlogo/agent/World.linkManager ()Lorg/nlogo/agent/LinkManager;
@@ -1003,7 +1003,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
             CHECKCAST org/nlogo/agent/Turtle
             ALOAD 2
             INVOKEINTERFACE org/nlogo/agent/LinkManager.findLinkedWith (Lorg/nlogo/agent/Turtle;Lorg/nlogo/agent/AgentSet;)Lscala/collection/Iterator;
-            INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromIterator (Lorg/nlogo/api/AgentKind;Lscala/collection/Iterator;)Lorg/nlogo/agent/AgentSet;
+            INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromIterator (Lorg/nlogo/core/AgentKind;Lscala/collection/Iterator;)Lorg/nlogo/agent/AgentSet;
            L4
             ASTORE 2
             ALOAD 2

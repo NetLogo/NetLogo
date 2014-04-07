@@ -2,12 +2,14 @@
 
 package org.nlogo.prim.etc
 
+import org.nlogo.core.Syntax
+import org.nlogo.api.Let
 import org.nlogo.nvm.{ Command, Context, MutableLong }
-import org.nlogo.api.{ Let, Syntax }
 
 class _waitinternal(let: Let) extends Command {
   override def syntax =
-    Syntax.commandSyntax(true)
+    Syntax.commandSyntax(
+      switches = true)
   override def perform(context: Context) {
     perform_1(context)
   }

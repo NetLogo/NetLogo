@@ -57,12 +57,12 @@ InconeLargeRadiusDuplicationCheck
 
 InconeDontAskYourPatch
   O> crt 1
-  T> ask patches with [distance-nowrap myself > 0] in-cone 20 30 [set pcolor red]
+  T> ask patches with [distance myself > 0] in-cone 20 30 [set pcolor red]
   [pcolor] of [patch-here] of turtle 0 = black => true
 
 InconeDontAskSomeOtherPatches
   O> cro 1
-  T> ask patches with [distance-nowrap myself > 3] in-cone 4 30 [set pcolor red]
+  T> ask patches with [distance myself > 3] in-cone 4 30 [set pcolor red]
   [pcolor] of patch 0 1 = black => true
   [pcolor] of patch 0 2 = black => true
   [pcolor] of patch 0 3 = black => true
@@ -71,7 +71,7 @@ InconeDontAskSomeOtherPatches
 InconeDontAskTurtlesOnYou
   O> crt 2
   T> set color green
-  O> ask turtle 0 [ ask turtles with [distance-nowrap myself > 0] in-cone 20 30 [set color red] ]
+  O> ask turtle 0 [ ask turtles with [distance myself > 0] in-cone 20 30 [set color red] ]
   [color] of turtle 0 = green => true
   [color] of turtle 1 = green => true
 
@@ -80,7 +80,7 @@ InconeDontAskSomeOtherTurtles
   T> setxy 0 who
   T> set color green
   O> ask turtle 0 [set heading 0]
-  O> ask turtle 0 [ ask turtles with [distance-nowrap myself > 3] in-cone 4 30 [set color red] ]
+  O> ask turtle 0 [ ask turtles with [distance myself > 3] in-cone 4 30 [set color red] ]
   [color] of turtle 0 = green => true
   [color] of turtle 1 = green => true
   [color] of turtle 2 = green => true
@@ -139,13 +139,14 @@ InconeManyTurtlesCounting
   length remove-duplicates [count turtles in-cone 10 30] of turtles => 3
 
 InconeNowrap1
+  O> __change-topology false false
   O> crt 2
   T> set color green set heading 45
   O> ask turtle 1 [setxy -3 -3]
-  O> ask turtle 0 [ask turtles in-cone-nowrap 10 30 [set color cyan]]
+  O> ask turtle 0 [ask turtles in-cone 10 30 [set color cyan]]
   [color] of turtle 0 = cyan => true
   [color] of turtle 1 = green => true
-  O> ask turtle 1 [ask turtles in-cone-nowrap 5 30 [set color red]]
+  O> ask turtle 1 [ask turtles in-cone 5 30 [set color red]]
   [color] of turtle 0 = red => true
   [color] of turtle 1 = red => true
 

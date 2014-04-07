@@ -5,11 +5,12 @@ package org.nlogo.prim.etc;
 import org.nlogo.agent.AgentIterator;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Link;
-import org.nlogo.api.AgentKindJ;
+import org.nlogo.core.AgentKindJ;
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoList;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
+import org.nlogo.core.SyntaxJ;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
@@ -26,7 +27,7 @@ public final strictfp class _linkset
         | Syntax.LinksetType() | Syntax.NobodyType()
         | Syntax.ListType()};
     int ret = Syntax.LinksetType();
-    return Syntax.reporterSyntax(right, ret, 1, 0);
+    return SyntaxJ.reporterSyntax(right, ret, 1, 0);
   }
 
   @Override

@@ -3,8 +3,9 @@
 package org.nlogo.compile
 package front
 
-import org.nlogo.{ api, nvm, parse },
-  api.{ Program, Token },
+import org.nlogo.{ core, api, nvm, parse },
+  core.Token,
+  api.Program,
   nvm.StructureResults
 
 /// Stage #3 of StructureParser

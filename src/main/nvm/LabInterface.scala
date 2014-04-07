@@ -2,7 +2,7 @@
 
 package org.nlogo.nvm
 
-import org.nlogo.api.WorldDimensions
+import org.nlogo.core.WorldDimensions
 
 object LabInterface {
   trait Worker {
@@ -16,7 +16,7 @@ object LabInterface {
     def experimentStarted() { }
     def experimentAborted() { }
     def experimentCompleted() { }
-    def runStarted(w: Workspace, runNumber: Int, settings: List[Pair[String, Any]]) { }
+    def runStarted(w: Workspace, runNumber: Int, settings: List[(String, Any)]) { }
     def measurementsTaken(w: Workspace, runNumber: Int, step: Int, values: List[AnyRef]) { }
     def stepCompleted(w: Workspace, step: Int) { }
     def runCompleted(w: Workspace, runNumber: Int, steps: Int) { }

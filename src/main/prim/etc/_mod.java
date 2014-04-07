@@ -3,7 +3,8 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.I18N;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
+import org.nlogo.core.SyntaxJ;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Pure;
@@ -14,8 +15,8 @@ public final strictfp class _mod extends Reporter implements Pure {
   public Syntax syntax() {
     int left = Syntax.NumberType();
     int[] right = {Syntax.NumberType()};
-    return Syntax.reporterSyntax(left, right, Syntax.NumberType(),
-        org.nlogo.api.Syntax.NormalPrecedence() - 2);
+    return SyntaxJ.reporterSyntax(left, right, Syntax.NumberType(),
+        org.nlogo.core.Syntax.NormalPrecedence() - 2);
   }
 
   @Override

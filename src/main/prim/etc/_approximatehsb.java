@@ -2,7 +2,8 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
+import org.nlogo.core.SyntaxJ;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Pure;
 import org.nlogo.nvm.Reporter;
@@ -12,7 +13,7 @@ public final strictfp class _approximatehsb extends Reporter implements Pure {
   public Syntax syntax() {
     int[] right = {Syntax.NumberType(), Syntax.NumberType(), Syntax.NumberType()};
     int ret = Syntax.NumberType();
-    return Syntax.reporterSyntax(right, ret);
+    return SyntaxJ.reporterSyntax(right, ret);
   }
 
   @Override

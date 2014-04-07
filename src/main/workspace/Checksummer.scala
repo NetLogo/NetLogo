@@ -2,9 +2,9 @@
 
 package org.nlogo.workspace
 
-import org.nlogo.util.HexString.toHexString
 import java.io.PrintWriter
 import org.nlogo.api.Workspace
+import org.nlogo.api.HexString
 
 object Checksummer {
   def initModelForChecksumming(workspace: Workspace) {
@@ -33,6 +33,6 @@ object Checksummer {
       outputStream.toString.replaceAll("\r\n", "\n")  // avoid platform differences
     }
     val digester = java.security.MessageDigest.getInstance("SHA")
-    toHexString(digester.digest(output.getBytes))
+    HexString.toHexString(digester.digest(output.getBytes))
   }
 }

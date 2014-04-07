@@ -2,8 +2,8 @@
 
 package org.nlogo.prim
 
+import org.nlogo.core.Syntax
 import org.nlogo.agent.{ Turtle, Patch }
-import org.nlogo.api.Syntax
 import org.nlogo.nvm.{ Reporter, Context }
 
 // needed by _patchat.optimize() because regular _patchhere is turtle-only
@@ -12,7 +12,8 @@ class _patchhereinternal extends Reporter {
 
   override def syntax =
     Syntax.reporterSyntax(
-      Syntax.PatchType, "-TP-")
+      ret = Syntax.PatchType,
+      agentClassString = "-TP-")
 
   override def report(context: Context): Patch =
     report_1(context)

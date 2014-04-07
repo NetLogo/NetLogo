@@ -2,7 +2,7 @@
 
 package org.nlogo.nvm
 
-import org.nlogo.api,
+import org.nlogo.{ core, api },
   FrontEndInterface.{ ProceduresMap, NoProcedures }
 
 object StructureResults {
@@ -11,6 +11,6 @@ object StructureResults {
 case class StructureResults(
   program: api.Program,
   procedures: ProceduresMap = NoProcedures,
-  tokens: Map[Procedure, Iterable[api.Token]] = Map(),
-  includes: Seq[api.Token] = Seq(),
-  extensions: Seq[api.Token] = Seq())
+  tokens: Map[Procedure, Iterable[core.Token]] = Map(),
+  includes: Seq[core.Token] = Seq(),
+  extensions: Seq[core.Token] = Seq())

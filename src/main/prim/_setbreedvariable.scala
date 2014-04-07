@@ -2,7 +2,8 @@
 
 package org.nlogo.prim
 
-import org.nlogo.api.{ Syntax, AgentException }
+import org.nlogo.core.Syntax
+import org.nlogo.api.AgentException
 import org.nlogo.nvm.{ Command, Context, EngineException }
 
 class _setbreedvariable(name: String) extends Command {
@@ -11,7 +12,9 @@ class _setbreedvariable(name: String) extends Command {
 
   override def syntax =
     Syntax.commandSyntax(
-      Array(Syntax.WildcardType), "-T--", true)
+      right = List(Syntax.WildcardType),
+      agentClassString = "-T--",
+      switches = true)
 
   override def toString =
     super.toString + ":" + name

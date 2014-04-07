@@ -4,9 +4,10 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
-import org.nlogo.api.AgentKindJ;
+import org.nlogo.core.AgentKindJ;
 import org.nlogo.api.I18N;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
+import org.nlogo.core.SyntaxJ;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
@@ -20,8 +21,8 @@ public final strictfp class _inradius
     int left = Syntax.TurtlesetType() | Syntax.PatchsetType();
     int[] right = {Syntax.NumberType()};
     int ret = Syntax.TurtlesetType() | Syntax.PatchsetType();
-    return Syntax.reporterSyntax
-        (left, right, ret, org.nlogo.api.Syntax.NormalPrecedence() + 2,
+    return SyntaxJ.reporterSyntax
+        (left, right, ret, org.nlogo.core.Syntax.NormalPrecedence() + 2,
             false, "-TP-", null);
   }
 

@@ -2,7 +2,7 @@
 
 package org.nlogo.mirror
 
-import org.nlogo.{ api, util }
+import org.nlogo.{ api, core }
 import Mirrorables._
 import Mirroring.State
 import collection.JavaConverters._
@@ -28,7 +28,7 @@ class FakeWorld(state: State) extends api.World {
 
   def newRenderer: api.RendererInterface = {
     val renderer: api.RendererInterface =
-      util.Femto.get("org.nlogo.render.Renderer", this)
+      org.nlogo.api.Femto.get("org.nlogo.render.Renderer", this)
     renderer.resetCache(patchSize)
     renderer
   }
@@ -38,7 +38,7 @@ class FakeWorld(state: State) extends api.World {
       .map(patch => api.Color.getRGBInt(patch.pcolor))
       .toArray
 
-  class FakeAgentSet[A <: api.Agent](val kind: api.AgentKind, val agentSeq: Seq[A], val isDirected: Boolean = false)
+  class FakeAgentSet[A <: api.Agent](val kind: core.AgentKind, val agentSeq: Seq[A], val isDirected: Boolean = false)
     extends api.AgentSet {
     override val isUndirected: Boolean = !isDirected
     override def isEmpty = agentSeq.isEmpty
@@ -62,7 +62,7 @@ class FakeWorld(state: State) extends api.World {
   class FakeTurtle(agentId: Long, val vars: Seq[AnyRef])
     extends api.Turtle with FakeAgent {
     import Turtle.Variables._
-    override def kind = api.AgentKind.Turtle
+    override def kind = core.AgentKind.Turtle
     override def id = agentId
     override def xcor = vars(VAR_XCOR).asInstanceOf[Double]
     override def ycor = vars(VAR_YCOR).asInstanceOf[Double]
@@ -83,13 +83,13 @@ class FakeWorld(state: State) extends api.World {
   }
 
   override val turtles =
-    new FakeAgentSet(api.AgentKind.Turtle, turtleStates.map {
+    new FakeAgentSet(core.AgentKind.Turtle, turtleStates.map {
       case (id, vars) => new FakeTurtle(id, vars)
     }.sortBy(_.id))
 
   class FakePatch(agentId: Long, val vars: Seq[AnyRef])
     extends api.Patch with FakeAgent {
-    override def kind = api.AgentKind.Patch
+    override def kind = core.AgentKind.Patch
     override def id = agentId
     override def pxcor = vars(VAR_PXCOR).asInstanceOf[Int]
     override def pycor = vars(VAR_PYCOR).asInstanceOf[Int]
@@ -102,14 +102,14 @@ class FakeWorld(state: State) extends api.World {
   }
 
   override val patches =
-    new FakeAgentSet(api.AgentKind.Patch, patchStates.map {
+    new FakeAgentSet(core.AgentKind.Patch, patchStates.map {
       case (id, vars) => new FakePatch(id, vars)
     }.sortBy(_.id))
 
   class FakeLink(agentId: Long, val vars: Seq[AnyRef]) extends api.Link with FakeAgent {
     import Link.Variables._
     override def id = agentId
-    override def kind = api.AgentKind.Link
+    override def kind = core.AgentKind.Link
     override def getBreedIndex: Int = unsupported
     override def labelColor: AnyRef = vars(VAR_LLABELCOLOR)
     override def labelString: String = org.nlogo.api.Dump.logoObject(vars(VAR_LLABEL))
@@ -138,7 +138,7 @@ class FakeWorld(state: State) extends api.World {
     val agentSeq = linkStates
       .map { case (id, vars) => new FakeLink(id, vars) }
       .sortBy(_.id)
-    new FakeAgentSet(api.AgentKind.Link, agentSeq, worldVar[Boolean](UnbreededLinksAreDirected.id)) {
+    new FakeAgentSet(core.AgentKind.Link, agentSeq, worldVar[Boolean](UnbreededLinksAreDirected.id)) {
       override val agents =
         (agentSeq.sortBy(l => (l.end1.id, l.end2.id)): Iterable[api.Agent]).asJava
     }
@@ -156,7 +156,7 @@ class FakeWorld(state: State) extends api.World {
           }
       }.orNull
     }
-    def kind = api.AgentKind.Observer
+    def kind = core.AgentKind.Observer
     def id = 0
     def size = 0
     def perspective: api.Perspective = unsupported
@@ -258,11 +258,11 @@ class FakeWorld(state: State) extends api.World {
   def timer: api.Timer = unsupported
   def setObserverVariableByName(variableName: String, value: AnyRef): Unit = unsupported
   def observerOwnsIndexOf(name: String): Int = unsupported
-  def auxRNG: util.MersenneTwisterFast = unsupported
-  def mainRNG: util.MersenneTwisterFast = unsupported
-  def equalDimensions(d: api.WorldDimensions): Boolean = unsupported
+  def auxRNG: api.MersenneTwisterFast = unsupported
+  def mainRNG: api.MersenneTwisterFast = unsupported
+  def equalDimensions(d: core.WorldDimensions): Boolean = unsupported
   def isDimensionVariable(variableName: String): Boolean = unsupported
-  def getDimensions: api.WorldDimensions = unsupported
+  def getDimensions: core.WorldDimensions = unsupported
   def realloc(): Unit = unsupported
   def clearGlobals(): Unit = unsupported
 

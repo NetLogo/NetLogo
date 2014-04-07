@@ -2,8 +2,9 @@
 
 package org.nlogo.prim.etc
 
+import org.nlogo.core.Syntax
+import org.nlogo.api.{ AgentException, Nobody }
 import org.nlogo.agent.Turtle
-import org.nlogo.api.{ Syntax, AgentException, Nobody }
 import org.nlogo.nvm.{ Context, Reporter }
 
 @annotation.strictfp
@@ -11,8 +12,9 @@ class _patchrightandahead extends Reporter {
 
   override def syntax =
     Syntax.reporterSyntax(
-      Array(Syntax.NumberType, Syntax.NumberType),
-      Syntax.PatchType, "-T--")
+      right = List(Syntax.NumberType, Syntax.NumberType),
+      ret = Syntax.PatchType,
+      agentClassString = "-T--")
 
   override def report(context: Context): AnyRef =
     try

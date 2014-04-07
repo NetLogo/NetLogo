@@ -124,17 +124,22 @@ Interaction10
   T> repeat 5 [ hatch 2 ]
   count turtles => 11
 
-Interaction11
+Interaction11a
   O> random-seed 711
   P> sprout 1
   max [towards one-of turtles with [self != myself]] of turtles < 360 => true
   min [towards one-of turtles with [self != myself]] of turtles >= 0 => true
   max [towards one-of patches with [self != [patch-here] of myself]] of turtles < 360 => true
   min [towards one-of patches with [self != [patch-here] of myself]] of turtles >= 0 => true
-  max [towards-nowrap one-of turtles with [self != myself]] of turtles < 360 => true
-  min [towards-nowrap one-of turtles with [self != myself]] of turtles >= 0 => true
-  max [towards-nowrap one-of patches with [self != [patch-here] of myself]] of turtles < 360 => true
-  max [towards-nowrap one-of patches with [self != [patch-here] of myself]] of turtles >= 0 => true
+
+Interaction11
+  O> __change-topology false false
+  O> random-seed 711
+  P> sprout 1
+  max [towards one-of turtles with [self != myself]] of turtles < 360 => true
+  min [towards one-of turtles with [self != myself]] of turtles >= 0 => true
+  max [towards one-of patches with [self != [patch-here] of myself]] of turtles < 360 => true
+  max [towards one-of patches with [self != [patch-here] of myself]] of turtles >= 0 => true
 
 Interaction12
   O> cro 20 [ fd 5 ]
@@ -146,9 +151,6 @@ Interaction13
   [towards turtle 1] of turtle 0 => ERROR No heading is defined from a point (0,0) to that same point.
   [towardsxy 0 0] of turtle 0 => ERROR No heading is defined from a point (0,0) to that same point.
   [towards patch-here] of turtle 0 => ERROR No heading is defined from a point (0,0) to that same point.
-  [towards-nowrap turtle 1] of turtle 0 => ERROR No heading is defined from a point (0,0) to that same point.
-  [towardsxy-nowrap 0 0] of turtle 0 => ERROR No heading is defined from a point (0,0) to that same point.
-  [towards-nowrap patch-here] of turtle 0 => ERROR No heading is defined from a point (0,0) to that same point.
 
 Interaction14
   O> crt 2 [ set heading 0 ]

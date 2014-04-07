@@ -3,7 +3,8 @@
 package org.nlogo.prim
 
 import org.nlogo.agent.{ Turtle, AgentSet, AgentSetBuilder }
-import org.nlogo.api.{ Syntax, AgentKind }
+import org.nlogo.core.Syntax
+import org.nlogo.core.AgentKind
 import org.nlogo.nvm.{ Command, Context, CustomAssembled, AssemblerAssistant }
 
 class _createorderedturtles(val breedName: String) extends Command with CustomAssembled {
@@ -12,8 +13,10 @@ class _createorderedturtles(val breedName: String) extends Command with CustomAs
 
   override def syntax =
     Syntax.commandSyntax(
-      Array(Syntax.NumberType, Syntax.CommandBlockType | Syntax.OptionalType),
-      "O---", "-T--", true)
+      right = List(Syntax.NumberType, Syntax.CommandBlockType | Syntax.OptionalType),
+      agentClassString = "O---",
+      blockAgentClassString = "-T--",
+      switches = true)
 
   override def toString =
     super.toString + ":" + breedName + ",+" + offset

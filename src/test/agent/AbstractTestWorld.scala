@@ -3,7 +3,7 @@
 package org.nlogo.agent
 
 import org.scalatest.Assertions
-import org.nlogo.api.WorldDimensions
+import org.nlogo.core.WorldDimensions
 
 // Exists to be separately extended in 2D and 3D versions. - ST 10/18/10
 

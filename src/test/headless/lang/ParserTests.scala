@@ -3,7 +3,7 @@
 package org.nlogo.headless.lang
 
 import org.scalatest.FunSuite
-import org.nlogo.api.AgentKind
+import org.nlogo.core.AgentKind
 
 class ParserTests extends FunSuite {
 

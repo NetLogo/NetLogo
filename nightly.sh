@@ -32,12 +32,12 @@ echo "*** done: nogen fast:test"
 if [ ${PIPESTATUS[0]} -ne 0 ] ; then echo "*** FAILED: sbt all"; exit 1; fi
 echo "*** done: sbt all"
 
-# experimenting hoping that intermittent Travis failures will stop.
-# hopefully turning off logBuffered for the slow tests means that we
-# won't go 10 minutes without producing any output.  with logBuffered
-# off, the output from the different tests gets scrambled together,
-# but we can't turn off parallelExecution or the whole thing will
-# take more than 50 minutes to run (the Travis limit) - ST 8/29/13
+# turning off logBuffered for the slow tests keeps us from going 10
+# minutes without producing any output, which would make Travis time
+# out.  the tests from different suites get scrambled together in the
+# output, but we can't turn off parallelExecution or the whole thing
+# will take more than 50 minutes to run (the Travis limit)
+# - ST 8/29/13, 4/1/14
 
 ./sbt 'set logBuffered in test := false' slow:test 2>&1 | tee tmp/nightly/3-slow-test.txt
 if [ ${PIPESTATUS[0]} -ne 0 ] ; then echo "*** FAILED: slow:test"; exit 1; fi

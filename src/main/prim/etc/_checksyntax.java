@@ -3,7 +3,8 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.CompilerException;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
+import org.nlogo.core.SyntaxJ;
 import org.nlogo.nvm.Reporter;
 
 /**
@@ -30,6 +31,6 @@ public final strictfp class _checksyntax
   @Override
   public Syntax syntax() {
     int[] right = {Syntax.StringType()};
-    return Syntax.reporterSyntax(right, Syntax.StringType());
+    return SyntaxJ.reporterSyntax(right, Syntax.StringType());
   }
 }

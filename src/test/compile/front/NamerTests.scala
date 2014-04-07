@@ -4,8 +4,9 @@ package org.nlogo.compile
 package front
 
 import org.scalatest.FunSuite
-import org.nlogo.{ api, nvm, parse },
-  api.{ DummyExtensionManager, Program, Token, TokenType }
+import org.nlogo.{ core, api, nvm, parse },
+  core.{ Token, TokenType },
+  api.{ DummyExtensionManager, Program }
 
 class NamerTests extends FunSuite {
 
@@ -13,7 +14,7 @@ class NamerTests extends FunSuite {
     val wrappedSource = "to __test " + source + "\nend"
     val program = Program.empty().copy(interfaceGlobals = Seq("X"))
     val results = new StructureParser(
-        FrontEnd.tokenizer.tokenize(wrappedSource).map(parse.Namer0),
+        FrontEnd.tokenizer.tokenizeString(wrappedSource).map(parse.Namer0),
         None, nvm.StructureResults(program))
       .parse(false)
     assertResult(1)(results.procedures.size)

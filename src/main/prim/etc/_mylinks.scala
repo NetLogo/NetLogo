@@ -2,8 +2,8 @@
 
 package org.nlogo.prim.etc
 
+import org.nlogo.core.{ Syntax, AgentKind }
 import org.nlogo.agent.{ AgentSet, LinkManager, Turtle }
-import org.nlogo.api, api.Syntax
 import org.nlogo.nvm.{ Reporter, Context, EngineException }
 
 class _mylinks(breedName: String) extends Reporter {
@@ -11,7 +11,9 @@ class _mylinks(breedName: String) extends Reporter {
   def this() = this(null)
 
   override def syntax =
-    Syntax.reporterSyntax(Syntax.LinksetType, "-T--")
+    Syntax.reporterSyntax(
+      ret = Syntax.LinksetType,
+      agentClassString = "-T--")
 
   override def toString =
     super.toString + ":" + breedName
@@ -22,7 +24,7 @@ class _mylinks(breedName: String) extends Reporter {
       else world.getLinkBreed(breedName)
     for(err <- LinkManager.mustNotBeDirected(breed))
       throw new EngineException(context, this, err)
-    AgentSet.fromIterator(api.AgentKind.Link,
+    AgentSet.fromIterator(AgentKind.Link,
       world.linkManager.findLinksWith(
         context.agent.asInstanceOf[Turtle], breed))
   }

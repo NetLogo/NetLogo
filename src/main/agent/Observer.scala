@@ -2,12 +2,12 @@
 
 package org.nlogo.agent
 
-import org.nlogo.api
+import org.nlogo.{ api, core }
 
 class Observer(_world: World) extends Agent(_world)
 with api.Observer with Constraints {
 
-  def kind = api.AgentKind.Observer
+  def kind = core.AgentKind.Observer
 
   override def getVariable(vn: Int) = variables(vn)
 
@@ -79,7 +79,7 @@ with api.Observer with Constraints {
   override def toString = "observer"
   override def classDisplayName = "observer"
 
-  val agentBit = AgentBit(api.AgentKind.Observer)
+  val agentBit = AgentBit(core.AgentKind.Observer)
 
   override def alpha = 0
 

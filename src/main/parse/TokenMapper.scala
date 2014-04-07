@@ -2,17 +2,17 @@
 
 package org.nlogo.parse
 
-import org.nlogo.util.Utils
-import org.nlogo.api
+import org.nlogo.api.Resource
+import org.nlogo.core.TokenHolder
 
 class TokenMapper(path: String, prefix: String) {
-  def getCommand(s: String): Option[api.TokenHolder] =
-    commands.get(s.toUpperCase).map(instantiate[api.TokenHolder])
-  def getReporter(s: String): Option[api.TokenHolder] =
-    reporters.get(s.toUpperCase).map(instantiate[api.TokenHolder])
+  def getCommand(s: String): Option[TokenHolder] =
+    commands.get(s.toUpperCase).map(instantiate[TokenHolder])
+  def getReporter(s: String): Option[TokenHolder] =
+    reporters.get(s.toUpperCase).map(instantiate[TokenHolder])
   private def entries(entryType: String): Iterator[(String, String)] =
     for {
-      line <- Utils.getResourceLines(path)
+      line <- Resource.getResourceLines(path)
       if !line.startsWith("#")
       Array(tpe, primName, className) = line.split(" ")
       if tpe == entryType

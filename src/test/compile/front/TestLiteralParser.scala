@@ -27,10 +27,10 @@ class TestLiteralParser extends FunSuite with MockSuite {
                  world: World = defaultWorld,
                  extensionManager: ExtensionManager = null): AnyRef =
     FrontEnd.literalParser(world, extensionManager)
-      .getLiteralValue(FrontEnd.tokenizer.tokenize(input).map(parse.Namer0))
+      .getLiteralValue(FrontEnd.tokenizer.tokenizeString(input).map(parse.Namer0))
 
   def toLiteralList(input: String, world: World = defaultWorld): LogoList = {
-    val tokens = FrontEnd.tokenizer.tokenize(input).map(parse.Namer0)
+    val tokens = FrontEnd.tokenizer.tokenizeString(input).map(parse.Namer0)
     val (result, _) = FrontEnd.literalParser(world, null).parseLiteralList(tokens.next(), tokens)
     result
   }

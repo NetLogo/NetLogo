@@ -2,7 +2,7 @@
 
 package org.nlogo.prim
 
-import org.nlogo.api.Syntax
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Command, Context }
 
 class _setprocedurevariable(vn: Int, name: String) extends Command {
@@ -10,7 +10,7 @@ class _setprocedurevariable(vn: Int, name: String) extends Command {
     this(original.vn, original.name)
   override def syntax =
     Syntax.commandSyntax(
-      Array(Syntax.WildcardType))
+      List(Syntax.WildcardType))
   override def toString =
     super.toString + ":" + name
   override def perform(context: Context) {

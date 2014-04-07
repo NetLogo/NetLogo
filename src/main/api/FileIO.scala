@@ -6,8 +6,7 @@ object FileIO {
 
   @throws(classOf[java.io.IOException])
   def file2String(path: String) =
-    org.nlogo.util.Utils.reader2String(
-      new java.io.FileReader(path))
+    io.Source.fromFile(path).mkString
 
   @throws(classOf[java.io.IOException])
   def writeFile(path: String, text: String) {

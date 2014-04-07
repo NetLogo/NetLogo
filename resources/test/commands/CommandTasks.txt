@@ -211,7 +211,7 @@ concise-syntax-7
   O> (foreach [1 2 3] [9 9 9] crt)
   count turtles => 6
 
-concise-syntax 8
+concise-syntax-8
   globals [glob1]
   to foo [x] ask x [ set glob1 glob1 + who ] end
   O> crt 5

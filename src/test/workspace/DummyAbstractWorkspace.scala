@@ -2,9 +2,9 @@
 
 package org.nlogo.workspace
 
-import org.nlogo.agent.{ Agent, World }
-import org.nlogo.nvm, nvm.CompilerInterface
-import org.nlogo.api
+import org.nlogo.agent.{ Agent, World },
+  org.nlogo.{ api, core, nvm },
+    nvm.CompilerInterface
 
 /**
  * handy for use in unit tests
@@ -20,7 +20,7 @@ extends AbstractWorkspace(new World)
   override def waitForResult[T](runnable: api.ReporterRunnable[T]): T = unsupported
   override def waitForQueuedEvents(): Unit = unsupported
   override def inspectAgent(agent: Agent, radius: Double): Unit = unsupported
-  override def inspectAgent(kind: api.AgentKind, agent: Agent, radius: Double): Unit = unsupported
+  override def inspectAgent(kind: core.AgentKind, agent: Agent, radius: Double): Unit = unsupported
   override def clearDrawing(): Unit = unsupported
   override def getAndCreateDrawing(): java.awt.image.BufferedImage = unsupported
   override def open(path: String) = unsupported
@@ -40,8 +40,8 @@ extends AbstractWorkspace(new World)
   override def patchSize: Double = unsupported
   override def changeTopology(wrapX: Boolean, wrapY: Boolean) = unsupported
   override def setOutputAreaContents(text: String) = unsupported
-  override def setDimensions(d: api.WorldDimensions) = unsupported
-  override def setDimensions(d: api.WorldDimensions, patchSize: Double) = unsupported
+  override def setDimensions(d: core.WorldDimensions) = unsupported
+  override def setDimensions(d: core.WorldDimensions, patchSize: Double) = unsupported
   override def resizeView(): Unit = unsupported
   override def runtimeError(owner: api.JobOwner,
                             context: nvm.Context,

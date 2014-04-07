@@ -2,7 +2,8 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api.{ Syntax, Nobody }
+import org.nlogo.core.Syntax
+import org.nlogo.api.Nobody
 import org.nlogo.nvm.{ Reporter, Context, EngineException }
 import org.nlogo.agent.{ Turtle, LinkManager }
 
@@ -12,8 +13,9 @@ class _outlinkto(breedName: String) extends Reporter {
 
   override def syntax =
     Syntax.reporterSyntax(
-      Array(Syntax.AgentType),
-      Syntax.AgentType, "-T--")
+      right = List(Syntax.AgentType),
+      ret = Syntax.AgentType,
+      agentClassString = "-T--")
 
   override def toString =
     super.toString + ":" + breedName

@@ -3,7 +3,7 @@
 package org.nlogo.render;
 
 import org.nlogo.api.Agent;
-import org.nlogo.api.AgentKindJ;
+import org.nlogo.core.AgentKindJ;
 import org.nlogo.api.AgentSet;
 import org.nlogo.api.Graphics2DWrapper;
 import org.nlogo.api.GraphicsInterface;

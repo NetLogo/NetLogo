@@ -3,9 +3,10 @@
 package org.nlogo.agent
 
 import
-  org.nlogo.api,
-    api.{ AgentKind, LogoList, SimpleChangeEventPublisher },
-  org.nlogo.util.MersenneTwisterFast
+  org.nlogo.{ api, core },
+    core.AgentKind,
+    api.{ LogoList, SimpleChangeEventPublisher },
+  org.nlogo.api.MersenneTwisterFast
 
 // Used only for the all-turtles, all-links, and breed agentsets.
 //

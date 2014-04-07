@@ -3,7 +3,7 @@
 package org.nlogo.agent;
 
 import org.nlogo.api.AgentException;
-import org.nlogo.api.AgentKindJ;
+import org.nlogo.core.AgentKindJ;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -111,7 +111,7 @@ public strictfp class InRadiusOrCone {
             }
           }
         } catch (AgentException e) {
-          org.nlogo.util.Exceptions.ignore(e);
+          org.nlogo.api.Exceptions.ignore(e);
         }
       }
     }

@@ -3,11 +3,11 @@
 package org.nlogo.compile
 package front
 
-import org.nlogo.{ agent, api, nvm, parse }
-import org.nlogo.util.Femto
+import org.nlogo.{ core, api, agent, nvm, parse }
+import org.nlogo.api.Femto
 
 object FrontEnd extends FrontEnd {
-  val tokenizer: api.TokenizerInterface =
+  val tokenizer: core.TokenizerInterface =
     Femto.scalaSingleton("org.nlogo.lex.Tokenizer")
   val tokenMapper = new parse.TokenMapper(
     "/system/tokens.txt", "org.nlogo.prim.")
@@ -16,7 +16,7 @@ object FrontEnd extends FrontEnd {
   def literalParser(world: api.World, extensionManager: api.ExtensionManager): parse.LiteralParser = {
     lazy val literalParser =
       new parse.LiteralParser(world, extensionManager, parseLiteralAgentOrAgentSet)
-    lazy val parseLiteralAgentOrAgentSet: Iterator[api.Token] => AnyRef =
+    lazy val parseLiteralAgentOrAgentSet: Iterator[core.Token] => AnyRef =
       new agent.LiteralAgentParser(
           world, literalParser.readLiteralPrefix _, Fail.cAssert _, Fail.exception _)
         .parseLiteralAgentOrAgentSet _

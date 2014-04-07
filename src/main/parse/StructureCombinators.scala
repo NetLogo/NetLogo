@@ -5,7 +5,7 @@ package org.nlogo.parse
 /// Stage #1 of StructureParser
 
 // This knows practically nothing about the rest of NetLogo.
-// We use api.{ Token, TokenType } and nothing else.
+// We use core.{ Token, TokenType } and nothing else.
 
 // We currently use the parser combinators from the Scala standard library.  It's not an
 // industrial-strength implementation, but I'm hopeful it will be good enough for our purposes.  Our
@@ -25,7 +25,7 @@ package org.nlogo.parse
 // It's annoying that there's no ~>! (to both disallow backtracking
 // and discard input).
 
-import org.nlogo.api.{ Token, TokenType }
+import org.nlogo.core.{ Token, TokenType }
 import StructureDeclarations._
 
 object StructureCombinators {

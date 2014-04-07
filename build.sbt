@@ -23,7 +23,7 @@ licenses += ("GPL-2.0", url("http://opensource.org/licenses/GPL-2.0"))
 // Used by the publish-versioned plugin
 isSnapshot := true
 
-version := "5.1.0"
+version := "5.2.0"
 
 ///
 /// building
@@ -41,12 +41,12 @@ libraryDependencies ++= Seq(
   "asm" % "asm-all" % "3.3.1"
 )
 
-libraryDependencies in ThisBuild ++= Seq(
+libraryDependencies ++= Seq(
   "org.jmock" % "jmock" % "2.5.1" % "test",
   "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
   "org.jmock" % "jmock-junit4" % "2.5.1" % "test",
   "org.scalacheck" %% "scalacheck" % "1.11.3" % "test",
-  "org.scalatest" %% "scalatest" % "2.1.1" % "test"
+  "org.scalatest" %% "scalatest" % "2.1.3" % "test"
 )
 
 // reflections depends on some extra jars but for some reason we need to

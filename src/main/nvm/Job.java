@@ -13,7 +13,7 @@ public abstract strictfp class Job {
 
   abstract boolean exclusive();
 
-  public final JobOwner owner;                    // public for _updatemonitor
+  public final JobOwner owner;
   public byte state = RUNNING;
   public boolean stopping = false;
   public boolean buttonTurnIsOver = false;
@@ -23,14 +23,14 @@ public abstract strictfp class Job {
   public final Context parentContext;
   public final Procedure topLevelProcedure;
 
-  public org.nlogo.util.MersenneTwisterFast random;
+  public org.nlogo.api.MersenneTwisterFast random;
 
   Job(JobOwner owner,
       AgentSet agentset,
       Procedure topLevelProcedure,
       int address,
       Context parentContext,
-      org.nlogo.util.MersenneTwisterFast random) {
+      org.nlogo.api.MersenneTwisterFast random) {
     this.owner = owner;
     this.agentset = agentset;
     this.topLevelProcedure = topLevelProcedure;

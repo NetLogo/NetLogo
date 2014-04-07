@@ -2,7 +2,8 @@
 
 package org.nlogo.prim
 
-import org.nlogo.api.{ Syntax, I18N }
+import org.nlogo.core.Syntax
+import org.nlogo.api.I18N
 import org.nlogo.nvm.{ Command, CustomAssembled, Context,
                        EngineException, AssemblerAssistant }
 import org.nlogo.agent.Observer
@@ -11,8 +12,10 @@ class _askconcurrent extends Command with CustomAssembled {
 
   override def syntax =
     Syntax.commandSyntax(
-      Array(Syntax.AgentsetType, Syntax.CommandBlockType),
-      "OTPL", "?", true)
+      right = List(Syntax.AgentsetType, Syntax.CommandBlockType),
+      agentClassString = "OTPL",
+      blockAgentClassString = "?",
+      switches = true)
 
   override def toString =
     super.toString + ":+" + offset

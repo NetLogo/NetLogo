@@ -26,7 +26,7 @@ object MiddleEnd extends MiddleEndInterface {
       procdef.accept(new ReferenceVisitor)  // handle ReferenceType
       // SimpleOfVisitor performs an optimization, but also sets up for SetVisitor - ST 2/21/08
       procdef.accept(new SimpleOfVisitor)  // convert _of(_*variable) => _*variableof
-      procdef.accept(new TaskVisitor)  // handle _reportertask
+      procdef.accept(new TaskVisitor)  // handle _taskvariable
       procdef.accept(new LocalsVisitor(alteredLets)) // convert _let/_repeat to _locals
       procdef.accept(new SetVisitor)   // convert _set to specific setters
       procdef.accept(new CarefullyVisitor)  // connect _carefully to _errormessage

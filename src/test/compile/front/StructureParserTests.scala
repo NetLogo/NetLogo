@@ -5,17 +5,17 @@ package front
 
 import org.scalatest.FunSuite
 
-import org.nlogo.{ api, nvm, parse },
+import org.nlogo.{ core, api, nvm, parse },
   api.CompilerException,
-  org.nlogo.util.Femto
+  org.nlogo.api.Femto
 
 class StructureParserTests extends FunSuite {
 
-  val tokenizer: api.TokenizerInterface =
+  val tokenizer: core.TokenizerInterface =
     Femto.scalaSingleton("org.nlogo.lex.Tokenizer")
 
   def compile(source: String): nvm.StructureResults =
-    new StructureParser(tokenizer.tokenize(source).map(parse.Namer0),
+    new StructureParser(tokenizer.tokenizeString(source).map(parse.Namer0),
                         None, nvm.StructureResults.empty)
       .parse(false)
 

@@ -5,7 +5,8 @@ package org.nlogo.prim.etc;
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoList;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
+import org.nlogo.core.SyntaxJ;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
@@ -48,6 +49,6 @@ public final strictfp class _item
     int[] right = {Syntax.NumberType(),
         Syntax.ListType() | Syntax.StringType()};
     int ret = Syntax.WildcardType();
-    return Syntax.reporterSyntax(right, ret);
+    return SyntaxJ.reporterSyntax(right, ret);
   }
 }

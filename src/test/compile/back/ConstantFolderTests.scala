@@ -5,7 +5,7 @@ package back
 
 import org.scalatest.FunSuite
 import org.nlogo.api
-import org.nlogo.util.Femto
+import org.nlogo.api.Femto
 
 class ConstantFolderTests extends FunSuite {
 

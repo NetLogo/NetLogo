@@ -3,10 +3,11 @@
 package org.nlogo.job
 
 import org.nlogo.nvm.{ExclusiveJob, ConcurrentJob, Procedure, Job, JobManagerOwner}
-import org.nlogo.api.{AgentKind, JobOwner, LogoException}
+import org.nlogo.core.AgentKind
+import org.nlogo.api.{JobOwner, LogoException}
 import org.nlogo.agent.{Agent, Turtle, Link, AgentSet, World}
 import java.util.List
-import org.nlogo.util.Exceptions.ignoring
+import org.nlogo.api.Exceptions.ignoring
 import collection.JavaConverters._
 
 class JobManager(jobManagerOwner: JobManagerOwner,

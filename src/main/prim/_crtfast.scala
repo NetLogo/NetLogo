@@ -3,14 +3,16 @@
 package org.nlogo.prim
 
 import org.nlogo.agent.Turtle
-import org.nlogo.api.Syntax
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Command, Context }
 
 class _crtfast(breedName: String) extends Command {
 
   override def syntax =
     Syntax.commandSyntax(
-      Array(Syntax.NumberType), "O---", true)
+      right = List(Syntax.NumberType),
+      agentClassString = "O---",
+      switches = true)
 
   override def toString =
     super.toString + ":" + breedName

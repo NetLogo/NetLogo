@@ -2,9 +2,9 @@
 
 package org.nlogo.agent;
 
+import org.nlogo.core.AgentKind;
+import org.nlogo.core.AgentKindJ;
 import org.nlogo.api.AgentException;
-import org.nlogo.api.AgentKind;
-import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.AgentVariableNumbers;
 import org.nlogo.api.AgentVariables;
 import org.nlogo.api.Color;
@@ -14,12 +14,6 @@ import org.nlogo.api.LogoList;
 
 import java.util.Iterator;
 import java.util.Set;
-
-// A note on wrapping: normally whether x and y coordinates wrap is a
-// product of the topology.  But we also have the old "-nowrap" primitives
-// that don't wrap regardless of what the topology is.  So that's why many
-// methods like distance() and towards() take a boolean argument "wrap";
-// it's true for the normal prims, false for the nowrap prims. - ST 5/24/06
 
 public strictfp class Turtle
     extends Agent
@@ -951,7 +945,7 @@ public strictfp class Turtle
       // an agent to itself, or to an agent at the exact same position.
       // Since face is nice, it just ignores the exception and doesn't change
       // the callers heading. - AZS 6/22/05
-      org.nlogo.util.Exceptions.ignore(ex);
+      org.nlogo.api.Exceptions.ignore(ex);
     }
   }
 
@@ -963,7 +957,7 @@ public strictfp class Turtle
       // an agent to itself, or to an agent at the exact same position.
       // Since face is nice, it just ignores the exception and doesn't change
       // the callers heading. - AZS 6/22/05
-      org.nlogo.util.Exceptions.ignore(ex);
+      org.nlogo.api.Exceptions.ignore(ex);
     }
   }
 

@@ -2,7 +2,8 @@
 
 package org.nlogo.prim
 
-import org.nlogo.api.{ Syntax, I18N, AgentException, LogoList, LogoListBuilder }
+import org.nlogo.core.Syntax
+import org.nlogo.api.{ I18N, AgentException, LogoList, LogoListBuilder }
 import org.nlogo.nvm.{ Reporter, Context, EngineException, ArgumentTypeException }
 import org.nlogo.agent.{ Agent, AgentSet }
 
@@ -14,8 +15,8 @@ class _linkvariableof(_vn: Int) extends Reporter {
 
   override def syntax =
     Syntax.reporterSyntax(
-      Array(Syntax.LinkType | Syntax.LinksetType),
-      Syntax.WildcardType)
+      right = List(Syntax.LinkType | Syntax.LinksetType),
+      ret = Syntax.WildcardType)
 
   // MethodRipper won't let us call a public method from report_1()
   // so we must keep vn and _vn separate - ST 9/22/12

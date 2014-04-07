@@ -13,7 +13,7 @@ package misc
 // this, the DSL didn't support catching runtime errors, but now it does.) - ST 5/4/10
 
 import org.nlogo.util.SlowTest
-import org.nlogo.api
+import org.nlogo.{ api, core }
 
 class TestProfiler extends FixtureSuite with SlowTest {
 
@@ -21,7 +21,7 @@ class TestProfiler extends FixtureSuite with SlowTest {
   // since they tend to fail intermittently if CPU load is high. - ST 6/10/10
   val timingSensitiveOK = false
 
-  val useGenerator = org.nlogo.api.Version.useGenerator
+  val useGenerator = api.Version.useGenerator
   if(!useGenerator)
     test("no generator") { implicit fixture =>
       import fixture._
@@ -171,7 +171,7 @@ class TestProfiler extends FixtureSuite with SlowTest {
   // extensions, so we put it here because it's a SlowTest - ST 1/19/12
   test("isReporter on extension prims") { implicit fixture =>
     import fixture._
-    ModelCreator.open(workspace, api.WorldDimensions.square(5), "extensions [profiler]")
+    ModelCreator.open(workspace, core.WorldDimensions.square(5), "extensions [profiler]")
     assertResult(false) { workspace.isReporter("profiler:start") }
     assertResult(true) { workspace.isReporter("profiler:report") }
     assertResult(false) { workspace.isReporter("profiler:ghjfgjhkfhgjk") }

@@ -3,15 +3,16 @@
 package org.nlogo.parse
 
 import org.scalatest.FunSuite
-import org.nlogo.api, org.nlogo.util.Femto
+import org.nlogo.{ core, api },
+  org.nlogo.api.Femto
 
 class LetScoperTests extends FunSuite {
 
-  val tokenizer: api.TokenizerInterface =
+  val tokenizer: core.TokenizerInterface =
     Femto.scalaSingleton("org.nlogo.lex.Tokenizer")
 
   def compile(source: String) =
-    new LetScoper(tokenizer.tokenize(source).toSeq)
+    new LetScoper(tokenizer.tokenizeString(source).toSeq)
       .scan(Map())
 
   test("empty") {

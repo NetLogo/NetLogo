@@ -6,15 +6,15 @@ package org.nlogo.headless
 // AbstractWorkspace are not, so if you want to document a method for everyone, override that method
 // here and document it here.  The overriding method can simply call super(). - ST 6/1/05, 7/28/11
 
-import org.nlogo.agent.Agent
-import org.nlogo.api.{ AgentKind, Program, Version, RendererInterface, WorldDimensions,
+import org.nlogo.core.{ AgentKind, WorldDimensions }
+import org.nlogo.api.{ Program, Version, RendererInterface,
                        ModelReader, CompilerException, LogoException, SimpleJobOwner,
                        CommandRunnable, ReporterRunnable, UpdateMode }
-import org.nlogo.agent.World
+import org.nlogo.agent.{ Agent, World }
 import org.nlogo.nvm, nvm.{ LabInterface, Context, FrontEndInterface,
                             DefaultParserServices, CompilerInterface }
 import org.nlogo.workspace.AbstractWorkspace
-import org.nlogo.util.Femto
+import org.nlogo.api.Femto
 import org.nlogo.drawing.DrawingActionBroker
 
 /**
@@ -232,10 +232,10 @@ with org.nlogo.workspace.WorldLoaderInterface {
         try file.close(false)
         catch {
           case ex2: java.io.IOException =>
-            org.nlogo.util.Exceptions.ignore(ex2)
+            org.nlogo.api.Exceptions.ignore(ex2)
         }
       case ex: RuntimeException =>
-        org.nlogo.util.Exceptions.handle(ex)
+        org.nlogo.api.Exceptions.handle(ex)
     }
   }
 
@@ -355,7 +355,7 @@ with org.nlogo.workspace.WorldLoaderInterface {
         lastErrorReport = new ErrorReport(owner, context, instruction, le)
       case _ =>
         System.err.println("owner: " + owner.displayName)
-        org.nlogo.util.Exceptions.handle(ex)
+        org.nlogo.api.Exceptions.handle(ex)
     }
   }
 

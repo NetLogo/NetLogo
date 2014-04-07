@@ -2,7 +2,8 @@
 
 package org.nlogo.parse
 
-import org.nlogo.api.{ CompilerException, Token }
+import org.nlogo.core.Token
+import org.nlogo.api.CompilerException
 
 object Fail {
 

@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.{ api, nvm }
+import org.nlogo.{ api, core, nvm }
 
 object OutputCommand {
   case class Options(
@@ -20,7 +20,8 @@ import OutputCommand._
 
 abstract class OutputCommand(options: Options) extends nvm.Command {
   override def syntax =
-    api.Syntax.commandSyntax(Array(api.Syntax.WildcardType))
+    core.Syntax.commandSyntax(
+      right = List(core.Syntax.WildcardType))
   override def perform(context: nvm.Context) {
     workspace.outputObject(
       args(0).report(context),

@@ -4,7 +4,8 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.api.LogoList;
 import org.nlogo.api.LogoListBuilder;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
+import org.nlogo.core.SyntaxJ;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 
@@ -14,7 +15,7 @@ public final strictfp class _extracthsb
   public Syntax syntax() {
     int[] right = {Syntax.NumberType() | Syntax.ListType()};
     int ret = Syntax.ListType();
-    return Syntax.reporterSyntax(right, ret);
+    return SyntaxJ.reporterSyntax(right, ret);
   }
 
   @Override

@@ -2,7 +2,7 @@
 
 package org.nlogo.api
 
-import org.nlogo.util.MersenneTwisterFast
+import org.nlogo.core
 
 trait World {
   def patchSize: Double
@@ -53,9 +53,9 @@ trait World {
   def breedsOwnNameAt(breed: AgentSet, i: Int): String
   def allStoredValues: Iterator[AnyRef]
   def realloc()
-  def getDimensions: WorldDimensions
+  def getDimensions: core.WorldDimensions
   def isDimensionVariable(variableName: String): Boolean
-  def equalDimensions(d: WorldDimensions): Boolean
+  def equalDimensions(d: core.WorldDimensions): Boolean
   def mainRNG: MersenneTwisterFast
   def auxRNG: MersenneTwisterFast
   def observerOwnsIndexOf(name: String): Int

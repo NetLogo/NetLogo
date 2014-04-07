@@ -3,8 +3,8 @@
 package org.nlogo.compile
 package front
 
-import org.nlogo.{ api, parse, prim },
-  api.{ Token, TokenType },
+import org.nlogo.{ core, api, parse, prim },
+  core.{ Token, TokenType },
   parse.CountedIterator
 
 object LetStuffer {

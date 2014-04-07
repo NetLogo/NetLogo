@@ -2,7 +2,8 @@
 
 package org.nlogo.agent
 
-import org.nlogo.api, api.{ Token, TokenType }
+import org.nlogo.{ api, core },
+  core.{ Token, TokenType }
 
 // This is only used for importing worlds; the regular NetLogo language
 // doesn't have literal agents and agentsets.
@@ -104,7 +105,7 @@ class LiteralAgentParser(_world: api.World,
     }
     else if(token.value == "TURTLES") {
       // we have an agentset of turtles. parse arguments...
-      val builder = new AgentSetBuilder(api.AgentKind.Turtle)
+      val builder = new AgentSetBuilder(core.AgentKind.Turtle)
       var token = tokens.next()
       while(token.tpe != TokenType.CloseBrace) {
         val value = readLiteralPrefix(token, tokens)
@@ -116,7 +117,7 @@ class LiteralAgentParser(_world: api.World,
     }
     else if(token.value == "LINKS") {
       // we have an agentset of links. parse arguments...
-      val builder = new AgentSetBuilder(api.AgentKind.Link)
+      val builder = new AgentSetBuilder(core.AgentKind.Link)
       var token = tokens.next()
       while(token.tpe != TokenType.CloseBrace) {
         cAssert(token.tpe == TokenType.OpenBracket, ERR_BAD_LINK_SET_ARGS, token)
@@ -136,7 +137,7 @@ class LiteralAgentParser(_world: api.World,
     }
     else if(token.value == "PATCHES") {
       // we have an agentset of patches. parse arguments...
-      val builder = new AgentSetBuilder(api.AgentKind.Patch)
+      val builder = new AgentSetBuilder(core.AgentKind.Patch)
       var token = tokens.next()
       while(token.tpe != TokenType.CloseBrace) {
         cAssert(token.tpe == TokenType.OpenBracket, ERR_BAD_PATCH_SET_ARGS, token)

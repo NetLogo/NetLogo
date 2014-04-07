@@ -4,7 +4,8 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
+import org.nlogo.core.SyntaxJ;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
 
@@ -34,6 +35,6 @@ public final strictfp class _substring
   public Syntax syntax() {
     int[] right = {Syntax.StringType(), Syntax.NumberType(), Syntax.NumberType()};
     int ret = Syntax.StringType();
-    return Syntax.reporterSyntax(right, ret);
+    return SyntaxJ.reporterSyntax(right, ret);
   }
 }

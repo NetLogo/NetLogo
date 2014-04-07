@@ -1,0 +1,37 @@
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
+
+package org.nlogo.core
+
+// This object holds methods that are used specifically with NetLogo strings.
+
+object StringEscaper {
+  def escapeString(s: String): String =
+    s.flatMap{
+      case '\n' => "\\n"
+      case '\r' => "\\r"
+      case '\t' => "\\t"
+      case '\\' => "\\\\"
+      case '\"' => "\\\""
+      case c => c.toString
+    }
+  def unescapeString(s: String): String = {
+    val (stuff, more) = s.span(_ != '\\')
+    if(more.size < 2)
+      s
+    else
+      stuff + unescape(more(1)) + unescapeString(more.drop(2))
+  }
+  def unescape(c: Char): Char =
+    c match {
+      case 'n' => '\n'
+      case 'r' => '\r'
+      case 't' => '\t'
+      case '\\' => '\\'
+      case '"' => '"'
+      case _ =>
+        // kludge alert: Tokenizer expects exactly this exception, so it
+        // can detect the error and recover when it's in "robust" mode - ST 9/22/10
+        throw new IllegalArgumentException(
+          "invalid escape sequence: \\" + c)
+    }
+}

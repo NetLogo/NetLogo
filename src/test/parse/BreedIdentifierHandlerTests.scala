@@ -4,13 +4,15 @@ package org.nlogo.parse
 
 import org.scalatest.FunSuite
 import collection.immutable.ListMap
-import org.nlogo.api, api.{ Breed, Program, Token, TokenType }
-import org.nlogo.util.Femto
+import org.nlogo.{ core, api },
+  core.{ Token, TokenType },
+  api.{ Breed, Program }
+import org.nlogo.api.Femto
 import BreedIdentifierHandler.Spec
 
 class BreedIdentifierHandlerTests extends FunSuite {
 
-  val tokenizer: api.TokenizerInterface =
+  val tokenizer: core.TokenizerInterface =
     Femto.scalaSingleton("org.nlogo.lex.Tokenizer")
 
   def tester(handler: BreedIdentifierHandler.Helper, code: String, tokenString: String): (String, String, TokenType) = {
@@ -21,7 +23,7 @@ class BreedIdentifierHandlerTests extends FunSuite {
           "AS" -> Breed("AS", "A", isDirected = true),
           "BS" -> Breed("BS", "B", isDirected = false)))
     handler.process(
-      tokenizer.tokenize(code).find(_.text.equalsIgnoreCase(tokenString)).orNull,
+      tokenizer.tokenizeString(code).find(_.text.equalsIgnoreCase(tokenString)).orNull,
       program)
       .get
   }

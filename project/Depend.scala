@@ -58,11 +58,12 @@ object Depend {
     val packageDefs = Map(
       "" -> Nil,
       "agent" -> List("api"),
-      "api" -> List("util"),
+      "api" -> List("core", "util"),
       "compile" -> List("prim"),
       "compile/back" -> List("compile"),
       "compile/front" -> List("compile", "parse"),
       "compile/middle" -> List("compile"),
+      "core" -> Nil,
       "drawing" -> List("api"),
       "generate" -> List("prim"),
       "headless" -> List("mirror","workspace"),
@@ -72,7 +73,7 @@ object Depend {
       "headless/render" -> List("headless"),
       "job" -> List("nvm"),
       "lab" -> List("nvm"),
-      "lex" -> List("api"),
+      "lex" -> List("core"),
       "mirror" -> List("drawing", "plot", "shape"),
       "nvm" -> List("agent"),
       "parse" -> List("api"),
@@ -105,7 +106,7 @@ check absenceOfPackageCycles > 1 in org.nlogo.*
 
 [stdlib-j] = java.lang.* java.util.* java.io.* java.text.* java.net.* java.security.*
 
-[stdlib-s] = scala.Serializable scala.Predef* scala.collection.* scala.reflect.* scala.Function* scala.UninitializedFieldError scala.util.control.Exception* scala.Array* scala.LowPriorityImplicits scala.package$ scala.util.Properties$ scala.Option* scala.Tuple* scala.Product* scala.util.DynamicVariable scala.runtime.* scala.math.* scala.None* scala.Some* scala.MatchError scala.util.Left* scala.util.Right* scala.util.Either* scala.io.* scala.sys.package* scala.Console* scala.PartialFunction* scala.util.matching.Regex* scala.Enumeration* scala.Proxy* scala.FallbackArrayBuilding scala.util.Sorting* scala.StringContext
+[stdlib-s] = scala.Serializable scala.Predef* scala.collection.* scala.reflect.* scala.Function* scala.UninitializedFieldError scala.util.control.Exception* scala.Array* scala.LowPriorityImplicits scala.package$ scala.util.Properties$ scala.Option* scala.Tuple* scala.Product* scala.util.DynamicVariable scala.runtime.* scala.math.* scala.None* scala.Some* scala.MatchError scala.util.Left* scala.util.Right* scala.util.Either* scala.io.* scala.sys.package* scala.Console* scala.PartialFunction* scala.util.matching.Regex* scala.Enumeration* scala.Proxy* scala.FallbackArrayBuilding scala.util.Sorting* scala.StringContext scala.Double$
 
 [xml] = org.w3c.dom.* org.xml.sax.* javax.xml.parsers.*
 

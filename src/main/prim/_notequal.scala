@@ -2,16 +2,17 @@
 
 package org.nlogo.prim
 
-import org.nlogo.api.{ Syntax, Equality, Nobody }
-import org.nlogo.nvm.{ Reporter, Pure, Context }
+import org.nlogo.core.Syntax
+import org.nlogo.api.{ Equality, Nobody }
 import org.nlogo.agent.{ Turtle, Patch, Link }
+import org.nlogo.nvm.{ Reporter, Pure, Context }
 
 class _notequal extends Reporter with Pure {
 
   override def syntax =
     Syntax.reporterSyntax(
       left = Syntax.WildcardType,
-      right = Array(Syntax.WildcardType),
+      right = List(Syntax.WildcardType),
       ret = Syntax.BooleanType,
       precedence = Syntax.NormalPrecedence - 5)
 

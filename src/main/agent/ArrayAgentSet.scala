@@ -3,8 +3,8 @@
 package org.nlogo.agent
 
 import
-  org.nlogo.api,
-  org.nlogo.util.MersenneTwisterFast
+  org.nlogo.{ api, core },
+  org.nlogo.api.MersenneTwisterFast
 
 // ArrayAgentSets are only used for agentsets which are never added to
 // after they are initially created.  However note that turtles and
@@ -12,7 +12,7 @@ import
 // agents (agents with id -1). NP 2013-08-28.
 
 class ArrayAgentSet(
-  kind: api.AgentKind,
+  kind: core.AgentKind,
   printName: String,
   val array: Array[Agent])
 extends AgentSet(kind, printName, false, false, false) {

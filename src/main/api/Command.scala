@@ -9,15 +9,6 @@ package org.nlogo.api
 trait Command extends Primitive {
 
   /**
-   * Specifies whether NetLogo should "switch" to another turtle after running this command.
-   * Generally, this should be true if this <code>Command</code> affects the state of the world
-   * (changing a variable, changing graphics, etc.)
-   *
-   * @return <code> true </code> if a switch should occur, <code> false </code> otherwise.
-   */
-  def getSwitchesBoolean: Boolean
-
-  /**
    * Executes this <code>Command</code>. Called by NetLogo when this <code>Command</code> is called at run-time.
    *
    * @param args    the <code>Argument</code>s that were passed to

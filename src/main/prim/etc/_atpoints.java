@@ -7,11 +7,12 @@ import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.AgentException;
-import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoList;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.AgentKindJ;
+import org.nlogo.core.Syntax;
+import org.nlogo.core.SyntaxJ;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
@@ -147,6 +148,6 @@ public final strictfp class _atpoints
     int left = Syntax.TurtlesetType() | Syntax.PatchsetType();
     int[] right = {Syntax.ListType()};
     int ret = Syntax.AgentsetType();
-    return Syntax.reporterSyntax(left, right, ret, org.nlogo.api.Syntax.NormalPrecedence() + 2);
+    return SyntaxJ.reporterSyntax(left, right, ret, org.nlogo.core.Syntax.NormalPrecedence() + 2);
   }
 }

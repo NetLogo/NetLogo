@@ -2,15 +2,16 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api.{ Syntax, Nobody }
+import org.nlogo.core.Syntax
+import org.nlogo.api.Nobody
 import org.nlogo.nvm.{ Reporter, Context, EngineException }
 
 class _breedsingular(_breedName: String) extends Reporter {
 
   override def syntax =
     Syntax.reporterSyntax(
-      Array(Syntax.NumberType),
-      Syntax.TurtleType | Syntax.NobodyType)
+      right = List(Syntax.NumberType),
+      ret = Syntax.TurtleType | Syntax.NobodyType)
 
   override def toString =
     super.toString + ":" + _breedName

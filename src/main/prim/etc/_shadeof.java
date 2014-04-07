@@ -2,7 +2,8 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
+import org.nlogo.core.SyntaxJ;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _shadeof
@@ -22,6 +23,6 @@ public final strictfp class _shadeof
     int[] right = {Syntax.NumberType(),
         Syntax.NumberType()};
     int ret = Syntax.BooleanType();
-    return Syntax.reporterSyntax(right, ret);
+    return SyntaxJ.reporterSyntax(right, ret);
   }
 }

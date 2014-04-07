@@ -4,10 +4,10 @@ package org.nlogo.headless
 package lang
 
 import org.scalatest, scalatest.Assertions
-import org.nlogo.{ api, agent }
+import org.nlogo.{ api, core, agent }
 import api.CompilerException.{RuntimeErrorAtCompileTimePrefix => runtimePrefix}
 import org.nlogo.nvm.CompilerInterface
-import org.nlogo.util.Femto
+import org.nlogo.api.Femto
 
 trait FixtureSuite extends scalatest.fixture.FunSuite {
   type FixtureParam = Fixture
@@ -29,8 +29,8 @@ object Fixture {
 // elsewhere by Tortoise - ST 8/28/13
 trait AbstractFixture {
   import Assertions._
-  def defaultDimensions: api.WorldDimensions
-  def declare(source: String, dimensions: api.WorldDimensions = defaultDimensions)
+  def defaultDimensions: core.WorldDimensions
+  def declare(source: String, dimensions: core.WorldDimensions = defaultDimensions)
   def open(path: String)
   def open(model: ModelCreator.Model)
   def runCommand(command: Command, mode: TestMode)
@@ -70,15 +70,15 @@ class Fixture(name: String) extends AbstractFixture {
     }
 
   // to get the test name into the stack traces on JobThread - ST 1/26/11, 8/7/13
-  def owner(kind: api.AgentKind = api.AgentKind.Observer) =
+  def owner(kind: core.AgentKind = core.AgentKind.Observer) =
     new api.SimpleJobOwner(name, workspace.world.mainRNG, kind)
 
   val compiler: CompilerInterface =
     Femto.scalaSingleton("org.nlogo.compile.Compiler")
 
-  def defaultDimensions = api.WorldDimensions.square(5)
+  def defaultDimensions = core.WorldDimensions.square(5)
 
-  def declare(source: String, dimensions: api.WorldDimensions = defaultDimensions) {
+  def declare(source: String, dimensions: core.WorldDimensions = defaultDimensions) {
     ModelCreator.open(workspace,
       dimensions = dimensions,
       source = source)
@@ -98,7 +98,7 @@ class Fixture(name: String) extends AbstractFixture {
         case NormalMode =>
           reporter.reporter
         case RunMode    =>
-          s"""runresult "${api.StringUtils.escapeString(reporter.reporter)}""""
+          s"""runresult "${core.StringEscaper.escapeString(reporter.reporter)}""""
       }
       val compiled = workspace.compileReporter(wrappedReporter)
       val actualResult = workspace.runCompiledReporter(owner(), compiled)
@@ -122,7 +122,7 @@ class Fixture(name: String) extends AbstractFixture {
         case NormalMode =>
           command.command
         case RunMode    =>
-          s"""run "${api.StringUtils.escapeString(command.command)}""""
+          s"""run "${core.StringEscaper.escapeString(command.command)}""""
       }
       val compiled = workspace.compileCommands(wrappedCommand, command.kind)
       if (mode == NormalMode && command.result.isInstanceOf[CompileError])
@@ -162,7 +162,7 @@ class Fixture(name: String) extends AbstractFixture {
   def testReporter(reporter: String, result: String) =
     runReporter(Reporter(reporter, Success(result)))
   def testCommand(command: String, result: Result = Success("")) =
-    runCommand(Command(command, api.AgentKind.Observer, result))
+    runCommand(Command(command, core.AgentKind.Observer, result))
 
   // more convenience
   def open(path: String) =

@@ -3,7 +3,7 @@
 package org.nlogo.compile
 package front
 
-import org.nlogo.{ api, nvm, parse }
+import org.nlogo.{ core, api, nvm, parse }
 
 trait FrontEndExtras { this: nvm.FrontEndInterface =>
 
@@ -16,26 +16,26 @@ trait FrontEndExtras { this: nvm.FrontEndInterface =>
   // back to the slow path where we actually tokenize. - ST 4/7/11
 
   def readFromString(source: String): AnyRef =
-    api.NumberParser.parse(source).right.getOrElse(
+    core.NumberParser.parse(source).right.getOrElse(
       new parse.LiteralParser(null, null, null)
-        .getLiteralValue(tokenizer.tokenize(source)
+        .getLiteralValue(tokenizer.tokenizeString(source)
           .map(parse.Namer0)))
 
   def readFromString(source: String, world: api.World, extensionManager: api.ExtensionManager): AnyRef =
-    api.NumberParser.parse(source).right.getOrElse(
+    core.NumberParser.parse(source).right.getOrElse(
       FrontEnd.literalParser(world, extensionManager)
-        .getLiteralValue(tokenizer.tokenize(source)
+        .getLiteralValue(tokenizer.tokenizeString(source)
           .map(parse.Namer0)))
 
   def readNumberFromString(source: String, world: api.World, extensionManager: api.ExtensionManager): java.lang.Double =
-    api.NumberParser.parse(source).right.getOrElse(
+    core.NumberParser.parse(source).right.getOrElse(
       FrontEnd.literalParser(world, extensionManager)
-        .getNumberValue(tokenizer.tokenize(source)
+        .getNumberValue(tokenizer.tokenizeString(source)
           .map(parse.Namer0)))
 
   @throws(classOf[java.io.IOException])
   def readFromFile(currFile: api.File, world: api.World, extensionManager: api.ExtensionManager): AnyRef = {
-    val tokens: Iterator[api.Token] =
+    val tokens: Iterator[core.Token] =
       new parse.TokenReader(currFile, tokenizer)
         .map(parse.Namer0)
     val result =
@@ -64,10 +64,11 @@ trait FrontEndExtras { this: nvm.FrontEndInterface =>
   // used by CommandLine
   def isReporter(s: String, program: api.Program, procedures: ProceduresMap, extensionManager: api.ExtensionManager) =
     try {
-      val results =
-        new StructureParser(tokenizer.tokenize("to __is-reporter? report " + s + "\nend").map(parse.Namer0),
-                            None, nvm.StructureResults(program, procedures))
-          .parse(subprogram = true)
+      val sp = new StructureParser(
+        tokenizer.tokenizeString("to __is-reporter? report " + s + "\nend")
+          .map(parse.Namer0),
+        None, nvm.StructureResults(program, procedures))
+      val results = sp.parse(subprogram = true)
       val namer =
         new Namer(program, procedures ++ results.procedures, extensionManager, Vector())
       val proc = results.procedures.values.head
@@ -75,14 +76,14 @@ trait FrontEndExtras { this: nvm.FrontEndInterface =>
       tokens.toStream
         .drop(1)  // skip _report
         .map(_.tpe)
-        .dropWhile(_ == api.TokenType.OpenParen)
+        .dropWhile(_ == core.TokenType.OpenParen)
         .headOption
         .exists(reporterTokenTypes)
     }
     catch { case _: api.CompilerException => false }
 
-  private val reporterTokenTypes: Set[api.TokenType] = {
-    import api.TokenType._
+  private val reporterTokenTypes: Set[core.TokenType] = {
+    import core.TokenType._
     Set(OpenBracket, Literal, Ident, Reporter)
   }
 

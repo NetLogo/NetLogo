@@ -2,8 +2,8 @@
 
 package org.nlogo.generate
 
-import org.nlogo.api.Syntax
-import org.nlogo.nvm.{ Command, CustomGenerated, GeneratorInterface, Instruction, Procedure, Reporter }
+import org.nlogo.core.Syntax
+import org.nlogo.nvm.{ Command, CustomGenerated, GeneratorInterface, Instruction, Procedure, Reporter, Thunk }
 
 object Generator {
   val KEPT_INSTRUCTION_PREFIX = "keptinstr"
@@ -253,7 +253,7 @@ class Generator(source: String, procedure: Procedure, profilingEnabled: Boolean)
       // disassembly is stored as a thunk, so it's not generated unless used
       def isBoring(line: String) =
         List("\\s*LINENUMBER.*", "\\s*MAXSTACK.*", "\\s*MAXLOCALS.*").exists(line.matches(_))
-      result.disassembly = new org.nlogo.util.Thunk[String] {
+      result.disassembly = new Thunk[String] {
         def compute = {
           val sw = new java.io.StringWriter
           new ClassReader(bytecode).accept(new TraceClassVisitor(new java.io.PrintWriter(sw)), 0)

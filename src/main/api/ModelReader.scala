@@ -2,7 +2,7 @@
 
 package org.nlogo.api
 
-import org.nlogo.util.Utils.getResourceLines
+import org.nlogo.api.Resource.getResourceLines
 
 object ModelReader {
 

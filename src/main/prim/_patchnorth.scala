@@ -2,15 +2,17 @@
 
 package org.nlogo.prim
 
+import org.nlogo.core.Syntax
+import org.nlogo.api.Nobody
 import org.nlogo.agent.{ Turtle, Patch }
-import org.nlogo.api.{ Syntax, Nobody }
 import org.nlogo.nvm.{ Reporter, Context }
 
 class _patchnorth extends Reporter {
 
   override def syntax =
     Syntax.reporterSyntax(
-      Syntax.PatchType, "-TP-")
+      ret = Syntax.PatchType,
+      agentClassString = "-TP-")
 
   override def report(context: Context): AnyRef =
     report_1(context)

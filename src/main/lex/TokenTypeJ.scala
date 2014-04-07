@@ -5,7 +5,7 @@ package org.nlogo.lex
 // annoying for this to exist, but I can't see a better way to get at the
 // Scala inner objects from Java - ST 7/7/11
 
-import org.nlogo.api.TokenType
+import org.nlogo.core.TokenType
 
 object TokenTypeJ {
   final val OpenParen    = TokenType.OpenParen

@@ -2,14 +2,15 @@
 
 package org.nlogo.prim
 
-import org.nlogo.api.Syntax
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Command, Context, MutableLong }
 
 class _repeatlocalinternal(vn: Int, _offset: Int) extends Command {
 
   offset = _offset
 
-  override def syntax = Syntax.commandSyntax
+  override def syntax =
+    Syntax.commandSyntax()
 
   override def toString =
     super.toString + ":" + offset + "," + vn

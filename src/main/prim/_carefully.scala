@@ -2,8 +2,9 @@
 
 package org.nlogo.prim
 
+import org.nlogo.core.Syntax
 import org.nlogo.agent.AgentSet
-import org.nlogo.api.{ Let, LogoException, Syntax }
+import org.nlogo.api.{ Let, LogoException }
 import org.nlogo.nvm.{ Command, Context, CustomAssembled, AssemblerAssistant }
 
 class _carefully extends Command with CustomAssembled {
@@ -14,8 +15,7 @@ class _carefully extends Command with CustomAssembled {
 
   override def syntax =
     Syntax.commandSyntax(
-      Array(Syntax.CommandBlockType,
-            Syntax.CommandBlockType))
+      right = List(Syntax.CommandBlockType, Syntax.CommandBlockType))
 
   override def toString =
     super.toString + ":+" + offset

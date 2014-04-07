@@ -4,7 +4,7 @@ package org.nlogo.headless
 package lang
 package misc
 
-import org.nlogo.api
+import org.nlogo.{ api, core }
 import org.nlogo.util.SlowTest
 import org.nlogo.workspace.Checksummer
 
@@ -27,7 +27,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
     val filename = getUniqueFilename()
 
     // get ready
-    ModelCreator.open(workspace, api.WorldDimensions.square(worldSize), model)
+    ModelCreator.open(workspace, core.WorldDimensions.square(worldSize), model)
     testCommand("random-seed 378234"); // just some number I made up
 
     // run the setup commands, run export-world, and slurp the resulting export into a string
@@ -134,7 +134,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
     // the bug we're testing for is elusive and may only appear if we actually change the world size
     // around - ST 12/21/04
     val filename = getUniqueFilename()
-    ModelCreator.open(workspace, api.WorldDimensions.square(5), "globals [x y]")
+    ModelCreator.open(workspace, core.WorldDimensions.square(5), "globals [x y]")
     testCommand("crt 10 set x turtles set y patches")
     testCommand("export-world \"" + filename + "\"")
     testCommand("resize-world -6 6 -6 6")
@@ -148,7 +148,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
   test("testImportDrawing") { implicit fixture =>
     import fixture._
     val filename = getUniqueFilename()
-    ModelCreator.open(workspace, api.WorldDimensions.square(10))
+    ModelCreator.open(workspace, core.WorldDimensions.square(10))
     testCommand("random-seed 2843")
     testCommand("crt 10 [ pd  set pen-size random 5 ]")
     testCommand("ask turtles [ fd random 5 ]")
@@ -169,7 +169,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
   test("testExportOutputArea") { implicit fixture =>
     import fixture._
     val filename = getUniqueFilename()
-    ModelCreator.open(workspace, api.WorldDimensions.square(10))
+    ModelCreator.open(workspace, core.WorldDimensions.square(10))
     testCommand("ca")
     testCommand("output-print \"This is a test of output areas.\"");
     testCommand("export-world \"" + filename + "\"")
@@ -182,7 +182,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
   test("testExportLinks") { implicit fixture =>
     import fixture._
     val filename = getUniqueFilename()
-    ModelCreator.open(workspace, api.WorldDimensions.square(10))
+    ModelCreator.open(workspace, core.WorldDimensions.square(10))
     testCommand("ca")
     testCommand("create-ordered-turtles 2 [ fd 2 ]")
     testCommand("ask turtle 0 [ create-link-to turtle 1 [ tie ] ]")
@@ -200,7 +200,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
 
   test("testImportInvalidSize") { implicit fixture =>
     import fixture._
-    ModelCreator.open(workspace, api.WorldDimensions.square(10))
+    ModelCreator.open(workspace, core.WorldDimensions.square(10))
     workspace.importerErrorHandler =
       new org.nlogo.agent.ImporterJ.ErrorHandler() {
         def showError(title: String, errorDetails: String, fatalError: Boolean): Boolean =
@@ -217,7 +217,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
 
   test("testImportDrawingIncompleteData") { implicit fixture =>
     import fixture._
-    ModelCreator.open(workspace, api.WorldDimensions.square(10))
+    ModelCreator.open(workspace, core.WorldDimensions.square(10))
     workspace.importerErrorHandler =
       new org.nlogo.agent.ImporterJ.ErrorHandler() {
         def showError(title: String, errorDetails: String, fatalError: Boolean): Boolean = {
@@ -234,7 +234,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
   test("testImportSubject") { implicit fixture =>
     import fixture._
     val filename = getUniqueFilename()
-    ModelCreator.open(workspace, api.WorldDimensions.square(10))
+    ModelCreator.open(workspace, core.WorldDimensions.square(10))
     testCommand("export-world \"" + filename + "\"")
     testCommand("import-world \"" + filename + "\"")
     testReporter("subject", "nobody")
@@ -263,7 +263,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
 
   test("testNonExistentPlot") { implicit fixture =>
     import fixture._
-    ModelCreator.open(workspace, api.WorldDimensions.square(10))
+    ModelCreator.open(workspace, core.WorldDimensions.square(10))
     workspace.importerErrorHandler =
       new org.nlogo.agent.ImporterJ.ErrorHandler() {
         def showError(title: String, errorDetails: String, fatalError: Boolean) = {
@@ -309,7 +309,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
   test("testImportingTurtlesDying") { implicit fixture =>
     import fixture._
     val filename = getUniqueFilename()
-    ModelCreator.open(workspace, api.WorldDimensions.square(10))
+    ModelCreator.open(workspace, core.WorldDimensions.square(10))
     testCommand("crt 10")
     testCommand("ask turtle 9 [ die ]")
     testCommand("ask turtle 5 [ die ]")
@@ -324,7 +324,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
   test("testImportingTables") { implicit fixture =>
     import fixture._
     val filename = getUniqueFilename()
-    ModelCreator.open(workspace, api.WorldDimensions.square(5), "globals [table1 table2] extensions [ table ]")
+    ModelCreator.open(workspace, core.WorldDimensions.square(5), "globals [table1 table2] extensions [ table ]")
     testCommand("set table1 table:from-list [[1 2] [\"word\" \"value\"] [3 false]]")
     testCommand("export-world \"" + filename + "\"")
     testCommand("ca")
@@ -335,7 +335,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
   test("testImportingTablesSameTable") { implicit fixture =>
     import fixture._
     val filename = getUniqueFilename()
-    ModelCreator.open(workspace, api.WorldDimensions.square(5), "globals [table1 table2] extensions [ table ]")
+    ModelCreator.open(workspace, core.WorldDimensions.square(5), "globals [table1 table2] extensions [ table ]")
     testCommand("set table1 table:from-list [[1 2] [3 4] [4 5]]")
     testCommand("set table2 table1")
     testCommand("export-world \"" + filename + "\"")
@@ -349,7 +349,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
   test("testImportingTablesTwoTables") { implicit fixture =>
     import fixture._
     val filename = getUniqueFilename()
-    ModelCreator.open(workspace, api.WorldDimensions.square(5), "globals [table1 table2] extensions [ table ]")
+    ModelCreator.open(workspace, core.WorldDimensions.square(5), "globals [table1 table2] extensions [ table ]")
     testCommand("set table1 table:from-list [[1 2] [3 4] [4 5]]")
     testCommand("set table2 table:from-list [[1 2] [3 4] [4 5]]")
     testCommand("export-world \"" + filename + "\"")
@@ -363,7 +363,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
   test("testImportingArrays") { implicit fixture =>
     import fixture._
     val filename = getUniqueFilename()
-    ModelCreator.open(workspace, api.WorldDimensions.square(5), "globals [ar1 ar2] extensions [ array ]")
+    ModelCreator.open(workspace, core.WorldDimensions.square(5), "globals [ar1 ar2] extensions [ array ]")
     testCommand("set ar1 array:from-list [1 2 3 4 \"string\" false]")
     testCommand("export-world \"" + filename + "\"")
     testCommand("ca")
@@ -374,7 +374,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
   test("testImportingArraysSameArray") { implicit fixture =>
     import fixture._
     val filename = getUniqueFilename()
-    ModelCreator.open(workspace, api.WorldDimensions.square(5), "globals [ar1 ar2] extensions [ array ]")
+    ModelCreator.open(workspace, core.WorldDimensions.square(5), "globals [ar1 ar2] extensions [ array ]")
     testCommand("set ar1 array:from-list [ 1 2 3 ]")
     testCommand("set ar2 ar1")
     testCommand("export-world \"" + filename + "\"")
@@ -387,7 +387,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
   test("testImportingArraysTwoArrays") { implicit fixture =>
     import fixture._
     val filename = getUniqueFilename()
-    ModelCreator.open(workspace, api.WorldDimensions.square(5), "globals [ar1 ar2] extensions [ array ]")
+    ModelCreator.open(workspace, core.WorldDimensions.square(5), "globals [ar1 ar2] extensions [ array ]")
     testCommand("set ar1 array:from-list [ 1 2 3 ]")
     testCommand("set ar2 array:from-list [ 1 2 3 ]")
     testCommand("export-world \"" + filename + "\"")
@@ -401,7 +401,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
   test("testImportingArraysAndTables") { implicit fixture =>
     import fixture._
     val filename = getUniqueFilename()
-    ModelCreator.open(workspace, api.WorldDimensions.square(5), "globals [ar1 ar2 t1 t2] extensions [ array table ]")
+    ModelCreator.open(workspace, core.WorldDimensions.square(5), "globals [ar1 ar2 t1 t2] extensions [ array table ]")
     testCommand("set ar1 array:from-list [ 1 2 3 ]")
     testCommand("set ar2 array:from-list [ 1 2 3 ]")
     testCommand("set t1 table:from-list [ [1 2] [3 4]]")
@@ -421,14 +421,14 @@ class TestImportExport extends FixtureSuite with SlowTest {
 
   test("testTrailingCommas") { implicit fixture =>
     import fixture._
-    ModelCreator.open(workspace, api.WorldDimensions.square(35), new org.nlogo.api.LocalFile(
-      "test/import/trailing-commas.nlogo").readFile())
+    ModelCreator.open(workspace, core.WorldDimensions.square(35),
+      org.nlogo.api.FileIO.file2String("test/import/trailing-commas.nlogo"))
     testCommand("import-world \"test/import/trailing-commas.csv\"")
   }
 
   test("ImportWrongOrder") { implicit fixture =>
     import fixture._
-    ModelCreator.open(workspace, api.WorldDimensions.square(10))
+    ModelCreator.open(workspace, core.WorldDimensions.square(10))
     workspace.importerErrorHandler =
       new org.nlogo.agent.ImporterJ.ErrorHandler() {
         def showError(title: String, errorDetails: String, fatalError: Boolean) = {
@@ -445,14 +445,14 @@ class TestImportExport extends FixtureSuite with SlowTest {
 
   test("ImportSentinelName") { implicit fixture =>
     import fixture._
-    ModelCreator.open(workspace, api.WorldDimensions.square(10))
+    ModelCreator.open(workspace, core.WorldDimensions.square(10))
     testCommand("import-world \"test/import/TURTLES.csv\"")
   }
 
   test("ExtraFieldValue") { implicit fixture =>
     import fixture._
-    ModelCreator.open(workspace, api.WorldDimensions.square(35), new org.nlogo.api.LocalFile(
-      "test/import/trailing-commas.nlogo").readFile())
+    ModelCreator.open(workspace, core.WorldDimensions.square(35),
+      org.nlogo.api.FileIO.file2String("test/import/trailing-commas.nlogo"))
     val errorNumber = Array(0)
     workspace.importerErrorHandler =
       new org.nlogo.agent.ImporterJ.ErrorHandler() {
@@ -494,7 +494,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
   test("testReproducibilityOfWhoNumberAssignment1") { implicit fixture =>
     import fixture._
     val filename = getUniqueFilename()
-    ModelCreator.open(workspace, api.WorldDimensions.square(0))
+    ModelCreator.open(workspace, core.WorldDimensions.square(0))
     testCommand("crt 4")
     testCommand("ask turtle 0 [ die ]")
     testCommand("ask turtle 2 [ die ]")
@@ -512,7 +512,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
   test("testReproducibilityOfWhoNumberAssignment2") { implicit fixture =>
     import fixture._
     val filename = getUniqueFilename()
-    ModelCreator.open(workspace, api.WorldDimensions.square(0))
+    ModelCreator.open(workspace, core.WorldDimensions.square(0))
     testCommand("crt 4")
     testCommand("ask turtle 2 [ die ]")
     testCommand("ask turtle 0 [ die ]")
@@ -530,7 +530,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
   test("testReproducibilityOfWhoNumberAssignment3") { implicit fixture =>
     import fixture._
     val filename = getUniqueFilename()
-    ModelCreator.open(workspace, api.WorldDimensions.square(0))
+    ModelCreator.open(workspace, core.WorldDimensions.square(0))
     testCommand("crt 500")
     testCommand("ask turtles [ if random 2 = 0 [ die ] ]")
     testCommand("export-world \"" + filename + "\"");

@@ -3,8 +3,8 @@
 package org.nlogo.nvm
 
 import org.nlogo.agent.{Agent, AgentSet, World}
-import org.nlogo.api
-import org.nlogo.api.{WorldDimensions, DummyParserServices, DummyExtensionManager, JobOwner,
+import org.nlogo.{ api, core }
+import org.nlogo.api.{DummyParserServices, DummyExtensionManager, JobOwner,
                       CommandRunnable, ReporterRunnable, ImportErrorHandler, OutputDestination}
 
 class DummyWorkspace extends DummyParserServices with Workspace {
@@ -33,7 +33,7 @@ class DummyWorkspace extends DummyParserServices with Workspace {
   override def exportPlot(plotName: String, path: String) = unsupported
   override def exportAllPlots(path: String) = unsupported
   override def inspectAgent(agent: Agent, radius: Double) = unsupported
-  override def inspectAgent(kind: api.AgentKind, agent: Agent, radius: Double) = unsupported
+  override def inspectAgent(kind: core.AgentKind, agent: Agent, radius: Double) = unsupported
   override def getAndCreateDrawing() = unsupported
   override def waitForQueuedEvents() = unsupported
   override def outputObject(obj: AnyRef, owner: AnyRef, addNewline: Boolean, readable: Boolean,
@@ -55,7 +55,7 @@ class DummyWorkspace extends DummyParserServices with Workspace {
   override def evaluateReporter(owner: JobOwner, source: String, agent: Agent) = unsupported
   override def evaluateReporter(owner: JobOwner, source: String, agents: AgentSet) = unsupported
   override def compileCommands(source: String) = unsupported
-  override def compileCommands(source: String, kind: api.AgentKind) = unsupported
+  override def compileCommands(source: String, kind: core.AgentKind) = unsupported
   override def compileReporter(source: String) = unsupported
   override def runCompiledCommands(owner: JobOwner, procedure: Procedure) = unsupported
   override def runCompiledReporter(owner: JobOwner, procedure: Procedure) = unsupported
@@ -98,8 +98,8 @@ class DummyWorkspace extends DummyParserServices with Workspace {
   // from WorldResizer
   override def resizeView() = unsupported
   override def patchSize(patchSize: Double) = unsupported
-  override def setDimensions(dim: WorldDimensions) = unsupported
-  override def setDimensions(dim: WorldDimensions, patchSize: Double) = unsupported
+  override def setDimensions(dim: core.WorldDimensions) = unsupported
+  override def setDimensions(dim: core.WorldDimensions, patchSize: Double) = unsupported
 
   // from JobManagerOwner
   override def runtimeError(owner: JobOwner, context: Context, instruction: Instruction, ex: Exception) = unsupported

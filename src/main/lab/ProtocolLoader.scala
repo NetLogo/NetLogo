@@ -37,9 +37,7 @@ class ProtocolLoader(services: ParserServices)
   implicit def file2inputSource(file: java.io.File): sax.InputSource =
     new sax.InputSource(
       new java.io.StringReader(
-        ticksToSteps(
-          org.nlogo.util.Utils.reader2String(
-            new java.io.FileReader(file)))))
+        ticksToSteps(io.Source.fromFile(file).mkString)))
   implicit def xml2inputSource(xml: String): sax.InputSource =
     // what about character encodings?  String.getBytes() will use the platform's default encoding;
     // presumably sax.InputSource will also then use that same encoding?  I'm not really sure...  it

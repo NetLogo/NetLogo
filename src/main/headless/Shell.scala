@@ -3,7 +3,7 @@
 package org.nlogo.headless
 
 import org.nlogo.api.{ CompilerException, ModelReader, Version }
-import org.nlogo.util.Utils.url2String
+import org.nlogo.api.Resource.getResourceAsString
 import org.nlogo.workspace, workspace.AbstractWorkspace.setHeadlessProperty
 
 object Shell extends workspace.Shell {
@@ -14,7 +14,9 @@ object Shell extends workspace.Shell {
     val workspace = HeadlessWorkspace.newInstance
     argv.headOption match {
       case None =>
-        workspace.openString(url2String(ModelReader.emptyModelPath))
+        workspace.openString(
+          getResourceAsString(
+            ModelReader.emptyModelPath))
       case Some(path) =>
         workspace.open(path)
     }

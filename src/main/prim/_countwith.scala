@@ -2,16 +2,19 @@
 
 package org.nlogo.prim
 
+import org.nlogo.core.Syntax
+import org.nlogo.api.{ Dump, I18N }
 import org.nlogo.agent.AgentSet
-import org.nlogo.api.{ Syntax, Dump, I18N }
 import org.nlogo.nvm.{ Reporter, Context, EngineException }
 
 class _countwith extends Reporter {
 
   override def syntax =
     Syntax.reporterSyntax(
-      Array(Syntax.AgentsetType, Syntax.BooleanBlockType),
-      Syntax.NumberType, "OTPL", "?")
+      right = List(Syntax.AgentsetType, Syntax.BooleanBlockType),
+      ret = Syntax.NumberType,
+      agentClassString = "OTPL",
+      blockAgentClassString = "?")
 
   override def report(context: Context): java.lang.Double =
     Double.box(

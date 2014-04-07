@@ -1,11 +1,9 @@
 C __bench etc._bench
 C __change-topology etc._changetopology
-C __clear-all-and-reset-ticks etc._clearallandresetticks
 C __done _done
 C __experimentstepend etc._experimentstepend
 C __export-drawing etc._exportdrawing
 C __foreverbuttonend etc._foreverbuttonend
-C __git etc._git
 C __ignore etc._ignore
 C __let _let
 C __linkcode etc._linkcode
@@ -22,7 +20,6 @@ C __stderr etc._stderr
 C __stdout etc._stdout
 C __thunk-did-finish etc._thunkdidfinish
 C __turtlecode etc._turtlecode
-C __updatemonitor etc._updatemonitor
 C ask _ask
 C ask-concurrent _askconcurrent
 C auto-plot-off etc._autoplotoff
@@ -71,9 +68,7 @@ C export-plot etc._exportplot
 C export-view etc._exportview
 C export-world etc._exportworld
 C face etc._face
-C face-nowrap etc._facenowrap
 C facexy etc._facexy
-C facexy-nowrap etc._facexynowrap
 C fd _fd
 C file-close etc._fileclose
 C file-close-all etc._filecloseall
@@ -233,9 +228,7 @@ R cos etc._cos
 R count _count
 R date-and-time etc._dateandtime
 R distance etc._distance
-R distance-nowrap etc._distancenowrap
 R distancexy etc._distancexy
-R distancexy-nowrap etc._distancexynowrap
 R dx etc._dx
 R dy etc._dy
 R empty? etc._empty
@@ -255,12 +248,10 @@ R fput etc._fput
 R hsb etc._hsb
 R ifelse-value etc._ifelsevalue
 R in-cone etc._incone
-R in-cone-nowrap etc._inconenowrap
 R in-link-from etc._inlinkfrom
 R in-link-neighbor? etc._inlinkneighbor
 R in-link-neighbors etc._inlinkneighbors
 R in-radius etc._inradius
-R in-radius-nowrap etc._inradiusnowrap
 R int etc._int
 R is-agent? etc._isagent
 R is-agentset? etc._isagentset
@@ -400,9 +391,7 @@ R task _task
 R ticks etc._ticks
 R timer etc._timer
 R towards etc._towards
-R towards-nowrap etc._towardsnowrap
 R towardsxy etc._towardsxy
-R towardsxy-nowrap etc._towardsxynowrap
 R turtle etc._turtle
 R turtle-set etc._turtleset
 R turtles etc._turtles

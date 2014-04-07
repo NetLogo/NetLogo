@@ -2,15 +2,18 @@
 
 package org.nlogo.prim
 
-import org.nlogo.api.{ Syntax, LogoList, LogoListBuilder }
+import org.nlogo.core.Syntax
+import org.nlogo.api.{ LogoList, LogoListBuilder }
 import org.nlogo.nvm.{ Context, Reporter, Pure }
 
 class _sentence extends Reporter with Pure {
 
   override def syntax =
     Syntax.reporterSyntax(
-      Array(Syntax.RepeatableType | Syntax.WildcardType),
-      Syntax.ListType, dfault = 2, minimum = 0)
+      right = List(Syntax.RepeatableType | Syntax.WildcardType),
+      ret = Syntax.ListType,
+      defaultOption = Some(2),
+      minimumOption = Some(0))
 
   // for fear of https://issues.scala-lang.org/browse/SI-7725
   // we must never do (Vector ++ Vector) - ST 8/7/13

@@ -2,17 +2,19 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api.{ CompilerException, LogoException, Syntax }
+import org.nlogo.core.Syntax
+import org.nlogo.api.{ CompilerException, LogoException }
 import org.nlogo.nvm.{ Activation, ArgumentTypeException, Context, EngineException, Reporter, ReporterTask }
 
 class _runresult extends Reporter {
 
   override def syntax =
     Syntax.reporterSyntax(
-      Array(Syntax.StringType | Syntax.ReporterTaskType,
+      right = List(
+        Syntax.StringType | Syntax.ReporterTaskType,
         Syntax.RepeatableType | Syntax.WildcardType),
-      Syntax.WildcardType,
-      1)
+      ret = Syntax.WildcardType,
+      defaultOption = Some(1))
 
   override def report(context: Context): AnyRef =
     args(0).report(context) match {

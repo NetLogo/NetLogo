@@ -36,6 +36,6 @@ trait Context {
    *
    * @return a random number generator
    */
-  def getRNG: org.nlogo.util.MersenneTwisterFast
+  def getRNG: MersenneTwisterFast
 
 }

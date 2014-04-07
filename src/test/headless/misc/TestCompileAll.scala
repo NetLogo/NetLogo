@@ -18,6 +18,7 @@ object TestCompileAll {
       pathMatches("GIS") ||
       pathMatches("QUICKTIME EXTENSION") ||
       pathMatches("HUBNET ACTIVITIES") ||
+      pathMatches("CURRICULAR MODELS") ||
       pathMatches("SOUND") ||
       path.containsSlice("Frogger") || // uses sound extension
       path.containsSlice("Sound Machines") || // uses sound extension

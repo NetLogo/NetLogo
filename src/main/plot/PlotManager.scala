@@ -76,7 +76,7 @@ class PlotManager(factory: LogoThunkFactory)
 
   // the two maps below hold the compilation results for the plots and pens
   // a Results holds both the setup and update results.
-  // the results could be a Thunk, or a CompilerException.
+  // the results could be a thunk, or a CompilerException.
   type CompilationResult = Either[CompilerException,CommandLogoThunk]
   case class Results(setup: CompilationResult, update: CompilationResult)
   private val plotThunks = new mutable.WeakHashMap[Plot, Results]()

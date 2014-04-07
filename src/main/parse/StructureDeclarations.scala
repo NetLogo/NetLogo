@@ -2,7 +2,7 @@
 
 package org.nlogo.parse
 
-import org.nlogo.api.Token
+import org.nlogo.core.Token
 
 // retains tokens so we can report error locations
 
