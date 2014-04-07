@@ -330,7 +330,7 @@ class ExpressionParser(procedure: Procedure) {
           val (reporter, rApp) = token.tpe match {
             case TokenType.Literal =>
               val r = Literals.makeLiteralReporter(token.value)
-              r.token(token)
+              r.token = token
               (r, new ReporterApp(r, token.start, token.end, token.filename))
             case TokenType.Reporter =>
               val r = token.value.asInstanceOf[Reporter]
@@ -345,7 +345,7 @@ class ExpressionParser(procedure: Procedure) {
                 if(!r.isInstanceOf[_minus] || !variadic)
                   throw new MissingPrefixException(token)
                 val r2 = new _unaryminus
-                r2.token(token)
+                r2.token = token
                 (r2, new ReporterApp(r2, token.start, token.end, token.filename))
               }
             case _ =>
@@ -358,12 +358,12 @@ class ExpressionParser(procedure: Procedure) {
           // !variadic check is to prevent "map (f a) ..." from being misparsed.
           if(wantReporterTask && !variadic && (wantAnyTask || reporter.syntax.totalDefault > 0)) {
             val task = new _reportertask
-            task.token(reporter.token)
+            task.token = reporter.token
             val taskApp = new ReporterApp(task, reporter.token.start, reporter.token.end, reporter.token.filename)
             taskApp.addArgument(rApp)
             for(argNumber <- 1 to reporter.syntax.totalDefault) {
               val lv = new _taskvariable(argNumber)
-              lv.token(reporter.token)
+              lv.token = reporter.token
               rApp.addArgument(new ReporterApp(lv, reporter.token.start, reporter.token.end, reporter.token.filename))
             }
             taskApp
@@ -383,10 +383,10 @@ class ExpressionParser(procedure: Procedure) {
           val stmt = new Statement(token.value.asInstanceOf[Command],
             token.start, token.end, token.filename)
           val task = new _commandtask(null) // LambdaLifter will fill in
-          task.token(token)
+          task.token = token
           for(argNumber <- 1 to stmt.command.syntax.totalDefault) {
             val lv = new _taskvariable(argNumber)
-            lv.token(token)
+            lv.token = token
             stmt.addArgument(new ReporterApp(lv, token.start, token.end, token.filename))
           }
           if(stmt.command.syntax.takesOptionalCommandBlock)
@@ -519,7 +519,7 @@ class ExpressionParser(procedure: Procedure) {
       // the origin of the block are based on the positions of the brackets.
       tokens.next()
       val task = new _reportertask
-      task.token(openBracket)
+      task.token = openBracket
       val app = new ReporterApp(task, openBracket.start, closeBracket.end, openBracket.filename)
       app.addArgument(expr)
       app
@@ -541,7 +541,7 @@ class ExpressionParser(procedure: Procedure) {
       // the origin of the block are based on the positions of the brackets.
       tokens.next()
       val task = new _commandtask(null) // LambdaLifter will fill in
-      task.token(openBracket)
+      task.token = openBracket
       val rapp =
         new ReporterApp(
           task, openBracket.start, closeBracket.end, openBracket.filename)
@@ -559,7 +559,7 @@ class ExpressionParser(procedure: Procedure) {
       val (list, closeBracket) =
         new LiteralParser(null, null, null).parseLiteralList(tokens.next(), tokens)
       val tmp = Literals.makeLiteralReporter(list)
-      tmp.token(new Token("", TokenType.Literal, null)(openBracket.start, closeBracket.end, closeBracket.filename))
+      tmp.token = new Token("", TokenType.Literal, null)(openBracket.start, closeBracket.end, closeBracket.filename)
       new ReporterApp(tmp, openBracket.start, closeBracket.end, closeBracket.filename)
     }
     // we weren't actually expecting a block at all!

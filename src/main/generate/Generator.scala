@@ -244,9 +244,9 @@ class Generator(source: String, procedure: Procedure, profilingEnabled: Boolean)
       val result = loader.loadBytecodeClass(cName, bytecode).newInstance.asInstanceOf[A]
       setAllKeptFields(result)
       result.args = original.args
-      result.token(original.token)
-      val sourceStart = original.getSourceStartPosition
-      val sourceEnd = original.getSourceEndPosition
+      result.token = original.token
+      val sourceStart = original.sourceStartPosition
+      val sourceEnd = original.sourceEndPosition
       result.source =
         if (sourceStart < 0 || sourceStart > sourceEnd || sourceEnd > source.length) ""
         else source.substring(sourceStart, sourceEnd)

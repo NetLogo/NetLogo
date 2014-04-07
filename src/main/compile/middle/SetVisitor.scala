@@ -25,8 +25,8 @@ class SetVisitor extends DefaultAstVisitor {
       val newCommand =
         Instantiator.newInstance[nvm.Command](
           newCommandClass, rApp.reporter)
-      newCommand.token(stmt.command.token)
-      newCommand.tokenLimitingType(rApp.instruction.token)
+      newCommand.token = stmt.command.token
+      newCommand.token2 = rApp.instruction.token
       stmt.command_$eq(newCommand)
       stmt.removeArgument(0)
     }
