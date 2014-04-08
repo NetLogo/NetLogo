@@ -41,6 +41,7 @@ class TestPatchLabels extends AbstractTestRenderer {
 
   case class Test(p: Patch, labelSize: LabelSize, drawnAt: LabelDrawnAt)
   extends BaseTest {
+    override def toString = (p, labelSize).toString
     def command = s"ask patch ${p.x} ${p.y} [ set plabel 123 ]"
     def expectedResults = drawnAt.expectedResults(labelSize)
     override def setup(g: MockGraphics) {
@@ -90,27 +91,28 @@ class TestRendererForTurtleLabels extends AbstractTestRenderer {
   // notice the label is always at patchsize * turtlesize greater than the turtle.
   // that is because a circle is drawn at the top left corner and a label at the bottom right.
 
-  Test(Turtle(at = (0, 0), size = 1), LabelSize(10, 10),
+  Test("one", Turtle(at = (0, 0), size = 1), LabelSize(10, 10),
     TurtleDrawnAt((208, 208)), LabelDrawnAt((221, 221)))
 
   // labels are at the bottom right corner of the turtle.
   // so a bigger turtle should push the label down and to the right.
-  Test(Turtle(at = (0, 0), size = 2), LabelSize(10, 10),
+  Test("two", Turtle(at = (0, 0), size = 2), LabelSize(10, 10),
     TurtleDrawnAt((201.5, 201.5)), LabelDrawnAt((227.5, 227.5)))
 
   // top left corner of world
-  Test(Turtle(at = (-16, 16), size = 1), LabelSize(10, 10),
+  Test("three", Turtle(at = (-16, 16), size = 1), LabelSize(10, 10),
     TurtleDrawnAt((0, 0)), LabelDrawnAt((13, 13)))
 
-  Test(Turtle(at = (-16, 16), size = 2), LabelSize(10, 10),
+  Test("four", Turtle(at = (-16, 16), size = 2), LabelSize(10, 10),
     TurtleDrawnAt((-6.5, -6.5),(422.5, -6.5), (-6.5, 422.5), (422.5, 422.5)), LabelDrawnAt((19.5, 19.5)))
 
-  Test(Turtle(at = (-16, 16), size = 2), LabelSize(40, 40),
+  Test("five", Turtle(at = (-16, 16), size = 2), LabelSize(40, 40),
     TurtleDrawnAt((-6.5, -6.5), (422.5, -6.5), (-6.5, 422.5), (422.5, 422.5)),
     LabelDrawnAt((19.5, 19.5), (448.5, 19.5), (19.5, 448.5), (448.5, 448.5)))
 
-  case class Test(t: Turtle, labelSize: LabelSize, turtleDrawnAt: TurtleDrawnAt, labelDrawnAt: LabelDrawnAt)
+  case class Test(name: String, t: Turtle, labelSize: LabelSize, turtleDrawnAt: TurtleDrawnAt, labelDrawnAt: LabelDrawnAt)
   extends BaseTest {
+    override def toString = name
     def command =
        s"""|crt 1 [
            |  set shape "circle"
