@@ -1,5 +1,0 @@
-# this branch doesn't compile under OpenJDK 6;
-# and Travis doesn't offer Oracle Java 6
-branches:
-  only:
-    - headless

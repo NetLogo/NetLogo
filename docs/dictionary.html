@@ -917,6 +917,9 @@ ask turtle 4 [ rt 90 ]
         ask-concurrent <i>agentset</i> [<i>commands</i>]
       </h4>
       <p>
+         This primitive exists only for backwards compatibility.
+         We don't recommend using it new models.
+      <p>
         The agents in the given agentset run the given commands, using a
         turn-taking mechanism to produce simulated concurrency. See the
         <a href="programming.html#ask-concurrent">Ask-Concurrent</a>
@@ -7123,6 +7126,9 @@ ask turtles [ set color scale-color red age 0 50 ]
         &quot;myself&quot; means &quot;the agent who asked me to do what
         I'm doing right now.&quot;
       <p>
+        Note that it is always redundant to write <tt>[foo] of self</tt>.
+        This is always equivalent to simply writing <tt>foo</tt>.
+      <p>
         See also <a href="#myself">myself</a>.
       </div>
     <div class="dict_entry">
@@ -8074,6 +8080,11 @@ show sum [energy] of turtles
         Advances the tick counter by <i>number</i>. The input may be an
         integer or a floating point number. (Some models divide ticks more
         finely than by ones.) The input may not be negative.
+      <p>
+        When using <a href="programming.html#updates">tick-based view updates</a>,
+        the view is normally updated every 1.0 ticks, so using <tt>tick-advance</tt> with
+        a number less then 1.0 may not always trigger an update. If you want to
+        make sure that the view is updated, you can use the <tt>display</tt> command.
       <p>
         If the tick counter has not been started yet with
         <tt>reset-ticks</tt>, an error results.
@@ -9043,6 +9054,9 @@ print n-values 10 [random 10]
       <h4>
         without-interruption [ <i>commands</i> ]
       </h4>
+      <p>
+         This primitive exists only for backwards compatibility.
+         We don't recommend using it in new models.
       <p>
         The agent runs all the commands in the block without allowing other
         agents using <tt>ask-concurrent</tt> to &quot;interrupt&quot;. That

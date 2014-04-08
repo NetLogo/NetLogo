@@ -2,7 +2,7 @@
 /// ThisBuild -- applies to subprojects too
 ///
 
-scalaVersion in ThisBuild := "2.10.3"
+scalaVersion in ThisBuild := "2.10.4"
 
 scalacOptions in ThisBuild ++=
   "-deprecation -unchecked -feature -Xcheckinit -encoding us-ascii -target:jvm-1.6 -Xfatal-warnings -Ywarn-adapted-args -Yinline-warnings"
@@ -100,6 +100,7 @@ all <<= (baseDirectory, streams) map { (base, s) =>
 all <<= all.dependsOn(
   packageBin in Compile,
   packageBin in Compile in NetLogoBuild.headless,
+  packageBin in Test in NetLogoBuild.headless,
   Extensions.extensions,
   NativeLibs.nativeLibs,
   ModelIndex.modelIndex,

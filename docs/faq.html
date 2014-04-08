@@ -380,7 +380,7 @@
       Volunteers have translated the user manual into Chinese and Czech.
       The translated versions are available from the NetLogo web site.
     <p>
-      At present, NetLogo is available in English, Spanish, Chinese, and
+      So far, the NetLogo user interface has been localized in English, Spanish, Chinese, and
       Russian. All four languages are included in the standard download.
     <p>
       We are seeking volunteers to complete and improve these localizations
@@ -392,13 +392,11 @@
       interpreted?
     </h3>
     <p>
-      Short answer: partially compiled. We are working towards a full
-      compiler.
+      Short answer: some of both.
     <p>
       Long answer: NetLogo does include a compiler that generates Java byte
       code. However, this compiler does not yet support the entire
-      language, so some parts of user code are interpreted. We are working
-      on expanding the compiler to support the entire language. Note that
+      language, so some parts of user code remain interpreted. Note that
       our compiler generates Java byte code, and Java virtual machines have
       &quot;just-in-time&quot; compilers that in turn compile Java byte
       code all the way to native code, so much user code is ultimately
@@ -407,7 +405,9 @@
       <a name="model" id="model"></a>Has anyone built a model of &lt;x&gt;?
     </h3>
     <p>
-      Try looking at the NetLogo Models Library, our <a href=
+      Try looking at the <a href="http://ccl.northwestern.edu/netlogo/models/">NetLogo Models Library</a>,
+      the <a href="http://modelingcommons.org/">NetLogo Modeling Commons</a>,
+      our <a href=
       "http://ccl.northwestern.edu/netlogo/models/community/">Community
       Models</a> page, and our <a href=
       "http://ccl.northwestern.edu/netlogo/references.shtml">list of
@@ -457,12 +457,11 @@
       For now, yes. NetLogo 3D is included with NetLogo, but it is still a
       separate application.
     <p>
-      Eventually a single unified application will support both 2D and 3D
-      modeling. We will design the 3D world support so it doesn't get
+      Ideally a single unified application would support both 2D and 3D
+      modeling. We would design the 3D world support so it doesn't get
       in the way when you are building 2D models.
-    <p>
-      Models built in NetLogo 3D may require changes in order to run in the
-      eventual unified application.
+      Models built in NetLogo 3D might require changes in order to run in the
+      hypothetical unified application.
     <h3>
       <a name="mobile" id="mobile"></a>Can I run NetLogo on my phone or
       tablet?
@@ -474,7 +473,7 @@
       We are working on an alternate implementation of NetLogo on a
       JavaScript and HTML5 base, instead of Java. It will work on a variety
       of tablets and phones. We don't know yet when it will be ready,
-      and we expect it will only support a subset of the features in
+      and we expect that for a long time it will only support a subset of the features in
       desktop NetLogo. The many person-years of development effort that
       have gone into the Java version can't cheaply or easily be
       replicated on another platform.
@@ -590,7 +589,7 @@ NetLogo@@@VERSION@@@Installer.exe -q
     <p>
       In theory, any Java 6 or later runtime will run NetLogo. In
       practice, some Java implementations aren't high enough
-      quality. Recent versions of OpenJDK will probably work; older
+      quality. Recent versions of OpenJDK should work; older
       ones may not.  GNU libgcj does not work.
     <p>
       Ubuntu users should consult <a href=
@@ -635,7 +634,7 @@ NetLogo@@@VERSION@@@Installer.exe -q
     <p>
       Another option is to use our Controlling API. Some light Java
       programming is required. See the <a href=
-      "controlling.html">Controlling Guide</a> for details and sample code.
+      "https://github.com/NetLogo/NetLogo/wiki/Controlling-API">Controlling API Guide</a> for details and sample code.
     <h3>
       <a name="multiprocessing" id="multiprocessing"></a>Does NetLogo take
       advantage of multiple processors?
@@ -760,6 +759,15 @@ NetLogo@@@VERSION@@@Installer.exe -q
         <b>Other:</b> Edit the <tt>netlogo.sh</tt> script (or a copy),
         changing the <code>-Xmx</code> number to the desired value.
       </ul>
+    <p>On all platforms, the JVM may not be able to use all of the RAM on your
+       system to run NetLogo unless you are running a 64-bit OS on a 64-bit JVM.  On recent
+       Macs running recent Mac OS X versions, the JVM is always 64-bit
+       and you don't need to do anything special.
+       On Windows and Linux, you may need to make configuration changes
+       in order to switch from 32-bit to 64-bit mode.
+       The members of the <a href=
+       "http://groups.yahoo.com/group/netlogo-users/">NetLogo Users
+       Group</a> may be able to help with this.
     <h3>
       <a name="gisimport" id="gisimport"></a>Can I use GIS data in NetLogo?
     </h3>
@@ -814,8 +822,9 @@ NetLogo@@@VERSION@@@Installer.exe -q
       model open at a time?
     </h3>
     <p>
-      One instance of NetLogo can only have one model open at a time. (We
-      plan to change this in a future version.)
+      One instance of NetLogo can only have one model open at a time.
+      (Unfortunately, it is unlikely that this will change in a future
+      version, due to the engineering difficulties involved.)
     <p>
       You can have multiple models open by opening multiple instances of
       NetLogo, though. On Windows and Linux, simply start the application
@@ -828,14 +837,13 @@ NetLogo@@@VERSION@@@Installer.exe -q
       choices in a chooser on the fly?
     </h3>
     <p>
-      At present, no. In a future version of NetLogo, we plan to support
-      this.
+      No.
     <h3>
       <a name="include" id="include"></a>Can I divide the code for my model
       up into several files?
     </h3>
     <p>
-      Yes, this is available on an experimental basis using the
+      On an experimental basis, this is available using the
       <tt>__includes</tt> keyword.
     <h2>
       Programming
@@ -1028,7 +1036,8 @@ if is-turtle? turtle 0 [ ... ]
       <a name="arrays" id="arrays"></a>Does NetLogo have arrays?
     </h3>
     <p>
-      Most models should just use lists. The usual motivation for using
+      Nearly all models should just use lists for this.
+    <p>The usual motivation for using
       arrays in other programming languages is that they provide fast
       random access (<tt>item</tt>) and mutation (<tt>replace-item</tt>).
       But NetLogo's lists, even though they are immutable, now provide
