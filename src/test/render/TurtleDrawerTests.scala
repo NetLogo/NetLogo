@@ -14,35 +14,35 @@ class TurtleTestsDrawer extends MockSuite {
 
   // these tests have the same results independent of recolorable and size
   for(recolorable<-List(true, false); size<-testSizes){
-    mockTest("first draw should add shape to cache (recolorable:"+recolorable+") (size:"+size+") ") {
+    mockTest("first draw should add shape (recolorable:"+recolorable+") (size:"+size+") ") {
       val tester = CacheTester(testShapeIsRecolorable = recolorable, TestTurtle(size=size))
       assert(tester.cacheSize === (if(cachableSizes contains size) 1 else 0))
     }
 
-    mockTest("second draw should not add shape to cache (recolorable:"+recolorable+") (size:"+size+")") {
+    mockTest("second draw should not add shape (recolorable:"+recolorable+") (size:"+size+")") {
       val turtle = TestTurtle(size=size)
       val tester = CacheTester(testShapeIsRecolorable = recolorable, turtle, turtle)
       assert(tester.cacheSize === (if(cachableSizes contains size) 1 else 0))
     }
 
-    mockTest("drawing same shape, same color, but different alpha should " +
-            "add shape to cache (recolorable:"+recolorable+") (size:"+size+")") {
+    mockTest("changing alpha should " +
+            "add shape (recolorable:"+recolorable+") (size:"+size+")") {
       val turtle1 = TestTurtle(size=size, color = red)
       val turtle2 = TestTurtle(size=size, color = withAlpha(red, 127))
       val tester = CacheTester(testShapeIsRecolorable = recolorable, turtle1, turtle2)
       assert(tester.cacheSize == (if(cachableSizes contains size) 2 else 0))
     }
 
-    mockTest("drawing same shape, same color, but different alpha should " +
-            "add shape to cache (2) (recolorable:"+recolorable+") (size:"+size+")") {
+    mockTest("changing alpha should " +
+            "add shape (2) (recolorable:"+recolorable+") (size:"+size+")") {
       val turtle1 = TestTurtle(size=size, color = withAlpha(red, 127))
       val turtle2 = TestTurtle(size=size, color = withAlpha(red, 128))
       val tester = CacheTester(testShapeIsRecolorable = recolorable, turtle1, turtle2)
       assert(tester.cacheSize == (if(cachableSizes contains size) 2 else 0))
     }
 
-    mockTest("second draw with same alpha should not add " +
-            "shape to cache (recolorable:"+recolorable+") (size:"+size+")") {
+    mockTest("redraw (same alpha) should not add " +
+            "shape (recolorable:"+recolorable+") (size:"+size+")") {
       val turtle = TestTurtle(size=size, color = withAlpha(red, 127))
       val tester = CacheTester(testShapeIsRecolorable = recolorable, turtle, turtle)
       assert(tester.cacheSize === (if(cachableSizes contains size) 1 else 0))
@@ -53,17 +53,17 @@ class TurtleTestsDrawer extends MockSuite {
   // if its not recolorable, then changing its color shouldnt add a new shape to the cache
   // because color doesnt matter in that case.
   for(size<-testSizes){
-    mockTest("drawing same shape, but different color should " +
-            "add shape to cache (recolorable:true) (size:"+size+")") {
+    mockTest("same shape different color should " +
+            "add shape (recolorable:true) (size:"+size+")") {
       val turtles = colors.map(c => TestTurtle(size=size, color=c))
       val tester = CacheTester(testShapeIsRecolorable = true, turtles:_*)
       assert(tester.cacheSize == (if(cachableSizes contains size) turtles.size else 0))
     }
-    mockTest("drawing same shape, but different color should NOT! " +
-            "add shape to cache when (recolorable:false) (size:" + size + ")") {
+    mockTest("changing color shouldn't " +
+            "add when not recolorable (size:" + size + ")") {
       val turtles = colors.map(c => TestTurtle(size=size, color=c))
       val tester = CacheTester(testShapeIsRecolorable = false, turtles:_*)
-      // we should only add one shape to cache, regardless of how many turtles there are.
+      // we should only add one shape, regardless of how many turtles there are.
       assert(tester.cacheSize == (if (cachableSizes contains size) 1 else 0))
     }
   }
@@ -71,14 +71,14 @@ class TurtleTestsDrawer extends MockSuite {
   // these tests work the same independent of recolorability
   // they test adding things to the cache based on size alone.
   for(recolorable<-List(true, false)) {
-    mockTest("drawing same shape, but three different cachable sizes should " +
-            "add shapes to cache (recolorable:"+recolorable+")") {
+    mockTest("three different cachable sizes should " +
+            "add shapes (recolorable:"+recolorable+")") {
       val turtles = cachableSizes.map(s => TestTurtle(size = s))
       val tester = CacheTester(testShapeIsRecolorable = recolorable, turtles:_*)
       assert(tester.cacheSize == 3)
     }
-    mockTest("drawing same shape, but lots of different sizes should " +
-            "add some shapes to cache (recolorable:"+recolorable+")") {
+    mockTest("lots of different sizes should " +
+            "add some shapes (recolorable:"+recolorable+")") {
       val turtles = testSizes.map(s => TestTurtle(size = s)) // only 3 of these sizes are cachable
       val tester = CacheTester(testShapeIsRecolorable = recolorable, turtles:_*)
       assert(tester.cacheSize == 3) // so only 3 shapes should be in the cache.

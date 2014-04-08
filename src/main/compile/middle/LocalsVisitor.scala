@@ -45,7 +45,7 @@ extends DefaultAstVisitor {
         val exempt = l.token.text.equalsIgnoreCase("__LET")
         if(!procedure.isTask && askNestingLevel == 0 && !exempt) {
           stmt.command = new _setprocedurevariable(new _procedurevariable(procedure.args.size, l.let.name))
-          stmt.command.token(stmt.command.token)
+          stmt.command.token = stmt.command.token
           stmt.removeArgument(0)
           alteredLets(procedure).put(l.let, procedure.args.size)
           procedure.localsCount += 1
@@ -83,7 +83,7 @@ extends DefaultAstVisitor {
         for(index <- alteredLets(procedure).get(l.let).orElse(Option(procedure.parent).flatMap(parent => alteredLets(parent).get(l.let)))) {
           val oldToken = expr.reporter.token
           expr.reporter = new _procedurevariable(index.intValue, l.let.name)
-          expr.reporter.token(oldToken)
+          expr.reporter.token = oldToken
         }
       case _ =>
     }

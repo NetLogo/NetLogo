@@ -7,7 +7,7 @@ import org.nlogo.nvm.{ Command, Context }
 
 class _recursefast(original: _call) extends Command {
 
-  token(original.token)
+  token = original.token
 
   override def syntax =
     Syntax.commandSyntax()

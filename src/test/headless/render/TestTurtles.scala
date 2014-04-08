@@ -42,23 +42,29 @@ class TestTurtles extends AbstractTestRenderer {
 
 class TestTorusRendererForTurtles extends AbstractTestRenderer(Torus){
 
-  Test(Turtle(at=(0,0), size=1), TurtleDrawnAt((208, 208)))
-  Test(Turtle(at=(5,5), size=1), TurtleDrawnAt((273, 143)))
-  Test(Turtle(at=(-5,5), size=1), TurtleDrawnAt((143, 143)))
-  // top left
-  Test(Turtle(at=(-16,16), size=1), TurtleDrawnAt((0, 0))) // circles are drawn from their top left corner.
-  Test(Turtle(at=(-16,16), size=2), TurtleDrawnAt((-6.5, -6.5),(422.5, -6.5),(-6.5, 422.5),(422.5, 422.5)))
-  // bottom left
-  Test(Turtle(at=(-16,-16), size=1), TurtleDrawnAt((0, 416)))
-  Test(Turtle(at=(-16,-16), size=2), TurtleDrawnAt((-6.5, 409.5),(422.5, 409.5),(-6.5, -19.5),(422.5, -19.5)))
-  // bottom right
-  Test(Turtle(at=(16,-16), size=1), TurtleDrawnAt((416, 416)))
-  Test(Turtle(at=(16,-16), size=2), TurtleDrawnAt((409.5, 409.5),(-19.5, 409.5),(409.5, -19.5),(-19.5, -19.5)))
-  // top right
-  Test(Turtle(at=(16,16), size=1), TurtleDrawnAt((416, 0)))
-  Test(Turtle(at=(16,16), size=2), TurtleDrawnAt((409.5, -6.5),(-19.5, -6.5),(409.5, 422.5),(-19.5, 422.5)))
+  Test("one", Turtle(at=(0,0), size=1), TurtleDrawnAt((208, 208)))
+  Test("two", Turtle(at=(5,5), size=1), TurtleDrawnAt((273, 143)))
+  Test("three", Turtle(at=(-5,5), size=1), TurtleDrawnAt((143, 143)))
 
-  case class Test(t:Turtle, drawnAt:TurtleDrawnAt) extends BaseTest{
+  Test("top left 1", Turtle(at=(-16,16), size=1),
+    TurtleDrawnAt((0, 0))) // circles are drawn from their top left corner.
+    Test("top left 2", Turtle(at=(-16,16), size=2),
+      TurtleDrawnAt((-6.5, -6.5),(422.5, -6.5),(-6.5, 422.5),(422.5, 422.5)))
+  Test("bottom left 1", Turtle(at=(-16,-16), size=1),
+    TurtleDrawnAt((0, 416)))
+  Test("bottom left 2", Turtle(at=(-16,-16), size=2),
+    TurtleDrawnAt((-6.5, 409.5),(422.5, 409.5),(-6.5, -19.5),(422.5, -19.5)))
+  Test("bottom right 1", Turtle(at=(16,-16), size=1),
+    TurtleDrawnAt((416, 416)))
+  Test("bottom right 2", Turtle(at=(16,-16), size=2),
+    TurtleDrawnAt((409.5, 409.5),(-19.5, 409.5),(409.5, -19.5),(-19.5, -19.5)))
+  Test("top right 1", Turtle(at=(16,16), size=1),
+    TurtleDrawnAt((416, 0)))
+  Test("top right 2", Turtle(at=(16,16), size=2),
+    TurtleDrawnAt((409.5, -6.5),(-19.5, -6.5),(409.5, 422.5),(-19.5, 422.5)))
+
+  case class Test(name: String, t:Turtle, drawnAt:TurtleDrawnAt) extends BaseTest{
+    override def toString = name
     def command = "crt 1[ set shape \"circle\" setxy " + t.at._1 + " " + t.at._2 + " set size " + t.size + " ]"
     def expectedResults = drawnAt.expectedResults(t.size)
   }
@@ -66,23 +72,20 @@ class TestTorusRendererForTurtles extends AbstractTestRenderer(Torus){
 
 class TestBoxRendererForTurtles extends AbstractTestRenderer(Box){
 
-  Test(Turtle(at=(0,0), size=1), TurtleDrawnAt((208, 208)))
-  Test(Turtle(at=(5,5), size=1), TurtleDrawnAt((273, 143)))
-  Test(Turtle(at=(-5,5), size=1), TurtleDrawnAt((143, 143)))
-  // top left
-  Test(Turtle(at=(-16,16), size=1), TurtleDrawnAt((0, 0)))
-  Test(Turtle(at=(-16,16), size=2), TurtleDrawnAt((-6.5, -6.5)))
-  // bottom left
-  Test(Turtle(at=(-16,-16), size=1), TurtleDrawnAt((0, 416)))
-  Test(Turtle(at=(-16,-16), size=2), TurtleDrawnAt((-6.5, 409.5)))
-  // bottom right
-  Test(Turtle(at=(16,-16), size=1), TurtleDrawnAt((416, 416)))
-  Test(Turtle(at=(16,-16), size=2), TurtleDrawnAt((409.5, 409.5)))
-  // top right
-  Test(Turtle(at=(16,16), size=1), TurtleDrawnAt((416, 0)))
-  Test(Turtle(at=(16,16), size=2), TurtleDrawnAt((409.5, -6.5)))
+  Test("one", Turtle(at=(0,0), size=1), TurtleDrawnAt((208, 208)))
+  Test("two", Turtle(at=(5,5), size=1), TurtleDrawnAt((273, 143)))
+  Test("three", Turtle(at=(-5,5), size=1), TurtleDrawnAt((143, 143)))
+  Test("top left 1", Turtle(at=(-16,16), size=1), TurtleDrawnAt((0, 0)))
+  Test("top left 2", Turtle(at=(-16,16), size=2), TurtleDrawnAt((-6.5, -6.5)))
+  Test("bottom left 1", Turtle(at=(-16,-16), size=1), TurtleDrawnAt((0, 416)))
+  Test("bottom left 2", Turtle(at=(-16,-16), size=2), TurtleDrawnAt((-6.5, 409.5)))
+  Test("bottom right 1", Turtle(at=(16,-16), size=1), TurtleDrawnAt((416, 416)))
+  Test("bottom right 2", Turtle(at=(16,-16), size=2), TurtleDrawnAt((409.5, 409.5)))
+  Test("top right 1", Turtle(at=(16,16), size=1), TurtleDrawnAt((416, 0)))
+  Test("top right 2", Turtle(at=(16,16), size=2), TurtleDrawnAt((409.5, -6.5)))
 
-  case class Test(t:Turtle, drawnAt:TurtleDrawnAt) extends BaseTest{
+  case class Test(name:String, t:Turtle, drawnAt:TurtleDrawnAt) extends BaseTest{
+    override def toString = name
     def command = "crt 1[ set shape \"circle\" setxy " + t.at._1 + " " + t.at._2 + " set size " + t.size + " ]"
     def expectedResults = drawnAt.expectedResults(t.size)
   }
@@ -90,23 +93,20 @@ class TestBoxRendererForTurtles extends AbstractTestRenderer(Box){
 
 class TestVerticalCylRendererForTurtles extends AbstractTestRenderer(VerticalCyl){
 
-  Test(Turtle(at=(0,0), size=1), TurtleDrawnAt((208, 208)))
-  Test(Turtle(at=(5,5), size=1), TurtleDrawnAt((273, 143)))
-  Test(Turtle(at=(-5,5), size=1), TurtleDrawnAt((143, 143)))
-  // top left
-  Test(Turtle(at=(-16,16), size=1), TurtleDrawnAt((0, 0)))
-  Test(Turtle(at=(-16,16), size=2), TurtleDrawnAt((-6.5, -6.5),(422.5, -6.5)))
-  // bottom left
-  Test(Turtle(at=(-16,-16), size=1), TurtleDrawnAt((0, 416)))
-  Test(Turtle(at=(-16,-16), size=2), TurtleDrawnAt((-6.5, 409.5),(422.5, 409.5)))
-  // bottom right
-  Test(Turtle(at=(16,-16), size=1), TurtleDrawnAt((416, 416)))
-  Test(Turtle(at=(16,-16), size=2), TurtleDrawnAt((409.5, 409.5),(-19.5, 409.5)))
-  // top right
-  Test(Turtle(at=(16,16), size=1), TurtleDrawnAt((416, 0)))
-  Test(Turtle(at=(16,16), size=2), TurtleDrawnAt((409.5, -6.5),(-19.5, -6.5)))
+  Test("one", Turtle(at=(0,0), size=1), TurtleDrawnAt((208, 208)))
+  Test("two", Turtle(at=(5,5), size=1), TurtleDrawnAt((273, 143)))
+  Test("three", Turtle(at=(-5,5), size=1), TurtleDrawnAt((143, 143)))
+  Test("top left 1", Turtle(at=(-16,16), size=1), TurtleDrawnAt((0, 0)))
+  Test("top left 2", Turtle(at=(-16,16), size=2), TurtleDrawnAt((-6.5, -6.5),(422.5, -6.5)))
+  Test("bottom left 1", Turtle(at=(-16,-16), size=1), TurtleDrawnAt((0, 416)))
+  Test("bottom left 2", Turtle(at=(-16,-16), size=2), TurtleDrawnAt((-6.5, 409.5),(422.5, 409.5)))
+  Test("bottom right 1", Turtle(at=(16,-16), size=1), TurtleDrawnAt((416, 416)))
+  Test("bottom right 2", Turtle(at=(16,-16), size=2), TurtleDrawnAt((409.5, 409.5),(-19.5, 409.5)))
+  Test("top right 1", Turtle(at=(16,16), size=1), TurtleDrawnAt((416, 0)))
+  Test("top right 2", Turtle(at=(16,16), size=2), TurtleDrawnAt((409.5, -6.5),(-19.5, -6.5)))
 
-  case class Test(t:Turtle, drawnAt:TurtleDrawnAt) extends BaseTest{
+  case class Test(name:String, t:Turtle, drawnAt:TurtleDrawnAt) extends BaseTest{
+    override def toString = name
     def command = "crt 1[ set shape \"circle\" setxy " + t.at._1 + " " + t.at._2 + " set size " + t.size + " ]"
     def expectedResults = drawnAt.expectedResults(t.size)
   }
@@ -114,23 +114,20 @@ class TestVerticalCylRendererForTurtles extends AbstractTestRenderer(VerticalCyl
 
 class TestHorizontalCylRendererForTurtles extends AbstractTestRenderer(HorizontalCyl){
 
-  Test(Turtle(at=(0,0), size=1), TurtleDrawnAt((208, 208)))
-  Test(Turtle(at=(5,5), size=1), TurtleDrawnAt((273, 143)))
-  Test(Turtle(at=(-5,5), size=1), TurtleDrawnAt((143, 143)))
-  // top left
-  Test(Turtle(at=(-16,16), size=1), TurtleDrawnAt((0, 0)))
-  Test(Turtle(at=(-16,16), size=2), TurtleDrawnAt((-6.5, -6.5),(-6.5, 422.5)))
-  // bottom left
-  Test(Turtle(at=(-16,-16), size=1), TurtleDrawnAt((0, 416)))
-  Test(Turtle(at=(-16,-16), size=2), TurtleDrawnAt((-6.5, 409.5),(-6.5, -19.5)))
-  // bottom right
-  Test(Turtle(at=(16,-16), size=1), TurtleDrawnAt((416, 416)))
-  Test(Turtle(at=(16,-16), size=2), TurtleDrawnAt((409.5, 409.5),(409.5,-19.5)))
-  // top right
-  Test(Turtle(at=(16,16), size=1), TurtleDrawnAt((416, 0)))
-  Test(Turtle(at=(16,16), size=2), TurtleDrawnAt((409.5, -6.5),(409.5, 422.5)))
+  Test("one", Turtle(at=(0,0), size=1), TurtleDrawnAt((208, 208)))
+  Test("two", Turtle(at=(5,5), size=1), TurtleDrawnAt((273, 143)))
+  Test("three", Turtle(at=(-5,5), size=1), TurtleDrawnAt((143, 143)))
+  Test("top left 1", Turtle(at=(-16,16), size=1), TurtleDrawnAt((0, 0)))
+  Test("top left 2", Turtle(at=(-16,16), size=2), TurtleDrawnAt((-6.5, -6.5),(-6.5, 422.5)))
+  Test("bottom left 1", Turtle(at=(-16,-16), size=1), TurtleDrawnAt((0, 416)))
+  Test("bottom left 2", Turtle(at=(-16,-16), size=2), TurtleDrawnAt((-6.5, 409.5),(-6.5, -19.5)))
+  Test("bottom right 1", Turtle(at=(16,-16), size=1), TurtleDrawnAt((416, 416)))
+  Test("bottom right 2", Turtle(at=(16,-16), size=2), TurtleDrawnAt((409.5, 409.5),(409.5,-19.5)))
+  Test("top right 1", Turtle(at=(16,16), size=1), TurtleDrawnAt((416, 0)))
+  Test("top right 2", Turtle(at=(16,16), size=2), TurtleDrawnAt((409.5, -6.5),(409.5, 422.5)))
 
-  case class Test(t:Turtle, drawnAt:TurtleDrawnAt) extends BaseTest{
+  case class Test(name:String, t:Turtle, drawnAt:TurtleDrawnAt) extends BaseTest{
+    override def toString = name
     def command = "crt 1[ set shape \"circle\" setxy " + t.at._1 + " " + t.at._2 + " set size " + t.size + " ]"
     def expectedResults = drawnAt.expectedResults(t.size)
   }
