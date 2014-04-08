@@ -88,28 +88,29 @@ class TestMirroringModels extends FunSuite with SlowTest {
  * generalised if needed.) NP 2014-01-13
  */
 class TestDiffusionOnDirectedNetworkMirroring extends FunSuite {
-  test("TestDiffusionOnDirectedNetworkMirroring") {
-    val path = TestChecksums.checksums.values.map(_.path)
-      .find(_.contains("Diffusion on a Directed Network")).get
-    withWorkspace { (ws, mirrorables) =>
-      ws.open(path)
-      Checksummer.initModelForChecksumming(ws)
-      val mirroredState = Mirroring.merge(Map(), diffs(Map(), mirrorables())._2)
-      val fakeWorld = new FakeWorld(mirroredState)
-      def getLinks(world: api.World, breedName: String) = world
-        .getLinkBreed(breedName).agents.asScala
-        .collect { case l: api.Link => l }
-      for {
-        breedName <- ws.world.program.breeds.keys
-        fakeLinks = getLinks(fakeWorld, breedName)
-        realLinks = getLinks(ws.world, breedName)
-        _ = assertResult(realLinks.size)(fakeLinks.size)
-        (rl, fl) <- (realLinks, fakeLinks).zipped
-      } {
-        assertResult(rl.end1.id)(fl.end1.id)
-        assertResult(rl.end2.id)(fl.end2.id)
-        assertResult(rl.color)(fl.color)
+  if (!api.Version.is3D)
+    test("TestDiffusionOnDirectedNetworkMirroring") {
+      val path = TestChecksums.checksums.values.map(_.path)
+        .find(_.contains("Diffusion on a Directed Network")).get
+      withWorkspace { (ws, mirrorables) =>
+        ws.open(path)
+        Checksummer.initModelForChecksumming(ws)
+        val mirroredState = Mirroring.merge(Map(), diffs(Map(), mirrorables())._2)
+        val fakeWorld = new FakeWorld(mirroredState)
+        def getLinks(world: api.World, breedName: String) = world
+          .getLinkBreed(breedName).agents.asScala
+          .collect { case l: api.Link => l }
+        for {
+          breedName <- ws.world.program.breeds.keys
+          fakeLinks = getLinks(fakeWorld, breedName)
+          realLinks = getLinks(ws.world, breedName)
+          _ = assertResult(realLinks.size)(fakeLinks.size)
+          (rl, fl) <- (realLinks, fakeLinks).zipped
+        } {
+          assertResult(rl.end1.id)(fl.end1.id)
+          assertResult(rl.end2.id)(fl.end2.id)
+          assertResult(rl.color)(fl.color)
+        }
       }
     }
-  }
 }
