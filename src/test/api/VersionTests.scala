@@ -31,7 +31,7 @@ class VersionTests extends FunSuite {
   }
   // these don't need to be changed very often; they should always
   // pass properly since we're long past these versions -- ev
-  test("testOldVersions") {
+  test("OldVersions") {
     assert(!compatibleVersion("NetLogo 4.0"))
     assert(!compatibleVersion("NetLogo 4.0beta1"))
     assert(!compatibleVersion("NetLogo 4.0pre1"))
@@ -55,7 +55,7 @@ class VersionTests extends FunSuite {
     assert(!compatibleVersion("NetLogo 3.0weirdversion"))
   }
   // no need to update this. it only checks that version.txt has a valid date - ST 12/18/08
-  if (buildDate != "INTERIM DEVEL BUILD") test("testDate") {
+  if (buildDate != "INTERIM DEVEL BUILD") test("Date") {
     import java.text.SimpleDateFormat
     val format = new SimpleDateFormat("MMMM d, yyyy")
     val date = format.parse(buildDate)
@@ -64,7 +64,7 @@ class VersionTests extends FunSuite {
     assert(date.before(new SimpleDateFormat("y").parse("2100")))
   }
   // no need to change this part it's just testing the string comparing part -- ev
-  test("testStringComparisonLogic") {
+  test("StringComparisonLogic") {
     assert(compareVersions("NetLogo 4.0", "NetLogo 4.0.1"))
     assert(compareVersions("NetLogo 4.0.1", "NetLogo 4.0.1"))
     assert(compareVersions("NetLogo 4.0", "NetLogo 4.0"))

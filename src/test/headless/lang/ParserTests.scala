@@ -8,7 +8,7 @@ import org.nlogo.core.AgentKind
 class ParserTests extends FunSuite {
 
   // simple regex tests
-  test("test command regex") {
+  test(" command regex") {
     val Parser.CommandRegex(agent, command) = "O> crt 1"
     assertResult("O")(agent)
     assertResult("crt 1")(command)

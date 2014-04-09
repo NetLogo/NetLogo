@@ -22,25 +22,25 @@ class ConstantFolderTests extends FunSuite {
   }
 
   /// not pure
-  test("testNonConstant") { assertResult("_timer[]")(compile("timer")) }
-  test("testNestedNonConstant") {
+  test("NonConstant") { assertResult("_timer[]")(compile("timer")) }
+  test("NestedNonConstant") {
     assertResult("_plus[_constdouble:1.0[], _timer[]]")(
       compile("1 + timer"))
   }
 
   /// pure, easy
-  test("testNumber") { assertResult("_constdouble:1.0[]")(compile("1")) }
-  test("testBoolean") { assertResult("_constboolean:true[]")(compile("true")) }
-  test("testList") { assertResult("_constlist:[1 2 3][]")(compile("[1 2 3]")) }
-  test("testString") { assertResult("_conststring:\"foo\"[]")(compile("\"foo\"")) }
-  test("testNobody") { assertResult("_nobody[]")(compile("nobody")) }
+  test("Number") { assertResult("_constdouble:1.0[]")(compile("1")) }
+  test("Boolean") { assertResult("_constboolean:true[]")(compile("true")) }
+  test("List") { assertResult("_constlist:[1 2 3][]")(compile("[1 2 3]")) }
+  test("String") { assertResult("_conststring:\"foo\"[]")(compile("\"foo\"")) }
+  test("Nobody") { assertResult("_nobody[]")(compile("nobody")) }
 
   /// pure, harder
-  test("testAddition") { assertResult("_constdouble:4.0[]")(compile("2 + 2")) }
-  test("testNesting") { assertResult("_constdouble:19.0[]")(compile("2 + 3 * 4 + 5")) }
+  test("Addition") { assertResult("_constdouble:4.0[]")(compile("2 + 2")) }
+  test("Nesting") { assertResult("_constdouble:19.0[]")(compile("2 + 3 * 4 + 5")) }
 
   /// runtime errors
-  test("testError") {
+  test("Error") {
     // hmm, is there an easier way in ScalaTest to check the message in an exception? - ST 4/2/11
     intercept[api.CompilerException] {
       try compile("1 / 0")

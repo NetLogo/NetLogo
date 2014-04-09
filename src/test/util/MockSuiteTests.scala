@@ -9,7 +9,7 @@ class MockSuiteTests extends MockSuite{
     def c(c:Char)
     def a(a:Any)
   }
-  mockTest("test primitive arguments"){
+  mockTest("primitive arguments"){
     val x = mock[X]
     expecting{
       one(x).i(arg(a[Int]))
@@ -42,7 +42,7 @@ class MockSuiteTests extends MockSuite{
       x.a('f')
     }
   }
-  mockTest("test primitive arguments (error cases)"){
+  mockTest("primitive arguments (error cases)"){
     val x = mock[X]
     expecting{
       one(x).a(arg(a[Int]))
@@ -59,7 +59,7 @@ class MockSuiteTests extends MockSuite{
     assert(e.toString === errorMessage)
   }
 
-  mockTest("test primitive arguments (more error cases)"){
+  mockTest("primitive arguments (more error cases)"){
     val x = mock[X]
     expecting{
       one(x).a(arg(a[Char]))

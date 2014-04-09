@@ -60,23 +60,23 @@ class TestImportExport extends FixtureSuite with SlowTest {
 
   /// tests that use roundTripHelper
 
-  test("testRoundTripEmpty") { implicit fixture =>
+  test("RoundTripEmpty") { implicit fixture =>
     roundTripHelper("")
   }
 
-  test("testRoundTripTicks1") { implicit fixture =>
+  test("RoundTripTicks1") { implicit fixture =>
     roundTripHelper("reset-ticks")
   }
 
-  test("testRoundTripTicks2") { implicit fixture =>
+  test("RoundTripTicks2") { implicit fixture =>
     roundTripHelper("reset-ticks tick")
   }
 
-  test("testRoundTripTicks3") { implicit fixture =>
+  test("RoundTripTicks3") { implicit fixture =>
     roundTripHelper("reset-ticks tick clear-ticks")
   }
 
-  test("testRoundTripSimple") { implicit fixture =>
+  test("RoundTripSimple") { implicit fixture =>
     roundTripHelper("crt 30 [ set heading who * 90 fd who ]",
       worldSize = 5)
   }
@@ -85,7 +85,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
     roundTripHelper("setup true", COMPLEX_SOURCE, worldSize = 3)
   }
 
-  test("testRoundTripSpecialCharacter") { implicit fixture =>
+  test("RoundTripSpecialCharacter") { implicit fixture =>
     // 8211 and 8212 are some arbitrary unicode values. we use numbers since we don't want non-ASCII
     // characters in the source files -- ST 2/14/07
     roundTripHelper("ask one-of patches [ set plabel \""
@@ -94,12 +94,12 @@ class TestImportExport extends FixtureSuite with SlowTest {
       + "\" ]")
   }
 
-  test("testRoundTripAllTurtlesAllPatches1") { implicit fixture =>
+  test("RoundTripAllTurtlesAllPatches1") { implicit fixture =>
     roundTripHelper("set x turtles set y patches",
       "globals [x y]")
   }
 
-  test("testAgentsStoredInAgentVariables") { implicit fixture =>
+  test("AgentsStoredInAgentVariables") { implicit fixture =>
     roundTripHelper("cro 4 [ create-links-with other turtles ]\n" +
       "ask turtle 0 [ set label one-of other turtles ]\n" +
       "ask turtle 1 [ set label one-of patches ]\n" +
@@ -107,7 +107,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
       "ask turtle 3 [ set label sort patches ]")
   }
 
-  test("testBreededTurtlesStoredInAgentVariables") { implicit fixture =>
+  test("BreededTurtlesStoredInAgentVariables") { implicit fixture =>
     roundTripHelper("create-ordered-mice 2 [ create-links-with other mice ]\n" +
       "ask turtle 0 [ set label one-of other mice ]\n" +
       "ask turtle 1 [ set label sort mice ]",
@@ -115,21 +115,21 @@ class TestImportExport extends FixtureSuite with SlowTest {
   }
 
   // ticket #934
-  test("testLinksStoredInAgentVariables") { implicit fixture =>
+  test("LinksStoredInAgentVariables") { implicit fixture =>
     roundTripHelper("cro 2 [ create-links-with other turtles ]\n" +
       "ask turtle 0 [ set label one-of links ]\n" +
       "ask turtle 1 [ set label sort links]\n")
   }
 
   // more ticket #934
-  test("testBreededLinksStoredInAgentVariables") { implicit fixture =>
+  test("BreededLinksStoredInAgentVariables") { implicit fixture =>
     roundTripHelper("cro 2 [ create-shipments-to other turtles ]\n" +
       "ask turtle 0 [ set label one-of shipments ]\n" +
       "ask turtle 1 [ set label sort shipments]\n",
       "directed-link-breed [shipments shipment]")
   }
 
-  test("testRoundTripAllTurtlesAllPatches2") { implicit fixture =>
+  test("RoundTripAllTurtlesAllPatches2") { implicit fixture =>
     import fixture._
     // the bug we're testing for is elusive and may only appear if we actually change the world size
     // around - ST 12/21/04
@@ -145,7 +145,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
     testReporter("y = patches", "true")
   }
 
-  test("testImportDrawing") { implicit fixture =>
+  test("ImportDrawing") { implicit fixture =>
     import fixture._
     val filename = getUniqueFilename()
     ModelCreator.open(workspace, core.WorldDimensions.square(10))
@@ -166,7 +166,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
     // TrailDrawer for details.  ev 3/1/06
   }
 
-  test("testExportOutputArea") { implicit fixture =>
+  test("ExportOutputArea") { implicit fixture =>
     import fixture._
     val filename = getUniqueFilename()
     ModelCreator.open(workspace, core.WorldDimensions.square(10))
@@ -179,7 +179,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
     assertResult(expected)(actual)
   }
 
-  test("testExportLinks") { implicit fixture =>
+  test("ExportLinks") { implicit fixture =>
     import fixture._
     val filename = getUniqueFilename()
     ModelCreator.open(workspace, core.WorldDimensions.square(10))
@@ -198,7 +198,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
     testReporter("[heading] of turtle 1", "0")
   }
 
-  test("testImportInvalidSize") { implicit fixture =>
+  test("ImportInvalidSize") { implicit fixture =>
     import fixture._
     ModelCreator.open(workspace, core.WorldDimensions.square(10))
     workspace.importerErrorHandler =
@@ -215,7 +215,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
     testCommand("import-world \"test/import/invalid-drawing.csv\"")
   }
 
-  test("testImportDrawingIncompleteData") { implicit fixture =>
+  test("ImportDrawingIncompleteData") { implicit fixture =>
     import fixture._
     ModelCreator.open(workspace, core.WorldDimensions.square(10))
     workspace.importerErrorHandler =
@@ -231,7 +231,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
     testCommand("import-world \"test/import/short-drawing.csv\"")
   }
 
-  test("testImportSubject") { implicit fixture =>
+  test("ImportSubject") { implicit fixture =>
     import fixture._
     val filename = getUniqueFilename()
     ModelCreator.open(workspace, core.WorldDimensions.square(10))
@@ -261,7 +261,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
     assertResult(workspace.world.observer().perspective)(api.Perspective.Ride)
   }
 
-  test("testNonExistentPlot") { implicit fixture =>
+  test("NonExistentPlot") { implicit fixture =>
     import fixture._
     ModelCreator.open(workspace, core.WorldDimensions.square(10))
     workspace.importerErrorHandler =
@@ -277,7 +277,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
     testCommand("import-world \"test/import/plot-simple.csv\"")
   }
 
-  test("testNonExistentPen") { implicit fixture =>
+  test("NonExistentPen") { implicit fixture =>
     import fixture._
     workspace.open("test/import/plot-simple.nlogo")
     workspace.importerErrorHandler =
@@ -293,7 +293,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
     testCommand("import-world \"plot-simple.csv\"")
   }
 
-  test("testCustomPenColor") { implicit fixture =>
+  test("CustomPenColor") { implicit fixture =>
     import fixture._
     val filename = getUniqueFilename()
     workspace.open("test/import/plot-custom-color.nlogo")
@@ -306,7 +306,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
       dropLines(export2, 3))
   }
 
-  test("testImportingTurtlesDying") { implicit fixture =>
+  test("ImportingTurtlesDying") { implicit fixture =>
     import fixture._
     val filename = getUniqueFilename()
     ModelCreator.open(workspace, core.WorldDimensions.square(10))
@@ -321,7 +321,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
     testReporter("sort [who] of turtles", "[0 1 2 3 6 7 8 10 11]")
   }
 
-  test("testImportingTables") { implicit fixture =>
+  test("ImportingTables") { implicit fixture =>
     import fixture._
     val filename = getUniqueFilename()
     ModelCreator.open(workspace, core.WorldDimensions.square(5), "globals [table1 table2] extensions [ table ]")
@@ -332,7 +332,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
     testReporter("table:to-list table1", "[[1 2] [\"word\" \"value\"] [3 false]]")
   }
 
-  test("testImportingTablesSameTable") { implicit fixture =>
+  test("ImportingTablesSameTable") { implicit fixture =>
     import fixture._
     val filename = getUniqueFilename()
     ModelCreator.open(workspace, core.WorldDimensions.square(5), "globals [table1 table2] extensions [ table ]")
@@ -346,7 +346,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
     testReporter("table:to-list table2", "[[1 2] [3 4] [4 5] [7 8]]")
   }
 
-  test("testImportingTablesTwoTables") { implicit fixture =>
+  test("ImportingTablesTwoTables") { implicit fixture =>
     import fixture._
     val filename = getUniqueFilename()
     ModelCreator.open(workspace, core.WorldDimensions.square(5), "globals [table1 table2] extensions [ table ]")
@@ -360,7 +360,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
     testReporter("table:to-list table2", "[[1 2] [3 4] [4 5]]")
   }
 
-  test("testImportingArrays") { implicit fixture =>
+  test("ImportingArrays") { implicit fixture =>
     import fixture._
     val filename = getUniqueFilename()
     ModelCreator.open(workspace, core.WorldDimensions.square(5), "globals [ar1 ar2] extensions [ array ]")
@@ -371,7 +371,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
     testReporter("array:to-list ar1", "[1 2 3 4 \"string\" false]")
   }
 
-  test("testImportingArraysSameArray") { implicit fixture =>
+  test("ImportingArraysSameArray") { implicit fixture =>
     import fixture._
     val filename = getUniqueFilename()
     ModelCreator.open(workspace, core.WorldDimensions.square(5), "globals [ar1 ar2] extensions [ array ]")
@@ -384,7 +384,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
     testReporter("array:to-list ar2", "[1 2 4]");
   }
 
-  test("testImportingArraysTwoArrays") { implicit fixture =>
+  test("ImportingArraysTwoArrays") { implicit fixture =>
     import fixture._
     val filename = getUniqueFilename()
     ModelCreator.open(workspace, core.WorldDimensions.square(5), "globals [ar1 ar2] extensions [ array ]")
@@ -398,7 +398,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
     testReporter("array:to-list ar2", "[1 2 3]");
   }
 
-  test("testImportingArraysAndTables") { implicit fixture =>
+  test("ImportingArraysAndTables") { implicit fixture =>
     import fixture._
     val filename = getUniqueFilename()
     ModelCreator.open(workspace, core.WorldDimensions.square(5), "globals [ar1 ar2 t1 t2] extensions [ array table ]")
@@ -419,7 +419,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
 
   /// other tests (that don't use roundTripHelper)
 
-  test("testTrailingCommas") { implicit fixture =>
+  test("TrailingCommas") { implicit fixture =>
     import fixture._
     ModelCreator.open(workspace, core.WorldDimensions.square(35),
       org.nlogo.api.FileIO.file2String("test/import/trailing-commas.nlogo"))
@@ -491,7 +491,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
 
   // this is a focused test with a small number of turtles
   // designed to catch one particular known bug
-  test("testReproducibilityOfWhoNumberAssignment1") { implicit fixture =>
+  test("ReproducibilityOfWhoNumberAssignment1") { implicit fixture =>
     import fixture._
     val filename = getUniqueFilename()
     ModelCreator.open(workspace, core.WorldDimensions.square(0))
@@ -509,7 +509,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
 
   // this is a focused test with a small number of turtles
   // designed to catch one particular known bug
-  test("testReproducibilityOfWhoNumberAssignment2") { implicit fixture =>
+  test("ReproducibilityOfWhoNumberAssignment2") { implicit fixture =>
     import fixture._
     val filename = getUniqueFilename()
     ModelCreator.open(workspace, core.WorldDimensions.square(0))
@@ -527,7 +527,7 @@ class TestImportExport extends FixtureSuite with SlowTest {
 
   // this is a less focused test with lots of turtles
   // that might hopefully catch new bugs
-  test("testReproducibilityOfWhoNumberAssignment3") { implicit fixture =>
+  test("ReproducibilityOfWhoNumberAssignment3") { implicit fixture =>
     import fixture._
     val filename = getUniqueFilename()
     ModelCreator.open(workspace, core.WorldDimensions.square(0))
