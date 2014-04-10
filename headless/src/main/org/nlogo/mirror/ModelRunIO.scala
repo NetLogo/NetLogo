@@ -41,7 +41,6 @@ object ModelRunIO {
     def read[A]() = in.readObject().asInstanceOf[A]
     val name = read[String]()
     val modelString = read[String]()
-    val interfaceImage = imageFromBytes(read[Array[Byte]]())
     val deltas = read[Seq[Delta]]()
     val initialPlots = read[Seq[SavablePlot]].map(_.toPlot)
     val initialDrawingImage = imageFromBytes(read[Array[Byte]]())
