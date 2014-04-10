@@ -92,7 +92,7 @@ class ReviewToolBar(reviewTab: ReviewTab, frameAddedPub: SimplePublisher[FrameAd
     // full exception information when something
     // goes wrong. NP 2013-04-25.
     try {
-      val results: Seq[Either[String, ModelRun]] =
+      val results: Seq[Either[(String, Exception), ModelRun]] =
         chooseFiles.map { path =>
           // Load a run from `path` and returns either the loaded run
           // in case of success or the path in case of failure
@@ -102,7 +102,7 @@ class ReviewToolBar(reviewTab: ReviewTab, frameAddedPub: SimplePublisher[FrameAd
             Right(run)
           } catch {
             case e: UserCancelException => throw e // stop now if user cancels
-            case e: Exception           => Left(path) // accumulate other exceptions
+            case e: Exception           => Left((path, e)) // accumulate other exceptions
           }
         }
       val loadedRuns = results.flatMap(_.right.toOption)
@@ -117,8 +117,11 @@ class ReviewToolBar(reviewTab: ReviewTab, frameAddedPub: SimplePublisher[FrameAd
           if (errors.size > 1) ("they are not", "files")
           else ("it is not a", "file")
         val msg = "Something went wrong while trying to load the following " +
-          fileStr + ":\n\n" + errors.mkString("\n") + "\n\n" +
+          fileStr + ":\n\n" + errors.map(_._1).mkString("\n") + "\n\n" +
           "Maybe " + notStr + " proper NetLogo Model Run " + fileStr + "?"
+        // Ideally, stack traces would be available from a "Details..."
+        // button in the dialog box. NP 2014-04-10.
+        for ((_, e) <- errors) e.printStackTrace()
         JOptionPane.showMessageDialog(reviewTab, msg, "NetLogo", JOptionPane.ERROR_MESSAGE);
       }
     } catch {
