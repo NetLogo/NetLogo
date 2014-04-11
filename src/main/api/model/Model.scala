@@ -3,9 +3,13 @@
 package org.nlogo.api.model
 import org.nlogo.util.Utils.getResourceLines
 
-case class Model(code: String = "", widgets: List[Widget] = Nil, info: String = "", version: String = "",
+case class Model(code: String = "", widgets: List[Widget] = Nil, info: String = "", version: String = "NetLogo 5.0",
   turtleShapes: List[String] = Nil, behaviorSpace: List[String] = Nil, linkShapes: List[String] = Nil,
-  previewCommands: List[String] = Nil)
+  previewCommands: List[String] = Nil) {
+
+  def view: View = widgets.collectFirst({case (w: View) => w}).get
+  def plots: List[Plot] = widgets.collect({case (w: Plot) => w})
+}
 
 object Model {
   lazy val defaultShapes: Seq[String] =

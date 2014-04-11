@@ -3,6 +3,8 @@
 package org.nlogo.headless
 
 import org.nlogo.workspace
+import workspace.WorldLoader
+import org.nlogo.plot.PlotLoader
 import org.nlogo.agent.{BooleanConstraint, ChooserConstraint, InputBoxConstraint, NumericConstraint}
 import org.nlogo.api.{CompilerException, FileIO, LogoList, Program, ValueConstraint, Version}
 import org.nlogo.api.model.{Model, ModelReader, Widget}
@@ -28,8 +30,6 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     }
 
   def openFromModel(model: Model) {
-
-
     require(!ws.modelOpened, "HeadlessWorkspace can only open one model")
     ws.setModelOpened()
 
@@ -47,13 +47,19 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     val monitorCode = new collection.mutable.ArrayBuffer[String] // for TestCompileAll
     val interfaceGlobalCommands = new StringBuilder
 
+    WorldLoader.load(model.view, ws)
+
+    for(plot <- model.plots)
+      PlotLoader.loadPlot(plot, ws.plotManager.newPlot(""))
+
+
 //    val (interfaceGlobals, constraints, buttonCode, monitorCode, interfaceGlobalCommands, _) =
 //      new workspace.WidgetParser(ws, Some(ws), Some(ws.plotManager), ws.compilerTestingMode)
 //        .parseWidgets(map(ModelSection.Interface), netLogoVersion)
 
     // read procedures, compile them.
     val results = {
-      val code = model.code.mkString("", "\n", "\n")
+      val code = model.code
       ws.compiler.compileProgram(
         code, Program.empty.copy(
           interfaceGlobals = interfaceGlobals),

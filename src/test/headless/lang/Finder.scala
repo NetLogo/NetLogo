@@ -88,10 +88,12 @@ trait Finder extends FunSuite with SlowTest {
     withFixture(s"${t.fullName} ($mode)") {
       fixture =>
         val nonDecls = t.entries.filterNot(_.isInstanceOf[Declaration])
-        val decls = t.entries.collect{case d: Declaration => d.source}
+        val decls =
+          t.entries.collect{case d: Declaration => d.source}
+            .mkString("\n").trim
         if (nonDecls.forall(!_.isInstanceOf[Open]))
           fixture.open(new Model(
-            code = decls.mkString("\n"),
+            code = decls,
             widgets = StandardWidgets))
         else
           assert(t.entries.forall(!_.isInstanceOf[Declaration]))
@@ -126,7 +128,7 @@ trait Finder extends FunSuite with SlowTest {
   val StandardWidgets = {
     import model.{ Plot, Pens, Pen, View }
     List(
-      View(),
+      View.square(5),
       Plot(display = "plot1", pens = Pens(List(Pen(display = "pen1"), Pen(display = "pen2")))),
       Plot(display = "plot2", pens = Pens(List(Pen(display = "pen1"), Pen(display = "pen2")))))
   }

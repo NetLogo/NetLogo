@@ -77,7 +77,7 @@ class Fixture(name: String) extends AbstractFixture {
   val compiler: CompilerInterface =
     Femto.scalaSingleton("org.nlogo.compile.Compiler")
 
-  def defaultDimensions = core.WorldDimensions.square(5)
+  def defaultDimensions = api.model.View.square(5).dimensions
 
   def declare(source: String, dimensions: api.WorldDimensions = defaultDimensions) {
     workspace.openModel(Model(code = source))

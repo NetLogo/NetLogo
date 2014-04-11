@@ -4,16 +4,16 @@ package org.nlogo.api.model
 
 import scalaz.Scalaz.ToStringOpsFromString
 
-import org.nlogo.api.UpdateMode
+import org.nlogo.api.{UpdateMode, WorldDimensions}
 
 sealed trait Widget
 case class Button(display: String, left: Int, top: Int, right: Int, bottom: Int,
              source: String, forever: Boolean) extends Widget
 case class Plot(display: String, left: Int = 0, top: Int = 0, right: Int = 5, bottom: Int = 5,
-             xAxis: String = "", yAxis: String = "", ymin: Float = 0, ymax: Float = 0, xmin: Float = 0, xmax: Float = 0,
+             xAxis: String = "", yAxis: String = "", ymin: Double = 0, ymax: Double = 0, xmin: Double = 0, xmax: Double = 0,
              autoPlotOn: Boolean = true, legendOn: Boolean = false,
              setupCode: String = "", updateCode: String = "", pens: Pens = Pens()) extends Widget
-case class Pen(display: String, interval: Float = 1, mode: Int = 0, color: Int = 0, inLegend: Boolean = false,
+case class Pen(display: String, interval: Double = 1, mode: Int = 0, color: Int = 0, inLegend: Boolean = false,
              setupCode: String = "", updateCode: String = "") extends Widget
 case class Pens(pens: List[Pen] = Nil) extends Widget
 case class Switch(display: String, left: Int = 0, top: Int = 0, right: Int = 0, bottom: Int = 0,
@@ -24,7 +24,7 @@ sealed trait Direction
 case object Horizontal extends Direction
 case object Vertical extends Direction
 case class Slider(display: String, left: Int = 0, top: Int = 0, right: Int = 0, bottom: Int = 0,
-             varName: String, min: String = "1", max: String = "10", default: Float = 1, step: String = "1",
+             varName: String, min: String = "1", max: String = "10", default: Double = 1, step: String = "1",
              units: String = "", direction: Direction = Horizontal) extends Widget
 case class Monitor(display: String, left: Int, top: Int, right: Int, bottom: Int,
              source: String, precision: Int) extends Widget
@@ -39,11 +39,17 @@ case object Col extends InputBoxType[Int]("Color")
 case class InputBox[T](left: Int = 0, top: Int = 0, right: Int = 0, bottom: Int = 0, varName: String,
              value: T, multiline: Boolean = false, boxtype: InputBoxType[T]) extends Widget
 case class View(left: Int = 0, top: Int = 0, right: Int = 5, bottom: Int = 5,
-  patchSize: Float = 12, fontSize: Float = 9, wrappingAllowedInX: Boolean = true, wrappingAllowedInY: Boolean = true,
-  minPxcor: Int = -5, maxPxcor: Int = 5, minPycor: Int = -5, maxPycor: Int = 5,
+  patchSize: Double = 12, fontSize: Int = 9, wrappingAllowedInX: Boolean = true, wrappingAllowedInY: Boolean = true,
+  minPxcor: Int = 0, maxPxcor: Int = 0, minPycor: Int = 0, maxPycor: Int = 0,
   updateMode: UpdateMode = UpdateMode.TickBased, showTickCounter: Boolean = true, tickCounterLabel: String = "ticks",
-  frameRate: Int = 25) extends Widget
+  frameRate: Int = 25) extends Widget {
 
+  def dimensions: WorldDimensions = new WorldDimensions(minPxcor, maxPxcor, minPycor, maxPycor,
+                                                        patchSize, wrappingAllowedInY, wrappingAllowedInX)
+}
+object View {
+  def square(dim: Int) = View(minPxcor = -dim, maxPxcor = dim, minPycor = -dim, maxPycor = dim)
+}
 
 trait WidgetLine[T] {
   def parse(line: String): T
@@ -61,11 +67,11 @@ object BooleanLine extends WidgetLine[Boolean] {
   def format(v: Boolean): String = if(v) "1" else "0"
   def valid(v: String): Boolean = v == "1" || v == "0"
 }
-object FloatLine extends WidgetLine[Float] {
-  type T = Float
-  def parse(line: String): Float = line.toFloat
-  def format(v: Float): String = v.toString
-  def valid(v: String): Boolean = v.parseFloat.isSuccess
+object DoubleLine extends WidgetLine[Double] {
+  type T = Double
+  def parse(line: String): Double = line.toDouble
+  def format(v: Double): String = v.toString
+  def valid(v: String): Boolean = v.parseDouble.isSuccess
 }
 object StringLine extends WidgetLine[String] {
   def parse(line: String): String = line
@@ -175,10 +181,10 @@ object PlotReader extends BaseWidgetReader {
                         StringLine,  // display
                         StringLine,  // xaxis
                         StringLine,  // yaxis
-                        FloatLine,   // ymin
-                        FloatLine,   // ymax
-                        FloatLine,   // xmin
-                        FloatLine,   // xmax
+                        DoubleLine,   // ymin
+                        DoubleLine,   // ymax
+                        DoubleLine,   // xmin
+                        DoubleLine,   // xmax
                         BooleanLine, // autoploton
                         BooleanLine, // legend on
                         StringLine   // Double code lines, parse later
@@ -188,7 +194,7 @@ object PlotReader extends BaseWidgetReader {
                                     plot.autoPlotOn, plot.legendOn, """"" """"")
   def asAnyRef(vals: List[Any]): Plot = {
     val List(_, left: Int, right: Int, top: Int, bottom: Int, display: String,
-      xAxis: String, yAxis: String, ymin: Float, ymax: Float, xmin: Float, xmax: Float,
+      xAxis: String, yAxis: String, ymin: Double, ymax: Double, xmin: Double, xmax: Double,
       autoPlotOn: Boolean, legendOn: Boolean, _) = vals
     new Plot(display, left, top, right, bottom, xAxis, yAxis, ymin, ymax, xmin, xmax, autoPlotOn, legendOn, "", "")
   }
@@ -218,7 +224,7 @@ object SliderReader extends BaseWidgetReader {
                         StringLine,   // varname
                         StringLine,   // min
                         StringLine,   // max
-                        FloatLine,    // default
+                        DoubleLine,    // default
                         StringLine,   // step
                         ReservedLine,
                         StringLine,   // units
@@ -229,7 +235,7 @@ object SliderReader extends BaseWidgetReader {
                                     (), slider.units, slider.direction)
   def asAnyRef(vals: List[Any]): Slider = {
     val List(_, left: Int, right: Int, top: Int, bottom: Int, display: String, varName: String, min: String,
-             max: String, default: Float, step: String, _, units: String, direction: Direction) = vals
+             max: String, default: Double, step: String, _, units: String, direction: Direction) = vals
     new Slider(display, left, top, right, bottom, varName, min, max, default, step, units, direction)
   }
 }
@@ -310,9 +316,9 @@ object ViewReader extends BaseWidgetReader {
                         IntLine,  // bottom
                         ReservedLine("-1"), // maxPxCor or -1
                         ReservedLine("-1"), // maxPyCor or -1
-                        FloatLine,    // patchsize
+                        DoubleLine,    // patchsize
                         ReservedLine, // shapes on, not used
-                        FloatLine,    // font size
+                        IntLine,    // font size
 
                         ReservedLine, // hex settings
                         ReservedLine, // and 
@@ -337,8 +343,8 @@ object ViewReader extends BaseWidgetReader {
     view.minPxcor, view.maxPxcor, view.minPycor, view.maxPycor,
     view.updateMode, view.updateMode, view.showTickCounter, view.tickCounterLabel, view.frameRate)
   def asAnyRef(vals: List[Any]): View = {
-    val ((left: Int) :: (top: Int) :: (right: Int) :: (bottom: Int) :: _ :: _ :: (patchSize: Float) :: _ ::
-         (fontSize: Float) :: _ :: _ :: _ :: _ :: (wrappingAllowedInX: Boolean) :: (wrappingAllowedInY: Boolean) ::
+    val ((left: Int) :: (top: Int) :: (right: Int) :: (bottom: Int) :: _ :: _ :: (patchSize: Double) :: _ ::
+         (fontSize: Int) :: _ :: _ :: _ :: _ :: (wrappingAllowedInX: Boolean) :: (wrappingAllowedInY: Boolean) ::
          _ :: (minPxcor: Int) :: (maxPxcor: Int) :: (minPycor: Int) :: (maxPycor: Int) :: (updateMode: UpdateMode) ::
          _ :: (showTickCounter: Boolean) :: (tickCounterLabel: String) :: (frameRate: Int) :: Nil) = vals
     new View(left, top, right, bottom, patchSize, fontSize,

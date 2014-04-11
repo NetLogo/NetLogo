@@ -14,8 +14,3 @@ case class WorldDimensions(
   def width = maxPxcor - minPxcor + 1
   def height = maxPycor - minPycor + 1
 }
-object WorldDimensions {
-  def square(max: Int) =
-    WorldDimensions(-max, max, -max, max)
-}
-
