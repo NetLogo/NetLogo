@@ -32,7 +32,7 @@ class TestPlotModels extends FixtureSuite {
        |end""".stripMargin
   val theModel =
     Model(code = modelCode, widgets = List(
-      Plot(display = "", pens = List(Pen(display = "", updateCode = "plot count dogs * 2")))))
+      View(), Plot(display = "", pens = List(Pen(display = "", updateCode = "plot count dogs * 2")))))
 
   test("plot on tick") { implicit fixture =>
     import fixture._
@@ -101,6 +101,7 @@ class TestPlotModels extends FixtureSuite {
     import fixture._
     open(
       Model(code = modelCode, widgets = List(
+        View(),
         Plot(display = "", setupCode = "create-dogs 5",
           pens = List(Pen(display = "", updateCode = "plot count dogs * 2"))))))
     testCommand("setup-plots")
@@ -110,6 +111,7 @@ class TestPlotModels extends FixtureSuite {
   test("plot with setup code and pen with setup code") { implicit fixture =>
     import fixture._
     open(Model(code = modelCode, widgets = List(
+      View(),
       Plot(display = "", setupCode = "create-dogs 5",
            pens = List(Pen(display = "", setupCode = "create-dogs 3"))))))
     testReporter("count dogs", "0")
@@ -119,7 +121,7 @@ class TestPlotModels extends FixtureSuite {
 
   test("pen with no update code should not get plotted on tick") { implicit fixture =>
     import fixture._
-    open(Model(code = modelCode, widgets = List(Plot(display = "", pens = List(Pen(display = "", updateCode = ""))))))
+    open(Model(code = modelCode, widgets = List(View(), Plot(display = "", pens = List(Pen(display = "", updateCode = ""))))))
     testCommand("reset-ticks")
     assert(onlyPen.points.size === 0)
     testCommand("tick")
@@ -129,8 +131,9 @@ class TestPlotModels extends FixtureSuite {
   test("plot update code should run on tick") { implicit fixture =>
     import fixture._
     open(
-      Model(code = modelCode, widgets = List(Plot(display = "", updateCode = "plot count turtles",
-                                 pens = List(Pen(display = ""))))))
+      Model(code = modelCode, widgets = List(View(),
+                                             Plot(display = "", updateCode = "plot count turtles",
+                                                  pens = List(Pen(display = ""))))))
     testCommand("reset-ticks clear-all-plots")
     assert(onlyPen.points.size === 0)
 
@@ -143,6 +146,7 @@ class TestPlotModels extends FixtureSuite {
     import fixture._
     open(
       Model(code = modelCode, widgets = List(
+        View(),
         Plot(display = "", setupCode = "create-dogs 5", pens = List(Pen(display = "", updateCode = "plot count dogs * 2"))),
         Plot(display = "", setupCode = "create-dogs 2", pens = List(Pen(display = "", updateCode = "plot count dogs * 2")))
         )))
@@ -155,6 +159,7 @@ class TestPlotModels extends FixtureSuite {
     import fixture._
     open(
       Model(code = modelCode, widgets = List(
+        View(),
         Plot(display = "", updateCode = "create-dogs 7 stop", pens = List(Pen(display = "", updateCode = "create-dogs 8"))))))
     testReporter("count dogs", "0")
     testCommand("update-plots")
@@ -167,6 +172,7 @@ class TestPlotModels extends FixtureSuite {
     open(
       Model(modelCode2,
         widgets = List(
+          View(),
           Plot(display = "", updateCode = "create-dogs 1 stop",
             pens = List(Pen(display = "", updateCode = "create-dogs 42"))))))
     testCommand("ca")
@@ -187,7 +193,7 @@ class TestPlotModels extends FixtureSuite {
   test("stop in plot update code doesnt kill outer procedure (2)") { implicit fixture =>
     import fixture._
     open(
-      Model(modelCode3, widgets = List(Plot(display = "", updateCode = "create-dogs 1 stop",
+      Model(modelCode3, widgets = List(View(), Plot(display = "", updateCode = "create-dogs 1 stop",
                                   pens = List(Pen(display = "", updateCode = "create-dogs 42"))))))
     testCommand("ca")
     testReporter("count dogs", "0")
@@ -206,6 +212,7 @@ class TestPlotModels extends FixtureSuite {
     import fixture._
     open(
       Model(modelCode, widgets = List(
+        View(),
         Plot(display = "", updateCode = "ask turtles [stop]",
              pens = List(Pen(display = "", updateCode = "create-dogs 8"))))))
     testReporter("count dogs", "0")
@@ -217,6 +224,7 @@ class TestPlotModels extends FixtureSuite {
     import fixture._
     open(
       Model(modelCode, widgets = List(
+        View(),
         Plot(display = "", pens = List(Pen(display = "", updateCode = "create-dogs 8 stop"),
                                             Pen(display = "", updateCode = "create-dogs 8 stop"))))))
     testReporter("count dogs", "0")
@@ -237,6 +245,7 @@ class TestPlotModels extends FixtureSuite {
     import fixture._
     open(
       Model(modelCode4, widgets = List(
+        View(),
         Plot(display = "", updateCode = "set x n-values 10 [random 10]",
              pens = List(Pen(display = "", updateCode = "set x n-values 10 [random 10]"))))))
     testCommand("reset-ticks")
@@ -255,22 +264,22 @@ class TestPlotModels extends FixtureSuite {
   }
 
   test("Plot With Bad Update Code Should Throw Exception on Load (headless only)") { implicit fixture =>
-    testCompileError(Model(code = modelCode, widgets = List(Plot(display = "", updateCode="weijefwef")))) { ex =>
+    testCompileError(Model(code = modelCode, widgets = List(View(), Plot(display = "", updateCode="weijefwef")))) { ex =>
       assert("Nothing named WEIJEFWEF has been defined" === ex.getMessage)
     }}
 
   test("Plot With Bad Setup Code Should Throw Exception on Load (headless only)") { implicit fixture =>
-    testCompileError(Model(code = modelCode, widgets = List(Plot(display = "", setupCode="weijefwef")))){ ex =>
+    testCompileError(Model(code = modelCode, widgets = List(View(), Plot(display = "", setupCode="weijefwef")))){ ex =>
       assert("Nothing named WEIJEFWEF has been defined" === ex.getMessage)
     }}
 
   test("Plot With Bad Pen Setup Code Should Throw Exception on Load (headless only)") { implicit fixture =>
-    testCompileError(Model(code = modelCode, widgets = List(Plot(display = "", pens = List(Pen(display = "", setupCode = "create-fails 8")))))) { ex =>
+    testCompileError(Model(code = modelCode, widgets = List(View(), Plot(display = "", pens = List(Pen(display = "", setupCode = "create-fails 8")))))) { ex =>
       assert("Nothing named CREATE-FAILS has been defined" === ex.getMessage)
     }}
 
   test("Plot With Bad Pen Update Code Should Throw Exception on Load (headless only)") { implicit fixture =>
-    testCompileError(Model(code = modelCode, widgets = List(Plot(display = "", pens = List(Pen(display = "p", updateCode = "create-fails 8")))))) { ex =>
+    testCompileError(Model(code = modelCode, widgets = List(View(), Plot(display = "", pens = List(Pen(display = "p", updateCode = "create-fails 8")))))) { ex =>
       assert("Nothing named CREATE-FAILS has been defined" === ex.getMessage)
     }}
 }

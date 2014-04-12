@@ -24,7 +24,7 @@ its ok that these tests don't run in 'run' mode because we are only testing
 the stack traces, not the results.
  */
 
-import org.nlogo.api, api.LogoException, api.model.{Model, Plot, Pen}
+import org.nlogo.api, api.LogoException, api.model.{Model, Plot, Pen, View}
 import org.scalatest.FunSuite
 
 class TestStackTraces extends FixtureSuite {
@@ -89,7 +89,7 @@ class TestStackTraces extends FixtureSuite {
   def callPrimDirectly_Test(prim: String, codeType: CodeType) {
     test("direct call to " + prim + " with failure in " + codeType) { implicit fixture =>
       import fixture._
-      open(Model("globals [x]", widgets = List(codeType.plot("if x = 1 [plot __boom]"))))
+      open(Model("globals [x]", widgets = List(View(), codeType.plot("if x = 1 [plot __boom]"))))
       testCommand("reset-ticks")
       testCommand("set x 1")
       intercept[LogoException] { testCommand(prim) }
@@ -114,7 +114,7 @@ class TestStackTraces extends FixtureSuite {
                    |""".stripMargin
     test("nesting " + prim + " in " + codeType) { implicit fixture =>
       import fixture._
-      open(Model(code, widgets = List(codeType.plot("do-it"))))
+      open(Model(code, widgets = List(View(), codeType.plot("do-it"))))
       testCommand("reset-ticks")
       testCommand("set x 1")
       intercept[LogoException] {testCommand("go1")}
