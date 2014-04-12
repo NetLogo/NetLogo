@@ -1368,6 +1368,12 @@ public strictfp class World
   }
 
   public static interface VariableWatcher {
+    /**
+     * Called when the watched variable is set.
+     * @param agent The agent for which the variable was set
+     * @param variableName The name of the variable as an upper case string
+     * @param value The new value of the variable
+     */
     public void update(Agent agent, String variableName, Object value);
   }
 
@@ -1381,6 +1387,11 @@ public strictfp class World
 
   private Map<String, List<VariableWatcher>> variableWatchers = null;
 
+  /**
+   * A watcher to be notified every time the given variable changes for any agent.
+   * @param variableName The variable name to watch as an upper case string; e.g. "XCOR"
+   * @param watcher The watcher to notify when the variable changes
+   */
   public void addWatcher(String variableName, VariableWatcher watcher) {
     if (variableWatchers == null) {
       variableWatchers =  new HashMap<String, List<VariableWatcher>>();
@@ -1391,6 +1402,11 @@ public strictfp class World
     variableWatchers.get(variableName).add(watcher);
   }
 
+  /**
+   * Deletes a variable watcher.
+   * @param variableName The watched variable name as an upper case string; e.g. "XCOR"
+   * @param watcher The watcher to delete
+   */
   public void deleteWatcher(String variableName, VariableWatcher watcher) {
     if (variableWatchers != null && variableWatchers.containsKey(variableName)) {
       variableWatchers.get(variableName).remove(watcher);
