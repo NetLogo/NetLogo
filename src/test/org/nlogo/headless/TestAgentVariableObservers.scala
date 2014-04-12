@@ -123,5 +123,11 @@ class TestAgentVariableObservers extends AbstractTestModels with GivenWhenThen {
       case _ => fail("Got response from non-patch")
     }
     watcher.queue.clear()
+
+    when("deleting a watcher")
+    world.deleteWatcher("MY-GLOBAL", watcher)
+    observer>> "set my-global 5"
+    then("it's no longer called when that variable is set")
+    expect(watcher.queue.isEmpty)(true)
   }
 }
