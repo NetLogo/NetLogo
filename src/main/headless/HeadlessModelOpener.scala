@@ -7,7 +7,7 @@ import workspace.WorldLoader
 import org.nlogo.plot.PlotLoader
 import org.nlogo.agent.{BooleanConstraint, ChooserConstraint, InputBoxConstraint, NumericConstraint}
 import org.nlogo.api.{CompilerException, FileIO, LogoList, Program, ValueConstraint, Version}
-import org.nlogo.api.model.{Model, ModelReader, Widget, DeclaresGlobal, DeclaresGlobalCommand}
+import org.nlogo.api.model.{Model, ModelReader, Widget, DeclaresGlobal, DeclaresGlobalCommand, DeclaresConstraint}
 
 import org.nlogo.shape.{LinkShape, VectorShape}
 
@@ -42,7 +42,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
 
     val interfaceGlobals = model.widgets.collect({case x:DeclaresGlobal => x}).map(_.varName)
     val widgets = new collection.mutable.ArrayBuffer[Widget]
-    val constraints = new collection.mutable.HashMap[String, List[String]]
+    val constraints = model.widgets.collect({case x:DeclaresConstraint => (x.varName, x.constraint)}).toMap
     val buttonCode = new collection.mutable.ArrayBuffer[String] // for TestCompileAll
     val monitorCode = new collection.mutable.ArrayBuffer[String] // for TestCompileAll
     val interfaceGlobalCommands = model.widgets.collect({case x:DeclaresGlobalCommand => x}).map(_.command).mkString("\n")
