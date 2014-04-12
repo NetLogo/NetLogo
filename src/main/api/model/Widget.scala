@@ -53,7 +53,7 @@ case class View(left: Int = 0, top: Int = 0, right: Int = 5, bottom: Int = 5,
   patchSize: Double = 12, fontSize: Int = 9, wrappingAllowedInX: Boolean = true, wrappingAllowedInY: Boolean = true,
   minPxcor: Int = 0, maxPxcor: Int = 0, minPycor: Int = 0, maxPycor: Int = 0,
   updateMode: UpdateMode = UpdateMode.TickBased, showTickCounter: Boolean = true, tickCounterLabel: String = "ticks",
-  frameRate: Int = 25) extends Widget {
+  frameRate: Double = 25) extends Widget {
 
   def dimensions: WorldDimensions = new WorldDimensions(minPxcor, maxPxcor, minPycor, maxPycor,
                                                         patchSize, wrappingAllowedInY, wrappingAllowedInX)
@@ -122,10 +122,12 @@ trait WidgetReader {
 
 object WidgetReader {
   def read(lines: List[String]): Widget = {
-    val readers = List(ButtonReader, SliderReader)
+    val readers = List(ButtonReader, SliderReader, ViewReader)
     readers.find(_.validate(lines)) match {
       case Some(reader) => reader.parse(lines)
-      case None => throw new Exception("Couldn't find corresponding reader!")
+      case None =>
+        System.out.println(lines)
+        throw new Exception("Couldn't find corresponding reader!")
     }
   }
 
@@ -402,17 +404,17 @@ object ViewReader extends BaseWidgetReader {
                         new MapLine(List(("0", UpdateMode.Continuous), ("1", UpdateMode.TickBased))), // Twice for compatibility
                         BooleanLine,  // showTickCounter
                         StringLine,   // tick counter label
-                        IntLine   // frame rate
+                        DoubleLine   // frame rate
                       ) 
-  def asList(view: View) = List(view.left, view.right, view.top, view.bottom, (), (), view.patchSize, (), view.fontSize,
+  def asList(view: View) = List((), view.left, view.right, view.top, view.bottom, (), (), view.patchSize, (), view.fontSize,
     (), (), (), (), view.wrappingAllowedInX, view.wrappingAllowedInY, (),
     view.minPxcor, view.maxPxcor, view.minPycor, view.maxPycor,
     view.updateMode, view.updateMode, view.showTickCounter, view.tickCounterLabel, view.frameRate)
   def asAnyRef(vals: List[Any]): View = {
-    val ((left: Int) :: (top: Int) :: (right: Int) :: (bottom: Int) :: _ :: _ :: (patchSize: Double) :: _ ::
+    val (_ :: (left: Int) :: (top: Int) :: (right: Int) :: (bottom: Int) :: _ :: _ :: (patchSize: Double) :: _ ::
          (fontSize: Int) :: _ :: _ :: _ :: _ :: (wrappingAllowedInX: Boolean) :: (wrappingAllowedInY: Boolean) ::
          _ :: (minPxcor: Int) :: (maxPxcor: Int) :: (minPycor: Int) :: (maxPycor: Int) :: (updateMode: UpdateMode) ::
-         _ :: (showTickCounter: Boolean) :: (tickCounterLabel: String) :: (frameRate: Int) :: Nil) = vals
+         _ :: (showTickCounter: Boolean) :: (tickCounterLabel: String) :: (frameRate: Double) :: Nil) = vals
     View(left, top, right, bottom, patchSize, fontSize,
       wrappingAllowedInX, wrappingAllowedInY, minPxcor, maxPxcor, minPycor, maxPycor,
       updateMode, showTickCounter, tickCounterLabel, frameRate)
