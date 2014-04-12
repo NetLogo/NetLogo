@@ -126,10 +126,10 @@ trait Finder extends FunSuite with SlowTest {
       else true
     }
   val StandardWidgets = {
-    import model.{ Plot, Pens, Pen, View }
+    import model.{ Plot, Pen, View }
     List(
       View.square(5),
-      Plot(display = "plot1", pens = Pens(List(Pen(display = "pen1"), Pen(display = "pen2")))),
-      Plot(display = "plot2", pens = Pens(List(Pen(display = "pen1"), Pen(display = "pen2")))))
+      Plot(display = "plot1", pens = List(Pen(display = "pen1"), Pen(display = "pen2"))),
+      Plot(display = "plot2", pens = List(Pen(display = "pen1"), Pen(display = "pen2"))))
   }
 }

@@ -32,7 +32,7 @@ class TestPlotModels extends FixtureSuite {
        |end""".stripMargin
   val theModel =
     Model(code = modelCode, widgets = List(
-      Plot(display = "", pens = Pens(List(Pen(display = "", updateCode = "plot count dogs * 2"))))))
+      Plot(display = "", pens = List(Pen(display = "", updateCode = "plot count dogs * 2")))))
 
   test("plot on tick") { implicit fixture =>
     import fixture._
@@ -102,7 +102,7 @@ class TestPlotModels extends FixtureSuite {
     open(
       Model(code = modelCode, widgets = List(
         Plot(display = "", setupCode = "create-dogs 5",
-          pens = Pens(List(Pen(display = "", updateCode = "plot count dogs * 2")))))))
+          pens = List(Pen(display = "", updateCode = "plot count dogs * 2"))))))
     testCommand("setup-plots")
     testReporter("count dogs", "5")
   }
@@ -111,7 +111,7 @@ class TestPlotModels extends FixtureSuite {
     import fixture._
     open(Model(code = modelCode, widgets = List(
       Plot(display = "", setupCode = "create-dogs 5",
-           pens = Pens(List(Pen(display = "", setupCode = "create-dogs 3")))))))
+           pens = List(Pen(display = "", setupCode = "create-dogs 3"))))))
     testReporter("count dogs", "0")
     testCommand("setup-plots")
     testReporter("count dogs", "8")
@@ -119,7 +119,7 @@ class TestPlotModels extends FixtureSuite {
 
   test("pen with no update code should not get plotted on tick") { implicit fixture =>
     import fixture._
-    open(Model(code = modelCode, widgets = List(Plot(display = "", pens = Pens(List(Pen(display = "", updateCode = "")))))))
+    open(Model(code = modelCode, widgets = List(Plot(display = "", pens = List(Pen(display = "", updateCode = ""))))))
     testCommand("reset-ticks")
     assert(onlyPen.points.size === 0)
     testCommand("tick")
@@ -130,7 +130,7 @@ class TestPlotModels extends FixtureSuite {
     import fixture._
     open(
       Model(code = modelCode, widgets = List(Plot(display = "", updateCode = "plot count turtles",
-                                 pens = Pens(List(Pen(display = "")))))))
+                                 pens = List(Pen(display = ""))))))
     testCommand("reset-ticks clear-all-plots")
     assert(onlyPen.points.size === 0)
 
@@ -143,8 +143,8 @@ class TestPlotModels extends FixtureSuite {
     import fixture._
     open(
       Model(code = modelCode, widgets = List(
-        Plot(display = "", setupCode = "create-dogs 5", pens = Pens(List(Pen(display = "", updateCode = "plot count dogs * 2")))),
-        Plot(display = "", setupCode = "create-dogs 2", pens = Pens(List(Pen(display = "", updateCode = "plot count dogs * 2"))))
+        Plot(display = "", setupCode = "create-dogs 5", pens = List(Pen(display = "", updateCode = "plot count dogs * 2"))),
+        Plot(display = "", setupCode = "create-dogs 2", pens = List(Pen(display = "", updateCode = "plot count dogs * 2")))
         )))
     testReporter("count dogs", "0")
     testCommand("setup-plots")
@@ -155,7 +155,7 @@ class TestPlotModels extends FixtureSuite {
     import fixture._
     open(
       Model(code = modelCode, widgets = List(
-        Plot(display = "", updateCode = "create-dogs 7 stop", pens = Pens(List(Pen(display = "", updateCode = "create-dogs 8")))))))
+        Plot(display = "", updateCode = "create-dogs 7 stop", pens = List(Pen(display = "", updateCode = "create-dogs 8"))))))
     testReporter("count dogs", "0")
     testCommand("update-plots")
     testReporter("count dogs", "7")
@@ -168,7 +168,7 @@ class TestPlotModels extends FixtureSuite {
       Model(modelCode2,
         widgets = List(
           Plot(display = "", updateCode = "create-dogs 1 stop",
-            pens = Pens(List(Pen(display = "", updateCode = "create-dogs 42")))))))
+            pens = List(Pen(display = "", updateCode = "create-dogs 42"))))))
     testCommand("ca")
     testReporter("count dogs", "0")
     testCommand("reset-ticks")
@@ -188,7 +188,7 @@ class TestPlotModels extends FixtureSuite {
     import fixture._
     open(
       Model(modelCode3, widgets = List(Plot(display = "", updateCode = "create-dogs 1 stop",
-                                  pens = Pens(List(Pen(display = "", updateCode = "create-dogs 42")))))))
+                                  pens = List(Pen(display = "", updateCode = "create-dogs 42"))))))
     testCommand("ca")
     testReporter("count dogs", "0")
     testCommand("reset-ticks")
@@ -207,7 +207,7 @@ class TestPlotModels extends FixtureSuite {
     open(
       Model(modelCode, widgets = List(
         Plot(display = "", updateCode = "ask turtles [stop]",
-             pens = Pens(List(Pen(display = "", updateCode = "create-dogs 8")))))))
+             pens = List(Pen(display = "", updateCode = "create-dogs 8"))))))
     testReporter("count dogs", "0")
     testCommand("update-plots")
     testReporter("count dogs", "8")
@@ -217,8 +217,8 @@ class TestPlotModels extends FixtureSuite {
     import fixture._
     open(
       Model(modelCode, widgets = List(
-        Plot(display = "", pens = Pens(List(Pen(display = "", updateCode = "create-dogs 8 stop"),
-                                            Pen(display = "", updateCode = "create-dogs 8 stop")))))))
+        Plot(display = "", pens = List(Pen(display = "", updateCode = "create-dogs 8 stop"),
+                                            Pen(display = "", updateCode = "create-dogs 8 stop"))))))
     testReporter("count dogs", "0")
     testCommand("update-plots")
     testReporter("count dogs", "16")
@@ -238,7 +238,7 @@ class TestPlotModels extends FixtureSuite {
     open(
       Model(modelCode4, widgets = List(
         Plot(display = "", updateCode = "set x n-values 10 [random 10]",
-             pens = Pens(List(Pen(display = "", updateCode = "set x n-values 10 [random 10]")))))))
+             pens = List(Pen(display = "", updateCode = "set x n-values 10 [random 10]"))))))
     testCommand("reset-ticks")
     testCommand("random-seed 10")
     testReporter("n-values 10 [random 10]", "[8 9 8 4 2 4 5 4 7 9]")
@@ -265,12 +265,12 @@ class TestPlotModels extends FixtureSuite {
     }}
 
   test("Plot With Bad Pen Setup Code Should Throw Exception on Load (headless only)") { implicit fixture =>
-    testCompileError(Model(code = modelCode, widgets = List(Plot(display = "", pens = Pens(List(Pen(display = "", setupCode = "create-fails 8"))))))) { ex =>
+    testCompileError(Model(code = modelCode, widgets = List(Plot(display = "", pens = List(Pen(display = "", setupCode = "create-fails 8")))))) { ex =>
       assert("Nothing named CREATE-FAILS has been defined" === ex.getMessage)
     }}
 
   test("Plot With Bad Pen Update Code Should Throw Exception on Load (headless only)") { implicit fixture =>
-    testCompileError(Model(code = modelCode, widgets = List(Plot(display = "", pens = Pens(List(Pen(display = "p", updateCode = "create-fails 8"))))))) { ex =>
+    testCompileError(Model(code = modelCode, widgets = List(Plot(display = "", pens = List(Pen(display = "p", updateCode = "create-fails 8")))))) { ex =>
       assert("Nothing named CREATE-FAILS has been defined" === ex.getMessage)
     }}
 }

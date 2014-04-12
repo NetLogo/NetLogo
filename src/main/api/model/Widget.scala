@@ -4,7 +4,8 @@ package org.nlogo.api.model
 
 import scalaz.Scalaz.ToStringOpsFromString
 
-import org.nlogo.api.{UpdateMode, WorldDimensions}
+import org.nlogo.api
+import api.{UpdateMode, WorldDimensions}
 
 sealed trait Widget
 case class Button(display: String, left: Int, top: Int, right: Int, bottom: Int,
@@ -12,10 +13,9 @@ case class Button(display: String, left: Int, top: Int, right: Int, bottom: Int,
 case class Plot(display: String, left: Int = 0, top: Int = 0, right: Int = 5, bottom: Int = 5,
              xAxis: String = "", yAxis: String = "", ymin: Double = 0, ymax: Double = 0, xmin: Double = 0, xmax: Double = 0,
              autoPlotOn: Boolean = true, legendOn: Boolean = false,
-             setupCode: String = "", updateCode: String = "", pens: Pens = Pens()) extends Widget
+             setupCode: String = "", updateCode: String = "", pens: List[Pen] = Nil) extends Widget
 case class Pen(display: String, interval: Double = 1, mode: Int = 0, color: Int = 0, inLegend: Boolean = false,
              setupCode: String = "", updateCode: String = "") extends Widget
-case class Pens(pens: List[Pen] = Nil) extends Widget
 case class Switch(display: String, left: Int = 0, top: Int = 0, right: Int = 0, bottom: Int = 0,
              varName: String, on: Boolean = false) extends Widget
 case class Chooser(display: String, left: Int = 0, top: Int = 0, right: Int = 0, bottom: Int = 0,
@@ -67,6 +67,11 @@ object BooleanLine extends WidgetLine[Boolean] {
   def format(v: Boolean): String = if(v) "1" else "0"
   def valid(v: String): Boolean = v == "1" || v == "0"
 }
+object StringBooleanLine extends WidgetLine[Boolean] {
+  def parse(line: String): Boolean = line == "true"
+  def format(v: Boolean): String = if(v) "1" else "0"
+  def valid(v: String): Boolean = v == "true" || v == "false"
+}
 object DoubleLine extends WidgetLine[Double] {
   type T = Double
   def parse(line: String): Double = line.toDouble
@@ -75,7 +80,7 @@ object DoubleLine extends WidgetLine[Double] {
 }
 object StringLine extends WidgetLine[String] {
   def parse(line: String): String = line
-  def format(v: String): String = v.mkString("\n")
+  def format(v: String): String = v
   def valid(v: String): Boolean = true
 }
 class SpecifiedLine(str: String) extends WidgetLine[Unit] {
@@ -146,8 +151,9 @@ abstract class BaseWidgetReader extends WidgetReader {
   def format(t: T): List[String] = {
     definition.asInstanceOf[List[WidgetLine[Any]]].zip(asList(t)).map{case (d, v) => d.format(v)}
   }
-  def validate(lines: List[String]): Boolean =
+  def validate(lines: List[String]): Boolean = {
     lines.size == definition.size && (definition zip lines).forall{case (d, l) => d.valid(l)}
+  }
   def parse(lines: List[String]): T =
     asAnyRef(definition.asInstanceOf[List[WidgetLine[AnyRef]]].zip(lines).map{case (d, s) => d.parse(s)})
 }
@@ -167,12 +173,66 @@ object ButtonReader extends BaseWidgetReader {
   def asAnyRef(vals: List[Any]): Button = {
     val List(_, display: String, left: Int, top: Int, right: Int, bottom: Int,
       source: String, forever: Boolean) = vals
-    new Button(display, left, top, right, bottom, source, forever)
+    Button(display, left, top, right, bottom, source, forever)
   }
+}
+
+object PenReader {
+  import api.StringUtils.unescapeString
+  // This is tricky because the string literals may contain escaped double quotes, so it's
+  // nontrivial to figure out where one literal ends and the next starts.  Assumes the
+  // opening double quote has already been detected and discarded.
+  private def parseOne(s: String): (String, String) =
+    if(s.isEmpty)
+      ("", "")
+    else if (s.head == '"')
+      ("", s.tail.trim)
+    else if(s.take(2) == "\\\"")
+      parseOne(s.drop(2)) match {
+        case (more1, more2) =>
+          ('"' + more1, more2)
+      }
+    else
+      parseOne(s.tail) match {
+        case (more1, more2) =>
+          (s.head + more1, more2)
+      }
+  def quoted(s:String) = '"' + s + '"'
+  def parseStringLiterals(s: String): List[String] =
+    s.headOption match {
+      case Some('"') =>
+        val (result, more) = parseOne(s.tail)
+        result :: parseStringLiterals(more)
+      case _ =>
+        Nil
+    }
+
+  def parse(line: String): Pen = {
+    require(line.head == '"')
+    val (display, rest) = parseOne(line.tail)
+    val (rest1, rest2) = rest.span(_ != '"')
+    val List(interval, mode, color, inLegend) =
+      rest1.trim.split("\\s+").toList
+    require(api.PlotPenInterface.isValidPlotPenMode(mode.toInt))
+    // optional; pre-5.0 models don't have them
+    val (setup, update) =
+      parseStringLiterals(rest2) match {
+        case List(setup, update) =>
+          (setup, update)
+        case _ =>
+          ("", "")
+      }
+    Pen(display = unescapeString(display), interval = interval.toDouble, mode = mode.toInt, color = color.toInt,
+        inLegend = inLegend.toBoolean, setupCode = unescapeString(setup), updateCode = unescapeString(update))
+  }
+
+  def format(pen: Pen): String = quoted(pen.display) + " 1.0 0 -16777216 true " +
+    quoted(pen.setupCode.mkString("\\n")) + " " + quoted(pen.updateCode.mkString("\\n"))
 }
 
 object PlotReader extends BaseWidgetReader {
   type T = Plot
+
   def definition = List(new SpecifiedLine("PLOT"),
                         IntLine,  // left
                         IntLine,  // top
@@ -185,8 +245,8 @@ object PlotReader extends BaseWidgetReader {
                         DoubleLine,   // ymax
                         DoubleLine,   // xmin
                         DoubleLine,   // xmax
-                        BooleanLine, // autoploton
-                        BooleanLine, // legend on
+                        StringBooleanLine, // autoploton
+                        StringBooleanLine, // legend on
                         StringLine   // Double code lines, parse later
                       )
   def asList(plot: Plot) = List((), plot.left, plot.right, plot.top, plot.bottom, plot.display,
@@ -195,21 +255,16 @@ object PlotReader extends BaseWidgetReader {
   def asAnyRef(vals: List[Any]): Plot = {
     val List(_, left: Int, right: Int, top: Int, bottom: Int, display: String,
       xAxis: String, yAxis: String, ymin: Double, ymax: Double, xmin: Double, xmax: Double,
-      autoPlotOn: Boolean, legendOn: Boolean, _) = vals
-    new Plot(display, left, top, right, bottom, xAxis, yAxis, ymin, ymax, xmin, xmax, autoPlotOn, legendOn, "", "")
+      autoPlotOn: Boolean, legendOn: Boolean, _, pens: List[Pen] @unchecked) = vals
+    Plot(display, left, top, right, bottom, xAxis, yAxis, ymin, ymax, xmin, xmax, autoPlotOn, legendOn, "", "", pens)
   }
-}
 
-// To do later, for now just mocked out.  But the pens are of the format:
-//   name interval mode color inLegend setupCode updateCode
-object PensReader extends WidgetReader {
-  type T = Pens
-  def quoted(s:String) = '"' + s + '"'
-  def formatPen(pen: Pen): String = quoted(pen.display) + " 1.0 0 -16777216 true " +
-    quoted(pen.setupCode.mkString("\\n")) + " " + quoted(pen.updateCode.mkString("\\n"))
-  def format(pens: Pens): List[String] = "PENS" :: pens.pens.map(formatPen(_))
-  def validate(lines: List[String]): Boolean = true
-  def parse(lines: List[String]): Pens = new Pens(Nil)
+  override def validate(lines: List[String]): Boolean = super.validate(lines.toList.span(_ != "PENS")._1)
+  override def parse(lines: List[String]): Plot = {
+    val (plotLines, penLines) = lines.span(_ != "PENS")
+    val pens = if (penLines.size > 0) penLines.tail.map(PenReader.parse(_)) else Nil
+    asAnyRef(definition.asInstanceOf[List[WidgetLine[AnyRef]]].zip(lines).map{case (d, s) => d.parse(s)} :+ pens)
+  }
 }
 
 object SliderReader extends BaseWidgetReader {
@@ -236,7 +291,7 @@ object SliderReader extends BaseWidgetReader {
   def asAnyRef(vals: List[Any]): Slider = {
     val List(_, left: Int, right: Int, top: Int, bottom: Int, display: String, varName: String, min: String,
              max: String, default: Double, step: String, _, units: String, direction: Direction) = vals
-    new Slider(display, left, top, right, bottom, varName, min, max, default, step, units, direction)
+    Slider(display, left, top, right, bottom, varName, min, max, default, step, units, direction)
   }
 }
 
@@ -257,7 +312,7 @@ object SwitchReader extends BaseWidgetReader {
   def asList(switch: Switch) = List(switch.display, switch.left, switch.right, switch.top, switch.bottom, switch.varName, (), ())
   def asAnyRef(vals: List[Any]): Switch = {
     val List(display: String, left: Int, right: Int, top: Int, bottom: Int, varName: String, on: Boolean, _, _) = vals
-    new Switch(display, left, top, right, bottom, varName, on)
+    Switch(display, left, top, right, bottom, varName, on)
   }
 }
 
@@ -279,7 +334,7 @@ object ChooserReader extends BaseWidgetReader {
   def asAnyRef(vals: List[Any]): Chooser = {
     val List(left: Int, right: Int, top: Int, bottom: Int, display: String, varName: String,
       choices: List[String] @unchecked, currentChoice: Int) = vals
-    new Chooser(display, left, top, right, bottom, varName, choices, currentChoice)
+    Chooser(display, left, top, right, bottom, varName, choices, currentChoice)
   }
 }
 
@@ -302,7 +357,7 @@ object InputBoxReader extends BaseWidgetReader {
   def asAnyRef(vals: List[Any]): InputBox[_] = {
     val List(left: Int, right: Int, top: Int, bottom: Int, varName: String, value: String,
       multiline: Boolean, _, inputBoxType: InputBoxType[Any] @unchecked) = vals
-    new InputBox(left, top, right, bottom, varName, value, multiline, inputBoxType)
+    InputBox(left, top, right, bottom, varName, value, multiline, inputBoxType)
   }
 }
 
@@ -347,7 +402,7 @@ object ViewReader extends BaseWidgetReader {
          (fontSize: Int) :: _ :: _ :: _ :: _ :: (wrappingAllowedInX: Boolean) :: (wrappingAllowedInY: Boolean) ::
          _ :: (minPxcor: Int) :: (maxPxcor: Int) :: (minPycor: Int) :: (maxPycor: Int) :: (updateMode: UpdateMode) ::
          _ :: (showTickCounter: Boolean) :: (tickCounterLabel: String) :: (frameRate: Int) :: Nil) = vals
-    new View(left, top, right, bottom, patchSize, fontSize,
+    View(left, top, right, bottom, patchSize, fontSize,
       wrappingAllowedInX, wrappingAllowedInY, minPxcor, maxPxcor, minPycor, maxPycor,
       updateMode, showTickCounter, tickCounterLabel, frameRate)
   }
