@@ -13,7 +13,7 @@ import org.nlogo.api.model._
 class TestSliderModels extends FixtureSuite {
 
   val model =
-    Model(widgets = List(Slider(display="density", varName="density", max="99", default=57)))
+    Model(widgets = List(Slider(display="density", varName="density", max="99", default=57), View()))
 
   test("simple slider test") { implicit fixture =>
     import fixture._
