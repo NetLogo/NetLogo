@@ -34,15 +34,15 @@ with OneInstancePerTest with BeforeAndAfterEach {
   def stripLineFeeds(s: String) =
     s.replaceAll("\r\n", "\n")
 
-  def runExperiment(dim: core.WorldDimensions, declarations: String, name: String): HeadlessWorkspace = {
+  def runExperiment(view: api.model.View, declarations: String, name: String): HeadlessWorkspace = {
     val workspace = newWorkspace()
-    workspace.openModel(Model(code = declarations))
+    workspace.openModel(Model(code = declarations, widgets = List(view)))
     run("test/lab/" + name)(() => workspace, () => newWorker(name))
     workspace
   }
   def runExperiment(worldSize: Int, declarations: String, name: String): HeadlessWorkspace =
     runExperiment(
-      core.WorldDimensions(-worldSize, worldSize, -worldSize, worldSize),
+      api.model.View.square(worldSize),
       declarations, name)
   def runParallelExperiment(name: String, declarations: String = "") {
     def workspace = {
@@ -169,7 +169,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
     runExperimentFromModel("models/test/lab/FireWithExperiments.nlogo", "test2", "models/test/lab/FireWithExperiments2")
   }
   test("ResizingWorld3") {
-    runExperiment(core.WorldDimensions(0, 1, 0, 1), "", "testResizingWorld3")
+    runExperiment(api.model.View(minPycor = 0, minPxcor = 0, maxPycor = 1, maxPxcor = 1), "", "testResizingWorld3")
   }
   test("Stopping1") {
     runExperiment(0, "globals [x]",

@@ -57,7 +57,7 @@ case class Slider(display: String, left: Int = 0, top: Int = 0, right: Int = 0, 
   override def constraint = List("SLIDER", min, max, step, default.toString)
 }
 case class Monitor(display: String, left: Int, top: Int, right: Int, bottom: Int,
-             source: String, precision: Int) extends Widget
+             source: String, precision: Int, fontSize: Int) extends Widget
 case class Output(left: Int, top: Int, right: Int, bottom: Int) extends Widget
 
 abstract class InputBoxType[T](val name:String)
@@ -106,6 +106,11 @@ object StringBooleanLine extends WidgetLine[Boolean] {
   def format(v: Boolean): String = if(v) "1" else "0"
   def valid(v: String): Boolean = v == "true" || v == "false"
 }
+object TNilBooleanLine extends WidgetLine[Boolean] {
+  def parse(line: String): Boolean = line == "T"
+  def format(v: Boolean): String = if(v) "1" else "0"
+  def valid(v: String): Boolean = v == "T" || v == "NIL"
+}
 object DoubleLine extends WidgetLine[Double] {
   type T = Double
   def parse(line: String): Double = line.toDouble
@@ -145,7 +150,7 @@ trait WidgetReader {
 
 object WidgetReader {
   def read(lines: List[String]): Widget = {
-    val readers = List(ButtonReader, SliderReader, ViewReader)
+    val readers = List(ButtonReader, SliderReader, ViewReader, MonitorReader)
     readers.find(_.validate(lines)) match {
       case Some(reader) => reader.parse(lines)
       case None =>
@@ -197,18 +202,27 @@ abstract class BaseWidgetReader extends WidgetReader {
 object ButtonReader extends BaseWidgetReader {
   type T = Button
   def definition = List(new SpecifiedLine("BUTTON"),
-                        StringLine,   // display
                         IntLine,  // left
                         IntLine,  // top
                         IntLine,  // right
                         IntLine,  // bottom
-                        StringLine,     // code to execute
-                        BooleanLine)  // forever?
+                        StringLine,   // display
+                        StringLine,   // code to execute
+                        TNilBooleanLine,  // forever?
+                        ReservedLine,
+                        ReservedLine,
+                        StringLine,   // buttonType
+                        ReservedLine,
+                        StringLine,  // actionkey
+                        ReservedLine,
+                        ReservedLine,
+                        BooleanLine  // go time
+                      ) 
   def asList(button: Button) = List((), button.display, button.left, button.top, button.right, button.bottom,
                                     button.source, button.forever)
   def asAnyRef(vals: List[Any]): Button = {
-    val List(_, display: String, left: Int, top: Int, right: Int, bottom: Int,
-      source: String, forever: Boolean) = vals
+    val List(_, left: Int, top: Int, right: Int, bottom: Int, display: String,
+      source: String, forever: Boolean, _, _, _, _, _, _, _, _) = vals
     Button(display, left, top, right, bottom, source, forever)
   }
 }
@@ -371,6 +385,28 @@ object ChooserReader extends BaseWidgetReader {
     val List(left: Int, right: Int, top: Int, bottom: Int, display: String, varName: String,
       choices: List[String] @unchecked, currentChoice: Int) = vals
     Chooser(display, left, top, right, bottom, varName, choices, currentChoice)
+  }
+}
+
+object MonitorReader extends BaseWidgetReader {
+  type T = Monitor
+
+  def definition = List(new SpecifiedLine("MONITOR"),
+                        IntLine,  // left
+                        IntLine,  // top
+                        IntLine,  // right
+                        IntLine,  // bottom
+                        StringLine,   // display
+                        StringLine,   // source
+                        IntLine,   // precision
+                        ReservedLine,
+                        IntLine    // font size
+                      ) 
+  def asList(monitor: Monitor) = List(monitor.left, monitor.right, monitor.top, monitor.bottom, monitor.display,
+    monitor.source, monitor.precision, (), monitor.fontSize)
+  def asAnyRef(vals: List[Any]): Monitor = {
+    val List(_, left: Int, right: Int, top: Int, bottom: Int, display: String, source: String, precision: Int, _, fontSize: Int) = vals
+    Monitor(display, left, top, right, bottom, source, precision, fontSize)
   }
 }
 
