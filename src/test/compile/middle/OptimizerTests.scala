@@ -25,84 +25,84 @@ class OptimizerTests extends FunSuite {
     procdef
   }
 
-  test("testForward1") { assertResult("_fd1[]")(compileCommands("fd 1")) }
-  test("testForward2") { assertResult("_jump[_constdouble:0.1[]]")(compileCommands("fd 0.1")) }
-  test("testForward3") { assertResult("_jump[_constdouble:-0.1[]]")(compileCommands("fd -0.1")) }
-  test("testForward4") { assertResult("_fd[_constdouble:2.0[]]")(compileCommands("fd 2")) }
+  test("Forward1") { assertResult("_fd1[]")(compileCommands("fd 1")) }
+  test("Forward2") { assertResult("_jump[_constdouble:0.1[]]")(compileCommands("fd 0.1")) }
+  test("Forward3") { assertResult("_jump[_constdouble:-0.1[]]")(compileCommands("fd -0.1")) }
+  test("Forward4") { assertResult("_fd[_constdouble:2.0[]]")(compileCommands("fd 2")) }
 
-  test("testPatchAt1") {
+  test("PatchAt1") {
     assertResult("_patchhereinternal[]")(compileReporter("patch-at 0 0"))
   }
-  test("testPatchAt2") {
+  test("PatchAt2") {
     assertResult("_patcheast[]")(compileReporter("patch-at 1 0"))
   }
-  test("testPatchAt3") {
+  test("PatchAt3") {
     assertResult("_patchsw[]")(compileReporter("patch-at -1 -1"))
   }
 
-  test("testPatchColumn1") {
+  test("PatchColumn1") {
     assertResult("_patchcol[_constdouble:5.0[]]")(
       compileReporter("patches with [pxcor = 5]"))
   }
-  test("testPatchColumn2") {
+  test("PatchColumn2") {
     assertResult("_patchcol[_constdouble:5.0[]]")(
       compileReporter("patches with [5 = pxcor]"))
   }
-  test("testPatchColumn3") {
+  test("PatchColumn3") {
     assertResult("_patchcol[_observervariable:0[]]")(
       compileReporter("patches with [pxcor = glob1]"))
   }
-  test("testPatchColumn4") {
+  test("PatchColumn4") {
     assertResult("_patchcol[_procedurevariable:X[]]")(
       compileReporter("patches with [pxcor = x]"))
   }
 
-  test("testPatchRow1") {
+  test("PatchRow1") {
     assertResult("_patchrow[_constdouble:6.0[]]")(
       compileReporter("patches with [pycor = 6]"))
   }
-  test("testPatchRow2") {
+  test("PatchRow2") {
     assertResult("_patchrow[_constdouble:6.0[]]")(
       compileReporter("patches with [6 = pycor]"))
   }
-  test("testPatchRow3") {
+  test("PatchRow3") {
     assertResult("_patchrow[_observervariable:0[]]")(
       compileReporter("patches with [pycor = glob1]"))
   }
-  test("testPatchRow4") {
+  test("PatchRow4") {
     assertResult("_patchrow[_procedurevariable:X[]]")(
       compileReporter("patches with [pycor = x]"))
   }
 
-  test("testHatchFast1") {
+  test("HatchFast1") {
     assertResult("_hatchfast:[_constdouble:5.0[]]")(
       compileCommands("hatch 5"))
   }
-  test("testHatchFast2") {
+  test("HatchFast2") {
     assertResult("_hatchfast:FROGS[_constdouble:5.0[]]")(
       compileCommands("hatch-frogs 5"))
   }
-  test("testSproutFast1") {
+  test("SproutFast1") {
     assertResult("_sproutfast:[_constdouble:5.0[]]")(
       compileCommands("sprout 5"))
   }
-  test("testSproutFast2") {
+  test("SproutFast2") {
     assertResult("_sproutfast:FROGS[_constdouble:5.0[]]")(
       compileCommands("sprout-frogs 5"))
   }
-  test("testFastCrt1") {
+  test("FastCrt1") {
     assertResult("_crtfast:[_constdouble:5.0[]]")(
       compileCommands("crt 5"))
   }
-  test("testFastCrt2") {
+  test("FastCrt2") {
     assertResult("_crtfast:FROGS[_constdouble:5.0[]]")(
       compileCommands("create-frogs 5"))
   }
-  test("testFastCro1") {
+  test("FastCro1") {
     assertResult("_crofast:[_constdouble:5.0[]]")(
       compileCommands("cro 5"))
   }
-  test("testFastCro2") {
+  test("FastCro2") {
     assertResult("_crofast:FROGS[_constdouble:5.0[]]")(
       compileCommands("create-ordered-frogs 5"))
   }

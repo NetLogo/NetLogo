@@ -85,3 +85,8 @@ PatchDoesCountOtherBreedHere
   breed [frogs frog]
   O> create-frogs 1 [ set glob1 patch-here ]
   [count other frogs-here] of glob1 => 1
+
+SimpleCountAndString
+  O> crt 10
+  count [turtles-here] of patch 0 0 => 10
+  (word [turtles-here] of patch 0 0) => "(agentset, 10 turtles)"

@@ -338,7 +338,7 @@ trait TestPlotLoaderHelper extends FunSuite {
 
   def testPlotsFromModels(model:String, plots:List[String]) {
     plots.zipWithIndex.foreach{ case (lines,i) =>
-      test("test "+model+" plots without exploding: " + i) { load(lines) }
+      test(model+" plots without exploding: " + i) { load(lines) }
     }
   }
 

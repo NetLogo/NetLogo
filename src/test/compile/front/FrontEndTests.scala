@@ -74,27 +74,27 @@ class FrontEndTests extends FunSuite {
   }
 
   /// now, the actual tests
-  test("testDoParseSimpleCommand") {
+  test("DoParseSimpleCommand") {
     runTest("__ignore round 0.5", "_ignore[_round[_constdouble:0.5[]]]")
   }
-  test("testDoParseCommandWithInfix") {
+  test("DoParseCommandWithInfix") {
     runTest("__ignore 5 + 2", "_ignore[_plus[_constdouble:5.0[], _constdouble:2.0[]]]")
   }
-  test("testDoParseTwoCommands") {
+  test("DoParseTwoCommands") {
     runTest("__ignore round 0.5 fd 5",
       "_ignore[_round[_constdouble:0.5[]]] " +
       "_fd[_constdouble:5.0[]]")
   }
-  test("testDoParseBadCommand1") {
+  test("DoParseBadCommand1") {
     runFailure("__ignore 1 2 3", "Expected command.", 11, 12)
   }
-  test("testDoParseBadCommand2") {
+  test("DoParseBadCommand2") {
     runFailure("__ignore", "__IGNORE expected 1 input.", 0, 8)
   }
-  test("testDoParseReporterOnly") {
+  test("DoParseReporterOnly") {
     runFailure("round 1.2", "Expected command.", 0, 5)
   }
-  test("testWrongArgumentType") {
+  test("WrongArgumentType") {
     runFailure("__ignore count 0", "COUNT expected this input to be an agentset, but got a number instead", 15, 16)
   }
   test("missingCloseBracket") {
@@ -102,89 +102,89 @@ class FrontEndTests extends FunSuite {
     // fine. - ST 1/22/09
     runFailure("crt 10 [ [", "No closing bracket for this open bracket.", 7, 8)
   }
-  test("testDoParseMap") {
+  test("DoParseMap") {
     runTest("__ignore map [round ?] [1.2 1.7 3.2]",
       "_ignore[_map[_reportertask[_round[_taskvariable:1[]]], _constlist:[1.2 1.7 3.2][]]]")
   }
-  test("testDoParseMapShortSyntax") {
+  test("DoParseMapShortSyntax") {
     runTest("__ignore map round [1.2 1.7 3.2]",
       "_ignore[_map[_reportertask[_round[_taskvariable:1[]]], _constlist:[1.2 1.7 3.2][]]]")
   }
-  test("testDoParseForeach") {
+  test("DoParseForeach") {
     runTest("foreach [1 2 3] [__ignore ?]",
       "_foreach[_constlist:[1 2 3][], _commandtask[[_ignore[_taskvariable:1[]]]]]")
   }
-  test("testDoParseParenthesizedCommand") {
+  test("DoParseParenthesizedCommand") {
     runTest("(__ignore 5)", "_ignore[_constdouble:5.0[]]")
   }
-  test("testDoParseParenthesizedCommandAsFromEvaluator") {
+  test("DoParseParenthesizedCommandAsFromEvaluator") {
     runTest("__observercode (__ignore 5) __done",
       "_observercode[] _ignore[_constdouble:5.0[]] _done[]")
   }
-  test("testParseExpressionWithInfix") {
+  test("ParseExpressionWithInfix") {
     runTest("__ignore 5 + 2",
       "_ignore[_plus[_constdouble:5.0[], _constdouble:2.0[]]]")
   }
-  test("testParseExpressionWithInfix2") {
+  test("ParseExpressionWithInfix2") {
     runTest("__ignore 5 + 2 * 7",
       "_ignore[_plus[_constdouble:5.0[], _mult[_constdouble:2.0[], _constdouble:7.0[]]]]")
   }
-  test("testParseExpressionWithInfix3") {
+  test("ParseExpressionWithInfix3") {
     runTest("__ignore 5 + 2 * 7 - 2",
       "_ignore[_minus[_plus[_constdouble:5.0[], _mult[_constdouble:2.0[], _constdouble:7.0[]]], _constdouble:2.0[]]]")
   }
-  test("testParseExpressionWithInfixAndPrefix") {
+  test("ParseExpressionWithInfixAndPrefix") {
     runTest("__ignore round 5.2 + log 64 2 * log 64 2 - random 2",
       "_ignore[_minus[_plus[_round[_constdouble:5.2[]], _mult[_log[_constdouble:64.0[], _constdouble:2.0[]], _log[_constdouble:64.0[], _constdouble:2.0[]]]], _random[_constdouble:2.0[]]]]")
   }
-  test("testParseConstantInteger") {
+  test("ParseConstantInteger") {
     runTest("__ignore 5", "_ignore[_constdouble:5.0[]]")
   }
-  test("testParseConstantList") {
+  test("ParseConstantList") {
     runTest("__ignore [5]", "_ignore[_constlist:[5][]]")
   }
-  test("testParseConstantListWithSublists") {
+  test("ParseConstantListWithSublists") {
     runTest("__ignore [[1] [2]]", "_ignore[_constlist:[[1] [2]][]]")
   }
-  test("testParseConstantListInsideTask1") {
+  test("ParseConstantListInsideTask1") {
     runTest("__ignore n-values 10 [[]]",
       "_ignore[_nvalues[_constdouble:10.0[], _reportertask[_constlist:[][]]]]")
   }
-  test("testParseConstantListInsideTask2") {
+  test("ParseConstantListInsideTask2") {
     runTest("__ignore n-values 10 [[5]]",
       "_ignore[_nvalues[_constdouble:10.0[], _reportertask[_constlist:[5][]]]]")
   }
-  test("testParseCommandTask1") {
+  test("ParseCommandTask1") {
     runTest("__ignore task [print ?]",
       "_ignore[_task[_commandtask[[_print[_taskvariable:1[]]]]]]")
   }
-  test("testParseCommandTask2") {
+  test("ParseCommandTask2") {
     runTest("__ignore task [print 5]",
       "_ignore[_task[_commandtask[[_print[_constdouble:5.0[]]]]]]")
   }
-  test("testParseCommandTask3") {
+  test("ParseCommandTask3") {
     // it would be nice if this resulted in a CompilerException instead
     // of failing at runtime - ST 2/6/11
     runTest("__ignore runresult task [__ignore 5]",
       "_ignore[_runresult[_task[_commandtask[[_ignore[_constdouble:5.0[]]]]]]]")
   }
-  test("testParseDiffuse") {
+  test("ParseDiffuse") {
     runTest("diffuse pcolor 1",
       "_diffuse[_reference:Patch,2[], _constdouble:1.0[]]")
   }
   /// tests using testStartAndEnd
-  test("testStartAndEndPositions0") {
+  test("StartAndEndPositions0") {
     testStartAndEnd("ca",
       "Statements 'ca' " +
       "Statement 'ca' ")
   }
-  test("testStartAndEndPositions1") {
+  test("StartAndEndPositions1") {
     testStartAndEnd("__ignore 5",
       "Statements '__ignore 5' " +
       "Statement '__ignore 5' " +
       "ReporterApp '5' ")
   }
-  test("testStartAndEndPositions2") {
+  test("StartAndEndPositions2") {
     testStartAndEnd("__ignore n-values 5 [world-width]",
       "Statements '__ignore n-values 5 [world-width]' " +
       "Statement '__ignore n-values 5 [world-width]' " +
@@ -193,7 +193,7 @@ class FrontEndTests extends FunSuite {
       "ReporterApp '[world-width]' " +
       "ReporterApp 'world-width' ")
   }
-  test("testStartAndEndPositions8") {
+  test("StartAndEndPositions8") {
     testStartAndEnd("crt 1",
       "Statements 'crt 1' " +
       "Statement 'crt 1' " +
@@ -201,7 +201,7 @@ class FrontEndTests extends FunSuite {
       "CommandBlock '' " +
       "Statements '' ")
   }
-  test("testStartAndEndPositions9") {
+  test("StartAndEndPositions9") {
     testStartAndEnd("crt 1 [ ]",
       "Statements 'crt 1 [ ]' " +
       "Statement 'crt 1 [ ]' " +
@@ -210,7 +210,7 @@ class FrontEndTests extends FunSuite {
       "Statements '' ")
   }
 
-  test("testStartAndEndPositions10") {
+  test("StartAndEndPositions10") {
     testStartAndEnd("ask turtles with [color = red ] [ fd 1 ]",
       "Statements 'ask turtles with [color = red ] [ fd 1 ]' " +
       "Statement 'ask turtles with [color = red ] [ fd 1 ]' " +
@@ -226,7 +226,7 @@ class FrontEndTests extends FunSuite {
       "ReporterApp '1' ")
   }
 
-  test("testWhile") {
+  test("While") {
     testStartAndEnd("while [count turtles < 10] [ crt 1 ]",
       "Statements 'while [count turtles < 10] [ crt 1 ]' " +
       "Statement 'while [count turtles < 10] [ crt 1 ]' " +
