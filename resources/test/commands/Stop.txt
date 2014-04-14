@@ -51,23 +51,6 @@ StopTask1
   O> foo
   glob2 => 5
 
-#StopInsideWithoutInterruption1
-#  to go crt 1 [ foo ] end
-#  to foo without-interruption [ stop ] end
-#  O> go
-#
-#StopInsideWithoutInterruption2
-#  to go crt 1 [ foo set glob1 glob1 + 1 ] set glob1 glob1 + 2 end
-#  to foo without-interruption [ set glob1 glob1 + 4 stop set glob1 glob1 + 8 ] set glob1 glob1 + 16 end
-#  O> set glob1 0 go
-#  glob1 => 7
-#
-#StopInsideWithoutInterruption3
-#  to go ask patch 0 0 [ foo set glob1 glob1 + 1 ] set glob1 glob1 + 2 end
-#  to foo without-interruption [ set glob1 glob1 + 4 stop set glob1 glob1 + 8 ] set glob1 glob1 + 16 end
-#  O> set glob1 0 go
-#  glob1 => 7
-
 StopInsideAsk1
   to go crt 1 ask turtles [ stop hatch 10 ] crt 1 end
   O> go
