@@ -196,8 +196,6 @@ R __dump-extension-prims etc._dumpextensionprims
 R __dump-extensions etc._dumpextensions
 R __dump1 etc._dump1
 R __nano-time etc._nanotime
-R __patchcol _patchcol
-R __patchrow _patchrow
 R __processors etc._processors
 R __random-state etc._randomstate
 R __stack-trace etc._stacktrace

@@ -169,12 +169,10 @@ class TestAllSyntaxes extends FunSuite {
                      |_patchahead number,patch,-T--,null,10,1,1
                      |_patchat number/number,patch,-TP-,null,10,2,2
                      |_patchatheadinganddistance number/number,patch,-TP-,null,10,2,2
-                     |_patchcol number,patch agentset,OTPL,null,10,1,1
                      |_patches ,patch agentset,OTPL,null,10,0,0
                      |_patchhere ,patch,-T--,null,10,0,0
                      |_patchleftandahead number/number,patch,-T--,null,10,2,2
                      |_patchrightandahead number/number,patch,-T--,null,10,2,2
-                     |_patchrow number,patch agentset,OTPL,null,10,1,1
                      |_patchset list or patch agentset or patch,patch agentset,OTPL,null,10,1,0
                      |_patchsize ,number,OTPL,null,10,0,0
                      |_plotname ,string,OTPL,null,10,0,0
