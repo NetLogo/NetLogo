@@ -75,6 +75,11 @@ object StructureParser {
     FrontEnd.tokenMapper.allCommandNames.map(_ -> "primitive command") ++
     FrontEnd.tokenMapper.allReporterNames.map(_ -> "primitive reporter")
 
+  def usedNames(program: api.Program, procedures: ProceduresMap): Map[String, String] =
+    program.usedNames ++
+    procedures.keys.map(_ -> "procedure") ++
+    StructureParser.alwaysUsedNames
+
 }
 
 /// for each source file. knits stages together. throws CompilerException
@@ -88,8 +93,9 @@ class StructureParser(
     StructureCombinators.parse(tokens) match {
       case Right(declarations) =>
         StructureChecker.rejectDuplicateDeclarations(declarations)
-        StructureChecker.rejectDuplicateNames(
-          declarations, usedNames(oldResults.program, oldResults.procedures))
+        StructureChecker.rejectDuplicateNames(declarations,
+          StructureParser.usedNames(
+            oldResults.program, oldResults.procedures))
         StructureConverter.convert(declarations, displayName,
           if (subprogram)
             StructureResults.empty.copy(program = oldResults.program)
@@ -98,10 +104,5 @@ class StructureParser(
       case Left((msg, token)) =>
         exception(msg, token)
     }
-
-  def usedNames(program: api.Program, procedures: ProceduresMap): Map[String, String] =
-    program.usedNames ++
-    procedures.keys.map(_ -> "procedure") ++
-    StructureParser.alwaysUsedNames
 
 }

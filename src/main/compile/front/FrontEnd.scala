@@ -46,14 +46,13 @@ trait FrontEndMain {
       tokenizer, source, displayName, program, subprogram, oldProcedures, extensionManager)
     def parseProcedure(procedure: nvm.Procedure): ProcedureDefinition = {
       val rawTokens = structureResults.tokens(procedure)
-      val lets = {
-        val used1 = structureResults.program.usedNames
-        val used2 = (structureResults.procedures.keys ++ oldProcedures.keys).map(_ -> "procedure")
-        val used3 = procedure.args.map(_ -> "local variable here")
-        val used4 = StructureParser.alwaysUsedNames
+      val usedNames =
+        StructureParser.usedNames(structureResults.program,
+          structureResults.procedures ++ oldProcedures) ++
+        procedure.args.map(_ -> "local variable here")
+      val lets =
         new parse.LetScoper(rawTokens)
-          .scan(used1 ++ used2 ++ used3 ++ used4)
-      }
+          .scan(usedNames)
       val namer =
         new Namer(structureResults.program,
           oldProcedures ++ structureResults.procedures,
