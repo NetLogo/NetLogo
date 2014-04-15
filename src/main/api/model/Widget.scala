@@ -35,6 +35,8 @@ case class Plot(display: String, left: Int = 0, top: Int = 0, right: Int = 5, bo
              setupCode: String = "", updateCode: String = "", pens: List[Pen] = Nil) extends Widget
 case class Pen(display: String, interval: Double = 1, mode: Int = 0, color: Int = 0, inLegend: Boolean = false,
              setupCode: String = "", updateCode: String = "") extends Widget
+case class TextBox(display: String, left: Int = 0, top: Int = 0, right: Int = 5, bottom: Int = 5,
+             fontSize: Int, color: Double, transparent: Boolean) extends Widget
 case class Switch(display: String, left: Int = 0, top: Int = 0, right: Int = 0, bottom: Int = 0,
              varName: String, on: Boolean = false)
               extends Widget with DeclaresGlobal with DeclaresGlobalCommand with DeclaresConstraint {
@@ -147,8 +149,9 @@ trait WidgetReader {
 }
 
 object WidgetReader {
-  def read(lines: List[String]): Widget = {
-    val readers = List(ButtonReader, SliderReader, ViewReader, MonitorReader, SwitchReader, PlotReader, ChooserReader, OutputReader)
+  def read(lines: List[String], parser: api.ParserServices): Widget = {
+    val readers = List(ButtonReader, SliderReader, ViewReader, MonitorReader, SwitchReader, PlotReader, ChooserReader(parser),
+      OutputReader, TextBoxReader)
     readers.find(_.validate(lines)) match {
       case Some(reader) => reader.parse(lines)
       case None =>
@@ -164,7 +167,7 @@ object WidgetReader {
     }
   }
 
-  def readInterface(lines: List[String]): List[Widget] = {
+  def readInterface(lines: List[String], parser: api.ParserServices): List[Widget] = {
     var widgets = Vector[Widget]()
     var widgetLines = Vector[String]()
     for(line <- lines)
@@ -172,11 +175,11 @@ object WidgetReader {
         widgetLines :+= line
       else {
         if(!widgetLines.forall(_.isEmpty))
-          widgets :+= read(widgetLines.toList)
+          widgets :+= read(widgetLines.toList, parser)
         widgetLines = Vector()
       }
     if(!widgetLines.forall(_.isEmpty))
-      widgets :+= read(widgetLines.toList)
+      widgets :+= read(widgetLines.toList, parser)
 
     widgets.toList
   }
@@ -347,6 +350,27 @@ object SliderReader extends BaseWidgetReader {
   }
 }
 
+object TextBoxReader extends BaseWidgetReader {
+  type T = TextBox
+
+  def definition = List(new SpecifiedLine("TEXTBOX"),
+                        IntLine(),  // left
+                        IntLine(),  // top
+                        IntLine(),  // right
+                        IntLine(),  // bottom
+                        StringLine(),   // display
+                        IntLine(),   // varname
+                        DoubleLine(),  // on
+                        BooleanLine()
+                      ) 
+  def asList(textBox: TextBox) = List((), textBox.left, textBox.right, textBox.top, textBox.bottom,
+                                    textBox.display, textBox.fontSize, textBox.color, textBox.transparent)
+  def asAnyRef(vals: List[Any]): TextBox = {
+    val List(_, left: Int, right: Int, top: Int, bottom: Int, display: String, fontSize: Int, color: Double, transparent: Boolean) = vals
+    TextBox(display, left, top, right, bottom, fontSize, color, transparent)
+  }
+}
+
 object SwitchReader extends BaseWidgetReader {
   type T = Switch
 
@@ -369,7 +393,7 @@ object SwitchReader extends BaseWidgetReader {
   }
 }
 
-object ChooserReader extends BaseWidgetReader {
+case class ChooserReader(val parser: api.ParserServices) extends BaseWidgetReader {
   type T = Chooser
 
   def definition = List(new SpecifiedLine("CHOOSER"),
@@ -385,9 +409,11 @@ object ChooserReader extends BaseWidgetReader {
   def asList(chooser: Chooser) = List(chooser.left, chooser.right, chooser.top, chooser.bottom, chooser.display,
     chooser.varName, chooser.choices, chooser.currentChoice)
   def asAnyRef(vals: List[Any]): Chooser = {
-    val List(left: Int, right: Int, top: Int, bottom: Int, display: String, varName: String,
-      choices: List[String] @unchecked, currentChoice: Int) = vals
-    Chooser(display, left, top, right, bottom, varName, choices, currentChoice)
+    val List(_, left: Int, right: Int, top: Int, bottom: Int, display: String, varName: String,
+      choicesStr: String, currentChoice: Int) = vals
+    val choices = parser.readFromString("[" + choicesStr + "]").asInstanceOf[api.LogoList]
+
+    Chooser(display, left, top, right, bottom, varName, choices.toList, currentChoice)
   }
 }
 

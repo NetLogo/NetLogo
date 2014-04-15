@@ -2,6 +2,7 @@
 
 package org.nlogo.api.model
 import org.nlogo.util.Utils.getResourceLines
+import org.nlogo.api
 
 case class Model(code: String = "", widgets: List[Widget] = List(View()), info: String = "", version: String = "NetLogo 5.0",
   turtleShapes: List[String] = Nil, behaviorSpace: List[String] = Nil, linkShapes: List[String] = Nil,
@@ -25,7 +26,7 @@ object ModelReader {
 
   val SEPARATOR = "@#$#@#$#@"
 
-  def parseModel(model: String): Model = {
+  def parseModel(model: String, parser: Option[api.ParserServices] = None): Model = {
     var sections = Vector[Vector[String]]()
     var sectionContents = Vector[String]()
     def sectionDone() {
@@ -41,7 +42,9 @@ object ModelReader {
 
     val Vector(code, interface, info, turtleShapes, version, previewCommands, systemDynamics,
              behaviorSpace, hubNetClient, linkShapes, modelSettings, deltaTick) = sections
-    new Model(code.mkString("\n"), WidgetReader.readInterface(interface.toList), info.mkString("\n"), version.head,
+    new Model(code.mkString("\n"),
+              if(parser.nonEmpty) WidgetReader.readInterface(interface.toList, parser.get) else Nil,
+              info.mkString("\n"), version.head,
               turtleShapes.toList, behaviorSpace.toList, linkShapes.toList, previewCommands.toList)
   }
 
