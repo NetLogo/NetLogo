@@ -58,7 +58,7 @@ case class Slider(display: String, left: Int = 0, top: Int = 0, right: Int = 0, 
 }
 case class Monitor(display: String, left: Int, top: Int, right: Int, bottom: Int,
              source: String, precision: Int, fontSize: Int) extends Widget
-case class Output(left: Int, top: Int, right: Int, bottom: Int) extends Widget
+case class Output(left: Int, top: Int, right: Int, bottom: Int, fontSize: Int) extends Widget
 
 abstract class InputBoxType[T](val name:String)
 case object Num extends InputBoxType[Double]("Number")
@@ -89,56 +89,54 @@ trait WidgetLine[T] {
   def parse(line: String): T
   def format(v: T): String
   def valid(v: String): Boolean
+  def default(): Option[T] = None
 }
 
-object IntLine extends WidgetLine[Int] {
+case class IntLine(override val default: Option[Int] = None) extends WidgetLine[Int] {
   def parse(line: String): Int = line.toInt
   def format(v: Int): String = v.toString()
   def valid(v: String): Boolean = v.parseInt.isSuccess
 }
-object BooleanLine extends WidgetLine[Boolean] {
+case class BooleanLine(override val default: Option[Boolean] = None) extends WidgetLine[Boolean] {
   def parse(line: String): Boolean = line == "1"
   def format(v: Boolean): String = if(v) "1" else "0"
   def valid(v: String): Boolean = v == "1" || v == "0"
 }
-object StringBooleanLine extends WidgetLine[Boolean] {
+case class StringBooleanLine(override val default: Option[Boolean] = None) extends WidgetLine[Boolean] {
   def parse(line: String): Boolean = line == "true"
   def format(v: Boolean): String = if(v) "1" else "0"
   def valid(v: String): Boolean = v == "true" || v == "false"
 }
-object TNilBooleanLine extends WidgetLine[Boolean] {
+case class TNilBooleanLine(override val default: Option[Boolean] = None) extends WidgetLine[Boolean] {
   def parse(line: String): Boolean = line == "T"
   def format(v: Boolean): String = if(v) "1" else "0"
   def valid(v: String): Boolean = v == "T" || v == "NIL"
 }
-object DoubleLine extends WidgetLine[Double] {
+case class DoubleLine(override val default: Option[Double] = None) extends WidgetLine[Double] {
   type T = Double
   def parse(line: String): Double = line.toDouble
   def format(v: Double): String = v.toString
   def valid(v: String): Boolean = v.parseDouble.isSuccess
 }
-object StringLine extends WidgetLine[String] {
+case class StringLine(override val default: Option[String] = None) extends WidgetLine[String] {
   def parse(line: String): String = line
   def format(v: String): String = v
   def valid(v: String): Boolean = true
 }
-class SpecifiedLine(str: String) extends WidgetLine[Unit] {
+case class SpecifiedLine(str: String) extends WidgetLine[Unit] {
   def parse(line: String): Unit = {}
   def format(x: Unit): String = str
   def valid(v: String): Boolean = v == str
 }
-class MapLine[T](map: List[Tuple2[String, T]]) extends WidgetLine[T] {
+case class MapLine[T](map: List[Tuple2[String, T]]) extends WidgetLine[T] {
   def parse(line: String): T = map.collectFirst({case (v, x) => x}).get
   def format(v: T): String = map.collectFirst({case (x, v) => x}).get
   def valid(v: String): Boolean = map.collectFirst({case (v, x) => x}).nonEmpty
 }
-class ReservedLine(output: String) extends WidgetLine[Unit] {
+case class ReservedLine(output: String = "RESERVED") extends WidgetLine[Unit] {
   def parse(line: String): Unit = {}
   def format(x: Unit): String = output
   def valid(v: String): Boolean = true
-}
-object ReservedLine extends ReservedLine("RESERVED") {
-  def apply(output: String) = new ReservedLine(output)
 }
 
 trait WidgetReader {
@@ -150,7 +148,7 @@ trait WidgetReader {
 
 object WidgetReader {
   def read(lines: List[String]): Widget = {
-    val readers = List(ButtonReader, SliderReader, ViewReader, MonitorReader)
+    val readers = List(ButtonReader, SliderReader, ViewReader, MonitorReader, SwitchReader, PlotReader, ChooserReader, OutputReader)
     readers.find(_.validate(lines)) match {
       case Some(reader) => reader.parse(lines)
       case None =>
@@ -193,30 +191,34 @@ abstract class BaseWidgetReader extends WidgetReader {
     definition.asInstanceOf[List[WidgetLine[Any]]].zip(asList(t)).map{case (d, v) => d.format(v)}
   }
   def validate(lines: List[String]): Boolean = {
-    lines.size == definition.size && (definition zip lines).forall{case (d, l) => d.valid(l)}
+    (lines.size == definition.size ||
+     (definition.indexWhere(_.default.nonEmpty) != -1 &&
+      lines.size >= definition.indexWhere(_.default.nonEmpty))) &&
+    (definition zip lines).forall{case (d, l) => d.valid(l)}
   }
   def parse(lines: List[String]): T =
-    asAnyRef(definition.asInstanceOf[List[WidgetLine[AnyRef]]].zip(lines).map{case (d, s) => d.parse(s)})
+    asAnyRef(definition.asInstanceOf[List[WidgetLine[AnyRef]]].zipWithIndex.map{case (d, idx) =>
+      if(idx < lines.size) d.parse(lines(idx)) else d.default.get })
 }
 
 object ButtonReader extends BaseWidgetReader {
   type T = Button
   def definition = List(new SpecifiedLine("BUTTON"),
-                        IntLine,  // left
-                        IntLine,  // top
-                        IntLine,  // right
-                        IntLine,  // bottom
-                        StringLine,   // display
-                        StringLine,   // code to execute
-                        TNilBooleanLine,  // forever?
-                        ReservedLine,
-                        ReservedLine,
-                        StringLine,   // buttonType
-                        ReservedLine,
-                        StringLine,  // actionkey
-                        ReservedLine,
-                        ReservedLine,
-                        BooleanLine  // go time
+                        IntLine(),  // left
+                        IntLine(),  // top
+                        IntLine(),  // right
+                        IntLine(),  // bottom
+                        StringLine(),   // display
+                        StringLine(),   // code to execute
+                        TNilBooleanLine(),  // forever?
+                        ReservedLine(),
+                        ReservedLine(),
+                        StringLine(),   // buttonType
+                        ReservedLine(),
+                        StringLine(),  // actionkey
+                        ReservedLine(),
+                        ReservedLine(),
+                        BooleanLine()  // go time
                       ) 
   def asList(button: Button) = List((), button.display, button.left, button.top, button.right, button.bottom,
                                     button.source, button.forever)
@@ -284,20 +286,20 @@ object PlotReader extends BaseWidgetReader {
   type T = Plot
 
   def definition = List(new SpecifiedLine("PLOT"),
-                        IntLine,  // left
-                        IntLine,  // top
-                        IntLine,  // right
-                        IntLine,  // bottom
-                        StringLine,  // display
-                        StringLine,  // xaxis
-                        StringLine,  // yaxis
-                        DoubleLine,   // ymin
-                        DoubleLine,   // ymax
-                        DoubleLine,   // xmin
-                        DoubleLine,   // xmax
-                        StringBooleanLine, // autoploton
-                        StringBooleanLine, // legend on
-                        StringLine   // Double code lines, parse later
+                        IntLine(),  // left
+                        IntLine(),  // top
+                        IntLine(),  // right
+                        IntLine(),  // bottom
+                        StringLine(),  // display
+                        StringLine(),  // xaxis
+                        StringLine(),  // yaxis
+                        DoubleLine(),   // ymin
+                        DoubleLine(),   // ymax
+                        DoubleLine(),   // xmin
+                        DoubleLine(),   // xmax
+                        StringBooleanLine(), // autoploton
+                        StringBooleanLine(), // legend on
+                        StringLine()   // Double code lines, parse later
                       )
   def asList(plot: Plot) = List((), plot.left, plot.right, plot.top, plot.bottom, plot.display,
                                     plot.xAxis, plot.yAxis, plot.ymin, plot.ymax, plot.xmin, plot.xmax,
@@ -321,18 +323,18 @@ object SliderReader extends BaseWidgetReader {
   type T = Slider
 
   def definition = List(new SpecifiedLine("SLIDER"),
-                        IntLine,  // left
-                        IntLine,  // top
-                        IntLine,  // right
-                        IntLine,  // bottom
-                        StringLine,   // display
-                        StringLine,   // varname
-                        StringLine,   // min
-                        StringLine,   // max
-                        DoubleLine,    // default
-                        StringLine,   // step
-                        ReservedLine,
-                        StringLine,   // units
+                        IntLine(),  // left
+                        IntLine(),  // top
+                        IntLine(),  // right
+                        IntLine(),  // bottom
+                        StringLine(),   // display
+                        StringLine(),   // varname
+                        StringLine(),   // min
+                        StringLine(),   // max
+                        DoubleLine(),    // default
+                        StringLine(),   // step
+                        ReservedLine(),
+                        StringLine(),   // units
                         new MapLine(List(("HORIZONTAL", Horizontal), ("VERTICAL", Vertical)))
                       ) 
   def asList(slider: Slider) = List((), slider.left, slider.right, slider.top, slider.bottom, slider.display,
@@ -349,19 +351,20 @@ object SwitchReader extends BaseWidgetReader {
   type T = Switch
 
   def definition = List(new SpecifiedLine("SWITCH"),
-                        StringLine,   // display
-                        IntLine,  // left
-                        IntLine,  // top
-                        IntLine,  // right
-                        IntLine,  // bottom
-                        StringLine,   // varname
-                        BooleanLine,  // on
-                        ReservedLine,
-                        ReservedLine
+                        IntLine(),  // left
+                        IntLine(),  // top
+                        IntLine(),  // right
+                        IntLine(),  // bottom
+                        StringLine(),   // display
+                        StringLine(),   // varname
+                        BooleanLine(),  // on
+                        ReservedLine(),
+                        ReservedLine()
                       ) 
-  def asList(switch: Switch) = List(switch.display, switch.left, switch.right, switch.top, switch.bottom, switch.varName, (), ())
+  def asList(switch: Switch) = List(switch.left, switch.right, switch.top, switch.bottom,
+                                    switch.display, switch.varName, switch.on, (), ())
   def asAnyRef(vals: List[Any]): Switch = {
-    val List(display: String, left: Int, right: Int, top: Int, bottom: Int, varName: String, on: Boolean, _, _) = vals
+    val List(_, left: Int, right: Int, top: Int, bottom: Int, display: String, varName: String, on: Boolean, _, _) = vals
     Switch(display, left, top, right, bottom, varName, on)
   }
 }
@@ -370,14 +373,14 @@ object ChooserReader extends BaseWidgetReader {
   type T = Chooser
 
   def definition = List(new SpecifiedLine("CHOOSER"),
-                        IntLine,  // left
-                        IntLine,  // top
-                        IntLine,  // right
-                        IntLine,  // bottom
-                        StringLine,   // display
-                        StringLine,   // varname
-                        StringLine,   // choices
-                        IntLine   // current choice
+                        IntLine(),  // left
+                        IntLine(),  // top
+                        IntLine(),  // right
+                        IntLine(),  // bottom
+                        StringLine(),   // display
+                        StringLine(),   // varname
+                        StringLine(),   // choices
+                        IntLine()   // current choice
                       ) 
   def asList(chooser: Chooser) = List(chooser.left, chooser.right, chooser.top, chooser.bottom, chooser.display,
     chooser.varName, chooser.choices, chooser.currentChoice)
@@ -392,15 +395,15 @@ object MonitorReader extends BaseWidgetReader {
   type T = Monitor
 
   def definition = List(new SpecifiedLine("MONITOR"),
-                        IntLine,  // left
-                        IntLine,  // top
-                        IntLine,  // right
-                        IntLine,  // bottom
-                        StringLine,   // display
-                        StringLine,   // source
-                        IntLine,   // precision
-                        ReservedLine,
-                        IntLine    // font size
+                        IntLine(),  // left
+                        IntLine(),  // top
+                        IntLine(),  // right
+                        IntLine(),  // bottom
+                        StringLine(),   // display
+                        StringLine(),   // source
+                        IntLine(),   // precision
+                        ReservedLine(),
+                        IntLine()    // font size
                       ) 
   def asList(monitor: Monitor) = List(monitor.left, monitor.right, monitor.top, monitor.bottom, monitor.display,
     monitor.source, monitor.precision, (), monitor.fontSize)
@@ -410,19 +413,36 @@ object MonitorReader extends BaseWidgetReader {
   }
 }
 
+object OutputReader extends BaseWidgetReader {
+  type T = Output
+
+  def definition = List(new SpecifiedLine("OUTPUT"),
+                        IntLine(),  // left
+                        IntLine(),  // top
+                        IntLine(),  // right
+                        IntLine(),  // bottom
+                        IntLine()    // font size
+                      ) 
+  def asList(output: Output) = List(output.left, output.right, output.top, output.bottom, output.fontSize)
+  def asAnyRef(vals: List[Any]): Output = {
+    val List(_, left: Int, right: Int, top: Int, bottom: Int, fontSize: Int) = vals
+    Output(left, top, right, bottom, fontSize)
+  }
+}
+
 object InputBoxReader extends BaseWidgetReader {
   type T = InputBox[_]
 
   def definition = List(new SpecifiedLine("INPUTBOX"),
-                        IntLine,  // left
-                        IntLine,  // top
-                        IntLine,  // right
-                        IntLine,  // bottom
-                        StringLine,   // varname
-                        StringLine,   // value
-                        BooleanLine,  // multiline
-                        ReservedLine,
-                        StringLine    // inputboxtype
+                        IntLine(),  // left
+                        IntLine(),  // top
+                        IntLine(),  // right
+                        IntLine(),  // bottom
+                        StringLine(),   // varname
+                        StringLine(),   // value
+                        BooleanLine(),  // multiline
+                        ReservedLine(),
+                        StringLine()    // inputboxtype
                       ) 
   def asList(inputbox: InputBox[_]) = List(inputbox.left, inputbox.right, inputbox.top, inputbox.bottom, inputbox.varName,
     inputbox.value, inputbox.multiline, (), inputbox.boxtype)
@@ -437,33 +457,33 @@ object ViewReader extends BaseWidgetReader {
   type T = View
 
   def definition = List(new SpecifiedLine("GRAPHICS-WINDOW"),
-                        IntLine,  // left
-                        IntLine,  // top
-                        IntLine,  // right
-                        IntLine,  // bottom
+                        IntLine(),  // left
+                        IntLine(),  // top
+                        IntLine(),  // right
+                        IntLine(),  // bottom
                         ReservedLine("-1"), // maxPxCor or -1
                         ReservedLine("-1"), // maxPyCor or -1
-                        DoubleLine,    // patchsize
-                        ReservedLine, // shapes on, not used
-                        IntLine,    // font size
+                        DoubleLine(),    // patchsize
+                        ReservedLine(), // shapes on, not used
+                        IntLine(),    // font size
 
-                        ReservedLine, // hex settings
-                        ReservedLine, // and 
-                        ReservedLine, // exactDraw
-                        ReservedLine, // not used
+                        ReservedLine(), // hex settings
+                        ReservedLine(), // and 
+                        ReservedLine(), // exactDraw
+                        ReservedLine(), // not used
 
-                        BooleanLine,  // wrappingAllowedInX
-                        BooleanLine,  // wrappingAllowedInY
-                        ReservedLine, // thin turtle pens!  Always on
-                        IntLine,  // minPxcor
-                        IntLine,  // maxPxcor
-                        IntLine,  // minPycor
-                        IntLine,  // maxPycor
+                        BooleanLine(),  // wrappingAllowedInX
+                        BooleanLine(),  // wrappingAllowedInY
+                        ReservedLine(), // thin turtle pens!  Always on
+                        IntLine(),  // minPxcor
+                        IntLine(),  // maxPxcor
+                        IntLine(),  // minPycor
+                        IntLine(),  // maxPycor
                         new MapLine(List(("0", UpdateMode.Continuous), ("1", UpdateMode.TickBased))),
                         new MapLine(List(("0", UpdateMode.Continuous), ("1", UpdateMode.TickBased))), // Twice for compatibility
-                        BooleanLine,  // showTickCounter
-                        StringLine,   // tick counter label
-                        DoubleLine   // frame rate
+                        BooleanLine(),  // showTickCounter
+                        StringLine(),   // tick counter label
+                        DoubleLine(Some(30))   // frame rate
                       ) 
   def asList(view: View) = List((), view.left, view.right, view.top, view.bottom, (), (), view.patchSize, (), view.fontSize,
     (), (), (), (), view.wrappingAllowedInX, view.wrappingAllowedInY, (),
