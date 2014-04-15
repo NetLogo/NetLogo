@@ -62,12 +62,24 @@ case class Monitor(display: String, left: Int, top: Int, right: Int, bottom: Int
              source: String, precision: Int, fontSize: Int) extends Widget
 case class Output(left: Int, top: Int, right: Int, bottom: Int, fontSize: Int) extends Widget
 
-abstract class InputBoxType[T](val name:String)
-case object Num extends InputBoxType[Double]("Number")
-case object Str extends InputBoxType[String]("String")
-case object StrReporter extends InputBoxType[String]("Reporter")
-case object StrCommand extends InputBoxType[String]("Commands")
-case object Col extends InputBoxType[Int]("Color")
+abstract class InputBoxType[T](val name:String) {
+  def widgetline: WidgetLine[T]
+}
+case object Num extends InputBoxType[Double]("Number") {
+  override def widgetline = DoubleLine()
+}
+case object Str extends InputBoxType[String]("String") {
+  def widgetline = StringLine()
+}
+case object StrReporter extends InputBoxType[String]("Reporter") {
+  def widgetline = StringLine()
+}
+case object StrCommand extends InputBoxType[String]("Commands") {
+  def widgetline = StringLine()
+}
+case object Col extends InputBoxType[Int]("Color") {
+  override def widgetline = IntLine()
+}
 case class InputBox[T](left: Int = 0, top: Int = 0, right: Int = 0, bottom: Int = 0, varName: String,
              value: T, multiline: Boolean = false, boxtype: InputBoxType[T])
            extends Widget with DeclaresGlobal with DeclaresGlobalCommand with DeclaresConstraint {
@@ -103,6 +115,11 @@ case class BooleanLine(override val default: Option[Boolean] = None) extends Wid
   def parse(line: String): Boolean = line == "1"
   def format(v: Boolean): String = if(v) "1" else "0"
   def valid(v: String): Boolean = v == "1" || v == "0"
+}
+case class InvertedBooleanLine(override val default: Option[Boolean] = None) extends WidgetLine[Boolean] {
+  def parse(line: String): Boolean = line == "0"
+  def format(v: Boolean): String = if(v) "1" else "0"
+  def valid(v: String): Boolean = v == "0" || v == "1"
 }
 case class StringBooleanLine(override val default: Option[Boolean] = None) extends WidgetLine[Boolean] {
   def parse(line: String): Boolean = line == "true"
@@ -151,7 +168,7 @@ trait WidgetReader {
 object WidgetReader {
   def read(lines: List[String], parser: api.ParserServices): Widget = {
     val readers = List(ButtonReader, SliderReader, ViewReader, MonitorReader, SwitchReader, PlotReader, ChooserReader(parser),
-      OutputReader, TextBoxReader)
+      OutputReader, TextBoxReader, new InputBoxReader())
     readers.find(_.validate(lines)) match {
       case Some(reader) => reader.parse(lines)
       case None =>
@@ -221,7 +238,7 @@ object ButtonReader extends BaseWidgetReader {
                         StringLine(),  // actionkey
                         ReservedLine(),
                         ReservedLine(),
-                        BooleanLine()  // go time
+                        BooleanLine(Some(true))  // go time
                       ) 
   def asList(button: Button) = List((), button.display, button.left, button.top, button.right, button.bottom,
                                     button.source, button.forever)
@@ -381,7 +398,7 @@ object SwitchReader extends BaseWidgetReader {
                         IntLine(),  // bottom
                         StringLine(),   // display
                         StringLine(),   // varname
-                        BooleanLine(),  // on
+                        InvertedBooleanLine(),  // on
                         ReservedLine(),
                         ReservedLine()
                       ) 
@@ -456,8 +473,11 @@ object OutputReader extends BaseWidgetReader {
   }
 }
 
-object InputBoxReader extends BaseWidgetReader {
-  type T = InputBox[_]
+class InputBoxReader extends BaseWidgetReader {
+  type U
+  type T = InputBox[U]
+
+  val inputBoxTypes = List(Num, Col, Str, StrCommand, StrReporter)
 
   def definition = List(new SpecifiedLine("INPUTBOX"),
                         IntLine(),  // left
@@ -470,12 +490,17 @@ object InputBoxReader extends BaseWidgetReader {
                         ReservedLine(),
                         StringLine()    // inputboxtype
                       ) 
-  def asList(inputbox: InputBox[_]) = List(inputbox.left, inputbox.right, inputbox.top, inputbox.bottom, inputbox.varName,
+  def asList(inputbox: InputBox[U]) = List(inputbox.left, inputbox.right, inputbox.top, inputbox.bottom, inputbox.varName,
     inputbox.value, inputbox.multiline, (), inputbox.boxtype)
-  def asAnyRef(vals: List[Any]): InputBox[_] = {
-    val List(left: Int, right: Int, top: Int, bottom: Int, varName: String, value: String,
-      multiline: Boolean, _, inputBoxType: InputBoxType[Any] @unchecked) = vals
-    InputBox(left, top, right, bottom, varName, value, multiline, inputBoxType)
+  def asAnyRef(vals: List[Any]): InputBox[U] = {
+    
+    val List((), left: Int, right: Int, top: Int, bottom: Int, varName: String, value: String,
+      multiline: Boolean, _, inputBoxTypeStr: String) = vals
+    val inputBoxType: InputBoxType[U] = inputBoxTypes.find(_.name == inputBoxTypeStr) match {
+      case Some(t) => t.asInstanceOf[InputBoxType[U]]
+      case None => throw new Exception("Couldn't find corresponding input box type for " + inputBoxTypeStr)
+    }
+    InputBox(left, top, right, bottom, varName, inputBoxType.widgetline.parse(value), multiline, inputBoxType)
   }
 }
 
