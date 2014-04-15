@@ -7,6 +7,7 @@ import org.scalatest.FunSuite
 class ModelTest extends FunSuite {
 
   test("Parse a button") {
+  /*
     println(ButtonReader.format(new Button("B1", 0, 0, 0, 0, "", false)))
     println(ButtonReader.validate("""|BUTTON
                                   |B1
@@ -31,7 +32,7 @@ class ModelTest extends FunSuite {
                                   |2
                                   |3
                                   |Some Code
-                                  |1""".stripMargin.split("\n").toList))
+                                  |1""".stripMargin.split("\n").toList))*/
   }
 
   /*

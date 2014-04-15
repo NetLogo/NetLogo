@@ -302,7 +302,7 @@ object PlotReader extends BaseWidgetReader {
                         DoubleLine(),   // xmax
                         StringBooleanLine(), // autoploton
                         StringBooleanLine(), // legend on
-                        StringLine()   // Double code lines, parse later
+                        StringLine(Some(""))   // Double code lines, parse later
                       )
   def asList(plot: Plot) = List((), plot.left, plot.right, plot.top, plot.bottom, plot.display,
                                     plot.xAxis, plot.yAxis, plot.ymin, plot.ymax, plot.xmin, plot.xmax,
