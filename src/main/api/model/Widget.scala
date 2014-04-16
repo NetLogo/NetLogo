@@ -46,7 +46,7 @@ case class Switch(display: String, left: Int = 0, top: Int = 0, right: Int = 0, 
   override def constraint = List("SWITCH", asNetLogoString(default))
 }
 case class Chooser(display: String, left: Int = 0, top: Int = 0, right: Int = 0, bottom: Int = 0,
-             varName: String, choices: List[Any] = Nil, currentChoice: Int = 0)
+             varName: String, choices: List[AnyRef] = Nil, currentChoice: Int = 0)
            extends Widget with DeclaresGlobal with DeclaresGlobalCommand with DeclaresConstraint {
   override def default = choices(currentChoice)
   override def constraint = List("CHOOSER", asNetLogoString(choices), currentChoice.toString)
@@ -73,10 +73,10 @@ case object Num extends InputBoxType[Double]("Number") {
 case object Str extends InputBoxType[String]("String") {
   def widgetline = StringLine()
 }
-case object StrReporter extends InputBoxType[String]("Reporter") {
+case object StrReporter extends InputBoxType[String]("String (reporter)") {
   def widgetline = StringLine()
 }
-case object StrCommand extends InputBoxType[String]("Commands") {
+case object StrCommand extends InputBoxType[String]("String (command)") {
   def widgetline = StringLine()
 }
 case object Col extends InputBoxType[Int]("Color") {
@@ -433,7 +433,7 @@ case class ChooserReader(val parser: api.ParserServices) extends BaseWidgetReade
                         IntLine()   // current choice
                       ) 
   def asList(chooser: Chooser) = List((), chooser.left, chooser.top, chooser.right, chooser.bottom, chooser.display,
-    chooser.varName, chooser.choices, chooser.currentChoice)
+    chooser.varName, chooser.choices.map(v => api.Dump.logoObject(v, true, false)).mkString(" "), chooser.currentChoice)
   def asAnyRef(vals: List[Any]): Chooser = {
     val List(_, left: Int, top: Int, right: Int, bottom: Int, display: String, varName: String,
       choicesStr: String, currentChoice: Int) = vals
@@ -500,7 +500,7 @@ class InputBoxReader extends BaseWidgetReader {
                         StringLine()    // inputboxtype
                       ) 
   def asList(inputbox: InputBox[U]) = List((), inputbox.left, inputbox.top, inputbox.right, inputbox.bottom, inputbox.varName,
-    inputbox.value, inputbox.multiline, (), inputbox.boxtype)
+    inputbox.boxtype.widgetline.format(inputbox.value), inputbox.multiline, (), inputbox.boxtype.name)
   def asAnyRef(vals: List[Any]): InputBox[U] = {
     
     val List((), left: Int, top: Int, right: Int, bottom: Int, varName: String, value: String,

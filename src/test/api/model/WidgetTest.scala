@@ -9,7 +9,6 @@ import org.nlogo.headless.HeadlessWorkspace
 class WidgetTest extends FunSuite {
 
   test("Required reader lines") {
-    val ws = HeadlessWorkspace.newInstance
     case class TestWidget(vals: List[Any])  extends Widget
     object AllLineTest extends BaseWidgetReader {
       type T = TestWidget
@@ -246,13 +245,38 @@ class WidgetTest extends FunSuite {
       PlotReader.parse(PlotReader.format(PlotReader.parse(plot)).split("\n").toList))
   }
 
-/*
   test("chooser") {
+    val ws = HeadlessWorkspace.newInstance
+    val chooser = """|CHOOSER
+                     |164
+                     |10
+                     |315
+                     |55
+                     |visualize-time-steps
+                     |visualize-time-steps
+                     |"days" "years"
+                     |1""".stripMargin.split("\n").toList
+    val cr = new ChooserReader(ws)
+    assert(cr.validate(chooser))
+    assert(Chooser("visualize-time-steps", 164, 10, 315, 55, "visualize-time-steps", List("days", "years"), 1) ==
+      cr.parse(chooser))
+    assert(cr.validate(cr.format(cr.parse(chooser)).split("\n").toList))
+    assert(Chooser("visualize-time-steps", 164, 10, 315, 55, "visualize-time-steps", List("days", "years"), 1) ==
+      cr.parse(cr.format(cr.parse(chooser)).split("\n").toList))
   }
 
   test("output") {
+    val output = """|OUTPUT
+                    |290
+                    |449
+                    |602
+                    |543
+                    |12""".stripMargin.split("\n").toList
+    assert(OutputReader.validate(output))
+    assert(Output(290, 449, 602, 543, 12) == OutputReader.parse(output))
+    assert(OutputReader.validate(OutputReader.format(OutputReader.parse(output)).split("\n").toList))
+    assert(Output(290, 449, 602, 543, 12) == OutputReader.parse(OutputReader.format(OutputReader.parse(output)).split("\n").toList))
   }
-*/
 
   test("textbox") {
     val textBox = """|TEXTBOX
@@ -269,30 +293,84 @@ class WidgetTest extends FunSuite {
     assert(TextBoxReader.validate(TextBoxReader.format(TextBoxReader.parse(textBox)).split("\n").toList))
     assert(TextBox("Sheep settings", 28, 11, 168, 30, 11, 0.0, false) ==
       TextBoxReader.parse(TextBoxReader.format(TextBoxReader.parse(textBox)).split("\n").toList))
-
-    //.stripMargin.split("\n").toList
-    //assert(SliderReader.validate(slider))
-    //System.out.println(SliderReader.parse(slider))
-    //assert(Slider() == SliderReader.parse(slider))
-    //assert(SliderReader.validate(SliderReader.format(SliderReader.parse(slider)).split("\n").toList))
-    //assert(Slider() ==
-    //  SliderReader.parse(SliderReader.format(SliderReader.parse(slider)).split("\n").toList))
-
   }
 
-/*
   test("inputbox color") {
+    val inputBox = """|INPUTBOX
+                      |119
+                      |309
+                      |274
+                      |369
+                      |fgcolor
+                      |123
+                      |1
+                      |0
+                      |Color""".stripMargin.split("\n").toList
+    val ibr = new InputBoxReader()
+    assert(ibr.validate(inputBox))
+    assert(InputBox(119, 309, 274, 369, "fgcolor", 123, true, Col) == ibr.parse(inputBox))
+    assert(ibr.validate(ibr.format(ibr.parse(inputBox)).split("\n").toList))
+    assert(InputBox(119, 309, 274, 369, "fgcolor", 123, true, Col) ==
+      ibr.parse(ibr.format(ibr.parse(inputBox)).split("\n").toList))
   }
 
   test("inputbox num") {
+    val inputBox = """|INPUTBOX
+                      |31
+                      |301
+                      |112
+                      |361
+                      |step-size
+                      |1
+                      |1
+                      |0
+                      |Number""".stripMargin.split("\n").toList
+
+    val ibr = new InputBoxReader()
+    assert(ibr.validate(inputBox))
+    assert(InputBox(31, 301, 112, 361, "step-size", 1.0, true, Num) == ibr.parse(inputBox))
+    assert(ibr.validate(ibr.format(ibr.parse(inputBox)).split("\n").toList))
+    assert(InputBox(31, 301, 112, 361, "step-size", 1.0, true, Num) ==
+      ibr.parse(ibr.format(ibr.parse(inputBox)).split("\n").toList))
   }
 
   test("inputbox str") {
+    val inputBox = """|INPUTBOX
+                      |5
+                      |330
+                      |255
+                      |390
+                      |user-created-code
+                      |AAAAA
+                      |1
+                      |0
+                      |String""".stripMargin.split("\n").toList
+
+    val ibr = new InputBoxReader()
+    assert(ibr.validate(inputBox))
+    assert(InputBox(5, 330, 255, 390, "user-created-code", "AAAAA", true, Str) == ibr.parse(inputBox))
+    assert(ibr.validate(ibr.format(ibr.parse(inputBox)).split("\n").toList))
+    assert(InputBox(5, 330, 255, 390, "user-created-code", "AAAAA", true, Str) ==
+      ibr.parse(ibr.format(ibr.parse(inputBox)).split("\n").toList))
   }
 
   test("inputbox str reporter") {
-  }
+    val inputBox = """|INPUTBOX
+                      |245
+                      |134
+                      |470
+                      |214
+                      |my-equation
+                      |0
+                      |1
+                      |0
+                      |String (reporter)""".stripMargin.split("\n").toList
 
-  test("inputbox str command") {
-  }*/
+    val ibr = new InputBoxReader()
+    assert(ibr.validate(inputBox))
+    assert(InputBox(245, 134, 470, 214, "my-equation", "0", true, StrReporter) == ibr.parse(inputBox))
+    assert(ibr.validate(ibr.format(ibr.parse(inputBox)).split("\n").toList))
+    assert(InputBox(245, 134, 470, 214, "my-equation", "0", true, StrReporter) ==
+      ibr.parse(ibr.format(ibr.parse(inputBox)).split("\n").toList))
+  }
 }
