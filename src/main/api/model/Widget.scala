@@ -8,7 +8,7 @@ import org.nlogo.api
 import api.StringUtils.unescapeString
 import api.{UpdateMode, WorldDimensions}
 
-sealed trait Widget
+trait Widget
 sealed trait DeclaresGlobal {
   def varName: String
 }
@@ -119,17 +119,17 @@ case class BooleanLine(override val default: Option[Boolean] = None) extends Wid
 }
 case class InvertedBooleanLine(override val default: Option[Boolean] = None) extends WidgetLine[Boolean] {
   def parse(line: String): Boolean = line == "0"
-  def format(v: Boolean): String = if(v) "1" else "0"
+  def format(v: Boolean): String = if(v) "0" else "1"
   def valid(v: String): Boolean = v == "0" || v == "1"
 }
 case class StringBooleanLine(override val default: Option[Boolean] = None) extends WidgetLine[Boolean] {
   def parse(line: String): Boolean = line == "true"
-  def format(v: Boolean): String = if(v) "1" else "0"
+  def format(v: Boolean): String = if(v) "true" else "false"
   def valid(v: String): Boolean = v == "true" || v == "false"
 }
 case class TNilBooleanLine(override val default: Option[Boolean] = None) extends WidgetLine[Boolean] {
   def parse(line: String): Boolean = line == "T"
-  def format(v: Boolean): String = if(v) "1" else "0"
+  def format(v: Boolean): String = if(v) "T" else "NIL"
   def valid(v: String): Boolean = v == "T" || v == "NIL"
 }
 case class DoubleLine(override val default: Option[Double] = None) extends WidgetLine[Double] {
@@ -151,7 +151,7 @@ case class SpecifiedLine(str: String) extends WidgetLine[Unit] {
 case class MapLine[T](map: List[Tuple2[String, T]]) extends WidgetLine[T] {
   def parse(line: String): T = map.collectFirst({case (v, x) => x}).get
   def format(v: T): String = map.collectFirst({case (x, v) => x}).get
-  def valid(v: String): Boolean = map.collectFirst({case (v, x) => x}).nonEmpty
+  def valid(v: String): Boolean = map.toMap.contains(v)
 }
 case class ReservedLine(output: String = "RESERVED") extends WidgetLine[Unit] {
   def parse(line: String): Unit = {}
@@ -161,7 +161,7 @@ case class ReservedLine(output: String = "RESERVED") extends WidgetLine[Unit] {
 
 trait WidgetReader {
   type T <: Widget
-  def format(t: T): List[String]
+  def format(t: T): String
   def validate(lines: List[String]): Boolean
   def parse(lines: List[String]): T
 }
@@ -178,7 +178,7 @@ object WidgetReader {
     }
   }
 
-  def format(widget: Widget): List[String] = {
+  def format(widget: Widget): String = {
     widget match {
       case _:Button => ButtonReader.format(widget.asInstanceOf[Button])
       case _ => throw new Exception("XXX IMPLEMENT ME")
@@ -208,8 +208,8 @@ abstract class BaseWidgetReader extends WidgetReader {
   def definition: List[WidgetLine[_]]
   def asList(t: T): List[Any]
   def asAnyRef(vals: List[Any]): T
-  def format(t: T): List[String] = {
-    definition.asInstanceOf[List[WidgetLine[Any]]].zip(asList(t)).map{case (d, v) => d.format(v)}
+  def format(t: T): String = {
+    (definition.asInstanceOf[List[WidgetLine[Any]]].zip(asList(t)).map{case (d, v) => d.format(v)}).mkString("\n")
   }
   def validate(lines: List[String]): Boolean = {
     (lines.size == definition.size ||
@@ -241,8 +241,8 @@ object ButtonReader extends BaseWidgetReader {
                         ReservedLine(),
                         BooleanLine(Some(true))  // go time
                       ) 
-  def asList(button: Button) = List((), button.display, button.left, button.top, button.right, button.bottom,
-                                    button.source, button.forever)
+  def asList(button: Button) = List((), button.left, button.top, button.right, button.bottom, button.display,
+                                    button.source, button.forever, (), (), "", (), "", (), (), true)
   def asAnyRef(vals: List[Any]): Button = {
     val List(_, left: Int, top: Int, right: Int, bottom: Int, display: String,
       source: String, forever: Boolean, _, _, _, _, _, _, _, _) = vals
