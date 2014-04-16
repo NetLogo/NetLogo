@@ -29,7 +29,8 @@ object PlotLoader {
           plot.updateCode = unescapeString(update)
         case _ =>
           // 1, or 3 or more bits of code...error.
-          sys.error("Plot '" + plot.name + "' contains invalid setup and/or update code: " + plotLines(14))
+          throw new IllegalArgumentException(
+            s"Plot '${plot.name}' contains invalid setup and/or update code: ${plotLines(14)}")
       }
     }
 

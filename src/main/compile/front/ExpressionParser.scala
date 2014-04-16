@@ -373,7 +373,8 @@ class ExpressionParser(procedure: Procedure) {
                 (r2, new ReporterApp(r2, token.start, token.end, token.filename))
               }
             case _ =>
-              sys.error("unexpected token type: " + token.tpe)
+              throw new IllegalStateException(
+                s"unexpected token type ${token.tpe}")
           }
           // handle the case of the concise task syntax, where I can write e.g. "map + ..." instead
           // of "map [?1 + ?2] ...".  for the task primitive itself we allow this even for literals

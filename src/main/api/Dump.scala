@@ -41,7 +41,7 @@ object Dump {
         // be calling !reference ev 2/29/08
         extensionObject(eo, readable, exporting, exporting)
       case i: java.lang.Integer =>
-        sys.error("java.lang.Integer: " + i)
+        throw new IllegalArgumentException("java.lang.Integer: " + i)
       case b: java.lang.Boolean =>
         b.toString
       case d: java.lang.Double =>
