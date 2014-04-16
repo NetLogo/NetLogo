@@ -320,7 +320,7 @@ object PlotReader extends BaseWidgetReader {
                         DoubleLine(),   // xmax
                         StringBooleanLine(), // autoploton
                         StringBooleanLine(), // legend on
-                        StringLine(Some(""))   // Double code lines, parse later
+                        StringLine(Some(""""" """""))   // Double code lines, parse later
                       )
   def asList(plot: Plot) = List((), plot.left, plot.top, plot.right, plot.bottom, plot.display,
                                     plot.xAxis, plot.yAxis, plot.ymin, plot.ymax, plot.xmin, plot.xmax,
@@ -343,8 +343,9 @@ object PlotReader extends BaseWidgetReader {
   override def validate(lines: List[String]): Boolean = super.validate(lines.toList.span(_ != "PENS")._1)
   override def parse(lines: List[String]): Plot = {
     val (plotLines, penLines) = lines.span(_ != "PENS")
-    val pens = if (penLines.size > 0) penLines.tail.map(PenReader.parse(_)) else Nil
-    asAnyRef(definition.asInstanceOf[List[WidgetLine[AnyRef]]].zip(lines).map{case (d, s) => d.parse(s)} :+ pens)
+    val pens = if (penLines.size > 1) penLines.tail.map(PenReader.parse(_)) else Nil
+    asAnyRef(definition.asInstanceOf[List[WidgetLine[AnyRef]]].zipWithIndex.map{case (d, idx) =>
+      if(idx < plotLines.size) d.parse(plotLines(idx)) else d.default.get } :+ pens)
   }
 }
 

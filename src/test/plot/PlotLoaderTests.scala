@@ -104,8 +104,7 @@ Number
 0.0
 100.0
 true
-false
-""""".replaceAll("\r\n", "\n")
+false""".replaceAll("\r\n", "\n")
     val plot = load(plotLines)
     assertResult(0)(plot.pens.size) // no default pen anymore.
   }
