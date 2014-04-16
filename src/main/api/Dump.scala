@@ -7,16 +7,14 @@ import org.nlogo.core,
 
 object Dump {
 
-  private val dumper: Any => String = {
-    // We don't allow Integers anymore as Logo values, but it's convenient to be able to dump them
-    // in a CSV context. - ST 5/30/06
+  val csv = new CSV({
+    // Boxed integers are illegal Logo values, but we have legacy CSV generation code
+    // that still uses them. Yuck. - ST 5/30/06, 4/16/14
     case i: java.lang.Integer =>
       i.toString
     case x =>
       logoObject(x.asInstanceOf[AnyRef], true, true)
-  }
-
-  val csv = new CSV(dumper)
+  })
 
   def isKnownType(obj: AnyRef): Boolean =
     obj.isInstanceOf[java.lang.Boolean] ||
