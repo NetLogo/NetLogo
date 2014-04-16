@@ -5,6 +5,7 @@ package org.nlogo.api.model
 import scalaz.Scalaz.ToStringOpsFromString
 
 import org.nlogo.api
+import api.StringUtils.unescapeString
 import api.{UpdateMode, WorldDimensions}
 
 sealed trait Widget
@@ -250,7 +251,6 @@ object ButtonReader extends BaseWidgetReader {
 }
 
 object PenReader {
-  import api.StringUtils.unescapeString
   // This is tricky because the string literals may contain escaped double quotes, so it's
   // nontrivial to figure out where one literal ends and the next starts.  Assumes the
   // opening double quote has already been detected and discarded.
@@ -327,8 +327,10 @@ object PlotReader extends BaseWidgetReader {
   def asAnyRef(vals: List[Any]): Plot = {
     val List(_, left: Int, right: Int, top: Int, bottom: Int, display: String,
       xAxis: String, yAxis: String, ymin: Double, ymax: Double, xmin: Double, xmax: Double,
-      autoPlotOn: Boolean, legendOn: Boolean, _, pens: List[Pen] @unchecked) = vals
-    Plot(display, left, top, right, bottom, xAxis, yAxis, ymin, ymax, xmin, xmax, autoPlotOn, legendOn, "", "", pens)
+      autoPlotOn: Boolean, legendOn: Boolean, code: String, pens: List[Pen] @unchecked) = vals
+    val List(setupCode: String, updateCode: String) = PenReader.parseStringLiterals(code)
+    Plot(display, left, top, right, bottom, xAxis, yAxis, ymin, ymax, xmin, xmax, autoPlotOn, legendOn,
+         unescapeString(setupCode), unescapeString(updateCode), pens)
   }
 
   override def validate(lines: List[String]): Boolean = super.validate(lines.toList.span(_ != "PENS")._1)
