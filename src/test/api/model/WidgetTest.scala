@@ -1,6 +1,7 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.api.model
+package org.nlogo.api
+package model
 
 import org.scalatest.FunSuite
 import org.nlogo.headless.HeadlessWorkspace
@@ -115,29 +116,183 @@ class WidgetTest extends FunSuite {
       ButtonReader.parse(ButtonReader.format(ButtonReader.parse(button)).split("\n").toList))
   }
   test("slider") {
+     val slider = """|SLIDER
+                     |20
+                     |65
+                     |201
+                     |98
+                     |initial-sheep-stride
+                     |initial-sheep-stride
+                     |0
+                     |1
+                     |0.2
+                     |0.1
+                     |1
+                     |NIL
+                     |HORIZONTAL""".stripMargin.split("\n").toList
+    assert(SliderReader.validate(slider))
+    assert(Slider("initial-sheep-stride", 20, 65, 201, 98, "initial-sheep-stride", "0", "1", 0.2, "0.1", "NIL", Horizontal) ==
+      SliderReader.parse(slider))
+    assert(SliderReader.validate(SliderReader.format(SliderReader.parse(slider)).split("\n").toList))
+    assert(Slider("initial-sheep-stride", 20, 65, 201, 98, "initial-sheep-stride", "0", "1", 0.2, "0.1", "NIL", Horizontal) ==
+      SliderReader.parse(SliderReader.format(SliderReader.parse(slider)).split("\n").toList))
+      
   }
+
   test("view") {
+    val view = """|GRAPHICS-WINDOW
+                  |430
+                  |12
+                  |806
+                  |409
+                  |30
+                  |30
+                  |6.0
+                  |1
+                  |20
+                  |1
+                  |1
+                  |1
+                  |0
+                  |1
+                  |1
+                  |1
+                  |-30
+                  |30
+                  |-30
+                  |30
+                  |1
+                  |1
+                  |1
+                  |ticks
+                  |30.0""".stripMargin.split("\n").toList
+
+    assert(ViewReader.validate(view))
+    assert(View(430, 12, 806, 409, 6.0, 20, true, true, -30, 30, -30, 30, UpdateMode.Continuous, true, "ticks", 30.0) ==
+      ViewReader.parse(view))
+    assert(ViewReader.validate(ViewReader.format(ViewReader.parse(view)).split("\n").toList))
+    assert(View(430, 12, 806, 409, 6.0, 20, true, true, -30, 30, -30, 30, UpdateMode.Continuous, true, "ticks", 30.0) ==
+      ViewReader.parse(ViewReader.format(ViewReader.parse(view)).split("\n").toList))
   }
+
   test("monitor") {
+    val monitor = """|MONITOR
+                     |74
+                     |214
+                     |152
+                     |259
+                     |sheep
+                     |count sheep
+                     |3
+                     |1
+                     |11""".stripMargin.split("\n").toList
+    assert(MonitorReader.validate(monitor))
+    assert(Monitor("sheep", 74, 214, 152, 259, "count sheep", 3, 11) == MonitorReader.parse(monitor))
+    assert(MonitorReader.validate(MonitorReader.format(MonitorReader.parse(monitor)).split("\n").toList))
+    assert(Monitor("sheep", 74, 214, 152, 259, "count sheep", 3, 11) ==
+      MonitorReader.parse(MonitorReader.format(MonitorReader.parse(monitor)).split("\n").toList))
   }
+
   test("switch") {
+    val switch = """|SWITCH
+                    |111
+                    |174
+                    |307
+                    |207
+                    |stride-length-penalty?
+                    |stride-length-penalty?
+                    |0
+                    |1
+                    |-1000""".stripMargin.split("\n").toList
+    assert(SwitchReader.validate(switch))
+    assert(Switch("stride-length-penalty?", 111, 174, 307, 207, "stride-length-penalty?", true) == SwitchReader.parse(switch))
+    assert(SwitchReader.validate(SwitchReader.format(SwitchReader.parse(switch)).split("\n").toList))
+    assert(Switch("stride-length-penalty?", 111, 174, 307, 207, "stride-length-penalty?", true) ==
+      SwitchReader.parse(SwitchReader.format(SwitchReader.parse(switch)).split("\n").toList))
+
   }
+
   test("plot") {
+    val plot = """|PLOT
+                  |33
+                  |265
+                  |369
+                  |408
+                  |populations
+                  |time
+                  |pop.
+                  |0.0
+                  |100.0
+                  |0.0
+                  |100.0
+                  |true
+                  |true
+                  |"" ""
+                  |PENS
+                  |"sheep" 1.0 0 -13345367 true "" "plot count sheep"
+                  |"wolves" 1.0 0 -2674135 true "" "plot count wolves"
+                  |"grass / 4" 1.0 0 -10899396 true "" ";; divide by four to keep it within similar\n;; range as wolf and sheep populations\nplot count patches with [ pcolor = green ] / 4" """.stripMargin.split("\n").toList
+    assert(PlotReader.validate(plot))
+    assert(Plot("populations", 33, 265, 369, 408, "time", "pop.", 0.0, 100.0, 0.0, 100.0, true, true, "", "",
+      List(Pen("sheep", 1.0, 0, -13345367, true, "", "plot count sheep"), 
+           Pen("wolves", 1.0, 0, -2674135, true, "", "plot count wolves"), 
+           Pen("grass / 4", 1.0, 0, -10899396, true, "", ";; divide by four to keep it within similar\n;; range as wolf and sheep populations\nplot count patches with [ pcolor = green ] / 4"))) ==
+         PlotReader.parse(plot))
+    assert(PlotReader.validate(PlotReader.format(PlotReader.parse(plot)).split("\n").toList))
+    assert(Plot("populations", 33, 265, 369, 408, "time", "pop.", 0.0, 100.0, 0.0, 100.0, true, true, "", "",
+      List(Pen("sheep", 1.0, 0, -13345367, true, "", "plot count sheep"), 
+           Pen("wolves", 1.0, 0, -2674135, true, "", "plot count wolves"), 
+           Pen("grass / 4", 1.0, 0, -10899396, true, "", ";; divide by four to keep it within similar\n;; range as wolf and sheep populations\nplot count patches with [ pcolor = green ] / 4"))) ==
+      PlotReader.parse(PlotReader.format(PlotReader.parse(plot)).split("\n").toList))
   }
+
+/*
   test("chooser") {
   }
+
   test("output") {
   }
+*/
+
   test("textbox") {
+    val textBox = """|TEXTBOX
+                     |28
+                     |11
+                     |168
+                     |30
+                     |Sheep settings
+                     |11
+                     |0.0
+                     |0""".stripMargin.split("\n").toList
+    assert(TextBoxReader.validate(textBox))
+    assert(TextBox("Sheep settings", 28, 11, 168, 30, 11, 0.0, false) == TextBoxReader.parse(textBox))
+    assert(TextBoxReader.validate(TextBoxReader.format(TextBoxReader.parse(textBox)).split("\n").toList))
+    assert(TextBox("Sheep settings", 28, 11, 168, 30, 11, 0.0, false) ==
+      TextBoxReader.parse(TextBoxReader.format(TextBoxReader.parse(textBox)).split("\n").toList))
+
+    //.stripMargin.split("\n").toList
+    //assert(SliderReader.validate(slider))
+    //System.out.println(SliderReader.parse(slider))
+    //assert(Slider() == SliderReader.parse(slider))
+    //assert(SliderReader.validate(SliderReader.format(SliderReader.parse(slider)).split("\n").toList))
+    //assert(Slider() ==
+    //  SliderReader.parse(SliderReader.format(SliderReader.parse(slider)).split("\n").toList))
+
   }
+
+/*
   test("inputbox color") {
   }
+
   test("inputbox num") {
   }
+
   test("inputbox str") {
   }
+
   test("inputbox str reporter") {
   }
+
   test("inputbox str command") {
-  }
+  }*/
 }

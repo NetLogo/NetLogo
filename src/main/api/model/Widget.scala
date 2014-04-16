@@ -6,6 +6,7 @@ import scalaz.Scalaz.ToStringOpsFromString
 
 import org.nlogo.api
 import api.StringUtils.unescapeString
+import api.StringUtils.escapeString
 import api.{UpdateMode, WorldDimensions}
 
 trait Widget
@@ -298,8 +299,8 @@ object PenReader {
         inLegend = inLegend.toBoolean, setupCode = unescapeString(setup), updateCode = unescapeString(update))
   }
 
-  def format(pen: Pen): String = quoted(pen.display) + " 1.0 0 -16777216 true " +
-    quoted(pen.setupCode.mkString("\\n")) + " " + quoted(pen.updateCode.mkString("\\n"))
+  def format(pen: Pen): String = quoted(pen.display) + " " + pen.interval + " " + pen.mode + " " + pen.color + " " + pen.inLegend + " " +
+    quoted(escapeString(pen.setupCode)) + " " + quoted(escapeString(pen.updateCode))
 }
 
 object PlotReader extends BaseWidgetReader {
@@ -321,11 +322,12 @@ object PlotReader extends BaseWidgetReader {
                         StringBooleanLine(), // legend on
                         StringLine(Some(""))   // Double code lines, parse later
                       )
-  def asList(plot: Plot) = List((), plot.left, plot.right, plot.top, plot.bottom, plot.display,
+  def asList(plot: Plot) = List((), plot.left, plot.top, plot.right, plot.bottom, plot.display,
                                     plot.xAxis, plot.yAxis, plot.ymin, plot.ymax, plot.xmin, plot.xmax,
-                                    plot.autoPlotOn, plot.legendOn, """"" """"")
+                                    plot.autoPlotOn, plot.legendOn,
+                                    "\"" + escapeString(plot.setupCode) + "\" \"" + escapeString(plot.updateCode) + "\"")
   def asAnyRef(vals: List[Any]): Plot = {
-    val List(_, left: Int, right: Int, top: Int, bottom: Int, display: String,
+    val List(_, left: Int, top: Int, right: Int, bottom: Int, display: String,
       xAxis: String, yAxis: String, ymin: Double, ymax: Double, xmin: Double, xmax: Double,
       autoPlotOn: Boolean, legendOn: Boolean, code: String, pens: List[Pen] @unchecked) = vals
     val List(setupCode: String, updateCode: String) = PenReader.parseStringLiterals(code)
@@ -333,6 +335,11 @@ object PlotReader extends BaseWidgetReader {
          unescapeString(setupCode), unescapeString(updateCode), pens)
   }
 
+  override def format(plot: Plot): String = {
+    (definition.asInstanceOf[List[WidgetLine[Any]]].zip(asList(plot)).map{case (d, v) => d.format(v)}).mkString("\n") +
+      "\nPENS\n" +
+      plot.pens.map(PenReader.format(_)).mkString("\n")
+  }
   override def validate(lines: List[String]): Boolean = super.validate(lines.toList.span(_ != "PENS")._1)
   override def parse(lines: List[String]): Plot = {
     val (plotLines, penLines) = lines.span(_ != "PENS")
@@ -359,11 +366,11 @@ object SliderReader extends BaseWidgetReader {
                         StringLine(),   // units
                         new MapLine(List(("HORIZONTAL", Horizontal), ("VERTICAL", Vertical)))
                       ) 
-  def asList(slider: Slider) = List((), slider.left, slider.right, slider.top, slider.bottom, slider.display,
+  def asList(slider: Slider) = List((), slider.left, slider.top, slider.right, slider.bottom, slider.display,
                                     slider.varName, slider.min, slider.max, slider.default, slider.step,
                                     (), slider.units, slider.direction)
   def asAnyRef(vals: List[Any]): Slider = {
-    val List(_, left: Int, right: Int, top: Int, bottom: Int, display: String, varName: String, min: String,
+    val List(_, left: Int, top: Int, right: Int, bottom: Int, display: String, varName: String, min: String,
              max: String, default: Double, step: String, _, units: String, direction: Direction) = vals
     Slider(display, left, top, right, bottom, varName, min, max, default, step, units, direction)
   }
@@ -382,10 +389,10 @@ object TextBoxReader extends BaseWidgetReader {
                         DoubleLine(),  // on
                         BooleanLine()
                       ) 
-  def asList(textBox: TextBox) = List((), textBox.left, textBox.right, textBox.top, textBox.bottom,
+  def asList(textBox: TextBox) = List((), textBox.left, textBox.top, textBox.right, textBox.bottom,
                                     textBox.display, textBox.fontSize, textBox.color, textBox.transparent)
   def asAnyRef(vals: List[Any]): TextBox = {
-    val List(_, left: Int, right: Int, top: Int, bottom: Int, display: String, fontSize: Int, color: Double, transparent: Boolean) = vals
+    val List(_, left: Int, top: Int, right: Int, bottom: Int, display: String, fontSize: Int, color: Double, transparent: Boolean) = vals
     TextBox(display, left, top, right, bottom, fontSize, color, transparent)
   }
 }
@@ -404,10 +411,10 @@ object SwitchReader extends BaseWidgetReader {
                         ReservedLine(),
                         ReservedLine()
                       ) 
-  def asList(switch: Switch) = List(switch.left, switch.right, switch.top, switch.bottom,
+  def asList(switch: Switch) = List((), switch.left, switch.top, switch.right, switch.bottom,
                                     switch.display, switch.varName, switch.on, (), ())
   def asAnyRef(vals: List[Any]): Switch = {
-    val List(_, left: Int, right: Int, top: Int, bottom: Int, display: String, varName: String, on: Boolean, _, _) = vals
+    val List(_, left: Int, top: Int, right: Int, bottom: Int, display: String, varName: String, on: Boolean, _, _) = vals
     Switch(display, left, top, right, bottom, varName, on)
   }
 }
@@ -425,10 +432,10 @@ case class ChooserReader(val parser: api.ParserServices) extends BaseWidgetReade
                         StringLine(),   // choices
                         IntLine()   // current choice
                       ) 
-  def asList(chooser: Chooser) = List(chooser.left, chooser.right, chooser.top, chooser.bottom, chooser.display,
+  def asList(chooser: Chooser) = List((), chooser.left, chooser.top, chooser.right, chooser.bottom, chooser.display,
     chooser.varName, chooser.choices, chooser.currentChoice)
   def asAnyRef(vals: List[Any]): Chooser = {
-    val List(_, left: Int, right: Int, top: Int, bottom: Int, display: String, varName: String,
+    val List(_, left: Int, top: Int, right: Int, bottom: Int, display: String, varName: String,
       choicesStr: String, currentChoice: Int) = vals
     val choices = parser.readFromString("[" + choicesStr + "]").asInstanceOf[api.LogoList]
 
@@ -450,10 +457,10 @@ object MonitorReader extends BaseWidgetReader {
                         ReservedLine(),
                         IntLine()    // font size
                       ) 
-  def asList(monitor: Monitor) = List(monitor.left, monitor.right, monitor.top, monitor.bottom, monitor.display,
+  def asList(monitor: Monitor) = List((), monitor.left, monitor.top, monitor.right, monitor.bottom, monitor.display,
     monitor.source, monitor.precision, (), monitor.fontSize)
   def asAnyRef(vals: List[Any]): Monitor = {
-    val List(_, left: Int, right: Int, top: Int, bottom: Int, display: String, source: String, precision: Int, _, fontSize: Int) = vals
+    val List(_, left: Int, top: Int, right: Int, bottom: Int, display: String, source: String, precision: Int, _, fontSize: Int) = vals
     Monitor(display, left, top, right, bottom, source, precision, fontSize)
   }
 }
@@ -468,9 +475,9 @@ object OutputReader extends BaseWidgetReader {
                         IntLine(),  // bottom
                         IntLine()    // font size
                       ) 
-  def asList(output: Output) = List(output.left, output.right, output.top, output.bottom, output.fontSize)
+  def asList(output: Output) = List((), output.left, output.top, output.right, output.bottom, output.fontSize)
   def asAnyRef(vals: List[Any]): Output = {
-    val List(_, left: Int, right: Int, top: Int, bottom: Int, fontSize: Int) = vals
+    val List(_, left: Int, top: Int, right: Int, bottom: Int, fontSize: Int) = vals
     Output(left, top, right, bottom, fontSize)
   }
 }
@@ -492,11 +499,11 @@ class InputBoxReader extends BaseWidgetReader {
                         ReservedLine(),
                         StringLine()    // inputboxtype
                       ) 
-  def asList(inputbox: InputBox[U]) = List(inputbox.left, inputbox.right, inputbox.top, inputbox.bottom, inputbox.varName,
+  def asList(inputbox: InputBox[U]) = List((), inputbox.left, inputbox.top, inputbox.right, inputbox.bottom, inputbox.varName,
     inputbox.value, inputbox.multiline, (), inputbox.boxtype)
   def asAnyRef(vals: List[Any]): InputBox[U] = {
     
-    val List((), left: Int, right: Int, top: Int, bottom: Int, varName: String, value: String,
+    val List((), left: Int, top: Int, right: Int, bottom: Int, varName: String, value: String,
       multiline: Boolean, _, inputBoxTypeStr: String) = vals
     val inputBoxType: InputBoxType[U] = inputBoxTypes.find(_.name == inputBoxTypeStr) match {
       case Some(t) => t.asInstanceOf[InputBoxType[U]]
@@ -538,7 +545,7 @@ object ViewReader extends BaseWidgetReader {
                         StringLine(),   // tick counter label
                         DoubleLine(Some(30))   // frame rate
                       ) 
-  def asList(view: View) = List((), view.left, view.right, view.top, view.bottom, (), (), view.patchSize, (), view.fontSize,
+  def asList(view: View) = List((), view.left, view.top, view.right, view.bottom, (), (), view.patchSize, (), view.fontSize,
     (), (), (), (), view.wrappingAllowedInX, view.wrappingAllowedInY, (),
     view.minPxcor, view.maxPxcor, view.minPycor, view.maxPycor,
     view.updateMode, view.updateMode, view.showTickCounter, view.tickCounterLabel, view.frameRate)
