@@ -32,7 +32,7 @@ sealed trait DeclaresGlobalCommand {
 case class Button(display: String, left: Int, top: Int, right: Int, bottom: Int,
              source: String, forever: Boolean) extends Widget
 case class Plot(display: String, left: Int = 0, top: Int = 0, right: Int = 5, bottom: Int = 5,
-             xAxis: String = "", yAxis: String = "", ymin: Double = 0, ymax: Double = 0, xmin: Double = 0, xmax: Double = 0,
+             xAxis: String = "", yAxis: String = "", xmin: Double = 0, xmax: Double = 0, ymin: Double = 0, ymax: Double = 0,
              autoPlotOn: Boolean = true, legendOn: Boolean = false,
              setupCode: String = "", updateCode: String = "", pens: List[Pen] = Nil) extends Widget
 case class Pen(display: String, interval: Double = 1, mode: Int = 0, color: Int = 0, inLegend: Boolean = false,
@@ -314,24 +314,24 @@ object PlotReader extends BaseWidgetReader {
                         StringLine(),  // display
                         StringLine(),  // xaxis
                         StringLine(),  // yaxis
-                        DoubleLine(),   // ymin
-                        DoubleLine(),   // ymax
                         DoubleLine(),   // xmin
                         DoubleLine(),   // xmax
+                        DoubleLine(),   // ymin
+                        DoubleLine(),   // ymax
                         StringBooleanLine(), // autoploton
                         StringBooleanLine(), // legend on
                         StringLine(Some(""""" """""))   // Double code lines, parse later
                       )
   def asList(plot: Plot) = List((), plot.left, plot.top, plot.right, plot.bottom, plot.display,
-                                    plot.xAxis, plot.yAxis, plot.ymin, plot.ymax, plot.xmin, plot.xmax,
+                                    plot.xAxis, plot.yAxis, plot.xmin, plot.xmax, plot.ymin, plot.ymax,
                                     plot.autoPlotOn, plot.legendOn,
                                     "\"" + escapeString(plot.setupCode) + "\" \"" + escapeString(plot.updateCode) + "\"")
   def asAnyRef(vals: List[Any]): Plot = {
     val List(_, left: Int, top: Int, right: Int, bottom: Int, display: String,
-      xAxis: String, yAxis: String, ymin: Double, ymax: Double, xmin: Double, xmax: Double,
+      xAxis: String, yAxis: String, xmin: Double, xmax: Double, ymin: Double, ymax: Double,
       autoPlotOn: Boolean, legendOn: Boolean, code: String, pens: List[Pen] @unchecked) = vals
     val List(setupCode: String, updateCode: String) = PenReader.parseStringLiterals(code)
-    Plot(display, left, top, right, bottom, xAxis, yAxis, ymin, ymax, xmin, xmax, autoPlotOn, legendOn,
+    Plot(display, left, top, right, bottom, xAxis, yAxis, xmin, xmax, ymin, ymax, autoPlotOn, legendOn,
          unescapeString(setupCode), unescapeString(updateCode), pens)
   }
 
