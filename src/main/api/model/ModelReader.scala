@@ -9,7 +9,10 @@ object ModelReader {
 
   val SEPARATOR = "@#$#@#$#@"
 
-  def parseModel(model: String, parser: Option[api.ParserServices] = None): Model = {
+  // The optional parser services here can be omitted if you would not like widget parsing
+  // This should really be changed in the future to not need a compiler to parse widgets, but that is not
+  // a things for today.  FD 4/17/14
+  def parseModel(model: String, parser: Option[api.ParserServices]): Model = {
     var sections = Vector[Vector[String]]()
     var sectionContents = Vector[String]()
     def sectionDone() {
