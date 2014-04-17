@@ -3,7 +3,7 @@
 package org.nlogo.headless
 
 import org.nlogo.api.{ CompilerException, Version }
-import org.nlogo.api.Resource.getResourceAsString
+import org.nlogo.core.Resource.getResourceAsString
 import org.nlogo.workspace, workspace.AbstractWorkspace.setHeadlessProperty
 
 object Shell extends workspace.Shell {

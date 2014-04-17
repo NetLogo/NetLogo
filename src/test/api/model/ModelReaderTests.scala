@@ -3,7 +3,7 @@
 package org.nlogo.api.model
 
 import org.scalatest.FunSuite
-import org.nlogo.api.Resource.getResourceAsString
+import org.nlogo.core.Resource.getResourceAsString
 
 class ModelReaderTests extends FunSuite {
 

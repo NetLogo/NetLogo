@@ -5,7 +5,7 @@ package lang
 package misc
 
 import org.nlogo.plot.{ PlotPoint, PlotPen }
-import org.nlogo.api.model._
+import org.nlogo.core._
 
 class TestPlotModels extends FixtureSuite {
 

@@ -5,7 +5,8 @@ package lang
 package misc
 
 import org.scalatest.exceptions.TestFailedException
-import org.nlogo.api, api.AgentVariables, api.model._
+import org.nlogo.api, api.AgentVariables
+import org.nlogo.core._
 import org.nlogo.mirror._, Mirroring._, Mirrorables._
 
 class TestMirroring extends FixtureSuite {

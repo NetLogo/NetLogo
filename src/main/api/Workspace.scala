@@ -2,7 +2,7 @@
 
 package org.nlogo.api
 
-import model.Model
+import org.nlogo.core.Model
 
 import java.io.IOException
 

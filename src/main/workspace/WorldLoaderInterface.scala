@@ -11,7 +11,7 @@ trait WorldLoaderInterface {
   def setSize(x: Int, y: Int): Unit
   def changeTopology(wrapX: Boolean, wrapY: Boolean): Unit
   def clearTurtles(): Unit
-  def updateMode(updateMode: api.UpdateMode): Unit
+  def updateMode(updateMode: core.UpdateMode): Unit
   def getMinimumWidth: Int
   def computePatchSize(width: Int, numPatches: Int): Double
   def calculateHeight(worldHeight: Int, patchSize: Double): Int

@@ -4,7 +4,8 @@ package org.nlogo.headless
 package lang
 package misc
 
-import org.nlogo.api, api.model._
+import org.nlogo.api
+import org.nlogo.core._
 import org.nlogo.util.SlowTest
 import org.nlogo.workspace.Checksummer
 

@@ -3,6 +3,8 @@
 package org.nlogo.api
 package model
 
+import org.nlogo.api
+import org.nlogo.core._
 import org.scalatest.FunSuite
 import org.nlogo.headless.HeadlessWorkspace
 
@@ -52,7 +54,6 @@ class WidgetTest extends FunSuite {
   }
 
   test("Unrequired reader lines") {
-    val ws = HeadlessWorkspace.newInstance
     case class TestWidget(vals: List[Any])  extends Widget
     object AllLineTest extends BaseWidgetReader {
       type T = TestWidget
@@ -246,7 +247,7 @@ class WidgetTest extends FunSuite {
   }
 
   test("chooser") {
-    val ws = HeadlessWorkspace.newInstance
+    val ps = new api.DummyParserServices()
     val chooser = """|CHOOSER
                      |164
                      |10
@@ -256,7 +257,7 @@ class WidgetTest extends FunSuite {
                      |visualize-time-steps
                      |"days" "years"
                      |1""".stripMargin.split("\n").toList
-    val cr = new ChooserReader(ws)
+    val cr = new ChooserReader(ps)
     assert(cr.validate(chooser))
     assert(Chooser("visualize-time-steps", 164, 10, 315, 55, "visualize-time-steps", List("days", "years"), 1) ==
       cr.parse(chooser))

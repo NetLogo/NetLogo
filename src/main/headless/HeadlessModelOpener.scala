@@ -7,7 +7,8 @@ import workspace.WorldLoader
 import org.nlogo.plot.PlotLoader
 import org.nlogo.agent.{BooleanConstraint, ChooserConstraint, InputBoxConstraint, NumericConstraint}
 import org.nlogo.api.{CompilerException, FileIO, LogoList, Program, ValueConstraint, Version}
-import org.nlogo.api.model.{Model, ModelReader, Widget, DeclaresGlobal, DeclaresGlobalCommand, DeclaresConstraint}
+import org.nlogo.api.model.ModelReader
+import org.nlogo.core.{Model, Widget, DeclaresGlobal, DeclaresGlobalCommand, DeclaresConstraint}
 
 import org.nlogo.shape.{LinkShape, VectorShape}
 

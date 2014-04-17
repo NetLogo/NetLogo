@@ -5,7 +5,7 @@ package misc
 
 import org.scalatest.{ FunSuite, OneInstancePerTest, BeforeAndAfterEach }
 import org.nlogo.api
-import org.nlogo.api.model.{ Model }
+import org.nlogo.core.{Model, View}
 import org.nlogo.nvm.{ LabInterface, Workspace }
 import org.nlogo.workspace.AbstractWorkspace
 import org.nlogo.util.SlowTest
@@ -34,7 +34,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
   def stripLineFeeds(s: String) =
     s.replaceAll("\r\n", "\n")
 
-  def runExperiment(view: api.model.View, declarations: String, name: String): HeadlessWorkspace = {
+  def runExperiment(view: View, declarations: String, name: String): HeadlessWorkspace = {
     val workspace = newWorkspace()
     workspace.openModel(Model(code = declarations, widgets = List(view)))
     run("test/lab/" + name)(() => workspace, () => newWorker(name))
@@ -42,7 +42,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
   }
   def runExperiment(worldSize: Int, declarations: String, name: String): HeadlessWorkspace =
     runExperiment(
-      api.model.View.square(worldSize),
+      View.square(worldSize),
       declarations, name)
   def runParallelExperiment(name: String, declarations: String = "") {
     def workspace = {
@@ -169,7 +169,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
     runExperimentFromModel("models/test/lab/FireWithExperiments.nlogo", "test2", "models/test/lab/FireWithExperiments2")
   }
   test("ResizingWorld3") {
-    runExperiment(api.model.View(minPycor = 0, minPxcor = 0, maxPycor = 1, maxPxcor = 1), "", "testResizingWorld3")
+    runExperiment(View(minPycor = 0, minPxcor = 0, maxPycor = 1, maxPxcor = 1), "", "testResizingWorld3")
   }
   test("Stopping1") {
     runExperiment(0, "globals [x]",

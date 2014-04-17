@@ -4,7 +4,7 @@ package org.nlogo.headless
 package lang
 package misc
 
-import org.nlogo.api.model._
+import org.nlogo.core._
 
 /**
  * maybe we could use some more tests that test sliders.

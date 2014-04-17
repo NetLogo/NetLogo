@@ -2,8 +2,7 @@
 
 package org.nlogo.plot
 
-import org.nlogo.api
-import api.model.{Plot => ParsedPlot, Pen => ParsedPen}
+import org.nlogo.core.{Plot => ParsedPlot, Pen => ParsedPen}
 
 object PlotLoader {
 

@@ -24,7 +24,8 @@ its ok that these tests don't run in 'run' mode because we are only testing
 the stack traces, not the results.
  */
 
-import org.nlogo.api, api.LogoException, api.model.{Model, Plot, Pen, View}
+import org.nlogo.api, api.LogoException
+import org.nlogo.core.{Model, Plot, Pen, View}
 import org.scalatest.FunSuite
 
 class TestStackTraces extends FixtureSuite {

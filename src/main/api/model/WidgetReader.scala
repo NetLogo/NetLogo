@@ -5,100 +5,7 @@ package org.nlogo.api.model
 import org.nlogo.api
 import org.nlogo.core.StringEscaper.unescapeString
 import org.nlogo.core.StringEscaper.escapeString
-import api.UpdateMode
-import org.nlogo.core.WorldDimensions
-
-trait Widget
-sealed trait DeclaresGlobal {
-  def varName: String
-}
-
-sealed trait DeclaresConstraint {
-  def varName: String
-  def constraint: List[String]
-}
-sealed trait DeclaresGlobalCommand {
-  def varName: String
-  def default: Any
-  def asNetLogoString(x: Any): String = x match {
-    case s: String => s""""$s""""
-    case b: Boolean => if(b) "true" else "false"
-    case l: List[Any] => "[" + l.map(asNetLogoString).mkString(" ") + "]"
-    case o: AnyRef => o.toString
-  }
-  def command: String = "set " + varName + " " + asNetLogoString(default)
-}
-case class Button(display: String, left: Int, top: Int, right: Int, bottom: Int,
-             source: String, forever: Boolean) extends Widget
-case class Plot(display: String, left: Int = 0, top: Int = 0, right: Int = 5, bottom: Int = 5,
-             xAxis: String = "", yAxis: String = "", xmin: Double = 0, xmax: Double = 0, ymin: Double = 0, ymax: Double = 0,
-             autoPlotOn: Boolean = true, legendOn: Boolean = false,
-             setupCode: String = "", updateCode: String = "", pens: List[Pen] = Nil) extends Widget
-case class Pen(display: String, interval: Double = 1, mode: Int = 0, color: Int = 0, inLegend: Boolean = false,
-             setupCode: String = "", updateCode: String = "") extends Widget
-case class TextBox(display: String, left: Int = 0, top: Int = 0, right: Int = 5, bottom: Int = 5,
-             fontSize: Int, color: Double, transparent: Boolean) extends Widget
-case class Switch(display: String, left: Int = 0, top: Int = 0, right: Int = 0, bottom: Int = 0,
-             varName: String, on: Boolean = false)
-              extends Widget with DeclaresGlobal with DeclaresGlobalCommand with DeclaresConstraint {
-  override def default = on
-  override def constraint = List("SWITCH", asNetLogoString(default))
-}
-case class Chooser(display: String, left: Int = 0, top: Int = 0, right: Int = 0, bottom: Int = 0,
-             varName: String, choices: List[AnyRef] = Nil, currentChoice: Int = 0)
-           extends Widget with DeclaresGlobal with DeclaresGlobalCommand with DeclaresConstraint {
-  override def default = choices(currentChoice)
-  override def constraint = List("CHOOSER", asNetLogoString(choices), currentChoice.toString)
-}
-sealed trait Direction
-case object Horizontal extends Direction
-case object Vertical extends Direction
-case class Slider(display: String, left: Int = 0, top: Int = 0, right: Int = 0, bottom: Int = 0,
-             varName: String, min: String = "1", max: String = "10", default: Double = 1, step: String = "1",
-             units: String = "", direction: Direction = Horizontal)
-             extends Widget with DeclaresGlobal with DeclaresGlobalCommand with DeclaresConstraint {
-  override def constraint = List("SLIDER", min, max, step, default.toString)
-}
-case class Monitor(display: String, left: Int, top: Int, right: Int, bottom: Int,
-             source: String, precision: Int, fontSize: Int) extends Widget
-case class Output(left: Int, top: Int, right: Int, bottom: Int, fontSize: Int) extends Widget
-
-abstract class InputBoxType[T](val name:String) {
-  def widgetline: WidgetLine[T]
-}
-case object Num extends InputBoxType[Double]("Number") {
-  override def widgetline = DoubleLine()
-}
-case object Str extends InputBoxType[String]("String") {
-  def widgetline = StringLine()
-}
-case object StrReporter extends InputBoxType[String]("String (reporter)") {
-  def widgetline = StringLine()
-}
-case object StrCommand extends InputBoxType[String]("String (command)") {
-  def widgetline = StringLine()
-}
-case object Col extends InputBoxType[Int]("Color") {
-  override def widgetline = IntLine()
-}
-case class InputBox[T](left: Int = 0, top: Int = 0, right: Int = 0, bottom: Int = 0, varName: String,
-             value: T, multiline: Boolean = false, boxtype: InputBoxType[T])
-           extends Widget with DeclaresGlobal with DeclaresGlobalCommand with DeclaresConstraint {
-  override def default = value
-  override def constraint = List("INPUTBOX", default.toString, boxtype.name)
-}
-case class View(left: Int = 0, top: Int = 0, right: Int = 5, bottom: Int = 5,
-  patchSize: Double = 12, fontSize: Int = 9, wrappingAllowedInX: Boolean = true, wrappingAllowedInY: Boolean = true,
-  minPxcor: Int = 0, maxPxcor: Int = 0, minPycor: Int = 0, maxPycor: Int = 0,
-  updateMode: UpdateMode = UpdateMode.TickBased, showTickCounter: Boolean = true, tickCounterLabel: String = "ticks",
-  frameRate: Double = 25) extends Widget {
-
-  def dimensions: WorldDimensions = new WorldDimensions(minPxcor, maxPxcor, minPycor, maxPycor,
-                                                        patchSize, wrappingAllowedInY, wrappingAllowedInX)
-}
-object View {
-  def square(dim: Int) = View(minPxcor = -dim, maxPxcor = dim, minPycor = -dim, maxPycor = dim)
-}
+import org.nlogo.core._
 
 // parse and valid are separated for clarity later on in the overarching reader, FD 4/16/14
 trait WidgetLine[T] {
@@ -487,7 +394,8 @@ class InputBoxReader extends BaseWidgetReader {
   type U
   type T = InputBox[U]
 
-  val inputBoxTypes = List(Num, Col, Str, StrCommand, StrReporter)
+  val inputBoxTypes =
+    List((Num, DoubleLine()), (Col, IntLine()), (Str, StringLine()), (StrCommand, StringLine()), (StrReporter, StringLine()))
 
   def definition = List(new SpecifiedLine("INPUTBOX"),
                         IntLine(),  // left
@@ -501,16 +409,16 @@ class InputBoxReader extends BaseWidgetReader {
                         StringLine()    // inputboxtype
                       ) 
   def asList(inputbox: InputBox[U]) = List((), inputbox.left, inputbox.top, inputbox.right, inputbox.bottom, inputbox.varName,
-    inputbox.boxtype.widgetline.format(inputbox.value), inputbox.multiline, (), inputbox.boxtype.name)
+    inputbox.value.toString, inputbox.multiline, (), inputbox.boxtype.name)
   def asAnyRef(vals: List[Any]): InputBox[U] = {
     
     val List((), left: Int, top: Int, right: Int, bottom: Int, varName: String, value: String,
       multiline: Boolean, _, inputBoxTypeStr: String) = vals
-    val inputBoxType: InputBoxType[U] = inputBoxTypes.find(_.name == inputBoxTypeStr) match {
-      case Some(t) => t.asInstanceOf[InputBoxType[U]]
+    val (inputBoxType: InputBoxType[U], widgetline: WidgetLine[U]) = inputBoxTypes.find(_._1.name == inputBoxTypeStr) match {
+      case Some(t) => t.asInstanceOf[Tuple2[InputBoxType[U], WidgetLine[U]]]
       case None => throw new Exception("Couldn't find corresponding input box type for " + inputBoxTypeStr)
     }
-    InputBox(left, top, right, bottom, varName, inputBoxType.widgetline.parse(value), multiline, inputBoxType)
+    InputBox(left, top, right, bottom, varName, widgetline.parse(value), multiline, inputBoxType)
   }
 }
 

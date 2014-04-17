@@ -14,7 +14,7 @@ package misc
 
 import org.nlogo.util.SlowTest
 import org.nlogo.api
-import api.model.Model
+import org.nlogo.core.Model
 
 class TestProfiler extends FixtureSuite with SlowTest {
 

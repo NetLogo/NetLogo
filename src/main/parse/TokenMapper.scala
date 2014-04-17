@@ -2,7 +2,7 @@
 
 package org.nlogo.parse
 
-import org.nlogo.api.Resource
+import org.nlogo.core.Resource
 import org.nlogo.core.TokenHolder
 
 class TokenMapper(path: String, prefix: String) {

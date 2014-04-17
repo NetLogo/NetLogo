@@ -10,8 +10,9 @@ import org.nlogo.agent.Agent
 import org.nlogo.core.{ AgentKind, WorldDimensions }
 import org.nlogo.api.{ Program, Version, RendererInterface,
                        CompilerException, LogoException, SimpleJobOwner,
-                       CommandRunnable, ReporterRunnable, UpdateMode }
-import org.nlogo.api.model.{Model, ModelReader}
+                       CommandRunnable, ReporterRunnable }
+import org.nlogo.core.{ Model, UpdateMode }
+import org.nlogo.api.model.ModelReader
 
 import org.nlogo.agent.World
 import org.nlogo.nvm, nvm.{ LabInterface, Context, FrontEndInterface,

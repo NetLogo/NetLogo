@@ -5,7 +5,7 @@ package lang
 
 import org.scalatest, scalatest.Assertions
 import org.nlogo.{ api, agent, core }
-import org.nlogo.api.model.Model
+import org.nlogo.core.{ Model, View }
 import api.CompilerException.{RuntimeErrorAtCompileTimePrefix => runtimePrefix}
 import org.nlogo.nvm.CompilerInterface
 import org.nlogo.api.Femto
@@ -77,7 +77,7 @@ class Fixture(name: String) extends AbstractFixture {
   val compiler: CompilerInterface =
     Femto.scalaSingleton("org.nlogo.compile.Compiler")
 
-  def defaultDimensions = api.model.View.square(5).dimensions
+  def defaultDimensions = View.square(5).dimensions
 
   def declare(source: String, dimensions: core.WorldDimensions = defaultDimensions) {
     workspace.openModel(Model(code = source))

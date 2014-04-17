@@ -6,7 +6,7 @@ package misc
 
 import org.nlogo.agent.BooleanConstraint
 import org.nlogo.api
-import api.model._
+import org.nlogo.core._
 
 class TestConstraintModels extends FixtureSuite {
 

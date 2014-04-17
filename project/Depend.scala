@@ -59,6 +59,7 @@ object Depend {
       "" -> Nil,
       "agent" -> List("api"),
       "api" -> List("core", "util"),
+      "api/model" -> List("api"),
       "compile" -> List("prim"),
       "compile/back" -> List("compile"),
       "compile/front" -> List("compile", "parse"),
@@ -77,14 +78,14 @@ object Depend {
       "mirror" -> List("drawing", "plot", "shape"),
       "nvm" -> List("agent"),
       "parse" -> List("api"),
-      "plot" -> List("api"),
+      "plot" -> List("api", "api/model"),
       "prim" -> List("nvm"),
       "prim/etc" -> List("nvm"),
       "render" -> List("shape"),
       "review" -> List("mirror", "window"),
       "shape" -> List("api"),
       "util" -> Nil,
-      "workspace" -> List("nvm", "plot", "drawing"))
+      "workspace" -> List("nvm", "plot", "drawing", "api/model"))
     case class Package(val dir: String, var depends: Set[Package]) {
       def ancestors:Set[Package] = depends ++ depends.flatMap(_.ancestors)
     }
@@ -106,7 +107,7 @@ check absenceOfPackageCycles > 1 in org.nlogo.*
 
 [stdlib-j] = java.lang.* java.util.* java.io.* java.text.* java.net.* java.security.*
 
-[stdlib-s] = scala.Serializable scala.Predef* scala.collection.* scala.reflect.* scala.Function* scala.UninitializedFieldError scala.util.control.Exception* scala.Array* scala.LowPriorityImplicits scala.package$ scala.util.Properties$ scala.Option* scala.Tuple* scala.Product* scala.util.DynamicVariable scala.runtime.* scala.math.* scala.None* scala.Some* scala.MatchError scala.util.Left* scala.util.Right* scala.util.Either* scala.io.* scala.sys.package* scala.Console* scala.PartialFunction* scala.util.matching.Regex* scala.Enumeration* scala.Proxy* scala.FallbackArrayBuilding scala.util.Sorting* scala.StringContext scala.Double$
+[stdlib-s] = scala.Serializable scala.Predef* scala.collection.* scala.reflect.* scala.Function* scala.UninitializedFieldError scala.util.control.Exception* scala.Array* scala.LowPriorityImplicits scala.package$ scala.util.Properties$ scala.Option* scala.Tuple* scala.Product* scala.util.DynamicVariable scala.runtime.* scala.math.* scala.None* scala.Some* scala.MatchError scala.util.Left* scala.util.Right* scala.util.Either* scala.io.* scala.sys.package* scala.Console* scala.PartialFunction* scala.util.matching.Regex* scala.Enumeration* scala.Proxy* scala.FallbackArrayBuilding scala.util.Sorting* scala.StringContext scala.Double$ scala.util.Try*
 
 [xml] = org.w3c.dom.* org.xml.sax.* javax.xml.parsers.*
 

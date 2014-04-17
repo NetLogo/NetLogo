@@ -6,7 +6,7 @@ import org.nlogo.agent.{Agent, AgentSet, World}
 import org.nlogo.{ api, core }
 import org.nlogo.api.{DummyParserServices, DummyExtensionManager, JobOwner,
                       CommandRunnable, ReporterRunnable, ImportErrorHandler, OutputDestination}
-import api.model.Model
+import core.Model
 
 class DummyWorkspace extends DummyParserServices with Workspace {
   private def unsupported = throw new UnsupportedOperationException

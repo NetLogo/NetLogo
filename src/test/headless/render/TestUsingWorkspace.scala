@@ -4,7 +4,7 @@ package org.nlogo.headless
 package render
 
 import org.nlogo.api
-import api.model.{Model, View}
+import org.nlogo.core.{Model, View}
 import org.nlogo.shape.{ LinkShape, VectorShape }
 import org.nlogo.util.MockSuite
 
