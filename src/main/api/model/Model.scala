@@ -5,8 +5,8 @@ import org.nlogo.api.Resource.getResourceLines
 import org.nlogo.api
 
 case class Model(code: String = "", widgets: List[Widget] = List(View()), info: String = "", version: String = "NetLogo 5.0",
-  turtleShapes: List[String] = Nil, behaviorSpace: List[String] = Nil, linkShapes: List[String] = Nil,
-  previewCommands: List[String] = Nil) {
+  turtleShapes: List[String] = Model.defaultShapes, behaviorSpace: List[String] = Nil,
+  linkShapes: List[String] = Model.defaultLinkShapes, previewCommands: List[String] = Nil) {
 
   def interfaceGlobals: List[String] = widgets.collect({case x:DeclaresGlobal => x}).map(_.varName)
   def constraints: Map[String, List[String]] = widgets.collect({case x:DeclaresConstraint => (x.varName, x.constraint)}).toMap
@@ -20,10 +20,10 @@ case class Model(code: String = "", widgets: List[Widget] = List(View()), info: 
 }
 
 object Model {
-  lazy val defaultShapes: Seq[String] =
-    getResourceLines("/system/defaultShapes.txt").toSeq
-  lazy val defaultLinkShapes: Seq[String] =
-    getResourceLines("/system/defaultLinkShapes.txt").toSeq
+  lazy val defaultShapes: List[String] =
+    getResourceLines("/system/defaultShapes.txt").toList
+  lazy val defaultLinkShapes: List[String] =
+    getResourceLines("/system/defaultLinkShapes.txt").toList
 }
 
 object ModelReader {
