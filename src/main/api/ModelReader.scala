@@ -77,7 +77,9 @@ object ModelReader {
           case 'n'  => loop(acc :+ '\n', rest.tail.tail)
           case '\\' => loop(acc :+ '\\', rest.tail.tail)
           case '"'  => loop(acc :+ '"', rest.tail.tail)
-          case _    => sys.error("invalid escape sequence in \"" + s + "\"")
+          case _    =>
+            throw new IllegalStateException(
+              s"""invalid escape sequence in "$s"""")
         }
       else loop(acc :+ rest.head, rest.tail)
     }

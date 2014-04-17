@@ -60,7 +60,9 @@ object ScalaConversions {
     case ll: LogoList => toLogoList(ll)
 
     // unconvertible type
-    case _ => sys.error("don't know how to convert: " + a)
+    case _ =>
+      throw new IllegalArgumentException(
+        "don't know how to convert: " + a)
   }
 
 }

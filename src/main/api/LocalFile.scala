@@ -32,7 +32,7 @@ class LocalFile(filepath: String) extends File {
         w = new java.io.PrintWriter(new java.io.FileWriter(filepath, true))
         this.mode = mode
       case FileMode.None =>
-        sys.error("file is not open")
+        throw new IllegalStateException("file is not open")
     }
   }
 

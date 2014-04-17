@@ -147,14 +147,15 @@ class TurtleTestsDrawer extends MockSuite {
     override def hasLabel = label!=""
     override def labelString = label
     override def alpha = Color.getColor(color).getAlpha
-    override def world: World = sys.error("unimplemented")
-    override def setVariable(vn:Int,value:Object) = sys.error("unimplemented")
-    override def getVariable(vn:Int) = sys.error("unimplemented")
-    override def variables = sys.error("unimplemented")
-    override def heading( d:Double ) = sys.error("unimplemented")
-    override def getBreed: AgentSet = sys.error("unimplemented")
-    override def getBreedIndex = sys.error("unimplemented")
-    override def getPatchHere = sys.error("unimplemented")
-    override def jump(distance:Double) = sys.error("unimplemented")
+    override def world: World = unsupported
+    override def setVariable(vn:Int,value:Object) = unsupported
+    override def getVariable(vn:Int) = unsupported
+    override def variables = unsupported
+    override def heading( d:Double ) = unsupported
+    override def getBreed: AgentSet = unsupported
+    override def getBreedIndex = unsupported
+    override def getPatchHere = unsupported
+    override def jump(distance:Double) = unsupported
+    private def unsupported = throw new UnsupportedOperationException
   }
 }

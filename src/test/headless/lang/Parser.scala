@@ -32,7 +32,9 @@ object Parser {
     case "T" => AgentKind.Turtle
     case "P" => AgentKind.Patch
     case "L" => AgentKind.Link
-    case x => sys.error(s"unrecognized agent kind: $x")
+    case x =>
+      throw new IllegalArgumentException(
+        s"unrecognized agent kind: $x")
   }
 
   def parse(line: String): Entry = {
@@ -51,7 +53,8 @@ object Parser {
           Command(command, agentKind(kind),
             StackTrace(err.stripPrefix("STACKTRACE ").replace("\\n", "\n")))
         else
-          sys.error("error missing!: " + err)
+          throw new IllegalArgumentException(
+            s"error missing!: $err")
       case ReporterRegex(reporter, result) =>
         if (result.startsWith("ERROR" ))
           Reporter(reporter,

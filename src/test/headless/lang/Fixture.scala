@@ -66,7 +66,8 @@ class Fixture(name: String) extends AbstractFixture {
   workspace.importerErrorHandler =
     new agent.ImporterJ.ErrorHandler() {
       def showError(title: String, errorDetails: String, fatalError: Boolean): Boolean =
-        sys.error(s"$title / $errorDetails  / $fatalError")
+        throw new IllegalStateException(
+          s"$title / $errorDetails  / $fatalError")
     }
 
   // to get the test name into the stack traces on JobThread - ST 1/26/11, 8/7/13
