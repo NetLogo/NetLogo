@@ -392,7 +392,7 @@ with org.nlogo.workspace.WorldLoaderInterface {
    * @param source The complete model, including widgets and so forth,
    *               in the same format as it would be stored in a file.
    */
-  def openModel(model: Model) {
+  def openModel(model: Model = Model()) {
     new HeadlessModelOpener(this).openFromModel(model)
   }
 
