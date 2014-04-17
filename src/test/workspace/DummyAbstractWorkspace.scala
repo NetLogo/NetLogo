@@ -5,6 +5,7 @@ package org.nlogo.workspace
 import org.nlogo.agent.{ Agent, World }
 import org.nlogo.nvm, nvm.CompilerInterface
 import org.nlogo.api, api.model.Model
+import org.nlogo.core
 
 /**
  * handy for use in unit tests
