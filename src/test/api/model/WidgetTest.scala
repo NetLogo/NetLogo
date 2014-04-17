@@ -25,7 +25,7 @@ class WidgetTest extends FunSuite {
                             StringBooleanLine(),
                             ReservedLine())
       def asList(t: TestWidget): List[Any] = t.vals
-      def asAnyRef(vals: List[Any]): TestWidget = TestWidget(vals)
+      def asWidget(vals: List[Any]): TestWidget = TestWidget(vals)
     }
     val fullAllLineTest = """|A
                              |b
@@ -66,7 +66,7 @@ class WidgetTest extends FunSuite {
                             InvertedBooleanLine(Some(true)),
                             StringBooleanLine(Some(true)))
       def asList(t: TestWidget): List[Any] = t.vals
-      def asAnyRef(vals: List[Any]): TestWidget = TestWidget(vals)
+      def asWidget(vals: List[Any]): TestWidget = TestWidget(vals)
     }
     val fullAllLineTest = """|B
                              |5
