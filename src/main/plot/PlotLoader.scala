@@ -3,7 +3,6 @@
 package org.nlogo.plot
 
 import org.nlogo.api
-import api.StringUtils.unescapeString
 import api.model.{Plot => ParsedPlot, Pen => ParsedPen}
 
 object PlotLoader {

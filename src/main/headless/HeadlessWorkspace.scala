@@ -7,7 +7,8 @@ package org.nlogo.headless
 // here and document it here.  The overriding method can simply call super(). - ST 6/1/05, 7/28/11
 
 import org.nlogo.agent.Agent
-import org.nlogo.api.{ AgentKind, Program, Version, RendererInterface, WorldDimensions,
+import org.nlogo.core.{ AgentKind, WorldDimensions }
+import org.nlogo.api.{ Program, Version, RendererInterface,
                        CompilerException, LogoException, SimpleJobOwner,
                        CommandRunnable, ReporterRunnable, UpdateMode }
 import org.nlogo.api.model.{Model, ModelReader}

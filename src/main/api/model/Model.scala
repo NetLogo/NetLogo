@@ -1,7 +1,7 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.api.model
-import org.nlogo.util.Utils.getResourceLines
+import org.nlogo.api.Resource.getResourceLines
 import org.nlogo.api
 
 case class Model(code: String = "", widgets: List[Widget] = List(View()), info: String = "", version: String = "NetLogo 5.0",

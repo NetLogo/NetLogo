@@ -2,12 +2,11 @@
 
 package org.nlogo.api.model
 
-import scalaz.Scalaz.ToStringOpsFromString
-
 import org.nlogo.api
-import api.StringUtils.unescapeString
-import api.StringUtils.escapeString
-import api.{UpdateMode, WorldDimensions}
+import org.nlogo.core.StringEscaper.unescapeString
+import org.nlogo.core.StringEscaper.escapeString
+import api.UpdateMode
+import org.nlogo.core.WorldDimensions
 
 trait Widget
 sealed trait DeclaresGlobal {
@@ -101,6 +100,7 @@ object View {
   def square(dim: Int) = View(minPxcor = -dim, maxPxcor = dim, minPycor = -dim, maxPycor = dim)
 }
 
+// parse and valid are separated for clarity later on in the overarching reader, FD 4/16/14
 trait WidgetLine[T] {
   def parse(line: String): T
   def format(v: T): String
@@ -111,7 +111,7 @@ trait WidgetLine[T] {
 case class IntLine(override val default: Option[Int] = None) extends WidgetLine[Int] {
   def parse(line: String): Int = line.toInt
   def format(v: Int): String = v.toString()
-  def valid(v: String): Boolean = v.parseInt.isSuccess
+  def valid(v: String): Boolean = util.Try(v.toInt).isSuccess
 }
 case class BooleanLine(override val default: Option[Boolean] = None) extends WidgetLine[Boolean] {
   def parse(line: String): Boolean = line == "1"
@@ -137,7 +137,7 @@ case class DoubleLine(override val default: Option[Double] = None) extends Widge
   type T = Double
   def parse(line: String): Double = line.toDouble
   def format(v: Double): String = v.toString
-  def valid(v: String): Boolean = v.parseDouble.isSuccess
+  def valid(v: String): Boolean = util.Try(v.toDouble).isSuccess
 }
 case class StringLine(override val default: Option[String] = None) extends WidgetLine[String] {
   def parse(line: String): String = line
