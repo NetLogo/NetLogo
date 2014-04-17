@@ -12,7 +12,7 @@ class TokenMapper(path: String, prefix: String) {
     reporters.get(s.toUpperCase).map(instantiate[TokenHolder])
   private def entries(entryType: String): Iterator[(String, String)] =
     for {
-      line <- Resource.getResourceLines(path)
+      line <- Resource.lines(path)
       if !line.startsWith("#")
       Array(tpe, primName, className) = line.split(" ")
       if tpe == entryType

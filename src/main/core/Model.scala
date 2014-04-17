@@ -19,7 +19,7 @@ case class Model(code: String = "", widgets: List[Widget] = List(View()), info: 
 
 object Model {
   lazy val defaultShapes: List[String] =
-    Resource.getResourceLines("/system/defaultShapes.txt").toList
+    Resource.lines("/system/defaultShapes.txt").toList
   lazy val defaultLinkShapes: List[String] =
-    Resource.getResourceLines("/system/defaultLinkShapes.txt").toList
+    Resource.lines("/system/defaultLinkShapes.txt").toList
 }

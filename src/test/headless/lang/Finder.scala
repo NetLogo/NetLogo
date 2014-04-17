@@ -7,7 +7,7 @@ import java.io.File
 import org.nlogo.api.FileIO.file2String
 import org.scalatest.{ FunSuite, Tag }
 import org.nlogo.api
-import org.nlogo.core, core.Model
+import org.nlogo.core, core.{ Model, Resource }
 import org.nlogo.util.SlowTest
 
 /// top level entry points
@@ -70,7 +70,7 @@ trait Finder extends FunSuite with SlowTest {
         .asScala.toSeq.sorted.iterator
         .map(s =>
           (s.stripPrefix(path + "/").stripSuffix(".txt"),
-           org.nlogo.core.Resource.getResourceAsString("/" + s)))
+           Resource.asString("/" + s)))
   }
   // parse tests first, then run them
   for (t <- files.flatMap(Function.tupled(parseFile)))

@@ -2,12 +2,14 @@
 
 package org.nlogo.api
 
+import org.nlogo.core.Resource
+
 object Version {
 
   val noVersion = "NetLogo (no version)"
 
   val (version, buildDate, knownVersions) = {
-    val lines = org.nlogo.core.Resource.getResourceLines("/system/version.txt").toStream
+    val lines = Resource.lines("/system/version.txt").toStream
     val version = lines.head
     val buildDate = lines.tail.head
     val knownVersions = collection.mutable.ArrayBuffer[String]()

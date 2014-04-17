@@ -4,16 +4,13 @@ package org.nlogo.core
 
 object Resource {
 
-  def getResourceLines(path: String): Iterator[String] = {
-    val in = new java.io.BufferedReader(
-      new java.io.InputStreamReader(
-        getClass.getResourceAsStream(path)))
-    Iterator.continually(in.readLine())
-      .takeWhile(_ != null)
-  }
+  def get(path: String): io.Source =
+    io.Source.fromURL(getClass.getResource(path))
 
-  def getResourceAsString(path: String): String =
-    getResourceLines(path)
-      .mkString("", "\n", "\n")
+  def lines(path: String): Iterator[String] =
+    get(path).getLines
+
+  def asString(path: String): String =
+    get(path).mkString
 
 }
