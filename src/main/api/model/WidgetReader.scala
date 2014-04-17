@@ -57,8 +57,8 @@ case class SpecifiedLine(str: String) extends WidgetLine[Unit] {
   def valid(v: String): Boolean = v == str
 }
 case class MapLine[T](map: List[Tuple2[String, T]]) extends WidgetLine[T] {
-  def parse(line: String): T = map.collectFirst({case (v, x) => x}).get
-  def format(v: T): String = map.collectFirst({case (x, v) => x}).get
+  def parse(line: String): T = map.collectFirst{case (v, x) => x}.get
+  def format(v: T): String = map.collectFirst{case (x, v) => x}.get
   def valid(v: String): Boolean = map.toMap.contains(v)
 }
 case class ReservedLine(output: String = "RESERVED") extends WidgetLine[Unit] {

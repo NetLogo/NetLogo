@@ -11,8 +11,8 @@ import org.nlogo.core.{ Token, TokenType }
  */
 class CompilerException(message: String, val start: Int, val end: Int, val filename: String)
 extends RuntimeException(message) {
-  def this(token: Token) = this({assert(token.tpe == TokenType.Bad); token.value.asInstanceOf[String]},
-                                 token.start, token.end, token.filename)
+  def this(token: Token) = this(token.ensuring(_.tpe == TokenType.Bad).value.asInstanceOf[String],
+                                token.start, token.end, token.filename)
 
   override def toString =
     getMessage + " at position " + start + " in " + filename

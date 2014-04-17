@@ -31,7 +31,7 @@ object Fixture {
 trait AbstractFixture {
   import Assertions._
   def defaultView: core.View
-  def declare(code: String) = Model(code = code, widgets = List(defaultView))
+  def declare(code: String): Unit = declare(Model(code = code, widgets = List(defaultView)))
   def declare(model: Model = Model(widgets = List(defaultView)))
   def open(path: String)
   def open(model: Model)
