@@ -38,8 +38,7 @@ javacOptions ++=
   .split(" ").toSeq
 
 libraryDependencies ++= Seq(
-  "asm" % "asm-all" % "3.3.1",
-  "org.scalaz" %% "scalaz-core" % "7.0.6"
+  "asm" % "asm-all" % "3.3.1"
 )
 
 libraryDependencies ++= Seq(
