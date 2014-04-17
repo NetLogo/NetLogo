@@ -72,7 +72,9 @@ object I18N {
       val preformattedText = getFromBundle(defaultBundle).getOrElse{
         // fallback to english here.
         println("unable to find translation for: " + key + " in " + name + " for locale: " + defaultBundle.getLocale)
-        getFromBundle(englishBundle).getOrElse(sys.error("coding error, bad translation key: " + key + " for " + name))
+        getFromBundle(englishBundle)
+          .getOrElse(throw new IllegalArgumentException(
+            "coding error, bad translation key: " + key + " for " + name))
       }
       java.text.MessageFormat.format(preformattedText, args: _*)
     }

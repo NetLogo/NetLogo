@@ -372,7 +372,8 @@ object Color {
       case d: java.lang.Double =>
         getARGBbyPremodulatedColorNumber(d.doubleValue)
       case _ =>
-        sys.error("Can't get RGB color")
+        throw new IllegalArgumentException(
+          s"Can't get RGB color: $c")
     }
 
   def getComplement(color: JColor): JColor = {

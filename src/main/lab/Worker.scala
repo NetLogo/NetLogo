@@ -41,7 +41,7 @@ class Worker(val protocol: Protocol)
         executor.invokeAll(collection.JavaConversions.asJavaCollection[Callable[Unit]](runners)).asScala
       }
       executor.shutdown()
-      executor.awaitTermination(java.lang.Integer.MAX_VALUE, TimeUnit.SECONDS)
+      executor.awaitTermination(Int.MaxValue, TimeUnit.SECONDS)
       listeners.foreach(_.experimentCompleted())
       // this will cause the first ExecutionException we got to be thrown - ST 3/10/09
       futures.foreach(_.get)

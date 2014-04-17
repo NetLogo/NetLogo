@@ -373,29 +373,12 @@ class ExpressionParser(procedure: Procedure) {
                 (r2, new ReporterApp(r2, token.start, token.end, token.filename))
               }
             case _ =>
-              sys.error("unexpected token type: " + token.tpe)
+              throw new IllegalStateException(
+                s"unexpected token type ${token.tpe}")
           }
-          // handle the case of the concise task syntax, where I can write e.g. "map + ..." instead
-          // of "map [?1 + ?2] ...".  for the task primitive itself we allow this even for literals
-          // and nullary reporters, for the other primitives like map we require the reporter to
-          // take at least one input (since otherwise a simple "map f xs" wouldn't evaluate f).  the
-          // !variadic check is to prevent "map (f a) ..." from being misparsed.
-          if (wantReporterTask && !variadic && (wantAnyTask || reporter.syntax.totalDefault > 0)) {
-            val task = new _reportertask
-            task.token = reporter.token
-            val taskApp =
-              new ReporterApp(task,
-                reporter.token.start, reporter.token.end, reporter.token.filename)
-            taskApp.addArgument(rApp)
-            for(argNumber <- 1 to reporter.syntax.totalDefault) {
-              val lv = new _taskvariable(argNumber)
-              lv.token = reporter.token
-              rApp.addArgument(
-                new ReporterApp(lv,
-                  reporter.token.start, reporter.token.end, reporter.token.filename))
-            }
-            taskApp
-          }
+          // the !variadic check is to prevent "map (f a) ..." from being misparsed.
+          if (wantReporterTask && !variadic && (wantAnyTask || reporter.syntax.totalDefault > 0))
+            expandConciseReporterTask(rApp, reporter)
           // the normal case
           else {
             if (variadic && isVariadic(rApp.instruction))
@@ -404,41 +387,67 @@ class ExpressionParser(procedure: Procedure) {
               parseArguments(rApp, tokens, reporter.syntax.precedence)
             rApp
           }
-        // handle the case of the concise task syntax, where I can write e.g. "foreach xs print"
-        // instead of "foreach xs [ print ? ]"
         case TokenType.Command if wantCommandTask =>
           tokens.next()
-          val stmt = new Statement(token.value.asInstanceOf[Command],
-            token.start, token.end, token.filename)
-          val task = new _commandtask(null) // LambdaLifter will fill in
-          task.token = token
-          for(argNumber <- 1 to stmt.command.syntax.totalDefault) {
-            val lv = new _taskvariable(argNumber)
-            lv.token = token
-            stmt.addArgument(new ReporterApp(lv, token.start, token.end, token.filename))
-          }
-          if (stmt.command.syntax.takesOptionalCommandBlock)
-            // synthesize an empty block so that later phases of compilation will be dealing with a
-            // consistent number of arguments - ST 3/4/08
-            stmt.addArgument(
-              new CommandBlock(
-                new Statements(token.filename),
-                token.start, token.end, token.filename))
-          val stmts = new Statements(token.filename)
-          stmts.addStatement(stmt)
-          val rapp =
-            new ReporterApp(
-              task, token.start, token.end, token.filename)
-          rapp.addArgument(
-            new CommandBlock(
-              stmts, token.start, token.end, token.filename))
-          rapp
+          expandConciseCommandTask(token)
         case _ =>
           // here we throw a temporary exception, since we don't know yet what this error means... It
           // generally either means MissingInputOnRight or ExpectedReporter.
           throw new UnexpectedTokenException(token)
       }
     parseMore(expr, tokens, precedence)
+  }
+
+  /**
+    * handle the case of the concise task syntax, where I can write e.g. "map + ..." instead
+    * of "map [?1 + ?2] ...".  for the task primitive itself we allow this even for literals
+    *  and nullary reporters, for the other primitives like map we require the reporter to
+    *  take at least one input (since otherwise a simple "map f xs" wouldn't evaluate f).
+    */
+  private def expandConciseReporterTask(rApp: ReporterApp, reporter: Reporter): ReporterApp = {
+    val task = new _reportertask
+    task.token = reporter.token
+    val taskApp =
+      new ReporterApp(task,
+        reporter.token.start, reporter.token.end, reporter.token.filename)
+    taskApp.addArgument(rApp)
+    for(argNumber <- 1 to reporter.syntax.totalDefault) {
+      val lv = new _taskvariable(argNumber)
+      lv.token = reporter.token
+      rApp.addArgument(
+        new ReporterApp(lv,
+          reporter.token.start, reporter.token.end, reporter.token.filename))
+    }
+    taskApp
+  }
+
+  // expand e.g. "foreach xs print" -> "foreach xs [ print ? ]"
+  private def expandConciseCommandTask(token: Token): ReporterApp = {
+    val stmt = new Statement(token.value.asInstanceOf[Command],
+      token.start, token.end, token.filename)
+    val task = new _commandtask(null) // LambdaLifter will fill in
+    task.token = token
+    for(argNumber <- 1 to stmt.command.syntax.totalDefault) {
+      val lv = new _taskvariable(argNumber)
+      lv.token = token
+      stmt.addArgument(new ReporterApp(lv, token.start, token.end, token.filename))
+    }
+    if (stmt.command.syntax.takesOptionalCommandBlock)
+      // synthesize an empty block so that later phases of compilation will be dealing with a
+      // consistent number of arguments - ST 3/4/08
+      stmt.addArgument(
+        new CommandBlock(
+          new Statements(token.filename),
+          token.start, token.end, token.filename))
+    val stmts = new Statements(token.filename)
+    stmts.addStatement(stmt)
+    val rapp =
+      new ReporterApp(
+        task, token.start, token.end, token.filename)
+    rapp.addArgument(
+      new CommandBlock(
+        stmts, token.start, token.end, token.filename))
+    rapp
   }
 
   /**

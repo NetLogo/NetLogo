@@ -101,7 +101,7 @@ class SpreadsheetExporter(modelFileName: String,
     }
     out.print(Dump.csv.header("[steps]") + ",")
     foreachRun((run,metricNumber) =>
-      Some(Int.box(run.steps)))
+      Some(run.steps))
   }
   def writeRunData() {
     // output the raw run data, like this:
