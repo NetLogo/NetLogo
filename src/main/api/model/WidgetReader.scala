@@ -455,12 +455,12 @@ object ViewReader extends BaseWidgetReader {
                         DoubleLine(Some(30))   // frame rate
                       )
   def asList(view: View) = List((), view.left, view.top, view.right, view.bottom, (), (), view.patchSize, (), view.fontSize,
-    (), (), (), (), view.wrappingAllowedInY, view.wrappingAllowedInX, (),
+    (), (), (), (), view.wrappingAllowedInX, view.wrappingAllowedInY, (),
     view.minPxcor, view.maxPxcor, view.minPycor, view.maxPycor,
     view.updateMode, view.updateMode, view.showTickCounter, view.tickCounterLabel, view.frameRate)
   def asWidget(vals: List[Any]): View = {
     val (_ :: (left: Int) :: (top: Int) :: (right: Int) :: (bottom: Int) :: _ :: _ :: (patchSize: Double) :: _ ::
-         (fontSize: Int) :: _ :: _ :: _ :: _ :: (wrappingAllowedInY: Boolean) :: (wrappingAllowedInX: Boolean) ::
+         (fontSize: Int) :: _ :: _ :: _ :: _ :: (wrappingAllowedInX: Boolean) :: (wrappingAllowedInY: Boolean) ::
          _ :: (minPxcor: Int) :: (maxPxcor: Int) :: (minPycor: Int) :: (maxPycor: Int) :: (updateMode: UpdateMode) ::
          _ :: (showTickCounter: Boolean) :: (tickCounterLabel: String) :: (frameRate: Double) :: Nil) = vals
     View(left, top, right, bottom, patchSize, fontSize,

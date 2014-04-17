@@ -11,7 +11,7 @@ class TestModelNetLogoVersions extends FunSuite with SlowTest {
   val paths = ModelsLibrary.getModelPaths ++ ModelsLibrary.getModelPathsAtRoot("extensions")
   for(path <- paths)
     test(path) {
-      val version = ModelReader.parseModel(FileIO.file2String(path)).version
+      val version = ModelReader.parseModel(FileIO.file2String(path), None).version
       assert(Version.compatibleVersion(version))
     }
 }

@@ -14,7 +14,7 @@ import org.nlogo.shape.{LinkShape, VectorShape}
 
 object HeadlessModelOpener {
   def protocolSection(path: String) =
-    ModelReader.parseModel(FileIO.file2String(path)).behaviorSpace.mkString("", "\n", "\n")
+    ModelReader.parseModel(FileIO.file2String(path), None).behaviorSpace.mkString("", "\n", "\n")
 }
 
 // this class is an abomination
