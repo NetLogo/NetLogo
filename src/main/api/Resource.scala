@@ -4,13 +4,13 @@ package org.nlogo.api
 
 object Resource {
 
-  def getResource(path: String): io.Source =
+  def get(path: String): io.Source =
     io.Source.fromURL(getClass.getResource(path))
 
-  def getResourceLines(path: String): Iterator[String] =
-    getResource(path).getLines
+  def lines(path: String): Iterator[String] =
+    get(path).getLines
 
-  def getResourceAsString(path: String): String =
-    getResource(path).mkString
+  def asString(path: String): String =
+    get(path).mkString
 
 }

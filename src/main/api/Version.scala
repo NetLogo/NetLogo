@@ -7,7 +7,7 @@ object Version {
   val noVersion = "NetLogo (no version)"
 
   val (version, buildDate, knownVersions) = {
-    val lines = org.nlogo.api.Resource.getResourceLines("/system/version.txt").toStream
+    val lines = Resource.lines("/system/version.txt").toStream
     val version = lines.head
     val buildDate = lines.tail.head
     val knownVersions = collection.mutable.ArrayBuffer[String]()

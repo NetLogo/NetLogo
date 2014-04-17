@@ -2,8 +2,6 @@
 
 package org.nlogo.api
 
-import org.nlogo.api.Resource.getResourceLines
-
 object ModelReader {
 
   val modelSuffix = "nlogo"
@@ -18,9 +16,9 @@ object ModelReader {
   val sections = ModelSection.allSections
 
   lazy val defaultShapes: Seq[String] =
-    getResourceLines("/system/defaultShapes.txt").toSeq
+    Resource.lines("/system/defaultShapes.txt").toSeq
   lazy val defaultLinkShapes: Seq[String] =
-    getResourceLines("/system/defaultLinkShapes.txt").toSeq
+    Resource.lines("/system/defaultLinkShapes.txt").toSeq
 
   def parseModel(model: String): ModelMap = {
     var result: ModelMap = sections.map(_ -> Seq[String]()).toMap
