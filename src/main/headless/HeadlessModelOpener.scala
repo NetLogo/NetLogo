@@ -38,31 +38,20 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     if (!Version.knownVersion(netLogoVersion))
       throw new IllegalStateException("unknown NetLogo version: " + netLogoVersion)
 
-    // parse all the widgets in the WIDGETS section
-
-    val interfaceGlobals = model.widgets.collect({case x:DeclaresGlobal => x}).map(_.varName)
-    val widgets = new collection.mutable.ArrayBuffer[Widget]
-    val constraints = model.widgets.collect({case x:DeclaresConstraint => (x.varName, x.constraint)}).toMap
     val buttonCode = new collection.mutable.ArrayBuffer[String] // for TestCompileAll
     val monitorCode = new collection.mutable.ArrayBuffer[String] // for TestCompileAll
-    val interfaceGlobalCommands = model.widgets.collect({case x:DeclaresGlobalCommand => x}).map(_.command).mkString("\n")
 
     WorldLoader.load(model.view, ws)
 
     for(plot <- model.plots)
       PlotLoader.loadPlot(plot, ws.plotManager.newPlot(""))
 
-
-//    val (interfaceGlobals, constraints, buttonCode, monitorCode, interfaceGlobalCommands, _) =
-//      new workspace.WidgetParser(ws, Some(ws), Some(ws.plotManager), ws.compilerTestingMode)
-//        .parseWidgets(map(ModelSection.Interface), netLogoVersion)
-
     // read procedures, compile them.
     val results = {
       val code = model.code
       ws.compiler.compileProgram(
         code, Program.empty.copy(
-          interfaceGlobals = interfaceGlobals),
+          interfaceGlobals = model.interfaceGlobals),
         ws.getExtensionManager, ws.flags)
     }
     ws.procedures = results.proceduresMap
@@ -85,7 +74,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     if (ws.compilerTestingMode)
       testCompileWidgets(results.program, netLogoVersion, buttonCode.toList, monitorCode.toList)
     else
-      finish(Map() ++ constraints, results.program, interfaceGlobalCommands.toString)
+      finish(Map() ++ model.constraints, results.program, model.interfaceGlobalCommands.mkString("\n"))
   }
 
 
