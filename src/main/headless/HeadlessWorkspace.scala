@@ -386,11 +386,10 @@ with org.nlogo.workspace.WorldLoaderInterface {
   }
 
   /**
-   * Opens a model stored in a string.
+   * Opens a model stored in memory.
    * Can only be called once per instance of HeadlessWorkspace
    *
-   * @param source The complete model, including widgets and so forth,
-   *               in the same format as it would be stored in a file.
+   * @param source The complete model, including widgets and so forth, as created from core.Model()
    */
   def openModel(model: Model = Model()) {
     new HeadlessModelOpener(this).openFromModel(model)
