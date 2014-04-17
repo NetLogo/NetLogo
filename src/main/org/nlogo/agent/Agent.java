@@ -56,6 +56,13 @@ public abstract strictfp class Agent
 
   public abstract Object getVariable(int vn);
 
+  /**
+   * Returns the name of the variable with the given index. Works for built-in, *-own, and breed variables.
+   * Only added in NetLogo 5.0.6.
+   * @param vn the index of the variable
+   */
+  public abstract String variableName(int vn);
+
   public abstract void setVariable(int vn, Object value)
       throws AgentException, LogoException;
 

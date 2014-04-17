@@ -1367,4 +1367,70 @@ public strictfp class World
     return AllStoredValues.apply(this);
   }
 
+  public static interface VariableWatcher {
+    /**
+     * Called when the watched variable is set.
+     * @param agent The agent for which the variable was set
+     * @param variableName The name of the variable as an upper case string
+     * @param value The new value of the variable
+     */
+    public void update(Agent agent, String variableName, Object value);
+  }
+
+  // Variable watching *must* be done on variable name, not number. Numbers
+  // can change in the middle of runs if, for instance, the user rearranges
+  // the order of declarations in turtles-own and then keeps running.
+  //
+  // I didn't use SimpleChangeEvent here since I wanted the observers to know
+  // what the change actually was.
+  // -- BCH (4/1/2014)
+
+  private Map<String, List<VariableWatcher>> variableWatchers = null;
+
+  /**
+   * A watcher to be notified every time the given variable changes for any agent.
+   * @param variableName The variable name to watch as an upper case string; e.g. "XCOR"
+   * @param watcher The watcher to notify when the variable changes
+   */
+  public void addWatcher(String variableName, VariableWatcher watcher) {
+    if (variableWatchers == null) {
+      variableWatchers =  new HashMap<String, List<VariableWatcher>>();
+    }
+    if (!variableWatchers.containsKey(variableName)) {
+      variableWatchers.put(variableName, new ArrayList<VariableWatcher>());
+    }
+    variableWatchers.get(variableName).add(watcher);
+  }
+
+  /**
+   * Deletes a variable watcher.
+   * @param variableName The watched variable name as an upper case string; e.g. "XCOR"
+   * @param watcher The watcher to delete
+   */
+  public void deleteWatcher(String variableName, VariableWatcher watcher) {
+    if (variableWatchers != null && variableWatchers.containsKey(variableName)) {
+      List<VariableWatcher> watchers = variableWatchers.get(variableName);
+      watchers.remove(watcher);
+      if (watchers.isEmpty()) {
+        variableWatchers.remove(variableName);
+      }
+      if (variableWatchers.isEmpty()) {
+        variableWatchers = null;
+      }
+    }
+  }
+
+  void notifyWatchers(Agent agent, int vn, Object value) {
+    // This needs to be crazy fast if there are no watchers. Thus, null check. -- BCH (3/31/2014)
+    if (variableWatchers != null) {
+      String variableName = agent.variableName(vn);
+      List<VariableWatcher> watchers = variableWatchers.get(variableName);
+      if (watchers != null) {
+        for (VariableWatcher watcher : watchers) {
+          watcher.update(agent, variableName, value);
+        }
+      }
+    }
+  }
+
 }
