@@ -8,34 +8,6 @@ import org.nlogo.api.model.{PenReader, PlotReader}
 
 class PlotLoaderTests extends TestPlotLoaderHelper{
 
-  // PlotLoader.parseStringLiterals
-
-/*
-  test("none") {
-    assertResult(Nil)(PlotLoader.parseStringLiterals(""))
-  }
-  test("one") {
-    assertResult(List("foo"))(PlotLoader.parseStringLiterals("\"foo\""))
-  }
-  test("one empty") {
-    assertResult(List(""))(PlotLoader.parseStringLiterals("\"\""))
-  }
-  test("two") {
-    assertResult(List("foo", "bar"))(PlotLoader.parseStringLiterals("\"foo\" \"bar\""))
-  }
-  test("escaped quotes") {
-    assertResult(List("print \"foo\""))(PlotLoader.parseStringLiterals("\"print \\\"foo\\\"\""))
-  }
-  test("extra spaces") {  // bug #48
-    assertResult(List("foo" , "bar" ))(PlotLoader.parseStringLiterals("\"foo\" \"bar\""))
-    assertResult(List(" foo", "bar" ))(PlotLoader.parseStringLiterals("\" foo\" \"bar\""))
-    assertResult(List(" foo", " bar"))(PlotLoader.parseStringLiterals("\" foo\" \" bar\""))
-    assertResult(List("foo" , " bar"))(PlotLoader.parseStringLiterals("\"foo\" \" bar\""))
-    assertResult(List("foo ", "bar" ))(PlotLoader.parseStringLiterals("\"foo \" \"bar\""))
-    assertResult(List("foo ", "bar "))(PlotLoader.parseStringLiterals("\"foo \" \"bar \""))
-    assertResult(List("foo" , "bar "))(PlotLoader.parseStringLiterals("\"foo\" \"bar \""))
-  }*/
-
   // PlotLoader.parsePen
 
   test("easy pen") {
