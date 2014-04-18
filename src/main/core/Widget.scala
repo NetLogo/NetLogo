@@ -76,7 +76,7 @@ case class View(left: Int = 0, top: Int = 0, right: Int = 5, bottom: Int = 5,
   frameRate: Double = 25) extends Widget {
 
   def dimensions: WorldDimensions = new WorldDimensions(minPxcor, maxPxcor, minPycor, maxPycor,
-                                                        patchSize, wrappingAllowedInY, wrappingAllowedInX)
+                                                        patchSize, wrappingAllowedInX, wrappingAllowedInY)
 }
 object View {
   def square(dim: Int) = View(minPxcor = -dim, maxPxcor = dim, minPycor = -dim, maxPycor = dim)
