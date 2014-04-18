@@ -82,16 +82,13 @@ object WidgetReader {
       case Some(reader) => reader.parse(lines)
       case None =>
         System.out.println(lines)
-        throw new Exception("Couldn't find corresponding reader!")
+        throw new RuntimeException(
+          "Couldn't find corresponding reader!")
     }
   }
 
-  def format(widget: Widget): String = {
-    widget match {
-      case b: Button => ButtonReader.format(b)
-      case _ => throw new Exception("XXX IMPLEMENT ME")
-    }
-  }
+  def format(widget: Widget): String =
+    throw new UnsupportedOperationException
 
   def readInterface(lines: List[String], parser: api.ParserServices): List[Widget] = {
     var widgets = Vector[Widget]()
@@ -416,7 +413,9 @@ class InputBoxReader extends BaseWidgetReader {
       multiline: Boolean, _, inputBoxTypeStr: String) = vals
     val (inputBoxType: InputBoxType[U], widgetline: WidgetLine[U]) = inputBoxTypes.find(_._1.name == inputBoxTypeStr) match {
       case Some(t) => t.asInstanceOf[Tuple2[InputBoxType[U], WidgetLine[U]]]
-      case None => throw new Exception("Couldn't find corresponding input box type for " + inputBoxTypeStr)
+      case None =>
+        throw new RuntimeException(
+          "Couldn't find corresponding input box type for " + inputBoxTypeStr)
     }
     InputBox(left, top, right, bottom, varName, widgetline.parse(value), multiline, inputBoxType)
   }

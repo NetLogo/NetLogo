@@ -27,7 +27,8 @@ object ModelReader {
     sectionDone()
 
     if(sections.size != 12)
-      throw new Exception("Models must have 12 sections, this had " + sections.size)
+      throw new RuntimeException(
+        "Models must have 12 sections, this had " + sections.size)
 
     val Vector(code, interface, info, turtleShapes, version, previewCommands, systemDynamics,
              behaviorSpace, hubNetClient, linkShapes, modelSettings, deltaTick) = sections

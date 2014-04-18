@@ -11,7 +11,8 @@ case class Model(code: String = "", widgets: List[Widget] = List(View()), info: 
   def interfaceGlobalCommands: List[String] = widgets.collect{case x:DeclaresGlobalCommand => x}.map(_.command)
 
   if(widgets.collectFirst{case (w: View) => w}.isEmpty)
-    throw new Exception("Every model must have at least a view...")
+    throw new RuntimeException(
+      "Every model must have at least a view...")
 
   def view: View = widgets.collectFirst{case (w: View) => w}.get
   def plots: List[Plot] = widgets.collect{case (w: Plot) => w}
