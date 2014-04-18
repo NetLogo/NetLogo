@@ -82,13 +82,16 @@ object Depend {
       "prim" -> List("nvm"),
       "prim/etc" -> List("nvm"),
       "render" -> List("shape"),
-      "review" -> List("mirror", "window"),
       "shape" -> List("api"),
       "util" -> Nil,
       "workspace" -> List("nvm", "plot", "drawing", "api/model"))
     case class Package(val dir: String, var depends: Set[Package]) {
       def ancestors:Set[Package] = depends ++ depends.flatMap(_.ancestors)
     }
+    for {
+      deps <- packageDefs.values
+      dep <- deps
+    } require(packageDefs.contains(dep), s"unknown package: $dep")
     val allPackages: Set[Package] = Set() ++ packageDefs.keys.map(Package(_,Set()))
     for(p <- allPackages)
       p.depends = allPackages.filter(p2 => packageDefs(p.dir).contains(p2.dir))
