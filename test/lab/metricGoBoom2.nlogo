@@ -53,3 +53,6 @@ NetLogo 5.0
   </experiment>
 </experiments>
 @#$#@#$#@
+@#$#@#$#@
+@#$#@#$#@
+@#$#@#$#@

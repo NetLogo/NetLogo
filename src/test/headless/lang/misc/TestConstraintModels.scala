@@ -5,15 +5,16 @@ package lang
 package misc
 
 import org.nlogo.agent.BooleanConstraint
-import org.nlogo.api, ModelCreator._
+import org.nlogo.api
+import org.nlogo.core._
 
 class TestConstraintModels extends FixtureSuite {
 
   test("Boolean Constraint Constructor") { implicit fixture =>
     import fixture._
     open(Model(widgets =
-      List(Switch(name="on?", on=true),
-        Switch(name="off?", on=false))))
+      List(View(), Switch(varName="on?", display="on?", on=true),
+        Switch(varName="off?", display="on?", on=false))))
     testReporter("on?", "true")
     testReporter("off?", "false")
     object con extends BooleanConstraint {
@@ -34,9 +35,12 @@ class TestConstraintModels extends FixtureSuite {
   test("Chooser Constraint") { implicit fixture =>
     import fixture._
     open(Model(widgets = List(
-      Chooser(name = "foo", choices = List(1, 2, 3, 4, 5), index = 0),
-      Chooser(name = "bar", choices = List("a", "b", "c", "d"), index = 3),
-      Chooser(name = "mix", choices = List(12, "aaa", 34, "bbb", 56), index = 0))))
+      View(),
+      Chooser(display = "foo", varName = "foo", choices = List(Double.box(1), Double.box(2), Double.box(3), Double.box(4), Double.box(5)),
+        currentChoice = 0),
+      Chooser(display = "bar", varName = "bar", choices = List("a", "b", "c", "d"), currentChoice = 3),
+      Chooser(display = "mix", varName = "mix", choices = List(Double.box(12), "aaa", Double.box(34), "bbb", Double.box(56)),
+      currentChoice = 0))))
     testReporter("foo", "1")
     testReporter("bar", "\"d\"")
     testReporter("mix", "12")
@@ -50,11 +54,12 @@ class TestConstraintModels extends FixtureSuite {
   test("InputBox Constraint Loading") { implicit fixture =>
     import fixture._
     open(Model(widgets = List(
-      InputBox(name="number", value=5d, typ=InputBoxTypes.Num),
-      InputBox(name="string", value="this is a string", typ=InputBoxTypes.Str),
-      InputBox(name="reporter", value="max-pxcor", typ=InputBoxTypes.StrReporter),
-      InputBox(name="commands", value="show 1", typ=InputBoxTypes.StrCommand),
-      InputBox(name="colors", value=0, typ=InputBoxTypes.Col)
+      View(),
+      InputBox(varName="number", value=5d, boxtype=Num),
+      InputBox(varName="string", value="this is a string", boxtype=Str),
+      InputBox(varName="reporter", value="max-pxcor", boxtype=StrReporter),
+      InputBox(varName="commands", value="show 1", boxtype=StrCommand),
+      InputBox(varName="colors", value=0, boxtype=Col)
       )))
 
     testReporter("string", "\"this is a string\"")
@@ -105,7 +110,7 @@ class TestConstraintModels extends FixtureSuite {
 
   test("Slider Constraints") { implicit fixture =>
     import fixture._
-    open(Model(widgets = List(Slider(name="x-loc", min="0", max="100", current="10", inc="1"))))
+    open(Model(widgets = List(View(), Slider(display="x-loc", varName="x-loc", min="0", max="100", default=10, step="1"))))
     testReporter("x-loc", "10")
     testCommand(("set x-loc 20"))
     testReporter("x-loc", "20")

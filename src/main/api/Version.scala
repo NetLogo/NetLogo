@@ -2,6 +2,8 @@
 
 package org.nlogo.api
 
+import org.nlogo.core.Resource
+
 object Version {
 
   val noVersion = "NetLogo (no version)"

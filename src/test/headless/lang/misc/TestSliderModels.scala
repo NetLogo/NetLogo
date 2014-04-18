@@ -4,7 +4,7 @@ package org.nlogo.headless
 package lang
 package misc
 
-import ModelCreator._
+import org.nlogo.core._
 
 /**
  * maybe we could use some more tests that test sliders.
@@ -13,7 +13,7 @@ import ModelCreator._
 class TestSliderModels extends FixtureSuite {
 
   val model =
-    Model(widgets = List(Slider(name="density", max="99", current="57.0")))
+    Model(widgets = List(Slider(display="density", varName="density", max="99", default=57), View()))
 
   test("simple slider test") { implicit fixture =>
     import fixture._

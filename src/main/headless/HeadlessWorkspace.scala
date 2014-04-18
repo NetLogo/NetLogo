@@ -6,11 +6,15 @@ package org.nlogo.headless
 // AbstractWorkspace are not, so if you want to document a method for everyone, override that method
 // here and document it here.  The overriding method can simply call super(). - ST 6/1/05, 7/28/11
 
+import org.nlogo.agent.Agent
 import org.nlogo.core.{ AgentKind, WorldDimensions }
 import org.nlogo.api.{ Program, Version, RendererInterface,
-                       ModelReader, CompilerException, LogoException, SimpleJobOwner,
-                       CommandRunnable, ReporterRunnable, UpdateMode }
-import org.nlogo.agent.{ Agent, World }
+                       CompilerException, LogoException, SimpleJobOwner,
+                       CommandRunnable, ReporterRunnable }
+import org.nlogo.core.{ Model, UpdateMode }
+import org.nlogo.api.model.ModelReader
+
+import org.nlogo.agent.World
 import org.nlogo.nvm, nvm.{ LabInterface, Context, FrontEndInterface,
                             DefaultParserServices, CompilerInterface }
 import org.nlogo.workspace.AbstractWorkspace
@@ -370,7 +374,7 @@ with org.nlogo.workspace.WorldLoaderInterface {
   override def open(path: String) {
     setModelPath(path)
     val modelContents = org.nlogo.api.FileIO.file2String(path)
-    try openString(modelContents)
+    try openModel(ModelReader.parseModel(modelContents, Some(this)))
     catch {
       case ex: CompilerException =>
         // models with special comment are allowed not to compile
@@ -382,15 +386,13 @@ with org.nlogo.workspace.WorldLoaderInterface {
   }
 
   /**
-   * Opens a model stored in a string.
+   * Opens a model stored in memory.
    * Can only be called once per instance of HeadlessWorkspace
    *
-   * @param source The complete model, including widgets and so forth,
-   *               in the same format as it would be stored in a file.
+   * @param source The complete model, including widgets and so forth, as created from core.Model()
    */
-  def openString(modelContents: String) {
-    new HeadlessModelOpener(this)
-      .openFromMap(ModelReader.parseModel(modelContents))
+  def openModel(model: Model = Model()) {
+    new HeadlessModelOpener(this).openFromModel(model)
   }
 
   /**

@@ -6,6 +6,7 @@ import org.nlogo.agent.{Agent, AgentSet, World}
 import org.nlogo.{ api, core }
 import org.nlogo.api.{DummyParserServices, DummyExtensionManager, JobOwner,
                       CommandRunnable, ReporterRunnable, ImportErrorHandler, OutputDestination}
+import core.Model
 
 class DummyWorkspace extends DummyParserServices with Workspace {
   private def unsupported = throw new UnsupportedOperationException
@@ -66,7 +67,7 @@ class DummyWorkspace extends DummyParserServices with Workspace {
   override def compiler = unsupported
   override def parser = unsupported
   override def open(modelPath: String) = unsupported
-  override def openString(modelContents: String) = unsupported
+  override def openModel(model: Model) = unsupported
   override def dispose() { }
   override def lastLogoException = unsupported
   override def clearLastLogoException() = unsupported

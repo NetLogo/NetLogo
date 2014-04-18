@@ -21,13 +21,6 @@ trait DrawableShape {
   def getEditableColorIndex: Int
 }
 
-trait ModelSectionReader {
-  @throws(classOf[IOException])
-  def read(path: String): Array[String]
-  @throws(classOf[IOException])
-  def getVersion(path: String): String
-}
-
 trait ShapeChangeListener {
   def shapeChanged(shape: Shape): Unit
   def shapeRemoved(shape: Shape): Unit

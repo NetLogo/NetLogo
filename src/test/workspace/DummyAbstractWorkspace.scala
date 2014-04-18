@@ -2,9 +2,10 @@
 
 package org.nlogo.workspace
 
-import org.nlogo.agent.{ Agent, World },
-  org.nlogo.{ api, core, nvm },
-    nvm.CompilerInterface
+import org.nlogo.agent.{ Agent, World }
+import org.nlogo.nvm, nvm.CompilerInterface
+import org.nlogo.api
+import org.nlogo.core, core.Model
 
 /**
  * handy for use in unit tests
@@ -24,7 +25,7 @@ extends AbstractWorkspace(new World)
   override def clearDrawing(): Unit = unsupported
   override def getAndCreateDrawing(): java.awt.image.BufferedImage = unsupported
   override def open(path: String) = unsupported
-  override def openString(modelContents: String) = unsupported
+  override def openModel(model: Model) = unsupported
   override def clearOutput(): Unit = unsupported
   override def sendOutput(oo: org.nlogo.agent.OutputObject, toOutputArea: Boolean): Unit = unsupported
   override def importerErrorHandler: org.nlogo.agent.ImporterJ.ErrorHandler = unsupported

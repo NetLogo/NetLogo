@@ -25,8 +25,8 @@ the stack traces, not the results.
  */
 
 import org.nlogo.api, api.LogoException
+import org.nlogo.core.{Model, Plot, Pen, View}
 import org.scalatest.FunSuite
-import ModelCreator._
 
 class TestStackTraces extends FixtureSuite {
 
@@ -66,22 +66,22 @@ class TestStackTraces extends FixtureSuite {
   case object PlotSetup extends CodeType {
     val procName = "plot 'p' setup code"
     def plot(code: String) =
-      Plot(name = "p", pens = Pens(Pen(name = "pp")), setupCode = code)
+      Plot(display = "p", pens = List(Pen(display = "pp")), setupCode = code)
   }
   case object PlotUpdate extends CodeType {
     val procName = "plot 'p' update code"
     def plot(code: String) =
-      Plot(name = "p", pens = Pens(Pen(name = "pp")), updateCode = code)
+      Plot(display = "p", pens = List(Pen(display = "pp")), updateCode = code)
   }
   case object PenSetup extends CodeType {
     val procName = "plot 'p' pen 'pp' setup code"
     def plot(code: String) =
-      Plot(name = "p", pens = Pens(Pen(name = "pp", setupCode = code)))
+      Plot(display = "p", pens = List(Pen(display = "pp", setupCode = code)))
   }
   case object PenUpdate extends CodeType {
     val procName = "plot 'p' pen 'pp' update code"
     def plot(code: String) =
-      Plot(name = "p", pens = Pens(Pen(name = "pp", updateCode = code)))
+      Plot(display = "p", pens = List(Pen(display = "pp", updateCode = code)))
   }
 
   def trace(implicit fixture: Fixture) =
@@ -90,7 +90,7 @@ class TestStackTraces extends FixtureSuite {
   def callPrimDirectly_Test(prim: String, codeType: CodeType) {
     test("direct call to " + prim + " with failure in " + codeType) { implicit fixture =>
       import fixture._
-      open(Model("globals [x]", widgets = List(codeType.plot("if x = 1 [plot __boom]"))))
+      open(Model("globals [x]", widgets = List(View(), codeType.plot("if x = 1 [plot __boom]"))))
       testCommand("reset-ticks")
       testCommand("set x 1")
       intercept[LogoException] { testCommand(prim) }
@@ -115,7 +115,7 @@ class TestStackTraces extends FixtureSuite {
                    |""".stripMargin
     test("nesting " + prim + " in " + codeType) { implicit fixture =>
       import fixture._
-      open(Model(code, widgets = List(codeType.plot("do-it"))))
+      open(Model(code, widgets = List(View(), codeType.plot("do-it"))))
       testCommand("reset-ticks")
       testCommand("set x 1")
       intercept[LogoException] {testCommand("go1")}

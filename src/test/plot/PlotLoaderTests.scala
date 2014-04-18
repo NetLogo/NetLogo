@@ -4,93 +4,66 @@ package org.nlogo.plot
 
 import org.scalatest.FunSuite
 import org.nlogo.api.DummyLogoThunkFactory
+import org.nlogo.api.model.{PenReader, PlotReader}
 
 class PlotLoaderTests extends TestPlotLoaderHelper{
-
-  // PlotLoader.parseStringLiterals
-
-  test("none") {
-    assertResult(Nil)(PlotLoader.parseStringLiterals(""))
-  }
-  test("one") {
-    assertResult(List("foo"))(PlotLoader.parseStringLiterals("\"foo\""))
-  }
-  test("one empty") {
-    assertResult(List(""))(PlotLoader.parseStringLiterals("\"\""))
-  }
-  test("two") {
-    assertResult(List("foo", "bar"))(PlotLoader.parseStringLiterals("\"foo\" \"bar\""))
-  }
-  test("escaped quotes") {
-    assertResult(List("print \"foo\""))(PlotLoader.parseStringLiterals("\"print \\\"foo\\\"\""))
-  }
-  test("extra spaces") {  // bug #48
-    assertResult(List("foo" , "bar" ))(PlotLoader.parseStringLiterals("\"foo\" \"bar\""))
-    assertResult(List(" foo", "bar" ))(PlotLoader.parseStringLiterals("\" foo\" \"bar\""))
-    assertResult(List(" foo", " bar"))(PlotLoader.parseStringLiterals("\" foo\" \" bar\""))
-    assertResult(List("foo" , " bar"))(PlotLoader.parseStringLiterals("\"foo\" \" bar\""))
-    assertResult(List("foo ", "bar" ))(PlotLoader.parseStringLiterals("\"foo \" \"bar\""))
-    assertResult(List("foo ", "bar "))(PlotLoader.parseStringLiterals("\"foo \" \"bar \""))
-    assertResult(List("foo" , "bar "))(PlotLoader.parseStringLiterals("\"foo\" \"bar \""))
-  }
 
   // PlotLoader.parsePen
 
   test("easy pen") {
-    assertResult("PenSpec(sheep,1.0,0,-13345367,true,,)")(
-      PlotLoader.parsePen("\"sheep\" 1.0 0 -13345367 true").toString)
+    assertResult("Pen(sheep,1.0,0,-13345367,true,,)")(
+      PenReader.parse("\"sheep\" 1.0 0 -13345367 true").toString)
   }
 
   test("pen with spaces in name") {
-    assertResult("PenSpec(grass / 4,1.0,0,-10899396,true,,)")(
-      PlotLoader.parsePen("\"grass / 4\" 1.0 0 -10899396 true").toString)
+    assertResult("Pen(grass / 4,1.0,0,-10899396,true,,)")(
+      PenReader.parse("\"grass / 4\" 1.0 0 -10899396 true").toString)
   }
 
   test("pen with adjacent spaces in name") {
-    assertResult("PenSpec(  grass  /  4    ,1.0,0,-10899396,true,,)")(
-      PlotLoader.parsePen("\"  grass  /  4    \" 1.0 0 -10899396 true").toString)
+    assertResult("Pen(  grass  /  4    ,1.0,0,-10899396,true,,)")(
+      PenReader.parse("\"  grass  /  4    \" 1.0 0 -10899396 true").toString)
   }
 
   test("pen with double quotes in name") {
-    assertResult("PenSpec(\"\"\",1.0,0,-10899396,true,,)")(
-      PlotLoader.parsePen("\"\\\"\\\"\\\"\" 1.0 0 -10899396 true").toString)
+    assertResult("Pen(\"\"\",1.0,0,-10899396,true,,)")(
+      PenReader.parse("\"\\\"\\\"\\\"\" 1.0 0 -10899396 true").toString)
   }
 
   test("a bunch of white space before code is ok.") {
-    assertResult("PenSpec(sheep,1.0,0,-13345367,true,count turtles,)")(
-      PlotLoader.parsePen("\"sheep\" 1.0 0 -13345367 true       \"count turtles\" \"\"").toString)
+    assertResult("Pen(sheep,1.0,0,-13345367,true,count turtles,)")(
+      PenReader.parse("\"sheep\" 1.0 0 -13345367 true       \"count turtles\" \"\"").toString)
   }
 
   test("pen with command code, with escaped quotes command code") {
-    assertResult("PenSpec(sheep,1.0,0,-13345367,true,ticks \" \" ticks,)")(
-      PlotLoader.parsePen("\"sheep\" 1.0 0 -13345367 true \"ticks \\\" \\\" ticks\" \"\"").toString)
+    assertResult("Pen(sheep,1.0,0,-13345367,true,ticks \" \" ticks,)")(
+      PenReader.parse("\"sheep\" 1.0 0 -13345367 true \"ticks \\\" \\\" ticks\" \"\"").toString)
   }
 
   test("pen with simple command code") {
-    assertResult("PenSpec(sheep,1.0,0,-13345367,true,crt 1,)")(
-      PlotLoader.parsePen("\"sheep\" 1.0 0 -13345367 true \"crt 1\" \"\"").toString)
+    assertResult("Pen(sheep,1.0,0,-13345367,true,crt 1,)")(
+      PenReader.parse("\"sheep\" 1.0 0 -13345367 true \"crt 1\" \"\"").toString)
   }
 
   test("pen with no x and y axis code") {
-    assertResult("PenSpec(sheep,1.0,0,-13345367,true,,)")(
-      PlotLoader.parsePen("\"sheep\" 1.0 0 -13345367 true").toString)
+    assertResult("Pen(sheep,1.0,0,-13345367,true,,)")(
+      PenReader.parse("\"sheep\" 1.0 0 -13345367 true").toString)
   }
 
   test("pen with empty command code") {
-    assertResult("PenSpec(sheep,1.0,0,-13345367,true,,)")(
-      PlotLoader.parsePen("\"sheep\" 1.0 0 -13345367 true \"\" \"\"").toString)
+    assertResult("Pen(sheep,1.0,0,-13345367,true,,)")(
+      PenReader.parse("\"sheep\" 1.0 0 -13345367 true \"\" \"\"").toString)
   }
 
   test("pen with multi-line code") {
-    assertResult("PenSpec(sheep,1.0,0,-13345367,true,foo\nbar,)")(
-      PlotLoader.parsePen("\"sheep\" 1.0 0 -13345367 true \"foo\\nbar\" \"\"").toString)
+    assertResult("Pen(sheep,1.0,0,-13345367,true,foo\nbar,)")(
+      PenReader.parse("\"sheep\" 1.0 0 -13345367 true \"foo\\nbar\" \"\"").toString)
   }
 
     // PlotLoader.parsePlot
 
   test("parse plot with no pen line") {
-val plotLines="""
-PLOT
+val plotLines="""PLOT
 26
 160
 301
@@ -344,7 +317,8 @@ trait TestPlotLoaderHelper extends FunSuite {
 
   def load(lines:String): Plot = {
     val plot = new PlotManager(new DummyLogoThunkFactory).newPlot("test")
-    PlotLoader.parsePlot(lines.trim.split("\n"), plot)
+    assert(PlotReader.validate(lines.trim.split("\n").toList))
+    PlotLoader.loadPlot(PlotReader.parse(lines.trim.split("\n").toList), plot)
     plot
   }
 }

@@ -3,7 +3,8 @@
 package org.nlogo.headless
 package render
 
-import org.nlogo.{ api, core }
+import org.nlogo.api
+import org.nlogo.core.{Model, View}
 import org.nlogo.shape.{ LinkShape, VectorShape }
 import org.nlogo.util.MockSuite
 
@@ -41,14 +42,14 @@ trait TestUsingWorkspace extends MockSuite {
     val workspace: HeadlessWorkspace = HeadlessWorkspace.newInstance
     workspace.silent = true
     try {
-      ModelCreator.open(workspace, core.WorldDimensions.square(radius))
+      workspace.openModel(Model(widgets = List(View.square(radius))))
       workspace.changeTopology(worldType.xWrap, worldType.yWrap)
       workspace.world.turtleShapeList.replaceShapes(
         VectorShape.parseShapes(
-          api.ModelReader.defaultShapes.toArray, api.Version.version))
+          Model.defaultShapes.toArray, api.Version.version))
       workspace.world.linkShapeList.replaceShapes(
         LinkShape.parseShapes(
-          api.ModelReader.defaultLinkShapes.toArray, api.Version.version))
+          Model.defaultLinkShapes.toArray, api.Version.version))
       f(workspace)
     }
     finally workspace.dispose()

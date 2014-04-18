@@ -4,7 +4,8 @@ package org.nlogo.headless
 package lang
 
 import org.scalatest, scalatest.Assertions
-import org.nlogo.{ api, core, agent }
+import org.nlogo.{ api, agent, core }
+import org.nlogo.core.{ Model, View }
 import api.CompilerException.{RuntimeErrorAtCompileTimePrefix => runtimePrefix}
 import org.nlogo.nvm.CompilerInterface
 import org.nlogo.api.Femto
@@ -29,10 +30,11 @@ object Fixture {
 // elsewhere by Tortoise - ST 8/28/13
 trait AbstractFixture {
   import Assertions._
-  def defaultDimensions: core.WorldDimensions
-  def declare(source: String, dimensions: core.WorldDimensions = defaultDimensions)
+  def defaultView: core.View
+  def declare(code: String): Unit = declare(Model(code = code, widgets = List(defaultView)))
+  def declare(model: Model = Model(widgets = List(defaultView)))
   def open(path: String)
-  def open(model: ModelCreator.Model)
+  def open(model: Model)
   def runCommand(command: Command, mode: TestMode)
   def runReporter(reporter: Reporter, mode: TestMode)
   def readFromString(literal: String): AnyRef
@@ -41,13 +43,13 @@ trait AbstractFixture {
     // as values and as printed representations.  Most of the time these checks will come out
     // the same, but it might be good to have both, partially as a way of giving both Equality and
     // Dump lots of testing! - ST 5/8/03, 8/21/13
-    withClue(s"""$mode: not equals(): reporter "$reporter"""") {
+    withClue(s"""$mode: not equals(): reporter "$reporter" """) {
       assertResult(expectedResult)(
         api.Dump.logoObject(actualResult, true, false))
     }
     assert(api.Equality.equals(actualResult,
       readFromString(expectedResult)),
-      s"""$mode: not recursivelyEqual(): reporter "$reporter"""")
+      s"""$mode: not recursivelyEqual(): reporter "$reporter" """)
   }
 }
 
@@ -77,13 +79,9 @@ class Fixture(name: String) extends AbstractFixture {
   val compiler: CompilerInterface =
     Femto.scalaSingleton("org.nlogo.compile.Compiler")
 
-  def defaultDimensions = core.WorldDimensions.square(5)
+  def defaultView = View.square(5)
 
-  def declare(source: String, dimensions: core.WorldDimensions = defaultDimensions) {
-    ModelCreator.open(workspace,
-      dimensions = dimensions,
-      source = source)
-  }
+  def declare(model: Model) = workspace.openModel(model)
 
   def readFromString(literal: String): AnyRef =
     compiler.frontEnd.readFromString(literal)
@@ -168,7 +166,7 @@ class Fixture(name: String) extends AbstractFixture {
   // more convenience
   def open(path: String) =
     workspace.open(path)
-  def open(model: ModelCreator.Model) =
-    workspace.openString(model.toString)
+  def open(model: Model) =
+    workspace.openModel(model)
 
 }

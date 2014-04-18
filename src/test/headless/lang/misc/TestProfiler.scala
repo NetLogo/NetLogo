@@ -13,7 +13,8 @@ package misc
 // this, the DSL didn't support catching runtime errors, but now it does.) - ST 5/4/10
 
 import org.nlogo.util.SlowTest
-import org.nlogo.{ api, core }
+import org.nlogo.api
+import org.nlogo.core.Model
 
 class TestProfiler extends FixtureSuite with SlowTest {
 
@@ -171,7 +172,7 @@ class TestProfiler extends FixtureSuite with SlowTest {
   // extensions, so we put it here because it's a SlowTest - ST 1/19/12
   test("isReporter on extension prims") { implicit fixture =>
     import fixture._
-    ModelCreator.open(workspace, core.WorldDimensions.square(5), "extensions [profiler]")
+    workspace.openModel(Model(code = "extensions [profiler]"))
     assertResult(false) { workspace.isReporter("profiler:start") }
     assertResult(true) { workspace.isReporter("profiler:report") }
     assertResult(false) { workspace.isReporter("profiler:ghjfgjhkfhgjk") }

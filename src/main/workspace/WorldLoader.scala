@@ -2,100 +2,47 @@
 
 package org.nlogo.workspace
 
-import org.nlogo.core.WorldDimensions
-import org.nlogo.api.{ I18N, UpdateMode }
+import org.nlogo.api.I18N
+import org.nlogo.core.{WorldDimensions, UpdateMode, View}
 
-class WorldLoader {
-
-  val updateModeIndex = 21
-  val tickCounterIndex = 23
-  val tickCounterLabelIndex = 24
-  val frameRateIndex = 25
-
-  def load(strings: Seq[String], worldInterface: WorldLoaderInterface) {
-    val d = getWorldDimensions(strings)
+object WorldLoader {
+  def load(view: View, worldInterface: WorldLoaderInterface) {
+    val d = view.dimensions
     // set the visiblity of the ticks counter first because it changes the minimum size of the
     // viewWidget which could cause patchSize ugliness down the line ev 7/30/07
-    if(strings.size > tickCounterLabelIndex) {
-      val label = strings(tickCounterLabelIndex)
-      worldInterface.tickCounterLabel(
-        if(label == "NIL") ""
-        else label)
-    }
-    else
-      worldInterface.tickCounterLabel("ticks")
-    if(strings.size > tickCounterIndex)
-      worldInterface.showTickCounter(1 == strings(tickCounterIndex).toInt)
-    else
-      worldInterface.showTickCounter(true)
-    var patchSize = strings(7).toDouble
-    val width = getWidth(worldInterface, d, patchSize, strings)
-    patchSize = adjustPatchSize(worldInterface, d, patchSize, strings)
-    val height = getHeight(worldInterface, d, patchSize, strings)
+    val label = view.tickCounterLabel
+    worldInterface.tickCounterLabel(if(label == "NIL") "" else label)
+
+    worldInterface.showTickCounter(view.showTickCounter)
+
+    val width = getWidth(worldInterface, d)
+    val patchSize = adjustPatchSize(worldInterface, d)
+    val height = getHeight(worldInterface, d)
     worldInterface.setDimensions(d, patchSize)
-    // we have to clear turtles before we change the topology otherwise we might have extra links
-    // lying around in the world that go kerplooey when we try to reposition them and after we set
-    // the dimensions because that's where every thing gets allocated initially. ev 7/19/06
     worldInterface.clearTurtles()
-    if(strings.size > 9)
-      worldInterface.fontSize(strings(9).toInt)
-    // note we ignore items 10, 11, 12 which had the old exactDraw
-    // settings which are now always on - ST 5/27/05
-    // ignore item 13, which was for old, now-removed hex support - ST 1/4/07
-    var wrapX = true
-    var wrapY = true
-    if(strings.size > 15) {
-      wrapX = 0 != strings(14).toInt
-      wrapY = 0 != strings(15).toInt
-    }
-    worldInterface.changeTopology(wrapX, wrapY)
-    worldInterface.updateMode(
-      if(strings.size > updateModeIndex)
-        UpdateMode.load(strings(updateModeIndex).toInt)
-      else
-        UpdateMode.Continuous)
-    worldInterface.frameRate(
-      if(strings.size > frameRateIndex)
-        strings(frameRateIndex).toDouble
-      else
-        30)
-    // ignore strings(22), used to be timeBasedUpdates flag - ST 1/25/07
+    worldInterface.fontSize(view.fontSize)
+
+    worldInterface.changeTopology(d.wrappingAllowedInX, d.wrappingAllowedInY)
+    worldInterface.updateMode(view.updateMode)
+    worldInterface.frameRate(view.frameRate)
     worldInterface.setSize(width, height)
   }
 
-  def getWorldDimensions(strings: Seq[String]): WorldDimensions = {
-    var maxx = strings(5).toInt
-    var maxy = strings(6).toInt
-    var minx = -1
-    var miny = -1
-    if(maxx != -1 && maxy != -1) {
-      minx = -maxx
-      miny = -maxy
-    }
-    else if(strings.size > 20) {
-      minx = strings(17).toInt
-      maxx = strings(18).toInt
-      miny = strings(19).toInt
-      maxy = strings(20).toInt
-    }
-    new WorldDimensions(minx, maxx, miny, maxy)
-  }
-
-  def getWidth(world: WorldLoaderInterface, d: WorldDimensions, patchSize: Double, strings: Seq[String]): Int = {
-    val widgetWidth = world.calculateWidth(d.width, patchSize)
+  def getWidth(world: WorldLoaderInterface, d: WorldDimensions): Int = {
+    val widgetWidth = world.calculateWidth(d.width, d.patchSize)
     val minWidth = world.getMinimumWidth
     widgetWidth max minWidth
   }
 
-  def getHeight(world: WorldLoaderInterface, d: WorldDimensions, patchSize: Double, strings: Seq[String]): Int =
-    world.calculateHeight(d.height,  patchSize)
+  def getHeight(world: WorldLoaderInterface, d: WorldDimensions): Int =
+    world.calculateHeight(d.height, d.patchSize)
 
-  def adjustPatchSize(world: WorldLoaderInterface, d: WorldDimensions, patchSize: Double, strings: Seq[String]): Double = {
-    val widgetWidth = world.calculateWidth(d.width, patchSize)
+  def adjustPatchSize(world: WorldLoaderInterface, d: WorldDimensions): Double = {
+    val widgetWidth = world.calculateWidth(d.width, d.patchSize)
     val minWidth = world.getMinimumWidth
     if(widgetWidth < minWidth)
       world.computePatchSize(minWidth - world.insetWidth, d.width)
     else
-      patchSize
+      d.patchSize
   }
 }

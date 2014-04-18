@@ -134,7 +134,7 @@ public strictfp class ModelsLibrary {
       throws java.io.IOException {
     String file = org.nlogo.api.FileIO.file2String(filePath);
     // parse out info text
-    String delimiter = org.nlogo.api.ModelReader$.MODULE$.SEPARATOR();
+    String delimiter = org.nlogo.api.model.ModelReader$.MODULE$.SEPARATOR();
     int dlength = delimiter.length();
     int startIndex = 0;
     int endIndex;

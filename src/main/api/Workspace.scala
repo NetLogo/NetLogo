@@ -2,6 +2,8 @@
 
 package org.nlogo.api
 
+import org.nlogo.core.Model
+
 import java.io.IOException
 
 trait Workspace extends ImporterUser with ParserServices with RandomServices
@@ -54,7 +56,7 @@ with ViewSettings with Controllable {
   def changeTopology(wrapX: Boolean, wrapY: Boolean)
   @throws(classOf[IOException])
   def open(modelPath: String)
-  def openString(modelContents: String)
+  def openModel(model: Model)
   def mouseDown: Boolean = false
   def mouseInside: Boolean = false
   def mouseXCor: Double = 0

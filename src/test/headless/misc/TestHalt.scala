@@ -60,7 +60,7 @@ class TestHalt extends FunSuite with SlowTest {
       }
     }
     withWorkspace {
-      ModelCreator.open(workspace, core.WorldDimensions.square(0), "globals [x]")
+      workspace.openModel(core.Model(code = "globals [x]"))
       thread.start()
       def loop() {
         if (ex != null) throw ex
