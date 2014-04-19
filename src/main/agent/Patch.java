@@ -167,6 +167,10 @@ public strictfp class Patch
     return getPatchVariable(vn);
   }
 
+  public String variableName(int vn) {
+    return world().patchesOwnNameAt(vn);
+  }
+
   @Override
   public void setTurtleVariable(int vn, Object value)
       throws AgentException {
@@ -260,6 +264,7 @@ public strictfp class Patch
           throw new IllegalStateException(I18N.errorsJ().getN("org.nlogo.agent.Agent.cantSetUnknownVariable", vn));
       }
     }
+    world().notifyWatchers(this, vn, value);
   }
 
   @Override

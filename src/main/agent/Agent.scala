@@ -23,6 +23,12 @@ extends api.Agent with Comparable[Agent] {
 
   def getVariable(vn: Int): AnyRef
 
+  /**
+   * Returns the name of the variable with the given index. Works for built-in, *-own, and breed variables.
+   * @param vn the index of the variable
+   */
+  def variableName(vn: Int): String
+
   @throws(classOf[AgentException])
   def setVariable(vn: Int, value: AnyRef)
 

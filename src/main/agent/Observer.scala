@@ -11,10 +11,14 @@ with api.Observer with Constraints {
 
   override def getVariable(vn: Int) = variables(vn)
 
+  override def variableName(vn: Int) =
+    world.observerOwnsNameAt(vn)
+
   @throws(classOf[api.AgentException])
   override def setVariable(vn: Int, value: AnyRef) {
     assertConstraint(vn, value)
     variables(vn) = value
+    world.notifyWatchers(this, vn, value)
   }
 
   override def realloc(forRecompile: Boolean) {

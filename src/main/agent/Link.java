@@ -168,6 +168,14 @@ public strictfp class Link
     return getLinkVariable(vn);
   }
 
+  public String variableName(int vn) {
+    if (vn < world().program().linksOwn().size()) {
+      return world().linksOwnNameAt(vn);
+    } else {
+      return world().linkBreedsOwnNameAt(getBreed(), vn);
+    }
+  }
+
   @Override
   public Object getTurtleOrLinkVariable(String varName) {
     return getLinkVariable(world().program().linksOwn().indexOf(varName));
@@ -304,10 +312,10 @@ public strictfp class Link
         case VAR_END2:
           throw new AgentException("you can't change a link's endpoints");
         default:
-          return;
-
+          break;
       }
     }
+    world().notifyWatchers(this, vn, value);
   }
 
   @Override
