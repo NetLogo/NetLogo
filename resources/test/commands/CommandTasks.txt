@@ -262,3 +262,9 @@ foreach-plus-recursion
   O> ask patches [ sprout 1 ]
   O> ask one-of turtles [ explore ]
   any? turtles with [tvar = 0] => false
+
+allow-task-variable-access-inside-reporter-block
+  globals [glob1]
+  O> crt 10
+  O> foreach [7] [ set glob1 first [who] of turtles with [who = ?] ]
+  glob1 => 7
