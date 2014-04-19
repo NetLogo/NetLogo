@@ -334,3 +334,7 @@ reporter-task-closes-over-let-inside-task-of-different-agent
   globals [glob1]
   O> __let z 9 crt 1 [ set glob1 task [ z ] ]
   runresult glob1 => 9
+
+allow-reporter-task-variable-access-inside-reporter-block
+  O> crt 10
+  map [[who] of turtles with [who = ?]] [7] => [[7]]
