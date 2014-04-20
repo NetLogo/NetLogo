@@ -87,6 +87,7 @@ object Mirrorables {
     override def kind = Turtle
     override val variables = Map(
       VAR_BREED -> turtle.getBreed.printName,
+      VAR_LABEL -> turtle.labelString,
       LineThickness.id -> Double.box(turtle.lineThickness))
   }
 
@@ -94,7 +95,8 @@ object Mirrorables {
     override def kind = Patch
     override val variables = Map(
       VAR_PXCOR -> Int.box(patch.pxcor),
-      VAR_PYCOR -> Int.box(patch.pycor))
+      VAR_PYCOR -> Int.box(patch.pycor),
+      VAR_PLABEL -> patch.labelString)
   }
 
   class MirrorableLink(link: api.Link) extends MirrorableAgent(link) {
@@ -104,6 +106,7 @@ object Mirrorables {
       VAR_END1 -> Long.box(link.end1.id),
       VAR_END2 -> Long.box(link.end2.id),
       VAR_LBREED -> link.getBreed.printName,
+      VAR_LLABEL -> link.labelString,
       Size.id -> Double.box(link.size),
       Heading.id -> Double.box(link.heading),
       MidpointX.id -> Double.box(link.midpointX),

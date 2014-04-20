@@ -5,7 +5,7 @@ package lang
 package misc
 
 import org.scalatest.exceptions.TestFailedException
-import org.nlogo.api, api.AgentVariables
+import org.nlogo.api, api.{ AgentVariables, AgentVariableNumbers }
 import org.nlogo.core._
 import org.nlogo.mirror._, Mirroring._, Mirrorables._
 
@@ -150,6 +150,31 @@ class TestMirroring extends FixtureSuite {
     val (m2, u2) = diffs(m1, mirrorables)
     assertResult((3, (0, 0, 1))) { (m2.size, sizes(u2)) }
     assertResult(1.1)(m2(AgentKey(World, 0))(Mirrorables.World.Variables.Ticks.id))
+  }
+
+  test("labels are mirrored as strings") { implicit fixture =>
+    import fixture.{ workspace => ws }
+    ws.openModel(Model(widgets = List(View.square(0))))
+    val (m0, u0) = diffs(Map(), mirrorables)
+    ws.command("ask one-of patches [ set plabel self ]")
+    val (m1, u1) = diffs(m0, mirrorables)
+    assertResult(Change(AgentVariableNumbers.VAR_PLABEL, "(patch 0 0)")) {
+      u1.changes(1)._2.head
+    }
+    ws.command("crt 1")
+    val (m2, u2) = diffs(m1, mirrorables)
+    ws.command("ask turtle 0 [ set label self ]")
+    val (m3, u3) = diffs(m2, mirrorables)
+    assertResult(Change(AgentVariableNumbers.VAR_LABEL, "(turtle 0)")) {
+      u3.changes(0)._2.head
+    }
+    ws.command("crt 1 [ create-link-with turtle 0 ]")
+    val (m4, u4) = diffs(m3, mirrorables)
+    ws.command("ask links [ set label self ]")
+    val (m5, u5) = diffs(m4, mirrorables)
+    assertResult(Change(AgentVariableNumbers.VAR_LLABEL, "(link 0 1)")) {
+      u5.changes(0)._2.head
+    }
   }
 
 }
