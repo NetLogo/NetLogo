@@ -171,4 +171,6 @@ class _breedon(breedName: String) extends Reporter {
     AgentSet.fromArray(AgentKind.Turtle, result.toArray)
   }
 
+  //MethodRipper died if I just made it a val above - F.D. (10/3/13), ST 4/22/14
+  def getBreedName: String = breedName
 }
