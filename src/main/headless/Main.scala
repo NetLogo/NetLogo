@@ -8,10 +8,13 @@ import org.nlogo.workspace.AbstractWorkspace.setHeadlessProperty
 import org.nlogo.nvm.LabInterface.Settings
 
 object Main {
-  def main(args: Array[String]) {
-    setHeadlessProperty()
-    parseArgs(args).foreach(runExperiment)
-  }
+  class CancelException extends RuntimeException
+  def main(args: Array[String]): Unit =
+    try {
+      setHeadlessProperty()
+      parseArgs(args).foreach(runExperiment)
+    }
+    catch { case _: CancelException => } // ignore
   def runExperiment(settings: Settings) {
     def newWorkspace = {
       val w = HeadlessWorkspace.newInstance
@@ -35,11 +38,11 @@ object Main {
     var threads = Runtime.getRuntime.availableProcessors
     var suppressErrors = false
     val it = args.iterator
-    def die(msg: String) { System.err.println(msg); System.exit(1) }
+    def die(msg: String) { Console.err.println(msg) ; throw new CancelException}
     def path2writer(path: String) =
       if(path == "-")
-        new java.io.PrintWriter(System.out) {
-          // don't close System.out - ST 6/9/09
+        new java.io.PrintWriter(Console.out) {
+          // don't close Console.out - ST 6/9/09
           override def close() { } }
       else
         new java.io.PrintWriter(new java.io.FileWriter(path.trim))
