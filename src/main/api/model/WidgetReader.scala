@@ -290,9 +290,9 @@ object TextBoxReader extends BaseWidgetReader {
                         IntLine(),  // right
                         IntLine(),  // bottom
                         StringLine(),   // display
-                        IntLine(),   // varname
-                        DoubleLine(),  // on
-                        BooleanLine()
+                        IntLine(),   // font size
+                        DoubleLine(), // color
+                        BooleanLine()  // transparent
                       )
   def asList(textBox: TextBox) = List((), textBox.left, textBox.top, textBox.right, textBox.bottom,
                                     textBox.display, textBox.fontSize, textBox.color, textBox.transparent)
