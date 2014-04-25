@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 // A note on wrapping: normally whether x and y coordinates wrap is a
 // product of the topology.  But we also have the old "-nowrap" primitives
@@ -1397,7 +1398,7 @@ public strictfp class World
       variableWatchers =  new HashMap<String, List<VariableWatcher>>();
     }
     if (!variableWatchers.containsKey(variableName)) {
-      variableWatchers.put(variableName, new ArrayList<VariableWatcher>());
+      variableWatchers.put(variableName, new CopyOnWriteArrayList<VariableWatcher>());
     }
     variableWatchers.get(variableName).add(watcher);
   }

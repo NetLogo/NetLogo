@@ -13,6 +13,16 @@ class ObservationQueue extends World.VariableWatcher {
     queue.enqueue((agent, variableName, value))
   }
 }
+
+class SelfDestroyer extends World.VariableWatcher {
+  var triggered = 0
+  def update(agent: Agent, variableName: String, value: scala.Any) = {
+    triggered += 1
+    agent.world.deleteWatcher(variableName, this)
+  }
+}
+
+
 class TestAgentVariableObservers extends AbstractTestModels with GivenWhenThen {
   val declarations =
     """
@@ -25,6 +35,19 @@ class TestAgentVariableObservers extends AbstractTestModels with GivenWhenThen {
       |links-own [ my-link-var ]
       |patches-own [ my-patch-var ]
     """.stripMargin
+
+  testModel("watchers can delete themselves", Model(declarations)) {
+    val watcher = new SelfDestroyer
+    when("a variable has a self destructive watcher")
+    world.addWatcher("MY-GLOBAL", watcher)
+    and("that watcher is triggered")
+    observer>> "set my-global 5"
+    then("that watcher is removed without exception")
+    expect(1)(watcher.triggered)
+    observer>> "set my-global 10"
+    expect(1)(watcher.triggered)
+
+  }
 
   testModel("agents call variable observers", Model(declarations)) {
     val watcher = new ObservationQueue
