@@ -37,4 +37,18 @@ object ModelReader {
               info.mkString("\n"), version.head,
               turtleShapes.toList, behaviorSpace.toList, linkShapes.toList, previewCommands.toList)
   }
+
+  def formatModel(model: Model, parser: Option[api.ParserServices]): String = {
+    model.code + s"\n$SEPARATOR\n" +
+      (if(parser.nonEmpty) WidgetReader.formatInterface(model.widgets, parser.get) else "\n") + s"\n$SEPARATOR\n" +
+      model.info + s"\n$SEPARATOR\n" +
+      model.turtleShapes.mkString("\n") + s"\n$SEPARATOR\n" +
+      model.version + s"\n$SEPARATOR" +
+      (if(model.previewCommands.nonEmpty) model.previewCommands.mkString("\n", "\n", "\n") else "\n") + s"$SEPARATOR\n" +
+      s"$SEPARATOR" +
+      (if(model.behaviorSpace.nonEmpty) model.behaviorSpace.mkString("\n", "\n", "\n") else "\n") + s"$SEPARATOR\n" +
+      s"$SEPARATOR\n" +
+      model.linkShapes.mkString("\n") + s"\n$SEPARATOR\n" +
+      s"$SEPARATOR\n"
+  }
 }

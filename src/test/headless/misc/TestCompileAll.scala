@@ -7,6 +7,7 @@ import org.nlogo.api.Version
 import org.nlogo.workspace.ModelsLibrary
 import org.scalatest.FunSuite
 import org.nlogo.util.SlowTest
+import org.nlogo.api.model.ModelReader
 
 object TestCompileAll {
   // core branch doesn't have these features - ST 1/11/12
@@ -34,6 +35,30 @@ class TestCompileAll extends FunSuite with SlowTest {
     test("compile: " + path) {
       compile(path)
     }
+
+  for (path <- ModelsLibrary.getModelPaths.filterNot(TestCompileAll.badPath))
+    test("readWriteRead: " + path) {
+      readWriteRead(path)
+    }
+
+  def readWriteRead(path: String) {
+    val workspace = HeadlessWorkspace.newInstance
+    try {
+      val modelContents = org.nlogo.api.FileIO.file2String(path)
+      val model = ModelReader.parseModel(modelContents, Some(workspace))
+      val newModel = ModelReader.parseModel(ModelReader.formatModel(model, Some(workspace)), Some(workspace))
+      assert(model.code == newModel.code)
+      assert(model.widgets == newModel.widgets)
+      assert(model.info == newModel.info)
+      assert(model.version == newModel.version)
+      assert(model.turtleShapes == newModel.turtleShapes)
+      assert(model.behaviorSpace == newModel.behaviorSpace)
+      assert(model.linkShapes == newModel.linkShapes)
+      assert(model.previewCommands == newModel.previewCommands)
+      assert(model == newModel)
+    }
+    finally workspace.dispose()
+  }
 
   def compile(path: String) {
     val workspace = HeadlessWorkspace.newInstance

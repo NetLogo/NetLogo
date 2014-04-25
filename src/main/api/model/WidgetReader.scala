@@ -87,8 +87,20 @@ object WidgetReader {
     }
   }
 
-  def format(widget: Widget): String =
-    throw new UnsupportedOperationException
+  def format(widget: Widget, parser: api.ParserServices): String =
+    widget match {
+      case b: Button => ButtonReader.format(b)
+      case s: Slider => SliderReader.format(s)
+      case v: View => ViewReader.format(v)
+      case m: Monitor => MonitorReader.format(m)
+      case s: Switch => SwitchReader.format(s)
+      case p: Plot => PlotReader.format(p)
+      case c: Chooser => new ChooserReader(parser).format(c)
+      case o: Output => OutputReader.format(o)
+      case t: TextBox => TextBoxReader.format(t)
+      case i: InputBox[_] => new InputBoxReader{type U = Any}.format(i.asInstanceOf[InputBox[Any]])
+      case _ => throw new UnsupportedOperationException("Widget type is not supported: " + widget.getClass.getName)
+    }
 
   def readInterface(lines: List[String], parser: api.ParserServices): List[Widget] = {
     var widgets = Vector[Widget]()
@@ -106,6 +118,9 @@ object WidgetReader {
 
     widgets.toList
   }
+
+  def formatInterface(widgets: List[Widget], parser: api.ParserServices): String =
+    widgets.map(format(_, parser)).mkString("\n\n")
 }
 
 abstract class BaseWidgetReader extends WidgetReader {
@@ -147,11 +162,11 @@ object ButtonReader extends BaseWidgetReader {
                         BooleanLine(Some(true))  // go time
                       )
   def asList(button: Button) = List((), button.left, button.top, button.right, button.bottom, button.display,
-                                    button.source, button.forever, (), (), "", (), "", (), (), true)
+                                    button.source, button.forever, (), (), button.buttonType, (), button.actionKey, (), (), true)
   def asWidget(vals: List[Any]): Button = {
     val List(_, left: Int, top: Int, right: Int, bottom: Int, display: String,
-      source: String, forever: Boolean, _, _, _, _, _, _, _, _) = vals
-    Button(display, left, top, right, bottom, source, forever)
+      source: String, forever: Boolean, _, _, buttonType: String, _, actionKey: String, _, _, _) = vals
+    Button(display, left, top, right, bottom, source, forever, buttonType, actionKey)
   }
 }
 

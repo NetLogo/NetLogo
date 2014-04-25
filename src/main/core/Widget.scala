@@ -23,7 +23,7 @@ sealed trait DeclaresGlobalCommand {
   def command: String = "set " + varName + " " + asNetLogoString(default)
 }
 case class Button(display: String, left: Int, top: Int, right: Int, bottom: Int,
-             source: String, forever: Boolean) extends Widget
+             source: String, forever: Boolean, buttonType: String = "OBSERVER", actionKey: String = "NIL") extends Widget
 case class Plot(display: String, left: Int = 0, top: Int = 0, right: Int = 5, bottom: Int = 5,
              xAxis: String = "", yAxis: String = "", xmin: Double = 0, xmax: Double = 0, ymin: Double = 0, ymax: Double = 0,
              autoPlotOn: Boolean = true, legendOn: Boolean = false,
