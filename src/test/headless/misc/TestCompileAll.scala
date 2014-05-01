@@ -3,7 +3,7 @@
 package org.nlogo.headless
 package misc
 
-import org.nlogo.api.Version
+import org.nlogo.api.{ Version, FileIO }
 import org.nlogo.workspace.ModelsLibrary
 import org.scalatest.FunSuite
 import org.nlogo.util.SlowTest
@@ -41,21 +41,28 @@ class TestCompileAll extends FunSuite with SlowTest {
       readWriteRead(path)
     }
 
+  for(path <- ModelsLibrary.getModelPaths ++ ModelsLibrary.getModelPathsAtRoot("extensions"))
+    test("version: " + path) {
+      val workspace = HeadlessWorkspace.newInstance
+      val version = ModelReader.parseModel(FileIO.file2String(path), workspace).version
+      assert(Version.compatibleVersion(version))
+    }
+
   def readWriteRead(path: String) {
     val workspace = HeadlessWorkspace.newInstance
     try {
       val modelContents = org.nlogo.api.FileIO.file2String(path)
       val model = ModelReader.parseModel(modelContents, workspace)
       val newModel = ModelReader.parseModel(ModelReader.formatModel(model, workspace), workspace)
-      assert(model.code == newModel.code)
-      assert(model.widgets == newModel.widgets)
-      assert(model.info == newModel.info)
-      assert(model.version == newModel.version)
-      assert(model.turtleShapes == newModel.turtleShapes)
-      assert(model.behaviorSpace == newModel.behaviorSpace)
-      assert(model.linkShapes == newModel.linkShapes)
-      assert(model.previewCommands == newModel.previewCommands)
-      assert(model == newModel)
+      assertResult(model.code)(newModel.code)
+      assertResult(model.widgets)(newModel.widgets)
+      assertResult(model.info)(newModel.info)
+      assertResult(model.version)(newModel.version)
+      assertResult(model.turtleShapes)(newModel.turtleShapes)
+      assertResult(model.behaviorSpace)(newModel.behaviorSpace)
+      assertResult(model.linkShapes)(newModel.linkShapes)
+      assertResult(model.previewCommands)(newModel.previewCommands)
+      assertResult(model)(newModel)
     }
     finally workspace.dispose()
   }
@@ -68,7 +75,7 @@ class TestCompileAll extends FunSuite with SlowTest {
     try {
       workspace.open(path)
       val lab = HeadlessWorkspace.newLab
-      lab.load(HeadlessModelOpener.protocolSection(path))
+      lab.load(ModelReader.parseModel(FileIO.file2String(path), workspace).behaviorSpace.mkString("", "\n", "\n"))
       lab.names.foreach(lab.newWorker(_).compile(workspace))
     }
     finally workspace.dispose()

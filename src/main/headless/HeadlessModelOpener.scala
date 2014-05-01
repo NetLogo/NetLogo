@@ -9,15 +9,8 @@ import org.nlogo.agent.{BooleanConstraint, ChooserConstraint, InputBoxConstraint
 import org.nlogo.api.{CompilerException, FileIO, LogoList, Program, ValueConstraint, Version}
 import org.nlogo.api.model.ModelReader
 import org.nlogo.core.{Model, Widget, DeclaresGlobal, DeclaresGlobalCommand, DeclaresConstraint}
-import org.nlogo.nvm.DefaultParserServices
-import org.nlogo.compile.front.FrontEnd
 
 import org.nlogo.shape.{LinkShape, VectorShape}
-
-object HeadlessModelOpener {
-  def protocolSection(path: String) =
-    ModelReader.parseModel(FileIO.file2String(path), new DefaultParserServices(FrontEnd)).behaviorSpace.mkString("", "\n", "\n")
-}
 
 // this class is an abomination
 // everything works off of side effects, asking the workspace to update something
