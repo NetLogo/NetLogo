@@ -45,8 +45,8 @@ class TestCompileAll extends FunSuite with SlowTest {
     val workspace = HeadlessWorkspace.newInstance
     try {
       val modelContents = org.nlogo.api.FileIO.file2String(path)
-      val model = ModelReader.parseModel(modelContents, Some(workspace))
-      val newModel = ModelReader.parseModel(ModelReader.formatModel(model, Some(workspace)), Some(workspace))
+      val model = ModelReader.parseModel(modelContents, workspace)
+      val newModel = ModelReader.parseModel(ModelReader.formatModel(model, workspace), workspace)
       assert(model.code == newModel.code)
       assert(model.widgets == newModel.widgets)
       assert(model.info == newModel.info)

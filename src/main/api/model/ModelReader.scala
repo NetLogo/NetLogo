@@ -9,10 +9,9 @@ object ModelReader {
 
   val SEPARATOR = "@#$#@#$#@"
 
-  // The optional parser services here can be omitted if you would not like widget parsing
   // This should really be changed in the future to not need a compiler to parse widgets, but that is not
   // a things for today.  FD 4/17/14
-  def parseModel(model: String, parser: Option[api.ParserServices]): Model = {
+  def parseModel(model: String, parser: api.ParserServices): Model = {
     var sections = Vector[Vector[String]]()
     var sectionContents = Vector[String]()
     def sectionDone() {
@@ -32,15 +31,14 @@ object ModelReader {
 
     val Vector(code, interface, info, turtleShapes, version, previewCommands, systemDynamics,
              behaviorSpace, hubNetClient, linkShapes, modelSettings, deltaTick) = sections
-    new Model(code.mkString("\n"),
-              if(parser.nonEmpty) WidgetReader.readInterface(interface.toList, parser.get) else List(View()),
-              info.mkString("\n"), version.head,
-              turtleShapes.toList, behaviorSpace.toList, linkShapes.toList, previewCommands.toList)
+    new Model(code.mkString("\n"), WidgetReader.readInterface(interface.toList, parser),
+              info.mkString("\n"), version.head, turtleShapes.toList, behaviorSpace.toList,
+              linkShapes.toList, previewCommands.toList)
   }
 
-  def formatModel(model: Model, parser: Option[api.ParserServices]): String = {
+  def formatModel(model: Model, parser: api.ParserServices): String = {
     model.code + s"\n$SEPARATOR\n" +
-      (if(parser.nonEmpty) WidgetReader.formatInterface(model.widgets, parser.get) else "\n") + s"\n$SEPARATOR\n" +
+      WidgetReader.formatInterface(model.widgets, parser) + s"\n$SEPARATOR\n" +
       model.info + s"\n$SEPARATOR\n" +
       model.turtleShapes.mkString("\n") + s"\n$SEPARATOR\n" +
       model.version + s"\n$SEPARATOR" +
