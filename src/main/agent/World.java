@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
-import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import scala.collection.Seq;
 
@@ -1214,7 +1214,7 @@ public strictfp class World
       variableWatchers =  new HashMap<String, List<VariableWatcher>>();
     }
     if (!variableWatchers.containsKey(variableName)) {
-      variableWatchers.put(variableName, new ArrayList<VariableWatcher>());
+      variableWatchers.put(variableName, new CopyOnWriteArrayList<VariableWatcher>());
     }
     variableWatchers.get(variableName).add(watcher);
   }

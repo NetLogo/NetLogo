@@ -8,11 +8,20 @@ import collection.mutable
 import collection.JavaConverters._
 import org.scalatest.{GivenWhenThen, FunSuite}
 import org.nlogo.agent._
+import org.nlogo.core.Model
 
 class ObservationQueue extends World.VariableWatcher {
   val queue: mutable.Queue[(Agent, String, AnyRef)] = new mutable.Queue[(Agent, String, AnyRef)]
   def update(agent: Agent, variableName: String, value: AnyRef) = {
     queue.enqueue((agent, variableName, value))
+  }
+}
+
+class SelfDestroyer extends World.VariableWatcher {
+  var triggered = 0
+  def update(agent: Agent, variableName: String, value: scala.Any) = {
+    triggered += 1
+    agent.world.deleteWatcher(variableName, this)
   }
 }
 
@@ -29,6 +38,20 @@ class TestAgentVariableObservers extends FixtureSuite with GivenWhenThen {
       |links-own [ my-link-var ]
       |patches-own [ my-patch-var ]
     """.stripMargin
+
+  test("watchers can delete themselves") { implicit fixture =>
+    import fixture._
+    open(Model(declarations))
+    val watcher = new SelfDestroyer
+    When("a variable has a self destructive watcher")
+    workspace.world.addWatcher("MY-GLOBAL", watcher)
+    And("that watcher is triggered")
+    testCommand("set my-global 5")
+    Then("that watcher is removed without exception")
+    assertResult(1)(watcher.triggered)
+    testCommand("set my-global 10")
+    assertResult(1)(watcher.triggered)
+  }
 
   test("agents call variable observers") { implicit fixture =>
     import fixture._
