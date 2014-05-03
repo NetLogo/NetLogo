@@ -12,11 +12,6 @@ import org.nlogo.core.{Model, Widget, DeclaresGlobal, DeclaresGlobalCommand, Dec
 
 import org.nlogo.shape.{LinkShape, VectorShape}
 
-object HeadlessModelOpener {
-  def protocolSection(path: String) =
-    ModelReader.parseModel(FileIO.file2String(path), None).behaviorSpace.mkString("", "\n", "\n")
-}
-
 // this class is an abomination
 // everything works off of side effects, asking the workspace to update something
 // but not only that, some of the internals of this class work off side effects as well

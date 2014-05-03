@@ -3,9 +3,10 @@
 package org.nlogo.headless
 
 import org.nlogo.core.WorldDimensions
-import org.nlogo.api.{ APIVersion, Version }
+import org.nlogo.api.{ APIVersion, Version, FileIO }
 import org.nlogo.workspace.AbstractWorkspace.setHeadlessProperty
 import org.nlogo.nvm.LabInterface.Settings
+import org.nlogo.api.model.ModelReader
 
 object Main {
   class CancelException extends RuntimeException
@@ -22,7 +23,7 @@ object Main {
       w
     }
     val lab = HeadlessWorkspace.newLab
-    lab.load(HeadlessModelOpener.protocolSection(settings.model))
+    lab.load(ModelReader.parseModel(FileIO.file2String(settings.model), newWorkspace).behaviorSpace.mkString("", "\n", "\n"))
     lab.run(settings, newWorkspace _)
   }
   private def parseArgs(args: Array[String]): Option[Settings] = {
