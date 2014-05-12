@@ -530,6 +530,14 @@ InConeCornerOrigin5_2D
   T> rt 180
   [count turtles in-cone 100 0] of turtle 0 => 6
 
+InConeOriginPitch_3D
+  O> ask patches [ sprout 1 [ set heading .01 ] ]
+  [count turtles in-cone 10 90] of turtle 0 => 556
+  O> ask turtle 0 [ set heading 180.01 ]
+  [count turtles in-cone 10 90] of turtle 0 => 556
+  O> ask turtle 0 [ set pitch 180 ]
+  [count turtles in-cone 10 90] of turtle 0 => 556
+
 InConeCornerOrigin5_3D
   O> resize-world -5 0 -5 0 -5 0
   O> ask patch -2 -3 0 [ sprout 1 [ set heading 0 hatch 5 [ fd who ] ] ]
