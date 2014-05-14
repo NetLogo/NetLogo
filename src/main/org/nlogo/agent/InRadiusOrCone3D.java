@@ -3,6 +3,7 @@
 package org.nlogo.agent;
 
 import org.nlogo.api.AgentException;
+import org.nlogo.api.Vect;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -296,27 +297,12 @@ public strictfp class InRadiusOrCone3D
     {
       return false;
     }
-    double thetaH;
-    try {
-      thetaH = protractor.towards(cx, cy, x, y, false);
-    } catch (AgentException e) {
-      //this might happen if we're at the same x and y but different z
-      // in which case only the pitch matters.
-      thetaH = 0;
-    }
-    double thetaP;
-    try {
-      thetaP = protractor.towardsPitch(cx, cy, cz, x, y, z, false);
-    } catch (AgentException e) {
-      // this should never happen because towardsPitch() only throws an AgentException
-      // when the distance is 0, but we already ruled out that case above
-      throw new IllegalStateException(e.toString());
-    }
-    double diffH = StrictMath.abs(thetaH - h);
-    double diffP = StrictMath.abs(thetaP - p);
-    // we have to be careful here because e.g. the difference between 5 and 355
-    // is 10 not 350... hence the 360 thing
-    return (((diffH <= half) || ((360 - diffH) <= half))
-        && ((diffP <= half) || ((360 - diffP) <= half)));
+
+    Vect unitVect = Vect.toVectors(h, p, 0)[0];
+    Vect targetVect = new Vect(x - cx, y - cy, z - cz);
+    double angle = targetVect.angleTo(unitVect);
+    double halfRadians = StrictMath.toRadians(half);
+
+    return angle <= halfRadians || angle >= (2 * StrictMath.PI - halfRadians);
   }
 }
