@@ -28,8 +28,11 @@ object Extensions {
     log.info("building extension: " + dir.getName)
     val jar = dir / (dir.getName + ".jar")
     val exitCode =
-      if((dir / "build.sbt").exists)
+      if((dir / "build.sbt").exists && (dir / "bin" / "sbt").exists)
         Process(Seq("bin/sbt", "package"), dir,
+                "SCALA_JAR" -> scalaLibrary.getPath) ! log
+      else if((dir / "build.sbt").exists)
+        Process(Seq("sbt", "package"), dir,
                 "SCALA_JAR" -> scalaLibrary.getPath) ! log
       else
         Process(Seq("make", "-s", jar.getName), dir,

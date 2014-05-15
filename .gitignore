@@ -48,6 +48,3 @@ tmp/
 /resources/GUI_Strings_??.properties
 /resources/system/dict.txt
 /resources/system/dict3d.txt
-
-# ignore nw extension until bundled
-/extensions/nw
