@@ -917,8 +917,8 @@ ask turtle 4 [ rt 90 ]
         ask-concurrent <i>agentset</i> [<i>commands</i>]
       </h4>
       <p>
-         This primitive exists only for backwards compatibility.
-         We don't recommend using it new models.
+        This primitive exists only for backwards compatibility. We
+        don't recommend using it new models.
       <p>
         The agents in the given agentset run the given commands, using a
         turn-taking mechanism to produce simulated concurrency. See the
@@ -1151,7 +1151,8 @@ ask link 0 1 [
       <p>
         You can set this variable to change a turtle or link's breed.
         (When a turtle changes breeds, its shape is reset to the default
-	shape for that breed. See <a href="#set-default-shape">set-default-shape</a>.)
+        shape for that breed. See <a href=
+        "#set-default-shape">set-default-shape</a>.)
       <p>
         See also <a href="#breed">breed</a>, <a href=
         "#directed-link-breed">directed-link-breed</a>, <a href=
@@ -1342,9 +1343,9 @@ show ceiling -4.5
         <img alt="Observer Command" src="images/observer.gif">
       </h4>
       <p>
-        Clears globals variables declared with <tt>globals</tt>,
-	plus combines the effects of clear-ticks, clear-turtles,
-        clear-patches, clear-drawing, clear-all-plots, and clear-output.
+        Clears globals variables declared with <tt>globals</tt>, plus
+        combines the effects of clear-ticks, clear-turtles, clear-patches,
+        clear-drawing, clear-all-plots, and clear-output.
       </div>
     <div class="dict_entry">
       <h3>
@@ -2619,12 +2620,12 @@ file-open &quot;C:\\NetLogo\\my-file-out.txt&quot;
 file-print &quot;Hello World&quot; ;; File is in writing mode
 </pre>
       <p>
-        Opening a file does not close previously opened files.
-        You can use <tt>file-open</tt> to switch back and forth
-        between multiple open files.
+        Opening a file does not close previously opened files. You can use
+        <tt>file-open</tt> to switch back and forth between multiple open
+        files.
       <p>
-        See also <a href="#file-close">file-close</a>
-        See also <a href="#file-close-all">file-close-all</a>.
+        See also <a href="#file-close">file-close</a> See also <a href=
+        "#file-close-all">file-close-all</a>.
       </div>
     <div class="dict_entry">
       <h3>
@@ -3164,10 +3165,10 @@ set hidden? not hidden?
       <p>
         The histogram is drawn on the current plot using the current plot
         pen and pen color. Auto scaling does not affect a histogram's
-        horizontal range, so set-plot-x-range should be used to control
-        the range, and the pen interval can then be set (either directly
-        with set-plot-pen-interval, or indirectly via set-histogram-num-bars)
-        to control how many bars that range is split up into.
+        horizontal range, so set-plot-x-range should be used to control the
+        range, and the pen interval can then be set (either directly with
+        set-plot-pen-interval, or indirectly via set-histogram-num-bars) to
+        control how many bars that range is split up into.
       <p>
         Be sure that if you want the histogram drawn with bars that the
         current pen is in bar mode (mode 1).
@@ -8085,10 +8086,11 @@ show sum [energy] of turtles
         integer or a floating point number. (Some models divide ticks more
         finely than by ones.) The input may not be negative.
       <p>
-        When using <a href="programming.html#updates">tick-based view updates</a>,
-        the view is normally updated every 1.0 ticks, so using <tt>tick-advance</tt> with
-        a number less then 1.0 may not always trigger an update. If you want to
-        make sure that the view is updated, you can use the <tt>display</tt> command.
+        When using <a href="programming.html#updates">tick-based view
+        updates</a>, the view is normally updated every 1.0 ticks, so using
+        <tt>tick-advance</tt> with a number less then 1.0 may not always
+        trigger an update. If you want to make sure that the view is
+        updated, you can use the <tt>display</tt> command.
       <p>
         If the tick counter has not been started yet with
         <tt>reset-ticks</tt>, an error results.
@@ -8588,9 +8590,9 @@ ask turtle 0 [ show sort my-links ]
         update code for any pens in the plot.
       <p>
         <a href="#tick">tick</a> has the same effect, so in models that use
-        the tick counter, this primitive is not normally used.
-        Models that use fractional ticks may need <tt>update-plots</tt>, since
-        <a href="#tick-advance">tick-advance</a> does not update the plots.
+        the tick counter, this primitive is not normally used. Models that
+        use fractional ticks may need <tt>update-plots</tt>, since <a href=
+        "#tick-advance">tick-advance</a> does not update the plots.
       <p>
         See the <a href="programming.html#plotting">Plotting section</a> of
         the Programming Guide for more details.
@@ -9059,8 +9061,8 @@ print n-values 10 [random 10]
         without-interruption [ <i>commands</i> ]
       </h4>
       <p>
-         This primitive exists only for backwards compatibility.
-         We don't recommend using it in new models.
+        This primitive exists only for backwards compatibility. We
+        don't recommend using it in new models.
       <p>
         The agent runs all the commands in the block without allowing other
         agents using <tt>ask-concurrent</tt> to &quot;interrupt&quot;. That
