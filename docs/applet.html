@@ -13,10 +13,10 @@
       running models as Java applets inside a web browser.
     <p>
       <b>WARNING AND DISCLAIMER:</b> However, applets are dead technology.
-        We no longer recommend them as a way of delivering models to a general
-        audience.
-        <a href="https://github.com/NetLogo/NetLogo/wiki/Applets">Details here</a>,
-        including discussion of alternatives.
+      We no longer recommend them as a way of delivering models to a
+      general audience. <a href=
+      "https://github.com/NetLogo/NetLogo/wiki/Applets">Details here</a>,
+      including discussion of alternatives.
     <h2>
       Making an applet
     </h2>
@@ -134,8 +134,8 @@
       Features not supported in applets
     </h2>
     <ul>
-      <li>Only some extensions work.  (Extension authors should document
-        whether their extensions work in applets.)
+      <li>Only some extensions work. (Extension authors should document
+      whether their extensions work in applets.)
       <li>Extensions that require native libraries won't work.
       <li>The 3D view is not supported.
       <li>The bytecode generator is not used in applets (which means that
@@ -144,16 +144,20 @@
       exceptions. See the <a href="faq.html#applet200OK">FAQ</a> for the
       workaround.
       </ul>
-   <h3>Note to extension authors</h3>
-   <p>You may wish to document whether your extension
-     works in applets.
-   <p>One reason an extension might fail to work is that
-   the NetLogo build process uses <a href="http://proguard.sourceforge.net">ProGuard</a> aggressively
-   to reduce the size of NetLogoLite.jar.  This can break some
-   extensions, but often the problem is trivially fixable by adding an
-   entry to the
-   <tt>project/proguard/lite.txt</tt> file in the NetLogo build.
-   If you discover that something your extension does works if you substitute NetLogo.jar,
-   but doesn't work with NetLogoLite.jar, the NetLogo development team may
-   be able to help you resolve the issue, if you ask about it on
-   <a href="http://groups.google.com/group/netlogo-devel">netlogo-devel</a>.
+    <h3>
+      Note to extension authors
+    </h3>
+    <p>
+      You may wish to document whether your extension works in applets.
+    <p>
+      One reason an extension might fail to work is that the NetLogo build
+      process uses <a href="http://proguard.sourceforge.net">ProGuard</a>
+      aggressively to reduce the size of NetLogoLite.jar. This can break
+      some extensions, but often the problem is trivially fixable by adding
+      an entry to the <tt>project/proguard/lite.txt</tt> file in the
+      NetLogo build. If you discover that something your extension does
+      works if you substitute NetLogo.jar, but doesn't work with
+      NetLogoLite.jar, the NetLogo development team may be able to help you
+      resolve the issue, if you ask about it on <a href=
+      "http://groups.google.com/group/netlogo-devel">netlogo-devel</a>.
+
