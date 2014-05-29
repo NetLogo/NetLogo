@@ -3,11 +3,29 @@
 package org.nlogo.app
 
 import java.util.prefs.Preferences
+import org.nlogo.window.Events._
 
 import org.nlogo.api
 import org.nlogo.window
 
 import javax.swing.JOptionPane
+
+case class ModelEntry(path: String, modelType: api.ModelType) {
+  def this(line: String) {
+    this(line.drop(1), (line(0) match {
+                          case 'N' => api.ModelType.Normal
+                          case 'L' => api.ModelType.Library
+                          case _ => api.ModelType.Normal // This case is only for malformed prefs, which will bork later. FD 5/29/14
+    }))
+  }
+
+  override def toString(): String =
+    (modelType match {
+      case api.ModelType.Normal => "N"
+      case api.ModelType.Library => "L"
+      case api.ModelType.New => throw new RuntimeException("Cannot add new file to menu!")
+     }) + path
+}
 
 class RecentFiles {
   val prefs = Preferences.userNodeForPackage(getClass)
@@ -16,14 +34,14 @@ class RecentFiles {
 
   loadFromPrefs()
 
-  private var _paths: List[String] = _
-  def paths = _paths
-  def paths_=(newPaths: List[String]) {
-    _paths = newPaths
-      .flatMap(toCanonicalPath)
+  private var _models: List[ModelEntry] = _
+  def models = _models
+  def models_=(newModels: List[ModelEntry]) {
+    _models = newModels
+      .flatMap(ensureCanonicalPath)
       .distinct
       .take(maxEntries)
-    prefs.put(key, _paths.mkString("\n"))
+    prefs.put(key, _models.mkString("\n"))
   }
 
   /**
@@ -31,40 +49,31 @@ class RecentFiles {
    * (without checking if the file actually exists) rejecting,
    * e.g., paths that are too long. NP 2014-01-29.
    */
-  private def toCanonicalPath(path: String): Option[String] =
-    try Some(new java.io.File(path).getCanonicalPath())
+  private def ensureCanonicalPath(modelEntry: ModelEntry): Option[ModelEntry] =
+    try Some(ModelEntry(new java.io.File(modelEntry.path).getCanonicalPath(), modelEntry.modelType))
     catch { case _: java.io.IOException => None }
 
   def loadFromPrefs() {
-    paths = prefs.get(key, "").lines.toList
+    models = prefs.get(key, "").lines.toList.map(new ModelEntry(_))
   }
 
-  def add(path: String) {
-    paths = (path :: _paths)
+  def add(modelEntry: ModelEntry) {
+    models = (modelEntry :: _models)
   }
 
   def clear() {
-    paths = Nil
+    models = Nil
   }
 }
 
-class RecentFilesMenu(workspace: window.GUIWorkspace, fileMenu: FileMenu)
-  extends org.nlogo.swing.Menu("Recent Files") {
+class RecentFilesMenu(app: App, fileMenu: FileMenu)
+  extends org.nlogo.swing.Menu("Recent Files")
+  with ModelSavedEvent.Handler
+  with BeforeLoadEvent.Handler {
 
   val recentFiles = new RecentFiles
   refreshMenu()
-
-  // Add paths to list when new models are opened
-  workspace.listenerManager.addListener(
-    new api.NetLogoAdapter {
-      override def modelOpened(path: String) {
-        if (workspace.getModelType == api.ModelType.Normal)
-          for (p <- Option(path)) {
-            recentFiles.add(p)
-            refreshMenu()
-          }
-      }
-    })
+  app.frame.addLinkComponent(this)
 
   private def trimForDisplay(path: String): String = {
     val maxDisplayLength = 100
@@ -75,13 +84,31 @@ class RecentFilesMenu(workspace: window.GUIWorkspace, fileMenu: FileMenu)
       path
   }
 
+  // Add models to list when the current model is saved
+  def handle(e: ModelSavedEvent) {
+    for (p <- Option(e.modelPath)) {
+      recentFiles.add(ModelEntry(p, api.ModelType.Normal))
+      refreshMenu()
+    }
+  }
+
+  // Add models to list when new models are opened
+  def handle(e: BeforeLoadEvent) {
+    if (e.modelType != api.ModelType.New) {
+      for (p <- Option(e.modelPath)) {
+        recentFiles.add(ModelEntry(p, e.modelType))
+        refreshMenu()
+      }
+    }
+  }
+
   def refreshMenu() {
     removeAll()
-    if (recentFiles.paths.isEmpty)
+    if (recentFiles.models.isEmpty)
       addMenuItem("<empty>").setEnabled(false)
     else {
-      for (path <- recentFiles.paths)
-        addMenuItem(trimForDisplay(path), () => open(path))
+      for (modelEntry <- recentFiles.models)
+        addMenuItem(trimForDisplay(modelEntry.path), () => open(modelEntry))
       addSeparator()
       addMenuItem("Clear Items", () => {
         recentFiles.clear
@@ -90,10 +117,10 @@ class RecentFilesMenu(workspace: window.GUIWorkspace, fileMenu: FileMenu)
     }
   }
 
-  def open(path: String) {
+  def open(modelEntry: ModelEntry) {
     try {
       fileMenu.offerSave()
-      fileMenu.openFromPath(path, api.ModelType.Normal)
+      fileMenu.openFromPath(modelEntry.path, modelEntry.modelType)
     } catch {
       case ex: org.nlogo.awt.UserCancelException =>
         org.nlogo.util.Exceptions.ignore(ex)
