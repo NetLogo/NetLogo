@@ -2,74 +2,77 @@ package org.nlogo.app
 
 import org.scalatest.FunSuite
 
+import org.nlogo.api
+
 class RecentFilesTests extends FunSuite {
 
   val rf = new RecentFiles
-  val paths = (1 to rf.maxEntries).map(makePath).toList
-  val extraPath = makePath(rf.maxEntries + 1)
+  val models = (1 to rf.maxEntries).map(makePath).map(ModelEntry(_, api.ModelType.Normal)).toList ++
+               (9 to rf.maxEntries).map(makePath).map(ModelEntry(_, api.ModelType.Library)).toList
+  val extraModel = ModelEntry(makePath(rf.maxEntries + 1), api.ModelType.Normal)
   def makePath(n: Int) = "/" + n + ".nlogo"
 
-  def putAndLoad(s: String) {
-    rf.prefs.put(rf.key, s)
+  def putAndLoad(models: List[ModelEntry]) {
+    rf.prefs.put(rf.key, models.mkString("\n"))
     rf.loadFromPrefs()
   }
 
   test("empty pref store should yield empty path list") {
-    putAndLoad("")
-    assert(rf.paths.size === 0)
+    putAndLoad(List())
+    assert(rf.models.size === 0)
   }
 
-  test("paths in pref store should get loaded into class") {
-    putAndLoad(paths.mkString("\n"))
-    assert(rf.paths === paths)
+  test("models in pref store should get loaded into class") {
+    putAndLoad(models)
+    assert(rf.models === models)
   }
 
-  test("start empty, add paths one by one") {
-    putAndLoad("")
-    paths.foreach(rf.add)
-    assert(rf.paths === paths.reverse)
+  test("start empty, add models one by one") {
+    putAndLoad(List())
+    models.foreach(rf.add)
+    assert(rf.models === models.reverse)
     assert(rf.prefs.get(rf.key, "") ===
-      paths.reverse.mkString("\n"))
+      models.reverse.mkString("\n"))
   }
 
   test("adding already existing path should move it to head") {
-    putAndLoad(paths.mkString("\n"))
-    rf.add(paths.head)
-    assert(rf.paths === paths)
-    rf.add(paths.last)
-    assert(rf.paths === paths.last :: paths.init)
+    putAndLoad(models)
+    rf.add(models.head)
+    assert(rf.models === models)
+    rf.add(models.last)
+    assert(rf.models === models.last :: models.init)
   }
 
-  test("calling clear should clear paths and prefs") {
-    putAndLoad(paths.mkString("\n"))
-    assert(rf.paths === paths)
+  test("calling clear should clear models and prefs") {
+    putAndLoad(models)
+    assert(rf.models === models)
     rf.clear()
-    assert(rf.paths === Nil)
+    assert(rf.models === Nil)
     assert(rf.prefs.get(rf.key, "default") === "")
   }
 
   test("max entries should be respected when adding one by one") {
-    (paths :+ extraPath).foreach(rf.add)
-    assert(rf.paths.size === rf.maxEntries)
-    assert(rf.paths.head === extraPath)
-    assert(rf.paths.last === paths(1))
+    (models :+ extraModel).foreach(rf.add)
+    assert(rf.models.size === rf.maxEntries)
+    assert(rf.models.head === extraModel)
+    assert(rf.models.last === models(1))
   }
 
   test("max entries should be respected when loading from prefs store") {
-    putAndLoad((paths :+ extraPath).reverse.mkString("\n"))
-    assert(rf.paths.size === rf.maxEntries)
-    assert(rf.paths.head === extraPath)
-    assert(rf.paths.last === paths(1))
+    putAndLoad((models :+ extraModel).reverse)
+    assert(rf.models.size === rf.maxEntries)
+    assert(rf.models.head === extraModel)
+    assert(rf.models.last === models(1))
   }
 
-  test("distinct paths should be respected when loading from prefs store") {
-    putAndLoad((paths ++ paths).mkString("\n"))
-    assert(rf.paths === paths)
+  test("distinct models should be respected when loading from prefs store") {
+    putAndLoad((models ++ models))
+    assert(rf.models === models)
   }
 
   test("a very long path should be refused") {
     val tooLongPath = "/" + ("x" * 4096) + ".nlogo"
-    putAndLoad(tooLongPath)
-    assert(rf.paths.isEmpty)
+    putAndLoad(List(ModelEntry(tooLongPath, api.ModelType.Normal)))
+    assert(rf.models.isEmpty)
   }
 }
