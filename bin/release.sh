@@ -40,9 +40,9 @@ VM=windows-x86-1.6.0_45_server
 # ("brew install htmldoc"; or if you don't want to involve homebrew,
 # 1.8.27 is also available from htmldoc.org as a simple
 # configure/make/make install)
-if test `htmldoc --version` != 1.8.27 ;
+if test `htmldoc --version` != 1.8.28 ;
 then
-  echo "htmldoc 1.8.27 not found"
+  echo "htmldoc 1.8.28 not found"
   exit 1
 fi
 
@@ -69,7 +69,7 @@ if [ $WINDOWS -eq 1 ]; then
     exit 1
   fi
   # check install 4j version
-  DESIRED_VERSION="install4j version 5.1.5 (build 5568), built on 2013-01-15"
+  DESIRED_VERSION="install4j version 5.1.11 (build 5697), built on 2014-03-20"
   pushd "$IJDIR" > /dev/null
   FOUND_VERSION=`./$IJ --version`
   popd > /dev/null
