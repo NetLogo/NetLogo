@@ -50,6 +50,10 @@ public strictfp class Observer
     return variables[vn];
   }
 
+  public String variableName(int vn) {
+    return world.observerOwnsNameAt(vn);
+  }
+
   @Override
   public Object getObserverVariable(int vn) {
     return variables[vn];
@@ -114,6 +118,7 @@ public strictfp class Observer
       throws AgentException, LogoException {
     assertVariableConstraint(vn, value);
     variables[vn] = value;
+    world.notifyWatchers(this, vn, value);
   }
 
   @Override

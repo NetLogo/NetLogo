@@ -704,10 +704,6 @@ ask turtles [ set color red ]
 </pre>
     <p>
       first all the turtles move, then they all turn red.
-    <p>
-      (Another form of the <a href="dictionary.html#ask"><tt>ask</tt></a>
-      command, with a different ordering rule, is also available. See
-      <a href="#ask-concurrent">Ask-Concurrent</a> below.)
     <h2>
       <a name="agentsets" id="agentsets">Agentsets</a>
     </h2>
@@ -926,10 +922,10 @@ breed [sheep a-sheep]
       Others have the singular name of the breed in them, such as <a href=
       "dictionary.html#turtle"><tt>&lt;breed&gt;</tt></a>
     <p>
-      The order in which breeds are declared is also the order in
-      which they are layered in the view. So breeds defined later will
-      appear on top of breeds defined earlier; in this example, sheep will
-      be drawn over wolves.
+      The order in which breeds are declared is also the order in which
+      they are layered in the view. So breeds defined later will appear on
+      top of breeds defined earlier; in this example, sheep will be drawn
+      over wolves.
     <p>
       When you define a breed such as <tt>sheep</tt>, an agentset for that
       breed is automatically created, so that all of the agentset
@@ -1950,13 +1946,13 @@ ask turtles [ set shape one-of shapes ]
       behavior.
       </ol>
     <p>
-      Nearly every model in our Models Library uses
-      tick-based updates.
+      Nearly every model in our Models Library uses tick-based updates.
     <p>
-      Continuous updates are occasionally useful for those rare models in which execution is not
-      divided into short, discrete phases. An example in the Models Library
-      is Termites. (See also, however, the State Machine Example model,
-      which shows how to re-code Termites using ticks.)
+      Continuous updates are occasionally useful for those rare models in
+      which execution is not divided into short, discrete phases. An
+      example in the Models Library is Termites. (See also, however, the
+      State Machine Example model, which shows how to re-code Termites
+      using ticks.)
     <p>
       Even for models that would normally be set to tick-based updates, it
       may be useful to switch to continuous updates temporarily for
@@ -2149,10 +2145,11 @@ end</code>
       change a pen's default mode by editing the plot in the Interface
       tab.)
     <p>
-      Like other types of plots, histograms can be set to auto scale. However,
-      auto scaled histograms do not automatically resize themselves
-      horizontally like other plot types do. To set the range programmatically,
-      you can use the <code>set-plot-x-range</code> primitive.
+      Like other types of plots, histograms can be set to auto scale.
+      However, auto scaled histograms do not automatically resize
+      themselves horizontally like other plot types do. To set the range
+      programmatically, you can use the <code>set-plot-x-range</code>
+      primitive.
     <p>
       The width of the bars in a histogram is controlled by the plot
       pen's interval. You can set a plot pen's default interval by
@@ -2453,10 +2450,6 @@ word &quot;tur&quot; &quot;tle&quot; =&gt; &quot;turtle&quot;
       you are reading in information from a file, data that is stored in
       the file flows into your model. On the other hand, writing allows
       data to flow out of your model and into a file.
-    <p>
-      When a NetLogo model runs as an applet within a web browser, it will
-      only be able to read data from files which are in the same directory
-      on the server as the model file. Applets cannot write to any files.
     <p>
       When working with files, always begin by using the primitive <a href=
       "dictionary.html#file-open"><tt>file-open</tt></a>. This specifies
@@ -2971,11 +2964,12 @@ ifelse patch-at (new-x - xcor) (new-y - ycor) = nobody
       "dictionary.html#create-breeds-from"><tt>create-&lt;breeds&gt;-from</tt></a>
       for directed links.
     <p>
-      There cannot be more than one undirected link of the same breed (or more than
-      one unbreeded undirected link) between a pair of agents, nor more than one
-      directed link of the same breed in the same direction between a pair
-      of agents. You can have two directed links of the same breed (or two
-      unbreeded directed links) between a pair if they are in opposite directions.
+      There cannot be more than one undirected link of the same breed (or
+      more than one unbreeded undirected link) between a pair of agents,
+      nor more than one directed link of the same breed in the same
+      direction between a pair of agents. You can have two directed links
+      of the same breed (or two unbreeded directed links) between a pair if
+      they are in opposite directions.
     <p>
       <b>Layouts</b>
     <p>
@@ -3182,6 +3176,10 @@ foreach [1 2 3 4] [ print ? ]
       <a name="ask-concurrent" id="ask-concurrent">Ask-Concurrent</a>
     </h2>
     <p>
+      <b>NOTE:</b> The following information is included only for backwards
+      compatibility. We don't recommend using the
+      <tt>ask-concurrent</tt> primitive at all in new models.
+    <p>
       In very old versions of NetLogo, <a href=
       "dictionary.html#ask"><tt>ask</tt></a> was concurrent by default.
       Since NetLogo 4.0 (2007), <a href=
@@ -3287,11 +3285,11 @@ while [any? turtles with [steps &gt; 0]] [
       same version of NetLogo and begin your model run with the same random
       seed).
     <p>
-      In general, we suggest you write your model so that it does not
-      depend on the exact details of how <a href=
-      "dictionary.html#ask-concurrent"><tt>ask-concurrent</tt></a> works.
-      We make no guarantees that its semantics will remain the same in
-      future versions of NetLogo.
+      In general, we suggest you not use <tt>ask-concurrent</tt> at all. If
+      you do, we suggest you write your model so that it does not depend on
+      the exact details of how <tt>ask-concurrent</tt> works. We make no
+      guarantees that its semantics will remain the same in future versions
+      of NetLogo, or that it will continue to be supported at all.
     <h2>
       <a name="tie" id="tie">Tie</a>
     </h2>

@@ -92,6 +92,7 @@ all <<= (baseDirectory, streams) map { (base, s) =>
 }
 
 all <<= all.dependsOn(
+  packageBin in Test,
   Extensions.extensions,
   NativeLibs.nativeLibs,
   ModelIndex.modelIndex,

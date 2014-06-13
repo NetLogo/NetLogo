@@ -86,19 +86,10 @@
     </h3>
     <ul class="smaller">
       <li>
-        <a href="#appletjava"><b>I tried to run one of the applets on your
-        site, but it didn't work. What should I do?</b></a>
+        <a href="#applet"><b>Should I use applets?</b></a>
       <li>
-        <a href="#secretweb"><b>Can I make my model available as an applet
-        while keeping the code secret?</b></a>
-      <li>
-        <a href="#appletfiles"><b>Can a model saved as an applet use
-        <tt>import-world</tt>, <tt>file-open</tt>, and other commands that
-        read files?</b></a>
-      <li>
-        <a href="#applet200OK"><b>When I tried loading my model as an
-        applet I get an error like: java.lang.ClassFormatError:
-        Incompatible magic value.</b></a>
+        <a href="#appletjava"><b>Why don't NetLogo applets work for
+        me?</b></a>
       </ul>
     <h3>
       Running
@@ -214,7 +205,9 @@
       <li>
         <a href="#stoppingforeach"><b>How do I stop foreach?</b></a>
       <li>
-        <a href="#listexpectedconstant"><b>I'm trying to make a list. Why do I keep getting the error &quot;Expected a constant&quot;?</b></a>
+        <a href="#listexpectedconstant"><b>I'm trying to make a list.
+        Why do I keep getting the error &quot;Expected a
+        constant&quot;?</b></a>
       </ul>
     <h3>
       BehaviorSpace
@@ -401,8 +394,9 @@
       Volunteers have translated the user manual into Chinese and Czech.
       The translated versions are available from the NetLogo web site.
     <p>
-      At present, NetLogo is available in English, Spanish, Chinese, and
-      Russian. All four languages are included in the standard download.
+      So far, the NetLogo user interface has been localized in English,
+      Spanish, Chinese, and Russian. All four languages are included in the
+      standard download.
     <p>
       We are seeking volunteers to complete and improve these localizations
       and to translate the NetLogo software and manual into as many other
@@ -413,13 +407,11 @@
       interpreted?
     </h3>
     <p>
-      Short answer: partially compiled. We are working towards a full
-      compiler.
+      Short answer: some of both.
     <p>
       Long answer: NetLogo does include a compiler that generates Java byte
       code. However, this compiler does not yet support the entire
-      language, so some parts of user code are interpreted. We are working
-      on expanding the compiler to support the entire language. Note that
+      language, so some parts of user code remain interpreted. Note that
       our compiler generates Java byte code, and Java virtual machines have
       &quot;just-in-time&quot; compilers that in turn compile Java byte
       code all the way to native code, so much user code is ultimately
@@ -428,7 +420,10 @@
       <a name="model" id="model"></a>Has anyone built a model of &lt;x&gt;?
     </h3>
     <p>
-      Try looking at the NetLogo Models Library, our <a href=
+      Try looking at the <a href=
+      "http://ccl.northwestern.edu/netlogo/models/">NetLogo Models
+      Library</a>, the <a href="http://modelingcommons.org/">NetLogo
+      Modeling Commons</a>, our <a href=
       "http://ccl.northwestern.edu/netlogo/models/community/">Community
       Models</a> page, and our <a href=
       "http://ccl.northwestern.edu/netlogo/references.shtml">list of
@@ -478,29 +473,29 @@
       For now, yes. NetLogo 3D is included with NetLogo, but it is still a
       separate application.
     <p>
-      Eventually a single unified application will support both 2D and 3D
-      modeling. We will design the 3D world support so it doesn't get
-      in the way when you are building 2D models.
-    <p>
-      Models built in NetLogo 3D may require changes in order to run in the
-      eventual unified application.
+      Ideally a single unified application would support both 2D and 3D
+      modeling. We would design the 3D world support so it doesn't get
+      in the way when you are building 2D models. Models built in NetLogo
+      3D might require changes in order to run in the hypothetical unified
+      application.
     <h3>
       <a name="mobile" id="mobile"></a>Can I run NetLogo on my phone or
       tablet?
     </h3>
     <p>
-      No. Neither iOS, nor Android, nor Windows RT supports running
-      Java applications such as NetLogo.
+      No. Neither iOS, nor Android, nor Windows RT supports running Java
+      applications such as NetLogo.
     <p>
       We are working on an alternate implementation of NetLogo on a
       JavaScript and HTML5 base, instead of Java. It will work on a variety
       of tablets and phones. We don't know yet when it will be ready,
-      and we expect it will only support a subset of the features in
-      desktop NetLogo. The many person-years of development effort that
-      have gone into the Java version can't cheaply or easily be
-      replicated on another platform.
-    <p>For technical details on this new project, go
-       <a href="https://github.com/NetLogo/NetLogo/wiki/Tortoise">here</a>.
+      and we expect that for a long time it will only support a subset of
+      the features in desktop NetLogo. The many person-years of development
+      effort that have gone into the Java version can't cheaply or
+      easily be replicated on another platform.
+    <p>
+      For technical details on this new project, go <a href=
+      "https://github.com/NetLogo/NetLogo/wiki/Tortoise">here</a>.
     <h2>
       Downloading
     </h2>
@@ -571,70 +566,20 @@ NetLogo@@@VERSION@@@Installer.exe -q
       Applets
     </h2>
     <h3>
-      <a name="appletjava" id="appletjava"></a>I tried to run one of the
-      applets on your site, but it didn't work. What should I do?
+      <a name="applet" id="applet"><b>Should I use applets?</b></a>
     </h3>
     <p>
-      Your web browser must support Java 5 or later. For details on Java
-      requirements see the <a href="applet.html#java">Applet guide</a>.
+      No. We don't recommend it. <a href=
+      "https://github.com/NetLogo/NetLogo/wiki/Applets">Details here</a>.
     <h3>
-      <a name="secretweb" id="secretweb"></a>Can I make my model available
-      as an applet while keeping the code secret?
+      <a name="appletjava" id="appletjava"></a>Why don't NetLogo
+      applets work for me?
     </h3>
     <p>
-      Normally, the code is not secret. In order for the applet to operate,
-      the model file containing the code must be accessible.
-    <p>
-      When you use &quot;Save as applet&quot; on the File menu, the HTML
-      page generated contains the source code and a link where the user can
-      download the model file.
-    <p>
-      If you want to keep the code secret, you can remove the source code
-      and the link. Removing the link will make it harder for the user to
-      access the model file, but not impossible.
-    <p>
-      However, Peter Brooks has developed a NetLogo obfuscator which makes
-      the code &quot;as indecipherable as possible&quot;. It is online
-      <a href="http://bert.stuy.edu/pbrooks/netlogo/obfuscator">here</a>.
-    <h3>
-      <a name="appletfiles" id="appletfiles"></a>Can a model saved as an
-      applet use <tt>import-world</tt>, <tt>file-open</tt>, and other
-      commands that read files?
-    </h3>
-    <p>
-      Yes, but only to read files that are stored in the same directory on
-      your web server as the HTML and model files. Unsigned Java applets
-      cannot read files on the user's computer, only the web server.
-    <h3>
-      <a name="applet200OK" id="applet200OK"></a>When I tried loading my
-      model as an applet I get an error like: java.lang.ClassFormatError:
-      Incompatible magic value.
-    </h3>
-    <p>
-      If your web server returns custom error messages in response to
-      requests for non-existent pages it must also return a status code of
-      404 Not Found, otherwise, NetLogo thinks the following data is what
-      it requested and tries to read it as such. This happens even if all
-      the files required to run the applet are present.
-    <p>
-      If you don't have control over the error messages on your web
-      server you can use the following as a workaround:
-    <ul>
-      <li>Create a directory named <tt>META-INF</tt> in the same directory
-      as the applet files.
-      <li>Create a subdirectory of <tt>META-INF</tt> called
-      <tt>services</tt>
-      <li>Create a file called
-      <tt>org.apache.commons.logging.LogFactory</tt> in the
-      <tt>services</tt> subdirectory
-      <li>Add the following line to
-      <tt>org.apache.commons.logging.LogFactory</tt>:
-        <pre>
-org.apache.commons.logging.impl.LogFactoryImpl
-</pre>
-      </ul>
-    <p>
-      Note that all the directory and file names are case sensitive.
+      In Java 7 Update 51, released in 2014, Oracle changed applet security
+      requirements such that NetLogo applets no longer work for most
+      people. <a href=
+      "https://github.com/NetLogo/NetLogo/wiki/Applets">Details here</a>.
     <h2>
       Running
     </h2>
@@ -677,10 +622,10 @@ org.apache.commons.logging.impl.LogFactoryImpl
     <p>
       We recommend Oracle's Java runtime when using NetLogo on Linux.
     <p>
-      In theory, any Java 5 or later runtime will run NetLogo. In
-      practice, some Java implementations aren't high enough
-      quality. Recent versions of OpenJDK will probably work; older
-      ones may not.  GNU libgcj does not work.
+      In theory, any Java 5 or later runtime will run NetLogo. In practice,
+      some Java implementations aren't high enough quality. Recent
+      versions of OpenJDK should work; older ones may not. GNU libgcj does
+      not work.
     <p>
       Ubuntu users should consult <a href=
       "http://help.ubuntu.com/community/Java">http://help.ubuntu.com/community/Java</a>.
@@ -724,7 +669,8 @@ org.apache.commons.logging.impl.LogFactoryImpl
     <p>
       Another option is to use our Controlling API. Some light Java
       programming is required. See the <a href=
-      "controlling.html">Controlling Guide</a> for details and sample code.
+      "https://github.com/NetLogo/NetLogo/wiki/Controlling-API">Controlling
+      API Guide</a> for details and sample code.
     <h3>
       <a name="multiprocessing" id="multiprocessing"></a>Does NetLogo take
       advantage of multiple processors?
@@ -849,6 +795,15 @@ org.apache.commons.logging.impl.LogFactoryImpl
         <b>Other:</b> Edit the <tt>netlogo.sh</tt> script (or a copy),
         changing the <code>-Xmx</code> number to the desired value.
       </ul>
+    <p>
+      On all platforms, the JVM may not be able to use all of the RAM on
+      your system to run NetLogo unless you are running a 64-bit OS on a
+      64-bit JVM. On recent Macs running recent Mac OS X versions, the JVM
+      is always 64-bit and you don't need to do anything special. On
+      Windows and Linux, you may need to make configuration changes in
+      order to switch from 32-bit to 64-bit mode. The members of the
+      <a href="http://groups.yahoo.com/group/netlogo-users/">NetLogo Users
+      Group</a> may be able to help with this.
     <h3>
       <a name="gisimport" id="gisimport"></a>Can I use GIS data in NetLogo?
     </h3>
@@ -903,8 +858,9 @@ org.apache.commons.logging.impl.LogFactoryImpl
       model open at a time?
     </h3>
     <p>
-      One instance of NetLogo can only have one model open at a time. (We
-      plan to change this in a future version.)
+      One instance of NetLogo can only have one model open at a time.
+      (Unfortunately, it is unlikely that this will change in a future
+      version, due to the engineering difficulties involved.)
     <p>
       You can have multiple models open by opening multiple instances of
       NetLogo, though. On Windows and Linux, simply start the application
@@ -917,14 +873,13 @@ org.apache.commons.logging.impl.LogFactoryImpl
       choices in a chooser on the fly?
     </h3>
     <p>
-      At present, no. In a future version of NetLogo, we plan to support
-      this.
+      No.
     <h3>
       <a name="include" id="include"></a>Can I divide the code for my model
       up into several files?
     </h3>
     <p>
-      Yes, this is available on an experimental basis using the
+      On an experimental basis, this is available using the
       <tt>__includes</tt> keyword.
     <h2>
       Programming
@@ -1117,11 +1072,13 @@ if is-turtle? turtle 0 [ ... ]
       <a name="arrays" id="arrays"></a>Does NetLogo have arrays?
     </h3>
     <p>
-      Most models should just use lists. The usual motivation for using
-      arrays in other programming languages is that they provide fast
-      random access (<tt>item</tt>) and mutation (<tt>replace-item</tt>).
-      But NetLogo's lists, even though they are immutable, now provide
-      near constant time performance on these operations.
+      Nearly all models should just use lists for this.
+    <p>
+      The usual motivation for using arrays in other programming languages
+      is that they provide fast random access (<tt>item</tt>) and mutation
+      (<tt>replace-item</tt>). But NetLogo's lists, even though they
+      are immutable, now provide near constant time performance on these
+      operations.
     <p>
       Lists in earlier versions of NetLogo (4.1 and 4.0) were simple
       singly-linked lists and therefore these operations took linear time.
@@ -1200,15 +1157,17 @@ end
       executed either. (If the procedure is a reporter procedure, use
       <tt>report</tt> instead of <tt>stop</tt>.)
     <h3>
-      <a name="listexpectedconstant" id="listexpectedconstant"></a>I'm trying to make a list. Why do I keep getting the error &quot;Expected a constant&quot;?
+      <a name="listexpectedconstant" id="listexpectedconstant"></a>I'm
+      trying to make a list. Why do I keep getting the error &quot;Expected
+      a constant&quot;?
     </h3>
     <p>
-      If a list contains only constants, you can write it down just by putting
-      square brackets around it, like <tt>[1 2 3]</tt>.
+      If a list contains only constants, you can write it down just by
+      putting square brackets around it, like <tt>[1 2 3]</tt>.
     <p>
-      If you want your list to contain items that may vary at runtime, the list
-      cannot be written down directly.  Instead, you
-      build it using the <a href="dictionary.html#list">list</a> primitive.
+      If you want your list to contain items that may vary at runtime, the
+      list cannot be written down directly. Instead, you build it using the
+      <a href="dictionary.html#list">list</a> primitive.
     <h2>
       BehaviorSpace
     </h2>
@@ -1283,7 +1242,7 @@ set var1 old-var1
       <a name="applet" id="applet"></a>Can I make a 3D applet?
     </h3>
     <p>
-      Not at this time. Perhaps in some future version of NetLogo.
+      No.
     <h3>
       <a name="stereo" id="stereo"></a>Does NetLogo work with my
       stereoscopic device?

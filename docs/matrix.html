@@ -118,46 +118,52 @@ print matrix:to-row-list (matrix:plus m2 m3)
       Matrix creation &amp; conversion to/from lists
     </h3>
     <p>
-      <a href="#matrix:make-constant">matrix:make-constant</a> <a href=
-      "#matrix:make-identity">matrix:make-identity</a> <a href=
-      "#matrix:from-row-list">matrix:from-row-list</a> <a href=
-      "#matrix:from-column-list">matrix:from-column-list</a> <a href=
-      "#matrix:to-row-list">matrix:to-row-list</a> <a href=
-      "#matrix:to-column-list">matrix:to-column-list</a> <a href=
-      "#matrix:copy">matrix:copy</a> <a href=
-      "#matrix:pretty-print-text">matrix:pretty-print-text</a>
+      <a href="#matrix:make-constant">matrix:make-constant</a>
+      <a href="#matrix:make-identity">matrix:make-identity</a>
+      <a href="#matrix:from-row-list">matrix:from-row-list</a>
+      <a href="#matrix:from-column-list">matrix:from-column-list</a>
+      <a href="#matrix:to-row-list">matrix:to-row-list</a>
+      <a href="#matrix:to-column-list">matrix:to-column-list</a>
+      <a href="#matrix:copy">matrix:copy</a>
+      <a href="#matrix:pretty-print-text">matrix:pretty-print-text</a>
     <h3>
       Matrix data retrieval and manipulation
     </h3>
     <p>
-      <a href="#matrix:get">matrix:get</a> <a href=
-      "#matrix:get-row">matrix:get-row</a> <a href=
-      "#matrix:get-column">matrix:get-column</a> <a href=
-      "#matrix:set">matrix:set</a> <a href=
-      "#matrix:set-row">matrix:set-row</a> <a href=
-      "#matrix:set-column">matrix:set-column</a> <a href=
-      "#matrix:swap-rows">matrix:swap-rows</a> <a href=
-      "#matrix:swap-columns">matrix:swap-columns</a> <a href=
-      "#matrix:set-and-report">matrix:set-and-report</a> <a href=
-      "#matrix:dimensions">matrix:dimensions</a> <a href=
-      "#matrix:submatrix">matrix:submatrix</a>
+      <a href="#matrix:get">matrix:get</a>
+      <a href="#matrix:get-row">matrix:get-row</a>
+      <a href="#matrix:get-column">matrix:get-column</a>
+      <a href="#matrix:set">matrix:set</a>
+      <a href="#matrix:set-row">matrix:set-row</a>
+      <a href="#matrix:set-column">matrix:set-column</a>
+      <a href="#matrix:swap-rows">matrix:swap-rows</a>
+      <a href="#matrix:swap-columns">matrix:swap-columns</a>
+      <a href="#matrix:set-and-report">matrix:set-and-report</a>
+      <a href="#matrix:dimensions">matrix:dimensions</a>
+      <a href="#matrix:submatrix">matrix:submatrix</a>
+      <a href="#matrix:map">matrix:map</a>
     <h3>
       Math operations
     </h3>
     <p>
-      <a href="#matrix:times-scalar">matrix:times-scalar</a> <a href=
-      "#matrix:times">matrix:times</a> <a href=
-      "#matrix:times-element-wise">matrix:times-element-wise</a> <a href=
-      "#matrix:plus-scalar">matrix:plus-scalar</a> <a href=
-      "#matrix:plus">matrix:plus</a> <a href=
-      "#matrix:inverse">matrix:inverse</a> <a href=
-      "#matrix:transpose">matrix:transpose</a> <a href=
-      "#matrix:real-eigenvalues">matrix:real-eigenvalues</a> <a href=
-      "#matrix:imaginary-eigenvalues">matrix:imaginary-eigenvalues</a>
-      <a href="#matrix:eigenvectors">matrix:eigenvectors</a> <a href=
-      "#matrix:det">matrix:det</a> <a href="#matrix:rank">matrix:rank</a>
-      <a href="#matrix:cond">matrix:cond</a> <a href=
-      "#matrix:trace">matrix:trace</a>
+      <a href="#matrix:times-scalar">matrix:times-scalar</a> 
+      <a href="#matrix:times">matrix:times</a>
+      <a href="#matrix:*">matrix:*</a>
+      <a href="#matrix:times-element-wise">matrix:times-element-wise</a>
+      <a href="#matrix:plus-scalar">matrix:plus-scalar</a>
+      <a href="#matrix:plus">matrix:plus</a>
+      <a href="#matrix:+">matrix:+</a>
+      <a href="#matrix:minus">matrix:minus</a>
+      <a href="#matrix:-">matrix:-</a>
+      <a href="#matrix:inverse">matrix:inverse</a>
+      <a href="#matrix:transpose">matrix:transpose</a>
+      <a href="#matrix:real-eigenvalues">matrix:real-eigenvalues</a>
+      <a href="#matrix:imaginary-eigenvalues">matrix:imaginary-eigenvalues</a>
+      <a href="#matrix:eigenvectors">matrix:eigenvectors</a>
+      <a href="#matrix:det">matrix:det</a>
+      <a href="#matrix:rank">matrix:rank</a>
+      <a href="#matrix:cond">matrix:cond</a>
+      <a href="#matrix:trace">matrix:trace</a>
     <h3>
       Advanced features
     </h3>
@@ -448,12 +454,40 @@ print matrix:submatrix m 0 1 2 3 ; matrix, row-start, col-start, row-end, col-en
     </div>
     <div class="dict_entry">
       <h3>
+        <a name="matrix:map" id="matrix:map">matrix:map</a>
+      </h3>
+      <h4>
+        matrix:map <i>reporter-task</i> <i>matrix</i>
+        <br/>
+        (matrix:map <i>reporter-task</i> <i>m1</i> <i>m2</i> ...)
+      </h4>
+      <p>
+        Reports a new matrix which results from applying <i>reporter-task</i>
+        to each of the elements of the given matrix. For example,
+        <pre>matrix:map sqrt matrix</pre>
+      <p>
+        would take the square root of each
+        element of <i>matrix</i>. If more than one matrix argument is provided,
+        the task is given the elements of each matrix as arguments. Thus,
+        <pre>(matrix:map + matrix1 matrix2)</pre>
+      <p>
+        would add <i>matrix1</i> and
+        <i>matrix2</i>.
+      <p>
+        This reporter is meant to be the same as <i>map</i>, but for matrices
+        instead of lists.
+    </div>
+    <div class="dict_entry">
+      <h3>
         <a name="matrix:times-scalar" id=
         "matrix:times-scalar">matrix:times-scalar</a>
       </h3>
       <h4>
         matrix:times-scalar matrix factor
       </h4>
+      <p>
+        As of NetLogo 5.1, <i>matrix:times</i> can multiply matrices by scalars
+        making this function obsolete. Use <i>matrix:times</i> instead.
       <p>
         Reports a new matrix, which is the result of multiplying every
         entry in the original <i>matrix</i> by the given scaling
@@ -464,12 +498,32 @@ print matrix:submatrix m 0 1 2 3 ; matrix, row-start, col-start, row-end, col-en
         <a name="matrix:times" id="matrix:times">matrix:times</a>
       </h3>
       <h4>
-        matrix:times <i>m1</i> <i>m2</i>
+        matrix:times <i>m1</i> <i>m2</i>...
+        <br/>
+        (matrix:times <i>m1</i> <i>m2</i> ...)
       </h4>
       <p>
-        Reports a matrix, which is the result of multiplying matrix
-        <i>m1</i> by matrix <i>m2</i> (using standard matrix multiplication
-        -- make sure your matrix dimensions match up.)
+        Reports a matrix, which is the result of multiplying the given matrices
+        and scalars (using standard matrix multiplication -- make sure your matrix 
+        dimensions match up.)
+        Without parentheses, it takes two arguments. With parentheses it takes
+        two or more. The arguments may either be numbers or matrices, but at
+        least one must be a matrix.
+      </div>
+    <div class="dict_entry">
+      <h3>
+        <a name="matrix:*" id="matrix:*">matrix:*</a>
+      </h3>
+      <h4>
+        <i>m1</i> matrix:* <i>m2</i>
+      </h4>
+      <p>
+        Reports a matrix, which is the result of multiplying the given matrices
+        and/or scalars (using standard matrix multiplication -- make sure your matrix 
+        dimensions match up.) This is exactly the same as <pre>matrix:times m1 m2</pre>
+      <p>
+        Takes precedence over <i>matrix:+</i> and <i>matrix:-</i>, same as normal
+        multiplication.
       </div>
     <div class="dict_entry">
       <h3>
@@ -478,11 +532,18 @@ print matrix:submatrix m 0 1 2 3 ; matrix, row-start, col-start, row-end, col-en
       </h3>
       <h4>
         matrix:times-element-wise <i>m1</i> <i>m2</i>
+        <br/>
+        (matrix:times-element-wise <i>m1</i> <i>m2</i> ...)
       </h4>
       <p>
-        Reports a matrix, which is the result of multiplying each element
-        of matrix <i>m1</i> by the corresponding element in <i>m2</i>.
-        (Note: <i>m1</i> and <i>m2</i> must have the same dimensions).
+        Reports a matrix, which is the result of multiplying the given matrices
+        together, element-wise. All elements are multiplied by scalar arguments
+        as well. 
+        Note that all matrix arguments must have the same dimensions.
+        Without parentheses, it takes two arguments. With parentheses it takes
+        two or more. The arguments may either be numbers or matrices, but at
+        least one must be a matrix.
+        
       </div>
     <div class="dict_entry">
       <h3>
@@ -493,6 +554,9 @@ print matrix:submatrix m 0 1 2 3 ; matrix, row-start, col-start, row-end, col-en
         matrix:plus-scalar <i>matrix</i> <i>number</i>
       </h4>
       <p>
+        As of NetLogo 5.1, <i>matrix:plus</i> can add matrices and scalars
+        making this function obsolete. Use <i>matrix:plus</i> instead.
+      <p>
         Reports a matrix, which is the result of adding the constant
         <i>number</i> to each element of the given <i>matrix</i>.
       </div>
@@ -502,11 +566,59 @@ print matrix:submatrix m 0 1 2 3 ; matrix, row-start, col-start, row-end, col-en
       </h3>
       <h4>
         matrix:plus <i>m1</i> <i>m2</i>
+        <br/>
+        (matrix:plus <i>m1</i> <i>m2</i> ...)
       </h4>
       <p>
-        Reports a matrix, which is the result of adding each element of
-        matrix <i>m1</i> to the corresponding element in <i>m2</i>. (Note:
-        <i>m1</i> and <i>m2</i> must have the same dimensions).
+        Reports a matrix, which is the result of adding the given matrices
+        and scalars. Scalars are added to each element.
+        Without parentheses, it takes two arguments. With parentheses it takes
+        two or more. The arguments may either be numbers or matrices, but at
+        least one must be a matrix.
+      </div>
+    <div class="dict_entry">
+      <h3>
+        <a name="matrix:+" id="matrix:+">matrix:+</a>
+      </h3>
+      <h4>
+        <i>m1</i> matrix:+ <i>m2</i>
+      </h4>
+      <p>
+        Reports a matrix, which is the result of adding the given matrices
+        and/or scalars. This is exactly the same as <pre>matrix:plus m1 m2</pre>
+      <p>
+        Takes precedence after <i>matrix:*</i>, same as normal addition.
+      </div>
+    <div class="dict_entry">
+      <h3>
+        <a name="matrix:minus" id="matrix:minus">matrix:minus</a>
+      </h3>
+      <h4>
+        matrix:minus <i>m1</i> <i>m2</i>
+        <br/>
+        (matrix:minus <i>m1</i> <i>m2</i> ...)
+      </h4>
+      <p>
+        Reports a matrix, which is the result of subtracting all arguments
+        besides <i>m1</i> from <i>m1</i>. Scalar arguments are treated as
+        matrices of the same size as the matrix arguments with every element
+        equal to that scalar.
+        Without parentheses, it takes two arguments. With parentheses it takes
+        two or more. The arguments may either be numbers or matrices, but at
+        least one must be a matrix.
+      </div>
+    <div class="dict_entry">
+      <h3>
+        <a name="matrix:-" id="matrix:-">matrix:-</a>
+      </h3>
+      <h4>
+        <i>m1</i> matrix:- <i>m2</i>
+      </h4>
+      <p>
+        Reports a matrix, which is the result of subtracting the given matrices
+        and/or scalars. This is exactly the same as <pre>matrix:minus m1 m2</pre>
+      <p>
+        Takes precedence after <i>matrix:*</i>, same as normal subtraction.
       </div>
     <div class="dict_entry">
       <h3>

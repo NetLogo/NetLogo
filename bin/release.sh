@@ -40,9 +40,9 @@ VM=windows-x86-1.6.0_45_server
 # ("brew install htmldoc"; or if you don't want to involve homebrew,
 # 1.8.27 is also available from htmldoc.org as a simple
 # configure/make/make install)
-if test `htmldoc --version` != 1.8.27 ;
+if test `htmldoc --version` != 1.8.28 ;
 then
-  echo "htmldoc 1.8.27 not found"
+  echo "htmldoc 1.8.28 not found"
   exit 1
 fi
 
@@ -69,7 +69,7 @@ if [ $WINDOWS -eq 1 ]; then
     exit 1
   fi
   # check install 4j version
-  DESIRED_VERSION="install4j version 5.1.5 (build 5568), built on 2013-01-15"
+  DESIRED_VERSION="install4j version 5.1.11 (build 5697), built on 2014-03-20"
   pushd "$IJDIR" > /dev/null
   FOUND_VERSION=`./$IJ --version`
   popd > /dev/null
@@ -167,7 +167,7 @@ cd tmp/netlogo-$COMPRESSEDVERSION
 
 # put most of the files in
 $CP -rp ../../docs .
-$CP -p ../../dist/readme.txt .
+$CP -p ../../dist/readme.md .
 $CP -p ../../dist/netlogo_logging.xml .
 $CP -p ../../NetLogo.jar ../../HubNet.jar .
 $CP ../../NetLogoLite.jar .
@@ -204,15 +204,19 @@ $CP -rp ../../Mathematica-Link Mathematica\ Link
 $RM Mathematica\ Link/JLink.jar
 
 # stuff version number etc. into readme
-$PERL -pi -e "s/\@\@\@VERSION\@\@\@/$VERSION/g" readme.txt
-$PERL -pi -e "s/\@\@\@DATE\@\@\@/$DATE/g" readme.txt
-$PERL -pi -e "s/\@\@\@UNIXNAME\@\@\@/netlogo-$COMPRESSEDVERSION/g" readme.txt
+$PERL -pi -e "s/\@\@\@VERSION\@\@\@/$VERSION/g" readme.md
+$PERL -pi -e "s/\@\@\@DATE\@\@\@/$DATE/g" readme.md
+$PERL -pi -e "s/\@\@\@UNIXNAME\@\@\@/netlogo-$COMPRESSEDVERSION/g" readme.md
 
 # include extensions
 $MKDIR extensions
-$CP -rp ../../extensions/[a-z]* extensions
+$CP -RpP ../../extensions/[a-z]* extensions  # don't follow simlinks due to some extensions creating infinite directory structures
 $RM -rf extensions/sample extensions/sample-scala
-$RM -rf extensions/*/{src,Makefile,manifest.txt,classes,tests.txt,README.md,build.xml,turtle.gif,.classpath,.project,.settings,project,target,build.sbt,*.zip,bin}
+$RM -rf extensions/*/{src,Makefile,manifest.txt,classes,tests.txt,README.md,build.xml,turtle.gif,.classpath,.project,.settings,project,target,build.sbt,*.zip,bin,sbt,NetLogo*.jar*}
+
+#Extra NW extension stuff (see #620): FD 6/13/14
+$RM -rf extensions/nw/{lib_managed,models,test,extensions,timeit.nlogo}
+
 # Apple's license won't let us include this - ST 2/6/12
 $RM -f extensions/qtj/QTJava.jar
 
@@ -412,7 +416,7 @@ $RM -rf lib/Mac\ OS\ X/
 # Mac done. Windows time!
 
 # convert readme to Windows line endings
-$PERL -p -i -e "s/\n/\r\n/g" readme.txt
+$PERL -p -i -e "s/\n/\r\n/g" readme.md
 
 # add Windows-only stuff, remove others
 $CP -r ../../lib/Windows/ lib/Windows
@@ -450,6 +454,7 @@ fi
 # make directory with web pages and so on
 cd ..
 $CP -p netlogo-$COMPRESSEDVERSION/{NetLogo,NetLogoLite}.jar netlogo-$COMPRESSEDVERSION/NetLogoLite.jar.pack.gz $COMPRESSEDVERSION
+$CP -p ../target/NetLogo-tests.jar $COMPRESSEDVERSION
 $CP -rp netlogo-$COMPRESSEDVERSION/docs $COMPRESSEDVERSION
 $CP -rp netlogo-$COMPRESSEDVERSION/models $COMPRESSEDVERSION
 if [ $WINDOWS -eq 1 ]

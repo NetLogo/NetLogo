@@ -3,11 +3,16 @@
 package org.nlogo.window;
 
 import org.nlogo.agent.AgentSet;
+import org.nlogo.agent.Observer;
 import org.nlogo.api.AgentException;
 import org.nlogo.api.Perspective;
 import org.nlogo.api.PerspectiveJ;
 import org.nlogo.api.RendererInterface;
 import org.nlogo.workspace.AbstractWorkspace;
+
+import javax.swing.JPopupMenu;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public strictfp class View
     extends javax.swing.JComponent
@@ -466,6 +471,16 @@ public strictfp class View
           });
       menu.add(exportItem);
     }
+
+    menu.add(new JPopupMenu.Separator());
+    javax.swing.JMenuItem inspectGlobalsItem = new javax.swing.JMenuItem("inspect globals");
+    inspectGlobalsItem.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent actionEvent) {
+          workspace.inspectAgent(Observer.class);
+      }
+    });
+    menu.add(inspectGlobalsItem);
+
     if (!workspace.world.observer().atHome2D()) {
       menu.add(new javax.swing.JPopupMenu.Separator());
       javax.swing.JMenuItem resetItem =

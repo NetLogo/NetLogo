@@ -17,10 +17,11 @@ object Scaladoc {
     scalacOptions in (Compile, doc) <++= (baseDirectory, netlogoVersion) map {
       (base, version) =>
         Seq("-encoding", "us-ascii") ++
+        Seq("-sourcepath", base.getAbsolutePath) ++
         Opts.doc.title("NetLogo") ++
         Opts.doc.version(version) ++
         Opts.doc.sourceUrl("https://github.com/NetLogo/NetLogo/blob/" +
-                           version + "/src/main€{FILE_PATH}.scala")
+                           version + "€{FILE_PATH}.scala")
     },
     doc in Compile ~= mungeScaladocSourceUrls,
     // The regular doc task includes doc for the entire main source tree.  But for the NetLogo
