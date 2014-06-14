@@ -195,7 +195,9 @@
       <li>
         <a href="#stoppingforeach"><b>How do I stop foreach?</b></a>
       <li>
-        <a href="#listexpectedconstant"><b>I'm trying to make a list. Why do I keep getting the error &quot;Expected a constant&quot;?</b></a>
+        <a href="#listexpectedconstant"><b>I'm trying to make a list.
+        Why do I keep getting the error &quot;Expected a
+        constant&quot;?</b></a>
       </ul>
     <h3>
       BehaviorSpace
@@ -380,8 +382,9 @@
       Volunteers have translated the user manual into Chinese and Czech.
       The translated versions are available from the NetLogo web site.
     <p>
-      So far, the NetLogo user interface has been localized in English, Spanish, Chinese, and
-      Russian. All four languages are included in the standard download.
+      So far, the NetLogo user interface has been localized in English,
+      Spanish, Chinese, and Russian. All four languages are included in the
+      standard download.
     <p>
       We are seeking volunteers to complete and improve these localizations
       and to translate the NetLogo software and manual into as many other
@@ -405,9 +408,10 @@
       <a name="model" id="model"></a>Has anyone built a model of &lt;x&gt;?
     </h3>
     <p>
-      Try looking at the <a href="http://ccl.northwestern.edu/netlogo/models/">NetLogo Models Library</a>,
-      the <a href="http://modelingcommons.org/">NetLogo Modeling Commons</a>,
-      our <a href=
+      Try looking at the <a href=
+      "http://ccl.northwestern.edu/netlogo/models/">NetLogo Models
+      Library</a>, the <a href="http://modelingcommons.org/">NetLogo
+      Modeling Commons</a>, our <a href=
       "http://ccl.northwestern.edu/netlogo/models/community/">Community
       Models</a> page, and our <a href=
       "http://ccl.northwestern.edu/netlogo/references.shtml">list of
@@ -459,26 +463,27 @@
     <p>
       Ideally a single unified application would support both 2D and 3D
       modeling. We would design the 3D world support so it doesn't get
-      in the way when you are building 2D models.
-      Models built in NetLogo 3D might require changes in order to run in the
-      hypothetical unified application.
+      in the way when you are building 2D models. Models built in NetLogo
+      3D might require changes in order to run in the hypothetical unified
+      application.
     <h3>
       <a name="mobile" id="mobile"></a>Can I run NetLogo on my phone or
       tablet?
     </h3>
     <p>
-      No. Neither iOS, nor Android, nor Windows RT supports running
-      Java applications such as NetLogo.
+      No. Neither iOS, nor Android, nor Windows RT supports running Java
+      applications such as NetLogo.
     <p>
       We are working on an alternate implementation of NetLogo on a
       JavaScript and HTML5 base, instead of Java. It will work on a variety
       of tablets and phones. We don't know yet when it will be ready,
-      and we expect that for a long time it will only support a subset of the features in
-      desktop NetLogo. The many person-years of development effort that
-      have gone into the Java version can't cheaply or easily be
-      replicated on another platform.
-    <p>For technical details on this new project, go
-       <a href="https://github.com/NetLogo/NetLogo/wiki/Tortoise">here</a>.
+      and we expect that for a long time it will only support a subset of
+      the features in desktop NetLogo. The many person-years of development
+      effort that have gone into the Java version can't cheaply or
+      easily be replicated on another platform.
+    <p>
+      For technical details on this new project, go <a href=
+      "https://github.com/NetLogo/NetLogo/wiki/Tortoise">here</a>.
     <h2>
       Downloading
     </h2>
@@ -546,6 +551,27 @@ NetLogo@@@VERSION@@@Installer.exe -q
       the Java installation.
       </ul>
     <h2>
+<<<<<<< HEAD
+=======
+      Applets
+    </h2>
+    <h3>
+      <a name="applet" id="applet"><b>Should I use applets?</b></a>
+    </h3>
+    <p>
+      No. We don't recommend it. <a href=
+      "https://github.com/NetLogo/NetLogo/wiki/Applets">Details here</a>.
+    <h3>
+      <a name="appletjava" id="appletjava"></a>Why don't NetLogo
+      applets work for me?
+    </h3>
+    <p>
+      In Java 7 Update 51, released in 2014, Oracle changed applet security
+      requirements such that NetLogo applets no longer work for most
+      people. <a href=
+      "https://github.com/NetLogo/NetLogo/wiki/Applets">Details here</a>.
+    <h2>
+>>>>>>> 383694
       Running
     </h2>
     <h3>
@@ -587,10 +613,17 @@ NetLogo@@@VERSION@@@Installer.exe -q
     <p>
       We recommend Oracle's Java runtime when using NetLogo on Linux.
     <p>
+<<<<<<< HEAD
       In theory, any Java 6 or later runtime will run NetLogo. In
       practice, some Java implementations aren't high enough
       quality. Recent versions of OpenJDK should work; older
       ones may not.  GNU libgcj does not work.
+=======
+      In theory, any Java 5 or later runtime will run NetLogo. In practice,
+      some Java implementations aren't high enough quality. Recent
+      versions of OpenJDK should work; older ones may not. GNU libgcj does
+      not work.
+>>>>>>> 383694
     <p>
       Ubuntu users should consult <a href=
       "http://help.ubuntu.com/community/Java">http://help.ubuntu.com/community/Java</a>.
@@ -634,7 +667,8 @@ NetLogo@@@VERSION@@@Installer.exe -q
     <p>
       Another option is to use our Controlling API. Some light Java
       programming is required. See the <a href=
-      "https://github.com/NetLogo/NetLogo/wiki/Controlling-API">Controlling API Guide</a> for details and sample code.
+      "https://github.com/NetLogo/NetLogo/wiki/Controlling-API">Controlling
+      API Guide</a> for details and sample code.
     <h3>
       <a name="multiprocessing" id="multiprocessing"></a>Does NetLogo take
       advantage of multiple processors?
@@ -759,15 +793,15 @@ NetLogo@@@VERSION@@@Installer.exe -q
         <b>Other:</b> Edit the <tt>netlogo.sh</tt> script (or a copy),
         changing the <code>-Xmx</code> number to the desired value.
       </ul>
-    <p>On all platforms, the JVM may not be able to use all of the RAM on your
-       system to run NetLogo unless you are running a 64-bit OS on a 64-bit JVM.  On recent
-       Macs running recent Mac OS X versions, the JVM is always 64-bit
-       and you don't need to do anything special.
-       On Windows and Linux, you may need to make configuration changes
-       in order to switch from 32-bit to 64-bit mode.
-       The members of the <a href=
-       "http://groups.yahoo.com/group/netlogo-users/">NetLogo Users
-       Group</a> may be able to help with this.
+    <p>
+      On all platforms, the JVM may not be able to use all of the RAM on
+      your system to run NetLogo unless you are running a 64-bit OS on a
+      64-bit JVM. On recent Macs running recent Mac OS X versions, the JVM
+      is always 64-bit and you don't need to do anything special. On
+      Windows and Linux, you may need to make configuration changes in
+      order to switch from 32-bit to 64-bit mode. The members of the
+      <a href="http://groups.yahoo.com/group/netlogo-users/">NetLogo Users
+      Group</a> may be able to help with this.
     <h3>
       <a name="gisimport" id="gisimport"></a>Can I use GIS data in NetLogo?
     </h3>
@@ -1037,11 +1071,12 @@ if is-turtle? turtle 0 [ ... ]
     </h3>
     <p>
       Nearly all models should just use lists for this.
-    <p>The usual motivation for using
-      arrays in other programming languages is that they provide fast
-      random access (<tt>item</tt>) and mutation (<tt>replace-item</tt>).
-      But NetLogo's lists, even though they are immutable, now provide
-      near constant time performance on these operations.
+    <p>
+      The usual motivation for using arrays in other programming languages
+      is that they provide fast random access (<tt>item</tt>) and mutation
+      (<tt>replace-item</tt>). But NetLogo's lists, even though they
+      are immutable, now provide near constant time performance on these
+      operations.
     <p>
       Lists in earlier versions of NetLogo (4.1 and 4.0) were simple
       singly-linked lists and therefore these operations took linear time.
@@ -1120,15 +1155,17 @@ end
       executed either. (If the procedure is a reporter procedure, use
       <tt>report</tt> instead of <tt>stop</tt>.)
     <h3>
-      <a name="listexpectedconstant" id="listexpectedconstant"></a>I'm trying to make a list. Why do I keep getting the error &quot;Expected a constant&quot;?
+      <a name="listexpectedconstant" id="listexpectedconstant"></a>I'm
+      trying to make a list. Why do I keep getting the error &quot;Expected
+      a constant&quot;?
     </h3>
     <p>
-      If a list contains only constants, you can write it down just by putting
-      square brackets around it, like <tt>[1 2 3]</tt>.
+      If a list contains only constants, you can write it down just by
+      putting square brackets around it, like <tt>[1 2 3]</tt>.
     <p>
-      If you want your list to contain items that may vary at runtime, the list
-      cannot be written down directly.  Instead, you
-      build it using the <a href="dictionary.html#list">list</a> primitive.
+      If you want your list to contain items that may vary at runtime, the
+      list cannot be written down directly. Instead, you build it using the
+      <a href="dictionary.html#list">list</a> primitive.
     <h2>
       BehaviorSpace
     </h2>
