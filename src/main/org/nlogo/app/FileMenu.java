@@ -36,7 +36,7 @@ public strictfp class FileMenu
     addMenuItem('N', new NewAction());
     addMenuItem('O', new OpenAction());
     addMenuItem('M', new ModelsLibraryAction());
-    add(new RecentFilesMenu(app.workspace(), this));
+    add(new RecentFilesMenu(app, this));
     addSeparator();
     addMenuItem('S', new SaveAction());
     addMenuItem('S', true, new SaveAsAction());
