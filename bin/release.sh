@@ -226,9 +226,13 @@ $PERL -pi -e "s/\@\@\@UNIXNAME\@\@\@/netlogo-$COMPRESSEDVERSION/g" readme.md
 
 # include extensions
 $MKDIR extensions
-$CP -rp ../../extensions/[a-z]* extensions
+$CP -RpP ../../extensions/[a-z]* extensions  # don't follow simlinks due to some extensions creating infinite directory structures
 $RM -rf extensions/sample extensions/sample-scala
-$RM -rf extensions/*/{src,Makefile,manifest.txt,classes,tests.txt,README.md,build.xml,turtle.gif,.classpath,.project,.settings,project,target,build.sbt,*.zip,bin,NetLogo.jar,scala-library*.jar,sbt}
+$RM -rf extensions/*/{src,Makefile,manifest.txt,classes,tests.txt,README.md,build.xml,turtle.gif,.classpath,.project,.settings,project,target,build.sbt,*.zip,bin,sbt,NetLogo*.jar*,scala-library*.jar}
+
+#Extra NW extension stuff (see #620): FD 6/13/14
+$RM -rf extensions/nw/{lib_managed,models,test,extensions,timeit.nlogo}
+
 # Apple's license won't let us include this - ST 2/6/12
 $RM -f extensions/qtj/QTJava.jar
 

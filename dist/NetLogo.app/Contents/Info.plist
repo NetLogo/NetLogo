@@ -68,5 +68,7 @@
   </array>
   <key>NSJavaRoot</key>
   <string>..</string>
+  <key>NSHighResolutionCapable</key>
+  <true/>
 </dict>
 </plist>

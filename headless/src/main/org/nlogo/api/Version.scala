@@ -110,6 +110,10 @@ object Version {
   private def versionNumber(v: String) =
     if (v.startsWith("NetLogo 3D Preview"))
       v.substring("NetLogo 3D ".length, "NetLogo 3D Preview 5".length)
+    else if (v.startsWith("NetLogo 3D 5.")) // Minor version upgrade in 5.x line IS compatible.  FD 6/2/14
+      v.substring("NetLogo 3D ".length, "NetLogo 3D 5.".length)
+    else if (v.startsWith("NetLogo 5."))
+      v.substring("NetLogo ".length, "NetLogo 5.".length)
     else if (v.startsWith("NetLogo 3D"))
       v.substring("NetLogo 3D ".length, "NetLogo 3D 4.0".length)
     else

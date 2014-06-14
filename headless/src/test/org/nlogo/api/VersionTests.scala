@@ -25,14 +25,14 @@ class VersionTests extends FunSuite {
   }
   test("futureMinor") {
     // these differ from the current version by minor version only
-    assert(!compatibleVersion("NetLogo 5.1"))
-    assert(!compatibleVersion("NetLogo 5.1RC1"))
-    assert(!compatibleVersion("NetLogo 5.1beta1"))
-    assert(!compatibleVersion("NetLogo 5.1pre1"))
-    assert(!compatibleVersion("NetLogo 5.1alpha1"))
-    assert(!compatibleVersion("NetLogo 5.1.1"))
-    assert(!compatibleVersion("NetLogo 5.1.1weirdversion"))
-    assert(!compatibleVersion("NetLogo 5.1weirdversion"))
+    assert(compatibleVersion("NetLogo 5.1"))
+    assert(compatibleVersion("NetLogo 5.1RC1"))
+    assert(compatibleVersion("NetLogo 5.1beta1"))
+    assert(compatibleVersion("NetLogo 5.1pre1"))
+    assert(compatibleVersion("NetLogo 5.1alpha1"))
+    assert(compatibleVersion("NetLogo 5.1.1"))
+    assert(compatibleVersion("NetLogo 5.1.1weirdversion"))
+    assert(compatibleVersion("NetLogo 5.1weirdversion"))
   }
   // these don't need to be changed very often; they should always
   // pass properly since we're long past these versions -- ev
@@ -70,6 +70,9 @@ class VersionTests extends FunSuite {
   }
   // no need to change this part it's just testing the string comparing part -- ev
   test("testStringComparisonLogic") {
+    assert(compareVersions("NetLogo 5.0.5", "NetLogo 5.1")) // Exception for 5.0 to 5.1!
+    assert(compareVersions("NetLogo 5.0", "NetLogo 5.0.5"))
+    assert(compareVersions("NetLogo 5.0.0", "NetLogo 5.0.5"))
     assert(compareVersions("NetLogo 4.0", "NetLogo 4.0.1"))
     assert(compareVersions("NetLogo 4.0.1", "NetLogo 4.0.1"))
     assert(compareVersions("NetLogo 4.0", "NetLogo 4.0"))
