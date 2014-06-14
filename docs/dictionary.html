@@ -1148,7 +1148,10 @@ ask link 0 1 [
         (For turtles or links that do not have any particular breed, this
         is the <a href="#turtles">turtles</a> agentset of all turtles or
         the <a href="#links">links</a> agentset of all links respectively.)
+      <p>
         You can set this variable to change a turtle or link's breed.
+        (When a turtle changes breeds, its shape is reset to the default
+	shape for that breed. See <a href="#set-default-shape">set-default-shape</a>.)
       <p>
         See also <a href="#breed">breed</a>, <a href=
         "#directed-link-breed">directed-link-breed</a>, <a href=
@@ -4685,6 +4688,10 @@ show (map [?1 + ?2 = ?3] [1 2 3] [2 4 6] [3 5 9])
 show max [xcor] of turtles
 ;; prints the x coordinate of the turtle which is
 ;; farthest right in the world
+show max list a b
+;; prints the larger of the two variables a and b
+show max (list a b c)
+;; prints the largest of the three variables a, b, and c
 </pre>
       </div>
       <div class="dict_entry">
@@ -4851,6 +4858,10 @@ show member? turtle 0 patches
         <pre>
 show min [xcor] of turtles
 ;; prints the lowest x-coordinate of all the turtles
+show min list a b
+;; prints the smaller of the two variables a and b
+show min (list a b c)
+;; prints the smallest of the three variables a, b, and c
 </pre>
       </div>
       <div class="dict_entry">

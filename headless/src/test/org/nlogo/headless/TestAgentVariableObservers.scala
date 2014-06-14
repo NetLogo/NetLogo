@@ -1,3 +1,5 @@
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.headless
 
 import collection.mutable
@@ -11,6 +13,16 @@ class ObservationQueue extends World.VariableWatcher {
     queue.enqueue((agent, variableName, value))
   }
 }
+
+class SelfDestroyer extends World.VariableWatcher {
+  var triggered = 0
+  def update(agent: Agent, variableName: String, value: scala.Any) = {
+    triggered += 1
+    agent.world.deleteWatcher(variableName, this)
+  }
+}
+
+
 class TestAgentVariableObservers extends AbstractTestModels with GivenWhenThen {
   val declarations =
     """
@@ -23,6 +35,19 @@ class TestAgentVariableObservers extends AbstractTestModels with GivenWhenThen {
       |links-own [ my-link-var ]
       |patches-own [ my-patch-var ]
     """.stripMargin
+
+  testModel("watchers can delete themselves", Model(declarations)) {
+    val watcher = new SelfDestroyer
+    When("a variable has a self destructive watcher")
+    world.addWatcher("MY-GLOBAL", watcher)
+    And("that watcher is triggered")
+    observer>> "set my-global 5"
+    Then("that watcher is removed without exception")
+    assertResult(1)(watcher.triggered)
+    observer>> "set my-global 10"
+    assertResult(1)(watcher.triggered)
+
+  }
 
   testModel("agents call variable observers", Model(declarations)) {
     val watcher = new ObservationQueue
