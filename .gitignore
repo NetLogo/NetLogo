@@ -40,5 +40,4 @@ tmp/
 /resources/system/dict3d.txt
 
 # ignore some unbundled but commonly present extensions
-/extensions/nw
 /extensions/runs
