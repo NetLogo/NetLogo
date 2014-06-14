@@ -9,6 +9,7 @@ import org.nlogo.api.AgentException;
 import org.nlogo.api.Perspective;
 import org.nlogo.api.PerspectiveJ;
 import org.nlogo.api.RendererInterface;
+import org.nlogo.api.AgentKindJ;
 import org.nlogo.workspace.AbstractWorkspace;
 
 import javax.swing.JPopupMenu;
@@ -486,7 +487,7 @@ public strictfp class View
     javax.swing.JMenuItem inspectGlobalsItem = new javax.swing.JMenuItem("inspect globals");
     inspectGlobalsItem.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent actionEvent) {
-          workspace.inspectAgent(Observer.class);
+          workspace.inspectAgent(AgentKindJ.Observer());
       }
     });
     menu.add(inspectGlobalsItem);
