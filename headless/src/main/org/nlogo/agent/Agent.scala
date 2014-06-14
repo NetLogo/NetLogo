@@ -23,6 +23,8 @@ extends api.Agent with Comparable[Agent] {
 
   def getVariable(vn: Int): AnyRef
 
+  def variableName(vn: Int): String
+
   @throws(classOf[AgentException])
   def setVariable(vn: Int, value: AnyRef)
 

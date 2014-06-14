@@ -101,7 +101,7 @@ public strictfp class Turtle
   Turtle(World world, long id) {
     this(world, world.turtles(), World.ZERO, World.ZERO, false);
     _id_$eq(id);
-    world._turtles.add(this);
+    world()._turtles.add(this);
   }
 
 
@@ -263,6 +263,14 @@ public strictfp class Turtle
   @Override
   public Object getVariable(int vn) {
     return getTurtleVariable(vn);
+  }
+
+  public String variableName(int vn) {
+    if (vn < world().program().turtlesOwn().size()) {
+      return world().turtlesOwnNameAt(vn);
+    } else {
+      return world().breedsOwnNameAt(getBreed(), vn);
+    }
   }
 
   @Override
@@ -523,6 +531,7 @@ public strictfp class Turtle
           throw new IllegalStateException(I18N.errorsJ().getN("org.nlogo.agent.Agent.cantSetUnknownVariable", vn));
       }
     }
+    world().notifyWatchers(this, vn, value);
   }
 
   @Override
