@@ -8,9 +8,9 @@ import javax.swing.UIManager;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
 import java.awt.Component;
 
-public strictfp class DisableableComboBox extends JComboBox {
+public strictfp class DisableableComboBox extends JComboBox<Object> {
 
-  private class Item {
+  public static class Item {
 
     private Object obj;
     private boolean enabled;
@@ -38,7 +38,7 @@ public strictfp class DisableableComboBox extends JComboBox {
 
   }
 
-  public DisableableComboBox() {
+  @SuppressWarnings("unchecked") public DisableableComboBox() {
     super();
     setRenderer(new BasicComboBoxRenderer() {
       public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {

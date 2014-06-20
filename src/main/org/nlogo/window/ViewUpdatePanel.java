@@ -13,7 +13,7 @@ public strictfp class ViewUpdatePanel
 
   private final SpeedSliderPanel speedSlider;
 
-  private final javax.swing.JComboBox viewUpdates = new javax.swing.JComboBox();
+  private final javax.swing.JComboBox<String> viewUpdates = new javax.swing.JComboBox<String>();
 
   private final WorldViewSettings settings;
 

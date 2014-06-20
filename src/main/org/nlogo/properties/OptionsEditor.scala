@@ -8,7 +8,7 @@ import org.nlogo.swing.Implicits._
 abstract class OptionsEditor[T](accessor: PropertyAccessor[Options[T]])
   extends PropertyEditor(accessor)
 {
-  private val combo = new javax.swing.JComboBox
+  private val combo = new javax.swing.JComboBox[String]
   setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT))
   add(new javax.swing.JLabel(accessor.displayName))
   add(combo)

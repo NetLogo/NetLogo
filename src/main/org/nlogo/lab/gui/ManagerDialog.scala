@@ -12,8 +12,8 @@ private class ManagerDialog(manager: LabManager,
   extends JDialog(manager.workspace.getFrame)
   with javax.swing.event.ListSelectionListener
 {
-  private val jlist = new JList
-  private val listModel = new javax.swing.DefaultListModel
+  private val jlist = new JList[Protocol]
+  private val listModel = new javax.swing.DefaultListModel[Protocol]
   private implicit val i18NPrefix = I18N.Prefix("tools.behaviorSpace")
   /// actions
   private def action(name: String, fn: ()=>Unit) =

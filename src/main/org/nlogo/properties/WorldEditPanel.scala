@@ -18,9 +18,9 @@ class WorldEditPanel(widget: Editable, parser: ParserServices, colorizer: Colori
   private val previewPanel = new WorldPreview(200, 200)
 
   private var editors:scala.List[IntegerEditor] = Nil
-  private var positionChoices:JComboBox = null
-  private var edgeChoices:JComboBox = null
-  private var cornerChoices:JComboBox = null
+  private var positionChoices:JComboBox[OriginConfiguration] = null
+  private var edgeChoices:JComboBox[OriginConfiguration] = null
+  private var cornerChoices:JComboBox[OriginConfiguration] = null
 
   override def init(): PropertyEditor[_] = {
     setLayout(new BorderLayout())
@@ -84,7 +84,7 @@ class WorldEditPanel(widget: Editable, parser: ParserServices, colorizer: Colori
     buttonsLayout.setConstraints(positionChoices, c)
     buttons.add(positionChoices)
 
-    edgeChoices = new JComboBox()
+    edgeChoices = new JComboBox[OriginConfiguration]()
     for(config <- settings.getEdgeChoices.asScala)
       edgeChoices.addItem(config)
     edgeChoices.addItemListener(new ConfigurationListener())
@@ -92,7 +92,7 @@ class WorldEditPanel(widget: Editable, parser: ParserServices, colorizer: Colori
     buttons.add(edgeChoices)
     edgeChoices.setVisible(false)
 
-    cornerChoices = new JComboBox()
+    cornerChoices = new JComboBox[OriginConfiguration]()
     for(config <- settings.getCornerChoices.asScala)
       cornerChoices.addItem(config)
     cornerChoices.addItemListener(new ConfigurationListener())

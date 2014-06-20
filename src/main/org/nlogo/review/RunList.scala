@@ -12,7 +12,7 @@ import javax.swing.event.ListSelectionEvent
 import javax.swing.event.ListSelectionListener
 
 class RunList(reviewTab: ReviewTab)
-  extends JList(reviewTab.state) {
+  extends JList[ModelRun](reviewTab.state) {
 
   def selectedRun: Option[ModelRun] =
     if (getSelectedIndex == -1) None

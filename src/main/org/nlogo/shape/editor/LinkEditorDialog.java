@@ -7,13 +7,16 @@ import org.nlogo.api.Shape;
 import org.nlogo.api.ShapeList;
 import org.nlogo.shape.LinkShape;
 
+import java.util.List;
+import java.util.ArrayList;
+
 strictfp class LinkEditorDialog
     extends javax.swing.JDialog
     implements EditorDialog.VectorShapeContainer {
   private final javax.swing.JTextField name = new javax.swing.JTextField(10);
   private final javax.swing.JTextField curviness = new javax.swing.JTextField(10);
 
-  private final javax.swing.JComboBox[] dashes = new javax.swing.JComboBox[3];
+  private final List<javax.swing.JComboBox<float[]>> dashes = new ArrayList<javax.swing.JComboBox<float[]>>(3);
 
   private final LinkShape shape;
   private final LinkShape originalShape;
@@ -89,26 +92,26 @@ strictfp class LinkEditorDialog
     curviness.setText(Double.toString(shape.curviness()));
     add(curviness, c);
 
-    for (int i = 0; i < dashes.length; i++) {
-      dashes[i] = new javax.swing.JComboBox(org.nlogo.shape.LinkLine.dashChoices);
-      dashes[i].setRenderer(new DashCellRenderer());
-      dashes[i].setSelectedItem(shape.getDashes(i));
+    for (int i = 0; i < dashes.size(); i++) {
+      dashes.set(i, new javax.swing.JComboBox<float[]>(org.nlogo.shape.LinkLine.dashChoices));
+      dashes.get(i).setRenderer(new DashCellRenderer());
+      dashes.get(i).setSelectedItem(shape.getDashes(i));
     }
 
     c.gridwidth = 1;
     add(new javax.swing.JLabel("left line"), c);
     c.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-    add(dashes[2], c);
+    add(dashes.get(2), c);
 
     c.gridwidth = 1;
     add(new javax.swing.JLabel("middle line"), c);
     c.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-    add(dashes[1], c);
+    add(dashes.get(1), c);
 
     c.gridwidth = 1;
     add(new javax.swing.JLabel("right line"), c);
     c.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-    add(dashes[0], c);
+    add(dashes.get(0), c);
 
     javax.swing.JButton cancel = new javax.swing.JButton(I18N.guiJ().get("common.buttons.cancel"));
     cancel.addActionListener
@@ -195,8 +198,8 @@ strictfp class LinkEditorDialog
     }
 
     shape.curviness(cv);
-    for (int i = 0; i < dashes.length; i++) {
-      int index = dashes[i].getSelectedIndex();
+    for (int i = 0; i < dashes.size(); i++) {
+      int index = dashes.get(i).getSelectedIndex();
       shape.setLineVisible(i, index != 0);
       shape.setDashiness(i, org.nlogo.shape.LinkLine.dashChoices[index]);
     }
@@ -209,8 +212,8 @@ strictfp class LinkEditorDialog
     LinkShape currentShape = (LinkShape) shape.clone();
     currentShape.setName(name.getText());
     currentShape.curviness(Double.parseDouble(curviness.getText()));
-    for (int i = 0; i < dashes.length; i++) {
-      int index = dashes[i].getSelectedIndex();
+    for (int i = 0; i < dashes.size(); i++) {
+      int index = dashes.get(i).getSelectedIndex();
       currentShape.setLineVisible(i, index != 0);
       currentShape.setDashiness(i, org.nlogo.shape.LinkLine.dashChoices[index]);
     }
@@ -218,11 +221,10 @@ strictfp class LinkEditorDialog
   }
 
   private class DashCellRenderer
-      implements javax.swing.ListCellRenderer {
-    public java.awt.Component getListCellRendererComponent
-        (javax.swing.JList list, Object value,
+      implements javax.swing.ListCellRenderer<float[]> {
+    @Override public java.awt.Component getListCellRendererComponent
+        (javax.swing.JList<? extends float[]> list, final float[] value,
          int index, final boolean isSelected, boolean cellHasFocus) {
-      final Object obj = value;
 
       return new java.awt.Component() {
         private final java.awt.Dimension dimension =
@@ -245,13 +247,12 @@ strictfp class LinkEditorDialog
 
         @Override
         public void paint(java.awt.Graphics g) {
-          float[] arry = (float[]) obj;
           // this is a horrible hack. This configuration is supposed
           // to be blank but for some reason on Windows it's not so just
           // don't draw anything. ev 9/14/07
-          if (arry.length == 2 &&
-              arry[0] == 0 &&
-              arry[1] == 1) {
+          if (value.length == 2 &&
+              value[0] == 0 &&
+              value[1] == 1) {
             return;
           }
           java.awt.Graphics2D g2 = (java.awt.Graphics2D) g;
@@ -259,7 +260,7 @@ strictfp class LinkEditorDialog
           g2.setColor(java.awt.Color.black);
           g2.setStroke(new java.awt.BasicStroke
               (1.0f, java.awt.BasicStroke.CAP_ROUND,
-                  java.awt.BasicStroke.JOIN_ROUND, 1.0f, (float[]) obj, 0));
+                  java.awt.BasicStroke.JOIN_ROUND, 1.0f, value, 0));
           g2.drawLine(0, d.height / 2, d.width, d.height / 2);
         }
       };

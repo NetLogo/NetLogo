@@ -44,7 +44,7 @@ public strictfp class UploadDialog extends JDialog {
   private JButton cancelButton;
   private JButton logoutButton;
   private JTextField modelNameField;
-  private JComboBox groupComboBox;
+  private JComboBox<Group> groupComboBox;
   private DisableableComboBox visibilityComboBox;
   private DisableableComboBox changeabilityComboBox;
   private JRadioButton useCurrentViewRadioButton;
@@ -122,7 +122,7 @@ public strictfp class UploadDialog extends JDialog {
     });
     List<Group> groups = new ArrayList<Group>(communicator.getGroups());
     groups.add(0, null);
-    groupComboBox.setModel(new DefaultComboBoxModel(groups.toArray()));
+    groupComboBox.setModel(new DefaultComboBoxModel<Group>(groups.toArray(new Group[0])));
     everyonePermissionIndex = visibilityComboBox.addItem(Permission.getPermissions().get("a"), true);
     changeabilityComboBox.addItem(Permission.getPermissions().get("a"), true);
     groupPermissionIndex = visibilityComboBox.addItem(Permission.getPermissions().get("g"), false);
@@ -343,7 +343,7 @@ public strictfp class UploadDialog extends JDialog {
     dispose();
     String modelName = modelNameField.getText().trim();
     String description = descriptionTextField.getText().trim();
-    Group group = (Group) groupComboBox.getSelectedItem();
+    Group group = (Group)groupComboBox.getSelectedItem();
     Permission visibility = (Permission) visibilityComboBox.getSelectedObject();
     Permission changeability = (Permission) changeabilityComboBox.getSelectedObject();
     NewModelType uploadType = getSelectedUploadType();
@@ -608,7 +608,7 @@ public strictfp class UploadDialog extends JDialog {
 
     modelGroupLabel = new JLabel("Model Group");
     formLabels.add(modelGroupLabel);
-    groupComboBox = new JComboBox();
+    groupComboBox = new JComboBox<Group>();
     JPanel groupComboBoxPanel = new JPanel(new GridBagLayout());
     groupComboBoxPanel.add(groupComboBox, constraints);
     formFields.add(groupComboBoxPanel);

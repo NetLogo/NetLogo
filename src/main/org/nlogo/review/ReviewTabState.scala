@@ -10,12 +10,12 @@ import javax.swing.AbstractListModel
 class ReviewTabState(
   val ws: GUIWorkspace,
   private var _runs: Vector[ModelRun] = Vector.empty)
-  extends AbstractListModel
+  extends AbstractListModel[ModelRun]
   with HasCurrentRun
   with RecordingToggling {
 
   // ListModel methods:
-  override def getElementAt(index: Int): AnyRef = _runs(index)
+  override def getElementAt(index: Int): ModelRun = _runs(index)
   override def getSize = _runs.size
 
   def runs = _runs

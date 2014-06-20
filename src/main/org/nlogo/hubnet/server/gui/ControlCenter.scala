@@ -80,7 +80,7 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
    * Panel in HubNet Control Center displays client list
    */
   class ClientsPanel(initialClientEntries: Iterable[String]) extends JPanel with ActionListener with ListSelectionListener {
-    private val listData = new DefaultListModel()
+    private val listData = new DefaultListModel[String]()
     private val clientsList = new JList(listData) {
       putClientProperty("Quaqua.List.style", "striped")
       setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION)
@@ -130,9 +130,10 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
      * From interface ActionListener.
      */
     def actionPerformed(evt: ActionEvent) {
+      import scala.collection.JavaConverters._
       if (evt.getSource == kickButton) {
-        val clientIds = clientsList.getSelectedValues()
-        for (j <- 0 until clientIds.length) {kickClient(clientIds(j).toString)}
+        val clientIds = clientsList.getSelectedValuesList().asScala
+        for (j <- 0 until clientIds.size) {kickClient(clientIds(j).toString)}
       }
       else if (evt.getSource == newClientButton) {launchNewClient()}
       else if (evt.getSource == reloadButton) {
