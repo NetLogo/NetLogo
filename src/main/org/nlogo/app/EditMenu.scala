@@ -7,6 +7,7 @@ package org.nlogo.app
 
 import org.nlogo.editor.Actions
 import org.nlogo.api.I18N
+import org.nlogo.window.EditorColorizer
 
 class EditMenu(app: App) extends org.nlogo.swing.Menu(I18N.gui.get("menu.edit"))
 with Events.SwitchedTabsEventHandler
@@ -35,6 +36,9 @@ with org.nlogo.window.Events.LoadSectionEventHandler
   addSeparator()
   addMenuItem(I18N.gui("find"), 'F', FindDialog.FIND_ACTION)
   addMenuItem(I18N.gui("findNext"), 'G', FindDialog.FIND_NEXT_ACTION)
+  addSeparator()
+  addMenuItem(I18N.gui("jumpToDefinition"), 'D', Actions.jumpToDefinitionAction(new EditorColorizer(app.workspace),
+              I18N.gui.get _))
   addSeparator()
   addMenuItem(I18N.gui("shiftLeft"), '[', org.nlogo.editor.Actions.shiftLeftAction)
   addMenuItem(I18N.gui("shiftRight"), ']', org.nlogo.editor.Actions.shiftRightAction)
