@@ -43,7 +43,7 @@ object Actions {
                      e => colorizer.doHelp(e, e.getHelpTarget(e.getMousePos)))
   def jumpToDefinitionAction(colorizer: Colorizer[_], i18n: String => String) =
     new MyTextAction(i18n("menu.edit.jumpToDefinition"),
-                     e => colorizer.jumpToDefinition(e, e.getHelpTarget(e.getSelectionStart)))
+                     e => colorizer.jumpToDefinition(e, e.getHelpTarget(e.getSelectionStart))){ setEnabled(false) }
   def mouseJumpToDefinitionAction(colorizer: Colorizer[_], i18n: String => String) =
     new MyTextAction(i18n("menu.edit.jumpToDefinition"),
                      e => colorizer.jumpToDefinition(e, e.getHelpTarget(e.getMousePos)))
