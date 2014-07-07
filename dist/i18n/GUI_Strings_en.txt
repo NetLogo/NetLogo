@@ -141,6 +141,7 @@ tabs.info.help = Help
 
 tabs.code = Code
 tabs.code.rightclick.quickhelp = Quick Help
+tabs.code.rightclick.jump-to-definition = Jump To Definition
 tabs.code.checkButton = Check
 tabs.code.procedures = Procedures
 tabs.code.procedures.none = none

@@ -4,9 +4,11 @@ package org.nlogo.window
 
 import java.awt.Color
 import org.nlogo.api.{ ParserServices, Token, TokenType, Version }
-import org.nlogo.editor.Colorizer
+import org.nlogo.editor.{ EditorArea, Colorizer }
 import org.nlogo.swing.BrowserLauncher.openURL
+import org.nlogo.swing.Implicits._
 import collection.JavaConverters._
+import org.nlogo.awt.EventQueue
 
 class EditorColorizer(parser: ParserServices) extends Colorizer[TokenType] {
 
@@ -110,4 +112,18 @@ class EditorColorizer(parser: ParserServices) extends Colorizer[TokenType] {
                        confirmOpen _)
   }
 
+  def jumpToDefinition(comp: java.awt.Component, name: String) {
+    val procsTable = parser.findProcedurePositions(comp.asInstanceOf[EditorArea[_]].getText)
+    if (!procsTable.contains(name)) {
+      javax.swing.JOptionPane.showMessageDialog(
+        comp, name.toUpperCase + " could not be found in your code.", "Netlogo", javax.swing.JOptionPane.ERROR_MESSAGE)
+    } else {
+      val namePos = procsTable(name)._3
+      val endPos = procsTable(name)._4
+      comp.asInstanceOf[EditorArea[_]].select(endPos, endPos)
+      EventQueue.invokeLater { () =>
+        comp.asInstanceOf[EditorArea[_]].select(namePos, namePos + name.size)
+      }
+    }
+  }
 }

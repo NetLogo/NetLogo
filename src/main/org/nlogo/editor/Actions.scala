@@ -41,6 +41,12 @@ object Actions {
   def mouseQuickHelpAction(colorizer: Colorizer[_], i18n: String => String) =
     new MyTextAction(i18n("tabs.code.rightclick.quickhelp"),
                      e => colorizer.doHelp(e, e.getHelpTarget(e.getMousePos)))
+  def jumpToDefinitionAction(colorizer: Colorizer[_], i18n: String => String) =
+    new MyTextAction(i18n("tabs.code.rightclick.jump-to-definition"),
+                     e => colorizer.jumpToDefinition(e, e.getHelpTarget(e.getSelectionStart)))
+  def mouseJumpToDefinitionAction(colorizer: Colorizer[_], i18n: String => String) =
+    new MyTextAction(i18n("tabs.code.rightclick.jump-to-definition"),
+                     e => colorizer.jumpToDefinition(e, e.getHelpTarget(e.getMousePos)))
   class MyTextAction(name:String, f: EditorArea[_] => Unit) extends TextAction(name) {
     override def actionPerformed(e:ActionEvent){
       val component = getTextComponent(e)

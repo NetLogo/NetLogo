@@ -157,6 +157,7 @@ public strictfp class EditorArea<TokenType>
                 Actions.commentAction(), Actions.uncommentAction(),
                 Actions.shiftLeftAction(), Actions.shiftRightAction(),
                 Actions.quickHelpAction(colorizer, i18n),
+                Actions.jumpToDefinitionAction(colorizer, i18n)
             });
   }
 
@@ -413,6 +414,7 @@ public strictfp class EditorArea<TokenType>
     Actions.PASTE_ACTION().putValue(javax.swing.Action.NAME, i18n.apply("menu.edit.paste"));
     menu.addSeparator();
     menu.add(new javax.swing.JMenuItem(Actions.mouseQuickHelpAction(colorizer, i18n)));
+    menu.add(new javax.swing.JMenuItem(Actions.mouseJumpToDefinitionAction(colorizer, i18n)));
     menu.show(this, e.getX(), e.getY());
   }
 
