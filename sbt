@@ -10,7 +10,12 @@ if [[ `uname -s` == *CYGWIN* ]] ; then
 else
   CURR_DIR=`dirname $0`
   if [ `uname -s` = Linux ] ; then
-    export JAVA_HOME=/usr/lib/jvm/java-6-sun
+    if [ -a /usr/lib/jvm/java-6-sun ] ; then
+      export JAVA_HOME=/usr/lib/jvm/java-6-sun
+    elif ! $JAVA_HOME/bin/java -version |& head -n 1 | grep "1\.6" >> /dev/null ; then
+      echo "Please set JAVA_HOME to version 1.6"
+      exit
+    fi
   else
     if [ `uname -s` = Darwin ] ; then
       export JAVA_HOME=`/usr/libexec/java_home -F -v1.6*`
@@ -20,6 +25,7 @@ else
   fi
   JH=$JAVA_HOME
 fi
+
 
 export PATH=$JH/bin:$PATH
 JAVA=$JH/bin/java
