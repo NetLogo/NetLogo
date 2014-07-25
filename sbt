@@ -12,7 +12,7 @@ else
   if [ `uname -s` = Linux ] ; then
     if [ -a /usr/lib/jvm/java-6-sun ] ; then
       export JAVA_HOME=/usr/lib/jvm/java-6-sun
-    elif ! $JAVA_HOME/bin/java -version |& head -n 1 | grep "1\.6" >> /dev/null ; then
+    elif ! $JAVA_HOME/bin/java -version 2>&1 | head -n 1 | grep "1\.6" >> /dev/null ; then
       echo "Please set JAVA_HOME to version 1.6"
       exit
     fi
