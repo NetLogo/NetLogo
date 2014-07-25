@@ -1,0 +1,7 @@
+ClearGlobals
+  O> crt 10
+  O> set glob1 5
+  glob1 => 5
+  O> clear-globals
+  glob1 => 0
+  count turtles => 10

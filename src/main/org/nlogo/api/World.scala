@@ -15,6 +15,7 @@ trait World {
   def wrap(pos: Double, min: Double, max: Double): Double
   def ticks: Double
   def observer: Observer
+  def clearGlobals()
   def getPatch(i: Int): Patch
   @throws(classOf[AgentException])
   def getPatchAt(x: Double, y: Double): Patch
