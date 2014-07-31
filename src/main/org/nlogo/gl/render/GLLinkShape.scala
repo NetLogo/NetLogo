@@ -2,7 +2,7 @@
 
 package org.nlogo.gl.render
 
-import javax.media.opengl.GL
+import javax.media.opengl.{ GL, GL2 }
 
 import org.nlogo.api.{ Link, World }
 import org.nlogo.shape.LinkShape
@@ -24,7 +24,7 @@ private class GLLinkShape(shape: LinkShape, val directionIndicator: GLShape) {
     a
   }
 
-  def render(gl: GL,
+  def render(gl: GL2,
              x1: Float, y1: Float, z1: Float,
              x2: Float, y2: Float, z2: Float,
              stroke: Float, isDirected: Boolean, link: Link,
@@ -50,7 +50,7 @@ private class GLLinkShape(shape: LinkShape, val directionIndicator: GLShape) {
     }
   }
 
-  def renderDirectionIndicator(gl: GL, shapeRenderer: ShapeRenderer,
+  def renderDirectionIndicator(gl: GL2, shapeRenderer: ShapeRenderer,
                                x1: Double, y1: Double, z1: Double,
                                x2: Double, y2: Double, z2: Double,
                                link: Link, color: java.awt.Color, outline: Boolean,

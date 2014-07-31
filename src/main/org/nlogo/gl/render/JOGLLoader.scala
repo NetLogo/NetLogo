@@ -25,11 +25,12 @@ object JOGLLoader {
     // this next bit is based on code from NativeLibLoader - ST 2/28/05
     // if both the 2003 build and a newer build are in the classpath the version number will be
     // reported wrong and this call will fail.
-    try com.sun.opengl.impl.NativeLibLoader.disableLoading()
-    catch {
-      case e: NoSuchMethodError =>
-        throw new JOGLException(VersionMismatch, e)
-    }
+
+    //try com.sun.opengl.impl.NativeLibLoader.disableLoading()
+    //catch {
+    //  case e: NoSuchMethodError =>
+    //    throw new JOGLException(VersionMismatch, e)
+    //}
     val isMac = System.getProperty("os.name").startsWith("Mac")
     def withErrorReporting(body: => Unit) {
       try body

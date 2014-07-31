@@ -2,7 +2,8 @@
 
 package org.nlogo.gl.render
 
-import javax.media.opengl.GL
+import javax.media.opengl.{ GL, GL2, GL2GL3 }
+import javax.media.opengl.fixedfunc.GLLightingFunc
 import org.nlogo.api.{ World, Agent, Patch, Patch3D, Turtle, Perspective, DrawingInterface, AgentException }
 
 private class WorldRenderer(world: World, patchRenderer: PatchRenderer,
@@ -17,12 +18,12 @@ private class WorldRenderer(world: World, patchRenderer: PatchRenderer,
                             turtleRenderer: TurtleRenderer, linkRenderer: LinkRenderer): DrawingRendererInterface =
     new DrawingRenderer(world, drawing)
 
-  def init(gl: GL, shapeManager: ShapeManager) {
+  def init(gl: GL2, shapeManager: ShapeManager) {
     this.shapeManager = shapeManager
     drawingRenderer.init(gl)
   }
 
-  def observePerspective(gl: GL) {
+  def observePerspective(gl: GL2) {
     var x = observer.oxcor - world.followOffsetX
     var y = observer.oycor - world.followOffsetY
     var z = observer.ozcor
@@ -69,7 +70,7 @@ private class WorldRenderer(world: World, patchRenderer: PatchRenderer,
                   observer.oycor - world.followOffsetY,
                   observer.ozcor)
 
-  def renderCrossHairs(gl: GL) {
+  def renderCrossHairs(gl: GL2) {
     if(showCrossHairs) {
       val coords = getCrosshairCoords
       val perspective = observer.perspective
@@ -89,7 +90,7 @@ private class WorldRenderer(world: World, patchRenderer: PatchRenderer,
     }
   }
 
-  def renderWorld(gl: GL, fontSize: Int, patchSize: Double) {
+  def renderWorld(gl: GL2, fontSize: Int, patchSize: Double) {
     // we might get here before the world is set up
     if(world.patches != null) {
       patchRenderer.renderPatches(gl)
@@ -98,7 +99,7 @@ private class WorldRenderer(world: World, patchRenderer: PatchRenderer,
     }
   }
 
-  def renderIndividualPatchShapes(gl: GL, patch: Patch3D, outlineAgent: Agent,
+  def renderIndividualPatchShapes(gl: GL2, patch: Patch3D, outlineAgent: Agent,
                                   fontSize: Int, patchSize: Double) {
     outlineAgent match {
       case p: Patch =>
@@ -108,7 +109,7 @@ private class WorldRenderer(world: World, patchRenderer: PatchRenderer,
     patchRenderer.renderIndividualLabels(gl, patch, fontSize, patchSize)
   }
 
-  def renderPatchShapes(gl: GL, outlineAgent: Agent, fontSize: Int, patchSize: Double) {
+  def renderPatchShapes(gl: GL2, outlineAgent: Agent, fontSize: Int, patchSize: Double) {
     outlineAgent match {
       case p: Patch =>
         patchRenderer.renderOutline(gl, p)
@@ -117,23 +118,23 @@ private class WorldRenderer(world: World, patchRenderer: PatchRenderer,
     patchRenderer.renderLabels(gl, fontSize, patchSize)
   }
 
-  def renderDrawing(gl: GL) {
+  def renderDrawing(gl: GL2) {
     drawingRenderer.renderDrawing(gl)
   }
 
-  def renderWorldWireFrame(gl: GL) {
+  def renderWorldWireFrame(gl: GL2) {
     val coords = getWorldDimensions(world)
     // white lines only please
-    gl.glPolygonMode(GL.GL_FRONT, GL.GL_LINE)
-    gl.glDisable(GL.GL_LIGHTING)
+    gl.glPolygonMode(GL.GL_FRONT, GL2GL3.GL_LINE)
+    gl.glDisable(GLLightingFunc.GL_LIGHTING)
     gl.glColor3f(1.0f, 1.0f, 1.0f)
     gl.glPushMatrix()
     gl.glScalef(coords(0), coords(1), coords(2))
     gl.glCallList(shapeManager.getShape("@@@WIREFRAME@@@").displayListIndex)
     gl.glPopMatrix()
     // restore state
-    gl.glPolygonMode(GL.GL_FRONT, GL.GL_FILL)
-    gl.glEnable(GL.GL_LIGHTING)
+    gl.glPolygonMode(GL.GL_FRONT, GL2GL3.GL_FILL)
+    gl.glEnable(GLLightingFunc.GL_LIGHTING)
   }
 
   def getWorldDimensions(world: World) =

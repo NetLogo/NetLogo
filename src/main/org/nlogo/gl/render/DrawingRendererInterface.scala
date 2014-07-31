@@ -2,10 +2,10 @@
 
 package org.nlogo.gl.render
 
-import javax.media.opengl.GL
+import javax.media.opengl.GL2
 
 private trait DrawingRendererInterface {
-  def renderDrawing(gl: GL): Unit
+  def renderDrawing(gl: GL2): Unit
   def clear(): Unit
-  def init(gl: GL): Unit
+  def init(gl: GL2): Unit
 }

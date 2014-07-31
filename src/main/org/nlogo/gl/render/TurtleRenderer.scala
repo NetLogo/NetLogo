@@ -2,7 +2,7 @@
 
 package org.nlogo.gl.render
 
-import javax.media.opengl.GL
+import javax.media.opengl.{ GL, GL2 }
 import javax.media.opengl.glu.GLU
 import org.nlogo.api.{ Agent, Constants, Perspective, Turtle, World }
 
@@ -22,7 +22,7 @@ extends AgentRenderer(world, shapeRenderer) {
       (world.worldWidth max world.worldHeight) * 1.5 / distance
   }
 
-  def renderTurtles(gl: GL, glu: GLU, fontSize: Int, patchSize: Double, outlineAgent: Agent) {
+  def renderTurtles(gl: GL2, glu: GLU, fontSize: Int, patchSize: Double, outlineAgent: Agent) {
     if (world.turtles == null)
       return
     import collection.JavaConverters._
@@ -32,7 +32,7 @@ extends AgentRenderer(world, shapeRenderer) {
         renderWrappedTurtle(gl, turtle, fontSize, patchSize, outlineAgent == turtle, lineScale)
   }
 
-  def renderWrappedTurtle(gl: GL, turtle: Turtle, fontSize: Int,
+  def renderWrappedTurtle(gl: GL2, turtle: Turtle, fontSize: Int,
                           patchSize: Double, outline: Boolean, lineScale: Double) {
     val shape3D = shapeRenderer.getShape(turtle.shape)
     val height = shapeRenderer.getShapeHeight(turtle.shape, shape3D, turtle.size)
@@ -44,7 +44,7 @@ extends AgentRenderer(world, shapeRenderer) {
       getOrientation(turtle))
   }
 
-  def renderHighlight(gl: GL, agent: Turtle) {
+  def renderHighlight(gl: GL2, agent: Turtle) {
     shapeRenderer.renderHighlight(
       gl, agent, shapeRenderer.shapeManager.getShape(agent.shape),
       getAgentCoords(agent, 1), getOrientation(agent))

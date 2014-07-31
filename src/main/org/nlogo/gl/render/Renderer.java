@@ -17,10 +17,15 @@ import org.nlogo.api.World;
 import org.nlogo.api.World3D;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
+import javax.media.opengl.GL2ES1;
+import javax.media.opengl.fixedfunc.GLMatrixFunc;
+import javax.media.opengl.fixedfunc.GLLightingFunc;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 import java.nio.DoubleBuffer;
+import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,8 +70,8 @@ public class Renderer
 
   // we need to save the last matricies for mouse-x/ycor;
   // also used by context menu - jrn 5/20/05
-  private DoubleBuffer modelMatrix;
-  private DoubleBuffer projMatrix;
+  private FloatBuffer modelMatrix;
+  private FloatBuffer projMatrix;
   private IntBuffer viewPort;
 
   public Renderer(World world,
@@ -81,8 +86,8 @@ public class Renderer
                   DrawingInterface drawing,
                   GLViewSettings glSettings,
                   ShapeRenderer shapeRenderer) {
-    modelMatrix = DoubleBuffer.wrap(new double[16]);
-    projMatrix = DoubleBuffer.wrap(new double[16]);
+    modelMatrix = FloatBuffer.wrap(new float[16]);
+    projMatrix = FloatBuffer.wrap(new float[16]);
     viewPort = IntBuffer.wrap(new int[4]);
 
     this.world = world;
@@ -150,7 +155,7 @@ public class Renderer
     // needed, instead of in here. Other parts of the application might
     // change these settings, which creates hard-to-debug issues.
 
-    GL gl = gLDrawable.getGL();
+    GL2 gl = (GL2)gLDrawable.getGL();
 
     ClassLoader classLoader = getClass().getClassLoader();
     org.nlogo.util.SysInfo.getJOGLInfoString_$eq
@@ -162,13 +167,13 @@ public class Renderer
             + "OpenGL vendor: " + gl.glGetString(GL.GL_VENDOR)
     );
 
-    gl.glShadeModel(GL.GL_SMOOTH);                     // Enable Smooth Shading
+    gl.glShadeModel(GLLightingFunc.GL_SMOOTH);                     // Enable Smooth Shading
     gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);          // Black Background
     gl.glClearDepth(1.0f);                            // Depth Buffer Setup
     gl.glEnable(GL.GL_DEPTH_TEST);              // Enables Depth Testing
     gl.glDepthFunc(GL.GL_LEQUAL);              // The Type Of Depth Testing To Do
 
-    gl.glHint(GL.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_FASTEST);
+    gl.glHint(GL2ES1.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_FASTEST);
 
     // Lighting
 
@@ -188,12 +193,12 @@ public class Renderer
 
     // This is necessary for properly rendering scaled objects. Without this, small objects
     // may look too bright, and large objects will look flat.
-    gl.glEnable(GL.GL_NORMALIZE);
+    gl.glEnable(GLLightingFunc.GL_NORMALIZE);
 
     // Coloring
 
-    gl.glColorMaterial(GL.GL_FRONT, GL.GL_AMBIENT_AND_DIFFUSE);
-    gl.glEnable(GL.GL_COLOR_MATERIAL);
+    gl.glColorMaterial(GL.GL_FRONT, GLLightingFunc.GL_AMBIENT_AND_DIFFUSE);
+    gl.glEnable(GLLightingFunc.GL_COLOR_MATERIAL);
 
     // Remove back-face rendering
 
@@ -215,7 +220,7 @@ public class Renderer
   }
 
   public void reshape(GLAutoDrawable gLDrawable, int x, int y, int width, int height) {
-    GL gl = gLDrawable.getGL();
+    GL2 gl = (GL2)gLDrawable.getGL();
     this.width = width;
     this.height = (height > 0) ? height : 1;
     ratio = (float) this.width / (float) this.height;
@@ -223,9 +228,9 @@ public class Renderer
     mainViewport(gl);
   }
 
-  private void mainViewport(GL gl) {
+  private void mainViewport(GL2 gl) {
     gl.glViewport(0, 0, width, height);
-    gl.glMatrixMode(GL.GL_PROJECTION);
+    gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
     gl.glLoadIdentity();
 
     // make the z-clip proportional to the max screen edge so the world doesn't
@@ -235,12 +240,15 @@ public class Renderer
             world.worldHeight()) * 4;
 
     glu.gluPerspective(45.0f, ratio, 0.1, zClip);
-    gl.glMatrixMode(GL.GL_MODELVIEW);
+    gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
     gl.glLoadIdentity();
   }
 
+  public void dispose(GLAutoDrawable gLDrawable) {
+  }
+
   public void display(GLAutoDrawable gLDrawable) {
-    final GL gl = gLDrawable.getGL();
+    final GL2 gl = (GL2)gLDrawable.getGL();
 
     gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
     shapeManager.checkQueue(gl, glu);
@@ -249,13 +257,13 @@ public class Renderer
     gl.glFlush();
   }
 
-  void renderClippingPlane(GL gl, double[] eqn, int plane) {
+  void renderClippingPlane(GL2 gl, double[] eqn, int plane) {
     java.nio.DoubleBuffer eqnBuffer = java.nio.DoubleBuffer.wrap(eqn);
     gl.glClipPlane(plane, eqnBuffer);
     gl.glEnable(plane);
   }
 
-  void setClippingPlanes(GL gl) {
+  void setClippingPlanes(GL2 gl) {
     // we get 6 clipping planes guaranteed (0-5).
     // there might be more we can check GL_MAX_CLIPPING_PLANES
     // ev 4/20/06
@@ -265,26 +273,26 @@ public class Renderer
     renderClippingPlane
         (gl, new double[]
             {1.0f, 0.0, 0.0f, (float) (-(world.minPxcor() - 0.5) * WORLD_SCALE) + 0.01f},
-            GL.GL_CLIP_PLANE0);
+            GL2ES1.GL_CLIP_PLANE0);
     renderClippingPlane
         (gl, new double[]
             {-1.0, 0.0, 0.0, (float) ((world.maxPxcor() + 0.5) * WORLD_SCALE) + 0.01f},
-            GL.GL_CLIP_PLANE1);
+            GL2ES1.GL_CLIP_PLANE1);
     renderClippingPlane
         (gl, new double[]
             {0.0, -1.0, 0.0, (float) ((world.maxPycor() + 0.5) * WORLD_SCALE) + 0.01f},
-            GL.GL_CLIP_PLANE2);
+            GL2ES1.GL_CLIP_PLANE2);
     renderClippingPlane
         (gl, new double[]
             {0.0, 1.0, 0.0, (float) (-(world.minPycor() - 0.5) * WORLD_SCALE) + 0.01f},
-            GL.GL_CLIP_PLANE3);
+            GL2ES1.GL_CLIP_PLANE3);
   }
 
-  void disableClippingPlanes(GL gl) {
-    gl.glDisable(GL.GL_CLIP_PLANE0);
-    gl.glDisable(GL.GL_CLIP_PLANE1);
-    gl.glDisable(GL.GL_CLIP_PLANE2);
-    gl.glDisable(GL.GL_CLIP_PLANE3);
+  void disableClippingPlanes(GL2 gl) {
+    gl.glDisable(GL2ES1.GL_CLIP_PLANE0);
+    gl.glDisable(GL2ES1.GL_CLIP_PLANE1);
+    gl.glDisable(GL2ES1.GL_CLIP_PLANE2);
+    gl.glDisable(GL2ES1.GL_CLIP_PLANE3);
     gl.glPopMatrix();
   }
 
@@ -321,7 +329,7 @@ public class Renderer
     }
   }
 
-  void render(GL gl) {
+  void render(GL2 gl) {
     // Notes:
     //
     // This render function only gets called in NetLogo 3D, or in the "3D View" of
@@ -591,7 +599,7 @@ public class Renderer
     return alpha > 0 && alpha < 255;
   }
 
-  void renderAgent(GL gl, Agent agent, Double lineScale) {
+  void renderAgent(GL2 gl, Agent agent, Double lineScale) {
     if (agent instanceof Turtle) {
       turtleRenderer.renderWrappedTurtle(gl, (Turtle) agent, renderer.fontSize(),
           renderer.patchSize(), (agent == outlineAgent), lineScale);
@@ -608,7 +616,7 @@ public class Renderer
     // have to check if( agent instanceof Patch ).
   }
 
-  void renderWorld(GL gl, World world) {
+  void renderWorld(GL2 gl, World world) {
     // This version of renderWorld gets called when we're in the 3D view in 2D.
     // For NetLogo 3D, look in Renderer3D.renderWorld().
     //
@@ -691,7 +699,7 @@ public class Renderer
   // pick/select objects for context menu
   void performPick() {
     List<Agent> agents = new ArrayList<Agent>(5);
-    double[][] ray = generatePickRay(mouseState.point().getX(), (height - mouseState.point().getY()));
+    float[][] ray = generatePickRay(mouseState.point().getX(), (height - mouseState.point().getY()));
     pickPatches(agents, ray);
     pickTurtles(agents, ray);
     pickLinks(agents, ray);
@@ -700,21 +708,21 @@ public class Renderer
   }
 
   // saves current transformation matricies and viewport
-  private void storeMatricies(GL gl) {
-    gl.glGetDoublev(GL.GL_MODELVIEW_MATRIX, modelMatrix);
-    gl.glGetDoublev(GL.GL_PROJECTION_MATRIX, projMatrix);
+  private void storeMatricies(GL2 gl) {
+    gl.glGetFloatv(GLMatrixFunc.GL_MODELVIEW_MATRIX, modelMatrix);
+    gl.glGetFloatv(GLMatrixFunc.GL_PROJECTION_MATRIX, projMatrix);
     gl.glGetIntegerv(GL.GL_VIEWPORT, viewPort);
   }
 
   // generates a pick/selection ray from mouse coordinates
-  double[][] generatePickRay(double mouseX, double mouseY) {
-    double[][] ray = new double[2][3];
+  float[][] generatePickRay(double mouseX, double mouseY) {
+    float[][] ray = new float[2][3];
 
     // create pick-ray
     glu.gluUnProject(mouseX, mouseY, 0.0d, modelMatrix, projMatrix,
-        viewPort, DoubleBuffer.wrap(ray[0]));
+        viewPort, FloatBuffer.wrap(ray[0]));
     glu.gluUnProject(mouseX, mouseY, 1.0d, modelMatrix, projMatrix,
-        viewPort, DoubleBuffer.wrap(ray[1]));
+        viewPort, FloatBuffer.wrap(ray[1]));
 
     return ray;
   }
@@ -736,7 +744,7 @@ public class Renderer
   }
 
   // detects which patch a pick-ray intersects with
-  void pickPatches(List<Agent> agents, double[][] ray) {
+  void pickPatches(List<Agent> agents, float[][] ray) {
     // detect any patches in the pick-ray ( ( Renderer.WORLD_SCALE / 2 )
     // is the offset of the patches plane in the z-axis - jrn)
     double scale = (1.0 / WORLD_SCALE);
@@ -855,13 +863,13 @@ public class Renderer
   }
 
   public void setMouseCors(java.awt.Point mousePt) {
-    double[][] ray = generatePickRay(mousePt.getX(), (height - mousePt.getY()));
+    float[][] ray = generatePickRay(mousePt.getX(), (height - mousePt.getY()));
     pickPatches(null, ray);
     mouseState.point_$eq(mousePt);
   }
 
   public void updateMouseCors() {
-    double[][] ray = generatePickRay(mouseState.point().getX(), (height - mouseState.point().getY()));
+    float[][] ray = generatePickRay(mouseState.point().getX(), (height - mouseState.point().getY()));
     pickPatches(null, ray);
   }
 
@@ -900,7 +908,7 @@ public class Renderer
     shapeManager.invalidateLinkShape(shape);
   }
 
-  public void translateWorld(GL gl, World world) {
+  public void translateWorld(GL2 gl, World world) {
     gl.glTranslated
         ((world.maxPxcor() + world.minPxcor()) / 2.0 * Renderer.WORLD_SCALE,
             (world.maxPycor() + world.minPycor()) / 2.0 * Renderer.WORLD_SCALE,

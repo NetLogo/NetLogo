@@ -2,7 +2,7 @@
 
 package org.nlogo.gl.render
 
-import javax.media.opengl.GL
+import javax.media.opengl.{ GL, GL2, GL2GL3 }
 
 import org.nlogo.api.World
 import org.nlogo.api.Perspective
@@ -17,7 +17,7 @@ private class ShapeRenderer(world: World) {
 
   var shapeManager: ShapeManager = _
 
-  def renderWrappedAgent(gl: GL, shape3D: GLShape, size: Double, color: java.awt.Color,
+  def renderWrappedAgent(gl: GL2, shape3D: GLShape, size: Double, color: java.awt.Color,
                          label: String, labelColor: AnyRef,
                          x: Double, y: Double, z: Double, height: Float,
                          patchSize: Double, fontSize: Int, outline: Boolean,
@@ -80,7 +80,7 @@ private class ShapeRenderer(world: World) {
         height, fontSize, patchSize)
   }
 
-  def renderAgent(gl: GL, shape3D: GLShape, color: java.awt.Color, size: Double,
+  def renderAgent(gl: GL2, shape3D: GLShape, color: java.awt.Color, size: Double,
                   xcor: Double, ycor: Double, zcor: Double,
                   stroke: Float, outline: Boolean, orientation: Array[Double]) {
     gl.glPushMatrix()
@@ -100,7 +100,7 @@ private class ShapeRenderer(world: World) {
     gl.glPopMatrix()
   }
 
-  def alignAgent(gl: GL, size: Double, xcor: Double, ycor: Double, zcor: Double,
+  def alignAgent(gl: GL2, size: Double, xcor: Double, ycor: Double, zcor: Double,
                  shape3D: GLShape, highlight: Boolean, orientation: Array[Double]) {
     val Array(heading, pitch, roll) = orientation
     gl.glTranslated(xcor, ycor, zcor)
@@ -130,7 +130,7 @@ private class ShapeRenderer(world: World) {
     gl.glScaled(size, size, size)
   }
 
-  def doOutline(gl: GL, shape3D: GLShape, rgb: Array[Float]) {
+  def doOutline(gl: GL2, shape3D: GLShape, rgb: Array[Float]) {
     if (stencilSupport) {
       // This highlighting code was borrowed from
       // http://www.flipcode.com/articles/article_objectoutline.shtml
@@ -148,22 +148,22 @@ private class ShapeRenderer(world: World) {
       gl.glStencilFunc(GL.GL_NOTEQUAL, 1, 0xFFFF)
       gl.glStencilOp(GL.GL_KEEP, GL.GL_KEEP, GL.GL_REPLACE)
       gl.glLineWidth(2)
-      gl.glPolygonMode(GL.GL_FRONT, GL.GL_LINE)
+      gl.glPolygonMode(GL.GL_FRONT, GL2GL3.GL_LINE)
       gl.glColor4f((rgb(0) + 0.5f) % 1f, (rgb(1) + 0.5f) % 1f,
         (rgb(2) + 0.5f) % 1f, 0.5f)
       gl.glCallList(shape3D.displayListIndex)
       gl.glLineWidth(4)
-      gl.glPolygonMode(GL.GL_FRONT, GL.GL_LINE)
+      gl.glPolygonMode(GL.GL_FRONT, GL2GL3.GL_LINE)
       gl.glColor4f(rgb(0), rgb(1), rgb(2), 0.5f)
       gl.glCallList(shape3D.displayListIndex)
       gl.glLineWidth(1)
-      gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL)
+      gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2GL3.GL_FILL)
       gl.glDisable(GL.GL_STENCIL_TEST)
     }
     else {
       // render the thick-lined wireframe
       gl.glPushMatrix()
-      gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE)
+      gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2GL3.GL_LINE)
       gl.glColor4f(rgb(0), rgb(1), rgb(2), 0.5f)
       gl.glLineWidth(4)
       gl.glCallList(shape3D.displayListIndex)
@@ -177,7 +177,7 @@ private class ShapeRenderer(world: World) {
       // push the filled object towards the screen
       gl.glEnable(GL.GL_POLYGON_OFFSET_FILL)
       gl.glPolygonOffset(-3f, -3f)
-      gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL)
+      gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2GL3.GL_FILL)
       gl.glColor4f(rgb(0), rgb(1), rgb(2), 0.5f)
       gl.glCallList(shape3D.displayListIndex)
       gl.glDisable(GL.GL_POLYGON_OFFSET_FILL)
@@ -196,7 +196,7 @@ private class ShapeRenderer(world: World) {
     else
       size.toFloat
 
-  def renderHighlight(gl: GL, agent: Agent, shape: GLShape, coords: Array[Double], orientation: Array[Double]) {
+  def renderHighlight(gl: GL2, agent: Agent, shape: GLShape, coords: Array[Double], orientation: Array[Double]) {
     gl.glPushMatrix()
     alignAgent(gl, agent.size,
       coords(0) * Renderer.WORLD_SCALE,
@@ -207,7 +207,7 @@ private class ShapeRenderer(world: World) {
     gl.glPopMatrix()
   }
 
-  def renderLabel(gl: GL, label: String, labelColor: AnyRef,
+  def renderLabel(gl: GL2, label: String, labelColor: AnyRef,
                   xcor: Float, ycor: Float, zcor: Float,
                   height: Float, fontSize: Int, patchSize: Double) {
     val observer = world.observer
@@ -227,7 +227,7 @@ private class ShapeRenderer(world: World) {
     gl.glPopMatrix()
   }
 
-  def renderHalo(gl: GL, isTurtle: Boolean, diameter: Double) {
+  def renderHalo(gl: GL2, isTurtle: Boolean, diameter: Double) {
     val haloShape = shapeManager.getShape("@@@HALO@@@")
     val width = world.worldWidth
     val height = world.worldHeight
@@ -264,7 +264,7 @@ private class ShapeRenderer(world: World) {
       gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE)
       val darkOverlay = Array(0f, 0f, 0.196f, 0.392f)
       gl.glColor4fv(java.nio.FloatBuffer.wrap(darkOverlay))
-      gl.glBegin(GL.GL_QUADS)
+      gl.glBegin(GL2GL3.GL_QUADS)
       gl.glNormal3f(0f, 0f, 1f)
       gl.glVertex3f(-100f, 100f, 0f)
       gl.glVertex3f(-100f, -100f, 0f)

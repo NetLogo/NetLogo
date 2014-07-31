@@ -4,7 +4,7 @@ package org.nlogo.gl.render;
 
 import org.nlogo.api.World;
 
-import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 
 class TextureRenderer {
   int texture = 0;
@@ -26,7 +26,7 @@ class TextureRenderer {
   // as I've been commenting I realize it may have been easier to just have different cases
   // for different tile arrangements rather than this massive crazy generalized method.
   // oh well.  ev 6/3/05
-  void renderTextureTiles(GL gl, int width, int height, int textureSize,
+  void renderTextureTiles(GL2 gl, int width, int height, int textureSize,
                           int[] colors, boolean dirty) {
     float scale = Renderer.WORLD_SCALE;
 

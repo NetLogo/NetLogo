@@ -3,15 +3,18 @@
 package org.nlogo.gl.render
 
 import java.util.{ Map => JMap }
-import javax.media.opengl.GL
+import javax.media.opengl.{ GL, GL2, GL2GL3 }
 import javax.media.opengl.glu.{ GLU, GLUquadric }
 import ShapeManager.SMOOTHNESS
 
-private class Builtins(gl: GL, glu: GLU, quadric: GLUquadric) {
+private class Builtins(gl: GL2, glu: GLU, quadric: GLUquadric) {
 
   import gl._
   import glu._
   import GL._
+  import GL2._
+  import GL2GL3._
+  import javax.media.opengl.fixedfunc.GLLightingFunc._
 
   def add(shapes: JMap[String, GLShape],
           shapeMap: JMap[String, String]): Int = {
@@ -22,7 +25,7 @@ private class Builtins(gl: GL, glu: GLU, quadric: GLUquadric) {
     def shape(name: String, rotatable: Boolean = true)(body: => Unit) {
       lastList += 1
       shapes.put(name, new GLShape(name, lastList, rotatable))
-      glNewList(lastList, GL.GL_COMPILE)
+      glNewList(lastList, GL2.GL_COMPILE)
       body
       glEndList()
     }

@@ -2,7 +2,8 @@
 
 package org.nlogo.gl.view
 
-import javax.media.opengl.GLCanvas
+import javax.media.opengl.awt.GLCanvas
+import javax.media.opengl.GLProfile
 
 import org.nlogo.gl.render.Renderer
 import java.awt.image.BufferedImage
@@ -12,7 +13,7 @@ abstract class View(title: String, val viewManager: ViewManager, var renderer: R
 extends java.awt.Frame(title)
 with org.nlogo.window.Event.LinkChild {
 
-  var canvas: javax.media.opengl.GLCanvas = null
+  var canvas: javax.media.opengl.awt.GLCanvas = null
   val picker = new Picker(this)
 
   if (org.nlogo.api.Version.is3D)
@@ -43,7 +44,7 @@ with org.nlogo.window.Event.LinkChild {
   def updatePerspectiveLabel() { }
 
   def createCanvas(antiAliasing: Boolean) {
-    val capabilities = new javax.media.opengl.GLCapabilities
+    val capabilities = new javax.media.opengl.GLCapabilities(GLProfile.getGL2GL3)
     capabilities.setSampleBuffers(antiAliasing)
     capabilities.setNumSamples(4)
     capabilities.setStencilBits(1)

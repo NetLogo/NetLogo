@@ -3,6 +3,7 @@
 package org.nlogo.gl.render
 
 import javax.media.opengl.GL
+import javax.media.opengl.GL2
 import javax.media.opengl.glu.GLU
 import org.nlogo.api.{ Agent, Link, Perspective, World }
 
@@ -22,7 +23,7 @@ private class LinkRenderer(world: World, shapeRenderer: ShapeRenderer)
       (world.worldWidth max world.worldHeight) * 1.5 / distance
   }
 
-  def renderLinks(gl: GL, glu: GLU, fontSize: Int, patchSize: Double, outlineAgent: Agent) {
+  def renderLinks(gl: GL2, glu: GLU, fontSize: Int, patchSize: Double, outlineAgent: Agent) {
     if(world.links == null)
       return
     val scale = lineScale
@@ -35,7 +36,7 @@ private class LinkRenderer(world: World, shapeRenderer: ShapeRenderer)
   def getLinkCoords(link: Link) =
     Array[Float](link.x1.toFloat, link.y1.toFloat, 0, link.x2.toFloat, link.y2.toFloat, 0)
 
-  def renderWrappedLink(gl: GL, link: Link, fontSize: Int, patchSize: Double,
+  def renderWrappedLink(gl: GL2, link: Link, fontSize: Int, patchSize: Double,
                         outline: Boolean, lineScale: Double) {
     val maxx = world.maxPxcor + 0.5
     val minx = world.minPxcor - 0.5
@@ -114,24 +115,24 @@ private class LinkRenderer(world: World, shapeRenderer: ShapeRenderer)
     }
   }
 
-  private def renderLink(gl: GL, shape: GLLinkShape, color: java.awt.Color, size: Double,
+  private def renderLink(gl: GL2, shape: GLLinkShape, color: java.awt.Color, size: Double,
                          x1: Float, y1: Float, z1: Float,
                          x2: Float, y2: Float, z2: Float,
                          patchSize: Double, lineThickness: Double, isDirected: Boolean,
                          link: Link, outline: Boolean) {
     gl.glPushMatrix()
     gl.glColor4fv(java.nio.FloatBuffer.wrap(color.getRGBColorComponents(null)))
-    gl.glEnable(GL.GL_LINE_STIPPLE)
+    gl.glEnable(GL2.GL_LINE_STIPPLE)
     val stroke = (1.0 max (patchSize * lineThickness)).toFloat
     gl.glLineWidth(stroke)
     shape.render(gl, x1, y1, z1, x2, y2, z2, stroke,
                  isDirected, link, shapeRenderer, outline, color, world)
     gl.glLineWidth(1.0f)
-    gl.glDisable(GL.GL_LINE_STIPPLE)
+    gl.glDisable(GL2.GL_LINE_STIPPLE)
     gl.glPopMatrix()
   }
 
-  def renderIndividualLinks(gl: GL, glu: GLU, link: Link, fontSize: Int,
+  def renderIndividualLinks(gl: GL2, glu: GLU, link: Link, fontSize: Int,
                             patchSize: Double, outlineAgent: Agent)
   {
     if(world.links == null)

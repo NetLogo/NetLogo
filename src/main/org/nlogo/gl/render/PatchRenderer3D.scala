@@ -2,28 +2,28 @@
 
 package org.nlogo.gl.render
 
-import javax.media.opengl.GL
+import javax.media.opengl.{GL, GL2, GL2GL3}
 import org.nlogo.api.{ Patch, Patch3D, World, World3D, Color, DrawingInterface }
 
 private class PatchRenderer3D(world: World3D, drawing: DrawingInterface, shapeRenderer: ShapeRenderer)
 extends PatchRenderer(world, drawing, shapeRenderer) {
 
-  override def renderPatchTexture(gl: GL)
+  override def renderPatchTexture(gl: GL2)
   {
     super.renderPatches(gl)
   }
 
-  override def renderLabels(gl: GL, fontSize: Int, patchSize: Double) {
+  override def renderLabels(gl: GL2, fontSize: Int, patchSize: Double) {
     if(world.patchesAllBlack)
       super.renderLabels(gl, fontSize, patchSize)
   }
 
-  override def renderIndividualLabels(gl: GL, patch: Patch3D, fontSize: Int, patchSize: Double) {
+  override def renderIndividualLabels(gl: GL2, patch: Patch3D, fontSize: Int, patchSize: Double) {
     if(world.patchesAllBlack)
       super.renderIndividualLabels(gl, patch, fontSize, patchSize)
   }
 
-  def renderIndividualPatch(gl: GL, patch: Patch3D, fontSize: Int, patchSize: Double) {
+  def renderIndividualPatch(gl: GL2, patch: Patch3D, fontSize: Int, patchSize: Double) {
     if(!world.patchesAllBlack) {
       var flag = true
       gl.glPushMatrix()
@@ -47,7 +47,7 @@ extends PatchRenderer(world, drawing, shapeRenderer) {
     }
   }
 
-  def renderBlackPatches(gl: GL, patch: Patch3D, fontSize: Int, patchSize: Double) {
+  def renderBlackPatches(gl: GL2, patch: Patch3D, fontSize: Int, patchSize: Double) {
     if(!world.patchesAllBlack) {
       if(patch.hasLabel) {
         gl.glPushMatrix()
@@ -60,7 +60,7 @@ extends PatchRenderer(world, drawing, shapeRenderer) {
     }
   }
 
-  override def renderPatches(gl: GL, fontSize: Int, patchSize: Double) {
+  override def renderPatches(gl: GL2, fontSize: Int, patchSize: Double) {
     if(!world.patchesAllBlack || world.patchesWithLabels != 0) {
       gl.glPushMatrix()
       val numPatches = world.patchColors.length
@@ -87,7 +87,7 @@ extends PatchRenderer(world, drawing, shapeRenderer) {
     }
   }
 
-  def renderWrappedPatch(gl: GL, patch: Patch3D, shape: GLShape,
+  def renderWrappedPatch(gl: GL2, patch: Patch3D, shape: GLShape,
                         fontSize: Int, patchSize: Double, outline: Boolean) {
     shapeRenderer.renderWrappedAgent(
       gl, shapeRenderer.getShape("@@@PATCH@@@"),
@@ -113,7 +113,7 @@ extends PatchRenderer(world, drawing, shapeRenderer) {
     coords
   }
 
-  override def renderOutline(gl: GL, patch: Patch) {
+  override def renderOutline(gl: GL2, patch: Patch) {
     val shape = shapeRenderer.getShape("@@@PATCH@@@")
     val rgb = Color.getColor(patch.pcolor).getRGBColorComponents(null)
     gl.glPushMatrix()
@@ -123,7 +123,7 @@ extends PatchRenderer(world, drawing, shapeRenderer) {
                     coords(2) * Renderer.WORLD_SCALE)
     // render the thick-lined wireframe
     gl.glPushMatrix()
-    gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE)
+    gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2GL3.GL_LINE)
     gl.glColor3f(rgb(0), rgb(1), rgb(2))
     gl.glLineWidth(4)
     gl.glCallList(shape.displayListIndex)
@@ -133,7 +133,7 @@ extends PatchRenderer(world, drawing, shapeRenderer) {
     gl.glCallList(shape.displayListIndex)
     gl.glLineWidth(1)
     gl.glPopMatrix()
-    gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL)
+    gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2GL3.GL_FILL)
     gl.glPopMatrix()
   }
 

@@ -2,7 +2,8 @@
 
 package org.nlogo.gl.render
 
-import javax.media.opengl.GL
+import javax.media.opengl.{ GL, GL2 }
+import javax.media.opengl.fixedfunc.GLLightingFunc
 import javax.media.opengl.glu.GLU
 import org.nlogo.api.World3D
 import java.nio.FloatBuffer
@@ -20,19 +21,19 @@ import java.lang.{Float => JFloat, Double => JDouble}
 
 object LightManager {
   val lightNumbers = List(
-    GL.GL_LIGHT0, GL.GL_LIGHT1, GL.GL_LIGHT2, GL.GL_LIGHT3,
-    GL.GL_LIGHT4, GL.GL_LIGHT5, GL.GL_LIGHT6, GL.GL_LIGHT7)
+    GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_LIGHT1, GLLightingFunc.GL_LIGHT2, GLLightingFunc.GL_LIGHT3,
+    GLLightingFunc.GL_LIGHT4, GLLightingFunc.GL_LIGHT5, GLLightingFunc.GL_LIGHT6, GLLightingFunc.GL_LIGHT7)
 }
 
 class LightManager {
 
   val lights = ArrayBuffer[Light]()
 
-  private var glInstance: Option[GL] = None
-  implicit def getGL: GL = glInstance.getOrElse(
+  private var glInstance: Option[GL2] = None
+  implicit def getGL: GL2 = glInstance.getOrElse(
     sys.error("Handle to OpenGL interface is not set. Make sure init() got called."))
 
-  def init(gl: GL) {
+  def init(gl: GL2) {
     glInstance = Some(gl)
   }
 
@@ -83,8 +84,8 @@ abstract class Light {
 
   var glLightNumber = -1
 
-  var glInstance: Option[GL] = None
-  implicit def getGL: GL = glInstance.getOrElse(sys.error(
+  var glInstance: Option[GL2] = None
+  implicit def getGL: GL2 = glInstance.getOrElse(sys.error(
     "Handle to OpenGL interface must be set before attempting to use the light. "
     + "Use LightManager.addLight() and LightManager.removeLight() to add or remove lights, "
     + "and be sure LightManager.init() was called."))
@@ -96,9 +97,9 @@ abstract class Light {
     assertValidLightNumber()
     _isOn = true
     val gl = getGL
-    gl.glLightfv(glLightNumber, GL.GL_AMBIENT, FloatBuffer.wrap(ambient.toFloat4Array))
-    gl.glLightfv(glLightNumber, GL.GL_DIFFUSE, FloatBuffer.wrap(diffuse.toFloat4Array))
-    gl.glLightfv(glLightNumber, GL.GL_SPECULAR, FloatBuffer.wrap(specular.toFloat4Array))
+    gl.glLightfv(glLightNumber, GLLightingFunc.GL_AMBIENT, FloatBuffer.wrap(ambient.toFloat4Array))
+    gl.glLightfv(glLightNumber, GLLightingFunc.GL_DIFFUSE, FloatBuffer.wrap(diffuse.toFloat4Array))
+    gl.glLightfv(glLightNumber, GLLightingFunc.GL_SPECULAR, FloatBuffer.wrap(specular.toFloat4Array))
     // Position/Direction gets set in the applyLight() method.
     gl.glEnable(glLightNumber)
   }
@@ -227,9 +228,9 @@ abstract class Light {
   }
 
   def assertValidLightNumber() {
-    assert (glLightNumber >= GL.GL_LIGHT0 || glLightNumber <= GL.GL_LIGHT7,
+    assert (glLightNumber >= GLLightingFunc.GL_LIGHT0 || glLightNumber <= GLLightingFunc.GL_LIGHT7,
       { sys.error("Invalid OpenGL light number: " + glLightNumber
-          + ". Light number needs to be between " + GL.GL_LIGHT0 + " and " + GL.GL_LIGHT7
+          + ". Light number needs to be between " + GLLightingFunc.GL_LIGHT0 + " and " + GLLightingFunc.GL_LIGHT7
           + ". Use LightManager.addLight() and LightManager.removeLight() to add or remove lights.")
       })
   }
@@ -249,10 +250,10 @@ class DirectionalLight(val direction: Direction) extends Light {
 
   def applyLight() {
     val gl = getGL
-    gl.glEnable(GL.GL_LIGHTING)
+    gl.glEnable(GLLightingFunc.GL_LIGHTING)
     if (isOn) {
       gl.glEnable(glLightNumber)
-      gl.glLightfv(glLightNumber, GL.GL_POSITION, FloatBuffer.wrap(direction.toFloat4Array))
+      gl.glLightfv(glLightNumber, GLLightingFunc.GL_POSITION, FloatBuffer.wrap(direction.toFloat4Array))
     } else {
       gl.glDisable(glLightNumber)
     }
@@ -262,7 +263,7 @@ class DirectionalLight(val direction: Direction) extends Light {
                   shapeRenderer: ShapeRenderer) {
     val gl = getGL
 
-    gl.glDisable(GL.GL_LIGHTING)
+    gl.glDisable(GLLightingFunc.GL_LIGHTING)
 
     gl.glPushMatrix()
 
@@ -292,7 +293,7 @@ class DirectionalLight(val direction: Direction) extends Light {
     shapeRenderer.renderLabel(getGL, getLabel, 47: JDouble, lightSourceX, lightSourceY, lightSourceZ,
         1.0f, 12, world.patchSize)
 
-    gl.glEnable(GL.GL_LIGHTING)
+    gl.glEnable(GLLightingFunc.GL_LIGHTING)
   }
 }
 
@@ -303,10 +304,10 @@ class PositionalLight(val position: Position) extends Light {
 
   def applyLight() {
     val gl = getGL
-    gl.glEnable(GL.GL_LIGHTING)
+    gl.glEnable(GLLightingFunc.GL_LIGHTING)
     if (isOn) {
       gl.glEnable(glLightNumber)
-      gl.glLightfv(glLightNumber, GL.GL_POSITION, FloatBuffer.wrap(position.toFloat4Array))
+      gl.glLightfv(glLightNumber, GLLightingFunc.GL_POSITION, FloatBuffer.wrap(position.toFloat4Array))
     } else {
       gl.glDisable(glLightNumber)
     }
@@ -316,7 +317,7 @@ class PositionalLight(val position: Position) extends Light {
                   shapeRenderer: ShapeRenderer) {
     val gl = getGL
 
-    gl.glDisable(GL.GL_LIGHTING)
+    gl.glDisable(GLLightingFunc.GL_LIGHTING)
 
     // Render a sphere at the light's position
     gl.glPushMatrix()
@@ -333,7 +334,7 @@ class PositionalLight(val position: Position) extends Light {
     shapeRenderer.renderLabel(getGL, getLabel, 47: JDouble, position.x, position.y, position.z,
         1.0f, 12, world.patchSize)
 
-    gl.glEnable(GL.GL_LIGHTING)
+    gl.glEnable(GLLightingFunc.GL_LIGHTING)
   }
 }
 

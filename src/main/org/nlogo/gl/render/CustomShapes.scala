@@ -3,7 +3,7 @@
 package org.nlogo.gl.render
 
 import java.util.{ List => JList, Map => JMap }
-import javax.media.opengl.GL
+import javax.media.opengl.{ GL, GL2, GL2GL3}
 import org.nlogo.shape.InvalidShapeDescriptionException
 import collection.JavaConverters._
 
@@ -13,11 +13,11 @@ private object CustomShapes {
     def javaLines = lines.asJava
   }
 
-  def addNewShape(gl: GL, shapes: JMap[String, GLShape],
+  def addNewShape(gl: GL2, shapes: JMap[String, GLShape],
                   shape: Description): Int = {
     val lastList = gl.glGenLists(1)
     shapes.put(shape.name, new GLShape(shape.name, lastList))
-    gl.glNewList(lastList, GL.GL_COMPILE)
+    gl.glNewList(lastList, GL2.GL_COMPILE)
     for (line <- shape.lines)
       lineHandler(line).get(gl)
     gl.glEndList()
@@ -26,12 +26,12 @@ private object CustomShapes {
 
   // serves the dual purpose of checking whether the line is valid (if it isn't None is returned)
   // and associating valid lines with actions
-  private def lineHandler(line: String): Option[GL => Unit] =
+  private def lineHandler(line: String): Option[GL2 => Unit] =
     try line.split(" ") match {
       case Array("tris") =>
         Some(_.glBegin(GL.GL_TRIANGLES))
       case Array("quads") =>
-        Some(_.glBegin(GL.GL_QUADS))
+        Some(_.glBegin(GL2GL3.GL_QUADS))
       case Array("stop") =>
         Some(_.glEnd())
       case Array("normal:", s0, s1, s2) =>
@@ -45,13 +45,13 @@ private object CustomShapes {
     }
     catch { case _: NumberFormatException => None }
 
-  def updateShapes(gl: GL, lastList: Int,
+  def updateShapes(gl: GL2, lastList: Int,
                    shapes: JMap[String, GLShape],
                    customShapes: JMap[String, JList[String]]): Int = {
     for (((shapeName, lines), index) <- customShapes.asScala.zipWithIndex) {
       shapes.put(shapeName, new GLShape(shapeName, lastList + index))
       customShapes.put(shapeName, lines)
-      gl.glNewList(lastList + index, GL.GL_COMPILE)
+      gl.glNewList(lastList + index, GL2.GL_COMPILE)
       for (line <- lines.asScala)
         lineHandler(line).get(gl)
       gl.glEndList()

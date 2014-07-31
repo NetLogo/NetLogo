@@ -3,6 +3,9 @@
 package org.nlogo.gl.render
 
 import javax.media.opengl.GL
+import javax.media.opengl.GL2
+import javax.media.opengl.GL2GL3
+import javax.media.opengl.fixedfunc.GLLightingFunc
 import org.nlogo.api.{ World, Patch, Patch3D, Perspective, DrawingInterface}
 
 private class PatchRenderer(world: World, drawing: DrawingInterface, shapeRenderer: ShapeRenderer)
@@ -15,7 +18,7 @@ extends TextureRenderer(world) {
     coords
   }
 
-  def renderIndividualLabels(gl: GL, patch: Patch3D, fontSize: Int, patchSize: Double) {
+  def renderIndividualLabels(gl: GL2, patch: Patch3D, fontSize: Int, patchSize: Double) {
     if(world.patchesWithLabels > 0) {
       val scale = Renderer.WORLD_SCALE
       if(patch.hasLabel) {
@@ -28,7 +31,7 @@ extends TextureRenderer(world) {
     }
   }
 
-  def renderLabels(gl: GL, fontSize: Int, patchSize: Double) {
+  def renderLabels(gl: GL2, fontSize: Int, patchSize: Double) {
     if(world.patchesWithLabels > 0) {
       val numPatches = world.patchColors.length
       val scale = Renderer.WORLD_SCALE
@@ -45,7 +48,7 @@ extends TextureRenderer(world) {
     }
   }
 
-  def renderLabel(gl: GL, col: Float, row: Float, dep: Float,
+  def renderLabel(gl: GL2, col: Float, row: Float, dep: Float,
                   patch: Patch, fontSize: Int, patchSize: Double) {
     val observer = world.observer
     gl.glTranslated(col, row, dep)
@@ -63,31 +66,31 @@ extends TextureRenderer(world) {
       gl, world, patch.labelString, patch.labelColor, fontSize, patchSize)
   }
 
-  def renderOutline(gl: GL, patch: Patch) {
+  def renderOutline(gl: GL2, patch: Patch) {
     gl.glPushMatrix()
     val scale = Renderer.WORLD_SCALE
     val rgb = org.nlogo.api.Color.getColor(patch.pcolor).getRGBColorComponents(null)
     gl.glColor3f((rgb(0) + 0.5f) % 1f,
                  (rgb(1) + 0.5f) % 1f,
                  (rgb(2) + 0.5f) % 1f)
-    gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE)
-    gl.glEnable(GL.GL_POLYGON_OFFSET_LINE)
+    gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2GL3.GL_LINE)
+    gl.glEnable(GL2GL3.GL_POLYGON_OFFSET_LINE)
     gl.glPolygonOffset(-1f, -1f)
     gl.glScaled(scale, scale, scale)
     val coords = getPatchCoords(patch)
     gl.glTranslated(coords(0), coords(1), coords(2))
-    gl.glBegin(GL.GL_QUADS)
+    gl.glBegin(GL2GL3.GL_QUADS)
     gl.glVertex3f(-0.5f, 0.5f, -0.5f)
     gl.glVertex3f(-0.5f, -0.5f, -0.5f)
     gl.glVertex3f(0.5f, -0.5f, -0.5f)
     gl.glVertex3f(0.5f, 0.5f, -0.5f)
     gl.glEnd()
-    gl.glDisable(GL.GL_POLYGON_OFFSET_LINE)
-    gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL)
+    gl.glDisable(GL2GL3.GL_POLYGON_OFFSET_LINE)
+    gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2GL3.GL_FILL)
     gl.glPopMatrix()
   }
 
-  def renderHightlight(gl: GL, patch: Patch) {
+  def renderHightlight(gl: GL2, patch: Patch) {
     gl.glPushMatrix()
     val scale = Renderer.WORLD_SCALE
     gl.glScaled(scale, scale, scale)
@@ -98,22 +101,22 @@ extends TextureRenderer(world) {
     gl.glPopMatrix()
   }
 
-  def renderPatchTexture(gl: GL) {
+  def renderPatchTexture(gl: GL2) {
     renderPatches(gl)
   }
 
   /// textures
 
-  def renderPatches(gl: GL) {
+  def renderPatches(gl: GL2) {
     calculateTextureSize(gl, world.patchesAllBlack)
     renderTexture(gl)
   }
 
-  def renderPatches(gl: GL, fontSize: Int, patchSize: Double) { }
+  def renderPatches(gl: GL2, fontSize: Int, patchSize: Double) { }
 
-  private def renderTexture(gl: GL) {
+  private def renderTexture(gl: GL2) {
     gl.glEnable(GL.GL_TEXTURE_2D)
-    gl.glDisable(GL.GL_LIGHTING)
+    gl.glDisable(GLLightingFunc.GL_LIGHTING)
     // we disable writing to the depth buffer because we technically want to guarantee the drawing
     // will be written, which has exactly the same depth as the patches, and hence can cause
     // "stitching" - jrn 6/2/05
@@ -149,12 +152,12 @@ extends TextureRenderer(world) {
     // done, clean up
     if(!drawing.isBlank)
       gl.glDepthMask(true)
-    gl.glEnable(GL.GL_LIGHTING)
+    gl.glEnable(GLLightingFunc.GL_LIGHTING)
     gl.glPopMatrix()
     gl.glBindTexture(GL.GL_TEXTURE_2D, 0)
   }
 
-  private def calculateTextureSize(gl: GL, patchesBlank: Boolean) {
+  private def calculateTextureSize(gl: GL2, patchesBlank: Boolean) {
     // generate new textures
     if(!patchesBlank || textureSize == 0) {
       val newSize = TextureUtils.calculateTextureSize(

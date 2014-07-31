@@ -2,7 +2,7 @@
 
 package org.nlogo.gl.render
 
-import javax.media.opengl.GL
+import javax.media.opengl.{ GL, GL2 }
 import org.nlogo.api.{ Drawing3D, DrawingLine3D, World3D, Perspective }
 import collection.JavaConverters._
 
@@ -13,9 +13,9 @@ extends DrawingRendererInterface {
 
   // make a calllist for the line shape we use for drawing.  we don't want to have to depend on the
   // shapeManager so just add it here.
-  def init(gl: GL) {
+  def init(gl: GL2) {
     lineIndex = gl.glGenLists(1)
-    gl.glNewList(lineIndex, GL.GL_COMPILE)
+    gl.glNewList(lineIndex, GL2.GL_COMPILE)
     gl.glBegin(GL.GL_LINES)
     gl.glNormal3f(0f, 0f, -1f)
     gl.glVertex3f(0, 0 , 0)
@@ -26,7 +26,7 @@ extends DrawingRendererInterface {
 
   private def drawing = world.getDrawing.asInstanceOf[Drawing3D]
 
-  def renderDrawing(gl: GL) {
+  def renderDrawing(gl: GL2) {
     var defaultDist = 1.5 * (world.worldWidth max world.worldHeight max world.worldDepth)
     // Link stamps
     for(stamp <- drawing.linkStamps.asScala) {
@@ -47,12 +47,12 @@ extends DrawingRendererInterface {
     gl.glLineWidth(1f)
   }
 
-  def renderTrails(gl: GL) {
+  def renderTrails(gl: GL2) {
     for(line <- drawing.lines.asScala)
       renderWrappedLine(gl, line)
   }
 
-  private def renderWrappedLine(gl: GL, l: DrawingLine3D) {
+  private def renderWrappedLine(gl: GL2, l: DrawingLine3D) {
     val x = world.wrappedObserverX(l.x0)
     val y = world.wrappedObserverY(l.y0)
     val z = world.wrappedObserverZ(l.z0)
@@ -149,7 +149,7 @@ extends DrawingRendererInterface {
     }
   }
 
-  private def renderLine(gl: GL, line: DrawingLine3D, x: Double, y: Double, z: Double) {
+  private def renderLine(gl: GL2, line: DrawingLine3D, x: Double, y: Double, z: Double) {
     val color = org.nlogo.api.Color.getColor(line.color)
     gl.glPushMatrix()
     alignLine(gl, line, x, y, z)
@@ -159,7 +159,7 @@ extends DrawingRendererInterface {
     gl.glPopMatrix()
   }
 
-  private def alignLine(gl: GL, line: DrawingLine3D, x: Double, y: Double, z: Double) {
+  private def alignLine(gl: GL2, line: DrawingLine3D, x: Double, y: Double, z: Double) {
     val length = line.length
     gl.glTranslated(x * Renderer.WORLD_SCALE,
                     y * Renderer.WORLD_SCALE,

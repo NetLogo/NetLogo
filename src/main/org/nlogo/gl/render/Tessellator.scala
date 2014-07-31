@@ -3,11 +3,11 @@
 package org.nlogo.gl.render
 
 import java.util.{ List => JList, ArrayList }
-import javax.media.opengl.GL
+import javax.media.opengl.{ GL, GL2 }
 
 object Tessellator {
   // see javax.media.opengl.glu.GLUtessellatorCallback
-  class TessDataObject(val gl: GL) {
+  class TessDataObject(val gl: GL2) {
     var tpe: Int = _
     val shapeData: JList[AnyRef] = new ArrayList[AnyRef]
   }
@@ -17,7 +17,7 @@ private class Tessellator extends javax.media.opengl.glu.GLUtessellatorCallbackA
 
   import Tessellator.TessDataObject
 
-  def createTessDataObject(gl: GL) =
+  def createTessDataObject(gl: GL2) =
     new TessDataObject(gl)
 
   override def beginData(tpe: Int, polygonData: AnyRef) {

@@ -2,14 +2,14 @@
 
 package org.nlogo.gl.render
 
-import javax.media.opengl.GL
+import javax.media.opengl.{ GL, GL2 }
 import org.nlogo.api.{ Link, Link3D, World, World3D }
 import org.nlogo.shape.LinkShape
 
 private class GLLinkShape3D(shape: LinkShape, directionIndicator: GLShape)
 extends GLLinkShape(shape, directionIndicator) {
 
-  override def renderDirectionIndicator(gl: GL, shapeRenderer: ShapeRenderer,
+  override def renderDirectionIndicator(gl: GL2, shapeRenderer: ShapeRenderer,
                                         x1: Double, y1: Double, z1: Double,
                                         x2: Double, y2: Double, z2: Double,
                                         link: Link, color: java.awt.Color, outline: Boolean,

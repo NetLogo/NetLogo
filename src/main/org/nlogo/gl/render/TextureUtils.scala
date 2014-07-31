@@ -2,24 +2,24 @@
 
 package org.nlogo.gl.render
 
-import javax.media.opengl.GL
+import javax.media.opengl.{ GL, GL2, GL2GL3 }
 import java.nio.{ ByteBuffer, IntBuffer }
 
 object TextureUtils {
 
-  def makeTexture(gl: GL, size: Int) {
+  def makeTexture(gl: GL2, size: Int) {
     gl.glTexImage2D(
       GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, size, size,
       0, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, null)
   }
 
-  def genTexture(gl: GL): Int = {
+  def genTexture(gl: GL2): Int = {
     val tmp = Array(0)
     gl.glGenTextures(1, IntBuffer.wrap(tmp))
     tmp(0)
   }
 
-  def calculateTextureSize(gl: GL, width: Int, height: Int) = {
+  def calculateTextureSize(gl: GL2, width: Int, height: Int) = {
     // OpenGL only allows square textures whose dimension is at least 64...
     val glRendererName = gl.glGetString(GL.GL_RENDERER).toUpperCase
     val maxTextureSize =
@@ -60,7 +60,7 @@ object TextureUtils {
     Array.fill(numTiles)(Array[Byte]())
   }
 
-  def setParameters(gl: GL) {
+  def setParameters(gl: GL2) {
     // We want our patches to have nice sharp edges, not blurry fuzzy edges (that would take longer
     // to render anyway). - ST 2/9/05
     gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST)
@@ -69,11 +69,11 @@ object TextureUtils {
     // clamp or repeat, because the texture will exactly fill its quad.  but just in case we're
     // slightly off, putting the texture in clamp mode seems like it might possibly 1) avoid
     // slightly weird appearance, and 2) slightly improve performance.  So let's do it. - ST 2/9/05
-    gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_CLAMP)
-    gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_CLAMP)
+    gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL2.GL_CLAMP)
+    gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL2.GL_CLAMP)
   }
 
-  def reuseTexture(gl: GL, tileWidth: Int, tileHeight: Int,
+  def reuseTexture(gl: GL2, tileWidth: Int, tileHeight: Int,
                    xOffset: Int, yOffset: Int, width: Int,
                    colors: Array[Int], _bytes: Array[Byte]): Array[Byte] = {
 
@@ -122,13 +122,13 @@ object TextureUtils {
     bytes
   }
 
-  def renderEmptyPlane(gl: GL, _sideX: Float, _sideY: Float, _sideZ: Float) {
+  def renderEmptyPlane(gl: GL2, _sideX: Float, _sideY: Float, _sideZ: Float) {
     val sideX = _sideX * (Renderer.WORLD_SCALE / 2)
     val sideY = _sideY * (Renderer.WORLD_SCALE / 2)
     val sideZ = _sideZ * (Renderer.WORLD_SCALE / 2)
 
     gl.glColor4f(0f, 0f, 0f, 0.5f)
-    gl.glBegin(GL.GL_QUADS)
+    gl.glBegin(GL2GL3.GL_QUADS)
     gl.glNormal3f(0f, 0f, -1f)
     gl.glVertex3f(-sideX, +sideY, -sideZ)
     gl.glVertex3f(-sideX, -sideY, -sideZ)
@@ -138,7 +138,7 @@ object TextureUtils {
 
     // both sides of the quad. patches are always opaque from both sides
     gl.glColor4f(0f, 0f, 0f, 0.5f)
-    gl.glBegin(GL.GL_QUADS)
+    gl.glBegin(GL2GL3.GL_QUADS)
     gl.glNormal3f(0f, 0f, -1f)
     gl.glVertex3f(+sideX, +sideY, -sideZ)
     gl.glVertex3f(+sideX, -sideY, -sideZ)
@@ -147,7 +147,7 @@ object TextureUtils {
     gl.glEnd()
   }
 
-  def renderInPlane(gl: GL, _sideX: Float, _sideY: Float, _sideZ: Float,
+  def renderInPlane(gl: GL2, _sideX: Float, _sideY: Float, _sideZ: Float,
                     width: Float, height: Float, size: Float,
                     offsetX: Float, offsetY: Float) = {
 
@@ -167,7 +167,7 @@ object TextureUtils {
     val textureStretchX = width / size + offsetStretchX
     val textureStretchY = height / size + offsetStretchY
 
-    gl.glBegin(GL.GL_QUADS)
+    gl.glBegin(GL2GL3.GL_QUADS)
     gl.glNormal3f(0f, 0f, -1f)
 
     gl.glTexCoord2f(offsetStretchY, offsetStretchX)

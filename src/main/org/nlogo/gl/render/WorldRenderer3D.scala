@@ -2,7 +2,7 @@
 
 package org.nlogo.gl.render
 
-import javax.media.opengl.GL
+import javax.media.opengl.{ GL, GL2 }
 import org.nlogo.api.{ Turtle, Turtle3D, Patch, Patch3D, World, World3D,
                        Agent, AgentException, Perspective, DrawingInterface }
 
@@ -17,7 +17,7 @@ extends WorldRenderer(world, patchRenderer, drawing, turtleRenderer, linkRendere
                         renderer.asInstanceOf[TurtleRenderer3D],
                         linkRenderer.asInstanceOf[LinkRenderer3D])
 
-  override def observePerspective(gl: GL) {
+  override def observePerspective(gl: GL2) {
     var x = observer.oxcor - world.followOffsetX
     var y = observer.oycor - world.followOffsetY
     var z = observer.ozcor - world.followOffsetZ
@@ -65,7 +65,7 @@ extends WorldRenderer(world, patchRenderer, drawing, turtleRenderer, linkRendere
                     -(z * Renderer.WORLD_SCALE))
   }
 
-  override def renderPatchShapes(gl: GL, outlineAgent: Agent,
+  override def renderPatchShapes(gl: GL2, outlineAgent: Agent,
                                  fontSize: Int, patchSize: Double) {
     // we might get here before the world is set up
     if(world.patches != null) {
@@ -79,13 +79,13 @@ extends WorldRenderer(world, patchRenderer, drawing, turtleRenderer, linkRendere
     }
   }
 
-  override def renderIndividualPatchShapes(gl: GL, patch: Patch3D, outlineAgent: Agent,
+  override def renderIndividualPatchShapes(gl: GL2, patch: Patch3D, outlineAgent: Agent,
                                            fontSize: Int, patchSize: Double) {
     if(world.patches != null && world.worldDepth > 1)
       patchRenderer.renderIndividualPatch(gl, patch, fontSize, patchSize)
   }
 
-  override def renderWorld(gl: GL, fontSize: Int, patchSize: Double) {
+  override def renderWorld(gl: GL2, fontSize: Int, patchSize: Double) {
     // we might get here before the world is set up
     if(world.patches != null) {
       if (world.worldDepth == 1)
@@ -107,7 +107,7 @@ extends WorldRenderer(world, patchRenderer, drawing, turtleRenderer, linkRendere
     }
   }
 
-  def renderTrails(gl: GL) {
+  def renderTrails(gl: GL2) {
     drawingRenderer match {
       case r: TrailRenderer3D =>
         r.renderTrails(gl)

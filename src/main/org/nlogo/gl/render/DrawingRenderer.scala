@@ -2,24 +2,25 @@
 
 package org.nlogo.gl.render
 
-import javax.media.opengl.GL
+import javax.media.opengl.{ GL, GL2 }
+import javax.media.opengl.fixedfunc.GLLightingFunc
 import org.nlogo.api.{ DrawingInterface, World }
 
 private class DrawingRenderer(world: World, drawing: DrawingInterface)
         extends TextureRenderer(world) with DrawingRendererInterface {
 
-  def init(gl: GL) { }
+  def init(gl: GL2) { }
 
-  def renderDrawing(gl: GL) {
+  def renderDrawing(gl: GL2) {
     calculateTextureSize(gl, drawing.isBlank)
     renderTexture(gl, drawing.isBlank)
   }
 
-  private def renderTexture(gl: GL, blank: Boolean) {
+  private def renderTexture(gl: GL2, blank: Boolean) {
     val width = drawing.getWidth
     val height = drawing.getHeight
     gl.glEnable(GL.GL_TEXTURE_2D);
-    gl.glDisable(GL.GL_LIGHTING)
+    gl.glDisable(GLLightingFunc.GL_LIGHTING)
     gl.glEnable(GL.GL_BLEND)
     if(!blank) {
       if(newTexture) {
@@ -41,7 +42,7 @@ private class DrawingRenderer(world: World, drawing: DrawingInterface)
       drawing.markClean()
       gl.glPopMatrix()
     }
-    gl.glEnable(GL.GL_LIGHTING)
+    gl.glEnable(GLLightingFunc.GL_LIGHTING)
     gl.glDisable(GL.GL_BLEND)
     gl.glBindTexture(GL.GL_TEXTURE_2D, 0)
   }
@@ -49,7 +50,7 @@ private class DrawingRenderer(world: World, drawing: DrawingInterface)
   private var drawingWidth = 0
   private var drawingHeight = 0
 
-  private def calculateTextureSize(gl: GL, blank: Boolean) {
+  private def calculateTextureSize(gl: GL2, blank: Boolean) {
     var newSize = 0
     if(!blank && (drawing.getWidth != drawingWidth || drawing.getHeight != drawingHeight) ||
        textureSize == 0) {

@@ -13,6 +13,8 @@ import org.nlogo.api.World;
 import org.nlogo.api.World3D;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
+import javax.media.opengl.GL2ES1;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +32,7 @@ public class Renderer3D
   }
 
   @Override
-  void setClippingPlanes(GL gl) {
+  void setClippingPlanes(GL2 gl) {
     super.setClippingPlanes(gl);
     World3D w = (World3D) world;
 
@@ -40,19 +42,19 @@ public class Renderer3D
       renderClippingPlane
           (gl, new double[]
               {0.0f, 0.0, 1.0f, (float) (-(w.minPzcor() - 0.5) * WORLD_SCALE) + 0.01f},
-              GL.GL_CLIP_PLANE4);
+              GL2ES1.GL_CLIP_PLANE4);
       renderClippingPlane
           (gl, new double[]
               {0.0, 0.0, -1.0, (float) ((w.maxPzcor() + 0.5) * WORLD_SCALE) + 0.01f},
-              GL.GL_CLIP_PLANE5);
+              GL2ES1.GL_CLIP_PLANE5);
     }
   }
 
   @Override
-  void disableClippingPlanes(GL gl) {
+  void disableClippingPlanes(GL2 gl) {
     super.disableClippingPlanes(gl);
-    gl.glDisable(GL.GL_CLIP_PLANE4);
-    gl.glDisable(GL.GL_CLIP_PLANE5);
+    gl.glDisable(GL2ES1.GL_CLIP_PLANE4);
+    gl.glDisable(GL2ES1.GL_CLIP_PLANE5);
   }
 
   @Override
@@ -87,7 +89,7 @@ public class Renderer3D
   }
 
   @Override
-  void renderWorld(GL gl, World world) {
+  void renderWorld(GL2 gl, World world) {
     gl.glPushMatrix();
     translateWorld(gl, world);
 
@@ -100,7 +102,7 @@ public class Renderer3D
   }
 
   @Override
-  public void translateWorld(GL gl, World world) {
+  public void translateWorld(GL2 gl, World world) {
     World3D w = (World3D) world;
 
     gl.glTranslated

@@ -3,7 +3,7 @@
 package org.nlogo.gl.render
 
 import java.nio.FloatBuffer
-import javax.media.opengl.GL
+import javax.media.opengl.{ GL, GL2, GL2GL3 }
 
 private object LinkLine {
   val dashChoices =
@@ -16,7 +16,7 @@ private class LinkLine(xcor: Double, dashIndex: Int) {
 
   private val lineStipple: Short = LinkLine.dashChoices(dashIndex)
 
-  def render(gl:GL, x1: Float, y1: Float, z1: Float,
+  def render(gl:GL2, x1: Float, y1: Float, z1: Float,
              x2: Float, y2: Float, z2: Float, curviness: Double, stroke: Float, distance: Int) {
     gl.glLineStipple(distance, lineStipple)
     if(curviness == 0)
@@ -25,7 +25,7 @@ private class LinkLine(xcor: Double, dashIndex: Int) {
       renderCurve(gl, x1, y1, z1, x2, y2, z2, curviness, stroke)
   }
 
-  private def renderCurve(gl: GL,
+  private def renderCurve(gl: GL2,
                           _x1: Float, _y1: Float, _z1: Float,
                           _x2: Float, _y2: Float, _z2: Float,
                           curviness: Double, stroke: Float) {
@@ -51,15 +51,15 @@ private class LinkLine(xcor: Double, dashIndex: Int) {
     val midZ = ((z1 + z2) / 2) + (-curviness * zcomp / 2).toFloat
 
     val controlPoints = FloatBuffer.wrap(Array[Float](x1, y1, z1, midX, midY, midZ, x2, y2, z2))
-    gl.glMap1f(GL.GL_MAP1_VERTEX_3, 0.0f, 1.0f, 3, 3, controlPoints)
-    gl.glEnable(GL.GL_MAP1_VERTEX_3)
+    gl.glMap1f(GL2.GL_MAP1_VERTEX_3, 0.0f, 1.0f, 3, 3, controlPoints)
+    gl.glEnable(GL2.GL_MAP1_VERTEX_3)
     gl.glBegin(GL.GL_LINE_STRIP)
     for (i <- 0 to 30)
       gl.glEvalCoord1f(i / 30.0f)
     gl.glEnd()
   }
 
-  private def renderLine(gl: GL,
+  private def renderLine(gl: GL2,
                          _x1: Float, _y1: Float, _z1: Float,
                          _x2: Float, _y2: Float, _z2: Float,
                          stroke: Float) {
