@@ -68,8 +68,8 @@ class RecentFiles {
 
 class RecentFilesMenu(app: App, fileMenu: FileMenu)
   extends org.nlogo.swing.Menu("Recent Files")
-  with ModelSavedEvent.Handler
-  with BeforeLoadEvent.Handler {
+  with ModelSavedEventHandler
+  with BeforeLoadEventHandler {
 
   val recentFiles = new RecentFiles
   refreshMenu()
