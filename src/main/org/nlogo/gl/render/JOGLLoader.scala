@@ -83,7 +83,7 @@ object JOGLLoader {
 
   ///
 
-  private val RecommendedVersion = "1.1.1"
+  private val RecommendedVersion = "2.1.5"
 
   // Note that it's possible to have more than one version of JOGL in your classpath, which means
   // that the classloader may get some classes from one and some from the other.  In particular, the

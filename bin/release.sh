@@ -13,10 +13,10 @@ GREP=grep
 HDIUTIL=hdiutil
 IJ=bin/install4jc
 if [[ $OSTYPE = linux* ]]; then
-  JAVA=/usr/lib/jvm/java-6-sun/bin/java
+  JAVA=/usr/lib/jvm/java-7-sun/bin/java
 else
   # if not on Linux, assume Mac (should be the case for the real release)
-  JAVA=`/usr/libexec/java_home -F -v1.6*`/bin/java
+  JAVA=`/usr/libexec/java_home -F -v1.7*`/bin/java
 fi
 LN=ln
 MAKE=make
@@ -201,8 +201,10 @@ $CP -p \
   ../../lib_managed/jars/org.jhotdraw/jhotdraw/jhotdraw-6.0b1.jar \
   ../../lib_managed/jars/ch.randelshofer/quaqua/quaqua-7.3.4.jar \
   ../../lib_managed/jars/ch.randelshofer/swing-layout/swing-layout-7.3.4.jar \
-  ../../lib_managed/jars/org.jogl/jogl/jogl-1.1.1.jar \
-  ../../lib_managed/jars/org.gluegen-rt/gluegen-rt/gluegen-rt-1.1.1.jar \
+  ../../lib_managed/jars/org.jogamp.gluegen/gluegen-rt/gluegen-rt-2.1.5-01.jar \
+  ../../lib_managed/jars/org.jogamp.gluegen/gluegen-rt-main/gluegen-rt-main-2.1.5-01.jar \
+  ../../lib_managed/jars/org.jogamp.jogl/jogl-all/jogl-all-2.1.5-01.jar \
+  ../../lib_managed/jars/org.jogamp.jogl/jogl-all-main/jogl-all-main-2.1.5-01.jar \
   ../../lib_managed/bundles/com.googlecode.json-simple/json-simple/json-simple-1.1.1.jar \
   ../../lib_managed/jars/commons-codec/commons-codec/commons-codec-1.6.jar \
   ../../lib_managed/jars/commons-logging/commons-logging/commons-logging-1.1.1.jar \
@@ -224,17 +226,13 @@ $PERL -pi -e "s/\@\@\@VERSION\@\@\@/$VERSION/g" readme.md
 $PERL -pi -e "s/\@\@\@DATE\@\@\@/$DATE/g" readme.md
 $PERL -pi -e "s/\@\@\@UNIXNAME\@\@\@/netlogo-$COMPRESSEDVERSION/g" readme.md
 
-# include extensions
-$MKDIR extensions
-$CP -RpP ../../extensions/[a-z]* extensions  # don't follow simlinks due to some extensions creating infinite directory structures
-$RM -rf extensions/sample extensions/sample-scala
-$RM -rf extensions/*/{src,Makefile,manifest.txt,classes,tests.txt,README.md,build.xml,turtle.gif,.classpath,.project,.settings,project,target,build.sbt,*.zip,bin,sbt,NetLogo*.jar*,scala-library*.jar}
-
-#Extra NW extension stuff (see #620): FD 6/13/14
-$RM -rf extensions/nw/{lib_managed,models,test,extensions,timeit.nlogo}
-
-# Apple's license won't let us include this - ST 2/6/12
-$RM -f extensions/qtj/QTJava.jar
+# include extensions (taken out temporarily for 6.x)
+#$MKDIR extensions
+#$CP -rp ../../extensions/[a-z]* extensions
+#$RM -rf extensions/sample extensions/sample-scala
+#$RM -rf extensions/*/{src,Makefile,manifest.txt,classes,tests.txt,README.md,build.xml,turtle.gif,.classpath,.project,.settings,project,target,build.sbt,*.zip,bin,NetLogo.jar,scala-library*.jar,sbt}
+## Apple's license won't let us include this - ST 2/6/12
+#$RM -f extensions/qtj/QTJava.jar
 
 # include models
 $CP -rp ../../models .
@@ -331,8 +329,9 @@ $PERL -0 -p -i -e 's|<title>.+?NetLogo User Manual.+?</title>|<title>NetLogo $EN
 ) || exit 1
 
 # add JOGL native library for Linux
-$CP -r ../../lib/Linux-amd64 lib/Linux-amd64
-$CP -r ../../lib/Linux-x86 lib/Linux-x86
+#$CP -r ../../lib/Linux-amd64 lib/Linux-amd64
+#$CP -r ../../lib/Linux-x86 lib/Linux-x86
+$CP -r ../../lib/Linux-arm lib/Linux-arm
 
 # move linux-only stuff into the package
 $CP -p ../../dist/netlogo.sh .
@@ -359,7 +358,8 @@ fi
 # make directory for web pages & packages
 cd ..
 $RM -rf $COMPRESSEDVERSION
-mkdir $COMPRESSEDVERSION
+echo $COMPRESSEDVERSION
+$MKDIR $COMPRESSEDVERSION
 
 # make tarball
 $CHMOD -R go+rX netlogo-$COMPRESSEDVERSION
@@ -435,7 +435,7 @@ $RM -rf lib/Mac\ OS\ X/
 $PERL -p -i -e "s/\n/\r\n/g" readme.md
 
 # add Windows-only stuff, remove others
-$CP -r ../../lib/Windows/ lib/Windows
+# $CP -r ../../lib/Windows/ lib/Windows
 $FIND . -name Linux-amd64 -print0 | $XARGS -0 $RM -rf
 $FIND . -name Linux-x86 -print0 | $XARGS -0 $RM -rf
 $FIND . -name Mac\ OS\ X -print0 | $XARGS -0 $RM -rf
@@ -461,7 +461,7 @@ $CHMOD -R go+rX .
 if [ $WINDOWS -eq 1 ]
 then
   $PERL -pi -e "s/\@\@\@VM\@\@\@/$VM/g" NetLogo.install4j
-  INSTALL4J_JAVA_HOME_OVERRIDE=`/usr/libexec/java_home -F -v1.6*` "$IJDIR/$IJ" --quiet -r "$COMPRESSEDVERSION" -d "." NetLogo.install4j
+  INSTALL4J_JAVA_HOME_OVERRIDE=`/usr/libexec/java_home -F -v1.7*` "$IJDIR/$IJ" --quiet -r "$COMPRESSEDVERSION" -d "." NetLogo.install4j
   $CHMOD -R a+x *.exe
   $DU -h *.exe
   $MV *.exe ../$COMPRESSEDVERSION
@@ -470,7 +470,7 @@ fi
 # make directory with web pages and so on
 cd ..
 $CP -p netlogo-$COMPRESSEDVERSION/NetLogo.jar $COMPRESSEDVERSION
-$CP -p ../target/NetLogo-tests.jar $COMPRESSEDVERSION
+# $CP -p ../target/NetLogo-tests.jar $COMPRESSEDVERSION #taken out temporarily for 6.x
 $CP -rp netlogo-$COMPRESSEDVERSION/docs $COMPRESSEDVERSION
 $CP -rp netlogo-$COMPRESSEDVERSION/models $COMPRESSEDVERSION
 if [ $WINDOWS -eq 1 ]

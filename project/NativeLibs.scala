@@ -20,7 +20,7 @@ object NativeLibs {
 
   private val urlBase = "http://ccl.northwestern.edu/devel/"
   private val quaquaVersion = "7.3.4"
-  private val joglVersion = "1.1.1"
+  private val joglVersion = "2.1.5"
 
   private def pathsAndVersions(base: File): Seq[(File, String)] = Seq(
     (base / "lib" / "Mac OS X" / "libquaqua.jnilib", quaquaVersion),
@@ -36,7 +36,10 @@ object NativeLibs {
     (base / "lib" / "Linux-x86" / "libgluegen-rt.so", "x86-" + joglVersion),
     (base / "lib" / "Linux-amd64" / "libjogl.so", "amd64-" + joglVersion),
     (base / "lib" / "Linux-amd64" / "libjogl_awt.so", "amd64-" + joglVersion),
-    (base / "lib" / "Linux-amd64" / "libgluegen-rt.so", "amd64-" + joglVersion)
+    (base / "lib" / "Linux-amd64" / "libgluegen-rt.so", "amd64-" + joglVersion),
+    (base / "lib" / "Linux-arm" / "libjogl.so", "arm-" + joglVersion),
+    (base / "lib" / "Linux-arm" / "libjogl_awt.so", "arm-" + joglVersion),
+    (base / "lib" / "Linux-arm" / "libgluegen-rt.so", "arm-" + joglVersion)
   )
 
   private def download(path: File, version: String, log: String => Unit) {

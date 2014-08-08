@@ -25,7 +25,6 @@ import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 import java.nio.DoubleBuffer;
-import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,8 +69,8 @@ public class Renderer
 
   // we need to save the last matricies for mouse-x/ycor;
   // also used by context menu - jrn 5/20/05
-  private FloatBuffer modelMatrix;
-  private FloatBuffer projMatrix;
+  private DoubleBuffer modelMatrix;
+  private DoubleBuffer projMatrix;
   private IntBuffer viewPort;
 
   public Renderer(World world,
@@ -86,8 +85,8 @@ public class Renderer
                   DrawingInterface drawing,
                   GLViewSettings glSettings,
                   ShapeRenderer shapeRenderer) {
-    modelMatrix = FloatBuffer.wrap(new float[16]);
-    projMatrix = FloatBuffer.wrap(new float[16]);
+    modelMatrix = DoubleBuffer.wrap(new double[16]);
+    projMatrix = DoubleBuffer.wrap(new double[16]);
     viewPort = IntBuffer.wrap(new int[4]);
 
     this.world = world;
@@ -699,7 +698,7 @@ public class Renderer
   // pick/select objects for context menu
   void performPick() {
     List<Agent> agents = new ArrayList<Agent>(5);
-    float[][] ray = generatePickRay(mouseState.point().getX(), (height - mouseState.point().getY()));
+    double[][] ray = generatePickRay(mouseState.point().getX(), (height - mouseState.point().getY()));
     pickPatches(agents, ray);
     pickTurtles(agents, ray);
     pickLinks(agents, ray);
@@ -709,20 +708,22 @@ public class Renderer
 
   // saves current transformation matricies and viewport
   private void storeMatricies(GL2 gl) {
-    gl.glGetFloatv(GLMatrixFunc.GL_MODELVIEW_MATRIX, modelMatrix);
-    gl.glGetFloatv(GLMatrixFunc.GL_PROJECTION_MATRIX, projMatrix);
+    gl.glGetDoublev(GLMatrixFunc.GL_MODELVIEW_MATRIX, modelMatrix);
+    gl.glGetDoublev(GLMatrixFunc.GL_PROJECTION_MATRIX, projMatrix);
     gl.glGetIntegerv(GL.GL_VIEWPORT, viewPort);
   }
 
   // generates a pick/selection ray from mouse coordinates
-  float[][] generatePickRay(double mouseX, double mouseY) {
-    float[][] ray = new float[2][3];
+  double[][] generatePickRay(double mouseX, double mouseY) {
+    double[][] ray = new double[2][3];
+
+    //DoubleBuffer ray1Wrap = 
 
     // create pick-ray
-    glu.gluUnProject(mouseX, mouseY, 0.0d, modelMatrix, projMatrix,
-        viewPort, FloatBuffer.wrap(ray[0]));
-    glu.gluUnProject(mouseX, mouseY, 1.0d, modelMatrix, projMatrix,
-        viewPort, FloatBuffer.wrap(ray[1]));
+    glu.gluUnProject(mouseX, mouseY, 0.0d, modelMatrix.array(), modelMatrix.position(), projMatrix.array(), projMatrix.position(),
+        viewPort.array(), viewPort.position(), DoubleBuffer.wrap(ray[0]).array(), 0);
+    glu.gluUnProject(mouseX, mouseY, 1.0d, modelMatrix.array(), modelMatrix.position(), projMatrix.array(), projMatrix.position(),
+        viewPort.array(), viewPort.position(), DoubleBuffer.wrap(ray[1]).array(), 0);
 
     return ray;
   }
@@ -744,7 +745,7 @@ public class Renderer
   }
 
   // detects which patch a pick-ray intersects with
-  void pickPatches(List<Agent> agents, float[][] ray) {
+  void pickPatches(List<Agent> agents, double[][] ray) {
     // detect any patches in the pick-ray ( ( Renderer.WORLD_SCALE / 2 )
     // is the offset of the patches plane in the z-axis - jrn)
     double scale = (1.0 / WORLD_SCALE);
@@ -863,13 +864,13 @@ public class Renderer
   }
 
   public void setMouseCors(java.awt.Point mousePt) {
-    float[][] ray = generatePickRay(mousePt.getX(), (height - mousePt.getY()));
+    double[][] ray = generatePickRay(mousePt.getX(), (height - mousePt.getY()));
     pickPatches(null, ray);
     mouseState.point_$eq(mousePt);
   }
 
   public void updateMouseCors() {
-    float[][] ray = generatePickRay(mouseState.point().getX(), (height - mouseState.point().getY()));
+    double[][] ray = generatePickRay(mouseState.point().getX(), (height - mouseState.point().getY()));
     pickPatches(null, ray);
   }
 
