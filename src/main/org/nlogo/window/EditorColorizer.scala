@@ -113,16 +113,17 @@ class EditorColorizer(parser: ParserServices) extends Colorizer[TokenType] {
   }
 
   def jumpToDefinition(comp: java.awt.Component, name: String) {
-    val procsTable = parser.findProcedurePositions(comp.asInstanceOf[EditorArea[_]].getText)
+    val editor = comp.asInstanceOf[EditorArea[_]]
+    val procsTable = parser.findProcedurePositions(editor.getText)
     if (!procsTable.contains(name)) {
       javax.swing.JOptionPane.showMessageDialog(
         comp, name.toUpperCase + " could not be found in your code.", "Netlogo", javax.swing.JOptionPane.ERROR_MESSAGE)
     } else {
       val namePos = procsTable(name)._3
       val endPos = procsTable(name)._4
-      comp.asInstanceOf[EditorArea[_]].select(endPos, endPos)
+      editor.select(endPos, endPos)
       EventQueue.invokeLater { () =>
-        comp.asInstanceOf[EditorArea[_]].select(namePos, namePos + name.size)
+        editor.select(namePos, namePos + name.size)
       }
     }
   }
