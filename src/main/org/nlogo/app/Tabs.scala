@@ -131,13 +131,15 @@ class Tabs(val workspace: GUIWorkspace,
 
 
   def handle(e: JumpToDefinitionEvent) {
-    val found = codeTab.text.jumpToDefinition(e.name)
-    if(found)
-      setSelectedComponent(codeTab)
-    else
-      javax.swing.JOptionPane.showMessageDialog(
-        currentTab, e.name.toUpperCase + " could not be found in your code.", "Netlogo",
-        javax.swing.JOptionPane.ERROR_MESSAGE)
+    if(e.name!="") {
+      val found = codeTab.text.jumpToDefinition(e.name)
+      if (found)
+        setSelectedComponent(codeTab)
+      else
+        javax.swing.JOptionPane.showMessageDialog(
+          currentTab, e.name.toUpperCase + " could not be found in your code.", "Netlogo",
+          javax.swing.JOptionPane.ERROR_MESSAGE)
+    }
   }
 
   def openTemporaryFile(filename: String, fileMustExist: Boolean) {
