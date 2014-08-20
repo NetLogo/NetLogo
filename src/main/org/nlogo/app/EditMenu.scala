@@ -51,6 +51,7 @@ with org.nlogo.window.Events.LoadSectionEventHandler
 
   def handle(e: Events.SwitchedTabsEvent) {
     snapAction.setEnabled(e.newTab == app.tabs.interfaceTab)
+    jumper.setEnabled(e.newTab!=app.tabs.infoTab)
   }
 
   def handle(e: org.nlogo.window.Events.LoadSectionEvent) {
