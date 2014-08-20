@@ -2,9 +2,11 @@
 
 package org.nlogo.app
 
+import org.nlogo.editor.EditorArea
 import org.nlogo.swing.Implicits._
 import org.nlogo.window.{EditDialogFactoryInterface, GUIWorkspace}
 import org.nlogo.window.Events._
+import org.nlogo.app.Events._
 import org.nlogo.swing.RichAction
 import org.nlogo.api.I18N
 
@@ -13,7 +15,8 @@ class Tabs(val workspace: GUIWorkspace,
            monitorManager: AgentMonitorManager,
            dialogFactory: EditDialogFactoryInterface) extends javax.swing.JTabbedPane
   with javax.swing.event.ChangeListener with org.nlogo.window.Event.LinkParent
-  with LoadBeginEventHandler with RuntimeErrorEventHandler with CompiledEventHandler{
+  with LoadBeginEventHandler with RuntimeErrorEventHandler with CompiledEventHandler
+  with JumpToDefinitionEventHandler{
 
   locally{
     setOpaque(false)
@@ -124,6 +127,17 @@ class Tabs(val workspace: GUIWorkspace,
       if(e.error != null) setSelectedIndex(0)
       recolorTab(interfaceTab, e.error != null)
     }
+  }
+
+
+  def handle(e: JumpToDefinitionEvent) {
+    val found = codeTab.text.jumpToDefinition(e.name)
+    if(found)
+      setSelectedComponent(codeTab)
+    else
+      javax.swing.JOptionPane.showMessageDialog(
+        currentTab, e.name.toUpperCase + " could not be found in your code.", "Netlogo",
+        javax.swing.JOptionPane.ERROR_MESSAGE)
   }
 
   def openTemporaryFile(filename: String, fileMustExist: Boolean) {

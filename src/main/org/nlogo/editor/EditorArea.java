@@ -8,6 +8,8 @@
 
 package org.nlogo.editor;
 
+import org.nlogo.window.EditorColorizer;
+
 public strictfp class EditorArea<TokenType>
     extends AbstractEditorArea
     implements java.awt.event.FocusListener {
@@ -467,6 +469,10 @@ public strictfp class EditorArea<TokenType>
     } catch (javax.swing.text.BadLocationException ex) {
       throw new IllegalStateException(ex);
     }
+  }
+
+  public boolean jumpToDefinition(String name) {
+    return ((EditorColorizer) colorizer).jumpToDefinition(this, name);
   }
 
   ///

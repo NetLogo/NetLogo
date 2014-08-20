@@ -37,7 +37,8 @@ with org.nlogo.window.Events.LoadSectionEventHandler
   addMenuItem(I18N.gui("find"), 'F', FindDialog.FIND_ACTION)
   addMenuItem(I18N.gui("findNext"), 'G', FindDialog.FIND_NEXT_ACTION)
   addSeparator()
-  val jumper = addMenuItem(I18N.gui("jumpToDefinition"), 'D', Actions.jumpToDefinitionAction(new EditorColorizer(app.workspace),
+  val jumper = addMenuItem(I18N.gui("jumpToDefinition"), 'D',
+                           Actions.jumpToDefinitionAction(new EditorColorizer(app.workspace),
                            I18N.gui.get _))
   addSeparator()
   addMenuItem(I18N.gui("shiftLeft"), '[', org.nlogo.editor.Actions.shiftLeftAction)
@@ -50,7 +51,6 @@ with org.nlogo.window.Events.LoadSectionEventHandler
 
   def handle(e: Events.SwitchedTabsEvent) {
     snapAction.setEnabled(e.newTab == app.tabs.interfaceTab)
-    jumper.getAction.setEnabled(e.newTab == app.tabs.codeTab)
   }
 
   def handle(e: org.nlogo.window.Events.LoadSectionEvent) {
