@@ -7,7 +7,7 @@ import org.nlogo.api.{SimpleJobOwner, Version}
 import org.nlogo.api.FileIO.file2String
 import java.io.File
 import org.nlogo.agent.{Turtle, Patch, Link, Observer}
-import org.nlogo.util.SlowTest
+import org.nlogo.util.{Utils, SlowTest}
 
 // We parse the tests first, then run them.
 // Parsing is separate so we can write tests for the parser itself.
@@ -25,7 +25,7 @@ case class TxtsInDir(dir:String) extends TestFinder {
 case object ExtensionTestsDotTxt extends TestFinder {
   def iterator = {
     def filesInDir(parent:File): Iterable[File] =
-      parent.listFiles.flatMap{f => if(f.isDirectory) filesInDir(f) else List(f)}
+      parent.listFiles.flatMap{f => if(f.isDirectory && !Utils.isSymlink(f)) filesInDir(f) else List(f)}
     filesInDir(new File("extensions")).filter(_.getName == "tests.txt").iterator
   }
 }
