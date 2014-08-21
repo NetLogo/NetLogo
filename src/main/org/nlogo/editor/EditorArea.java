@@ -471,10 +471,6 @@ public strictfp class EditorArea<TokenType>
     }
   }
 
-  public boolean jumpToDefinition(String name) {
-    return ((EditorColorizer) colorizer).jumpToDefinition(this, name);
-  }
-
   ///
 
   protected class TransferFocusAction

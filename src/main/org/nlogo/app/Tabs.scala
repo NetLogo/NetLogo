@@ -2,9 +2,8 @@
 
 package org.nlogo.app
 
-import org.nlogo.editor.EditorArea
 import org.nlogo.swing.Implicits._
-import org.nlogo.window.{EditDialogFactoryInterface, GUIWorkspace}
+import org.nlogo.window.{EditorColorizer, EditDialogFactoryInterface, GUIWorkspace}
 import org.nlogo.window.Events._
 import org.nlogo.app.Events._
 import org.nlogo.swing.RichAction
@@ -132,7 +131,7 @@ class Tabs(val workspace: GUIWorkspace,
 
   def handle(e: JumpToDefinitionEvent) {
     if(e.name!="") {
-      val found = codeTab.text.jumpToDefinition(e.name)
+      val found = new EditorColorizer(workspace).jumpToDefinition(codeTab.text, e.name)
       if (found)
         setSelectedComponent(codeTab)
       else
