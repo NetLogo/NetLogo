@@ -26,11 +26,11 @@ object JOGLLoader {
     // if both the 2003 build and a newer build are in the classpath the version number will be
     // reported wrong and this call will fail.
 
-    //try com.sun.opengl.impl.NativeLibLoader.disableLoading()
-    //catch {
-    //  case e: NoSuchMethodError =>
-    //    throw new JOGLException(VersionMismatch, e)
-    //}
+//    try com.jogamp.common.jvm.JNILibLoaderBase.disableLoading()
+//    catch {
+//      case e: NoSuchMethodError =>
+//        throw new JOGLException(VersionMismatch, e)
+//    }
     val isMac = System.getProperty("os.name").startsWith("Mac")
     def withErrorReporting(body: => Unit) {
       try body
@@ -45,12 +45,20 @@ object JOGLLoader {
           }
       }
     }
-    val joglPath = libraryPath + System.getProperty("file.separator") + System.mapLibraryName("jogl")
-    val joglAwtPath = libraryPath + System.getProperty("file.separator") + System.mapLibraryName("jogl_awt")
-    if (!isMac)
-      withErrorReporting { System.loadLibrary("jawt") }
-    withErrorReporting { System.load(joglPath) }
-    withErrorReporting { System.load(joglAwtPath) }
+    val joglDesktopPath = libraryPath + System.getProperty("file.separator") + System.mapLibraryName("jogl_desktop")
+    val joglMobilePath = libraryPath + System.getProperty("file.separator") + System.mapLibraryName("jogl_mobile")
+    val joglNativeWindowAwtPath = libraryPath + System.getProperty("file.separator") + System.mapLibraryName("nativewindow_awt")
+    val joglNativeWindowX11Path = libraryPath + System.getProperty("file.separator") + System.mapLibraryName("nativewindow_macosx")
+    val joglNewtPath = libraryPath + System.getProperty("file.separator") + System.mapLibraryName("newt")
+    val gluegenPath = libraryPath + System.getProperty("file.separator") + System.mapLibraryName("gluegen-rt")
+    //if (!isMac)
+      //withErrorReporting { System.loadLibrary("jawt") }
+    //withErrorReporting { System.load(joglDesktopPath) }
+    //withErrorReporting { System.load(joglMobilePath) }
+    //withErrorReporting { System.load(joglNativeWindowAwtPath) }
+    //withErrorReporting { System.load(joglNativeWindowX11Path) }
+    //withErrorReporting { System.load(joglNewtPath) }
+    //withErrorReporting { System.load(gluegenPath) }
     _isLoaded = true
   }
 

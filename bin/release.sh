@@ -203,7 +203,9 @@ $CP -p \
   ../../lib_managed/jars/ch.randelshofer/swing-layout/swing-layout-7.3.4.jar \
   ../../lib_managed/jars/org.jogamp.gluegen/gluegen-rt/gluegen-rt-2.1.5-01.jar \
   ../../lib_managed/jars/org.jogamp.gluegen/gluegen-rt-main/gluegen-rt-main-2.1.5-01.jar \
+  ../../lib_managed/jars/org.jogamp.gluegen/gluegen-rt/*native*jar \
   ../../lib_managed/jars/org.jogamp.jogl/jogl-all/jogl-all-2.1.5-01.jar \
+  ../../lib_managed/jars/org.jogamp.jogl/jogl-all/*native*jar \
   ../../lib_managed/jars/org.jogamp.jogl/jogl-all-main/jogl-all-main-2.1.5-01.jar \
   ../../lib_managed/bundles/com.googlecode.json-simple/json-simple/json-simple-1.1.1.jar \
   ../../lib_managed/jars/commons-codec/commons-codec/commons-codec-1.6.jar \
@@ -331,7 +333,7 @@ $PERL -0 -p -i -e 's|<title>.+?NetLogo User Manual.+?</title>|<title>NetLogo $EN
 # add JOGL native library for Linux
 #$CP -r ../../lib/Linux-amd64 lib/Linux-amd64
 #$CP -r ../../lib/Linux-x86 lib/Linux-x86
-$CP -r ../../lib/Linux-arm lib/Linux-arm
+#$CP -r ../../lib/Linux-arm lib/Linux-arm
 
 # move linux-only stuff into the package
 $CP -p ../../dist/netlogo.sh .

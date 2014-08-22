@@ -719,6 +719,8 @@ public class Renderer
 
     //DoubleBuffer ray1Wrap = 
 
+    //DoubleBuffer ray1Wrap = 
+
     // create pick-ray
     glu.gluUnProject(mouseX, mouseY, 0.0d, modelMatrix.array(), modelMatrix.position(), projMatrix.array(), projMatrix.position(),
         viewPort.array(), viewPort.position(), DoubleBuffer.wrap(ray[0]).array(), 0);

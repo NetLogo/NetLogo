@@ -23,23 +23,23 @@ object NativeLibs {
   private val joglVersion = "2.1.5"
 
   private def pathsAndVersions(base: File): Seq[(File, String)] = Seq(
-    (base / "lib" / "Mac OS X" / "libquaqua.jnilib", quaquaVersion),
-    (base / "lib" / "Mac OS X" / "libquaqua64.jnilib", quaquaVersion),
-    (base / "lib" / "Mac OS X" / "libjogl.jnilib", joglVersion),
-    (base / "lib" / "Mac OS X" / "libjogl_awt.jnilib", joglVersion),
-    (base / "lib" / "Mac OS X" / "libgluegen-rt.jnilib", joglVersion),
-    (base / "lib" / "Windows" / "jogl.dll", joglVersion),
-    (base / "lib" / "Windows" / "jogl_awt.dll", joglVersion),
-    (base / "lib" / "Windows" / "gluegen-rt.dll", joglVersion),
-    (base / "lib" / "Linux-x86" / "libjogl.so", "x86-" + joglVersion),
-    (base / "lib" / "Linux-x86" / "libjogl_awt.so", "x86-" + joglVersion),
-    (base / "lib" / "Linux-x86" / "libgluegen-rt.so", "x86-" + joglVersion),
-    (base / "lib" / "Linux-amd64" / "libjogl.so", "amd64-" + joglVersion),
-    (base / "lib" / "Linux-amd64" / "libjogl_awt.so", "amd64-" + joglVersion),
-    (base / "lib" / "Linux-amd64" / "libgluegen-rt.so", "amd64-" + joglVersion),
-    (base / "lib" / "Linux-arm" / "libjogl.so", "arm-" + joglVersion),
-    (base / "lib" / "Linux-arm" / "libjogl_awt.so", "arm-" + joglVersion),
-    (base / "lib" / "Linux-arm" / "libgluegen-rt.so", "arm-" + joglVersion)
+//    (base / "lib" / "Mac OS X" / "libquaqua.jnilib", quaquaVersion),
+//    (base / "lib" / "Mac OS X" / "libquaqua64.jnilib", quaquaVersion),
+//    (base / "lib" / "Mac OS X" / "libjogl.jnilib", joglVersion),
+//    (base / "lib" / "Mac OS X" / "libjogl_awt.jnilib", joglVersion),
+//    (base / "lib" / "Mac OS X" / "libgluegen-rt.jnilib", joglVersion),
+//    (base / "lib" / "Windows" / "jogl.dll", joglVersion),
+//    (base / "lib" / "Windows" / "jogl_awt.dll", joglVersion),
+//    (base / "lib" / "Windows" / "gluegen-rt.dll", joglVersion),
+//    (base / "lib" / "Linux-x86" / "libjogl.so", "x86-" + joglVersion),
+//    (base / "lib" / "Linux-x86" / "libjogl_awt.so", "x86-" + joglVersion),
+//    (base / "lib" / "Linux-x86" / "libgluegen-rt.so", "x86-" + joglVersion),
+//    (base / "lib" / "Linux-amd64" / "libjogl.so", "amd64-" + joglVersion),
+//    (base / "lib" / "Linux-amd64" / "libjogl_awt.so", "amd64-" + joglVersion),
+//    (base / "lib" / "Linux-amd64" / "libgluegen-rt.so", "amd64-" + joglVersion),
+//    (base / "lib" / "Linux-arm" / "libjogl.so", "arm-" + joglVersion),
+//    (base / "lib" / "Linux-arm" / "libjogl_awt.so", "arm-" + joglVersion),
+//    (base / "lib" / "Linux-arm" / "libgluegen-rt.so", "arm-" + joglVersion)
   )
 
   private def download(path: File, version: String, log: String => Unit) {
