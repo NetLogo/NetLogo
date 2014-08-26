@@ -10,6 +10,9 @@ package org.nlogo.editor;
 
 import org.nlogo.window.EditorColorizer;
 
+import java.awt.Container;
+import java.awt.Dialog;
+
 public strictfp class EditorArea<TokenType>
     extends AbstractEditorArea
     implements java.awt.event.FocusListener {
@@ -151,11 +154,20 @@ public strictfp class EditorArea<TokenType>
     }
   }
 
+  private boolean isModalEditor() {
+    Container topLevel = getTopLevelAncestor();
+    return topLevel instanceof Dialog && ((Dialog) topLevel).isModal();
+  }
+
   @Override
   public javax.swing.Action[] getActions() {
     return javax.swing.text.TextAction.augmentList
         (super.getActions(),
-            new javax.swing.Action[]{
+            isModalEditor() ? new javax.swing.Action[]{
+                Actions.commentAction(), Actions.uncommentAction(),
+                Actions.shiftLeftAction(), Actions.shiftRightAction(),
+                Actions.quickHelpAction(colorizer, i18n)
+            } : new javax.swing.Action[]{
                 Actions.commentAction(), Actions.uncommentAction(),
                 Actions.shiftLeftAction(), Actions.shiftRightAction(),
                 Actions.quickHelpAction(colorizer, i18n),
@@ -416,7 +428,7 @@ public strictfp class EditorArea<TokenType>
     Actions.PASTE_ACTION().putValue(javax.swing.Action.NAME, i18n.apply("menu.edit.paste"));
     menu.addSeparator();
     menu.add(new javax.swing.JMenuItem(Actions.mouseQuickHelpAction(colorizer, i18n)));
-    menu.add(new javax.swing.JMenuItem(Actions.mouseJumpToDefinitionAction(colorizer, i18n)));
+    if(!isModalEditor()) menu.add(new javax.swing.JMenuItem(Actions.mouseJumpToDefinitionAction(colorizer, i18n)));
     menu.show(this, e.getX(), e.getY());
   }
 
