@@ -8,10 +8,8 @@
 
 package org.nlogo.editor;
 
-import org.nlogo.window.EditorColorizer;
-
-import java.awt.Container;
-import java.awt.Dialog;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public strictfp class EditorArea<TokenType>
     extends AbstractEditorArea
@@ -155,24 +153,21 @@ public strictfp class EditorArea<TokenType>
   }
 
   private boolean isModalEditor() {
-    Container topLevel = getTopLevelAncestor();
-    return topLevel instanceof Dialog && ((Dialog) topLevel).isModal();
+    java.awt.Container topLevel = getTopLevelAncestor();
+    return topLevel instanceof java.awt.Dialog && ((java.awt.Dialog) topLevel).isModal();
   }
 
   @Override
   public javax.swing.Action[] getActions() {
+    ArrayList<javax.swing.Action> actions = new ArrayList<javax.swing.Action>(
+      Arrays.asList(
+        Actions.commentAction(), Actions.uncommentAction(),
+        Actions.shiftLeftAction(), Actions.shiftRightAction(),
+        Actions.quickHelpAction(colorizer, i18n)
+      ));
+    if(!isModalEditor()) actions.add(Actions.jumpToDefinitionAction(colorizer, i18n));
     return javax.swing.text.TextAction.augmentList
-        (super.getActions(),
-            isModalEditor() ? new javax.swing.Action[]{
-                Actions.commentAction(), Actions.uncommentAction(),
-                Actions.shiftLeftAction(), Actions.shiftRightAction(),
-                Actions.quickHelpAction(colorizer, i18n)
-            } : new javax.swing.Action[]{
-                Actions.commentAction(), Actions.uncommentAction(),
-                Actions.shiftLeftAction(), Actions.shiftRightAction(),
-                Actions.quickHelpAction(colorizer, i18n),
-                Actions.jumpToDefinitionAction(colorizer, i18n)
-            });
+        (super.getActions(),actions.toArray(new javax.swing.Action[actions.size()]));
   }
 
   @Override
