@@ -8,6 +8,9 @@
 
 package org.nlogo.editor;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public strictfp class EditorArea<TokenType>
     extends AbstractEditorArea
     implements java.awt.event.FocusListener {
@@ -149,15 +152,22 @@ public strictfp class EditorArea<TokenType>
     }
   }
 
+  private boolean isModalEditor() {
+    java.awt.Container topLevel = getTopLevelAncestor();
+    return topLevel instanceof java.awt.Dialog && ((java.awt.Dialog) topLevel).isModal();
+  }
+
   @Override
   public javax.swing.Action[] getActions() {
+    ArrayList<javax.swing.Action> actions = new ArrayList<javax.swing.Action>(
+      Arrays.asList(
+        Actions.commentAction(), Actions.uncommentAction(),
+        Actions.shiftLeftAction(), Actions.shiftRightAction(),
+        Actions.quickHelpAction(colorizer, i18n)
+      ));
+    if(!isModalEditor()) actions.add(Actions.jumpToDefinitionAction(colorizer, i18n));
     return javax.swing.text.TextAction.augmentList
-        (super.getActions(),
-            new javax.swing.Action[]{
-                Actions.commentAction(), Actions.uncommentAction(),
-                Actions.shiftLeftAction(), Actions.shiftRightAction(),
-                Actions.quickHelpAction(colorizer, i18n),
-            });
+        (super.getActions(),actions.toArray(new javax.swing.Action[actions.size()]));
   }
 
   @Override
@@ -413,6 +423,7 @@ public strictfp class EditorArea<TokenType>
     Actions.PASTE_ACTION().putValue(javax.swing.Action.NAME, i18n.apply("menu.edit.paste"));
     menu.addSeparator();
     menu.add(new javax.swing.JMenuItem(Actions.mouseQuickHelpAction(colorizer, i18n)));
+    if(!isModalEditor()) menu.add(new javax.swing.JMenuItem(Actions.mouseJumpToDefinitionAction(colorizer, i18n)));
     menu.show(this, e.getX(), e.getY());
   }
 

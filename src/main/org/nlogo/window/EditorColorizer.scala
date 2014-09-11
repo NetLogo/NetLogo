@@ -4,9 +4,11 @@ package org.nlogo.window
 
 import java.awt.Color
 import org.nlogo.api.{ ParserServices, Token, TokenType, Version }
-import org.nlogo.editor.Colorizer
+import org.nlogo.editor.{ EditorArea, Colorizer }
 import org.nlogo.swing.BrowserLauncher.openURL
+import org.nlogo.swing.Implicits._
 import collection.JavaConverters._
+import org.nlogo.awt.EventQueue
 
 class EditorColorizer(parser: ParserServices) extends Colorizer[TokenType] {
 
@@ -110,4 +112,17 @@ class EditorColorizer(parser: ParserServices) extends Colorizer[TokenType] {
                        confirmOpen _)
   }
 
+  def jumpToDefinition(editor: EditorArea[_], name: String): Boolean = {
+    val procsTable = parser.findProcedurePositions(editor.getText)
+    val found = procsTable.contains(name)
+    if (found) {
+      val namePos = procsTable(name)._3
+      val endPos = procsTable(name)._4
+      editor.select(endPos, endPos)
+      EventQueue.invokeLater { () =>
+        editor.select(namePos, namePos + name.size)
+      }
+    }
+    found
+  }
 }
