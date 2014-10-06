@@ -7055,9 +7055,13 @@ show round -4.5
       <h4>
         run <i>command-task</i>
         <br>
+        (run <i>command-task</i> <i>input1</i> ...)
+        <br>
         run <i>string</i>
         <br>
         runresult <i>reporter-task</i>
+        <br>
+        (runresult <i>reporter-task</i> <i>input1</i> ...)
         <br>
         runresult <i>string</i>
       </h4>
@@ -7083,6 +7087,15 @@ show round -4.5
         Tasks may freely read and/or set local variables and procedure
         inputs. Trying to do the same with strings may or may not work and
         should not be relied on.
+      <p>
+        When using tasks, you can provide them with inputs. For example:
+      <pre>
+(run task [ crt ?1 [ fd ?2 ] ] 10 5)
+;; creates 10 turtles and move them forward 5 steps
+show (runresult task [ ?1 + ?2 ] 10 5)
+=&gt; 15
+;; adds 10 and 5
+</pre>
       </div><!-- ======================================== -->
     <h2>
       <a name="S" id="S">S</a>
