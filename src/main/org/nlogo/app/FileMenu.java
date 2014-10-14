@@ -33,6 +33,7 @@ public strictfp class FileMenu
     super(I18N.guiJ().get("menu.file"));
     this.app = app;
     this.modelSaver = modelSaver;
+    setMnemonic('F');
     addMenuItem('N', new NewAction());
     addMenuItem('O', new OpenAction());
     addMenuItem('M', new ModelsLibraryAction());

@@ -22,6 +22,7 @@ class HelpMenu(app: App, colorizer: Colorizer[_])
       } }
   def launch(name: String, isLocal: Boolean, url: String) =
     action(name, () => BrowserLauncher.openURL(HelpMenu.this, url, isLocal))
+  setMnemonic('H')
   addMenuItem(
     I18N.gui("lookUpInDictionary(F1)"),
     Actions.quickHelpAction(colorizer, I18N.gui.get _))
