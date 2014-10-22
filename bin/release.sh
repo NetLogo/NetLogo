@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash -e -v
 
 # -e makes the whole thing die with an error if any command does
 # add -v if you want to see the commands as they happen
@@ -175,6 +175,7 @@ export VERSION=`$JAVA -cp target/NetLogo.jar:headless/target/NetLogoHeadless.jar
 export DATE=`$JAVA -cp target/NetLogo.jar:headless/target/NetLogoHeadless.jar:$SCALA_JAR org.nlogo.headless.Main --builddate`
 echo $VERSION":" $DATE
 export COMPRESSEDVERSION=`$JAVA -cp target/NetLogo.jar:headless/target/NetLogoHeadless.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //" | $SED -e "s/ //g"`
+echo $COMPRESSEDVERSION
 
 # make fresh staging area
 $RM -rf tmp/netlogo-$COMPRESSEDVERSION
@@ -229,12 +230,12 @@ $PERL -pi -e "s/\@\@\@DATE\@\@\@/$DATE/g" readme.md
 $PERL -pi -e "s/\@\@\@UNIXNAME\@\@\@/netlogo-$COMPRESSEDVERSION/g" readme.md
 
 # include extensions (taken out temporarily for 6.x)
-#$MKDIR extensions
-#$CP -rp ../../extensions/[a-z]* extensions
-#$RM -rf extensions/sample extensions/sample-scala
-#$RM -rf extensions/*/{src,Makefile,manifest.txt,classes,tests.txt,README.md,build.xml,turtle.gif,.classpath,.project,.settings,project,target,build.sbt,*.zip,bin,NetLogo.jar,scala-library*.jar,sbt}
+$MKDIR extensions
+$CP -rp ../../extensions/[a-z]* extensions
+$RM -rf extensions/sample extensions/sample-scala
+$RM -rf extensions/*/{src,Makefile,manifest.txt,classes,tests.txt,README.md,build.xml,turtle.gif,.classpath,.project,.settings,project,target,build.sbt,*.zip,bin,NetLogo.jar,scala-library*.jar,sbt}
 ## Apple's license won't let us include this - ST 2/6/12
-#$RM -f extensions/qtj/QTJava.jar
+$RM -f extensions/qtj/QTJava.jar
 
 # include models
 $CP -rp ../../models .
@@ -383,23 +384,23 @@ $RM netlogo-3D.sh
 $RM hubnet.sh
 
 # add in Mac-only stuff
-$CP -r ../../lib/Mac\ OS\ X/ lib/Mac\ OS\ X/
-$CP -rp ../../dist/NetLogo.app .
-$CP -rp ../../dist/HubNet\ Client.app .
-$PERL -pi -e "s/org.nlogo.NetLogoDEVEL/org.nlogo.NetLogo/" NetLogo.app/Contents/Info.plist
-$PERL -pi -e "s@<key>CFBundleVersion</key> <string>1.0</string>@<key>CFBundleVersion</key> <string>$VERSION</string>@" NetLogo.app/Contents/Info.plist
-$CP -rp ./NetLogo.app ./NetLogo\ 3D.app
-$PERL -pi -e "s/org.nlogo.NetLogo/org.nlogo.NetLogo3D/" NetLogo\ 3D.app/Contents/Info.plist
-$PERL -pi -e "s@<key>CFBundleTypeExtensions</key> <array> <string>nlogo</string> </array>@<key>CFBundleTypeExtensions</key> <array> <string>nlogo3d</string> </array>@" NetLogo\ 3D.app/Contents/Info.plist
-$PERL -pi -e "s/-Dapple.awt.graphics.UseQuartz=true/-Dapple.awt.graphics.UseQuartz=true -Dorg.nlogo.is3d=true/" NetLogo\ 3D.app/Contents/Info.plist
-$PERL -pi -e "s/org.nlogo.HubNetClientDEVEL/org.nlogo.HubNetClient/" HubNet\ Client.app/Contents/Info.plist
-$PERL -pi -e "s@<key>CFBundleVersion</key> <string>1.0</string>@<key>CFBundleVersion</key> <string>$VERSION</string>@" HubNet\ Client.app/Contents/Info.plist
-$CP -rp NetLogo.app NetLogo\ Logging.app
-$PERL -pi -e  "s@<string>org.nlogo.app.App</string>@<string>org.nlogo.app.App</string> <key>Arguments</key> <string>--logging netlogo_logging.xml</string>@" NetLogo\ Logging.app/Contents/Info.plist
-$MV NetLogo.app NetLogo\ "$VERSION".app
-$MV NetLogo\ Logging.app NetLogo\ Logging\ "$VERSION".app
-$MV HubNet\ Client.app HubNet\ Client\ "$VERSION".app
-$MV NetLogo\ 3D.app NetLogo\ 3D\ "$VERSION"\.app
+#$CP -r ../../lib/Mac\ OS\ X/ lib/Mac\ OS\ X/
+#$CP -rp ../../dist/NetLogo.app .
+#$CP -rp ../../dist/HubNet\ Client.app .
+#$PERL -pi -e "s/org.nlogo.NetLogoDEVEL/org.nlogo.NetLogo/" NetLogo.app/Contents/Info.plist
+#$PERL -pi -e "s@<key>CFBundleVersion</key> <string>1.0</string>@<key>CFBundleVersion</key> <string>$VERSION</string>@" NetLogo.app/Contents/Info.plist
+#$CP -rp ./NetLogo.app ./NetLogo\ 3D.app
+#$PERL -pi -e "s/org.nlogo.NetLogo/org.nlogo.NetLogo3D/" NetLogo\ 3D.app/Contents/Info.plist
+#$PERL -pi -e "s@<key>CFBundleTypeExtensions</key> <array> <string>nlogo</string> </array>@<key>CFBundleTypeExtensions</key> <array> <string>nlogo3d</string> </array>@" NetLogo\ 3D.app/Contents/Info.plist
+#$PERL -pi -e "s/-Dapple.awt.graphics.UseQuartz=true/-Dapple.awt.graphics.UseQuartz=true -Dorg.nlogo.is3d=true/" NetLogo\ 3D.app/Contents/Info.plist
+#$PERL -pi -e "s/org.nlogo.HubNetClientDEVEL/org.nlogo.HubNetClient/" HubNet\ Client.app/Contents/Info.plist
+#$PERL -pi -e "s@<key>CFBundleVersion</key> <string>1.0</string>@<key>CFBundleVersion</key> <string>$VERSION</string>@" HubNet\ Client.app/Contents/Info.plist
+#$CP -rp NetLogo.app NetLogo\ Logging.app
+#$PERL -pi -e  "s@<string>org.nlogo.app.App</string>@<string>org.nlogo.app.App</string> <key>Arguments</key> <string>--logging netlogo_logging.xml</string>@" NetLogo\ Logging.app/Contents/Info.plist
+#$MV NetLogo.app NetLogo\ "$VERSION".app
+#$MV NetLogo\ Logging.app NetLogo\ Logging\ "$VERSION".app
+#$MV HubNet\ Client.app HubNet\ Client\ "$VERSION".app
+#$MV NetLogo\ 3D.app NetLogo\ 3D\ "$VERSION"\.app
 
 # blow away version control and Mac junk again
 $FIND . \( -name .DS_Store -or -name .gitignore -or -path \*/.git \) -print0 \
@@ -428,7 +429,7 @@ mv NetLogo\ "$VERSION".dmg $COMPRESSEDVERSION
 cd netlogo-$COMPRESSEDVERSION
 
 # remove Mac-only stuff
-$RM -r *.app
+$RM -rf *.app
 $RM -rf lib/Mac\ OS\ X/
 
 # Mac done. Windows time!
