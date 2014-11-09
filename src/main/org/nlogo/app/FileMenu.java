@@ -52,6 +52,7 @@ public strictfp class FileMenu
     exportMenu.addMenuItem(new ExportGraphicsAction());
     exportMenu.addMenuItem(new ExportInterfaceAction());
     exportMenu.addMenuItem(new ExportOutputAction());
+    exportMenu.addMenuItem(new ExportCodeAction());
     add(exportMenu);
     addSeparator();
     org.nlogo.swing.Menu importMenu =
@@ -362,6 +363,28 @@ private class SaveModelingCommonsAction extends FileMenuAction {
           public void run() {
             new org.nlogo.window.Events.ExportPlotEvent(
               org.nlogo.window.PlotWidgetExportType.ALL, null, exportPath)
+              .raise(FileMenu.this);
+          }});
+    }
+  }
+
+  private class ExportCodeAction extends FileMenuAction {
+    ExportCodeAction() {
+      super(I18N.guiJ().get("menu.file.export.code"));
+    }
+
+    @Override
+    void action()
+        throws UserCancelException {
+      final String exportPath = org.nlogo.swing.FileDialog.show
+          (FileMenu.this, "Export Code", java.awt.FileDialog.SAVE,
+              app.workspace().guessExportName("code.html"));
+      org.nlogo.swing.ModalProgressTask.apply(
+        org.nlogo.awt.Hierarchy.getFrame(FileMenu.this),
+        "Exporting...",
+        new Runnable() {
+          public void run() {
+            new org.nlogo.window.Events.ExportCodeEvent(exportPath)
               .raise(FileMenu.this);
           }});
     }

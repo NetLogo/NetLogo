@@ -10,16 +10,18 @@ import java.awt.{BorderLayout, Dimension, Graphics}
 import java.awt.event.{ActionEvent, TextEvent, TextListener}
 import java.awt.print.PageFormat
 import javax.swing.{JButton, ImageIcon, AbstractAction, Action, ScrollPaneConstants, JScrollPane, BorderFactory, JPanel}
-import org.nlogo.api.{ AgentKind, I18N }
+import org.nlogo.api.{FileMode, AgentKind, LocalFile, I18N}
 
 class CodeTab(val workspace: AbstractWorkspace) extends JPanel
   with org.nlogo.window.ProceduresInterface
   with ProceduresMenuTarget
   with Events.SwitchedTabsEventHandler
   with org.nlogo.window.Events.CompiledEventHandler
+  with org.nlogo.window.Events.ExportCodeEventHandler
   with org.nlogo.window.Zoomable
   with org.nlogo.swing.Printable {
 
+  private val codeToHTML = new CodeToHTML(workspace)
   private val listener = new TextListener() {
     override def textValueChanged(e: TextEvent) {
       needsCompile()
@@ -119,6 +121,21 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
     _needsCompile = false
     compileAction.setEnabled(e.error != null)
     if(e.sourceOwner == this) errorLabel.setError(e.error, headerSource.length)
+  }
+
+
+  def handle(e: org.nlogo.window.Events.ExportCodeEvent) {
+    val file = new LocalFile(e.filename)
+    try {
+      file.open(FileMode.Write)
+      file.println(codeToHTML(text.getText))
+      file.close(true)
+    } catch {
+      case ex: java.io.IOException => try file.close(false)
+        catch {
+          case closingEx: java.io.IOException => org.nlogo.util.Exceptions.ignore(closingEx)
+        }
+    }
   }
 
   def recompile() { new org.nlogo.window.Events.CompileAllEvent().raise(this) }
