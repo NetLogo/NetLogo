@@ -1420,14 +1420,16 @@ show (list)
 =&gt; []
 </pre>
     <p>
-      Note that each of these special commands has a default number of
+      Note that each of these special primitives has a default number of
       inputs for which no parentheses are required. The primitives which
       have this capability are <a href=
       "dictionary.html#list"><tt>list</tt></a>, <a href=
       "dictionary.html#word"><tt>word</tt></a>, <a href=
       "dictionary.html#sentence"><tt>sentence</tt></a>, <a href=
-      "dictionary.html#map"><tt>map</tt></a>, and <a href=
-      "dictionary.html#foreach"><tt>foreach</tt></a>.
+      "dictionary.html#map"><tt>map</tt></a>,
+      <a href="dictionary.html#foreach"><tt>foreach</tt></a>,
+      <a href="dictionary.html#run"><tt>run</tt></a>, and
+      <a href="dictionary.html#runresult"><tt>runresult</tt></a>.
     <p>
       <b>Lists of agents</b>
     <p>
@@ -3046,11 +3048,6 @@ ifelse patch-at (new-x - xcor) (new-y - ycor) = nobody
       Primitives specific to tasks are <tt>task</tt>,
       <tt>is-command-task?</tt>, and <tt>is-reporter-task?</tt>.
     <p>
-      The <tt>run</tt> command accepts command tasks as well as strings.
-    <p>
-      The <tt>runresult</tt> reporter accepts reporter tasks as well as
-      strings.
-    <p>
       The <tt>task</tt> primitive creates a task. The task it reports might
       be a command task or a reporter task, depending on what kind of block
       you pass it. For example <tt>task [ fd 1 ]</tt> reports a command
@@ -3067,6 +3064,18 @@ ifelse patch-at (new-x - xcor) (new-y - ycor) = nobody
       <tt>task</tt> is optional, the syntax for these primitives is
       backward-compatible with existing code from previous NetLogo
       versions.)
+    <p>
+      The <tt>run</tt> command accepts command tasks as well as strings.
+    <p>
+      The <tt>runresult</tt> reporter accepts reporter tasks as well as
+      strings.
+    <p>
+      <tt>run</tt> and <tt>runresult</tt> allow passing inputs
+      to a task. As with all primitives accepting varying number of inputs,
+      the whole call must be surrounded with parentheses, so for example
+      <tt>(run my-command-task 5)</tt> or <tt>(runresult my-reporter-task
+      &quot;foo&quot; 2)</tt>.  When not passing input, no parentheses are
+      required.
     <h3>
       Task inputs
     </h3>
