@@ -22,6 +22,7 @@ import scala.annotation.{strictfp, switch}
     with org.nlogo.window.Events.OpenModelEventHandler {
   implicit val i18nName = I18N.Prefix("menu.file")
 
+  setMnemonic('F')
   addMenuItem('N', new NewAction)
   addMenuItem('O', new OpenAction)
   addMenuItem('M', new ModelsLibraryAction)

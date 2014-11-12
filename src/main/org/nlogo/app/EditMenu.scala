@@ -23,6 +23,7 @@ with org.nlogo.window.Events.LoadSectionEventHandler
   private var snapper: javax.swing.JCheckBoxMenuItem = null
 
   //TODO i18n - do we need to change the shortcut keys too?
+  setMnemonic('E')
   addMenuItem('Z', org.nlogo.editor.UndoManager.undoAction)
   addMenuItem('Y', org.nlogo.editor.UndoManager.redoAction)
   addSeparator()
