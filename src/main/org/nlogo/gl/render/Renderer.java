@@ -154,7 +154,7 @@ public class Renderer
     // needed, instead of in here. Other parts of the application might
     // change these settings, which creates hard-to-debug issues.
 
-    GL2 gl = (GL2)gLDrawable.getGL();
+    GL2 gl = gLDrawable.getGL().getGL2();
 
     ClassLoader classLoader = getClass().getClassLoader();
     org.nlogo.util.SysInfo.getJOGLInfoString_$eq
@@ -175,7 +175,6 @@ public class Renderer
     gl.glHint(GL2ES1.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_FASTEST);
 
     // Lighting
-
     lightManager.init(gl);
 
     Light light1 = new DirectionalLight(new Direction(-1.0f, -0.3f, 0.4f));
@@ -292,7 +291,6 @@ public class Renderer
     gl.glDisable(GL2ES1.GL_CLIP_PLANE1);
     gl.glDisable(GL2ES1.GL_CLIP_PLANE2);
     gl.glDisable(GL2ES1.GL_CLIP_PLANE3);
-    gl.glPopMatrix();
   }
 
   /**

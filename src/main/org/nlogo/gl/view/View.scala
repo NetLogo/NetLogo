@@ -44,7 +44,7 @@ with org.nlogo.window.Event.LinkChild {
   def updatePerspectiveLabel() { }
 
   def createCanvas(antiAliasing: Boolean) {
-    val capabilities = new javax.media.opengl.GLCapabilities(GLProfile.getGL2GL3)
+    val capabilities = new javax.media.opengl.GLCapabilities(GLProfile.get(GLProfile.GL2ES1))
     capabilities.setSampleBuffers(antiAliasing)
     capabilities.setNumSamples(4)
     capabilities.setStencilBits(1)
