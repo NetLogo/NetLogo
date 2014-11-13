@@ -1343,9 +1343,9 @@ show ceiling -4.5
         <img alt="Observer Command" src="images/observer.gif">
       </h4>
       <p>
-        Clears globals variables declared with <tt>globals</tt>, plus
-        combines the effects of clear-ticks, clear-turtles, clear-patches,
-        clear-drawing, clear-all-plots, and clear-output.
+        Combines the effects of clear-globals, clear-ticks,
+        clear-turtles, clear-patches, clear-drawing, clear-all-plots, and
+        clear-output.
       </div>
     <div class="dict_entry">
       <h3>
@@ -1787,10 +1787,9 @@ end
         normal way to make a pen is to make a permanent pen in the
         plot's Edit dialog.
       <p>
-        If a temporary pen with that name already exists in the current
-        plot, no new pen is created, and the existing pen is set to the
-        current pen. If a permanent pen with that name already exists in
-        the current plot, you get a runtime error.
+        If a pen with that name already exists in the current plot, no
+        new pen is created, and the existing pen is set to the current
+        pen.
       <p>
         The new temporary plot pen has the following initial settings:
       <ul>
@@ -1958,9 +1957,9 @@ to setup
   ask turtle 0 [ create-highway-from turtle 1 ]
 end
 
-ask turtle 0 [ show one-of in-links ]
+ask turtle 0 [ show one-of my-in-links ]
 ;; prints (street 0 1)
-ask turtle 0 [ show one-of out-links ]
+ask turtle 0 [ show one-of my-out-links ]
 ;; prints (highway 1 0)
 </pre>
       <p>
@@ -5283,16 +5282,17 @@ ask turtle 1
           myself
           <br>
           <img alt="Turtle Command" src="images/turtle.gif"> <img alt=
-          "Patch Command" src="images/patch.gif">
+          "Patch Command" src="images/patch.gif"> <img alt="Link Command"
+          src="images/link.gif">
         </h4>
         <p>
           &quot;self&quot; and &quot;myself&quot; are very different.
           &quot;self&quot; is simple; it means &quot;me&quot;.
-          &quot;myself&quot; means &quot;the turtle or patch who asked me
+          &quot;myself&quot; means &quot;the turtle, patch or link who asked me
           to do what I'm doing right now.&quot;
         <p>
           When an agent has been asked to run some code, using myself in
-          that code reports the agent (turtle or patch) that did the
+          that code reports the agent (turtle, patch or link) that did the
           asking.
         <p>
           myself is most often used in conjunction with <tt>of</tt> to read
@@ -6280,8 +6280,9 @@ patch-set [neighbors] of turtles
       </h4>
       <p>
         Clears everything the current plot pen has drawn, moves it to
-        (0,0), and puts it down. If the pen is a permanent pen, the color
-        and mode are reset to the default values from the plot Edit dialog.
+        (0,0), and puts it down. If the pen is a permanent pen, the color,
+        mode, and interval are reset to the default values from the plot
+        Edit dialog.
       </div>
     <div class="dict_entry">
       <h3>
@@ -7056,9 +7057,13 @@ show round -4.5
       <h4>
         run <i>command-task</i>
         <br>
+        (run <i>command-task</i> <i>input1</i> ...)
+        <br>
         run <i>string</i>
         <br>
         runresult <i>reporter-task</i>
+        <br>
+        (runresult <i>reporter-task</i> <i>input1</i> ...)
         <br>
         runresult <i>string</i>
       </h4>
@@ -7074,7 +7079,7 @@ show round -4.5
         be compiled first which takes time. However, compiled bits of code
         are cached by NetLogo and thus using <tt>run</tt> on the same
         string over and over is much faster than running different strings.
-        The first run, though, will be may be many times slower than
+        The first run, though, will be many times slower than
         running the same code directly, or in a command task.
       <p>
         Tasks are recommended over strings whenever possible. (An example
@@ -7084,6 +7089,15 @@ show round -4.5
         Tasks may freely read and/or set local variables and procedure
         inputs. Trying to do the same with strings may or may not work and
         should not be relied on.
+      <p>
+        When using tasks, you can provide them with inputs. For example:
+      <pre>
+(run task [ crt ?1 [ fd ?2 ] ] 10 5)
+;; creates 10 turtles and move them forward 5 steps
+show (runresult task [ ?1 + ?2 ] 10 5)
+=&gt; 15
+;; adds 10 and 5
+</pre>
       </div><!-- ======================================== -->
     <h2>
       <a name="S" id="S">S</a>

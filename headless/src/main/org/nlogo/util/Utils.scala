@@ -2,6 +2,8 @@
 
 package org.nlogo.util
 
+import java.io.File
+
 object Utils {
 
   def getStackTrace(throwable: Throwable): String = {
@@ -101,5 +103,13 @@ object Utils {
       .map(i => s" (${i})")
       .getOrElse("")
     requestedBaseName + newIndex
+
+  def isSymlink(file: File): Boolean = {
+    val canon = if (file.getParent == null) {
+      file
+    } else {
+      new File(file.getParentFile.getCanonicalFile, file.getName)
+    }
+    file.getAbsolutePath != file.getCanonicalPath
   }
 }

@@ -9,6 +9,7 @@ private class ZoomMenu extends org.nlogo.swing.Menu(I18N.gui.get("menu.zoom")) {
 
   implicit val i18nName = I18N.Prefix("menu.zoom")
 
+  setMnemonic('Z')
   addMenuItem('=',new javax.swing.AbstractAction(I18N.gui("larger")) {
     def actionPerformed(e:java.awt.event.ActionEvent) {
       zoom(1)
