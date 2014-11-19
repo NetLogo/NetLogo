@@ -103,6 +103,7 @@ object Utils {
       .map(i => s" (${i})")
       .getOrElse("")
     requestedBaseName + newIndex
+  }
 
   def isSymlink(file: File): Boolean = {
     val canon = if (file.getParent == null) {
