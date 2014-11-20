@@ -5,11 +5,12 @@ package org.nlogo.hubnet.server
 import java.io.{Serializable, InterruptedIOException, IOException}
 import org.nlogo.workspace.AbstractWorkspaceScala
 import org.nlogo.hubnet.connection.MessageEnvelope.MessageEnvelope
+import org.nlogo.plot.Plot
 import org.nlogo.hubnet.protocol._
 import org.nlogo.hubnet.mirroring.{AgentPerspective, ClearOverride, SendOverride, ServerWorld}
 import org.nlogo.agent.AgentSet
 import java.net.{BindException, ServerSocket}
-import org.nlogo.api.{WorldPropertiesInterface, ModelReader}
+import org.nlogo.api.{WorldPropertiesInterface, ModelReader, PlotInterface}
 import org.nlogo.hubnet.connection.{Streamable, ConnectionTypes, Ports, HubNetException, ConnectionInterface}
 import collection.JavaConverters._
 
@@ -33,6 +34,7 @@ trait ConnectionManagerInterface {
   def putClientData(messageEnvelope: MessageEnvelope)
   def removeClient(userid: String, notifyClient: Boolean, reason: String): Boolean
   def logMessage(message:String)
+  def sendPlots(clientId:String)
 }
 
 class ConnectionManager(val connection: ConnectionInterface,
@@ -60,6 +62,14 @@ class ConnectionManager(val connection: ConnectionInterface,
 
   protected var running = false
   val clients = collection.mutable.HashMap[String, ServerSideConnection]()
+  val plotManager = new ServerPlotManager(workspace, this,
+    // these two arguments are by name params,
+    // as they need be evaluated each time.
+    // i wanted to avoid giving the entire plot manager to ServerPlotManager
+    // JC - 12/20/10
+    workspace.plotManager.plots, workspace.plotManager.currentPlot.get) {
+    workspace.plotManager.subscribe(this)
+  }
 
   private type ClientType = String
   private val clientInterfaceMap = collection.mutable.HashMap[ClientType, Iterable[AnyRef]]()
@@ -274,7 +284,18 @@ class ConnectionManager(val connection: ConnectionInterface,
   @throws(classOf[HubNetException])
   def broadcast(obj: Any) {
     if (obj.isInstanceOf[String]) broadcastMessage(new Text(obj.toString, Text.MessageType.TEXT))
+    else if (obj.isInstanceOf[Plot]) broadcastMessage(new PlotUpdate(obj.asInstanceOf[Plot]))
     else throw new HubNetException(VALID_SEND_TYPES_MESSAGE)
+  }
+
+  @throws(classOf[HubNetException])
+  def broadcastPlotControl(a:Any, plotName:String){
+    broadcastMessage(new PlotControl(a.asInstanceOf[AnyRef], plotName))
+  }
+
+  @throws(classOf[HubNetException])
+  def sendPlotControl(userId: String, a:Any, plotName:String){
+    sendUserMessage(userId, new PlotControl(a.asInstanceOf[AnyRef], plotName))
   }
 
   def broadcastClearTextMessage() { broadcastMessage(new Text(null, Text.MessageType.CLEAR)) }
@@ -379,6 +400,13 @@ class ConnectionManager(val connection: ConnectionInterface,
   def setViewEnabled(mirror:Boolean) {
     if (mirror) incrementalViewUpdate() else broadcastMessage(DisableView)
   }
+
+  def sendPlot(clientId:String, plot:PlotInterface) {
+    val c = clients.get(clientId)
+    if (c.isDefined) c.get.sendData(new PlotUpdate(plot))
+  }
+
+  def sendPlots(clientId:String){ plotManager.sendPlots(clientId) }
 
   def clientSendQueueSizes: Iterable[Int] = clients.synchronized{ clients.values.map(_.getSendQueueSize)}
 

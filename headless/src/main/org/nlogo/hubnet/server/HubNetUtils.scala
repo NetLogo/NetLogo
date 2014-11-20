@@ -18,6 +18,7 @@ object HubNetUtils {
 
   // these are terrible - JC 8/21/10
   var viewMirroring = true
+  var plotMirroring = false
 
   // this doesnt appear to be used - JC 8/21/10
   def checkPacketSize(obj: Object, message: String) {

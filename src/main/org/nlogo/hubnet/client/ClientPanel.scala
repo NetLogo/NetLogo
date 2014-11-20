@@ -4,18 +4,19 @@ package org.nlogo.hubnet.client
 
 import javax.swing.JPanel
 import org.nlogo.agent.{AbstractExporter, ConstantSliderConstraint}
+import org.nlogo.plot.{PlotExporter, Plot, PlotManager}
 import java.io.{IOException, PrintWriter}
 import org.nlogo.window.Events.{AfterLoadEvent, LoadSectionEvent}
 import org.nlogo.swing.OptionDialog
-import org.nlogo.hubnet.mirroring.{OverrideList, HubNetLinkStamp, HubNetLine, HubNetTurtleStamp}
+import org.nlogo.hubnet.mirroring.{OverrideList, HubNetLinkStamp, HubNetPlotPoint, HubNetLine, HubNetTurtleStamp}
 import java.net.{Socket, ConnectException, UnknownHostException, NoRouteToHostException}
 import java.awt.AWTEvent
 import org.nlogo.hubnet.protocol._
 import org.nlogo.awt.EventQueue.invokeLater
 import org.nlogo.awt.Hierarchy.getFrame
 import org.nlogo.swing.Implicits._
-import org.nlogo.window.{MonitorWidget, InterfaceGlobalWidget, Widget, ButtonWidget}
-import org.nlogo.api.{I18N, Version, ModelSection, Dump, LogoList, DummyLogoThunkFactory, ParserServices}
+import org.nlogo.window.{PlotWidgetExportType, MonitorWidget, InterfaceGlobalWidget, Widget, ButtonWidget, PlotWidget}
+import org.nlogo.api.{I18N, Version, ModelSection, Dump, PlotInterface, LogoList, DummyLogoThunkFactory, ParserServices}
 import org.nlogo.hubnet.connection.{Streamable, ConnectionTypes, AbstractConnection}
 
 // Normally we try not to use the org.nlogo.window.Events stuff except in
@@ -26,11 +27,13 @@ class ClientPanel(editorFactory: org.nlogo.window.EditorFactory,
                   errorHandler: ErrorHandler,
                   parser: ParserServices) extends JPanel with
         org.nlogo.window.Events.AddJobEventHandler with
+        org.nlogo.window.Events.ExportPlotEventHandler with
         org.nlogo.window.Events.InterfaceGlobalEventHandler with
         org.nlogo.window.Events.AddSliderConstraintEventHandler {
 
   var clientGUI:ClientGUI = null
   var viewWidget:ClientView = null
+  private val plotManager = new PlotManager(new DummyLogoThunkFactory())
 
   locally {
     setBackground(java.awt.Color.white)
@@ -45,12 +48,49 @@ class ClientPanel(editorFactory: org.nlogo.window.EditorFactory,
     sendDataAndWait(new ActivityCommand(if (down) "View" else "Mouse Up", coords))
   }
 
+  def handlePlotUpdate(msg: PlotInterface) {
+    for (pw <- clientGUI.getInterfaceComponents.collect {case pw: PlotWidget => pw}) {
+      if (pw.plot.name==msg.name) {
+        pw.plot.clear()
+        updatePlot(msg.asInstanceOf[org.nlogo.plot.Plot], pw.plot)
+        pw.repaintIfNeeded()
+      }
+    }
+  }
+
+  // TODO: couldnt we use case class copy here or something?
+  private def updatePlot(plot1: Plot, plot2: Plot) {
+    plot2.currentPen = plot2.getPen(plot1.currentPen.get.name)
+    plot2.state = plot1.state.copy()
+    for (pen1 <- plot1.pens) {
+      val pen2 = if (pen1.temporary) plot2.createPlotPen(pen1.name, true)
+      else plot2.getPen(pen1.name).get
+      pen2.state = pen1.state.copy()
+      pen2.points ++= pen1.points
+    }
+  }
+
   /// Interface EventHandlers
   def handle(e: org.nlogo.window.Events.AddJobEvent) {
     org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     val button = e.owner.asInstanceOf[ButtonWidget]
     sendDataAndWait(new ActivityCommand(button.displayName, button.foreverOn.asInstanceOf[AnyRef]))
     button.popUpStoppingButton()
+  }
+
+  def handle(e: org.nlogo.window.Events.ExportPlotEvent) {
+    e.whichPlots match {
+      case PlotWidgetExportType.ALL => throw new UnsupportedOperationException("can't export all plots yet.")
+      case _ =>
+        if (e.target != null) {
+          try new AbstractExporter(e.filename) {
+            override def export(writer: PrintWriter) {
+              new PlotExporter(e.target, Dump.csv).export(writer)
+            }
+          }.export("plot", "HubNet Client", "")
+          catch {case ex: IOException => org.nlogo.util.Exceptions.handle(ex)}
+        }
+    }
   }
 
   def handle(e: org.nlogo.window.Events.InterfaceGlobalEvent) {
@@ -72,6 +112,13 @@ class ClientPanel(editorFactory: org.nlogo.window.EditorFactory,
       case l: HubNetLine => viewWidget.renderer.drawLine(l)
       case _ => viewWidget.renderer.clearDrawing()
     }
+    else if (widgetName=="ALL PLOTS") {
+      plotManager.clearAll()
+      for (pw <- clientGUI.getInterfaceComponents.collect { case pw: PlotWidget => pw }) {
+        pw.plot.dirty = true
+        pw.repaintIfNeeded()
+      }
+    }
     // `foreach` is the reasonable choice here; widgets of different types may share the same
     // name as the Monitor and can intercept the search if we use `find`! -- JAB (5/9/12)
     clientGUI.getInterfaceComponents filter { case w: Widget => w.displayName == widgetName } foreach {
@@ -85,6 +132,83 @@ class ClientPanel(editorFactory: org.nlogo.window.EditorFactory,
     clientGUI.getInterfaceComponents.find { case w: Widget => w.displayName == name }
   }
 
+  // this is the master method for handling plot messages. it should probably be redone.
+  private def handlePlotControlMessage(value: Any, plotName:String) {
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
+    val plotWidget = findWidget(plotName).asInstanceOf[Option[PlotWidget]].get // horrible.
+    value match {
+      // This instance sets the current-plot-pen
+      case s:String =>
+        plotWidget.plot.currentPen=plotWidget.plot.getPen(s).getOrElse(plotWidget.plot.createPlotPen(s, true))
+      // This instance sets the plot-pen-color
+      case i: Int =>
+        val plotPen = plotWidget.plot.currentPen.get
+        plotPen.state = plotPen.state.copy(color = i)
+      // This instance sets plot-pen-up and down
+      case b: Boolean =>
+        val plotPen = plotWidget.plot.currentPen.get
+        plotPen.state = plotPen.state.copy(isDown = b)
+        plotWidget.plot.dirty = true
+        plotWidget.repaintIfNeeded()
+      // This instance is a point to plot
+      case p: HubNetPlotPoint =>
+        // points may or may not contain a specific X coordinate.
+        // however, this is only the case in narrowcast plotting
+        // plot mirroring always sends both coordinates even if
+        // auto-plot is on. ev 8/18/08
+        if (p.specifiesXCor) plotWidget.plot.plot(p.xcor, p.ycor)
+        // if not, we'll just let the plot use the next one.
+        else plotWidget.plot.plot(p.ycor)
+        plotWidget.plot.dirty = true
+        plotWidget.repaintIfNeeded()
+      // These instances do various plotting commands
+      case c: Char => {
+        try c match {
+          case 'c' =>
+            plotWidget.plot.clear()
+            plotWidget.plot.dirty = true
+            plotWidget.repaintIfNeeded()
+          case 'r' =>
+            plotWidget.plot.currentPen.get.hardReset()
+            plotWidget.plot.dirty = true
+            plotWidget.repaintIfNeeded()
+          case 'p' =>
+            plotWidget.plot.currentPen.get.softReset()
+            plotWidget.plot.dirty = true
+            plotWidget.repaintIfNeeded()
+          case 'n' =>
+            plotWidget.plot.state = plotWidget.plot.state.copy(autoPlotOn = true)
+          case 'f' =>
+            plotWidget.plot.state = plotWidget.plot.state.copy(autoPlotOn = false)
+          case _ => throw new IllegalStateException()
+        } catch {case ex: RuntimeException => org.nlogo.util.Exceptions.handle(ex)}
+      }
+      // This instance changes the plot-pen-mode
+      case s:Short =>
+        plotWidget.plot.currentPen.get.state = plotWidget.plot.currentPen.get.state.copy(mode = s.toInt)
+        plotWidget.plot.dirty = true
+        plotWidget.repaintIfNeeded()
+      // This instance changes the plot-pen-interval
+      case d:Double =>
+        plotWidget.plot.currentPen.get.state = plotWidget.plot.currentPen.get.state.copy(interval = d)
+      // This instance is used for anything that has a lot of data
+      case list: List[_] => list(0) match {
+        case 'x' =>
+          val min: Double = list(1).asInstanceOf[Double]
+          val max: Double = list(2).asInstanceOf[Double]
+          plotWidget.plot.state = plotWidget.plot.state.copy(xMin = min, xMax = max)
+          plotWidget.plot.dirty = true
+          plotWidget.repaintIfNeeded()
+        case _ =>
+          val min: Double = list(1).asInstanceOf[Double]
+          val max: Double = list(2).asInstanceOf[Double]
+          plotWidget.plot.state = plotWidget.plot.state.copy(xMin = min, xMax = max)
+          plotWidget.plot.dirty = true
+          plotWidget.repaintIfNeeded()
+      }
+    }
+  }
+
   /**
    * Completes the login process. Called when a handshake message is received
    * from the server.
@@ -93,8 +217,9 @@ class ClientPanel(editorFactory: org.nlogo.window.EditorFactory,
     errorHandler.completeLogin()
     activityName = handshake.activityName
     if (clientGUI != null) remove(clientGUI)
+    plotManager.forgetAll()
     viewWidget = new ClientView(this)
-    clientGUI = new ClientGUI(editorFactory, viewWidget, parser)
+    clientGUI = new ClientGUI(editorFactory, viewWidget, plotManager, parser)
     add(clientGUI, java.awt.BorderLayout.CENTER)
     clientGUI.setStatus(userid, activityName, hostip, port)
     val clientInterface = handshake.interfaceSpecList.head.asInstanceOf[ClientInterface]
@@ -124,6 +249,8 @@ class ClientPanel(editorFactory: org.nlogo.window.EditorFactory,
       case WidgetControl(content, tag) => handleWidgetControlMessage(content, tag)
       case DisableView => setDisplayOn(false)
       case ViewUpdate(worldData) => viewWidget.updateDisplay(worldData)
+      case PlotControl(content, plotName) => handlePlotControlMessage(content, plotName)
+      case PlotUpdate(plot) => handlePlotUpdate(plot)
       case OverrideMessage(data, clear) => viewWidget.handleOverrideList(data.asInstanceOf[OverrideList], clear)
       case ClearOverrideMessage => viewWidget.clearOverrides()
       case AgentPerspectiveMessage(bytes) => viewWidget.handleAgentPerspective(bytes)

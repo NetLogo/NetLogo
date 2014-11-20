@@ -5,6 +5,7 @@ package org.nlogo.plot
 import collection.mutable.Buffer
 import org.nlogo.api.{ I18N, PlotPenState, PlotPenInterface }
 
+@SerialVersionUID(0)
 class PlotPen(
   val temporary: Boolean,
   var name: String,
@@ -12,7 +13,7 @@ class PlotPen(
   var updateCode: String = "",
   var inLegend: Boolean = true,
   var defaultState: PlotPenState = PlotPenState())
-extends PlotPenInterface {
+extends PlotPenInterface with Serializable {
 
   override def toString = "PlotPen(" + name + ")"
 
