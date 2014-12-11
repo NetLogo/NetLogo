@@ -60,6 +60,6 @@ extends AbstractWorkspaceScala(
   override def startLogging(properties: String) = unsupported
   override def zipLogFiles(filename: String) = unsupported
   override def deleteLogFiles(): Unit = unsupported
-  override def compiler = unsupported
+  override def compiler: CompilerInterface = unsupported
   override def parser = unsupported
 }

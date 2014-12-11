@@ -234,7 +234,7 @@ with Events.LoadSectionEventHandler {
   override def userDirectory: Option[String] =
     try {
       view.mouseDown(false)
-      FileDialog.setDirectory(fileManager.getPrefix)
+      FileDialog.setDirectory(fileManager.prefix)
       val chosen =
         FileDialog.show(getFrame, "Choose Directory", java.awt.FileDialog.LOAD,
                         true)  // directories only please
@@ -248,7 +248,7 @@ with Events.LoadSectionEventHandler {
   override def userFile: Option[String] =
     try {
       view.mouseDown(false)
-      FileDialog.setDirectory(fileManager.getPrefix)
+      FileDialog.setDirectory(fileManager.prefix)
       val chosen =
         FileDialog.show(getFrame, "Choose File", java.awt.FileDialog.LOAD)
       Some(chosen)
@@ -278,7 +278,7 @@ with Events.LoadSectionEventHandler {
   override def userNewFile: Option[String] =
     try {
       view.mouseDown(false)
-      FileDialog.setDirectory(fileManager.getPrefix)
+      FileDialog.setDirectory(fileManager.prefix)
       val chosen = FileDialog.show(getFrame, "Choose File", java.awt.FileDialog.SAVE)
       Some(chosen)
     }
