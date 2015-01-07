@@ -6,15 +6,13 @@ import org.nlogo.agent.{ World, OutputObject }
 import org.nlogo.api.{ File, FileMode }
 
 trait FileManager {
-  def getPrefix: String
+  def prefix: String
   @throws(classOf[java.net.MalformedURLException])
   def attachPrefix(filename: String): String
   def setPrefix(newPrefix: String)
   def setPrefix(newPrefix: java.net.URL)
   @throws(classOf[java.io.IOException])
   def eof: Boolean
-  def currentFile: File
-  def findOpenFile(fileName: String): File
   def hasCurrentFile: Boolean
   @throws(classOf[java.io.IOException])
   def closeCurrentFile()
