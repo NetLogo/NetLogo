@@ -43,3 +43,6 @@
 [submodule "extensions/nw"]
 	path = extensions/nw
 	url = https://github.com/NetLogo/NW-Extension
+[submodule "extensions/csv"]
+	path = extensions/csv
+	url = https://github.com/NetLogo/CSV-Extension
