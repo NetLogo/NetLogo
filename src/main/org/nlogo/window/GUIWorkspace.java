@@ -63,6 +63,10 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   // for grid snap
   private boolean snapOn = false;
 
+  private PeriodicUpdater periodicUpdater;
+  private javax.swing.Timer repaintTimer;
+  private Lifeguard lifeguard;
+
   public GUIWorkspace(final org.nlogo.agent.World world,
                       KioskLevel kioskLevel, java.awt.Frame frame,
                       java.awt.Component linkParent,
@@ -81,7 +85,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     view = viewWidget.view;
     viewManager.setPrimary(view);
 
-    PeriodicUpdater periodicUpdater = new PeriodicUpdater(jobManager);
+    periodicUpdater = new PeriodicUpdater(jobManager);
     periodicUpdater.start();
     world.trailDrawer(this);
 
@@ -95,9 +99,11 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
           }
         };
     // 10 checks a second seems like plenty
-    new javax.swing.Timer(100, repaintAction).start();
+    repaintTimer = new javax.swing.Timer(100, repaintAction);
+    repaintTimer.start();
 
-    new Lifeguard().start();
+    lifeguard = new Lifeguard();
+    lifeguard.start();
   }
 
   // Lifeguard ensures the engine comes up for air every so often.
@@ -238,12 +244,13 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     view.renderer.trailDrawer().sendPixels(dirty);
   }
 
-  // I'm not sure that our superclass's implementation wouldn't
-  // actually just work, but rather than think about it...
-  // - ST 1/19/05
   @Override
-  public void dispose() {
-    throw new UnsupportedOperationException();
+  public void dispose() throws InterruptedException {
+    periodicUpdater.stop();
+    repaintTimer.stop();
+    lifeguard.interrupt();
+    lifeguard.join();
+    super.dispose();
   }
 
   public WidgetContainer getWidgetContainer() {
