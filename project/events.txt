@@ -2,6 +2,7 @@
 
 app.ChangeLanguage
 app.IndenterChanged - isSmart: Boolean
+app.JumpToDefinition - name: String
 app.MagicOpen - name: String
 app.Reload
 app.SwitchedTabs - oldTab: java.awt.Component - newTab: java.awt.Component

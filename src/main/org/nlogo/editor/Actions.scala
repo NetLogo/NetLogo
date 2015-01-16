@@ -7,6 +7,8 @@ import javax.swing.Action
 import javax.swing.text._
 import javax.swing.text.DefaultEditorKit.{CutAction, CopyAction, PasteAction, InsertContentAction}
 
+import org.nlogo.app.Events
+
 object Actions {
 
   val commentAction = new CommentAction()
@@ -41,6 +43,12 @@ object Actions {
   def mouseQuickHelpAction(colorizer: Colorizer[_], i18n: String => String) =
     new MyTextAction(i18n("tabs.code.rightclick.quickhelp"),
                      e => colorizer.doHelp(e, e.getHelpTarget(e.getMousePos)))
+  def jumpToDefinitionAction(colorizer: Colorizer[_], i18n: String => String) =
+    new MyTextAction(i18n("menu.edit.jumpToDefinition"),
+                     e => Events.JumpToDefinitionEvent(e.getHelpTarget(e.getSelectionStart)).raise(e))
+  def mouseJumpToDefinitionAction(colorizer: Colorizer[_], i18n: String => String) =
+    new MyTextAction(i18n("menu.edit.jumpToDefinition"),
+                     e => Events.JumpToDefinitionEvent(e.getHelpTarget(e.getMousePos)).raise(e))
   class MyTextAction(name:String, f: EditorArea[_] => Unit) extends TextAction(name) {
     override def actionPerformed(e:ActionEvent){
       val component = getTextComponent(e)

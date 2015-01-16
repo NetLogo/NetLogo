@@ -57,6 +57,7 @@ menu.edit.redo = Redo
 menu.edit.selectAll = Select All
 menu.edit.find = Find...
 menu.edit.findNext = Find Next
+menu.edit.jumpToDefinition = Jump to Definition
 menu.edit.shiftLeft = Shift Left
 menu.edit.shiftRight = Shift Right
 menu.edit.comment = Comment
