@@ -28,6 +28,7 @@ window.ExportInterface - stream: java.io.OutputStream - callback: java.io.IOExce
 window.ExportOutput - filename: String
 window.ExportPlot - whichPlots: PlotWidgetExportType - target: plot.Plot - filename: String
 window.ExportWorld - writer: java.io.PrintWriter
+window.ExportCode - filename: String
 window.Iconified - frame: java.awt.Frame - iconified: Boolean
 window.InputBoxLoseFocus
 window.InterfaceGlobal - widget: InterfaceGlobalWidget - nameChanged: Boolean - updating: Boolean - valueChanged: Boolean - buttonReleased: Boolean
