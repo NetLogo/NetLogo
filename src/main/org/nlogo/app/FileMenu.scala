@@ -41,6 +41,7 @@ import scala.annotation.{strictfp, switch}
   exportMenu.addMenuItem(new ExportGraphicsAction)
   exportMenu.addMenuItem(new ExportInterfaceAction)
   exportMenu.addMenuItem(new ExportOutputAction)
+  exportMenu.addMenuItem(new ExportCodeAction)
   add(exportMenu)
   addSeparator()
   val importMenu = new org.nlogo.swing.Menu(I18N.gui("import"))
@@ -232,6 +233,21 @@ import scala.annotation.{strictfp, switch}
             new org.nlogo.window.Events.ExportPlotEvent(org.nlogo.window.PlotWidgetExportType.ALL, null, exportPath)
               .raise(FileMenu.this)
           }})
+    }
+  }
+
+  private class ExportCodeAction extends FileMenuAction(I18N.gui("export.code")) {
+    def action() {
+      val exportPath = org.nlogo.swing.FileDialog.show(
+        FileMenu.this, "Export Code", java.awt.FileDialog.SAVE, app.workspace.guessExportName("code.html"));
+      org.nlogo.swing.ModalProgressTask.apply(
+        org.nlogo.awt.Hierarchy.getFrame(FileMenu.this),
+        "Exporting...",
+        new Runnable {
+          def run() {
+            new org.nlogo.window.Events.ExportCodeEvent(exportPath)
+              .raise(FileMenu.this);
+        }});
     }
   }
 
