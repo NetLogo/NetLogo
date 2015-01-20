@@ -248,9 +248,9 @@ class Generator(source: String, procedure: Procedure, profilingEnabled: Boolean)
         if (sourceStart < 0 || sourceStart > sourceEnd || sourceEnd > source.length) ""
         else source.substring(sourceStart, sourceEnd)
       // disassembly is stored as a thunk, so it's not generated unless used
-      def isBoring(line: String) =
-        List("\\s*LINENUMBER.*", "\\s*MAXSTACK.*", "\\s*MAXLOCALS.*").exists(line.matches(_))
       result.disassembly = new org.nlogo.util.Thunk[String] {
+        def isBoring(line: String) =
+          List("\\s*LINENUMBER.*", "\\s*MAXSTACK.*", "\\s*MAXLOCALS.*").exists(line.matches(_))
         def compute = {
           val sw = new java.io.StringWriter
           new ClassReader(bytecode).accept(new TraceClassVisitor(new java.io.PrintWriter(sw)), 0)
