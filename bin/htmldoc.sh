@@ -34,9 +34,11 @@ htmldoc \
   controlling.html \
   mathematica.html \
   3d.html \
+  csv.html \
   extensions.html \
   arraystables.html \
   matrix.html \
+  nw.html \
   sound.html \
   netlogolab.html \
   profiler.html \

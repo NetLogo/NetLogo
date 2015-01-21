@@ -142,17 +142,17 @@ if [ ! -f Mathematica-Link/JLink.jar ]; then
 fi
 
 # compile, build jars etc.
-cd extensions
-for FOO in *
-do
-  echo "cleaning extension" $FOO
-  cd $FOO
-  rm -f $FOO.jar $FOO.jar.pack.gz
-  cd ..
-done
-cd ..
-rm -f *.jar
-./sbt clean all
+#cd extensions
+#for FOO in *
+#do
+#  echo "cleaning extension" $FOO
+#  cd $FOO
+#  rm -f $FOO.jar $FOO.jar.pack.gz
+#  cd ..
+#done
+#cd ..
+#rm -f *.jar
+#./sbt clean all
 
 # remember version number
 export VERSION=`$JAVA -cp NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //"`
@@ -253,6 +253,10 @@ $PERL -p -i -e 's/\<\/blockquote\>/\<\/td\>\<\/tr\>\<\/table\>/' docs/*.html
 $PERL -0 -p -i -e 's|<div class="version">.+?</div>||gs;' docs/*.html
 $PERL -p -i -e "s/\<h3\>/\<p\>\<hr\>\<h3\>/" docs/dictionary.html
 
+# Extension docs can come from extension READMEs now (requires pandoc), repeated below
+pandoc ../../extensions/nw/README.md -o docs/nw.html -t html -T "NetLogo User Manual: Networks Extension" -c netlogo.css
+pandoc ../../extensions/csv/README.md -o docs/csv.html -t html -T "NetLogo User Manual: CSV Extension" -c netlogo.css
+
 cd docs
 ../../../bin/htmldoc.sh
 cd ..
@@ -270,6 +274,10 @@ $PERL -p -i -e 's/NetLogo User Manual:/NetLogo $ENV{"VERSION"} User Manual:/' do
 $PERL -p -i -e 's/NetLogo User Manual&nbsp;/NetLogo $ENV{"VERSION"} User Manual&nbsp;/' docs/*.html
 # we use -0 so that the regexes can extend across line breaks
 $PERL -0 -p -i -e 's|<title>.+?NetLogo User Manual.+?</title>|<title>NetLogo $ENV{"VERSION"} User Manual</title>|gs' docs/*.html
+
+# Extension docs can come from extension READMEs now (requires pandoc)
+pandoc ../../extensions/nw/README.md -o docs/nw.html -t html -T "NetLogo User Manual: Networks Extension" -c netlogo.css
+pandoc ../../extensions/csv/README.md -o docs/csv.html -t html -T "NetLogo User Manual: CSV Extension" -c netlogo.css
 
 # put models in multiple categories
 ( cd models/Sample\ Models     ; $CP -rp Biology/AIDS* Social\ Science ) || exit 1
