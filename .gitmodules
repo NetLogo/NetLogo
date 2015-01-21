@@ -10,9 +10,6 @@
 [submodule "extensions/gis"]
 	path = extensions/gis
 	url = https://github.com/NetLogo/GIS-Extension.git
-[submodule "extensions/gogo"]
-	path = extensions/gogo
-	url = https://github.com/NetLogo/GoGo-Extension.git
 [submodule "extensions/matrix"]
 	path = extensions/matrix
 	url = https://github.com/NetLogo/Matrix-Extension.git
