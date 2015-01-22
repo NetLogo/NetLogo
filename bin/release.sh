@@ -214,8 +214,9 @@ $CP -RpP ../../extensions/[a-z]* extensions  # don't follow simlinks due to some
 $RM -rf extensions/sample extensions/sample-scala
 $RM -rf extensions/*/{src,Makefile,manifest.txt,classes,tests.txt,README.md,build.xml,turtle.gif,.classpath,.project,.settings,project,target,build.sbt,*.zip,bin,sbt,NetLogo*.jar*}
 
-#Extra NW extension stuff (see #620): FD 6/13/14
+#Extra NW/CSV extension stuff (see #620): FD 6/13/14
 $RM -rf extensions/nw/{lib_managed,models,test,extensions,timeit.nlogo}
+$RM -rf extensions/csv/{lib_managed,models,test,extensions}
 
 # Apple's license won't let us include this - ST 2/6/12
 $RM -f extensions/qtj/QTJava.jar
@@ -296,12 +297,18 @@ $PERL -0 -p -i -e 's|<title>.+?NetLogo User Manual.+?</title>|<title>NetLogo $EN
 ( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/*.jpg Curricular\ Models/BEAGLE\ Evolution ) || exit 1
 ( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/*.jpg Curricular\ Models/BEAGLE\ Evolution/HubNet\ Activities ) || exit 1
 ( cd models                    ; $CP -rp HubNet\ Activities/Unverified/Guppy\ Spots* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
-( cd models                    ; $CP -rp HubNet\ Activities/Unverified/aquarium.jpg Curricular\ Models/BEAGLE\ Evolution ) || exit 1
+( cd models                    ; $CP -rp HubNet\ Activities/Unverified/aquarium\ [HubNet].jpg Curricular\ Models/BEAGLE\ Evolution ) || exit 1
 ( cd models                    ; $CP -rp HubNet\ Activities/Bug\ Hunters\ Camouflage* Curricular\ Models/BEAGLE\ Evolution/HubNet\ Activities ) || exit 1
 ( cd models                    ; $CP -rp Sample\ Models/Biology/Daisyworld* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
 ( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Mimicry* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
 ( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Altruism* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
 ( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Cooperation* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
+
+# BEAGLE HubNet models
+( cd models                    ; $CP -rp Curricular\ Models/BEAGLE\ Evolution/HubNet\ Activities/Bird\ Breeders\ \[HubNet\]* HubNet\ Activities ) || exit 1
+( cd models                    ; $CP -rp Curricular\ Models/BEAGLE\ Evolution/HubNet\ Activities/Bug\ Hunters\ Competition\ \[HubNet\]* HubNet\ Activities ) || exit 1
+( cd models                    ; $CP -rp Curricular\ Models/BEAGLE\ Evolution/HubNet\ Activities/Critter\ Designers\ \[HubNet\]* HubNet\ Activities ) || exit 1
+( cd models                    ; $CP -rp Curricular\ Models/BEAGLE\ Evolution/HubNet\ Activities/Fish\ Spotters\ \[HubNet\]* HubNet\ Activities ) || exit 1
 
 # it'd be nice if there were an easier way to fool the model-index task
 # into processing our directory where it is instead of having to bamboozle
