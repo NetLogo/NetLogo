@@ -45,7 +45,7 @@
 	url = https://github.com/NetLogo/CSV-Extension
 [submodule "gogo-hid"]
 	path = extensions/gogo
-	url = git@github.com:NetLogo/GoGo-HID-Extension
+	url = https://github.com/NetLogo/GoGo-HID-Extension
 [submodule "extensions/gogo-serial"]
 	path = extensions/gogo-serial
-	url = git@github.com:NetLogo/GoGo-Serial-Extension
+	url = https://github.com/NetLogo/GoGo-Serial-Extension
