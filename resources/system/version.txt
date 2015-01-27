@@ -1,5 +1,5 @@
-NetLogo 5.1.0-RC2
-INTERIM DEVEL BUILD
+NetLogo 5.2.0-RC1
+January 23, 2015
 NetLogo 5.1
 NetLogo 5.0
 NetLogo 4.
