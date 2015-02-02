@@ -33,10 +33,10 @@ abstract class KeyEditor(accessor: PropertyAccessor[Char])
     newEditor
   }
   override def get = Some(
-    if(editor.getText().isEmpty) '\0'
+    if(editor.getText().isEmpty) '\u0000'
     else editor.getText().charAt(0))
   override def set(value: Char) {
-    editor.setText(if(value == '\0') ""
+    editor.setText(if(value == '\u0000') ""
                    else value.toString)
   }
   override def requestFocus() { editor.requestFocus() }

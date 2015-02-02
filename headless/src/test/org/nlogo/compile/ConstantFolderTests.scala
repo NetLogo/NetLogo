@@ -22,7 +22,7 @@ class ConstantFolderTests extends FunSuite {
         .process(results.tokens(procedure).iterator, procedure)
     val procdef = new ExpressionParser(procedure).parse(tokens).head
     procdef.accept(new ConstantFolder)
-    procdef.statements.head.head.toString
+    procdef.statements.stmts.head.args.head.toString
   }
 
   /// not pure

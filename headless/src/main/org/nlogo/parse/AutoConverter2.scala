@@ -152,7 +152,7 @@ class AutoConverter2(workspace: Workspace, ignoreErrors: Boolean, tokenizer: Tok
       val oldReporter = app.reporter
       oldReporter match {
         case _: org.nlogo.prim.dead._valuefrom | _: org.nlogo.prim.dead._valuesfrom =>
-          val arg1 = app(1).asInstanceOf[ReporterBlock]
+          val arg1 = app.args(1).asInstanceOf[ReporterBlock]
           replacements += new Replacement(app.reporter.token.startPos,
                                           app.reporter.token.endPos,
                                           app.reporter.token.name,
@@ -163,7 +163,7 @@ class AutoConverter2(workspace: Workspace, ignoreErrors: Boolean, tokenizer: Tok
                                           source.substring(start, arg1.end), "")
         case _: org.nlogo.prim.dead._randomorrandomfloat =>
           var choice: String = null
-          val arg = app(0).asInstanceOf[ReporterApp].reporter
+          val arg = app.args(0).asInstanceOf[ReporterApp].reporter
           if(arg.isInstanceOf[_constdouble] && arg.asInstanceOf[_constdouble].report(null).isInstanceOf[java.lang.Double])
             choice = if(arg.token.name.indexOf('.') == -1) "random" else "random-float"
           else if(arg.token.name.equalsIgnoreCase("WORLD-WIDTH") ||
@@ -186,7 +186,7 @@ class AutoConverter2(workspace: Workspace, ignoreErrors: Boolean, tokenizer: Tok
     override def visitStatement(stmt: Statement) {
       val oldCommand = stmt.command
       if(oldCommand.isInstanceOf[org.nlogo.prim.dead._histogramfrom]) {
-        val arg1 = stmt(1).asInstanceOf[ReporterBlock]
+        val arg1 = stmt.args(1).asInstanceOf[ReporterBlock]
         var start = arg1.start
         replacements += new Replacement(oldCommand.token.startPos,
                                         oldCommand.token.endPos,

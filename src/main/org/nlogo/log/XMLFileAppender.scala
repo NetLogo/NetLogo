@@ -8,7 +8,7 @@ import javax.xml.transform.sax.{ SAXTransformerFactory, TransformerHandler }
 import javax.xml.transform.stream.StreamResult
 import org.xml.sax.helpers.AttributesImpl
 import org.apache.log4j.FileAppender
-import scala.reflect.BeanProperty
+import scala.beans.BeanProperty
 import org.nlogo.util.Exceptions.ignoring
 
 //  This class must be public because log4j needs to be able to find it and we refer to it in the

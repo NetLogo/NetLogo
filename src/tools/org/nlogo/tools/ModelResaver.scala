@@ -36,7 +36,7 @@ object ModelResaver {
   def main(args: Array[String]): Unit = {
     val find = "find models -name test -prune -o -name *.nlogo -print"
     val paths = Process(find)
-      .lines.toSeq
+      .lineStream.toSeq
       .filterNot(_.contains("HubNet")) // for some reason, I'm having a hard time doing this with 'find'
 
     App.main(Array[String]())
