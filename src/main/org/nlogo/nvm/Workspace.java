@@ -2,6 +2,9 @@
 
 package org.nlogo.nvm;
 
+import scala.collection.Seq;
+import scala.Tuple2;
+
 import org.nlogo.agent.Agent;
 import org.nlogo.api.CommandRunnable;
 import org.nlogo.api.CompilerException;
@@ -246,4 +249,11 @@ public interface Workspace
   boolean profilingEnabled();
 
   Tracer profilingTracer();
+
+  /*
+   * Primarily for use by Custom Logging extension
+   */
+  void logCustomMessage(String msg);
+  void logCustomGlobals(Seq<Tuple2<String, String>> nameValuePairs);
+
 }

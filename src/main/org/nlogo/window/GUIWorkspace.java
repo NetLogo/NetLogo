@@ -2,6 +2,9 @@
 
 package org.nlogo.window;
 
+import scala.collection.Seq;
+import scala.Tuple2;
+
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.BooleanConstraint;
@@ -17,6 +20,7 @@ import org.nlogo.api.PerspectiveJ;
 import org.nlogo.api.RendererInterface;
 import org.nlogo.api.ReporterRunnable;
 import org.nlogo.api.SimpleJobOwner;
+import org.nlogo.log.Logger;
 import org.nlogo.nvm.Procedure;
 import org.nlogo.nvm.Workspace;
 
@@ -1320,6 +1324,16 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       source = super.getSource(filename);
     }
     return source;
+  }
+
+  @Override
+  public void logCustomMessage(String msg) {
+    Logger.logCustomMessage(msg);
+  }
+
+  @Override
+  public void logCustomGlobals(Seq<Tuple2<String, String>> nameValuePairs) {
+    Logger.logCustomGlobals(nameValuePairs);
   }
 
 }

@@ -462,6 +462,10 @@ with org.nlogo.api.ViewSettings {
    */
   def deleteLogFiles() = unsupported
 
+  def logCustomMessage(msg: String): Unit = unsupported
+
+  def logCustomGlobals(nameValuePairs: Seq[(String, String)]): Unit = unsupported
+
   // This lastLogoException stuff is gross.  We should write methods that are declared to throw
   // LogoException, rather than requiring that this variable be checked. - ST 2/28/05
 
