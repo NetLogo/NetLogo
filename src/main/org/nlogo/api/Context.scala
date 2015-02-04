@@ -50,4 +50,18 @@ trait Context {
    */
   def getRNG: org.nlogo.util.MersenneTwisterFast
 
+  /**
+   * Logs a customized message (primarily for use by the Custom Logging extension)
+   *
+   * @param msg Message to be logged
+   */
+  def logCustomMessage(msg: String): Unit
+
+  /**
+   * Allows for interaction with code that wants to log globals in a bulk, selective way (primarily for use by the Custom Logging extension)
+   *
+   * @param nameValuePairs Pairs of (global name, global value) that are to be recorded
+   */
+  def logCustomGlobals(nameValuePairs: Seq[(String, String)]): Unit
+
 }

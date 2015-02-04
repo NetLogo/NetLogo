@@ -2,6 +2,9 @@
 
 package org.nlogo.nvm;
 
+import scala.collection.Seq;
+import scala.Tuple2;
+
 import org.nlogo.util.MersenneTwisterFast;
 
 public strictfp class ExtensionContext
@@ -50,4 +53,15 @@ public strictfp class ExtensionContext
   public void importPcolors(java.awt.image.BufferedImage image, boolean asNetLogoColors) {
     org.nlogo.agent.ImportPatchColors.doImport(image, workspace.world(), asNetLogoColors);
   }
+
+  @Override
+  public void logCustomMessage(String msg) {
+    workspace.logCustomMessage(msg);
+  }
+
+  @Override
+  public void logCustomGlobals(Seq<Tuple2<String, String>> nameValuePairs) {
+    workspace.logCustomGlobals(nameValuePairs);
+  }
+
 }
