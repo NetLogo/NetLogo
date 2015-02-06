@@ -41,5 +41,18 @@ htmldoc \
   netlogolab.html \
   profiler.html \
   gis.html \
+  nw.html \
+  csv.html \
   faq.html \
   dictionary.html
+
+code=$?
+
+if [ $code -eq 14 ]
+then
+  exit 0
+  .
+else
+  exit $code
+  .
+fi
