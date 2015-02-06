@@ -48,6 +48,8 @@ htmldoc \
 
 code=$?
 
+# htmldoc returns 14 when it can't find an external link (which it never can),
+# but still generates the pdf just fine. We can safely ignore it. BCH 2/6/2015
 if [ $code -eq 14 ]
 then
   exit 0
