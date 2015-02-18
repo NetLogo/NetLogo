@@ -193,16 +193,15 @@ object Color {
   // that represents the color in NetLogo's color scheme
   // inputs: clamped to [0.0-1.0]
   // output: [0.0-139.9]
-  def getClosestColorNumberByHSB(h: Float, s: Float, b: Float) = {
+  def getClosestColorNumberByHSB(h: Float, s: Float, b: Float,
+                                 hMax: Float, sMax: Float, bMax: Float) = {
     // restrict to 0-255 range
-    val hh = 0f max h min 255f
-    val ss = 0f max h min 255f
-    val bb = 0f max h min 255f
+    val hh = 0f max h min hMax
+    val ss = 0f max s min sMax
+    val bb = 0f max b min bMax
     // convert to RGB
-    val argb = JColor.HSBtoRGB(h / 255, s / 255, b / 255)
-    rgbMap.get(argb).getOrElse(
-      // try the new search mechanism
-      estimateClosestColorNumberByRGB(argb))
+    val argb = JColor.HSBtoRGB(hh / hMax, ss / sMax, bb / bMax)
+    getClosestColorNumberByARGB(argb)
   }
 
   private def estimateClosestColorNumberByRGB(argb: Int) = {
@@ -332,7 +331,9 @@ object Color {
        ((rgba.get(1).asInstanceOf[java.lang.Double]).intValue << 8) |
        ((rgba.get(2).asInstanceOf[java.lang.Double]).intValue))
 
-  def getHSBListByARGB(argb: Int): LogoList = {
+  // The following getHSB functions get passed in an hMax, sMax, and bMax in order to retain backwards compatability
+  // with previous versions of netlogo who used 255 as the max rather than 360, 100, and 100.  FD 2/15
+  def getHSBListByARGB(argb: Int, hMax: Float, sMax: Float, bMax: Float): LogoList = {
     val hsb = new Array[Float](3)
     JColor.RGBtoHSB(
       (argb >> 16) & 0xff,
@@ -345,14 +346,38 @@ object Color {
     // nearest 0.1) - ST 10/25/05
     result.add(Double.box
         (org.nlogo.api.Approximate.approximate
-            (hsb(0) * 255, 3)))
+            (hsb(0) * hMax, 3)))
     result.add(Double.box
         (org.nlogo.api.Approximate.approximate
-            (hsb(1) * 255, 3)))
+            (hsb(1) * sMax, 3)))
     result.add(Double.box
         (org.nlogo.api.Approximate.approximate
-            (hsb(2) * 255, 3)))
+            (hsb(2) * bMax, 3)))
     result.toLogoList
+  }
+
+  // See above comment about Maxes
+  def getHSBListByRGBList(hMax: Float, sMax: Float, bMax: Float, rgbList: LogoList): LogoList = {
+    val r = rgbList.get(0).asInstanceOf[Double].intValue
+    val g = rgbList.get(1).asInstanceOf[Double].intValue
+    val b = rgbList.get(2).asInstanceOf[Double].intValue
+    val hsbvals = java.awt.Color.RGBtoHSB(
+          (StrictMath.max (0, StrictMath.min(255, r))),
+          (StrictMath.max (0, StrictMath.min(255, g))),
+          (StrictMath.max (0, StrictMath.min(255, b))),
+          null)
+
+    val hsbList = new LogoListBuilder
+    hsbList.add(Double.box(org.nlogo.api.Approximate.approximate(hMax * hsbvals(0), 3)))
+    hsbList.add(Double.box(org.nlogo.api.Approximate.approximate(sMax * hsbvals(1), 3)))
+    hsbList.add(Double.box(org.nlogo.api.Approximate.approximate(bMax * hsbvals(2), 3)))
+    hsbList.toLogoList
+  }
+
+  // See above comment about Maxes
+  def getHSBListByColor(hMax: Float, sMax: Float, bMax: Float, color: Double): LogoList = {
+    val ccolor = if (color < 0 || color >= 140) modulateDouble(color) else color
+    getHSBListByARGB(getARGBbyPremodulatedColorNumber(ccolor), hMax, sMax, bMax)
   }
 
   ///

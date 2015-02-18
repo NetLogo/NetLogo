@@ -2,6 +2,9 @@
 
 package org.nlogo.window;
 
+import scala.collection.Seq;
+import scala.Tuple2;
+
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.BooleanConstraint;
@@ -22,6 +25,7 @@ import org.nlogo.api.SimpleJobOwner;
 import org.nlogo.api.UpdateMode;
 import org.nlogo.api.UpdateModeJ;
 import org.nlogo.drawing.DrawingActionBroker;
+import org.nlogo.log.Logger;
 import org.nlogo.nvm.Procedure;
 import org.nlogo.nvm.Workspace;
 
@@ -68,12 +72,16 @@ public abstract strictfp class GUIWorkspaceJ
   // for grid snap
   private boolean snapOn = false;
 
+  private PeriodicUpdater periodicUpdater;
+  private javax.swing.Timer repaintTimer;
+  private Lifeguard lifeguard;
+
   public GUIWorkspaceJ(final org.nlogo.agent.World world,
-                       KioskLevel kioskLevel, java.awt.Frame frame,
-                       java.awt.Component linkParent,
-                       org.nlogo.workspace.AbstractWorkspace.HubNetManagerFactory hubNetManagerFactory,
-                       ExternalFileManager externalFileManager,
-                       NetLogoListenerManager listenerManager) {
+                      KioskLevel kioskLevel, java.awt.Frame frame,
+                      java.awt.Component linkParent,
+                      org.nlogo.workspace.AbstractWorkspace.HubNetManagerFactory hubNetManagerFactory,
+                      ExternalFileManager externalFileManager,
+                      NetLogoListenerManager listenerManager) {
     super(world, hubNetManagerFactory);
     this.kioskLevel = kioskLevel;
     this.frame = frame;
@@ -87,7 +95,7 @@ public abstract strictfp class GUIWorkspaceJ
     drawingActionBroker = new DrawingActionBroker(view.renderer.trailDrawer());
     viewManager.setPrimary(view);
 
-    PeriodicUpdater periodicUpdater = new PeriodicUpdater(jobManager);
+    periodicUpdater = new PeriodicUpdater(jobManager);
     periodicUpdater.start();
     world.trailDrawer(this);
 
@@ -101,9 +109,11 @@ public abstract strictfp class GUIWorkspaceJ
           }
         };
     // 10 checks a second seems like plenty
-    new javax.swing.Timer(100, repaintAction).start();
+    repaintTimer = new javax.swing.Timer(100, repaintAction);
+    repaintTimer.start();
 
-    new Lifeguard().start();
+    lifeguard = new Lifeguard();
+    lifeguard.start();
   }
 
   // Lifeguard ensures the engine comes up for air every so often.
@@ -226,12 +236,13 @@ public abstract strictfp class GUIWorkspaceJ
     drawingActionBroker.sendPixels(dirty);
   }
 
-  // I'm not sure that our superclass's implementation wouldn't
-  // actually just work, but rather than think about it...
-  // - ST 1/19/05
   @Override
-  public void dispose() {
-    throw new UnsupportedOperationException();
+  public void dispose() throws InterruptedException {
+    periodicUpdater.stop();
+    repaintTimer.stop();
+    lifeguard.interrupt();
+    lifeguard.join();
+    super.dispose();
   }
 
   public WidgetContainer getWidgetContainer() {
@@ -1151,6 +1162,16 @@ public abstract strictfp class GUIWorkspaceJ
       source = super.getSource(filename);
     }
     return source;
+  }
+
+  @Override
+  public void logCustomMessage(String msg) {
+    Logger.logCustomMessage(msg);
+  }
+
+  @Override
+  public void logCustomGlobals(Seq<Tuple2<String, String>> nameValuePairs) {
+    Logger.logCustomGlobals(nameValuePairs);
   }
 
 }

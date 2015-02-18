@@ -236,8 +236,9 @@ $RM -rf extensions/sample extensions/sample-scala
 
 $RM -rf extensions/*/{src,Makefile,manifest.txt,classes,tests.txt,README.md,build.xml,turtle.gif,.classpath,.project,.settings,project,target,build.sbt,*.zip,bin,sbt,NetLogo*.jar*}
 
-#Extra NW extension stuff (see #620): FD 6/13/14
+#Extra NW/CSV extension stuff (see #620): FD 6/13/14
 $RM -rf extensions/nw/{lib_managed,models,test,extensions,timeit.nlogo}
+$RM -rf extensions/csv/{lib_managed,models,test,extensions}
 
 ## Apple's license won't let us include this - ST 2/6/12
 $RM -f extensions/qtj/QTJava.jar
@@ -274,6 +275,10 @@ $PERL -p -i -e 's/\<\/blockquote\>/\<\/td\>\<\/tr\>\<\/table\>/' docs/*.html
 $PERL -0 -p -i -e 's|<div class="version">.+?</div>||gs;' docs/*.html
 $PERL -p -i -e "s/\<h3\>/\<p\>\<hr\>\<h3\>/" docs/dictionary.html
 
+# Extension docs can come from extension READMEs now (requires pandoc), repeated below
+pandoc ../../extensions/nw/README.md -o docs/nw.html -t html -T "NetLogo User Manual: Networks Extension" -c netlogo.css
+pandoc ../../extensions/csv/README.md -o docs/csv.html -t html -T "NetLogo User Manual: CSV Extension" -c netlogo.css
+
 cd docs
 ../../../bin/htmldoc.sh
 cd ..
@@ -291,6 +296,10 @@ $PERL -p -i -e 's/NetLogo User Manual:/NetLogo $ENV{"VERSION"} User Manual:/' do
 $PERL -p -i -e 's/NetLogo User Manual&nbsp;/NetLogo $ENV{"VERSION"} User Manual&nbsp;/' docs/*.html
 # we use -0 so that the regexes can extend across line breaks
 $PERL -0 -p -i -e 's|<title>.+?NetLogo User Manual.+?</title>|<title>NetLogo $ENV{"VERSION"} User Manual</title>|gs' docs/*.html
+
+# Extension docs can come from extension READMEs now (requires pandoc)
+pandoc ../../extensions/nw/README.md -o docs/nw.html -t html -T "NetLogo User Manual: Networks Extension" -c netlogo.css
+pandoc ../../extensions/csv/README.md -o docs/csv.html -t html -T "NetLogo User Manual: CSV Extension" -c netlogo.css
 
 # put models in multiple categories
 ( cd models/Sample\ Models     ; $CP -rp Biology/AIDS* Social\ Science ) || exit 1
@@ -318,12 +327,18 @@ $PERL -0 -p -i -e 's|<title>.+?NetLogo User Manual.+?</title>|<title>NetLogo $EN
 ( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/*.jpg Curricular\ Models/BEAGLE\ Evolution ) || exit 1
 ( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/*.jpg Curricular\ Models/BEAGLE\ Evolution/HubNet\ Activities ) || exit 1
 ( cd models                    ; $CP -rp HubNet\ Activities/Unverified/Guppy\ Spots* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
-( cd models                    ; $CP -rp HubNet\ Activities/Unverified/aquarium.jpg Curricular\ Models/BEAGLE\ Evolution ) || exit 1
+( cd models                    ; $CP -rp HubNet\ Activities/Unverified/aquarium\ [HubNet].jpg Curricular\ Models/BEAGLE\ Evolution ) || exit 1
 ( cd models                    ; $CP -rp HubNet\ Activities/Bug\ Hunters\ Camouflage* Curricular\ Models/BEAGLE\ Evolution/HubNet\ Activities ) || exit 1
 ( cd models                    ; $CP -rp Sample\ Models/Biology/Daisyworld* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
 ( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Mimicry* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
 ( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Altruism* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
 ( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Cooperation* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
+
+# BEAGLE HubNet models
+( cd models                    ; $CP -rp Curricular\ Models/BEAGLE\ Evolution/HubNet\ Activities/Bird\ Breeders\ \[HubNet\]* HubNet\ Activities ) || exit 1
+( cd models                    ; $CP -rp Curricular\ Models/BEAGLE\ Evolution/HubNet\ Activities/Bug\ Hunters\ Competition\ \[HubNet\]* HubNet\ Activities ) || exit 1
+( cd models                    ; $CP -rp Curricular\ Models/BEAGLE\ Evolution/HubNet\ Activities/Critter\ Designers\ \[HubNet\]* HubNet\ Activities ) || exit 1
+( cd models                    ; $CP -rp Curricular\ Models/BEAGLE\ Evolution/HubNet\ Activities/Fish\ Spotters\ \[HubNet\]* HubNet\ Activities ) || exit 1
 
 # it'd be nice if there were an easier way to fool the model-index task
 # into processing our directory where it is instead of having to bamboozle

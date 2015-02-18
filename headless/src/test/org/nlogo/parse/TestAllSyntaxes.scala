@@ -31,6 +31,7 @@ class TestAllSyntaxes extends FunSuite {
                      |_and TRUE/FALSE,TRUE/FALSE,TRUE/FALSE,OTPL,null,4,1,1
                      |_any agentset,TRUE/FALSE,OTPL,null,10,1,1
                      |_approximatehsb number/number/number,number,OTPL,null,10,3,3
+                     |_approximatehsbold number/number/number,number,OTPL,null,10,3,3
                      |_approximatergb number/number/number,number,OTPL,null,10,3,3
                      |_asin number,number,OTPL,null,10,1,1
                      |_atan number/number,number,OTPL,null,10,2,2
@@ -66,6 +67,7 @@ class TestAllSyntaxes extends FunSuite {
                      |_errormessage ,string,OTPL,null,10,0,0
                      |_exp number,number,OTPL,null,10,1,1
                      |_extracthsb number or list,list,OTPL,null,10,1,1
+                     |_extracthsbold number or list,list,OTPL,null,10,1,1
                      |_extractrgb number,list,OTPL,null,10,1,1
                      |_fileatend ,TRUE/FALSE,OTPL,null,10,0,0
                      |_fileexists string,TRUE/FALSE,OTPL,null,10,1,1
@@ -79,6 +81,7 @@ class TestAllSyntaxes extends FunSuite {
                      |_greaterorequal agent or number or string,agent or number or string,TRUE/FALSE,OTPL,null,6,1,1
                      |_greaterthan agent or number or string,agent or number or string,TRUE/FALSE,OTPL,null,6,1,1
                      |_hsb number/number/number,list,OTPL,null,10,3,3
+                     |_hsbold number/number/number,list,OTPL,null,10,3,3
                      |_hubnetclientslist ,list,OTPL,null,10,0,0
                      |_hubnetentermessage ,TRUE/FALSE,OTPL,null,10,0,0
                      |_hubnetexitmessage ,TRUE/FALSE,OTPL,null,10,0,0

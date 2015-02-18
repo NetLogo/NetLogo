@@ -474,4 +474,8 @@ class AutoConverter1(tokenizer: TokenizerInterface) {
 
   private val CONVERSIONS22 = Map("clear-all" -> AutoConverter1.clearAllAndResetTicks,
                                   "ca" -> AutoConverter1.clearAllAndResetTicks)
+
+  private val CONVERSIONS23 = Map(("hsb", "__hsb-old"),
+                                  ("extract-hsb", "__extract-hsb-old"),
+                                  ("approximate-hsb", "__approximate-hsb-old"))
 }

@@ -1481,6 +1481,16 @@ sort-by [[size] of ?1 &lt; [size] of ?2] turtles
       This returns a list of turtles sorted in ascending order by their
       turtle variable <a href="dictionary.html#size"><tt>size</tt></a>.
     <p>
+      There's a common pattern to get a list of agents in a random order,
+      using a combination of <a href="dictionary.html#of"><tt>of</tt></a>
+      and <a href="dictionary.html#self"><tt>self</tt></a>, in the rare
+      case that you cannot just use <a href="dictionary.html#self">
+        <tt>ask</tt></a>:
+    <pre>
+[self] of my-agentset
+</pre>
+      
+    <p>
       <b>Asking a list of agents</b>
     <p>
       Once you have a list of agents, you might want to ask them each to do

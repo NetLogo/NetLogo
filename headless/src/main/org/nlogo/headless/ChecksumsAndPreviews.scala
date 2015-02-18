@@ -61,7 +61,7 @@ object ChecksumsAndPreviews {
           workspace.exportView(previewPath, "PNG")
         }
       }
-      catch { case e: Exception => e.printStackTrace() }
+      catch { case e: Throwable => e.printStackTrace() }
       finally { workspace.dispose() }
     }
   }

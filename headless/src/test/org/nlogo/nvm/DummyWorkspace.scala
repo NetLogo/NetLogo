@@ -82,6 +82,8 @@ class DummyWorkspace extends DummyParserServices with Workspace {
   override def behaviorSpaceRunNumber(n: Int) = unsupported
   override def previewCommands = unsupported
   override def benchmark(minTime: Int, maxTime: Int) = unsupported
+  override def logCustomMessage(msg: String): Unit = unsupported
+  override def logCustomGlobals(nameValuePairs: Seq[(String, String)]): Unit = unsupported
 
   // from ImporterUser
   override def setOutputAreaContents(text: String) = unsupported

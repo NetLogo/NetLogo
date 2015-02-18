@@ -64,6 +64,16 @@ HSB4
 HSB5
   length remove-duplicates map [extract-hsb ?] n-values 1400 [? / 10] => 1400
 
+# Use blue for tests, but really testing reflexivity of things
+HSB6
+  approximate-hsb 218.974 69.231 66.275 => 105
+  extract-hsb 105 => [218.974 69.231 66.275]
+  extract-hsb extract-rgb blue = extract-hsb blue => true
+
+# Confirmed with outside site
+HSB7
+  hsb 218.974 69.231 66.275 => [52 93 169]
+
 RGB1
   approximate-rgb 0 0 0 => 0
 

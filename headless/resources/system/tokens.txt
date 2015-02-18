@@ -249,6 +249,7 @@ R all? etc._all
 R and _and
 R any? _any
 R approximate-hsb etc._approximatehsb
+R __approximate-hsb-old etc._approximatehsbold
 R approximate-rgb etc._approximatergb
 R asin etc._asin
 R at-points etc._atpoints
@@ -280,6 +281,7 @@ R end2 etc._end2
 R error-message _errormessage
 R exp etc._exp
 R extract-hsb etc._extracthsb
+R __extract-hsb-old etc._extracthsbold
 R extract-rgb etc._extractrgb
 R file-at-end? etc._fileatend
 R file-exists? etc._fileexists
@@ -291,6 +293,7 @@ R first etc._first
 R floor etc._floor
 R fput etc._fput
 R hsb etc._hsb
+R __hsb-old etc._hsbold
 R hubnet-clients-list hubnet._hubnetclientslist
 R hubnet-enter-message? hubnet._hubnetentermessage
 R hubnet-exit-message? hubnet._hubnetexitmessage

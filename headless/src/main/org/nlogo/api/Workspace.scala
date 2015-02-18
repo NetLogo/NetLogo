@@ -97,4 +97,6 @@ trait Workspace extends ImporterUser with ParserServices with RandomServices {
   def lastLogoException: LogoException
   def clearLastLogoException()
   def profilingEnabled: Boolean
+  def logCustomMessage(msg: String)
+  def logCustomGlobals(nameValuePairs: Seq[(String, String)])
 }

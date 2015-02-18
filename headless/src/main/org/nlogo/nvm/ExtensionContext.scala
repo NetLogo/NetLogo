@@ -36,4 +36,9 @@ extends api.Context {
       image, workspace.world.asInstanceOf[agent.World], asNetLogoColors)
   }
 
+  override def logCustomMessage(msg: String) =
+    workspace.logCustomMessage(msg)
+
+  override def logCustomGlobals(nameValuePairs: Seq[(String, String)]) =
+    workspace.logCustomGlobals(nameValuePairs);
 }

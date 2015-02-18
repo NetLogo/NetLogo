@@ -26,6 +26,8 @@
       notes</a> for more complete details on differences between versions.
     <ul>
       <li>
+        <a href="#v52">Changes for NetLogo 5.2</a>
+      <li>
         <a href="#v50">Changes for NetLogo 5.0</a>
       <li>
         <a href="#v41">Changes for NetLogo 4.1</a>
@@ -34,6 +36,34 @@
       <li>
         <a href="#v31">Changes for NetLogo 3.1</a>
       </ul>
+    <h2>
+      <a name="v52" id="v50">Changes for NetLogo 5.2</a>
+    </h2>
+    <h3>
+      hsb primitives
+    </h3>
+    <p>
+      In 5.2, the hsb primitives have been changed to work with the standard
+      scale values of 360 for hue, and 100 for saturation and brightness.  This
+      affects the primitives hsb, extract-hsb and approximate-hsb.
+    <p>
+      The old primitives, scaled to 255, are automatically transitioned to and have
+      been renamed __hsb-old, __extract-hsb-old and __approximate-hsb-old.
+    <h3>
+      GoGo extension
+    </h3>
+    <p>
+      The GoGo extension has been upgraded to use newer GoGo boards with the HID
+      interface.  Many of the older primitives no longer work, and will alert you
+      to upgrading your GoGo board's firmware.
+    <p>
+      If you need to continue to use a serial interface, you can use the bundled
+      gogo-serial extension.  Change your model to use gogo-serial as opposed to
+      gogo.
+    <p>
+      If you cannot upgrade to use the new HID extension nor the new serial
+      extension, the original extension can be found at
+      https://github.com/NetLogo/GoGo-RXTX-Extension
     <h2>
       <a name="v50" id="v50">Changes for NetLogo 5.0</a>
     </h2>
