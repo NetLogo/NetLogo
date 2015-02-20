@@ -3632,7 +3632,7 @@ procedure CALCULATE-PRESSURE:[]{OTPL}:
          L4
           RETURN
 [2]_asm_procedurecalculatepressure_setobservervariable_5 "set zero-pressure-count length filter [? = 0] pressure-history" Object => void
-      _length LogoList => double
+      _length Object => double
         _filter
           _reportertask
             _asm_procedurecalculatepressure_equal_6 "? = 0" Object,double => boolean
@@ -3690,54 +3690,62 @@ procedure CALCULATE-PRESSURE:[]{OTPL}:
                 INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
                L1
                 ARETURN
-          TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
-          TRYCATCHBLOCK L2 L3 L4 org/nlogo/api/AgentException
+          TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurecalculatepressure_setobservervariable_5.keptinstr3 : Lorg/nlogo/prim/etc/_filter;
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/prim/etc/_filter.report (Lorg/nlogo/nvm/Context;)Ljava/lang/Object;
-         L5
+         L3
           ASTORE 2
-         L0
+          ALOAD 2
+          INSTANCEOF org/nlogo/api/LogoList
+          IFEQ L4
           ALOAD 2
           CHECKCAST org/nlogo/api/LogoList
-          GOTO L6
-         L1
-          POP
+          INVOKEVIRTUAL org/nlogo/api/LogoList.size ()I
+          I2D
+          GOTO L5
+         L4
+          ALOAD 2
+          INSTANCEOF java/lang/String
+          IFEQ L6
+          ALOAD 2
+          CHECKCAST java/lang/String
+          INVOKEVIRTUAL java/lang/String.length ()I
+          I2D
+          GOTO L5
+         L6
           NEW org/nlogo/nvm/ArgumentTypeException
           DUP
           ALOAD 1
           ALOAD 0
-          BIPUSH 0
-          LDC 8
+          ICONST_0
+          INVOKESTATIC org/nlogo/api/Syntax.ListType ()I
+          INVOKESTATIC org/nlogo/api/Syntax.StringType ()I
+          IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
-         L6
-          ASTORE 2
-          ALOAD 2
-          INVOKEVIRTUAL org/nlogo/api/LogoList.size ()I
-          I2D
-         L7
+         L5
           DSTORE 2
           NEW java/lang/Double
           DUP
           DLOAD 2
           INVOKESPECIAL java/lang/Double.<init> (D)V
           ASTORE 2
-         L2
+         L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurecalculatepressure_setobservervariable_5.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
           BIPUSH 10
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Observer.setVariable (ILjava/lang/Object;)V
-         L3
+         L1
           ALOAD 1
           ICONST_3
           PUTFIELD org/nlogo/nvm/Context.ip : I
-          GOTO L8
-         L4
+          GOTO L7
+         L2
           ASTORE 3
           NEW org/nlogo/nvm/EngineException
           DUP
@@ -3747,7 +3755,7 @@ procedure CALCULATE-PRESSURE:[]{OTPL}:
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L8
+         L7
           RETURN
 [3]_asm_procedurecalculatepressure_ask_8 "ask particles" AgentSet => void
       _breed:PARTICLES => AgentSet

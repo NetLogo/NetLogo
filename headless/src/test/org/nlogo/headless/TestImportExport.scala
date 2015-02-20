@@ -18,6 +18,9 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
         def showError(title: String, errorDetails: String, fatalError: Boolean): Boolean =
           sys.error(title + " / " + errorDetails + " / " + fatalError)
       }
+
+    // This is needed because earlier tests set up the prefix weirdly
+    workspace.fileManager.setPrefix("")
   }
 
   override def afterEach() { workspace.dispose() }

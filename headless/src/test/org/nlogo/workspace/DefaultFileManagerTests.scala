@@ -18,6 +18,10 @@ class DefaultFileManagerTests extends FunSuite with OneInstancePerTest with Befo
     AbstractWorkspace.isApp(true)
   }
 
+  override def afterAll() = {
+    AbstractWorkspace.isApp(false)
+  }
+
   test("openFile allows opening files that do not exist") {
     fileManager.getFile("foobar")
   }
