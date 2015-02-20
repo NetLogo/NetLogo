@@ -46,6 +46,3 @@
 [submodule "gogo-hid"]
 	path = extensions/gogo
 	url = https://github.com/NetLogo/GoGo-HID-Extension
-[submodule "extensions/gogo-serial"]
-	path = extensions/gogo-serial
-	url = https://github.com/NetLogo/GoGo-Serial-Extension
