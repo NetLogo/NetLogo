@@ -12,7 +12,7 @@ import scala.collection._
 final class DefaultFileManager(val workspace: AbstractWorkspace) extends org.nlogo.nvm.FileManager {
   private var openFiles: Map[String, File] = Map[String, File]()
   private var _currentFile: Option[File] = None
-  var prefix: String = System.getProperty("user.home")
+  var prefix: String = if(AbstractWorkspace.isApp) System.getProperty("user.home") else ""
 
   @throws(classOf[java.io.IOException])
   def getErrorInfo: String = {
