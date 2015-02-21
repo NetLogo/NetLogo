@@ -16,6 +16,7 @@ class TestCompileAll extends FunSuite with SlowTest {
     val skip =
       !Version.is3D && path.endsWith(".nlogo3d") ||
       // skip Oil Cartel while status of HubNet narrowcast plotting remains uncertain - ST 9/9/12
+      path.contains("QuickTime") ||
       path.endsWith("Oil Cartel.nlogo") ||
       // in 3D skip models that aren't in the 3D directory.
       Version.is3D && !pathMatches("3D")

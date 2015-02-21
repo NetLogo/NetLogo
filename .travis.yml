@@ -5,7 +5,7 @@ before_install:
 install:
   - sbt update
 script:
-- ./nightly.sh
+  - ./nightly.sh
 
 notifications:
   hipchat:
