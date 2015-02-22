@@ -9,7 +9,7 @@ object ChecksumsAndPreviews {
 
   val allBenchmarks =
     List("Ants", "Bureaucrats", "BZ", "CA1D", "Erosion", "Fire", "FireBig", "Flocking", "GasLabCirc",
-         "GasLabNew", "GasLabOld", "GridWalk", "Heatbugs", "Ising", "Life", "PrefAttach",
+         "GasLabOld", "GridWalk", "Heatbugs", "Ising", "Life", "PrefAttach",
          "Team", "Termites", "VirusNet", "Wealth", "Wolf", "ImportWorld")
 
   def main(argv: Array[String]) {

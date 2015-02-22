@@ -75,6 +75,7 @@ class TestMirroringModels extends FunSuite with SlowTest {
       path <- TestChecksums.checksums.values.map(_.path)
       if !exclusions.exists(name => path.endsWith(name + ".nlogo"))
     } test("Mirroring: " + path) {
+      System.out.println(path)
       modelRenderingTest(path)
     }
   }

@@ -10,7 +10,7 @@ class TestCompileBenchmarks extends FunSuite with SlowTest{
 
   val names = Seq(
     "Ants", "Bureaucrats", "BZ", "CA1D", "Erosion", "Fire", "FireBig", "Flocking", "GasLabCirc",
-    "GasLabNew", "GasLabOld", "GridWalk", "Heatbugs", "Ising", "Life", "PrefAttach",
+    "GasLabOld", "GridWalk", "Heatbugs", "Ising", "Life", "PrefAttach",
     "Team", "Termites", "VirusNet", "Wealth", "Wolf", "ImportWorld")
 
   // this is here to help us remember that when the list of benchmarks changes, this file and the
