@@ -32,7 +32,9 @@ echo "*** done: nogen fast:test"
 if [ ${PIPESTATUS[0]} -ne 0 ] ; then echo "*** FAILED: threed fast:test"; exit 1; fi
 echo "*** done: threed fast:test"
 
-./sbt extensions 2>&1 | tee tmp/nightly/extensions.txt
+# This is neede for travis so that it won't run itself out of memory
+JVM_OPTS="-Dfile.encoding=UTF8 -XX:MaxPermSize=1024m -Xms512m -Xmx1536m -Xss2m" \
+  ./sbt extensions 2>&1 | tee tmp/nightly/extensions.txt
 if [ ${PIPESTATUS[0]} -ne 0 ] ; then echo "*** FAILED: extensions"; exit 1; fi
 echo "*** done: extensions"
 
@@ -48,7 +50,9 @@ echo "*** done: nogen slow:test"
 if [ ${PIPESTATUS[0]} -ne 0 ] ; then echo "*** FAILED: threed slow:test"; exit 1; fi
 echo "*** done: threed slow:test"
 
-./sbt all 2>&1 | tee tmp/nightly/6-sbt-all.txt
+# This is neede for travis so that it won't run itself out of memory
+JVM_OPTS="-Dfile.encoding=UTF8 -XX:MaxPermSize=1024m -Xms512m -Xmx1536m -Xss2m" \
+  ./sbt all 2>&1 | tee tmp/nightly/6-sbt-all.txt
 if [ ${PIPESTATUS[0]} -ne 0 ] ; then echo "*** FAILED: sbt all"; exit 1; fi
 echo "*** done: sbt all"
 
