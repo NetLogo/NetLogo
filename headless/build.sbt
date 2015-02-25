@@ -1,5 +1,7 @@
 artifactName := { (_, _, _) => "NetLogoHeadless.jar" }
 
+artifactName in Test := { (_, _, _) => "NetLogoHeadless-tests.jar" }
+
 unmanagedResourceDirectories in Compile <+= baseDirectory { _ / "resources" }
 
 resourceDirectory in Compile <<= baseDirectory(_ / "resources")
