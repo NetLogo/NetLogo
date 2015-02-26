@@ -81,7 +81,7 @@ class ProceduresTab(val workspace: AbstractWorkspace) extends JPanel
   // since the editor tends to want to be huge - ST
   override def getPreferredSize: Dimension = toolBar.getPreferredSize
 
-  def getIncludesTable: java.util.Map[String, String] = {
+  def getIncludesTable: Option[java.util.Map[String, String]] = {
     val path = Option(workspace.getModelPath()).getOrElse{
       // we create an arbitrary model name for checking include paths when we don't have an actual
       // modelPath or directory
@@ -89,7 +89,7 @@ class ProceduresTab(val workspace: AbstractWorkspace) extends JPanel
       catch {
         case ex: java.net.MalformedURLException =>
           // if we can't even figure out where we are, we certainly can't have includes
-          return new java.util.HashMap[String, String]
+          return None
       }
     }
     workspace.compiler.findIncludes(path, getText, workspace.world.program.is3D)

@@ -25,27 +25,27 @@ with org.nlogo.window.Events.CompiledEvent.Handler
 
   override def populate(menu: javax.swing.JPopupMenu) {
     import collection.JavaConverters._
-    includesTable = target.getIncludesTable.asScala.toMap
-    if(includesTable.isEmpty) {
-      val nullItem = new javax.swing.JMenuItem("<No Includes Defined>")
-      nullItem.setEnabled(false)
-      menu.add(nullItem)
-    }
-    else {
-      val includes = new java.util.ArrayList[String]
-      includesTable.keys.foreach(includes.add)
-      java.util.Collections.sort(includes, String.CASE_INSENSITIVE_ORDER)
-      for(include <- includes.asScala if include.endsWith(".nls") && include.size > 4)
-        if(new java.io.File(includesTable(include)).exists) {
-          val item = new javax.swing.JMenuItem(include)
-          item.addActionListener(
-            new java.awt.event.ActionListener() {
-              override def actionPerformed(e: java.awt.event.ActionEvent) {
-                menuSelection(include)
-              }})
-          menu.add(item)
-        }
-      menu.addSeparator()
+    target.getIncludesTable match {
+      case Some(includesTableJ) =>
+        includesTable = includesTableJ.asScala.toMap
+        val includes = new java.util.ArrayList[String]
+        includesTable.keys.foreach(includes.add)
+        java.util.Collections.sort(includes, String.CASE_INSENSITIVE_ORDER)
+        for(include <- includes.asScala if include.endsWith(".nls") && include.size > 4)
+          if(new java.io.File(includesTable(include)).exists) {
+            val item = new javax.swing.JMenuItem(include)
+            item.addActionListener(
+              new java.awt.event.ActionListener() {
+                override def actionPerformed(e: java.awt.event.ActionEvent) {
+                  menuSelection(include)
+                }})
+            menu.add(item)
+          }
+        menu.addSeparator()
+      case None =>
+        val nullItem = new javax.swing.JMenuItem("<No Includes Defined>")
+        nullItem.setEnabled(false)
+        menu.add(nullItem)
     }
     menu.add(new javax.swing.JMenuItem(new NewSourceEditorAction))
     menu.add(new javax.swing.JMenuItem(new OpenSourceEditorAction))

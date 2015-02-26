@@ -40,7 +40,7 @@ trait CompilerInterface {
   def readFromFile(currFile: org.nlogo.api.File, world: World, extensionManager: ExtensionManager): AnyRef
 
   def findProcedurePositions(source: String, is3D: Boolean): java.util.Map[String, java.util.List[AnyRef]]
-  def findIncludes(sourceFileName: String, source: String, is3D: Boolean): java.util.Map[String, String]
+  def findIncludes(sourceFileName: String, source: String, is3D: Boolean): Option[java.util.Map[String, String]]
   def isValidIdentifier(s: String, is3D: Boolean): Boolean
   def isReporter(s: String, program: Program, procedures: java.util.Map[String, Procedure], extensionManager: ExtensionManager): Boolean
   def getTokenAtPosition(source: String, position: Int): Token

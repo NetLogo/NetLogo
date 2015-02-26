@@ -558,8 +558,7 @@ private class StructureParserExtras(implicit tokenizer: TokenizerInterface) {
     }
     procsTable
   }
-  def findIncludes(sourceFileName: String, source: String): java.util.Map[String, String] = {
-    val includedFiles = new java.util.HashMap[String, String]
+  def findIncludes(sourceFileName: String, source: String): Option[java.util.Map[String, String]] = {
     // Tokenize the current procedures window source
     val myTokens = tokenizer.tokenizeRobustly(source).iterator.buffered
     while(myTokens.hasNext) {
@@ -567,6 +566,7 @@ private class StructureParserExtras(implicit tokenizer: TokenizerInterface) {
       if(token.tyype == TokenType.KEYWORD) {
         val keyword = token.value.asInstanceOf[String]
         if(keyword == "__INCLUDES") {
+          val includedFiles = new java.util.HashMap[String, String]
           while(true) {
             var filePath: String = null
             var pathToken = myTokens.head
@@ -575,18 +575,18 @@ private class StructureParserExtras(implicit tokenizer: TokenizerInterface) {
               pathToken = myTokens.head
             }
             else if(pathToken.tyype == TokenType.CLOSE_BRACKET)
-              return includedFiles
+              return Some(includedFiles)
             else if(pathToken.tyype == TokenType.CONSTANT && pathToken.value.isInstanceOf[String]) {
               pathToken = myTokens.next()
               filePath = StructureParser.resolvePath(sourceFileName, pathToken.value.asInstanceOf[String])
               includedFiles.put(pathToken.value.asInstanceOf[String], filePath)
             }
             else
-              return includedFiles
+              return Some(includedFiles)
           }
         }
       }
     }
-    includedFiles
+    None
   }
 }

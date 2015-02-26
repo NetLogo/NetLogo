@@ -133,7 +133,7 @@ object Compiler extends CompilerInterface {
     new StructureParserExtras()(tokenizer(is3D)).findProcedurePositions(source)
 
   // used for includes menu
-  def findIncludes(sourceFileName: String, source: String, is3D: Boolean): java.util.Map[String, String] =
+  def findIncludes(sourceFileName: String, source: String, is3D: Boolean): Option[java.util.Map[String, String]] =
     new StructureParserExtras()(tokenizer(is3D)).findIncludes(sourceFileName, source)
 
   // used by VariableNameEditor
