@@ -49,6 +49,34 @@ class StructureParserExtras(tokenizer: TokenizerInterface) {
     result
   }
 
+  def getAllProcedures(source: String): Seq[String] = {
+    var result = Seq[String]()
+    // Tokenize the current procedures window source
+    val tokens = tokenizer.tokenizeRobustly(source).iterator.buffered
+    while(tokens.hasNext) {
+      var token = tokens.next()
+      if(token.tpe == TokenType.KEYWORD) {
+        val keyword = token.value.asInstanceOf[String]
+        if(keyword == "TO" || keyword == "TO-REPORT") {
+          // name of procedure
+          val nameToken = tokens.head
+          if(nameToken.tpe == TokenType.IDENT) {
+            val name = nameToken.name
+            // position of end
+            var done = false
+            while(!done && tokens.hasNext) {
+              token = tokens.next()
+              if(token.tpe == TokenType.KEYWORD && token.value == "END")
+                done = true
+            }
+            result = result :+ name
+          }
+        }
+      }
+    }
+    result
+  }
+
   def findIncludes(sourceFileName: String, source: String): Option[Map[String, String]] = {
     // Tokenize the current procedures window source
     val myTokens = tokenizer.tokenizeRobustly(source).iterator.buffered

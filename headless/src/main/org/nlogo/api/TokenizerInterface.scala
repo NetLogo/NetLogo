@@ -13,4 +13,5 @@ trait TokenizerInterface {
   def tokenizeForColorization(source: String, extensionManager: ExtensionManager): Seq[Token]
   def nextToken(reader: java.io.BufferedReader): Token
   def checkInstructionMaps(): Unit  // for testing
+  def allReportersAndCommands(): Seq[String]
 }

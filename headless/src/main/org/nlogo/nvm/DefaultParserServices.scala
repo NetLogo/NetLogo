@@ -36,4 +36,6 @@ class DefaultParserServices(parser: ParserInterface) extends api.ParserServices 
     parser.getTokenAtPosition(source, pos)
   def findProcedurePositions(source: String) =
     parser.findProcedurePositions(source, false)
+  def getCompletions(source: String, name: String): Seq[(String, String)] =
+    parser.getCompletions(source, name, api.Version.is3D)
 }

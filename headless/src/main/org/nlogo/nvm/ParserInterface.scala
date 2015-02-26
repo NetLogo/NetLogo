@@ -25,4 +25,5 @@ trait ParserInterface {
   def isReporter(s: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager): Boolean
   def getTokenAtPosition(source: String, position: Int): Token
   def tokenizeForColorization(source: String, extensionManager: ExtensionManager, is3D: Boolean): Seq[Token]
+  def getCompletions(source: String, name: String, is3D: Boolean): Seq[(String, String)]
 }

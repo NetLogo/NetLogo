@@ -8,6 +8,8 @@
 
 package org.nlogo.editor;
 
+import org.nlogo.api.Token;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -101,6 +103,11 @@ public strictfp class EditorArea<TokenType>
     getInputMap().put
         (javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, 0),
             Actions.quickHelpAction(colorizer, i18n));
+
+    getInputMap().put
+        (javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_SPACE,
+            java.awt.event.InputEvent.CTRL_DOWN_MASK),
+            Actions.codeCompletionAction(colorizer));
   }
 
   @Override
@@ -228,7 +235,7 @@ public strictfp class EditorArea<TokenType>
     indenter.handleTab();
   }
 
-  int lineToStartOffset(javax.swing.text.PlainDocument doc, int line) {
+  public int lineToStartOffset(javax.swing.text.PlainDocument doc, int line) {
     return doc.getDefaultRootElement().getElement(line).getStartOffset();
   }
 
@@ -236,7 +243,7 @@ public strictfp class EditorArea<TokenType>
     return doc.getDefaultRootElement().getElement(line).getEndOffset();
   }
 
-  int offsetToLine(javax.swing.text.PlainDocument doc, int offset) {
+  public int offsetToLine(javax.swing.text.PlainDocument doc, int offset) {
     return doc.getDefaultRootElement().getElementIndex(offset);
   }
 
@@ -463,7 +470,7 @@ public strictfp class EditorArea<TokenType>
 
   ///
 
-  String getHelpTarget(int startPosition) {
+  public String getHelpTarget(int startPosition) {
     // determine the current "word" that the cursor is on
     javax.swing.text.PlainDocument doc = (javax.swing.text.PlainDocument) getDocument();
     try {
@@ -472,6 +479,22 @@ public strictfp class EditorArea<TokenType>
       int lineLength = lineToEndOffset(doc, currentLine) - startLineOffset;
       String lineText = doc.getText(startLineOffset, lineLength);
       int selStartInString = startPosition - startLineOffset;
+      return colorizer.getTokenStringAtPosition(lineText, selStartInString);
+    } catch (javax.swing.text.BadLocationException ex) {
+      throw new IllegalStateException(ex);
+    }
+  }
+
+  public Token getCursorToken() {
+    // determine the current "word" that the cursor is on
+    int position = getCaretPosition();
+    javax.swing.text.PlainDocument doc = (javax.swing.text.PlainDocument) getDocument();
+    try {
+      int currentLine = offsetToLine(doc, position);
+      int startLineOffset = lineToStartOffset(doc, currentLine);
+      int lineLength = lineToEndOffset(doc, currentLine) - startLineOffset;
+      String lineText = doc.getText(startLineOffset, lineLength);
+      int selStartInString = position - startLineOffset;
       return colorizer.getTokenAtPosition(lineText, selStartInString);
     } catch (javax.swing.text.BadLocationException ex) {
       throw new IllegalStateException(ex);

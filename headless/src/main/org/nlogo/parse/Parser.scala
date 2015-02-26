@@ -154,6 +154,11 @@ trait Parser extends nvm.ParserInterface {
   def findProcedurePositions(source: String, is3D: Boolean): Map[String, (String, Int, Int, Int)] =
     new StructureParserExtras(tokenizer(is3D)).findProcedurePositions(source)
 
+  def getCompletions(source: String, name: String, is3D: Boolean): Seq[(String, String)] = {
+    tokenizer(is3D).allReportersAndCommands.map((_, "SYSTEM")) ++
+    new StructureParserExtras(tokenizer(is3D)).getAllProcedures(source).map((_, "USER"))
+  }
+
   // used for includes menu
   def findIncludes(sourceFileName: String, source: String, is3D: Boolean): Option[Map[String, String]] =
     new StructureParserExtras(tokenizer(is3D)).findIncludes(sourceFileName, source)

@@ -37,6 +37,8 @@ object Actions {
   class UncommentAction extends MyTextAction("uncomment-line", _.uncomment())
   class ShiftLeftAction extends MyTextAction("shift-line-left", _.shiftLeft() )
   class ShiftRightAction extends MyTextAction("shift-line-right", _.insertBeforeEachSelectedLine(" ") )
+  def codeCompletionAction(colorizer: Colorizer[_]) =
+    new MyTextAction("code-complete", e => colorizer.doCodeCompletion(e))
   def quickHelpAction(colorizer: Colorizer[_], i18n: String => String) =
     new MyTextAction(i18n("tabs.code.rightclick.quickhelp"),
                      e => colorizer.doHelp(e, e.getHelpTarget(e.getSelectionStart)))

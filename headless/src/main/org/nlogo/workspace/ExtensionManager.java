@@ -61,7 +61,7 @@ public strictfp class ExtensionManager
   public static final String EXTENSION_NOT_FOUND =
     "Can't find extension: ";
 
-  private final Map<String, JarContainer> jars =
+  public final Map<String, JarContainer> jars =
       new HashMap<String, JarContainer>();
   private final AbstractWorkspace workspace;
 

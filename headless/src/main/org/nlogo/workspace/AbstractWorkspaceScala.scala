@@ -128,6 +128,16 @@ object AbstractWorkspaceTraits {
     override def findProcedurePositions(source: String) =
       compiler.findProcedurePositions(source, world.program.is3D)
 
+    override def getCompletions(source: String, name: String): Seq[(String, String)] = {
+      import scala.collection.JavaConverters._
+      getExtensionManager.jars.asScala.map(_._2).map(
+        jarContainer => {
+          jarContainer.primManager.getPrimitiveNames.asScala.toList.map(
+            primName => (jarContainer.extensionName + ":" + primName, jarContainer.extensionName)
+            )
+        }).flatten.toList ++ compiler.getCompletions(source, name, world.program.is3D)
+    }
+
   }
 
   trait Procedures { this: AbstractWorkspaceScala =>

@@ -96,9 +96,11 @@ class EditorColorizer(parser: ParserServices) extends Colorizer[TokenType] {
         SyntaxColors.DEFAULT_COLOR
     }
 
-  def getTokenAtPosition(text: String, position: Int): String =
-    Option(parser.getTokenAtPosition(text, position))
-      .map(_.name).orNull
+  def getTokenStringAtPosition(text: String, position: Int): String =
+    Option(getTokenAtPosition(text, position)).map(_.name).orNull
+
+  def getTokenAtPosition(text: String, position: Int): Token =
+    parser.getTokenAtPosition(text, position)
 
   def doHelp(comp: java.awt.Component, name: String) {
     def confirmOpen(): Boolean =
@@ -129,5 +131,17 @@ class EditorColorizer(parser: ParserServices) extends Colorizer[TokenType] {
       }
     }
     found
+  }
+
+  def doCodeCompletion(editor: EditorArea[_]): Unit = {
+    System.out.println(editor.getCursorToken())
+    System.out.println(editor.getCursorToken().endPos)
+    val doc = editor.getDocument.asInstanceOf[javax.swing.text.PlainDocument]
+    val currentLine = editor.offsetToLine(doc, editor.getCaretPosition);
+    val startLineOffset = editor.lineToStartOffset(doc, currentLine);
+
+    System.out.println(parser.getCompletions(org.nlogo.app.App.app.tabs.codeTab.text.getText(), editor.getCursorToken().name))
+
+    editor.setCaretPosition(editor.getCursorToken().endPos + startLineOffset);
   }
 }

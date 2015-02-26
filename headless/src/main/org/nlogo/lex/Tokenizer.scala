@@ -32,6 +32,9 @@ class Tokenizer(tokenMapper: TokenMapper) extends TokenizerInterface {
     }
   }
 
+  override def allReportersAndCommands(): Seq[String] =
+    tokenMapper.allReporterNames.toSeq ++ tokenMapper.allCommandNames.toSeq
+
   // this is used e.g. when colorizing
   private def tokenizeIncludingComments(source: String): Seq[Token] =
     doTokenize(source, true, false, "", false)
