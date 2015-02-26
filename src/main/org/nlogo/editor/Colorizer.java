@@ -30,6 +30,7 @@ public interface Colorizer<TokenType> {
 
   // Let's just keep rocking out adding non colorizer things
   void raiseJumpToDefinitionEvent(java.awt.Component comp, String name);
+  boolean jumpToDefinition(EditorArea<?> editor, String name);
 
   // Ok, at this point we should really rename this class - FD 2/26/15
   void doCodeCompletion(EditorArea<?> editor);
