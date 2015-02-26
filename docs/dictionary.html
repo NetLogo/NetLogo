@@ -129,16 +129,17 @@ Go figure! - ST 12/2/04
       "#show-turtle">show-turtle</a> (<a href="#show-turtle">st</a>)
       <a href="#sprout">sprout</a> <a href=
       "#sprout-breeds">sprout-<i>&lt;breeds&gt;</i></a> <a href=
-      "#stamp">stamp</a> <a href="#stamperase">stamp-erase</a> <a href=
-      "#subject">subject</a> <a href=
+      "#stamp">stamp</a> <a href="#stamperase">stamp-erase</a>
+      <a href="#stop-inspecting">stop-inspecting</a> 
+      <a href="#subject">subject</a> <a href=
       "#subtract-headings">subtract-headings</a> <a href="#tie">tie</a>
       <a href="#towards">towards</a> <a href="#towardsxy">towardsxy</a>
       <a href="#turtle">turtle</a> <a href="#turtle-set">turtle-set</a>
       <a href="#turtles">turtles</a> <a href="#turtles-at">turtles-at</a>
       <a href="#turtles-here">turtles-here</a> <a href=
       "#turtles-on">turtles-on</a> <a href="#turtles-own">turtles-own</a>
-      <a href="#untie">untie</a> <a href="#uphill">uphill</a> <a href=
-      "#uphill4">uphill4</a>
+      <a href="#untie">untie</a>
+      <a href="#uphill">uphill</a> <a href="#uphill4">uphill4</a>
       <!-- ======================================== -->
     <h3>
       <a name="patchgroup" id="patchgroup">Patch-related</a>
@@ -166,8 +167,9 @@ Go figure! - ST 12/2/04
       "#random-pxcor">random-pxcor</a> <a href=
       "#random-pycor">random-pycor</a> <a href="#self">self</a> <a href=
       "#sprout">sprout</a> <a href=
-      "#sprout-breeds">sprout-<i>&lt;breeds&gt;</i></a> <a href=
-      "#subject">subject</a> <a href="#turtles-here">turtles-here</a>
+      "#sprout-breeds">sprout-<i>&lt;breeds&gt;</i></a>
+      <a href="#stop-inspecting">stop-inspecting</a> 
+      <a href="#subject">subject</a> <a href="#turtles-here">turtles-here</a>
       <!-- ======================================== -->
     <h3>
       <a name="agentsetgroup" id="agentsetgroup">Agentset</a>
@@ -265,7 +267,9 @@ Go figure! - ST 12/2/04
       <a href="#min-pycor">min-pycor</a> <a href=
       "#patch-size">patch-size</a> <a href="#reset-ticks">reset-ticks</a>
       <a href="#resize-world">resize-world</a> <a href=
-      "#set-patch-size">set-patch-size</a> <a href="#tick">tick</a>
+      "#set-patch-size">set-patch-size</a>
+      <a href="#stop-inspecting-dead-agents">stop-inspecting-dead-agents</a> 
+      <a href="#tick">tick</a>
       <a href="#tick-advance">tick-advance</a> <a href="#ticks">ticks</a>
       <a href="#world-width">world-width</a> <a href=
       "#world-height">world-height</a>
@@ -3982,6 +3986,9 @@ inspect one-of sheep
 ;; an agent monitor opens for a random turtle from
 ;; the &quot;sheep&quot; breed
 </pre>
+      <p>
+        See <a href="#stop-inspecting">stop-inspecting</a> and <a
+        href="#stop-inspecting-dead-agents">stop-inspecting-dead-agents</a>
     </div>
     <div class="dict_entry">
       <h3>
@@ -7937,6 +7944,39 @@ if not any? turtles [ stop ]
         commands directly call a procedure, then when that procedure stops,
         the run ends.
       </div>
+    <div class="dict_entry">
+      <h3>
+        <a name="stop-inspecting" id="stop-inspecting">stop-inspecting</a>
+      </h3>
+      <h4>
+        stop-inspecting <i>agent</i>
+      </h4>
+      <p>
+        Closes the agent monitor for the given agent (turtle or patch).
+        In the case that no agent monitor is open, stop-inspecting does
+        nothing.
+      <pre>
+stop-inspecting patch 2 4
+;; the agent monitor for that patch closes
+ask sheep [ stop-inspecting self ]
+;; close all agent monitors for sheep
+</pre>
+      <p>
+        See <a href="#inspect">inspect</a> and <a
+        href="#stop-inspecting-dead-agents">stop-inspecting-dead-agents</a>
+    </div>
+    <div class="dict_entry">
+      <h3>
+        <a name="stop-inspecting-dead-agents" id="stop-inspecting-dead-agents">stop-inspecting-dead-agents</a>
+      </h3>
+      <h4>
+        stop-inspecting-dead-agents
+      </h4>
+      <p>
+        Closes all agent monitors for dead agents.
+        See <a href="#inspect">inspect</a> and <a
+        href="#stop-inspecting">stop-inspecting</a>
+    </div>
     <div class="dict_entry">
       <h3>
         <a name="subject" id="subject">subject</a>

@@ -297,6 +297,8 @@ with org.nlogo.api.ViewSettings {
       println(agent)
     }
   }
+  override def stopInspectingAgent(agent: org.nlogo.agent.Agent): Unit = { }
+  override def stopInspectingDeadAgents(): Unit = { }
   override def getAndCreateDrawing =
     renderer.trailDrawer.getAndCreateDrawing(true)
   override def importDrawing(file: org.nlogo.api.File) {

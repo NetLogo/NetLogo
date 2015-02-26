@@ -115,6 +115,10 @@ public interface Workspace
 
   void inspectAgent(Class<? extends Agent> agentClass, org.nlogo.agent.Agent agent, double radius);
 
+  void stopInspectingAgent(org.nlogo.agent.Agent agent);
+
+  void stopInspectingDeadAgents();
+
   java.awt.image.BufferedImage getAndCreateDrawing();
 
   HubNetInterface getHubNetManager();

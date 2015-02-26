@@ -344,6 +344,12 @@ class App extends
       override def inspectAgent(agentClass: Class[_ <: Agent], agent: Agent, radius: Double) {
         monitorManager.inspect(agentClass, agent, radius)
       }
+      override def stopInspectingAgent(agent: Agent): Unit = {
+        monitorManager.stopInspecting(agent)
+      }
+      override def stopInspectingDeadAgents(): Unit = {
+        monitorManager.stopInspectingDeadAgents()
+      }
       override def closeAgentMonitors() { monitorManager.closeAll() }
       override def newRenderer: RendererInterface = {
         // yikes, it's really ugly that we do this stuff

@@ -34,6 +34,8 @@ class DummyWorkspace extends DummyCompilerServices with Workspace {
   override def exportAllPlots(path: String) = unsupported
   override def inspectAgent(agent: org.nlogo.api.Agent, radius: Double) = unsupported
   override def inspectAgent(agentClass: Class[_ <: Agent], agent: Agent, radius: Double) = unsupported
+  override def stopInspectingAgent(agent: org.nlogo.agent.Agent) = unsupported
+  override def stopInspectingDeadAgents() = unsupported
   override def getAndCreateDrawing() = unsupported
   override def getHubNetManager() = unsupported
   override def waitForQueuedEvents() = unsupported

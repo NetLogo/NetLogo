@@ -36,6 +36,8 @@ extends GUIWorkspace(world, GUIWorkspace.KioskLevel.MODERATE, frame, frame, null
   }
   override def inspectAgent(agent: org.nlogo.api.Agent, radius: Double) { }
   override def inspectAgent(agentClass: Class[_ <: Agent], agent: Agent, radius: Double) { }
+  override def stopInspectingAgent(agent: org.nlogo.agent.Agent): Unit = { }
+  override def stopInspectingDeadAgents(): Unit = { }
   override def closeAgentMonitors() { }
   override def newRenderer = Femto.get(
     classOf[RendererInterface], "org.nlogo.render.Renderer", Array(world))
