@@ -8,6 +8,7 @@ package org.nlogo.app
 import org.nlogo.editor.Actions
 import org.nlogo.api.I18N
 import org.nlogo.window.EditorColorizer
+import org.nlogo.event.Events
 
 class EditMenu(app: App) extends org.nlogo.swing.Menu(I18N.gui.get("menu.edit"))
 with Events.SwitchedTabsEventHandler

@@ -7,7 +7,7 @@ import javax.swing.Action
 import javax.swing.text._
 import javax.swing.text.DefaultEditorKit.{CutAction, CopyAction, PasteAction, InsertContentAction}
 
-import org.nlogo.app.Events
+import org.nlogo.event.Events
 
 object Actions {
 

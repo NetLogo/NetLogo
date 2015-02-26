@@ -25,7 +25,7 @@ strictfp class AggregateModelEditor
     extends javax.swing.JFrame
     implements
     DrawingEditor,
-    org.nlogo.window.Event.LinkChild {
+    org.nlogo.event.Event.LinkChild {
 
   /// Constants
 

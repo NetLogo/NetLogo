@@ -10,7 +10,7 @@ class AgentMonitorWindow(kind: AgentKind, _agent: Agent, radius: Double,
                          manager: AgentMonitorManager, parent: java.awt.Frame)
 // JWindow not JFrame so we can float on top of the App window - ev 1/7/09
 extends javax.swing.JWindow(parent)
-with org.nlogo.window.Event.LinkChild
+with org.nlogo.event.Event.LinkChild
 with org.nlogo.window.Events.PeriodicUpdateEventHandler
 with org.nlogo.window.Events.PatchesCreatedEventHandler
 with org.nlogo.window.Events.LoadBeginEventHandler
@@ -81,7 +81,7 @@ with org.nlogo.window.Events.LoadBeginEventHandler
     monitor.close()
     manager.remove(this)
     dispose()
-    org.nlogo.window.Event.rehash()
+    org.nlogo.event.Event.rehash()
   }
 
   def refresh() {

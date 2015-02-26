@@ -4,6 +4,7 @@ package org.nlogo.app;
 
 import org.nlogo.window.MouseMode;
 import org.nlogo.window.Widget;
+import org.nlogo.event.Events;
 
 import java.awt.Dimension;
 
@@ -174,7 +175,7 @@ public strictfp class WidgetWrapper
 
       setBounds(bounds);
       if (!temporary) {
-        new Events.WidgetSelectedEvent(widget, selected)
+        new org.nlogo.window.Events.WidgetSelectedEvent(widget, selected)
             .raise(this);
       }
     }

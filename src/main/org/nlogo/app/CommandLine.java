@@ -10,6 +10,7 @@ import org.nlogo.api.I18N;
 import org.nlogo.api.TokenType;
 import org.nlogo.window.EditorColorizer;
 import org.nlogo.window.Widget;
+import org.nlogo.event.Events;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -24,6 +24,7 @@ import org.nlogo.api.ReporterRunnable;
 import org.nlogo.api.SimpleJobOwner;
 import org.nlogo.api.UpdateMode;
 import org.nlogo.api.UpdateModeJ;
+import org.nlogo.event.Event;
 import org.nlogo.drawing.DrawingActionBroker;
 import org.nlogo.log.Logger;
 import org.nlogo.nvm.Procedure;

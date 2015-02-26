@@ -12,8 +12,9 @@ import org.nlogo.shape.{ShapesManagerInterface, ShapeChangeListener, LinkShapesM
 import org.nlogo.util.Pico
 import org.nlogo.window._
 import org.nlogo.window.Events._
+import org.nlogo.event.Events
 import org.nlogo.workspace.{AbstractWorkspace, Controllable}
-import org.nlogo.window.Event.LinkParent
+import org.nlogo.event.Event.LinkParent
 import org.nlogo.swing.Implicits.thunk2runnable
 
 import org.picocontainer.Characteristics._
@@ -175,7 +176,7 @@ object App{
     def moreTokens = i < args.length
     while(moreTokens){
       val token = nextToken()
-      if (token == "--events") org.nlogo.window.Event.logEvents = true;
+      if (token == "--events") org.nlogo.event.Event.logEvents = true;
       else if (token == "--open" || token == "--launch") {
         commandLineModelIsLaunch = token == "--launch"
         require(commandLineModel == null &&
@@ -262,7 +263,7 @@ object App{
 }
 
 class App extends
-    org.nlogo.window.Event.LinkChild with
+    org.nlogo.event.Event.LinkChild with
     org.nlogo.util.Exceptions.Handler with
     org.nlogo.window.ExternalFileManager with
     BeforeLoadEventHandler with

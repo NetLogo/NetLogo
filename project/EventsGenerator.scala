@@ -11,7 +11,7 @@ object EventsGenerator {
           FileFunction.cached(cacheDir / "autogen", inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
             in: Set[File] =>
               Set(events(s.log.info(_), base, src, "window"),
-                  events(s.log.info(_), base, src, "app"))
+                  events(s.log.info(_), base, src, "event"))
           }
         cache(Set(base / "headless" / "project" / "warning.txt",
                   base / "project" / "events.txt")).toSeq
@@ -28,11 +28,11 @@ object EventsGenerator {
 
     append("package org.nlogo." + ppackage + "\n")
     append("import org.nlogo._")
-    if(ppackage == "app")
-      append("import window.Event")
+    if(ppackage == "window")
+      append("import event.Event")
     append("\nobject Events {")
 
-    for{line <- IO.read(base /"project" / "events.txt").split("\n")
+    for{line <- IO.read(base / "project" / "events.txt").split("\n")
         if !line.trim.isEmpty // skip blank lines
         if !line.startsWith("#") // skip comment lines
         if line.startsWith(ppackage)} // skip unless in right package

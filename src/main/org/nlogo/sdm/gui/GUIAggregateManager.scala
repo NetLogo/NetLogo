@@ -13,7 +13,7 @@ class GUIAggregateManager(linkParent: java.awt.Component,
                           colorizer: Colorizer[TokenType],
                           dialogFactory: EditDialogFactoryInterface)
 extends org.nlogo.api.AggregateManagerInterface
-with org.nlogo.window.Event.LinkChild
+with org.nlogo.event.Event.LinkChild
 with org.nlogo.window.Events.CompiledEventHandler
 with org.nlogo.window.Events.BeforeLoadEventHandler
 with org.nlogo.window.Events.LoadSectionEventHandler {

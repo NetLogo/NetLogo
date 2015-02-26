@@ -8,6 +8,7 @@ import javax.swing.border.Border
 import Events.{WidgetRemovedEvent, WidgetEditedEvent, WidgetAddedEvent}
 import org.nlogo.api.{MultiErrorHandler, SingleErrorHandler}
 import javax.swing.{JPanel, JMenuItem, JPopupMenu}
+import org.nlogo.event.Event
 
 object Widget {
   trait LoadHelper {

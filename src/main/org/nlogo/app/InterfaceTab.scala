@@ -5,6 +5,7 @@ package org.nlogo.app
 import org.nlogo.api.I18N
 import org.nlogo.window.{WidgetInfo, EditDialogFactoryInterface, GUIWorkspace}
 import org.nlogo.swing.Implicits.thunk2action
+import org.nlogo.event.Events
 import javax.swing.{JScrollPane, ScrollPaneConstants, Action, ImageIcon, AbstractAction, JSplitPane, JPanel}
 import java.awt.{Graphics2D, Graphics, Component, Container, ContainerOrderFocusTraversalPolicy, Dimension, BorderLayout}
 

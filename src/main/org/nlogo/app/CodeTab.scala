@@ -11,6 +11,7 @@ import java.awt.event.{ActionEvent, TextEvent, TextListener}
 import java.awt.print.PageFormat
 import javax.swing.{JButton, ImageIcon, AbstractAction, Action, ScrollPaneConstants, JScrollPane, BorderFactory, JPanel}
 import org.nlogo.api.{FileMode, AgentKind, LocalFile, I18N}
+import org.nlogo.event.Events
 
 class CodeTab(val workspace: AbstractWorkspace) extends JPanel
   with org.nlogo.window.ProceduresInterface

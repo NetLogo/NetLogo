@@ -5,6 +5,7 @@ package org.nlogo.app
 import java.util.HashSet
 import javax.swing.{JMenuItem, JPopupMenu, JButton, ButtonGroup, JToggleButton, AbstractAction, Action, ImageIcon}
 import org.nlogo.api.{Editable, I18N}
+import org.nlogo.event.Events
 import java.awt.event.{ActionListener, MouseAdapter, MouseEvent, ActionEvent}
 import org.nlogo.window.{WidgetInfo, EditDialogFactoryInterface, Widget}
 
@@ -17,7 +18,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
   with org.nlogo.window.Events.WidgetForegroundedEventHandler
   with org.nlogo.window.Events.WidgetRemovedEventHandler
   with org.nlogo.window.Events.WidgetAddedEventHandler
-  with Events.WidgetSelectedEventHandler
+  with org.nlogo.window.Events.WidgetSelectedEventHandler
   with org.nlogo.window.Events.LoadBeginEventHandler
   with org.nlogo.window.Events.EditWidgetEventHandler
   with java.awt.event.ActionListener {
@@ -139,7 +140,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
 
   private val deleteableObjects = new HashSet[Widget]
 
-  def handle(e: Events.WidgetSelectedEvent) {
+  def handle(e: org.nlogo.window.Events.WidgetSelectedEvent) {
     val w = e.widget
     if(wPanel.getWrapper(w).selected) {
       if(!selectedObjects.contains(w)) selectedObjects.add(w)
