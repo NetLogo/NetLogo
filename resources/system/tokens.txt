@@ -231,6 +231,8 @@ C st etc._showturtle
 C stamp etc._stamp
 C stamp-erase etc._stamperase
 C stop etc._stop
+C stop-inspecting gui._stopinspecting
+C stop-inspecting-dead-agents gui._stopinspectingdeadagents
 C tick etc._tick
 C tick-advance etc._tickadvance
 C tie etc._tie

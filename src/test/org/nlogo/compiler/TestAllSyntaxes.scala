@@ -480,6 +480,8 @@ class TestAllSyntaxes extends FunSuite {
                     |_stderr anything,OTPL,null,0,1,1
                     |_stdout anything,OTPL,null,0,1,1
                     |_stop ,OTPL,null,0,0,0
+                    |_stopinspecting agent,OTPL,null,0,1,1
+                    |_stopinspectingdeadagents ,OTPL,null,0,0,0
                     |_thunkdidfinish ,OTPL,null,0,0,0
                     |_tick ,O---,null,0,0,0 *
                     |_tickadvance number,O---,null,0,1,1 *
