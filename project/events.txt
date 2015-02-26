@@ -1,15 +1,15 @@
 # app package
 
-app.ChangeLanguage
-app.IndenterChanged - isSmart: Boolean
-app.JumpToDefinition - name: String
-app.MagicOpen - name: String
-app.Reload
-app.SwitchedTabs - oldTab: java.awt.Component - newTab: java.awt.Component
-app.WidgetSelected - widget: window.Widget - selected: Boolean
+event.ChangeLanguage
+event.IndenterChanged - isSmart: Boolean
+event.JumpToDefinition - name: String
+event.MagicOpen - name: String
+event.Reload
+event.SwitchedTabs - oldTab: java.awt.Component - newTab: java.awt.Component
 
 # window package
 
+window.WidgetSelected - widget: window.Widget - selected: Boolean
 window.AboutToQuit
 window.AddBooleanConstraint - varname: String - defaultValue: Boolean
 window.AddChooserConstraint - varname: String - constraint: agent.ChooserConstraint

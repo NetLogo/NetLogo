@@ -2,6 +2,8 @@
 
 package org.nlogo.window;
 
+import org.nlogo.event.Event;
+
 public interface LabManagerInterface
     extends Event.LinkChild {
   void show();

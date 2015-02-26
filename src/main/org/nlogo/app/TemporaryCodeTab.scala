@@ -6,6 +6,7 @@ import scala.util.control.Exception.ignoring
 import org.nlogo.awt.UserCancelException
 import org.nlogo.workspace.AbstractWorkspace
 import org.nlogo.api.{I18N, FileIO, LocalFile}
+import org.nlogo.event.Events
 
 object TemporaryCodeTab {
   val NewFile = "New File"

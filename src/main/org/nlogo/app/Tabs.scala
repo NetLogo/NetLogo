@@ -5,7 +5,8 @@ package org.nlogo.app
 import org.nlogo.swing.Implicits._
 import org.nlogo.window.{EditorColorizer, EditDialogFactoryInterface, GUIWorkspace}
 import org.nlogo.window.Events._
-import org.nlogo.app.Events._
+import org.nlogo.event.Events
+import org.nlogo.event.Events._
 import org.nlogo.swing.RichAction
 import org.nlogo.api.I18N
 
@@ -13,7 +14,7 @@ class Tabs(val workspace: GUIWorkspace,
            val reviewTab: org.nlogo.window.ReviewTabInterface,
            monitorManager: AgentMonitorManager,
            dialogFactory: EditDialogFactoryInterface) extends javax.swing.JTabbedPane
-  with javax.swing.event.ChangeListener with org.nlogo.window.Event.LinkParent
+  with javax.swing.event.ChangeListener with org.nlogo.event.Event.LinkParent
   with LoadBeginEventHandler with RuntimeErrorEventHandler with CompiledEventHandler
   with JumpToDefinitionEventHandler{
 
@@ -47,7 +48,7 @@ class Tabs(val workspace: GUIWorkspace,
       addMenuItem(getTabCount() - 1, "Review")
       reviewTab.recordingEnabled = true
     }
-    org.nlogo.window.Event.rehash()
+    org.nlogo.event.Event.rehash()
     if (selectReviewTab) {
       setSelectedComponent(reviewTab)
       org.nlogo.awt.EventQueue.invokeLater(() => requestFocus())
@@ -163,7 +164,7 @@ class Tabs(val workspace: GUIWorkspace,
     val tab = new TemporaryCodeTab(workspace, this, name, fileMustExist, codeTab.smartTabbingEnabled)
     addTab(stripPath(name), tab)
     addMenuItem(getTabCount() - 1, stripPath(name))
-    org.nlogo.window.Event.rehash()
+    org.nlogo.event.Event.rehash()
     tab.includesMenu.updateVisibility()
     setSelectedComponent(tab)
     // if I just call requestFocus the tab never gets the focus request because it's not yet

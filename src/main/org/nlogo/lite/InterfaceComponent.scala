@@ -3,7 +3,8 @@
 package org.nlogo.lite
 
 import java.util.{ ArrayList, List => JList }
-import org.nlogo.window.{ Event, Widget, ButtonWidget, PlotWidget }
+import org.nlogo.event.Event
+import org.nlogo.window.{ Widget, ButtonWidget, PlotWidget }
 import java.util.StringTokenizer
 import org.nlogo.api.{ CompilerException, Version }
 import org.nlogo.log.Logger

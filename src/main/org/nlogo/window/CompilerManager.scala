@@ -5,6 +5,7 @@ package org.nlogo.window
 import org.nlogo.api.{ CompilerException, JobOwner, Program, Version }
 import org.nlogo.nvm.{ CompilerResults, Procedure }
 import org.nlogo.workspace.AbstractWorkspace
+import org.nlogo.event.Event
 import collection.JavaConverters._
 class CompilerManager(workspace: GUIWorkspace, proceduresInterface: ProceduresInterface)
 extends Event.LinkChild

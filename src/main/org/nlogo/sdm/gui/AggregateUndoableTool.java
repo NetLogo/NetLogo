@@ -4,7 +4,7 @@ package org.nlogo.sdm.gui;
 
 strictfp class AggregateUndoableTool
     extends org.jhotdraw.util.UndoableTool
-    implements org.nlogo.window.Event.LinkChild {
+    implements org.nlogo.event.Event.LinkChild {
   private final java.awt.Component linkParent;
 
   AggregateUndoableTool(org.jhotdraw.framework.Tool newWrappedTool, java.awt.Component linkParent) {

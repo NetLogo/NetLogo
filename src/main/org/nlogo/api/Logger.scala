@@ -2,9 +2,13 @@
 
 package org.nlogo.api
 
-import org.nlogo.log.{ Logger => L }
+trait Logger {
+  def logCustomMessage(msg: String): Unit
+  def logCustomGlobals(nameValuePairs: (String, String)*): Unit
+}
 
 object Logger {
-  def logCustomMessage(msg: String):                       Unit = L.logCustomMessage(msg)
-  def logCustomGlobals(nameValuePairs: (String, String)*): Unit = L.logCustomGlobals(nameValuePairs: _*)
+  var logger: Option[Logger] = None
+  def logCustomMessage(msg: String): Unit = logger.collect { case l => l.logCustomMessage(msg) }
+  def logCustomGlobals(nameValuePairs: (String, String)*): Unit = logger.collect { case l => l.logCustomGlobals(nameValuePairs: _*) }
 }

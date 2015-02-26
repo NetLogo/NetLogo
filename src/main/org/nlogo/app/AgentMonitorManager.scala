@@ -9,8 +9,8 @@ import org.nlogo.swing.Tiler
 import org.nlogo.window.GUIWorkspace
 
 class AgentMonitorManager(val workspace: GUIWorkspace)
-extends org.nlogo.window.Event.LinkChild
-with org.nlogo.window.Event.LinkParent
+extends org.nlogo.event.Event.LinkChild
+with org.nlogo.event.Event.LinkParent
 {
 
   private val monitorWindows = collection.mutable.Map[Agent, AgentMonitorWindow]()
@@ -40,7 +40,7 @@ with org.nlogo.window.Event.LinkParent
       emptyLinkMonitorWindow = null
     }
     monitorWindows.clear()
-    org.nlogo.window.Event.rehash()
+    org.nlogo.event.Event.rehash()
     monitorList.clear()
   }
 
@@ -146,7 +146,7 @@ with org.nlogo.window.Event.LinkParent
     }
     else window.radius(radius)
     window.setVisible(true)
-    org.nlogo.window.Event.rehash()
+    org.nlogo.event.Event.rehash()
     if(agent == null && (kind ne AgentKind.Observer))
       window.requestFocus()
     else

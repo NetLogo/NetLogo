@@ -5,7 +5,8 @@ package org.nlogo.lite
 import org.nlogo.agent.Observer
 import org.nlogo.api.{ AgentKind, ModelSection }
 import org.nlogo.nvm.Workspace
-import org.nlogo.window.{ Event, Events, ProceduresInterface }
+import org.nlogo.event.Event
+import org.nlogo.window.{ Events, ProceduresInterface }
 
 // for use from Applet; we don't want the whole CodeTab class in that context, because
 // CodeTab depends on the new editor, which we don't want in the lite jar

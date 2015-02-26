@@ -13,8 +13,8 @@ class ViewManager(val workspace: GUIWorkspace,
                   appWindow: JFrame,
                   keyListener: KeyListener)
     extends org.nlogo.window.GLViewManagerInterface
-    with org.nlogo.window.Event.LinkChild
-    with org.nlogo.window.Event.LinkParent
+    with org.nlogo.event.Event.LinkChild
+    with org.nlogo.event.Event.LinkParent
     with org.nlogo.window.Events.PeriodicUpdateEventHandler
     with GLViewSettings {
 

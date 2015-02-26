@@ -4,6 +4,7 @@ package org.nlogo.app
 
 import org.nlogo.workspace.AbstractWorkspace
 import org.nlogo.api.{I18N, ModelSection}
+import org.nlogo.event.Events
 
 // This is THE Code tab.  Certain settings and things that are only accessible here.
 // Other Code tabs come and go.

@@ -6,6 +6,7 @@ import org.nlogo.swing.BrowserLauncher
 import java.awt.Container
 import Events._
 import org.nlogo.api.{I18N, ModelType, ModelReader, ModelSection, Version}
+import org.nlogo.event.Event
 
 object ModelLoader {
   val TRANSITION_URL = "http://ccl.northwestern.edu/netlogo/5.0/docs/transition.html"

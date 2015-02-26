@@ -12,7 +12,7 @@ class HubNetClientEditor(workspace: GUIWorkspace,
                          linkParent: Component,
                          iFactory: InterfaceFactory,
                          menuFactory: MenuBarFactory) extends JFrame
-        with org.nlogo.window.Event.LinkChild
+        with org.nlogo.event.Event.LinkChild
         with org.nlogo.window.Events.ZoomedEventHandler {
   val interfacePanel: AbstractWidgetPanel = iFactory.widgetPanel(workspace)
 

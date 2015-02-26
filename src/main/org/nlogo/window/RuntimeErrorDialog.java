@@ -4,6 +4,7 @@ package org.nlogo.window;
 
 import org.nlogo.api.LogoException;
 import org.nlogo.workspace.AbstractWorkspace;
+import org.nlogo.event.Event;
 
 import java.util.ArrayList;
 import java.util.List;

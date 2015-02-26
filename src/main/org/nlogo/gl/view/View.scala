@@ -11,7 +11,7 @@ import java.awt.event.{ KeyEvent, KeyAdapter, MouseEvent }
 
 abstract class View(title: String, val viewManager: ViewManager, var renderer: Renderer)
 extends java.awt.Frame(title)
-with org.nlogo.window.Event.LinkChild {
+with org.nlogo.event.Event.LinkChild {
 
   var canvas: javax.media.opengl.awt.GLCanvas = null
   val picker = new Picker(this)
