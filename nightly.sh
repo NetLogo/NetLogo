@@ -9,6 +9,12 @@ if [ "$1" == --clean ] ; then
   git submodule foreach git clean -fdX
 fi
 
+if [ "$1" == --obliterate ] ; then
+  git clean -fdx
+  git submodule update --init
+  git submodule foreach git clean -fdx
+fi
+
 rm -rf tmp/nightly
 mkdir -p tmp/nightly
 

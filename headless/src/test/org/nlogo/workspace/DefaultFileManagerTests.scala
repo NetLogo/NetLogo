@@ -395,5 +395,6 @@ class DefaultFileManagerTests extends FunSuite with OneInstancePerTest with Befo
     override def isValidIdentifier(s: String, is3D: Boolean): Boolean = ???
     override def readNumberFromString(source: String, world: World,
                                       extensionManager: APIExtensionManager, is3D: Boolean): AnyRef = ???
+    override def getCompletions(source: String, name: String, is3D: Boolean): Seq[(String, String)] = ???
   }
 }
