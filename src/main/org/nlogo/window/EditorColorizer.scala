@@ -133,15 +133,41 @@ class EditorColorizer(parser: ParserServices) extends Colorizer[TokenType] {
     found
   }
 
+
+  class CodeCompletionPopup(tokens: Seq[(String, String)], f: String => Unit) extends javax.swing.JPopupMenu {
+    class CodeCompletionAction(name: String) extends javax.swing.text.TextAction(name) {
+      override def actionPerformed(e:java.awt.event.ActionEvent): Unit = {
+        f(name)
+      }
+    }
+    if(tokens.isEmpty) {
+      add(new javax.swing.JMenuItem("-- No Completions --"))
+    } else {
+      tokens.foreach { case (name, source) =>
+        add(new CodeCompletionAction(name))
+      }
+    }
+  }
+
   def doCodeCompletion(editor: EditorArea[_]): Unit = {
-    System.out.println(editor.getCursorToken())
-    System.out.println(editor.getCursorToken().endPos)
+    val currentToken = editor.getCursorToken
+    val tokenName = currentToken.name.toLowerCase
     val doc = editor.getDocument.asInstanceOf[javax.swing.text.PlainDocument]
     val currentLine = editor.offsetToLine(doc, editor.getCaretPosition);
     val startLineOffset = editor.lineToStartOffset(doc, currentLine);
+    val tokens: Seq[(String, String)] = parser.getCompletions(org.nlogo.app.App.app.tabs.codeTab.text.getText(),
+      editor.getCursorToken().name)
 
-    System.out.println(parser.getCompletions(org.nlogo.app.App.app.tabs.codeTab.text.getText(), editor.getCursorToken().name))
+    System.out.println(tokens.filter(_._1.startsWith(tokenName)).sortWith(_._1 < _._1))
 
-    editor.setCaretPosition(editor.getCursorToken().endPos + startLineOffset);
+    val position = editor.getCursorToken().endPos + startLineOffset
+    editor.setCaretPosition(position)
+
+    val menu = new CodeCompletionPopup(tokens.filter(_._1.startsWith(tokenName)).sortWith(_._1 < _._1),
+      { name => doc.insertString(position, name.stripPrefix(tokenName), null) }
+    )
+    System.out.println(editor.modelToView(editor.getCursorToken().endPos + startLineOffset))
+
+    menu.show(editor, editor.modelToView(position).x, editor.modelToView(position).y)
   }
 }

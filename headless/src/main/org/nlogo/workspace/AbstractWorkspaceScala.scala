@@ -133,7 +133,7 @@ object AbstractWorkspaceTraits {
       getExtensionManager.jars.asScala.map(_._2).map(
         jarContainer => {
           jarContainer.primManager.getPrimitiveNames.asScala.toList.map(
-            primName => (jarContainer.extensionName + ":" + primName, jarContainer.extensionName)
+            primName => ((jarContainer.extensionName + ":" + primName).toLowerCase, jarContainer.extensionName.toLowerCase)
             )
         }).flatten.toList ++ compiler.getCompletions(source, name, world.program.is3D)
     }
