@@ -362,7 +362,8 @@ strictfp class InterfacePanel
               workspace.exportInterface(exportPath);
             } catch (java.io.IOException ex) {
               exception[0] = ex;
-            }}});
+            }}},
+        org.nlogo.api.Version.is3D());
       if (exception[0] != null) {
         throw exception[0];
       }

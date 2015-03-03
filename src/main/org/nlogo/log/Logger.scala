@@ -8,10 +8,11 @@ package org.nlogo.log
 
 import org.apache.log4j.{ Appender, FileAppender, Logger => JLogger, LogManager }
 import org.apache.log4j.xml.DOMConfigurator
-import org.nlogo.api.Version
+import org.nlogo.api, api.Version
 import java.util.{ Enumeration => JEnumeration, List => JList, ArrayList }
 
-object Logger {
+object Logger extends api.Logger {
+  api.Logger.logger = Some(this)
 
   private val name = classOf[Logger].getName
 

@@ -194,7 +194,8 @@ with Events.LoadSectionEventHandler {
         override def run() {
           movieEncoder.stop()
           movieEncoder = null
-        }})
+        }},
+      api.Version.is3D)
   }
 
   override def movieGrabInterface() {

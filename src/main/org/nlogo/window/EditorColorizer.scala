@@ -112,6 +112,11 @@ class EditorColorizer(parser: ParserServices) extends Colorizer[TokenType] {
                        confirmOpen _)
   }
 
+  // When all we have is a name, go find a definition
+  override def jumpToDefinition(name: String): Unit = {
+     Events.JumpToDefinitionEvent(name).raise(this)
+  }
+
   def jumpToDefinition(editor: EditorArea[_], name: String): Boolean = {
     val procsTable = parser.findProcedurePositions(editor.getText)
     val found = procsTable.contains(name)

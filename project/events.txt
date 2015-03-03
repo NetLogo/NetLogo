@@ -2,7 +2,6 @@
 
 app.ChangeLanguage
 app.IndenterChanged - isSmart: Boolean
-app.JumpToDefinition - name: String
 app.MagicOpen - name: String
 app.Reload
 app.SwitchedTabs - oldTab: java.awt.Component - newTab: java.awt.Component
@@ -34,6 +33,7 @@ window.InputBoxLoseFocus
 window.InterfaceGlobal - widget: InterfaceGlobalWidget - nameChanged: Boolean - updating: Boolean - valueChanged: Boolean - buttonReleased: Boolean
 window.JobRemoved - owner: api.JobOwner
 window.JobStopping - owner: api.JobOwner
+window.JumpToDefinition - name: String
 window.Load3DShapes - filename: String
 window.LoadBegin
 window.LoadEnd

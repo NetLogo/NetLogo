@@ -8,7 +8,7 @@ import java.awt.BorderLayout
 import org.nlogo.swing.{ModalProgressTask, OptionDialog}
 import org.nlogo.awt.{ Hierarchy, Images, Positioning, EventQueue }
 import org.nlogo.hubnet.connection.Ports
-import org.nlogo.api.{I18N, ParserServices}
+import org.nlogo.api, api.{I18N, ParserServices}
 import javax.swing.{WindowConstants, JFrame}
 
 /**
@@ -126,7 +126,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
     var exs: Option[String] = None
     ModalProgressTask(Hierarchy.getFrame(this), "Entering...", () => {
       exs = clientPanel.login(userid, hostip, port)
-    })
+    }, api.Version.is3D)
     exs match {
       case Some(ex) =>
         handleLoginFailure(ex)

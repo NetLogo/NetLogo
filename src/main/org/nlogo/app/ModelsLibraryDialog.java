@@ -126,7 +126,8 @@ strictfp class ModelsLibraryDialog
             ModelsLibrary.scanForModels(false);
             smt[0] = new SearchableModelTree
               (new Node(ModelsLibrary.rootNode, ModelsLibraryIndexReader.readInfoMap()));
-          }});
+          }},
+        org.nlogo.api.Version.is3D());
     }
     tree = new javax.swing.JTree(smt[0]);
     tree.getSelectionModel().setSelectionMode
