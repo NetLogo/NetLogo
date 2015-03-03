@@ -4,7 +4,7 @@ package org.nlogo.app
 
 import java.io.IOException
 
-import org.nlogo.api.{ I18N, ModelReader, ModelSection, ModelType }
+import org.nlogo.api, api.{ I18N, ModelReader, ModelSection, ModelType }
 import org.nlogo.api.ModelReader.{ modelSuffix, emptyModelPath }
 import org.nlogo.awt.UserCancelException
 import org.nlogo.window.InvalidVersionException
@@ -150,7 +150,8 @@ import scala.annotation.{strictfp, switch}
              try app.workspace.exportWorld(exportPath)
              catch {
                case ex:IOException => exception = Some(ex)
-           }}})
+           }}},
+         api.Version.is3D)
       exception foreach (throw _)
     }
   }
@@ -168,7 +169,8 @@ import scala.annotation.{strictfp, switch}
             try app.workspace.exportView(exportPath, "png")
             catch {
               case ex:IOException => exception = Some(ex)
-          }}})
+          }}},
+        api.Version.is3D)
       exception foreach (throw _)
     }
   }
@@ -186,7 +188,8 @@ import scala.annotation.{strictfp, switch}
             try app.workspace.exportInterface(exportPath)
             catch {
               case ex: IOException => exception = Some(ex)
-            }}})
+            }}},
+        api.Version.is3D)
       exception foreach (throw _)
     }
   }
@@ -202,7 +205,8 @@ import scala.annotation.{strictfp, switch}
           def run() {
             new org.nlogo.window.Events.ExportOutputEvent(exportPath)
               .raise(FileMenu.this)
-          }})
+          }},
+        api.Version.is3D)
     }
   }
 
@@ -217,7 +221,8 @@ import scala.annotation.{strictfp, switch}
           def run() {
             new org.nlogo.window.Events.ExportPlotEvent(org.nlogo.window.PlotWidgetExportType.PROMPT, null, exportPath)
               .raise(FileMenu.this)
-          }})
+          }},
+        api.Version.is3D)
     }
   }
 
@@ -232,7 +237,8 @@ import scala.annotation.{strictfp, switch}
           def run() {
             new org.nlogo.window.Events.ExportPlotEvent(org.nlogo.window.PlotWidgetExportType.ALL, null, exportPath)
               .raise(FileMenu.this)
-          }})
+          }},
+        api.Version.is3D)
     }
   }
 
@@ -247,7 +253,8 @@ import scala.annotation.{strictfp, switch}
           def run() {
             new org.nlogo.window.Events.ExportCodeEvent(exportPath)
               .raise(FileMenu.this);
-        }});
+        }},
+        api.Version.is3D);
     }
   }
 
@@ -267,7 +274,8 @@ import scala.annotation.{strictfp, switch}
             }
             catch {
               case ex:IOException => exception = Some(ex)
-           }}})
+           }}},
+        api.Version.is3D)
       exception foreach (throw _)
     }
   }
@@ -294,7 +302,8 @@ import scala.annotation.{strictfp, switch}
             }
             catch {
               case ex:IOException => exception = Some(ex)
-          }}})
+          }}},
+        api.Version.is3D)
       exception foreach (throw _)
     }
   }
@@ -321,7 +330,8 @@ import scala.annotation.{strictfp, switch}
             }
             catch {
               case ex:IOException => exception = Some(ex)
-          }}})
+          }}},
+        api.Version.is3D)
       exception foreach (throw _)
     }
   }
@@ -342,7 +352,8 @@ import scala.annotation.{strictfp, switch}
             }
             catch {
               case ex:IOException => exception = Some(ex)
-          }}})
+          }}},
+        api.Version.is3D)
       exception foreach (throw _)
     }
   }
@@ -368,7 +379,8 @@ import scala.annotation.{strictfp, switch}
               try app.workspace.getHubNetManager.importClientInterface(importPath, choice == 1)
               catch {
                 case ex:IOException => exception = Some(ex)
-            }}})
+            }}},
+         api.Version.is3D)
         exception foreach (throw _)
       }
     }
@@ -500,7 +512,7 @@ import scala.annotation.{strictfp, switch}
             }
           }
         }
-        org.nlogo.swing.ModalProgressTask(org.nlogo.awt.Hierarchy.getFrame(this), message, loader)
+        org.nlogo.swing.ModalProgressTask(org.nlogo.awt.Hierarchy.getFrame(this), message, loader, api.Version.is3D)
         app.tabs.requestFocus()
       }
     } catch {
@@ -550,7 +562,7 @@ import scala.annotation.{strictfp, switch}
   private def doSave(path: String) {
     checkWithUserBeforeSavingModelFromOldVersion()
     val saver = new Saver(path)
-    org.nlogo.swing.ModalProgressTask(org.nlogo.awt.Hierarchy.getFrame(this), "Saving...", saver)
+    org.nlogo.swing.ModalProgressTask(org.nlogo.awt.Hierarchy.getFrame(this), "Saving...", saver, api.Version.is3D)
     saver.exception foreach (ex => javax.swing.JOptionPane.showMessageDialog(
       this, s"Save failed.  Error: ${ex.getMessage}", "NetLogo", javax.swing.JOptionPane.ERROR_MESSAGE))
     if (!saver.result) throw new UserCancelException()

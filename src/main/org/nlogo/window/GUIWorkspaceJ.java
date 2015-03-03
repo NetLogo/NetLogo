@@ -598,7 +598,8 @@ public abstract strictfp class GUIWorkspaceJ
           GUIWorkspaceJ.super.halt();
           view.dirty();
           view.repaint();
-        }});
+        }},
+      org.nlogo.api.Version.is3D());
   }
 
   // for notification of a changed shape
@@ -929,7 +930,8 @@ public abstract strictfp class GUIWorkspaceJ
               exportView(exportee, exportPath, "png");
             } catch (java.io.IOException ex) {
               exception[0] = ex;
-            }}});
+            }}},
+        org.nlogo.api.Version.is3D());
       if (exception[0] != null) {
         throw exception[0];
       }

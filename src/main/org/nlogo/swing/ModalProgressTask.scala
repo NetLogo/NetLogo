@@ -6,12 +6,11 @@ import java.awt.BorderLayout
 import javax.swing.{ BorderFactory, JDialog, JLabel, JPanel, SwingConstants }
 import org.nlogo.awt.EventQueue.mustBeEventDispatchThread
 import org.nlogo.awt.Positioning.center
-import org.nlogo.api.Version
 
 object ModalProgressTask {
   val isMac = System.getProperty("os.name").startsWith("Mac")
 
-  def apply(parent: java.awt.Frame, message: String, r: Runnable) {
+  def apply(parent: java.awt.Frame, message: String, r: Runnable, is3D: Boolean) {
     mustBeEventDispatchThread()
 
     // set up dialog
@@ -44,7 +43,7 @@ object ModalProgressTask {
 
     // This is a workaround for the menu getting grayed out on macs in 3D mode
     // See issue #47  FD 6/12/14
-    if(isMac && Version.is3D) {
+    if(isMac && is3D) {
       val threedFixBoss = new Boss(dialog, new Runnable() { override def run() {} })
       threedFixBoss.setPriority(Thread.MAX_PRIORITY)
       threedFixBoss.start()
