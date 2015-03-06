@@ -158,15 +158,12 @@ class EditorColorizer(parser: ParserServices) extends Colorizer[TokenType] {
     val tokens: Seq[(String, String)] = parser.getCompletions(org.nlogo.app.App.app.tabs.codeTab.text.getText(),
       editor.getCursorToken().name)
 
-    System.out.println(tokens.filter(_._1.startsWith(tokenName)).sortWith(_._1 < _._1))
-
     val position = editor.getCursorToken().endPos + startLineOffset
     editor.setCaretPosition(position)
 
     val menu = new CodeCompletionPopup(tokens.filter(_._1.startsWith(tokenName)).sortWith(_._1 < _._1),
       { name => doc.insertString(position, name.stripPrefix(tokenName), null) }
     )
-    System.out.println(editor.modelToView(editor.getCursorToken().endPos + startLineOffset))
 
     menu.show(editor, editor.modelToView(position).x, editor.modelToView(position).y)
   }

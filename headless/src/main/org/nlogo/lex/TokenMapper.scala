@@ -66,5 +66,5 @@ class TokenMapper(is3D: Boolean) extends TokenMapperInterface {
   def allCommandClassNames = commands.values.toSet
   def allReporterClassNames = reporters.values.toSet
   def allCommandNames = commands.keys.toSet
-  def allReporterNames = commands.keys.toSet
+  def allReporterNames = reporters.keys.toSet
 }
