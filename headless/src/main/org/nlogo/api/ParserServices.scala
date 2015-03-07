@@ -14,5 +14,5 @@ trait ParserServices {
   def tokenizeForColorization(source: String): Seq[Token]
   def getTokenAtPosition(source: String, position: Int): Token
   def findProcedurePositions(source: String): Map[String, (String, Int, Int, Int)]
-  def getCompletions(source: String, name: String): Seq[(String, String)]
+  def getCompletions(source: String): Seq[(String, String)]
 }

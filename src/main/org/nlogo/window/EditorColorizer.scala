@@ -133,14 +133,87 @@ class EditorColorizer(parser: ParserServices) extends Colorizer[TokenType] {
     found
   }
 
+  // Realistically, using a popup here is not what we actually want to do.
+  // We should create our own completion widget that works like we'd like.
+  // This is a prototype which may doom it to being the production method
+  // if it's good enough!  However, if you find that that people are running
+  // into weird edge cases, don't try and make this work, but rather build
+  // something correct from the ground up, probably something that lets
+  // the editor retain focus for key events.  FD - 3/7/15
+  class CodeCompletionPopup(editor: EditorArea[_], allTokens: Seq[(String, String)], f: (Int, String) => Unit)
+  extends javax.swing.JPopupMenu {
+    var knownitems: Seq[javax.swing.JMenuItem] = Seq()
+    var tokenName: String = ""
+
+    addMenuKeyListener(new javax.swing.event.MenuKeyListener {
+       override def menuKeyTyped(e: javax.swing.event.MenuKeyEvent): Unit = {
+         if(e.getKeyChar == java.awt.event.KeyEvent.VK_BACK_SPACE) {
+           // Early return when we're deleting and we had nothing!
+           if(tokenName.length == 0) {
+             setVisible(false)
+             return
+           }
+
+           val position = editor.getCaretPosition
+           if(position != 0) {
+             editor.setCaretPosition(position - 1)
+             val doc = editor.getDocument.asInstanceOf[javax.swing.text.PlainDocument]
+             doc.remove(position - 1, 1)
+           }
+         } else {
+           e.setSource(editor)
+           editor.dispatchEvent(e)
+         }
+
+         refreshMyself
+       }
+       override def menuKeyPressed(e: javax.swing.event.MenuKeyEvent) = { }
+       override def menuKeyReleased(e: javax.swing.event.MenuKeyEvent) = { }
+      })
+    refreshMyself
+
+    class CodeCompletionAction(name: String, position: Int, insert: String) extends javax.swing.text.TextAction(name) {
+      override def actionPerformed(e:java.awt.event.ActionEvent): Unit = {
+        f(position, insert)
+      }
+    }
+
+    def refreshMyself: Unit = {
+      knownitems.foreach(remove(_))
+      knownitems = Seq()
+
+      val currentToken = Option(editor.getCursorToken)
+      tokenName = currentToken.map(_.name).getOrElse("")
+      val position = editor.getCaretPosition
+
+      val tokens = allTokens.filter( { token => !(tokenName.length == 0 && token._1.startsWith("_")) }).
+                     filter(_._1.startsWith(tokenName)).sortWith(_._1 < _._1)
+      if(tokens.isEmpty) {
+        knownitems = knownitems :+ add(new javax.swing.JMenuItem("-- No Completions --"))
+      } else {
+        tokens.take(30).foreach { case (name, source) =>
+          knownitems = knownitems :+ add(new CodeCompletionAction(name, position, name.stripPrefix(tokenName)))
+        }
+        if(tokens.size > 30) knownitems = knownitems :+ add(new javax.swing.JMenuItem("... " + (tokens.size - 30) + " more"))
+      }
+
+      setLocation(editor.modelToView(position).x + editor.getLocationOnScreen.x,
+        editor.modelToView(position).y + editor.getLocationOnScreen.y)
+    }
+  }
+
   def doCodeCompletion(editor: EditorArea[_]): Unit = {
-    System.out.println(editor.getCursorToken())
-    System.out.println(editor.getCursorToken().endPos)
     val doc = editor.getDocument.asInstanceOf[javax.swing.text.PlainDocument]
     val currentLine = editor.offsetToLine(doc, editor.getCaretPosition);
     val startLineOffset = editor.lineToStartOffset(doc, currentLine);
+    val allTokens: Seq[(String, String)] = parser.getCompletions(org.nlogo.app.App.app.tabs.codeTab.text.getText())
 
-    System.out.println(parser.getCompletions(org.nlogo.app.App.app.tabs.codeTab.text.getText(), editor.getCursorToken().name))
+    val position = Option(editor.getCursorToken()).map(_.endPos + startLineOffset).getOrElse(editor.getCaretPosition())
+    editor.setCaretPosition(position)
+
+    val menu = new CodeCompletionPopup(editor, allTokens, 
+      { (position, insert) => doc.insertString(position, insert, null) }
+    )
 
     editor.setCaretPosition(editor.getCursorToken().endPos + startLineOffset);
   }

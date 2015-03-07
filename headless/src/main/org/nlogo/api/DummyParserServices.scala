@@ -27,5 +27,5 @@ class DummyParserServices extends ParserServices {
   def tokenizeForColorization(s: String): Seq[Token] = unsupported
   def getTokenAtPosition(source: String, position: Int): Token = unsupported
   def findProcedurePositions(source: String) = unsupported
-  def getCompletions(source: String, name: String): Seq[(String, String)] = unsupported
+  def getCompletions(source: String): Seq[(String, String)] = unsupported
 }
