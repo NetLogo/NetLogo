@@ -49,3 +49,6 @@
 [submodule "extensions/gogo-serial"]
 	path = extensions/gogo-serial
 	url = https://github.com/NetLogo/GoGo-Serial-Extension
+[submodule "extensions/palette"]
+	path = extensions/palette
+	url = https://github.com/NetLogo/Palette-Extension
