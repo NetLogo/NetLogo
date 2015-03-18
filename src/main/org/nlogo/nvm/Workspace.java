@@ -235,6 +235,10 @@ public interface Workspace
 
   void behaviorSpaceRunNumber(int n);
 
+  String behaviorSpaceExperimentName();
+
+  void behaviorSpaceExperimentName(String name);
+
   // for now this only works in HeadlessWorkspace, returns null in GUIWorkspace.
   // this whole error handling stuff is a complete mess and needs to be redone
   // for the next release after 4.1 - ST 3/10.09

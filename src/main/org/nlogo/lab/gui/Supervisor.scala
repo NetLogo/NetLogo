@@ -126,6 +126,7 @@ class Supervisor(dialog: java.awt.Dialog,
         workspace.jobManager.haltPrimary()
         workspace.jobManager.haltSecondary()
         workspace.behaviorSpaceRunNumber(0)
+        workspace.behaviorSpaceExperimentName("")
         progressDialog.close()
       } } )
     headlessWorkspaces.foreach(_.dispose())

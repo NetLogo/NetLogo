@@ -163,6 +163,7 @@ class Worker(val protocol: Protocol)
         }
       }
       ws.behaviorSpaceRunNumber(runNumber)
+      ws.behaviorSpaceExperimentName(protocol.name)
       setVariables(settings)
       eachListener(_.runStarted(ws, runNumber, settings))
       ws.runCompiledCommands(owner(ws.world.mainRNG), setupProcedure)

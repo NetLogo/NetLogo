@@ -296,6 +296,7 @@ R at-points etc._atpoints
 R atan etc._atan
 R autoplot? plot._autoplot
 R base-colors etc._basecolors
+R behaviorspace-experiment-name etc._behaviorspaceexperimentname
 R behaviorspace-run-number etc._behaviorspacerunnumber
 R bf etc._butfirst
 R bl etc._butlast

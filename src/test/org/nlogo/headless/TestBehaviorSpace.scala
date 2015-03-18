@@ -162,6 +162,11 @@ with OneInstancePerTest with BeforeAndAfterEach {
     expect(Double.box(3))(
       workspace.report("behaviorspace-run-number"))
   }
+  test("ExperimentName") {
+    val workspace = runExperiment(0, "", "runNumber")
+    expect("runNumber")(
+      workspace.report("behaviorspace-experiment-name"))
+  }
   // test export-graphics in headless mode
   if(!Version.is3D)
     test("ExportGraphics") {
