@@ -38,6 +38,7 @@ class TestAllSyntaxes extends FunSuite {
                      |_atpoints turtle agentset or patch agentset,list,agentset,OTPL,null,12,1,1
                      |_autoplot ,TRUE/FALSE,OTPL,null,10,0,0
                      |_basecolors ,list,OTPL,null,10,0,0
+                     |_behaviorspaceexperimentname ,string,OTPL,null,10,0,0
                      |_behaviorspacerunnumber ,number,OTPL,null,10,0,0
                      |_boom ,anything,OTPL,null,10,0,0
                      |_bothends ,agentset,---L,null,10,0,0

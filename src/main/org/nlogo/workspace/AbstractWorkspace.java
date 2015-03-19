@@ -657,6 +657,16 @@ public abstract strictfp class AbstractWorkspace
     _behaviorSpaceRunNumber = n;
   }
 
+  private String _behaviorSpaceExperimentName = "";
+
+  public String behaviorSpaceExperimentName() {
+    return _behaviorSpaceExperimentName;
+  }
+
+  public void behaviorSpaceExperimentName(String name) {
+    _behaviorSpaceExperimentName = name;
+  }
+
   public String getSource(String filename)
       throws java.io.IOException {
     if (filename.equals("aggregate")) {
