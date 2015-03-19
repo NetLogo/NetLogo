@@ -17,6 +17,8 @@ class _useroneof extends Reporter {
     val list = argEvalList(context, 1)
     workspace match {
       case gw: GUIWorkspace =>
+        if(list.isEmpty)
+          throw new EngineException(context, this, I18N.errors.get("org.nlogo.prim.etc.$common.emptyList"))
         val items = list.map(Dump.logoObject).toArray[AnyRef]
         gw.updateUI()
         val choice = workspace.waitForResult(
