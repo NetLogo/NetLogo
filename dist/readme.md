@@ -64,14 +64,15 @@ NetLogo work. Much of that support came from the National Science
 Foundation -- grant numbers REC-9814682 and REC-0126227, with further
 support from REC-0003285, REC-0115699, DRL-0196044, CCF-ITR-0326542,
 DRL-REC/ROLE-0440113, SBE-0624318, EEC-0648316, IIS-0713619,
-DRL-RED-9552950, DRL-REC-9632612, and DRL-DRK12-1020101. Additional
+DRL-RED-9552950, DRL-REC-9632612, DRL-DRK12-1020101, IIS-1441552,
+CNS-1441016, CNS-1441041, IIS-1438813, and REC-1343873.  Additional
 support came from the Spencer Foundation, Texas Instruments, the
 Brady Fund, and the Northwestern Institute on Complex Systems.
 
 ## License
 
 NetLogo  
-Copyright (C) 1999-2014 Uri Wilensky
+Copyright (C) 1999-2015 Uri Wilensky
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -97,7 +98,7 @@ licenses, please contact Uri Wilensky at
 ### User Manual license
 
 NetLogo User Manual  
-Copyright (C) 1999-2014 Uri Wilensky
+Copyright (C) 1999-2015 Uri Wilensky
 
 This work is licensed under the Creative Commons
 Attribution-ShareAlike 3.0 Unported License. To view a copy of this
