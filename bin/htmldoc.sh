@@ -42,6 +42,7 @@ htmldoc \
   profiler.html \
   gis.html \
   nw.html \
+  palette.html \
   csv.html \
   faq.html \
   dictionary.html

@@ -256,6 +256,7 @@ $PERL -p -i -e "s/\<h3\>/\<p\>\<hr\>\<h3\>/" docs/dictionary.html
 # Extension docs can come from extension READMEs now (requires pandoc), repeated below
 pandoc ../../extensions/nw/README.md -o docs/nw.html -t html -T "NetLogo User Manual: Networks Extension" -c netlogo.css
 pandoc ../../extensions/csv/README.md -o docs/csv.html -t html -T "NetLogo User Manual: CSV Extension" -c netlogo.css
+pandoc ../../extensions/palette/README.md -o docs/palette.html -t html -T "NetLogo User Manual: Palette Extension" -c netlogo.css
 
 cd docs
 ../../../bin/htmldoc.sh
