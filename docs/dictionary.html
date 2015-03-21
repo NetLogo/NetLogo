@@ -772,8 +772,8 @@ if any? turtles with [color = red]
         that represents the given color, specified in the HSB spectrum, in
         NetLogo's color space.
       <p>
-        The first value (hue) should be in the range of 0 to 100, the second
-        and third (saturation and brightness) in the range between 0 and 360.
+        The first value (hue) should be in the range of 0 to 360, the second
+        and third (saturation and brightness) in the range between 0 and 100.
       <p>
         The color reported may be only an approximation, since the NetLogo
         color space does not include all possible colors.
@@ -2409,8 +2409,8 @@ export-world (word &quot;results &quot; random-float 1.0 &quot;.csv&quot;)
       </h4>
       <p>
         Reports a list of three values, the first (hue) in the range of
-        0 to 100, the second and third (brightness and saturation) in 
-        the range of in the range 0 to 360, of the given
+        0 to 360, the second and third (brightness and saturation) in
+        the range of in the range 0 to 100, of the given
         NetLogo <i>color</i> in the range 0 to 140, not including 140
         itself.
       <pre>
@@ -3234,7 +3234,7 @@ histogram [color] of turtles
       <p>
         Reports a RGB list when given three numbers describing an HSB
         color. Hue, saturation, and brightness are integers in the range
-        0-100, 0-360, 0-360 respectively. The RGB list contains three
+        0-360, 0-100, 0-100 respectively. The RGB list contains three
         integers in the range of 0-255.
       <p>
         See also <a href="#rgb">rgb</a>
