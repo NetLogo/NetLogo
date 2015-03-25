@@ -54,7 +54,7 @@ class MethodSelectorTests extends FunSuite {
       dump(evaluate(new _constdouble(0.0),false)))
   }
   test("const list") {
-    expectResult("(LogoList,0)")(
+    assertResult("(LogoList,0)")(
       dump(evaluate(new _constlist(LogoList.Empty),false)))
   }
   // _lessthan's report methods are as follows:
@@ -106,15 +106,15 @@ class MethodSelectorTests extends FunSuite {
   test("sum list 1") {
     val root = new _sum
     root.args = Array(new _constlist(LogoList.Empty))
-    expectResult("(double,0)")(dump(evaluate(root,false)))
-    expectResult("LogoList => double")(
+    assertResult("(double,0)")(dump(evaluate(root,false)))
+    assertResult("LogoList => double")(
       dump(select(root,java.lang.Double.TYPE,false).get))
   }
   test("sum list 2") {
     val root = new _sum
     root.args = Array(new _sentence)
-    expectResult("(double,0)")(dump(evaluate(root,false)))
-    expectResult("LogoList => double")(
+    assertResult("(double,0)")(dump(evaluate(root,false)))
+    assertResult("LogoList => double")(
       dump(select(root,java.lang.Double.TYPE,false).get))
   }
   // check on handling of reporter blocks (which show up as Reporter arguments
