@@ -306,7 +306,7 @@ pandoc ../../extensions/csv/README.md -o docs/csv.html -t html -T "NetLogo User 
 ( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/*.jpg Curricular\ Models/BEAGLE\ Evolution ) || exit 1
 ( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/*.jpg Curricular\ Models/BEAGLE\ Evolution/HubNet\ Activities ) || exit 1
 ( cd models                    ; $CP -rp HubNet\ Activities/Unverified/Guppy\ Spots* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
-( cd models                    ; $CP -rp HubNet\ Activities/Unverified/aquarium\ [HubNet].jpg Curricular\ Models/BEAGLE\ Evolution ) || exit 1
+( cd models                    ; $CP -rp HubNet\ Activities/Unverified/aquarium.jpg Curricular\ Models/BEAGLE\ Evolution ) || exit 1
 ( cd models                    ; $CP -rp HubNet\ Activities/Bug\ Hunters\ Camouflage* Curricular\ Models/BEAGLE\ Evolution/HubNet\ Activities ) || exit 1
 ( cd models                    ; $CP -rp Sample\ Models/Biology/Daisyworld* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
 ( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Mimicry* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
@@ -314,10 +314,10 @@ pandoc ../../extensions/csv/README.md -o docs/csv.html -t html -T "NetLogo User 
 ( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Cooperation* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
 
 # BEAGLE HubNet models
-( cd models                    ; $CP -rp Curricular\ Models/BEAGLE\ Evolution/HubNet\ Activities/Bird\ Breeders\ \[HubNet\]* HubNet\ Activities ) || exit 1
-( cd models                    ; $CP -rp Curricular\ Models/BEAGLE\ Evolution/HubNet\ Activities/Bug\ Hunters\ Competition\ \[HubNet\]* HubNet\ Activities ) || exit 1
-( cd models                    ; $CP -rp Curricular\ Models/BEAGLE\ Evolution/HubNet\ Activities/Critter\ Designers\ \[HubNet\]* HubNet\ Activities ) || exit 1
-( cd models                    ; $CP -rp Curricular\ Models/BEAGLE\ Evolution/HubNet\ Activities/Fish\ Spotters\ \[HubNet\]* HubNet\ Activities ) || exit 1
+( cd models                    ; $CP -rp Curricular\ Models/BEAGLE\ Evolution/HubNet\ Activities/Bird\ Breeders\ HubNet* HubNet\ Activities ) || exit 1
+( cd models                    ; $CP -rp Curricular\ Models/BEAGLE\ Evolution/HubNet\ Activities/Bug\ Hunters\ Competition\ HubNet* HubNet\ Activities ) || exit 1
+( cd models                    ; $CP -rp Curricular\ Models/BEAGLE\ Evolution/HubNet\ Activities/Critter\ Designers\ HubNet* HubNet\ Activities ) || exit 1
+( cd models                    ; $CP -rp Curricular\ Models/BEAGLE\ Evolution/HubNet\ Activities/Fish\ Spotters\ HubNet* HubNet\ Activities ) || exit 1
 
 # it'd be nice if there were an easier way to fool the model-index task
 # into processing our directory where it is instead of having to bamboozle
