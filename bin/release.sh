@@ -526,12 +526,14 @@ else
   echo "rsync -av --inplace --progress --delete tmp/$COMPRESSEDVERSION ccl.northwestern.edu:/usr/local/www/netlogo"
 fi
 
-echo
-echo "to tag the release (changing 'master' if necessary):"
-echo git tag -a -m $COMPRESSEDVERSION $COMPRESSEDVERSION master
-echo git submodule foreach git tag -a -m $COMPRESSEDVERSION $COMPRESSEDVERSION master
-echo
-echo "and to push the tags:"
-echo git push --tags
-echo git submodule foreach git push --tags
-echo
+cat << END
+to tag the release (changing '5.x' if necessary):
+git tag -a -m $COMPRESSEDVERSION $COMPRESSEDVERSION 5.x
+git submodule foreach git tag -a -m $COMPRESSEDVERSION $COMPRESSEDVERSION 5.x
+
+Don't forget to tag ccl-models, iabm-models
+
+and to push the tags:
+git push --tags
+git submodule foreach git push --tags
+END

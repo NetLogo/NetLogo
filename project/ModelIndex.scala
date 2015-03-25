@@ -32,14 +32,14 @@ object ModelIndex {
     for(path <- paths) {
       val info = infoTab(path)
       // The (?s) part allows . to match line endings
-      val pattern = "(?s)## WHAT IS IT\\?\\s*\\n"
+      val pattern = "(?s).*## WHAT IS IT\\?\\s*\\n"
       if(info.matches(pattern + ".*") ) {
         val firstParagraph = info.replaceFirst(pattern, "").split('\n').head
         println("models" + path.replaceFirst(modelsPath.toString, ""))
         println(firstParagraph)
-      }
-      else
+      } else {
         System.err.println("WHAT IS IT not found: " + path)
+      }
     }
     buf.toString
   }
