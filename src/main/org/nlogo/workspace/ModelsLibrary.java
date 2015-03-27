@@ -249,12 +249,12 @@ public strictfp class ModelsLibrary {
         {
           orderednames = new String[]{
               "3D", "SAMPLE MODELS", "CURRICULAR MODELS", "CODE EXAMPLES",
-              "HUBNET ACTIVITIES"};
+              "HUBNET ACTIVITIES", "IABM TEXTBOOK", "ALTERNATIVE VISUALIZATIONS"};
         }
       } else {
         orderednames = new String[]{
             "SAMPLE MODELS", "CURRICULAR MODELS", "CODE EXAMPLES",
-            "HUBNET ACTIVITIES"};
+            "HUBNET ACTIVITIES", "IABM TEXTBOOK", "ALTERNATIVE VISUALIZATIONS"};
       }
     } else {
       orderednames = new String[0];
