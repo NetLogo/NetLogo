@@ -184,11 +184,7 @@ public strictfp class ModelsLibrary {
       orderedEntries.add(rawEntries[i]);
     }
     orderedEntries = orderItems(orderedEntries, parent.isRoot(), exclusive);
-    // this test is so empty directories don't even show up at all
-    // - ST 8/5/04
-    if (!orderedEntries.isEmpty() && grandparent != null) {
-      grandparent.add(parent);
-    }
+    boolean hasChild = false; // will get turned true if we add at least one folder or model
     for (int i = 0; i < orderedEntries.size(); i++) {
       String fileName = orderedEntries.get(i);
       if (isBadName(fileName)) {
@@ -200,13 +196,23 @@ public strictfp class ModelsLibrary {
               + (file.isDirectory() ? "/" : ""),
           file.isDirectory());
       if (child.isFolder()) {
+        hasChild = true;
         scanDirectory(file, parent, child, exclusive);
       } else {
         if (fileName.toUpperCase().endsWith(".NLOGO") ||
             fileName.toUpperCase().endsWith(".NLOGO3D")) {
+          hasChild = true;
           parent.add(child);
         }
       }
+    }
+    // Only add nodes when they have at least one model or folder
+    // under them, and they're not the root `models` folder.
+    // See: https://github.com/NetLogo/models/issues/33
+    // (this would still allow a folder with just an empty folder under it, but
+    // I think we can be careful enough to avoid that situation) NP 2015-03-27.
+    if (hasChild && grandparent != null) {
+      grandparent.add(parent);
     }
   }
 
