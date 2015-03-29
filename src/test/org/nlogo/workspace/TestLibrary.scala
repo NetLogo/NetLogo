@@ -8,12 +8,11 @@ import scala.collection.JavaConverters._
 
 class TestLibrary extends FunSuite {
   test("every model has a unique name") {
-    val names = new collection.mutable.HashSet[String]
-    for(path <- getModelPaths) {
-      val name = new java.io.File(path).getName
-      assert(!names.contains(name.toUpperCase), name)
-      names += name.toUpperCase
-    }
+    val duplicateNames = getModelPaths
+      .map(new java.io.File(_).getName.toUpperCase)
+      .groupBy(identity)
+      .collect { case (x, xs) if xs.size > 1 => x }
+    assert(duplicateNames.isEmpty, duplicateNames.toList)
   }
   test("there are no empty leaf folders") {
     val emptyLeafFolders = scanForModelsAtRoot("models", false)
