@@ -319,6 +319,10 @@ pandoc ../../extensions/csv/README.md -o docs/csv.html -t html -T "NetLogo User 
 ( cd models                    ; $CP -rp Curricular\ Models/BEAGLE\ Evolution/HubNet\ Activities/Critter\ Designers\ HubNet* HubNet\ Activities ) || exit 1
 ( cd models                    ; $CP -rp Curricular\ Models/BEAGLE\ Evolution/HubNet\ Activities/Fish\ Spotters\ HubNet* HubNet\ Activities ) || exit 1
 
+# IABM Textbook models duplicated in Sample Models
+( cd models                    ; $CP -rp IABM\ Textbook/chapter\ 3/El\ Farol\ Extensions/El\ Farol.nlogo Sample\ Models/Social\ Science ) || exit 1
+( cd models                    ; $CP -rp IABM\ Textbook/chapter\ 3/DLA\ extensions/DLA\ Simple.nlogo Sample\ Models/Chemistry\ \&\ Physics/Diffusion\ Limited\ Aggregation ) || exit 1
+
 # it'd be nice if there were an easier way to fool the model-index task
 # into processing our directory where it is instead of having to bamboozle
 # it like this with a temporary symbolic link - ST 6/18/12
