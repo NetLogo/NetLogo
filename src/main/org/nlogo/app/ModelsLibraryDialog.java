@@ -265,6 +265,16 @@ strictfp class ModelsLibraryDialog
 
     this.setSize(740, 680);
     org.nlogo.awt.Positioning.center(this, parent);
+
+    // This last bit is a fugly stopgap measure: the only way I found so far
+    // to trigger a refresh of the modelPreviewPanel with the right size
+    // calculations in order to fix https://github.com/NetLogo/NetLogo/issues/750
+    // NP 2015-03-31
+    javax.swing.SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        modelPreviewPanel.showModel();
+      }
+    });
   }
 
   //
