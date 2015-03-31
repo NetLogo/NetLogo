@@ -263,7 +263,7 @@ strictfp class ModelsLibraryDialog
           }
         });
 
-    this.setSize(740, 680);
+    this.setSize(740, 715);
     org.nlogo.awt.Positioning.center(this, parent);
 
     // This last bit is a fugly stopgap measure: the only way I found so far
