@@ -8,12 +8,16 @@ package org.nlogo.app;
 // super slow. ev 3/26/09
 
 import org.nlogo.api.I18N;
+import org.nlogo.swing.BrowserLauncher;
 import org.nlogo.workspace.ModelsLibrary;
 
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.swing.JOptionPane;
+import javax.swing.event.HyperlinkEvent;
 
 strictfp class ModelsLibraryDialog
     extends javax.swing.JDialog
@@ -263,8 +267,18 @@ strictfp class ModelsLibraryDialog
           }
         });
 
-    this.setSize(740, 680);
+    this.setSize(740, 715);
     org.nlogo.awt.Positioning.center(this, parent);
+
+    // This last bit is a fugly stopgap measure: the only way I found so far
+    // to trigger a refresh of the modelPreviewPanel with the right size
+    // calculations in order to fix https://github.com/NetLogo/NetLogo/issues/750
+    // NP 2015-03-31
+    javax.swing.SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        modelPreviewPanel.showModel();
+      }
+    });
   }
 
   //
@@ -423,9 +437,8 @@ strictfp class ModelsLibraryDialog
     }
   }
 
-  //
-
-  private strictfp class ModelPreviewPanel extends javax.swing.JPanel {
+  private strictfp class ModelPreviewPanel extends javax.swing.JPanel
+    implements javax.swing.event.HyperlinkListener {
 
     private final GraphicsPreview graphicsPreview;
     private final javax.swing.JEditorPane textArea;
@@ -441,6 +454,7 @@ strictfp class ModelsLibraryDialog
       textArea.setContentType("text/html");
       textArea.setEditable(false);
       textArea.setOpaque(false);
+      textArea.addHyperlinkListener(this);
 
       add(graphicsPreview);
       add(textArea);
@@ -513,6 +527,17 @@ strictfp class ModelsLibraryDialog
               390,
               textArea.getPreferredSize().height));
       invalidate();
+    }
+
+    @Override
+    public void hyperlinkUpdate(HyperlinkEvent e) {
+      if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+        if (e.getURL() == null) {
+          JOptionPane.showMessageDialog(this, "Invalid URL!", "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+          BrowserLauncher.openURL(this, e.getURL().toString(), false);
+        }
+      }
     }
   }
 
