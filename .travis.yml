@@ -11,10 +11,6 @@ notifications:
   hipchat:
     rooms:
       secure: "EEaRwfUUBj1phN/+8C3mbZARgSy3QWkx/ppQy/aBtydWpT82Mx3fhqOTKDpS3onEjioMqSOKzOGtQuZ1KP1agy11WDTFkwAhg9MMPzdc3J0gRaxhI6FyfZ9emWYmzM6GxGMtJZM1hOvenPp5QDQ7POyhCuQUW3+Utv2vQM3PkBg="
-
- webhooks:
+  webhooks:
     urls:
       - https://webhooks.gitter.im/e/7e19d0a6b790bd7d14dc
-    on_success: always  # options: [always|never|change] default: always
-    on_failure: always  # options: [always|never|change] default: always
-    on_start: false     # default: false
