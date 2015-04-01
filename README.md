@@ -1,5 +1,7 @@
 # NetLogo
 
+[![Join the chat at https://gitter.im/NetLogo/NetLogo](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/NetLogo/NetLogo?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 This page is for open source developers interested in the source code for NetLogo.
 
 Other users should visit the [NetLogo home page](http://ccl.northwestern.edu/netlogo/) at Northwestern and the [NetLogo users group](http://groups.yahoo.com/group/netlogo-users/) on Yahoo.
