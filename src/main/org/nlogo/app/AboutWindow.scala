@@ -37,7 +37,7 @@ class AboutWindow(parent:Frame) extends JDialog(parent,false) {
       setText(
           "<html>\n"
           + "<center>"
-          + "<b>" + Version.version
+          + "<b>" + Version.versionDropZeroPatch
           + " <font color=\"#666666\">(" + Version.buildDate
           + ")</font>" + "</b><br><br>\n"
           + "<font size=-1><b>web site</b> "
