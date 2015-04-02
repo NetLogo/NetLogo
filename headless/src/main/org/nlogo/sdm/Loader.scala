@@ -76,7 +76,9 @@ object Loader {
           }
           // skip GUI-only stuff, until eol - ST 1/25/05
           while(tokens.hasNext && tokens.next() != EOLToken)
-            { }
+          { }
+        case t =>
+          throw new RuntimeException(s"unexpected token: $t")
       }
     model
   }

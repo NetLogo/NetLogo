@@ -12,7 +12,7 @@ private class ReferenceVisitor extends parse.DefaultAstVisitor {
     // be removed, so exempt _extern - ST 2/15/11
     if(index != -1 && !stmt.command.isInstanceOf[prim._extern]) {
       stmt.command.reference =
-        stmt(index).asInstanceOf[parse.ReporterApp].reporter
+        stmt.args(index).asInstanceOf[parse.ReporterApp].reporter
           .asInstanceOf[prim._reference].reference
       stmt.removeArgument(index)
     }

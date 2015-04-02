@@ -28,7 +28,7 @@ object Scaladoc {
     // for a discussion of why this was necessary, see
     // groups.google.com/forum/?fromgroups#!topic/simple-build-tool/jV43_9zpqZs
     // - ST 8/3/12
-    docSmaller <<= (baseDirectory, cacheDirectory, scalacOptions in (Compile, doc), compileInputs in Compile, netlogoVersion, streams) map {
+    docSmaller <<= (baseDirectory, cacheDirectory, scalacOptions in (Compile, doc), compileInputs in (Compile, compile), netlogoVersion, streams) map {
       (base, cache, options, inputs, version, s) =>
         val apiSources = Seq(
           "app/App.scala", "headless/HeadlessWorkspace.scala",

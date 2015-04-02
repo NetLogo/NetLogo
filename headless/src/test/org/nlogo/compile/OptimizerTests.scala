@@ -9,10 +9,10 @@ import org.nlogo.{ nvm, parse }
 class OptimizerTests extends FunSuite {
   def compileReporter(source: String) =
     compile("globals [glob1] breed [frogs frog] to-report __test [x] report " + source + "\nend")
-      .statements.head.head.toString
+      .statements.stmts.head.args.head.toString
   def compileCommands(source: String) =
     compile("globals [glob1] breed [frogs frog] to __test [x] " + source + "\nend")
-      .statements.head.toString
+      .statements.stmts.head.toString
   def compile(source: String): parse.ProcedureDefinition = {
     import parse._
     val results = new StructureParser(Parser.Tokenizer2D.tokenize(source), None,

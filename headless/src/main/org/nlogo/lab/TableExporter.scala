@@ -12,13 +12,13 @@ class TableExporter(modelFileName: String,
                     out: java.io.PrintWriter)
   extends Exporter(modelFileName, initialDims, protocol, out)
 {
-  val settings = new collection.mutable.HashMap[Int,List[Pair[String,Any]]]
+  val settings = new collection.mutable.HashMap[Int,List[(String, Any)]]
   override def experimentStarted() {
     writeExportHeader()
     writeExperimentHeader()
     out.flush()
   }
-  override def runStarted(w: Workspace, runNumber: Int,runSettings: List[Pair[String,Any]]) {
+  override def runStarted(w: Workspace, runNumber: Int,runSettings: List[(String, Any)]) {
     settings(runNumber) = runSettings
   }
   override def measurementsTaken(w: Workspace, runNumber: Int, step: Int, values: List[AnyRef]) {

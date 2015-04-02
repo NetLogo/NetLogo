@@ -18,9 +18,9 @@ private class CarefullyVisitor extends parse.DefaultAstVisitor {
       case c:_carefully =>
         // carefully takes two arguments, both command blocks.
         // error-message is allowed only within the second block.
-        stmt(0).accept(this)
+        stmt.args(0).accept(this)
         stack.push(c)
-        stmt(1).accept(this)
+        stmt.args(1).accept(this)
         stack.pop()
       case _ => super.visitStatement(stmt)
     }

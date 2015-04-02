@@ -82,9 +82,9 @@ with Events.LoadSectionEventHandler {
   ///
 
   override def startLogging(properties: String) {
-    try new Events.LoggingEvent(LoggingEventType.START_LOGGING,
-                                fileManager.attachPrefix(properties))
-      .raiseLater(this);
+    new Events.LoggingEvent(LoggingEventType.START_LOGGING,
+        fileManager.attachPrefix(properties))
+      .raiseLater(this)
   }
 
   override def zipLogFiles(filename: String) {

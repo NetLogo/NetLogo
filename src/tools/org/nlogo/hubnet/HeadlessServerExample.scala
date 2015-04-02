@@ -25,7 +25,7 @@ object HeadlessServerExample {
     override def run {
       print("enter command> ")
       while(true){
-        queuedCommands put readLine()
+        queuedCommands put scala.io.StdIn.readLine()
       }
     }
     def runAll() {

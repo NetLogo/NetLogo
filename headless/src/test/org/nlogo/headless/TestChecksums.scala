@@ -43,7 +43,6 @@ object TestChecksums extends ChecksumTester(println _) {
   def main(args: Array[String]) {
 
     val runTimes = new collection.mutable.HashMap[String, Long]
-            with collection.mutable.SynchronizedMap[String, Long]
     val executor = Executors.newFixedThreadPool(Runtime.getRuntime.availableProcessors)
 
     val checksums = this.checksums
@@ -52,11 +51,13 @@ object TestChecksums extends ChecksumTester(println _) {
       def doit() {
         try {
           print(".")
-          runTimes.update(entry.path, System.currentTimeMillis)
+          val start = System.currentTimeMillis
           // for now, store current time; we'll replace it later with the difference
           // between this value and the time then - ST 3/27/08
           testChecksum(entry.path, entry.worldSum, entry.graphicsSum, entry.revision)
-          runTimes.update(entry.path, System.currentTimeMillis - runTimes(entry.path))
+          runTimes.synchronized{
+            runTimes.update(entry.path, System.currentTimeMillis - start)
+          }
         }
         catch {
           case t: Throwable =>

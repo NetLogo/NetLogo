@@ -150,7 +150,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
   /// ProgressListener implementation
 
   override def experimentStarted() {started = System.currentTimeMillis}
-  override def runStarted(w: Workspace, runNumber: Int, settings: List[Pair[String, Any]]) {
+  override def runStarted(w: Workspace, runNumber: Int, settings: List[(String, Any)]) {
     if (!w.isHeadless) {
       runCount = runNumber
       steps = 0

@@ -73,7 +73,7 @@ private class Optimizer(is3D: Boolean) extends parse.DefaultAstVisitor {
       node match {
         case stmt: parse.Statement if !stmt.args.isEmpty =>
           stmt.args.last match {
-            case block: parse.CommandBlock if block.statements.size == 0 =>
+            case block: parse.CommandBlock if block.statements.stmts.isEmpty =>
               new Match(block)
             case _ =>
               throw new MatchFailedException

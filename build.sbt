@@ -2,7 +2,7 @@
 /// ThisBuild -- applies to subprojects too
 ///
 
-scalaVersion in ThisBuild := "2.10.4"
+scalaVersion in ThisBuild := "2.11.5"
 
 scalacOptions in ThisBuild ++=
   "-deprecation -unchecked -feature -Xcheckinit -encoding us-ascii -target:jvm-1.6 -Xfatal-warnings -Ywarn-adapted-args -Yinline-warnings"
@@ -26,13 +26,14 @@ threed in ThisBuild := { System.setProperty("org.nlogo.is3d", "true") }
 nogen in ThisBuild  := { System.setProperty("org.nlogo.noGenerator", "true") }
 
 libraryDependencies in ThisBuild ++= Seq(
+  "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.3",
   "asm" % "asm-all" % "3.3.1",
   "org.picocontainer" % "picocontainer" % "2.13.6",
   "org.jmock" % "jmock" % "2.5.1" % "test",
   "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
   "org.jmock" % "jmock-junit4" % "2.5.1" % "test",
-  "org.scalacheck" %% "scalacheck" % "1.10.0" % "test",
-  "org.scalatest" %% "scalatest" % "2.0" % "test"
+  "org.scalacheck" %% "scalacheck" % "1.12.0" % "test",
+  "org.scalatest" %% "scalatest" % "2.2.1" % "test"
 )
 
 ///
