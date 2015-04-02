@@ -15,8 +15,9 @@ import scala.collection.immutable.VectorBuilder
 // Also used by the clone method, which is itself used for model runs,
 // and by ModelRun.Frame.apply when starting a new run
 // NP 2012-12-17
+@SerialVersionUID(0)
 class Plot(var name: String, var defaultState: PlotState = PlotState())
-extends PlotInterface {
+extends PlotInterface with Serializable {
 
   import Plot._
 

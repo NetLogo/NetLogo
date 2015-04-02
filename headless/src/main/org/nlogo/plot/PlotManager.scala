@@ -67,7 +67,7 @@ class PlotManager(factory: LogoThunkFactory)
     plotThunks.clear()
   }
   def clearAll() {
-    _plots.foreach(_.clear())
+    for (name <- getPlotNames) publish(PlotAction.ClearPlot(name))
   }
 
   //

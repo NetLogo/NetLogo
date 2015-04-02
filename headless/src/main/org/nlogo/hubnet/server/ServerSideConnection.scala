@@ -88,6 +88,7 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
             // ideally we'd only send this full update to the client that
             // just joined, rather than broadcasting it to everyone. - ST 12/5/09
             if (HubNetUtils.viewMirroring) server.fullViewUpdate() else sendData(DisableView)
+            if (HubNetUtils.plotMirroring) server.sendPlots(userId)
           }
           else {
             sendData(new LoginFailure("\"" + userId + "\" is already taken by another user.\nPlease choose another name."))

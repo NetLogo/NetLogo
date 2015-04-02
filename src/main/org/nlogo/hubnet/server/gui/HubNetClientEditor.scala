@@ -23,7 +23,7 @@ class HubNetClientEditor(workspace: GUIWorkspace,
       ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
       ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER)
     import WidgetInfo._
-    val buttons = List(button, slider, switch, chooser, input, monitor, note, view)
+    val buttons = List(button, slider, switch, chooser, input, monitor, plot, note, view)
     getContentPane.add(iFactory.toolbar(interfacePanel, workspace, buttons, this), BorderLayout.NORTH)
     if (System.getProperty("os.name").startsWith("Mac")) {
       val menus = new JMenuBar() {add(menuFactory.createFileMenu())}

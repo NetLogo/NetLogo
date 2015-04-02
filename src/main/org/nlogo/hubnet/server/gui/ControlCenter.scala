@@ -31,7 +31,7 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
   locally {
     setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE)
     getContentPane.setLayout(new BorderLayout())
-    getContentPane.add(new ServerOptionsPanel(HubNetUtils.viewMirroring), BorderLayout.CENTER)
+    getContentPane.add(new ServerOptionsPanel(HubNetUtils.viewMirroring, HubNetUtils.plotMirroring), BorderLayout.CENTER)
     getContentPane.add(clientsPanel, BorderLayout.EAST)
     getContentPane.add(messagePanel, BorderLayout.SOUTH)
     pack()
@@ -45,6 +45,12 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
       HubNetUtils.viewMirroring = mirror
       server.setViewEnabled(mirror)
     }
+  }
+
+  def setPlotMirroring(mirror: Boolean) {
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
+    HubNetUtils.plotMirroring = mirror;
+    if (mirror) server.plotManager.broadcastPlots()
   }
 
   // Kicks a client and notifies it.
@@ -209,9 +215,12 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
   /**
    * Panel in HubNet Control Center displays server info  and server options.
    */
-  class ServerOptionsPanel(mirrorView: Boolean) extends JPanel with ItemListener {
+  class ServerOptionsPanel(mirrorView: Boolean, mirrorPlots: Boolean) extends JPanel with ItemListener {
 
     private val mirrorViewCheckBox = new JCheckBox(I18N.gui.get("menu.tools.hubnetControlCenter.mirrorViewOn2dClients"), mirrorView) {
+      addItemListener(ServerOptionsPanel.this)
+    }
+    private val mirrorPlotsCheckBox = new JCheckBox(I18N.gui.get("menu.tools.hubnetControlCenter.mirrorPlotsOnClients"), mirrorPlots) {
       addItemListener(ServerOptionsPanel.this)
     }
 
@@ -230,6 +239,7 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
       add(new JLabel(I18N.gui.get("menu.tools.hubnetControlCenter.settings")))
       add(Box.createVerticalStrut(4))
       add(mirrorViewCheckBox)
+      add(mirrorPlotsCheckBox)
       add(Box.createVerticalGlue())
     }
 
@@ -256,6 +266,7 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
      */
     def itemStateChanged(e: ItemEvent) {
       setViewMirroring(mirrorViewCheckBox.isSelected)
+      setPlotMirroring(mirrorPlotsCheckBox.isSelected)
     }
   }
 }

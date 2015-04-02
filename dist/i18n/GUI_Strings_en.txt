@@ -385,6 +385,7 @@ menu.tools.hubnetControlCenter.clients = Clients:
 menu.tools.hubnetControlCenter.dateFormat = h:mm:ss
 menu.tools.hubnetControlCenter.broadcastMessage = Broadcast Message
 menu.tools.hubnetControlCenter.mirrorViewOn2dClients = Mirror 2D view on clients
+menu.tools.hubnetControlCenter.mirrorPlotsOnClients = Mirror plots on clients (experimental)
 menu.tools.hubnetControlCenter.name = Name:
 menu.tools.hubnetControlCenter.activity = Activity:
 menu.tools.hubnetControlCenter.unknown = UNKNOWN
