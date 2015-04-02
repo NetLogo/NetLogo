@@ -25,5 +25,5 @@ public interface Colorizer<TokenType> {
   // this isn't colorizing either.. - ST 3/28/08
   void doHelp(java.awt.Component comp, String name);
 
-  void jumpToDefinition(String name);
+  void raiseJumpToDefinitionEvent(java.awt.Component comp, String name);
 }

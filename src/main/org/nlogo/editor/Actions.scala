@@ -45,10 +45,10 @@ object Actions {
                      e => colorizer.doHelp(e, e.getHelpTarget(e.getMousePos)))
   def jumpToDefinitionAction(colorizer: Colorizer[_], i18n: String => String) =
     new MyTextAction(i18n("menu.edit.jumpToDefinition"),
-                     e => colorizer.jumpToDefinition(e.getHelpTarget(e.getSelectionStart)))
+                     e => colorizer.raiseJumpToDefinitionEvent(e, e.getHelpTarget(e.getSelectionStart)))
   def mouseJumpToDefinitionAction(colorizer: Colorizer[_], i18n: String => String) =
     new MyTextAction(i18n("menu.edit.jumpToDefinition"),
-                     e => colorizer.jumpToDefinition(e.getHelpTarget(e.getMousePos)))
+                     e => colorizer.raiseJumpToDefinitionEvent(e, e.getHelpTarget(e.getMousePos)))
   class MyTextAction(name:String, f: EditorArea[_] => Unit) extends TextAction(name) {
     override def actionPerformed(e:ActionEvent){
       val component = getTextComponent(e)

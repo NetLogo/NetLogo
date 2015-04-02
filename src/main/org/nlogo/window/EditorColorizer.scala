@@ -113,8 +113,8 @@ class EditorColorizer(parser: ParserServices) extends Colorizer[TokenType] {
   }
 
   // When all we have is a name, go find a definition
-  override def jumpToDefinition(name: String): Unit = {
-     Events.JumpToDefinitionEvent(name).raise(this)
+  override def raiseJumpToDefinitionEvent(comp: java.awt.Component, name: String): Unit = {
+     Events.JumpToDefinitionEvent(name).raise(comp)
   }
 
   def jumpToDefinition(editor: EditorArea[_], name: String): Boolean = {
