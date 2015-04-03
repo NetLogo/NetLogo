@@ -22,12 +22,12 @@
       Version 5.2.0 (April 2015)
     </h2>
 
-    <h3>Extensions:</h3>
+    <h3>Extensions</h3>
     <ul>
-      <li>An included CSV extension to read data to and from CSV files
+      <li>An included CSV extension to read and write CSV files
       <li>An included Palette extension to map different values to colors
       <li>The previous gogo extension has been removed. It has been replaced with two different gogo extensions, gogo and gogo-serial. The extensions work with different hardware. The gogo extension works with the new style HID-interface gogo boards and the gogo-serial extension works with the old-style serial-interface gogo boards
-      <li> Upgrade to the network extension including the following changes:
+      <li>Upgrade to the network extension including the following changes:
         <ul>
           <li>Support for many more file types, including GEXF, GDF, GML, Pajek NET, UCINET DL, and Netdraw VNA
           <li>Fixed bugs with GraphML support
@@ -35,25 +35,25 @@
         </ul>
     </ul>
 
-    <h3>New Features:</h3>
+    <h3>New features</h3>
     <ul>
-      <li>New primitive <tt>netlogo-web?</tt> added to test whether you are currently running in NetLogo Web 
+      <li>New primitive <tt>netlogo-web?</tt> added to test whether you are currently running in NetLogo Web
       <li>New primitive <tt>behaviorspace-experiment-name</tt> added allowing you to get the name of the currently running experiment
       <li>New primitive <tt>stop-inspecting</tt> to stop inspecting agents
       <li>New primitive <tt>stop-inspecting-dead-agents</tt> and menu item to stop inspecting dead agents
-      <li><tt>__includes</tt> keywork now enables the Includes button when given an empty
+      <li><tt>__includes</tt> keyword now enables the Includes button when given an empty
       <li>hooks added for extensions to write custom log messages
     </ul>
 
-    <h3>Bug fixes:</h3>
+    <h3>Bug fixes</h3>
     <ul>
-      <li>user-one-of will now signal an error earlier when provided an empty list of choices
+      <li><tt>user-one-of</tt> will now signal an error earlier when provided an empty list of choices
       <li><tt>hsb</tt>, <tt>extract-hsb</tt>, and <tt>approximate-hsb</tt> have been updated to represent true hsb conventions
       <li>new deprecated primitives <tt>__hsb-old</tt>, <tt>__extract-hsb-old</tt>, and <tt>__approximate-hsb-old</tt> work as the old hsb primitives did when older models using the hsb primitives are opened in NetLogo 5.2, they will be auto-converted to use the deprecated primitives
       <li><tt>extract-hsb</tt> -- fixed bug where it didn't work correctly on rgb lists
     </ul>
 
-    <h3>Model Changes:</h3>
+    <h3>Model changes</h3>
     <ul>
       <li>New Sample Models: Artificial Anasazi, Bacteria Food Hunt, Bacteria Hunt Speeds, BeeSmart - Hive Finding, Bug Hunt Disruptions, Bug Hunt Environmental Changes, Bug Hunt Predators and Invasive Species - Two Regions, Hydrogen Diffusion 3D, Lennard-Jones, Paths
       <li>There are 46 new models in the new IABM Textbook folder: Turtles Circling Simple, Ants Simple, Heroes and Cowards, Life Simple, Simple Economy, 4 DLA extensions, 4 El Farol Extensions, 4 Fire Extensions, 4 Segregation Extensions, 5 Wolf Sheep Extensions, Agentset Efficiency, Agentset Ordering, Communication-T-T Network Example, Preferential Attachment Simple, Random Network, Traffic Basic Adaptive, Traffic Basic Utility, Traffic Grid Goal, Spread of Disease, Voting Component Verification, Voting Sensitivity Analysis, Arduino Example, Disease With Android Avoidance HubNet, Example HubNet, Run Example, Run Result Example, Simple Machine Learning, Simple Viral Marketing, Ticket Sales, Sandpile Simple
