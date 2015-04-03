@@ -40,9 +40,12 @@ class TestGenerator extends FunSuite {
   // "GETFIELD IADD"
   if(Version.useGenerator)
     test("offset compiled to constant") {
-      assertResult(List("ICONST_4","PUTFIELD org/nlogo/nvm/Context.ip : I","RETURN").mkString("\n"))(
+      assertResult("""|ICONST_4
+                        |FRAME FULL [org/nlogo/prim/_asm_procedurefoo_if_0 org/nlogo/nvm/Context I] [org/nlogo/nvm/Context I]
+                        |PUTFIELD org/nlogo/nvm/Context.ip : I
+                        |RETURN""".stripMargin)(
         stripLineNumbers(disassembleCommand("if true [ __ignore 1 __ignore 2 __ignore 3 ]"))
-        .takeRight(3).mkString("\n"))
+        .takeRight(4).mkString("\n"))
     }
 
   // make sure the generator chooses _constdouble's Double-returning method,
@@ -112,13 +115,25 @@ class TestGenerator extends FunSuite {
         // return ... ? Boolean.TRUE : Boolean.FALSE
         "ICONST_1",
         "GOTO L4",
-        "L3","ICONST_0",
-        "L4","IFEQ L5",
+        "L3", "FRAME APPEND [D D]", "ICONST_0",
+        "L4","FRAME SAME1 I", "IFEQ L5",
         "GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;",
         "GOTO L6",
-        "L5","GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;",
-        "L6","ARETURN"
+        "L5","FRAME SAME", "GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;",
+        "L6","FRAME SAME1 java/lang/Boolean", "ARETURN"
       ).mkString("\n"))(disassembleReporter("xcor = 0"))
     }
 
+    if(Version.useGenerator)
+      test("Correctly generates custom code for or") {
+        Compiler.compileProgram(
+          """
+          |breed [agents agent]
+          |
+          |to-report move
+          |  report all? agents-here [true] or all? agents-here [false]
+          |end
+          """.stripMargin, Program.empty(), new DummyExtensionManager
+        )
+      }
 }

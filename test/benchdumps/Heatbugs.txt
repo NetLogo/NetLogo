@@ -25,6 +25,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           LCMP
           IFLE L3
          L2
+         FRAME APPEND [D J]
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -42,6 +43,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
+         FRAME SAME
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
@@ -132,6 +134,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
           GOTO L2
          L1
+         FRAME APPEND [org/nlogo/nvm/MutableLong]
           ALOAD 2
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/nvm/MutableLong.value ()J
@@ -142,6 +145,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           ICONST_4
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
+         FRAME SAME
           RETURN
 [6]_asm_procedurebenchmark_setobservervariable_5 "set result timer" Object => void
       _timer => double
@@ -171,6 +175,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
           GOTO L5
          L2
+         FRAME FULL [org/nlogo/prim/_asm_procedurebenchmark_setobservervariable_5 org/nlogo/nvm/Context java/lang/Double] [org/nlogo/api/AgentException]
           ASTORE 3
           NEW org/nlogo/nvm/EngineException
           DUP
@@ -181,6 +186,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5
+         FRAME SAME
           RETURN
 [7]_asm_procedurebenchmark_return_6 "" => void
          L0
@@ -247,6 +253,7 @@ procedure SETUP:[]{O---}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_ask_0 org/nlogo/nvm/Context java/lang/Object T java/lang/Object org/nlogo/agent/AgentSet] []
           ALOAD 5
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_0.world : Lorg/nlogo/agent/World;
@@ -263,10 +270,12 @@ procedure SETUP:[]{O---}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L2
+         FRAME SAME
           ALOAD 5
           ASTORE 6
           GOTO L4
          L1
+         FRAME CHOP 1
           ALOAD 4
           INSTANCEOF org/nlogo/agent/Agent
           IFEQ L5
@@ -298,11 +307,13 @@ procedure SETUP:[]{O---}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L6
+         FRAME APPEND [T T org/nlogo/agent/Agent]
           GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
           ALOAD 7
           INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromAgent (Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
           ASTORE 6
          L4
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_ask_0 org/nlogo/nvm/Context java/lang/Object T java/lang/Object T org/nlogo/agent/AgentSet] []
           ALOAD 6
           ASTORE 3
           ALOAD 1
@@ -314,6 +325,7 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
           GOTO L7
          L5
+         FRAME CHOP 2
           NEW org/nlogo/nvm/ArgumentTypeException
           DUP
           ALOAD 1
@@ -328,6 +340,7 @@ procedure SETUP:[]{O---}:
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
          L7
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_ask_0 org/nlogo/nvm/Context java/lang/Object org/nlogo/agent/AgentSet java/lang/Object T org/nlogo/agent/AgentSet] []
           RETURN
 [3]_sprout:,+10
       _asm_proceduresetup_constdouble_3 "1" => Double
@@ -356,6 +369,7 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
           GOTO L5
          L2
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtleorlinkvariable_4 org/nlogo/nvm/Context java/lang/Double] [org/nlogo/api/AgentException]
           ASTORE 3
           NEW org/nlogo/nvm/EngineException
           DUP
@@ -366,6 +380,7 @@ procedure SETUP:[]{O---}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5
+         FRAME SAME
           RETURN
 [5]_asm_proceduresetup_setturtlevariable_5 "set size 1.75" Object => void
       _constdouble:1.75 => Double
@@ -387,6 +402,7 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
           GOTO L5
          L2
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtlevariable_5 org/nlogo/nvm/Context java/lang/Double] [org/nlogo/api/AgentException]
           ASTORE 3
           NEW org/nlogo/nvm/EngineException
           DUP
@@ -397,6 +413,7 @@ procedure SETUP:[]{O---}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5
+         FRAME SAME
           RETURN
 [6]_asm_proceduresetup_setturtlevariable_6 "set ideal-temp  min-ideal-temp  + random abs (max-ideal-temp  - min-ideal-temp" Object => void
       _plus double,double => double
@@ -424,6 +441,7 @@ procedure SETUP:[]{O---}:
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           GOTO L11
          L1
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtlevariable_6 org/nlogo/nvm/Context java/lang/Object] [java/lang/ClassCastException]
           POP
           NEW org/nlogo/nvm/ArgumentTypeException
           DUP
@@ -435,6 +453,7 @@ procedure SETUP:[]{O---}:
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
          L11
+         FRAME SAME1 D
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetup_setturtlevariable_6.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
@@ -448,6 +467,7 @@ procedure SETUP:[]{O---}:
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           GOTO L13
          L3
+         FRAME SAME1 java/lang/ClassCastException
           POP
           NEW org/nlogo/nvm/ArgumentTypeException
           DUP
@@ -459,6 +479,7 @@ procedure SETUP:[]{O---}:
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
          L13
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtlevariable_6 org/nlogo/nvm/Context java/lang/Object] [D D]
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetup_setturtlevariable_6.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
@@ -472,6 +493,7 @@ procedure SETUP:[]{O---}:
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           GOTO L15
          L5
+         FRAME SAME1 java/lang/ClassCastException
           POP
           NEW org/nlogo/nvm/ArgumentTypeException
           DUP
@@ -483,6 +505,7 @@ procedure SETUP:[]{O---}:
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
          L15
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtlevariable_6 org/nlogo/nvm/Context java/lang/Object] [D D D]
           DSTORE 4
           DSTORE 2
           DLOAD 2
@@ -498,8 +521,10 @@ procedure SETUP:[]{O---}:
           DNEG
           GOTO L18
          L17
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtlevariable_6 org/nlogo/nvm/Context D D] [D]
           DLOAD 2
          L18
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtlevariable_6 org/nlogo/nvm/Context D D] [D D]
           DSTORE 2
           ALOAD 0
           DLOAD 2
@@ -519,12 +544,15 @@ procedure SETUP:[]{O---}:
           ICONST_1
           GOTO L21
          L20
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtlevariable_6 org/nlogo/nvm/Context D J] [D J]
           ICONST_M1
          L21
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtlevariable_6 org/nlogo/nvm/Context D J] [D J I]
           I2L
           LADD
           LSTORE 4
          L19
+         FRAME SAME1 D
           LLOAD 4
           LCONST_0
           LCMP
@@ -537,6 +565,7 @@ procedure SETUP:[]{O---}:
           L2D
           GOTO L23
          L22
+         FRAME SAME1 D
           LLOAD 4
           LCONST_0
           LCMP
@@ -551,8 +580,10 @@ procedure SETUP:[]{O---}:
           L2D
           GOTO L23
          L24
+         FRAME SAME1 D
           DCONST_0
          L23
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtlevariable_6 org/nlogo/nvm/Context D J] [D D]
           DSTORE 4
           DSTORE 2
           DLOAD 2
@@ -577,6 +608,7 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
           GOTO L26
          L8
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtlevariable_6 org/nlogo/nvm/Context java/lang/Double T D] [org/nlogo/api/AgentException]
           ASTORE 3
           NEW org/nlogo/nvm/EngineException
           DUP
@@ -587,6 +619,7 @@ procedure SETUP:[]{O---}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L26
+         FRAME SAME
           RETURN
 [7]_asm_proceduresetup_setturtlevariable_7 "set output-heat min-output-heat + random abs (max-output-heat - min-output-heat" Object => void
       _plus double,double => double
@@ -614,6 +647,7 @@ procedure SETUP:[]{O---}:
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           GOTO L11
          L1
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtlevariable_7 org/nlogo/nvm/Context java/lang/Object] [java/lang/ClassCastException]
           POP
           NEW org/nlogo/nvm/ArgumentTypeException
           DUP
@@ -625,6 +659,7 @@ procedure SETUP:[]{O---}:
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
          L11
+         FRAME SAME1 D
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetup_setturtlevariable_7.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
@@ -638,6 +673,7 @@ procedure SETUP:[]{O---}:
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           GOTO L13
          L3
+         FRAME SAME1 java/lang/ClassCastException
           POP
           NEW org/nlogo/nvm/ArgumentTypeException
           DUP
@@ -649,6 +685,7 @@ procedure SETUP:[]{O---}:
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
          L13
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtlevariable_7 org/nlogo/nvm/Context java/lang/Object] [D D]
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetup_setturtlevariable_7.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
@@ -662,6 +699,7 @@ procedure SETUP:[]{O---}:
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           GOTO L15
          L5
+         FRAME SAME1 java/lang/ClassCastException
           POP
           NEW org/nlogo/nvm/ArgumentTypeException
           DUP
@@ -673,6 +711,7 @@ procedure SETUP:[]{O---}:
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
          L15
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtlevariable_7 org/nlogo/nvm/Context java/lang/Object] [D D D]
           DSTORE 4
           DSTORE 2
           DLOAD 2
@@ -688,8 +727,10 @@ procedure SETUP:[]{O---}:
           DNEG
           GOTO L18
          L17
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtlevariable_7 org/nlogo/nvm/Context D D] [D]
           DLOAD 2
          L18
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtlevariable_7 org/nlogo/nvm/Context D D] [D D]
           DSTORE 2
           ALOAD 0
           DLOAD 2
@@ -709,12 +750,15 @@ procedure SETUP:[]{O---}:
           ICONST_1
           GOTO L21
          L20
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtlevariable_7 org/nlogo/nvm/Context D J] [D J]
           ICONST_M1
          L21
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtlevariable_7 org/nlogo/nvm/Context D J] [D J I]
           I2L
           LADD
           LSTORE 4
          L19
+         FRAME SAME1 D
           LLOAD 4
           LCONST_0
           LCMP
@@ -727,6 +771,7 @@ procedure SETUP:[]{O---}:
           L2D
           GOTO L23
          L22
+         FRAME SAME1 D
           LLOAD 4
           LCONST_0
           LCMP
@@ -741,8 +786,10 @@ procedure SETUP:[]{O---}:
           L2D
           GOTO L23
          L24
+         FRAME SAME1 D
           DCONST_0
          L23
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtlevariable_7 org/nlogo/nvm/Context D J] [D D]
           DSTORE 4
           DSTORE 2
           DLOAD 2
@@ -767,6 +814,7 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
           GOTO L26
          L8
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtlevariable_7 org/nlogo/nvm/Context java/lang/Double T D] [org/nlogo/api/AgentException]
           ASTORE 3
           NEW org/nlogo/nvm/EngineException
           DUP
@@ -777,6 +825,7 @@ procedure SETUP:[]{O---}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L26
+         FRAME SAME
           RETURN
 [8]_asm_proceduresetup_setturtlevariable_8 "set unhappiness abs (ideal-temp - temp" Object => void
       _abs double => double
@@ -796,6 +845,7 @@ procedure SETUP:[]{O---}:
          L1
           GOTO L13
          L2
+         FRAME SAME1 org/nlogo/api/AgentException
           ASTORE 2
           NEW org/nlogo/nvm/EngineException
           DUP
@@ -806,6 +856,7 @@ procedure SETUP:[]{O---}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L13
+         FRAME SAME1 java/lang/Object
           ASTORE 2
          L3
           ALOAD 2
@@ -813,6 +864,7 @@ procedure SETUP:[]{O---}:
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           GOTO L5
          L4
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtlevariable_8 org/nlogo/nvm/Context java/lang/Object] [java/lang/ClassCastException]
           POP
           NEW org/nlogo/nvm/ArgumentTypeException
           DUP
@@ -824,6 +876,7 @@ procedure SETUP:[]{O---}:
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
          L5
+         FRAME SAME1 D
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
           ICONST_5
@@ -831,6 +884,7 @@ procedure SETUP:[]{O---}:
          L6
           GOTO L14
          L7
+         FRAME SAME1 org/nlogo/api/AgentException
           ASTORE 2
           NEW org/nlogo/nvm/EngineException
           DUP
@@ -841,6 +895,7 @@ procedure SETUP:[]{O---}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L14
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtlevariable_8 org/nlogo/nvm/Context java/lang/Object] [D java/lang/Object]
           ASTORE 2
          L8
           ALOAD 2
@@ -848,6 +903,7 @@ procedure SETUP:[]{O---}:
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           GOTO L15
          L9
+         FRAME SAME1 java/lang/ClassCastException
           POP
           NEW org/nlogo/nvm/ArgumentTypeException
           DUP
@@ -859,6 +915,7 @@ procedure SETUP:[]{O---}:
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
          L15
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtlevariable_8 org/nlogo/nvm/Context java/lang/Object] [D D]
           DSTORE 4
           DSTORE 2
           DLOAD 2
@@ -874,8 +931,10 @@ procedure SETUP:[]{O---}:
           DNEG
           GOTO L18
          L17
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtlevariable_8 org/nlogo/nvm/Context D D] []
           DLOAD 2
          L18
+         FRAME SAME1 D
           DSTORE 2
           NEW java/lang/Double
           DUP
@@ -894,6 +953,7 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
           GOTO L19
          L12
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtlevariable_8 org/nlogo/nvm/Context java/lang/Double T D] [org/nlogo/api/AgentException]
           ASTORE 3
           NEW org/nlogo/nvm/EngineException
           DUP
@@ -904,6 +964,7 @@ procedure SETUP:[]{O---}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L19
+         FRAME SAME
           RETURN
 [9]_asm_proceduresetup_done_9 "" => void
          L0
@@ -946,16 +1007,20 @@ procedure GO:[]{O---}:
           ICONST_0
           GOTO L3
          L2
+         FRAME APPEND [org/nlogo/agent/AgentSet]
           ICONST_1
          L3
+         FRAME SAME1 I
           ISTORE 2
           ILOAD 2
           IFEQ L4
           ICONST_0
           GOTO L5
          L4
+         FRAME FULL [org/nlogo/prim/_asm_procedurego_if_0 org/nlogo/nvm/Context I] []
           ICONST_1
          L5
+         FRAME SAME1 I
           ISTORE 2
           ALOAD 1
           ILOAD 2
@@ -963,8 +1028,10 @@ procedure GO:[]{O---}:
           ICONST_1
           GOTO L7
          L6
+         FRAME SAME1 org/nlogo/nvm/Context
           ICONST_2
          L7
+         FRAME FULL [org/nlogo/prim/_asm_procedurego_if_0 org/nlogo/nvm/Context I] [org/nlogo/nvm/Context I]
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L8
           RETURN
@@ -978,6 +1045,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
           GOTO L2
          L1
+         FRAME SAME
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
@@ -995,6 +1063,7 @@ procedure GO:[]{O---}:
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
           IFEQ L4
          L3
+         FRAME SAME
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -1011,9 +1080,11 @@ procedure GO:[]{O---}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L4
+         FRAME SAME
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.stop ()V
          L2
+         FRAME SAME
           RETURN
 [2]_diffuse:TEMP
       _asm_procedurego_observervariable_2 "diffusion-rate" => Object
@@ -1053,6 +1124,7 @@ procedure GO:[]{O---}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
+         FRAME APPEND [org/nlogo/agent/AgentSet]
           ALOAD 2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_3.world : Lorg/nlogo/agent/World;
@@ -1069,6 +1141,7 @@ procedure GO:[]{O---}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L2
+         FRAME SAME
           ALOAD 1
           ALOAD 2
           ICONST_4
@@ -1161,6 +1234,7 @@ procedure RECOLOR-PATCHES:[]{OTPL}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
+         FRAME APPEND [org/nlogo/agent/AgentSet]
           ALOAD 2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurerecolorpatches_ask_0.world : Lorg/nlogo/agent/World;
@@ -1177,6 +1251,7 @@ procedure RECOLOR-PATCHES:[]{OTPL}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L2
+         FRAME SAME
           ALOAD 1
           ALOAD 2
           ICONST_1
@@ -1204,6 +1279,7 @@ procedure RECOLOR-PATCHES:[]{OTPL}:
          L1
           GOTO L10
          L2
+         FRAME SAME1 org/nlogo/api/AgentException
           ASTORE 2
           NEW org/nlogo/nvm/EngineException
           DUP
@@ -1214,6 +1290,7 @@ procedure RECOLOR-PATCHES:[]{OTPL}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L10
+         FRAME SAME1 java/lang/Object
           ASTORE 2
          L3
           ALOAD 2
@@ -1221,6 +1298,7 @@ procedure RECOLOR-PATCHES:[]{OTPL}:
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           GOTO L11
          L4
+         FRAME FULL [org/nlogo/prim/_asm_procedurerecolorpatches_setpatchvariable_1 org/nlogo/nvm/Context java/lang/Object] [java/lang/ClassCastException]
           POP
           NEW org/nlogo/nvm/ArgumentTypeException
           DUP
@@ -1232,6 +1310,7 @@ procedure RECOLOR-PATCHES:[]{OTPL}:
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
          L11
+         FRAME SAME1 D
           DCONST_1
          L12
           ALOAD 0
@@ -1247,6 +1326,7 @@ procedure RECOLOR-PATCHES:[]{OTPL}:
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           GOTO L14
          L6
+         FRAME SAME1 java/lang/ClassCastException
           POP
           NEW org/nlogo/nvm/ArgumentTypeException
           DUP
@@ -1258,6 +1338,7 @@ procedure RECOLOR-PATCHES:[]{OTPL}:
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
          L14
+         FRAME FULL [org/nlogo/prim/_asm_procedurerecolorpatches_setpatchvariable_1 org/nlogo/nvm/Context java/lang/Object] [D D D]
           DSTORE 4
           DSTORE 2
           DLOAD 2
@@ -1288,6 +1369,7 @@ procedure RECOLOR-PATCHES:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
           GOTO L17
          L9
+         FRAME FULL [org/nlogo/prim/_asm_procedurerecolorpatches_setpatchvariable_1 org/nlogo/nvm/Context java/lang/Double T D] [org/nlogo/api/AgentException]
           ASTORE 3
           NEW org/nlogo/nvm/EngineException
           DUP
@@ -1298,6 +1380,7 @@ procedure RECOLOR-PATCHES:[]{OTPL}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L17
+         FRAME SAME
           RETURN
 [2]_asm_procedurerecolorpatches_setpatchvariable_2 "set pcolor scale-color red temp 0 500" Object => void
       _scalecolor double,double,double,double => double
@@ -1318,6 +1401,7 @@ procedure RECOLOR-PATCHES:[]{OTPL}:
          L1
           GOTO L9
          L2
+         FRAME SAME1 org/nlogo/api/AgentException
           ASTORE 2
           NEW org/nlogo/nvm/EngineException
           DUP
@@ -1328,6 +1412,7 @@ procedure RECOLOR-PATCHES:[]{OTPL}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L9
+         FRAME FULL [org/nlogo/prim/_asm_procedurerecolorpatches_setpatchvariable_2 org/nlogo/nvm/Context] [D java/lang/Object]
           ASTORE 2
          L3
           ALOAD 2
@@ -1335,6 +1420,7 @@ procedure RECOLOR-PATCHES:[]{OTPL}:
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           GOTO L10
          L4
+         FRAME FULL [org/nlogo/prim/_asm_procedurerecolorpatches_setpatchvariable_2 org/nlogo/nvm/Context java/lang/Object] [java/lang/ClassCastException]
           POP
           NEW org/nlogo/nvm/ArgumentTypeException
           DUP
@@ -1346,6 +1432,7 @@ procedure RECOLOR-PATCHES:[]{OTPL}:
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
          L10
+         FRAME FULL [org/nlogo/prim/_asm_procedurerecolorpatches_setpatchvariable_2 org/nlogo/nvm/Context java/lang/Object] [D D]
           DCONST_0
          L11
           LDC 500.0
@@ -1373,6 +1460,7 @@ procedure RECOLOR-PATCHES:[]{OTPL}:
           DSTORE 10
           GOTO L15
          L14
+         FRAME FULL [org/nlogo/prim/_asm_procedurerecolorpatches_setpatchvariable_2 org/nlogo/nvm/Context D D D D D] []
           DLOAD 4
           DLOAD 6
           DCMPL
@@ -1381,6 +1469,7 @@ procedure RECOLOR-PATCHES:[]{OTPL}:
           DSTORE 10
           GOTO L15
          L16
+         FRAME SAME
           DLOAD 6
           DLOAD 4
           DSUB
@@ -1395,6 +1484,7 @@ procedure RECOLOR-PATCHES:[]{OTPL}:
           DSTORE 10
           GOTO L15
          L13
+         FRAME SAME
           DLOAD 4
           DLOAD 8
           DCMPL
@@ -1403,6 +1493,7 @@ procedure RECOLOR-PATCHES:[]{OTPL}:
           DSTORE 10
           GOTO L15
          L17
+         FRAME SAME
           DLOAD 4
           DLOAD 6
           DCMPG
@@ -1411,6 +1502,7 @@ procedure RECOLOR-PATCHES:[]{OTPL}:
           DSTORE 10
           GOTO L15
          L18
+         FRAME SAME
           DLOAD 4
           DLOAD 6
           DSUB
@@ -1424,6 +1516,7 @@ procedure RECOLOR-PATCHES:[]{OTPL}:
           DDIV
           DSTORE 10
          L15
+         FRAME SAME
           DLOAD 10
           LDC 10.0
           DMUL
@@ -1436,6 +1529,7 @@ procedure RECOLOR-PATCHES:[]{OTPL}:
           DSTORE 10
           GOTO L20
          L19
+         FRAME SAME
           DLOAD 10
           DCONST_0
           DCMPG
@@ -1443,6 +1537,7 @@ procedure RECOLOR-PATCHES:[]{OTPL}:
           DCONST_0
           DSTORE 10
          L20
+         FRAME SAME
           ALOAD 0
           DLOAD 2
           DLOAD 10
@@ -1467,6 +1562,7 @@ procedure RECOLOR-PATCHES:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
           GOTO L22
          L7
+         FRAME FULL [org/nlogo/prim/_asm_procedurerecolorpatches_setpatchvariable_2 org/nlogo/nvm/Context java/lang/Double T D D D D] [org/nlogo/api/AgentException]
           ASTORE 3
           NEW org/nlogo/nvm/EngineException
           DUP
@@ -1477,6 +1573,7 @@ procedure RECOLOR-PATCHES:[]{OTPL}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L22
+         FRAME SAME
           RETURN
 [3]_asm_procedurerecolorpatches_done_3 "" => void
          L0
@@ -1514,6 +1611,7 @@ procedure STEP:[TARGET]{-T--}:
          L1
           GOTO L13
          L2
+         FRAME SAME1 org/nlogo/api/AgentException
           ASTORE 2
           NEW org/nlogo/nvm/EngineException
           DUP
@@ -1524,6 +1622,7 @@ procedure STEP:[TARGET]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L13
+         FRAME SAME1 java/lang/Object
           ASTORE 2
          L3
           ALOAD 2
@@ -1531,6 +1630,7 @@ procedure STEP:[TARGET]{-T--}:
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           GOTO L5
          L4
+         FRAME FULL [org/nlogo/prim/_asm_procedurestep_setturtlevariable_0 org/nlogo/nvm/Context java/lang/Object] [java/lang/ClassCastException]
           POP
           NEW org/nlogo/nvm/ArgumentTypeException
           DUP
@@ -1542,6 +1642,7 @@ procedure STEP:[TARGET]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
          L5
+         FRAME SAME1 D
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
           ICONST_5
@@ -1549,6 +1650,7 @@ procedure STEP:[TARGET]{-T--}:
          L6
           GOTO L14
          L7
+         FRAME SAME1 org/nlogo/api/AgentException
           ASTORE 2
           NEW org/nlogo/nvm/EngineException
           DUP
@@ -1559,6 +1661,7 @@ procedure STEP:[TARGET]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L14
+         FRAME FULL [org/nlogo/prim/_asm_procedurestep_setturtlevariable_0 org/nlogo/nvm/Context java/lang/Object] [D java/lang/Object]
           ASTORE 2
          L8
           ALOAD 2
@@ -1566,6 +1669,7 @@ procedure STEP:[TARGET]{-T--}:
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           GOTO L15
          L9
+         FRAME SAME1 java/lang/ClassCastException
           POP
           NEW org/nlogo/nvm/ArgumentTypeException
           DUP
@@ -1577,6 +1681,7 @@ procedure STEP:[TARGET]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
          L15
+         FRAME FULL [org/nlogo/prim/_asm_procedurestep_setturtlevariable_0 org/nlogo/nvm/Context java/lang/Object] [D D]
           DSTORE 4
           DSTORE 2
           DLOAD 2
@@ -1592,8 +1697,10 @@ procedure STEP:[TARGET]{-T--}:
           DNEG
           GOTO L18
          L17
+         FRAME FULL [org/nlogo/prim/_asm_procedurestep_setturtlevariable_0 org/nlogo/nvm/Context D D] []
           DLOAD 2
          L18
+         FRAME SAME1 D
           DSTORE 2
           NEW java/lang/Double
           DUP
@@ -1612,6 +1719,7 @@ procedure STEP:[TARGET]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
           GOTO L19
          L12
+         FRAME FULL [org/nlogo/prim/_asm_procedurestep_setturtlevariable_0 org/nlogo/nvm/Context java/lang/Double T D] [org/nlogo/api/AgentException]
           ASTORE 3
           NEW org/nlogo/nvm/EngineException
           DUP
@@ -1622,6 +1730,7 @@ procedure STEP:[TARGET]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L19
+         FRAME SAME
           RETURN
 [1]_asm_procedurestep_ifelse_1 "ifelse unhappiness = 0" boolean => void
       _equal Object,double => boolean
@@ -1636,6 +1745,7 @@ procedure STEP:[TARGET]{-T--}:
          L1
           GOTO L3
          L2
+         FRAME SAME1 org/nlogo/api/AgentException
           ASTORE 2
           NEW org/nlogo/nvm/EngineException
           DUP
@@ -1646,6 +1756,7 @@ procedure STEP:[TARGET]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
+         FRAME SAME1 java/lang/Object
           DCONST_0
          L4
           DSTORE 3
@@ -1666,14 +1777,18 @@ procedure STEP:[TARGET]{-T--}:
           ICONST_1
           GOTO L7
          L6
+         FRAME FULL [org/nlogo/prim/_asm_procedurestep_ifelse_1 org/nlogo/nvm/Context java/lang/Object D java/lang/Object java/lang/Double] []
           ICONST_0
          L7
+         FRAME SAME1 I
           ISTORE 7
           GOTO L8
          L5
+         FRAME CHOP 1
           ICONST_0
           ISTORE 7
          L8
+         FRAME APPEND [T I]
           ILOAD 7
          L9
           ISTORE 2
@@ -1683,8 +1798,10 @@ procedure STEP:[TARGET]{-T--}:
           ICONST_2
           GOTO L11
          L10
+         FRAME FULL [org/nlogo/prim/_asm_procedurestep_ifelse_1 org/nlogo/nvm/Context I D java/lang/Object T I] [org/nlogo/nvm/Context]
           ICONST_4
          L11
+         FRAME FULL [org/nlogo/prim/_asm_procedurestep_ifelse_1 org/nlogo/nvm/Context I D java/lang/Object T I] [org/nlogo/nvm/Context I]
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
@@ -1705,6 +1822,7 @@ procedure STEP:[TARGET]{-T--}:
          L1
           GOTO L13
          L2
+         FRAME SAME1 org/nlogo/api/AgentException
           ASTORE 2
           NEW org/nlogo/nvm/EngineException
           DUP
@@ -1715,6 +1833,7 @@ procedure STEP:[TARGET]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L13
+         FRAME SAME1 java/lang/Object
           ASTORE 2
          L3
           ALOAD 2
@@ -1722,6 +1841,7 @@ procedure STEP:[TARGET]{-T--}:
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           GOTO L5
          L4
+         FRAME FULL [org/nlogo/prim/_asm_procedurestep_setpatchvariable_2 org/nlogo/nvm/Context java/lang/Object] [java/lang/ClassCastException]
           POP
           NEW org/nlogo/nvm/ArgumentTypeException
           DUP
@@ -1733,6 +1853,7 @@ procedure STEP:[TARGET]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
          L5
+         FRAME SAME1 D
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
           BIPUSH 14
@@ -1740,6 +1861,7 @@ procedure STEP:[TARGET]{-T--}:
          L6
           GOTO L14
          L7
+         FRAME SAME1 org/nlogo/api/AgentException
           ASTORE 2
           NEW org/nlogo/nvm/EngineException
           DUP
@@ -1750,6 +1872,7 @@ procedure STEP:[TARGET]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L14
+         FRAME FULL [org/nlogo/prim/_asm_procedurestep_setpatchvariable_2 org/nlogo/nvm/Context java/lang/Object] [D java/lang/Object]
           ASTORE 2
          L8
           ALOAD 2
@@ -1757,6 +1880,7 @@ procedure STEP:[TARGET]{-T--}:
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           GOTO L15
          L9
+         FRAME SAME1 java/lang/ClassCastException
           POP
           NEW org/nlogo/nvm/ArgumentTypeException
           DUP
@@ -1768,6 +1892,7 @@ procedure STEP:[TARGET]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
          L15
+         FRAME FULL [org/nlogo/prim/_asm_procedurestep_setpatchvariable_2 org/nlogo/nvm/Context java/lang/Object] [D D]
           DSTORE 4
           DSTORE 2
           DLOAD 2
@@ -1792,6 +1917,7 @@ procedure STEP:[TARGET]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
           GOTO L17
          L12
+         FRAME FULL [org/nlogo/prim/_asm_procedurestep_setpatchvariable_2 org/nlogo/nvm/Context java/lang/Double T D] [org/nlogo/api/AgentException]
           ASTORE 3
           NEW org/nlogo/nvm/EngineException
           DUP
@@ -1802,6 +1928,7 @@ procedure STEP:[TARGET]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L17
+         FRAME SAME
           RETURN
 [3]_asm_procedurestep_goto_3 "" => void
          L0
@@ -1834,6 +1961,7 @@ procedure STEP:[TARGET]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L1
+         FRAME SAME1 java/lang/Object
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1876,8 +2004,10 @@ procedure STEP:[TARGET]{-T--}:
           ICONST_0
           GOTO L4
          L3
+         FRAME APPEND [org/nlogo/agent/Patch java/lang/Object]
           ICONST_1
          L4
+         FRAME SAME1 I
           IFNE L5
          L6
           ALOAD 0
@@ -1911,12 +2041,15 @@ procedure STEP:[TARGET]{-T--}:
           ICONST_1
           GOTO L11
          L10
+         FRAME FULL [org/nlogo/prim/_asm_procedurestep_if_5 org/nlogo/nvm/Context java/lang/Object D java/lang/Object java/lang/Double] []
           ICONST_0
          L11
+         FRAME SAME1 I
           ISTORE 7
           ILOAD 7
           GOTO L12
          L9
+         FRAME CHOP 1
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -1945,10 +2078,13 @@ procedure STEP:[TARGET]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L12
+         FRAME FULL [org/nlogo/prim/_asm_procedurestep_if_5 org/nlogo/nvm/Context java/lang/Object D java/lang/Object java/lang/Double I] [I]
           GOTO L13
          L5
+         FRAME FULL [org/nlogo/prim/_asm_procedurestep_if_5 org/nlogo/nvm/Context org/nlogo/agent/Patch java/lang/Object] []
           ICONST_1
          L13
+         FRAME FULL [org/nlogo/prim/_asm_procedurestep_if_5 org/nlogo/nvm/Context java/lang/Object] [I]
           ISTORE 2
           ALOAD 1
           ILOAD 2
@@ -1956,8 +2092,10 @@ procedure STEP:[TARGET]{-T--}:
           BIPUSH 6
           GOTO L15
          L14
+         FRAME FULL [org/nlogo/prim/_asm_procedurestep_if_5 org/nlogo/nvm/Context I] [org/nlogo/nvm/Context]
           BIPUSH 7
          L15
+         FRAME FULL [org/nlogo/prim/_asm_procedurestep_if_5 org/nlogo/nvm/Context I] [org/nlogo/nvm/Context I]
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L16
           RETURN
@@ -2008,6 +2146,7 @@ procedure STEP:[TARGET]{-T--}:
          L1
           GOTO L13
          L2
+         FRAME SAME1 org/nlogo/api/AgentException
           ASTORE 2
           NEW org/nlogo/nvm/EngineException
           DUP
@@ -2018,6 +2157,7 @@ procedure STEP:[TARGET]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L13
+         FRAME SAME1 java/lang/Object
           ASTORE 2
          L3
           ALOAD 2
@@ -2025,6 +2165,7 @@ procedure STEP:[TARGET]{-T--}:
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           GOTO L5
          L4
+         FRAME FULL [org/nlogo/prim/_asm_procedurestep_setpatchvariable_7 org/nlogo/nvm/Context java/lang/Object] [java/lang/ClassCastException]
           POP
           NEW org/nlogo/nvm/ArgumentTypeException
           DUP
@@ -2036,6 +2177,7 @@ procedure STEP:[TARGET]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
          L5
+         FRAME SAME1 D
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
           BIPUSH 14
@@ -2043,6 +2185,7 @@ procedure STEP:[TARGET]{-T--}:
          L6
           GOTO L14
          L7
+         FRAME SAME1 org/nlogo/api/AgentException
           ASTORE 2
           NEW org/nlogo/nvm/EngineException
           DUP
@@ -2053,6 +2196,7 @@ procedure STEP:[TARGET]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L14
+         FRAME FULL [org/nlogo/prim/_asm_procedurestep_setpatchvariable_7 org/nlogo/nvm/Context java/lang/Object] [D java/lang/Object]
           ASTORE 2
          L8
           ALOAD 2
@@ -2060,6 +2204,7 @@ procedure STEP:[TARGET]{-T--}:
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           GOTO L15
          L9
+         FRAME SAME1 java/lang/ClassCastException
           POP
           NEW org/nlogo/nvm/ArgumentTypeException
           DUP
@@ -2071,6 +2216,7 @@ procedure STEP:[TARGET]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
          L15
+         FRAME FULL [org/nlogo/prim/_asm_procedurestep_setpatchvariable_7 org/nlogo/nvm/Context java/lang/Object] [D D]
           DSTORE 4
           DSTORE 2
           DLOAD 2
@@ -2095,6 +2241,7 @@ procedure STEP:[TARGET]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
           GOTO L17
          L12
+         FRAME FULL [org/nlogo/prim/_asm_procedurestep_setpatchvariable_7 org/nlogo/nvm/Context java/lang/Double T D] [org/nlogo/api/AgentException]
           ASTORE 3
           NEW org/nlogo/nvm/EngineException
           DUP
@@ -2105,6 +2252,7 @@ procedure STEP:[TARGET]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L17
+         FRAME SAME
           RETURN
 [8]_asm_procedurestep_return_8 "" => void
          L0
@@ -2131,6 +2279,7 @@ reporter procedure FIND-TARGET:[]{-T--}:
          L1
           GOTO L3
          L2
+         FRAME SAME1 org/nlogo/api/AgentException
           ASTORE 2
           NEW org/nlogo/nvm/EngineException
           DUP
@@ -2141,6 +2290,7 @@ reporter procedure FIND-TARGET:[]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
+         FRAME SAME1 java/lang/Object
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
           BIPUSH 13
@@ -2148,6 +2298,7 @@ reporter procedure FIND-TARGET:[]{-T--}:
          L4
           GOTO L6
          L5
+         FRAME SAME1 org/nlogo/api/AgentException
           ASTORE 2
           NEW org/nlogo/nvm/EngineException
           DUP
@@ -2158,6 +2309,7 @@ reporter procedure FIND-TARGET:[]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L6
+         FRAME FULL [org/nlogo/prim/_asm_procedurefindtarget_ifelse_0 org/nlogo/nvm/Context] [java/lang/Object java/lang/Object]
           ASTORE 3
           ASTORE 2
           ALOAD 2
@@ -2177,10 +2329,13 @@ reporter procedure FIND-TARGET:[]{-T--}:
           ICONST_1
           GOTO L9
          L8
+         FRAME APPEND [java/lang/Object java/lang/Object]
           ICONST_0
          L9
+         FRAME SAME1 I
           GOTO L10
          L7
+         FRAME SAME
           ALOAD 2
           INSTANCEOF java/lang/String
           IFEQ L11
@@ -2197,10 +2352,13 @@ reporter procedure FIND-TARGET:[]{-T--}:
           ICONST_1
           GOTO L13
          L12
+         FRAME SAME
           ICONST_0
          L13
+         FRAME SAME1 I
           GOTO L10
          L11
+         FRAME SAME
           ALOAD 2
           INSTANCEOF org/nlogo/agent/Agent
           IFEQ L14
@@ -2226,10 +2384,13 @@ reporter procedure FIND-TARGET:[]{-T--}:
           ICONST_1
           GOTO L16
          L15
+         FRAME APPEND [org/nlogo/agent/Agent org/nlogo/agent/Agent]
           ICONST_0
          L16
+         FRAME SAME1 I
           GOTO L10
          L14
+         FRAME CHOP 2
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -2257,6 +2418,7 @@ reporter procedure FIND-TARGET:[]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L10
+         FRAME SAME1 I
           ISTORE 2
           ALOAD 1
           ILOAD 2
@@ -2264,8 +2426,10 @@ reporter procedure FIND-TARGET:[]{-T--}:
           ICONST_1
           GOTO L18
          L17
+         FRAME FULL [org/nlogo/prim/_asm_procedurefindtarget_ifelse_0 org/nlogo/nvm/Context I java/lang/Object] [org/nlogo/nvm/Context]
           ICONST_3
          L18
+         FRAME FULL [org/nlogo/prim/_asm_procedurefindtarget_ifelse_0 org/nlogo/nvm/Context I java/lang/Object] [org/nlogo/nvm/Context I]
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L19
           RETURN
@@ -2287,6 +2451,7 @@ reporter procedure FIND-TARGET:[]{-T--}:
               ASTORE 4
               GOTO L2
              L1
+             FRAME APPEND [org/nlogo/agent/Agent]
               ALOAD 2
               INSTANCEOF org/nlogo/agent/Patch
               IFEQ L3
@@ -2296,16 +2461,19 @@ reporter procedure FIND-TARGET:[]{-T--}:
               ALOAD 5
               ASTORE 4
              L2
+             FRAME APPEND [T org/nlogo/agent/Patch]
               ALOAD 4
               INVOKEVIRTUAL org/nlogo/agent/Patch.getNeighbors ()Lorg/nlogo/agent/AgentSet;
               GOTO L4
              L3
+             FRAME CHOP 2
               NEW scala/MatchError
               DUP
               ALOAD 2
               INVOKESPECIAL scala/MatchError.<init> (Ljava/lang/Object;)V
               ATHROW
              L4
+             FRAME FULL [org/nlogo/prim/_asm_procedurefindtarget_neighbors_2 org/nlogo/nvm/Context org/nlogo/agent/Agent T org/nlogo/agent/Patch] [org/nlogo/agent/AgentSet]
               ARETURN
         _asm_procedurefindtarget_patchvariable_3 "temp" => Object
               TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -2317,6 +2485,7 @@ reporter procedure FIND-TARGET:[]{-T--}:
              L1
               GOTO L3
              L2
+             FRAME SAME1 org/nlogo/api/AgentException
               ASTORE 2
               NEW org/nlogo/nvm/EngineException
               DUP
@@ -2327,6 +2496,7 @@ reporter procedure FIND-TARGET:[]{-T--}:
               INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
               ATHROW
              L3
+             FRAME SAME1 java/lang/Object
               ARETURN
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurefindtarget_report_1.keptinstr2 : Lorg/nlogo/prim/etc/_maxoneof;
@@ -2352,6 +2522,7 @@ reporter procedure FIND-TARGET:[]{-T--}:
           GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
          L1
+         FRAME APPEND [java/lang/Object]
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
@@ -2373,6 +2544,7 @@ reporter procedure FIND-TARGET:[]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L2
+         FRAME SAME
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.atTopActivation ()Z
           IFNE L3
@@ -2392,6 +2564,7 @@ reporter procedure FIND-TARGET:[]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
+         FRAME SAME
           RETURN
 [2]_asm_procedurefindtarget_goto_4 "" => void
          L0
@@ -2418,6 +2591,7 @@ reporter procedure FIND-TARGET:[]{-T--}:
               ASTORE 4
               GOTO L2
              L1
+             FRAME APPEND [org/nlogo/agent/Agent]
               ALOAD 2
               INSTANCEOF org/nlogo/agent/Patch
               IFEQ L3
@@ -2427,16 +2601,19 @@ reporter procedure FIND-TARGET:[]{-T--}:
               ALOAD 5
               ASTORE 4
              L2
+             FRAME APPEND [T org/nlogo/agent/Patch]
               ALOAD 4
               INVOKEVIRTUAL org/nlogo/agent/Patch.getNeighbors ()Lorg/nlogo/agent/AgentSet;
               GOTO L4
              L3
+             FRAME CHOP 2
               NEW scala/MatchError
               DUP
               ALOAD 2
               INVOKESPECIAL scala/MatchError.<init> (Ljava/lang/Object;)V
               ATHROW
              L4
+             FRAME FULL [org/nlogo/prim/_asm_procedurefindtarget_neighbors_6 org/nlogo/nvm/Context org/nlogo/agent/Agent T org/nlogo/agent/Patch] [org/nlogo/agent/AgentSet]
               ARETURN
         _asm_procedurefindtarget_patchvariable_7 "temp" => Object
               TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -2448,6 +2625,7 @@ reporter procedure FIND-TARGET:[]{-T--}:
              L1
               GOTO L3
              L2
+             FRAME SAME1 org/nlogo/api/AgentException
               ASTORE 2
               NEW org/nlogo/nvm/EngineException
               DUP
@@ -2458,6 +2636,7 @@ reporter procedure FIND-TARGET:[]{-T--}:
               INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
               ATHROW
              L3
+             FRAME SAME1 java/lang/Object
               ARETURN
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurefindtarget_report_5.keptinstr2 : Lorg/nlogo/prim/etc/_minoneof;
@@ -2483,6 +2662,7 @@ reporter procedure FIND-TARGET:[]{-T--}:
           GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
          L1
+         FRAME APPEND [java/lang/Object]
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
@@ -2504,6 +2684,7 @@ reporter procedure FIND-TARGET:[]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L2
+         FRAME SAME
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.atTopActivation ()Z
           IFNE L3
@@ -2523,6 +2704,7 @@ reporter procedure FIND-TARGET:[]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
+         FRAME SAME
           RETURN
 [4]_asm_procedurefindtarget_returnreport_8 "" => void
          L0
@@ -2537,7 +2719,8 @@ reporter procedure FIND-TARGET:[]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L1
-          RETURN
+         FRAME FULL [] [java/lang/Throwable]
+          ATHROW
 
 procedure BUG-MOVE:[TARGET TRIES]{-T--}:
 [0]_asm_procedurebugmove_setprocedurevariable_0 "" Object => void
@@ -2583,6 +2766,7 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           CHECKCAST org/nlogo/agent/AgentSet
           GOTO L3
          L1
+         FRAME FULL [org/nlogo/prim/_asm_procedurebugmove_if_1 org/nlogo/nvm/Context java/lang/Object] [java/lang/ClassCastException]
           POP
           NEW org/nlogo/nvm/ArgumentTypeException
           DUP
@@ -2594,6 +2778,7 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
          L3
+         FRAME SAME1 org/nlogo/agent/AgentSet
           ASTORE 2
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.isEmpty ()Z
@@ -2601,16 +2786,20 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           ICONST_0
           GOTO L5
          L4
+         FRAME FULL [org/nlogo/prim/_asm_procedurebugmove_if_1 org/nlogo/nvm/Context org/nlogo/agent/AgentSet] []
           ICONST_1
          L5
+         FRAME SAME1 I
           ISTORE 2
           ILOAD 2
           IFEQ L6
           ICONST_0
           GOTO L7
          L6
+         FRAME FULL [org/nlogo/prim/_asm_procedurebugmove_if_1 org/nlogo/nvm/Context I] []
           ICONST_1
          L7
+         FRAME SAME1 I
           ISTORE 2
           ALOAD 1
           ILOAD 2
@@ -2618,8 +2807,10 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           ICONST_2
           GOTO L9
          L8
+         FRAME SAME1 org/nlogo/nvm/Context
           ICONST_4
          L9
+         FRAME FULL [org/nlogo/prim/_asm_procedurebugmove_if_1 org/nlogo/nvm/Context I] [org/nlogo/nvm/Context I]
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L10
           RETURN
@@ -2643,6 +2834,7 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
           GOTO L2
          L1
+         FRAME SAME
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
@@ -2660,6 +2852,7 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
           IFEQ L4
          L3
+         FRAME SAME
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -2676,9 +2869,11 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L4
+         FRAME SAME
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.stop ()V
          L2
+         FRAME SAME
           RETURN
 [4]_asm_procedurebugmove_goto_5 "" => void
          L0
@@ -2706,6 +2901,7 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           GOTO L4
          L1
+         FRAME FULL [org/nlogo/prim/_asm_procedurebugmove_setprocedurevariable_6 org/nlogo/nvm/Context java/lang/Object] [java/lang/ClassCastException]
           POP
           NEW org/nlogo/nvm/ArgumentTypeException
           DUP
@@ -2717,6 +2913,7 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
          L4
+         FRAME SAME1 D
           DCONST_1
          L5
           DSTORE 4
@@ -2760,6 +2957,7 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           ASTORE 4
           GOTO L2
          L1
+         FRAME APPEND [org/nlogo/agent/Agent]
           ALOAD 2
           INSTANCEOF org/nlogo/agent/Patch
           IFEQ L3
@@ -2769,16 +2967,19 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           ALOAD 5
           ASTORE 4
          L2
+         FRAME APPEND [T org/nlogo/agent/Patch]
           ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/Patch.getNeighbors ()Lorg/nlogo/agent/AgentSet;
           GOTO L4
          L3
+         FRAME CHOP 2
           NEW scala/MatchError
           DUP
           ALOAD 2
           INVOKESPECIAL scala/MatchError.<init> (Ljava/lang/Object;)V
           ATHROW
          L4
+         FRAME FULL [org/nlogo/prim/_asm_procedurebugmove_setprocedurevariable_7 org/nlogo/nvm/Context org/nlogo/agent/Agent T org/nlogo/agent/Patch] [org/nlogo/agent/AgentSet]
           ASTORE 2
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.count ()I
@@ -2789,6 +2990,7 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
           GOTO L6
          L5
+         FRAME FULL [org/nlogo/prim/_asm_procedurebugmove_setprocedurevariable_7 org/nlogo/nvm/Context org/nlogo/agent/AgentSet I org/nlogo/agent/Patch] []
           ALOAD 2
           ILOAD 3
           ALOAD 1
@@ -2798,6 +3000,7 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextInt (I)I
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.randomOne (II)Lorg/nlogo/agent/Agent;
          L6
+         FRAME SAME1 java/lang/Object
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -2835,6 +3038,7 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           CHECKCAST org/nlogo/agent/AgentSet
           GOTO L3
          L1
+         FRAME FULL [org/nlogo/prim/_asm_procedurebugmove_if_8 org/nlogo/nvm/Context java/lang/Object] [java/lang/ClassCastException]
           POP
           NEW org/nlogo/nvm/ArgumentTypeException
           DUP
@@ -2846,6 +3050,7 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
          L3
+         FRAME SAME1 org/nlogo/agent/AgentSet
           ASTORE 2
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.isEmpty ()Z
@@ -2853,16 +3058,20 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           ICONST_0
           GOTO L5
          L4
+         FRAME FULL [org/nlogo/prim/_asm_procedurebugmove_if_8 org/nlogo/nvm/Context org/nlogo/agent/AgentSet] []
           ICONST_1
          L5
+         FRAME SAME1 I
           ISTORE 2
           ILOAD 2
           IFEQ L6
           ICONST_0
           GOTO L7
          L6
+         FRAME FULL [org/nlogo/prim/_asm_procedurebugmove_if_8 org/nlogo/nvm/Context I] []
           ICONST_1
          L7
+         FRAME SAME1 I
           ISTORE 2
           ALOAD 1
           ILOAD 2
@@ -2870,8 +3079,10 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           BIPUSH 8
           GOTO L9
          L8
+         FRAME SAME1 org/nlogo/nvm/Context
           BIPUSH 10
          L9
+         FRAME FULL [org/nlogo/prim/_asm_procedurebugmove_if_8 org/nlogo/nvm/Context I] [org/nlogo/nvm/Context I]
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L10
           RETURN
@@ -2895,6 +3106,7 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
           GOTO L2
          L1
+         FRAME SAME
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
@@ -2912,6 +3124,7 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
           IFEQ L4
          L3
+         FRAME SAME
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -2928,9 +3141,11 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L4
+         FRAME SAME
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.stop ()V
          L2
+         FRAME SAME
           RETURN
 [10]_asm_procedurebugmove_while_12 "while [tries <= 9" boolean => void
       _lessorequal Object,double => boolean
@@ -2959,10 +3174,13 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           ICONST_1
           GOTO L5
          L4
+         FRAME APPEND [java/lang/Object D]
           ICONST_0
          L5
+         FRAME SAME1 I
           GOTO L6
          L3
+         FRAME SAME
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -2986,6 +3204,7 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L6
+         FRAME SAME1 I
           ISTORE 2
           ALOAD 1
           ILOAD 2
@@ -2993,8 +3212,10 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           ICONST_5
           GOTO L8
          L7
+         FRAME FULL [org/nlogo/prim/_asm_procedurebugmove_while_12 org/nlogo/nvm/Context I D] [org/nlogo/nvm/Context]
           BIPUSH 11
          L8
+         FRAME FULL [org/nlogo/prim/_asm_procedurebugmove_while_12 org/nlogo/nvm/Context I D] [org/nlogo/nvm/Context I]
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L9
           RETURN

@@ -26,7 +26,7 @@ threed in ThisBuild := { System.setProperty("org.nlogo.is3d", "true") }
 nogen in ThisBuild  := { System.setProperty("org.nlogo.noGenerator", "true") }
 
 libraryDependencies in ThisBuild ++= Seq(
-  "asm" % "asm-all" % "3.3.1",
+  "org.ow2.asm" % "asm-all" % "5.0.3",
   "org.picocontainer" % "picocontainer" % "2.13.6",
   "org.jmock" % "jmock" % "2.5.1" % "test",
   "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
