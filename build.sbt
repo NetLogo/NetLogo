@@ -78,7 +78,7 @@ moduleConfigurations += ModuleConfiguration("javax.media", JavaNet2Repository)
 libraryDependencies ++= Seq(
   "log4j" % "log4j" % "1.2.17",
   "javax.media" % "jmf" % "2.1.1e",
-  "org.pegdown" % "pegdown" % "1.1.0",
+  "org.pegdown" % "pegdown" % "1.5.0",
   "org.parboiled" % "parboiled-java" % "1.0.2",
   "steveroy" % "mrjadapter" % "1.2" from "http://ccl.northwestern.edu/devel/mrjadapter-1.2.jar",
   "org.jhotdraw" % "jhotdraw" % "6.0b1" from "http://ccl.northwestern.edu/devel/jhotdraw-6.0b1.jar",
