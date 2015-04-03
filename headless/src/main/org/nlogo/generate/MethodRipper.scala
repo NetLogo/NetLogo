@@ -5,7 +5,7 @@ package org.nlogo.generate
 import org.objectweb.asm.Opcodes._
 import java.lang.reflect.{ Field, Method }
 import org.objectweb.asm
-import asm.{ ClassReader, Label, MethodAdapter, MethodVisitor, Type }
+import asm.{ ClassReader, Label, MethodVisitor, Type }
 import org.nlogo.nvm.Instruction
 
 private class MethodRipper(method: Method, instr: Instruction, mvOut: MethodVisitor, bgen: Generator#InstructionGenerator[_], instrUID: Int) {
@@ -21,22 +21,22 @@ private class MethodRipper(method: Method, instr: Instruction, mvOut: MethodVisi
     reader.accept(extractor, ClassReader.SKIP_FRAMES)
     if (errorLog.length > 0) throw new IllegalStateException(errorLog.toString)
   }
-  private class MethodExtractorClassAdapter extends asm.commons.EmptyVisitor {
+  private class MethodExtractorClassAdapter extends EmptyClassVisitor {
     override def visitMethod(arg0: Int, name: String, descriptor: String, signature: String, exceptions: Array[String]): MethodVisitor = {
       if (name == method.getName && descriptor == Type.getMethodDescriptor(method))
         new MethodTransformerAdapter
-      else new asm.commons.EmptyVisitor
+      else new EmptyMethodVisitor
     }
   }
-  private class MethodTransformerAdapter extends MethodAdapter(mvOut) {
+  private class MethodTransformerAdapter extends MethodVisitor(ASM5, mvOut) {
     val endOfMethodLabel = new Label
     override def visitFieldInsn(opcode: Int, owner: String, name: String, desc: String) {
       if (owner != Type.getInternalName(instr.getClass))
-        super.visitFieldInsn(opcode, owner, name, desc)
+        mvOut.visitFieldInsn(opcode, owner, name, desc)
       else opcode match {
         case GETFIELD =>
           if (List("workspace", "world").contains(name))
-            super.visitFieldInsn(opcode, bgen.fullClassName, name, desc)
+            mvOut.visitFieldInsn(opcode, bgen.fullClassName, name, desc)
           else try {
             // It'd be nice if we could just use Class.getField, but that only finds public stuff. - ST 2/3/09
             def getField(c: Class[_]): Field =
@@ -80,17 +80,17 @@ private class MethodRipper(method: Method, instr: Instruction, mvOut: MethodVisi
         case _ => // do nothing
       }
     }
-    override def visitMethodInsn(opcode: Int, owner: String, name: String, desc: String) {
+    override def visitMethodInsn(opcode: Int, owner: String, name: String, desc: String, itf: Boolean) {
       if (name == "displayName") {
-        super.visitInsn(POP)
-        super.visitLdcInsn(instr.displayName)
+        mvOut.visitInsn(POP)
+        mvOut.visitLdcInsn(instr.displayName)
       } else if (owner != Type.getInternalName(instr.getClass))
-        super.visitMethodInsn(opcode, owner, name, desc)
+        mvOut.visitMethodInsn(opcode, owner, name, desc, itf)
       else if (opcode == INVOKESTATIC) {
         if (name == "class$") {
           bgen.generateStaticClassMethod("class$")
           // handle things like "Turtle.class"
-          super.visitMethodInsn(opcode, bgen.fullClassName, name, desc)
+          mvOut.visitMethodInsn(opcode, bgen.fullClassName, name, desc, itf)
         } else
           // for now, I just want to know if static methods are ever called
           errorLog.append("debug: MethodRipper noticed that class " + instr.getClass() +
@@ -101,7 +101,7 @@ private class MethodRipper(method: Method, instr: Instruction, mvOut: MethodVisi
         // they are private access.  super.visitMethodInsn(opcode,owner,name,desc);
       } else if (BytecodeUtils.checkClassHasMethod(classOf[Instruction], name, desc))
         // it's probably okay to let them call a method from Instruction. ~Forrest (7/16/2006)
-        super.visitMethodInsn(opcode, bgen.fullClassName, name, desc)
+        mvOut.visitMethodInsn(opcode, bgen.fullClassName, name, desc, itf)
       else
         // probably calling helper function inside same class -- we don't allow that
         errorLog.append("MethodRipper says: Java class " + instr.getClass() +
@@ -111,8 +111,8 @@ private class MethodRipper(method: Method, instr: Instruction, mvOut: MethodVisi
       // We need to change "returns" to "jump-to-end-method"
       opcode match {
         case RETURN | ARETURN | IRETURN | DRETURN | FRETURN | LRETURN =>
-          super.visitJumpInsn(GOTO, endOfMethodLabel)
-        case _ => super.visitInsn(opcode)
+          mvOut.visitJumpInsn(GOTO, endOfMethodLabel)
+        case _ => mvOut.visitInsn(opcode)
       }
     }
     // strip out the visitations that we don't want to pass on
@@ -122,7 +122,7 @@ private class MethodRipper(method: Method, instr: Instruction, mvOut: MethodVisi
     override def visitLocalVariable(name: String, desc: String, signature: String, start: Label, end: Label, index: Int) {}
     override def visitLineNumber(line: Int, start: Label) {}
     override def visitTryCatchBlock(start: Label, end: Label, handler: Label, tpe: String) {
-      mv.visitTryCatchBlock(start, end, handler, tpe)
+      mvOut.visitTryCatchBlock(start, end, handler, tpe)
     }
   }
 }

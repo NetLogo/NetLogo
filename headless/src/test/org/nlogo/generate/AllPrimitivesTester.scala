@@ -5,7 +5,6 @@ package org.nlogo.generate
 import org.scalatest.FunSuite
 import java.lang.reflect.Method
 import org.objectweb.asm.{ ClassReader, Type, MethodVisitor }
-import org.objectweb.asm.commons.EmptyVisitor
 import org.nlogo.api.Version
 import org.nlogo.nvm.Instruction
 
@@ -51,12 +50,12 @@ trait AllPrimitivesTester extends FunSuite {
   def processClass(c: PrimClass) {
     val reader = PrimitiveCache.getClassReader(c)
     for(method <- BytecodeUtils.getMethods(c)) {
-      val visitor = new EmptyVisitor {
+      val visitor = new EmptyClassVisitor {
         override def visitMethod(arg0: Int, name: String, descriptor: String,
                                  signature: String, exceptions: Array[String]) =
           if(name == method.getName && descriptor == Type.getMethodDescriptor(method))
             makeVisitor(method)
-          else new EmptyVisitor
+          else new EmptyMethodVisitor
       }
       reader.accept(visitor, ClassReader.SKIP_DEBUG)
     }

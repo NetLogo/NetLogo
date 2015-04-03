@@ -2,9 +2,11 @@
 
 package org.nlogo.generate
 
-import org.objectweb.asm.{ Label, MethodAdapter, MethodVisitor }
+import
+  org.objectweb.asm.{ Label, MethodVisitor, Opcodes },
+    Opcodes.{ ASM5, INVOKEINTERFACE }
 
-private abstract class AbstractPeepholeOptimizer(mv: MethodVisitor) extends MethodAdapter(mv) {
+private abstract class AbstractPeepholeOptimizer(mv: MethodVisitor) extends MethodVisitor(ASM5, mv) {
 
   def restartMatch() // abstract
 
@@ -38,9 +40,14 @@ private abstract class AbstractPeepholeOptimizer(mv: MethodVisitor) extends Meth
     restartMatch()
     mv.visitFieldInsn(opcode, owner, name, desc)
   }
+  @Deprecated
   override def visitMethodInsn(opcode: Int, owner: String, name: String, desc: String) {
     restartMatch()
-    mv.visitMethodInsn(opcode, owner, name, desc)
+    mv.visitMethodInsn(opcode, owner, name, desc, opcode == INVOKEINTERFACE)
+  }
+  override def visitMethodInsn(opcode: Int, owner: String, name: String, desc: String, itf: Boolean) {
+    restartMatch()
+    mv.visitMethodInsn(opcode, owner, name, desc, itf)
   }
   override def visitLdcInsn(cst: Object) {
     restartMatch()
@@ -49,10 +56,6 @@ private abstract class AbstractPeepholeOptimizer(mv: MethodVisitor) extends Meth
   override def visitIincInsn(variable: Int, increment: Int) {
     restartMatch()
     mv.visitIincInsn(variable, increment)
-  }
-  override def visitTableSwitchInsn(min: Int, max: Int, dflt: Label, labels: Array[Label]) {
-    restartMatch()
-    mv.visitTableSwitchInsn(min, max, dflt, labels)
   }
   override def visitLookupSwitchInsn(dflt: Label, keys: Array[Int], labels: Array[Label]) {
     restartMatch()

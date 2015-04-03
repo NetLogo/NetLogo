@@ -4,7 +4,6 @@ package org.nlogo.generate
 
 import org.scalatest.FunSuite
 import java.lang.reflect.Method
-import org.objectweb.asm.commons.EmptyVisitor
 import org.objectweb.asm.Opcodes.INVOKESTATIC
 import org.objectweb.asm.Type
 import org.nlogo.nvm.Instruction
@@ -13,7 +12,7 @@ import org.nlogo.nvm.Instruction
 
 class TestHelperMethodSafe extends FunSuite with AllPrimitivesTester {
   override def makeVisitor(method: Method) =
-    new EmptyVisitor {
+    new EmptyMethodVisitor {
       override def visitMethodInsn(opcode: Int, owner: String, name: String, desc: String) {
         assert(name == "displayName" ||
                owner != Type.getInternalName(method.getDeclaringClass) ||

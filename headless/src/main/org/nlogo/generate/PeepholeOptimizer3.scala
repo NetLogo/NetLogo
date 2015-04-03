@@ -2,8 +2,9 @@
 
 package org.nlogo.generate
 
-import org.objectweb.asm.Opcodes._
-import org.objectweb.asm.{ Label, MethodAdapter, MethodVisitor }
+import
+  org.objectweb.asm.{ Label, MethodVisitor, Opcodes },
+    Opcodes._
 
 /**
  * This class serves as a peep-hole optimizer.  Its purpose is just to catch one specific
@@ -151,7 +152,7 @@ private class PeepholeOptimizer3(mv: MethodVisitor) extends AbstractPeepholeOpti
  *  ~Forrest (6/19/2006)
  */
 
-private class PeepholeOptimizer3B(mv: MethodVisitor) extends MethodAdapter(mv) {
+private class PeepholeOptimizer3B(mv: MethodVisitor) extends MethodVisitor(ASM5, mv) {
   override def visitLabel(label: Label) {
     if (label != PeepholeOptimizer3.PEEPHOLE_FLAG_LABEL)
       mv.visitLabel(label)
