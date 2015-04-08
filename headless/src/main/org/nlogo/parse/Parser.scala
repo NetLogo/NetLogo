@@ -155,7 +155,7 @@ trait Parser extends nvm.ParserInterface {
     new StructureParserExtras(tokenizer(is3D)).findProcedurePositions(source)
 
   // used for includes menu
-  def findIncludes(sourceFileName: String, source: String, is3D: Boolean): Map[String, String] =
+  def findIncludes(sourceFileName: String, source: String, is3D: Boolean): Option[Map[String, String]] =
     new StructureParserExtras(tokenizer(is3D)).findIncludes(sourceFileName, source)
 
   // used by VariableNameEditor

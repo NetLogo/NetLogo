@@ -10,11 +10,7 @@ class _stopinspecting extends Command {
     Syntax.commandSyntax(Array(Syntax.AgentType))
   override def perform(context: Context) = {
     val agent = argEvalAgent(context, 0)
-    org.nlogo.awt.EventQueue.invokeLater(
-      new Runnable {
-        override def run() {
-          workspace.stopInspectingAgent(agent)
-        }})
+    workspace.stopInspectingAgent(agent)
     context.ip = next
   }
 }
@@ -22,11 +18,7 @@ class _stopinspecting extends Command {
 class _stopinspectingdeadagents extends Command {
   override def syntax = Syntax.commandSyntax
   override def perform(context: Context) {
-    org.nlogo.awt.EventQueue.invokeLater(
-      new Runnable {
-        override def run() {
-          workspace.stopInspectingDeadAgents()
-        }})
+    workspace.stopInspectingDeadAgents()
     context.ip = next
   }
 }

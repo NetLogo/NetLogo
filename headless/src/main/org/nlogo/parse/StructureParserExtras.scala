@@ -49,8 +49,7 @@ class StructureParserExtras(tokenizer: TokenizerInterface) {
     result
   }
 
-  def findIncludes(sourceFileName: String, source: String): Map[String, String] = {
-    var result = Map[String, String]()
+  def findIncludes(sourceFileName: String, source: String): Option[Map[String, String]] = {
     // Tokenize the current procedures window source
     val myTokens = tokenizer.tokenizeRobustly(source).iterator.buffered
     while(myTokens.hasNext) {
@@ -58,6 +57,7 @@ class StructureParserExtras(tokenizer: TokenizerInterface) {
       if(token.tpe == TokenType.KEYWORD) {
         val keyword = token.value.asInstanceOf[String]
         if(keyword == "__INCLUDES") {
+          var includedFiles = Map[String, String]()
           while(true) {
             var filePath: String = null
             var pathToken = myTokens.head
@@ -66,19 +66,19 @@ class StructureParserExtras(tokenizer: TokenizerInterface) {
               pathToken = myTokens.head
             }
             else if(pathToken.tpe == TokenType.CLOSE_BRACKET)
-              return result
+              return Some(includedFiles)
             else if(pathToken.tpe == TokenType.CONSTANT && pathToken.value.isInstanceOf[String]) {
               pathToken = myTokens.next()
               filePath = resolvePath(sourceFileName, pathToken.value.asInstanceOf[String])
-              result += pathToken.value.asInstanceOf[String] -> filePath
+              includedFiles += pathToken.value.asInstanceOf[String] -> filePath
             }
             else
-              return result
+              return Some(includedFiles)
           }
         }
       }
     }
-    result
+    None
   }
 
   def resolvePath(fileName: String, path: String): String = {

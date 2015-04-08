@@ -391,7 +391,7 @@ class DefaultFileManagerTests extends FunSuite with OneInstancePerTest with Befo
     override def getTokenAtPosition(source: String, position: Int): Token = ???
     override def tokenizeForColorization(source: String,
                                          extensionManager: APIExtensionManager, is3D: Boolean): Seq[Token] = ???
-    override def findIncludes(sourceFileName: String, source: String, is3D: Boolean): Map[String, String] = ???
+    override def findIncludes(sourceFileName: String, source: String, is3D: Boolean): Option[Map[String, String]] = ???
     override def isValidIdentifier(s: String, is3D: Boolean): Boolean = ???
     override def readNumberFromString(source: String, world: World,
                                       extensionManager: APIExtensionManager, is3D: Boolean): AnyRef = ???

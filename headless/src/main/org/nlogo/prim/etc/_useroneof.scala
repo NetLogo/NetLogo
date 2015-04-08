@@ -15,6 +15,7 @@ class _useroneof extends Reporter {
   override def report(context: Context) = {
     val message = Dump.logoObject(args(0).report(context))
     val list = argEvalList(context, 1)
+    if(list.isEmpty) throw new EngineException(context, this, I18N.errors.get("org.nlogo.prim.etc.$common.emptyList"))
     workspace.updateUI(context)
     val choice =
       workspace.waitForResult(

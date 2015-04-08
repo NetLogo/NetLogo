@@ -165,7 +165,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
   }
   test("ExperimentName") {
     val workspace = runExperiment(0, "", "runNumber")
-    expect("runNumber")(
+    assertResult("runNumber")(
       workspace.report("behaviorspace-experiment-name"))
   }
   // test export-graphics in headless mode

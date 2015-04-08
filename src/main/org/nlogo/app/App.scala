@@ -362,10 +362,18 @@ class App extends
             }})
       }
       override def stopInspectingAgent(agent: Agent): Unit = {
-        monitorManager.stopInspecting(agent)
+        org.nlogo.awt.EventQueue.invokeLater(
+          new Runnable {
+            override def run() {
+              monitorManager.stopInspecting(agent)
+            }})
       }
       override def stopInspectingDeadAgents(): Unit = {
-        monitorManager.stopInspectingDeadAgents()
+        org.nlogo.awt.EventQueue.invokeLater(
+          new Runnable {
+            override def run() {
+              monitorManager.stopInspectingDeadAgents()
+            }})
       }
       override def closeAgentMonitors() { monitorManager.closeAll() }
       override def newRenderer: RendererInterface = {
