@@ -40,5 +40,8 @@ htmldoc \
   netlogolab.html \
   profiler.html \
   gis.html \
+  nw.html \
+  csv.html \
+  palette.html \
   faq.html \
   dictionary.html

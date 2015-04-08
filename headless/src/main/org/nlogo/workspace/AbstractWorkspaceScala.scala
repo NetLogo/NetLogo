@@ -330,6 +330,10 @@ object AbstractWorkspaceTraits {
     override def behaviorSpaceRunNumber(n: Int) {
       _behaviorSpaceRunNumber = n
     }
+    private var _behaviorSpaceExperimentName = ""
+    override def behaviorSpaceExperimentName = _behaviorSpaceExperimentName
+    override def behaviorSpaceExperimentName(name: String): Unit =
+      _behaviorSpaceExperimentName = name;
   }
 
   trait Paths { this: AbstractWorkspaceScala =>

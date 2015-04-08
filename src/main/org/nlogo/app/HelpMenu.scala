@@ -42,6 +42,6 @@ class HelpMenu(app: App, colorizer: Colorizer[_])
            "http://ccl.northwestern.edu/netlogo/giving.shtml"))
   if(!System.getProperty("os.name").startsWith("Mac"))
     addMenuItem(
-      action("About " + Version.version + "...",
+      action("About " + Version.versionDropZeroPatch + "...",
              app.showAboutWindow _))
 }

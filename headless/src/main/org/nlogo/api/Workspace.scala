@@ -92,6 +92,8 @@ trait Workspace extends ImporterUser with ParserServices with RandomServices {
   def isHeadless: Boolean
   def behaviorSpaceRunNumber: Int
   def behaviorSpaceRunNumber(n: Int)
+  def behaviorSpaceExperimentName: String
+  def behaviorSpaceExperimentName(name: String)
   // for now this only works in HeadlessWorkspace, returns null in GUIWorkspace.  error handling
   // stuff is a mess, should be redone - ST 3/10/09, 1/22/12
   def lastLogoException: LogoException

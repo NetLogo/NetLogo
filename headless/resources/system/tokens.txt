@@ -201,6 +201,8 @@ C st etc._showturtle
 C stamp etc._stamp
 C stamp-erase etc._stamperase
 C stop etc._stop
+C stop-inspecting etc._stopinspecting
+C stop-inspecting-dead-agents etc._stopinspectingdeadagents
 C tick etc._tick
 C tick-advance etc._tickadvance
 C tie etc._tie
@@ -256,6 +258,7 @@ R at-points etc._atpoints
 R atan etc._atan
 R autoplot? etc._autoplot
 R base-colors etc._basecolors
+R behaviorspace-experiment-name etc._behaviorspaceexperimentname
 R behaviorspace-run-number etc._behaviorspacerunnumber
 R bf etc._butfirst
 R bl etc._butlast
@@ -373,6 +376,7 @@ R neighbors _neighbors
 R neighbors4 _neighbors4
 R netlogo-applet? etc._netlogoapplet
 R netlogo-version etc._netlogoversion
+R netlogo-web? etc._netlogoweb
 R new-seed etc._newseed
 R no-links etc._nolinks
 R no-patches etc._nopatches

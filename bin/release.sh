@@ -172,6 +172,8 @@ rm -f *.jar
 
 # remember version number
 export VERSION=`$JAVA -cp target/NetLogo.jar:headless/target/NetLogoHeadless.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //"`
+# We remove the trailing .0 because 5.2 and 6.0 look cleaner than 5.2.0 and 6.0.0 to the user
+export VERSION=${VERSION%.0}
 export DATE=`$JAVA -cp target/NetLogo.jar:headless/target/NetLogoHeadless.jar:$SCALA_JAR org.nlogo.headless.Main --builddate`
 echo $VERSION":" $DATE
 export COMPRESSEDVERSION=`$JAVA -cp target/NetLogo.jar:headless/target/NetLogoHeadless.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //" | $SED -e "s/ //g"`
@@ -278,6 +280,7 @@ $PERL -p -i -e "s/\<h3\>/\<p\>\<hr\>\<h3\>/" docs/dictionary.html
 # Extension docs can come from extension READMEs now (requires pandoc), repeated below
 pandoc ../../extensions/nw/README.md -o docs/nw.html -t html -T "NetLogo User Manual: Networks Extension" -c netlogo.css
 pandoc ../../extensions/csv/README.md -o docs/csv.html -t html -T "NetLogo User Manual: CSV Extension" -c netlogo.css
+pandoc ../../extensions/palette/README.md -o docs/palette.html -t html -T "NetLogo User Manual: Palette Extension" -c netlogo.css
 
 cd docs
 ../../../bin/htmldoc.sh
@@ -327,7 +330,7 @@ pandoc ../../extensions/csv/README.md -o docs/csv.html -t html -T "NetLogo User 
 ( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/*.jpg Curricular\ Models/BEAGLE\ Evolution ) || exit 1
 ( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/*.jpg Curricular\ Models/BEAGLE\ Evolution/HubNet\ Activities ) || exit 1
 ( cd models                    ; $CP -rp HubNet\ Activities/Unverified/Guppy\ Spots* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
-( cd models                    ; $CP -rp HubNet\ Activities/Unverified/aquarium\ [HubNet].jpg Curricular\ Models/BEAGLE\ Evolution ) || exit 1
+( cd models                    ; $CP -rp HubNet\ Activities/Unverified/aquarium.jpg Curricular\ Models/BEAGLE\ Evolution ) || exit 1
 ( cd models                    ; $CP -rp HubNet\ Activities/Bug\ Hunters\ Camouflage* Curricular\ Models/BEAGLE\ Evolution/HubNet\ Activities ) || exit 1
 ( cd models                    ; $CP -rp Sample\ Models/Biology/Daisyworld* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
 ( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Mimicry* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
@@ -335,10 +338,14 @@ pandoc ../../extensions/csv/README.md -o docs/csv.html -t html -T "NetLogo User 
 ( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Cooperation* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
 
 # BEAGLE HubNet models
-( cd models                    ; $CP -rp Curricular\ Models/BEAGLE\ Evolution/HubNet\ Activities/Bird\ Breeders\ \[HubNet\]* HubNet\ Activities ) || exit 1
-( cd models                    ; $CP -rp Curricular\ Models/BEAGLE\ Evolution/HubNet\ Activities/Bug\ Hunters\ Competition\ \[HubNet\]* HubNet\ Activities ) || exit 1
-( cd models                    ; $CP -rp Curricular\ Models/BEAGLE\ Evolution/HubNet\ Activities/Critter\ Designers\ \[HubNet\]* HubNet\ Activities ) || exit 1
-( cd models                    ; $CP -rp Curricular\ Models/BEAGLE\ Evolution/HubNet\ Activities/Fish\ Spotters\ \[HubNet\]* HubNet\ Activities ) || exit 1
+( cd models                    ; $CP -rp Curricular\ Models/BEAGLE\ Evolution/HubNet\ Activities/Bird\ Breeders\ HubNet* HubNet\ Activities ) || exit 1
+( cd models                    ; $CP -rp Curricular\ Models/BEAGLE\ Evolution/HubNet\ Activities/Bug\ Hunters\ Competition\ HubNet* HubNet\ Activities ) || exit 1
+( cd models                    ; $CP -rp Curricular\ Models/BEAGLE\ Evolution/HubNet\ Activities/Critter\ Designers\ HubNet* HubNet\ Activities ) || exit 1
+( cd models                    ; $CP -rp Curricular\ Models/BEAGLE\ Evolution/HubNet\ Activities/Fish\ Spotters\ HubNet* HubNet\ Activities ) || exit 1
+
+# IABM Textbook models duplicated in Sample Models
+( cd models                    ; $CP -rp IABM\ Textbook/chapter\ 3/El\ Farol\ Extensions/El\ Farol.nlogo Sample\ Models/Social\ Science ) || exit 1
+( cd models                    ; $CP -rp IABM\ Textbook/chapter\ 3/DLA\ extensions/DLA\ Simple.nlogo Sample\ Models/Chemistry\ \&\ Physics/Diffusion\ Limited\ Aggregation ) || exit 1
 
 # it'd be nice if there were an easier way to fool the model-index task
 # into processing our directory where it is instead of having to bamboozle
@@ -543,12 +550,14 @@ else
   echo "rsync -av --inplace --progress --delete tmp/$COMPRESSEDVERSION ccl.northwestern.edu:/usr/local/www/netlogo"
 fi
 
-echo
-echo "to tag the release (changing 'master' if necessary):"
-echo git tag -a -m $COMPRESSEDVERSION $COMPRESSEDVERSION master
-echo git submodule foreach git tag -a -m $COMPRESSEDVERSION $COMPRESSEDVERSION master
-echo
-echo "and to push the tags:"
-echo git push --tags
-echo git submodule foreach git push --tags
-echo
+cat << END
+to tag the release (changing '5.x' if necessary):
+git tag -a -m $COMPRESSEDVERSION $COMPRESSEDVERSION 5.x
+git submodule foreach git tag -a -m $COMPRESSEDVERSION $COMPRESSEDVERSION 5.x
+
+Don't forget to tag ccl-models, iabm-models
+
+and to push the tags:
+git push --tags
+git submodule foreach git push --tags
+END

@@ -11,7 +11,7 @@ object Version {
     else
       "NetLogo (no version)";
 
-  val (version, buildDate, knownVersions) = {
+  val (version, versionDropZeroPatch, buildDate, knownVersions) = {
     val lines = org.nlogo.util.Utils.getResourceLines("/system/version.txt").toStream
     val lines2 = Array("NetLogo 3D Preview 5",
                        "NetLogo 3D Preview 4",
@@ -24,6 +24,8 @@ object Version {
       else
         lines.head
     val buildDate = lines.tail.head
+    val versionDropZeroPatch =
+      if(version.endsWith(".0")) version.dropRight(2) else version
     val knownVersions = collection.mutable.ArrayBuffer[String]()
     knownVersions += version
     knownVersions ++= lines.drop(2)
@@ -33,7 +35,7 @@ object Version {
        else
          lines2)
     knownVersions += noVersion
-    (version, buildDate, knownVersions.toArray)
+    (version, versionDropZeroPatch, buildDate, knownVersions.toArray)
   }
 
   def is3D(version: String) =

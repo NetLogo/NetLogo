@@ -154,6 +154,24 @@ with org.nlogo.window.Event.LinkParent
         new Runnable() { def run() { frame.requestFocus() }})
   }
 
+  def stopInspecting(agent: Agent) {
+    if(agent != null) {
+      monitorWindows.get(agent).collect {
+        case window: AgentMonitorWindow =>
+          window.setVisible(false)
+          window.dispose
+          remove(window)
+      }
+    }
+  }
+
+  def stopInspectingDeadAgents() {
+    monitorWindows.keys.foreach { case agent =>
+      if(agent.id == -1)
+        stopInspecting(agent)
+    }
+  }
+
   def showAll() { showOrHideAll(show = true) }
   def hideAll() { showOrHideAll(show = false) }
 

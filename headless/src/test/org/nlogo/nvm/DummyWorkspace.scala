@@ -35,6 +35,8 @@ class DummyWorkspace extends DummyParserServices with Workspace {
   override def exportAllPlots(path: String) = unsupported
   override def inspectAgent(agent: Agent, radius: Double) = unsupported
   override def inspectAgent(kind: api.AgentKind, agent: Agent, radius: Double) = unsupported
+  override def stopInspectingAgent(agent: org.nlogo.agent.Agent) = unsupported
+  override def stopInspectingDeadAgents() = unsupported
   override def getAndCreateDrawing() = unsupported
   override def getHubNetManager = unsupported
   override def waitForQueuedEvents() = unsupported
@@ -80,6 +82,8 @@ class DummyWorkspace extends DummyParserServices with Workspace {
   override def isHeadless = unsupported
   override def behaviorSpaceRunNumber = 0
   override def behaviorSpaceRunNumber(n: Int) = unsupported
+  override def behaviorSpaceExperimentName = ""
+  override def behaviorSpaceExperimentName(name: String) = unsupported
   override def previewCommands = unsupported
   override def benchmark(minTime: Int, maxTime: Int) = unsupported
   override def logCustomMessage(msg: String): Unit = unsupported

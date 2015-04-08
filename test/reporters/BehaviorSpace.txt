@@ -1,2 +1,5 @@
 BehaviorSpaceRunNumber
   behaviorspace-run-number => 0
+
+BehaviorSpaceExperimentName
+  behaviorspace-experiment-name => ""

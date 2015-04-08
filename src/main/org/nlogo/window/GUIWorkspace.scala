@@ -5,6 +5,7 @@ package org.nlogo.window
 import org.nlogo.{ agent, api, nvm, shape, workspace }
 import org.nlogo.swing.{ FileDialog, InputDialog, OptionDialog, ModalProgressTask }
 import org.nlogo.awt.UserCancelException
+import org.nlogo.nvm.EngineException
 
 abstract class GUIWorkspace(
   _world: agent.World,
@@ -290,6 +291,7 @@ with Events.LoadSectionEventHandler {
 
   override def userOneOf(message: String, xs: api.LogoList): Option[AnyRef] = {
     val items = xs.map(api.Dump.logoObject).toArray[AnyRef]
+    if(items.isEmpty) throw new EngineException(context, this, I18N.errors.get("org.nlogo.prim.etc.$common.emptyList"))
     view.mouseDown(false)
     val chosen =
       new OptionDialog(

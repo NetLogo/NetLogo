@@ -38,6 +38,7 @@ class TestAllSyntaxes extends FunSuite {
                      |_atpoints turtle agentset or patch agentset,list,agentset,OTPL,null,12,1,1
                      |_autoplot ,TRUE/FALSE,OTPL,null,10,0,0
                      |_basecolors ,list,OTPL,null,10,0,0
+                     |_behaviorspaceexperimentname ,string,OTPL,null,10,0,0
                      |_behaviorspacerunnumber ,number,OTPL,null,10,0,0
                      |_boom ,anything,OTPL,null,10,0,0
                      |_bothends ,agentset,---L,null,10,0,0
@@ -166,6 +167,7 @@ class TestAllSyntaxes extends FunSuite {
                      |_neighbors4 ,patch agentset,-TP-,null,10,0,0
                      |_netlogoapplet ,TRUE/FALSE,OTPL,null,10,0,0
                      |_netlogoversion ,string,OTPL,null,10,0,0
+                     |_netlogoweb ,TRUE/FALSE,OTPL,null,10,0,0
                      |_newseed ,number,OTPL,null,10,0,0
                      |_nof number/list or agentset,list or agentset,OTPL,null,10,2,2
                      |_nolinks ,link agentset,OTPL,null,10,0,0
@@ -457,6 +459,8 @@ class TestAllSyntaxes extends FunSuite {
                     |_stderr anything,OTPL,null,0,1,1
                     |_stdout anything,OTPL,null,0,1,1
                     |_stop ,OTPL,null,0,0,0
+                    |_stopinspecting agent,OTPL,null,0,1,1
+                    |_stopinspectingdeadagents ,OTPL,null,0,0,0
                     |_thunkdidfinish ,OTPL,null,0,0,0
                     |_tick ,O---,null,0,0,0 *
                     |_tickadvance number,O---,null,0,1,1 *

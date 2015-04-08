@@ -20,6 +20,7 @@ class ToolsMenu(app: App) extends org.nlogo.swing.Menu(I18N.gui.get("menu.tools"
   addMenuItem(I18N.gui("patchMonitor"), () => app.workspace.inspectAgent(AgentKind.Patch))
   addMenuItem(I18N.gui("linkMonitor"), () => app.workspace.inspectAgent(AgentKind.Link))
   addMenuItem(I18N.gui("closeAllAgentMonitors"), app.workspace.closeAgentMonitors _)
+  addMenuItem(I18N.gui("closeDeadAgentMonitors"), app.workspace.stopInspectingDeadAgents _)
   addSeparator()
   addMenuItem('/', app.tabs.interfaceTab.commandCenterAction)
   addSeparator()

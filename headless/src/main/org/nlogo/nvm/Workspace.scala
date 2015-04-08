@@ -27,6 +27,8 @@ trait Workspace extends api.Workspace with JobManagerOwner {
   def resetTicks(c: Context)
   def inspectAgent(agent: Agent, radius: Double)
   def inspectAgent(kind: api.AgentKind, agent: Agent, radius: Double)
+  def stopInspectingAgent(agent: Agent)
+  def stopInspectingDeadAgents()
 
   def compileForRun(source: String, context: Context, reporter: Boolean): Procedure
   def compileCommands(source: String): Procedure
