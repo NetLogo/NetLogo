@@ -24,9 +24,10 @@ echo "*** done: test:compile"
 if [ ${PIPESTATUS[0]} -ne 0 ] ; then echo "*** FAILED: fast:test"; exit 1; fi
 echo "*** done: fast:test"
 
-./sbt nogen fast:test 2>&1 | tee tmp/nightly/1-nogen-fast-test.txt
-if [ ${PIPESTATUS[0]} -ne 0 ] ; then echo "*** FAILED: nogen fast:test"; exit 1; fi
-echo "*** done: nogen fast:test"
+# Removed for the time being and to be addded back in later after the builds are a bit more under control FD 4/9/15
+# ./sbt nogen fast:test 2>&1 | tee tmp/nightly/1-nogen-fast-test.txt
+# if [ ${PIPESTATUS[0]} -ne 0 ] ; then echo "*** FAILED: nogen fast:test"; exit 1; fi
+# echo "*** done: nogen fast:test"
 
 ./sbt threed fast:test 2>&1 | tee tmp/nightly/2-threed-fast-test.txt
 if [ ${PIPESTATUS[0]} -ne 0 ] ; then echo "*** FAILED: threed fast:test"; exit 1; fi
@@ -42,9 +43,10 @@ echo "*** done: extensions"
 if [ ${PIPESTATUS[0]} -ne 0 ] ; then echo "*** FAILED: slow:test"; exit 1; fi
 echo "*** done: slow:test"
 
-./sbt nogen slow:test 2>&1 | tee tmp/nightly/4-nogen-slow-test.txt
-if [ ${PIPESTATUS[0]} -ne 0 ] ; then echo "*** FAILED: nogen slow:test"; exit 1; fi
-echo "*** done: nogen slow:test"
+# Removed for the time being and to be addded back in later after the builds are a bit more under control FD 4/9/15
+# ./sbt nogen slow:test 2>&1 | tee tmp/nightly/4-nogen-slow-test.txt
+# if [ ${PIPESTATUS[0]} -ne 0 ] ; then echo "*** FAILED: nogen slow:test"; exit 1; fi
+# echo "*** done: nogen slow:test"
 
 ./sbt threed slow:test 2>&1 | tee tmp/nightly/5-threed-slow-test.txt
 if [ ${PIPESTATUS[0]} -ne 0 ] ; then echo "*** FAILED: threed slow:test"; exit 1; fi
