@@ -26,6 +26,11 @@ mkdir -p tmp/nightly
 if [ ${PIPESTATUS[0]} -ne 0 ] ; then echo "*** FAILED: test:compile"; exit 1; fi
 echo "*** done: test:compile"
 
+# Ruminate on why this is 7-depend.txt and be enlightened
+./sbt depend 2>&1 | tee tmp/nightly/7-depend.txt
+if [ ${PIPESTATUS[0]} -ne 0 ] ; then echo "*** FAILED: depend"; exit 1; fi
+echo "*** done: depend"
+
 ./sbt fast:test 2>&1 | tee tmp/nightly/0-fast-test.txt
 if [ ${PIPESTATUS[0]} -ne 0 ] ; then echo "*** FAILED: fast:test"; exit 1; fi
 echo "*** done: fast:test"
@@ -61,9 +66,5 @@ JVM_OPTS="-Dfile.encoding=UTF8 -XX:MaxPermSize=1024m -Xms512m -Xmx1536m -Xss2m" 
   ./sbt all 2>&1 | tee tmp/nightly/6-sbt-all.txt
 if [ ${PIPESTATUS[0]} -ne 0 ] ; then echo "*** FAILED: sbt all"; exit 1; fi
 echo "*** done: sbt all"
-
-./sbt depend 2>&1 | tee tmp/nightly/7-depend.txt
-if [ ${PIPESTATUS[0]} -ne 0 ] ; then echo "*** FAILED: depend"; exit 1; fi
-echo "*** done: depend"
 
 echo "****** all done!"

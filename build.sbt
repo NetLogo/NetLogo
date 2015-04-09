@@ -101,6 +101,7 @@ all <<= all.dependsOn(
   packageBin in Compile,
   packageBin in Compile in NetLogoBuild.headless,
   packageBin in Test in NetLogoBuild.headless,
+  Depend.depend,
   Extensions.extensions,
   NativeLibs.nativeLibs,
   ModelIndex.modelIndex,
