@@ -4,7 +4,6 @@ package org.nlogo.generate
 
 import org.scalatest.FunSuite
 import org.objectweb.asm.ClassReader
-import org.objectweb.asm.commons.EmptyVisitor
 
 class TestStrictFP extends FunSuite {
 
@@ -31,13 +30,13 @@ class TestStrictFP extends FunSuite {
     visitor.badMethods.toList
   }
 
-  class StrictFPVisitor extends EmptyVisitor {
+  class StrictFPVisitor extends EmptyClassVisitor {
     import org.objectweb.asm.Opcodes.{ACC_ABSTRACT, ACC_STRICT}
     val badMethods = collection.mutable.ListBuffer[String]()
     override def visitMethod(arg0: Int, name: String, descriptor: String, signature: String, exceptions: Array[String]) = {
       if((arg0 & ACC_ABSTRACT) != 0 && (arg0 & ACC_STRICT) != 0)
         badMethods += name
-      new EmptyVisitor
+      new EmptyMethodVisitor
     }
   }
 

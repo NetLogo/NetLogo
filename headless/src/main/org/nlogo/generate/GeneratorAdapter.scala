@@ -7,7 +7,7 @@ import org.nlogo.nvm.Instruction
 import org.objectweb.asm.{ Label, MethodVisitor, Type }
 
 private class GeneratorAdapter(mv: MethodVisitor, access: Int, name: String, desc: String, igen: Generator#InstructionGenerator[_])
-    extends org.objectweb.asm.commons.GeneratorAdapter(mv, access, name, desc) {
+    extends org.objectweb.asm.commons.GeneratorAdapter(ASM5, mv, access, name, desc) {
   // We need to know what the lowest JVM local variable that we can play with is.  var 0 = "this",
   // and var 1 = "context", so we can't mess with these.  It could be in the future, we'll want to
   // reserve more JVM local variables e.g. to store NetLogo local procedure variables in them But

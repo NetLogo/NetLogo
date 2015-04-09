@@ -98,12 +98,12 @@ private class CustomGenerator(profilingEnabled: Boolean) {
     // stack: Activation Activation Procedure Activation
     mv.push(instr.next)
     // stack: Activation Activation Procedure Activation int
-    mv.visitMethodInsn(INVOKESPECIAL, "org/nlogo/nvm/Activation", "<init>", "(Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V")
+    mv.visitMethodInsn(INVOKESPECIAL, "org/nlogo/nvm/Activation", "<init>", "(Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V", false)
     // operand stack: Activation
     for (i <- 0 until (instr.procedure.args.size - instr.procedure.localsCount)) {
       // newActivation.args[ i ] = args[ i ].report(context)
       mv.visitInsn(DUP)
-      mv.visitMethodInsn(INVOKEVIRTUAL, "org/nlogo/nvm/Activation", "args", "()[Ljava/lang/Object;")
+      mv.visitMethodInsn(INVOKEVIRTUAL, "org/nlogo/nvm/Activation", "args", "()[Ljava/lang/Object;", false)
       mv.push(i)
       // operand stack: Activation Args[] i
       mv.generateArgument(instr, i, classOf[Object], thisInstrUID)
@@ -129,7 +129,7 @@ private class CustomGenerator(profilingEnabled: Boolean) {
       // operand stack: Activation Instruction
       mv.visitFieldInsn(GETFIELD, "org/nlogo/nvm/Instruction", "workspace", "Lorg/nlogo/nvm/Workspace;")
       // operand stack: Activation Workspace
-      mv.visitMethodInsn(INVOKEINTERFACE, "org/nlogo/nvm/Workspace", "profilingTracer", "()Lorg/nlogo/nvm/Tracer;")
+      mv.visitMethodInsn(INVOKEINTERFACE, "org/nlogo/nvm/Workspace", "profilingTracer", "()Lorg/nlogo/nvm/Tracer;", true)
       // operand stack: Activation Tracer
       mv.visitInsn(SWAP)
       // operand stack: Tracer Activation
@@ -137,7 +137,7 @@ private class CustomGenerator(profilingEnabled: Boolean) {
       mv.visitInsn(SWAP)
       // operand stack: Tracer Context Activation
       mv.visitMethodInsn(INVOKEVIRTUAL, "org/nlogo/nvm/Tracer", "openCallRecord",
-        "(Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Activation;)V")
+        "(Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Activation;)V", false)
     }
   }
 
@@ -169,12 +169,12 @@ private class CustomGenerator(profilingEnabled: Boolean) {
     // stack: Activation Activation Procedure Activation
     mv.push(ip)
     // stack: Activation Activation Procedure Activation int
-    mv.visitMethodInsn(INVOKESPECIAL, "org/nlogo/nvm/Activation", "<init>", "(Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V")
+    mv.visitMethodInsn(INVOKESPECIAL, "org/nlogo/nvm/Activation", "<init>", "(Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V", false)
     // operand stack:  Activation
     for (i <- 0 until (instr.procedure.args.size - instr.procedure.localsCount)) {
       // newActivation.args[ i ] = args[ i ].report(context)
       mv.visitInsn(DUP)
-      mv.visitMethodInsn(INVOKEVIRTUAL, "org/nlogo/nvm/Activation", "args", "()[Ljava/lang/Object;")
+      mv.visitMethodInsn(INVOKEVIRTUAL, "org/nlogo/nvm/Activation", "args", "()[Ljava/lang/Object;", false)
       mv.push(i)
       // operand stack: Activation Args[] i
       mv.generateArgument(instr, i, classOf[Object], thisInstrUID)
@@ -191,7 +191,7 @@ private class CustomGenerator(profilingEnabled: Boolean) {
       // operand stack: Activation Activation Activation Instruction
       mv.visitFieldInsn(GETFIELD, "org/nlogo/nvm/Instruction", "workspace", "Lorg/nlogo/nvm/Workspace;")
       // operand stack: Activation Activation Activation Workspace
-      mv.visitMethodInsn(INVOKEINTERFACE, "org/nlogo/nvm/Workspace", "profilingTracer", "()Lorg/nlogo/nvm/Tracer;");
+      mv.visitMethodInsn(INVOKEINTERFACE, "org/nlogo/nvm/Workspace", "profilingTracer", "()Lorg/nlogo/nvm/Tracer;", true)
       // operand stack: Activation Activation Activation Tracer
       mv.visitInsn(SWAP)
       // operand stack: Activation Activation Tracer Activation
@@ -199,13 +199,13 @@ private class CustomGenerator(profilingEnabled: Boolean) {
       mv.visitInsn(SWAP)
       // operand stack: Activation Activation Tracer Context Activation
       mv.visitMethodInsn(INVOKEVIRTUAL, "org/nlogo/nvm/Tracer", "openCallRecord",
-        "(Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Activation;)V")
+        "(Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Activation;)V", false)
     }
     // operand stack: [Activation] Activation
     mv.visitVarInsn(ALOAD, 1)
     mv.visitInsn(SWAP)
     mv.visitMethodInsn(INVOKEVIRTUAL, "org/nlogo/nvm/Context", "callReporterProcedure",
-      "(Lorg/nlogo/nvm/Activation;)Ljava/lang/Object;")
+      "(Lorg/nlogo/nvm/Activation;)Ljava/lang/Object;", false)
     // operand stack: [Activation] resultObj
     if (profilingEnabled) {
       mv.visitInsn(SWAP)
@@ -213,7 +213,7 @@ private class CustomGenerator(profilingEnabled: Boolean) {
       // operand stack: resultObj Activation Instruction
       mv.visitFieldInsn(GETFIELD, "org/nlogo/nvm/Instruction", "workspace", "Lorg/nlogo/nvm/Workspace;")
       // operand stack: resultObj Activation Workspace
-      mv.visitMethodInsn(INVOKEINTERFACE, "org/nlogo/nvm/Workspace", "profilingTracer", "()Lorg/nlogo/nvm/Tracer;")
+      mv.visitMethodInsn(INVOKEINTERFACE, "org/nlogo/nvm/Workspace", "profilingTracer", "()Lorg/nlogo/nvm/Tracer;", true)
       // operand stack: resultObj Activation Tracer
       mv.visitInsn(SWAP)
       // operand stack: resultObj Tracer Activation
@@ -221,7 +221,7 @@ private class CustomGenerator(profilingEnabled: Boolean) {
       mv.visitInsn(SWAP)
       // operand stack: resultObj Tracer Context Activation
       mv.visitMethodInsn(INVOKEVIRTUAL, "org/nlogo/nvm/Tracer", "closeCallRecord",
-        "(Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Activation;)V")
+        "(Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Activation;)V", false)
     }
     // operand stack: resultObj
     mv.visitInsn(DUP)
@@ -233,7 +233,7 @@ private class CustomGenerator(profilingEnabled: Boolean) {
     mv.visitVarInsn(ALOAD, 0)
     mv.visitLdcInsn("the " + instr.procedure.name + " procedure failed to report a result")
     mv.visitMethodInsn(INVOKESPECIAL, "org/nlogo/nvm/EngineException", "<init>",
-      "(Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V")
+      "(Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V", false)
     mv.visitInsn(ATHROW)
     mv.visitLabel(lSkip)
     // operand stack: resultObj
@@ -251,15 +251,15 @@ private class CustomGenerator(profilingEnabled: Boolean) {
   private def generateList(instr: _list, mv: GeneratorAdapter, thisInstrUID: Int) {
     mv.visitTypeInsn(NEW, "org/nlogo/api/LogoListBuilder")
     mv.visitInsn(DUP)
-    mv.visitMethodInsn(INVOKESPECIAL, "org/nlogo/api/LogoListBuilder", "<init>", "()V")
+    mv.visitMethodInsn(INVOKESPECIAL, "org/nlogo/api/LogoListBuilder", "<init>", "()V", false)
     for (i <- 0 until instr.args.length) {
       mv.visitInsn(DUP)
       // recursively generate each argument
       mv.generateArgument(instr, i, classOf[Object], thisInstrUID)
       mv.markLineNumber(thisInstrUID)
-      mv.visitMethodInsn(INVOKEVIRTUAL, "org/nlogo/api/LogoListBuilder", "add", "(Ljava/lang/Object;)V")
+      mv.visitMethodInsn(INVOKEVIRTUAL, "org/nlogo/api/LogoListBuilder", "add", "(Ljava/lang/Object;)V", false)
     }
-    mv.visitMethodInsn(INVOKEVIRTUAL, "org/nlogo/api/LogoListBuilder", "toLogoList", "()Lorg/nlogo/api/LogoList;")
+    mv.visitMethodInsn(INVOKEVIRTUAL, "org/nlogo/api/LogoListBuilder", "toLogoList", "()Lorg/nlogo/api/LogoList;", false)
   }
 
   /* Example code,just to show what bytecode is being generated
@@ -275,20 +275,20 @@ private class CustomGenerator(profilingEnabled: Boolean) {
   private def generateWord(instr: _word, mv: GeneratorAdapter, thisInstrUID: Int) {
     mv.visitTypeInsn(NEW, "java/lang/StringBuilder")
     mv.visitInsn(DUP)
-    mv.visitMethodInsn(INVOKESPECIAL, "java/lang/StringBuilder", "<init>", "()V")
+    mv.visitMethodInsn(INVOKESPECIAL, "java/lang/StringBuilder", "<init>", "()V", false)
     // operand stack: SB
     for (i <- 0 until instr.args.length) {
       mv.generateArgument(instr, i, classOf[Object], thisInstrUID)
       // operand stack: SB OBJ
       mv.visitMethodInsn(INVOKESTATIC, "org/nlogo/api/Dump", "logoObject",
-        "(Ljava/lang/Object;)Ljava/lang/String;")
+        "(Ljava/lang/Object;)Ljava/lang/String;", false)
       // operand stack: SB STR
       mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append",
-        "(Ljava/lang/String;)Ljava/lang/StringBuilder;")
+        "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false)
       // operand stack: SB
     }
     mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "toString",
-      "()Ljava/lang/String;")
+      "()Ljava/lang/String;", false)
   }
 
 }
