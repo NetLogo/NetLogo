@@ -204,7 +204,7 @@ class EditorColorizer(parser: ParserServices) extends Colorizer[TokenType] {
           .take(page * PageSize)
           .takeRight(Math.min(PageSize, tokens.size - (page - 1) * PageSize))
           .foreach { case (name, source) =>
-            add(new CodeCompletionAction(name, position, name.stripPrefix(tokenName)))
+            add(new CodeCompletionAction(name + " (" + source + ")", position, name.stripPrefix(tokenName)))
         }
         if(tokens.size > page * PageSize)
           add(new PageAction("... " + (tokens.size - page * PageSize) + " more", 1))
