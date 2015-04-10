@@ -6,7 +6,7 @@
 if [ "$1" == --clean ] ; then
   git clean -fdX
   git submodule update --init
-  git submodule foreach git clean -fdX
+  git submodule foreach git clean -fdx -e QTJava.jar
 fi
 
 ./sbt all
