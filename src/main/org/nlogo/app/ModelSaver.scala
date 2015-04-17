@@ -89,7 +89,9 @@ class ModelSaver(app: App) {
       buf ++= (if(app.tabs.workspace.snapOn) "1\n" else "0\n")
     }
 
-    buf.toString
+    buf.lines
+      .map(_.replaceAll("\\s+$", "")) // strips trailing whitespace at the end of each line
+      .mkString("", "\n", "\n") // and build the string with a new line at end of file
   }
 
 }
