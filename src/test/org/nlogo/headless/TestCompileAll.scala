@@ -11,13 +11,21 @@ import ChecksumsAndPreviews.Previews.needsManualPreview
 
 class TestCompileAll extends FunSuite with SlowTest{
 
-  // Models whose path contains any of these strings will not be tested:
-  val exclusions = Seq("Arduino Example") // see https://github.com/NetLogo/NetLogo/issues/763
+  // Models whose path contains any of these strings will not be tested at all:
+  def excludeModel(path: String) =
+    path.contains("Arduino Example") || // see https://github.com/NetLogo/NetLogo/issues/763
+      (if (Version.is3D) !path.contains(makePath("3D")) // when in 3D, skip models that aren't in the 3D directory.
+      else path.endsWith(".nlogo3d")) // when not in 3D, skip 3D models
+
+  // and those are exempt from having their preview commands tested:
+  def excludePreviewCommands(path: String) =
+    Seq(makePath("extensions"), makePath("models", "test"))
+      .exists(path.contains)
 
   val modelPaths =
     (ModelsLibrary.getModelPaths ++ ModelsLibrary.getModelPathsAtRoot("extensions"))
       .map(new java.io.File(_).getCanonicalPath()).toSet  // workaround for https://github.com/NetLogo/NetLogo/issues/765
-      .filterNot(path => exclusions exists path.contains)
+      .filterNot(excludeModel)
 
   for (path <- modelPaths) {
     test("compile: " + path) {
@@ -33,7 +41,8 @@ class TestCompileAll extends FunSuite with SlowTest{
     workspace.compilerTestingMode = true
     try {
       workspace.open(path)
-      compilePreviewCommands(workspace)
+      if (!excludePreviewCommands(path))
+        compilePreviewCommands(workspace)
       // compile BehaviorSpace experiments
       val lab = HeadlessWorkspace.newLab
       lab.load(HeadlessModelOpener.protocolSection(path))
@@ -47,5 +56,10 @@ class TestCompileAll extends FunSuite with SlowTest{
       val source = "to __custom-preview-commands " + ws.previewCommands + "\nend"
       ws.compiler.compileMoreCode(source, None, ws.world.program, ws.getProcedures, ws.getExtensionManager)
     }
+  }
+
+  def makePath(folderNames: String*) = {
+    val sep = java.io.File.separatorChar.toString
+    folderNames.mkString(sep, sep, sep)
   }
 }
