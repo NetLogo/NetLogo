@@ -11,7 +11,15 @@ import ChecksumsAndPreviews.Previews.needsManualPreview
 
 class TestCompileAll extends FunSuite with SlowTest{
 
-  for (path <- ModelsLibrary.getModelPaths ++ ModelsLibrary.getModelPathsAtRoot("extensions")) {
+  // Models whose path contains any of these strings will not be tested:
+  val exclusions = Seq("Arduino Example") // see https://github.com/NetLogo/NetLogo/issues/763
+
+  val modelPaths =
+    (ModelsLibrary.getModelPaths ++ ModelsLibrary.getModelPathsAtRoot("extensions"))
+      .map(new java.io.File(_).getCanonicalPath()).toSet  // workaround for https://github.com/NetLogo/NetLogo/issues/765
+      .filterNot(path => exclusions exists path.contains)
+
+  for (path <- modelPaths) {
     test("compile: " + path) {
       compile(path)
     }
