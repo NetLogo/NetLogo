@@ -6,6 +6,8 @@ import org.nlogo.api.Version
 import org.nlogo.workspace.ModelsLibrary
 import org.scalatest.FunSuite
 import org.nlogo.util.SlowTest
+import org.nlogo.workspace.AbstractWorkspace
+import ChecksumsAndPreviews.Previews.needsManualPreview
 
 class TestCompileAll extends FunSuite with SlowTest{
 
@@ -23,6 +25,7 @@ class TestCompileAll extends FunSuite with SlowTest{
     workspace.compilerTestingMode = true
     try {
       workspace.open(path)
+      compilePreviewCommands(workspace)
       // compile BehaviorSpace experiments
       val lab = HeadlessWorkspace.newLab
       lab.load(HeadlessModelOpener.protocolSection(path))
@@ -31,4 +34,10 @@ class TestCompileAll extends FunSuite with SlowTest{
     finally {workspace.dispose()}
   }
 
+  def compilePreviewCommands(ws: AbstractWorkspace) {
+    if (!(ws.previewCommands.isEmpty || needsManualPreview(ws.previewCommands))) {
+      val source = "to __custom-preview-commands " + ws.previewCommands + "\nend"
+      ws.compiler.compileMoreCode(source, None, ws.world.program, ws.getProcedures, ws.getExtensionManager)
+    }
+  }
 }
