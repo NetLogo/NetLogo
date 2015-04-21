@@ -5,11 +5,12 @@ package org.nlogo.headless
 import org.nlogo.workspace.AbstractWorkspaceScala
 import org.nlogo.util.HexString.toHexString
 import java.io.PrintWriter
+import ChecksumsAndPreviews.Previews.needsManualPreview
 
 object Checksummer {
   def initModelForChecksumming(workspace: HeadlessWorkspace) {
     workspace.renderer.renderLabelsAsRectangles_=(true)
-    if(workspace.previewCommands.containsSlice("need-to-manually-make-preview-for-this-model"))
+    if (needsManualPreview(workspace.previewCommands))
       workspace.previewCommands = AbstractWorkspaceScala.DefaultPreviewCommands
     workspace.command("random-seed 0")
     workspace.command(workspace.previewCommands)
