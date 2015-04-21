@@ -8,6 +8,7 @@ import org.scalatest.FunSuite
 import org.nlogo.util.SlowTest
 import org.nlogo.workspace.AbstractWorkspace
 import ChecksumsAndPreviews.Previews.needsManualPreview
+import org.nlogo.api.CompilerException
 
 class TestCompileAll extends FunSuite with SlowTest{
 
@@ -54,7 +55,11 @@ class TestCompileAll extends FunSuite with SlowTest{
   def compilePreviewCommands(ws: AbstractWorkspace) {
     if (!(ws.previewCommands.isEmpty || needsManualPreview(ws.previewCommands))) {
       val source = "to __custom-preview-commands " + ws.previewCommands + "\nend"
-      ws.compiler.compileMoreCode(source, None, ws.world.program, ws.getProcedures, ws.getExtensionManager)
+      try {
+        ws.compiler.compileMoreCode(source, None, ws.world.program, ws.getProcedures, ws.getExtensionManager)
+      } catch {
+        case e: CompilerException => throw new Exception("Error compiling preview commands: " + e.getMessage, e)
+      }
     }
   }
 
