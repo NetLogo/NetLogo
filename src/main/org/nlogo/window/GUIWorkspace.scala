@@ -22,8 +22,7 @@ with Events.LoadSectionEventHandler {
   def handle(e: Events.LoadSectionEvent) {
     e.section match {
       case api.ModelSection.PreviewCommands =>
-        if (e.text.trim.nonEmpty)
-          previewCommands = e.text
+        previewCommands = api.PreviewCommands(e.text)
       case api.ModelSection.HubNetClient =>
         if (e.lines.nonEmpty && !workspace.AbstractWorkspace.isApplet)
           getHubNetManager.load(e.lines.toArray, e.version)

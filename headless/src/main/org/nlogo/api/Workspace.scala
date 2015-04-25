@@ -49,7 +49,7 @@ trait Workspace extends ImporterUser with ParserServices with RandomServices {
   // kludgy this is AnyRef, but we don't want to have a compile-time dependency on the plot
   // package. should be cleaned up sometime by introducing PlotManager? ST 2/12/08
   def plotManager: AnyRef
-  def previewCommands: String
+  def previewCommands: PreviewCommands
   def clearTicks()
   @throws(classOf[java.net.MalformedURLException])
   def attachModelDir(filePath: String): String

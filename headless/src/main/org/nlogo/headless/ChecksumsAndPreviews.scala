@@ -4,6 +4,7 @@ package org.nlogo.headless
 
 import org.nlogo.api.Version
 import org.nlogo.workspace.ModelsLibrary
+import org.nlogo.api.PreviewCommands
 
 object ChecksumsAndPreviews {
 
@@ -53,12 +54,13 @@ object ChecksumsAndPreviews {
         // startup procedure if any - ST 7/12/06
         workspace.command("random-seed 0")
         workspace.open(path)
-        if(workspace.previewCommands.containsSlice("need-to-manually-make-preview-for-this-model"))
-          println("skipping: " + path)
-        else {
-          println("making preview for: " + path)
-          workspace.command(workspace.previewCommands)
-          workspace.exportView(previewPath, "PNG")
+        workspace.previewCommands match {
+          case PreviewCommands.Manual =>
+            println("skipping: " + path)
+          case _ =>
+            println("making preview for: " + path)
+            workspace.command(workspace.previewCommands.source)
+            workspace.exportView(previewPath, "PNG")
         }
       }
       catch { case e: Throwable => e.printStackTrace() }
