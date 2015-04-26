@@ -17,6 +17,7 @@ class TestCompileAll extends FunSuite with SlowTest {
     Seq(
       "Arduino Example", // see https://github.com/NetLogo/NetLogo/issues/763
       "Oil Cartel HubNet", // see https://github.com/NetLogo/models/issues/51
+      "GoGo", // until the gogo extension is updated on 6.x -- NP 2014-04-26
       "QuickTime" // because the qtj extension is not built on Travis
     ).exists(path.contains) ||
       (if (Version.is3D) !path.contains(makePath("3D")) // when in 3D, skip models that aren't in the 3D directory.
