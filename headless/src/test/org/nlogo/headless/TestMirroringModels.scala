@@ -70,7 +70,8 @@ class TestMirroringModels extends FunSuite with SlowTest {
   if (!api.Version.is3D) {
     val exclusions = Seq(
       "GIS General Examples", // the GIS ext. bypasses the trailDrawer
-      "GIS Gradient Example")
+      "GIS Gradient Example",
+      "Ticket Sales")
     for {
       path <- TestChecksums.checksums.values.map(_.path)
       if !exclusions.exists(name => path.endsWith(name + ".nlogo"))
