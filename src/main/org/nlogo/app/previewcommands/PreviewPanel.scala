@@ -13,10 +13,11 @@ import scala.util.Success
 import scala.xml.Utility.escape
 
 import org.nlogo.api.Version.is3D
-import org.nlogo.app.GraphicsPreview
 import org.nlogo.awt.Hierarchy.getFrame
+import org.nlogo.nvm.RunnablePreviewCommands
 import org.nlogo.swing.Implicits.thunk2runnable
 import org.nlogo.swing.ModalProgressTask
+import org.nlogo.window.GraphicsPreviewInterface
 
 import javax.imageio.ImageIO
 import javax.swing.AbstractAction
@@ -27,13 +28,11 @@ import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.SwingConstants.CENTER
 
-class PreviewPanel extends JPanel {
+class PreviewPanel(graphicsPreview: GraphicsPreviewInterface) extends JPanel {
   setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
   setLayout(new BorderLayout)
   val button = new JButton
-  val graphicsPreview = new GraphicsPreview {
-    setBorder(BorderFactory.createLineBorder(DARK_GRAY, 1))
-  }
+  graphicsPreview.setBorder(BorderFactory.createLineBorder(DARK_GRAY, 1))
   val imageLabel = new JLabel {
     override val getPreferredSize = graphicsPreview.getPreferredSize
     setBorder(BorderFactory.createLineBorder(GRAY, 1))

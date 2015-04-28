@@ -87,7 +87,7 @@ class Supervisor(dialog: java.awt.Dialog,
     }
     queue.enqueue(workspace)
     (2 to options.threadCount).foreach{_ =>
-      val w = factory.newInstance
+      val w = factory.newInstance(true)
       headlessWorkspaces += w
       queue.enqueue(w)
     }

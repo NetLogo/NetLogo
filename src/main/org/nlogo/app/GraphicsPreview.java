@@ -2,13 +2,15 @@ package org.nlogo.app;
 
 /*
  * I ripped out this class from ModelsLibraryDialog.java to make it accessible from
- * `previewCommands.PreviewPanel`. Besides making it public, the only modification is 
+ * `previewCommands.PreviewPanel`. Besides making it public, the only modification is
  * the addition of the `void setImage(java.awt.Image newImage)` method.
  * This should be converted to Scala when we deal with
  * https://github.com/NetLogo/models/issues/48
  * -- NP 2015-04-25
  */
-public strictfp class GraphicsPreview extends javax.swing.JPanel {
+public strictfp class GraphicsPreview
+  extends javax.swing.JPanel
+  implements org.nlogo.window.GraphicsPreviewInterface {
     // not JComponent otherwise super.paintComponent() doesn't paint the
     // background color for reasons I can't fathom - ST 8/3/03
 
@@ -30,10 +32,10 @@ public strictfp class GraphicsPreview extends javax.swing.JPanel {
       }
       repaint();
     }
-    
+
     public void setImage(java.awt.Image newImage) {
       image = newImage;
-      repaint();      
+      repaint();
     }
 
     @Override

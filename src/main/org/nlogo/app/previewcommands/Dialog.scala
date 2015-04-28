@@ -7,52 +7,43 @@ import java.awt.event.ItemEvent
 import java.awt.event.ItemListener
 import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
-
 import org.nlogo.api.CompilerException
 import org.nlogo.api.I18N
 import org.nlogo.api.PreviewCommands
-import org.nlogo.app.App
-import org.nlogo.app.ModelSaver
 import org.nlogo.awt.Positioning.center
 import org.nlogo.headless.HeadlessWorkspace
 import org.nlogo.swing.Utils.addEscKeyAction
 import org.nlogo.window.EditorColorizer
+import org.nlogo.window.GraphicsPreviewInterface
 import org.nlogo.workspace.Evaluator
 import org.nlogo.workspace.ModelsLibrary.getImagePath
-
 import javax.swing.AbstractAction
 import javax.swing.BorderFactory
 import javax.swing.JButton
 import javax.swing.JDialog
 import javax.swing.JPanel
-
-object Dialog {
-  val title = "Preview Commands Editor"
-  def getPreviewCommands(app: App): PreviewCommands = {
-    val dialog = new Dialog(app.frame, new ModelSaver(app).save, app.workspace.getModelPath)
-    dialog.setVisible(true)
-    dialog.previewCommands
-  }
-}
+import org.nlogo.nvm.WorkspaceFactory
 
 class Dialog(
   owner: Frame,
+  title: String,
   modelContents: String,
-  modelPath: String)
-  extends JDialog(owner, true) {
+  modelPath: String,
+  workspaceFactory: WorkspaceFactory,
+  graphicsPreview: GraphicsPreviewInterface)
+  extends JDialog(owner, title, true) {
   org.nlogo.awt.Fonts.adjustDefaultFont(this)
-  setTitle(Dialog.title)
 
   val ws = HeadlessWorkspace.newInstance
   ws.openString(modelContents)
   private var _previewCommands = ws.previewCommands
   def previewCommands = _previewCommands
 
-  val guiState = new GUIState(ws, modelContents)
+  val guiState = new GUIState(modelContents, ws, workspaceFactory)
   val editorPanel = new EditorPanel(new EditorColorizer(ws))
   val comboBox = editorPanel.comboBox
   val editor = editorPanel.editor
-  val previewPanel = new PreviewPanel
+  val previewPanel = new PreviewPanel(graphicsPreview)
 
   comboBox.addItemListener(new ItemListener() {
     def itemStateChanged(evt: ItemEvent): Unit =

@@ -31,7 +31,7 @@ class ImageGenerator {
 
     try {
 
-      Workspace ws = workspaceFactory.newInstance();
+      Workspace ws = workspaceFactory.newInstance(true);
       String         command = "random-seed 0 " + ws.previewCommands().source();
       SimpleJobOwner owner   = new SimpleJobOwner("ImageGenerator", ws.world().mainRNG(), org.nlogo.api.AgentKindJ.Observer());
       ws.runCompiledCommands(owner, ws.compileCommands(command));
