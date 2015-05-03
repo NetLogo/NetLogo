@@ -173,7 +173,7 @@ class ViewManager(val workspace: GUIWorkspace,
 
   private var antiAliasing = true
 
-  def antiAliasingOn(antiAliasing: Boolean) {
+  def antiAliasingOn_=(antiAliasing: Boolean) {
     this.antiAliasing = antiAliasing
     if (currentView != null) {
       world.markPatchColorsDirty()
@@ -220,7 +220,7 @@ class ViewManager(val workspace: GUIWorkspace,
 
   def displayOn = workspace.displaySwitchOn
 
-  def displayOn(displayOn: Boolean) {
+  def displayOn_=(displayOn: Boolean) {
     workspace.displaySwitchOn(displayOn)
   }
 

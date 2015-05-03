@@ -15,7 +15,7 @@ class AggregateManagerLite extends AggregateManagerInterface {
   /// implementations of SourceOwner methods
   var source = ""
   def innerSource = source
-  def innerSource(s: String) = unsupported
+  def innerSource_=(s: String) = unsupported
   def classDisplayName = "System Dynamics"
   def kind = unsupported
   def headerSource = ""

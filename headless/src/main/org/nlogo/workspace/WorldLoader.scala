@@ -17,16 +17,15 @@ class WorldLoader {
     // viewWidget which could cause patchSize ugliness down the line ev 7/30/07
     if(strings.size > tickCounterLabelIndex) {
       val label = strings(tickCounterLabelIndex)
-      worldInterface.tickCounterLabel(
-        if(label == "NIL") ""
-        else label)
+      worldInterface.tickCounterLabel = if(label == "NIL") "" else label
     }
     else
-      worldInterface.tickCounterLabel("ticks")
-    if(strings.size > tickCounterIndex)
-      worldInterface.showTickCounter(1 == strings(tickCounterIndex).toInt)
-    else
-      worldInterface.showTickCounter(true)
+      worldInterface.tickCounterLabel = "ticks"
+    worldInterface.showTickCounter =
+      if(strings.size > tickCounterIndex)
+        1 == strings(tickCounterIndex).toInt
+      else
+        true
     var patchSize = strings(7).toDouble
     val width = getWidth(worldInterface, d, patchSize, strings)
     patchSize = adjustPatchSize(worldInterface, d, patchSize, strings)
@@ -37,7 +36,7 @@ class WorldLoader {
     // the dimensions because that's where every thing gets allocated initially. ev 7/19/06
     worldInterface.clearTurtles()
     if(strings.size > 9)
-      worldInterface.fontSize(strings(9).toInt)
+      worldInterface.fontSize_=(strings(9).toInt)
     // note we ignore items 10, 11, 12 which had the old exactDraw
     // settings which are now always on - ST 5/27/05
     // ignore item 13, which was for old, now-removed hex support - ST 1/4/07
@@ -50,16 +49,16 @@ class WorldLoader {
       wrapY = 0 != strings(15).toInt
     }
     worldInterface.changeTopology(wrapX, wrapY)
-    worldInterface.updateMode(
+    worldInterface.updateMode_=(
       if(strings.size > updateModeIndex)
         UpdateMode.load(strings(updateModeIndex).toInt)
       else
         UpdateMode.Continuous)
-    worldInterface.frameRate(
+    worldInterface.frameRate =
       if(strings.size > frameRateIndex)
         strings(frameRateIndex).toDouble
       else
-        30)
+        30
     // ignore strings(22), used to be timeBasedUpdates flag - ST 1/25/07
     worldInterface.setSize(width, height)
   }

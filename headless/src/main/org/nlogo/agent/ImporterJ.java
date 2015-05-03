@@ -199,7 +199,7 @@ public abstract strictfp class ImporterJ
       throws java.io.IOException {
     if (hasMoreLines(false)) {
       Double patchSize = Double.valueOf(nextLine()[0]);
-      importerUser.patchSize(patchSize.doubleValue());
+      importerUser.patchSize_$eq(patchSize.doubleValue());
       importerUser.resizeView();
       needToResize = false;
 

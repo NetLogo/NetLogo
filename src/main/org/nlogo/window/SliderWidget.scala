@@ -45,13 +45,13 @@ trait AbstractSliderWidget extends MultiErrorWidget {
   def increment = sliderData.increment
   def value = sliderData.value
   def value_=(d:Double){
-    sliderData.value = d;
-    revalidate();
+    sliderData.value = d
+    revalidate()
     repaint()
   }
   def value_=(d:Double, buttonRelease:Boolean){
-    sliderData.value_=(d, buttonRelease);
-    revalidate();
+    sliderData.value_=(d, buttonRelease)
+    revalidate()
     repaint()
   }
   def coerceValue(value: Double): Double = sliderData.coerceValue(value)
@@ -101,7 +101,7 @@ trait AbstractSliderWidget extends MultiErrorWidget {
   }
 
   /// size calculations
-  override def getMinimumSize = painter.getMinimumSize()
+  override def getMinimumSize = painter.getMinimumSize
   override def getPreferredSize(font:Font) =painter.getPreferredSize(font)
   override def getMaximumSize = painter.getMaximumSize
   override def doLayout { super.doLayout(); painter.doLayout() }
@@ -141,7 +141,7 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast) ext
     }
   }
 
-  def valueObject(v: Object) {
+  def valueObject_=(v: Object) {
     if (v.isInstanceOf[Double]) { value_=(v.asInstanceOf[Double], true) }
   }
 

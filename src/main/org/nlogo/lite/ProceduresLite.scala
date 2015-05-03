@@ -11,18 +11,17 @@ import org.nlogo.window.{ Event, Events, ProceduresInterface }
 // CodeTab depends on the new editor, which we don't want in the lite jar
 
 class ProceduresLite(linkParent: AnyRef, workspace: Workspace) extends ProceduresInterface
-with Event.LinkChild with Events.LoadSectionEventHandler
-{
+    with Event.LinkChild with Events.LoadSectionEventHandler {
   override def classDisplayName = "Code"
   override def kind = AgentKind.Observer
   private var text = ""
   override def headerSource = ""
   override def innerSource = text
   override def source = headerSource + innerSource
-  override def innerSource(text: String) { this.text = text }
+  override def innerSource_=(text: String) { this.text = text }
   override def handle(e: Events.LoadSectionEvent) {
     if(e.section == ModelSection.Code) {
-      innerSource(workspace.autoConvert(e.text, false, false, e.version))
+      innerSource = workspace.autoConvert(e.text, false, false, e.version)
       (new Events.CompileAllEvent).raise(this)
     }
   }

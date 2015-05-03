@@ -191,7 +191,7 @@ strictfp class InterfacePanel
         // from the errors tab - ST 12/17/04
         org.nlogo.window.JobWidget jobWidget =
             (org.nlogo.window.JobWidget) w.widget();
-        jobWidget.innerSource("");
+        jobWidget.innerSource_$eq("");
         new org.nlogo.window.Events.CompileMoreSourceEvent(jobWidget)
             .raise(this);
       }
@@ -260,7 +260,7 @@ strictfp class InterfacePanel
         !type.equals("GRAPHICS-WINDOW") &&
         VersionHistory.olderThan13pre1(modelVersion)) {
       y += ((org.nlogo.window.ViewWidget) viewWidget).getExtraHeight() +
-          ((org.nlogo.window.ViewWidget) viewWidget).controlStrip.getHeight();
+          ((org.nlogo.window.ViewWidget) viewWidget).controlStrip().getHeight();
     }
     if (type.equals("GRAPHICS-WINDOW")) {
       // the graphics widget (and the command center) are special cases because
@@ -281,7 +281,7 @@ strictfp class InterfacePanel
                 true, true, 1.0, zoomer().zoomFactor());
         zoomer().scaleComponentFont
             (((org.nlogo.window.ViewWidget) viewWidget)
-                .view,
+                .view(),
                zoomFactor(), 1.0, false);
       }
       return viewWidget.asWidget();

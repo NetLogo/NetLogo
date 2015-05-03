@@ -63,7 +63,7 @@ class PlotWidgetGUI(
     c.anchor = java.awt.GridBagConstraints.WEST
     c.fill = java.awt.GridBagConstraints.VERTICAL
     gridbag.setConstraints(yAxis, c)
-    panel.add(yAxis);
+    panel.add(yAxis)
 
     c.gridwidth = java.awt.GridBagConstraints.RELATIVE
     c.weightx = 3.0

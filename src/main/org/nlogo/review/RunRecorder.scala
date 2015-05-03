@@ -135,7 +135,7 @@ class RunRecorder(
       } catch {
         case _: api.LogoException => "N/A"
       }
-    } monitor.value(result)
+    } monitor.value = result
   }
 
 }

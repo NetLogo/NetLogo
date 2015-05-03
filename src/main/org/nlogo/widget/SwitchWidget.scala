@@ -13,7 +13,7 @@ class SwitchWidget extends Switch with Editable with InterfaceGlobalWidget
   override def propertySet = Properties.swiitch
 
   def valueObject: AnyRef = constraint.defaultValue
-  def valueObject(value: AnyRef) {
+  def valueObject_=(value: AnyRef) {
     if (value.isInstanceOf[Boolean]) {
       isOn = value.asInstanceOf[Boolean]
     }

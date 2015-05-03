@@ -22,8 +22,7 @@ package org.nlogo.api
 trait SourceOwner {
   def classDisplayName: String
   def headerSource: String
-  def innerSource: String
-  def innerSource(s: String)
+  var innerSource: String
   def source: String
   def kind: AgentKind
 }

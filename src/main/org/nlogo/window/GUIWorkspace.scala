@@ -84,7 +84,7 @@ with Events.LoadSectionEventHandler {
   override def startLogging(properties: String) {
     try new Events.LoggingEvent(LoggingEventType.START_LOGGING,
                                 fileManager.attachPrefix(properties))
-      .raiseLater(this);
+      .raiseLater(this)
   }
 
   override def zipLogFiles(filename: String) {
@@ -103,7 +103,7 @@ with Events.LoadSectionEventHandler {
   override def choosePlot(frame: java.awt.Frame): org.nlogo.plot.Plot = {
     val plotNames = plotManager.getPlotNames.toArray[AnyRef]
     if (plotNames.isEmpty) {
-      val message = "There are no plots to export.";
+      val message = "There are no plots to export."
       val options = Array[AnyRef](api.I18N.gui.get("common.buttons.ok"))
       org.nlogo.swing.OptionDialog.show(frame, "Export Plot", message, options)
       return null
@@ -172,7 +172,7 @@ with Events.LoadSectionEventHandler {
   }
 
   override def updateMonitor(owner: api.JobOwner, value: AnyRef) {
-    owner.asInstanceOf[MonitorWidget].value(value)
+    owner.asInstanceOf[MonitorWidget].value = value
   }
 
   ///
@@ -234,7 +234,7 @@ with Events.LoadSectionEventHandler {
 
   override def userDirectory: Option[String] =
     try {
-      view.mouseDown(false)
+      view.mouseDown = false
       FileDialog.setDirectory(fileManager.prefix)
       val chosen =
         FileDialog.show(getFrame, "Choose Directory", java.awt.FileDialog.LOAD,
@@ -248,7 +248,7 @@ with Events.LoadSectionEventHandler {
 
   override def userFile: Option[String] =
     try {
-      view.mouseDown(false)
+      view.mouseDown = false
       FileDialog.setDirectory(fileManager.prefix)
       val chosen =
         FileDialog.show(getFrame, "Choose File", java.awt.FileDialog.LOAD)
@@ -260,7 +260,7 @@ with Events.LoadSectionEventHandler {
     }
 
   override def userInput(message: String): Option[String] = {
-    view.mouseDown(false)
+    view.mouseDown = false
     Option(
       new InputDialog(
         getFrame, "User Input", message,
@@ -268,7 +268,7 @@ with Events.LoadSectionEventHandler {
   }
 
   override def userMessage(message: String): Boolean = {
-    view.mouseDown(false)
+    view.mouseDown = false
     val choice =
       OptionDialog.show(getFrame, "User Message", message,
                         Array(api.I18N.gui.get("common.buttons.ok"),
@@ -278,7 +278,7 @@ with Events.LoadSectionEventHandler {
 
   override def userNewFile: Option[String] =
     try {
-      view.mouseDown(false)
+      view.mouseDown = false
       FileDialog.setDirectory(fileManager.prefix)
       val chosen = FileDialog.show(getFrame, "Choose File", java.awt.FileDialog.SAVE)
       Some(chosen)
@@ -290,7 +290,7 @@ with Events.LoadSectionEventHandler {
 
   override def userOneOf(message: String, xs: api.LogoList): Option[AnyRef] = {
     val items = xs.map(api.Dump.logoObject).toArray[AnyRef]
-    view.mouseDown(false)
+    view.mouseDown = false
     val chosen =
       new OptionDialog(
         getFrame, "User One Of", message,
@@ -301,7 +301,7 @@ with Events.LoadSectionEventHandler {
   }
 
   override def userYesOrNo(message: String): Option[Boolean] = {
-    view.mouseDown(false)
+    view.mouseDown = false
     val response = OptionDialog.showIgnoringCloseBox(
       getFrame, "User Yes or No", message,
       Array(api.I18N.gui.get("common.buttons.yes"),

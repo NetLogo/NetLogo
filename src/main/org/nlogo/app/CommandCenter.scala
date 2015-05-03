@@ -136,10 +136,10 @@ class CommandCenter(workspace: org.nlogo.workspace.AbstractWorkspaceScala,
     val O = AgentKind.Observer; val T = AgentKind.Turtle
     val P = AgentKind.Patch;    val L = AgentKind.Link
     commandLine.kind match {
-      case O => commandLine.kind(if (forward) T else L)
-      case T => commandLine.kind(if (forward) P else O)
-      case P => commandLine.kind(if (forward) L else T)
-      case L => commandLine.kind(if (forward) O else P)
+      case O => commandLine.kind = if (forward) T else L
+      case T => commandLine.kind = if (forward) P else O
+      case P => commandLine.kind = if (forward) L else T
+      case L => commandLine.kind = if (forward) O else P
     }
     repaintPrompt()
     commandLine.requestFocus()

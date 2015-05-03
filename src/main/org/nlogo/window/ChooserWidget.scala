@@ -16,25 +16,25 @@ class ChooserWidget(parser: ParserServices) extends Chooser(parser) with Editabl
   private var nameChanged = false
 
   def valueObject: Object = value
-  def valueObject(v: Object) {
+  def valueObject_=(v: Object) {
     if (v != null) {
       var newIndex: Int = constraint.indexForValue(v)
-      if (newIndex != -1) {index(newIndex)}
+      if (newIndex != -1) {index = newIndex}
     }
   }
 
-  override def name(newName: String) = name(newName, true)
+  override def name_=(newName: String) = name(newName, true)
   private def name(newName: String, sendEvent: Boolean) {
-    super.name(newName)
+    super.name = newName
     // I don't think anyone ever uses the display name, but let's keep it in sync
     // with the real name, just in case - ST 6/3/02
     displayName(newName)
     if (sendEvent) {new Events.InterfaceGlobalEvent(this, true, false, false, false).raise(this)}
   }
-  def nameWrapper = name()
+  def nameWrapper: String = name
   // name needs a wrapper because we don't want to recompile until editFinished()
   def nameWrapper(newName: String) {
-    nameChanged = !name().equals(newName) || nameChanged
+    nameChanged = (name: String) != newName || nameChanged
     name(newName, false)
   }
 
@@ -53,7 +53,7 @@ class ChooserWidget(parser: ParserServices) extends Chooser(parser) with Editabl
     var oldValue: Object = value
     constraint.acceptedValues(list)
     var newIndex: Int = constraint.indexForValue(oldValue)
-    if (newIndex == -1) index(0) else index(newIndex)
+    index = if (newIndex == -1) 0 else newIndex
   }
 
   def handle(e: Events.AfterLoadEvent) {updateConstraints()}
@@ -63,18 +63,18 @@ class ChooserWidget(parser: ParserServices) extends Chooser(parser) with Editabl
 
   override def editFinished(): Boolean = {
     super.editFinished
-    name(name(), nameChanged)
+    name(name, nameChanged)
     updateConstraints
     nameChanged = false
     true
   }
 
-  protected[window] override def index(index: Int) {
+  protected[window] override def index_=(index: Int) {
     // Let's check to see if the value is different than the old value
     // before we raise an InterfaceGlobalEvent.  This will cut
     // down on the number of events generated.
-    if (this.index() != index) {
-      super.index(index)
+    if (this.index != index) {
+      super.index = index
       new Events.InterfaceGlobalEvent(this, false, false, true, false).raise(this)
     }
   }
@@ -85,9 +85,9 @@ class ChooserWidget(parser: ParserServices) extends Chooser(parser) with Editabl
     val x2 = strings(3).toInt
     val y2 = strings(4).toInt
     setSize(x2 - x1, y2 - y1)
-    name(org.nlogo.api.ModelReader.restoreLines(strings(5)))
+    name_=(org.nlogo.api.ModelReader.restoreLines(strings(5)))
     choicesWrapper(strings(7))
-    index(Integer.parseInt(strings(8)))
+    index = strings(8).toInt
     this
   }
 
@@ -98,16 +98,16 @@ class ChooserWidget(parser: ParserServices) extends Chooser(parser) with Editabl
     // the file format has separate entries for name and display name,
     // but at least at present, they are always equal, so we just
     // write out the name twice - ST 6/3/02
-    if (name() != null && name().trim.nonEmpty) {
-      s ++= name() + "\n"
-      s ++= name() + "\n"
+    if ((name: String) != null && (name: String).trim.nonEmpty) {
+      s ++= (name: String) + "\n"
+      s ++= (name: String) + "\n"
     }
     else {
       s ++= "NIL\n"
       s ++= "NIL\n"
     }
     s ++= choicesWrapper.trim.replaceAll("\n", " ") + "\n"
-    s ++= index() + "\n"
+    s ++= index + "\n"
     s.toString
   }
 }
