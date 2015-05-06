@@ -11,7 +11,10 @@ object Running {
       "-XX:MaxPermSize=128m",
       "-Xmx1024m",
       "-Dfile.encoding=UTF-8",
-      "-Djava.ext.dirs=",
+      // sunjce_provider.jar is needed for https connection to GitHub.
+      // but surely there was a reason to clear java.ext.dirs
+      // so this should NOT be merged like this - NP 2014-05-04.
+      // "-Djava.ext.dirs=",
       "-Dapple.awt.graphics.UseQuartz=true") ++
     (if(System.getProperty("os.name").startsWith("Mac"))
       Seq("-Xdock:name=NetLogo")
