@@ -149,6 +149,9 @@ object App{
           () => pico.getComponent(classOf[App]).tabs.setSelectedComponent(
             pico.getComponent(classOf[App]).tabs.reviewTab))))
     pico.addComponent(classOf[AgentMonitorManager])
+    pico.add(classOf[GitHubModelsDialogInterface],
+      "org.nlogo.app.github.ModelsDialog",
+      Array[Parameter](new ComponentParameter(classOf[AppFrame])))
     app = pico.getComponent(classOf[App])
     // It's pretty silly, but in order for the splash screen to show up
     // for more than a fraction of a second, we want to initialize as
@@ -298,6 +301,7 @@ class App extends
   var labManager:LabManagerInterface = null
   private val listenerManager = new NetLogoListenerManager
   lazy val modelingCommons = pico.getComponent(classOf[ModelingCommonsInterface])
+  lazy val gitHubModelsDialog = pico.getComponent(classOf[GitHubModelsDialogInterface])
   private val ImportWorldURLProp = "netlogo.world_state_url"
   private val ImportRawWorldURLProp = "netlogo.raw_world_state_url"
 

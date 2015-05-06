@@ -3,12 +3,10 @@
 package org.nlogo.app
 
 import java.io.IOException
-
 import org.nlogo.api, api.{ I18N, ModelReader, ModelSection, ModelType }
 import org.nlogo.api.ModelReader.{ modelSuffix, emptyModelPath }
 import org.nlogo.awt.UserCancelException
 import org.nlogo.window.InvalidVersionException
-
 import scala.annotation.{strictfp, switch}
 
 /*
@@ -26,6 +24,7 @@ import scala.annotation.{strictfp, switch}
   addMenuItem('N', new NewAction)
   addMenuItem('O', new OpenAction)
   addMenuItem('M', new ModelsLibraryAction)
+  addMenuItem('G', new GitHubModelsAction)
   add(new RecentFilesMenu(app, this))
   addSeparator()
   addMenuItem('S', new SaveAction)
@@ -112,6 +111,14 @@ import scala.annotation.{strictfp, switch}
       val source = ModelsLibraryDialog.open(org.nlogo.awt.Hierarchy.getFrame(FileMenu.this))
       val modelPath = ModelsLibraryDialog.getModelPath
       openFromSource(source, modelPath, "Loading...", ModelType.Library)
+    }
+  }
+
+  private class GitHubModelsAction extends FileMenuAction("GitHub Models...") {
+    def action() {
+      offerSave()
+      for (source <- app.gitHubModelsDialog.getModelSource())
+        openFromSource(source, null, "Loading...", ModelType.Library)
     }
   }
 
