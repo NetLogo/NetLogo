@@ -6,7 +6,9 @@ import javax.swing.event.DocumentListener
 import javax.swing._
 import java.awt.event._
 import java.awt.{Container, Component}
+import java.util.concurrent.Executor
 import language.implicitConversions
+import scala.concurrent.ExecutionContext
 
 object Implicits {
   implicit def thunk2runnable(fn: () => Unit): Runnable =
@@ -33,6 +35,11 @@ object Implicits {
 
   implicit def EnrichComboBox[T](combo: JComboBox[T]) = RichJComboBox[T](combo)
   implicit def EnrichContainer(c:Container) = new RichComponent(c)
+
+  implicit val swingExecutionContext: ExecutionContext =
+    ExecutionContext.fromExecutor(new Executor {
+      def execute(command: Runnable): Unit = SwingUtilities invokeLater command
+    })
 }
 
 object RichJButton{
