@@ -75,6 +75,8 @@ NativeLibs.nativeLibsTask
 
 moduleConfigurations += ModuleConfiguration("javax.media", JavaNet2Repository)
 
+resolvers += "Typesafe Repo" at "http://repo.typesafe.com/typesafe/releases/"
+
 libraryDependencies ++= Seq(
   "log4j" % "log4j" % "1.2.17",
   "javax.media" % "jmf" % "2.1.1e",
@@ -88,6 +90,8 @@ libraryDependencies ++= Seq(
   "org.jogamp.gluegen" % "gluegen-rt-main" % "2.1.5-01", // from "http://ccl.northwestern.edu/devel/gluegen-rt-2.1.5.jar",
   "org.apache.httpcomponents" % "httpclient" % "4.2",
   "org.apache.httpcomponents" % "httpmime" % "4.2",
+  "com.typesafe.play" %% "play-json" % "2.3.8",
+  "com.typesafe.play" %% "play-ws" % "2.3.8",
   "com.googlecode.json-simple" % "json-simple" % "1.1.1"
 )
 
