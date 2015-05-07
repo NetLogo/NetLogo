@@ -45,7 +45,7 @@ URL='http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.1
 if [ ! -f $SBT_LAUNCH ] ; then
   echo "downloading" $URL
   mkdir -p $HOME/.sbt
-  curl -s -S -f $URL -o $SBT_LAUNCH || exit
+  curl -s -S -L -f $URL -o $SBT_LAUNCH || exit
 fi
 
 # Windows/Cygwin users need these settings
