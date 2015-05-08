@@ -98,7 +98,7 @@ class DummyWorkspace extends DummyParserServices with Workspace {
 
   // from WorldResizer
   override def resizeView() = unsupported
-  override def patchSize(patchSize: Double) = unsupported
+  override def patchSize_=(patchSize: Double) = unsupported
   override def setDimensions(dim: WorldDimensions) = unsupported
   override def setDimensions(dim: WorldDimensions, patchSize: Double) = unsupported
 
