@@ -7,7 +7,7 @@ import VersionHistory._  // olderThan* methods
 
 // AutoConverter1 handles easy conversions that don't require parsing.
 // AutoConverter2 handles hard conversions that do.
-// This class was automatically converted from Scala to Java using a program called jatran.  I did
+// This class was automatically converted from Java to Scala using a program called jatran.  I did
 // some hand cleaning up of the code, but not that much, so beware. - ST 12/10/08
 object AutoConverter1 {
   val clearAllAndResetTicks =
