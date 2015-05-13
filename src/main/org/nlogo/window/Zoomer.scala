@@ -41,8 +41,8 @@ class Zoomer(container: Container) {
   def zoomWidgetSize(wrapper: WidgetWrapperInterface, newWidget: Boolean, loadingWidget: Boolean,
       oldZoom: Double, newZoom: Double) = {
     val component = wrapper.widget
-    var originalSize = sizes(component)
-    var originalZoom = sizeZooms(component)
+    var originalSize = sizes.getOrElse(component, null)
+    var originalZoom = sizeZooms.getOrElse(component, 0: Double)
     if(originalSize == null) {
       originalSize = component.getSize
       originalZoom = oldZoom
@@ -64,8 +64,8 @@ class Zoomer(container: Container) {
   def zoomWidgetLocation(wrapper: WidgetWrapperInterface, newWidget: Boolean, loadingWidget: Boolean,
       oldZoom: Double, newZoom: Double) = {
     val component = wrapper.widget
-    var originalLocation = locations(component)
-    var originalZoom = locationZooms(component)
+    var originalLocation = locations.getOrElse(component, null)
+    var originalZoom = locationZooms.getOrElse(component, 0: Double)
     if(originalLocation == null) {
       originalLocation = wrapper.getUnselectedLocation
       originalZoom = oldZoom
@@ -89,7 +89,7 @@ class Zoomer(container: Container) {
   def zoomWidgetFont(wrapper: WidgetWrapperInterface, widget: Widget,
       newWidget: Boolean, loadingWidget: Boolean, oldZoom: Double, newZoom: Double) = {
     val recursive = widget.zoomSubcomponents
-    if(fonts(widget) == null)
+    if(!fonts.contains(widget))
       storeComponentFont(widget, recursive, newWidget, loadingWidget, oldZoom)
     scaleComponentFont(widget, newZoom, oldZoom, recursive)
     if(wrapper != null && recursive)
@@ -102,7 +102,7 @@ class Zoomer(container: Container) {
     // want to remember what the font size at the 100% zoom level is, because
     // font sizes are so small that rounding error will mess us up unless we
     // always scale from the normal, unzoomed size
-    if(fonts(component) == null &&
+    if(!fonts.contains(component) &&
         (!component.isInstanceOf[ViewWidgetInterface] || !newWidget || loadingWidget)) {
       fonts(component) = component.getFont
       fontZooms(component) = oldZoom
@@ -116,7 +116,7 @@ class Zoomer(container: Container) {
 
   def scaleComponentFont(component: Component,
       newZoom: Double, oldZoom: Double, recursive: Boolean): Unit = {
-    if(fonts(component) == null)
+    if(!fonts.contains(component))
       storeComponentFont(component, recursive, false, false, oldZoom)
     val originalFont = fonts(component)
     val originalZoom = fontZooms(component)
@@ -145,16 +145,16 @@ class Zoomer(container: Container) {
     }
   }
 
-  def updateZoomInfo(component: Component) = component.getParent match {
+  def updateZoomInfo(component: Component): Unit = component.getParent match {
       case wrapper: WidgetWrapperInterface =>
-        val storedSize = sizes(component)
+        val storedSize = sizes.getOrElse(component, null)
         if(storedSize != null &&
             component.getSize != zoomSize(storedSize, sizeZooms(component), zoomFactor)) {
           sizes -= component
           sizeZooms -= component
         }
       
-        val storedLocation = locations(component)
+        val storedLocation = locations.getOrElse(component, null)
         if(storedLocation != null &&
             wrapper.getUnselectedLocation !=
               zoomLocation(storedLocation, locationZooms(component), zoomFactor)) {
@@ -164,10 +164,13 @@ class Zoomer(container: Container) {
         // except for View, always go from original font
         // size, since at the moment the user can't the change
         // individual font sizes of other widget types
-        component match { case viewWidget: ViewWidget =>
-          fonts -= viewWidget.view
-          fontZooms -= viewWidget.view
+        component match {
+          case viewWidget: ViewWidget =>
+            fonts -= viewWidget.view
+            fontZooms -= viewWidget.view
+          case _ =>
         }
+      case _ =>
     }
 
   /// called indirectly from the save() methods of the individual Widget classes
@@ -179,13 +182,13 @@ class Zoomer(container: Container) {
       r.x += parent.getLocation.x
       r.y += parent.getLocation.y
     }
-    val originalLocation = locations(comp)
+    val originalLocation = locations.getOrElse(comp, null)
     val unzoomedLocation =
       if(originalLocation == null)
         zoomLocation(r.getLocation, zoomFactor, 1.0)
       else
         zoomLocation(originalLocation, locationZooms(comp), 1.0)
-    val originalSize = sizes(comp)
+    val originalSize = sizes.getOrElse(comp, null)
     val unzoomedSize =
       if(originalSize == null)
         zoomSize(r.getSize, zoomFactor, 1.0)
@@ -196,7 +199,7 @@ class Zoomer(container: Container) {
 
   def getFontForSave(comp: Component) = {
     val size = comp.getFont.getSize
-    val originalFont = fonts(comp)
+    val originalFont = fonts.getOrElse(comp, null)
     val originalZoom = fontZooms(comp)
     if (originalFont != null)
       StrictMath.ceil(originalFont.getSize / originalZoom).toInt

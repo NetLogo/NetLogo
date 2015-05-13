@@ -158,22 +158,14 @@ abstract class Event {
       // step 1: using raiser as key, get map back which maps
       // from event class to handlers.  if no such map in cache,
       // create one.
-      var events = Event.handlers(raiser)
-      if(null == events) {
-        events = new HashMap[Class[_], ArrayBuffer[AnyRef]]
-        Event.handlers(raiser) = events
-      }
+      var events = Event.handlers.getOrElseUpdate(raiser, new HashMap[Class[_], ArrayBuffer[AnyRef]])
 
       // step 2: using event class as key, get list of handlers.
       // if no such list in cache, create one.
-      var handlersV = events(eventClass)
-      if(null == handlersV) {
-        // findHandlers does the grunt work of actually
-        // walking the component hierarchy looking for
-        // handlers
-        handlersV = findHandlers(findTop(raiser), eventClass)
-        events(eventClass) = handlersV
-      }
+      // findHandlers does the grunt work of actually
+      // walking the component hierarchy looking for
+      // handlers
+      var handlersV = events.getOrElseUpdate(eventClass, findHandlers(findTop(raiser), eventClass))
 
       // step 3: call the handle() method on every handler we find
       handlersV.foreach { handler =>
@@ -224,6 +216,7 @@ abstract class Event {
           parent = linkParent.asInstanceOf[Component]
         case comp: Component if !top.isInstanceOf[Window] =>
           parent = comp.getParent
+        case _ =>
       }
       if(null == parent)
         return top.asInstanceOf[Component]
@@ -241,6 +234,7 @@ abstract class Event {
       case linkParent: Event.LinkParent => linkParent.getLinkChildren.foreach { obj =>
           result ++= findHandlers(obj, eventClass)
         }
+      case _ =>
     }
     if(isHandler(top, eventClass))
       result += top
@@ -253,10 +247,9 @@ abstract class Event {
 
   private def isHandler(handler: AnyRef, eventClass: Class[_ <: Event]) = {
     var handlerClass: Class[_] = handler.getClass
-    var eventsHandled = Event.eventsHandledMap(handlerClass)
-    if(eventsHandled == null) {
-      eventsHandled = new HashSet[Class[_ <: Event]]
-      Event.eventsHandledMap(handlerClass) = eventsHandled
+    val freshEventsHandled = !Event.eventsHandledMap.contains(handlerClass)
+    var eventsHandled = Event.eventsHandledMap.getOrElseUpdate(handlerClass, new HashSet[Class[_ <: Event]])
+    if(freshEventsHandled)
       while(handlerClass != null) {
         Event.getAllInterfaces(handlerClass).foreach { interface =>
           val interfaceName = interface.getName
@@ -266,7 +259,6 @@ abstract class Event {
         }
         handlerClass = handlerClass.getSuperclass
       }
-    }
     eventsHandled.contains(eventClass)
   }
 
