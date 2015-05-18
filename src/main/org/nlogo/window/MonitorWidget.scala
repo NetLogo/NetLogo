@@ -21,19 +21,6 @@ class MonitorWidget(random: MersenneTwisterFast) extends JobWidget(random) with 
   private var jobRunning = false
   private var hasError = false
 
-  setOpaque(true)
-  addMouseListener(this)
-  setBackground(InterfaceColors.MONITOR_BACKGROUND)
-  setBorder(widgetBorder)
-  Fonts.adjustDefaultFont(this)
-
-  private var _name = ""
-  def name = _name
-  def name_=(__name: String) = {
-    _name = __name
-    chooseDisplayName()
-  }
-
   private var _fontSize = getFont.getSize
   def fontSize = _fontSize
   def fontSize_=(size: Int) = {
@@ -60,6 +47,19 @@ class MonitorWidget(random: MersenneTwisterFast) extends JobWidget(random) with 
       super.setFont(f)
     else
       super.setFont(getFont.deriveFont(fontSize.toFloat))
+
+  setOpaque(true)
+  addMouseListener(this)
+  setBackground(InterfaceColors.MONITOR_BACKGROUND)
+  setBorder(widgetBorder)
+  Fonts.adjustDefaultFont(this)
+
+  private var _name = ""
+  def name = _name
+  def name_=(__name: String) = {
+    _name = __name
+    chooseDisplayName()
+  }
 
   override def classDisplayName = I18N.gui.get("tabs.run.widgets.monitor")
 

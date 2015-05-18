@@ -10,27 +10,6 @@ import org.nlogo.plot.{ Plot, PlotPainter }
 
 class PlotCanvas(private var plot: Plot) extends JPanel {
   private var painter = new PlotPainter(plot)
-  setOpaque(true)
-  setBackground(Color.WHITE)
-  setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR))
-  addMouseListener(_mouseListener)
-  addMouseMotionListener(_mouseMotionListener)
-
-  def setPlot(_plot: Plot) =  {
-    plot = _plot
-    painter = new PlotPainter(plot)
-  }
-
-  def repaintIfNeeded() = {
-    painter.setupOffscreenImage(getWidth, getHeight)
-    painter.refresh()
-    repaint()
-  }
-
-  /// mouse handling
-
-  private var mouseHere = false
-  private var mouseLoc: Point = null
 
   private val _mouseListener = new MouseAdapter {
       override def mouseEntered(e: MouseEvent) = {
@@ -57,6 +36,28 @@ class PlotCanvas(private var plot: Plot) extends JPanel {
         repaint()
       }
     }
+
+  setOpaque(true)
+  setBackground(Color.WHITE)
+  setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR))
+  addMouseListener(_mouseListener)
+  addMouseMotionListener(_mouseMotionListener)
+
+  def setPlot(_plot: Plot) =  {
+    plot = _plot
+    painter = new PlotPainter(plot)
+  }
+
+  def repaintIfNeeded() = {
+    painter.setupOffscreenImage(getWidth, getHeight)
+    painter.refresh()
+    repaint()
+  }
+
+  /// mouse handling
+
+  private var mouseHere = false
+  private var mouseLoc: Point = null
 
   /// other methods
 

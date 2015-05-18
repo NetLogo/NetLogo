@@ -72,7 +72,7 @@ object Event {
     if(clazz == o.getClass)
       longName
     else
-      longName + s" (${clazz.getName})"
+      s"$longName (${clazz.getName})"
   }
 
   private val eventsHandledMap = new HashMap[Class[_], Set[Class[_ <: Event]]]
@@ -145,7 +145,7 @@ abstract class Event {
       // with them, so let's ignore them
       if(Event.logEvents && name != "PeriodicUpdateEvent" && name != "InterfaceGlobalEvent") {
         print(" "*oldNestingDepth)
-        println(s"raising $name : ${Event.readableName(raiser)}")
+        println(s"raising $name: ${Event.readableName(raiser)}")
       }
       if(raiser == null)
         throw new IllegalStateException("event raised with null raiser")
@@ -231,6 +231,9 @@ abstract class Event {
       case container: Container => container.getComponents.foreach { comp =>
           result ++= findHandlers(comp, eventClass)
         }
+      case _ =>
+    }
+    top match {
       case linkParent: Event.LinkParent => linkParent.getLinkChildren.foreach { obj =>
           result ++= findHandlers(obj, eventClass)
         }
