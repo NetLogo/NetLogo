@@ -41,40 +41,33 @@ with Event.LinkParent {
   RuntimeErrorDialog.init(this)
   org.nlogo.util.Exceptions.setHandler(this)
 
-  val (iP: InterfacePanelLite,
-       workspace: LiteWorkspace,
-       procedures: ProceduresLite,
-       panel: AppletAdPanel,
-       defaultOwner: SimpleJobOwner) = {
-    val world = if(Version.is3D) new World3D() else new World
-    val workspace = new LiteWorkspace(this, isApplet, world, frame, listenerManager)
-    addLinkComponent(workspace.aggregateManager)
-    addLinkComponent(workspace)
-    val procedures = new ProceduresLite(workspace, workspace)
-    addLinkComponent(procedures)
-    addLinkComponent(new CompilerManager(workspace, procedures))
-    addLinkComponent(new CompiledEvent.Handler {
-      override def handle(e: CompiledEvent) {
-        if (e.error != null)
-          e.error.printStackTrace()
-      }})
-    addLinkComponent(new LoadSectionEvent.Handler {
-      override def handle(e: LoadSectionEvent) {
-        if (e.section == ModelSection.SystemDynamics)
-          workspace.aggregateManager.load(e.text, workspace)
-      }})
-    val iP =
-      new InterfacePanelLite(workspace.viewWidget, workspace, workspace, workspace.plotManager,
-                             new LiteEditorFactory(workspace))
-    workspace.setWidgetContainer(iP)
-    val defaultOwner = new SimpleJobOwner("AppletPanel", workspace.world.mainRNG, classOf[Observer])
-    setBackground(java.awt.Color.WHITE)
-    setLayout(new java.awt.BorderLayout)
-    add(iP, java.awt.BorderLayout.CENTER)
-    val panel = new AppletAdPanel(iconListener)
-    add(panel, java.awt.BorderLayout.EAST)
-    (iP, workspace, procedures, panel, defaultOwner)
-  }
+  protected val world = if(Version.is3D) new World3D() else new World
+  val workspace = new LiteWorkspace(this, isApplet, world, frame, listenerManager)
+  val procedures = new ProceduresLite(workspace, workspace)
+  protected val liteEditorFactory = new LiteEditorFactory(workspace)
+
+  val iP = createInterfacePanel(workspace)
+  val defaultOwner = new SimpleJobOwner("AppletPanel", workspace.world.mainRNG, classOf[Observer])
+  val panel = new AppletAdPanel(iconListener)
+  addLinkComponent(workspace.aggregateManager)
+  addLinkComponent(workspace)
+  addLinkComponent(procedures)
+  addLinkComponent(new CompilerManager(workspace, procedures))
+  addLinkComponent(new CompiledEvent.Handler {
+    override def handle(e: CompiledEvent) {
+      if (e.error != null)
+        e.error.printStackTrace()
+  }})
+  addLinkComponent(new LoadSectionEvent.Handler {
+    override def handle(e: LoadSectionEvent) {
+      if (e.section == ModelSection.SystemDynamics)
+        workspace.aggregateManager.load(e.text, workspace)
+  }})
+  workspace.setWidgetContainer(iP)
+  setBackground(java.awt.Color.WHITE)
+  setLayout(new java.awt.BorderLayout)
+  add(iP, java.awt.BorderLayout.CENTER)
+  add(panel, java.awt.BorderLayout.EAST)
 
   /** internal use only */
   @throws(classOf[java.net.MalformedURLException])
@@ -86,6 +79,9 @@ with Event.LinkParent {
     if (iP != null)
       iP.requestFocus()
   }
+
+  protected def createInterfacePanel(workspace: LiteWorkspace): InterfacePanelLite =
+    new InterfacePanelLite(workspace.viewWidget, workspace, workspace, workspace.plotManager, liteEditorFactory)
 
   /** internal use only */
   def setAdVisible(visible: Boolean) {
