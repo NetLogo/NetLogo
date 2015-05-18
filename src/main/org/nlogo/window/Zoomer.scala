@@ -25,8 +25,10 @@ class Zoomer(container: Container) {
     container.setVisible(false)
     val oldZoom = zoomFactor
     _zoomFactor = newZoom
-    container.getComponents.foreach { case wrapper: WidgetWrapperInterface =>
-      zoomWidget(wrapper, false, false, oldZoom, zoomFactor)
+    container.getComponents.foreach {
+      case wrapper: WidgetWrapperInterface =>
+        zoomWidget(wrapper, false, false, oldZoom, zoomFactor)
+      case _ =>
     }
     container.setVisible(true)
   }
@@ -111,6 +113,7 @@ class Zoomer(container: Container) {
       case comp: Container => comp.getComponents.foreach { x =>
         storeComponentFont(x, true, newWidget, loadingWidget, oldZoom)
       }
+      case _ =>
     }
   }
 
@@ -153,7 +156,7 @@ class Zoomer(container: Container) {
           sizes -= component
           sizeZooms -= component
         }
-      
+
         val storedLocation = locations.getOrElse(component, null)
         if(storedLocation != null &&
             wrapper.getUnselectedLocation !=
