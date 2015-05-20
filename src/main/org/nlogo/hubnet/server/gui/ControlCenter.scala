@@ -139,7 +139,7 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
       import scala.collection.JavaConverters._
       if (evt.getSource == kickButton) {
         val clientIds = clientsList.getSelectedValuesList().asScala
-        for (j <- 0 until clientIds.size) {kickClient(clientIds(j).toString)}
+        for (j <- 0 until clientIds.size) {kickClient(clientIds(j))}
       }
       else if (evt.getSource == newClientButton) {launchNewClient()}
       else if (evt.getSource == reloadButton) {

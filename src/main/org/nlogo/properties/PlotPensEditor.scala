@@ -342,10 +342,9 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
     private class RowListener extends ListSelectionListener {
       def valueChanged(event: ListSelectionEvent) {
         if (!event.getValueIsAdjusting && getSelectedRow != -1) {
-          if(table.getSelectedColumn == 2) {
-            if(model.pens(getSelectedRow).updateCode.contains("\n"))
+          if(table.getSelectedColumn == 2 &&
+             model.pens(getSelectedRow).updateCode.contains("\n"))
               openAdvancedPenEditor(model.pens(getSelectedRow))
-          }
           lastColumn = table.getSelectedColumn
         }
       }
@@ -353,8 +352,8 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
     private class ColumnListener extends ListSelectionListener {
       def valueChanged(event: ListSelectionEvent) {
         if (!event.getValueIsAdjusting && getSelectedRow != -1) {
-          if(table.getSelectedColumn == 2 && lastColumn != 2)
-            if(model.pens(getSelectedRow).updateCode.contains("\n"))
+          if(table.getSelectedColumn == 2 && lastColumn != 2 &&
+             model.pens(getSelectedRow).updateCode.contains("\n"))
               openAdvancedPenEditor(model.pens(getSelectedRow))
           lastColumn = table.getSelectedColumn
         }

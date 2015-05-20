@@ -23,9 +23,6 @@ class PropertyAccessor[T : reflect.ClassTag](val target: Editable, val displayNa
   def get: T = getter.invoke(target).asInstanceOf[T]
   def set(value: T) { setter.invoke(target, value.asInstanceOf[AnyRef]) }
 
-  def error: Option[Exception] = {
-    val e = target.error(accessString)
-    if( e == null ) None else Some(e)
-  }
+  def error: Option[Exception] = Option(target.error(accessString))
 
 }

@@ -45,7 +45,7 @@ class GUIHubNetManager(workspace: GUIWorkspace,
    */
   override def newClient(isRobo: Boolean, waitTime: Int) {
     val clientApp = Femto.get(classOf[ClientAppInterface], "org.nlogo.hubnet.client.ClientApp", Array[AnyRef]())
-    val host = try Some(InetAddress.getLocalHost.getHostAddress.toString)
+    val host = try Some(InetAddress.getLocalHost.getHostAddress)
     catch {case ex: java.net.UnknownHostException => None}
     // TODO: this seems like a bunch of bugs waiting to happen
     clientApp.startup(editorFactory, "", host.orNull, connectionManager.port, true,

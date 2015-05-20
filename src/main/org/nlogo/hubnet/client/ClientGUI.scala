@@ -99,7 +99,7 @@ class ClientGUI(editorFactory: org.nlogo.window.EditorFactory,clientView: Client
   // Component shows label,value pair. For the status bar.
   private class StatusField(labelStr: String,valueStr: String) extends JPanel {
     private val value = new JLabel(valueStr) {
-      setFont(getFont.deriveFont((getFont.getSize - 2.0).asInstanceOf[Float]))
+      setFont(getFont.deriveFont((getFont.getSize - 2.0).toFloat))
     }
     locally {
       setBackground(Color.white)

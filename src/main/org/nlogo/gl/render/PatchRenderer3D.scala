@@ -48,15 +48,13 @@ extends PatchRenderer(world, drawing, shapeRenderer) {
   }
 
   def renderBlackPatches(gl: GL2, patch: Patch3D, fontSize: Int, patchSize: Double) {
-    if(!world.patchesAllBlack) {
-      if(patch.hasLabel) {
-        gl.glPushMatrix()
-        val coords = getPatchCoords(patch)
-        val scale = Renderer.WORLD_SCALE
-        renderLabel(gl, scale * coords(0), scale * coords(1), scale * coords(2),
-                    patch, fontSize, patchSize)
-        gl.glPopMatrix()
-      }
+    if(!world.patchesAllBlack && patch.hasLabel) {
+      gl.glPushMatrix()
+      val coords = getPatchCoords(patch)
+      val scale = Renderer.WORLD_SCALE
+      renderLabel(gl, scale * coords(0), scale * coords(1), scale * coords(2),
+                  patch, fontSize, patchSize)
+      gl.glPopMatrix()
     }
   }
 

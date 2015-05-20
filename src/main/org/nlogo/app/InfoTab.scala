@@ -192,7 +192,7 @@ class InfoTab(attachModelDir: String => String) extends JPanel with
     def actionPerformed(e: ActionEvent) {
       val scrollBar = scrollPane.getVerticalScrollBar
       val (min, max) = (scrollBar.getMinimum, scrollBar.getMaximum)
-      val ratio = ((scrollBar.getValue - min).asInstanceOf[Double] / (max - min).asInstanceOf[Double])
+      val ratio = ((scrollBar.getValue - min).toDouble / (max - min).toDouble)
       if (view.isInstanceOf[JTextArea]) {
         updateEditorPane()
         scrollPane.setViewportView(editorPane)

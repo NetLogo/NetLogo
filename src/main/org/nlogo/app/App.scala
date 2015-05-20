@@ -779,11 +779,14 @@ class App extends
     if(workspace.getModelFileName == null) "NetLogo"
     else{
       var title = workspace.modelNameForDisplay
-      // on OS X, use standard window title format. otherwise use Windows convention
-      if(! System.getProperty("os.name").startsWith("Mac")) title = title + " - " + "NetLogo"
+      // on OS X, use standard window title format. otherwise use Windows convention.
       // 8212 is the unicode value for an em dash. we use the number since
       // we don't want non-ASCII characters in the source files -- AZS 6/14/2005
-      else title = "NetLogo " + (8212.toChar) + " " + title
+      title =
+        if(System.getProperty("os.name").startsWith("Mac"))
+          s"NetLogo ${8212.toChar} $title"
+        else
+          s"$title - NetLogo"
 
       // OS X UI guidelines prohibit paths in title bars, but oh well...
       if (workspace.getModelType == ModelType.Normal)

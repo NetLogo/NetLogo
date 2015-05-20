@@ -44,7 +44,7 @@ object ClientApp {
         }
         else if (args(i).equalsIgnoreCase("--id")) userid = args(i + 1)
         else if (args(i).equalsIgnoreCase("--ip")) hostip = args(i + 1)
-        else if (args(i).equalsIgnoreCase("--port")) port = (i + 1).toInt
+        else if (args(i).equalsIgnoreCase("--port")) port = i + 1
       }
       app.startup(editorFactory, userid, hostip, port, false, isRoboClient, waitTime, workspace)
     } catch {
@@ -130,7 +130,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
     exs match {
       case Some(ex) =>
         handleLoginFailure(ex)
-        clientPanel.disconnect(ex.toString)
+        clientPanel.disconnect(ex)
       case None =>
         loginDialog.setVisible(false)
         clientPanel.requestFocus()

@@ -203,12 +203,10 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   }
 
   def mouseDragged(e: MouseEvent) {
-    if (error == null){
-      if (hasButton1(e) && isEnabled) {
-        e.translatePoint(getX(), getY())
-        if (getBounds().contains(e.getPoint()) && ! disabledWaitingForSetup) buttonUp = false
-        else if (!forever || !foreverOn) buttonUp = true
-      }
+    if (error == null && hasButton1(e) && isEnabled){
+      e.translatePoint(getX(), getY())
+      if (getBounds().contains(e.getPoint()) && ! disabledWaitingForSetup) buttonUp = false
+      else if (!forever || !foreverOn) buttonUp = true
     }
   }
 
@@ -242,67 +240,64 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   }
 
   def action() {
-    if (error == null) {
-      // warning, confusing code ahead. not sure if there's a
-      // clearer way to write this hard to know without trying.
-      // it looks like maybe the forever button and the once button
-      // cases should be completely separate. that might help
-      // - ST 4/28/10
+    // warning, confusing code ahead. not sure if there's a
+    // clearer way to write this hard to know without trying.
+    // it looks like maybe the forever button and the once button
+    // cases should be completely separate. that might help
+    // - ST 4/28/10
 
-      // comments below added by - JC 9/16/10
+    // comments below added by - JC 9/16/10
 
-      // handle a click if this button is a forever button,
-      // or its a once button thats not running
-      // this means we don't process clicks on once buttons that are already running.
-      if (forever || !running) {
+    // handle a click if this button is a forever button,
+    // or its a once button thats not running
+    // this means we don't process clicks on once buttons that are already running.
+    if (error == null && (forever || !running)) {
+      // if its a once button or a forever button that is running
+      // signal to the user that the button is in the process of stopping.
+      if (!forever || running) {
+        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR))
+      }
 
-        // if its a once button or a forever button that is running
-        // signal to the user that the button is in the process of stopping.
-        if (!forever || running) {
-          setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR))
-        }
+      // if it's a forever button that is running, that means we need to stop it.
+      if (forever && running) {
+        // the mouseReleased method in ButtonWidget will have prematurely
+        // popped the button back up... so first we immediately undo what it did
+        foreverOn = true
+        buttonUp = false
+        // then we mark the job for stopping -- the button will pop back up
+        // when the job stops
+        stopping = true
+      }
+      else {
+        // in this case, it could be a forever button, but its not running
+        // or it could be a once button that is not running.
+        // remember, we couldn't have gotten into this if statement
+        // if it was a once button that was already running.
+        // so we've definitely clicked on a button that was up, and its time to run it.
+        stopping = false
+        running = true
+      }
 
-        // if it's a forever button that is running, that means we need to stop it.
-        if (forever && running) {
-          // the mouseReleased method in ButtonWidget will have prematurely
-          // popped the button back up... so first we immediately undo what it did
-          foreverOn = true
-          buttonUp = false
-          // then we mark the job for stopping -- the button will pop back up
-          // when the job stops
-          stopping = true
-        }
-        else {
-          // in this case, it could be a forever button, but its not running
-          // or it could be a once button that is not running.
-          // remember, we couldn't have gotten into this if statement
-          // if it was a once button that was already running.
-          // so we've definitely clicked on a button that was up, and its time to run it.
-          stopping = false
-          running = true
-        }
+      // http://ccl.northwestern.edu/netlogo/docs/programming.html#buttons :
+      // Forever buttons keep running their code over and over again,
+      // until either the code hits the stop command, or you press the button again to stop it.
+      // If you stop the button, the code doesn't get interrupted.
+      // The button waits until the code has finished, then pops up.
 
-        // http://ccl.northwestern.edu/netlogo/docs/programming.html#buttons :
-        // Forever buttons keep running their code over and over again,
-        // until either the code hits the stop command, or you press the button again to stop it.
-        // If you stop the button, the code doesn't get interrupted.
-        // The button waits until the code has finished, then pops up.
-
-        // if this is a forever button that was running, was clicked, and is now up.
-        if (forever && buttonUp) {
-          new Events.RemoveJobEvent(this).raise(this)
-        }
-        // a forever button that was stopped with the stop command.
-        else if (forever && !buttonUp && stopping) {
-          new Events.JobStoppingEvent(this).raise(this)
-        }
-        // a forever button or a once button that is now down because
-        // it was just clicked.  it needs to run.
-        else {
-          new Events.AddJobEvent(this, agents(), procedure()).raise(this)
-          if(Version.isLoggingEnabled)
-            org.nlogo.log.Logger.logButtonPressed(displayName)
-        }
+      // if this is a forever button that was running, was clicked, and is now up.
+      if (forever && buttonUp) {
+        new Events.RemoveJobEvent(this).raise(this)
+      }
+      // a forever button that was stopped with the stop command.
+      else if (forever && !buttonUp && stopping) {
+        new Events.JobStoppingEvent(this).raise(this)
+      }
+      // a forever button or a once button that is now down because
+      // it was just clicked.  it needs to run.
+      else {
+        new Events.AddJobEvent(this, agents(), procedure()).raise(this)
+        if(Version.isLoggingEnabled)
+          org.nlogo.log.Logger.logButtonPressed(displayName)
       }
     }
   }
@@ -402,7 +397,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   override def load(strings: Seq[String], helper: Widget.LoadHelper) = {
     forever = strings(7) == "T"
     // ButtonType handles converting the saved button type name into a ButtonType object.
-    if (10 < strings.length) _buttonType = ButtonType(strings(10).toLowerCase)
+    if (strings.length > 10) _buttonType = ButtonType(strings(10).toLowerCase)
 
     // strings[11] used to control the autoUpdate flag,
     // but that's now a global setting
