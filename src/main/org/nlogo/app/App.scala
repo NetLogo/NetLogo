@@ -8,6 +8,8 @@ import org.nlogo.awt.UserCancelException
 import org.nlogo.log.Logger
 import org.nlogo.nvm.{CompilerInterface, Workspace}
 import org.nlogo.shape.{ShapesManagerInterface, ShapeChangeListener, LinkShapesManagerInterface, TurtleShapesManagerInterface}
+import org.nlogo.util.Implicits.RichString
+import org.nlogo.util.Implicits.RichStringLike
 import org.nlogo.util.Pico
 import org.nlogo.window._
 import org.nlogo.window.Events._
@@ -257,6 +259,7 @@ class App extends
     LoadSectionEvent.Handler with
     LoadEndEvent.Handler with
     ModelSavedEvent.Handler with
+    ModelSections with
     Events.SwitchedTabsEvent.Handler with
     AboutToQuitEvent.Handler with
     ZoomedEvent.Handler with
@@ -1020,6 +1023,34 @@ class App extends
     org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     f
   }
+
+  def procedureSource:  String =
+    tabs.codeTab.innerSource
+  def widgets:          Seq[ModelSections.Saveable] = {
+    import collection.JavaConverters._
+    tabs.interfaceTab.iP.getWidgetsForSaving.asScala
+  }
+  def info:             String =
+    tabs.infoTab.info
+  def turtleShapes:     Seq[Shape] = {
+    import collection.JavaConverters._
+    tabs.workspace.world.turtleShapeList.getShapes.asScala
+  }
+  def version:          String =
+    Version.version
+  def previewCommands:  String =
+    tabs.workspace.previewCommands match {
+      case PreviewCommands.Default => ""
+      case commands                => commands.source.stripTrailingWhiteSpace + "\n"
+    }
+  def hubnetManager:    ModelSections.BufSaveable =
+    workspace.hubnetManager
+  def linkShapes:       Seq[Shape] = {
+    import collection.JavaConverters._
+    tabs.workspace.world.linkShapeList.getShapes.asScala
+  }
+  def snapOn:           Boolean =
+    tabs.workspace.snapOn
 }
 
 class AppFrame extends JFrame with LinkParent {
