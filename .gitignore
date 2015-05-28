@@ -38,7 +38,7 @@ tmp/
 /.ensime
 /.ensime_lucene/
 /build/
-/.idea/workspace.xml
+/.idea
 /docs/Perspective Example.png
 /docs/dict/
 /docs/infotab.html
