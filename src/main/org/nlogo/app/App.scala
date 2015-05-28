@@ -259,6 +259,7 @@ class App extends
     LoadSectionEvent.Handler with
     LoadEndEvent.Handler with
     ModelSavedEvent.Handler with
+    ModelSections with
     Events.SwitchedTabsEvent.Handler with
     AboutToQuitEvent.Handler with
     ZoomedEvent.Handler with
@@ -1026,6 +1027,31 @@ class App extends
     org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     f
   }
+
+  def procedureSource:  String =
+    tabs.proceduresTab.innerSource
+  def widgets:          Seq[ModelSections.Saveable] = {
+    import collection.JavaConverters._
+    tabs.interfaceTab.iP.getWidgetsForSaving.asScala
+  }
+  def info:             String =
+    tabs.infoTab.info
+  def turtleShapes:     Seq[Shape] = {
+    import collection.JavaConverters._
+    tabs.workspace.world.turtleShapeList.getShapes.asScala
+  }
+  def version:          String =
+    Version.version
+  def previewCommands:  String =
+    tabs.workspace.previewCommands
+  def hubnetManager:    ModelSections.BufSaveable =
+    workspace.hubnetManager
+  def linkShapes:       Seq[Shape] = {
+    import collection.JavaConverters._
+    tabs.workspace.world.linkShapeList.getShapes.asScala
+  }
+  def snapOn:           Boolean =
+    tabs.workspace.snapOn
 }
 
 class AppFrame extends JFrame with LinkParent {

@@ -2,7 +2,7 @@
 
 package org.nlogo.api
 
-trait HubNetInterface extends ViewInterface {
+trait HubNetInterface extends ViewInterface with ModelSections.BufSaveable {
   /// getting messages
   @throws(classOf[LogoException])
   def messageWaiting: Boolean

@@ -2,11 +2,11 @@
 
 package org.nlogo.app
 
-import org.nlogo.api.{ModelReader, Shape, Version}
+import org.nlogo.api.{ModelReader, ModelSections, Shape, Version}
 import org.nlogo.workspace.AbstractWorkspaceScala
 import collection.JavaConverters._
 
-class ModelSaver(app: App) {
+class ModelSaver(model: ModelSections) {
 
   def save: String = {
 
@@ -20,25 +20,25 @@ class ModelSaver(app: App) {
 
     // procedures
     section {
-      buf ++= app.tabs.proceduresTab.innerSource
+      buf ++= model.procedureSource
       if(buf.nonEmpty && buf.last != '\n')
         buf += '\n'
     }
 
     // widgets
     section {
-      for(w <- app.tabs.interfaceTab.iP.getWidgetsForSaving.asScala)
+      for(w <- model.widgets)
         buf ++= (w.save + "\n")
     }
 
     // info
     section {
-      buf ++= app.tabs.infoTab.info
+      buf ++= model.info
     }
 
     // turtle shapes
     section {
-      for(shape <- app.tabs.workspace.world.turtleShapeList.getShapes.asScala) {
+      for(shape <- model.turtleShapes) {
         buf ++= shape.asInstanceOf[Shape].toString
         buf ++= "\n\n"
       }
@@ -46,20 +46,20 @@ class ModelSaver(app: App) {
 
     // version
     section {
-      buf ++= Version.version + "\n"
+      buf ++= model.version + "\n"
     }
 
     // preview commands
     section {
-      val cmds = app.tabs.workspace.previewCommands.trim
+      val cmds = model.previewCommands
       if(cmds.nonEmpty && cmds != AbstractWorkspaceScala.DefaultPreviewCommands)
-        buf ++= app.tabs.workspace.previewCommands.trim + "\n"
+        buf ++= model.previewCommands.trim + "\n"
     }
 
     // system dynamics modeler
     section {
-      if(app.aggregateManager != null) {
-        val s = app.aggregateManager.save
+      if(model.aggregateManager != null) {
+        val s = model.aggregateManager.save
         if(s != null)
           buf.append(s + "\n")
       }
@@ -67,18 +67,18 @@ class ModelSaver(app: App) {
 
     // BehaviorSpace
     section {
-      buf ++= app.labManager.save
+      buf ++= model.labManager.save
     }
 
     // reserved for HubNet client
     section {
-      for(manager <- Option(app.tabs.workspace.hubnetManager))
+      for(manager <- Option(model.hubnetManager))
         manager.save(buf)
     }
 
     //link shapes
     section {
-      for(shape <- app.tabs.workspace.world.linkShapeList.getShapes.asScala) {
+      for(shape <- model.linkShapes) {
         buf ++= shape.asInstanceOf[Shape].toString
         buf ++= "\n\n"
       }
@@ -86,7 +86,7 @@ class ModelSaver(app: App) {
 
     // interface tab settings
     section {
-      buf ++= (if(app.tabs.workspace.snapOn) "1\n" else "0\n")
+      buf ++= (if(model.snapOn) "1\n" else "0\n")
     }
 
     buf.toString
