@@ -1094,11 +1094,16 @@ ask one-of friendships [ set breed links ] ;; produces a runtime error
       button&quot;. You can control this by editing the button and checking
       or unchecking the &quot;Forever&quot; checkbox. Once buttons run
       their code once, then stop and pop back up. Forever buttons keep
-      running their code over and over again, until either the code hits
-      the <a href="dictionary.html#stop"><tt>stop</tt></a> command, or you
-      press the button again to stop it. If you stop the button, the code
-      doesn't get interrupted. The button waits until the code has
+      running their code over and over again.
+    <p>A forever button stops if the user presses the button again
+      to stop it.  The button waits until the current iteration has
       finished, then pops up.
+    <p>A forever button can also be stopped from code.
+      If the forever
+      button directly calls a procedure, then when that procedure stops,
+      the button stops. (In a turtle or patch forever button, the button
+      won't stop until every turtle or patch stops -- a single turtle
+      or patch doesn't have the power to stop the whole button.)
     <p>
       Normally, a button is labeled with the code that it runs. For
       example, a button that says &quot;go&quot; on it usually contains the

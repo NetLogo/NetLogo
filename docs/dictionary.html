@@ -4636,14 +4636,23 @@ show log 64 2
           loop [ <i>commands</i> ]
         </h4>
         <p>
-          Runs the list of commands forever (or until the enclosing procedure
-          exits through use of the <a href="#stop">stop</a> command or the
-          <a href="#report">report</a> command).
+          Repeats the commands forever, or until the enclosing procedure
+          exits through use of the <a href="#stop">stop</a> or
+          <a href="#report">report</a> commands.
+          <pre>to move-to-world-edge  ;; turtle procedure
+  loop [
+    if not can-move? 1 [ stop ]
+    fd 1
+  ]
+end</pre>
+        <p>In this example, <tt>stop</tt> exits not just the loop,
+           but the entire procedure.
         <p>
-          Note: In most circumstances, you should use a forever button in
-          order to repeat something forever. The advantage of using a
-          forever button is that the user can click the button to stop the
-          loop.
+          Note: in many circumstances, it is more appropriate to use
+          a forever button to repeat something indefinitely.  See
+          <a href="programming.html#buttons">Buttons</a> in the
+          Programming Guide.
+        </pre>
         </div>
       <div class="dict_entry">
         <h3>
@@ -7952,21 +7961,19 @@ end
       </h4>
       <p>
         This agent exits immediately from the enclosing procedure, ask, or
-        ask-like construct (e.g. crt, hatch, sprout). Only the current
-        procedure stops, not all execution for the agent.
+        ask-like construct (e.g. crt, hatch, sprout). Only the enclosing
+        procedure or construct stops, not all execution for the agent.
       <pre>
 if not any? turtles [ stop ]
 ;; exits if there are no more turtles
 </pre>
       <p>
-        Note: stop can be used to stop a forever button. If the forever
-        button directly calls a procedure, then when that procedure stops,
-        the button stops. (In a turtle or patch forever button, the button
-        won't stop until every turtle or patch stops -- a single turtle
-        or patch doesn't have the power to stop the whole button.)
+        Note: <tt>stop</tt> can also be used to stop a forever button. See
+        <a href="programming.html#buttons">Buttons</a> in the
+        Programming Guide for details.
       <p>
-        It can also be used to stop a BehaviorSpace model run. If the go
-        commands directly call a procedure, then when that procedure stops,
+        <tt>stop</tt> can also be used to stop a BehaviorSpace model run. If the go
+        commands directly call a procedure, then when that procedure calls <i>stop</i>,
         the run ends.
       </div>
     <div class="dict_entry">
