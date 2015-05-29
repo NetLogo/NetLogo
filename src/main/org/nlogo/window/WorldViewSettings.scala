@@ -13,8 +13,6 @@ abstract class WorldViewSettings(workspace: GUIWorkspace, gWidget: ViewWidget) e
     with WorldLoaderInterface with WorldPropertiesInterface {
   implicit val i18nName = I18N.Prefix("edit.viewSettings.origin.location")
 
-  addProperties()
-
   def classDisplayName = "Model Settings"
 
   def resizeWithProgress(showProgress: Boolean): Unit
@@ -25,6 +23,8 @@ abstract class WorldViewSettings(workspace: GUIWorkspace, gWidget: ViewWidget) e
   protected var dimensionProperties, wrappingProperties, viewProperties,
     modelProperties: mutable.ArrayBuffer[Property] = null
   protected var cornerChoices, edgeChoices, originConfigurations: mutable.ArrayBuffer[OriginConfiguration] = null
+
+  addProperties()
 
   protected def addProperties() = {
     _propertySet = new mutable.ArrayBuffer[Property]
