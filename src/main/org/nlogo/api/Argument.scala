@@ -155,4 +155,13 @@ trait Argument {
   @throws(classOf[LogoException])
   def getCommandTask: CommandTask
 
+  /**
+   * Returns the argument as a <code>org.nlogo.api.CommandTask</code>.
+   *
+   * @throws ExtensionException if the argument is not a <code>CommandTask</code>
+   * @throws LogoException      if a LogoException occurred while evaluating this argument
+   */
+  @throws(classOf[ExtensionException])
+  @throws(classOf[LogoException])
+  def getCode: java.util.List[org.nlogo.api.Token]
 }

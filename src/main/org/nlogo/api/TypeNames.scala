@@ -127,6 +127,9 @@ object TypeNames {
       } else if (compatible(NumberBlockType)) {
         subtract(NumberBlockType)
         "number block"
+      } else if (compatible(CodeBlockType)) {
+        subtract(CodeBlockType)
+        "code block"
       }
       else
         "(none)"

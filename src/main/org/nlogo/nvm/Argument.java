@@ -6,6 +6,7 @@ import org.nlogo.agent.AgentSet;
 import org.nlogo.api.Dump;
 import org.nlogo.api.Syntax;
 import org.nlogo.api.TypeNames;
+import java.util.List;
 
 /**
  * Passes arguments to extension primitives.
@@ -176,6 +177,17 @@ public strictfp class Argument
     } catch (ClassCastException ex) {
       throw new org.nlogo.api.ExtensionException(
         getExceptionMessage(Syntax.CommandTaskType(), obj));
+    }
+  }
+
+  @SuppressWarnings("unchecked") public List<org.nlogo.api.Token> getCode() 
+      throws org.nlogo.api.ExtensionException, org.nlogo.api.LogoException {
+    Object obj = get();
+    try {
+      return (List<org.nlogo.api.Token>) obj;
+    } catch (ClassCastException ex) {
+      throw new org.nlogo.api.ExtensionException(
+        getExceptionMessage(Syntax.CodeBlockType(), obj));
     }
   }
 

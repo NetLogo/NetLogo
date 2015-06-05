@@ -126,6 +126,17 @@ class CommandBlock(val statements: Statements, var start: Int, var end: Int, val
 }
 
 /**
+ * represents a set of code that should not be evaluated, but can be lexed
+ * and tokenized.  This is an expression, and can be used as an argument
+ * to commands and reports.
+ */
+class CodeBlock(val code: String, var start: Int, var end: Int, val file: String) extends Expression {
+  def reportedType() = Syntax.CodeBlockType
+  override def toString = "[" + code + "]"
+  def accept(v: AstVisitor) {}
+}
+
+/**
  * represents a block containing exactly one expression. Called a reporter
  * block rather than an expression block for consistency with usual NetLogo
  * jargon. Note that this is an Expression, and as such can be an argument

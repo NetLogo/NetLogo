@@ -29,7 +29,7 @@ private object CompilerMain {
     for(procedure <- structureResults.procedures.values.asScala) {
       procedure.topLevel = subprogram
       val tokens =
-        new IdentifierParser(program, oldProcedures, structureResults.procedures, false)
+        new IdentifierParser(program, oldProcedures, structureResults.procedures, true)
         .process(structureResults.tokens(procedure).iterator, procedure)  // resolve references
       defs ++= new ExpressionParser(procedure, taskNumbers).parse(tokens) // parse
     }
