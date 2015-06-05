@@ -7,13 +7,6 @@ import ModelsLibrary._
 import scala.collection.JavaConverters._
 
 class TestLibrary extends FunSuite {
-  test("every model has a unique name") {
-    val duplicateNames = getModelPaths
-      .map(new java.io.File(_).getName.toUpperCase)
-      .groupBy(identity)
-      .collect { case (x, xs) if xs.size > 1 => x }
-    assert(duplicateNames.isEmpty, duplicateNames.toList)
-  }
   test("there are no empty leaf folders") {
     val emptyLeafFolders = scanForModelsAtRoot("models", false)
       .breadthFirstEnumeration.asScala
