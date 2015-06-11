@@ -3142,7 +3142,8 @@ foreach [1 2 3 4] [ print ? ]
       Tasks are &quot;closures&quot;; that means they capture or
       &quot;close over&quot; the bindings (not just the current values) of
       local variables and procedure inputs. They do not capture agent
-      variables and do not capture the identity of the current agent.
+      variables and do not capture the identity (or even the agent type)
+      of the current agent.
     <h3>
       Nonlocal exits
     </h3>
