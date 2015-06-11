@@ -76,7 +76,7 @@ object Utils {
   private[util] def reader2String(reader: java.io.Reader, bufferSize: Int): String = {
     assert(bufferSize > 0)
     val sb = new StringBuilder
-    val buffer = Array.fill(bufferSize)('\0')
+    val buffer = Array.fill(bufferSize)('\u0000')
     Iterator.continually(reader.read(buffer))
       .takeWhile(_ != -1)
       .foreach(sb.appendAll(buffer, 0, _))

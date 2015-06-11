@@ -7,14 +7,22 @@ import java.util.concurrent.{Executors, TimeUnit}
 import org.nlogo.util.SlowTest
 import org.scalatest._
 
+import scala.language.implicitConversions
+
 class TestChecksums extends FunSuite with SlowTest {
 
   // overriding this so we can pass in a model filter to run checksums against a single model.
   // example   sbt> checksums model=Echo
-  override def runTest (testName : java.lang.String, reporter : Reporter, stopper : Stopper,
-                        configMap : scala.collection.immutable.Map[java.lang.String, Any], tracker : Tracker){
-    val shouldRun = configMap.get("model").map(testName contains _.asInstanceOf[String]).getOrElse(true)
-    if(shouldRun) super.runTest(testName, reporter, stopper, configMap, tracker)
+  override def run(testName: Option[String], args: Args) = {
+    val allTests: Set[String] = testNames
+    val selection = args.configMap.get("model")
+    val testsToRun = allTests.filter((tname: String) => selection.map(tname.contains(_)).getOrElse(true))
+    val allOtherTests = allTests -- testsToRun
+    val ignoreAllOtherTests = allOtherTests.map(_ -> Set("org.scalatest.Ignore")).toMap
+    val ignoreAllOtherTestsInThisSuite = Map(suiteId -> ignoreAllOtherTests)
+    val newDynatags = DynaTags(args.filter.dynaTags.suiteTags, args.filter.dynaTags.testTags ++ ignoreAllOtherTestsInThisSuite)
+    val newFilter = Filter(args.filter.tagsToInclude, args.filter.tagsToExclude, args.filter.excludeNestedSuites, newDynatags)
+    super.run(testName, args.copy(filter = newFilter))
   }
 
   // prevent annoying JAI message on Linux when using JAI extension
@@ -40,8 +48,7 @@ object TestChecksums extends ChecksumTester(println _) {
 
   def main(args: Array[String]) {
 
-    val runTimes = new collection.mutable.HashMap[String, Long]
-            with collection.mutable.SynchronizedMap[String, Long]
+    val runTimes = new scala.collection.parallel.mutable.ParHashMap[String, Long]
     val executor = Executors.newFixedThreadPool(Runtime.getRuntime.availableProcessors)
 
     val checksums = this.checksums
@@ -71,7 +78,7 @@ object TestChecksums extends ChecksumTester(println _) {
     // print report of longest runtimes (so we can alter preview commands to not take so long)
     val n = 30
     println(n + " slowest models:")
-    val keys = checksums.keySet.toSeq.sortBy(runTimes).reverse.take(n)
+    val keys = checksums.keySet.toSeq.sortBy(runTimes.apply).reverse.take(n)
     for (key <- keys)
       println("  " + key + " " + runTimes(key) / 1000 + " seconds")
     // done, whole test fails if any model failed

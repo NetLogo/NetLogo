@@ -17,6 +17,8 @@ import org.nlogo.awt.Fonts.platformMonospacedFont
 import javax.swing.{SwingConstants, JLabel, JPanel, JScrollPane}
 import org.nlogo.api.DummyEditable
 
+import scala.language.reflectiveCalls
+
 object CodeEditor {
   def apply(displayName: String, colorizer: Colorizer[_],
             collapsible: Boolean = false,

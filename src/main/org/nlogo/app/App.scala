@@ -23,6 +23,7 @@ import javax.swing._
 import java.awt.event.{WindowAdapter, WindowEvent}
 import java.awt.{Toolkit, Dimension, Frame}
 
+import scala.language.postfixOps
 /**
  * The main class for the complete NetLogo application.
  *

@@ -45,11 +45,11 @@ class MethodSelectorTests extends FunSuite {
   }
   // ok, enough cost tests, now test actual method evaluation.  first some trivial ones
   test("const string") {
-    expect("(String,0)")(
+    assertResult("(String,0)")(
       dump(evaluate(new _conststring(""),false)))
   }
   test("const double") {
-    expect("(Double,0)(double,0)")(
+    assertResult("(Double,0)(double,0)")(
       dump(evaluate(new _constdouble(0.0),false)))
   }
   // _lessthan's report methods are as follows:
@@ -65,36 +65,36 @@ class MethodSelectorTests extends FunSuite {
     val root = new _lessthan
     root.args = Array(new _conststring(""),new _conststring(""))
     val m = BytecodeUtils.getMethods(classOf[_conststring]).head
-    expect("(boolean,0)")(dump(evaluate(root,false)))
-    expect("String,String => boolean")(
+    assertResult("(boolean,0)")(dump(evaluate(root,false)))
+    assertResult("String,String => boolean")(
       dump(select(root,java.lang.Boolean.TYPE,false).get))
   }
   test("less than 2") {
     val root = new _lessthan
     root.args = Array(new _observervariable(0),new _conststring(""))
-    expect("(boolean,10000)")(dump(evaluate(root,false)))
-    expect("Object,Object => boolean")(
+    assertResult("(boolean,10000)")(dump(evaluate(root,false)))
+    assertResult("Object,Object => boolean")(
       dump(select(root,java.lang.Boolean.TYPE,false).get))
   }
   test("less than 3") {
     val root = new _lessthan
     root.args = Array(new _observervariable(0),new _constdouble(0.0))
-    expect("(boolean,0)")(dump(evaluate(root,false)))
-    expect("Object,double => boolean")(
+    assertResult("(boolean,0)")(dump(evaluate(root,false)))
+    assertResult("Object,double => boolean")(
       dump(select(root,java.lang.Boolean.TYPE,false).get))
   }
   test("less than 4") {
     val root = new _lessthan
     root.args = Array(new _constdouble(0.0),new _observervariable(0))
-    expect("(boolean,0)")(dump(evaluate(root,false)))
-    expect("double,Object => boolean")(
+    assertResult("(boolean,0)")(dump(evaluate(root,false)))
+    assertResult("double,Object => boolean")(
       dump(select(root,java.lang.Boolean.TYPE,false).get))
   }
   test("less than 5") {
     val root = new _lessthan
     root.args = Array(new _constdouble(0.0),new _constdouble(0.0))
-    expect("(boolean,0)")(dump(evaluate(root,false)))
-    expect("double,double => boolean")(
+    assertResult("(boolean,0)")(dump(evaluate(root,false)))
+    assertResult("double,double => boolean")(
       dump(select(root,java.lang.Boolean.TYPE,false).get))
   }
   // check on handling of reporter blocks (which show up as Reporter arguments
@@ -102,15 +102,15 @@ class MethodSelectorTests extends FunSuite {
   test("with 1") {
     val root = new _with
     root.args = Array(new _turtles,new _constboolean(true))
-    expect("(AgentSet,0)")(dump(evaluate(root,false)))
-    expect("AgentSet,Reporter => AgentSet")(
+    assertResult("(AgentSet,0)")(dump(evaluate(root,false)))
+    assertResult("AgentSet,Reporter => AgentSet")(
       dump(select(root,classOf[AgentSet],false).get))
   }
   // make sure we handle unrejiggered primitives with equanimity
   test("unrejiggered command") {
     val root = new _sprout
     root.args = Array(new _constdouble(1.0))
-    expect("(void,0)")(dump(evaluate(root,false)))
+    assertResult("(void,0)")(dump(evaluate(root,false)))
   }
   // at the moment, _patch is unrejiggered. these tests will need to be changed if we ever rejigger
   // it.  at the moment it is unrejiggered because the generator doesn't know what to do with the
@@ -118,15 +118,15 @@ class MethodSelectorTests extends FunSuite {
   test("unrejiggered reporter at root") {
     val root = new _patch
     root.args = Array(new _constdouble(0.0),new _constdouble(0.0))
-    expect("(Object,0)")(dump(evaluate(root,false)))
+    assertResult("(Object,0)")(dump(evaluate(root,false)))
   }
   test("unrejiggered reporter inside") {
     val root = new _equal
     root.args = Array(new _patch,new _patch)
     root.args(0).args = Array(new _constdouble(0.0),new _constdouble(0.0))
     root.args(1).args = Array(new _constdouble(0.0),new _constdouble(0.0))
-    expect("(boolean,0)")(dump(evaluate(root,false)))
-    expect("Object,Object => boolean")(
+    assertResult("(boolean,0)")(dump(evaluate(root,false)))
+    assertResult("Object,Object => boolean")(
       dump(select(root,java.lang.Boolean.TYPE,false).get))
   }
 }

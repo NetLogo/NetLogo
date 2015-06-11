@@ -5,6 +5,8 @@ package org.nlogo.api
 import org.scalatest.FunSuite
 import java.lang.{ Double => JDouble, Integer => JInteger }
 
+import scala.language.implicitConversions
+
 class ScalaConversionsTests extends FunSuite {
 
   import ScalaConversions._
@@ -108,7 +110,7 @@ class ScalaConversionsTests extends FunSuite {
 
   private def testConversion(input: Any, expected: Any) {
     val actual = input.toLogoObject
-    expect(expected)(actual)
+    assertResult(expected)(actual)
   }
 
 }

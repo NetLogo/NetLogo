@@ -2,13 +2,13 @@
 
 package org.nlogo.workspace
 
-import org.scalatest.fixture
+import org.scalatest.{ fixture, Outcome }
 
 class EvaluatorTests extends fixture.FunSuite {
 
   type FixtureParam = Evaluator
 
-  override def withFixture(test: OneArgTest) {
+  override def withFixture(test: OneArgTest): Outcome = {
    test(new Evaluator(new DummyAbstractWorkspace))
  }
 

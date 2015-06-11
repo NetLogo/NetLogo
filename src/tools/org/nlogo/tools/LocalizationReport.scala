@@ -180,7 +180,7 @@ object LocalizationReport {
       // print all the data in this report.
       // the code isn't that difficult to follow
       def printReport() {
-        def printWrapped[A](seq: {def size:Int}, message: String)(f: => Unit) {
+        def printWrapped[A](seq: scala.collection.TraversableOnce[A], message: String)(f: => Unit) {
           if(seq.size > 0 || verbose){
             println("======= " + seq.size + " " + message + " =======")
             f
@@ -243,7 +243,7 @@ object LocalizationReport {
                 if (funny) Wrong(translation) else Good(translation)
               } catch {
                 // an exception was thrown trying to get the value of this key.
-                case e => Exploded(e)
+                case e: Throwable => Exploded(e)
               }
             }
           }

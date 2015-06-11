@@ -7,6 +7,8 @@ import collection.mutable.ListBuffer
 import org.nlogo.api.PlotInterface
 import org.nlogo.workspace.AbstractWorkspaceScala
 
+import java.io.{ Serializable => JSerializable }
+
 class MockControlCenter extends ClientEventListener() {
   def addClient(clientId: String, remoteAddress: String) {  }
   def clientDisconnect(clientId: String){  }
@@ -31,7 +33,7 @@ class MockConnectionManager(connection: ConnectionInterface, workspace: Abstract
   override def isValidTag(tag:String) = validTag
   override def clientSendQueueSizes = null
   @throws(classOf[HubNetException])
-  override def send(node:String, tag:String, message:Any) =
+  override def send(node:String, tag:String, message:JSerializable) =
     if (!validTag) throw new HubNetException(tag + " is an invalid tag") else true
   override def setClientInterface(interfaceType:String, interfaceInfo: Iterable[AnyRef]){}
   override def sendPlot(clientId:String, plot:PlotInterface){}

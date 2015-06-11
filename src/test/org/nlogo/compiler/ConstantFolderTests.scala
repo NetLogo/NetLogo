@@ -15,7 +15,7 @@ class ConstantFolderTests extends FunSuite {
       tokenizer.tokenize("to-report __test report " + source + "\nend"), None,
       program, java.util.Collections.emptyMap[String, Procedure], new DummyExtensionManager)
       .parse(false)
-    expect(1)(results.procedures.size)
+    assertResult(1)(results.procedures.size)
     val procedure = results.procedures.values.iterator.next()
     val tokens =
       new IdentifierParser(program, java.util.Collections.emptyMap[String, Procedure],
@@ -27,22 +27,22 @@ class ConstantFolderTests extends FunSuite {
   }
 
   /// not pure
-  test("testNonConstant") { expect("_timer[]")(compile("timer")) }
+  test("testNonConstant") { assertResult("_timer[]")(compile("timer")) }
   test("testNestedNonConstant") {
-    expect("_plus[_constdouble:1.0[], _timer[]]")(
+    assertResult("_plus[_constdouble:1.0[], _timer[]]")(
       compile("1 + timer"))
   }
 
   /// pure, easy
-  test("testNumber") { expect("_constdouble:1.0[]")(compile("1")) }
-  test("testBoolean") { expect("_constboolean:true[]")(compile("true")) }
-  test("testList") { expect("_constlist:[1 2 3][]")(compile("[1 2 3]")) }
-  test("testString") { expect("_conststring:\"foo\"[]")(compile("\"foo\"")) }
-  test("testNobody") { expect("_nobody[]")(compile("nobody")) }
+  test("testNumber") { assertResult("_constdouble:1.0[]")(compile("1")) }
+  test("testBoolean") { assertResult("_constboolean:true[]")(compile("true")) }
+  test("testList") { assertResult("_constlist:[1 2 3][]")(compile("[1 2 3]")) }
+  test("testString") { assertResult("_conststring:\"foo\"[]")(compile("\"foo\"")) }
+  test("testNobody") { assertResult("_nobody[]")(compile("nobody")) }
 
   /// pure, harder
-  test("testAddition") { expect("_constdouble:4.0[]")(compile("2 + 2")) }
-  test("testNesting") { expect("_constdouble:19.0[]")(compile("2 + 3 * 4 + 5")) }
+  test("testAddition") { assertResult("_constdouble:4.0[]")(compile("2 + 2")) }
+  test("testNesting") { assertResult("_constdouble:19.0[]")(compile("2 + 3 * 4 + 5")) }
 
   /// runtime errors
   test("testError") {
@@ -51,7 +51,7 @@ class ConstantFolderTests extends FunSuite {
       try compile("1 / 0")
       catch {
         case ex: CompilerException =>
-          expect("Runtime error: Division by zero.")(ex.getMessage)
+          assertResult("Runtime error: Division by zero.")(ex.getMessage)
           throw ex
       }
     }

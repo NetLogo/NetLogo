@@ -10,7 +10,7 @@ import org.scalatest.{ FunSuite, BeforeAndAfterEach }
 import org.nlogo.api.CompilerException
 import org.nlogo.nvm.{ ArgumentTypeException, EngineException }
 
-class TestErrorMessages extends AbstractTestLanguage with FunSuite with BeforeAndAfterEach {
+class TestErrorMessages extends FunSuite with AbstractTestLanguage with BeforeAndAfterEach {
   override def beforeEach() { init() }
   override def afterEach() { workspace.dispose() }
   test("perspectiveChangeWithOf") {
@@ -20,18 +20,18 @@ class TestErrorMessages extends AbstractTestLanguage with FunSuite with BeforeAn
       testCommand("ask turtle 0 [ __ignore [who] of frogs with [age = ([age] of [spots] of self)]]")
     }
     // is the error message correct?
-    expect("That frog is dead.")(ex.getMessage)
+    assertResult("That frog is dead.")(ex.getMessage)
     // is the error message attributed to the right agent? frog 2 is dead,
     // but it's frog 1 that actually encountered the error
-    expect("frog 1")(ex.context.agent.toString)
+    assertResult("frog 1")(ex.context.agent.toString)
   }
   test("argumentTypeException") {
     testCommand("set glob1 [1.4]")
     val ex = intercept[ArgumentTypeException] {
       testCommand("__ignore 0 < position 5 item 0 glob1")
     }
-    expect("POSITION expected input to be a string or list but got the number 1.4 instead.")(ex.getMessage)
-    expect("POSITION")(ex.instruction.token.name.toUpperCase)
+    assertResult("POSITION expected input to be a string or list but got the number 1.4 instead.")(ex.getMessage)
+    assertResult("POSITION")(ex.instruction.token.name.toUpperCase)
   }
   test("breedOwnRedeclaration") {
     val ex = intercept[CompilerException] {
@@ -40,7 +40,7 @@ class TestErrorMessages extends AbstractTestLanguage with FunSuite with BeforeAn
         workspace.world.newProgram(java.util.Collections.emptyList[String]),
         workspace.getExtensionManager)
     }
-    expect("Redeclaration of HUNTERS-OWN")(ex.getMessage)
+    assertResult("Redeclaration of HUNTERS-OWN")(ex.getMessage)
   }
 
 }

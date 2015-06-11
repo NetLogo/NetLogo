@@ -11,6 +11,8 @@ import org.nlogo.agent.TreeAgentSet
 import org.scalatest.FunSuite
 import org.scalatest.GivenWhenThen
 
+import scala.language.implicitConversions
+
 class TreeAgentSetTests extends FunSuite with GivenWhenThen with TestUsingWorkspace {
 
   testUsingWorkspace("TreeAgentSet should trigger SimpleChangeEvent") { ws =>
@@ -18,95 +20,95 @@ class TreeAgentSetTests extends FunSuite with GivenWhenThen with TestUsingWorksp
     implicit def anyToPub(agentSet: AnyRef) =
       agentSet.asInstanceOf[TreeAgentSet].simpleChangeEventPublisher
 
-    given("a subscriber to turtles")
+    Given("a subscriber to turtles")
     val turtlesSub = new SimpleChangeEventCounter(ws.world.turtles)
-    and("a subscriber to mice")
+    And("a subscriber to mice")
     val miceSub = new SimpleChangeEventCounter(ws.world.program.breeds.get("MICE"))
-    and("a subscriber to frogs")
+    And("a subscriber to frogs")
     val frogSub = new SimpleChangeEventCounter(ws.world.program.breeds.get("FROGS"))
-    and("a subscriber to links")
+    And("a subscriber to links")
     val linksSub = new SimpleChangeEventCounter(ws.world.links)
-    and("a subscriber to undirected-links")
+    And("a subscriber to undirected-links")
     val undirLinksSub = new SimpleChangeEventCounter(ws.world.program.linkBreeds.get("UNDIRECTED-LINKS"))
 
     val allSubs = Seq(turtlesSub, miceSub, frogSub, linksSub, undirLinksSub)
 
-    when("creating a new turtle")
+    When("creating a new turtle")
     ws.command("crt 1")
-    then("the turtles subscriber should get an event")
-    expect(1)(turtlesSub.eventCount)
-    and("other subscribers should get none")
-    for (s <- allSubs if s != turtlesSub) expect(0)(s.eventCount)
+    Then("the turtles subscriber should get an event")
+    assertResult(1)(turtlesSub.eventCount)
+    And("other subscribers should get none")
+    for (s <- allSubs if s != turtlesSub) assertResult(0)(s.eventCount)
 
     allSubs.foreach(_.eventCount = 0)
 
-    when("creating two other turtles")
+    When("creating two other turtles")
     ws.command("crt 2")
-    then("the turtles subscriber should two events")
-    expect(2)(turtlesSub.eventCount)
-    and("other subscribers should get none")
-    for (s <- allSubs if s != turtlesSub) expect(0)(s.eventCount)
+    Then("the turtles subscriber should two events")
+    assertResult(2)(turtlesSub.eventCount)
+    And("other subscribers should get none")
+    for (s <- allSubs if s != turtlesSub) assertResult(0)(s.eventCount)
 
     allSubs.foreach(_.eventCount = 0)
 
-    when("creating a new mouse")
+    When("creating a new mouse")
     ws.command("create-mice 1")
-    then("the turtles subscriber should get an event")
-    expect(1)(turtlesSub.eventCount)
-    and("the mice subscriber should get an event")
-    expect(1)(miceSub.eventCount)
-    and("other subscribers should get none")
-    for (s <- allSubs if !Set(turtlesSub, miceSub).contains(s)) expect(0)(s.eventCount)
+    Then("the turtles subscriber should get an event")
+    assertResult(1)(turtlesSub.eventCount)
+    And("the mice subscriber should get an event")
+    assertResult(1)(miceSub.eventCount)
+    And("other subscribers should get none")
+    for (s <- allSubs if !Set(turtlesSub, miceSub).contains(s)) assertResult(0)(s.eventCount)
 
     allSubs.foreach(_.eventCount = 0)
 
-    when("creating two other mice")
+    When("creating two other mice")
     ws.command("create-mice 2")
-    then("the turtles subscriber should get two events")
-    expect(2)(turtlesSub.eventCount)
-    and("the mice subscriber should get two events")
-    expect(2)(miceSub.eventCount)
-    and("other subscribers should get none")
-    for (s <- allSubs if !Set(turtlesSub, miceSub).contains(s)) expect(0)(s.eventCount)
+    Then("the turtles subscriber should get two events")
+    assertResult(2)(turtlesSub.eventCount)
+    And("the mice subscriber should get two events")
+    assertResult(2)(miceSub.eventCount)
+    And("other subscribers should get none")
+    for (s <- allSubs if !Set(turtlesSub, miceSub).contains(s)) assertResult(0)(s.eventCount)
 
     allSubs.foreach(_.eventCount = 0)
 
-    when("killing one of the three mice")
+    When("killing one of the three mice")
     ws.command("ask one-of mice [ die ]")
-    then("the turtles subscriber should get an event")
-    expect(1)(turtlesSub.eventCount)
-    and("the mice subscriber should get an event")
-    expect(1)(miceSub.eventCount)
-    and("other subscribers should get none")
-    for (s <- allSubs if !Set(turtlesSub, miceSub).contains(s)) expect(0)(s.eventCount)
+    Then("the turtles subscriber should get an event")
+    assertResult(1)(turtlesSub.eventCount)
+    And("the mice subscriber should get an event")
+    assertResult(1)(miceSub.eventCount)
+    And("other subscribers should get none")
+    for (s <- allSubs if !Set(turtlesSub, miceSub).contains(s)) assertResult(0)(s.eventCount)
 
     allSubs.foreach(_.eventCount = 0)
 
-    when("creating a link between the two remaining mice")
+    When("creating a link between the two remaining mice")
     ws.command("ask one-of mice [ create-links-with other mice ]")
-    then("the links subscriber should get an event")
-    expect(1)(linksSub.eventCount)
-    and("other subscribers should get none")
-    for (s <- allSubs if s != linksSub) expect(0)(s.eventCount)
+    Then("the links subscriber should get an event")
+    assertResult(1)(linksSub.eventCount)
+    And("other subscribers should get none")
+    for (s <- allSubs if s != linksSub) assertResult(0)(s.eventCount)
 
     allSubs.foreach(_.eventCount = 0)
 
-    when("killing this links")
+    When("killing this links")
     ws.command("ask links [ die ]")
-    then("the links subscriber should get an event")
-    expect(1)(linksSub.eventCount)
-    and("other subscribers should get none")
-    for (s <- allSubs if s != linksSub) expect(0)(s.eventCount)
+    Then("the links subscriber should get an event")
+    assertResult(1)(linksSub.eventCount)
+    And("other subscribers should get none")
+    for (s <- allSubs if s != linksSub) assertResult(0)(s.eventCount)
 
     allSubs.foreach(_.eventCount = 0)
 
-    when("creating an undirected-link between the two remaining mice")
+    When("creating an undirected-link between the two remaining mice")
     ws.command("ask one-of mice [ create-undirected-links-with other mice ]")
-    then("the links subscriber should get an event")
-    expect(1)(linksSub.eventCount)
-    and("the undirected-links subscriber should get an event")
-    expect(1)(linksSub.eventCount)
-    and("other subscribers should get none")
-    for (s <- allSubs if !Set(linksSub, undirLinksSub).contains(s)) expect(0)(s.eventCount)
+    Then("the links subscriber should get an event")
+    assertResult(1)(linksSub.eventCount)
+    And("the undirected-links subscriber should get an event")
+    assertResult(1)(linksSub.eventCount)
+    And("other subscribers should get none")
+    for (s <- allSubs if !Set(linksSub, undirLinksSub).contains(s)) assertResult(0)(s.eventCount)
   }
 }

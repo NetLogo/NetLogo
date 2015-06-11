@@ -2,7 +2,7 @@
 
 package org.nlogo.sdm
 
-import scala.reflect.{ BeanProperty, BooleanBeanProperty }
+import scala.beans.{ BeanProperty, BooleanBeanProperty }
 
 // Model Elements need to be serializable because they are contained in the model element figures
 // which are added to the jhotdraw figures which require serializability.

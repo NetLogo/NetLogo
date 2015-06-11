@@ -9,6 +9,8 @@ import MockGraphics._
 import org.nlogo.util.WorldType
 import org.nlogo.util.WorldType._
 
+import scala.language.implicitConversions
+
 // These tests were written before render.TestTurtleDrawer existed.  If you need to test rendering
 // stuff, consider doing it in the render package rather than here, using TestTurtleDrawer or your
 // or own test scaffold that uses similar techniques to keep it all within the render package.

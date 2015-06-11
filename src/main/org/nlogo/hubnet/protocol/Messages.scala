@@ -37,7 +37,7 @@ case object EnterMessage extends Message
  * @param tag the name of the widget
  */
 @SerialVersionUID(0)
-case class WidgetControl(content: AnyRef, tag: String) extends Message
+case class WidgetControl(content: Serializable, tag: String) extends Message
 
 // Message from server tells client to disable the view until the next update
 @SerialVersionUID(0)

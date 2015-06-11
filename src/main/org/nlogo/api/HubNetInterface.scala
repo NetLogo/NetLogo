@@ -2,6 +2,8 @@
 
 package org.nlogo.api
 
+import java.io.{ Serializable => JSerializable }
+
 trait HubNetInterface extends ViewInterface {
   /// getting messages
   @throws(classOf[LogoException])
@@ -41,13 +43,13 @@ trait HubNetInterface extends ViewInterface {
    * Send a message to each node (client) in the list for the given tag
    */
   @throws(classOf[LogoException])
-  def send(nodes: Seq[String], tag: String, message: Any)
+  def send(nodes: Seq[String], tag: String, message: JSerializable)
 
   /**
    * Send message to a single client for the given tag
    */
   @throws(classOf[LogoException])
-  def send(node: String, tag: String, message: Any): Boolean
+  def send(node: String, tag: String, message: JSerializable): Boolean
 
   /// connection management
   def disconnect()

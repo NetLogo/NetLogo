@@ -32,7 +32,7 @@ object StandaloneHubNetClient{
               new ClientGUI(new TestClient(name.getText, "ANDROID", ip.getText, port.getText.toInt)).run()
               ConnectionGUI.this.dispose
             }
-            catch { case e: Exception => e.printStackTrace; false }
+            catch { case e: Exception => e.printStackTrace }
           }
         })
       })

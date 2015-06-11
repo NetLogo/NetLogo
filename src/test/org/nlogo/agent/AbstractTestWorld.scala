@@ -7,7 +7,7 @@ import org.nlogo.api.WorldDimensions
 
 // Exists to be separately extended in 2D and 3D versions. - ST 10/18/10
 
-abstract class AbstractTestWorld extends Assertions {
+trait AbstractTestWorld extends Assertions {
 
   def makeWorld(dimensions: WorldDimensions): World
   def makeTurtle(world: World, cors: Array[Int]): Turtle
@@ -17,12 +17,12 @@ abstract class AbstractTestWorld extends Assertions {
 
   private def makeTurtles(world: World, turtles: Array[Array[Int]]) {
     turtles.foreach(makeTurtle(world, _))
-    expect(turtles.size)(world.turtles.count)
+    assertResult(turtles.size)(world.turtles.count)
   }
 
   private def checkTurtles(world: World, size: Int) {
-    expect(size)(world.turtles.count)
-    expect(size)(world.turtles.toLogoList.size)
+    assertResult(size)(world.turtles.count)
+    assertResult(size)(world.turtles.toLogoList.size)
     assert(world.turtles.toLogoList.forall(_ != null))
   }
 
@@ -64,7 +64,7 @@ abstract class AbstractTestWorld extends Assertions {
     val iter = world.turtles.shufflerator(world.mainRNG)
     for(who <- Seq(4, 3, 2, 0, 1)) {
       assert(iter.hasNext)
-      expect(who)(iter.next.id)
+      assertResult(who)(iter.next.id)
     }
     assert(!iter.hasNext)
   }
@@ -73,14 +73,14 @@ abstract class AbstractTestWorld extends Assertions {
     val world = makeWorld(d)
     makeTurtles(world, turtleList)
     val link = makeLink(world, linkList)
-    expect(0)(world.protractor.distanceToLink(link, 0, 0))
-    expect(1)(world.protractor.distanceToLink(link, 1, 0))
+    assertResult(0)(world.protractor.distanceToLink(link, 0, 0))
+    assertResult(1)(world.protractor.distanceToLink(link, 1, 0))
   }
 
   def testShortestPath(d: WorldDimensions) {
     val world = makeWorld(d)
-    expect(3)(world.topology.shortestPathY(2, -2))
-    expect(5)(world.topology.shortestPathX(2, -2))
+    assertResult(3)(world.topology.shortestPathY(2, -2))
+    assertResult(5)(world.topology.shortestPathX(2, -2))
   }
 
   def testChangePublishedAfterWorldResize(d1: WorldDimensions, d2: WorldDimensions) {
@@ -89,10 +89,10 @@ abstract class AbstractTestWorld extends Assertions {
       new SimpleChangeEventCounter(world.turtles.asInstanceOf[TreeAgentSet].simpleChangeEventPublisher)
     val linkSub =
       new SimpleChangeEventCounter(world.links.asInstanceOf[TreeAgentSet].simpleChangeEventPublisher)
-    expect(0)(turtleSub.eventCount)
-    expect(0)(linkSub.eventCount)
+    assertResult(0)(turtleSub.eventCount)
+    assertResult(0)(linkSub.eventCount)
     world.createPatches(d2)
-    expect(1)(turtleSub.eventCount)
-    expect(1)(linkSub.eventCount)
+    assertResult(1)(turtleSub.eventCount)
+    assertResult(1)(linkSub.eventCount)
   }
 }

@@ -10,10 +10,10 @@ class ReplacementTests extends FunSuite {
     val sb = new StringBuilder("the quick brown fox")
     var offset = 0
     offset = new Replacement(4, 4, "", "bis").replace(sb, offset)
-    expect(3)(offset)
+    assertResult(3)(offset)
     offset = new Replacement(16, 19, "fox", "pancake").replace(sb, offset)
-    expect(7)(offset)
-    expect("the bisquick brown pancake")(sb.toString)
+    assertResult(7)(offset)
+    assertResult("the bisquick brown pancake")(sb.toString)
   }
   test("error 1") {
     intercept[Replacement.FailedException] {

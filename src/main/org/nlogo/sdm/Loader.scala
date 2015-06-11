@@ -57,7 +57,7 @@ object Loader {
     // not every line results in an object, so we use a map - ST 1/25/05
     val lineMap = collection.mutable.Map[Int, ModelElement]()
     var model: Model = null
-    while(tokens.hasNext)
+    while(tokens.hasNext) {
       tokens.next() match {
         case WordToken(name) =>
           for(me <- readElement(name, tokens)) {
@@ -74,10 +74,12 @@ object Loader {
             }
             model.addElement(me)
           }
-          // skip GUI-only stuff, until eol - ST 1/25/05
-          while(tokens.hasNext && tokens.next() != EOLToken)
-            { }
+        case _ => throw new Exception("Invalid SDM Model")
       }
+      // skip GUI-only stuff, until eol - ST 1/25/05
+      while(tokens.hasNext && tokens.next() != EOLToken)
+      { }
+    }
     model
   }
 

@@ -1,4 +1,4 @@
-scalaVersion := "2.9.2"
+scalaVersion := "2.11.6"
 
 name := "NetLogo"
 
@@ -7,7 +7,7 @@ onLoadMessage := ""
 resourceDirectory in Compile <<= baseDirectory(_ / "resources")
 
 scalacOptions ++=
-  "-deprecation -unchecked -Xfatal-warnings -Xcheckinit -encoding us-ascii"
+  "-deprecation -unchecked -feature -Xfatal-warnings -Xcheckinit -encoding us-ascii"
   .split(" ").toSeq
 
 javacOptions ++=
@@ -60,8 +60,6 @@ threed := { System.setProperty("org.nlogo.is3d", "true") }
 
 nogen  := { System.setProperty("org.nlogo.noGenerator", "true") }
 
-moduleConfigurations += ModuleConfiguration("javax.media", JavaNet2Repository)
-
 libraryDependencies ++= Seq(
   "asm" % "asm-all" % "3.3.1",
   "org.picocontainer" % "picocontainer" % "2.13.6",
@@ -78,8 +76,8 @@ libraryDependencies ++= Seq(
   "org.jmock" % "jmock" % "2.5.1" % "test",
   "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
   "org.jmock" % "jmock-junit4" % "2.5.1" % "test",
-  "org.scalacheck" %% "scalacheck" % "1.10.0" % "test",
-  "org.scalatest" %% "scalatest" % "1.8" % "test",
+  "org.scalacheck" %% "scalacheck" % "1.12.2" % "test",
+  "org.scalatest" %% "scalatest" % "2.2.1" % "test",
   "org.apache.httpcomponents" % "httpclient" % "4.2",
   "org.apache.httpcomponents" % "httpmime" % "4.2",
   "com.googlecode.json-simple" % "json-simple" % "1.1.1"

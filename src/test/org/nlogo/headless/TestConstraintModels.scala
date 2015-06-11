@@ -15,10 +15,11 @@ class TestConstraintModels extends AbstractTestModels {
     reporter("on?") -> true
     reporter("off?") -> false
 
-    val con = new BooleanConstraint(){
+    class StringBooleanConstraint extends BooleanConstraint {
       def default = defaultValue.asInstanceOf[java.lang.Boolean].booleanValue
       def apply(s:String): Boolean = coerceValue(s).asInstanceOf[java.lang.Boolean].booleanValue
     }
+    val con = new StringBooleanConstraint
 
     assert(!con.default)
     assert(!con("false"))

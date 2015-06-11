@@ -21,7 +21,7 @@ class IdentifierParserTests extends FunSuite {
       program, java.util.Collections.emptyMap[String, Procedure],
       new DummyExtensionManager)
       .parse(false)
-    expect(1)(results.procedures.size)
+    assertResult(1)(results.procedures.size)
     val procedure = results.procedures.values.iterator.next()
     new IdentifierParser(program, java.util.Collections.emptyMap[String, Procedure],
       results.procedures, false)
@@ -30,14 +30,14 @@ class IdentifierParserTests extends FunSuite {
   }
 
   test("empty") {
-    expect("")(compile("").mkString)
+    assertResult("")(compile("").mkString)
   }
   test("interface global") {
-    expect("Token(X,REPORTER,_observervariable:0)")(
+    assertResult("Token(X,REPORTER,_observervariable:0)")(
       compile("print x").drop(1).mkString)
   }
   test("let") {
-    expect("Token(let,COMMAND,_let)" + "Token(Y,REPORTER,_letvariable(Y))" + "Token(5,CONSTANT,5.0)")(
+    assertResult("Token(let,COMMAND,_let)" + "Token(Y,REPORTER,_letvariable(Y))" + "Token(5,CONSTANT,5.0)")(
       compile("let y 5").mkString)
   }
 

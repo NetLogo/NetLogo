@@ -11,6 +11,7 @@ import org.nlogo.hubnet.connection.MessageEnvelope.MessageEnvelope
 import org.nlogo.workspace.AbstractWorkspaceScala
 import org.nlogo.agent.{Link, Turtle}
 
+import java.io.{ Serializable => JSerializable }
 import java.util.concurrent.LinkedBlockingQueue
 
 abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetInterface with ConnectionInterface {
@@ -89,7 +90,7 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetIn
    * string node ids.
    */
   @throws(classOf[HubNetException])
-  def send(nodes: Seq[String], tag: String, message: Any) {
+  def send(nodes: Seq[String], tag: String, message: JSerializable) {
     checkRunningStatus()
     for (node <- nodes) if (!send(node, tag, message)) { simulateFailedExitMessage(node) }
   }
@@ -102,7 +103,8 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetIn
    * sends a message to a specific node (by String ID).
    */
   @throws(classOf[HubNetException])
-  def send(node: String, tag: String, message: Any): Boolean = connectionManager.send(node, tag, message)
+  def send(node: String, tag: String, message: JSerializable): Boolean =
+    connectionManager.send(node, tag, message)
 
   def sendUserMessage(nodes: Seq[String], text: String) {
     for (node <- nodes) if (!connectionManager.sendUserMessage(node, text)) simulateFailedExitMessage(node)

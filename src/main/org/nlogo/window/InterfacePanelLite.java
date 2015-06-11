@@ -77,7 +77,8 @@ public strictfp class InterfacePanelLite
     return new ButtonKeyAdapter();
   }
 
-  protected class ButtonKeyAdapter extends java.awt.event.KeyAdapter {
+  // This is accessible ONLY FOR hubnet. Use it at your own peril. -- RG 6/11/15
+  public class ButtonKeyAdapter extends java.awt.event.KeyAdapter {
     protected boolean keyIsHandleable(KeyEvent e) {
       return e.getKeyChar() != KeyEvent.CHAR_UNDEFINED &&
           !e.isActionKey() &&

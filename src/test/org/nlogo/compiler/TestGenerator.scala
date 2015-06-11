@@ -43,7 +43,7 @@ class TestGenerator extends FunSuite {
   // "GETFIELD IADD"
   if(Version.useGenerator)
     test("offset compiled to constant") {
-      expect(List("ICONST_4","PUTFIELD org/nlogo/nvm/Context.ip : I","RETURN").mkString("\n"))(
+      assertResult(List("ICONST_4","PUTFIELD org/nlogo/nvm/Context.ip : I","RETURN").mkString("\n"))(
         stripLineNumbers(disassembleCommand("if true [ __ignore 1 __ignore 2 __ignore 3 ]"))
         .takeRight(3).mkString("\n"))
     }
@@ -97,7 +97,7 @@ class TestGenerator extends FunSuite {
   // make sure we generate good code for comparison of a variable known to be numeric
   if(Version.useGenerator)
     test("xcorEqualsNumber") {
-      expect(List(
+      assertResult(List(
         // context.agent.getTurtleVariableDouble
         "L0","ALOAD 1",
         "GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;",

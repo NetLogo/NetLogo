@@ -10,7 +10,7 @@ class ProceduresToHtmlTests extends FunSuite with SlowTest {
   val converter = ProceduresToHtml.newInstance
   import converter.convert
   test("basic") {
-    expect("""|<pre><font color="#007f69">to</font><font color="#000000"> foo
+    assertResult("""|<pre><font color="#007f69">to</font><font color="#000000"> foo
            |  </font><font color="#0000aa">crt</font><font color="#000000"> </font><font color="#963700">10</font><font color="#000000">
            |</font><font color="#007f69">end</font>
            |</pre>
@@ -22,6 +22,6 @@ class ProceduresToHtmlTests extends FunSuite with SlowTest {
     // very long Code tabs shouldn't blow the stack.
     test("don't blow stack") {
       val path = "models/test/Really Long Code.nls"
-      expect(1010929)(convert(FileIO.file2String(path).replaceAll("\r\n", "\n")).size)
+      assertResult(1010929)(convert(FileIO.file2String(path).replaceAll("\r\n", "\n")).size)
     }
 }

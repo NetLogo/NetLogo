@@ -25,7 +25,7 @@ object HeadlessServerExample {
     override def run {
       print("enter command> ")
       while(true){
-        queuedCommands put readLine()
+        queuedCommands put scala.io.StdIn.readLine()
       }
     }
     def runAll() {
@@ -33,7 +33,7 @@ object HeadlessServerExample {
       queuedCommands.asScala.foreach { c =>
         println("executing command: " + c)
         try workspace.command(c)
-        catch { case e => e.printStackTrace() }
+        catch { case e: Throwable => e.printStackTrace() }
         print("enter command> ")
       }
       queuedCommands.clear()

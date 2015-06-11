@@ -19,7 +19,7 @@ public abstract strictfp class Chooser
   // global is always one of them.  We use it to track our current
   // index too (the selected value in the chooser). -- CLB
   ChooserConstraint constraint = new ChooserConstraint(
-      ChooserConstraint.init$default$1(), ChooserConstraint.init$default$2());
+      ChooserConstraint.$lessinit$greater$default$1(), ChooserConstraint.$lessinit$greater$default$2());
 
   // sub-elements of Switch
   private final ChooserClickControl control = new ChooserClickControl();

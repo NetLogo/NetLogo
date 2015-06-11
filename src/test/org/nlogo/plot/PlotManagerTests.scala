@@ -10,35 +10,35 @@ class PlotManagerTests extends SimplePlotTest {
     new PlotManager(new DummyLogoThunkFactory())
 
   test("Constructor") {
-    expect(0)(newPlotManager().getPlotNames.length)
+    assertResult(0)(newPlotManager().getPlotNames.length)
   }
 
   test("Current Plot") {
     val manager = newPlotManager()
     val plot = manager.newPlot("test")
-    expect(1)(manager.getPlotNames.length)
-    expect(plot)(manager.currentPlot.get)
+    assertResult(1)(manager.getPlotNames.length)
+    assertResult(plot)(manager.currentPlot.get)
     manager.currentPlot = Some(plot)
-    expect(plot)(manager.currentPlot.get)
+    assertResult(plot)(manager.currentPlot.get)
     manager.forgetPlot(plot)
-    expect(None)(manager.currentPlot)
+    assertResult(None)(manager.currentPlot)
   }
 
   test("Get Plot") {
     val manager = newPlotManager()
     val plot = manager.newPlot("Test1")
-    expect(plot)(manager.currentPlot.get)
-    expect("Test1")(manager.currentPlot.get.name)
-    expect(plot)(manager.getPlot("test1"))
-    expect(plot)(manager.getPlot("TEST1"))
-    expect(plot)(manager.getPlot("Test1"))
-    expect(null)(manager.getPlot("test1 "))
+    assertResult(plot)(manager.currentPlot.get)
+    assertResult("Test1")(manager.currentPlot.get.name)
+    assertResult(plot)(manager.getPlot("test1"))
+    assertResult(plot)(manager.getPlot("TEST1"))
+    assertResult(plot)(manager.getPlot("Test1"))
+    assertResult(null)(manager.getPlot("test1 "))
     val plot2 = manager.newPlot("test2")
-    expect(plot2)(manager.currentPlot.get)
-    expect(2)(manager.getPlotNames.length)
-    expect(List("Test1", "test2"))(manager.getPlotNames.toList)
+    assertResult(plot2)(manager.currentPlot.get)
+    assertResult(2)(manager.getPlotNames.length)
+    assertResult(List("Test1", "test2"))(manager.getPlotNames.toList)
     manager.forgetPlot(plot)
-    expect(List("test2"))(manager.getPlotNames.toList)
+    assertResult(List("test2"))(manager.getPlotNames.toList)
   }
 
 }

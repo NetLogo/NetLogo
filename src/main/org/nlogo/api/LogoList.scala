@@ -3,6 +3,7 @@
 package org.nlogo.api
 
 import collection.immutable.{ Vector, VectorBuilder }
+import scala.language.implicitConversions
 
 object LogoList {
   val Empty = new LogoList(Vector[AnyRef]())

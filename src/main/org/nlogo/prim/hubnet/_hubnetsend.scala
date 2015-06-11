@@ -36,7 +36,15 @@ class _hubnetsend extends Command {
         throw new ArgumentTypeException(
           context, this, 0, Syntax.ListType | Syntax.StringType, nodesArg)
     }
-    hubnetManager.send(nodes, tag, message)
+    message match {
+      case m: Serializable => hubnetManager.send(nodes, tag, m)
+      case _               =>
+        throw new EngineException(
+          context, this,
+          s"""|HUBNET-SEND is unable to send the message $message
+              |of type ${TypeNames.name(message)} because it could not be
+              |transmitted over the network""".stripMargin.lines.mkString(" "))
+    }
     context.ip = next
   }
 }

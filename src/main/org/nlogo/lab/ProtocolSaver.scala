@@ -37,7 +37,7 @@ object ProtocolSaver
     hd.endDocument()
     out.toString.replaceAll("\r\n", "\n")
   }
-  def attributes(specs: Pair[String,String]*) = {
+  def attributes(specs: (String,String)*) = {
     val result = new AttributesImpl
     for((name,value) <- specs)
       result.addAttribute("", "", name, "CDATA", value)

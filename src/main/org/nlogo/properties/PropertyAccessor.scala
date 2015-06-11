@@ -4,13 +4,14 @@ package org.nlogo.properties
 
 import org.nlogo.api.Editable
 import java.lang.reflect.Method
+import scala.reflect.{ classTag, ClassTag }
 
-class PropertyAccessor[T : ClassManifest](val target: Editable, val displayName: String, val accessString: String) {
+class PropertyAccessor[T : ClassTag](val target: Editable, val displayName: String, val accessString: String) {
 
   // We assume the getter and setter methods have the same name. - ST 3/14/08
 
   val getter: Method = target.getClass.getMethod(accessString)
-  def erasure = classManifest[T].erasure
+  def erasure = classTag[T].runtimeClass
 
   val setter: Method =
     try target.getClass.getMethod(accessString, erasure)

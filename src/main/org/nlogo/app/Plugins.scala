@@ -5,6 +5,7 @@ package org.nlogo.app
 import org.nlogo.api.APIVersion
 import org.nlogo.util.Pico
 import java.awt.Component
+import java.net.{URL, URLClassLoader}
 
 /** Loads plugins. Plugins are instantiated using PicoContainer so that arbitrary constructor
  * parameters can be injected.  (Currently a plugin is always an extra tab, but we plan to
@@ -32,13 +33,14 @@ object Plugins {
         sys.error("Tab-Name not found in manifest"))
       val className = Option(attributes.getValue("Class-Name")).getOrElse(
         sys.error("Class-Name not found in manifest"))
-      val loader = new java.net.URLClassLoader(Array(url),
-        Thread.currentThread.getContextClassLoader) {
-          def load(x: String) = findClass(x)  // findClass is protected
-        }
+      val loader = new PluginClassLoader(url)
       pico.addComponent(className, loader.load(className))
       val component = pico.getComponent(className).asInstanceOf[java.awt.Component]
       (tabName, component)
+    }
+
+    class PluginClassLoader(url: URL) extends URLClassLoader(Array(url), Thread.currentThread.getContextClassLoader) {
+      def load(x: String) = findClass(x)  // findClass is protected
     }
 
 }

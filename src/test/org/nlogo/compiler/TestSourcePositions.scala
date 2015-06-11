@@ -17,9 +17,9 @@ class TestSourcePositions extends FunSuite {
     Compiler.compileMoreCode("to foo " + source + "\nend", None, program,
       java.util.Collections.emptyMap[String, Procedure],
       new DummyExtensionManager).head.code.head.source
-  def reporter(s: String) { expect(s)(compileReporter(s)) }
-  def command(s: String) { expect(s)(compileCommand(s)) }
-  def command(expected: String, s: String) { expect(expected)(compileCommand(s)) }
+  def reporter(s: String) { assertResult(s)(compileReporter(s)) }
+  def command(s: String) { assertResult(s)(compileCommand(s)) }
+  def command(expected: String, s: String) { assertResult(expected)(compileCommand(s)) }
   if (useGenerator) {
     /// reporters
     test("one") { reporter("timer") }

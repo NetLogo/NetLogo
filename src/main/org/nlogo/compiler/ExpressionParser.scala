@@ -479,7 +479,7 @@ private class ExpressionParser(procedure: Procedure,
     recurse()
     val end = results.last.endPos
     results += Token.eof
-    new DelayedBlock(results.readOnly,
+    new DelayedBlock(results.toList,
                      results.head.startPos, end, openBracket.fileName)
   }
   /**

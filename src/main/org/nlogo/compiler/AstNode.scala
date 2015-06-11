@@ -46,7 +46,11 @@ trait Expression extends AstNode {
  * of a command application). This is used when parsing arguments, when we
  * don't care what kind of application the args are for.
  */
-trait Application extends AstNode with collection.SeqProxy[Expression] {
+trait Application extends AstNode with Seq[Expression] {
+  def apply(i: Int) = args(i)
+  def length   = args.length
+  def iterator = args.iterator
+  def args: scala.collection.SeqLike[Expression, _]
   def instruction: Instruction
   def end_=(end: Int)
   def addArgument(arg: Expression)
@@ -70,10 +74,13 @@ class ProcedureDefinition(val procedure: Procedure, val statements: Statements) 
  * (enclosed in [], in particular). This class is used to represent other
  * groups of statements as well, for instance procedure bodies.
  */
-class Statements(val file: String) extends AstNode with collection.SeqProxy[Statement] {
+class Statements(val file: String) extends AstNode with Seq[Statement] {
   var start: Int = _
   var end: Int = _
-  def self = stmts // for SeqProxy
+
+  def apply(i: Int) = stmts(i)
+  def length = stmts.length
+  def iterator = stmts.iterator
   /**
    * a List of the actual Statement objects.
    */
@@ -95,10 +102,9 @@ class Statements(val file: String) extends AstNode with collection.SeqProxy[Stat
  * application.
  */
 class Statement(var command: Command, var start: Int, var end: Int, val file: String)
-    extends Application with collection.SeqProxy[Expression] {
+    extends Application with Seq[Expression] {
   val args = new collection.mutable.ArrayBuffer[Expression]
   def instruction = command // for Application
-  def self = args // for SeqProxy
   def addArgument(arg: Expression) { args.append(arg) }
   override def toString = command.toString + "[" + args.mkString(", ") + "]"
   def accept(v: AstVisitor) { v.visitStatement(this) }
@@ -154,12 +160,11 @@ class ReporterBlock(val app: ReporterApp, var start: Int, var end: Int, val file
  * applications as they're parsed.
  */
 class ReporterApp(var reporter: Reporter, var start: Int, var end: Int, val file: String)
-extends Expression with Application with collection.SeqProxy[Expression] {
+extends Expression with Application with Seq[Expression] {
   /**
    * the args for this application.
    */
   val args = new collection.mutable.ArrayBuffer[Expression]
-  def self = args // for SeqProxy
   def instruction = reporter // for Application
   def addArgument(arg: Expression) { args.append(arg) }
   def reportedType() = reporter.syntax.ret

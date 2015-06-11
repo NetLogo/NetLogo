@@ -38,14 +38,14 @@ class TestAgentVariableObservers extends AbstractTestModels with GivenWhenThen {
 
   testModel("watchers can delete themselves", Model(declarations)) {
     val watcher = new SelfDestroyer
-    when("a variable has a self destructive watcher")
+    When("a variable has a self destructive watcher")
     world.addWatcher("MY-GLOBAL", watcher)
-    and("that watcher is triggered")
+    And("that watcher is triggered")
     observer>> "set my-global 5"
-    then("that watcher is removed without exception")
-    expect(1)(watcher.triggered)
+    Then("that watcher is removed without exception")
+    assertResult(1)(watcher.triggered)
     observer>> "set my-global 10"
-    expect(1)(watcher.triggered)
+    assertResult(1)(watcher.triggered)
 
   }
 
@@ -63,96 +63,96 @@ class TestAgentVariableObservers extends AbstractTestModels with GivenWhenThen {
     world.addWatcher("MY-LINK-VAR", watcher)
     world.addWatcher("MY-PATCH-VAR", watcher)
 
-    when("setting a global variable with a watch")
+    When("setting a global variable with a watch")
     observer>> "set my-global 5"
-    then("a single response is triggered")
-    expect(1)(watcher.queue.size)
-    and("the response contains the new value")
-    expect((world.observer, "MY-GLOBAL", 5))(watcher.queue(0))
+    Then("a single response is triggered")
+    assertResult(1)(watcher.queue.size)
+    And("the response contains the new value")
+    assertResult((world.observer, "MY-GLOBAL", 5))(watcher.queue(0))
     watcher.queue.clear()
 
-    when("setting a built-in turtle variable with a watch")
+    When("setting a built-in turtle variable with a watch")
     observer>> "ask turtles [ set xcor who ]"
-    then("one response per turtle is given")
-    expect(world.turtles.count)(watcher.queue.size)
-    and("those responses contain the new value")
+    Then("one response per turtle is given")
+    assertResult(world.turtles.count)(watcher.queue.size)
+    And("those responses contain the new value")
     watcher.queue.foreach {
-      case (t: Turtle, vn: String, value: AnyRef) => expect(t.id)(value)
+      case (t: Turtle, vn: String, value: AnyRef) => assertResult(t.id)(value)
       case _ => fail("got response from non-turtle")
     }
     watcher.queue.clear()
 
-    when("setting a built-in turtle variable of a single turtle with a watch")
+    When("setting a built-in turtle variable of a single turtle with a watch")
     observer>> "ask turtle 0 [ set xcor 20 ]"
-    then("one response is given")
-    expect(1)(watcher.queue.size)
-    and("that response contains the new value")
+    Then("one response is given")
+    assertResult(1)(watcher.queue.size)
+    And("that response contains the new value")
     watcher.queue.foreach {
-      case (t: Turtle, vn: String, value: AnyRef) => expect(20)(value)
+      case (t: Turtle, vn: String, value: AnyRef) => assertResult(20)(value)
       case _ => fail("got response from non-turtle")
     }
     watcher.queue.clear()
 
-    when("setting a custom turtle variable with a watch")
+    When("setting a custom turtle variable with a watch")
     observer>> "ask turtles [ set my-turtle-var who ]"
-    then("one response per turtle is given")
-    expect(world.turtles.count)(watcher.queue.size)
-    and("those responses contain the new value")
+    Then("one response per turtle is given")
+    assertResult(world.turtles.count)(watcher.queue.size)
+    And("those responses contain the new value")
     watcher.queue.foreach {
-      case (t: Turtle, vn: String, value: AnyRef) => expect(t.id)(value)
+      case (t: Turtle, vn: String, value: AnyRef) => assertResult(t.id)(value)
       case _ => fail("Got response from non-turtle")
     }
     watcher.queue.clear()
 
-    when("setting a breeds-own variable with a watch")
+    When("setting a breeds-own variable with a watch")
     observer>> "ask dogs [ set my-dog-var who ]"
-    then("one response per turtle of that breed is given")
-    expect(world.getBreed("DOGS").count)(watcher.queue.size)
-    and("those responses contain the new value")
+    Then("one response per turtle of that breed is given")
+    assertResult(world.getBreed("DOGS").count)(watcher.queue.size)
+    And("those responses contain the new value")
     watcher.queue.foreach {
-      case (t: Turtle, vn: String, value: AnyRef) => expect(t.id)(value)
+      case (t: Turtle, vn: String, value: AnyRef) => assertResult(t.id)(value)
       case _ => fail("Got response from non-turtle")
     }
     watcher.queue.clear()
 
-    when("setting a shared breeds-own variable with a watch")
+    When("setting a shared breeds-own variable with a watch")
     observer>> "ask dogs [ set my-shared-var who ]"
     observer>> "ask cats [ set my-shared-var who ]"
-    then("one response per turtle of the breeds with that variable is given")
-    expect(world.getBreed("DOGS").count + world.getBreed("CATS").count)(watcher.queue.size)
-    and("those responses contain the new value")
+    Then("one response per turtle of the breeds with that variable is given")
+    assertResult(world.getBreed("DOGS").count + world.getBreed("CATS").count)(watcher.queue.size)
+    And("those responses contain the new value")
     watcher.queue.foreach {
-      case (t: Turtle, vn: String, value: AnyRef) => { expect(t.id)(value); expect("MY-SHARED-VAR")(vn) }
+      case (t: Turtle, vn: String, value: AnyRef) => { assertResult(t.id)(value); assertResult("MY-SHARED-VAR")(vn) }
       case _ => fail("Got response from non-turtle")
     }
     watcher.queue.clear()
 
-    when("setting a links-own variable with a watch")
+    When("setting a links-own variable with a watch")
     observer>> "ask links [ set my-link-var end1 ]"
-    then("one response per link is given")
-    expect(world.links.count)(watcher.queue.size)
-    and("those responses contain the new value")
+    Then("one response per link is given")
+    assertResult(world.links.count)(watcher.queue.size)
+    And("those responses contain the new value")
     watcher.queue.foreach {
-      case (l: Link, vn: String, value: AnyRef) => expect(l.end1)(value)
+      case (l: Link, vn: String, value: AnyRef) => assertResult(l.end1)(value)
       case _ => fail("Got response from non-link")
     }
     watcher.queue.clear()
 
-    when("setting a patches-own variable with a watch")
+    When("setting a patches-own variable with a watch")
     observer>> "ask patches [ set my-patch-var pxcor ]"
-    then("one response per patch is given")
-    expect(world.patches.count)(watcher.queue.size)
-    and("those responses contain the new value")
+    Then("one response per patch is given")
+    assertResult(world.patches.count)(watcher.queue.size)
+    And("those responses contain the new value")
     watcher.queue.foreach {
-      case (p: Patch, vn: String, value: AnyRef) => expect(p.pxcor)(value)
+      case (p: Patch, vn: String, value: AnyRef) => assertResult(p.pxcor)(value)
       case _ => fail("Got response from non-patch")
     }
     watcher.queue.clear()
 
-    when("deleting a watcher")
+    When("deleting a watcher")
     world.deleteWatcher("MY-GLOBAL", watcher)
     observer>> "set my-global 5"
-    then("it's no longer called when that variable is set")
-    expect(watcher.queue.isEmpty)(true)
+    Then("it's no longer called when that variable is set")
+    assertResult(watcher.queue.isEmpty)(true)
   }
 }

@@ -12,6 +12,7 @@ import org.nlogo.awt.Mouse.hasButton1
 import org.nlogo.agent.{Agent, Observer, Turtle, Patch, Link}
 import org.nlogo.nvm.Procedure
 import org.nlogo.api.{I18N, Editable, ModelReader, Options, Version}
+import scala.language.existentials
 
 object ButtonWidget {
 

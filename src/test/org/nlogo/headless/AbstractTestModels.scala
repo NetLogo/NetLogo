@@ -52,7 +52,8 @@ trait AbstractTestModels extends FunSuite with ModelCreator {
   }
 
   // also part of the DSL, enabling command-line like syntax: observer>>"somecommand"
-  val observer = new { def >>(s: String) = workspace.command(s) }
+  object ShovelableObserver { def >>(s: String) = workspace.command(s) }
+  val observer = ShovelableObserver
 
   def testError(f: => Unit, message:String){
     val e = intercept[LogoException]{f}

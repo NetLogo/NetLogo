@@ -20,8 +20,7 @@ class ClientGUI(editorFactory: org.nlogo.window.EditorFactory,clientView: Client
   private val interfacePanel = new InterfacePanelLite(clientView,compiler,new DummyRandomServices(),plotManager,editorFactory) {
     sliderEventOnReleaseOnly(true)
 
-    // override in order to throttle messages when a hubnet client is holding down a key
-    override def getKeyAdapter = new ButtonKeyAdapter {
+    class ClientGUIButtonKeyAdapter extends ButtonKeyAdapter {
       val map = new collection.mutable.HashMap[ButtonWidget,Long]
       override def buttonKeyed(button: ButtonWidget) {
         val currentTime = System.currentTimeMillis
@@ -33,6 +32,9 @@ class ClientGUI(editorFactory: org.nlogo.window.EditorFactory,clientView: Client
         }
       }
     }
+
+    // override in order to throttle messages when a hubnet client is holding down a key
+    override def getKeyAdapter = new ClientGUIButtonKeyAdapter
   }
 
   locally {

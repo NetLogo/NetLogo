@@ -115,18 +115,19 @@ private class AgentTypeChecker(defs: Seq[ProcedureDefinition]) {
     }
 
     private def chooseVisitorAndContinue(blockAgentClassString: String, exps: Seq[Expression]) {
-      for(exp <- exps) {
+      exps.foreach { exp =>
         exp.accept(
           exp match {
             case _: CommandBlock | _: ReporterBlock =>
               val argsAgentClassString =
                 if(blockAgentClassString != "?") blockAgentClassString
-                else exps match {
-                  case Seq(app: ReporterApp, _*) => getReportedAgentType(app)
+                else exps.headOption match {
+                  case Some(app: ReporterApp) => getReportedAgentType(app)
                   case _ => "-TPL"
                 }
               new AgentTypeCheckerVisitor(currentProcedure, argsAgentClassString)
-            case _ => this } ) }
+            case _ => this } )
+      }
     }
 
     def getReportedAgentType(app: ReporterApp): String = {
@@ -139,8 +140,8 @@ private class AgentTypeChecker(defs: Seq[ProcedureDefinition]) {
         // are examples of this, also "one-of".)   Careful, this assumption
         // could break someday. - ST 12/8/02, 12/15/05, 2/21/08
         case Syntax.AgentType  | Syntax.AgentsetType  =>
-          app.args match {
-            case Seq(app: ReporterApp, _*) => getReportedAgentType(app)
+          app.args.headOption match {
+            case Some(app: ReporterApp) => getReportedAgentType(app)
             case _ => "-TPL"
           }
         case _ => "-TPL"

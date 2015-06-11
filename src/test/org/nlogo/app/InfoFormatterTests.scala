@@ -18,20 +18,20 @@ class InfoFormatterTests extends FunSuite {
                                |</code></pre>""".stripMargin.replaceAll("\r\n", "\n")
 
   test("hello world (smoke test)") {
-    expect(helloWorldInnerHtml) {
+    assertResult(helloWorldInnerHtml) {
       toInnerHtml(helloWorldMarkdown)
     }
   }
 
   test("github flavored newlines 1") {
-    expect("""<p>hi<br/>there</p>""") {
+    assertResult("""<p>hi<br/>there</p>""") {
       toInnerHtml("""|hi
                      |there""".stripMargin)
     }
   }
 
   test("github flavored newlines 2") {
-    expect("""<p>hi</p><p>there</p>""") {
+    assertResult("""<p>hi</p><p>there</p>""") {
       toInnerHtml("""|hi
                      |
                      |there""".stripMargin)
@@ -50,7 +50,7 @@ class InfoFormatterTests extends FunSuite {
 
   test("read function that should probably be in a utils class somewhere") {
     def process(s: String) =
-      expect(s) { read(new ByteArrayInputStream(s.getBytes)) }
+      assertResult(s) { read(new ByteArrayInputStream(s.getBytes)) }
     process("goo")
     process("\ngoo")
     process("\ngoo\n")
@@ -64,7 +64,7 @@ class InfoFormatterTests extends FunSuite {
 
   // trac.assembla.com/nlogo/ticket/1278
   test("< characters get converted to &lt;") {
-    expect("""<p>is 5&lt;6?<br/>is 5 &lt; 6?<br/>is 5 &lt; x?</p>""") {
+    assertResult("""<p>is 5&lt;6?<br/>is 5 &lt; 6?<br/>is 5 &lt; x?</p>""") {
       toInnerHtml("""|is 5<6?
                      |is 5 < 6?
                      |is 5 < x?""".stripMargin)
@@ -79,14 +79,14 @@ class InfoFormatterTests extends FunSuite {
                      |<tr> <td>confess     <td>silent           <td>0              <td>5
                      |</table>""".stripMargin
     val time = System.currentTimeMillis
-    expect(content) { toInnerHtml(content) }
+    assertResult(content) { toInnerHtml(content) }
     // trac.assembla.com/nlogo/ticket/1181
     assert(System.currentTimeMillis - time < 1000)
   }
 
   // here we get a <pre> block because we have a blank line before the fence
   test("fenced code blocks 1") {
-    expect("""|<p>foo</p>
+    assertResult("""|<p>foo</p>
               |<pre><code>   bar
               |  baz
               |qux
@@ -104,7 +104,7 @@ class InfoFormatterTests extends FunSuite {
 
   // in contrast, here no <pre> because no blank line
   test("fenced code blocks 2") {
-    expect("""|<p>foo<br/><code>
+    assertResult("""|<p>foo<br/><code>
               |   bar
               |  baz
               |qux

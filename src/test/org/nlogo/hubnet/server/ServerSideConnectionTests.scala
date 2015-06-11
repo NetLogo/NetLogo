@@ -136,19 +136,21 @@ class ServerSideConnectionTests extends MockSuite {
   }
 */
 
+  class TestableConnection(streamable: Streamable, server: ConnectionManagerInterface)
+    extends ServerSideConnection(streamable, "test:4242", server) {
+    def nextOutgoingMessage = {
+      val m = this.writeQueue.poll()
+      if(m==null) throw new IllegalStateException("expected message, but got none!")
+      m
+    }
+  }
   def newConnection(server:ConnectionManagerInterface=mock[ConnectionManagerInterface]) = {
     val streamable=mock[Streamable]
     expecting{
       one(streamable).getOutputStream
       one(streamable).getInputStream
     }
-    new ServerSideConnection(streamable, "test:4242", server){
-      def nextOutgoingMessage = {
-        val m = this.writeQueue.poll()
-        if(m==null) throw new IllegalStateException("expected message, but got none!")
-        m
-      }
-    }
+    new TestableConnection(streamable, server)
   }
 
 }

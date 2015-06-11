@@ -267,6 +267,7 @@ public final strictfp class Context {
     letBindings = letBindings.$colon$colon(new LetBinding(let, value));
   }
 
+  @SuppressWarnings("unchecked")
   public Object getLet(Let let) {
     scala.collection.immutable.List<LetBinding> rest = letBindings;
     while ((Object) rest != scala.collection.immutable.Nil$.MODULE$) // NOPMD
@@ -275,11 +276,12 @@ public final strictfp class Context {
       if (let == binding.let) {
         return binding.value;
       }
-      rest = rest.tail();
+      rest = (scala.collection.immutable.List<LetBinding>) rest.tail(); // NOPMD
     }
     return job.parentContext.getLet(let);
   }
 
+  @SuppressWarnings("unchecked")
   public void setLet(Let let, Object value) {
     scala.collection.immutable.List<LetBinding> rest = letBindings;
     while ((Object) rest != scala.collection.immutable.Nil$.MODULE$) // NOPMD
@@ -289,7 +291,7 @@ public final strictfp class Context {
         binding.value = value;
         return;
       }
-      rest = rest.tail();
+      rest = (scala.collection.immutable.List<LetBinding>) rest.tail(); // NOPMD
     }
     job.parentContext.setLet(let, value);
   }

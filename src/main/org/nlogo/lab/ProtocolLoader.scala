@@ -5,6 +5,7 @@ package org.nlogo.lab
 import org.nlogo.api.CompilerServices
 import org.w3c.dom
 import org.xml.sax
+import scala.language.implicitConversions
 
 object ProtocolLoader
 {
@@ -26,9 +27,9 @@ class ProtocolLoader(services: CompilerServices)
       .getOrElse(throw new IllegalStateException(
         "no experiment named \"" + name + "\""))
   def loadAll(file: java.io.File):List[Protocol] =
-    new Loader().load(file)
+    new Loader().load(file).toList
   def loadAll(xml: String):List[Protocol] =
-    new Loader().load(xml)
+    new Loader().load(xml).toList
   // old NetLogo versions used "tick" where we now use "step" because "tick" got added to the language
   def ticksToSteps(str: String) =
     str.replaceAll("runMetricsEveryTick=\"", "runMetricsEveryStep=\"")
@@ -48,7 +49,7 @@ class ProtocolLoader(services: CompilerServices)
   ///
   def file2xml(file: java.io.File): String = ""
   class Loader {
-    def load(inputSource: sax.InputSource): List[Protocol] = {
+    def load(inputSource: sax.InputSource): Seq[Protocol] = {
       inputSource.setSystemId(getClass.getResource("/system/").toString)
       val factory = javax.xml.parsers.DocumentBuilderFactory.newInstance
       factory.setValidating(true)

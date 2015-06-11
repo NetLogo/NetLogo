@@ -3,10 +3,11 @@
 package org.nlogo.headless
 
 import org.nlogo.plot.{PlotPoint, PlotPen}
+import scala.language.implicitConversions
 
 class TestPlotModels extends AbstractTestModels {
 
-  implicit def pen2ContainsPoint(pen:PlotPen) = new {
+  implicit class penContainsPoint(pen: PlotPen) {
     // couldnt call contains here because it seemed to call the java method instead.
     def containsPoint(x:Double, y:Double) = {
       pen.points.find((p:PlotPoint) => p.x == x && p.y == y).isDefined

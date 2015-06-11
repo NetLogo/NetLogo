@@ -54,7 +54,7 @@ class SmartIndenterTests extends FunSuite {
   }
 
   class Scaffold(var text: String) extends EditorAreaInterface {
-    import scala.reflect.BeanProperty
+    import scala.beans.BeanProperty
     @BeanProperty var selectionStart = 0
     @BeanProperty var selectionEnd = 0
     selectAll()

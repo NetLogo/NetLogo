@@ -25,7 +25,7 @@ class BreedIdentifierHandlerTests extends FunSuite {
       classOf[_createturtles]),
       "breed[frogs frog] to foo create-frogs 1 end", "CREATE-FROGS")
     assert(token.value.isInstanceOf[_createturtles])
-    expect("_createturtles:FROGS,+0")(token.value.toString)
+    assertResult("_createturtles:FROGS,+0")(token.value.toString)
   }
   test("directedLinkBreedIdentifier1") {
     val token = tester(BreedIdentifierHandler.directedLink
@@ -34,7 +34,7 @@ class BreedIdentifierHandlerTests extends FunSuite {
       "directed-link-breed[as a] to foo ask turtle 0 [ create-a-to turtle 1 ] end",
       "CREATE-A-TO")
     assert(token.value.isInstanceOf[_createlinkto])
-    expect("_createlinkto:AS,+0")(token.value.toString)
+    assertResult("_createlinkto:AS,+0")(token.value.toString)
   }
   test("directedLinkBreedIdentifier2") {
     val token = tester(BreedIdentifierHandler.directedLink
@@ -43,7 +43,7 @@ class BreedIdentifierHandlerTests extends FunSuite {
       "directed-link-breed[as a] to foo ask turtle 0 [ print out-a-neighbor? turtle 1 ] end",
       "OUT-A-NEIGHBOR?")
     assert(token.value.isInstanceOf[_outlinkneighbor])
-    expect("_outlinkneighbor:AS")(token.value.toString)
+    assertResult("_outlinkneighbor:AS")(token.value.toString)
   }
   test("undirectedLinkBreedIdentifier") {
     val token = tester(BreedIdentifierHandler.undirectedLink
@@ -52,6 +52,6 @@ class BreedIdentifierHandlerTests extends FunSuite {
       "undirected-link-breed[bs b] to foo ask turtle 0 [ create-b-with turtle 1 ] end",
       "CREATE-B-WITH")
     assert(token.value.isInstanceOf[_createlinkwith])
-    expect("_createlinkwith:BS,+0")(token.value.toString)
+    assertResult("_createlinkwith:BS,+0")(token.value.toString)
   }
 }
