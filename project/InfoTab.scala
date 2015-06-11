@@ -8,10 +8,10 @@ object InfoTab {
     "info-tab", "builds info tab section of User Manual")
 
   val infoTabTask =
-    infoTab <<= (fullClasspath in Test, baseDirectory, cacheDirectory, runner, streams) map {
-      (cp, base, cacheDir, runner, s) =>
+    infoTab <<= (fullClasspath in Test, baseDirectory, runner, streams) map {
+      (cp, base, runner, s) =>
         val cache =
-          FileFunction.cached(cacheDir / "infotab",
+          FileFunction.cached(s.cacheDirectory / "infotab",
                               inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
             in: Set[File] =>
               Run.run("org.nlogo.tools.InfoTabDocGenerator",

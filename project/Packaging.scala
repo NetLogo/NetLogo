@@ -15,10 +15,10 @@ object Packaging {
             .map(f => "lib/" + f.getName)
             .filter(_.endsWith(".jar"))
             .mkString(" ")))},
-    packageBin in Compile <<= (packageBin in Compile, scalaInstance, baseDirectory, cacheDirectory, streams) map {
-      (jar, instance, base, cacheDir, s) =>
+    packageBin in Compile <<= (packageBin in Compile, scalaInstance, baseDirectory, streams) map {
+      (jar, instance, base, s) =>
         val cache =
-          FileFunction.cached(cacheDir / "jars", inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
+          FileFunction.cached(s.cacheDirectory / "jars", inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
             in: Set[File] =>
               IO.delete(base / "NetLogoLite.jar")
               IO.delete(base / "HubNet.jar")

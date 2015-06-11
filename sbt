@@ -33,7 +33,7 @@ JAVA=$JH/bin/java
 # Most of these settings are fine for everyone
 XSS=-Xss2m
 XMX=-Xmx1536m
-XX=-XX:MaxPermSize=256m
+XX=-XX:MaxPermSize=512m
 ENCODING=-Dfile.encoding=UTF-8
 HEADLESS=-Djava.awt.headless=true
 USE_QUARTZ=-Dapple.awt.graphics.UseQuartz=false
@@ -41,8 +41,8 @@ DISABLE_EXT_DIRS=-Djava.ext.dirs=
 BOOT=xsbt.boot.Boot
 
 
-SBT_LAUNCH=$HOME/.sbt/sbt-launch-0.12.4.jar
-URL='http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.12.4/sbt-launch.jar'
+SBT_LAUNCH=$HOME/.sbt/sbt-launch-0.13.8.jar
+URL='http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.13.8/sbt-launch.jar'
 
 if [ ! -f $SBT_LAUNCH ] ; then
   echo "downloading" $URL

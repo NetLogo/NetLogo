@@ -1,4 +1,10 @@
-addSbtPlugin("org.ensime" % "ensime-sbt-cmd" % "0.0.10")
+resolvers += "Typesafe Public Repo" at "http://repo.typesafe.com/typesafe/releases"
+
+resolvers += "sonatype-releases" at "https://oss.sonatype.org/content/repositories/releases/"
+
+addSbtPlugin("org.ensime" % "ensime-sbt" % "0.1.6")
+
+addSbtPlugin("com.typesafe.sbt" % "sbt-git" % "0.8.4")
 
 libraryDependencies +=
   "de.jflex" % "jflex" % "1.4.3"
@@ -10,8 +16,3 @@ libraryDependencies +=
 libraryDependencies +=
   "net.sf.proguard" % "proguard" % "4.8" from
     "http://ccl.northwestern.edu/devel/proguard-4.8.jar"
-
-// for sbt-git-plugin
-resolvers += "jgit-repo" at "http://download.eclipse.org/jgit/maven"
-
-addSbtPlugin("com.jsuereth" % "sbt-git-plugin" % "0.4")
