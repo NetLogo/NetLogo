@@ -11,7 +11,7 @@ scalacOptions ++=
   .split(" ").toSeq
 
 javacOptions ++=
-  "-bootclasspath dist/java5/classes.jar%sdist/java5/ui.jar -g -deprecation -encoding us-ascii -Werror -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path -source 1.5 -target 1.5"
+  "-g -deprecation -encoding us-ascii -Werror -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path -source 1.8 -target 1.8"
   .format(java.io.File.pathSeparator)
   .split(" ").toSeq
 

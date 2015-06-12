@@ -45,9 +45,9 @@ public strictfp class NewUserDialog extends JDialog {
   private JTextField emailAddressField;
   private JRadioButton femaleRadioButton;
   private JRadioButton maleRadioButton;
-  private JComboBox birthdayYearComboBox;
-  private JComboBox birthdayMonthComboBox;
-  private JComboBox birthdayDayComboBox;
+  private JComboBox<Integer> birthdayYearComboBox;
+  private JComboBox<Month> birthdayMonthComboBox;
+  private JComboBox<Integer> birthdayDayComboBox;
   private JPasswordField passwordField;
   private JPasswordField passwordConfirmField;
   private JTextField firstNameField;
@@ -315,9 +315,9 @@ public strictfp class NewUserDialog extends JDialog {
     formLabels.add(new JLabel("Birthday (Optional)"));
     JPanel birthdayPanel = new JPanel(new GridLayout(1, 3, 10, 0));
     formFields.add(birthdayPanel);
-    birthdayYearComboBox = new JComboBox();
-    birthdayMonthComboBox = new JComboBox();
-    birthdayDayComboBox = new JComboBox();
+    birthdayYearComboBox = new JComboBox<Integer>();
+    birthdayMonthComboBox = new JComboBox<Month>();
+    birthdayDayComboBox = new JComboBox<Integer>();
     JPanel birthdayYearComboBoxPanel = new JPanel(new GridBagLayout());
     JPanel birthdayMonthComboBoxPanel = new JPanel(new GridBagLayout());
     JPanel birthdayDayComboBoxPanel = new JPanel(new GridBagLayout());

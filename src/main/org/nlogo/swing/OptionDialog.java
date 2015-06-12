@@ -5,14 +5,14 @@ package org.nlogo.swing;
 import java.util.Arrays;
 import java.util.List;
 
-public strictfp class OptionDialog
+public strictfp class OptionDialog<T>
     extends UserDialog {
-  javax.swing.JComboBox options;
+  javax.swing.JComboBox<T> options;
 
   public OptionDialog(java.awt.Frame owner, String title,
-                      String message, Object[] choices, scala.Function1<String, String> i18n) {
+                      String message, T[] choices, scala.Function1<String, String> i18n) {
     super(owner, title, i18n);
-    options = new javax.swing.JComboBox(choices);
+    options = new javax.swing.JComboBox<T>(choices);
     addComponents(options, message);
   }
 

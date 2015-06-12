@@ -6,7 +6,7 @@ import org.nlogo.shape.DrawableShape;
 
 public strictfp class ShapeCellRenderer   // public for DeltaTick - ST 12/2/11
     extends javax.swing.JPanel
-    implements javax.swing.ListCellRenderer {
+    implements javax.swing.ListCellRenderer<String> {
 
   protected Object theShape;
   protected final java.awt.Component shapeComponent;
@@ -77,8 +77,9 @@ public strictfp class ShapeCellRenderer   // public for DeltaTick - ST 12/2/11
   }
 
   // Method that actually renders the item
+  @Override
   public java.awt.Component getListCellRendererComponent
-  (javax.swing.JList list, Object value, int index,
+  (javax.swing.JList<? extends String> list, String value, int index,
    boolean isSelected, boolean cellHasFocus) {
     theShape = this.list.getShape(index);
     shapeName.setText(value.toString());

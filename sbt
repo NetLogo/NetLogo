@@ -6,19 +6,19 @@
 # an intermediary JH variable --JAB (3/22/13)
 if [[ `uname -s` == *CYGWIN* ]] ; then
   CURR_DIR="$( cd "$( dirname "$0" )" && pwd )"
-  JH=`cygpath -up "\Java\jdk1.6.0_31"`
+  JH=`cygpath -up "\Java\jdk1.8.0_31"`
 else
   CURR_DIR=`dirname $0`
   if [ `uname -s` = Linux ] ; then
-    if [ -a /usr/lib/jvm/java-6-sun ] ; then
-      export JAVA_HOME=/usr/lib/jvm/java-6-sun
-    elif ! $JAVA_HOME/bin/java -version 2>&1 | head -n 1 | grep "1\.6" >> /dev/null ; then
-      echo "Please set JAVA_HOME to version 1.6"
+    if [ -a /usr/lib/jvm/java-8-sun ] ; then
+      export JAVA_HOME=/usr/lib/jvm/java-8-oracle
+    elif ! $JAVA_HOME/bin/java -version 2>&1 | head -n 1 | grep "1\.8" >> /dev/null ; then
+      echo "Please set JAVA_HOME to version 1.8"
       exit
     fi
   else
     if [ `uname -s` = Darwin ] ; then
-      export JAVA_HOME=`/usr/libexec/java_home -F -v1.6*`
+      export JAVA_HOME=`/usr/libexec/java_home -F -v1.8*`
     else
       export JAVA_HOME=/usr
     fi

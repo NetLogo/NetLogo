@@ -8,7 +8,7 @@ import javax.swing.UIManager;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
 import java.awt.Component;
 
-public strictfp class DisableableComboBox extends JComboBox {
+public strictfp class DisableableComboBox extends JComboBox<Object> {
 
   private class Item {
 
@@ -38,6 +38,7 @@ public strictfp class DisableableComboBox extends JComboBox {
 
   }
 
+  @SuppressWarnings({"unchecked", "rawtypes"}) // see: http://bugs.java.com/view_bug.do?bug_id=7067201 -- RG 6/12/15
   public DisableableComboBox() {
     super();
     setRenderer(new BasicComboBoxRenderer() {

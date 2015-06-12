@@ -13,7 +13,7 @@ abstract class InputBoxEditor(accessor: PropertyAccessor[Options[InputBox#InputT
   extends PropertyEditor(accessor)
 {
 
-  private val typeCombo: JComboBox = new JComboBox
+  private val typeCombo: JComboBox[InputBox#InputType] = new JComboBox[InputBox#InputType]
   private val multiline: JCheckBox = new JCheckBox("Multi-Line")
   private val options: Options[InputBox#InputType] = accessor.get
   private val originalOption: InputBox#InputType = accessor.get.chosenValue

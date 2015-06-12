@@ -18,9 +18,9 @@ class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Co
   private val previewPanel = new WorldPreview(200, 200)
 
   private var editors:scala.List[IntegerEditor] = Nil
-  private var positionChoices:JComboBox = null
-  private var edgeChoices:JComboBox = null
-  private var cornerChoices:JComboBox = null
+  private var positionChoices:JComboBox[OriginConfiguration] = null
+  private var edgeChoices:JComboBox[OriginConfiguration] = null
+  private var cornerChoices:JComboBox[OriginConfiguration] = null
 
   override def init(): PropertyEditor[_] = {
     setLayout(new BorderLayout())

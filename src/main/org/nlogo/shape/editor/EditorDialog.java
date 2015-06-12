@@ -45,7 +45,7 @@ strictfp class EditorDialog
   // - SAB/ST 6/11/04
   private javax.swing.undo.UndoableEdit undoableEdit;
 
-  private final javax.swing.JComboBox colorSelection;
+  private final javax.swing.JComboBox<Integer> colorSelection;
 
   private boolean fillShapes = true;
   private boolean shapeRotatable = true;
@@ -292,7 +292,7 @@ strictfp class EditorDialog
       colors.add(Integer.valueOf(icolor));
     }
 
-    colorSelection = new javax.swing.JComboBox(colors.toArray());
+    colorSelection = new javax.swing.JComboBox<Integer>(colors.toArray(new Integer[0]));
     colorSelection.setRenderer(new ColorCellRenderer());
     colorSelection.addActionListener
         (new java.awt.event.ActionListener() {

@@ -8,7 +8,7 @@ package org.nlogo.shape.editor;
 
 strictfp class ColorCellRenderer
     extends javax.swing.JPanel
-    implements javax.swing.ListCellRenderer {
+    implements javax.swing.ListCellRenderer<Integer> {
 
   private static final String[] NAMES =
       {"Gray", "Red", "Orange", "Brown", "Yellow", "Green",
@@ -35,10 +35,11 @@ strictfp class ColorCellRenderer
   }
 
   // method that actually renders the item
+  @Override
   public java.awt.Component getListCellRendererComponent
-  (javax.swing.JList list, Object value, int index,
+  (javax.swing.JList<? extends Integer> list, Integer value, int index,
    boolean isSelected, boolean cellHasFocus) {
-    int colorIndex = ((Integer) value).intValue();
+    int colorIndex = value.intValue();
     colorSwatch.setBackground(EditorDialog.getColor(colorIndex));
     colorName.setText(NAMES[colorIndex]);
     if (isSelected) {
