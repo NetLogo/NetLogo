@@ -26,23 +26,22 @@ else
   JH=$JAVA_HOME
 fi
 
-
 export PATH=$JH/bin:$PATH
 JAVA=$JH/bin/java
+JJS=$JH/bin/jjs
 
 # Most of these settings are fine for everyone
 XSS=-Xss2m
 XMX=-Xmx2048m
-XX="-XX:MaxPermSize=512m -XX:ReservedCodeCacheSize=512m"
+XX=
 ENCODING=-Dfile.encoding=UTF-8
 HEADLESS=-Djava.awt.headless=true
 USE_QUARTZ=-Dapple.awt.graphics.UseQuartz=false
-DISABLE_EXT_DIRS=-Djava.ext.dirs=
 BOOT=xsbt.boot.Boot
 
 
 SBT_LAUNCH=$HOME/.sbt/sbt-launch-0.13.8.jar
-URL='http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.13.8/sbt-launch.jar'
+URL='https://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.13.8/sbt-launch.jar'
 
 if [ ! -f $SBT_LAUNCH ] ; then
   echo "downloading" $URL
@@ -74,6 +73,5 @@ fi
     $HEADLESS \
     $TERMINAL \
     $USE_QUARTZ \
-    $DISABLE_EXT_DIRS \
     -classpath $SBT_LAUNCH \
     $BOOT "$@"
