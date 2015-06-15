@@ -19,13 +19,13 @@ private[agent] class Exporter3D(world: World3D, writer: PrintWriter) extends Exp
 
   import writer.{ print, println }
 
-  override def exportWorld(full: Boolean) {
+  override def exportWorld(full: Boolean) = {
     super.exportWorld(full)
     if(full)
       exportDrawing()
   }
 
-  def exportDrawing() {
+  def exportDrawing() = {
     println(csv.encode("DRAWING"))
     println(csv.encode("x0")  + ","
             + csv.encode("y0")  + ","
@@ -103,7 +103,7 @@ private[agent] class Exporter3D(world: World3D, writer: PrintWriter) extends Exp
     println()
   }
 
-  override def exportGlobals() {
+  override def exportGlobals() = {
     println(csv.encode("GLOBALS"))
     print(csv.encode("min-pxcor") + ","
                   + csv.encode("max-pxcor") + ","
@@ -152,7 +152,7 @@ private[agent] class Exporter3D(world: World3D, writer: PrintWriter) extends Exp
     println()
   }
 
-  override def exportTurtles() {
+  override def exportTurtles() = {
     println(csv.encode("TURTLES"))
     val allTurtleVars = new ArrayList[String](world.program.turtlesOwn)
     val turtlesVarSize = world.program.turtlesOwn.size()

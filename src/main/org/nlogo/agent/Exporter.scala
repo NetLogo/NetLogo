@@ -16,7 +16,7 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
 
   import writer.{ print, println }
 
-  def exportWorld(full: Boolean) {
+  def exportWorld(full: Boolean) = {
     exportRandomState()
     exportGlobals()
     if(full) {
@@ -26,7 +26,7 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
     }
   }
 
-  private def exportLinks() {
+  private def exportLinks() = {
     println(csv.encode("LINKS"))
     val allLinkVars = new ArrayList[String]
     for(v <- world.program.linksOwn.asScala)
@@ -82,13 +82,13 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
     println()
   }
 
-  private def exportRandomState() {
+  private def exportRandomState() = {
     println(csv.encode("RANDOM STATE"))
     println(csv.encode(world.mainRNG.save()))
     println()
   }
 
-  protected def exportGlobals() {
+  protected def exportGlobals() = {
     println(csv.encode("GLOBALS"))
     print(csv.encode("min-pxcor") + ","
           + csv.encode("max-pxcor") + ","
@@ -132,7 +132,7 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
     println()
   }
 
-  protected def exportTurtles() {
+  protected def exportTurtles() = {
     println(csv.encode("TURTLES"))
     val allTurtleVars = new ArrayList[String](world.program.turtlesOwn)
     val turtlesVarSize = world.program.turtlesOwn.size
@@ -187,7 +187,7 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
     println()
   }
 
-  private def exportPatches() {
+  private def exportPatches() = {
     println(csv.encode("PATCHES"))
     val vars = world.program.patchesOwn
     println(csv.variableNameRow(vars))
@@ -204,7 +204,7 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
     println()
   }
 
-  protected def sortIndicesAndVars(vars: Array[String], indices: Array[Int]) {
+  protected def sortIndicesAndVars(vars: Array[String], indices: Array[Int]) = {
     val (sortedVars, sortedIndices) = (vars zip indices).sortBy(_._2).unzip
     sortedVars.copyToArray(vars)
     sortedIndices.copyToArray(indices)

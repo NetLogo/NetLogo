@@ -9,7 +9,7 @@ class ChooserConstraint(private var _acceptedValues: LogoList = LogoList(),
 extends ValueConstraint
 {
   def acceptedValues = _acceptedValues
-  def acceptedValues(vals: LogoList) {
+  def acceptedValues(vals: LogoList) = {
     val newdef = indexForValue(defaultValue)
     _acceptedValues = vals
     defaultIndex = newdef
@@ -26,12 +26,9 @@ extends ValueConstraint
     acceptedValues.indexWhere(Equality.equals(_, value))
 
   @throws(classOf[ValueConstraint.Violation])
-  def assertConstraint(value: AnyRef) {
-    if(!acceptedValues.contains(value))
-      throw new ValueConstraint.Violation(
-        I18N.errors.getN("org.nlogo.agent.ChooserConstraint.invalidValue", Dump.logoObject(acceptedValues, true, false))
-        )
-  }
+  def assertConstraint(value: AnyRef) = if(!acceptedValues.contains(value))
+    throw new ValueConstraint.Violation(
+      I18N.errors.getN("org.nlogo.agent.ChooserConstraint.invalidValue", Dump.logoObject(acceptedValues, true, false)))
 
   def coerceValue(value: AnyRef): AnyRef =
     if(indexForValue(value) != -1)

@@ -16,7 +16,7 @@ class Drawing3D(world: World3D) extends org.nlogo.api.Drawing3D {
   private val _linkStamps = ArrayBuffer[org.nlogo.api.LinkStamp3D]()
   def linkStamps = _linkStamps.asJava
 
-  def clear() {
+  def clear() = {
     lines.clear()
     turtleStamps.clear()
     linkStamps.clear()
@@ -29,14 +29,12 @@ class Drawing3D(world: World3D) extends org.nlogo.api.Drawing3D {
   private def pitch(x0: Double, y0: Double, z0: Double, x1: Double, y1: Double, z1: Double) =
     world.protractor.towardsPitch(x0, y0, z0, x1, y1, z1, true)
 
-  def stamp(agent: Agent) {
-    agent match {
+  def stamp(agent: Agent) = agent match {
       case t: Turtle3D =>
         turtleStamps.add(new TurtleStamp3D(t))
       case l: Link3D =>
         linkStamps.add(new LinkStamp3D(l))
     }
-  }
 
   def drawLine(x0: Double, y0: Double, z0: Double,
                x1: Double, y1: Double, z1: Double,
@@ -71,7 +69,7 @@ class Drawing3D(world: World3D) extends org.nlogo.api.Drawing3D {
                                     lineThickness, directedLink, destSize, heading, pitch))
   }
 
-  private def wrap(l: DrawingLine3D) {
+  private def wrap(l: DrawingLine3D) = {
     var startX = l.x0
     var startY = l.y0
     var endX = l.x0

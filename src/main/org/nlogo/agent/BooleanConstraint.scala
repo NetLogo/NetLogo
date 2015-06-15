@@ -14,10 +14,8 @@ class BooleanConstraint(_defaultValue: AnyRef) extends ValueConstraint {
   var defaultValue: java.lang.Boolean = coerceValue(_defaultValue)
 
   @throws(classOf[ValueConstraint.Violation])
-  def assertConstraint(value: AnyRef) {
-    if(!value.isInstanceOf[java.lang.Boolean])
-      throw new ValueConstraint.Violation(I18N.errors.get("org.nlogo.agent.BooleanConstraint.bool"))
-  }
+  def assertConstraint(value: AnyRef) = if(!value.isInstanceOf[java.lang.Boolean])
+    throw new ValueConstraint.Violation(I18N.errors.get("org.nlogo.agent.BooleanConstraint.bool"))
 
   def coerceValue(value: AnyRef): java.lang.Boolean =
     value match {

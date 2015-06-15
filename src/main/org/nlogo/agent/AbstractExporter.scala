@@ -9,7 +9,7 @@ import org.nlogo.api.Dump.csv
 
 object AbstractExporter {
 
-  def exportHeader(writer: PrintWriter, tyype: String, modelFileName: String, extraHeader: String) {
+  def exportHeader(writer: PrintWriter, tyype: String, modelFileName: String, extraHeader: String) = {
     import writer.println
     println(csv.header("export-" + tyype + " data (" + Version.version + ")"))
     println(csv.header(modelFileName))
@@ -30,7 +30,7 @@ abstract class AbstractExporter(filename: String) {
   def export(writer: java.io.PrintWriter) // abstract
 
   @throws(classOf[IOException])
-  def export(tyype: String, modelFileName: String, extraHeader: String) {
+  def export(tyype: String, modelFileName: String, extraHeader: String): Unit = {
     val file = new org.nlogo.api.LocalFile(filename)
     try {
       file.open(FileMode.Write)
