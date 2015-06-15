@@ -37,33 +37,30 @@ class LocalFile(filepath: String) extends File {
   }
 
   @throws(classOf[java.io.IOException])
-  override def print(str: String) {
+  override def print(str: String) = {
     if (w == null)
       throw new java.io.IOException("Attempted to print to an unopened File")
     w.print(str)
   }
 
   @throws(classOf[java.io.IOException])
-  override def println(line: String) {
+  override def println(line: String) = {
     if (w == null)
       throw new java.io.IOException("Attempted to println to an unopened File")
     w.println(line)
   }
 
   @throws(classOf[java.io.IOException])
-  override def println() {
+  override def println() = {
     if (w == null)
       throw new java.io.IOException("Attempted to println to an unopened File")
     w.println()
   }
 
-  override def flush() {
-    if (w != null)
-      w.flush()
-  }
+  override def flush() = if (w != null) w.flush()
 
   @throws(classOf[java.io.IOException])
-  override def close(ok: Boolean) {
+  override def close(ok: Boolean) = {
     mode match {
       case FileMode.Write | FileMode.Append =>
         w.close()

@@ -40,7 +40,7 @@ class CSV(dump: Any => String) {
     '"' + ss.flatMap(escape) + '"'
   }
 
-  def stringToCSV(writer: java.io.PrintWriter, text: String) {
+  def stringToCSV(writer: java.io.PrintWriter, text: String) = {
     val CellWidth = 10000
     val MaxColumns = 2
     var i = 0

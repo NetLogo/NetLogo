@@ -19,8 +19,8 @@ class DummyCompilerServices extends CompilerServices {
     }
   def autoConvert(source: String, subprogram: Boolean, reporter: Boolean, modelVersion: String) = source
   def readNumberFromString(source: String) = source
-  def checkReporterSyntax(source: String) { }
-  def checkCommandSyntax(source: String) { }
+  def checkReporterSyntax(source: String) = {}
+  def checkCommandSyntax(source: String) = {}
   def isConstant(s: String): Boolean = unsupported
   def isValidIdentifier(s: String): Boolean = unsupported
   def isReporter(s: String): Boolean = unsupported

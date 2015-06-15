@@ -13,5 +13,5 @@ object SimpleChangeEvent
  */
 class SimpleChangeEventPublisher extends Publisher[SimpleChangeEvent.type] {
   override type Pub = Publisher[SimpleChangeEvent.type]
-  def publish() { publish(SimpleChangeEvent) }
+  def publish(): Unit = publish(SimpleChangeEvent)
 }

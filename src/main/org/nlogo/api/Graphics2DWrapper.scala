@@ -21,16 +21,14 @@ class Graphics2DWrapper(g: Graphics2D, renderLabelsAsRectangles: Boolean = false
 
   def location(x: Double, y: Double) =
     "(" + (g.getTransform.getTranslateX + x) + " , " + (g.getTransform.getTranslateY + y) + ")"
-  def draw(shape: java.awt.Shape) { g.draw(shape) }
-  def drawImage(image: java.awt.image.BufferedImage) { g.drawImage(image, null, 0, 0) }
-  def drawImage(image: java.awt.Image, x: Int, y: Int, width: Int, height: Int) {
+  def draw(shape: java.awt.Shape) = g.draw(shape)
+  def drawImage(image: java.awt.image.BufferedImage) = g.drawImage(image, null, 0, 0)
+  def drawImage(image: java.awt.Image, x: Int, y: Int, width: Int, height: Int) =
     g.drawImage(image, x, y, width, height, null)
-  }
-  def drawLine(x1: Double, y1: Double, x2: Double, y2: Double) {
+  def drawLine(x1: Double, y1: Double, x2: Double, y2: Double) =
     g.draw(new java.awt.geom.Line2D.Double(x1, y1, x2, y2))
-  }
-  def drawLabel(label: String, x: Double, y: Double, patchSize: Double) {
-    if (renderLabelsAsRectangles) {
+  def drawLabel(label: String, x: Double, y: Double, patchSize: Double) =
+    if(renderLabelsAsRectangles) {
       // fonts aren't the same cross-platform so for graphics checksumming
       // purposes we just draw a little rectangle (with the right position
       // and color, at least) - ST 6/23/12
@@ -38,8 +36,7 @@ class Graphics2DWrapper(g: Graphics2D, renderLabelsAsRectangles: Boolean = false
       translate(x, y)
       fillRect(0, 0, 5, 5)
       pop()
-    }
-    else {
+    } else {
       val fm = g.getFontMetrics
       g.translate(x - fm.stringWidth(label), 0)
       if (patchSize >= (fm.getMaxAscent + fm.getMaxDescent))
@@ -50,7 +47,6 @@ class Graphics2DWrapper(g: Graphics2D, renderLabelsAsRectangles: Boolean = false
       }
       g.drawString(label, 0, 0)
     }
-  }
   def fillCircle(x: Double, y: Double, xDiameter: Double, yDiameter: Double, scale: Double, angle: Double) = {
     var sizeCorrection = 0.0
     var xCorrection = 0.0
@@ -118,75 +114,67 @@ class Graphics2DWrapper(g: Graphics2D, renderLabelsAsRectangles: Boolean = false
       (sizeCorrection * (StrictMath.sin((angle - 45) / 180.0 * StrictMath.PI) + 0.7071067811865476)
        / -1.4142135623730951)
 
-  def fill(shape: java.awt.Shape) { g.fill(shape) }
-  def fillRect(x: Int, y: Int, width: Int, height: Int) { g.fillRect(x, y, width, height) }
+  def fill(shape: java.awt.Shape) = g.fill(shape)
+  def fillRect(x: Int, y: Int, width: Int, height: Int) = g.fillRect(x, y, width, height)
 
   private var transforms: List[java.awt.geom.AffineTransform] = Nil
   private var strokes: List[java.awt.Stroke] = Nil
-  def pop() {
+  def pop() = {
     g.setTransform(transforms.head)
     transforms = transforms.tail
     g.setStroke(strokes.head)
     strokes = strokes.tail
   }
-  def push() {
+  def push() = {
     transforms ::= g.getTransform
     strokes ::= g.getStroke
   }
 
-  def rotate(theta: Double) { g.rotate(theta) }
-  def rotate(theta: Double, x: Double, y: Double) { g.rotate(theta, x, y) }
-  def rotate(theta: Double, x: Double, y: Double, offset: Double) {
+  def rotate(theta: Double) = g.rotate(theta)
+  def rotate(theta: Double, x: Double, y: Double) = g.rotate(theta, x, y)
+  def rotate(theta: Double, x: Double, y: Double, offset: Double) = {
     val offset2 = if (isQuartz) offset - 1 else offset
     g.rotate(theta, x + offset2 / 2, y + offset2 / 2)
   }
-  def scale(x: Double, y: Double) { g.scale(x, y) }
-  def scale(x: Double, y: Double, shapeWidth: Double) {
+  def scale(x: Double, y: Double) = g.scale(x, y)
+  def scale(x: Double, y: Double, shapeWidth: Double) = {
     val (xx, yy) = if (isQuartz) (x - 1, y - 1) else (x, y)
     g.scale(xx / shapeWidth, yy / shapeWidth)
   }
-  def antiAliasing(on: Boolean) {
+  def antiAliasing(on: Boolean) =
     g.setRenderingHint(
       java.awt.RenderingHints.KEY_ANTIALIASING,
       if (on) java.awt.RenderingHints.VALUE_ANTIALIAS_ON
       else java.awt.RenderingHints.VALUE_ANTIALIAS_OFF)
-  }
-  def setInterpolation() {
-    // on Macs we need this or we get blurry scaling, but on Windows we can't do it or it kills
-    // performance - ST 11/2/03
-    if (isMac)
-      g.setRenderingHint(
-        java.awt.RenderingHints.KEY_INTERPOLATION,
-        java.awt.RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR)
-  }
-  def setStrokeControl() {
-    g.setRenderingHint(
-      java.awt.RenderingHints.KEY_STROKE_CONTROL,
-      java.awt.RenderingHints.VALUE_STROKE_PURE)
-  }
-  def setColor(c: java.awt.Color) { g.setColor(c) }
-  def setComposite(comp: java.awt.Composite) { g.setComposite(comp) }
-  def setStroke(width: Double) { g.setStroke(new java.awt.BasicStroke((width max 1.0).toFloat)) }
-  def setStrokeFromLineThickness(lineThickness: Double, scale: Double, cellSize: Double, shapeWidth: Double) {
+  // on Macs we need this or we get blurry scaling, but on Windows we can't do it or it kills
+  // performance - ST 11/2/03
+  def setInterpolation() = if(isMac) g.setRenderingHint(
+    java.awt.RenderingHints.KEY_INTERPOLATION,
+    java.awt.RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR)
+  def setStrokeControl() = g.setRenderingHint(
+    java.awt.RenderingHints.KEY_STROKE_CONTROL,
+    java.awt.RenderingHints.VALUE_STROKE_PURE)
+  def setColor(c: java.awt.Color) = g.setColor(c)
+  def setComposite(comp: java.awt.Composite) = g.setComposite(comp)
+  def setStroke(width: Double) = g.setStroke(new java.awt.BasicStroke((width max 1.0).toFloat))
+  def setStrokeFromLineThickness(lineThickness: Double, scale: Double, cellSize: Double, shapeWidth: Double) = {
     val sscale = if (isQuartz) scale - 1 else scale
     setStroke((shapeWidth / sscale) * (if (lineThickness == 0) 1 else (lineThickness * cellSize)))
   }
-  def setStroke(width: Float, dashes: Array[Float]) {
-    g.setStroke(
-      new java.awt.BasicStroke(width, java.awt.BasicStroke.CAP_ROUND,
-                               java.awt.BasicStroke.JOIN_ROUND, 1.0f, dashes, 0))
-  }
-  def setPenWidth(penSize: Double) {
+  def setStroke(width: Float, dashes: Array[Float]) = g.setStroke(
+    new java.awt.BasicStroke(width, java.awt.BasicStroke.CAP_ROUND,
+      java.awt.BasicStroke.JOIN_ROUND, 1.0f, dashes, 0))
+  def setPenWidth(penSize: Double) = {
     val width = (penSize max 1.0).toFloat
     if (g.getStroke.asInstanceOf[java.awt.BasicStroke].getLineWidth != width)
       g.setStroke(
         new java.awt.BasicStroke(width, java.awt.BasicStroke.CAP_ROUND,
                                  java.awt.BasicStroke.JOIN_MITER))
   }
-  def translate(x: Double, y: Double) { g.translate(x, y) }
-  def drawPolygon(xcors: Array[Int], ycors: Array[Int], length: Int) { g.drawPolygon(xcors, ycors, length) }
-  def fillPolygon(xcors: Array[Int], ycors: Array[Int], length: Int) { g.fillPolygon(xcors, ycors, length) }
-  def drawPolyline(xcors: Array[Int], ycors: Array[Int], length: Int) { g.drawPolyline(xcors, ycors, length) }
-  def dispose() { g.dispose() }
+  def translate(x: Double, y: Double) = g.translate(x, y)
+  def drawPolygon(xcors: Array[Int], ycors: Array[Int], length: Int) = g.drawPolygon(xcors, ycors, length)
+  def fillPolygon(xcors: Array[Int], ycors: Array[Int], length: Int) = g.fillPolygon(xcors, ycors, length)
+  def drawPolyline(xcors: Array[Int], ycors: Array[Int], length: Int) = g.drawPolyline(xcors, ycors, length)
+  def dispose() = g.dispose()
   override def getFontMetrics = g.getFontMetrics
 }

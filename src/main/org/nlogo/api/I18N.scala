@@ -90,9 +90,7 @@ object I18N {
       getBundle(locale).getKeys.asScala
     }
     // internal use only, used to set the locale for error messages in the GUI only.
-    def setLanguage(locale: Locale) {
-      defaultBundle = getBundle(locale)
-    }
+    def setLanguage(locale: Locale) = defaultBundle = getBundle(locale)
     // for use in Java classes that we don't want to depend on I18N
     override val fn = get _
   }

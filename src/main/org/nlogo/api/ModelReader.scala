@@ -33,7 +33,7 @@ object ModelReader {
     }
     val sectionsIter = sections.iterator
     val sectionContents = new collection.mutable.ArrayBuffer[String]
-    def sectionDone() {
+    def sectionDone() = {
       if(sectionsIter.hasNext)
         map(sectionsIter.next()) = sectionContents.toArray
       sectionContents.clear()

@@ -47,7 +47,7 @@ class ShapeList(_shapes: Shape*) {
     shapes.contains(name)
 
   /** Clears the list of shapes currently available */
-  def replaceShapes(newShapes: JCollection[Shape]) {
+  def replaceShapes(newShapes: JCollection[Shape]) = {
     shapes.clear()
     addAll(newShapes)
   }
@@ -60,9 +60,7 @@ class ShapeList(_shapes: Shape*) {
   }
 
   /** Adds a collection of shapes to the ones currently available for use */
-  def addAll(collection: JCollection[Shape]) {
-    collection.asScala.foreach(add)
-  }
+  def addAll(collection: JCollection[Shape]) = collection.asScala.foreach(add)
 
   /** Removes a shape from those currently in use */
   def removeShape(shapeToRemove: Shape) = {

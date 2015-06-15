@@ -37,14 +37,14 @@ trait MultiErrorHandler {
   def anyErrors = !errors.isEmpty
   def removeAllErrors() = errors.clear()
   def error(key: Object): Exception = errors.get(key).orNull
-  def error(key: Object, e: Exception) {errors(key) = e}
+  def error(key: Object, e: Exception) = errors(key) = e
 }
 
 trait SingleErrorHandler {
   private var _error: Option[Exception] = None
   def anyErrors = _error.isDefined
   def error(key: Object): Exception = _error.orNull
-  def error(key: Object, e: Exception) { _error = Option(e) }
+  def error(key: Object, e: Exception) = _error = Option(e)
   def error() = _error.orNull
   def error(e: Exception){ _error = Option(e) }
 }

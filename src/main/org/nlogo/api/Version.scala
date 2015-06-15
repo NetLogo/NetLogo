@@ -53,8 +53,8 @@ object Version {
   // - ST 11/11/10
   private var _isLoggingEnabled = false
   def isLoggingEnabled = _isLoggingEnabled
-  def startLogging() { _isLoggingEnabled = true }
-  def stopLogging() { _isLoggingEnabled = false }
+  def startLogging() = _isLoggingEnabled = true
+  def stopLogging() = _isLoggingEnabled = false
 
   // Turning the optimizer off may be useful when testing or modifying the compiler.  This flag is
   // public so we can conditionalize tests on it, since the results of some tests are affected by

@@ -15,9 +15,7 @@ class Options[T] {
   def chosenName = current.get.name
   def chosenValue = current.get.value
 
-  def addOption(name: String, value: T) {
-    choices += Option(name, value)
-  }
+  def addOption(name: String, value: T): Unit = choices += Option(name, value)
 
   def names: List[String] =
     choices.map(_.name).toList
@@ -25,12 +23,8 @@ class Options[T] {
   def values: List[T] =
     choices.map(_.value).toList
 
-  def selectByName(s: String) {
-    current = choices.find(_.name == s)
-  }
+  def selectByName(s: String) = current = choices.find(_.name == s)
 
-  def selectValue(obj: T) {
-    current = choices.find(_.value == obj)
-  }
+  def selectValue(obj: T) = current = choices.find(_.value == obj)
 
 }

@@ -10,12 +10,10 @@ object FileIO {
       new java.io.FileReader(path))
 
   @throws(classOf[java.io.IOException])
-  def writeFile(path: String, text: String) {
-    writeFile(path, text, false)
-  }
+  def writeFile(path: String, text: String): Unit = writeFile(path, text, false)
 
   @throws(classOf[java.io.IOException])
-  def writeFile(path: String, text: String, convertToPlatformLineBreaks: Boolean) {
+  def writeFile(path: String, text: String, convertToPlatformLineBreaks: Boolean): Unit = {
     val file = new LocalFile(path)
     try {
       file.open(FileMode.Write)
