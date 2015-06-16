@@ -7,7 +7,7 @@ import org.nlogo.api.StringUtils.unEscapeString
 
 object PlotLoader {
 
-  def parsePlot(widget: Array[String], plot: Plot, autoConvert: String => String) {
+  def parsePlot(widget: Array[String], plot: Plot, autoConvert: String => String) = {
     val (plotLines, penLines) =
       widget.toList.span(_ != "PENS")
     plot.name(plotLines(5))
@@ -39,7 +39,7 @@ object PlotLoader {
       case _ => Nil
     }
 
-    def loadPens(penLines: Seq[String], translateColors: Boolean) {
+    def loadPens(penLines: Seq[String], translateColors: Boolean) = {
       plot.pens = Nil
       for (spec <- penLines.map(parsePen)) {
         val pen = plot.createPlotPen(spec.name, false,

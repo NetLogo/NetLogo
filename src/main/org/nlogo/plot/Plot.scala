@@ -24,25 +24,25 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with Serializa
   var dirtyListener: Option[Plot.DirtyListener] = None
 
   var plotListener: Option[PlotListener] = None
-  def setPlotListener(plotListener:PlotListener){
+  def setPlotListener(plotListener:PlotListener) = {
     if(plotListener == null) sys.error("null plotListener")
     this.plotListener = Some(plotListener)
   }
-  def removePlotListener(){ this.plotListener = None }
+  def removePlotListener() = this.plotListener = None
 
-  def name(newName:String){ name = newName }
+  def name(newName:String): Unit = name = newName
 
-  def makeDirty(){ dirtyListener.foreach{_.makeDirty() }}
+  def makeDirty() = dirtyListener.foreach{_.makeDirty() }
 
   var _pens = List[PlotPen]()
   def pens = _pens
-  def pens_=(pens:List[PlotPen]){
+  def pens_=(pens:List[PlotPen]) = {
     _pens = pens
     currentPen = pens.headOption
   }
   var pensDirty = false
 
-  def addPen(p:PlotPen){
+  def addPen(p:PlotPen) = {
     pens = pens :+ p
     pensDirty = true
   }
@@ -67,35 +67,35 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with Serializa
   /// default properties
   private var _defaultXMin = 0.0
   def defaultXMin = _defaultXMin
-  def defaultXMin_=(defaultXMin: Double){
+  def defaultXMin_=(defaultXMin: Double) = {
     _defaultXMin = defaultXMin
     plotListener.foreach(_.defaultXMin(defaultXMin))
   }
 
   private var _defaultXMax = 10.0
   def defaultXMax = _defaultXMax
-  def defaultXMax_=(defaultXMax: Double){
+  def defaultXMax_=(defaultXMax: Double) = {
     _defaultXMax = defaultXMax
     plotListener.foreach(_.defaultXMax(defaultXMax))
   }
 
   private var _defaultYMin = 0.0
   def defaultYMin = _defaultYMin
-  def defaultYMin_=(defaultYMin: Double) {
+  def defaultYMin_=(defaultYMin: Double) = {
     _defaultYMin = defaultYMin
     plotListener.foreach(_.defaultYMin(defaultYMin))
   }
 
   private var _defaultYMax = 10.0
   def defaultYMax = _defaultYMax
-  def defaultYMax_=(defaultYMax: Double){
+  def defaultYMax_=(defaultYMax: Double) = {
     _defaultYMax = defaultYMax
     plotListener.foreach(_.defaultYMax(defaultYMax))
   }
 
   private var _defaultAutoPlotOn = true
   def defaultAutoPlotOn = _defaultAutoPlotOn
-  def defaultAutoPlotOn_=(defaultAutoPlotOn: Boolean){
+  def defaultAutoPlotOn_=(defaultAutoPlotOn: Boolean) = {
     _defaultAutoPlotOn = defaultAutoPlotOn
     plotListener.foreach(_.defaultAutoPlotOn(defaultAutoPlotOn))
   }
@@ -105,35 +105,35 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with Serializa
 
   private var _autoPlotOn = false
   def autoPlotOn = _autoPlotOn
-  def autoPlotOn_=(autoPlotOn: Boolean){
+  def autoPlotOn_=(autoPlotOn: Boolean) = {
     _autoPlotOn = autoPlotOn
     plotListener.foreach(_.autoPlotOn(autoPlotOn))
   }
 
   private var _xMin = 0.0
   def xMin = _xMin
-  def xMin_=(xMin: Double){
+  def xMin_=(xMin: Double) = {
     _xMin = xMin
     plotListener.foreach(_.xMin(xMin))
   }
 
   private var _xMax = 0.0
   def xMax = _xMax
-  def xMax_=(xMax: Double){
+  def xMax_=(xMax: Double) = {
     _xMax = xMax
     plotListener.foreach(_.xMax(xMax))
   }
 
   private var _yMin = 0.0
   def yMin = _yMin
-  def yMin_=(yMin: Double){
+  def yMin_=(yMin: Double) = {
     _yMin = yMin
     plotListener.foreach(_.yMin(yMin))
   }
 
   private var _yMax = 0.0
   def yMax = _yMax
-  def yMax_=(yMax: Double){
+  def yMax_=(yMax: Double) = {
     _yMax = yMax
     plotListener.foreach(_.yMax(yMax))
   }
@@ -148,7 +148,7 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with Serializa
   /// clearing
   clear() // finally after all fields have been initialized, clear. unsure why...
 
-  def clear() {
+  def clear() = {
     pens = pens.filterNot(_.temporary)
     currentPen = pens.headOption
     pens.foreach(_.hardReset())
@@ -170,8 +170,7 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with Serializa
     new PlotPen(this, name, temporary, setupCode, updateCode)
   }
 
-  def perhapsGrowRanges(pen:PlotPen, x:Double, y: Double){
-    if(autoPlotOn){
+  def perhapsGrowRanges(pen:PlotPen, x:Double, y: Double) = if(autoPlotOn){
       if(pen.mode == PlotPen.BAR_MODE){
         // allow extra room on the right for bar
         growRanges(x + pen.interval, y, true)
@@ -183,9 +182,8 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with Serializa
       // min to decrease) - ST 2/23/06
       growRanges(x, y, true)
     }
-  }
 
-  private def growRanges(x:Double, y:Double, extraRoom:Boolean){
+  private def growRanges(x:Double, y:Double, extraRoom:Boolean) = {
     def adjust(d:Double, factor: Double) = d * (if(extraRoom) factor else 1)
     if(x > xMax){
       val newRange = adjust(x - xMin, AUTOPLOT_X_FACTOR)
@@ -206,26 +204,23 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with Serializa
   }
 
   /// histograms
-  def setHistogramNumBars(pen: PlotPen, numBars: Int) {
+  def setHistogramNumBars(pen: PlotPen, numBars: Int) = {
     pen.interval = (xMax - xMin) / numBars
     plotListener.foreach(_.setHistogramNumBars(numBars))
   }
 
   var histogram: Option[Histogram] = None
 
-  def beginHistogram(pen:PlotPen) {
+  def beginHistogram(pen:PlotPen): Unit =
     histogram = Some(new Histogram(xMin, xMax, pen.interval))
-  }
-
-  def beginHistogram(pen:PlotPen, bars:Array[Int]){
+  def beginHistogram(pen:PlotPen, bars:Array[Int]): Unit =
     histogram = Some(new Histogram(xMin, pen.interval, bars))
-  }
 
   def nextHistogramValue(value:Double) = histogram.get.nextValue(value)
 
   // this leaves the pen down, regardless of its previous state
   // historgram cannot be None when entering this method, or boom. - Josh 11/2/09
-  def endHistogram(pen:PlotPen){
+  def endHistogram(pen:PlotPen) = {
     pen.softReset()
     if(autoPlotOn){
       // note that we pass extraRoom as false; we know the exact height
@@ -251,7 +246,7 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with Serializa
   }
 
   @throws(classOf[java.io.IOException])
-  private def writeObject(out:java.io.ObjectOutputStream){
+  private def writeObject(out:java.io.ObjectOutputStream) = {
     out.writeObject(name)
     out.writeBoolean(autoPlotOn)
     out.writeDouble(xMin)
@@ -264,7 +259,7 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with Serializa
 
   @throws(classOf[java.io.IOException])
   @throws(classOf[ClassNotFoundException])
-  private def readObject(in:java.io.ObjectInputStream){
+  private def readObject(in:java.io.ObjectInputStream) = {
     name = in.readObject().toString
     _autoPlotOn = in.readBoolean()
     _xMin = in.readDouble()

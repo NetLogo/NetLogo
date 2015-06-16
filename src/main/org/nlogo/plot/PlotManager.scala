@@ -43,15 +43,15 @@ class PlotManager(factory: LogoThunkFactory) extends PlotManagerInterface {
   def getPlotNames: Array[String] = _plots.map(_.name).toArray
   def nextName = Stream.from(1).map("plot " + _).find(getPlot(_) == null).get
 
-  def forgetPlot(goner: Plot) {
+  def forgetPlot(goner: Plot) = {
     if (currentPlot == Some(goner)) currentPlot = None
     _plots -= goner
   }
-  def forgetAll() {
+  def forgetAll() = {
     _plots.clear()
     currentPlot = None
   }
-  def clearAll() {
+  def clearAll() = {
     _plots.foreach(_.clear())
     if (listener != null) listener.clearAll()
   }
@@ -108,10 +108,10 @@ class PlotManager(factory: LogoThunkFactory) extends PlotManagerInterface {
   // code to run code in plots
   //
 
-  def setupPlots() { runCode(Setup) }
-  def updatePlots() { runCode(Update) }
+  def setupPlots() = runCode(Setup)
+  def updatePlots() = runCode(Update)
 
-  private def runCode(codeType: CodeType) {
+  private def runCode(codeType: CodeType) = {
     // save the currently selected plot
     val oldCurrentPlot = currentPlot
     for (plot <- _plots) {

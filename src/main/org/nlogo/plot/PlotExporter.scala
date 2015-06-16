@@ -6,13 +6,13 @@ import org.nlogo.api.CSV
 import collection.mutable.Buffer
 
 class PlotExporter(private val plot: Plot, private val csv: CSV) {
-  def export(writer: java.io.PrintWriter) {
+  def export(writer: java.io.PrintWriter) = {
     exportIntro(writer)
     exportPens(writer)
     exportPoints(writer)
   }
 
-  private def exportIntro(writer: java.io.PrintWriter) {
+  private def exportIntro(writer: java.io.PrintWriter) = {
     writer.println(csv.data(plot.name))
     writer.println(csv.headerRow(Array(
       "x min", "x max", "y min", "y max",
@@ -32,7 +32,7 @@ class PlotExporter(private val plot: Plot, private val csv: CSV) {
   }
 
 
-  private def exportPens(writer: java.io.PrintWriter) {
+  private def exportPens(writer: java.io.PrintWriter) = {
     writer.println(csv.headerRow(Array(
       "pen name", "pen down?", "mode", "interval",
       "color", "x")))
@@ -48,7 +48,7 @@ class PlotExporter(private val plot: Plot, private val csv: CSV) {
     writer.println()
   }
 
-  private def exportPoints(writer: java.io.PrintWriter) {
+  private def exportPoints(writer: java.io.PrintWriter) = {
     /// Output header row of pen names
     var numPens = 0
     for (pen <- plot.pens) {

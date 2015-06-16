@@ -47,53 +47,47 @@ extends org.nlogo.api.PlotPenInterface with Serializable {
   var points: Buffer[PlotPoint] = Buffer()
 
   def color = _color
-  def color_=(newColor: Int) {
-    if(_color != newColor) {
+  def color_=(newColor: Int) = if(_color != newColor) {
       _color = newColor
       plot.pensDirty = true
       plot.plotListener.foreach(_.setPenColor(newColor))
     }
-  }
 
   def interval = _interval
-  def interval_=(newInterval: Double) {
+  def interval_=(newInterval: Double) = {
     _interval = newInterval
     plot.plotListener.foreach(_.setInterval(newInterval))
   }
 
   def hidden = _hidden
-  def hidden_=(newIsHidden: Boolean) {
-    if(_hidden != newIsHidden) {
+  def hidden_=(newIsHidden: Boolean) = if(_hidden != newIsHidden) {
       _hidden = newIsHidden
       plot.pensDirty = true
     }
-  }
 
   def isDown = _isDown
-  def isDown_=(newIsDown: Boolean) {
+  def isDown_=(newIsDown: Boolean) = {
     _isDown = newIsDown
     plot.plotListener.foreach(_.penDown(newIsDown))
   }
 
   def mode = _mode
-  def mode_=(newMode: Int) {
-    if( mode != newMode ) {
+  def mode_=(newMode: Int) = if( mode != newMode ) {
       penModeChanged = true
       _mode = newMode
       plot.makeDirty() // forces redrawing immediately. closes ticket #1004. JC - 6/7/10
       plot.plotListener.foreach(_.plotPenMode(newMode))
     }
-  }
 
-  def setupCode(code:String) { setupCode = if(code == null) "" else code }
-  def updateCode(code:String) { updateCode = if(code == null) "" else code }
+  def setupCode(code:String): Unit = setupCode = if(code == null) "" else code
+  def updateCode(code:String): Unit = updateCode = if(code == null) "" else code
   def saveString = {
     import org.nlogo.api.StringUtils.escapeString
     "\"" + escapeString(setupCode.trim) + "\"" + " " + "\"" + escapeString(updateCode.trim) + "\""
   }
 
   /// actual functionality
-  def hardReset() {
+  def hardReset() = {
     softReset()
     // temporary pens don't have defaults, so there's no difference between a soft and hard reset
     // for a temporary pen - ST 2/24/06
@@ -106,22 +100,20 @@ extends org.nlogo.api.PlotPenInterface with Serializable {
 
   // move this out of hard reset because sometimes hardReset is used as part of a multi-step process
   // and we don't want this to happen until the end ev 1/18/07
-  def plotListenerReset(hardReset: Boolean) {
-    plot.plotListener.foreach(_.resetPen(hardReset))
-  }
+  def plotListenerReset(hardReset: Boolean) = plot.plotListener.foreach(_.resetPen(hardReset))
 
-  def softReset() {
+  def softReset() = {
     x = 0.0
     isDown = true
     points = Buffer()
   }
 
-  def plot(y: Double) {
+  def plot(y: Double): Unit = {
     if (points.nonEmpty) x += interval
     plot(x, y)
   }
 
-  def plot(x: Double, y: Double) {
+  def plot(x: Double, y: Double): Unit = {
     this.x = x
     // note that we add the point even if the pen is up; this may
     // seem useless but it simplifies the painting logic - ST 2/23/06
@@ -130,14 +122,12 @@ extends org.nlogo.api.PlotPenInterface with Serializable {
     plot.plotListener.foreach(_.plot(x, y))
   }
 
-  def plot(x: Double, y: Double, color: Int, isDown: Boolean) {
-    points += PlotPoint(x, y, isDown, color)
-  }
+  def plot(x: Double, y: Double, color: Int, isDown: Boolean) = points += PlotPoint(x, y, isDown, color)
 
   // serialization is for HubNet plot mirroring
 
   @throws(classOf[java.io.IOException])
-  private def writeObject(out: java.io.ObjectOutputStream) {
+  private def writeObject(out: java.io.ObjectOutputStream) = {
     out.writeObject(name)
     out.writeBoolean(temporary)
     out.writeDouble(x)
@@ -150,7 +140,7 @@ extends org.nlogo.api.PlotPenInterface with Serializable {
 
   @throws(classOf[java.io.IOException])
   @throws(classOf[ClassNotFoundException])
-  private def readObject(in:java.io.ObjectInputStream) {
+  private def readObject(in:java.io.ObjectInputStream) = {
     name = in.readObject().asInstanceOf[String]
     temporary = in.readBoolean()
     x = in.readDouble()
