@@ -2,5 +2,5 @@
 
 package org.nlogo.api
 trait TokenHolder {
-  def token(t:Token)
+  def token(t:Token): Unit
 }

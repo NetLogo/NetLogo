@@ -6,11 +6,11 @@ import org.nlogo.api.WorldDimensions
 
 object LabInterface {
   trait Worker {
-    def addListener(l: ProgressListener)
-    def addTableWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter)
-    def addSpreadsheetWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter)
-    def run(testWorkspace: Workspace, fn: ()=>Workspace, threads: Int)
-    def compile(w: Workspace) // only for testing purposes
+    def addListener(l: ProgressListener): Unit
+    def addTableWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter): Unit
+    def addSpreadsheetWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter): Unit
+    def run(testWorkspace: Workspace, fn: ()=>Workspace, threads: Int): Unit
+    def compile(w: Workspace): Unit // only for testing purposes
   }
   trait ProgressListener {
     def experimentStarted() = {}
@@ -33,10 +33,10 @@ object LabInterface {
 }
 trait LabInterface {
   import LabInterface._
-  def load(protocols: String)
+  def load(protocols: String): Unit
   def names: List[String]
   def newWorker(protocolName: String): Worker
   def newWorker(setupFile: java.io.File): Worker
   def newWorker(protocolName: String, setupFile: java.io.File): Worker
-  def run(settings: Settings, fn: ()=>Workspace)
+  def run(settings: Settings, fn: ()=>Workspace): Unit
 }

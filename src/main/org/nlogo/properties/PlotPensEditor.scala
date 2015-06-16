@@ -174,7 +174,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
     def getPlotPens: List[PlotPen] = model.pens.map(_.convertToPlotPen(plot)).toList
 
     // add a dummy pen to the list so that the user can then modify it.
-    def newPen {
+    def newPen = {
       val nextName = "pen-" + model.pens.size
       val nextColor = {
         val colorsInUse:List[ColorInfo] = model.pens.toList.map(_.color)

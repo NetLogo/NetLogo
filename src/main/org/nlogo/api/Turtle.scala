@@ -21,7 +21,7 @@ trait Turtle extends Agent {
    *
    * @param d the new heading
    */
-  def heading(d: Double)
+  def heading(d: Double): Unit
 
   /** Returns the value of the <code>hidden?</code> variable. */
   def hidden: Boolean
@@ -56,6 +56,6 @@ trait Turtle extends Agent {
    * @param distance this amount to jump
    */
   @throws(classOf[AgentException])
-  def jump(distance: Double)
+  def jump(distance: Double): Unit
 
 }

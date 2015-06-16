@@ -26,7 +26,7 @@ object Tree {
     List.fill(n)(' ').mkString
 
   trait ComponentTreeWalker {
-    def touch(comp: Component, level: Int);
+    def touch(comp: Component, level: Int): Unit
   }
 
   def walkComponentTree(comp: Component, level: Int, walker: ComponentTreeWalker): Unit = {

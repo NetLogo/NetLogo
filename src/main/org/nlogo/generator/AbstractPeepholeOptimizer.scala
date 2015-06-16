@@ -6,7 +6,7 @@ import org.objectweb.asm.{ Label, MethodAdapter, MethodVisitor }
 
 private abstract class AbstractPeepholeOptimizer(mv: MethodVisitor) extends MethodAdapter(mv) {
 
-  def restartMatch() // abstract
+  def restartMatch(): Unit // abstract
 
   // the rest of the methods are all the same. we just insert a call to restartMatch()
 

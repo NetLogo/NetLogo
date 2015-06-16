@@ -13,7 +13,7 @@ trait Controllable {
 
   @throws(classOf[CompilerException])
   @throws(classOf[LogoException])
-  def command(source: String)
+  def command(source: String): Unit
 
   @throws(classOf[CompilerException])
   @throws(classOf[LogoException])
@@ -22,6 +22,6 @@ trait Controllable {
   @throws(classOf[CompilerException])
   @throws(classOf[LogoException])
   @throws(classOf[java.io.IOException])
-  def open(path: String)
+  def open(path: String): Unit
 
 }

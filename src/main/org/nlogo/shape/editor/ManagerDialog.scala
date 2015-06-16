@@ -15,9 +15,9 @@ abstract class ManagerDialog(parentFrame: java.awt.Frame,
         with ListSelectionListener with ImportDialog.ShapeParser {
 
   // abstract defs
-  def newShape()
-  def editShape()
-  def duplicateShape()
+  def newShape(): Unit
+  def editShape(): Unit
+  def duplicateShape(): Unit
 
   // this is horrible
   private var importDialog: ImportDialog = null

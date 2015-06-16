@@ -16,7 +16,7 @@ trait ExtensionManager {
    *
    * @param obj the object to be stored
    */
-  def storeObject(obj: AnyRef)
+  def storeObject(obj: AnyRef): Unit
 
   /** @return the stored object */
   def retrieveObject: AnyRef
@@ -31,7 +31,7 @@ trait ExtensionManager {
    * Instructs any loaded extensions to unload. Should be called previous
    * to a new model load.
    */
-  def reset()
+  def reset(): Unit
 
   /**
    * During compilation, we reach the extensions [ ... ] block.
@@ -45,7 +45,7 @@ trait ExtensionManager {
    *
    * See the top of {@link org.nlogo.workspace.ExtensionManager} for full details.
    */
-  def startFullCompilation()
+  def startFullCompilation(): Unit
 
   /**
    * Instructs any extensions which haven't been re-imported during the
@@ -54,7 +54,7 @@ trait ExtensionManager {
    *
    * See the top of {@link org.nlogo.workspace.ExtensionManager} for full details.
    */
-  def finishFullCompilation()
+  def finishFullCompilation(): Unit
 
   /** Returns true if any extensions have been imported in the current model. */
   def anyExtensionsLoaded: Boolean
@@ -74,7 +74,7 @@ trait ExtensionManager {
    *                to be thrown.
    */
   @throws(classOf[CompilerException])
-  def importExtension(jarPath: String, errors: ErrorSource)
+  def importExtension(jarPath: String, errors: ErrorSource): Unit
 
   def resolvePath(path: String): String
 
@@ -87,7 +87,7 @@ trait ExtensionManager {
   @throws(classOf[java.io.IOException])
   def getSource(filename: String): String
 
-  def addToLibraryPath(classManager: AnyRef, directory: String)
+  def addToLibraryPath(classManager: AnyRef, directory: String): Unit
 
   @throws(classOf[ExtensionException])
   def getFile(path: String): File

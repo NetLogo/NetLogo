@@ -218,8 +218,8 @@ object InterfaceComponent {
   /** Callback interface used by <code>reportAndCallback()</code> */
   trait InvocationListener extends java.util.EventListener {
     /** Called by <code>reportAndCallback()</code> if the request completes successfully. */
-    def handleResult(value: AnyRef)
+    def handleResult(value: AnyRef): Unit
     /** Called by <code>reportAndCallback()</code> if the code did not compile. */
-    def handleError(error: CompilerException)
+    def handleError(error: CompilerException): Unit
   }
 }

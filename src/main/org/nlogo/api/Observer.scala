@@ -27,6 +27,6 @@ trait Observer extends Agent {
   def dx: Double
   def dy: Double
   def dz: Double
-  def setPerspective(p: Perspective, a: Agent)
+  def setPerspective(p: Perspective, a: Agent): Unit
 
 }

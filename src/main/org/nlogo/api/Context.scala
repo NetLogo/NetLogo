@@ -14,7 +14,7 @@ trait Context {
   def getDrawing: java.awt.image.BufferedImage
 
   /** Imports an image into the the patch colors either as NetLogo colors or RGB colors. */
-  def importPcolors(image: java.awt.image.BufferedImage, asNetLogoColors: Boolean)
+  def importPcolors(image: java.awt.image.BufferedImage, asNetLogoColors: Boolean): Unit
 
   /**
    * Transforms a relative path to a model into an absolute path by prepending the current model

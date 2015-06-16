@@ -28,7 +28,7 @@ trait DummyEditable extends Editable with DummyErrorHandler{
 
 trait DummyErrorHandler {
   def error(key: Object) = null
-  def error(key: Object, e: Exception){}
+  def error(key: Object, e: Exception) = {}
   def anyErrors = false
 }
 
@@ -46,5 +46,5 @@ trait SingleErrorHandler {
   def error(key: Object): Exception = _error.orNull
   def error(key: Object, e: Exception) = _error = Option(e)
   def error() = _error.orNull
-  def error(e: Exception){ _error = Option(e) }
+  def error(e: Exception) = _error = Option(e)
 }

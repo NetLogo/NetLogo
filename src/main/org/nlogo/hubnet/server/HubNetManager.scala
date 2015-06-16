@@ -148,18 +148,17 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetIn
       varName) != -1
 
   def sendOverrideList(client: String, agentType: Class[_ <: org.nlogo.api.Agent],
-                       varName: String, overrides: Map[java.lang.Long, AnyRef]) {
+                       varName: String, overrides: Map[java.lang.Long, AnyRef]) =
     connectionManager.sendOverrideList(client, agentType, varName, overrides)
-  }
+
   def clearOverride(client: String, agentType: Class[_ <: org.nlogo.api.Agent],
-                    varName: String, overrides: Seq[java.lang.Long]) {
+                    varName: String, overrides: Seq[java.lang.Long]) =
     connectionManager.clearOverride(client, agentType, varName, overrides)
-  }
+
   def clearOverrideLists(client: String) = connectionManager.clearOverrideLists(client)
   def sendAgentPerspective(client: String, perspective: Int, agentType: Class[_ <: org.nlogo.api.Agent],
-                           id: Long, radius: Double, serverMode: Boolean) {
+                           id: Long, radius: Double, serverMode: Boolean) =
     connectionManager.sendAgentPerspective(client, perspective, agentType, id, radius, serverMode)
-  }
 
   /// mirror drawing
 
@@ -294,7 +293,7 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetIn
   def mouseXCor = 0
   def mouseYCor = 0
   def mouseDown = false
-  def resetMouseCors{}
+  def resetMouseCors = {}
   // we could implement these to send messages on these events.
   def shapeChanged(shape:org.nlogo.api.Shape) = {}
   def applyNewFontSize(fontSize:Int, zoom:Int) = {}

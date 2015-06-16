@@ -30,7 +30,7 @@ import org.nlogo.prim.{ _and, _call, _callreport, _list, _or, _word }
 
 private class CustomGenerator(profilingEnabled: Boolean) {
 
-  def generate(instr: CustomGenerated, nlgen: GeneratorAdapter, thisInstrUID: Int, ip: Int) = instr match {
+  def generate(instr: CustomGenerated, nlgen: GeneratorAdapter, thisInstrUID: Int, ip: Int): Unit = instr match {
       case instr: _and =>
         generateAnd(instr, nlgen, thisInstrUID)
       case instr: _or =>

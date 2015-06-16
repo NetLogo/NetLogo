@@ -8,10 +8,7 @@ import org.nlogo.api.{ Patch, Patch3D, World, World3D, Color, DrawingInterface }
 private class PatchRenderer3D(world: World3D, drawing: DrawingInterface, shapeRenderer: ShapeRenderer)
 extends PatchRenderer(world, drawing, shapeRenderer) {
 
-  override def renderPatchTexture(gl: GL)
-  {
-    super.renderPatches(gl)
-  }
+  override def renderPatchTexture(gl: GL) = super.renderPatches(gl)
 
   override def renderLabels(gl: GL, fontSize: Int, patchSize: Double) = if(world.patchesAllBlack)
     super.renderLabels(gl, fontSize, patchSize)

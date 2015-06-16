@@ -35,20 +35,20 @@ private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
          PatchVariableDouble, TurtleVariableDouble, RandomConst)
 
   private class MatchFailedException extends Exception
-  private abstract class CommandMunger { val clazz: Class[_ <: Command]; def munge(stmt: Statement) }
-  private abstract class ReporterMunger { val clazz: Class[_ <: Reporter]; def munge(app: ReporterApp) }
+  private abstract class CommandMunger { val clazz: Class[_ <: Command]; def munge(stmt: Statement): Unit }
+  private abstract class ReporterMunger { val clazz: Class[_ <: Reporter]; def munge(app: ReporterApp): Unit }
 
   private abstract class RewritingCommandMunger extends CommandMunger {
     def munge(stmt: Statement) =
       try munge(new Match(stmt))
       catch { case _: MatchFailedException => }
-    def munge(root: Match)
+    def munge(root: Match): Unit
   }
   private abstract class RewritingReporterMunger extends ReporterMunger {
     def munge(app: ReporterApp) =
       try munge(new Match(app))
       catch { case _: MatchFailedException => }
-    def munge(root: Match)
+    def munge(root: Match): Unit
   }
 
   private class Match(val node: AstNode) {

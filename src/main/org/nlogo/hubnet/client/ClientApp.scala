@@ -65,7 +65,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
   }
 
   def startup(editorFactory: org.nlogo.window.EditorFactory, userid: String, hostip: String,
-              port: Int, isLocal: Boolean, isRobo: Boolean, waitTime: Long, workspace: CompilerServices) {
+              port: Int, isLocal: Boolean, isRobo: Boolean, waitTime: Long, workspace: CompilerServices) = {
     EventQueue.invokeLater(() => {
       Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
         def uncaughtException(t: Thread, e: Throwable) = org.nlogo.util.Exceptions.handle(e)

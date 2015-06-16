@@ -5,7 +5,7 @@ package org.nlogo.util
 object Exceptions
 {
   trait Handler {
-    def handle(t: Throwable)
+    def handle(t: Throwable): Unit
   }
   val defaultHandler = new Handler() {
     def handle(t: Throwable) = t.printStackTrace(System.err)

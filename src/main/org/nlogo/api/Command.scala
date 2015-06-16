@@ -29,6 +29,6 @@ trait Command extends Primitive {
    */
   @throws(classOf[ExtensionException])
   @throws(classOf[LogoException])
-  def perform(args: Array[Argument], context: Context)
+  def perform(args: Array[Argument], context: Context): Unit
 
 }

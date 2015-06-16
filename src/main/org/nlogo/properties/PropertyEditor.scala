@@ -7,7 +7,7 @@ abstract class PropertyEditor[T](val accessor: PropertyAccessor[T],
          extends javax.swing.JPanel
 {
 
-  def changed() // abstract
+  def changed(): Unit // abstract
 
   val BORDER_PADDING = 5
 

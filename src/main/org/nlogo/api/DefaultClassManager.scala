@@ -22,7 +22,7 @@ abstract class DefaultClassManager extends ClassManager {
    * @param primManager The manager to transport the primitives to NetLogo
    */
   @throws(classOf[ExtensionException])
-  override def load(primManager: PrimitiveManager)
+  override def load(primManager: PrimitiveManager): Unit
 
   /** Empty implementation. */
   @throws(classOf[ExtensionException])

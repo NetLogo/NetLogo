@@ -7,12 +7,12 @@ package org.nlogo.compiler
  * pattern with double-dispatch.
  */
 trait AstVisitor {
-  def visitProcedureDefinition(proc: ProcedureDefinition)
-  def visitCommandBlock(block: CommandBlock)
-  def visitReporterApp(app: ReporterApp)
-  def visitReporterBlock(block: ReporterBlock)
-  def visitStatement(stmt: Statement)
-  def visitStatements(stmts: Statements)
+  def visitProcedureDefinition(proc: ProcedureDefinition): Unit
+  def visitCommandBlock(block: CommandBlock): Unit
+  def visitReporterApp(app: ReporterApp): Unit
+  def visitReporterBlock(block: ReporterBlock): Unit
+  def visitStatement(stmt: Statement): Unit
+  def visitStatements(stmts: Statements): Unit
 }
 
 /**

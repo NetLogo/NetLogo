@@ -120,7 +120,7 @@ class Generator(source: String, procedure: Procedure, profilingEnabled: Boolean)
       nlgen.visitEnd()
     }
     def generateInstruction(instr: Instruction, retTypeWanted: Class[_], parentInstrUID: Int,
-                            parentInstr: Instruction, argIndex: Int) {
+                            parentInstr: Instruction, argIndex: Int): Unit = {
       curInstructionUID += 1
       // need to save the curInstructionUID value in a local var, since curInstructionUID gets
       // changed as a result of generating the children.
@@ -191,7 +191,7 @@ class Generator(source: String, procedure: Procedure, profilingEnabled: Boolean)
       }
     }
     def generateOldStyleCall(instr: Instruction, retTypeWanted: Class[_], parentInstrUID: Int,
-                             parentInstr: Instruction, argIndex: Int) {
+                             parentInstr: Instruction, argIndex: Int) = {
       keepAndLoadInstruction(instr, curInstructionUID)
       nlgen.loadContext()
       instr match {

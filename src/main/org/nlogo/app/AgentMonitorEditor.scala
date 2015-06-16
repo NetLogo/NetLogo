@@ -175,11 +175,7 @@ with org.nlogo.window.Events.JobRemovedEvent.Handler
   }
 
   // our job has finished, so we can fetch a new value for our variable
-  def handle(e: org.nlogo.window.Events.JobRemovedEvent)
-  {
-    if(e.owner eq this)
-      refresh(true)
-  }
+  def handle(e: org.nlogo.window.Events.JobRemovedEvent) = if(e.owner eq this) refresh(true)
 
   override def handle(e: org.nlogo.window.Events.CompiledEvent) {
     super.handle(e)

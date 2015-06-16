@@ -34,11 +34,9 @@ with org.nlogo.window.Events.CompiledEvent.Handler
         for(include <- includes.asScala if include.endsWith(".nls") && include.size > 4)
           if(new java.io.File(includesTable(include)).exists) {
             val item = new javax.swing.JMenuItem(include)
-            item.addActionListener(
-              new java.awt.event.ActionListener() {
-                override def actionPerformed(e: java.awt.event.ActionEvent) {
-                  menuSelection(include)
-                }})
+            item.addActionListener(new java.awt.event.ActionListener() {
+                override def actionPerformed(e: java.awt.event.ActionEvent) = menuSelection(include)
+              })
             menu.add(item)
           }
         menu.addSeparator()

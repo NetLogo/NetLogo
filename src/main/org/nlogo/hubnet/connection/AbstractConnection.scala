@@ -35,8 +35,8 @@ abstract class AbstractConnection(name: String, connectionStreams: Streamable) e
     disconnect("Shutting down.")
   }
 
-  def receiveData(a: AnyRef)
-  def handleEx(e: Exception, sendingEx: Boolean)
+  def receiveData(a: AnyRef): Unit
+  def handleEx(e: Exception, sendingEx: Boolean): Unit
 
   // this should only be called if you need to wait for the send to
   // be completed it bypasses the writeQueue CB 09/28/2004

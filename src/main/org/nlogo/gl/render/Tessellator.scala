@@ -29,7 +29,7 @@ private class Tessellator extends javax.media.opengl.glu.GLUtessellatorCallbackA
   }
 
   override def combineData(coords: Array[Double], data: Array[AnyRef], weight: Array[Float],
-                           outData: Array[AnyRef], polygonData: Object) {
+                           outData: Array[AnyRef], polygonData: Object) = {
     // not sure if this is right...
     outData(0) = Array[Double](coords(0), coords(1), coords(2) )
   }

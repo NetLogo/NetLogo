@@ -8,11 +8,11 @@ object PlotPenInterface {
 }
 
 trait PlotPenInterface {
-  def isDown_=(isDown: Boolean)
-  def mode_=(mode: Int)
-  def interval_=(interval: Double)
-  def color_=(color: Int)
-  def x_=(x: Double)
-  def plot(x: Double, y: Double, color: Int, isDown: Boolean)
+  def isDown_=(isDown: Boolean): Unit
+  def mode_=(mode: Int): Unit
+  def interval_=(interval: Double): Unit
+  def color_=(color: Int): Unit
+  def x_=(x: Double): Unit
+  def plot(x: Double, y: Double, color: Int, isDown: Boolean): Unit
   def name: String
 }

@@ -17,11 +17,11 @@ trait CompilerInterface {
 
   @throws(classOf[CompilerException])
   def checkCommandSyntax(source: String, program: Program, procedures: java.util.Map[String, Procedure],
-                         extensionManager: ExtensionManager, parse: Boolean)
+                         extensionManager: ExtensionManager, parse: Boolean): Unit
 
   @throws(classOf[CompilerException])
   def checkReporterSyntax(source: String, program: Program, procedures: java.util.Map[String, Procedure],
-                          extensionManager: ExtensionManager, parse: Boolean)
+                          extensionManager: ExtensionManager, parse: Boolean): Unit
 
   def autoConvert(source: String, subprogram: Boolean, reporter: Boolean, version: String,
                   workspace: AnyRef, ignoreErrors: Boolean, is3D: Boolean): String

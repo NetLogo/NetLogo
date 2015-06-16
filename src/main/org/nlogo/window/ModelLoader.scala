@@ -12,9 +12,8 @@ object ModelLoader {
 
   @throws(classOf[InvalidVersionException])
   def load(linkParent: Container, modelPath: String,
-           modelType: ModelType, map: java.util.Map[ModelSection, Array[String]]) {
+           modelType: ModelType, map: java.util.Map[ModelSection, Array[String]]) =
     Loader(linkParent).loadHelper(modelPath, modelType, map)
-  }
   @throws(classOf[InvalidVersionException])
   def load(linkParent: Container, modelPath: String, modelType: ModelType, source: String) =
     Loader(linkParent).loadHelper(modelPath, modelType, ModelReader.parseModel(source))

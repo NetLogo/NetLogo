@@ -104,7 +104,7 @@ trait AbstractSliderWidget extends MultiErrorWidget {
   override def getMinimumSize = painter.getMinimumSize()
   override def getPreferredSize(font:Font) =painter.getPreferredSize(font)
   override def getMaximumSize = painter.getMaximumSize
-  override def doLayout { super.doLayout(); painter.doLayout() }
+  override def doLayout() = { super.doLayout(); painter.doLayout() }
   override def paintComponent(g:Graphics) = { super.paintComponent(g); painter.paintComponent(g) }
 }
 

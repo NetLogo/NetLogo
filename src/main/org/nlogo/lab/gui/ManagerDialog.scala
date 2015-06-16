@@ -93,7 +93,7 @@ private class ManagerDialog(manager: LabManager,
     }
     catch { case ex: org.nlogo.awt.UserCancelException => org.nlogo.util.Exceptions.ignore(ex) }
 
-  private def makeNew {
+  private def makeNew = {
     import collection.JavaConverters._
     editProtocol(
       new Protocol(

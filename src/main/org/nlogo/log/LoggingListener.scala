@@ -20,15 +20,13 @@ trait LoggingListener extends NetLogoListener {
   }
   override def sliderChanged(name: String, value: Double, min: Double,
                     increment: Double, max: Double, valueChanged: Boolean,
-                    buttonReleased: Boolean) {
-    if (valueChanged) {
+                    buttonReleased: Boolean) = if (valueChanged) {
       sliderMsg.updateSliderMessage(name.toUpperCase, value, min, max, increment)
       if (buttonReleased)
         Greens.info(sliderMsg)
       else
         Greens.debug(sliderMsg)
     }
-  }
   override def switchChanged(name: String, value: Boolean, valueChanged: Boolean) = if (valueChanged) {
       switchMsg.updateGlobalMessage(name.toUpperCase, value.toString)
       Greens.info(switchMsg)

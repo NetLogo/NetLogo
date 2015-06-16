@@ -15,7 +15,7 @@ trait World {
   def wrap(pos: Double, min: Double, max: Double): Double
   def ticks: Double
   def observer: Observer
-  def clearGlobals()
+  def clearGlobals(): Unit
   def getPatch(i: Int): Patch
   @throws(classOf[AgentException])
   def getPatchAt(x: Double, y: Double): Patch
@@ -37,13 +37,13 @@ trait World {
   def linkShapeList: ShapeList
   def getDrawing: AnyRef
   def sendPixels: Boolean
-  def markDrawingClean()
+  def markDrawingClean(): Unit
   def protractor: Protractor
   def wrappedObserverX(x: Double): Double
   def wrappedObserverY(y: Double): Double
   def patchColorsDirty: Boolean
-  def markPatchColorsDirty()
-  def markPatchColorsClean()
+  def markPatchColorsDirty(): Unit
+  def markPatchColorsClean(): Unit
   def getVariablesArraySize(link: Link, breed: AgentSet): Int
   def getVariablesArraySize(turtle: Turtle, breed: AgentSet): Int
   def linksOwnNameAt(i: Int): String

@@ -33,7 +33,7 @@ object CodeEditor {
     }
     new CodeEditor(accessor, colorizer, rows=rows, columns=columns,
       collapsible=collapsible, collapseWhenEmpty=collapseWhenEmpty){
-      def changed{ changedFunc }
+      def changed = changedFunc
     }
   }
 }

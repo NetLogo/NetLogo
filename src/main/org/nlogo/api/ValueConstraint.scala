@@ -12,7 +12,7 @@ trait ValueConstraint {
   /** Throws a Violation condition if the input is not acceptable. */
   @throws(classOf[ValueConstraint.Violation])
   @throws(classOf[LogoException])
-  def assertConstraint(value: AnyRef)
+  def assertConstraint(value: AnyRef): Unit
 
   /** Returns the constrained value, which can differ from the input.
     * Throws a Violation condition if the input is not coercable. */

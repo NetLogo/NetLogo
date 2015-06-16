@@ -8,7 +8,7 @@ package org.nlogo.api
  */
 
 trait NetLogoAdapter extends NetLogoListener {
-  override def possibleViewUpdate { }
+  override def possibleViewUpdate = {}
   override def tickCounterChanged(ticks: Double) = {}
   override def switchChanged(name: String, value: Boolean, valueChanged: Boolean) = {}
   override def sliderChanged(name: String, value: Double, min: Double, increment: Double, max: Double, valueChanged: Boolean, buttonReleased: Boolean) = {}

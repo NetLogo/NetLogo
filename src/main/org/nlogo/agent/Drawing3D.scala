@@ -38,7 +38,7 @@ class Drawing3D(world: World3D) extends org.nlogo.api.Drawing3D {
 
   def drawLine(x0: Double, y0: Double, z0: Double,
                x1: Double, y1: Double, z1: Double,
-               width: Double, color: AnyRef) {
+               width: Double, color: AnyRef) = {
     wrap(DrawingLine3D(
       x0, y0, z0, x1, y1, z1,
       heading(x0, y0, x1, y1),
@@ -48,7 +48,7 @@ class Drawing3D(world: World3D) extends org.nlogo.api.Drawing3D {
 
   def addLine(x0: Double, y0: Double, z0: Double,
               x1: Double, y1: Double, z1: Double,
-              width: Double, color: AnyRef) {
+              width: Double, color: AnyRef) = {
     lines.add(DrawingLine3D(
       x0, y0, z0, x1, y1, z1,
       heading(x0, y0, x1, y1),
@@ -57,14 +57,14 @@ class Drawing3D(world: World3D) extends org.nlogo.api.Drawing3D {
   }
 
   def addStamp(shape: String, xcor: Double, ycor: Double, zcor: Double, size: Double,
-               heading: Double, pitch: Double, roll: Double, color: AnyRef, lineThickness: Double) {
+               heading: Double, pitch: Double, roll: Double, color: AnyRef, lineThickness: Double) = {
     turtleStamps.add(
       new TurtleStamp3D(shape, xcor, ycor, zcor, size, heading, pitch, roll, color, lineThickness))
   }
 
   def addStamp(shape: String, x1: Double, y1: Double, z1: Double, x2: Double, y2: Double, z2: Double,
                color: AnyRef, lineThickness: Double, directedLink: Boolean, destSize: Double,
-               heading: Double, pitch: Double) {
+               heading: Double, pitch: Double) = {
      linkStamps.add(new LinkStamp3D(shape, x1, y1, z1, x2, y2, z2, color,
                                     lineThickness, directedLink, destSize, heading, pitch))
   }

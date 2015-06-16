@@ -21,7 +21,7 @@ private class ShapeRenderer(world: World) {
                          label: String, labelColor: AnyRef,
                          x: Double, y: Double, z: Double, height: Float,
                          patchSize: Double, fontSize: Int, outline: Boolean,
-                         lineThickness: Double, orientation: Array[Double]) {
+                         lineThickness: Double, orientation: Array[Double]) = {
     val maxx = world.maxPxcor + 0.5
     val minx = world.minPxcor - 0.5
     val maxy = world.maxPycor + 0.5
@@ -82,7 +82,7 @@ private class ShapeRenderer(world: World) {
 
   def renderAgent(gl: GL, shape3D: GLShape, color: java.awt.Color, size: Double,
                   xcor: Double, ycor: Double, zcor: Double,
-                  stroke: Float, outline: Boolean, orientation: Array[Double]) {
+                  stroke: Float, outline: Boolean, orientation: Array[Double]) = {
     gl.glPushMatrix()
     alignAgent(gl, size,
       xcor * Renderer.WORLD_SCALE,
@@ -101,7 +101,7 @@ private class ShapeRenderer(world: World) {
   }
 
   def alignAgent(gl: GL, size: Double, xcor: Double, ycor: Double, zcor: Double,
-                 shape3D: GLShape, highlight: Boolean, orientation: Array[Double]) {
+                 shape3D: GLShape, highlight: Boolean, orientation: Array[Double]) = {
     val Array(heading, pitch, roll) = orientation
     gl.glTranslated(xcor, ycor, zcor)
     // non-rotatable shapes always face the viewpoint

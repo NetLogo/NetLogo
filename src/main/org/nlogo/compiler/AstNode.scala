@@ -23,7 +23,7 @@ trait AstNode {
   def start: Int
   def end: Int
   def file: String
-  def accept(v: AstVisitor)
+  def accept(v: AstVisitor): Unit
 }
 
 /**
@@ -37,8 +37,8 @@ trait Expression extends AstNode {
    * types of subexpressions.
    */
   def reportedType(): Int
-  def start_=(start: Int)
-  def end_=(end: Int)
+  def start_=(start: Int): Unit
+  def end_=(end: Int): Unit
 }
 
 /**
@@ -52,9 +52,9 @@ trait Application extends AstNode with Seq[Expression] {
   def iterator = args.iterator
   def args: scala.collection.SeqLike[Expression, _]
   def instruction: Instruction
-  def end_=(end: Int)
-  def addArgument(arg: Expression)
-  def replaceArg(index: Int, expr: Expression)
+  def end_=(end: Int): Unit
+  def addArgument(arg: Expression): Unit
+  def replaceArg(index: Int, expr: Expression): Unit
 }
 
 /**

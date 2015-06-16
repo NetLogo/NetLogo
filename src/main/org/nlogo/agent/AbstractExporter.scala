@@ -27,7 +27,7 @@ object AbstractExporter {
 abstract class AbstractExporter(filename: String) {
 
   @throws(classOf[IOException])
-  def export(writer: java.io.PrintWriter) // abstract
+  def export(writer: java.io.PrintWriter): Unit // abstract
 
   @throws(classOf[IOException])
   def export(tyype: String, modelFileName: String, extraHeader: String): Unit = {

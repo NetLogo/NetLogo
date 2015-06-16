@@ -11,7 +11,7 @@ import collection.JavaConverters._
 object Polygons {
 
   def renderPolygon(gl: GL, glu: GLU, tessellator: Tessellator, tess: GLUtessellator,
-                    offset: Int, poly: Polygon, rotatable: Boolean, is3D: Boolean) {
+                    offset: Int, poly: Polygon, rotatable: Boolean, is3D: Boolean) = {
     val zDepth = 0.01f + offset * 0.0001f
     // this is more complex than it looks, primarily because OpenGL cannot render concave polygons
     // directly but must "tessellate" the polygon into simple convex triangles first - jrn 6/13/05
@@ -67,7 +67,7 @@ object Polygons {
                               data: Tessellator.TessDataObject,
                               xcoords: JList[java.lang.Integer],
                               ycoords: JList[java.lang.Integer],
-                              zDepth: Float, rotatable: Boolean) {
+                              zDepth: Float, rotatable: Boolean) = {
     glu.gluTessBeginPolygon(tess, data)
     glu.gluTessBeginContour(tess)
     for(i <- 0 until xcoords.size) {
@@ -85,7 +85,7 @@ object Polygons {
                               data: Tessellator.TessDataObject,
                               xcoords: JList[java.lang.Integer],
                               ycoords: JList[java.lang.Integer],
-                              zDepth: Float, rotatable: Boolean) {
+                              zDepth: Float, rotatable: Boolean) = {
     glu.gluTessBeginPolygon(tess, data)
     glu.gluTessBeginContour(tess)
     // render top

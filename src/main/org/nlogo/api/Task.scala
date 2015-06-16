@@ -7,6 +7,6 @@ trait ReporterTask extends Task {
   def report(c: Context, args: Array[AnyRef]): AnyRef
 }
 trait CommandTask extends Task {
-  def perform(c: Context, args: Array[AnyRef])
+  def perform(c: Context, args: Array[AnyRef]): Unit
 }
 

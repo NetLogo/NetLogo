@@ -22,8 +22,7 @@ class AppletSaver(proceduresToHtml: ProceduresToHtmlInterface, buf: StringBuilde
 
   def save(frame: java.awt.Frame, iP: InterfacePanel, modelName: String,
            path: String, fileName: String, infoText: String, procedures: String,
-           additionalJars: JList[String], extensions: JList[String])
-  {
+           additionalJars: JList[String], extensions: JList[String]) = {
     // we add a 10 pixel buffer here so that widgets are not cramped and in some cases cut off
     // slightly on some platforms, such as Firefox on Ubuntu Linux. -- CLB
     // + 16 to width so there is space for the NetLogo ad ev 7/9/08
@@ -46,8 +45,7 @@ class AppletSaver(proceduresToHtml: ProceduresToHtmlInterface, buf: StringBuilde
     doSave(frame, path)
   }
 
-  def saveClient(frame: java.awt.Frame, width: Int, height: Int, modelName: String, path: String)
-  {
+  def saveClient(frame: java.awt.Frame, width: Int, height: Int, modelName: String, path: String) = {
     // + 16 to width so there is space for the NetLogo ad ev 11/10/08
     // 88 == the size of the message area ev 8/6/8
     buildClient(modelName, width + 10 + 16, height + 10 + 88)
@@ -114,8 +112,7 @@ class AppletSaver(proceduresToHtml: ProceduresToHtmlInterface, buf: StringBuilde
   // non-private for unit testing - ST 2/8/05
 
   def build(modelName: String, fileName: String, width: Int, height: Int,
-            infoText: String, procedures: String, additionalJars: JList[String], extensions: JList[String])
-  {
+            infoText: String, procedures: String, additionalJars: JList[String], extensions: JList[String]) = {
     buf.clear()
     header(modelName)
     paragraph("In order for this to work, this file, your model file",
@@ -199,8 +196,7 @@ class AppletSaver(proceduresToHtml: ProceduresToHtmlInterface, buf: StringBuilde
   private def applet(code: String, archive: String,
                      width: Int, height: Int,
                      params: List[(String,String)] = Nil,
-                     additionalJars: JList[String] = Nil)
-  {
+                     additionalJars: JList[String] = Nil) = {
     line("<p>")
     line("<applet code=\"" + code + "\"")
     line("        archive=" + (archive :: additionalJars.toList).mkString("\"", ",", "\""))

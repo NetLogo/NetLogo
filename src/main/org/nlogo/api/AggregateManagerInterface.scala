@@ -3,6 +3,6 @@
 package org.nlogo.api
 trait AggregateManagerInterface extends SourceOwner {
   def save():String
-  def load(lines:String,compiler:CompilerServices)
-  def showEditor()
+  def load(lines:String,compiler:CompilerServices): Unit
+  def showEditor(): Unit
 }

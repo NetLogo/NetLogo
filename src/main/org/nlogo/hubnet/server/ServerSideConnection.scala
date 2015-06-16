@@ -53,7 +53,7 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
     }
 
   trait MessageHandler{
-    def handleMessage(message:Message)
+    def handleMessage(message:Message): Unit
   }
 
   /**

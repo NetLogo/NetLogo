@@ -47,11 +47,9 @@ abstract class AbstractWorkspaceScala(private val _world: World, hubNetManagerFa
     requestDisplayUpdate(true)
   }
 
-  def clearTicks{
-    world.tickCounter.clear()
-  }
+  def clearTicks() = world.tickCounter.clear()
 
-  def clearAll {
+  def clearAll() = {
     world.clearAll()
     clearOutput()
     clearDrawing()
@@ -84,8 +82,8 @@ object AbstractWorkspaceTraits {
 
   trait Exporting extends Plotting { this: AbstractWorkspace =>
 
-    def exportDrawingToCSV(writer:PrintWriter)
-    def exportOutputAreaToCSV(writer:PrintWriter)
+    def exportDrawingToCSV(writer:PrintWriter): Unit
+    def exportOutputAreaToCSV(writer:PrintWriter): Unit
 
     @throws(classOf[IOException])
     def exportWorld(filename: String) = new AbstractExporter(filename) {
@@ -155,16 +153,15 @@ object AbstractWorkspaceTraits {
       evaluator.evaluateCommands(owner, source, world.observers, waitForCompletion)
     @throws(classOf[CompilerException])
     def evaluateCommands(owner: JobOwner, source: String, agent: Agent,
-                         waitForCompletion: Boolean) {
+                         waitForCompletion: Boolean) = {
       val agents = new ArrayAgentSet(agent.getAgentClass, 1, false, world)
       agents.add(agent)
       evaluator.evaluateCommands(owner, source, agents, waitForCompletion)
     }
     @throws(classOf[CompilerException])
     def evaluateCommands(owner: JobOwner, source: String, agents: AgentSet,
-                         waitForCompletion: Boolean) {
+                         waitForCompletion: Boolean) =
       evaluator.evaluateCommands(owner, source, agents, waitForCompletion)
-    }
     @throws(classOf[CompilerException])
     def evaluateReporter(owner: JobOwner, source: String) =
       evaluator.evaluateReporter(owner, source, world.observers)

@@ -464,8 +464,7 @@ with org.nlogo.api.ViewSettings {
    * Internal use only.
    */
   def runtimeError(owner: org.nlogo.api.JobOwner, context: org.nlogo.nvm.Context,
-                   instruction: org.nlogo.nvm.Instruction, ex: Exception) {
-    ex match {
+                   instruction: org.nlogo.nvm.Instruction, ex: Exception) = ex match {
       case le: LogoException =>
         lastLogoException = le
         lastErrorReport = new ErrorReport(owner, context, instruction, le)
@@ -473,7 +472,6 @@ with org.nlogo.api.ViewSettings {
         System.err.println("owner: " + owner.displayName)
         org.nlogo.util.Exceptions.handle(ex)
     }
-  }
 
   /// Controlling API methods
 

@@ -5,14 +5,14 @@ package org.nlogo.nvm
 abstract class Tracer {
 
   // control
-  def enable()
-  def disable()
-  def reset()
-  def dump(stream: java.io.PrintStream)
+  def enable(): Unit
+  def disable(): Unit
+  def reset(): Unit
+  def dump(stream: java.io.PrintStream): Unit
 
   // call recording
-  def openCallRecord(context: Context, activation: Activation)
-  def closeCallRecord(context: Context, activation: Activation)
+  def openCallRecord(context: Context, activation: Activation): Unit
+  def closeCallRecord(context: Context, activation: Activation): Unit
   def calls(name: String): Long
   def exclusiveTime(name: String): Long
   def inclusiveTime(name: String): Long

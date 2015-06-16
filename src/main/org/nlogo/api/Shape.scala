@@ -6,5 +6,5 @@ package org.nlogo.api
 
 trait Shape {
   def getName: String
-  def setName(name: String)
+  def setName(name: String): Unit
 }

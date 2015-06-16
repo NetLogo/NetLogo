@@ -18,9 +18,9 @@ import collection.JavaConverters._
 // HeadlessHNM uses it to simply print events.
 // GUIHNM uses it to update the gui.
 trait ClientEventListener {
-  def addClient(clientId: String, remoteAddress: String)
-  def clientDisconnect(clientId: String)
-  def logMessage(message:String)
+  def addClient(clientId: String, remoteAddress: String): Unit
+  def clientDisconnect(clientId: String): Unit
+  def logMessage(message:String): Unit
 }
 
 // ConnectionManager implements this so that we can pass this to ServerSideConnection
@@ -30,11 +30,11 @@ trait ConnectionManagerInterface {
   def isSupportedClientType(clientType: String): Boolean
   def finalizeConnection(c: ServerSideConnection, desiredClientId: String): Boolean
   def createHandshakeMessage(clientType: String): HandshakeFromServer
-  def fullViewUpdate()
-  def putClientData(messageEnvelope: MessageEnvelope)
+  def fullViewUpdate(): Unit
+  def putClientData(messageEnvelope: MessageEnvelope): Unit
   def removeClient(userid: String, notifyClient: Boolean, reason: String): Boolean
-  def logMessage(message:String)
-  def sendPlots(clientId:String)
+  def logMessage(message:String): Unit
+  def sendPlots(clientId:String): Unit
 }
 
 class ConnectionManager(val connection: ConnectionInterface,
@@ -364,7 +364,7 @@ class ConnectionManager(val connection: ConnectionInterface,
   def clearOverrideLists(client:String) = sendUserMessage(client, ClearOverrideMessage)
 
   def sendAgentPerspective(client:String, perspective:Int, agentClass: Class[_ <: org.nlogo.api.Agent],
-                                    id: Long, radius: Double, serverMode: Boolean) {
+                                    id: Long, radius: Double, serverMode: Boolean) = {
     sendUserMessage(client, new AgentPerspectiveMessage(
       new AgentPerspective(agentClass, id, perspective, radius, serverMode).toByteArray))
   }

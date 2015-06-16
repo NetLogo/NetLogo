@@ -11,7 +11,7 @@ import org.nlogo.swing.{NonemptyTextFieldButtonEnabler, TextField, TextFieldBox}
 import org.nlogo.swing.Implicits._
 
 abstract class LoginCallback{
-  def apply(user:String, host:String, port:Int)
+  def apply(user:String, host:String, port:Int): Unit
 }
 
 /**

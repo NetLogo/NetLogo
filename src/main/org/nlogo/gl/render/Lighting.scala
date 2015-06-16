@@ -111,13 +111,13 @@ abstract class Light {
    * Makes the light effective by setting the appropriate OpenGL state variables. Be sure
    * that the light is on by calling turnOn(), but note that it is on by default.
    */
-  def applyLight();
+  def applyLight(): Unit
 
   /**
    * Shows the light's position in 3D space. This is intended as a debugging aid.
    */
   def showLight(glu: GLU, world: World3D, worldScale: Float, observerDistance: Double,
-                  shapeRenderer: ShapeRenderer);
+                  shapeRenderer: ShapeRenderer): Unit
 
   /**
    * Helps visualize the light's position in 3D space by drawing some lines. This is intended as a debugging aid.

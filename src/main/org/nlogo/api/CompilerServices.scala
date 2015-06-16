@@ -10,9 +10,9 @@ trait CompilerServices {
   @throws(classOf[CompilerException])
   def readNumberFromString(source: String): AnyRef
   @throws(classOf[CompilerException])
-  def checkReporterSyntax(source: String)
+  def checkReporterSyntax(source: String): Unit
   @throws(classOf[CompilerException])
-  def checkCommandSyntax(source: String)
+  def checkCommandSyntax(source: String): Unit
   def isReporter(s: String): Boolean
   def isValidIdentifier(s: String): Boolean
   def tokenizeForColorization(source: String): Array[Token]
