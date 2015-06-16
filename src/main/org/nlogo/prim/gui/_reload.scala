@@ -9,8 +9,7 @@ import org.nlogo.window.GUIWorkspace
 class _reload extends Command {
   override def syntax =
     Syntax.commandSyntax("O---", true)
-  override def perform(context: Context) {
-    workspace match {
+  override def perform(context: Context) = workspace match {
       case gw: GUIWorkspace =>
         gw.reload()
         context.ip = next
@@ -18,5 +17,4 @@ class _reload extends Command {
         throw new EngineException(
           context, this, token.name + " can only be used in the GUI")
     }
-  }
 }

@@ -10,7 +10,7 @@ class _updatemonitor extends Command {
   override def syntax =
     Syntax.commandSyntax(
       Array(Syntax.WildcardType), "O---", true);
-  override def perform(context: Context) {
+  override def perform(context: Context) = {
     context.job.owner.asInstanceOf[MonitorWidget]
       .value(args(0).report(context))
     context.ip = next

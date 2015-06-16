@@ -11,14 +11,12 @@ class _bench extends Command {
     Syntax.commandSyntax(Array(Syntax.NumberType,
                                Syntax.NumberType),
                          "O---")
-  override def perform(context: Context) {
+  override def perform(context: Context) = {
     val minTime = argEvalIntValue(context, 0)
     val maxTime = argEvalIntValue(context, 1)
     new Thread("__bench") {
-      override def run() {
-        Benchmarker.benchmark(
-          workspace.asInstanceOf[AbstractWorkspace], minTime, maxTime)
-      }
+      override def run() =
+        Benchmarker.benchmark(workspace.asInstanceOf[AbstractWorkspace], minTime, maxTime)
     }.start()
     context.ip = next
   }

@@ -12,7 +12,7 @@ class _usermessage extends Command {
   def syntax =
     Syntax.commandSyntax(Array(Syntax.WildcardType))
 
-  override def perform(context: Context) {
+  override def perform(context: Context) = {
     val message = Dump.logoObject(args(0).report(context))
     workspace match {
       case gw: GUIWorkspace =>

@@ -9,16 +9,15 @@ import org.nlogo.window.GUIWorkspace
 class _moviecancel extends Command {
   override def syntax =
     Syntax.commandSyntax
-  override def perform(context: Context) {
+  override def perform(context: Context) = {
     workspace match {
       case gw: GUIWorkspace =>
         workspace.waitFor(
           new org.nlogo.api.CommandRunnable {
-            def run() {
-              if (gw.movieEncoder != null) {
+            def run() = if (gw.movieEncoder != null) {
                 gw.movieEncoder.cancel()
                 gw.movieEncoder = null
-              }}})
+              }})
       case _ =>
         throw new EngineException(
           context, this, token.name + " can only be used in the GUI")

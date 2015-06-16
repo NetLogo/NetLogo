@@ -9,7 +9,7 @@ import org.nlogo.window.GUIWorkspace
 class _moviegrabinterface extends Command {
   override def syntax =
     Syntax.commandSyntax
-  override def perform(context: Context) {
+  override def perform(context: Context) = {
     if (world.program.is3D)
       throw new EngineException(
           context, this, token.name + " is not supported in NetLogo 3D")
@@ -17,7 +17,7 @@ class _moviegrabinterface extends Command {
       case gw: GUIWorkspace =>
         workspace.waitFor(
           new org.nlogo.api.CommandRunnable {
-            def run() {
+            def run() =
               try {
                 if (gw.movieEncoder == null)
                   throw new EngineException(
@@ -30,7 +30,7 @@ class _moviegrabinterface extends Command {
                 case ex: java.io.IOException =>
                   throw new EngineException(
                     context, _moviegrabinterface.this, ex.getMessage)
-              }}})
+              }})
       case _ =>
         throw new EngineException(
           context, this, token.name + " can only be used in the GUI")

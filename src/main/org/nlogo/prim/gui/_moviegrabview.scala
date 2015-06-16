@@ -9,12 +9,12 @@ import org.nlogo.window.GUIWorkspace
 class _moviegrabview extends Command {
   override def syntax =
     Syntax.commandSyntax
-  override def perform(context: Context) {
+  override def perform(context: Context) = {
     workspace match {
       case gw: GUIWorkspace =>
         workspace.waitFor(
           new org.nlogo.api.CommandRunnable {
-            def run() {
+            def run() =
               try {
                 if (gw.movieEncoder == null)
                   throw new EngineException(
@@ -25,7 +25,7 @@ class _moviegrabview extends Command {
                 case ex: java.io.IOException =>
                   throw new EngineException(
                     context, _moviegrabview.this, ex.getMessage)
-              }}})
+              }})
       case _ =>
         throw new EngineException(
           context, this, token.name + " can only be used in the GUI")

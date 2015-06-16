@@ -8,7 +8,7 @@ import org.nlogo.nvm.{ Command, Context, EngineException }
 class _inspectwithradius extends Command {
   override def syntax =
     Syntax.commandSyntax(Array(Syntax.AgentType, Syntax.NumberType))
-  override def perform(context: Context) {
+  override def perform(context: Context) = {
     val agent = argEvalAgent(context, 0)
     val radius = argEvalDouble(context, 1)
     if (agent.id == -1)
@@ -20,9 +20,8 @@ class _inspectwithradius extends Command {
         context, this, "the radius must be between 0 and " + limit)
     org.nlogo.awt.EventQueue.invokeLater(
       new Runnable {
-        override def run() {
-            workspace.inspectAgent(agent.getAgentClass, agent, radius)
-        }})
+        override def run() = workspace.inspectAgent(agent.getAgentClass, agent, radius)
+      })
     context.ip = next
   }
 }

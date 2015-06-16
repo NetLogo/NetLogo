@@ -9,7 +9,7 @@ import org.nlogo.window.GUIWorkspace
 class _moviestart extends Command {
   override def syntax =
     Syntax.commandSyntax(Array(Syntax.StringType))
-  override def perform(context: Context) {
+  override def perform(context: Context) = {
     val path = {
       val arg = argEvalString(context, 0)
       try workspace.fileManager.attachPrefix(arg)
@@ -23,7 +23,7 @@ class _moviestart extends Command {
       case gw: GUIWorkspace =>
         workspace.waitFor(
           new org.nlogo.api.CommandRunnable {
-            def run() {
+            def run() = {
               if (gw.movieEncoder != null)
                 throw new EngineException(
                   context, _moviestart.this,
