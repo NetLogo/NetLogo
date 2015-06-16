@@ -16,18 +16,17 @@ class LinkShapeManagerDialog(parentFrame: java.awt.Frame,
   shapesList.addListSelectionListener(this)
 
   // Load a new shapes editor to let the user create a new shape
-  override def newShape() {
+  override def newShape() =
     new LinkEditorDialog(shapesList, new LinkShape(), getLocation.x, getLocation.y)
-  }
 
   // Edit an existing shape
-  override def editShape() {
+  override def editShape() = {
     val shape = shapesList.getOneSelected.asInstanceOf[LinkShape]
     if (shape != null) new LinkEditorDialog(shapesList, shape, getLocation.x, getLocation.y)
   }
 
   // Duplicate a shape, which can then be edited
-  override def duplicateShape() {
+  override def duplicateShape() = {
     val shape = shapesList.getOneSelected.asInstanceOf[LinkShape]
     // You can only duplicate one shape at a time
     if (shape != null) {

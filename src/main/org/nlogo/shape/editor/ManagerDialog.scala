@@ -51,7 +51,7 @@ abstract class ManagerDialog(parentFrame: java.awt.Frame,
     shapesList.setParent(this)
     shapesList.addMouseListener(new MouseInputAdapter() {
       // Listen for double-clicks, and edit the selected shape
-      override def mouseClicked(e: java.awt.event.MouseEvent) {if (e.getClickCount() > 1) editShape()}
+      override def mouseClicked(e: java.awt.event.MouseEvent) = if (e.getClickCount() > 1) editShape()
     })
     shapesList.setCellRenderer(new ShapeCellRenderer(shapesList))
 
@@ -106,20 +106,20 @@ abstract class ManagerDialog(parentFrame: java.awt.Frame,
   }
 
   // Initialize then display the manager
-  def init(title: String) {
+  def init(title: String) = {
     shapesList.update()
     shapesList.selectShapeName("default")
     setTitle(title)
     setVisible(true)
   }
 
-  def reset() {
+  def reset() = {
     shapesList.update()
     shapesList.selectShapeName("default")
   }
 
   // Import shapes from shapes library
-  private def importFromLibrary() {
+  private def importFromLibrary() = {
     val defaultShapes = org.nlogo.util.Utils.getResourceAsStringArray("/system/defaultShapes.txt")
     val libraryShapes = org.nlogo.util.Utils.getResourceAsStringArray("/system/libraryShapes.txt")
     val mergedShapes = defaultShapes.toList ::: ("" :: libraryShapes.toList)
@@ -128,7 +128,7 @@ abstract class ManagerDialog(parentFrame: java.awt.Frame,
   }
 
   // Import shapes from another model
-  private def importFromModel() {
+  private def importFromModel() = {
     try {
       val path = org.nlogo.swing.FileDialog.show(parentFrame, I18N.gui("import.note"), java.awt.FileDialog.LOAD)
       val shapesV = sectionReader.read(path)
@@ -144,7 +144,7 @@ abstract class ManagerDialog(parentFrame: java.awt.Frame,
   def parseShapes(shapes: Array[String], version: String) = VectorShape.parseShapes(shapes, version)
 
   // Listen for changes in list selection, and make the edit and delete buttons inoperative if necessary
-  def valueChanged(e: ListSelectionEvent) {
+  def valueChanged(e: ListSelectionEvent) = {
     val selected = shapesList.getSelectedIndices()
     // Only one shape can be edited or copied at a time
     if (selected.length != 1) {

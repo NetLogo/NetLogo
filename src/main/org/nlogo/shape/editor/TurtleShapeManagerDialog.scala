@@ -15,12 +15,11 @@ class TurtleShapeManagerDialog(parentFrame: java.awt.Frame,
   shapesList.addListSelectionListener(this)
 
   // Load a new shapes editor to let the user create a new shape
-  override def newShape() {
+  override def newShape() =
     new EditorDialog(shapesList, new VectorShape(), getLocation.x, getLocation.y, true)
-  }
 
   // Edit an existing shape
-  override def editShape() {
+  override def editShape() = {
     val shape = shapesList.getOneSelected.asInstanceOf[VectorShape]
     if (shape != null) {
       new EditorDialog(shapesList, shape, getLocation.x, getLocation.y, !ShapeList.isDefaultShapeName(shape.getName))
@@ -28,7 +27,7 @@ class TurtleShapeManagerDialog(parentFrame: java.awt.Frame,
   }
 
   // Duplicate a shape, which can then be edited
-  override def duplicateShape() {
+  override def duplicateShape() = {
     val shape = shapesList.getOneSelected.asInstanceOf[VectorShape]
     // You can only duplicate one shape at a time
     if ( shape != null )   {
