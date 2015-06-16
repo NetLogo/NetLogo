@@ -21,7 +21,7 @@ object HubNetUtils {
   var plotMirroring = false
 
   // this doesnt appear to be used - JC 8/21/10
-  def checkPacketSize(obj: Object, message: String) {
+  def checkPacketSize(obj: Object, message: String) =
     try {
       import java.io.{ObjectOutputStream, ByteArrayOutputStream}
       import java.util.zip.DeflaterOutputStream
@@ -42,5 +42,4 @@ object HubNetUtils {
           println("choked: ")
           e.printStackTrace()
     }
-  }
 }

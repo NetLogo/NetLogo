@@ -33,8 +33,7 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
   @volatile private var disconnecting = false
   var clientId: String = null
 
-  override def receiveData(a:AnyRef) {
-    a match {
+  override def receiveData(a:AnyRef) = a match {
       // note: if clientId is null, that means that we haven't yet had a successful login yet.
       // so, this string we received must be the version of the client.
       case s:String =>
@@ -52,7 +51,6 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
       // TODO: is disconnect the right call here?
       case _ => dieHard(reason="Unknown message type: " + a.getClass)
     }
-  }
 
   trait MessageHandler{
     def handleMessage(message:Message)
@@ -67,8 +65,7 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
    * we ought to have a nice state machine here.
    * JC 1/1/11
    */
-  private def handleMessage(message:Message) {
-    message match {
+  private def handleMessage(message:Message) = message match {
       case HandshakeFromClient(userId, clientType) => {
         if(userId == null || userId.trim == ""){
           sendData(new LoginFailure("Server received empty username."))
@@ -122,29 +119,24 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
         // JC 1/6/11
         dieHard(reason="Unknown message type: " + message.getClass)
     }
-  }
 
   // TODO...this absolutely HAS to be cleaned up before 4.2 final.
   // also, its not even really dying hard, its dying hard if it needs to.
   // but whatever, it will all be ripped out soon.
-  private def dieHard(reason:String) {
-    if(! server.removeClient(clientId, notifyClient=true, reason)){
+  private def dieHard(reason:String) = if(! server.removeClient(clientId, notifyClient=true, reason)){
       waitForSendData(ExitMessage(reason))
       stopWriting()
       // this call really goes to the super class, not to the disconnect method here.
       // i hate myself for having to do this. the disconnect stuff here desparately needs cleaning up.
       super.disconnect(reason)
     }
-  }
 
-  override def disconnect(reason:String) {
-    if(!disconnecting) {
+  override def disconnect(reason:String) = if(!disconnecting) {
       disconnecting = true
       server.removeClient(clientId, false, reason)
     }
-  }
 
-  def disconnect(notifyClient:Boolean, reason:String) {
+  def disconnect(notifyClient:Boolean, reason:String) = {
     disconnecting = true
     server.putClientData(ExitMessageEnvelope(clientId))
     if(notifyClient) sendData(ExitMessage(reason))
@@ -152,8 +144,7 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
     super.disconnect(reason)
   }
 
-  override def handleEx(e:Exception, sendingEx:Boolean) {
-    if(!disconnecting) {
+  override def handleEx(e:Exception, sendingEx:Boolean) = if(!disconnecting) {
       disconnecting = true
       if(clientId != null) server.removeClient(clientId, ! sendingEx, e.toString)
       else{
@@ -176,5 +167,4 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
         }
       }
     }
-  }
 }

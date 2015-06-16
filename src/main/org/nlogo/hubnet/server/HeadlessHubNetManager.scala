@@ -21,32 +21,32 @@ class HeadlessHubNetManager(workspace: AbstractWorkspaceScala) extends HubNetMan
   // load is called from HeadlessModelOpener
   // save should never be called.
   var widgets: Array[String] = Array()
-  def load(lines:Array[String], version: String) { widgets = lines }
+  def load(lines:Array[String], version: String) = widgets = lines
   def getClientInterface: Array[String] = widgets
-  def save(buf:scala.collection.mutable.StringBuilder) {}
+  def save(buf:scala.collection.mutable.StringBuilder) = {}
 
   // should we be logging or doing something else here besides just println? JC - 12/28/10
   private val listener = new ClientEventListener() {
-    def addClient(clientId: String, remoteAddress: String) {
+    def addClient(clientId: String, remoteAddress: String) = {
       //println("added client: " + clientId + " on: " + remoteAddress)
     }
-    def clientDisconnect(clientId: String) {
+    def clientDisconnect(clientId: String) = {
       //println("client disconnected: " + clientId)
     }
-    def logMessage(message:String) {
+    def logMessage(message:String) = {
       //println(message)
     }
   }
   val connectionManager = new ConnectionManager(this, listener, this.workspace)
 
   /// connection management
-  def disconnect() {
+  def disconnect() = {
     connectionManager.shutdown()
     messagesList.clear()
   }
 
   @throws(classOf[HubNetException])
-  def reset() {
+  def reset() = {
     if (connectionManager.isRunning) {
       connectionManager.shutdown()
       // when we reset, make sure to get rid of any locally connected clients.
@@ -68,19 +68,19 @@ class HeadlessHubNetManager(workspace: AbstractWorkspaceScala) extends HubNetMan
   def clientEditor: AnyRef = null
   def getInterfaceWidth = 0
   def getInterfaceHeight = 0
-  def openClientEditor() {}
-  def closeClientEditor() {}
+  def openClientEditor() = {}
+  def closeClientEditor() = {}
 
   // other no-op gui related stuff
-  def setTitle(name: String, dir: String, modelType: ModelType) {}
-  def importClientInterface(filePath: String, client: Boolean) {} // only called from the File menu.
+  def setTitle(name: String, dir: String, modelType: ModelType) = {}
+  def importClientInterface(filePath: String, client: Boolean) = {} // only called from the File menu.
 
   private val clientIds = Iterator.from(0)
   private val clientsAddedViaNewClient = ListBuffer[TestClient]()
   lazy val executor: ExecutorService = Executors.newCachedThreadPool()
 
   // creates a new local client. this method should be renamed.
-  def newClient(isRobo: Boolean, waitTime: Int) {
+  def newClient(isRobo: Boolean, waitTime: Int) =
     // login happens automatically in the constructor.
     // its debateable that i should do this, but ok for now.
     // JC - 3/30/11
@@ -91,7 +91,6 @@ class HeadlessHubNetManager(workspace: AbstractWorkspaceScala) extends HubNetMan
         clientsAddedViaNewClient.synchronized(clientsAddedViaNewClient += client)
       }
     })
-  }
 
   // send a message from a local client to the server
   def sendFromLocalClient(clientName:String, tag: String, content: AnyRef) = {
@@ -106,5 +105,5 @@ class HeadlessHubNetManager(workspace: AbstractWorkspaceScala) extends HubNetMan
     }
   }
 
-  def showControlCenter() {} // maybe we could log a message here.
+  def showControlCenter() = {} // maybe we could log a message here.
 }

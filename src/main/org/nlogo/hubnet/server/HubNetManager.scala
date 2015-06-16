@@ -33,7 +33,7 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetIn
   private var messageEnvelope: MessageEnvelope = null
 
   /// messages
-  def enqueueMessage(message: MessageEnvelope) { messagesList.put(message) }
+  def enqueueMessage(message: MessageEnvelope) = messagesList.put(message)
 
   def messageWaiting: Boolean = {
     if (!messagesList.isEmpty) true
@@ -63,7 +63,7 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetIn
   }
 
   @throws(classOf[HubNetException])
-  def fetchMessage() {
+  def fetchMessage() = {
     checkRunningStatus()
     messageEnvelope = null
     if (!messagesList.isEmpty) messageEnvelope = messagesList.take()
@@ -90,14 +90,13 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetIn
    * string node ids.
    */
   @throws(classOf[HubNetException])
-  def send(nodes: Seq[String], tag: String, message: JSerializable) {
+  def send(nodes: Seq[String], tag: String, message: JSerializable) = {
     checkRunningStatus()
     for (node <- nodes) if (!send(node, tag, message)) { simulateFailedExitMessage(node) }
   }
 
-  private def simulateFailedExitMessage(clientId: String) {
+  private def simulateFailedExitMessage(clientId: String) =
     enqueueMessage(ExitMessageEnvelope(clientId))
-  }
 
   /**
    * sends a message to a specific node (by String ID).
@@ -106,43 +105,37 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetIn
   def send(node: String, tag: String, message: JSerializable): Boolean =
     connectionManager.send(node, tag, message)
 
-  def sendUserMessage(nodes: Seq[String], text: String) {
-    for (node <- nodes) if (!connectionManager.sendUserMessage(node, text)) simulateFailedExitMessage(node)
-  }
+  def sendUserMessage(nodes: Seq[String], text: String) = for (node <- nodes)
+    if (!connectionManager.sendUserMessage(node, text)) simulateFailedExitMessage(node)
 
-  def broadcastUserMessage(msg: String) {
-    if(connectionManager.isRunning) connectionManager.broadcastUserMessage(msg)
-  }
+  def broadcastUserMessage(msg: String) = if(connectionManager.isRunning)
+    connectionManager.broadcastUserMessage(msg)
 
-  def sendText(nodes: Seq[String], text:String) {
-    for (node <- nodes) if (!connectionManager.sendTextMessage(node, text)) simulateFailedExitMessage(node)
-  }
+  def sendText(nodes: Seq[String], text:String) = for (node <- nodes)
+    if (!connectionManager.sendTextMessage(node, text)) simulateFailedExitMessage(node)
 
-  def clearText(nodes: Seq[String]) {
-    for (node <- nodes) if (!connectionManager.sendClearTextMessage(node)) simulateFailedExitMessage(node)
-  }
+  def clearText(nodes: Seq[String]) = for (node <- nodes)
+    if (!connectionManager.sendClearTextMessage(node)) simulateFailedExitMessage(node)
 
   @throws(classOf[HubNetException])
-  def broadcast(tag: String, message: Any) {
-    if(connectionManager.isRunning) connectionManager.broadcast(tag, message)
-  }
+  def broadcast(tag: String, message: Any) = if(connectionManager.isRunning)
+    connectionManager.broadcast(tag, message)
 
   @throws(classOf[HubNetException])
-  def broadcast(msg:Any){ if(connectionManager.isRunning) connectionManager.broadcast(msg) }
+  def broadcast(msg:Any) = if(connectionManager.isRunning) connectionManager.broadcast(msg)
 
-  def broadcastClearText() { if(connectionManager.isRunning) connectionManager.broadcastClearTextMessage() }
+  def broadcastClearText() = if(connectionManager.isRunning) connectionManager.broadcastClearTextMessage()
 
   /**
    * @throws HubNetException exception if the connectionManager is not currently running.
    */
   @throws(classOf[HubNetException])
-  private def checkRunningStatus() {
-    if(!connectionManager.isRunning) throw new HubNetException(NOT_LOGGED_IN)
-  }
+  private def checkRunningStatus() = if(!connectionManager.isRunning)
+    throw new HubNetException(NOT_LOGGED_IN)
 
   /// clients
   @throws(classOf[HubNetException])
-  def setClientInterface(interfaceType:String, interfaceInfo: Iterable[AnyRef]){
+  def setClientInterface(interfaceType:String, interfaceInfo: Iterable[AnyRef]) = {
     connectionManager.setClientInterface(interfaceType, interfaceInfo)
     resetPlotManager()
   }
@@ -162,9 +155,7 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetIn
                     varName: String, overrides: Seq[java.lang.Long]) {
     connectionManager.clearOverride(client, agentType, varName, overrides)
   }
-  def clearOverrideLists(client: String) {
-    connectionManager.clearOverrideLists(client)
-  }
+  def clearOverrideLists(client: String) = connectionManager.clearOverrideLists(client)
   def sendAgentPerspective(client: String, perspective: Int, agentType: Class[_ <: org.nlogo.api.Agent],
                            id: Long, radius: Double, serverMode: Boolean) {
     connectionManager.sendAgentPerspective(client, perspective, agentType, id, radius, serverMode)
@@ -185,23 +176,19 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetIn
   // (this same comment is in ConnectionManager)
   // JC - 2/26/10
   protected def someNodesHaveView: Boolean = connectionManager.nodesHaveView && HubNetUtils.viewMirroring
-  private def broadcastViewMessage(obj: Any) {
-    if (connectionManager.isRunning && someNodesHaveView) broadcast("VIEW", obj)
-  }
+  private def broadcastViewMessage(obj: Any) = if (connectionManager.isRunning && someNodesHaveView)
+    broadcast("VIEW", obj)
 
-  def sendLine(x0: Double, y0: Double, x1: Double, y1: Double, color: Any, size: Double, mode: String) {
+  def sendLine(x0: Double, y0: Double, x1: Double, y1: Double, color: Any, size: Double, mode: String) =
     broadcastViewMessage(new HubNetLine(x0, y0, x1, y1, color, size, mode))
-  }
 
-  def sendStamp(agent: org.nlogo.api.Agent, erase: Boolean) {
-    agent match {
+  def sendStamp(agent: org.nlogo.api.Agent, erase: Boolean) = agent match {
       case t: Turtle => broadcastViewMessage(new HubNetTurtleStamp(t, erase))
       case l: Link => broadcastViewMessage(new HubNetLinkStamp(l, erase))
       case _ =>
     }
-  }
 
-  def sendClear() {broadcastViewMessage(new HubNetDrawingMessage(HubNetDrawingMessage.Type.CLEAR))}
+  def sendClear() = broadcastViewMessage(new HubNetDrawingMessage(HubNetDrawingMessage.Type.CLEAR))
 
   /// network info
   @throws(classOf[HubNetException])
@@ -220,10 +207,10 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetIn
   }
 
   def clients:Iterable[String] = connectionManager.clients.keys
-  def kick(userId:String){ connectionManager.removeClient(userId, true, "Kicked out.") }
-  def kickAll(){ connectionManager.removeAllClients() }
-  def setViewMirroring(onOff:Boolean){ HubNetUtils.viewMirroring = onOff }
-  def setPlotMirroring(onOff:Boolean){ HubNetUtils.plotMirroring = onOff }
+  def kick(userId:String) = connectionManager.removeClient(userId, true, "Kicked out.")
+  def kickAll() = connectionManager.removeAllClients()
+  def setViewMirroring(onOff:Boolean) = HubNetUtils.viewMirroring = onOff
+  def setPlotMirroring(onOff:Boolean) = HubNetUtils.plotMirroring = onOff
 
   def waitForClients(numClientsToWaitFor:Int, timeoutMillis: Long): (Boolean, Int) = {
     waitForEvents(numClientsToWaitFor, timeoutMillis)(workspace.getHubNetManager.clients.size)
@@ -260,15 +247,15 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetIn
 
   /// plots
   private def plotManager = connectionManager.plotManager
-  private def resetPlotManager() {plotManager.initPlotListeners()}
+  private def resetPlotManager() = plotManager.initPlotListeners()
   def addNarrowcastPlot(plotName: String) = plotManager.addNarrowcastPlot(plotName)
-  def plot(clientId: String, y: Double) {plotManager.narrowcastPlot(clientId, y)}
-  def plot(clientId: String, x: Double, y: Double) {plotManager.narrowcastPlot(clientId, x, y)}
-  def clearPlot(clientId: String) {plotManager.narrowcastClear(clientId)}
-  def plotPenDown(clientId: String, penDown: Boolean) {plotManager.narrowcastPenDown(clientId, penDown)}
-  def setPlotPenMode(clientId: String, plotPenMode: Int) {plotManager.narrowcastPlotPenMode(clientId, plotPenMode)}
-  def setHistogramNumBars(clientId: String, num: Int) {plotManager.narrowcastSetHistogramNumBars(clientId, num)}
-  def setPlotPenInterval(clientId: String, interval: Double) {plotManager.narrowcastSetInterval(clientId, interval)}
+  def plot(clientId: String, y: Double) = plotManager.narrowcastPlot(clientId, y)
+  def plot(clientId: String, x: Double, y: Double) = plotManager.narrowcastPlot(clientId, x, y)
+  def clearPlot(clientId: String) = plotManager.narrowcastClear(clientId)
+  def plotPenDown(clientId: String, penDown: Boolean) = plotManager.narrowcastPenDown(clientId, penDown)
+  def setPlotPenMode(clientId: String, plotPenMode: Int) = plotManager.narrowcastPlotPenMode(clientId, plotPenMode)
+  def setHistogramNumBars(clientId: String, num: Int) = plotManager.narrowcastSetHistogramNumBars(clientId, num)
+  def setPlotPenInterval(clientId: String, interval: Double) = plotManager.narrowcastSetInterval(clientId, interval)
 
   // gui related
 
@@ -282,11 +269,11 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetIn
    */
    def viewIsVisible: Boolean = someNodesHaveView
    private var _framesSkipped = true
-   def framesSkipped() {_framesSkipped = true}
+   def framesSkipped() = _framesSkipped = true
    def isDead = false
-   def paintImmediately(force: Boolean) { if (force || _framesSkipped) incrementalUpdateFromEventThread() }
+   def paintImmediately(force: Boolean) = if (force || _framesSkipped) incrementalUpdateFromEventThread()
 
-   def incrementalUpdateFromEventThread() {
+   def incrementalUpdateFromEventThread() = {
      // HeadlessWorkspace will call this function on a tick or display.
      // this is why we now check isRunning here. this is probably good from GUIWorkspace too.
      // also, for some yet unknown reason, not having the check was causing
@@ -295,10 +282,10 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetIn
      // im not going to dig into that problem. however, its possible that the problem might
      // come back up, which is my i comment it here.
      // - JC 1/7/11
-     if (someNodesHaveView && connectionManager.isRunning) {connectionManager.incrementalViewUpdate()}
+     if (someNodesHaveView && connectionManager.isRunning) connectionManager.incrementalViewUpdate()
      _framesSkipped = false
    }
-   def repaint() {}
+   def repaint() = {}
 
   // since mouseInside is always false all the other values don't matter.
   // all this is silly, but its here because we have to extend ViewInterface.
@@ -309,6 +296,6 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetIn
   def mouseDown = false
   def resetMouseCors{}
   // we could implement these to send messages on these events.
-  def shapeChanged(shape:org.nlogo.api.Shape){}
-  def applyNewFontSize(fontSize:Int, zoom:Int) {}
+  def shapeChanged(shape:org.nlogo.api.Shape) = {}
+  def applyNewFontSize(fontSize:Int, zoom:Int) = {}
 }

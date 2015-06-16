@@ -55,7 +55,7 @@ class ConnectionManager(val connection: ConnectionInterface,
   @volatile private var socket: ServerSocket = null
   private var _port = -1
   def port = _port
-  private def port_=(p:Int){ _port = p }
+  private def port_=(p:Int) = _port = p
   // the run method polls this to know when to stop.
   // set to true in startup, false in shutdown.
   @volatile private var serverOn: Boolean = false
@@ -162,9 +162,9 @@ class ConnectionManager(val connection: ConnectionInterface,
    * be accessed by the NetLogo code when <code>hubnet-fetch-message</code>
    * and <code>hubnet-message-waiting?</code> called.
    */
-  def enqueueMessage(message:MessageEnvelope) { connection.enqueueMessage(message) }
+  def enqueueMessage(message:MessageEnvelope) = connection.enqueueMessage(message)
 
-  def run() {
+  def run() =
     try {
       while (serverOn) {
         try waitForConnection()
@@ -182,7 +182,6 @@ class ConnectionManager(val connection: ConnectionInterface,
     catch {
       case e: IOException => org.nlogo.util.Exceptions.handle(e)
     }
-  }
 
   @throws(classOf[IOException])
   private def waitForConnection(): Unit = {
@@ -219,12 +218,12 @@ class ConnectionManager(val connection: ConnectionInterface,
   }
 
   /// client Interface code
-  def reloadClientInterface() {
+  def reloadClientInterface() = {
     setClientInterface(ConnectionTypes.COMP_CONNECTION, List())
     plotManager.initPlotListeners()
   }
 
-  def setClientInterface(interfaceType: ClientType, interfaceInfo: Iterable[AnyRef]) {
+  def setClientInterface(interfaceType: ClientType, interfaceInfo: Iterable[AnyRef]) =
     // we set this when hubnet-reset is called now, instead
     // of forcing users to call hubnet-set-client-interface "COMPUTER" []
     // however, if they still want to call it, we should just update it here anyway.
@@ -235,7 +234,6 @@ class ConnectionManager(val connection: ConnectionInterface,
         List(createClientInterfaceSpec)
       else
         interfaceInfo
-  }
 
   private def createClientInterfaceSpec: ClientInterface = {
     val widgetDescriptions = connection.getClientInterface
@@ -249,7 +247,7 @@ class ConnectionManager(val connection: ConnectionInterface,
   /**
    * Enqueues a message from the client to the manager.
    */
-  def putClientData(messageEnvelope:MessageEnvelope) { enqueueMessage(messageEnvelope) }
+  def putClientData(messageEnvelope:MessageEnvelope) = enqueueMessage(messageEnvelope)
 
   /**
    * Returns a handshake message containing the current Interface specification.
@@ -285,30 +283,26 @@ class ConnectionManager(val connection: ConnectionInterface,
   }
 
   @throws(classOf[HubNetException])
-  def broadcast(obj: Any) {
+  def broadcast(obj: Any) =
     if (obj.isInstanceOf[String]) broadcastMessage(new Text(obj.toString, Text.MessageType.TEXT))
     else if (obj.isInstanceOf[Plot]) broadcastMessage(new PlotUpdate(obj.asInstanceOf[Plot]))
     else throw new HubNetException(VALID_SEND_TYPES_MESSAGE)
-  }
 
   @throws(classOf[HubNetException])
-  def broadcastPlotControl(a:Any, plotName:String){
+  def broadcastPlotControl(a:Any, plotName:String) =
     broadcastMessage(new PlotControl(a.asInstanceOf[AnyRef], plotName))
-  }
 
   @throws(classOf[HubNetException])
-  def sendPlotControl(userId: String, a:Any, plotName:String){
+  def sendPlotControl(userId: String, a:Any, plotName:String) =
     sendUserMessage(userId, new PlotControl(a.asInstanceOf[AnyRef], plotName))
-  }
 
-  def broadcastClearTextMessage() { broadcastMessage(new Text(null, Text.MessageType.CLEAR)) }
+  def broadcastClearTextMessage() = broadcastMessage(new Text(null, Text.MessageType.CLEAR))
 
   /**
    * Broadcasts a message to all clients.
    */
-  private def broadcastMessage(msg:Message) {
+  private def broadcastMessage(msg:Message) =
     clients.synchronized { for (connection <- clients.values) { connection.sendData(msg) } }
-  }
 
   def sendTextMessage(node: String, text: String): Boolean =
     sendUserMessage(node, new Text(text, Text.MessageType.TEXT))
@@ -323,17 +317,15 @@ class ConnectionManager(val connection: ConnectionInterface,
     c.isDefined
   }
 
-  def broadcastUserMessage(text:String) { broadcastMessage(new Text(text, Text.MessageType.USER)) }
+  def broadcastUserMessage(text:String) = broadcastMessage(new Text(text, Text.MessageType.USER))
 
   // called from control center
-  def removeAllClients() {
-    clients.synchronized {
+  def removeAllClients() = clients.synchronized {
       for(conn <- clients.values){
         disconnectClient(conn, true, "Kicked from Control Center.")
       }
       clients.clear()
     }
-  }
 
   /**
    * Removes a client. Deletes the client from the client map and disconnects it.
@@ -353,12 +345,10 @@ class ConnectionManager(val connection: ConnectionInterface,
   /**
    * Disconnects the client and removes it from the control center.
    */
-  private def disconnectClient(c:ServerSideConnection, notifyClient:Boolean, reason:String) {
-    if (c != null) {
+  private def disconnectClient(c:ServerSideConnection, notifyClient:Boolean, reason:String) = if (c != null) {
       c.disconnect(notifyClient, reason)
       clientEventListener.clientDisconnect(c.clientId)
     }
-  }
 
   /// view stuff
   def sendOverrideList (client:String, agentClass: Class[_ <: org.nlogo.api.Agent],
@@ -371,7 +361,7 @@ class ConnectionManager(val connection: ConnectionInterface,
     sendUserMessage(client, new OverrideMessage(new ClearOverride(agentClass, varName, overrides), true))
   }
 
-  def clearOverrideLists(client:String) { sendUserMessage(client, ClearOverrideMessage) }
+  def clearOverrideLists(client:String) = sendUserMessage(client, ClearOverrideMessage)
 
   def sendAgentPerspective(client:String, perspective:Int, agentClass: Class[_ <: org.nlogo.api.Agent],
                                     id: Long, radius: Double, serverMode: Boolean) {
@@ -381,16 +371,13 @@ class ConnectionManager(val connection: ConnectionInterface,
 
   private var lastPatches: AgentSet = null
 
-  def fullViewUpdate() {
-    doViewUpdate(true) /* reset the world before sending the update */
-  }
+  def fullViewUpdate() = doViewUpdate(true) /* reset the world before sending the update */
 
-  def incrementalViewUpdate() {
+  def incrementalViewUpdate() =
     // update the entire world if the patches have changed (do to a world resizing)
     doViewUpdate(lastPatches != world.patches())
-  }
 
-  private def doViewUpdate(resetWorld:Boolean) {
+  private def doViewUpdate(resetWorld:Boolean) = {
     if (resetWorld) {
       // create a new world buffer, which will force a full update.
       worldBuffer = new ServerWorld(worldProps)
@@ -400,16 +387,15 @@ class ConnectionManager(val connection: ConnectionInterface,
     if (!buf.isEmpty) broadcastMessage(new ViewUpdate(buf.toByteArray))
   }
 
-  def setViewEnabled(mirror:Boolean) {
-    if (mirror) incrementalViewUpdate() else broadcastMessage(DisableView)
-  }
+  def setViewEnabled(mirror:Boolean) = if (mirror)
+    incrementalViewUpdate() else broadcastMessage(DisableView)
 
-  def sendPlot(clientId:String, plot:PlotInterface) {
+  def sendPlot(clientId:String, plot:PlotInterface) = {
     val c = clients.get(clientId)
     if (c.isDefined) c.get.sendData(new PlotUpdate(plot))
   }
 
-  def sendPlots(clientId:String){ plotManager.sendPlots(clientId) }
+  def sendPlots(clientId:String) = plotManager.sendPlots(clientId)
 
   def clientSendQueueSizes: Iterable[Int] = clients.synchronized{ clients.values.map(_.getSendQueueSize)}
 
