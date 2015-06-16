@@ -9,8 +9,7 @@ class _set extends Command {
   override def syntax =
     Syntax.commandSyntax(Array(Syntax.WildcardType,
                                Syntax.WildcardType))
-  override def perform(context: Context) {
+  override def perform(context: Context) =
     // we get compiled out of existence
     throw new UnsupportedOperationException
-  }
 }

@@ -15,10 +15,6 @@ import org.nlogo.nvm.{ Command, Context }
 
 class _done extends Command {
   override def syntax = Syntax.commandSyntax
-  override def perform(context: Context) {
-    perform_1(context)
-  }
-  def perform_1(context: Context) {
-    context.finished = true
-  }
+  override def perform(context: Context) = perform_1(context)
+  def perform_1(context: Context) = context.finished = true
 }
