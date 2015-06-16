@@ -60,7 +60,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
   locally {
     setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
     addWindowListener(new java.awt.event.WindowAdapter {
-      override def windowClosing(e: java.awt.event.WindowEvent) { abortAction.actionPerformed(null) }
+      override def windowClosing(e: java.awt.event.WindowEvent) = abortAction.actionPerformed(null)
     })
     setTitle("Running Experiment: " + protocol.name)
     setResizable(true)
@@ -142,7 +142,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
       workspace.jobManager.finishSecondaryJobs(null)
     }
   }
-  def close() {
+  def close() = {
     timer.stop()
     setVisible(false)
     dispose()
@@ -152,9 +152,8 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
 
   /// ProgressListener implementation
 
-  override def experimentStarted() {started = System.currentTimeMillis}
-  override def runStarted(w: Workspace, runNumber: Int, settings: List[(String, Any)]) {
-    if (!w.isHeadless) {
+  override def experimentStarted() = started = System.currentTimeMillis
+  override def runStarted(w: Workspace, runNumber: Int, settings: List[(String, Any)]) = if (!w.isHeadless) {
       runCount = runNumber
       steps = 0
       resetPlot()
@@ -163,24 +162,19 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
         settingsString += name + " = " + Dump.logoObject(value.asInstanceOf[AnyRef]) + "\n"
       updateProgressArea(true)
     }
-  }
-  override def stepCompleted(w: Workspace, steps: Int) {
-    if(!w.isHeadless) this.steps = steps
-  }
-  override def measurementsTaken(w: Workspace, runNumber: Int, step: Int, values: List[AnyRef]) {
+  override def stepCompleted(w: Workspace, steps: Int) = if(!w.isHeadless) this.steps = steps
+  override def measurementsTaken(w: Workspace, runNumber: Int, step: Int, values: List[AnyRef]) =
     if(!w.isHeadless) plotNextPoint(values)
-  }
 
   private def invokeAndWait(f: => Unit) =
-    try org.nlogo.awt.EventQueue.invokeAndWait(new Runnable {def run() {f}})
+    try org.nlogo.awt.EventQueue.invokeAndWait(new Runnable {def run() = f})
     catch {
       case ex: InterruptedException =>
         // we may get interrupted if the user aborts the run - ST 10/30/03
         org.nlogo.util.Exceptions.ignore(ex)
     }
 
-  private def resetPlot() {
-    plotWidgetOption.foreach{ plotWidget => invokeAndWait {
+  private def resetPlot() = plotWidgetOption.foreach{ plotWidget => invokeAndWait {
       plotWidget.clear()
       for (metricNumber <- 0 until protocol.metrics.length) yield {
         val pen = plotWidget.plot.createPlotPen(getPenName(metricNumber), true)
@@ -188,7 +182,6 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
         pen
       }
     }}
-  }
 
   // this is only called when we KNOW we have a plot, so plotWidgetOption.get is ok
   private def getPenName(metricNumber: Int): String = {
@@ -201,8 +194,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
     buf.toString
   }
 
-  private def plotNextPoint(measurements: List[AnyRef]) {
-    plotWidgetOption.foreach { plotWidget => invokeAndWait {
+  private def plotNextPoint(measurements: List[AnyRef]) = plotWidgetOption.foreach { plotWidget => invokeAndWait {
       for (metricNumber <- 0 until protocol.metrics.length) {
         val measurement = measurements(metricNumber)
         if (measurement.isInstanceOf[Number]) {
@@ -212,9 +204,8 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
       }
       plotWidget.plot.makeDirty()
     }}
-  }
 
-  private def updateProgressArea(force: Boolean) {
+  private def updateProgressArea(force: Boolean) = {
     def pad(s: String) = if (s.length == 1) ("0" + s) else s
     val elapsedMillis: Int = ((System.currentTimeMillis - started) / 1000).toInt
     val hours = (elapsedMillis / 3600).toString
@@ -224,7 +215,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
     if (force || elapsed != newElapsed) {
       elapsed = newElapsed
       org.nlogo.awt.EventQueue.invokeLater(new Runnable {
-        def run() {
+        def run() = {
           progressArea.setText("Run #" + runCount + " of " + totalRuns + ", " +
                   "step #" + steps + "\n" +
                   "Total elapsed time: " + elapsed + "\n" + settingsString)

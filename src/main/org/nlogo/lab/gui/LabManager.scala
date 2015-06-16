@@ -19,18 +19,18 @@ class LabManager(val workspace: GUIWorkspace,
 {
   val protocols = new ListBuffer[Protocol]
   private lazy val dialog = new ManagerDialog(this, dialogFactory)
-  def show() { dialog.update(); dialog.setVisible(true) }
-  def close() { dialog.setVisible(false) }
-  def dirty() { new DirtyEvent().raise(this) }
+  def show() = { dialog.update(); dialog.setVisible(true) }
+  def close() = dialog.setVisible(false)
+  def dirty() = new DirtyEvent().raise(this)
   /// Event.LinkChild -- lets us get events out to rest of app
   val getLinkParent = workspace
   /// loading & saving
-  def handle(e:LoadBeginEvent) {
+  def handle(e:LoadBeginEvent) = {
     close()
     protocols.clear()
     lastCompileAllWasSuccessful = false
   }
-  def handle(e:LoadSectionEvent) {
+  def handle(e:LoadSectionEvent) = {
     // autoconversion of protocols from old NetLogo versions
     def autoConvert(protocol:Protocol):Protocol = {
       import protocol._
@@ -51,11 +51,9 @@ class LabManager(val workspace: GUIWorkspace,
     else ProtocolSaver.save(protocols)
   /// making sure everything gets compiled before an experiment run
   private var lastCompileAllWasSuccessful = false
-  def handle(e:CompiledEvent) {
-    if(e.sourceOwner.isInstanceOf[org.nlogo.window.ProceduresInterface])
+  def handle(e:CompiledEvent) = if(e.sourceOwner.isInstanceOf[org.nlogo.window.ProceduresInterface])
       lastCompileAllWasSuccessful = e.error == null
-  }
-  def prepareForRun() {
+  def prepareForRun() = {
     (new CompileAllEvent).raise(this)
     if(!lastCompileAllWasSuccessful)
       throw new org.nlogo.awt.UserCancelException

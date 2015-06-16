@@ -33,7 +33,7 @@ class RunOptionsDialog(parent: java.awt.Dialog,
     // boilerplate for Editable
     def helpLink = None
     def error(key:Object) = null
-    def error(key:Object, e: Exception){}
+    def error(key:Object, e: Exception) = {}
     def anyErrors = false
     val sourceOffset = 0
     def editFinished = true

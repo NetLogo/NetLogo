@@ -18,7 +18,7 @@ class ProtocolEditable(protocol: Protocol,
   def helpLink = None
   val classDisplayName = "Experiment"
   def error(key:Object) = null
-  def error(key:Object, e: Exception){}
+  def error(key:Object, e: Exception) = {}
   def anyErrors = false
   val sourceOffset = 0
 
@@ -70,11 +70,9 @@ class ProtocolEditable(protocol: Protocol,
   // make a new Protocol based on what user entered
   def editFinished: Boolean = get.isDefined
   def get: Option[Protocol] = {
-    def complain(message: String) {
-      javax.swing.JOptionPane.showMessageDialog(
+    def complain(message: String) = javax.swing.JOptionPane.showMessageDialog(
         window, "Invalid spec for varying variables. Error:\n" + message,
        "Invalid", javax.swing.JOptionPane.ERROR_MESSAGE)
-    }
     Some(new Protocol(
       name.trim, setupCommands.trim, goCommands.trim,
       finalCommands.trim, repetitions, runMetricsEveryStep,

@@ -18,7 +18,8 @@ private class ManagerDialog(manager: LabManager,
   /// actions
   private def action(name: String, fn: ()=>Unit) =
     new javax.swing.AbstractAction(name) {
-      def actionPerformed(e: java.awt.event.ActionEvent) { fn() } }
+      def actionPerformed(e: java.awt.event.ActionEvent) = fn()
+    }
   private val editAction = action(I18N.gui("edit"), edit _)
   private val newAction = action(I18N.gui("new"), makeNew _)
   private val deleteAction = action(I18N.gui("delete"), delete _)
@@ -27,10 +28,11 @@ private class ManagerDialog(manager: LabManager,
   private val runAction = action(I18N.gui("run"), run _)
   /// initialization
   init()
-  private def init() {
+  private def init() = {
     setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE)
     addWindowListener(new java.awt.event.WindowAdapter {
-      override def windowClosing(e: java.awt.event.WindowEvent) { closeAction.actionPerformed(null) } })
+        override def windowClosing(e: java.awt.event.WindowEvent) = closeAction.actionPerformed(null)
+      })
     setTitle(I18N.gui.get("menu.tools.behaviorSpace"))
     // set up the list
     jlist.putClientProperty("Quaqua.List.style", "striped")
@@ -39,8 +41,8 @@ private class ManagerDialog(manager: LabManager,
     jlist.addListSelectionListener(this)
     // Listen for double-clicks, and edit the selected protocol
     jlist.addMouseListener(new javax.swing.event.MouseInputAdapter {
-      override def mouseClicked(e: java.awt.event.MouseEvent) {
-        if(e.getClickCount > 1) edit() } })
+        override def mouseClicked(e: java.awt.event.MouseEvent) = if(e.getClickCount > 1) edit()
+      })
     // Setup the first row of buttons
     val buttonPanel = new JPanel
     val runButton = new JButton(runAction)
@@ -76,7 +78,7 @@ private class ManagerDialog(manager: LabManager,
     getRootPane.setDefaultButton(runButton)
   }
   /// implement ListSelectionListener
-  def valueChanged(e: javax.swing.event.ListSelectionEvent) {
+  def valueChanged(e: javax.swing.event.ListSelectionEvent) = {
     val count = jlist.getSelectedIndices.length
     editAction.setEnabled(count == 1)
     duplicateAction.setEnabled(count == 1)
@@ -84,13 +86,13 @@ private class ManagerDialog(manager: LabManager,
     deleteAction.setEnabled(count > 0)
   }
   /// action implementations
-  private def run() {
+  private def run() =
     try {
       manager.prepareForRun()
       new Supervisor(this, manager.workspace, selectedProtocol, manager.workspaceFactory, dialogFactory).start()
     }
     catch { case ex: org.nlogo.awt.UserCancelException => org.nlogo.util.Exceptions.ignore(ex) }
-  }
+
   private def makeNew {
     import collection.JavaConverters._
     editProtocol(
@@ -103,9 +105,9 @@ private class ManagerDialog(manager: LabManager,
               variableName, List(manager.workspace.world.getObserverVariableByName(variableName)))}}),
       true)
   }
-  private def duplicate() { editProtocol(selectedProtocol, true) }
-  private def edit() { editProtocol(selectedProtocol, false) }
-  private def editProtocol(protocol: Protocol, isNew: Boolean) {
+  private def duplicate() = editProtocol(selectedProtocol, true)
+  private def edit() = editProtocol(selectedProtocol, false)
+  private def editProtocol(protocol: Protocol, isNew: Boolean) = {
     val editable = new ProtocolEditable(protocol, manager.workspace.getFrame,
                                         manager.workspace, manager.workspace.world)
     if(!dialogFactory.canceled(this, editable)) {
@@ -117,7 +119,7 @@ private class ManagerDialog(manager: LabManager,
       manager.dirty()
     }
   }
-  private def delete() {
+  private def delete() = {
     val selected = jlist.getSelectedIndices
     val message = "Are you sure you want to delete " +
       (if(selected.length > 1) "these " + selected.length + " experiments?"
@@ -134,17 +136,17 @@ private class ManagerDialog(manager: LabManager,
     }
   }
   /// helpers
-  def update() {
+  def update(): Unit = {
     listModel.clear
     manager.protocols.foreach(listModel.addElement(_))
     valueChanged(null)
     if(manager.protocols.size > 0) jlist.setSelectedIndices(Array(0))
   }
-  private def select(index: Int) {
+  private def select(index: Int) = {
     jlist.setSelectedIndices(Array(index))
     jlist.ensureIndexIsVisible(index)
   }
-  private def select(targetProtocol: Protocol) {
+  private def select(targetProtocol: Protocol) = {
     val index = manager.protocols.indexWhere(_ eq targetProtocol)
     jlist.setSelectedIndices(Array(index))
     jlist.ensureIndexIsVisible(index)
