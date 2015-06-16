@@ -39,7 +39,7 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
     setVisible(true)
   }
 
-  def setViewMirroring(mirror: Boolean) {
+  def setViewMirroring(mirror: Boolean) = {
     org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     if (mirror != HubNetUtils.viewMirroring) {
       HubNetUtils.viewMirroring = mirror
@@ -47,40 +47,40 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
     }
   }
 
-  def setPlotMirroring(mirror: Boolean) {
+  def setPlotMirroring(mirror: Boolean) = {
     org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     HubNetUtils.plotMirroring = mirror;
     if (mirror) server.plotManager.broadcastPlots()
   }
 
   // Kicks a client and notifies it.
-  def kickClient(clientId: String) {
+  def kickClient(clientId: String) = {
     org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     server.removeClient(clientId, true, I18N.gui.get("menu.tools.hubnetControlCenter.removedViaControlCenter"))
     clientsPanel.removeClientEntry(clientId)
   }
 
-  def kickAllClients() {server.removeAllClients()}
-  def reloadClientInterface() {server.reloadClientInterface()}
-  def broadcastMessage(text: String) {
+  def kickAllClients() = server.removeAllClients()
+  def reloadClientInterface() = server.reloadClientInterface()
+  def broadcastMessage(text: String) = {
     org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     server.broadcast(text)
   }
 
-  def addClient(clientId: String, remoteAddress: String) {
+  def addClient(clientId: String, remoteAddress: String): Unit = {
     org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     clientsPanel.addClientEntry(clientId)
     messagePanel.logMessage( I18N.gui.getN("menu.tools.hubnetControlCenter.messagePanel.clientJoined" , clientId, remoteAddress) + "\n")
   }
 
-  def clientDisconnect(clientId: String) {
+  def clientDisconnect(clientId: String): Unit = {
     org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     messagePanel.logMessage(I18N.gui.getN("menu.tools.hubnetControlCenter.messagePanel.clientDisconnected" , clientId) + "\n")
     clientsPanel.removeClientEntry(clientId)
   }
 
-  def logMessage(message: String) {messagePanel.logMessage(message)}
-  def launchNewClient() {server.connection.newClient(false, 0)}
+  def logMessage(message: String): Unit = messagePanel.logMessage(message)
+  def launchNewClient() = server.connection.newClient(false, 0)
 
   /**
    * Panel in HubNet Control Center displays client list
@@ -127,15 +127,14 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
      * Called when the list selection changes.
      * From interface ListSelectionListener.
      */
-    def valueChanged(evt: ListSelectionEvent) {
-      if (!evt.getValueIsAdjusting()) kickButton.setEnabled(clientsList.getMinSelectionIndex() > -1)
-    }
+    def valueChanged(evt: ListSelectionEvent) = if (!evt.getValueIsAdjusting())
+      kickButton.setEnabled(clientsList.getMinSelectionIndex() > -1)
 
     /**
      * Kicks a client.
      * From interface ActionListener.
      */
-    def actionPerformed(evt: ActionEvent) {
+    def actionPerformed(evt: ActionEvent) = {
       import scala.collection.JavaConverters._
       if (evt.getSource == kickButton) {
         val clientIds = clientsList.getSelectedValuesList().asScala
@@ -148,9 +147,9 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
       }
     }
 
-    def addClientEntry(clientId: String) {listData.addElement(clientId)}
-    def removeClientEntry(clientId: String) {listData.removeElement(clientId)}
-    def setClientList(clientNames: List[String]) {
+    def addClientEntry(clientId: String) = listData.addElement(clientId)
+    def removeClientEntry(clientId: String) = listData.removeElement(clientId)
+    def setClientList(clientNames: List[String]) = {
       listData.clear()
       clientNames.foreach(listData.addElement)
     }
@@ -190,7 +189,7 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
      * Broadcasts the message and appends it to the message log.
      * Called when the button is clicked on return is pressed.
      */
-    def actionPerformed(evt: ActionEvent) {
+    def actionPerformed(evt: ActionEvent) = {
       val message = inputField.getText
       if (!message.isEmpty) {
         logMessage("<Leader> " + message + "\n")
@@ -203,7 +202,7 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
     /**
      * Appends a message to the message log.
      */
-    def logMessage(message: String) {
+    def logMessage(message: String): Unit = {
       val currentTime = dateFormatter.format(new java.util.Date())
       val newMessage = "" + currentTime + "   " + message
       // we use setText instead of append to ensure scrolling
@@ -264,7 +263,7 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
      * Called when a checkbox is clicked.
      * From interface java.awt.event.ItemListener.
      */
-    def itemStateChanged(e: ItemEvent) {
+    def itemStateChanged(e: ItemEvent) = {
       setViewMirroring(mirrorViewCheckBox.isSelected)
       setPlotMirroring(mirrorPlotsCheckBox.isSelected)
     }

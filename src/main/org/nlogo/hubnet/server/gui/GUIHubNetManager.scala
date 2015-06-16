@@ -25,15 +25,12 @@ class GUIHubNetManager(workspace: GUIWorkspace,
   private var serverName: String = System.getProperty("org.nlogo.hubnet.server.name")
 
   private val listener = new ClientEventListener() {
-    def addClient(clientId: String, remoteAddress: String) {
+    def addClient(clientId: String, remoteAddress: String) =
       invokeLater(() => controlCenter.addClient(clientId, remoteAddress))
-    }
-    def clientDisconnect(clientId: String) {
+    def clientDisconnect(clientId: String) =
       invokeLater(() => controlCenter.clientDisconnect(clientId))
-    }
-    def logMessage(message:String){
+    def logMessage(message:String) =
       invokeLater(() => controlCenter.logMessage(message))
-    }
   }
   val connectionManager = new ConnectionManager(this, listener, this.workspace)
   var controlCenter: ControlCenter = null // created in showControlCenter
@@ -43,7 +40,7 @@ class GUIHubNetManager(workspace: GUIWorkspace,
   /**
    * Launch a local computer client, if there is a session open connect to it.
    */
-  override def newClient(isRobo: Boolean, waitTime: Int) {
+  override def newClient(isRobo: Boolean, waitTime: Int) = {
     val clientApp = Femto.get(classOf[ClientAppInterface], "org.nlogo.hubnet.client.ClientApp", Array[AnyRef]())
     val host = try Some(InetAddress.getLocalHost.getHostAddress.toString)
     catch {case ex: java.net.UnknownHostException => None}
@@ -57,12 +54,12 @@ class GUIHubNetManager(workspace: GUIWorkspace,
   def clientEditor: AnyRef = _clientEditor
   def getInterfaceWidth = _clientEditor.interfacePanel.getPreferredSize.width
   def getInterfaceHeight = _clientEditor.interfacePanel.getPreferredSize.height
-  def load(lines:Array[String], version: String) { _clientEditor.load(lines, version) }
-  def save(buf:scala.collection.mutable.StringBuilder) { _clientEditor.save(buf) }
+  def load(lines:Array[String], version: String) = _clientEditor.load(lines, version)
+  def save(buf:scala.collection.mutable.StringBuilder) = _clientEditor.save(buf)
 
 
   @throws(classOf[java.io.IOException])
-  def importClientInterface(filePath: String, client: Boolean) {
+  def importClientInterface(filePath: String, client: Boolean) = {
     _clientEditor.close()
     // Load the file
     val fileContents = new LocalFile(filePath).readFile()
@@ -74,38 +71,36 @@ class GUIHubNetManager(workspace: GUIWorkspace,
     openClientEditor()
   }
 
-  def setTitle(name: String, dir: String, modelType: ModelType) {
+  def setTitle(name: String, dir: String, modelType: ModelType) =
     _clientEditor.setTitle(name, dir, modelType)
-  }
 
-  def showControlCenter() {
+  def showControlCenter() = {
     controlCenter =
       new ControlCenter(connectionManager, workspace.getFrame, serverName, workspace.modelNameForDisplay)
     controlCenter.pack()
     controlCenter.setVisible(true)
   }
 
-  private def closeControlCenter(){
+  private def closeControlCenter() =
     // the hubnet manager is created in AbstractWorkspace, but the control center
     // isn't started unless showControlCenter is called.
     if(controlCenter != null) controlCenter.dispose()
-  }
 
   /// client editor
-  def openClientEditor() {
+  def openClientEditor() = {
     org.nlogo.awt.Positioning.moveNextTo(_clientEditor, linkParent)
     _clientEditor.setVisible(true)
     _clientEditor.setSize(_clientEditor.getPreferredSize)
   }
 
-  def closeClientEditor() {
+  def closeClientEditor() = {
      _clientEditor.close()
      _clientEditor.dispose()
      _clientEditor = new HubNetClientEditor(workspace, linkParent, ifactory, menuFactory)
   }
 
   @throws(classOf[HubNetException])
-  def reset() {
+  def reset() = {
     if(connectionManager.isRunning) {
       connectionManager.shutdown()
       closeControlCenter()
@@ -116,7 +111,7 @@ class GUIHubNetManager(workspace: GUIWorkspace,
     showControlCenter()
   }
 
-  def disconnect() {
+  def disconnect() = {
     connectionManager.shutdown()
     closeControlCenter()
     messagesList.clear()

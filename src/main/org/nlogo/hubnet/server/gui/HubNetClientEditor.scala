@@ -40,8 +40,8 @@ class HubNetClientEditor(workspace: GUIWorkspace,
 
   override def getPreferredSize = if (interfacePanel.empty) new Dimension(700, 550) else super.getPreferredSize
   def getLinkParent = linkParent
-  def close() {interfacePanel.removeAllWidgets()}
-  override def requestFocus() {interfacePanel.requestFocus()}
+  def close() = interfacePanel.removeAllWidgets()
+  override def requestFocus() = interfacePanel.requestFocus()
   def getWidgetsForSaving: java.util.List[org.nlogo.window.Widget] = interfacePanel.getWidgetsForSaving
 
   def getWidgetsAsStrings: Seq[String] = {
@@ -59,20 +59,20 @@ class HubNetClientEditor(workspace: GUIWorkspace,
     widgets.map(widgetToStrings).flatten
   }
 
-  def save (buf:scala.collection.mutable.StringBuilder) {
+  def save (buf:scala.collection.mutable.StringBuilder) = {
     val keys = interfacePanel.getWidgetsForSaving.iterator
     while (keys.hasNext()) {
       buf ++= (wrapString(keys.next.save + "\n") )
     }
   }
 
-  def load(lines: Array[String], version:String) {
+  def load(lines: Array[String], version:String) = {
     interfacePanel.loadWidgets(lines, version)
     setSize (getPreferredSize)
   }
 
-  def handle(e: org.nlogo.window.Events.ZoomedEvent) {setSize(getPreferredSize)}
-  def setTitle(title: String, directory: String, mt: ModelType) {setTitle(getTitle(title, directory, mt))}
+  def handle(e: org.nlogo.window.Events.ZoomedEvent) = setSize(getPreferredSize)
+  def setTitle(title: String, directory: String, mt: ModelType): Unit = setTitle(getTitle(title, directory, mt))
 
   private def getTitle (title:String, directory:String, mt: ModelType) = {
     // on OS X, use standard window title format. otherwise use Windows convention
