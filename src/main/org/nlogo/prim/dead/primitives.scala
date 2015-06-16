@@ -6,9 +6,7 @@ import org.nlogo.api.Syntax
 import org.nlogo.nvm.{ Command, Context, Reporter }
 
 trait DeadCommand extends Command {
-  override def perform(context: Context) {
-    throw new IllegalStateException
-  }
+  override def perform(context: Context) = throw new IllegalStateException
 }
 
 trait DeadReporter extends Reporter {
