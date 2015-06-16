@@ -11,10 +11,10 @@ class DummySwitchWidget extends Switch with Editable {
   def propertySet = Properties.dummySwitch
 
   // we never update constraints in a dummy widget -- CLB
-  override def updateConstraints() {}
+  override def updateConstraints() = {}
 
   // do nothing
-  def handle(e:org.nlogo.window.Events.AfterLoadEvent) {}
+  def handle(e:org.nlogo.window.Events.AfterLoadEvent) = {}
 
   /// load and save
   override def load(strings:Array[String], helper:Widget.LoadHelper) = {

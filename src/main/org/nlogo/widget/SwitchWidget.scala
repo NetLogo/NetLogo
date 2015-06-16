@@ -13,14 +13,12 @@ class SwitchWidget extends Switch with Editable with InterfaceGlobalWidget
   override def propertySet = Properties.swiitch
 
   def valueObject: AnyRef = constraint.defaultValue
-  def valueObject(value: AnyRef) {
-    if (value.isInstanceOf[Boolean]) {
+  def valueObject(value: AnyRef) = if (value.isInstanceOf[Boolean]) {
       isOn = value.asInstanceOf[Boolean]
     }
-  }
 
   def nameWrapper = this._name
-  def nameWrapper(newName: String) {
+  def nameWrapper(newName: String) = {
     nameChanged = newName != this._name || nameChanged
     name(newName, false)
   }
@@ -33,23 +31,20 @@ class SwitchWidget extends Switch with Editable with InterfaceGlobalWidget
     true
   }
 
-  def name(newName: String, sendEvent: Boolean) {
+  def name(newName: String, sendEvent: Boolean) = {
     super.name = newName
     if (sendEvent) {
       new Events.InterfaceGlobalEvent(this, true, true, false, false).raise(this)
     }
   }
 
-  override def isOn_=(on: Boolean) {
-    if (on != super.isOn) {
+  override def isOn_=(on: Boolean) = if (on != super.isOn) {
       super.isOn = on
       new Events.InterfaceGlobalEvent(this, false, false, true, false).raise(this)
     }
-  }
 
-  def handle(e: Events.PeriodicUpdateEvent) {
+  def handle(e: Events.PeriodicUpdateEvent) =
     new Events.InterfaceGlobalEvent(this, false, true, false, false).raise(this)
-  }
 
   def save: String = {
     val s: StringBuilder = new StringBuilder
@@ -74,5 +69,5 @@ class SwitchWidget extends Switch with Editable with InterfaceGlobalWidget
     this
   }
 
-  def handle(e: Events.AfterLoadEvent) { updateConstraints() }
+  def handle(e: Events.AfterLoadEvent) = updateConstraints()
 }

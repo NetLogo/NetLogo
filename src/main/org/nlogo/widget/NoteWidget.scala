@@ -27,20 +27,20 @@ class NoteWidget extends SingleErrorWidget with Editable {
   override def widgetWrapperOpaque = ! transparency
 
   def text = _text
-  def text_=(newText: String) {
+  def text_=(newText: String) = {
     this._text = newText
     this.displayName = newText
     repaint()
   }
 
   def transparency = getBackground eq InterfaceColors.TRANSPARENT
-  def transparency(trans: Boolean) {
+  def transparency(trans: Boolean) = {
     setBackground(if (trans) InterfaceColors.TRANSPARENT else InterfaceColors.TEXT_BOX_BACKGROUND)
     setOpaque(!trans)
   }
 
   def fontSize = _fontSize
-  def fontSize_=(size: Int) {
+  def fontSize_=(size: Int) = {
     this._fontSize = size
     if (isZoomed && originalFont != null) {
       val zoomDiff: Int = getFont.getSize - originalFont.getSize
@@ -52,11 +52,11 @@ class NoteWidget extends SingleErrorWidget with Editable {
     resetSizeInfo()
   }
 
-  override def setBounds(r: Rectangle) {
+  override def setBounds(r: Rectangle) = {
     if (r.width > 0) _width = r.width
     super.setBounds(r)
   }
-  override def setBounds(x: Int, y: Int, width: Int, height: Int) {
+  override def setBounds(x: Int, y: Int, width: Int, height: Int) = {
     if (width > 0) this._width = width
     super.setBounds(x, y, width, height)
   }
@@ -69,7 +69,7 @@ class NoteWidget extends SingleErrorWidget with Editable {
   }
   override def needsPreferredWidthFudgeFactor = false
 
-  override def paintComponent(g: Graphics) {
+  override def paintComponent(g: Graphics) = {
     super.paintComponent(g)
     g.setFont(getFont)
     val metrics: FontMetrics = g.getFontMetrics

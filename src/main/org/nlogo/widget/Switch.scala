@@ -35,31 +35,26 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
   add(channel)
   addMouseWheelListener(this)
   addMouseListener(new MouseAdapter {
-    override def mousePressed(e: MouseEvent) {
-      new Events.InputBoxLoseFocusEvent().raise(Switch.this)
-    }
+    override def mousePressed(e: MouseEvent) = new Events.InputBoxLoseFocusEvent().raise(Switch.this)
   })
 
   def isOn = constraint.defaultValue.booleanValue
 
-  def isOn_=(on: Boolean) {
-    if (isOn != on) {
+  def isOn_=(on: Boolean) = if (isOn != on) {
       constraint.defaultValue = on
       updateConstraints()
       doLayout()
     }
-  }
 
   def name = _name
-  def name_=(name: String) {
+  def name_=(name: String) = {
     this._name = name
     displayName(name)
     repaint()
   }
 
-  override def updateConstraints() {
-    if (_name.length > 0) { new Events.AddBooleanConstraintEvent(_name, isOn).raise(this) }
-  }
+  override def updateConstraints() = if (_name.length > 0)
+    new Events.AddBooleanConstraintEvent(_name, isOn).raise(this)
 
   override def getPreferredSize(font: Font): Dimension = {
     val fontMetrics: FontMetrics = getFontMetrics(font)
@@ -71,7 +66,7 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
   override def getMinimumSize = new Dimension(MINWIDTH, MINHEIGHT)
   override def getMaximumSize = new Dimension(10000, MINHEIGHT)
 
-  override def doLayout() {
+  override def doLayout() = {
     super.doLayout()
     val scaleFactor: Float = getHeight.asInstanceOf[Float] / MINHEIGHT.asInstanceOf[Float]
     channel.setSize((CHANNEL_WIDTH * scaleFactor).asInstanceOf[Int], (CHANNEL_HEIGHT * scaleFactor).asInstanceOf[Int])
@@ -80,7 +75,7 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
     dragger.setLocation(BORDERX + (channel.getWidth - dragger.getWidth) / 2, channel.getY + (if (isOn) (0.1 * channel.getHeight).asInstanceOf[Int] else (channel.getHeight - dragger.getHeight - (0.1 * channel.getHeight).asInstanceOf[Int])))
   }
 
-  override def paintComponent(g: Graphics) {
+  override def paintComponent(g: Graphics) = {
     super.paintComponent(g)
     val fontMetrics: FontMetrics = g.getFontMetrics
     val stringAscent: Int = fontMetrics.getMaxAscent
@@ -99,14 +94,14 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
       (getHeight - fontMetrics.getHeight - (2 * BORDERY)) / 2 + stringAscent + 1)
   }
 
-  def mouseWheelMoved(e: MouseWheelEvent) { isOn = ! (e.getWheelRotation >= 1) }
+  def mouseWheelMoved(e: MouseWheelEvent) = isOn = ! (e.getWheelRotation >= 1)
 
   protected class Dragger extends javax.swing.JPanel {
     setBackground(InterfaceColors.SWITCH_HANDLE)
     setBorder(org.nlogo.swing.Utils.createWidgetBorder)
     setOpaque(true)
     addMouseListener(new MouseAdapter {
-      override def mousePressed(e: MouseEvent) {
+      override def mousePressed(e: MouseEvent) = {
         new Events.InputBoxLoseFocusEvent().raise(Switch.this)
         isOn = ! isOn
       }
@@ -117,7 +112,7 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
     setOpaque(false)
     setBackground(org.nlogo.awt.Colors.mixColors(InterfaceColors.SWITCH_BACKGROUND, java.awt.Color.BLACK, 0.5))
     addMouseListener(new MouseAdapter {
-      override def mousePressed(e: MouseEvent) {
+      override def mousePressed(e: MouseEvent) = {
         new Events.InputBoxLoseFocusEvent().raise(Channel.this)
         if (org.nlogo.awt.Mouse.hasButton1(e)) {
           isOn = ! isOn
@@ -125,7 +120,7 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
       }
     })
 
-    override def paintComponent(g: Graphics) {
+    override def paintComponent(g: Graphics) = {
       val x: Int = (getWidth * 0.2).toInt
       val y: Int = (getHeight * 0.1).toInt
       val width: Int = (getWidth * 0.6).toInt
