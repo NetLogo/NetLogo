@@ -8,9 +8,7 @@ class AggregateManagerLite extends AggregateManagerInterface {
 
   private def unsupported = throw new UnsupportedOperationException
 
-  def load(lines: String, compiler: CompilerServices) {
-    source = Loader.load(lines, compiler)
-  }
+  def load(lines: String, compiler: CompilerServices) = source = Loader.load(lines, compiler)
 
   /// implementations of SourceOwner methods
   var source = ""

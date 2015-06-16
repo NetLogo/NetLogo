@@ -117,8 +117,7 @@ object Loader {
         None
     }
 
-  private def setSourceSink(rate: Rate, tokens: Tokenizer, lineMap: LineMap) {
-    tokens.next() match {
+  private def setSourceSink(rate: Rate, tokens: Tokenizer, lineMap: LineMap) = tokens.next() match {
       case WordToken("REF") =>
         rate.setSource(getSourceOrSink(tokens, lineMap))
         rate.setSink(
@@ -134,7 +133,6 @@ object Loader {
         rate.setSink(getSourceOrSink(tokens, lineMap))
         rate.setSource(getSourceOrSink(tokens, lineMap))
     }
-  }
 
   private def getSourceOrSink(tokens: Tokenizer, lineMap: LineMap): Stock =
     // the REF number points to the line containing the StockFigure. the Stock is on the following line,
