@@ -20,7 +20,7 @@ class _fileatend extends Reporter {
 class _fileclose extends Command {
   override def syntax =
     Syntax.commandSyntax
-  override def perform(context: Context) {
+  override def perform(context: Context) = {
     try
       if (workspace.fileManager.hasCurrentFile)
         workspace.fileManager.closeCurrentFile()
@@ -35,7 +35,7 @@ class _fileclose extends Command {
 class _filecloseall extends Command {
   override def syntax =
     Syntax.commandSyntax
-  override def perform(context: Context) {
+  override def perform(context: Context) = {
     try workspace.fileManager.closeAllFiles()
     catch {
       case ex: IOException =>
@@ -48,7 +48,7 @@ class _filecloseall extends Command {
 class _filedelete extends Command {
   override def syntax =
     Syntax.commandSyntax(Array(Syntax.StringType))
-  override def perform(context: Context) {
+  override def perform(context: Context) = {
     try
       workspace.fileManager.deleteFile(
         workspace.fileManager.attachPrefix(
@@ -88,7 +88,7 @@ class _fileexists extends Reporter {
 class _fileflush extends Command {
   override def syntax =
     Syntax.commandSyntax
-  override def perform(context: Context) {
+  override def perform(context: Context) = {
     try
       if (workspace.fileManager.hasCurrentFile)
         workspace.fileManager.flushCurrentFile()
@@ -103,7 +103,7 @@ class _fileflush extends Command {
 class _fileopen extends Command {
   override def syntax =
     Syntax.commandSyntax(Array(Syntax.StringType))
-  override def perform(context: Context) {
+  override def perform(context: Context) = {
     try
       // DefaultFileManager.openFile attaches the prefix for us, so we need not normalize our path
       // before calling that method - CLB 05/17/05
@@ -120,7 +120,7 @@ class _fileopen extends Command {
 class _fileprint extends Command {
   override def syntax =
     Syntax.commandSyntax(Array(Syntax.WildcardType))
-  override def perform(context: Context) {
+  override def perform(context: Context) = {
     try
       workspace.fileManager.ensureMode(
         org.nlogo.api.FileMode.Append)
@@ -185,7 +185,7 @@ class _filereadline extends Reporter {
 class _fileshow extends Command {
   override def syntax =
     Syntax.commandSyntax(Array(Syntax.WildcardType))
-  override def perform(context: Context) {
+  override def perform(context: Context) = {
     val s = args(0).report(context)
     try
       workspace.fileManager.ensureMode(FileMode.Append)
@@ -202,7 +202,7 @@ class _fileshow extends Command {
 class _filetype extends Command {
   override def syntax =
     Syntax.commandSyntax(Array(Syntax.WildcardType))
-  override def perform(context: Context) {
+  override def perform(context: Context) = {
     val s = args(0).report(context)
     try workspace.fileManager.ensureMode(FileMode.Append)
     catch {
@@ -218,7 +218,7 @@ class _filetype extends Command {
 class _filewrite extends Command {
   override def syntax =
     Syntax.commandSyntax(Array(Syntax.ReadableType))
-  override def perform(context: Context) {
+  override def perform(context: Context) = {
     val s = args(0).report(context)
     try
       workspace.fileManager.ensureMode(FileMode.Append)
