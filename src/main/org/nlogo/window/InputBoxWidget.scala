@@ -12,7 +12,7 @@ class InputBoxWidget(textArea: AbstractEditorArea, dialogTextArea: AbstractEdito
                 with org.nlogo.window.Events.PeriodicUpdateEvent.Handler {
   def propertySet = Properties.input
 
-  override def name(name: String, sendEvent: Boolean) {
+  override def name(name: String, sendEvent: Boolean) = {
     this.name_=(name)
     // I don't think anyone ever uses the display name, but let's keep it in sync
     // with the real name, just in case - ST 6/3/02
@@ -21,17 +21,14 @@ class InputBoxWidget(textArea: AbstractEditorArea, dialogTextArea: AbstractEdito
     widgetLabel.setText(name)
   }
 
-  def handle(e: org.nlogo.window.Events.PeriodicUpdateEvent) {
-    if (!editing) new org.nlogo.window.Events.InterfaceGlobalEvent(this, false, true, false, false).raise(this)
-  }
+  def handle(e: org.nlogo.window.Events.PeriodicUpdateEvent) = if (!editing)
+    new org.nlogo.window.Events.InterfaceGlobalEvent(this, false, true, false, false).raise(this)
 
-  override def valueObject(value: AnyRef, raiseEvent: Boolean) {
-    if (this.value != value) {
+  override def valueObject(value: AnyRef, raiseEvent: Boolean) = if (this.value != value) {
       text = Dump.logoObject(value)
       this.value = value
       if (!text.equals(textArea.getText())) textArea.setText(text)
       if (raiseEvent) new org.nlogo.window.Events.InterfaceGlobalEvent(this, false, false, true, false).raise(this)
       inputType.colorPanel(colorSwatch)
     }
-  }
 }

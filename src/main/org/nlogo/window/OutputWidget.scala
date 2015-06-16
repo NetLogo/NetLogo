@@ -33,8 +33,8 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
 
   // satisfy CommandCenterInterface, which we must implement in order
   // to be used in NetLogoComponent - ST 9/13/04
-  def repaintPrompt(){}
-  def cycleAgentType(forward:Boolean){}
+  def repaintPrompt() = {}
+  def cycleAgentType(forward:Boolean) = {}
 
   override def populateContextMenu(menu:javax.swing.JPopupMenu, p:java.awt.Point, source:java.awt.Component) = {
     // at least on Macs, Command-C to copy may not work, so this
@@ -47,7 +47,7 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
   // these are copied from the TrailDrawer, as is this code for breaking up
   // possible very long text into multiple cells and rows for Excel
   // CLB 7/15/05
-  def handle(e:org.nlogo.window.Events.ExportWorldEvent){
+  def handle(e:org.nlogo.window.Events.ExportWorldEvent) = {
     import org.nlogo.api.Dump
     e.writer.println(Dump.csv.encode("OUTPUT"))
     Dump.csv.stringToCSV(e.writer, outputArea.text.getText())

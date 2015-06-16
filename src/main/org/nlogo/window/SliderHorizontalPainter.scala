@@ -39,7 +39,7 @@ class SliderHorizontalPainter(private val slider:AbstractSliderWidget) extends S
     slider.addMouseWheelListener(this)
   }
 
-  override def dettach() {
+  override def dettach() = {
     slider.remove(handle)
     slider.remove(channel)
     slider.removeMouseWheelListener(this)
@@ -69,12 +69,12 @@ class SliderHorizontalPainter(private val slider:AbstractSliderWidget) extends S
       metrics.stringWidth(slider.valueString(slider.maximum - slider.increment)))
   }
 
-  override  def setToolTipText(text:String ) {
+  override  def setToolTipText(text:String ) = {
     handle.setToolTipText(text)
     channel.setToolTipText(text)
   }
 
-  override def doLayout() {
+  override def doLayout() = {
     val scaleFactor =
       if (slider.getBorder() != null) slider.getHeight.toFloat / MIN_HEIGHT.toFloat
       else slider.getHeight.toFloat / 18.toFloat
@@ -91,16 +91,15 @@ class SliderHorizontalPainter(private val slider:AbstractSliderWidget) extends S
 
   /// respond to user actions
 
-  def handlePositionChanged(x:Int, buttonRelease:Boolean){
-    if(!slider.anyErrors) try{
+  def handlePositionChanged(x:Int, buttonRelease:Boolean) = if(!slider.anyErrors)
+    try{
       val newValue = slider.minimum + x * scaleFactor
       slider.value_=(slider.coerceValue(newValue), buttonRelease)
     }
     catch{ case e:LogoException => org.nlogo.util.Exceptions.ignore(e) }
-  }
 
-  def incrementClick(x:Int){
-    if(!slider.anyErrors) try {
+  def incrementClick(x:Int) = if(!slider.anyErrors)
+    try {
       val thisRect = channel.getBounds()
       val handleRect = handle.getBounds()
       val center = handleRect.x + handle.getBounds().width / 2
@@ -108,14 +107,13 @@ class SliderHorizontalPainter(private val slider:AbstractSliderWidget) extends S
       else slider.value = (slider.coerceValue(slider.value - slider.increment))
     }
     catch{ case ex:LogoException=> org.nlogo.util.Exceptions.ignore(ex)  }
-  }
 
   private def scaleFactor = {
     (slider.maximum - slider.minimum) /
             (slider.getBounds().width - LEFT_MARGIN - RIGHT_MARGIN - CHANNEL_LEFT_MARGIN - CHANNEL_RIGHT_MARGIN)
   }
 
-  override def paintComponent(g: Graphics) {
+  override def paintComponent(g: Graphics) = {
     val padNameHeight = 3
     val nameXOffset = 10
     val rect = slider.getBounds()
@@ -138,19 +136,18 @@ class SliderHorizontalPainter(private val slider:AbstractSliderWidget) extends S
     }
   }
 
-  def mouseWheelMoved(e: MouseWheelEvent) {
-    if(!slider.anyErrors) try {
+  def mouseWheelMoved(e: MouseWheelEvent) = if(!slider.anyErrors)
+    try {
       if (e.getWheelRotation() >= 1) slider.value = slider.coerceValue(slider.value - slider.increment)
       else slider.value = slider.coerceValue(slider.value + slider.increment)
     }
     catch { case ex: LogoException => org.nlogo.util.Exceptions.ignore(ex) }
-  }
 
   class Channel extends JComponent {
     setOpaque(false)
     setBackground(org.nlogo.awt.Colors.mixColors(InterfaceColors.SLIDER_BACKGROUND, Color.BLACK, 0.5))
     addMouseListener(new MouseAdapter() {
-      override def mousePressed(e: MouseEvent) {
+      override def mousePressed(e: MouseEvent) = {
         new Events.InputBoxLoseFocusEvent().raise(Channel.this)
         if ((!e.isPopupTrigger) && org.nlogo.awt.Mouse.hasButton1(e)) incrementClick(e.getX())
       }
@@ -167,7 +164,7 @@ class SliderHorizontalPainter(private val slider:AbstractSliderWidget) extends S
       loc
     }
 
-    override def paintComponent(g: Graphics) {
+    override def paintComponent(g: Graphics) = {
       val x = CHANNEL_LEFT_MARGIN
       val y = 0
       val width = getWidth - CHANNEL_LEFT_MARGIN - CHANNEL_RIGHT_MARGIN
@@ -184,11 +181,11 @@ class SliderHorizontalPainter(private val slider:AbstractSliderWidget) extends S
     setBorder(org.nlogo.swing.Utils.createWidgetBorder())
     setOpaque(true)
     addMouseListener(new MouseAdapter() {
-      override def mousePressed(e: MouseEvent) {new Events.InputBoxLoseFocusEvent().raise(Handle.this)}
-      override def mouseReleased(e: MouseEvent) {changed(e.getX, true)}
+      override def mousePressed(e: MouseEvent) = new Events.InputBoxLoseFocusEvent().raise(Handle.this)
+      override def mouseReleased(e: MouseEvent) = changed(e.getX, true)
     })
     addMouseMotionListener(new MouseMotionAdapter() {
-      override def mouseDragged(e: MouseEvent) {changed(e.getX, false)}
+      override def mouseDragged(e: MouseEvent) = changed(e.getX, false)
     })
 
     // make tooltips appear in the same location onscreen as they do
@@ -201,8 +198,7 @@ class SliderHorizontalPainter(private val slider:AbstractSliderWidget) extends S
       }
       loc
     }
-    private def changed(mouseX: Int, buttonReleased: Boolean) {
+    private def changed(mouseX: Int, buttonReleased: Boolean) =
       handlePositionChanged(mouseX + getX - getWidth / 2, buttonReleased)
-    }
   }
 }

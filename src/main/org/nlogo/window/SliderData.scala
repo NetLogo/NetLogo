@@ -10,8 +10,8 @@ class SliderData(var minimum:Double = 0, var maximum:Double=100, var increment: 
 
   private var _value = 50d
   def value = _value
-  def value_=(value: Double) {valueSetter(value)}
-  def value_=(value: Double, buttonRelease: Boolean) {valueSetter(value)}
+  def value_=(value: Double) = valueSetter(value)
+  def value_=(value: Double, buttonRelease: Boolean) = valueSetter(value)
   def valueSetter(v: Double): Boolean = {
     if (v!=_value) {
       this._value = v

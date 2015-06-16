@@ -7,7 +7,7 @@ import org.nlogo.nvm.HaltException
 
 object ThreadUtils {
   /// asking for stuff to happen on the event thread
-  val DO_NOTHING = new CommandRunnable() {def run() {}}
+  val DO_NOTHING = new CommandRunnable() {def run() = {}}
 
   @throws(classOf[LogoException])
   def waitForQueuedEvents(workspace: GUIWorkspace): Unit = {waitFor(workspace, DO_NOTHING)}
@@ -25,9 +25,8 @@ object ThreadUtils {
   }
 
   @throws(classOf[LogoException])
-  def waitFor(workspace: GUIWorkspace, runnable: CommandRunnable) {
+  def waitFor(workspace: GUIWorkspace, runnable: CommandRunnable) =
     waitForResult(workspace, reporter(runnable.run _))
-  }
 
   private class Result[T] {
     @volatile var done = false // NOPMD pmd doesn't like 'volatile'
@@ -45,7 +44,7 @@ object ThreadUtils {
     // - ST 8/13/03,8/16/03
     try {
       org.nlogo.awt.EventQueue.invokeLater(new Runnable() {
-        def run() {
+        def run() =
           try result.value = runnable.run()
           catch {
             case ex: LogoException => result.ex = ex
@@ -55,7 +54,6 @@ object ThreadUtils {
             result.done = true
             workspace.world.synchronized {workspace.world.notifyAll()}
           }
-        }
       })
       // the while loop here is necessary because
       // notify() might actually get called before

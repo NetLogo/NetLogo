@@ -58,18 +58,16 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
   protected var text = ""
   protected var value: AnyRef = ""
   def valueObject = value
-  def valueObject(value: AnyRef) {valueObject(value, false)}
-  def valueObject(value: AnyRef, raiseEvent: Boolean) {
+  def valueObject(value: AnyRef): Unit = valueObject(value, false)
+  def valueObject(value: AnyRef, raiseEvent: Boolean) = {
     text = Dump.logoObject(value)
     this.value = value
     if (text != textArea.getText) textArea.setText(text)
   }
-  protected def inputText(input: Object) {
-    if (input != null) valueObject(input, true)
-  }
+  protected def inputText(input: Object) = if (input != null) valueObject(input, true)
   // multiline property
   protected var multiline = false
-  def multiline(multiline: Boolean) {
+  def multiline(multiline: Boolean): Unit = {
     this.multiline = multiline
     textArea.setEditable(!inputType.changeVisible)
     changeButton.setVisible(inputType.changeVisible)
@@ -81,8 +79,8 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
   var nameChanged = false
 
   /// name needs a wrapper because we don't want to recompile until editFinished()
-  def name(name: String) {this.name(name, true)}
-  def name(name: String, sendEvent: Boolean) {
+  def name(name: String): Unit = this.name(name, true)
+  def name(name: String, sendEvent: Boolean): Unit = {
     this.name = name
     // I don't think anyone ever uses the display name, but let's keep it in sync
     // with the real name, just in case - ST 6/3/02
@@ -91,13 +89,13 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
   }
 
   def nameWrapper = name
-  def nameWrapper(name: String) {
+  def nameWrapper(name: String) = {
     nameChanged = name != this.name || nameChanged
     this.name(name, false)
   }
 
   protected var editing = false
-  protected def stopEdit() {
+  protected def stopEdit() = {
     editing = false
     transferFocus()
     nextComponent.requestFocus()
@@ -156,11 +154,11 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
     // focus listener for in place editing
     textArea.addFocusListener(
       new FocusListener() {
-        def focusGained(e: FocusEvent) {
+        def focusGained(e: FocusEvent) = {
           _hasFocus = true
           if (!multiline) editing = true
         }
-        def focusLost(e: FocusEvent) {
+        def focusLost(e: FocusEvent) = {
           _hasFocus = false
           if (editing) {
             try inputText(inputType.readValue(InputBox.this.textArea.getText))
@@ -180,19 +178,17 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
   }
 
   private class EditActionListener extends ActionListener {
-    def actionPerformed(e: ActionEvent) {
-      if (!editing) {
+    def actionPerformed(e: ActionEvent) = if (!editing) {
         editing = true
         dialog = new InputDialog(org.nlogo.awt.Hierarchy.getFrame(InputBox.this), name, `inputType`, editDialogTextArea)
         dialog.setVisible(true)
         editDialogTextArea.setText(textArea.getText)
         editDialogTextArea.selectAll()
       }
-    }
   }
 
   private class SelectColorActionListener extends ActionListener {
-    def actionPerformed(e: ActionEvent) {
+    def actionPerformed(e: ActionEvent) = {
       val colorDialog = new ColorDialog(org.nlogo.awt.Hierarchy.getFrame(InputBox.this), true)
       valueObject(colorDialog.showInputBoxDialog(
         if (value.isInstanceOf[Double])
@@ -202,7 +198,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
     }
   }
 
-  private def showError(ex: Exception) {
+  private def showError(ex: Exception) = {
     val frame = org.nlogo.awt.Hierarchy.getFrame(this)
     if (frame != null) {
       var msg = ex.getMessage
@@ -213,27 +209,24 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
     }
   }
 
-  def handle(e:Events.InputBoxLoseFocusEvent){
-    if(_hasFocus) transferFocus()
-  }
+  def handle(e:Events.InputBoxLoseFocusEvent) = if(_hasFocus) transferFocus()
 
   private class CancelAction extends AbstractAction {
-    def actionPerformed(e:ActionEvent){
+    def actionPerformed(e:ActionEvent) = {
       textArea.setText(text)
       stopEdit()
     }
   }
 
   private class TransferFocusAction extends AbstractAction {
-    def actionPerformed(e:ActionEvent) {
+    def actionPerformed(e:ActionEvent) = {
       transferFocus()
       nextComponent.requestFocus()
     }
   }
 
-  override def updateConstraints() {
-    if (name.length > 0) new org.nlogo.window.Events.AddInputBoxConstraintEvent(name, constraint).raise(this)
-  }
+  override def updateConstraints() = if (name.length > 0)
+    new org.nlogo.window.Events.AddInputBoxConstraintEvent(name, constraint).raise(this)
 
   override def editFinished() = {
     super.editFinished()
@@ -247,7 +240,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
     true
   }
 
-  def typeOptions(typeOptions: org.nlogo.api.Options[InputType]) {
+  def typeOptions(typeOptions: org.nlogo.api.Options[InputType]): Unit = {
     this.typeOptions = typeOptions
     if (inputType.displayName != typeOptions.chosenValue.displayName) {
       inputType = typeOptions.chosenValue
@@ -308,7 +301,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
     if(contents == "NIL") contents = ""
     if(strings.length > 8) multiline(strings(8) == "1")
 
-    def setType(i: String) {
+    def setType(i: String) = {
       this.inputType = InputType.create(i match{
         case "Reporter" => "String (reporter)"
         case "Commands" => "String (commands)"
@@ -340,14 +333,13 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
   override def zoomSubcomponents = true
   override def getMaximumSize = null
 
-  override def export(exportPath: String) {
+  override def export(exportPath: String) =
     try org.nlogo.api.FileIO.writeFile(exportPath, text, true)
     catch {
       case ex: java.io.IOException =>
         JOptionPane.showMessageDialog(this,
           "Export failed.  Error:\n" + ex.getMessage, "Export Failed", JOptionPane.ERROR_MESSAGE)
     }
-  }
 
   // based on MoreButton in ViewControlStrip.java
   protected class NLButton(title:String) extends JButton(title) {
@@ -358,14 +350,14 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
     setOpaque(false)
     setFont(new Font(platformFont, Font.PLAIN, 10))
     // without this it looks funny on Windows - ST 9/18/03
-    override def updateUI() { setUI(new BasicButtonUI()) }
+    override def updateUI() = setUI(new BasicButtonUI())
   }
 
   protected class InputDialog(parent: Frame, title: String, inputType: InputType,
                               textArea: AbstractEditorArea) extends JDialog(parent, title) {
     private val textArea1: AbstractEditorArea = textArea
     private val okAction = new AbstractAction(I18N.gui.get("common.buttons.ok")) {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent) =
         try{
           val value = inputType.readValue(textArea1.getText)
           inputText(value)
@@ -377,11 +369,10 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
           case ex@(_:LogoException | _:CompilerException | _:ValueConstraint.Violation) =>
             showError(ex.asInstanceOf[Exception])
         }
-      }
     }
 
     private val cancelAction = new AbstractAction(I18N.gui.get("common.buttons.cancel")) {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent) = {
         dispose()
         editing = false
         dialog = null
@@ -390,13 +381,12 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
 
     private val applyAction =
     new AbstractAction("Apply") {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent) =
         try inputText(inputType.readValue(textArea1.getText))
         catch {
           case ex@(_:LogoException | _:CompilerException | _:ValueConstraint.Violation) =>
             showError(ex.asInstanceOf[Exception])
         }
-      }
     }
     locally {
       setResizable(true)
@@ -432,14 +422,14 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
       pack()
       org.nlogo.awt.Positioning.center(this, parent)
       addWindowListener(new WindowAdapter() {
-        override def windowClosing(e: WindowEvent) {
+        override def windowClosing(e: WindowEvent) = {
           dispose()
           editing = false
           dialog = null
         }
       })
     }
-    def setText(text: String) {
+    def setText(text: String) = {
       textArea1.setText(text)
       textArea1.selectAll()
     }
@@ -455,24 +445,22 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
       else new StringInputType()
     }
 
-    def addTypeOptions(options:Options[InputType]){
-      baseNames.map{ name =>
+    def addTypeOptions(options:Options[InputType]) = baseNames.map{ name =>
         val t = create(name)
         typeOptions.addOption(t.displayName, t)
       }
-    }
   }
 
   case class InputType(baseName: String, i18nKey: String, editorKit: EditorKit, font: Font) {
     def defaultValue: AnyRef = ""
     def multiline = InputBox.this.multiline
-    def multiline(newMultiline: Boolean) {InputBox.this.multiline(newMultiline)}
+    def multiline(newMultiline: Boolean) = InputBox.this.multiline(newMultiline)
     override def toString = displayName
     def saveName = baseName
     def displayName = I18N.gui.get("edit.input.type." + i18nKey)
     def getEditorKit = editorKit
     def getFont = font
-    def colorPanel(panel: JButton) {
+    def colorPanel(panel: JButton) = {
       panel.setVisible(false)
       scroller.setVisible(true)
     }
@@ -532,7 +520,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
   private class ColorInputType(kit: EditorKit) extends InputType("Color", "color", kit, plainFont) {
     @throws(classOf[CompilerException])
     override def readValue(text: String) = compiler.readNumberFromString(text)
-    override def colorPanel(panel: JButton) {
+    override def colorPanel(panel: JButton) = {
       panel.setVisible(true)
       scroller.setVisible(false)
       panel.setOpaque(true)

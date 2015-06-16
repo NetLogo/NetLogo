@@ -11,7 +11,7 @@ with Events.ZoomedEvent.Handler {
   def zoomFactor = 1.0 + 0.1 * zoomSteps
   def zoomSubcomponents = true
   def zoomTarget: java.awt.Component = this
-  def handle(e: org.nlogo.window.Events.ZoomedEvent) {
+  def handle(e: org.nlogo.window.Events.ZoomedEvent) = {
     if (isShowing) { // ignore unless we're the front tab
       val oldFactor = zoomFactor
       _zoomSteps = e.action match {

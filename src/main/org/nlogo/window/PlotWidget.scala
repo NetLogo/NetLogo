@@ -29,7 +29,7 @@ object PlotWidget{
 class PlotWidget(plot:Plot, plotManager: PlotManagerInterface) extends AbstractPlotWidget(plot, plotManager)
         with PeriodicUpdateEvent.Handler {
 
-  def handle(e: PeriodicUpdateEvent){ repaintIfNeeded() }
+  def handle(e: PeriodicUpdateEvent) = repaintIfNeeded()
 
   override def hasContextMenu = true
   override def exportable = true
@@ -57,7 +57,7 @@ class PlotWidget(plot:Plot, plotManager: PlotManagerInterface) extends AbstractP
     RichJMenuItem("Clear"){ clear() }
   )
 
-  def repaintIfNeeded(){
+  def repaintIfNeeded() = {
     canvas.repaintIfNeeded()
     refreshGUI()
   }

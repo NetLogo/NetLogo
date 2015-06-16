@@ -61,7 +61,7 @@ abstract class Widget extends JPanel {
   }
   def extraMenuItems: List[JMenuItem] = Nil
 
-  def addPopupListeners(popupListener: MouseListener){ addPopupListeners(this, popupListener) }
+  def addPopupListeners(popupListener: MouseListener): Unit = addPopupListeners(this, popupListener)
   def addPopupListeners(): Unit = { addPopupListeners(this, popupListener) }
   private def addPopupListeners(component: Component, popupListener: MouseListener): Unit = {
     component.addMouseListener(popupListener)
@@ -92,8 +92,8 @@ abstract class Widget extends JPanel {
   }
 
   private final val popupListener: MouseListener = new MouseAdapter {
-    override def mousePressed(e: MouseEvent){ if (e.isPopupTrigger) { doPopup(e) } }
-    override def mouseReleased(e: MouseEvent){ if (e.isPopupTrigger) { doPopup(e) } }
+    override def mousePressed(e: MouseEvent) = if (e.isPopupTrigger) { doPopup(e) }
+    override def mouseReleased(e: MouseEvent) = if (e.isPopupTrigger) { doPopup(e) }
   }
 
   def findWidgetContainer: WidgetContainer =

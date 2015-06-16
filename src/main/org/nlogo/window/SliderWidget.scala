@@ -38,18 +38,18 @@ trait AbstractSliderWidget extends MultiErrorWidget {
   def constraint = sliderData.constraint
   def setSliderConstraint(con: SliderConstraint) = sliderData.setSliderConstraint(con)
   def name = _name
-  def name_=(name:String) { _name = name; repaint() }
+  def name_=(name:String) = { _name = name; repaint() }
   def minimum = sliderData.minimum
   def maximum = sliderData.maximum
   def effectiveMaximum = sliderData.effectiveMaximum
   def increment = sliderData.increment
   def value = sliderData.value
-  def value_=(d:Double){
+  def value_=(d:Double) = {
     sliderData.value = d;
     revalidate();
     repaint()
   }
-  def value_=(d:Double, buttonRelease:Boolean){
+  def value_=(d:Double, buttonRelease:Boolean) = {
     sliderData.value_=(d, buttonRelease);
     revalidate();
     repaint()
@@ -57,7 +57,7 @@ trait AbstractSliderWidget extends MultiErrorWidget {
   def coerceValue(value: Double): Double = sliderData.coerceValue(value)
 
   def units = _units
-  def units_=(units:String){ _units = units; repaint() }
+  def units_=(units:String) = { _units = units; repaint() }
 
   def valueSetter(v: Double) = {
     if (sliderData.valueSetter(v)) {
@@ -68,7 +68,7 @@ trait AbstractSliderWidget extends MultiErrorWidget {
     else false
   }
 
-  override def setToolTipText(text:String){
+  override def setToolTipText(text:String) = {
     super.setToolTipText(text)
     painter.setToolTipText(text)
   }
@@ -130,7 +130,7 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast) ext
       new InterfaceGlobalEvent(this, false, false, true, false).raise(this)
     }
   }
-  override def value_=(v: Double, buttonRelease: Boolean) {
+  override def value_=(v: Double, buttonRelease: Boolean) = {
     val valueChanged = v != value || v < minimum || v > effectiveMaximum
     if (valueChanged) {
       super.value_=(v, buttonRelease)
@@ -141,24 +141,22 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast) ext
     }
   }
 
-  def valueObject(v: Object) {
-    if (v.isInstanceOf[Double]) { value_=(v.asInstanceOf[Double], true) }
-  }
+  def valueObject(v: Object) = if (v.isInstanceOf[Double]) { value_=(v.asInstanceOf[Double], true) }
 
   // NAME RELATED METHODS
   private var nameChanged: Boolean = false
   def nameWrapper: String = name
-  def nameWrapper(n: String) {
+  def nameWrapper(n: String) = {
     nameChanged = !n.equals(name) || nameChanged
     setName(n, false)
   }
 
-  override def name_=(n: String){
+  override def name_=(n: String) = {
     setName(n, true)
     repaint()
   }
 
-  private def setName(name: String, sendEvent: Boolean) {
+  private def setName(name: String, sendEvent: Boolean) = {
     this._name=name
     displayName(name)
     if (sendEvent) new InterfaceGlobalEvent(this, true, false, false, false).raise(this)
@@ -193,11 +191,10 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast) ext
     false
   }
 
-  override def updateConstraints() {
+  override def updateConstraints() =
     new AddSliderConstraintEvent(this, name, minimumCode, maximumCode, incrementCode, defaultValue).raise(this)
-  }
 
-  def setConstraintError(constraintField: String, ex: SliderConstraintException) {
+  def setConstraintError(constraintField: String, ex: SliderConstraintException) = {
     super.error(constraintField, ex)
     setForeground(java.awt.Color.RED)
   }
@@ -209,7 +206,7 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast) ext
     updateConstraints()
     this.value=defaultValue
   }
-  def handle(e: PeriodicUpdateEvent) {
+  def handle(e: PeriodicUpdateEvent) = {
     new InterfaceGlobalEvent(this, false, true, false, false).raise(this)
     if(!anyErrors) this.setSliderConstraint(constraint)
   }

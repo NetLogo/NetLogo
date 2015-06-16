@@ -16,15 +16,14 @@ object ModelLoader {
     Loader(linkParent).loadHelper(modelPath, modelType, map)
   }
   @throws(classOf[InvalidVersionException])
-  def load(linkParent: Container, modelPath: String, modelType: ModelType, source: String) {
+  def load(linkParent: Container, modelPath: String, modelType: ModelType, source: String) =
     Loader(linkParent).loadHelper(modelPath, modelType, ModelReader.parseModel(source))
-  }
 
   private case class Loader(linkParent: Container) extends org.nlogo.window.Event.LinkChild {
     def getLinkParent = linkParent
 
     @throws(classOf[InvalidVersionException])
-    def loadHelper(modelPath: String, modelType: ModelType, map: java.util.Map[ModelSection, Array[String]]) {
+    def loadHelper(modelPath: String, modelType: ModelType, map: java.util.Map[ModelSection, Array[String]]) = {
       if (map == null) throw new InvalidVersionException()
       val version = ModelReader.parseVersion(map)
       if (version == null || !version.startsWith("NetLogo")) throw new InvalidVersionException()

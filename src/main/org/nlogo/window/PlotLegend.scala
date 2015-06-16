@@ -15,20 +15,18 @@ extends javax.swing.JPanel {
 
   var open = false
 
-  def addPen(pen: PlotPen) {
-    if (open) {
+  def addPen(pen: PlotPen) = if (open) {
       if (pen.inLegend) {
         add(new LegendItem(pen) { setFont(fontSource.getFont) })
       }
       revalidate()
     }
-  }
 
-  def toggle() { open = !open; refresh() }
-  def refresh() { clearGUI(); if (open) fillGUI() }
-  def clearGUI() { removeAll(); revalidate() }
+  def toggle() = { open = !open; refresh() }
+  def refresh() = { clearGUI(); if (open) fillGUI() }
+  def clearGUI() = { removeAll(); revalidate() }
 
-  private def fillGUI() {
+  private def fillGUI() = {
     for (pen <- plot.pens; if (pen.inLegend)) {
       add(new LegendItem(pen) { setFont(fontSource.getFont) })
     }
@@ -38,7 +36,7 @@ extends javax.swing.JPanel {
   private class LegendItem(pen: PlotPen) extends javax.swing.JComponent {
     org.nlogo.awt.Fonts.adjustDefaultFont(this)
 
-    override def paintComponent(g: java.awt.Graphics) {
+    override def paintComponent(g: java.awt.Graphics) = {
       val ascent = g.getFontMetrics.getMaxAscent
       g.setColor(new java.awt.Color(pen.color))
       g.fillRect(0, 0, ascent, ascent)

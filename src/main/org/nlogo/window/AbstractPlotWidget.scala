@@ -135,7 +135,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     refreshGUI()
   }
 
-  def refreshGUI() {
+  def refreshGUI() = {
     def getLabel(d:Double) = if(d.toString.endsWith(".0")) d.toString.dropRight(2) else d.toString
     xAxis.setMin(getLabel(plot.xMin))
     xAxis.setMax(getLabel(plot.xMax))
@@ -151,29 +151,27 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   override def classDisplayName = I18N.gui.get("tabs.run.widgets.plot")
   override def needsPreferredWidthFudgeFactor = false
   override def zoomSubcomponents = true
-  def makeDirty(){
+  def makeDirty() =
     // yuck! plot calls makeDirty when its being constructed.
     // but canvas isnt created yet.
     if(fullyConstructed) canvas.makeDirty()
-  }
+
   override def helpLink = Some("docs/programming.html#plotting")
   def propertySet = Properties.plot
   def showLegend = legend.open
-  def showLegend(open: Boolean){ legend.open=open }
+  def showLegend(open: Boolean) = legend.open=open
 
   /// some stuff relating to plot pen editing
   def editPlotPens: List[PlotPen] = plot.pens
-  def editPlotPens(pens: List[PlotPen]){
-    if(! (plot.pens eq pens)) plot.pens = pens
-  }
+  def editPlotPens(pens: List[PlotPen]) = if(! (plot.pens eq pens)) plot.pens = pens
 
   ///
-  def togglePenList(){ legend.toggle }
-  def clear(){ plot.clear; legend.refresh }
+  def togglePenList() = legend.toggle
+  def clear() = { plot.clear; legend.refresh }
 
   /// these exist to support editing
   def plotName = plot.name
-  def plotName(name: String){
+  def plotName(name: String) = {
     plot.name(name)
     displayName = plot.name
     nameLabel.setText(name)
@@ -181,38 +179,38 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
 
   private var _xAxisLabel: String = ""
   def xLabel = xAxis.getLabel
-  def xLabel(label: String){
+  def xLabel(label: String) = {
     _xAxisLabel = label
     xAxis.setLabel(_xAxisLabel)
   }
 
   private var _yAxisLabel: String = ""
   def yLabel = yAxis.getLabel
-  def yLabel(label: String){
+  def yLabel(label: String) = {
     _yAxisLabel = label
     yAxis.setLabel(_yAxisLabel)
   }
 
   def setupCode = plot.setupCode
-  def setupCode(setupCode: String){ plot.setupCode=setupCode }
+  def setupCode(setupCode: String) = plot.setupCode=setupCode
 
   def updateCode = plot.updateCode
-  def updateCode(updateCode: String){ plot.updateCode=updateCode }
+  def updateCode(updateCode: String) = plot.updateCode=updateCode
 
   def defaultXMin = plot.defaultXMin
-  def defaultXMin(defaultXMin: Double){ plot.defaultXMin=defaultXMin }
+  def defaultXMin(defaultXMin: Double) = plot.defaultXMin=defaultXMin
 
   def defaultYMin = plot.defaultYMin
-  def defaultYMin(defaultYMin: Double){ plot.defaultYMin=defaultYMin }
+  def defaultYMin(defaultYMin: Double) = plot.defaultYMin=defaultYMin
 
   def defaultXMax = plot.defaultXMax
-  def defaultXMax(defaultXMax: Double){ plot.defaultXMax=defaultXMax }
+  def defaultXMax(defaultXMax: Double) = plot.defaultXMax=defaultXMax
 
   def defaultYMax = plot.defaultYMax
-  def defaultYMax(defaultYMax: Double){ plot.defaultYMax=defaultYMax }
+  def defaultYMax(defaultYMax: Double) = plot.defaultYMax=defaultYMax
 
   def defaultAutoPlotOn = plot.defaultAutoPlotOn
-  def defaultAutoPlotOn(defaultAutoPlotOn: Boolean){ plot.defaultAutoPlotOn=defaultAutoPlotOn }
+  def defaultAutoPlotOn(defaultAutoPlotOn: Boolean) = plot.defaultAutoPlotOn=defaultAutoPlotOn
 
   /// sizing
   override def getMinimumSize = AbstractPlotWidget.MIN_SIZE
@@ -239,7 +237,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     s.toString
   }
 
-  def savePens(s: StringBuilder){
+  def savePens(s: StringBuilder) = {
     import org.nlogo.api.StringUtils.escapeString
     for (pen <- plot.pens; if (!pen.temporary)) {
       s.append("\"" + escapeString(pen.name) + "\" " +
@@ -269,23 +267,20 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     image
   }
 
-  private def recolor() {
+  private def recolor() =
     nameLabel.setForeground(if(anyErrors) java.awt.Color.RED else java.awt.Color.BLACK)
-  }
 
-  def handle(e: AfterLoadEvent){
+  def handle(e: AfterLoadEvent) = {
     plotManager.compilePlot(plot)
     recolor()
   }
 
-  def handle(e: WidgetRemovedEvent){ if(e.widget == this){ plotManager.forgetPlot(plot) } }
+  def handle(e: WidgetRemovedEvent) = if(e.widget == this) plotManager.forgetPlot(plot)
 
-  def handle(e:org.nlogo.window.Events.CompiledEvent){
-    if(e.sourceOwner.isInstanceOf[ProceduresInterface]){
+  def handle(e:org.nlogo.window.Events.CompiledEvent) = if(e.sourceOwner.isInstanceOf[ProceduresInterface]){
       plotManager.compilePlot(plot)
       recolor()
     }
-  }
 
   // error handling
   def anyErrors: Boolean = plotManager.hasErrors(plot)
@@ -294,7 +289,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     case "setupCode" => plotManager.getPlotSetupError(plot)
     case "updateCode" => plotManager.getPlotUpdateError(plot)
   }).orNull
-  def error(key: Object, e: Exception) { throw new UnsupportedOperationException }
+  def error(key: Object, e: Exception) = throw new UnsupportedOperationException
 
   override def editFinished: Boolean = {
     super.editFinished
@@ -349,9 +344,9 @@ object AbstractPlotWidget {
     org.nlogo.awt.Fonts.adjustDefaultFont(label)
     org.nlogo.awt.Fonts.adjustDefaultFont(max)
 
-    def setLabel(text: String) {label.setText(text)}
-    def setMax(text: String) {max.setText(text)}
-    def setMin(text: String) {min.setText(text)}
+    def setLabel(text: String) = label.setText(text)
+    def setMax(text: String) = max.setText(text)
+    def setMin(text: String) = min.setText(text)
     def getLabel = label.getText
   }
 
@@ -389,10 +384,10 @@ object AbstractPlotWidget {
     org.nlogo.awt.Fonts.adjustDefaultFont(label)
     org.nlogo.awt.Fonts.adjustDefaultFont(max)
 
-    def setMin(text: String) {min.setText(text)}
+    def setMin(text: String) = min.setText(text)
     def setMax(text: String): Unit = {max.setText(text)}
     def getLabel = labelText
-    def setLabel(text: String) {
+    def setLabel(text: String) = {
       labelText = text
       labelIcon.setLabel(labelText)
       label.repaint()

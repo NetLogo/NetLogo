@@ -92,15 +92,14 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   // agentClass from outside of this class anyway.
   // the ui edits work through agent options, which now just set the button type
   override def agentClass = buttonType.agentClass
-  override def agentClass(c:Class[_ <: Agent]) { /** ignoring, no one should call this. */ }
+  override def agentClass(c:Class[_ <: Agent]) = { /** ignoring, no one should call this. */ }
   def agentOptions = buttonType.toAgentOptions
-  def agentOptions(newAgentOptions:Options[String]){
+  def agentOptions(newAgentOptions:Options[String]): Unit =
     if (newAgentOptions.chosenValue != this.agentOptions.chosenValue){
       this.buttonType = ButtonType(newAgentOptions.chosenValue)
       recompile()
       repaint()
     }
-  }
 
   var foreverOn = false
   var goTime = false
@@ -108,7 +107,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
 
   private var _buttonUp = true
   def buttonUp = _buttonUp
-  def buttonUp_=(newButtonUp:Boolean){
+  def buttonUp_=(newButtonUp:Boolean) = {
     if(newButtonUp) foreverOn = false
     _buttonUp = newButtonUp
     if(buttonUp) setBorder(widgetBorder)
@@ -123,41 +122,33 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
 
   protected var _forever = false
   def forever = _forever
-  def forever_=(newForever: Boolean){
-    if(newForever != _forever){
+  def forever_=(newForever: Boolean) = if(newForever != _forever){
       _forever = newForever
       stopping = false
       recompile()
       repaint()
     }
-  }
 
   /// keyboard stuff
   private var _actionKey: Option[Char] = None
   def actionKey = _actionKey.getOrElse(0.toChar)
-  def actionKey_=(newActionKey:Char) {
-    _actionKey = newActionKey match {
+  def actionKey_=(newActionKey:Char) = _actionKey = newActionKey match {
       case 0 => None
       case _ => Some(newActionKey)
     }
-  }
   private def actionKeyString = _actionKey.map(_.toString).getOrElse("")
 
   private var _keyEnabled = false
   def keyEnabled = _keyEnabled
-  def keyEnabled(newKeyEnabled:Boolean){
-    if(_keyEnabled != newKeyEnabled){
+  def keyEnabled(newKeyEnabled:Boolean) = if(_keyEnabled != newKeyEnabled){
       _keyEnabled = newKeyEnabled
       repaint()
     }
-  }
 
-  def keyTriggered(){
-    if (error == null){
+  def keyTriggered() = if (error == null){
       buttonUp = false
       respondToClick(true)
     }
-  }
 
   /// mouse handlers
 
@@ -167,17 +158,16 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   // a normal click. - ST 1/3/06
   private var lastMousePressedWasPopupTrigger = false
 
-  def mouseReleased(e:MouseEvent){
+  def mouseReleased(e:MouseEvent) =
     if (error == null && ! e.isPopupTrigger() && isEnabled() &&
             ! lastMousePressedWasPopupTrigger && ! disabledWaitingForSetup){
       e.translatePoint(getX(), getY())
       respondToClick(getBounds().contains(e.getPoint()))
     }
-  }
 
   private def disabledWaitingForSetup = goTime && ! setupFinished
 
-  private def respondToClick(inBounds: Boolean) {
+  private def respondToClick(inBounds: Boolean) =
     if(disabledWaitingForSetup){
       buttonUp = true
     }
@@ -195,15 +185,14 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
         if (inBounds) action()
       }
     }
-  }
 
-  def mousePressed(e: MouseEvent) {
+  def mousePressed(e: MouseEvent) = {
     new Events.InputBoxLoseFocusEvent().raise(this)
     lastMousePressedWasPopupTrigger = e.isPopupTrigger()
     if (error == null && !e.isPopupTrigger && hasButton1(e) && isEnabled && !disabledWaitingForSetup) buttonUp = false
   }
 
-  def mouseDragged(e: MouseEvent) {
+  def mouseDragged(e: MouseEvent) = {
     if (error == null){
       if (hasButton1(e) && isEnabled) {
         e.translatePoint(getX(), getY())
@@ -213,13 +202,12 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
     }
   }
 
-  def mouseEntered(e:MouseEvent) {}
-  def mouseExited(e:MouseEvent) {}
-  def mouseMoved(e: MouseEvent) {}
-  def mouseClicked(e: MouseEvent) {
+  def mouseEntered(e:MouseEvent) = {}
+  def mouseExited(e:MouseEvent) = {}
+  def mouseMoved(e: MouseEvent) = {}
+  def mouseClicked(e: MouseEvent) =
     if (!e.isPopupTrigger() && error != null && !lastMousePressedWasPopupTrigger && hasButton1(e))
       new Events.EditWidgetEvent(this).raise(this)
-  }
 
   /// editability
   override def classDisplayName = I18N.gui.get("tabs.run.widgets.button")
@@ -233,17 +221,14 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   override def isLinkForeverButton = buttonType == ButtonType.LinkButton && forever
   private var _name = ""
   def name = _name
-  def name_=(newName:String){
+  def name_=(newName:String) = {
     _name = newName
     chooseDisplayName
   }
 
-  override def procedure(p: Procedure) {
-    super.procedure(p)
-  }
+  override def procedure(p: Procedure) = super.procedure(p)
 
-  def action() {
-    if (error == null) {
+  def action() = if (error == null) {
       // warning, confusing code ahead. not sure if there's a
       // clearer way to write this hard to know without trying.
       // it looks like maybe the forever button and the once button
@@ -306,22 +291,19 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
         }
       }
     }
-  }
 
-  def handle(e: Events.JobRemovedEvent) {
-    if (e.owner == this) {
+  def handle(e: Events.JobRemovedEvent) = if (e.owner == this) {
       if(Version.isLoggingEnabled)
         org.nlogo.log.Logger.logButtonStopped(displayName, buttonUp, stopping)
       popUpStoppingButton()
     }
-  }
 
-  def handle(e: Events.TickStateChangeEvent) {
+  def handle(e: Events.TickStateChangeEvent) = {
     setupFinished = e.tickCounterInitialized
     repaint()
   }
 
-  def popUpStoppingButton() {
+  def popUpStoppingButton() = {
     buttonUp = true
     running = false
     stopping = false
@@ -334,19 +316,17 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
 
   // behold the mighty regular expression
   private def getSourceName = innerSource().trim.replaceAll("\\s+", " ")
-  override def innerSource(newInnerSource:String){
+  override def innerSource(newInnerSource:String) = {
     super.innerSource(newInnerSource)
     chooseDisplayName
   }
   def wrapSource = innerSource()
-  def wrapSource(newInnerSource:String){
-    if(newInnerSource != "" && newInnerSource != innerSource()){
+  def wrapSource(newInnerSource:String) = if(newInnerSource != "" && newInnerSource != innerSource()){
       this.innerSource(newInnerSource)
       recompile()
     }
-  }
 
-  def recompile(){
+  def recompile() = {
     val header = "to __button [] " + buttonType.toHeaderCode + (if(forever) " loop [ " else "")
     val footer = "\n" + // protect against comments
       (if(forever) "__foreverbuttonend ] " else "__done ") + "end"
@@ -366,39 +346,33 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   }
 
   /// painting
-  override def paintComponent(g: Graphics) {
+  override def paintComponent(g: Graphics) = {
     val g2d = g.asInstanceOf[Graphics2D]
     g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     def drawAsUp = buttonUp && !running
     def getPaintColor = if (drawAsUp) getBackground else getForeground
-    def paintButtonRectangle(g: Graphics) {
+    def paintButtonRectangle(g: Graphics) = {
       g.setColor(getPaintColor)
       g.fillRect(0, 0, getWidth(), getHeight())
-      def renderImages(g: Graphics, dark: Boolean) {
-        def maybePaintForeverImage() {
-          if (forever) {
+      def renderImages(g: Graphics, dark: Boolean) = {
+        def maybePaintForeverImage() = if (forever) {
             val image = if (dark) FOREVER_GRAPHIC_DARK else FOREVER_GRAPHIC
             image.paintIcon(this, g, getWidth() - image.getIconWidth - 4, getHeight() - image.getIconHeight - 4)
           }
-        }
-        def maybePaintAgentImage() {
-          buttonType.img(dark).map(_.paintIcon(this, g, 3, 3))
-        }
+        def maybePaintAgentImage() = buttonType.img(dark).map(_.paintIcon(this, g, 3, 3))
         maybePaintForeverImage()
         maybePaintAgentImage()
       }
       renderImages(g, !drawAsUp)
     }
-    def paintKeyboardShortcut(g: Graphics) {
-      if (actionKeyString != "") {
+    def paintKeyboardShortcut(g: Graphics) = if (actionKeyString != "") {
         val ax = getSize().width - 4 - g.getFontMetrics.stringWidth(actionKeyString)
         val ay = g.getFontMetrics.getMaxAscent + 2
         if (drawAsUp) g.setColor(if (keyEnabled) Color.BLACK else Color.GRAY)
         else g.setColor(if (keyEnabled && forever) getBackground else Color.BLACK)
         g.drawString(actionKeyString, ax - 1, ay)
       }
-    }
-    def paintButtonText(g: Graphics) {
+    def paintButtonText(g: Graphics) = {
       val stringWidth = g.getFontMetrics.stringWidth(displayName)
       val color = {
         val c = if (drawAsUp) getForeground else getBackground

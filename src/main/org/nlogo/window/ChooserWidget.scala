@@ -17,15 +17,13 @@ class ChooserWidget(compiler: CompilerServices) extends Chooser(compiler) with E
   private var nameChanged = false
 
   def valueObject: Object = value
-  def valueObject(v: Object) {
-    if (v != null) {
+  def valueObject(v: Object) = if (v != null) {
       var newIndex: Int = constraint.indexForValue(v)
       if (newIndex != -1) {index(newIndex)}
     }
-  }
 
   override def name(newName: String) = name(newName, true)
-  private def name(newName: String, sendEvent: Boolean) {
+  private def name(newName: String, sendEvent: Boolean) = {
     super.name(newName)
     // I don't think anyone ever uses the display name, but let's keep it in sync
     // with the real name, just in case - ST 6/3/02
@@ -34,7 +32,7 @@ class ChooserWidget(compiler: CompilerServices) extends Chooser(compiler) with E
   }
   def nameWrapper = name()
   // name needs a wrapper because we don't want to recompile until editFinished()
-  def nameWrapper(newName: String) {
+  def nameWrapper(newName: String) = {
     nameChanged = !name().equals(newName) || nameChanged
     name(newName, false)
   }
@@ -44,7 +42,7 @@ class ChooserWidget(compiler: CompilerServices) extends Chooser(compiler) with E
     constraint.acceptedValues.asScala.map(v => Dump.logoObject(v, true, false)).mkString("\n")
   }
 
-  def choicesWrapper(choicesString: String) {
+  def choicesWrapper(choicesString: String) = {
     var obj: Object = compiler.readFromString("[ " + choicesString + " ]")
     if (obj.isInstanceOf[LogoList]) {setChoices(obj.asInstanceOf[LogoList])}
     updateConstraints()
@@ -57,10 +55,9 @@ class ChooserWidget(compiler: CompilerServices) extends Chooser(compiler) with E
     if (newIndex == -1) index(0) else index(newIndex)
   }
 
-  def handle(e: AfterLoadEvent) {updateConstraints()}
-  def handle(e: PeriodicUpdateEvent) {
+  def handle(e: AfterLoadEvent) = updateConstraints()
+  def handle(e: PeriodicUpdateEvent) =
     new InterfaceGlobalEvent(this, false, true, false, false).raise(this)
-  }
 
   override def editFinished(): Boolean = {
     super.editFinished
@@ -70,7 +67,7 @@ class ChooserWidget(compiler: CompilerServices) extends Chooser(compiler) with E
     true
   }
 
-  protected[window] override def index(index: Int) {
+  protected[window] override def index(index: Int) =
     // Let's check to see if the value is different than the old value
     // before we raise an InterfaceGlobalEvent.  This will cut
     // down on the number of events generated.
@@ -78,7 +75,6 @@ class ChooserWidget(compiler: CompilerServices) extends Chooser(compiler) with E
       super.index(index)
       new InterfaceGlobalEvent(this, false, false, true, false).raise(this)
     }
-  }
 
   def load(strings: Array[String], helper: Widget.LoadHelper): Object = {
     val x1 = strings(1).toInt

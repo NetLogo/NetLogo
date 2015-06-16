@@ -14,7 +14,7 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer[TokenType] {
   private var lastLine = ""
   private var lastColors = Array[Color]()
 
-  def reset() {
+  def reset() = {
     lastLine = ""
     lastColors = Array()
   }
@@ -97,8 +97,6 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer[TokenType] {
     Option(compiler.getTokenAtPosition(text, position))
       .map(_.name).orNull
 
-  def doHelp(comp: java.awt.Component, name: String) {
-    QuickHelp.doHelp(comp, name)
-  }
+  def doHelp(comp: java.awt.Component, name: String) = QuickHelp.doHelp(comp, name)
 
 }
