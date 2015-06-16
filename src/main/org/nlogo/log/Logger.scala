@@ -41,8 +41,7 @@ object Logger {
   val customMsg = LogMessage.createCustomMessage()
   val customGlobals = LogMessage.createCustomGlobals()
 
-  def logButtonStopped(name: String, onceButton: Boolean, stopping: Boolean) {
-    if (Buttons.isInfoEnabled) {
+  def logButtonStopped(name: String, onceButton: Boolean, stopping: Boolean) = if (Buttons.isInfoEnabled) {
       val message = (onceButton, stopping) match {
         case (true, _) => "once"
         case (_, true) => "user"
@@ -51,32 +50,31 @@ object Logger {
       buttonMsg.updateButtonMessage(name, "released", message)
       Buttons.info(buttonMsg)
     }
-  }
-  def logButtonPressed(name: String) {
+  def logButtonPressed(name: String) = {
     buttonMsg.updateButtonMessage(name, "pressed", "user")
     Buttons.info(buttonMsg)
   }
-  def logAddWidget(tyype: String, name: String) {
+  def logAddWidget(tyype: String, name: String) = {
     widgetMsg.updateWidgetMessage(tyype.toLowerCase, name, "added")
     Widgets.info(widgetMsg)
   }
-  def logWidgetRemoved(tyype: String, name: String) {
+  def logWidgetRemoved(tyype: String, name: String) = {
     widgetMsg.updateWidgetMessage(tyype.toLowerCase, name, "removed")
     Widgets.info(widgetMsg)
   }
-  def logSpeedSlider(value: Double) {
+  def logSpeedSlider(value: Double) = {
     speedMsg.updateSpeedMessage(value.toString)
     Speed.info(speedMsg)
   }
-  def logTurtleBirth(name: String, breed: String) {
+  def logTurtleBirth(name: String, breed: String) = {
     mortalityMsg.updateAgentMessage("turtle", name, "born", breed)
     Turtles.info(mortalityMsg)
   }
-  def logTurtleDeath(name: String, breed: String) {
+  def logTurtleDeath(name: String, breed: String) = {
     mortalityMsg.updateAgentMessage("turtle", name, "died", breed)
     Turtles.info(mortalityMsg)
   }
-  def logGlobal(name: String, value: AnyRef, changed: Boolean) {
+  def logGlobal(name: String, value: AnyRef, changed: Boolean) = {
     globalMsg.updateGlobalMessage(name, value.toString)
     if (changed)
       Globals.info(globalMsg)
@@ -94,13 +92,9 @@ object Logger {
 
   ///
 
-  def beQuiet() {
-    org.apache.log4j.helpers.LogLog.setQuietMode(true)
-  }
+  def beQuiet() = org.apache.log4j.helpers.LogLog.setQuietMode(true)
 
-  def configure(properties: String) {
-    DOMConfigurator.configure(properties)
-  }
+  def configure(properties: String) = DOMConfigurator.configure(properties)
 
 }
 
@@ -108,12 +102,12 @@ class Logger(studentName: String) extends LoggingListener {
 
   var logDirectory = System.getProperty("java.io.tmpdir")
 
-  def configure(reader: java.io.Reader) {
+  def configure(reader: java.io.Reader) = {
     val configurator = new DOMConfigurator
     configurator.doConfigure(reader, LogManager.getLoggerRepository)
   }
 
-  def changeLogDirectory(path: String) {
+  def changeLogDirectory(path: String) = {
     val directory = new java.io.File(path)
     if (!directory.isAbsolute) {
       val newPath = System.getProperty("user.home") + java.io.File.separatorChar + "dummy.txt"
@@ -129,7 +123,7 @@ class Logger(studentName: String) extends LoggingListener {
 
   var filenames: java.util.List[String] = null // for TestLogger
 
-  def modelOpened(name: String) {
+  def modelOpened(name: String) = {
     filenames = new java.util.ArrayList[String]
     filenames.addAll(newFiles(JLogger.getRootLogger.getAllAppenders, name))
     val loggers = JLogger.getRootLogger.getLoggerRepository.getCurrentLoggers
@@ -153,7 +147,7 @@ class Logger(studentName: String) extends LoggingListener {
     filenames
   }
 
-  private def setupXMLFileAppender(name: String, xappender: XMLFileAppender) {
+  private def setupXMLFileAppender(name: String, xappender: XMLFileAppender) = {
     xappender.setStudentName(studentName)
     xappender.setUsername(System.getProperty("user.name"))
     xappender.setIPAddress(getIPAddress)
@@ -161,7 +155,7 @@ class Logger(studentName: String) extends LoggingListener {
     xappender.setVersion(Version.version)
   }
 
-  def close() {
+  def close() = {
     closeFiles(JLogger.getRootLogger.getAllAppenders)
     val loggers = JLogger.getRootLogger.getLoggerRepository.getCurrentLoggers
     while (loggers.hasMoreElements) {
@@ -170,10 +164,8 @@ class Logger(studentName: String) extends LoggingListener {
     }
   }
 
-  private def closeFiles(e: JEnumeration[_]) {
-    while (e.hasMoreElements)
-      e.nextElement().asInstanceOf[Appender].close()
-  }
+  private def closeFiles(e: JEnumeration[_]) = while (e.hasMoreElements)
+    e.nextElement().asInstanceOf[Appender].close()
 
   def getIPAddress() =
     try java.net.InetAddress.getLocalHost.getHostAddress
@@ -189,13 +181,9 @@ class Logger(studentName: String) extends LoggingListener {
       System.getProperty("file.separator") + "logfile_" + appender + "_" +
       dateFormat.format(new java.util.Date) + ".xml"
 
-  def deleteSessionFiles() {
-    Files.deleteSessionFiles(logDirectory)
-  }
+  def deleteSessionFiles() = Files.deleteSessionFiles(logDirectory)
 
-  def zipSessionFiles(filename: String) {
-    Files.zipSessionFiles(logDirectory, filename)
-  }
+  def zipSessionFiles(filename: String) = Files.zipSessionFiles(logDirectory, filename)
 
   def getFileList: Array[String] =
     new java.io.File(logDirectory).list(

@@ -24,7 +24,7 @@ class XMLFileAppender extends FileAppender {
   private var hd: TransformerHandler = _
 
   @throws(classOf[java.io.IOException])
-  override def setFile(fileName: String, append: Boolean, bufferedIO: Boolean, bufferSize: Int) {
+  override def setFile(fileName: String, append: Boolean, bufferedIO: Boolean, bufferSize: Int) = {
     super.setFile(fileName, append, bufferedIO, bufferSize)
     val streamResult = new StreamResult(qw)
     val tf = TransformerFactory.newInstance.asInstanceOf[SAXTransformerFactory]
@@ -51,7 +51,7 @@ class XMLFileAppender extends FileAppender {
     }
   }
 
-  override def closeFile() {
+  override def closeFile() = {
     if(hd != null) {
       hd.endElement("", "", "eventSet")
       hd.endDocument()
@@ -60,8 +60,6 @@ class XMLFileAppender extends FileAppender {
     super.closeFile()
   }
 
-  override def close() {
-    closeFile()
-  }
+  override def close() = closeFile()
 
 }

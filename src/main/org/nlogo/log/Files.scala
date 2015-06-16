@@ -9,7 +9,7 @@ import org.nlogo.util.Exceptions.ignoring
 
 object Files {
 
-  def deleteSessionFiles(path: String) {
+  def deleteSessionFiles(path: String) = {
     val directory = new java.io.File(path)
     if (directory.isDirectory) {
       val files = directory.list(
@@ -22,7 +22,7 @@ object Files {
     }
   }
 
-  def zipSessionFiles(path: String, filename: String) {
+  def zipSessionFiles(path: String, filename: String) = {
     val directory = new java.io.File(path)
     if (directory.isDirectory) {
       val files = directory.list(

@@ -13,10 +13,10 @@ import org.xml.sax.helpers.AttributesImpl
 class XMLLayout extends Layout {
 
   /** No options to activate. */
-  override def activateOptions() { }
+  override def activateOptions() = {}
 
   var hd: TransformerHandler = null
-  def setTransformerHandler(hd: TransformerHandler) { this.hd = hd }
+  def setTransformerHandler(hd: TransformerHandler) = this.hd = hd
 
   override def format(event: LoggingEvent): String = {
     val attributes = new AttributesImpl
@@ -44,7 +44,7 @@ class XMLLayout extends Layout {
     ""
   }
 
-  private def renderLogMessage(msg: LogMessage) {
+  private def renderLogMessage(msg: LogMessage): Unit = {
     val attributes = new AttributesImpl
     for(a <- Option(msg.attributes); attr <- a)
       attributes.addAttribute("", "", attr(0), "CDATA", attr(1))
