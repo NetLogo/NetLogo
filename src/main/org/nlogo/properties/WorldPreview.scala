@@ -73,7 +73,7 @@ class WorldPreview(width: Int, height: Int)
 
   setVisible(true)
 
-  def update(field: String, opt: Option[Any]) {
+  def update(field: String, opt: Option[Any]): Unit = {
     if(!opt.isDefined) return
     val value = opt.get
     theCanvas.update(field, value)
@@ -113,7 +113,7 @@ class WorldPreview(width: Int, height: Int)
     }
   }
 
-  private def updateLabel() {
+  private def updateLabel() = {
     val text = (wrapX, wrapY) match {
       case (true, true) => "Torus"
       case (true, false) => "Vertical Cylinder"
@@ -127,7 +127,7 @@ class WorldPreview(width: Int, height: Int)
     setSize(w, h)
     setBackground(java.awt.Color.black)
     repaint()
-    override def paint(g: java.awt.Graphics) { }
+    override def paint(g: java.awt.Graphics) = {}
   }
 
   private class WorldPreviewCanvas(width: Int, height: Int) extends java.awt.Canvas {
@@ -145,7 +145,7 @@ class WorldPreview(width: Int, height: Int)
     setBackground(java.awt.Color.black)
     repaint()  // necessary? - ST 2/18/10
 
-    def update(field: String, value: Any) {
+    def update(field: String, value: Any): Unit = {
       def asInt = value.asInstanceOf[java.lang.Integer].intValue
       field match {
         case "minPxcor" => minPxcor = asInt
@@ -157,7 +157,7 @@ class WorldPreview(width: Int, height: Int)
       repaint()
     }
 
-    override def paint(g: java.awt.Graphics) {
+    override def paint(g: java.awt.Graphics) =
       if(minPxcor > 0 || maxPxcor < 0 || minPycor > 0 || maxPycor < 0)
         paintError(g.asInstanceOf[java.awt.Graphics2D],
                    "Invalid world dimensions. " +
@@ -179,10 +179,8 @@ class WorldPreview(width: Int, height: Int)
         g.setColor(java.awt.Color.WHITE)
         g.drawRect(0, 0, width - 1, height - 1)
       }
-    }
 
-    private def paintError(g: java.awt.Graphics2D, error: String)
-    {
+    private def paintError(g: java.awt.Graphics2D, error: String) = {
       val font = new java.awt.Font(monoFont, java.awt.Font.PLAIN, 12)
       g.setFont(font)
       val fm = g.getFontMetrics
@@ -193,15 +191,14 @@ class WorldPreview(width: Int, height: Int)
       g.drawString(error, width / 2 + xTextOff, height / 2 + yTextOff)
     }
 
-    def paintOrigin(g: java.awt.Graphics2D, pad: Int) {
+    def paintOrigin(g: java.awt.Graphics2D, pad: Int) = {
       g.setColor(java.awt.Color.RED)
       g.fillOval(xOrigin - 4, yOrigin - 4, 8, 8)
       paintOriginLabel(g, xOrigin, yOrigin, 5, AT_ORIGIN, AT_ORIGIN)
     }
 
     def paintOriginLabel(g: java.awt.Graphics2D, x: Int, y: Int,
-                         radius: Int, txtHorizOrient: Int, txtVertOrient: Int)
-    {
+                         radius: Int, txtHorizOrient: Int, txtVertOrient: Int) = {
 
       val font = new java.awt.Font(monoFont, java.awt.Font.PLAIN, 10)
       g.setFont(font)
@@ -224,8 +221,7 @@ class WorldPreview(width: Int, height: Int)
     }
 
     def paintCorners(g: java.awt.Graphics2D, radius: Int, pad: Int,
-                     center: java.awt.Color, border: java.awt.Color)
-    {
+                     center: java.awt.Color, border: java.awt.Color) = {
       val r = radius max 1
       paintDot(g, PAD,       PAD,        r, TO_LEFT,  TO_TOP,    center, border)
       paintDot(g, width-PAD, PAD,        r, TO_RIGHT, TO_TOP,    center, border)
@@ -235,8 +231,7 @@ class WorldPreview(width: Int, height: Int)
 
     private def paintDot(g: java.awt.Graphics2D, x: Int, y: Int, radius: Int,
                          txtHorizOrient: Int, txtVertOrient: Int,
-                         center: java.awt.Color, border: java.awt.Color)
-    {
+                         center: java.awt.Color, border: java.awt.Color): Unit = {
       if(xOrigin == x && yOrigin == y) return
       val font = new java.awt.Font(monoFont, java.awt.Font.PLAIN, 10)
       g.setFont(font)
@@ -287,7 +282,7 @@ class WorldPreview(width: Int, height: Int)
     setBackground(java.awt.Color.black)
     repaint()   // I wonder if this is actually needed - ST 2/17/10
     var wrapX, wrapY = false
-    def update(field: String, value: Any) {
+    def update(field: String, value: Any) = {
       if(field != null)
         if(field == "wrappingX")
           wrapX = value.asInstanceOf[java.lang.Boolean].booleanValue
@@ -295,13 +290,13 @@ class WorldPreview(width: Int, height: Int)
           wrapY = value.asInstanceOf[java.lang.Boolean].booleanValue
       this.repaint()
     }
-    override def paint(g: java.awt.Graphics) {
+    override def paint(g: java.awt.Graphics) = {
       if(wrapDim == WorldPreviewWrapCanvas.WRAP_X)
         drawWrapXMonitor(g)
       if(wrapDim == WorldPreviewWrapCanvas.WRAP_Y)
         drawWrapYMonitor(g)
     }
-    def drawWrapXMonitor(g: java.awt.Graphics) {
+    def drawWrapXMonitor(g: java.awt.Graphics) =
       if(wrapX) {
         g.setColor(new java.awt.Color(33, 204, 0))
         g.fillRect(width / 4, 0, width / 2, height)
@@ -313,8 +308,7 @@ class WorldPreview(width: Int, height: Int)
         g.setColor(java.awt.Color.red)
         g.fillRect(width / 4, 0, width / 2, height)
       }
-    }
-    def drawWrapYMonitor(g: java.awt.Graphics) {
+    def drawWrapYMonitor(g: java.awt.Graphics) =
       if(wrapY) {
         g.setColor(new java.awt.Color(33, 204, 0))
         g.fillRect(0, height / 4, width, height / 2)
@@ -326,7 +320,6 @@ class WorldPreview(width: Int, height: Int)
         g.setColor(java.awt.Color.red)
         g.fillRect(0, height / 4, width, height / 2)
       }
-    }
   }
 }
 

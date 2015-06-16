@@ -112,7 +112,7 @@ class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Co
     buttons
   }
 
-  override def previewChanged(field: String, value: Option[Any]) {
+  override def previewChanged(field: String, value: Option[Any]): Unit = {
     previewPanel.update(field, value)
     if(!value.isDefined) return
     def v = value.get.asInstanceOf[Int]
@@ -124,19 +124,17 @@ class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Co
   }
 
   private class LocationItemListener extends ItemListener{
-    def itemStateChanged(e:ItemEvent){
-      if(e.getStateChange() == java.awt.event.ItemEvent.SELECTED){
+    def itemStateChanged(e:ItemEvent) = if(e.getStateChange() == java.awt.event.ItemEvent.SELECTED){
         selectPosition(e.getItem().asInstanceOf[OriginConfiguration], 0)
       }
-    }
   }
 
-  def enableChoices(corner:Boolean, edge:Boolean){
+  def enableChoices(corner:Boolean, edge:Boolean) = {
     edgeChoices setVisible edge
     cornerChoices setVisible corner
   }
 
-  private def selectPosition(selection:OriginConfiguration, index:Int){
+  private def selectPosition(selection:OriginConfiguration, index:Int) = {
     selectConfiguration(selection)
     if (selection.toString == I18N.gui("origin.location.corner")){
       enableChoices(true, false)
@@ -153,7 +151,7 @@ class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Co
     }
   }
 
-  private def selectConfiguration(choice:OriginConfiguration){
+  private def selectConfiguration(choice:OriginConfiguration) = {
     for((editor,i) <- editors.zipWithIndex){
       if(choice.toString != I18N.gui("origin.location.custom")){
         editor.refresh()
@@ -175,10 +173,8 @@ class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Co
   }
 
   private class ConfigurationListener extends ItemListener {
-    def itemStateChanged(e:ItemEvent){
-      if(e.getStateChange() == java.awt.event.ItemEvent.SELECTED){
+    def itemStateChanged(e:ItemEvent) = if(e.getStateChange() == java.awt.event.ItemEvent.SELECTED){
         selectConfiguration(e.getItem().asInstanceOf[OriginConfiguration])
       }
-    }
   }
 }

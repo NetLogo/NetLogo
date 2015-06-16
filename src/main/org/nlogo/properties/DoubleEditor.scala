@@ -15,15 +15,15 @@ abstract class DoubleEditor(accessor: PropertyAccessor[Double])
   add(label, java.awt.BorderLayout.WEST)
   editor.getDocument().addDocumentListener(changed _)
   add(editor, java.awt.BorderLayout.CENTER)
-  override def setEnabled(enabled: Boolean) {
+  override def setEnabled(enabled: Boolean) = {
     super.setEnabled(enabled)
     editor.setEnabled(enabled)
     label.setEnabled(enabled)
   }
   override def get =
     catching(classOf[NumberFormatException]) opt editor.getText().toDouble
-  override def set(value: Double) { editor.setText(Dump.number(value)) }
-  override def requestFocus() { editor.requestFocus() }
+  override def set(value: Double) = editor.setText(Dump.number(value))
+  override def requestFocus() = editor.requestFocus()
   override def getConstraints = {
     val c = super.getConstraints
     c.fill = java.awt.GridBagConstraints.HORIZONTAL

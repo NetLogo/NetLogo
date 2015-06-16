@@ -14,7 +14,7 @@ abstract class IntegerEditor(accessor: PropertyAccessor[Int])
   add(label, java.awt.BorderLayout.WEST)
   editor.getDocument().addDocumentListener(changed _)
   add(editor, java.awt.BorderLayout.CENTER)
-  override def setEnabled(enabled: Boolean) {
+  override def setEnabled(enabled: Boolean) = {
     super.setEnabled(enabled)
     editor.setEnabled(enabled)
     label.setEnabled(enabled)
@@ -22,8 +22,8 @@ abstract class IntegerEditor(accessor: PropertyAccessor[Int])
   override def get =
     catching(classOf[NumberFormatException])
       .opt(editor.getText.toInt)
-  override def set(value: Int) { editor.setText(value.toString) }
-  override def requestFocus() { editor.requestFocus() }
+  override def set(value: Int) = editor.setText(value.toString)
+  override def requestFocus() = editor.requestFocus()
   override def getConstraints = {
     val c = super.getConstraints
     c.fill = java.awt.GridBagConstraints.HORIZONTAL

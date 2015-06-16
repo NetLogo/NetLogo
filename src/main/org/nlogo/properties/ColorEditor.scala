@@ -22,7 +22,7 @@ abstract class ColorEditor(accessor: PropertyAccessor[Color], frame: java.awt.Fr
   colorButton.addActionListener(new SelectColorActionListener())
   setColor(originalColor)
 
-  def setColor(color: Color) {
+  def setColor(color: Color) = {
     colorIcon.setColor(color)
     val c = getClosestColorNumberByARGB(color.getRGB)
     val colorString = c match {
@@ -44,16 +44,16 @@ abstract class ColorEditor(accessor: PropertyAccessor[Color], frame: java.awt.Fr
 
   override def getMinimumSize = colorButton.getMinimumSize
   override def get = Some(colorIcon.getColor)
-  override def set(value: Color) { setColor(value) }
-  override def requestFocus() { colorButton.requestFocus() }
+  override def set(value: Color) = setColor(value)
+  override def requestFocus() = colorButton.requestFocus()
 
-  override def revert() {
+  override def revert() = {
     setColor(originalColor)
     super.revert()
   }
 
    private class SelectColorActionListener extends ActionListener{
-     def actionPerformed(e: ActionEvent){
+     def actionPerformed(e: ActionEvent) = {
        val colorDialog = new org.nlogo.window.ColorDialog(frame, true)
        val c = colorDialog.showInputBoxDialog(getClosestColorNumberByARGB(colorIcon.getColor.getRGB))
        setColor(org.nlogo.api.Color.getColor(c: java.lang.Double))
@@ -62,13 +62,13 @@ abstract class ColorEditor(accessor: PropertyAccessor[Color], frame: java.awt.Fr
 
   private class ColorIcon extends Icon {
     val color = new JPanel
-    def paintIcon(c:Component, g:Graphics, x:Int, y:Int){
+    def paintIcon(c:Component, g:Graphics, x:Int, y:Int) = {
       g.setColor(getColor)
       g.fillRect(x, y, getIconWidth, getIconHeight)
     }
     def getIconWidth = color.getMinimumSize().width
     def getIconHeight = color.getMinimumSize().height
-    def setColor(c: Color) { color.setBackground(c) }
+    def setColor(c: Color) = color.setBackground(c)
     def getColor = color.getBackground
   }
 }

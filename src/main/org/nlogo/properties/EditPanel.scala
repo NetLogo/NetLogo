@@ -76,22 +76,18 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
       }
     case _ => None
   }
-  override def requestFocus() {
-    if(getsFirstFocus != null)
-      getsFirstFocus.requestFocus()
-  }
-  def previewChanged(field: String, value: Option[Any]) { }  // overridden in WorldEditPanel
+  override def requestFocus() = if(getsFirstFocus != null) getsFirstFocus.requestFocus()
+  def previewChanged(field: String, value: Option[Any]) = {}  // overridden in WorldEditPanel
   def isResizable() =
     // Wow!  This sure is kludgy! - ST 5/25/04
     propertyEditors.exists {
       case _: BigStringEditor | _: CodeEditor => true
       case _ => false
     }
-  def changed() {
-    // this is kinda kludgy because of the need to deal with the WidgetWrapperInterface rather than
-    // with the widget itself, but the alternative is to make a new event just to handle this, but
-    // that would be kludgy in itself, and a great deal less simple... - ST 12/22/01
-    for(wrapper <- wrapperOption) {
+  // this is kinda kludgy because of the need to deal with the WidgetWrapperInterface rather than
+  // with the widget itself, but the alternative is to make a new event just to handle this, but
+  // that would be kludgy in itself, and a great deal less simple... - ST 12/22/01
+  def changed() = for(wrapper <- wrapperOption) {
       val prefSize = wrapper.getPreferredSize
       // Some widgets have no max size, so we use an very large one
       val maxSize = Option(wrapper.getMaximumSize).getOrElse(new Dimension(10000, 10000))
@@ -120,7 +116,6 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
       }
       wrapper.widgetChanged()
     }
-  }
   def valid() = {
     def valid(editor: PropertyEditor[_]) = {
       // plot editor handles its errors when you press the ok button.
@@ -137,11 +132,11 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
     }
     propertyEditors.forall(valid)
   }
-  def apply() {
+  def apply() = {
     propertyEditors.foreach(_.apply)
     changed()
   }
-  def revert() {
+  def revert() = {
     for(editor <- propertyEditors) {
       editor.revert()
       editor.refresh()
@@ -217,15 +212,13 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
   }
 
   trait Changed { self: PropertyEditor[_] =>
-    override def changed() {
-      if (get.isDefined) {
+    override def changed() = if (get.isDefined) {
         if (liveUpdate) {
           apply()
           EditPanel.this.changed()
         }
         previewChanged(accessor.accessString, get)
       }
-    }
   }
 
   private def frame = org.nlogo.awt.Hierarchy.getFrame(this)

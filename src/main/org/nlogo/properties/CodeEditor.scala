@@ -47,7 +47,7 @@ abstract class CodeEditor(accessor: PropertyAccessor[String],
 
   lazy val editor = new EditorArea(rows, columns,
     new Font(platformMonospacedFont, Font.PLAIN, 12), false,
-    new TextListener() {def textValueChanged(e: TextEvent) {changed()}}, colorizer,
+    new TextListener() { def textValueChanged(e: TextEvent) = changed() }, colorizer,
     org.nlogo.api.I18N.gui.get _)
   lazy val scrollPane = new JScrollPane(editor, VERTICAL_SCROLLBAR_ALWAYS, HORIZONTAL_SCROLLBAR_AS_NEEDED)
   private val errorLabel = new EditorAreaErrorLabel(editor)
@@ -61,9 +61,9 @@ abstract class CodeEditor(accessor: PropertyAccessor[String],
   private def arrowDirection = if(collapsed) SwingConstants.EAST else SwingConstants.SOUTH
   private val arrow = new BasicArrowButton(arrowDirection) { self =>
     addActionListener(new ActionListener() {
-      def actionPerformed(e: ActionEvent) { setVisibility(collapsed) }
+      def actionPerformed(e: ActionEvent) = setVisibility(collapsed)
     })
-    def updateDirection() { self.setDirection(arrowDirection) }
+    def updateDirection() = self.setDirection(arrowDirection)
   }
 
   locally{
@@ -76,8 +76,7 @@ abstract class CodeEditor(accessor: PropertyAccessor[String],
     add(collapso, BorderLayout.CENTER)
   }
 
-  private def setVisibility(newVisibility: Boolean) {
-    if (collapsible && collapseWhenEmpty) {
+  private def setVisibility(newVisibility: Boolean): Unit = if (collapsible && collapseWhenEmpty) {
       collapso setVisible newVisibility
       if(newVisibility)
         add(collapso, BorderLayout.CENTER)
@@ -87,15 +86,14 @@ abstract class CodeEditor(accessor: PropertyAccessor[String],
       org.nlogo.awt.Hierarchy.getWindow(this).pack()
       if(!collapsed) editor.requestFocus()
     }
-  }
   override def get = Option(editor.getText)
-  override def set(value: String) {
+  override def set(value: String) = {
     editor setText value
     setVisibility(value.nonEmpty)
     editor.select(0, 0)
     accessor.error.foreach{ errorLabel.setError(_, accessor.target.sourceOffset) }
   }
-  override def requestFocus() { editor.requestFocus() }
+  override def requestFocus() = editor.requestFocus()
   private def rowLayout(rows:Int) = new RowLayout(rows, LEFT_ALIGNMENT, TOP_ALIGNMENT)
   override def getConstraints = {
     val c = super.getConstraints

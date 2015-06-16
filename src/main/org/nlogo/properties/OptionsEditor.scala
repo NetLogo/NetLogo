@@ -21,14 +21,10 @@ abstract class OptionsEditor[T](accessor: PropertyAccessor[Options[T]])
     options.selectByName(combo.getSelectedItem.asInstanceOf[String])
     Some(options)
   }
-  override def set(value: Options[T]) {
-    combo.setSelectedItem(value.chosenName)
-  }
-  override def revert() {
+  override def set(value: Options[T]) = combo.setSelectedItem(value.chosenName)
+  override def revert() = {
     options.selectValue(originalOption)
     super.revert()
   }
-  override def requestFocus() {
-    combo.requestFocus()
-  }
+  override def requestFocus() = combo.requestFocus()
 }

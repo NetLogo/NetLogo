@@ -85,13 +85,12 @@ trait EditDialog extends javax.swing.JDialog {
   editPanel.init()
 
   setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE)
-  addWindowListener(
-    new java.awt.event.WindowAdapter() {
-      override def windowClosing(e: java.awt.event.WindowEvent) {
+  addWindowListener(new java.awt.event.WindowAdapter() {
+      override def windowClosing(e: java.awt.event.WindowEvent) =
         if(editPanel.valid) {
           editPanel.apply()
           if(target.editFinished) bye()
-        }}})
+        }})
 
   org.nlogo.swing.Utils.addEscKeyAction(this, () => cancel(target))
 
@@ -109,7 +108,7 @@ trait EditDialog extends javax.swing.JDialog {
 
   setResizable(editPanel.isResizable)
 
-  private def cancel(target: org.nlogo.api.Editable) {
+  private def cancel(target: org.nlogo.api.Editable) = {
     editPanel.revert()
     if(!sendEditFinishedOnCancel || target.editFinished) {
       canceled = true
@@ -117,7 +116,7 @@ trait EditDialog extends javax.swing.JDialog {
     }
   }
 
-  private def bye() {
+  private def bye() = {
     EditDialog.lastLocation = Some(getLocation)
     setVisible(false)
     dispose()

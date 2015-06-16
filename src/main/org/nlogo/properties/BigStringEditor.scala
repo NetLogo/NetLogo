@@ -21,11 +21,11 @@ abstract class BigStringEditor(accessor: PropertyAccessor[String])
                                   javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER),
       java.awt.BorderLayout.CENTER)
   override def get = Option(editor.getText())
-  override def set(value: String) {
+  override def set(value: String) = {
     editor.setText(value)
     editor.select(0, 0)
   }
-  override def requestFocus() { editor.requestFocus() }
+  override def requestFocus() = editor.requestFocus()
   override def getConstraints() = {
     val c = super.getConstraints
     c.fill = java.awt.GridBagConstraints.BOTH

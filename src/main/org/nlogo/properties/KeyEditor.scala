@@ -22,12 +22,11 @@ abstract class KeyEditor(accessor: PropertyAccessor[Char])
     // use a listener to make it so that after I type a character that character is selected, so if
     // I type another one it replaces the old one - ST 8/6/04
     val listener = new javax.swing.event.DocumentListener() {
-      def changedUpdate(e: javax.swing.event.DocumentEvent) { }
-      def removeUpdate(e: javax.swing.event.DocumentEvent) { }
-      def insertUpdate(e: javax.swing.event.DocumentEvent) {
+      def changedUpdate(e: javax.swing.event.DocumentEvent) = {}
+      def removeUpdate(e: javax.swing.event.DocumentEvent) = {}
+      def insertUpdate(e: javax.swing.event.DocumentEvent) =
         // not quite sure why this won't work without the invokeLater - ST 8/6/04
         java.awt.EventQueue.invokeLater{() => newEditor.selectAll()}
-      }
     }
     newEditor.getDocument.addDocumentListener(listener)
     newEditor
@@ -35,11 +34,8 @@ abstract class KeyEditor(accessor: PropertyAccessor[Char])
   override def get = Some(
     if(editor.getText().isEmpty) '\u0000'
     else editor.getText().charAt(0))
-  override def set(value: Char) {
-    editor.setText(if(value == '\u0000') ""
-                   else value.toString)
-  }
-  override def requestFocus() { editor.requestFocus() }
+  override def set(value: Char) = editor.setText(if(value == '\u0000') "" else value.toString)
+  override def requestFocus() = editor.requestFocus()
   override def getConstraints = {
     val c = super.getConstraints
     c.fill = java.awt.GridBagConstraints.HORIZONTAL

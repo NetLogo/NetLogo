@@ -42,8 +42,8 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
   title.setTitleJustification(TitledBorder.LEFT)
   setBorder(title)
 
-  def changed() {} // seemingly no need to do anything here
-  def set(value: List[PlotPen]) {} // seemingly no need to do anything here either
+  def changed() = {} // seemingly no need to do anything here
+  def set(value: List[PlotPen]) = {} // seemingly no need to do anything here either
 
   private def frame = org.nlogo.awt.Hierarchy.getFrame(this)
 
@@ -186,7 +186,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
     }
 
     // someone pressed the delete button in the pens row.
-    def removePen(index: Int) {model.removePen(index)}
+    def removePen(index: Int) = model.removePen(index)
 
     // shows the pens color as a colored rectangle
     class ColorRenderer extends JLabel with TableCellRenderer {
@@ -229,7 +229,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
       }
     }
 
-    def openAdvancedPenEditor(editingPen: Pen) {
+    def openAdvancedPenEditor(editingPen: Pen) = {
       val p = new PlotPenEditorAdvanced(editingPen)
       new org.nlogo.swing.Popup(frame, I18N.gui("editing") + " " + editingPen.name, p, (), {
         p.getResult match {
@@ -281,9 +281,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
         // for some reason QuaquaTableUI calls setFont(table.getFont()) on cell editors. I don't
         // understand why it does that, but it means that in order to get the right font in our cell
         // editors, we need to do this. - ST 4/29/10
-        override def setFont(badFont: java.awt.Font) {
-          super.setFont(goodFont)
-        }
+        override def setFont(badFont: java.awt.Font) = super.setFont(goodFont)
       }
       def getTableCellEditorComponent(table: JTable, value: Object, isSelected: Boolean, row: Int, col: Int) = {
         editor.setText(value.asInstanceOf[String])
@@ -316,8 +314,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
           case _ => classOf[String]
         }
       }
-      override def setValueAt(value: Object, row: Int, col: Int) {
-        if (row < pens.size) {
+      override def setValueAt(value: Object, row: Int, col: Int) = if (row < pens.size) {
           val p = pens(row)
           columnNames(col) match {
             case NameColumnName => pens(row) = p.copy(name = value.asInstanceOf[String])
@@ -327,42 +324,35 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
           }
           fireTableCellUpdated(row, col)
         }
-      }
 
-      def addPen(p: Pen) {pens += p; fireTableDataChanged}
+      def addPen(p: Pen) = {pens += p; fireTableDataChanged}
 
-      def removePen(index: Int) {
-        if (index != -1) {
+      def removePen(index: Int) = if (index != -1) {
           pens.remove(index)
           fireTableRowsDeleted(index, index)
           removeEditor
           revalidate
           repaint()
         }
-      }
     }
 
     var lastColumn = 0
     private class RowListener extends ListSelectionListener {
-      def valueChanged(event: ListSelectionEvent) {
-        if (!event.getValueIsAdjusting && getSelectedRow != -1) {
+      def valueChanged(event: ListSelectionEvent) = if (!event.getValueIsAdjusting && getSelectedRow != -1) {
           if(table.getSelectedColumn == 2) {
             if(model.pens(getSelectedRow).updateCode.contains("\n"))
               openAdvancedPenEditor(model.pens(getSelectedRow))
           }
           lastColumn = table.getSelectedColumn
         }
-      }
     }
     private class ColumnListener extends ListSelectionListener {
-      def valueChanged(event: ListSelectionEvent) {
-        if (!event.getValueIsAdjusting && getSelectedRow != -1) {
+      def valueChanged(event: ListSelectionEvent) = if (!event.getValueIsAdjusting && getSelectedRow != -1) {
           if(table.getSelectedColumn == 2 && lastColumn != 2)
             if(model.pens(getSelectedRow).updateCode.contains("\n"))
               openAdvancedPenEditor(model.pens(getSelectedRow))
           lastColumn = table.getSelectedColumn
         }
-      }
     }
   }
 
@@ -410,7 +400,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
       else None
     }
 
-    private def addWidgets() {
+    private def addWidgets() = {
       setLayout(new BorderLayout())
       val title = createTitledBorder(createEtchedBorder(EtchedBorder.LOWERED), I18N.gui("advanced"))
       title.setTitleJustification(TitledBorder.LEFT)

@@ -22,7 +22,7 @@ class PropertyAccessor[T : ClassTag](val target: Editable, val displayName: Stri
     }
 
   def get: T = getter.invoke(target).asInstanceOf[T]
-  def set(value: T) { setter.invoke(target, value.asInstanceOf[AnyRef]) }
+  def set(value: T) = setter.invoke(target, value.asInstanceOf[AnyRef])
 
   def error: Option[Exception] = {
     val e = target.error(accessString)

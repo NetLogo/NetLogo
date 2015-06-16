@@ -13,9 +13,9 @@ abstract class BooleanEditor(accessor: PropertyAccessor[Boolean])
   setLayout(new java.awt.BorderLayout)
   add(checkbox, java.awt.BorderLayout.CENTER)
   override def get = Some(checkbox.isSelected)
-  override def set(value: Boolean) { checkbox.setSelected(value) }
-  override def requestFocus() { checkbox.requestFocus() }
-  override def setEnabled(enabled: Boolean) {
+  override def set(value: Boolean) = checkbox.setSelected(value)
+  override def requestFocus() = checkbox.requestFocus()
+  override def setEnabled(enabled: Boolean) = {
     super.setEnabled(enabled)
     checkbox.setEnabled(enabled)
   }

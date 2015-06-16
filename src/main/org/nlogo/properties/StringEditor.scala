@@ -14,8 +14,8 @@ abstract class StringEditor(accessor: PropertyAccessor[String])
   add(editor, java.awt.BorderLayout.CENTER)
   def makeEditor() = new org.nlogo.swing.TextField(12)
   override def get = Option(editor.getText)
-  override def set(value: String) { editor.setText(value) }
-  override def requestFocus() { editor.requestFocus() }
+  override def set(value: String) = editor.setText(value)
+  override def requestFocus() = editor.requestFocus()
   override def getConstraints() = {
     val c = super.getConstraints
     c.fill = java.awt.GridBagConstraints.HORIZONTAL

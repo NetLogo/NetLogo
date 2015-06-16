@@ -47,7 +47,7 @@ abstract class InputBoxEditor(accessor: PropertyAccessor[Options[InputBox#InputT
     Some(options)
   }
 
-  override def revert() {
+  override def revert() = {
     originalOption.multiline(originalMultiline)
     options.selectValue(originalOption)
     super.revert
