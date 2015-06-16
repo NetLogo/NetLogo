@@ -55,7 +55,7 @@ class Evaluator(workspace: AbstractWorkspace) {
 
   ///
 
-  private[workspace] def withContext(context: Context)(f: => Unit) {
+  private[workspace] def withContext(context: Context)(f: => Unit) = {
     val oldContext = ProcedureRunner.context
     ProcedureRunner.context = context
     try f

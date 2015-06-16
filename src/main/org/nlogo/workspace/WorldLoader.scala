@@ -12,7 +12,7 @@ class WorldLoader {
   val tickCounterLabelIndex = 24
   val frameRateIndex = 25
 
-  def load(strings: Array[String], version: String, worldInterface: WorldLoaderInterface) {
+  def load(strings: Array[String], version: String, worldInterface: WorldLoaderInterface) = {
     val d = getWorldDimensions(strings, version)
     // set the visiblity of the ticks counter first because it changes the minimum size of the
     // viewWidget which could cause patchSize ugliness down the line ev 7/30/07

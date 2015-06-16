@@ -31,7 +31,7 @@ abstract class AbstractWorkspaceScala(private val _world: World, hubNetManagerFa
   // otherwise we don't get accurate runtime error locations
   // we pass in the Instruction so that we dont have to duplicate the exception logic in both locations.
   // JC 5/19/10
-  def tick(context: Context, originalInstruction: Instruction) {
+  def tick(context: Context, originalInstruction: Instruction) = {
     if(world.tickCounter.ticks == -1)
       throw new EngineException(context, originalInstruction,
         "The tick counter has not been started yet. Use RESET-TICKS.")
@@ -40,7 +40,7 @@ abstract class AbstractWorkspaceScala(private val _world: World, hubNetManagerFa
     requestDisplayUpdate(true)
   }
 
-  def resetTicks(context:Context) {
+  def resetTicks(context:Context) = {
     world.tickCounter.reset()
     setupPlots(context)
     updatePlots(context)
@@ -67,9 +67,7 @@ object AbstractWorkspaceTraits {
     val plotManager = new PlotManager(this)
 
     // methods used when importing plots
-    def currentPlot(plot: String) {
-      plotManager.currentPlot = Some(plotManager.getPlot(plot))
-    }
+    def currentPlot(plot: String) = plotManager.currentPlot = Some(plotManager.getPlot(plot))
 
     def getPlot(plot: String): PlotInterface = plotManager.getPlot(plot)
 
@@ -78,13 +76,9 @@ object AbstractWorkspaceTraits {
     // runtime.  So once we know the Context, we store it in a bit of mutable state
     // in Evaluator. - ST 3/2/10
 
-    def updatePlots(c: Context) {
-      evaluator.withContext(c){ plotManager.updatePlots() }
-    }
+    def updatePlots(c: Context) = evaluator.withContext(c){ plotManager.updatePlots() }
 
-    def setupPlots(c: Context) {
-      evaluator.withContext(c){ plotManager.setupPlots() }
-    }
+    def setupPlots(c: Context) = evaluator.withContext(c){ plotManager.setupPlots() }
 
   }
 
@@ -94,18 +88,17 @@ object AbstractWorkspaceTraits {
     def exportOutputAreaToCSV(writer:PrintWriter)
 
     @throws(classOf[IOException])
-    def exportWorld(filename: String) {
-      new AbstractExporter(filename) {
-        def export(writer:PrintWriter){
+    def exportWorld(filename: String) = new AbstractExporter(filename) {
+        def export(writer:PrintWriter) = {
           world.exportWorld(writer,true)
           exportDrawingToCSV(writer)
           exportOutputAreaToCSV(writer)
           exportPlotsToCSV(writer)
           extensionManager.exportWorld(writer)
-        } }.export("world",modelFileName,"")
-    }
+        }
+      }.export("world",modelFileName,"")
 
-    def exportWorld(writer:PrintWriter){
+    def exportWorld(writer:PrintWriter) = {
       world.exportWorld(writer,true)
       exportDrawingToCSV(writer)
       exportOutputAreaToCSV(writer)
@@ -113,7 +106,7 @@ object AbstractWorkspaceTraits {
       extensionManager.exportWorld(writer)
     }
 
-    def exportPlotsToCSV(writer: PrintWriter) {
+    def exportPlotsToCSV(writer: PrintWriter) = {
       writer.println(Dump.csv.encode("PLOTS"))
       writer.println(
         Dump.csv.encode(
@@ -125,19 +118,16 @@ object AbstractWorkspaceTraits {
     }
 
     @throws(classOf[IOException])
-    def exportPlot(plotName: String,filename: String) {
-      new AbstractExporter(filename) {
-        override def export(writer: PrintWriter) {
+    def exportPlot(plotName: String,filename: String) = new AbstractExporter(filename) {
+        override def export(writer: PrintWriter) = {
           exportInterfaceGlobals(writer)
           new PlotExporter(plotManager.getPlot(plotName),Dump.csv).export(writer)
         }
       }.export("plot",modelFileName,"")
-    }
 
     @throws(classOf[IOException])
-    def exportAllPlots(filename: String) {
-      new AbstractExporter(filename) {
-        override def export(writer: PrintWriter) {
+    def exportAllPlots(filename: String) = new AbstractExporter(filename) {
+        override def export(writer: PrintWriter) = {
           exportInterfaceGlobals(writer)
 
           plotManager.getPlotNames.foreach { name =>
@@ -146,7 +136,6 @@ object AbstractWorkspaceTraits {
           }
         }
       }.export("plots",modelFileName,"")
-    }
   }
 
   trait Evaluating { this: AbstractWorkspace =>
@@ -159,13 +148,11 @@ object AbstractWorkspaceTraits {
       evaluator.makeCommandThunk(source, world.observer,
                                  new SimpleJobOwner(jobOwnerName, auxRNG, classOf[Observer]))
     @throws(classOf[CompilerException])
-    def evaluateCommands(owner: JobOwner, source: String) {
+    def evaluateCommands(owner: JobOwner, source: String) =
       evaluator.evaluateCommands(owner, source)
-    }
     @throws(classOf[CompilerException])
-    def evaluateCommands(owner: JobOwner, source: String, waitForCompletion: Boolean) {
+    def evaluateCommands(owner: JobOwner, source: String, waitForCompletion: Boolean) =
       evaluator.evaluateCommands(owner, source, world.observers, waitForCompletion)
-    }
     @throws(classOf[CompilerException])
     def evaluateCommands(owner: JobOwner, source: String, agent: Agent,
                          waitForCompletion: Boolean) {
