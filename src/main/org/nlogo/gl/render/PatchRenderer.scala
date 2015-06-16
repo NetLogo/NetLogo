@@ -15,7 +15,7 @@ extends TextureRenderer(world) {
     coords
   }
 
-  def renderIndividualLabels(gl: GL, patch: Patch3D, fontSize: Int, patchSize: Double) {
+  def renderIndividualLabels(gl: GL, patch: Patch3D, fontSize: Int, patchSize: Double) =
     if(world.patchesWithLabels > 0) {
       val scale = Renderer.WORLD_SCALE
       if(patch.hasLabel) {
@@ -26,9 +26,8 @@ extends TextureRenderer(world) {
         gl.glPopMatrix()
       }
     }
-  }
 
-  def renderLabels(gl: GL, fontSize: Int, patchSize: Double) {
+  def renderLabels(gl: GL, fontSize: Int, patchSize: Double) =
     if(world.patchesWithLabels > 0) {
       val numPatches = world.patchColors.length
       val scale = Renderer.WORLD_SCALE
@@ -43,10 +42,9 @@ extends TextureRenderer(world) {
         }
       }
     }
-  }
 
   def renderLabel(gl: GL, col: Float, row: Float, dep: Float,
-                  patch: Patch, fontSize: Int, patchSize: Double) {
+                  patch: Patch, fontSize: Int, patchSize: Double) = {
     val observer = world.observer
     gl.glTranslated(col, row, dep)
     gl.glRotated(-observer.heading, 0.0, 0.0, 1.0)
@@ -63,7 +61,7 @@ extends TextureRenderer(world) {
       gl, world, patch.labelString, patch.labelColor, fontSize, patchSize)
   }
 
-  def renderOutline(gl: GL, patch: Patch) {
+  def renderOutline(gl: GL, patch: Patch) = {
     gl.glPushMatrix()
     val scale = Renderer.WORLD_SCALE
     val rgb = org.nlogo.api.Color.getColor(patch.pcolor).getRGBColorComponents(null)
@@ -87,7 +85,7 @@ extends TextureRenderer(world) {
     gl.glPopMatrix()
   }
 
-  def renderHightlight(gl: GL, patch: Patch) {
+  def renderHightlight(gl: GL, patch: Patch) = {
     gl.glPushMatrix()
     val scale = Renderer.WORLD_SCALE
     gl.glScaled(scale, scale, scale)
@@ -98,20 +96,18 @@ extends TextureRenderer(world) {
     gl.glPopMatrix()
   }
 
-  def renderPatchTexture(gl: GL) {
-    renderPatches(gl)
-  }
+  def renderPatchTexture(gl: GL) = renderPatches(gl)
 
   /// textures
 
-  def renderPatches(gl: GL) {
+  def renderPatches(gl: GL) = {
     calculateTextureSize(gl, world.patchesAllBlack)
     renderTexture(gl)
   }
 
-  def renderPatches(gl: GL, fontSize: Int, patchSize: Double) { }
+  def renderPatches(gl: GL, fontSize: Int, patchSize: Double) = {}
 
-  private def renderTexture(gl: GL) {
+  private def renderTexture(gl: GL) = {
     gl.glEnable(GL.GL_TEXTURE_2D)
     gl.glDisable(GL.GL_LIGHTING)
     // we disable writing to the depth buffer because we technically want to guarantee the drawing
@@ -154,9 +150,8 @@ extends TextureRenderer(world) {
     gl.glBindTexture(GL.GL_TEXTURE_2D, 0)
   }
 
-  private def calculateTextureSize(gl: GL, patchesBlank: Boolean) {
     // generate new textures
-    if(!patchesBlank || textureSize == 0) {
+  private def calculateTextureSize(gl: GL, patchesBlank: Boolean) = if(!patchesBlank || textureSize == 0) {
       val newSize = TextureUtils.calculateTextureSize(
         gl, world.worldWidth, world.worldHeight)
       if(textureSize != newSize) {
@@ -165,6 +160,5 @@ extends TextureRenderer(world) {
         tiles = TextureUtils.createTileArray(world.worldWidth, world.worldHeight, textureSize)
       }
     }
-  }
 
 }

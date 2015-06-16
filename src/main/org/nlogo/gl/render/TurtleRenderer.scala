@@ -22,7 +22,7 @@ extends AgentRenderer(world, shapeRenderer) {
       (world.worldWidth max world.worldHeight) * 1.5 / distance
   }
 
-  def renderTurtles(gl: GL, glu: GLU, fontSize: Int, patchSize: Double, outlineAgent: Agent) {
+  def renderTurtles(gl: GL, glu: GLU, fontSize: Int, patchSize: Double, outlineAgent: Agent): Unit = {
     if (world.turtles == null)
       return
     import collection.JavaConverters._
@@ -33,7 +33,7 @@ extends AgentRenderer(world, shapeRenderer) {
   }
 
   def renderWrappedTurtle(gl: GL, turtle: Turtle, fontSize: Int,
-                          patchSize: Double, outline: Boolean, lineScale: Double) {
+                          patchSize: Double, outline: Boolean, lineScale: Double) = {
     val shape3D = shapeRenderer.getShape(turtle.shape)
     val height = shapeRenderer.getShapeHeight(turtle.shape, shape3D, turtle.size)
     val coords = getAgentCoords(turtle, height)
@@ -44,10 +44,8 @@ extends AgentRenderer(world, shapeRenderer) {
       getOrientation(turtle))
   }
 
-  def renderHighlight(gl: GL, agent: Turtle) {
-    shapeRenderer.renderHighlight(
-      gl, agent, getAgentCoords(agent, 1), getOrientation(agent))
-  }
+  def renderHighlight(gl: GL, agent: Turtle) =
+    shapeRenderer.renderHighlight(gl, agent, getAgentCoords(agent, 1), getOrientation(agent))
 
   def getXYandZComponents(agent: Agent, dist: Double): Array[Double] = {
     val turtle = agent.asInstanceOf[Turtle]

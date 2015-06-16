@@ -7,18 +7,17 @@ import javax.media.opengl.GL
 private object Rectangle {
 
   // symmetric over axes
-  def renderRectangularPrism(gl: GL, edgeX: Float, edgeY: Float, edgeZ: Float, invert: Boolean) {
+  def renderRectangularPrism(gl: GL, edgeX: Float, edgeY: Float, edgeZ: Float, invert: Boolean): Unit =
     if (invert)
       renderRectangularPrism(gl, edgeX, -edgeX, edgeY, -edgeY, edgeZ, -edgeZ, false, true, true)
     else
       renderRectangularPrism(gl, -edgeX, edgeX, -edgeY, edgeY, -edgeZ, edgeZ, false, true, true)
-  }
 
   // utility function to render a 3D-rectangle-prism
   def renderRectangularPrism(gl: GL, left: Float, right: Float,
                              back: Float, front: Float,
                              bottom: Float, top: Float, hollow: Boolean,
-                             hasBottom: Boolean, hasSides: Boolean) {
+                             hasBottom: Boolean, hasSides: Boolean) = {
 
     if (hollow)
       gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE)

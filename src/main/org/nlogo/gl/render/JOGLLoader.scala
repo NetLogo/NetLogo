@@ -15,7 +15,7 @@ object JOGLLoader {
   def isLoaded = _isLoaded
 
   @throws(classOf[JOGLException])
-  def load(classLoader: ClassLoader) {
+  def load(classLoader: ClassLoader) = {
     checkJOGLVersion(classLoader)
     // if we let jogl load itself, it might try to load a native library from the VM's extensions
     // directory instead of our copy of the library, and it might be the wrong version.  so let's
@@ -31,7 +31,7 @@ object JOGLLoader {
         throw new JOGLException(VersionMismatch, e)
     }
     val isMac = System.getProperty("os.name").startsWith("Mac")
-    def withErrorReporting(body: => Unit) {
+    def withErrorReporting(body: => Unit) =
       try body
       catch {
         case e: UnsatisfiedLinkError =>
@@ -43,7 +43,6 @@ object JOGLLoader {
             throw new JOGLException(msg, e)
           }
       }
-    }
     val joglPath = libraryPath + System.getProperty("file.separator") + System.mapLibraryName("jogl")
     val joglAwtPath = libraryPath + System.getProperty("file.separator") + System.mapLibraryName("jogl_awt")
     if (!isMac)
@@ -111,7 +110,7 @@ object JOGLLoader {
     }
   }
 
-  private def checkJOGLVersion(classLoader: ClassLoader)   {
+  private def checkJOGLVersion(classLoader: ClassLoader) = {
     val pkgName = "javax.media.opengl"
     val className = "GL"
     try {

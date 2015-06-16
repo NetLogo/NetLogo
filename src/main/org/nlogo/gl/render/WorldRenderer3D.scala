@@ -17,7 +17,7 @@ extends WorldRenderer(world, patchRenderer, drawing, turtleRenderer, linkRendere
                         renderer.asInstanceOf[TurtleRenderer3D],
                         linkRenderer.asInstanceOf[LinkRenderer3D])
 
-  override def observePerspective(gl: GL) {
+  override def observePerspective(gl: GL) = {
     var x = observer.oxcor - world.followOffsetX
     var y = observer.oycor - world.followOffsetY
     var z = observer.ozcor - world.followOffsetZ
@@ -65,10 +65,9 @@ extends WorldRenderer(world, patchRenderer, drawing, turtleRenderer, linkRendere
                     -(z * Renderer.WORLD_SCALE))
   }
 
+  // we might get here before the world is set up
   override def renderPatchShapes(gl: GL, outlineAgent: Agent,
-                                 fontSize: Int, patchSize: Double) {
-    // we might get here before the world is set up
-    if(world.patches != null) {
+                                 fontSize: Int, patchSize: Double) = if(world.patches != null) {
       if (world.worldDepth > 1)
         patchRenderer.renderPatches(gl, fontSize, patchSize)
       outlineAgent match {
@@ -77,17 +76,14 @@ extends WorldRenderer(world, patchRenderer, drawing, turtleRenderer, linkRendere
         case _ =>
       }
     }
-  }
 
   override def renderIndividualPatchShapes(gl: GL, patch: Patch3D, outlineAgent: Agent,
-                                           fontSize: Int, patchSize: Double) {
+                                           fontSize: Int, patchSize: Double) =
     if(world.patches != null && world.worldDepth > 1)
       patchRenderer.renderIndividualPatch(gl, patch, fontSize, patchSize)
-  }
 
-  override def renderWorld(gl: GL, fontSize: Int, patchSize: Double) {
-    // we might get here before the world is set up
-    if(world.patches != null) {
+  // we might get here before the world is set up
+  override def renderWorld(gl: GL, fontSize: Int, patchSize: Double) = if(world.patches != null) {
       if (world.worldDepth == 1)
         // I might be wrong, but the only way we can get here is if we're in 3D, and we manually set
         // the world depth to be 1 (by changing min-pzcor and max-pzcor).
@@ -105,15 +101,12 @@ extends WorldRenderer(world, patchRenderer, drawing, turtleRenderer, linkRendere
       if(settings.wireframeOn)
         renderWorldWireFrame(gl)
     }
-  }
 
-  def renderTrails(gl: GL) {
-    drawingRenderer match {
+  def renderTrails(gl: GL) = drawingRenderer match {
       case r: TrailRenderer3D =>
         r.renderTrails(gl)
       case _ =>
     }
-  }
 
   override def getCrosshairCoords =
     Array[Double](observer.oxcor - world.followOffsetX,

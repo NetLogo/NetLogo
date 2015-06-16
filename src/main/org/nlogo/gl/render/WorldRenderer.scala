@@ -17,12 +17,12 @@ private class WorldRenderer(world: World, patchRenderer: PatchRenderer,
                             turtleRenderer: TurtleRenderer, linkRenderer: LinkRenderer): DrawingRendererInterface =
     new DrawingRenderer(world, drawing)
 
-  def init(gl: GL, shapeManager: ShapeManager) {
+  def init(gl: GL, shapeManager: ShapeManager) = {
     this.shapeManager = shapeManager
     drawingRenderer.init(gl)
   }
 
-  def observePerspective(gl: GL) {
+  def observePerspective(gl: GL) = {
     var x = observer.oxcor - world.followOffsetX
     var y = observer.oycor - world.followOffsetY
     var z = observer.ozcor
@@ -69,7 +69,7 @@ private class WorldRenderer(world: World, patchRenderer: PatchRenderer,
                   observer.oycor - world.followOffsetY,
                   observer.ozcor)
 
-  def renderCrossHairs(gl: GL) {
+  def renderCrossHairs(gl: GL) = {
     if(showCrossHairs) {
       val coords = getCrosshairCoords
       val perspective = observer.perspective
@@ -89,17 +89,15 @@ private class WorldRenderer(world: World, patchRenderer: PatchRenderer,
     }
   }
 
-  def renderWorld(gl: GL, fontSize: Int, patchSize: Double) {
-    // we might get here before the world is set up
-    if(world.patches != null) {
+  // we might get here before the world is set up
+  def renderWorld(gl: GL, fontSize: Int, patchSize: Double) = if(world.patches != null) {
       patchRenderer.renderPatches(gl)
       if(settings.wireframeOn)
         renderWorldWireFrame(gl)
     }
-  }
 
   def renderIndividualPatchShapes(gl: GL, patch: Patch3D, outlineAgent: Agent,
-                                  fontSize: Int, patchSize: Double) {
+                                  fontSize: Int, patchSize: Double) = {
     outlineAgent match {
       case p: Patch =>
         patchRenderer.renderOutline(gl, p)
@@ -108,7 +106,7 @@ private class WorldRenderer(world: World, patchRenderer: PatchRenderer,
     patchRenderer.renderIndividualLabels(gl, patch, fontSize, patchSize)
   }
 
-  def renderPatchShapes(gl: GL, outlineAgent: Agent, fontSize: Int, patchSize: Double) {
+  def renderPatchShapes(gl: GL, outlineAgent: Agent, fontSize: Int, patchSize: Double) = {
     outlineAgent match {
       case p: Patch =>
         patchRenderer.renderOutline(gl, p)
@@ -117,11 +115,9 @@ private class WorldRenderer(world: World, patchRenderer: PatchRenderer,
     patchRenderer.renderLabels(gl, fontSize, patchSize)
   }
 
-  def renderDrawing(gl: GL) {
-    drawingRenderer.renderDrawing(gl)
-  }
+  def renderDrawing(gl: GL) = drawingRenderer.renderDrawing(gl)
 
-  def renderWorldWireFrame(gl: GL) {
+  def renderWorldWireFrame(gl: GL) = {
     val coords = getWorldDimensions(world)
     // white lines only please
     gl.glPolygonMode(GL.GL_FRONT, GL.GL_LINE)
@@ -142,7 +138,7 @@ private class WorldRenderer(world: World, patchRenderer: PatchRenderer,
 
   // when we switch views we want to make a new texture but we can't delete the textures here
   // because we need the gl.
-  def cleanUp() {
+  def cleanUp() = {
     patchRenderer.deleteTexture()
     drawingRenderer.clear()
   }

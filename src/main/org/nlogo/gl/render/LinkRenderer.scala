@@ -22,7 +22,7 @@ private class LinkRenderer(world: World, shapeRenderer: ShapeRenderer)
       (world.worldWidth max world.worldHeight) * 1.5 / distance
   }
 
-  def renderLinks(gl: GL, glu: GLU, fontSize: Int, patchSize: Double, outlineAgent: Agent) {
+  def renderLinks(gl: GL, glu: GLU, fontSize: Int, patchSize: Double, outlineAgent: Agent): Unit = {
     if(world.links == null)
       return
     val scale = lineScale
@@ -36,7 +36,7 @@ private class LinkRenderer(world: World, shapeRenderer: ShapeRenderer)
     Array[Float](link.x1.toFloat, link.y1.toFloat, 0, link.x2.toFloat, link.y2.toFloat, 0)
 
   def renderWrappedLink(gl: GL, link: Link, fontSize: Int, patchSize: Double,
-                        outline: Boolean, lineScale: Double) {
+                        outline: Boolean, lineScale: Double) = {
     val maxx = world.maxPxcor + 0.5
     val minx = world.minPxcor - 0.5
     val maxy = world.maxPycor + 0.5
@@ -118,7 +118,7 @@ private class LinkRenderer(world: World, shapeRenderer: ShapeRenderer)
                          x1: Float, y1: Float, z1: Float,
                          x2: Float, y2: Float, z2: Float,
                          patchSize: Double, lineThickness: Double, isDirected: Boolean,
-                         link: Link, outline: Boolean) {
+                         link: Link, outline: Boolean) = {
     gl.glPushMatrix()
     gl.glColor4fv(java.nio.FloatBuffer.wrap(color.getRGBColorComponents(null)))
     gl.glEnable(GL.GL_LINE_STIPPLE)
@@ -132,8 +132,7 @@ private class LinkRenderer(world: World, shapeRenderer: ShapeRenderer)
   }
 
   def renderIndividualLinks(gl: GL, glu: GLU, link: Link, fontSize: Int,
-                            patchSize: Double, outlineAgent: Agent)
-  {
+                            patchSize: Double, outlineAgent: Agent): Unit = {
     if(world.links == null)
       return
     if(!link.hidden)

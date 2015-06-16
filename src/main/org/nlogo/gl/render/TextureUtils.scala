@@ -7,11 +7,10 @@ import java.nio.{ ByteBuffer, IntBuffer }
 
 object TextureUtils {
 
-  def makeTexture(gl: GL, size: Int) {
+  def makeTexture(gl: GL, size: Int) =
     gl.glTexImage2D(
       GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, size, size,
       0, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, null)
-  }
 
   def genTexture(gl: GL): Int = {
     val tmp = Array(0)
@@ -60,7 +59,7 @@ object TextureUtils {
     Array.fill(numTiles)(Array[Byte]())
   }
 
-  def setParameters(gl: GL) {
+  def setParameters(gl: GL) = {
     // We want our patches to have nice sharp edges, not blurry fuzzy edges (that would take longer
     // to render anyway). - ST 2/9/05
     gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST)
@@ -122,7 +121,7 @@ object TextureUtils {
     bytes
   }
 
-  def renderEmptyPlane(gl: GL, _sideX: Float, _sideY: Float, _sideZ: Float) {
+  def renderEmptyPlane(gl: GL, _sideX: Float, _sideY: Float, _sideZ: Float) = {
     val sideX = _sideX * (Renderer.WORLD_SCALE / 2)
     val sideY = _sideY * (Renderer.WORLD_SCALE / 2)
     val sideZ = _sideZ * (Renderer.WORLD_SCALE / 2)

@@ -130,7 +130,7 @@ private class ShapeRenderer(world: World) {
     gl.glScaled(size, size, size)
   }
 
-  def doOutline(gl: GL, shape3D: GLShape, rgb: Array[Float]) {
+  def doOutline(gl: GL, shape3D: GLShape, rgb: Array[Float]) =
     if (stencilSupport) {
       // This highlighting code was borrowed from
       // http://www.flipcode.com/articles/article_objectoutline.shtml
@@ -182,7 +182,6 @@ private class ShapeRenderer(world: World) {
       gl.glCallList(shape3D.displayListIndex)
       gl.glDisable(GL.GL_POLYGON_OFFSET_FILL)
     }
-  }
 
   def getShape(name: String): GLShape =
     shapeManager.getShape(name)
@@ -196,7 +195,7 @@ private class ShapeRenderer(world: World) {
     else
       size.toFloat
 
-  def renderHighlight(gl: GL, agent: Agent, coords: Array[Double], orientation: Array[Double]) {
+  def renderHighlight(gl: GL, agent: Agent, coords: Array[Double], orientation: Array[Double]) = {
     gl.glPushMatrix()
     val shape = shapeManager.getShape(agent.shape)
     alignAgent(gl, agent.size,
@@ -210,7 +209,7 @@ private class ShapeRenderer(world: World) {
 
   def renderLabel(gl: GL, label: String, labelColor: AnyRef,
                   xcor: Float, ycor: Float, zcor: Float,
-                  height: Float, fontSize: Int, patchSize: Double) {
+                  height: Float, fontSize: Int, patchSize: Double) = {
     val observer = world.observer
     gl.glPushMatrix()
     gl.glTranslated(xcor, ycor,
@@ -228,7 +227,7 @@ private class ShapeRenderer(world: World) {
     gl.glPopMatrix()
   }
 
-  def renderHalo(gl: GL, isTurtle: Boolean, diameter: Double) {
+  def renderHalo(gl: GL, isTurtle: Boolean, diameter: Double) = {
     val haloShape = shapeManager.getShape("@@@HALO@@@")
     val width = world.worldWidth
     val height = world.worldHeight

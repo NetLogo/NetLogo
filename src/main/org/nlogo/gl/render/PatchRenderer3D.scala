@@ -13,17 +13,14 @@ extends PatchRenderer(world, drawing, shapeRenderer) {
     super.renderPatches(gl)
   }
 
-  override def renderLabels(gl: GL, fontSize: Int, patchSize: Double) {
-    if(world.patchesAllBlack)
-      super.renderLabels(gl, fontSize, patchSize)
-  }
+  override def renderLabels(gl: GL, fontSize: Int, patchSize: Double) = if(world.patchesAllBlack)
+    super.renderLabels(gl, fontSize, patchSize)
 
-  override def renderIndividualLabels(gl: GL, patch: Patch3D, fontSize: Int, patchSize: Double) {
+  override def renderIndividualLabels(gl: GL, patch: Patch3D, fontSize: Int, patchSize: Double) =
     if(world.patchesAllBlack)
       super.renderIndividualLabels(gl, patch, fontSize, patchSize)
-  }
 
-  def renderIndividualPatch(gl: GL, patch: Patch3D, fontSize: Int, patchSize: Double) {
+  def renderIndividualPatch(gl: GL, patch: Patch3D, fontSize: Int, patchSize: Double) =
     if(!world.patchesAllBlack) {
       var flag = true
       gl.glPushMatrix()
@@ -45,9 +42,8 @@ extends PatchRenderer(world, drawing, shapeRenderer) {
         renderWrappedPatch(gl, patch, shape3D, fontSize, patchSize, false)
       gl.glPopMatrix()
     }
-  }
 
-  def renderBlackPatches(gl: GL, patch: Patch3D, fontSize: Int, patchSize: Double) {
+  def renderBlackPatches(gl: GL, patch: Patch3D, fontSize: Int, patchSize: Double) =
     if(!world.patchesAllBlack) {
       if(patch.hasLabel) {
         gl.glPushMatrix()
@@ -58,9 +54,8 @@ extends PatchRenderer(world, drawing, shapeRenderer) {
         gl.glPopMatrix()
       }
     }
-  }
 
-  override def renderPatches(gl: GL, fontSize: Int, patchSize: Double) {
+  override def renderPatches(gl: GL, fontSize: Int, patchSize: Double) =
     if(!world.patchesAllBlack || world.patchesWithLabels != 0) {
       gl.glPushMatrix()
       val numPatches = world.patchColors.length
@@ -85,10 +80,9 @@ extends PatchRenderer(world, drawing, shapeRenderer) {
       }
       gl.glPopMatrix()
     }
-  }
 
   def renderWrappedPatch(gl: GL, patch: Patch3D, shape: GLShape,
-                        fontSize: Int, patchSize: Double, outline: Boolean) {
+                        fontSize: Int, patchSize: Double, outline: Boolean) =
     shapeRenderer.renderWrappedAgent(
       gl, shapeRenderer.getShape("@@@PATCH@@@"),
       1.0, Color.getColor(patch.pcolor),
@@ -97,7 +91,6 @@ extends PatchRenderer(world, drawing, shapeRenderer) {
       world.wrappedObserverY(patch.pycor),
       world.wrappedObserverZ(patch.pzcor), 1,
       patchSize, fontSize, false, 0, Array[Double](0, 0, 0))
-  }
 
   def getDimensions(world: World) = {
     val w = world.asInstanceOf[World3D]
@@ -113,7 +106,7 @@ extends PatchRenderer(world, drawing, shapeRenderer) {
     coords
   }
 
-  override def renderOutline(gl: GL, patch: Patch) {
+  override def renderOutline(gl: GL, patch: Patch) = {
     val shape = shapeRenderer.getShape("@@@PATCH@@@")
     val rgb = Color.getColor(patch.pcolor).getRGBColorComponents(null)
     gl.glPushMatrix()

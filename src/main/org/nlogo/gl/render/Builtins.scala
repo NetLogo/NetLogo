@@ -19,7 +19,7 @@ private class Builtins(gl: GL, glu: GLU, quadric: GLUquadric) {
     // note that this needs to be changed if a shape is added below
     var lastList = glGenLists(15) - 1
 
-    def shape(name: String, rotatable: Boolean = true)(body: => Unit) {
+    def shape(name: String, rotatable: Boolean = true)(body: => Unit) = {
       lastList += 1
       shapes.put(name, new GLShape(name, lastList, rotatable))
       glNewList(lastList, GL.GL_COMPILE)
@@ -62,8 +62,7 @@ private class Builtins(gl: GL, glu: GLU, quadric: GLUquadric) {
     lastList
   }
 
-  private def default() {
-    begin(GL_TRIANGLES) {
+  private def default() = begin(GL_TRIANGLES) {
       glNormal3f(0f, 0f, -1f)
       glVertex3f(-0.10f, -0.125f, 0f)
       glVertex3f(0f, 0.125f, 0f)
@@ -94,9 +93,8 @@ private class Builtins(gl: GL, glu: GLU, quadric: GLUquadric) {
       glVertex3f(0f, -0.075f, 0f)
       glVertex3f(0.10f, -0.125f, 0f)
     }
-  }
 
-  private def car() {
+  private def car() = {
     glTranslatef(0f, 0f, 0.14f * -0.6f)
     glRotatef(90f, 1f, 0f, 0f)
     glRotatef(90f, 0f, 1f, 0f)
@@ -218,8 +216,7 @@ private class Builtins(gl: GL, glu: GLU, quadric: GLUquadric) {
     }
   }
 
-  private def plane() {
-    begin(GL_QUADS) {
+  private def plane() = begin(GL_QUADS) {
       glNormal3f(0f, 0f, 1f)
       glVertex3f(.14f, .14f, -.14f)
       glVertex3f(-.14f, .14f, -.14f)
@@ -232,10 +229,8 @@ private class Builtins(gl: GL, glu: GLU, quadric: GLUquadric) {
       glVertex3f(-.14f, .14f, -.14f)
       glVertex3f(.14f, .14f, -.14f)
     }
-  }
 
-  private def crosshairs() {
-    attrib(GL_ENABLE_BIT, GL_CURRENT_BIT) {
+  private def crosshairs() = attrib(GL_ENABLE_BIT, GL_CURRENT_BIT) {
       glDisable(GL_LIGHTING)
       glDisable(GL_CULL_FACE)
 
@@ -260,10 +255,8 @@ private class Builtins(gl: GL, glu: GLU, quadric: GLUquadric) {
         glVertex3f(0.00f, 0.185f, 0f)
       }
     }
-  }
 
-  private def halo() {
-    attrib(GL_ENABLE_BIT, GL_CURRENT_BIT) {
+  private def halo() = attrib(GL_ENABLE_BIT, GL_CURRENT_BIT) {
 
       glDisable(GL_LIGHTING)
       glDisable(GL_CULL_FACE)
@@ -291,9 +284,8 @@ private class Builtins(gl: GL, glu: GLU, quadric: GLUquadric) {
 
       glDisable(GL_BLEND)
     }
-  }
 
-  private def stoplight() {
+  private def stoplight() = {
     glTranslatef(0f, 0f, (Renderer.WORLD_SCALE))
     gluSphere(quadric, (Renderer.WORLD_SCALE / 4),
       SMOOTHNESS, SMOOTHNESS)
@@ -302,7 +294,7 @@ private class Builtins(gl: GL, glu: GLU, quadric: GLUquadric) {
       gl, (0.14f / 6), (0.14f / 1.5f), (0.14f / 1.5f), false)
   }
 
-  private def cylinder() {
+  private def cylinder() = {
     glTranslatef(0f, 0f, (-Renderer.WORLD_SCALE / 2) + 0.01f)
     gluCylinder(quadric, 0.12f, 0.12f,
       Renderer.WORLD_SCALE - 0.01, SMOOTHNESS, 1)
@@ -313,7 +305,7 @@ private class Builtins(gl: GL, glu: GLU, quadric: GLUquadric) {
     gluDisk(quadric, 0f, 0.12f, SMOOTHNESS, 1)
   }
 
-  private def cone() {
+  private def cone() = {
     glRotatef(-90f, 1f, 0f, 0f)
     glTranslatef(0f, 0f, -(Renderer.WORLD_SCALE / 2))
     gluCylinder(quadric, Renderer.WORLD_SCALE / 2, 0f,
@@ -324,17 +316,17 @@ private class Builtins(gl: GL, glu: GLU, quadric: GLUquadric) {
   }
 
   // OpenGL helpers
-  private def begin(n: Int)(body: => Unit) {
+  private def begin(n: Int)(body: => Unit) = {
     glBegin(n)
     body
     glEnd()
   }
-  private def attrib(ns: Int*)(body: => Unit) {
+  private def attrib(ns: Int*)(body: => Unit) = {
     ns.foreach(glPushAttrib)
     body
     ns.foreach(_ => glPopAttrib())
   }
-  private def matrix(body: => Unit) {
+  private def matrix(body: => Unit) = {
     glPushMatrix()
     body
     glPopMatrix()
