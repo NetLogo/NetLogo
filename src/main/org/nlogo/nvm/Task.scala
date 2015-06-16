@@ -20,7 +20,7 @@ sealed trait Task {
   val formals: Array[api.Let]  // don't mutate please! Array for efficiency
   val lets: List[LetBinding]
   val locals: Array[AnyRef]
-  def bindArgs(c: Context, args: Array[AnyRef]) {
+  def bindArgs(c: Context, args: Array[AnyRef]) = {
     var i = 0
     var n = formals.size
     while(i < n) {
@@ -65,10 +65,9 @@ extends Task with org.nlogo.api.ReporterTask {
 case class CommandTask(procedure: Procedure, formals: Array[api.Let], lets: List[LetBinding], locals: Array[AnyRef])
 extends Task with org.nlogo.api.CommandTask {
   override def toString = procedure.displayName
-  def perform(context: api.Context, args: Array[AnyRef]) {
+  def perform(context: api.Context, args: Array[AnyRef]) =
     perform(context.asInstanceOf[ExtensionContext].nvmContext, args)
-  }
-  def perform(context: Context, args: Array[AnyRef]) {
+  def perform(context: Context, args: Array[AnyRef]) = {
     val oldLets = context.letBindings
     context.letBindings = lets
     bindArgs(context, args)

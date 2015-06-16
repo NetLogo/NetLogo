@@ -13,14 +13,14 @@ object LabInterface {
     def compile(w: Workspace) // only for testing purposes
   }
   trait ProgressListener {
-    def experimentStarted() { }
-    def experimentAborted() { }
-    def experimentCompleted() { }
-    def runStarted(w: Workspace, runNumber: Int, settings: List[(String, Any)]) { }
-    def measurementsTaken(w: Workspace, runNumber: Int, step: Int, values: List[AnyRef]) { }
-    def stepCompleted(w: Workspace, step: Int) { }
-    def runCompleted(w: Workspace, runNumber: Int, steps: Int) { }
-    def runtimeError(w: Workspace, runNumber: Int, t: Throwable) { }
+    def experimentStarted() = {}
+    def experimentAborted() = {}
+    def experimentCompleted() = {}
+    def runStarted(w: Workspace, runNumber: Int, settings: List[(String, Any)]) = {}
+    def measurementsTaken(w: Workspace, runNumber: Int, step: Int, values: List[AnyRef]) = {}
+    def stepCompleted(w: Workspace, step: Int) = {}
+    def runCompleted(w: Workspace, runNumber: Int, steps: Int) = {}
+    def runtimeError(w: Workspace, runNumber: Int, t: Throwable) = {}
   }
   case class Settings(model: String,
                       setupFile: Option[java.io.File],
