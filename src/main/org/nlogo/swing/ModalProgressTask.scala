@@ -11,7 +11,7 @@ import org.nlogo.api.Version
 object ModalProgressTask {
   val isMac = System.getProperty("os.name").startsWith("Mac")
 
-  def apply(parent: java.awt.Frame, message: String, r: Runnable) {
+  def apply(parent: java.awt.Frame, message: String, r: Runnable) = {
     mustBeEventDispatchThread()
 
     // set up dialog
@@ -45,7 +45,7 @@ object ModalProgressTask {
     // This is a workaround for the menu getting grayed out on macs in 3D mode
     // See issue #47  FD 6/12/14
     if(isMac && Version.is3D) {
-      val threedFixBoss = new Boss(dialog, new Runnable() { override def run() {} })
+      val threedFixBoss = new Boss(dialog, new Runnable() { override def run() = {} })
       threedFixBoss.setPriority(Thread.MAX_PRIORITY)
       threedFixBoss.start()
       dialog.setVisible(true)
@@ -54,7 +54,7 @@ object ModalProgressTask {
 
   private class Boss(dialog: JDialog, r: Runnable)
   extends Thread("ModalProgressTask#Boss") {
-    override def run() {
+    override def run() =
       try {
         while (!dialog.isVisible)
         Thread.sleep(50)
@@ -67,6 +67,5 @@ object ModalProgressTask {
         dialog.setVisible(false)
         dialog.dispose()
       }
-    }
   }
 }

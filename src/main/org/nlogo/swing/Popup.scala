@@ -20,13 +20,13 @@ class Popup(parentFrame: Frame, title:String, panel: JPanel, cancel: => Unit, ok
     RichJButton(i18n("common.buttons.cancel")){ cancel; die() }),
     BorderLayout.SOUTH)
 
-  def show() {
+  def show() = {
     dialog.pack()
     org.nlogo.awt.Positioning.center(dialog, parentFrame)
     dialog.setVisible(true)
   }
 
-  def die() {
+  def die() = {
     dialog.setVisible(false)
     dialog.dispose()
   }

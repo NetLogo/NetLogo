@@ -10,7 +10,6 @@ abstract class NumberedMenu(name: String) extends Menu(name) {
     addMenuItem(
       ('1' + i).toChar,
       new javax.swing.AbstractAction(itemName) {
-        override def actionPerformed(e: java.awt.event.ActionEvent) {
-          fn()
-        }})
+        override def actionPerformed(e: java.awt.event.ActionEvent) = fn()
+      })
 }

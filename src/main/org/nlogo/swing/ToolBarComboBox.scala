@@ -14,43 +14,37 @@ class ToolBarComboBox(val items: Array[JMenuItem]) extends JPanel {
     setBorder(Utils.createWidgetBorder())
     if (System.getProperty("os.name").startsWith("Mac")) setBackground(Color.WHITE)
     addMouseListener(new MouseAdapter() {
-      override def mousePressed(e: MouseEvent) {
-        if (isEnabled()) {
+      override def mousePressed(e: MouseEvent) = if (isEnabled()) {
           val menu = new WrappingPopupMenu()
           populate(menu)
           menu.show(ToolBarComboBox.this, 0, getHeight)
         }
-      }
     })
     org.nlogo.awt.Fonts.adjustDefaultFont(this)
   }
 
-  def populate(menu: JPopupMenu) {
-    for (item <- items) {
+  def populate(menu: JPopupMenu) = for (item <- items) {
       menu.add(item)
       item.addActionListener(new ActionListener() {
-        def actionPerformed(e: ActionEvent) {
+        def actionPerformed(e: ActionEvent) = {
           selected = item
           ToolBarComboBox.this.repaint()
         }
       })
     }
-  }
 
   def getSelectedItem:JMenuItem = selected
-  def setSelectedString(toSelect:String) {
+  def setSelectedString(toSelect:String) = {
     selected = items.find(_.getText == toSelect).getOrElse(selected)
     repaint()
   }
 
   // handle the case where the item that was selected has now become disabled
-  def updateSelected() {
-    if(!selected.isEnabled)
-      for(newGuy <- items.find(_.isEnabled)) {
-        selected = newGuy
-        repaint()
-      }
-  }
+  def updateSelected() = if(!selected.isEnabled)
+    for(newGuy <- items.find(_.isEnabled)) {
+      selected = newGuy
+      repaint()
+    }
 
   override def getMinimumSize = new Dimension(11,20)
   override def getPreferredSize = {
@@ -64,7 +58,7 @@ class ToolBarComboBox(val items: Array[JMenuItem]) extends JPanel {
     size
   }
 
-  override def paintComponent(g:Graphics) {
+  override def paintComponent(g:Graphics) = {
     val g2d = g.asInstanceOf[Graphics2D]
     g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     super.paintComponent(g)

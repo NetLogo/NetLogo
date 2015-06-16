@@ -15,21 +15,19 @@ extends javax.swing.JPanel {
         classOf[CollapsiblePane].getResource("/images/closedarrow.gif")))
 
   locally {
-    open.addMouseListener(
-      new java.awt.event.MouseAdapter {
-        override def mouseClicked(e: java.awt.event.MouseEvent) {
-          setCollapsed(true) }})
-    closed.addMouseListener(
-      new java.awt.event.MouseAdapter {
-        override def mouseClicked(e: java.awt.event.MouseEvent) {
-          setCollapsed(false) }})
+    open.addMouseListener(new java.awt.event.MouseAdapter {
+        override def mouseClicked(e: java.awt.event.MouseEvent) = setCollapsed(true)
+      })
+    closed.addMouseListener(new java.awt.event.MouseAdapter {
+        override def mouseClicked(e: java.awt.event.MouseEvent) = setCollapsed(false)
+      })
     setLayout(new java.awt.BorderLayout())
     add(open, java.awt.BorderLayout.NORTH)
     add(element, java.awt.BorderLayout.CENTER)
     setBorder(javax.swing.border.LineBorder.createGrayLineBorder())
   }
 
-  def setCollapsed(collapsed: Boolean) {
+  def setCollapsed(collapsed: Boolean) = {
     element.setVisible(!collapsed)
     if (collapsed) {
       remove(open)

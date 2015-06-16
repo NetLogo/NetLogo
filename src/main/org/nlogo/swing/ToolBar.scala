@@ -13,7 +13,7 @@ object ToolBar {
   class Separator extends JComponent {
     override def getMinimumSize = new Dimension(19,25)
     override def getPreferredSize = getMinimumSize
-    override def paintComponent(g:Graphics) {
+    override def paintComponent(g:Graphics) = {
       g.setColor(Color.GRAY)
       for(i<-0 until 3) {
         g.drawLine(getWidth / 2 + i, 0, getWidth / 2 + i, getHeight - 2)
@@ -32,7 +32,7 @@ abstract class ToolBar extends JToolBar {
 
   // we add the controls at addNotify time so that subclasses have the chance to fully construct
   // themselves before addControls() is called - ST 9/2/03
-  override def addNotify(){
+  override def addNotify() = {
     super.addNotify()
     addControls()
     for(comp<-getComponents) {
