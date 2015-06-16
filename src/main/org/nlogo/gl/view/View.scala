@@ -40,9 +40,9 @@ with org.nlogo.window.Event.LinkChild {
   add(canvas, java.awt.BorderLayout.CENTER)
   canvas.setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR))
 
-  def updatePerspectiveLabel() { }
+  def updatePerspectiveLabel() = {}
 
-  def createCanvas(antiAliasing: Boolean) {
+  def createCanvas(antiAliasing: Boolean) = {
     val capabilities = new javax.media.opengl.GLCapabilities
     capabilities.setSampleBuffers(antiAliasing)
     capabilities.setNumSamples(4)
@@ -56,42 +56,29 @@ with org.nlogo.window.Event.LinkChild {
   }
 
   class KeyInputHandler extends KeyAdapter {
-    override def keyPressed(e: KeyEvent) {
-      if (e.getKeyCode == KeyEvent.VK_ESCAPE) {
-        viewManager.setFullscreen(false)
-      }
-    }
+    override def keyPressed(e: KeyEvent) = if (e.getKeyCode == KeyEvent.VK_ESCAPE)
+      viewManager.setFullscreen(false)
   }
 
   override def getLinkParent = viewManager
 
-  def updateRenderer() {
-    renderer.update()
-  }
+  def updateRenderer() = renderer.update()
 
-  def setVisible() {
+  def setVisible() = {
     super.setVisible(true)
     toFront()
     canvas.requestFocus()
   }
 
-  def display() {
-    canvas.display()
-  }
+  def display() = canvas.display()
 
-  def invalidateTurtleShape(shape: String) {
-    renderer.invalidateTurtleShape(shape)
-  }
+  def invalidateTurtleShape(shape: String) = renderer.invalidateTurtleShape(shape)
 
-  def invalidateLinkShape(shape: String) {
-    renderer.invalidateLinkShape(shape)
-  }
+  def invalidateLinkShape(shape: String) = renderer.invalidateLinkShape(shape)
 
-  def signalViewUpdate() {
-    canvas.repaint()
-  }
+  def signalViewUpdate() = canvas.repaint()
 
-  def resetPerspective() {
+  def resetPerspective() = {
     viewManager.world.observer.resetPerspective()
     signalViewUpdate()
     updatePerspectiveLabel()
@@ -117,7 +104,7 @@ with org.nlogo.window.Event.LinkChild {
     true
   }
 
-  def doPopup(e: MouseEvent) {
+  def doPopup(e: MouseEvent) = {
     renderer.queuePick(e.getPoint, picker)
     e.consume()
   }

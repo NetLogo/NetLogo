@@ -45,16 +45,14 @@ class ViewControlToolBar(view: View, inputHandler: MouseMotionHandler)
   add(javax.swing.Box.createHorizontalStrut(8))
   val resetButton = new javax.swing.JButton(I18N.gui.get("view.3d.resetPerspective"))
   resetButton.addActionListener(new ActionListener {
-    override def actionPerformed(e: ActionEvent) {
-      view.resetPerspective()
-    }
+    override def actionPerformed(e: ActionEvent) = view.resetPerspective()
   })
   add(resetButton)
   add(javax.swing.Box.createHorizontalStrut(8))
   val fullScreenButton = new javax.swing.JButton(I18N.gui.get("view.3d.fullScreen"))
   fullScreenButton.addActionListener(
     new ActionListener {
-      override def actionPerformed(e: ActionEvent) {
+      override def actionPerformed(e: ActionEvent) = {
         val options = Array[AnyRef](I18N.gui.get("common.buttons.continue"),
                                     I18N.gui.get("common.buttons.cancel"))
         val isWindows = System.getProperty("os.name").toLowerCase.startsWith("win")
@@ -75,8 +73,7 @@ class ViewControlToolBar(view: View, inputHandler: MouseMotionHandler)
   private var perspective: Perspective = null
   private var agent: Agent = null
 
-  def setStatus(perspective: Perspective, agent: Agent) {
-    // don't update if perspective didn't change
+  def setStatus(perspective: Perspective, agent: Agent) =
     if (this.perspective != perspective || (agent != null && agent != this.agent)) {
       this.perspective = perspective
       this.agent = agent
@@ -106,22 +103,17 @@ class ViewControlToolBar(view: View, inputHandler: MouseMotionHandler)
           }
       }
     }
-  }
 
-  private def setButtonsEnabled(enabled: Boolean) {
+  private def setButtonsEnabled(enabled: Boolean) = {
     orbitAction.setEnabled(enabled)
     zoomAction.setEnabled(enabled)
     moveAction.setEnabled(enabled)
   }
 
-  private def setMovementMode(mode: Mode) {
-    inputHandler.setMovementMode(mode)
-  }
+  private def setMovementMode(mode: Mode) = inputHandler.setMovementMode(mode)
 
   class MovementAction(label: String, mode: Mode)
       extends javax.swing.AbstractAction(label) {
-    override def actionPerformed(e: ActionEvent) {
-      setMovementMode(mode)
-    }
+    override def actionPerformed(e: ActionEvent) = setMovementMode(mode)
   }
 }

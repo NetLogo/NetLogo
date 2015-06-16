@@ -11,13 +11,13 @@ extends View("", viewManager, renderer) {
   setUndecorated(true)
   setVisible(true)
 
-  def init() {
+  def init() = {
     val gd = getLocalGraphicsEnvironment.getDefaultScreenDevice
     gd.setFullScreenWindow(this)
     canvas.requestFocus()
   }
 
   // We override this so no popup menus -- otherwise the screen just goes blank. - AZS 6/1/05
-  override def doPopup(e: java.awt.event.MouseEvent) { }
+  override def doPopup(e: java.awt.event.MouseEvent) = {}
 
 }

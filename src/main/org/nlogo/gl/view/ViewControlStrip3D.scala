@@ -19,7 +19,7 @@ class ViewControlStrip3D(workspace: GUIWorkspace) extends JPanel {
   controls.setOpaque(false)
   add(controls, BorderLayout.CENTER)
 
-  def updateTicks() {
+  def updateTicks() = {
     tickCounter.setVisible(workspace.viewWidget.showTickCounter)
     val width = tickCounter.getMinimumSize.width
     val ticks = workspace.world.tickCounter.ticks

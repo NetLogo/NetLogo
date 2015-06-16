@@ -25,7 +25,7 @@ with java.awt.event.MouseWheelListener {
   private var prevMouseX, prevMouseY = 0
   val world = view.viewManager.world
 
-  def setMovementMode(mode: Mode) {
+  def setMovementMode(mode: Mode) = {
     if (mode == InteractMode) {
       view.renderer.setMouseMode(true)
       view.signalViewUpdate()
@@ -37,17 +37,11 @@ with java.awt.event.MouseWheelListener {
 
   // MouseListener
 
-  def mouseEntered(evt: MouseEvent) {
-    if (movementMode == InteractMode)
-      view.renderer.mouseInside(evt.getX, evt.getY)
-  }
+  def mouseEntered(evt: MouseEvent) = if (movementMode == InteractMode) view.renderer.mouseInside(evt.getX, evt.getY)
 
-  def mouseExited(evt: MouseEvent) {
-    if (movementMode == InteractMode)
-      view.renderer.mouseInside(evt.getX, evt.getY)
-  }
+  def mouseExited(evt: MouseEvent) = if (movementMode == InteractMode) view.renderer.mouseInside(evt.getX, evt.getY)
 
-  def mousePressed(evt: MouseEvent) {
+  def mousePressed(evt: MouseEvent) = {
     prevMouseX = evt.getX
     prevMouseY = evt.getY
     if (!evt.isPopupTrigger && movementMode == InteractMode && hasButton1(evt))
@@ -59,7 +53,7 @@ with java.awt.event.MouseWheelListener {
     }
   }
 
-  def mouseReleased(evt: MouseEvent) {
+  def mouseReleased(evt: MouseEvent) = {
     view.renderer.showCrossHairs(false)
     if (!evt.isPopupTrigger && (movementMode == InteractMode) && hasButton1(evt))
       view.renderer.mouseDown(false)
@@ -68,7 +62,7 @@ with java.awt.event.MouseWheelListener {
     view.signalViewUpdate()
   }
 
-  def mouseWheelMoved(e: MouseWheelEvent) {
+  def mouseWheelMoved(e: MouseWheelEvent) = {
     val observer = world.observer
     var zoomDist = -e.getUnitsToScroll.toDouble
     if (observer.perspective == Perspective.Follow || observer.perspective == Perspective.Ride) {
@@ -91,7 +85,7 @@ with java.awt.event.MouseWheelListener {
 
   /// Implementation of java.awt.event.MouseMotionListener
 
-  def mouseDragged(evt: MouseEvent) {
+  def mouseDragged(evt: MouseEvent) =
     if (movementMode == InteractMode) {
       // we skip all the unnecessary computations below because it drastically slows down the
       // mouse updates jrn 5/20/05
@@ -100,9 +94,8 @@ with java.awt.event.MouseWheelListener {
       view.renderer.mouseInside(evt.getX, evt.getY)
     }
     else handleDrag(evt)
-  }
 
-  private def handleDrag(evt: MouseEvent) {
+  private def handleDrag(evt: MouseEvent) = {
     val mode =
       if (evt.isAltDown) TranslateMode
       else if (evt.isShiftDown) ZoomMode
@@ -145,13 +138,11 @@ with java.awt.event.MouseWheelListener {
     }
   }
 
-  def mouseMoved(evt: MouseEvent) {
-    if (movementMode == InteractMode) {
+  def mouseMoved(evt: MouseEvent) = if (movementMode == InteractMode) {
       view.renderer.setMouseCors(evt.getPoint)
       view.renderer.mouseInside(evt.getX, evt.getY)
     }
-  }
 
-  def mouseClicked(evt: MouseEvent) {}
+  def mouseClicked(evt: MouseEvent) = {}
 
 }

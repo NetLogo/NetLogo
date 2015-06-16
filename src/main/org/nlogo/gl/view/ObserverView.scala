@@ -17,19 +17,15 @@ extends View("3D View", viewManager, renderer) {
   add(controlStrip, java.awt.BorderLayout.NORTH)
 
   addWindowListener(new java.awt.event.WindowAdapter {
-    override def windowClosing(e: java.awt.event.WindowEvent) {
-      if(!org.nlogo.api.Version.is3D)
-        ObserverView.this.viewManager.close()
-    }
+    override def windowClosing(e: java.awt.event.WindowEvent) = if(!org.nlogo.api.Version.is3D)
+      ObserverView.this.viewManager.close()
   })
 
   viewManager.addLinkComponent(this)
 
-  override def updatePerspectiveLabel() {
-    navBar.setStatus(
-      viewManager.world.observer.perspective,
-      viewManager.world.observer.targetAgent)
-  }
+  override def updatePerspectiveLabel() = navBar.setStatus(
+    viewManager.world.observer.perspective,
+    viewManager.world.observer.targetAgent)
 
   override def editFinished() = {
     super.editFinished()
