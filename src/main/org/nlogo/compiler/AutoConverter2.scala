@@ -148,7 +148,7 @@ class AutoConverter2(workspace:Workspace,ignoreErrors:Boolean)(implicit tokenize
    *
    */
   private class AutoConverterVisitor(replacements:collection.mutable.ArrayBuffer[Replacement],source:String) extends DefaultAstVisitor {
-    override def visitReporterApp(app:ReporterApp) {
+    override def visitReporterApp(app:ReporterApp) = {
       val oldReporter = app.reporter
       oldReporter match {
         case _:org.nlogo.prim.dead._valuefrom | _:org.nlogo.prim.dead._valuesfrom =>
@@ -183,7 +183,7 @@ class AutoConverter2(workspace:Workspace,ignoreErrors:Boolean)(implicit tokenize
     // histogram-from turtles [xcor] => histogram [xcor] of turtles
     // replacement #1: "histogram-from" -> "histogram [xcor] of"
     // replacement #2: " [xcor]" -> ""
-    override def visitStatement(stmt:Statement) {
+    override def visitStatement(stmt:Statement) = {
       val oldCommand = stmt.command
       if(oldCommand.isInstanceOf[org.nlogo.prim.dead._histogramfrom]) {
         val arg1 = stmt(1).asInstanceOf[ReporterBlock]

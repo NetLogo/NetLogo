@@ -15,7 +15,7 @@ import org.nlogo.prim.{ _call, _done, _fastrecurse, _goto, _return, _returnrepor
  */
 private class Assembler {
   private val code = new collection.mutable.ArrayBuffer[Command]
-  def assemble(procdef: ProcedureDefinition) {
+  def assemble(procdef: ProcedureDefinition) = {
     val proc = procdef.procedure
     assembleStatements(procdef.statements)
     val ret = proc.tyype match {
@@ -54,41 +54,35 @@ private class Assembler {
     private var branchMark = -1
     private var gotoMark = -1
     private var storedGoto: Option[_goto] = None
-    def add(cmd: Command) {
+    def add(cmd: Command) = {
       if (cmd eq stmt.command)
         if (branchMark == -1) branchMark = code.size
         else stmt.command.offset = branchMark - code.size
       code += cmd
     }
-    def goTo() {
+    def goTo() =
       if (gotoMark == -1) {
         storedGoto = Some(new _goto(-99999)) // we'll fix in comeFrom()
         add(storedGoto.get)
         gotoMark = code.size
       } else add(new _goto(gotoMark - code.size))
-    }
-    def comeFrom() {
-      storedGoto match {
+    def comeFrom() = storedGoto match {
         case Some(g) =>
           g.offset = code.size - gotoMark + 1
           storedGoto = None
         case None => gotoMark = code.size
       }
-    }
-    def block() { block(stmt.size - 1) }
-    def block(pos: Int) { assembleStatements(stmt(pos).asInstanceOf[CommandBlock].statements) }
+    def block() = block(stmt.size - 1)
+    def block(pos: Int) = assembleStatements(stmt(pos).asInstanceOf[CommandBlock].statements)
     def argCount() = stmt.size
     def arg(i: Int) = stmt(i).asInstanceOf[ReporterApp].reporter
-    def removeArg(i: Int) {
-      stmt.command.args = (stmt.command.args.take(i) ++ stmt.command.args.drop(i + 1)).toArray
-    }
-    def resume() {
+    def removeArg(i: Int) = stmt.command.args = (stmt.command.args.take(i) ++ stmt.command.args.drop(i + 1)).toArray
+    def resume() =
       if (branchMark == -1) branchMark = code.size
       else stmt.command.offset = offset
-    }
     def offset =
       if (branchMark == -1) throw new IllegalStateException
       else code.size - branchMark
-    def done() { code += new _done }
+    def done() = code += new _done
   }
 }

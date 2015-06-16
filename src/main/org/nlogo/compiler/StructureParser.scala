@@ -46,10 +46,8 @@ private object StructureParser {
       if(hasNext) tokens(index)
       else Token.eof
     // mutation
-    def add(t: Token) { tokens += t }
-    def appendAll(ts: Iterable[Token]) {
-      tokens ++= ts.takeWhile(_.tyype != TokenType.EOF)
-    }
+    def add(t: Token) = tokens += t
+    def appendAll(ts: Iterable[Token]) = tokens ++= ts.takeWhile(_.tyype != TokenType.EOF)
   }
 }
 
@@ -359,7 +357,7 @@ private class StructureParser(
     newProcedures.put(procedure.name, procedure)
     procedure
   }
-  private def parseVarList(result: java.util.List[String], owningAgentClass: Class[_ <: Agent], procedure: Procedure) {
+  private def parseVarList(result: java.util.List[String], owningAgentClass: Class[_ <: Agent], procedure: Procedure) = {
     var token = tokenBuffer.next()
     cAssert(token.tyype == TokenType.OPEN_BRACKET, "Expected [", token)
     var done = false
@@ -385,7 +383,7 @@ private class StructureParser(
       }
     }
   }
-  private def checkName(varName: String, token: Token, owningAgentClass: Class[_ <: Agent], procedure: Procedure) {
+  private def checkName(varName: String, token: Token, owningAgentClass: Class[_ <: Agent], procedure: Procedure) = {
     if(owningAgentClass == null || owningAgentClass == classOf[Link]) {
       val keys = program.breedsOwn.keySet.iterator()
       while(keys.hasNext) {
@@ -425,7 +423,7 @@ private class StructureParser(
     checkNameAgainstProceduresMap(varName, token, newProcedures, procedure != null)
   }
 
-  private def checkNameAgainstProceduresMap(varName: String, token: Token, procedures: java.util.Map[String, Procedure], isLocal: Boolean) {
+  private def checkNameAgainstProceduresMap(varName: String, token: Token, procedures: java.util.Map[String, Procedure], isLocal: Boolean) = {
     cAssert(!procedures.containsKey(varName),"There is already a procedure with that name", token)
     if(!isLocal) {
       val iter = procedures.keySet.iterator()
@@ -444,7 +442,7 @@ private class StructureParser(
   /**
    * parses the "import" special form
    */
-  private def parseImport(tokenBuffer: TokenBuffer) {
+  private def parseImport(tokenBuffer: TokenBuffer) = {
     extensionManager.startFullCompilation()
     tokenBuffer.next() // skip the __extensions
     val token = tokenBuffer.next()

@@ -35,21 +35,19 @@ object Compiler extends CompilerInterface {
 
   // these two used by input boxes
   @throws(classOf[CompilerException])
-  def checkCommandSyntax(source: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean) {
+  def checkCommandSyntax(source: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean) =
     checkSyntax("to __bogus-name " + source + "\nend",
                 true, program, procedures, extensionManager, parse)
-  }
   @throws(classOf[CompilerException])
-  def checkReporterSyntax(source: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean) {
+  def checkReporterSyntax(source: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean) =
     checkSyntax("to-report __bogus-name report " + source + "\nend",
                 true, program, procedures, extensionManager, parse)
-  }
 
   // like in the auto-converter we want to compile as far as we can but
   // we assume that any tokens we don't recognize are actually globals
   // that we don't know about.
   @throws(classOf[CompilerException])
-  private def checkSyntax(source: String, subprogram: Boolean, program: Program, oldProcedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean) {
+  private def checkSyntax(source: String, subprogram: Boolean, program: Program, oldProcedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean) = {
     implicit val t = tokenizer(program.is3D)
     val results = new StructureParser(t.tokenizeRobustly(source), None,
                                       program, oldProcedures, extensionManager)

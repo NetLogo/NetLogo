@@ -25,13 +25,12 @@ private class LocalsVisitor extends DefaultAstVisitor {
   private var askNestingLevel = 0
   private var vn = 0   // used when converting _repeat to _repeatlocal
 
-  override def visitProcedureDefinition(procdef: ProcedureDefinition) {
+  override def visitProcedureDefinition(procdef: ProcedureDefinition) = {
     procedure = procdef.procedure
     super.visitProcedureDefinition(procdef)
   }
 
-  override def visitStatement(stmt: Statement) {
-    stmt.command match {
+  override def visitStatement(stmt: Statement) = stmt.command match {
       case _: _ask | _: _askconcurrent =>
         askNestingLevel += 1
         super.visitStatement(stmt)
@@ -71,9 +70,8 @@ private class LocalsVisitor extends DefaultAstVisitor {
         super.visitStatement(stmt)
       case _ => super.visitStatement(stmt)
     }
-  }
 
-  override def visitReporterApp(expr: ReporterApp) {
+  override def visitReporterApp(expr: ReporterApp) = {
     expr.reporter match {
       case l: _letvariable =>
         cAssert(currentLet == null || (currentLet.let ne l.let),

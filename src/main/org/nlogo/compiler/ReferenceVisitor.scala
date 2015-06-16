@@ -6,7 +6,7 @@ import org.nlogo.api.Syntax
 import org.nlogo.prim._
 
 private class ReferenceVisitor extends DefaultAstVisitor {
-  override def visitStatement(stmt: Statement) {
+  override def visitStatement(stmt: Statement) = {
     super.visitStatement(stmt)
     val index = stmt.command.syntax.right.indexWhere(_ == Syntax.ReferenceType)
     // at present the GIS extension is expecting its _reference arguments not to

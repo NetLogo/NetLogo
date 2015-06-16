@@ -16,7 +16,7 @@ import org.nlogo.prim._
 private class SetVisitor extends DefaultAstVisitor {
   private lazy val INVALID_SET =
     I18N.errors.get("compiler.SetVisitor.notSettable")
-  override def visitStatement(stmt:Statement) {
+  override def visitStatement(stmt:Statement) = {
     super.visitStatement(stmt)
     if(stmt.command.isInstanceOf[_set]) {
       val rApp = stmt(0).asInstanceOf[ReporterApp]

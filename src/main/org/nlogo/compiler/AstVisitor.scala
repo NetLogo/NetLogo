@@ -22,10 +22,10 @@ trait AstVisitor {
  * strategies.
  */
 class DefaultAstVisitor extends AstVisitor {
-  def visitProcedureDefinition(proc: ProcedureDefinition) { proc.statements.accept(this) }
-  def visitCommandBlock(block: CommandBlock) { block.statements.accept(this) }
-  def visitReporterApp(app: ReporterApp) { app.foreach(_.accept(this)) }
-  def visitReporterBlock(block: ReporterBlock) { block.app.accept(this) }
-  def visitStatement(stmt: Statement) { stmt.foreach(_.accept(this)) }
-  def visitStatements(stmts: Statements) { stmts.foreach(_.accept(this)) }
+  def visitProcedureDefinition(proc: ProcedureDefinition) = proc.statements.accept(this)
+  def visitCommandBlock(block: CommandBlock) = block.statements.accept(this)
+  def visitReporterApp(app: ReporterApp) = app.foreach(_.accept(this))
+  def visitReporterBlock(block: ReporterBlock) = block.app.accept(this)
+  def visitStatement(stmt: Statement) = stmt.foreach(_.accept(this))
+  def visitStatements(stmts: Statements) = stmts.foreach(_.accept(this))
 }

@@ -13,8 +13,7 @@ import org.nlogo.prim._
 
 private class CarefullyVisitor extends DefaultAstVisitor {
   private val stack = new collection.mutable.Stack[_carefully]
-  override def visitStatement(stmt:Statement) {
-    stmt.command match {
+  override def visitStatement(stmt:Statement) = stmt.command match {
       case c:_carefully =>
         // carefully takes two arguments, both command blocks.
         // error-message is allowed only within the second block.
@@ -24,14 +23,11 @@ private class CarefullyVisitor extends DefaultAstVisitor {
         stack.pop()
       case _ => super.visitStatement(stmt)
     }
-  }
-  override def visitReporterApp(app:ReporterApp) {
-    app.reporter match {
+  override def visitReporterApp(app:ReporterApp) = app.reporter match {
       case em: _errormessage =>
         if(stack.isEmpty)
           exception(I18N.errors.getN("compiler.CarefullyVisitor.badNesting", em.token.name), app)
         em.let = stack.top.let
       case _ => super.visitReporterApp(app)
     }
-  }
 }

@@ -108,7 +108,7 @@ private class IdentifierParser(program:Program,
                 new Token(varName,tok.tyype,tok.value)
                          (tok.startPos,tok.startPos + varName.length,tok.fileName))
   }
-  private def checkProcedureName(procedure:Procedure) {
+  private def checkProcedureName(procedure:Procedure): Unit = {
     val newVal:AnyRef =
       // if the proc name doesn't trigger any identifier rules it's treated as a variable reference,
       // and if there's no variable with that name, CompilerException is raised -- CLB

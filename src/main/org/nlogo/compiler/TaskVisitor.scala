@@ -10,12 +10,11 @@ import org.nlogo.prim.{ _reportertask, _letvariable, _taskvariable }
 private class TaskVisitor extends DefaultAstVisitor {
   private var task = Option.empty[_reportertask]
   private var procedure = Option.empty[Procedure]
-  override def visitProcedureDefinition(procdef: ProcedureDefinition) {
+  override def visitProcedureDefinition(procdef: ProcedureDefinition) = {
     procedure = Some(procdef.procedure)
     super.visitProcedureDefinition(procdef)
   }
-  override def visitReporterApp(expr: ReporterApp) {
-    expr.reporter match {
+  override def visitReporterApp(expr: ReporterApp) = expr.reporter match {
       case l: _reportertask =>
         val old = task
         task = Some(l)
@@ -37,5 +36,4 @@ private class TaskVisitor extends DefaultAstVisitor {
       case _ =>
         super.visitReporterApp(expr)
     }
-  }
 }

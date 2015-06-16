@@ -65,7 +65,7 @@ class ProcedureDefinition(val procedure: Procedure, val statements: Statements) 
   def start = procedure.pos
   def end = procedure.endPos
   def file = procedure.fileName
-  def accept(v: AstVisitor) { v.visitProcedureDefinition(this) }
+  def accept(v: AstVisitor) = v.visitProcedureDefinition(this)
 }
 
 /**
@@ -85,16 +85,15 @@ class Statements(val file: String) extends AstNode with Seq[Statement] {
    * a List of the actual Statement objects.
    */
   private val stmts = new collection.mutable.ArrayBuffer[Statement]
-  def addStatement(stmt: Statement) {
+  def addStatement(stmt: Statement) = {
     stmts.append(stmt)
     recomputeStartAndEnd()
   }
-  private def recomputeStartAndEnd() {
+  private def recomputeStartAndEnd() =
     if (stmts.isEmpty) { start = 0; end = 0 }
     else { start = stmts(0).start; end = stmts(stmts.size - 1).end }
-  }
   override def toString = stmts.mkString(" ")
-  def accept(v: AstVisitor) { v.visitStatements(this) }
+  def accept(v: AstVisitor) = v.visitStatements(this)
 }
 
 /**
@@ -105,11 +104,11 @@ class Statement(var command: Command, var start: Int, var end: Int, val file: St
     extends Application with Seq[Expression] {
   val args = new collection.mutable.ArrayBuffer[Expression]
   def instruction = command // for Application
-  def addArgument(arg: Expression) { args.append(arg) }
+  def addArgument(arg: Expression) = args.append(arg)
   override def toString = command.toString + "[" + args.mkString(", ") + "]"
-  def accept(v: AstVisitor) { v.visitStatement(this) }
-  def replaceArg(index: Int, expr: Expression) { args(index) = expr }
-  def removeArgument(index: Int) { args.remove(index) }
+  def accept(v: AstVisitor) = v.visitStatement(this)
+  def replaceArg(index: Int, expr: Expression) = args(index) = expr
+  def removeArgument(index: Int) = args.remove(index)
 }
 
 /**
@@ -121,7 +120,7 @@ class Statement(var command: Command, var start: Int, var end: Int, val file: St
 class CommandBlock(val statements: Statements, var start: Int, var end: Int, val file: String) extends Expression {
   def reportedType() = Syntax.CommandBlockType
   override def toString = "[" + statements.toString + "]"
-  def accept(v: AstVisitor) { v.visitCommandBlock(this) }
+  def accept(v: AstVisitor) = v.visitCommandBlock(this)
 }
 
 /**
@@ -133,7 +132,7 @@ class CommandBlock(val statements: Statements, var start: Int, var end: Int, val
  */
 class ReporterBlock(val app: ReporterApp, var start: Int, var end: Int, val file: String) extends Expression {
   override def toString = "[" + app.toString() + "]"
-  def accept(v: AstVisitor) { v.visitReporterBlock(this) }
+  def accept(v: AstVisitor) = v.visitReporterBlock(this)
   /**
    * computes the type of this block. Reporter block types are
    * determined in a somewhat complicated way. This is derived from
@@ -166,11 +165,11 @@ extends Expression with Application with Seq[Expression] {
    */
   val args = new collection.mutable.ArrayBuffer[Expression]
   def instruction = reporter // for Application
-  def addArgument(arg: Expression) { args.append(arg) }
+  def addArgument(arg: Expression) = args.append(arg)
   def reportedType() = reporter.syntax.ret
-  def accept(v: AstVisitor) { v.visitReporterApp(this) }
-  def removeArgument(index: Int) { args.remove(index) }
-  def replaceArg(index: Int, expr: Expression) { args(index) = expr }
-  def clearArgs() { args.clear() }
+  def accept(v: AstVisitor) = v.visitReporterApp(this)
+  def removeArgument(index: Int) = args.remove(index)
+  def replaceArg(index: Int, expr: Expression) = args(index) = expr
+  def clearArgs() = args.clear()
   override def toString = reporter.toString + "[" + args.mkString(", ") + "]"
 }

@@ -70,7 +70,7 @@ import org.nlogo.prim.{ _call, _callreport, _task }
 
 private class AgentTypeChecker(defs: Seq[ProcedureDefinition]) {
 
-  def parse() {
+  def parse(): Unit = {
     def usables = defs.map(_.procedure.usableBy).toList
     val oldUsables = usables
     for(procdef <- defs)
@@ -84,14 +84,14 @@ private class AgentTypeChecker(defs: Seq[ProcedureDefinition]) {
     // it may grow.  The use of mutable state in this way is characteristic
     // of the Visitor pattern.
 
-    override def visitProcedureDefinition(procdef: ProcedureDefinition) {
+    override def visitProcedureDefinition(procdef: ProcedureDefinition) = {
       super.visitProcedureDefinition(procdef)
       // after we've seen the whole procedure, store the result there
       procdef.procedure.usableBy = usableBy
     }
     // visitStatement and visitReporterApp are clones of each other
 
-    override def visitStatement(stmt: Statement) {
+    override def visitStatement(stmt: Statement) = {
       val c = stmt.command
       usableBy = typeCheck(currentProcedure, c, usableBy)
       if(c.syntax.blockAgentClassString != null)
@@ -102,7 +102,7 @@ private class AgentTypeChecker(defs: Seq[ProcedureDefinition]) {
     }
 
     // visitStatement and visitReporterApp are clones of each other
-    override def visitReporterApp(app: ReporterApp) {
+    override def visitReporterApp(app: ReporterApp) = {
       val r = app.reporter
       usableBy = typeCheck(currentProcedure, r, usableBy)
       if(r.isInstanceOf[_task])
@@ -114,7 +114,7 @@ private class AgentTypeChecker(defs: Seq[ProcedureDefinition]) {
       r.agentClassString = usableBy
     }
 
-    private def chooseVisitorAndContinue(blockAgentClassString: String, exps: Seq[Expression]) {
+    private def chooseVisitorAndContinue(blockAgentClassString: String, exps: Seq[Expression]) =
       exps.foreach { exp =>
         exp.accept(
           exp match {
@@ -128,7 +128,6 @@ private class AgentTypeChecker(defs: Seq[ProcedureDefinition]) {
               new AgentTypeCheckerVisitor(currentProcedure, argsAgentClassString)
             case _ => this } )
       }
-    }
 
     def getReportedAgentType(app: ReporterApp): String = {
       app.reporter.syntax.ret match {

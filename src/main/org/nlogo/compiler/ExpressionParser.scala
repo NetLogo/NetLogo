@@ -119,7 +119,7 @@ private class ExpressionParser(procedure: Procedure,
    * can't have a non-default number of args after all, so we assert that it doesn't. Type
    * resolution is then performed.
    */
-  private def parseVarArgs(app:Application,tokens:BufferedIterator[Token],precedence:Int) {
+  private def parseVarArgs(app:Application,tokens:BufferedIterator[Token],precedence:Int) = {
     var done = false
     var token = tokens.head
     var argNumber = 0
@@ -192,7 +192,7 @@ private class ExpressionParser(procedure: Procedure,
    * type, we check those left-to-right. There's one other bit of ugliness at the beginning
    * pertaining to left-hand args to infix operators.
    */
-  private def resolveTypes(app:Application) {
+  private def resolveTypes(app:Application): Unit = {
     val syntax = app.instruction.syntax
     var actual1 = 0
     // first look at left arg, if any
@@ -463,13 +463,13 @@ private class ExpressionParser(procedure: Procedure,
     // closing bracket for the opening bracket at the front of tokens.   advance() takes
     // care of collecting the tokens as we go.
     val results = new collection.mutable.ListBuffer[Token]
-    def advance() {
+    def advance() = {
       val token = tokens.next()
       if(token.tyype == TokenType.EOF)
         exception(MISSING_CLOSE_BRACKET,openBracket)
       results += token
     }
-    def recurse() {
+    def recurse(): Unit = {
       advance() // go past the open bracket
       while(tokens.head.tyype != TokenType.CLOSE_BRACKET)
         if(tokens.head.tyype == TokenType.OPEN_BRACKET) recurse()

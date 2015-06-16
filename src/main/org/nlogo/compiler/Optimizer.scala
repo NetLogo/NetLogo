@@ -11,17 +11,15 @@ import org.nlogo.prim._
 
 private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
 
-  override def visitProcedureDefinition(defn: ProcedureDefinition) {
-    if(Version.useOptimizer)
-      super.visitProcedureDefinition(defn)
-  }
-  override def visitStatement(stmt: Statement) {
+  override def visitProcedureDefinition(defn: ProcedureDefinition) = if(Version.useOptimizer)
+    super.visitProcedureDefinition(defn)
+  override def visitStatement(stmt: Statement) = {
     super.visitStatement(stmt)
     val oldCommand = stmt.command
     commandMungers.filter(_.clazz eq oldCommand.getClass)
       .find{munger => munger.munge(stmt); stmt.command != oldCommand}
   }
-  override def visitReporterApp(app: ReporterApp) {
+  override def visitReporterApp(app: ReporterApp) = {
     super.visitReporterApp(app)
     val oldReporter = app.reporter
     reporterMungers.filter(_.clazz eq oldReporter.getClass)
@@ -41,17 +39,15 @@ private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
   private abstract class ReporterMunger { val clazz: Class[_ <: Reporter]; def munge(app: ReporterApp) }
 
   private abstract class RewritingCommandMunger extends CommandMunger {
-    def munge(stmt: Statement) {
+    def munge(stmt: Statement) =
       try munge(new Match(stmt))
       catch { case _: MatchFailedException => }
-    }
     def munge(root: Match)
   }
   private abstract class RewritingReporterMunger extends ReporterMunger {
-    def munge(app: ReporterApp) {
+    def munge(app: ReporterApp) =
       try munge(new Match(app))
       catch { case _: MatchFailedException => }
-    }
     def munge(root: Match)
   }
 
@@ -126,27 +122,21 @@ private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
     def report =
       try node.asInstanceOf[ReporterApp].reporter.report(null)
       catch { case ex: LogoException => throw new IllegalStateException(ex) }
-    def strip() {
-      node match {
+    def strip() = node match {
         case app: ReporterApp =>
           while(!app.args.isEmpty) app.removeArgument(0)
         case stmt: Statement =>
           while(!stmt.args.isEmpty) stmt.removeArgument(0)
       }
-    }
-    def graftArg(newArg: Match) {
-      node match {
+    def graftArg(newArg: Match) = node match {
         case app: ReporterApp => app.addArgument(newArg.node.asInstanceOf[Expression])
         case stmt: Statement => stmt.addArgument(newArg.node.asInstanceOf[Expression])
       }
-    }
-    def removeLastArg() {
-      node match {
+    def removeLastArg() = node match {
         case app: ReporterApp => app.removeArgument(app.args.size - 1)
         case stmt: Statement => stmt.removeArgument(stmt.args.size - 1)
       }
-    }
-    def replace(theClass: Class[_ <: Instruction], constructorArgs: AnyRef*) {
+    def replace(theClass: Class[_ <: Instruction], constructorArgs: AnyRef*) = {
       val newGuy = Instantiator.newInstance[Instruction](theClass, constructorArgs: _*)
       node match {
         case app: ReporterApp =>
@@ -169,16 +159,15 @@ private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
   /// now for the individual optimizations
   private object Fd1 extends RewritingCommandMunger {
     val clazz = classOf[_fd]
-    def munge(root: Match) {
+    def munge(root: Match) =
       if(root.matchArg(0, classOf[_constdouble]).reporter.asInstanceOf[_constdouble].primitiveValue == 1) {
         root.strip()
         root.replace(classOf[_fd1])
       }
-    }
   }
   private object FdLessThan1 extends RewritingCommandMunger {
     val clazz = classOf[_fd]
-    def munge(root: Match) {
+    def munge(root: Match) = {
       val d = root.matchArg(0, classOf[_constdouble]).reporter.asInstanceOf[_constdouble].primitiveValue
       if(d < 1 && d > -1) {
         root.replace(classOf[_jump])
@@ -187,7 +176,7 @@ private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
   }
   private object FastHatch extends RewritingCommandMunger {
     val clazz = classOf[_hatch]
-    def munge(root: Match) {
+    def munge(root: Match) = {
       root.matchEmptyCommandBlockIsLastArg
       root.removeLastArg()
       root.replace(classOf[_fasthatch],
@@ -196,7 +185,7 @@ private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
   }
   private object FastSprout extends RewritingCommandMunger {
     val clazz = classOf[_sprout]
-    def munge(root: Match) {
+    def munge(root: Match) = {
       root.matchEmptyCommandBlockIsLastArg
       root.removeLastArg()
       root.replace(classOf[_fastsprout],
@@ -205,7 +194,7 @@ private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
   }
   private object FastCrt extends RewritingCommandMunger {
     val clazz = classOf[_createturtles]
-    def munge(root: Match) {
+    def munge(root: Match) = {
       root.matchEmptyCommandBlockIsLastArg
       root.removeLastArg()
       root.replace(classOf[_fastcreateturtles],
@@ -214,7 +203,7 @@ private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
   }
   private object FastCro extends RewritingCommandMunger {
     val clazz = classOf[_createorderedturtles]
-    def munge(root: Match) {
+    def munge(root: Match) = {
       root.matchEmptyCommandBlockIsLastArg
       root.removeLastArg()
       root.replace(classOf[_fastcreateorderedturtles],
@@ -223,7 +212,7 @@ private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
   }
   private object PatchAt extends RewritingReporterMunger {
     val clazz = classOf[_patchat]
-    def munge(root: Match) {
+    def munge(root: Match): Unit = {
       val x = root.matchArg(0, classOf[_constdouble]).reporter.asInstanceOf[_constdouble].primitiveValue
       val y = root.matchArg(1, classOf[_constdouble]).reporter.asInstanceOf[_constdouble].primitiveValue
       val newClass = (x, y) match {
@@ -245,7 +234,7 @@ private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
   // _with(_patches, _equal(_constdouble, _px/ycor)) => _patchcol/_patchrow
   private object With extends RewritingReporterMunger {
     val clazz = classOf[_with]
-    def munge(root: Match) {
+    def munge(root: Match): Unit = {
       // this optimization doesn't work in 3D, we could fix it but not now - ev 6/27/07, ST 3/3/08
       if(is3D) return
       root.matchArg(0, classOf[_patches])
@@ -267,7 +256,7 @@ private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
   // _oneof(_with) => _oneofwith
   private object OneOfWith extends RewritingReporterMunger {
     val clazz = classOf[_oneof]
-    def munge(root: Match) {
+    def munge(root: Match) = {
       val arg0 = root.matchArg(0, classOf[_with])
       root.strip()
       root.replace(classOf[_oneofwith])
@@ -277,7 +266,7 @@ private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
   }
   private object Nsum extends RewritingReporterMunger {
     val clazz = classOf[_sum]
-    def munge(root: Match) {
+    def munge(root: Match) = {
       val arg0 = root.matchArg(0, classOf[_patchvariableof])
       arg0.matchArg(0, classOf[_neighbors])
       root.strip()
@@ -288,7 +277,7 @@ private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
   }
   private object Nsum4 extends RewritingReporterMunger {
     val clazz = classOf[_sum]
-    def munge(root: Match) {
+    def munge(root: Match) = {
       val arg0 = root.matchArg(0, classOf[_patchvariableof])
       arg0.matchArg(0, classOf[_neighbors4])
       root.strip()
@@ -300,7 +289,7 @@ private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
   // _count(_with) => _countwith
   private object CountWith extends RewritingReporterMunger {
     val clazz = classOf[_count]
-    def munge(root: Match) {
+    def munge(root: Match) = {
       val arg0 = root.matchArg(0, classOf[_with])
       root.strip()
       root.replace(classOf[_countwith])
@@ -312,7 +301,7 @@ private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
   // _with(_other(*), *) => _otherwith(*, *)
   private object OtherWith extends RewritingReporterMunger {
     val clazz = classOf[_other]
-    def munge(root: Match) {
+    def munge(root: Match) = {
       val arg0 = root.matchArg(0, classOf[_with])
       root.strip()
       root.replace(classOf[_otherwith])
@@ -322,7 +311,7 @@ private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
   }
   private object WithOther extends RewritingReporterMunger {
     val clazz = classOf[_with]
-    def munge(root: Match) {
+    def munge(root: Match) = {
       val arg0 = root.matchArg(0, classOf[_other])
       val arg1 = root.matchArg(1)
       root.replace(classOf[_otherwith])
@@ -334,7 +323,7 @@ private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
   // _any(_other(*)) => _anyother(*)
   private object AnyOther extends RewritingReporterMunger {
     val clazz = classOf[_any]
-    def munge(root: Match) {
+    def munge(root: Match) = {
       val arg = root.matchArg(0, classOf[_other])
       root.strip()
       root.replace(classOf[_anyother])
@@ -344,7 +333,7 @@ private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
   // _any(_otherwith(*, *)) => _anyotherwith(*, *)
   private object AnyOtherWith extends RewritingReporterMunger {
     val clazz = classOf[_any]
-    def munge(root: Match) {
+    def munge(root: Match) = {
       val arg = root.matchArg(0, classOf[_otherwith])
       root.strip()
       root.replace(classOf[_anyotherwith])
@@ -355,7 +344,7 @@ private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
   // _count(_other(*)) => _countother(*)
   private object CountOther extends RewritingReporterMunger {
     val clazz = classOf[_count]
-    def munge(root: Match) {
+    def munge(root: Match) = {
       val arg = root.matchArg(0, classOf[_other])
       root.strip()
       root.replace(classOf[_countother])
@@ -365,7 +354,7 @@ private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
   // _count(_otherwith(*, *)) => _countotherwith(*, *)
   private object CountOtherWith extends RewritingReporterMunger {
     val clazz = classOf[_count]
-    def munge(root: Match) {
+    def munge(root: Match) = {
       val arg = root.matchArg(0, classOf[_otherwith])
       root.strip()
       root.replace(classOf[_countotherwith])
@@ -376,7 +365,7 @@ private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
   // _any(_with) => _anywith
   private object AnyWith1 extends RewritingReporterMunger {
     val clazz = classOf[_any]
-    def munge(root: Match) {
+    def munge(root: Match) = {
       val arg0 = root.matchArg(0, classOf[_with])
       root.strip()
       root.replace(classOf[_anywith])
@@ -387,7 +376,7 @@ private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
   // _notequal(_countwith(*, *), _constdouble: 0.0) => _anywith(*, *)
   private object AnyWith2 extends RewritingReporterMunger {
     val clazz = classOf[_notequal]
-    def munge(root: Match) {
+    def munge(root: Match) = {
       val count = root.matchOneArg(classOf[_countwith])
       if(root.matchOtherArg(count, classOf[_constdouble]).reporter.asInstanceOf[_constdouble]
            .primitiveValue == 0)
@@ -402,7 +391,7 @@ private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
   // _greaterthan(_countwith(*, *), _constdouble: 0.0) => _anywith(*, *)
   private object AnyWith3 extends RewritingReporterMunger {
     val clazz = classOf[_greaterthan]
-    def munge(root: Match) {
+    def munge(root: Match) = {
       val count = root.matchArg(0, classOf[_countwith])
       if(root.matchArg(1, classOf[_constdouble]).reporter.asInstanceOf[_constdouble]
            .primitiveValue == 0)
@@ -417,7 +406,7 @@ private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
   // _lessthan(_constdouble: 0.0, _countwith(*, *)) => _anywith(*, *)
   private object AnyWith4 extends RewritingReporterMunger {
     val clazz = classOf[_lessthan]
-    def munge(root: Match) {
+    def munge(root: Match) = {
       val count = root.matchArg(1, classOf[_countwith])
       if(root.matchArg(0, classOf[_constdouble]).reporter.asInstanceOf[_constdouble]
            .primitiveValue == 0)
@@ -432,7 +421,7 @@ private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
   // _equal(_countwith(*, *), _constdouble: 0.0) => _not(_anywith(*, *))
   private object AnyWith5 extends RewritingReporterMunger {
     val clazz = classOf[_equal]
-    def munge(root: Match) {
+    def munge(root: Match) = {
       val count = root.matchOneArg(classOf[_countwith])
       if(root.matchOtherArg(count, classOf[_constdouble]).reporter.asInstanceOf[_constdouble]
            .primitiveValue == 0)
@@ -449,7 +438,7 @@ private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
   // _patchvariable => _patchvariabledouble
   private object PatchVariableDouble extends RewritingReporterMunger {
     val clazz = classOf[_patchvariable]
-    def munge(root: Match) {
+    def munge(root: Match) = {
       val vn = root.reporter.asInstanceOf[_patchvariable].vn
       if(org.nlogo.api.AgentVariables.isDoublePatchVariable(vn, is3D)) {
         root.replace(classOf[_patchvariabledouble])
@@ -460,7 +449,7 @@ private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
   // _turtlevariable => _turtlevariabledouble
   private object TurtleVariableDouble extends RewritingReporterMunger {
     val clazz = classOf[_turtlevariable]
-    def munge(root: Match) {
+    def munge(root: Match) = {
       val vn = root.reporter.asInstanceOf[_turtlevariable].vn
       if(org.nlogo.api.AgentVariables.isDoubleTurtleVariable(vn, is3D)) {
         root.replace(classOf[_turtlevariabledouble])
@@ -471,7 +460,7 @@ private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
   // _random(_constdouble) => _randomconst  (if argument is a positive integer)
   private object RandomConst extends RewritingReporterMunger {
     val clazz = classOf[_random]
-    def munge(root: Match) {
+    def munge(root: Match) = {
       val d = root.matchArg(0, classOf[_constdouble])
                   .reporter.asInstanceOf[_constdouble].primitiveValue
       if(d > 0 && d == d.toLong && Instruction.isValidLong(d)) {
