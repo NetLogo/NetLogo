@@ -31,11 +31,10 @@ case class TestClient(userId: String, clientType: String="COMPUTER", ip:String="
   val (activityName, interfaceSpec) = handshake()
   lazy val messagesReceived = new LinkedBlockingQueue[Message]
 
-  def sendActivityCommand(message:String, content: Any){
+  def sendActivityCommand(message:String, content: Any) =
     send(new ActivityCommand(message, content.asInstanceOf[AnyRef]))
-  }
 
-  def close(reason:String){ send(ExitMessage(reason)) }
+  def close(reason:String) = send(ExitMessage(reason))
   def getWidgetControls: List[WidgetControl] =
     messagesReceived.asScala.collect{ case wc: WidgetControl => wc }.toList
   def getViewUpdates: List[ViewUp] =
@@ -70,7 +69,7 @@ case class TestClient(userId: String, clientType: String="COMPUTER", ip:String="
   // sends a message to the server
   protected def send(a: AnyRef) = { rawSend(a) }
 
-  protected def rawSend(a: AnyRef){
+  protected def rawSend(a: AnyRef) = {
     out.writeObject(a)
     out.flush()
   }
@@ -82,7 +81,7 @@ case class TestClient(userId: String, clientType: String="COMPUTER", ip:String="
   // instead, when we need the next message, we can just read it off the socket.
   // we could then get rid of the exector altogether..
   private class Receiver extends Runnable {
-    override def run() {
+    override def run() =
       try {
         messagesReceived.put(in.readObject.asInstanceOf[Message])
         executor.submit(this)
@@ -91,6 +90,5 @@ case class TestClient(userId: String, clientType: String="COMPUTER", ip:String="
         // previously we were just dropping this here. bad. JC - 3/31/11
         case e:IOException => _dead = true
       }
-    }
   }
 }
