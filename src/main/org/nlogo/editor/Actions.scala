@@ -25,9 +25,8 @@ object Actions {
   def getDefaultEditorKitAction(name:String) = actionMap(name)
   val SELECT_ALL_ACTION = getDefaultEditorKitAction(DefaultEditorKit.selectAllAction)
 
-  def setEnabled(enabled:Boolean){
+  def setEnabled(enabled:Boolean) =
     List(commentAction,uncommentAction,shiftLeftAction,shiftRightAction).foreach(_.setEnabled(enabled))
-  }
 
   class TabKeyAction extends MyTextAction("tab-key", _.indentSelection() )
   class ShiftTabKeyAction extends MyTextAction("shift-tab-key", e => { e.shiftLeft(); e.shiftLeft() })
@@ -42,7 +41,7 @@ object Actions {
     new MyTextAction(i18n("tabs.code.rightclick.quickhelp"),
                      e => colorizer.doHelp(e, e.getHelpTarget(e.getMousePos)))
   class MyTextAction(name:String, f: EditorArea[_] => Unit) extends TextAction(name) {
-    override def actionPerformed(e:ActionEvent){
+    override def actionPerformed(e:ActionEvent) = {
       val component = getTextComponent(e)
       if(component.isInstanceOf[EditorArea[_]]) f(component.asInstanceOf[EditorArea[_]])
     }
