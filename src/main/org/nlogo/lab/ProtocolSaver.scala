@@ -43,13 +43,13 @@ object ProtocolSaver
       result.addAttribute("", "", name, "CDATA", value)
     result
   }
-  def saveProtocol(hd: TransformerHandler, protocol: Protocol) {
-    def element(name: String, value: String) {
+  def saveProtocol(hd: TransformerHandler, protocol: Protocol) = {
+    def element(name: String, value: String) = {
       hd.startElement("","",name,attributes())
       hd.characters(value.toCharArray,0,value.length)
       hd.endElement("","",name)
     }
-    def elementWithAttributes(name: String, attributes: AttributesImpl) {
+    def elementWithAttributes(name: String, attributes: AttributesImpl) = {
       hd.startElement("", "", name, attributes)
       hd.endElement("", "", name)
     }

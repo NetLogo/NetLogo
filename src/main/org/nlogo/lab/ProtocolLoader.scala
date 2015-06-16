@@ -55,9 +55,9 @@ class ProtocolLoader(services: CompilerServices)
       factory.setValidating(true)
       val builder = factory.newDocumentBuilder
       builder.setErrorHandler(new sax.ErrorHandler {
-        def error(ex: sax.SAXParseException) { throw ex }
-        def fatalError(ex: sax.SAXParseException) { throw ex }
-        def warning(ex: sax.SAXParseException) { throw ex }
+        def error(ex: sax.SAXParseException) = throw ex
+        def fatalError(ex: sax.SAXParseException) = throw ex
+        def warning(ex: sax.SAXParseException) = throw ex
       })
       builder.parse(inputSource)
         .getElementsByTagName("experiment")

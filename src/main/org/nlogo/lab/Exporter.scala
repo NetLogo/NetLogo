@@ -16,7 +16,7 @@ abstract class Exporter(modelFileName: String,
                         out: java.io.PrintWriter)
   extends ProgressListener
 {
-  def writeExportHeader() {
+  def writeExportHeader() = {
     out.println(
       Dump.csv.header(
         "BehaviorSpace results (" + Version.version + ")"))

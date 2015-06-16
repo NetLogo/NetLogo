@@ -14,20 +14,16 @@ class Worker(val protocol: Protocol)
   extends LabInterface.Worker
 {
   val listeners = new collection.mutable.ListBuffer[ProgressListener]
-  def addListener(listener: ProgressListener) {
-    listeners += listener
-  }
-  def addSpreadsheetWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter) {
+  def addListener(listener: ProgressListener) = listeners += listener
+  def addSpreadsheetWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter) =
     addListener(new SpreadsheetExporter(modelFileName, initialDims, protocol, w))
-  }
-  def addTableWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter) {
+  def addTableWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter) =
     addListener(new TableExporter(modelFileName, initialDims, protocol, w))
-  }
   var runners: Seq[Runner] = null
   // we only want to compile stuff once per workspace, so use this
   // (should use a Scala collection not a Java one, but oh well, too lazy today - ST 8/13/09)
   val proceduresMap = new java.util.WeakHashMap[Workspace, Procedures]
-  def run(initialWorkspace: Workspace, fn: ()=>Workspace, threads: Int) {
+  def run(initialWorkspace: Workspace, fn: ()=>Workspace, threads: Int) = {
     val executor = Executors.newFixedThreadPool(threads)
     try {
       listeners.foreach(_.experimentStarted())
@@ -58,8 +54,8 @@ class Worker(val protocol: Protocol)
   // result discarded -- we just want to see if compilation succeeds.
   // used in TestCompileAll, also used before the start of the
   // experiment in the GUI so if something doesn't compile we can fail early.
-  def compile(w: Workspace) { new Procedures(w) }
-  def abort() { if(runners != null) runners.foreach(_.aborted = true) }
+  def compile(w: Workspace) = new Procedures(w)
+  def abort() = if(runners != null) runners.foreach(_.aborted = true)
   class Procedures(workspace: Workspace) {
     val setupProcedure = workspace.compileCommands(protocol.setupCommands)
     val goProcedure = workspace.compileCommands(protocol.goCommands
@@ -80,10 +76,8 @@ class Worker(val protocol: Protocol)
     @volatile var aborted = false
     // each Runner is on its own thread, but all the Runners share a ProgressListener,
     // so we need to synchronize
-    def eachListener(fn: (ProgressListener)=>Unit) {
-      listeners.synchronized { listeners.foreach(fn) }
-    }
-    def call() {
+    def eachListener(fn: (ProgressListener)=>Unit) = listeners.synchronized { listeners.foreach(fn) }
+    def call() =
       // not clear why this check would be necessary, but perhaps it will
       // keep bug #1203 from happening - ST 2/16/11
       if(!aborted) {
@@ -92,8 +86,7 @@ class Worker(val protocol: Protocol)
         catch { case t: Throwable =>
           if(!aborted) eachListener(_.runtimeError(workspace, runNumber, t)) }
       }
-    }
-    def callHelper(ws: Workspace) {
+    def callHelper(ws: Workspace): Unit = {
       val procedures =
         if(proceduresMap.containsKey(ws))
           proceduresMap.get(ws)
@@ -103,7 +96,7 @@ class Worker(val protocol: Protocol)
           newProcedures
         }
       import procedures._
-      def setVariables(settings: List[(String, Any)]) {
+      def setVariables(settings: List[(String, Any)]) = {
         val world = ws.world
         var d = world.getDimensions
         for((name, value) <- settings) {
@@ -154,14 +147,12 @@ class Worker(val protocol: Protocol)
             throw new FailedException(
               "Reporter for measuring runs failed to report a result:\n" + result)
           result }
-      def checkForRuntimeError() {
-        if(ws.lastLogoException != null) {
+      def checkForRuntimeError() = if(ws.lastLogoException != null) {
           val ex = ws.lastLogoException
           ws.clearLastLogoException()
           if(!aborted)
             eachListener(_.runtimeError(ws, runNumber, ex))
         }
-      }
       ws.behaviorSpaceRunNumber(runNumber)
       ws.behaviorSpaceExperimentName(protocol.name)
       setVariables(settings)

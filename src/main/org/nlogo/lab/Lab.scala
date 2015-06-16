@@ -27,7 +27,7 @@ class Lab(loader: ProtocolLoader)
     new Worker(loader.loadOne(setupFile))
   def newWorker(protocolName: String, setupFile: java.io.File) =
     new Worker(loader.loadOne(setupFile, protocolName))
-  def run(settings: LabInterface.Settings, fn: ()=>Workspace) {
+  def run(settings: LabInterface.Settings, fn: ()=>Workspace) = {
     import settings._
     // pool of workspaces, same size as thread pool
     val workspaces = (1 to threads).map(_ => fn.apply).toList
@@ -49,11 +49,9 @@ class Lab(loader: ProtocolLoader)
         worker.addSpreadsheetWriter(model, dims.getOrElse(modelDims), _))
       worker.addListener(
         new LabInterface.ProgressListener {
-          override def runCompleted(w: Workspace, runNumber: Int, step: Int) {
+          override def runCompleted(w: Workspace, runNumber: Int, step: Int) =
             queue.synchronized { queue.enqueue(w) }
-          }
-          override def runtimeError(w: Workspace, runNumber: Int, t: Throwable) {
-            if (!suppressErrors)
+          override def runtimeError(w: Workspace, runNumber: Int, t: Throwable) = if (!suppressErrors)
               t match {
                 case ee: EngineException =>
                   val msg = ee.context.buildRuntimeErrorMessage(ee.instruction, ee)
@@ -66,7 +64,7 @@ class Lab(loader: ProtocolLoader)
                   System.err.println("Run #" + runNumber + ", JAVA EXCEPTION: " + t.getMessage)
                   t.printStackTrace(System.err)
               }
-          } } )
+          } )
       def nextWorkspace = queue.synchronized { queue.dequeue() }
       worker.run(workspaces.head, nextWorkspace _, threads)
     }

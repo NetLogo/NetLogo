@@ -19,17 +19,15 @@ class SpreadsheetExporter(modelFileName: String,
   extends Exporter(modelFileName, initialDims, protocol, out)
 {
   val runs = new collection.mutable.HashMap[Int,Run]
-  override def runStarted(w: Workspace, runNumber: Int, settings: List[(String,Any)]) {
+  override def runStarted(w: Workspace, runNumber: Int, settings: List[(String,Any)]) =
     runs(runNumber) = new Run(settings)
-  }
-  override def measurementsTaken(w: Workspace, runNumber: Int, step: Int, values: List[AnyRef]) {
+  override def measurementsTaken(w: Workspace, runNumber: Int, step: Int, values: List[AnyRef]) =
     runs(runNumber).addMeasurements(values)
-  }
-  override def runCompleted(w: Workspace, runNumber: Int, steps: Int) {
+  override def runCompleted(w: Workspace, runNumber: Int, steps: Int) = {
     runs(runNumber).done = true
     runs(runNumber).steps = steps
   }
-  def finish() {
+  def finish() = {
     for(runNumber <- runs.keySet)
       if(!runs(runNumber).done)
         runs -= runNumber
@@ -39,10 +37,10 @@ class SpreadsheetExporter(modelFileName: String,
       writeRunData()
     out.close()
   }
-  override def experimentCompleted() { finish() }
-  override def experimentAborted() { finish() }
+  override def experimentCompleted() = finish()
+  override def experimentAborted() = finish()
   def runNumbers = runs.keySet.toList.sorted
-  def foreachRun(fn: (Run, Int) => Option[Any]) {
+  def foreachRun(fn: (Run, Int) => Option[Any]) = {
     // if the experiment was aborted, the completed run numbers might not be
     // consecutive, so we have to be careful - ST 3/31/09
     val outputs =
@@ -55,7 +53,7 @@ class SpreadsheetExporter(modelFileName: String,
       } yield output
     out.println(outputs.mkString(","))
   }
-  def writeSummary() {
+  def writeSummary() = {
     // first output run numbers, like this:
     // "[run number]","1","2","3"
     out.print(Dump.csv.header("[run number]"))
@@ -103,7 +101,7 @@ class SpreadsheetExporter(modelFileName: String,
     foreachRun((run,metricNumber) =>
       Some(Int.box(run.steps)))
   }
-  def writeRunData() {
+  def writeRunData(): Unit = {
     // output the raw run data, like this:
     // "[all run data]","metric","metric","metric"
     // ,"473.0","845.0","704.0"
@@ -140,7 +138,7 @@ class SpreadsheetExporter(modelFileName: String,
     // we use Array instead of List because List has a lot of memory overhead (one object per
     // cons cell) and for a big experiment we can have a ton of measurements.
     val measurements = new collection.mutable.ArrayBuffer[Array[AnyRef]]
-    def addMeasurements(values: List[AnyRef]) { measurements += values.toArray }
+    def addMeasurements(values: List[AnyRef]) = measurements += values.toArray
     // careful here... normally measurement number means step number, but if runMetricsEveryStep is
     // false, then we'll only have two measurements, regardless of the number of steps - ST 12/19/04
     def getMeasurement(measurementNumber: Int, metricNumber: Int): AnyRef =
