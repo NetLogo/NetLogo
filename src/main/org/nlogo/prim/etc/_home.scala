@@ -9,7 +9,7 @@ import org.nlogo.nvm.{ Command, Context }
 class _home extends Command {
   override def syntax =
     Syntax.commandSyntax("-T--", true)
-  override def perform(context: Context) {
+  override def perform(context: Context) = {
     context.agent.asInstanceOf[Turtle].home()
     context.ip = next
   }

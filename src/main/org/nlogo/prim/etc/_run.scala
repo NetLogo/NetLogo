@@ -14,8 +14,7 @@ class _run extends Command {
             Syntax.RepeatableType | Syntax.WildcardType),
       1)
 
-  override def perform(context: Context) {
-    args(0).report(context) match {
+  override def perform(context: Context) = args(0).report(context) match {
       case s: String =>
         if(args.size > 1)
           throw new EngineException(context, this,
@@ -57,6 +56,5 @@ class _run extends Command {
         throw new ArgumentTypeException(
           context, this, 0, Syntax.CommandTaskType | Syntax.StringType, obj)
     }
-  }
 
 }

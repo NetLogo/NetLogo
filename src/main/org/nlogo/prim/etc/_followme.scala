@@ -9,7 +9,7 @@ import org.nlogo.api.{ Perspective, Syntax }
 class _followme extends Command {
   override def syntax =
     Syntax.commandSyntax("-T--", true)
-  override def perform(context: Context) {
+  override def perform(context: Context) = {
     val turtle = context.agent.asInstanceOf[Turtle]
     world.observer.setPerspective(Perspective.Follow, turtle)
     // the following code is duplicated in _follow and _followme - ST 6/28/05

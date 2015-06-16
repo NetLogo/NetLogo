@@ -7,7 +7,7 @@ import org.nlogo.nvm.{ Command, Context }
 
 class _thunkdidfinish extends Command {
   override def syntax = Syntax.commandSyntax
-  override def perform(context: Context) {
+  override def perform(context: Context) = {
     workspace.completedActivations.put(context.activation, true)
     context.ip = next
   }

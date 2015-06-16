@@ -9,7 +9,7 @@ import org.nlogo.nvm.{ Command, Context }
 class _showlink extends Command {
   override def syntax =
     Syntax.commandSyntax("---L", true)
-  override def perform(context: Context) {
+  override def perform(context: Context) = {
     context.agent.asInstanceOf[Link].hidden(false)
     context.ip = next
   }

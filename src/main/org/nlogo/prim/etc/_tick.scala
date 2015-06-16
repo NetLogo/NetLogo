@@ -9,7 +9,7 @@ class _tick extends Command {
   override def syntax =
     Syntax.commandSyntax("O---", true)
   override def callsOtherCode = true
-  override def perform(context: Context) {
+  override def perform(context: Context) = {
     workspace.tick(context, this)
     context.ip = next
   }

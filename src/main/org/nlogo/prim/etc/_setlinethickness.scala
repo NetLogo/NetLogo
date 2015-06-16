@@ -10,7 +10,7 @@ class _setlinethickness extends Command {
     Syntax.commandSyntax(
       Array(Syntax.NumberType),
       "-T--", switches = true)
-  override def perform(context: Context) {
+  override def perform(context: Context) = {
     world.setLineThickness(
       context.agent,
       argEvalDoubleValue(context, 0))

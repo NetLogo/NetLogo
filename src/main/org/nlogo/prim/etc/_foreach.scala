@@ -9,7 +9,7 @@ class _foreach extends Command {
   override def syntax =
     Syntax.commandSyntax(Array(Syntax.RepeatableType | Syntax.ListType,
       Syntax.CommandTaskType), 2) // default # of inputs
-  override def perform(context: Context) {
+  override def perform(context: Context) = {
     var size = 0
     val n = args.length - 1
     val iters = for (i <- 0 until n) yield {
