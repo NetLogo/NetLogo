@@ -18,17 +18,16 @@ class JobManager(jobManagerOwner: JobManagerOwner,
   def isInterrupted = thread.isInterrupted()
   def interrupt() = thread.interrupt()
   @throws(classOf[InterruptedException])
-  def die() {thread.die()}
-  def timeToRunSecondaryJobs() { thread.isTimeToRunSecondaryJobs = true }
-  def maybeRunSecondaryJobs() { thread.maybeRunSecondaryJobs() }
+  def die() = thread.die()
+  def timeToRunSecondaryJobs() = thread.isTimeToRunSecondaryJobs = true
+  def maybeRunSecondaryJobs() = thread.maybeRunSecondaryJobs()
   def anyPrimaryJobs = !thread.primaryJobs.isEmpty
 
   /// public methods for adding jobs
 
-  def addJob(job: Job, waitForCompletion: Boolean) {
+  def addJob(job: Job, waitForCompletion: Boolean) =
     if (waitForCompletion) { add(job, thread.primaryJobs); waitFor(job, false) }
     else add(job, thread.primaryJobs)
-  }
 
   def makeConcurrentJob(owner: JobOwner, agentSet: AgentSet, procedure: Procedure): Job =
     new ConcurrentJob(owner, agentSet, procedure, 0, null, owner.random)
@@ -44,12 +43,10 @@ class JobManager(jobManagerOwner: JobManagerOwner,
     job.result
   }
 
-  def addJobFromJobThread(job: Job) {thread.primaryJobs.add(job)}
-  def addJob(owner: JobOwner, agents: AgentSet, procedure: Procedure) {
-    add(new ConcurrentJob(owner, agents, procedure, 0, null, owner.random),
-        thread.primaryJobs)
-  }
-  def addSecondaryJob(owner: JobOwner, agents: AgentSet, procedure: Procedure) {
+  def addJobFromJobThread(job: Job) = thread.primaryJobs.add(job)
+  def addJob(owner: JobOwner, agents: AgentSet, procedure: Procedure) =
+    add(new ConcurrentJob(owner, agents, procedure, 0, null, owner.random), thread.primaryJobs)
+  def addSecondaryJob(owner: JobOwner, agents: AgentSet, procedure: Procedure) = {
     // we only allow one secondary job per owner -- this is so MonitorWidgets
     // don't wind up with multiple jobs -- it's a bit of a kludge - ST 9/19/01
     val found = thread.secondaryJobs.synchronized {
@@ -62,7 +59,7 @@ class JobManager(jobManagerOwner: JobManagerOwner,
 
   /// private methods for adding a job
 
-  private def add(job: Job, jobs: List[Job]) {
+  private def add(job: Job, jobs: List[Job]) = {
     jobs.add(job)
     if (job.isTurtleForeverButtonJob) thread.turtleForeverButtonJobs.add(job.asInstanceOf[ConcurrentJob])
     if (job.isLinkForeverButtonJob) thread.linkForeverButtonJobs.add(job.asInstanceOf[ConcurrentJob])
@@ -74,8 +71,7 @@ class JobManager(jobManagerOwner: JobManagerOwner,
 
   // This is called from the job thread only by such commands as
   // _createbreed, _sprout, _hatch, etc. - ST 8/13/03
-  def joinForeverButtons(agent: Agent) {
-    agent match {
+  def joinForeverButtons(agent: Agent) = agent match {
       case t: Turtle =>
         thread.turtleForeverButtonJobs.synchronized {
           for (job <- thread.turtleForeverButtonJobs.asScala)
@@ -91,17 +87,16 @@ class JobManager(jobManagerOwner: JobManagerOwner,
         // ev 9/29/06
         throw new IllegalStateException()
     }
-  }
 
   /// public methods for waiting for and/or finishing jobs
 
-  def haltPrimary() {
+  def haltPrimary() = {
     finishJobs(thread.primaryJobs, null)
     waitForFinishedJobs(thread.primaryJobs)
   }
 
   // this is for the resize-world primitive - ST 4/6/09
-  def haltNonObserverJobs() {
+  def haltNonObserverJobs() = {
     val goners = thread.primaryJobs.synchronized {
       thread.primaryJobs.asScala.filter {j => j != null && j.agentset.`type` != classOf[Observer]}
     }.asJava
@@ -109,32 +104,30 @@ class JobManager(jobManagerOwner: JobManagerOwner,
     waitForFinishedJobs(goners)
   }
 
-  def finishJobs(owner: JobOwner) {finishJobs(thread.primaryJobs, owner)}
+  def finishJobs(owner: JobOwner) = finishJobs(thread.primaryJobs, owner)
 
-  def finishSecondaryJobs(owner: JobOwner) {
+  def finishSecondaryJobs(owner: JobOwner) = {
     finishJobs(thread.secondaryJobs, owner)
     thread.lastSecondaryRun = 0
     timeToRunSecondaryJobs()
   }
 
-  def haltSecondary() {
+  def haltSecondary() = {
     finishJobs(thread.secondaryJobs, null)
     thread.lastSecondaryRun = 0
     timeToRunSecondaryJobs()
     waitForFinishedJobs(thread.secondaryJobs)
   }
 
-  def stoppingJobs(owner: JobOwner) {
-    thread.primaryJobs.synchronized {
+  def stoppingJobs(owner: JobOwner) = thread.primaryJobs.synchronized {
       for (job <- thread.primaryJobs.asScala; if (job != null && (owner == null || job.owner == owner))) {
         job.stopping = true
       }
     }
-  }
 
   /// private methods for waiting for and/or finishing jobs
 
-  private def waitFor(job: Job, kill: Boolean) {
+  private def waitFor(job: Job, kill: Boolean) = {
     // We could use wait-notify always, but at the cost of introducing
     // lock-acquisition overhead in the run loop, so let's just do
     // this instead.  waitFor() on jobs without lock objects is
@@ -157,14 +150,12 @@ class JobManager(jobManagerOwner: JobManagerOwner,
     if (job.result.isInstanceOf[RuntimeException]) throw job.result.asInstanceOf[RuntimeException]
   }
 
-  def finishJobs(jobs: List[Job], owner: JobOwner) {
-    jobs.synchronized {
+  def finishJobs(jobs: List[Job], owner: JobOwner) = jobs.synchronized {
       for {
         job <- jobs.asScala
         if (job != null && (owner == null || job.owner == owner))
       } job.finish()
     }
-  }
 
   private def waitForFinishedJobs(jobs: List[Job]): Unit = {
     // We synchronize on the jobs list only long enough to

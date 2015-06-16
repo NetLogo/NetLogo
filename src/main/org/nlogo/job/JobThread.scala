@@ -49,7 +49,7 @@ extends Thread(null, null, "JobThread", JobThread.stackSize * 1024 * 1024) {
   start()
 
   @throws(classOf[InterruptedException])
-  def die() {
+  def die() = {
     // Ignore NPE because sometimes setPriority throws it for no good reason.
     // It was happening to me when using the controlling API with multiple HeadlessWorkspaces,
     // on both Sun Java 1.5.0_07 and IBM Java 1.5.0, both on 64 bit linux machines.  It wasn't
@@ -71,8 +71,7 @@ extends Thread(null, null, "JobThread", JobThread.stackSize * 1024 * 1024) {
     join()
   }
 
-  override def run() {
-    handling(classOf[RuntimeException]) {
+  override def run() = handling(classOf[RuntimeException]) {
       while (!dying) {
         compact(primaryJobs)
         runPrimaryJobs()
@@ -86,11 +85,8 @@ extends Thread(null, null, "JobThread", JobThread.stackSize * 1024 * 1024) {
               // be secondary jobs that need attention - ST 8/10/03
               newJobsCondition.wait(PeriodicUpdateDelay.PERIODIC_UPDATE_DELAY)
             } } } }
-  }
 
-  def maybeRunSecondaryJobs() {
-    // our owner will tell us when it's time - ST 8/10/03
-    if (isTimeToRunSecondaryJobs) {
+  def maybeRunSecondaryJobs() = if (isTimeToRunSecondaryJobs) { // our owner will tell us when it's time - ST 8/10/03
       val now = System.currentTimeMillis()
       // if the secondary jobs take a long time to run, we don't want to run them whenever our owner
       // tells us to; we want to take the time they take to run into account too, so we don't hog
@@ -105,10 +101,9 @@ extends Thread(null, null, "JobThread", JobThread.stackSize * 1024 * 1024) {
         owner.periodicUpdate()
       }
     }
-  }
 
   // this and runSecondaryJobs() differ only in a few details
-  private def runPrimaryJobs() {
+  private def runPrimaryJobs() = {
     var i = 0
     while(i < primaryJobs.size) {
       val job = primaryJobs.get(i)
@@ -162,7 +157,7 @@ extends Thread(null, null, "JobThread", JobThread.stackSize * 1024 * 1024) {
   //  - secondary jobs do not cause display updates
   //  - here we don't need all the buttonTurnIsOver/activeButton stuff that makes
   //    buttons take turns
-  private def runSecondaryJobs() {
+  private def runSecondaryJobs() = {
     var i = 0
     while(i < secondaryJobs.size) {
       val job = secondaryJobs.get(i)
@@ -190,13 +185,11 @@ extends Thread(null, null, "JobThread", JobThread.stackSize * 1024 * 1024) {
 
   /// helpers
 
-  private def compact(list: JList[Job]) {
-    list.synchronized {
+  private def compact(list: JList[Job]) = list.synchronized {
       val iter = list.iterator
       while(iter.hasNext)
       if(iter.next() == null)
         iter.remove()
     }
-  }
 
 }
