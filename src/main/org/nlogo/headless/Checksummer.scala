@@ -7,7 +7,7 @@ import org.nlogo.util.HexString.toHexString
 import java.io.PrintWriter
 
 object Checksummer {
-  def initModelForChecksumming(workspace: HeadlessWorkspace) {
+  def initModelForChecksumming(workspace: HeadlessWorkspace) = {
     workspace.renderer.renderLabelsAsRectangles_=(true)
     if(workspace.previewCommands.containsSlice("need-to-manually-make-preview-for-this-model"))
       workspace.previewCommands = AbstractWorkspaceScala.DefaultPreviewCommands

@@ -22,7 +22,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
 
   @throws(classOf[CompilerException])
   @throws(classOf[LogoException])
-  def openFromMap(map: java.util.Map[ModelSection, Array[String]]) {
+  def openFromMap(map: java.util.Map[ModelSection, Array[String]]) = {
 
     // get out if the model is opened. (WHY? - JC 10/27/09)
     if (ws.modelOpened) throw new IllegalStateException
@@ -76,7 +76,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
   }
 
 
-  private def parseShapes(turtleShapeLines: Array[String], linkShapeLines: Array[String], netLogoVersion: String) {
+  private def parseShapes(turtleShapeLines: Array[String], linkShapeLines: Array[String], netLogoVersion: String) = {
     ws.world.turtleShapeList.replaceShapes(VectorShape.parseShapes(turtleShapeLines, netLogoVersion))
     if (turtleShapeLines.isEmpty) ws.world.turtleShapeList.add(VectorShape.getDefaultShape)
 
@@ -85,7 +85,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     if (linkShapeLines.isEmpty) ws.world.linkShapeList.add(LinkShape.getDefaultLinkShape)
   }
 
-  private def finish(constraints: Map[String, List[String]], program: Program, interfaceGlobalCommands: StringBuilder) {
+  private def finish(constraints: Map[String, List[String]], program: Program, interfaceGlobalCommands: StringBuilder) = {
     ws.world.realloc()
 
     val errors = ws.plotManager.compileAllPlots()
@@ -118,7 +118,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     ws.command(interfaceGlobalCommands.toString)
   }
 
-  private def testCompileWidgets(program: Program, netLogoVersion: String, buttons: List[String], monitors:List[String]) {
+  private def testCompileWidgets(program: Program, netLogoVersion: String, buttons: List[String], monitors:List[String]) = {
     val errors = ws.plotManager.compileAllPlots()
     if(errors.nonEmpty) throw errors(0)
     for (widgetSource <- buttons ::: monitors)
@@ -149,26 +149,26 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
       // each widget type has its own parsing method
       //===
 
-      def parseSlider(widget: Array[String]) {
+      def parseSlider(widget: Array[String]) = {
         interfaceGlobals += widget(6)
         interfaceGlobalCommands.append("set " + widget(6) + " " + widget(9) + "\n")
         constraints(widget(6)) = List("SLIDER", widget(7), widget(8), widget(10), widget(9))
       }
 
-      def parseSwitch(widget: Array[String]) {
+      def parseSwitch(widget: Array[String]) = {
         interfaceGlobals += widget(6)
         val defaultAsString = (widget(7).toDouble == 0).toString
         interfaceGlobalCommands.append("set " + widget(6) + " " + defaultAsString + "\n")
         constraints(widget(6)) = List("SWITCH", defaultAsString)
       }
 
-      def parseChoiceOrChooser(widget: Array[String]) {
+      def parseChoiceOrChooser(widget: Array[String]) = {
         interfaceGlobals += widget(6)
         val valSpec = "[" + widget(7) + "]"
         constraints(widget(6)) = List("CHOOSER", valSpec, widget(8))
       }
 
-      def parseInputBox(widget: Array[String]) {
+      def parseInputBox(widget: Array[String]) = {
         interfaceGlobals += widget(5)
         val defaultVal = escapeString(ModelReader.restoreLines(widget(6)))
         if (widget(9) == "Number" || widget(9) == "Color")
@@ -178,14 +178,12 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
         constraints(widget(5)) = List("INPUTBOX", defaultVal, widget(9))
       }
 
-      def parsePlot(widget: Array[String]) {
-        // ick, side effects.
-        // might replace identity soon as we might actually convert old models for headless.
-        // JC - 9/14/10
-        PlotLoader.parsePlot(widget, ws.plotManager.newPlot(""), identity)
-      }
+      // ick, side effects.
+      // might replace identity soon as we might actually convert old models for headless.
+      // JC - 9/14/10
+      def parsePlot(widget: Array[String]) = PlotLoader.parsePlot(widget, ws.plotManager.newPlot(""), identity)
 
-      def parseButton(widget: Array[String]) {
+      def parseButton(widget: Array[String]) = {
         val buttonSource = ModelReader.restoreLines(widget(6)) match {
           case "NIL" => ""
           case s => s
@@ -198,7 +196,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
           })
       }
 
-      def parseMonitor(widget: Array[String]) {
+      def parseMonitor(widget: Array[String]) = {
         val monitorSource = widget(6)
         if (monitorSource != "NIL")
         // add "__ignore" to turn the reporter into a command, so we can handle buttons and
@@ -206,9 +204,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
           monitors += "__ignore (" + ModelReader.restoreLines(monitorSource) + "\n)"
       }
 
-      def parseGraphicsWindow(widget: Array[String]) {
-        ws.loadWorld(widget, netLogoVersion, ws)
-      }
+      def parseGraphicsWindow(widget: Array[String]) = ws.loadWorld(widget, netLogoVersion, ws)
 
       // finally parse all the widgets in the WIDGETS section
       val widgets = ModelReader.parseWidgets(widgetsSection)

@@ -12,7 +12,7 @@ object ChecksumsAndPreviews {
          "GasLabNew", "GasLabOld", "GridWalk", "Heatbugs", "Ising", "Life", "PrefAttach",
          "Team", "Termites", "VirusNet", "Wealth", "Wolf", "ImportWorld")
 
-  def main(argv: Array[String]) {
+  def main(argv: Array[String]) = {
     Main.setHeadlessProperty()
     def paths(fn: String => Boolean, includeBenchmarks: Boolean) = {
       val benchmarks = allBenchmarks.map("models/test/benchmarks/" + _ + " Benchmark.nlogo")
@@ -44,7 +44,7 @@ object ChecksumsAndPreviews {
     def okPath(path: String) =
       List("HUBNET", "/GOGO/", "/CODE EXAMPLES/SOUND/")
         .forall(!path.toUpperCase.containsSlice(_))
-    def remake(path: String) {
+    def remake(path: String) = {
       val previewPath = path.replaceFirst("\\.nlogo$", ".png")
       val workspace = HeadlessWorkspace.newInstance
       try {
@@ -91,14 +91,14 @@ object ChecksumsAndPreviews {
       for (msg <- message) println("SKIPPING MODEL: " + path + "  because " + msg)
     }).isEmpty
 
-    def update(paths: List[String]) {
+    def update(paths: List[String]) = {
       val path = if(Version.is3D) "test/checksums3d.txt"
                  else "test/checksums.txt"
       val m = load(path)
       paths.foreach(updateOne(m, _))
       write(m, path)
     }
-    def updateOne(m: ChecksumMap, model: String) {
+    def updateOne(m: ChecksumMap, model: String) = {
       val workspace = HeadlessWorkspace.newInstance
       try {
         if(!new java.io.File(model).exists && m.contains(model)) {
@@ -117,7 +117,7 @@ object ChecksumsAndPreviews {
                 e.printStackTrace() }
       finally { workspace.dispose() }
     }
-    def updateOneHelper(m: ChecksumMap, model: String, workspace: HeadlessWorkspace) {
+    def updateOneHelper(m: ChecksumMap, model: String, workspace: HeadlessWorkspace) = {
       Checksummer.initModelForChecksumming(workspace)
       val newCheckSum = Checksummer.calculateWorldChecksum(workspace)
       val newGraphicsChecksum = Checksummer.calculateGraphicsChecksum(workspace)
@@ -146,7 +146,7 @@ object ChecksumsAndPreviews {
         }
       m
     }
-    def write(m: ChecksumMap, path: String) {
+    def write(m: ChecksumMap, path: String) = {
       val fw = new java.io.FileWriter(path)
       m.values.foreach(entry => fw.write(entry.toString + '\n'))
       fw.close()

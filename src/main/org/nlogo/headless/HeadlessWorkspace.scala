@@ -139,9 +139,7 @@ with org.nlogo.api.ViewSettings {
   /**
    * Internal use only.
    */
-  def waitFor(runnable: CommandRunnable) {
-    runnable.run()
-  }
+  def waitFor(runnable: CommandRunnable) = runnable.run()
 
   /**
    * Internal use only.
@@ -152,38 +150,34 @@ with org.nlogo.api.ViewSettings {
   /**
    * Internal use only.
    */
-  def waitForQueuedEvents() { }
+  def waitForQueuedEvents() = {}
 
   /**
    * Internal use only.
    */
-  def initForTesting(worldSize: Int) {
-    initForTesting(worldSize, "")
-  }
+  def initForTesting(worldSize: Int): Unit = initForTesting(worldSize, "")
 
   /**
    * Internal use only.
    */
-  def initForTesting(worldSize: Int, modelString: String) {
+  def initForTesting(worldSize: Int, modelString: String): Unit =
     if (Version.is3D)
       initForTesting(new WorldDimensions3D(
           -worldSize, worldSize, -worldSize, worldSize, -worldSize, worldSize),
           modelString)
     else
       initForTesting(-worldSize, worldSize, -worldSize, worldSize, modelString)
-  }
 
   /**
    * Internal use only.
    */
-  def initForTesting(minPxcor: Int, maxPxcor: Int, minPycor: Int, maxPycor: Int, source: String) {
+  def initForTesting(minPxcor: Int, maxPxcor: Int, minPycor: Int, maxPycor: Int, source: String): Unit =
     initForTesting(new WorldDimensions(minPxcor, maxPxcor, minPycor, maxPycor), source)
-  }
 
   /**
    * Internal use only.
    */
-  def initForTesting(d: WorldDimensions, source: String) {
+  def initForTesting(d: WorldDimensions, source: String): Unit = {
     world.turtleShapeList.add(org.nlogo.shape.VectorShape.getDefaultShape)
     world.linkShapeList.add(org.nlogo.shape.LinkShape.getDefaultLinkShape)
     world.createPatches(d)
@@ -210,14 +204,13 @@ with org.nlogo.api.ViewSettings {
     clearDrawing()
   }
 
-  def initForTesting(minPxcor: Int, maxPxcor: Int, minPycor: Int, maxPycor: Int) {
+  def initForTesting(minPxcor: Int, maxPxcor: Int, minPycor: Int, maxPycor: Int): Unit =
     initForTesting(new WorldDimensions(minPxcor, maxPxcor, minPycor, maxPycor))
-  }
 
   /**
    * Internal use only.
    */
-  def initForTesting(d: org.nlogo.api.WorldDimensions) {
+  def initForTesting(d: org.nlogo.api.WorldDimensions) = {
     world.createPatches(d)
     world.realloc()
     clearDrawing()
@@ -226,12 +219,12 @@ with org.nlogo.api.ViewSettings {
   /**
    * Kills all turtles, clears all patch variables, and makes a new patch grid.
    */
-  def setDimensions(d: WorldDimensions) {
+  def setDimensions(d: WorldDimensions) = {
     world.createPatches(d)
     clearDrawing()
   }
 
-  def setDimensions(d: WorldDimensions, patchSize: Double) {
+  def setDimensions(d: WorldDimensions, patchSize: Double) = {
     world.patchSize(patchSize)
     if (!compilerTestingMode) {
       world.createPatches(d)
@@ -242,19 +235,19 @@ with org.nlogo.api.ViewSettings {
 
   private var _fontSize = 13
   override def fontSize = _fontSize
-  override def fontSize(i: Int) { _fontSize = i }
+  override def fontSize(i: Int) = _fontSize = i
 
   private var _frameRate = 0.0
   override def frameRate = _frameRate
-  override def frameRate(frameRate: Double) { _frameRate = frameRate }
+  override def frameRate(frameRate: Double) = _frameRate = frameRate
 
   private var _tickCounterLabel = "ticks"
   override def tickCounterLabel = _tickCounterLabel
-  override def tickCounterLabel(s: String) { _tickCounterLabel = tickCounterLabel }
+  override def tickCounterLabel(s: String) = _tickCounterLabel = tickCounterLabel
 
   private var _showTickCounter = true
   override def showTickCounter = _showTickCounter
-  override def showTickCounter(showTickCounter: Boolean) { _showTickCounter = showTickCounter }
+  override def showTickCounter(showTickCounter: Boolean) = _showTickCounter = showTickCounter
 
   override def getMinimumWidth = 0
   override def insetWidth = 0
@@ -264,16 +257,16 @@ with org.nlogo.api.ViewSettings {
     (worldHeight * patchSize).toInt
   def calculateWidth(worldWidth: Int, patchSize: Double): Int =
     (worldWidth * patchSize).toInt
-  override def resizeView() { }
+  override def resizeView() = {}
   override def viewWidth = world.worldWidth
   override def viewHeight = world.worldHeight
-  override def patchSize(patchSize: Double) {
+  override def patchSize(patchSize: Double) = {
     world.patchSize(patchSize)
     renderer.resetCache(patchSize)
     renderer.trailDrawer.rescaleDrawing()
   }
   override def patchSize = world.patchSize
-  override def changeTopology(wrapX: Boolean, wrapY: Boolean) {
+  override def changeTopology(wrapX: Boolean, wrapY: Boolean) = {
     world.changeTopology(wrapX, wrapY)
     renderer.changeTopology(wrapX, wrapY)
   }
@@ -282,43 +275,32 @@ with org.nlogo.api.ViewSettings {
   override def renderPerspective = true
   override def viewOffsetX = world.observer.followOffsetX
   override def viewOffsetY = world.observer.followOffsetY
-  override def updateMode(updateMode: Workspace.UpdateMode) { }
-  override def setSize(x: Int, y: Int) { }
-  override def clearTurtles() {
-    if (!compilerTestingMode)
-      world.clearTurtles()
-  }
-  override def inspectAgent(agent: org.nlogo.api.Agent, radius: Double) {
-    if (!silent)
-      println(agent)
-  }
-  def inspectAgent(agentClass: Class[_ <: Agent], agent: org.nlogo.agent.Agent, radius: Double) {
-    if (!silent) {
-      println(agent)
-    }
-  }
+  override def updateMode(updateMode: Workspace.UpdateMode) = {}
+  override def setSize(x: Int, y: Int) = {}
+  override def clearTurtles() = if (!compilerTestingMode) world.clearTurtles()
+  override def inspectAgent(agent: org.nlogo.api.Agent, radius: Double) = if (!silent) println(agent)
+  def inspectAgent(agentClass: Class[_ <: Agent], agent: org.nlogo.agent.Agent, radius: Double) =
+    if (!silent) println(agent)
   override def stopInspectingAgent(agent: org.nlogo.agent.Agent): Unit = { }
   override def stopInspectingDeadAgents(): Unit = { }
   override def getAndCreateDrawing =
     renderer.trailDrawer.getAndCreateDrawing(true)
-  override def importDrawing(file: org.nlogo.api.File) {
+  override def importDrawing(file: org.nlogo.api.File) =
     renderer.trailDrawer.importDrawing(file)
-  }
-  override def clearDrawing() {
+  override def clearDrawing() = {
     world.clearDrawing()
     renderer.trailDrawer.clearDrawing()
   }
-  override def exportDrawing(filename: String, format: String) {
+  override def exportDrawing(filename: String, format: String) = {
     val stream = new java.io.FileOutputStream(new java.io.File(filename))
     javax.imageio.ImageIO.write(
       renderer.trailDrawer.getAndCreateDrawing(true), format, stream)
     stream.close()
   }
-  override def exportDrawingToCSV(writer: java.io.PrintWriter) {
+  override def exportDrawingToCSV(writer: java.io.PrintWriter) =
     renderer.trailDrawer.exportDrawingToCSV(writer)
-  }
 
-  def exportOutput(filename: String) {
+  def exportOutput(filename: String) = {
     val file: org.nlogo.api.File = new org.nlogo.api.LocalFile(filename)
     try {
       file.open(org.nlogo.api.FileMode.Write)
@@ -342,7 +324,7 @@ with org.nlogo.api.ViewSettings {
     }
   }
 
-  override def exportOutputAreaToCSV(writer: java.io.PrintWriter) {
+  override def exportOutputAreaToCSV(writer: java.io.PrintWriter) = {
     writer.println(org.nlogo.api.Dump.csv.encode("OUTPUT"))
     org.nlogo.api.Dump.csv.stringToCSV(writer, outputAreaBuffer.toString)
   }
@@ -351,9 +333,7 @@ with org.nlogo.api.ViewSettings {
    * Internal use only.
    */
   // called from job thread - ST 10/1/03
-  override def clearOutput() {
-    outputAreaBuffer.setLength(0)
-  }
+  override def clearOutput() = outputAreaBuffer.setLength(0)
 
   /// world importing error handling
 
@@ -383,7 +363,7 @@ with org.nlogo.api.ViewSettings {
     renderer.exportView(graphics, this)
   }
 
-  override def exportView(filename: String, format: String) {
+  override def exportView(filename: String, format: String) = {
     // there's a form of ImageIO.write that just takes a filename, but if we use that when the
     // filename is invalid (e.g. refers to a directory that doesn't exist), we get an
     // IllegalArgumentException instead of an IOException, so we make our own OutputStream so we get
@@ -402,7 +382,7 @@ with org.nlogo.api.ViewSettings {
   /**
    * Internal use only. Called from job thread.
    */
-  override def sendOutput(oo: org.nlogo.agent.OutputObject, toOutputArea: Boolean) {
+  override def sendOutput(oo: org.nlogo.agent.OutputObject, toOutputArea: Boolean) = {
     // output always goes to stdout in headless mode
     if (!silent)
       print(oo.get)
@@ -414,30 +394,28 @@ with org.nlogo.api.ViewSettings {
   /**
    * Internal use only.
    */
-  def ownerFinished(owner: org.nlogo.api.JobOwner) { }
+  def ownerFinished(owner: org.nlogo.api.JobOwner) = {}
 
   /**
    * Internal use only.
    */
-  def updateDisplay(haveWorldLockAlready: Boolean) { }
+  def updateDisplay(haveWorldLockAlready: Boolean) = {}
 
   /**
    * Internal use only.
    */
-  override def requestDisplayUpdate(force: Boolean) {
-    if (hubnetManager != null)
-      hubnetManager.incrementalUpdateFromEventThread()
-  }
+  override def requestDisplayUpdate(force: Boolean) = if (hubnetManager != null)
+    hubnetManager.incrementalUpdateFromEventThread()
 
   /**
    * Internal use only.
    */
-  override def breathe() { }
+  override def breathe() = {}
 
   /**
    * Internal use only.
    */
-  def periodicUpdate() { }
+  def periodicUpdate() = {}
 
   /**
    * Internal use only.
@@ -475,7 +453,7 @@ with org.nlogo.api.ViewSettings {
    * Internal use only.
    */
   override var lastLogoException: LogoException = null
-  override def clearLastLogoException() { lastLogoException = null }
+  override def clearLastLogoException() = lastLogoException = null
 
   // this is a blatant hack that makes it possible to test the new stack trace stuff.
   // lastErrorReport gives more information than the regular exception that gets thrown from the
@@ -507,7 +485,7 @@ with org.nlogo.api.ViewSettings {
   @throws(classOf[java.io.IOException])
   @throws(classOf[CompilerException])
   @throws(classOf[LogoException])
-  override def open(path: String) {
+  override def open(path: String) = {
     setModelPath(path)
     val modelContents = org.nlogo.api.FileIO.file2String(path)
     try openString(modelContents)
@@ -526,7 +504,7 @@ with org.nlogo.api.ViewSettings {
    *
    * @param modelContents
    */
-  override def openString(modelContents: String) {
+  override def openString(modelContents: String) = {
     fileManager.handleModelChange()
     new HeadlessModelOpener(this).openFromMap(ModelReader.parseModel(modelContents))
   }
@@ -538,9 +516,8 @@ with org.nlogo.api.ViewSettings {
    * @param source The complete model, including widgets and so forth,
    *               in the same format as it would be stored in a file.
    */
-  def openFromSource(source: String) {
+  def openFromSource(source: String) =
     new HeadlessModelOpener(this).openFromMap(ModelReader.parseModel(source))
-  }
 
   /**
    * Runs NetLogo commands and waits for them to complete.
@@ -552,7 +529,7 @@ with org.nlogo.api.ViewSettings {
    */
   @throws(classOf[CompilerException])
   @throws(classOf[LogoException])
-  def command(source: String) {
+  def command(source: String) = {
     evaluateCommands(defaultOwner, source, true)
     if (lastLogoException != null) {
       val ex = lastLogoException
@@ -587,11 +564,9 @@ with org.nlogo.api.ViewSettings {
   /**
    * Halts all running NetLogo code in this workspace.
    */
-  override def halt() {
-    // we just invoke the method in our superclass, but explicitly writing that lets us doc the
-    // method - ST 6/1/05
-    super.halt()
-  }
+  // we just invoke the method in our superclass, but explicitly writing that lets us doc the
+  // method - ST 6/1/05
+  override def halt() = super.halt()
 
   def unsupported = throw new UnsupportedOperationException
 

@@ -8,12 +8,12 @@ import org.nlogo.workspace.AbstractWorkspace
 import org.nlogo.nvm.LabInterface.Settings
 
 object Main {
-  def main(args: Array[String]) {
+  def main(args: Array[String]) = {
     AbstractWorkspace.isApplet(false)
     setHeadlessProperty()
     parseArgs(args).foreach(runExperiment)
   }
-  def runExperiment(settings: Settings) {
+  def runExperiment(settings: Settings) = {
     def newWorkspace = {
       val w = HeadlessWorkspace.newInstance
       w.open(settings.model)
@@ -23,7 +23,7 @@ object Main {
     lab.load(HeadlessModelOpener.protocolSection(settings.model))
     lab.run(settings, newWorkspace _)
   }
-  def setHeadlessProperty() {
+  def setHeadlessProperty() = {
     // force headless mode if it is not set.  This is necessary for the headless workspace to run
     // on most platforms when a display is not available. --CLB
     // note that since our check is for null, so the user can still force the property to false and
@@ -45,20 +45,18 @@ object Main {
     var threads = Runtime.getRuntime.availableProcessors
     var suppressErrors = false
     val it = args.iterator
-    def die(msg: String) { System.err.println(msg); System.exit(1) }
+    def die(msg: String) = { System.err.println(msg); System.exit(1) }
     def path2writer(path: String) =
       if(path == "-")
         new java.io.PrintWriter(System.out) {
           // don't close System.out - ST 6/9/09
-          override def close() { } }
+          override def close() = {}
+        }
       else
         new java.io.PrintWriter(new java.io.FileWriter(path.trim))
     while(it.hasNext) {
       val arg = it.next()
-      def requireHasNext() {
-        if (!it.hasNext)
-          die("missing argument after " + arg)
-      }
+      def requireHasNext() = if (!it.hasNext) die("missing argument after " + arg)
       if(arg == "--version")
         { println(Version.version); return None }
       else if(arg == "--extension-api-version")
