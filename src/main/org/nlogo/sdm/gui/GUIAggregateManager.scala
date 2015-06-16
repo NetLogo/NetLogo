@@ -20,7 +20,7 @@ with org.nlogo.window.Events.LoadSectionEvent.Handler {
 
   private var editor: AggregateModelEditor = null
 
-  override def showEditor() {
+  override def showEditor() = {
     // if it's the first time, make a new aggregate model editor
     if (editor == null)
       editor = new AggregateModelEditor(
@@ -47,20 +47,15 @@ with org.nlogo.window.Events.LoadSectionEvent.Handler {
     }
   }
 
-  override def handle(e: org.nlogo.window.Events.BeforeLoadEvent) {
-    if (editor != null) {
+  override def handle(e: org.nlogo.window.Events.BeforeLoadEvent) = if (editor != null) {
       editor.dispose()
       editor = null
     }
-  }
 
-  override def handle(e: org.nlogo.window.Events.LoadSectionEvent) {
-    if (e.section == ModelSection.SystemDynamics)
-      load(e.text, compiler)
-  }
+  override def handle(e: org.nlogo.window.Events.LoadSectionEvent) = if (e.section == ModelSection.SystemDynamics)
+    load(e.text, compiler)
 
-  override def load(text: String, compiler: CompilerServices) {
-    if(text.trim.nonEmpty) {
+  override def load(text: String, compiler: CompilerServices) = if(text.trim.nonEmpty) {
       var text2 = org.nlogo.sdm.Loader.mungeClassNames(text)
       // first parse out dt on our own as jhotdraw does not deal with scientific notation
       // properly. ev 10/11/05
@@ -77,14 +72,9 @@ with org.nlogo.window.Events.LoadSectionEvent.Handler {
       if (drawing.getModel.elements.isEmpty)
         editor.setVisible(false)
     }
-  }
 
-  override def handle(e: org.nlogo.window.Events.CompiledEvent) {
-    if (editor != null)
-      editor.setError(
-        this,
-        if(e.sourceOwner eq this) e.error else null)
-  }
+  override def handle(e: org.nlogo.window.Events.CompiledEvent) = if (editor != null)
+    editor.setError(this, if(e.sourceOwner eq this) e.error else null)
 
   /// from org.nlogo.nvm.SourceOwner
 
@@ -93,7 +83,7 @@ with org.nlogo.window.Events.LoadSectionEvent.Handler {
   override def source = innerSource
   override def innerSource =
     Option(editor).map(_.toNetLogoCode).getOrElse("")
-  override def innerSource(s: String) { }
+  override def innerSource(s: String) = {}
   override def headerSource = ""
 
 }

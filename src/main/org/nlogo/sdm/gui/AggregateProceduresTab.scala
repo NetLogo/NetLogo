@@ -13,7 +13,7 @@ class AggregateProceduresTab(colorizer: Colorizer[TokenType]) extends javax.swin
     true,
     // Dummy listener since the editor is not editable
     new java.awt.event.TextListener() {
-        override def textValueChanged(e: java.awt.event.TextEvent) { } },
+        override def textValueChanged(e: java.awt.event.TextEvent) = {} },
     colorizer,
     org.nlogo.api.I18N.gui.get _)
   text.setBorder(
@@ -26,13 +26,11 @@ class AggregateProceduresTab(colorizer: Colorizer[TokenType]) extends javax.swin
        javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS),
       java.awt.BorderLayout.CENTER)
   text.scrollRectToVisible(new java.awt.Rectangle(1, 1, 1, 1))
-  def setError(e: CompilerException) {
-    if(e != null) {
+  def setError(e: CompilerException) = if(e != null) {
       text.select(e.startPos, e.endPos)
       text.requestFocus()
     }
-  }
-  def setText(text: String) {
+  def setText(text: String) = {
     this.text.setText(text)
     this.text.scrollRectToVisible(new java.awt.Rectangle(1, 1, 1, 1))
   }
