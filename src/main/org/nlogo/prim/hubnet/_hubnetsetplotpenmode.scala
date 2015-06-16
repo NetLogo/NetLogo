@@ -8,12 +8,12 @@ import org.nlogo.nvm.{ Command, Context, EngineException }
 class _hubnetsetplotpenmode extends Command {
   override def syntax =
     Syntax.commandSyntax(Array(Syntax.StringType, Syntax.NumberType))
-  override def perform(context: Context) {
+  override def perform(context: Context) = {
     val name = argEvalString(context, 0)
     val mode = argEvalIntValue(context, 1)
     workspace.waitFor(
       new CommandRunnable {
-        override def run() {
+        override def run() = {
           if (mode < PlotPenInterface.MinMode || mode > PlotPenInterface.MaxMode)
             throw new EngineException(
               context, _hubnetsetplotpenmode.this,

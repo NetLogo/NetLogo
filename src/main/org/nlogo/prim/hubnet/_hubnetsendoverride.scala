@@ -14,7 +14,7 @@ class _hubnetsendoverride extends Command {
           Syntax.ReporterBlockType),
     "OTPL", "?", false)
 
-  override def perform(context: Context) {
+  override def perform(context: Context) = {
     val client = argEvalString(context, 0)
     val target = args(1).report(context)
     val varName = argEvalString(context, 2)
@@ -52,7 +52,7 @@ class _hubnetsendoverride extends Command {
     }
 
     workspace.waitFor(new CommandRunnable() {
-      def run() { workspace.getHubNetManager.sendOverrideList(client, set.`type`(), varName, overrides.toMap) }
+      def run() = workspace.getHubNetManager.sendOverrideList(client, set.`type`(), varName, overrides.toMap)
     })
     context.ip = next
   }

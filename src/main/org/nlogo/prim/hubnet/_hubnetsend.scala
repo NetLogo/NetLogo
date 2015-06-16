@@ -11,7 +11,7 @@ class _hubnetsend extends Command {
       Array(Syntax.StringType | Syntax.ListType,
             Syntax.StringType,
             Syntax.WildcardType))
-  override def perform(context: Context) {
+  override def perform(context: Context) = {
     val nodesArg = args(0).report(context)
     val tag = argEvalString(context, 1)
     val message = args(2).report(context)
