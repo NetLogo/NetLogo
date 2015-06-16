@@ -56,7 +56,7 @@ class TokenMapper(is3D: Boolean) extends TokenMapperInterface {
   private def instantiate[T](name: String) =
     Class.forName(name).newInstance.asInstanceOf[T]
   // for integration testing
-  def checkInstructionMaps() {
+  def checkInstructionMaps() = {
     commands.keySet.foreach(getCommand)
     reporters.keySet.foreach(getReporter)
   }

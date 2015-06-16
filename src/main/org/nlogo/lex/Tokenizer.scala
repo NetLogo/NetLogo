@@ -114,6 +114,6 @@ class Tokenizer(tokenMapper: TokenMapper) extends TokenizerInterface {
     tokenizeForColorization(source).map(replaceImports)
   }
 
-  def checkInstructionMaps() { tokenMapper.checkInstructionMaps() }
+  def checkInstructionMaps() = tokenMapper.checkInstructionMaps()
 
 }
