@@ -10,7 +10,7 @@ class _tiltup extends Command {
   override def syntax =
     Syntax.commandSyntax(
       Array(Syntax.NumberType), "-T--", true)
-  override def perform(context: Context) {
+  override def perform(context: Context) = {
     val delta = argEvalDoubleValue(context, 0)
     val turtle = context.agent.asInstanceOf[Turtle3D]
     val v = Vect.toVectors(turtle.heading,

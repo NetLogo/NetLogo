@@ -13,7 +13,7 @@ class _facexyz extends Command {
             Syntax.NumberType,
             Syntax.NumberType),
       "OT--", true)
-  override def perform(context: Context) {
+  override def perform(context: Context) = {
     context.agent match {
       case turtle: Turtle3D =>
         turtle.face(argEvalDoubleValue(context, 0),

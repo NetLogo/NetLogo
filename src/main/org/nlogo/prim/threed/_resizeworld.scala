@@ -14,7 +14,7 @@ class _resizeworld extends Command {
       Syntax.NumberType, Syntax.NumberType,
       Syntax.NumberType, Syntax.NumberType), "O---", true)
 
-  override def perform(context: Context) {
+  override def perform(context: Context) = {
 
     val newMinX = argEvalIntValue(context, 0)
     val newMaxX = argEvalIntValue(context, 1)
@@ -43,7 +43,7 @@ class _resizeworld extends Command {
                                             newMinZ, newMaxZ))
       workspace.waitFor(
         new org.nlogo.api.CommandRunnable {
-          override def run() { workspace.resizeView() }})
+          override def run() = workspace.resizeView() })
     }
     context.ip = next
   }

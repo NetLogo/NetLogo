@@ -12,7 +12,7 @@ class _setxyz extends Command {
           Syntax.NumberType,
           Syntax.NumberType),
     "OT--", true)
-  override def perform(context: Context) {
+  override def perform(context: Context) = {
     context.agent match {
       case turtle: Turtle3D =>
         var newx = argEvalDouble(context, 0)
