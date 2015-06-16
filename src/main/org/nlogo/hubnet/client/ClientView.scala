@@ -15,16 +15,16 @@ class ClientView(clientPanel: ClientPanel) extends Widget with ViewWidgetInterfa
   val renderer = new ClientRenderer(world)
   def isHeadless = false
   private var _displayOn = false
-  def setDisplayOn(on: Boolean) { _displayOn = on; repaint() }
+  def setDisplayOn(on: Boolean) = { _displayOn = on; repaint() }
 
   locally {
     world.setTrailDrawer(renderer.trailDrawer())
     val mouser = new ViewMouseHandler(this, world, this) {
-      override def mousePressed(e: MouseEvent) {
+      override def mousePressed(e: MouseEvent) = {
         super.mousePressed(e)
         if (_displayOn && mouseInside) clientPanel.sendMouseMessage(mouseXCor, mouseYCor, true)
       }
-      override def mouseReleased(e: MouseEvent) {
+      override def mouseReleased(e: MouseEvent) = {
         super.mouseReleased(e)
         if (_displayOn && mouseInside) clientPanel.sendMouseMessage(mouseXCor, mouseYCor, false)
       }
@@ -34,8 +34,7 @@ class ClientView(clientPanel: ClientPanel) extends Widget with ViewWidgetInterfa
   }
 
   // PAINTING
-  override def paintComponent(g: Graphics) {
-    this.synchronized {
+  override def paintComponent(g: Graphics) = this.synchronized {
       setFontSize(g)
       if (!_displayOn || world == null) {
         g.setColor(InterfaceColors.GRAPHICS_BACKGROUND)
@@ -48,16 +47,14 @@ class ClientView(clientPanel: ClientPanel) extends Widget with ViewWidgetInterfa
         world.rollbackOverrides()
       }
     }
-  }
 
-  private def setFontSize(g: Graphics) {
+  private def setFontSize(g: Graphics) = {
     val font = g.getFont()
     g.setFont(new Font(font.getName(), font.getStyle(), world.fontSize()))
   }
 
   //Updates the world and draws it.
-  def updateDisplay(worldData: Array[Byte]) {
-    this.synchronized {
+  def updateDisplay(worldData: Array[Byte]) = this.synchronized {
       if (world != null) {
         try {
           world.updateFrom(new java.io.DataInputStream(new java.io.ByteArrayInputStream(worldData)))
@@ -69,20 +66,19 @@ class ClientView(clientPanel: ClientPanel) extends Widget with ViewWidgetInterfa
         repaint()
       }
     }
-  }
 
-  def handleOverrideList(list: OverrideList, clear: Boolean) {
+  def handleOverrideList(list: OverrideList, clear: Boolean) = {
     if (clear) world.updateOverrides(list.asInstanceOf[ClearOverride])
     else world.updateOverrides(list.asInstanceOf[SendOverride])
     if (_displayOn) repaint()
   }
 
-  def clearOverrides() {
+  def clearOverrides() = {
     world.clearOverrides()
     if (_displayOn) repaint()
   }
 
-  def handleAgentPerspective(data: Array[Byte]) {
+  def handleAgentPerspective(data: Array[Byte]) = {
     world.updateClientPerspective(new AgentPerspective(new DataInputStream(new ByteArrayInputStream(data))))
     if (_displayOn) repaint()
   }

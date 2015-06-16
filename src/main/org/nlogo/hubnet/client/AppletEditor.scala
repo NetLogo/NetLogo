@@ -7,16 +7,12 @@ private class AppletEditor(rows: Int, columns: Int, disableFocusTraversal: Boole
 {
   if(!disableFocusTraversal)
     addFocusTraversalActions()
-  private def addFocusTraversalActions() {
+  private def addFocusTraversalActions() = {
     val transferFocusAction = new javax.swing.AbstractAction() {
-      def actionPerformed(e: java.awt.event.ActionEvent) {
-        transferFocus()
-      }
+      def actionPerformed(e: java.awt.event.ActionEvent) = transferFocus()
     }
     val transferFocusBackwardAction = new javax.swing.AbstractAction() {
-      def actionPerformed(e: java.awt.event.ActionEvent) {
-        transferFocusBackward()
-      }
+      def actionPerformed(e: java.awt.event.ActionEvent) = transferFocusBackward()
     }
     getInputMap.put(
       javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_TAB, 0),
@@ -59,5 +55,5 @@ private class AppletEditor(rows: Int, columns: Int, disableFocusTraversal: Boole
   }
   private def columnWidth = getFontMetrics(getFont).charWidth('m')
   private def rowHeight = getFontMetrics(getFont).getHeight
-  override def enableBracketMatcher(enabled: Boolean) { }
+  override def enableBracketMatcher(enabled: Boolean) = {}
 }

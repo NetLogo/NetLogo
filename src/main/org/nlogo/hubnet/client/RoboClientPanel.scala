@@ -10,17 +10,17 @@ private class RoboClientPanel(editorFactory:org.nlogo.window.EditorFactory,
         extends ClientPanel(editorFactory, errorHandler, workspace) {
   private lazy val roboClient:RoboWidgetControl = new RoboWidgetControl()
 
-  override def completeLogin(handshake:HandshakeFromServer){
+  override def completeLogin(handshake:HandshakeFromServer) = {
     super.completeLogin(handshake)
     roboClient.start()
   }
 
-  override def disconnect(reason:String){
+  override def disconnect(reason:String) = {
     roboClient.running = false
     super.disconnect(reason)
   }
 
-  override def logout(){
+  override def logout() = {
     roboClient.running = false
     super.logout()
   }
@@ -34,7 +34,7 @@ private class RoboClientPanel(editorFactory:org.nlogo.window.EditorFactory,
     private val r = new org.nlogo.util.MersenneTwisterFast()
     var running = true
 
-    override def run() {
+    override def run() = {
       val components = clientGUI.getInterfaceComponents
       while (running) {
         val comp = components(r.nextInt(components.length))
@@ -51,7 +51,7 @@ private class RoboClientPanel(editorFactory:org.nlogo.window.EditorFactory,
     }
 
     @throws(classOf[InterruptedException])
-    private def sendRoboViewMessage(){
+    private def sendRoboViewMessage() = {
       def randomCor(min:Double, max:Double) = min + r.nextDouble() * (max - min) - 0.5
       invokeAndWait(() =>
         sendMouseMessage(randomCor(viewWidget.world.minPxcor, viewWidget.world.maxPxcor),
@@ -64,12 +64,11 @@ private class RoboClientPanel(editorFactory:org.nlogo.window.EditorFactory,
      * --mag 08/04/03, 08/07/03
      */
     @throws(classOf[InterruptedException])
-    private def getAndSendRoboWidgetMessage(widget:Widget) {
-      // use invokeAndWait() here instead of invokeLater() since
-      // then if the event thread gets backed up, we don't send
-      // over a whole slew of widget events all at once.  they
-      // will always be at least waitTime apart.
-      invokeAndWait(() => {
+    // use invokeAndWait() here instead of invokeLater() since
+    // then if the event thread gets backed up, we don't send
+    // over a whole slew of widget events all at once.  they
+    // will always be at least waitTime apart.
+    private def getAndSendRoboWidgetMessage(widget:Widget) = invokeAndWait(() => {
         val (name, value) = widget match {
           case s:SliderWidget =>
             if(s.value == s.maximum) s.value = s.minimum else s.value = s.value + s.increment
@@ -85,6 +84,5 @@ private class RoboClientPanel(editorFactory:org.nlogo.window.EditorFactory,
         // --mag 8/26/03
         if (connected && value.isDefined) sendDataAndWait(new ActivityCommand(name, value.get.asInstanceOf[AnyRef]))
       })
-    }
   }
 }

@@ -18,7 +18,7 @@ object ClientApp {
   private var localClientIndex = 0
 
   // called by App.main()
-  def mainHelper(args: Array[String], editorFactory: EditorFactory, workspace: CompilerServices) {
+  def mainHelper(args: Array[String], editorFactory: EditorFactory, workspace: CompilerServices) =
     try {
       val app = new ClientApp()
       if (System.getProperty("os.name").startsWith("Mac"))
@@ -50,7 +50,6 @@ object ClientApp {
     } catch {
       case ex: RuntimeException => org.nlogo.util.Exceptions.handle(ex)
     }
-  }
 }
 
 class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterface {
@@ -69,9 +68,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
               port: Int, isLocal: Boolean, isRobo: Boolean, waitTime: Long, workspace: CompilerServices) {
     EventQueue.invokeLater(() => {
       Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-        def uncaughtException(t: Thread, e: Throwable) {
-          org.nlogo.util.Exceptions.handle(e)
-        }
+        def uncaughtException(t: Thread, e: Throwable) = org.nlogo.util.Exceptions.handle(e)
       })
 
       this.isLocal = isLocal
@@ -110,19 +107,14 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
     })
   }
 
-  private def doLogin() {
-    /// arggh.  isn't there some way around keeping this flag??
-    /// grumble. ev 7/29/08
-    if (!isLocal){
-      loginDialog.go(new LoginCallback {
-        def apply(user: String, host: String, port: Int) { login(user, host, port) }
-      })
-    }
-  }
+  private def doLogin() = if (!isLocal) /// arggh.  isn't there some way around keeping this flag?? grumble. ev 7/29/08
+    loginDialog.go(new LoginCallback {
+        def apply(user: String, host: String, port: Int) = login(user, host, port)
+    })
 
-  def completeLogin() { setVisible(true) }
+  def completeLogin() = setVisible(true)
 
-  private def login(userid: String, hostip: String, port: Int) {
+  private def login(userid: String, hostip: String, port: Int) = {
     var exs: Option[String] = None
     ModalProgressTask(Hierarchy.getFrame(this), "Entering...", () => {
       exs = clientPanel.login(userid, hostip, port)
@@ -143,7 +135,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
     0 == OptionDialog.show(loginDialog, "Confirm " + title, message, buttons)
   }
 
-  def handleDisconnect(activityName: String, connected: Boolean, reason:String) {
+  def handleDisconnect(activityName: String, connected: Boolean, reason:String) = {
     EventQueue.mustBeEventDispatchThread()
     if (isLocal) this.dispose()
     else {
@@ -156,14 +148,14 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
     }
   }
 
-  def handleLoginFailure(errorMessage: String) {
+  def handleLoginFailure(errorMessage: String) = {
     EventQueue.mustBeEventDispatchThread()
     OptionDialog.show(ClientApp.this, "Login Failed",
       errorMessage, Array(I18N.gui.get("common.buttons.ok")))
     loginDialog.setVisible(true)
   }
 
-  def handleExit() {
+  def handleExit() = {
     EventQueue.mustBeEventDispatchThread()
     if (showExitMessage(I18N.gui.get("common.buttons.exit"), "Do you really want to exit this activity?")){
       clientPanel.logout()
@@ -173,7 +165,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
     }
   }
 
-  def handleQuit() {
+  def handleQuit() = {
     EventQueue.mustBeEventDispatchThread()
     val shouldExit = showExitMessage(
       I18N.gui.get("common.buttons.quit"),

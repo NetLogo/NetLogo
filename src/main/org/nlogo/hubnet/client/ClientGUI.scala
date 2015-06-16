@@ -22,7 +22,7 @@ class ClientGUI(editorFactory: org.nlogo.window.EditorFactory,clientView: Client
 
     class ClientGUIButtonKeyAdapter extends ButtonKeyAdapter {
       val map = new collection.mutable.HashMap[ButtonWidget,Long]
-      override def buttonKeyed(button: ButtonWidget) {
+      override def buttonKeyed(button: ButtonWidget) = {
         val currentTime = System.currentTimeMillis
         val lastMessageTime = map.getOrElse(button, 0L)
         // only send the message for this button if it hasnt been pressed in the last 100 ms.
@@ -50,14 +50,13 @@ class ClientGUI(editorFactory: org.nlogo.window.EditorFactory,clientView: Client
   }
 
   override def getInsets = new Insets(5,5,5,5)
-  override def requestFocus() { if (interfacePanel != null) interfacePanel.requestFocus() }
+  override def requestFocus() = if (interfacePanel != null) interfacePanel.requestFocus()
   def getInterfaceComponents = interfacePanel.getComponents
-  def setStatus(username: String, activity: String, server: String, port: Int) {
+  def setStatus(username: String, activity: String, server: String, port: Int) =
     statusPanel.setStatus(username, activity, server, port)
-  }
-  def addMessage(message: String) {messagePanel.addMessage(message)}
-  def clearMessages() {messagePanel.clear()}
-  def setChoices(chooserChoices: Map[String, org.nlogo.api.LogoList]) {
+  def addMessage(message: String) = messagePanel.addMessage(message)
+  def clearMessages() = messagePanel.clear()
+  def setChoices(chooserChoices: Map[String, org.nlogo.api.LogoList]) = {
     def getWidget(name: String): ChooserWidget = {
       getInterfaceComponents.collect{case w:ChooserWidget => w}.find(_.displayName == name) match {
         case Some(w) => w
@@ -75,7 +74,7 @@ class ClientGUI(editorFactory: org.nlogo.window.EditorFactory,clientView: Client
       setBorder(new BevelBorder(BevelBorder.LOWERED))
       setVisible(false)
     }
-    def addMessage(message: String) {
+    def addMessage(message: String) = {
       setVisible(true)
       messageTextArea.append(message + "\n")
       // windows seems to need this to scroll to the end
@@ -84,7 +83,7 @@ class ClientGUI(editorFactory: org.nlogo.window.EditorFactory,clientView: Client
       // frame might be null in the applet ev 1/23/09
       if (frame != null) frame.pack()
     }
-    def clear() {messageTextArea.setText("")}
+    def clear() = messageTextArea.setText("")
   }
   private class StatusPanel extends JPanel {
     private val List(username, server, port) = List("User name", "Server", "Port").map(new StatusField(_, ""))
@@ -93,7 +92,7 @@ class ClientGUI(editorFactory: org.nlogo.window.EditorFactory,clientView: Client
       setLayout(new BoxLayout(this,BoxLayout.X_AXIS))
       add(username); add(Box.createHorizontalGlue); add(server); add(port)
     }
-    def setStatus(u:String, activity: String, s:String, p:Int) {
+    def setStatus(u:String, activity: String, s:String, p:Int) = {
       username setText u; server setText s; port setText p.toString
       org.nlogo.awt.Hierarchy.getFrame(ClientGUI.this).setTitle("HubNet: " + activity)
     }
@@ -113,7 +112,7 @@ class ClientGUI(editorFactory: org.nlogo.window.EditorFactory,clientView: Client
       })
       add(value)
     }
-    def setText(text: String) {value.setText(text)}
+    def setText(text: String) = value.setText(text)
   }
   private class DummyRandomServices extends RandomServices {
     def auxRNG: MersenneTwisterFast = null

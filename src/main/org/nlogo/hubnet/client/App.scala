@@ -11,7 +11,7 @@ import org.nlogo.window.VMCheck
  * Creates and runs a hubnet client from the command line.
  */
 object App {
-  def main(args: Array[String]) {
+  def main(args: Array[String]) = {
     AbstractWorkspace.isApp(true)
     AbstractWorkspace.isApplet(false)
     VMCheck.detectBadJVMs()
