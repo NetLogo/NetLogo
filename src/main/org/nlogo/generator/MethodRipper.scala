@@ -10,7 +10,7 @@ import org.nlogo.nvm.Instruction
 
 private class MethodRipper(method: Method, instr: Instruction, mvOut: MethodVisitor, bgen: Generator#InstructionGenerator[_], instrUID: Int) {
   private val errorLog = new StringBuilder
-  def writeTransformedBytecode() {
+  def writeTransformedBytecode() = {
     val reader = PrimitiveCache.getClassReader(instr.getClass)
     val extractor = new MethodExtractorClassAdapter
     reader.accept(extractor, ClassReader.SKIP_FRAMES)
@@ -25,7 +25,7 @@ private class MethodRipper(method: Method, instr: Instruction, mvOut: MethodVisi
   }
   private class MethodTransformerAdapter extends MethodAdapter(mvOut) {
     val endOfMethodLabel = new Label
-    override def visitFieldInsn(opcode: Int, owner: String, name: String, desc: String) {
+    override def visitFieldInsn(opcode: Int, owner: String, name: String, desc: String) =
       if (owner != Type.getInternalName(instr.getClass))
         super.visitFieldInsn(opcode, owner, name, desc)
       else opcode match {
@@ -74,8 +74,7 @@ private class MethodRipper(method: Method, instr: Instruction, mvOut: MethodVisi
           bgen.translatePutStatic(name, instrUID, desc)
         case _ => // do nothing
       }
-    }
-    override def visitMethodInsn(opcode: Int, owner: String, name: String, desc: String) {
+    override def visitMethodInsn(opcode: Int, owner: String, name: String, desc: String) =
       if (name == "displayName") {
         super.visitInsn(POP)
         super.visitLdcInsn(instr.displayName)
@@ -101,24 +100,21 @@ private class MethodRipper(method: Method, instr: Instruction, mvOut: MethodVisi
         // probably calling helper function inside same class -- we don't allow that
         errorLog.append("MethodRipper says: Java class " + instr.getClass() +
           " not allowed to call method '" + name + "' in a report_X()/perform_X() method.\n")
-    }
-    override def visitInsn(opcode: Int) {
-      // We need to change "returns" to "jump-to-end-method"
-      opcode match {
+
+    // We need to change "returns" to "jump-to-end-method"
+    override def visitInsn(opcode: Int) = opcode match {
         case RETURN | ARETURN | IRETURN | DRETURN | FRETURN | LRETURN =>
           super.visitJumpInsn(GOTO, endOfMethodLabel)
         case _ => super.visitInsn(opcode)
       }
-    }
     // strip out the visitations that we don't want to pass on
-    override def visitCode() {}
-    override def visitEnd() { visitLabel(endOfMethodLabel) }
-    override def visitMaxs(maxStack: Int, maxLocals: Int) {}
-    override def visitLocalVariable(name: String, desc: String, signature: String, start: Label, end: Label, index: Int) {}
-    override def visitLineNumber(line: Int, start: Label) {}
-    override def visitTryCatchBlock(start: Label, end: Label, handler: Label, tyype: String) {
+    override def visitCode() = {}
+    override def visitEnd() = visitLabel(endOfMethodLabel)
+    override def visitMaxs(maxStack: Int, maxLocals: Int) = {}
+    override def visitLocalVariable(name: String, desc: String, signature: String, start: Label, end: Label, index: Int) = {}
+    override def visitLineNumber(line: Int, start: Label) = {}
+    override def visitTryCatchBlock(start: Label, end: Label, handler: Label, tyype: String) =
       mv.visitTryCatchBlock(start, end, handler, tyype)
-    }
   }
   private def checkClassHasMethod(c: Class[_], name: String, descriptor: String): Boolean =
     c != null &&

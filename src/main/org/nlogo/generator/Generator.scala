@@ -96,7 +96,7 @@ class Generator(source: String, procedure: Procedure, profilingEnabled: Boolean)
       result.chosenMethod = original.chosenMethod
       result
     }
-    def generateConstructor() {
+    def generateConstructor() = {
       val constructor = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null)
       constructor.visitCode()
       constructor.visitVarInsn(ALOAD, 0)
@@ -105,7 +105,7 @@ class Generator(source: String, procedure: Procedure, profilingEnabled: Boolean)
       constructor.visitMaxs(0, 0)
       constructor.visitEnd()
     }
-    def generateBodyMethod() {
+    def generateBodyMethod() = {
       nlgen.visitCode()
       original match {
         case _: Command =>
@@ -214,7 +214,7 @@ class Generator(source: String, procedure: Procedure, profilingEnabled: Boolean)
      * inlining of everything.  (Remember that any Instructions that are called "old-style" with
      * report() need to be inited too...) ~Forrest (3/12/2006)
      */
-    def generateInitMethod() {
+    def generateInitMethod() = {
       val mv = cw.visitMethod(ACC_PUBLIC, "init", "(Lorg/nlogo/nvm/Workspace;)V", null, null)
       mv.visitCode()
       // first invoke super.init()
@@ -295,22 +295,21 @@ class Generator(source: String, procedure: Procedure, profilingEnabled: Boolean)
      * to be able to load it multiple times, then you should first call "keep" and save the index
      * that is returned.  Then call loadKept(index) whenever you want to load the object.
      */
-    def keepAndLoadInstruction(obj: Instruction, instrUID: Int) {
+    def keepAndLoadInstruction(obj: Instruction, instrUID: Int) =
       loadKept(keepInstruction(obj, instrUID))
-    }
-    def keep(fieldName: String, obj: Object, tyype: Type, accessCode: Int) {
+    def keep(fieldName: String, obj: Object, tyype: Type, accessCode: Int) = {
       keptThings.put(fieldName, obj)
       keptThingsTypes.put(fieldName, tyype)
       keptThingsAccessCodes.put(fieldName, Int.box(accessCode))
     }
-    def loadKept(fieldName: String) {
+    def loadKept(fieldName: String) = {
       val descriptor = keptThingsTypes.get(fieldName).getDescriptor
       nlgen.visitVarInsn(ALOAD, 0)
       nlgen.visitFieldInsn(GETFIELD, fullClassName, fieldName, descriptor)
     }
     def remapFieldName(originalName: String, instrUID: Int) =
       "kept" + instrUID + "_" + originalName
-    def translateGetField(origFieldName: String, instrUID: Int, obj: Object, tyype: Type, accessCode: Int) {
+    def translateGetField(origFieldName: String, instrUID: Int, obj: Object, tyype: Type, accessCode: Int) =
       // Note: The POPs are generated to cancel out the ALOAD 0 which preceded the GETFIELD
       // instruction.  These ALOAD/POP pairs will then be swept away by a peep-hole optimizer that
       // streamlines the bytecode.
@@ -324,17 +323,14 @@ class Generator(source: String, procedure: Procedure, profilingEnabled: Boolean)
         keep(fieldName, obj, tyype, accessCode)
         nlgen.visitFieldInsn(GETFIELD, fullClassName, fieldName, tyype.getDescriptor)
       }
-    }
-    def translateGetStatic(origFieldName: String, instrUID: Int, obj: Object, tyype: Type, accessCode: Int) {
+    def translateGetStatic(origFieldName: String, instrUID: Int, obj: Object, tyype: Type, accessCode: Int) = {
       val fieldName = remapFieldName(origFieldName, instrUID)
       keep(fieldName, obj, tyype, accessCode)
       nlgen.visitFieldInsn(GETSTATIC, fullClassName, fieldName, tyype.getDescriptor)
     }
-    def translatePutStatic(origFieldName: String, instrUID: Int, descriptor: String) {
-      nlgen.visitFieldInsn(PUTSTATIC, fullClassName, remapFieldName(origFieldName, instrUID),
-        descriptor)
-    }
-    def generateKeptFields() {
+    def translatePutStatic(origFieldName: String, instrUID: Int, descriptor: String) =
+      nlgen.visitFieldInsn(PUTSTATIC, fullClassName, remapFieldName(origFieldName, instrUID), descriptor)
+    def generateKeptFields() = {
       import collection.JavaConverters._
       for (fieldName <- keptThings.keySet.asScala) {
         val descriptor = keptThingsTypes.get(fieldName).getDescriptor
@@ -344,7 +340,7 @@ class Generator(source: String, procedure: Procedure, profilingEnabled: Boolean)
         cw.visitField(accessCode, fieldName, descriptor, null, null).visitEnd()
       }
     }
-    def setAllKeptFields(resultInstr: Instruction) {
+    def setAllKeptFields(resultInstr: Instruction) = {
       import collection.JavaConverters._
       for (fieldName <- keptThings.keySet.asScala) {
         val f = resultInstr.getClass.getDeclaredField(fieldName)
@@ -357,7 +353,7 @@ class Generator(source: String, procedure: Procedure, profilingEnabled: Boolean)
      * like "Turtle.class" ~Forrest (7/16/2006)
      */
     var staticClassMethodAlreadyGenerated = false
-    def generateStaticClassMethod(methodName: String) {
+    def generateStaticClassMethod(methodName: String): Unit = {
       // we don't want to generate it twice!
       if (staticClassMethodAlreadyGenerated) return
       staticClassMethodAlreadyGenerated = true

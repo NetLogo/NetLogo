@@ -57,7 +57,7 @@ private class PeepholeOptimizer3(mv: MethodVisitor) extends AbstractPeepholeOpti
   private var labelE: Label = null
 
   // When match fails, flush saved pieces of pattern before moving on
-  def restartMatch() {
+  def restartMatch() = {
     state match {
       case 0 => // do nothing, because nothing to flush
       case 1 => mv.visitVarInsn(storeOpcodeA, localVarB)
@@ -83,15 +83,14 @@ private class PeepholeOptimizer3(mv: MethodVisitor) extends AbstractPeepholeOpti
     state = 0
   }
 
-  private def matchSucceeded() {
+  private def matchSucceeded() = {
     mv.visitLabel(PeepholeOptimizer3.PEEPHOLE_FLAG_LABEL)
     mv.visitLabel(labelC)
     mv.visitLineNumber(lineNumberD, labelC)
     mv.visitLabel(labelE)
     state = 0
   }
-  private def storeLoadOpcodesMatch(storeOpcode: Int, loadOpcode: Int): Boolean =
-    (storeOpcode, loadOpcode) match {
+  private def storeLoadOpcodesMatch(storeOpcode: Int, loadOpcode: Int): Boolean = (storeOpcode, loadOpcode) match {
       case (ISTORE, ILOAD) => true
       case (DSTORE, DLOAD) => true
       case (LSTORE, LLOAD) => true
@@ -99,7 +98,7 @@ private class PeepholeOptimizer3(mv: MethodVisitor) extends AbstractPeepholeOpti
       case (ASTORE, ALOAD) => true
       case _ => false
     }
-  override def visitVarInsn(opcode: Int, variable: Int) {
+  override def visitVarInsn(opcode: Int, variable: Int) = 
     if (state == 0)
       if (List(ISTORE, DSTORE, LSTORE, FSTORE, ASTORE).contains(opcode)) {
         storeOpcodeA = opcode
@@ -113,9 +112,7 @@ private class PeepholeOptimizer3(mv: MethodVisitor) extends AbstractPeepholeOpti
       // recurse, so we don't miss the start of a new pattern
       visitVarInsn(opcode, variable)
     }
-  }
-  override def visitLabel(label: Label) {
-    (state, label) match {
+  override def visitLabel(label: Label) = (state, label) match {
       case (1, PeepholeOptimizer3.PEEPHOLE_FLAG_LABEL) => state += 1
       case (2, _) => labelC = label; state += 1
       case (4, _) => labelE = label; state += 1
@@ -123,8 +120,7 @@ private class PeepholeOptimizer3(mv: MethodVisitor) extends AbstractPeepholeOpti
         restartMatch()
         mv.visitLabel(label)
     }
-  }
-  override def visitLineNumber(line: Int, start: Label) {
+  override def visitLineNumber(line: Int, start: Label) =
     if (state == 3 && start == labelC) {
       lineNumberD = line
       state += 1
@@ -132,7 +128,6 @@ private class PeepholeOptimizer3(mv: MethodVisitor) extends AbstractPeepholeOpti
       restartMatch()
       mv.visitLineNumber(line, start)
     }
-  }
 }
 
 /**
@@ -152,8 +147,6 @@ private class PeepholeOptimizer3(mv: MethodVisitor) extends AbstractPeepholeOpti
  */
 
 private class PeepholeOptimizer3B(mv: MethodVisitor) extends MethodAdapter(mv) {
-  override def visitLabel(label: Label) {
-    if (label != PeepholeOptimizer3.PEEPHOLE_FLAG_LABEL)
-      mv.visitLabel(label)
-  }
+  override def visitLabel(label: Label) = if (label != PeepholeOptimizer3.PEEPHOLE_FLAG_LABEL)
+    mv.visitLabel(label)
 }

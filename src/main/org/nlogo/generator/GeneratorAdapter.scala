@@ -13,15 +13,13 @@ private class GeneratorAdapter(mv: MethodVisitor, access: Int, name: String, des
   // reserve more JVM local variables e.g. to store NetLogo local procedure variables in them But
   // for now, we aren't reserving anything, and var 2 is the first free var.  ~Forrest (6/22/2006)
   private val FIRST_FREE_JVM_LOCAL = 2
-  def keepField(fieldName: String, obj: AnyRef, thisInstrUID: Int) {
+  def keepField(fieldName: String, obj: AnyRef, thisInstrUID: Int) =
     igen.keep(igen.remapFieldName(fieldName, thisInstrUID),
       obj, Type.getType(obj.getClass),
       ACC_PRIVATE) // could be public, too, whatever ~Forrest (7/21/2006)
-  }
-  def loadKeptField(fieldName: String, thisInstrUID: Int) {
+  def loadKeptField(fieldName: String, thisInstrUID: Int) =
     igen.loadKept(igen.remapFieldName(fieldName, thisInstrUID))
-  }
-  def generateArgument(instr: Instruction, argIndex: Int, retTypeWanted: Class[_], thisInstrUID: Int) {
+  def generateArgument(instr: Instruction, argIndex: Int, retTypeWanted: Class[_], thisInstrUID: Int) = {
     igen.generateInstruction(instr.args(argIndex), retTypeWanted, thisInstrUID, instr, argIndex)
     markLineNumber(thisInstrUID)
   }
@@ -30,8 +28,7 @@ private class GeneratorAdapter(mv: MethodVisitor, access: Int, name: String, des
    * runtime error occurs, for determining which instruction, and hence token, is to blame.
    * ~Forrest (7/20/2006) */
   private var lastMarkedLineNum = -1
-  def markLineNumber(lineNum: Int) {
-    if (lineNum != lastMarkedLineNum) {
+  def markLineNumber(lineNum: Int) = if (lineNum != lastMarkedLineNum) {
       lastMarkedLineNum = lineNum
       val lineLabel = new Label
       visitLabel(lineLabel)
@@ -39,21 +36,17 @@ private class GeneratorAdapter(mv: MethodVisitor, access: Int, name: String, des
       // an error -- instead, we call super's method.
       super.visitLineNumber(lineNum, lineLabel)
     }
-  }
-  override def visitLineNumber(line: Int, start: Label) {
+  override def visitLineNumber(line: Int, start: Label) =
     throw new IllegalStateException("Don't write line numbers to the NetLogoGeneratorAdapter -- line number info " +
       "is reserved for runtime error handling uses.")
-  }
-  def generateConversion(typeFrom: Class[_], typeTo: Class[_], parentInstr: Instruction, argIndex: Int) {
+  def generateConversion(typeFrom: Class[_], typeTo: Class[_], parentInstr: Instruction, argIndex: Int) =
     TypeConverter.generateConversion(typeFrom, typeTo, this, FIRST_FREE_JVM_LOCAL, parentInstr, argIndex)
-  }
   /**
    * Note that using "push" can create more efficient code than using "visitLdcInsn()", because when
    * possible it creates ICONST_1, or DCONST_0, etc.
    * @param obj can be any boxed primitive type, or a String.
    */
-  def push(obj: AnyRef) {
-    obj match {
+  def push(obj: AnyRef): Unit = obj match {
       case b: java.lang.Boolean => push(b.booleanValue)
       case d: java.lang.Double => push(d.doubleValue)
       case f: java.lang.Float => push(f.floatValue)
@@ -61,38 +54,36 @@ private class GeneratorAdapter(mv: MethodVisitor, access: Int, name: String, des
       case i: Number => push(i.intValue) // Integer, Short, or Byte
       case s: String => super.push(s)
     }
-  }
   // We need to override the methods that LocalVariableSorter was working with, because the local
   // variable bytecode we generate gets broken when the variables are renumbered.  However, we still
   // subclass GeneratorAdapter, because it has lots of convenient methods in it.  ~Forrest
-  override def visitVarInsn(opcode: Int, variable: Int) { mv.visitVarInsn(opcode, variable) }
-  override def visitIincInsn(variable: Int, increment: Int) { mv.visitIincInsn(variable, increment) }
-  override def visitMaxs(maxStack: Int, maxLocals: Int) { mv.visitMaxs(maxStack, maxLocals) }
-  override def visitLocalVariable(name: String, desc: String, signature: String, start: Label, end: Label, index: Int) {
+  override def visitVarInsn(opcode: Int, variable: Int) = mv.visitVarInsn(opcode, variable)
+  override def visitIincInsn(variable: Int, increment: Int) = mv.visitIincInsn(variable, increment)
+  override def visitMaxs(maxStack: Int, maxLocals: Int) = mv.visitMaxs(maxStack, maxLocals)
+  override def visitLocalVariable(name: String, desc: String, signature: String, start: Label, end: Label, index: Int) =
     mv.visitLocalVariable(name, desc, signature, start, end, index)
-  }
   // see note above about LocalVariableSorter incompatibility
   override def newLocal(tyype: Type): Int = { throw new IllegalStateException }
-  override def loadArg(arg: Int) { throw new IllegalStateException }
-  override def loadArgs(arg: Int, count: Int) { throw new IllegalStateException }
-  override def loadArgs() { throw new IllegalStateException }
-  override def loadArgArray() { throw new IllegalStateException }
-  override def storeArg(arg: Int) { throw new IllegalStateException }
+  override def loadArg(arg: Int) = throw new IllegalStateException
+  override def loadArgs(arg: Int, count: Int) = throw new IllegalStateException
+  override def loadArgs() = throw new IllegalStateException
+  override def loadArgArray() = throw new IllegalStateException
+  override def storeArg(arg: Int) = throw new IllegalStateException
   override def getLocalType(local: Int): Type = { throw new IllegalStateException }
-  override def loadLocal(local: Int) { throw new IllegalStateException }
-  override def storeLocal(local: Int) { throw new IllegalStateException }
+  override def loadLocal(local: Int) = throw new IllegalStateException
+  override def storeLocal(local: Int) = throw new IllegalStateException
   /**
    * Generates the instruction to load the given local variable on the stack.
    * @param local a local variable index.
    * @param type the type of this local variable.
    */
-  override def loadLocal(index: Int, tyype: Type) { mv.visitVarInsn(tyype.getOpcode(ILOAD), index) }
+  override def loadLocal(index: Int, tyype: Type) =mv.visitVarInsn(tyype.getOpcode(ILOAD), index)
   /**
    * Generates the instruction to store the top stack value in the given local variable.
    * @param local a local variable index.
    * @param type the type of this local variable.
    */
-  override def storeLocal(index: Int, tyype: Type) { mv.visitVarInsn(tyype.getOpcode(ISTORE), index) }
-  override def loadThis() { mv.visitVarInsn(ALOAD, 0) }
-  def loadContext() { mv.visitVarInsn(ALOAD, 1) }
+  override def storeLocal(index: Int, tyype: Type) = mv.visitVarInsn(tyype.getOpcode(ISTORE), index)
+  override def loadThis() = mv.visitVarInsn(ALOAD, 0)
+  def loadContext() = mv.visitVarInsn(ALOAD, 1)
 }
