@@ -25,7 +25,7 @@ with Event.LinkParent {
 
   val linkComponents: JList[AnyRef] = new ArrayList[AnyRef]
   /** internal use only */
-  def addLinkComponent(c: AnyRef) { linkComponents.add(c) }
+  def addLinkComponent(c: AnyRef) = linkComponents.add(c)
   /** internal use only */
   override def getLinkChildren = linkComponents.toArray
 
@@ -54,15 +54,12 @@ with Event.LinkParent {
     addLinkComponent(procedures)
     addLinkComponent(new CompilerManager(workspace, procedures))
     addLinkComponent(new CompiledEvent.Handler {
-      override def handle(e: CompiledEvent) {
-        if (e.error != null)
-          e.error.printStackTrace()
-      }})
+      override def handle(e: CompiledEvent) = if (e.error != null) e.error.printStackTrace()
+      })
     addLinkComponent(new LoadSectionEvent.Handler {
-      override def handle(e: LoadSectionEvent) {
-        if (e.section == ModelSection.SystemDynamics)
+      override def handle(e: LoadSectionEvent) = if (e.section == ModelSection.SystemDynamics)
           workspace.aggregateManager.load(e.text, workspace)
-      }})
+      })
     val iP =
       new InterfacePanelLite(workspace.viewWidget, workspace, workspace, workspace.plotManager,
                              new LiteEditorFactory(workspace))
@@ -82,42 +79,33 @@ with Event.LinkParent {
     throw new UnsupportedOperationException
 
   /** AppletPanel passes the focus request to the InterfacePanel */
-  override def requestFocus() {
-    if (iP != null)
-      iP.requestFocus()
-  }
+  override def requestFocus() = if (iP != null) iP.requestFocus()
 
   /** internal use only */
-  def setAdVisible(visible: Boolean) {
-    panel.setVisible(visible)
-  }
+  def setAdVisible(visible: Boolean) = panel.setVisible(visible)
 
   /**
    * sets the current working directory
    *
    * @param url the directory as java.net.URL
    */
-  def setPrefix(url: java.net.URL) {
-    workspace.fileManager.setPrefix(url)
-  }
+  def setPrefix(url: java.net.URL) = workspace.fileManager.setPrefix(url)
 
   /** internal use only */
-  def handle(throwable: Throwable) {
+  def handle(throwable: Throwable) =
     try {
       if (!throwable.isInstanceOf[LogoException])
         throwable.printStackTrace(System.err)
       val thread = Thread.currentThread
       org.nlogo.awt.EventQueue.invokeLater(
         new Runnable {
-          override def run() {
-            RuntimeErrorDialog.show("Runtime Error", null, null, thread, throwable)
-          }})
+          override def run() = RuntimeErrorDialog.show("Runtime Error", null, null, thread, throwable)
+          })
     }
     catch {
       case ex: RuntimeException =>
         ex.printStackTrace(System.err)
     }
-  }
 
   /**
    * Runs NetLogo commands and waits for them to complete.
@@ -132,7 +120,7 @@ with Event.LinkParent {
    * @see #commandLater
    */
   @throws(classOf[CompilerException])
-  def command(source: String) {
+  def command(source: String) = {
     org.nlogo.awt.EventQueue.cantBeEventDispatchThread()
     workspace.evaluateCommands(defaultOwner, source)
   }
@@ -148,9 +136,7 @@ with Event.LinkParent {
    * @see #command
    */
   @throws(classOf[CompilerException])
-  def commandLater(source: String) {
-    workspace.evaluateCommands(defaultOwner, source, false)
-  }
+  def commandLater(source: String) = workspace.evaluateCommands(defaultOwner, source, false)
 
   /**
    * Runs a NetLogo reporter.
@@ -187,7 +173,7 @@ with Event.LinkParent {
    *
    * @param source new contents
    */
-  def setProcedures(source: String) {
+  def setProcedures(source: String) = {
     org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     procedures.innerSource(source)
   }
@@ -200,7 +186,7 @@ with Event.LinkParent {
    *               in the same format as it would be stored in a file.
    */
   @throws(classOf[InvalidVersionException])
-  def openFromSource(name: String, path: String, source: String) {
+  def openFromSource(name: String, path: String, source: String) = {
     iP.reset()
     // I haven't thoroughly searched for all the places where the type of model matters, but it
     // seems to me like it ought to be OK; the main thing the model type affects in the engine (as

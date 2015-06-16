@@ -25,10 +25,10 @@ import collection.JavaConverters._
 class InterfaceComponent(frame: java.awt.Frame)
 extends AppletPanel(frame,
                     new java.awt.event.MouseAdapter {
-                      override def mouseClicked(e: java.awt.event.MouseEvent) {
+                      override def mouseClicked(e: java.awt.event.MouseEvent) =
                         org.nlogo.swing.BrowserLauncher.openURL(
                           frame, "http://ccl.northwestern.edu/netlogo/", false)
-                      }},
+                      },
                     false)
 with Event.LinkChild {
 
@@ -47,7 +47,7 @@ with Event.LinkChild {
    *
    * @see #setProcedures
    */
-  def compile() {
+  def compile() = {
     org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     (new org.nlogo.window.Events.CompileAllEvent).raise(this)
   }
@@ -58,7 +58,7 @@ with Event.LinkChild {
    *
    * @param text the widget specification
    */
-  def makeWidget(text: String) {
+  def makeWidget(text: String) = {
     org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     val result = new ArrayList[String]
     val tokenizer = new StringTokenizer(text, "\n")
@@ -78,7 +78,7 @@ with Event.LinkChild {
    * @param name the display name of the widget to hide.
    * @see #hideWidget
    */
-  def hideWidget(name: String) {
+  def hideWidget(name: String) = {
     org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     iP.hideWidget(name)
   }
@@ -93,7 +93,7 @@ with Event.LinkChild {
    * @param name the display name of the widget to reveal.
    * @see #hideWidget
    */
-  def showWidget(name: String) {
+  def showWidget(name: String) = {
     org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     iP.showWidget(name)
   }
@@ -105,7 +105,7 @@ with Event.LinkChild {
    */
   @throws(classOf[java.io.IOException])
   @throws(classOf[org.nlogo.window.InvalidVersionException])
-  def open(path: String) {
+  def open(path: String) = {
     org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     val source = org.nlogo.api.FileIO.file2String(path)
     if (source == null)
@@ -119,7 +119,7 @@ with Event.LinkChild {
    * @param properties path to the XML properties file as defined by the log4j dtd
    * @param username   user defined username, this should be a unique identifier
    */
-  def startLogging(properties: String, username: String) {
+  def startLogging(properties: String, username: String) = {
     createLogger(username)
     DOMConfigurator.configure(properties)
     logger.modelOpened(workspace.getModelPath)
@@ -131,13 +131,13 @@ with Event.LinkChild {
    * @param reader   a reader that contains an XML properties file as defined by the log4j dtd
    * @param username user defined username, this should be a unique identifier
    */
-  def startLogging(reader: java.io.Reader, username: String) {
+  def startLogging(reader: java.io.Reader, username: String) = {
     createLogger(username)
     logger.configure(reader)
     logger.modelOpened(workspace.getModelPath)
   }
 
-  def createLogger(username: String) {
+  def createLogger(username: String) = {
     if (logger == null) {
       logger = new Logger(username)
       listenerManager.addListener(logger)
@@ -150,7 +150,7 @@ with Event.LinkChild {
    * If the button is a "once" button, this method does not return until the button has popped back
    * up.  (For "forever" buttons, it returns immediately.)
    */
-  def pressButton(name: String) {
+  def pressButton(name: String) = {
     org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     val button = findWidget(name, classOf[ButtonWidget]).asInstanceOf[ButtonWidget]
     button.keyTriggered()
@@ -177,7 +177,7 @@ with Event.LinkChild {
   /**
    * @param writer to writer the contents of the export world feature
    */
-  def exportWorld(writer: java.io.PrintWriter) {
+  def exportWorld(writer: java.io.PrintWriter) = {
     workspace.exportWorld(writer)
     writer.flush()
   }
@@ -203,15 +203,14 @@ with Event.LinkChild {
    * <em>This method may be called from any thread, including the AWT Event
    * Thread.</em>
    */
-  def reportAndCallback(code: String, handler: InterfaceComponent.InvocationListener) {
+  def reportAndCallback(code: String, handler: InterfaceComponent.InvocationListener) =
     new Thread("InterfaceComponent.reportAndCallback") {
-      override def run() {
+      override def run() =
         try handler.handleResult(report(code))
         catch {
           case e: CompilerException =>
             handler.handleError(e)
-        }}}.start()
-  }
+        }}.start()
 
 }
 

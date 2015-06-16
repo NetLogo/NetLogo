@@ -22,7 +22,7 @@ extends GUIWorkspace(world, GUIWorkspace.KioskLevel.MODERATE, frame, frame, null
   val aggregateManager =
     Femto.get(classOf[AggregateManagerInterface],
               "org.nlogo.sdm.AggregateManagerLite", Array())
-  override def doImport(importer: BufferedReaderImporter) {
+  override def doImport(importer: BufferedReaderImporter) =
     if(isApplet)
       // it's pretty gruesome here efficiency-wise that we slurp
       // the entire contents into a giant string -- ST 9/29/04
@@ -33,12 +33,12 @@ extends GUIWorkspace(world, GUIWorkspace.KioskLevel.MODERATE, frame, frame, null
               appletPanel.getFileURL(importer.filename).toString))))
     else
       super.doImport(importer)
-  }
-  override def inspectAgent(agent: org.nlogo.api.Agent, radius: Double) { }
-  override def inspectAgent(agentClass: Class[_ <: Agent], agent: Agent, radius: Double) { }
+
+  override def inspectAgent(agent: org.nlogo.api.Agent, radius: Double) = {}
+  override def inspectAgent(agentClass: Class[_ <: Agent], agent: Agent, radius: Double) = {}
   override def stopInspectingAgent(agent: org.nlogo.agent.Agent): Unit = { }
   override def stopInspectingDeadAgents(): Unit = { }
-  override def closeAgentMonitors() { }
+  override def closeAgentMonitors() = {}
   override def newRenderer = Femto.get(
     classOf[RendererInterface], "org.nlogo.render.Renderer", Array(world))
 }
