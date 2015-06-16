@@ -7,14 +7,14 @@ class ClearOverride(agentClass: Class[_ <: org.nlogo.api.Agent], varName:String,
         extends OverrideList(agentClass, varName) with Serializable {
 
   @throws(classOf[java.io.IOException])
-  private def writeObject(out:java.io.ObjectOutputStream){
+  private def writeObject(out:java.io.ObjectOutputStream) = {
     out.writeInt( agents.size )
     agents.foreach(a => out.writeLong(a.longValue))
   }
 
   @throws(classOf[java.io.IOException])
   @throws(classOf[ClassNotFoundException])
-  private def readObject(in:java.io.ObjectInputStream){
+  private def readObject(in:java.io.ObjectInputStream) = {
     val numOverrides = in.readInt()
     agents = (for(i <- 0 until numOverrides)
               yield Long.box(in.readLong()))
