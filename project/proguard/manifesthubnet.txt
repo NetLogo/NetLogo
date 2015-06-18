@@ -1,2 +1,0 @@
-Main-Class: org.nlogo.hubnet.client.App
-Class-Path: lib/mrjadapter-1.2.jar lib/quaqua-7.3.4.jar
