@@ -541,7 +541,7 @@ Go figure! - ST 12/2/04
     <p>
       <a href="#netlogo-applet">netlogo-applet?</a> <a href=
       "#netlogo-version">netlogo-version</a>
-      <a href="#netlogo-web">netlogo-web?</a> 
+      <a href="#netlogo-web">netlogo-web?</a>
       <!-- ======================================== -->
        <!-- ======================================== -->
        <!-- ======================================== -->
@@ -1688,9 +1688,9 @@ cro 100 [ fd 10 ]  ;; makes an evenly spaced circle
       <p>
         Used for creating breeded and unbreeded links between turtles.
       <p>
-        create-link-with creates an undirected link between the caller and
-        <i>agent</i>. create-link-to creates a directed link from the
-        caller to <i>agent</i>. create-link-from creates a directed link
+        <tt>create-link-with</tt> creates an undirected link between the caller and
+        <i>agent</i>. <tt>create-link-to</tt> creates a directed link from the
+        caller to <i>agent</i>. <tt>create-link-from</tt> creates a directed link
         from <i>agent</i> to the caller.
       <p>
         When the plural form of the breed name is used, an <i>agentset</i>
@@ -1711,16 +1711,17 @@ cro 100 [ fd 10 ]  ;; makes an evenly spaced circle
         to itself you get a runtime error.
       <pre>
 to setup
-   crt 5
-   ;; turtle 1 creates links with all other turtles
-   ;; the link between the turtle and itself is ignored
-   ask turtle 0 [ create-links-with other turtles ]
-   show count links ;; shows 4
-   ;; this does nothing since the link already exists
-   ask turtle 0 [ create-link-with turtle 1 ]
-   show count links ;; shows 4 since the previous link already existed
-   ask turtle 2 [ create-link-with turtle 1 ]
-   show count links ;; shows 5
+  clear-all
+  create-turtles 5
+  ;; turtle 1 creates links with all other turtles
+  ;; the link between the turtle and itself is ignored
+  ask turtle 0 [ create-links-with other turtles ]
+  show count links ;; shows 4
+  ;; this does nothing since the link already exists
+  ask turtle 0 [ create-link-with turtle 1 ]
+  show count links ;; shows 4 since the previous link already existed
+  ask turtle 2 [ create-link-with turtle 1 ]
+  show count links ;; shows 5
 end
 </pre>
       <pre>
@@ -1728,14 +1729,15 @@ directed-link-breed [red-links red-link]
 undirected-link-breed [blue-links blue-link]
 
 to setup
-  crt 5
+  clear-all
+  create-turtles 5
   ;; create links in both directions between turtle 0
   ;; and all other turtles
-  ask turtle 0 [ create-red-links-to turtles ]
-  ask turtle 0 [ create-red-links-from turtles ]
+  ask turtle 0 [ create-red-links-to other turtles ]
+  ask turtle 0 [ create-red-links-from other turtles ]
   show count links ;; shows 8
   ;; now create undirected links between turtle 0 and other turtles
-  ask turtle 0 [ create-blue-links-with turtles ]
+  ask turtle 0 [ create-blue-links-with other turtles ]
   show count links ;; shows 12
 end
 </pre>
