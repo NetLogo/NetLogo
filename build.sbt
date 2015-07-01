@@ -60,8 +60,6 @@ threed := { System.setProperty("org.nlogo.is3d", "true") }
 
 nogen  := { System.setProperty("org.nlogo.noGenerator", "true") }
 
-moduleConfigurations += ModuleConfiguration("javax.media", JavaNet2Repository)
-
 libraryDependencies ++= Seq(
   "asm" % "asm-all" % "3.3.1",
   "org.picocontainer" % "picocontainer" % "2.13.6",
