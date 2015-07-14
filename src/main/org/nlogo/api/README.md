@@ -1,1 +1,1 @@
-the extensions API that lets users write their own commands and reporters in Java. also includes lots of "API"s that are only used internally — typically interfaces that are declared here but implemented in other packages
+The extensions API that lets users write their own commands and reporters in Java. also includes lots of "API"s that are only used internally — typically interfaces that are declared here but implemented in other packages.
