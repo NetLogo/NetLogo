@@ -1,1 +1,1 @@
-Stands for "NetLogo Virtual Machine". This is the model execution engine. Important classes include Job, Context, and Activation. Context represents the current state of execution of a particular agent on a particular job. See also org.nlogo.job.
+Stands for "NetLogo Virtual Machine". This is the model execution engine. Important classes include Job, Context, and Activation. Context represents the current state of execution of a particular agent on a particular job. See also `org.nlogo.job`.
