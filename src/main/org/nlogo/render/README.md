@@ -1,1 +1,1 @@
-code for editing items in the Interface tab (buttons and sliders and so forth)
+code for rendering turtles & patches in 2D
