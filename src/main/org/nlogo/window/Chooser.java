@@ -204,6 +204,9 @@ public abstract strictfp class Chooser
             cb.x + cb.width - MARGIN - triangleSize() - 2,  // extra 2 for triangle shadow
             cb.y + (cb.height - triangleSize()) / 2 + 1,
             triangleSize());
+
+    setToolTipText(shortenedName != name ? name : null);
+    control.setToolTipText(shortenedValue != Dump.logoObject(value()) ? Dump.logoObject(value()) : null);
   }
 
   private static void filledDownTriangle(java.awt.Graphics g, int x, int y, int size) {
@@ -228,6 +231,7 @@ public abstract strictfp class Chooser
       setBackground(InterfaceColors.SLIDER_BACKGROUND);
       setBorder(widgetBorder());
       setOpaque(false);
+      setToolTipText("tootlip");
       addMouseListener
           (new java.awt.event.MouseAdapter() {
             @Override
