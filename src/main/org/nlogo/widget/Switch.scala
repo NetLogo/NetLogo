@@ -93,10 +93,14 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
     val controlLabelWidth: Int =
       StrictMath.max(fontMetrics.stringWidth("On"), fontMetrics.stringWidth("Off")) + controlRect.width + 2 * BORDERX
     g.setColor(getForeground)
+    val shortString = org.nlogo.awt.Fonts.shortenStringToFit(
+      displayName, getWidth - 3 * BORDERX - controlLabelWidth, fontMetrics)
     g.drawString(
-      org.nlogo.awt.Fonts.shortenStringToFit(displayName, getWidth - 3 * BORDERX - controlLabelWidth, fontMetrics),
+      shortString,
       controlLabelWidth + 2 * BORDERX,
       (getHeight - fontMetrics.getHeight - (2 * BORDERY)) / 2 + stringAscent + 1)
+
+    setToolTipText(if(shortString != displayName) displayName else null)
   }
 
   def mouseWheelMoved(e: MouseWheelEvent) { isOn = ! (e.getWheelRotation >= 1) }
