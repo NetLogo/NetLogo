@@ -411,6 +411,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
       val labelHeight = g.getFontMetrics.getMaxDescent + g.getFontMetrics.getMaxAscent
       val ny = (getSize().height / 2) + (labelHeight / 2)
       g.drawString(shortString, nx, ny)  //if (disabledWaitingForSetup) Color.GRAY
+      setToolTipText(if(displayName != shortString) displayName else null)
     }
     paintButtonRectangle(g)
     paintButtonText(g)
