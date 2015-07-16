@@ -7,7 +7,7 @@ package org.nlogo.headless
 // here and document it here.  The overriding method can simply call super(). - ST 6/1/05, 7/28/11
 
 import org.nlogo.agent.{ Agent, Observer }
-import org.nlogo.api.{ Version, RendererInterface,
+import org.nlogo.api.{ Version, HeadlessRendererInterface,
                        WorldDimensions, WorldDimensions3D, AggregateManagerInterface,
                        ModelReader, CompilerException, LogoException, SimpleJobOwner,
                        HubNetInterface, CommandRunnable, ReporterRunnable }
@@ -18,11 +18,21 @@ import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala }
 import org.nlogo.util.Pico
 import org.picocontainer.Parameter
 import org.picocontainer.parameters.ComponentParameter
+import org.nlogo.api.ShapeList
 
 /**
  * Companion object, and factory object, for the HeadlessWorkspace class.
  */
 object HeadlessWorkspace {
+
+  def main(args: Array[String]) {
+    val w = org.nlogo.headless.HeadlessWorkspace.newInstance
+//    w.open("models/3D/Sample Models/Hydrogen Diffusion 3D.nlogo3d")
+//    w.command(w.previewCommands + " orbit-right 45")
+    w.initForTesting(10)
+    w.command("crt 1 [ pd fd 5 ] ask patches [ set pcolor red ]")
+    w.exportView("test.png", "PNG")
+  }
 
   /**
    * Makes a new instance of NetLogo capable of running a model "headless", with no GUI.
@@ -34,14 +44,16 @@ object HeadlessWorkspace {
    * If you derive your own subclass of HeadlessWorkspace, use this method to instantiate it.
    */
   def newInstance(subclass: Class[_ <: HeadlessWorkspace]): HeadlessWorkspace = {
+    val world = if (Version.is3D) new World3D else new World
+    val renderer = newRenderer(world)
     val pico = new Pico
-    pico.addComponent(if (Version.is3D) classOf[World3D] else classOf[World])
+    pico.addComponent(world)
+    pico.addComponent(renderer)
     pico.addScalaObject("org.nlogo.compiler.Compiler")
     pico.add("org.nlogo.sdm.AggregateManagerLite")
-    pico.add("org.nlogo.render.Renderer")
     pico.add(classOf[HubNetInterface],
-             "org.nlogo.hubnet.server.HeadlessHubNetManager",
-             Array[Parameter](new ComponentParameter))
+      "org.nlogo.hubnet.server.HeadlessHubNetManager",
+      Array[Parameter](new ComponentParameter))
     pico.addComponent(subclass)
     val hubNetManagerFactory = new AbstractWorkspace.HubNetManagerFactory {
       override def newInstance(workspace: AbstractWorkspace) =
@@ -49,6 +61,21 @@ object HeadlessWorkspace {
     }
     pico.addComponent(hubNetManagerFactory)
     pico.getComponent(subclass)
+  }
+
+  def newRenderer(world: World): HeadlessRendererInterface = {
+    val pico = new Pico
+    pico.addComponent(world)
+    if (Version.is3D) {
+      pico.addComponent(world.turtleShapeList) // TODO add link shape list too
+      pico.add("org.nlogo.render.LinkDrawer")
+      pico.add("org.nlogo.render.TurtleDrawer")
+      pico.add("org.nlogo.render.TrailDrawer")
+      pico.add("org.nlogo.gl.render.Headless3DRenderer")
+    } else {
+      pico.add("org.nlogo.render.Renderer")
+    }
+    pico.getComponent(classOf[HeadlessRendererInterface])
   }
 
   def newLab: LabInterface = {
@@ -101,7 +128,7 @@ object HeadlessWorkspace {
 class HeadlessWorkspace(
   _world: World,
   val compiler: CompilerInterface,
-  val renderer: RendererInterface,
+  val renderer: HeadlessRendererInterface,
   val aggregateManager: AggregateManagerInterface,
   hubNetManagerFactory: AbstractWorkspace.HubNetManagerFactory)
 extends AbstractWorkspaceScala(_world, hubNetManagerFactory)
@@ -367,12 +394,12 @@ with org.nlogo.api.ViewSettings {
       }}
 
   /**
-   * Get a snapshot of the 2D view.
+   * Get a snapshot of the view.
    */
   override def exportView = renderer.exportView(this)
 
   /**
-   * Get a snapshot of the 2D view, using an existing BufferedImage
+   * Get a snapshot of the view, using an existing BufferedImage
    * object.
    */
   def getGraphics(image: java.awt.image.BufferedImage) = {
