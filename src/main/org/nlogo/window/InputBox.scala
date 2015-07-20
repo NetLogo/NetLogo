@@ -8,11 +8,10 @@ import org.nlogo.api.Approximate.approximate
 import org.nlogo.api.Color.{getColor, getColorNameByIndex, modulateDouble}
 import org.nlogo.api.ModelReader.stripLines
 import org.nlogo.swing.ButtonPanel
-import org.nlogo.awt.Fonts.platformMonospacedFont
-import org.nlogo.awt.Fonts.platformFont
+import org.nlogo.awt.Fonts.{platformFont, platformMonospacedFont}
 import org.nlogo.swing.Implicits._
 import org.nlogo.api.{Options, I18N, ValueConstraint, CompilerException, LogoException, CompilerServices, Dump, Editable}
-import java.awt.{Color, Frame, Dimension, Font, Component}
+import java.awt.{Color, Component, Dimension, Font, Frame, Graphics}
 import java.awt.event.{ActionListener, WindowEvent, WindowAdapter, FocusListener, FocusEvent, ActionEvent, KeyEvent}
 import javax.swing.text.EditorKit
 import javax.swing.KeyStroke.getKeyStroke
@@ -177,6 +176,12 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
     textArea.getInputMap.put(getKeyStroke(KeyEvent.VK_ESCAPE, 0), new CancelAction())
     textArea.getInputMap.put(getKeyStroke(KeyEvent.VK_ENTER, 0), new TransferFocusAction())
     textArea.getInputMap.put(getKeyStroke(KeyEvent.VK_TAB, 0), new TransferFocusAction())
+  }
+
+  override def paintComponent(g: Graphics) = {
+    super.paintComponent(g)
+    widgetLabel.setToolTipText(
+      if(widgetLabel.getPreferredSize.width > widgetLabel.getSize().width) name else null)
   }
 
   private class EditActionListener extends ActionListener {
