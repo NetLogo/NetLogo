@@ -45,7 +45,7 @@ object ChecksumsAndPreviews {
       List("HUBNET", "/GOGO/", "/CODE EXAMPLES/SOUND/")
         .forall(!path.toUpperCase.containsSlice(_))
     def remake(path: String) {
-      val previewPath = path.replaceFirst("\\.nlogo$", ".png")
+      val previewPath = path.replaceFirst("\\.nlogo(3d)?$", ".png")
       val workspace = HeadlessWorkspace.newInstance
       try {
         // we set the random seed before opening the model, so that the random-seed will affect the
