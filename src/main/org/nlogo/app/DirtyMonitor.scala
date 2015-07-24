@@ -34,7 +34,10 @@ with ModelSavedEvent.Handler
       // on a Mac, this will make a gray dot appear in the red close button in the frame's title bar
       // to indicate that the document has unsaved changes, as documented at
       // developer.apple.com/qa/qa2001/qa1146.html - ST 7/30/04
-      frame.getRootPane().putClientProperty("windowModified", dirty)
+      if(System.getProperty("os.name").startsWith("Mac"))
+        frame.getRootPane().putClientProperty("windowModified", dirty)
+      else
+        if(dirty) frame.setTitle("* " + frame.getTitle) else frame.setTitle(frame.getTitle.substring(2))
     }
   }
   def handle(e: AboutToQuitEvent) {
