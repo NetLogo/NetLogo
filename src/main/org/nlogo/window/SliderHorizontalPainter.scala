@@ -69,11 +69,6 @@ class SliderHorizontalPainter(private val slider:AbstractSliderWidget) extends S
       metrics.stringWidth(slider.valueString(slider.maximum - slider.increment)))
   }
 
-  override  def setToolTipText(text:String ) {
-    handle.setToolTipText(text)
-    channel.setToolTipText(text)
-  }
-
   override def doLayout() {
     val scaleFactor =
       if (slider.getBorder() != null) slider.getHeight.toFloat / MIN_HEIGHT.toFloat
@@ -134,6 +129,7 @@ class SliderHorizontalPainter(private val slider:AbstractSliderWidget) extends S
         g.drawString(valueString,
           rect.width - valueWidth - RIGHT_MARGIN - CHANNEL_RIGHT_MARGIN,
           rect.height - fontMetrics.getMaxDescent - padNameHeight)
+        slider.setToolTipText(if(shortenedName != slider.name) slider.name else null)
       }
     }
   }

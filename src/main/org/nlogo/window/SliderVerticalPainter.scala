@@ -64,11 +64,6 @@ class SliderVerticalPainter(private val slider: AbstractSliderWidget) extends Sl
     StrictMath.max(result, metrics.stringWidth(slider.valueString(slider.maximum - slider.increment)))
   }
 
-  override def setToolTipText(text: String) {
-    handle.setToolTipText(text)
-    channel.setToolTipText(text)
-  }
-
   override def doLayout() {
     val scaleFactor =
       if (slider.getBorder() != null) slider.getWidth.toFloat / MIN_WIDTH.toFloat
@@ -148,6 +143,8 @@ class SliderVerticalPainter(private val slider: AbstractSliderWidget) extends Sl
           g2d.rotate(-rot)
           g.translate(-x, -y2)
         }
+
+        slider.setToolTipText(if(shortenedName != slider.name) slider.name else null)
       }
     }
   }
