@@ -349,9 +349,15 @@ object AbstractPlotWidget {
     org.nlogo.awt.Fonts.adjustDefaultFont(label)
     org.nlogo.awt.Fonts.adjustDefaultFont(max)
 
-    def setLabel(text: String) {label.setText(text)}
-    def setMax(text: String) {max.setText(text)}
-    def setMin(text: String) {min.setText(text)}
+    override def paintComponent(g: Graphics) = {
+      super.paintComponent(g)
+      label.setToolTipText(
+        if(label.getPreferredSize.width > label.getSize().width) getLabel else null)
+    }
+
+    def setLabel(text: String) = label.setText(text)
+    def setMax(text: String) = max.setText(text)
+    def setMin(text: String) = min.setText(text)
     def getLabel = label.getText
   }
 
@@ -388,6 +394,12 @@ object AbstractPlotWidget {
     org.nlogo.awt.Fonts.adjustDefaultFont(min)
     org.nlogo.awt.Fonts.adjustDefaultFont(label)
     org.nlogo.awt.Fonts.adjustDefaultFont(max)
+
+    override def paintComponent(g: Graphics) = {
+      super.paintComponent(g)
+      label.setToolTipText(
+        if(label.getPreferredSize.height > label.getSize().height) getLabel else null)
+    }
 
     def setMin(text: String) {min.setText(text)}
     def setMax(text: String): Unit = {max.setText(text)}
