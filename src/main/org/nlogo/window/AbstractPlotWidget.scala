@@ -135,6 +135,12 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     refreshGUI()
   }
 
+  override def paintComponent(g: Graphics) = {
+    super.paintComponent(g)
+    nameLabel.setToolTipText(
+      if(nameLabel.getPreferredSize.width > nameLabel.getSize().width) plotName else null)
+  }
+
   def refreshGUI() {
     def getLabel(d:Double) = if(d.toString.endsWith(".0")) d.toString.dropRight(2) else d.toString
     xAxis.setMin(getLabel(plot.xMin))
