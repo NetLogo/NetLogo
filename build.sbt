@@ -84,6 +84,8 @@ libraryDependencies ++= Seq(
   "com.googlecode.json-simple" % "json-simple" % "1.1.1"
 )
 
+unmanagedJars in Compile += Attributed.blank(file(System.getProperty("java.home") + "/lib/ext/jfxrt.jar"))
+
 all <<= (baseDirectory, streams) map { (base, s) =>
   s.log.info("making resources/system/dict.txt and docs/dict folder")
   IO.delete(base / "docs" / "dict")
