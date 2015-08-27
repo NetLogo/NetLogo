@@ -45,6 +45,7 @@ public strictfp class FileMenu
     addMenuItem(new SaveModelingCommonsAction());
     addSeparator();
     addMenuItem(new SaveAppletAction());
+    addMenuItem(new SaveAsNetLogoWebAction());
     addSeparator();
     addMenuItem(I18N.guiJ().get("menu.file.print"), 'P', app.tabs().printAction());
     addSeparator();
@@ -244,9 +245,6 @@ private class SaveModelingCommonsAction extends FileMenuAction {
 
       appletWarningIgnored = true;
 
-      // first, force the user to save.
-      save();
-
       String exportPath = getExportPath("");
 
       app.resetZoom();
@@ -268,25 +266,32 @@ private class SaveModelingCommonsAction extends FileMenuAction {
 
     String getExportPath(String suffix)
         throws UserCancelException {
-      // we use workspace.getModelFileName() here, because it really should
-      // never any longer be null, now that we've forced the user to save.
-      // it's important that it not be, in fact, since the applet relies
-      // on the model having been saved to some file.
-      String suggestedFileName = app.workspace().getModelFileName();
-
-      // try to guess a decent file name to export to...
-      int suffixIndex = suggestedFileName.lastIndexOf("." + modelSuffix());
-      if (suffixIndex > 0
-          && suffixIndex == suggestedFileName.length() - (modelSuffix().length() + 1)) {
-        suggestedFileName = suggestedFileName.substring(0,
-            suggestedFileName.length() - (modelSuffix().length() + 1));
-      }
-      suggestedFileName = suggestedFileName + suffix + ".html";
+      String suggestedFileName = suggestedSaveFileName(suffix + ".html");
 
       // make the user choose the actual destination...
       return org.nlogo.swing.FileDialog.show
           (FileMenu.this, "Saving as Applet", java.awt.FileDialog.SAVE,
               suggestedFileName);
+    }
+  }
+
+  private class SaveAsNetLogoWebAction extends FileMenuAction {
+    SaveAsNetLogoWebAction() {
+      super(I18N.guiJ().get("menu.file.saveAsNetLogoWeb"));
+      // disabled for 3-D since it doesn't work - ST 2/25/05
+      setEnabled(!org.nlogo.api.Version.is3D());
+    }
+
+    @Override
+    void action()
+      throws UserCancelException, java.io.IOException {
+      String exportPath = org.nlogo.swing.FileDialog.show
+          (FileMenu.this, "Saving as NetLogo Web HTML Page", java.awt.FileDialog.SAVE,
+              suggestedSaveFileName(""));
+
+      java.io.File exportFile = new java.io.File(exportPath);
+      NetLogoWebSaver saver = NetLogoWebSaver$.MODULE$.apply(exportPath + ".html");
+      saver.save(modelSaver.save(), exportFile.getName());
     }
   }
 
@@ -913,6 +918,28 @@ private class SaveModelingCommonsAction extends FileMenuAction {
     if (app.dirtyMonitor().dirty() && userWantsToSaveFirst()) {
       save();
     }
+  }
+
+  private String suggestedSaveFileName(String suffix)
+    throws UserCancelException {
+    // first, force the user to save.
+    save();
+
+    // we use workspace.getModelFileName() here, because it really should
+    // never any longer be null, now that we've forced the user to save.
+    // it's important that it not be, in fact, since the applet relies
+    // on the model having been saved to some file.
+    String suggestedFileName = app.workspace().getModelFileName();
+
+    // try to guess a decent file name to export to...
+    int suffixIndex = suggestedFileName.lastIndexOf("." + modelSuffix());
+    if (suffixIndex > 0
+        && suffixIndex == suggestedFileName.length() - (modelSuffix().length() + 1)) {
+      suggestedFileName = suggestedFileName.substring(0,
+          suggestedFileName.length() - (modelSuffix().length() + 1));
+    }
+    suggestedFileName = suggestedFileName + suffix;
+    return suggestedFileName;
   }
 
   private String userChooseLoadPath()
