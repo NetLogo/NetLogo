@@ -1,5 +1,5 @@
-NetLogo 5.2.0
-April 3, 2015
+NetLogo 5.2.1-M1
+September 4, 2015
 NetLogo 5.2
 NetLogo 5.1
 NetLogo 5.0
