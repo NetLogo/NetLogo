@@ -248,6 +248,7 @@ public strictfp class ExtensionManager
 
   public String resolvePathAsURL(String path) {
     java.net.URL jarURL;
+    ArrayList<String> triedPaths = new ArrayList<String>();
 
     if (AbstractWorkspace.isApplet()) {
 
@@ -270,6 +271,7 @@ public strictfp class ExtensionManager
       jarURL = new java.net.URL(path);
       return jarURL.toString();
     } catch (java.net.MalformedURLException ex) {
+      triedPaths.add(path);
       org.nlogo.util.Exceptions.ignore(ex);
     }
 
@@ -280,6 +282,7 @@ public strictfp class ExtensionManager
         if (jarFile.exists()) {
           return toURL(jarFile).toString();
         }
+        triedPaths.add(toURL(jarFile).toString());
       } catch (java.net.MalformedURLException ex) {
         org.nlogo.util.Exceptions.ignore(ex);
       }
@@ -292,6 +295,7 @@ public strictfp class ExtensionManager
       if (jarFile.exists()) {
         return toURL(jarFile).toString();
       }
+      triedPaths.add(toURL(jarFile).toString());
     } catch (java.net.MalformedURLException ex) {
       org.nlogo.util.Exceptions.ignore(ex);
     }
@@ -303,12 +307,18 @@ public strictfp class ExtensionManager
       if (jarFile.exists()) {
         return toURL(jarFile).toString();
       }
+      triedPaths.add(toURL(jarFile).toString());
     } catch (java.net.MalformedURLException ex) {
       org.nlogo.util.Exceptions.ignore(ex);
     }
 
+    String triedPathsString = "";
+    for (String triedPath : triedPaths) {
+      triedPathsString += " " + triedPath + ",";
+    }
+    triedPathsString = triedPathsString.substring(0, triedPathsString.length() - 1);
     // Give up
-    throw new IllegalStateException(EXTENSION_NOT_FOUND + path);
+    throw new IllegalStateException(EXTENSION_NOT_FOUND + path + " looked in :" + triedPathsString);
   }
 
   public String getFullPath(String path)
