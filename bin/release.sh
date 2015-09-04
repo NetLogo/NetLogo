@@ -142,17 +142,17 @@ if [ ! -f Mathematica-Link/JLink.jar ]; then
 fi
 
 # compile, build jars etc.
-# cd extensions
-# for FOO in *
-# do
-#   echo "cleaning extension" $FOO
-#   cd $FOO
-#   rm -f $FOO.jar $FOO.jar.pack.gz
-#   cd ..
-# done
-# cd ..
-# rm -f *.jar
-# ./sbt clean all
+cd extensions
+for FOO in *
+do
+  echo "cleaning extension" $FOO
+  cd $FOO
+  rm -f $FOO.jar $FOO.jar.pack.gz
+  cd ..
+done
+cd ..
+rm -f *.jar
+./sbt clean all
 
 # remember version number
 export VERSION=`$JAVA -cp NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //"`
