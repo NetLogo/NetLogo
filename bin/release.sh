@@ -252,7 +252,7 @@ if [ $REQUIRE_PREVIEWS -eq 1 ]; then
   done || exit 1
 fi
 
-$RM -f models/legal.txt
+$RM -rf models/{legal.txt,sbt,build.sbt,project,src,target}
 $RM dist resources scala bin
 
 # build the PDF with the proper version numbers inserted everywhere
