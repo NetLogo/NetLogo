@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash -e -v
 
 # -e makes the whole thing die with an error if any command does
 # add -v if you want to see the commands as they happen
@@ -142,17 +142,17 @@ if [ ! -f Mathematica-Link/JLink.jar ]; then
 fi
 
 # compile, build jars etc.
-cd extensions
-for FOO in *
-do
-  echo "cleaning extension" $FOO
-  cd $FOO
-  rm -f $FOO.jar $FOO.jar.pack.gz
-  cd ..
-done
-cd ..
-rm -f *.jar
-./sbt clean all
+# cd extensions
+# for FOO in *
+# do
+#   echo "cleaning extension" $FOO
+#   cd $FOO
+#   rm -f $FOO.jar $FOO.jar.pack.gz
+#   cd ..
+# done
+# cd ..
+# rm -f *.jar
+# ./sbt clean all
 
 # remember version number
 export VERSION=`$JAVA -cp NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //"`
@@ -241,7 +241,17 @@ $LN -s ../../dist        # notarize script needs this
 $LN -s ../../resources   # and this
 $LN -s ../../scala       # and this
 $LN -s ../../bin         # and this
-../../models/bin/notarize.scala $REQUIRE_PREVIEWS || exit 1
+if [ $REQUIRE_PREVIEWS -eq 1 ]; then
+  find models -name \*.nlogo | while read modelfile ; do
+    echo $modelfile
+    echo ${modelfile/nlogo/png}
+    if [ ! -f "${modelfile/nlogo/png}" ] ; then
+      echo "$modelfile does not have a preview image"
+      exit 1
+    fi
+  done || exit 1
+fi
+
 $RM -f models/legal.txt
 $RM dist resources scala bin
 
