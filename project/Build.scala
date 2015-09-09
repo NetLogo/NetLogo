@@ -9,7 +9,6 @@ object NetLogoBuild extends Build {
     Project(id = "NetLogo", base = file("."))
       .configs(Testing.configs: _*)
       .settings(Defaults.coreDefaultSettings ++
-                Compiling.settings ++
                 Testing.settings ++
                 Packaging.settings ++
                 Running.settings ++

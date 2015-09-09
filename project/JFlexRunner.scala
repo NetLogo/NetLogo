@@ -6,10 +6,17 @@ object JFlexRunner {
 
   val task =
     Def.task {
-      Seq(("agent", "ImportLexer"), ("lex", "TokenLexer")).map {
-        case (pkg, kind) =>
-          flex(streams.value.log.info(_), baseDirectory.value, streams.value.cacheDirectory, (sourceManaged in Compile).value, pkg, kind)
+      val cachedLexers = FileFunction.cached(streams.value.cacheDirectory / "lexer", inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
+        (in: Set[File]) =>
+          Set(("agent", "ImportLexer"), ("lex", "TokenLexer")).map {
+            case (pkg, kind) =>
+              flex(streams.value.log.info(_), baseDirectory.value, streams.value.cacheDirectory, (sourceManaged in Compile).value, pkg, kind)
+        }
       }
+      cachedLexers(Set(
+          baseDirectory.value / "project" / "autogen" / "ImportLexer.flex",
+          baseDirectory.value / "project" / "autogen" / "TokenLexer.flex",
+          baseDirectory.value / "project" / "autogen" / "warning.txt")).toSeq
     }
 
   // this used to be broken into two tasks, but jflex doesnt seem to be threadsafe

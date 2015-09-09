@@ -1,4 +1,4 @@
-scalaVersion := "2.11.6"
+scalaVersion := "2.11.7"
 
 name := "NetLogo"
 
@@ -14,6 +14,7 @@ javacOptions ++=
   "-g -deprecation -encoding us-ascii -Werror -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path -source 1.8 -target 1.8"
   .format(java.io.File.pathSeparator)
   .split(" ").toSeq
+
 
 // only log problems plz
 ivyLoggingLevel := UpdateLogging.Quiet

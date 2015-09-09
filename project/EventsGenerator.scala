@@ -6,9 +6,15 @@ object EventsGenerator {
 
   val task =
     Def.task {
-      Seq("window", "app").map { pkg =>
-        events(streams.value.log.info(_), baseDirectory.value, (sourceManaged in Compile).value, pkg)
-      }
+        val cachedEvents = FileFunction.cached(streams.value.cacheDirectory / "events", inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
+          (in: Set[File]) =>
+            Set("window", "app").map { pkg =>
+              events(streams.value.log.info(_), baseDirectory.value, (sourceManaged in Compile).value, pkg)
+            }
+        }
+        cachedEvents(Set(
+          baseDirectory.value / "project" / "autogen" / "events.txt",
+          baseDirectory.value / "project" / "autogen" / "warning.txt")).toSeq
     }
 
   def events(log: String => Unit, base: File, dir: File, ppackage: String): File = {
@@ -72,5 +78,4 @@ object EventsGenerator {
     IO.write(file, codeString)
     file
   }
-
 }
