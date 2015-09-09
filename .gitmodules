@@ -13,15 +13,9 @@
 [submodule "extensions/matrix"]
 	path = extensions/matrix
 	url = https://github.com/NetLogo/Matrix-Extension.git
-[submodule "extensions/network"]
-	path = extensions/network
-	url = https://github.com/NetLogo/Network-Extension.git
 [submodule "extensions/profiler"]
 	path = extensions/profiler
 	url = https://github.com/NetLogo/Profiler-Extension.git
-[submodule "extensions/qtj"]
-	path = extensions/qtj
-	url = https://github.com/NetLogo/QTJ-Extension.git
 [submodule "extensions/sample"]
 	path = extensions/sample
 	url = https://github.com/NetLogo/Sample-Extension.git
@@ -46,9 +40,6 @@
 [submodule "gogo-hid"]
 	path = extensions/gogo
 	url = https://github.com/NetLogo/GoGo-HID-Extension
-[submodule "extensions/gogo-serial"]
-	path = extensions/gogo-serial
-	url = https://github.com/NetLogo/GoGo-Serial-Extension
 [submodule "extensions/palette"]
 	path = extensions/palette
 	url = https://github.com/NetLogo/Palette-Extension
