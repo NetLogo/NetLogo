@@ -7,19 +7,31 @@ import org.nlogo.awt.UserCancelException
 import org.nlogo.window.EditDialogFactoryInterface
 import Supervisor.RunOptions
 import collection.JavaConverters._
+import java.util.prefs.Preferences
 
 class RunOptionsDialog(parent: java.awt.Dialog,
                        dialogFactory: EditDialogFactoryInterface)
 {
+  object Prefs {
+    private val prefs = Preferences.userNodeForPackage(RunOptionsDialog.this.getClass)
+    def spreadsheet = prefs.getBoolean("spreadsheet", true)
+    def table = prefs.getBoolean("table", false)
+    def updateFrom(runOptions: RunOptions): Unit = {
+      prefs.putBoolean("spreadsheet", runOptions.spreadsheet)
+      prefs.putBoolean("table", runOptions.table)
+    }
+  }
   def get = {
     val editable = new EditableRunOptions
     if(dialogFactory.canceled(parent, editable))
       throw new UserCancelException
-    editable.get
+    val runOptions = editable.get
+    Prefs.updateFrom(runOptions)
+    runOptions
   }
   class EditableRunOptions extends Editable {
-    var spreadsheet = true
-    var table = false
+    var spreadsheet = Prefs.spreadsheet
+    var table = Prefs.table
     var threadCount = Runtime.getRuntime.availableProcessors
     val classDisplayName = "Run options"
     val propertySet =
