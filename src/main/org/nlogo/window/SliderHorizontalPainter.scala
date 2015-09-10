@@ -119,10 +119,9 @@ class SliderHorizontalPainter(private val slider:AbstractSliderWidget) extends S
     val padNameHeight = 3
     val nameXOffset = 10
     val rect = slider.getBounds()
-    if (!(rect.width == 0 || rect.height == 0)) {
-      // this next check is a very kludgey way to distinguish whether we're embedded
-      // in the control strip or not - ST 9/15/03
-      if (slider.getBorder != null) {
+    // this `getBorder` check is a very kludgey way to distinguish whether we're embedded
+    // in the control strip or not - ST 9/15/03
+    if (!(rect.width == 0 || rect.height == 0) && slider.getBorder != null) {
         g.setColor(slider.getForeground)
         val valueString = slider.valueString(slider.value)
         val fontMetrics = g.getFontMetrics
@@ -134,7 +133,6 @@ class SliderHorizontalPainter(private val slider:AbstractSliderWidget) extends S
         g.drawString(valueString,
           rect.width - valueWidth - RIGHT_MARGIN - CHANNEL_RIGHT_MARGIN,
           rect.height - fontMetrics.getMaxDescent - padNameHeight)
-      }
     }
   }
 

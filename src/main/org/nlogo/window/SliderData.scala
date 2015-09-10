@@ -49,8 +49,7 @@ class SliderData(var minimum:Double = 0, var maximum:Double=100, var increment: 
   // then the effective maximum is the largest value less than max that
   // makes the division come out even
   def effectiveMaximum: Double = {
-    if (minimum >= maximum) minimum
-    else if (increment == 0) minimum
+    if (minimum >= maximum || increment == 0) minimum
     else {
       var result = minimum + (increment * StrictMath.floor((maximum - minimum) / increment))
       // Sometimes rounding error leaves us off by one here, for example if min is 0.1,

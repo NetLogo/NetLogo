@@ -72,9 +72,9 @@ private class RoboClientPanel(editorFactory:org.nlogo.window.EditorFactory,
       invokeAndWait(() => {
         val (name, value) = widget match {
           case s:SliderWidget =>
-            if(s.value == s.maximum) s.value = s.minimum else s.value = s.value + s.increment
+            s.value = if(s.value == s.maximum) s.minimum else s.value + s.increment
             (s.nameWrapper, Some(s.value))
-          case b: ButtonWidget => (widget.displayName, Some(if(b.foreverOn) true else false))
+          case b: ButtonWidget => (widget.displayName, Some(b.foreverOn))
           case s: SwitchWidget =>
             s.isOn = !s.isOn
             (widget.displayName, Some(s.isOn))

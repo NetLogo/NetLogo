@@ -25,12 +25,13 @@ class RowLayout(hGap: Int, hAlign: Float, vAlign: Float) extends java.awt.Layout
         x += hGap
       val comp = target.getComponent(i)
       val pref = comp.getPreferredSize
-      if(vAlign == java.awt.Component.BOTTOM_ALIGNMENT)
-        y = size.height - insets.top - insets.bottom - pref.height
-      else if(vAlign == java.awt.Component.CENTER_ALIGNMENT)
-        y = (size.height - insets.top - insets.bottom - pref.height) / 2
-      else // top
-        y = 0
+      y =
+        if(vAlign == java.awt.Component.BOTTOM_ALIGNMENT)
+          size.height - insets.top - insets.bottom - pref.height
+        else if(vAlign == java.awt.Component.CENTER_ALIGNMENT)
+          (size.height - insets.top - insets.bottom - pref.height) / 2
+        else // top
+          0
       comp.setBounds(x, y + insets.top, pref.width, pref.height)
       x += pref.width
     }

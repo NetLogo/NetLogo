@@ -28,12 +28,13 @@ class ColumnLayout(vGap: Int, hAlign: Float, vAlign: Float) extends LayoutManage
         y += vGap
       val comp = target.getComponent(i)
       val pref = comp.getPreferredSize
-      if(hAlign == Component.RIGHT_ALIGNMENT)
-        x = size.width - insets.left - insets.right - pref.width
-      else if(hAlign == Component.CENTER_ALIGNMENT)
-        x = (size.width - insets.left - insets.right - pref.width) / 2
-      else // left
-        x = 0
+      x =
+        if(hAlign == Component.RIGHT_ALIGNMENT)
+          size.width - insets.left - insets.right - pref.width
+        else if(hAlign == Component.CENTER_ALIGNMENT)
+          (size.width - insets.left - insets.right - pref.width) / 2
+        else // left
+          0
       comp.setBounds(x + insets.left, y, pref.width, pref.height)
       y += pref.height
     }

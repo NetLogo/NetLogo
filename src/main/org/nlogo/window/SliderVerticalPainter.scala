@@ -109,45 +109,43 @@ class SliderVerticalPainter(private val slider: AbstractSliderWidget) extends Sl
     val nameYOffset = 10
     val padNameWidth = 3
     val rect = slider.getBounds()
-    if (!(rect.width == 0 || rect.height == 0)) {
-      // this next check is a very kludgey way to distinguish whether we're embedded
-      // in the control strip or not - ST 9/15/03
-      if (slider.getBorder != null) {
-        g.setColor(slider.getForeground)
+    // this `getBorder` check is a very kludgey way to distinguish whether we're embedded
+    // in the control strip or not - ST 9/15/03
+    if (!(rect.width == 0 || rect.height == 0) && slider.getBorder != null) {
+      g.setColor(slider.getForeground)
 
-        val valueString = slider.valueString(slider.value)
-        val fontMetrics = g.getFontMetrics
+      val valueString = slider.valueString(slider.value)
+      val fontMetrics = g.getFontMetrics
 
-        // remember, we are writing rotated counter-clockwise 90 degrees, so that var names
-        // reflect that.
-        val valueHeight = fontMetrics.stringWidth(valueString)
-        val shortenedName = org.nlogo.awt.Fonts.shortenStringToFit(
-          slider.name, rect.height - nameYOffset - valueHeight - TOP_MARGIN - CHANNEL_BOTTOM_MARGIN - 2, fontMetrics)
+      // remember, we are writing rotated counter-clockwise 90 degrees, so that var names
+      // reflect that.
+      val valueHeight = fontMetrics.stringWidth(valueString)
+      val shortenedName = org.nlogo.awt.Fonts.shortenStringToFit(
+        slider.name, rect.height - nameYOffset - valueHeight - TOP_MARGIN - CHANNEL_BOTTOM_MARGIN - 2, fontMetrics)
 
-        // write name and value text rotated -90 degrees
-        g.setColor(slider.getForeground())
-        val rot = -StrictMath.toRadians(90)
-        val y = rect.height - nameYOffset
-        val x = rect.width - fontMetrics.getMaxDescent - padNameWidth
+      // write name and value text rotated -90 degrees
+      g.setColor(slider.getForeground())
+      val rot = -StrictMath.toRadians(90)
+      val y = rect.height - nameYOffset
+      val x = rect.width - fontMetrics.getMaxDescent - padNameWidth
 
-        val g2d = g.asInstanceOf[Graphics2D]
-        if (shortenedName.length > 0) {
-          val nameLayout = new TextLayout(shortenedName, g.getFont, g2d.getFontRenderContext)
-          g.translate(x, y)
-          g2d.rotate(rot)
-          nameLayout.draw(g2d, 0, 0)
-          g2d.rotate(-rot)
-          g.translate(-x, -y)
-        }
-        if (valueString.length > 0) {
-          val valueLayout = new TextLayout(valueString, g.getFont, g2d.getFontRenderContext)
-          val y2 = StrictMath.round(valueHeight + TOP_MARGIN + CHANNEL_TOP_MARGIN)
-          g.translate(x, y2)
-          g2d.rotate(rot)
-          valueLayout.draw(g2d, 0, 0)
-          g2d.rotate(-rot)
-          g.translate(-x, -y2)
-        }
+      val g2d = g.asInstanceOf[Graphics2D]
+      if (shortenedName.length > 0) {
+        val nameLayout = new TextLayout(shortenedName, g.getFont, g2d.getFontRenderContext)
+        g.translate(x, y)
+        g2d.rotate(rot)
+        nameLayout.draw(g2d, 0, 0)
+        g2d.rotate(-rot)
+        g.translate(-x, -y)
+      }
+      if (valueString.length > 0) {
+        val valueLayout = new TextLayout(valueString, g.getFont, g2d.getFontRenderContext)
+        val y2 = StrictMath.round(valueHeight + TOP_MARGIN + CHANNEL_TOP_MARGIN)
+        g.translate(x, y2)
+        g2d.rotate(rot)
+        valueLayout.draw(g2d, 0, 0)
+        g2d.rotate(-rot)
+        g.translate(-x, -y2)
       }
     }
   }

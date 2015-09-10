@@ -49,11 +49,11 @@ trait PaintableSwitch extends JComponent {
 
   override def doLayout() {
     super.doLayout()
-    val scaleFactor: Float = getHeight.asInstanceOf[Float] / MINHEIGHT.asInstanceOf[Float]
-    channel.setSize((CHANNEL_WIDTH * scaleFactor).asInstanceOf[Int], (CHANNEL_HEIGHT * scaleFactor).asInstanceOf[Int])
+    val scaleFactor: Float = getHeight.toFloat / MINHEIGHT.toFloat
+    channel.setSize((CHANNEL_WIDTH * scaleFactor).toInt, (CHANNEL_HEIGHT * scaleFactor).toInt)
     channel.setLocation(BORDERX, (getHeight - channel.getHeight) / 2)
-    dragger.setSize((channel.getWidth * 0.9).asInstanceOf[Int], (channel.getHeight * 0.35).asInstanceOf[Int])
-    dragger.setLocation(BORDERX + (channel.getWidth - dragger.getWidth) / 2, channel.getY + (if (isOn) (0.1 * channel.getHeight).asInstanceOf[Int] else (channel.getHeight - dragger.getHeight - (0.1 * channel.getHeight).asInstanceOf[Int])))
+    dragger.setSize((channel.getWidth * 0.9).toInt, (channel.getHeight * 0.35).toInt)
+    dragger.setLocation(BORDERX + (channel.getWidth - dragger.getWidth) / 2, channel.getY + (if (isOn) (0.1 * channel.getHeight).toInt else (channel.getHeight - dragger.getHeight - (0.1 * channel.getHeight).toInt)))
   }
 
   override def paintComponent(g: Graphics) {

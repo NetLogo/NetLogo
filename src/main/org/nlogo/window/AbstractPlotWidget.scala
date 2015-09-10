@@ -147,11 +147,11 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   def load(strings: Seq[String], helper: Widget.LoadHelper): Object = {
     val List(x1,y1,x2,y2) = strings.drop(1).take(4).map(_.toInt).toList
     setSize(x2 - x1, y2 - y1)
-    if (7 < strings.length) {
+    if (strings.length > 7) {
       xLabel(if (strings(6) == "NIL") "" else strings(6))
       yLabel(if (strings(7) == "NIL") "" else strings(7))
     }
-    if (13 < strings.length) { gui.legend.open=strings(13).toBoolean }
+    if (strings.length > 13) { gui.legend.open=strings(13).toBoolean }
     PlotLoader.parsePlot(strings.toArray, plot, helper.convert(_, false))
     plotName(plot.name)
     clear()

@@ -255,9 +255,9 @@ class ClientPanel(editorFactory: org.nlogo.window.EditorFactory,
       case ClearOverrideMessage => viewWidget.clearOverrides()
       case AgentPerspectiveMessage(bytes) => viewWidget.handleAgentPerspective(bytes)
       case Text(content, messageType) => messageType match {
-        case Text.MessageType.TEXT => clientGUI.addMessage(content.toString)
+        case Text.MessageType.TEXT => clientGUI.addMessage(content)
         case Text.MessageType.USER =>
-          OptionDialog.show(getFrame(this), "User Message", content.toString,
+          OptionDialog.show(getFrame(this), "User Message", content,
             Array(I18N.gui.get("common.buttons.ok"), I18N.gui.get("common.buttons.halt")))
         case Text.MessageType.CLEAR => clientGUI.clearMessages()
       }
