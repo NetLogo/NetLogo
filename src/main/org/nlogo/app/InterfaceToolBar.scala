@@ -2,34 +2,36 @@
 
 package org.nlogo.app
 
+import java.awt.{ Frame, SystemColor }
+import java.awt.event.{ ActionEvent, ActionListener, MouseAdapter, MouseEvent }
 import java.util.HashSet
-import javax.swing.{JMenuItem, JPopupMenu, JButton, ButtonGroup, JToggleButton, AbstractAction, Action, ImageIcon}
-import org.nlogo.api.{Editable, I18N}
-import java.awt.event.{ActionListener, MouseAdapter, MouseEvent, ActionEvent}
-import org.nlogo.window.{WidgetInfo, EditDialogFactoryInterface, Widget}
+import javax.swing.{ AbstractAction, Action, ButtonGroup, ImageIcon,
+  JButton, JMenuItem, JPopupMenu, JToggleButton }
+import org.nlogo.api.{ Editable, I18N }
+import org.nlogo.swing.{ ToolBar, ToolBarComboBox }
+import org.nlogo.window.{ WidgetInfo, EditDialogFactoryInterface, GUIWorkspace, JobWidget, Widget }
+import scala.collection.mutable
 
 class InterfaceToolBar(wPanel: WidgetPanel,
-                       workspace: org.nlogo.window.GUIWorkspace,
-                       WidgetInfos: List[WidgetInfo],
-                       frame: java.awt.Frame,
-                       dialogFactory: EditDialogFactoryInterface) extends org.nlogo.swing.ToolBar
-  with WidgetCreator
-  with org.nlogo.window.Events.WidgetForegroundedEventHandler
-  with org.nlogo.window.Events.WidgetRemovedEventHandler
-  with org.nlogo.window.Events.WidgetAddedEventHandler
-  with Events.WidgetSelectedEventHandler
-  with org.nlogo.window.Events.LoadBeginEventHandler
-  with org.nlogo.window.Events.EditWidgetEventHandler
-  with java.awt.event.ActionListener {
+  workspace: GUIWorkspace,
+  WidgetInfos: List[WidgetInfo],
+  frame: Frame,
+  dialogFactory: EditDialogFactoryInterface) extends ToolBar
+    with WidgetCreator
+    with org.nlogo.window.Events.WidgetForegroundedEventHandler
+    with org.nlogo.window.Events.WidgetRemovedEventHandler
+    with org.nlogo.window.Events.WidgetAddedEventHandler
+    with Events.WidgetSelectedEventHandler
+    with org.nlogo.window.Events.LoadBeginEventHandler
+    with org.nlogo.window.Events.EditWidgetEventHandler
+    with ActionListener {
 
-  private val selectedObjects = new collection.mutable.HashSet[Widget]
-  private val editAction = new EditAction()
+  private val selectedObjects = new mutable.HashSet[Widget]
+  private val editAction = new EditAction
   private val editButton = new JButton(editAction)
   private val addAction = new AddAction
-  private val addButton = new AddButton
-  private val group = new ButtonGroup()
-  private val noneButton = new JToggleButton()
-  private val deleteAction = new DeleteAction()
+  private val addButton = new JToggleButton(addAction)
+  private val deleteAction = new DeleteAction
   private val deleteButton = new JButton(deleteAction)
   private val widgetMenu = new WidgetMenu
 
@@ -37,7 +39,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
   // on Macs we want the window background but not on other systems
   if(System.getProperty("os.name").startsWith("Mac")) {
     setOpaque(true)
-    setBackground(java.awt.SystemColor.window)
+    setBackground(SystemColor.window)
   }
   editButton.setToolTipText(I18N.gui.get("tabs.run.editButton.tooltip"))
   addButton.setToolTipText(I18N.gui.get("tabs.run.addButton.tooltip"))
@@ -46,26 +48,25 @@ class InterfaceToolBar(wPanel: WidgetPanel,
 
   class EditAction extends AbstractAction(I18N.gui.get("tabs.run.editButton")) {
     putValue(Action.SMALL_ICON, new ImageIcon(classOf[InterfaceToolBar].getResource("/images/edit.gif")))
-    def actionPerformed(e: java.awt.event.ActionEvent) {
+    def actionPerformed(e: ActionEvent) =
       new org.nlogo.window.Events.EditWidgetEvent(null).raise(InterfaceToolBar.this)
-    }
   }
 
   class AddAction extends AbstractAction(I18N.gui.get("tabs.run.addButton")) {
     putValue(Action.SMALL_ICON, new ImageIcon(classOf[InterfaceToolBar].getResource("/images/add.gif")))
-    def actionPerformed(e: java.awt.event.ActionEvent) { }
+    def actionPerformed(e: ActionEvent) = {}
   }
 
   def getWidget =
-    if(noneButton.isSelected) null
-    else {
-      noneButton.setSelected(true)
+    if(addButton.isSelected) {
+      addButton.setSelected(false)
       wPanel.makeWidget(widgetMenu.getSelectedWidgetType, false)
-    }
+    } else
+      null
 
   var editTarget: Option[Editable] = None
 
-  def handle(e: org.nlogo.window.Events.EditWidgetEvent) {
+  def handle(e: org.nlogo.window.Events.EditWidgetEvent): Unit = {
     // this is to support the "Edit..." button in the view control strip - ST 7/18/03
     val targetOption = Option(e.widget).orElse{
       if(!editButton.isEnabled) return
@@ -74,7 +75,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     for(target <- targetOption) {
       def suppress(b: Boolean) {
         target match {
-          case w: org.nlogo.window.JobWidget => w.suppressRecompiles(b)
+          case w: JobWidget => w.suppressRecompiles(b)
           case _ =>
         }
       }
@@ -88,38 +89,21 @@ class InterfaceToolBar(wPanel: WidgetPanel,
 
   class DeleteAction extends AbstractAction(I18N.gui.get("tabs.run.deleteButton")) {
     putValue(Action.SMALL_ICON, new ImageIcon(classOf[InterfaceToolBar].getResource("/images/delete.gif")))
-    def actionPerformed(e: java.awt.event.ActionEvent) {
+    def actionPerformed(e: ActionEvent) =
       wPanel.deleteSelectedWidgets()
-    }
   }
 
-  private class AddButton extends JToggleButton(addAction) {
-    // normally ToggleButtons when pressed again stay pressed, but we want it to pop back up if
-    // pressed again; this variable is used to produce that behavior - ST 7/30/03, 2/22/07
-    private var wasSelectedWhenMousePressed = false
-    addMouseListener(new MouseAdapter() {
-      override def mousePressed(e: MouseEvent) { wasSelectedWhenMousePressed = isSelected }
-    })
-    addActionListener(new ActionListener() {
-      def actionPerformed(e: ActionEvent) { if(wasSelectedWhenMousePressed) noneButton.setSelected(true) }
-    })
-  }
-
-  override def addControls() {
+  override def addControls() =
     Seq(editButton, deleteButton, addButton, widgetMenu).foreach(add)
-    group.add(noneButton)
-    group.add(addButton)
-    noneButton.setSelected(true)
-  }
 
-  def handle(e: org.nlogo.window.Events.LoadBeginEvent) {
+  def handle(e: org.nlogo.window.Events.LoadBeginEvent) = {
     editAction.setEnabled(false)
     deleteAction.setEnabled(false)
-    noneButton.setSelected(true)
+    addButton.setSelected(false)
     widgetMenu.setSelectedString(I18N.gui.get("tabs.run.widgets.button"))
   }
 
-  def handle(e: org.nlogo.window.Events.WidgetRemovedEvent) {
+  def handle(e: org.nlogo.window.Events.WidgetRemovedEvent) = {
     val r = e.widget
     if(selectedObjects.contains(r)) {
       if(r.isInstanceOf[Editable] && editTarget.exists(_ == r.asInstanceOf[Editable])) {
@@ -132,14 +116,14 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     }
   }
 
-  def handle(e: org.nlogo.window.Events.WidgetAddedEvent) {
+  def handle(e: org.nlogo.window.Events.WidgetAddedEvent) = {
     for(i <- widgetMenu.items) i.setEnabled(wPanel.canAddWidget(i.getText))
     widgetMenu.updateSelected()
   }
 
   private val deleteableObjects = new HashSet[Widget]
 
-  def handle(e: Events.WidgetSelectedEvent) {
+  def handle(e: Events.WidgetSelectedEvent) = {
     val w = e.widget
     if(wPanel.getWrapper(w).selected) {
       if(!selectedObjects.contains(w)) selectedObjects.add(w)
@@ -156,17 +140,17 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     deleteAction.setEnabled(!deleteableObjects.isEmpty)
   }
 
-  def handle(e: org.nlogo.window.Events.WidgetForegroundedEvent) {
+  def handle(e: org.nlogo.window.Events.WidgetForegroundedEvent) = {
     editTarget = Some(e.widget.getEditable).collect{case editable: Editable => editable}
     editAction.setEnabled(editTarget.isDefined)
   }
 
-  def actionPerformed(e: java.awt.event.ActionEvent) { addButton.setSelected(true) }
+  def actionPerformed(e: ActionEvent) = addButton.setSelected(true)
 
   def getItems: Array[JMenuItem] = WidgetInfos.map( spec => new JMenuItem(spec.displayName, spec.icon)).toArray
-  class WidgetMenu extends org.nlogo.swing.ToolBarComboBox(getItems) {
+  class WidgetMenu extends ToolBarComboBox(getItems) {
     def getSelectedWidgetType = WidgetInfos.find(_.displayName == getSelectedItem.getText).get.widgetType
-    override def populate(menu: JPopupMenu) {
+    override def populate(menu: JPopupMenu) = {
       super.populate(menu)
       for(i <- items) {
         i.setEnabled(wPanel.canAddWidget(i.getText))
