@@ -318,13 +318,15 @@ private class SaveModelingCommonsAction extends FileMenuAction {
 
     private boolean userWantsLastSaveExported()
       throws UserCancelException {
+      ModelType modelType = app.workspace().getModelType();
+      String typeKey = (modelType == ModelTypeJ.NORMAL() ? "fromSave" : "fromLibrary");
       String[] options = {
-        I18N.guiJ().get("menu.file.nlw.prompt.fromSave"),
+        I18N.guiJ().get("menu.file.nlw.prompt." + typeKey),
         I18N.guiJ().get("menu.file.nlw.prompt.fromCurrentCopy"),
         I18N.guiJ().get("common.buttons.cancel")
       };
       String title   = I18N.guiJ().get("menu.file.nlw.prompt.title");
-      String message = I18N.guiJ().get("menu.file.nlw.prompt.message");
+      String message = I18N.guiJ().get("menu.file.nlw.prompt.message." + typeKey);
       int choice = org.nlogo.swing.OptionDialog.show(
           FileMenu.this, title, message, options);
       if (choice == 0) {
@@ -339,8 +341,7 @@ private class SaveModelingCommonsAction extends FileMenuAction {
     // We compare last saved to current save here because dirtyMonitor doesn't
     // report if UI values (sliders, etc.) have been changed - RG 9/10/15
     private boolean doesNotMatchWorkingCopy(String lastSaved) {
-      return app.workspace().getModelType() == ModelTypeJ.NORMAL() &&
-        ! lastSaved.equals(modelSaver.save());
+      return ! lastSaved.equals(modelSaver.save());
     }
   }
 
