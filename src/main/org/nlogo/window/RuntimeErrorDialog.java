@@ -172,14 +172,6 @@ public strictfp class RuntimeErrorDialog
             org.nlogo.util.SysInfo.getGLInfoString() + "\n" +
             "model: " + modelName + "\n\n" +
             eventTrace;
-    if (!AbstractWorkspace.isApp()) {
-      String browser = org.nlogo.util.SysInfo.getBrowserInfoString();
-      textWithDetails += "\n";
-      textWithDetails +=
-          (browser == null)
-              ? "running as applet in unknown browser"
-              : ("browser info: " + browser);
-    }
   }
 
   private void showJavaDetails(boolean flag) {
