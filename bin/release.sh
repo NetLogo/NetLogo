@@ -1,4 +1,4 @@
-#!/bin/bash -e -v
+#!/bin/bash -e
 
 # -e makes the whole thing die with an error if any command does
 # add -v if you want to see the commands as they happen
@@ -243,8 +243,6 @@ $LN -s ../../scala       # and this
 $LN -s ../../bin         # and this
 if [ $REQUIRE_PREVIEWS -eq 1 ]; then
   find models -name \*.nlogo | while read modelfile ; do
-    echo $modelfile
-    echo ${modelfile/nlogo/png}
     if [ ! -f "${modelfile/nlogo/png}" ] ; then
       echo "$modelfile does not have a preview image"
       exit 1
