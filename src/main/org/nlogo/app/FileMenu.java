@@ -278,20 +278,69 @@ private class SaveModelingCommonsAction extends FileMenuAction {
   private class SaveAsNetLogoWebAction extends FileMenuAction {
     SaveAsNetLogoWebAction() {
       super(I18N.guiJ().get("menu.file.saveAsNetLogoWeb"));
-      // disabled for 3-D since it doesn't work - ST 2/25/05
+      // disabled for 3-D since you can't do that in NetLogo Web - RG 9/10/15
       setEnabled(!org.nlogo.api.Version.is3D());
     }
 
     @Override
     void action()
       throws UserCancelException, java.io.IOException {
+
       String exportPath = org.nlogo.swing.FileDialog.show
           (FileMenu.this, "Saving as NetLogo Web HTML Page", java.awt.FileDialog.SAVE,
-              suggestedSaveFileName(""));
+              suggestedFileName());
 
       java.io.File exportFile = new java.io.File(exportPath);
-      NetLogoWebSaver saver = NetLogoWebSaver$.MODULE$.apply(exportPath + ".html");
-      saver.save(modelSaver.save(), exportFile.getName());
+      NetLogoWebSaver saver = NetLogoWebSaver$.MODULE$.apply(exportPath);
+      saver.save(modelToSave(), exportFile.getName());
+    }
+
+    private String suggestedFileName()
+      throws UserCancelException {
+      if (app.workspace().getModelType() == ModelTypeJ.NEW()) {
+        return suggestedSaveFileName("") + ".html";
+      } else {
+        String fileName = guessFileName();
+        return fileName.substring(0, fileName.length() - 6) + ".html";
+      }
+    }
+
+    private String modelToSave()
+      throws UserCancelException, java.io.IOException {
+      String lastSaved =
+        org.nlogo.api.FileIO.file2String(app.workspace().getModelPath());
+      if (doesNotMatchWorkingCopy(lastSaved) && userWantsLastSaveExported()) {
+        return lastSaved;
+      } else {
+        return modelSaver.save();
+      }
+    }
+
+    private boolean userWantsLastSaveExported()
+      throws UserCancelException {
+      String[] options = {
+        I18N.guiJ().get("menu.file.nlw.prompt.fromSave"),
+        I18N.guiJ().get("menu.file.nlw.prompt.fromCurrentCopy"),
+        I18N.guiJ().get("common.buttons.cancel")
+      };
+      String title   = I18N.guiJ().get("menu.file.nlw.prompt.title");
+      String message = I18N.guiJ().get("menu.file.nlw.prompt.message");
+      int choice = org.nlogo.swing.OptionDialog.show(
+          FileMenu.this, title, message, options);
+      if (choice == 0) {
+        return true;
+      } else if (choice == 1) {
+        return false;
+      } else {
+        throw new UserCancelException();
+      }
+    }
+
+    // We compare last saved to current save here because dirtyMonitor doesn't
+    // report if UI values (sliders, etc.) have been changed - RG 9/10/15
+    private boolean doesNotMatchWorkingCopy(String lastSaved) {
+      return app.workspace().getModelType() == ModelTypeJ.NORMAL() &&
+        ! lastSaved.equals(modelSaver.save());
     }
   }
 

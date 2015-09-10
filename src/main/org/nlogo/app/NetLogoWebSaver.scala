@@ -30,7 +30,7 @@ class NetLogoWebSaver(loader: NLWTemplateLoader, saveFunction: String => Unit) {
     if (htmlTemplate.contains(ModelContents))
       htmlTemplate
         .replaceAllLiterally(ModelContents, model)
-        .replaceAllLiterally(ModelName    , modelName + ".nlogo")
+        .replaceAllLiterally(ModelName, modelName.stripSuffix(".html") + ".nlogo")
     else
       throw new IllegalArgumentException("Invalid HTML Template")
   }

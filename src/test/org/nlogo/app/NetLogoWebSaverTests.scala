@@ -25,11 +25,19 @@ class NetLogoWebSaverTests extends FunSuite {
     }
   }
 
-  test("nlwsaver returns the template supplied by the transformed html file") {
+  test("nlwsaver returns the template filled in with the transformed html file") {
     var savedText = ""
     var saveFunction: String => Unit = { t => savedText = t }
     val saver = new NetLogoWebSaver(templateLoader, saveFunction)
     saver.save(dummyModel, "model name")
+    assert(savedText == dummyTemplate(dummyModel, "model name.nlogo"))
+  }
+
+  test("nlwsaver strips the html suffix off received filenames") {
+    var savedText = ""
+    var saveFunction: String => Unit = { t => savedText = t }
+    val saver = new NetLogoWebSaver(templateLoader, saveFunction)
+    saver.save(dummyModel, "model name.html")
     assert(savedText == dummyTemplate(dummyModel, "model name.nlogo"))
   }
 
