@@ -1057,7 +1057,7 @@ span.CodeMirror-selectedtext { background: none; }
               transform: rotate(360deg);
   }
 }
-</style>
+/*# sourceMappingURL=spinner.css.map */</style>
     <style>/*
  * styles to use with the "error alert" component
  */
@@ -1136,7 +1136,7 @@ span.CodeMirror-selectedtext { background: none; }
   border: 1px solid lightgray;
   background-color: #e6e6e6;
 }
-</style>
+/*# sourceMappingURL=alert.css.map */</style>
   </head>
   <body style="margin: 0px;">
     <div class="dark-overlay" id="loading-overlay">
@@ -43193,118 +43193,6 @@ function Kt(){Gqa||(Gqa=(new $$).d())};
 
 }).call(this);
 
-},{}],"engine/core/structure/patchvariablemanager":[function(require,module,exports){
-(function() {
-  var AltVariableManager,
-    bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-
-  module.exports = AltVariableManager = (function() {
-    function AltVariableManager(agent, _varSpecs) {
-      var spec;
-      this.agent = agent;
-      this.refineBy = bind(this.refineBy, this);
-      this._addVarsBySpec(_varSpecs);
-      this._names = (function() {
-        var i, len, results;
-        results = [];
-        for (i = 0, len = _varSpecs.length; i < len; i++) {
-          spec = _varSpecs[i];
-          results.push(spec.name);
-        }
-        return results;
-      })();
-    }
-
-    AltVariableManager.prototype._defineGetter = function(name) {
-      return function() {
-        return this.agent._getters[name].apply(this.agent);
-      };
-    };
-
-    AltVariableManager.prototype._defineSetter = function(name) {
-      return function(x) {
-        return this.agent._setters[name].apply(this.agent, [x]);
-      };
-    };
-
-    AltVariableManager.prototype._addVarsBySpec = function(varSpecs) {
-      var data, get, i, initialValue, len, name, ref, set, writable;
-      for (i = 0, len = varSpecs.length; i < len; i++) {
-        ref = varSpecs[i], name = ref.name, initialValue = ref.initialValue, writable = ref.writable, data = ref.data;
-        if (writable && data) {
-          this._defineProperty(name, {
-            writable: true,
-            value: initialValue,
-            configurable: true
-          });
-        } else if (writable) {
-          get = this._defineGetter(name);
-          set = this._defineSetter(name);
-          this._defineProperty(name, {
-            set: set,
-            get: get,
-            configurable: true
-          });
-        } else {
-          this._defineProperty(name, {
-            writable: false,
-            value: initialValue
-          });
-        }
-      }
-    };
-
-    AltVariableManager.prototype.refineBy = function(obsoleteVarNames, newVarNames) {
-      var i, len, name, newVarSpecs, varName;
-      if (obsoleteVarNames == null) {
-        obsoleteVarNames = [];
-      }
-      if (newVarNames == null) {
-        newVarNames = [];
-      }
-      for (i = 0, len = obsoleteVarNames.length; i < len; i++) {
-        name = obsoleteVarNames[i];
-        this._defineProperty(name, {
-          get: void 0,
-          set: this.invalidSet,
-          configurable: true
-        });
-      }
-      newVarSpecs = (function() {
-        var j, len1, results;
-        results = [];
-        for (j = 0, len1 = newVarNames.length; j < len1; j++) {
-          varName = newVarNames[j];
-          results.push({
-            name: varName,
-            initialValue: 0,
-            writable: true,
-            data: true
-          });
-        }
-        return results;
-      })();
-      return this._addVarsBySpec(newVarSpecs);
-    };
-
-    AltVariableManager.prototype._invalidSet = function() {
-      throw new Error(name + " is no longer a valid variable.");
-    };
-
-    AltVariableManager.prototype.names = function() {
-      return this._names;
-    };
-
-    AltVariableManager.prototype._defineProperty = function(propName, config) {
-      Object.defineProperty(this, propName, config);
-    };
-
-    return AltVariableManager;
-
-  })();
-
-}).call(this);
-
 },{}],"engine/core/structure/penmanager":[function(require,module,exports){
 (function() {
   var Down, Erase, PenManager, PenStatus, Up;
@@ -45941,24 +45829,7 @@ function Kt(){Gqa||(Gqa=(new $$).d())};
 
 }).call(this);
 
-},{"../link":"engine/core/link","../linkset":"engine/core/linkset","../nobody":"engine/core/nobody","../structure/builtins":"engine/core/structure/builtins","./idmanager":"engine/core/world/idmanager","./sortedlinks":"engine/core/world/sortedlinks","lodash":"lodash","util/stablesort":"util/stablesort"}],"engine/core/world/patchoptimizationmanager":[function(require,module,exports){
-(function() {
-  var PatchOptimizationManager;
-
-  module.exports = PatchOptimizationManager = (function() {
-    function PatchOptimizationManager(declareNonBlackPatch, decrementPatchLabelCount, incrementPatchLabelCount) {
-      this.declareNonBlackPatch = declareNonBlackPatch;
-      this.decrementPatchLabelCount = decrementPatchLabelCount;
-      this.incrementPatchLabelCount = incrementPatchLabelCount;
-    }
-
-    return PatchOptimizationManager;
-
-  })();
-
-}).call(this);
-
-},{}],"engine/core/world/sortedlinks":[function(require,module,exports){
+},{"../link":"engine/core/link","../linkset":"engine/core/linkset","../nobody":"engine/core/nobody","../structure/builtins":"engine/core/structure/builtins","./idmanager":"engine/core/world/idmanager","./sortedlinks":"engine/core/world/sortedlinks","lodash":"lodash","util/stablesort":"util/stablesort"}],"engine/core/world/sortedlinks":[function(require,module,exports){
 (function() {
   var Mori, SortedLinks, linkCompare;
 
@@ -68350,7 +68221,7 @@ into the sorting code and caused a 25% performance hit in BZ Benchmark. --JAB (4
 var _nS = function(c,f,b){var e=c.split(f||"."),g=b||_root,d,a;for(d=0,a=e.length;d<a;d++){g=g[e[d]]=g[e[d]]||{}}return g}
 var _qS = function(items){var qs = ''; for(var i=0;i<items.length;i++) {if(items[i]) qs += (qs ? '&' : '') + items[i]}; return qs ? ('?' + qs) : ''}
 var _s = function(p,s){return p+((s===true||(s&&s.secure))?'s':'')+':\/\/'}
-var _wA = function(r){return {ajax:function(c){c=c||{};c.url=r.url;c.type=r.method;return jQuery.ajax(c)}, method:r.method,type:r.method,url:r.url,absoluteURL: function(s){return _s('http',s)+'localhost:9000'+r.url},webSocketURL: function(s){return _s('ws',s)+'localhost:9000'+r.url}}}
+var _wA = function(r){return {ajax:function(c){c=c||{};c.url=r.url;c.type=r.method;return jQuery.ajax(c)}, method:r.method,type:r.method,url:r.url,absoluteURL: function(s){return _s('http',s)+'netlogoweb.org'+r.url},webSocketURL: function(s){return _s('ws',s)+'netlogoweb.org'+r.url}}}
 _nS('controllers.Local'); _root.controllers.Local.standalone = 
         function() {
           return _wA({method:"GET", url:"\/" + "standalone"})
@@ -68370,7 +68241,7 @@ _nS('controllers.Local'); _root.controllers.Local.standalone =
       var modelContainer  = document.querySelector("#netlogo-model-container");
       var index           = window.location.href.indexOf("?");
       var nlogoScript     = document.querySelector("#nlogo-code");
-      var standaloneURL   = "http://localhost:9000/standalone";
+      var standaloneURL   = "http://netlogoweb.org/standalone";
       var pageTitle       = function(modelTitle) {
         if (modelTitle != null && modelTitle != "") {
           return "NetLogo Web: " + modelTitle;
