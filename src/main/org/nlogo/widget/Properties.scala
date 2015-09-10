@@ -17,7 +17,7 @@ object Properties {
     P("transparency", P.Boolean, I18N.gui("text.transparency")),
     P("color", P.Color, I18N.gui("text.color"))
   ).asJava
-  val swiitch = List(
+  val switch = List(
     P("nameWrapper", P.Identifier, I18N.gui("switch.globalVar"))
   ).asJava
   val dummySwitch = List(
