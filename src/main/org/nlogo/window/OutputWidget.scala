@@ -21,8 +21,15 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
   }, java.awt.BorderLayout.CENTER)
 
   def propertySet = Properties.output
-  def fontSize = outputArea.fontSize
-  def fontSize(fontSize:Int) = outputArea.fontSize(fontSize)
+
+  originalFont = outputArea.getFont
+  def fontSize = originalFont.getSize
+  def fontSize_=(newSize: Int): Unit = {
+    val zoomDiff = outputArea.fontSize - fontSize
+    outputArea.fontSize(newSize + zoomDiff)
+    originalFont = originalFont.deriveFont(newSize.toFloat)
+  }
+
   override def classDisplayName = I18N.gui.get("tabs.run.widgets.output")
   override def zoomSubcomponents = true
   override def exportable = true
