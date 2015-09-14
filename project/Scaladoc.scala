@@ -8,20 +8,25 @@ object Scaladoc {
   val netlogoVersion = TaskKey[String]("netlogo-version", "from api.Version")
 
   val settings = Seq(
+    apiMappings += (
+      file(System.getenv("JAVA_HOME") + "/jre/lib/rt.jar") ->
+      url("http://docs.oracle.com/javase/8/docs/api")),
+    // automagically link scaladoc with appropriate library docs
+    autoAPIMappings := true,
     netlogoVersion <<= (testLoader in Test) map {
       _.loadClass("org.nlogo.api.Version")
        .getMethod("version")
        .invoke(null).asInstanceOf[String]
        .replaceFirst("NetLogo ", "")
     },
-    scalacOptions in (Compile, doc) <++= (baseDirectory, netlogoVersion) map {
-      (base, version) =>
-        Seq("-encoding", "us-ascii") ++
-        Seq("-sourcepath", base.getAbsolutePath) ++
-        Opts.doc.title("NetLogo") ++
-        Opts.doc.version(version) ++
-        Opts.doc.sourceUrl("https://github.com/NetLogo/NetLogo/blob/" +
-                           version + "€{FILE_PATH}.scala")
+    scalacOptions in (Compile, doc) := {
+      (scalacOptions in Compile in doc).value ++
+      Seq("-no-link-warnings", "-encoding", "us-ascii") ++
+      Seq("-sourcepath", baseDirectory.value.getAbsolutePath) ++
+      Opts.doc.title("NetLogo") ++
+      Opts.doc.version(netlogoVersion.value) ++
+      Opts.doc.sourceUrl("https://github.com/NetLogo/NetLogo/blob/" +
+        version + "€{FILE_PATH}.scala")
     },
     doc in Compile ~= mungeScaladocSourceUrls,
     // The regular doc task includes doc for the entire main source tree.  But for the NetLogo
