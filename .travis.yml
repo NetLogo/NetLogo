@@ -1,0 +1,32 @@
+sudo: false
+
+# cache stuff, hopefully shortening build times
+cache:
+  directories:
+  - $HOME/.ivy2
+  - $HOME/.sbt/boot
+  - $HOME/.sbt/launchers
+
+jdk: oraclejdk8
+language: scala
+before_install:
+  - git submodule update --init --recursive
+install:
+  - ./sbt update
+script:
+  - ./sbt depend
+  - travis_wait ./sbt all
+  - ./sbt test:fast
+  - ./sbt nogen test:fast
+  - ./sbt threed test:fast
+  - ./sbt test:slow
+  - ./sbt nogen test:slow
+  - ./sbt threed test:slow
+
+notifications:
+  hipchat:
+    rooms:
+      secure: "EEaRwfUUBj1phN/+8C3mbZARgSy3QWkx/ppQy/aBtydWpT82Mx3fhqOTKDpS3onEjioMqSOKzOGtQuZ1KP1agy11WDTFkwAhg9MMPzdc3J0gRaxhI6FyfZ9emWYmzM6GxGMtJZM1hOvenPp5QDQ7POyhCuQUW3+Utv2vQM3PkBg="
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/7e19d0a6b790bd7d14dc

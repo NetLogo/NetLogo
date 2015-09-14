@@ -14,6 +14,8 @@ fi
 rm -rf tmp/nightly
 mkdir -p tmp/nightly
 
+./sbt update
+
 # here we're using pipes so "-e" isn't enough to stop when something fails.
 # maybe there's an easier way, than I've done it below, I don't know.
 # I suck at shell scripting - ST 2/15/11
