@@ -1090,7 +1090,7 @@ public abstract strictfp class GUIWorkspaceJ
     jobManager.haltPrimary();
     getExtensionManager().reset();
     fileManager().handleModelChange();
-    previewCommands_$eq(DefaultPreviewCommands());
+    previewCommands_$eq(org.nlogo.api.PreviewCommands$.MODULE$.DEFAULT());
     clearDrawing();
     viewManager.resetMouseCors();
     displaySwitchOn(true);

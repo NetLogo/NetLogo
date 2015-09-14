@@ -9,6 +9,8 @@ import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.List;
 
+import org.nlogo.util.Utils$;
+
 public strictfp class ModelsLibrary {
 
   // this class is not instantiable
@@ -174,7 +176,7 @@ public strictfp class ModelsLibrary {
   }
 
   private static void scanDirectory(java.io.File directory, Node grandparent, Node parent, boolean exclusive) {
-    if (!directory.isDirectory()) {
+    if (!directory.isDirectory() || Utils$.MODULE$.isSymlink(directory)) {
       return;
     }
 

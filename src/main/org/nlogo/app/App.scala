@@ -124,16 +124,25 @@ object App{
     // to use the same container in both places, so I'm going to keep the
     // containers separate and just use Plain Old Java Reflection to
     // call HeadlessWorkspace's newInstance() method. - ST 3/11/09
+    // And we'll conveniently reuse it for the preview commands editor! - NP 2015-04-27
     val factory = new WorkspaceFactory() {
-      def newInstance: Workspace = {
+      def newInstance(openCurrentModel: Boolean): Workspace = {
         val w = Class.forName("org.nlogo.headless.HeadlessWorkspace").
                 getMethod("newInstance").invoke(null).asInstanceOf[Workspace]
-        w.setModelPath(app.workspace.getModelPath)
-        w.openString(new ModelSaver(pico.getComponent(classOf[App])).save)
+        if (openCurrentModel) {
+          w.setModelPath(app.workspace.getModelPath)
+          w.openString(new ModelSaver(pico.getComponent(classOf[App])).save)
+        }
         w
       }
     }
     pico.addComponent(classOf[WorkspaceFactory], factory)
+    pico.addComponent(classOf[GraphicsPreview])
+    pico.add(
+      classOf[PreviewCommandsEditorInterface],
+      "org.nlogo.app.previewcommands.PreviewCommandsEditor",
+      new ComponentParameter(classOf[AppFrame]),
+      new ComponentParameter(), new ComponentParameter())
     pico.addComponent(classOf[Tabs])
     pico.add(
       classOf[org.nlogo.window.ReviewTabInterface],
@@ -298,6 +307,7 @@ class App extends
   var labManager:LabManagerInterface = null
   private val listenerManager = new NetLogoListenerManager
   lazy val modelingCommons = pico.getComponent(classOf[ModelingCommonsInterface])
+  lazy val previewCommandsEditor = pico.getComponent(classOf[PreviewCommandsEditorInterface])
   private val ImportWorldURLProp = "netlogo.world_state_url"
   private val ImportRawWorldURLProp = "netlogo.raw_world_state_url"
 

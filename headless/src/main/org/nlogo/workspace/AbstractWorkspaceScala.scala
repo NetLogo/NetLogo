@@ -3,7 +3,7 @@
 package org.nlogo.workspace
 
 import org.nlogo.agent.{ World, Agent, Observer, AbstractExporter, AgentSet }
-import org.nlogo.api.{ AgentKind, PlotInterface, Dump, CommandLogoThunk, ReporterLogoThunk,
+import org.nlogo.api.{ AgentKind, PlotInterface, Dump, CommandLogoThunk, ReporterLogoThunk, PreviewCommands,
                        CompilerException, LogoException, JobOwner, SimpleJobOwner, Token, ModelType}
 import org.nlogo.nvm.{ CompilerInterface, FileManager, Instruction, EngineException, Context,
                        Procedure, Job, Command, MutableLong, Workspace, Activation }
@@ -13,10 +13,6 @@ import java.io.{ IOException, PrintWriter }
 import java.util.WeakHashMap
 
 import AbstractWorkspaceTraits._
-
-object AbstractWorkspaceScala {
-  val DefaultPreviewCommands = "setup repeat 75 [ go ]"
-}
 
 abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory: HubNetManagerFactory)
 extends AbstractWorkspace
@@ -28,7 +24,7 @@ with Compiling with Profiling with Extensions with HubNet with BehaviorSpace wit
   /**
    * previewCommands used by make-preview and model test
    */
-  var previewCommands = AbstractWorkspaceScala.DefaultPreviewCommands
+  var previewCommands: PreviewCommands = PreviewCommands.Default
 
   val lastRunTimes = new WeakHashMap[Job, WeakHashMap[Agent, WeakHashMap[Command, MutableLong]]]
 

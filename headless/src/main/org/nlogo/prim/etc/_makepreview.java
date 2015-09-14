@@ -27,7 +27,7 @@ public final strictfp class _makepreview
       String escaped = org.nlogo.api.StringUtils.escapeString(previewPath);
       Procedure procedure =
           workspace.compileForRun
-              ("random-seed 0 " + workspace.previewCommands() +
+              ("random-seed 0 " + workspace.previewCommands().source() +
                   "\nexport-view \"" + escaped + "\"" +
                   "\nprint \"GENERATED: " + escaped + "\"",
                   context, false);

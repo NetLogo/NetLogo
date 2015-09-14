@@ -6,14 +6,17 @@ import org.nlogo.api.{ RendererInterface, ViewSettings }
 import org.nlogo.workspace.AbstractWorkspaceScala
 import org.nlogo.util.HexString.toHexString
 import java.io.PrintWriter
+import org.nlogo.api.PreviewCommands
 
 object Checksummer {
   def initModelForChecksumming(workspace: HeadlessWorkspace) {
     workspace.renderer.renderLabelsAsRectangles_=(true)
-    if(workspace.previewCommands.containsSlice("need-to-manually-make-preview-for-this-model"))
-      workspace.previewCommands = AbstractWorkspaceScala.DefaultPreviewCommands
+    val source = workspace.previewCommands match {
+      case PreviewCommands.Custom(source) => source
+      case _ => PreviewCommands.Default.source // may or may not compile, but we'll try
+    }
     workspace.command("random-seed 0")
-    workspace.command(workspace.previewCommands)
+    workspace.command(source)
   }
   def calculateWorldChecksum(workspace: HeadlessWorkspace): String =
     calculateChecksum(workspace.exportWorld _)

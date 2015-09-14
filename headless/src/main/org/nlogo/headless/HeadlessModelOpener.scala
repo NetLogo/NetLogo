@@ -8,6 +8,7 @@ import org.nlogo.api.{CompilerException, FileIO, LogoList,
 import org.nlogo.plot.PlotLoader
 import org.nlogo.shape.{LinkShape, VectorShape}
 import org.nlogo.api.StringUtils.escapeString
+import org.nlogo.api.PreviewCommands
 
 object HeadlessModelOpener {
   def protocolSection(path: String) =
@@ -56,10 +57,9 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     ws.procedures = results.proceduresMap
     ws.codeBits.clear() //(WTH IS THIS? - JC 10/27/09)
 
-    // read preview commands. (if the model doesn't specify preview commands, allow the default ones
-    // from our superclass to stand)
-    val previewCommands = map(ModelSection.PreviewCommands).mkString("", "\n", "\n")
-    if (!previewCommands.trim.isEmpty) ws.previewCommands = previewCommands
+    // Read preview commands. If the model doesn't specify preview commands, the default ones will be used.
+    val previewCommandsSource = map(ModelSection.PreviewCommands).mkString("\n")
+    ws.previewCommands = PreviewCommands(previewCommandsSource)
 
     // parse turtle and link shapes, updating the workspace.
     parseShapes(map(ModelSection.TurtleShapes).toArray,
