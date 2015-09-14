@@ -124,4 +124,12 @@ class TestGenerator extends FunSuite {
       ).mkString("\n"))(disassembleReporter("xcor = 0"))
     }
 
+  if(Version.useGenerator)
+    test("withGeneratesEfficientInstructions") {
+      assert(
+        ! disassembleReporter("turtles with [true]")
+          .split("\n").toSeq.sliding(2)
+          .exists(_ == Seq("ALOAD 0", "POP"))
+        )
+    }
 }

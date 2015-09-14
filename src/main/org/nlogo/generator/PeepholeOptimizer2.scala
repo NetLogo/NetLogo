@@ -16,12 +16,17 @@ package org.nlogo.generator
  *  ~Forrest (6/19/2006)
  */
 
-import org.objectweb.asm.MethodVisitor
+import org.objectweb.asm.{ Label, MethodVisitor }
 import org.objectweb.asm.Opcodes.{ ALOAD, POP }
 
 private class PeepholeOptimizer2(mv: MethodVisitor) extends AbstractPeepholeOptimizer(mv) {
 
   private var seenAload0 = false
+
+  // don't restartMatch when encountering a label
+  override def visitLabel(label: Label): Unit = {
+    mv.visitLabel(label)
+  }
 
   override def restartMatch() {
     if (seenAload0) {
@@ -41,7 +46,8 @@ private class PeepholeOptimizer2(mv: MethodVisitor) extends AbstractPeepholeOpti
   override def visitInsn(opcode: Int) {
     if (seenAload0 && opcode == POP)
       seenAload0 = false
-    else super.visitInsn(opcode)
+    else
+      super.visitInsn(opcode)
   }
 
 }
