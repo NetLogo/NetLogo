@@ -11,8 +11,10 @@ class TestCompileAll extends FunSuite with SlowTest {
 
   // Models whose path contains any of these strings will not be tested at all:
   def excludeModel(path: String) =
-      (if (Version.is3D) !path.contains(makePath("3D")) // when in 3D, skip models that aren't in the 3D directory.
-      else path.endsWith(".nlogo3d"))
+    (if (Version.is3D) !path.contains(makePath("3D")) // when in 3D, skip models that aren't in the 3D directory.
+      else path.endsWith(".nlogo3d")) || // when not in 3D, skip 3D models
+        Seq("Arduino", "QuickTime", "Serial").exists(path.contains)
+        // ^^ this branch is a transition away from QTJ, and gogo-serial. Arduino is skipped because it isn't bundled
 
 
   // and those are exempt from having their preview commands tested:
@@ -62,5 +64,4 @@ class TestCompileAll extends FunSuite with SlowTest {
     }
     finally {workspace.dispose()}
   }
-
 }
