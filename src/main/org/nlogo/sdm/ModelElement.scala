@@ -2,11 +2,12 @@
 
 package org.nlogo.sdm
 
+import java.io.{ Serializable => JSerializable }
 import scala.beans.{ BeanProperty, BooleanBeanProperty }
 
 // Model Elements need to be serializable because they are contained in the model element figures
 // which are added to the jhotdraw figures which require serializability.
-class ModelElement(@BeanProperty var name: String) extends Serializable {
+class ModelElement(@BeanProperty var name: String) extends JSerializable {
   def this() = this("")
   /** Returns true if all required fields are filled in. */
   def isComplete = !name.isEmpty

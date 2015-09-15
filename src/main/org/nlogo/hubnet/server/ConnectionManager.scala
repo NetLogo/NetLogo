@@ -2,7 +2,7 @@
 
 package org.nlogo.hubnet.server
 
-import java.io.{Serializable, InterruptedIOException, IOException}
+import java.io.{ Serializable => JSerializable , InterruptedIOException, IOException}
 import org.nlogo.workspace.AbstractWorkspaceScala
 import org.nlogo.hubnet.connection.MessageEnvelope.MessageEnvelope
 import org.nlogo.plot.Plot
@@ -268,8 +268,8 @@ class ConnectionManager(val connection: ConnectionInterface,
   def broadcast(tag:String, message:Any) = {
     if (!isValidTag(tag)) throw new HubNetException(tag + " is not a valid tag on the client.")
     message match {
-      case m: Serializable => broadcastMessage(new WidgetControl(m, tag))
-      case _               => throw new HubNetException(VALID_SEND_TYPES_MESSAGE)
+      case m: JSerializable => broadcastMessage(new WidgetControl(m, tag))
+      case _                => throw new HubNetException(VALID_SEND_TYPES_MESSAGE)
     }
   }
 
@@ -279,7 +279,7 @@ class ConnectionManager(val connection: ConnectionInterface,
    * @return true if the message was sent
    */
   @throws(classOf[HubNetException])
-  def send(userId:String, tag:String, message:Serializable) = {
+  def send(userId:String, tag:String, message:JSerializable) = {
     if (!isValidTag(tag)) throw new HubNetException(tag + " is not a valid tag on the client.")
     sendUserMessage(userId, new WidgetControl(message, tag))
   }

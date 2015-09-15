@@ -3,7 +3,11 @@
 package org.nlogo.plot
 
 import collection.mutable.Buffer
+
+import java.io.{ Serializable => JSerializable }
+
 import org.nlogo.api.I18N
+
 
 object PlotPen {
   // modes (all static)
@@ -38,7 +42,7 @@ class PlotPen (
         var penModeChanged: Boolean = false,
         private var _isDown: Boolean = true,
         private var _hidden: Boolean = false)
-extends org.nlogo.api.PlotPenInterface with Serializable {
+extends org.nlogo.api.PlotPenInterface with JSerializable {
 
   hardReset()
   plot.addPen(this)

@@ -4,6 +4,8 @@ package org.nlogo.plot
 
 import org.nlogo.api.PlotInterface
 
+import java.io.{ Serializable => JSerializable }
+
 // normally, to create a new Plot, you have to go through PlotManager.newPlot
 // this makes sense because the PlotManager then controls compilation
 // and running of code, and it needs to know about all the Plots.
@@ -12,7 +14,7 @@ import org.nlogo.api.PlotInterface
 // its also nice for tests as well though.
 // JC - 12/20/10
 @SerialVersionUID(0)
-class Plot private[nlogo] (var name:String) extends PlotInterface with Serializable {
+class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializable {
 
   import Plot._
 

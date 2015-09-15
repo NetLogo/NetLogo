@@ -4,10 +4,11 @@ package org.nlogo.hubnet.protocol
 
 import org.nlogo.api.{Version, PlotInterface}
 import java.io.{ObjectInputStream, ObjectOutputStream, DataOutputStream,
-                ByteArrayOutputStream, ByteArrayInputStream, DataInputStream, IOException, Serializable}
+                ByteArrayOutputStream, ByteArrayInputStream, DataInputStream, IOException, Serializable => JSerializable}
+
 // Message between hubnet clients and hubnet servers
 @SerialVersionUID(0)
-trait Message extends Serializable
+trait Message extends JSerializable
 
 // Messages sent to establish handshake between client and server
 @SerialVersionUID(0)
@@ -37,7 +38,7 @@ case object EnterMessage extends Message
  * @param tag the name of the widget
  */
 @SerialVersionUID(0)
-case class WidgetControl(content: Serializable, tag: String) extends Message
+case class WidgetControl(content: JSerializable, tag: String) extends Message
 
 // Message from server tells client to disable the view until the next update
 @SerialVersionUID(0)
@@ -80,7 +81,7 @@ case class PlotControl(content: AnyRef, plotName: String) extends Message
  * Message from server tells client to display text
  */
 object Text {
-  sealed trait MessageType extends Serializable
+  sealed trait MessageType extends JSerializable
   object MessageType {
     case object USER extends MessageType
     case object TEXT extends MessageType

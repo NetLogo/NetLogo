@@ -2,6 +2,7 @@
 
 package org.nlogo.prim.hubnet
 
+import java.io.{ Serializable => JSerializable }
 import org.nlogo.api.{ Dump, LogoList, Syntax, TypeNames }
 import org.nlogo.nvm.{ ArgumentTypeException, Command, Context, EngineException }
 
@@ -37,8 +38,8 @@ class _hubnetsend extends Command {
           context, this, 0, Syntax.ListType | Syntax.StringType, nodesArg)
     }
     message match {
-      case m: Serializable => hubnetManager.send(nodes, tag, m)
-      case _               =>
+      case m: JSerializable => hubnetManager.send(nodes, tag, m)
+      case _                =>
         throw new EngineException(
           context, this,
           s"""|HUBNET-SEND is unable to send the message $message
