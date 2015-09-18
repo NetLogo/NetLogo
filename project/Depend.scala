@@ -110,7 +110,7 @@ check [not-job-not-workspace] directlyIndependentOf [job]
 
 ### checks on AWT, Swing, JOGL
 
-[Sun-Swing] = javax.swing.* excluding javax.swing.tree.MutableTreeNode javax.swing.tree.DefaultMutableTreeNode
+[Sun-Swing] = javax.swing.* excluding javax.swing.tree.MutableTreeNode javax.swing.tree.DefaultMutableTreeNode javax.swing.tree.TreeNode
 [Sun-AWT] = java.awt.*
 [headless-AWT] = java.awt.geom.* java.awt.image.* java.awt.Color java.awt.Image java.awt.Shape java.awt.Graphics2D java.awt.Graphics java.awt.Stroke java.awt.Composite java.awt.BasicStroke java.awt.Point java.awt.Font java.awt.AlphaComposite java.awt.RenderingHints java.awt.Rectangle java.awt.FontMetrics java.awt.color.ColorSpace java.awt.Polygon java.awt.RenderingHints$Key
 # as a special case, we allow referring to java.awt.Frame, because ShapesManagerFactory

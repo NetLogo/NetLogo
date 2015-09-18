@@ -42,9 +42,16 @@ object ModalProgressTask {
     boss.start()
     dialog.setVisible(true)
 
+    // avoid depending on api.Version
+    def is3D =
+      try java.lang.Boolean.getBoolean("org.nlogo.is3d")
+      catch {
+        case e: Exception => false
+      }
+
     // This is a workaround for the menu getting grayed out on macs in 3D mode
     // See issue #47  FD 6/12/14
-    if(isMac && Version.is3D) {
+    if(isMac && is3D) {
       val threedFixBoss = new Boss(dialog, new Runnable() { override def run() {} })
       threedFixBoss.setPriority(Thread.MAX_PRIORITY)
       threedFixBoss.start()
