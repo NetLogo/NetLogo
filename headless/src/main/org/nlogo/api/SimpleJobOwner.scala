@@ -17,5 +17,5 @@ extends JobOwner {
   override def headerSource = ""
   override def innerSource = ""
   override def source = ""
-  override def innerSource(s: String) { }
+  override def innerSource_=(s: String) = {}
 }

@@ -52,7 +52,7 @@ strictfp class CommandLine
     this.commandCenter = commandCenter;
     this.echoCommandsToOutput = echoCommandsToOutput;
     this.workspace = workspace;
-    kind(AgentKindJ.Observer());
+    kind_$eq(AgentKindJ.Observer());
     textField =
         new org.nlogo.editor.EditorField<TokenType>
             (30,
@@ -220,13 +220,13 @@ strictfp class CommandLine
                     false, true).raise(this);
           }
           if (agent != null) {
-            agents(org.nlogo.agent.AgentSet.fromAgent(agent));
+            agents_$eq(org.nlogo.agent.AgentSet.fromAgent(agent));
           }
           new org.nlogo.window.Events.AddJobEvent(this, agents(), procedure())
               .raise(this);
         }
       } else if (error() instanceof CompilerException) {
-        int offset = headerSource.length();
+        int offset = headerSource().length();
         // highlight error location
 
         textField.select(((CompilerException) error()).startPos() - offset,
@@ -274,7 +274,7 @@ strictfp class CommandLine
         historyPosition++;
         ExecutionString es = history.get(historyPosition);
         setText(es.string);
-        kind(es.kind);
+        kind_$eq(es.kind);
       }
     }
     commandCenter.repaintPrompt();
@@ -283,13 +283,13 @@ strictfp class CommandLine
   void cycleListForward() {
     if (historyPosition == 0) {
       setText(historyBase);
-      kind(historyBaseKind);
+      kind_$eq(historyBaseKind);
       historyPosition = -1;
     } else if (historyPosition > 0 && !history.isEmpty()) {
       historyPosition--;
       ExecutionString es = history.get(historyPosition);
       setText(es.string);
-      kind(es.kind);
+      kind_$eq(es.kind);
     }
     commandCenter.repaintPrompt();
   }
@@ -301,7 +301,7 @@ strictfp class CommandLine
   void reset() {
     clearList();
     setText("");
-    kind(AgentKindJ.Observer());
+    kind_$eq(AgentKindJ.Observer());
   }
 
   void clearList() {
@@ -311,7 +311,7 @@ strictfp class CommandLine
 
   void setExecutionString(ExecutionString es) {
     setText(es.string);
-    kind(es.kind);
+    kind_$eq(es.kind);
     textField.setCaretPosition(getText().length());
     commandCenter.repaintPrompt();
   }

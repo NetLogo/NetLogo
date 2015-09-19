@@ -58,7 +58,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
   protected var text = ""
   protected var value: AnyRef = ""
   def valueObject = value
-  def valueObject(value: AnyRef) {valueObject(value, false)}
+  def valueObject_=(value: AnyRef) {valueObject(value, false)}
   def valueObject(value: AnyRef, raiseEvent: Boolean) {
     text = Dump.logoObject(value)
     this.value = value

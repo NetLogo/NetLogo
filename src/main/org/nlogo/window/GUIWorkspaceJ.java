@@ -91,8 +91,8 @@ public abstract strictfp class GUIWorkspaceJ
     hubNetControlCenterAction.setEnabled(false);
 
     viewWidget = new ViewWidget((GUIWorkspace) this);
-    view = viewWidget.view;
-    drawingActionBroker = new DrawingActionBroker(view.renderer.trailDrawer());
+    view = viewWidget.view();
+    drawingActionBroker = new DrawingActionBroker(view.renderer().trailDrawer());
     viewManager.setPrimary(view);
 
     periodicUpdater = new PeriodicUpdater(jobManager);
@@ -171,7 +171,7 @@ public abstract strictfp class GUIWorkspaceJ
   public abstract RendererInterface newRenderer();
 
   public void stamp(org.nlogo.api.Agent agent, boolean erase) {
-    view.renderer.prepareToPaint(view, drawingActionBroker.getWidth(), drawingActionBroker.getHeight());
+    view.renderer().prepareToPaint(view, drawingActionBroker.getWidth(), drawingActionBroker.getHeight());
     drawingActionBroker.stamp(agent, erase);
     if (hubNetManager() != null) {
       hubNetManager().sendStamp(agent, erase);
@@ -193,7 +193,7 @@ public abstract strictfp class GUIWorkspaceJ
   @Override
   public void importDrawing(java.io.InputStream is)
       throws java.io.IOException {
-    view.renderer.trailDrawer().importDrawing(is);
+    view.renderer().trailDrawer().importDrawing(is);
   }
 
   @Override
@@ -298,8 +298,8 @@ public abstract strictfp class GUIWorkspaceJ
     viewWidget.settings().resizeWithProgress(true);
   }
 
-  public void patchSize(double patchSize) {
-    viewWidget.settings().patchSize(patchSize);
+  public void patchSize_$eq(double patchSize) {
+    viewWidget.settings().patchSize_$eq(patchSize);
   }
 
   public double patchSize() {
@@ -365,7 +365,7 @@ public abstract strictfp class GUIWorkspaceJ
 
   public void changeTopology(boolean wrapX, boolean wrapY) {
     world().changeTopology(wrapX, wrapY);
-    viewWidget.view.renderer.changeTopology(wrapX, wrapY);
+    viewWidget.view().renderer().changeTopology(wrapX, wrapY);
   }
 
   /// very kludgy stuff for communicating with stuff in app
@@ -420,7 +420,7 @@ public abstract strictfp class GUIWorkspaceJ
       }
       viewWidget.setVisible(true);
       try {
-        viewWidget.displaySwitch.setOn(glView.displaySwitch());
+        viewWidget.displaySwitch().setOn(glView.displaySwitch());
       } catch (IllegalStateException e) {
         org.nlogo.util.Exceptions.ignore(e);
       }
@@ -431,10 +431,10 @@ public abstract strictfp class GUIWorkspaceJ
         viewManager.remove(view);
         view.freeze();
       }
-      glView.displaySwitch(viewWidget.displaySwitch.isSelected());
+      glView.displaySwitch(viewWidget.displaySwitch().isSelected());
       viewWidget.setVisible(dualView);
     }
-    view.renderPerspective = enabled;
+    view.renderPerspective_$eq(enabled);
     viewWidget.settings().refreshViewProperties(!enabled);
     new Events.Enable2DEvent(enabled).raise(this);
   }

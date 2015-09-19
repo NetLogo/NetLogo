@@ -93,7 +93,7 @@ with org.nlogo.window.Events.LoadSectionEventHandler {
   override def source = innerSource
   override def innerSource =
     Option(editor).map(_.toNetLogoCode).getOrElse("")
-  override def innerSource(s: String) { }
+  override def innerSource_=(s: String) { }
   override def headerSource = ""
 
 }

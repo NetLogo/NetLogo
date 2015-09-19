@@ -158,7 +158,7 @@ with Events.CompileAllEventHandler {
 
   private def resetWidgetProcedures() {
     widgets.collect{case jw: JobWidget => jw}
-      .foreach(_.procedure(null))
+      .foreach(_.procedure = null)
   }
 
   def handle(e: Events.CompileMoreSourceEvent) {
@@ -194,8 +194,8 @@ with Events.CompileAllEventHandler {
     // that doesn't have a variable yet - ST 3/3/04
     else if (workspace.world.observerOwnsIndexOf(widget.name.toUpperCase) != -1) {
       if (e.updating)
-        widget.valueObject(
-          workspace.world.getObserverVariableByName(widget.name))
+        widget.valueObject =
+          workspace.world.getObserverVariableByName(widget.name)
       // note that we do this even if e.updating is true -- that's because
       // the widget may not have accepted the new value as is - ST 8/17/03
       try {

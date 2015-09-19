@@ -74,7 +74,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     for(target <- targetOption) {
       def suppress(b: Boolean) {
         target match {
-          case w: org.nlogo.window.JobWidget => w.suppressRecompiles(b)
+          case w: org.nlogo.window.JobWidget => w.suppressRecompiles_=(b)
           case _ =>
         }
       }

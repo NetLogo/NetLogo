@@ -7,7 +7,7 @@ package org.nlogo.api
 
 trait WorldResizer {
   def resizeView()
-  def patchSize(patchSize: Double)
+  def patchSize_=(patchSize: Double)
   def setDimensions(dim: WorldDimensions)
   def setDimensions(dim: WorldDimensions, patchSize: Double)
 }

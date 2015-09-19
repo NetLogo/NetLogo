@@ -60,7 +60,7 @@ class AgentMonitorEditor(parent: AgentMonitor) extends javax.swing.JPanel
         else
           workspace.world.indexOfVariable(agent, variableName)
       editor = new AgentVarEditor(this, index, variableName, label)
-      editor.kind(kind)
+      editor.kind = kind
       editors += editor
       layout.setConstraints(label, labelConstraints)
       add(label)
@@ -166,8 +166,8 @@ with org.nlogo.window.Events.JobRemovedEventHandler
   override def isCommandCenter = true
 
   // this is how we're notified when we've been recompiled
-  override def procedure(procedure: org.nlogo.nvm.Procedure) {
-    super.procedure(procedure)
+  override def procedure_=(procedure: org.nlogo.nvm.Procedure) {
+    super.procedure = procedure
     if(procedure != null)
       new org.nlogo.window.Events.AddJobEvent(this, agents, procedure).raise(this)
   }
@@ -198,7 +198,7 @@ with org.nlogo.window.Events.JobRemovedEventHandler
   // CompileMoreSourceEvent stuff to call the compiler and add a job if compilation succeeds
   def wrapSource(innerSource: String) {
     setEnabled(false)
-    this.innerSource(innerSource)
+    this.innerSource = innerSource
     var header = "to __agentvareditor [] "
     if(parent.kind eq AgentKind.Turtle)
       header += " __turtlecode "
@@ -215,7 +215,7 @@ with org.nlogo.window.Events.JobRemovedEventHandler
         workspace.world.observers()
       else
         AgentSet.fromAgent(agent)
-    agents(agentset)
+    agents = agentset
     source(header, innerSource, "\n" + footer)  // the \n protects against comments
   }
 

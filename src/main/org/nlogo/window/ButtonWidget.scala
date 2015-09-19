@@ -91,7 +91,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   // the kind from outside of this class anyway.
   // the ui edits work through agent options, which now just set the button type
   override def kind = _buttonType.kind
-  override def kind(kind: AgentKind) { /** ignoring, no one should call this. */ }
+  override def kind_=(kind: AgentKind) { /** ignoring, no one should call this. */ }
   def agentOptions = _buttonType.toAgentOptions
   def agentOptions(newAgentOptions:Options[String]){
     if (newAgentOptions.chosenValue != this.agentOptions.chosenValue){
@@ -237,8 +237,8 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
     chooseDisplayName
   }
 
-  override def procedure(p: Procedure) {
-    super.procedure(p)
+  override def procedure_=(p: Procedure) {
+    super.procedure = p
   }
 
   def action() {
@@ -299,7 +299,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
         // a forever button or a once button that is now down because
         // it was just clicked.  it needs to run.
         else {
-          new Events.AddJobEvent(this, agents(), procedure()).raise(this)
+          new Events.AddJobEvent(this, agents, procedure).raise(this)
           if(Version.isLoggingEnabled)
             org.nlogo.log.Logger.logButtonPressed(displayName)
         }
@@ -332,15 +332,15 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   private def chooseDisplayName = if (name == "") displayName(getSourceName) else displayName(name)
 
   // behold the mighty regular expression
-  private def getSourceName = innerSource().trim.replaceAll("\\s+", " ")
-  override def innerSource(newInnerSource:String){
-    super.innerSource(newInnerSource)
+  private def getSourceName = innerSource.trim.replaceAll("\\s+", " ")
+  override def innerSource_=(newInnerSource:String){
+    super.innerSource = newInnerSource
     chooseDisplayName
   }
-  def wrapSource = innerSource()
+  def wrapSource = innerSource
   def wrapSource(newInnerSource:String){
-    if(newInnerSource != "" && newInnerSource != innerSource()){
-      this.innerSource(newInnerSource)
+    if(newInnerSource != "" && newInnerSource != innerSource){
+      this.innerSource = newInnerSource
       recompile()
     }
   }
@@ -372,8 +372,8 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
 
     if(name.trim != "") s.append(name + "\n") else s.append("NIL\n")
 
-    if(innerSource() != null  && innerSource().trim != "")
-      s.append(ModelReader.stripLines(innerSource()) + "\n")
+    if(innerSource != null  && innerSource.trim != "")
+      s.append(ModelReader.stripLines(innerSource) + "\n")
     else s.append("NIL\n")
 
     if(forever) s.append("T\n") else s.append("NIL\n")

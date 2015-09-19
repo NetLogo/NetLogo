@@ -246,21 +246,10 @@ with org.nlogo.api.ViewSettings {
     clearDrawing()
   }
 
-  private var _fontSize = 13
-  override def fontSize = _fontSize
-  override def fontSize(i: Int) { _fontSize = i }
-
-  private var _frameRate = 0.0
-  override def frameRate = _frameRate
-  override def frameRate(frameRate: Double) { _frameRate = frameRate }
-
-  private var _tickCounterLabel = "ticks"
-  override def tickCounterLabel = _tickCounterLabel
-  override def tickCounterLabel(s: String) { _tickCounterLabel = tickCounterLabel }
-
-  private var _showTickCounter = true
-  override def showTickCounter = _showTickCounter
-  override def showTickCounter(showTickCounter: Boolean) { _showTickCounter = showTickCounter }
+  var fontSize = 13
+  var frameRate = 0: Double
+  var tickCounterLabel = "ticks"
+  var showTickCounter = true
 
   override def getMinimumWidth = 0
   override def insetWidth = 0
@@ -273,12 +262,12 @@ with org.nlogo.api.ViewSettings {
   override def resizeView() { }
   override def viewWidth = world.worldWidth
   override def viewHeight = world.worldHeight
-  override def patchSize(patchSize: Double) {
+  override def patchSize = world.patchSize
+  override def patchSize_=(patchSize: Double) {
     world.patchSize(patchSize)
     renderer.resetCache(patchSize)
     drawingActionBroker.rescaleDrawing()
   }
-  override def patchSize = world.patchSize
   override def changeTopology(wrapX: Boolean, wrapY: Boolean) {
     world.changeTopology(wrapX, wrapY)
     renderer.changeTopology(wrapX, wrapY)
@@ -288,7 +277,7 @@ with org.nlogo.api.ViewSettings {
   override def renderPerspective = true
   override def viewOffsetX = world.observer.followOffsetX
   override def viewOffsetY = world.observer.followOffsetY
-  override def updateMode(updateMode: UpdateMode) { }
+  override def updateMode_=(updateMode: UpdateMode) = {}
   override def setSize(x: Int, y: Int) { }
   override def clearTurtles() {
     if (!compilerTestingMode)

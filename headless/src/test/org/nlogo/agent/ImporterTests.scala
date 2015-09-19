@@ -21,7 +21,7 @@ class ImporterTests extends FunSuite with OneInstancePerTest {
         world.createPatches(d.minPxcor, d.maxPxcor, d.minPycor, d.maxPycor)
         world.patchSize(patchSize)
       }
-      def patchSize(patchSize: Double) {
+      def patchSize_=(patchSize: Double) {
         world.patchSize(patchSize)
       }
       def setOutputAreaContents(text: String) { }

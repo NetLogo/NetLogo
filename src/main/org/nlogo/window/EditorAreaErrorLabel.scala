@@ -2,8 +2,6 @@
 
 package org.nlogo.window
 
-import scala.annotation.strictfp
-
 import org.nlogo.api.CompilerException
 import org.nlogo.editor.EditorArea
 

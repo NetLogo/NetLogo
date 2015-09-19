@@ -42,7 +42,7 @@ extends AbstractWorkspaceScala(
   override def exportView(filename: String, format: String) = unsupported
   override def exportView: java.awt.image.BufferedImage = unsupported
   override def exportInterface(filename: String) = unsupported
-  override def patchSize(patchSize: Double) = unsupported
+  override def patchSize_=(patchSize: Double) = unsupported
   override def patchSize: Double = unsupported
   override def changeTopology(wrapX: Boolean, wrapY: Boolean) = unsupported
   override def setOutputAreaContents(text: String) = unsupported

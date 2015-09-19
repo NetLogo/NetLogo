@@ -104,7 +104,7 @@ class ClientPanel(editorFactory: org.nlogo.window.EditorFactory,
   }
 
   /// Message Handlers
-  private def handleWidgetControlMessage(value: Any, widgetName: String) {
+  private def handleWidgetControlMessage(value: AnyRef, widgetName: String) {
     org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     if (widgetName == "VIEW") value match {
       case t: HubNetTurtleStamp => viewWidget.renderer.stamp(t)
@@ -122,8 +122,8 @@ class ClientPanel(editorFactory: org.nlogo.window.EditorFactory,
     // `foreach` is the reasonable choice here; widgets of different types may share the same
     // name as the Monitor and can intercept the search if we use `find`! -- JAB (5/9/12)
     clientGUI.getInterfaceComponents filter { case w: Widget => w.displayName == widgetName } foreach {
-      case i: InterfaceGlobalWidget => i.valueObject(value)
-      case m: MonitorWidget         => m.value(value)
+      case i: InterfaceGlobalWidget => i.valueObject = value
+      case m: MonitorWidget         => m.value = value
       case _                        => // Ignore
     }
   }

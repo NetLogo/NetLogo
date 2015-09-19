@@ -67,7 +67,7 @@ with org.nlogo.window.CommandCenterInterface // lets us embed CommandLine
           java.awt.BorderLayout.CENTER)
       commandLine.setEnabled(agent != null && agent.id != -1)
       historyPrompt.setEnabled(agent != null && agent.id != -1)
-      commandLine.kind(kind)
+      commandLine.kind = kind
       prompt.setEnabled(false)
       val commandPanel = new javax.swing.JPanel
       val gridBag = new java.awt.GridBagLayout

@@ -31,7 +31,7 @@ class LinePrompt(commandLine: CommandLine) extends JComponent with MouseListener
       def addItem(name: String, kind: AgentKind) {
         popMenu.add(new JMenuItem(name) {
           addActionListener(() => {
-            commandLine.kind(kind)
+            commandLine.kind = kind
             LinePrompt.this.repaint()
             commandLine.requestFocus()
           })

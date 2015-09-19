@@ -147,7 +147,7 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
   def headerSource = ""
   def source = headerSource + innerSource
 
-  def innerSource(s: String) {
+  def innerSource_=(s: String) {
     text.setText(s)
     text.setCaretPosition(0)
   }
