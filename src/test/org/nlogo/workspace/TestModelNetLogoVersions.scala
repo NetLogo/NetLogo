@@ -9,7 +9,7 @@ import org.nlogo.util.SlowTest
 class TestModelNetLogoVersions extends FunSuite with SlowTest {
   val paths = ModelsLibrary.getModelPaths ++ ModelsLibrary.getModelPathsAtRoot("extensions")
   for(path <- paths)
-    test(path) {
+    test(path, SlowTest.Tag) {
       val version = ModelReader.parseVersion(ModelReader.parseModel(FileIO.file2String(path)))
       assert(Version.compatibleVersion(version))
     }

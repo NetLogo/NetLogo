@@ -72,33 +72,33 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
 
   /// tests that use roundTripHelper
 
-  test("testRoundTripEmpty") {
+  test("testRoundTripEmpty", SlowTest.Tag) {
     roundTripHelper("")
   }
 
-  test("testRoundTripTicks1") {
+  test("testRoundTripTicks1", SlowTest.Tag) {
     roundTripHelper("reset-ticks")
   }
 
-  test("testRoundTripTicks2") {
+  test("testRoundTripTicks2", SlowTest.Tag) {
     roundTripHelper("reset-ticks tick")
   }
 
-  test("testRoundTripTicks3") {
+  test("testRoundTripTicks3", SlowTest.Tag) {
     roundTripHelper("reset-ticks tick clear-ticks")
   }
 
-  test("testRoundTripSimple") {
+  test("testRoundTripSimple", SlowTest.Tag) {
     roundTripHelper("crt 30 [ set heading who * 90 fd who ]",
       worldSize = 5)
   }
 
   if(!Version.is3D)
-    test("RoundTripComplexNewFormat") {
+    test("RoundTripComplexNewFormat", SlowTest.Tag) {
       roundTripHelper("setup true", COMPLEX_SOURCE, worldSize = 3)
     }
 
-  test("testRoundTripSpecialCharacter") {
+  test("testRoundTripSpecialCharacter", SlowTest.Tag) {
     // 8211 and 8212 are some arbitrary unicode values. we use numbers since we don't want non-ASCII
     // characters in the source files -- ST 2/14/07
     roundTripHelper("ask one-of patches [ set plabel \""
@@ -107,12 +107,12 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
       + "\" ]")
   }
 
-  test("testRoundTripAllTurtlesAllPatches1") {
+  test("testRoundTripAllTurtlesAllPatches1", SlowTest.Tag) {
     roundTripHelper("set x turtles set y patches",
       "globals [x y]")
   }
 
-  test("testAgentsStoredInAgentVariables") {
+  test("testAgentsStoredInAgentVariables", SlowTest.Tag) {
     roundTripHelper("cro 4 [ create-links-with other turtles ]\n" +
       "ask turtle 0 [ set label one-of other turtles ]\n" +
       "ask turtle 1 [ set label one-of patches ]\n" +
@@ -120,7 +120,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
       "ask turtle 3 [ set label sort patches ]")
   }
 
-  test("testBreededTurtlesStoredInAgentVariables") {
+  test("testBreededTurtlesStoredInAgentVariables", SlowTest.Tag) {
     roundTripHelper("create-ordered-mice 2 [ create-links-with other mice ]\n" +
       "ask turtle 0 [ set label one-of other mice ]\n" +
       "ask turtle 1 [ set label sort mice ]",
@@ -128,21 +128,21 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
   }
 
   // ticket #934
-  test("testLinksStoredInAgentVariables") {
+  test("testLinksStoredInAgentVariables", SlowTest.Tag) {
     roundTripHelper("cro 2 [ create-links-with other turtles ]\n" +
       "ask turtle 0 [ set label one-of links ]\n" +
       "ask turtle 1 [ set label sort links]\n")
   }
 
   // more ticket #934
-  test("testBreededLinksStoredInAgentVariables") {
+  test("testBreededLinksStoredInAgentVariables", SlowTest.Tag) {
     roundTripHelper("cro 2 [ create-shipments-to other turtles ]\n" +
       "ask turtle 0 [ set label one-of shipments ]\n" +
       "ask turtle 1 [ set label sort shipments]\n",
       "directed-link-breed [shipments shipment]")
   }
 
-  test("testRoundTripAllTurtlesAllPatches2") {
+  test("testRoundTripAllTurtlesAllPatches2", SlowTest.Tag) {
     // the bug we're testing for is elusive and may only appear if we actually change the world size
     // around - ST 12/21/04
     val filename = getUniqueFilename()
@@ -157,7 +157,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
   }
 
   if(!Version.is3D)
-    test("testImportDrawing") {
+    test("testImportDrawing", SlowTest.Tag) {
       val filename = getUniqueFilename()
       workspace.initForTesting(10)
       testCommand("random-seed 2843")
@@ -177,7 +177,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
       // TrailDrawer for details.  ev 3/1/06
     }
 
-  test("testExportOutputArea") {
+  test("testExportOutputArea", SlowTest.Tag) {
     val filename = getUniqueFilename()
     workspace.initForTesting(10)
     testCommand("ca")
@@ -189,7 +189,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     assertResult(expected)(actual)
   }
 
-  test("testExportLinks") {
+  test("testExportLinks", SlowTest.Tag) {
     val filename = getUniqueFilename()
     workspace.initForTesting(10, HeadlessWorkspace.TestDeclarations)
     testCommand("ca")
@@ -208,7 +208,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
   }
 
   if(!Version.is3D)
-    test("testImportInvalidSize") {
+    test("testImportInvalidSize", SlowTest.Tag) {
       workspace.initForTesting(10)
       workspace.importerErrorHandler =
         new org.nlogo.agent.Importer.ErrorHandler() {
@@ -225,7 +225,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     }
 
   if(!Version.is3D)
-    test("testImportDrawingIncompleteData") {
+    test("testImportDrawingIncompleteData", SlowTest.Tag) {
       workspace.initForTesting(10)
       workspace.importerErrorHandler =
         new org.nlogo.agent.Importer.ErrorHandler() {
@@ -240,7 +240,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
       testCommand("import-world \"test/import/short-drawing.csv\"")
     }
 
-  test("testImportSubject") {
+  test("testImportSubject", SlowTest.Tag) {
     val filename = getUniqueFilename()
     workspace.initForTesting(10)
     testCommand("export-world \"" + filename + "\"")
@@ -270,7 +270,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
   }
 
   if(!Version.is3D)
-    test("testNonExistentPlot") {
+    test("testNonExistentPlot", SlowTest.Tag) {
       workspace.initForTesting(10)
       workspace.importerErrorHandler =
         new org.nlogo.agent.Importer.ErrorHandler() {
@@ -286,7 +286,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     }
 
   if(!Version.is3D)
-    test("testNonExistentPen") {
+    test("testNonExistentPen", SlowTest.Tag) {
       workspace.open("test/import/plot-simple.nlogo")
       workspace.importerErrorHandler =
         new org.nlogo.agent.Importer.ErrorHandler() {
@@ -302,7 +302,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     }
 
   if(!Version.is3D)
-    test("testCustomPenColor") {
+    test("testCustomPenColor", SlowTest.Tag) {
       val filename = getUniqueFilename()
       workspace.open("test/import/plot-custom-color.nlogo")
       testCommand("export-world \"../../" + filename + "\"")
@@ -314,7 +314,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
         dropLines(export2, 3))
     }
 
-  test("testImportingTurtlesDying") {
+  test("testImportingTurtlesDying", SlowTest.Tag) {
     val filename = getUniqueFilename()
     workspace.initForTesting(10)
     testCommand("crt 10")
@@ -328,7 +328,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     testReporter("sort [who] of turtles", "[0 1 2 3 6 7 8 10 11]")
   }
 
-  test("testImportingTables") {
+  test("testImportingTables", SlowTest.Tag) {
     val filename = getUniqueFilename()
     workspace.initForTesting(5, "globals [table1 table2] extensions [ table ]")
     testCommand("set table1 table:from-list [[1 2] [\"word\" \"value\"] [3 false]]")
@@ -338,7 +338,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     testReporter("table:to-list table1", "[[1 2] [\"word\" \"value\"] [3 false]]")
   }
 
-  test("testImportingTablesSameTable") {
+  test("testImportingTablesSameTable", SlowTest.Tag) {
     val filename = getUniqueFilename()
     workspace.initForTesting(5, "globals [table1 table2] extensions [ table ]")
     testCommand("set table1 table:from-list [[1 2] [3 4] [4 5]]")
@@ -351,7 +351,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     testReporter("table:to-list table2", "[[1 2] [3 4] [4 5] [7 8]]")
   }
 
-  test("testImportingTablesTwoTables") {
+  test("testImportingTablesTwoTables", SlowTest.Tag) {
     val filename = getUniqueFilename()
     workspace.initForTesting(5, "globals [table1 table2] extensions [ table ]")
     testCommand("set table1 table:from-list [[1 2] [3 4] [4 5]]")
@@ -364,7 +364,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     testReporter("table:to-list table2", "[[1 2] [3 4] [4 5]]")
   }
 
-  test("testImportingArrays") {
+  test("testImportingArrays", SlowTest.Tag) {
     val filename = getUniqueFilename()
     workspace.initForTesting(5, "globals [ar1 ar2] extensions [ array ]")
     testCommand("set ar1 array:from-list [1 2 3 4 \"string\" false]")
@@ -374,7 +374,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     testReporter("array:to-list ar1", "[1 2 3 4 \"string\" false]")
   }
 
-  test("testImportingArraysSameArray") {
+  test("testImportingArraysSameArray", SlowTest.Tag) {
     val filename = getUniqueFilename()
     workspace.initForTesting(5, "globals [ar1 ar2] extensions [ array ]")
     testCommand("set ar1 array:from-list [ 1 2 3 ]")
@@ -386,7 +386,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     testReporter("array:to-list ar2", "[1 2 4]");
   }
 
-  test("testImportingArraysTwoArrays") {
+  test("testImportingArraysTwoArrays", SlowTest.Tag) {
     val filename = getUniqueFilename()
     workspace.initForTesting(5, "globals [ar1 ar2] extensions [ array ]")
     testCommand("set ar1 array:from-list [ 1 2 3 ]")
@@ -399,7 +399,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     testReporter("array:to-list ar2", "[1 2 3]");
   }
 
-  test("testImportingArraysAndTables") {
+  test("testImportingArraysAndTables", SlowTest.Tag) {
     val filename = getUniqueFilename()
     workspace.initForTesting(5, "globals [ar1 ar2 t1 t2] extensions [ array table ]")
     testCommand("set ar1 array:from-list [ 1 2 3 ]")
@@ -420,14 +420,14 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
   /// other tests (that don't use roundTripHelper)
 
   if(!Version.is3D)
-    test("testTrailingCommas") {
+    test("testTrailingCommas", SlowTest.Tag) {
       workspace.initForTesting(35, new org.nlogo.api.LocalFile(
         "test/import/trailing-commas.nlogo").readFile())
       testCommand("import-world \"test/import/trailing-commas.csv\"")
     }
 
   if(!Version.is3D)
-    test("ImportWrongOrder") {
+    test("ImportWrongOrder", SlowTest.Tag) {
       workspace.initForTesting(10)
       workspace.importerErrorHandler =
         new org.nlogo.agent.Importer.ErrorHandler() {
@@ -444,13 +444,13 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     }
 
   if(!Version.is3D)
-    test("ImportSentinelName") {
+    test("ImportSentinelName", SlowTest.Tag) {
       workspace.initForTesting(10)
       testCommand("import-world \"test/import/TURTLES.csv\"")
     }
 
   if(!Version.is3D)
-    test("ExtraFieldValue") {
+    test("ExtraFieldValue", SlowTest.Tag) {
       workspace.initForTesting(35, new org.nlogo.api.LocalFile(
         "test/import/trailing-commas.nlogo").readFile())
       val errorNumber = Array(0)
@@ -491,7 +491,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
 
   // this is a focused test with a small number of turtles
   // designed to catch one particular known bug
-  test("testReproducibilityOfWhoNumberAssignment1") {
+  test("testReproducibilityOfWhoNumberAssignment1", SlowTest.Tag) {
     val filename = getUniqueFilename()
     workspace.initForTesting(0)
     testCommand("crt 4")
@@ -508,7 +508,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
 
   // this is a focused test with a small number of turtles
   // designed to catch one particular known bug
-  test("testReproducibilityOfWhoNumberAssignment2") {
+  test("testReproducibilityOfWhoNumberAssignment2", SlowTest.Tag) {
     val filename = getUniqueFilename()
     workspace.initForTesting(0)
     testCommand("crt 4")
@@ -525,7 +525,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
 
   // this is a less focused test with lots of turtles
   // that might hopefully catch new bugs
-  test("testReproducibilityOfWhoNumberAssignment3") {
+  test("testReproducibilityOfWhoNumberAssignment3", SlowTest.Tag) {
     val filename = getUniqueFilename()
     workspace.initForTesting(0)
     testCommand("crt 500")
@@ -540,7 +540,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     assert(delete(filename))
   }
 
-  test("utf 8 string") {
+  test("utf 8 string", SlowTest.Tag) {
     val x = new String("A" + "\u00ea" + "\u00f1" + "\u00fc" + "C")
     roundTripHelper(setup="set t \"" + x + "\"", model="globals [t]")
   }
@@ -548,13 +548,13 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
   /// 3D tests
 
   if(Version.is3D)
-    test("RoundTripDrawing") {
+    test("RoundTripDrawing", SlowTest.Tag) {
       roundTripHelper("crt 10 [ pd repeat 5 [ fd random-float 5 rt random-float 360 ] ]",
         worldSize = 5)
     }
 
   if(Version.is3D)
-    test("RoundTripStamp") {
+    test("RoundTripStamp", SlowTest.Tag) {
       roundTripHelper("crt 10 [ repeat 5 [ fd random-float 5 rt random-float 360 stamp ] ]",
         worldSize = 5)
     }

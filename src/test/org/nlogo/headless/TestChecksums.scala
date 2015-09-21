@@ -29,7 +29,7 @@ class TestChecksums extends FunSuite with SlowTest {
   // (old.nabble.com/get-rid-of-%22Could-not-find-mediaLib-accelerator-wrapper-classes%22-td11025745.html)
   System.setProperty("com.sun.media.jai.disableMediaLib", "true")
   for (entry <- TestChecksums.checksums.values) {
-    test(entry.path) {
+    test(entry.path, SlowTest.Tag) {
       val tester = new ChecksumTester(info(_))
       tester.testChecksum(entry.path, entry.worldSum, entry.graphicsSum, entry.revision)
       val failures = tester.failures.toString

@@ -25,7 +25,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
 
   val useGenerator = org.nlogo.api.Version.useGenerator
   if(!useGenerator)
-    test("no generator") {
+    test("no generator", SlowTest.Tag) {
       defineProcedures("extensions [profiler]")
       testCommandError(
         "profiler:start",
@@ -34,7 +34,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
         "property.")
     }
   if(useGenerator)
-    test("basics") {
+    test("basics", SlowTest.Tag) {
       defineProcedures(
         "extensions [profiler]\n" +
         "to dosomething crt 5 [ rt random 360 fd random 30 ] end\n" +
@@ -53,7 +53,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
       testReporter("profiler:calls \"somethingelse\"", "52")
     }
   if(useGenerator)
-    test("stop") {
+    test("stop", SlowTest.Tag) {
       defineProcedures(
         "extensions [profiler]\n" +
         "to foo end")
@@ -67,7 +67,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     }
   if(useGenerator && timingSensitiveOK)
     // uses precision primitive to not be too picky about exact times
-    test("wait") {
+    test("wait", SlowTest.Tag) {
       defineProcedures(
         "extensions [profiler]\n" +
         "to test1 wait 1 end\n" +
@@ -99,7 +99,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
       testReporter("precision profiler:inclusive-time \"test3\" -1", "10")
     }
   if(useGenerator && timingSensitiveOK)
-    test("ask turtles") {
+    test("ask turtles", SlowTest.Tag) {
       defineProcedures(
         "extensions [profiler]\n" +
         "to test1 ask turtles [ test2 ] end\n" +
@@ -117,7 +117,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
       testReporter("precision (glob1 - profiler:inclusive-time \"test1\") 8", "0")
     }
   if(useGenerator && timingSensitiveOK)
-    test("nested asks") {
+    test("nested asks", SlowTest.Tag) {
       defineProcedures(
         "extensions [profiler]\n" +
         "to go ask turtles [ go-turtles1 ] ask patches [ go-patches ] end\n" +
@@ -143,7 +143,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
       testReporter("precision (glob1 + glob2 + glob3 - profiler:inclusive-time \"go-turtles1\") 13", "0")
     }
   if(useGenerator && timingSensitiveOK)
-    test("reporter procedures") {
+    test("reporter procedures", SlowTest.Tag) {
       defineProcedures(
         "extensions [profiler]\n" +
         "to-report some-value wait 0.1 report random 10 end")
@@ -163,7 +163,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
   // lets us test extensions stuff without having an actual extension jar in hand.  but we don't,
   // and we don't want anything in test-fast or test-medium to depend on submodules like models and
   // extensions, so we put it here because it's a SlowTest - ST 1/19/12
-  test("isReporter on extension prims") {
+  test("isReporter on extension prims", SlowTest.Tag) {
     workspace.initForTesting(5, "extensions [profiler]")
     assertResult(false) { workspace.isReporter("profiler:start") }
     assertResult(true) { workspace.isReporter("profiler:report") }

@@ -15,13 +15,13 @@ class TestCompileBenchmarks extends FunSuite with SlowTest{
 
   // this is here to help us remember that when the list of benchmarks changes, this file and the
   // contents of test/benchdumps both need updating too - ST 2/11/09
-  test("names") {
+  test("names", SlowTest.Tag) {
     assert(names.mkString("\n") === ChecksumsAndPreviews.allBenchmarks.mkString("\n"))
   }
 
   if(Version.useGenerator && !Version.is3D) {
     for(name <- names)
-      test(name) {
+      test(name, SlowTest.Tag) {
         val dump = {
           val workspace = HeadlessWorkspace.newInstance
           workspace.open("models/test/benchmarks/" + name + " Benchmark.nlogo")

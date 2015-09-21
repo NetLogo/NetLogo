@@ -3,72 +3,64 @@ import Def.{ Initialize, spaceDelimited }
 import Keys._
 
 object Testing {
+  lazy val fast     = taskKey[Unit]("fast tests")
+  lazy val medium   = taskKey[Unit]("medium tests")
+  lazy val slow     = taskKey[Unit]("slow tests")
+  lazy val language = taskKey[Unit]("language tests")
+  lazy val crawl    = taskKey[Unit]("extremely slow tests")
 
-  val FastTest = config("fast") extend(Test)
-  val MediumTest = config("medium") extend(Test)
-  val SlowTest = config("slow") extend(Test)
+  lazy val tr = inputKey[Unit]("org.nlogo.headless.TestReporters")
+  lazy val tc = inputKey[Unit]("org.nlogo.headless.TestCommands")
+  lazy val te = inputKey[Unit]("org.nlogo.headless.TestExtensions")
+  lazy val tm = inputKey[Unit]("org.nlogo.headless.TestModels")
+  lazy val ts = inputKey[Unit]("org.nlogo.headless.TestChecksums")
 
-  val configs = Seq(FastTest, MediumTest, SlowTest)
+  private val testKeys = Seq(tr, tc, te, tm, ts)
 
-  lazy val tr = InputKey[Unit]("tr", "run TestReporters", test)
-  lazy val tc = InputKey[Unit]("tc", "run TestCommands", test)
-  lazy val te = InputKey[Unit]("te", "run TestExtensions", test)
-  lazy val tm = InputKey[Unit]("tm", "run TestModels", test)
-  lazy val testChecksums = InputKey[Unit]("test-checksums", "run TestChecksums", test)
+  lazy val suiteSettings = Seq(
+    (fast in Test) := {
+      (testOnly in Test).toTask(" -- -l org.nlogo.util.SlowTestTag -l org.nlogo.headless.LanguageTestTag").value
+    },
+    (medium in Test) := {
+      (testOnly in Test).toTask(" -- -l org.nlogo.util.SlowTestTag").value
+    },
+    (language in Test) := {
+      (testOnly in Test).toTask(" -- -n org.nlogo.headless.LanguageTestTag").value
+    },
+    (crawl in Test) := {
+      (testOnly in Test).toTask(" -- -n org.nlogo.util.SlowTestTag").value
+    },
+    (slow in Test) := {
+      (testOnly in Test).toTask(" -- -n org.nlogo.headless.LanguageTestTag -n org.nlogo.util.SlowTestTag").value
+    })
 
-  private val testKeys = Seq(tr, tc, te, tm, testChecksums)
+  val settings = suiteSettings ++
+    inConfig(Test)(
+      testKeys.flatMap(key =>
+          Defaults.defaultTestTasks(key) ++
+          Defaults.testTaskOptions(key)) ++
+      Seq(tr, tc, te, tm).flatMap(key =>
+          Seq(key := taggedTest(key.key.description.get).evaluated)) ++
+      Seq(ts).flatMap(key =>
+          Seq(key := keyValueTest(key.key.description.get, "model").evaluated)))
 
-  val settings = inConfig(Test)(
-    inConfig(FastTest)(Defaults.testTasks) ++
-    inConfig(MediumTest)(Defaults.testTasks) ++
-    inConfig(SlowTest)(Defaults.testTasks) ++
-    testKeys.flatMap(Defaults.defaultTestTasks) ++
-    testKeys.flatMap(Defaults.testTaskOptions) ++
-    Seq(
-      testOptions in FastTest <<= (fullClasspath in Test) map { path =>
-        Seq(Tests.Filter(fastFilter(path, _))) },
-      testOptions in MediumTest <<= (fullClasspath in Test) map { path =>
-        Seq(Tests.Filter(mediumFilter(path, _))) },
-      testOptions in SlowTest <<= (fullClasspath in Test) map { path =>
-        Seq(Tests.Filter(slowFilter(path, _))) },
-      tr <<= oneTest(tr, "org.nlogo.headless.TestReporters"),
-      tc <<= oneTest(tc, "org.nlogo.headless.TestCommands"),
-      tm <<= oneTest(tm, "org.nlogo.headless.TestModels"),
-      te <<= oneTest(te, "org.nlogo.headless.TestExtensions"),
-      testChecksums <<= oneTest(testChecksums, "org.nlogo.headless.TestChecksums")
-    ))
-
-  private def fastFilter(path: Classpath, name: String): Boolean = !slowFilter(path, name)
-  private def mediumFilter(path: Classpath, name: String): Boolean =
-    fastFilter(path, name) ||
-    name == "org.nlogo.headless.TestReporters" ||
-    name == "org.nlogo.headless.TestCommands"
-  private def slowFilter(path: Classpath, name: String): Boolean = {
-    val jars = path.files.map(_.asURL).toArray[java.net.URL]
-    val loader = new java.net.URLClassLoader(jars, getClass.getClassLoader)
-    def clazz(name: String) = Class.forName(name, false, loader)
-    clazz("org.nlogo.util.SlowTest").isAssignableFrom(clazz(name))
-  }
-
-  // mostly copy-and-pasted from Defaults.inputTests. there may well be a better
-  // way this could be done - ST 6/17/12
-  def oneTest(key: InputKey[Unit], name: String): Initialize[InputTask[Unit]] =
-    Def.inputTask {
-      (streams, testResultLogger, loadedTestFrameworks, testGrouping in key, testExecution in key, testLoader, resolvedScoped, fullClasspath in key, javaHome in key, state) flatMap {
-        case (s, testLogger, frameworks, groups, config, loader, scoped, cp, javaHome, st) =>
-          val args = spaceDelimited("").parsed
-          implicit val display = Project.showContextKey(st)
-          val filter = Tests.Filters(Defaults.selectedFilter(Seq(name)))
-          val mungedArgs =
-            if(args.isEmpty) Nil
-            else List("-n", args.mkString(" "))
-          val modifiedOpts =
-            filter +: Tests.Argument(TestFrameworks.ScalaTest, mungedArgs: _*) +: config.options
-          val newConfig = config.copy(options = modifiedOpts)
-          Defaults.allTestGroupsTask(
-            s, frameworks, loader, groups, newConfig, cp, javaHome) map
-              (testLogger.run(s.log, _, "not found"))
-      }
+  def taggedTest(name: String): Def.Initialize[InputTask[Unit]] =
+    Def.inputTaskDyn {
+      val args = Def.spaceDelimited("<arg>").parsed
+      val scalaTestArgs =
+        if (args.isEmpty) ""
+        else args.mkString(" -- -n \"", " ", "\"")
+      (testOnly in Test).toTask(s" $name$scalaTestArgs")
     }
 
+  def keyValueTest(name: String, key: String): Def.Initialize[InputTask[Unit]] =
+    Def.inputTaskDyn {
+      val args = Def.spaceDelimited("<arg>").parsed
+      val scalaTestArgs =
+        if (args.isEmpty)
+          ""
+        else
+          s""" -- "-D$key=${args.mkString(" ")}""""
+      (testOnly in Test).toTask(s" $name$scalaTestArgs")
+    }
 }

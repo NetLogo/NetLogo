@@ -32,14 +32,14 @@ trait TestMultiThreadedModels extends AbstractTestModels {
    * run a model test in N threads, using the given model
    */
   def testModelWithThreads(threads:Int, testName: String, model: Model)(f: => Unit) {
-    test(testName){ testWithThreads(threads){ runModel(model){ f } } }
+    test(testName, SlowTest.Tag){ testWithThreads(threads){ runModel(model){ f } } }
   }
 
   /**
    * run a model test in N threads, loading the model from the given file
    */
   def testModelFileWithThreads(threads:Int, testName: String, path: String)(f: => Unit) {
-    test(testName){ testWithThreads(threads){ runModelFromFile(path){ f } } }
+    test(testName, SlowTest.Tag){ testWithThreads(threads){ runModelFromFile(path){ f } } }
   }
 
   /**

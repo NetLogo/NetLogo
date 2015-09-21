@@ -19,7 +19,7 @@ object TestHalt {
 }
 class TestHalt extends FunSuite with SlowTest {
   if(!Version.is3D)
-    test("halt") {
+    test("halt", SlowTest.Tag) {
       import TestHalt._
       finalized = false
       var workspace =

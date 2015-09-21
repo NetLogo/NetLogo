@@ -7,7 +7,6 @@ object NetLogoBuild extends Build {
 
   lazy val root =
     Project(id = "NetLogo", base = file("."))
-      .configs(Testing.configs: _*)
       .settings(Defaults.coreDefaultSettings ++
                 Testing.settings ++
                 Packaging.settings ++

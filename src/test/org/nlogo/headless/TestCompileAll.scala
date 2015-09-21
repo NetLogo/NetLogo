@@ -7,10 +7,31 @@ import org.nlogo.workspace.ModelsLibrary
 import org.scalatest.FunSuite
 import org.nlogo.util.SlowTest
 
-class TestCompileAll extends FunSuite with SlowTest{
+class TestCompileAll extends FunSuite with SlowTest {
 
-  for (path <- ModelsLibrary.getModelPaths ++ ModelsLibrary.getModelPathsAtRoot("extensions")) {
-    test("compile: " + path) {
+  // Models whose path contains any of these strings will not be tested at all:
+  def excludeModel(path: String) =
+      (if (Version.is3D) !path.contains(makePath("3D")) // when in 3D, skip models that aren't in the 3D directory.
+      else path.endsWith(".nlogo3d"))
+
+
+  // and those are exempt from having their preview commands tested:
+  def excludePreviewCommands(path: String) =
+    Seq(makePath("extensions"), makePath("models", "test"))
+      .exists(path.contains)
+
+  def makePath(folderNames: String*) = {
+    val sep = java.io.File.separatorChar.toString
+    folderNames.mkString(sep, sep, sep)
+  }
+
+  val modelPaths =
+    (ModelsLibrary.getModelPaths ++ ModelsLibrary.getModelPathsAtRoot("extensions"))
+      .map(new java.io.File(_).getCanonicalPath()).distinct // workaround for https://github.com/NetLogo/NetLogo/issues/765
+      .filterNot(excludeModel)
+
+  for (path <- modelPaths) {
+    test("compile: " + path, SlowTest.Tag) {
       compile(path)
     }
   }

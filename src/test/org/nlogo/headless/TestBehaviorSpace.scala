@@ -110,34 +110,34 @@ with OneInstancePerTest with BeforeAndAfterEach {
       })
   }
 
-  test("BehaviorSpace1") {
+  test("BehaviorSpace1", SlowTest.Tag) {
     runExperiment(0, "globals [param1 param2 counter]",
       "testBehaviorSpace1")
   }
-  test("BehaviorSpace2") {
+  test("BehaviorSpace2", SlowTest.Tag) {
     runExperiment(0, "globals [param1 param2 counter]",
       "testBehaviorSpace2")
   }
-  test("MultipleMetrics") {
+  test("MultipleMetrics", SlowTest.Tag) {
     runExperiment(0, "globals [counter param1]",
       "testMultipleMetrics")
   }
-  test("NoMetrics1") {
+  test("NoMetrics1", SlowTest.Tag) {
     runExperiment(0, "globals [counter param1]",
       "testNoMetrics1")
   }
-  test("NoMetrics2") {
+  test("NoMetrics2", SlowTest.Tag) {
     runExperiment(0, "globals [counter param1]",
       "testNoMetrics2")
   }
-  test("ImmediateExit") {
+  test("ImmediateExit", SlowTest.Tag) {
     val workspace =
       runExperiment(0, "globals [counter foo]",
         "testImmediateExit")
     assertResult(Double.box(99))(
       workspace.report("foo"))
   }
-  test("CarryoverBetweenRuns") {
+  test("CarryoverBetweenRuns", SlowTest.Tag) {
     val workspace = newWorkspace()
     workspace.initForTesting(0, "globals [foo]")
     // no setup commands, so foo doesn't get reset
@@ -146,68 +146,68 @@ with OneInstancePerTest with BeforeAndAfterEach {
     assertResult(Double.box(20))(
       workspace.report("foo"))
   }
-  test("ResizingWorld1") {
+  test("ResizingWorld1", SlowTest.Tag) {
     runExperiment(0, "", "testResizingWorld1")
   }
-  test("ResizingWorld2") {
+  test("ResizingWorld2", SlowTest.Tag) {
     runExperiment(0, "", "testResizingWorld2")
   }
-  test("SettingRandomSeed") {
+  test("SettingRandomSeed", SlowTest.Tag) {
     runExperiment(0, "", "testRandomSeed")
   }
-  test("RunNumber") {
+  test("RunNumber", SlowTest.Tag) {
     val workspace = runExperiment(0, "", "runNumber")
     // I suppose we could reset the run number to 0 after a run, and we do that in the GUI, but I
     // can't see a reason to ensure it headless - ST 7/7/10
     assertResult(Double.box(3))(
       workspace.report("behaviorspace-run-number"))
   }
-  test("ExperimentName") {
+  test("ExperimentName", SlowTest.Tag) {
     val workspace = runExperiment(0, "", "runNumber")
     assertResult("runNumber")(
       workspace.report("behaviorspace-experiment-name"))
   }
   // test export-graphics in headless mode
   if(!Version.is3D)
-    test("ExportGraphics") {
+    test("ExportGraphics", SlowTest.Tag) {
       val workspace = newWorkspace()
       workspace.open("models/test/lab/FireWithExperiments.nlogo")
       newWorker("testExportGraphics")
         .run(workspace, () => workspace, 1)
     }
   if(!Version.is3D)
-    test("ModelWithIncludedExperiments") {
+    test("ModelWithIncludedExperiments", SlowTest.Tag) {
       runExperimentFromModel("models/test/lab/FireWithExperiments.nlogo", "test1", "models/test/lab/FireWithExperiments1")
       runExperimentFromModel("models/test/lab/FireWithExperiments.nlogo", "test2", "models/test/lab/FireWithExperiments2")
     }
   if(!Version.is3D)
-    test("ResizingWorld3") {
+    test("ResizingWorld3", SlowTest.Tag) {
       run2DExperiment(0, 1, 0, 1, "", "testResizingWorld3")
     }
-  test("Stopping1") {
+  test("Stopping1", SlowTest.Tag) {
     runExperiment(0, "globals [x]",
       "testStopping1")
   }
-  test("Stopping2") {
+  test("Stopping2", SlowTest.Tag) {
     runExperiment(0, "globals [x] to go if x = 5 [ stop ] set x x + 1 end",
       "testStopping2")
   }
-  test("DontRunMetricsAtEveryStep") {
+  test("DontRunMetricsAtEveryStep", SlowTest.Tag) {
     runExperiment(0,
       "globals [ glob1 ] to setup set glob1 one-of patches end " +
         "to go set glob1 5 end" +
         " to-report bad-divide report glob1 / 5 end",
       "badAtBeginning")
   }
-  test("metricsLocalRandomness") {
+  test("metricsLocalRandomness", SlowTest.Tag) {
     runExperiment(0, "globals [x]",
       "metricsLocalRandomness")
   }
-  test("exitConditionLocalRandomness") {
+  test("exitConditionLocalRandomness", SlowTest.Tag) {
     runExperiment(0, "globals [x]",
       "exitConditionLocalRandomness")
   }
-  test("metricGoBoom") {
+  test("metricGoBoom", SlowTest.Tag) {
     runExperiment(0, "", "metricGoBoom")
   }
 
@@ -218,41 +218,41 @@ with OneInstancePerTest with BeforeAndAfterEach {
     val goBoom2Declarations =
       "to setup clear-all create-turtles 1 reset-ticks end\n" +
       "to go if not any? turtles [ stop ] if ticks = 10 [ ask turtles [ die ] ] tick end"
-    test("metricGoBoom2") {
+    test("metricGoBoom2", SlowTest.Tag) {
       runExperiment(0, goBoom2Declarations, "metricGoBoom2")
     }
-    test("metricGoBoom2-parallel") {
+    test("metricGoBoom2-parallel", SlowTest.Tag) {
       runParallelExperiment("metricGoBoom2", goBoom2Declarations)
     }
-    test("metricGoBoom2-parallel-from-model") {
+    test("metricGoBoom2-parallel-from-model", SlowTest.Tag) {
       runExperimentFromModel("test/lab/metricGoBoom2.nlogo", "experiment", "test/lab/metricGoBoom2", wantTable = false,
                              threads = Runtime.getRuntime.availableProcessors)
     }
   }
 
-  test("setupCommandsGoBoom") {
+  test("setupCommandsGoBoom", SlowTest.Tag) {
     runExperiment(0, "", "setupCommandsGoBoom")
   }
-  test("goCommandsGoBoom") {
+  test("goCommandsGoBoom", SlowTest.Tag) {
     runExperiment(0, "", "goCommandsGoBoom")
   }
-  test("metricsWithSideEffects") {
+  test("metricsWithSideEffects", SlowTest.Tag) {
     runExperiment(0,
       "globals [g] to-report metric set g g + 1 report g end",
       "metricsWithSideEffects")
   }
   if(Version.is3D)
-    test("ResizingWorld13d") {
+    test("ResizingWorld13d", SlowTest.Tag) {
       run3DExperiment("testResizingWorld13d")
     }
   if(Version.is3D)
-    test("ResizingWorld23d") {
+    test("ResizingWorld23d", SlowTest.Tag) {
       run3DExperiment("testResizingWorld23d")
     }
   /*
   TODO this keeps failing in Jenkins depending on CPU load.
   I either need to make it less sensitive or just get rid of it. - ST 6/9/10
-  test("ParallelOperationOfWait1") {
+  test("ParallelOperationOfWait1", SlowTest.Tag) {
     val processors = Runtime.getRuntime.availableProcessors
     // if we need this test to work with other numbers of processors it will need revision
     assert(List(1,2,4).contains(processors))
@@ -268,7 +268,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
       assertResult(log2(8 / processors)(log2(elapsed))
   }
   */
-  test("dontRunMetricsIfNoListener") {
+  test("dontRunMetricsIfNoListener", SlowTest.Tag) {
     val workspace = newWorkspace()
     workspace.initForTesting(0)
     newWorker("metricGoBoom")

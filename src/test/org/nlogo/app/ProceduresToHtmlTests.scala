@@ -9,7 +9,7 @@ import org.nlogo.util.SlowTest
 class ProceduresToHtmlTests extends FunSuite with SlowTest {
   val converter = ProceduresToHtml.newInstance
   import converter.convert
-  test("basic") {
+  test("basic", SlowTest.Tag) {
     assertResult("""|<pre><font color="#007f69">to</font><font color="#000000"> foo
            |  </font><font color="#0000aa">crt</font><font color="#000000"> </font><font color="#963700">10</font><font color="#000000">
            |</font><font color="#007f69">end</font>
@@ -20,7 +20,7 @@ class ProceduresToHtmlTests extends FunSuite with SlowTest {
   // can be very slow, so restrict to 2D to keep overall nightly.sh runtime down - ST 6/24/11
   if(!Version.is3D)
     // very long Code tabs shouldn't blow the stack.
-    test("don't blow stack") {
+    test("don't blow stack", SlowTest.Tag) {
       val path = "models/test/Really Long Code.nls"
       assertResult(1010929)(convert(FileIO.file2String(path).replaceAll("\r\n", "\n")).size)
     }

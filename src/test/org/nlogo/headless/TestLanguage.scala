@@ -9,11 +9,15 @@ import java.io.File
 import org.nlogo.agent.{Turtle, Patch, Link, Observer}
 import org.nlogo.util.{Utils, SlowTest}
 
+object LanguageTestTag extends Tag("org.nlogo.headless.LanguageTestTag")
+
 // We parse the tests first, then run them.
 // Parsing is separate so we can write tests for the parser itself.
 abstract class TestLanguage(files: Iterable[File]) extends FunSuite with SlowTest {
+  def additionalTags: Seq[Tag] = Seq()
+
   for(t:LanguageTest <- TestParser.parseFiles(files); if(t.shouldRun))
-    test(t.fullName, new Tag(t.suiteName){}, new Tag(t.fullName){}) {
+    test(t.fullName, (additionalTags ++ Seq(new Tag(t.suiteName){}, new Tag(t.fullName){}, SlowTest.Tag)): _*) {
       t.run
     }
 }
@@ -30,8 +34,12 @@ case object ExtensionTestsDotTxt extends TestFinder {
   }
 }
 
-class TestCommands extends TestLanguage(TxtsInDir("test/commands"))
-class TestReporters extends TestLanguage(TxtsInDir("test/reporters"))
+class TestCommands extends TestLanguage(TxtsInDir("test/commands")) {
+  override def additionalTags = Seq(LanguageTestTag)
+}
+class TestReporters extends TestLanguage(TxtsInDir("test/reporters")) {
+  override def additionalTags = Seq(LanguageTestTag)
+}
 class TestExtensions extends TestLanguage(ExtensionTestsDotTxt)
 class TestModels extends TestLanguage(
   TxtsInDir("models/test")
@@ -182,7 +190,7 @@ object TestParser {
 class TestParser extends FunSuite {
 
   // simple regex tests
-  test("test command regex") {
+  test("test command regex", SlowTest.Tag) {
     val TestParser.CommandRegex(agent, command) = "O> crt 1"
     assert(agent === "O")
     assert(command === "crt 1")
@@ -207,12 +215,12 @@ class TestParser extends FunSuite {
     "extensions [ array ]" -> Proc("extensions [ array ]")
     )
   for((input, output) <- tests)
-    test("parse: " + input) {
+    test("parse: " + input, SlowTest.Tag) {
       assert(TestParser.parse(input) === output)
     }
 
   // test entire path
-  test("parse a simple test") {
+  test("parse a simple test", SlowTest.Tag) {
     val code = """
 TurtleSet_2D
   O> crt 1
