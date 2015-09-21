@@ -41,7 +41,7 @@ private class Assembler {
     proc.code = code.map(tailRecurse).toArray
   }
   def assembleStatements(stmts: Statements): collection.mutable.ArrayBuffer[Command] = {
-    stmts.foreach(stmt =>
+    stmts.body.foreach(stmt =>
       stmt.command match {
         case ca: CustomAssembled => ca.assemble(new Assistant(stmt))
         case _ => code += stmt.command
@@ -75,9 +75,9 @@ private class Assembler {
         case None => gotoMark = code.size
       }
     }
-    def block() { block(stmt.size - 1) }
+    def block() { block(stmt.args.size - 1) }
     def block(pos: Int) { assembleStatements(stmt(pos).asInstanceOf[CommandBlock].statements) }
-    def argCount() = stmt.size
+    def argCount() = stmt.args.size
     def arg(i: Int) = stmt(i).asInstanceOf[ReporterApp].reporter
     def removeArg(i: Int) {
       stmt.command.args = (stmt.command.args.take(i) ++ stmt.command.args.drop(i + 1)).toArray

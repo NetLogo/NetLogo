@@ -46,7 +46,7 @@ trait Expression extends AstNode {
  * of a command application). This is used when parsing arguments, when we
  * don't care what kind of application the args are for.
  */
-trait Application extends AstNode with Seq[Expression] {
+trait Application extends AstNode {
   def apply(i: Int) = args(i)
   def length   = args.length
   def iterator = args.iterator
@@ -74,26 +74,27 @@ class ProcedureDefinition(val procedure: Procedure, val statements: Statements) 
  * (enclosed in [], in particular). This class is used to represent other
  * groups of statements as well, for instance procedure bodies.
  */
-class Statements(val file: String) extends AstNode with Seq[Statement] {
+class Statements(val file: String) extends AstNode {
   var start: Int = _
   var end: Int = _
 
-  def apply(i: Int) = stmts(i)
-  def length = stmts.length
-  def iterator = stmts.iterator
+  def apply(i: Int) = body(i)
+  def length = body.length
+  def iterator = body.iterator
   /**
    * a List of the actual Statement objects.
    */
-  private val stmts = new collection.mutable.ArrayBuffer[Statement]
+  val body= new collection.mutable.ArrayBuffer[Statement]
+
   def addStatement(stmt: Statement) {
-    stmts.append(stmt)
+    body.append(stmt)
     recomputeStartAndEnd()
   }
   private def recomputeStartAndEnd() {
-    if (stmts.isEmpty) { start = 0; end = 0 }
-    else { start = stmts(0).start; end = stmts(stmts.size - 1).end }
+    if (body.isEmpty) { start = 0; end = 0 }
+    else { start = body(0).start; end = body(body.size - 1).end }
   }
-  override def toString = stmts.mkString(" ")
+  override def toString = body.mkString(" ")
   def accept(v: AstVisitor) { v.visitStatements(this) }
 }
 
@@ -102,7 +103,7 @@ class Statements(val file: String) extends AstNode with Seq[Statement] {
  * application.
  */
 class Statement(var command: Command, var start: Int, var end: Int, val file: String)
-    extends Application with Seq[Expression] {
+    extends Application {
   val args = new collection.mutable.ArrayBuffer[Expression]
   def instruction = command // for Application
   def addArgument(arg: Expression) { args.append(arg) }
@@ -160,7 +161,7 @@ class ReporterBlock(val app: ReporterApp, var start: Int, var end: Int, val file
  * applications as they're parsed.
  */
 class ReporterApp(var reporter: Reporter, var start: Int, var end: Int, val file: String)
-extends Expression with Application with Seq[Expression] {
+extends Expression with Application {
   /**
    * the args for this application.
    */

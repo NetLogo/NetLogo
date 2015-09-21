@@ -10,10 +10,10 @@ class OptimizerTests extends FunSuite {
   implicit val tokenizer = Compiler.Tokenizer2D
   def compileReporter(source:String) =
     compile("globals [glob1] breed [frogs frog] to-report __test [x] report " + source + "\nend")
-      .statements.head.head.toString
+      .statements.body.head.args.head.toString
   def compileCommands(source:String) =
     compile("globals [glob1] breed [frogs frog] to __test [x] " + source + "\nend")
-      .statements.head.toString
+      .statements.body.head.toString
   private def compile(source:String):ProcedureDefinition = {
     val program = new Program(false)
     val results = new StructureParser(tokenizer.tokenize(source), None, program,

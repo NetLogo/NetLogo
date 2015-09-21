@@ -76,7 +76,7 @@ private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
       node match {
         case stmt: Statement if !stmt.args.isEmpty =>
           stmt.args.last match {
-            case block: CommandBlock if block.statements.size == 0 => new Match(block)
+            case block: CommandBlock if block.statements.body.size == 0 => new Match(block)
             case _ => throw new MatchFailedException
           }
         case _ => throw new MatchFailedException

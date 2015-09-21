@@ -135,7 +135,7 @@ private class ExpressionParser(procedure: Procedure,
         // at this point is lower precedence, or we would already
         // have consumed it. so if we have a non-default number of
         // args, this is definitely illegal.
-        cAssert(app.size == app.instruction.syntax.totalDefault,INVALID_VARIADIC_CONTEXT,app)
+        cAssert(app.args.size == app.instruction.syntax.totalDefault,INVALID_VARIADIC_CONTEXT,app)
         done = true
       }
       // note: if it's a reporter, it must be the beginning
@@ -199,7 +199,7 @@ private class ExpressionParser(procedure: Procedure,
     if(syntax.isInfix) {
       val tyype = syntax.left
       // this shouldn't really be possible here...
-      cAssert(app.size >= 1,missingInput(app,false),app)
+      cAssert(app.args.size >= 1,missingInput(app,false),app)
       app.replaceArg(0,resolveType(tyype,app(0),app.instruction.displayName))
       // the first right arg is the second arg.
       actual1 = 1
@@ -208,20 +208,20 @@ private class ExpressionParser(procedure: Procedure,
     var formal1 = 0
     val types = syntax.right
     while(formal1 < types.length && !compatible(Syntax.RepeatableType,types(formal1))) {
-      if(formal1 == types.length - 1 && app.size == types.length - 1 &&
+      if(formal1 == types.length - 1 && app.args.size == types.length - 1 &&
          compatible(Syntax.OptionalType,types(formal1)))
         return
-      cAssert(app.size > actual1,missingInput(app,true),app)
+      cAssert(app.args.size > actual1,missingInput(app,true),app)
       app.replaceArg(actual1,resolveType(types(formal1),app(actual1),app.instruction.displayName))
       formal1 += 1
       actual1 += 1
     }
     if(formal1 < types.length) {
       // then we encountered a repeatable arg, so we look at right args from right-to-left...
-      var actual2 = app.size - 1
+      var actual2 = app.args.size - 1
       var formal2 = types.length - 1
       while(formal2 >= 0 && !compatible(Syntax.RepeatableType,types(formal2))) {
-        cAssert(app.size > actual2 && actual2 > -1,missingInput(app,true),app)
+        cAssert(app.args.size > actual2 && actual2 > -1,missingInput(app,true),app)
         app.replaceArg(actual2,resolveType(types(formal2),app(actual2),app.instruction.displayName))
         formal2 -= 1
         actual2 -= 1
