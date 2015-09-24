@@ -32,7 +32,7 @@ JJS=$JH/bin/jjs
 
 # Most of these settings are fine for everyone
 XSS=-Xss2m
-XMX=-Xmx2048m
+XMX=-Xmx1900m
 XX=
 ENCODING=-Dfile.encoding=UTF-8
 HEADLESS=-Djava.awt.headless=true
