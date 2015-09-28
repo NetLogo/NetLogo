@@ -2,9 +2,11 @@
 
 package org.nlogo.generator
 
-import org.objectweb.asm.{ Label, MethodAdapter, MethodVisitor }
+import
+  org.objectweb.asm.{ Label, MethodVisitor, Opcodes },
+    Opcodes.{ ASM5, INVOKEINTERFACE }
 
-private abstract class AbstractPeepholeOptimizer(mv: MethodVisitor) extends MethodAdapter(mv) {
+private abstract class AbstractPeepholeOptimizer(mv: MethodVisitor) extends MethodVisitor(ASM5, mv) {
 
   def restartMatch() // abstract
 
@@ -38,9 +40,14 @@ private abstract class AbstractPeepholeOptimizer(mv: MethodVisitor) extends Meth
     restartMatch()
     mv.visitFieldInsn(opcode, owner, name, desc)
   }
+  @Deprecated
   override def visitMethodInsn(opcode: Int, owner: String, name: String, desc: String) {
     restartMatch()
-    mv.visitMethodInsn(opcode, owner, name, desc)
+    mv.visitMethodInsn(opcode, owner, name, desc, opcode == INVOKEINTERFACE)
+  }
+  override def visitMethodInsn(opcode: Int, owner: String, name: String, desc: String, itf: Boolean) {
+    restartMatch()
+    mv.visitMethodInsn(opcode, owner, name, desc, itf)
   }
   override def visitLdcInsn(cst: Object) {
     restartMatch()
@@ -50,10 +57,6 @@ private abstract class AbstractPeepholeOptimizer(mv: MethodVisitor) extends Meth
     restartMatch()
     mv.visitIincInsn(variable, increment)
   }
-  override def visitTableSwitchInsn(min: Int, max: Int, dflt: Label, labels: Array[Label]) {
-    restartMatch()
-    mv.visitTableSwitchInsn(min, max, dflt, labels)
-  }
   override def visitLookupSwitchInsn(dflt: Label, keys: Array[Int], labels: Array[Label]) {
     restartMatch()
     mv.visitLookupSwitchInsn(dflt, keys, labels)
@@ -62,9 +65,9 @@ private abstract class AbstractPeepholeOptimizer(mv: MethodVisitor) extends Meth
     restartMatch()
     mv.visitMultiANewArrayInsn(desc, dims)
   }
-  override def visitTryCatchBlock(start: Label, end: Label, handler: Label, tyype: String) {
+  override def visitTryCatchBlock(start: Label, end: Label, handler: Label, tpe: String) {
     restartMatch()
-    mv.visitTryCatchBlock(start, end, handler, tyype)
+    mv.visitTryCatchBlock(start, end, handler, tpe)
   }
   override def visitLocalVariable(name: String, desc: String, signature: String, start: Label, end: Label, index: Int) {
     restartMatch()

@@ -7,7 +7,7 @@ import org.nlogo.nvm.Instruction
 import org.objectweb.asm.{ Label, MethodVisitor, Type }
 
 private class GeneratorAdapter(mv: MethodVisitor, access: Int, name: String, desc: String, igen: Generator#InstructionGenerator[_])
-    extends org.objectweb.asm.commons.GeneratorAdapter(mv, access, name, desc) {
+    extends org.objectweb.asm.commons.GeneratorAdapter(ASM5, mv, access, name, desc) {
   // We need to know what the lowest JVM local variable that we can play with is.  var 0 = "this",
   // and var 1 = "context", so we can't mess with these.  It could be in the future, we'll want to
   // reserve more JVM local variables e.g. to store NetLogo local procedure variables in them But
@@ -72,7 +72,7 @@ private class GeneratorAdapter(mv: MethodVisitor, access: Int, name: String, des
     mv.visitLocalVariable(name, desc, signature, start, end, index)
   }
   // see note above about LocalVariableSorter incompatibility
-  override def newLocal(tyype: Type): Int = { throw new IllegalStateException }
+  override def newLocal(tpe: Type): Int = { throw new IllegalStateException }
   override def loadArg(arg: Int) { throw new IllegalStateException }
   override def loadArgs(arg: Int, count: Int) { throw new IllegalStateException }
   override def loadArgs() { throw new IllegalStateException }
@@ -86,13 +86,13 @@ private class GeneratorAdapter(mv: MethodVisitor, access: Int, name: String, des
    * @param local a local variable index.
    * @param type the type of this local variable.
    */
-  override def loadLocal(index: Int, tyype: Type) { mv.visitVarInsn(tyype.getOpcode(ILOAD), index) }
+  override def loadLocal(index: Int, tpe: Type) { mv.visitVarInsn(tpe.getOpcode(ILOAD), index) }
   /**
    * Generates the instruction to store the top stack value in the given local variable.
    * @param local a local variable index.
    * @param type the type of this local variable.
    */
-  override def storeLocal(index: Int, tyype: Type) { mv.visitVarInsn(tyype.getOpcode(ISTORE), index) }
+  override def storeLocal(index: Int, tpe: Type) { mv.visitVarInsn(tpe.getOpcode(ISTORE), index) }
   override def loadThis() { mv.visitVarInsn(ALOAD, 0) }
   def loadContext() { mv.visitVarInsn(ALOAD, 1) }
 }
