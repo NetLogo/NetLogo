@@ -21,13 +21,7 @@ private class IdentifierParser(program:Program,
     checkProcedureName(procedure)
     val it = new CountedIterator(tokens)
     def processToken(token:Token):Token = {
-      // This is pretty gruesome.  In NetLogo 3.1 and earlier, we allowed + to be used with strings
-      // and lists.  In order to be able to autoconvert old models, we disable type checking on +
-      // when allowRemovedPrimitives is true. - ST 7/8/06, 2/18/08
-      if(forgiving && token.value.isInstanceOf[_plus])
-        newToken(new dead._pluswildcard,
-                 token.name,TokenType.REPORTER,token.startPos,token.endPos,token.fileName)
-      else if(token.tyype == TokenType.IDENT || token.tyype == TokenType.VARIABLE)
+      if(token.tyype == TokenType.IDENT || token.tyype == TokenType.VARIABLE)
         processToken2(token,procedure,it.count)
       else token
     }
