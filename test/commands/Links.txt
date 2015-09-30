@@ -663,7 +663,7 @@ LinkNeighborIsUndirectedOnly1
 
 LinkNeighborIsUndirectedOnly2
   O> crt 2 [ create-directed-links-to other turtles ]
-  T> __ignore directed-link-neighbor? one-of other turtles => COMPILER ERROR Nothing named DIRECTED-LINK-NEIGHBOR? has been defined
+  T> __ignore directed-link-neighbor? one-of other turtles => COMPILER ERROR Nothing named DIRECTED-LINK-NEIGHBOR? has been defined.
 
 # https://github.com/NetLogo/NetLogo/issues/338
 LinkCreationTypeChecking_2D

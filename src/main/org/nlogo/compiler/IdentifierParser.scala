@@ -3,7 +3,7 @@
 package org.nlogo.compiler
 
 import org.nlogo.compiler.CompilerExceptionThrowers.{cAssert,exception}
-import org.nlogo.api.{CompilerException,Let,Program,Token,TokenType}
+import org.nlogo.api.{CompilerException,Let,Program,Token,TokenType,I18N}
 import org.nlogo.nvm.{Instruction,Procedure,Reporter}
 import org.nlogo.prim._
 import collection.JavaConverters._
@@ -98,7 +98,7 @@ private class IdentifierParser(program:Program,
     else if(forgiving)
       new _unknownidentifier
     else
-      exception("Nothing named " + varName + " has been defined",
+      exception(I18N.errors.getN("compiler.LocalsVisitor.notDefined", varName),
                 new Token(varName,tok.tyype,tok.value)
                          (tok.startPos,tok.startPos + varName.length,tok.fileName))
   }

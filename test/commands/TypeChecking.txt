@@ -1,5 +1,5 @@
 DeadPrim
-  O> __ignore value-from turtle 0 [color] => COMPILER ERROR Nothing named VALUE-FROM has been defined
+  O> __ignore value-from turtle 0 [color] => COMPILER ERROR Nothing named VALUE-FROM has been defined.
 
 SetVariable
   O> ask patches [ set color red ] => COMPILER ERROR You can't use COLOR in a patch context, because COLOR is turtle/link-only.

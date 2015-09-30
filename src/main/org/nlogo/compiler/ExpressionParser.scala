@@ -3,7 +3,7 @@
 package org.nlogo.compiler
 
 import CompilerExceptionThrowers.{ cAssert, exception }
-import org.nlogo.api.{ Syntax, Token, TokenType, TypeNames }
+import org.nlogo.api.{ Syntax, Token, TokenType, TypeNames, I18N }
 import Syntax.compatible
 import org.nlogo.nvm.{ Command, Instruction, Procedure, Referenceable, Reporter}
 import org.nlogo.prim._
@@ -81,7 +81,7 @@ private class ExpressionParser(procedure: Procedure,
         stmt
       case _ =>
         if (token.tyype == TokenType.REPORTER && token.value.isInstanceOf[_unknownidentifier])
-          exception("Solve the nothing named here", token)
+          exception(I18N.errors.getN("compiler.LocalsVisitor.notDefined", token.name), token)
         exception(EXPECTED_COMMAND,token)
     }
   }
@@ -348,6 +348,10 @@ private class ExpressionParser(procedure: Procedure,
               (r, new ReporterApp(r, token.startPos, token.endPos, token.fileName))
             case TokenType.REPORTER =>
               val r = token.value.asInstanceOf[Reporter]
+              if (r.isInstanceOf[_unknownidentifier]) {
+                exception(I18N.errors.getN("compiler.LocalsVisitor.notDefined", token.name),
+                                token)
+              }
               // the "|| wantReporterTask" is needed or the concise syntax wouldn't work for infix
               // reporters, e.g. "map + ..."
               if(!r.syntax.isInfix || wantReporterTask)
