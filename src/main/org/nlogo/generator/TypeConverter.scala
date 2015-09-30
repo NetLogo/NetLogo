@@ -54,7 +54,7 @@ private object TypeConverter {
   // the method generates code to convert the top stack value to type Y
   //   ~Forrest (5/16/2006)
   private def from_Double_to_double(mv: MethodVisitor) {
-    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Double", "doubleValue", "()D")
+    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Double", "doubleValue", "()D", false)
   }
   private def from_Object_to_double(mv: MethodVisitor, firstFreeJVMLocal: Int, argIndex: Int) {
     mv.visitVarInsn(ASTORE, firstFreeJVMLocal)
@@ -64,7 +64,7 @@ private object TypeConverter {
     mv.visitLabel(l0)
     mv.visitVarInsn(ALOAD, firstFreeJVMLocal)
     mv.visitTypeInsn(CHECKCAST, "java/lang/Double")
-    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Double", "doubleValue", "()D")
+    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Double", "doubleValue", "()D", false)
     val lEnd = new Label
     mv.visitJumpInsn(GOTO, lEnd)
     mv.visitLabel(l1)
@@ -77,12 +77,12 @@ private object TypeConverter {
     mv.visitLdcInsn(api.Syntax.NumberType.toInt)
     mv.visitVarInsn(ALOAD, firstFreeJVMLocal)
     mv.visitMethodInsn(INVOKESPECIAL, "org/nlogo/nvm/ArgumentTypeException", "<init>",
-      "(Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V")
+      "(Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V", false)
     mv.visitInsn(ATHROW)
     mv.visitLabel(lEnd)
   }
   private def from_Boolean_to_boolean(mv: MethodVisitor) {
-    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Boolean", "booleanValue", "()Z")
+    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Boolean", "booleanValue", "()Z", false)
   }
   private def from_Object_to_boolean(mv: MethodVisitor, firstFreeJVMLocal: Int, argIndex: Int) {
     mv.visitVarInsn(ASTORE, firstFreeJVMLocal)
@@ -92,7 +92,7 @@ private object TypeConverter {
     mv.visitLabel(l0)
     mv.visitVarInsn(ALOAD, firstFreeJVMLocal)
     mv.visitTypeInsn(CHECKCAST, "java/lang/Boolean")
-    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Boolean", "booleanValue", "()Z")
+    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Boolean", "booleanValue", "()Z", false)
     val lEnd = new Label
     mv.visitJumpInsn(GOTO, lEnd)
     mv.visitLabel(l1)
@@ -105,7 +105,7 @@ private object TypeConverter {
     mv.visitLdcInsn(Int.box(api.Syntax.BooleanType))
     mv.visitVarInsn(ALOAD, firstFreeJVMLocal)
     mv.visitMethodInsn(INVOKESPECIAL, "org/nlogo/nvm/ArgumentTypeException", "<init>",
-      "(Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V")
+      "(Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V", false)
     mv.visitInsn(ATHROW)
     mv.visitLabel(lEnd)
   }
@@ -114,7 +114,7 @@ private object TypeConverter {
     mv.visitTypeInsn(NEW, "java/lang/Double")
     mv.visitInsn(DUP)
     mv.visitVarInsn(DLOAD, firstFreeJVMLocal)
-    mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Double", "<init>", "(D)V")
+    mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Double", "<init>", "(D)V", false)
   }
   private def from_boolean_to_Object(mv: MethodVisitor) {
     // Code, roughly speaking:  bval ? Boolean.TRUE : Boolean.FALSE
@@ -147,7 +147,7 @@ private object TypeConverter {
     mv.visitLdcInsn(Int.box(api.Syntax.getTypeConstant(typeTo)))
     mv.visitVarInsn(ALOAD, firstFreeJVMLocal)
     mv.visitMethodInsn(INVOKESPECIAL, "org/nlogo/nvm/ArgumentTypeException", "<init>",
-      "(Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V");
+      "(Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V", false)
     mv.visitInsn(ATHROW)
     mv.visitLabel(lEnd)
   }

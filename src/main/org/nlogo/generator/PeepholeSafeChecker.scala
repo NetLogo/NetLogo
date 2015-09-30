@@ -4,7 +4,6 @@ package org.nlogo.generator
 
 import java.lang.reflect.Method
 import org.objectweb.asm.{ ClassReader, MethodVisitor, Type }
-import org.objectweb.asm.commons.EmptyVisitor
 import org.objectweb.asm.Opcodes.{ ALOAD, DLOAD, FLOAD, ILOAD, LLOAD }
 
 /**
@@ -35,7 +34,7 @@ import org.objectweb.asm.Opcodes.{ ALOAD, DLOAD, FLOAD, ILOAD, LLOAD }
  *  The other PeepholeOptimizers will be run regardless.
  */
 
-private class PeepholeSafeChecker(profilingEnabled: Boolean = false) {
+class PeepholeSafeChecker(profilingEnabled: Boolean = false) {
   // we have to synchronize because we could be compiling stuff on multiple threads
   def isSafe(m: Method): Boolean = synchronized {
     val hashKey = getHashKey(m)
@@ -51,13 +50,13 @@ private class PeepholeSafeChecker(profilingEnabled: Boolean = false) {
     for (m <- BytecodeUtils.getMethods(c, profilingEnabled))
       reader.accept(new MethodExtractorClassAdapter(m), ClassReader.SKIP_DEBUG)
   }
-  private class MethodExtractorClassAdapter(method: Method) extends EmptyVisitor {
+  private class MethodExtractorClassAdapter(method: Method) extends EmptyClassVisitor {
     override def visitMethod(arg0: Int, name: String, descriptor: String, signature: String, exceptions: Array[String]): MethodVisitor =
       if (name == method.getName && descriptor == Type.getMethodDescriptor(method))
         new PeepholeSafeMethodChecker(method)
-      else new EmptyVisitor
+      else new EmptyMethodVisitor
   }
-  private class PeepholeSafeMethodChecker(method: Method) extends EmptyVisitor {
+  private class PeepholeSafeMethodChecker(method: Method) extends EmptyMethodVisitor {
     private var thisMethodFailedTest = false
     val paramLocalsCount = Type.getArgumentTypes(method).map(_.getSize).sum
     val alreadyLoaded = Array.fill(paramLocalsCount)(false)

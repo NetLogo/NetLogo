@@ -12,7 +12,7 @@ language: scala
 before_install:
   - git submodule update --init --recursive
 install:
-  - ./sbt update
+  - travis_wait ./sbt update
 script:
   - ./sbt depend
   - travis_wait ./sbt all
