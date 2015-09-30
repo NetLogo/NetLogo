@@ -49,7 +49,7 @@ object Testing {
       val args = Def.spaceDelimited("<arg>").parsed
       val scalaTestArgs =
         if (args.isEmpty) ""
-        else args.mkString(" -- -n \"", " ", "\"")
+        else args.mkString(" -- -z \"", " ", "\"")
       (testOnly in Test).toTask(s" $name$scalaTestArgs")
     }
 
