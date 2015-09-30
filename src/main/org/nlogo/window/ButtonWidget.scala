@@ -4,8 +4,8 @@ package org.nlogo.window
 
 import java.awt.{List=>AWTList, _}
 import event.{MouseEvent, MouseListener, MouseMotionListener}
-import image.FilteredImageSource
-import org.nlogo.awt.DarkenImageFilter
+import image.{ FilteredImageSource, RGBImageFilter }
+import org.nlogo.awt.InverseImageFilter
 import javax.swing.ImageIcon
 import org.nlogo.util.MersenneTwisterFast
 import org.nlogo.awt.Mouse.hasButton1
@@ -18,25 +18,24 @@ object ButtonWidget {
 
   def image(path: String) = new ImageIcon(classOf[ButtonWidget].getResource(path))
 
-  val FOREVER_GRAPHIC_DARK: ImageIcon = image("/images/forever.gif")
-  val FOREVER_GRAPHIC: ImageIcon = image("/images/forever2.gif")
+  val FOREVER_ICON: ImageIcon = image("/images/forever.gif")
 
   object ButtonType {
 
     // the 4 possible button types
-    val ObserverButton = ButtonType("observer", classOf[Observer], img = None, darkImg = None)
+    val ObserverButton = ButtonType("observer", classOf[Observer], img = None, inverseImg = None)
     val TurtleButton = ButtonType("turtle", classOf[Turtle], "/images/turtle.gif")
     val LinkButton = ButtonType("link", classOf[Link], "/images/link.gif")
     val PatchButton = ButtonType("patch", classOf[Patch], "/images/patch.gif")
 
     val buttonTypes = List(ObserverButton, TurtleButton, LinkButton, PatchButton)
 
-    def darkImage(image: ImageIcon) = new ImageIcon(java.awt.Toolkit.getDefaultToolkit.createImage(
-      new FilteredImageSource(image.getImage.getSource, new DarkenImageFilter(0.5))))
+    def inverseImage(image: ImageIcon) = new ImageIcon(java.awt.Toolkit.getDefaultToolkit.createImage(
+      new FilteredImageSource(image.getImage.getSource, new InverseImageFilter)))
 
     private def apply(headerCode:String, agentClass:Class[_ <: Agent], imagePath: String): ButtonType = {
       val img = image(imagePath)
-      new ButtonType(headerCode, agentClass, Some(img), Some(darkImage(img)))
+      new ButtonType(headerCode, agentClass, Some(img), Some(inverseImage(img)))
     }
     def apply(c:Class[_ <: Agent]): ButtonType = {
       buttonTypes.find(_.agentClass == c).getOrElse(ObserverButton) //TODO or should we say error("bad agent class")
@@ -62,8 +61,8 @@ object ButtonWidget {
   // encapsulates what used to be a bunch of 4 way if statements.
   // ButtonWidget now has a single ButtonType object that handles all this logic for it.
   case class ButtonType(name: String, agentClass:Class[_ <: Agent],
-                        img:Option[ImageIcon], darkImg:Option[ImageIcon]){
-    def img(dark:Boolean): Option[ImageIcon] = if(dark) darkImg else img
+                        img:Option[ImageIcon], inverseImg:Option[ImageIcon]){
+    def img(inverse:Boolean): Option[ImageIcon] = if(inverse) inverseImg else img
     def toHeaderCode = "__" + name.toLowerCase + "code "
     def toAgentOptions = {
       val opts = ButtonType.defaultAgentOptions
@@ -374,15 +373,22 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
     def paintButtonRectangle(g: Graphics) {
       g.setColor(getPaintColor)
       g.fillRect(0, 0, getWidth(), getHeight())
-      def renderImages(g: Graphics, dark: Boolean) {
+      def renderImages(g: Graphics, inverse: Boolean) {
         def maybePaintForeverImage() {
           if (forever) {
-            val image = if (dark) FOREVER_GRAPHIC_DARK else FOREVER_GRAPHIC
+            val image = new ImageIcon(java.awt.Toolkit.getDefaultToolkit.createImage(
+              new FilteredImageSource(FOREVER_ICON.getImage.getSource, new RGBImageFilter {
+                private final val OpaqueAlpha = 0xff000000
+                canFilterIndexColorModel = true
+                val color = if (drawAsUp) getForeground else getBackground
+                override def filterRGB(x: Int, y: Int, rgb: Int): Int =
+                  (rgb & OpaqueAlpha) | (color.getRed << 16) | (color.getGreen << 8) | color.getBlue
+              })))
             image.paintIcon(this, g, getWidth() - image.getIconWidth - 4, getHeight() - image.getIconHeight - 4)
           }
         }
         def maybePaintAgentImage() {
-          buttonType.img(dark).map(_.paintIcon(this, g, 3, 3))
+          buttonType.img(inverse).map(_.paintIcon(this, g, 3, 3))
         }
         maybePaintForeverImage()
         maybePaintAgentImage()
