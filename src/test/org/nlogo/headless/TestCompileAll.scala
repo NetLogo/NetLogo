@@ -8,13 +8,10 @@ import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
 
-import org.nlogo.api.CompilerException
-import org.nlogo.api.LogoException
-import org.nlogo.api.PreviewCommands
-import org.nlogo.api.Version
+import org.nlogo.api.{ CompilerException, LogoException, PreviewCommands, Version }
 import org.nlogo.nvm.Workspace
 import org.nlogo.util.SlowTest
-import org.nlogo.workspace.ModelsLibrary
+import org.nlogo.workspace.{ ExtensionManager, ModelsLibrary }
 import org.scalatest.FunSuite
 
 class TestCompileAll extends FunSuite with SlowTest {
@@ -35,7 +32,8 @@ class TestCompileAll extends FunSuite with SlowTest {
       .exists(path.contains)
 
   val modelPaths =
-    (ModelsLibrary.getModelPaths ++ ModelsLibrary.getModelPathsAtRoot("extensions"))
+    (ModelsLibrary.getModelPaths ++ ModelsLibrary.getModelPathsAtRoot(ExtensionManager.extensionPath))
+      .map(new java.io.File(_).getCanonicalPath()).distinct // workaround for https://github.com/NetLogo/NetLogo/issues/765
       .filterNot(excludeModel)
 
   for (path <- modelPaths) {

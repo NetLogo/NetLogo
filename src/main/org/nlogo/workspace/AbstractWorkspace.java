@@ -22,6 +22,7 @@ import org.nlogo.util.Femto;
 
 public abstract strictfp class AbstractWorkspace
     implements Workspace,
+    ExtendableWorkspace,
     org.nlogo.api.LogoThunkFactory,
     org.nlogo.api.HubNetWorkspaceInterface {
 
