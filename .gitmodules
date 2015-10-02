@@ -52,3 +52,6 @@
 [submodule "extensions/palette"]
 	path = extensions/palette
 	url = https://github.com/NetLogo/Palette-Extension
+[submodule "extensions/arduino"]
+	path = extensions/arduino
+	url = https://github.com/NetLogo/Arduino-Extension/

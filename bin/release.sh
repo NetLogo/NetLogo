@@ -432,7 +432,7 @@ if [ $SIGN_MAC -eq 1 ]; then
   $FIND dmg -name "*.app" -print0 | $XARGS -0 codesign --force -s "$OSXSIGNAME"
 fi
 
-$HDIUTIL create -quiet NetLogo\ "$VERSION".dmg -srcfolder dmg -volname NetLogo\ "$VERSION" -ov
+$HDIUTIL create -quiet NetLogo\ "$VERSION".dmg -srcfolder dmg -size 200m -volname NetLogo\ "$VERSION" -ov
 $HDIUTIL internet-enable -quiet -yes NetLogo\ "$VERSION".dmg
 $DU -h NetLogo\ "$VERSION".dmg
 $RM -rf dmg
