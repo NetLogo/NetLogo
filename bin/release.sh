@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash -e -v
 
 # -e makes the whole thing die with an error if any command does
 # add -v if you want to see the commands as they happen
@@ -267,6 +267,7 @@ $PERL -p -i -e "s/\<h3\>/\<p\>\<hr\>\<h3\>/" docs/dictionary.html
 pandoc ../../extensions/nw/README.md -o docs/nw.html -t html -T "NetLogo User Manual: Networks Extension" -c netlogo.css
 pandoc ../../extensions/csv/README.md -o docs/csv.html -t html -T "NetLogo User Manual: CSV Extension" -c netlogo.css
 pandoc ../../extensions/palette/README.md -o docs/palette.html -t html -T "NetLogo User Manual: Palette Extension" -c netlogo.css
+pandoc ../../extensions/arduino/README.md -o docs/arduino.html -t html -T "NetLogo User Manual: Arduino Extension" -c netlogo.css
 
 cd docs
 ../../../bin/htmldoc.sh
@@ -289,6 +290,8 @@ $PERL -0 -p -i -e 's|<title>.+?NetLogo User Manual.+?</title>|<title>NetLogo $EN
 # Extension docs can come from extension READMEs now (requires pandoc)
 pandoc ../../extensions/nw/README.md -o docs/nw.html -t html -T "NetLogo User Manual: Networks Extension" -c netlogo.css
 pandoc ../../extensions/csv/README.md -o docs/csv.html -t html -T "NetLogo User Manual: CSV Extension" -c netlogo.css
+pandoc ../../extensions/palette/README.md -o docs/palette.html -t html -T "NetLogo User Manual: Palette Extension" -c netlogo.css
+pandoc ../../extensions/arduino/README.md -o docs/arduino.html -t html -T "NetLogo User Manual: Arduino Extension" -c netlogo.css
 
 # put models in multiple categories
 ( cd models/Sample\ Models     ; $CP -rp Biology/AIDS* Social\ Science ) || exit 1

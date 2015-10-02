@@ -42,6 +42,7 @@ htmldoc \
   profiler.html \
   gis.html \
   nw.html \
+  arduino.html \
   csv.html \
   palette.html \
   faq.html \
