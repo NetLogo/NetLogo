@@ -68,11 +68,6 @@ trait AbstractSliderWidget extends MultiErrorWidget {
     else false
   }
 
-  override def setToolTipText(text:String){
-    super.setToolTipText(text)
-    painter.setToolTipText(text)
-  }
-
   def vertical: Boolean = _vertical
   def vertical_=(vert:Boolean): Unit = {
     if(vert != vertical){

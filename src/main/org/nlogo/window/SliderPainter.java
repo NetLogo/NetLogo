@@ -9,8 +9,6 @@ public abstract strictfp class SliderPainter {
 
   abstract public java.awt.Dimension getMaximumSize();
 
-  abstract public void setToolTipText(String text);
-
   abstract public void doLayout();
 
   abstract public void paintComponent(java.awt.Graphics g);
