@@ -135,6 +135,12 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     refreshGUI()
   }
 
+  override def paintComponent(g: Graphics) = {
+    super.paintComponent(g)
+    nameLabel.setToolTipText(
+      if (nameLabel.getPreferredSize.width > nameLabel.getSize().width) plotName else null)
+  }
+
   def refreshGUI() {
     def getLabel(d:Double) = if(d.toString.endsWith(".0")) d.toString.dropRight(2) else d.toString
     xAxis.setMin(getLabel(plot.xMin))
@@ -349,9 +355,15 @@ object AbstractPlotWidget {
     org.nlogo.awt.Fonts.adjustDefaultFont(label)
     org.nlogo.awt.Fonts.adjustDefaultFont(max)
 
-    def setLabel(text: String) {label.setText(text)}
-    def setMax(text: String) {max.setText(text)}
-    def setMin(text: String) {min.setText(text)}
+    override def paintComponent(g: Graphics) = {
+      super.paintComponent(g)
+      label.setToolTipText(
+        if (label.getPreferredSize.width > label.getSize().width) getLabel else null)
+    }
+
+    def setLabel(text: String) = label.setText(text)
+    def setMax(text: String) = max.setText(text)
+    def setMin(text: String) = min.setText(text)
     def getLabel = label.getText
   }
 
@@ -388,6 +400,12 @@ object AbstractPlotWidget {
     org.nlogo.awt.Fonts.adjustDefaultFont(min)
     org.nlogo.awt.Fonts.adjustDefaultFont(label)
     org.nlogo.awt.Fonts.adjustDefaultFont(max)
+
+    override def paintComponent(g: Graphics) = {
+      super.paintComponent(g)
+      label.setToolTipText(
+        if (label.getPreferredSize.height > label.getSize().height) getLabel else null)
+    }
 
     def setMin(text: String) {min.setText(text)}
     def setMax(text: String): Unit = {max.setText(text)}

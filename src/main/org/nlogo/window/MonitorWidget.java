@@ -200,9 +200,10 @@ public strictfp class MonitorWidget
     int labelHeight = fm.getMaxDescent() + fm.getMaxAscent();
     java.awt.Dimension d = getSize();
     g.setColor(getForeground());
-    String displayName = displayName();
     int boxHeight = (int) StrictMath.ceil(labelHeight * 1.4);
-    g.drawString(displayName, LEFT_MARGIN,
+    String shortString = org.nlogo.awt.Fonts.shortenStringToFit(
+      displayName(), d.width - LEFT_MARGIN - RIGHT_MARGIN, fm);
+    g.drawString(shortString, LEFT_MARGIN,
         d.height - BOTTOM_MARGIN - boxHeight - fm.getMaxDescent() - 1);
     g.setColor(java.awt.Color.WHITE);
     g.fillRect(LEFT_MARGIN, d.height - BOTTOM_MARGIN - boxHeight,
@@ -214,6 +215,7 @@ public strictfp class MonitorWidget
           LEFT_MARGIN + 5,
           d.height - BOTTOM_MARGIN - INSIDE_BOTTOM_MARGIN - fm.getMaxDescent());
     }
+    setToolTipText(shortString != displayName() ? displayName() : null);
   }
 
   private int decimalPlaces = 17;
