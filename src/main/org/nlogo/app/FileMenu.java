@@ -35,6 +35,7 @@ public strictfp class FileMenu
     this.app = app;
     this.modelSaver = modelSaver;
     this.appletSaver = appletSaver;
+    setMnemonic('F');
     addMenuItem('N', new NewAction());
     addMenuItem('O', new OpenAction());
     addMenuItem('M', new ModelsLibraryAction());
