@@ -47,7 +47,7 @@ object NativeLibs {
                                     else
                                       "-1.1.1.").reverse)
               .reverse
-          val url = "http://ccl.northwestern.edu/devel/" + filename
+          val url = "http://ccl-artifacts.s3-website-us-east-1.amazonaws.com/" + filename
           if(!path.exists) {
             s.log.info("downloading " + path)
             IO.download(new java.net.URL(url), path)
