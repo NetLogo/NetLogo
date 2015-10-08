@@ -16,7 +16,7 @@ import
 import org.nlogo.nvm.FileManager
 
 import scala.collection.JavaConversions._
-import scala.util.Try
+import scala.util.{ Success, Try }
 
 /**
  * Some simple notes on loading and unloading extensions:
@@ -63,26 +63,22 @@ object ExtensionManager {
   val EXTENSION_NOT_FOUND: String = "Can't find extension: "
 
   @throws(classOf[java.net.MalformedURLException])
-  private def toURL(file: JFile): URL = {
-    return file.toURI.toURL
-  }
+  private def toURL(file: JFile): URL =
+    file.toURI.toURL
 
   def extensionPath: String =
     System.getProperty("netlogo.extensions.dir", "extensions");
 
   case class ExtensionData(extensionName: String, fileURL: URL, prefix: String, classManagerName: String, version: Option[String], modified: Long)
 
-  class JarContainer(val jarClassLoader: URLClassLoader, val data: ExtensionData) {
+  class JarContainer(val jarClassLoader: URLClassLoader, data: ExtensionData) {
     val extensionName  = data.extensionName
+    val normalizedName = data.extensionName.toUpperCase
     val fileURL        = data.fileURL
-    val prefix: String = data.prefix
     val modified: Long = data.modified
     val primManager: ExtensionPrimitiveManager = new ExtensionPrimitiveManager(extensionName)
     var classManager: ClassManager = null
     var loaded: Boolean = false
-
-    val normalizedName: String =
-      primManager.name.toUpperCase
 
     def load(instantiatedClassManager: ClassManager): Unit = {
       loaded = true
@@ -103,25 +99,25 @@ object ExtensionManager {
   }
 }
 
-class ExtensionManager(_workspace: ExtendableWorkspace) extends org.nlogo.api.ExtensionManager {
+class ExtensionManager(val workspace: ExtendableWorkspace) extends org.nlogo.api.ExtensionManager {
   import ExtensionManager.{ ExtensionData, JarContainer }
   import ExtensionManagerException._
-
-  // for backwards compatibility during refactor
-  val workspace: AbstractWorkspace = if (_workspace.isInstanceOf[AbstractWorkspace]) _workspace.asInstanceOf[AbstractWorkspace] else null
 
   private var jars = Map[URL, JarContainer]()
   private var liveJars = Set[JarContainer]()
 
-  def anyExtensionsLoaded: Boolean =
-    jars.nonEmpty
+  def anyExtensionsLoaded: Boolean = jars.nonEmpty
 
   def loadedExtensions: JIterable[ClassManager] =
     asJavaIterable(jars.values.map(_.classManager))
 
   @throws(classOf[ExtensionException])
-  def getFile(path: String): File =
-    _workspace.fileManager.getFile(getFullPath(path))
+  def getFile(path: String): File = {
+    val filePath =
+      resolvePathAsURL(path).map(u => new JFile(u.toURI).getPath).getOrElse(
+        throw new ExtensionException(s"Can't find file: $path"))
+    workspace.fileManager.getFile(filePath)
+  }
 
   private var obj: AnyRef = null
 
@@ -133,29 +129,16 @@ class ExtensionManager(_workspace: ExtendableWorkspace) extends org.nlogo.api.Ex
 
   private def identifierToJar(id: String): String =
     if (!id.endsWith(".jar"))
-      return id + java.io.File.separator + id + ".jar"
+      id + java.io.File.separator + id + ".jar"
     else
-      return id
+      id
 
   @throws(classOf[CompilerException])
   def importExtension(extName: String, errors: ErrorSource): Unit = {
     try {
-      val fileURL: URL =
-        try {
-          resolvePathAsURL(identifierToJar(extName))
-        } catch {
-          case ex: RuntimeException =>
-            ex.printStackTrace()
-            throw new ExtensionManagerException(ExtensionNotFound(extName))
-          case ex: IOException =>
-            ex.printStackTrace()
-            try {
-              new URL(identifierToJar(extName))
-            } catch {
-              case e: MalformedURLException =>
-                throw new ExtensionManagerException(ExtensionNotFound(extName))
-            }
-        }
+      val fileURL = resolvePathAsURL(identifierToJar(extName)).getOrElse {
+        throw new ExtensionManagerException(ExtensionNotFound(extName))
+      }
 
       val data = extensionData(extName, fileURL, connectToJar(fileURL))
 
@@ -187,6 +170,9 @@ class ExtensionManager(_workspace: ExtendableWorkspace) extends org.nlogo.api.Ex
         theJarContainer.foreach(_.load(classManager))
       theJarContainer.foreach(liveJars += _)
     } catch {
+      case ex@(_: RuntimeException | _: MalformedURLException)=>
+        ex.printStackTrace()
+        errors.signalError(ExtensionNotFound(extName).message)
       case ex @ (_: ExtensionManagerException | _: ExtensionException) =>
         errors.signalError(ex.getMessage)
       case ex: IOException =>
@@ -203,42 +189,17 @@ class ExtensionManager(_workspace: ExtendableWorkspace) extends org.nlogo.api.Ex
     newJarContainer
   }
 
-  private[workspace] def resolvePathAsURL(path: String): URL = {
-    try {
-      return new URL(path)
-    } catch {
-      case ex: MalformedURLException => org.nlogo.util.Exceptions.ignore(ex)
-    }
+  private[workspace] def resolvePathAsURL(path: String): Option[URL] = {
+    val pathsToTry: Seq[Try[URL]] = Try(new URL(path)) +:
+      potentialPaths(path).filter(f => f.exists).map(f => Try(ExtensionManager.toURL(f)))
 
-    val files = potentialPaths(path)
-
-    val foundPath = files.find(f => f.exists).flatMap(f =>
-        try {
-          Some(ExtensionManager.toURL(f))
-        } catch {
-          case ex: MalformedURLException =>
-            org.nlogo.util.Exceptions.ignore(ex)
-            None
-        }).headOption
-
-    if (foundPath.nonEmpty)
-      return foundPath.get
-
-    val triedPathsString: String = (path +: files.map(_.getPath)).mkString(", ")
-    throw new IllegalStateException(ExtensionManager.EXTENSION_NOT_FOUND + path + " looked in: " + triedPathsString)
+    pathsToTry.collect { case Success(url) => url }.headOption
   }
 
   private def potentialPaths(path: String): Seq[JFile] = {
     val paths = Seq(new JFile(ExtensionManager.extensionPath + java.io.File.separator + path))
-    Try {
-      new JFile(_workspace.attachModelDir(path))
-    }.toOption.map(_ +: paths).getOrElse(paths)
+    Try(new JFile(workspace.attachModelDir(path))).toOption.map(_ +: paths).getOrElse(paths)
   }
-
-  @throws(classOf[ExtensionException])
-  def getFullPath(path: String): String =
-    potentialPaths(path).find(_.exists).map(_.getPath).getOrElse(
-      throw new ExtensionException(s"Can't find file: $path"))
 
   private def getClassLoader(fileURL: URL, parentLoader: ClassLoader): URLClassLoader = {
     val folderContainingJar = new JFile(new JFile(fileURL.getFile).getParent)
@@ -246,37 +207,33 @@ class ExtensionManager(_workspace: ExtendableWorkspace) extends org.nlogo.api.Ex
     java.net.URLClassLoader.newInstance(urls.toArray, parentLoader)
   }
 
-  private def getClassManager(myClassLoader: URLClassLoader, data: ExtensionData): ClassManager = {
-    Try {
-      myClassLoader.loadClass(data.classManagerName).newInstance match {
+  private def getClassManager(classLoader: URLClassLoader, data: ExtensionData): ClassManager =
+    try {
+      classLoader.loadClass(data.classManagerName).newInstance match {
         case cm: ClassManager => cm
-        case _ =>
+        case _                =>
           throw new ExtensionManagerException(InvalidClassManager)
       }
-    }.recover {
+    } catch {
       case ex: ClassNotFoundException =>
         throw new ExtensionManagerException(NotFoundClassManager(data.classManagerName))
-      case ex: InstantiationException =>
+      case ex@(_: InstantiationException | _: IllegalAccessException) =>
         throw new IllegalStateException(ex)
-      case ex: IllegalAccessException =>
-        throw new IllegalStateException(ex)
-    }.get
-  }
+    }
 
-  private def initializedClassManager(cm: ClassManager): ClassManager = {
+  private def initializedClassManager(cm: ClassManager): ClassManager =
     try {
-      if (!_workspace.compilerTestingMode)
+      if (!workspace.compilerTestingMode)
         cm.runOnce(this)
+      cm
     } catch {
       case ex: ExtensionException =>
         System.err.println("Error while initializing extension.")
         System.err.println("Error is: " + ex)
         throw ex
     }
-    cm
-  }
 
-  private def connectToJar(fileURL: URL): JarURLConnection = {
+  private def connectToJar(fileURL: URL): JarURLConnection =
     try {
       val jarURL = new URL("jar", "", fileURL.toString + "!/")
       jarURL.openConnection.asInstanceOf[JarURLConnection]
@@ -284,27 +241,26 @@ class ExtensionManager(_workspace: ExtendableWorkspace) extends org.nlogo.api.Ex
       case _ : FileNotFoundException | _ : IOException =>
         throw new ExtensionManagerException(ExtensionNotFound(fileURL.toString))
     }
-  }
 
   // throwing an IOException indicates an established connection is not working, so we have a problem
   @throws(classOf[IOException])
-  private def extensionData(extensionName: String, fileURL: URL, jarConnection: JarURLConnection): ExtensionData = {
+  private def extensionData(extensionName: String, fileURL: URL, jarConnection: JarURLConnection): ExtensionData =
     Option(jarConnection.getManifest).map { manifest =>
       val attr = manifest.getMainAttributes
 
       val version       = Option(attr.getValue("NetLogo-Extension-API-Version"))
+      // note - the prefix is not really used anywhere, the extensionName drives the behavior.
+      // But no assertion is ever made that prefix == extensionName
       val prefix        = Option(attr.getValue("Extension-Name")).getOrElse(throw new ExtensionManagerException(NoExtensionName))
       val classMangName = Option(attr.getValue("Class-Manager")).getOrElse(throw new ExtensionManagerException(NoClassManager))
 
       ExtensionData(extensionName, fileURL, prefix, classMangName, version, jarConnection.getLastModified)
 
     }.getOrElse(throw new ExtensionManagerException(NoManifest))
-  }
 
-  // used by extensions
   @throws(classOf[CompilerException])
   def readFromString(source: String): AnyRef =
-    return _workspace.readFromString(source)
+    workspace.readFromString(source)
 
   def clearAll(): Unit =
     for (jar <- jars.values) {
@@ -346,7 +302,7 @@ class ExtensionManager(_workspace: ExtendableWorkspace) extends org.nlogo.api.Ex
   def dumpExtensions: String = tabulate(
     Seq("EXTENSION", "LOADED", "MODIFIED", "JARPATH"),
     (jarContainer =>
-        Seq(Seq(jarContainer.prefix, jarContainer.loaded.toString, jarContainer.modified.toString, jarContainer.fileURL.toString))))
+        Seq(Seq(jarContainer.extensionName, jarContainer.loaded.toString, jarContainer.modified.toString, jarContainer.fileURL.toString))))
 
   /**
    * Returns a String describing all the loaded extensions.
@@ -355,7 +311,7 @@ class ExtensionManager(_workspace: ExtendableWorkspace) extends org.nlogo.api.Ex
     Seq("EXTENSION", "PRIMITIVE", "TYPE"),
     (jarContainer => jarContainer.primManager.getPrimitiveNames.map { n =>
       val p = jarContainer.primManager.getPrimitive(n)
-      Seq(jarContainer.prefix, n, if (p.isInstanceOf[Reporter]) "Reporter" else "Command")
+      Seq(jarContainer.extensionName, n, if (p.isInstanceOf[Reporter]) "Reporter" else "Command")
     }.toSeq))
 
   def reset() = {
@@ -397,11 +353,11 @@ class ExtensionManager(_workspace: ExtendableWorkspace) extends org.nlogo.api.Ex
     val currentVer: String = org.nlogo.api.APIVersion.version
     val shouldContinue: Boolean =
       if (extensionVer.isEmpty)
-        _workspace.warningMessage(
+        workspace.warningMessage(
           """|Could not determine version of NetLogo extension.
              |NetLogo can try to load the extension, but it might not work.""".stripMargin.lines.mkString(" "))
       else if (currentVer != extensionVer.get)
-        _workspace.warningMessage(
+        workspace.warningMessage(
           s"""|You are attempting to open a NetLogo extension file that was created
               |for a different version of the NetLogo Extension API.
               |(This NetLogo uses Extension API $currentVer;

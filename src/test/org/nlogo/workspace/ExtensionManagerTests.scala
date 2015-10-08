@@ -71,7 +71,13 @@ class ExtensionManagerTests extends FunSuite with BeforeAndAfter {
 
   test("getFile raises an exception if the file doesn't exist") {
     intercept[ExtensionException] {
+      try
       emptyManager.getFile("notfound")
+      catch {
+        case e: IllegalStateException => println(e.getMessage)
+        e.printStackTrace
+        throw e
+      }
     }
   }
 
@@ -102,44 +108,26 @@ class ExtensionManagerTests extends FunSuite with BeforeAndAfter {
   }
 
   test("resolvePathAsURL resolves URLs as URLs ") {
-    assert(emptyManager.resolvePathAsURL("file:///tmp") == new URL("file:/tmp"))
+    assert(emptyManager.resolvePathAsURL("file:///tmp").get == new URL("file:/tmp"))
   }
 
   test("resolvePathAsURL resolves paths with slashes relative to the model location") {
     val expectedURL = dummyWorkspace.dummyFileManager.fooExt.toURI.toURL
-    assert(fixWonkyURI(emptyManager.resolvePathAsURL("extensions/foo")) == expectedURL)
+    assert(emptyManager.resolvePathAsURL("extensions/foo").get == expectedURL)
   }
 
   test("resolvePathAsURL resolves paths relative to the model location") {
     val expectedURL = dummyWorkspace.dummyFileManager.foobarFile.toURI.toURL
-    assert(fixWonkyURI(emptyManager.resolvePathAsURL("foobar")) == expectedURL)
+    assert(emptyManager.resolvePathAsURL("foobar").get == expectedURL)
   }
 
   test("resolvePathAsURL resolves extensions relative to the working directory") {
     val expectedURL = new java.io.File("extensions" + java.io.File.separator + "array").toURI.toURL
-    assert(emptyManager.resolvePathAsURL("array") == expectedURL)
+    assert(emptyManager.resolvePathAsURL("array").get == expectedURL)
   }
 
-  test("resolvePathAsURL throws an exception if the file cannot be found") {
-    intercept[IllegalStateException] {
-      emptyManager.resolvePathAsURL("notfound")
-    }
-  }
-
-  test("getFullPath returns the full path of files in the models directory") {
-    val expectedPath = dummyWorkspace.attachModelDir("foobar")
-    assert(emptyManager.getFullPath("foobar") == expectedPath)
-  }
-
-  test("getFullPath returns the path of files in cwd's extensions directory") {
-    val expectedPath = new java.io.File("extensions/array").getPath
-    assert(emptyManager.getFullPath("array") == expectedPath)
-  }
-
-  test("getFullPath throws an ExtensionException when the file cannot be found") {
-    intercept[ExtensionException] {
-      emptyManager.getFullPath("notfound")
-    }
+  test("resolvePathAsURL returns None if the file cannot be found") {
+    assert(emptyManager.resolvePathAsURL("notfound").isEmpty)
   }
 
   test("readFromString proxies through to workspace") {
@@ -246,8 +234,4 @@ class ExtensionManagerTests extends FunSuite with BeforeAndAfter {
   test("finishFullCompilation doesn't catch exceptions thrown by the jar on unloading") {
     pending
   }
-
-  // TODO: this shouldn't be needed
-  def fixWonkyURI(uri: URL): URL =
-    new URL(uri.getProtocol, "", uri.getPath.replaceFirst("/private", ""))
 }

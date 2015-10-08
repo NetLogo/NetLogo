@@ -16,6 +16,7 @@ class DummyWorkspace extends ExtendableWorkspace {
   def profilingEnabled(): Boolean = ???
   def readFromString(s: String): Object = s
   def warningMessage(x$1: String): Boolean = ???
+  def setProfilingTracer(tracer: org.nlogo.nvm.Tracer) = ???
 }
 
 class DummyFileManager extends org.nlogo.nvm.FileManager {
@@ -28,7 +29,7 @@ class DummyFileManager extends org.nlogo.nvm.FileManager {
   foobarFile.createNewFile()
 
   def attachModelDir(f: String): String =
-    new java.io.File(tempdir.toFile, f).getCanonicalPath
+    new java.io.File(tempdir.toFile, f).getAbsolutePath
 
   val dummyFile = new org.nlogo.api.File {
     def close(ok: Boolean): Unit = ???

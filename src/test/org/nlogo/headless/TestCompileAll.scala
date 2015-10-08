@@ -4,11 +4,9 @@ package org.nlogo.headless
 
 import java.io.IOException
 
-import scala.util.Failure
-import scala.util.Success
-import scala.util.Try
+import scala.util.{ Failure, Success, Try }
 
-import org.nlogo.api.{ CompilerException, LogoException, PreviewCommands, Version }
+import org.nlogo.api.{ CompilerException, PreviewCommands, Version }
 import org.nlogo.nvm.Workspace
 import org.nlogo.util.SlowTest
 import org.nlogo.workspace.{ ExtensionManager, ModelsLibrary }
