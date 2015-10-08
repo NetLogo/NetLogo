@@ -190,7 +190,7 @@ with org.nlogo.api.ViewSettings {
     import collection.JavaConverters._
     val results = compiler.compileProgram(
       source, world.newProgram(List[String]().asJava),
-      getExtensionManager)
+      getExtensionManager, getCompilationEnvironment)
     setProcedures(results.proceduresMap)
     codeBits.clear()
     init()

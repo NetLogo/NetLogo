@@ -10,12 +10,8 @@ class AgentTypeCheckerTests extends FunSuite {
 
   /// first some helpers
   private def compile(source: String, is3D: Boolean): Seq[ProcedureDefinition] = {
-    implicit val tokenizer = if (is3D) Compiler.Tokenizer3D else Compiler.Tokenizer2D
     val program = new Program(is3D)
-    val results = new StructureParser(tokenizer.tokenize(source), None, program,
-      java.util.Collections.emptyMap[String, Procedure],
-      new DummyExtensionManager)
-      .parse(false)
+    val results = TestHelper.structureParse(source, program, is3D = is3D)
     val defs = new collection.mutable.ArrayBuffer[ProcedureDefinition]
     import collection.JavaConverters._ // results.procedures.values is a java.util.Collection
     for (procedure <- results.procedures.asScala.values) {

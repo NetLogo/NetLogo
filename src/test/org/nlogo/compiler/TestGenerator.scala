@@ -4,7 +4,7 @@ package org.nlogo.compiler
 
 import org.scalatest.FunSuite
 import org.nlogo.api.{ DummyExtensionManager, Program, Version }
-import org.nlogo.nvm.Procedure
+import org.nlogo.nvm.{ DummyCompilationEnvironment, Procedure }
 
 class TestGenerator extends FunSuite {
 
@@ -18,7 +18,7 @@ class TestGenerator extends FunSuite {
     Compiler.compileMoreCode(
       "to foo " + preamble + source + "\nend", None,
       program, java.util.Collections.emptyMap[String, Procedure],
-      new DummyExtensionManager).head.code.head
+      new DummyExtensionManager, new DummyCompilationEnvironment()).head.code.head
   def disassembleCommand(source: String): String =
     condense(compile(source, "").disassembly.value)
   def disassembleReporter(source: String): String =
@@ -140,7 +140,7 @@ class TestGenerator extends FunSuite {
           |to-report move
           |  report all? agents-here [true] or all? agents-here [false]
           |end
-          """.stripMargin, emptyProgram, new DummyExtensionManager
+          """.stripMargin, emptyProgram, new DummyExtensionManager, new DummyCompilationEnvironment()
         )
       }
 }

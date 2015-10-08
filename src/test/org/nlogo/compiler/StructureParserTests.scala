@@ -5,16 +5,12 @@ package org.nlogo.compiler
 import org.scalatest.FunSuite
 
 import org.nlogo.api.{ CompilerException, DummyExtensionManager, Program }
-import org.nlogo.nvm.Procedure
+import org.nlogo.nvm.{ DummyCompilationEnvironment, Procedure }
 
 class StructureParserTests extends FunSuite {
   // private so StructureParser.Results doesn't escape compiler package
-  private def compile(source: String, program: Program = new Program(false)): StructureParser.Results = {
-    implicit val tokenizer = Compiler.Tokenizer2D
-    new StructureParser(tokenizer.tokenize(source), None, program,
-      java.util.Collections.emptyMap[String, Procedure], new DummyExtensionManager)
-      .parse(false)
-  }
+  private def compile(source: String, program: Program = new Program(false)): StructureParser.Results =
+    TestHelper.structureParse(source, program)
   test("empty") {
     val program = new Program(false)
     val results = compile("", program)

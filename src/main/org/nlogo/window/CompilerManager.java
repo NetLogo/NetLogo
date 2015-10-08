@@ -107,7 +107,7 @@ public strictfp class CompilerManager
       CompilerResults results =
           workspace.compiler().compileProgram
               (proceduresInterface.innerSource(), workspace.world.newProgram(getGlobalVariableNames()),
-                  workspace.getExtensionManager());
+                  workspace.getExtensionManager(), workspace.getCompilationEnvironment());
       workspace.setProcedures(results.proceduresMap());
       for (Procedure procedure : workspace.getProcedures().values()) {
         if (procedure.fileName.equals("")) {
@@ -176,7 +176,7 @@ public strictfp class CompilerManager
       CompilerResults results =
           workspace.compiler().compileMoreCode
               (owner.source(), scala.Some.apply(owner.classDisplayName() + " '" + owner.displayName() + "'"),
-                  workspace.world.program(), workspace.getProcedures(), workspace.getExtensionManager());
+                  workspace.world.program(), workspace.getProcedures(), workspace.getExtensionManager(), workspace.getCompilationEnvironment());
 
       if (!results.procedures().isEmpty()) {
         results.head().init(workspace);
@@ -234,7 +234,7 @@ public strictfp class CompilerManager
         CompilerResults results =
             workspace.compiler().compileMoreCode
                 (owner.source(), scala.Some.apply(owner.classDisplayName()), workspace.world.program(),
-                    workspace.getProcedures(), workspace.getExtensionManager());
+                    workspace.getProcedures(), workspace.getExtensionManager(), workspace.getCompilationEnvironment());
         results.head().init(workspace);
         results.head().setOwner(owner);
         new org.nlogo.window.Events.CompiledEvent

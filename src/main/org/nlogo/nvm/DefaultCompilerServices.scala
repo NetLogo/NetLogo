@@ -16,11 +16,11 @@ class DefaultCompilerServices(compiler: CompilerInterface) extends CompilerServi
   def checkReporterSyntax(source: String) =
     compiler.checkReporterSyntax(source, new Program(false),
                                  new java.util.HashMap[String,Procedure],
-                                 null, false)
+                                 null, false, new DummyCompilationEnvironment())
   def checkCommandSyntax(source: String) =
     compiler.checkCommandSyntax(source, new Program(false),
                                 new java.util.HashMap[String,Procedure],
-                                null, true)
+                                null, true, new DummyCompilationEnvironment())
   def readFromString(source: String) =
     compiler.readFromString(source, false)
   def isConstant(s: String) =
@@ -29,7 +29,7 @@ class DefaultCompilerServices(compiler: CompilerInterface) extends CompilerServi
     compiler.isValidIdentifier(s, false)
   def isReporter(s: String) =
     compiler.isReporter(s, new Program(false), new java.util.HashMap[String, Procedure],
-                        new org.nlogo.api.DummyExtensionManager)
+                        new org.nlogo.api.DummyExtensionManager, new DummyCompilationEnvironment())
   def tokenizeForColorization(source: String) =
     compiler.tokenizeForColorization(
       source, new org.nlogo.api.DummyExtensionManager, false)

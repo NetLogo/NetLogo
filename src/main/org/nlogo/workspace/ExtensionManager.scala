@@ -112,22 +112,12 @@ class ExtensionManager(_workspace: ExtendableWorkspace) extends org.nlogo.api.Ex
 
   private var jars = Map[URL, JarContainer]()
   private var liveJars = Set[JarContainer]()
-  private def jarsLoaded: Int =
-    jars.values.count(_.loaded)
-
-  def profilingEnabled: Boolean =
-    _workspace.profilingEnabled
 
   def anyExtensionsLoaded: Boolean =
-    jarsLoaded > 0
+    jars.nonEmpty
 
   def loadedExtensions: JIterable[ClassManager] =
     asJavaIterable(jars.values.map(_.classManager))
-
-  @throws(classOf[java.io.IOException])
-  def getSource(filename: String): String = {
-    _workspace.getSource(filename)
-  }
 
   @throws(classOf[ExtensionException])
   def getFile(path: String): File =
@@ -152,7 +142,7 @@ class ExtensionManager(_workspace: ExtendableWorkspace) extends org.nlogo.api.Ex
     try {
       val fileURL: URL =
         try {
-          resolvePathAsActualURL(identifierToJar(extName))
+          resolvePathAsURL(identifierToJar(extName))
         } catch {
           case ex: RuntimeException =>
             ex.printStackTrace()
@@ -213,27 +203,7 @@ class ExtensionManager(_workspace: ExtendableWorkspace) extends org.nlogo.api.Ex
     newJarContainer
   }
 
-
-  def addToLibraryPath(classManager: AnyRef, directory: String): Unit = {
-    org.nlogo.api.JavaLibraryPath.setLibraryPath(classManager.getClass, directory)
-  }
-
-  def resolvePath(path: String): String = {
-    Try(new JFile(_workspace.attachModelDir(path))).recover {
-      case ex: MalformedURLException =>
-        throw new IllegalStateException(s"$path is not a valid pathname: $ex")
-    }.flatMap(r =>
-      Try(r.getCanonicalPath).recover {
-        case ex: IOException => r.getPath
-      }).get
-  }
-
-  // this name could be better, but changing it is API-breaking,
-  // so I'm holding off until the last possible minute
-  def resolvePathAsURL(path: String): String =
-    resolvePathAsActualURL(path).toString
-
-  private def resolvePathAsActualURL(path: String): URL = {
+  private[workspace] def resolvePathAsURL(path: String): URL = {
     try {
       return new URL(path)
     } catch {
@@ -331,6 +301,7 @@ class ExtensionManager(_workspace: ExtendableWorkspace) extends org.nlogo.api.Ex
     }.getOrElse(throw new ExtensionManagerException(NoManifest))
   }
 
+  // used by extensions
   @throws(classOf[CompilerException])
   def readFromString(source: String): AnyRef =
     return _workspace.readFromString(source)
@@ -368,14 +339,6 @@ class ExtensionManager(_workspace: ExtendableWorkspace) extends org.nlogo.api.Ex
       .filter(relevantFilter)
       .map(_.primManager.getPrimitive(primName)).headOption.orNull
   }
-
-  def getJarPaths: JList[String] =
-    new JArrayList[String](
-      jars.values.flatMap(j =>
-          (j.extensionName + '/' + j.extensionName + ".jar") +: j.classManager.additionalJars))
-
-  def getExtensionNames: JList[String] =
-    new JArrayList[String](jars.values.map(_.extensionName))
 
   /**
    * Returns a String describing all the loaded extensions.

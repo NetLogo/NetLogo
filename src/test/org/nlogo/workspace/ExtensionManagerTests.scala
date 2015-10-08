@@ -2,6 +2,8 @@
 
 package org.nlogo.workspace
 
+import java.net.URL
+
 import org.nlogo.api.ExtensionException
 
 import org.scalatest.{ BeforeAndAfter, FunSuite }
@@ -59,10 +61,6 @@ class ExtensionManagerTests extends FunSuite with BeforeAndAfter {
     }
   }
 
-  test("getFile gets the source from the provided workspace") {
-    assert(emptyManager.getSource("foobar") == dummyWorkspace.getSource("foobar"))
-  }
-
   test("getFile retrieves files from the workspaces model directory") {
     assert(emptyManager.getFile("foobar") == dummyWorkspace.fileManager.getFile("foobar"))
   }
@@ -104,21 +102,21 @@ class ExtensionManagerTests extends FunSuite with BeforeAndAfter {
   }
 
   test("resolvePathAsURL resolves URLs as URLs ") {
-    assert(emptyManager.resolvePathAsURL("file:///tmp") == "file:/tmp")
+    assert(emptyManager.resolvePathAsURL("file:///tmp") == new URL("file:/tmp"))
   }
 
   test("resolvePathAsURL resolves paths with slashes relative to the model location") {
-    val expectedURL = dummyWorkspace.dummyFileManager.fooExt.toURI.toURL.toString
+    val expectedURL = dummyWorkspace.dummyFileManager.fooExt.toURI.toURL
     assert(fixWonkyURI(emptyManager.resolvePathAsURL("extensions/foo")) == expectedURL)
   }
 
   test("resolvePathAsURL resolves paths relative to the model location") {
-    val expectedURL = dummyWorkspace.dummyFileManager.foobarFile.toURI.toURL.toString
+    val expectedURL = dummyWorkspace.dummyFileManager.foobarFile.toURI.toURL
     assert(fixWonkyURI(emptyManager.resolvePathAsURL("foobar")) == expectedURL)
   }
 
   test("resolvePathAsURL resolves extensions relative to the working directory") {
-    val expectedURL = new java.io.File("extensions" + java.io.File.separator + "array").toURI.toURL.toString
+    val expectedURL = new java.io.File("extensions" + java.io.File.separator + "array").toURI.toURL
     assert(emptyManager.resolvePathAsURL("array") == expectedURL)
   }
 
@@ -169,26 +167,6 @@ class ExtensionManagerTests extends FunSuite with BeforeAndAfter {
             |---------	------	--------	-------
             |array	true	$modified	$path
             |""".stripMargin)
-    }
-  }
-
-  test("getJarPaths returns empty list if no extensions loaded") {
-    assert(emptyManager.getJarPaths.isEmpty)
-  }
-
-  test("getJarPaths returns a list of paths when jars are loaded") {
-    new WithLoadedArrayExtension {
-      assert(loadedManager.getJarPaths.head == "array/array.jar")
-    }
-  }
-
-  test("getExtensionNames returns empty list if no extensions loaded") {
-    assert(emptyManager.getExtensionNames.isEmpty)
-  }
-
-  test("getExtensionNames lists loaded extensions") {
-    new WithLoadedArrayExtension {
-      assert(loadedManager.getExtensionNames.head == "array")
     }
   }
 
@@ -270,6 +248,6 @@ class ExtensionManagerTests extends FunSuite with BeforeAndAfter {
   }
 
   // TODO: this shouldn't be needed
-  def fixWonkyURI(uri: String) =
-    uri.replaceFirst("/private", "")
+  def fixWonkyURI(uri: URL): URL =
+    new URL(uri.getProtocol, "", uri.getPath.replaceFirst("/private", ""))
 }

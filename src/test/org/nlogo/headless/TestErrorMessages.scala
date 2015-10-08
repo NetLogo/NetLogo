@@ -38,7 +38,7 @@ class TestErrorMessages extends FunSuite with AbstractTestLanguage with BeforeAn
       compiler.compileProgram(
         "breed [hunters hunter] hunters-own [fear] hunters-own [loathing]",
         workspace.world.newProgram(java.util.Collections.emptyList[String]),
-        workspace.getExtensionManager)
+        workspace.getExtensionManager, workspace.getCompilationEnvironment)
     }
     assertResult("Redeclaration of HUNTERS-OWN")(ex.getMessage)
   }

@@ -16,10 +16,7 @@ class OptimizerTests extends FunSuite {
       .statements.body.head.toString
   private def compile(source:String):ProcedureDefinition = {
     val program = new Program(false)
-    val results = new StructureParser(tokenizer.tokenize(source), None, program,
-                                      java.util.Collections.emptyMap[String,Procedure],
-                                      new DummyExtensionManager)
-      .parse(false)
+    val results = TestHelper.structureParse(source, program)
     assertResult(1)(results.procedures.size)
     val procedure = results.procedures.values.iterator.next()
     val tokens =

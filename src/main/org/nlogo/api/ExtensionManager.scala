@@ -76,26 +76,12 @@ trait ExtensionManager {
   @throws(classOf[CompilerException])
   def importExtension(jarPath: String, errors: ErrorSource)
 
-  def resolvePath(path: String): String
-
-  def resolvePathAsURL(path: String): String
-
   def dumpExtensions: String
 
   def dumpExtensionPrimitives(): String
 
-  @throws(classOf[java.io.IOException])
-  def getSource(filename: String): String
-
-  def addToLibraryPath(classManager: AnyRef, directory: String)
-
+  // used only by extensions
   @throws(classOf[ExtensionException])
   def getFile(path: String): File
-
-  def getJarPaths: JList[String]
-
-  def getExtensionNames: JList[String]
-
-  def profilingEnabled: Boolean
 
 }

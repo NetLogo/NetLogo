@@ -41,7 +41,7 @@ trait AbstractTestLanguage extends Assertions {
       compiler.compileProgram(
         HeadlessWorkspace.TestDeclarations + source,
         workspace.world.newProgram(List[String]().asJava),
-        workspace.getExtensionManager())
+        workspace.getExtensionManager(), workspace.getCompilationEnvironment)
     }
     workspace.setProcedures(results.proceduresMap)
     workspace.world.program(results.program)
