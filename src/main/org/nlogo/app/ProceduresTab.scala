@@ -3,6 +3,7 @@
 package org.nlogo.app
 
 import org.nlogo.agent.Observer
+import org.nlogo.editor.LineNumbersBar
 import org.nlogo.window.EditorAreaErrorLabel
 import org.nlogo.workspace.AbstractWorkspace
 
@@ -31,6 +32,7 @@ class ProceduresTab(val workspace: AbstractWorkspace) extends JPanel
   override def zoomTarget = text
 
   val errorLabel = new EditorAreaErrorLabel(text)
+  val lineNumbers = new LineNumbersBar(text)
   val toolBar = getToolBar
   def compiler = workspace
   def program = workspace.world.program
@@ -39,12 +41,13 @@ class ProceduresTab(val workspace: AbstractWorkspace) extends JPanel
     setIndenter(false)
     setLayout(new BorderLayout)
     add(toolBar, BorderLayout.NORTH)
+    val scrollableEditor = new JScrollPane(
+      text,
+      ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+      ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
+    scrollableEditor.setRowHeaderView(lineNumbers)
     val codePanel = new JPanel(new BorderLayout) {
-      add(new JScrollPane(
-        text,
-        ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED),
-        BorderLayout.CENTER)
+      add(scrollableEditor, BorderLayout.CENTER)
       add(errorLabel, BorderLayout.NORTH)
     }
     add(codePanel, BorderLayout.CENTER)
@@ -110,6 +113,7 @@ class ProceduresTab(val workspace: AbstractWorkspace) extends JPanel
     if(originalFontSize == -1)
       originalFontSize = text.getFont.getSize
     text.setFont(text.getFont.deriveFont(StrictMath.ceil(originalFontSize * zoomFactor).toFloat))
+    lineNumbers.setFont(text.getFont)
     errorLabel.zoom(zoomFactor)
   }
 
