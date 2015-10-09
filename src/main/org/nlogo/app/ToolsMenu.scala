@@ -12,6 +12,7 @@ class ToolsMenu(app: App) extends org.nlogo.swing.Menu(I18N.gui.get("menu.tools"
 
   implicit val i18nName = I18N.Prefix("menu.tools")
 
+  setMnemonic('T')
   addMenuItem(I18N.gui("halt"), app.workspace.halt _)
   addSeparator()
   addMenuItem(I18N.gui("globalsMonitor"), () => app.workspace.inspectAgent(classOf[Observer]))
