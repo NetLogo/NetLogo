@@ -86,6 +86,8 @@ libraryDependencies ++= Seq(
 
 unmanagedJars in Compile += Attributed.blank(file(System.getProperty("java.home") + "/lib/ext/jfxrt.jar"))
 
+unmanagedJars in Compile += Attributed.blank(file(System.getProperty("java.home") + "/lib/ext/sunjce_provider.jar"))
+
 all <<= (baseDirectory, streams) map { (base, s) =>
   s.log.info("making resources/system/dict.txt and docs/dict folder")
   IO.delete(base / "docs" / "dict")
