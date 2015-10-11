@@ -4,9 +4,9 @@ package org.nlogo.nvm;
 
 import org.nlogo.api.Let;
 
-strictfp class LetBinding {
-  final Let let;
-  Object value;
+strictfp public class LetBinding {
+  public final Let let;
+  public Object value;
 
   LetBinding(Let let, Object value) {
     this.let = let;
