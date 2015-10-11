@@ -180,7 +180,7 @@ public strictfp class Argument
     }
   }
 
-  @SuppressWarnings("unchecked") public List<org.nlogo.api.Token> getCode() 
+  @SuppressWarnings("unchecked") public List<org.nlogo.api.Token> getCode()
       throws org.nlogo.api.ExtensionException, org.nlogo.api.LogoException {
     Object obj = get();
     try {
@@ -188,6 +188,17 @@ public strictfp class Argument
     } catch (ClassCastException ex) {
       throw new org.nlogo.api.ExtensionException(
         getExceptionMessage(Syntax.CodeBlockType(), obj));
+    }
+  }
+
+  public org.nlogo.api.Token getSymbol()
+      throws org.nlogo.api.ExtensionException, org.nlogo.api.LogoException {
+    Object obj = get();
+    try {
+      return (org.nlogo.api.Token) obj;
+    } catch (ClassCastException ex) {
+      throw new org.nlogo.api.ExtensionException(
+        getExceptionMessage(Syntax.SymbolType(), obj));
     }
   }
 

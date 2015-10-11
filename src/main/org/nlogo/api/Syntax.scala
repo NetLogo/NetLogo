@@ -260,6 +260,7 @@ object Syntax {
    * As of yet, only holds in it a String
    */
   val CodeBlockType = 1048576
+  val SymbolType = 2097152
 
   val CommandPrecedence = 0
   val NormalPrecedence = 10

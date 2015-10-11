@@ -349,12 +349,17 @@ private class ExpressionParser(procedure: Procedure,
             case TokenType.REPORTER =>
               val r = token.value.asInstanceOf[Reporter]
               if (r.isInstanceOf[_unknownidentifier]) {
-                exception(I18N.errors.getN("compiler.LocalsVisitor.notDefined", token.name),
+                if (goalType == Syntax.SymbolType) {
+                  val c = _constsymbol(token)
+                  (c, new ReporterApp(c, token.startPos, token.endPos, token.fileName))
+                } else {
+                  exception(I18N.errors.getN("compiler.LocalsVisitor.notDefined", token.name),
                                 token)
+                }
               }
               // the "|| wantReporterTask" is needed or the concise syntax wouldn't work for infix
               // reporters, e.g. "map + ..."
-              if(!r.syntax.isInfix || wantReporterTask)
+              else if(!r.syntax.isInfix || wantReporterTask)
                 (r, new ReporterApp(r, token.startPos, token.endPos, token.fileName))
               else {
                 // this is a bit of a hack, but it's not terrible.  _minus is allowed to be unary

@@ -164,4 +164,14 @@ trait Argument {
   @throws(classOf[ExtensionException])
   @throws(classOf[LogoException])
   def getCode: java.util.List[org.nlogo.api.Token]
+
+  /**
+   * Returns the argument as a <code>org.nlogo.api.Token</code>.
+   *
+   * @throws ExtensionException if the argument is not a <code>Token</code>
+   * @throws LogoException      if a LogoException occurred while evaluating this argument
+   */
+  @throws(classOf[ExtensionException])
+  @throws(classOf[LogoException])
+  def getSymbol: org.nlogo.api.Token
 }
