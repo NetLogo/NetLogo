@@ -111,7 +111,7 @@ public abstract strictfp class AbstractWorkspace
     jobManager = Femto.get(JobManagerInterface.class, "org.nlogo.job.JobManager",
         new Object[]{this, world, world});
     fileManager = new DefaultFileManager(this);
-    extensionManager = new ExtensionManager(this);
+    extensionManager = new ExtensionManager(this, new JarLoader(this));
   }
 
   public org.nlogo.api.ExtensionManager getExtensionManager() {

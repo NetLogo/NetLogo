@@ -5,6 +5,7 @@ package org.nlogo.workspace
 import java.net.URL
 
 import org.nlogo.api.ExtensionException
+import ExtensionManager.ExtensionLoader
 
 import org.scalatest.{ BeforeAndAfter, FunSuite }
 
@@ -20,7 +21,7 @@ class ExtensionManagerTests extends FunSuite with BeforeAndAfter {
   }
 
   val dummyWorkspace = new DummyWorkspace
-  val emptyManager = new ExtensionManager(dummyWorkspace)
+  val emptyManager = new ExtensionManager(dummyWorkspace, new JarLoader(dummyWorkspace))
 
   class ErrorSourceException extends Exception("problem")
 
@@ -32,12 +33,26 @@ class ExtensionManagerTests extends FunSuite with BeforeAndAfter {
         throw new ErrorSourceException()
       }
     }
-    val loadingManager = new ExtensionManager(dummyWorkspace)
+    def extraLoaders: Seq[ExtensionLoader] = Seq()
+
+    lazy val loadingManager = {
+      val m = new ExtensionManager(dummyWorkspace, new JarLoader(dummyWorkspace))
+      extraLoaders.foreach(m.addLoader)
+      m
+    }
   }
 
   trait WithLoadedArrayExtension extends LoadingExtensionTest {
-    val loadedManager = loadingManager
-    loadedManager.importExtension("array", errorSource)
+    lazy val loadedManager = {
+      loadingManager.importExtension("array", errorSource)
+      loadingManager
+    }
+  }
+
+  trait InMemoryExtensionTest {
+    lazy val dummyClassManager = new DummyClassManager()
+    lazy val memoryLoader = new InMemoryExtensionLoader("foo", dummyClassManager)
+    lazy val inmemoryManager = new ExtensionManager(dummyWorkspace, memoryLoader)
   }
 
   test("loadedExtensions returns empty list when no extensions loaded") {
@@ -87,12 +102,25 @@ class ExtensionManagerTests extends FunSuite with BeforeAndAfter {
     }
   }
 
+  test("importExtension loads from an alternate loader, if provided") {
+    new LoadingExtensionTest with InMemoryExtensionTest {
+      override def extraLoaders = Seq(memoryLoader)
+      loadingManager.importExtension("foo", errorSource)
+      assert(errorMessage == null)
+      assert(loadingManager.anyExtensionsLoaded)
+    }
+  }
+
   test("readFromString proxies through to workspace") {
     assert(emptyManager.readFromString("foobar") == "foobar")
   }
 
   test("clearAll runs clearAll on all jars") {
-    pending
+    new InMemoryExtensionTest {
+      inmemoryManager.importExtension("foo", null)
+      inmemoryManager.clearAll()
+      assert(dummyClassManager.methodsRun.contains("clearAll"))
+    }
   }
 
   test("dumpExtensions prints an empty table when no extensions have been loaded") {
@@ -156,7 +184,7 @@ class ExtensionManagerTests extends FunSuite with BeforeAndAfter {
     }
   }
 
-  test("finishFullCompilation does not remove live jars if they are imported during compilation") {
+  test("finishFullCompilation does not remove live jars if they are used during compilation") {
     new WithLoadedArrayExtension {
       loadedManager.startFullCompilation()
       loadedManager.importExtension("array", errorSource)
@@ -187,8 +215,15 @@ class ExtensionManagerTests extends FunSuite with BeforeAndAfter {
     }
   }
 
-  //TODO: this needs to be addressed
-  test("finishFullCompilation doesn't catch exceptions thrown by the jar on unloading") {
-    pending
+  test("finishFullCompilation catches exceptions thrown by the jar when unloading") {
+    new InMemoryExtensionTest {
+      override lazy val dummyClassManager = new DummyClassManager() {
+        override def unload(em: org.nlogo.api.ExtensionManager) = { super.unload(em); throw new Exception("stuff") }
+      }
+      inmemoryManager.importExtension("foo", null)
+      inmemoryManager.startFullCompilation()
+      inmemoryManager.finishFullCompilation()
+      assert(dummyClassManager.methodsRun.contains("unload"))
+    }
   }
 }

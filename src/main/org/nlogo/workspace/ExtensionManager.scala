@@ -4,7 +4,8 @@ package org.nlogo.workspace
 import java.net.URL
 
 import org.nlogo.api.{ ClassManager, CompilerException, Dump, ErrorSource,
-  ExtensionException, ExtensionObject, ImportErrorHandler, Primitive, Reporter }
+  ExtensionException, ExtensionManager => APIExtensionManager, ExtensionObject,
+  ImportErrorHandler, Primitive, Reporter }
 
 import java.lang.{ ClassLoader, Iterable => JIterable }
 import java.io.{ IOException, PrintWriter }
@@ -20,40 +21,41 @@ import scala.collection.JavaConversions._
  * there in the last compilation
  * - The unload method is called when an extension is removed from the extensions block
  *
- * Before a compilation, N extensions might be loaded.
- * For example, if the extensions block previously said: extensions [ array table ]
- * Then the array and table extensions will be loaded and added to the set of live jars.
- * For a new compilation, we have to remember which extensions are loaded so that we dont call load on them again.
- * But we have to know which extensions were removed from the list, so that we call unload on them.
- * For example, if the extensions block now says: extensions [ array ]
- * then the table extension needs to be unloaded. But the array extension does not need to be loaded again.
- * During the main compile when/if we reach the extensions block
- * the compiler calls startFullCompilation and
- * the ExtensionManager sets the set of live jars to empty
- * Then, for each extension in the block, it is added to the set of live jars.
- * If the extension wasnt previously in the block, its loaded flag will be false
- * and the ExtensionManager will set loaded to true and call the load method on it.
- * Then, when we come across extension primitives later in compilation, we simply check
- * whether it is in the live set. If the extension is not in the live set, then the
- * primitive isn't found.  For example, if someone removed table from the extensions block,
- * the table extension will no longer be in the live set, and if they call table:make,
- * then error. At the end of main compilation, the compiler calls the finishFullCompilation,
- * and the ExtensionManager calls unload on any extensions that have loaded=true and are
- * not in the live set.
+ * ExtensionManager lifecycle call chart.
+ * In [square brackets] are methods called on the extension manager.
+ * In {curly braces} are the methods called on the class manager of the extension.
+ * Conditions are specified in (parens)
  *
- * Subprogram compilations just check the live set in the same way, and everyone is happy.
- *
- * That is how it works now, but here is some info on the bug was that led to the addition
- * of the live flag. (You shouldn't really have to read this, but maybe it might someday
- * be useful).  After a main compile, the ExtensionManager would set reloaded to false on
- * all extensions.  During the main compile, extensions previously and currently in the
- * extensions block would have loaded=true.  When we encountered a primitive during the
- * main compile, we checked the loaded flag.  But this was true even for extensions that
- * had been removed from the extensions block!  So we would say that table:make was valid,
- * even if table had just been removed.  Subprograms managed to still work because they
- * would run after the main compile, after the loaded flags were set to false. They would
- * get set to false if reloaded!=true.  It was only during the main compile that there was
- * confusion.
+ * [startFullCompilation]                     // called by compiler
+ *   |                 |
+ * (no exts)         (ext foo)
+ *   |                 |
+ *   |                 v
+ *   |           [importExtension(foo)]       // called by compiler
+ *   |            |            |
+ *   |      (foo loaded)   (foo not loaded)
+ *   |            |            |
+ *   |            v            v
+ *   |         {unload}   {runOnce}
+ *   |               |     |
+ *   |               v     v
+ *   |         +-----{load}
+ *   |         |          |                    // return control to compiler
+ *   |(foo:bar not used) (foo:bar used)
+ *   |         |          |
+ *   |         |          v
+ *   |         |   [replaceIdentifer(foo:bar)] // foo added to live set
+ *   |         |          |
+ *   |         |          |
+ *   v         v          v
+ *  [finishFullCompilation]
+ *   |         |          |
+ *(no ext) (foo live) (foo not live)
+ *   |         |          |
+ *  ---       ---         v
+ *                      {unload}
+ *                        |
+ *                       ---
  */
 object ExtensionManager {
   val EXTENSION_NOT_FOUND: String = "Can't find extension: "
@@ -83,9 +85,7 @@ object ExtensionManager {
       try {
         classManager.unload(extensionManager)
       } catch {
-        case ex: ExtensionException =>
-          System.err.println("Error unloading extension: " + ex)
-          ex.printStackTrace
+        case ex: Exception => org.nlogo.util.Exceptions.ignore(ex)
       }
     }
   }
@@ -103,14 +103,14 @@ object ExtensionManager {
   }
 }
 
-class ExtensionManager(val workspace: ExtendableWorkspace) extends org.nlogo.api.ExtensionManager {
-  import ExtensionManager.{ ExtensionData, JarContainer }
+import ExtensionManager._
+
+class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoader) extends APIExtensionManager {
   import ExtensionManagerException._
 
-  private var jars = Map[URL, JarContainer]()
+  private var loaders  = Seq[ExtensionLoader](loader)
+  private var jars     = Map[URL, JarContainer]()
   private var liveJars = Set[JarContainer]()
-
-  private val loader = new JarLoader(workspace)
 
   def anyExtensionsLoaded: Boolean = jars.nonEmpty
 
@@ -118,6 +118,10 @@ class ExtensionManager(val workspace: ExtendableWorkspace) extends org.nlogo.api
     asJavaIterable(jars.values.map(_.classManager))
 
   private var obj: AnyRef = null
+
+  private[workspace] def addLoader(alternateLoader: ExtensionLoader): Unit = {
+    loaders = loaders :+ alternateLoader
+  }
 
   def storeObject(obj: AnyRef): Unit = {
     this.obj = obj
@@ -128,9 +132,10 @@ class ExtensionManager(val workspace: ExtendableWorkspace) extends org.nlogo.api
   @throws(classOf[CompilerException])
   def importExtension(extName: String, errors: ErrorSource): Unit = {
     try {
-      val fileURL = loader.locateExtension(extName).getOrElse {
-        throw new ExtensionManagerException(ExtensionNotFound(extName))
-      }
+      val (fileURL, loader) = loaders.foldLeft(Option.empty[(URL, ExtensionLoader)]) {
+        case (None,             ldr) => ldr.locateExtension(extName).map((_, ldr))
+        case (location@Some(_), _)   => location
+      }.getOrElse(throw new ExtensionManagerException(ExtensionNotFound(extName)))
 
       val data = loader.extensionData(extName, fileURL)
 
@@ -140,7 +145,6 @@ class ExtensionManager(val workspace: ExtendableWorkspace) extends org.nlogo.api
       val myClassLoader: ClassLoader =
         theJarContainer.map(_.jarClassLoader)
           .getOrElse(loader.extensionClassLoader(fileURL, getClass.getClassLoader))
-      assert(myClassLoader != null)
 
       val classManager: ClassManager =
         theJarContainer.filter(_.loaded).map(_.classManager)
@@ -148,7 +152,6 @@ class ExtensionManager(val workspace: ExtendableWorkspace) extends org.nlogo.api
             checkVersion(data.version)
             initializedClassManager(loader.extensionClassManager(myClassLoader, data))
           }
-      assert(classManager != null)
 
       val modifiedSinceLoad = theJarContainer.exists(_.modified != data.modified)
       def needsLoad = ! theJarContainer.exists(_.loaded)
@@ -202,29 +205,29 @@ class ExtensionManager(val workspace: ExtendableWorkspace) extends org.nlogo.api
   @throws(classOf[CompilerException])
   def readExtensionObject(extName: String, typeName: String, value: String): ExtensionObject = {
     val upcaseExtName = extName.toUpperCase
-    jars.values
-      .filter(theJarContainer =>
+    def catchExtensionException(f: JarContainer => ExtensionObject): JarContainer => ExtensionObject = { j: JarContainer =>
+      try { f(j) }
+      catch {
+        case ex: ExtensionException =>
+          System.err.println(ex)
+          throw new IllegalStateException(s"Error reading extension object $upcaseExtName:$typeName $value ==> ${ex.getMessage}")
+      }
+    }
+    jars.values.filter(theJarContainer =>
         theJarContainer.loaded && theJarContainer.normalizedName == upcaseExtName)
-      .map { theJarContainer =>
-        try {
-          theJarContainer.classManager.readExtensionObject(this, typeName, value)
-        } catch {
-          case ex: ExtensionException =>
-            System.err.println(ex)
-            throw new IllegalStateException(s"Error reading extension object $upcaseExtName:$typeName $value ==> ${ex.getMessage}")
-        }
-      }.headOption.getOrElse(null)
+      .map(catchExtensionException(_.classManager.readExtensionObject(this, typeName, value)))
+      .headOption.getOrElse(null)
   }
 
   def replaceIdentifier(name: String): Primitive = {
-    val (primName, relevantFilter) =
+    val (primName, isRelevantJar) =
       if (name.contains(':')) {
         val Array(prefix, pname) = name.split(":")
-        (pname, { (jc: ExtensionManager.JarContainer) => prefix == jc.normalizedName })
+        (pname, { (jc: JarContainer) => prefix.toUpperCase == jc.normalizedName })
       } else
-        (name,  { (jc: ExtensionManager.JarContainer) => jc.primManager.autoImportPrimitives })
+        (name,  { (jc: JarContainer) => jc.primManager.autoImportPrimitives })
     jars.values.filter(liveJars.contains)
-      .filter(relevantFilter)
+      .filter(isRelevantJar)
       .map(_.primManager.getPrimitive(primName)).headOption.orNull
   }
 
@@ -233,18 +236,23 @@ class ExtensionManager(val workspace: ExtendableWorkspace) extends org.nlogo.api
    */
   def dumpExtensions: String = tabulate(
     Seq("EXTENSION", "LOADED", "MODIFIED", "JARPATH"),
-    (jarContainer =>
-        Seq(Seq(jarContainer.extensionName, jarContainer.loaded.toString, jarContainer.modified.toString, jarContainer.fileURL.toString))))
+    { jarContainer =>
+        Seq(Seq(jarContainer.extensionName, jarContainer.loaded.toString, jarContainer.modified.toString, jarContainer.fileURL.toString))
+    }
+  )
 
   /**
    * Returns a String describing all the loaded extensions.
    */
   def dumpExtensionPrimitives: String = tabulate(
     Seq("EXTENSION", "PRIMITIVE", "TYPE"),
-    (jarContainer => jarContainer.primManager.getPrimitiveNames.map { n =>
-      val p = jarContainer.primManager.getPrimitive(n)
-      Seq(jarContainer.extensionName, n, if (p.isInstanceOf[Reporter]) "Reporter" else "Command")
-    }.toSeq))
+    { jarContainer =>
+      jarContainer.primManager.getPrimitiveNames.map { n =>
+        val p = jarContainer.primManager.getPrimitive(n)
+        Seq(jarContainer.extensionName, n, if (p.isInstanceOf[Reporter]) "Reporter" else "Command")
+      }.toSeq
+    }
+  )
 
   def reset() = {
     jars.values.foreach(_.unload(this))
@@ -252,14 +260,14 @@ class ExtensionManager(val workspace: ExtendableWorkspace) extends org.nlogo.api
     liveJars = Set[JarContainer]()
   }
 
-  private def tabulate(header: Seq[String], generateRows: (ExtensionManager.JarContainer) => Seq[Seq[String]]) = {
+  private def tabulate(header: Seq[String], generateRows: (JarContainer) => Seq[Seq[String]]) = {
     val separator = header.map(n => "-" * n.length)
     val rows = jars.values.flatMap(generateRows)
     (Seq(header, separator) ++ rows).map(_.mkString("\t")).mkString("", "\n", "\n")
   }
 
   def startFullCompilation(): Unit = {
-    liveJars = Set[ExtensionManager.JarContainer]()
+    liveJars = Set[JarContainer]()
   }
 
   def finishFullCompilation(): Unit = {
