@@ -4,12 +4,14 @@ package org.nlogo.api
 
 import org.scalatest.FunSuite
 
+import TestEnvironment.projectFilePath
+
 class ModelReaderTests extends FunSuite {
 
   /// parseModel
 
   test("parseModel: empty model has correct version string") {
-    val emptyModel = FileIO.file2String("resources/system/empty.nlogo")
+    val emptyModel = FileIO.file2String(projectFilePath("resources/system/empty.nlogo"))
     val map = ModelReader.parseModel(emptyModel)
     assert("NetLogo (no version)" === ModelReader.parseVersion(map))
   }
@@ -58,7 +60,7 @@ class ModelReaderTests extends FunSuite {
     assert(widgets.get(1).get(0) === "BAR")
   }
   test("parseWidgets: empty model contains only view") {
-    val emptyModel = FileIO.file2String("resources/system/empty.nlogo")
+    val emptyModel = FileIO.file2String(projectFilePath("resources/system/empty.nlogo"))
     val map = ModelReader.parseModel(emptyModel)
     val widgets = ModelReader.parseWidgets(map.get(ModelSection.Interface))
     assert(widgets.size === 1)

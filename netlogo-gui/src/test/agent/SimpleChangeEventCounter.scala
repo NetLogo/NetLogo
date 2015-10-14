@@ -1,7 +1,6 @@
 package org.nlogo.agent
 
-import org.nlogo.api.SimpleChangeEventPublisher
-import org.nlogo.api.SimpleChangeEvent
+import org.nlogo.api.{ SimpleChangeEvent, SimpleChangeEventPublisher }
 
 class SimpleChangeEventCounter(pub: SimpleChangeEventPublisher) extends SimpleChangeEventPublisher#Sub {
   pub.subscribe(this)

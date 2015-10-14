@@ -43,7 +43,9 @@ tmp/
 /build/
 /.idea
 /lib/
+/netlogo-gui/lib/
 /natives/
+/netlogo-gui/natives/
 /out/
 /resources/Errors_??.properties
 /resources/GUI_Strings_??.properties

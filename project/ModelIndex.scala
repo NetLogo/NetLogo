@@ -5,16 +5,17 @@ import Keys._
 
 object ModelIndex {
 
+  val modelsDirectory = settingKey[File]("models directory")
+
   val modelIndex = TaskKey[Seq[File]](
     "model-index", "builds models/index.txt for use in Models Library dialog")
 
   val modelIndexTask =
-    modelIndex <<= (baseDirectory, streams) map {
-      (base, s) =>
-        s.log.info("creating models/index.txt")
-        val path = base / "models" / "index.txt"
-        IO.write(path, generateIndex(base / "models"))
-        Seq(path)
+    modelIndex := {
+      streams.value.log.info("creating models/index.txt")
+      val path = modelsDirectory.value / "index.txt"
+      IO.write(path, generateIndex(modelsDirectory.value))
+      Seq(path)
     }
 
   private def generateIndex(modelsPath: File): String = {

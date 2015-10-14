@@ -17,7 +17,7 @@ object Scaladoc {
       _.loadClass("org.nlogo.api.Version")
        .getMethod("version")
        .invoke(null).asInstanceOf[String]
-       .replaceFirst("NetLogo ", "")
+       .stripPrefix("NetLogo ")
     },
     scalacOptions in (Compile, doc) := {
       (scalacOptions in Compile in doc).value ++
@@ -26,7 +26,7 @@ object Scaladoc {
       Opts.doc.title("NetLogo") ++
       Opts.doc.version(netlogoVersion.value) ++
       Opts.doc.sourceUrl("https://github.com/NetLogo/NetLogo/blob/" +
-        version + "€{FILE_PATH}.scala")
+        netlogoVersion.value + "/" + baseDirectory.value.getName + "€{FILE_PATH}.scala")
     },
     doc in Compile ~= mungeScaladocSourceUrls,
     // The regular doc task includes doc for the entire main source tree.  But for the NetLogo
@@ -40,7 +40,7 @@ object Scaladoc {
           "lite/InterfaceComponent.scala", "lite/Applet.scala", "lite/AppletPanel.scala",
           "api/", "agent/", "workspace/", "nvm/")
         val sourceFilter: File => Boolean = path =>
-          apiSources.exists(ok => path.toString.containsSlice("src/main/org/nlogo/" + ok))
+          apiSources.exists(ok => path.toString.containsSlice("src/main/" + ok))
         // not sure these are being accounted for
         val classpath = inputs.config.classpath
         val out = base / "docs" / "scaladoc"

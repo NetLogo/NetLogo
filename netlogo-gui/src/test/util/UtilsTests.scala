@@ -14,7 +14,7 @@ class UtilsTests extends FunSuite {
     assert(Utils.getStackTrace(new Throwable).filter(_!='\r').take(expected.size) === expected)
   }
   test("getResourceLines") {
-    val expected = "NetLogo author: Uri Wilensky"
+    val expected = "\nNetLogo author: Uri Wilensky"
     assert(Utils.getResourceAsString("/system/about.txt").take(expected.size) ===
       expected)
   }
