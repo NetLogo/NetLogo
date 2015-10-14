@@ -61,26 +61,6 @@ class ExtensionManagerTests extends FunSuite with BeforeAndAfter {
     }
   }
 
-  test("getFile retrieves files from the workspaces model directory") {
-    assert(emptyManager.getFile("foobar") == dummyWorkspace.fileManager.getFile("foobar"))
-  }
-
-  test("getFile returns files in the extensions directory") {
-    assert(emptyManager.getFile("array") != null)
-  }
-
-  test("getFile raises an exception if the file doesn't exist") {
-    intercept[ExtensionException] {
-      try
-      emptyManager.getFile("notfound")
-      catch {
-        case e: IllegalStateException => println(e.getMessage)
-        e.printStackTrace
-        throw e
-      }
-    }
-  }
-
   test("retrieveObject returns null when no object has been stored") {
     assert(emptyManager.retrieveObject == null)
   }
@@ -105,29 +85,6 @@ class ExtensionManagerTests extends FunSuite with BeforeAndAfter {
       assert(errorMessage == null)
       assert(loadingManager.anyExtensionsLoaded)
     }
-  }
-
-  test("resolvePathAsURL resolves URLs as URLs ") {
-    assert(emptyManager.resolvePathAsURL("file:///tmp").get == new URL("file:/tmp"))
-  }
-
-  test("resolvePathAsURL resolves paths with slashes relative to the model location") {
-    val expectedURL = dummyWorkspace.dummyFileManager.fooExt.toURI.toURL
-    assert(emptyManager.resolvePathAsURL("extensions/foo").get == expectedURL)
-  }
-
-  test("resolvePathAsURL resolves paths relative to the model location") {
-    val expectedURL = dummyWorkspace.dummyFileManager.foobarFile.toURI.toURL
-    assert(emptyManager.resolvePathAsURL("foobar").get == expectedURL)
-  }
-
-  test("resolvePathAsURL resolves extensions relative to the working directory") {
-    val expectedURL = new java.io.File("extensions" + java.io.File.separator + "array").toURI.toURL
-    assert(emptyManager.resolvePathAsURL("array").get == expectedURL)
-  }
-
-  test("resolvePathAsURL returns None if the file cannot be found") {
-    assert(emptyManager.resolvePathAsURL("notfound").isEmpty)
   }
 
   test("readFromString proxies through to workspace") {

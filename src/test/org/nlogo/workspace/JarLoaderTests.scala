@@ -131,6 +131,29 @@ class JarLoaderTests extends FunSuite with BeforeAndAfter {
     intercept[ExtensionManagerException] { getClassManager("NotAClassManager") }
   }
 
+  test("resolvePathAsURL resolves URLs as URLs ") {
+    assert(jarLoader.resolvePathAsURL("file:///tmp").get == new URL("file:/tmp"))
+  }
+
+  test("resolvePathAsURL resolves paths with slashes relative to the model location") {
+    val expectedURL = dummyWorkspace.dummyFileManager.fooExt.toURI.toURL
+    assert(jarLoader.resolvePathAsURL("extensions/foo").get == expectedURL)
+  }
+
+  test("resolvePathAsURL resolves paths relative to the model location") {
+    val expectedURL = dummyWorkspace.dummyFileManager.foobarFile.toURI.toURL
+    assert(jarLoader.resolvePathAsURL("foobar").get == expectedURL)
+  }
+
+  test("resolvePathAsURL resolves extensions relative to the working directory") {
+    val expectedURL = new java.io.File("extensions" + java.io.File.separator + "array").toURI.toURL
+    assert(jarLoader.resolvePathAsURL("array").get == expectedURL)
+  }
+
+  test("resolvePathAsURL returns None if the file cannot be found") {
+    assert(jarLoader.resolvePathAsURL("notfound").isEmpty)
+  }
+
   def getClassManager(className: String): ClassManager = {
     jarLoader.extensionClassManager(getClass.getClassLoader,
       dummyExtensionData.copy(classManagerName = s"org.nlogo.workspace.$className"))

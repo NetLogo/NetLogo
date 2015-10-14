@@ -4,10 +4,10 @@ package org.nlogo.workspace
 import java.net.URL
 
 import org.nlogo.api.{ ClassManager, CompilerException, Dump, ErrorSource,
-  ExtensionException, ExtensionObject, File, ImportErrorHandler, Primitive, Reporter }
+  ExtensionException, ExtensionObject, ImportErrorHandler, Primitive, Reporter }
 
 import java.lang.{ ClassLoader, Iterable => JIterable }
-import java.io.{ File => JFile, FileNotFoundException, IOException, PrintWriter }
+import java.io.{ IOException, PrintWriter }
 import java.util.{ List => JList }
 
 import org.nlogo.nvm.FileManager
@@ -57,10 +57,6 @@ import scala.collection.JavaConversions._
  */
 object ExtensionManager {
   val EXTENSION_NOT_FOUND: String = "Can't find extension: "
-
-  @throws(classOf[java.net.MalformedURLException])
-  private def toURL(file: JFile): URL =
-    file.toURI.toURL
 
   def extensionPath: String =
     System.getProperty("netlogo.extensions.dir", "extensions");
@@ -120,14 +116,6 @@ class ExtensionManager(val workspace: ExtendableWorkspace) extends org.nlogo.api
 
   def loadedExtensions: JIterable[ClassManager] =
     asJavaIterable(jars.values.map(_.classManager))
-
-  @throws(classOf[ExtensionException])
-  def getFile(path: String): File = {
-    val filePath =
-      resolvePathAsURL(path).map(u => new JFile(u.toURI).getPath).getOrElse(
-        throw new ExtensionException(s"Can't find file: $path"))
-    workspace.fileManager.getFile(filePath)
-  }
 
   private var obj: AnyRef = null
 
@@ -189,9 +177,6 @@ class ExtensionManager(val workspace: ExtendableWorkspace) extends org.nlogo.api
     jars += data.fileURL -> newJarContainer
     newJarContainer
   }
-
-  private[workspace] def resolvePathAsURL(path: String): Option[URL] =
-    loader.resolvePathAsURL(path)
 
   private def initializedClassManager(cm: ClassManager): ClassManager =
     try {

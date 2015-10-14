@@ -79,9 +79,4 @@ trait ExtensionManager {
   def dumpExtensions: String
 
   def dumpExtensionPrimitives(): String
-
-  // used only by extensions
-  @throws(classOf[ExtensionException])
-  def getFile(path: String): File
-
 }
