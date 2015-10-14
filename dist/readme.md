@@ -38,6 +38,11 @@ Or, from the command line, typical Unix shell commands would be:
     $ cd @@@UNIXNAME@@@
     $ ./netlogo.sh
 
+A Desktop Entry file is also available, so you can link to it from
+your desktop. Try using the following commands:
+    $ cd @@@UNIXNAME@@@
+    $ ln -s netlogo.desktop ~/Desktop/
+
 ## Citing
 
 If you use or refer to NetLogo in a publication, we ask that you cite

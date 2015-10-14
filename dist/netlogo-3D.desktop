@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=NetLogo 3D
+GenricName=Modeling Environment
+Comment=Run 3D NetLogo models
+Exec=bash -c "`dirname %k`/netlogo-3D.sh"
+Terminal=False
+Categories=Development;Education;Science

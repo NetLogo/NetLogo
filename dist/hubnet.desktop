@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=HubNet
+GenricName=Multi-user Modeling Environment
+Comment=Connect to a HubNet server
+Exec=bash -c "`dirname %k`/hubnet.sh"
+Terminal=False
+Categories=Development;Education;Science

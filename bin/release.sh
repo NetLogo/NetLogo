@@ -345,7 +345,11 @@ $CP -p ../../dist/netlogo.sh .
 $CP -p ../../dist/netlogo-headless.sh .
 $CP -p ../../dist/netlogo-3D.sh .
 $CP -p ../../dist/hubnet.sh .
-$CP -p ../../dist/icon.ico .
+$CP -p ../../dist/icon32.gif .
+$CP -p ../../dist/hnicon32.gif .
+$CP -p ../../dist/netlogo.desktop .
+$CP -p ../../dist/netlogo-3D.desktop .
+$CP -p ../../dist/hubnet.desktop .
 
 # blow away version control and Mac junk
 $FIND . \( -name .DS_Store -or -name .gitignore -or -path \*/.git \) -print0 \
