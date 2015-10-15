@@ -1,0 +1,311 @@
+InConeMeTurtlesOnMe
+  O> cro 2
+  O> ask turtle 0 [ask turtles in-cone 1 1 [set color yellow]]
+  [color] of turtle 0  = yellow => true
+  [color] of turtle 1  = yellow => true
+  O> ask turtle 0 [ask turtles in-cone 0 0 [set color red]]
+  [color] of turtle 0  = red => true
+  [color] of turtle 1  = red => true
+  O> ask turtle 0 [setxy 0.1 0]
+  O> ask turtle 0 [ask turtles in-cone 0 0 [set color yellow]]
+  [color] of turtle 0  = yellow => true
+  [color] of turtle 1  = red => true
+  O> ask turtle 0 [ask turtles in-cone 10 90 [set color green]]
+  [color] of turtle 0  = green => true
+  [color] of turtle 1  = red => true
+  O> ask turtle 1 [ask turtles in-cone 10 90 [set color yellow]]
+  [color] of turtle 0  = green => true
+  [color] of turtle 1  = yellow => true
+  O> ask turtles [set heading 0]
+  O> ask turtle 0 [setxy 0 0]
+  O> ask turtle 1 [setxy 0 0.3]
+  O> ask turtle 0 [ask turtles in-cone 0.3 0 [set color cyan]]
+  [color] of turtle 0  = cyan => true
+  [color] of turtle 1  = cyan => true
+  O> ask turtle 0 [ask turtles in-cone 0.29 0 [set color green]]
+  [color] of turtle 0  = green => true
+  [color] of turtle 1  = cyan => true
+  O> ask turtle 1 [setxy 0.01 0.3]
+  O> ask turtle 0 [ask turtles in-cone 0.3 0 [set color yellow]]
+  [color] of turtle 0  = yellow => true
+  [color] of turtle 1  = cyan => true
+
+InconePatchWhoseCenterIAmOn
+  O> cro 1
+  T> ask patches in-cone 0 0 [set pcolor red]
+  [pcolor] of patch 0 0 = red => true
+  T> fd 0.1
+  T> ask patches in-cone 0 0 [set pcolor green]
+  [pcolor] of patch 0 0 = red => true
+  T> set heading 180
+  T> ask patches in-cone 0 0 [set pcolor green]
+  [pcolor] of patch 0 0 = red => true
+  T> ask patches in-cone 0.1 0 [set pcolor green]
+  [pcolor] of patch 0 0 = green => true
+
+InconeInvalidInputs
+  O> crt 1
+  T> ask patches in-cone -1 0 [set pcolor red] => ERROR IN-CONE cannot take a negative radius.
+  T> ask patches in-cone 0 -1 [set pcolor red] => ERROR IN-CONE cannot take a negative angle.
+  T> ask patches in-cone 0 361 [set pcolor red] => ERROR IN-CONE cannot take an angle greater than 360.
+
+InconeLargeRadiusDuplicationCheck
+  globals [glob1]
+  O> crt 1
+  T> set glob1 count patches in-cone 100 360
+  count patches = glob1 => true
+
+InconeDontAskYourPatch
+  O> crt 1
+  T> ask patches with [distance myself > 0] in-cone 20 30 [set pcolor red]
+  [pcolor] of [patch-here] of turtle 0 = black => true
+
+InconeDontAskSomeOtherPatches
+  O> cro 1
+  T> ask patches with [distance myself > 3] in-cone 4 30 [set pcolor red]
+  [pcolor] of patch 0 1 = black => true
+  [pcolor] of patch 0 2 = black => true
+  [pcolor] of patch 0 3 = black => true
+  [pcolor] of patch 0 4 = red => true
+
+InconeDontAskTurtlesOnYou
+  O> crt 2
+  T> set color green
+  O> ask turtle 0 [ ask turtles with [distance myself > 0] in-cone 20 30 [set color red] ]
+  [color] of turtle 0 = green => true
+  [color] of turtle 1 = green => true
+
+InconeDontAskSomeOtherTurtles
+  O> crt 5
+  T> setxy 0 who
+  T> set color green
+  O> ask turtle 0 [set heading 0]
+  O> ask turtle 0 [ ask turtles with [distance myself > 3] in-cone 4 30 [set color red] ]
+  [color] of turtle 0 = green => true
+  [color] of turtle 1 = green => true
+  [color] of turtle 2 = green => true
+  [color] of turtle 3 = green => true
+  [color] of turtle 4 = red => true
+
+InconeTestForGridRoot1
+  O> crt 2
+  O> ask turtle 0 [setxy -0.49 0.49 set heading -45]
+  O> ask turtle 1 [setxy -2.51 2.51]
+  T> set color green
+  O> ask turtle 0 [ask turtles in-cone 2.85 0 [set color red]]
+  [color] of turtle 0 = red => true
+  [color] of turtle 1 = green => true
+
+InconeTestForGridRoot2
+  O> crt 2
+  O> ask turtle 0 [setxy -0.49 0.49 set heading -45]
+  O> ask turtle 1 [setxy -2.51 2.51]
+  T> set color green
+  O> ask turtle 0 [ask turtles in-cone 2.86 0 [set color red]]
+  [color] of turtle 0 = red => true
+  [color] of turtle 1 = red => true
+
+Incone360DiffTestForTurtles
+  O> crt 2
+  O> ask turtle 0 [set heading 350 setxy 0 0]
+  O> ask turtle 1 [setxy 1 1]
+  T> set color green
+  O> ask turtle 0 [ask turtles in-cone 2 120 [set color red]]
+  [color] of turtle 0 = red => true
+  [color] of turtle 1 = red => true
+
+Incone360DiffTestForPatches
+  O> crt 1
+  T> set heading -45
+  O> ask turtle 0 [ask patches in-cone 4 150 [set pcolor red]]
+  [pcolor] of patch 1 2 = red => true
+
+InconeManyTurtlesCountingTorus
+  O> __change-topology true true
+  P> sprout 1 [ set heading 0 ]
+  length remove-duplicates [count patches in-cone 10 30] of turtles => 1
+  length remove-duplicates [count turtles in-cone 10 30] of turtles => 1
+
+InconeManyTurtlesCounting
+  P> sprout 1 [ set heading 0 ]
+  O> __change-topology false false
+  length remove-duplicates [count patches in-cone 10 30] of turtles => 20
+  length remove-duplicates [count turtles in-cone 10 30] of turtles => 20
+  O> __change-topology true false
+  length remove-duplicates [count patches in-cone 10 30] of turtles => 11
+  length remove-duplicates [count turtles in-cone 10 30] of turtles => 11
+  O> __change-topology false true
+  length remove-duplicates [count patches in-cone 10 30] of turtles => 3
+  length remove-duplicates [count turtles in-cone 10 30] of turtles => 3
+
+InconeNowrap1
+  O> __change-topology false false
+  O> crt 2
+  T> set color green set heading 45
+  O> ask turtle 1 [setxy -3 -3]
+  O> ask turtle 0 [ask turtles in-cone 10 30 [set color cyan]]
+  [color] of turtle 0 = cyan => true
+  [color] of turtle 1 = green => true
+  O> ask turtle 1 [ask turtles in-cone 5 30 [set color red]]
+  [color] of turtle 0 = red => true
+  [color] of turtle 1 = red => true
+
+InconeMultipleWrappings
+  O> crt 3
+  T> set color green set heading (333 + who * 3 )
+  O> ask turtles with [who != 1] [fd 3]
+  O> ask turtle 1 [ask turtles in-cone 3.1 6 [set color red]]
+  [color] of turtle 0 = red => true
+  [color] of turtle 1 = red => true
+  [color] of turtle 2 = red => true
+  O> ask turtles with [who != 1] [fd 3]
+  O> ask turtle 1 [ask turtles in-cone 6.1 6 [set color green]]
+  [color] of turtle 0 = green => true
+  [color] of turtle 1 = green => true
+  [color] of turtle 2 = green => true
+  O> ask turtles with [who != 1] [fd 3]
+  O> ask turtle 1 [ask turtles in-cone 9.1 6 [set color yellow]]
+  [color] of turtle 0 = yellow => true
+  [color] of turtle 1 = yellow => true
+  [color] of turtle 2 = yellow => true
+  O> ask turtles with [who != 1] [fd 3]
+  O> ask turtle 1 [ask turtles in-cone 12.1 6 [set color cyan]]
+  [color] of turtle 0 = cyan => true
+  [color] of turtle 1 = cyan => true
+  [color] of turtle 2 = cyan => true
+
+InConeCornerOrigin1
+  O> resize-world 0 32 0 32
+  O> cro 1 [ setxy 17 15 ]
+  O> cro 10 [ setxy 17 15 fd 3 ]
+  [count turtles in-cone 3 180] of turtle 0 => 6
+
+InConeCornerOrigin2
+  O> resize-world 0 32 0 32
+  O> ask patch 9 0 [ sprout 1 [ set heading 0 hatch 32 [ fd who ] ] ]
+  [count turtles in-cone 15 0] of turtle 0 => 16
+  [count turtles in-cone 16 0] of turtle 0 => 17
+  [count turtles in-cone 17 0] of turtle 0 => 18
+  [count turtles in-cone 18 0] of turtle 0 => 19
+  [count turtles in-cone 22 0] of turtle 0 => 23
+  [count turtles in-cone 30 0] of turtle 0 => 31
+  [count turtles in-cone 31 0] of turtle 0 => 32
+  [count turtles in-cone 32 0] of turtle 0 => 33
+  [count turtles in-cone 33 0] of turtle 0 => 33
+  [count turtles in-cone 100 0] of turtle 0 => 33
+  [count turtles in-cone 500 0] of turtle 0 => 33
+  T> rt 180
+  [count turtles in-cone 15 0] of turtle 0 => 16
+  [count turtles in-cone 16 0] of turtle 0 => 17
+  [count turtles in-cone 17 0] of turtle 0 => 18
+  [count turtles in-cone 18 0] of turtle 0 => 19
+  [count turtles in-cone 22 0] of turtle 0 => 23
+  [count turtles in-cone 30 0] of turtle 0 => 31
+  [count turtles in-cone 31 0] of turtle 0 => 32
+  [count turtles in-cone 32 0] of turtle 0 => 33
+  [count turtles in-cone 33 0] of turtle 0 => 33
+  [count turtles in-cone 100 0] of turtle 0 => 33
+  [count turtles in-cone 500 0] of turtle 0 => 33
+  T> setxy ycor xcor
+  T> rt 90
+  [count turtles in-cone 15 0] of turtle 0 => 16
+  [count turtles in-cone 16 0] of turtle 0 => 17
+  [count turtles in-cone 17 0] of turtle 0 => 18
+  [count turtles in-cone 18 0] of turtle 0 => 19
+  [count turtles in-cone 22 0] of turtle 0 => 23
+  [count turtles in-cone 30 0] of turtle 0 => 31
+  [count turtles in-cone 31 0] of turtle 0 => 32
+  [count turtles in-cone 32 0] of turtle 0 => 33
+  [count turtles in-cone 33 0] of turtle 0 => 33
+  [count turtles in-cone 100 0] of turtle 0 => 33
+  [count turtles in-cone 500 0] of turtle 0 => 33
+  T> rt 180
+  [count turtles in-cone 15 0] of turtle 0 => 16
+  [count turtles in-cone 16 0] of turtle 0 => 17
+  [count turtles in-cone 17 0] of turtle 0 => 18
+  [count turtles in-cone 18 0] of turtle 0 => 19
+  [count turtles in-cone 22 0] of turtle 0 => 23
+  [count turtles in-cone 30 0] of turtle 0 => 31
+  [count turtles in-cone 31 0] of turtle 0 => 32
+  [count turtles in-cone 32 0] of turtle 0 => 33
+  [count turtles in-cone 33 0] of turtle 0 => 33
+  [count turtles in-cone 100 0] of turtle 0 => 33
+  [count turtles in-cone 500 0] of turtle 0 => 33
+
+InConeCornerOrigin3
+  O> resize-world -32 0 -32 0
+  O> ask patch -9 2 [ sprout 1 [ set heading 0 hatch 32 [ fd who ] ] ]
+  [count turtles in-cone 15 0] of turtle 0 => 16
+  [count turtles in-cone 16 0] of turtle 0 => 17
+  [count turtles in-cone 17 0] of turtle 0 => 18
+  [count turtles in-cone 18 0] of turtle 0 => 19
+  [count turtles in-cone 22 0] of turtle 0 => 23
+  [count turtles in-cone 30 0] of turtle 0 => 31
+  [count turtles in-cone 31 0] of turtle 0 => 32
+  [count turtles in-cone 32 0] of turtle 0 => 33
+  [count turtles in-cone 33 0] of turtle 0 => 33
+  [count turtles in-cone 100 0] of turtle 0 => 33
+  [count turtles in-cone 500 0] of turtle 0 => 33
+  T> rt 180
+  [count turtles in-cone 15 0] of turtle 0 => 16
+  [count turtles in-cone 16 0] of turtle 0 => 17
+  [count turtles in-cone 17 0] of turtle 0 => 18
+  [count turtles in-cone 18 0] of turtle 0 => 19
+  [count turtles in-cone 22 0] of turtle 0 => 23
+  [count turtles in-cone 30 0] of turtle 0 => 31
+  [count turtles in-cone 31 0] of turtle 0 => 32
+  [count turtles in-cone 32 0] of turtle 0 => 33
+  [count turtles in-cone 33 0] of turtle 0 => 33
+  [count turtles in-cone 100 0] of turtle 0 => 33
+  [count turtles in-cone 500 0] of turtle 0 => 33
+  T> setxy ycor xcor
+  T> rt 90
+  [count turtles in-cone 15 0] of turtle 0 => 16
+  [count turtles in-cone 16 0] of turtle 0 => 17
+  [count turtles in-cone 17 0] of turtle 0 => 18
+  [count turtles in-cone 18 0] of turtle 0 => 19
+  [count turtles in-cone 22 0] of turtle 0 => 23
+  [count turtles in-cone 30 0] of turtle 0 => 31
+  [count turtles in-cone 31 0] of turtle 0 => 32
+  [count turtles in-cone 32 0] of turtle 0 => 33
+  [count turtles in-cone 33 0] of turtle 0 => 33
+  [count turtles in-cone 100 0] of turtle 0 => 33
+  [count turtles in-cone 500 0] of turtle 0 => 33
+  T> rt 180
+  [count turtles in-cone 15 0] of turtle 0 => 16
+  [count turtles in-cone 16 0] of turtle 0 => 17
+  [count turtles in-cone 17 0] of turtle 0 => 18
+  [count turtles in-cone 18 0] of turtle 0 => 19
+  [count turtles in-cone 22 0] of turtle 0 => 23
+  [count turtles in-cone 30 0] of turtle 0 => 31
+  [count turtles in-cone 31 0] of turtle 0 => 32
+  [count turtles in-cone 32 0] of turtle 0 => 33
+  [count turtles in-cone 33 0] of turtle 0 => 33
+  [count turtles in-cone 100 0] of turtle 0 => 33
+  [count turtles in-cone 500 0] of turtle 0 => 33
+
+InConeCornerOrigin4
+  O> resize-world 0 5 0 5
+  O> ask patch 1 2 [ sprout 1 [ set heading 0 hatch 5 [ fd who ] ] ]
+  count turtles => 6
+  [count turtles in-cone 100 0] of turtle 0 => 6
+  T> rt 180
+  [count turtles in-cone 100 0] of turtle 0 => 6
+  T> setxy ycor xcor
+  T> rt 90
+  [count turtles in-cone 100 0] of turtle 0 => 6
+  T> rt 180
+  [count turtles in-cone 100 0] of turtle 0 => 6
+
+InConeCornerOrigin5
+  O> resize-world -5 0 -5 0
+  O> ask patch -2 -3 [ sprout 1 [ set heading 0 hatch 5 [ fd who ] ] ]
+  count turtles => 6
+  [count turtles in-cone 100 0] of turtle 0 => 6
+  T> rt 180
+  [count turtles in-cone 100 0] of turtle 0 => 6
+  T> setxy ycor xcor
+  T> rt 90
+  [count turtles in-cone 100 0] of turtle 0 => 6
+  T> rt 180
+  [count turtles in-cone 100 0] of turtle 0 => 6

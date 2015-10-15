@@ -1,0 +1,129 @@
+StrButFirst1
+  bf "string" => "tring"
+
+StrButFirst2
+  bf "" => ERROR bf got an empty string as input.
+
+StrButLast1
+  bl "string" => "strin"
+
+StrButLast2
+  bl "" => ERROR bl got an empty string as input.
+
+StrEmpty1
+  empty? "" => true
+
+StrEmpty2
+  empty? "string" => false
+
+StrFirst
+  first "string" => "s"
+
+StrItem
+  item 2 "string" => "r"
+
+StrLast
+  last "string" => "g"
+
+StrLength
+  length "string" => 6
+
+StrMember1
+  member? "s" "string" => true
+
+StrMember2
+  member? "rin" "string" => true
+
+StrMember3
+  member? "ron" "string" => false
+
+StrMember4
+  member? "" "" => true
+
+StrMember5
+  member? "" "f" => true
+
+StrMember6
+  member? "" "foo" => true
+
+StrMember7
+  member? "x" "" => false
+
+StrPosition1
+  position "s" "string" => 0
+
+StrPosition2
+  position "rin" "string" => 2
+
+StrPosition3
+  position "ron" "string" => false
+
+StrRemove1
+  remove "r" "string" => "sting"
+
+StrRemove2
+  remove "s" "strings" => "tring"
+
+StrRemoveItem1
+  remove-item 0 "123" => "23"
+
+StrRemoveItem2
+  remove-item 1 "123" => "13"
+
+StrRemoveItem3
+  remove-item 2 "123" => "12"
+
+StrRemoveItem4
+  remove-item 3 "123" => ERROR Can't find element 3 of the string 123, which is only of length 3.
+
+StrRemoveItem5
+  remove-item -1 "123" => ERROR -1 isn't greater than or equal to zero.
+
+StrRemoveItem6
+  remove-item 0 "" => ERROR Can't find element 0 of the string , which is only of length 0.
+
+StrReplaceItem
+  replace-item 3 "string" "o" => "strong"
+
+StrReverse
+  reverse "string" => "gnirts"
+
+StrIsString1
+  is-string? "string" => true
+
+StrIsString2
+  is-string? 37 => false
+
+StrSubstring
+  substring "string" 2 5 => "rin"
+
+StrWord1
+  word "tur" "tle" => "turtle"
+
+StrWord2
+  (word "tur") => "tur"
+
+StrWord3
+  (word 3) => "3"
+
+StrWord4
+  word 1 2 => "12"
+
+StrWord5
+  (word) => ""
+
+AgentSetStringRepresentations
+  breed [ woLVes wolf ]
+  (word wolves with [false]) => "(agentset, 0 turtles)"
+  (word (link-set))          => "(agentset, 0 links)"
+  (word (patch-set))         => "(agentset, 0 patches)"
+  (word (turtle-set))        => "(agentset, 0 turtles)"
+  (word links)               => "links"
+  (word patches)             => "patches"
+  (word turtles)             => "turtles"
+  (word lINKs)               => "links"
+  (word paTches)             => "patches"
+  (word turTLes)             => "turtles"
+  (word wolves)              => "wolves"
+  (word woLVes)              => "wolves"
+  (word Wolves)              => "wolves"

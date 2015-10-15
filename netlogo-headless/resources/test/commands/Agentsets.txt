@@ -1,0 +1,299 @@
+Agentsets1
+  O> crt 10
+  any? turtles => true
+  remove-duplicates [breed] of turtles = (list turtles) => true
+  T> die
+  any? turtles => false
+  O> crt 10
+  any? turtles => true
+  O> ca
+  any? turtles => false
+  O> crt 10
+  any? turtles => true
+  O> ct
+  any? turtles => false
+  O> crt 10
+  any? turtles => true
+  O> cp
+  any? turtles => true
+  O> ct cp
+  any? turtles => false
+
+Agentsets2
+  breed [frogs frog]
+  breed [mice mouse]
+  O> ask one-of turtles [ die ] => ERROR ASK expected input to be an agent or agentset but got NOBODY instead.
+  O> crt 10
+  [who] of min-one-of turtles [who] => 0
+  O> ask turtles with [who < 5] [ die ]
+  [who] of min-one-of turtles [who] => 5
+  [count turtles-here] of turtle 7 => 5
+  [count other turtles-here] of turtle 7 => 4
+  [count other mice-here] of turtle 7 => 0
+  [count other frogs-here] of turtle 7 => 0
+  O> ask turtle 7 [ set breed mice ]
+  O> ask turtle 8 [ set breed mice ]
+  [count mice-here] of turtle 7 => 2
+  [count other mice-here] of turtle 7 => 1
+
+Agentsets3
+  O> random-seed 18174
+  count (n-of 0 turtles) => 0
+  count (n-of 1 turtles) => ERROR Requested 1 random agents from a set of only 0 agents.
+  count (n-of -1 patches) => ERROR First input to N-OF can't be negative.
+  count (n-of 50 patches) => 50
+  count (n-of 50 patches) => 50
+  count (n-of 50 patches) => 50
+  count (n-of 50 patches) => 50
+
+Agentsets4
+  globals [glob1]
+  O> random-seed 29020
+  O> crt 100
+  T> fd 3
+  T> create-links-with turtles with [ who > [who] of myself ]
+  count turtles = count turtle-set [self] of turtles => true
+  count patches = count patch-set [self] of patches => true
+  count links = count link-set [self] of links => true
+  count patches = count patch-set [neighbors4] of patches => true
+  count patches with [any? turtles-here] = count patch-set [patch-here] of turtles => true
+  count patches with [any? turtles-here] = count turtle-set [one-of turtles-here] of patches => true
+  any? turtle-set [nobody] of turtles => false
+  any? patch-set [nobody] of turtles => false
+  any? link-set [nobody] of turtles => false
+  any? turtle-set [nobody] of patches => false
+  any? patch-set [nobody] of patches => false
+  any? link-set [nobody] of patches => false
+  any? turtle-set [nobody] of links => false
+  any? patch-set [nobody] of links => false
+  any? link-set [nobody] of links => false
+  any? turtle-set [turtles with [false]] of patches => false
+  any? patch-set [patches with [false]] of patches => false
+  any? link-set [links with [false]] of patches => false
+  patch-set [turtles with [false]] of patches => ERROR List inputs to PATCH-SET must only contain patch, patch agentset, or list elements.  The list [(agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles)] contained a different type agentset: (agentset, 0 turtles).
+  turtle-set [patches with [false]] of patches => ERROR List inputs to TURTLE-SET must only contain turtle or turtle agentset elements.  The list [(agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches)] contained a different type agentset: (agentset, 0 patches).
+  link-set [patches with [false]] of patches => ERROR List inputs to LINK-SET must only contain link, link agentset, or list elements.  The list [(agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches) (agentset, 0 patches)] contained a different type agentset: (agentset, 0 patches).
+  link-set [turtles with [false]] of patches => ERROR List inputs to LINK-SET must only contain link, link agentset, or list elements.  The list [(agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles)] contained a different type agentset: (agentset, 0 turtles).
+  P> set plabel self
+  count patches = count patch-set [plabel] of patches => true
+  O> ask patch 0 0 [ set plabel turtle 0 ]
+  O> carefully [ __ignore (patch-set patches [plabel] of patches) ] [ set glob1 error-message ]
+  substring glob1 0 83 => "List inputs to PATCH-SET must only contain patch, patch agentset, or list elements."
+  count [patch-set [neighbors4] of neighbors4] of patch 0 0 => 9
+
+Agentsets5Torus
+  O> __change-topology true true
+  O> random-seed 3782
+  O> ask patches at-points [ [ 0 0 ] [ 1 1 ] [ 2 2 ] ] [ set pcolor 1 ]
+  [pcolor] of patches at-points [[0 0] [1 1] [2 2]] => [1 1 1]
+  O> ask patches at-points [ [ 450 -200 ] [ -350 200 ] [ 0 0 ] ] [ set pcolor 5 ]
+  [pcolor] of patches at-points [ [ 450 -200 ] [ -350 200  ] [ 0 0 ] ] => [5 5 5]
+  O> crt 4 [ fd random 10 ]
+  count turtles at-points ([list pxcor pycor] of turtles) => 4
+  O> ask patches [ ask patches at-points [ [ 0 1 ] ] [ set pcolor blue ] ]
+  count patches with [ pcolor != blue ] => 0
+  O> ask patches [ ask patches at-points [ [ 1 1 ] ] [ set pcolor blue ] ]
+  count patches with [ pcolor != blue ] => 0
+
+Agentsets5Box
+  O> __change-topology false false
+  O> random-seed 3782
+  O> ask patches at-points [ [ 0 0 ] [ 1 1 ] [ 2 2 ] ] [ set pcolor 1 ]
+  [pcolor] of patches at-points [ [ 0 0 ] [ 1 1 ] [ 2 2 ] ] => [1 1 1]
+  O> ask patches at-points [ [ 450 -200 ] [ -350 200 ] [ 0 0 ] ] [ set pcolor 5 ]
+  [pcolor] of patches at-points [ [ 450 -200 ] [ -350 200  ] [ 0 0 ] ] => [5]
+  O> crt 4 [ fd random 10 ]
+  count turtles at-points ([list pxcor pycor] of turtles) => 4
+  O> ask patches [ ask patches at-points [ [ 0 1 ] ] [ set pcolor blue ] ]
+  count patches with [ pcolor != blue ] => 11
+  O> ask patches [ ask patches at-points [ [ 1 0 ] ] [ set pcolor red ] ]
+  count patches with [ pcolor != red ] => 11
+  O> ask patches [ ask patches at-points [ [ 1 1 ] ] [ set pcolor green ] ]
+  count patches with [ pcolor != green ] => 21
+
+Agentsets5VCylind
+  O> __change-topology true false
+  O> random-seed 3782
+  O> ask patches at-points [ [ 0 0 ] [ 1 1 ] [ 2 2 ] ] [ set pcolor 1 ]
+  [pcolor] of patches at-points [ [ 0 0 ] [ 1 1 ] [ 2 2 ] ] => [1 1 1]
+  O> ask patches at-points [ [ 450 -200 ] [ -350 200 ] [ 0 0 ] ] [ set pcolor 5 ]
+  [pcolor] of patches at-points [ [ 450 -200 ] [ -350 200  ] [ 0 0 ] ] => [5]
+  O> crt 4 [ fd random 10 ]
+  count turtles at-points ([list pxcor pycor] of turtles) => 4
+  O> ask patches [ ask patches at-points [ [ 0 1 ] ] [ set pcolor blue ] ]
+  count patches with [ pcolor != blue ] => 11
+  O> ask patches [ ask patches at-points [ [ 1 0 ] ] [ set pcolor red ] ]
+  count patches with [ pcolor != red ] => 0
+  O> ask patches [ ask patches at-points [ [ 1 1 ] ] [ set pcolor green ] ]
+  count patches with [ pcolor != green ] => 11
+
+Agentsets5HCylind
+  O> __change-topology false true
+  O> random-seed 3782
+  O> ask patches at-points [ [ 0 0 ] [ 1 1 ] [ 2 2 ] ] [ set pcolor 1 ]
+  [pcolor] of patches at-points [ [ 0 0 ] [ 1 1 ] [ 2 2 ] ] => [1 1 1]
+  O> ask patches at-points [ [ 450 -200 ] [ -350 200 ] [ 0 0 ] ] [ set pcolor 5 ]
+  [pcolor] of patches at-points [ [ 450 -200 ] [ -350 200  ] [ 0 0 ] ] => [5]
+  O> crt 4 [ fd random 10 ]
+  count turtles at-points ([list pxcor pycor] of turtles) => 4
+  O> ask patches [ ask patches at-points [ [ 0 1 ] ] [ set pcolor blue ] ]
+  count patches with [ pcolor != blue ] => 0
+  O> ask patches [ ask patches at-points [ [ 1 0 ] ] [ set pcolor red ] ]
+  count patches with [ pcolor != red ] => 11
+  O> ask patches [ ask patches at-points [ [ 1 1 ] ] [ set pcolor green ] ]
+  count patches with [ pcolor != green ] => 11
+
+Agentsets6
+  O> random-seed 383
+  O> crt 2
+  O> ask one-of turtles [ set heading 90 fd 1 ]
+  [[pxcor] of one-of turtles at-points [[1 0]]] of one-of turtles at-points [[0 0]]  => 1
+
+Agentsets7
+  O> random-seed 118
+  O> crt 3
+  O> ask turtles [ set color gray ]
+  O> ask one-of turtles [ set color blue set heading 0 fd 2 ]
+  [list pxcor pycor] of turtles with [color = blue] at-points [[0 2]] => [[0 2]]
+  count turtles with [ color = .23456 ] at-points [ [ 0 0 ] [ 1 1 ] ] => 0
+  count patches with [ pcolor = .23456 ] at-points [ [ 0 0 ] [ 1 1 ] ] => 0
+
+Agentsets8
+  breed [frogs frog]
+  breed [mice mouse]
+  O> random-seed 9119
+  O> create-frogs 3
+  O> create-mice 5
+  O> ask one-of frogs [ setxy -1 1 ]
+  O> ask one-of mice [ setxy -1 1 ]
+  count frogs at-points [ [ 0 0 ] ] => 2
+  count frogs at-points [ [ 0 0 ] [ -1 1 ] ] => 3
+  count mice at-points [ [ 0 0 ] ] => 4
+  count mice at-points [ [ 0 0 ] [ -1 1 ] ] => 5
+  count turtles at-points [ [ 0 0 ] [ -1 1 ] ] => 8
+  [color] of turtles at-points [ [ 1 "a" ] ] => ERROR Invalid list of points: [[1 a]]
+  [color] of turtles at-points [ 1 2 ] => ERROR Invalid list of points: [1 2]
+  [color] of turtles at-points [ [ [ 1 2 ] ] ] => ERROR Invalid list of points: [[[1 2]]]
+
+InvalidAtPoints
+  [color] of turtles at-points [ [ 1 2 3 ] ] => ERROR Invalid list of points: [[1 2 3]]
+
+Agentsets9
+  O> crt 10
+  count turtles at-points [[0 0] [0 0] [0.1 -0.1]] => 10
+
+Agentsets10
+  O> crt 100
+  count (turtles with [who != 37]) at-points [[0 0] [0 0] [-0.5 -0.5]] => 99
+
+Agentsets11
+  breed [mice mouse]
+  O> create-mice 10
+  O> create-mice 10 [ setxy 1 1 ]
+  count mice at-points [[0 0] [0 0]] => 10
+  count mice at-points [[0 0] [0 0] [0.5 0.5]] => 20
+
+Agentsets12
+  O> __change-topology true true
+  count patches at-points [[2 7] [2 7] [1 6] [1.1 5.8]] => 2
+  O> __change-topology false false
+  count patches at-points [[2 7] [2 7] [1 6] [1.1 5.8]] => 0
+  O> __change-topology true false
+  count patches at-points [[2 7] [2 7] [1 6] [1.1 5.8]] => 0
+  count patches at-points [[2 7] [2 7] [1 6] [5.8 1.1]] => 1
+  O> __change-topology false true
+  count patches at-points [[2 7] [2 7] [1 6] [1.1 5.8]] => 2
+  count patches at-points [[2 7] [2 7] [6 1] [5.8 1.1]] => 1
+
+Agentsets13
+  count (patches with [true]) at-points [[-3 -4] [-3 -4] [-3.5 -4.5]] => 1
+
+AgentSetEquality
+  globals [glob1]
+  turtles = turtles => true
+  turtles = patches => false
+  links = links => true
+  turtles = links => false
+  no-turtles = no-turtles => true
+  no-patches = no-patches => true
+  no-turtles = no-patches => false
+  no-links = no-turtles => false
+  turtles = no-turtles => true
+  no-links = links => true
+  no-patches = patches with [pxcor = 1000] => true
+  O> crt 10 [ create-links-with turtles with [ who > [who] of myself  ] ]
+  turtles = no-turtles => false
+  links = no-links => false
+  no-links = links with [ color = blue ] => true
+  no-turtles = turtles with [who = 1000] => true
+  turtles = turtles with [who >= 0] => true
+  patches = patches with [abs pxcor >= 0] => true
+  turtles with [who = 3] = patches with [pxcor = 3 and pycor = 3] => false
+  turtles with [who = 3] = turtles with [who = 3] => true
+  turtles with [who = 3] = turtles with [who = 4] => false
+  turtles with [who > 5] = turtles with [who > 5] => true
+  turtles with [who < 5] = turtles with [who > 5] => false
+  links with [ end1 = turtle 0 ] = links with [ end1 = turtle 0 ] => true
+  patches with [pxcor = 3 and pycor = 3] = patches with [pxcor = 3 and pycor = 3] => true
+  O> set glob1 turtles with [who >= 0]
+  glob1 = turtles => true
+  O> ask turtle 5 [ die ]
+  glob1 = turtles => true
+  patches at-points [[0 0] [1 1]] = patches at-points [[1 1] [0 0]] => true
+  remove-duplicates list no-turtles no-turtles = (list no-turtles) => true
+  remove-duplicates list no-turtles no-patches = list no-turtles no-patches => true
+  position no-turtles (list no-patches turtles with [who < 0]) => 1
+
+SimpleLinkAgentset
+  O> crt 2
+  O> ask turtle 0 [ create-link-to turtle 1 ]
+  O> ask turtle 0 [ create-link-from turtle 1 ]
+  O> ask link 0 1 [ die ]
+  [list [who] of end1 [who] of end2 ] of one-of links => [1 0]
+
+CountTurtlesOptimization
+  0 < count turtles with [true] => false
+  count turtles with [true] > 0 => false
+  O> crt 1
+  0 < count turtles with [true] => true
+  count turtles with [true] > 0 => true
+
+LinkAgentsetDeadLinks
+  globals [glob1]
+  O> crt 10 [ create-links-with other turtles ]
+  O> set glob1 links with [true]
+  O> ask links [ die ]
+  count glob1 => 0
+  any? glob1 => false
+  one-of glob1 = nobody => true
+  n-of 5 glob1 => ERROR Requested 5 random agents from a set of only 0 agents.
+
+RemoveDuplicates
+  globals [glob1]
+  O> set glob1 one-of patches
+  length remove-duplicates (list (patch-set glob1) (patch-set glob1)) => 1
+  O> crt 2
+  O> set glob1 (list (turtle-set turtle 0 turtle 1) (turtle-set turtle 0))
+  length remove-duplicates glob1 => 2
+  O> ask turtle 1 [ die ]
+  length remove-duplicates glob1 => 1
+
+OneOfTypes
+  globals [x y z]
+  O> crt 1 set x 0 set y true set z "apples"
+  nobody = min-one-of turtles [x] => false
+  nobody = min-one-of turtles [y] => true
+  nobody = min-one-of turtles [z] => true
+  nobody = max-one-of turtles [x] => false
+  nobody = max-one-of turtles [y] => true
+  nobody = max-one-of turtles [z] => true
+
+NOfTypes
+  globals [x y z]
+  O> crt 1 set x 0 set y true set z "apples"
+  no-turtles = min-n-of 1 turtles [x] => false
+  no-turtles = min-n-of 1 turtles [y] => true
+  no-turtles = min-n-of 1 turtles [z] => true
+  no-turtles = max-n-of 1 turtles [x] => false
+  no-turtles = max-n-of 1 turtles [y] => true
+  no-turtles = max-n-of 1 turtles [z] => true

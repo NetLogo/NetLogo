@@ -7,7 +7,7 @@ import org.nlogo.agent.Observer
 import org.nlogo.api.{Dump,LogoException,
                       WorldDimensions, WorldDimensionException, SimpleJobOwner}
 import org.nlogo.nvm.{LabInterface, Workspace}
-import org.nlogo.util.MersenneTwisterFast
+import org.nlogo.api.MersenneTwisterFast
 import LabInterface.ProgressListener
 
 class Worker(val protocol: Protocol)

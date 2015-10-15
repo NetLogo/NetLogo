@@ -1,0 +1,87 @@
+# this is purely temporary -- while I'm still building the new
+# compiler it's handy to have a smaller set of language tests here
+# instead of the full TestReporters/TestCommand suites - Forrest
+
+# Still, why not keep these around just as a handy, small set of easy
+# tests, as a first hurdle for any compiler changes to jump.  Note
+# that it's mostly just reporters, but a few commands too. - ST 4/6/08
+
+ConstantInteger
+  5 => 5
+
+ConstantDouble
+  5.0 => 5
+
+AddTwoIntegers
+  1 + 2 => 3
+
+AddTwoDoubles
+  1.0 + 2.0 => 3
+
+DoubleGreaterThanDouble
+  1.0 > 2.0 => false
+  2.0 > 1.0 => true
+  2.0 > 2.0 => false
+
+PatchVariable
+  [pcolor] of patch 0 0 => 0
+
+Not1
+  not true => false
+  not false => true
+
+Not2
+  globals [glob1]
+  O> set glob1 true
+  not glob1 => false
+  O> set glob1 false
+  not glob1 => true
+
+BasicArithmetic
+  10.0 - 6.0 => 4
+  10 - 6.0 => 4
+  10.0 - 6 => 4
+  10 - 6 => 4
+  10.0 + 6.0 => 16
+  10 + 6.0 => 16
+  10.0 + 6 => 16
+  10 + 6 => 16
+  10.0 * 6.0 => 60
+  10 * 6.0 => 60
+  10.0 * 6 => 60
+  10 * 6 => 60
+  10.0 / 5.0 => 2
+  10 / 5.0 => 2
+  10.0 / 5 => 2
+  10 / 5 => 2
+
+NumericTypeConversion
+  globals [glob1]
+  O> set glob1 1
+  glob1 - glob1 => 0
+  glob1 + glob1 => 2
+  O> set glob1 2.5
+  glob1 - glob1 => 0
+  glob1 + glob1 => 5
+
+BooleanTypeConversion
+  globals [glob1]
+  O> set glob1 true
+  glob1 and glob1 => true
+  glob1 and false => false
+  false and glob1 => false
+  glob1 or false => true
+  false or glob1 => true
+  O> set glob1 false
+  false or glob1 => false
+  glob1 or true => true
+  not glob1 => true
+
+PatchColorSetting
+  O> ask patches [ set pcolor (pcolor - 1 + 2)  set pcolor (pcolor - 1 - 2)  set pcolor (pcolor + 1 + 2)  set pcolor (pcolor + 1 - 2) ]
+
+LessThan
+  5 < 3 => false
+  3 < 5 => true
+  "cow" < "moo" => true
+  "moo" < "cow" => false

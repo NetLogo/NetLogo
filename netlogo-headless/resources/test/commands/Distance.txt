@@ -1,0 +1,48 @@
+DistanceWrapping
+  O> __change-topology true true
+  [ distancexy -5 -5 ] of patch 5 5 => 1.4142135623730951
+  [ distancexy 5 5 ] of patch -5 -5 => 1.4142135623730951
+  [ distancexy 5 -5 ] of patch 5 5 => 1
+  [ distancexy -5 5 ] of patch 5 5 => 1
+  O> __change-topology false false
+  [ distancexy -5 -5 ] of patch 5 5 => 14.142135623730951
+  [ distancexy 5 5 ] of patch -5 -5 => 14.142135623730951
+  [ distancexy 5 -5 ] of patch 5 5 => 10
+  [ distancexy -5 5 ] of patch 5 5 => 10
+  O> __change-topology true false
+  [ distancexy -5 -5 ] of patch 5 5 => 10.04987562112089
+  [ distancexy 5 5 ] of patch -5 -5 => 10.04987562112089
+  [ distancexy 5 -5 ] of patch 5 5 => 10
+  [ distancexy -5 5 ] of patch 5 5 => 1
+  O> __change-topology false true
+  [ distancexy -5 -5 ] of patch 5 5 => 10.04987562112089
+  [ distancexy 5 5 ] of patch -5 -5 => 10.04987562112089
+  [ distancexy 5 -5 ] of patch 5 5 => 1
+  [ distancexy -5 5 ] of patch 5 5 => 10
+
+DistanceWrappingAsymetrical
+  O> resize-world 0 10 0 10
+  O> __change-topology true true
+  [ distancexy 0 0 ] of patch 10 10 => 1.4142135623730951
+  [ distancexy 10 10 ] of patch 0 0 => 1.4142135623730951
+  [ distancexy 9 10 ] of patch 0 0 => 2.23606797749979
+  [ distancexy 10 0 ] of patch 10 10 => 1
+  [ distancexy 0 10 ] of patch 10 10 => 1
+  O> __change-topology false false
+  [ distancexy 0 0 ] of patch 10 10 => 14.142135623730951
+  [ distancexy 10 10 ] of patch 0 0 => 14.142135623730951
+  [ distancexy 9 10 ] of patch 0 0 => 13.45362404707371
+  [ distancexy 10 0 ] of patch 10 10 => 10
+  [ distancexy 0 10 ] of patch 10 10 => 10
+  O> __change-topology true false
+  [ distancexy 0 0 ] of patch 10 10 => 10.04987562112089
+  [ distancexy 10 10 ] of patch 0 0 => 10.04987562112089
+  [ distancexy 9 10 ] of patch 0 0 => 10.198039027185569
+  [ distancexy 10 0 ] of patch 10 10 => 10
+  [ distancexy 0 10 ] of patch 10 10 => 1
+  O> __change-topology false true
+  [ distancexy 0 0 ] of patch 10 10 => 10.04987562112089
+  [ distancexy 10 10 ] of patch 0 0 => 10.04987562112089
+  [ distancexy 9 10 ] of patch 0 0 => 9.055385138137417
+  [ distancexy 10 0 ] of patch 10 10 => 1
+  [ distancexy 0 10 ] of patch 10 10 => 10

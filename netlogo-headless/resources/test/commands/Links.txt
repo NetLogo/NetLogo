@@ -1,0 +1,699 @@
+Links1
+  O> crt 2
+  O> ask turtle 0 [ create-link-to turtle 1 ]
+  [(list [who] of end1 [who] of end2 )] of link 0 1 => [0 1]
+  [color] of link 0 1 => 5
+  [end1] of link 0 1 = turtle 0 => true
+  [end2] of link 0 1 = turtle 1 => true
+  [label] of link 0 1 = "" => true
+  [label-color] of link 0 1 => 9.9
+  [hidden?] of link 0 1 => false
+  [breed] of link 0 1 = links => true
+  [shape] of link 0 1 => "default"
+
+Links2
+  O> crt 2 [ create-links-with turtles with [ who > [who] of myself ] ]
+  O> ask link 0 1 [ set color 140 ]
+  [color] of link 0 1 => 0
+  O> ask link 0 1 [ set color -10 ]
+  [color] of link 0 1 => 130
+  O> ask link 0 1 [ set color 150 ]
+  [color] of link 0 1 => 10
+
+LinkWithBadEndPointsReturnsNobody
+  O> crt 2
+  O> ask turtle 0 [ create-link-with turtle 1 ]
+  link 0 2 => nobody
+  link 2 0 => nobody
+  link 2 2 => nobody
+  link 2 3 => nobody
+  link 3 2 => nobody
+
+LinksInitBlock
+  globals [glob1]
+  O> set glob1 0
+  O> crt 50
+  T> create-links-with other turtles [ set glob1 glob1 + 1 ]
+  count links = glob1 => true
+  L> die
+  O> set glob1 0
+  T> create-links-to other turtles [ set glob1 glob1 + 1 ]
+  count links = glob1 => true
+  L> die
+  O> set glob1 0
+  T> create-links-from other turtles [ set glob1 glob1 + 1 ]
+  count links = glob1 => true
+
+CreateDuplicateLinks
+  O> crt 2 [ create-links-with other turtles ]
+  count links = 1 => true
+  O> ask turtle 0 [ create-link-with turtle 1 ]
+  count links = 1 => true
+  O> ca
+  O> crt 3 [ create-links-to other turtles ]
+  count links = 6 => true
+  O> ask turtle 0 [ create-link-to turtle 1 ]
+  count links = 6 => true
+  O> ca
+  O> crt 3 [ create-links-from other turtles ]
+  count links = 6 => true
+  O> ask turtle 0 [ create-link-from turtle 1 ]
+  count links = 6 => true
+  O> ca
+  O> crt 2
+  O> ask turtle 0 [ create-link-with turtle 1 ]
+  count [link-neighbors] of turtle 0 => 1
+  count [link-neighbors] of turtle 1 => 1
+  O> ask turtle 1 [ create-link-with turtle 0 ]
+  count [link-neighbors] of turtle 0 => 1
+  count [link-neighbors] of turtle 1 => 1
+
+CreateLinksTo
+  breed [nodes node]
+  directed-link-breed [directed-links directed-link]
+  O> crt 1
+  O> create-nodes 2
+  count links => 0
+  O> ask turtle 0 [ create-links-to nodes [set color red] ]
+  count turtles => 3
+  count links => 2
+  count links with [color = red] => 2
+  [color] of link 0 1 = red => true
+  [color] of link 0 2 = red => true
+  T> create-directed-links-to other turtles => ERROR You cannot have both breeded and unbreeded links in the same world.
+  T> create-directed-link-to one-of turtles => ERROR You cannot have both breeded and unbreeded links in the same world.
+  O> ask turtle 0 [ ask my-out-links [ die ] ]
+  count links => 0
+
+CreateLinksFrom
+  breed [nodes node]
+  directed-link-breed [directed-links directed-link]
+  O> crt 1
+  O> create-nodes 2
+  count links => 0
+  O> ask turtle 0 [ create-links-from nodes [set color red] ]
+  count turtles => 3
+  count links => 2
+  count links with [color = red] => 2
+  T> create-directed-links-from other turtles => ERROR You cannot have both breeded and unbreeded links in the same world.
+  T> create-directed-link-from one-of turtles => ERROR You cannot have both breeded and unbreeded links in the same world.
+  O> ask turtle 0 [ ask my-in-links [ die ] ]
+  count links => 0
+
+CreateLinksWith
+  breed [nodes node]
+  undirected-link-breed [undirected-links undirected-link]
+  O> crt 1
+  O> create-nodes 2
+  count links => 0
+  O> ask turtle 0 [ create-links-with nodes [set color red] ]
+  count turtles => 3
+  count links => 2
+  count links with [color = red] => 2
+  T> create-undirected-links-with other turtles => ERROR You cannot have both breeded and unbreeded links in the same world.
+  T> create-undirected-link-with one-of turtles => ERROR You cannot have both breeded and unbreeded links in the same world.
+  O> ask turtle 0 [ ask my-links [ die ] ]
+  count links => 0
+
+LinkedTest1
+  O> crt 2
+  [in-link-neighbor? turtle 1] of turtle 0 => false
+  [in-link-neighbor? turtle 0] of turtle 1 => false
+  [out-link-neighbor? turtle 1] of turtle 0 => false
+  [out-link-neighbor? turtle 0] of turtle 1 => false
+  [link-neighbor? turtle 1] of turtle 0 => false
+  [link-neighbor? turtle 0] of turtle 1 => false
+  O> ask turtle 0[ create-link-to turtle 1]
+  [in-link-neighbor? turtle 1] of turtle 0 => false
+  [in-link-neighbor? turtle 0] of turtle 1 => true
+  [out-link-neighbor? turtle 1] of turtle 0 => true
+  [out-link-neighbor? turtle 0] of turtle 1 => false
+
+LinkedTest2
+  O> crt 2
+  O> ask turtle 0[ create-link-from turtle 1]
+  [in-link-neighbor? turtle 1] of turtle 0 => true
+  [in-link-neighbor? turtle 0] of turtle 1 => false
+  [out-link-neighbor? turtle 1] of turtle 0 => false
+  [out-link-neighbor? turtle 0] of turtle 1 => true
+
+LinkedTest3
+  O> crt 2
+  O> ask turtle 0[ create-link-with turtle 1]
+  [link-neighbor? turtle 1] of turtle 0 => true
+  [link-neighbor? turtle 0] of turtle 1 => true
+
+NodeDies1
+  breed [nodes node]
+  O> create-nodes 2
+  O> ask turtle 0 [create-link-to turtle 1]
+  count nodes => 2
+  count links => 1
+  O> ask turtle 0 [die]
+  count nodes => 1
+  count links => 0
+
+NodeDies2
+  breed [nodes node]
+  O> create-nodes 2
+  O> ask turtle 0 [create-link-from turtle 1]
+  count nodes => 2
+  count links => 1
+  O> ask turtle 0 [die]
+  count nodes => 1
+  count links => 0
+
+NodeDies3
+  breed [nodes node]
+  O> create-nodes 2
+  O> ask turtle 0 [create-link-with turtle 1]
+  count nodes => 2
+  count links => 1
+  O> ask turtle 0 [die]
+  count nodes => 1
+  count links => 0
+
+LinkDies1
+  breed [nodes node]
+  O> create-nodes 2
+  O> ask turtle 0 [create-link-to turtle 1]
+  O> ask link 0 1 [die]
+  count nodes => 2
+  count links => 0
+  [ out-link-neighbor? turtle 1] of turtle 0 => false
+
+LinkDies2
+  breed [nodes node]
+  O> create-nodes 2
+  O> ask turtle 0 [create-link-from turtle 1]
+  O> ask link 1 0 [die]
+  count nodes => 2
+  count links => 0
+  [ in-link-neighbor? turtle 1] of turtle 0 => false
+
+LinkDies3
+  breed [nodes node]
+  O> create-nodes 2
+  O> ask turtle 0 [create-link-with turtle 1]
+  O> ask link 0 1 [die]
+  count nodes => 2
+  count links => 0
+  [ link-neighbor? turtle 1] of turtle 0 => false
+
+LinkDestTest1
+  breed [nodes node]
+  O> create-nodes 2
+  O> ask turtle 0 [create-link-to turtle 1]
+  [ end1 ] of link 0 1 = turtle 0 => true
+  [ end2 ] of link 0 1 = turtle 1 => true
+  O> ask link 0 1 [die]
+  O> ask turtle 0 [create-link-from turtle 1]
+  [ end1 ] of link 1 0 = turtle 1 => true
+  [ end2 ] of link 1 0 = turtle 0 => true
+
+LinkDestTest2
+  breed [nodes node]
+  O> create-nodes 2
+  O> ask turtle 0 [create-link-with turtle 1]
+  [ end1 ] of link 0 1 = turtle 0 => true
+  [ end2 ] of link 0 1 = turtle 1 => true
+
+BothEnds1
+  O> crt 2
+  O> ask turtle 0 [create-link-to turtle 1]
+  [sort [who] of both-ends] of link 0 1 => [0 1]
+
+BothEnds2
+  O> crt 2
+  O> ask turtle 0 [create-link-from turtle 1]
+  [sort [who] of both-ends] of link 1 0 => [0 1]
+
+BothEnds3
+  O> crt 2
+  O> ask turtle 0 [create-link-with turtle 1]
+  [sort [who] of both-ends] of link 0 1 => [0 1]
+
+OtherEnd1
+  O> crt 2
+  O> ask turtle 0 [create-link-to turtle 1]
+  [[[who] of other-end] of link 0 1] of turtle 0 => 1
+  [[[who] of other-end] of link 0 1] of turtle 1 => 0
+  [[[who] of other-end] of turtle 0] of link 0 1 => 1
+  [[[who] of other-end] of turtle 1] of link 0 1 => 0
+
+OtherEnd2
+  O> crt 2
+  O> ask turtle 0 [create-link-from turtle 1]
+  [[[who] of other-end] of link 1 0] of turtle 0 => 1
+  [[[who] of other-end] of link 1 0] of turtle 1 => 0
+  [[[who] of other-end] of turtle 0] of link 1 0 => 1
+  [[[who] of other-end] of turtle 1] of link 1 0 => 0
+
+OtherEnd3
+  O> crt 2
+  O> ask turtle 0 [create-link-with turtle 1]
+  [[[who] of other-end] of link 0 1] of turtle 0 => 1
+  [[[who] of other-end] of link 0 1] of turtle 1 => 0
+  [[[who] of other-end] of turtle 0] of link 0 1 => 1
+  [[[who] of other-end] of turtle 1] of link 0 1 => 0
+
+IsLink1
+  O> crt 2
+  O> ask turtle 0 [create-link-to turtle 1]
+  O> ask turtle 0 [create-link-from turtle 1]
+  is-link? turtle 0 => false
+  is-link? turtle 1 => false
+  is-link? link 0 1 => true
+  is-link? link 1 0 => true
+
+IsLink2
+  O> crt 2
+  O> ask turtle 0 [create-link-with turtle 1]
+  is-link? turtle 0 => false
+  is-link? turtle 1 => false
+  is-link? link 0 1 => true
+
+LinkKillsNode1
+  breed [nodes node]
+  O> create-nodes 2
+  count nodes => 2
+  count links => 0
+  O> ask turtle 0 [create-link-to turtle 1 [ask myself [die]]]
+  count nodes => 1
+  count links => 0
+
+LinkKillsNode2
+  breed [nodes node]
+  O> create-nodes 2
+  count nodes => 2
+  count links => 0
+  O> ask turtle 0 [create-link-from turtle 1 [ask myself [die]]]
+  count nodes => 1
+  count links => 0
+
+LinkKillsNode3
+  breed [nodes node]
+  O> create-nodes 2
+  count nodes => 2
+  count links => 0
+  O> ask turtle 0 [create-link-with turtle 1 [ask myself [die]]]
+  count nodes => 1
+  count links => 0
+
+LinkFromToWith1
+  O> crt 2
+  [in-link-from turtle 1] of turtle 0 => nobody
+  [out-link-to turtle 1] of turtle 0 => nobody
+  [in-link-from turtle 0] of turtle 1 => nobody
+  [out-link-to turtle 0] of turtle 1 => nobody
+  [link-with turtle 1] of turtle 0 => nobody
+  [link-with turtle 0] of turtle 1 => nobody
+  O> ask turtle 0 [ create-link-to turtle 1 ]
+  [in-link-from turtle 1] of turtle 0 => nobody
+  [(list [who] of end1 [who] of end2 )] of [out-link-to turtle 1] of turtle 0 => [0 1]
+  [(list [who] of end1 [who] of end2 )] of [in-link-from turtle 0] of turtle 1 => [0 1]
+  [out-link-to turtle 0] of turtle 1 => nobody
+  [link-with turtle 1] of turtle 0 => ERROR LINKS is a directed breed.
+  [link-with turtle 0] of turtle 1 => ERROR LINKS is a directed breed.
+
+LinkFromToWith2
+  O> crt 2
+  O> ask turtle 0 [create-link-from turtle 1]
+  [(list [who] of end1 [who] of end2 )] of [in-link-from turtle 1] of turtle 0 => [1 0]
+  [out-link-to turtle 1] of turtle 0 => nobody
+  [in-link-from turtle 0] of turtle 1 => nobody
+  [(list [who] of end1 [who] of end2 )] of [out-link-to turtle 0] of turtle 1 => [1 0]
+
+LinkFromToWith3
+  O> crt 2
+  O> ask turtle 0 [create-link-with turtle 1]
+  [(list [who] of end1 [who] of end2 )] of [link-with turtle 1] of turtle 0 => [0 1]
+  [(list [who] of end1 [who] of end2 )] of [link-with turtle 0] of turtle 1 => [0 1]
+
+LinkedFromToWith1
+  O> crt 2
+  sort [who] of [in-link-neighbors] of turtle 0 => []
+  sort [who] of [out-link-neighbors] of turtle 0 => []
+  sort [who] of [in-link-neighbors ] of turtle 1 => []
+  sort [who] of [out-link-neighbors ] of turtle 1 => []
+  sort [who] of [link-neighbors ] of turtle 0 => []
+  sort [who] of [link-neighbors ] of turtle 1 => []
+  O> ask turtle 0 [create-link-to turtle 1]
+  sort [who] of [in-link-neighbors ] of turtle 0 => []
+  sort [who] of [out-link-neighbors ] of turtle 0 => [1]
+  sort [who] of [in-link-neighbors ] of turtle 1 => [0]
+  sort [who] of [out-link-neighbors ] of turtle 1 => []
+
+LinkedFromToWith2
+  O> crt 2
+  O> ask turtle 0 [create-link-from turtle 1]
+  sort [who] of [in-link-neighbors] of turtle 1 => []
+  sort [who] of [out-link-neighbors ] of turtle 1 => [0]
+  sort [who] of [in-link-neighbors] of turtle 0 => [1]
+  sort [who] of [out-link-neighbors ] of turtle 0 => []
+
+LinkedFromToWith3
+  O> crt 2
+  O> ask turtle 0 [create-link-with turtle 1]
+  sort [who] of [link-neighbors ] of turtle 1 => [0]
+  sort [who] of [link-neighbors ] of turtle 0 => [1]
+
+LinksAllFromTo1
+  O> crt 2
+  sort [my-in-links] of turtle 0 => []
+  sort [my-out-links] of turtle 0 => []
+  sort [my-in-links ] of turtle 1 => []
+  sort [my-out-links ] of turtle 1 => []
+  sort [my-links ] of turtle 0 => []
+  sort [my-links ] of turtle 1 => []
+  O> ask turtle 0 [create-link-to turtle 1]
+  map [ [ (list [who] of end1 [who] of end2 ) ] of ? ] sort [my-out-links ] of turtle 0 => [[0 1]]
+  map [ [ (list [who] of end1 [who] of end2 ) ] of ? ] sort [my-in-links ] of turtle 1 => [[0 1]]
+  sort [my-in-links] of turtle 0 => []
+  sort [my-out-links ] of turtle 1 => []
+
+LinksAllFromTo2
+  O> crt 2
+  O> ask turtle 0 [create-link-from turtle 1]
+  map [ [ (list [who] of end1 [who] of end2 ) ] of ? ] sort [my-in-links ] of turtle 0 => [[1 0]]
+  sort [my-out-links ] of turtle 0 => []
+  sort [my-in-links] of turtle 1 => []
+  map [ [ (list [who] of end1 [who] of end2 ) ] of ? ] sort [my-out-links ] of turtle 1 => [[1 0]]
+
+LinksAllFromTo3
+  O> crt 2
+  O> ask turtle 0 [create-link-with turtle 1]
+  map [ [ (list [who] of end1 [who] of end2 ) ] of ? ] sort [my-links ] of turtle 0 => [[0 1]]
+  map [ [ (list [who] of end1 [who] of end2 ) ] of ? ] sort [my-links ] of turtle 1 => [[0 1]]
+
+LinkKillsItself1
+  breed [nodes node]
+  O> create-nodes 2
+  O> ask turtle 0 [create-link-to turtle 1 [die]]
+  count nodes => 2
+  count links => 0
+  [in-link-from turtle 1] of turtle 0 => nobody
+  [out-link-to turtle 1] of turtle 0 => nobody
+  [in-link-from turtle 0] of turtle 1 => nobody
+  [out-link-to turtle 0] of turtle 1 => nobody
+  sort [who] of [in-link-neighbors] of turtle 0 => []
+  sort [who] of [out-link-neighbors] of turtle 0 => []
+  sort [who] of [in-link-neighbors ] of turtle 1 => []
+  sort [who] of [out-link-neighbors ] of turtle 1 => []
+  sort [who] of [my-in-links] of turtle 0 => []
+  sort [who] of [my-out-links] of turtle 0 => []
+  sort [who] of [my-in-links ] of turtle 1 => []
+  sort [who] of [my-out-links ] of turtle 1 => []
+
+LinkKillsItself2
+  breed [nodes node]
+  O> create-nodes 2
+  O> ask turtle 0 [create-link-from turtle 1 [die]]
+  count nodes => 2
+  count links => 0
+  [in-link-from turtle 1] of turtle 0 => nobody
+  [out-link-to turtle 1] of turtle 0 => nobody
+  [in-link-from turtle 0] of turtle 1 => nobody
+  [out-link-to turtle 0] of turtle 1 => nobody
+  sort [who] of [in-link-neighbors] of turtle 0 => []
+  sort [who] of [out-link-neighbors] of turtle 0 => []
+  sort [who] of [in-link-neighbors ] of turtle 1 => []
+  sort [who] of [out-link-neighbors ] of turtle 1 => []
+  sort [who] of [my-in-links] of turtle 0 => []
+  sort [who] of [my-out-links] of turtle 0 => []
+  sort [who] of [my-in-links ] of turtle 1 => []
+  sort [who] of [my-out-links ] of turtle 1 => []
+
+LinkKillsItself3
+  breed [nodes node]
+  O> create-nodes 2
+  O> ask turtle 0 [create-link-with turtle 1 [die]]
+  count nodes => 2
+  count links => 0
+  [link-with turtle 1] of turtle 0 => nobody
+  [link-with turtle 0] of turtle 1 => nobody
+  sort [who] of [link-neighbors] of turtle 0 => []
+  sort [who] of [link-neighbors ] of turtle 1 => []
+  sort [who] of [my-links] of turtle 0 => []
+  sort [who] of [my-links ] of turtle 1 => []
+
+LinkKillsParents1
+  O> crt 2 [ create-links-with turtles with [ who > [who] of myself  ] [ ask both-ends [die] ] ]
+  count links = 0 => true
+  count turtles = 0 => true
+  O> crt 2 [ create-links-with turtles with [ who > [who] of myself  ] [ ask end1 [die] ask end2 [die ] ] ]
+  count links = 0 => true
+  count turtles = 1 => true
+
+LinkKillsParents2
+  O> crt 10
+  T> create-links-with other turtles [ ask turtles with [true] [ die ] ]
+  count turtles => 0
+  count links => 0
+
+SwitchDirectednessOfUnbreededLinks1
+  O> crt 2
+  O> ask turtle 0 [ create-link-to turtle 1 ]
+  O> ask turtle 1 [ die ]
+  O> crt 1
+  O> ask turtle 0 [ create-link-with turtle 2 ]
+  count turtles => 2
+  count links => 1
+
+SwitchDirectednessOfUnbreededLinks2
+  O> crt 2
+  O> ask turtle 0 [ create-link-with turtle 1 ]
+  O> ask turtle 1 [ die ]
+  O> crt 1
+  O> ask turtle 0 [ create-link-to turtle 2 ]
+  count turtles => 2
+  count links => 1
+
+RemoveFrom
+  O> crt 2
+  O> ask turtle 0 [create-link-from turtle 1]
+  O> ask turtle 0 [ask link 1 0 [ die ] ]
+  [in-link-from turtle 1] of turtle 0 => nobody
+  [out-link-to turtle 1] of turtle 0 => nobody
+  [in-link-from turtle 0] of turtle 1 => nobody
+  [out-link-to turtle 0] of turtle 1 => nobody
+  sort [who] of [in-link-neighbors] of turtle 0 => []
+  sort [who] of [out-link-neighbors] of turtle 0 => []
+  sort [who] of [in-link-neighbors ] of turtle 1 => []
+  sort [who] of [out-link-neighbors ] of turtle 1 => []
+  sort [who] of [my-in-links] of turtle 0 => []
+  sort [who] of [my-out-links] of turtle 0 => []
+  sort [who] of [my-in-links ] of turtle 1 => []
+  sort [who] of [my-out-links ] of turtle 1 => []
+
+RemoveTo
+  O> crt 2
+  O> ask turtle 0 [create-link-to turtle 1]
+  O> ask turtle 0 [ask link 0 1 [die]]
+  [in-link-from turtle 1] of turtle 0 => nobody
+  [out-link-to turtle 1] of turtle 0 => nobody
+  [in-link-from turtle 0] of turtle 1 => nobody
+  [out-link-to turtle 0] of turtle 1 => nobody
+  sort [who] of [in-link-neighbors] of turtle 0 => []
+  sort [who] of [out-link-neighbors] of turtle 0 => []
+  sort [who] of [in-link-neighbors ] of turtle 1 => []
+  sort [who] of [out-link-neighbors ] of turtle 1 => []
+  sort [who] of [my-in-links] of turtle 0 => []
+  sort [who] of [my-out-links] of turtle 0 => []
+  sort [who] of [my-in-links ] of turtle 1 => []
+  sort [who] of [my-out-links ] of turtle 1 => []
+
+RemoveWith
+  O> crt 2
+  O> ask turtle 0 [create-link-with turtle 1]
+  O> ask turtle 0 [ask link 0 1[die]]
+  [link-with turtle 1] of turtle 0 => nobody
+  [link-with turtle 0] of turtle 1 => nobody
+  sort [who] of [link-neighbors] of turtle 0 => []
+  sort [who] of [link-neighbors ] of turtle 1 => []
+  sort [who] of [my-links] of turtle 0 => []
+  sort [who] of [my-links ] of turtle 1 => []
+
+BreedTest1
+  directed-link-breed [directed-links directed-link]
+  O> crt 2
+  O> ask turtle 0 [create-link-to turtle 1]
+  [in-directed-link-from turtle 1] of turtle 0 => nobody
+  [out-directed-link-to turtle 1] of turtle 0 => nobody
+  [in-directed-link-from turtle 0] of turtle 1 => nobody
+  [out-directed-link-to turtle 0] of turtle 1 => nobody
+  sort [who] of [in-directed-link-neighbors ] of turtle 0 => []
+  sort [who] of [out-directed-link-neighbors ] of turtle 0 => []
+  sort [who] of [in-directed-link-neighbors ] of turtle 1 => []
+  sort [who] of [out-directed-link-neighbors ] of turtle 1 => []
+  sort [who] of [my-in-directed-links ] of turtle 0 => []
+  sort [who] of [my-out-directed-links ] of turtle 0 => []
+  sort [who] of [my-in-directed-links ] of turtle 1 => []
+  sort [who] of [my-out-directed-links ] of turtle 1 => []
+
+BreedTest2
+  directed-link-breed [directed-links directed-link]
+  O> crt 2
+  O> ask turtle 0 [create-link-from turtle 1]
+  [in-directed-link-from turtle 1] of turtle 0 => nobody
+  [out-directed-link-to turtle 1] of turtle 0 => nobody
+  [in-directed-link-from turtle 0] of turtle 1 => nobody
+  [out-directed-link-to turtle 0] of turtle 1 => nobody
+  sort [who] of [in-directed-link-neighbors] of turtle 0 => []
+  sort [who] of [out-directed-link-neighbors] of turtle 0 => []
+  sort [who] of [in-directed-link-neighbors ] of turtle 1 => []
+  sort [who] of [out-directed-link-neighbors ] of turtle 1 => []
+  sort [who] of [my-in-directed-links] of turtle 0 => []
+  sort [who] of [my-out-directed-links] of turtle 0 => []
+  sort [who] of [my-in-directed-links ] of turtle 1 => []
+  sort [who] of [my-out-directed-links ] of turtle 1 => []
+
+BreedTest3
+  undirected-link-breed [undirected-links undirected-link]
+  O> crt 2
+  O> ask turtle 0 [create-link-with turtle 1]
+  [undirected-link-with turtle 1] of turtle 0 => nobody
+  [undirected-link-with turtle 0] of turtle 1 => nobody
+  sort [who] of [undirected-link-neighbors ] of turtle 0 => []
+  sort [who] of [undirected-link-neighbors ] of turtle 1 => []
+  sort [who] of [my-undirected-links ] of turtle 0 => []
+  sort [who] of [my-undirected-links ] of turtle 1 => []
+
+LinkCantChangeBreeds
+  globals [glob1]
+  breed [frogs frog]
+  O> crt 2
+  O> ask turtle 0 [ create-link-to turtle 1 [ set glob1 self ] ]
+  [breed] of glob1 = links => true
+  O> ask glob1 [ set breed frogs ] => ERROR You can't set BREED to a non-link-breed agentset.
+
+LinkEquality
+  O> crt 3 [ create-links-with other turtles ]
+  link 0 1 = link 0 1 => true
+  link 0 1 = link 0 2 => false
+
+LinkBreedIdentifiers
+  directed-link-breed [directed-links directed-link]
+  undirected-link-breed [undirected-links undirected-link]
+  O> crt 2
+  O> ask turtle 0 [ create-link-with turtle 1 [ set color blue ] ]
+  link 0 1 = one-of links with [color = blue] => true
+  link 1 0 = one-of links with [color = blue] => true
+  link 1 1 = nobody => true
+  O> ask links [ die ]
+  O> crt 2
+  O> ask turtle 2 [ create-directed-link-to turtle 3 [ set color green ] ]
+  O> crt 2
+  O> ask turtle 4 [ create-undirected-link-with turtle 5 [ set color red ] ]
+  directed-link 0 1 = nobody => true
+  undirected-link 0 1 = nobody => true
+  link 2 3 = nobody => true
+  directed-link 2 3 = one-of links with [color = green] => true
+  directed-link 3 2 = nobody => true
+  undirected-link 2 3 = nobody => true
+  link 4 5 = nobody => true
+  directed-link 4 5 = nobody => true
+  undirected-link 4 5 = one-of links with [color = red] => true
+  undirected-link 5 4 = one-of links with [color = red] => true
+  O> ask turtle 0 [ create-directed-link-to turtle 1 [ set color green ] ]
+  O> ask turtle 0 [ create-undirected-link-with turtle 1 [ set color red ] ]
+  link 0 1 = one-of links with [color = blue] => true
+
+LinkNeighborsUnbreeded
+  directed-link-breed [directed-links directed-link]
+  undirected-link-breed [undirected-links undirected-link]
+  O> crt 5 [ create-undirected-links-with other turtles ]
+  count links => 10
+  count undirected-links => 10
+  [count undirected-link-neighbors] of turtle 0 => 4
+  [count link-neighbors] of turtle 0 => 4
+  [undirected-link-neighbor? turtle 1] of turtle 0 => true
+  [link-neighbor? turtle 1] of turtle 0 => true
+  T> create-directed-links-to other turtles
+  count links => 30
+  count undirected-links => 10
+  count directed-links => 20
+  [count undirected-link-neighbors] of turtle 0 => 4
+  [count in-directed-link-neighbors] of turtle 0 => 4
+  [count out-directed-link-neighbors] of turtle 0 => 4
+  [count link-neighbors] of turtle 0 => 4
+  [count out-link-neighbors] of turtle 0 => 4
+  [count in-link-neighbors] of turtle 0 => 4
+
+LinksNotAllowed
+  globals [glob1]
+  O> crt 2 [ create-links-with other turtles [ set glob1 self ] ]
+  [towards glob1] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
+  [distance glob1] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
+  [distance turtle 0] of glob1 => ERROR this code can't be run by a link
+  [neighbors] of glob1 => ERROR this code can't be run by a link
+  O> follow glob1 => ERROR FOLLOW expected input to be a turtle but got the link (link 0 1) instead.
+  O> ride glob1 => ERROR RIDE expected input to be a turtle but got the link (link 0 1) instead.
+  T> face glob1 => ERROR Expected a turtle or a patch but got a link.
+  O> ask glob1 [ facexy 0 1 ] => ERROR this code can't be run by a link, only a turtle
+  O> ask glob1 [ face turtle 0 ] => ERROR this code can't be run by a link, only a turtle
+  O> ask glob1 [ follow-me ] => ERROR this code can't be run by a link, only a turtle
+  O> set glob1 links
+  [glob1 in-radius 5] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
+  [glob1 in-cone 5 5] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
+
+LinkNotAllowed
+  globals [glob1]
+  O> crt 2 [ create-links-with other turtles [ set glob1 self ] ]
+  [patch-at 0 1] of glob1 => ERROR this code can't be run by a link
+
+BadLinkBreeds
+  breed [frogs frog]
+  undirected-link-breed [undirected-links undirected-link]
+  directed-link-breed [directed-links directed-link]
+  O> crt 2 [ create-links-with turtles with [ who > [who] of myself ] ]
+  L> set breed turtles => ERROR You can't set BREED to a non-link-breed agentset.
+  L> set breed frogs => ERROR You can't set BREED to a non-link-breed agentset.
+  L> set breed directed-links => ERROR You cannot have both breeded and unbreeded links in the same world.
+  L> die
+  O> ask turtle 0 [ create-directed-link-to turtle 1 ]
+  L> set breed undirected-links
+  O> ask turtle 0 [ create-directed-link-to turtle 1 ]
+  L> set breed undirected-links => ERROR there is already a UNDIRECTED-LINK with endpoints turtle 0 and turtle 1
+  L> set breed links => ERROR You cannot have both breeded and unbreeded links in the same world.
+
+SetLinkVariable
+  undirected-link-breed [undirected-links undirected-link]
+  directed-link-breed [directed-links directed-link]
+  directed-links-own [lvar]
+  undirected-links-own [weight]
+  O> crt 10
+  T> create-directed-links-to other turtles [ set lvar 5 ]
+  T> create-undirected-links-with other turtles [ set weight 5 ]
+
+LinkBreedsDying
+  undirected-link-breed [undirected-links undirected-link]
+  directed-link-breed [directed-links directed-link]
+  globals [glob1]
+  O> create-turtles 10 [ fd 10 repeat 5 [ ifelse one-of [true false] [ create-directed-link-to one-of other turtles ] [ create-undirected-link-with one-of other turtles ] ] ]
+  O> set glob1 count links
+  O> repeat glob1 [ ask one-of links [ die ] ]
+  count links => 0
+
+LinkHeading
+  O> cro 360 [ create-link-with turtle ((who + 1) mod 360) ]
+  [link-heading] of link 0 1 => ERROR there is no heading of a link whose endpoints are in the same position
+  T> fd 5
+  all? links [link-heading = [towards other-end] of end1] => true
+
+LinkNeighborIsUndirectedOnly1
+  O> crt 2 [ create-links-to other turtles ]
+  T> __ignore link-neighbor? one-of other turtles => ERROR LINKS is a directed breed.
+
+LinkNeighborIsUndirectedOnly2
+  directed-link-breed [directed-links directed-link]
+  O> crt 2 [ create-directed-links-to other turtles ]
+  T> __ignore directed-link-neighbor? one-of other turtles => COMPILER ERROR Nothing named DIRECTED-LINK-NEIGHBOR? has been defined.
+
+# https://github.com/NetLogo/NetLogo/issues/338
+LinkCreationTypeChecking
+  O> crt 1
+  T> create-link-with patch-here => COMPILER ERROR CREATE-LINK-WITH expected this input to be a turtle, but got a patch instead
+  T> let x patch-here create-link-with x => ERROR CREATE-LINK-WITH expected input to be a turtle but got the patch (patch 0 0) instead.
+  T> create-links-with neighbors => COMPILER ERROR CREATE-LINKS-WITH expected this input to be a turtle agentset, but got a patch agentset instead
+  T> let x neighbors create-links-with x => ERROR CREATE-LINKS-WITH expected input to be a turtle agentset but got the agentset (agentset, 8 patches) instead.

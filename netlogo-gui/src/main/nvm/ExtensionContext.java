@@ -5,7 +5,7 @@ package org.nlogo.nvm;
 import scala.collection.Seq;
 import scala.Tuple2;
 
-import org.nlogo.util.MersenneTwisterFast;
+import org.nlogo.api.MersenneTwisterFast;
 
 public strictfp class ExtensionContext
     implements org.nlogo.api.Context {

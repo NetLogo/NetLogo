@@ -215,7 +215,7 @@ public final strictfp class ArrayAgentSet
 
   @Override
   Agent[] randomSubsetGeneral(int resultSize, int precomputedCount,
-                              org.nlogo.util.MersenneTwisterFast random) {
+                              org.nlogo.api.MersenneTwisterFast random) {
     Agent result[] = new Agent[resultSize];
     if (precomputedCount == capacity) {
       for (int i = 0, j = 0; j < resultSize; i++) {
@@ -326,7 +326,7 @@ public final strictfp class ArrayAgentSet
   /// was close enough!  ;-)  ~Forrest (10/3/2008)
 
   @Override
-  public AgentSet.Iterator shufflerator(org.nlogo.util.MersenneTwisterFast random) {
+  public AgentSet.Iterator shufflerator(org.nlogo.api.MersenneTwisterFast random) {
     // note it at the moment (and this should probably be fixed)
     // Job.runExclusive() counts on this making a copy of the
     // contents of the agentset - ST 12/15/05
@@ -337,9 +337,9 @@ public final strictfp class ArrayAgentSet
     private int i = 0;
     private final Agent[] copy = new Agent[size];
     private Agent next;
-    private final org.nlogo.util.MersenneTwisterFast random;
+    private final org.nlogo.api.MersenneTwisterFast random;
 
-    Shufflerator(org.nlogo.util.MersenneTwisterFast random) {
+    Shufflerator(org.nlogo.api.MersenneTwisterFast random) {
       this.random = random;
       System.arraycopy(agents, 0, copy, 0, size);
       while (i < copy.length && copy[i] == null) {

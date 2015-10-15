@@ -53,7 +53,7 @@ public final strictfp class _nof
   }
 
   private LogoList randomSubset(LogoList list, int n,
-                                org.nlogo.util.MersenneTwisterFast random) {
+                                org.nlogo.api.MersenneTwisterFast random) {
     int size = list.size();
     LogoListBuilder result = new LogoListBuilder();
     int i = 0;

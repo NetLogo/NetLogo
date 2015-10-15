@@ -1,0 +1,30 @@
+NoPatches
+  any? no-patches => false
+  count no-patches => 0
+  no-patches = nobody => false
+  is-agentset? no-patches => true
+  is-patch-set? no-patches => true
+  is-turtle-set? no-patches => false
+  is-link-set? no-patches => false
+  O> ask no-patches [ __ignore __boom ]
+
+NoTurtles
+  any? no-turtles => false
+  count no-turtles => 0
+  no-turtles = nobody => false
+  is-agentset? no-turtles => true
+  is-turtle-set? no-turtles => true
+  is-patch-set? no-turtles => false
+  is-link-set? no-turtles => false
+  O> ask no-turtles [ __ignore __boom ]
+
+NoLinks
+  any? no-links => false
+  count no-links => 0
+  no-links = nobody => false
+  is-agentset? no-links => true
+  is-turtle-set? no-links => false
+  is-patch-set? no-links => false
+  is-link-set? no-links => true
+  O> ask no-links [ __ignore __boom ]
+

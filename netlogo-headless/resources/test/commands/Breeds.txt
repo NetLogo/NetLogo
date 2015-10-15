@@ -1,0 +1,71 @@
+TestIsBreed
+  breed [mice mouse]
+  breed [frogs frog]
+  globals [glob1]
+  is-frog? nobody => false
+  is-frog? turtle 0 => false
+  O> create-turtles 1
+  is-frog? turtle 0 => false
+  O> create-frogs 1
+  is-frog? turtle 1 => true
+  is-mouse? turtle 1 => false
+  O> set glob1 turtle 1
+  O> ask glob1 [ die ]
+  is-frog? glob1 => false
+  is-mouse? glob1 => false
+  O> set glob1 55
+  is-frog? glob1 => false
+
+IsLinkBreed
+  undirected-link-breed [undirected-links undirected-link]
+  directed-link-breed [directed-links directed-link]
+  globals [glob1]
+  is-directed-link? nobody => false
+  is-directed-link? link 0 1 => false
+  O> crt 2
+  O> ask turtle 0 [ create-directed-link-to turtle 1 ]
+  O> ask turtle 0 [ create-undirected-link-with turtle 1 ]
+  is-directed-link? link 0 1 => false
+  is-directed-link? directed-link 0 1 => true
+  is-undirected-link? directed-link 0 1 => false
+  is-directed-link? undirected-link 0 1 => false
+  is-undirected-link? undirected-link 0 1 => true
+  O> set glob1 directed-link 0 1
+  is-directed-link? glob1 => true
+  is-undirected-link? glob1 => false
+
+SetBreedToNonBreed
+  breed [frogs frog]
+  directed-link-breed [directed-links directed-link]
+  O> crt 1 [ set breed turtles ]
+  O> crt 1 [ set breed frogs ]
+  O> crt 1 [ set breed patches ] => ERROR You can't set BREED to a non-breed agentset.
+  O> crt 1 [ set breed turtles with [true] ] => ERROR You can't set BREED to a non-breed agentset.
+  O> crt 1 [ set breed links ] => ERROR You can't set BREED to a non-breed agentset.
+  O> crt 1 [ set breed directed-links ] => ERROR You can't set BREED to a non-breed agentset.
+
+HatchWithBreedsOwn
+  breed [rabbits rabbit]
+  rabbits-own [energy]
+  O> create-rabbits 1 [ set energy 10 ]
+  T> hatch 1
+  [energy] of turtle 0 => 10
+  [energy] of turtle 1 => 10
+
+SetBreedOfUnbreededTurtleWithVar
+  turtles-own [apples]
+  breed [wolves wolf]
+  O> crt 1 [ set apples 10 set breed wolves set apples 20 ]
+  [apples] of wolf 0 => 20
+
+DontPropagateGivenShapeOnHatch
+  breed [apples apple]
+  breed [grapes grape]
+  O> create-apples 1 [ set shape "car" hatch-grapes 1 ]
+  [shape] of grape 1 => "default"
+
+DropGivenShapeAfterSwitchingBreeds
+  breed [apples apple]
+  breed [grapes grape]
+  O> create-apples 1 [ set shape "car" set breed grapes ]
+  [shape] of grape 0 => "default"

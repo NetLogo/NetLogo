@@ -1,0 +1,270 @@
+*ToString3
+  (word task [__ignore ?]) => "(command task from: procedure __EVALUATOR)"
+
+*ToString4
+  (word task [__ignore 5]) => "(command task from: procedure __EVALUATOR)"
+
+*ToString5
+  (word task [(foreach [1 2] [3 4] [ __ignore ? + ? ])]) => "(command task from: procedure __EVALUATOR)"
+
+*ToString6
+  to foo end
+  (word task [foo]) => "(command task from: procedure __EVALUATOR)"
+
+CallTask
+  globals [glob1]
+  O> run [set glob1 5]
+  glob1 => 5
+
+NestedCallTask
+  globals [glob1]
+  O> run [ run [ set glob1 5 ] ]
+  glob1 => 5
+
+CallTaskAgainAndAgain
+  globals [glob1 glob2]
+  O> set glob1 task [set glob2 glob2 + 5]
+  O> run glob1
+  glob2 => 5
+  O> run glob1
+  glob2 => 10
+  O> run glob1 run glob1 run glob1
+  glob2 => 25
+
+EasyForeach
+  globals [glob1]
+  O> foreach [1 2 3] [ set glob1 glob1 + 1 ]
+  glob1 => 3
+
+HarderForeach
+  globals [glob1]
+  O> foreach [1 2 3] [ set glob1 glob1 + ? ]
+  glob1 => 6
+
+NestedForeach1
+  globals [glob1]
+  O> foreach [1 2 3] [ foreach [1 2 3] [ set glob1 glob1 + 1 ] ]
+  glob1 => 9
+
+NestedForeach2
+  globals [glob1]
+  O> foreach [1 2 3] [ foreach [10 20 30] [ set glob1 glob1 + ? ] ]
+  glob1 => 180
+
+NestedForeach3
+  globals [glob1]
+  O> foreach [1 2 3] [ __let x ? foreach [10 20 30] [ set glob1 glob1 + x + ? ] ]
+  glob1 => 198
+
+CloseOverUnoptimizedLet
+  globals [glob1 glob2]
+  O> __let x 5 set glob1 task [ set glob2 x ]
+  O> run glob1
+  glob2 => 5
+
+CloseOverOptimizedLet
+  globals [glob1 glob2]
+  O> let x 5 set glob1 task [ set glob2 x ]
+  O> run glob1
+  glob2 => 5
+
+CloseOverProcedureVariable
+  globals [glob1]
+  to-report foo [x] report task [set glob1 x] end
+  O> run foo 10
+  glob1 => 10
+
+*WrongTypeOfTask1
+  O> __ignore runresult task [__ignore 5] => ERROR RUNRESULT expected input to be a string or reporter task but got the command task (command task from: procedure __EVALUATOR) instead.
+
+WrongTypeOfTask2
+  O> run task [5] => ERROR RUN expected input to be a string or command task but got the reporter task (reporter task) instead.
+
+NotEnoughInputs
+  O> run [__ignore ?] => ERROR task expected 1 input, but only got 0
+
+NotEnoughInputsForeach
+  O> foreach [1 2 3] [__ignore ?1 + ?2] => ERROR task expected 2 inputs, but only got 1
+
+command-and-reporter-tasks-close-over-same-let-variable
+  globals [glob1 glob2 glob3]
+  to-report make-account let balance 0 report list task [balance] task [ set balance balance + ? ] end
+  O> set glob1 make-account
+  O> set glob2 item 0 glob1
+  O> set glob3 item 1 glob1
+  runresult glob2 => 0
+  O> (run glob3 10)
+  runresult glob2 => 10
+  O> (run glob3 20)
+  runresult glob2 => 30
+  O> set glob1 make-account
+  runresult (item 0 glob1) => 0
+  runresult glob2 => 30
+
+command-and-reporter-tasks-close-over-same-procedure-input
+  globals [glob1 glob2 glob3]
+  to-report make-account [balance] report list task [balance] task [ set balance balance + ? ] end
+  O> set glob1 make-account 100
+  O> set glob2 item 0 glob1
+  O> set glob3 item 1 glob1
+  runresult glob2 => 100
+  O> (run glob3 10)
+  runresult glob2 => 110
+  O> (run glob3 20)
+  runresult glob2 => 130
+  O> set glob1 make-account 50
+  runresult (item 0 glob1) => 50
+  runresult glob2 => 130
+
+*command-task-stack-trace
+  O> run task [__ignore __boom] => STACKTRACE boom!\
+  error while observer running __BOOM\
+    called by (command task from: procedure __EVALUATOR)\
+    called by procedure __EVALUATOR
+
+*command-task-in-command-task-stack-trace
+  O> run task [run task [__ignore __boom]] => STACKTRACE boom!\
+  error while observer running __BOOM\
+    called by (command task from: procedure __EVALUATOR)\
+    called by (command task from: procedure __EVALUATOR)\
+    called by procedure __EVALUATOR
+
+turtle-executing-command-task
+  O> crt 1 let f task [set label "hi"] ask turtle 0 [run f]
+  [label] of turtle 0 => "hi"
+
+turtle-executing-command-task-2
+  O> crt 1 let f task [set xcor 2] ask turtle 0 [run f]
+  [xcor] of turtle 0 => 2
+
+turtle-executing-command-task-3
+  O> crt 1 let f task [set plabel "hi"] ask turtle 0 [run f]
+  [plabel] of turtle 0 => "hi"
+
+patch-executing-command-task
+  globals [glob1]
+  O> set glob1 one-of patches
+  O> let f task [set plabel "hi"] ask glob1 [run f]
+  [plabel] of glob1 => "hi"
+
+link-executing-command-task
+  O> crt 2 ask turtle 0 [create-link-with turtle 1] let f task [set label "hi"] ask link 0 1 [run f]
+  [label] of link 0 1 => "hi"
+
+deeply-nested-with-all-agent-types
+  globals [glob1]
+  to-report f [x] report task [ ask turtle 0 [run x] ] end
+  to-report g [x] report task [ ask link 0 1 [run x] ] end
+  to-report h [x] report task [ ask glob1 [run x] ] end
+  to-report i report task [ set plabel "wow!" ] end
+  to go crt 2 ask turtle 0 [create-link-with turtle 1] run f (g (h i)) end
+  O> set glob1 one-of patches
+  O> go
+  [plabel] of glob1 => "wow!"
+
+is-it-or-isnt-it
+  is-command-task? 5 => false
+  is-command-task? task [__ignore timer] => true
+  is-command-task? task [timer] => false
+
+dont-close-over-current-agent
+  globals [glob1 glob2]
+  O> crt 2
+  O> ask turtle 0 [ set glob1 task [ set glob2 who ] ]
+  O> ask turtle 1 [ run glob1 ]
+  glob2 => 1
+
+concise-syntax-1
+  O> cro 1
+  T> foreach [0.5 0.5 0.5] fd
+  [ycor] of turtle 0 => 1.5
+
+concise-syntax-2
+  O> crt 5
+  count turtles => 5
+  T> foreach [1] die
+  count turtles => 0
+
+concise-syntax-3
+  O> foreach [1 2 3] crt
+  count turtles => 6
+
+concise-syntax-4
+  globals [glob1]
+  to foo set glob1 glob1 + 1 end
+  O> foreach [1 1 1] foo
+  glob1 => 3
+
+concise-syntax-5
+  globals [glob1]
+  to foo [x] set glob1 glob1 + x end
+  O> foreach [1 2 3] foo
+  glob1 => 6
+
+concise-syntax-6
+  globals [glob1]
+  O> set glob1 task crt
+  O> foreach [1 2 3] glob1
+  count turtles => 6
+
+concise-syntax-7
+  O> (foreach [1 2 3] [9 9 9] crt)
+  count turtles => 6
+
+concise-syntax-8
+  globals [glob1]
+  to foo [x] ask x [ set glob1 glob1 + who ] end
+  O> crt 5
+  O> foreach sort turtles foo
+  glob1 => 10
+
+foreach-multiple-lists
+  globals [glob1]
+  O> set glob1 []
+  O> (foreach [1 2] [10 20] [100 200] [ set glob1 lput (list ?1 ?2 ?3) glob1 ])
+  glob1 => [[1 10 100] [2 20 200]]
+
+foreach-multiple-lists-length-mismatch
+  globals [glob1]
+  O> (foreach [1 2] [10 20] [100 200 300] [ ]) => ERROR All the list arguments to FOREACH must be the same length.
+  O> (foreach [1 2 3] [10 20] [100 200] [ ]) => ERROR All the list arguments to FOREACH must be the same length.
+
+the-killing-task
+  globals [glob1]
+  O> set glob1 task [ ask turtle 0 [ die ] ]
+  O> crt 1
+  T> run glob1  __stdout who  error "oops"
+
+empty-command-task-1
+  globals [glob1]
+  O> set glob1 task [ ]
+  is-command-task? glob1 => true
+  O> run glob1  set glob1 5
+  glob1 => 5
+
+empty-command-task-2
+  O> foreach [1 2 3] [ ]
+
+command-task-body-may-have-different-agent-type
+  is-command-task? task die => true
+
+command-task-body-gets-agent-type-check
+  O> __ignore task [hatch 1 sprout 1] => COMPILER ERROR You can't use SPROUT in a turtle context, because SPROUT is patch-only.
+
+command-task-closes-over-let-inside-task-of-different-agent
+  globals [glob1]
+  O> __let z 0 crt 1 [ set glob1 task [ __ignore z ] ]
+  O> run glob1
+
+foreach-plus-recursion
+  turtles-own [tvar]
+  to explore if tvar = 0 [ set tvar 1 foreach sort turtles-on neighbors [ ask ? [ explore ] ] ] end
+  O> ask patches [ sprout 1 ]
+  O> ask one-of turtles [ explore ]
+  any? turtles with [tvar = 0] => false
+
+allow-task-variable-access-inside-reporter-block
+  globals [glob1]
+  O> crt 10
+  O> foreach [7] [ set glob1 first [who] of turtles with [who = ?] ]
+  glob1 => 7

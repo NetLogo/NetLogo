@@ -1,0 +1,307 @@
+Random1
+  O> random-seed 21264
+  min [random 0] of patches => 0
+  max [random 0] of patches => 0
+  min [random 1] of patches => 0
+  max [random 1] of patches => 0
+  min [random 2] of patches => 0
+  max [random 2] of patches => 1
+  min [random -1] of patches => 0
+  max [random -1] of patches => 0
+  min [random -2] of patches => -1
+  max [random -2] of patches => 0
+
+Random2
+  O> random-seed 21264
+  min [random 0] of patches => 0
+  max [random 0] of patches => 0
+  min [random 1] of patches => 0
+  max [random 1] of patches => 0
+  min [random 2] of patches => 0
+  max [random 2] of patches => 1
+  min [random -1] of patches => 0
+  max [random -1] of patches => 0
+  min [random -2] of patches => -1
+  max [random -2] of patches => 0
+
+Random3
+  O> random-seed 19181
+  random 0.5 => 0
+  random 0 => 0
+  random 0.9 => 0
+  max n-values 100 [random 2.9] => 2
+
+RandomFloat1
+  O> random-seed 37378
+  min [random-float 0] of patches => 0
+  max [random-float 0] of patches => 0
+  min [random-float 1] of patches >= 0 => true
+  min [random-float 1] of patches <= 0.05 => true
+  max [random-float 1] of patches >= 0.95 => true
+  max [random-float 1] of patches < 1 => true
+  max [random-float -1] of patches <= 0 => true
+  max [random-float -1] of patches >= -0.05 => true
+  min [random-float -1] of patches <= -0.95 => true
+  min [random-float -1] of patches > -1 => true
+  max [random-float 10] of patches > 9 => true
+  min [random-float -10] of patches < -9 => true
+
+RandomFloat2
+  O> random-seed 37378
+  min [random-float 0] of patches => 0
+  max [random-float 0] of patches => 0
+  min [random-float 1] of patches >= 0 => true
+  min [random-float 1] of patches <= 0.05 => true
+  max [random-float 1] of patches >= 0.95 => true
+  max [random-float 1] of patches < 1 => true
+  max [random-float -1] of patches <= 0 => true
+  max [random-float -1] of patches >= -0.05 => true
+  min [random-float -1] of patches <= -0.95 => true
+  min [random-float -1] of patches > -1 => true
+  max [random-float 10] of patches > 9 => true
+  min [random-float -10] of patches < -9 => true
+
+RandomGamma
+  globals [glob1]
+  O> random-seed 2722
+  O> set glob1 n-values 100000 [random-gamma 50 5]
+  abs (mean glob1 - 10) < 0.01 => true
+  abs (variance glob1 - 2) < 0.01 => true
+
+Shuffle1
+  O> random-seed 2782
+  shuffle [] => []
+  shuffle [1 2 3 4 5] => [3 5 1 2 4]
+  shuffle [1 2 3 4 5] => [2 4 1 3 5]
+  shuffle [1 2 3 4 5] => [5 2 1 3 4]
+  O> random-seed 2782
+  shuffle [1 2 3 4 5] => [3 5 1 2 4]
+
+OrderOfEvaluation1
+  to-report foo crt 5 report count turtles end
+  remove foo (list foo foo) => [10 15]
+
+RandomOneOfWithLists
+  O> random-seed 1938
+  one-of [1 2 3 4 5 6 7] => 2
+  O> random-seed 1938
+  one-of ["one" "two" "three" "four" "five" "six" "seven"] => "two"
+  one-of [1.0 2.1 3.2 4.3 5.4 6.5] => 4.3
+  one-of [[]] => []
+  one-of [] => ERROR ONE-OF got an empty list as input.
+  n-values 100 [?] = sort remove-duplicates n-values 1000 [one-of n-values 100 [?]] => true
+
+RandomNOfWithLists
+  globals [glob1]
+  O> random-seed 27892
+  n-of -1 [] => ERROR First input to N-OF can't be negative.
+  n-of -1 [1 2 3] => ERROR First input to N-OF can't be negative.
+  n-of 0 [] => []
+  n-of 0 [1 2 3] => []
+  n-of 1 [] => ERROR Requested 1 random items from a list of length 0.
+  n-of 1 [99] => [99]
+  n-of 2 [1 2] => [1 2]
+  sum n-values 20 [sum n-of 10 n-values 10 [?]] => 900
+  sum n-values 20 [sum n-values 10 [length n-of ? n-values 10 [?]]] => 900
+  length remove-duplicates n-values 1000 [n-of 1 n-values 10 [?]] => 10
+  O> set glob1 n-of 50 n-values 100 [?]
+  glob1 = sort glob1 => true
+
+OneOfWithAgentSets
+  O> random-seed 9382
+  [who] of one-of turtles => ERROR OF expected input to be a turtle agentset or turtle but got NOBODY instead.
+  O> crt 10
+  [who] of one-of turtles => 9
+  [list pxcor pycor] of one-of patches => [0 5]
+
+RandomNOfIsFairForPatches
+  to-report ratio let x [plabel] of patches report max x / min x end
+  O> random-seed 39823
+  P> set plabel 0
+  O> repeat 10000 [ ask n-of 1 patches [ set plabel plabel + 1 ] ]
+  sum [plabel] of patches => 10000
+  ratio < 3 => true
+  P> set plabel 0
+  O> repeat 10000 [ ask n-of 2 patches [ set plabel plabel + 1 ] ]
+  sum [plabel] of patches => 20000
+  ratio < 3 => true
+  P> set plabel 0
+  O> repeat 10000 [ ask n-of 3 patches [ set plabel plabel + 1 ] ]
+  sum [plabel] of patches => 30000
+  ratio < 3 => true
+  P> set plabel 0
+  O> repeat 10000 [ ask n-of 5 patches [ set plabel plabel + 1 ] ]
+  sum [plabel] of patches => 50000
+  ratio < 3 => true
+  P> set plabel 0
+  O> repeat 10000 [ ask n-of 10 patches [ set plabel plabel + 1 ] ]
+  sum [plabel] of patches => 100000
+  ratio < 3 => true
+
+RandomNOfIsFairForTurtles
+  to-report ratio let x [label] of turtles report max x / min x end
+  O> random-seed 39823
+  O> crt 200
+  T> set label 0
+  O> repeat 10000 [ ask n-of 1 turtles [ set label label + 1 ] ]
+  sum [label] of turtles => 10000
+  ratio < 3 => true
+  T> set label 0
+  O> repeat 10000 [ ask n-of 2 turtles [ set label label + 1 ] ]
+  sum [label] of turtles => 20000
+  ratio < 3 => true
+  T> set label 0
+  O> repeat 10000 [ ask n-of 3 turtles [ set label label + 1 ] ]
+  sum [label] of turtles => 30000
+  ratio < 3 => true
+  T> set label 0
+  O> repeat 10000 [ ask n-of 5 turtles [ set label label + 1 ] ]
+  sum [label] of turtles => 50000
+  ratio < 3 => true
+  T> set label 0
+  O> repeat 10000 [ ask n-of 10 turtles [ set label label + 1 ] ]
+  sum [label] of turtles => 100000
+  ratio < 3 => true
+
+RandomNOfIsFairForLinks
+  to-report ratio let x [label] of links report max x / min x end
+  O> random-seed 39823
+  O> crt 20 [  create-links-with turtles with [ who > [who] of myself  ] ]
+  L> set label 0
+  O> repeat 10000 [ ask n-of 1 links [ set label label + 1 ] ]
+  sum [label] of links => 10000
+  ratio < 3 => true
+  L> set label 0
+  O> repeat 10000 [ ask n-of 2 links [ set label label + 1 ] ]
+  sum [label] of links => 20000
+  ratio < 3 => true
+  L> set label 0
+  O> repeat 10000 [ ask n-of 3 links [ set label label + 1 ] ]
+  sum [label] of links => 30000
+  ratio < 3 => true
+  L> set label 0
+  O> repeat 10000 [ ask n-of 5 links [ set label label + 1 ] ]
+  sum [label] of links => 50000
+  ratio < 3 => true
+  L> set label 0
+  O> repeat 10000 [ ask n-of 10 links [ set label label + 1 ] ]
+  sum [label] of links => 100000
+  ratio < 3 => true
+
+RandomNOfIsFairForABreed
+  breed [mice mouse]
+  to-report ratio let x [label] of mice report max x / min x end
+  O> random-seed 39823
+  O> create-mice 200
+  T> set label 0
+  O> repeat 10000 [ ask n-of 1 mice [ set label label + 1 ] ]
+  sum [label] of mice => 10000
+  ratio < 3 => true
+  T> set label 0
+  O> repeat 10000 [ ask n-of 2 mice [ set label label + 1 ] ]
+  sum [label] of mice => 20000
+  ratio < 3 => true
+  T> set label 0
+  O> repeat 10000 [ ask n-of 3 mice [ set label label + 1 ] ]
+  sum [label] of mice => 30000
+  ratio < 3 => true
+  T> set label 0
+  O> repeat 10000 [ ask n-of 5 mice [ set label label + 1 ] ]
+  sum [label] of mice => 50000
+  ratio < 3 => true
+  T> set label 0
+  O> repeat 10000 [ ask n-of 10 mice [ set label label + 1 ] ]
+  sum [label] of mice => 100000
+  ratio < 3 => true
+
+RandomNOfIsFairForAnAgentsetConstructedOnTheFly
+  globals [glob1]
+  to-report ratio let x [label] of glob1 report max x / min x end
+  O> random-seed 39823
+  O> crt 200
+  O> set glob1 turtles with [breed = turtles]
+  T> set label 0
+  O> repeat 10000 [ ask n-of 1 glob1 [ set label label + 1 ] ]
+  sum [label] of glob1 => 10000
+  ratio < 3 => true
+  T> set label 0
+  O> repeat 10000 [ ask n-of 2 glob1 [ set label label + 1 ] ]
+  sum [label] of glob1 => 20000
+  ratio < 3 => true
+  T> set label 0
+  O> repeat 10000 [ ask n-of 3 glob1 [ set label label + 1 ] ]
+  sum [label] of glob1 => 30000
+  ratio < 3 => true
+  T> set label 0
+  O> repeat 10000 [ ask n-of 5 glob1 [ set label label + 1 ] ]
+  sum [label] of glob1 => 50000
+  ratio < 3 => true
+  T> set label 0
+  O> repeat 10000 [ ask n-of 10 glob1 [ set label label + 1 ] ]
+  sum [label] of glob1 => 100000
+  ratio < 3 => true
+
+RandomNOfIsFairForAList
+  to-report ratio let x [label] of turtles report max x / min x end
+  O> random-seed 39823
+  O> crt 200
+  T> set label 0
+  O> repeat 10000 [ foreach n-of 1 n-values 200 [?] [ ask turtle ? [ set label label + 1 ] ] ]
+  sum [label] of turtles => 10000
+  ratio < 3 => true
+  T> set label 0
+  O> repeat 10000 [ foreach n-of 2 n-values 200 [?] [ ask turtle ? [ set label label + 1 ] ] ]
+  sum [label] of turtles => 20000
+  ratio < 3 => true
+  T> set label 0
+  O> repeat 10000 [ foreach n-of 3 n-values 200 [?] [ ask turtle ? [ set label label + 1 ] ] ]
+  sum [label] of turtles => 30000
+  ratio < 3 => true
+  T> set label 0
+  O> repeat 10000 [ foreach n-of 5 n-values 200 [?] [ ask turtle ? [ set label label + 1 ] ] ]
+  sum [label] of turtles => 50000
+  ratio < 3 => true
+  T> set label 0
+  O> repeat 10000 [ foreach n-of 10 n-values 200 [?] [ ask turtle ? [ set label label + 1 ] ] ]
+  sum [label] of turtles => 100000
+  ratio < 3 => true
+
+NewSeedUnique
+  O> crt 2
+  T> set label new-seed
+  [label] of turtle 0 = [label] of turtle 1 => false
+
+NewSeedInRange
+  to-report out-of-range? [n] report n < -2147483648 or n > 2147483647 end
+  filter out-of-range? n-values 1000 [new-seed] => []
+
+AllowGoodSeeds
+  O> random-seed 0
+  O> random-seed 1
+  O> random-seed -1
+  O> random-seed -2147483648
+  O> random-seed 2147483647
+
+# reject Nick Cave, too?
+RejectBadSeeds
+  O> random-seed 2147483648 => ERROR 2147483648 is not in the allowable range for random seeds (-2147483648 to 2147483647)
+  O> random-seed -2147483649 => ERROR -2147483649 is not in the allowable range for random seeds (-2147483648 to 2147483647)
+  O> random-seed 1.0E38 => ERROR 1.0E38 is not in the allowable range for random seeds (-2147483648 to 2147483647)
+  O> random-seed -1.0E38 => ERROR -1.0E38 is not in the allowable range for random seeds (-2147483648 to 2147483647)
+
+random-normal-1
+  precision (mean n-values 10000 [random-normal 10 1]) 1 => 10
+
+random-normal-2
+  precision (standard-deviation n-values 10000 [random-normal 10 1]) 1 => 1
+
+random-normal-3
+  random-normal 10 -1 => ERROR random-normal's second input can't be negative.
+
+# https://github.com/NetLogo/NetLogo/issues/340
+one-of-evaluates-input-only-once
+  globals [glob1]
+  to-report foo set glob1 glob1 + 1 report (list glob1 glob1 glob1) end
+  O> random-seed 0
+  one-of foo => 1
+  one-of foo => 2

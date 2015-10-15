@@ -1,0 +1,6 @@
+WordWithVariables
+  globals [glob1 glob2]
+  O> set glob1 "abc"
+  first (word glob1) => "a"
+  O> set glob2 "def"
+  but-first (word glob1 glob2) => "bcdef"

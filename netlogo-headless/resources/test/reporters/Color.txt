@@ -1,0 +1,83 @@
+WrapColor1
+  wrap-color 150 => 10
+
+WrapColor2
+  wrap-color -10 => 130
+
+WrapColor3
+  wrap-color 0 => 0
+
+WrapColor4
+  wrap-color 0.0 => 0
+
+WrapColor5
+  wrap-color 150.0 => 10
+
+WrapColor6
+  wrap-color -10.0 => 130
+
+Shade1
+  shade-of? blue red => false
+
+Shade2
+  shade-of? blue (blue + 1) => true
+
+Shade3
+  shade-of? gray white => true
+
+ScaleColor1
+  scale-color red 5 0 10 => 15
+
+ScaleColor2
+  scale-color red 0 0 10 => 10
+
+ScaleColor3
+  scale-color red 10 0 10 => 19.9999
+
+ScaleColor4
+  scale-color red 10.001 0 10 => 19.9999
+
+ScaleColor5
+  scale-color red -0.001 0 10 => 10
+
+ScaleColor6
+  scale-color blue 16 10 20 => 106
+
+ScaleColor7
+  scale-color blue 16 20 10 => 104
+
+ScaleColor8
+  scale-color red 0.9999999999999998 0 1 => 19.9999
+
+HSB1
+  approximate-hsb 0 0 0 => 0
+
+HSB2
+  n-values 1400 [? / 10] = map [approximate-hsb (item 0 ?) (item 1 ?) (item 2 ?)] map [extract-hsb ?] n-values 1400 [? / 10] => true
+
+HSB3
+  length remove-duplicates map [map [round (255 * ?)] extract-rgb ?] n-values 14 [10 * ?] => 14
+
+HSB4
+  length remove-duplicates map [map [round (255 * ?)] extract-rgb ?] n-values 14 [10 * ? + 9.9] => 14
+
+HSB5
+  length remove-duplicates map [extract-hsb ?] n-values 1400 [? / 10] => 1400
+
+RGB1
+  approximate-rgb 0 0 0 => 0
+
+RGB2
+  n-values 1400 [? / 10] = map [approximate-rgb (item 0 ?) (item 1 ?) (item 2 ?)] map [extract-rgb ?] n-values 1400 [? / 10] => true
+
+RGB3
+  length remove-duplicates map [map [round (255 * ?)] extract-rgb ?] n-values 14 [10 * ?] => 14
+
+RGB4
+  length remove-duplicates map [map [round (255 * ?)] extract-rgb ?] n-values 14 [10 * ? + 9.9] => 14
+
+RGB5
+  length remove-duplicates map [extract-rgb ?] n-values 1400 [? / 10] => 1400
+
+BaseColors
+  base-colors = n-values 14 [? * 10 + 5] => true

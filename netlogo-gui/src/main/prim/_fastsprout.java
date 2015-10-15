@@ -36,7 +36,7 @@ public final strictfp class _fastsprout
       org.nlogo.agent.AgentSet agentset =
           new org.nlogo.agent.ArrayAgentSet(org.nlogo.agent.Turtle.class, numberOfTurtles,
               false, world);
-      org.nlogo.util.MersenneTwisterFast random = context.job.random;
+      org.nlogo.api.MersenneTwisterFast random = context.job.random;
 
       if (breedName == _sprout.NO_BREED) {
         for (int i = 0; i < numberOfTurtles; i++) {

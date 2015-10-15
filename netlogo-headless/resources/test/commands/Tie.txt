@@ -1,0 +1,116 @@
+Tie0
+  O> cro 2 [ fd 1]
+  O> ask turtle 0 [ create-link-with turtle 1 ]
+  [tie-mode] of link 0 1 => "none"
+  L> tie
+  [tie-mode] of link 0 1 => "fixed"
+  L> untie
+  [tie-mode] of link 0 1 => "none"
+
+Tie1
+  O> cro 2 [ fd 1 ]
+  O> ask turtle 1 [ create-link-to turtle 0 [ tie ] ]
+  O> ask turtle 1 [ rt 180 ]
+  [ycor] of turtle 1 => -1
+  [ycor] of turtle 0 => -3
+  [heading] of turtle 0 => 180
+  [heading] of turtle 1 => 0
+  O> ask turtle 1 [ fd 1 ]
+  [ycor] of turtle 1 => 0
+  [ycor] of turtle 0 => -2
+  [heading] of turtle 0 => 180
+  [heading] of turtle 1 => 0
+
+Tie2
+  O> cro 2 [ fd 1 ]
+  O> ask turtle 0 [ create-link-to turtle 1 [ tie ] ]
+  O> ask turtle 1 [ create-link-to turtle 0 [ tie ] ]
+  O> ask turtle 1 [ rt 180 ]
+  O> ask turtle 1 [ fd 2 ]
+  O> ask turtle 0 [ rt 180 ]
+  O> ask turtle 0 [ fd 2 ]
+  [ycor] of turtle 0 => 1
+  [ycor] of turtle 1 => -1
+  [heading] of turtle 0 => 0
+  [heading] of turtle 1 => 180
+
+Tie2Undirected
+  O> cro 2 [ fd 1 ]
+  O> ask turtle 0 [ create-link-with turtle 1 [ tie ] ]
+  O> ask turtle 1 [ rt 180 ]
+  O> ask turtle 1 [ fd 2 ]
+  O> ask turtle 0 [ rt 180 ]
+  O> ask turtle 0 [ fd 2 ]
+  [ycor] of turtle 0 => 1
+  [ycor] of turtle 1 => -1
+  [heading] of turtle 0 => 0
+  [heading] of turtle 1 => 180
+
+Tie2Nonrigid
+  O> cro 2 [ fd 1 ]
+  O> ask turtle 0 [ create-link-with turtle 1 [ set tie-mode "free" ] ]
+  O> ask turtle 1 [ rt 180 ]
+  O> ask turtle 1 [ fd 2 ]
+  O> ask turtle 0 [ rt 180 ]
+  O> ask turtle 0 [ fd 2 ]
+  [ycor] of turtle 0 => -3
+  [ycor] of turtle 1 => -5
+  [heading] of turtle 0 => 180
+  [heading] of turtle 1 => 0
+
+Tie3
+  O> cro 2 [ fd 1 ]
+  O> ask turtle 1 [ create-link-to turtle 0 [ tie ] ]
+  O> ask turtle 0 [ rt 180 ]
+  [heading] of turtle 0 => 180
+  [heading] of turtle 1 => 180
+
+Tie4
+  O> cro 2 [ fd 1 ]
+  O> ask turtle 1 [ create-link-to turtle 0 [ tie ] ]
+  O> ask turtle 1 [ rt 90 ]
+
+  [xcor] of turtle 1 => 0
+  [ycor] of turtle 1 => -1
+  [heading] of turtle 1 => 270
+
+  [xcor] of turtle 0 => 2
+  [ycor] of turtle 0 => -1
+  [heading] of turtle 0 => 90
+
+  O> ask turtle 1 [ rt 90 ]
+
+  [xcor] of turtle 1 => 0
+  [ycor] of turtle 1 => -1
+  [heading] of turtle 1 => 0
+
+  [xcor] of turtle 0 => 0
+  [ycor] of turtle 0 => -3
+  [heading] of turtle 0 => 180
+
+  O> ask turtle 1 [ rt 90 ]
+
+  [xcor] of turtle 1 => 0
+  [ycor] of turtle 1 => -1
+  [heading] of turtle 1 => 90
+
+  [xcor] of turtle 0 => -2
+  [ycor] of turtle 0 => -1
+  [heading] of turtle 0 => 270
+
+  O> ask turtle 1 [ rt 90 ]
+
+  [xcor] of turtle 1 => 0
+  [ycor] of turtle 1 => -1
+  [heading] of turtle 1 => 180
+
+  [xcor] of turtle 0 => 0
+  [ycor] of turtle 0 => 1
+  [heading] of turtle 0 => 0
+
+TieMultipleWithSameTurtle
+  directed-link-breed [ l1s l1 ]
+  directed-link-breed [ l2s l2 ]
+  O> crt 1 [ setxy 0 1 ]
+  O> crt 1 [ setxy 0 0 create-l1-to turtle 0 [ set tie-mode "fixed" ] create-l2s-to other turtles [ set tie-mode "fixed" ] right 90 ]
+  [(word xcor ", " ycor)] of turtle 0 => "1, 0"

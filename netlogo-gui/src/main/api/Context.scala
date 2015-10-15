@@ -48,7 +48,7 @@ trait Context {
    *
    * @return a random number generator
    */
-  def getRNG: org.nlogo.util.MersenneTwisterFast
+  def getRNG: org.nlogo.api.MersenneTwisterFast
 
   /**
    * Logs a customized message (primarily for use by the Custom Logging extension)

@@ -1,0 +1,81 @@
+ReadString1
+  read-from-string "" => ERROR Expected a literal value.
+
+ReadString2
+  read-from-string "a" => ERROR Expected a literal value.
+
+ReadString3
+  read-from-string "abc" => ERROR Expected a literal value.
+
+ReadString4
+  read-from-string "  a" => ERROR Expected a literal value.
+
+ReadString5
+  read-from-string "5" => 5
+
+ReadString6
+  read-from-string "3.2" => 3.2
+
+ReadString7
+  read-from-string "\"foo\"" => "foo"
+
+ReadString8
+  read-from-string "[]" => []
+
+ReadString9
+  read-from-string "[1 3.0]" => [1 3]
+
+ReadString10
+  read-from-string "[1 \"foo\" 3.0]" => [1 "foo" 3]
+
+ReadString11
+  read-from-string "nobody" => nobody
+
+ReadString12
+  read-from-string "e" => 2.718281828459045
+
+ReadString13
+  read-from-string "pi" => 3.141592653589793
+
+ReadString14
+  read-from-string "no-label" => ERROR Expected a literal value.
+
+ReadString15
+  read-from-string "1 2" => ERROR Extra characters after literal.
+
+ReadString16a
+  read-from-string "98748937489374893743789473894.0" => 9.874893748937489E28
+
+ReadString16b
+  read-from-string "98748937489374893743789473894." => 9.874893748937489E28
+
+ReadString17
+  read-from-string "[1 2 3" => ERROR No closing bracket for this open bracket.
+
+ReadString18
+  read-from-string "[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]" => ERROR No closing bracket for this open bracket.
+
+ReadString19
+  read-from-string "[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]" => [[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]
+
+ReadString20
+  read-from-string "[[[[[]]]]]]" => ERROR Extra characters after literal.
+
+ReadString21
+  read-from-string "true" => true
+
+ReadString22
+  read-from-string "false" => false
+
+ReadString23
+  read-from-string "3" + read-from-string "5" => 8
+
+ReadString24
+  length read-from-string "[1 2 3]" => 3
+
+ReadString25
+  read-from-string "(5" => ERROR Expected a closing parenthesis.
+
+ReadString26
+  read-from-string "(5)" => 5
+

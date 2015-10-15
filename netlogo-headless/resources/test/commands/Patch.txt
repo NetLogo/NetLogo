@@ -1,0 +1,50 @@
+IncorrectlyTypedUseOfPatchPrimitiveOnAPatch
+  globals [glob1]
+  O> set glob1 patch 0 0
+  O> __ignore patch glob1 => COMPILER ERROR PATCH expected 2 inputs, a number and a number.
+  O> ask patch glob1 [ ] => COMPILER ERROR Expected a number here, rather than a list or block.
+
+PatchWrapsAndRounds
+  O> __change-topology true true
+  [list pxcor pycor] of patch 3 4 => [3 4]
+  [list pxcor pycor] of patch 3.1 4 => [3 4]
+  [list pxcor pycor] of patch 2.9 4 => [3 4]
+  [list pxcor pycor] of patch 2.5 4 => [3 4]
+  [list pxcor pycor] of patch 3.5 4 => [4 4]
+  [list pxcor pycor] of patch 3 4.1 => [3 4]
+  [list pxcor pycor] of patch 3 3.9 => [3 4]
+  [list pxcor pycor] of patch 3 3.5 => [3 4]
+  [list pxcor pycor] of patch 3 4.5 => [3 5]
+  [list pxcor pycor] of patch 6 6 => [-5 -5]
+  [list pxcor pycor] of patch 6 -6 => [-5 5]
+  [list pxcor pycor] of patch -6 6 => [5 -5]
+  [list pxcor pycor] of patch -6 -6 => [5 5]
+  [list pxcor pycor] of patch -6.5 6.5 => [5 -4]
+  [list pxcor pycor] of patch 6.5 -6.5 => [-4 5]
+  O> __change-topology false false
+  [list pxcor pycor] of patch 3 4 => [3 4]
+  [list pxcor pycor] of patch 3.1 4 => [3 4]
+  [list pxcor pycor] of patch 2.9 4 => [3 4]
+  [list pxcor pycor] of patch 2.5 4 => [3 4]
+  [list pxcor pycor] of patch 3.5 4 => [4 4]
+  [list pxcor pycor] of patch 3 4.1 => [3 4]
+  [list pxcor pycor] of patch 3 3.9 => [3 4]
+  [list pxcor pycor] of patch 3 3.5 => [3 4]
+  [list pxcor pycor] of patch 3 4.5 => [3 5]
+  patch 6 6 => nobody
+  patch 6 -6 => nobody
+  patch -6 6 => nobody
+  patch -6 -6 => nobody
+  patch -6.5 6.5 => nobody
+  patch 6.5 -6.5 => nobody
+
+SetVariableRuntime
+  O> ask patch 0 0 [ set pcolor self ] => ERROR can't set patch variable PCOLOR to non-number (patch 0 0)
+
+PatchBoundariesAndFloatingPointMagic
+  globals [ magic ]
+  O> set magic 0.4999999999999999167333
+  (word patch 0 0) => "(patch 0 0)"
+  (word patch magic 0) => "(patch 1 0)"
+  (word patch 0 magic) => "(patch 0 1)"
+  (word patch magic magic) => "(patch 1 1)"

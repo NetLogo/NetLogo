@@ -4,7 +4,7 @@ package org.nlogo.hubnet.client
 
 import org.nlogo.plot.PlotManager
 import org.nlogo.api.{RandomServices,CompilerServices}
-import org.nlogo.util.MersenneTwisterFast
+import org.nlogo.api.MersenneTwisterFast
 import org.nlogo.window.{ButtonWidget,ChooserWidget,InterfacePanelLite}
 
 import javax.swing.border.{BevelBorder,EmptyBorder}

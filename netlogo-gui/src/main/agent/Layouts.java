@@ -45,7 +45,7 @@ public final strictfp class Layouts {
   }
 
   public static void circle(AgentSet nodes, double radius,
-                            org.nlogo.util.MersenneTwisterFast random)
+                            org.nlogo.api.MersenneTwisterFast random)
       throws AgentException {
     int i = 0;
     int n = nodes.count();
@@ -66,7 +66,7 @@ public final strictfp class Layouts {
   /// spring
   public static void spring(AgentSet nodeset, AgentSet linkset,
                             double spr, double len, double rep,
-                            org.nlogo.util.MersenneTwisterFast random) {
+                            org.nlogo.api.MersenneTwisterFast random) {
     World world = nodeset.world();
     if (world.program().is3D()) {
       spring3D(nodeset, linkset, spr, len, rep, random);
@@ -80,7 +80,7 @@ public final strictfp class Layouts {
   // AS WELL.  ~Forrest (12/5/2006)
   public static void spring2D(AgentSet nodeset, AgentSet linkset,
                               double spr, double len, double rep,
-                              org.nlogo.util.MersenneTwisterFast random) {
+                              org.nlogo.api.MersenneTwisterFast random) {
     World world = nodeset.world();
     int nodeCount = nodeset.count();
     if (nodeCount == 0) {
@@ -242,7 +242,7 @@ public final strictfp class Layouts {
   // AS WELL.  ~Forrest (12/5/2006)
   public static void spring3D(AgentSet nodeset, AgentSet linkset,
                               double spr, double len, double rep,
-                              org.nlogo.util.MersenneTwisterFast random) {
+                              org.nlogo.api.MersenneTwisterFast random) {
     World3D world = (World3D) nodeset.world();
     int nodeCount = nodeset.count();
     if (nodeCount == 0) {
@@ -426,7 +426,7 @@ public final strictfp class Layouts {
   /// Tutte
 
   public static void tutte(AgentSet nodeset, AgentSet linkset,
-                           double radius, org.nlogo.util.MersenneTwisterFast random)
+                           double radius, org.nlogo.api.MersenneTwisterFast random)
       throws AgentException {
     World world = nodeset.world();
     java.util.ArrayList<Turtle> anchors = new java.util.ArrayList<Turtle>();

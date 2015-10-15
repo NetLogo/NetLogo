@@ -10,7 +10,7 @@ public abstract strictfp class JobWidget
     org.nlogo.api.JobOwner,
     org.nlogo.window.Events.CompiledEvent.Handler {
 
-  public JobWidget(org.nlogo.util.MersenneTwisterFast random) {
+  public JobWidget(org.nlogo.api.MersenneTwisterFast random) {
     this.random = random;
   }
 
@@ -24,9 +24,9 @@ public abstract strictfp class JobWidget
     this.agentClass = agentClass;
   }
 
-  public final org.nlogo.util.MersenneTwisterFast random;
+  public final org.nlogo.api.MersenneTwisterFast random;
 
-  public org.nlogo.util.MersenneTwisterFast random() {
+  public org.nlogo.api.MersenneTwisterFast random() {
     return random;
   }
 

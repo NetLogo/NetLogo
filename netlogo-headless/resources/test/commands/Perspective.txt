@@ -1,0 +1,31 @@
+Subject1
+  subject => nobody
+  O> crt 5
+  O> follow turtle 0
+  subject = turtle 0 => true
+  O> follow turtle 3
+  subject = turtle 3 => true
+  O> ask turtle 3 [ die ]
+  subject => nobody
+  O> watch turtle 2
+  subject = turtle 2 => true
+  O> ask turtle 2 [ die ]
+  subject => nobody
+  O> ride turtle 4
+  subject = turtle 4 => true
+  O> ask turtle 4 [ die ]
+  subject => nobody
+  O> ride turtle 0
+  subject = turtle 0 => true
+  O> reset-perspective
+  subject => nobody
+
+FollowRideWatchMe1
+  subject => nobody
+  O> crt 5
+  O> ask turtle 0 [ ride-me ]
+  subject = turtle 0 => true
+  O> ask turtle 1 [ follow-me ]
+  subject = turtle 1 => true
+  O> ask turtle 2 [ watch-me ]
+  subject = turtle 2 => true

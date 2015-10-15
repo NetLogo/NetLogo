@@ -1,0 +1,64 @@
+Carefully1
+  O> carefully [ crt 2 ] [ crt 1 ]
+  count turtles => 2
+
+Carefully2
+  O> carefully [ crt 2 crt __boom crt 1 ] [ crt 5 ]
+  count turtles => 7
+
+Carefully3
+  globals [glob1]
+  O> carefully [ crt __boom ] [ set glob1 error-message ]
+  is-string? glob1 => true
+
+CarefullyStackInteraction1
+  globals [glob1]
+  O> set glob1 []
+  O> carefully [ __ignore __boom ] [ repeat 2 [ set glob1 fput error-message glob1] ]
+  length glob1 => 2
+  item 0 glob1 = item 1 glob1 => true
+
+CarefullyStackInteraction2
+  globals [glob1]
+  O> set glob1 []
+  O> repeat 2 [ carefully [ __ignore __boom ] [ set glob1 fput error-message glob1] ]
+  length glob1 => 2
+  item 0 glob1 = item 1 glob1 => true
+
+CarefullyStackInteraction3
+  globals [glob1]
+  O> set glob1 []
+  O> carefully [ repeat 2 [ __ignore __boom ] ] [ set glob1 fput error-message glob1]
+  length glob1 => 1
+
+CarefullyAcrossCalls
+  globals [glob1]
+  to p1 p2 end
+  to p2 __ignore __boom end
+  O> carefully [ p1 ] [ set glob1 error-message ]
+  is-string? glob1 => true
+
+CarefullyNested
+  globals [glob1]
+  O> carefully [ __ignore __boom ] [ carefully [ set glob1 error-message ] [ ] ]
+  is-string? glob1 => true
+
+ErrorMessageOutsideCarefully
+  O> carefully [ __ignore error-message ] [ ] => COMPILER ERROR error-message cannot be used outside of CAREFULLY.
+
+error-string
+  O> error "foo" => ERROR foo
+
+error-non-string
+  O> error 5 => ERROR 5
+
+carefully-with-error-and-message
+  globals [glob1]
+  O> carefully [ error "foo" ] [ set glob1 error-message ]
+  glob1 => "foo"
+
+NotSettable
+  O> set timer 5 => COMPILER ERROR This isn't something you can use "set" on.
+
+task-variable-not-in-task
+  O> __ignore ?1 => COMPILER ERROR This special variable isn't defined here.

@@ -1,0 +1,259 @@
+FileIO
+  globals [glob1]
+  O> __mkdir "tmp/File"
+  O> file-close
+  O> file-close
+  O> set glob1 (word "tmp/File/test-file-" __nano-time ".csv" )
+  O> if ( file-exists? glob1 ) [ file-delete glob1 ]
+  file-at-end? => ERROR No file has been opened.
+  file-read => ERROR No file has been opened.
+  file-read-line => ERROR No file has been opened.
+  file-read-characters 5 => ERROR No file has been opened.
+  O> file-print 0 => ERROR No file has been opened.
+  O> file-type 0 => ERROR No file has been opened.
+  O> file-show 0 => ERROR No file has been opened.
+  O> file-write 0 => ERROR No file has been opened.
+  O> file-open glob1
+  O> file-print "first line"
+  file-read => ERROR You can only use WRITING primitives with this file
+  O> file-show "2nd line"
+  O> file-type "3rd "
+  O> file-print "line"
+  O> file-write -50
+  O> file-write [ 1 -2     "a" [3 4 true    ] 5.678 ]
+  O> file-write "hello"
+  O> file-close
+  O> file-close
+  O> file-open glob1
+  O> file-delete glob1 => ERROR You need to close the file before deletion
+  file-read-line => "first line"
+  file-read-line => "observer: \"2nd line\""
+  file-read-characters 4 => "3rd "
+  file-read-line => "line"
+  file-at-end? => false
+  file-read + 50 => 0
+  file-read => [1 -2 "a" [3 4 true] 5.678]
+  file-read => "hello"
+  file-at-end? => true
+  O> file-close
+  O> file-delete glob1
+
+FileReadWrite
+  globals [glob1]
+  O> __mkdir "tmp/File"
+  O> set glob1 (word "tmp/File/test-file-" __nano-time ".csv" )
+  O> if ( file-exists? glob1 ) [ file-delete glob1 ]
+  O> file-open glob1
+  O> crt 30
+  O> ask turtles [ fd who file-write xcor file-write ycor ]
+  O> file-close
+  O> file-open glob1
+  O> crt 30 [ setxy file-read file-read ]
+  count turtles with [any? other turtles-here] => 60
+  O> let t glob1 ca set glob1 t
+  O> file-close
+  O> file-delete glob1
+  O> file-open glob1
+  O> file-write map [[pcolor] of ?] sort patches
+  O> file-write "Once upon a time"
+  O> file-write "[1 2 3]"
+  O> file-write "true 5"
+  O> file-write count patches with [ pxcor = 0 ]
+  O> file-write ( 1 + -1 = 0 )
+  O> file-write turtle 1
+  O> file-close
+  O> file-open glob1
+  length file-read => 121
+  word file-read "." => "Once upon a time."
+  file-read => "[1 2 3]"
+  file-read => "true 5"
+  file-read - 11 => 0
+  file-read => true
+  file-read => nobody
+  file-read => ERROR The end of file has been reached
+  O> file-close
+  O> file-delete glob1
+
+FileReadWhitespaceAtEndOfFile
+  globals [glob1 glob2]
+  O> __mkdir "tmp/File"
+  O> set glob2 (word "tmp/File/test-file-" __nano-time ".csv" )
+  O> if ( file-exists? glob2 ) [ file-delete glob2 ]
+  O> file-open glob2
+  O> file-print "1 2\t3 "
+  O> file-print "4 5 6  \t   "
+  O> file-close
+  O> file-open glob2
+  O> set glob1 []
+  O> while [not file-at-end?] [ set glob1 lput file-read glob1 ]
+  glob1 => [1 2 3 4 5 6]
+  O> file-close
+  O> file-delete glob2
+
+FileReadSmallFileOfNumbers
+  globals [glob1 glob2 glob3]
+  O> __mkdir "tmp/File"
+  O> set glob3 (word "tmp/File/test-file-" __nano-time ".csv" )
+  O> set glob1 []
+  O> set glob1 lput [9 9 9 9 9 9 9 9 10 6 9 9 9 9 9 3 3 3 3 3 9 9 9 9 9 9 9 9 9 5 5 6 6 5 5 5 9 9 9 9 9 9 9 9 9 7 7 7 9 9 9 5 5 6 5 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 6] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 6 9 9 9 9 9 3 3 3 3 3 3 9 9 9 9 9 9 9 9 9 5 5 5 6 5 5 5 9 9 9 9 9 9 9 9 7 7 7 9 9 9 5 5 6 5 9 9 9 9 9 9 9 9 9 9 7 9 9 9 9 5 6] glob1
+  O> if ( file-exists? "tmp/File/file-io-testing.txt" ) [ file-delete "tmp/File/file-io-testing.txt" ]
+  O> file-open glob3
+  O> set glob2 []
+  O> foreach glob1 [ set glob2 sentence glob2 ? foreach ? [ file-type (word ? " ") ] file-print "" ]
+  O> file-close
+  O> file-open glob3
+  O> while [not file-at-end?] [ if file-read != first glob2 [ stop ] set glob2 butfirst glob2 ]
+  glob2 => []
+  O> file-close
+  O> file-delete glob3
+
+FileReadLargeFileOfNumbers1
+  globals [glob1 glob2 glob3]
+  O> __mkdir "tmp/File"
+  O> set glob3 (word "tmp/File/test-file-" __nano-time ".csv" )
+  O> set glob1 n-values 100 [n-values 50 [?]]
+  O> if ( file-exists? glob3 ) [ file-delete glob3 ]
+  O> file-open glob3
+  O> set glob2 []
+  O> foreach glob1 [ set glob2 sentence glob2 ? foreach ? [ file-type (word ? " ") ] file-print "" ]
+  O> file-close
+  O> file-open glob3
+  O> while [not file-at-end?] [ if file-read != first glob2 [ stop ] set glob2 butfirst glob2 ]
+  glob2 => []
+  O> file-close
+
+FileReadLargeFileOfNumbers2
+  globals [glob1 glob2 glob3]
+  O> __mkdir "tmp/File"
+  O> set glob1 []
+  O> set glob1 lput [9 9 9 9 9 9 9 9 10 6 9 9 9 9 9 3 3 3 3 3 9 9 9 9 9 9 9 9 9 5 5 6 6 5 5 5 9 9 9 9 9 9 9 9 9 7 7 7 9 9 9 5 5 6 5 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 6] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 6 9 9 9 9 9 3 3 3 3 3 3 9 9 9 9 9 9 9 9 9 5 5 5 6 5 5 5 9 9 9 9 9 9 9 9 7 7 7 9 9 9 5 5 6 5 9 9 9 9 9 9 9 9 9 9 7 9 9 9 9 5 6] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 10 6 9 9 10 9 9 3 3 3 3 3 3 9 9 9 9 9 9 9 9 5 5 5 5 6 5 5 9 9 9 9 9 9 9 9 7 7 7 9 9 5 5 5 6 5 9 9 9 9 9 9 9 9 9 7 7 9 9 9 7 7 6] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 10 6 9 9 9 9 9 3 3 3 3 3 3 9 9 9 9 9 9 9 5 5 5 5 6 5 6 5 5 9 9 9 9 9 9 9 9 7 7 7 9 5 5 6 5 9 9 9 9 9 9 9 9 9 9 9 9 9 9 7 7 6 5] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 10 9 6 9 9 9 9 3 3 3 3 3 3 9 9 9 9 9 5 5 5 5 5 6 5 5 6 6 5 5 9 9 9 9 9 9 9 7 7 7 9 5 5 6 5 9 9 9 9 9 9 9 9 9 9 9 9 9 9 7 7 6 5] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 9 6 9 9 9 9 9 3 3 3 3 3 9 9 9 9 5 6 6 6 6 6 6 5 5 5 5 6 5 5 5 9 9 9 9 9 7 7 7 9 5 6 5 5 5 5 9 9 9 9 9 9 9 9 9 9 7 7 7 7 6 5] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 10 9 6 9 9 9 9 3 3 3 3 3 3 9 9 5 6 5 5 5 5 6 5 5 5 5 5 5 6 5 5 5 9 9 9 9 9 7 7 9 9 5 6 5 5 5 9 9 9 9 9 9 9 9 9 9 7 7 7 6 5 5] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 10 10 6 9 9 9 9 3 3 3 3 3 3 9 5 5 6 5 5 5 6 5 5 5 5 5 5 5 6 6 5 5 5 9 9 9 9 7 7 9 9 5 6 5 5 5 9 9 9 9 9 9 9 9 9 5 5 7 7 6 5 6] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 10 10 10 6 9 9 9 3 3 3 3 3 3 9 5 6 5 5 5 5 6 5 5 9 5 5 6 6 5 5 6 5 5 5 5 9 9 7 7 9 5 5 6 5 5 5 9 9 9 9 9 9 9 6 6 6 6 6 6 6 6 6] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 10 10 10 10 6 9 9 9 3 3 3 3 3 3 9 5 5 6 5 6 6 5 5 9 9 5 6 5 5 5 5 5 6 6 5 5 5 5 7 7 7 5 5 6 5 5 5 6 6 6 6 6 6 6 5 5 5 6 5 6 6 6 5] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 10 10 10 10 6 10 9 9 9 3 3 3 3 3 3 9 5 5 6 5 5 5 9 9 9 9 5 9 9 9 5 5 6 5 6 6 6 6 6 6 6 6 6 6 6 6 6 9 9 9 9 9 9 9 9 5 5 6 5 9 9 9 6] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 10 10 9 9 6 10 9 9 9 3 3 3 3 3 9 9 5 5 5 5 9 9 9 9 9 9 9 9 9 5 5 6 5 5 5 5 5 5 5 5 7 7 7 7 7 9 9 9 9 9 9 9 9 9 5 5 5 6 5 9 9 6] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 10 10 10 10 10 6 10 9 9 9 3 3 3 3 3 9 9 9 9 9 9 9 9 9 9 9 9 9 9 5 5 5 6 5 5 5 5 5 5 7 7 7 7 7 7 7 9 9 9 9 9 9 9 9 9 9 5 5 6 5 9 9 9] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 10 10 10 10 10 10 6 9 9 9 9 9 3 9 9 3 9 9 9 9 9 9 9 9 9 9 9 9 9 5 5 5 5 6 6 6 6 6 5 5 7 7 7 7 7 7 7 9 9 9 9 9 9 9 9 9 9 9 5 6 5 5 9 9] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 10 10 10 10 10 10 6 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 5 5 5 5 6 5 5 5 5 6 5 7 7 7 7 7 7 7 9 9 9 9 9 9 9 9 9 9 9 5 5 6 5 9 9] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 10 10 10 10 10 10 6 10 10 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 5 5 5 5 5 5 6 5 9 5 5 5 6 5 7 7 7 7 7 7 9 9 9 9 9 9 9 9 9 9 9 9 5 6 5 9 9] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 10 10 10 7 10 10 10 6 10 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 5 5 5 5 5 5 5 6 5 9 9 9 5 6 5 7 7 7 7 7 9 9 9 9 9 9 9 9 9 9 9 9 9 5 5 6 5 9] glob1
+  O> set glob1 lput [9 2 9 9 10 10 10 10 10 10 7 7 10 6 10 10 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 5 5 6 6 5 5 5 5 6 5 5 9 9 5 6 5 5 7 7 7 7 9 9 9 9 9 9 9 9 9 9 9 9 9 5 5 6 5 9] glob1
+  O> set glob1 lput [2 2 2 9 9 10 10 9 9 7 7 7 7 6 10 10 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 5 6 5 5 6 6 6 6 6 5 9 9 9 5 5 6 5 7 7 7 7 9 9 9 9 9 9 9 9 9 9 9 9 9 9 5 6 9 9] glob1
+  O> set glob1 lput [2 2 2 2 9 10 10 9 9 7 7 7 10 10 6 10 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 5 5 6 5 5 5 5 5 5 6 5 5 5 5 5 5 6 5 5 7 7 7 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 6 9 9] glob1
+  O> set glob1 lput [2 2 2 2 2 9 10 10 10 10 10 10 7 10 6 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 5 6 5 5 5 5 5 5 6 5 5 5 5 5 6 5 5 7 9 9 9 9 9 9 9 9 9 9 9 9 9 10 10 9 9 9 6 9 9] glob1
+  O> set glob1 lput [9 9 2 2 2 2 9 10 10 10 10 9 7 10 6 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 5 6 5 5 5 5 5 6 5 5 5 5 6 5 5 7 7 7 7 9 9 9 9 9 9 9 9 9 9 10 10 1 1 1 10 9 6 9] glob1
+  O> set glob1 lput [9 9 9 2 2 2 2 10 10 10 10 10 10 10 6 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 5 5 6 5 5 5 5 6 5 5 6 6 5 5 7 7 7 7 7 7 9 9 9 9 9 9 9 9 9 10 1 1 1 1 10 9 6 9] glob1
+  O> set glob1 lput [9 9 9 9 2 2 2 2 10 10 10 10 9 10 6 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 5 6 6 6 6 6 6 6 6 5 5 9 9 7 7 7 7 7 9 9 9 9 9 9 9 9 9 9 1 1 1 1 1 1 10 9 6] glob1
+  O> set glob1 lput [9 9 9 9 9 2 2 2 9 10 10 10 10 10 6 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 5 5 5 5 5 6 5 5 9 9 9 9 9 7 7 7 7 7 9 9 9 9 9 9 9 9 10 1 1 1 1 1 9 10 9 6] glob1
+  O> set glob1 lput [9 9 9 9 9 9 2 2 2 9 10 10 10 10 6 10 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 5 5 5 5 6 9 9 9 9 9 9 9 9 7 7 7 7 9 9 9 9 9 9 9 9 1 1 1 1 1 1 1 1 10 6] glob1
+  O> set glob1 lput [9 9 9 9 9 9 2 2 2 9 10 10 10 10 6 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 5 6 9 9 9 9 9 9 9 9 9 7 7 7 10 9 9 9 9 9 9 9 10 1 1 1 1 1 1 1 1 10 9] glob1
+  O> set glob1 lput [9 9 9 9 9 9 2 2 2 2 9 10 10 9 6 10 10 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 5 5 6 9 9 9 9 9 9 9 9 9 9 9 7 7 9 9 9 9 9 9 9 9 1 1 1 1 1 1 1 1 1 9 9] glob1
+  O> set glob1 lput [9 9 9 9 9 9 2 2 2 2 2 9 10 9 10 6 10 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 5 6 9 9 9 9 9 9 9 9 9 9 9 9 7 9 9 9 9 9 9 9 9 9 10 1 1 1 1 1 1 1 1 1 10] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 2 2 2 2 2 2 10 10 6 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 6 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 10 1 1 1 1 1 1 1 10 9] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 2 2 2 2 2 2 2 9 6 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 6 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 10 9 1 1 1 1 1 10 10] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 2 2 2 2 2 2 2 2 10 6 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 6 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 1 1 1 1 10 9] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 2 2 2 2 2 2 2 2 2 6 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 6 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 1 1 1 10 9] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 2 2 2 2 2 2 2 2 2 6 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 6 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 10 1 1 9 10 9] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 2 2 2 2 2 2 2 2 9 6 11 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 6 9 9 7 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 2 2 2 2 2 2 2 2 6 11 9 9 10 9 9 9 9 9 9 9 9 9 9 9 9 9 6 7 7 7 7 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 10 9 9 9] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 2 2 2 2 2 2 2 11 6 11 9 9 10 9 9 9 9 9 9 9 9 9 9 9 9 6 7 7 7 7 7 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 10 1 1 10 9 9 9] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 9 2 2 2 2 2 2 2 6 11 11 9 10 9 9 9 9 9 9 9 9 9 9 9 9 9 6 7 7 7 7 7 7 7 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 10 1 1 1 1 10 9 9 9] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 9 2 2 2 2 2 2 2 11 6 11 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 6 7 7 7 7 7 7 7 7 7 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 10 9 1 1 1 1 1 10 9 9 9] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 9 9 2 2 2 2 2 2 11 6 11 11 11 11 9 9 9 9 9 9 9 9 9 9 9 9 6 9 7 7 7 7 7 7 7 7 7 9 9 9 9 9 9 9 9 10 10 9 9 9 10 1 1 1 1 1 1 1 10 9 9 9] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 9 9 9 2 2 2 2 2 2 11 6 11 11 11 11 9 9 9 9 9 9 9 9 9 9 9 6 9 9 9 9 7 7 7 7 7 7 7 9 9 9 9 9 9 9 9 10 9 9 9 1 1 1 1 1 1 1 1 10 9 9 9] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 9 9 9 9 2 2 2 2 2 11 6 11 11 11 11 11 9 9 9 9 9 9 9 9 9 9 9 6 9 9 9 7 7 7 7 7 7 7 7 9 9 9 9 9 9 9 10 10 9 10 1 1 1 1 1 1 1 1 1 1 9 7] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 2 2 2 2 2 11 6 11 11 11 11 9 9 9 9 9 9 9 9 9 9 9 9 6 9 9 7 7 7 7 7 7 7 7 7 9 9 9 9 9 9 1 1 9 9 1 1 1 1 1 1 1 1 1 1 1 7] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 2 2 2 2 2 2 6 11 11 11 11 9 9 9 9 9 9 9 9 9 9 9 9 6 9 9 9 9 9 9 9 7 7 7 7 9 9 9 9 9 9 1 1 9 1 1 1 1 1 1 1 1 1 1 1 1 7] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 2 2 2 2 2 6 11 11 6 11 11 9 9 9 9 9 9 9 9 9 9 6 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 10 9 9 9 1 1 1 1 1 1 1 1 1 1 1 1 1 7] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 2 2 2 2 6 6 6 6 11 11 11 9 9 9 9 9 9 9 9 6 9 9 9 9 9 9 9 9 9 9 9 9 9 10 10 9 9 10 9 9 9 1 1 1 10 10 9 9 10 1 1 1 1 10 9] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 2 11 11 11 6 11 11 6 11 11 11 9 9 9 9 9 9 6 9 9 9 9 9 9 9 9 10 9 9 9 9 1 1 1 10 9 9 9 9 9 10 9 10 9 9 9 9 9 9 10 1 1 10 9] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 11 9 9 6 11 6 11 11 11 11 9 9 9 9 6 9 9 9 9 9 3 9 9 1 1 1 10 9 1 1 1 1 1 9 9 9 9 9 9 10 10 9 9 9 9 9 9 9 10 1 10 9] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 4 9 6 6 11 6 11 11 11 9 9 6 6 9 9 9 9 3 3 3 3 1 1 1 1 1 10 9 10 1 1 10 9 9 9 9 9 9 10 9 7 9 9 9 9 9 9 9 9 9 9] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 4 9 9 6 6 6 11 11 11 10 6 9 9 9 9 9 3 3 3 3 1 3 3 10 1 1 10 9 9 9 1 10 9 9 9 9 9 9 10 7 7 9 9 9 9 9 9 9 9 9 9] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 4 9 6 9 6 6 11 11 9 6 10 10 9 9 9 3 3 3 3 3 9 9 9 9 9 9 9 9 9 1 1 10 9 9 9 9 9 9 7 7 7 9 9 9 9 9 9 9 9 7] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 4 9 6 9 6 6 6 9 6 10 10 9 9 9 9 3 3 9 10 9 9 9 9 9 9 9 9 1 1 1 10 9 9 9 9 9 9 9 7 7 7 7 9 9 9 9 9 9 7] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 4 10 9 6 6 10 9 6 6 10 10 9 9 9 9 10 10 10 9 9 9 9 9 9 9 9 1 1 1 1 1 10 9 9 9 7 9 9 7 7 7 7 7 9 9 9 9 7 7] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 4 9 9 6 10 10 10 9 6 10 9 9 7 9 9 10 9 9 9 9 9 9 9 9 10 1 1 1 1 1 1 9 9 7 7 7 9 9 7 7 7 7 7 8 8 7 7 7] glob1
+  O> set glob1 lput [9 9 9 4 9 11 11 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 4 9 10 6 10 10 10 10 9 6 9 9 7 9 10 10 9 9 9 9 9 9 9 10 1 1 1 1 1 1 10 7 7 7 7 7 9 9 7 7 7 7 7 8 8 7 7 7] glob1
+  O> set glob1 lput [9 9 11 4 4 11 11 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 4 10 10 6 10 10 10 10 10 6 7 7 9 10 10 9 9 9 9 9 9 9 1 1 1 1 1 1 10 7 7 7 7 7 7 7 9 7 7 7 7 7 8 8 8 7 7] glob1
+  O> set glob1 lput [9 9 11 4 4 11 11 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 4 9 10 6 10 10 10 10 10 6 7 7 10 10 10 10 9 9 9 9 9 1 1 1 1 1 1 10 9 7 7 1 1 1 7 7 7 9 7 7 7 7 9 8 8 7 7] glob1
+  O> set glob1 lput [9 10 11 4 4 11 11 9 9 11 11 9 9 9 9 9 9 9 9 9 9 9 9 9 9 10 9 9 6 10 10 10 10 10 6 6 10 10 10 10 9 9 9 9 10 1 1 1 1 1 1 10 9 9 9 7 3 1 1 7 7 7 9 7 7 9 9 9 8 8 9 7] glob1
+  O> set glob1 lput [9 9 11 11 11 11 11 11 11 11 11 11 11 9 11 11 9 9 9 9 9 9 9 9 9 9 9 4 6 10 10 10 10 6 6 6 9 10 10 10 9 9 9 9 9 1 1 1 1 10 10 9 9 9 9 7 7 7 7 7 7 7 7 7 9 9 9 9 9 8 8 7] glob1
+  O> set glob1 lput [9 9 11 11 11 11 11 11 11 11 11 11 11 11 11 11 9 9 9 9 9 9 9 9 9 9 9 9 6 10 10 10 6 10 9 9 6 6 10 9 9 9 9 9 6 6 6 6 6 9 9 9 9 9 9 9 7 7 7 7 7 7 7 7 9 9 9 9 9 8 8 7] glob1
+  O> set glob1 lput [6 6 6 9 9 11 11 11 11 11 11 11 11 11 11 11 9 9 9 9 9 9 9 9 9 9 9 9 4 6 10 6 10 10 10 10 10 10 6 6 6 6 6 6 9 9 9 9 9 6 6 9 9 9 9 9 7 7 7 7 7 7 7 7 9 9 9 9 9 9 8 6] glob1
+  O> set glob1 lput [9 9 9 6 6 6 6 9 9 9 9 11 11 11 11 11 11 9 9 9 9 9 9 9 9 9 9 9 4 6 6 10 10 10 10 10 10 10 9 9 9 9 9 9 9 9 9 9 9 9 9 6 6 6 6 6 6 6 6 6 6 6 6 7 7 9 9 9 9 8 8 6] glob1
+  O> set glob1 lput [9 9 9 9 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 9 9 9 6 6 9 10 10 9 9 10 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 7 7 7 7 7 7 6 6 6 6 6 6 6 6 6] glob1
+  O> set glob1 lput [9 9 9 9 6 6 6 6 6 6 6 6 6 9 9 9 9 9 9 9 9 9 9 9 9 9 6 6 6 6 4 9 10 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 7 7 7 7 7 7 7 7 7 7 7 7 7 6 9] glob1
+  O> set glob1 lput [9 9 9 9 9 6 6 6 6 6 6 6 6 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 10 10 6 4 4 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 7 7 7 7 7 7 7 7 7 7 9 9 6 10] glob1
+  O> set glob1 lput [9 9 9 9 9 6 6 6 6 6 6 6 6 6 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 10 6 4 4 4 10 9 9 9 9 9 9 9 9 9 9 9 9 9 9 10 9 9 9 9 9 9 9 9 7 7 7 7 7 7 7 7 7 7 9 9 6 9] glob1
+  O> set glob1 lput [9 9 9 9 9 9 6 6 6 6 6 6 6 6 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 10 6 4 4 4 9 4 4 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 7 7 7 7 7 7 7 9 9 6 9] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 6 6 6 6 6 6 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 4 6 4 2 4 4 4 4 4 9 4 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 7 7 7 7 7 7 7 7 9 6 7] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 6 6 6 6 6 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 10 6 2 2 2 4 2 2 2 4 4 4 4 4 4 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 7 7 7 7 7 7 7 7 7 6 7] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 6 6 6 6 6 6 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 6 2 2 2 2 2 2 2 4 2 2 2 2 4 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 7 7 7 7 7 7 7 7 7 6 7] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 9 6 6 6 6 6 6 9 9 9 9 9 9 9 9 9 9 9 9 9 9 6 4 2 2 2 2 2 2 2 2 2 2 2 2 2 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 7 7 7 7 7 7 7 7 7 6 7] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 9 9 9 6 6 6 6 6 6 9 9 9 9 9 9 9 9 9 9 9 9 6 4 4 2 2 2 2 2 2 2 2 2 2 2 2 2 9 9 9 9 9 9 9 9 9 9 9 9 9 9 7 7 7 7 7 7 7 7 7 6 7] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 9 9 9 9 6 6 6 6 6 6 9 9 9 9 9 9 9 9 9 9 9 10 6 6 4 2 2 2 2 2 2 2 2 2 2 2 2 2 9 9 9 9 9 9 9 9 9 9 9 9 9 7 7 7 7 7 7 7 7 7 6 7] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 9 9 9 9 6 6 6 6 6 6 6 6 9 9 9 9 9 9 9 9 9 10 6 10 6 4 2 2 2 2 2 2 2 2 2 2 2 2 2 9 9 9 9 9 9 9 9 9 9 9 9 7 7 7 7 7 9 7 7 7 7 6] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 6 6 6 6 6 6 6 6 6 9 9 9 9 9 9 9 9 10 6 10 6 4 2 2 2 2 2 2 2 2 2 2 2 2 2 9 9 9 9 9 9 9 9 9 9 9 7 9 9 9 9 9 9 7 7 7 6] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 9 9 9 7 7 7 6 6 6 6 6 6 6 6 6 9 9 9 9 9 9 9 10 6 10 10 6 4 2 2 2 2 2 2 2 2 2 2 2 2 10 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 7 7 6] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 9 9 9 7 7 7 7 6 6 6 6 6 6 6 6 9 9 9 9 9 9 9 10 6 10 10 10 6 4 2 2 2 2 2 2 2 2 2 2 2 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 6] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 9 9 9 7 7 7 7 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 10 9 6 10 10 10 6 4 4 2 2 2 2 2 2 2 2 2 2 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 6] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 9 9 9 9 7 7 7 7 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 10 6 10 9 9 9 6 4 4 2 2 2 2 2 2 2 2 2 10 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 10 9 9 9 6] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 9 9 9 9 7 7 7 7 7 9 9 9 9 9 9 9 9 9 9 9 9 9 9 10 6 9 9 9 9 9 6 4 4 2 2 2 2 2 2 2 2 2 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 6] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 9 9 9 9 7 7 7 7 7 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 6 9 9 9 9 9 9 6 4 4 2 2 2 2 2 2 2 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 6] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 7 7 7 7 7 9 9 9 9 9 9 9 9 9 9 9 9 9 9 6 9 9 9 9 9 9 9 6 4 2 2 2 2 2 4 4 4 10 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 7 7 7] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 7 7 7 7 7 9 9 9 9 7 7 9 9 9 9 9 9 9 9 6 9 9 9 9 9 9 9 9 6 4 2 2 4 9 9 10 9 9 9 9 9 9 9 9 9 9 10 10 9 9 9 9 9 9 7 7 7] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 7 7 7 7 7 7 9 9 7 7 7 9 9 9 9 9 9 9 9 6 9 9 9 9 9 9 9 9 9 6 4 9 4 9 10 9 9 9 9 9 9 9 9 9 9 9 9 10 9 9 9 9 9 9 7 7 7] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 7 7 7 7 7 7 7 7 7 7 7 7 7 7 9 9 9 9 9 6 9 9 9 9 9 9 9 9 9 9 6 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 7 7 7 7] glob1
+  O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 7 7 7 7 7 7 7 7 7 7 7 7 9 9 9 6 9 9 9 9 9 9 9 9 9 9 9 6 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 7 7 7 7] glob1
+  O> set glob3 (word "tmp/File/test-file-" __nano-time ".csv" )
+  O> if ( file-exists? glob3 ) [ file-delete glob3 ]
+  O> file-open glob3
+  O> set glob2 []
+  O> foreach glob1 [ set glob2 sentence glob2 ? foreach ? [ file-type (word ? " ") ] file-print "" ]
+  O> file-close
+  O> file-open glob3
+  O> while [not file-at-end?] [ if file-read != first glob2 [ stop ] set glob2 butfirst glob2 ]
+  glob2 => []
+  O> file-close
+
+FileReadNumberThenLetter
+  globals [glob2]
+  O> __mkdir "tmp/File"
+  O> set glob2 (word "tmp/File/test-file-" __nano-time ".csv" )
+  O> if file-exists? glob2 [ file-delete glob2 ]
+  O> file-open glob2
+  O> file-print "1 A 2"
+  O> file-close
+  O> file-open glob2
+  O> __ignore file-read
+  O> __ignore file-read => ERROR Expected a literal value. (line number 1, character 3)
+
+FileReadBadToken
+  globals [glob2]
+  O> __mkdir "tmp/File"
+  O> set glob2 (word "tmp/File/test-file-" __nano-time ".csv" )
+  O> if file-exists? glob2 [ file-delete glob2 ]
+  O> file-open glob2
+  O> file-print "598745879457894578945789457894578945789"
+  O> file-close
+  O> file-open glob2
+  O> __ignore file-read => ERROR Illegal number format (line number 1, character 1)
+
+FileWriteReadUTF8
+  globals [glob2]
+  O> __mkdir "tmp/File"
+  O> set glob2 (word "tmp/File/test-file-" __nano-time ".txt" )
+  O> file-open glob2
+  O> file-write "?????"
+  O> file-close
+  O> file-open glob2
+  file-read => "?????"
+  O> file-close

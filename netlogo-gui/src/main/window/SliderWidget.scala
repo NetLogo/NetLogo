@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import org.nlogo.util.MersenneTwisterFast
+import org.nlogo.api.MersenneTwisterFast
 import java.awt.event.{ MouseAdapter, MouseEvent }
 import org.nlogo.window.Events.{ InterfaceGlobalEvent, AfterLoadEvent, PeriodicUpdateEvent, AddSliderConstraintEvent, InputBoxLoseFocusEvent }
 import org.nlogo.api.{ Dump, Editable, I18N, LogoException, ModelReader }

@@ -1,0 +1,17 @@
+MoveTo
+  O> cro 2 [ fd 5 ]
+  sort [heading] of turtles => [0 180]
+  O> ask turtle 0 [ move-to one-of turtles with [false] ] => ERROR MOVE-TO expected input to be an agent but got NOBODY instead.
+  O> ask turtle 0 [ move-to turtle 1 ]
+  [xcor] of turtle 0 = [xcor] of turtle 1 => true
+  [ycor] of turtle 0 = [ycor] of turtle 1 => true
+  O> ask turtle 0 [ move-to turtle 0 ]
+  [xcor] of turtle 0 = [xcor] of turtle 1 => true
+  [ycor] of turtle 0 = [ycor] of turtle 1 => true
+  O> ask turtle 1 [ move-to patch 3 5 ]
+  [xcor] of turtle 1 => 3
+  [ycor] of turtle 1 => 5
+  O> ask turtle 0 [ setxy -4.1 2.9 move-to patch-here ]
+  [xcor] of turtle 0 => -4
+  [ycor] of turtle 0 => 3
+  sort [heading] of turtles => [0 180]

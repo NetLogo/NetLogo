@@ -1,0 +1,21 @@
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
+
+package org.nlogo.prim.etc
+
+import org.nlogo.api.Perspective
+import org.nlogo.core.Nobody
+import org.nlogo.nvm.{ Context, Reporter }
+
+class _subject extends Reporter {
+  override def report(context: Context): AnyRef =
+    if (world.observer.perspective == Perspective.Observe)
+      Nobody
+    else {
+      val subject = world.observer.targetAgent
+      // not actually sure if the null check here is necessary - ST 6/28/05
+      if (subject == null || subject.id == -1)
+        Nobody
+      else
+        subject
+    }
+}

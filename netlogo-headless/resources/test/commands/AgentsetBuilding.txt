@@ -1,0 +1,76 @@
+TurtleSet
+  breed [mice mouse]
+  breed [frogs frog]
+  O> crt 1
+  [turtle-set self] of turtle 0 = turtles => true
+  O> crt 10
+  (turtle-set sort turtles turtle 0) = turtles => true
+  (turtle-set sort patches turtle 0) => ERROR List inputs to TURTLE-SET must only contain turtle or turtle agentset elements.  The list [(patch -5 5) (patch -4 5) (patch -3 5) (patch -2 5) (patch -1 5) (patch 0 5) (patch 1 5) (patch 2 5) (patch 3 5) (patch 4 5) (patch 5 5) (patch -5 4) (patch -4 4) (patch -3 4) (patch -2 4) (patch -1 4) (patch 0 4) (patch 1 4) (patch 2 4) (patch 3 4) (patch 4 4) (patch 5 4) (patch -5 3) (patch -4 3) (patch -3 3) (patch -2 3) (patch -1 3) (patch 0 3) (patch 1 3) (patch 2 3) (patch 3 3) (patch 4 3) (patch 5 3) (patch -5 2) (patch -4 2) (patch -3 2) (patch -2 2) (patch -1 2) (patch 0 2) (patch 1 2) (patch 2 2) (patch 3 2) (patch 4 2) (patch 5 2) (patch -5 1) (patch -4 1) (patch -3 1) (patch -2 1) (patch -1 1) (patch 0 1) (patch 1 1) (patch 2 1) (patch 3 1) (patch 4 1) (patch 5 1) (patch -5 0) (patch -4 0) (patch -3 0) (patch -2 0) (patch -1 0) (patch 0 0) (patch 1 0) (patch 2 0) (patch 3 0) (patch 4 0) (patch 5 0) (patch -5 -1) (patch -4 -1) (patch -3 -1) (patch -2 -1) (patch -1 -1) (patch 0 -1) (patch 1 -1) (patch 2 -1) (patch 3 -1) (patch 4 -1) (patch 5 -1) (patch -5 -2) (patch -4 -2) (patch -3 -2) (patch -2 -2) (patch -1 -2) (patch 0 -2) (patch 1 -2) (patch 2 -2) (patch 3 -2) (patch 4 -2) (patch 5 -2) (patch -5 -3) (patch -4 -3) (patch -3 -3) (patch -2 -3) (patch -1 -3) (patch 0 -3) (patch 1 -3) (patch 2 -3) (patch 3 -3) (patch 4 -3) (patch 5 -3) (patch -5 -4) (patch -4 -4) (patch -3 -4) (patch -2 -4) (patch -1 -4) (patch 0 -4) (patch 1 -4) (patch 2 -4) (patch 3 -4) (patch 4 -4) (patch 5 -4) (patch -5 -5) (patch -4 -5) (patch -3 -5) (patch -2 -5) (patch -1 -5) (patch 0 -5) (patch 1 -5) (patch 2 -5) (patch 3 -5) (patch 4 -5) (patch 5 -5)] contained (patch -5 5) which is NOT a turtle or turtle agentset.
+  (turtle-set turtles turtle 0) = turtles => true
+  sort [who] of (turtle-set turtle 6 turtle 4 turtle 9) => [4 6 9]
+  count (turtle-set turtle 0 turtle 0) => 1
+  O> create-frogs 5
+  O> create-mice 7
+  count (turtle-set frogs mice) => 12
+  [turtle-set self] of patch 0 0 => ERROR TURTLE-SET expected input to be a turtle agentset or turtle but got the patch (patch 0 0) instead.
+
+EmptyTurtleSet
+  (turtle-set) = no-turtles => true
+  (turtle-set nobody nobody) = no-turtles => true
+  (turtle-set nobody nobody) = no-patches => false
+
+TurtleSetNestedLists
+  O> crt 1
+  (turtle-set (list (list (list (list turtle 0))))) = turtles => true
+  O> crt 1
+  (turtle-set (list (list (list (list turtle 1))))) = turtles => false
+  (turtle-set turtle 0 (list (list (list (list turtle 1))))) = turtles => true
+  (turtle-set (list (list (list turtle 1)) (list (list (turtle 0))))) = turtles => true
+
+PatchSet2
+  globals [glob1]
+  O> crt 1 [ __ignore patch-set self ] => ERROR PATCH-SET expected input to be a patch agentset or patch but got the turtle (turtle 0) instead.
+  O> ask patch 0 0 [ set glob1 patch-set self ]
+  count glob1 => 1
+  one-of glob1 = patch 0 0 => true
+  patches = (patch-set patch 0 0 patches) => true
+  patches = (patch-set patch 0 0 sort patches) => true
+  (patch-set sort turtles patch 0 0) => ERROR List inputs to PATCH-SET must only contain patch, patch agentset, or list elements.  The list [(turtle 0)] contained (turtle 0) which is NOT a patch or patch agentset.
+  map [[pxcor] of ?] sort-by [[pxcor] of ?1 < [pxcor] of ?2] (patch-set patch 3 0 patch 1 0 patch 2 0) => [1 2 3]
+  count (patch-set patch 0 0 patch 0 0) => 1
+
+EmptyPatchSet
+  (patch-set) = no-patches => true
+  (patch-set nobody nobody) = no-patches => true
+  (patch-set nobody nobody) = no-turtles => false
+
+PatchSetNestedLists
+  count patch-set (list (list (list (list patch 0 0)))) => 1
+  count (patch-set patch 0 0 (list (list (list (list patch 0 1))))) => 2
+  count patch-set (list (list (list patch 0 1)) (list (list (patch 0 0)))) => 2
+
+LinkSet
+  O> crt 3
+  O> ask turtle 0 [ create-link-with turtle 1 ]
+  [link-set self] of link 0 2 => ERROR OF expected input to be an agent or agentset but got NOBODY instead.
+  [link-set self] of link 0 1 = links => true
+  O> ask turtles [ create-links-with other turtles ]
+  (link-set sort links link 0 1) = links => true
+  (link-set sort turtles link 0 1) => ERROR List inputs to LINK-SET must only contain link, link agentset, or list elements.  The list [(turtle 0) (turtle 1) (turtle 2)] contained (turtle 0) which is NOT a link or link agentset.
+  (link-set sort patches link 0 1) => ERROR List inputs to LINK-SET must only contain link, link agentset, or list elements.  The list [(patch -5 5) (patch -4 5) (patch -3 5) (patch -2 5) (patch -1 5) (patch 0 5) (patch 1 5) (patch 2 5) (patch 3 5) (patch 4 5) (patch 5 5) (patch -5 4) (patch -4 4) (patch -3 4) (patch -2 4) (patch -1 4) (patch 0 4) (patch 1 4) (patch 2 4) (patch 3 4) (patch 4 4) (patch 5 4) (patch -5 3) (patch -4 3) (patch -3 3) (patch -2 3) (patch -1 3) (patch 0 3) (patch 1 3) (patch 2 3) (patch 3 3) (patch 4 3) (patch 5 3) (patch -5 2) (patch -4 2) (patch -3 2) (patch -2 2) (patch -1 2) (patch 0 2) (patch 1 2) (patch 2 2) (patch 3 2) (patch 4 2) (patch 5 2) (patch -5 1) (patch -4 1) (patch -3 1) (patch -2 1) (patch -1 1) (patch 0 1) (patch 1 1) (patch 2 1) (patch 3 1) (patch 4 1) (patch 5 1) (patch -5 0) (patch -4 0) (patch -3 0) (patch -2 0) (patch -1 0) (patch 0 0) (patch 1 0) (patch 2 0) (patch 3 0) (patch 4 0) (patch 5 0) (patch -5 -1) (patch -4 -1) (patch -3 -1) (patch -2 -1) (patch -1 -1) (patch 0 -1) (patch 1 -1) (patch 2 -1) (patch 3 -1) (patch 4 -1) (patch 5 -1) (patch -5 -2) (patch -4 -2) (patch -3 -2) (patch -2 -2) (patch -1 -2) (patch 0 -2) (patch 1 -2) (patch 2 -2) (patch 3 -2) (patch 4 -2) (patch 5 -2) (patch -5 -3) (patch -4 -3) (patch -3 -3) (patch -2 -3) (patch -1 -3) (patch 0 -3) (patch 1 -3) (patch 2 -3) (patch 3 -3) (patch 4 -3) (patch 5 -3) (patch -5 -4) (patch -4 -4) (patch -3 -4) (patch -2 -4) (patch -1 -4) (patch 0 -4) (patch 1 -4) (patch 2 -4) (patch 3 -4) (patch 4 -4) (patch 5 -4) (patch -5 -5) (patch -4 -5) (patch -3 -5) (patch -2 -5) (patch -1 -5) (patch 0 -5) (patch 1 -5) (patch 2 -5) (patch 3 -5) (patch 4 -5) (patch 5 -5)] contained (patch -5 5) which is NOT a link or link agentset.
+  (link-set links link 0 1) = links => true
+  count (link-set link 1 2 link 1 2) => 1
+
+EmptyLinkSet
+  (link-set) = no-links => true
+  (link-set nobody nobody) = no-links => true
+  (link-set nobody nobody) = no-patches => false
+
+LinkSetNestedLists
+  O> crt 2 [ create-links-with other turtles ]
+  (link-set (list (list (list (list link 0 1))))) = links => true
+  O> crt 1 [ create-links-with other turtles ]
+  (link-set (list (list (list (list link 2 1))))) = links => false
+  (link-set link 0 1 link 2 0 (list (list (list (list link 2 1))))) = links => true
+  (link-set (list (list (list link 2 1)) link 0 1 (list (list (link 2 0))))) = links => true
+

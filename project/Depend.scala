@@ -15,14 +15,15 @@ object Depend {
       val s = streams.value
       val classes = (classDirectory in Compile).value.toString
       val testClasses = (classDirectory in Test).value.toString
-      IO.write(baseDirectory.value / "tmp" / "depend.ddf", ddfContents)
+      val ddfFile = baseDirectory.value / "tmp" / "depend.ddf"
+      IO.write(ddfFile, ddfContents)
       import classycle.dependency.DependencyChecker
       def main() = TrapExit(
-        DependencyChecker.main(Array("-dependencies=@tmp/depend.ddf",
+        DependencyChecker.main(Array("-dependencies=@" + ddfFile.getPath,
                                      classes)),
         s.log)
       def test() = TrapExit(
-        DependencyChecker.main(Array("-dependencies=@tmp/depend.ddf",
+        DependencyChecker.main(Array("-dependencies=@" + ddfFile.getPath,
                                      testClasses)),
         s.log)
       main() match {
@@ -39,10 +40,12 @@ object Depend {
     val packageDefs = Map(
       "" -> Nil,
       "agent" -> List("api"),
-      "api" -> List("util"),
+      "api" -> List("core", "util"),
       "app" -> List("window"),
       "awt" -> Nil,
-      "compiler" -> List("prim","prim/dead","prim/threed"),
+      "compiler" -> List("core/prim","prim","prim/dead","prim/threed"),
+      "core" -> Nil,
+      "core/prim" -> Nil,
       "editor" -> Nil,
       "generator" -> List("prim","prim/dead","prim/threed"),
       "gl/render" -> List("shape"),
@@ -63,6 +66,7 @@ object Depend {
       "log" -> List("api"),
       "mc" -> List("workspace", "swing"),
       "nvm" -> List("agent"),
+      "parse" -> List("core", "core/prim"),
       "plot" -> List("api"),
       "prim" -> List("nvm"),
       "prim/dead" -> List("nvm"),

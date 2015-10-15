@@ -31,7 +31,7 @@ private class RoboClientPanel(editorFactory:org.nlogo.window.EditorFactory,
     import org.nlogo.window.{ButtonWidget, SliderWidget, Widget}
     import org.nlogo.widget.SwitchWidget
 
-    private val r = new org.nlogo.util.MersenneTwisterFast()
+    private val r = new org.nlogo.api.MersenneTwisterFast()
     var running = true
 
     override def run() {

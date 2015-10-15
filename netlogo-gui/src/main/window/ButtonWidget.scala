@@ -7,7 +7,7 @@ import event.{MouseEvent, MouseListener, MouseMotionListener}
 import image.FilteredImageSource
 import org.nlogo.awt.DarkenImageFilter
 import javax.swing.ImageIcon
-import org.nlogo.util.MersenneTwisterFast
+import org.nlogo.api.MersenneTwisterFast
 import org.nlogo.awt.Mouse.hasButton1
 import org.nlogo.agent.{Agent, Observer, Turtle, Patch, Link}
 import org.nlogo.nvm.Procedure

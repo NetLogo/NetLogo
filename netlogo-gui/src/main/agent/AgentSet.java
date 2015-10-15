@@ -105,10 +105,10 @@ public abstract strictfp class AgentSet
   abstract Agent[] randomTwo(int precomputedCount, int random1, int random2);
 
   abstract Agent[] randomSubsetGeneral(int resultSize, int precomputedCount,
-                                       org.nlogo.util.MersenneTwisterFast randomerizer);
+                                       org.nlogo.api.MersenneTwisterFast randomerizer);
 
   public AgentSet randomSubset(int resultSize, int precomputedCount,
-                               org.nlogo.util.MersenneTwisterFast randomerizer) {
+                               org.nlogo.api.MersenneTwisterFast randomerizer) {
     Agent[] result;
     if (resultSize == 0) {
       result = new Agent[0];
@@ -146,7 +146,7 @@ public abstract strictfp class AgentSet
 
   public abstract Iterator iterator();
 
-  public abstract Iterator shufflerator(org.nlogo.util.MersenneTwisterFast random);
+  public abstract Iterator shufflerator(org.nlogo.api.MersenneTwisterFast random);
 
   // from org.nlogo.api.Dump though, we really need to get a regular iterator
   // in order not to depend on org.nlogo.agent, so we provide this method

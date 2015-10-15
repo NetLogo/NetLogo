@@ -14,7 +14,7 @@ public strictfp class ExclusiveJob
                       Procedure topLevelProcedure,
                       int address,
                       Context parentContext,
-                      org.nlogo.util.MersenneTwisterFast random) {
+                      org.nlogo.api.MersenneTwisterFast random) {
     super(owner, agentset, topLevelProcedure, address, parentContext, random);
   }
 

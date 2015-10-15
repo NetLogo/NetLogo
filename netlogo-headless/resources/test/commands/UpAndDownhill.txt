@@ -1,0 +1,87 @@
+UpAndDownhill1
+  globals [glob1]
+  patches-own [pvar]
+  O> crt 1
+  O> set glob1 1
+  T> foreach sort neighbors [ ask ? [ set pvar glob1 set glob1 glob1 + 1 ] ]
+  T> set pvar 100
+  T> home downhill pvar
+  [heading] of turtle 0 => 315
+  T> home downhill4 pvar
+  [heading] of turtle 0 => 0
+  T> home set pvar -100
+  T> home uphill pvar
+  [heading] of turtle 0 => 135
+  T> home uphill4 pvar
+  [heading] of turtle 0 => 180
+
+Uphill1
+  O> random-seed 287
+  P> if patch 0 0 != self [ set pcolor 1 ]
+  O> crt 100
+  T> uphill pcolor
+  any? turtles with [heading = 0] => true
+  any? turtles with [heading = 45] => true
+  any? turtles with [heading = 90] => true
+  any? turtles with [heading = 135] => true
+  any? turtles with [heading = 180] => true
+  any? turtles with [heading = 225] => true
+  any? turtles with [heading = 270] => true
+  any? turtles with [heading = 315] => true
+  any? turtles with [heading mod 45 != 0] => false
+  T> rt 180 fd 1 move-to patch-here
+  any? turtles with [patch-here != patch 0 0] => false
+
+Uphill2
+  globals [glob1]
+  O> crt 100
+  O> ask turtle 0 [ set glob1 patch-here ask patches with [ self != glob1 ] [ set pcolor 1 ] ]
+  T> uphill4 pcolor
+  any? turtles with [heading = 0] => true
+  any? turtles with [heading = 90] => true
+  any? turtles with [heading = 180] => true
+  any? turtles with [heading = 270] => true
+  any? turtles with [heading mod 90 != 0] => false
+  T> rt 180 fd 1 move-to patch-here
+  any? turtles with [patch-here != glob1] => false
+
+Uphill3
+  globals [glob1 glob2]
+  patches-own [pvar]
+  O> crt 1 [ set glob2 patch-here ]
+  O> set glob1 -1
+  T> foreach sort neighbors [ ask ? [ set pvar glob1 set glob1 glob1 - 1 ] ]
+  T> set pvar -100
+  T> uphill pvar
+  [heading] of turtle 0 => 315
+  T> rt 180 fd 1 move-to patch-here
+  any? turtles with [patch-here != glob2] => false
+
+Downhill1
+  globals [glob1]
+  O> crt 100
+  O> ask turtle 0 [ set glob1 patch-here set pcolor 1 ]
+  T> downhill pcolor
+  any? turtles with [heading = 0] => true
+  any? turtles with [heading = 45] => true
+  any? turtles with [heading = 90] => true
+  any? turtles with [heading = 135] => true
+  any? turtles with [heading = 180] => true
+  any? turtles with [heading = 225] => true
+  any? turtles with [heading = 270] => true
+  any? turtles with [heading = 315] => true
+  T> rt 180 fd 1 move-to patch-here
+  any? turtles with [patch-here != glob1] => false
+
+Downhill2
+  globals [glob1]
+  O> crt 100
+  O> ask turtle 0 [ set glob1 patch-here set pcolor 1 ]
+  T> downhill4 pcolor
+  any? turtles with [heading = 0] => true
+  any? turtles with [heading = 90] => true
+  any? turtles with [heading = 180] => true
+  any? turtles with [heading = 270] => true
+  any? turtles with [heading mod 90 != 0] => false
+  T> rt 180 fd 1 move-to patch-here
+  any? turtles with [patch-here != glob1] => false

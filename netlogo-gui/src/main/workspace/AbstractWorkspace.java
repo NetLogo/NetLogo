@@ -707,11 +707,11 @@ public abstract strictfp class AbstractWorkspace
     loader.load(strings, version, worldInterface);
   }
 
-  public org.nlogo.util.MersenneTwisterFast auxRNG() {
+  public org.nlogo.api.MersenneTwisterFast auxRNG() {
     return world.auxRNG;
   }
 
-  public org.nlogo.util.MersenneTwisterFast mainRNG() {
+  public org.nlogo.api.MersenneTwisterFast mainRNG() {
     return world.mainRNG;
   }
 

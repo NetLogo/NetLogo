@@ -2,8 +2,6 @@
 
 package org.nlogo.api
 
-import org.nlogo.util.MersenneTwisterFast
-
 class SimpleJobOwner(override val displayName: String,
                      override val random: MersenneTwisterFast,
                      override val agentClass: Class[_])

@@ -28,7 +28,7 @@ public strictfp class MonitorWidget
   private boolean jobRunning = false;
   private boolean hasError = false;
 
-  public MonitorWidget(org.nlogo.util.MersenneTwisterFast random) {
+  public MonitorWidget(org.nlogo.api.MersenneTwisterFast random) {
     super(random);
     setOpaque(true);
     addMouseListener(this);

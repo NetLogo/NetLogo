@@ -1,0 +1,44 @@
+Member1
+  member? one-of patches turtles => false
+  member? one-of patches patches => true
+
+Member2
+  breed [mice mouse]
+  breed [frogs frog]
+  O> create-ordered-mice 8
+  O> create-ordered-frogs 1
+  O> cro 1
+  O> ask turtles [ set color blue ]
+  member? turtle 0 patches => false
+  member? turtle 0 turtles => true
+  member? turtle 0 mice => true
+  member? turtle 0 frogs => false
+  O> ask turtles [ fd 4 ]
+  member? turtle 3 turtles with [xcor > 0] => true
+  O> ask mice [ set color red ]
+  member? turtle 0 turtles with [color = blue] => false
+  member? turtle 8 turtles with [color = blue] => true
+  member? turtle 0 turtles with [color = pink] => false
+
+Member3
+  globals [glob1]
+  breed [mice mouse]
+  breed [frogs frog]
+  breed [nodes node]
+  O> create-mice 1
+  O> set glob1 turtle 0
+  member? glob1 turtles => true
+  member? glob1 mice => true
+  member? glob1 frogs => false
+  T> set breed nodes
+  member? glob1 turtles => true
+  member? glob1 mice => false
+  member? glob1 frogs => false
+
+Member4
+  globals [glob1 glob2]
+  breed [mice mouse]
+  O> create-mice 1
+  O> set glob1 turtle 0
+  O> set glob2 turtles with [true]
+  member? glob1 glob2 => true

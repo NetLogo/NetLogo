@@ -1,0 +1,33 @@
+MinNOf
+  globals [glob1]
+  turtles-own [tvar]
+  count min-n-of 5 patches [pcolor] => 5
+  any? (min-n-of 5 patches [pxcor]) with [pxcor != min-pxcor] => false
+  O> crt 10
+  any? (min-n-of 5 turtles [who]) with [who > 4] => false
+  O> ask turtles [ ifelse who < 2 [ set tvar who ][ set tvar 2] ]
+  O> set glob1 min-n-of 3 turtles [tvar]
+  member? turtle 0 glob1 => true
+  member? turtle 1 glob1 => true
+  count glob1 => 3
+  min-n-of 2 links [color] => ERROR Requested 2 random agents from a set of only 0 agents.
+  T> create-links-with other turtles
+  count min-n-of 5 links [[who] of end1] => 5
+  min-n-of -1 links [color] => ERROR First input to MIN-N-OF can't be negative.
+
+MaxNOf
+  globals [glob1]
+  turtles-own [tvar]
+  count max-n-of 5 patches [pcolor] => 5
+  any? (max-n-of 5 patches [pxcor]) with [pxcor != max-pxcor] => false
+  O> crt 10
+  any? (max-n-of 5 turtles [who]) with [who < 5] => false
+  O> ask turtles [ ifelse who > 7 [ set tvar who ][ set tvar 7] ]
+  O> set glob1 max-n-of 3 turtles [tvar]
+  member? turtle 9 glob1 => true
+  member? turtle 8 glob1 => true
+  count glob1 => 3
+  max-n-of 2 links [color] => ERROR Requested 2 random agents from a set of only 0 agents.
+  T> create-links-with other turtles
+  count max-n-of 5 links [[who] of end1] => 5
+  max-n-of -1 links [color] => ERROR First input to MAX-N-OF can't be negative.

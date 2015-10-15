@@ -159,7 +159,7 @@ public strictfp class TreeAgentSet
 
   @Override
   Agent[] randomSubsetGeneral(int resultSize, int precomputedCount,
-                              org.nlogo.util.MersenneTwisterFast randomerator) {
+                              org.nlogo.api.MersenneTwisterFast randomerator) {
     Agent result[] = new Agent[resultSize];
     AgentSet.Iterator iter = iterator();
     for (int i = 0, j = 0; j < resultSize; i++) {
@@ -224,7 +224,7 @@ public strictfp class TreeAgentSet
   /// shuffling iterator = shufflerator! (Google hits: 0)
 
   @Override
-  public AgentSet.Iterator shufflerator(org.nlogo.util.MersenneTwisterFast random) {
+  public AgentSet.Iterator shufflerator(org.nlogo.api.MersenneTwisterFast random) {
     // note it at the moment (and this should probably be fixed)
     // Job.runExclusive() counts on this making a copy of the
     // contents of the agentset - ST 12/15/05
@@ -236,9 +236,9 @@ public strictfp class TreeAgentSet
     private int i = 0;
     private final Agent[] copy;
     private Agent next;
-    private final org.nlogo.util.MersenneTwisterFast random;
+    private final org.nlogo.api.MersenneTwisterFast random;
 
-    Shufflerator(org.nlogo.util.MersenneTwisterFast random) {
+    Shufflerator(org.nlogo.api.MersenneTwisterFast random) {
       copy = agents.values().toArray(new Agent[agents.size()]);
       this.random = random;
       fetch();

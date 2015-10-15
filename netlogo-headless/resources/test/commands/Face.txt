@@ -1,0 +1,226 @@
+Face1
+  P> sprout 1 [ face patch-at 0 1 ]
+  sort remove-duplicates [ heading ] of turtles => [0]
+  O> __change-topology true false
+  P> sprout 1 [ let p patch-at 0 1 if p = nobody [ set p patch xcor min-pycor ] face p ]
+  sort remove-duplicates [ heading ] of turtles => [0 180]
+  O> __change-topology false false
+  P> sprout 1 [ let p patch-at 0 1 if p = nobody [ set p patch xcor min-pycor ] face p ]
+  sort remove-duplicates [ heading ] of turtles => [0 180]
+  T> let p patch-at 1 0 if p = nobody [ set p patch min-pxcor ycor ] face p
+  sort remove-duplicates [ heading ] of turtles => [90 270]
+  O> __change-topology false true
+  P> sprout 1 [ let p patch-at 1 0 if p = nobody [ set p patch min-pxcor ycor ] face p ]
+  sort remove-duplicates [ heading ] of turtles => [90 270]
+
+Face2
+  globals [glob1]
+  O> cro 2
+  O> ask turtle 0 [ set glob1 heading face turtle 1 ]
+  [heading] of turtle 0 = glob1 => true
+  T> fd 2
+  O> ask turtle 0 [ face turtle 1 ]
+  [heading] of turtle 0 => 180
+  O> ask turtle 1 [ face turtle 0 ]
+  [heading] of turtle 1 => 0
+  O> ask turtle 0 [ lt 90 fd 4 face turtle 1 ]
+  [heading] of turtle 0 => 225
+
+Face3
+  O> resize-world 0 10 0 10
+  P> sprout 1 [ face patch-at 0 1 ]
+  sort remove-duplicates [ heading ] of turtles => [0]
+  O> __change-topology true false
+  P> sprout 1 [ let p patch-at 0 1 if p = nobody [ set p patch xcor min-pycor ] face p ]
+  sort remove-duplicates [ heading ] of turtles => [0 180]
+  O> __change-topology false false
+  P> sprout 1 [ let p patch-at 0 1 if p = nobody [ set p patch xcor min-pycor ] face p ]
+  sort remove-duplicates [ heading ] of turtles => [0 180]
+  T> let p patch-at 1 0 if p = nobody [ set p patch min-pxcor ycor ] face p
+  sort remove-duplicates [ heading ] of turtles => [90 270]
+  O> __change-topology false true
+  P> sprout 1 [ let p patch-at 1 0 if p = nobody [ set p patch min-pxcor ycor ] face p ]
+  sort remove-duplicates [ heading ] of turtles => [90 270]
+
+Face4
+  O> resize-world 0 11 0 11
+  P> sprout 1 [ face patch-at 0 1 ]
+  sort remove-duplicates [ heading ] of turtles => [0]
+  O> __change-topology true false
+  P> sprout 1 [ let p patch-at 0 1 if p = nobody [ set p patch xcor min-pycor ] face p ]
+  sort remove-duplicates [ heading ] of turtles => [0 180]
+  O> __change-topology false false
+  P> sprout 1 [ let p patch-at 0 1 if p = nobody [ set p patch xcor min-pycor ] face p ]
+  sort remove-duplicates [ heading ] of turtles => [0 180]
+  T> let p patch-at 1 0 if p = nobody [ set p patch min-pxcor ycor ] face p
+  sort remove-duplicates [ heading ] of turtles => [90 270]
+  O> __change-topology false true
+  P> sprout 1 [ let p patch-at 1 0 if p = nobody [ set p patch min-pxcor ycor ] face p ]
+  sort remove-duplicates [ heading ] of turtles => [90 270]
+
+Face5
+  O> resize-world -10 0 -10 0
+  P> sprout 1 [ face patch-at 0 1 ]
+  sort remove-duplicates [ heading ] of turtles => [0]
+  O> __change-topology true false
+  P> sprout 1 [ let p patch-at 0 1 if p = nobody [ set p patch xcor min-pycor ] face p ]
+  sort remove-duplicates [ heading ] of turtles => [0 180]
+  O> __change-topology false false
+  P> sprout 1 [ let p patch-at 0 1 if p = nobody [ set p patch xcor min-pycor ] face p ]
+  sort remove-duplicates [ heading ] of turtles => [0 180]
+  T> let p patch-at 1 0 if p = nobody [ set p patch min-pxcor ycor ] face p
+  sort remove-duplicates [ heading ] of turtles => [90 270]
+  O> __change-topology false true
+  P> sprout 1 [ let p patch-at 1 0 if p = nobody [ set p patch min-pxcor ycor ] face p ]
+  sort remove-duplicates [ heading ] of turtles => [90 270]
+
+Face6
+  O> resize-world -11 0 -11 0
+  P> sprout 1 [ face patch-at 0 1 ]
+  sort remove-duplicates [ heading ] of turtles => [0]
+  O> __change-topology true false
+  P> sprout 1 [ let p patch-at 0 1 if p = nobody [ set p patch xcor min-pycor ] face p ]
+  sort remove-duplicates [ heading ] of turtles => [0 180]
+  O> __change-topology false false
+  P> sprout 1 [ let p patch-at 0 1 if p = nobody [ set p patch xcor min-pycor ] face p ]
+  sort remove-duplicates [ heading ] of turtles => [0 180]
+  T> let p patch-at 1 0 if p = nobody [ set p patch min-pxcor ycor ] face p
+  sort remove-duplicates [ heading ] of turtles => [90 270]
+  O> __change-topology false true
+  P> sprout 1 [ let p patch-at 1 0 if p = nobody [ set p patch min-pxcor ycor ] face p ]
+  sort remove-duplicates [ heading ] of turtles => [90 270]
+
+FaceXY1
+  P> sprout 1 [ facexy pxcor pycor + 1 ]
+  sort remove-duplicates [ heading ] of turtles => [0]
+  T> facexy pxcor min-pycor
+  sort remove-duplicates [ heading ] of turtles => [0 180]
+  O> __change-topology true false
+  P> sprout 1 [ facexy pxcor pycor + 1 ]
+  sort remove-duplicates [ heading ] of turtles => [0 180]
+  T> facexy pxcor min-pycor
+  sort remove-duplicates [ heading ] of turtles => [0 180]
+  O> __change-topology false false
+  P> sprout 1 [ facexy pxcor pycor + 1 ]
+  sort remove-duplicates [ heading ] of turtles => [0 180]
+  T> facexy pxcor min-pycor
+  sort remove-duplicates [ heading ] of turtles => [0 180]
+  T> facexy pxcor + 1 pycor
+  sort remove-duplicates [ heading ] of turtles => [90]
+  O> __change-topology false true
+  P> sprout 1 [ facexy pxcor + 1 pycor ]
+  sort remove-duplicates [ heading ] of turtles => [90]
+  T> set heading 0 facexy pxcor min-pycor
+  sort remove-duplicates [ heading ] of turtles => [0 180]
+
+FaceXY2
+  globals [glob1]
+  O> cro 2
+  O> ask turtle 0 [ set glob1 heading facexy [xcor] of turtle 1 [ycor] of turtle 1 ]
+  [heading] of turtle 0 = glob1 => true
+  T> fd 2
+  O> ask turtle 0 [ facexy [xcor] of turtle 1 [ycor] of turtle 1 ]
+  [heading] of turtle 0 => 180
+  O> ask turtle 1 [ facexy [xcor] of turtle 0 [ycor] of turtle 0 ]
+  [heading] of turtle 1 => 0
+  O> ask turtle 0 [ lt 90 fd 4 facexy [xcor] of turtle 1 [ycor] of turtle 1 ]
+  [heading] of turtle 0 => 225
+
+FaceXY3
+  O> resize-world 0 10 0 10
+  P> sprout 1 [ facexy pxcor pycor + 1 ]
+  sort remove-duplicates [ heading ] of turtles => [0]
+  T> facexy pxcor min-pycor
+  sort remove-duplicates [ heading ] of turtles => [0 180]
+  O> __change-topology true false
+  P> sprout 1 [ facexy pxcor pycor + 1 ]
+  sort remove-duplicates [ heading ] of turtles => [0 180]
+  T> facexy pxcor min-pycor
+  sort remove-duplicates [ heading ] of turtles => [0 180]
+  O> __change-topology false false
+  P> sprout 1 [ facexy pxcor pycor + 1 ]
+  sort remove-duplicates [ heading ] of turtles => [0 180]
+  T> facexy pxcor min-pycor
+  sort remove-duplicates [ heading ] of turtles => [0 180]
+  T> facexy pxcor + 1 pycor
+  sort remove-duplicates [ heading ] of turtles => [90]
+  O> __change-topology false true
+  P> sprout 1 [ facexy pxcor + 1 pycor ]
+  sort remove-duplicates [ heading ] of turtles => [90]
+  T> set heading 0 facexy pxcor min-pycor
+  sort remove-duplicates [ heading ] of turtles => [0 180]
+
+FaceXY4
+  O> resize-world 0 11 0 11
+  P> sprout 1 [ facexy pxcor pycor + 1 ]
+  sort remove-duplicates [ heading ] of turtles => [0]
+  T> facexy pxcor min-pycor
+  sort remove-duplicates [ heading ] of turtles => [0 180]
+  O> __change-topology true false
+  P> sprout 1 [ facexy pxcor pycor + 1 ]
+  sort remove-duplicates [ heading ] of turtles => [0 180]
+  T> facexy pxcor min-pycor
+  sort remove-duplicates [ heading ] of turtles => [0 180]
+  O> __change-topology false false
+  P> sprout 1 [ facexy pxcor pycor + 1 ]
+  sort remove-duplicates [ heading ] of turtles => [0 180]
+  T> facexy pxcor min-pycor
+  sort remove-duplicates [ heading ] of turtles => [0 180]
+  T> facexy pxcor + 1 pycor
+  sort remove-duplicates [ heading ] of turtles => [90]
+  O> __change-topology false true
+  P> sprout 1 [ facexy pxcor + 1 pycor ]
+  sort remove-duplicates [ heading ] of turtles => [90]
+  T> set heading 0 facexy pxcor min-pycor
+  sort remove-duplicates [ heading ] of turtles => [0 180]
+
+FaceXY5
+  O> resize-world -10 0 -10 0
+  P> sprout 1 [ facexy pxcor pycor + 1 ]
+  sort remove-duplicates [ heading ] of turtles => [0]
+  T> facexy pxcor min-pycor
+  sort remove-duplicates [ heading ] of turtles => [0 180]
+  O> __change-topology true false
+  P> sprout 1 [ facexy pxcor pycor + 1 ]
+  sort remove-duplicates [ heading ] of turtles => [0 180]
+  T> facexy pxcor min-pycor
+  sort remove-duplicates [ heading ] of turtles => [0 180]
+  O> __change-topology false false
+  P> sprout 1 [ facexy pxcor pycor + 1 ]
+  sort remove-duplicates [ heading ] of turtles => [0 180]
+  T> facexy pxcor min-pycor
+  sort remove-duplicates [ heading ] of turtles => [0 180]
+  T> facexy pxcor + 1 pycor
+  sort remove-duplicates [ heading ] of turtles => [90]
+  O> __change-topology false true
+  P> sprout 1 [ facexy pxcor + 1 pycor ]
+  sort remove-duplicates [ heading ] of turtles => [90]
+  T> set heading 0 facexy pxcor min-pycor
+  sort remove-duplicates [ heading ] of turtles => [0 180]
+
+FaceXY6
+  O> resize-world -11 0 -11 0
+  P> sprout 1 [ facexy pxcor pycor + 1 ]
+  sort remove-duplicates [ heading ] of turtles => [0]
+  T> facexy pxcor min-pycor
+  sort remove-duplicates [ heading ] of turtles => [0 180]
+  O> __change-topology true false
+  P> sprout 1 [ facexy pxcor pycor + 1 ]
+  sort remove-duplicates [ heading ] of turtles => [0 180]
+  T> facexy pxcor min-pycor
+  sort remove-duplicates [ heading ] of turtles => [0 180]
+  O> __change-topology false false
+  P> sprout 1 [ facexy pxcor pycor + 1 ]
+  sort remove-duplicates [ heading ] of turtles => [0 180]
+  T> facexy pxcor min-pycor
+  sort remove-duplicates [ heading ] of turtles => [0 180]
+  T> facexy pxcor + 1 pycor
+  sort remove-duplicates [ heading ] of turtles => [90]
+  O> __change-topology false true
+  P> sprout 1 [ facexy pxcor + 1 pycor ]
+  sort remove-duplicates [ heading ] of turtles => [90]
+  T> set heading 0 facexy pxcor min-pycor
+  sort remove-duplicates [ heading ] of turtles => [0 180]
+
+FaceAgentset
+  O> crt 1 let foo turtles ask turtle 0 [ face foo ] => ERROR FACE expected input to be an agent but got the agentset turtles instead.

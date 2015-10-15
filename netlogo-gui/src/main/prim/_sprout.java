@@ -42,7 +42,7 @@ public final strictfp class _sprout
   public void perform(final Context context) throws LogoException {
     Patch parent = (Patch) context.agent;
     int numberOfTurtles = argEvalIntValue(context, 0);
-    org.nlogo.util.MersenneTwisterFast random = context.job.random;
+    org.nlogo.api.MersenneTwisterFast random = context.job.random;
     if (numberOfTurtles > 0) {
       AgentSet agentset =
           new ArrayAgentSet(Turtle.class, numberOfTurtles,

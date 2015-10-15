@@ -1,0 +1,8 @@
+UserReporters
+  O> __ignore "avoid compiler warning"
+  O> print user-yes-or-no? "blarg" => ERROR model halted by user
+  O> print user-one-of "blarg" [ 1 2 3 ] => ERROR model halted by user
+  O> print user-input "blarg" => ERROR model halted by user
+  user-file => false
+  user-new-file => false
+  user-directory => false

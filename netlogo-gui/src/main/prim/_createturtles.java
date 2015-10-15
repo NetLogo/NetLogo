@@ -46,7 +46,7 @@ public final strictfp class _createturtles
           breedName == NO_BREED
               ? world.turtles()
               : world.getBreed(breedName);
-      org.nlogo.util.MersenneTwisterFast random = context.job.random;
+      org.nlogo.api.MersenneTwisterFast random = context.job.random;
       for (int i = 0; i < numberOfTurtles; i++) {
         Turtle turtle =
             world.createTurtle(breed, random.nextInt(14),
