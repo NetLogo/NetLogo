@@ -10,7 +10,7 @@ import org.nlogo.nvm.EngineException;
 public final strictfp class _exportworld
     extends org.nlogo.nvm.Command {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.commandSyntax
         (new int[]{Syntax.StringType()});
   }
@@ -30,12 +30,12 @@ public final strictfp class _exportworld
             } catch (java.net.MalformedURLException ex) {
               throw new EngineException
                   (context, _exportworld.this,
-                      token().name() +
+                      token().text() +
                           ": " + ex.getMessage());
             } catch (java.io.IOException ex) {
               throw new EngineException
                   (context, _exportworld.this,
-                      token().name() +
+                      token().text() +
                           ": " + ex.getMessage());
             } catch (java.lang.IllegalStateException ex) {
                 // This exception is thrown when `DefaultFileManager.relativeToAbsolute` takes an `IOException` and wraps it up on failure.
@@ -43,7 +43,7 @@ public final strictfp class _exportworld
                 // --JAB (1/9/13)
                 throw new EngineException
                     (context, _exportworld.this,
-                        token().name() +
+                        token().text() +
                             ": " + ex.getMessage());
             }
           }

@@ -16,7 +16,7 @@ public final strictfp class _reference
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.reporterSyntax(Syntax.ReferenceType());
   }
 

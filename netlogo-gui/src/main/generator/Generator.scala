@@ -134,7 +134,7 @@ class Generator(source: String, procedure: Procedure, profilingEnabled: Boolean)
         nlgen.markLineNumber(parentInstrUID)
         val actualReturnType = instr.syntax.ret match {
           case Syntax.BooleanType => classOf[Boolean]
-          case Syntax.ListType => classOf[org.nlogo.api.LogoList]
+          case Syntax.ListType => classOf[org.nlogo.core.LogoList]
           case Syntax.StringType => classOf[String]
           case Syntax.WildcardType => classOf[Object]
           case Syntax.VoidType => java.lang.Void.TYPE
@@ -241,7 +241,7 @@ class Generator(source: String, procedure: Procedure, profilingEnabled: Boolean)
       val result = loader.loadBytecodeClass(cName, bytecode).newInstance.asInstanceOf[A]
       setAllKeptFields(result)
       result.args = original.args
-      result.token(original.token)
+      result.token_=(original.token)
       val sourceStart = original.getSourceStartPosition
       val sourceEnd = original.getSourceEndPosition
       result.source =

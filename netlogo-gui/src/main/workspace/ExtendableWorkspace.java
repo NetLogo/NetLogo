@@ -15,5 +15,5 @@ public interface ExtendableWorkspace {
   public org.nlogo.nvm.FileManager fileManager();
   public String attachModelDir(String filePath) throws java.net.MalformedURLException;
   public boolean warningMessage(String message);
-  public Object readFromString(String path) throws org.nlogo.api.CompilerException;
+  public Object readFromString(String path) throws org.nlogo.core.CompilerException;
 }

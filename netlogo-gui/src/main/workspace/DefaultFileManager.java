@@ -2,7 +2,7 @@
 
 package org.nlogo.workspace;
 
-import org.nlogo.api.CompilerException;
+import org.nlogo.core.CompilerException;
 import org.nlogo.api.I18N;
 
 import java.util.ArrayList;
@@ -12,9 +12,9 @@ import java.util.List;
 public final strictfp class DefaultFileManager
     implements org.nlogo.nvm.FileManager {
 
-  private final List<org.nlogo.api.File> openFiles =
-      new ArrayList<org.nlogo.api.File>();
-  private org.nlogo.api.File currentFile;
+  private final List<org.nlogo.core.File> openFiles =
+      new ArrayList<org.nlogo.core.File>();
+  private org.nlogo.core.File currentFile;
   private String prefix;
   private final AbstractWorkspace workspace;
 
@@ -30,7 +30,7 @@ public final strictfp class DefaultFileManager
     long position = currentFile.pos();
 
     currentFile.close(true);
-    currentFile.open(org.nlogo.api.FileModeJ.READ());
+    currentFile.open(org.nlogo.core.FileModeJ.READ());
 
     int lineNumber = 1;
     long prevPosition = 0;
@@ -62,7 +62,7 @@ public final strictfp class DefaultFileManager
     return prefix;
   }
 
-  public org.nlogo.api.File getFile(String fileName) {
+  public org.nlogo.core.File getFile(String fileName) {
 
     if (AbstractWorkspace.isApplet()) {
       return new org.nlogo.api.RemoteFile(fileName);
@@ -127,7 +127,7 @@ public final strictfp class DefaultFileManager
     }
   }
 
-  public org.nlogo.api.File currentFile() {
+  public org.nlogo.core.File currentFile() {
     return hasCurrentFile() ? currentFile : null;
   }
 
@@ -139,10 +139,10 @@ public final strictfp class DefaultFileManager
     return (findOpenFile(fileName) != null);
   }
 
-  public org.nlogo.api.File findOpenFile(String fileName) {
+  public org.nlogo.core.File findOpenFile(String fileName) {
 
     if (AbstractWorkspace.isApplet()) {
-      for (org.nlogo.api.File nextFile : openFiles) {
+      for (org.nlogo.core.File nextFile : openFiles) {
         if (fileName.equals(nextFile.getPath())) {
           return nextFile;
         }
@@ -150,9 +150,9 @@ public final strictfp class DefaultFileManager
     } else {
       java.io.File newFile = new java.io.File(fileName);
 
-      Iterator<org.nlogo.api.File> files = openFiles.iterator();
+      Iterator<org.nlogo.core.File> files = openFiles.iterator();
       while (files.hasNext()) {
-        org.nlogo.api.File nextFile = files.next();
+        org.nlogo.core.File nextFile = files.next();
         if (newFile.getAbsolutePath().equals(nextFile.getAbsolutePath())) {
           return nextFile;
         }
@@ -161,23 +161,23 @@ public final strictfp class DefaultFileManager
     return null;
   }
 
-  private boolean isFileCurrent(org.nlogo.api.File checkFile) {
+  private boolean isFileCurrent(org.nlogo.core.File checkFile) {
     return (currentFile == checkFile);
   }
 
-  public void setCurrentFile(org.nlogo.api.File newFile) {
+  public void setCurrentFile(org.nlogo.core.File newFile) {
     if (!isFileCurrent(newFile)) {
       currentFile = newFile;
     }
   }
 
-  public void ensureMode(org.nlogo.api.FileMode openMode)
+  public void ensureMode(org.nlogo.core.FileMode openMode)
       throws java.io.IOException {
     if (!hasCurrentFile()) {
       throw new java.io.IOException(I18N.errorsJ().get("org.nlogo.workspace.DefaultFileManager.noOpenFile"));
     }
 
-    if (currentFile.mode() == org.nlogo.api.FileModeJ.NONE()) {
+    if (currentFile.mode() == org.nlogo.core.FileModeJ.NONE()) {
       try {
         currentFile.open(openMode);
       } catch (java.io.FileNotFoundException ex) {
@@ -186,7 +186,7 @@ public final strictfp class DefaultFileManager
         throw new java.io.IOException(ex.getMessage());
       }
     } else if (currentFile.mode() != openMode) {
-      String mode = (currentFile.mode() == org.nlogo.api.FileModeJ.READ()) ? "READING" : "WRITING";
+      String mode = (currentFile.mode() == org.nlogo.core.FileModeJ.READ()) ? "READING" : "WRITING";
 
       throw new java.io.IOException("You can only use " + mode + " primitives with this file");
     }
@@ -206,7 +206,7 @@ public final strictfp class DefaultFileManager
 
   public void deleteFile(String filePath)
       throws java.io.IOException {
-    org.nlogo.api.File file = findOpenFile(filePath);
+    org.nlogo.core.File file = findOpenFile(filePath);
 
     if (file != null) {
       throw new java.io.IOException("You need to close the file before deletion");
@@ -237,7 +237,7 @@ public final strictfp class DefaultFileManager
       throw new java.io.IOException("This filename is illegal, " + newFileName);
     }
 
-    org.nlogo.api.File newFile = findOpenFile(fullFileName);
+    org.nlogo.core.File newFile = findOpenFile(fullFileName);
 
     if (newFile == null) {
       if (AbstractWorkspace.isApplet()) {
@@ -260,7 +260,7 @@ public final strictfp class DefaultFileManager
   }
 
   public void flushFile(String flushFileName) {
-    org.nlogo.api.File flushFile = findOpenFile(flushFileName);
+    org.nlogo.core.File flushFile = findOpenFile(flushFileName);
     flushFile.flush();
   }
 
@@ -277,7 +277,7 @@ public final strictfp class DefaultFileManager
   // currently needs absolute file name
   private void closeFile(String closeFileName)
       throws java.io.IOException {
-    org.nlogo.api.File closeFile = findOpenFile(closeFileName);
+    org.nlogo.core.File closeFile = findOpenFile(closeFileName);
     closeFile.close(true);
     openFiles.remove(closeFile);
   }
@@ -363,7 +363,7 @@ public final strictfp class DefaultFileManager
 
   public boolean eof()
       throws java.io.IOException {
-    ensureMode(org.nlogo.api.FileModeJ.READ());
+    ensureMode(org.nlogo.core.FileModeJ.READ());
     if (!currentFile.eof()) {
       java.io.BufferedReader buffReader = currentFile.reader();
       buffReader.mark(2);
@@ -375,9 +375,9 @@ public final strictfp class DefaultFileManager
 
   public void closeAllFiles()
       throws java.io.IOException {
-    Iterator<org.nlogo.api.File> files = openFiles.iterator();
+    Iterator<org.nlogo.core.File> files = openFiles.iterator();
     while (files.hasNext()) {
-      org.nlogo.api.File nextFile = files.next();
+      org.nlogo.core.File nextFile = files.next();
       closeFile(nextFile.getAbsolutePath());
       files = openFiles.iterator();
     }

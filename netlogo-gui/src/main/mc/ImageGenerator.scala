@@ -2,15 +2,13 @@
 
 package org.nlogo.mc
 
+import org.nlogo.workspace.{ CurrentModelOpener, PreviewCommandsRunner, WorkspaceFactory }
 import java.awt.image.BufferedImage
 
 import scala.util.Failure
 import scala.util.Success
 
-import org.nlogo.api.CompilerException
-import org.nlogo.workspace.CurrentModelOpener
-import org.nlogo.workspace.PreviewCommandsRunner
-import org.nlogo.workspace.WorkspaceFactory
+import org.nlogo.core.CompilerException
 
 object ImageGenerator {
 

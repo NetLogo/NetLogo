@@ -259,7 +259,7 @@ private class CustomGenerator(profilingEnabled: Boolean) {
       mv.markLineNumber(thisInstrUID)
       mv.visitMethodInsn(INVOKEVIRTUAL, "org/nlogo/api/LogoListBuilder", "add", "(Ljava/lang/Object;)V", false)
     }
-    mv.visitMethodInsn(INVOKEVIRTUAL, "org/nlogo/api/LogoListBuilder", "toLogoList", "()Lorg/nlogo/api/LogoList;", false)
+    mv.visitMethodInsn(INVOKEVIRTUAL, "org/nlogo/api/LogoListBuilder", "toLogoList", "()Lorg/nlogo/core/LogoList;", false)
   }
 
   /* Example code,just to show what bytecode is being generated

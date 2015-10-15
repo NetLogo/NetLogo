@@ -9,7 +9,7 @@ import org.nlogo.nvm.Reporter;
 public final strictfp class _patchleftandahead
     extends Reporter {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.reporterSyntax
         (new int[]{Syntax.NumberType(), Syntax.NumberType()},
             Syntax.PatchType(), "-T--");
@@ -24,7 +24,7 @@ public final strictfp class _patchleftandahead
           (-argEvalDoubleValue(context, 0),
               argEvalDoubleValue(context, 1));
     } catch (org.nlogo.api.AgentException exc) {
-      return org.nlogo.api.Nobody$.MODULE$;
+      return org.nlogo.core.Nobody$.MODULE$;
     }
   }
 }

@@ -4,7 +4,8 @@ package org.nlogo.app
 
 import org.nlogo.agent.{Agent, AgentSet, Observer, Turtle, Patch, Link}
 import org.nlogo.window.{EditorColorizer, Widget}
-import org.nlogo.api.{I18N, AgentVariables, Dump, Nobody, TokenType}
+import org.nlogo.api.{I18N, AgentVariables, Dump }
+import org.nlogo.core.{ TokenType, Nobody }
 import collection.JavaConverters._
 
 class AgentMonitorEditor(parent: AgentMonitor) extends javax.swing.JPanel
@@ -102,7 +103,7 @@ with org.nlogo.window.Events.JobRemovedEvent.Handler
     parent.agentClass match {
       case T if AgentVariables.isSpecialTurtleVariable(index) =>
         TURTLE_WHO
-      case P if AgentVariables.isSpecialPatchVariable(index, workspace.world.program.is3D) =>
+      case P if AgentVariables.isSpecialPatchVariable(index, workspace.world.program.dialect.is3D) =>
         PXCOR_OR_PYCOR
       case L if AgentVariables.isSpecialLinkVariable(index) =>
         LINK_WHO
@@ -382,7 +383,7 @@ with org.nlogo.window.Events.JobRemovedEvent.Handler
         lastTextBeforeUserChangedAnything = editor.getText()
         editor.selectAll
         return
-      case e: org.nlogo.api.CompilerException =>
+      case e: org.nlogo.core.CompilerException =>
         editor.setText(get)
         lastTextBeforeUserChangedAnything = editor.getText()
         editor.selectAll()
@@ -395,12 +396,12 @@ with org.nlogo.window.Events.JobRemovedEvent.Handler
     editor.selectAll()
   }
 
-  @throws(classOf[org.nlogo.api.CompilerException])
+  @throws(classOf[org.nlogo.core.CompilerException])
   @throws(classOf[org.nlogo.api.AgentException])
   private def parseTurtleOrDouble(text: String): Turtle = {
     val obj = workspace.compiler.readFromString(
       text, workspace.world, workspace.getExtensionManager,
-      workspace.world.program.is3D)
+      workspace.world.program.dialect.is3D)
     obj match {
       case t: Turtle =>
         t

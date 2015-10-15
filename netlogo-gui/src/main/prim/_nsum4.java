@@ -18,7 +18,7 @@ public final strictfp class _nsum4 extends Reporter {
   public int vn;
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.reporterSyntax
         (new int[]{Syntax.ReferenceType()},
             Syntax.NumberType(), "-TP-");

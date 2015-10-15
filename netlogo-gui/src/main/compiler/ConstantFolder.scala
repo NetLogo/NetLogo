@@ -19,7 +19,7 @@ package org.nlogo.compiler
 
 import org.nlogo.compiler.CompilerExceptionThrowers._
 
-import org.nlogo.api.CompilerException
+import org.nlogo.core.CompilerException
 import org.nlogo.api.LogoException
 import org.nlogo.nvm.Pure
 

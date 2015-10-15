@@ -9,7 +9,7 @@ import org.nlogo.nvm.{ Context, Reporter }
 class _linkneighbor(breedName: String) extends Reporter {
   def this() = this(null)
 
-  override def syntax: Syntax =
+  override def syntax =
     Syntax.reporterSyntax(
       Array[Int](Syntax.AgentType),
       Syntax.BooleanType, "-T--")

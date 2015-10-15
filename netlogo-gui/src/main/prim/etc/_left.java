@@ -11,7 +11,7 @@ import org.nlogo.nvm.Context;
 public final strictfp class _left
     extends Command {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.commandSyntax
         (new int[]{Syntax.NumberType()},
             "-T--", true);

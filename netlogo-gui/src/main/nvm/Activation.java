@@ -17,7 +17,7 @@ public final strictfp class Activation {
     this.procedure = procedure;
     this.parent = parent;
     this.returnAddress = returnAddress;
-    int size = procedure.size;
+    int size = procedure.size();
     args = (size > 0) ? new Object[size] : NO_ARGS;
   }
 
@@ -25,13 +25,13 @@ public final strictfp class Activation {
     // if there's a reason we make a copy rather than just using the
     // original, I no longer remember it - ST 2/6/11
     System.arraycopy(parent.args, 0, args, 0,
-        parent.procedure.args.size());
+        parent.procedure.args().size());
   }
 
   @Override
   public String toString() {
     String result = super.toString();
-    result += ":" + procedure.name + "(" + args.length + " args";
+    result += ":" + procedure.name() + "(" + args.length + " args";
     result += ", return address = " + returnAddress + ")\n";
     for (int i = 0; i < args.length; i++) {
       result += "  arg " + i + " = " + args[i] + "\n";

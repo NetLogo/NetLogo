@@ -5,7 +5,7 @@ package org.nlogo.prim;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.LogoList;
+import org.nlogo.core.LogoList;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Context;
@@ -29,7 +29,7 @@ public final strictfp class _oneof
       AgentSet agents = (AgentSet) obj;
       int count = agents.count();
       if (count == 0) {
-        return org.nlogo.api.Nobody$.MODULE$;
+        return org.nlogo.core.Nobody$.MODULE$;
       } else {
         return agents.randomOne(count, context.job.random.nextInt(count));
       }
@@ -40,7 +40,7 @@ public final strictfp class _oneof
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     int[] right = {Syntax.AgentsetType() | Syntax.ListType()};
     int ret = Syntax.WildcardType();
     return Syntax.reporterSyntax(right, ret);
@@ -49,7 +49,7 @@ public final strictfp class _oneof
   public Object report_1(Context context, AgentSet agents) {
     int count = agents.count();
     if (count == 0) {
-      return org.nlogo.api.Nobody$.MODULE$;
+      return org.nlogo.core.Nobody$.MODULE$;
     } else {
       return agents.randomOne(count, context.job.random.nextInt(count));
     }
@@ -77,7 +77,7 @@ public final strictfp class _oneof
       AgentSet agents = (AgentSet) obj;
       int count = agents.count();
       if (count == 0) {
-        return org.nlogo.api.Nobody$.MODULE$;
+        return org.nlogo.core.Nobody$.MODULE$;
       } else {
         return agents.randomOne(count, context.job.random.nextInt(count));
       }

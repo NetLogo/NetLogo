@@ -3,7 +3,8 @@
 package org.nlogo.prim.hubnet
 
 import org.nlogo.agent.Observer
-import org.nlogo.api.{ CommandRunnable, Dump, LogoList, Syntax }
+import org.nlogo.api.{ CommandRunnable, Dump, Syntax }
+import org.nlogo.core.LogoList
 import org.nlogo.nvm.{ EngineException, Command, Context, Reporter }
 import Syntax._
 

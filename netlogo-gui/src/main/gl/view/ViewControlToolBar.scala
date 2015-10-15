@@ -35,7 +35,7 @@ class ViewControlToolBar(view: View, inputHandler: MouseMotionHandler)
   add(moveButton)
   group.add(moveButton)
   val interactButton = new javax.swing.JToggleButton(interactAction)
-  if (!view.viewManager.workspace.world.program.is3D) {
+  if (!view.viewManager.workspace.world.program.dialect.is3D) {
     add(interactButton)
     group.add(interactButton)
   }

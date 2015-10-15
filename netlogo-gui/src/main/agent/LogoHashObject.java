@@ -12,8 +12,8 @@ package org.nlogo.agent;
    method to ensure that this general contract remains valid.*/
 
 import org.nlogo.api.Equality;
-import org.nlogo.api.LogoList;
-import org.nlogo.api.Nobody$;
+import org.nlogo.core.LogoList;
+import org.nlogo.core.Nobody$;
 
 import java.util.Iterator;
 
@@ -81,7 +81,7 @@ the same values, as well as a dead turtle and a Nobody. - JMD 10/28/03*/
       // we use a LogoHashObject - JMD 10/28/03*/
 
       int hashCodeCalc = 1;
-      Iterator<Object> listItr = ((LogoList) sourceObject).iterator();
+      Iterator<Object> listItr = ((LogoList) sourceObject).javaIterator();
       while (listItr.hasNext()) {
         LogoHashObject lhObj = new LogoHashObject(listItr.next());
         hashCodeCalc = 31 * hashCodeCalc + (lhObj.getSourceObject() == null

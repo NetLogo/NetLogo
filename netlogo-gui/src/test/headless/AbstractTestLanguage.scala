@@ -4,7 +4,8 @@ package org.nlogo.headless
 
 import org.scalatest.Assertions
 import org.nlogo.agent.{Agent, Observer}
-import org.nlogo.api.{Equality, CompilerException, JobOwner, LogoException, Version, WorldDimensions, WorldDimensions3D}
+import org.nlogo.api.{Equality, JobOwner, LogoException, Version, WorldDimensions, WorldDimensions3D}
+import org.nlogo.core.CompilerException
 import org.nlogo.nvm.CompilerInterface
 import org.nlogo.util.Femto
 
@@ -66,7 +67,7 @@ trait AbstractTestLanguage extends Assertions {
         org.nlogo.api.Dump.logoObject(actualResult, true, false))
     }
     assert(Equality.equals(actualResult,
-                           compiler.readFromString(expectedResult, workspace.world().program.is3D)),
+                           compiler.readFromString(expectedResult, workspace.world().program.dialect.is3D)),
            mode + ": not recursivelyEqual(): reporter \"" + reporter + "\"")
   }
   private def privateTestReporterError(reporter: String,

@@ -2,6 +2,8 @@
 
 package org.nlogo.api
 
+import org.nlogo.core.Primitive
+
 /**
  * Interface for NetLogo extension commands. Commands are primitives that
  * do not return a value.  All new commands must implement this interface.

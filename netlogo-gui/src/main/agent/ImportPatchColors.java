@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public strictfp class ImportPatchColors {
-  public static void importPatchColors(org.nlogo.api.File imageFile, World world,
+  public static void importPatchColors(org.nlogo.core.File imageFile, World world,
                                        boolean asNetLogoColors)
       throws java.io.IOException {
 

@@ -19,13 +19,8 @@ public abstract strictfp class Command
   // during compilation, this is a relative offset.  during assembly, it is changed
   // to an absolute ip value
   public int offset = 0;
+
   // for speed, cache this value. we can't be calling syntax()
   // in a tight loop like Context.step() - ST 1/27/09
   boolean switches = false;
-
-  @Override
-  public void init(Workspace workspace) {
-    super.init(workspace);
-    switches = syntax().switches();
-  }
 }

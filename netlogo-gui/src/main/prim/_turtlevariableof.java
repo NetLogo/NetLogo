@@ -6,7 +6,7 @@ import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.LogoList;
+import org.nlogo.core.LogoList;
 import org.nlogo.api.LogoListBuilder;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
@@ -65,7 +65,7 @@ public final strictfp class _turtlevariableof
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     int[] right = {Syntax.TurtleType() | Syntax.TurtlesetType()};
     int ret = Syntax.WildcardType();
     return Syntax.reporterSyntax(right, ret);

@@ -2,8 +2,8 @@
 
 package org.nlogo.properties
 
-import org.nlogo.api.Editable
-import org.nlogo.api.{CompilerServices, TokenType}
+import org.nlogo.api.{ CompilerServices, Editable }
+import org.nlogo.core.TokenType
 import org.nlogo.editor.Colorizer
 
 // see commentary in EditDialogFactoryInterface

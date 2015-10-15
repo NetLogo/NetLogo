@@ -8,7 +8,7 @@ import org.nlogo.api.Syntax;
 public final strictfp class _hubnetclearplot
     extends org.nlogo.nvm.Command {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.commandSyntax
         (new int[]{Syntax.StringType()});
   }

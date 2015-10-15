@@ -8,7 +8,7 @@ import org.nlogo.nvm.Context;
 
 public final strictfp class _return extends Command {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.commandSyntax();
   }
 

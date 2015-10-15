@@ -2,7 +2,7 @@ package org.nlogo.workspace
 
 import java.awt.image.BufferedImage
 
-import org.nlogo.api.CompilerException
+import org.nlogo.core.CompilerException
 import org.nlogo.api.JobOwner
 import org.nlogo.api.Observer
 import org.nlogo.api.PreviewCommands

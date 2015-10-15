@@ -3,12 +3,14 @@
 package org.nlogo.compiler
 
 import org.scalatest.FunSuite
-import org.nlogo.api.{ DummyExtensionManager, Program }
-import org.nlogo.nvm.{ DummyCompilationEnvironment, Procedure }
+import org.nlogo.api.{ DummyExtensionManager}
+import org.nlogo.core.Program
+import org.nlogo.nvm.Procedure
+import org.nlogo.core.DummyCompilationEnvironment
 import org.nlogo.api.Version.useGenerator
 
 class TestSourcePositions extends FunSuite {
-  val program = new Program(false)
+  val program = Program.empty()
   def compileReporter(source: String) =
     Compiler.compileMoreCode("to foo __ignore " + source + "\nend", None, program,
       java.util.Collections.emptyMap[String, Procedure],

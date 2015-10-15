@@ -9,7 +9,7 @@ import org.nlogo.api.{ AgentException, Syntax }
 import org.nlogo.nvm.{ Context, Reporter }
 
 class _breedat(breedName: String) extends Reporter {
-  override def syntax: Syntax =
+  override def syntax: org.nlogo.core.Syntax =
     Syntax.reporterSyntax(
       Array[Int](Syntax.NumberType, Syntax.NumberType),
       Syntax.TurtlesetType,

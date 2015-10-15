@@ -138,18 +138,22 @@ object Syntax {
     agentClassString: String = "OTPL",
     blockAgentClassString: Option[String] = None,
     introducesContext: Boolean = false
-  ) = new Syntax(
-    precedence = CommandPrecedence,
-    left = Syntax.VoidType,
-    right = right,
-    ret = Syntax.VoidType,
-    defaultOption = defaultOption,
-    minimumOption = minimumOption,
-    isRightAssociative = false,
-    agentClassString = agentClassString,
-    blockAgentClassString = blockAgentClassString,
-    introducesContext = introducesContext || blockAgentClassString.nonEmpty
+  ): Syntax =
+    new Syntax(
+      precedence = CommandPrecedence,
+      left = Syntax.VoidType,
+      right = right,
+      ret = Syntax.VoidType,
+      defaultOption = defaultOption,
+      minimumOption = minimumOption,
+      isRightAssociative = false,
+      agentClassString = agentClassString,
+      blockAgentClassString = blockAgentClassString,
+      introducesContext = introducesContext || blockAgentClassString.nonEmpty
   )
+
+  def commandSyntax(right: Array[Int]): Syntax =
+      commandSyntax(right.toList)
 
   def reporterSyntax(
     precedence: Int = NormalPrecedence,
@@ -161,7 +165,7 @@ object Syntax {
     isRightAssociative: Boolean = false,
     agentClassString: String = "OTPL",
     blockAgentClassString: Option[String] = None
-  ) = new Syntax(
+  ): Syntax = new Syntax(
     precedence = precedence,
     left = left,
     right = right,
@@ -302,6 +306,16 @@ object Syntax {
    * CommandBlockType as the last argument - ST 5/25/06
    */
   val OptionalType = 524288
+
+  /**
+   * for CodeBlocks, a list of tokens
+   */
+  val CodeBlockType = 1048576
+
+  /**
+   * for Symbols, a single token
+   */
+  val SymbolType = 2097152
 
   val CommandPrecedence = 0
   val NormalPrecedence = 10

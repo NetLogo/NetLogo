@@ -1,11 +1,9 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.lex
+package org.nlogo.core
 
 // annoying for this to exist, but I can't see a better way to get at the
 // Scala inner objects from Java - ST 7/7/11
-
-import org.nlogo.core.TokenType
 
 object TokenTypeJ {
   final val OpenParen    = TokenType.OpenParen
@@ -17,6 +15,7 @@ object TokenTypeJ {
   final val Literal      = TokenType.Literal
   final val Ident        = TokenType.Ident
   final val Comma        = TokenType.Comma
+  final val Command      = TokenType.Command
   final val Comment      = TokenType.Comment
   final val Bad          = TokenType.Bad
 }

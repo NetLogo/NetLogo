@@ -7,7 +7,7 @@ import org.nlogo.api.{ AgentException, I18N, LogoException, LogoListBuilder, Syn
 import org.nlogo.nvm.{ ArgumentTypeException, Context, EngineException, Reporter }
 
 class _patchvariableof(private[this] val _vn: Int) extends Reporter {
-  override def syntax: Syntax =
+  override def syntax =
     Syntax.reporterSyntax(
       Array[Int](Syntax.TurtleType | Syntax.PatchType | Syntax.TurtlesetType | Syntax.PatchsetType),
       Syntax.WildcardType)

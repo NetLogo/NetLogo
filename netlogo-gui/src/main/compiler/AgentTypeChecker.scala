@@ -94,8 +94,8 @@ private class AgentTypeChecker(defs: Seq[ProcedureDefinition]) {
     override def visitStatement(stmt: Statement) {
       val c = stmt.command
       usableBy = typeCheck(currentProcedure, c, usableBy)
-      if(c.syntax.blockAgentClassString != null)
-        chooseVisitorAndContinue(c.syntax.blockAgentClassString, stmt.args)
+      if(c.syntax.blockAgentClassString.isDefined)
+        chooseVisitorAndContinue(c.syntax.blockAgentClassString.get, stmt.args)
       else
         super.visitStatement(stmt)
       c.agentClassString = usableBy
@@ -107,8 +107,8 @@ private class AgentTypeChecker(defs: Seq[ProcedureDefinition]) {
       usableBy = typeCheck(currentProcedure, r, usableBy)
       if(r.isInstanceOf[_task] || r.isInstanceOf[_reportertask])
         app.args.head.accept(new AgentTypeCheckerVisitor(currentProcedure, "OTPL"))
-      else if(r.syntax.blockAgentClassString != null)
-        chooseVisitorAndContinue(r.syntax.blockAgentClassString, app.args)
+      else if(r.syntax.blockAgentClassString.isDefined)
+        chooseVisitorAndContinue(r.syntax.blockAgentClassString.get, app.args)
       else
         super.visitReporterApp(app)
       r.agentClassString = usableBy
@@ -166,7 +166,7 @@ private class AgentTypeChecker(defs: Seq[ProcedureDefinition]) {
           else instruction.syntax.agentClassString
         val result = combineRestrictions(usableBy, instructionUsableBy)
         if(result == "----") {
-          val name = instruction.tokenLimitingType.name
+          val name = instruction.tokenLimitingType.text
           exception("You can't use " + name + " in " + usableByToEnglish(usableBy, true) +
                     " context, because " + name + " is " + usableByToEnglish(instructionUsableBy, false) +
                     "-only.", instruction.tokenLimitingType)

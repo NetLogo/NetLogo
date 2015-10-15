@@ -10,7 +10,7 @@ import org.nlogo.nvm.Reporter;
 
 public final strictfp class _tostring extends Reporter implements Pure {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.reporterSyntax
         (new int[]{Syntax.WildcardType()},
             Syntax.StringType());

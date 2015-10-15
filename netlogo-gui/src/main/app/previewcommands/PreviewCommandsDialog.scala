@@ -9,7 +9,7 @@ import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
 
 import org.nlogo.agent.Observer
-import org.nlogo.api.CompilerException
+import org.nlogo.core.CompilerException
 import org.nlogo.api.I18N
 import org.nlogo.api.PreviewCommands
 import org.nlogo.awt.Positioning.center

@@ -18,7 +18,7 @@ public final strictfp class _repeatlocal
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     int[] right = {Syntax.NumberType(), Syntax.CommandBlockType()};
     return Syntax.commandSyntax(right);
   }

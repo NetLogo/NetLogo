@@ -2,6 +2,8 @@
 
 package org.nlogo.api
 
+import org.nlogo.core.{ Program => CoreProgram }
+
 trait World {
   def patchSize: Double
   def worldWidth: Int
@@ -32,7 +34,7 @@ trait World {
   def turtles: AgentSet
   def patches: AgentSet
   def links: AgentSet
-  def program: Program
+  def program: CoreProgram
   def turtleShapeList: ShapeList
   def linkShapeList: ShapeList
   def getDrawing: AnyRef
@@ -50,6 +52,8 @@ trait World {
   def turtlesOwnNameAt(i: Int): String
   def breedsOwnNameAt(breed: AgentSet, i: Int): String
   def allStoredValues: Iterator[AnyRef]
+  def getBreeds(): java.util.Map[String, _ <: AgentSet]
+  def getLinkBreeds(): java.util.Map[String, _ <: AgentSet]
 
   /**
    * Returns true if there is at least one partially transparent turtle, patch, link, or 3D stamp

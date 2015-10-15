@@ -12,7 +12,7 @@ import org.nlogo.nvm.Procedure;
 public final strictfp class _stop
     extends Command {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.commandSyntax();
   }
 
@@ -31,8 +31,8 @@ public final strictfp class _stop
       // if we're not in an ask, then "stop" means to exit this procedure
       // immediately.  first we must check that it's a command procedure
       // and not a reporter procedure.
-      if (context.activation.procedure.tyype == Procedure.Type.REPORTER ||
-          context.activation.procedure.isTask() && context.activation.procedure.parent.tyype == Procedure.Type.REPORTER) {
+      if (context.activation.procedure.isReporter() ||
+          context.activation.procedure.isTask() && context.activation.procedure.parent().isReporter()) {
         throw new EngineException(context, this,
             I18N.errorsJ().getN("org.nlogo.prim.etc._stop.notAllowedInsideToReport", displayName()));
       }
@@ -45,8 +45,8 @@ public final strictfp class _stop
     if (!context.atTopActivation()) {
       context.finished = true;
     } else {
-      if (context.activation.procedure.tyype == Procedure.Type.REPORTER ||
-          context.activation.procedure.isTask() && context.activation.procedure.parent.tyype == Procedure.Type.REPORTER) {
+      if (context.activation.procedure.isReporter() ||
+          context.activation.procedure.isTask() && context.activation.procedure.parent().isReporter()) {
         throw new EngineException(context, this,
             I18N.errorsJ().getN("org.nlogo.prim.etc._stop.notAllowedInsideToReport", displayName()));
       }

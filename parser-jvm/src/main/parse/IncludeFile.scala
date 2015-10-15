@@ -2,14 +2,14 @@
 
 package org.nlogo.parse
 
-import org.nlogo.core.ExtensionManager
+import org.nlogo.core.CompilationEnvironment
 
 import scala.io.Source
 import scala.util.Try
 
 object IncludeFile {
-  def apply(extensionManager: ExtensionManager, suppliedPath: String): Option[(String, String)] = {
-    val resolvedPath = extensionManager.resolvePath(suppliedPath)
+  def apply(compilationEnvironment: CompilationEnvironment, suppliedPath: String): Option[(String, String)] = {
+    val resolvedPath = compilationEnvironment.resolvePath(suppliedPath)
     Try(Source.fromFile(resolvedPath).mkString).toOption.map(fileText => (resolvedPath, fileText))
   }
 }

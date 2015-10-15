@@ -2,6 +2,8 @@
 
 package org.nlogo.api
 
+import org.nlogo.core.Primitive
+
 /**
  * Interface for NetLogo reporters. Reporters are primitives that
  * return a value.  All new reporters must implement this interface.

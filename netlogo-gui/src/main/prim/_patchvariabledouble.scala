@@ -11,7 +11,7 @@ class _patchvariabledouble extends Reporter {
   def vn = _vn
   def vn_=(new_vn: Int) = _vn = new_vn
 
-  override def syntax: Syntax =
+  override def syntax =
     Syntax.reporterSyntax(Syntax.NumberType, "-TP-")
 
   override def toString: String =

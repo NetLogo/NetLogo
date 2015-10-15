@@ -5,7 +5,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.LogoList;
+import org.nlogo.core.LogoList;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
@@ -16,7 +16,7 @@ import java.util.Iterator;
 
 public final strictfp class _standarddeviation extends Reporter implements Pure {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     int[] right = {Syntax.ListType()};
     return Syntax.reporterSyntax(right, Syntax.NumberType());
   }
@@ -29,7 +29,7 @@ public final strictfp class _standarddeviation extends Reporter implements Pure 
   public double report_1(Context context, LogoList list) throws LogoException {
     int listSize = list.size();
     double sum = 0, badElts = 0;
-    for (Iterator<Object> it = list.iterator(); it.hasNext();) {
+    for (Iterator<Object> it = list.javaIterator(); it.hasNext();) {
       Object elt = it.next();
       if (elt instanceof Double) {
         sum += ((Double) elt).doubleValue();
@@ -43,7 +43,7 @@ public final strictfp class _standarddeviation extends Reporter implements Pure 
     }
     double mean = sum / (listSize - badElts);
     double squareOfDifference = 0;
-    for (Iterator<Object> it = list.iterator(); it.hasNext();) {
+    for (Iterator<Object> it = list.javaIterator(); it.hasNext();) {
       Object elt = it.next();
       if (elt instanceof Double) {
         squareOfDifference +=

@@ -16,7 +16,7 @@ import java.util.List;
 public final strictfp class _inconenowrap
     extends Reporter {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     int left = Syntax.AgentsetType();
     int[] right = {Syntax.NumberType(), Syntax.NumberType()};
     int ret = Syntax.AgentsetType();

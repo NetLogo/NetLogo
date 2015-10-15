@@ -5,8 +5,8 @@ package org.nlogo.generator
 import org.objectweb.asm
 import asm.Opcodes._
 import asm.{ Label, MethodVisitor }
-import org.nlogo.{ api, nvm }
-import api.CompilerException
+import org.nlogo.{ api, core, nvm }
+import core.CompilerException
 import nvm.{ ArgumentTypeException, Instruction }
 
 private object TypeConverter {
@@ -46,7 +46,7 @@ private object TypeConverter {
         val tokenInstr = if (argIndex < parentInstr.args.length) parentInstr.args(argIndex)
         else parentInstr
         val token = tokenInstr.token
-        throw new CompilerException(argEx.getMessage, token.startPos, token.endPos, token.fileName)
+        throw new CompilerException(argEx.getMessage, token.start, token.end, token.filename)
       }
   }
   // Conversion methods:

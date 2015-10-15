@@ -19,22 +19,8 @@ public final strictfp class _extern
   }
 
   @Override
-  public Syntax syntax() {
-    Syntax s = command.getSyntax();
-    String[] acs = command.getAgentClassString().split(":");
-    if (acs[0].length() < 4) {
-      acs[0] = Syntax.convertOldStyleAgentClassString(acs[0]);
-    }
-    if (acs.length >= 2) {
-      if (acs[1].length() < 4) {
-        acs[1] = Syntax.convertOldStyleAgentClassString(acs[1]);
-      }
-      return Syntax.commandSyntax
-          (s.right(), s.dfault(), acs[0], acs[1], command.getSwitchesBoolean());
-    } else {
-      return Syntax.commandSyntax
-          (s.right(), s.dfault(), acs[0], null, command.getSwitchesBoolean());
-    }
+  public org.nlogo.core.Syntax syntax() {
+    return command.getSyntax();
   }
 
   @Override

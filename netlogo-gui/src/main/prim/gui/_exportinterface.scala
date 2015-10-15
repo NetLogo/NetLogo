@@ -24,11 +24,11 @@ class _exportinterface extends Command {
               catch {
                 case e: java.io.IOException =>
                   throw new EngineException(
-                    context, _exportinterface.this, token.name + ": " + e.getMessage)
+                    context, _exportinterface.this, token.text + ": " + e.getMessage)
               }}})
       case _ =>
         throw new EngineException(
-          context, this, token.name + " can only be used in the GUI")
+          context, this, token.text + " can only be used in the GUI")
     }
     context.ip = next
   }

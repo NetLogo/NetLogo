@@ -20,7 +20,7 @@ public final strictfp class _hubnetplotpendown
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     int[] right = {Syntax.StringType()};
     return Syntax.commandSyntax(right);
   }

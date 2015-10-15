@@ -32,7 +32,7 @@ public final strictfp class _substring
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     int[] right = {Syntax.StringType(), Syntax.NumberType(), Syntax.NumberType()};
     int ret = Syntax.StringType();
     return Syntax.reporterSyntax(right, ret);

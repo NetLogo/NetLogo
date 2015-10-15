@@ -63,7 +63,7 @@ trait AbstractTestModels extends FunSuite with ModelCreator {
   // runs the given model in a new workspace
   def runModel(model:Model)(f: => Unit) = {
     // very useful, do not just remove.
-    //println(model.toString)
+    // println(model.toString)
     // println(".")
     run(ws => ws.openFromSource(model.toString)){ f }
   }

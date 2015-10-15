@@ -204,7 +204,7 @@ public strictfp class TrailDrawer
     sendPixels = true;
   }
 
-  public void importDrawing(org.nlogo.api.File file)
+  public void importDrawing(org.nlogo.core.File file)
       throws java.io.IOException {
     try {
       importDrawing(file.getInputStream());

@@ -9,7 +9,7 @@ package org.nlogo.agent
 // Doesn't handle ExtensionObjects, so tasks inside arrays and tables will be missed.
 // Letting it slide for now. - ST 8/10/11
 
-import org.nlogo.api.LogoList
+import org.nlogo.core.LogoList
 import collection.JavaConverters._
 
 object AllStoredValues {

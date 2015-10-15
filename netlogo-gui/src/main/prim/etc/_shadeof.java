@@ -19,7 +19,7 @@ public final strictfp class _shadeof
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     int[] right = {Syntax.NumberType(),
         Syntax.NumberType()};
     int ret = Syntax.BooleanType();

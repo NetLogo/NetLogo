@@ -2,7 +2,7 @@
 
 package org.nlogo.agent;
 
-import org.nlogo.api.LogoList;
+import org.nlogo.core.LogoList;
 import org.nlogo.api.SimpleChangeEventPublisher;
 
 import java.util.Map;

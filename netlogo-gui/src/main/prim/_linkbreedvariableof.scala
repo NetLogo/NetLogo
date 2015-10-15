@@ -7,7 +7,7 @@ import org.nlogo.api.{ AgentException, I18N, LogoException, LogoListBuilder, Syn
 import org.nlogo.nvm.{ ArgumentTypeException, Context, EngineException, Reporter }
 
 class _linkbreedvariableof(name: String) extends Reporter {
-  override def syntax: Syntax =
+  override def syntax =
     Syntax.reporterSyntax(
       Array[Int](Syntax.LinksetType | Syntax.LinkType),
       Syntax.WildcardType)

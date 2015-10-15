@@ -7,7 +7,6 @@ C __foreverbuttonend etc._foreverbuttonend
 C __ignore etc._ignore
 C __let _let
 C __linkcode etc._linkcode
-C __make-preview etc._makepreview
 C __mkdir etc._mkdir
 C __observercode etc._observercode
 C __patchcode etc._patchcode

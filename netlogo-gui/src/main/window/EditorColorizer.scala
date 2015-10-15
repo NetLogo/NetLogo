@@ -3,7 +3,9 @@
 package org.nlogo.window
 
 import java.awt.Color
-import org.nlogo.api.{ CompilerServices, Token, TokenType }
+import org.nlogo.api.{ CompilerServices}
+import org.nlogo.core.Token
+import org.nlogo.core.TokenType
 import org.nlogo.editor.Colorizer
 import collection.JavaConverters._
 
@@ -30,14 +32,14 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer[TokenType] {
         // colorize it correctly; so as a kludge we colorize it as a keyword if it's right at the
         // beginning of the line (position 0) - ST 7/11/06
         val color = getTokenColor(
-          if (tok.tyype == TokenType.VARIABLE &&
-              tok.startPos == 0 &&
-              tok.name.equalsIgnoreCase("BREED"))
-            TokenType.KEYWORD
+          if (tok.tpe == TokenType.Ident &&
+              tok.start == 0 &&
+              tok.text.equalsIgnoreCase("BREED"))
+            TokenType.Keyword
           else
-            tok.tyype
+            tok.tpe
         )
-        for (j <- tok.startPos until tok.endPos)
+        for (j <- tok.start until tok.end)
           // guard against any bugs in tokenization causing out-of-bounds positions
           if(result.isDefinedAt(j))
             result(j) = color
@@ -53,41 +55,41 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer[TokenType] {
   def getCharacterTokenTypes(line: String): java.util.List[TokenType] = {
     val result = new Array[TokenType](line.size)
     val tokens = tokenizeForColorization(line)
-    for {tok <- tokens; j <- tok.startPos until tok.endPos}
+    for {tok <- tokens; j <- tok.start until tok.end}
       // guard against any bugs in tokenization causing out-of-bounds positions
       if (result.isDefinedAt(j))
-        result(j) = tok.tyype
+        result(j) = tok.tpe
     result.toIndexedSeq.asJava
   }
 
   def isMatch(token1: TokenType, token2: TokenType) =
-    (token1, token2) == (TokenType.OPEN_PAREN, TokenType.CLOSE_PAREN) ||
-    (token1, token2) == (TokenType.OPEN_BRACKET, TokenType.CLOSE_BRACKET)
+    (token1, token2) == (TokenType.OpenParen, TokenType.CloseParen) ||
+    (token1, token2) == (TokenType.OpenBracket, TokenType.CloseBracket)
 
   def isOpener(token: TokenType) =
-    token == TokenType.OPEN_PAREN || token == TokenType.OPEN_BRACKET
+    token == TokenType.OpenParen || token == TokenType.OpenBracket
 
   def isCloser(token: TokenType) =
-    token == TokenType.CLOSE_PAREN || token == TokenType.CLOSE_BRACKET
+    token == TokenType.CloseParen || token == TokenType.CloseBracket
 
   def tokenizeForColorization(line: String): Array[Token] =
     compiler.tokenizeForColorization(line)
 
   ///
 
-  private def getTokenColor(tyype: TokenType) =
-    tyype match {
-      case TokenType.CONSTANT =>
+  private def getTokenColor(tpe: TokenType) =
+    tpe match {
+      case TokenType.Literal =>
         SyntaxColors.CONSTANT_COLOR
-      case TokenType.COMMAND =>
+      case TokenType.Command =>
         SyntaxColors.COMMAND_COLOR
-      case TokenType.REPORTER =>
+      case TokenType.Reporter =>
         SyntaxColors.REPORTER_COLOR
-      case TokenType.VARIABLE =>
+      case TokenType.Ident =>
         SyntaxColors.REPORTER_COLOR
-      case TokenType.KEYWORD =>
+      case TokenType.Keyword =>
         SyntaxColors.KEYWORD_COLOR
-      case TokenType.COMMENT =>
+      case TokenType.Comment =>
         SyntaxColors.COMMENT_COLOR
       case _ =>
         SyntaxColors.DEFAULT_COLOR
@@ -95,7 +97,7 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer[TokenType] {
 
   def getTokenAtPosition(text: String, position: Int): String =
     Option(compiler.getTokenAtPosition(text, position))
-      .map(_.name).orNull
+      .map(_.text).orNull
 
   def doHelp(comp: java.awt.Component, name: String) {
     QuickHelp.doHelp(comp, name)

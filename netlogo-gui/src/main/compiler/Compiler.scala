@@ -2,9 +2,15 @@
 
 package org.nlogo.compiler
 
-import org.nlogo.api.{ CompilerException, ExtensionManager, NumberParser, Program, Token,
-                       TokenizerInterface, TokenReaderInterface, TokenType, TokenMapperInterface, World }
-import org.nlogo.nvm.{ CompilerInterface, CompilerResults, CompilationEnvironment, Procedure, Workspace }
+import org.nlogo.api.{ NumberParser, TokenizerInterface,
+                        TokenReaderInterface, TokenMapperInterface, World }
+import org.nlogo.core.Program
+import org.nlogo.core.CompilerException
+import org.nlogo.core.Token
+import org.nlogo.core.TokenType
+import org.nlogo.nvm.{ CompilerInterface, CompilerResults, Procedure, Workspace }
+import org.nlogo.core.CompilationEnvironment
+import org.nlogo.core.ExtensionManager
 import org.nlogo.util.Femto
 
 // This is intended to be called from Java as well as Scala, so @throws declarations are included.
@@ -24,14 +30,19 @@ object Compiler extends CompilerInterface {
 
   // used to compile the Code tab, including declarations
   @throws(classOf[CompilerException])
-  def compileProgram(source: String, program: Program, extensionManager: ExtensionManager, compilationEnv: CompilationEnvironment): CompilerResults =
-    new CompilerResults(CompilerMain.compile(source, None, program, false, noProcedures, extensionManager, compilationEnv),
-                        program)
+  def compileProgram(source: String, program: Program, extensionManager: ExtensionManager, compilationEnv: CompilationEnvironment): CompilerResults = {
+    val (procedures, newProgram) =
+      CompilerMain.compile(source, None, program, false, noProcedures, extensionManager, compilationEnv)
+
+    new CompilerResults(procedures, newProgram)
+  }
 
   // used to compile a single procedures only, from outside the Code tab
   @throws(classOf[CompilerException])
-  def compileMoreCode(source:String,displayName: Option[String], program:Program,oldProcedures:ProceduresMap,extensionManager:ExtensionManager, compilationEnv:CompilationEnvironment):CompilerResults =
-    new CompilerResults(CompilerMain.compile(source,displayName,program,true,oldProcedures,extensionManager,compilationEnv), program)
+  def compileMoreCode(source:String,displayName: Option[String], program:Program,oldProcedures:ProceduresMap,extensionManager:ExtensionManager, compilationEnv:CompilationEnvironment):CompilerResults = {
+    val (procedures, newProgram) = CompilerMain.compile(source,displayName,program,true,oldProcedures,extensionManager,compilationEnv)
+    new CompilerResults(procedures, newProgram)
+  }
 
   // these two used by input boxes
   @throws(classOf[CompilerException])
@@ -50,7 +61,7 @@ object Compiler extends CompilerInterface {
   // that we don't know about.
   @throws(classOf[CompilerException])
   private def checkSyntax(source: String, subprogram: Boolean, program: Program, oldProcedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean, compilationEnv: CompilationEnvironment) {
-    implicit val t = tokenizer(program.is3D)
+    implicit val t = tokenizer(program.dialect.is3D)
     val results = new StructureParser(t.tokenizeRobustly(source), None,
                                       program, oldProcedures, extensionManager, compilationEnv)
       .parse(subprogram)
@@ -105,10 +116,10 @@ object Compiler extends CompilerInterface {
 
   @throws(classOf[CompilerException])
   @throws(classOf[java.io.IOException])
-  def readFromFile(currFile: org.nlogo.api.File, world: World, extensionManager: ExtensionManager): AnyRef = {
+  def readFromFile(currFile: org.nlogo.core.File, world: World, extensionManager: ExtensionManager): AnyRef = {
     val tokens: Iterator[Token] =
       Femto.get(classOf[TokenReaderInterface], "org.nlogo.lex.TokenReader",
-                Array(currFile, tokenizer(world.program.is3D)))
+                Array(currFile, tokenizer(world.program.dialect.is3D)))
     val result = new ConstantParser(world.asInstanceOf[org.nlogo.agent.World], extensionManager)
       .getConstantFromFile(tokens)
     // now skip whitespace, so that the model can use file-at-end? to see whether there are any
@@ -142,7 +153,7 @@ object Compiler extends CompilerInterface {
   // used by CommandLine
   def isReporter(s: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager, compilationEnv: CompilationEnvironment) =
     try {
-      implicit val t = tokenizer(program.is3D)
+      implicit val t = tokenizer(program.dialect.is3D)
       val results =
         new StructureParser(t.tokenize("to __is-reporter? report " + s + "\nend"),
                             None, program, procedures, extensionManager, compilationEnv)
@@ -153,8 +164,8 @@ object Compiler extends CompilerInterface {
       val tokens = identifierParser.process(results.tokens(proc).iterator, proc)
       tokens
         .tail  // skip _report
-        .map(_.tyype)
-        .dropWhile(_ == TokenType.OPEN_PAREN)
+        .map(_.tpe)
+        .dropWhile(_ == TokenType.OpenParen)
         .headOption
         .exists(reporterTokenTypes)
     }
@@ -162,7 +173,7 @@ object Compiler extends CompilerInterface {
 
   private val reporterTokenTypes: Set[TokenType] = {
     import TokenType._
-    Set(OPEN_BRACKET, CONSTANT, IDENT, REPORTER, VARIABLE)
+    Set(OpenBracket, Literal, Extension, Reporter, Ident)
   }
 
   // used by the indenter. we always use the 2D tokenizer since it doesn't matter in this context

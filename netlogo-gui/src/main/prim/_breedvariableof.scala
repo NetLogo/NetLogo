@@ -8,7 +8,7 @@ import org.nlogo.api.Syntax
 import org.nlogo.nvm.{ ArgumentTypeException, Context, EngineException, Reporter }
 
 class _breedvariableof(name: String) extends Reporter {
-  override def syntax: Syntax =
+  override def syntax: org.nlogo.core.Syntax =
     Syntax.reporterSyntax(
       Array[Int](Syntax.TurtleType | Syntax.TurtlesetType),
       Syntax.WildcardType)

@@ -21,7 +21,7 @@ public final strictfp class _outlinkneighbor
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     int[] right = {Syntax.AgentType()};
     int ret = Syntax.BooleanType();
     return Syntax.reporterSyntax

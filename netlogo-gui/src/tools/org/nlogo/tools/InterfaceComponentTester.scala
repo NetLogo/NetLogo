@@ -2,8 +2,9 @@
 
 package org.nlogo.tools
 
+import org.nlogo.core.{ CompilerException, LogoList }
 import java.awt.BorderLayout
-import org.nlogo.api.{ NetLogoListener, CompilerException , StringUtils }
+import org.nlogo.api.{ NetLogoListener, StringUtils }
 import org.nlogo.lite.InterfaceComponent
 import org.nlogo.util.SysInfo
 import org.nlogo.awt
@@ -163,7 +164,7 @@ class InterfaceComponentTester extends JFrame {
         override def handleResult(value: AnyRef) {
           println("received:  " + value.toString)
         }
-        override def handleError(e: org.nlogo.api.CompilerException) {
+        override def handleError(e: org.nlogo.core.CompilerException) {
           println(e.getMessage)
         }
       }

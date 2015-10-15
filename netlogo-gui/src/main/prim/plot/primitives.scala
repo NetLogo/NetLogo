@@ -198,7 +198,7 @@ class _exportplot extends PlotCommand(Syntax.StringType, Syntax.StringType) {
         try workspace.exportPlot(name, workspace.fileManager.attachPrefix(path))
         catch {
           case ex: java.io.IOException =>
-            throw new EngineException(context, _exportplot.this, token.name + ": " + ex.getMessage)
+            throw new EngineException(context, _exportplot.this, token.text + ": " + ex.getMessage)
         }
       }
     })
@@ -219,7 +219,7 @@ class _exportplots extends PlotCommand(Syntax.StringType) {
         catch {
           case ex: java.io.IOException =>
             throw new EngineException(context, _exportplots.this,
-              token.name + ": " + ex.getMessage)
+              token.text + ": " + ex.getMessage)
         }
       }
     })

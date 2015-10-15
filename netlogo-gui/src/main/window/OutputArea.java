@@ -144,10 +144,10 @@ public strictfp class OutputArea
   }
 
   public void export(String filename) {
-    org.nlogo.api.File file =
+    org.nlogo.core.File file =
         new org.nlogo.api.LocalFile(filename);
     try {
-      file.open(org.nlogo.api.FileModeJ.WRITE());
+      file.open(org.nlogo.core.FileModeJ.WRITE());
       StringTokenizer lines =
           new StringTokenizer(text.getText(), "\n");
       while (lines.hasMoreTokens()) {

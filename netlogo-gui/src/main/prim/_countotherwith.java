@@ -15,7 +15,7 @@ import org.nlogo.nvm.Reporter;
 public final strictfp class _countotherwith
     extends Reporter {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.reporterSyntax
         (new int[]{Syntax.AgentsetType(), Syntax.BooleanBlockType()},
             Syntax.NumberType(), "-TPL",

@@ -7,7 +7,8 @@ package org.nlogo.app
 // strictly necessary since they're both in the app package, but it's still kind of nice. - ST
 // 2/2/09
 
-import org.nlogo.api.{CompilerServices, Program}
+import org.nlogo.api.{CompilerServices}
+import org.nlogo.core.Program
 
 trait ProceduresMenuTarget {
   def compiler: CompilerServices

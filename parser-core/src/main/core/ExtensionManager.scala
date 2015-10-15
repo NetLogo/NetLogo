@@ -33,8 +33,6 @@ trait ExtensionManager {
   /** Returns the identifier "name" by its imported implementation, if any, or null if not. */
   def replaceIdentifier(name: String): Primitive
 
-  def resolvePath(path: String): String
-
   /**
    * Loads the extension contained in the jar at jarPath.
    *
@@ -44,4 +42,6 @@ trait ExtensionManager {
    *                to be thrown.
    */
   def importExtension(jarPath: String, errors: ErrorSource)
+
+  def readExtensionObject(extensionName: String, typeName: String, value: String): ExtensionObject
 }

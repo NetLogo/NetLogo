@@ -2,9 +2,9 @@
 
 package org.nlogo.window;
 
-import org.nlogo.api.CompilerException;
+import org.nlogo.core.CompilerException;
 import org.nlogo.api.JobOwner;
-import org.nlogo.api.Program;
+import org.nlogo.core.Program;
 import org.nlogo.nvm.CompilerResults;
 import org.nlogo.nvm.Procedure;
 import org.nlogo.workspace.AbstractWorkspace;
@@ -62,8 +62,7 @@ public strictfp class CompilerManager
     workspace.world.rememberOldProgram();
     Program program = workspace.world.newProgram();
     workspace.world.program(program);
-    workspace.world.turtleBreedShapes.setUpBreedShapes(true, program.breeds()); // true = clear old
-    workspace.world.linkBreedShapes.setUpBreedShapes(true, program.linkBreeds()); // true = clear old
+    workspace.world.setUpShapes(true);
   }
 
   public void handle(org.nlogo.window.Events.LoadEndEvent e) {
@@ -110,12 +109,12 @@ public strictfp class CompilerManager
                   workspace.getExtensionManager(), workspace.getCompilationEnvironment());
       workspace.setProcedures(results.proceduresMap());
       for (Procedure procedure : workspace.getProcedures().values()) {
-        if (procedure.fileName.equals("")) {
-          procedure.setOwner(proceduresInterface);
-        } else if (procedure.fileName.equals("aggregate")) {
-          procedure.setOwner(workspace.aggregateManager());
+        if (procedure.filename().equals("")) {
+          procedure.owner_$eq(proceduresInterface);
+        } else if (procedure.filename().equalsIgnoreCase("aggregate")) {
+          procedure.owner_$eq(workspace.aggregateManager());
         } else {
-          procedure.setOwner(new ExternalFileInterface(procedure.fileName));
+          procedure.owner_$eq(new ExternalFileInterface(procedure.filename()));
         }
       }
       workspace.init();
@@ -132,17 +131,17 @@ public strictfp class CompilerManager
             (proceduresInterface, null, null, error)
             .raise(this);
       }
-      if (error.fileName().equals("")) {
+      if (error.filename().equals("")) {
         new org.nlogo.window.Events.CompiledEvent
             (proceduresInterface, null, null, error)
             .raise(this);
-      } else if (error.fileName().equals("aggregate")) {
+      } else if (error.filename().equals("aggregate")) {
         new org.nlogo.window.Events.CompiledEvent
             (workspace.aggregateManager(), null, null, error)
             .raise(this);
       } else {
         new org.nlogo.window.Events.CompiledEvent
-            (new ExternalFileInterface(error.fileName()), null, null, error)
+            (new ExternalFileInterface(error.filename()), null, null, error)
             .raise(this);
       }
       return false;
@@ -180,7 +179,7 @@ public strictfp class CompilerManager
 
       if (!results.procedures().isEmpty()) {
         results.head().init(workspace);
-        results.head().setOwner(owner);
+        results.head().owner_$eq(owner);
         new org.nlogo.window.Events.CompiledEvent
             (owner, workspace.world.program(), results.head(), null).raise(this);
       }
@@ -236,7 +235,7 @@ public strictfp class CompilerManager
                 (owner.source(), scala.Some.apply(owner.classDisplayName()), workspace.world.program(),
                     workspace.getProcedures(), workspace.getExtensionManager(), workspace.getCompilationEnvironment());
         results.head().init(workspace);
-        results.head().setOwner(owner);
+        results.head().owner_$eq(owner);
         new org.nlogo.window.Events.CompiledEvent
             (owner, workspace.world.program(), results.head(), null).raise(this);
       } catch (CompilerException error) {

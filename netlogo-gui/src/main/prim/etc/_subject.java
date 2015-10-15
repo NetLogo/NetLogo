@@ -12,18 +12,18 @@ public final strictfp class _subject
   @Override
   public Object report(final org.nlogo.nvm.Context context) {
     if (world.observer().perspective() == PerspectiveJ.OBSERVE()) {
-      return org.nlogo.api.Nobody$.MODULE$;
+      return org.nlogo.core.Nobody$.MODULE$;
     }
     Agent subject = world.observer().targetAgent();
     // not actually sure if the null check here is necessary - ST 6/28/05
     if (subject == null || subject.id() == -1) {
-      return org.nlogo.api.Nobody$.MODULE$;
+      return org.nlogo.core.Nobody$.MODULE$;
     }
     return subject;
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.reporterSyntax(Syntax.AgentType());
   }
 }

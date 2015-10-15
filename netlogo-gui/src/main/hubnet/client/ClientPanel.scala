@@ -16,7 +16,8 @@ import org.nlogo.awt.EventQueue.invokeLater
 import org.nlogo.awt.Hierarchy.getFrame
 import org.nlogo.swing.Implicits._
 import org.nlogo.window.{PlotWidgetExportType, MonitorWidget, InterfaceGlobalWidget, Widget, ButtonWidget, PlotWidget}
-import org.nlogo.api.{I18N, Version, ModelSection, Dump, PlotInterface, LogoList, DummyLogoThunkFactory, CompilerServices}
+import org.nlogo.api.{I18N, Version, ModelSection, Dump, PlotInterface, DummyLogoThunkFactory, CompilerServices}
+import org.nlogo.core.LogoList
 import org.nlogo.hubnet.connection.{Streamable, ConnectionTypes, AbstractConnection}
 
 // Normally we try not to use the org.nlogo.window.Events stuff except in

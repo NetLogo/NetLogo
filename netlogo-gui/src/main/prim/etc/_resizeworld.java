@@ -12,7 +12,7 @@ import org.nlogo.nvm.EngineException;
 public final strictfp class _resizeworld
     extends Command {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.commandSyntax(
         new int[]{Syntax.NumberType(), Syntax.NumberType(),
             Syntax.NumberType(), Syntax.NumberType()},

@@ -7,7 +7,7 @@ import org.nlogo.api.{ LogoException, Syntax }
 import org.nlogo.nvm.{ Context, Reporter }
 
 class _patchrow extends Reporter {
-  override def syntax: Syntax =
+  override def syntax =
     Syntax.reporterSyntax(
       Array[Int](Syntax.NumberType),
       Syntax.PatchsetType)

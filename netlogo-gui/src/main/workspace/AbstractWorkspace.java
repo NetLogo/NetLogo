@@ -9,6 +9,12 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import org.nlogo.agent.Agent;
 import org.nlogo.api.*;
+import org.nlogo.core.CompilerException;
+import org.nlogo.core.FileModeJ;
+import org.nlogo.core.File;
+import org.nlogo.core.CompilerException;
+import org.nlogo.core.Token;
+import org.nlogo.core.TokenType;
 import org.nlogo.agent.Importer;
 import org.nlogo.nvm.Activation;
 import org.nlogo.nvm.Command;
@@ -114,7 +120,7 @@ public abstract strictfp class AbstractWorkspace
     extensionManager = new ExtensionManager(this, new JarLoader(this));
   }
 
-  public org.nlogo.api.ExtensionManager getExtensionManager() {
+  public org.nlogo.workspace.ExtensionManager getExtensionManager() {
     return extensionManager;
   }
 
@@ -405,7 +411,7 @@ public abstract strictfp class AbstractWorkspace
   public Procedure compileForRun(String source, org.nlogo.nvm.Context context,
                                  boolean reporter)
       throws CompilerException {
-    String key = source + "@" + context.activation.procedure.args.size() +
+    String key = source + "@" + context.activation.procedure.args().size() +
         "@" + context.agentBit;
     Procedure proc = codeBits.get(key);
     if (proc == null) {
@@ -502,17 +508,17 @@ public abstract strictfp class AbstractWorkspace
       this.filename = filename;
     }
 
-    public abstract void doImport(org.nlogo.api.File reader)
+    public abstract void doImport(org.nlogo.core.File reader)
         throws java.io.IOException;
   }
 
   protected void exportInterfaceGlobals(java.io.PrintWriter writer) {
     writer.println(Dump.csv().header("MODEL SETTINGS"));
-    List<String> globals = world.program().interfaceGlobals();
+    scala.collection.Seq<String> globals = world.program().interfaceGlobals();
     writer.println(Dump.csv().variableNameRow(globals));
     Object[] values = new Object[globals.size()];
     int i = 0;
-    for (Iterator<String> iter = globals.iterator(); iter.hasNext(); i++) {
+    for (scala.collection.Iterator<String> iter = globals.iterator(); iter.hasNext(); i++) {
       values[i] =
           world.getObserverVariableByName(iter.next());
     }
@@ -558,7 +564,7 @@ public abstract strictfp class AbstractWorkspace
           throws Importer.StringReaderException {
         try {
           return compiler().readFromString
-            (s, world, extensionManager, world.program().is3D());
+            (s, world, extensionManager, world.program().dialect().is3D());
         } catch (CompilerException ex) {
           throw new Importer.StringReaderException
               (ex.getMessage());
@@ -572,7 +578,7 @@ public abstract strictfp class AbstractWorkspace
     doImport
         (new FileImporter(filename) {
           @Override
-          public void doImport(org.nlogo.api.File file)
+          public void doImport(org.nlogo.core.File file)
               throws java.io.IOException {
 
             importDrawing(file);
@@ -580,15 +586,15 @@ public abstract strictfp class AbstractWorkspace
         });
   }
 
-  protected abstract void importDrawing(org.nlogo.api.File file)
+  protected abstract void importDrawing(org.nlogo.core.File file)
       throws java.io.IOException;
 
   // overridden in subclasses - ST 9/8/03, 3/1/11
   public void doImport(BufferedReaderImporter importer)
       throws java.io.IOException {
-    org.nlogo.api.File file = new org.nlogo.api.LocalFile(importer.filename());
+    org.nlogo.core.File file = new org.nlogo.api.LocalFile(importer.filename());
     try {
-      file.open(org.nlogo.api.FileModeJ.READ());
+      file.open(org.nlogo.core.FileModeJ.READ());
       importer.doImport(file.reader());
     } finally {
       try {
@@ -603,7 +609,7 @@ public abstract strictfp class AbstractWorkspace
   // protected because GUIWorkspace will override - ST 9/8/03
   protected void doImport(FileImporter importer)
       throws java.io.IOException {
-    final org.nlogo.api.File newFile;
+    final org.nlogo.core.File newFile;
 
     if (AbstractWorkspace.isApplet()) {
       newFile = new org.nlogo.api.RemoteFile(importer.filename);
@@ -632,12 +638,12 @@ public abstract strictfp class AbstractWorkspace
     return modelName + " " + defaultName;
   }
 
-  public org.nlogo.api.File exportBehaviors(String filename,
+  public org.nlogo.core.File exportBehaviors(String filename,
                                             String experimentName,
                                             boolean includeHeader)
       throws java.io.IOException {
-    org.nlogo.api.File file = new org.nlogo.api.LocalFile(filename);
-    file.open(org.nlogo.api.FileModeJ.WRITE());
+    org.nlogo.core.File file = new org.nlogo.api.LocalFile(filename);
+    file.open(org.nlogo.core.FileModeJ.WRITE());
     if (includeHeader) {
       org.nlogo.agent.AbstractExporter.exportHeader
           (file.getPrintWriter(), "BehaviorSpace", modelFileName, experimentName);
@@ -681,7 +687,7 @@ public abstract strictfp class AbstractWorkspace
     // So we do the stripping of \r here, *before* we run the tokenizer,
     // and that avoids the problem. - ST 9/14/04
 
-    final org.nlogo.api.File sourceFile;
+    final org.nlogo.core.File sourceFile;
 
     if (AbstractWorkspace.isApplet()) {
       String url = fileManager().attachPrefix(filename);
@@ -689,14 +695,15 @@ public abstract strictfp class AbstractWorkspace
     } else {
       sourceFile = new org.nlogo.api.LocalFile(filename);
     }
-    String source = sourceFile.readFile();
+    sourceFile.open(FileModeJ.READ());
+    String source = org.nlogo.util.Utils.reader2String(sourceFile.reader());
     return source.replaceAll("\r\n", "\n");
   }
 
   public String autoConvert(String source, boolean subprogram, boolean reporter, String modelVersion) {
     return compiler().autoConvert
         (source, subprogram, reporter, modelVersion,
-         this, true, world().program().is3D());
+         this, true, world().program().dialect().is3D());
   }
 
   public void loadWorld(String[] strings, String version, WorldLoaderInterface worldInterface) {
@@ -718,7 +725,7 @@ public abstract strictfp class AbstractWorkspace
   public Object readNumberFromString(String source)
       throws CompilerException {
     return compiler().readNumberFromString
-      (source, world, getExtensionManager(), world.program().is3D());
+      (source, world, getExtensionManager(), world.program().dialect().is3D());
   }
 
   public void checkReporterSyntax(String source)
@@ -735,7 +742,7 @@ public abstract strictfp class AbstractWorkspace
 
   public boolean isConstant(String s) {
     try {
-      compiler().readFromString(s, world.program().is3D());
+      compiler().readFromString(s, world.program().dialect().is3D());
       return true;
     }
     catch(CompilerException e) {
@@ -744,7 +751,7 @@ public abstract strictfp class AbstractWorkspace
   }
 
   public boolean isValidIdentifier(String s) {
-    return compiler().isValidIdentifier(s, world.program().is3D());
+    return compiler().isValidIdentifier(s, world.program().dialect().is3D());
   }
 
   public boolean isReporter(String s) {
@@ -753,7 +760,7 @@ public abstract strictfp class AbstractWorkspace
 
   public Token[] tokenizeForColorization(String s) {
     return compiler().tokenizeForColorization
-      (s, getExtensionManager(), world.program().is3D());
+      (s, getExtensionManager(), world.program().dialect().is3D());
   }
 
   public Token getTokenAtPosition(String s, int pos) {
@@ -761,7 +768,7 @@ public abstract strictfp class AbstractWorkspace
   }
 
   public java.util.Map<String, java.util.List<Object>> findProcedurePositions(String source) {
-    return compiler().findProcedurePositions(source, world.program().is3D());
+    return compiler().findProcedurePositions(source, world.program().dialect().is3D());
   }
 
   public abstract org.nlogo.nvm.CompilerInterface compiler();

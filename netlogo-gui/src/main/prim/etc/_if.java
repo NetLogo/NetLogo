@@ -17,7 +17,7 @@ public final strictfp class _if
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     int[] right = {Syntax.BooleanType(), Syntax.CommandBlockType()};
     return Syntax.commandSyntax(right);
   }

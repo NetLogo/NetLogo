@@ -4,7 +4,7 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.agent.LogoHashObject;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.LogoList;
+import org.nlogo.core.LogoList;
 import org.nlogo.api.LogoListBuilder;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.MutableInteger;
@@ -22,7 +22,7 @@ public final strictfp class _modes
     LinkedHashMap<LogoHashObject, MutableInteger> counts =
         new LinkedHashMap<LogoHashObject, MutableInteger>();
     LogoList list = argEvalList(context, 0);
-    for (Iterator<Object> it = list.iterator(); it.hasNext();) {
+    for (Iterator<Object> it = list.javaIterator(); it.hasNext();) {
       Object srcElt = it.next();
       LogoHashObject logoElt = new LogoHashObject(srcElt);
       if (counts.containsKey(logoElt)) {
@@ -56,7 +56,7 @@ public final strictfp class _modes
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     int[] right = {Syntax.ListType()};
     int ret = Syntax.ListType();
     return Syntax.reporterSyntax(right, ret);

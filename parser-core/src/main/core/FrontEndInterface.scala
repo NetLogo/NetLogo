@@ -42,6 +42,7 @@ trait FrontEndInterface {
         program: Program = Program.empty(),
         subprogram: Boolean = true,
         oldProcedures: ProceduresMap = NoProcedures,
-        extensionManager: ExtensionManager = new DummyExtensionManager)
+        extensionManager: ExtensionManager = new DummyExtensionManager,
+        compilationEnvironment: CompilationEnvironment = new DummyCompilationEnvironment)
       : FrontEndInterface.FrontEndResults
 }

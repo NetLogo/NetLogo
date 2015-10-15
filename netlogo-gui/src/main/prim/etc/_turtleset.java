@@ -7,7 +7,7 @@ import org.nlogo.agent.Turtle;
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.LogoList;
+import org.nlogo.core.LogoList;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Context;
@@ -21,7 +21,7 @@ import java.util.Set;
 public final strictfp class _turtleset
     extends Reporter {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     int[] right = {Syntax.RepeatableType() | Syntax.TurtleType()
         | Syntax.TurtlesetType() | Syntax.NobodyType()
         | Syntax.ListType()};
@@ -50,7 +50,7 @@ public final strictfp class _turtleset
         descendList(context, (LogoList) elt, resultSet);
       } else if (elt instanceof Turtle) {
         resultSet.add((Turtle) elt);
-      } else if (elt != org.nlogo.api.Nobody$.MODULE$) {
+      } else if (elt != org.nlogo.core.Nobody$.MODULE$) {
         throw new ArgumentTypeException
             (context, this, i, Syntax.TurtleType() | Syntax.TurtlesetType(), elt);
       }
@@ -63,7 +63,7 @@ public final strictfp class _turtleset
 
   private void descendList(Context context, LogoList tempList, Set<Turtle> result)
       throws LogoException {
-    for (Iterator<Object> iter = tempList.iterator();
+    for (Iterator<Object> iter = tempList.javaIterator();
          iter.hasNext();) {
       Object obj = iter.next();
       if (obj instanceof Turtle) {
@@ -81,7 +81,7 @@ public final strictfp class _turtleset
         }
       } else if (obj instanceof LogoList) {
         descendList(context, (LogoList) obj, result);
-      } else if (obj != org.nlogo.api.Nobody$.MODULE$) {
+      } else if (obj != org.nlogo.core.Nobody$.MODULE$) {
         throw new EngineException(context, this,
             I18N.errorsJ().getN("org.nlogo.prim.etc._turtleset.incorrectInputType",
                 this.displayName(), Dump.logoObject(tempList, true, false), Dump.logoObject(obj, true, false)));

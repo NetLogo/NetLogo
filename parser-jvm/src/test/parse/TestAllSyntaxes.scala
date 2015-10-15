@@ -337,7 +337,6 @@ class TestAllSyntaxes extends FunSuite {
                     |_let anything/anything,OTPL,None,0,2,2
                     |_linkcode ,---L,None,0,0,0
                     |_loop command block,OTPL,None,0,1,1
-                    |_makepreview ,O---,None,0,0,0
                     |_mkdir string,OTPL,None,0,1,1
                     |_moveto turtle or patch,-T--,None,0,1,1
                     |_nodisplay ,OTPL,None,0,0,0

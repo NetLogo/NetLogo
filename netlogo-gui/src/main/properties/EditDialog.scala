@@ -8,7 +8,8 @@ import org.nlogo.editor.Colorizer
 import org.nlogo.swing.Implicits._
 import javax.swing.JButton
 import org.nlogo.swing.{BrowserLauncher, ButtonPanel, RichJButton}
-import org.nlogo.api.{I18N, CompilerServices, TokenType}
+import org.nlogo.api.{I18N, CompilerServices}
+import org.nlogo.core.TokenType
 
 // EditDialog is a trait because in EditDialogFactory we need to be able to call two different
 // constructors of JDialog.  See

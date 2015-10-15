@@ -12,7 +12,7 @@ import org.nlogo.nvm.EngineException;
 public final strictfp class _setdefaultshape
     extends Command {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     int[] right = {Syntax.TurtlesetType() | Syntax.LinksetType(),
         Syntax.StringType()};
     return Syntax.commandSyntax(right, "O---");

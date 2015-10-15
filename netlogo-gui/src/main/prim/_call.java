@@ -26,19 +26,19 @@ public final strictfp class _call
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return procedure.syntax();
   }
 
   @Override
   public String toString() {
-    return super.toString() + ":" + procedure.name;
+    return super.toString() + ":" + procedure.name();
   }
 
   @Override
   public void perform(Context context) throws LogoException {
     Activation newActivation = new Activation(procedure, context.activation, next);
-    for (int i = 0; i < (procedure.args.size() - procedure.localsCount); i++) {
+    for (int i = 0; i < (procedure.args().size() - procedure.localsCount()); i++) {
       newActivation.args[i] = args[i].report(context);
     }
     context.activation = newActivation;

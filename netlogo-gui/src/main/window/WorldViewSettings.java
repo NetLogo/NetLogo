@@ -2,7 +2,7 @@
 
 package org.nlogo.window;
 
-import org.nlogo.api.CompilerException;
+import org.nlogo.core.CompilerException;
 import org.nlogo.api.Editable;
 import org.nlogo.api.I18N;
 import org.nlogo.api.Property;

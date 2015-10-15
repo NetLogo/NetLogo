@@ -3,9 +3,9 @@
 package org.nlogo.app;
 
 import org.nlogo.agent.Agent;
-import org.nlogo.api.CompilerException;
+import org.nlogo.core.CompilerException;
 import org.nlogo.api.I18N;
-import org.nlogo.api.TokenType;
+import org.nlogo.core.TokenType;
 import org.nlogo.window.EditorColorizer;
 import org.nlogo.window.Widget;
 
@@ -212,8 +212,8 @@ strictfp class CommandLine
         int offset = headerSource.length();
         // highlight error location
 
-        textField.select(((CompilerException) error()).startPos() - offset,
-            ((CompilerException) error()).endPos() - offset);
+        textField.select(((CompilerException) error()).start() - offset,
+            ((CompilerException) error()).end() - offset);
 
         // print error message
         new org.nlogo.window.Events.OutputEvent

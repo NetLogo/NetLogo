@@ -2,6 +2,9 @@
 
 package org.nlogo.api
 
+import org.nlogo.core.CompilerException
+import org.nlogo.core.Token
+
 // just enough functionality to make the tests pass
 
 class DummyCompilerServices extends CompilerServices {

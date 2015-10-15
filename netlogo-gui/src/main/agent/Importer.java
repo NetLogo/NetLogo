@@ -961,16 +961,16 @@ public strictfp class Importer
   //returns a List containing all the breed variables for this model
   List<String> getAllBreedVars() {
     List<String> allBreedOwns = new ArrayList<String>();
-    Map<String, Object> breeds = world.getBreeds();
+    Map<String, AgentSet> breeds = world.getAgentBreeds();
     if (breeds != null) {
-      for (Iterator<Object> breedElt = breeds.values().iterator();
+      for (Iterator<AgentSet> breedElt = breeds.values().iterator();
            breedElt.hasNext();) {
-        AgentSet breed = (AgentSet) breedElt.next();
-        List<String> breedOwns =
-          world.program().breedsOwn().get(breed.printName());
+        AgentSet breed = breedElt.next();
+        scala.collection.Seq<String> breedOwns =
+          world.program().breeds().apply(breed.printName()).owns();
         if (breedOwns != null) {
           for (int i = 0; i < breedOwns.size(); i++) {
-            allBreedOwns.add(breedOwns.get(i));
+            allBreedOwns.add(breedOwns.apply(i));
           }
         }
       }
@@ -980,16 +980,16 @@ public strictfp class Importer
 
   List<String> getAllLinkBreedVars() {
     List<String> allBreedOwns = new ArrayList<String>();
-    Map<String, Object> breeds = world.getLinkBreeds();
+    Map<String, AgentSet> breeds = world.getLinkAgentBreeds();
     if (breeds != null) {
-      for (Iterator<Object> breedElt = breeds.values().iterator();
+      for (Iterator<AgentSet> breedElt = breeds.values().iterator();
            breedElt.hasNext();) {
-        AgentSet breed = (AgentSet) breedElt.next();
-        List<String> breedOwns =
-          world.program().linkBreedsOwn().get(breed.printName());
+        AgentSet breed = breedElt.next();
+        scala.collection.Seq<String> breedOwns =
+          world.program().linkBreeds().apply(breed.printName()).owns();
         if (breedOwns != null) {
           for (int i = 0; i < breedOwns.size(); i++) {
-            allBreedOwns.add(breedOwns.get(i));
+            allBreedOwns.add(breedOwns.apply(i));
           }
         }
       }
@@ -1175,10 +1175,10 @@ public strictfp class Importer
       return AgentVariables.getImplicitObserverVariables();
     }
     if (agentClass == Turtle.class) {
-      return AgentVariables.getImplicitTurtleVariables(world.program().is3D());
+      return AgentVariables.getImplicitTurtleVariables(world.program().dialect().is3D());
     }
     if (agentClass == Patch.class) {
-      return AgentVariables.getImplicitPatchVariables(world.program().is3D());
+      return AgentVariables.getImplicitPatchVariables(world.program().dialect().is3D());
     }
     if (agentClass == Link.class) {
       return AgentVariables.getImplicitLinkVariables();

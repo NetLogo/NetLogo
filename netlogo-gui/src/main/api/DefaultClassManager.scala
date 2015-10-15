@@ -8,13 +8,17 @@ package org.nlogo.api
  * @see ClassManager
  */
 
+import org.nlogo.core.CompilerException
+import org.nlogo.core.Primitive
+import org.nlogo.core.ExtensionObject
+import org.nlogo.core.{ ExtensionManager => CoreExtensionManager }
 import java.util.{ List => JList }
 
 abstract class DefaultClassManager extends ClassManager {
 
   /** Empty implementation. */
   @throws(classOf[ExtensionException])
-  override def runOnce(em: ExtensionManager) { }
+  override def runOnce(em: CoreExtensionManager) { }
 
   /**
    * Loads the primitives in the extension. This is called once per model compilation.
@@ -26,7 +30,7 @@ abstract class DefaultClassManager extends ClassManager {
 
   /** Empty implementation. */
   @throws(classOf[ExtensionException])
-  override def unload(em: ExtensionManager) { }
+  override def unload(em: CoreExtensionManager) { }
 
   /** Default exports nothing, returns empty builder. */
   override def exportWorld: java.lang.StringBuilder =
@@ -34,7 +38,7 @@ abstract class DefaultClassManager extends ClassManager {
 
   /** Default loads nothing. */
   @throws(classOf[ExtensionException])
-  override def importWorld(lines: JList[Array[String]], reader: ExtensionManager, handler: ImportErrorHandler) { }
+  override def importWorld(lines: JList[Array[String]], reader: CoreExtensionManager, handler: ImportErrorHandler) { }
 
   /** Default does nothing. */
   override def clearAll() { }
@@ -42,7 +46,7 @@ abstract class DefaultClassManager extends ClassManager {
   /** Default defines no extension objects, thus, we cannot read any extension objects. */
   @throws(classOf[ExtensionException])
   @throws(classOf[CompilerException])
-  override def readExtensionObject(em: ExtensionManager, typeName: String, value: String): ExtensionObject =
+  override def readExtensionObject(em: CoreExtensionManager, typeName: String, value: String): ExtensionObject =
     throw new IllegalStateException("readExtensionObject not implemented for " + this)
 
   override def additionalJars: JList[String] =

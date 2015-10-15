@@ -22,7 +22,7 @@ public final strictfp class _inlinkneighbor
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.reporterSyntax
         (new int[]{Syntax.AgentType()},
             Syntax.BooleanType(), "-T--");

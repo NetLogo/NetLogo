@@ -16,7 +16,7 @@ class _moviestatus extends Reporter {
         status(gw.movieEncoder)
       case _ =>
         throw new EngineException(
-          context, this, token.name + " can only be used in the GUI")
+          context, this, token.text + " can only be used in the GUI")
     }
   }
   private def status(encoder: MovieEncoder) =

@@ -3,7 +3,8 @@
 package org.nlogo.window
 
 import org.nlogo.window.Events.{AfterLoadEvent, PeriodicUpdateEvent, InterfaceGlobalEvent}
-import org.nlogo.api.{I18N, CompilerServices, Dump, Editable, LogoList}
+import org.nlogo.api.{I18N, CompilerServices, Dump, Editable}
+import org.nlogo.core.LogoList
 
 class ChooserWidget(compiler: CompilerServices) extends Chooser(compiler) with Editable with
         InterfaceGlobalWidget with PeriodicUpdateEvent.Handler {
@@ -41,7 +42,7 @@ class ChooserWidget(compiler: CompilerServices) extends Chooser(compiler) with E
 
   def choicesWrapper = {
     import collection.JavaConverters._
-    constraint.acceptedValues.asScala.map(v => Dump.logoObject(v, true, false)).mkString("\n")
+    constraint.acceptedValues.map(v => Dump.logoObject(v, true, false)).mkString("\n")
   }
 
   def choicesWrapper(choicesString: String) {

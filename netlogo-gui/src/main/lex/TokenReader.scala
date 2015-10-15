@@ -2,7 +2,12 @@
 
 package org.nlogo.lex
 
-import org.nlogo.api.{ CompilerException, File, FileMode, Token, TokenizerInterface, TokenReaderInterface, TokenType }
+import org.nlogo.api.{ TokenizerInterface, TokenReaderInterface }
+import org.nlogo.core.FileMode
+import org.nlogo.core.File
+import org.nlogo.core.CompilerException
+import org.nlogo.core.Token
+import org.nlogo.core.TokenType
 import java.io.IOException
 
 // This exists to support the file-read primitive, which uses ConstantParser.  During normal
@@ -32,7 +37,7 @@ class TokenReader(file: File, tokenizer: TokenizerInterface) extends TokenReader
     // it, at least until the day when the whole LocalFile mess gets straightened out. - ST 1/21/09
     reader.mark(65536)
     val t = tokenizer.nextToken(reader)
-    if (t.tyype == TokenType.BAD)
+    if (t.tpe == TokenType.Bad)
       throw new CompilerException(t)
     // after Tokenizer has done its thing, we no longer know what relationship holds between
     // the BufferedReader's position and file.pos, so the following code makes sure they are
@@ -51,12 +56,12 @@ class TokenReader(file: File, tokenizer: TokenizerInterface) extends TokenReader
         reader.skip(pos)
         file.pos = pos
     }
-    // nextToken() makes a new TokenLexer every time, so endPos is just the size of the token,
+    // nextToken() makes a new TokenLexer every time, so end is just the size of the token,
     // not an absolute position.  so, once we've returned to our original position, before
-    // the token was read, token.endPos the amount we need to move both pointers forward
+    // the token was read, token.end the amount we need to move both pointers forward
     // in order to be in the position right after the token we read. - ST 12/18/08
-    reader.skip(t.endPos)
-    file.pos += t.endPos
+    reader.skip(t.end)
+    file.pos += t.end
     t
   }
 }

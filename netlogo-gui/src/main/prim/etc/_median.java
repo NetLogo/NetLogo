@@ -5,7 +5,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.LogoList;
+import org.nlogo.core.LogoList;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
@@ -24,7 +24,7 @@ public final strictfp class _median
     int badElts = 0;
     List<Double> nums =
         new ArrayList<Double>(list.size());
-    for (Object elt : list) {
+    for (Object elt : list.javaIterable()) {
       if (!(elt instanceof Double)) {
         ++badElts;
         continue;
@@ -48,7 +48,7 @@ public final strictfp class _median
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.reporterSyntax
         (new int[]{Syntax.ListType()},
             Syntax.NumberType());

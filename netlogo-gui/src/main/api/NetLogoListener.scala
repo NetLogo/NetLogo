@@ -2,6 +2,9 @@
 
 package org.nlogo.api
 
+import org.nlogo.core.LogoList
+import org.nlogo.core.CompilerException
+
 /**
  * A host application should implement this interface in order to be notified of events occurring
  * within NetLogo.  Its methods are called by NetLogoListenerManager when these events occur.  The

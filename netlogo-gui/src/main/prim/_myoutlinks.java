@@ -22,7 +22,7 @@ public final strictfp class _myoutlinks
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.reporterSyntax
         (Syntax.LinksetType(), "-T--");
   }

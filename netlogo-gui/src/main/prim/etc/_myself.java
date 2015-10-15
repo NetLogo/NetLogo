@@ -14,7 +14,7 @@ import org.nlogo.nvm.Reporter;
 public final strictfp class _myself
     extends Reporter {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.reporterSyntax
         (Syntax.AgentType(), "-TPL");
   }

@@ -10,7 +10,7 @@ public final strictfp class _randomconst extends Reporter {
   public long n;
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.reporterSyntax(Syntax.NumberType());
   }
 

@@ -5,11 +5,14 @@ package org.nlogo.core
 import scala.collection.immutable.ListMap
 
 object Program {
-  def empty() =
+  def empty() = fromDialect(NetLogoCore)
+
+  def fromDialect(dialect: Dialect) =
     Program(
-      turtlesOwn = AgentVariables.getImplicitTurtleVariables,
-      patchesOwn = AgentVariables.getImplicitPatchVariables,
-      linksOwn = AgentVariables.getImplicitLinkVariables)
+      turtlesOwn = dialect.agentVariables.getImplicitTurtleVariables,
+      patchesOwn = dialect.agentVariables.getImplicitPatchVariables,
+      linksOwn   = dialect.agentVariables.getImplicitLinkVariables,
+      dialect    = dialect)
 }
 
 // breeds are ListMaps so the z-order in Renderer can match the definition order

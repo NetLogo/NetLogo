@@ -10,7 +10,7 @@ import org.nlogo.nvm.Reporter;
 
 public final strictfp class _mult extends Reporter implements Pure {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     int left = Syntax.NumberType();
     int[] right = {Syntax.NumberType()};
     return Syntax.reporterSyntax(left, right, Syntax.NumberType(),

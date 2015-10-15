@@ -18,24 +18,8 @@ public final strictfp class _externreport
   }
 
   @Override
-  public Syntax syntax() {
-    org.nlogo.api.Syntax s = reporter.getSyntax();
-    String[] acs = reporter.getAgentClassString().split(":");
-    if (acs[0].length() < 4) {
-      acs[0] = org.nlogo.api.Syntax.convertOldStyleAgentClassString(acs[0]);
-    }
-    if (acs.length >= 2) {
-      if (acs[1].length() < 4) {
-        acs[1] = org.nlogo.api.Syntax.convertOldStyleAgentClassString(acs[1]);
-      }
-      return Syntax.reporterSyntax
-          (s.left(), s.right(), s.ret(), s.precedence(), s.dfault(),
-              false, acs[0], acs[1]);
-    } else {
-      return Syntax.reporterSyntax
-          (s.left(), s.right(), s.ret(), s.precedence(), s.dfault(),
-              false, acs[0], null);
-    }
+  public org.nlogo.core.Syntax syntax() {
+    return reporter.getSyntax();
   }
 
   @Override

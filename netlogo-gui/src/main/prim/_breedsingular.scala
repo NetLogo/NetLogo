@@ -3,11 +3,12 @@
 package org.nlogo.prim
 
 import org.nlogo.agent.{ AgentSet, Turtle }
-import org.nlogo.api.{ Nobody, Syntax }
+import org.nlogo.api.Syntax
+import org.nlogo.core.Nobody
 import org.nlogo.nvm.{ Context, EngineException, Reporter }
 
 class _breedsingular(breedName: String) extends Reporter {
-  override def syntax: Syntax =
+  override def syntax: org.nlogo.core.Syntax =
     Syntax.reporterSyntax(Array[Int](Syntax.NumberType), Syntax.TurtleType | Syntax.NobodyType)
 
   override def toString: String = s"${super.toString}:$breedName"

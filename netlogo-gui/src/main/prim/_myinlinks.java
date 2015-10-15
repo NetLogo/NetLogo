@@ -22,7 +22,7 @@ public final strictfp class _myinlinks
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.reporterSyntax
         (Syntax.AgentsetType(), "-T--");
   }

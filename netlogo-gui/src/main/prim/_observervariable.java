@@ -34,7 +34,7 @@ public final strictfp class _observervariable
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.reporterSyntax(Syntax.WildcardType() | Syntax.ReferenceType());
   }
 

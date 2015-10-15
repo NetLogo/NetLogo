@@ -27,7 +27,7 @@ public final strictfp class _createlinkswith
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.commandSyntax
         (new int[]{Syntax.TurtlesetType(),
             Syntax.CommandBlockType() | Syntax.OptionalType()},

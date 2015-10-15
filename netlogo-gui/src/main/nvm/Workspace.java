@@ -2,12 +2,13 @@
 
 package org.nlogo.nvm;
 
+import org.nlogo.core.CompilationEnvironment;
 import scala.collection.Seq;
 import scala.Tuple2;
 
 import org.nlogo.agent.Agent;
 import org.nlogo.api.CommandRunnable;
-import org.nlogo.api.CompilerException;
+import org.nlogo.core.CompilerException;
 import org.nlogo.api.CompilerServices;
 import org.nlogo.api.HubNetInterface;
 import org.nlogo.api.ImporterUser;
@@ -67,7 +68,7 @@ public interface Workspace
 
   void addJobFromJobThread(Job job);
 
-  org.nlogo.api.ExtensionManager getExtensionManager();
+  ExtensionManager getExtensionManager();
 
   CompilationEnvironment getCompilationEnvironment();
 

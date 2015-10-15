@@ -7,7 +7,7 @@ import org.nlogo.agent.AgentSet;
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Nobody$;
+import org.nlogo.core.Nobody$;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
@@ -17,7 +17,7 @@ public final strictfp class _oneofwith
     extends Reporter {
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.reporterSyntax
         (new int[]{Syntax.AgentsetType(), Syntax.BooleanBlockType()},
          Syntax.AgentType() | Syntax.NobodyType(), "OTPL", "?");

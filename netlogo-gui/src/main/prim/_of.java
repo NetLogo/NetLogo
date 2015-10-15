@@ -15,7 +15,7 @@ import org.nlogo.nvm.Reporter;
 public final strictfp class _of
     extends Reporter {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.reporterSyntax
         (Syntax.ReporterBlockType(),  // input on left
             new int[]{Syntax.AgentType() | Syntax.AgentsetType()}, // inputs on right

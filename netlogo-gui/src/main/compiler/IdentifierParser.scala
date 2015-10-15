@@ -3,7 +3,11 @@
 package org.nlogo.compiler
 
 import org.nlogo.compiler.CompilerExceptionThrowers.{cAssert,exception}
-import org.nlogo.api.{CompilerException,Let,Program,Token,TokenType,I18N}
+import org.nlogo.api.{ Let, I18N }
+import org.nlogo.core.Program
+import org.nlogo.core.CompilerException
+import org.nlogo.core.Token
+import org.nlogo.core.TokenType
 import org.nlogo.nvm.{Instruction,Procedure,Reporter}
 import org.nlogo.prim._
 import collection.JavaConverters._
@@ -20,7 +24,7 @@ private class IdentifierParser(program:Program,
     checkProcedureName(procedure)
     val it = new CountedIterator(tokens)
     def processToken(token:Token):Token = {
-      if(token.tyype == TokenType.IDENT || token.tyype == TokenType.VARIABLE)
+      if (token.tpe == TokenType.Ident)
         processToken2(token,procedure,it.count)
       else token
     }
@@ -28,10 +32,10 @@ private class IdentifierParser(program:Program,
   }
   private def getLetFromArg(p:Procedure,ident:String,tokPos:Int):Option[Let] = {
     def checkLet(let: Let): Option[Let] =
-      if(tokPos < let.startPos || tokPos > let.endPos) None
+      if(tokPos < let.start || tokPos > let.end) None
       else let.children.asScala.map(checkLet).find(_.isDefined)
              .getOrElse(if(let.varName == ident) Some(let) else None)
-    p.lets.asScala.map(checkLet).find(_.isDefined).getOrElse(None)
+    p.lets.map(checkLet).find(_.isDefined).getOrElse(None)
   }
   private def processToken2(tok:Token,procedure:Procedure,tokPos:Int):Token = {
     val ident = tok.value.asInstanceOf[String]
@@ -44,7 +48,7 @@ private class IdentifierParser(program:Program,
              catch { case e:NumberFormatException => exception(INVALID_TASK_VARIABLE, tok) }
       cAssert(varNumber > 0, INVALID_TASK_VARIABLE, tok)
       newToken(new _taskvariable(varNumber),
-               ident,TokenType.REPORTER,tok.startPos,tok.endPos,tok.fileName)
+               ident,TokenType.Reporter,tok.start,tok.end,tok.filename)
     }
     // kludgy to special case this, but we only have one such prim,
     // so oh well... - ST 7/8/06
@@ -52,10 +56,10 @@ private class IdentifierParser(program:Program,
       exception(RANDOM_OR_RANDOM_FLOAT_ERROR,tok)
     else if(getLetFromArg(procedure,ident,tokPos).isDefined)
       newToken(new _letvariable(getLetFromArg(procedure,ident,tokPos).get,ident),
-               ident,TokenType.REPORTER,tok.startPos,tok.endPos,tok.fileName)
+               ident,TokenType.Reporter,tok.start,tok.end,tok.filename)
     else if(procedure.args.contains(ident))
       newToken(new _procedurevariable(procedure.args.indexOf(ident),ident),
-               ident,TokenType.REPORTER,tok.startPos,tok.endPos,tok.fileName)
+               ident,TokenType.Reporter,tok.start,tok.end,tok.filename)
     else {
       // go thru our identifierHandlers, if one triggers, return the result
       BreedIdentifierHandler.process(tok,program).getOrElse{
@@ -66,33 +70,31 @@ private class IdentifierParser(program:Program,
             newProcedures.get(ident)
           else
             return newToken(getAgentVariableReporter(ident,tok),
-                            ident,TokenType.REPORTER,tok.startPos,tok.endPos,tok.fileName)
-        callproc.tyype match {
-          case Procedure.Type.COMMAND =>
-            newToken(new _call(callproc),
-                     ident,TokenType.COMMAND,tok.startPos,tok.endPos,tok.fileName)
-          case Procedure.Type.REPORTER =>
-            newToken(new _callreport(callproc),
-                     ident,TokenType.REPORTER,tok.startPos,tok.endPos,tok.fileName)
-        }
+                            ident,TokenType.Reporter,tok.start,tok.end,tok.filename)
+        if (callproc.isReporter)
+          newToken(new _callreport(callproc),
+            ident,TokenType.Reporter,tok.start,tok.end,tok.filename)
+        else
+          newToken(new _call(callproc),
+                     ident,TokenType.Command,tok.start,tok.end,tok.filename)
       }
     }
   }
 
   private def getAgentVariableReporter(varName:String,tok:Token):Reporter = {
-    if(program.turtlesOwn.asScala.contains(varName) && program.linksOwn.asScala.contains(varName))
+    if(program.turtlesOwn.contains(varName) && program.linksOwn.contains(varName))
       new _turtleorlinkvariable(varName)
-    else if(program.turtlesOwn.asScala.contains(varName))
+    else if(program.turtlesOwn.contains(varName))
       new _turtlevariable(program.turtlesOwn.indexOf(varName))
-    else if(program.patchesOwn.asScala.contains(varName))
+    else if(program.patchesOwn.contains(varName))
       new _patchvariable(program.patchesOwn.indexOf(varName))
-    else if(program.linksOwn.asScala.contains(varName))
+    else if(program.linksOwn.contains(varName))
       new _linkvariable(program.linksOwn.indexOf(varName))
-    else if(program.globals.asScala.contains(varName))
+    else if(program.globals.contains(varName))
       new _observervariable(program.globals.indexOf(varName))
-    else if(program.breedsOwn.asScala.values.exists(_.asScala.contains(varName)))
+    else if(program.breeds.values.exists(_.owns.contains(varName)))
       new _breedvariable(varName)
-    else if(program.linkBreedsOwn.asScala.values.exists(_.asScala.contains(varName)))
+    else if(program.linkBreeds.values.exists(_.owns.contains(varName)))
       new _linkbreedvariable(varName)
     else
       new _unknownidentifier
@@ -109,9 +111,9 @@ private class IdentifierParser(program:Program,
             "Cannot use " + procedure.name + " as a procedure name.  Conflicts with: " + newVal,
             procedure.nameToken)
   }
-  private def newToken(instr:Instruction,name:String,tyype:TokenType,startPos:Int,endPos:Int,fileName:String) = {
-    val tok = new Token(name,tyype,instr)(startPos,endPos,fileName)
-    instr.token(tok)
+  private def newToken(instr:Instruction,name:String,tpe:TokenType,start:Int,end:Int,filename:String) = {
+    val tok = new Token(name,tpe,instr)(start,end,filename)
+    instr.token_=(tok)
     tok
   }
   /// error texts

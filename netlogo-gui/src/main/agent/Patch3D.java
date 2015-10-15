@@ -7,7 +7,7 @@ import org.nlogo.api.AgentVariableNumbers;
 import org.nlogo.api.AgentVariables;
 import org.nlogo.api.Color;
 import org.nlogo.api.Dump;
-import org.nlogo.api.LogoList;
+import org.nlogo.core.LogoList;
 
 import java.util.List;
 

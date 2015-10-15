@@ -2,7 +2,7 @@
 
 package org.nlogo.workspace
 
-import org.nlogo.api.Primitive
+import org.nlogo.core.Primitive
 
 class ExtensionPrimitiveManager(val name: String) extends org.nlogo.api.PrimitiveManager {
   private val importedPrimitives = collection.mutable.HashMap[String, Primitive]()

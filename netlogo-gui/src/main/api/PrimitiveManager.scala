@@ -2,6 +2,8 @@
 
 package org.nlogo.api
 
+import org.nlogo.core.Primitive
+
 /** Ships extension primitives and associated names to NetLogo. */
 trait PrimitiveManager {
 
@@ -14,7 +16,8 @@ trait PrimitiveManager {
   def addPrimitive(name: String, prim: Primitive)
 
   /**
-   * Should the primitives be automatically imported into the top-level NetLogo namespace.  If
+   * Should the primitives be automatically import org.nlogo.core.Primitive
+imported into the top-level NetLogo namespace.  If
    * false, they may only be referred to in NetLogo code as "extensionname:primitive".  If true,
    * they may also optionally be referred to simply as "primitive".  The default is false.
    */

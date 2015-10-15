@@ -6,7 +6,7 @@ import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
 
-import org.nlogo.api.CompilerException
+import org.nlogo.core.CompilerException
 import org.nlogo.api.PreviewCommands
 import org.nlogo.api.PreviewCommands.Compilable
 import org.nlogo.swing.HasPropertyChangeSupport

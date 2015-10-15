@@ -250,7 +250,7 @@ public strictfp class ClientWorld
 
     // otherwise, perform the update...
     bufPatch.updateFrom(patch);
-    patchColors[(int) patch.id()] = org.nlogo.api.Color.getARGBIntByRGBAList((org.nlogo.api.LogoList) bufPatch.pcolor());
+    patchColors[(int) patch.id()] = org.nlogo.api.Color.getARGBIntByRGBAList((org.nlogo.core.LogoList) bufPatch.pcolor());
   }
 
   void updateTurtle(TurtleData turtle) {
@@ -739,7 +739,7 @@ public strictfp class ClientWorld
     throw new UnsupportedOperationException();
   }
 
-  public org.nlogo.api.Program program() {
+  public org.nlogo.core.Program program() {
     throw new UnsupportedOperationException();
   }
 
@@ -833,6 +833,14 @@ public strictfp class ClientWorld
 
   public boolean mayHavePartiallyTransparentObjects() {
     return false;
+  }
+
+  public Map<String, ? extends org.nlogo.api.AgentSet> getBreeds() {
+    throw new UnsupportedOperationException();
+  }
+
+  public Map<String, ? extends org.nlogo.api.AgentSet> getLinkBreeds() {
+    throw new UnsupportedOperationException();
   }
 
 }

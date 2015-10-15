@@ -2,7 +2,9 @@
 
 package org.nlogo.compiler
 
-import org.nlogo.api.{Token,TokenizerInterface,TokenType,VersionHistory}
+import org.nlogo.api.{TokenizerInterface,VersionHistory}
+import org.nlogo.core.Token
+import org.nlogo.core.TokenType
 import VersionHistory._  // olderThan* methods
 
 // AutoConverter1 handles easy conversions that don't require parsing.
@@ -102,10 +104,10 @@ class AutoConverter1(implicit tokenizer:TokenizerInterface) {
     val tokens = tokenizer.tokenizeRobustly(source)
     val buf = new StringBuilder(source)
     var offset = 0
-    for(token <- tokens; replacement <- conversions.get(token.name.toLowerCase())) {
-      buf.delete(token.startPos + offset, token.endPos + offset)
-      buf.insert(token.startPos + offset, replacement)
-      offset += replacement.length - token.name.length
+    for(token <- tokens; replacement <- conversions.get(token.text.toLowerCase())) {
+      buf.delete(token.start + offset, token.end + offset)
+      buf.insert(token.start + offset, replacement)
+      offset += replacement.length - token.text.length
     }
     buf.toString
   }
@@ -115,16 +117,16 @@ class AutoConverter1(implicit tokenizer:TokenizerInterface) {
     var offset:Int = 0
     while(tokens.hasNext) {
       var token:Token = tokens.next()
-      if(token.name.equalsIgnoreCase("locals")) {
-        val start:Int = token.startPos
+      if(token.text.equalsIgnoreCase("locals")) {
+        val start:Int = token.start
         var replacement:String = ""
         token = tokens.next()
-        while(!token.name.equals("]")) {
-          if(!token.name.equals("["))
-            replacement += "let " + token.name + " 0\n  "
+        while(!token.text.equals("]")) {
+          if(!token.text.equals("["))
+            replacement += "let " + token.text + " 0\n  "
           token = tokens.next()
         }
-        val end:Int = token.endPos
+        val end:Int = token.end
         buf.delete(start + offset, end + offset)
         buf.insert(start + offset, replacement)
         offset += replacement.length - (end - start)
@@ -138,12 +140,12 @@ class AutoConverter1(implicit tokenizer:TokenizerInterface) {
     var offset = 0
     while(tokens.hasNext) {
       val token = tokens.next()
-      val name = token.name.toUpperCase
+      val name = token.text.toUpperCase
       if(name.startsWith("CREATE-CUSTOM-") || name.startsWith("CCT-")) {
         val prefixLength = if(name.startsWith("CREATE-CUSTOM-")) 14 else 4
-        val replacement = "create-" + token.name.substring(prefixLength)
-        val start = token.startPos + offset
-        val end = token.endPos + offset
+        val replacement = "create-" + token.text.substring(prefixLength)
+        val start = token.start + offset
+        val end = token.end + offset
         buf.delete(start, end)
         buf.insert(start, replacement)
         offset += replacement.length - (end - start)
@@ -156,9 +158,9 @@ class AutoConverter1(implicit tokenizer:TokenizerInterface) {
     val buf = new StringBuilder(source)
     while(tokens.hasNext) {
       val token = tokens.next()
-      val name = token.name.toUpperCase
+      val name = token.text.toUpperCase
       if(name.startsWith("OTHER-") && name.endsWith("-HERE")) {
-        buf.setCharAt(token.startPos + 5, ' ')
+        buf.setCharAt(token.start + 5, ' ')
       }
     }
     buf.toString
@@ -171,44 +173,44 @@ class AutoConverter1(implicit tokenizer:TokenizerInterface) {
     var lastToken2 = tokens.head
     while(tokens.hasNext) {
       val token = tokens.next()
-      if(token.name.startsWith("screen-edge-")) {
+      if(token.text.startsWith("screen-edge-")) {
         var replacement:String = null
         var start = 0
         var end = 0
         // negative screen-edge
-        if(lastToken.name == "-") {
+        if(lastToken.text == "-") {
           // parenthesis means that it's negative not subtracting so don't need to add the '+' sign.
-          if(lastToken2.name == "(") {
-            replacement = "screen-min-" + token.name.substring(12)
+          if(lastToken2.text == "(") {
+            replacement = "screen-min-" + token.text.substring(12)
             // if it's enclosed we can get rid of them; perhaps this is unnecessary but we have to
             // check for them anyway so we might as well be neat.
-            if(tokens.head.name == ")") {
-              start = lastToken2.startPos + offset
-              end = tokens.head.endPos + offset
+            if(tokens.head.text == ")") {
+              start = lastToken2.start + offset
+              end = tokens.head.end + offset
             }
             else {
-              start = lastToken.startPos + offset
-              end = token.endPos + offset
+              start = lastToken.start + offset
+              end = token.end + offset
             }
           }
           else {
-            replacement = "+ screen-min-" + token.name.substring(12)
-            start = lastToken.startPos + offset
-            end = token.endPos + offset
+            replacement = "+ screen-min-" + token.text.substring(12)
+            start = lastToken.start + offset
+            end = token.end + offset
           }
         }
         // subtracting from 0 also means it's screen min
-        else if(lastToken2.name == "0" && lastToken.name == "-") {
-          replacement = "screen-min-" + token.name.substring(12)
-          start = lastToken2.startPos + offset
-          end = token.endPos + offset
+        else if(lastToken2.text == "0" && lastToken.text == "-") {
+          replacement = "screen-min-" + token.text.substring(12)
+          start = lastToken2.start + offset
+          end = token.end + offset
         }
         else {
           // even if I've not covered every single case above a simple replace with edge -> max will
           // not break old models
-          replacement = "screen-max-" + token.name.substring(12)
-          start = token.startPos + offset
-          end = token.endPos + offset
+          replacement = "screen-max-" + token.text.substring(12)
+          start = token.start + offset
+          end = token.end + offset
         }
         buf.delete(start,end)
         buf.insert(start,replacement)
@@ -227,19 +229,19 @@ class AutoConverter1(implicit tokenizer:TokenizerInterface) {
     var offset:Int = 0
     while(tokens.hasNext) {
       var token:Token = tokens.next()
-      if(token.tyype == TokenType.IDENT && token.value.asInstanceOf[String] .equals("BREEDS")) {
+      if(token.tpe == TokenType.Ident && token.value.asInstanceOf[String] .equals("BREEDS")) {
         val breeds = new collection.mutable.ArrayBuffer[String]
-        val start:Int = token.startPos
+        val start:Int = token.start
         token = tokens.head
-        if(token.tyype == TokenType.OPEN_BRACKET) {
+        if(token.tpe == TokenType.OpenBracket) {
           tokens.next()
           token = tokens.next()
-          while(token.tyype != TokenType.CLOSE_BRACKET) {
-            breeds += token.name
+          while(token.tpe != TokenType.CloseBracket) {
+            breeds += token.text
             token = tokens.next()
           }
           // we do it this way to remove all the spaces too
-          buf.delete(start, token.endPos)
+          buf.delete(start, token.end)
           var i = 0
           while(i < breeds.size) {
             var replacement:String = "breed [ " + breeds(i) + " ]\n"
@@ -260,19 +262,19 @@ class AutoConverter1(implicit tokenizer:TokenizerInterface) {
     var offset:Int = 0
     while(tokens.hasNext) {
       var token:Token = tokens.next()
-      if(token.tyype == TokenType.IDENT && token.value.asInstanceOf[String] .equals("__EXTENSIONS")) {
+      if(token.tpe == TokenType.Ident && token.value.asInstanceOf[String] .equals("__EXTENSIONS")) {
         val extensions = new collection.mutable.ArrayBuffer[String]
-        val start:Int = token.startPos
+        val start:Int = token.start
         token = tokens.head
-        if(token.tyype == TokenType.OPEN_BRACKET) {
+        if(token.tpe == TokenType.OpenBracket) {
           tokens.next()
           token = tokens.next()
-          while(token.tyype != TokenType.CLOSE_BRACKET) {
-            extensions += token.name
+          while(token.tpe != TokenType.CloseBracket) {
+            extensions += token.text
             token = tokens.next()
           }
           // we do it this way to remove all the spaces too
-          buf.delete(start, token.endPos)
+          buf.delete(start, token.end)
           var replacement:String = "extensions [ "
           var i:Int = 0
           while(i < extensions.size) {
@@ -300,10 +302,10 @@ class AutoConverter1(implicit tokenizer:TokenizerInterface) {
     var offset:Int = 0
     while(tokens.hasNext) {
       var token:Token = tokens.next()
-      if(token.tyype == TokenType.IDENT && (token.value.asInstanceOf[String] .equals("NSUM") || token.value.asInstanceOf[String] .equals("NSUM4"))) {
+      if(token.tpe == TokenType.Ident && (token.value.asInstanceOf[String] .equals("NSUM") || token.value.asInstanceOf[String] .equals("NSUM4"))) {
         val neighbors:String = if(token.value.asInstanceOf[String] .equals("NSUM")) "neighbors" else "neighbors4"
-        var start:Int = token.startPos + offset
-        var end:Int = token.endPos + offset
+        var start:Int = token.start + offset
+        var end:Int = token.end + offset
         val replacement:String = "sum values-from " + neighbors
         buf.delete(start, end)
         buf.insert(start, replacement)
@@ -311,8 +313,8 @@ class AutoConverter1(implicit tokenizer:TokenizerInterface) {
         // The logic here won't work if the user put parentheses around the variable name, but let's
         // just cross our fingers and hope almost nobody did that... - ST 6/22/06
         token = tokens.next()
-        start = token.startPos + offset
-        end = token.endPos + offset
+        start = token.start + offset
+        end = token.end + offset
         buf.insert(start, "[")
         buf.insert(end + 1, "]")
         offset += 2
@@ -328,11 +330,11 @@ class AutoConverter1(implicit tokenizer:TokenizerInterface) {
     var offset:Int = 0
     while(tokens.hasNext) {
       var token:Token = tokens.next()
-      if(token.tyype == TokenType.IDENT && token.value.asInstanceOf[String] .endsWith("-OF")) {
-        var name:String = token.name
+      if(token.tpe == TokenType.Ident && token.value.asInstanceOf[String] .endsWith("-OF")) {
+        var name:String = token.text
         name = name.substring(0, name.length - 3)
-        val start:Int = token.startPos + offset
-        val end:Int = token.endPos + offset
+        val start:Int = token.start + offset
+        val end:Int = token.end + offset
         val replacement:String = "[" + name + "] of"
         buf.delete(start, end)
         buf.insert(start, replacement)

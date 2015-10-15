@@ -2,6 +2,8 @@
 
 package org.nlogo.api
 
+import org.nlogo.core.File
+
 /**
  * how a model was loaded. NEW is type for new models, NORMAL is a
  * model opened normally (e.g. via Open on the File menu),

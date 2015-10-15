@@ -3,7 +3,8 @@
 package org.nlogo.sdm.gui
 
 import org.nlogo.agent.Observer
-import org.nlogo.api.{ CompilerServices, TokenType, ModelSection }
+import org.nlogo.api.{ CompilerServices, ModelSection }
+import org.nlogo.core.TokenType
 import org.nlogo.editor.Colorizer
 import org.nlogo.window.{ EditDialogFactoryInterface, MenuBarFactory }
 

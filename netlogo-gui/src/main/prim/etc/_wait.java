@@ -15,7 +15,7 @@ public final strictfp class _wait
   private final Let let = new Let();
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     int[] right = {Syntax.NumberType()};
     return Syntax.commandSyntax(right);
   }

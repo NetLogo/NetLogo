@@ -21,14 +21,14 @@ class XMLLayout extends Layout {
   override def format(event: LoggingEvent): String = {
     val attributes = new AttributesImpl
     val obj = event.getMessage
-    val tyype = obj match {
+    val tpe = obj match {
       case msg: LogMessage => msg.attributes(0)(1)
       case _ => "log"
     }
     attributes.addAttribute("", "", "logger", "CDATA", event.getLoggerName)
     attributes.addAttribute("", "", "timestamp", "CDATA", event.timeStamp.toString)
     attributes.addAttribute("", "", "level", "CDATA", event.getLevel.toString)
-    attributes.addAttribute("", "", "type", "CDATA", tyype)
+    attributes.addAttribute("", "", "type", "CDATA", tpe)
     hd.startElement("", "", "event", attributes)
     attributes.clear()
     obj match {

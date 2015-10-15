@@ -130,7 +130,7 @@ error while observer running /
     "to-report bar report __boom end"
 
   testModel("error inside run", Model(code)) {
-    intercept[LogoException] {observer >> "__ignore runresult \"foo\""}
+    intercept[LogoException] { observer >> "__ignore runresult \"foo\"" }
     assert(trace === """boom!
 error while observer running __BOOM
   called by procedure BAR

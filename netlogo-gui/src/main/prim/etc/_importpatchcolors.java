@@ -9,7 +9,7 @@ import org.nlogo.nvm.EngineException;
 public final strictfp class _importpatchcolors
     extends org.nlogo.nvm.Command {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.commandSyntax
         (new int[]{Syntax.StringType()},
             "O---", true);
@@ -27,7 +27,7 @@ public final strictfp class _importpatchcolors
     } catch (java.io.IOException ex) {
       throw new EngineException
           (context, this,
-              token().name() +
+              token().text() +
                   ": " + ex.getMessage());
     }
     context.ip = next;

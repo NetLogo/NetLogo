@@ -2,6 +2,9 @@
 
 package org.nlogo.api
 
+import org.nlogo.core.FileMode
+import org.nlogo.core.File
+
 object RemoteFile {
   def exists(path: String): Boolean = {
     val url = org.nlogo.util.Utils.escapeSpacesInURL(path)

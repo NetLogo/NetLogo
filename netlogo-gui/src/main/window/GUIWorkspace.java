@@ -11,7 +11,7 @@ import org.nlogo.agent.BooleanConstraint;
 import org.nlogo.agent.Observer;
 import org.nlogo.agent.SliderConstraint;
 import org.nlogo.api.CommandRunnable;
-import org.nlogo.api.CompilerException;
+import org.nlogo.core.CompilerException;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.ModelSectionJ;
@@ -192,7 +192,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   }
 
   @Override
-  public void importDrawing(org.nlogo.api.File file)
+  public void importDrawing(org.nlogo.core.File file)
       throws java.io.IOException {
     view.renderer.trailDrawer().importDrawing(file);
   }
@@ -727,7 +727,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     if (glView != null) {
       glView.close();
     }
-    if (world.program().is3D()) {
+    if (world.program().dialect().is3D()) {
       open3DView();
     }
 
@@ -1176,7 +1176,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
 
       // check to see if the error occurred inside a "run" or "runresult" instruction;
       // if so, report the error as having occurred there - ST 5/7/03
-      org.nlogo.api.SourceOwner sourceOwner = context.activation.procedure.getOwner();
+      org.nlogo.api.SourceOwner sourceOwner = context.activation.procedure.owner();
       if (instruction.token() == null) {
         posAndLength = new int[]{-1, 0};
       } else {

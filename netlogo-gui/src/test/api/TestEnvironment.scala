@@ -2,6 +2,7 @@
 
 package org.nlogo.api
 
+import org.nlogo.core.File
 import java.io.{ File => JFile }
 
 object TestEnvironment {

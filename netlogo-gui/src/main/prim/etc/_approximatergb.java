@@ -10,7 +10,7 @@ import org.nlogo.nvm.Reporter;
 
 public final strictfp class _approximatergb extends Reporter implements Pure {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     int[] right = {Syntax.NumberType(), Syntax.NumberType(), Syntax.NumberType()};
     return Syntax.reporterSyntax(right, Syntax.NumberType());
   }

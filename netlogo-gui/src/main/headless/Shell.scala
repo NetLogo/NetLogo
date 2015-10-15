@@ -2,7 +2,8 @@
 
 package org.nlogo.headless
 
-import org.nlogo.api.{ CompilerException, ModelReader, Version }
+import org.nlogo.api.{ ModelReader, Version }
+import org.nlogo.core.CompilerException
 import java.io.{ BufferedReader, InputStreamReader }
 import org.nlogo.util.Utils.url2String
 

@@ -185,3 +185,4 @@ compiler.CarefullyVisitor.badNesting = {0} cannot be used outside of CAREFULLY.
 compiler.SetVisitor.notSettable = This isn''t something you can use "set" on.
 compiler.TaskVisitor.notDefined = This special variable isn''t defined here.
 compiler.LocalsVisitor.notDefined = Nothing named {0} has been defined.
+compiler.LetVariable.notDefined = Nothing named {0} has been defined.

@@ -64,4 +64,7 @@ class CSV(dump: Any => String) {
     v.asScala.map(encode(_).toLowerCase).mkString(",")
   }
 
+  def variableNameRow(v: Seq[String]): String = {
+    v.map(encode(_).toLowerCase).mkString(",")
+  }
 }

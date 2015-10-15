@@ -2,6 +2,7 @@
 
 package org.nlogo.api
 
+import org.nlogo.core.LogoList
 import java.text.DecimalFormat
 import java.awt.{ Color => JColor }
 

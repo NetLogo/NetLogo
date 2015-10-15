@@ -9,7 +9,7 @@ import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.Equality;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.LogoList;
+import org.nlogo.core.LogoList;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Reporter;
@@ -25,7 +25,7 @@ public final strictfp class _member
     if (obj instanceof LogoList) {
       Object value = args[0].report(context);
       LogoList list = (LogoList) obj;
-      for (Iterator<Object> it = list.iterator(); it.hasNext();) {
+      for (Iterator<Object> it = list.javaIterator(); it.hasNext();) {
         if (Equality.equals(value, it.next())) {
           return Boolean.TRUE;
         }
@@ -89,7 +89,7 @@ public final strictfp class _member
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     int[] right = {Syntax.WildcardType(),
         Syntax.ListType() | Syntax.StringType() | Syntax.AgentsetType()};
     int ret = Syntax.BooleanType();

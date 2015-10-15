@@ -10,7 +10,7 @@ import org.nlogo.nvm.Command;
 public final strictfp class _die
     extends Command {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.commandSyntax("-T-L", true);
   }
 

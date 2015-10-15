@@ -25,7 +25,7 @@ private class SetVisitor extends DefaultAstVisitor {
       val newCommandClass = SetVisitor.classes.get(rApp.reporter.getClass.asInstanceOf[SetVisitor.ReporterClass])
         .getOrElse(exception(INVALID_SET,stmt))
       val newCommand = Instantiator.newInstance[Command](newCommandClass,rApp.reporter)
-      newCommand.token(stmt.command.token)
+      newCommand.token_=(stmt.command.token)
       newCommand.tokenLimitingType(rApp.instruction.token)
       stmt.command_$eq(newCommand)
       stmt.removeArgument(0)

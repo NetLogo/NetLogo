@@ -2,7 +2,8 @@
 
 package org.nlogo.headless
 
-import org.nlogo.api.{ Observer, Turtle, Patch, Link, LogoList }
+import org.nlogo.api.{ Observer, Turtle, Patch, Link}
+import org.nlogo.core.LogoList
 
 class TestAllStoredValues extends AbstractTestModels {
   testModel("all agents included", Model()) {

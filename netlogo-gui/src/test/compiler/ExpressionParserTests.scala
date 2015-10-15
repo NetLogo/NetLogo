@@ -3,7 +3,10 @@
 package org.nlogo.compiler
 
 import org.scalatest.FunSuite
-import org.nlogo.api.{ CompilerException, DummyExtensionManager, Program }
+import org.nlogo.api.{ DummyExtensionManager, ThreeDProgram }
+import org.nlogo.core.NetLogoCore
+import org.nlogo.core.Program
+import org.nlogo.core.CompilerException
 import org.nlogo.nvm.Procedure
 
 // Normally we don't bother declaring stuff in test classes private, but sometimes (as a few times
@@ -16,13 +19,13 @@ class ExpressionParserTests extends FunSuite {
   /// helpers
   private def compile(source: String, is3D: Boolean): Seq[Statements] = { // must be private
     val wrappedSource = PREAMBLE + source + POSTAMBLE
-    val program = new Program(is3D)
+    val program = Program.fromDialect(if (is3D) ThreeDProgram else NetLogoCore)
     implicit val tokenizer = if (is3D) Compiler.Tokenizer3D else Compiler.Tokenizer2D
     val results = TestHelper.structureParse(tokenizer.tokenizeAllowingRemovedPrims(wrappedSource), program)
     assertResult(1)(results.procedures.size)
     val procedure = results.procedures.values.iterator.next()
     val tokens =
-      new IdentifierParser(program, java.util.Collections.emptyMap[String, Procedure], results.procedures)
+      new IdentifierParser(results.program, java.util.Collections.emptyMap[String, Procedure], results.procedures)
         .process(results.tokens(procedure).iterator, procedure)
     new ExpressionParser(procedure).parse(tokens).map(_.statements)
   }
@@ -80,8 +83,8 @@ class ExpressionParserTests extends FunSuite {
       compile(input, is3D)
     }
     assertResult(message)(e.getMessage)
-    assertResult(start + PREAMBLE.length())(e.startPos)
-    assertResult(end + PREAMBLE.length())(e.endPos)
+    assertResult(start + PREAMBLE.length())(e.start)
+    assertResult(end + PREAMBLE.length())(e.end)
   }
 
   /// now, the actual tests

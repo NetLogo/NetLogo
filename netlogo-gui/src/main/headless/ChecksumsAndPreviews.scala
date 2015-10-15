@@ -2,14 +2,12 @@
 
 package org.nlogo.headless
 
+import org.nlogo.api.{ LogoException, Version }
+import org.nlogo.workspace.{ ModelsLibrary, PreviewCommandsRunner }
 import java.io.File
 import java.io.IOException
 
-import org.nlogo.api.CompilerException
-import org.nlogo.api.LogoException
-import org.nlogo.api.Version
-import org.nlogo.workspace.ModelsLibrary
-import org.nlogo.workspace.PreviewCommandsRunner
+import org.nlogo.core.CompilerException
 
 import javax.imageio.ImageIO
 

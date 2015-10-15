@@ -15,7 +15,7 @@ public final strictfp class _conststring extends Reporter implements Pure {
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.reporterSyntax(Syntax.StringType());
   }
 

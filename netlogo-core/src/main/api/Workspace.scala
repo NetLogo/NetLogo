@@ -2,7 +2,7 @@
 
 package org.nlogo.api
 
-import org.nlogo.core.{ Model, LiteralParser, LogoList => CoreLogoList }
+import org.nlogo.core.{ Model, LiteralParser, LogoList }
 
 import java.io.IOException
 

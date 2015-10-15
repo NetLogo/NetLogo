@@ -56,12 +56,12 @@ object Logger extends APILogger {
     buttonMsg.updateButtonMessage(name, "pressed", "user")
     Buttons.info(buttonMsg)
   }
-  def logAddWidget(tyype: String, name: String) {
-    widgetMsg.updateWidgetMessage(tyype.toLowerCase, name, "added")
+  def logAddWidget(tpe: String, name: String) {
+    widgetMsg.updateWidgetMessage(tpe.toLowerCase, name, "added")
     Widgets.info(widgetMsg)
   }
-  def logWidgetRemoved(tyype: String, name: String) {
-    widgetMsg.updateWidgetMessage(tyype.toLowerCase, name, "removed")
+  def logWidgetRemoved(tpe: String, name: String) {
+    widgetMsg.updateWidgetMessage(tpe.toLowerCase, name, "removed")
     Widgets.info(widgetMsg)
   }
   def logSpeedSlider(value: Double) {

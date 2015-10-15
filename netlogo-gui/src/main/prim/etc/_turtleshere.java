@@ -12,7 +12,7 @@ import org.nlogo.nvm.Reporter;
 public final strictfp class _turtleshere
     extends Reporter {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.reporterSyntax
         (Syntax.TurtlesetType(), "-TP-");
   }

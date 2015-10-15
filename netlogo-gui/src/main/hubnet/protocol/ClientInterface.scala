@@ -2,7 +2,8 @@
 
 package org.nlogo.hubnet.protocol
 
-import org.nlogo.api.{LogoList, CompilerServices, Shape}
+import org.nlogo.api.{ CompilerServices, Shape}
+import org.nlogo.core.LogoList
 
 /**
  * Holds the specification for the client-side interface.

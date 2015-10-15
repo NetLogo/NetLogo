@@ -3,6 +3,7 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.api.{ Syntax, LogoListBuilder }
+import org.nlogo.core.LogoList
 import org.nlogo.nvm.{ Context, Pure, Reporter }
 
 object hsb {

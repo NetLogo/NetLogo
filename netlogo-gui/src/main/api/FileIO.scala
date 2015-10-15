@@ -2,6 +2,8 @@
 
 package org.nlogo.api
 
+import org.nlogo.core.FileMode
+
 object FileIO {
 
   @throws(classOf[java.io.IOException])

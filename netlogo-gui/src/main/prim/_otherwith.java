@@ -18,7 +18,7 @@ import java.util.List;
 public final strictfp class _otherwith
     extends Reporter {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.reporterSyntax
         (new int[]{Syntax.AgentsetType(), Syntax.BooleanBlockType()},
             Syntax.AgentsetType(),

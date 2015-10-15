@@ -3,14 +3,16 @@
 package org.nlogo.compiler
 
 import org.scalatest.FunSuite
-import org.nlogo.api.{ DummyExtensionManager, Program, Version }
-import org.nlogo.nvm.{ DummyCompilationEnvironment, Procedure }
+import org.nlogo.api.{ DummyExtensionManager, Version }
+import org.nlogo.core.Program
+import org.nlogo.nvm.Procedure
+import org.nlogo.core.DummyCompilationEnvironment
 
 class TestGenerator extends FunSuite {
 
   val program = {
     import collection.JavaConverters._
-    new Program(List("glob1").asJava, false)
+    Program.empty().copy(userGlobals = Seq("GLOB1"))
   }
   def condense(disassembly: String) =
     disassembly.split("\n").map(_.trim).mkString("\n")
@@ -131,7 +133,7 @@ class TestGenerator extends FunSuite {
       test("Correctly generates custom code for or") {
         val emptyProgram = {
           import collection.JavaConverters._
-          new Program(List().asJava, false)
+          Program.empty()
         }
         Compiler.compileProgram(
           """

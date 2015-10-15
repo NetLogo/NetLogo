@@ -6,7 +6,7 @@ import org.nlogo.api.{ AgentException, LogoException, Syntax }
 import org.nlogo.nvm.{ Context, EngineException, Reporter }
 
 class _linkvariable(private[this] val _vn: Int) extends Reporter {
-  override def syntax: Syntax =
+  override def syntax =
     Syntax.reporterSyntax(Syntax.WildcardType | Syntax.ReferenceType, "---L")
 
   override def toString =

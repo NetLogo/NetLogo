@@ -4,7 +4,7 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.api.Equality;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.LogoList;
+import org.nlogo.core.LogoList;
 import org.nlogo.api.LogoListBuilder;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
@@ -22,7 +22,7 @@ public final strictfp class _remove
     if (obj instanceof LogoList) {
       LogoList list = (LogoList) obj;
       LogoListBuilder listCopy = new LogoListBuilder();
-      for (Iterator<Object> it = list.iterator(); it.hasNext();) {
+      for (Iterator<Object> it = list.javaIterator(); it.hasNext();) {
         Object elt = it.next();
         if (!Equality.equals(value, elt)) {
           listCopy.add(elt);
@@ -60,7 +60,7 @@ public final strictfp class _remove
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     int[] right = {Syntax.WildcardType(),
         Syntax.ListType() | Syntax.StringType()};
     int ret = Syntax.ListType() | Syntax.StringType();

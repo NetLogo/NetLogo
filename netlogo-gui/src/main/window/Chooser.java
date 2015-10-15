@@ -5,7 +5,7 @@ package org.nlogo.window;
 import org.nlogo.agent.ChooserConstraint;
 import org.nlogo.api.CompilerServices;
 import org.nlogo.api.Dump;
-import org.nlogo.api.LogoList;
+import org.nlogo.core.LogoList;
 
 import java.awt.event.MouseWheelListener;
 

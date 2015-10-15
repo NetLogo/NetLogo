@@ -2,11 +2,12 @@
 
 package org.nlogo.prim
 
-import org.nlogo.api.{ AgentException, LogoException, Nobody, Syntax }
+import org.nlogo.api.{ AgentException, LogoException, Syntax }
+import org.nlogo.core.Nobody
 import org.nlogo.nvm.{ Context, Reporter }
 
 class _patch extends Reporter {
-  override def syntax: Syntax =
+  override def syntax =
     Syntax.reporterSyntax(
 	  Array[Int](Syntax.NumberType, Syntax.NumberType),
 	  Syntax.PatchType | Syntax.NobodyType)

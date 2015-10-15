@@ -11,7 +11,7 @@ import org.nlogo.api.AgentException;
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.LogoList;
+import org.nlogo.core.LogoList;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
@@ -31,8 +31,8 @@ public final strictfp class _atpoints
     AgentSet sourceSet = argEvalAgentSet(context, 0);
     List<Agent> result = new ArrayList<Agent>();
     LogoList points = argEvalList(context, 1);
-    for (Iterator<Object> it = points.iterator(); it.hasNext();) {
-      if (!validateListEntry(it.next())) {
+    for (Object point : points.javaIterable()) {
+      if (!validateListEntry(point)) {
         throw new EngineException(context, this, I18N.errorsJ().getN(
             "org.nlogo.prim.etc._atpoints.invalidListOfPoints", Dump.logoObject(points)));
       }
@@ -93,9 +93,9 @@ public final strictfp class _atpoints
     if (entry instanceof LogoList) {
       LogoList entryList = (LogoList) entry;
       if (entryList.size() == 2 ||
-          ((world.program().is3D())
+          ((world.program().dialect().is3D())
               && (entryList.size() == 3))) {
-        for (Iterator<Object> iter = entryList.iterator(); iter.hasNext();) {
+        for (Iterator<Object> iter = entryList.javaIterator(); iter.hasNext();) {
           if (!(iter.next() instanceof Double)) {
             return false;
           }
@@ -112,14 +112,14 @@ public final strictfp class _atpoints
     // predictable ordering so runs are reproducible - ST 8/13/03
     LinkedHashSet<Patch> result =
         new LinkedHashSet<Patch>();
-    boolean is3D = world.program().is3D();
-    for (Iterator<Object> it = points.iterator(); it.hasNext();) {
-      LogoList entry = (LogoList) it.next();
+    boolean is3D = world.program().dialect().is3D();
+    for (Object o : points.javaIterable()) {
+      LogoList entry = (LogoList) o;
       Double x = null;
       Double y = null;
       Double z = org.nlogo.agent.World.ZERO;
       int j = 0;
-      for (Iterator<Object> it2 = entry.iterator(); it2.hasNext();) {
+      for (Iterator<Object> it2 = entry.javaIterator(); it2.hasNext();) {
         switch (j) {
           case 0:
             x = (Double) it2.next();
@@ -165,7 +165,7 @@ public final strictfp class _atpoints
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     int left = Syntax.TurtlesetType() | Syntax.PatchsetType();
     int[] right = {Syntax.ListType()};
     int ret = Syntax.AgentsetType();

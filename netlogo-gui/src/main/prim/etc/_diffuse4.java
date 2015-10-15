@@ -15,7 +15,7 @@ import org.nlogo.nvm.EngineException;
 public final strictfp class _diffuse4
     extends Command {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.commandSyntax
         (new int[]{Syntax.ReferenceType(), Syntax.NumberType()},
             "O---", true);
@@ -49,7 +49,7 @@ public final strictfp class _diffuse4
           (context, this, e.patch() + " should contain a number in the " +
               world.patchesOwnNameAt(reference.vn()) +
               " variable, but contains " +
-              (value == org.nlogo.api.Nobody$.MODULE$
+              (value == org.nlogo.core.Nobody$.MODULE$
                   ? "NOBODY"
                   : "the " + TypeNames.name(value) + " " + Dump.logoObject(value)) +
               " instead");

@@ -31,14 +31,14 @@ class DummyFileManager extends org.nlogo.nvm.FileManager {
   def attachModelDir(f: String): String =
     new java.io.File(tempdir.toFile, f).getAbsolutePath
 
-  val dummyFile = new org.nlogo.api.File {
+  val dummyFile = new org.nlogo.core.File {
     def close(ok: Boolean): Unit = ???
     def flush(): Unit = ???
     def getAbsolutePath: String = ???
     def getInputStream: java.io.InputStream = ???
     def getPath: String = ???
     def getPrintWriter: java.io.PrintWriter = ???
-    def open(mode: org.nlogo.api.FileMode): Unit = ???
+    def open(mode: org.nlogo.core.FileMode): Unit = ???
     def print(str: String): Unit = ???
     def println(): Unit = ???
     def println(line: String): Unit = ???
@@ -47,15 +47,15 @@ class DummyFileManager extends org.nlogo.nvm.FileManager {
   def attachPrefix(x$1: String): String = ???
   def closeAllFiles(): Unit = ???
   def closeCurrentFile(): Unit = ???
-  def currentFile(): org.nlogo.api.File = ???
+  def currentFile(): org.nlogo.core.File = ???
   def deleteFile(x$1: String): Unit = ???
-  def ensureMode(x$1: org.nlogo.api.FileMode): Unit = ???
+  def ensureMode(x$1: org.nlogo.core.FileMode): Unit = ???
   def eof(): Boolean = ???
   def fileExists(x$1: String): Boolean = ???
-  def findOpenFile(x$1: String): org.nlogo.api.File = ???
+  def findOpenFile(x$1: String): org.nlogo.core.File = ???
   def flushCurrentFile(): Unit = ???
   def getErrorInfo(): String = ???
-  def getFile(x$1: String): org.nlogo.api.File = dummyFile
+  def getFile(x$1: String): org.nlogo.core.File = dummyFile
   def getPrefix(): String = ???
   def hasCurrentFile(): Boolean = ???
   def openFile(x$1: String): Unit = ???

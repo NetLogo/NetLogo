@@ -3,7 +3,7 @@
 package org.nlogo.hubnet.mirroring;
 
 import org.nlogo.api.Dump;
-import org.nlogo.api.LogoList;
+import org.nlogo.core.LogoList;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -161,7 +161,7 @@ public final strictfp class PatchData
     pcolor(org.nlogo.api.Color.getARGBbyPremodulatedColorNumber(pcolor));
   }
 
-  private void pcolor(org.nlogo.api.LogoList pcolor) {
+  private void pcolor(org.nlogo.core.LogoList pcolor) {
     this.pcolor = pcolor;
     if (patchColors != null) {
       patchColors[(int) id] = org.nlogo.api.Color.getARGBIntByRGBAList(pcolor);

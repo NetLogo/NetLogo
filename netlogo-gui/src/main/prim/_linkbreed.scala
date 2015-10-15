@@ -9,7 +9,7 @@ import org.nlogo.nvm.{ Context, Reporter }
 class _linkbreed(breedName: String) extends Reporter {
   override def toString: String = s"${super.toString}:$breedName"
 
-  override def syntax: Syntax = Syntax.reporterSyntax(Syntax.LinksetType)
+  override def syntax = Syntax.reporterSyntax(Syntax.LinksetType)
 
   override def report(context: Context): AnyRef = world.getLinkBreed(breedName)
 

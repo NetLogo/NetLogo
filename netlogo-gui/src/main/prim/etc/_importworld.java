@@ -9,7 +9,7 @@ import org.nlogo.nvm.EngineException;
 public final strictfp class _importworld
     extends org.nlogo.nvm.Command {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.commandSyntax
         (new int[]{Syntax.StringType()},
             "O---", true);
@@ -30,7 +30,7 @@ public final strictfp class _importworld
             } catch (java.io.IOException ex) {
               throw new EngineException
                   (context, _importworld.this,
-                      token().name() +
+                      token().text() +
                           ": " + ex.getMessage());
             }
           }

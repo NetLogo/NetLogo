@@ -8,7 +8,7 @@ import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.Equality;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Nobody$;
+import org.nlogo.core.Nobody$;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Pure;
@@ -17,7 +17,7 @@ import org.nlogo.nvm.Reporter;
 public final strictfp class _equal
     extends Reporter implements Pure {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     int left = Syntax.WildcardType();
     int[] right = {Syntax.WildcardType()};
     int ret = Syntax.BooleanType();

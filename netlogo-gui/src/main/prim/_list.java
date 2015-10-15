@@ -12,7 +12,7 @@ public final strictfp class _list
     extends Reporter
     implements org.nlogo.nvm.Pure, org.nlogo.nvm.CustomGenerated {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     int[] right = {Syntax.RepeatableType() | Syntax.WildcardType()};
     int ret = Syntax.ListType();
     return Syntax.reporterSyntax(right, ret, 2, 0);

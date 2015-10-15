@@ -17,7 +17,7 @@ import java.util.List;
 public final strictfp class _inradius
     extends Reporter {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     int left = Syntax.TurtlesetType() | Syntax.PatchsetType();
     int[] right = {Syntax.NumberType()};
     int ret = Syntax.TurtlesetType() | Syntax.PatchsetType();

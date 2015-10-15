@@ -25,7 +25,7 @@ public final strictfp class _fdinternal
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.commandSyntax("-T--", true);
   }
 

@@ -250,11 +250,6 @@ case class _log() extends Reporter with Pure {
       right = List(Syntax.NumberType, Syntax.NumberType),
       ret = Syntax.NumberType)
 }
-case class _makepreview() extends Command {
-  override def syntax =
-    Syntax.commandSyntax(
-      agentClassString = "O---")
-}
 case class _max() extends Reporter with Pure {
   override def syntax =
     Syntax.reporterSyntax(

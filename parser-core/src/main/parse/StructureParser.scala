@@ -20,7 +20,8 @@ package org.nlogo.parse
 
 import
   org.nlogo.core,
-    core.{ErrorSource, ExtensionManager, BreedIdentifierHandler, FrontEndInterface, Program, Token, StructureDeclarations, StructureResults},
+    core.{ErrorSource, ExtensionManager, BreedIdentifierHandler, CompilationEnvironment,
+    FrontEndInterface, Program, Token, StructureDeclarations, StructureResults},
       FrontEndInterface.ProceduresMap,
     core.Fail._
 
@@ -31,7 +32,7 @@ object StructureParser {
   def parseAll(
                 tokenizer: core.TokenizerInterface,
                 source: String, displayName: Option[String], program: Program, subprogram: Boolean,
-                oldProcedures: ProceduresMap, extensionManager: ExtensionManager): StructureResults = {
+                oldProcedures: ProceduresMap, extensionManager: ExtensionManager, compilationEnvironment: CompilationEnvironment): StructureResults = {
     if (!subprogram)
       extensionManager.startFullCompilation()
     val sources = Seq((source, ""))
@@ -56,7 +57,7 @@ object StructureParser {
         cAssert(suppliedPath.endsWith(".nls"),
           "Included files must end with .nls",
           results.includes.head)
-        IncludeFile(extensionManager, suppliedPath) match {
+        IncludeFile(compilationEnvironment, suppliedPath) match {
           case Some((path, fileContents)) =>
             parseOne(fileContents, path, results.copy(includes = results.includes.tail))
           case None =>

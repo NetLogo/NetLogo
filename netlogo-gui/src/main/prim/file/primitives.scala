@@ -2,7 +2,8 @@
 
 package org.nlogo.prim.file
 
-import org.nlogo.api.{ CompilerException, FileMode, Syntax }
+import org.nlogo.core.{ CompilerException, FileMode }
+import org.nlogo.api.Syntax
 import org.nlogo.nvm.{ Command, Context, EngineException, Reporter, Workspace }
 import java.io.IOException
 
@@ -123,7 +124,7 @@ class _fileprint extends Command {
   override def perform(context: Context) {
     try
       workspace.fileManager.ensureMode(
-        org.nlogo.api.FileMode.Append)
+        org.nlogo.core.FileMode.Append)
     catch {
       case ex: IOException =>
         throw new EngineException(context, this, ex.getMessage)

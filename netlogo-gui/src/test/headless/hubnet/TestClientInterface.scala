@@ -2,7 +2,7 @@
 
 package org.nlogo.headless.hubnet
 
-import org.nlogo.api.{LocalFile, ModelSection, ModelReader}
+import org.nlogo.api.{ FileIO, LocalFile, ModelSection, ModelReader}
 import org.nlogo.util.TestUtils._
 import org.nlogo.headless.TestUsingWorkspace
 import org.nlogo.hubnet.protocol.ClientInterface
@@ -27,7 +27,7 @@ class TestClientInterface extends TestUsingWorkspace {
   }
 
   private def getClientWidgets(modelFilePath: String) = {
-    ModelReader.parseModel(new LocalFile(modelFilePath).readFile()).get(ModelSection.HubNetClient)
+    ModelReader.parseModel(FileIO.file2String(modelFilePath)).get(ModelSection.HubNetClient)
   }
 
   test("test roundTripSerialization method"){

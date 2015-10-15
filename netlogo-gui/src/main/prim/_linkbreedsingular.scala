@@ -3,11 +3,12 @@
 package org.nlogo.prim
 
 import org.nlogo.agent.{ AgentSet, Link }
-import org.nlogo.api.{ LogoException, Nobody, Syntax }
+import org.nlogo.api.{ LogoException, Syntax }
+import org.nlogo.core.Nobody
 import org.nlogo.nvm.{ Context, Reporter }
 
 class _linkbreedsingular(breedName: String) extends Reporter {
-  override def syntax: Syntax =
+  override def syntax =
     Syntax.reporterSyntax(
       Array[Int](Syntax.NumberType, Syntax.NumberType),
       Syntax.LinkType | Syntax.NobodyType)

@@ -8,7 +8,8 @@ import org.nlogo.window.{WorldViewSettings, OriginConfiguration}
 import java.awt.{GridBagLayout, BorderLayout, GridBagConstraints}
 import javax.swing.{JLabel, JComboBox, JPanel}
 import java.awt.event.{ItemListener, ItemEvent}
-import org.nlogo.api.{I18N, Editable, CompilerServices, TokenType}
+import org.nlogo.api.{I18N, Editable, CompilerServices}
+import org.nlogo.core.TokenType
 import collection.JavaConverters._
 
 class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Colorizer[TokenType])

@@ -2,6 +2,8 @@
 
 package org.nlogo.api
 
+import org.nlogo.core.File
+
 trait TrailDrawerInterface extends DrawingInterface {
   def drawLine(x0: Double, y0: Double, x1: Double, y1: Double, color: AnyRef, size: Double, mode: String)
   def setColors(colors: Array[Int])

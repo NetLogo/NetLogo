@@ -17,7 +17,7 @@ private class SimpleOfVisitor extends DefaultAstVisitor {
   }
   private def process(app:ReporterApp) {
     for(r <- convert(app.args(0).asInstanceOf[ReporterBlock].app.reporter)) {
-      r.token(app.reporter.token)
+      r.token_=(app.reporter.token)
       app.reporter = r
       app.removeArgument(0)
     }

@@ -2,7 +2,8 @@
 
 package org.nlogo.workspace
 
-import org.nlogo.api.{ CompilerException, LogoException }
+import org.nlogo.api.LogoException
+import org.nlogo.core.CompilerException
 
 /**
  * Interface provides access to the NetLogo controlling API's report and command methods found in

@@ -5,7 +5,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.LogoList;
+import org.nlogo.core.LogoList;
 import org.nlogo.api.Syntax;
 import org.nlogo.api.TypeNames;
 import org.nlogo.nvm.Context;
@@ -17,7 +17,7 @@ import java.util.Iterator;
 
 public final strictfp class _mean extends Reporter implements Pure {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.reporterSyntax
         (new int[]{Syntax.ListType()},
             Syntax.NumberType());
@@ -34,7 +34,7 @@ public final strictfp class _mean extends Reporter implements Pure {
       throw new EngineException(
         context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.emptyList"));
     }
-    for (Iterator<Object> it = list.iterator(); it.hasNext();) {
+    for (Iterator<Object> it = list.javaIterator(); it.hasNext();) {
       Object elt = it.next();
       if (!(elt instanceof Double)) {
         throw new EngineException(context, this,

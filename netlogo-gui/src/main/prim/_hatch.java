@@ -23,7 +23,7 @@ public final strictfp class _hatch
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.commandSyntax
         (new int[]{Syntax.NumberType(),
             Syntax.CommandBlockType() | Syntax.OptionalType()},

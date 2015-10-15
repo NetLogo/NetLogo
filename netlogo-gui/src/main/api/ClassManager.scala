@@ -11,7 +11,7 @@ package org.nlogo.api;
  * <pre>
  * public class FibonacciExtension extends org.nlogo.api.DefaultClassManager
  * {
- *     public void load(org.nlogo.api.PrimitiveManager primManager)
+ *     public void load(org.nlogo.core.PrimitiveManager primManager)
  *     {
  *         primManager.addPrimitive("first-n-fibs", new Fibonacci());
  *     }
@@ -19,6 +19,10 @@ package org.nlogo.api;
  * </pre>
  */
 
+import org.nlogo.core.CompilerException
+import org.nlogo.core.Primitive
+import org.nlogo.core.ExtensionObject
+import org.nlogo.core.{ ExtensionManager => CoreExtensionManager }
 import java.util.{ List => JList }
 
 trait ClassManager {
@@ -27,7 +31,7 @@ trait ClassManager {
    * (In the NetLogo GUI, it is called on the AWT event thread.
    */
   @throws(classOf[ExtensionException])
-  def runOnce(em: ExtensionManager)
+  def runOnce(em: CoreExtensionManager)
 
   /**
    * Loads the primitives in the extension. This is called each time a model that uses this
@@ -43,7 +47,7 @@ trait ClassManager {
    * before NetLogo is closed or another model is opened.
    */
   @throws(classOf[ExtensionException])
-  def unload(em: ExtensionManager)
+  def unload(em: CoreExtensionManager)
 
   /**
    * Return a new NetLogo ExtensionObject
@@ -54,7 +58,7 @@ trait ClassManager {
    */
   @throws(classOf[ExtensionException])
   @throws(classOf[CompilerException])
-  def readExtensionObject(reader: ExtensionManager, typeName: String, value: String): ExtensionObject
+  def readExtensionObject(reader: CoreExtensionManager, typeName: String, value: String): ExtensionObject
 
   /**
    * Write any state needed to restore the world.
@@ -71,7 +75,7 @@ trait ClassManager {
    * @param handler An interface that allows the extensions to report non-fatal errors during the import
    */
   @throws(classOf[ExtensionException])
-  def importWorld(lines: JList[Array[String]], reader: ExtensionManager, handler: ImportErrorHandler)
+  def importWorld(lines: JList[Array[String]], reader: CoreExtensionManager, handler: ImportErrorHandler)
 
   /**
    * Clear any stored state

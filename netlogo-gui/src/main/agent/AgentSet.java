@@ -2,7 +2,7 @@
 
 package org.nlogo.agent;
 
-import org.nlogo.api.LogoList;
+import org.nlogo.core.LogoList;
 
 public abstract strictfp class AgentSet
     implements org.nlogo.api.AgentSet {

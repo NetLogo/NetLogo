@@ -2,6 +2,9 @@
 
 package org.nlogo.api
 
+import org.nlogo.core.LogoList
+import org.nlogo.core.Nobody
+import org.nlogo.core.{ Syntax => CoreSyntax }
 /**
  * Specifies the arguments accepted by a primitive.
  * Used by the compiler for type-checking.
@@ -48,7 +51,8 @@ case class Syntax(precedence: Int,
                   switches: Boolean = false)
 {
 
-  import Syntax._
+  import org.nlogo.core.Primitive
+import Syntax._
 
   require(agentClassString == null ||
           agentClassString.size == 4)
@@ -269,17 +273,16 @@ object Syntax {
     (mask & value) != 0
 
   /** Returns a Syntax object for commands with no arguments. */
-  def commandSyntax() =
-    Syntax(precedence = CommandPrecedence)
+  def commandSyntax(): CoreSyntax =
+    CoreSyntax.commandSyntax()
 
   /**
    * Returns a <code>Syntax</code> for commands with one or more right arguments.
    *
    * @param right an array of Type flags that are to be to the right of the Primitive
    */
-  def commandSyntax(right: Array[Int]) =
-    Syntax(precedence = CommandPrecedence,
-           right = right)
+  def commandSyntax(right: Array[Int]): CoreSyntax =
+    CoreSyntax.commandSyntax(right = right)
 
   /**
    * Returns a <code>Syntax</code> for commands with a variable number of arguments.
@@ -287,90 +290,81 @@ object Syntax {
    * @param right  an array of Type flags that are to be to the right of the primitive
    * @param dfault the default number of arguments if no parenthesis are used.
    */
-  def commandSyntax(right: Array[Int], dfault: Int) =
-    Syntax(precedence = CommandPrecedence,
-           right = right, defaultOption = Some(dfault))
+  def commandSyntax(right: Array[Int], dfault: Int): CoreSyntax =
+    CoreSyntax.commandSyntax(right = right.toList, defaultOption = Some(dfault))
 
-  def commandSyntax(switches: Boolean) =
-    Syntax(precedence = CommandPrecedence,
-           switches = switches)
+  def commandSyntax(switches: Boolean): CoreSyntax =
+    CoreSyntax.commandSyntax()
 
-  def commandSyntax(agentClassString: String, switches: Boolean) =
-    Syntax(precedence = CommandPrecedence,
-           agentClassString = agentClassString, switches = switches)
+  def commandSyntax(agentClassString: String, switches: Boolean): CoreSyntax =
+    CoreSyntax.commandSyntax(agentClassString = agentClassString)
 
   // for use by commands
-  def commandSyntax(right: Array[Int], switches: Boolean) =
-    Syntax(precedence = CommandPrecedence,
-           right = right, switches = switches)
+  def commandSyntax(right: Array[Int], switches: Boolean): CoreSyntax =
+    CoreSyntax.commandSyntax(right = right.toList)
 
   // for use by commands
-  def commandSyntax(right: Array[Int], agentClassString: String) =
-    Syntax(precedence = CommandPrecedence,
-           right = right, agentClassString = agentClassString)
+  def commandSyntax(right: Array[Int], agentClassString: String): CoreSyntax =
+    CoreSyntax.commandSyntax(right = right.toList, agentClassString = agentClassString)
 
   // for use by commands
-  def commandSyntax(right: Array[Int], agentClassString: String, switches: Boolean) =
-    Syntax(precedence = CommandPrecedence,
-           right = right, agentClassString = agentClassString, switches = switches)
+  def commandSyntax(right: Array[Int], agentClassString: String, switches: Boolean): CoreSyntax =
+    CoreSyntax.commandSyntax(right = right.toList, agentClassString = agentClassString)
 
   // for use by commands
-  def commandSyntax(right: Array[Int], agentClassString: String, blockAgentClassString: String, switches: Boolean) =
-    Syntax(precedence = CommandPrecedence,
-           right = right, agentClassString = agentClassString, blockAgentClassString = blockAgentClassString,
-           switches = switches)
+  def commandSyntax(right: Array[Int], agentClassString: String, blockAgentClassString: String, switches: Boolean): CoreSyntax =
+    CoreSyntax.commandSyntax(right = right.toList, agentClassString = agentClassString, blockAgentClassString = Option(blockAgentClassString))
 
   // for use by commands
   def commandSyntax(right: Array[Int], dfault: Int, agentClassString: String,
-                    blockAgentClassString: String, switches: Boolean) =
-    Syntax(precedence = CommandPrecedence,
-           right = right, defaultOption = Some(dfault), agentClassString = agentClassString,
-           blockAgentClassString = blockAgentClassString, switches = switches)
+                    blockAgentClassString: String, switches: Boolean): CoreSyntax =
+    CoreSyntax.commandSyntax(right = right.toList, defaultOption = Some(dfault), agentClassString = agentClassString,
+           blockAgentClassString = Option(blockAgentClassString))
 
   // for use by constants and no-argument reporters
-  def reporterSyntax(ret: Int, agentClassString: String) =
-    Syntax(precedence = NormalPrecedence,
+  def reporterSyntax(ret: Int, agentClassString: String): CoreSyntax =
+    CoreSyntax.reporterSyntax(precedence = NormalPrecedence,
            ret = ret, agentClassString = agentClassString)
 
   // for use by infix reporters
-  def reporterSyntax(left: Int, right: Array[Int], ret: Int, precedence: Int, isRightAssociative: Boolean) =
-    Syntax(left = left, right = right, ret = ret, precedence = precedence, isRightAssociative = isRightAssociative)
+  def reporterSyntax(left: Int, right: Array[Int], ret: Int, precedence: Int, isRightAssociative: Boolean): CoreSyntax =
+    CoreSyntax.reporterSyntax(left = left, right = right.toList, ret = ret, precedence = precedence, isRightAssociative = isRightAssociative)
 
   // for use by prefix reporters
-  def reporterSyntax(right: Array[Int], ret: Int, agentClassString: String, blockAgentClassString: String) =
-    Syntax(precedence = NormalPrecedence,
-           right = right, ret = ret, agentClassString = agentClassString, blockAgentClassString = blockAgentClassString)
+  def reporterSyntax(right: Array[Int], ret: Int, agentClassString: String, blockAgentClassString: String): CoreSyntax =
+    CoreSyntax.reporterSyntax(precedence = NormalPrecedence,
+           right = right.toList, ret = ret, agentClassString = agentClassString, blockAgentClassString = Option(blockAgentClassString))
 
   // for use by prefix reporters
-  def reporterSyntax(right: Array[Int], ret: Int, agentClassString: String) =
-    Syntax(precedence = NormalPrecedence,
-           right = right, ret = ret, agentClassString = agentClassString)
+  def reporterSyntax(right: Array[Int], ret: Int, agentClassString: String): CoreSyntax =
+    CoreSyntax.reporterSyntax(precedence = NormalPrecedence,
+           right = right.toList, ret = ret, agentClassString = agentClassString)
 
   // for use by variadic reporters when min is different than default
-  def reporterSyntax(right: Array[Int], ret: Int, dfault: Int, minimum: Int) =
-    Syntax(precedence = NormalPrecedence,
-           right = right, ret = ret, defaultOption = Some(dfault), minimumOption = Some(minimum))
+  def reporterSyntax(right: Array[Int], ret: Int, dfault: Int, minimum: Int): CoreSyntax =
+    CoreSyntax.reporterSyntax(precedence = NormalPrecedence,
+           right = right.toList, ret = ret, defaultOption = Some(dfault), minimumOption = Some(minimum))
 
   // for use by reporters that take a reporter block
   def reporterSyntax(left: Int, right: Array[Int], ret: Int, precedence: Int, isRightAssociative: Boolean,
-                     agentClassString: String, blockAgentClassString: String) =
-    Syntax(left = left, right = right, ret = ret, precedence = precedence, isRightAssociative = isRightAssociative,
-           agentClassString = agentClassString, blockAgentClassString = blockAgentClassString)
+                     agentClassString: String, blockAgentClassString: String): CoreSyntax =
+    CoreSyntax.reporterSyntax(left = left, right = right.toList, ret = ret, precedence = precedence, isRightAssociative = isRightAssociative,
+           agentClassString = agentClassString, blockAgentClassString = Option(blockAgentClassString))
 
   def reporterSyntax(left: Int, right: Array[Int], ret: Int, precedence: Int,
                      dfault: Int, isRightAssociative: Boolean,
-                     agentClassString: String, blockAgentClassString: String) =
-    Syntax(left = left, right = right, ret = ret, precedence = precedence, defaultOption = Some(dfault),
+                     agentClassString: String, blockAgentClassString: String): CoreSyntax =
+    CoreSyntax.reporterSyntax(left = left, right = right.toList, ret = ret, precedence = precedence, defaultOption = Some(dfault),
            isRightAssociative = isRightAssociative, agentClassString = agentClassString,
-           blockAgentClassString = blockAgentClassString)
+           blockAgentClassString = Option(blockAgentClassString))
 
   /**
    * Returns a <code>Syntax</code> for reporters with no arguments
    *
    * @param ret the return type
    */
-  def reporterSyntax(ret: Int) =
-    Syntax(precedence = NormalPrecedence,
+  def reporterSyntax(ret: Int): CoreSyntax =
+    CoreSyntax.reporterSyntax(precedence = NormalPrecedence,
            ret = ret)
 
   /**
@@ -381,8 +375,8 @@ object Syntax {
    * @param ret        the return type
    * @param precedence
    */
-  def reporterSyntax(left: Int, right: Array[Int], ret: Int, precedence: Int) =
-    Syntax(left = left, right = right, ret = ret, precedence = precedence)
+  def reporterSyntax(left: Int, right: Array[Int], ret: Int, precedence: Int): CoreSyntax =
+    CoreSyntax.reporterSyntax(left = left, right = right.toList, ret = ret, precedence = precedence)
 
   /**
    * Returns a <code>Syntax</code> for reporters with one or more right arguments
@@ -390,9 +384,9 @@ object Syntax {
    * @param right an array of Type flags that are to the be right of the Primitive
    * @param ret   the return type
    */
-  def reporterSyntax(right: Array[Int], ret: Int) =
-    Syntax(precedence = NormalPrecedence,
-           right = right, ret = ret)
+  def reporterSyntax(right: Array[Int], ret: Int): CoreSyntax =
+    CoreSyntax.reporterSyntax(precedence = NormalPrecedence,
+           right = right.toList, ret = ret)
 
   /**
    * Returns a <code>Syntax</code> for reporters with a variable number of
@@ -402,9 +396,9 @@ object Syntax {
    * @param ret    the return type
    * @param dfault the default number of arguments if no parenthesis are used.
    */
-  def reporterSyntax(right: Array[Int], ret: Int, dfault: Int) =
-    Syntax(precedence = NormalPrecedence,
-           right = right, ret = ret, defaultOption = Some(dfault))
+  def reporterSyntax(right: Array[Int], ret: Int, dfault: Int): CoreSyntax =
+    CoreSyntax.reporterSyntax(precedence = NormalPrecedence,
+           right = right.toList, ret = ret, defaultOption = Some(dfault))
 
   def convertOldStyleAgentClassString(oldStyle: String) =
     "OTPL".map(c => if (oldStyle.contains(c)) c else '-')

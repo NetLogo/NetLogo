@@ -2,7 +2,8 @@
 
 package org.nlogo.agent
 
-import org.nlogo.api.{ CompilerException, CompilerServices, LogoException, LogoThunkFactory, ReporterLogoThunk, ValueConstraint }
+import org.nlogo.api.{ CompilerServices, LogoException, LogoThunkFactory, ReporterLogoThunk, ValueConstraint }
+import org.nlogo.core.CompilerException
 
 object SliderConstraint {
 
@@ -13,7 +14,7 @@ object SliderConstraint {
 
   trait SliderConstraintException extends Exception { val spec: Spec }
   class ConstraintCompilerException(val spec: Spec, ex: CompilerException) extends
-    CompilerException(ex.getMessage, ex.startPos, ex.endPos, ex.fileName) with SliderConstraintException
+    CompilerException(ex.getMessage, ex.start, ex.end, ex.filename) with SliderConstraintException
   class ConstraintRuntimeException(val spec:Spec, message: String) extends
     RuntimeException("Constraint runtime error for " + spec.displayName + ": " + message) with SliderConstraintException
 

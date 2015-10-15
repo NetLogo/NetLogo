@@ -37,6 +37,8 @@ class LogoList private (private val v: Vector[AnyRef])
   override def size = v.size
   def javaIterator: java.util.Iterator[AnyRef] =
     new Iterator(v)
+  def javaIterable: java.lang.Iterable[AnyRef] =
+    new Iterable(v)
   def toJava: java.util.AbstractSequentialList[AnyRef] =
     new JavaList(v, size)
   def listIterator(i: Int): java.util.ListIterator[AnyRef] =
@@ -62,6 +64,9 @@ class LogoList private (private val v: Vector[AnyRef])
 
   /// Iterator class
 
+  private class Iterable(v: Vector[AnyRef]) extends java.lang.Iterable[AnyRef] {
+    val iterator = new Iterator(v)
+  }
   private class Iterator(v: Vector[AnyRef]) extends java.util.ListIterator[AnyRef] {
     private val it = v.iterator
     override def hasNext = it.hasNext

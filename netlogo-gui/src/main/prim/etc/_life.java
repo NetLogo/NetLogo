@@ -26,7 +26,7 @@ public final strictfp class _life
   private static final int LIVE_NEIGHBORS_VAR = Patch.LAST_PREDEFINED_VAR + 2;
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.commandSyntax("O---", true);
   }
 

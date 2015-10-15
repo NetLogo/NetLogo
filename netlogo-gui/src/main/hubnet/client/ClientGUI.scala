@@ -57,7 +57,7 @@ class ClientGUI(editorFactory: org.nlogo.window.EditorFactory,clientView: Client
   }
   def addMessage(message: String) {messagePanel.addMessage(message)}
   def clearMessages() {messagePanel.clear()}
-  def setChoices(chooserChoices: Map[String, org.nlogo.api.LogoList]) {
+  def setChoices(chooserChoices: Map[String, org.nlogo.core.LogoList]) {
     def getWidget(name: String): ChooserWidget = {
       getInterfaceComponents.collect{case w:ChooserWidget => w}.find(_.displayName == name) match {
         case Some(w) => w

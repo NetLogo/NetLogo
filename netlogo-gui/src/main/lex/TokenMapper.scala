@@ -3,7 +3,10 @@
 package org.nlogo.lex
 
 import org.nlogo.util.Utils
-import org.nlogo.api._
+import org.nlogo.api.{ Color, TokenMapperInterface, AgentVariables }
+import org.nlogo.core.Nobody
+import org.nlogo.core.Token
+import org.nlogo.core.TokenHolder
 
 // public for use from compiler.TestAllSyntaxes. yuck! - ST 1/21/09
 object TokenMapper2D extends TokenMapper(false)
@@ -39,8 +42,8 @@ class TokenMapper(is3D: Boolean) extends TokenMapperInterface {
     for {
       line <- Utils.getResourceLines("/system/tokens.txt")
       if !line.startsWith("#")
-      Array(tyype, primName, className) = line.split(" ")
-      if tyype == entryType
+      Array(tpe, primName, className) = line.split(" ")
+      if tpe == entryType
       // if a 3d version of the prim exists and we got to this point it
       // should override the 2d version. ev 12/11/06  note the overriding
       // 3d version must come after the 2d version in tokens.txt - ST 12/19/08

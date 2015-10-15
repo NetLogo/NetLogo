@@ -18,7 +18,7 @@ public final strictfp class _ask
     extends Command
     implements org.nlogo.nvm.CustomAssembled {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.commandSyntax
         (new int[]{Syntax.AgentsetType() | Syntax.AgentType(),
             Syntax.CommandBlockType()},

@@ -13,7 +13,7 @@ import java.util.List;
 public final strictfp class _shapes
     extends Reporter {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.reporterSyntax(Syntax.ListType());
   }
 

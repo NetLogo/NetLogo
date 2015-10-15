@@ -13,7 +13,7 @@ public final strictfp class _askconcurrent
     extends Command
     implements org.nlogo.nvm.CustomAssembled {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.commandSyntax
         (new int[]{Syntax.AgentsetType(), Syntax.CommandBlockType()},
             "OTPL", "?", true);

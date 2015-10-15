@@ -452,15 +452,15 @@ public strictfp class EditorArea<TokenType>
 
   ///
 
-  String getHelpTarget(int startPosition) {
+  String getHelpTarget(int startition) {
     // determine the current "word" that the cursor is on
     javax.swing.text.PlainDocument doc = (javax.swing.text.PlainDocument) getDocument();
     try {
-      int currentLine = offsetToLine(doc, startPosition);
+      int currentLine = offsetToLine(doc, startition);
       int startLineOffset = lineToStartOffset(doc, currentLine);
       int lineLength = lineToEndOffset(doc, currentLine) - startLineOffset;
       String lineText = doc.getText(startLineOffset, lineLength);
-      int selStartInString = startPosition - startLineOffset;
+      int selStartInString = startition - startLineOffset;
       return colorizer.getTokenAtPosition(lineText, selStartInString);
     } catch (javax.swing.text.BadLocationException ex) {
       throw new IllegalStateException(ex);

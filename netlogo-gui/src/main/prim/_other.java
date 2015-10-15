@@ -13,7 +13,7 @@ public final strictfp class _other
     extends Reporter {
   // super( "TPL" ) ;
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.reporterSyntax
         (new int[]{Syntax.AgentsetType()},
             Syntax.AgentsetType());

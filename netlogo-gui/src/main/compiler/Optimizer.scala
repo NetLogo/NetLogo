@@ -150,16 +150,16 @@ private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
       val newGuy = Instantiator.newInstance[Instruction](theClass, constructorArgs: _*)
       node match {
         case app: ReporterApp =>
-          newGuy.token(app.reporter.token)
+          newGuy.token_=(app.reporter.token)
           app.reporter = newGuy.asInstanceOf[Reporter]
         case stmt: Statement =>
-          newGuy.token(stmt.command.token)
+          newGuy.token_=(stmt.command.token)
           stmt.command = newGuy.asInstanceOf[Command]
       }
     }
     def addArg(theClass: Class[_ <: Reporter], original: ReporterApp): Match = {
       val newGuy = Instantiator.newInstance[Reporter](theClass)
-      newGuy.token(original.reporter.token)
+      newGuy.token_=(original.reporter.token)
       val result = new Match(new ReporterApp(newGuy, original.start, original.end, original.file))
       graftArg(result)
       result

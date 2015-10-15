@@ -11,7 +11,7 @@ public final strictfp class _ifelse
     extends Command
     implements org.nlogo.nvm.CustomAssembled {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.commandSyntax
         (new int[]{Syntax.BooleanType(),
             Syntax.CommandBlockType(),

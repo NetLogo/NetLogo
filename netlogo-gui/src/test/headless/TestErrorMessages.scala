@@ -7,7 +7,7 @@ package org.nlogo.headless
 // that framework should be extended so these tests could be done in it.)  - ST 3/18/08, 8/21/13
 
 import org.scalatest.{ FunSuite, BeforeAndAfterEach }
-import org.nlogo.api.CompilerException
+import org.nlogo.core.CompilerException
 import org.nlogo.nvm.{ ArgumentTypeException, EngineException }
 
 class TestErrorMessages extends FunSuite with AbstractTestLanguage with BeforeAndAfterEach {
@@ -31,7 +31,7 @@ class TestErrorMessages extends FunSuite with AbstractTestLanguage with BeforeAn
       testCommand("__ignore 0 < position 5 item 0 glob1")
     }
     assertResult("POSITION expected input to be a string or list but got the number 1.4 instead.")(ex.getMessage)
-    assertResult("POSITION")(ex.instruction.token.name.toUpperCase)
+    assertResult("POSITION")(ex.instruction.token.text.toUpperCase)
   }
   test("breedOwnRedeclaration") {
     val ex = intercept[CompilerException] {

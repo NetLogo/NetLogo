@@ -2,7 +2,8 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api, api.{ Syntax, LogoListBuilder, LogoList, Color }
+import org.nlogo.api, api.{ Syntax, LogoListBuilder, Color }
+import org.nlogo.core.LogoList
 import org.nlogo.nvm.{ Context, Pure, Reporter }
 
 class _extracthsb extends Reporter with Pure {

@@ -2,9 +2,10 @@
 
 package org.nlogo.nvm
 
+import org.nlogo.core.{ DummyCompilationEnvironment, CompilationEnvironment }
 import org.nlogo.agent.{Agent, AgentSet, World}
-import org.nlogo.api.{WorldDimensions, DummyCompilerServices, DummyExtensionManager, JobOwner,
-                      CommandRunnable, ReporterRunnable, ImportErrorHandler}
+import org.nlogo.api.{WorldDimensions, DummyCompilerServices, JobOwner,
+                      DummyExtensionManager, CommandRunnable, ReporterRunnable, ImportErrorHandler}
 
 class DummyWorkspace extends DummyCompilerServices with Workspace {
   private def unsupported = throw new UnsupportedOperationException
@@ -16,7 +17,10 @@ class DummyWorkspace extends DummyCompilerServices with Workspace {
   override def breathe() = unsupported
   override def joinForeverButtons(agent: Agent) = unsupported
   override def addJobFromJobThread(job: Job) = unsupported
-  override def getExtensionManager() = new DummyExtensionManager
+  override def getExtensionManager() = new DummyExtensionManager with ExtensionManager {
+    override def dumpExtensionPrimitives: String = ???
+    override def dumpExtensions: String = ???
+  }
   override def getCompilationEnvironment() = new DummyCompilationEnvironment
   override def waitFor(runnable: CommandRunnable) = unsupported
   override def waitForResult[T](runnable: ReporterRunnable[T]): T = unsupported

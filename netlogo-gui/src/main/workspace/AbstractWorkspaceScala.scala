@@ -3,7 +3,8 @@
 package org.nlogo.workspace
 
 import org.nlogo.agent.{World, Agent, Observer, AbstractExporter, AgentSet, ArrayAgentSet}
-import org.nlogo.api.{PreviewCommands, PlotInterface, Dump, CommandLogoThunk, ReporterLogoThunk, CompilerException, JobOwner, SimpleJobOwner}
+import org.nlogo.api.{PreviewCommands, PlotInterface, Dump, CommandLogoThunk, ReporterLogoThunk, JobOwner, SimpleJobOwner}
+import org.nlogo.core.CompilerException
 import org.nlogo.nvm.{Instruction, EngineException, Context, Procedure}
 import org.nlogo.plot.{ PlotExporter, PlotManager }
 import org.nlogo.workspace.AbstractWorkspace.HubNetManagerFactory
@@ -56,7 +57,7 @@ abstract class AbstractWorkspaceScala(private val _world: World, hubNetManagerFa
     import java.io.{ File => JFile }
     import java.net.MalformedURLException
 
-    new org.nlogo.nvm.CompilationEnvironment {
+    new org.nlogo.core.CompilationEnvironment {
       def getSource(filename: String): String = AbstractWorkspaceScala.this.getSource(filename)
       def profilingEnabled: Boolean = AbstractWorkspaceScala.this.profilingEnabled
       def resolvePath(path: String): String = {

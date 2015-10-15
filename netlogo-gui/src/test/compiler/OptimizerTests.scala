@@ -3,7 +3,8 @@
 package org.nlogo.compiler
 
 import org.scalatest.FunSuite
-import org.nlogo.api.{ DummyExtensionManager, Program }
+import org.nlogo.api.{ DummyExtensionManager}
+import org.nlogo.core.Program
 import org.nlogo.nvm.Procedure
 
 class OptimizerTests extends FunSuite {
@@ -15,13 +16,13 @@ class OptimizerTests extends FunSuite {
     compile("globals [glob1] breed [frogs frog] to __test [x] " + source + "\nend")
       .statements.body.head.toString
   private def compile(source:String):ProcedureDefinition = {
-    val program = new Program(false)
+    val program = Program.empty()
     val results = TestHelper.structureParse(source, program)
     assertResult(1)(results.procedures.size)
     val procedure = results.procedures.values.iterator.next()
     val tokens =
-      new IdentifierParser(program,java.util.Collections.emptyMap[String,Procedure], results.procedures)
-      .process(results.tokens(procedure).iterator, procedure)
+      new IdentifierParser(results.program,java.util.Collections.emptyMap[String,Procedure], results.procedures)
+        .process(results.tokens(procedure).iterator, procedure)
     val procdef = new ExpressionParser(procedure).parse(tokens).head
     procdef.accept(new ConstantFolder)
     procdef.accept(new Optimizer(false))

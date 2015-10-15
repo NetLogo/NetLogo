@@ -2,7 +2,8 @@
 
 package org.nlogo.compiler
 
-import org.nlogo.api.{ CompilerException, TokenizerInterface, VersionHistory }
+import org.nlogo.api.{ TokenizerInterface, VersionHistory }
+import org.nlogo.core.CompilerException
 import org.nlogo.nvm.Workspace
 import org.nlogo.prim._constdouble
 
@@ -147,9 +148,9 @@ class AutoConverter2(workspace:Workspace,ignoreErrors:Boolean)(implicit tokenize
       oldReporter match {
         case _:org.nlogo.prim.dead._valuefrom | _:org.nlogo.prim.dead._valuesfrom =>
           val arg1 = app(1).asInstanceOf[ReporterBlock]
-          replacements += new Replacement(app.reporter.token.startPos,
-                                          app.reporter.token.endPos,
-                                          app.reporter.token.name,
+          replacements += new Replacement(app.reporter.token.start,
+                                          app.reporter.token.end,
+                                          app.reporter.token.text,
                                           source.substring(arg1.start,arg1.end) + " of")
           var start = arg1.start
           if(start > 0 && source.charAt(start - 1) == ' ') start -= 1
@@ -159,16 +160,16 @@ class AutoConverter2(workspace:Workspace,ignoreErrors:Boolean)(implicit tokenize
           var choice:String = null
           val arg = app(0).asInstanceOf[ReporterApp].reporter
           if(arg.isInstanceOf[_constdouble] && arg.asInstanceOf[_constdouble].report(null).isInstanceOf[java.lang.Double])
-            choice = if(arg.token.name.indexOf('.') == -1) "random" else "random-float"
-          else if(arg.token.name.equalsIgnoreCase("WORLD-WIDTH") ||
-                  arg.token.name.equalsIgnoreCase("WORLD-HEIGHT") ||
-                  arg.token.name.equalsIgnoreCase("MAX-PXCOR") ||
-                  arg.token.name.equalsIgnoreCase("MAX-PYCOR") )
+            choice = if(arg.token.text.indexOf('.') == -1) "random" else "random-float"
+          else if(arg.token.text.equalsIgnoreCase("WORLD-WIDTH") ||
+                  arg.token.text.equalsIgnoreCase("WORLD-HEIGHT") ||
+                  arg.token.text.equalsIgnoreCase("MAX-PXCOR") ||
+                  arg.token.text.equalsIgnoreCase("MAX-PYCOR") )
             choice = "random"
           if(choice != null)
-            replacements += new Replacement(oldReporter.token.startPos,
-                                            oldReporter.token.endPos,
-                                            oldReporter.token.name,
+            replacements += new Replacement(oldReporter.token.start,
+                                            oldReporter.token.end,
+                                            oldReporter.token.text,
                                             choice)
         case _ => // do nothing
       }
@@ -182,9 +183,9 @@ class AutoConverter2(workspace:Workspace,ignoreErrors:Boolean)(implicit tokenize
       if(oldCommand.isInstanceOf[org.nlogo.prim.dead._histogramfrom]) {
         val arg1 = stmt(1).asInstanceOf[ReporterBlock]
         var start = arg1.start
-        replacements += new Replacement(oldCommand.token.startPos,
-                                        oldCommand.token.endPos,
-                                        oldCommand.token.name,
+        replacements += new Replacement(oldCommand.token.start,
+                                        oldCommand.token.end,
+                                        oldCommand.token.text,
                                         "histogram " + source.substring(start,arg1.end) + " of")
         if(start > 0 && source.charAt(start - 1) == ' ') start -= 1
         replacements += new Replacement(start,arg1.end,

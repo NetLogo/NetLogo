@@ -5,7 +5,8 @@ package org.nlogo.agent;
 import org.nlogo.api.AgentException;
 import org.nlogo.api.Color;
 import org.nlogo.api.ImporterUser;
-import org.nlogo.api.Program;
+import org.nlogo.core.Breed;
+import org.nlogo.core.Program;
 import org.nlogo.api.WorldDimensionException;
 import org.nlogo.api.WorldDimensions;
 import org.nlogo.api.WorldDimensions3D;
@@ -196,12 +197,26 @@ public final strictfp class World3D
 
   @Override
   public Program newProgram() {
-    return new Program(true);
+    return org.nlogo.core.Program$.MODULE$.fromDialect(org.nlogo.api.ThreeDProgram$.MODULE$);
   }
 
   @Override
   public Program newProgram(java.util.List<String> interfaceGlobals) {
-    return new Program(interfaceGlobals, true);
+    Program p = newProgram();
+    scala.collection.mutable.Builder<String, scala.collection.immutable.Seq<String>> builder = scala.collection.immutable.Seq$.MODULE$.newBuilder();
+    for (String global : interfaceGlobals) {
+      builder.$plus$eq(global);
+    }
+    Program emptyProgram = newProgram();
+    return emptyProgram.copy(
+        builder.result(),
+        emptyProgram.userGlobals(),
+        emptyProgram.turtlesOwn(),
+        emptyProgram.patchesOwn(),
+        emptyProgram.linksOwn(),
+        emptyProgram.breeds(),
+        emptyProgram.linkBreeds(),
+        emptyProgram.dialect());
   }
 
   public void createPatches(int minPxcor, int maxPxcor,
@@ -231,12 +246,19 @@ public final strictfp class World3D
     _maxPycorBoxed = Double.valueOf(_maxPycor);
     _maxPzcorBoxed = Double.valueOf(_maxPzcor);
 
-    if (program().breeds() != null) {
-      for (Iterator<Object> iter = program().breeds().values().iterator();
-           iter.hasNext();) {
-        ((AgentSet) iter.next()).clear();
+
+    breeds.clear();
+
+    scala.collection.Iterator<scala.Tuple2<String, Breed>> breedIterator =
+      program().breeds().iterator();
+
+    if (breedIterator.hasNext()) {
+      for (scala.Tuple2<String, Breed> b = breedIterator.next(); breedIterator.hasNext();) {
+        AgentSet agentset = new TreeAgentSet(Turtle.class, b._2.name(), this);
+        breeds.put(b._1.toUpperCase(), agentset);
       }
     }
+
     if (_turtles != null) _turtles.clear(); // so a SimpleChangeEvent is published
     _turtles = new TreeAgentSet(Turtle.class, "TURTLES", this);
     if (_links != null) _links.clear(); // so a SimpleChangeEvent is published

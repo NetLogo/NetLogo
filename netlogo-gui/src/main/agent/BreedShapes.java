@@ -28,7 +28,7 @@ public strictfp class BreedShapes {
     this.genericBreedName = genericBreedName;
   }
 
-  public void setUpBreedShapes(boolean clear, Map<String, Object> breeds) {
+  public void setUpBreedShapes(boolean clear, Map<String, AgentSet> breeds) {
     synchronized (lock) {
       if (clear || shapes == null) {
         shapes = new HashMap<String, String>();
@@ -36,11 +36,11 @@ public strictfp class BreedShapes {
       Map<String, String> newBreedShapes =
           new HashMap<String, String>();
       if (breeds != null) {
-        for (Iterator<Object> iter =
+        for (Iterator<AgentSet> iter =
                  breeds.values().iterator();
              iter.hasNext();) {
           String breedName =
-              ((AgentSet) iter.next()).printName();
+              iter.next().printName();
           String oldShape = shapes.get(breedName);
           newBreedShapes.put(breedName,
               oldShape == null

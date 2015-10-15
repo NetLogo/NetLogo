@@ -2,7 +2,8 @@
 
 package org.nlogo.compiler
 
-import org.nlogo.api.{CompilerException, Token}
+import org.nlogo.core.CompilerException
+import org.nlogo.core.Token
 
 object CompilerExceptionThrowers {
 
@@ -20,10 +21,10 @@ object CompilerExceptionThrowers {
     if(!condition)
       exception(desc, node)
 
-  def exception(message: String, startPos: Int, endPos: Int, fileName: String) =
-    throw new CompilerException(message, startPos, endPos, fileName)
+  def exception(message: String, start: Int, end: Int, filename: String) =
+    throw new CompilerException(message, start, end, filename)
   def exception(message: String, token: Token) =
-    throw new CompilerException(message, token.startPos, token.endPos, token.fileName)
+    throw new CompilerException(message, token.start, token.end, token.filename)
   def exception(message: String, node: AstNode) =
     throw new CompilerException(message, node.start, node.end, node.file)
 

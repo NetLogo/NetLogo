@@ -2,6 +2,7 @@
 
 package org.nlogo.api
 
+import org.nlogo.core.LogoList
 import org.scalatest.FunSuite
 import java.lang.{ Double => JDouble, Integer => JInteger }
 

@@ -13,7 +13,7 @@ public final strictfp class _word
     extends Reporter
     implements Pure, org.nlogo.nvm.CustomGenerated {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.reporterSyntax
         (new int[]{Syntax.RepeatableType() | Syntax.WildcardType()},
             Syntax.StringType(), 2, 0);

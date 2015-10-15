@@ -63,8 +63,8 @@ trait Application extends AstNode {
  */
 class ProcedureDefinition(val procedure: Procedure, val statements: Statements) extends AstNode {
   def start = procedure.pos
-  def end = procedure.endPos
-  def file = procedure.fileName
+  def end = procedure.end
+  def file = procedure.filename
   def accept(v: AstVisitor) { v.visitProcedureDefinition(this) }
 }
 

@@ -6,7 +6,8 @@ import java.io.IOException
 
 import scala.util.{ Failure, Success, Try }
 
-import org.nlogo.api.{ CompilerException, PreviewCommands, Version }
+import org.nlogo.api.{ PreviewCommands, Version }
+import org.nlogo.core.CompilerException
 import org.nlogo.nvm.Workspace
 import org.nlogo.util.SlowTest
 import org.nlogo.workspace.{ ExtensionManager, ModelsLibrary }

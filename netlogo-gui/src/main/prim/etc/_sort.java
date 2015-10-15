@@ -5,7 +5,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.LogoList;
+import org.nlogo.core.LogoList;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Context;
@@ -20,7 +20,7 @@ public final strictfp class _sort
     extends Reporter
     implements Pure {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.reporterSyntax
         (new int[]{Syntax.ListType() | Syntax.AgentsetType()},
             Syntax.ListType());
@@ -41,7 +41,7 @@ public final strictfp class _sort
       ArrayList<Double> numbers = new ArrayList<Double>();
       ArrayList<String> strings = new ArrayList<String>();
       ArrayList<Agent> agents = new ArrayList<Agent>();
-      for (Iterator<Object> it = input.iterator(); it.hasNext();) {
+      for (Iterator<Object> it = input.javaIterator(); it.hasNext();) {
         Object elt = it.next();
         if (elt instanceof Double) {
           numbers.add((Double) elt);
@@ -74,7 +74,7 @@ public final strictfp class _sort
     ArrayList<Double> numbers = new ArrayList<Double>();
     ArrayList<String> strings = new ArrayList<String>();
     ArrayList<Agent> agents = new ArrayList<Agent>();
-    for (Object elt : input) {
+    for (Object elt : input.javaIterable()) {
       if (elt instanceof Double) {
         numbers.add((Double) elt);
       } else if (elt instanceof String) {

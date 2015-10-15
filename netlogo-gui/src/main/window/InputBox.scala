@@ -10,7 +10,8 @@ import org.nlogo.api.ModelReader.stripLines
 import org.nlogo.swing.ButtonPanel
 import org.nlogo.awt.Fonts.{platformFont, platformMonospacedFont}
 import org.nlogo.swing.Implicits._
-import org.nlogo.api.{Options, I18N, ValueConstraint, CompilerException, LogoException, CompilerServices, Dump, Editable}
+import org.nlogo.api.{Options, I18N, ValueConstraint, LogoException, CompilerServices, Dump, Editable}
+import org.nlogo.core.CompilerException
 import java.awt.{Color, Component, Dimension, Font, Frame, Graphics}
 import java.awt.event.{ActionListener, WindowEvent, WindowAdapter, FocusListener, FocusEvent, ActionEvent, KeyEvent}
 import javax.swing.text.EditorKit

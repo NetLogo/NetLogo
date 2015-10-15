@@ -4,8 +4,9 @@ package org.nlogo.hubnet.server.gui
 
 import org.nlogo.hubnet.connection.HubNetException
 import org.nlogo.hubnet.server.{HubNetManager, ClientEventListener, ConnectionManager}
+import org.nlogo.core.FileMode
 import org.nlogo.nvm.DefaultCompilerServices
-import org.nlogo.util.Femto
+import org.nlogo.util.{ Femto, Utils }, Utils.reader2String
 import org.nlogo.api._
 import org.nlogo.awt.EventQueue.invokeLater
 import org.nlogo.swing.Implicits._
@@ -65,7 +66,9 @@ class GUIHubNetManager(workspace: GUIWorkspace,
   def importClientInterface(filePath: String, client: Boolean) {
     _clientEditor.close()
     // Load the file
-    val fileContents = new LocalFile(filePath).readFile()
+    val file = new LocalFile(filePath)
+    file.open(FileMode.Read)
+    val fileContents = reader2String(file.reader)
     // Parse the file
     val parsedFile = ModelReader.parseModel(fileContents)
     // Load the widget descriptions

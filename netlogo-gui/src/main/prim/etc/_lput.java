@@ -16,7 +16,7 @@ public final strictfp class _lput
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     int[] right = {Syntax.WildcardType(),
         Syntax.ListType()};
     int ret = Syntax.ListType();

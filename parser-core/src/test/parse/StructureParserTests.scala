@@ -2,7 +2,7 @@
 
 package org.nlogo.parse
 
-import org.nlogo.core.{DummyExtensionManager, FrontEndInterface, Program, CompilerException, Femto, StructureResults}
+import org.nlogo.core.{DummyCompilationEnvironment, DummyExtensionManager, FrontEndInterface, Program, CompilerException, Femto, StructureResults}
 import org.scalatest.FunSuite
 
 import org.nlogo._
@@ -224,7 +224,7 @@ class StructureParserTests extends FunSuite {
 
   def compileAll(src: String): StructureResults = {
     StructureParser.parseAll(
-      tokenizer, src, None, Program.empty(), false, FrontEndInterface.NoProcedures, new DummyExtensionManager)
+      tokenizer, src, None, Program.empty(), false, FrontEndInterface.NoProcedures, new DummyExtensionManager, new DummyCompilationEnvironment)
   }
 
   def expectParseAllError(src: String, error: String) = {

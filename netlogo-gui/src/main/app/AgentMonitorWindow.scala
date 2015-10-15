@@ -5,6 +5,8 @@ package org.nlogo.app
 
 import org.nlogo.agent.{Agent, Link, Observer, Patch, Turtle}
 
+import scala.collection.JavaConverters._
+
 class AgentMonitorWindow(agentClass: Class[_ <: Agent], _agent: Agent, radius: Double,
                          manager: AgentMonitorManager, parent: java.awt.Frame)
 // JWindow not JFrame so we can float on top of the App window - ev 1/7/09
@@ -141,7 +143,7 @@ with org.nlogo.window.Events.LoadBeginEvent.Handler
     override def vars = {
       val allGlobals = workspace.world.program.globals
       import collection.JavaConverters._
-      allGlobals.asScala
+      allGlobals
         .drop(workspace.world.program.interfaceGlobals.size)
         .toList.asJava
     }
@@ -152,17 +154,14 @@ with org.nlogo.window.Events.LoadBeginEvent.Handler
     override def agentClass = classOf[Turtle]
     override def repaintPrompt() { }
     override def vars = {
-      val turtleVars = new java.util.ArrayList[String](
-        workspace.world.program.turtlesOwn)
-      if(agent != null) {
-        val breed = agent.asInstanceOf[Turtle].getBreed
-        if(breed != workspace.world.turtles()) {
-          val breedVars = workspace.world.program.breedsOwn.get(breed.printName)
-          if(breedVars != null) // there might be a compiler error
-            turtleVars.addAll(breedVars)
+      val turtleVars = workspace.world.program.turtlesOwn
+      val allVars: Seq[String] =
+        Option(agent) match {
+          case Some(t: Turtle) if t.getBreed != workspace.world.turtles() =>
+            turtleVars ++ workspace.world.program.breeds.get(t.getBreed.printName).map(_.owns).getOrElse(Seq())
+          case _ => turtleVars
         }
-      }
-      turtleVars
+      allVars.asJava
     }
   }
 
@@ -170,7 +169,7 @@ with org.nlogo.window.Events.LoadBeginEvent.Handler
   extends AgentMonitor(manager.workspace, window) {
     override def agentClass = classOf[Patch]
     override def repaintPrompt() { }
-    override def vars = workspace.world.program.patchesOwn
+    override def vars = workspace.world.program.patchesOwn.asJava
   }
 
   class LinkMonitor(window: javax.swing.JWindow)
@@ -178,17 +177,14 @@ with org.nlogo.window.Events.LoadBeginEvent.Handler
     override def agentClass = classOf[Link]
     override def repaintPrompt() { }
     override def vars = {
-      val linkVars = new java.util.ArrayList[String](
-        workspace.world.program.linksOwn)
-      if(agent != null) {
-        val breed = agent.asInstanceOf[Link].getBreed
-        if(breed != workspace.world.links()) {
-          val breedVars = workspace.world.program.linkBreedsOwn.get(breed.printName)
-          if(breedVars != null) // there might be a compiler error
-            linkVars.addAll(breedVars)
+      val linkVars = workspace.world.program.linksOwn
+      val allVars: Seq[String] =
+        Option(agent) match {
+          case Some(t: Turtle) if t.getBreed != workspace.world.links() =>
+            linkVars ++ workspace.world.program.linkBreeds.get(t.getBreed.printName).map(_.owns).getOrElse(Seq())
+          case _ => linkVars
         }
-      }
-      linkVars
+      allVars.asJava
     }
   }
 

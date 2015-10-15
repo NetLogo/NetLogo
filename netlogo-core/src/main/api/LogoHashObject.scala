@@ -2,7 +2,7 @@
 
 package org.nlogo.api
 
-import org.nlogo.core.{ LogoList => CoreLogoList , Nobody => CoreNobody }
+import org.nlogo.core.{ LogoList , Nobody }
 
 /* The "general contract" between Object.hashCode() and Object.equals(..) is for any Objects a & b,
    a.hashCode() == b.hashCode() must be true when a.equals(b)/b.equals(a) and vice versa.
@@ -48,10 +48,10 @@ class LogoHashObject(val sourceObject: AnyRef) {
       case l: Link =>
         l.id.hashCode
 
-      case CoreNobody =>
+      case Nobody =>
         LogoHashObject.NobodyCode
 
-      case ll: CoreLogoList =>
+      case ll: LogoList =>
         ll.foldLeft(1){(result, next) =>
           31 * result + (if (next == null) 0 else new LogoHashObject(next).hashCode)}
 

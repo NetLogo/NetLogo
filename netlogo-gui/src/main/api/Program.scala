@@ -2,6 +2,7 @@
 
 package org.nlogo.api
 
+import org.nlogo.core.{ Program => CoreProgram }
 import java.util.{ ArrayList, LinkedHashMap, List => JList, Map => JMap }
 import collection.JavaConverters._
 
@@ -57,4 +58,13 @@ final class Program(val interfaceGlobals: JList[String], val is3D: Boolean) {
     buf.toString
   }
 
+  def toCoreProgram: CoreProgram = {
+    // TODO: add breeds, linkBreeds
+    CoreProgram.empty.copy(
+      interfaceGlobals = interfaceGlobals.asScala,
+      userGlobals = globals.asScala,
+      turtlesOwn = turtlesOwn.asScala,
+      patchesOwn = patchesOwn.asScala,
+      linksOwn = linksOwn.asScala)
+  }
 }

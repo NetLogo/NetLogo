@@ -22,7 +22,7 @@ public final strictfp class _linkwith
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     int[] right = {Syntax.AgentType()};
     int ret = Syntax.LinkType();
     return Syntax.reporterSyntax(right, ret, "-T--");
@@ -42,7 +42,7 @@ public final strictfp class _linkwith
     mustNotBeDirected(breed, context);
     Link link = linkManager.findLinkEitherWay(parent, target, breed, true);
     if (link == null) {
-      return org.nlogo.api.Nobody$.MODULE$;
+      return org.nlogo.core.Nobody$.MODULE$;
     }
     return link;
   }

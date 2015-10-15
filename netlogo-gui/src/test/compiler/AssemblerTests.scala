@@ -4,12 +4,13 @@ package org.nlogo.compiler
 
 import org.scalatest.FunSuite
 import org.nlogo.nvm.Procedure
-import org.nlogo.api.{ DummyExtensionManager, Program }
+import org.nlogo.api.{ DummyExtensionManager}
+import org.nlogo.core.Program
 
 class AssemblerTests extends FunSuite {
   def compile(keyword: String, source: String): Procedure = {
     implicit val tokenizer = Compiler.Tokenizer2D
-    val program = new Program(false)
+    val program = Program.empty()
     val results = TestHelper.structureParse(keyword + " foo " + source + "\nend", program)
     assertResult(1)(results.procedures.size)
     val procedure = results.procedures.values.iterator.next()

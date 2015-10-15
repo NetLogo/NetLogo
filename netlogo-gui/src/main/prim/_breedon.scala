@@ -9,7 +9,7 @@ import org.nlogo.api.{ I18N, Syntax }
 import org.nlogo.nvm.{ ArgumentTypeException, Context, EngineException, Reporter }
 
 class _breedon(breedName: String) extends Reporter {
-  override def syntax: Syntax =
+  override def syntax: org.nlogo.core.Syntax =
     Syntax.reporterSyntax(
       Array[Int](Syntax.TurtleType | Syntax.PatchType |
         Syntax.TurtlesetType | Syntax.PatchsetType),

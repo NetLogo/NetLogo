@@ -2,8 +2,10 @@
 
 package org.nlogo.compiler
 
-import org.nlogo.api.{ DummyExtensionManager, Program, Token, TokenizerInterface  }
-import org.nlogo.nvm.{ DummyCompilationEnvironment, Procedure }
+import org.nlogo.api.{ TokenizerInterface  }
+import org.nlogo.core.Program
+import org.nlogo.core.{ DummyExtensionManager, DummyCompilationEnvironment, Token }
+import org.nlogo.nvm.Procedure
 
 object TestHelper {
   private[compiler] def structureParse(source: String, program: Program, is3D: Boolean = false): StructureParser.Results = {

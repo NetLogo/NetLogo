@@ -4,19 +4,28 @@ package org.nlogo.compiler
 
 import CompilerExceptionThrowers.{ cAssert, exception }
 import org.nlogo.agent.{ Agent, Link, Turtle }
-import org.nlogo.api.{ ErrorSource, ExtensionManager, Let,
-                       Program, Token, TokenizerInterface, TokenType }
-import org.nlogo.nvm.{ CompilationEnvironment, Instruction, Procedure }
+import org.nlogo.api.{ Let, TokenizerInterface}
+import org.nlogo.core.Breed
+import org.nlogo.core.Program
+import org.nlogo.core.ErrorSource
+import org.nlogo.core.Token
+import org.nlogo.core.TokenType
+import org.nlogo.nvm.{ Instruction, Procedure }
+import org.nlogo.core.CompilationEnvironment
+import org.nlogo.core.ExtensionManager
 import org.nlogo.prim._let
+
+import scala.collection.JavaConversions._
 
 private object StructureParser {
 
   class Results(val procedures: java.util.Map[String, Procedure],
-                val tokens: Map[Procedure, Iterable[Token]])
+                val tokens: Map[Procedure, Iterable[Token]],
+                val program: Program)
 
-  def resolvePath(fileName: String, path: String): String = {
+  def resolvePath(filename: String, path: String): String = {
     val pathFile = new java.io.File(path)
-    val rootFile = new java.io.File(fileName)
+    val rootFile = new java.io.File(filename)
     if(pathFile.isAbsolute) path
     else {
       val result = new java.io.File(rootFile.getParentFile,path)
@@ -35,20 +44,20 @@ private object StructureParser {
     private val tokens =
       new collection.mutable.ArrayBuffer[Token]
     def slice(i1: Int, i2: Int) =
-      tokens.slice(i1, i2).toList ::: List(Token.eof)
+      tokens.slice(i1, i2).toList ::: List(Token.Eof)
     // iteration
     var index = 0
     def hasNext = index < tokens.size
     def next() =
       if(hasNext) { index += 1; tokens(index - 1) }
-      else Token.eof
+      else Token.Eof
     def head =
       if(hasNext) tokens(index)
-      else Token.eof
+      else Token.Eof
     // mutation
     def add(t: Token) { tokens += t }
     def appendAll(ts: Iterable[Token]) {
-      tokens ++= ts.takeWhile(_.tyype != TokenType.EOF)
+      tokens ++= ts.takeWhile(_.tpe != TokenType.Eof)
     }
   }
 }
@@ -60,7 +69,7 @@ private object StructureParser {
 private class StructureParser(
   originalTokens: Seq[Token],
   displayName: Option[String],
-  program: Program,
+  var program: Program,
   oldProcedures: java.util.Map[String, Procedure],
   extensionManager: ExtensionManager,
   compilationEnv: CompilationEnvironment)
@@ -88,7 +97,7 @@ private class StructureParser(
     // keeps track of our current location in usingFiles.  All of this is very confusing and ought
     // to be cleaned up. - ST 12/19/08
     val usingFiles = new collection.mutable.ArrayBuffer[(String, Token)]
-    var fileName = ""
+    var filename = ""
     var index = 1
     usingFiles += (("", null))
     if(!subprogram)
@@ -104,7 +113,7 @@ private class StructureParser(
       while(!done && tokenBuffer.hasNext) {
         val token = tokenBuffer.head
         // kludge: special case because of naming conflict with BREED turtle variable - jrn 8/04/05
-        if(token.tyype == TokenType.VARIABLE && token.value == "BREED") {
+        if(token.tpe == TokenType.Ident && token.value == "BREED") {
           tokenBuffer.next()
           val breedList = new java.util.ArrayList[String]
           parseVarList(breedList, null, null)
@@ -122,13 +131,11 @@ private class StructureParser(
           finally { cAssert(breedList.size == 1 || breedList.size == 2,
                             "breed only takes 1 or 2 inputs",token) }
           val breedName = breedList.get(0)
-          program.breeds.put(breedName, breedName) // will replace with agentset at realloc time
-          program.breedsOwn.put(breedName, new java.util.ArrayList[String])
-          if(breedList.size == 2)
-            program.breedsSingular.put(breedList.get(1), breedName)
+          val breedSingular = if (breedList.size == 2) breedList.get(1) else scala.util.Random.nextString(25)
+          program = program.copy(breeds = program.breeds + (breedName -> Breed(breedName, breedSingular)))
         }
         else {
-          cAssert(token.tyype == TokenType.KEYWORD,"Expected keyword",token)
+          cAssert(token.tpe == TokenType.Keyword,"Expected keyword",token)
           val keyword = token.value.asInstanceOf[String]
           if(keyword == "TO" || keyword == "TO-REPORT")
             parseProcedure(token)
@@ -138,35 +145,40 @@ private class StructureParser(
             parseVarList(breedList, null, null)
             cAssert(breedList.size == 2, keyword + " only takes 2 inputs", token)
             val breedName = breedList.get(0)
-            // will replace with agentset at realloc time
-            program.linkBreeds.put(breedName, keyword)
-            program.linkBreedsOwn.put(breedName, new java.util.ArrayList[String])
-            if(breedList.size == 2)
-              program.linkBreedsSingular.put(breedList.get(1), breedName)
+            val breedSingular = if (breedList.size == 2) breedList.get(1) else scala.util.Random.nextString(25)
+            program = program.copy(linkBreeds = program.linkBreeds + (breedName -> Breed(breedName, breedSingular, isLinkBreed = true, isDirected = keyword == "DIRECTED-LINK-BREED")))
           }
           else if(keyword == "TURTLES-OWN") {
             cAssert(!haveTurtlesOwn,"Redeclaration of TURTLES-OWN",token)
             tokenBuffer.next()
             haveTurtlesOwn = true
-            parseVarList(program.turtlesOwn, null, null)
+            val turtlesOwnList = new java.util.ArrayList[String]
+            parseVarList(turtlesOwnList, null, null)
+            program = program.copy(turtlesOwn = program.turtlesOwn ++ turtlesOwnList)
           }
           else if(keyword == "LINKS-OWN") {
             cAssert(!haveLinksOwn,"Redeclaration of LINKS-OWN",token)
             tokenBuffer.next()
             haveLinksOwn = true
-            parseVarList(program.linksOwn, null, null)
+            val linksOwnList = new java.util.ArrayList[String]
+            parseVarList(linksOwnList, null, null)
+            program = program.copy(linksOwn = program.linksOwn ++ linksOwnList)
           }
           else if(keyword == "PATCHES-OWN") {
             cAssert( !havePatchesOwn,"Redeclaration of PATCHES-OWN",token)
             tokenBuffer.next()
             havePatchesOwn = true
-            parseVarList( program.patchesOwn, null, null)
+            val patchesOwnList = new java.util.ArrayList[String]
+            parseVarList(patchesOwnList, null, null)
+            program = program.copy(patchesOwn = program.patchesOwn ++ patchesOwnList)
           }
           else if(keyword == "GLOBALS") {
             cAssert(!haveGlobals,"Redeclaration of GLOBALS",token)
             tokenBuffer.next()
             haveGlobals = true
-            parseVarList(program.globals, null, null)
+            val globalsList = new java.util.ArrayList[String]
+            parseVarList(globalsList, null, null)
+            program = program.copy(userGlobals = program.userGlobals ++ globalsList.map(_.toUpperCase))
           }
           else if(keyword.endsWith("-OWN")) {
             val breedName = keyword.substring(0, keyword.length - 4)
@@ -174,23 +186,26 @@ private class StructureParser(
                     "There is no breed named " + breedName,token)
             tokenBuffer.next()
             var linkbreed = false
-            if(program.breedsOwn.containsKey(breedName)) {
-              cAssert(program.breedsOwn.get(breedName).isEmpty,
+            if(program.breeds.values.flatMap(_.owns).contains(breedName)) {
+              cAssert(program.breeds(breedName).owns.isEmpty,
                       "Redeclaration of " + keyword, token)
             }
-            else if(program.linkBreedsOwn.containsKey(breedName)) {
-              cAssert(program.linkBreedsOwn.get(breedName).isEmpty,
+            else if(program.linkBreeds.containsKey(breedName)) {
+              cAssert(program.linkBreeds(breedName).owns.isEmpty,
                       "Redeclaration of " + keyword, token)
               linkbreed = true
             }
             val vars = new java.util.ArrayList[String]
-            if(linkbreed) {
+            if (linkbreed) {
               parseVarList(vars, classOf[Link], null)
-              program.linkBreedsOwn.put(breedName, vars)
-            }
-            else {
+              val oldLinkBreed = program.linkBreeds(breedName)
+              val newLinkBreed = oldLinkBreed.copy(owns = vars)
+              program = program.copy(linkBreeds = program.linkBreeds.updated(breedName, newLinkBreed))
+            } else {
               parseVarList(vars, classOf[Turtle], null)
-              program.breedsOwn.put(breedName, vars)
+              val oldBreed = program.breeds(breedName)
+              val newBreed = oldBreed.copy(owns = vars)
+              program = program.copy(breeds = program.breeds.updated(breedName, newBreed))
             }
           }
           else if(keyword == "EXTENSIONS")
@@ -201,23 +216,23 @@ private class StructureParser(
             var filePath: String = null
             tokenBuffer.next()
             // Retrieve the Using File Path
-            cAssert(tokenBuffer.head.tyype == TokenType.OPEN_BRACKET,
+            cAssert(tokenBuffer.head.tpe == TokenType.OpenBracket,
                     "Expected [",tokenBuffer.head)
             tokenBuffer.next()
-            while(tokenBuffer.head.tyype != TokenType.CLOSE_BRACKET) {
+            while(tokenBuffer.head.tpe != TokenType.CloseBracket) {
               var pathToken = tokenBuffer.head
-              cAssert(pathToken.tyype == TokenType.CONSTANT && pathToken.value.isInstanceOf[String],
+              cAssert(pathToken.tpe == TokenType.Literal && pathToken.value.isInstanceOf[String],
                       "Expected string or ]", pathToken)
               val name = pathToken.value.asInstanceOf[String]
               cAssert(name.endsWith(".nls"),"Included files must end with .nls", pathToken)
               pathToken = tokenBuffer.next()
               filePath =
-                if(fileName.isEmpty)
+                if(filename.isEmpty)
                   // because compilationEnv has a ref to the workspace and thus the modelDir, which
                   // is what we resolve against if we have no filename set -- CLB 02/01/05
                   compilationEnv.resolvePath(pathToken.value.asInstanceOf[String])
                 else
-                  StructureParser.resolvePath(fileName, pathToken.value.asInstanceOf[String])
+                  StructureParser.resolvePath(filename, pathToken.value.asInstanceOf[String])
               if(filePath != null && !usingFiles.exists(_._1 == filePath))
                 usingFiles += ((filePath, pathToken))
             }
@@ -227,28 +242,28 @@ private class StructureParser(
         }
       }
       if(index < usingFiles.size) {
-        fileName = usingFiles(index)._1
+        filename = usingFiles(index)._1
         val source:String =
-          try compilationEnv.getSource(fileName)
+          try compilationEnv.getSource(filename)
           catch { case _:java.io.IOException =>
-            exception("Could not find " + fileName,usingFiles(index)._2) }
-        tokenBuffer.appendAll(tokenizer.tokenize(source, fileName))
+            exception("Could not find " + filename,usingFiles(index)._2) }
+        tokenBuffer.appendAll(tokenizer.tokenize(source, filename))
         index += 1
       }
       else totallyDone = true
     }
     if(!subprogram)
       extensionManager.finishFullCompilation()
-    new StructureParser.Results(newProcedures, tokensMap.toMap)
+    new StructureParser.Results(newProcedures, tokensMap.toMap, program)
   }
   // replaces an identifier token with its imported implementation, if necessary
   private def processTokenWithExtensionManager(token: Token): Token = {
-    def wrap(prim: org.nlogo.api.Primitive, name: String): Instruction =
+    def wrap(prim: org.nlogo.core.Primitive, name: String): Instruction =
       prim match {
         case c: org.nlogo.api.Command  => new org.nlogo.prim._extern(c)
         case r: org.nlogo.api.Reporter => new org.nlogo.prim._externreport(r)
       }
-    if(token.tyype != TokenType.IDENT ||
+    if(token.tpe != TokenType.Ident ||
        extensionManager == null || !extensionManager.anyExtensionsLoaded)
       token
     else {
@@ -258,11 +273,11 @@ private class StructureParser(
         // if there's no replacement, make no change.
         case null => token
         case prim =>
-          val newType = if(prim.isInstanceOf[org.nlogo.api.Command]) TokenType.COMMAND
-                        else TokenType.REPORTER
+          val newType = if(prim.isInstanceOf[org.nlogo.api.Command]) TokenType.Command
+                        else TokenType.Reporter
           val instruction = wrap(prim,name)
-          val newToken = new Token(token.name, newType, instruction)(token.startPos, token.endPos, token.fileName)
-          instruction.token(newToken)
+          val newToken = new Token(token.text, newType, instruction)(token.start, token.end, token.filename)
+          instruction.token_=(newToken)
           newToken
       }
     }
@@ -274,62 +289,63 @@ private class StructureParser(
     var done = false
     var haveTo = false
     var haveName = false
-    var haveArgList = false
     var haveLocals = false
     var haveEnd = false
     var procedure: Procedure = null
     var start = 0
     while(!done) {
       val token = tokenBuffer.head
-      if(token.tyype == TokenType.EOF) {
+      if(token.tpe == TokenType.Eof) {
         val msg = "Last procedure doesn't end with END"
         if(haveName)
           // non-recommended call here, but less hassle...
-          exception(msg, procedure.pos,procedure.endPos,procedure.fileName)
+          exception(msg, procedure.pos,procedure.end,procedure.filename)
         else
           exception(msg, firstToken)
       }
       if(!haveTo) {
-        cAssert(token.tyype == TokenType.KEYWORD, "Expected TO or TO-REPORT", token)
+        cAssert(token.tpe == TokenType.Keyword, "Expected TO or TO-REPORT", token)
         val keyword = token.value.asInstanceOf[String]
         if(keyword == "TO" || keyword == "TO-REPORT")
           isReporterProcedure = keyword == "TO-REPORT"
         else exception("Expected TO or TO-REPORT",token)
         tokenBuffer.next()
         haveTo = true
-        startPos = token.startPos
+        startPos = token.start
         // we set some value for this here, so that if we never get around to overwriting it later
         // because an error occurs, the highlighting is still nice.
-        endPos = token.endPos
+        endPos = token.end
       }
       else if(!haveName) {
-        cAssert(token.tyype == TokenType.IDENT,"You can't use " + token.name.toUpperCase + " to name a procedure", token)
+        cAssert(token.tpe == TokenType.Ident,"You can't use " + token.text.toUpperCase + " to name a procedure", token)
         tokenBuffer.next()
         haveName = true
-        procedure = new Procedure(
-          if(isReporterProcedure) Procedure.Type.REPORTER
-          else Procedure.Type.COMMAND,
-          token, token.name.toUpperCase, displayName, null)
-        checkName(procedure.name, token, null, null)
-        cAssert(newProcedures.get(procedure.name) == null, "Cannot redefine " + procedure.name, token)
+        val procedureName = token.text.toUpperCase
+        checkName(procedureName, token, null, null)
+        cAssert(newProcedures.get(procedureName) == null, "Cannot redefine " + procedureName, token)
         // we set this here, so that if an error occurs, the highlighting is nice.
-        procedure.endPos = token.endPos
-      }
-      else if(!haveArgList) {
-        if(token.tyype == TokenType.OPEN_BRACKET) {
-          parseVarList(procedure.args, null, procedure)
-          start = tokenBuffer.index
-        }
-        haveArgList = true
+        val procedureToken = token
+        procedure = new Procedure(isReporterProcedure, procedureToken, procedureName, displayName, null)
+        procedure.args =
+          if (tokenBuffer.head.tpe == TokenType.OpenBracket) {
+            val argList = new java.util.ArrayList[String]
+            parseVarList(argList, null, procedure)
+            start = tokenBuffer.index
+            Vector[String](argList: _*)
+          } else {
+            Vector[String]()
+          }
+        procedure.end = token.end
       }
       else if(!haveLocals) {
-        if(token.tyype == TokenType.KEYWORD) {
+        if(token.tpe == TokenType.Keyword) {
           val keyword = token.value.asInstanceOf[String]
           if(keyword == "END") {
             if(start == 0) start = tokenBuffer.index
-            tokensMap.put(procedure, tokenBuffer.slice(start, tokenBuffer.index).map(processTokenWithExtensionManager))
+            val procedureTokens = tokenBuffer.slice(start, tokenBuffer.index).map(processTokenWithExtensionManager)
+            tokensMap.put(procedure, procedureTokens)
             tokenBuffer.next()
-            procedure.endPos = token.startPos
+            procedure.end = token.start
             done = true
           }
           else exception("This doesn't make sense here", token)
@@ -340,15 +356,16 @@ private class StructureParser(
         }
       }
       else if(!haveEnd) {
-        if(token.tyype == TokenType.COMMAND && token.value.isInstanceOf[_let])
+        if(token.tpe == TokenType.Command && token.value.isInstanceOf[_let])
           parseLet(procedure, start, new java.util.ArrayList[String])
-        else if(token.tyype == TokenType.KEYWORD) {
+        else if(token.tpe == TokenType.Keyword) {
           val keyword = token.value.asInstanceOf[String]
           if(keyword == "END") {
             if(start == 0)
               start = tokenBuffer.index
-            procedure.endPos = token.startPos
-            tokensMap.put(procedure,tokenBuffer.slice(start, tokenBuffer.index).map(processTokenWithExtensionManager))
+            procedure.end = token.start
+            val procedureTokens = tokenBuffer.slice(start, tokenBuffer.index).map(processTokenWithExtensionManager)
+            tokensMap.put(procedure, procedureTokens)
             done = true
             tokenBuffer.next()
           }
@@ -362,22 +379,22 @@ private class StructureParser(
   }
   private def parseVarList(result: java.util.List[String], owningAgentClass: Class[_ <: Agent], procedure: Procedure) {
     var token = tokenBuffer.next()
-    cAssert(token.tyype == TokenType.OPEN_BRACKET, "Expected [", token)
+    cAssert(token.tpe == TokenType.OpenBracket, "Expected [", token)
     var done = false
     while(!done) {
       token = tokenBuffer.next()
-      if(token.tyype == TokenType.CLOSE_BRACKET)
+      if(token.tpe == TokenType.CloseBracket)
         done = true
       else {
-        cAssert(token.tyype != TokenType.COMMAND,
+        cAssert(token.tpe != TokenType.Command,
                 "There is already a primitive with that name",token)
-        cAssert(token.tyype != TokenType.REPORTER,
+        cAssert(token.tpe != TokenType.Reporter,
                 "There is already a primitive with that name",token)
-        cAssert(token.tyype != TokenType.KEYWORD,
+        cAssert(token.tpe != TokenType.Keyword,
                 "There is already a keyword with that name",token)
-        cAssert(token.tyype == TokenType.IDENT,
+        cAssert(token.tpe == TokenType.Ident,
                 "Expected name or ]",token)
-        cAssert(newProcedures.get(token.name.toUpperCase) == null,
+        cAssert(newProcedures.get(token.text.toUpperCase) == null,
                 "There is already a procedure with that name",token)
         cAssert(!result.contains(token.value),
                 "The name " + token.value + " is already defined",token)
@@ -388,21 +405,13 @@ private class StructureParser(
   }
   private def checkName(varName: String, token: Token, owningAgentClass: Class[_ <: Agent], procedure: Procedure) {
     if(owningAgentClass == null || owningAgentClass == classOf[Link]) {
-      val keys = program.breedsOwn.keySet.iterator()
-      while(keys.hasNext) {
-        val breedName = keys.next()
-        val breedOwns = program.breedsOwn.get(breedName)
-        cAssert(!breedOwns.contains(varName),
-                "You already defined " + varName + " as a " + breedName + " variable", token)
+      program.breeds.values.find(_.owns.contains(varName)).foreach { breed =>
+        exception("You already defined " + varName + " as a " + breed.name + " variable", token)
       }
     }
     if(owningAgentClass == null || owningAgentClass == classOf[Turtle]) {
-      val keys = program.linkBreedsOwn.keySet.iterator()
-      while(keys.hasNext) {
-        val breedName = keys.next()
-        val breedOwns = program.linkBreedsOwn.get(breedName)
-        cAssert(!breedOwns.contains(varName),
-                "You already defined " + varName + " as a " + breedName + " variable", token)
+      program.linkBreeds.values.find(_.owns.contains(varName)).foreach { breed =>
+        exception("You already defined " + varName + " as a " + breed.name + " variable", token)
       }
     }
     cAssert(!program.turtlesOwn.contains(varName),
@@ -449,14 +458,14 @@ private class StructureParser(
     extensionManager.startFullCompilation()
     tokenBuffer.next() // skip the __extensions
     val token = tokenBuffer.next()
-    cAssert(token.tyype == TokenType.OPEN_BRACKET, "Expected [", token)
+    cAssert(token.tpe == TokenType.OpenBracket, "Expected [", token)
     var done = false
     while(!done) {
       val token = tokenBuffer.next()
-      if(token.tyype == TokenType.CLOSE_BRACKET)
+      if(token.tpe == TokenType.CloseBracket)
         done = true
       else {
-        cAssert(token.tyype == TokenType.IDENT && token.name != null, "Expected identifier or ]", token)
+        cAssert(token.tpe == TokenType.Ident && token.text != null, "Expected identifier or ]", token)
         extensionManager.importExtension(
           token.value.asInstanceOf[String].toLowerCase,
           new ErrorSource(token))
@@ -467,7 +476,7 @@ private class StructureParser(
     var ancestorNames = oldAncestorNames
     val letToken = tokenBuffer.next()
     val nameToken = tokenBuffer.head
-    cAssert(nameToken.tyype == TokenType.IDENT,"Expected variable name here", nameToken)
+    cAssert(nameToken.tpe == TokenType.Ident,"Expected variable name here", nameToken)
     val name = nameToken.value.asInstanceOf[String]
     val startPos = tokenBuffer.index - offset
     cAssert(!ancestorNames.contains(name),
@@ -475,32 +484,32 @@ private class StructureParser(
     checkName(name, nameToken, null, procedure)
     var level = 1
     val children = new collection.mutable.ListBuffer[Let]
-    def newLet(endPos: Int) = {
+    def newLet(end: Int) = {
       import collection.JavaConverters._
-      val result = new Let(name, startPos, endPos, children.asJava)
+      val result = new Let(name, startPos, end, children.asJava)
       letToken.value.asInstanceOf[_let].let = result
-      procedure.lets.add(result)
+      procedure.addLet(result)
       result
     }
     while(true) {
       if(!tokenBuffer.hasNext)
         exception("Expected ] or END", tokenBuffer.head)
       val token = tokenBuffer.head
-      if(token.tyype == TokenType.OPEN_BRACKET) {
+      if(token.tpe == TokenType.OpenBracket) {
         level += 1
         tokenBuffer.next()
       }
-      else if(token.tyype == TokenType.CLOSE_BRACKET) {
+      else if(token.tpe == TokenType.CloseBracket) {
         level -= 1
         if(level == 0) return newLet(tokenBuffer.index - offset)
         tokenBuffer.next()
       }
-      else if(token.tyype == TokenType.COMMAND && token.value.isInstanceOf[_let]) {
+      else if(token.tpe == TokenType.Command && token.value.isInstanceOf[_let]) {
         ancestorNames = new java.util.ArrayList[String](ancestorNames)
         ancestorNames.add(name)
         children += parseLet(procedure, offset, ancestorNames)
       }
-      else if(token.tyype == TokenType.KEYWORD) {
+      else if(token.tpe == TokenType.Keyword) {
         val keyword = token.value.asInstanceOf[String]
         if(keyword != "END") exception("Expected ] or END", token)
         return newLet(tokenBuffer.index - offset)
@@ -528,30 +537,30 @@ private class StructureParserExtras(implicit tokenizer: TokenizerInterface) {
     val tokens = tokenizer.tokenizeRobustly(source).iterator.buffered
     while(tokens.hasNext) {
       var token = tokens.next()
-      if(token.tyype == TokenType.KEYWORD) {
+      if(token.tpe == TokenType.Keyword) {
         val keyword = token.value.asInstanceOf[String]
         if(keyword == "TO" || keyword == "TO-REPORT") {
           // position of to/to-report
-          val toPos = token.startPos
+          val toPos = token.start
           // name of procedure
           val nameToken = tokens.head
-          if(nameToken.tyype == TokenType.IDENT) {
-            val name = nameToken.name
-            val namePos = nameToken.startPos
+          if(nameToken.tpe == TokenType.Ident) {
+            val name = nameToken.text
+            val namePos = nameToken.start
             // position of end
             var done = false
             while(!done && tokens.hasNext) {
               token = tokens.next()
-              if(token.tyype == TokenType.KEYWORD && token.value == "END")
+              if(token.tpe == TokenType.Keyword && token.value == "END")
                 done = true
             }
-            val endPos = token.endPos
+            val end = token.end
             // build index
             val index = new java.util.ArrayList[AnyRef](4)
             index.add(name)
             index.add(Int.box(toPos))
             index.add(Int.box(namePos))
-            index.add(Int.box(endPos))
+            index.add(Int.box(end))
             procsTable.put(name, index)
           }
         }
@@ -564,20 +573,20 @@ private class StructureParserExtras(implicit tokenizer: TokenizerInterface) {
     val myTokens = tokenizer.tokenizeRobustly(source).iterator.buffered
     while(myTokens.hasNext) {
       val token = myTokens.next()
-      if(token.tyype == TokenType.KEYWORD) {
+      if(token.tpe == TokenType.Keyword) {
         val keyword = token.value.asInstanceOf[String]
         if(keyword == "__INCLUDES") {
           val includedFiles = new java.util.HashMap[String, String]
           while(true) {
             var filePath: String = null
             var pathToken = myTokens.head
-            if(pathToken.tyype == TokenType.OPEN_BRACKET) {
+            if(pathToken.tpe == TokenType.OpenBracket) {
               myTokens.next()
               pathToken = myTokens.head
             }
-            else if(pathToken.tyype == TokenType.CLOSE_BRACKET)
+            else if(pathToken.tpe == TokenType.CloseBracket)
               return Some(includedFiles)
-            else if(pathToken.tyype == TokenType.CONSTANT && pathToken.value.isInstanceOf[String]) {
+            else if(pathToken.tpe == TokenType.Literal && pathToken.value.isInstanceOf[String]) {
               pathToken = myTokens.next()
               filePath = StructureParser.resolvePath(sourceFileName, pathToken.value.asInstanceOf[String])
               includedFiles.put(pathToken.value.asInstanceOf[String], filePath)

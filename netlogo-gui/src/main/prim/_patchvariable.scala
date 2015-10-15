@@ -7,7 +7,7 @@ import org.nlogo.api.{ AgentException, LogoException, Syntax }
 import org.nlogo.nvm.{ Context, EngineException, Reference, Referenceable, Reporter }
 
 class _patchvariable(private[this] val _vn: Int) extends Reporter with Referenceable {
-  override def syntax: Syntax =
+  override def syntax =
     Syntax.reporterSyntax(
       Syntax.WildcardType | Syntax.ReferenceType,
       "-TP-")

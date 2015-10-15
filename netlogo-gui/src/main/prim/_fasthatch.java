@@ -19,7 +19,7 @@ public final strictfp class _fasthatch
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.commandSyntax
         (new int[]{Syntax.NumberType()},
             "-T--", true);

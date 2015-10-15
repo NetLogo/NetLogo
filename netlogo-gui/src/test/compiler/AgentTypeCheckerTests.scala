@@ -3,14 +3,17 @@
 package org.nlogo.compiler
 
 import org.scalatest.FunSuite
-import org.nlogo.api.{ CompilerException, DummyExtensionManager, Program }
+import org.nlogo.api.{ ThreeDProgram, DummyExtensionManager }
+import org.nlogo.core.NetLogoCore
+import org.nlogo.core.Program
+import org.nlogo.core.CompilerException
 import org.nlogo.nvm.Procedure
 
 class AgentTypeCheckerTests extends FunSuite {
 
   /// first some helpers
   private def compile(source: String, is3D: Boolean): Seq[ProcedureDefinition] = {
-    val program = new Program(is3D)
+    val program = Program.fromDialect(if (is3D) ThreeDProgram else NetLogoCore)
     val results = TestHelper.structureParse(source, program, is3D = is3D)
     val defs = new collection.mutable.ArrayBuffer[ProcedureDefinition]
     import collection.JavaConverters._ // results.procedures.values is a java.util.Collection

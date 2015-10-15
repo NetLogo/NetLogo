@@ -17,7 +17,7 @@ public final strictfp class _turtlevariable
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.reporterSyntax
         (Syntax.WildcardType() | Syntax.ReferenceType(),
             "-T--");

@@ -16,7 +16,7 @@ public final strictfp class _loop
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.commandSyntax
         (new int[]{Syntax.CommandBlockType()});
   }

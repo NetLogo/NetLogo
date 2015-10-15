@@ -6,7 +6,8 @@ package org.nlogo.compiler
 // and an explanation of each method in the AssemblerAssistant interface, which is implemented below
 // - ST 2/22/08
 
-import org.nlogo.api.{ Token, TokenType }
+import org.nlogo.core.Token
+import org.nlogo.core.TokenType
 import org.nlogo.nvm.{ Command, CustomAssembled, AssemblerAssistant, Procedure }
 import org.nlogo.prim.{ _call, _done, _fastrecurse, _goto, _return, _returnreport }
 
@@ -18,13 +19,14 @@ private class Assembler {
   def assemble(procdef: ProcedureDefinition) {
     val proc = procdef.procedure
     assembleStatements(procdef.statements)
-    val ret = proc.tyype match {
-      case Procedure.Type.COMMAND =>
+    val ret =
+      if (proc.isReporter) {
+        new _returnreport
+      } else {
         if (proc.isTask) new _done
         else new _return
-      case Procedure.Type.REPORTER => new _returnreport
-    }
-    ret.token(new Token("END", TokenType.KEYWORD, ret)(proc.endPos, proc.endPos, proc.fileName))
+      }
+    ret.token_=(new Token("END", TokenType.Keyword, ret)(proc.end, proc.end, proc.filename))
     code += ret
     for ((cmd, n) <- code.toList.zipWithIndex) {
       cmd.next = n + 1

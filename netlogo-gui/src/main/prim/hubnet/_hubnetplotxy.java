@@ -22,7 +22,7 @@ public final strictfp class _hubnetplotxy
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     int[] right = {Syntax.StringType(), Syntax.NumberType(),
         Syntax.NumberType()};
     return Syntax.commandSyntax(right);

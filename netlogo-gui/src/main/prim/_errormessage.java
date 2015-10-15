@@ -19,7 +19,7 @@ public final strictfp class _errormessage
   public Let let = null;  // compiler will fill this in
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.reporterSyntax(Syntax.StringType());
   }
 

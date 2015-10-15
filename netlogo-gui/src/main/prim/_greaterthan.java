@@ -18,7 +18,7 @@ import org.nlogo.nvm.Reporter;
 public final strictfp class _greaterthan
     extends Reporter implements Pure {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     int left = Syntax.NumberType() | Syntax.StringType() | Syntax.AgentType();
     int[] right = {Syntax.NumberType() | Syntax.StringType() | Syntax.AgentType()};
     int ret = Syntax.BooleanType();

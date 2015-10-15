@@ -4,7 +4,7 @@ package org.nlogo.compiler
 
 import org.scalatest.FunSuite
 import org.nlogo.agent.{ Link, Patch, Turtle }
-import org.nlogo.api.CompilerException
+import org.nlogo.core.CompilerException
 import org.nlogo.nvm.{ Command, Reporter }
 import org.nlogo.prim._
 

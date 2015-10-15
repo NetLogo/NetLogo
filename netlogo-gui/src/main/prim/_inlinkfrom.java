@@ -23,7 +23,7 @@ public final strictfp class _inlinkfrom
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.reporterSyntax
         (new int[]{Syntax.AgentType()},
             Syntax.AgentType(), "-T--");
@@ -38,7 +38,7 @@ public final strictfp class _inlinkfrom
     Turtle target = argEvalTurtle(context, 0);
     Link link = linkManager.findLinkFrom(target, (Turtle) context.agent, breed, true);
     if (link == null) {
-      return org.nlogo.api.Nobody$.MODULE$;
+      return org.nlogo.core.Nobody$.MODULE$;
     }
     return link;
   }

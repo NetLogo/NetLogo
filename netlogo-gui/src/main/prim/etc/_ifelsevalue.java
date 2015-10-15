@@ -10,7 +10,7 @@ public final strictfp class _ifelsevalue
     extends Reporter
     implements org.nlogo.nvm.Pure {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.reporterSyntax
         (new int[]{Syntax.BooleanType(),
             Syntax.ReporterBlockType(),

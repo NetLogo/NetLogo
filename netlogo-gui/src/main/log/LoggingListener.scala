@@ -2,7 +2,8 @@
 
 package org.nlogo.log
 
-import org.nlogo.api.{ CompilerException, NetLogoListener }
+import org.nlogo.core.{ CompilerException, LogoList }
+import org.nlogo.api.NetLogoListener
 import Logger._
 
 trait LoggingListener extends NetLogoListener {
@@ -52,7 +53,7 @@ trait LoggingListener extends NetLogoListener {
       if (error == null)
         ("success", 0, 0)
       else
-        (error.getMessage, error.startPos, error.endPos)
+        (error.getMessage, error.start, error.end)
     commandMsg.updateCommandMessage(
         owner.toLowerCase, "compiled", text, agentType.toString, message, start, end)
     if (!owner.startsWith("Slider"))
@@ -63,7 +64,7 @@ trait LoggingListener extends NetLogoListener {
       if (error == null)
         ("success", 0, 0)
       else
-        (error.getMessage, error.startPos, error.endPos)
+        (error.getMessage, error.start, error.end)
     codeTabMsg.updateCodeTabMessage("compiled", text, message, start, end)
     Code.info(codeTabMsg)
   }

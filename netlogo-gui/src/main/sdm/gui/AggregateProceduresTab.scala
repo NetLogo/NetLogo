@@ -2,7 +2,8 @@
 
 package org.nlogo.sdm.gui
 
-import org.nlogo.api.{CompilerException, TokenType}
+import org.nlogo.core.CompilerException
+import org.nlogo.core.TokenType
 import org.nlogo.editor.Colorizer
 
 class AggregateProceduresTab(colorizer: Colorizer[TokenType]) extends javax.swing.JPanel {
@@ -28,7 +29,7 @@ class AggregateProceduresTab(colorizer: Colorizer[TokenType]) extends javax.swin
   text.scrollRectToVisible(new java.awt.Rectangle(1, 1, 1, 1))
   def setError(e: CompilerException) {
     if(e != null) {
-      text.select(e.startPos, e.endPos)
+      text.select(e.start, e.end)
       text.requestFocus()
     }
   }

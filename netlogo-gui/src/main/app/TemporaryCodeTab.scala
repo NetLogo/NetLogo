@@ -3,9 +3,11 @@
 package org.nlogo.app
 
 import scala.util.control.Exception.ignoring
+import org.nlogo.core.FileMode
 import org.nlogo.awt.UserCancelException
 import org.nlogo.workspace.AbstractWorkspace
 import org.nlogo.api.{I18N, FileIO, LocalFile}
+import org.nlogo.util.Utils.reader2String
 
 object TemporaryCodeTab {
   val NewFile = "New File"
@@ -48,7 +50,9 @@ with org.nlogo.window.Events.AboutToQuitEvent.Handler
     if(filename != TemporaryCodeTab.NewFile) {
       try {
         val sourceFile = new LocalFile(filename)
-        val origSource = sourceFile.readFile()
+        if (sourceFile.reader == null)
+          sourceFile.open(FileMode.Read)
+        val origSource = reader2String(sourceFile.reader)
         innerSource(origSource.replaceAll("\r\n", "\n"))
         _dirty = false
         _needsCompile = false

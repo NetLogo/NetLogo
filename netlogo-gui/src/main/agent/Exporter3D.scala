@@ -5,7 +5,8 @@ package org.nlogo.agent
 import java.io.PrintWriter
 import java.util.{ ArrayList, Collections, HashMap => JHashMap, List => JList, Map => JMap }
 import java.lang.{ Double => JDouble, Integer => JInteger, Long => JLong }
-import org.nlogo.api.{ Dump, Nobody }
+import org.nlogo.api.{ Dump}
+import org.nlogo.core.Nobody
 import Dump.csv
 import collection.JavaConverters._
 
@@ -119,9 +120,9 @@ private[agent] class Exporter3D(world: World3D, writer: PrintWriter) extends Exp
     val globals = world.program.globals
     val sortedGlobals = new ArrayList[String](globals.size)
     val globalVarIndices = new JHashMap[String, JInteger]
-    for((g, i) <- globals.asScala.zipWithIndex) {
-      globalVarIndices.put(globals.get(i), Int.box(i))
-      sortedGlobals.add(globals.get(i))
+    for((g, i) <- globals.zipWithIndex) {
+      globalVarIndices.put(globals(i), Int.box(i))
+      sortedGlobals.add(globals(i))
     }
     // we want to make sure to export the globals in alphabetical order so that the world files are
     // exactly the same everytime which is important for checksums in particular.  ev 6/15/05
@@ -141,7 +142,7 @@ private[agent] class Exporter3D(world: World3D, writer: PrintWriter) extends Exp
                   + csv.data(if(world.links().isDirected()) "DIRECTED" else
                                    if(world.links().isUndirected()) "UNDIRECTED" else "NEITHER") + ","
                   + csv.encode(Dump.number(world.tickCounter.ticks)))
-    for((g, i) <- globals.asScala.zipWithIndex) {
+    for((g, i) <- globals.zipWithIndex) {
       print(",")
       print(csv.data
                    (world.observer().getObserverVariable
@@ -154,17 +155,16 @@ private[agent] class Exporter3D(world: World3D, writer: PrintWriter) extends Exp
 
   override def exportTurtles() {
     println(csv.encode("TURTLES"))
-    val allTurtleVars = new ArrayList[String](world.program.turtlesOwn)
-    val turtlesVarSize = world.program.turtlesOwn.size()
+    val allTurtleVars = new ArrayList[String](world.program.turtlesOwn.asJava)
+    val turtlesVarSize = world.program.turtlesOwn.size
     // this next hashtable is keyed by the breed variable names and holds the index of where that var is positioned
-    val breedVarIndices = new JHashMap[String, JInteger]()
-    for(current <- world.program.breedsOwn.keySet.asScala) {
-      val breedOwns = world.program.breedsOwn.get(current)
-      for(breedVarName <- breedOwns.asScala)
-        if(breedVarIndices.get(breedVarName) == null) {
-          allTurtleVars.add(breedVarName)
-          breedVarIndices.put(breedVarName, Int.box(allTurtleVars.size() - 1))
-        }
+    val breedVarIndices = collection.mutable.Map[String, Int]()
+    for {
+      current <- world.program.breeds.values
+      breedVarName <- current.owns
+    } if (!breedVarIndices.contains(breedVarName)) {
+      allTurtleVars.add(breedVarName)
+      breedVarIndices(breedVarName) = allTurtleVars.size - 1
     }
     println(csv.variableNameRow(allTurtleVars))
     val it = world.turtles().iterator
@@ -173,16 +173,16 @@ private[agent] class Exporter3D(world: World3D, writer: PrintWriter) extends Exp
       print(csv.data(turtle.getTurtleVariable(Turtle.VAR_WHO)))
       val breed = turtle.getTurtleVariable(Turtle3D.VAR_BREED3D).asInstanceOf[AgentSet]
       val key = breed.printName()
-      var breedOwns: JList[String] = null
+      var breedOwns: Seq[String] = null
       var thisBreedVarIndices: Array[Int] = null
       var sortedBreedOwns: Array[String] = null
       if (!key.equals("TURTLES")) {
-        breedOwns = world.program.breedsOwn.get(key)
+        breedOwns = world.program.breeds(key).owns
         thisBreedVarIndices = Array.fill(breedOwns.size)(0)
-        sortedBreedOwns = Array.fill(breedOwns.size())(null: String)
+        sortedBreedOwns = Array.fill(breedOwns.size)(null: String)
         for(j <- 0 until breedOwns.size) {
-          sortedBreedOwns(j) = breedOwns.get(j)
-          thisBreedVarIndices(j) = breedVarIndices.get(breedOwns.get(j)).intValue()
+          sortedBreedOwns(j) = breedOwns(j)
+          thisBreedVarIndices(j) = breedVarIndices(breedOwns(j))
         }
         sortIndicesAndVars(sortedBreedOwns, thisBreedVarIndices)
       }

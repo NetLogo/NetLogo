@@ -3,7 +3,7 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.LogoException;
-import org.nlogo.api.LogoList;
+import org.nlogo.core.LogoList;
 import org.nlogo.api.LogoListBuilder;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
@@ -12,7 +12,7 @@ import org.nlogo.nvm.Reporter;
 public final strictfp class _rgb
     extends Reporter {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     int[] right = {Syntax.NumberType(), Syntax.NumberType(), Syntax.NumberType()};
     int ret = Syntax.ListType();
     return Syntax.reporterSyntax(right, ret);

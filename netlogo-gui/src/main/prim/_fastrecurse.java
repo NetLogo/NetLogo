@@ -13,11 +13,11 @@ public final strictfp class _fastrecurse
 
   public _fastrecurse(_call original) {
     this.original = original;
-    token(original.token());
+    token_$eq(original.token());
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.commandSyntax();
   }
 

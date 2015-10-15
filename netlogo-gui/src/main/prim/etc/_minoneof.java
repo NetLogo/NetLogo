@@ -15,7 +15,7 @@ import java.util.List;
 public final strictfp class _minoneof
     extends Reporter {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     int[] right = {Syntax.AgentsetType(), Syntax.NumberBlockType()};
     int ret = Syntax.AgentType();
     return Syntax.reporterSyntax(right, ret, "OTPL", "?");
@@ -48,7 +48,7 @@ public final strictfp class _minoneof
       }
     }
     if (winners.isEmpty()) {
-      return org.nlogo.api.Nobody$.MODULE$;
+      return org.nlogo.core.Nobody$.MODULE$;
     } else {
       return winners.get(context.job.random.nextInt(winners.size()));
     }

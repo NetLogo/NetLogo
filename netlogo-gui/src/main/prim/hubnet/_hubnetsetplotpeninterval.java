@@ -20,7 +20,7 @@ public final strictfp class _hubnetsetplotpeninterval
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     int[] right = {Syntax.StringType(), Syntax.NumberType()};
     return Syntax.commandSyntax(right);
   }

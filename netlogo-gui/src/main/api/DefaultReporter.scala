@@ -6,14 +6,14 @@ package org.nlogo.api
  * Partial implementation of Reporter provides common implementations of some methods.  Implements
  * every method except <code>report(...)</code>.
  */
-abstract class DefaultReporter extends Reporter {
+abstract class DefaultReporter extends Reporter with TokenHolder {
 
   /**
    * Indicates that this primitive can be used by any agent.
    *
    * @return <code>"OTPL"</code>
    */
-  override def getAgentClassString = "OTPL"
+  def getAgentClassString = getSyntax.agentClassString
 
   /**
    * Indicates that this reporter takes no arguments and returns a number.
@@ -21,6 +21,6 @@ abstract class DefaultReporter extends Reporter {
    * @return <code>Syntax.reporterSyntax(Syntax.NumberType)</code>
    */
   override def getSyntax =
-    Syntax.reporterSyntax(Syntax.NumberType)
+    org.nlogo.core.Syntax.reporterSyntax(ret = Syntax.NumberType)
 
 }

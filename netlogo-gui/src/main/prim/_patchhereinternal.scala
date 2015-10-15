@@ -9,7 +9,7 @@ import org.nlogo.nvm.{ Context, Reporter }
 // needed by _patchat.optimize() because regular _patchhere is turtle-only
 
 class _patchhereinternal extends Reporter {
-  override def syntax: Syntax =
+  override def syntax =
     Syntax.reporterSyntax(Syntax.PatchType, "-TP-")
 
   override def report(context: Context) = report_1(context)

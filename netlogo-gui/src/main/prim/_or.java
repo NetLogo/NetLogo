@@ -11,7 +11,7 @@ public final strictfp class _or
     extends Reporter
     implements org.nlogo.nvm.Pure, org.nlogo.nvm.CustomGenerated {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.reporterSyntax(Syntax.BooleanType(),
         new int[]{Syntax.BooleanType()},
         Syntax.BooleanType(),

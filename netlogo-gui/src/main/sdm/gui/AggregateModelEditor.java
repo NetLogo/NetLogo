@@ -9,10 +9,10 @@ import org.jhotdraw.framework.FigureEnumeration;
 import org.jhotdraw.framework.Tool;
 import org.jhotdraw.framework.ViewChangeListener;
 import org.jhotdraw.util.UndoManager;
-import org.nlogo.api.CompilerException;
+import org.nlogo.core.CompilerException;
 import org.nlogo.api.CompilerServices;
 import org.nlogo.api.I18N;
-import org.nlogo.api.TokenType;
+import org.nlogo.core.TokenType;
 import org.nlogo.sdm.Model;
 import org.nlogo.window.EditDialogFactoryInterface;
 

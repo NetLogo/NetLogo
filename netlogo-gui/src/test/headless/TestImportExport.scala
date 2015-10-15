@@ -3,7 +3,7 @@
 package org.nlogo.headless
 
 import org.scalatest.{ FunSuite, OneInstancePerTest, BeforeAndAfterEach }
-import org.nlogo.api.{ Perspective, Version }
+import org.nlogo.api.{ FileIO, Perspective, Version }
 import org.nlogo.util.SlowTest
 
 class TestImportExport extends FunSuite with AbstractTestLanguage
@@ -421,8 +421,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
 
   if(!Version.is3D)
     test("testTrailingCommas", SlowTest.Tag) {
-      workspace.initForTesting(35, new org.nlogo.api.LocalFile(
-        "test/import/trailing-commas.nlogo").readFile())
+      workspace.initForTesting(35, FileIO.file2String("test/import/trailing-commas.nlogo"))
       testCommand("import-world \"test/import/trailing-commas.csv\"")
     }
 
@@ -451,8 +450,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
 
   if(!Version.is3D)
     test("ExtraFieldValue", SlowTest.Tag) {
-      workspace.initForTesting(35, new org.nlogo.api.LocalFile(
-        "test/import/trailing-commas.nlogo").readFile())
+      workspace.initForTesting(35, FileIO.file2String("test/import/trailing-commas.nlogo"))
       val errorNumber = Array(0)
       workspace.importerErrorHandler =
         new org.nlogo.agent.Importer.ErrorHandler() {

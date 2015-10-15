@@ -2,7 +2,8 @@
 
 package org.nlogo.sdm
 
-import org.nlogo.api.{ CompilerException, CompilerServices }
+import org.nlogo.api.CompilerServices
+import org.nlogo.core.CompilerException
 
 /**
  * Turns an Model into a NetLogo source fragment

@@ -3,8 +3,11 @@
 package org.nlogo.headless
 
 import org.nlogo.agent.{BooleanConstraint, ChooserConstraint, InputBoxConstraint, SliderConstraint}
-import org.nlogo.api.{CompilerException, FileIO, LogoException, LogoList,
-                      ModelReader, ModelSection, Program, ValueConstraint, Version}
+import org.nlogo.api.{ FileIO, LogoException, 
+                      ModelReader, ModelSection, ValueConstraint, Version}
+import org.nlogo.core.LogoList
+import org.nlogo.core.Program
+import org.nlogo.core.CompilerException
 import org.nlogo.plot.PlotLoader
 import org.nlogo.shape.{LinkShape, VectorShape}
 import org.nlogo.api.StringUtils.escapeString
@@ -51,7 +54,8 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
       // JC - 9/14/10
       // val convertedCode = ws.autoConvert(code, false, false, netLogoVersion)
       import collection.JavaConverters._
-      ws.compiler.compileProgram(code, ws.world.newProgram(interfaceGlobals.asJava), ws.getExtensionManager, ws.getCompilationEnvironment)
+      val newProg = Program.empty().copy(interfaceGlobals = interfaceGlobals)
+      ws.compiler.compileProgram(code, newProg, ws.getExtensionManager, ws.getCompilationEnvironment)
     }
     ws.setProcedures(results.proceduresMap)
     ws.codeBits.clear() //(WTH IS THIS? - JC 10/27/09)
@@ -98,7 +102,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
           SliderConstraint.makeSliderConstraint(
             ws.world.observer(), spec(1), spec(2), spec(3), spec(4).toDouble, vname, ws)
         case "CHOOSER" =>
-          val vals = ws.compiler.readFromString(spec(1), ws.world.program.is3D).asInstanceOf[LogoList]
+          val vals = ws.compiler.readFromString(spec(1), ws.world.program.dialect.is3D).asInstanceOf[LogoList]
           val defaultIndex = spec(2).toInt
           val defaultAsString = org.nlogo.api.Dump.logoObject(vals.get(defaultIndex), true, false)
           interfaceGlobalCommands.append("set " + vname + " " + defaultAsString + "\n")
@@ -109,7 +113,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
           if (spec(2) == "Number" || spec(2) == "Color")
             defaultVal = ws.compiler.readNumberFromString(spec(1), ws.world,
               ws.getExtensionManager,
-              ws.world.program.is3D)
+              ws.world.program.dialect.is3D)
           new InputBoxConstraint(spec(2), defaultVal)
       }
       ws.world.observer().variableConstraint(ws.world.observerOwnsIndexOf(vname.toUpperCase), con)

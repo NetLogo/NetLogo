@@ -5,8 +5,10 @@ package org.nlogo.agent
 import java.io.PrintWriter
 import java.util.{ ArrayList, Collections, HashMap => JHashMap, List => JList, Map => JMap }
 import java.lang.{ Integer => JInteger, Long => JLong }
-import org.nlogo.api.{ Dump, Nobody }
-import Dump.csv
+import org.nlogo.{ core, api },
+  api.Dump,
+    Dump.csv,
+  core.Nobody
 import collection.JavaConverters._
 
 // I converted this from Java without (for now, at least) making any effort to clean it up and make
@@ -29,17 +31,17 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
   private def exportLinks() {
     println(csv.encode("LINKS"))
     val allLinkVars = new ArrayList[String]
-    for(v <- world.program.linksOwn.asScala)
+    for(v <- world.program.linksOwn)
       allLinkVars.add(v)
     val linkVarSize = world.program.linksOwn.size
     // this next hashtable is keyed by the breed variable names and holds the index of where that
     // var is positioned
-    val breedVarIndices = new JHashMap[String, JInteger]
-    for{current <- world.program.linkBreedsOwn.keySet.asScala
-        breedVarName <- world.program.linkBreedsOwn.get(current).asScala}
-      if(breedVarIndices.get(breedVarName) == null) {
+    val breedVarIndices = collection.mutable.Map[String, Int]()
+    for{current <- world.program.linkBreeds.values
+        breedVarName <- current.owns}
+      if (!breedVarIndices.contains(breedVarName)) {
         allLinkVars.add(breedVarName)
-        breedVarIndices.put(breedVarName, Int.box(allLinkVars.size - 1))
+        breedVarIndices(breedVarName) = allLinkVars.size - 1
       }
     println(csv.variableNameRow(allLinkVars))
     // when we get the list it's sorted and I think it's cool to export in who number order rather
@@ -50,16 +52,16 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
       val link = it.next.asInstanceOf[Link]
       val breed = link.getLinkVariable(Link.VAR_BREED).asInstanceOf[AgentSet]
       val key = breed.printName
-      var breedOwns: JList[String] = null
+      var breedOwns: Seq[String] = null
       var thisBreedVarIndices: Array[Int] = null
       var sortedBreedOwns: Array[String] = null
       if(key != "LINKS") {
-        breedOwns = world.program.linkBreedsOwn.get(key)
+        breedOwns = world.program.linkBreeds(key).owns
         thisBreedVarIndices = Array.fill(breedOwns.size)(0)
         sortedBreedOwns = Array.fill(breedOwns.size)(null: String)
         for(j <- 0 until breedOwns.size) {
-          sortedBreedOwns(j) = breedOwns.get(j)
-          thisBreedVarIndices(j) = breedVarIndices.get(breedOwns.get(j)).intValue()
+          sortedBreedOwns(j) = breedOwns(j)
+          thisBreedVarIndices(j) = breedVarIndices(breedOwns.apply(j))
         }
         sortIndicesAndVars(sortedBreedOwns, thisBreedVarIndices)
       }
@@ -101,9 +103,9 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
           + csv.encode("ticks"))
     val globals = world.program.globals
     val sortedGlobals = new ArrayList[String](globals.size)
-    val globalVarIndices = new JHashMap[String, JInteger]
-    for((g, i) <- globals.asScala.zipWithIndex) {
-      globalVarIndices.put(g, Int.box(i))
+    val globalVarIndices = collection.mutable.Map[String, Int]()
+    for((g, i) <- globals.zipWithIndex) {
+      globalVarIndices(g) = i
       sortedGlobals.add(g)
     }
     // we want to make sure to export the globals in alphabetical order so that the world files are
@@ -113,11 +115,11 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
       Option(world.observer.targetAgent).getOrElse(Nobody)
     print("," + csv.variableNameRow(sortedGlobals))
     println()
-    print(csv.encode(JInteger.toString(world.minPxcor)) + ","
-          + csv.encode(JInteger.toString(world.maxPxcor)) + ","
-          + csv.encode(JInteger.toString(world.minPycor)) + ","
-          + csv.encode(JInteger.toString(world.maxPycor)) + ","
-          + csv.encode(JInteger.toString(world.observer.perspective.export)) + ","
+    print(csv.encode(world.minPxcor.toString) + ","
+          + csv.encode(world.maxPxcor.toString) + ","
+          + csv.encode(world.minPycor.toString) + ","
+          + csv.encode(world.maxPycor.toString) + ","
+          + csv.encode(world.observer.perspective.export.toString) + ","
           + csv.data(subject) + ","
           + csv.encode(JLong.toString(world.nextTurtleIndex)) + ","
           + csv.data(if (world.links.isDirected) "DIRECTED" else
@@ -125,8 +127,8 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
           + csv.encode(Dump.number(world.tickCounter.ticks)))
     for(g <- sortedGlobals.asScala) {
       print(",")
-      print(csv.data(world.observer.getObserverVariable(
-        globalVarIndices.get(g).intValue)))
+      print(csv.data(world.observer.getVariable(
+        globalVarIndices(g))))
     }
     println()
     println()
@@ -134,17 +136,16 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
 
   protected def exportTurtles() {
     println(csv.encode("TURTLES"))
-    val allTurtleVars = new ArrayList[String](world.program.turtlesOwn)
+    val allTurtleVars = new ArrayList[String](world.program.turtlesOwn.asJava)
     val turtlesVarSize = world.program.turtlesOwn.size
     // this next hashtable is keyed by the breed variable names and holds the index of where that var is positioned
-    val breedVarIndices = new JHashMap[String, JInteger]
-    for(current <- world.program.breedsOwn.keySet.asScala) {
-      val breedOwns = world.program.breedsOwn.get(current)
-      for(breedVarName <- breedOwns.asScala)
-        if(breedVarIndices.get(breedVarName) == null) {
-          allTurtleVars.add(breedVarName)
-          breedVarIndices.put(breedVarName, Int.box(allTurtleVars.size - 1))
-        }
+    val breedVarIndices = collection.mutable.Map[String, Int]()
+    for {
+      current <- world.program.breeds.values
+      breedVarName <- current.owns
+    } if (!breedVarIndices.contains(breedVarName)) {
+      allTurtleVars.add(breedVarName)
+      breedVarIndices(breedVarName) = allTurtleVars.size - 1
     }
     println(csv.variableNameRow(allTurtleVars))
     // when we get the array list it's sorted and I think it's cool to export in who number order
@@ -156,16 +157,16 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
       print(csv.data(turtle.getTurtleVariable(Turtle.VAR_WHO)))
       val breed = turtle.getTurtleVariable(Turtle.VAR_BREED).asInstanceOf[AgentSet]
       val key = breed.printName
-      var breedOwns: JList[String] = null
+      var breedOwns: Seq[String] = null
       var thisBreedVarIndices: Array[Int] = null
       var sortedBreedOwns: Array[String] = null
       if (key != "TURTLES") {
-        breedOwns = world.program.breedsOwn.get(key)
+        breedOwns = world.program.breeds(key).owns
         thisBreedVarIndices = Array.fill(breedOwns.size)(0)
         sortedBreedOwns = Array.fill(breedOwns.size)(null: String)
         for(j <- 0 until breedOwns.size) {
-          sortedBreedOwns(j) = breedOwns.get(j)
-          thisBreedVarIndices(j) = breedVarIndices.get(breedOwns.get(j)).intValue
+          sortedBreedOwns(j) = breedOwns(j)
+          thisBreedVarIndices(j) = breedVarIndices(breedOwns(j))
         }
         sortIndicesAndVars(sortedBreedOwns, thisBreedVarIndices)
       }
@@ -190,7 +191,7 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
   private def exportPatches() {
     println(csv.encode("PATCHES"))
     val vars = world.program.patchesOwn
-    println(csv.variableNameRow(vars))
+    println(csv.variableNameRow(vars.asJava))
     val it = world.patches.iterator
     while(it.hasNext) {
       val patch = it.next().asInstanceOf[Patch]

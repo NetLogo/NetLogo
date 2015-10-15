@@ -3,7 +3,8 @@
 package org.nlogo.prim.hubnet
 
 import java.io.{ Serializable => JSerializable }
-import org.nlogo.api.{ Dump, LogoList, Syntax, TypeNames }
+import org.nlogo.api.{ Dump, Syntax, TypeNames }
+import org.nlogo.core.LogoList
 import org.nlogo.nvm.{ ArgumentTypeException, Command, Context, EngineException }
 
 class _hubnetsend extends Command {

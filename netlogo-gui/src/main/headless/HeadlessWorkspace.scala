@@ -9,8 +9,9 @@ package org.nlogo.headless
 import org.nlogo.agent.{ Agent, Observer }
 import org.nlogo.api.{ Version, RendererInterface,
                        WorldDimensions, WorldDimensions3D, AggregateManagerInterface,
-                       ModelReader, CompilerException, LogoException, SimpleJobOwner,
+                       ModelReader, LogoException, SimpleJobOwner,
                        HubNetInterface, CommandRunnable, ReporterRunnable }
+import org.nlogo.core.CompilerException
 import org.nlogo.agent.{ World, World3D }
 import org.nlogo.nvm.{ LabInterface,
                        Workspace, DefaultCompilerServices, CompilerInterface }
@@ -301,7 +302,7 @@ with org.nlogo.api.ViewSettings {
   override def stopInspectingDeadAgents(): Unit = { }
   override def getAndCreateDrawing =
     renderer.trailDrawer.getAndCreateDrawing(true)
-  override def importDrawing(file: org.nlogo.api.File) {
+  override def importDrawing(file: org.nlogo.core.File) {
     renderer.trailDrawer.importDrawing(file)
   }
   override def clearDrawing() {
@@ -319,9 +320,9 @@ with org.nlogo.api.ViewSettings {
   }
 
   def exportOutput(filename: String) {
-    val file: org.nlogo.api.File = new org.nlogo.api.LocalFile(filename)
+    val file: org.nlogo.core.File = new org.nlogo.api.LocalFile(filename)
     try {
-      file.open(org.nlogo.api.FileMode.Write)
+      file.open(org.nlogo.core.FileMode.Write)
       val lines =
           new java.util.StringTokenizer(outputAreaBuffer.toString, "\n")
       while (lines.hasMoreTokens) {
@@ -546,7 +547,7 @@ with org.nlogo.api.ViewSettings {
    * Runs NetLogo commands and waits for them to complete.
    *
    * @param source The command or commands to run
-   * @throws org.nlogo.api.CompilerException
+   * @throws org.nlogo.core.CompilerException
    *                       if the code fails to compile
    * @throws org.nlogo.api.LogoException if the code fails to run
    */
@@ -566,9 +567,9 @@ with org.nlogo.api.ViewSettings {
    *
    * @param source The reporter to run
    * @return the result reported; may be of type java.lang.Integer, java.lang.Double,
-   *         java.lang.Boolean, java.lang.String, {@link org.nlogo.api.LogoList},
+   *         java.lang.Boolean, java.lang.String, {@link org.nlogo.core.LogoList},
    *         {@link org.nlogo.api.Agent}, AgentSet, or Nobody
-   * @throws org.nlogo.api.CompilerException
+   * @throws org.nlogo.core.CompilerException
    *                       if the code fails to compile
    * @throws org.nlogo.api.LogoException if the code fails to run
    */

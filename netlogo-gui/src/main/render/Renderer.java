@@ -57,14 +57,13 @@ public strictfp class Renderer
   protected void paintLinks(GraphicsInterface g, double patchSize) {
     int linksDrawn = 0;
     // traverse breeds in reverse order of declaration
-    Collection<Object> breeds = world.program().linkBreeds().values();
-    for (Iterator<Object> iter = breeds.iterator();
+    Collection<? extends AgentSet> breeds = world.getLinkBreeds().values();
+    for (Iterator<? extends AgentSet> iter = breeds.iterator();
          iter.hasNext();) {
-      Object next = iter.next();
+      AgentSet breed = iter.next();
       // I'm unable to reproduce bug #1400, but a user did see it, and
       // this instanceof check should prevent it - ST 9/21/11
-      if(next instanceof AgentSet) {
-        AgentSet breed = (AgentSet) next;
+      if (breed instanceof AgentSet) {
         for (Agent a : breed.agents()) {
           linkDrawer.drawLink(g, topology, (Link) a, patchSize, false);
           linksDrawn++;
@@ -89,14 +88,13 @@ public strictfp class Renderer
   protected void paintTurtles(GraphicsInterface g, double patchSize) {
     int turtlesDrawn = 0;
     // traverse breeds in reverse order of declaration
-    Collection<Object> breeds = world.program().breeds().values();
-    for (Iterator<Object> iter = breeds.iterator();
+    Collection<? extends AgentSet> breeds = world.getBreeds().values();
+    for (Iterator<? extends AgentSet> iter = breeds.iterator();
          iter.hasNext();) {
-      Object next = iter.next();
+      AgentSet breed = iter.next();
       // I'm unable to reproduce bug #1400, but a user did see it, and
       // this instanceof check should prevent it - ST 9/21/11
-      if(next instanceof AgentSet) {
-        AgentSet breed = (AgentSet) next;
+      if (breed instanceof AgentSet) {
         if (Turtle.class.isAssignableFrom(breed.type())) {
           for (Agent a : breed.agents()) {
             turtleDrawer.drawTurtle(g, topology, (Turtle) a, patchSize);

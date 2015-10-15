@@ -16,7 +16,7 @@ class _reload extends Command {
         context.ip = next
       case _ =>
         throw new EngineException(
-          context, this, token.name + " can only be used in the GUI")
+          context, this, token.text + " can only be used in the GUI")
     }
   }
 }

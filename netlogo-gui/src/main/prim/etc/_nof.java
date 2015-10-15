@@ -5,7 +5,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.LogoList;
+import org.nlogo.core.LogoList;
 import org.nlogo.api.LogoListBuilder;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
@@ -58,7 +58,7 @@ public final strictfp class _nof
     LogoListBuilder result = new LogoListBuilder();
     int i = 0;
     int j = 0;
-    for (Iterator<Object> it = list.iterator();
+    for (Iterator<Object> it = list.javaIterator();
          it.hasNext() && j < n;
          i++) {
       Object elt = it.next();
@@ -71,7 +71,7 @@ public final strictfp class _nof
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.reporterSyntax
         (new int[]{Syntax.NumberType(),
             Syntax.AgentsetType() | Syntax.ListType()},

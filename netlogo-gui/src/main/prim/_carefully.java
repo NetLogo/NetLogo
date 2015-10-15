@@ -15,7 +15,7 @@ public final strictfp class _carefully
   public final Let let = new Let();
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.commandSyntax
         (new int[]{Syntax.CommandBlockType(),
             Syntax.CommandBlockType()});

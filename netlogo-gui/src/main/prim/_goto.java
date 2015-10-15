@@ -13,7 +13,7 @@ public final strictfp class _goto  // , Matt
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.commandSyntax();
   }
 

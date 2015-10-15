@@ -3,7 +3,7 @@
 package org.nlogo.prim;
 
 import org.nlogo.api.Dump;
-import org.nlogo.api.LogoList;
+import org.nlogo.core.LogoList;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Pure;
 import org.nlogo.nvm.Reporter;
@@ -17,7 +17,7 @@ public final strictfp class _constlist
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.reporterSyntax(Syntax.ListType());
   }
 

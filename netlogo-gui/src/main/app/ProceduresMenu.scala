@@ -20,11 +20,11 @@ class ProceduresMenu(target: ProceduresMenuTarget)
       for(proc <- procs.sortWith(_.toUpperCase < _.toUpperCase)) {
         val item = new JMenuItem(proc)
         val namePos = procsTable(proc)(2).asInstanceOf[java.lang.Integer].intValue
-        val endPos  = procsTable(proc)(3).asInstanceOf[java.lang.Integer].intValue
+        val end  = procsTable(proc)(3).asInstanceOf[java.lang.Integer].intValue
         item.addActionListener{() =>
           // invokeLater for the scrolling behavior we want. we scroll twice: first bring the end into
           // view, then bring the beginning into view, so then we can see both, if they fit - ST 11/4/04
-          target.select(endPos, endPos)
+          target.select(end, end)
           EventQueue.invokeLater{() =>
             target.select(namePos, namePos + proc.size)  // highlight the name
           }

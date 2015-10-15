@@ -9,7 +9,7 @@ import org.nlogo.api.Color;
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.LogoList;
+import org.nlogo.core.LogoList;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -1135,8 +1135,8 @@ public strictfp class Turtle
       return 0;
     }
     int j = 0;
-    for (Iterator<Object> iter = world.program().breeds().values().iterator(); iter.hasNext(); j++) {
-      if (mybreed == ((AgentSet) iter.next())) {
+    for (Iterator<AgentSet> iter = world.getAgentBreeds().values().iterator(); iter.hasNext(); j++) {
+      if (mybreed == iter.next()) {
         return j;
       }
     }

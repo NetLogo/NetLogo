@@ -2,6 +2,8 @@
 
 package org.nlogo.api
 
+import org.nlogo.core.Token
+
 // This object holds methods that are used specifically with NetLogo strings.
 
 object StringUtils {

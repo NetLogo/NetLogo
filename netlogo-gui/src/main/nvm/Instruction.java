@@ -10,16 +10,16 @@ import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.LogoList;
-import org.nlogo.api.Syntax;
-import org.nlogo.api.Token;
+import org.nlogo.core.LogoList;
+import org.nlogo.core.Syntax;
+import org.nlogo.core.Token;
 import org.nlogo.util.Thunk;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract strictfp class Instruction
-    implements org.nlogo.api.TokenHolder {
+    implements org.nlogo.core.TokenHolder {
 
   public Workspace workspace;
   public org.nlogo.agent.World world;  // public so the engine can get to World.comeUpForAir easily
@@ -28,13 +28,13 @@ public abstract strictfp class Instruction
 
   public abstract Syntax syntax();
 
-  private org.nlogo.api.Token token;
+  private org.nlogo.core.Token token;
 
-  public org.nlogo.api.Token token() {
+  public org.nlogo.core.Token token() {
     return token;
   }
 
-  public void token(org.nlogo.api.Token token) {
+  public void token_$eq(org.nlogo.core.Token token) {
     this.token = token;
   }
 
@@ -43,13 +43,13 @@ public abstract strictfp class Instruction
   // for runtime errors since it's expecting a command
   // however, the type is actually limited by the variable
   // name not the set and we want to compiler to report that ev 7/13/07
-  private org.nlogo.api.Token token2 = null;
+  private org.nlogo.core.Token token2 = null;
 
-  public org.nlogo.api.Token tokenLimitingType() {
+  public org.nlogo.core.Token tokenLimitingType() {
     return token2 == null ? token : token2;
   }
 
-  public void tokenLimitingType(org.nlogo.api.Token token) {
+  public void tokenLimitingType(org.nlogo.core.Token token) {
     this.token2 = token;
   }
 
@@ -114,7 +114,7 @@ public abstract strictfp class Instruction
     if (token() == null) {
       return -1;
     }
-    int begin = token().startPos();
+    int begin = token().start();
     for (int i = 0; i < args.length; i++) {
       if (args[i].token() != null) {
         int argBegin = args[i].getSourceStartPosition();
@@ -132,7 +132,7 @@ public abstract strictfp class Instruction
     if (token() == null) {
       return -1;
     }
-    int end = token().endPos();
+    int end = token().end();
     for (int i = 0; i < args.length; i++) {
       if (args[i].token() != null) {
         int argEnd = args[i].getSourceEndPosition();
@@ -162,7 +162,7 @@ public abstract strictfp class Instruction
     */
   public String displayName() {
     if (token != null) {
-      return token.name().toUpperCase();
+      return token.text().toUpperCase();
     } else {
       // well, returning some weird ugly internal class name
       // is better than nothing, I guess
@@ -422,7 +422,7 @@ public abstract strictfp class Instruction
     return argEvalDouble(context, argIndex).intValue();
   }
 
-  public org.nlogo.api.LogoList argEvalList(Context context, int argIndex) throws LogoException {
+  public org.nlogo.core.LogoList argEvalList(Context context, int argIndex) throws LogoException {
     Object obj = args[argIndex].report(context);
     try {
       return (LogoList) obj;

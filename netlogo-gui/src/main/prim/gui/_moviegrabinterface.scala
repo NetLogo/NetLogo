@@ -10,9 +10,9 @@ class _moviegrabinterface extends Command {
   override def syntax =
     Syntax.commandSyntax
   override def perform(context: Context) {
-    if (world.program.is3D)
+    if (world.program.dialect.is3D)
       throw new EngineException(
-          context, this, token.name + " is not supported in NetLogo 3D")
+          context, this, token.text + " is not supported in NetLogo 3D")
     workspace match {
       case gw: GUIWorkspace =>
         workspace.waitFor(
@@ -33,7 +33,7 @@ class _moviegrabinterface extends Command {
               }}})
       case _ =>
         throw new EngineException(
-          context, this, token.name + " can only be used in the GUI")
+          context, this, token.text + " can only be used in the GUI")
     }
     context.ip = next
   }

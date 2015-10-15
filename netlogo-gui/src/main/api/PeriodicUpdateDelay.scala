@@ -1,6 +1,8 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.api;
+package org.nlogo.api
+
+import org.nlogo.core.File;
 
 /**
  * Created by IntelliJ IDEA.

@@ -13,7 +13,7 @@ public final strictfp class _facenowrap
     extends Command {
   // turtle only since face for the observer is always nowrap -- AZS 4/12/05
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.commandSyntax
         (new int[]{Syntax.AgentType()}, "-T--", true);
   }

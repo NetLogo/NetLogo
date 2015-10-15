@@ -17,7 +17,7 @@ window.App - AppEventType type - Object[] args
 window.BeforeLoad - String modelPath - org.nlogo.api.ModelType modelType
 window.CompileAll
 window.CompileMoreSource - org.nlogo.api.JobOwner owner
-window.Compiled - org.nlogo.api.SourceOwner sourceOwner - org.nlogo.api.Program program - org.nlogo.nvm.Procedure procedure - org.nlogo.api.CompilerException error
+window.Compiled - org.nlogo.api.SourceOwner sourceOwner - org.nlogo.core.Program program - org.nlogo.nvm.Procedure procedure - org.nlogo.core.CompilerException error
 window.Dirty
 window.EditWidget - org.nlogo.api.Editable widget
 window.Enable2D - boolean enabled

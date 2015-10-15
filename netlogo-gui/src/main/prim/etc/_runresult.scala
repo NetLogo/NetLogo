@@ -2,7 +2,8 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api.{ CompilerException, LogoException, Syntax }
+import org.nlogo.api.{ LogoException, Syntax }
+import org.nlogo.core.CompilerException
 import org.nlogo.nvm.{ Activation, ArgumentTypeException, Context, EngineException, Reporter, ReporterTask }
 
 class _runresult extends Reporter {
@@ -19,7 +20,7 @@ class _runresult extends Reporter {
       case s: String =>
         if(args.size > 1)
           throw new EngineException(context, this,
-            token.name + " doesn't accept further inputs if the first is a string")
+            token.text + " doesn't accept further inputs if the first is a string")
         try {
           val procedure = workspace.compileForRun(s, context, true)
           val newActivation = new Activation(

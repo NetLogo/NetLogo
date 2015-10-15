@@ -14,7 +14,7 @@ import org.nlogo.nvm.Procedure;
 public final strictfp class _report
     extends Command {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.commandSyntax
         (new int[]{Syntax.WildcardType()});
   }
@@ -30,7 +30,7 @@ public final strictfp class _report
     context.ip = next;
     if (context.activation.procedure.isTask()) {
       throw NonLocalExit$.MODULE$;
-    } else if (context.activation.procedure.tyype != Procedure.Type.REPORTER) {
+    } else if (! context.activation.procedure.isReporter()) {
       throw new EngineException(context, this,
           I18N.errorsJ().getN("org.nlogo.prim._report.canOnlyUseInToReport", displayName()));
     } else if (!context.atTopActivation()) {

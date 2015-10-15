@@ -11,7 +11,7 @@ import org.nlogo.nvm.Reporter;
 
 public final strictfp class _towardsnowrap extends Reporter {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     int[] right = {Syntax.TurtleType() | Syntax.PatchType()};
     return Syntax.reporterSyntax(right, Syntax.NumberType(), "-TP-");
   }

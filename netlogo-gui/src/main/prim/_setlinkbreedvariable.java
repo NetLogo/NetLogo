@@ -17,7 +17,7 @@ public final strictfp class _setlinkbreedvariable
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     int[] right = {Syntax.WildcardType()};
     return Syntax.commandSyntax(right, "---L", true);
   }

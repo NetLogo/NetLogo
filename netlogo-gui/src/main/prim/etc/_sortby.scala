@@ -3,7 +3,8 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.agent.AgentSet
-import org.nlogo.api.{ LogoException, LogoList, Syntax }
+import org.nlogo.api.{ LogoException, Syntax }
+import org.nlogo.core.LogoList
 import org.nlogo.nvm.{ ArgumentTypeException, Context, EngineException, Reporter, ReporterTask  }
 
 class _sortby extends Reporter {
@@ -26,7 +27,7 @@ class _sortby extends Reporter {
     val input = obj match {
       case list: LogoList =>
         // must copy the list, because Collections.sort() works in place - ST 7/31/04, 1/12/06
-        new java.util.ArrayList[AnyRef](list)
+        new java.util.ArrayList[AnyRef](list.toJava)
       case agents: AgentSet =>
         val list = new java.util.ArrayList[AnyRef]
         val it = agents.shufflerator(context.job.random)

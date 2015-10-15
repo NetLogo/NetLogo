@@ -3,25 +3,28 @@
 package org.nlogo.compiler
 
 import org.scalatest.FunSuite
-import org.nlogo.api.{ Program, Token, TokenType }
+import org.nlogo.core.Breed
+import org.nlogo.core.Program
+import org.nlogo.core.Token
+import org.nlogo.core.TokenType
 import org.nlogo.prim._
 
 class BreedIdentifierHandlerTests extends FunSuite {
   def tester(handler: BreedIdentifierHandler.Helper, code: String, tokenString: String): Token = {
-    val program = new Program(false)
-    program.breeds.put("FROGS", "FROGS")
-    program.breedsSingular.put("FROG", "FROGS")
-    program.linkBreeds.put("AS", "DIRECTED-LINK-BREED")
-    program.linkBreedsSingular.put("A", "AS")
-    program.linkBreeds.put("BS", "UNDIRECTED-LINK-BREED")
-    program.linkBreedsSingular.put("B", "BS")
+    val p= Program.empty()
+    val program = p.copy(
+      breeds = scala.collection.immutable.ListMap(
+        "FROGS" -> Breed("FROGS", "FROG")),
+      linkBreeds = scala.collection.immutable.ListMap(
+        "AS" -> Breed("AS", "A", isLinkBreed = true, isDirected = true),
+        "BS" -> Breed("BS", "B", isLinkBreed = true, isDirected = false)))
     handler.process(
-      Compiler.Tokenizer2D.tokenize(code).find(_.name.equalsIgnoreCase(tokenString)).orNull,
+      Compiler.Tokenizer2D.tokenize(code).find(_.text.equalsIgnoreCase(tokenString)).orNull,
       program)
       .get
   }
   test("turtleBreedIdentifier") {
-    val token = tester(BreedIdentifierHandler.turtle("CREATE-*", TokenType.COMMAND, false,
+    val token = tester(BreedIdentifierHandler.turtle("CREATE-*", TokenType.Command, false,
       classOf[_createturtles]),
       "breed[frogs frog] to foo create-frogs 1 end", "CREATE-FROGS")
     assert(token.value.isInstanceOf[_createturtles])
@@ -29,7 +32,7 @@ class BreedIdentifierHandlerTests extends FunSuite {
   }
   test("directedLinkBreedIdentifier1") {
     val token = tester(BreedIdentifierHandler.directedLink
-      ("CREATE-*-TO", TokenType.COMMAND, true,
+      ("CREATE-*-TO", TokenType.Command, true,
         classOf[_createlinkto]),
       "directed-link-breed[as a] to foo ask turtle 0 [ create-a-to turtle 1 ] end",
       "CREATE-A-TO")
@@ -38,7 +41,7 @@ class BreedIdentifierHandlerTests extends FunSuite {
   }
   test("directedLinkBreedIdentifier2") {
     val token = tester(BreedIdentifierHandler.directedLink
-      ("OUT-*-NEIGHBOR?", TokenType.REPORTER, true,
+      ("OUT-*-NEIGHBOR?", TokenType.Reporter, true,
         classOf[_outlinkneighbor]),
       "directed-link-breed[as a] to foo ask turtle 0 [ print out-a-neighbor? turtle 1 ] end",
       "OUT-A-NEIGHBOR?")
@@ -47,7 +50,7 @@ class BreedIdentifierHandlerTests extends FunSuite {
   }
   test("undirectedLinkBreedIdentifier") {
     val token = tester(BreedIdentifierHandler.undirectedLink
-      ("CREATE-*-WITH", TokenType.COMMAND, true,
+      ("CREATE-*-WITH", TokenType.Command, true,
         classOf[_createlinkwith]),
       "undirected-link-breed[bs b] to foo ask turtle 0 [ create-b-with turtle 1 ] end",
       "CREATE-B-WITH")

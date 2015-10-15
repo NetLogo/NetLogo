@@ -2,7 +2,9 @@
 
 package org.nlogo.app
 
-import org.nlogo.api.{ CompilerServices, EditorAreaInterface, Token, TokenType }
+import org.nlogo.api.{ CompilerServices, EditorAreaInterface}
+import org.nlogo.core.Token
+import org.nlogo.core.TokenType
 import org.nlogo.editor.IndenterInterface
 
 class SmartIndenter(code: EditorAreaInterface, compiler: CompilerServices)
@@ -28,7 +30,7 @@ extends IndenterInterface {
           code.getLineOfText(
             code.offsetToLine(
               findMatchingOpenerBackward(code.getText(0, code.getSelectionStart), 0)
-              .startPos)))))
+              .start)))))
   }
   def handleInsertion(s: String) {
     if(List("e", "n", "d").contains(s.toLowerCase)) {
@@ -47,7 +49,7 @@ extends IndenterInterface {
     if(List("]", ")", "end").contains(wordUpToCursor)) {
       val lineSpaceCount = countLeadingSpaces(textUpToCursor)
       val opener = findMatchingOpenerBackward(code.getText(0, code.getSelectionStart), 0)
-      val openerLineNum = code.offsetToLine(opener.startPos)
+      val openerLineNum = code.offsetToLine(opener.start)
       val openerLine = code.getLineOfText(openerLineNum)
       val spaceDiff = StrictMath.min(lineSpaceCount - countLeadingSpaces(openerLine),
                                      textUpToCursor.length)
@@ -80,21 +82,21 @@ extends IndenterInterface {
   // None return means "leave it where it is"
   private def computeNewSpaces(currentLine: String,lineNum: Int): Option[Int] = {
     val token = compiler.tokenizeForColorization(currentLine).headOption.orNull
-    if(token != null && token.tyype == TokenType.CLOSE_BRACKET) {
+    if(token != null && token.tpe == TokenType.CloseBracket) {
       // first token is close bracket, so find matching opener and set it to the same indent level
       val opener = findMatchingOpenerBackward(
-        code.getText(0, code.lineToStartOffset(lineNum) + token.startPos + 1), 0)
+        code.getText(0, code.lineToStartOffset(lineNum) + token.start + 1), 0)
       return Some(countLeadingSpaces(
         code.getLineOfText(
-          code.offsetToLine(opener.startPos))))
+          code.offsetToLine(opener.start))))
     }
     // keywords should always be at the far left.  go ahead and guess if breed is the first token in
     // a line that it is the keyword. we do the same thing in EditorColorizer, sort of. I can think
     // of situations where the breed variable might be the first token in a line, however, they seem
     // quite unusual and maybe you should be formatting your code differently if you run into such a
     // situation :) ev 1/22/08
-    if(token != null && (token.tyype == TokenType.KEYWORD ||
-                         token.name.equalsIgnoreCase("breed")))
+    if(token != null && (token.tpe == TokenType.Keyword ||
+                         token.text.equalsIgnoreCase("breed")))
       return Some(0)
     // if it's not one of the previous two cases the position probably depends at least one line
     // previous unless it's the first line
@@ -107,8 +109,8 @@ extends IndenterInterface {
     var i = prevLineNum - 1
     while(i >= 0 &&
           (tokens.isEmpty ||
-           ((token == null || token.tyype != TokenType.COMMENT) &&
-            tokens(0).tyype == TokenType.COMMENT)))
+           ((token == null || token.tpe != TokenType.Comment) &&
+            tokens(0).tpe == TokenType.Comment)))
     {
       prevLineNum = i
       prevLine = code.getLineOfText(prevLineNum)
@@ -117,8 +119,8 @@ extends IndenterInterface {
     }
     if(tokens.isEmpty) return None
     // if our line starts with a comment, try to find a comment in prev line to align with
-    if(token != null && token.tyype == TokenType.COMMENT)
-      getComment(tokens).foreach(tok => return Some(tok.startPos))
+    if(token != null && token.tpe == TokenType.Comment)
+      getComment(tokens).foreach(tok => return Some(tok.start))
     var result = countLeadingSpaces(prevLine)
     // if there is such a previous line if it's got an "opener" that has no closer bump this line in
     if(totalValue(tokens) > 0)
@@ -131,7 +133,7 @@ extends IndenterInterface {
           token != null && isOpener(token)).foreach(opener =>
         result = countLeadingSpaces(
           code.getLineOfText(
-            code.offsetToLine(opener.startPos))))
+            code.offsetToLine(opener.start))))
       // look for the command on the previous line if we've got an opener (closed opener) look to
       // see where we are in relation to the command if we're indented past the command move to 1
       // tab stop past if we're before we move to be in line with the command
@@ -177,9 +179,9 @@ extends IndenterInterface {
     for(tok <- tokenize(line).reverse)
       if(isCloser(tok)) {
         val opener = findMatchingOpenerBackward(
-          code.getText(0, tok.startPos + offset), 1)
+          code.getText(0, tok.start + offset), 1)
         return Some(if(findOpener) opener
-                    else findCommand(code.getText(0, opener.startPos)).getOrElse(opener))
+                    else findCommand(code.getText(0, opener.start)).getOrElse(opener))
       }
     None
   }
@@ -191,25 +193,25 @@ extends IndenterInterface {
         diff -= 1
       else if(isCloser(tok))
         diff += 1
-      else if(diff == 0 && tok.tyype == TokenType.COMMAND)
+      else if(diff == 0 && tok.tpe == TokenType.Command)
         return Some(tok)
     }
     None
   }
 
   private def getComment(tokens: List[Token]): Option[Token] =
-    tokens.reverse.find(_.tyype == TokenType.COMMENT)
+    tokens.reverse.find(_.tpe == TokenType.Comment)
   private def tokenize(line: String) =
     compiler.tokenizeForColorization(line).toList
   private def isOpener(t: Token) =
-    t.tyype == TokenType.OPEN_PAREN ||
-    t.tyype == TokenType.OPEN_BRACKET ||
-    t.tyype == TokenType.KEYWORD &&
-      (t.name.equalsIgnoreCase("to") || t.name.equalsIgnoreCase("to-report"))
+    t.tpe == TokenType.OpenParen ||
+    t.tpe == TokenType.OpenBracket ||
+    t.tpe == TokenType.Keyword &&
+      (t.text.equalsIgnoreCase("to") || t.text.equalsIgnoreCase("to-report"))
   private def isCloser(t: Token) =
-    t.tyype == TokenType.CLOSE_PAREN ||
-    t.tyype == TokenType.CLOSE_BRACKET ||
-    t.tyype == TokenType.KEYWORD &&
-      t.name.equalsIgnoreCase("end")
+    t.tpe == TokenType.CloseParen ||
+    t.tpe == TokenType.CloseBracket ||
+    t.tpe == TokenType.Keyword &&
+      t.text.equalsIgnoreCase("end")
 
 }

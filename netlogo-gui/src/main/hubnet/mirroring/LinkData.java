@@ -3,7 +3,7 @@
 package org.nlogo.hubnet.mirroring;
 
 import org.nlogo.api.Dump;
-import org.nlogo.api.LogoList;
+import org.nlogo.core.LogoList;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -212,7 +212,7 @@ public strictfp class LinkData
     color(org.nlogo.api.Color.getARGBbyPremodulatedColorNumber(color));
   }
 
-  public void color(org.nlogo.api.LogoList color) {
+  public void color(org.nlogo.core.LogoList color) {
     this.color = color;
   }
 
@@ -264,7 +264,7 @@ public strictfp class LinkData
     labelColor(org.nlogo.api.Color.getARGBbyPremodulatedColorNumber(labelColor));
   }
 
-  public void labelColor(org.nlogo.api.LogoList labelColor) {
+  public void labelColor(org.nlogo.core.LogoList labelColor) {
     this.labelColor = labelColor;
   }
 

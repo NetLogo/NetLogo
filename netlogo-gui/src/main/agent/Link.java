@@ -9,7 +9,7 @@ import org.nlogo.api.Color;
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.LogoList;
+import org.nlogo.core.LogoList;
 
 import java.util.Iterator;
 
@@ -643,8 +643,8 @@ public strictfp class Link
       return 0;
     }
     int j = 1;
-    for (Iterator<Object> iter = world.program().linkBreeds().values().iterator(); iter.hasNext();) {
-      if (mybreed == ((AgentSet) iter.next())) {
+    for (Iterator<AgentSet> iter = world.getLinkAgentBreeds().values().iterator(); iter.hasNext();) {
+      if (mybreed == iter.next()) {
         return j;
       }
       j++;

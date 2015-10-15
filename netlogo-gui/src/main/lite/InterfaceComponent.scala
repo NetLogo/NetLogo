@@ -5,7 +5,8 @@ package org.nlogo.lite
 import java.util.{ ArrayList, List => JList }
 import org.nlogo.window.{ Event, Widget, ButtonWidget, PlotWidget }
 import java.util.StringTokenizer
-import org.nlogo.api.{ CompilerException, Version }
+import org.nlogo.api.Version
+import org.nlogo.core.CompilerException
 import org.nlogo.log.Logger
 import org.apache.log4j.xml.DOMConfigurator
 import collection.JavaConverters._
@@ -156,10 +157,10 @@ with Event.LinkChild {
     button.keyTriggered()
   }
 
-  def findWidget(name: String, tyype: Class[_]): Widget = {
+  def findWidget(name: String, tpe: Class[_]): Widget = {
     org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     def matches(comp: java.awt.Component) =
-      comp.getClass() == tyype && comp.asInstanceOf[Widget].displayName == name
+      comp.getClass() == tpe && comp.asInstanceOf[Widget].displayName == name
     iP.getComponents.find(matches)
       .getOrElse(throw new IllegalArgumentException("widget \"" + name + "\" not found"))
       .asInstanceOf[Widget]

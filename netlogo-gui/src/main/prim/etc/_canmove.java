@@ -10,7 +10,7 @@ import org.nlogo.nvm.Reporter;
 public final strictfp class _canmove
     extends Reporter {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.reporterSyntax
         (new int[]{Syntax.NumberType()},
             Syntax.BooleanType(),

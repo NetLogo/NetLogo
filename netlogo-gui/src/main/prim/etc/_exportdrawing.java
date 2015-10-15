@@ -22,7 +22,7 @@ public final strictfp class _exportdrawing
             } catch (java.io.IOException ex) {
               throw new EngineException
                   (context, _exportdrawing.this,
-                      token().name() +
+                      token().text() +
                           ": " + ex.getMessage());
             }
           }
@@ -31,7 +31,7 @@ public final strictfp class _exportdrawing
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     int[] right = {Syntax.StringType()};
     return Syntax.commandSyntax(right);
   }

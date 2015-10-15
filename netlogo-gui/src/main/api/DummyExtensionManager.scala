@@ -2,6 +2,11 @@
 
 package org.nlogo.api
 
+import org.nlogo.core.ErrorSource
+import org.nlogo.core.Primitive
+import org.nlogo.core.Token
+import org.nlogo.core.ExtensionObject
+
 // This isn't a singleton because in testing contexts it's sometimes useful
 // to override a few methods. - ST 11/5/11
 

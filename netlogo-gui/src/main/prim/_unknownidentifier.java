@@ -18,7 +18,7 @@ public final strictfp class _unknownidentifier
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.reporterSyntax(Syntax.WildcardType());
   }
 }

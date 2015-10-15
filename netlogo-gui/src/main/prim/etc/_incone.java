@@ -17,7 +17,7 @@ import java.util.List;
 public final strictfp class _incone
     extends Reporter {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.reporterSyntax
         (Syntax.TurtlesetType() | Syntax.PatchsetType(),          // left
             new int[]{Syntax.NumberType(), Syntax.NumberType()}, // right

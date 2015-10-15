@@ -2,6 +2,8 @@
 
 package org.nlogo.api
 
+import org.nlogo.core.LogoList
+
 /**
  * Interface provides access to NetLogo links.
  */

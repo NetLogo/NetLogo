@@ -6,7 +6,10 @@ import org.nlogo.editor.Colorizer
 import org.nlogo.window.WidgetWrapperInterface
 import javax.swing.{JPanel, JLabel}
 import java.awt.{Component, Insets, GridBagConstraints, Dimension, GridBagLayout, BorderLayout}
-import org.nlogo.api.{I18N, CompilerException, CompilerServices, Editable, LogoList, Property, TokenType}
+import org.nlogo.api.{I18N, CompilerServices, Editable, Property}
+import org.nlogo.core.LogoList
+import org.nlogo.core.CompilerException
+import org.nlogo.core.TokenType
 import scala.reflect.ClassTag
 // This is the contents of an EditDialog, except for the buttons at the bottom (OK/Apply/Cancel).
 
@@ -156,7 +159,7 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
     import property._
     def accessor[T : ClassTag] =
       new PropertyAccessor[T](r, name, accessString)
-    tyype match {
+    tpe match {
       case Property.AgentOptions =>
         new OptionsEditor[String](accessor) with Changed
       case Property.BigString =>

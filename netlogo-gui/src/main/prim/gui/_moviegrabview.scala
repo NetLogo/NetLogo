@@ -28,7 +28,7 @@ class _moviegrabview extends Command {
               }}})
       case _ =>
         throw new EngineException(
-          context, this, token.name + " can only be used in the GUI")
+          context, this, token.text + " can only be used in the GUI")
     }
     context.ip = next
   }

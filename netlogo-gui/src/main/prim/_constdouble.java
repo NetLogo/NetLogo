@@ -18,7 +18,7 @@ public final strictfp class _constdouble
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.reporterSyntax(Syntax.NumberType());
   }
 

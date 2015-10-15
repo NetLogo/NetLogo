@@ -2,7 +2,9 @@
 
 package org.nlogo.nvm
 
-import org.nlogo.api.{ CompilerServices, Program }
+import org.nlogo.core.{ CompilationEnvironment, DummyCompilationEnvironment }
+import org.nlogo.api.{ CompilerServices}
+import org.nlogo.core.Program
 
 // We use this in contexts where we want to do compiler stuff (not full compilation) like
 // colorization but it's OK to assume that we are 2D not 3D and no extensions are loaded.  The
@@ -14,11 +16,11 @@ class DefaultCompilerServices(compiler: CompilerInterface) extends CompilerServi
   def readNumberFromString(source: String) =
     compiler.readNumberFromString(source, null, null, false)
   def checkReporterSyntax(source: String) =
-    compiler.checkReporterSyntax(source, new Program(false),
+    compiler.checkReporterSyntax(source, Program.empty(),
                                  new java.util.HashMap[String,Procedure],
                                  null, false, new DummyCompilationEnvironment())
   def checkCommandSyntax(source: String) =
-    compiler.checkCommandSyntax(source, new Program(false),
+    compiler.checkCommandSyntax(source, Program.empty(),
                                 new java.util.HashMap[String,Procedure],
                                 null, true, new DummyCompilationEnvironment())
   def readFromString(source: String) =
@@ -28,7 +30,7 @@ class DefaultCompilerServices(compiler: CompilerInterface) extends CompilerServi
   def isValidIdentifier(s: String) =
     compiler.isValidIdentifier(s, false)
   def isReporter(s: String) =
-    compiler.isReporter(s, new Program(false), new java.util.HashMap[String, Procedure],
+    compiler.isReporter(s, Program.empty(), new java.util.HashMap[String, Procedure],
                         new org.nlogo.api.DummyExtensionManager, new DummyCompilationEnvironment())
   def tokenizeForColorization(source: String) =
     compiler.tokenizeForColorization(

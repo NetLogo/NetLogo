@@ -94,7 +94,7 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
           return None
       }
     }
-    workspace.compiler.findIncludes(path, getText, workspace.world.program.is3D)
+    workspace.compiler.findIncludes(path, getText, workspace.world.program.dialect.is3D)
   }
 
   def agentClass = classOf[Observer]
@@ -138,7 +138,7 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
     text.setCaretPosition(0)
   }
 
-  def select(startPos: Int, endPos: Int) { text.select(startPos, endPos) }
+  def select(start: Int, end: Int) { text.select(start, end) }
 
   def classDisplayName = "Code"
 

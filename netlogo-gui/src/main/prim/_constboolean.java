@@ -18,7 +18,7 @@ public final strictfp class _constboolean
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.reporterSyntax(Syntax.BooleanType());
   }
 

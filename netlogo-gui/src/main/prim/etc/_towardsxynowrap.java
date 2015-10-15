@@ -10,7 +10,7 @@ import org.nlogo.nvm.Reporter;
 
 public final strictfp class _towardsxynowrap extends Reporter {
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     int[] right = {Syntax.NumberType(), Syntax.NumberType()};
     return Syntax.reporterSyntax
         (right, Syntax.NumberType(), "-TP-");

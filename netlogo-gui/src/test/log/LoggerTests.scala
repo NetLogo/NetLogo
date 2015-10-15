@@ -4,7 +4,7 @@ package org.nlogo.log
 
 import org.scalatest.FunSuite
 import org.apache.log4j.xml.DOMConfigurator
-import org.nlogo.api.CompilerException
+import org.nlogo.core.CompilerException
 
 class LoggerTests extends FunSuite {
   org.apache.log4j.helpers.LogLog.setQuietMode(true)
@@ -64,7 +64,7 @@ class LoggerTests extends FunSuite {
       "\" modelName=\"models/Sample Models/Biology/Ants.nlogo\" version=\"" +
       org.nlogo.api.Version.version + "\">\n  <event logger=\"org.nlogo.log.Logger.CODE\" " +
       "timestamp=\""+ timestamp + "\" level=\"INFO\" type=\"compiled\">\n    " +
-      "<code>foo</code>\n    <errorMessage startPos=\"99\" endPos=\"999\">error!!!</errorMessage>\n  </event>\n</eventSet>\n"
+      "<code>foo</code>\n    <errorMessage start=\"99\" end=\"999\">error!!!</errorMessage>\n  </event>\n</eventSet>\n"
     assertResult(expected)(log)
   }
   test("code tab no error") {
@@ -82,7 +82,7 @@ class LoggerTests extends FunSuite {
       "\" modelName=\"models/Sample Models/Biology/Ants.nlogo\" version=\"" +
       org.nlogo.api.Version.version + "\">\n  <event logger=\"org.nlogo.log.Logger.CODE\" " +
       "timestamp=\""+ timestamp + "\" level=\"INFO\" type=\"compiled\">\n    " +
-      "<code>bar</code>\n    <errorMessage startPos=\"0\" endPos=\"0\">success</errorMessage>\n  </event>\n</eventSet>\n"
+      "<code>bar</code>\n    <errorMessage start=\"0\" end=\"0\">success</errorMessage>\n  </event>\n</eventSet>\n"
     assertResult(expected)(log)
   }
 }

@@ -18,7 +18,7 @@ public final strictfp class _repeatinternal
   }
 
   @Override
-  public Syntax syntax() {
+  public org.nlogo.core.Syntax syntax() {
     return Syntax.commandSyntax();
   }
 

@@ -9,7 +9,7 @@ lazy val root =
    aggregate(netlogo, parserJVM)
 
 lazy val netlogo = project.in(file("netlogo-gui"))
-   .dependsOn(parserJVM % "compile-internal->compile")
+   .dependsOn(parserJVM)
    .settings(Defaults.coreDefaultSettings ++
              Testing.settings ++
              Packaging.settings ++
