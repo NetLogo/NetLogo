@@ -166,7 +166,6 @@ class TestAllSyntaxes extends FunSuite {
                      |_nanotime ,number,OTPL,null,10,0,0
                      |_neighbors ,patch agentset,-TP-,null,10,0,0
                      |_neighbors4 ,patch agentset,-TP-,null,10,0,0
-                     |_netlogoapplet ,TRUE/FALSE,OTPL,null,10,0,0
                      |_netlogoversion ,string,OTPL,null,10,0,0
                      |_netlogoweb ,TRUE/FALSE,OTPL,null,10,0,0
                      |_newseed ,number,OTPL,null,10,0,0

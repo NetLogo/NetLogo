@@ -172,8 +172,6 @@ $CP -rp ../../docs .
 $CP -p ../../dist/readme.md .
 $CP -p ../../dist/netlogo_logging.xml .
 $CP -p ../../NetLogo.jar ../../HubNet.jar .
-$CP ../../NetLogoLite.jar .
-$PACK200 --modification-time=latest --effort=9 --strip-debug --no-keep-file-order --unknown-attribute=strip NetLogoLite.jar.pack.gz NetLogoLite.jar
 
 # fill lib directory
 $MKDIR lib
@@ -486,7 +484,7 @@ fi
 
 # make directory with web pages and so on
 cd ..
-$CP -p netlogo-$COMPRESSEDVERSION/{NetLogo,NetLogoLite}.jar netlogo-$COMPRESSEDVERSION/NetLogoLite.jar.pack.gz $COMPRESSEDVERSION
+$CP -p netlogo-$COMPRESSEDVERSION/NetLogo.jar $COMPRESSEDVERSION
 $CP -p ../target/NetLogo-tests.jar $COMPRESSEDVERSION
 $CP -rp netlogo-$COMPRESSEDVERSION/docs $COMPRESSEDVERSION
 $CP -rp netlogo-$COMPRESSEDVERSION/models $COMPRESSEDVERSION
@@ -498,15 +496,6 @@ $CP -p ../dist/index.html $COMPRESSEDVERSION
 $CP -p ../dist/title.jpg $COMPRESSEDVERSION
 $CP -p ../dist/donate.png $COMPRESSEDVERSION
 $CP -p ../dist/os-*.gif $COMPRESSEDVERSION
-$CP -rp ../models/test/applet $COMPRESSEDVERSION
-$CP $COMPRESSEDVERSION/NetLogoLite.jar $COMPRESSEDVERSION/NetLogoLite.jar.pack.gz $COMPRESSEDVERSION/applet
-$CP ../HubNet.jar $COMPRESSEDVERSION/applet
-$CP -rp netlogo-$COMPRESSEDVERSION/extensions/{sound,matrix,table,bitmap,gis} $COMPRESSEDVERSION/applet
-$FIND $COMPRESSEDVERSION/applet \( -name .DS_Store -or -name .gitignore -or -path \*/.git \) -print0 \
-  | $XARGS -0 $RM -rf
-$RM -rf $COMPRESSEDVERSION/applet/*/classes
-$CP -rp ../models/Code\ Examples/GIS/data $COMPRESSEDVERSION/applet
-$CP -p ../Mathematica-Link/NetLogo-Mathematica\ Tutorial.pdf $COMPRESSEDVERSION/docs
 $CP -rp ../docs/scaladoc $COMPRESSEDVERSION/docs
 
 # stuff version number and date into web page

@@ -420,7 +420,6 @@ R n-values etc._nvalues
 R neighbors _neighbors
 R neighbors4 _neighbors4
 R neighbors6 threed._neighbors6
-R netlogo-applet? etc._netlogoapplet
 R netlogo-version etc._netlogoversion
 R netlogo-web? etc._netlogoweb
 R new-seed etc._newseed
