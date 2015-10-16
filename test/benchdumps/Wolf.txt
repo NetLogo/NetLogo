@@ -3545,22 +3545,36 @@ procedure CATCH-SHEEP:[]{-T--}:
          L3
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ASTORE 3
+          ALOAD 3
           INSTANCEOF org/nlogo/agent/Turtle
           IFEQ L4
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ALOAD 3
           CHECKCAST org/nlogo/agent/Turtle
+          ASTORE 4
+          ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/Turtle.getPatchHere ()Lorg/nlogo/agent/Patch;
-          ASTORE 2
+          ASTORE 5
           GOTO L5
          L4
-         FRAME SAME
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+         FRAME APPEND [T org/nlogo/agent/Agent]
+          ALOAD 3
+          INSTANCEOF org/nlogo/agent/Patch
+          IFEQ L6
+          ALOAD 3
           CHECKCAST org/nlogo/agent/Patch
-          ASTORE 2
+          ASTORE 6
+          ALOAD 6
+          ASTORE 5
          L5
-         FRAME APPEND [org/nlogo/agent/Patch]
+         FRAME APPEND [T org/nlogo/agent/Patch]
+          ALOAD 5
+          ASTORE 2
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_procedurecatchsheep_setturtlevariable_0.world : Lorg/nlogo/agent/World;
+          LDC "SHEEP"
+          INVOKEVIRTUAL org/nlogo/agent/World.getBreed (Ljava/lang/String;)Lorg/nlogo/agent/AgentSet;
+          ASTORE 7
           NEW org/nlogo/agent/ArrayAgentSet
           DUP
           LDC Lorg/nlogo/agent/Turtle;.class
@@ -3570,49 +3584,64 @@ procedure CATCH-SHEEP:[]{-T--}:
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurecatchsheep_setturtlevariable_0.world : Lorg/nlogo/agent/World;
           INVOKESPECIAL org/nlogo/agent/ArrayAgentSet.<init> (Ljava/lang/Class;IZLorg/nlogo/agent/World;)V
-          ASTORE 3
-          ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurecatchsheep_setturtlevariable_0.world : Lorg/nlogo/agent/World;
-          LDC "SHEEP"
-          INVOKEVIRTUAL org/nlogo/agent/World.getBreed (Ljava/lang/String;)Lorg/nlogo/agent/AgentSet;
-          ASTORE 4
+          ASTORE 8
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Patch.turtlesHere ()Ljava/lang/Iterable;
           INVOKEINTERFACE java/lang/Iterable.iterator ()Ljava/util/Iterator;
-          ASTORE 5
-         L6
-         FRAME APPEND [org/nlogo/agent/ArrayAgentSet org/nlogo/agent/AgentSet java/util/Iterator]
-          ALOAD 5
+          ASTORE 9
+         L7
+         FRAME FULL [org/nlogo/prim/_asm_procedurecatchsheep_setturtlevariable_0 org/nlogo/nvm/Context org/nlogo/agent/Patch org/nlogo/agent/Agent T org/nlogo/agent/Patch T org/nlogo/agent/AgentSet org/nlogo/agent/ArrayAgentSet java/util/Iterator] []
+          ALOAD 9
           INVOKEINTERFACE java/util/Iterator.hasNext ()Z
-          IFEQ L7
-          ALOAD 5
+          IFEQ L8
+          ALOAD 9
           INVOKEINTERFACE java/util/Iterator.next ()Ljava/lang/Object;
           CHECKCAST org/nlogo/agent/Turtle
-          ASTORE 6
-          ALOAD 6
+          ASTORE 10
+          ALOAD 10
           INVOKEVIRTUAL org/nlogo/agent/Turtle.getBreed ()Lorg/nlogo/agent/AgentSet;
-          ALOAD 4
-          IF_ACMPNE L8
-          ALOAD 3
-          ALOAD 6
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.add (Lorg/nlogo/agent/Agent;)V
-         L8
-         FRAME APPEND [org/nlogo/agent/Turtle]
-          GOTO L6
-         L7
-         FRAME CHOP 1
-          ALOAD 3
+          ALOAD 7
+          ASTORE 11
+          DUP
+          IFNONNULL L9
+          POP
+          ALOAD 11
+          IFNULL L10
+          GOTO L7
          L9
+         FRAME FULL [org/nlogo/prim/_asm_procedurecatchsheep_setturtlevariable_0 org/nlogo/nvm/Context org/nlogo/agent/Patch org/nlogo/agent/Agent T org/nlogo/agent/Patch T org/nlogo/agent/AgentSet org/nlogo/agent/ArrayAgentSet java/util/Iterator org/nlogo/agent/Turtle org/nlogo/agent/AgentSet] [org/nlogo/agent/AgentSet]
+          ALOAD 11
+          INVOKEVIRTUAL java/lang/Object.equals (Ljava/lang/Object;)Z
+          IFEQ L7
+         L10
+         FRAME SAME
+          ALOAD 8
+          ALOAD 10
+          INVOKEVIRTUAL org/nlogo/agent/ArrayAgentSet.add (Lorg/nlogo/agent/Agent;)V
+          GOTO L7
+         L8
+         FRAME CHOP 2
+          ALOAD 8
+          GOTO L11
+         L6
+         FRAME FULL [org/nlogo/prim/_asm_procedurecatchsheep_setturtlevariable_0 org/nlogo/nvm/Context T org/nlogo/agent/Agent] []
+          NEW scala/MatchError
+          DUP
+          ALOAD 3
+          INVOKESPECIAL scala/MatchError.<init> (Ljava/lang/Object;)V
+          ATHROW
+         L11
+         FRAME FULL [org/nlogo/prim/_asm_procedurecatchsheep_setturtlevariable_0 org/nlogo/nvm/Context org/nlogo/agent/Patch org/nlogo/agent/Agent T org/nlogo/agent/Patch T org/nlogo/agent/AgentSet org/nlogo/agent/ArrayAgentSet java/util/Iterator] [org/nlogo/agent/ArrayAgentSet]
           ASTORE 2
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.count ()I
           ISTORE 3
           ILOAD 3
-          IFNE L10
+          IFNE L12
           GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
-          GOTO L11
-         L10
-         FRAME FULL [org/nlogo/prim/_asm_procedurecatchsheep_setturtlevariable_0 org/nlogo/nvm/Context org/nlogo/agent/ArrayAgentSet I org/nlogo/agent/AgentSet java/util/Iterator] []
+          GOTO L13
+         L12
+         FRAME FULL [org/nlogo/prim/_asm_procedurecatchsheep_setturtlevariable_0 org/nlogo/nvm/Context org/nlogo/agent/ArrayAgentSet I T org/nlogo/agent/Patch T org/nlogo/agent/AgentSet org/nlogo/agent/ArrayAgentSet java/util/Iterator] []
           ALOAD 2
           ILOAD 3
           ALOAD 1
@@ -3621,7 +3650,7 @@ procedure CATCH-SHEEP:[]{-T--}:
           ILOAD 3
           INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextInt (I)I
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.randomOne (II)Lorg/nlogo/agent/Agent;
-         L11
+         L13
          FRAME SAME1 java/lang/Object
           ASTORE 2
          L0
@@ -3631,9 +3660,9 @@ procedure CATCH-SHEEP:[]{-T--}:
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleVariable (ILjava/lang/Object;)V
          L1
-          GOTO L12
+          GOTO L14
          L2
-         FRAME FULL [org/nlogo/prim/_asm_procedurecatchsheep_setturtlevariable_0 org/nlogo/nvm/Context java/lang/Object I org/nlogo/agent/AgentSet java/util/Iterator] [org/nlogo/api/AgentException]
+         FRAME FULL [org/nlogo/prim/_asm_procedurecatchsheep_setturtlevariable_0 org/nlogo/nvm/Context java/lang/Object I T org/nlogo/agent/Patch T org/nlogo/agent/AgentSet org/nlogo/agent/ArrayAgentSet java/util/Iterator] [org/nlogo/api/AgentException]
           ASTORE 3
           NEW org/nlogo/nvm/EngineException
           DUP
@@ -3643,12 +3672,12 @@ procedure CATCH-SHEEP:[]{-T--}:
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L12
+         L14
          FRAME SAME
           ALOAD 1
           ICONST_1
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L13
+         L15
           RETURN
 [1]_asm_procedurecatchsheep_if_1 "if (prey != nobody" boolean => void
       _notequal Object,Object => boolean

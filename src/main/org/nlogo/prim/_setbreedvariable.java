@@ -13,7 +13,7 @@ public final strictfp class _setbreedvariable
   private final String name;
 
   public _setbreedvariable(_breedvariable original) {
-    name = original.name;
+    name = original.name();
   }
 
   @Override
