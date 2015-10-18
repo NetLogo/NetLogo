@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=NetLogo
+GenricName=Modeling Environment
+Comment=Run NetLogo models
+Exec=bash -c "`dirname %k`/netlogo.sh"
+Terminal=False
+Categories=Development;Education;Science
