@@ -1,0 +1,189 @@
+org.nlogo.agent.Agent.breedDoesNotOwnVariable = {0} breed no tiene variable {1}
+org.nlogo.agent.Agent.cantMoveToLink = No puede usar move-to sobre un link.
+# No se puede establecer XCOR tortuga variable foo no-número
+org.nlogo.agent.Agent.wrongTypeOnSetError = conjunto can''t {0} {1} variable a la no-{2} {3}
+org.nlogo.agent.Agent.rgbListSizeError.3 = rgb una lista deberá contener tres números de 0 a 255
+org.nlogo.agent.Agent.rgbListSizeError.3or4 = Una lista rgb debe contener 3 o 4 números de 0 a 255
+org.nlogo.agent.Agent.rgbValueError = valores RGB debe 0-255
+
+org.nlogo.agent.BooleanConstraint.bool = El valor debe ser un valor lógico.
+org.nlogo.agent.Box.cantMoveTurtleBeyondWorldEdge = No se puede mover la tortuga más allá del borde del mundo.
+
+# El valor debe ser uno de: ["Hola" 5 [1 2 3]]
+org.nlogo.agent.ChooserConstraint.invalidValue = El valor debe ser uno de: {0}
+org.nlogo.agent.ImportPatchColors.unsupportedImageFormat = El siguiente archivo no se encuentra en un formato de imagen soportados: {0}
+
+org.nlogo.agent.Turtle.patchBeyondLimits = No se puede obtener el parche más allá de los límites del mundo actual.
+org.nlogo.agent.Turtle.cantChangeWho = No puede cambiar el numero de ID de la tortuga.
+
+# Fix below, should be plot.plotmanager
+org.nlogo.plot.noPlotSelected = No hay un plot que esta eligido. Elige un plot usando el mandato "set-current-plot".
+
+
+org.nlogo.agent.Agent.cantSetUnknownVariable = {0} es un variable desconocido.
+org.nlogo.agent.Agent.notADoubleVariable = {0} no esta un variable de tipo doble.
+org.nlogo.agent.Agent.shapeUndefined = \" {0} \" no esta una forma que esta definido ahora.
+
+org.nlogo.agent.Patch.cantAccessLinkVarWithoutSpecifyingLink = Un patch no puede accessar a un variable de link sin specificando un link.
+# Neither Myself Nor Seth were able to reproduce the following errors. - Dhrumil
+org.nlogo.agent.Patch.cantAccessTurtleWithoutSpecifyingTurtle = Un patch no puede accessar a un variable de tortuga sin specificando un tortuga.
+org.nlogo.agent.Patch.cantChangePatchCoordinates = No puede cambiar las coordenadas de un patch.
+
+org.nlogo.agent.Patch.pcolorNotADouble = Pcolor no esta un variable de tipo double.
+
+org.nlogo.agent.Patch.cantSetTurtleWithoutSpecifyingTurtle = Un patch no puede dar un tortuga un variable sin specificando qual tortuga.
+org.nlogo.agent.Patch.cantAccessTurtleOrLinkWithoutSpecifyingAgent = Un patch no puede accessar un variable de tipo tortuga o link sin pecificando qual tortuga o qual link
+
+
+org.nlogo.prim._lessthan.cantUseLessthanOnDifferentArgs =  Solamente puede usar el operador < sobre dos numeros, dos strings, o dos agentos del mismo tipo, pero no se puede ussar sobre {0} and {1}.
+
+#Agent Errors
+
+
+# TURTLE FILE
+org.nlogo.agent.Turtle.cantSetBreedToNonBreedAgentSet = No puede dar el precio BREED a un non-breed agentset.
+
+org.nlogo.agent.Turtle.cantAccessLinkWithoutSpecifyingLink = Un tortuga no puede accessar a un variable de link sin specificando un link
+
+
+#LINK FILE
+
+org.nlogo.agent.Link.cantHaveBreededAndUnbreededLinks = No puede tener links en el mismo mundo the tipos breeded y unbreeded.
+org.nlogo.agent.Link.cantSetBreedToNonLinkBreedAgentSet = No puede dar un BREED un valor de un non-link-breed agentset.
+
+org.nlogo.agent.Protractor.noHeadingFromPointToSelf = No hay un heading definido desde punto ({0},{1}) a si mismo.
+org.nlogo.agent.Protractor.noHeadingFromAgentToSelf = No hay un heading definido para un agent a si mismo.
+org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink = Preve una tortuga o un patch, pero recibio un link.
+
+
+
+org.nlogo.prim.etc.$common.noNegativeRadius = {0} no puede tomar un radius negativo.
+org.nlogo.prim.etc.$common.noNegativeNumber = {0} no puede tomar un numero negativo.
+org.nlogo.prim.etc.$common.noNegativeAngle = {0} no puede tomar un angulo negativo.
+org.nlogo.prim.etc.$common.noAngleGreaterThan360 = {0} no puede tomar un angulo mas de 360.
+
+org.nlogo.prim.$common.turtleCantLinkToSelf = Un tortuga no puede hacer un link a si mismo;
+org.nlogo.prim.$common.onlyObserverCanAskAllTurtles = Solamente el observador puede usar ASK sobre el conjuno de todas las tortugas.
+org.nlogo.prim.$common.onlyObserverCanAskAllPatches = Solamente el observador puede usar ASK sobre el conjuno de todos los patches.
+
+org.nlogo.prim.etc._atpoints.invalidListOfPoints = Esta lista de puntos no es valido: {0}
+org.nlogo.prim.etc._setxy.pointOutsideWorld =El punto [ {0} , {1} ] es fuera de los limites de ese mundo y  wrapping no esta permitido en uno o mas de los direcions.
+org.nlogo.prim.etc._sqrt.squareRootIsImaginary = El square root de {0} esta un numero imaginario.
+
+org.nlogo.prim.etc._standarddeviation.needListGreaterThanOneItem =No puede calcular el standard deviation sin un listo de mas que un numero: {0}
+org.nlogo.prim.etc._setDefaultShape.notADefinedLinkShape ="{0}" no esta una forma definida para un link.
+org.nlogo.prim.etc._setDefaultShape.notADefinedTurtleShape ="{0}" no esta una forma definida para una tortuga.
+
+org.nlogo.prim._greaterthan.cannotCompareParameters = Solamente puede usar el operador > sobre dos numeros, dos strings, o dos agentos del mismo tipo, pero no se puede ussar sobre {0} and {1}.
+org.nlogo.prim._max.cantFindMaxOfListWithNoNumbers = No puede esconder el maximo de un listo sin numeros: {0}
+org.nlogo.prim._min.cantFindMinOfListWithNoNumbers = No puede esconder el minimo de un listo sin numeros: {0}
+org.nlogo.prim._mean.cantFindMeanOfNonNumbers= No puede esconder el promedio de un listo que contiene miebros que no son numersos: {0} es un {1}.
+
+org.nlogo.prim.etc.$common.emptyList = No hay nada en el listo.
+org.nlogo.prim.etc.$common.emptyString = No hay nada en el string.
+
+org.nlogo.prim._greaterorequal.cannotCompareParameters = Solamente puede usar el operador >= sobre dos numeros, dos strings, o dos agentos del mismo tipo, pero no se puede ussar sobre {0} and {1}.
+org.nlogo.prim._lessorequal.cannotCompareParameters = Solamente puede usar el operador <= sobre dos numeros, dos strings, o dos agentos del mismo tipo, pero no se puede ussar sobre {0} and {1}.
+
+org.nlogo.prim.etc.$common.cantTakeLogarithmOf = No puede tomar un logarithm de {0}.
+org.nlogo.prim.etc._log.notAValidBase = {0} no esta un base valido para el logarithm.
+
+org.nlogo.prim.etc.$common.emptyListInput = {0} recibio un listo sin miembros.
+org.nlogo.prim.etc.$common.emptyStringInput = {0} recibio un string vacio.
+
+org.nlogo.prim.etc.$common.firstInputCantBeNegative = El primero input a {0} no puede ser negativo.
+
+org.nlogo.prim.etc.$common.requestMoreItemsThanInList = Escondiendo {0} miembros al azar del listo de longitud {1}.
+org.nlogo.prim.etc.$common.negativeIndex = {0} no esta mas que o iqual a cero.
+
+
+org.nlogo.prim.etc.$common.indexExceedsListSize = No puede esconder elemento {0} del listo {1} que solamente tiene {2} miembros.
+org.nlogo.prim.etc.$common.indexExceedsStringSize = No puede esconder elemento {0} del String {1} que solamente tiene {2} miembros.
+
+
+org.nlogo.prim.etc._median.emptyList = No puede esconder el mediano de un listo sin numeros: {0}
+
+org.nlogo.$common.tooBigForInt = {0} es demasiado grande para estar representado como un Integer en NetLogo.
+
+org.nlogo.$common.thatAgentIsDead = Ese agento esta muerte.
+
+org.nlogo.prim.$common.paramOutOfBounds = {0} no esta entre 0.0 y 1.0
+
+
+org.nlogo.prim.etc.atan.bothInputsCannotBeZero = atan no puede tomar dos ceros por input.
+
+org.nlogo.prim.etc._exportoutput.emptyPath = No puede hacer un export a un pathname vacio.
+
+
+org.nlogo.prim.etc._linkset.invalidListInputs = Los inputs del listo {0} solamente puede contener un link, link agentset, o elementos de un listo. \
+ El listo {1} contenio {2} que NO esta un link o link agentset.
+
+org.nlogo.prim.etc._linkset.invalidLAgentsetTypeInputToList = Los inputs de {0} olamente puede contener un link, link agentset, o elementos de un listo.  El listo {1} contiene un otro tipo de agentset: {2}.
+
+
+org.nlogo.prim.etc.median.cantFindMedianOfListWithNoNumbers = No puede esconder un listo sin numeros: {0}.
+
+org.nlogo.prim.etc._resizeworld.worldMustIncludeOrigin = Tienes que incluir el punto (0,0) en el mundo.
+
+
+org.nlogo.prim.etc._sublist.startIsLessThanZero = {0} es menos que cero.
+org.nlogo.prim.etc._sublist.endIsLessThanStart = {0} es menos que {1}.
+org.nlogo.prim.etc._sublist.endIsGreaterThanListSize =  {0} es mas que el longitud del listo de input ({1}).
+org.nlogo.prim.etc._substring.endIsGreaterThanListSize = {0} es demasiado grande para {1}, que es solamente del longitud {2}.
+org.nlogo.prim.etc.$common.divByZero = No se puede dividir con 0.
+org.nlogo.prim.etc._myself.noAgentMyself = No hay un agent a que MYSELF puede referir.
+org.nlogo.prim.etc._otherend.onlyTurtleCanGetLinkEnd = Solamente un turtle puede adquirir OTHER-END de un link.
+org.nlogo.prim.etc._otherend.onlyLinkCanGetTurtleEnd = Solamente un link puede adquirir OTHER-END de un turtle.
+org.nlogo.prim.etc._layoutcircle.patchesImmovable = No puede mover los patches.
+
+org.nlogo.prim.etc._patchset.listInputNonPatch = Los inputs de tipo list {0} solamente puede contener miembros del tipo patch, patch agentset, o list elements.\
+  El listo {1} contenio {2} que NO esta un patch o patch agentset.
+
+org.nlogo.prim.etc._patchset.listInputNonPatchAgentset = Los inputs en forma de listos a {0} solamente puede contener miembros del tipo patch, patch agentset, o list elements.\
+  El listo {1} contenio un otro tipo de agentset: {2}.
+
+
+org.nlogo.prim.etc._setdefaultshape.cantSetDefaultShapeOfPatch = No puede dar forma default a los patches, porque patches no tiene formas.
+org.nlogo.prim.etc._setdefaultshape.canOnlySetDefaultShapeOfEntireBreed = Solamente se puede dar default-shape a todas las tortugas , todas las links, o un entero breed.
+
+
+org.nlogo.prim.etc._tickadvance.noNegativeTickAdvances = No puede avancar el contador de tick con un numero negativo.
+org.nlogo.prim.etc.$common.tickCounterNotStarted = No he empezado el contador de ticks. Usa RESET-TICKS.
+
+org.nlogo.prim.etc._turtleset.incorrectInputType = Los inputs para {0} solamente puede contener tortugas o elementos de tortuga agentset.  Ql liato \
+{1} contenio {2} que NO esta un tortuga o tortuga agentset.
+
+org.nlogo.prim.etc._variance.listMustHaveMoreThanOneNumber = No puede esconder el variance de un listo que tiene por lo menos dos numeros: {0}.
+org.nlogo.prim.etc._randomgamma.noNegativeInputs = Ambos inputs a {0} debe ser positivos.
+
+org.nlogo.prim.$common.withExpectedBooleanValue = WITH expectabla un verdad/falso valor de {0}, pero encuentro {1} en vez.
+org.nlogo.prim.$common.expectedBooleanValue = {0} expectabla un verdad/falso valor de {1}, pero encuentro {2} en vez.
+
+
+org.nlogo.prim.etc._turtleset.listInputsMustBeTurtleOrTurtleAgentset = entradas de la lista a {0} sólo debe contener elementos de tortuga o tortuga agentset. La lista {1} contiene un tipo diferente agentset: {2}.
+
+org.nlogo.prim.etc._linkheading.noLinkHeadingWithSameEndpoints = No hay un heading de un link que tiene endpoints en el mismo lugar.
+
+org.nlogo.prim.etc.$common.notThatManyAgentsExist = Pidió a {0} agentes azar de un conjunto de sólo {1} agentes.
+org.nlogo.prim.etc._otherend.incorrectLink = {0} no esta vinculado con {1}.
+
+org.nlogo.prim._reduce.emptyListInvalidInput = El listo para hacer 'reducto' no debe ser vacio.
+org.nlogo.prim._report.canOnlyUseInToReport =  solamente se puede usar {0} en TO-REPORT.
+org.nlogo.prim._report.mustImmediatelyBeUsedInToReport = Se necesita usar {0} immediatamente entre un TO-REPORT.
+
+
+org.nlogo.prim.etc.$common.syntaxError = Error de Syntax: {0}
+org.nlogo.prim.etc._runresult.failedToReportResult = No reportaba un resulto.
+org.nlogo.prim.etc._stop.notAllowedInsideToReport = {0} no esta permitido entre TO-REPORT.
+
+org.nlogo.$common.thatAgentIsDead = Ese {0} es muerte.
+org.nlogo.workspace.DefaultFileManager.canOnlyDeleteFiles = S\u00f3lo se pueden eliminar los archivos.
+org.nlogo.workspace.DefaultFileManager.cannotDeleteNonExistantFile = No se puede eliminar un archivo inexistente.
+org.nlogo.workspace.DefaultFileManager.noOpenFile = No hay un archivo que esta abierto.
+
+org.nlogo.prim.etc._foreach.listsMustBeSameLength = Todos los argumentos lista para foreach debe tener la misma longitud.
+org.nlogo.prim.$common.noSumOfListWithNonNumbers = No se puede encontrar la suma de una lista que contiene elementos que no son números, {0} esta un {1}.
+org.nlogo.prim._returnreport.reportNotCalledInReportProcedure = Llego al terminacion del procedimiento de reporter sin llamando REPORT.
+org.nlogo.prim.etc.$common.expectedLastInputToBeLinkBreed = Se esperaba la última entrada a una raza enlace.
+
+org.nlogo.prim.etc._randomNormal.secondInputNotNegative = El segundo input de random-normal no puede ser negativo.

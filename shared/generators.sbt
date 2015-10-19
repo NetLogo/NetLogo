@@ -6,7 +6,7 @@
 
 resourceGenerators in Compile += Def.task {
   val names: Set[String] =
-    IO.listFiles(file(".") / "dist" / "i18n")
+    IO.listFiles(baseDirectory.value / "i18n")
       .map(_.getName)
       .filter(_.endsWith(".txt"))
       .map(_.stripSuffix(".txt"))
@@ -16,16 +16,16 @@ resourceGenerators in Compile += Def.task {
     FileFunction.cached(s.cacheDirectory / "native2ascii",
         inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
       in: Set[File] =>
-        names.map{name =>
+        names.map{ name =>
           s.log.info(s"native2ascii: $name")
-          native2ascii(resourceManaged.value, name)
+          native2ascii(resourceManaged.value, baseDirectory.value / "i18n", name)
         }
     }
-  cache(names.map(name => file(".") / "dist" / "i18n" / (name + ".txt"))).toSeq
+  cache(names.map(name => baseDirectory.value / "i18n" / (name + ".txt"))).toSeq
 }.taskValue
 
-def native2ascii(dir: File, name: String): File = {
-  val in = file(".") / "dist" / "i18n" / (name + ".txt")
+def native2ascii(dir: File, i18nDir: File, name: String): File = {
+  val in = i18nDir / (name + ".txt")
   val result = dir / (name + ".properties")
   IO.createDirectory(dir)
   (new sun.tools.native2ascii.Main).convert(
