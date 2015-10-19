@@ -3,7 +3,8 @@
 package org.nlogo.parse
 
 import org.nlogo.core,
-  core.{FrontEndInterface, ExtensionManager, FrontEndProcedure, Program, Token, TokenType},
+  core.{FrontEndInterface, ExtensionManager, FrontEndProcedure,
+  Program, Token, TokenMapperInterface, TokenType},
   core.Fail._
 
 /**
@@ -27,8 +28,8 @@ class Namer(
     // appear is arbitrary, except that for checkName to work, ProcedureVariableHandler
     // and CallHandler must come last - ST 5/14/13, 5/16/13
     val handlers = Stream[Token => Option[(TokenType, core.Instruction)]](
-      CommandHandler,
-      ReporterHandler,
+      new CommandHandler(program.dialect.tokenMapper),
+      new ReporterHandler(program.dialect.tokenMapper),
       TaskVariableHandler,
       new BreedHandler(program),
       new AgentVariableReporterHandler(program),

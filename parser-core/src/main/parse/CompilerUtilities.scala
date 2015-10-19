@@ -52,10 +52,11 @@ object CompilerUtilities extends CompilerUtilitiesInterface {
   // used by CommandLine
   def isReporter(s: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager) =
     try {
-      val sp = new StructureParser(
+      val namedTokens =
         tokenizer.tokenizeString("to __is-reporter? report " + s + "\nend")
-          .map(Namer0),
-        None, StructureResults(program, procedures))
+          .map(Namer0)
+      val sp =
+        new StructureParser(namedTokens, None, StructureResults(program, procedures))
       val results = sp.parse(subprogram = true)
       val namer =
         new Namer(program, procedures ++ results.procedures, extensionManager)

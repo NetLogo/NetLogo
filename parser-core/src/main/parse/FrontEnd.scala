@@ -10,7 +10,7 @@ import org.nlogo.core,
 object FrontEnd extends FrontEnd {
   val tokenizer: TokenizerInterface =
     Femto.scalaSingleton[TokenizerInterface]("org.nlogo.lex.Tokenizer")
-  val tokenMapper = new TokenMapper("/system/tokens-core.txt", "org.nlogo.core.prim.")
+  val tokenMapper = new core.TokenMapper("/system/tokens-core.txt", "org.nlogo.core.prim.")
 }
 
 class FrontEnd extends FrontEndMain
@@ -37,7 +37,7 @@ trait FrontEndMain {
       val rawTokens = structureResults.procedureTokens(procedure.name)
       val usedNames =
         StructureParser.usedNames(structureResults.program,
-          oldProcedures ++ structureResults.procedures) ++
+          oldProcedures ++ structureResults.procedures, Seq()) ++
         procedure.args.map(_ -> "local variable here")
       // on LetNamer vs. Namer vs. LetScoper, see comments in LetScoper
       val namedTokens = {

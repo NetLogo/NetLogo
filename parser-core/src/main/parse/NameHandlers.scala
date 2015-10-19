@@ -3,8 +3,9 @@
 package org.nlogo.parse
 
 import org.nlogo.core,
-  core.{ExtensionManager, Fail, FrontEndInterface,
-    Primitive, PrimitiveCommand, PrimitiveReporter, Program, Token, TokenType},
+  core.{ Command, ExtensionManager, Fail, FrontEndInterface, Instruction,
+    Primitive, PrimitiveCommand, PrimitiveReporter, Program, Reporter,
+    Token, TokenMapperInterface, TokenType},
     FrontEndInterface.ProceduresMap,
     Fail._
 
@@ -33,19 +34,22 @@ class CallHandler(procedures: ProceduresMap) extends NameHandler {
 }
 
 abstract class PrimitiveHandler extends NameHandler {
-  def lookup(token: Token, fn: String => Option[core.TokenHolder], newType: TokenType): Option[(TokenType, core.Instruction)] =
+  type InstructionType <: Instruction
+  def lookup(token: Token, fn: String => Option[InstructionType], newType: TokenType): Option[(TokenType, core.Instruction)] =
     fn(token.value.asInstanceOf[String]).map{holder =>
-      (newType, holder.asInstanceOf[core.Instruction])}
+      (newType, holder)}
 }
 
-object CommandHandler extends PrimitiveHandler {
+class CommandHandler(tokenMapper: TokenMapperInterface) extends PrimitiveHandler {
+  type InstructionType = Command
   override def apply(token: Token) =
-    lookup(token, FrontEnd.tokenMapper.getCommand  _, TokenType.Command)
+    lookup(token, tokenMapper.getCommand  _, TokenType.Command)
 }
 
-object ReporterHandler extends PrimitiveHandler {
+class ReporterHandler(tokenMapper: TokenMapperInterface) extends PrimitiveHandler {
+  type InstructionType = Reporter
   override def apply(token: Token) =
-    lookup(token, FrontEnd.tokenMapper.getReporter  _, TokenType.Reporter)
+    lookup(token, tokenMapper.getReporter  _, TokenType.Reporter)
 }
 
 // replaces an identifier token with its imported implementation, if necessary

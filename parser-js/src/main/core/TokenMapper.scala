@@ -1,19 +1,20 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.parse
+package org.nlogo.core
 
-import org.nlogo.core.TokenHolder
+object DefaultTokenMapper extends
+  TokenMapper("/system/tokens-core.txt", "org.nlogo.core.prim.")
 
-class TokenMapper(location: String, prefix: String) {
-  def getCommand(s: String): Option[TokenHolder] =
+class TokenMapper(location: String, prefix: String) extends TokenMapperInterface {
+  def getCommand(s: String): Option[Command] =
     commands.get(s.toUpperCase).map(_())
-  def getReporter(s: String): Option[TokenHolder] =
+  def getReporter(s: String): Option[Reporter] =
     reporters.get(s.toUpperCase).map(_())
 
-  val reporters:Map[String, () => TokenHolder] =
-    TokenClasses.compiledReporters[TokenHolder]("org.nlogo.core.prim")
-  val commands:Map[String, () => TokenHolder] =
-    TokenClasses.compiledCommands[TokenHolder]("org.nlogo.core.prim")
+  val reporters:Map[String, () => Reporter] =
+    TokenClasses.compiledReporters[Reporter]("org.nlogo.core.prim")
+  val commands:Map[String, () => Command] =
+    TokenClasses.compiledCommands[Command]("org.nlogo.core.prim")
 
   def allCommandNames = commands.keySet
   def allReporterNames = reporters.keySet

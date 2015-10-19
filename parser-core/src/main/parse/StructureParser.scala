@@ -72,15 +72,16 @@ object StructureParser {
     results
   }
 
-  val alwaysUsedNames =
-    FrontEnd.tokenMapper.allCommandNames.map(_ -> "primitive command") ++
-      FrontEnd.tokenMapper.allReporterNames.map(_ -> "primitive reporter")
 
-  def usedNames(program: Program, procedures: ProceduresMap, declarations: Seq[StructureDeclarations.Declaration] = Seq()): Map[String, String] = {
+  def usedNames(program: Program, procedures: ProceduresMap, declarations: Seq[StructureDeclarations.Declaration]): Map[String, String] = {
+    val alwaysUsedNames =
+      program.dialect.tokenMapper.allCommandNames.map(_ -> "primitive command") ++
+        program.dialect.tokenMapper.allReporterNames.map(_ -> "primitive reporter")
+
     program.usedNames ++
       breedPrimitives(declarations) ++
       procedures.keys.map(_ -> "procedure") ++
-      StructureParser.alwaysUsedNames
+      alwaysUsedNames
   }
 
   private def breedPrimitives(declarations: Seq[StructureDeclarations.Declaration]): Map[String, String] = {

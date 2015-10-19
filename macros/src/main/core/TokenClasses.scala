@@ -1,8 +1,8 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.parse
+package org.nlogo.core
 
-import org.nlogo.core.Resource.getResource
+import Resource.getResource
 import scala.language.experimental.macros
 import scala.reflect.macros.blackbox.{ Context => BlackBoxContext}
 

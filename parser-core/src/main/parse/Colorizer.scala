@@ -41,7 +41,8 @@ object Colorizer {
   object Namer extends (Token => Token) {
     import org.nlogo.parse.Namer0
     val handlers: Seq[NameHandler] =
-      Seq(CommandHandler, ReporterHandler,
+      Seq(new CommandHandler(FrontEnd.tokenMapper),
+        new ReporterHandler(FrontEnd.tokenMapper),
         new AgentVariableReporterHandler(Program.empty()))
     def apply(token: Token): Token =
       if (token.tpe != TokenType.Ident)

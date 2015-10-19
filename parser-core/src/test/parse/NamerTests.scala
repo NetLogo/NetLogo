@@ -17,8 +17,7 @@ class NamerTests extends FunSuite {
       .parse(false)
     assertResult(1)(results.procedures.size)
     val procedure = results.procedures.values.iterator.next()
-    new Namer(results.program, results.procedures,
-        new DummyExtensionManager)
+    new Namer(results.program, results.procedures, new DummyExtensionManager)
       .process(results.procedureTokens(procedure.name).iterator, procedure)
       .takeWhile(_.tpe != TokenType.Eof)
   }

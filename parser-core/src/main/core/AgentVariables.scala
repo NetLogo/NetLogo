@@ -2,7 +2,7 @@
 
 package org.nlogo.core
 
-object AgentVariables {
+object AgentVariables extends AgentVariableSet {
 
   val getImplicitObserverVariables =
     Seq[String]()

@@ -22,7 +22,8 @@ case class Program private(
   patchesOwn: Seq[String] = Seq(),
   linksOwn: Seq[String] = Seq(),
   breeds: ListMap[String, Breed] = ListMap(),
-  linkBreeds: ListMap[String, Breed] = ListMap()) {
+  linkBreeds: ListMap[String, Breed] = ListMap(),
+  dialect: Dialect = NetLogoCore) {
 
   def globals: Seq[String] =
     AgentVariables.getImplicitObserverVariables ++
