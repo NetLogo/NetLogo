@@ -3,9 +3,11 @@
 package org.nlogo.parse
 
 import org.nlogo.core,
-  core.{FrontEndProcedure, Fail, StructureDeclarations, Syntax, Token, TokenType},
+  core.{FrontEndProcedure, Fail, I18N, StructureDeclarations, Syntax, Token, TokenType},
     Fail.{ cAssert, exception },
     Syntax.compatible
+
+import scala.annotation.tailrec
 
 /**
  * Parses procedure bodies.
@@ -57,6 +59,8 @@ object ExpressionParser {
         else
           parseArguments(coreCommand.syntax, stmt, tokens)
         stmt
+      case TokenType.Reporter if token.value.isInstanceOf[core.prim._symbol] =>
+        exception(I18N.errors.getN("compiler.LetVariable.notDefined", token.text.toUpperCase), token)
       case _ =>
         exception(ExpectedCommand, token)
     }
@@ -337,6 +341,13 @@ object ExpressionParser {
                 new core.ReporterApp(coreReporter, token.start, token.end, token.filename))
             case TokenType.Reporter =>
               val coreReporter = token.value.asInstanceOf[core.Reporter]
+              if (coreReporter.isInstanceOf[core.prim._symbol]) {
+                if (goalType == Syntax.SymbolType) {
+                  (coreReporter.syntax, new core.ReporterApp(coreReporter, token.start, token.end, token.filename))
+                } else {
+                  exception(I18N.errors.getN("compiler.LetVariable.notDefined", token.text.toUpperCase), token)
+                }
+              }
               // the "|| wantReporterTask" is needed or the concise syntax wouldn't work for infix
               // reporters, e.g. "map + ..."
               if (!coreReporter.syntax.isInfix || wantReporterTask)
@@ -580,6 +591,47 @@ object ExpressionParser {
         new core.CommandBlock(stmts,
           openBracket.start, closeBracket.end, openBracket.filename))
       rapp
+    }
+    else if (compatible(goalType, Syntax.CodeBlockType)) {
+      // Because we don't parse the inside of the code block, precisely because we don't want to define
+      // legality of code in terms of the standard NetLogo requirements, we have to do a little sanity
+      // checking here to make sure that at the very least, parenthesis and brackets are matched up
+      // without being mixed and matched.  FD 8/19/2015
+      @tailrec
+      def check(remaining: Seq[Token], stack: Seq[Token] = Seq()) {
+        if(remaining.isEmpty) {
+          if(!stack.isEmpty) {
+            if(stack.head.tpe == TokenType.OpenParen) {
+              exception("Expected close paren here", block.tokens.last)
+            }
+          }
+        } else if (remaining.head.tpe == TokenType.OpenBracket) {
+          check(remaining.tail, remaining.head +: stack)
+        } else if (remaining.head.tpe == TokenType.OpenParen) {
+          check(remaining.tail, remaining.head +: stack)
+        } else if (remaining.head.tpe == TokenType.CloseBracket) {
+          if(!stack.isEmpty && stack.head.tpe == TokenType.OpenParen) {
+            exception("Expected close paren before close bracket here", remaining.head)
+          }
+          if(stack.isEmpty || stack.head.tpe != TokenType.OpenBracket) {
+            exception("Closing bracket has no matching open bracket here", remaining.head)
+          }
+          check(remaining.tail, stack.tail)
+        } else if (remaining.head.tpe == TokenType.CloseParen) {
+          if(!stack.isEmpty && stack.head.tpe == TokenType.OpenBracket) {
+            exception("Expected close bracket before close paren here", remaining.head)
+          }
+          if(stack.isEmpty || stack.head.tpe != TokenType.OpenParen) {
+            exception("Closing paren has no matching open paren here", remaining.head)
+          }
+          check(remaining.tail, stack.tail)
+        } else {
+          check(remaining.tail, stack)
+        }
+      }
+      check(block.tokens.tail.dropRight(2)) // Drops two because of the EOF
+      val tmp = new core.prim._constcodeblock(block.tokens.tail.dropRight(2))
+      new core.ReporterApp(tmp,tokens.head.start,block.tokens.last.end,tokens.head.filename)
     }
     else if (compatible(goalType, Syntax.ListType)) {
       // parseLiteralList() deals with the open bracket itself, but it leaves the close bracket so

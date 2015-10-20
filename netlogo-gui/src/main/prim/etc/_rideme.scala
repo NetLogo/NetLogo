@@ -7,7 +7,9 @@ import org.nlogo.api.{ Perspective, Syntax }
 
 class _rideme extends Command {
   override def syntax =
-    Syntax.commandSyntax("-T--", true)
+    Syntax.commandSyntax("-T--")
+
+  switches = true
   override def perform(context: Context) {
     world.observer.setPerspective(Perspective.Ride, context.agent)
     world.observer.followDistance(0)

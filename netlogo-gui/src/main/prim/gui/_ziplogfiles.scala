@@ -7,7 +7,9 @@ import org.nlogo.nvm.{ Command, Context }
 
 class _ziplogfiles extends Command {
   override def syntax =
-    Syntax.commandSyntax(Array(Syntax.StringType), "O---", true)
+    Syntax.commandSyntax(Array(Syntax.StringType), "O---")
+
+  switches = true
   override def perform(context: Context) {
     workspace.zipLogFiles(argEvalString(context, 0))
     context.ip = next

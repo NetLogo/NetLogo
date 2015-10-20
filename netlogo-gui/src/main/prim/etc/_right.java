@@ -10,11 +10,15 @@ import org.nlogo.nvm.Context;
 
 public final strictfp class _right
     extends Command {
+  public _right() {
+    this.switches = true;
+  }
+
   @Override
   public org.nlogo.core.Syntax syntax() {
     return Syntax.commandSyntax
         (new int[]{Syntax.NumberType()},
-            "-T--", true);
+            "-T--");
   }
 
   @Override

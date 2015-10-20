@@ -5,7 +5,9 @@ package org.nlogo.prim
 import org.nlogo.api.Syntax
 import org.nlogo.nvm.{ CommandTask, Context, Procedure, Reporter }
 
-class _commandtask(proc: Procedure) extends Reporter {
+class _commandtask(val argCount: Int) extends Reporter {
+
+  var proc: Procedure = null
 
   override def syntax =
     Syntax.reporterSyntax(Syntax.CommandTaskType)

@@ -2,7 +2,7 @@
 
 package org.nlogo.prim;
 
-import org.nlogo.api.Let;
+import org.nlogo.core.Let;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Command;
@@ -12,7 +12,7 @@ import org.nlogo.nvm.MutableLong;
 public final strictfp class _repeat
     extends Command
     implements org.nlogo.nvm.CustomAssembled {
-  public final Let let = new Let();
+  public final Let let = new Let(null);
 
   @Override
   public org.nlogo.core.Syntax syntax() {

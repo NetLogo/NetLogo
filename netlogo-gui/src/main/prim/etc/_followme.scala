@@ -8,7 +8,9 @@ import org.nlogo.api.{ Perspective, Syntax }
 
 class _followme extends Command {
   override def syntax =
-    Syntax.commandSyntax("-T--", true)
+    Syntax.commandSyntax("-T--")
+
+  switches = true
   override def perform(context: Context) {
     val turtle = context.agent.asInstanceOf[Turtle]
     world.observer.setPerspective(Perspective.Follow, turtle)

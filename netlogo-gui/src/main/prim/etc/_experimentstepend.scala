@@ -7,7 +7,7 @@ import org.nlogo.nvm.{ Command, Context }
 
 class _experimentstepend extends Command {
   override def syntax =
-    Syntax.commandSyntax("O---", false)
+    Syntax.commandSyntax("O---")
   override def perform(context: Context) {
     if (context.stopping)
       // Worker checks this flag to see if the run should be stopped - ST 3/8/06

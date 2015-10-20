@@ -12,12 +12,15 @@ import org.nlogo.nvm.Context;
 
 public final strictfp class _layoutspring
     extends Command {
+  public _layoutspring() {
+    this.switches = true;
+  }
+
   @Override
   public org.nlogo.core.Syntax syntax() {
-    return Syntax.commandSyntax
-        (new int[]{Syntax.TurtlesetType(), Syntax.LinksetType(),
-            Syntax.NumberType(), Syntax.NumberType(), Syntax.NumberType()},
-            true);
+    return Syntax.commandSyntax(
+        new int[]{Syntax.TurtlesetType(), Syntax.LinksetType(),
+            Syntax.NumberType(), Syntax.NumberType(), Syntax.NumberType()});
   }
 
   @Override

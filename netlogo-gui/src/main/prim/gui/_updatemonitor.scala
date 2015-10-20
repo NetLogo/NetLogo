@@ -7,9 +7,11 @@ import org.nlogo.nvm.{ Command, Context }
 import org.nlogo.window.MonitorWidget
 
 class _updatemonitor extends Command {
+  switches = true
+
   override def syntax =
-    Syntax.commandSyntax(
-      Array(Syntax.WildcardType), "O---", true);
+    Syntax.commandSyntax(Array(Syntax.WildcardType), "O---")
+
   override def perform(context: Context) {
     context.job.owner.asInstanceOf[MonitorWidget]
       .value(args(0).report(context))

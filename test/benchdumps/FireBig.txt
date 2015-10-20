@@ -4,9 +4,7 @@ turtles-own [WHO COLOR HEADING XCOR YCOR SHAPE LABEL LABEL-COLOR BREED HIDDEN? S
 patches-own [PXCOR PYCOR PCOLOR PLABEL PLABEL-COLOR FIRE COUNTS]
 links-own [END1 END2 COLOR LABEL LABEL-COLOR HIDDEN? BREED THICKNESS SHAPE TIE-MODE]
 breeds 
-breeds-own 
 link-breeds 
-link-breeds-own 
 
 procedure GO:[]{O---}:
 [0]_asm_procedurego_if_0 "if (count patches with [burning?]) =" boolean => void
@@ -151,9 +149,8 @@ procedure GO:[]{O---}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tyype : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPEQ L3
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFNE L3
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
@@ -162,10 +159,9 @@ procedure GO:[]{O---}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.parent : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tyype : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPNE L4
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.parent ()Lorg/nlogo/nvm/Procedure;
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFEQ L4
          L3
          FRAME SAME
           NEW org/nlogo/nvm/EngineException
@@ -970,11 +966,11 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          FRAME SAME
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           LLOAD 4
           L2I
           I2L
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.setSeed (J)V
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.setSeed (J)V
           ALOAD 1
           ICONST_1
           PUTFIELD org/nlogo/nvm/Context.ip : I
@@ -1122,7 +1118,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L1
           RETURN
 
-procedure BURNING?:[]{-TP-}:
+reporter procedure BURNING?:[]{-TP-}:
 [0]_asm_procedureburning_report_0 "report (pcolor > (red - 4)) and (pcolor <" Object => void
       _and
         _greaterthan Object,double => boolean
@@ -1305,9 +1301,8 @@ procedure BURNING?:[]{-TP-}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tyype : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPEQ L23
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFNE L23
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -1361,7 +1356,7 @@ procedure BURNING?:[]{-TP-}:
          FRAME FULL [] [java/lang/Throwable]
           ATHROW
 
-procedure PERCENT-BURNED:[]{OTPL}:
+reporter procedure PERCENT-BURNED:[]{OTPL}:
 [0]_asm_procedurepercentburned_ifelse_0 "ifelse initial-trees > 0" boolean => void
       _greaterthan Object,double => boolean
         _observervariable:INITIAL-TREES => Object
@@ -1549,9 +1544,8 @@ procedure PERCENT-BURNED:[]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tyype : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPEQ L14
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFNE L14
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -1626,9 +1620,8 @@ procedure PERCENT-BURNED:[]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tyype : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPEQ L3
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFNE L3
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -1852,9 +1845,9 @@ procedure SETUP:[]{O---}:
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           LDC 100
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextLong (J)J
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
          L1
           ALOAD 1

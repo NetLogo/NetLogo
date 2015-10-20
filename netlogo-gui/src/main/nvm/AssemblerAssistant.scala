@@ -2,6 +2,8 @@
 
 package org.nlogo.nvm
 
+import org.nlogo.core.Reference
+
 // WHY CUSTOM ASSEMBLY?
 //
 // A primitive command that is custom assembled uses the methods in this interface to direct their

@@ -4,9 +4,7 @@ turtles-own [WHO COLOR HEADING XCOR YCOR SHAPE LABEL LABEL-COLOR BREED HIDDEN? S
 patches-own [PXCOR PYCOR PCOLOR PLABEL PLABEL-COLOR CHEMICAL FOOD NEST? NEST-SCENT FOOD-SOURCE-NUMBER]
 links-own [END1 END2 COLOR LABEL LABEL-COLOR HIDDEN? BREED THICKNESS SHAPE TIE-MODE]
 breeds 
-breeds-own 
 link-breeds 
-link-breeds-own 
 
 procedure GO:[]{O---}:
 [0]_asm_procedurego_ask_0 "ask turtles" AgentSet => void
@@ -323,9 +321,8 @@ procedure DO-PLOTTING:[]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tyype : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPEQ L3
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFNE L3
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
@@ -334,10 +331,9 @@ procedure DO-PLOTTING:[]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.parent : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tyype : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPNE L4
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.parent ()Lorg/nlogo/nvm/Procedure;
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFEQ L4
          L3
          FRAME SAME
           NEW org/nlogo/nvm/EngineException
@@ -1094,9 +1090,8 @@ procedure LOOK-FOR-FOOD:[]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tyype : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPEQ L3
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFNE L3
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
@@ -1105,10 +1100,9 @@ procedure LOOK-FOR-FOOD:[]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.parent : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tyype : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPNE L4
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.parent ()Lorg/nlogo/nvm/Procedure;
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFEQ L4
          L3
          FRAME SAME
           NEW org/nlogo/nvm/EngineException
@@ -1692,11 +1686,11 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          FRAME SAME
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           LLOAD 4
           L2I
           I2L
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.setSeed (J)V
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.setSeed (J)V
           ALOAD 1
           ICONST_1
           PUTFIELD org/nlogo/nvm/Context.ip : I
@@ -1936,8 +1930,8 @@ procedure UPHILL-NEST-SCENT:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           ALOAD 7
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/util/MersenneTwisterFast;)Lorg/nlogo/agent/AgentSet$Iterator;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/api/MersenneTwisterFast;)Lorg/nlogo/agent/AgentSet$Iterator;
           ASTORE 10
          L10
          FRAME FULL [org/nlogo/prim/_asm_procedureuphillnestscent_setprocedurevariable_1 org/nlogo/nvm/Context java/lang/Object java/lang/Object T T T org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder T org/nlogo/agent/AgentSet$Iterator] []
@@ -1954,7 +1948,7 @@ procedure UPHILL-NEST-SCENT:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
          L1
          FRAME SAME
           ALOAD 8
-          INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/api/LogoList;
+          INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/core/LogoList;
           ASTORE 5
          L8
          FRAME FULL [org/nlogo/prim/_asm_procedureuphillnestscent_setprocedurevariable_1 org/nlogo/nvm/Context java/lang/Object java/lang/Object T java/lang/Object] []
@@ -2643,8 +2637,8 @@ procedure UPHILL-CHEMICAL:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           ALOAD 7
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/util/MersenneTwisterFast;)Lorg/nlogo/agent/AgentSet$Iterator;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/api/MersenneTwisterFast;)Lorg/nlogo/agent/AgentSet$Iterator;
           ASTORE 10
          L10
          FRAME FULL [org/nlogo/prim/_asm_procedureuphillchemical_setprocedurevariable_1 org/nlogo/nvm/Context java/lang/Object java/lang/Object T T T org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder T org/nlogo/agent/AgentSet$Iterator] []
@@ -2661,7 +2655,7 @@ procedure UPHILL-CHEMICAL:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
          L1
          FRAME SAME
           ALOAD 8
-          INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/api/LogoList;
+          INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/core/LogoList;
           ASTORE 5
          L8
          FRAME FULL [org/nlogo/prim/_asm_procedureuphillchemical_setprocedurevariable_1 org/nlogo/nvm/Context java/lang/Object java/lang/Object T java/lang/Object] []
@@ -3433,7 +3427,7 @@ procedure GO-PATCHES:[]{-TP-}:
          L1
           RETURN
 
-procedure CHEMICAL-SCENT:[ANGLE P]{-T--}:
+reporter procedure CHEMICAL-SCENT:[ANGLE P]{-T--}:
 [0]_asm_procedurechemicalscent_setprocedurevariable_0 "" Object => void
       _patchrightandahead
         _asm_procedurechemicalscent_procedurevariable_1 "angle" => Object
@@ -3479,7 +3473,7 @@ procedure CHEMICAL-SCENT:[ANGLE P]{-T--}:
           ICONST_1
           AALOAD
          L1
-          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
+          GETSTATIC org/nlogo/core/Nobody$.MODULE$ : Lorg/nlogo/core/Nobody$;
          L2
           ASTORE 3
           ASTORE 2
@@ -3490,7 +3484,7 @@ procedure CHEMICAL-SCENT:[ANGLE P]{-T--}:
           ICONST_1
           GOTO L4
          L3
-         FRAME APPEND [java/lang/Object org/nlogo/api/Nobody$]
+         FRAME APPEND [java/lang/Object org/nlogo/core/Nobody$]
           ICONST_0
          L4
          FRAME SAME1 I
@@ -3501,10 +3495,10 @@ procedure CHEMICAL-SCENT:[ANGLE P]{-T--}:
           ICONST_2
           GOTO L6
          L5
-         FRAME FULL [org/nlogo/prim/_asm_procedurechemicalscent_if_3 org/nlogo/nvm/Context I org/nlogo/api/Nobody$] [org/nlogo/nvm/Context]
+         FRAME FULL [org/nlogo/prim/_asm_procedurechemicalscent_if_3 org/nlogo/nvm/Context I org/nlogo/core/Nobody$] [org/nlogo/nvm/Context]
           ICONST_3
          L6
-         FRAME FULL [org/nlogo/prim/_asm_procedurechemicalscent_if_3 org/nlogo/nvm/Context I org/nlogo/api/Nobody$] [org/nlogo/nvm/Context I]
+         FRAME FULL [org/nlogo/prim/_asm_procedurechemicalscent_if_3 org/nlogo/nvm/Context I org/nlogo/core/Nobody$] [org/nlogo/nvm/Context I]
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
@@ -3577,8 +3571,8 @@ procedure CHEMICAL-SCENT:[ANGLE P]{-T--}:
           ALOAD 7
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/util/MersenneTwisterFast;)Lorg/nlogo/agent/AgentSet$Iterator;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/api/MersenneTwisterFast;)Lorg/nlogo/agent/AgentSet$Iterator;
           ASTORE 10
          L11
          FRAME FULL [org/nlogo/prim/_asm_procedurechemicalscent_report_4 org/nlogo/nvm/Context java/lang/Object java/lang/Object T T T org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder T org/nlogo/agent/AgentSet$Iterator] []
@@ -3595,7 +3589,7 @@ procedure CHEMICAL-SCENT:[ANGLE P]{-T--}:
          L1
          FRAME SAME
           ALOAD 8
-          INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/api/LogoList;
+          INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/core/LogoList;
           ASTORE 5
          L9
          FRAME FULL [org/nlogo/prim/_asm_procedurechemicalscent_report_4 org/nlogo/nvm/Context java/lang/Object java/lang/Object T java/lang/Object] []
@@ -3669,9 +3663,8 @@ procedure CHEMICAL-SCENT:[ANGLE P]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tyype : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPEQ L14
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFNE L14
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -3739,9 +3732,8 @@ procedure CHEMICAL-SCENT:[ANGLE P]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tyype : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPEQ L3
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFNE L3
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -5140,8 +5132,8 @@ procedure SETUP-TURTLES:[]{O---}:
           DLOAD 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextDouble ()D
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextDouble ()D
           DMUL
          L2
           DSTORE 2
@@ -5248,16 +5240,16 @@ procedure WIGGLE:[]{-T--}:
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           LDC 40
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextLong (J)J
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
          L1
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           LDC 40
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextLong (J)J
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
          L2
           DSTORE 4
@@ -5362,7 +5354,7 @@ procedure WIGGLE:[]{-T--}:
          L1
           RETURN
 
-procedure GET-NEST-SCENT:[ANGLE P]{-T--}:
+reporter procedure GET-NEST-SCENT:[ANGLE P]{-T--}:
 [0]_asm_proceduregetnestscent_setprocedurevariable_0 "" Object => void
       _patchrightandahead
         _asm_proceduregetnestscent_procedurevariable_1 "angle" => Object
@@ -5408,7 +5400,7 @@ procedure GET-NEST-SCENT:[ANGLE P]{-T--}:
           ICONST_1
           AALOAD
          L1
-          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
+          GETSTATIC org/nlogo/core/Nobody$.MODULE$ : Lorg/nlogo/core/Nobody$;
          L2
           ASTORE 3
           ASTORE 2
@@ -5419,7 +5411,7 @@ procedure GET-NEST-SCENT:[ANGLE P]{-T--}:
           ICONST_1
           GOTO L4
          L3
-         FRAME APPEND [java/lang/Object org/nlogo/api/Nobody$]
+         FRAME APPEND [java/lang/Object org/nlogo/core/Nobody$]
           ICONST_0
          L4
          FRAME SAME1 I
@@ -5430,10 +5422,10 @@ procedure GET-NEST-SCENT:[ANGLE P]{-T--}:
           ICONST_2
           GOTO L6
          L5
-         FRAME FULL [org/nlogo/prim/_asm_proceduregetnestscent_if_3 org/nlogo/nvm/Context I org/nlogo/api/Nobody$] [org/nlogo/nvm/Context]
+         FRAME FULL [org/nlogo/prim/_asm_proceduregetnestscent_if_3 org/nlogo/nvm/Context I org/nlogo/core/Nobody$] [org/nlogo/nvm/Context]
           ICONST_3
          L6
-         FRAME FULL [org/nlogo/prim/_asm_proceduregetnestscent_if_3 org/nlogo/nvm/Context I org/nlogo/api/Nobody$] [org/nlogo/nvm/Context I]
+         FRAME FULL [org/nlogo/prim/_asm_proceduregetnestscent_if_3 org/nlogo/nvm/Context I org/nlogo/core/Nobody$] [org/nlogo/nvm/Context I]
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
@@ -5506,8 +5498,8 @@ procedure GET-NEST-SCENT:[ANGLE P]{-T--}:
           ALOAD 7
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/util/MersenneTwisterFast;)Lorg/nlogo/agent/AgentSet$Iterator;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/api/MersenneTwisterFast;)Lorg/nlogo/agent/AgentSet$Iterator;
           ASTORE 10
          L11
          FRAME FULL [org/nlogo/prim/_asm_proceduregetnestscent_report_4 org/nlogo/nvm/Context java/lang/Object java/lang/Object T T T org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder T org/nlogo/agent/AgentSet$Iterator] []
@@ -5524,7 +5516,7 @@ procedure GET-NEST-SCENT:[ANGLE P]{-T--}:
          L1
          FRAME SAME
           ALOAD 8
-          INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/api/LogoList;
+          INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/core/LogoList;
           ASTORE 5
          L9
          FRAME FULL [org/nlogo/prim/_asm_proceduregetnestscent_report_4 org/nlogo/nvm/Context java/lang/Object java/lang/Object T java/lang/Object] []
@@ -5598,9 +5590,8 @@ procedure GET-NEST-SCENT:[ANGLE P]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tyype : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPEQ L14
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFNE L14
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -5668,9 +5659,8 @@ procedure GET-NEST-SCENT:[ANGLE P]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tyype : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPEQ L3
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFNE L3
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -6532,9 +6522,9 @@ procedure SETUP-FOOD:[]{-TP-}:
          L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           LDC 2
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextLong (J)J
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
          L5
           DSTORE 4

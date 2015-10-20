@@ -2,23 +2,18 @@
 
 package org.nlogo.compiler
 
+import org.nlogo.core.{ CompilerException, Program }
 import org.scalatest.FunSuite
-import org.nlogo.api.{ DummyExtensionManager}
-import org.nlogo.core.Program
-import org.nlogo.core.CompilerException
+import org.nlogo.api.DummyExtensionManager
 import org.nlogo.nvm.Procedure
 
 class ConstantFolderTests extends FunSuite {
 
   def compile(source: String): String = {
     val program = Program.empty()
-    val results = TestHelper.structureParse(s"to-report __test report $source \nend", program)
-    assertResult(1)(results.procedures.size)
-    val procedure = results.procedures.values.iterator.next()
-    val tokens =
-      new IdentifierParser(program, java.util.Collections.emptyMap[String, Procedure], results.procedures)
-        .process(results.tokens(procedure).iterator, procedure)
-    val procdef = new ExpressionParser(procedure).parse(tokens).head
+    val procdefs = TestHelper.compiledProcedures(s"to-report __test report $source \nend", program)
+    assertResult(1)(procdefs.size)
+    val procdef = procdefs.head
     procdef.accept(new ConstantFolder)
     procdef.statements.body.head.args.head.toString
   }

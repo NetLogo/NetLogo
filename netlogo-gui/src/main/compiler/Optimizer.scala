@@ -2,6 +2,7 @@
 
 package org.nlogo.compiler
 
+import org.nlogo.core.Instantiator
 import org.nlogo.agent.Patch
 import org.nlogo.api.{ LogoException, Version }
 import org.nlogo.nvm.{ Command, Instruction, Reporter }
@@ -151,16 +152,18 @@ private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
       node match {
         case app: ReporterApp =>
           newGuy.token_=(app.reporter.token)
+          newGuy.agentClassString = app.reporter.agentClassString
           app.reporter = newGuy.asInstanceOf[Reporter]
         case stmt: Statement =>
           newGuy.token_=(stmt.command.token)
+          newGuy.agentClassString = stmt.command.agentClassString
           stmt.command = newGuy.asInstanceOf[Command]
       }
     }
     def addArg(theClass: Class[_ <: Reporter], original: ReporterApp): Match = {
       val newGuy = Instantiator.newInstance[Reporter](theClass)
       newGuy.token_=(original.reporter.token)
-      val result = new Match(new ReporterApp(newGuy, original.start, original.end, original.file))
+      val result = new Match(new ReporterApp(original.coreReporter, newGuy, original.start, original.end, original.file))
       graftArg(result)
       result
     }

@@ -50,29 +50,29 @@ class TestCompiler extends FunSuite with OneInstancePerTest with BeforeAndAfterE
 
   test("LetSameVariableTwice1") {
     badCommand("let a 5 let a 6",
-               "There is already a local variable called A here")
+               "There is already a local variable here called A")
   }
   test("LetSameVariableTwice2") {
     badCommand("let a 5 ask patches [ let a 6 ]",
-               "There is already a local variable called A here")
+               "There is already a local variable here called A")
   }
   test("LetSameNameAsCommandProcedure1") {
     declare("to a end")
     badCommand("let a 5",
-               "There is already a procedure with that name")
+               "There is already a procedure called A")
   }
   test("LetSameNameAsCommandProcedure2") {
     declareBad("to b let a 5 end  to a end",
-               "There is already a local variable called A in the B procedure")
+               "There is already a procedure called A")
   }
   test("LetSameNameAsReporterProcedure1") {
     declare("to-report a end")
     badCommand("let a 5",
-               "There is already a procedure with that name")
+               "There is already a procedure called A")
   }
   test("LetSameNameAsReporterProcedure2") {
     declareBad("to b let a 5 end  to-report a end",
-               "There is already a local variable called A in the B procedure")
+               "There is already a procedure called A")
   }
   test("LetSameNameAsGlobal") {
     declare("globals [glob1]")
@@ -92,31 +92,31 @@ class TestCompiler extends FunSuite with OneInstancePerTest with BeforeAndAfterE
   test("LetSameNameAsBreedVariable") {
     declare("breed [mice mouse] mice-own [fur]")
     badCommand("let fur 5",
-               "You already defined FUR as a MICE variable")
+               "There is already a MICE variable called FUR")
   }
   test("LetSameNameAsPrimitiveCommand") {
     badCommand("let fd 5",
-               "Expected variable name here")
+               "There is already a primitive command called FD")
   }
   test("LetSameNameAsPrimitiveReporter1") {
     badCommand("let timer 5",
-               "Expected variable name here")
+               "There is already a primitive reporter called TIMER")
   }
   test("LetSameNameAsPrimitiveReporter2") {
     badCommand("let sin 5",
-               "Expected variable name here")
+               "There is already a primitive reporter called SIN")
   }
   test("LetShadowsLet") {
     badCommand("let x 4 ask patches [ let x 0 ]",
-               "There is already a local variable called X here")
+               "There is already a local variable here called X")
   }
   test("LetNameSameAsEnclosingCommandProcedureName") {
     declareBad("to bazort let bazort 5 end",
-               "There is already a procedure with that name")
+               "There is already a procedure called BAZORT")
   }
   test("LetNameSameAsEnclosingReporterProcedureName") {
     declareBad("to-report bazort let bazort 5 report bazort end",
-               "There is already a procedure with that name")
+               "There is already a procedure called BAZORT")
   }
   test("SameLocalVariableTwice1") {
     declareBad("to a1 locals [b b] end",
@@ -124,11 +124,11 @@ class TestCompiler extends FunSuite with OneInstancePerTest with BeforeAndAfterE
   }
   test("SameLocalVariableTwice2") {
     declareBad("to a2 [b b] end",
-               "The name B is already defined")
+               "There is already a local variable called B here")
   }
   test("SameLocalVariableTwice3") {
     declareBad("to a3 let b 5 let b 6 end",
-               "There is already a local variable called B here")
+               "There is already a local variable here called B")
   }
   test("SameLocalVariableTwice4") {
     declareBad("to a4 locals [b] let b 5 end",
@@ -140,7 +140,7 @@ class TestCompiler extends FunSuite with OneInstancePerTest with BeforeAndAfterE
   }
   test("SameLocalVariableTwice6") {
     declareBad("to a6 [b] let b 5 end",
-               "There is already a local variable called B here")
+               "There is already a local variable here called B")
   }
   test("NonAsciiChars") {
     badCommand("blah " + 8211.toChar + " blah ",
@@ -153,7 +153,7 @@ class TestCompiler extends FunSuite with OneInstancePerTest with BeforeAndAfterE
                "edges-own [weight]\n" +
                "nodes-own [weight]\n" +
                "foos-own [weight] ",
-               "You already defined WEIGHT as a EDGES variable")
+               "There is already a EDGES-OWN variable called WEIGHT")
   }
   test("BreedOwnsNoConflict") {
     workspace.initForTesting(5,

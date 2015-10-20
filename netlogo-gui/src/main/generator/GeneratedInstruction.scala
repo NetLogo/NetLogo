@@ -2,7 +2,7 @@
 
 package org.nlogo.generator
 
-import org.nlogo.nvm.{ Command, EngineException, Instruction, Reporter }
+import org.nlogo.nvm.{ Command, EngineException, Instruction, Reporter, Workspace }
 
 trait GeneratedInstruction extends Instruction {
   var original: Instruction = null
@@ -36,5 +36,12 @@ trait GeneratedInstruction extends Instruction {
     buf.toString
   }
 }
-abstract class GeneratedCommand extends Command with GeneratedInstruction
+// this could be done at compile time (I believe) but it isn't speed-critical
+// RG 10/21/15
+abstract class GeneratedCommand extends Command with GeneratedInstruction {
+  override def init(workspace: Workspace) {
+    super.init(workspace)
+    switches = original.asInstanceOf[Command].switches
+  }
+}
 abstract class GeneratedReporter extends Reporter with GeneratedInstruction

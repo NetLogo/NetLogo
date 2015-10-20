@@ -8,9 +8,13 @@ import org.nlogo.nvm.Context;
 
 public final strictfp class _foreverbuttonend
     extends Command {
+  public _foreverbuttonend() {
+    this.switches = true;
+  }
+
   @Override
   public org.nlogo.core.Syntax syntax() {
-    return Syntax.commandSyntax(true);
+    return Syntax.commandSyntax();
   }
 
   @Override

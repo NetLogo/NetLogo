@@ -13,12 +13,14 @@ import org.nlogo.nvm.EngineException;
 
 public final strictfp class _layoutradial
     extends Command {
+  public _layoutradial() {
+    this.switches = true;
+  }
+
   @Override
   public org.nlogo.core.Syntax syntax() {
-    return Syntax.commandSyntax
-        (new int[]{Syntax.TurtlesetType(), Syntax.LinksetType(),
-            Syntax.TurtleType()},
-            true);
+    return Syntax.commandSyntax(
+        new int[]{Syntax.TurtlesetType(), Syntax.LinksetType(), Syntax.TurtleType()});
   }
 
   @Override

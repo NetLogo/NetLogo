@@ -4,7 +4,8 @@ package org.nlogo.compiler
 
 import CompilerExceptionThrowers.{ cAssert, exception }
 import org.nlogo.agent.{ Agent, Link, Turtle }
-import org.nlogo.api.{ Let, TokenizerInterface}
+import org.nlogo.api.{ TokenizerInterface}
+import org.nlogo.core.Let
 import org.nlogo.core.Breed
 import org.nlogo.core.Program
 import org.nlogo.core.ErrorSource
@@ -445,7 +446,7 @@ private class StructureParser(
                 "There is already a local variable called " + varName + " in the " + proc.name + " procedure",token)
         val iter2 = proc.lets.iterator()
         while(iter2.hasNext)
-          cAssert(varName != iter2.next().varName,
+          cAssert(varName != iter2.next().name,
                   "There is already a local variable called " + varName + " in the " +
                   proc.name + " procedure",token)
       }
@@ -486,7 +487,7 @@ private class StructureParser(
     val children = new collection.mutable.ListBuffer[Let]
     def newLet(end: Int) = {
       import collection.JavaConverters._
-      val result = new Let(name, startPos, end, children.asJava)
+      val result = Let(name)
       letToken.value.asInstanceOf[_let].let = result
       procedure.addLet(result)
       result

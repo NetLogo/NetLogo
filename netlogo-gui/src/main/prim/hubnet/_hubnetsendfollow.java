@@ -15,7 +15,7 @@ public strictfp class _hubnetsendfollow
     return Syntax.commandSyntax
         (new int[]
             {Syntax.StringType(), Syntax.AgentType(), Syntax.NumberType()},
-            "OTPL", false);
+            "OTPL");
   }
 
   @Override

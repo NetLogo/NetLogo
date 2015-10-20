@@ -22,12 +22,16 @@ to go
 
 public final strictfp class _life
     extends Command {
+  public _life() {
+    this.switches = true;
+  }
+
   private static final int LIVING_VAR = Patch.LAST_PREDEFINED_VAR + 1;
   private static final int LIVE_NEIGHBORS_VAR = Patch.LAST_PREDEFINED_VAR + 2;
 
   @Override
   public org.nlogo.core.Syntax syntax() {
-    return Syntax.commandSyntax("O---", true);
+    return Syntax.commandSyntax("O---");
   }
 
   @Override

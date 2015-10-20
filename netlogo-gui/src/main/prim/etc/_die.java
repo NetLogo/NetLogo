@@ -9,9 +9,13 @@ import org.nlogo.nvm.Command;
 
 public final strictfp class _die
     extends Command {
+  public _die() {
+    this.switches = true;
+  }
+
   @Override
   public org.nlogo.core.Syntax syntax() {
-    return Syntax.commandSyntax("-T-L", true);
+    return Syntax.commandSyntax("-T-L");
   }
 
   @Override

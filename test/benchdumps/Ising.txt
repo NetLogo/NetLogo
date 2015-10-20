@@ -4,9 +4,7 @@ turtles-own [WHO COLOR HEADING XCOR YCOR SHAPE LABEL LABEL-COLOR BREED HIDDEN? S
 patches-own [PXCOR PYCOR PCOLOR PLABEL PLABEL-COLOR SPIN]
 links-own [END1 END2 COLOR LABEL LABEL-COLOR HIDDEN? BREED THICKNESS SHAPE TIE-MODE]
 breeds 
-breeds-own 
 link-breeds 
-link-breeds-own 
 
 procedure GO:[]{O---}:
 [0]_asm_procedurego_ask_0 "ask one-of patches" Object => void
@@ -23,7 +21,7 @@ procedure GO:[]{O---}:
           ISTORE 3
           ILOAD 3
           IFNE L2
-          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
+          GETSTATIC org/nlogo/core/Nobody$.MODULE$ : Lorg/nlogo/core/Nobody$;
           GOTO L3
          L2
          FRAME APPEND [org/nlogo/agent/AgentSet I]
@@ -31,9 +29,9 @@ procedure GO:[]{O---}:
           ILOAD 3
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           ILOAD 3
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextInt (I)I
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextInt (I)I
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.randomOne (II)Lorg/nlogo/agent/Agent;
          L3
          FRAME SAME1 java/lang/Object
@@ -386,11 +384,11 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          FRAME SAME
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           LLOAD 4
           L2I
           I2L
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.setSeed (J)V
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.setSeed (J)V
           ALOAD 1
           ICONST_1
           PUTFIELD org/nlogo/nvm/Context.ip : I
@@ -889,8 +887,8 @@ procedure UPDATE:[EDIFF]{-TP-}:
           DLOAD 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextDouble ()D
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextDouble ()D
           DMUL
          L22
           ALOAD 1
@@ -1147,11 +1145,11 @@ procedure SETUP:[INITIAL-MAGNETIZATION]{O---}:
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresetup_setpatchvariable_2.kept3_value : Lorg/nlogo/api/LogoList;
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_setpatchvariable_2.kept3_value : Lorg/nlogo/core/LogoList;
          L4
           ASTORE 2
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/api/LogoList.size ()I
+          INVOKEVIRTUAL org/nlogo/core/LogoList.size ()I
           ISTORE 3
           ILOAD 3
           IFNE L5
@@ -1171,14 +1169,14 @@ procedure SETUP:[INITIAL-MAGNETIZATION]{O---}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5
-         FRAME APPEND [org/nlogo/api/LogoList I]
+         FRAME APPEND [org/nlogo/core/LogoList I]
           ALOAD 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           ILOAD 3
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextInt (I)I
-          INVOKEVIRTUAL org/nlogo/api/LogoList.get (I)Ljava/lang/Object;
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextInt (I)I
+          INVOKEVIRTUAL org/nlogo/core/LogoList.get (I)Ljava/lang/Object;
          L6
           ASTORE 2
          L0
@@ -1297,8 +1295,8 @@ procedure SETUP:[INITIAL-MAGNETIZATION]{O---}:
           ALOAD 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/util/MersenneTwisterFast;)Lorg/nlogo/agent/AgentSet$Iterator;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/api/MersenneTwisterFast;)Lorg/nlogo/agent/AgentSet$Iterator;
           ASTORE 5
          L10
          FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setobservervariable_7 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder T org/nlogo/agent/AgentSet$Iterator] []
@@ -1315,7 +1313,7 @@ procedure SETUP:[INITIAL-MAGNETIZATION]{O---}:
          L1
          FRAME SAME
           ALOAD 3
-          INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/api/LogoList;
+          INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/core/LogoList;
           GOTO L11
          L2
          FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setobservervariable_7 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder] [org/nlogo/api/AgentException]
@@ -1329,14 +1327,14 @@ procedure SETUP:[INITIAL-MAGNETIZATION]{O---}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L11
-         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setobservervariable_7 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder T org/nlogo/agent/AgentSet$Iterator] [org/nlogo/api/LogoList]
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setobservervariable_7 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder T org/nlogo/agent/AgentSet$Iterator] [org/nlogo/core/LogoList]
           ASTORE 2
          L3
           ALOAD 2
-          CHECKCAST org/nlogo/api/LogoList
+          CHECKCAST org/nlogo/core/LogoList
           GOTO L12
          L4
-         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setobservervariable_7 org/nlogo/nvm/Context org/nlogo/api/LogoList org/nlogo/api/LogoListBuilder T org/nlogo/agent/AgentSet$Iterator] [java/lang/ClassCastException]
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setobservervariable_7 org/nlogo/nvm/Context org/nlogo/core/LogoList org/nlogo/api/LogoListBuilder T org/nlogo/agent/AgentSet$Iterator] [java/lang/ClassCastException]
           POP
           NEW org/nlogo/nvm/ArgumentTypeException
           DUP
@@ -1348,15 +1346,15 @@ procedure SETUP:[INITIAL-MAGNETIZATION]{O---}:
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
          L12
-         FRAME SAME1 org/nlogo/api/LogoList
+         FRAME SAME1 org/nlogo/core/LogoList
           ASTORE 2
           DCONST_0
           DSTORE 3
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/api/LogoList.iterator ()Ljava/util/Iterator;
+          INVOKEVIRTUAL org/nlogo/core/LogoList.javaIterator ()Ljava/util/Iterator;
           ASTORE 5
          L13
-         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setobservervariable_7 org/nlogo/nvm/Context org/nlogo/api/LogoList D java/util/Iterator] []
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setobservervariable_7 org/nlogo/nvm/Context org/nlogo/core/LogoList D java/util/Iterator] []
           ALOAD 5
           INVOKEINTERFACE java/util/Iterator.hasNext ()Z
           IFEQ L14
@@ -1537,7 +1535,7 @@ procedure UPDATE-PLOT:[]{OTPL}:
          L1
           RETURN
 
-procedure MAGNETIZATION:[]{OTPL}:
+reporter procedure MAGNETIZATION:[]{OTPL}:
 [0]_asm_proceduremagnetization_report_0 "report sum-of-spins / count patches" Object => void
       _div double,double => double
         _observervariable:SUM-OF-SPINS => Object
@@ -1628,9 +1626,8 @@ procedure MAGNETIZATION:[]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tyype : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPEQ L10
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFNE L10
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1

@@ -14,13 +14,14 @@ public final strictfp class _setbreedvariable
 
   public _setbreedvariable(_breedvariable original) {
     name = original.name();
+    this.switches = true;
   }
 
   @Override
   public org.nlogo.core.Syntax syntax() {
     return Syntax.commandSyntax
         (new int[]{Syntax.WildcardType()},
-            "-T--", true);
+            "-T--");
   }
 
   @Override

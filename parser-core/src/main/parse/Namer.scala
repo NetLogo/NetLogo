@@ -60,7 +60,7 @@ class Namer(
     tokens.map{token => token.tpe match {
       case TokenType.Ident =>
         processOne(token).getOrElse(
-          token.refine(core.prim._letvariable(null), tpe = TokenType.Reporter)
+          token.refine(core.prim._unknownidentifier(), tpe = TokenType.Reporter)
         )
       case _ =>
         token

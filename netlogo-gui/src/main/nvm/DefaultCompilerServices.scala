@@ -3,7 +3,7 @@
 package org.nlogo.nvm
 
 import org.nlogo.core.{ CompilationEnvironment, DummyCompilationEnvironment }
-import org.nlogo.api.{ CompilerServices}
+import org.nlogo.api.{ CompilerServices, NetLogoLegacyDialect, NetLogoThreeDDialect , Version }
 import org.nlogo.core.Program
 
 // We use this in contexts where we want to do compiler stuff (not full compilation) like
@@ -12,15 +12,20 @@ import org.nlogo.core.Program
 // BehaviorSpace XML. - ST 2/23/09, 3/4/09
 
 class DefaultCompilerServices(compiler: CompilerInterface) extends CompilerServices {
+  def emptyProgram =
+    if (Version.is3D)
+      Program.fromDialect(NetLogoLegacyDialect)
+    else
+      Program.fromDialect(NetLogoThreeDDialect)
   def autoConvert(source: String, subprogram: Boolean, reporter: Boolean, modelVersion: String) = source
   def readNumberFromString(source: String) =
     compiler.readNumberFromString(source, null, null, false)
   def checkReporterSyntax(source: String) =
-    compiler.checkReporterSyntax(source, Program.empty(),
+    compiler.checkReporterSyntax(source, emptyProgram,
                                  new java.util.HashMap[String,Procedure],
                                  null, false, new DummyCompilationEnvironment())
   def checkCommandSyntax(source: String) =
-    compiler.checkCommandSyntax(source, Program.empty(),
+    compiler.checkCommandSyntax(source, emptyProgram,
                                 new java.util.HashMap[String,Procedure],
                                 null, true, new DummyCompilationEnvironment())
   def readFromString(source: String) =
@@ -30,7 +35,7 @@ class DefaultCompilerServices(compiler: CompilerInterface) extends CompilerServi
   def isValidIdentifier(s: String) =
     compiler.isValidIdentifier(s, false)
   def isReporter(s: String) =
-    compiler.isReporter(s, Program.empty(), new java.util.HashMap[String, Procedure],
+    compiler.isReporter(s, emptyProgram, new java.util.HashMap[String, Procedure],
                         new org.nlogo.api.DummyExtensionManager, new DummyCompilationEnvironment())
   def tokenizeForColorization(source: String) =
     compiler.tokenizeForColorization(

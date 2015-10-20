@@ -4,9 +4,7 @@ turtles-own [WHO COLOR HEADING XCOR YCOR SHAPE LABEL LABEL-COLOR BREED HIDDEN? S
 patches-own [PXCOR PYCOR PCOLOR PLABEL PLABEL-COLOR LIVING? LIVE-NEIGHBORS]
 links-own [END1 END2 COLOR LABEL LABEL-COLOR HIDDEN? BREED THICKNESS SHAPE TIE-MODE]
 breeds 
-breeds-own 
 link-breeds 
-link-breeds-own 
 
 procedure GO:[]{O---}:
 [0]_asm_procedurego_ask_0 "ask patches" AgentSet => void
@@ -496,11 +494,11 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          FRAME SAME
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           LLOAD 4
           L2I
           I2L
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.setSeed (J)V
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.setSeed (J)V
           ALOAD 1
           ICONST_1
           PUTFIELD org/nlogo/nvm/Context.ip : I
@@ -716,8 +714,8 @@ procedure SETUP-RANDOM:[]{O---}:
           DLOAD 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextDouble ()D
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextDouble ()D
           DMUL
          L2
           ALOAD 1

@@ -148,4 +148,14 @@ trait AbstractTestLanguage extends Assertions {
         assertResult(errorMessage)(ex.getMessage)
     }
   }
+
+  def testCompilerError(source: String, errorMessage: String): Unit = {
+    try {
+      defineProcedures(source)
+      fail("no CompilerException occurred")
+    } catch {
+      case ex: CompilerException =>
+        assertResult(errorMessage)(ex.getMessage)
+    }
+  }
 }

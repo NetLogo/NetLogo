@@ -14,12 +14,13 @@ public final strictfp class _setlinkvariable
 
   public _setlinkvariable(_linkvariable original) {
     vn = original.vn();
+    this.switches = true;
   }
 
   @Override
   public org.nlogo.core.Syntax syntax() {
     int[] right = {Syntax.WildcardType()};
-    return Syntax.commandSyntax(right, "---L", true);
+    return Syntax.commandSyntax(right, "---L");
   }
 
   @Override

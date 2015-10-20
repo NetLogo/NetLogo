@@ -4,16 +4,14 @@ turtles-own [WHO COLOR HEADING XCOR YCOR SHAPE LABEL LABEL-COLOR BREED HIDDEN? S
 patches-own [PXCOR PYCOR PCOLOR PLABEL PLABEL-COLOR ON?]
 links-own [END1 END2 COLOR LABEL LABEL-COLOR HIDDEN? BREED THICKNESS SHAPE TIE-MODE]
 breeds 
-breeds-own 
 link-breeds 
-link-breeds-own 
 
 procedure SETUP-CONTINUE:[ON?-LIST]{O---}:
 [0]_asm_proceduresetupcontinue_setprocedurevariable_0 "" Object => void
       _constlist:[] => LogoList
          L0
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresetupcontinue_setprocedurevariable_0.kept2_value : Lorg/nlogo/api/LogoList;
+          GETFIELD org/nlogo/prim/_asm_proceduresetupcontinue_setprocedurevariable_0.kept2_value : Lorg/nlogo/core/LogoList;
          L1
           ASTORE 2
           ALOAD 1
@@ -95,9 +93,8 @@ procedure SETUP-CONTINUE:[ON?-LIST]{O---}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tyype : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPEQ L3
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFNE L3
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
@@ -106,10 +103,9 @@ procedure SETUP-CONTINUE:[ON?-LIST]{O---}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.parent : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tyype : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPNE L4
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.parent ()Lorg/nlogo/nvm/Procedure;
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFEQ L4
          L3
          FRAME SAME
           NEW org/nlogo/nvm/EngineException
@@ -144,8 +140,8 @@ procedure SETUP-CONTINUE:[ON?-LIST]{O---}:
                L6
                 ALOAD 1
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_proceduresetupcontinue_patchvariableof_4.kept2_let : Lorg/nlogo/api/Let;
-                INVOKEVIRTUAL org/nlogo/nvm/Context.getLet (Lorg/nlogo/api/Let;)Ljava/lang/Object;
+                GETFIELD org/nlogo/prim/_asm_proceduresetupcontinue_patchvariableof_4.kept2_let : Lorg/nlogo/core/Let;
+                INVOKEVIRTUAL org/nlogo/nvm/Context.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
                L7
                 ASTORE 2
                 ALOAD 2
@@ -204,8 +200,8 @@ procedure SETUP-CONTINUE:[ON?-LIST]{O---}:
                 ALOAD 7
                 ALOAD 1
                 GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-                GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
-                INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/util/MersenneTwisterFast;)Lorg/nlogo/agent/AgentSet$Iterator;
+                GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
+                INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/api/MersenneTwisterFast;)Lorg/nlogo/agent/AgentSet$Iterator;
                 ASTORE 10
                L11
                FRAME FULL [org/nlogo/prim/_asm_proceduresetupcontinue_patchvariableof_4 org/nlogo/nvm/Context java/lang/Object java/lang/Object T T T org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder T org/nlogo/agent/AgentSet$Iterator] []
@@ -222,7 +218,7 @@ procedure SETUP-CONTINUE:[ON?-LIST]{O---}:
                L1
                FRAME SAME
                 ALOAD 8
-                INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/api/LogoList;
+                INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/core/LogoList;
                 ASTORE 5
                L9
                FRAME FULL [org/nlogo/prim/_asm_proceduresetupcontinue_patchvariableof_4 org/nlogo/nvm/Context java/lang/Object java/lang/Object T java/lang/Object] []
@@ -295,15 +291,15 @@ procedure SETUP-CONTINUE:[ON?-LIST]{O---}:
               IFEQ L1
               ALOAD 2
               CHECKCAST org/nlogo/agent/AgentSet
-              INVOKEVIRTUAL org/nlogo/agent/AgentSet.toLogoList ()Lorg/nlogo/api/LogoList;
+              INVOKEVIRTUAL org/nlogo/agent/AgentSet.toLogoList ()Lorg/nlogo/core/LogoList;
               GOTO L2
              L1
              FRAME APPEND [java/lang/Object]
               ALOAD 2
-              INSTANCEOF org/nlogo/api/LogoList
+              INSTANCEOF org/nlogo/core/LogoList
               IFEQ L3
               ALOAD 2
-              CHECKCAST org/nlogo/api/LogoList
+              CHECKCAST org/nlogo/core/LogoList
               ASTORE 3
               NEW java/util/ArrayList
               DUP
@@ -318,10 +314,10 @@ procedure SETUP-CONTINUE:[ON?-LIST]{O---}:
               INVOKESPECIAL java/util/ArrayList.<init> ()V
               ASTORE 6
               ALOAD 3
-              INVOKEVIRTUAL org/nlogo/api/LogoList.iterator ()Ljava/util/Iterator;
+              INVOKEVIRTUAL org/nlogo/core/LogoList.javaIterator ()Ljava/util/Iterator;
               ASTORE 7
              L4
-             FRAME FULL [org/nlogo/prim/_asm_proceduresetupcontinue_sort_5 org/nlogo/nvm/Context java/lang/Object org/nlogo/api/LogoList java/util/ArrayList java/util/ArrayList java/util/ArrayList java/util/Iterator] []
+             FRAME FULL [org/nlogo/prim/_asm_proceduresetupcontinue_sort_5 org/nlogo/nvm/Context java/lang/Object org/nlogo/core/LogoList java/util/ArrayList java/util/ArrayList java/util/ArrayList java/util/Iterator] []
               ALOAD 7
               INVOKEINTERFACE java/util/Iterator.hasNext ()Z
               IFEQ L5
@@ -369,7 +365,7 @@ procedure SETUP-CONTINUE:[ON?-LIST]{O---}:
               ALOAD 4
               INVOKESTATIC java/util/Collections.sort (Ljava/util/List;)V
               ALOAD 4
-              INVOKESTATIC org/nlogo/api/LogoList.fromJava (Ljava/lang/Iterable;)Lorg/nlogo/api/LogoList;
+              INVOKESTATIC org/nlogo/core/LogoList.fromJava (Ljava/lang/Iterable;)Lorg/nlogo/core/LogoList;
               GOTO L2
              L9
              FRAME SAME
@@ -379,14 +375,14 @@ procedure SETUP-CONTINUE:[ON?-LIST]{O---}:
               ALOAD 5
               INVOKESTATIC java/util/Collections.sort (Ljava/util/List;)V
               ALOAD 5
-              INVOKESTATIC org/nlogo/api/LogoList.fromJava (Ljava/lang/Iterable;)Lorg/nlogo/api/LogoList;
+              INVOKESTATIC org/nlogo/core/LogoList.fromJava (Ljava/lang/Iterable;)Lorg/nlogo/core/LogoList;
               GOTO L2
              L10
              FRAME SAME
               ALOAD 6
               INVOKESTATIC java/util/Collections.sort (Ljava/util/List;)V
               ALOAD 6
-              INVOKESTATIC org/nlogo/api/LogoList.fromJava (Ljava/lang/Iterable;)Lorg/nlogo/api/LogoList;
+              INVOKESTATIC org/nlogo/core/LogoList.fromJava (Ljava/lang/Iterable;)Lorg/nlogo/core/LogoList;
               GOTO L2
              L3
              FRAME FULL [org/nlogo/prim/_asm_proceduresetupcontinue_sort_5 org/nlogo/nvm/Context java/lang/Object] []
@@ -402,7 +398,7 @@ procedure SETUP-CONTINUE:[ON?-LIST]{O---}:
               INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
               ATHROW
              L2
-             FRAME SAME1 org/nlogo/api/LogoList
+             FRAME SAME1 org/nlogo/core/LogoList
               ARETURN
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetupcontinue_setprocedurevariable_3.keptinstr2 : Lorg/nlogo/prim/etc/_map;
@@ -1001,9 +997,8 @@ procedure GO:[]{O---}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tyype : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPEQ L3
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFNE L3
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
@@ -1012,10 +1007,9 @@ procedure GO:[]{O---}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.parent : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tyype : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPNE L4
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.parent ()Lorg/nlogo/nvm/Procedure;
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFEQ L4
          L3
          FRAME SAME
           NEW org/nlogo/nvm/EngineException
@@ -1170,9 +1164,8 @@ procedure GO:[]{O---}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tyype : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPEQ L3
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFNE L3
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
@@ -1181,10 +1174,9 @@ procedure GO:[]{O---}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.parent : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tyype : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPNE L4
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.parent ()Lorg/nlogo/nvm/Procedure;
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFEQ L4
          L3
          FRAME SAME
           NEW org/nlogo/nvm/EngineException
@@ -1666,11 +1658,11 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          FRAME SAME
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           LLOAD 4
           L2I
           I2L
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.setSeed (J)V
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.setSeed (J)V
           ALOAD 1
           ICONST_1
           PUTFIELD org/nlogo/nvm/Context.ip : I
@@ -1983,9 +1975,9 @@ procedure SETUP-RANDOM:[]{O---}:
          L3
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           LDC 100
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextLong (J)J
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
          L4
           ALOAD 1
@@ -3368,12 +3360,12 @@ procedure STARTUP:[]{OTPL}:
          L1
           RETURN
 
-procedure LIST-RULES:[RULES]{OTPL}:
+reporter procedure LIST-RULES:[RULES]{OTPL}:
 [0]_asm_procedurelistrules_setprocedurevariable_0 "" Object => void
       _constlist:[] => LogoList
          L0
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurelistrules_setprocedurevariable_0.kept2_value : Lorg/nlogo/api/LogoList;
+          GETFIELD org/nlogo/prim/_asm_procedurelistrules_setprocedurevariable_0.kept2_value : Lorg/nlogo/core/LogoList;
          L1
           ASTORE 2
           ALOAD 1
@@ -3401,7 +3393,7 @@ procedure LIST-RULES:[RULES]{OTPL}:
           _asm_procedurelistrules_constlist_3 "[false false false]" => LogoList
                L0
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_procedurelistrules_constlist_3.kept1_value : Lorg/nlogo/api/LogoList;
+                GETFIELD org/nlogo/prim/_asm_procedurelistrules_constlist_3.kept1_value : Lorg/nlogo/core/LogoList;
                L1
                 ARETURN
         _asm_procedurelistrules_procedurevariable_4 "rules" => Object
@@ -3444,7 +3436,7 @@ procedure LIST-RULES:[RULES]{OTPL}:
           _asm_procedurelistrules_constlist_7 "[false false true ]" => LogoList
                L0
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_procedurelistrules_constlist_7.kept1_value : Lorg/nlogo/api/LogoList;
+                GETFIELD org/nlogo/prim/_asm_procedurelistrules_constlist_7.kept1_value : Lorg/nlogo/core/LogoList;
                L1
                 ARETURN
         _asm_procedurelistrules_procedurevariable_8 "rules" => Object
@@ -3487,7 +3479,7 @@ procedure LIST-RULES:[RULES]{OTPL}:
           _asm_procedurelistrules_constlist_11 "[false true  false]" => LogoList
                L0
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_procedurelistrules_constlist_11.kept1_value : Lorg/nlogo/api/LogoList;
+                GETFIELD org/nlogo/prim/_asm_procedurelistrules_constlist_11.kept1_value : Lorg/nlogo/core/LogoList;
                L1
                 ARETURN
         _asm_procedurelistrules_procedurevariable_12 "rules" => Object
@@ -3530,7 +3522,7 @@ procedure LIST-RULES:[RULES]{OTPL}:
           _asm_procedurelistrules_constlist_15 "[false true  true ]" => LogoList
                L0
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_procedurelistrules_constlist_15.kept1_value : Lorg/nlogo/api/LogoList;
+                GETFIELD org/nlogo/prim/_asm_procedurelistrules_constlist_15.kept1_value : Lorg/nlogo/core/LogoList;
                L1
                 ARETURN
         _asm_procedurelistrules_procedurevariable_16 "rules" => Object
@@ -3573,7 +3565,7 @@ procedure LIST-RULES:[RULES]{OTPL}:
           _asm_procedurelistrules_constlist_19 "[true  false false]" => LogoList
                L0
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_procedurelistrules_constlist_19.kept1_value : Lorg/nlogo/api/LogoList;
+                GETFIELD org/nlogo/prim/_asm_procedurelistrules_constlist_19.kept1_value : Lorg/nlogo/core/LogoList;
                L1
                 ARETURN
         _asm_procedurelistrules_procedurevariable_20 "rules" => Object
@@ -3616,7 +3608,7 @@ procedure LIST-RULES:[RULES]{OTPL}:
           _asm_procedurelistrules_constlist_23 "[true  false true ]" => LogoList
                L0
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_procedurelistrules_constlist_23.kept1_value : Lorg/nlogo/api/LogoList;
+                GETFIELD org/nlogo/prim/_asm_procedurelistrules_constlist_23.kept1_value : Lorg/nlogo/core/LogoList;
                L1
                 ARETURN
         _asm_procedurelistrules_procedurevariable_24 "rules" => Object
@@ -3659,7 +3651,7 @@ procedure LIST-RULES:[RULES]{OTPL}:
           _asm_procedurelistrules_constlist_27 "[true  true  false]" => LogoList
                L0
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_procedurelistrules_constlist_27.kept1_value : Lorg/nlogo/api/LogoList;
+                GETFIELD org/nlogo/prim/_asm_procedurelistrules_constlist_27.kept1_value : Lorg/nlogo/core/LogoList;
                L1
                 ARETURN
         _asm_procedurelistrules_procedurevariable_28 "rules" => Object
@@ -3702,7 +3694,7 @@ procedure LIST-RULES:[RULES]{OTPL}:
           _asm_procedurelistrules_constlist_31 "[true  true  true ]" => LogoList
                L0
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_procedurelistrules_constlist_31.kept1_value : Lorg/nlogo/api/LogoList;
+                GETFIELD org/nlogo/prim/_asm_procedurelistrules_constlist_31.kept1_value : Lorg/nlogo/core/LogoList;
                L1
                 ARETURN
         _asm_procedurelistrules_procedurevariable_32 "rules" => Object
@@ -3763,9 +3755,8 @@ procedure LIST-RULES:[RULES]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tyype : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPEQ L3
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFNE L3
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -3819,7 +3810,7 @@ procedure LIST-RULES:[RULES]{OTPL}:
          FRAME FULL [] [java/lang/Throwable]
           ATHROW
 
-procedure CALCULATE-RULE:[RRESULT]{OTPL}:
+reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
 [0]_asm_procedurecalculaterule_setprocedurevariable_0 "" Object => void
       _constdouble:0.0 => Double
          L0
@@ -4670,9 +4661,8 @@ procedure CALCULATE-RULE:[RRESULT]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tyype : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPEQ L3
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFNE L3
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -5698,12 +5688,12 @@ procedure SHOW-RULES:[RULES]{O---}:
           DSTORE 2
           ALOAD 1
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedureshowrules_fd_10.kept1_let : Lorg/nlogo/api/Let;
+          GETFIELD org/nlogo/prim/_asm_procedureshowrules_fd_10.kept1_let : Lorg/nlogo/core/Let;
           NEW org/nlogo/nvm/MutableDouble
           DUP
           DLOAD 2
           INVOKESPECIAL org/nlogo/nvm/MutableDouble.<init> (D)V
-          INVOKEVIRTUAL org/nlogo/nvm/Context.let (Lorg/nlogo/api/Let;Ljava/lang/Object;)V
+          INVOKEVIRTUAL org/nlogo/nvm/Context.let (Lorg/nlogo/core/Let;Ljava/lang/Object;)V
           ALOAD 1
           BIPUSH 9
           PUTFIELD org/nlogo/nvm/Context.ip : I
@@ -5719,8 +5709,8 @@ procedure SHOW-RULES:[RULES]{O---}:
           ASTORE 2
           ALOAD 1
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedureshowrules_fdinternal_11.kept1_let : Lorg/nlogo/api/Let;
-          INVOKEVIRTUAL org/nlogo/nvm/Context.getLet (Lorg/nlogo/api/Let;)Ljava/lang/Object;
+          GETFIELD org/nlogo/prim/_asm_procedureshowrules_fdinternal_11.kept1_let : Lorg/nlogo/core/Let;
+          INVOKEVIRTUAL org/nlogo/nvm/Context.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
           CHECKCAST org/nlogo/nvm/MutableDouble
           ASTORE 3
           ALOAD 3
@@ -5870,12 +5860,12 @@ procedure SHOW-RULES:[RULES]{O---}:
           DSTORE 2
           ALOAD 1
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedureshowrules_fd_16.kept1_let : Lorg/nlogo/api/Let;
+          GETFIELD org/nlogo/prim/_asm_procedureshowrules_fd_16.kept1_let : Lorg/nlogo/core/Let;
           NEW org/nlogo/nvm/MutableDouble
           DUP
           DLOAD 2
           INVOKESPECIAL org/nlogo/nvm/MutableDouble.<init> (D)V
-          INVOKEVIRTUAL org/nlogo/nvm/Context.let (Lorg/nlogo/api/Let;Ljava/lang/Object;)V
+          INVOKEVIRTUAL org/nlogo/nvm/Context.let (Lorg/nlogo/core/Let;Ljava/lang/Object;)V
           ALOAD 1
           BIPUSH 12
           PUTFIELD org/nlogo/nvm/Context.ip : I
@@ -5891,8 +5881,8 @@ procedure SHOW-RULES:[RULES]{O---}:
           ASTORE 2
           ALOAD 1
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedureshowrules_fdinternal_17.kept1_let : Lorg/nlogo/api/Let;
-          INVOKEVIRTUAL org/nlogo/nvm/Context.getLet (Lorg/nlogo/api/Let;)Ljava/lang/Object;
+          GETFIELD org/nlogo/prim/_asm_procedureshowrules_fdinternal_17.kept1_let : Lorg/nlogo/core/Let;
+          INVOKEVIRTUAL org/nlogo/nvm/Context.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
           CHECKCAST org/nlogo/nvm/MutableDouble
           ASTORE 3
           ALOAD 3
@@ -6042,12 +6032,12 @@ procedure SHOW-RULES:[RULES]{O---}:
           DSTORE 2
           ALOAD 1
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedureshowrules_fd_22.kept1_let : Lorg/nlogo/api/Let;
+          GETFIELD org/nlogo/prim/_asm_procedureshowrules_fd_22.kept1_let : Lorg/nlogo/core/Let;
           NEW org/nlogo/nvm/MutableDouble
           DUP
           DLOAD 2
           INVOKESPECIAL org/nlogo/nvm/MutableDouble.<init> (D)V
-          INVOKEVIRTUAL org/nlogo/nvm/Context.let (Lorg/nlogo/api/Let;Ljava/lang/Object;)V
+          INVOKEVIRTUAL org/nlogo/nvm/Context.let (Lorg/nlogo/core/Let;Ljava/lang/Object;)V
           ALOAD 1
           BIPUSH 15
           PUTFIELD org/nlogo/nvm/Context.ip : I
@@ -6063,8 +6053,8 @@ procedure SHOW-RULES:[RULES]{O---}:
           ASTORE 2
           ALOAD 1
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedureshowrules_fdinternal_23.kept1_let : Lorg/nlogo/api/Let;
-          INVOKEVIRTUAL org/nlogo/nvm/Context.getLet (Lorg/nlogo/api/Let;)Ljava/lang/Object;
+          GETFIELD org/nlogo/prim/_asm_procedureshowrules_fdinternal_23.kept1_let : Lorg/nlogo/core/Let;
+          INVOKEVIRTUAL org/nlogo/nvm/Context.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
           CHECKCAST org/nlogo/nvm/MutableDouble
           ASTORE 3
           ALOAD 3
@@ -6214,13 +6204,13 @@ procedure SHOW-RULES:[RULES]{O---}:
           DSTORE 2
           ALOAD 1
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedureshowrules_bk_28.kept1_let : Lorg/nlogo/api/Let;
+          GETFIELD org/nlogo/prim/_asm_procedureshowrules_bk_28.kept1_let : Lorg/nlogo/core/Let;
           NEW org/nlogo/nvm/MutableDouble
           DUP
           DLOAD 2
           DNEG
           INVOKESPECIAL org/nlogo/nvm/MutableDouble.<init> (D)V
-          INVOKEVIRTUAL org/nlogo/nvm/Context.let (Lorg/nlogo/api/Let;Ljava/lang/Object;)V
+          INVOKEVIRTUAL org/nlogo/nvm/Context.let (Lorg/nlogo/core/Let;Ljava/lang/Object;)V
           ALOAD 1
           BIPUSH 18
           PUTFIELD org/nlogo/nvm/Context.ip : I
@@ -6236,8 +6226,8 @@ procedure SHOW-RULES:[RULES]{O---}:
           ASTORE 2
           ALOAD 1
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedureshowrules_fdinternal_29.kept1_let : Lorg/nlogo/api/Let;
-          INVOKEVIRTUAL org/nlogo/nvm/Context.getLet (Lorg/nlogo/api/Let;)Ljava/lang/Object;
+          GETFIELD org/nlogo/prim/_asm_procedureshowrules_fdinternal_29.kept1_let : Lorg/nlogo/core/Let;
+          INVOKEVIRTUAL org/nlogo/nvm/Context.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
           CHECKCAST org/nlogo/nvm/MutableDouble
           ASTORE 3
           ALOAD 3
@@ -6354,12 +6344,12 @@ procedure SHOW-RULES:[RULES]{O---}:
           DSTORE 2
           ALOAD 1
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedureshowrules_fd_31.kept1_let : Lorg/nlogo/api/Let;
+          GETFIELD org/nlogo/prim/_asm_procedureshowrules_fd_31.kept1_let : Lorg/nlogo/core/Let;
           NEW org/nlogo/nvm/MutableDouble
           DUP
           DLOAD 2
           INVOKESPECIAL org/nlogo/nvm/MutableDouble.<init> (D)V
-          INVOKEVIRTUAL org/nlogo/nvm/Context.let (Lorg/nlogo/api/Let;Ljava/lang/Object;)V
+          INVOKEVIRTUAL org/nlogo/nvm/Context.let (Lorg/nlogo/core/Let;Ljava/lang/Object;)V
           ALOAD 1
           BIPUSH 21
           PUTFIELD org/nlogo/nvm/Context.ip : I
@@ -6375,8 +6365,8 @@ procedure SHOW-RULES:[RULES]{O---}:
           ASTORE 2
           ALOAD 1
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedureshowrules_fdinternal_32.kept1_let : Lorg/nlogo/api/Let;
-          INVOKEVIRTUAL org/nlogo/nvm/Context.getLet (Lorg/nlogo/api/Let;)Ljava/lang/Object;
+          GETFIELD org/nlogo/prim/_asm_procedureshowrules_fdinternal_32.kept1_let : Lorg/nlogo/core/Let;
+          INVOKEVIRTUAL org/nlogo/nvm/Context.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
           CHECKCAST org/nlogo/nvm/MutableDouble
           ASTORE 3
           ALOAD 3
@@ -6681,7 +6671,7 @@ procedure DO-RULE:[LEFT-ON? RIGHT-ON? NEW-VALUE]{-TP-}:
           ASTORE 2
           ALOAD 2
           IFNONNULL L10
-          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
+          GETSTATIC org/nlogo/core/Nobody$.MODULE$ : Lorg/nlogo/core/Nobody$;
           GOTO L11
          L10
          FRAME FULL [org/nlogo/prim/_asm_proceduredorule_setprocedurevariable_0 org/nlogo/nvm/Context org/nlogo/agent/Patch org/nlogo/agent/Agent T org/nlogo/agent/Patch] []
@@ -6745,8 +6735,8 @@ procedure DO-RULE:[LEFT-ON? RIGHT-ON? NEW-VALUE]{-TP-}:
           ALOAD 7
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/util/MersenneTwisterFast;)Lorg/nlogo/agent/AgentSet$Iterator;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/api/MersenneTwisterFast;)Lorg/nlogo/agent/AgentSet$Iterator;
           ASTORE 10
          L15
          FRAME FULL [org/nlogo/prim/_asm_proceduredorule_setprocedurevariable_0 org/nlogo/nvm/Context java/lang/Object java/lang/Object T org/nlogo/agent/Patch T org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder T org/nlogo/agent/AgentSet$Iterator] []
@@ -6763,7 +6753,7 @@ procedure DO-RULE:[LEFT-ON? RIGHT-ON? NEW-VALUE]{-TP-}:
          L1
          FRAME SAME
           ALOAD 8
-          INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/api/LogoList;
+          INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/core/LogoList;
           ASTORE 5
          L13
          FRAME FULL [org/nlogo/prim/_asm_proceduredorule_setprocedurevariable_0 org/nlogo/nvm/Context java/lang/Object java/lang/Object T java/lang/Object] []
@@ -6872,7 +6862,7 @@ procedure DO-RULE:[LEFT-ON? RIGHT-ON? NEW-VALUE]{-TP-}:
           ASTORE 2
           ALOAD 2
           IFNONNULL L10
-          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
+          GETSTATIC org/nlogo/core/Nobody$.MODULE$ : Lorg/nlogo/core/Nobody$;
           GOTO L11
          L10
          FRAME FULL [org/nlogo/prim/_asm_proceduredorule_setprocedurevariable_1 org/nlogo/nvm/Context org/nlogo/agent/Patch org/nlogo/agent/Agent T org/nlogo/agent/Patch] []
@@ -6936,8 +6926,8 @@ procedure DO-RULE:[LEFT-ON? RIGHT-ON? NEW-VALUE]{-TP-}:
           ALOAD 7
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/util/MersenneTwisterFast;)Lorg/nlogo/agent/AgentSet$Iterator;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/api/MersenneTwisterFast;)Lorg/nlogo/agent/AgentSet$Iterator;
           ASTORE 10
          L15
          FRAME FULL [org/nlogo/prim/_asm_proceduredorule_setprocedurevariable_1 org/nlogo/nvm/Context java/lang/Object java/lang/Object T org/nlogo/agent/Patch T org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder T org/nlogo/agent/AgentSet$Iterator] []
@@ -6954,7 +6944,7 @@ procedure DO-RULE:[LEFT-ON? RIGHT-ON? NEW-VALUE]{-TP-}:
          L1
          FRAME SAME
           ALOAD 8
-          INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/api/LogoList;
+          INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/core/LogoList;
           ASTORE 5
          L13
          FRAME FULL [org/nlogo/prim/_asm_proceduredorule_setprocedurevariable_1 org/nlogo/nvm/Context java/lang/Object java/lang/Object T java/lang/Object] []
@@ -8493,7 +8483,7 @@ procedure DO-RULE:[LEFT-ON? RIGHT-ON? NEW-VALUE]{-TP-}:
           ASTORE 2
           ALOAD 2
           IFNONNULL L4
-          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
+          GETSTATIC org/nlogo/core/Nobody$.MODULE$ : Lorg/nlogo/core/Nobody$;
           GOTO L5
          L4
          FRAME FULL [org/nlogo/prim/_asm_proceduredorule_ask_3 org/nlogo/nvm/Context org/nlogo/agent/Patch org/nlogo/agent/Agent T org/nlogo/agent/Patch] []
@@ -9104,7 +9094,7 @@ procedure SINGLE-CELL:[]{O---}:
          L1
           RETURN
 
-procedure BINDIGIT:[NUMBER POWER-OF-TWO]{OTPL}:
+reporter procedure BINDIGIT:[NUMBER POWER-OF-TWO]{OTPL}:
 [0]_asm_procedurebindigit_ifelse_0 "ifelse (power-of-two = 0" boolean => void
       _equal Object,double => boolean
         _procedurevariable:POWER-OF-TWO => Object
@@ -9245,9 +9235,8 @@ procedure BINDIGIT:[NUMBER POWER-OF-TWO]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tyype : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPEQ L10
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFNE L10
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -9457,9 +9446,8 @@ procedure BINDIGIT:[NUMBER POWER-OF-TWO]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tyype : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPEQ L19
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFNE L19
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1

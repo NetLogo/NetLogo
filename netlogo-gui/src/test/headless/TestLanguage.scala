@@ -56,6 +56,7 @@ case class CommandWithCompilerError(agentType: String, command: String, message:
 case class ReporterWithResult(reporter: String, result: String)
 case class ReporterWithError(reporter: String, error: String)
 case class ReporterWithStackTrace(reporter: String, stackTrace: String)
+case class CompileWithError(message: String)
 
 // This is the code that runs each test:
 
@@ -97,7 +98,9 @@ case class LanguageTest(suiteName: String, testName: String, commands: List[Stri
         new SimpleJobOwner(fullName, workspace.world.mainRNG, classOf[Observer])
       try {
         init()
-        defineProcedures(proc.content)
+        if (! nonProcs.exists(e => e.isInstanceOf[CompileWithError])) {
+          defineProcedures(proc.content)
+        }
         nonProcs.foreach {
           case OpenModel(modelPath) => workspace.open(modelPath)
           case Proc(content) =>
@@ -116,6 +119,8 @@ case class LanguageTest(suiteName: String, testName: String, commands: List[Stri
             testReporterError(reporter, error, mode)
           case ReporterWithStackTrace(reporter, error) =>
             testReporterErrorStackTrace(reporter, error, mode)
+          case CompileWithError(error) =>
+            testCompilerError(proc.content, error)
         }
       }
       finally workspace.dispose()
@@ -157,10 +162,13 @@ object TestParser {
   val ReporterRegex = """^(.*)\s+=>\s+(.*)$""".r
   val CommandRegex = """^([OTPL])>\s+(.*)$""".r
   val OpenModelRegex = """^OPEN>\s+(.*)$""".r
+  val CompileRegex = """^COMPILE>\s+(.*)$""".r
   def parse(line: String): AnyRef = {
     if (line.startsWith("to ") || line.startsWith("to-report ") || line.startsWith("extensions"))
       Proc(line)
     else line.trim match {
+      case CompileRegex(error) =>
+        CompileWithError(error.stripPrefix("COMPILER ERROR "))
       case CommandAndErrorRegex(agentType, command, err) =>
         if (err startsWith "ERROR")
           CommandWithError(agentType, command, err.substring("ERROR".length + 1))

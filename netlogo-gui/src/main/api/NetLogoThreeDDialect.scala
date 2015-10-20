@@ -2,9 +2,9 @@
 
 package org.nlogo.api
 
-import org.nlogo.core.{ AgentVariableSet, Dialect, DefaultTokenMapper }
+import org.nlogo.core.{ AgentVariableSet, Dialect }
 
-object ThreeDProgram extends Dialect {
+object NetLogoThreeDDialect extends Dialect {
   val is3D = true;
   val agentVariables = new AgentVariableSet {
     val getImplicitObserverVariables: Seq[String] = Seq()
@@ -12,5 +12,11 @@ object ThreeDProgram extends Dialect {
     val getImplicitPatchVariables: Seq[String]    = AgentVariables.getImplicitPatchVariables(true)
     val getImplicitLinkVariables: Seq[String]     = AgentVariables.getImplicitLinkVariables
   }
-  val tokenMapper = DefaultTokenMapper // this is to allow compilation -- not correct
+  val tokenMapper = ThreeDTokenMapper
+}
+
+object ThreeDTokenMapper extends DelegatingMapper {
+  val defaultMapper = NetLogoLegacyDialectTokenMapper
+  val path = "/system/tokens-threed.txt"
+  val pkgName = "org.nlogo.compiler.prim"
 }

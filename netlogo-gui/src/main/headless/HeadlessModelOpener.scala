@@ -3,8 +3,8 @@
 package org.nlogo.headless
 
 import org.nlogo.agent.{BooleanConstraint, ChooserConstraint, InputBoxConstraint, SliderConstraint}
-import org.nlogo.api.{ FileIO, LogoException, 
-                      ModelReader, ModelSection, ValueConstraint, Version}
+import org.nlogo.api.{ FileIO, LogoException, ModelReader, ModelSection,
+                        NetLogoLegacyDialect, NetLogoThreeDDialect, ValueConstraint, Version}
 import org.nlogo.core.LogoList
 import org.nlogo.core.Program
 import org.nlogo.core.CompilerException
@@ -28,6 +28,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
   @throws(classOf[LogoException])
   def openFromMap(map: java.util.Map[ModelSection, Array[String]]) {
 
+    val dialect = if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect
     // get out if the model is opened. (WHY? - JC 10/27/09)
     if (ws.modelOpened) throw new IllegalStateException
     ws.modelOpened = true
@@ -54,7 +55,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
       // JC - 9/14/10
       // val convertedCode = ws.autoConvert(code, false, false, netLogoVersion)
       import collection.JavaConverters._
-      val newProg = Program.empty().copy(interfaceGlobals = interfaceGlobals)
+      val newProg = Program.fromDialect(dialect).copy(interfaceGlobals = interfaceGlobals)
       ws.compiler.compileProgram(code, newProg, ws.getExtensionManager, ws.getCompilationEnvironment)
     }
     ws.setProcedures(results.proceduresMap)

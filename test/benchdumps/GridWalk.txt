@@ -4,9 +4,7 @@ turtles-own [WHO COLOR HEADING XCOR YCOR SHAPE LABEL LABEL-COLOR BREED HIDDEN? S
 patches-own [PXCOR PYCOR PCOLOR PLABEL PLABEL-COLOR]
 links-own [END1 END2 COLOR LABEL LABEL-COLOR HIDDEN? BREED THICKNESS SHAPE TIE-MODE]
 breeds 
-breeds-own 
 link-breeds 
-link-breeds-own 
 
 procedure BENCHMARK:[_repeatlocal:0]{O---}:
 [0]_asm_procedurebenchmark_randomseed_0 "random-seed 362" double => void
@@ -48,11 +46,11 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          FRAME SAME
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           LLOAD 4
           L2I
           I2L
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.setSeed (J)V
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.setSeed (J)V
           ALOAD 1
           ICONST_1
           PUTFIELD org/nlogo/nvm/Context.ip : I
@@ -224,7 +222,7 @@ procedure SETUP:[]{O---}:
             ISTORE 3
             ILOAD 3
             IFNE L2
-            GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
+            GETSTATIC org/nlogo/core/Nobody$.MODULE$ : Lorg/nlogo/core/Nobody$;
             GOTO L3
            L2
            FRAME APPEND [org/nlogo/agent/AgentSet I]
@@ -232,9 +230,9 @@ procedure SETUP:[]{O---}:
             ILOAD 3
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-            GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+            GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
             ILOAD 3
-            INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextInt (I)I
+            INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextInt (I)I
             INVOKEVIRTUAL org/nlogo/agent/AgentSet.randomOne (II)Lorg/nlogo/agent/Agent;
            L3
            FRAME SAME1 java/lang/Object
@@ -268,7 +266,7 @@ procedure SETUP:[]{O---}:
           ISTORE 3
           ILOAD 3
           IFNE L5
-          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
+          GETSTATIC org/nlogo/core/Nobody$.MODULE$ : Lorg/nlogo/core/Nobody$;
           GOTO L6
          L5
          FRAME APPEND [org/nlogo/agent/AgentSet I]
@@ -276,9 +274,9 @@ procedure SETUP:[]{O---}:
           ILOAD 3
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           ILOAD 3
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextInt (I)I
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextInt (I)I
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.randomOne (II)Lorg/nlogo/agent/Agent;
          L6
          FRAME SAME1 java/lang/Object
@@ -464,7 +462,7 @@ procedure GO:[]{O---}:
           ISTORE 3
           ILOAD 3
           IFNE L5
-          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
+          GETSTATIC org/nlogo/core/Nobody$.MODULE$ : Lorg/nlogo/core/Nobody$;
           GOTO L6
          L5
          FRAME APPEND [org/nlogo/agent/AgentSet I]
@@ -472,9 +470,9 @@ procedure GO:[]{O---}:
           ILOAD 3
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           ILOAD 3
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextInt (I)I
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextInt (I)I
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.randomOne (II)Lorg/nlogo/agent/Agent;
          L6
          FRAME SAME1 java/lang/Object

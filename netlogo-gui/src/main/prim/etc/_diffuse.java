@@ -15,11 +15,15 @@ import org.nlogo.nvm.EngineException;
 
 public final strictfp class _diffuse
     extends Command {
+  public _diffuse() {
+    this.switches = true;
+  }
+
   @Override
   public org.nlogo.core.Syntax syntax() {
     return Syntax.commandSyntax
         (new int[]{Syntax.ReferenceType(), Syntax.NumberType()},
-            "O---", true);
+            "O---");
   }
 
   @Override

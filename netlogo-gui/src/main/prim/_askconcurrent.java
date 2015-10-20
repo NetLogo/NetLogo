@@ -12,11 +12,15 @@ import org.nlogo.nvm.EngineException;
 public final strictfp class _askconcurrent
     extends Command
     implements org.nlogo.nvm.CustomAssembled {
+  public _askconcurrent() {
+    this.switches = true;
+  }
+
   @Override
   public org.nlogo.core.Syntax syntax() {
     return Syntax.commandSyntax
         (new int[]{Syntax.AgentsetType(), Syntax.CommandBlockType()},
-            "OTPL", "?", true);
+            "OTPL", "?");
   }
 
   @Override

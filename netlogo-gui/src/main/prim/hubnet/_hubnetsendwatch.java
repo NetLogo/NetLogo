@@ -15,7 +15,7 @@ public strictfp class _hubnetsendwatch
     return Syntax.commandSyntax
         (new int[]
             {Syntax.StringType(), Syntax.AgentType()},
-            "OTPL", false);
+            "OTPL");
   }
 
   @Override

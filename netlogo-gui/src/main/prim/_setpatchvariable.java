@@ -14,13 +14,14 @@ public final strictfp class _setpatchvariable
 
   public _setpatchvariable(_patchvariable original) {
     vn = original.vn();
+    this.switches = true;
   }
 
   @Override
   public org.nlogo.core.Syntax syntax() {
     return Syntax.commandSyntax
         (new int[]{Syntax.WildcardType()},
-            "-TP-", true);
+            "-TP-");
   }
 
   @Override

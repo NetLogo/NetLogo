@@ -39,6 +39,10 @@ how to speed it up further:
 
 public final strictfp class _fire
     extends Command {
+  public _fire() {
+    this.switches = true;
+  }
+
   private static final double RED = 15.0;
   private static final double GREEN = 55.0;
   private static final Double BOXED_RED = Double.valueOf(RED);
@@ -49,7 +53,7 @@ public final strictfp class _fire
 
   @Override
   public org.nlogo.core.Syntax syntax() {
-    return Syntax.commandSyntax("O---", true);
+    return Syntax.commandSyntax("O---");
   }
 
   @Override

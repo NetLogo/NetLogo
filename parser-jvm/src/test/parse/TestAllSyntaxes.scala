@@ -344,7 +344,7 @@ class TestAllSyntaxes extends FunSuite {
                     |_outputprint anything,OTPL,None,0,1,1
                     |_outputshow anything,OTPL,None,0,1,1
                     |_outputtype anything,OTPL,None,0,1,1
-                    |_outputwrite anything,OTPL,None,0,1,1
+                    |_outputwrite number or TRUE/FALSE or string or list or NOBODY,OTPL,None,0,1,1
                     |_patchcode ,--P-,None,0,0,0
                     |_pendown ,-T--,None,0,0,0
                     |_penerase ,-T--,None,0,0,0
@@ -413,5 +413,5 @@ class TestAllSyntaxes extends FunSuite {
                     |_while TRUE/FALSE block/command block,OTPL,None,0,2,2
                     |_withlocalrandomness command block,OTPL,None,0,1,1
                     |_withoutinterruption command block,OTPL,None,0,1,1
-                    |_write anything,OTPL,None,0,1,1""".stripMargin.replaceAll("\r\n", "\n")
+                    |_write number or TRUE/FALSE or string or list or NOBODY,OTPL,None,0,1,1""".stripMargin.replaceAll("\r\n", "\n")
 }

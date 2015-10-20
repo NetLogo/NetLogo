@@ -2,7 +2,7 @@
 
 package org.nlogo.prim;
 
-import org.nlogo.api.Let;
+import org.nlogo.core.Let;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
@@ -17,6 +17,12 @@ import org.nlogo.nvm.Reporter;
 public final strictfp class _errormessage
     extends Reporter {
   public Let let = null;  // compiler will fill this in
+
+  public _errormessage() { }
+
+  public _errormessage(Let let) {
+    this.let = let;
+  }
 
   @Override
   public org.nlogo.core.Syntax syntax() {

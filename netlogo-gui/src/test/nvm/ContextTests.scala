@@ -3,7 +3,7 @@
 package org.nlogo.nvm
 
 import org.scalatest.FunSuite
-import org.nlogo.api.Let
+import org.nlogo.core.Let
 
 class ContextTests extends FunSuite {
   test("let 1") {

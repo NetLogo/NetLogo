@@ -11,11 +11,15 @@ import org.nlogo.nvm.EngineException;
 
 public final strictfp class _facenowrap
     extends Command {
+  public _facenowrap() {
+    this.switches = true;
+  }
+
   // turtle only since face for the observer is always nowrap -- AZS 4/12/05
   @Override
   public org.nlogo.core.Syntax syntax() {
     return Syntax.commandSyntax
-        (new int[]{Syntax.AgentType()}, "-T--", true);
+        (new int[]{Syntax.AgentType()}, "-T--");
   }
 
   @Override

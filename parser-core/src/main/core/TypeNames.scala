@@ -90,8 +90,13 @@ object TypeNames {
       } else if (compatible(NumberBlockType)) {
         subtract(NumberBlockType)
         "number block"
-      }
-      else
+      } else if (compatible(CodeBlockType)) {
+        subtract(CodeBlockType)
+        "code block"
+      } else if (compatible(SymbolType)) {
+        subtract(SymbolType)
+        "symbol"
+      } else
         "(none)"
     remainingMask match {
       case 0 => result

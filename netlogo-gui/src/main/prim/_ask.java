@@ -17,12 +17,16 @@ import org.nlogo.nvm.EngineException;
 public final strictfp class _ask
     extends Command
     implements org.nlogo.nvm.CustomAssembled {
+  public _ask() {
+    this.switches = true;
+  }
+
   @Override
   public org.nlogo.core.Syntax syntax() {
     return Syntax.commandSyntax
         (new int[]{Syntax.AgentsetType() | Syntax.AgentType(),
             Syntax.CommandBlockType()},
-            "OTPL", "?", true);
+            "OTPL", "?");
   }
 
   @Override

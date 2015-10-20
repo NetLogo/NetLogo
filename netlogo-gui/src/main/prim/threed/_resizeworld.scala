@@ -8,11 +8,13 @@ import org.nlogo.nvm.{ Command, Context, EngineException }
 
 class _resizeworld extends Command {
 
+  switches = true
+
   override def syntax =
     Syntax.commandSyntax(Array(
       Syntax.NumberType, Syntax.NumberType,
       Syntax.NumberType, Syntax.NumberType,
-      Syntax.NumberType, Syntax.NumberType), "O---", true)
+      Syntax.NumberType, Syntax.NumberType), "O---")
 
   override def perform(context: Context) {
 

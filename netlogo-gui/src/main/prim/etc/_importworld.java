@@ -8,11 +8,15 @@ import org.nlogo.nvm.EngineException;
 
 public final strictfp class _importworld
     extends org.nlogo.nvm.Command {
+  public _importworld() {
+    this.switches = true;
+  }
+
   @Override
   public org.nlogo.core.Syntax syntax() {
     return Syntax.commandSyntax
         (new int[]{Syntax.StringType()},
-            "O---", true);
+            "O---");
   }
 
   @Override

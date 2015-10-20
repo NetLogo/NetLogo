@@ -1,11 +1,11 @@
 __symbol-can-wrap-unknown-identifiers
-  __symbol what-is-this => "WHAT-IS-THIS"
+  __symbol what-is-this => "what-is-this"
 
 __symbol-cant-wrap-builtins
   O> __ignore __symbol xcor => COMPILER ERROR __SYMBOL expected this input to be a symbol, but got a variable or anything instead
 
 __block-can-wrap-known-and-unknown-things
-  __block [ crt some-stuff ] => "crt SOME-STUFF"
+  __block [ crt some-stuff ] => "crt some-stuff"
 
 __block-can-nest-blocks
-  __block [ crt [ setxy foo bar ] ] => "crt [ setxy FOO BAR ]"
+  __block [ crt [ setxy foo bar ] ] => "crt [ setxy foo bar ]"

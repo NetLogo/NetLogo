@@ -9,7 +9,9 @@ import org.nlogo.window.GUIWorkspace
 
 class _load3Dshapes extends Command {
   override def syntax =
-    Syntax.commandSyntax(Array(Syntax.StringType), "O---", true)
+    Syntax.commandSyntax(Array(Syntax.StringType), "O---")
+
+  switches = true
   override def perform(context: Context) {
     val filename = argEvalString(context, 0)
     workspace match {

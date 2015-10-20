@@ -197,12 +197,11 @@ public final strictfp class World3D
 
   @Override
   public Program newProgram() {
-    return org.nlogo.core.Program$.MODULE$.fromDialect(org.nlogo.api.ThreeDProgram$.MODULE$);
+    return org.nlogo.core.Program$.MODULE$.fromDialect(org.nlogo.api.NetLogoThreeDDialect$.MODULE$);
   }
 
   @Override
   public Program newProgram(java.util.List<String> interfaceGlobals) {
-    Program p = newProgram();
     scala.collection.mutable.Builder<String, scala.collection.immutable.Seq<String>> builder = scala.collection.immutable.Seq$.MODULE$.newBuilder();
     for (String global : interfaceGlobals) {
       builder.$plus$eq(global);

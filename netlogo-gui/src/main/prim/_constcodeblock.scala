@@ -6,6 +6,8 @@ import java.util.List
 import scala.collection.JavaConverters._
 
 class _constcodeblock(value: List[Token]) extends Reporter with Pure {
+  def this(value: Seq[Token]) = this(value.asJava)
+
   override def syntax =
     Syntax.reporterSyntax(ret = Syntax.CodeBlockType)
 

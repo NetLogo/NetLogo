@@ -4,11 +4,9 @@ turtles-own [WHO COLOR HEADING XCOR YCOR SHAPE LABEL LABEL-COLOR BREED HIDDEN? S
 patches-own [PXCOR PYCOR PCOLOR PLABEL PLABEL-COLOR GRAIN-HERE MAX-GRAIN-HERE]
 links-own [END1 END2 COLOR LABEL LABEL-COLOR HIDDEN? BREED THICKNESS SHAPE TIE-MODE]
 breeds 
-breeds-own 
 link-breeds 
-link-breeds-own 
 
-procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
+reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
 [0]_asm_proceduregrainahead_setprocedurevariable_0 "" Object => void
       _constdouble:0.0 => Double
          L0
@@ -213,8 +211,8 @@ procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
           ALOAD 7
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/util/MersenneTwisterFast;)Lorg/nlogo/agent/AgentSet$Iterator;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/api/MersenneTwisterFast;)Lorg/nlogo/agent/AgentSet$Iterator;
           ASTORE 10
          L17
          FRAME FULL [org/nlogo/prim/_asm_proceduregrainahead_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object T T T org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder T org/nlogo/agent/AgentSet$Iterator] [D]
@@ -231,7 +229,7 @@ procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
          L3
          FRAME SAME1 D
           ALOAD 8
-          INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/api/LogoList;
+          INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/core/LogoList;
           ASTORE 5
          L15
          FRAME FULL [org/nlogo/prim/_asm_proceduregrainahead_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object T java/lang/Object] [D]
@@ -446,9 +444,8 @@ procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tyype : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPEQ L3
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFNE L3
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -1474,8 +1471,8 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           DLOAD 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextDouble ()D
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextDouble ()D
           DMUL
          L2
           ALOAD 1
@@ -2277,11 +2274,11 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          FRAME SAME
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           LLOAD 4
           L2I
           I2L
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.setSeed (J)V
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.setSeed (J)V
           ALOAD 1
           ICONST_1
           PUTFIELD org/nlogo/nvm/Context.ip : I
@@ -3574,7 +3571,7 @@ procedure RECOLOR-PATCH:[]{-TP-}:
          L1
           RETURN
 
-procedure AREA-OF-EQUALITY-TRIANGLE:[]{OTPL}:
+reporter procedure AREA-OF-EQUALITY-TRIANGLE:[]{OTPL}:
 [0]_asm_procedureareaofequalitytriangle_report_0 "report (num-people * (num-people - 1) / 2) / (num-people ^ 2" Object => void
       _div double,double => double
         _div double,double => double
@@ -3762,9 +3759,8 @@ procedure AREA-OF-EQUALITY-TRIANGLE:[]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tyype : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPEQ L24
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFNE L24
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -4011,8 +4007,8 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
               ALOAD 3
               ALOAD 1
               GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-              GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
-              INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/util/MersenneTwisterFast;)Lorg/nlogo/agent/AgentSet$Iterator;
+              GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
+              INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/api/MersenneTwisterFast;)Lorg/nlogo/agent/AgentSet$Iterator;
               ASTORE 5
              L11
              FRAME APPEND [org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder org/nlogo/agent/AgentSet$Iterator]
@@ -4043,7 +4039,7 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
              L12
              FRAME APPEND [org/nlogo/agent/AgentSet$Iterator]
               ALOAD 4
-              INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/api/LogoList;
+              INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/core/LogoList;
               GOTO L9
              L10
              FRAME CHOP 3
@@ -6065,13 +6061,13 @@ procedure SETUP-TURTLES:[]{O---}:
           ILOAD 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           ILOAD 3
           ILOAD 2
           ISUB
           ICONST_1
           IADD
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextInt (I)I
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextInt (I)I
           IADD
           I2D
          L4
@@ -6086,13 +6082,13 @@ procedure SETUP-TURTLES:[]{O---}:
           ILOAD 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           ILOAD 3
           ILOAD 2
           ISUB
           ICONST_1
           IADD
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextInt (I)I
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextInt (I)I
           IADD
           I2D
          L5
@@ -6274,9 +6270,9 @@ procedure SETUP-TURTLES:[]{O---}:
           IFLE L13
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           LLOAD 4
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextLong (J)J
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
           GOTO L14
          L13
@@ -6287,10 +6283,10 @@ procedure SETUP-TURTLES:[]{O---}:
           IFGE L15
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           LLOAD 4
           LNEG
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextLong (J)J
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           LNEG
           L2D
           GOTO L14
@@ -6411,9 +6407,9 @@ procedure SET-INITIAL-TURTLE-VARS:[]{-T--}:
          L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           LDC 4
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextLong (J)J
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
          L5
           DSTORE 4
@@ -6590,9 +6586,9 @@ procedure SET-INITIAL-TURTLE-VARS:[]{-T--}:
           IFLE L22
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           LLOAD 4
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextLong (J)J
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
           GOTO L23
          L22
@@ -6603,10 +6599,10 @@ procedure SET-INITIAL-TURTLE-VARS:[]{-T--}:
           IFGE L24
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           LLOAD 4
           LNEG
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextLong (J)J
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           LNEG
           L2D
           GOTO L23
@@ -6720,9 +6716,9 @@ procedure SET-INITIAL-TURTLE-VARS:[]{-T--}:
           IFLE L12
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           LLOAD 4
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextLong (J)J
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
           GOTO L13
          L12
@@ -6733,10 +6729,10 @@ procedure SET-INITIAL-TURTLE-VARS:[]{-T--}:
           IFGE L14
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           LLOAD 4
           LNEG
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextLong (J)J
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           LNEG
           L2D
           GOTO L13
@@ -6832,9 +6828,9 @@ procedure SET-INITIAL-TURTLE-VARS:[]{-T--}:
          FRAME SAME1 D
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           LDC 50
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextLong (J)J
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
          L10
           DSTORE 4
@@ -6942,9 +6938,9 @@ procedure SET-INITIAL-TURTLE-VARS:[]{-T--}:
           IFLE L12
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           LLOAD 4
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextLong (J)J
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
           GOTO L13
          L12
@@ -6955,10 +6951,10 @@ procedure SET-INITIAL-TURTLE-VARS:[]{-T--}:
           IFGE L14
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           LLOAD 4
           LNEG
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextLong (J)J
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           LNEG
           L2D
           GOTO L13
@@ -7189,8 +7185,8 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           ALOAD 3
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/util/MersenneTwisterFast;)Lorg/nlogo/agent/AgentSet$Iterator;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/api/MersenneTwisterFast;)Lorg/nlogo/agent/AgentSet$Iterator;
           ASTORE 5
          L11
          FRAME APPEND [org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder org/nlogo/agent/AgentSet$Iterator]
@@ -7221,7 +7217,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
          L12
          FRAME APPEND [org/nlogo/agent/AgentSet$Iterator]
           ALOAD 4
-          INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/api/LogoList;
+          INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/core/LogoList;
           GOTO L9
          L10
          FRAME CHOP 3
@@ -7244,15 +7240,15 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           IFEQ L13
           ALOAD 2
           CHECKCAST org/nlogo/agent/AgentSet
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.toLogoList ()Lorg/nlogo/api/LogoList;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet.toLogoList ()Lorg/nlogo/core/LogoList;
           GOTO L14
          L13
          FRAME FULL [org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object java/lang/Object] []
           ALOAD 2
-          INSTANCEOF org/nlogo/api/LogoList
+          INSTANCEOF org/nlogo/core/LogoList
           IFEQ L15
           ALOAD 2
-          CHECKCAST org/nlogo/api/LogoList
+          CHECKCAST org/nlogo/core/LogoList
           ASTORE 3
           NEW java/util/ArrayList
           DUP
@@ -7267,10 +7263,10 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           INVOKESPECIAL java/util/ArrayList.<init> ()V
           ASTORE 6
           ALOAD 3
-          INVOKEVIRTUAL org/nlogo/api/LogoList.iterator ()Ljava/util/Iterator;
+          INVOKEVIRTUAL org/nlogo/core/LogoList.javaIterator ()Ljava/util/Iterator;
           ASTORE 7
          L16
-         FRAME FULL [org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object org/nlogo/api/LogoList java/util/ArrayList java/util/ArrayList java/util/ArrayList java/util/Iterator] []
+         FRAME FULL [org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object org/nlogo/core/LogoList java/util/ArrayList java/util/ArrayList java/util/ArrayList java/util/Iterator] []
           ALOAD 7
           INVOKEINTERFACE java/util/Iterator.hasNext ()Z
           IFEQ L17
@@ -7318,7 +7314,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           ALOAD 4
           INVOKESTATIC java/util/Collections.sort (Ljava/util/List;)V
           ALOAD 4
-          INVOKESTATIC org/nlogo/api/LogoList.fromJava (Ljava/lang/Iterable;)Lorg/nlogo/api/LogoList;
+          INVOKESTATIC org/nlogo/core/LogoList.fromJava (Ljava/lang/Iterable;)Lorg/nlogo/core/LogoList;
           GOTO L14
          L21
          FRAME SAME
@@ -7328,14 +7324,14 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           ALOAD 5
           INVOKESTATIC java/util/Collections.sort (Ljava/util/List;)V
           ALOAD 5
-          INVOKESTATIC org/nlogo/api/LogoList.fromJava (Ljava/lang/Iterable;)Lorg/nlogo/api/LogoList;
+          INVOKESTATIC org/nlogo/core/LogoList.fromJava (Ljava/lang/Iterable;)Lorg/nlogo/core/LogoList;
           GOTO L14
          L22
          FRAME SAME
           ALOAD 6
           INVOKESTATIC java/util/Collections.sort (Ljava/util/List;)V
           ALOAD 6
-          INVOKESTATIC org/nlogo/api/LogoList.fromJava (Ljava/lang/Iterable;)Lorg/nlogo/api/LogoList;
+          INVOKESTATIC org/nlogo/core/LogoList.fromJava (Ljava/lang/Iterable;)Lorg/nlogo/core/LogoList;
           GOTO L14
          L15
          FRAME FULL [org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object java/lang/Object] []
@@ -7351,7 +7347,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
          L14
-         FRAME SAME1 org/nlogo/api/LogoList
+         FRAME SAME1 org/nlogo/core/LogoList
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -7378,7 +7374,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           ASTORE 2
          L0
           ALOAD 2
-          CHECKCAST org/nlogo/api/LogoList
+          CHECKCAST org/nlogo/core/LogoList
           GOTO L4
          L1
          FRAME FULL [org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_setprocedurevariable_8 org/nlogo/nvm/Context java/lang/Object] [java/lang/ClassCastException]
@@ -7393,15 +7389,15 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
          L4
-         FRAME SAME1 org/nlogo/api/LogoList
+         FRAME SAME1 org/nlogo/core/LogoList
           ASTORE 2
           DCONST_0
           DSTORE 3
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/api/LogoList.iterator ()Ljava/util/Iterator;
+          INVOKEVIRTUAL org/nlogo/core/LogoList.javaIterator ()Ljava/util/Iterator;
           ASTORE 5
          L5
-         FRAME FULL [org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_setprocedurevariable_8 org/nlogo/nvm/Context org/nlogo/api/LogoList D java/util/Iterator] []
+         FRAME FULL [org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_setprocedurevariable_8 org/nlogo/nvm/Context org/nlogo/core/LogoList D java/util/Iterator] []
           ALOAD 5
           INVOKEINTERFACE java/util/Iterator.hasNext ()Z
           IFEQ L6

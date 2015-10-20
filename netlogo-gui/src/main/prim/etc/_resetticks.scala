@@ -7,7 +7,9 @@ import org.nlogo.nvm.{ Command, Context }
 
 class _resetticks extends Command {
   override def syntax =
-    Syntax.commandSyntax("O---", true)
+    Syntax.commandSyntax("O---")
+
+  switches = true
   override def callsOtherCode = true
   override def perform(context: Context) {
     workspace.resetTicks(context)

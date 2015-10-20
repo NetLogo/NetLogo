@@ -20,10 +20,12 @@ public final strictfp class _createlinksfrom
 
   public _createlinksfrom() {
     breedName = null;
+    this.switches = true;
   }
 
   public _createlinksfrom(String breedName) {
     this.breedName = breedName;
+    this.switches = true;
   }
 
   @Override
@@ -31,7 +33,7 @@ public final strictfp class _createlinksfrom
     return Syntax.commandSyntax
         (new int[]{Syntax.TurtlesetType(),
             Syntax.CommandBlockType() | Syntax.OptionalType()},
-            "-T--", "---L", true);
+            "-T--", "---L");
   }
 
   @Override

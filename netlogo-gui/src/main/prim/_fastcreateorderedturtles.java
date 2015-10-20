@@ -15,13 +15,14 @@ public final strictfp class _fastcreateorderedturtles
 
   public _fastcreateorderedturtles(String breedName) {
     this.breedName = breedName;
+    this.switches = true;
   }
 
   @Override
   public org.nlogo.core.Syntax syntax() {
     return Syntax.commandSyntax
         (new int[]{Syntax.NumberType()},
-            "O---", true);
+            "O---");
   }
 
   @Override

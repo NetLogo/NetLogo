@@ -7,12 +7,15 @@ import org.nlogo.api.Syntax
 import org.nlogo.nvm.{ Command, Context }
 
 class _facexyz extends Command {
+  switches = true
+
   override def syntax =
     Syntax.commandSyntax(
       Array(Syntax.NumberType,
             Syntax.NumberType,
             Syntax.NumberType),
-      "OT--", true)
+      "OT--")
+
   override def perform(context: Context) {
     context.agent match {
       case turtle: Turtle3D =>

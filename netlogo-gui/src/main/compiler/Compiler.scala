@@ -4,6 +4,8 @@ package org.nlogo.compiler
 
 import org.nlogo.api.{ NumberParser, TokenizerInterface,
                         TokenReaderInterface, TokenMapperInterface, World }
+import org.nlogo.core.CompilerUtilitiesInterface
+import org.nlogo.core.FrontEndInterface
 import org.nlogo.core.Program
 import org.nlogo.core.CompilerException
 import org.nlogo.core.Token
@@ -13,10 +15,16 @@ import org.nlogo.core.CompilationEnvironment
 import org.nlogo.core.ExtensionManager
 import org.nlogo.util.Femto
 
+import scala.collection.immutable.ListMap
+import scala.collection.JavaConversions._
+
 // This is intended to be called from Java as well as Scala, so @throws declarations are included.
 // No other classes in this package are public. - ST 2/20/08, 4/9/08, 1/21/09
 
 object Compiler extends CompilerInterface {
+
+  val compilerUtilities = Femto.scalaSingleton(classOf[CompilerUtilitiesInterface], "org.nlogo.parse.CompilerUtilities")
+  private val frontEnd = Femto.scalaSingleton(classOf[FrontEndInterface], "org.nlogo.parse.FrontEnd")
 
   // tokenizer singletons
   val Tokenizer2D = Femto.scalaSingleton(classOf[TokenizerInterface], "org.nlogo.lex.Tokenizer2D")
@@ -56,22 +64,18 @@ object Compiler extends CompilerInterface {
                 true, program, procedures, extensionManager, parse, compilationEnv)
   }
 
-  // like in the auto-converter we want to compile as far as we can but
-  // we assume that any tokens we don't recognize are actually globals
-  // that we don't know about.
+  // this function tries to go as far as possible, but throws an exception if there is
+  // a syntax error. It assumes that any unrecognized tokens are unknown variables.
+  // The FrontEnd is currently not quite forgiving enough, but we will use it for the moment.
+  // Additionally, the compiler doesn't currently work for 3D prims, so that will also need to be fixed.
+  // this also always parses, which probably isn't desirable, but we don't have an option at this point
   @throws(classOf[CompilerException])
   private def checkSyntax(source: String, subprogram: Boolean, program: Program, oldProcedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean, compilationEnv: CompilationEnvironment) {
+
     implicit val t = tokenizer(program.dialect.is3D)
-    val results = new StructureParser(t.tokenizeRobustly(source), None,
-                                      program, oldProcedures, extensionManager, compilationEnv)
-      .parse(subprogram)
-    val identifierParser = new IdentifierParser(program, noProcedures, results.procedures)
-    import collection.JavaConverters._  // results.procedures.values is a java.util.Collection
-    for(procedure <- results.procedures.values.asScala) {
-      val tokens = identifierParser.process(results.tokens(procedure).iterator, procedure)
-      if(parse)
-        new ExpressionParser(procedure).parse(tokens)
-    }
+    val oldProceduresListMap = ListMap[String, Procedure](oldProcedures.toSeq: _*)
+    val (topLevelDefs, feStructureResults) =
+      frontEnd.frontEnd(source, None, program, subprogram, oldProceduresListMap, extensionManager)
   }
 
   def autoConvert(source: String, subprogram: Boolean, reporter: Boolean, version: String, w: AnyRef, ignoreErrors: Boolean, is3D: Boolean): String = {
@@ -80,10 +84,7 @@ object Compiler extends CompilerInterface {
     // go away after 4.1, we'll just do it... - ST 2/23/09
     val workspace = w.asInstanceOf[Workspace]
     // AutoConverter1 handles the easy conversions
-    val result1 = new AutoConverter1()(tokenizer(is3D)).convert(source, subprogram, reporter, version)
-    // AutoConverter2 handles the hard ones that require parsing
-    new AutoConverter2(workspace, ignoreErrors)(tokenizer(is3D))
-      .convert(result1, subprogram, reporter, version)
+    new AutoConverter1()(tokenizer(is3D)).convert(source, subprogram, reporter, version)
   }
 
   ///
@@ -151,25 +152,11 @@ object Compiler extends CompilerInterface {
   def isValidIdentifier(s: String, is3D: Boolean) = tokenizer(is3D).isValidIdentifier(s)
 
   // used by CommandLine
-  def isReporter(s: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager, compilationEnv: CompilationEnvironment) =
-    try {
-      implicit val t = tokenizer(program.dialect.is3D)
-      val results =
-        new StructureParser(t.tokenize("to __is-reporter? report " + s + "\nend"),
-                            None, program, procedures, extensionManager, compilationEnv)
-          .parse(subprogram = true)
-      val identifierParser = new IdentifierParser(program, procedures, results.procedures)
-      import collection.JavaConverters._  // results.procedures.values is a java.util.Collection
-      val proc = results.procedures.values.asScala.head
-      val tokens = identifierParser.process(results.tokens(proc).iterator, proc)
-      tokens
-        .tail  // skip _report
-        .map(_.tpe)
-        .dropWhile(_ == TokenType.OpenParen)
-        .headOption
-        .exists(reporterTokenTypes)
-    }
-    catch { case _: CompilerException => false }
+  def isReporter(s: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager, compilationEnv: CompilationEnvironment) = {
+    // this will definitely need a way to pass in whether compilation is 2D or 3D
+    val proceduresListMap = ListMap[String, Procedure](procedures.toSeq: _*)
+    compilerUtilities.isReporter(s, program, proceduresListMap, extensionManager)
+  }
 
   private val reporterTokenTypes: Set[TokenType] = {
     import TokenType._

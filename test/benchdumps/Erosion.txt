@@ -4,9 +4,7 @@ turtles-own [WHO COLOR HEADING XCOR YCOR SHAPE LABEL LABEL-COLOR BREED HIDDEN? S
 patches-own [PXCOR PYCOR PCOLOR PLABEL PLABEL-COLOR ELEVATION WATER DRAIN?]
 links-own [END1 END2 COLOR LABEL LABEL-COLOR HIDDEN? BREED THICKNESS SHAPE TIE-MODE]
 breeds 
-breeds-own 
 link-breeds 
-link-breeds-own 
 
 procedure GO:[]{O---}:
 [0]_asm_procedurego_ask_0 "ask land" Object => void
@@ -139,8 +137,8 @@ procedure GO:[]{O---}:
           DLOAD 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextDouble ()D
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextDouble ()D
           DMUL
          L2
           ALOAD 1
@@ -1230,7 +1228,7 @@ procedure RECOLOR:[]{-TP-}:
           GETFIELD org/nlogo/prim/_asm_procedurerecolor_setpatchvariable_3.kept7_value : Ljava/lang/Double;
          L10
           INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.add (Ljava/lang/Object;)V
-          INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/api/LogoList;
+          INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/core/LogoList;
          L11
           ASTORE 2
           DCONST_0
@@ -1238,10 +1236,11 @@ procedure RECOLOR:[]{-TP-}:
           ACONST_NULL
           ASTORE 5
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/api/LogoList.iterator ()Ljava/util/Iterator;
+          INVOKEVIRTUAL org/nlogo/core/LogoList.javaIterable ()Ljava/lang/Iterable;
+          INVOKEINTERFACE java/lang/Iterable.iterator ()Ljava/util/Iterator;
           ASTORE 6
          L12
-         FRAME FULL [org/nlogo/prim/_asm_procedurerecolor_setpatchvariable_3 org/nlogo/nvm/Context org/nlogo/api/LogoList D java/lang/Double java/util/Iterator] [D]
+         FRAME FULL [org/nlogo/prim/_asm_procedurerecolor_setpatchvariable_3 org/nlogo/nvm/Context org/nlogo/core/LogoList D java/lang/Double java/util/Iterator] [D]
           ALOAD 6
           INVOKEINTERFACE java/util/Iterator.hasNext ()Z
           IFEQ L13
@@ -1264,16 +1263,16 @@ procedure RECOLOR:[]{-TP-}:
           DCMPG
           IFGE L14
          L15
-         FRAME FULL [org/nlogo/prim/_asm_procedurerecolor_setpatchvariable_3 org/nlogo/nvm/Context org/nlogo/api/LogoList D java/lang/Double java/util/Iterator java/lang/Object java/lang/Double D] [D]
+         FRAME FULL [org/nlogo/prim/_asm_procedurerecolor_setpatchvariable_3 org/nlogo/nvm/Context org/nlogo/core/LogoList D java/lang/Double java/util/Iterator java/lang/Object java/lang/Double D] [D]
           DLOAD 9
           DSTORE 3
           ALOAD 8
           ASTORE 5
          L14
-         FRAME FULL [org/nlogo/prim/_asm_procedurerecolor_setpatchvariable_3 org/nlogo/nvm/Context org/nlogo/api/LogoList D java/lang/Double java/util/Iterator java/lang/Object] [D]
+         FRAME FULL [org/nlogo/prim/_asm_procedurerecolor_setpatchvariable_3 org/nlogo/nvm/Context org/nlogo/core/LogoList D java/lang/Double java/util/Iterator java/lang/Object] [D]
           GOTO L12
          L13
-         FRAME FULL [org/nlogo/prim/_asm_procedurerecolor_setpatchvariable_3 org/nlogo/nvm/Context org/nlogo/api/LogoList D java/lang/Double java/util/Iterator] [D]
+         FRAME FULL [org/nlogo/prim/_asm_procedurerecolor_setpatchvariable_3 org/nlogo/nvm/Context org/nlogo/core/LogoList D java/lang/Double java/util/Iterator] [D]
           ALOAD 5
           IFNONNULL L16
           NEW org/nlogo/nvm/EngineException
@@ -1490,11 +1489,11 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          FRAME SAME
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           LLOAD 4
           L2I
           I2L
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.setSeed (J)V
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.setSeed (J)V
           ALOAD 1
           ICONST_1
           PUTFIELD org/nlogo/nvm/Context.ip : I
@@ -1984,8 +1983,8 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           ALOAD 7
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/util/MersenneTwisterFast;)Lorg/nlogo/agent/AgentSet$Iterator;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/api/MersenneTwisterFast;)Lorg/nlogo/agent/AgentSet$Iterator;
           ASTORE 10
          L40
          FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object D T org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder T org/nlogo/agent/AgentSet$Iterator] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
@@ -2002,7 +2001,7 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
          L14
          FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object D T org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder T org/nlogo/agent/AgentSet$Iterator] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
           ALOAD 8
-          INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/api/LogoList;
+          INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/core/LogoList;
           ASTORE 5
          L38
          FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object T java/lang/Object] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
@@ -2142,8 +2141,8 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           ALOAD 7
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/util/MersenneTwisterFast;)Lorg/nlogo/agent/AgentSet$Iterator;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/api/MersenneTwisterFast;)Lorg/nlogo/agent/AgentSet$Iterator;
           ASTORE 10
          L48
          FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object D T org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder T org/nlogo/agent/AgentSet$Iterator] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
@@ -2160,7 +2159,7 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
          L22
          FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object D T org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder T org/nlogo/agent/AgentSet$Iterator] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
           ALOAD 8
-          INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/api/LogoList;
+          INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/core/LogoList;
           ASTORE 5
          L46
          FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object T java/lang/Object] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
@@ -2249,7 +2248,7 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           DLOAD 2
           INVOKESPECIAL java/lang/Double.<init> (D)V
           INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.add (Ljava/lang/Object;)V
-          INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/api/LogoList;
+          INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/core/LogoList;
          L53
           ASTORE 2
           DCONST_0
@@ -2257,10 +2256,11 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           ACONST_NULL
           ASTORE 5
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/api/LogoList.iterator ()Ljava/util/Iterator;
+          INVOKEVIRTUAL org/nlogo/core/LogoList.javaIterable ()Ljava/lang/Iterable;
+          INVOKEINTERFACE java/lang/Iterable.iterator ()Ljava/util/Iterator;
           ASTORE 6
          L54
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context org/nlogo/api/LogoList D java/lang/Double java/util/Iterator] []
+         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context org/nlogo/core/LogoList D java/lang/Double java/util/Iterator] []
           ALOAD 6
           INVOKEINTERFACE java/util/Iterator.hasNext ()Z
           IFEQ L55
@@ -2811,8 +2811,8 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           ALOAD 7
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/util/MersenneTwisterFast;)Lorg/nlogo/agent/AgentSet$Iterator;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/api/MersenneTwisterFast;)Lorg/nlogo/agent/AgentSet$Iterator;
           ASTORE 10
          L40
          FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object java/lang/Object D T org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder T org/nlogo/agent/AgentSet$Iterator] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
@@ -2829,7 +2829,7 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
          L14
          FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object java/lang/Object D T org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder T org/nlogo/agent/AgentSet$Iterator] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
           ALOAD 8
-          INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/api/LogoList;
+          INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/core/LogoList;
           ASTORE 5
          L38
          FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object java/lang/Object T java/lang/Object] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
@@ -2969,8 +2969,8 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           ALOAD 7
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/util/MersenneTwisterFast;)Lorg/nlogo/agent/AgentSet$Iterator;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/api/MersenneTwisterFast;)Lorg/nlogo/agent/AgentSet$Iterator;
           ASTORE 10
          L48
          FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object java/lang/Object D T org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder T org/nlogo/agent/AgentSet$Iterator] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
@@ -2987,7 +2987,7 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
          L22
          FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object java/lang/Object D T org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder T org/nlogo/agent/AgentSet$Iterator] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
           ALOAD 8
-          INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/api/LogoList;
+          INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/core/LogoList;
           ASTORE 5
          L46
          FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object java/lang/Object T java/lang/Object] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
@@ -3076,7 +3076,7 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           DLOAD 2
           INVOKESPECIAL java/lang/Double.<init> (D)V
           INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.add (Ljava/lang/Object;)V
-          INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/api/LogoList;
+          INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/core/LogoList;
          L53
           ASTORE 2
           DCONST_0
@@ -3084,10 +3084,11 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           ACONST_NULL
           ASTORE 5
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/api/LogoList.iterator ()Ljava/util/Iterator;
+          INVOKEVIRTUAL org/nlogo/core/LogoList.javaIterable ()Ljava/lang/Iterable;
+          INVOKEINTERFACE java/lang/Iterable.iterator ()Ljava/util/Iterator;
           ASTORE 6
          L54
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context org/nlogo/api/LogoList D java/lang/Double java/util/Iterator] []
+         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context org/nlogo/core/LogoList D java/lang/Double java/util/Iterator] []
           ALOAD 6
           INVOKEINTERFACE java/util/Iterator.hasNext ()Z
           IFEQ L55
@@ -3770,9 +3771,9 @@ procedure SETUP:[_repeatlocal:0]{O---}:
          L13
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           LDC 100
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextLong (J)J
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
          L14
           DSTORE 4
@@ -3826,9 +3827,9 @@ procedure SETUP:[_repeatlocal:0]{O---}:
          L3
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           LDC 125
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextLong (J)J
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
          L4
           DSTORE 2

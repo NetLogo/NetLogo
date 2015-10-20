@@ -17,7 +17,7 @@ public final strictfp class _edit
     extends Command {
   @Override
   public org.nlogo.core.Syntax syntax() {
-    return Syntax.commandSyntax("O---", false);
+    return Syntax.commandSyntax("O---");
   }
 
   @Override

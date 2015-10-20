@@ -3,7 +3,7 @@
 package org.nlogo.prim;
 
 import org.nlogo.agent.AgentSet;
-import org.nlogo.api.Let;
+import org.nlogo.core.Let;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Command;
@@ -12,7 +12,13 @@ import org.nlogo.nvm.Context;
 public final strictfp class _carefully
     extends Command
     implements org.nlogo.nvm.CustomAssembled {
-  public final Let let = new Let();
+  public Let let = null;
+
+  public _carefully() { }
+
+  public _carefully(Let let) {
+    this.let = let;
+  }
 
   @Override
   public org.nlogo.core.Syntax syntax() {

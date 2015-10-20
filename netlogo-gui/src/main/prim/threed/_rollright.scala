@@ -8,7 +8,9 @@ import org.nlogo.nvm.{ Command, Context }
 
 class _rollright extends Command {
   override def syntax =
-    Syntax.commandSyntax(Array(Syntax.NumberType), "-T--", true)
+    Syntax.commandSyntax(Array(Syntax.NumberType), "-T--")
+
+  switches = true
   override def perform(context: Context) {
     val delta = argEvalDoubleValue(context, 0)
     val t = context.agent.asInstanceOf[Turtle3D]

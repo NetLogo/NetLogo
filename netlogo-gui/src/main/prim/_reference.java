@@ -4,7 +4,7 @@ package org.nlogo.prim;
 
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.Reference;
+import org.nlogo.core.Reference;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _reference
@@ -22,7 +22,7 @@ public final strictfp class _reference
 
   @Override
   public String toString() {
-    return super.toString() + ":" + reference.agentClass().getSimpleName() + "," + reference.vn();
+    return super.toString() + ":" + reference.kind().toString() + "," + reference.vn();
   }
 
   @Override

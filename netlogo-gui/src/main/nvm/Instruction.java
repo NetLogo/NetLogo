@@ -2,6 +2,7 @@
 
 package org.nlogo.nvm;
 
+import org.nlogo.core.Reference;
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Link;

@@ -17,8 +17,8 @@ private class ArgumentStuffer extends DefaultAstVisitor {
   }
   private def gatherArgs(expressions:Seq[Expression]):Array[Reporter] =
     expressions.flatMap{
-      case app:ReporterApp => Some(app.reporter)
-      case block:ReporterBlock => Some(block.app.reporter)
+      case app:   ReporterApp   => Some(app.reporter)
+      case block: ReporterBlock => Some(block.app.reporter)
       case _ => None
     }.toArray
 }

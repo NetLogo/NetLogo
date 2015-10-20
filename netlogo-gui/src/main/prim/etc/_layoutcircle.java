@@ -14,12 +14,14 @@ import org.nlogo.nvm.EngineException;
 
 public final strictfp class _layoutcircle
     extends Command {
+  public _layoutcircle() {
+    this.switches = true;
+  }
+
   @Override
   public org.nlogo.core.Syntax syntax() {
-    return Syntax.commandSyntax
-        (new int[]{Syntax.TurtlesetType() | Syntax.ListType(),
-            Syntax.NumberType()},
-            true);
+    return Syntax.commandSyntax(
+        new int[]{Syntax.TurtlesetType() | Syntax.ListType(), Syntax.NumberType()});
   }
 
   @Override

@@ -12,13 +12,12 @@ public final strictfp class _setobservervariable
 
   public _setobservervariable(_observervariable original) {
     vn = original.vn;
+    this.switches = true;
   }
 
   @Override
   public org.nlogo.core.Syntax syntax() {
-    return Syntax.commandSyntax
-        (new int[]{Syntax.WildcardType()},
-            true);
+    return Syntax.commandSyntax(new int[]{Syntax.WildcardType()});
   }
 
   @Override

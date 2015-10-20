@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.api.Let;
+import org.nlogo.core.Let;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
@@ -13,11 +13,12 @@ public final strictfp class _waitinternal extends Command {
 
   public _waitinternal(Let let) {
     this.let = let;
+    this.switches = true;
   }
 
   @Override
   public org.nlogo.core.Syntax syntax() {
-    return Syntax.commandSyntax(true);
+    return Syntax.commandSyntax();
   }
 
   @Override

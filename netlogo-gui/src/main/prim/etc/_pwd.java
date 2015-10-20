@@ -14,7 +14,7 @@ public final strictfp class _pwd
     extends Command {
   @Override
   public org.nlogo.core.Syntax syntax() {
-    return Syntax.commandSyntax("O---", false);
+    return Syntax.commandSyntax("O---");
   }
 
   @Override

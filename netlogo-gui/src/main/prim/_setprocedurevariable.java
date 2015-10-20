@@ -29,8 +29,7 @@ public final strictfp class _setprocedurevariable
 
   @Override
   public void perform(final org.nlogo.nvm.Context context) throws LogoException {
-    context.activation.args[vn] = args[0].report(context);
-    context.ip = next;
+    perform_1(context, args[0].report(context));
   }
 
   public void perform_1(final org.nlogo.nvm.Context context, Object arg0) {

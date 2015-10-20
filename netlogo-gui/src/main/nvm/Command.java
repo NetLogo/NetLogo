@@ -22,5 +22,5 @@ public abstract strictfp class Command
 
   // for speed, cache this value. we can't be calling syntax()
   // in a tight loop like Context.step() - ST 1/27/09
-  boolean switches = false;
+  public boolean switches = false;
 }

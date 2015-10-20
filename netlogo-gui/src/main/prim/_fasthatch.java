@@ -16,13 +16,14 @@ public final strictfp class _fasthatch
 
   public _fasthatch(String breedName) {
     this.breedName = breedName;
+    this.switches = true;
   }
 
   @Override
   public org.nlogo.core.Syntax syntax() {
     return Syntax.commandSyntax
         (new int[]{Syntax.NumberType()},
-            "-T--", true);
+            "-T--");
   }
 
   @Override

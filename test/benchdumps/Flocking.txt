@@ -4,11 +4,9 @@ turtles-own [WHO COLOR HEADING XCOR YCOR SHAPE LABEL LABEL-COLOR BREED HIDDEN? S
 patches-own [PXCOR PYCOR PCOLOR PLABEL PLABEL-COLOR]
 links-own [END1 END2 COLOR LABEL LABEL-COLOR HIDDEN? BREED THICKNESS SHAPE TIE-MODE]
 breeds 
-breeds-own 
 link-breeds 
-link-breeds-own 
 
-procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
+reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
 [0]_asm_proceduremysubtractheadings_ifelse_0 "ifelse abs (h1 - h2) <= 180" boolean => void
       _lessorequal double,double => boolean
         _abs double => double
@@ -212,9 +210,8 @@ procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tyype : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPEQ L11
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFNE L11
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -496,9 +493,8 @@ procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tyype : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPEQ L13
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFNE L13
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -647,9 +643,8 @@ procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tyype : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPEQ L13
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFNE L13
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -793,7 +788,7 @@ procedure GO:[]{O---}:
          L1
           RETURN
 
-procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
+reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
 [0]_asm_procedureaverageheadingtowardsflockmates_report_0 "report atan mean [sin (towards myself + 180)] of flockmates
               mean [cos (towards myself + 180)] of flockmates" Object => void
       _atan double,double => double
@@ -1007,7 +1002,7 @@ procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           ASTORE 2
          L0
           ALOAD 2
-          CHECKCAST org/nlogo/api/LogoList
+          CHECKCAST org/nlogo/core/LogoList
           GOTO L5
          L1
          FRAME FULL [org/nlogo/prim/_asm_procedureaverageheadingtowardsflockmates_report_0 org/nlogo/nvm/Context java/lang/Object] [java/lang/ClassCastException]
@@ -1022,12 +1017,12 @@ procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
          L5
-         FRAME SAME1 org/nlogo/api/LogoList
+         FRAME SAME1 org/nlogo/core/LogoList
           ASTORE 2
           DCONST_0
           DSTORE 3
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/api/LogoList.isEmpty ()Z
+          INVOKEVIRTUAL org/nlogo/core/LogoList.isEmpty ()Z
           IFEQ L6
           NEW org/nlogo/nvm/EngineException
           DUP
@@ -1039,9 +1034,9 @@ procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L6
-         FRAME FULL [org/nlogo/prim/_asm_procedureaverageheadingtowardsflockmates_report_0 org/nlogo/nvm/Context org/nlogo/api/LogoList D] []
+         FRAME FULL [org/nlogo/prim/_asm_procedureaverageheadingtowardsflockmates_report_0 org/nlogo/nvm/Context org/nlogo/core/LogoList D] []
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/api/LogoList.iterator ()Ljava/util/Iterator;
+          INVOKEVIRTUAL org/nlogo/core/LogoList.javaIterator ()Ljava/util/Iterator;
           ASTORE 5
          L7
          FRAME APPEND [java/util/Iterator]
@@ -1089,7 +1084,7 @@ procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           ALOAD 0
           DLOAD 3
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/api/LogoList.size ()I
+          INVOKEVIRTUAL org/nlogo/core/LogoList.size ()I
           I2D
           DDIV
           INVOKEVIRTUAL org/nlogo/prim/_asm_procedureaverageheadingtowardsflockmates_report_0.validDouble (D)D
@@ -1102,7 +1097,7 @@ procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           ASTORE 2
          L2
           ALOAD 2
-          CHECKCAST org/nlogo/api/LogoList
+          CHECKCAST org/nlogo/core/LogoList
           GOTO L12
          L3
          FRAME FULL [org/nlogo/prim/_asm_procedureaverageheadingtowardsflockmates_report_0 org/nlogo/nvm/Context java/lang/Object D java/util/Iterator] [java/lang/ClassCastException]
@@ -1117,12 +1112,12 @@ procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
          L12
-         FRAME FULL [org/nlogo/prim/_asm_procedureaverageheadingtowardsflockmates_report_0 org/nlogo/nvm/Context java/lang/Object D java/util/Iterator] [D org/nlogo/api/LogoList]
+         FRAME FULL [org/nlogo/prim/_asm_procedureaverageheadingtowardsflockmates_report_0 org/nlogo/nvm/Context java/lang/Object D java/util/Iterator] [D org/nlogo/core/LogoList]
           ASTORE 2
           DCONST_0
           DSTORE 3
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/api/LogoList.isEmpty ()Z
+          INVOKEVIRTUAL org/nlogo/core/LogoList.isEmpty ()Z
           IFEQ L13
           NEW org/nlogo/nvm/EngineException
           DUP
@@ -1134,9 +1129,9 @@ procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L13
-         FRAME FULL [org/nlogo/prim/_asm_procedureaverageheadingtowardsflockmates_report_0 org/nlogo/nvm/Context org/nlogo/api/LogoList D java/util/Iterator] [D]
+         FRAME FULL [org/nlogo/prim/_asm_procedureaverageheadingtowardsflockmates_report_0 org/nlogo/nvm/Context org/nlogo/core/LogoList D java/util/Iterator] [D]
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/api/LogoList.iterator ()Ljava/util/Iterator;
+          INVOKEVIRTUAL org/nlogo/core/LogoList.javaIterator ()Ljava/util/Iterator;
           ASTORE 5
          L14
          FRAME SAME1 D
@@ -1171,7 +1166,7 @@ procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L16
-         FRAME FULL [org/nlogo/prim/_asm_procedureaverageheadingtowardsflockmates_report_0 org/nlogo/nvm/Context org/nlogo/api/LogoList D java/util/Iterator java/lang/Object] [D]
+         FRAME FULL [org/nlogo/prim/_asm_procedureaverageheadingtowardsflockmates_report_0 org/nlogo/nvm/Context org/nlogo/core/LogoList D java/util/Iterator java/lang/Object] [D]
           DLOAD 3
           ALOAD 6
           CHECKCAST java/lang/Double
@@ -1180,11 +1175,11 @@ procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           DSTORE 3
           GOTO L14
          L15
-         FRAME FULL [org/nlogo/prim/_asm_procedureaverageheadingtowardsflockmates_report_0 org/nlogo/nvm/Context org/nlogo/api/LogoList D java/util/Iterator] [D]
+         FRAME FULL [org/nlogo/prim/_asm_procedureaverageheadingtowardsflockmates_report_0 org/nlogo/nvm/Context org/nlogo/core/LogoList D java/util/Iterator] [D]
           ALOAD 0
           DLOAD 3
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/api/LogoList.size ()I
+          INVOKEVIRTUAL org/nlogo/core/LogoList.size ()I
           I2D
           DDIV
           INVOKEVIRTUAL org/nlogo/prim/_asm_procedureaverageheadingtowardsflockmates_report_0.validDouble (D)D
@@ -1284,9 +1279,8 @@ procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tyype : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPEQ L27
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFNE L27
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -1380,11 +1374,11 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          FRAME SAME
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           LLOAD 4
           L2I
           I2L
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.setSeed (J)V
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.setSeed (J)V
           ALOAD 1
           ICONST_1
           PUTFIELD org/nlogo/nvm/Context.ip : I
@@ -1878,9 +1872,9 @@ procedure SETUP:[]{O---}:
          L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           LDC 7
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextLong (J)J
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
          L5
           DSTORE 4
@@ -1938,8 +1932,8 @@ procedure SETUP:[]{O---}:
           DLOAD 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextDouble ()D
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextDouble ()D
           DMUL
          L5
           ALOAD 0
@@ -1951,8 +1945,8 @@ procedure SETUP:[]{O---}:
           DLOAD 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextDouble ()D
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextDouble ()D
           DMUL
          L7
           DSTORE 4
@@ -2013,8 +2007,8 @@ procedure SETUP:[]{O---}:
           DLOAD 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextDouble ()D
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextDouble ()D
           DMUL
          L2
           DSTORE 2
@@ -2547,8 +2541,8 @@ procedure SEPARATE:[]{-T--}:
           ALOAD 3
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/util/MersenneTwisterFast;)Lorg/nlogo/agent/AgentSet$Iterator;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/api/MersenneTwisterFast;)Lorg/nlogo/agent/AgentSet$Iterator;
           ASTORE 5
          L14
          FRAME FULL [org/nlogo/prim/_asm_procedureseparate_call_0 org/nlogo/nvm/Context java/lang/Object org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder org/nlogo/agent/AgentSet$Iterator] [org/nlogo/nvm/Activation [Ljava/lang/Object; I]
@@ -2579,7 +2573,7 @@ procedure SEPARATE:[]{-T--}:
          L15
          FRAME FULL [org/nlogo/prim/_asm_procedureseparate_call_0 org/nlogo/nvm/Context java/lang/Object org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder org/nlogo/agent/AgentSet$Iterator] [org/nlogo/nvm/Activation [Ljava/lang/Object; I]
           ALOAD 4
-          INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/api/LogoList;
+          INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/core/LogoList;
           GOTO L12
          L13
          FRAME FULL [org/nlogo/prim/_asm_procedureseparate_call_0 org/nlogo/nvm/Context java/lang/Object] [org/nlogo/nvm/Activation [Ljava/lang/Object; I]
@@ -2625,7 +2619,7 @@ procedure SEPARATE:[]{-T--}:
          L1
           RETURN
 
-procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
+reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
 [0]_asm_procedureaverageflockmateheading_report_0 "report atan mean [sin heading] of flockmates
               mean [cos heading] of flockmates" Object => void
       _atan double,double => double
@@ -2729,7 +2723,7 @@ procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           ASTORE 2
          L0
           ALOAD 2
-          CHECKCAST org/nlogo/api/LogoList
+          CHECKCAST org/nlogo/core/LogoList
           GOTO L5
          L1
          FRAME FULL [org/nlogo/prim/_asm_procedureaverageflockmateheading_report_0 org/nlogo/nvm/Context java/lang/Object] [java/lang/ClassCastException]
@@ -2744,12 +2738,12 @@ procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
          L5
-         FRAME SAME1 org/nlogo/api/LogoList
+         FRAME SAME1 org/nlogo/core/LogoList
           ASTORE 2
           DCONST_0
           DSTORE 3
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/api/LogoList.isEmpty ()Z
+          INVOKEVIRTUAL org/nlogo/core/LogoList.isEmpty ()Z
           IFEQ L6
           NEW org/nlogo/nvm/EngineException
           DUP
@@ -2761,9 +2755,9 @@ procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L6
-         FRAME FULL [org/nlogo/prim/_asm_procedureaverageflockmateheading_report_0 org/nlogo/nvm/Context org/nlogo/api/LogoList D] []
+         FRAME FULL [org/nlogo/prim/_asm_procedureaverageflockmateheading_report_0 org/nlogo/nvm/Context org/nlogo/core/LogoList D] []
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/api/LogoList.iterator ()Ljava/util/Iterator;
+          INVOKEVIRTUAL org/nlogo/core/LogoList.javaIterator ()Ljava/util/Iterator;
           ASTORE 5
          L7
          FRAME APPEND [java/util/Iterator]
@@ -2811,7 +2805,7 @@ procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           ALOAD 0
           DLOAD 3
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/api/LogoList.size ()I
+          INVOKEVIRTUAL org/nlogo/core/LogoList.size ()I
           I2D
           DDIV
           INVOKEVIRTUAL org/nlogo/prim/_asm_procedureaverageflockmateheading_report_0.validDouble (D)D
@@ -2824,7 +2818,7 @@ procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           ASTORE 2
          L2
           ALOAD 2
-          CHECKCAST org/nlogo/api/LogoList
+          CHECKCAST org/nlogo/core/LogoList
           GOTO L12
          L3
          FRAME FULL [org/nlogo/prim/_asm_procedureaverageflockmateheading_report_0 org/nlogo/nvm/Context java/lang/Object D java/util/Iterator] [java/lang/ClassCastException]
@@ -2839,12 +2833,12 @@ procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
          L12
-         FRAME FULL [org/nlogo/prim/_asm_procedureaverageflockmateheading_report_0 org/nlogo/nvm/Context java/lang/Object D java/util/Iterator] [D org/nlogo/api/LogoList]
+         FRAME FULL [org/nlogo/prim/_asm_procedureaverageflockmateheading_report_0 org/nlogo/nvm/Context java/lang/Object D java/util/Iterator] [D org/nlogo/core/LogoList]
           ASTORE 2
           DCONST_0
           DSTORE 3
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/api/LogoList.isEmpty ()Z
+          INVOKEVIRTUAL org/nlogo/core/LogoList.isEmpty ()Z
           IFEQ L13
           NEW org/nlogo/nvm/EngineException
           DUP
@@ -2856,9 +2850,9 @@ procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L13
-         FRAME FULL [org/nlogo/prim/_asm_procedureaverageflockmateheading_report_0 org/nlogo/nvm/Context org/nlogo/api/LogoList D java/util/Iterator] [D]
+         FRAME FULL [org/nlogo/prim/_asm_procedureaverageflockmateheading_report_0 org/nlogo/nvm/Context org/nlogo/core/LogoList D java/util/Iterator] [D]
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/api/LogoList.iterator ()Ljava/util/Iterator;
+          INVOKEVIRTUAL org/nlogo/core/LogoList.javaIterator ()Ljava/util/Iterator;
           ASTORE 5
          L14
          FRAME SAME1 D
@@ -2893,7 +2887,7 @@ procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L16
-         FRAME FULL [org/nlogo/prim/_asm_procedureaverageflockmateheading_report_0 org/nlogo/nvm/Context org/nlogo/api/LogoList D java/util/Iterator java/lang/Object] [D]
+         FRAME FULL [org/nlogo/prim/_asm_procedureaverageflockmateheading_report_0 org/nlogo/nvm/Context org/nlogo/core/LogoList D java/util/Iterator java/lang/Object] [D]
           DLOAD 3
           ALOAD 6
           CHECKCAST java/lang/Double
@@ -2902,11 +2896,11 @@ procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           DSTORE 3
           GOTO L14
          L15
-         FRAME FULL [org/nlogo/prim/_asm_procedureaverageflockmateheading_report_0 org/nlogo/nvm/Context org/nlogo/api/LogoList D java/util/Iterator] [D]
+         FRAME FULL [org/nlogo/prim/_asm_procedureaverageflockmateheading_report_0 org/nlogo/nvm/Context org/nlogo/core/LogoList D java/util/Iterator] [D]
           ALOAD 0
           DLOAD 3
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/api/LogoList.size ()I
+          INVOKEVIRTUAL org/nlogo/core/LogoList.size ()I
           I2D
           DDIV
           INVOKEVIRTUAL org/nlogo/prim/_asm_procedureaverageflockmateheading_report_0.validDouble (D)D
@@ -3006,9 +3000,8 @@ procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tyype : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPEQ L27
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFNE L27
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1

@@ -15,11 +15,15 @@ import java.util.List;
 
 public final strictfp class _downhill4
     extends Command {
+  public _downhill4() {
+    this.switches = true;
+  }
+
   @Override
   public org.nlogo.core.Syntax syntax() {
     return Syntax.commandSyntax
         (new int[]{Syntax.ReferenceType()},
-            "-T--", true);
+            "-T--");
   }
 
   @Override

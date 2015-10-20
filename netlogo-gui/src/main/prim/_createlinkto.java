@@ -19,10 +19,12 @@ public final strictfp class _createlinkto
 
   public _createlinkto() {
     breedName = null;
+    this.switches = true;
   }
 
   public _createlinkto(String breedName) {
     this.breedName = breedName;
+    this.switches = true;
   }
 
   @Override
@@ -30,7 +32,7 @@ public final strictfp class _createlinkto
     return Syntax.commandSyntax
         (new int[]{Syntax.TurtleType(),
             Syntax.CommandBlockType() | Syntax.OptionalType()},
-            "-T--", "---L", true);
+            "-T--", "---L");
   }
 
   @Override

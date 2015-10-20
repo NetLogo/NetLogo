@@ -16,10 +16,12 @@ public final strictfp class _hatch
 
   public _hatch() {
     breedName = NO_BREED;
+    this.switches = true;
   }
 
   public _hatch(String breedName) {
     this.breedName = breedName;
+    this.switches = true;
   }
 
   @Override
@@ -27,7 +29,7 @@ public final strictfp class _hatch
     return Syntax.commandSyntax
         (new int[]{Syntax.NumberType(),
             Syntax.CommandBlockType() | Syntax.OptionalType()},
-            "-T--", "-T--", true);
+            "-T--", "-T--");
   }
 
   @Override

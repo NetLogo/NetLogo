@@ -2,14 +2,7 @@
 
 package org.nlogo.compiler
 
-// here is the AstNode (AST = Abstract Syntax Tree) trait, along with its extending traits
-// Expression and Application and their subclasses: ProcedureDefinition, Statements, Statement,
-// ReporterApp, ReporterBlock, CommandBlock, DelayedBlock.
-
-// see also AstVisitor.scala which implements the Visitor pattern on these AST's.
-
-import org.nlogo.api.Syntax
-import org.nlogo.nvm.{ Procedure, Command, Reporter, Instruction }
+import org.nlogo.{ core, nvm }
 
 /**
  * An interface representing a node in the NetLogo abstract syntax tree (AKA parse tree, in
@@ -19,11 +12,39 @@ import org.nlogo.nvm.{ Procedure, Command, Reporter, Instruction }
  * indicated by the position and length. It's the compiler's job to make sure these values are
  * always reasonable.
  */
-trait AstNode {
+trait AstNode extends core.AstNode {
   def start: Int
   def end: Int
   def file: String
   def accept(v: AstVisitor)
+}
+
+/**
+ * an interface for AST tree-walkers. This represents the usual Visitor
+ * pattern with double-dispatch.
+ */
+trait AstVisitor {
+  def visitProcedureDefinition(proc: ProcedureDefinition)
+  def visitCommandBlock(block: CommandBlock)
+  def visitReporterApp(app: ReporterApp)
+  def visitReporterBlock(block: ReporterBlock)
+  def visitStatement(stmt: Statement)
+  def visitStatements(stmts: Statements)
+}
+
+/**
+ * The default AST tree-walker. This simply visits each node of the
+ * tree, and visits any children of each node in turn. Subclasses can
+ * implement pre-order or post-order traversal, or a wide range of other
+ * strategies.
+ */
+class DefaultAstVisitor extends AstVisitor {
+  def visitProcedureDefinition(proc: ProcedureDefinition) { proc.statements.accept(this) }
+  def visitCommandBlock(block: CommandBlock) { block.statements.accept(this) }
+  def visitReporterApp(app: ReporterApp) { app.args.foreach(_.accept(this)) }
+  def visitReporterBlock(block: ReporterBlock) { block.app.accept(this) }
+  def visitStatement(stmt: Statement) { stmt.args.foreach(_.accept(this)) }
+  def visitStatements(stmts: Statements) { stmts.stmts.foreach(_.accept(this)) }
 }
 
 /**
@@ -47,11 +68,9 @@ trait Expression extends AstNode {
  * don't care what kind of application the args are for.
  */
 trait Application extends AstNode {
-  def apply(i: Int) = args(i)
-  def length   = args.length
-  def iterator = args.iterator
-  def args: scala.collection.SeqLike[Expression, _]
-  def instruction: Instruction
+  def args: Seq[Expression]
+  def coreInstruction: core.Instruction
+  def nvmInstruction: nvm.Instruction
   def end_=(end: Int)
   def addArgument(arg: Expression)
   def replaceArg(index: Int, expr: Expression)
@@ -61,7 +80,7 @@ trait Application extends AstNode {
  * represents a single procedure definition.  really just a container
  * for the procedure body, which is a Statements object.
  */
-class ProcedureDefinition(val procedure: Procedure, val statements: Statements) extends AstNode {
+class ProcedureDefinition(val procedure: nvm.Procedure, val statements: Statements) extends AstNode {
   def start = procedure.pos
   def end = procedure.end
   def file = procedure.filename
@@ -77,24 +96,21 @@ class ProcedureDefinition(val procedure: Procedure, val statements: Statements) 
 class Statements(val file: String) extends AstNode {
   var start: Int = _
   var end: Int = _
-
-  def apply(i: Int) = body(i)
-  def length = body.length
-  def iterator = body.iterator
   /**
    * a List of the actual Statement objects.
    */
-  val body= new collection.mutable.ArrayBuffer[Statement]
-
+  private val _stmts = collection.mutable.Buffer[Statement]()
+  def stmts: Seq[Statement] = _stmts
+  def body: Seq[Statement] = _stmts
   def addStatement(stmt: Statement) {
-    body.append(stmt)
+    _stmts.append(stmt)
     recomputeStartAndEnd()
   }
   private def recomputeStartAndEnd() {
-    if (body.isEmpty) { start = 0; end = 0 }
-    else { start = body(0).start; end = body(body.size - 1).end }
+    if (stmts.isEmpty) { start = 0; end = 0 }
+    else { start = stmts(0).start; end = stmts(stmts.size - 1).end }
   }
-  override def toString = body.mkString(" ")
+  override def toString = stmts.mkString(" ")
   def accept(v: AstVisitor) { v.visitStatements(this) }
 }
 
@@ -102,15 +118,18 @@ class Statements(val file: String) extends AstNode {
  * represents a NetLogo statement. Statements only have one form: command
  * application.
  */
-class Statement(var command: Command, var start: Int, var end: Int, val file: String)
+class Statement(var coreCommand: core.Command, var command: nvm.Command, var start: Int, var end: Int, val file: String)
     extends Application {
-  val args = new collection.mutable.ArrayBuffer[Expression]
-  def instruction = command // for Application
-  def addArgument(arg: Expression) { args.append(arg) }
+  private val _args = collection.mutable.Buffer[Expression]()
+  override def args: Seq[Expression] = _args
+  def nvmInstruction = command // for Application
+  def coreInstruction = coreCommand // for Application
+  def addArgument(arg: Expression) { _args.append(arg) }
   override def toString = command.toString + "[" + args.mkString(", ") + "]"
   def accept(v: AstVisitor) { v.visitStatement(this) }
-  def replaceArg(index: Int, expr: Expression) { args(index) = expr }
-  def removeArgument(index: Int) { args.remove(index) }
+  def replaceArg(index: Int, expr: Expression) { _args(index) = expr }
+
+  def removeArgument(index: Int) { _args.remove(index) }
 }
 
 /**
@@ -120,7 +139,7 @@ class Statement(var command: Command, var start: Int, var end: Int, val file: St
  * to commands and reporters, etc.
  */
 class CommandBlock(val statements: Statements, var start: Int, var end: Int, val file: String) extends Expression {
-  def reportedType() = Syntax.CommandBlockType
+  def reportedType() = core.Syntax.CommandBlockType
   override def toString = "[" + statements.toString + "]"
   def accept(v: AstVisitor) { v.visitCommandBlock(this) }
 }
@@ -131,7 +150,7 @@ class CommandBlock(val statements: Statements, var start: Int, var end: Int, val
  * to commands and reports.
  */
 class CodeBlock(val code: String, var start: Int, var end: Int, val file: String) extends Expression {
-  def reportedType() = Syntax.CodeBlockType
+  def reportedType() = core.Syntax.CodeBlockType
   override def toString = "[" + code + "]"
   def accept(v: AstVisitor) {}
 }
@@ -153,14 +172,15 @@ class ReporterBlock(val app: ReporterApp, var start: Int, var end: Int, val file
    */
   def reportedType(): Int = {
     val appType = app.reportedType
+    import core.Syntax._
     appType match {
-      case Syntax.BooleanType => Syntax.BooleanBlockType
-      case Syntax.NumberType => Syntax.NumberBlockType
+      case BooleanType => BooleanBlockType
+      case NumberType => NumberBlockType
       case _ =>
-        if (Syntax.compatible(appType, Syntax.BooleanType)
-            || Syntax.compatible(appType, Syntax.NumberType))
-          Syntax.ReporterBlockType
-        else Syntax.OtherBlockType
+        if (compatible(appType, BooleanType)
+            || compatible(appType, NumberType))
+          ReporterBlockType
+        else OtherBlockType
     }
   }
 }
@@ -171,18 +191,20 @@ class ReporterBlock(val app: ReporterApp, var start: Int, var end: Int, val file
  * represents things like constants, which are converted into no-arg reporter
  * applications as they're parsed.
  */
-class ReporterApp(var reporter: Reporter, var start: Int, var end: Int, val file: String)
+class ReporterApp(var coreReporter: core.Reporter, var reporter: nvm.Reporter, var start: Int, var end: Int, val file: String)
 extends Expression with Application {
   /**
    * the args for this application.
    */
-  val args = new collection.mutable.ArrayBuffer[Expression]
-  def instruction = reporter // for Application
-  def addArgument(arg: Expression) { args.append(arg) }
-  def reportedType() = reporter.syntax.ret
+  private val _args = collection.mutable.Buffer[Expression]()
+  override def args: Seq[Expression] = _args
+  def coreInstruction = coreReporter // for Application
+  def nvmInstruction = reporter // for Application
+  def addArgument(arg: Expression) { _args.append(arg) }
+  def reportedType() = coreReporter.syntax.ret
   def accept(v: AstVisitor) { v.visitReporterApp(this) }
-  def removeArgument(index: Int) { args.remove(index) }
-  def replaceArg(index: Int, expr: Expression) { args(index) = expr }
-  def clearArgs() { args.clear() }
+  def removeArgument(index: Int) { _args.remove(index) }
+  def replaceArg(index: Int, expr: Expression) { _args(index) = expr }
+  def clearArgs() { _args.clear() }
   override def toString = reporter.toString + "[" + args.mkString(", ") + "]"
 }

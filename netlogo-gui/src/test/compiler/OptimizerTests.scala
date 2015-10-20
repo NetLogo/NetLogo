@@ -17,13 +17,9 @@ class OptimizerTests extends FunSuite {
       .statements.body.head.toString
   private def compile(source:String):ProcedureDefinition = {
     val program = Program.empty()
-    val results = TestHelper.structureParse(source, program)
-    assertResult(1)(results.procedures.size)
-    val procedure = results.procedures.values.iterator.next()
-    val tokens =
-      new IdentifierParser(results.program,java.util.Collections.emptyMap[String,Procedure], results.procedures)
-        .process(results.tokens(procedure).iterator, procedure)
-    val procdef = new ExpressionParser(procedure).parse(tokens).head
+    val procs = TestHelper.compiledProcedures(source, program)
+    assertResult(1)(procs.size)
+    val procdef = procs.head
     procdef.accept(new ConstantFolder)
     procdef.accept(new Optimizer(false))
     procdef

@@ -6,7 +6,7 @@ package org.nlogo.api
  * Partial implementation of Command provides common implentations of some methods.  Implements
  * every method except <code>Command.perform(...)</code>.
  */
-abstract class DefaultCommand extends Command with TokenHolder {
+abstract class DefaultCommand extends Command {
 
   /**
    * Indicates that this primitive can be used by any agent.

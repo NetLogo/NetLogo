@@ -13,12 +13,13 @@ public final strictfp class _setturtlevariable
 
   public _setturtlevariable(_turtlevariable original) {
     vn = original.vn;
+    this.switches = true;
   }
 
   @Override
   public org.nlogo.core.Syntax syntax() {
     return Syntax.commandSyntax
-        (new int[]{Syntax.WildcardType()}, "-T--", true);
+        (new int[]{Syntax.WildcardType()}, "-T--");
   }
 
   @Override

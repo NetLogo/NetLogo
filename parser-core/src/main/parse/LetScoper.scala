@@ -151,14 +151,12 @@ class LetScoper(usedNames: Map[String, String]) {
           "Names beginning with ? are reserved for use as task inputs", nameToken)
         val let = Environment.add(name)
         t.refine(l.copy(let = let))
-      case t @ Token(_, TokenType.Reporter, l: core.prim._letvariable) =>
+      case t @ Token(_, TokenType.Reporter, l: core.prim._unknownidentifier) =>
         Environment.get(t.text.toUpperCase) match {
-          case Some(let) =>
-            t.refine(l.copy(let = let))
-          case None =>
-            val msg = I18N.errors.getN(
-              "compiler.LetVariable.notDefined", t.text.toUpperCase)
-            exception(msg, t)
+          case Some(let) => t.refine(core.prim._letvariable(let))
+          // if no let is defined, we infer a symbol here.
+          // ExpressionParser verifies that that is correct
+          case None      => t.refine(core.prim._symbol())
         }
       case t =>
         t

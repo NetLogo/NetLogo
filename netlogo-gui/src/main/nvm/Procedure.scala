@@ -3,8 +3,8 @@
 package org.nlogo.nvm
 
 import org.nlogo.api
-import api.{ SourceOwner, Syntax, Let }
-import org.nlogo.core.{ FrontEndProcedure, Token, Syntax => CoreSyntax }
+import api.{ SourceOwner, Syntax }
+import org.nlogo.core.{ Let, FrontEndProcedure, Token, Syntax => CoreSyntax }
 
 class Procedure(
   val isReporter: Boolean,
@@ -12,12 +12,12 @@ class Procedure(
   val name: String,
   _displayName: Option[String],
   val parent: Procedure,
+  val argTokens: Seq[Token] = Seq(),
   initialArgs: Vector[String] = Vector[String]()) extends FrontEndProcedure {
 
   args = initialArgs
   val fileName = nameToken.filename // used by cities include-file stuff
   val filename = fileName // alias, may not be needed
-  override def argTokens = Seq()
   override def procedureDeclaration = null
 
   val displayName = buildDisplayName(_displayName)
@@ -46,7 +46,7 @@ class Procedure(
 
   def getTaskFormal(n: Int, token: Token): Let = {
     while (taskFormals.size < n)
-      taskFormals += new Let("?" + n, token.start, token.end)
+      taskFormals += new Let("?" + n)
     taskFormals.last
   }
 

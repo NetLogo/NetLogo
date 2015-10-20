@@ -12,7 +12,7 @@ class _hubnetsendoverride extends Command {
     Array(Syntax.StringType, Syntax.AgentsetType | Syntax.AgentType,
           Syntax.StringType,
           Syntax.ReporterBlockType),
-    "OTPL", "?", false)
+    "OTPL", "?")
 
   override def perform(context: Context) {
     val client = argEvalString(context, 0)

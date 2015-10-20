@@ -2,6 +2,7 @@
 
 package org.nlogo.compiler
 
+import org.nlogo.core.Instantiator
 import org.nlogo.api.I18N
 import org.nlogo.compiler.CompilerExceptionThrowers.exception
 import org.nlogo.nvm.{Command,Reporter}
@@ -19,14 +20,14 @@ private class SetVisitor extends DefaultAstVisitor {
   override def visitStatement(stmt:Statement) {
     super.visitStatement(stmt)
     if(stmt.command.isInstanceOf[_set]) {
-      val rApp = stmt(0).asInstanceOf[ReporterApp]
+      val rApp = stmt.args.head.asInstanceOf[ReporterApp]
       // it's annoying Scala can't figure out that reporter.getClass is a ReporterClass.
       // lampsvn.epfl.ch/trac/scala/ticket/490 - ST 4/3/08, 8/19/08, 11/1/08
       val newCommandClass = SetVisitor.classes.get(rApp.reporter.getClass.asInstanceOf[SetVisitor.ReporterClass])
         .getOrElse(exception(INVALID_SET,stmt))
       val newCommand = Instantiator.newInstance[Command](newCommandClass,rApp.reporter)
       newCommand.token_=(stmt.command.token)
-      newCommand.tokenLimitingType(rApp.instruction.token)
+      newCommand.tokenLimitingType(rApp.coreReporter.token)
       stmt.command_$eq(newCommand)
       stmt.removeArgument(0)
     }

@@ -13,10 +13,14 @@ import org.nlogo.nvm.EngineException;
 
 public final strictfp class _moveto
     extends Command {
+  public _moveto() {
+    this.switches = true;
+  }
+
   @Override
   public org.nlogo.core.Syntax syntax() {
     int[] right = {Syntax.TurtleType() | Syntax.PatchType()};
-    return Syntax.commandSyntax(right, "OT--", true);
+    return Syntax.commandSyntax(right, "OT--");
   }
 
   @Override

@@ -10,11 +10,15 @@ import org.nlogo.nvm.Context;
 
 public final strictfp class _facexy
     extends Command {
+  public _facexy() {
+    this.switches = true;
+  }
+
   @Override
   public org.nlogo.core.Syntax syntax() {
     return Syntax.commandSyntax
         (new int[]{Syntax.NumberType(), Syntax.NumberType()},
-            "OT--", true);
+            "OT--");
   }
 
   @Override

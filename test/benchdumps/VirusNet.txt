@@ -4,9 +4,7 @@ turtles-own [WHO COLOR HEADING XCOR YCOR SHAPE LABEL LABEL-COLOR BREED HIDDEN? S
 patches-own [PXCOR PYCOR PCOLOR PLABEL PLABEL-COLOR]
 links-own [END1 END2 COLOR LABEL LABEL-COLOR HIDDEN? BREED THICKNESS SHAPE TIE-MODE]
 breeds 
-breeds-own 
 link-breeds 
-link-breeds-own 
 
 procedure GO:[]{O---}:
 [0]_asm_procedurego_if_0 "if all? turtles [not infected?" boolean => void
@@ -182,9 +180,8 @@ procedure GO:[]{O---}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tyype : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPEQ L3
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFNE L3
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
@@ -193,10 +190,9 @@ procedure GO:[]{O---}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.parent : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tyype : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPNE L4
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.parent ()Lorg/nlogo/nvm/Procedure;
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFEQ L4
          L3
          FRAME SAME
           NEW org/nlogo/nvm/EngineException
@@ -853,7 +849,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
           ISTORE 3
           ILOAD 3
           IFNE L2
-          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
+          GETSTATIC org/nlogo/core/Nobody$.MODULE$ : Lorg/nlogo/core/Nobody$;
           GOTO L3
          L2
          FRAME APPEND [org/nlogo/agent/AgentSet I]
@@ -861,9 +857,9 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
           ILOAD 3
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           ILOAD 3
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextInt (I)I
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextInt (I)I
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.randomOne (II)Lorg/nlogo/agent/Agent;
          L3
          FRAME SAME1 java/lang/Object
@@ -978,18 +974,10 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
          L9
           RETURN
 [3]_let
-      _asm_proceduresetupspatiallyclusterednetwork_letvariable_3 "choice" => Object
-           L0
-            ALOAD 1
-            ALOAD 0
-            GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_letvariable_3.kept1_let : Lorg/nlogo/api/Let;
-            INVOKEVIRTUAL org/nlogo/nvm/Context.getLet (Lorg/nlogo/api/Let;)Ljava/lang/Object;
-           L1
-            ARETURN
       _minoneof
-        _asm_proceduresetupspatiallyclusterednetwork_otherwith_4 "other turtles with [not link-neighbor? myself" AgentSet,Reporter => AgentSet
+        _asm_proceduresetupspatiallyclusterednetwork_otherwith_3 "other turtles with [not link-neighbor? myself" AgentSet,Reporter => AgentSet
           _turtles => AgentSet
-          _asm_proceduresetupspatiallyclusterednetwork_not_5 "not link-neighbor? myself" boolean => boolean
+          _asm_proceduresetupspatiallyclusterednetwork_not_4 "not link-neighbor? myself" boolean => boolean
             _linkneighbor:null Turtle => boolean
               _myself => Agent
                 TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
@@ -1042,18 +1030,18 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
                 CHECKCAST org/nlogo/agent/Turtle
                 ASTORE 3
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_not_5.kept2_breedName : Ljava/lang/String;
+                GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_not_4.kept2_breedName : Ljava/lang/String;
                 IFNONNULL L7
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_not_5.world : Lorg/nlogo/agent/World;
+                GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_not_4.world : Lorg/nlogo/agent/World;
                 INVOKEVIRTUAL org/nlogo/agent/World.links ()Lorg/nlogo/agent/AgentSet;
                 GOTO L8
                L7
-               FRAME FULL [org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_not_5 org/nlogo/nvm/Context org/nlogo/agent/Turtle org/nlogo/agent/Turtle] []
+               FRAME FULL [org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_not_4 org/nlogo/nvm/Context org/nlogo/agent/Turtle org/nlogo/agent/Turtle] []
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_not_5.world : Lorg/nlogo/agent/World;
+                GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_not_4.world : Lorg/nlogo/agent/World;
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_not_5.kept2_breedName : Ljava/lang/String;
+                GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_not_4.kept2_breedName : Ljava/lang/String;
                 INVOKEVIRTUAL org/nlogo/agent/World.getLinkBreed (Ljava/lang/String;)Lorg/nlogo/agent/AgentSet;
                L8
                FRAME SAME1 org/nlogo/agent/AgentSet
@@ -1061,9 +1049,9 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
                 ALOAD 0
                 ALOAD 4
                 ALOAD 1
-                INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_not_5.mustNotBeDirected (Lorg/nlogo/agent/AgentSet;Lorg/nlogo/nvm/Context;)V
+                INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_not_4.mustNotBeDirected (Lorg/nlogo/agent/AgentSet;Lorg/nlogo/nvm/Context;)V
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_not_5.world : Lorg/nlogo/agent/World;
+                GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_not_4.world : Lorg/nlogo/agent/World;
                 GETFIELD org/nlogo/agent/World.linkManager : Lorg/nlogo/agent/LinkManager;
                 ASTORE 5
                 ALOAD 5
@@ -1093,7 +1081,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
                 ICONST_1
                 GOTO L12
                L11
-               FRAME FULL [org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_not_5 org/nlogo/nvm/Context I org/nlogo/agent/Turtle org/nlogo/agent/AgentSet org/nlogo/agent/LinkManager] []
+               FRAME FULL [org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_not_4 org/nlogo/nvm/Context I org/nlogo/agent/Turtle org/nlogo/agent/AgentSet org/nlogo/agent/LinkManager] []
                 ICONST_0
                L12
                FRAME SAME1 I
@@ -1108,11 +1096,11 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
                 ARETURN
              L0
               ALOAD 0
-              GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_otherwith_4.world : Lorg/nlogo/agent/World;
+              GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_otherwith_3.world : Lorg/nlogo/agent/World;
               INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
              L1
               ALOAD 0
-              GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_otherwith_4.keptinstr3 : Lorg/nlogo/nvm/Reporter;
+              GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_otherwith_3.keptinstr3 : Lorg/nlogo/nvm/Reporter;
               ASTORE 3
               ASTORE 2
               NEW org/nlogo/nvm/Context
@@ -1133,7 +1121,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
               INVOKEVIRTUAL org/nlogo/agent/AgentSet.iterator ()Lorg/nlogo/agent/AgentSet$Iterator;
               ASTORE 6
              L2
-             FRAME FULL [org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_otherwith_4 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context java/util/ArrayList org/nlogo/agent/AgentSet$Iterator] []
+             FRAME FULL [org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_otherwith_3 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context java/util/ArrayList org/nlogo/agent/AgentSet$Iterator] []
               ALOAD 6
               INVOKEINTERFACE org/nlogo/agent/AgentSet$Iterator.hasNext ()Z
               IFEQ L3
@@ -1206,11 +1194,11 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
               INVOKEINTERFACE java/util/List.toArray ([Ljava/lang/Object;)[Ljava/lang/Object;
               CHECKCAST [Lorg/nlogo/agent/Agent;
               ALOAD 0
-              GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_otherwith_4.world : Lorg/nlogo/agent/World;
+              GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_otherwith_3.world : Lorg/nlogo/agent/World;
               INVOKESPECIAL org/nlogo/agent/ArrayAgentSet.<init> (Ljava/lang/Class;[Lorg/nlogo/agent/Agent;Lorg/nlogo/agent/World;)V
              L7
               ARETURN
-        _asm_proceduresetupspatiallyclusterednetwork_distance_6 "distance myself" Agent => double
+        _asm_proceduresetupspatiallyclusterednetwork_distance_5 "distance myself" Agent => double
           _myself => Agent
              L0
               ALOAD 1
@@ -1275,7 +1263,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
              L5
              FRAME SAME
               ALOAD 0
-              GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_distance_6.world : Lorg/nlogo/agent/World;
+              GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_distance_5.world : Lorg/nlogo/agent/World;
               INVOKEVIRTUAL org/nlogo/agent/World.protractor ()Lorg/nlogo/agent/Protractor;
               ALOAD 1
               GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -1289,17 +1277,17 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
               DLOAD 2
               INVOKESPECIAL java/lang/Double.<init> (D)V
               ARETURN
-[4]_asm_proceduresetupspatiallyclusterednetwork_if_7 "if choice != nobody" boolean => void
+[4]_asm_proceduresetupspatiallyclusterednetwork_if_6 "if choice != nobody" boolean => void
       _notequal Object,Object => boolean
         _letvariable(CHOICE) => Object
         _nobody => Nobody$
          L0
           ALOAD 1
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_if_7.kept3_let : Lorg/nlogo/api/Let;
-          INVOKEVIRTUAL org/nlogo/nvm/Context.getLet (Lorg/nlogo/api/Let;)Ljava/lang/Object;
+          GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_if_6.kept3_let : Lorg/nlogo/core/Let;
+          INVOKEVIRTUAL org/nlogo/nvm/Context.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
          L1
-          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
+          GETSTATIC org/nlogo/core/Nobody$.MODULE$ : Lorg/nlogo/core/Nobody$;
          L2
           ASTORE 3
           ASTORE 2
@@ -1310,7 +1298,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
           ICONST_1
           GOTO L4
          L3
-         FRAME APPEND [java/lang/Object org/nlogo/api/Nobody$]
+         FRAME APPEND [java/lang/Object org/nlogo/core/Nobody$]
           ICONST_0
          L4
          FRAME SAME1 I
@@ -1321,44 +1309,44 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
           ICONST_5
           GOTO L6
          L5
-         FRAME FULL [org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_if_7 org/nlogo/nvm/Context I org/nlogo/api/Nobody$] [org/nlogo/nvm/Context]
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_if_6 org/nlogo/nvm/Context I org/nlogo/core/Nobody$] [org/nlogo/nvm/Context]
           BIPUSH 7
          L6
-         FRAME FULL [org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_if_7 org/nlogo/nvm/Context I org/nlogo/api/Nobody$] [org/nlogo/nvm/Context I]
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_if_6 org/nlogo/nvm/Context I org/nlogo/core/Nobody$] [org/nlogo/nvm/Context I]
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
 [5]_createlinkwith:null,+7
-      _asm_proceduresetupspatiallyclusterednetwork_letvariable_8 "choice" => Object
+      _asm_proceduresetupspatiallyclusterednetwork_letvariable_7 "choice" => Object
            L0
             ALOAD 1
             ALOAD 0
-            GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_letvariable_8.kept1_let : Lorg/nlogo/api/Let;
-            INVOKEVIRTUAL org/nlogo/nvm/Context.getLet (Lorg/nlogo/api/Let;)Ljava/lang/Object;
+            GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_letvariable_7.kept1_let : Lorg/nlogo/core/Let;
+            INVOKEVIRTUAL org/nlogo/nvm/Context.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
            L1
             ARETURN
-[6]_asm_proceduresetupspatiallyclusterednetwork_done_9 "" => void
+[6]_asm_proceduresetupspatiallyclusterednetwork_done_8 "" => void
          L0
           ALOAD 1
           ICONST_1
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[7]_asm_proceduresetupspatiallyclusterednetwork_done_10 "" => void
+[7]_asm_proceduresetupspatiallyclusterednetwork_done_9 "" => void
          L0
           ALOAD 1
           ICONST_1
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[8]_asm_proceduresetupspatiallyclusterednetwork_while_11 "while [count links < num-links" boolean => void
+[8]_asm_proceduresetupspatiallyclusterednetwork_while_10 "while [count links < num-links" boolean => void
       _lessthan double,Object => boolean
         _count AgentSet => double
           _links => AgentSet
         _procedurevariable:NUM-LINKS => Object
          L0
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_while_11.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_while_10.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.links ()Lorg/nlogo/agent/AgentSet;
          L1
           ASTORE 2
@@ -1424,14 +1412,14 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
           ICONST_2
           GOTO L9
          L8
-         FRAME FULL [org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_while_11 org/nlogo/nvm/Context I T java/lang/Object] [org/nlogo/nvm/Context]
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_while_10 org/nlogo/nvm/Context I T java/lang/Object] [org/nlogo/nvm/Context]
           BIPUSH 9
          L9
-         FRAME FULL [org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_while_11 org/nlogo/nvm/Context I T java/lang/Object] [org/nlogo/nvm/Context I]
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_while_10 org/nlogo/nvm/Context I T java/lang/Object] [org/nlogo/nvm/Context I]
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L10
           RETURN
-[9]_asm_proceduresetupspatiallyclusterednetwork_repeatlocal_12 "" double => void
+[9]_asm_proceduresetupspatiallyclusterednetwork_repeatlocal_11 "" double => void
       _constdouble:10.0 => double
          L0
           LDC 10.0
@@ -1445,7 +1433,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
           DUP
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_repeatlocal_12.validLong (D)J
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_repeatlocal_11.validLong (D)J
           INVOKESPECIAL org/nlogo/nvm/MutableLong.<init> (J)V
           AASTORE
           ALOAD 1
@@ -1454,34 +1442,34 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
          L2
           RETURN
 [10]_layoutspring
-      _asm_proceduresetupspatiallyclusterednetwork_turtles_13 "turtles" => AgentSet
+      _asm_proceduresetupspatiallyclusterednetwork_turtles_12 "turtles" => AgentSet
            L0
             ALOAD 0
-            GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_turtles_13.world : Lorg/nlogo/agent/World;
+            GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_turtles_12.world : Lorg/nlogo/agent/World;
             INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
            L1
             ARETURN
-      _asm_proceduresetupspatiallyclusterednetwork_links_14 "links" => AgentSet
+      _asm_proceduresetupspatiallyclusterednetwork_links_13 "links" => AgentSet
            L0
             ALOAD 0
-            GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_links_14.world : Lorg/nlogo/agent/World;
+            GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_links_13.world : Lorg/nlogo/agent/World;
             INVOKEVIRTUAL org/nlogo/agent/World.links ()Lorg/nlogo/agent/AgentSet;
            L1
             ARETURN
-      _asm_proceduresetupspatiallyclusterednetwork_constdouble_15 "0.3" => Double
+      _asm_proceduresetupspatiallyclusterednetwork_constdouble_14 "0.3" => Double
            L0
             ALOAD 0
-            GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_constdouble_15.kept1_value : Ljava/lang/Double;
+            GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_constdouble_14.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-      _asm_proceduresetupspatiallyclusterednetwork_div_16 "world-width / (sqrt number-of-nodes" double,double => double
+      _asm_proceduresetupspatiallyclusterednetwork_div_15 "world-width / (sqrt number-of-nodes" double,double => double
         _worldwidth => double
         _sqrt double => double
           _observervariable:NUMBER-OF-NODES => Object
             TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
            L2
             ALOAD 0
-            GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_div_16.world : Lorg/nlogo/agent/World;
+            GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_div_15.world : Lorg/nlogo/agent/World;
             INVOKEVIRTUAL org/nlogo/agent/World.worldWidth ()I
             I2D
            L3
@@ -1497,7 +1485,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
             INVOKEVIRTUAL java/lang/Double.doubleValue ()D
             GOTO L5
            L1
-           FRAME FULL [org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_div_16 org/nlogo/nvm/Context java/lang/Object] [java/lang/ClassCastException]
+           FRAME FULL [org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_div_15 org/nlogo/nvm/Context java/lang/Object] [java/lang/ClassCastException]
             POP
             NEW org/nlogo/nvm/ArgumentTypeException
             DUP
@@ -1509,7 +1497,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
             INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
             ATHROW
            L5
-           FRAME FULL [org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_div_16 org/nlogo/nvm/Context java/lang/Object] [D D]
+           FRAME FULL [org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_div_15 org/nlogo/nvm/Context java/lang/Object] [D D]
             DSTORE 2
             DLOAD 2
             DCONST_0
@@ -1532,7 +1520,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
             INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
            L6
-           FRAME FULL [org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_div_16 org/nlogo/nvm/Context D] [D]
+           FRAME FULL [org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_div_15 org/nlogo/nvm/Context D] [D]
             DLOAD 2
             INVOKESTATIC java/lang/StrictMath.sqrt (D)D
            L7
@@ -1563,13 +1551,13 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-      _asm_proceduresetupspatiallyclusterednetwork_constdouble_17 "1" => Double
+      _asm_proceduresetupspatiallyclusterednetwork_constdouble_16 "1" => Double
            L0
             ALOAD 0
-            GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_constdouble_17.kept1_value : Ljava/lang/Double;
+            GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_constdouble_16.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-[11]_asm_proceduresetupspatiallyclusterednetwork_repeatlocalinternal_18 "" => void
+[11]_asm_proceduresetupspatiallyclusterednetwork_repeatlocalinternal_17 "" => void
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1601,7 +1589,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
          L2
          FRAME SAME
           RETURN
-[12]_asm_proceduresetupspatiallyclusterednetwork_return_19 "" => void
+[12]_asm_proceduresetupspatiallyclusterednetwork_return_18 "" => void
          L0
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
@@ -1651,11 +1639,11 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          FRAME SAME
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           LLOAD 4
           L2I
           I2L
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.setSeed (J)V
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.setSeed (J)V
           ALOAD 1
           ICONST_1
           PUTFIELD org/nlogo/nvm/Context.ip : I
@@ -2060,9 +2048,9 @@ procedure DO-VIRUS-CHECKS:[]{OTPL}:
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           LDC 100
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextLong (J)J
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
          L1
           ALOAD 1
@@ -2136,9 +2124,9 @@ procedure DO-VIRUS-CHECKS:[]{OTPL}:
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           LDC 100
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextLong (J)J
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
          L1
           ALOAD 1
@@ -3871,8 +3859,8 @@ procedure SPREAD-VIRUS:[]{OTPL}:
           DLOAD 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextDouble ()D
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextDouble ()D
           DMUL
          L2
           ALOAD 1
@@ -4030,8 +4018,8 @@ procedure SETUP-NODES:[]{O---}:
           DLOAD 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextDouble ()D
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextDouble ()D
           DLOAD 4
           DLOAD 2
           DSUB
@@ -4063,8 +4051,8 @@ procedure SETUP-NODES:[]{O---}:
           DLOAD 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextDouble ()D
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextDouble ()D
           DLOAD 4
           DLOAD 2
           DSUB
@@ -4208,9 +4196,9 @@ procedure SETUP-NODES:[]{O---}:
           IFLE L11
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           LLOAD 4
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextLong (J)J
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
           GOTO L12
          L11
@@ -4221,10 +4209,10 @@ procedure SETUP-NODES:[]{O---}:
           IFGE L13
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           LLOAD 4
           LNEG
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextLong (J)J
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           LNEG
           L2D
           GOTO L12

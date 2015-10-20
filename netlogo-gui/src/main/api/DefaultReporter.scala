@@ -6,7 +6,7 @@ package org.nlogo.api
  * Partial implementation of Reporter provides common implementations of some methods.  Implements
  * every method except <code>report(...)</code>.
  */
-abstract class DefaultReporter extends Reporter with TokenHolder {
+abstract class DefaultReporter extends Reporter {
 
   /**
    * Indicates that this primitive can be used by any agent.

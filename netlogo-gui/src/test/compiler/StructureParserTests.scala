@@ -4,7 +4,7 @@ package org.nlogo.compiler
 
 import org.scalatest.FunSuite
 
-import org.nlogo.api.{ DummyExtensionManager}
+import org.nlogo.api.{ DummyExtensionManager, NetLogoLegacyDialect }
 import org.nlogo.core.Program
 import org.nlogo.core.CompilerException
 import org.nlogo.core.DummyCompilationEnvironment
@@ -12,10 +12,10 @@ import org.nlogo.nvm.Procedure
 
 class StructureParserTests extends FunSuite {
   // private so StructureParser.Results doesn't escape compiler package
-  private def compile(source: String, program: Program = Program.empty()): StructureParser.Results =
+  private def compile(source: String, program: Program = Program.fromDialect(NetLogoLegacyDialect)): StructureParser.Results =
     TestHelper.structureParse(source, program)
   test("empty") {
-    val program = Program.empty()
+    val program = Program.fromDialect(NetLogoLegacyDialect)
     val results = compile("", program)
     assert(results.procedures.isEmpty)
     assert(results.tokens.isEmpty)
@@ -29,19 +29,19 @@ class StructureParserTests extends FunSuite {
   }
   test("missing procedure name") {  // ticket #1183
     intercept[CompilerException] {
-      compile("to", Program.empty())
+      compile("to", Program.fromDialect(NetLogoLegacyDialect))
     }
     intercept[CompilerException] {
-      compile("to-report", Program.empty())
+      compile("to-report", Program.fromDialect(NetLogoLegacyDialect))
     }
   }
   test("commandProcedure") {
-    val results = compile("to go fd 1 end", Program.empty())
+    val results = compile("to go fd 1 end", Program.fromDialect(NetLogoLegacyDialect))
     assertResult(1)(results.procedures.size)
     assertResult("procedure GO:[]{OTPL}:\n")(results.procedures.get("GO").dump)
   }
   test("declarations1") {
-    val program = Program.empty()
+    val program = Program.fromDialect(NetLogoLegacyDialect)
     val results = compile("globals [g1 g2] turtles-own [t1 t2] patches-own [p1 p2]", program)
     assert(results.procedures.isEmpty)
     assertResult("globals [G1 G2]\n" +
@@ -53,7 +53,7 @@ class StructureParserTests extends FunSuite {
       "link-breeds \n")(results.program.dump)
   }
   test("declarations2") {
-    val program = Program.empty()
+    val program = Program.fromDialect(NetLogoLegacyDialect)
     val results = compile("breed [b1s b1] b1s-own [b11 b12] breed [b2s b2] b2s-own [b21 b22]", program)
     assert(results.procedures.isEmpty)
     assertResult(

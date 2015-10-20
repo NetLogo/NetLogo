@@ -13,11 +13,15 @@ import org.nlogo.nvm.EngineException;
 
 public final strictfp class _face
     extends Command {
+  public _face() {
+    this.switches = true;
+  }
+
   @Override
   public org.nlogo.core.Syntax syntax() {
     return Syntax.commandSyntax
         (new int[]{Syntax.TurtleType() | Syntax.PatchType()},
-            "OT--", true);
+            "OT--");
   }
 
   @Override

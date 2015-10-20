@@ -59,7 +59,10 @@ class _hubnetkickclient extends Command {
 }
 
 class _hubnetkickallclients extends Command {
-  override def syntax = commandSyntax("OTPL", true)
+  switches = true
+
+  override def syntax = commandSyntax("OTPL")
+
   override def perform(context: Context) {
     workspace.getHubNetManager.kickAll()
     context.ip = next
@@ -79,7 +82,7 @@ class _hubnetoutqsize extends Reporter {
 }
 
 class _hubnetcreateclient extends Command {
-  override def syntax = commandSyntax("O---", false)
+  override def syntax = commandSyntax("O---")
   override def perform(context: Context) {
     workspace.getHubNetManager.newClient(false,0)
     context.ip = next
@@ -151,7 +154,7 @@ class _hubnetsetplotmirroring extends Command {
 }
 
 class _hubnetsetclientinterface extends Command {
-  def syntax = commandSyntax(Array[Int](StringType, ListType), "O---", false)
+  def syntax = commandSyntax(Array[Int](StringType, ListType), "O---")
   def perform(context: Context) {
     val interfaceType = argEvalString(context, 0)
     val interfaceInfo = argEvalList(context, 1)
@@ -175,7 +178,7 @@ class _hubnetfetchmessage extends Command {
 
 class _hubnetreset extends Command {
   override def syntax =
-    commandSyntax("O---", false)
+    commandSyntax("O---")
   override def perform(context: Context) {
     workspace.waitFor(
       new CommandRunnable {
@@ -188,7 +191,7 @@ class _hubnetreset extends Command {
 
 class _hubnetresetperspective extends Command {
   override def syntax =
-    commandSyntax(Array(StringType), "OTPL", false)
+    commandSyntax(Array(StringType), "OTPL")
   override def perform(context: Context) {
     val client = argEvalString(context, 0)
     val agent = world.observer.targetAgent
@@ -248,7 +251,7 @@ class _hubnetbroadcastusermessage extends Command {
 
 class _hubnetroboclient extends Command {
   override def syntax =
-    commandSyntax(Array(NumberType), "O---", false)
+    commandSyntax(Array(NumberType), "O---")
   override def perform(context: Context) {
     workspace.getHubNetManager.newClient(true, argEvalIntValue(context, 0))
     context.ip = next
@@ -257,7 +260,7 @@ class _hubnetroboclient extends Command {
 
 class _hubnetclearoverrides extends Command {
   override def syntax =
-    commandSyntax(Array(StringType), "OTPL", false)
+    commandSyntax(Array(StringType), "OTPL")
   override def perform(context: Context) {
     val client = argEvalString(context, 0)
     workspace.waitFor(
@@ -274,7 +277,7 @@ class _hubnetclearoverride extends Command {
     commandSyntax(Array(StringType,
                         AgentsetType | AgentType,
                         StringType),
-                  "OTPL", "?", false)
+                  "OTPL", "?")
   override def perform(context: Context) {
     import org.nlogo.agent.{ Agent, AgentSet, ArrayAgentSet }
     val client = argEvalString(context, 0)

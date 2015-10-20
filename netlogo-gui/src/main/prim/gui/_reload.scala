@@ -8,7 +8,9 @@ import org.nlogo.window.GUIWorkspace
 
 class _reload extends Command {
   override def syntax =
-    Syntax.commandSyntax("O---", true)
+    Syntax.commandSyntax("O---")
+
+  switches = true
   override def perform(context: Context) {
     workspace match {
       case gw: GUIWorkspace =>

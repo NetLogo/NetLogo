@@ -6,9 +6,10 @@ import org.nlogo.api.Syntax
 import org.nlogo.nvm.{ Command, Context }
 
 class _zoom extends Command {
+  switches = true
+
   override def syntax =
-    Syntax.commandSyntax(Array(Syntax.NumberType),
-                         "O---", true)
+    Syntax.commandSyntax(Array(Syntax.NumberType), "O---")
   override def perform(context: Context) {
     val observer = world.observer
     // don't zoom past the point you are looking at.  maybe this should be an error?

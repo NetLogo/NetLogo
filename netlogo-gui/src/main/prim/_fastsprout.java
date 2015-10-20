@@ -14,13 +14,14 @@ public final strictfp class _fastsprout
 
   public _fastsprout(String breedName) {
     this.breedName = breedName;
+    this.switches = true;
   }
 
   @Override
   public org.nlogo.core.Syntax syntax() {
     return Syntax.commandSyntax
         (new int[]{Syntax.NumberType()},
-            "--P-", true);
+            "--P-");
   }
 
   @Override

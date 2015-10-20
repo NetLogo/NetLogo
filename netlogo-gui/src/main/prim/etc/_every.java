@@ -14,11 +14,13 @@ import java.util.WeakHashMap;
 public final strictfp class _every
     extends Command
     implements org.nlogo.nvm.CustomAssembled {
+  public _every() {
+    this.switches = true;
+  }
+
   @Override
   public org.nlogo.core.Syntax syntax() {
-    return Syntax.commandSyntax
-        (new int[]{Syntax.NumberType(), Syntax.CommandBlockType()},
-            true);
+    return Syntax.commandSyntax(new int[]{Syntax.NumberType(), Syntax.CommandBlockType()});
   }
 
   @Override

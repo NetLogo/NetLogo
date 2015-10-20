@@ -3,6 +3,7 @@
 package org.nlogo.nvm
 
 import org.nlogo.api
+import org.nlogo.core.Let
 
 // tasks are created by the _task prim, which may appear in user code, or may be inserted by
 // ExpressionParser during parsing, when a task is known to be expected.
@@ -17,7 +18,7 @@ import org.nlogo.api
 // "locals"), so we have storage for both of those in the task.
 
 sealed trait Task {
-  val formals: Array[api.Let]  // don't mutate please! Array for efficiency
+  val formals: Array[Let]  // don't mutate please! Array for efficiency
   val lets: List[LetBinding]
   val locals: Array[AnyRef]
   def bindArgs(c: Context, args: Array[AnyRef]) {
@@ -39,7 +40,7 @@ sealed trait Task {
 // Reporter tasks are pretty simple.  The body is simply a Reporter.  To run it, we swap closed-over
 // variables into the context, bind actuals to formals, call report(), then unswap.
 
-case class ReporterTask(body: Reporter, formals: Array[api.Let], lets: List[LetBinding], locals: Array[AnyRef])
+case class ReporterTask(body: Reporter, formals: Array[Let], lets: List[LetBinding], locals: Array[AnyRef])
 extends Task with org.nlogo.api.ReporterTask {
   override def toString = "(reporter task)"
   def report(context: api.Context, args: Array[AnyRef]): AnyRef =
@@ -62,7 +63,7 @@ extends Task with org.nlogo.api.ReporterTask {
 // the way out (including a dead-agent check).  We may throw NonLocalExit if _report or _stop is
 // called.
 
-case class CommandTask(procedure: Procedure, formals: Array[api.Let], lets: List[LetBinding], locals: Array[AnyRef])
+case class CommandTask(procedure: Procedure, formals: Array[Let], lets: List[LetBinding], locals: Array[AnyRef])
 extends Task with org.nlogo.api.CommandTask {
   override def toString = procedure.displayName
   def perform(context: api.Context, args: Array[AnyRef]) {

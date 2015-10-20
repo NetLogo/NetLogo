@@ -87,11 +87,15 @@ case class _const(value: AnyRef) extends Reporter with Pure {
     Syntax.reporterSyntax(
       ret = value match {
         case b: java.lang.Boolean => Syntax.BooleanType
-        case d: java.lang.Double => Syntax.NumberType
-        case l: LogoList => Syntax.ListType
-        case s: String => Syntax.StringType
-        case _ => Syntax.WildcardType
+        case d: java.lang.Double  => Syntax.NumberType
+        case l: LogoList          => Syntax.ListType
+        case s: String            => Syntax.StringType
+        case _                    => Syntax.WildcardType
       })
+}
+case class _constcodeblock(value: Seq[Token]) extends Reporter with Pure {
+  override def syntax =
+    Syntax.reporterSyntax(ret = Syntax.CodeBlockType)
 }
 case class _count() extends Reporter {
   override def syntax =
@@ -387,6 +391,9 @@ case class _sum() extends Reporter with Pure {
       right = List(Syntax.ListType),
       ret = Syntax.NumberType)
 }
+case class _symbol() extends Reporter with Pure {
+  override def syntax = Syntax.reporterSyntax(ret = Syntax.SymbolType)
+}
 // This is used only for parsing and removed from the AST before compilation
 case class _task() extends Reporter {
   override def syntax = {
@@ -429,6 +436,10 @@ case class _unaryminus() extends Reporter with Pure {
     Syntax.reporterSyntax(
       right = List(Syntax.NumberType),
       ret = Syntax.NumberType)
+}
+case class _unknownidentifier() extends Reporter {
+  override def syntax =
+    Syntax.reporterSyntax(ret = Syntax.WildcardType)
 }
 case class _with() extends Reporter {
   override def syntax =

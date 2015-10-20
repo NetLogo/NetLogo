@@ -18,10 +18,12 @@ public final strictfp class _createorderedturtles
 
   public _createorderedturtles() {
     breedName = NO_BREED;
+    this.switches = true;
   }
 
   public _createorderedturtles(String breedName) {
     this.breedName = breedName;
+    this.switches = true;
   }
 
   @Override
@@ -29,7 +31,7 @@ public final strictfp class _createorderedturtles
     return Syntax.commandSyntax
         (new int[]{Syntax.NumberType(),
             Syntax.CommandBlockType() | Syntax.OptionalType()},
-            "O---", "-T--", true);
+            "O---", "-T--");
   }
 
   @Override

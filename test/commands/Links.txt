@@ -668,6 +668,6 @@ LinkNeighborIsUndirectedOnly2
 # https://github.com/NetLogo/NetLogo/issues/338
 LinkCreationTypeChecking_2D
   O> crt 1
-  T> create-link-with patch-here => ERROR CREATE-LINK-WITH expected input to be a turtle but got the patch (patch 0 0) instead.
+  T> create-link-with patch-here => COMPILER ERROR CREATE-LINK-WITH expected this input to be a turtle, but got a patch instead
   T> create-links-with neighbors => COMPILER ERROR CREATE-LINKS-WITH expected this input to be a turtle agentset, but got a patch agentset instead
   T> let x neighbors create-links-with x => ERROR CREATE-LINKS-WITH expected input to be a turtle agentset but got the agentset (agentset, 8 patches) instead.

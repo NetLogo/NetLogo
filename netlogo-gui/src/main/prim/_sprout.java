@@ -19,10 +19,12 @@ public final strictfp class _sprout
 
   public _sprout() {
     breedName = NO_BREED;
+    this.switches = true;
   }
 
   public _sprout(String breedName) {
     this.breedName = breedName;
+    this.switches = true;
   }
 
   @Override
@@ -30,7 +32,7 @@ public final strictfp class _sprout
     return Syntax.commandSyntax
         (new int[]{Syntax.NumberType(),
             Syntax.CommandBlockType() | Syntax.OptionalType()},
-            "--P-", "-T--", true);
+            "--P-", "-T--");
   }
 
   @Override

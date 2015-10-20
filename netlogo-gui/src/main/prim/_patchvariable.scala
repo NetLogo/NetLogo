@@ -4,7 +4,8 @@ package org.nlogo.prim
 
 import org.nlogo.agent.Patch
 import org.nlogo.api.{ AgentException, LogoException, Syntax }
-import org.nlogo.nvm.{ Context, EngineException, Reference, Referenceable, Reporter }
+import org.nlogo.nvm.{ Context, EngineException, Reporter }
+import org.nlogo.core.{ AgentKind, Reference, Referenceable }
 
 class _patchvariable(private[this] val _vn: Int) extends Reporter with Referenceable {
   override def syntax =
@@ -15,7 +16,7 @@ class _patchvariable(private[this] val _vn: Int) extends Reporter with Reference
   override def toString: String =
     s"${super.toString}:${if (world == null) vn else world.patchesOwnNameAt(vn)}"
 
-  def makeReference: Reference = new Reference(classOf[Patch], vn, this)
+  def makeReference: Reference = return new Reference(AgentKind.Patch, vn, this)
 
   override def report(context: Context) = report_1(context)
 
