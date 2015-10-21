@@ -101,7 +101,6 @@ class TestCompileAll extends FunSuite  {
     // slowing things down), and has some other effects too - ST 1/13/05, 12/6/07
     workspace.compilerTestingMode = true
     try {
-      System.setProperty("netlogo.extensions.dir", "jvm/extensions")
       workspace.open(path)
       val lab = HeadlessWorkspace.newLab
       lab.load(ModelReader.parseModel(

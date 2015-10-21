@@ -15,7 +15,6 @@ class TestImportExport extends FixtureSuite  {
 
   override def withFixture(test: OneArgTest) =
     Fixture.withFixture(test.name) { fixture =>
-      System.setProperty("netlogo.extensions.dir", "jvm/extensions")
       withFixture(test.toNoArgTest(fixture))
     }
 

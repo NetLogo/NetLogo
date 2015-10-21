@@ -17,7 +17,6 @@ import
 trait Finder extends TestFinder {
   override def withFixture[T](name: String)(body: AbstractFixture => T): T =
     Fixture.withFixture(name) { fixture =>
-      System.setProperty("netlogo.extensions.dir", "jvm/extensions")
       body(fixture)
     }
 }
@@ -28,11 +27,15 @@ trait TaggedLanguageTest extends Finder {
 }
 
 trait TaggedSlowTest extends Finder {
-  override def test(name: String, otherTags: Tag*)(testFun: => Unit) =
+  println("In TaggedSlowTest!")
+  override def test(name: String, otherTags: Tag*)(testFun: => Unit) = {
     super.test(name, (SlowTestTag +: otherTags):_*)(testFun)
+  }
 }
 
 class TestCommands extends CommandTests with TaggedLanguageTest
 class TestReporters extends ReporterTests with TaggedLanguageTest
 class TestModels extends ModelTests with TaggedSlowTest
-class TestExtensions extends ExtensionTests with TaggedSlowTest
+class TestExtensions extends ExtensionTests with TaggedSlowTest {
+  println("In TestExtensions!")
+}

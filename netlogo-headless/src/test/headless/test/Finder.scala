@@ -34,7 +34,13 @@ abstract class ExtensionTests extends Finder {
             filesInDir(f)
           else
             List(f).filter(_.getName == "tests.txt")}
-      filesInDir(new File("jvm" + File.separator + "extensions"))
+      println("netlogo ext dir: " + System.getProperty("netlogo.extensions.dir"))
+      val extensionsDir =
+        Option(System.getProperty("netlogo.extensions.dir", "extensions"))
+          .flatMap(path => Option(new File(path)))
+          .getOrElse(throw new RuntimeException("Invalid extensions dir!"))
+      println("extension dir: " + extensionsDir)
+      filesInDir(extensionsDir)
         .iterator
         .map(f => (suiteName(f), file2String(f.getAbsolutePath)))
     }
@@ -53,6 +59,7 @@ trait Finder extends FunSuite  {
       f.getParentFile.getName
     else
       f.getName.stripSuffix(".txt")
+
   case class TxtsInDir(dir: String) extends Iterable[(String, String)] {
     override def iterator =
       new File(dir).listFiles
@@ -62,6 +69,7 @@ trait Finder extends FunSuite  {
         .iterator
         .map(f => (suiteName(f), file2String(f.getAbsolutePath)))
   }
+
   case class TxtsInResources(path: String) extends Iterable[(String, String)] {
     import org.reflections._
     import collection.JavaConverters._
@@ -73,6 +81,10 @@ trait Finder extends FunSuite  {
           (s.stripPrefix(path + "/").stripSuffix(".txt"),
            Resource.asString("/" + s)))
   }
+
+  if (files == null)
+    throw new RuntimeException("PROBLEMS!")
+
   // parse tests first, then run them
   for (t <- files.flatMap(Function.tupled(parseFile)))
     // by tagging each test with both its suite name and its full name,

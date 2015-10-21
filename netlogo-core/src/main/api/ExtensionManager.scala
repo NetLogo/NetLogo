@@ -37,21 +37,8 @@ trait ExtensionManager extends CoreManager {
   /** uses java.lang.Iterable for easy access from Java */
   def loadedExtensions: java.lang.Iterable[ClassManager]
 
-  def resolvePathAsURL(path: String): String
-
   def dumpExtensions: String
 
   def dumpExtensionPrimitives(): String
-
-  def addToLibraryPath(classManager: AnyRef, directory: String)
-
-  @throws(classOf[ExtensionException])
-  def getFile(path: String): File
-
-  def getJarPaths: JList[String]
-
-  def getExtensionNames: JList[String]
-
-  def profilingEnabled: Boolean
 
 }

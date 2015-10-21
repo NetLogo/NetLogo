@@ -15,7 +15,7 @@ import
   agent.{ AbstractExporter, Agent, AgentSet, World },
   api.{PlotInterface, CommandLogoThunk, Dump, Exceptions,
     JobOwner, LogoException, ModelType, ReporterLogoThunk, SimpleJobOwner},
-  core.{CompilerUtilitiesInterface, AgentKind, CompilerException, Femto, File, FileMode, LiteralParser},
+  core.{ CompilationEnvironment, CompilerUtilitiesInterface, Dialect, AgentKind, CompilerException, Femto, File, FileMode, LiteralParser},
   nvm.{ Activation, Command, Context, EngineException, FileManager, ImportHandler,
     Instruction, Job, MutableLong, Procedure, Workspace },
     Procedure.{ NoProcedures, ProceduresMap },
@@ -61,7 +61,8 @@ abstract class AbstractWorkspace(val world: World)
 extends api.LogoThunkFactory with LiteralParser
 with Workspace with Procedures with Plotting with Exporting with Evaluating with Benchmarking
 with Compiling with Profiling with Extensions with BehaviorSpace with Paths with Checksums
-with RunCache with Jobs with Warning with OutputArea with Importing {
+with RunCache with Jobs with Warning with OutputArea with Importing
+with ExtendableWorkspace with ExtensionCompilationEnvironment {
 
   world.parser_=(this)
 
@@ -126,6 +127,7 @@ with RunCache with Jobs with Warning with OutputArea with Importing {
   override def auxRNG = world.auxRNG
   override def lastLogoException: LogoException = null
   override def clearLastLogoException() { }
+
 }
 
 object AbstractWorkspaceTraits {
@@ -345,7 +347,7 @@ object AbstractWorkspaceTraits {
 
   trait Extensions { this: AbstractWorkspace =>
     private val _extensionManager: ExtensionManager =
-      new ExtensionManager(this)
+      new ExtensionManager(this, new JarLoader(this));
     override def getExtensionManager =
       _extensionManager
     override def isExtensionName(name: String) =
@@ -624,4 +626,49 @@ object AbstractWorkspaceTraits {
 
   }
 
+  trait ExtensionCompilationEnvironment { this: Paths with Profiling =>
+    import java.io.{ File => JFile }
+    import java.net.MalformedURLException
+    import java.net.URL
+
+    def attachModelDir(filePath: String): String = {
+      if (new JFile(filePath).isAbsolute())
+        filePath
+      else {
+        val path =
+          Option(getModelPath).getOrElse(
+            System.getProperty("user.home")
+            + JFile.separatorChar + "dummy.txt")
+        val urlForm = new URL(new JFile(path).toURI.toURL, filePath);
+        new JFile(urlForm.getFile()).getAbsolutePath();
+      }
+    }
+
+    def getSource(filename: String): String = {
+      throw new UnsupportedOperationException("Source not available from headless workspace")
+    }
+
+    val compilationEnvironment = new CompilationEnvironment {
+
+      def getSource(filename: String): String =
+        ExtensionCompilationEnvironment.this.getSource(filename)
+
+      def profilingEnabled: Boolean =
+        ExtensionCompilationEnvironment.this.profilingEnabled
+
+      def resolvePath(path: String): String = {
+        try {
+          val r = new JFile(attachModelDir(path))
+          try {
+            r.getCanonicalPath
+          } catch {
+            case ex: IOException => r.getPath
+          }
+        } catch {
+          case ex: MalformedURLException =>
+            throw new IllegalStateException(s"$path is not a valid pathname: $ex")
+        }
+      }
+    }
+  }
 }
