@@ -49,7 +49,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
       ws.compiler.compileProgram(
         code, Program.empty.copy(
           interfaceGlobals = model.interfaceGlobals),
-        ws.getExtensionManager, ws.flags)
+        ws.getExtensionManager, ws.compilationEnvironment, ws.flags)
     }
     ws.procedures = results.proceduresMap
     ws.clearRunCache()

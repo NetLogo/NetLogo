@@ -171,7 +171,8 @@ class Evaluator(workspace: AbstractWorkspace) {
       wrappedSource,
       Some(if(reporter) "runresult" else "run"),
       workspace.world.program, workspace.procedures,
-      workspace.getExtensionManager)
+      workspace.getExtensionManager,
+      workspace.compilationEnvironment)
     results.head.init(workspace)
     results.head
   }
@@ -181,7 +182,7 @@ class Evaluator(workspace: AbstractWorkspace) {
     val wrappedSource = SourceWrapping.getHeader(kind, commands) + source + SourceWrapping.getFooter(commands)
     val results =
       workspace.compiler.compileMoreCode(wrappedSource, displayName, workspace.world.program,
-        workspace.procedures, workspace.getExtensionManager, flags)
+        workspace.procedures, workspace.getExtensionManager, workspace.compilationEnvironment, flags)
     results.head.init(workspace)
     results.head
   }

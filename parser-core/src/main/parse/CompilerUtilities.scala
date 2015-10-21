@@ -3,7 +3,7 @@
 package org.nlogo.parse
 
 import org.nlogo.core,
-  core.{DummyExtensionManager, CompilerException, CompilerUtilitiesInterface,
+  core.{Dialect, DummyExtensionManager, CompilerException, CompilerUtilitiesInterface,
         File, FrontEndInterface, ExtensionManager, StructureResults, Program, LiteralImportHandler}
 
 object CompilerUtilities extends CompilerUtilitiesInterface {
@@ -23,7 +23,7 @@ object CompilerUtilities extends CompilerUtilitiesInterface {
   def readNumberFromString(source: String): java.lang.Double =
     numberOrElse[java.lang.Double](source, NullImportHandler, _.getNumberValue)
 
-  def readFromString(source: String, importHandler: LiteralImportHandler): AnyRef =
+  def readFromString(source: String, importHandler: LiteralImportHandler)(implicit dialect: Dialect): AnyRef =
     numberOrElse[AnyRef](source, importHandler, _.getLiteralValue)
 
   def readNumberFromString(source: String, importHandler: LiteralImportHandler): java.lang.Double =

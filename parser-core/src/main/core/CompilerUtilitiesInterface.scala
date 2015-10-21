@@ -14,7 +14,7 @@ trait CompilerUtilitiesInterface extends LiteralParser {
 
   def readNumberFromString(source: String): AnyRef
 
-  def readFromString(source: String, importHandler: LiteralImportHandler): AnyRef
+  def readFromString(source: String, importHandler: LiteralImportHandler)(implicit dialect: Dialect): AnyRef
 
   def readNumberFromString(source: String, importHandler: LiteralImportHandler): AnyRef
 

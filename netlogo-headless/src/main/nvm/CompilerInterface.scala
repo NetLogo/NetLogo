@@ -4,7 +4,7 @@ package org.nlogo.nvm
 
 import org.nlogo.{ api, core },
   api.ExtensionManager,
-  core.{CompilerUtilitiesInterface, FrontEndInterface, Program}
+  core.{CompilationEnvironment, CompilerUtilitiesInterface, FrontEndInterface, Program}
 
 // ought to be in the api package, except oops, it depends on nvm.Procedure - ST 2/23/09
 
@@ -13,9 +13,9 @@ trait CompilerInterface {
   def frontEnd: FrontEndInterface
   def utilities: CompilerUtilitiesInterface
   def compileProgram(source: String, program: Program, extensionManager: ExtensionManager,
-    flags: CompilerFlags = CompilerFlags()): CompilerResults
+    compilationEnvironment: CompilationEnvironment, flags: CompilerFlags = CompilerFlags()): CompilerResults
   def compileMoreCode(source: String, displayName: Option[String], program: Program,
-    oldProcedures: ProceduresMap, extensionManager: ExtensionManager,
+    oldProcedures: ProceduresMap, extensionManager: ExtensionManager, compilationEnvironment: CompilationEnvironment,
     flags: CompilerFlags = CompilerFlags()): CompilerResults
   def makeLiteralReporter(value: AnyRef): Reporter
 }

@@ -2,10 +2,16 @@
 
 package org.nlogo.core
 
-trait Dialect {
+trait Dialect extends LowPriorityDialect {
   def is3D:           Boolean
   def agentVariables: AgentVariableSet
   def tokenMapper:    TokenMapperInterface
+}
+
+object Dialect extends LowPriorityDialect
+
+trait LowPriorityDialect {
+  implicit val dialect = NetLogoCore
 }
 
 case object NetLogoCore extends Dialect {

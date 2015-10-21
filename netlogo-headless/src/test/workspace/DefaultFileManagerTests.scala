@@ -9,7 +9,8 @@ import
 org.nlogo.{core, agent, api, nvm},
     agent.OutputObject,
     api.{ExtensionManager => APIExtensionManager, World},
-org.nlogo.core.{LiteralImportHandler, CompilerUtilitiesInterface, File, FileMode, FrontEndInterface, Program},
+    core.{ Dialect, LiteralImportHandler, CompilationEnvironment, CompilerUtilitiesInterface,
+          File, FileMode, FrontEndInterface, Program},
     nvm.{Procedure, CompilerFlags, CompilerInterface, CompilerResults, Reporter},
       FrontEndInterface.ProceduresMap
 
@@ -295,6 +296,7 @@ class DefaultFileManagerTests extends FunSuite with OneInstancePerTest {
     override def compileProgram(source: String,
                                 program: Program,
                                 extensionManager: APIExtensionManager,
+                                compilationEnvironment: CompilationEnvironment,
                                 flags: CompilerFlags): CompilerResults = ???
 
     override def makeLiteralReporter(value: AnyRef): Reporter = ???
@@ -304,6 +306,7 @@ class DefaultFileManagerTests extends FunSuite with OneInstancePerTest {
                                  program: Program,
                                  oldProcedures: Procedure.ProceduresMap,
                                  extensionManager: APIExtensionManager,
+                                 compilationEnvironment: CompilationEnvironment,
                                  flags: CompilerFlags): CompilerResults = ???
 
     override def frontEnd: FrontEndInterface = ???
@@ -315,7 +318,7 @@ class DefaultFileManagerTests extends FunSuite with OneInstancePerTest {
 
     override def readFromString(source: String): AnyRef = ???
 
-    override def readFromString(source: String, importHandler: LiteralImportHandler): AnyRef = ???
+    override def readFromString(source: String, importHandler: LiteralImportHandler)(implicit dialect: Dialect): AnyRef = ???
 
     override def isReporter(s: String,
                             program: Program,
