@@ -1781,20 +1781,25 @@ procedure SETUP:[]{O---}:
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ASTORE 3
+          ALOAD 3
           INSTANCEOF org/nlogo/agent/Turtle
           IFEQ L1
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ALOAD 3
           CHECKCAST org/nlogo/agent/Turtle
+          ASTORE 4
+          ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/Turtle.getPatchHere ()Lorg/nlogo/agent/Patch;
+          ASTORE 5
           GOTO L2
          L1
-         FRAME SAME
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+         FRAME APPEND [T org/nlogo/agent/Agent]
+          ALOAD 3
           CHECKCAST org/nlogo/agent/Patch
+          ASTORE 5
          L2
-         FRAME SAME1 org/nlogo/agent/Patch
+         FRAME APPEND [T org/nlogo/agent/Patch]
+          ALOAD 5
           ASTORE 2
           ALOAD 2
           ICONST_0
@@ -1822,7 +1827,7 @@ procedure SETUP:[]{O---}:
           ICONST_1
           GOTO L8
          L7
-         FRAME APPEND [D D]
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_if_2 org/nlogo/nvm/Context D D] []
           ICONST_0
          L8
          FRAME SAME1 I
@@ -1959,20 +1964,25 @@ procedure SETUP:[]{O---}:
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ASTORE 3
+          ALOAD 3
           INSTANCEOF org/nlogo/agent/Turtle
           IFEQ L1
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ALOAD 3
           CHECKCAST org/nlogo/agent/Turtle
+          ASTORE 4
+          ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/Turtle.getPatchHere ()Lorg/nlogo/agent/Patch;
+          ASTORE 5
           GOTO L2
          L1
-         FRAME SAME
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+         FRAME APPEND [T org/nlogo/agent/Agent]
+          ALOAD 3
           CHECKCAST org/nlogo/agent/Patch
+          ASTORE 5
          L2
-         FRAME SAME1 org/nlogo/agent/Patch
+         FRAME APPEND [T org/nlogo/agent/Patch]
+          ALOAD 5
           ASTORE 2
           ALOAD 2
           ICONST_0
@@ -2000,7 +2010,7 @@ procedure SETUP:[]{O---}:
           ICONST_1
           GOTO L8
          L7
-         FRAME APPEND [D D]
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_if_5 org/nlogo/nvm/Context D D] []
           ICONST_0
          L8
          FRAME SAME1 I

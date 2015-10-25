@@ -13,7 +13,7 @@ public final strictfp class _setpatchvariable
   int vn = 0;
 
   public _setpatchvariable(_patchvariable original) {
-    vn = original.vn;
+    vn = original.vn();
   }
 
   @Override
