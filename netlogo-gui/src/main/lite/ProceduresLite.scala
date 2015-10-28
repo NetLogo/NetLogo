@@ -2,7 +2,7 @@
 
 package org.nlogo.lite
 
-import org.nlogo.agent.Observer
+import org.nlogo.core.AgentKind
 import org.nlogo.api.ModelSection
 import org.nlogo.nvm.Workspace
 import org.nlogo.window.{ Event, Events, ProceduresInterface }
@@ -14,7 +14,7 @@ class ProceduresLite(linkParent: AnyRef, workspace: Workspace) extends Procedure
 with Event.LinkChild with Events.LoadSectionEvent.Handler
 {
   override def classDisplayName = "Code"
-  override def agentClass = classOf[Observer]
+  override def kind = AgentKind.Observer
   private var text = ""
   override def headerSource = ""
   override def innerSource = text

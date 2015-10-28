@@ -2,6 +2,9 @@
 
 package org.nlogo.core
 
+import java.util.{ Collection => JCollection }
+import scala.collection.JavaConverters._
+
 object ShapeList {
   val DefaultShapeName = "default"
   def isDefaultShapeName(name: String) =
@@ -27,7 +30,7 @@ class ShapeList(val kind: AgentKind, _shapes: Seq[Shape]) {
   /** Returns vector of the list of shapes available to the current model */
   def shapes: Seq[Shape] =
     // make sure that the shape with the name DefaultShapeName is at the top of the list.
-    shapeMap(DefaultShapeName) +:
+    shapeMap.get(DefaultShapeName).toSeq ++
       shapeMap.values.toSeq.filterNot(s => isDefaultShapeName(s.name)).sortBy(_.name)
 
   /** Returns a set of the names of all available shapes */
@@ -39,9 +42,13 @@ class ShapeList(val kind: AgentKind, _shapes: Seq[Shape]) {
     shapeMap.contains(name)
 
   /** Clears the list of shapes currently available */
-  def replaceShapes(newShapes: Iterable[Shape]) {
+  def replaceShapes(newShapes: Iterable[Shape]): Unit = {
     shapeMap.clear()
     addAll(newShapes)
+  }
+
+  def replaceShapes(newShapes: JCollection[_ <: Shape]): Unit = {
+    replaceShapes(newShapes.asScala)
   }
 
   /** Adds a new shape to the ones currently available for use */

@@ -11,10 +11,10 @@ class NamerTests extends FunSuite {
   def compile(source: String): Iterator[Token] = {
     val wrappedSource = "to __test " + source + "\nend"
     val program = Program.empty().copy(interfaceGlobals = Seq("X"))
-    val results = new StructureParser(
+    val results = new StructureParser(None,false)
+      .parse(
         FrontEnd.tokenizer.tokenizeString(wrappedSource).map(parse.Namer0),
-        None, StructureResults(program))
-      .parse(false)
+        StructureResults(program))
     assertResult(1)(results.procedures.size)
     val procedure = results.procedures.values.iterator.next()
     new Namer(results.program, results.procedures, new DummyExtensionManager)

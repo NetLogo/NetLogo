@@ -6,7 +6,8 @@ package org.nlogo.widget
 // so we put all of our Properties for this package here - ST 2/23/10
 
 import collection.JavaConverters._
-import org.nlogo.api.{ I18N, Property => P }
+import org.nlogo.api.{ Property => P }
+import org.nlogo.core.I18N
 
 object Properties {
   implicit val i18nPrefix = I18N.Prefix("edit")

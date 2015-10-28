@@ -20,59 +20,66 @@ package org.nlogo.parse
 
 import
   org.nlogo.core,
-    core.{ErrorSource, ExtensionManager, BreedIdentifierHandler, CompilationEnvironment,
-    FrontEndInterface, Program, Token, StructureDeclarations, StructureResults},
+    core.{CompilationOperand, ErrorSource, ExtensionManager, BreedIdentifierHandler, CompilationEnvironment,
+    FrontEndInterface, ProcedureSyntax, Program, Token, TokenMapperInterface, StructureDeclarations, StructureResults},
       FrontEndInterface.ProceduresMap,
     core.Fail._
 
 object StructureParser {
+  val IncludeFilesEndInNLS = "Included files must end with .nls"
 
   /// main entry point.  handles gritty extensions stuff and includes stuff.
+  def parseSources(tokenizer: core.TokenizerInterface, compilationData: CompilationOperand): StructureResults = {
+      import compilationData.{ compilationEnvironment, displayName, oldProcedures, subprogram, sources, containingProgram => program }
+      parsingWithExtensions(compilationData) {
+        val structureParser = new StructureParser(displayName, subprogram)
+        val firstResults =
+          sources.foldLeft(StructureResults(program, oldProcedures)) {
+            case (results, (filename, source)) =>
+              parseOne(tokenizer, structureParser, source, filename, results)
+          }
+        if (subprogram)
+          firstResults
+        else {
+          Iterator.iterate(firstResults) { results =>
+            val suppliedPath = results.includes.head.value.asInstanceOf[String]
+            cAssert(suppliedPath.endsWith(".nls"), IncludeFilesEndInNLS, results.includes.head)
+            IncludeFile(compilationEnvironment, suppliedPath) match {
+              case Some((path, fileContents)) =>
+                parseOne(tokenizer, structureParser, fileContents, path, results.copy(includes = results.includes.tail))
+              case None =>
+                exception(s"Could not find $suppliedPath", results.includes.head)
+            }
+          }.dropWhile(_.includes.nonEmpty).next
+        }
+      }
+  }
 
-  def parseAll(
-                tokenizer: core.TokenizerInterface,
-                source: String, displayName: Option[String], program: Program, subprogram: Boolean,
-                oldProcedures: ProceduresMap, extensionManager: ExtensionManager, compilationEnvironment: CompilationEnvironment): StructureResults = {
-    if (!subprogram)
-      extensionManager.startFullCompilation()
-    val sources = Seq((source, ""))
-    val oldResults = StructureResults(program, oldProcedures)
-    def parseOne(source: String, filename: String, previousResults: StructureResults): StructureResults = {
+  private def parsingWithExtensions(compilationData: CompilationOperand)(results: => StructureResults): StructureResults = {
+    if (compilationData.subprogram)
+      results
+    else {
+      compilationData.extensionManager.startFullCompilation()
+
+      val r = results
+
+      for (token <- r.extensions)
+        compilationData.extensionManager.importExtension(
+          token.text.toLowerCase, new ErrorSource(token))
+
+      compilationData.extensionManager.finishFullCompilation()
+
+      r
+    }
+  }
+
+  private def parseOne(tokenizer: core.TokenizerInterface, structureParser: StructureParser, source: String, filename: String, oldResults: StructureResults): StructureResults = {
       val tokens =
         tokenizer.tokenizeString(source, filename)
           .filter(_.tpe != core.TokenType.Comment)
           .map(Namer0)
-      new StructureParser(tokens, displayName, previousResults)
-        .parse(subprogram)
+      structureParser.parse(tokens, oldResults)
     }
-    val firstResults =
-      sources.foldLeft(oldResults) {
-        case (results, (source, filename)) =>
-          parseOne(source, filename, results)
-      }
-    val results =
-      Iterator.iterate(firstResults) { results =>
-        assert(!subprogram)
-        val suppliedPath = results.includes.head.value.asInstanceOf[String]
-        cAssert(suppliedPath.endsWith(".nls"),
-          "Included files must end with .nls",
-          results.includes.head)
-        IncludeFile(compilationEnvironment, suppliedPath) match {
-          case Some((path, fileContents)) =>
-            parseOne(fileContents, path, results.copy(includes = results.includes.tail))
-          case None =>
-            exception(s"Could not find $suppliedPath", results.includes.head)
-        }
-      }.dropWhile(_.includes.nonEmpty).next
-    if (!subprogram) {
-      for (token <- results.extensions)
-        extensionManager.importExtension(
-          token.text.toLowerCase, new ErrorSource(token))
-      extensionManager.finishFullCompilation()
-    }
-    results
-  }
-
 
   def usedNames(program: Program, procedures: ProceduresMap, declarations: Seq[StructureDeclarations.Declaration]): Map[String, String] = {
     val alwaysUsedNames =
@@ -96,15 +103,64 @@ object StructureParser {
       case _ => Seq()
     }.toMap
   }
+
+  def findProcedurePositions(tokens: Seq[Token]): Map[String, ProcedureSyntax] = {
+    import scala.annotation.tailrec
+    def procedureSyntax(tokens: Seq[Token]): Option[(String, ProcedureSyntax)] = {
+      val ident = tokens(1)
+      if (ident.tpe == core.TokenType.Ident)
+        Some((ident.text, ProcedureSyntax(tokens.head, ident, tokens.last)))
+      else
+        None
+    }
+
+    @tailrec
+    def splitOnProcedureStarts(tokens:       Seq[Token],
+                              existingProcs: Seq[Seq[Token]]): Seq[Seq[Token]] = {
+      if (tokens.isEmpty || tokens.head.tpe == core.TokenType.Eof)
+        existingProcs
+      else {
+        val headValue = tokens.head.value
+        if (headValue == "TO" || headValue == "TO-REPORT") {
+          val sizeToEnd = tokens.takeWhile(t => t.value != "END").size
+          val (procedureTokens, remainingTokens) = tokens.splitAt(sizeToEnd + 1)
+          splitOnProcedureStarts(remainingTokens, existingProcs :+ procedureTokens)
+        } else {
+          splitOnProcedureStarts(
+            tokens.dropWhile(t => ! (t.value == "TO" || t.value == "TO-REPORT")),
+            existingProcs)
+        }
+      }
+    }
+
+    splitOnProcedureStarts(tokens, Seq()).flatMap(procedureSyntax).toMap
+  }
+
+  def findIncludes(tokens: Iterator[Token]): Seq[String] = {
+
+    val includesPositionedTokens =
+      tokens.dropWhile(! _.text.equalsIgnoreCase("__includes"))
+    includesPositionedTokens.next
+    if (includesPositionedTokens.next.tpe != core.TokenType.OpenBracket)
+      Seq()
+    else
+      includesPositionedTokens
+        .takeWhile(_.tpe != core.TokenType.CloseBracket)
+        .filter(_.tpe == core.TokenType.Literal)
+        .map(_.value)
+        .collect {
+          case s: String => s
+        }.toSeq
+  }
+
 }
 /// for each source file. knits stages together. throws CompilerException
 
 class StructureParser(
-  tokens: Iterator[Token],
   displayName: Option[String],
-  oldResults: StructureResults) {
+  subprogram: Boolean) {
 
-  def parse(subprogram: Boolean): StructureResults =
+  def parse(tokens: Iterator[Token], oldResults: StructureResults): StructureResults =
     StructureCombinators.parse(tokens) match {
       case Right(declarations) =>
         StructureChecker.rejectDuplicateDeclarations(declarations)

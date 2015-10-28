@@ -2,8 +2,8 @@
 
 package org.nlogo.headless
 
+import org.nlogo.core.AgentKind
 import org.nlogo.workspace.ModelsLibrary
-import org.nlogo.agent.Observer
 import org.nlogo.api.SimpleJobOwner
 
 // This is accessible through the "bench" task in the sbt build.  It makes it convenient
@@ -27,7 +27,7 @@ object Dump {
       // I realized after writing this it would be more efficient to do what TestCompileAll does,
       // and not actually open the model. - ST 2/11/09
       workspace.open(path)
-      val owner = new SimpleJobOwner("Dump", workspace.world.mainRNG, classOf[Observer])
+      val owner = new SimpleJobOwner("Dump", workspace.world.mainRNG, AgentKind.Observer)
       workspace.evaluateReporter(owner, "__dump").asInstanceOf[String]
     }
     finally { workspace.dispose() }

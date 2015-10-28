@@ -4,7 +4,8 @@ package org.nlogo.app
 
 import java.util.HashSet
 import javax.swing.{JMenuItem, JPopupMenu, JButton, ButtonGroup, JToggleButton, AbstractAction, Action, ImageIcon}
-import org.nlogo.api.{Editable, I18N}
+import org.nlogo.api.{Editable}
+import org.nlogo.core.I18N
 import java.awt.event.{ActionListener, MouseAdapter, MouseEvent, ActionEvent}
 import org.nlogo.window.{WidgetInfo, EditDialogFactoryInterface, Widget}
 

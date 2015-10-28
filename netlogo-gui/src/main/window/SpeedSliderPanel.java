@@ -2,7 +2,7 @@
 
 package org.nlogo.window;
 
-import org.nlogo.api.I18N;
+import org.nlogo.core.I18N;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;

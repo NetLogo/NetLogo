@@ -7,7 +7,7 @@ package org.nlogo.app;
 // instead of sifting through all the files at that time cause that's
 // super slow. ev 3/26/09
 
-import org.nlogo.api.I18N;
+import org.nlogo.core.I18N;
 import org.nlogo.swing.BrowserLauncher;
 import org.nlogo.workspace.ModelsLibrary;
 

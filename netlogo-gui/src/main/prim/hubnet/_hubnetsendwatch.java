@@ -28,8 +28,8 @@ public strictfp class _hubnetsendwatch
           public void run() {
             workspace.getHubNetManager().sendAgentPerspective
                 (client,
-                    PerspectiveJ.WATCH().export(),
-                    agent.getAgentClass(), agent.id, ((world.worldWidth() - 1) / 2), false);
+                    PerspectiveJ.WATCH,
+                    agent.kind(), agent.id, ((world.worldWidth() - 1) / 2), false);
           }
         });
     context.ip = next;

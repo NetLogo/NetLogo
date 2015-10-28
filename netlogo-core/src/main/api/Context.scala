@@ -10,6 +10,9 @@ trait Context {
   /** Returns the agent that is currently executing this code. */
   def getAgent: Agent
 
+  /** Returns the current world */
+  def world: World
+
   /** Returns the drawing image. */
   def getDrawing: java.awt.image.BufferedImage
 
@@ -38,4 +41,8 @@ trait Context {
    */
   def getRNG: MersenneTwisterFast
 
+  /**
+   * This method returns the context activation, the current procedure at the time of call.
+   */
+  def activation: Activation
 }

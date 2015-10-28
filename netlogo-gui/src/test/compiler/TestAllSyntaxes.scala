@@ -260,7 +260,7 @@ class TestAllSyntaxes extends FunSuite {
                      |_towards turtle or patch,number,-TP-,None,10,1,1
                      |_towardsnowrap turtle or patch,number,-TP-,None,10,1,1
                      |_towardsxy number/number,number,-TP-,None,10,2,2
-                     |_towardsxynowrap turtle or patch,number,-TP-,None,10,1,1
+                     |_towardsxynowrap number/number,number,-TP-,None,10,2,2
                      |_turtle number,turtle,OTPL,None,10,1,1
                      |_turtles ,turtle agentset,OTPL,None,10,0,0
                      |_turtlesat number/number,turtle agentset,-TP-,None,10,2,2
@@ -273,8 +273,6 @@ class TestAllSyntaxes extends FunSuite {
                      |_usernewfile ,TRUE/FALSE or string,OTPL,None,10,0,0
                      |_useroneof anything/list,anything,OTPL,None,10,2,2
                      |_useryesorno anything,TRUE/FALSE,OTPL,None,10,1,1
-                     |_valuefrom agent/reporter block,anything,OTPL,None,10,2,2
-                     |_valuesfrom agentset/reporter block,list,OTPL,None,10,2,2
                      |_variance list,number,OTPL,None,10,1,1
                      |_with agentset,TRUE/FALSE block,agentset,OTPL,Some(?),12,1,1
                      |_withmax agentset,number block,agentset,OTPL,Some(?),12,1,1

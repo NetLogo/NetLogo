@@ -2,6 +2,8 @@
 
 package org.nlogo.api
 
+import org.nlogo.core.Shape
+
 trait ViewInterface {
   def viewIsVisible: Boolean
   def framesSkipped()

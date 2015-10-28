@@ -4,7 +4,7 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Turtle;
-import org.nlogo.api.I18N;
+import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
 import org.nlogo.api.Syntax;
@@ -39,7 +39,7 @@ public final strictfp class _layoutcircle
               (context, this,
                   I18N.errorsJ().get("org.nlogo.prim.etc._layoutcircle.patchesImmovable"));
         }
-        org.nlogo.agent.Layouts.circle(set, radius, context.job.random);
+        org.nlogo.agent.Layouts.circle(world, set, radius, context.job.random);
       }
     } catch (org.nlogo.api.AgentException e) {
       throw new EngineException(context, this, e.getMessage());

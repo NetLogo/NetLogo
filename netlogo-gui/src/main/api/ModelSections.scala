@@ -2,6 +2,8 @@
 
 package org.nlogo.api
 
+import org.nlogo.core.Shape
+
 import
   ModelSections._
 

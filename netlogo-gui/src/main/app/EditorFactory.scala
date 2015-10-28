@@ -2,7 +2,8 @@
 
 package org.nlogo.app
 
-import org.nlogo.api.{CompilerServices, I18N}
+import org.nlogo.api.{CompilerServices}
+import org.nlogo.core.I18N
 
 class EditorFactory(compiler: CompilerServices) extends org.nlogo.window.EditorFactory {
   def newEditor(cols: Int, rows: Int, disableFocusTraversal: Boolean) =

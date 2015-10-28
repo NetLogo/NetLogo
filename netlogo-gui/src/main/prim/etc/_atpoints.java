@@ -9,7 +9,7 @@ import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.AgentException;
 import org.nlogo.api.Dump;
-import org.nlogo.api.I18N;
+import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
 import org.nlogo.api.Syntax;
@@ -84,9 +84,8 @@ public final strictfp class _atpoints
       }
 
     }
-    return new ArrayAgentSet
-        (sourceSet.type(), result.toArray(new Agent[result.size()]),
-            world);
+    return new ArrayAgentSet(sourceSet.kind(),
+        result.toArray(new Agent[result.size()]));
   }
 
   private boolean validateListEntry(Object entry) {

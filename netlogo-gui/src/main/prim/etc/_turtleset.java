@@ -2,10 +2,11 @@
 
 package org.nlogo.prim.etc;
 
+import org.nlogo.core.AgentKindJ;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.Dump;
-import org.nlogo.api.I18N;
+import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
 import org.nlogo.api.Syntax;
@@ -56,9 +57,8 @@ public final strictfp class _turtleset
       }
     }
     return new org.nlogo.agent.ArrayAgentSet(
-        org.nlogo.agent.Turtle.class,
-        resultSet.toArray(new org.nlogo.agent.Turtle[resultSet.size()]),
-        world);
+        AgentKindJ.Turtle(),
+        resultSet.toArray(new org.nlogo.agent.Turtle[resultSet.size()]));
   }
 
   private void descendList(Context context, LogoList tempList, Set<Turtle> result)

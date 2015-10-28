@@ -3,7 +3,7 @@
 package org.nlogo.workspace;
 
 import org.nlogo.core.CompilerException;
-import org.nlogo.api.I18N;
+import org.nlogo.core.I18N;
 
 import java.util.ArrayList;
 import java.util.Iterator;

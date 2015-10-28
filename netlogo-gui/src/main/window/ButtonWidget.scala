@@ -8,10 +8,12 @@ import image.FilteredImageSource
 import org.nlogo.awt.DarkenImageFilter
 import javax.swing.ImageIcon
 import org.nlogo.api.MersenneTwisterFast
+import org.nlogo.core.AgentKind
 import org.nlogo.awt.Mouse.hasButton1
 import org.nlogo.agent.{Agent, Observer, Turtle, Patch, Link}
 import org.nlogo.nvm.Procedure
-import org.nlogo.api.{I18N, Editable, ModelReader, Options, Version}
+import org.nlogo.api.{ Editable, ModelReader, Options, Version}
+import org.nlogo.core.I18N
 import scala.language.existentials
 
 object ButtonWidget {
@@ -24,30 +26,30 @@ object ButtonWidget {
   object ButtonType {
 
     // the 4 possible button types
-    val ObserverButton = ButtonType("observer", classOf[Observer], img = None, darkImg = None)
-    val TurtleButton = ButtonType("turtle", classOf[Turtle], "/images/turtle.gif")
-    val LinkButton = ButtonType("link", classOf[Link], "/images/link.gif")
-    val PatchButton = ButtonType("patch", classOf[Patch], "/images/patch.gif")
+    val ObserverButton = ButtonType("observer", AgentKind.Observer, img = None, darkImg = None)
+    val TurtleButton = ButtonType("turtle", AgentKind.Turtle, "/images/turtle.gif")
+    val LinkButton = ButtonType("link", AgentKind.Link, "/images/link.gif")
+    val PatchButton = ButtonType("patch", AgentKind.Patch, "/images/patch.gif")
 
     val buttonTypes = List(ObserverButton, TurtleButton, LinkButton, PatchButton)
 
     def darkImage(image: ImageIcon) = new ImageIcon(java.awt.Toolkit.getDefaultToolkit.createImage(
       new FilteredImageSource(image.getImage.getSource, new DarkenImageFilter(0.5))))
 
-    private def apply(headerCode:String, agentClass:Class[_ <: Agent], imagePath: String): ButtonType = {
+    private def apply(headerCode:String, agentKind:AgentKind, imagePath: String): ButtonType = {
       val img = image(imagePath)
-      new ButtonType(headerCode, agentClass, Some(img), Some(darkImage(img)))
+      new ButtonType(headerCode, agentKind, Some(img), Some(darkImage(img)))
     }
-    def apply(c:Class[_ <: Agent]): ButtonType = {
-      buttonTypes.find(_.agentClass == c).getOrElse(ObserverButton) //TODO or should we say error("bad agent class")
+    def apply(c:AgentKind): ButtonType = {
+      buttonTypes.find(_.agentKind == c).getOrElse(ObserverButton) //TODO or should we say error("bad agent class")
     }
     def apply(name:String): ButtonType = {
       buttonTypes.find(_.name == name).getOrElse(ObserverButton) //TODO or should we say error("bad agent name")
     }
     def getAgentClass(name:String) = {
-      if(name == "NIL") ObserverButton.agentClass
+      if(name == "NIL") ObserverButton.agentKind
       //TODO or should we say error("bad agent name")
-      buttonTypes.find(_.name == name).map(_.agentClass).getOrElse(ObserverButton.agentClass)
+      buttonTypes.find(_.name == name).map(_.agentKind).getOrElse(ObserverButton.agentKind)
     }
 
     // used for the dropdown in the button editor in the UI.
@@ -61,7 +63,7 @@ object ButtonWidget {
   }
   // encapsulates what used to be a bunch of 4 way if statements.
   // ButtonWidget now has a single ButtonType object that handles all this logic for it.
-  case class ButtonType(name: String, agentClass:Class[_ <: Agent],
+  case class ButtonType(name: String, agentKind:AgentKind,
                         img:Option[ImageIcon], darkImg:Option[ImageIcon]){
     def img(dark:Boolean): Option[ImageIcon] = if(dark) darkImg else img
     def toHeaderCode = "__" + name.toLowerCase + "code "
@@ -88,11 +90,11 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
     org.nlogo.awt.Fonts.adjustDefaultFont(this)
   }
 
-  // buttonType now controls the agentClass. no one should ever be setting
-  // agentClass from outside of this class anyway.
+  // buttonType now controls the agentKind. no one should ever be setting
+  // agentKind from outside of this class anyway.
   // the ui edits work through agent options, which now just set the button type
-  override def agentClass = buttonType.agentClass
-  override def agentClass(c:Class[_ <: Agent]) { /** ignoring, no one should call this. */ }
+  override def kind = buttonType.agentKind
+  override def agentKind(c:AgentKind) { /** ignoring, no one should call this. */ }
   def agentOptions = buttonType.toAgentOptions
   def agentOptions(newAgentOptions:Options[String]){
     if (newAgentOptions.chosenValue != this.agentOptions.chosenValue){

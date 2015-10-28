@@ -11,7 +11,7 @@ import java.awt.event.{ItemEvent, ItemListener, ActionEvent, ActionListener}
 import javax.swing.{Box, SwingConstants, BoxLayout, JCheckBox, JTextArea, JTextField,
   JScrollPane, JLabel, JButton, ListSelectionModel, JList, DefaultListModel, JPanel, JFrame}
 import java.awt.{Font, BorderLayout, Color, Dimension, Frame, GridBagConstraints, GridBagLayout}
-import org.nlogo.api.I18N
+import org.nlogo.core.I18N
 import org.nlogo.hubnet.server.{HubNetUtils, ConnectionManager}
 
 /**

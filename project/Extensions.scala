@@ -9,6 +9,7 @@ object Extensions {
 
   private val extensionDeps = TaskKey[(File, File)]("extension dependencies")
   val extensionRoot = SettingKey[File]("extension root", "root directory of extensions")
+  val excludedExtensions = SettingKey[Seq[String]]("extensions excluded for this configuration")
   val extensions = TaskKey[Seq[File]]("extensions", "builds extensions")
   val extension = InputKey[Seq[File]]("extension", "build a single extension")
 
@@ -47,11 +48,12 @@ object Extensions {
       val scala = scalaInstance.value
       ("git -C " + base + " submodule --quiet update --init") ! s.log
       val dirs = extensionDirs(extensionRoot.value)
-      dirs.flatMap{ dir =>
+      dirs.filterNot(f => excludedExtensions.value.contains(f.getName)).flatMap{ dir =>
         cacheBuild(s.cacheDirectory, dir, Set(base / "NetLogo.jar", base / "NetLogoLite.jar"))(
           buildExtension(dir, scala.libraryJar, packagedNetLogoJar, s.log, state.value))
       }
-    }
+    },
+    excludedExtensions := Seq()
   )
 
 

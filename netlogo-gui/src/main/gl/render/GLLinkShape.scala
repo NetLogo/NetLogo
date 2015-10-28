@@ -10,6 +10,7 @@ import org.nlogo.shape.LinkShape
 private class GLLinkShape(shape: LinkShape, val directionIndicator: GLShape) {
 
   private val curviness = shape.curviness
+
   private val lines: Array[LinkLine] = {
     val a = Array.fill[LinkLine](shape.numLines)(null)
     var i, j = 0
@@ -40,7 +41,7 @@ private class GLLinkShape(shape: LinkShape, val directionIndicator: GLShape) {
                   y2 * Renderer.WORLD_SCALE,
                   z2 * Renderer.WORLD_SCALE,
                   // I pulled 100 out of the air. ok to tweak - ev 12/6/07
-                  curviness, stroke, (100 / world.observer.dist).toInt)
+                  curviness, stroke, (100 / world.observer.orientation.get.dist).toInt)
     }
     if(isDirected) {
       gl.glLineStipple(4, LinkLine.dashChoices(1))
@@ -57,7 +58,7 @@ private class GLLinkShape(shape: LinkShape, val directionIndicator: GLShape) {
                                stroke: Float, world: World) {
     val size = link.size
     val indicatorSize = 1.0 max (stroke / 2)
-    val trans = shape.getDirectionIndicatorTransform(
+    val trans = shape.directionIndicatorTransform(
       x1, y1, x2, y2, size, link.linkDestinationSize + 2, link, 1, indicatorSize)
     shapeRenderer.renderAgent(
       gl, directionIndicator, color, indicatorSize,

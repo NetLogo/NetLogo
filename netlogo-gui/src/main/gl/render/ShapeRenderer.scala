@@ -103,12 +103,13 @@ private class ShapeRenderer(world: World) {
   def alignAgent(gl: GL2, size: Double, xcor: Double, ycor: Double, zcor: Double,
                  shape3D: GLShape, highlight: Boolean, orientation: Array[Double]) {
     val Array(heading, pitch, roll) = orientation
+    val observerOrientation = world.observer.orientation.get
     gl.glTranslated(xcor, ycor, zcor)
     // non-rotatable shapes always face the viewpoint
-    if (highlight && world.observer.perspective == Perspective.Follow) {
-      gl.glRotated(-world.observer.heading, 0.0, 0.0, 1.0)
+    if (highlight && world.observer.perspective.isInstanceOf[Perspective.Follow]) {
+      gl.glRotated(-observerOrientation.heading, 0.0, 0.0, 1.0)
       gl.glRotated(90, 1.0, 0.0, 0.0)
-      gl.glRotated(-world.observer.pitch, -1.0, 0.0, 0.0)
+      gl.glRotated(-observerOrientation.pitch, -1.0, 0.0, 0.0)
     }
     else if (shape3D.rotatable && !highlight) {
       gl.glRotated((0 - heading), 0.0d, 0.0d, 1.0d)
@@ -116,15 +117,15 @@ private class ShapeRenderer(world: World) {
       gl.glRotated(roll, 0.0d, 1.0d, 0.0d)
     }
     else {
-      gl.glRotated(-world.observer.heading, 0.0, 0.0, 1.0)
+      gl.glRotated(-observerOrientation.heading, 0.0, 0.0, 1.0)
       gl.glRotated(90, 1.0, 0.0, 0.0)
-      if (world.observer.perspective == Perspective.Follow || world.observer.perspective == Perspective.Ride) {
-        gl.glRotated(-world.observer.pitch, -1.0, 0.0, 0.0)
-        gl.glRotated(-world.observer.roll, 0.0, 0.0, 1.0)
-      }
-      else {
-        gl.glRotated(world.observer.pitch, -1.0, 0.0, 0.0)
-        gl.glRotated(world.observer.roll, 0.0, 0.0, 1.0)
+      world.observer.perspective match {
+        case (_: Perspective.Follow | _: Perspective.Ride) =>
+          gl.glRotated(-observerOrientation.pitch, -1.0, 0.0, 0.0)
+          gl.glRotated(-observerOrientation.roll, 0.0, 0.0, 1.0)
+        case _ =>
+          gl.glRotated(observerOrientation.pitch, -1.0, 0.0, 0.0)
+          gl.glRotated(observerOrientation.roll, 0.0, 0.0, 1.0)
       }
     }
     gl.glScaled(size, size, size)
@@ -212,17 +213,19 @@ private class ShapeRenderer(world: World) {
                   xcor: Float, ycor: Float, zcor: Float,
                   height: Float, fontSize: Int, patchSize: Double) {
     val observer = world.observer
+    val orientation = observer.orientation.get
     gl.glPushMatrix()
     gl.glTranslated(xcor, ycor,
       zcor + ((Renderer.WORLD_SCALE / 2) * height))
-    gl.glRotated(-observer.heading, 0.0, 0.0, 1.0)
+    gl.glRotated(-orientation.heading, 0.0, 0.0, 1.0)
     gl.glRotated(90, 1.0, 0.0, 0.0)
-    if (observer.perspective == Perspective.Follow || observer.perspective == Perspective.Ride) {
-      gl.glRotated(-observer.pitch, -1.0, 0.0, 0.0)
-      gl.glRotated(-observer.roll, 0.0, 0.0, 1.0)
-    } else {
-      gl.glRotated(observer.pitch, -1.0, 0.0, 0.0)
-      gl.glRotated(observer.roll, 0.0, 0.0, 1.0)
+    observer.perspective match {
+      case (_: Perspective.Follow | _: Perspective.Ride) =>
+        gl.glRotated(-orientation.pitch, -1.0, 0.0, 0.0)
+        gl.glRotated(-orientation.roll, 0.0, 0.0, 1.0)
+      case _ =>
+        gl.glRotated(orientation.pitch, -1.0, 0.0, 0.0)
+        gl.glRotated(orientation.roll, 0.0, 0.0, 1.0)
     }
     AgentRenderer.renderString(gl, world, label, labelColor, fontSize, patchSize)
     gl.glPopMatrix()
@@ -251,11 +254,12 @@ private class ShapeRenderer(world: World) {
     gl.glScaled(stretch, stretch, 0.0)
     gl.glCallList(haloShape.displayListIndex)
     gl.glPopMatrix()
-    if (world.observer.perspective == Perspective.Watch && stencilSupport) {
+    if (world.observer.perspective.isInstanceOf[Perspective.Watch] && stencilSupport) {
+      val orientation = world.observer.orientation.get
       if (!isTurtle) {
-        gl.glRotated(-world.observer.heading, 0.0, 0.0, 1.0)
+        gl.glRotated(-orientation.heading, 0.0, 0.0, 1.0)
         gl.glRotated(90, 1.0, 0.0, 0.0)
-        gl.glRotated(world.observer.pitch, -1.0, 0.0, 0.0)
+        gl.glRotated(orientation.pitch, -1.0, 0.0, 0.0)
       }
       gl.glStencilFunc(GL.GL_NOTEQUAL, 1, 0xFFFF)
       gl.glStencilOp(GL.GL_KEEP, GL.GL_KEEP, GL.GL_KEEP)

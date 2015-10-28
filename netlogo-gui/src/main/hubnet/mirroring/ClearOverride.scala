@@ -2,11 +2,12 @@
 
 package org.nlogo.hubnet.mirroring
 
+import org.nlogo.core.AgentKind
 import java.io.{ Serializable => JSerializable }
 
 @SerialVersionUID(0)
-class ClearOverride(agentClass: Class[_ <: org.nlogo.api.Agent], varName:String, var agents: Seq[java.lang.Long])
-        extends OverrideList(agentClass, varName) with JSerializable {
+class ClearOverride(agentKind: AgentKind, varName:String, var agents: Seq[java.lang.Long])
+        extends OverrideList(agentKind, varName) with JSerializable {
 
   @throws(classOf[java.io.IOException])
   private def writeObject(out:java.io.ObjectOutputStream){

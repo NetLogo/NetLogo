@@ -2,10 +2,11 @@
 
 package org.nlogo.nvm
 
-import org.nlogo.core.{ DummyCompilationEnvironment, CompilationEnvironment }
+import org.nlogo.core.{ AgentKind, DummyCompilationEnvironment, CompilationEnvironment }
 import org.nlogo.agent.{Agent, AgentSet, World}
-import org.nlogo.api.{WorldDimensions, DummyCompilerServices, JobOwner,
+import org.nlogo.api.{ DummyCompilerServices, JobOwner,
                       DummyExtensionManager, CommandRunnable, ReporterRunnable, ImportErrorHandler}
+import org.nlogo.core.WorldDimensions
 
 class DummyWorkspace extends DummyCompilerServices with Workspace {
   private def unsupported = throw new UnsupportedOperationException
@@ -38,7 +39,7 @@ class DummyWorkspace extends DummyCompilerServices with Workspace {
   override def exportPlot(plotName: String, path: String) = unsupported
   override def exportAllPlots(path: String) = unsupported
   override def inspectAgent(agent: org.nlogo.api.Agent, radius: Double) = unsupported
-  override def inspectAgent(agentClass: Class[_ <: Agent], agent: Agent, radius: Double) = unsupported
+  override def inspectAgent(agentClass: AgentKind, agent: Agent, radius: Double) = unsupported
   override def stopInspectingAgent(agent: org.nlogo.agent.Agent) = unsupported
   override def stopInspectingDeadAgents() = unsupported
   override def getAndCreateDrawing() = unsupported
@@ -65,7 +66,7 @@ class DummyWorkspace extends DummyCompilerServices with Workspace {
   override def evaluateReporter(owner: JobOwner, source: String, agent: Agent) = unsupported
   override def evaluateReporter(owner: JobOwner, source: String, agents: AgentSet) = unsupported
   override def compileCommands(source: String) = unsupported
-  override def compileCommands(source: String,  agentClass: Class[_ <: Agent]) = unsupported
+  override def compileCommands(source: String,  agentClass: AgentKind) = unsupported
   override def compileReporter(source: String) = unsupported
   override def runCompiledCommands(owner: JobOwner, procedure: Procedure) = unsupported
   override def runCompiledReporter(owner: JobOwner, procedure: Procedure) = unsupported

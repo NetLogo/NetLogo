@@ -2,6 +2,9 @@
 
 package org.nlogo.window;
 
+import org.nlogo.core.AgentKind;
+import org.nlogo.core.AgentKindJ;
+
 public strictfp class ExternalFileInterface
     implements org.nlogo.api.SourceOwner {
 
@@ -19,8 +22,8 @@ public strictfp class ExternalFileInterface
     return "ExternalFileInterface";
   }
 
-  public Class<?> agentClass() {
-    return org.nlogo.agent.Observer.class;
+  public AgentKind kind() {
+    return AgentKindJ.Observer();
   }
 
   public String headerSource() {

@@ -2,7 +2,7 @@
 
 package org.nlogo.nvm
 
-import org.nlogo.api.WorldDimensions
+import org.nlogo.core.WorldDimensions
 
 object LabInterface {
   trait Worker {

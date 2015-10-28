@@ -5,7 +5,8 @@ package org.nlogo.window
 import javax.swing.JLabel
 import org.nlogo.swing.VTextIcon
 
-import org.nlogo.api.{I18N, Editable}
+import org.nlogo.api.Editable
+import org.nlogo.core.I18N
 import org.nlogo.plot.{PlotManagerInterface, PlotLoader, PlotPen, Plot}
 
 import java.awt.GridBagConstraints.REMAINDER

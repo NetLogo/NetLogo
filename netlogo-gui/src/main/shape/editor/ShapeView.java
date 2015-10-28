@@ -8,6 +8,7 @@ import org.nlogo.shape.Line;
 import org.nlogo.shape.Polygon;
 import org.nlogo.shape.Rectangle;
 import org.nlogo.shape.VectorShape;
+import org.nlogo.shape.VectorShape$;
 
 import java.util.List;
 import java.util.Observable;
@@ -38,10 +39,12 @@ strictfp class ShapeView
   private static final boolean IS_MAC =
       System.getProperty("os.name").startsWith("Mac");
 
+  private static int NUM_GRID_LINES = VectorShape$.MODULE$.NUM_GRID_LINES();
+
   private double gridGapX =
-      (double) getBounds().width / VectorShape.NUM_GRID_LINES;
+      (double) getBounds().width / NUM_GRID_LINES;
   private double gridGapY =
-      (double) getBounds().height / VectorShape.NUM_GRID_LINES;
+      (double) getBounds().height / NUM_GRID_LINES;
 
   ShapeView(EditorDialog editorDialog, VectorShape shape) {
     this.editorDialog = editorDialog;
@@ -159,7 +162,7 @@ strictfp class ShapeView
   public void selfFinishPolygon(boolean add) {
     if (tempElement instanceof Polygon) {
       ((Polygon) tempElement).selfClose();
-      tempElement.setFilled(editorDialog.fillShapes());
+      tempElement.filled_$eq(editorDialog.fillShapes());
       editorDialog.makeUndoableDraw(tempElement);
       if (add) {
         shape.add(tempElement);
@@ -187,11 +190,11 @@ strictfp class ShapeView
       g.fillOval(0, 0, bounds.width, bounds.height);
     }
 
-    gridGapX = (double) bounds.width / VectorShape.NUM_GRID_LINES;
-    gridGapY = (double) bounds.height / VectorShape.NUM_GRID_LINES;
+    gridGapX = (double) bounds.width / NUM_GRID_LINES;
+    gridGapY = (double) bounds.height / NUM_GRID_LINES;
     g.setColor(java.awt.Color.DARK_GRAY.darker());
 
-    for (int i = 1; i < VectorShape.NUM_GRID_LINES; ++i) {
+    for (int i = 1; i < NUM_GRID_LINES; ++i) {
       g.drawLine(i * Element.round(gridGapX), 0,
           i * Element.round(gridGapX), bounds.height);
       g.drawLine(0, i * Element.round(gridGapY),
@@ -203,16 +206,16 @@ strictfp class ShapeView
     g.drawLine(bounds.width / 2, 0, bounds.width / 2, bounds.height);
     g.drawLine(0, bounds.height / 2, bounds.width, bounds.width / 2);
     g.drawLine(0,
-        VectorShape.NUM_GRID_LINES * Element.round(gridGapY),
+        NUM_GRID_LINES * Element.round(gridGapY),
         bounds.width,
-        VectorShape.NUM_GRID_LINES * Element.round(gridGapY));
+        NUM_GRID_LINES * Element.round(gridGapY));
 
     // Draw the elements
     g2.antiAliasing(true);
 
     for (int i = 0; i < elements.size(); ++i) {
       element = elements.get(i);
-      g.setColor(element.getColor());
+      g.setColor(element.awtColor());
       element.draw(g2, null,
           IS_MAC ? 299 : 300,
           0);
@@ -407,8 +410,8 @@ strictfp class ShapeView
 
         // Add the shape, unless it's a polygon that has too few points
         if (!((tempElement instanceof Polygon) &&
-            (((Polygon) tempElement).getXcoords().size() < 3))) {
-          tempElement.setFilled(editorDialog.fillShapes());
+            (((Polygon) tempElement).xCoords().size() < 3))) {
+          tempElement.filled_$eq(editorDialog.fillShapes());
           shape.add(tempElement);
           editorDialog.makeUndoableDraw(tempElement);
           tempElement.select();

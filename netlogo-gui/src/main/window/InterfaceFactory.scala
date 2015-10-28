@@ -3,7 +3,7 @@
 package org.nlogo.window
 
 import javax.swing.ImageIcon
-import org.nlogo.api.I18N
+import org.nlogo.core.I18N
 
 object WidgetInfo {
   def apply(widgetType: String, imageName: String): WidgetInfo = {

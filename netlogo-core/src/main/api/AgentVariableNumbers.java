@@ -47,4 +47,30 @@ public final strictfp class AgentVariableNumbers {
   public static final int VAR_LSHAPE = 8;
   public static final int VAR_TIEMODE = 9;
 
+  // Turtle3D variables
+  public static final int VAR_WHO3D = 0;
+  public static final int VAR_COLOR3D = 1;
+  public static final int VAR_HEADING3D = 2;
+  public static final int VAR_PITCH3D = 3;
+  public static final int VAR_ROLL3D = 4;
+  public static final int VAR_XCOR3D = 5;
+  public static final int VAR_YCOR3D = 6;
+  public static final int VAR_ZCOR3D = 7;
+  public static final int VAR_SHAPE3D = 8;
+  public static final int VAR_LABEL3D = 9;
+  public static final int VAR_LABELCOLOR3D = 10;
+  public static final int VAR_BREED3D = 11;
+  public static final int VAR_HIDDEN3D = 12;
+  public static final int VAR_SIZE3D = 13;
+  public static final int VAR_PENSIZE3D = 14;
+  public static final int VAR_PENMODE3D = 15;
+
+  // Patch3D variables
+  public static final int VAR_PXCOR3D = 0;
+  public static final int VAR_PYCOR3D = 1;
+  public static final int VAR_PZCOR3D = 2;
+  public static final int VAR_PCOLOR3D = 3;
+  public static final int VAR_PLABEL3D = 4;
+  public static final int VAR_PLABELCOLOR3D = 5;
+
 }

@@ -14,7 +14,7 @@ abstract class ReporterLineEditor(accessor: PropertyAccessor[String],
 
   override lazy val editor = new EditorField(
     30, new Font(platformMonospacedFont, Font.PLAIN, 12), false, colorizer,
-    org.nlogo.api.I18N.gui.get _)
+    org.nlogo.core.I18N.gui.get _)
   override lazy val scrollPane = new JScrollPane(
     editor,
     ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,

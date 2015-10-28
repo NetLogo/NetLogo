@@ -8,6 +8,7 @@ import org.nlogo.core.{ Token, TokenType }
 import org.nlogo.util.TestUtils.cleanJsNumbers
 
 class TokenizerTests extends FunSuite {
+  import Tokenizer.{ isValidIdentifier, getTokenAtPosition }
 
   def tokenize(s: String) = {
     val result = Tokenizer.tokenizeString(s, "").toSeq
@@ -241,5 +242,28 @@ class TokenizerTests extends FunSuite {
     assertResult(4)(tokens(0)._2)
     assertResult(cleanJsNumbers("Token(456,Literal,456.0)"))(cleanJsNumbers(tokens(1)._1.toString))
     assertResult(1)(tokens(1)._2)
+  }
+
+  test("checks valid identifiers") {
+    Seq("abc", "a42", "------''''-------").foreach(ident => assert(isValidIdentifier(ident)))
+  }
+
+  test("checks invalid identifiers") {
+    Seq("{{}}", "(", ";comment", "42", "\"abc\"", "```", "-- --").foreach(ident => assert(! isValidIdentifier(ident)))
+  }
+
+  test("gets token at a given position") {
+    assert(getTokenAtPosition("", -1)   == None)
+    assert(getTokenAtPosition("", 10)   == None)
+    assert(getTokenAtPosition("t", 0)   == Some(Token("t", TokenType.Ident, "T")(0, 1, "")))
+    assert(getTokenAtPosition("t s", 2) == Some(Token("s", TokenType.Ident, "S")(2, 3, "")))
+    assert(getTokenAtPosition("abc def", 2) == Some(Token("abc", TokenType.Ident, "ABC")(0, 3, "")))
+    assert(getTokenAtPosition("abc def", 4) == Some(Token("def", TokenType.Ident, "DEF")(4, 7, "")))
+  }
+
+  test("prefers ident and keyword tokens to punctuation and literals") {
+    assert(getTokenAtPosition("abc]", 3)    == Some(Token("abc", TokenType.Ident, "ABC")(0, 3, "")))
+    assert(getTokenAtPosition("abc 123", 3) == Some(Token("abc", TokenType.Ident, "ABC")(0, 3, "")))
+    assert(getTokenAtPosition("123 abc", 3) == Some(Token("abc", TokenType.Ident, "ABC")(4, 7, "")))
   }
 }

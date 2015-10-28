@@ -2,6 +2,7 @@
 
 package org.nlogo.prim
 
+import org.nlogo.core.AgentKind
 import scala.collection.JavaConverters._
 
 import org.nlogo.agent.{ ArrayAgentSet, Patch, Turtle }
@@ -25,15 +26,14 @@ class _breedat(breedName: String) extends Reporter {
       patch = context.agent.getPatchAtOffsets(dx, dy)
     } catch {
       case e: AgentException =>
-        return new ArrayAgentSet(classOf[Turtle], 0, false, world)
+        return new ArrayAgentSet(AgentKind.Turtle, 0, false)
     }
     if (patch == null)
-      return new ArrayAgentSet(classOf[Turtle], 0, false, world)
+      return new ArrayAgentSet(AgentKind.Turtle, 0, false)
     val breed = world.getBreed(breedName)
     new ArrayAgentSet(
-      classOf[Turtle],
+      AgentKind.Turtle,
       patch.turtlesHere.asScala.
-        filter(turtle => turtle != null && turtle.getBreed == breed).toArray,
-      world)
+        filter(turtle => turtle != null && turtle.getBreed == breed).toArray)
   }
 }

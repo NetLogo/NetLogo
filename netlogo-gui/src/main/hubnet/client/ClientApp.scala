@@ -8,7 +8,8 @@ import java.awt.BorderLayout
 import org.nlogo.swing.{ModalProgressTask, OptionDialog}
 import org.nlogo.awt.{ Hierarchy, Images, Positioning, EventQueue }
 import org.nlogo.hubnet.connection.Ports
-import org.nlogo.api.{I18N, CompilerServices}
+import org.nlogo.api.CompilerServices
+import org.nlogo.core.I18N
 import javax.swing.{WindowConstants, JFrame}
 
 /**

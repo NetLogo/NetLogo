@@ -9,5 +9,5 @@ class _oheading extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(Syntax.NumberType)
   override def report(context: Context) =
-    Double.box(world.observer.heading)
+    Double.box(world.observer.orientation.get.heading)
 }

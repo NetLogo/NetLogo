@@ -22,7 +22,7 @@ public final strictfp class _ride
       throw new EngineException(context, this,
         I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", turtle.classDisplayName()));
     }
-    world.observer().setPerspective(PerspectiveJ.RIDE(), turtle);
+    world.observer().setPerspective(PerspectiveJ.create(PerspectiveJ.RIDE, turtle));
     context.ip = next;
   }
 }

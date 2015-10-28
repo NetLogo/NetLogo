@@ -2,7 +2,8 @@
 
 package org.nlogo.plot
 
-import org.nlogo.api.PlotInterface
+import org.nlogo.core.PlotPenInterface
+import org.nlogo.api.{ PlotAction, PlotInterface, PlotState }
 
 import java.io.{ Serializable => JSerializable }
 
@@ -17,6 +18,8 @@ import java.io.{ Serializable => JSerializable }
 class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializable {
 
   import Plot._
+
+  var state = PlotState()
 
   override def toString = "Plot(" + name + ")"
 
@@ -51,14 +54,15 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
 
   private var _currentPen: Option[PlotPen] = None
   // take the first pen if there is no current pen set
-  def currentPen: Option[PlotPen] = _currentPen.orElse(pens.headOption)
+  override def currentPen: Option[PlotPen] = _currentPen.orElse(pens.headOption)
   def currentPen_=(p: PlotPen): Unit = currentPen=(if(p==null) None else Some(p))
   def currentPen_=(p: Option[PlotPen]): Unit = {
     this._currentPen = p
      // TODO this line must be cleaned up when we fix up hubnet plotting. the .get here is bad. JC - 6/2/10
     plotListener.foreach(_.currentPen(p.get.name))
   }
-  def currentPen_=(penName: String): Unit = { currentPen=(getPen(penName)) }
+  def currentPenByName: String = currentPen.map(_.name).getOrElse(null)
+  def currentPenByName_=(penName: String): Unit = { currentPen=(getPen(penName)) }
   def getPen(penName: String): Option[PlotPen] = pens.find(_.name.toLowerCase==penName.toLowerCase)
 
   // This only affects the UI, not headless operation, but because it is included when a plot is
@@ -105,40 +109,16 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
   /// current properties
   /// (will be copied from defaults at construction time - ST 2/28/06)
 
-  private var _autoPlotOn = false
-  def autoPlotOn = _autoPlotOn
-  def autoPlotOn_=(autoPlotOn: Boolean){
-    _autoPlotOn = autoPlotOn
-    plotListener.foreach(_.autoPlotOn(autoPlotOn))
-  }
+  def autoPlotOn = state.autoPlotOn
 
-  private var _xMin = 0.0
-  def xMin = _xMin
-  def xMin_=(xMin: Double){
-    _xMin = xMin
-    plotListener.foreach(_.xMin(xMin))
-  }
+  def xMin = state.xMin
 
-  private var _xMax = 0.0
-  def xMax = _xMax
-  def xMax_=(xMax: Double){
-    _xMax = xMax
-    plotListener.foreach(_.xMax(xMax))
-  }
+  def xMax = state.xMax
 
-  private var _yMin = 0.0
-  def yMin = _yMin
-  def yMin_=(yMin: Double){
-    _yMin = yMin
-    plotListener.foreach(_.yMin(yMin))
-  }
+  def yMin = state.yMin
 
-  private var _yMax = 0.0
-  def yMax = _yMax
-  def yMax_=(yMax: Double){
-    _yMax = yMax
-    plotListener.foreach(_.yMax(yMax))
-  }
+  def yMax = state.yMax
+
   var setupCode: String = ""
   var updateCode:String = ""
 
@@ -150,15 +130,37 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
   /// clearing
   clear() // finally after all fields have been initialized, clear. unsure why...
 
+  override def plot(y: Double): Unit = {
+    currentPen.foreach { p =>
+      plot(p, y)
+      makeDirty()
+    }
+  }
+
+  override def plot(x: Double, y: Double) {
+    currentPen.foreach { p =>
+      plot(p, x, y)
+      makeDirty()
+    }
+  }
+
+  def plot(pen: PlotPen, y: Double) {
+    pen.plot(y)
+    if (pen.state.isDown)
+      perhapsGrowRanges(pen, pen.state.x, y)
+  }
+
+  def plot(pen: PlotPen, x: Double, y: Double) {
+    pen.plot(x, y)
+    if (pen.state.isDown)
+      perhapsGrowRanges(pen, x, y)
+  }
+
   def clear() {
     pens = pens.filterNot(_.temporary)
     currentPen = pens.headOption
     pens.foreach(_.hardReset())
-    xMin=defaultXMin
-    xMax=defaultXMax
-    yMin=defaultYMin
-    yMax=defaultYMax
-    autoPlotOn=defaultAutoPlotOn
+    state = PlotState(defaultAutoPlotOn, defaultXMin, defaultXMax, defaultYMin, defaultYMax)
     makeDirty()
     plotListener.foreach(_.clear)
     pensDirty = true
@@ -171,6 +173,10 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
   def createPlotPen(name: String, temporary: Boolean, setupCode: String, updateCode: String): PlotPen = {
     new PlotPen(this, name, temporary, setupCode, updateCode)
   }
+
+  // NOTE: this is for conformance to a shared api with netlogo-headless.
+  // At some point, this and client code should be changed to use this method properly.
+  def histogramActions(pen: PlotPenInterface, values: Seq[Double]): scala.collection.immutable.Seq[PlotAction] = ???
 
   def perhapsGrowRanges(pen:PlotPen, x:Double, y: Double){
     if(autoPlotOn){
@@ -191,19 +197,27 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
     def adjust(d:Double, factor: Double) = d * (if(extraRoom) factor else 1)
     if(x > xMax){
       val newRange = adjust(x - xMin, AUTOPLOT_X_FACTOR)
-      xMax=newBound(xMin + newRange, newRange)
+      state = state.copy(
+        xMax = newBound(xMin + newRange, newRange)
+      )
     }
     if(x < xMin){
       val newRange = adjust(xMax - x, AUTOPLOT_X_FACTOR)
-      xMin=newBound(xMax - newRange, newRange)
+      state = state.copy(
+        xMin = newBound(xMax - newRange, newRange)
+      )
     }
     if(y > yMax){
       val newRange = adjust(y - yMin, AUTOPLOT_Y_FACTOR)
-      yMax=newBound(yMin + newRange, newRange)
+      state = state.copy(
+        yMax = newBound(yMin + newRange, newRange)
+      )
     }
     if(y < yMin){
       val newRange = adjust(yMax - y, AUTOPLOT_Y_FACTOR)
-      yMin=newBound(yMax - newRange, newRange)
+      state = state.copy(
+        yMin = newBound(yMax - newRange, newRange)
+      )
     }
   }
 
@@ -268,11 +282,12 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
   @throws(classOf[ClassNotFoundException])
   private def readObject(in:java.io.ObjectInputStream){
     name = in.readObject().toString
-    _autoPlotOn = in.readBoolean()
-    _xMin = in.readDouble()
-    _xMax = in.readDouble()
-    _yMin = in.readDouble()
-    _yMax = in.readDouble()
+    val autoPlotOn = in.readBoolean()
+    val xMin = in.readDouble()
+    val xMax = in.readDouble()
+    val yMin = in.readDouble()
+    val yMax = in.readDouble()
+    state = PlotState(autoPlotOn, xMin, xMax, yMin, yMax)
     plotListener = None
     pens = in.readObject().asInstanceOf[List[PlotPen]]
     val currentPenName = in.readObject().asInstanceOf[Option[String]]

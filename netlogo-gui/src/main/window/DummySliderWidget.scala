@@ -2,10 +2,9 @@
 
 package org.nlogo.window
 
+import org.nlogo.api.{ Dump, Editable }
 import org.nlogo.agent.ConstantSliderConstraint
-import org.nlogo.api.Dump
-import org.nlogo.api.Editable
-import org.nlogo.api.I18N
+import org.nlogo.core.I18N
 
 // This widget works iff the slider has a ConstantSliderConstraint
 // object.  Since this is only being used to construct HubNet client

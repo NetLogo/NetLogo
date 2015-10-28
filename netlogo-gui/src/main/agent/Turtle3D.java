@@ -7,7 +7,7 @@ import org.nlogo.api.AgentVariableNumbers;
 import org.nlogo.api.AgentVariables;
 import org.nlogo.api.Color;
 import org.nlogo.api.Dump;
-import org.nlogo.api.I18N;
+import org.nlogo.core.I18N;
 import org.nlogo.core.LogoList;
 import org.nlogo.api.Vect;
 

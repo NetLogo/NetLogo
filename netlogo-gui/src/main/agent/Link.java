@@ -2,12 +2,15 @@
 
 package org.nlogo.agent;
 
+import org.nlogo.core.AgentKindJ;
+import org.nlogo.core.AgentKind;
+import org.nlogo.core.AgentKindJ;
 import org.nlogo.api.AgentException;
 import org.nlogo.api.AgentVariableNumbers;
 import org.nlogo.api.AgentVariables;
 import org.nlogo.api.Color;
 import org.nlogo.api.Dump;
-import org.nlogo.api.I18N;
+import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
 
@@ -16,6 +19,8 @@ import java.util.Iterator;
 public strictfp class Link
     extends Agent
     implements org.nlogo.api.Link {
+
+  public AgentKind kind() { return AgentKindJ.Link(); }
 
   /// ends
 
@@ -537,7 +542,7 @@ public strictfp class Link
   }
 
   public AgentSet bothEnds() {
-    AgentSet bothEnds = new ArrayAgentSet(Turtle.class, 2, false, world);
+    AgentSet bothEnds = new ArrayAgentSet(AgentKindJ.Turtle(), 2, false);
     bothEnds.add(end1);
     bothEnds.add(end2);
     return bothEnds;

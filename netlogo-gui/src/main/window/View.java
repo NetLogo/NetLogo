@@ -2,9 +2,12 @@
 
 package org.nlogo.window;
 
+import org.nlogo.core.AgentKind;
+import org.nlogo.core.AgentKindJ;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Observer;
 import org.nlogo.api.AgentException;
+import org.nlogo.api.AgentFollowingPerspective;
 import org.nlogo.api.Perspective;
 import org.nlogo.api.PerspectiveJ;
 import org.nlogo.api.RendererInterface;
@@ -215,8 +218,7 @@ public strictfp class View
       workspace.updateManager().donePainting();
 
       // update the mouse coordinates if following
-      if ((workspace.world.observer().perspective() == PerspectiveJ.FOLLOW()) ||
-          (workspace.world.observer().perspective() == PerspectiveJ.RIDE())) {
+      if (workspace.world.observer().perspective() instanceof AgentFollowingPerspective) {
         mouser.updateMouseCors();
       }
     }
@@ -313,7 +315,7 @@ public strictfp class View
   /// shapes
 
   // for notification from ShapesManager
-  public void shapeChanged(org.nlogo.api.Shape shape) {
+  public void shapeChanged(org.nlogo.core.Shape shape) {
     dirty = true;
     new org.nlogo.window.Events.DirtyEvent().raise(this);
     renderer.resetCache(patchSize());
@@ -476,7 +478,7 @@ public strictfp class View
     javax.swing.JMenuItem inspectGlobalsItem = new javax.swing.JMenuItem("inspect globals");
     inspectGlobalsItem.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent actionEvent) {
-          workspace.inspectAgent(Observer.class);
+          workspace.inspectAgent(AgentKindJ.Observer());
       }
     });
     menu.add(inspectGlobalsItem);
@@ -674,24 +676,26 @@ public strictfp class View
 
   public void actionPerformed(java.awt.event.ActionEvent e) {
     AgentMenuItem item = (AgentMenuItem) e.getSource();
+    Perspective newPerspective;
     switch (item.type) {
       case INSPECT:
         // we usually use a default radius of 3, but that doesnt work when the world
         // has a radius of less than 3. so simply take the miniumum. - JC 7/1/10
         double minWidthOrHeight =
-            StrictMath.min(workspace.world().worldWidth() / 2, workspace.world().worldHeight() / 2);
+          StrictMath.min(workspace.world().worldWidth() / 2, workspace.world().worldHeight() / 2);
         double radius = StrictMath.min(3, minWidthOrHeight / 2);
-        workspace.inspectAgent(item.agent.getAgentClass(), item.agent, radius);
+        workspace.inspectAgent(item.agent.kind(), item.agent, radius);
         return;
       case FOLLOW:
-        workspace.world.observer().setPerspective(PerspectiveJ.FOLLOW(), item.agent);
         int distance = (int) ((org.nlogo.agent.Turtle) item.agent).size() * 5;
-        workspace.world.observer().followDistance(StrictMath.max
-            (1, StrictMath.min(distance, 100)));
+        newPerspective = PerspectiveJ.create(PerspectiveJ.FOLLOW, item.agent,
+            StrictMath.max(1, StrictMath.min(distance, 100)));
+        workspace.world.observer().setPerspective(newPerspective);
         break;
       case WATCH:
         workspace.world.observer().home();
-        workspace.world.observer().setPerspective(PerspectiveJ.WATCH(), item.agent);
+        newPerspective = PerspectiveJ.create(PerspectiveJ.WATCH, item.agent);
+        workspace.world.observer().setPerspective(newPerspective);
         break;
       default:
         throw new IllegalStateException();

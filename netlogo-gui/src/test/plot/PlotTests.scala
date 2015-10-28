@@ -101,7 +101,7 @@ class PlotTests extends SimplePlotTest {
     assertResult(2.0)(pen.points(5).y)
   }
   testPlot("HistogramGrowHeight") { plot =>
-    plot.yMax=5
+    plot.state = plot.state.copy(yMax=5)
     val pen = plot.createPlotPen("test", false)
     plot.beginHistogram(pen)
     (0 until 5).foreach(_ => plot.nextHistogramValue(0))
@@ -112,7 +112,7 @@ class PlotTests extends SimplePlotTest {
     plot.endHistogram(pen)
     assertResult(10.0)(plot.yMax)
     plot.clear()
-    plot.yMax=5
+    plot.state = plot.state.copy(yMax=5)
     pen.plot(0, 10)
     assertResult(11.0)(plot.yMax)
   }

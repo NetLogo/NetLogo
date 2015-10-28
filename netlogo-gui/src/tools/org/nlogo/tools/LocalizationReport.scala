@@ -1,8 +1,8 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 import java.util.Locale
-import org.nlogo.api.I18N
-import org.nlogo.api.I18N.BundleKind
+import org.nlogo.core.I18N
+import org.nlogo.core.I18N.BundleKind
 
 /**
  * this code is a bit messy, but its working.

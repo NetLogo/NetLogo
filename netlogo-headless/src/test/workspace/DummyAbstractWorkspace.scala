@@ -71,4 +71,5 @@ extends AbstractWorkspace(new World)
   override def viewOffsetX = unsupported
   override def viewOffsetY = unsupported
   override def viewWidth = unsupported
+  override def isHeadless = true
 }

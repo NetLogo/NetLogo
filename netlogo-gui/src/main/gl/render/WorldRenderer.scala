@@ -4,7 +4,8 @@ package org.nlogo.gl.render
 
 import com.jogamp.opengl.{ GL, GL2, GL2GL3 }
 import com.jogamp.opengl.fixedfunc.GLLightingFunc.GL_LIGHTING
-import org.nlogo.api.{ World, Agent, Patch, Patch3D, Turtle, Perspective, DrawingInterface, AgentException }
+import org.nlogo.api.{ World, Agent, AgentFollowingPerspective, Patch,
+    Patch3D, Turtle, Perspective, DrawingInterface, AgentException }
 
 private class WorldRenderer(world: World, patchRenderer: PatchRenderer,
                             drawing: DrawingInterface, turtleRenderer: TurtleRenderer,
@@ -27,23 +28,29 @@ private class WorldRenderer(world: World, patchRenderer: PatchRenderer,
     var x = observer.oxcor - world.followOffsetX
     var y = observer.oycor - world.followOffsetY
     var z = observer.ozcor
-    var heading = observer.heading
-    var pitch = observer.pitch
-    if(observer.perspective == Perspective.Follow || observer.perspective == Perspective.Ride) {
-      var distance: Double = observer.followDistance
-      // try and skip the area where you're way too close to the turtle to be interesting
-      observer.targetAgent match {
-        case t: Turtle if distance > 0 =>
-          distance += t.size
-        case _ =>
-      }
-      val (oldx, oldy, oldz) = (x, y, z)
-      x -= distance * math.sin(math.toRadians(heading))
-      y -= distance * math.cos(math.toRadians(heading))
-      z = distance * 0.5
-      pitch =
-        try -world.protractor.towardsPitch(x, y, z, oldx, oldy, oldz, false)
-        catch { case ex: AgentException => 0 }
+    val orientation = observer.orientation.get
+    var heading = orientation.heading
+    var pitch   = orientation.pitch
+    val agentAndDist = observer.perspective match {
+      case afp: AgentFollowingPerspective => Some((afp.targetAgent, afp.followDistance))
+      case _                              => None
+    }
+    agentAndDist.foreach {
+      case (agent, dist) =>
+        var distance: Double = dist
+        // try and skip the area where you're way too close to the turtle to be interesting
+        agent match {
+          case t: Turtle if distance > 0 =>
+            distance += t.size
+          case _ =>
+        }
+        val (oldx, oldy, oldz) = (x, y, z)
+        x -= distance * math.sin(math.toRadians(heading))
+        y -= distance * math.cos(math.toRadians(heading))
+        z = distance * 0.5
+        pitch =
+          try -world.protractor.towardsPitch(x, y, z, oldx, oldy, oldz, false)
+          catch { case ex: AgentException => 0 }
     }
     gl.glRotated(90, -1.0, 0.0, 0.0)
     gl.glRotated(heading, 0.0, 0.0, 1.0)
@@ -74,11 +81,12 @@ private class WorldRenderer(world: World, patchRenderer: PatchRenderer,
     if(showCrossHairs) {
       val coords = getCrosshairCoords
       val perspective = observer.perspective
-      if(perspective != Perspective.Follow && perspective != Perspective.Ride) {
-        val dist = observer.dist
-        coords(0) += dist * observer.dx
-        coords(1) += dist * observer.dy
-        coords(2) -= dist * observer.dz
+      if (! perspective.isInstanceOf[AgentFollowingPerspective]) {
+        val orientation = observer.orientation.get
+        val dist = orientation.dist
+        coords(0) += dist * orientation.dx
+        coords(1) += dist * orientation.dy
+        coords(2) -= dist * orientation.dz
       }
       coords(0) *= Renderer.WORLD_SCALE
       coords(1) *= Renderer.WORLD_SCALE

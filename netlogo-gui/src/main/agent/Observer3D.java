@@ -3,6 +3,7 @@
 package org.nlogo.agent;
 
 import org.nlogo.api.AgentException;
+import org.nlogo.api.AgentFollowingPerspective;
 import org.nlogo.api.PerspectiveJ;
 import org.nlogo.api.Vect;
 
@@ -31,24 +32,24 @@ public final strictfp class Observer3D
   public boolean updatePosition() {
     boolean changed = false;
 
-    if (perspective == PerspectiveJ.OBSERVE()) {
+    if (perspective.kind() == PerspectiveJ.OBSERVE) {
       return false;
-    } else if (perspective == PerspectiveJ.WATCH()) {
-      if (targetAgent.id() == -1) {
+    } else if (perspective.kind() == PerspectiveJ.WATCH) {
+      if (targetAgent() == null || targetAgent().id() == -1) {
         resetPerspective();
         return true;
       }
 
-      face(targetAgent);
+      face(targetAgent());
     } else // follow and ride are the same save initial conditions.
     {
-      if (targetAgent.id() == -1) // he's dead!
+      if (targetAgent() == null || targetAgent().id() == -1) // he's dead!
       {
         resetPerspective();
         return true;
       }
 
-      Turtle3D turtle = (Turtle3D) targetAgent;
+      Turtle3D turtle = (Turtle3D) targetAgent();
       oxyandzcor(turtle.xcor(), turtle.ycor(), turtle.zcor());
       // don't smooth for now, some turns don't have continuous
       // angles and the smoothing doesn't work properly ev 5/32/06
@@ -89,7 +90,7 @@ public final strictfp class Observer3D
   }
 
   public double followOffsetZ() {
-    if (perspective == PerspectiveJ.FOLLOW() || perspective == PerspectiveJ.RIDE()) {
+    if (perspective instanceof AgentFollowingPerspective) {
       World3D w = (World3D) world;
       return ozcor() - ((w.minPzcor() + w.maxPzcor()) / 2.0);
     }
@@ -110,7 +111,7 @@ public final strictfp class Observer3D
     }
 
     setRotationPoint(x, y, z);
-    Vect[] v = Vect.toVectors(heading, pitch, roll);
+    Vect[] v = Vect.toVectors(orientation.heading, orientation.pitch, orientation.roll);
     forward = v[0];
     right = v[1];
   }
@@ -168,7 +169,7 @@ public final strictfp class Observer3D
 
     Vect rightxy = new Vect(right.x(), right.y(), 0);
     rightxy = rightxy.normalize();
-    heading = StrictMath.toDegrees(rightxy.angleTo(xaxis));
+    heading(StrictMath.toDegrees(rightxy.angleTo(xaxis)));
 
     oxyandzcor(cors.x(), cors.y(), cors.z());
   }
@@ -201,21 +202,21 @@ public final strictfp class Observer3D
     // can be made around the x-axis.
     pos = pos.rotateZ(angle).rotateX(-delta).rotateZ(-angle);
 
-    pitch(pitch + delta);
+    pitch(orientation.pitch + delta);
 
-    Vect[] v = Vect.toVectors(heading, pitch, roll);
+    Vect[] v = Vect.toVectors(orientation.heading, orientation.pitch, orientation.roll);
 
     forward = v[0];
     right = v[1];
 
-    oxyandzcor(pos.x() + rotationPoint.x(),
-        pos.y() + rotationPoint.y(),
-        pos.z() + rotationPoint.z());
+    oxyandzcor(pos.x() + orientation.rotationPoint.x(),
+        pos.y() + orientation.rotationPoint.y(),
+        pos.z() + orientation.rotationPoint.z());
   }
 
   @Override
   public void translate(double thetaX, double thetaY) {
-    Vect[] v = Vect.toVectors(heading, pitch, roll);
+    Vect[] v = Vect.toVectors(orientation.heading, orientation.pitch, orientation.roll);
     Vect ortho = v[1].cross(v[0]);
 
     oxcor(oxcor() - v[1].x() * thetaX * 0.1);

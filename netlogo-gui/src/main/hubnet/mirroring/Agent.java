@@ -2,6 +2,9 @@
 
 package org.nlogo.hubnet.mirroring;
 
+import org.nlogo.core.AgentKind;
+import org.nlogo.core.AgentKindJ;
+
 public strictfp class Agent {
   static final long serialVersionUID = 0L;
   final long id;
@@ -10,6 +13,11 @@ public strictfp class Agent {
   public Agent(long id, Class<? extends org.nlogo.api.Agent> agentClass) {
     this.id = id;
     type = AgentType.fromAgentClass(agentClass);
+  }
+
+  public Agent(long id, AgentKind agentKind) {
+    this.id = id;
+    type = AgentType.fromAgentKind(agentKind);
   }
 
   public Agent(java.io.DataInputStream is) {
@@ -66,6 +74,21 @@ public strictfp class Agent {
       } else if (org.nlogo.api.Patch.class.isAssignableFrom(agentClass)) {
         return PATCH;
       } else if (org.nlogo.api.Link.class.isAssignableFrom(agentClass)) {
+        return LINK;
+      } else {
+        return OBSERVER;
+      }
+    }
+
+    public static AgentType fromAgentKind(AgentKind agentKind) {
+      if (agentKind == null) {
+        return OBSERVER;
+      }
+      if (agentKind == AgentKindJ.Turtle()) {
+        return TURTLE;
+      } else if (agentKind == AgentKindJ.Patch()) {
+        return PATCH;
+      } else if (agentKind == AgentKindJ.Link()) {
         return LINK;
       } else {
         return OBSERVER;

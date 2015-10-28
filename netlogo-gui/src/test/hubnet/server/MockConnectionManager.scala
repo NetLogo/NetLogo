@@ -2,6 +2,7 @@
 
 package org.nlogo.hubnet.server
 
+import org.nlogo.core.AgentKind
 import org.nlogo.hubnet.connection.{ConnectionInterface, HubNetException}
 import collection.mutable.ListBuffer
 import org.nlogo.api.PlotInterface
@@ -22,12 +23,12 @@ class MockConnectionManager(connection: ConnectionInterface, workspace: Abstract
   override def nodesHaveView = _nodesHaveView
   var validTag = false
   override def incrementalViewUpdate() {results+="UPDATE"}
-  override def sendOverrideList(client: String, agentClass: Class[_ <: org.nlogo.api.Agent], varName: String,
+  override def sendOverrideList(client: String, agentClass: AgentKind, varName: String,
                                 overrides: Map[java.lang.Long, AnyRef]) = true
-  override def clearOverride(client: String, agentClass: Class[_ <: org.nlogo.api.Agent], varName: String,
+  override def clearOverride(client: String, agentClass: AgentKind, varName: String,
                     overrides: Seq[java.lang.Long]) = true
   override def clearOverrideLists(client:String){}
-  override def sendAgentPerspective(client: String, perspective:Int, agentClass: Class[_ <: org.nlogo.api.Agent],
+  override def sendAgentPerspective(client: String, perspective:Int, agentClass: AgentKind,
    id:Long, radius:Double, serverMode:Boolean){}
   override def run(){}
   override def isValidTag(tag:String) = validTag

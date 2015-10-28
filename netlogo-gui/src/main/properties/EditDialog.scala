@@ -4,12 +4,12 @@ package org.nlogo.properties
 
 // An EditDialog contains an EditPanel, plus some buttons at the bottom (OK/Apply/Cancel).
 
+import org.nlogo.core.{ I18N, TokenType }
 import org.nlogo.editor.Colorizer
 import org.nlogo.swing.Implicits._
 import javax.swing.JButton
 import org.nlogo.swing.{BrowserLauncher, ButtonPanel, RichJButton}
-import org.nlogo.api.{I18N, CompilerServices}
-import org.nlogo.core.TokenType
+import org.nlogo.api.CompilerServices
 
 // EditDialog is a trait because in EditDialogFactory we need to be able to call two different
 // constructors of JDialog.  See

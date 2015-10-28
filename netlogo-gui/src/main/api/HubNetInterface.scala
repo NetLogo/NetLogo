@@ -2,6 +2,7 @@
 
 package org.nlogo.api
 
+import org.nlogo.core.AgentKind
 import java.io.{ Serializable => JSerializable }
 
 trait HubNetInterface extends ViewInterface with ModelSections.BufSaveable {
@@ -70,13 +71,13 @@ trait HubNetInterface extends ViewInterface with ModelSections.BufSaveable {
   def setClientInterface(clientType: String, interfaceInfo:Iterable[AnyRef])
   def newClient(isRobo: Boolean, waitTime: Int)
   def sendFromLocalClient(clientName:String, tag: String, content: AnyRef): Option[String]
-  def isOverridable(agentType: Class[_ <: org.nlogo.api.Agent], varName: String): Boolean
-  def sendOverrideList(client: String, agentType: Class[_ <: org.nlogo.api.Agent],
+  def isOverridable(agentType: AgentKind, varName: String): Boolean
+  def sendOverrideList(client: String, agentType: AgentKind,
                        varName: String, overrides: Map[java.lang.Long, AnyRef])
-  def clearOverride(client: String, agentType: Class[_ <: org.nlogo.api.Agent],
+  def clearOverride(client: String, agentType: AgentKind,
                     varName: String, overrides: Seq[java.lang.Long])
   def clearOverrideLists(client: String)
-  def sendAgentPerspective(client: String, perspective: Int, agentType: Class[_ <: org.nlogo.api.Agent],
+  def sendAgentPerspective(client: String, perspective: Int, agentType: AgentKind,
                            id: Long, radius: Double, serverMode: Boolean)
   /// view updates
   def incrementalUpdateFromEventThread()

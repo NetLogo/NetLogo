@@ -2,6 +2,7 @@
 
 package org.nlogo.prim;
 
+import org.nlogo.core.AgentKindJ;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Command;
@@ -35,8 +36,8 @@ public final strictfp class _fastsprout
     int numberOfTurtles = argEvalIntValue(context, 0);
     if (numberOfTurtles > 0) {
       org.nlogo.agent.AgentSet agentset =
-          new org.nlogo.agent.ArrayAgentSet(org.nlogo.agent.Turtle.class, numberOfTurtles,
-              false, world);
+          new org.nlogo.agent.ArrayAgentSet(AgentKindJ.Turtle(), numberOfTurtles,
+              false);
       org.nlogo.api.MersenneTwisterFast random = context.job.random;
 
       if (breedName == _sprout.NO_BREED) {

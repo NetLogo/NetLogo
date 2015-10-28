@@ -2,9 +2,9 @@
 
 package org.nlogo.compiler
 
+import org.nlogo.core.{ I18N, Let }
 import CompilerExceptionThrowers.cAssert
-import org.nlogo.api.{ I18N}
-import org.nlogo.core.Let
+
 import org.nlogo.nvm.Procedure
 import org.nlogo.prim.{ _reportertask, _letvariable, _taskvariable }
 

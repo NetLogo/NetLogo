@@ -3,7 +3,8 @@
 package org.nlogo.window
 
 import org.nlogo.swing.RichJMenuItem
-import org.nlogo.api.{I18N, Editable}
+import org.nlogo.api.Editable
+import org.nlogo.core.I18N
 
 class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
   org.nlogo.window.Events.ExportWorldEvent.Handler with Editable {

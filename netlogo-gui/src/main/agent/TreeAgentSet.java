@@ -2,6 +2,7 @@
 
 package org.nlogo.agent;
 
+import org.nlogo.core.AgentKind;
 import org.nlogo.core.LogoList;
 import org.nlogo.api.SimpleChangeEventPublisher;
 
@@ -44,8 +45,8 @@ public strictfp class TreeAgentSet
     return true;
   }
 
-  public TreeAgentSet(Class<? extends Agent> type, String printName, World world) {
-    super(type, world, printName, true);
+  public TreeAgentSet(AgentKind type, String printName) {
+    super(type, printName, true);
   }
 
   @Override
@@ -80,7 +81,7 @@ public strictfp class TreeAgentSet
    */
   @Override
   public void add(Agent agent) {
-    if (agent.getAgentClass() != type) {
+    if (agent.kind() != kind) {
       throw new IllegalStateException();
     }
     agents.put(agent.agentKey(), agent);
@@ -103,6 +104,11 @@ public strictfp class TreeAgentSet
 
   @Override
   public boolean contains(Agent agent) {
+    return agents.containsValue(agent);
+  }
+
+  @Override
+  public boolean contains(org.nlogo.api.Agent agent) {
     return agents.containsValue(agent);
   }
 

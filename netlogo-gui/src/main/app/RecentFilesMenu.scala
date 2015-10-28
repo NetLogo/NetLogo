@@ -5,6 +5,7 @@ package org.nlogo.app
 import java.util.prefs.Preferences
 import org.nlogo.window.Events._
 
+import org.nlogo.core.I18N
 import org.nlogo.api
 import org.nlogo.window
 
@@ -128,7 +129,7 @@ class RecentFilesMenu(app: App, fileMenu: FileMenu)
         JOptionPane.showMessageDialog(
           RecentFilesMenu.this,
           ex.getMessage,
-          api.I18N.gui.get("common.messages.error"),
+          I18N.gui.get("common.messages.error"),
           JOptionPane.ERROR_MESSAGE)
       }
     }

@@ -53,8 +53,8 @@ SumOf3
 
 SumOf4
   O> crt 2
-  O> ask turtle 0 [ create-directed-link-to turtle 1 [ set lvar [1 2 3]] ]
-  sum [lvar] of directed-link 0 1 => 6
-  mean [lvar] of directed-link 0 1 => 2
-  min [lvar] of directed-link 0 1 => 1
-  max [lvar] of directed-link 0 1 => 3
+  O> ask turtle 0 [ create-directed-edge-to turtle 1 [ set lvar [1 2 3]] ]
+  sum [lvar] of directed-edge 0 1 => 6
+  mean [lvar] of directed-edge 0 1 => 2
+  min [lvar] of directed-edge 0 1 => 1
+  max [lvar] of directed-edge 0 1 => 3

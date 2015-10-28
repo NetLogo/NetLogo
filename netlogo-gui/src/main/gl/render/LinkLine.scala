@@ -14,6 +14,9 @@ private object LinkLine {
 
 private class LinkLine(xcor: Double, dashIndex: Int) {
 
+  if (dashIndex < 0)
+    throw new Exception("Invalid link line! " + dashIndex)
+
   private val lineStipple: Short = LinkLine.dashChoices(dashIndex)
 
   def render(gl:GL2, x1: Float, y1: Float, z1: Float,

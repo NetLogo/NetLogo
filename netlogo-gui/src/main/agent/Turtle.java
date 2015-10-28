@@ -2,12 +2,14 @@
 
 package org.nlogo.agent;
 
+import org.nlogo.core.AgentKind;
+import org.nlogo.core.AgentKindJ;
 import org.nlogo.api.AgentException;
 import org.nlogo.api.AgentVariableNumbers;
 import org.nlogo.api.AgentVariables;
 import org.nlogo.api.Color;
 import org.nlogo.api.Dump;
-import org.nlogo.api.I18N;
+import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
 
@@ -27,6 +29,8 @@ public strictfp class Turtle
     this.id = id;
     variables[VAR_WHO] = Double.valueOf(id);
   }
+
+  public AgentKind kind() { return AgentKindJ.Turtle(); }
 
   public static final int VAR_WHO = AgentVariableNumbers.VAR_WHO;
   public static final int VAR_COLOR = AgentVariableNumbers.VAR_COLOR;

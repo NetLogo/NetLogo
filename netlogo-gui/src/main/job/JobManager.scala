@@ -154,7 +154,8 @@ class JobManager(jobManagerOwner: JobManagerOwner,
       thread.isTimeToRunSecondaryJobs = true
       ignoring(classOf[InterruptedException]) { job.synchronized {job.wait(50)} }
     }
-    if (job.result.isInstanceOf[RuntimeException]) throw job.result.asInstanceOf[RuntimeException]
+    if (job.result.isInstanceOf[Exception] && ! job.result.isInstanceOf[LogoException])
+      throw job.result.asInstanceOf[Exception]
   }
 
   def finishJobs(jobs: List[Job], owner: JobOwner) {

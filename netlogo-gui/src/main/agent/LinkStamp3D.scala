@@ -2,6 +2,7 @@
 
 package org.nlogo.agent
 
+import org.nlogo.core.AgentKind
 import org.nlogo.api
 
 case class LinkStamp3D(
@@ -12,6 +13,7 @@ extends api.LinkStamp3D {
   def this(l: Link3D) =
     this(l.shape, l.x1, l.y1, l.z1, l.x2, l.y2, l.z2, l.color, l.lineThickness,
          l.isDirectedLink, l.linkDestinationSize, l.heading, l.pitch)
+  override val kind = AgentKind.Link
   override def midpointX = (x1 + x2) / 2
   override def midpointY = (y1 + y2) / 2
   override def getBreedIndex = 0
@@ -27,7 +29,6 @@ extends api.LinkStamp3D {
   override def world = null
   override def classDisplayName = ""
   override def alpha = api.Color.getColor(color).getAlpha
-  override def isPartiallyTransparent = { val a = alpha; a > 0 && a < 255 }
   override def getVariable(vn: Int) = unsupported
   override def setVariable(vn: Int, value: AnyRef) = unsupported
   override def variables = unsupported

@@ -51,7 +51,7 @@ ST 8/19/05
 import org.nlogo.api.GraphicsInterface;
 import org.nlogo.api.Perspective;
 import org.nlogo.api.PerspectiveJ;
-import org.nlogo.api.ShapeList;
+import org.nlogo.core.ShapeList;
 import org.nlogo.api.TrailDrawerInterface;
 import org.nlogo.api.ViewSettings;
 
@@ -207,21 +207,21 @@ public abstract strictfp class AbstractRenderer
     turtleDrawer.shapes.resetCache(patchSize);
   }
 
-  public void replaceTurtleShapes(java.util.List<org.nlogo.api.Shape> shapes) {
+  public void replaceTurtleShapes(java.util.List<org.nlogo.core.Shape> shapes) {
     turtleDrawer.shapes.shapeList.replaceShapes(shapes);
   }
 
-  public void replaceLinkShapes(java.util.List<org.nlogo.api.Shape> shapes) {
+  public void replaceLinkShapes(java.util.List<org.nlogo.core.Shape> shapes) {
     linkDrawer.linkShapes.replaceShapes(shapes);
   }
 
   protected boolean darkenPeripheral(ViewSettings settings) {
-    return (settings.perspective() == PerspectiveJ.WATCH()) && settings.renderPerspective();
+    return (settings.perspective().kind() == PerspectiveJ.WATCH) && settings.renderPerspective();
   }
 
   protected boolean spotlightAgent(Perspective perspective) {
-    return (perspective == PerspectiveJ.WATCH() ||
-        perspective == PerspectiveJ.FOLLOW() ||
-        perspective == PerspectiveJ.RIDE());
+    return (perspective.kind() == PerspectiveJ.WATCH ||
+        perspective.kind() == PerspectiveJ.FOLLOW ||
+        perspective.kind() == PerspectiveJ.RIDE);
   }
 }

@@ -90,5 +90,3 @@ R in-radius-nowrap etc._inradiusnowrap
 R random-or-random-float dead._randomorrandomfloat
 R towards-nowrap etc._towardsnowrap
 R towardsxy-nowrap etc._towardsxynowrap
-R value-from dead._valuefrom
-R values-from dead._valuesfrom

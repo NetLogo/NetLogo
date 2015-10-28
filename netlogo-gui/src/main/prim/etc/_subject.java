@@ -11,7 +11,7 @@ public final strictfp class _subject
     extends Reporter {
   @Override
   public Object report(final org.nlogo.nvm.Context context) {
-    if (world.observer().perspective() == PerspectiveJ.OBSERVE()) {
+    if (world.observer().perspective().kind() == PerspectiveJ.OBSERVE) {
       return org.nlogo.core.Nobody$.MODULE$;
     }
     Agent subject = world.observer().targetAgent();

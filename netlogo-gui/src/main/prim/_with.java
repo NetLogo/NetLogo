@@ -5,7 +5,7 @@ package org.nlogo.prim;
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.Dump;
-import org.nlogo.api.I18N;
+import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
@@ -54,9 +54,7 @@ public final strictfp class _with
         result.add(tester);
       }
     }
-    return new org.nlogo.agent.ArrayAgentSet
-        (sourceSet.type(),
-            result.toArray(new Agent[result.size()]),
-            world);
+    return new org.nlogo.agent.ArrayAgentSet(sourceSet.kind(),
+        result.toArray(new Agent[result.size()]));
   }
 }

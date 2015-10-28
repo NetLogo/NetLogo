@@ -4,7 +4,7 @@ package org.nlogo.prim.hubnet
 
 import org.nlogo.agent.Observer
 import org.nlogo.api.{ CommandRunnable, Dump, Syntax }
-import org.nlogo.core.LogoList
+import org.nlogo.core.{ AgentKind, LogoList }
 import org.nlogo.nvm.{ EngineException, Command, Context, Reporter }
 import Syntax._
 
@@ -195,15 +195,15 @@ class _hubnetresetperspective extends Command {
   override def perform(context: Context) {
     val client = argEvalString(context, 0)
     val agent = world.observer.targetAgent
-    val agentClass =
-      Option(agent).map(_.getClass).getOrElse(classOf[Observer])
+    val agentKind =
+      Option(agent).map(_.kind).getOrElse(AgentKind.Observer)
     val id = Option(agent).map(_.id).getOrElse(0L)
     workspace.waitFor(
       new CommandRunnable {
         override def run() {
           workspace.getHubNetManager.sendAgentPerspective(
             client, world.observer.perspective.export,
-            agentClass, id, (world.worldWidth() - 1) / 2, true)
+            agentKind, id, (world.worldWidth() - 1) / 2, true)
         }})
     context.ip = next
   }
@@ -285,13 +285,13 @@ class _hubnetclearoverride extends Command {
     val varName = argEvalString(context, 2)
     val set = target match {
       case agent: Agent =>
-        val set = new ArrayAgentSet(agent.getAgentClass, 1, false, world)
+        val set = new ArrayAgentSet(agent.kind, 1, false)
         set.add(agent)
         set
       case set: AgentSet =>
         set
     }
-    if(!workspace.getHubNetManager.isOverridable(set.`type`, varName))
+    if(!workspace.getHubNetManager.isOverridable(set.kind, varName))
       throw new EngineException(context, this,
         "you cannot override " + varName)
     val overrides = new collection.mutable.ArrayBuffer[java.lang.Long](set.count)
@@ -302,7 +302,7 @@ class _hubnetclearoverride extends Command {
       new CommandRunnable() {
         override def run() {
           workspace.getHubNetManager.clearOverride(
-            client, set.`type`, varName, overrides)}})
+            client, set.kind, varName, overrides)}})
     context.ip = next
   }
 }

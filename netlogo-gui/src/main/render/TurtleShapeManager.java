@@ -36,14 +36,14 @@ public strictfp class TurtleShapeManager {
       new LinkedList<CacheKey>();
   private final Map<CacheKey, CachedShape> shapeCache =
       new HashMap<CacheKey, CachedShape>();
-  final org.nlogo.api.ShapeList shapeList;
+  final org.nlogo.core.ShapeList shapeList;
 
   private int cellSize;
   private int pixelCount = 0;  // measured in pixels
   private int angleStep;
   private int numAngleSteps;
 
-  TurtleShapeManager(org.nlogo.api.ShapeList shapeList) {
+  TurtleShapeManager(org.nlogo.core.ShapeList shapeList) {
     this.shapeList = shapeList;
   }
 

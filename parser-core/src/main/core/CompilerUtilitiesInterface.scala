@@ -12,11 +12,11 @@ trait LiteralParser {
 trait CompilerUtilitiesInterface extends LiteralParser {
   def readFromString(source: String): AnyRef
 
-  def readNumberFromString(source: String): AnyRef
+  def readNumberFromString(source: String): java.lang.Double
 
-  def readFromString(source: String, importHandler: LiteralImportHandler)(implicit dialect: Dialect): AnyRef
+  def readFromString(source: String, importHandler: LiteralImportHandler): AnyRef
 
-  def readNumberFromString(source: String, importHandler: LiteralImportHandler): AnyRef
+  def readNumberFromString(source: String, importHandler: LiteralImportHandler): java.lang.Double
 
   @throws(classOf[java.io.IOException])
   def readFromFile(currFile: File, importHandler: LiteralImportHandler): AnyRef

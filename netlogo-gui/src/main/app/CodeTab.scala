@@ -2,6 +2,7 @@
 
 package org.nlogo.app
 
+import org.nlogo.core.AgentKind
 import org.nlogo.agent.Observer
 import org.nlogo.editor.LineNumbersBar
 import org.nlogo.window.EditorAreaErrorLabel
@@ -11,7 +12,7 @@ import java.awt.{BorderLayout, Dimension, Graphics}
 import java.awt.event.{ActionEvent, TextEvent, TextListener}
 import java.awt.print.PageFormat
 import javax.swing.{JButton, ImageIcon, AbstractAction, Action, ScrollPaneConstants, JScrollPane, BorderFactory, JPanel}
-import org.nlogo.api.I18N
+import org.nlogo.core.I18N
 
 class CodeTab(val workspace: AbstractWorkspace) extends JPanel
   with org.nlogo.window.ProceduresInterface
@@ -83,7 +84,7 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
   // since the editor tends to want to be huge - ST
   override def getPreferredSize: Dimension = toolBar.getPreferredSize
 
-  def getIncludesTable: Option[java.util.Map[String, String]] = {
+  def getIncludesTable: Option[Map[String, String]] = {
     val path = Option(workspace.getModelPath()).getOrElse{
       // we create an arbitrary model name for checking include paths when we don't have an actual
       // modelPath or directory
@@ -94,10 +95,12 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
           return None
       }
     }
-    workspace.compiler.findIncludes(path, getText, workspace.world.program.dialect.is3D)
+    workspace.compiler.findIncludes(path, getText)
   }
 
   def agentClass = classOf[Observer]
+
+  def kind = AgentKind.Observer
 
   protected var _needsCompile = false
 

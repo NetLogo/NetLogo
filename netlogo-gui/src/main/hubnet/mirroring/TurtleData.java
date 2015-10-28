@@ -3,6 +3,8 @@
 package org.nlogo.hubnet.mirroring;
 
 import org.nlogo.api.Dump;
+import org.nlogo.core.AgentKind;
+import org.nlogo.core.AgentKindJ;
 import org.nlogo.core.LogoList;
 
 import java.io.DataInputStream;
@@ -15,6 +17,9 @@ import java.io.IOException;
 public strictfp class TurtleData
     extends AgentData
     implements org.nlogo.api.Turtle {
+
+  public AgentKind kind() { return AgentKindJ.Turtle(); }
+
   public static final short DEAD = 0x0000;
   public static final short XCOR = 0x0001;
   public static final short YCOR = 0x0002;

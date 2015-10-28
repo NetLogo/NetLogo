@@ -4,15 +4,15 @@ package org.nlogo.lab
 
 import org.scalatest.FunSuite
 import org.nlogo.nvm.{ CompilerInterface, DefaultCompilerServices }
-import org.nlogo.util.Femto
+import org.nlogo.api.{ NetLogoLegacyDialect, NetLogoThreeDDialect, Version }
+import org.nlogo.core.Femto
 import org.xml.sax.SAXException
 import java.io.{ File, FileNotFoundException }
 
 class TestLoadAndSave extends FunSuite {
   val loader = new ProtocolLoader(
     new DefaultCompilerServices(
-      Femto.scalaSingleton(classOf[CompilerInterface],
-        "org.nlogo.compiler.Compiler")))
+      Femto.get[CompilerInterface]("org.nlogo.compiler.Compiler", if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect)))
   test("load and save") {
     val protocols = loader.loadAll(new File("test/lab/protocols.xml"))
     assertResult(org.nlogo.api.FileIO.file2String("test/lab/protocols.xml").replaceAll("\r\n", "\n"))(

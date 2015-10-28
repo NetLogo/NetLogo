@@ -3,8 +3,12 @@
 package org.nlogo.nvm
 
 import org.nlogo.{ api, core },
-  core.{Nobody, Syntax, TypeNames},
+  core.{Nobody, Syntax, Token, TypeNames},
   api.{ Dump, ExtensionException }
+
+import java.util.{ List => JList }
+
+import scala.unchecked
 
 /**
  * Passes arguments to extension primitives.
@@ -139,6 +143,25 @@ class Argument(context: Context, arg: Reporter) extends api.Argument {
       case x =>
         throw new ExtensionException(
           getExceptionMessage(Syntax.CommandTaskType, x))
+    }
+
+
+  @throws(classOf[ExtensionException])
+  def getCode: JList[Token] =
+    get match {
+      case t: JList[Token] @unchecked => t
+      case x =>
+        throw new ExtensionException(
+          getExceptionMessage(Syntax.CodeBlockType, x))
+    }
+
+  @throws(classOf[ExtensionException])
+  def getSymbol: Token =
+    get match {
+      case t: Token => t
+      case x =>
+        throw new ExtensionException(
+          getExceptionMessage(Syntax.SymbolType, x))
     }
 
   /**

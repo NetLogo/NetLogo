@@ -12,7 +12,7 @@ public strictfp class TurtleDrawer {
 
   final TurtleShapeManager shapes;
 
-  public TurtleDrawer(org.nlogo.api.ShapeList shapeList) {
+  public TurtleDrawer(org.nlogo.core.ShapeList shapeList) {
     shapes = new TurtleShapeManager(shapeList);
   }
 

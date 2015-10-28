@@ -92,6 +92,7 @@ class FakeWorld(state: State) extends api.World {
   class FakePatch(agentId: Long, val vars: Seq[AnyRef])
     extends api.Patch with FakeAgent {
     override def kind = core.AgentKind.Patch
+    override def shape = ""
     override def id = agentId
     override def pxcor = vars(VAR_PXCOR).asInstanceOf[Int]
     override def pycor = vars(VAR_PYCOR).asInstanceOf[Int]
@@ -159,12 +160,15 @@ class FakeWorld(state: State) extends api.World {
       }.orNull
     }
     def kind = core.AgentKind.Observer
+    def shape = ""
     def id = 0
     def size = 0
     def perspective: api.Perspective = unsupported
     def oxcor: Double = unsupported
     def oycor: Double = unsupported
-    def setPerspective(p: api.Perspective, a: api.Agent) = unsupported
+    def ozcor: Double = unsupported
+    def orientation: Option[api.ObserverOrientation] = None
+    def setPerspective(p: api.Perspective) = unsupported
   }
 
   private def worldVar[T](i: Int) = worldVars(i).asInstanceOf[T]

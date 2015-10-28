@@ -10,6 +10,7 @@ import org.nlogo.core.AgentVariables;
 import org.nlogo.core.Breed;
 import org.nlogo.api.ImporterUser;
 import org.nlogo.api.Perspective;
+import org.nlogo.api.PerspectiveJ;
 
 import scala.collection.Seq;
 
@@ -355,9 +356,15 @@ public abstract strictfp class ImporterJ
 
   void handleSpecialObserverVariable(Observer observer, Object val, String header) {
     if (header.equals(PERSPECTIVE_HEADER)) {
-      observer.perspective_$eq(Perspective.load(((Double) val).intValue()));
+      observer.setPerspective(PerspectiveJ.create(((Double) val).intValue()));
     } else if (header.equals(SUBJECT_HEADER) && val instanceof Agent) {
-      observer.targetAgent_$eq((Agent) val);
+      Perspective existingPerspective = observer.perspective();
+      int followDistance = 0;
+      if (existingPerspective.kind() == PerspectiveJ.FOLLOW) {
+        followDistance = 5;
+      }
+      Perspective newPerspective = PerspectiveJ.create(existingPerspective.kind(), (Agent) val, followDistance);
+      observer.setPerspective(newPerspective);
     } else if (header.equals(NEXT_INDEX_HEADER)) {
       world.nextTurtleIndex(((Double) val).longValue());
     } else if (header.equals(DIRECTED_LINKS_HEADER)) {

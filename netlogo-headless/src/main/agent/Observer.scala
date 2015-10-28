@@ -2,12 +2,16 @@
 
 package org.nlogo.agent
 
-import org.nlogo.{ api, core }
+import org.nlogo.{ api, core },
+  api.{ AgentFollowingPerspective, Perspective }
+
 
 class Observer(_world: World) extends Agent(_world)
 with api.Observer with Constraints {
 
   def kind = core.AgentKind.Observer
+
+  def shape = ""
 
   override def getVariable(vn: Int) = variables(vn)
 
@@ -40,24 +44,38 @@ with api.Observer with Constraints {
   override def perspective = _perspective
   def perspective_=(p: api.Perspective) { _perspective = p }
 
-  var targetAgent: api.Agent = null
+  def targetAgent: api.Agent =
+    perspective match {
+      case a: AgentFollowingPerspective => a.targetAgent
+      case Perspective.Watch(a)         => a
+      case _                            => null
+    }
+
+  def followDistance: Int =
+    perspective match {
+      case a: AgentFollowingPerspective => a.followDistance
+      case _                            => 5
+    }
 
   var oxcor: Double = 0
   var oycor: Double = 0
+  var ozcor: Double = 0
+
+  val orientation = None
 
   def atHome2D: Boolean =
     perspective == api.Perspective.Observe &&
       oxcor == 0 && oycor == 0
 
   def followOffsetX: Double = perspective match {
-    case api.Perspective.Follow | api.Perspective.Ride =>
+    case _: AgentFollowingPerspective =>
       oxcor - (world.minPxcor - 0.5 + world.worldWidth / 2.0)
     case _ =>
       0.0
     }
 
   def followOffsetY: Double = perspective match {
-    case api.Perspective.Follow | api.Perspective.Ride =>
+    case _: AgentFollowingPerspective =>
       oycor - (world.minPycor - 0.5 + world.worldHeight / 2.0)
     case _ =>
       0.0
@@ -65,7 +83,6 @@ with api.Observer with Constraints {
 
   def setPerspective(perspective: api.Perspective, agent: api.Agent) {
     _perspective = perspective
-    targetAgent = agent
   }
 
   def setPerspective(perspective: api.Perspective) {

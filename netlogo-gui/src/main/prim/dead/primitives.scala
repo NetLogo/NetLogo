@@ -50,26 +50,3 @@ class _randomorrandomfloat extends DeadReporter {
       Array(Syntax.NumberType),
       Syntax.NumberType)
 }
-
-/**
- * This isn't in the language anymore, but in order to auto-translate
- * it to OF, we need to have a class for it so the tokenizer and parser
- * can parse it.
- */
-class _valuefrom extends DeadReporter {
-  override def syntax =
-    Syntax.reporterSyntax(
-      Array(Syntax.AgentType, Syntax.ReporterBlockType),
-      Syntax.WildcardType)
-}
-
-/**
- * This isn't in the language anymore, but in order to auto-translate it to OF, we need to have a
- * class for it so the tokenizer and parser can parse it.
- */
-class _valuesfrom extends DeadReporter {
-  override def syntax =
-    Syntax.reporterSyntax(
-      Array(Syntax.AgentsetType, Syntax.ReporterBlockType),
-      Syntax.ListType)
-}

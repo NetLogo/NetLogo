@@ -13,11 +13,12 @@ class _zoom extends Command {
   override def perform(context: Context) {
     val observer = world.observer
     // don't zoom past the point you are looking at.  maybe this should be an error?
-    val delta = argEvalDoubleValue(context, 0) min observer.dist
+    val orientation = observer.orientation.get
+    val delta = argEvalDoubleValue(context, 0) min orientation.dist
     observer.oxyandzcor(
-      observer.oxcor + delta * observer.dx,
-      observer.oycor + delta * observer.dy,
-      observer.ozcor - delta * observer.dz)
+      observer.oxcor + delta * orientation.dx,
+      observer.oycor + delta * orientation.dy,
+      observer.ozcor - delta * orientation.dz)
     context.ip = next
   }
 }

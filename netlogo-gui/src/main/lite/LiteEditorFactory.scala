@@ -2,7 +2,8 @@
 
 package org.nlogo.lite
 
-import org.nlogo.api.{ CompilerServices, I18N }
+import org.nlogo.api.CompilerServices
+import org.nlogo.core.I18N
 import org.nlogo.window.{ CodeEditor, EditorColorizer, EditorFactory }
 import org.nlogo.awt.Fonts.platformMonospacedFont
 

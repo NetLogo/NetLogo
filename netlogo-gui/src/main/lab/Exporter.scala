@@ -2,9 +2,8 @@
 
 package org.nlogo.lab
 
-import org.nlogo.api.Dump
-import org.nlogo.api.Version
-import org.nlogo.api.WorldDimensions
+import org.nlogo.api.{ Dump, Version }
+import org.nlogo.core.WorldDimensions
 import org.nlogo.nvm.LabInterface.ProgressListener
 
 // abstract superclass of SpreadsheetExporter and TableExporter.

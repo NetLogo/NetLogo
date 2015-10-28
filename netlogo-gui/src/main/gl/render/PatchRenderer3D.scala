@@ -3,9 +3,9 @@
 package org.nlogo.gl.render
 
 import com.jogamp.opengl.{ GL, GL2, GL2GL3 }
-import org.nlogo.api.{ Patch, Patch3D, World, World3D, Color, DrawingInterface }
+import org.nlogo.api.{ Patch, Patch3D, World, World3D, WorldRenderable, Color, DrawingInterface }
 
-private class PatchRenderer3D(world: World3D, drawing: DrawingInterface, shapeRenderer: ShapeRenderer)
+private class PatchRenderer3D(world: World3D with WorldRenderable, drawing: DrawingInterface, shapeRenderer: ShapeRenderer)
 extends PatchRenderer(world, drawing, shapeRenderer) {
 
   override def renderPatchTexture(gl: GL2)

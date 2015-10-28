@@ -23,6 +23,8 @@ trait Patch extends Agent {
   /** Returns the value of the <code>pcolor</code> variable. */
   def pcolor: AnyRef
 
+  def shape: String
+
   /**
    * Returns the patch at dx and dy from this patch
    *

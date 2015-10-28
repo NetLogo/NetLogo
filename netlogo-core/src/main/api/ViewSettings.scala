@@ -12,4 +12,5 @@ trait ViewSettings {
   def viewOffsetY: Double
   def drawSpotlight: Boolean
   def renderPerspective: Boolean
+  def isHeadless: Boolean
 }

@@ -2,9 +2,9 @@
 
 package org.nlogo.shape.editor;
 
-import org.nlogo.api.I18N;
-import org.nlogo.api.Shape;
-import org.nlogo.api.ShapeList;
+import org.nlogo.core.I18N;
+import org.nlogo.core.Shape;
+import org.nlogo.core.ShapeList;
 import org.nlogo.shape.LinkShape;
 
 import java.util.List;
@@ -23,7 +23,7 @@ strictfp class LinkEditorDialog
   private final DrawableList list;
 
   public void update(Shape originalShape, Shape newShape) {
-    shape.setDirectionIndicator((org.nlogo.shape.VectorShape) newShape);
+    shape.directionIndicator_$eq((org.nlogo.shape.VectorShape) newShape);
   }
 
   public boolean exists(String name) {
@@ -68,7 +68,7 @@ strictfp class LinkEditorDialog
     c.anchor = java.awt.GridBagConstraints.WEST;
     add(label, c);
     c.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-    name.setText(shape.getName());
+    name.setText(shape.name());
     add(name, c);
 
     c.gridwidth = 1;
@@ -80,7 +80,7 @@ strictfp class LinkEditorDialog
     diButton.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent e) {
         new EditorDialog
-            (LinkEditorDialog.this, (org.nlogo.shape.VectorShape) shape.getDirectionIndicator(),
+            (LinkEditorDialog.this, shape.directionIndicator(),
                 getLocation().x, getLocation().y, false);
       }
     });
@@ -92,10 +92,11 @@ strictfp class LinkEditorDialog
     curviness.setText(Double.toString(shape.curviness()));
     add(curviness, c);
 
-    for (int i = 0; i < dashes.size(); i++) {
-      dashes.set(i, new javax.swing.JComboBox<float []>(org.nlogo.shape.LinkLine.dashChoices));
-      dashes.get(i).setRenderer(new DashCellRenderer());
-      dashes.get(i).setSelectedItem(shape.getDashes(i));
+    for (int i = 0; i < 3; i++) {
+      javax.swing.JComboBox<float []> comboBox = new javax.swing.JComboBox<float []>(org.nlogo.shape.LinkLine$.MODULE$.dashChoices());
+      comboBox.setRenderer(new DashCellRenderer());
+      comboBox.setSelectedItem(shape.getLine(i).dashes());
+      dashes.add(comboBox);
     }
 
     c.gridwidth = 1;
@@ -139,14 +140,14 @@ strictfp class LinkEditorDialog
     setLocation(x + 10, y + 10);
 
     setTitle("Link Shape");
-    name.setEnabled(!ShapeList.isDefaultShapeName(shape.getName()));
+    name.setEnabled(!ShapeList.isDefaultShapeName(shape.name()));
 
     list.update();
     pack();
     getRootPane().setDefaultButton(done);
     // when name is not enabled focus goes to the curviness
     // field instead ev 2/18/08
-    if (ShapeList.isDefaultShapeName(shape.getName())) {
+    if (ShapeList.isDefaultShapeName(shape.name())) {
       curviness.requestFocus();
     } else {
       name.requestFocus();
@@ -170,9 +171,9 @@ strictfp class LinkEditorDialog
 
     nameStr = nameStr.toLowerCase();
 
-    shape.setName(nameStr);
+    shape.name_$eq(nameStr);
 
-    String originalName = originalShape.getName();
+    String originalName = originalShape.name();
     // If this is an attempt to overwrite a shape, prompt for
     // permission to do it
     if (list.exists(nameStr)
@@ -197,11 +198,11 @@ strictfp class LinkEditorDialog
       }
     }
 
-    shape.curviness(cv);
+    shape.curviness_$eq(cv);
     for (int i = 0; i < dashes.size(); i++) {
       int index = dashes.get(i).getSelectedIndex();
       shape.setLineVisible(i, index != 0);
-      shape.setDashiness(i, org.nlogo.shape.LinkLine.dashChoices[index]);
+      shape.getLine(i).dashes_$eq(org.nlogo.shape.LinkLine$.MODULE$.dashChoices()[index]);
     }
 
     list.update(originalShape, shape);
@@ -210,12 +211,12 @@ strictfp class LinkEditorDialog
 
   private LinkShape getCurrentShape() {
     LinkShape currentShape = (LinkShape) shape.clone();
-    currentShape.setName(name.getText());
-    currentShape.curviness(Double.parseDouble(curviness.getText()));
+    currentShape.name_$eq(name.getText());
+    currentShape.curviness_$eq(Double.parseDouble(curviness.getText()));
     for (int i = 0; i < dashes.size(); i++) {
       int index = dashes.get(i).getSelectedIndex();
       currentShape.setLineVisible(i, index != 0);
-      currentShape.setDashiness(i, org.nlogo.shape.LinkLine.dashChoices[index]);
+      currentShape.getLine(i).dashes_$eq(org.nlogo.shape.LinkLine$.MODULE$.dashChoices()[index]);
     }
     return currentShape;
   }

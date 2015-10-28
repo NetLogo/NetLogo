@@ -8,7 +8,7 @@ import javax.swing.JToolBar.Separator
 import java.awt.event.{ActionEvent, MouseEvent}
 import javax.swing.{JOptionPane, ImageIcon, Action, AbstractAction, ButtonGroup, JButton, JLabel, JPanel, JToggleButton}
 import org.nlogo.sdm.Model
-import org.nlogo.api.I18N
+import org.nlogo.core.I18N
 
 class AggregateModelEditorToolBar(editor: AggregateModelEditor) extends org.nlogo.swing.ToolBar {
   // Invisible button allows no selection in visible buttongroup

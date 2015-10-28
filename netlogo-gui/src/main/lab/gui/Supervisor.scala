@@ -2,14 +2,14 @@
 
 package org.nlogo.lab.gui
 
+import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.awt.UserCancelException
 import org.nlogo.lab.{Exporter,Protocol,SpreadsheetExporter,TableExporter,Worker}
 import org.nlogo.window.{EditDialogFactoryInterface,GUIWorkspace}
 import org.nlogo.nvm.{EngineException, Workspace}
 import org.nlogo.workspace.{CurrentModelOpener, WorkspaceFactory}
 import org.nlogo.nvm.LabInterface.ProgressListener
-import org.nlogo.api.{I18N, LogoException}
-import org.nlogo.core.CompilerException
+import org.nlogo.api.LogoException
 
 object Supervisor {
   case class RunOptions(threadCount: Int, table: Boolean, spreadsheet: Boolean)

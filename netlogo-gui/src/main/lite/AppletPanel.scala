@@ -3,9 +3,9 @@
 package org.nlogo.lite
 
 import java.util.{ ArrayList, List => JList }
-import org.nlogo.agent.{ Observer, World, World3D }
+import org.nlogo.agent.{ World, World3D }
 import org.nlogo.api.{ LogoException, ModelSection, ModelType, Version, SimpleJobOwner }
-import org.nlogo.core.CompilerException
+import org.nlogo.core.{ AgentKind, CompilerException }
 import org.nlogo.window.{ Event, AppletAdPanel, CompilerManager, InterfacePanelLite, InvalidVersionException,
                           ModelLoader, NetLogoListenerManager, RuntimeErrorDialog }
 import org.nlogo.window.Events.{ CompiledEvent, LoadSectionEvent }
@@ -48,8 +48,11 @@ with Event.LinkParent {
   protected val liteEditorFactory = new LiteEditorFactory(workspace)
 
   val iP = createInterfacePanel(workspace)
-  val defaultOwner = new SimpleJobOwner("AppletPanel", workspace.world.mainRNG, classOf[Observer])
+
+  val defaultOwner = new SimpleJobOwner("AppletPanel", workspace.world.mainRNG, AgentKind.Observer)
+
   val panel = new AppletAdPanel(iconListener)
+
   addLinkComponent(workspace.aggregateManager)
   addLinkComponent(workspace)
   addLinkComponent(procedures)

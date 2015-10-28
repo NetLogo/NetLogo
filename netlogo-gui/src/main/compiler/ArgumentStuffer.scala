@@ -6,6 +6,7 @@ package org.nlogo.compiler
  * the Procedure, with Reporters.
  */
 import org.nlogo.nvm.Reporter
+
 private class ArgumentStuffer extends DefaultAstVisitor {
   override def visitStatement(stmt:Statement) {
     stmt.command.args = gatherArgs(stmt.args)

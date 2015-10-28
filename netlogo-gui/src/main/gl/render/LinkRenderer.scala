@@ -4,18 +4,17 @@ package org.nlogo.gl.render
 
 import com.jogamp.opengl.{ GL, GL2 }
 import com.jogamp.opengl.glu.GLU
-import org.nlogo.api.{ Agent, Link, Perspective, World }
+import org.nlogo.api.{ Agent, AgentFollowingPerspective, Link, Perspective, World }
 
 private class LinkRenderer(world: World, shapeRenderer: ShapeRenderer)
         extends AgentRenderer(world, shapeRenderer) {
 
   private def lineScale = {
     val distance =
-      if(world.observer.perspective == Perspective.Follow ||
-         world.observer.perspective == Perspective.Ride)
-        world.observer.followDistance
-      else
-        world.observer.dist
+      world.observer.perspective match {
+        case afp: AgentFollowingPerspective => afp.followDistance
+        case _                              => world.observer.orientation.get.dist
+      }
     if(distance == 0)
       0d
     else

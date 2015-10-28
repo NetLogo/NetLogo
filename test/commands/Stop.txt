@@ -33,11 +33,11 @@ StopFromForeach3
 
 StopFromForeachInsideReporterProcedure
   to-report foo foreach [1 2 3] [ stop ] end
-  O> __ignore foo => ERROR STOP is not allowed inside TO-REPORT.
+  COMPILE> COMPILER ERROR STOP is not allowed inside TO-REPORT.
 
 StopFromNestedForeachInsideReporterProcedure
   to-report foo foreach [1 2] [ foreach [3 4] [ stop ] ] end
-  O> __ignore foo => ERROR STOP is not allowed inside TO-REPORT.
+  COMPILE> COMPILER ERROR STOP is not allowed inside TO-REPORT.
 
 StopTask1
   O> set glob1 task [ stop ]

@@ -3,7 +3,8 @@
 package org.nlogo.prim
 
 import org.nlogo.agent.{ Agent, AgentSet }
-import org.nlogo.api.{ AgentException, I18N, LogoException, LogoListBuilder, Syntax }
+import org.nlogo.api.{ AgentException, LogoException, LogoListBuilder, Syntax }
+import org.nlogo.core.I18N
 import org.nlogo.nvm.{ ArgumentTypeException, Context, EngineException, Reporter }
 
 class _linkbreedvariableof(name: String) extends Reporter {

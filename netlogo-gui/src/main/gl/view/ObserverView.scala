@@ -26,9 +26,7 @@ extends View("3D View", viewManager, renderer) {
   viewManager.addLinkComponent(this)
 
   override def updatePerspectiveLabel() {
-    navBar.setStatus(
-      viewManager.world.observer.perspective,
-      viewManager.world.observer.targetAgent)
+    navBar.setStatus(viewManager.world.observer.perspective)
   }
 
   override def editFinished() = {

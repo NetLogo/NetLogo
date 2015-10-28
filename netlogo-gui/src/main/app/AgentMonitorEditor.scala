@@ -4,8 +4,9 @@ package org.nlogo.app
 
 import org.nlogo.agent.{Agent, AgentSet, Observer, Turtle, Patch, Link}
 import org.nlogo.window.{EditorColorizer, Widget}
-import org.nlogo.api.{I18N, AgentVariables, Dump }
-import org.nlogo.core.{ TokenType, Nobody }
+import org.nlogo.api.{ AgentVariables, Dump }
+import org.nlogo.core.I18N
+import org.nlogo.core.{ AgentKind, TokenType, Nobody }
 import collection.JavaConverters._
 
 class AgentMonitorEditor(parent: AgentMonitor) extends javax.swing.JPanel
@@ -57,11 +58,11 @@ class AgentMonitorEditor(parent: AgentMonitor) extends javax.swing.JPanel
         javax.swing.BorderFactory.createEmptyBorder(0, 1, 0, 1))
       val index =
         if(agent == null)
-          workspace.world.indexOfVariable(agentClass, variableName)
+          workspace.world.indexOfVariable(agentKind, variableName)
         else
           workspace.world.indexOfVariable(agent, variableName)
       editor = new AgentVarEditor(this, index, variableName, label)
-      editor.agentClass(agentClass)
+      editor.agentKind(agentKind)
       editors += editor
       layout.setConstraints(label, labelConstraints)
       add(label)
@@ -80,7 +81,7 @@ class AgentMonitorEditor(parent: AgentMonitor) extends javax.swing.JPanel
 
   def vars = parent.vars
   def agent = parent.agent
-  def agentClass = parent.agentClass
+  def agentKind = parent.agentKind
   def setAgent(agent: Agent) { parent.setAgent(agent, 3) }
   def workspace = parent.workspace
 }
@@ -99,13 +100,12 @@ with org.nlogo.window.Events.JobRemovedEvent.Handler
 {
 
   private def specialCase = {
-    val T = classOf[Turtle]; val P = classOf[Patch]; val L = classOf[Link]
-    parent.agentClass match {
-      case T if AgentVariables.isSpecialTurtleVariable(index) =>
+    parent.agentKind match {
+      case AgentKind.Turtle if AgentVariables.isSpecialTurtleVariable(index) =>
         TURTLE_WHO
-      case P if AgentVariables.isSpecialPatchVariable(index, workspace.world.program.dialect.is3D) =>
+      case AgentKind.Patch if AgentVariables.isSpecialPatchVariable(index, workspace.world.program.dialect.is3D) =>
         PXCOR_OR_PYCOR
-      case L if AgentVariables.isSpecialLinkVariable(index) =>
+      case AgentKind.Link if AgentVariables.isSpecialLinkVariable(index) =>
         LINK_WHO
       case _ =>
         NORMAL
@@ -155,13 +155,11 @@ with org.nlogo.window.Events.JobRemovedEvent.Handler
   override def useAgentClass = false
 
   displayName = {
-    val O = classOf[Observer]; val T = classOf[Turtle]
-    val P = classOf[Patch];    val L = classOf[Link]
-    parent.agentClass match {
-      case O => "Globals Monitor"
-      case T => "Turtle Monitor"
-      case P => "Patch Monitor"
-      case L => "Link Monitor"
+    parent.agentKind match {
+      case AgentKind.Observer => "Globals Monitor"
+      case AgentKind.Turtle   => "Turtle Monitor"
+      case AgentKind.Patch    => "Patch Monitor"
+      case AgentKind.Link     => "Link Monitor"
     }
   }
 
@@ -203,11 +201,11 @@ with org.nlogo.window.Events.JobRemovedEvent.Handler
     setEnabled(false)
     this.innerSource(innerSource)
     var header = "to __agentvareditor [] "
-    if(parent.agentClass eq classOf[Turtle])
+    if(parent.agentKind == AgentKind.Turtle)
       header += " __turtlecode "
-    else if(parent.agentClass eq classOf[Patch])
+    else if(parent.agentKind == AgentKind.Patch)
       header += " __patchcode "
-    else if(parent.agentClass eq classOf[Link])
+    else if(parent.agentKind == AgentKind.Link)
       header += "__linkcode "
     header += "set " + variableName + " "
     val footer = "__done end"
@@ -217,8 +215,7 @@ with org.nlogo.window.Events.JobRemovedEvent.Handler
         // monitors and the pxcor/pycor fields of empty patch monitors - ST 8/17/03
         workspace.world.observers()
       else {
-        val agentset = new org.nlogo.agent.ArrayAgentSet(
-          agent.getAgentClass, 1, false, workspace.world)
+        val agentset = new org.nlogo.agent.ArrayAgentSet(agent.kind, 1, false)
         agentset.add(agent)
         agentset
       }
@@ -400,8 +397,7 @@ with org.nlogo.window.Events.JobRemovedEvent.Handler
   @throws(classOf[org.nlogo.api.AgentException])
   private def parseTurtleOrDouble(text: String): Turtle = {
     val obj = workspace.compiler.readFromString(
-      text, workspace.world, workspace.getExtensionManager,
-      workspace.world.program.dialect.is3D)
+      text, workspace.world, workspace.getExtensionManager)
     obj match {
       case t: Turtle =>
         t

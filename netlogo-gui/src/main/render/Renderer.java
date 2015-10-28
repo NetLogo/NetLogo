@@ -2,6 +2,7 @@
 
 package org.nlogo.render;
 
+import org.nlogo.core.AgentKindJ;
 import org.nlogo.api.Agent;
 import org.nlogo.api.AgentSet;
 import org.nlogo.api.Graphics2DWrapper;
@@ -11,6 +12,7 @@ import org.nlogo.api.Patch;
 import org.nlogo.api.Turtle;
 import org.nlogo.api.ViewSettings;
 import org.nlogo.api.World;
+import org.nlogo.api.WorldWithWorldRenderable;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -18,11 +20,11 @@ import java.util.Iterator;
 public strictfp class Renderer
     extends AbstractRenderer {
 
-  public Renderer(World world) {
+  public Renderer(WorldWithWorldRenderable world) {
     this(world, false);
   }
 
-  public Renderer(World world, boolean renderLabelsAsRectangles) {
+  public Renderer(WorldWithWorldRenderable world, boolean renderLabelsAsRectangles) {
     super(world, world.turtleShapeList(), world.linkShapeList());
     renderLabelsAsRectangles_$eq(renderLabelsAsRectangles);
   }
@@ -57,17 +59,12 @@ public strictfp class Renderer
   protected void paintLinks(GraphicsInterface g, double patchSize) {
     int linksDrawn = 0;
     // traverse breeds in reverse order of declaration
-    Collection<? extends AgentSet> breeds = world.getLinkBreeds().values();
-    for (Iterator<? extends AgentSet> iter = breeds.iterator();
+    for (scala.collection.Iterator<String> iter = world.program().linkBreeds().keys().iterator();
          iter.hasNext();) {
-      AgentSet breed = iter.next();
-      // I'm unable to reproduce bug #1400, but a user did see it, and
-      // this instanceof check should prevent it - ST 9/21/11
-      if (breed instanceof AgentSet) {
-        for (Agent a : breed.agents()) {
-          linkDrawer.drawLink(g, topology, (Link) a, patchSize, false);
-          linksDrawn++;
-        }
+      AgentSet breed = world.getLinkBreed(iter.next());
+      for (Agent a : breed.agents()) {
+        linkDrawer.drawLink(g, topology, (Link) a, patchSize, false);
+        linksDrawn++;
       }
     }
     if (linksDrawn < world.links().count()) {
@@ -88,18 +85,13 @@ public strictfp class Renderer
   protected void paintTurtles(GraphicsInterface g, double patchSize) {
     int turtlesDrawn = 0;
     // traverse breeds in reverse order of declaration
-    Collection<? extends AgentSet> breeds = world.getBreeds().values();
-    for (Iterator<? extends AgentSet> iter = breeds.iterator();
+    for (scala.collection.Iterator<String> iter = world.program().breeds().keys().iterator();
          iter.hasNext();) {
-      AgentSet breed = iter.next();
-      // I'm unable to reproduce bug #1400, but a user did see it, and
-      // this instanceof check should prevent it - ST 9/21/11
-      if (breed instanceof AgentSet) {
-        if (Turtle.class.isAssignableFrom(breed.type())) {
-          for (Agent a : breed.agents()) {
-            turtleDrawer.drawTurtle(g, topology, (Turtle) a, patchSize);
-            turtlesDrawn++;
-          }
+      AgentSet breed = world.getBreed(iter.next());
+      if (breed.kind() == AgentKindJ.Turtle()) {
+        for (Agent a : breed.agents()) {
+          turtleDrawer.drawTurtle(g, topology, (Turtle) a, patchSize);
+          turtlesDrawn++;
         }
       }
     }

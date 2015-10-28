@@ -3,7 +3,7 @@
 package org.nlogo.window;
 
 import org.nlogo.agent.World3D;
-import org.nlogo.api.I18N;
+import org.nlogo.core.I18N;
 
 public strictfp class WorldViewSettings3D
     extends WorldViewSettings {
@@ -313,7 +313,7 @@ public strictfp class WorldViewSettings3D
   }
 
   @Override
-  public void setDimensions(org.nlogo.api.WorldDimensions d) {
+  public void setDimensions(org.nlogo.core.WorldDimensions d) {
     if (d instanceof org.nlogo.api.WorldDimensions3D) {
       org.nlogo.api.WorldDimensions3D dd = (org.nlogo.api.WorldDimensions3D) d;
       setDimensions

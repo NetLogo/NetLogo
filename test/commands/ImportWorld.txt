@@ -30,26 +30,26 @@ AllBreeds
 
 AllLinks
   O> create-frogs 10
-  O> ask turtle 0 [ create-directed-link-to turtle 1 ]
-  O> ask turtle 1 [ create-undirected-link-with turtle 2 ]
+  O> ask turtle 0 [ create-directed-edge-to turtle 1 ]
+  O> ask turtle 1 [ create-undirected-edge-with turtle 2 ]
   O> set glob1 links
   O> set glob2 links with [true]
-  O> set glob3 directed-links
-  O> ask turtle 2 [ create-undirected-link-with turtle 3 ]
-  O> ask turtle 3 [ create-directed-link-to turtle 4 ]
+  O> set glob3 directed-edges
+  O> ask turtle 2 [ create-undirected-edge-with turtle 3 ]
+  O> ask turtle 3 [ create-directed-edge-to turtle 4 ]
   count glob1 => 4
   count glob2 => 2
   count glob3 => 2
 
 AllLinkBreeds
   O> create-frogs 10
-  O> ask turtle 0 [ create-directed-link-to turtle 1 ]
-  O> ask turtle 1 [ create-undirected-link-with turtle 2 ]
+  O> ask turtle 0 [ create-directed-edge-to turtle 1 ]
+  O> ask turtle 1 [ create-undirected-edge-with turtle 2 ]
   O> set glob1 links
-  O> set glob2 directed-links with [true]
-  O> set glob3 directed-links
-  O> ask turtle 2 [ create-undirected-link-with turtle 3 ]
-  O> ask turtle 3 [ create-directed-link-to turtle 4 ]
+  O> set glob2 directed-edges with [true]
+  O> set glob3 directed-edges
+  O> ask turtle 2 [ create-undirected-edge-with turtle 3 ]
+  O> ask turtle 3 [ create-directed-edge-to turtle 4 ]
   count glob1 => 4
   count glob2 => 1
   count glob3 => 2
@@ -72,14 +72,14 @@ AllLinkBreedsExport
   to export-round-trip let file (word "tmp/ImportWorld/test-file-" __nano-time ".csv" )  export-world file ca import-world file end
   O> __mkdir "tmp/ImportWorld"
   O> create-frogs 10
-  O> ask turtle 0 [ create-directed-link-to turtle 1 ]
-  O> ask turtle 1 [ create-undirected-link-with turtle 2 ]
+  O> ask turtle 0 [ create-directed-edge-to turtle 1 ]
+  O> ask turtle 1 [ create-undirected-edge-with turtle 2 ]
   O> set glob1 links
   O> set glob2 links with [true]
-  O> set glob3 directed-links
+  O> set glob3 directed-edges
   O> export-round-trip
-  O> ask turtle 2 [ create-undirected-link-with turtle 3 ]
-  O> ask turtle 3 [ create-directed-link-to turtle 4 ]
+  O> ask turtle 2 [ create-undirected-edge-with turtle 3 ]
+  O> ask turtle 3 [ create-directed-edge-to turtle 4 ]
   count glob1 => 4
   count glob2 => 2
   count glob3 => 2
@@ -101,8 +101,8 @@ ImportExportLinkBreedOrder
   O> __mkdir "tmp/ImportWorld"
   O> random-seed 6924
   O> cro 10
-  O> ask turtles [ create-directed-links-to turtles with [ who > [who] of myself ] ]
-  O> ask directed-link 0 1 [ die ]
+  O> ask turtles [ create-directed-edges-to turtles with [ who > [who] of myself ] ]
+  O> ask directed-edge 0 1 [ die ]
   O> export-round-trip
   [list [who] of end1 [who] of end2 ] of one-of links = glob1 => true
 

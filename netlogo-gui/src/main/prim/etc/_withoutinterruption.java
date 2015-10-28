@@ -31,8 +31,7 @@ public final strictfp class _withoutinterruption
   public void perform_1(final Context context)
       throws LogoException {
     AgentSet agentset =
-        new org.nlogo.agent.ArrayAgentSet
-            (context.agent.getAgentClass(), 1, false, world);
+        new org.nlogo.agent.ArrayAgentSet(context.agent.kind(), 1, false);
     agentset.add(context.agent);
     context.runExclusiveJob(agentset, next);
     context.ip = offset;

@@ -71,7 +71,7 @@ public strictfp class ViewManager {
     }
   }
 
-  public void shapeChanged(org.nlogo.api.Shape shape) {
+  public void shapeChanged(org.nlogo.core.Shape shape) {
     for (ViewInterface view : views) {
       view.shapeChanged(shape);
     }

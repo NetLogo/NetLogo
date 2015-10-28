@@ -2,6 +2,7 @@
 
 package org.nlogo.hubnet.mirroring;
 
+import org.nlogo.core.AgentKind;
 import org.nlogo.api.Perspective;
 
 public strictfp class AgentPerspective {
@@ -12,7 +13,7 @@ public strictfp class AgentPerspective {
   final double radius;
   final boolean serverMode;
 
-  public AgentPerspective(Class<? extends org.nlogo.api.Agent> agentClass, long id, int perspective, double radius, boolean serverMode) {
+  public AgentPerspective(AgentKind agentClass, long id, int perspective, double radius, boolean serverMode) {
     this.agent = new Agent(id, agentClass);
     this.perspective = perspective;
     this.radius = radius;

@@ -4,7 +4,7 @@ package org.nlogo.agent;
 
 import org.nlogo.api.AgentException;
 import org.nlogo.api.Constants;
-import org.nlogo.api.I18N;
+import org.nlogo.core.I18N;
 
 public strictfp class Protractor
     implements org.nlogo.api.Protractor {

@@ -2,7 +2,8 @@
 
 package org.nlogo.render
 
-import org.nlogo.api.{AgentSet, Color, GraphicsInterface, ShapeList, Turtle, World}
+import org.nlogo.core.{ AgentKind, ShapeList }
+import org.nlogo.api.{AgentSet, Color, GraphicsInterface, Turtle, World}
 import org.nlogo.util.MockSuite
 
 class TurtleTestsDrawer extends MockSuite {
@@ -86,7 +87,7 @@ class TurtleTestsDrawer extends MockSuite {
 
   ///
   def color(name: String): java.lang.Double =
-    Double.box(Color.getColorNumberByIndex(Color.getColorNamesArray.indexOf(name)))
+    Double.box(Color.getColorNumberByIndex(Color.ColorNames.indexOf(name)))
   def withAlpha(boxedColor: java.lang.Double, alpha: Int) =
     Color.getRGBListByARGB(Color.getRGBInt(boxedColor)).lput(Double.box(alpha))
 
@@ -94,7 +95,7 @@ class TurtleTestsDrawer extends MockSuite {
     val patchSize = 13
     def makeTurtleDrawer = {
       import org.nlogo.shape.TestHelpers._
-      new TurtleDrawer(new ShapeList(makeSquarePolygon(recolorable = testShapeIsRecolorable))) {
+      new TurtleDrawer(new ShapeList(AgentKind.Turtle, Seq(makeSquarePolygon(recolorable = testShapeIsRecolorable)))) {
         shapes.resetCache(patchSize)
       }
     }
@@ -133,6 +134,7 @@ class TurtleTestsDrawer extends MockSuite {
                         label: String = "",
                         labelColor: Object = white)
   extends Turtle {
+    override val kind = AgentKind.Turtle
     override def classDisplayName = "TestTurtle"
     override def id = 0
     override def xcor = 0
@@ -142,7 +144,6 @@ class TurtleTestsDrawer extends MockSuite {
     override def hasLabel = label!=""
     override def labelString = label
     override def alpha = Color.getColor(color).getAlpha
-    override def isPartiallyTransparent = { val a = alpha; a > 0 && a < 255 }
     override def world: World = sys.error("unimplemented")
     override def setVariable(vn:Int,value:Object) = sys.error("unimplemented")
     override def getVariable(vn:Int) = sys.error("unimplemented")

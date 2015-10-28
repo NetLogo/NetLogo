@@ -25,6 +25,11 @@ public strictfp class TrailDrawer
     this.linkDrawer = linkDrawer;
   }
 
+
+  public boolean isHeadless() {
+    return true;
+  }
+
   // for rendering drawing in 3D view
   boolean drawingDirty = false;
   boolean drawingBlank = true;

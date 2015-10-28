@@ -7,7 +7,7 @@ import java.awt.event.FocusEvent
 import java.awt.event.TextEvent
 import java.awt.event.TextListener
 
-import org.nlogo.api.I18N
+import org.nlogo.core.I18N
 import org.nlogo.api.PreviewCommands
 import org.nlogo.api.PreviewCommands.Compilable
 import org.nlogo.api.PreviewCommands.Custom

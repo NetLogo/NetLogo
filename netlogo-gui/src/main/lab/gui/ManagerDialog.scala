@@ -5,7 +5,7 @@ package org.nlogo.lab.gui
 import org.nlogo.lab.{EnumeratedValueSet,Protocol}
 import org.nlogo.window.EditDialogFactoryInterface
 import javax.swing.{JButton,JDialog,JLabel,JList,JOptionPane,JPanel,JScrollPane}
-import org.nlogo.api.I18N
+import org.nlogo.core.I18N
 
 private class ManagerDialog(manager: LabManager,
                             dialogFactory: EditDialogFactoryInterface)

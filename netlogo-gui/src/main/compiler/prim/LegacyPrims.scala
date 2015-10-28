@@ -16,13 +16,6 @@ case class _patchrow() extends Reporter {
   def syntax = Syntax.reporterSyntax(ret = PatchsetType, right = List(NumberType))
 }
 
-case class _facenowrap() extends Command {
-  def syntax = Syntax.commandSyntax(agentClassString = "-T--", right = List(AgentType))
-}
-
-case class _facexynowrap() extends Command {
-  def syntax = Syntax.commandSyntax(agentClassString = "-T--", right = List(NumberType, NumberType))
-}
 
 // NOTE: These prims are NOT specific to the GUI as such, but rather are
 // primitives which are not in NLW at this time. For use with the NetLogoGUI dialect
@@ -48,51 +41,6 @@ package etc {
     def syntax = Syntax.reporterSyntax(ret = ListType | StringType, right = List(ListType | StringType))
   }
 
-  case class _distancenowrap() extends Reporter {
-    def syntax = Syntax.reporterSyntax(ret = NumberType, agentClassString = "-TP-", right = List(PatchType | TurtleType))
-  }
-
-  case class _distancexynowrap() extends Reporter {
-    def syntax = Syntax.reporterSyntax(ret = NumberType, agentClassString = "-TP-", right = List(NumberType, NumberType))
-  }
-
-  case class _extracthsbold() extends Reporter {
-    def syntax = Syntax.reporterSyntax(ret = ListType, right = List(NumberType | ListType))
-  }
-
-  case class _hsbold() extends Reporter {
-    def syntax = Syntax.reporterSyntax(ret = ListType, right = List(NumberType, NumberType, NumberType))
-  }
-
-
-  case class _hubnetinqsize() extends Reporter {
-    def syntax = Syntax.reporterSyntax(ret = NumberType)
-  }
-
-  case class _hubnetmessage() extends Reporter {
-    def syntax = Syntax.reporterSyntax(ret = WildcardType)
-  }
-
-  case class _inradiusnowrap() extends Reporter {
-    def syntax = Syntax.reporterSyntax(ret = AgentsetType, left = AgentsetType, agentClassString = "-TP-", precedence = 12, right = List(NumberType))
-  }
-
-  case class _inconenowrap() extends Reporter {
-    def syntax = Syntax.reporterSyntax(ret = AgentsetType, left = AgentsetType, agentClassString = "-T--", precedence = 12, right = List(NumberType, NumberType))
-  }
-
-  case class _monitorprecision() extends Reporter {
-    def syntax = Syntax.reporterSyntax(ret = NumberType, agentClassString = "O---", right = List(WildcardType, NumberType))
-  }
-
-  case class _towardsnowrap() extends Reporter {
-    def syntax = Syntax.reporterSyntax(ret = NumberType, agentClassString = "-TP-", right = List(PatchType | TurtleType))
-  }
-
-  case class _towardsxynowrap() extends Reporter {
-    def syntax = Syntax.reporterSyntax(ret = NumberType, agentClassString = "-TP-", right = List(PatchType | TurtleType))
-  }
-
   case class _changelanguage() extends Command {
     def syntax = Syntax.commandSyntax(agentClassString = "O---")
   }
@@ -101,12 +49,24 @@ package etc {
     def syntax = Syntax.commandSyntax(agentClassString = "O---")
   }
 
+  case class _distancenowrap() extends Reporter {
+    def syntax = Syntax.reporterSyntax(ret = NumberType, agentClassString = "-TP-", right = List(PatchType | TurtleType))
+  }
+
+  case class _distancexynowrap() extends Reporter {
+    def syntax = Syntax.reporterSyntax(ret = NumberType, agentClassString = "-TP-", right = List(NumberType, NumberType))
+  }
+
   case class _edit() extends Command {
     def syntax = Syntax.commandSyntax(agentClassString = "O---")
   }
 
   case class _english() extends Command {
     def syntax = Syntax.commandSyntax(agentClassString = "O---")
+  }
+
+  case class _extracthsbold() extends Reporter {
+    def syntax = Syntax.reporterSyntax(ret = ListType, right = List(NumberType | ListType))
   }
 
   case class _face() extends Command {
@@ -133,12 +93,36 @@ package etc {
     def syntax = Syntax.commandSyntax(agentClassString = "O---", right = List(StringType))
   }
 
+  case class _hsbold() extends Reporter {
+    def syntax = Syntax.reporterSyntax(ret = ListType, right = List(NumberType, NumberType, NumberType))
+  }
+
+  case class _hubnetinqsize() extends Reporter {
+    def syntax = Syntax.reporterSyntax(ret = NumberType)
+  }
+
+  case class _hubnetmessage() extends Reporter {
+    def syntax = Syntax.reporterSyntax(ret = WildcardType)
+  }
+
+  case class _inradiusnowrap() extends Reporter {
+    def syntax = Syntax.reporterSyntax(ret = AgentsetType, left = AgentsetType, agentClassString = "-TP-", precedence = 12, right = List(NumberType))
+  }
+
+  case class _inconenowrap() extends Reporter {
+    def syntax = Syntax.reporterSyntax(ret = AgentsetType, left = AgentsetType, agentClassString = "-T--", precedence = 12, right = List(NumberType, NumberType))
+  }
+
   case class _life() extends Command {
     def syntax = Syntax.commandSyntax(agentClassString = "O---")
   }
 
   case class _magicopen() extends Command {
     def syntax = Syntax.commandSyntax(agentClassString = "O---", right = List(StringType))
+  }
+
+  case class _monitorprecision() extends Reporter {
+    def syntax = Syntax.reporterSyntax(ret = NumberType, agentClassString = "O---", right = List(WildcardType, NumberType))
   }
 
   case class _moveto() extends Command {
@@ -155,6 +139,14 @@ package etc {
 
   case class _spanish() extends Command {
     def syntax = Syntax.commandSyntax(agentClassString = "O---")
+  }
+
+  case class _towardsnowrap() extends Reporter {
+    def syntax = Syntax.reporterSyntax(ret = NumberType, agentClassString = "-TP-", right = List(PatchType | TurtleType))
+  }
+
+  case class _towardsxynowrap() extends Reporter {
+    def syntax = Syntax.reporterSyntax(ret = NumberType, agentClassString = "-TP-", right = List(NumberType, NumberType))
   }
 }
 
@@ -219,15 +211,6 @@ package dead {
 
   case class _randomorrandomfloat() extends Reporter {
     def syntax = Syntax.reporterSyntax(ret = NumberType, right = List(NumberType))
-  }
-
-
-  case class _valuefrom() extends Reporter {
-    def syntax = Syntax.reporterSyntax(ret = WildcardType, right = List(AgentType, ReporterBlockType))
-  }
-
-  case class _valuesfrom() extends Reporter {
-    def syntax = Syntax.reporterSyntax(ret = ListType, right = List(AgentsetType, ReporterBlockType))
   }
 }
 

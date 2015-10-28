@@ -2,9 +2,12 @@
 
 package org.nlogo.hubnet.mirroring;
 
+import org.nlogo.core.WorldDimensions;
 import org.nlogo.api.AgentException;
+import org.nlogo.api.MersenneTwisterFast;
 import org.nlogo.api.Perspective;
 import org.nlogo.api.PerspectiveJ;
+import org.nlogo.api.Timer;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -103,6 +106,10 @@ public strictfp class ClientWorld
 
   public void setTrailDrawer(org.nlogo.api.TrailDrawerInterface trailDrawer) {
     this.trailDrawer = trailDrawer;
+  }
+
+  public org.nlogo.api.TrailDrawerInterface trailDrawer() {
+    return trailDrawer;
   }
 
   /**
@@ -483,7 +490,7 @@ public strictfp class ClientWorld
 
   private PerspectiveMode perspectiveMode = PerspectiveMode.SERVER;
 
-  public Perspective perspective = PerspectiveJ.OBSERVE();
+  public Perspective perspective = PerspectiveJ.create(PerspectiveJ.OBSERVE);
   public AgentData targetAgent;
   public double radius;
 
@@ -493,21 +500,21 @@ public strictfp class ClientWorld
 
   public void updateServerPerspective(AgentPerspective p) {
     if (perspectiveMode == PerspectiveMode.SERVER) {
-      perspective = Perspective.load(p.perspective);
+      perspective = PerspectiveJ.create(p.perspective);
       radius = p.radius;
       targetAgent = getAgent(p.agent);
     }
   }
 
   public void updateClientPerspective(AgentPerspective p) {
-    perspective = Perspective.load(p.perspective);
+    perspective = PerspectiveJ.create(p.perspective);
     perspectiveMode = p.serverMode ? PerspectiveMode.SERVER : PerspectiveMode.CLIENT;
     targetAgent = getAgent(p.agent);
     radius = p.radius;
   }
 
   public double followOffsetX() {
-    if (targetAgent == null || (perspective != PerspectiveJ.FOLLOW() && perspective != PerspectiveJ.RIDE())) {
+    if (targetAgent == null || (perspective.kind() != PerspectiveJ.FOLLOW && perspective.kind() != PerspectiveJ.RIDE)) {
       return 0;
     }
 
@@ -521,7 +528,7 @@ public strictfp class ClientWorld
   public double followOffsetY() {
     AgentData agent = targetAgent();
 
-    if (agent == null || (perspective != PerspectiveJ.FOLLOW() && perspective != PerspectiveJ.RIDE())) {
+    if (agent == null || (perspective.kind() != PerspectiveJ.FOLLOW && perspective.kind() != PerspectiveJ.RIDE)) {
       return 0;
     }
 
@@ -743,11 +750,11 @@ public strictfp class ClientWorld
     throw new UnsupportedOperationException();
   }
 
-  public org.nlogo.api.ShapeList turtleShapeList() {
+  public org.nlogo.core.ShapeList turtleShapeList() {
     throw new UnsupportedOperationException();
   }
 
-  public org.nlogo.api.ShapeList linkShapeList() {
+  public org.nlogo.core.ShapeList linkShapeList() {
     throw new UnsupportedOperationException();
   }
 
@@ -835,12 +842,47 @@ public strictfp class ClientWorld
     return false;
   }
 
-  public Map<String, ? extends org.nlogo.api.AgentSet> getBreeds() {
+  public org.nlogo.api.AgentSet getBreed(String name) {
     throw new UnsupportedOperationException();
   }
 
-  public Map<String, ? extends org.nlogo.api.AgentSet> getLinkBreeds() {
+  public org.nlogo.api.AgentSet getLinkBreed(String name) {
     throw new UnsupportedOperationException();
   }
 
+  public void realloc() {
+    throw new UnsupportedOperationException();
+  }
+
+  public WorldDimensions getDimensions() {
+    throw new UnsupportedOperationException();
+  }
+
+  public boolean isDimensionVariable(String variableName) {
+    throw new UnsupportedOperationException();
+  }
+
+  public boolean equalDimensions(WorldDimensions d) {
+    throw new UnsupportedOperationException();
+  }
+
+  public MersenneTwisterFast mainRNG() {
+    throw new UnsupportedOperationException();
+  }
+
+  public MersenneTwisterFast auxRNG() {
+    throw new UnsupportedOperationException();
+  }
+
+  public int observerOwnsIndexOf(String name) {
+    throw new UnsupportedOperationException();
+  }
+
+  public void setObserverVariableByName(String variableName, Object value) {
+    throw new UnsupportedOperationException();
+  }
+
+  public Timer timer() {
+    throw new UnsupportedOperationException();
+  }
 }

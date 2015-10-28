@@ -29,8 +29,7 @@ public strictfp class _hubnetsendfollow
           public void run() {
             workspace.getHubNetManager().sendAgentPerspective
                 (client,
-                    PerspectiveJ.FOLLOW().export(),
-                    agent.getAgentClass(), agent.id, radius, false);
+                    PerspectiveJ.FOLLOW, agent.kind(), agent.id, radius, false);
           }
         });
     context.ip = next;

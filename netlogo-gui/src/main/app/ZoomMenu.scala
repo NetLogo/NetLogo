@@ -2,7 +2,7 @@
 
 package org.nlogo.app
 
-import org.nlogo.api.I18N
+import org.nlogo.core.I18N
 // note that multiple instances of this class may exist as there are now multiple frames that each
 // have their own menu bar and menus  ev 8/25/05
 class ZoomMenu extends org.nlogo.swing.Menu(I18N.gui.get("menu.zoom")) {

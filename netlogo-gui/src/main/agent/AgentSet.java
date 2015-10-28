@@ -2,6 +2,8 @@
 
 package org.nlogo.agent;
 
+import org.nlogo.core.AgentKind;
+import org.nlogo.core.AgentKindJ;
 import org.nlogo.core.LogoList;
 
 public abstract strictfp class AgentSet
@@ -19,10 +21,10 @@ public abstract strictfp class AgentSet
     return type;
   }
 
-  final World world;
+  final AgentKind kind;
 
-  public World world() {
-    return world;
+  public AgentKind kind() {
+    return kind;
   }
 
   private boolean isDirected = false;
@@ -53,27 +55,38 @@ public abstract strictfp class AgentSet
 
   public abstract int count();
 
-  AgentSet(Class<? extends Agent> type, World world, String printName, boolean removableAgents) {
-    this.type = type;
-    this.world = world;
+  AgentSet(AgentKind kind, String printName, boolean removableAgents) {
+    this.kind = kind;
     this.printName = printName;
     this.removableAgents = removableAgents;
-    if (type == Patch.class) {
+    if (kind == AgentKindJ.Patch()) {
       agentBit = Patch.BIT;
-    } else if (type == Turtle.class) {
+      type = Patch.class;
+    } else if (kind == AgentKindJ.Turtle()) {
       agentBit = Turtle.BIT;
-    } else if (type == Link.class) {
+      type = Turtle.class;
+    } else if (kind == AgentKindJ.Link()) {
       agentBit = Link.BIT;
-    } else if (type == Observer.class) {
+      type = Link.class;
+    } else if (kind == AgentKindJ.Observer()) {
       agentBit = Observer.BIT;
+      type = Observer.class;
     } else {
-      throw new IllegalStateException("unknown type: " + type);
+      throw new IllegalStateException("unknown kind: " + kind);
     }
+  }
+
+  public static AgentSet fromAgent(Agent agent) {
+    return new ArrayAgentSet(agent.kind(), new Agent[]{ agent }, "");
+  }
+
+  public boolean removableAgents() {
+    return removableAgents;
   }
 
   public boolean equalAgentSets(org.nlogo.api.AgentSet otherSet) {
     return this == otherSet ||
-        (type == otherSet.type() &&
+        (kind == otherSet.kind() &&
             count() == otherSet.count() &&
             equalAgentSetsHelper(otherSet));
   }
@@ -121,7 +134,7 @@ public abstract strictfp class AgentSet
     } else {
       result = randomSubsetGeneral(resultSize, precomputedCount, randomerizer);
     }
-    return new ArrayAgentSet(type, result, world);
+    return new ArrayAgentSet(kind, result);
   }
 
 

@@ -2,7 +2,8 @@
 
 package org.nlogo.gl.view
 
-import org.nlogo.api.{ I18N, Shape }
+
+import org.nlogo.core.{ I18N, Shape }
 import org.nlogo.shape.{ VectorShape, LinkShape }
 import org.nlogo.gl.render.{ GLViewSettings, JOGLException, JOGLLoader }
 import org.nlogo.window.{ GUIWorkspace, JOGLLoadingException, JOGLVersionMismatchException }
@@ -236,10 +237,10 @@ class ViewManager(val workspace: GUIWorkspace,
   def shapeChanged(shape: Shape) {
     if (currentView != null) {
       shape match {
-        case _: VectorShape =>
-          currentView.invalidateTurtleShape(shape.getName)
-        case _: LinkShape =>
-          currentView.invalidateLinkShape(shape.getName)
+        case _: Shape.VectorShape =>
+          currentView.invalidateTurtleShape(shape.name)
+        case _: Shape.LinkShape =>
+          currentView.invalidateLinkShape(shape.name)
       }
       repaint()
     }

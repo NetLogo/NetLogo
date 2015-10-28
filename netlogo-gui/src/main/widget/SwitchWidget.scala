@@ -3,7 +3,7 @@
 package org.nlogo.widget
 
 import org.nlogo.api.Editable
-import org.nlogo.api.I18N
+import org.nlogo.core.I18N
 import org.nlogo.window.{Events, Widget, InterfaceGlobalWidget}
 
 class SwitchWidget extends Switch with Editable with InterfaceGlobalWidget

@@ -31,4 +31,5 @@ case class FixedViewSettings private (
   override def drawSpotlight = false
   override def renderPerspective = false
   override def perspective = api.Perspective.Observe
+  override def isHeadless = true
 }

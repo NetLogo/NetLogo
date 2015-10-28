@@ -2,7 +2,8 @@
 
 package org.nlogo.prim.plot
 
-import org.nlogo.api.{ CommandRunnable, I18N, Syntax }
+import org.nlogo.api.{ CommandRunnable, Syntax }
+import org.nlogo.core.I18N
 import org.nlogo.nvm.{ Command, Context, EngineException, Instruction, Reporter }
 import org.nlogo.plot.PlotManager
 
@@ -86,13 +87,13 @@ class _clearplot extends PlotCommand() {
 }
 class _autoplotoff extends PlotCommand() {
   override def perform(context: Context) {
-    currentPlot(context).autoPlotOn = false
+    currentPlot(context).state = currentPlot(context).state.copy(autoPlotOn = false)
     context.ip = next
   }
 }
 class _autoploton extends PlotCommand() {
   override def perform(context: Context) {
-    currentPlot(context).autoPlotOn = true
+    currentPlot(context).state = currentPlot(context).state.copy(autoPlotOn = true)
     context.ip = next
   }
 }
@@ -100,8 +101,7 @@ class _autoploton extends PlotCommand() {
 class _plot extends PlotCommand(Syntax.NumberType) {
   override def perform(context: Context) {
     val y = argEvalDoubleValue(context, 0)
-    currentPen(context).plot(y)
-    currentPlot(context).makeDirty()
+    currentPlot(context).plot(y)
     context.ip = next
   }
 }
@@ -110,8 +110,7 @@ class _plotxy extends PlotCommand(Syntax.NumberType, Syntax.NumberType) {
   override def perform(context: Context) {
     val x = argEvalDoubleValue(context, 0)
     val y = argEvalDoubleValue(context, 1)
-    currentPen(context).plot(x, y)
-    currentPlot(context).makeDirty()
+    currentPlot(context).plot(x, y)
     context.ip = next
   }
 }
@@ -124,8 +123,7 @@ class _setplotxrange extends PlotCommand(Syntax.NumberType, Syntax.NumberType) {
       throw new EngineException(context, this,
         "the minimum must be less than the maximum, but " +  min + " is greater than or equal to " + max)
     val plot = currentPlot(context)
-    plot.xMin = min
-    plot.xMax = max
+    plot.state = plot.state.copy(xMin = min, xMax = max)
     plot.makeDirty()
     context.ip = next
   }
@@ -139,8 +137,7 @@ class _setplotyrange extends PlotCommand(Syntax.NumberType, Syntax.NumberType) {
       throw new EngineException(context, this,
         "the minimum must be less than the maximum, but " +  min + " is greater than or equal to " + max)
     val plot = currentPlot(context)
-    plot.yMin = min
-    plot.yMax = max
+    plot.state = plot.state.copy(yMin = min, yMax = max)
     plot.makeDirty()
     context.ip = next
   }
@@ -305,7 +302,7 @@ final class _setplotpeninterval extends PlotCommand(Syntax.NumberType) {
 }
 
 final class _setplotpenmode extends PlotCommand(Syntax.NumberType) {
-  import org.nlogo.api.PlotPenInterface
+  import org.nlogo.core.PlotPenInterface
   override def perform(context: Context) {
     val mode = argEvalIntValue(context, 0)
     if (mode < PlotPenInterface.MinMode || mode > PlotPenInterface.MaxMode) {

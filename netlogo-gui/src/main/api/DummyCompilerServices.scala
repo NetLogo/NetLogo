@@ -3,6 +3,7 @@
 package org.nlogo.api
 
 import org.nlogo.core.CompilerException
+import org.nlogo.core.ProcedureSyntax
 import org.nlogo.core.Token
 
 // just enough functionality to make the tests pass
@@ -29,5 +30,5 @@ class DummyCompilerServices extends CompilerServices {
   def isReporter(s: String): Boolean = unsupported
   def tokenizeForColorization(s: String): Array[Token] = unsupported
   def getTokenAtPosition(source: String, position: Int): Token = unsupported
-  def findProcedurePositions(source: String): java.util.Map[String, java.util.List[AnyRef]] = unsupported
+  def findProcedurePositions(source: String): Map[String, ProcedureSyntax] = unsupported
 }

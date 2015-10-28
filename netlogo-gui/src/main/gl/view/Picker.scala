@@ -2,6 +2,7 @@
 
 package org.nlogo.gl.view
 
+import org.nlogo.core.AgentKind
 import org.nlogo.api.{ Agent, Perspective, Turtle }
 import org.nlogo.gl.render.PickListener
 import org.nlogo.window.SyntaxColors
@@ -51,7 +52,7 @@ class Picker(view: View) extends PickListener with ActionListener {
     inspectGlobalsItem.addActionListener(
       new ActionListener {
         override def actionPerformed(p1: ActionEvent) = {
-          view.viewManager.workspace.inspectAgent(classOf[Observer])
+          view.viewManager.workspace.inspectAgent(AgentKind.Observer)
         }
       }
     )
@@ -143,17 +144,16 @@ class Picker(view: View) extends PickListener with ActionListener {
       case Inspect =>
         view.viewManager.workspace.inspectAgent(item.agent, 3)
       case Follow =>
-        observer.setPerspective(Perspective.Follow, item.agent)
         val distance = (item.agent.asInstanceOf[Turtle].size * 5).toInt
-        observer.followDistance(1 max distance min 100)
+        val followDistance = 1 max distance min 100
+        observer.setPerspective(Perspective.Follow(item.agent, followDistance))
         update()
       case Ride =>
-        observer.setPerspective(Perspective.Ride, item.agent)
-        observer.followDistance(0)
+        observer.setPerspective(Perspective.Ride(item.agent))
         update()
       case Watch =>
         observer.home()
-        observer.setPerspective(Perspective.Watch, item.agent)
+        observer.setPerspective(Perspective.Watch(item.agent))
     }
   }
 

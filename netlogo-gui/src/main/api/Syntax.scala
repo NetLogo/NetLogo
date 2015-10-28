@@ -4,7 +4,7 @@ package org.nlogo.api
 
 import org.nlogo.core.LogoList
 import org.nlogo.core.Nobody
-import org.nlogo.core.{ Syntax => CoreSyntax }
+import org.nlogo.core.{ Syntax => CoreSyntax, TypeNames => CoreTypeNames }
 /**
  * Specifies the arguments accepted by a primitive.
  * Used by the compiler for type-checking.
@@ -96,17 +96,17 @@ import Syntax._
   def dump = {
     val buf = new java.lang.StringBuilder
     if (left != VoidType) {
-      buf.append(TypeNames.name(left))
+      buf.append(CoreTypeNames.name(left))
       buf.append(',')
     }
     for (i <- 0 until right.size) {
       if (i > 0)
         buf.append('/')
-      buf.append(TypeNames.name(right(i)))
+      buf.append(CoreTypeNames.name(right(i)))
     }
     if (ret != VoidType) {
       buf.append(',')
-      buf.append(TypeNames.name(ret))
+      buf.append(CoreTypeNames.name(ret))
     }
     buf.append(',')
     buf.append(agentClassString)

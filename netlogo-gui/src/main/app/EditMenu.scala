@@ -10,7 +10,7 @@ import java.util.prefs.Preferences
 import javax.swing.{ AbstractAction, JCheckBoxMenuItem }
 
 import org.nlogo.editor.Actions
-import org.nlogo.api.I18N
+import org.nlogo.core.I18N
 
 class EditMenu(app: App) extends org.nlogo.swing.Menu(I18N.gui.get("menu.edit"))
 with Events.SwitchedTabsEvent.Handler

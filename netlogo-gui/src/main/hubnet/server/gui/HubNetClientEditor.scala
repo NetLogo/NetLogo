@@ -2,7 +2,8 @@
 
 package org.nlogo.hubnet.server.gui
 
-import org.nlogo.api.{I18N, ModelType}
+import org.nlogo.api.ModelType
+import org.nlogo.core.I18N
 import javax.swing.{JMenuBar, JScrollPane, JFrame, ScrollPaneConstants}
 import java.awt.{Dimension, BorderLayout, Component}
 import java.io.{IOException, StringReader, BufferedReader}

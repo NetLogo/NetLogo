@@ -10,17 +10,22 @@ import org.nlogo.{ core, api, nvm },
 import scala.collection.JavaConverters._
 
 object CompilerBridge {
+
   def apply(structureResults: StructureResults,
     extensionManager: ExtensionManager,
     oldProcedures: ListMap[String, Procedure],
     topLevelDefs: Seq[core.ProcedureDefinition]): Seq[ProcedureDefinition] = {
-      val newProcedures = structureResults.procedures.map {
+      val newProcedures = (structureResults.procedures -- oldProcedures.keys).map {
         case (k, p) => k -> fromApiProcedure(p)
       }
       val backifier = new Backifier(
         structureResults.program, extensionManager, oldProcedures ++ newProcedures)
       val astBackifier = new ASTBackifier(backifier)
-      val procedures = (newProcedures.values, topLevelDefs).zipped.map(astBackifier.backify).toSeq
+      val procedureMap: Iterable[(nvm.Procedure, core.ProcedureDefinition)] =
+        newProcedures.values
+          .map(p =>
+            p -> topLevelDefs.find(_.procedure.name.equalsIgnoreCase(p.name)).get)
+      val procedures = procedureMap.map((astBackifier.backifyProcedure _).tupled).toSeq
       // lambda-lift
       val allDefs = {
         val taskNumbers = Iterator.from(1)
@@ -34,7 +39,7 @@ object CompilerBridge {
   }
 
   private def fromApiProcedure(p: FrontEndProcedure): nvm.Procedure = {
-    val proc = new nvm.Procedure(
+    val proc = new Procedure(
       isReporter = p.isReporter,
       nameToken = p.nameToken,
       name = p.name,

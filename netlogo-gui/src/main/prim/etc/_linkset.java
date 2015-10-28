@@ -2,10 +2,11 @@
 
 package org.nlogo.prim.etc;
 
+import org.nlogo.core.AgentKindJ;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Link;
 import org.nlogo.api.Dump;
-import org.nlogo.api.I18N;
+import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
 import org.nlogo.api.Syntax;
@@ -53,9 +54,8 @@ public final strictfp class _linkset
       }
     }
     return new org.nlogo.agent.ArrayAgentSet(
-        org.nlogo.agent.Link.class,
-        resultSet.toArray(new org.nlogo.agent.Link[resultSet.size()]),
-        world);
+        AgentKindJ.Link(),
+        resultSet.toArray(new org.nlogo.agent.Link[resultSet.size()]));
   }
 
   private void descendList(Context context, LogoList tempList, Set<Link> result)

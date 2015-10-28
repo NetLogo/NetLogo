@@ -77,6 +77,8 @@ with org.nlogo.workspace.WorldLoaderInterface {
 
   override def parser = compiler.utilities
 
+  def isHeadless = true
+
   val drawingActionBroker = new DrawingActionBroker(renderer.trailDrawer)
   world.trailDrawer(drawingActionBroker)
 

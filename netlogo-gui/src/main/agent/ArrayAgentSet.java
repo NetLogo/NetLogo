@@ -2,6 +2,7 @@
 
 package org.nlogo.agent;
 
+import org.nlogo.core.AgentKind;
 import org.nlogo.core.LogoList;
 
 import java.util.ArrayList;
@@ -69,15 +70,15 @@ public final strictfp class ArrayAgentSet
     return capacity;
   }
 
-  public ArrayAgentSet(Class<? extends Agent> type, int initialCapacity, boolean removableAgents, World world) {
-    super(type, world, null, removableAgents);
+  public ArrayAgentSet(AgentKind type, int initialCapacity, boolean removableAgents) {
+    super(type, null, removableAgents);
     this.initialCapacity = initialCapacity;
     agents = new Agent[initialCapacity];
     capacity = initialCapacity;
   }
 
-  public ArrayAgentSet(Class<? extends Agent> type, Agent[] agents, World world) {
-    super(type, world, null, false);
+  public ArrayAgentSet(AgentKind type, Agent[] agents) {
+    super(type, null, false);
     initialCapacity = agents.length;
     this.agents = agents;
     capacity = initialCapacity;
@@ -85,8 +86,8 @@ public final strictfp class ArrayAgentSet
     size = initialCapacity;
   }
 
-  public ArrayAgentSet(Class<? extends Agent> type, Agent[] agents, String printName, World world) {
-    super(type, world, printName, false);
+  public ArrayAgentSet(AgentKind type, Agent[] agents, String printName) {
+    super(type, printName, false);
     initialCapacity = agents.length;
     this.agents = agents;
     capacity = initialCapacity;
@@ -94,8 +95,8 @@ public final strictfp class ArrayAgentSet
     size = initialCapacity;
   }
 
-  ArrayAgentSet(Class<? extends Agent> type, int initialCapacity, String printName, boolean removableAgents, World world) {
-    super(type, world, printName, removableAgents);
+  ArrayAgentSet(AgentKind type, int initialCapacity, String printName, boolean removableAgents) {
+    super(type, printName, removableAgents);
     this.initialCapacity = initialCapacity;
     agents = new Agent[initialCapacity];
     capacity = initialCapacity;
@@ -144,13 +145,18 @@ public final strictfp class ArrayAgentSet
   }
 
   @Override
-  public boolean contains(Agent agent) {
+  public boolean contains(org.nlogo.api.Agent agent) {
     for (AgentSet.Iterator iter = iterator(); iter.hasNext();) {
       if (iter.next() == agent) {
         return true;
       }
     }
     return false;
+  }
+
+  @Override
+  public boolean contains(Agent agent) {
+    return contains((org.nlogo.api.Agent) agent);
   }
 
   // the next few methods take precomputedCount as an argument since

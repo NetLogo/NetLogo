@@ -14,7 +14,7 @@ import org.nlogo.{ api, core, nvm }
 
 class ASTBackifier(backifier: Backifier) {
 
-  def backify(proc: nvm.Procedure, pd: core.ProcedureDefinition): ProcedureDefinition =
+  def backifyProcedure(proc: nvm.Procedure, pd: core.ProcedureDefinition): ProcedureDefinition =
     new ProcedureDefinition(proc, backify(pd.statements))
 
   def backify(expr: core.Expression): Expression =

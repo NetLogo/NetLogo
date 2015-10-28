@@ -2,8 +2,9 @@
 
 package org.nlogo.compiler
 
-import org.nlogo.api.{TokenizerInterface,VersionHistory}
+import org.nlogo.api.VersionHistory
 import org.nlogo.core.Token
+import org.nlogo.core.TokenizerInterface
 import org.nlogo.core.TokenType
 import VersionHistory._  // olderThan* methods
 
@@ -101,7 +102,7 @@ class AutoConverter1(implicit tokenizer:TokenizerInterface) {
     source
   }
   private def convert(source:String,conversions:Map[String,String]) = {
-    val tokens = tokenizer.tokenizeRobustly(source)
+    val tokens = tokenizer.tokenizeString(source)
     val buf = new StringBuilder(source)
     var offset = 0
     for(token <- tokens; replacement <- conversions.get(token.text.toLowerCase())) {
@@ -112,7 +113,7 @@ class AutoConverter1(implicit tokenizer:TokenizerInterface) {
     buf.toString
   }
   private def convertLocals(source:String):String = {
-    val tokens = tokenizer.tokenizeRobustly(source).iterator
+    val tokens = tokenizer.tokenizeString(source)
     val buf:StringBuilder = new StringBuilder(source)
     var offset:Int = 0
     while(tokens.hasNext) {
@@ -135,7 +136,7 @@ class AutoConverter1(implicit tokenizer:TokenizerInterface) {
     buf.toString
   }
   private def convertCreateCustomBreed(source:String):String = {
-    val tokens = tokenizer.tokenizeRobustly(source).iterator
+    val tokens = tokenizer.tokenizeString(source)
     val buf = new StringBuilder(source)
     var offset = 0
     while(tokens.hasNext) {
@@ -154,7 +155,7 @@ class AutoConverter1(implicit tokenizer:TokenizerInterface) {
     buf.toString
   }
   private def convertOtherBreedHere(source:String):String = {
-    val tokens = tokenizer.tokenizeRobustly(source).iterator
+    val tokens = tokenizer.tokenizeString(source)
     val buf = new StringBuilder(source)
     while(tokens.hasNext) {
       val token = tokens.next()
@@ -166,7 +167,7 @@ class AutoConverter1(implicit tokenizer:TokenizerInterface) {
     buf.toString
   }
   private def convertScreenEdge(source:String):String = {
-    val tokens = tokenizer.tokenizeRobustly(source).iterator.buffered
+    val tokens = tokenizer.tokenizeString(source).buffered
     val buf = new StringBuilder(source)
     var offset = 0
     var lastToken = tokens.head
@@ -224,7 +225,7 @@ class AutoConverter1(implicit tokenizer:TokenizerInterface) {
   // We need to handle this a special case because it is more complicated than a simple string
   // replacement - jrn 8/8/05
   private def convertBreeds(source:String):String = {
-    val tokens = tokenizer.tokenizeRobustly(source).iterator.buffered
+    val tokens = tokenizer.tokenizeString(source).buffered
     val buf:StringBuilder = new StringBuilder(source)
     var offset:Int = 0
     while(tokens.hasNext) {
@@ -257,7 +258,7 @@ class AutoConverter1(implicit tokenizer:TokenizerInterface) {
   // We need to handle this a special case because it is more complicated than a simple string
   // replacement - jrn 8/8/05
   private def convertExtensionNames(source:String):String = {
-    val tokens = tokenizer.tokenizeRobustly(source).iterator.buffered
+    val tokens = tokenizer.tokenizeString(source).buffered
     val buf:StringBuilder = new StringBuilder(source)
     var offset:Int = 0
     while(tokens.hasNext) {
@@ -297,7 +298,7 @@ class AutoConverter1(implicit tokenizer:TokenizerInterface) {
   // We need to handle this a special case because it is more complicated than a simple string
   // replacement - ST 6/22/06
   private def convertNsum(source:String):String = {
-    val tokens = tokenizer.tokenizeRobustly(source).iterator
+    val tokens = tokenizer.tokenizeString(source)
     val buf:StringBuilder = new StringBuilder(source)
     var offset:Int = 0
     while(tokens.hasNext) {
@@ -325,7 +326,7 @@ class AutoConverter1(implicit tokenizer:TokenizerInterface) {
   // We need to handle this a special case because it is more complicated than a simple string
   // replacement - ST 6/28/06
   private def convertDashOf(source:String):String = {
-    val tokens = tokenizer.tokenizeRobustly(source).iterator
+    val tokens = tokenizer.tokenizeString(source)
     val buf:StringBuilder = new StringBuilder(source)
     var offset:Int = 0
     while(tokens.hasNext) {

@@ -6,7 +6,7 @@ package org.nlogo.window;
 // to change the associated constants in ModelLoader
 
 import org.nlogo.api.Dump;
-import org.nlogo.api.I18N;
+import org.nlogo.core.I18N;
 
 public strictfp class ViewWidget
     extends Widget

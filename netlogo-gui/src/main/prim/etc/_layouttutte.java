@@ -2,6 +2,7 @@
 
 package org.nlogo.prim.etc;
 
+import org.nlogo.core.AgentKindJ;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Link;
 import org.nlogo.agent.Turtle;
@@ -27,11 +28,11 @@ public final strictfp class _layouttutte
   @Override
   public void perform(final Context context)
       throws LogoException {
-    AgentSet nodeset = argEvalAgentSet(context, 0, Turtle.class);
-    AgentSet linkset = argEvalAgentSet(context, 1, Link.class);
+    AgentSet nodeset = argEvalAgentSet(context, 0, AgentKindJ.Turtle());
+    AgentSet linkset = argEvalAgentSet(context, 1, AgentKindJ.Link());
     double radius = argEvalDoubleValue(context, 2);
     try {
-      org.nlogo.agent.Layouts.tutte(nodeset, linkset, radius,
+      org.nlogo.agent.Layouts.tutte(world, nodeset, linkset, radius,
           context.job.random);
     } catch (AgentException e) {
       throw new EngineException(context, this, e.getMessage());

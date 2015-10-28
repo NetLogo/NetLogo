@@ -2,6 +2,7 @@
 
 package org.nlogo.hubnet.mirroring;
 
+import org.nlogo.core.AgentKind;
 import org.nlogo.hubnet.mirroring.Agent.AgentType;
 
 public strictfp class OverrideList
@@ -11,8 +12,8 @@ public strictfp class OverrideList
   public AgentType type;
   public int variable;
 
-  public OverrideList(Class<? extends org.nlogo.api.Agent> agentClass, String varName) {
-    type = AgentType.fromAgentClass(agentClass);
+  public OverrideList(AgentKind agentKind, String varName) {
+    type = AgentType.fromAgentKind(agentKind);
     variable = getOverrideIndex(type, varName);
   }
 

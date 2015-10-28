@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.api.I18N;
+import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.PerspectiveJ;
 import org.nlogo.api.Syntax;
@@ -30,7 +30,7 @@ public final strictfp class _watch
         I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
     }
     world.observer().home();
-    world.observer().setPerspective(PerspectiveJ.WATCH(), agent);
+    world.observer().setPerspective(PerspectiveJ.create(PerspectiveJ.WATCH, agent));
     context.ip = next;
   }
 }

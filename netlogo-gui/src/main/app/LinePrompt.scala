@@ -2,12 +2,13 @@
 
 package org.nlogo.app
 
+import org.nlogo.core.AgentKind
 import org.nlogo.agent.{Agent, Observer, Turtle, Patch, Link}
 import org.nlogo.swing.Implicits._
 import java.awt._
 import event.{MouseEvent,MouseListener}
 import javax.swing._
-import org.nlogo.api.I18N
+import org.nlogo.core.I18N
 
 class LinePrompt(commandLine: CommandLine) extends JComponent with MouseListener {
 
@@ -28,19 +29,19 @@ class LinePrompt(commandLine: CommandLine) extends JComponent with MouseListener
   def mousePressed(e: MouseEvent) {
     def doPopupMenu() {
       val popMenu = new JPopupMenu("Ask who?")
-      def addItem(name: String, clazz: Class[_ <: Agent]) {
+      def addItem(name: String, clazz: AgentKind) {
         popMenu.add(new JMenuItem(name) {
           addActionListener(() => {
-            commandLine.agentClass(clazz)
+            commandLine.agentKind(clazz)
             LinePrompt.this.repaint()
             commandLine.requestFocus()
           })
         })
       }
-      addItem(I18N.gui.get("common.observer"), classOf[Observer])
-      addItem(I18N.gui.get("common.turtles"), classOf[Turtle])
-      addItem(I18N.gui.get("common.patches"), classOf[Patch])
-      addItem(I18N.gui.get("common.links"), classOf[Link])
+      addItem(I18N.gui.get("common.observer"), AgentKind.Observer)
+      addItem(I18N.gui.get("common.turtles"), AgentKind.Turtle)
+      addItem(I18N.gui.get("common.patches"), AgentKind.Patch)
+      addItem(I18N.gui.get("common.links"), AgentKind.Link)
       popMenu.add(new JPopupMenu.Separator)
       val hintItem = new JMenuItem(I18N.gui.get("tabs.run.commandcenter.orusetabkey")) {setEnabled(false)}
       popMenu.add(hintItem)
@@ -54,14 +55,11 @@ class LinePrompt(commandLine: CommandLine) extends JComponent with MouseListener
 
     def drawAgentSymbol(g: Graphics) {
       def getPrompt() = {
-        import org.nlogo.agent._
-        val O = classOf[Observer]; val T = classOf[Turtle]
-        val P = classOf[Patch];    val L = classOf[Link]
-        commandLine.agentClass match {
-          case O => CommandLine.OBSERVER_PROMPT
-          case T => CommandLine.TURTLE_PROMPT
-          case P => CommandLine.PATCH_PROMPT
-          case L => CommandLine.LINK_PROMPT
+        commandLine.kind match {
+          case AgentKind.Observer => CommandLine.OBSERVER_PROMPT
+          case AgentKind.Turtle   => CommandLine.TURTLE_PROMPT
+          case AgentKind.Patch    => CommandLine.PATCH_PROMPT
+          case AgentKind.Link     => CommandLine.LINK_PROMPT
         }
       }
       val fontMetrics = g.getFontMetrics

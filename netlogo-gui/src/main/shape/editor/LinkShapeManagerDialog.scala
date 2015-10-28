@@ -2,7 +2,10 @@
 
 package org.nlogo.shape.editor
 
-import org.nlogo.shape.{ShapeChangeListener, LinkShape}
+import org.nlogo.shape.{ ShapeConverter, ShapeChangeListener, LinkShape}
+
+import org.nlogo.core.Shape
+import org.nlogo.core.ShapeParser.parseLinkShapes
 
 class LinkShapeManagerDialog(parentFrame: java.awt.Frame,
                              world: org.nlogo.api.World,
@@ -32,12 +35,12 @@ class LinkShapeManagerDialog(parentFrame: java.awt.Frame,
     // You can only duplicate one shape at a time
     if (shape != null) {
       val newShape = shape.clone.asInstanceOf[LinkShape]
-      newShape.setName("")
+      newShape.name_$eq("")
       new LinkEditorDialog(shapesList, newShape, getLocation.x, getLocation.y)
     }
   }
 
-  override def parseShapes(shapes: Array[String], version: String) = {
-    org.nlogo.shape.LinkShape.parseShapes(shapes, version)
+  override def parseShapes(shapes: Array[String], version: String): Seq[Shape] = {
+    parseLinkShapes(shapes).map(ShapeConverter.baseLinkShapeToLinkShape)
   }
 }

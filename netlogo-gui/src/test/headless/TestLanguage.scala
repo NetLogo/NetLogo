@@ -6,7 +6,7 @@ import org.scalatest.{FunSuite, Tag}
 import org.nlogo.api.{SimpleJobOwner, Version}
 import org.nlogo.api.FileIO.file2String
 import java.io.File
-import org.nlogo.agent.{Turtle, Patch, Link, Observer}
+import org.nlogo.core.AgentKind
 import org.nlogo.util.{Utils, SlowTest}
 
 object LanguageTestTag extends Tag("org.nlogo.headless.LanguageTestTag")
@@ -85,17 +85,17 @@ case class LanguageTest(suiteName: String, testName: String, commands: List[Stri
   def run() {
     import AbstractTestLanguage._
     def getAgentClass(a: String) = a match {
-      case "O" => classOf[Observer]
-      case "T" => classOf[Turtle]
-      case "P" => classOf[Patch]
-      case "L" => classOf[Link]
+      case "O" => AgentKind.Observer
+      case "T" => AgentKind.Turtle
+      case "P" => AgentKind.Patch
+      case "L" => AgentKind.Link
       case x => sys.error("unrecognized agent type: " + x)
     }
     class Tester(mode: TestMode) extends AbstractTestLanguage {
       // use a custom owner so we get fullName into the stack traces
       // we get on the JobThread - ST 1/26/11
       override def owner =
-        new SimpleJobOwner(fullName, workspace.world.mainRNG, classOf[Observer])
+        new SimpleJobOwner(fullName, workspace.world.mainRNG, AgentKind.Observer)
       try {
         init()
         if (! nonProcs.exists(e => e.isInstanceOf[CompileWithError])) {

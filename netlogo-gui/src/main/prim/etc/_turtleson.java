@@ -2,10 +2,11 @@
 
 package org.nlogo.prim.etc;
 
+import org.nlogo.core.AgentKindJ;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
-import org.nlogo.api.I18N;
+import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
@@ -52,11 +53,8 @@ public final strictfp class _turtleson
       throw new ArgumentTypeException
           (context, this, 0, Syntax.AgentType() | Syntax.AgentsetType(), agentOrSet);
     }
-    return new org.nlogo.agent.ArrayAgentSet
-        (Turtle.class,
-            resultList.toArray
-                (new Turtle[resultList.size()]),
-            world);
+    return new org.nlogo.agent.ArrayAgentSet(AgentKindJ.Turtle(),
+        resultList.toArray(new Turtle[resultList.size()]));
   }
 
   private void addAll(List<Turtle> turtles, Iterable<Turtle> moreTurtles) {

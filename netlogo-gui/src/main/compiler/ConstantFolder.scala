@@ -19,17 +19,29 @@ package org.nlogo.compiler
 
 import org.nlogo.compiler.CompilerExceptionThrowers._
 
-import org.nlogo.core.CompilerException
+import org.nlogo.core.{ CompilerException, LogoList, Nobody }
 import org.nlogo.api.LogoException
-import org.nlogo.nvm.Pure
+import org.nlogo.nvm.{ Pure, Reporter }
+import org.nlogo.prim.{ _constboolean, _constdouble, _constlist, _conststring, _nobody }
 
 private class ConstantFolder extends DefaultAstVisitor {
+  def makeConstantReporter(value:Object):Reporter =
+    value match {
+      case b:java.lang.Boolean => new _constboolean(b)
+      case d:java.lang.Double  => new _constdouble(d)
+      case l:LogoList          => new _constlist(l)
+      case s:String            => new _conststring(s)
+      case Nobody              => new _nobody
+      case _                   => throw new IllegalArgumentException(value.getClass.getName)
+    }
+
   override def visitReporterApp(app:ReporterApp) {
     super.visitReporterApp(app)
     if(app.reporter.isInstanceOf[Pure] && !app.args.isEmpty && app.args.forall(isConstant)) {
-      val newReporter = ConstantParser.makeConstantReporter(applyReporter(app))
+      val newReporter = makeConstantReporter(applyReporter(app))
       newReporter.storedSourceStartPosition = app.reporter.getSourceStartPosition
       newReporter.storedSourceEndPosition = app.reporter.getSourceEndPosition
+      newReporter.storedFilename = app.reporter.getFilename
       app.reporter = newReporter
       app.clearArgs
     }

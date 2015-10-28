@@ -9,8 +9,9 @@ import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
 
 import org.nlogo.agent.Observer
+import org.nlogo.core.AgentKind
 import org.nlogo.core.CompilerException
-import org.nlogo.api.I18N
+import org.nlogo.core.I18N
 import org.nlogo.api.PreviewCommands
 import org.nlogo.awt.Positioning.center
 import org.nlogo.swing.Utils.addEscKeyAction
@@ -111,7 +112,7 @@ class PreviewCommandsDialog(
       val setError = editorPanel.errorLabel.setError _
       evt.getNewValue match {
         case Some(e: CompilerException) =>
-          setError(e, Evaluator.sourceOffset(classOf[Observer], true))
+          setError(e, Evaluator.sourceOffset(AgentKind.Observer, true))
           okButton.setEnabled(false)
         case _ =>
           setError(null, 0)

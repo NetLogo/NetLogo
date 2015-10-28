@@ -17,7 +17,7 @@ object Generator {
   // something to think about - ST 2/2/11
 }
 
-class Generator(source: String, procedure: Procedure, profilingEnabled: Boolean) extends GeneratorInterface {
+class Generator(procedure: Procedure, profilingEnabled: Boolean) extends GeneratorInterface {
   var ip = 0 // kinda ugly we need to track this only to use in one place, in generateCallReport - ST 2/10/09
   def generate() = {
     ip = 0
@@ -133,11 +133,11 @@ class Generator(source: String, procedure: Procedure, profilingEnabled: Boolean)
         new CustomGenerator(profilingEnabled).generate(instr.asInstanceOf[CustomGenerated], nlgen, thisInstrUID, ip)
         nlgen.markLineNumber(parentInstrUID)
         val actualReturnType = instr.syntax.ret match {
-          case Syntax.BooleanType => classOf[Boolean]
-          case Syntax.ListType => classOf[org.nlogo.core.LogoList]
-          case Syntax.StringType => classOf[String]
+          case Syntax.BooleanType  => classOf[Boolean]
+          case Syntax.ListType     => classOf[org.nlogo.core.LogoList]
+          case Syntax.StringType   => classOf[String]
           case Syntax.WildcardType => classOf[Object]
-          case Syntax.VoidType => java.lang.Void.TYPE
+          case Syntax.VoidType     => java.lang.Void.TYPE
         }
         nlgen.generateConversion(actualReturnType, retTypeWanted, parentInstr, argIndex)
       } else {
@@ -242,11 +242,7 @@ class Generator(source: String, procedure: Procedure, profilingEnabled: Boolean)
       setAllKeptFields(result)
       result.args = original.args
       result.token_=(original.token)
-      val sourceStart = original.getSourceStartPosition
-      val sourceEnd = original.getSourceEndPosition
-      result.source =
-        if (sourceStart < 0 || sourceStart > sourceEnd || sourceEnd > source.length) ""
-        else source.substring(sourceStart, sourceEnd)
+      result.source = original.source
       // disassembly is stored as a thunk, so it's not generated unless used
       result.disassembly = new org.nlogo.util.Thunk[String] {
         def isBoring(line: String) =

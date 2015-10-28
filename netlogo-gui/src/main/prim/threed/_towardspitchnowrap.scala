@@ -2,7 +2,8 @@
 
 package org.nlogo.prim.threed
 
-import org.nlogo.api.{ AgentException, I18N, Syntax }
+import org.nlogo.api.{ AgentException, Syntax }
+import org.nlogo.core.I18N
 import org.nlogo.nvm.{ Context, EngineException, Reporter }
 
 class _towardspitchnowrap extends Reporter {

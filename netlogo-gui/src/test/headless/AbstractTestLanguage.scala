@@ -3,11 +3,12 @@
 package org.nlogo.headless
 
 import org.scalatest.Assertions
-import org.nlogo.agent.{Agent, Observer}
-import org.nlogo.api.{Equality, JobOwner, LogoException, Version, WorldDimensions, WorldDimensions3D}
-import org.nlogo.core.CompilerException
+import org.nlogo.agent.Agent
+import org.nlogo.api.{Equality, JobOwner, LogoException, NetLogoLegacyDialect, NetLogoThreeDDialect, Version, WorldDimensions3D}
+import org.nlogo.core.WorldDimensions
+import org.nlogo.core.{ AgentKind, CompilerException }
 import org.nlogo.nvm.CompilerInterface
-import org.nlogo.util.Femto
+import org.nlogo.core.Femto
 
 object AbstractTestLanguage {
   sealed abstract class TestMode
@@ -19,8 +20,7 @@ trait AbstractTestLanguage extends Assertions {
 
   import AbstractTestLanguage._
 
-  val compiler = Femto.scalaSingleton(classOf[CompilerInterface],
-                                      "org.nlogo.compiler.Compiler")
+  val compiler = Femto.get[CompilerInterface]("org.nlogo.compiler.Compiler", if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect)
   var workspace: HeadlessWorkspace = _
 
   def owner: JobOwner = workspace.defaultOwner
@@ -67,7 +67,7 @@ trait AbstractTestLanguage extends Assertions {
         org.nlogo.api.Dump.logoObject(actualResult, true, false))
     }
     assert(Equality.equals(actualResult,
-                           compiler.readFromString(expectedResult, workspace.world().program.dialect.is3D)),
+                           compiler.readFromString(expectedResult)),
            mode + ": not recursivelyEqual(): reporter \"" + reporter + "\"")
   }
   private def privateTestReporterError(reporter: String,
@@ -98,18 +98,18 @@ trait AbstractTestLanguage extends Assertions {
     privateTestReporterError(reporter, stackTrace, workspace.lastErrorReport.stackTrace.get, mode)
   }
   def testCommand(command: String,
-                  agentClass: Class[_ <: Agent] = classOf[Observer],
+                  agentClass: AgentKind = AgentKind.Observer,
                   mode: TestMode = NormalMode) {
     workspace.lastLogoException = null
     workspace.evaluateCommands(owner,
       if(mode == NormalMode) command
       else ("run \"" + org.nlogo.api.StringUtils.escapeString(command) + "\""),
-      workspace.world.agentClassToAgentSet(agentClass), true)
+      workspace.world.agentKindToAgentSet(agentClass), true)
     if(workspace.lastLogoException != null)
       throw workspace.lastLogoException
   }
   def testCommandError(command: String, error: String,
-                       agentClass: Class[_ <: Agent] = classOf[Observer],
+                       agentClass: AgentKind = AgentKind.Observer,
                        mode: TestMode = NormalMode) {
     try {
       testCommand(command, agentClass, mode)
@@ -123,7 +123,7 @@ trait AbstractTestLanguage extends Assertions {
     }
   }
   def testCommandErrorStackTrace(command: String, stackTrace: String,
-                       agentClass: Class[_ <: Agent] = classOf[Observer],
+                       agentClass: AgentKind = AgentKind.Observer,
                        mode: TestMode = NormalMode) {
     try {
       testCommand(command, agentClass, mode)
@@ -137,7 +137,7 @@ trait AbstractTestLanguage extends Assertions {
     }
   }
   def testCommandCompilerErrorMessage(command: String, errorMessage: String,
-                                      agentClass: Class[_ <: Agent] = classOf[Observer])
+                                      agentClass: AgentKind = AgentKind.Observer)
   {
     try {
       workspace.compileCommands(command, agentClass)

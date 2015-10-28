@@ -63,9 +63,10 @@ class TestRenderer extends AbstractTestRenderer {
 
   testUsingWorkspace("More links", radius=16){ workspace: HeadlessWorkspace =>
     workspace.command("create-nodes 2 [ ht setxy ((who - 1) * 5) 0 ] ask node 0 [ create-link-with node 1 ]")
+    val node = workspace.world.turtles.agent(0)
     val g = new MockGraphics(this)
     workspace.renderer.paint(g,
-      SimpleViewSettings(patchSize=61.285714285714285, viewOffsetX=13,viewOffsetY= -13, renderPerspective=true, perspective=Perspective.Follow))
+      SimpleViewSettings(patchSize=61.285714285714285, viewOffsetX=13,viewOffsetY= -13, renderPerspective=true, perspective=Perspective.Follow(node, 5)))
     testOperations(g,List(
       Rect(Location(0.0, 0.0), Size(2022.0,2022.0), filled=true),
       Line(Location(-91.92857142857143,214.5),Location(214.5,214.5))))
@@ -87,9 +88,10 @@ class TestRenderer extends AbstractTestRenderer {
     workspace.command("create-turtles 1 [ ht setxy -6 0 ] " +
                                "create-turtles 1 [ ht setxy 6 0 ] " +
                                "ask turtle 0 [ create-link-with turtle 1 ]")
+    val turtle = workspace.world.turtles.agent(0)
     val g = new MockGraphics(this)
     workspace.renderer.paint(g, SimpleViewSettings(patchSize=10, viewOffsetX=3,viewOffsetY= -3,
-      renderPerspective=true, perspective=Perspective.Follow))
+      renderPerspective=true, perspective=Perspective.Follow(turtle, 5)))
     testOperations(g,List(
       Rect(Location(0.0,0.0), Size(210.0,210.0), filled=true),
       Line(Location(15.0,75.0),Location(-75.0,75.0)),
@@ -149,7 +151,7 @@ class TestColorRendering extends AbstractTestRenderer {
     def setShapes(shapes: VectorShape*) {
       // remove all shapes from the world
       import collection.JavaConverters._
-      for (shape <- workspace.world.turtleShapeList().getShapes.asScala)
+      for (shape <- workspace.world.turtleShapeList().shapes)
         workspace.world.turtleShapeList().removeShape(shape)
       // add one non-recolorable shape
       shapes.foreach(workspace.world.turtleShapeList().add)
@@ -388,8 +390,8 @@ abstract class AbstractTestRenderer(worldType: WorldType = Torus) extends TestUs
     run()
     def command: String
     def expectedResults: List[Operation]
-    def setup(g:MockGraphics){}
-    def run(){
+    def setup(g:MockGraphics) { }
+    def run() {
       mockTestUsingWorkspace(this.toString, radius = 16, worldType = AbstractTestRenderer.this.worldType) { workspace =>
         val g = new MockGraphics(AbstractTestRenderer.this)
         setup(g)

@@ -6,8 +6,7 @@ package org.nlogo.headless
 // of the dependency on headless.TestUsingWorkspace. NP 2013-08-05
 // See https://github.com/NetLogo/NetLogo/commit/9f35a477f071b746bea225b2294813970b04daf0#commitcomment-3793507.
 
-import org.nlogo.agent.SimpleChangeEventCounter
-import org.nlogo.agent.TreeAgentSet
+import org.nlogo.agent.{ SimpleChangeEventCounter, TreeAgentSet }
 import org.scalatest.FunSuite
 import org.scalatest.GivenWhenThen
 
@@ -29,7 +28,7 @@ class TreeAgentSetTests extends FunSuite with GivenWhenThen with TestUsingWorksp
     And("a subscriber to links")
     val linksSub = new SimpleChangeEventCounter(ws.world.links)
     And("a subscriber to undirected-links")
-    val undirLinksSub = new SimpleChangeEventCounter(ws.world.getLinkBreeds.get("UNDIRECTED-LINKS"))
+    val undirLinksSub = new SimpleChangeEventCounter(ws.world.getLinkBreeds.get("UNDIRECTED-EDGES"))
 
     val allSubs = Seq(turtlesSub, miceSub, frogSub, linksSub, undirLinksSub)
 
@@ -103,7 +102,7 @@ class TreeAgentSetTests extends FunSuite with GivenWhenThen with TestUsingWorksp
     allSubs.foreach(_.eventCount = 0)
 
     When("creating an undirected-link between the two remaining mice")
-    ws.command("ask one-of mice [ create-undirected-links-with other mice ]")
+    ws.command("ask one-of mice [ create-undirected-edges-with other mice ]")
     Then("the links subscriber should get an event")
     assertResult(1)(linksSub.eventCount)
     And("the undirected-links subscriber should get an event")

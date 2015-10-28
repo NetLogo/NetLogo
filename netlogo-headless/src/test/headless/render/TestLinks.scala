@@ -22,8 +22,9 @@ class TestLinks extends AbstractTestRenderer {
   testUsingWorkspace("More links", radius=16){ workspace: HeadlessWorkspace =>
     workspace.command("create-turtles 2 [ ht setxy ((who - 1) * 5) 0 ] ask turtle 0 [ create-link-with turtle 1 ]")
     val g = new MockGraphics(this)
+    val agent = workspace.world.turtles.getAgent(0: java.lang.Double)
     workspace.renderer.paint(g,
-      SimpleViewSettings(patchSize=61.285714285714285, viewOffsetX=13,viewOffsetY= -13, renderPerspective=true, perspective=Perspective.Follow))
+      SimpleViewSettings(patchSize=61.285714285714285, viewOffsetX=13,viewOffsetY= -13, renderPerspective=true, perspective=Perspective.Follow(agent, 5)))
     testOperations(g,List(
       Rect(Location(0.0, 0.0), Size(2022.0,2022.0), filled=true),
       Line(Location(-91.92857142857143,214.5),Location(214.5,214.5))))
@@ -45,9 +46,10 @@ class TestLinks extends AbstractTestRenderer {
     workspace.command("create-turtles 1 [ ht setxy -6 0 ] " +
                                "create-turtles 1 [ ht setxy 6 0 ] " +
                                "ask turtle 0 [ create-link-with turtle 1 ]")
+    val turtle = workspace.world.turtles.getAgent(0: java.lang.Double)
     val g = new MockGraphics(this)
     workspace.renderer.paint(g, SimpleViewSettings(patchSize=10, viewOffsetX=3,viewOffsetY= -3,
-      renderPerspective=true, perspective=Perspective.Follow))
+      renderPerspective=true, perspective=Perspective.Follow(turtle, 5)))
     testOperations(g,List(
       Rect(Location(0.0,0.0), Size(210.0,210.0), filled=true),
       Line(Location(15.0,75.0),Location(-75.0,75.0)),

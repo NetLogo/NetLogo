@@ -2,9 +2,9 @@ package org.nlogo.workspace
 
 import java.awt.image.BufferedImage
 
+import org.nlogo.core.AgentKind
 import org.nlogo.core.CompilerException
 import org.nlogo.api.JobOwner
-import org.nlogo.api.Observer
 import org.nlogo.api.PreviewCommands
 import org.nlogo.api.SimpleJobOwner
 import org.nlogo.nvm.Workspace
@@ -50,7 +50,7 @@ object PreviewCommandsRunner {
       val ws = workspaceFactory.newInstance
       try {
         // set the seed before opening the model so it affects the `startup` procedure
-        val jobOwner = new SimpleJobOwner(this.getClass.getName, ws.world.mainRNG, classOf[Observer])
+        val jobOwner = new SimpleJobOwner(this.getClass.getName, ws.world.mainRNG, AgentKind.Observer)
         ws.evaluateCommands(jobOwner, "random-seed 0")
         openModelIn(ws)
         ws
@@ -101,7 +101,7 @@ class PreviewCommandsRunner private (
   procedure: Procedure) {
 
   lazy val previewImage: Try[BufferedImage] = Try {
-    val jobOwner = new SimpleJobOwner(this.getClass.getName, workspace.world.mainRNG, classOf[Observer])
+    val jobOwner = new SimpleJobOwner(this.getClass.getName, workspace.world.mainRNG, AgentKind.Observer)
     try
       workspace.evaluateCommands(jobOwner, "startup", workspace.world.observers, true)
     catch {

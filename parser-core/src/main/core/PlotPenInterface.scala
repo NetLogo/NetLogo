@@ -4,7 +4,9 @@ package org.nlogo.core
 
 trait PlotPenInterface {
   def name: String
-  var state: PlotPenState
+  def state: PlotPenState
+  def state_=(s: PlotPenState): Unit
+  def plot(x: Double, y: Double, color: Int, isDown: Boolean): Unit
 }
 
 object PlotPenInterface {

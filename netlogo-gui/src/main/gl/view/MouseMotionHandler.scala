@@ -2,7 +2,7 @@
 
 package org.nlogo.gl.view
 
-import org.nlogo.api.Perspective
+import org.nlogo.api.{ AgentFollowingPerspective, Perspective }
 import java.awt.event.{ MouseEvent, MouseWheelEvent }
 import org.nlogo.awt.Mouse.hasButton1
 
@@ -71,20 +71,21 @@ with java.awt.event.MouseWheelListener {
   def mouseWheelMoved(e: MouseWheelEvent) {
     val observer = world.observer
     var zoomDist = -e.getUnitsToScroll.toDouble
-    if (observer.perspective == Perspective.Follow || observer.perspective == Perspective.Ride) {
-      zoomDist = zoomDist min observer.followDistance
-      val newDist = (observer.followDistance - zoomDist).toInt
-      // slider values from ViewControlToolBar
-      if (newDist <= 100)
-        observer.followDistance(newDist)
-    }
-    else {
-      val dist = observer.dist
-      zoomDist = zoomDist min dist
-      observer.oxyandzcor(
-        observer.oxcor + (zoomDist * observer.dx),
-        observer.oycor + (zoomDist * observer.dy),
-        observer.ozcor - (zoomDist * observer.dz))
+    observer.perspective match {
+      case afp: AgentFollowingPerspective =>
+        zoomDist = zoomDist min afp.followDistance
+        val newDist = (afp.followDistance - zoomDist).toInt
+        // slider values from ViewControlToolBar
+        if (newDist <= 100)
+          observer.setPerspective(Perspective.Follow(afp.targetAgent, newDist))
+      case _ =>
+        val orientation = observer.orientation.get
+        val dist = orientation.dist
+        zoomDist = zoomDist min dist
+        observer.oxyandzcor(
+          observer.oxcor + (zoomDist * orientation.dx),
+          observer.oycor + (zoomDist * orientation.dy),
+          observer.ozcor - (zoomDist * orientation.dz))
     }
     view.signalViewUpdate()
   }
@@ -117,32 +118,32 @@ with java.awt.event.MouseWheelListener {
     prevMouseY = y
 
     val observer = world.observer
-    import observer.{ oxcor, oycor, ozcor, dist }
+    import observer.{ oxcor, oycor, ozcor }
 
-    if (world.observer.perspective == Perspective.Follow || world.observer.perspective == Perspective.Ride) {
-      val newDist = (observer.followDistance - thetaY).toInt
-      // slider values from ViewControlToolBar
-      if (newDist >= 0 && newDist <= 100)
-        observer.followDistance(newDist)
-      view.signalViewUpdate()
+    observer.perspective match {
+      case afp: AgentFollowingPerspective =>
+        val newDist = (afp.followDistance - thetaY).toInt
+        // slider values from ViewControlToolBar
+        if (newDist >= 0 && newDist <= 100)
+          observer.setPerspective(Perspective.Follow(afp.targetAgent, newDist))
+      case _ =>
+        mode match {
+          case OrbitMode =>
+            observer.orbitRight(-thetaX)
+            observer.orbitUp(-thetaY)
+          case ZoomMode =>
+            val orientation = observer.orientation.get
+            if (thetaY < orientation.dist)
+              observer.oxyandzcor(oxcor + (thetaY * orientation.dx),
+                                  oycor + (thetaY * orientation.dy),
+                                  ozcor - (thetaY * orientation.dz))
+          case TranslateMode =>
+            observer.translate(thetaX, thetaY)
+          case InteractMode =>
+            // do nothing
+        }
     }
-    else {
-      mode match {
-        case OrbitMode =>
-          observer.orbitRight(-thetaX)
-          observer.orbitUp(-thetaY)
-        case ZoomMode =>
-          if (thetaY < dist)
-            observer.oxyandzcor(oxcor + (thetaY * observer.dx),
-                                oycor + (thetaY * observer.dy),
-                                ozcor - (thetaY * observer.dz))
-        case TranslateMode =>
-          observer.translate(thetaX, thetaY)
-        case InteractMode =>
-          // do nothing
-      }
-      view.signalViewUpdate()
-    }
+    view.signalViewUpdate()
   }
 
   def mouseMoved(evt: MouseEvent) {

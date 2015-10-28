@@ -3,7 +3,7 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.agent.AgentSet;
-import org.nlogo.api.I18N;
+import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
 import org.nlogo.api.LogoListBuilder;

@@ -2,16 +2,18 @@
 
 package org.nlogo.headless
 
+import org.nlogo.core.{ CompilerException, LogoList, Program }
 import org.nlogo.agent.{BooleanConstraint, ChooserConstraint, InputBoxConstraint, SliderConstraint}
 import org.nlogo.api.{ FileIO, LogoException, ModelReader, ModelSection,
-                        NetLogoLegacyDialect, NetLogoThreeDDialect, ValueConstraint, Version}
-import org.nlogo.core.LogoList
-import org.nlogo.core.Program
-import org.nlogo.core.CompilerException
+                        NetLogoLegacyDialect, NetLogoThreeDDialect, SourceOwner, ValueConstraint, Version}
+import org.nlogo.core.ShapeParser.{ parseVectorShapes, parseLinkShapes }
 import org.nlogo.plot.PlotLoader
+import org.nlogo.core.Shape.{ LinkShape => CoreLinkShape, VectorShape => CoreVectorShape }
 import org.nlogo.shape.{LinkShape, VectorShape}
 import org.nlogo.api.StringUtils.escapeString
 import org.nlogo.api.PreviewCommands
+
+import org.nlogo.shape.{ShapeConverter, LinkShape, VectorShape}
 
 object HeadlessModelOpener {
   def protocolSection(path: String) =
@@ -49,14 +51,12 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
 
     // read procedures, compile them.
     val results = {
-      val code = map.get(ModelSection.Code).mkString("", "\n", "\n")
-      // we could convert right here.
-      // we'd still need to convert slider constraints, plots, monitors and buttons.
-      // JC - 9/14/10
-      // val convertedCode = ws.autoConvert(code, false, false, netLogoVersion)
       import collection.JavaConverters._
+
+      val additionalSources: Seq[SourceOwner] = if (sdmLines.isEmpty) Seq() else Seq(ws.aggregateManager)
+      val code = map.get(ModelSection.Code).mkString("", "\n", "\n")
       val newProg = Program.fromDialect(dialect).copy(interfaceGlobals = interfaceGlobals)
-      ws.compiler.compileProgram(code, newProg, ws.getExtensionManager, ws.getCompilationEnvironment)
+      ws.compiler.compileProgram(code, additionalSources, newProg, ws.getExtensionManager, ws.getCompilationEnvironment)
     }
     ws.setProcedures(results.proceduresMap)
     ws.codeBits.clear() //(WTH IS THIS? - JC 10/27/09)
@@ -66,7 +66,9 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     ws.previewCommands = PreviewCommands(previewCommandsSource)
 
     // parse turtle and link shapes, updating the workspace.
-    parseShapes(map.get(ModelSection.TurtleShapes), map.get(ModelSection.LinkShapes), netLogoVersion)
+    attachWorldShapes(
+      parseVectorShapes(map.get(ModelSection.TurtleShapes)).toList,
+      parseLinkShapes(map.get(ModelSection.LinkShapes)).toList)
 
     ws.getHubNetManager.load(map.get(ModelSection.HubNetClient), netLogoVersion)
 
@@ -80,13 +82,15 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
       finish(Map() ++ constraints, results.program, interfaceGlobalCommands)
   }
 
-  private def parseShapes(turtleShapeLines: Array[String], linkShapeLines: Array[String], netLogoVersion: String) {
-    ws.world.turtleShapeList.replaceShapes(VectorShape.parseShapes(turtleShapeLines, netLogoVersion))
-    if (turtleShapeLines.isEmpty) ws.world.turtleShapeList.add(VectorShape.getDefaultShape)
+  private def attachWorldShapes(turtleShapes: List[CoreVectorShape], linkShapes: List[CoreLinkShape]) = {
+    import collection.JavaConverters._
+    ws.world.turtleShapeList.replaceShapes(turtleShapes.map(ShapeConverter.baseVectorShapeToVectorShape))
+    if (turtleShapes.isEmpty)
+      ws.world.turtleShapeList.add(VectorShape.getDefaultShape)
 
-    // A new model is being loaded, so get rid of all previous shapes
-    ws.world.linkShapeList.replaceShapes(LinkShape.parseShapes(linkShapeLines, netLogoVersion))
-    if (linkShapeLines.isEmpty) ws.world.linkShapeList.add(LinkShape.getDefaultLinkShape)
+    ws.world.linkShapeList.replaceShapes(linkShapes.map(ShapeConverter.baseLinkShapeToLinkShape))
+    if (linkShapes.isEmpty)
+      ws.world.linkShapeList.add(LinkShape.getDefaultLinkShape)
   }
 
   private def finish(constraints: Map[String, List[String]], program: Program, interfaceGlobalCommands: StringBuilder) {
@@ -103,7 +107,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
           SliderConstraint.makeSliderConstraint(
             ws.world.observer(), spec(1), spec(2), spec(3), spec(4).toDouble, vname, ws)
         case "CHOOSER" =>
-          val vals = ws.compiler.readFromString(spec(1), ws.world.program.dialect.is3D).asInstanceOf[LogoList]
+          val vals = ws.compiler.readFromString(spec(1)).asInstanceOf[LogoList]
           val defaultIndex = spec(2).toInt
           val defaultAsString = org.nlogo.api.Dump.logoObject(vals.get(defaultIndex), true, false)
           interfaceGlobalCommands.append("set " + vname + " " + defaultAsString + "\n")
@@ -112,9 +116,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
         case "INPUTBOX" =>
           var defaultVal: AnyRef = spec(1)
           if (spec(2) == "Number" || spec(2) == "Color")
-            defaultVal = ws.compiler.readNumberFromString(spec(1), ws.world,
-              ws.getExtensionManager,
-              ws.world.program.dialect.is3D)
+            defaultVal = ws.compiler.readNumberFromString(spec(1), ws.world, ws.getExtensionManager)
           new InputBoxConstraint(spec(2), defaultVal)
       }
       ws.world.observer().variableConstraint(ws.world.observerOwnsIndexOf(vname.toUpperCase), con)

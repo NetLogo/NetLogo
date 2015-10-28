@@ -3,8 +3,10 @@
 package org.nlogo.app;
 
 import org.nlogo.agent.Agent;
+import org.nlogo.core.AgentKind;
+import org.nlogo.core.AgentKindJ;
 import org.nlogo.core.CompilerException;
-import org.nlogo.api.I18N;
+import org.nlogo.core.I18N;
 import org.nlogo.core.TokenType;
 import org.nlogo.window.EditorColorizer;
 import org.nlogo.window.Widget;
@@ -46,11 +48,11 @@ strictfp class CommandLine
   public CommandLine(org.nlogo.window.CommandCenterInterface commandCenter,
                      boolean echoCommandsToOutput, int fontSize,
                      org.nlogo.nvm.Workspace workspace) {
-    super(workspace.world().mainRNG);
+    super(workspace.world().mainRNG());
     this.commandCenter = commandCenter;
     this.echoCommandsToOutput = echoCommandsToOutput;
     this.workspace = workspace;
-    agentClass(org.nlogo.agent.Observer.class);
+    agentKind(AgentKindJ.Observer());
     textField =
         new org.nlogo.editor.EditorField<TokenType>
             (30,
@@ -163,13 +165,13 @@ strictfp class CommandLine
     }
     String header = "to __commandline [] ";
     String footer = "__done end";
-    if (agentClass() == org.nlogo.agent.Observer.class) {
+    if (kind() == AgentKindJ.Observer()) {
       header += "__observercode ";
-    } else if (agentClass() == org.nlogo.agent.Turtle.class) {
+    } else if (kind() == AgentKindJ.Turtle()) {
       header += "__turtlecode ";
-    } else if (agentClass() == org.nlogo.agent.Patch.class) {
+    } else if (kind() == AgentKindJ.Patch()) {
       header += "__patchcode ";
-    } else if (agentClass() == org.nlogo.agent.Link.class) {
+    } else if (kind() == AgentKindJ.Link()) {
       header += "__linkcode ";
     }
     source(header, inner, "\n" + footer); // the \n is to protect against comments in inner
@@ -186,11 +188,11 @@ strictfp class CommandLine
         if (!outStr.trim().equals("")) {
           addToHistory(outStr);
           if (echoCommandsToOutput) {
-            if (agentClass() == org.nlogo.agent.Turtle.class) {
+            if (kind() == AgentKindJ.Turtle()) {
               outStr = TURTLE_PROMPT + " " + outStr;
-            } else if (agentClass() == org.nlogo.agent.Patch.class) {
+            } else if (kind() == AgentKindJ.Patch()) {
               outStr = PATCH_PROMPT + " " + outStr;
-            } else if (agentClass() == org.nlogo.agent.Link.class) {
+            } else if (kind() == AgentKindJ.Link()) {
               outStr = LINK_PROMPT + " " + outStr;
             } else {
               outStr = OBSERVER_PROMPT + " " + outStr;
@@ -201,7 +203,7 @@ strictfp class CommandLine
           }
           if (agent != null) {
             org.nlogo.agent.AgentSet agentSet =
-                new org.nlogo.agent.ArrayAgentSet(agentClass(), 1, false, agent.world());
+                new org.nlogo.agent.ArrayAgentSet(kind(), 1, false);
             agentSet.add(agent);
             agents(agentSet);
           }
@@ -230,13 +232,13 @@ strictfp class CommandLine
   private static final int MAX_HISTORY_SIZE = 40;
   private int historyPosition = -1;
   private String historyBase = "";
-  private Class<? extends Agent> historyBaseClass = org.nlogo.agent.Observer.class;
+  private AgentKind historyBaseClass = AgentKindJ.Observer();
   private final List<ExecutionString> history =
       new ArrayList<ExecutionString>(MAX_HISTORY_SIZE);
 
   private void addToHistory(String str) {
     ExecutionString executionString =
-        new ExecutionString(agentClass(), str);
+        new ExecutionString(kind(), str);
     if (history.isEmpty() ||
         !executionString.equals(history.get(0))) {
       history.add(0, executionString);
@@ -251,13 +253,13 @@ strictfp class CommandLine
     if (!history.isEmpty()) {
       if (historyPosition == -1) {
         historyBase = getText();
-        historyBaseClass = agentClass();
+        historyBaseClass = kind();
       }
       if (historyPosition + 1 < history.size()) {
         historyPosition++;
         ExecutionString es = history.get(historyPosition);
         setText(es.string);
-        agentClass(es.agentClass);
+        agentKind(es.agentClass);
       }
     }
     commandCenter.repaintPrompt();
@@ -266,13 +268,13 @@ strictfp class CommandLine
   void cycleListForward() {
     if (historyPosition == 0) {
       setText(historyBase);
-      agentClass(historyBaseClass);
+      agentKind(historyBaseClass);
       historyPosition = -1;
     } else if (historyPosition > 0 && !history.isEmpty()) {
       historyPosition--;
       ExecutionString es = history.get(historyPosition);
       setText(es.string);
-      agentClass(es.agentClass);
+      agentKind(es.agentClass);
     }
     commandCenter.repaintPrompt();
   }
@@ -284,7 +286,7 @@ strictfp class CommandLine
   void reset() {
     clearList();
     setText("");
-    agentClass(org.nlogo.agent.Observer.class);
+    agentKind(AgentKindJ.Observer());
   }
 
   void clearList() {
@@ -294,7 +296,7 @@ strictfp class CommandLine
 
   void setExecutionString(ExecutionString es) {
     setText(es.string);
-    agentClass(es.agentClass);
+    agentKind(es.agentClass);
     textField.setCaretPosition(getText().length());
     commandCenter.repaintPrompt();
   }
@@ -316,10 +318,10 @@ strictfp class CommandLine
   }
 
   static strictfp class ExecutionString {
-    final Class<? extends Agent> agentClass;
+    final AgentKind agentClass;
     final String string;
 
-    ExecutionString(Class<? extends Agent> agentClass, String string) {
+    ExecutionString(AgentKind agentClass, String string) {
       this.agentClass = agentClass;
       this.string = string;
     }

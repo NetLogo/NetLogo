@@ -4,6 +4,7 @@ package org.nlogo.workspace
 
 import org.nlogo.agent.{Agent, World, World3D}
 import org.nlogo.nvm.CompilerInterface
+import org.nlogo.core.AgentKind
 import org.nlogo.api.{AggregateManagerInterface, Version}
 
 /**
@@ -24,7 +25,7 @@ extends AbstractWorkspaceScala(
   override def waitForResult[T](runnable: org.nlogo.api.ReporterRunnable[T]): T = unsupported
   override def waitForQueuedEvents(): Unit = unsupported
   override def inspectAgent(agent: org.nlogo.api.Agent, radius: Double): Unit = unsupported
-  override def inspectAgent(agentClass: Class[_ <: Agent], agent: org.nlogo.agent.Agent, radius: Double): Unit = unsupported
+  override def inspectAgent(agentClass: AgentKind, agent: org.nlogo.agent.Agent, radius: Double): Unit = unsupported
   override def stopInspectingAgent(agent: org.nlogo.agent.Agent) = unsupported
   override def stopInspectingDeadAgents() = unsupported
   override def clearDrawing(): Unit = unsupported
@@ -48,8 +49,8 @@ extends AbstractWorkspaceScala(
   override def patchSize: Double = unsupported
   override def changeTopology(wrapX: Boolean, wrapY: Boolean) = unsupported
   override def setOutputAreaContents(text: String) = unsupported
-  override def setDimensions(d: org.nlogo.api.WorldDimensions) = unsupported
-  override def setDimensions(d: org.nlogo.api.WorldDimensions, patchSize: Double) = unsupported
+  override def setDimensions(d: org.nlogo.core.WorldDimensions) = unsupported
+  override def setDimensions(d: org.nlogo.core.WorldDimensions, patchSize: Double) = unsupported
   override def resizeView(): Unit = unsupported
   override def runtimeError(owner: org.nlogo.api.JobOwner,
                             context: org.nlogo.nvm.Context,

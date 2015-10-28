@@ -2,7 +2,8 @@
 
 package org.nlogo.gl.view
 
-import org.nlogo.api.{ Agent, I18N, Perspective }
+import org.nlogo.api.{ Agent, AgentFollowingPerspective, Perspective }
+import org.nlogo.core.I18N
 import java.awt.event.{ ActionEvent, ActionListener }
 import MouseMotionHandler.{ Mode, OrbitMode, ZoomMode, TranslateMode, InteractMode }
 
@@ -73,32 +74,31 @@ class ViewControlToolBar(view: View, inputHandler: MouseMotionHandler)
   setButtonsEnabled(true)
 
   private var perspective: Perspective = null
-  private var agent: Agent = null
 
-  def setStatus(perspective: Perspective, agent: Agent) {
+  def setStatus(perspective: Perspective) {
     // don't update if perspective didn't change
-    if (this.perspective != perspective || (agent != null && agent != this.agent)) {
+    if (this.perspective != perspective) {
       this.perspective = perspective
-      this.agent = agent
+
       perspective match {
         case Perspective.Observe =>
           status.setText("")
           setButtonsEnabled(true)
-        case Perspective.Watch =>
-          status.setText(I18N.gui.get("view.3d.watching") + agent.toString)
+        case Perspective.Watch(a) =>
+          status.setText(I18N.gui.get("view.3d.watching") + " " + a.toString)
           orbitAction.setEnabled(true)
           zoomAction.setEnabled(true)
           moveAction.setEnabled(false)
           if (moveButton.isSelected)
             orbitButton.doClick()
-        case Perspective.Ride =>
-          status.setText(I18N.gui.get("view.3d.riding") + agent.toString)
+        case Perspective.Ride(a) =>
+          status.setText(I18N.gui.get("view.3d.riding") + " " + a.toString)
           setButtonsEnabled(false)
           zoomAction.setEnabled(true)
           if (!interactButton.isSelected && !zoomButton.isSelected)
             zoomButton.doClick()
-        case Perspective.Follow =>
-          status.setText(I18N.gui.get("view.3d.following") + agent.toString)
+        case Perspective.Follow(a, _) =>
+          status.setText(I18N.gui.get("view.3d.following") + " " + a.toString)
           setButtonsEnabled(false)
           zoomAction.setEnabled(true)
           if (!interactButton.isSelected && !zoomButton.isSelected) {

@@ -526,8 +526,6 @@ R user-input gui._userinput
 R user-new-file gui._usernewfile
 R user-one-of gui._useroneof
 R user-yes-or-no? gui._useryesorno
-R value-from dead._valuefrom
-R values-from dead._valuesfrom
 R variance etc._variance
 R with _with
 R with-max etc._withmax

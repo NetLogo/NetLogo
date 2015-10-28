@@ -4,8 +4,8 @@ package org.nlogo.app
 
 // pulled this out of CommandLine.java so I could translate it separately to Scala - ST 8/19/10
 
-import org.nlogo.agent.{Observer, Turtle, Patch, Link}
-import org.nlogo.api.I18N
+import org.nlogo.core.AgentKind
+import org.nlogo.core.I18N
 
 class HistoryPrompt(commandLine: CommandLine) extends javax.swing.JButton {
 
@@ -35,13 +35,11 @@ class HistoryPrompt(commandLine: CommandLine) extends javax.swing.JButton {
         if(commandLine.agent != null)          // if we're in an agent monitor
           CommandLine.PROMPT + " " + ex.string
         else {
-          val O = classOf[Observer]; val T = classOf[Turtle]
-          val P = classOf[Patch];    val L = classOf[Link]
           val prompt = ex.agentClass match {
-            case O => CommandLine.OBSERVER_PROMPT
-            case T => CommandLine.TURTLE_PROMPT
-            case P => CommandLine.PATCH_PROMPT
-            case L => CommandLine.LINK_PROMPT
+            case AgentKind.Observer => CommandLine.OBSERVER_PROMPT
+            case AgentKind.Turtle   => CommandLine.TURTLE_PROMPT
+            case AgentKind.Patch    => CommandLine.PATCH_PROMPT
+            case AgentKind.Link     => CommandLine.LINK_PROMPT
           }
           prompt + " " + ex.string
         }

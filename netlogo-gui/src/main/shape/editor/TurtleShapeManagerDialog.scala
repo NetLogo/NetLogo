@@ -3,7 +3,7 @@
 package org.nlogo.shape.editor
 
 import org.nlogo.shape.{VectorShape, ShapeChangeListener}
-import org.nlogo.api.ShapeList
+import org.nlogo.core.ShapeList
 
 class TurtleShapeManagerDialog(parentFrame: java.awt.Frame,
                                world: org.nlogo.api.World,
@@ -23,7 +23,7 @@ class TurtleShapeManagerDialog(parentFrame: java.awt.Frame,
   override def editShape() {
     val shape = shapesList.getOneSelected.asInstanceOf[VectorShape]
     if (shape != null) {
-      new EditorDialog(shapesList, shape, getLocation.x, getLocation.y, !ShapeList.isDefaultShapeName(shape.getName))
+      new EditorDialog(shapesList, shape, getLocation.x, getLocation.y, !ShapeList.isDefaultShapeName(shape.name))
     }
   }
 
@@ -33,7 +33,7 @@ class TurtleShapeManagerDialog(parentFrame: java.awt.Frame,
     // You can only duplicate one shape at a time
     if ( shape != null )   {
       val newShape = shape.clone.asInstanceOf[VectorShape]
-      newShape.setName("")
+      newShape.name_$eq("")
       new EditorDialog(shapesList, newShape, getLocation.x, getLocation.y, true )
     }
   }

@@ -17,7 +17,7 @@ object Polygons {
     // this is more complex than it looks, primarily because OpenGL cannot render concave polygons
     // directly but must "tessellate" the polygon into simple convex triangles first - jrn 6/13/05
     if (!poly.marked) {
-      val rgb = poly.getColor.getRGBColorComponents(null)
+      val rgb = poly.awtColor.getRGBColorComponents(null)
       gl.glPushAttrib(GL2.GL_CURRENT_BIT)
       gl.glColor3fv(java.nio.FloatBuffer.wrap(rgb))
     }
@@ -28,8 +28,8 @@ object Polygons {
     // alternative) ... too lazy right now - jrn 6/13/05
     gl.glDisable(GL.GL_CULL_FACE)
     val data = tessellator.createTessDataObject(gl)
-    val xcoords = poly.getXcoords
-    val ycoords = poly.getYcoords
+    val xcoords = poly.xCoords
+    val ycoords = poly.yCoords
     if(is3D)
       renderPolygon3D(gl, glu, tess, data, xcoords, ycoords, zDepth, rotatable)
     else
@@ -41,10 +41,10 @@ object Polygons {
       // render sides
       for(i <- 0 until xcoords.size) {
         val coords = Array[Float](
-          xcoords.get(i).intValue * 0.001f - 0.15f,
-          (300 - ycoords.get(i).intValue) * .001f - 0.15f,
-          xcoords.get((i + 1) % xcoords.size).intValue * .001f - 0.15f,
-          (300 - ycoords.get((i + 1) % xcoords.size).intValue) * .001f - 0.15f
+          xcoords(i) * 0.001f - 0.15f,
+          (300 - ycoords(i)) * .001f - 0.15f,
+          xcoords((i + 1) % xcoords.size) * .001f - 0.15f,
+          (300 - ycoords((i + 1) % xcoords.size)) * .001f - 0.15f
         )
         gl.glBegin(GL2ES3.GL_QUADS)
         val (normalX, normalY, normalZ) =
@@ -66,15 +66,15 @@ object Polygons {
 
   private def renderPolygon2D(gl: GL2, glu: GLU, tess: GLUtessellator,
                               data: Tessellator.TessDataObject,
-                              xcoords: JList[java.lang.Integer],
-                              ycoords: JList[java.lang.Integer],
+                              xcoords: Seq[Int],
+                              ycoords: Seq[Int],
                               zDepth: Float, rotatable: Boolean) {
     GLU.gluTessBeginPolygon(tess, data)
     GLU.gluTessBeginContour(tess)
     for(i <- 0 until xcoords.size) {
       val coords = Array[Double](
-        xcoords.get(i).intValue * .001 - 0.15,
-        (300 - ycoords.get(i).intValue) * .001 - 0.15,
+        xcoords(i) * .001 - 0.15,
+        (300 - ycoords(i)) * .001 - 0.15,
         zDepth)
       GLU.gluTessVertex(tess, coords, 0, coords)
     }
@@ -84,16 +84,16 @@ object Polygons {
 
   private def renderPolygon3D(gl: GL2, glu: GLU, tess: GLUtessellator,
                               data: Tessellator.TessDataObject,
-                              xcoords: JList[java.lang.Integer],
-                              ycoords: JList[java.lang.Integer],
+                              xcoords: Seq[Int],
+                              ycoords: Seq[Int],
                               zDepth: Float, rotatable: Boolean) {
     GLU.gluTessBeginPolygon(tess, data)
     GLU.gluTessBeginContour(tess)
     // render top
-    for((x, y) <- xcoords.asScala zip ycoords.asScala) {
+    for((x, y) <- xcoords zip ycoords) {
       val coords = Array[Double](
-        x.intValue * 0.001 - 0.15,
-        (300 - y.intValue) * .001 - 0.15,
+        x * 0.001 - 0.15,
+        (300 - y) * .001 - 0.15,
         zDepth)
       GLU.gluTessVertex(tess, coords, 0, coords)
     }

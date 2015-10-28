@@ -2,10 +2,11 @@
 
 package org.nlogo.window;
 
-import org.nlogo.agent.Observer;
+import org.nlogo.core.AgentKind;
+import org.nlogo.core.AgentKindJ;
 import org.nlogo.api.Dump;
 import org.nlogo.api.Editable;
-import org.nlogo.api.I18N;
+import org.nlogo.core.I18N;
 import org.nlogo.api.ModelReader;
 import org.nlogo.api.Property;
 
@@ -92,8 +93,8 @@ public strictfp class MonitorWidget
   }
 
   @Override
-  public Class<Observer> agentClass() {
-    return org.nlogo.agent.Observer.class;
+  public AgentKind kind() {
+    return AgentKindJ.Observer();
   }
 
   @Override

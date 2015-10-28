@@ -3,7 +3,8 @@
 package org.nlogo.prim
 
 import org.nlogo.agent.{ Agent, AgentSet }
-import org.nlogo.api.{ AgentException, I18N, LogoListBuilder }
+import org.nlogo.api.{ AgentException, LogoListBuilder }
+import org.nlogo.core.I18N
 import org.nlogo.api.Syntax
 import org.nlogo.nvm.{ ArgumentTypeException, Context, EngineException, Reporter }
 

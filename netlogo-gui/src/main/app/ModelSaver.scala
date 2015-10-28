@@ -2,9 +2,10 @@
 
 package org.nlogo.app
 
-import org.nlogo.api.{ModelReader, ModelSections, PreviewCommands, Shape, Version}
+import org.nlogo.api.{ModelReader, ModelSections, PreviewCommands, Version}
 import org.nlogo.util.Implicits.RichString
 import org.nlogo.util.Implicits.RichStringLike
+import org.nlogo.core.Shape
 import org.nlogo.workspace.AbstractWorkspaceScala
 import collection.JavaConverters._
 

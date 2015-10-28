@@ -142,6 +142,11 @@ public strictfp class TrailDrawer
 
     java.awt.image.BufferedImage image = javax.imageio.ImageIO.read(is);
 
+    readImage(image);
+  }
+
+  public void readImage(java.awt.image.BufferedImage image)
+      throws java.io.IOException {
     java.awt.Graphics2D dg = drawingImage.createGraphics();
 
     dg.drawImage(image, 0, 0, null);

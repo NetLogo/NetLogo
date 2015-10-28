@@ -8,12 +8,12 @@ link-breeds
 
 reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
 [0]_asm_proceduremysubtractheadings_ifelse_0 "ifelse abs (h1 - h2) <= 180" boolean => void
-      _lessorequal double,double => boolean
-        _abs double => double
-          _minus double,double => double
-            _procedurevariable:H1 => Object
-            _procedurevariable:H2 => Object
-        _constdouble:180.0 => double
+      _lessorequal "abs (h1 - h2) <= 180" double,double => boolean
+        _abs "abs (h1 - h2" double => double
+          _minus "h1 - h2" double,double => double
+            _procedurevariable:H1 "h1" => Object
+            _procedurevariable:H2 "h2" => Object
+        _constdouble:180.0 "180" => double
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           TRYCATCHBLOCK L2 L3 L3 java/lang/ClassCastException
          L4
@@ -118,9 +118,9 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
          L17
           RETURN
 [1]_asm_proceduremysubtractheadings_report_1 "report h1 - h2" Object => void
-      _minus double,double => double
-        _procedurevariable:H1 => Object
-        _procedurevariable:H2 => Object
+      _minus "h1 - h2" double,double => double
+        _procedurevariable:H1 "h1" => Object
+        _procedurevariable:H2 "h2" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           TRYCATCHBLOCK L2 L3 L3 java/lang/ClassCastException
          L4
@@ -216,7 +216,7 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim._report.canOnlyUseInToReport"
           ICONST_1
           ANEWARRAY java/lang/Object
@@ -224,7 +224,7 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           ICONST_0
           LDC "REPORT"
           AASTORE
-          INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L11
@@ -236,7 +236,7 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim._report.mustImmediatelyBeUsedInToReport"
           ICONST_1
           ANEWARRAY java/lang/Object
@@ -244,13 +244,13 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           ICONST_0
           LDC "REPORT"
           AASTORE
-          INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L12
          FRAME SAME
           RETURN
-[2]_asm_proceduremysubtractheadings_goto_2 "" => void
+[2]_asm_proceduremysubtractheadings_goto_2 => void
          L0
           ALOAD 1
           BIPUSH 7
@@ -258,9 +258,9 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
          L1
           RETURN
 [3]_asm_proceduremysubtractheadings_ifelse_3 "ifelse h1 > h2" boolean => void
-      _greaterthan Object,Object => boolean
-        _procedurevariable:H1 => Object
-        _procedurevariable:H2 => Object
+      _greaterthan "h1 > h2" Object,Object => boolean
+        _procedurevariable:H1 "h1" => Object
+        _procedurevariable:H2 "h2" => Object
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -357,7 +357,7 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim._greaterthan.cannotCompareParameters"
           ICONST_2
           ANEWARRAY java/lang/Object
@@ -371,7 +371,7 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           ALOAD 3
           INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L6
@@ -391,11 +391,11 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
          L15
           RETURN
 [4]_asm_proceduremysubtractheadings_report_4 "report h1 - h2 - 360" Object => void
-      _minus double,double => double
-        _minus double,double => double
-          _procedurevariable:H1 => Object
-          _procedurevariable:H2 => Object
-        _constdouble:360.0 => double
+      _minus "h1 - h2 - 360" double,double => double
+        _minus "h1 - h2" double,double => double
+          _procedurevariable:H1 "h1" => Object
+          _procedurevariable:H2 "h2" => Object
+        _constdouble:360.0 "360" => double
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           TRYCATCHBLOCK L2 L3 L3 java/lang/ClassCastException
          L4
@@ -499,7 +499,7 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim._report.canOnlyUseInToReport"
           ICONST_1
           ANEWARRAY java/lang/Object
@@ -507,7 +507,7 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           ICONST_0
           LDC "REPORT"
           AASTORE
-          INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L13
@@ -519,7 +519,7 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim._report.mustImmediatelyBeUsedInToReport"
           ICONST_1
           ANEWARRAY java/lang/Object
@@ -527,13 +527,13 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           ICONST_0
           LDC "REPORT"
           AASTORE
-          INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L14
          FRAME SAME
           RETURN
-[5]_asm_proceduremysubtractheadings_goto_5 "" => void
+[5]_asm_proceduremysubtractheadings_goto_5 => void
          L0
           ALOAD 1
           BIPUSH 7
@@ -541,11 +541,11 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
          L1
           RETURN
 [6]_asm_proceduremysubtractheadings_report_6 "report h1 - h2 + 360" Object => void
-      _plus double,double => double
-        _minus double,double => double
-          _procedurevariable:H1 => Object
-          _procedurevariable:H2 => Object
-        _constdouble:360.0 => double
+      _plus "h1 - h2 + 360" double,double => double
+        _minus "h1 - h2" double,double => double
+          _procedurevariable:H1 "h1" => Object
+          _procedurevariable:H2 "h2" => Object
+        _constdouble:360.0 "360" => double
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           TRYCATCHBLOCK L2 L3 L3 java/lang/ClassCastException
          L4
@@ -649,7 +649,7 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim._report.canOnlyUseInToReport"
           ICONST_1
           ANEWARRAY java/lang/Object
@@ -657,7 +657,7 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           ICONST_0
           LDC "REPORT"
           AASTORE
-          INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L13
@@ -669,7 +669,7 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim._report.mustImmediatelyBeUsedInToReport"
           ICONST_1
           ANEWARRAY java/lang/Object
@@ -677,21 +677,21 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           ICONST_0
           LDC "REPORT"
           AASTORE
-          INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L14
          FRAME SAME
           RETURN
-[7]_asm_proceduremysubtractheadings_returnreport_7 "" => void
+[7]_asm_proceduremysubtractheadings_returnreport_7 => void
          L0
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim._returnreport.reportNotCalledInReportProcedure"
-          INVOKEINTERFACE org/nlogo/api/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L1
@@ -700,7 +700,7 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
 
 procedure GO:[]{O---}:
 [0]_asm_procedurego_ask_0 "ask turtles" AgentSet => void
-      _turtles => AgentSet
+      _turtles "turtles" => AgentSet
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_0.world : Lorg/nlogo/agent/World;
@@ -720,9 +720,9 @@ procedure GO:[]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"
-          INVOKEINTERFACE org/nlogo/api/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -736,9 +736,9 @@ procedure GO:[]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim.$common.onlyObserverCanAskAllPatches"
-          INVOKEINTERFACE org/nlogo/api/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L2
@@ -770,15 +770,15 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[2]_asm_procedurego_done_2 "" => void
+[2]_asm_procedurego_done_2 => void
          L0
           ALOAD 1
           ICONST_1
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[3]_tick
-[4]_asm_procedurego_return_3 "" => void
+[3]_tick "tick"
+[4]_asm_procedurego_return_3 => void
          L0
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
@@ -791,12 +791,13 @@ procedure GO:[]{O---}:
 reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
 [0]_asm_procedureaverageheadingtowardsflockmates_report_0 "report atan mean [sin (towards myself + 180)] of flockmates
               mean [cos (towards myself + 180)] of flockmates" Object => void
-      _atan double,double => double
-        _mean LogoList => double
-          _of
+      _atan "atan mean [sin (towards myself + 180)] of flockmates
+              mean [cos (towards myself + 180)] of flockmates" double,double => double
+        _mean "mean [sin (towards myself + 180)] of flockmates" LogoList => double
+          _of "sin (towards myself + 180)] of flockmates"
             _asm_procedureaverageheadingtowardsflockmates_sin_1 "sin (towards myself + 180" double => double
-              _plus double,double => double
-                _towards
+              _plus "towards myself + 180" double,double => double
+                _towards "towards myself"
                   _asm_procedureaverageheadingtowardsflockmates_myself_2 "myself" => Agent
                        L0
                         ALOAD 1
@@ -813,9 +814,9 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
                         DUP
                         ALOAD 1
                         ALOAD 0
-                        INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+                        INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
                         LDC "org.nlogo.prim.etc._myself.noAgentMyself"
-                        INVOKEINTERFACE org/nlogo/api/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
+                        INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
                         INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
                         ATHROW
                        L2
@@ -823,7 +824,7 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
                         ALOAD 2
                        L3
                         ARETURN
-                _constdouble:180.0 => double
+                _constdouble:180.0 "180" => double
                   TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
                   ALOAD 0
                   GETFIELD org/nlogo/prim/_asm_procedureaverageheadingtowardsflockmates_sin_1.keptinstr3 : Lorg/nlogo/prim/etc/_towards;
@@ -892,11 +893,11 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
                  L3
                  FRAME SAME1 java/lang/Object
                   ARETURN
-        _mean LogoList => double
-          _of
+        _mean "mean [cos (towards myself + 180)] of flockmates" LogoList => double
+          _of "cos (towards myself + 180)] of flockmates"
             _asm_procedureaverageheadingtowardsflockmates_cos_4 "cos (towards myself + 180" double => double
-              _plus double,double => double
-                _towards
+              _plus "towards myself + 180" double,double => double
+                _towards "towards myself"
                   _asm_procedureaverageheadingtowardsflockmates_myself_5 "myself" => Agent
                        L0
                         ALOAD 1
@@ -913,9 +914,9 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
                         DUP
                         ALOAD 1
                         ALOAD 0
-                        INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+                        INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
                         LDC "org.nlogo.prim.etc._myself.noAgentMyself"
-                        INVOKEINTERFACE org/nlogo/api/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
+                        INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
                         INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
                         ATHROW
                        L2
@@ -923,7 +924,7 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
                         ALOAD 2
                        L3
                         ARETURN
-                _constdouble:180.0 => double
+                _constdouble:180.0 "180" => double
                   TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
                   ALOAD 0
                   GETFIELD org/nlogo/prim/_asm_procedureaverageheadingtowardsflockmates_cos_4.keptinstr3 : Lorg/nlogo/prim/etc/_towards;
@@ -1028,9 +1029,9 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim.etc.$common.emptyList"
-          INVOKEINTERFACE org/nlogo/api/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L6
@@ -1053,7 +1054,7 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim._mean.cantFindMeanOfNonNumbers"
           ICONST_2
           ANEWARRAY java/lang/Object
@@ -1067,7 +1068,7 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           ALOAD 6
           INVOKESTATIC org/nlogo/api/TypeNames.name (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L9
@@ -1123,9 +1124,9 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim.etc.$common.emptyList"
-          INVOKEINTERFACE org/nlogo/api/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L13
@@ -1148,7 +1149,7 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim._mean.cantFindMeanOfNonNumbers"
           ICONST_2
           ANEWARRAY java/lang/Object
@@ -1162,7 +1163,7 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           ALOAD 6
           INVOKESTATIC org/nlogo/api/TypeNames.name (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L16
@@ -1198,9 +1199,9 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim.etc.atan.bothInputsCannotBeZero"
-          INVOKEINTERFACE org/nlogo/api/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L18
@@ -1285,7 +1286,7 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim._report.canOnlyUseInToReport"
           ICONST_1
           ANEWARRAY java/lang/Object
@@ -1293,7 +1294,7 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           ICONST_0
           LDC "REPORT"
           AASTORE
-          INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L27
@@ -1305,7 +1306,7 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim._report.mustImmediatelyBeUsedInToReport"
           ICONST_1
           ANEWARRAY java/lang/Object
@@ -1313,21 +1314,21 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           ICONST_0
           LDC "REPORT"
           AASTORE
-          INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L28
          FRAME SAME
           RETURN
-[1]_asm_procedureaverageheadingtowardsflockmates_returnreport_7 "" => void
+[1]_asm_procedureaverageheadingtowardsflockmates_returnreport_7 => void
          L0
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim._returnreport.reportNotCalledInReportProcedure"
-          INVOKEINTERFACE org/nlogo/api/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L1
@@ -1336,7 +1337,7 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
 
 procedure BENCHMARK:[_repeatlocal:0]{O---}:
 [0]_asm_procedurebenchmark_randomseed_0 "random-seed 5454" double => void
-      _constdouble:5454.0 => double
+      _constdouble:5454.0 "5454" => double
          L0
           LDC 5454.0
          L1
@@ -1384,7 +1385,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[1]_resettimer
+[1]_resettimer "reset-timer"
 [2]_asm_procedurebenchmark_call_1 "setup"
          L0
           NEW org/nlogo/nvm/Activation
@@ -1403,8 +1404,8 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedurebenchmark_repeatlocal_2 "" double => void
-      _constdouble:700.0 => double
+[3]_asm_procedurebenchmark_repeatlocal_2 double => void
+      _constdouble:700.0 "700" => double
          L0
           LDC 700.0
          L1
@@ -1443,7 +1444,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[5]_asm_procedurebenchmark_repeatlocalinternal_4 "" => void
+[5]_asm_procedurebenchmark_repeatlocalinternal_4 => void
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1476,13 +1477,13 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          FRAME SAME
           RETURN
 [6]_asm_procedurebenchmark_setobservervariable_5 "set result timer" Object => void
-      _timer => double
+      _timer "timer" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurebenchmark_setobservervariable_5.world : Lorg/nlogo/agent/World;
-          GETFIELD org/nlogo/agent/World.timer : Lorg/nlogo/agent/Timer;
-          INVOKEVIRTUAL org/nlogo/agent/Timer.read ()D
+          INVOKEVIRTUAL org/nlogo/agent/World.timer ()Lorg/nlogo/api/Timer;
+          INVOKEVIRTUAL org/nlogo/api/Timer.read ()D
          L4
           DSTORE 2
           NEW java/lang/Double
@@ -1516,7 +1517,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[7]_asm_procedurebenchmark_return_6 "" => void
+[7]_asm_procedurebenchmark_return_6 => void
          L0
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
@@ -1528,8 +1529,8 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
 
 procedure ALIGN:[]{-T--}:
 [0]_asm_procedurealign_call_0 "turn-towards average-flockmate-heading max-align-turn"
-      _callreport:AVERAGE-FLOCKMATE-HEADING
-      _observervariable:MAX-ALIGN-TURN => Object
+      _callreport:AVERAGE-FLOCKMATE-HEADING "average-flockmate-heading"
+      _observervariable:MAX-ALIGN-TURN "max-align-turn" => Object
          L0
           NEW org/nlogo/nvm/Activation
           DUP
@@ -1584,7 +1585,7 @@ procedure ALIGN:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L5
           RETURN
-[1]_asm_procedurealign_return_1 "" => void
+[1]_asm_procedurealign_return_1 => void
          L0
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
@@ -1596,7 +1597,7 @@ procedure ALIGN:[]{-T--}:
 
 procedure FIND-NEAREST-NEIGHBOR:[]{-T--}:
 [0]_asm_procedurefindnearestneighbor_setturtlevariable_0 "set nearest-neighbor min-one-of flockmates [distance myself" Object => void
-      _minoneof
+      _minoneof "min-one-of flockmates [distance myself"
         _asm_procedurefindnearestneighbor_turtlevariable_1 "flockmates" => Object
               TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
              L0
@@ -1621,7 +1622,7 @@ procedure FIND-NEAREST-NEIGHBOR:[]{-T--}:
              FRAME SAME1 java/lang/Object
               ARETURN
         _asm_procedurefindnearestneighbor_distance_2 "distance myself" Agent => double
-          _myself => Agent
+          _myself "myself" => Agent
              L0
               ALOAD 1
               INVOKEVIRTUAL org/nlogo/nvm/Context.myself ()Lorg/nlogo/agent/Agent;
@@ -1637,9 +1638,9 @@ procedure FIND-NEAREST-NEIGHBOR:[]{-T--}:
               DUP
               ALOAD 1
               ALOAD 0
-              INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+              INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
               LDC "org.nlogo.prim.etc._myself.noAgentMyself"
-              INVOKEINTERFACE org/nlogo/api/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
+              INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
               INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
               ATHROW
              L2
@@ -1654,9 +1655,9 @@ procedure FIND-NEAREST-NEIGHBOR:[]{-T--}:
               DUP
               ALOAD 1
               ALOAD 0
-              INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+              INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
               LDC "org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink"
-              INVOKEINTERFACE org/nlogo/api/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
+              INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
               INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
               ATHROW
              L4
@@ -1670,7 +1671,7 @@ procedure FIND-NEAREST-NEIGHBOR:[]{-T--}:
               DUP
               ALOAD 1
               ALOAD 0
-              INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+              INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
               LDC "org.nlogo.$common.thatAgentIsDead"
               ICONST_1
               ANEWARRAY java/lang/Object
@@ -1679,7 +1680,7 @@ procedure FIND-NEAREST-NEIGHBOR:[]{-T--}:
               ALOAD 2
               INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
               AASTORE
-              INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+              INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
               INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
               ATHROW
              L5
@@ -1732,7 +1733,7 @@ procedure FIND-NEAREST-NEIGHBOR:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L5
           RETURN
-[1]_asm_procedurefindnearestneighbor_return_3 "" => void
+[1]_asm_procedurefindnearestneighbor_return_3 => void
          L0
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
@@ -1744,10 +1745,10 @@ procedure FIND-NEAREST-NEIGHBOR:[]{-T--}:
 
 procedure TURN-AWAY:[NEW-HEADING MAX-TURN]{-T--}:
 [0]_asm_procedureturnaway_call_0 "turn-at-most (my-subtract-headings heading new-heading) max-turn"
-      _callreport:MY-SUBTRACT-HEADINGS
-        _turtlevariabledouble:HEADING => Double
-        _procedurevariable:NEW-HEADING => Object
-      _procedurevariable:MAX-TURN => Object
+      _callreport:MY-SUBTRACT-HEADINGS "my-subtract-headings heading new-heading"
+        _turtlevariabledouble:HEADING "heading" => Double
+        _procedurevariable:NEW-HEADING "new-heading" => Object
+      _procedurevariable:MAX-TURN "max-turn" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           NEW org/nlogo/nvm/Activation
@@ -1840,7 +1841,7 @@ procedure TURN-AWAY:[NEW-HEADING MAX-TURN]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L11
           RETURN
-[1]_asm_procedureturnaway_return_1 "" => void
+[1]_asm_procedureturnaway_return_1 => void
          L0
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
@@ -1851,9 +1852,9 @@ procedure TURN-AWAY:[NEW-HEADING MAX-TURN]{-T--}:
           RETURN
 
 procedure SETUP:[]{O---}:
-[0]_clearall
-[1]_resetticks
-[2]_createorderedturtles:,+7
+[0]_clearall "ca"
+[1]_resetticks "reset-ticks"
+[2]_createorderedturtles:,+7 "cro population"
       _asm_proceduresetup_observervariable_0 "population" => Object
            L0
             ALOAD 1
@@ -1863,9 +1864,9 @@ procedure SETUP:[]{O---}:
            L1
             ARETURN
 [3]_asm_proceduresetup_setturtleorlinkvariable_1 "set color yellow - 2 + random" Object => void
-      _plus double,double => double
-        _constdouble:43.0 => double
-        _randomconst:7 => double
+      _plus "+ random" double,double => double
+        _constdouble:43.0 "yellow - 2" => double
+        _randomconst:7 "random" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           LDC 43.0
@@ -1917,10 +1918,10 @@ procedure SETUP:[]{O---}:
           RETURN
 [4]_asm_proceduresetup_setxy_2 "setxy (random-float world-width)
             (random-float world-height" double,double => void
-      _randomfloat double => double
-        _worldwidth => double
-      _randomfloat double => double
-        _worldheight => double
+      _randomfloat "random-float world-width" double => double
+        _worldwidth "world-width" => double
+      _randomfloat "random-float world-height" double => double
+        _worldheight "world-height" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
@@ -1973,7 +1974,7 @@ procedure SETUP:[]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim.etc._setxy.pointOutsideWorld"
           ICONST_2
           ANEWARRAY java/lang/Object
@@ -1987,7 +1988,7 @@ procedure SETUP:[]{O---}:
           DLOAD 4
           INVOKESTATIC java/lang/Double.valueOf (D)Ljava/lang/Double;
           AASTORE
-          INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L8
@@ -1998,8 +1999,8 @@ procedure SETUP:[]{O---}:
          L9
           RETURN
 [5]_asm_proceduresetup_right_3 "rt random-float 360" double => void
-      _randomfloat double => double
-        _constdouble:360.0 => double
+      _randomfloat "random-float 360" double => double
+        _constdouble:360.0 "360" => double
          L0
           LDC 360.0
          L1
@@ -2022,14 +2023,14 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L3
           RETURN
-[6]_asm_proceduresetup_done_4 "" => void
+[6]_asm_proceduresetup_done_4 => void
          L0
           ALOAD 1
           ICONST_1
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[7]_asm_proceduresetup_return_5 "" => void
+[7]_asm_proceduresetup_return_5 => void
          L0
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
@@ -2041,10 +2042,10 @@ procedure SETUP:[]{O---}:
 
 procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
 [0]_asm_procedureturnatmost_ifelse_0 "ifelse abs turn > max-turn" boolean => void
-      _greaterthan double,Object => boolean
-        _abs double => double
-          _procedurevariable:TURN => Object
-        _procedurevariable:MAX-TURN => Object
+      _greaterthan "abs turn > max-turn" double,Object => boolean
+        _abs "abs turn" double => double
+          _procedurevariable:TURN "turn" => Object
+        _procedurevariable:MAX-TURN "max-turn" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 1
@@ -2117,7 +2118,7 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim._greaterthan.cannotCompareParameters"
           ICONST_2
           ANEWARRAY java/lang/Object
@@ -2132,7 +2133,7 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
           ALOAD 4
           INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L11
@@ -2152,9 +2153,9 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
          L14
           RETURN
 [1]_asm_procedureturnatmost_ifelse_1 "ifelse turn > 0" boolean => void
-      _greaterthan Object,double => boolean
-        _procedurevariable:TURN => Object
-        _constdouble:0.0 => double
+      _greaterthan "turn > 0" Object,double => boolean
+        _procedurevariable:TURN "turn" => Object
+        _constdouble:0.0 "0" => double
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -2189,7 +2190,7 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim._greaterthan.cannotCompareParameters"
           ICONST_2
           ANEWARRAY java/lang/Object
@@ -2204,7 +2205,7 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
           INVOKESTATIC java/lang/Double.valueOf (D)Ljava/lang/Double;
           INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L6
@@ -2224,7 +2225,7 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
          L9
           RETURN
 [2]_asm_procedureturnatmost_right_2 "rt max-turn" double => void
-      _procedurevariable:MAX-TURN => Object
+      _procedurevariable:MAX-TURN "max-turn" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 1
@@ -2264,7 +2265,7 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L5
           RETURN
-[3]_asm_procedureturnatmost_goto_3 "" => void
+[3]_asm_procedureturnatmost_goto_3 => void
          L0
           ALOAD 1
           ICONST_5
@@ -2272,7 +2273,7 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
          L1
           RETURN
 [4]_asm_procedureturnatmost_left_4 "lt max-turn" double => void
-      _procedurevariable:MAX-TURN => Object
+      _procedurevariable:MAX-TURN "max-turn" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 1
@@ -2313,7 +2314,7 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L5
           RETURN
-[5]_asm_procedureturnatmost_goto_5 "" => void
+[5]_asm_procedureturnatmost_goto_5 => void
          L0
           ALOAD 1
           BIPUSH 7
@@ -2321,7 +2322,7 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
          L1
           RETURN
 [6]_asm_procedureturnatmost_right_6 "rt turn" double => void
-      _procedurevariable:TURN => Object
+      _procedurevariable:TURN "turn" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 1
@@ -2361,7 +2362,7 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L5
           RETURN
-[7]_asm_procedureturnatmost_return_7 "" => void
+[7]_asm_procedureturnatmost_return_7 => void
          L0
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
@@ -2373,8 +2374,8 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
 
 procedure COHERE:[]{-T--}:
 [0]_asm_procedurecohere_call_0 "turn-towards average-heading-towards-flockmates max-cohere-turn"
-      _callreport:AVERAGE-HEADING-TOWARDS-FLOCKMATES
-      _observervariable:MAX-COHERE-TURN => Object
+      _callreport:AVERAGE-HEADING-TOWARDS-FLOCKMATES "average-heading-towards-flockmates"
+      _observervariable:MAX-COHERE-TURN "max-cohere-turn" => Object
          L0
           NEW org/nlogo/nvm/Activation
           DUP
@@ -2429,7 +2430,7 @@ procedure COHERE:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L5
           RETURN
-[1]_asm_procedurecohere_return_1 "" => void
+[1]_asm_procedurecohere_return_1 => void
          L0
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
@@ -2441,9 +2442,9 @@ procedure COHERE:[]{-T--}:
 
 procedure SEPARATE:[]{-T--}:
 [0]_asm_procedureseparate_call_0 "turn-away ([heading] of nearest-neighbor) max-separate-turn"
-      _turtlevariableof:HEADING Object => Object
-        _turtlevariable:NEAREST-NEIGHBOR => Object
-      _observervariable:MAX-SEPARATE-TURN => Object
+      _turtlevariableof:HEADING "of nearest-neighbor" Object => Object
+        _turtlevariable:NEAREST-NEIGHBOR "nearest-neighbor" => Object
+      _observervariable:MAX-SEPARATE-TURN "max-separate-turn" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
           TRYCATCHBLOCK L6 L7 L8 org/nlogo/api/AgentException
@@ -2495,7 +2496,7 @@ procedure SEPARATE:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.$common.thatAgentIsDead"
           ICONST_1
           ANEWARRAY java/lang/Object
@@ -2504,7 +2505,7 @@ procedure SEPARATE:[]{-T--}:
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
           AASTORE
-          INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -2609,7 +2610,7 @@ procedure SEPARATE:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L18
           RETURN
-[1]_asm_procedureseparate_return_1 "" => void
+[1]_asm_procedureseparate_return_1 => void
          L0
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
@@ -2622,11 +2623,12 @@ procedure SEPARATE:[]{-T--}:
 reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
 [0]_asm_procedureaverageflockmateheading_report_0 "report atan mean [sin heading] of flockmates
               mean [cos heading] of flockmates" Object => void
-      _atan double,double => double
-        _mean LogoList => double
-          _of
+      _atan "atan mean [sin heading] of flockmates
+              mean [cos heading] of flockmates" double,double => double
+        _mean "mean [sin heading] of flockmates" LogoList => double
+          _of "sin heading] of flockmates"
             _asm_procedureaverageflockmateheading_sin_1 "sin heading" double => double
-              _turtlevariabledouble:HEADING => double
+              _turtlevariabledouble:HEADING "heading" => double
                  L0
                   ALOAD 1
                   GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -2668,10 +2670,10 @@ reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
                  L3
                  FRAME SAME1 java/lang/Object
                   ARETURN
-        _mean LogoList => double
-          _of
+        _mean "mean [cos heading] of flockmates" LogoList => double
+          _of "cos heading] of flockmates"
             _asm_procedureaverageflockmateheading_cos_3 "cos heading" double => double
-              _turtlevariabledouble:HEADING => double
+              _turtlevariabledouble:HEADING "heading" => double
                  L0
                   ALOAD 1
                   GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -2749,9 +2751,9 @@ reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim.etc.$common.emptyList"
-          INVOKEINTERFACE org/nlogo/api/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L6
@@ -2774,7 +2776,7 @@ reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim._mean.cantFindMeanOfNonNumbers"
           ICONST_2
           ANEWARRAY java/lang/Object
@@ -2788,7 +2790,7 @@ reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           ALOAD 6
           INVOKESTATIC org/nlogo/api/TypeNames.name (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L9
@@ -2844,9 +2846,9 @@ reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim.etc.$common.emptyList"
-          INVOKEINTERFACE org/nlogo/api/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L13
@@ -2869,7 +2871,7 @@ reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim._mean.cantFindMeanOfNonNumbers"
           ICONST_2
           ANEWARRAY java/lang/Object
@@ -2883,7 +2885,7 @@ reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           ALOAD 6
           INVOKESTATIC org/nlogo/api/TypeNames.name (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L16
@@ -2919,9 +2921,9 @@ reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim.etc.atan.bothInputsCannotBeZero"
-          INVOKEINTERFACE org/nlogo/api/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L18
@@ -3006,7 +3008,7 @@ reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim._report.canOnlyUseInToReport"
           ICONST_1
           ANEWARRAY java/lang/Object
@@ -3014,7 +3016,7 @@ reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           ICONST_0
           LDC "REPORT"
           AASTORE
-          INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L27
@@ -3026,7 +3028,7 @@ reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim._report.mustImmediatelyBeUsedInToReport"
           ICONST_1
           ANEWARRAY java/lang/Object
@@ -3034,21 +3036,21 @@ reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           ICONST_0
           LDC "REPORT"
           AASTORE
-          INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L28
          FRAME SAME
           RETURN
-[1]_asm_procedureaverageflockmateheading_returnreport_5 "" => void
+[1]_asm_procedureaverageflockmateheading_returnreport_5 => void
          L0
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim._returnreport.reportNotCalledInReportProcedure"
-          INVOKEINTERFACE org/nlogo/api/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L1
@@ -3075,8 +3077,8 @@ procedure FLOCK:[]{-T--}:
          L1
           RETURN
 [1]_asm_procedureflock_if_1 "if any? flockmates" boolean => void
-      _any AgentSet => boolean
-        _turtlevariable:FLOCKMATES => Object
+      _any "any? flockmates" AgentSet => boolean
+        _turtlevariable:FLOCKMATES "flockmates" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
          L0
@@ -3162,10 +3164,10 @@ procedure FLOCK:[]{-T--}:
          L1
           RETURN
 [3]_asm_procedureflock_ifelse_3 "ifelse distance nearest-neighbor < minimum-separation" boolean => void
-      _lessthan double,Object => boolean
-        _distance Agent => double
-          _turtlevariable:NEAREST-NEIGHBOR => Object
-        _observervariable:MINIMUM-SEPARATION => Object
+      _lessthan "distance nearest-neighbor < minimum-separation" double,Object => boolean
+        _distance "distance nearest-neighbor" Agent => double
+          _turtlevariable:NEAREST-NEIGHBOR "nearest-neighbor" => Object
+        _observervariable:MINIMUM-SEPARATION "minimum-separation" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
          L0
@@ -3215,9 +3217,9 @@ procedure FLOCK:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink"
-          INVOKEINTERFACE org/nlogo/api/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L7
@@ -3231,7 +3233,7 @@ procedure FLOCK:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.$common.thatAgentIsDead"
           ICONST_1
           ANEWARRAY java/lang/Object
@@ -3240,7 +3242,7 @@ procedure FLOCK:[]{-T--}:
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
           AASTORE
-          INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L8
@@ -3284,7 +3286,7 @@ procedure FLOCK:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim._lessthan.cantUseLessthanOnDifferentArgs"
           ICONST_2
           ANEWARRAY java/lang/Object
@@ -3299,7 +3301,7 @@ procedure FLOCK:[]{-T--}:
           ALOAD 4
           INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L14
@@ -3336,7 +3338,7 @@ procedure FLOCK:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[5]_asm_procedureflock_goto_5 "" => void
+[5]_asm_procedureflock_goto_5 => void
          L0
           ALOAD 1
           BIPUSH 8
@@ -3399,7 +3401,7 @@ procedure FLOCK:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[9]_asm_procedureflock_return_9 "" => void
+[9]_asm_procedureflock_return_9 => void
          L0
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
@@ -3411,10 +3413,10 @@ procedure FLOCK:[]{-T--}:
 
 procedure TURN-TOWARDS:[NEW-HEADING MAX-TURN]{-T--}:
 [0]_asm_procedureturntowards_call_0 "turn-at-most (my-subtract-headings new-heading heading) max-turn"
-      _callreport:MY-SUBTRACT-HEADINGS
-        _procedurevariable:NEW-HEADING => Object
-        _turtlevariabledouble:HEADING => Double
-      _procedurevariable:MAX-TURN => Object
+      _callreport:MY-SUBTRACT-HEADINGS "my-subtract-headings new-heading heading"
+        _procedurevariable:NEW-HEADING "new-heading" => Object
+        _turtlevariabledouble:HEADING "heading" => Double
+      _procedurevariable:MAX-TURN "max-turn" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           NEW org/nlogo/nvm/Activation
@@ -3507,7 +3509,7 @@ procedure TURN-TOWARDS:[NEW-HEADING MAX-TURN]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L11
           RETURN
-[1]_asm_procedureturntowards_return_1 "" => void
+[1]_asm_procedureturntowards_return_1 => void
          L0
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
@@ -3519,10 +3521,10 @@ procedure TURN-TOWARDS:[NEW-HEADING MAX-TURN]{-T--}:
 
 procedure FIND-FLOCKMATES:[]{-T--}:
 [0]_asm_procedurefindflockmates_setturtlevariable_0 "set flockmates other turtles in-radius vision" Object => void
-      _other AgentSet => AgentSet
-        _inradius AgentSet,double => AgentSet
-          _turtles => AgentSet
-          _observervariable:VISION => Object
+      _other "other turtles in-radius vision" AgentSet => AgentSet
+        _inradius "turtles in-radius vision" AgentSet,double => AgentSet
+          _turtles "turtles" => AgentSet
+          _observervariable:VISION "vision" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           TRYCATCHBLOCK L2 L3 L4 org/nlogo/api/AgentException
          L5
@@ -3565,9 +3567,9 @@ procedure FIND-FLOCKMATES:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink"
-          INVOKEINTERFACE org/nlogo/api/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L9
@@ -3580,7 +3582,7 @@ procedure FIND-FLOCKMATES:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim.etc.$common.noNegativeRadius"
           ICONST_1
           ANEWARRAY java/lang/Object
@@ -3588,7 +3590,7 @@ procedure FIND-FLOCKMATES:[]{-T--}:
           ICONST_0
           LDC "IN-RADIUS"
           AASTORE
-          INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L10
@@ -3606,28 +3608,24 @@ procedure FIND-FLOCKMATES:[]{-T--}:
           NEW org/nlogo/agent/ArrayAgentSet
           DUP
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.type ()Ljava/lang/Class;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/core/AgentKind;
           ALOAD 5
           ALOAD 5
           INVOKEINTERFACE java/util/List.size ()I
           ANEWARRAY org/nlogo/agent/Agent
           INVOKEINTERFACE java/util/List.toArray ([Ljava/lang/Object;)[Ljava/lang/Object;
           CHECKCAST [Lorg/nlogo/agent/Agent;
-          ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurefindflockmates_setturtlevariable_0.world : Lorg/nlogo/agent/World;
-          INVOKESPECIAL org/nlogo/agent/ArrayAgentSet.<init> (Ljava/lang/Class;[Lorg/nlogo/agent/Agent;Lorg/nlogo/agent/World;)V
+          INVOKESPECIAL org/nlogo/agent/ArrayAgentSet.<init> (Lorg/nlogo/core/AgentKind;[Lorg/nlogo/agent/Agent;)V
          L11
           ASTORE 2
           NEW org/nlogo/agent/ArrayAgentSet
           DUP
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.type ()Ljava/lang/Class;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/core/AgentKind;
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.count ()I
           ICONST_0
-          ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurefindflockmates_setturtlevariable_0.world : Lorg/nlogo/agent/World;
-          INVOKESPECIAL org/nlogo/agent/ArrayAgentSet.<init> (Ljava/lang/Class;IZLorg/nlogo/agent/World;)V
+          INVOKESPECIAL org/nlogo/agent/ArrayAgentSet.<init> (Lorg/nlogo/core/AgentKind;IZ)V
           ASTORE 3
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.iterator ()Lorg/nlogo/agent/AgentSet$Iterator;
@@ -3681,7 +3679,7 @@ procedure FIND-FLOCKMATES:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L17
           RETURN
-[1]_asm_procedurefindflockmates_return_1 "" => void
+[1]_asm_procedurefindflockmates_return_1 => void
          L0
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V

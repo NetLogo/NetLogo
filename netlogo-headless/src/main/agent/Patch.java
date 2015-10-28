@@ -20,6 +20,8 @@ public strictfp class Patch
 
   public AgentKind kind() { return AgentKindJ.Patch(); }
 
+  public String shape() { return ""; }
+
   public static final int VAR_PXCOR = AgentVariableNumbers.VAR_PXCOR;
   public static final int VAR_PYCOR = AgentVariableNumbers.VAR_PYCOR;
   public static final int VAR_PCOLOR = AgentVariableNumbers.VAR_PCOLOR;

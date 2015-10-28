@@ -4,7 +4,7 @@ package org.nlogo.nvm
 
 import java.awt.image.BufferedImage
 import org.nlogo.{ api, agent }
-import org.nlogo.api.MersenneTwisterFast
+import org.nlogo.api.{ Activation => ApiActivation, MersenneTwisterFast }
 
 /**
  * workspace and nvmContext are public vals, even though that violates the org.nlogo.api
@@ -23,6 +23,9 @@ extends api.Context {
   def getDrawing: BufferedImage =
     workspace.getAndCreateDrawing()
 
+  def world: api.World =
+    workspace.world
+
   @throws(classOf[java.net.MalformedURLException])
   def attachCurrentDirectory(path: String): String =
     workspace.fileManager.attachPrefix(path)
@@ -31,5 +34,8 @@ extends api.Context {
     org.nlogo.agent.ImportPatchColors.doImport(
       image, workspace.world.asInstanceOf[agent.World], asNetLogoColors)
   }
+
+  def activation: ApiActivation =
+    nvmContext.activation
 
 }

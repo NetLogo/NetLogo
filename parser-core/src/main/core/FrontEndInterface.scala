@@ -4,28 +4,6 @@ package org.nlogo.core
 
 import org.nlogo.core.FrontEndInterface.{NoProcedures, ProceduresMap}
 
-trait FrontEndProcedure {
-  var agentClassString = "OTPL"
-  def procedureDeclaration: StructureDeclarations.Procedure
-  def name: String
-  def isReporter: Boolean
-  def displayName: String
-  def filename: String
-  def nameToken: Token
-  def argTokens: Seq[Token]
-  var args = Vector[String]()
-  var topLevel = false
-  def dump: String
-
-  def syntax: Syntax = {
-    val right = List.fill(argTokens.size)(Syntax.WildcardType)
-    if (isReporter)
-      Syntax.reporterSyntax(right = right, ret = Syntax.WildcardType)
-    else
-      Syntax.commandSyntax(right = right)
-  }
-}
-
 object FrontEndInterface {
   // use ListMap so procedures come out in the order they were defined (users expect errors in
   // earlier procedures to be reported first) - ST 6/10/04, 8/3/12
@@ -34,6 +12,18 @@ object FrontEndInterface {
   val NoProcedures: ProceduresMap = ListMap()
   type FrontEndResults = (Seq[ProcedureDefinition], StructureResults)
 }
+
+case class ProcedureSyntax(declarationKeyword: Token, identifier: Token, endKeyword: Token)
+case class CompilationOperand(
+  sources: Map[String, String],
+  extensionManager: ExtensionManager,
+  compilationEnvironment: CompilationEnvironment,
+  containingProgram: Program = Program.empty,
+  oldProcedures: ProceduresMap = NoProcedures,
+  subprogram: Boolean = true,
+  // displayName is only used by reporters in slider widgets.
+  // I would like to eliminate it, but not right now.
+  displayName: Option[String] = None)
 
 trait FrontEndInterface {
   def frontEnd(
@@ -44,5 +34,16 @@ trait FrontEndInterface {
         oldProcedures: ProceduresMap = NoProcedures,
         extensionManager: ExtensionManager = new DummyExtensionManager,
         compilationEnvironment: CompilationEnvironment = new DummyCompilationEnvironment)
-      : FrontEndInterface.FrontEndResults
+      : FrontEndInterface.FrontEndResults = {
+    frontEnd(CompilationOperand(Map("" -> source), extensionManager, compilationEnvironment, program, oldProcedures, subprogram, displayName))
+  }
+
+  def frontEnd(compilationOperand: CompilationOperand): FrontEndInterface.FrontEndResults
+
+  // matches procedure definitions to procedure syntax objects
+  // does not error on bad parse
+  def findProcedurePositions(source: String, dialect: Option[Dialect]): Map[String, ProcedureSyntax]
+
+  // lists the strings contained by the __includes list
+  def findIncludes(source: String): Seq[String]
 }

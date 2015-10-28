@@ -20,8 +20,8 @@ class TestClientInterface extends TestUsingWorkspace {
     val unparsedWidgets = getClientWidgets(model)
     val parsedWidgets = ModelReader.parseWidgets(unparsedWidgets).asScala.map(_.asScala.toList).toList
     val ci = new ClientInterface(parsedWidgets, unparsedWidgets.toList,
-                                 workspace.world.turtleShapeList.getShapes.asScala.toList,
-                                 workspace.world.linkShapeList.getShapes.asScala.toList,
+                                 workspace.world.turtleShapeList.shapes,
+                                 workspace.world.linkShapeList.shapes,
                                  workspace)
     assert(ci.toString === roundTripSerialization(ci).toString)
   }

@@ -6,7 +6,7 @@ import org.nlogo.core.CompilerException;
 import org.nlogo.api.CompilerServices;
 import org.nlogo.api.Dump;
 import org.nlogo.api.Editable;
-import org.nlogo.api.I18N;
+import org.nlogo.core.I18N;
 import org.nlogo.core.LogoList;
 import org.nlogo.api.Property;
 

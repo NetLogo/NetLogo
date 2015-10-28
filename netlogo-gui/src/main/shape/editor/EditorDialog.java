@@ -2,8 +2,8 @@
 
 package org.nlogo.shape.editor;
 
-import org.nlogo.api.I18N;
-import org.nlogo.api.Shape;
+import org.nlogo.core.I18N;
+import org.nlogo.core.Shape;
 import org.nlogo.shape.Circle;
 import org.nlogo.shape.Element;
 import org.nlogo.shape.Line;
@@ -265,7 +265,7 @@ strictfp class EditorDialog
     // recolorable
     List<Integer> colors =
         new ArrayList<Integer>
-            (org.nlogo.api.Color.getColorNamesArray().length);
+            (org.nlogo.api.Color.ColorNames().length);
     javax.swing.ButtonGroup colorGroup =
         new javax.swing.ButtonGroup();
     javax.swing.JToolBar colorGrid = new javax.swing.JToolBar();
@@ -273,7 +273,7 @@ strictfp class EditorDialog
     colorGrid.setLayout(new java.awt.GridLayout(4, 4));
 
     for (int icolor = 0;
-         icolor < org.nlogo.api.Color.getColorNamesArray().length;
+         icolor < org.nlogo.api.Color.ColorNames().length;
          icolor++) {
       String userstr =
           "Draw in " + org.nlogo.api.Color.getColorNameByIndex(icolor);
@@ -532,7 +532,7 @@ strictfp class EditorDialog
     getContentPane().add
         (javax.swing.Box.createVerticalStrut(borderWidth));
 
-    nameText.setText(shape.getName());
+    nameText.setText(shape.name());
     shapeRotatable = shape.isRotatable();
     rotatableButton.setSelected(shapeRotatable);
     for (int i = 0; i < previews.length; i++) {
@@ -543,7 +543,7 @@ strictfp class EditorDialog
     setLocation(x + 10, y + 10);
 
     setTitle("Shape");
-    setNameEditable(nameEditable);
+    name_$eqEditable(nameEditable);
 
     pack();
     getRootPane().setDefaultButton(done);
@@ -645,7 +645,7 @@ strictfp class EditorDialog
       return;
     }
 
-    String originalName = originalShape.getName();
+    String originalName = originalShape.name();
     // If this is an attempt to overwrite a shape, prompt for
     // permission to do it
     if (container.exists(name) && !name.equals(originalName)) {
@@ -658,7 +658,7 @@ strictfp class EditorDialog
     }
 
     newShape = shape;
-    newShape.setName(name);
+    newShape.name_$eq(name);
     newShape.setRotatable(shapeRotatable);
     newShape.markRecolorableElements(getColor(shape.getEditableColorIndex()),
         shape.getEditableColorIndex());
@@ -669,7 +669,7 @@ strictfp class EditorDialog
 
   private VectorShape getCurrentShape() {
     VectorShape currentShape = (VectorShape) shape.clone();
-    currentShape.setName(nameText.getText());
+    currentShape.name_$eq(nameText.getText());
     currentShape.setRotatable(shapeRotatable);
     currentShape.markRecolorableElements(getColor(shape.getEditableColorIndex()),
         shape.getEditableColorIndex());
@@ -713,7 +713,7 @@ strictfp class EditorDialog
   }
 
   // Makes the name (un)editable.  Name should be uneditable for default shape
-  private void setNameEditable(boolean editable) {
+  private void name_$eqEditable(boolean editable) {
     nameText.setEnabled(editable);
   }
 
@@ -739,7 +739,7 @@ strictfp class EditorDialog
             (shapeView.getSelectedElement(),
                 shape.getElements()
                     .indexOf(shapeView.getSelectedElement()));
-        shapeView.getSelectedElement().setColor(color);
+        shapeView.getSelectedElement().awtColor_$eq(color);
         shapeView.repaint();
       }
     }

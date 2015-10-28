@@ -3,9 +3,9 @@
 package org.nlogo.parse
 
 import org.nlogo.core,
-  core.{AstTransformer, CompilationEnvironment, DummyCompilationEnvironment, Femto,
-    ExtensionManager, DummyExtensionManager, FrontEndInterface, FrontEndProcedure,
-    Program, TokenizerInterface, ProcedureDefinition}
+  core.{AstTransformer, CompilationOperand, CompilationEnvironment, Dialect, DummyCompilationEnvironment, Femto,
+    ExtensionManager, DummyExtensionManager, NetLogoCore, FrontEndInterface, FrontEndProcedure,
+    Program, TokenizerInterface, ProcedureDefinition, ProcedureSyntax}
 
 object FrontEnd extends FrontEnd {
   val tokenizer: TokenizerInterface =
@@ -23,17 +23,9 @@ trait FrontEndMain {
 
   // entry points
 
-  def frontEnd(
-        source: String,
-        displayName: Option[String] = None,
-        program: Program = Program.empty(),
-        subprogram: Boolean = true,
-        oldProcedures: ProceduresMap = FrontEndInterface.NoProcedures,
-        extensionManager: ExtensionManager = new DummyExtensionManager,
-        compilationEnvironment: CompilationEnvironment = new DummyCompilationEnvironment())
-      : FrontEndResults = {
-    val structureResults = StructureParser.parseAll(
-      tokenizer, source, displayName, program, subprogram, oldProcedures, extensionManager, compilationEnvironment)
+  def frontEnd(compilationOperand: CompilationOperand): FrontEndResults = {
+    import compilationOperand.{ extensionManager, oldProcedures }
+    val structureResults = StructureParser.parseSources(tokenizer, compilationOperand)
     def parseProcedure(procedure: FrontEndProcedure): ProcedureDefinition = {
       val rawTokens = structureResults.procedureTokens(procedure.name)
       val usedNames =
@@ -53,7 +45,9 @@ trait FrontEndMain {
       }
       ExpressionParser(procedure, namedTokens)
     }
-    var topLevelDefs = structureResults.procedures.values.map(parseProcedure).toSeq
+    val newTopLevelProcedures = (structureResults.procedures -- oldProcedures.keys)
+
+    var topLevelDefs = newTopLevelProcedures.values.map(parseProcedure).toSeq
 
     topLevelDefs = transformers.foldLeft(topLevelDefs) {
       case (defs, transform) => defs.map(transform.visitProcedureDefinition)
@@ -80,5 +74,16 @@ trait FrontEndMain {
       new LetReducer,
       new CarefullyVisitor
     )
+  }
+
+  def findProcedurePositions(source: String, dialectOption: Option[Dialect]): Map[String, ProcedureSyntax] = {
+    val tokenMapper = dialectOption.getOrElse(NetLogoCore).tokenMapper
+    val tokens = tokenizer.tokenizeString(source).map(Namer.basicNamer(tokenMapper))
+    StructureParser.findProcedurePositions(tokens.toSeq)
+  }
+
+  def findIncludes(source: String): Seq[String] = {
+    val tokens = tokenizer.tokenizeString(source)
+    StructureParser.findIncludes(tokens)
   }
 }

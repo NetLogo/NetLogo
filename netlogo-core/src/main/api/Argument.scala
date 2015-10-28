@@ -2,7 +2,7 @@
 
 package org.nlogo.api
 
-import org.nlogo.core.LogoList
+import org.nlogo.core.{ LogoList, Token }
 
 /**
  * Interface provides access to arguments passed to the <code>perform</code> or <code>report</code>
@@ -157,4 +157,23 @@ trait Argument {
   @throws(classOf[LogoException])
   def getCommandTask: CommandTask
 
+  /**
+   * Returns the argument as a <code>org.nlogo.api.CommandTask</code>.
+   *
+   * @throws api.ExtensionException if the argument is not a <code>CommandTask</code>
+   * @throws api.LogoException      if a LogoException occurred while evaluating this argument
+   */
+  @throws(classOf[ExtensionException])
+  @throws(classOf[LogoException])
+  def getCode: java.util.List[Token]
+
+  /**
+   * Returns the argument as a <code>org.nlogo.api.Token</code>.
+   *
+   * @throws api.ExtensionException if the argument is not a <code>Token</code>
+   * @throws api.LogoException      if a LogoException occurred while evaluating this argument
+   */
+  @throws(classOf[ExtensionException])
+  @throws(classOf[LogoException])
+  def getSymbol: Token
 }

@@ -11,23 +11,20 @@ package org.nlogo.api
 
 // "class" not "trait" otherwise we won't get a static forwarder for Perspective.load() - ST 7/27/11
 
-abstract sealed class Perspective(val export: Int)
+abstract sealed class Perspective(val export: Int) {
+  def kind: Int = export
+}
 
 object Perspective {
   case object Observe extends Perspective(0)
-  case object Ride    extends Perspective(1)
-  case object Follow  extends Perspective(2)
-  case object Watch   extends Perspective(3)
-  private val perspectives = List(Observe, Ride, Follow, Watch)
-  def load(n: Int) = perspectives(n)
+  case class Ride(targetAgent: Agent) extends Perspective(1) with AgentFollowingPerspective {
+    def followDistance: Int = 0
+  }
+  case class Follow(targetAgent: Agent, followDistance: Int) extends Perspective(2) with AgentFollowingPerspective
+  case class Watch(targetAgent: Agent) extends Perspective(3)
 }
 
-object PerspectiveJ {
-  import Perspective._
-  // (I don't think) Java can access the inner objects without reflection, so we provide these
-  // convenience vals for use from the handful of Java clients we still have. - ST 7/11/11, 7/27/11
-  val OBSERVE = Observe
-  val RIDE = Ride
-  val FOLLOW = Follow
-  val WATCH = Watch
+trait AgentFollowingPerspective {
+  def targetAgent: Agent
+  def followDistance: Int
 }

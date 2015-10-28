@@ -5,7 +5,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.agent.PatchException;
 import org.nlogo.api.AgentException;
 import org.nlogo.api.Dump;
-import org.nlogo.api.I18N;
+import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.api.TypeNames;

@@ -2,7 +2,7 @@
 
 package org.nlogo.window;
 
-import org.nlogo.api.I18N;
+import org.nlogo.core.I18N;
 
 public strictfp final class VMCheck {
 

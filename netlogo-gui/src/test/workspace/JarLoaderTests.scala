@@ -185,14 +185,14 @@ class DummyClassManager extends ClassManager {
   def additionalJars: java.util.List[String] = null
   def clearAll(): Unit = methodsRun = methodsRun :+ "clearAll"
   def exportWorld: java.lang.StringBuilder = null
-  def importWorld(lines: java.util.List[Array[String]],reader: org.nlogo.core.ExtensionManager,handler: org.nlogo.api.ImportErrorHandler): Unit = methodsRun = methodsRun :+ "importWorld"
+  def importWorld(lines: java.util.List[Array[String]],reader: org.nlogo.api.ExtensionManager,handler: org.nlogo.api.ImportErrorHandler): Unit = methodsRun = methodsRun :+ "importWorld"
   def load(primManager: org.nlogo.api.PrimitiveManager): Unit = {
     primManager.addPrimitive("bar", barPrim)
     methodsRun = methodsRun :+ "load"
   }
-  def readExtensionObject(reader: org.nlogo.core.ExtensionManager,typeName: String,value: String): org.nlogo.core.ExtensionObject = null
-  def runOnce(em: org.nlogo.core.ExtensionManager): Unit = methodsRun = methodsRun :+ "runOnce"
-  def unload(em: org.nlogo.core.ExtensionManager): Unit = methodsRun = methodsRun :+ "unload"
+  def readExtensionObject(reader: org.nlogo.api.ExtensionManager,typeName: String,value: String): org.nlogo.core.ExtensionObject = null
+  def runOnce(em: org.nlogo.api.ExtensionManager): Unit = methodsRun = methodsRun :+ "runOnce"
+  def unload(em: org.nlogo.api.ExtensionManager): Unit = methodsRun = methodsRun :+ "unload"
 }
 
 class UninstantiableClassManager(foo: String, bar: Int) extends DummyClassManager

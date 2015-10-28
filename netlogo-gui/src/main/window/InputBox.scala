@@ -2,6 +2,7 @@
 
 package org.nlogo.window
 
+import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.agent.InputBoxConstraint
 import org.nlogo.editor.AbstractEditorArea
 import org.nlogo.api.Approximate.approximate
@@ -10,8 +11,7 @@ import org.nlogo.api.ModelReader.stripLines
 import org.nlogo.swing.ButtonPanel
 import org.nlogo.awt.Fonts.{platformFont, platformMonospacedFont}
 import org.nlogo.swing.Implicits._
-import org.nlogo.api.{Options, I18N, ValueConstraint, LogoException, CompilerServices, Dump, Editable}
-import org.nlogo.core.CompilerException
+import org.nlogo.api.{Options, ValueConstraint, LogoException, CompilerServices, Dump, Editable}
 import java.awt.{Color, Component, Dimension, Font, Frame, Graphics}
 import java.awt.event.{ActionListener, WindowEvent, WindowAdapter, FocusListener, FocusEvent, ActionEvent, KeyEvent}
 import javax.swing.text.EditorKit

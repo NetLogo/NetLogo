@@ -60,6 +60,10 @@ extends PlotPenInterface {
     points :+= PlotPoint(x, y, state.isDown, state.color)
   }
 
+  def plot(x: Double, y: Double, color: Int, isDown: Boolean) {
+    points :+= PlotPoint(x, y, isDown, color)
+  }
+
   override def clone: PlotPen = {
     val newPlotPen =
       new PlotPen(temporary, name, setupCode, updateCode, inLegend, defaultState)

@@ -13,7 +13,8 @@ import table.{DefaultTableCellRenderer, AbstractTableModel, TableCellEditor, Tab
 import org.nlogo.window.{ColorDialog, PlotWidget}
 import org.nlogo.plot.{Plot, PlotPen}
 import javax.swing.event.{ListSelectionEvent, ListSelectionListener}
-import org.nlogo.api.{I18N}
+
+import org.nlogo.core.I18N
 import org.nlogo.core.TokenType
 
 class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Colorizer[TokenType])
@@ -442,7 +443,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
 
 object ColorInfo {
   import org.nlogo.api.Color._
-  lazy val defaults = getColorNamesArray.map{name =>
+  lazy val defaults = ColorNames.map{name =>
     val rgb = getRGBByName(name)
     new ColorInfo(rgb, new Color(rgb), name)
   }

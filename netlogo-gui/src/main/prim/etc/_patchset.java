@@ -2,10 +2,11 @@
 
 package org.nlogo.prim.etc;
 
+import org.nlogo.core.AgentKindJ;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Patch;
 import org.nlogo.api.Dump;
-import org.nlogo.api.I18N;
+import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
 import org.nlogo.api.Syntax;
@@ -55,9 +56,8 @@ public final strictfp class _patchset
       }
     }
     return new org.nlogo.agent.ArrayAgentSet(
-        org.nlogo.agent.Patch.class,
-        resultSet.toArray(new org.nlogo.agent.Patch[resultSet.size()]),
-        world);
+        AgentKindJ.Patch(),
+        resultSet.toArray(new org.nlogo.agent.Patch[resultSet.size()]));
   }
 
   private void descendList(Context context, LogoList tempList, Set<Patch> result)

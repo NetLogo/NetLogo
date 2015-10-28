@@ -3,7 +3,7 @@
 package org.nlogo.headless
 
 import org.nlogo.plot.{PlotPoint, PlotPen}
-import org.nlogo.api.I18N
+import org.nlogo.core.I18N
 import scala.language.implicitConversions
 
 class TestPlotModels extends AbstractTestModels {

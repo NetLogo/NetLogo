@@ -4,7 +4,7 @@ package org.nlogo.workspace
 
 trait WorldLoaderInterface {
   def patchSize(patchSize: Double): Unit
-  def setDimensions(d: org.nlogo.api.WorldDimensions, patchSize: Double): Unit
+  def setDimensions(d: org.nlogo.core.WorldDimensions, patchSize: Double): Unit
   def fontSize(fontSize: Int): Unit
   def setSize(x: Int, y: Int): Unit
   def changeTopology(wrapX: Boolean, wrapY: Boolean): Unit

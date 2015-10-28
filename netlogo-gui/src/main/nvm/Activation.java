@@ -2,7 +2,7 @@
 
 package org.nlogo.nvm;
 
-public final strictfp class Activation {
+public final strictfp class Activation implements org.nlogo.api.Activation {
 
   public final Procedure procedure;
   public final Activation parent;
@@ -19,6 +19,16 @@ public final strictfp class Activation {
     this.returnAddress = returnAddress;
     int size = procedure.size();
     args = (size > 0) ? new Object[size] : NO_ARGS;
+  }
+
+  @Override
+  public Procedure procedure() {
+    return procedure;
+  }
+
+  @Override
+  public scala.Option<Activation> parent() {
+    return scala.Option.apply(parent);
   }
 
   public void setUpArgsForRunOrRunresult() {

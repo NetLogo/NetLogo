@@ -2,7 +2,7 @@
 
 package org.nlogo.window;
 
-import org.nlogo.api.I18N;
+import org.nlogo.core.I18N;
 import org.nlogo.shape.VectorShape;
 
 import javax.swing.BorderFactory;

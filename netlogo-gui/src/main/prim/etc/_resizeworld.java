@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.api.I18N;
+import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Command;
@@ -46,7 +46,7 @@ public final strictfp class _resizeworld
           (new org.nlogo.api.CommandRunnable() {
             public void run() {
               workspace.setDimensions
-                  (new org.nlogo.api.WorldDimensions(newMinX, newMaxX,
+                  (new org.nlogo.core.WorldDimensions(newMinX, newMaxX,
                       newMinY, newMaxY));
             }
           });

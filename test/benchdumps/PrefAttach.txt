@@ -8,7 +8,7 @@ link-breeds
 
 procedure GO:[]{O---}:
 [0]_asm_procedurego_ask_0 "ask links" AgentSet => void
-      _links => AgentSet
+      _links "links" => AgentSet
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_0.world : Lorg/nlogo/agent/World;
@@ -28,9 +28,9 @@ procedure GO:[]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"
-          INVOKEINTERFACE org/nlogo/api/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -44,9 +44,9 @@ procedure GO:[]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim.$common.onlyObserverCanAskAllPatches"
-          INVOKEINTERFACE org/nlogo/api/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L2
@@ -61,7 +61,7 @@ procedure GO:[]{O---}:
          L4
           RETURN
 [1]_asm_procedurego_setturtleorlinkvariable_1 "set color gray" Object => void
-      _constdouble:5.0 => Double
+      _constdouble:5.0 "gray" => Double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
@@ -94,7 +94,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[2]_asm_procedurego_done_2 "" => void
+[2]_asm_procedurego_done_2 => void
          L0
           ALOAD 1
           ICONST_1
@@ -102,7 +102,7 @@ procedure GO:[]{O---}:
          L1
           RETURN
 [3]_asm_procedurego_call_3 "make-node find-partner"
-      _callreport:FIND-PARTNER
+      _callreport:FIND-PARTNER "find-partner"
          L0
           NEW org/nlogo/nvm/Activation
           DUP
@@ -147,8 +147,8 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L3
           RETURN
-[4]_tick
-[5]_asm_procedurego_return_4 "" => void
+[4]_tick "tick"
+[5]_asm_procedurego_return_4 => void
          L0
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
@@ -160,7 +160,7 @@ procedure GO:[]{O---}:
 
 procedure BENCHMARK:[_repeatlocal:0]{O---}:
 [0]_asm_procedurebenchmark_randomseed_0 "random-seed 121862" double => void
-      _constdouble:121862.0 => double
+      _constdouble:121862.0 "121862" => double
          L0
           LDC 121862.0
          L1
@@ -208,7 +208,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[1]_resettimer
+[1]_resettimer "reset-timer"
 [2]_asm_procedurebenchmark_call_1 "setup"
          L0
           NEW org/nlogo/nvm/Activation
@@ -227,8 +227,8 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedurebenchmark_repeatlocal_2 "" double => void
-      _constdouble:3000.0 => double
+[3]_asm_procedurebenchmark_repeatlocal_2 double => void
+      _constdouble:3000.0 "3000" => double
          L0
           LDC 3000.0
          L1
@@ -267,7 +267,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[5]_asm_procedurebenchmark_repeatlocalinternal_4 "" => void
+[5]_asm_procedurebenchmark_repeatlocalinternal_4 => void
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -300,13 +300,13 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          FRAME SAME
           RETURN
 [6]_asm_procedurebenchmark_setobservervariable_5 "set result timer" Object => void
-      _timer => double
+      _timer "timer" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurebenchmark_setobservervariable_5.world : Lorg/nlogo/agent/World;
-          GETFIELD org/nlogo/agent/World.timer : Lorg/nlogo/agent/Timer;
-          INVOKEVIRTUAL org/nlogo/agent/Timer.read ()D
+          INVOKEVIRTUAL org/nlogo/agent/World.timer ()Lorg/nlogo/api/Timer;
+          INVOKEVIRTUAL org/nlogo/api/Timer.read ()D
          L4
           DSTORE 2
           NEW java/lang/Double
@@ -340,7 +340,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[7]_asm_procedurebenchmark_return_6 "" => void
+[7]_asm_procedurebenchmark_return_6 => void
          L0
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
@@ -351,7 +351,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           RETURN
 
 procedure MAKE-NODE:[OLD-NODE]{O---}:
-[0]_createorderedturtles:,+11
+[0]_createorderedturtles:,+11 "cro 1"
       _asm_proceduremakenode_constdouble_0 "1" => Double
            L0
             ALOAD 0
@@ -359,7 +359,7 @@ procedure MAKE-NODE:[OLD-NODE]{O---}:
            L1
             ARETURN
 [1]_asm_proceduremakenode_setturtleorlinkvariable_1 "set color red" Object => void
-      _constdouble:15.0 => Double
+      _constdouble:15.0 "red" => Double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
@@ -393,9 +393,9 @@ procedure MAKE-NODE:[OLD-NODE]{O---}:
          L6
           RETURN
 [2]_asm_proceduremakenode_if_2 "if old-node != nobody" boolean => void
-      _notequal Object,Object => boolean
-        _procedurevariable:OLD-NODE => Object
-        _nobody => Nobody$
+      _notequal "old-node != nobody" Object,Object => boolean
+        _procedurevariable:OLD-NODE "old-node" => Object
+        _nobody "nobody" => Nobody$
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -432,7 +432,7 @@ procedure MAKE-NODE:[OLD-NODE]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[3]_createlinkwith:null,+6
+[3]_createlinkwith:null,+6 "create-link-with old-node"
       _asm_proceduremakenode_procedurevariable_3 "old-node" => Object
            L0
             ALOAD 1
@@ -443,7 +443,7 @@ procedure MAKE-NODE:[OLD-NODE]{O---}:
            L1
             ARETURN
 [4]_asm_proceduremakenode_setturtleorlinkvariable_4 "set color green" Object => void
-      _constdouble:55.0 => Double
+      _constdouble:55.0 "green" => Double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
@@ -476,14 +476,14 @@ procedure MAKE-NODE:[OLD-NODE]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[5]_asm_proceduremakenode_done_5 "" => void
+[5]_asm_proceduremakenode_done_5 => void
          L0
           ALOAD 1
           ICONST_1
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[6]_moveto
+[6]_moveto "move-to old-node"
       _asm_proceduremakenode_procedurevariable_6 "old-node" => Object
            L0
             ALOAD 1
@@ -494,7 +494,7 @@ procedure MAKE-NODE:[OLD-NODE]{O---}:
            L1
             ARETURN
 [7]_asm_proceduremakenode_right_7 "rt random" double => void
-      _randomconst:360 => double
+      _randomconst:360 "random" => double
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
@@ -515,7 +515,7 @@ procedure MAKE-NODE:[OLD-NODE]{O---}:
          L2
           RETURN
 [8]_asm_proceduremakenode_fd_8 "fd 8" double => void
-      _constdouble:8.0 => double
+      _constdouble:8.0 "8" => double
          L0
           LDC 8.0
          L1
@@ -533,7 +533,7 @@ procedure MAKE-NODE:[OLD-NODE]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[9]_asm_proceduremakenode_fdinternal_9 "" => void
+[9]_asm_proceduremakenode_fdinternal_9 => void
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
          L6
@@ -619,14 +619,14 @@ procedure MAKE-NODE:[OLD-NODE]{O---}:
          L8
          FRAME CHOP 1
           RETURN
-[10]_asm_proceduremakenode_done_10 "" => void
+[10]_asm_proceduremakenode_done_10 => void
          L0
           ALOAD 1
           ICONST_1
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[11]_asm_proceduremakenode_return_11 "" => void
+[11]_asm_proceduremakenode_return_11 => void
          L0
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
@@ -637,8 +637,8 @@ procedure MAKE-NODE:[OLD-NODE]{O---}:
           RETURN
 
 procedure LAYOUT:[_repeatlocal:0]{OTPL}:
-[0]_asm_procedurelayout_repeatlocal_0 "" double => void
-      _constdouble:3.0 => double
+[0]_asm_procedurelayout_repeatlocal_0 double => void
+      _constdouble:3.0 "3" => double
          L0
           LDC 3.0
          L1
@@ -659,7 +659,7 @@ procedure LAYOUT:[_repeatlocal:0]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[1]_layoutspring
+[1]_layoutspring "layout-spring turtles links 0.5 1.0 0.4"
       _asm_procedurelayout_turtles_1 "turtles" => AgentSet
            L0
             ALOAD 0
@@ -692,8 +692,8 @@ procedure LAYOUT:[_repeatlocal:0]{OTPL}:
             GETFIELD org/nlogo/prim/_asm_procedurelayout_constdouble_5.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-[2]_display
-[3]_asm_procedurelayout_repeatlocalinternal_6 "" => void
+[2]_display "display"
+[3]_asm_procedurelayout_repeatlocalinternal_6 => void
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -725,7 +725,7 @@ procedure LAYOUT:[_repeatlocal:0]{OTPL}:
          L2
          FRAME SAME
           RETURN
-[4]_asm_procedurelayout_return_7 "" => void
+[4]_asm_procedurelayout_return_7 => void
          L0
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
@@ -736,9 +736,9 @@ procedure LAYOUT:[_repeatlocal:0]{OTPL}:
           RETURN
 
 procedure SETUP:[]{O---}:
-[0]_clearall
-[1]_resetticks
-[2]_setdefaultshape
+[0]_clearall "ca"
+[1]_resetticks "reset-ticks"
+[2]_setdefaultshape "set-default-shape turtles "circle""
       _asm_proceduresetup_turtles_0 "turtles" => AgentSet
            L0
             ALOAD 0
@@ -752,7 +752,7 @@ procedure SETUP:[]{O---}:
            L1
             ARETURN
 [3]_asm_proceduresetup_call_2 "make-node nobody"
-      _nobody => Nobody$
+      _nobody "nobody" => Nobody$
          L0
           NEW org/nlogo/nvm/Activation
           DUP
@@ -778,8 +778,8 @@ procedure SETUP:[]{O---}:
          L3
           RETURN
 [4]_asm_proceduresetup_call_3 "make-node turtle 0"
-      _turtle double => Object
-        _constdouble:0.0 => double
+      _turtle "turtle 0" double => Object
+        _constdouble:0.0 "0" => double
          L0
           NEW org/nlogo/nvm/Activation
           DUP
@@ -844,7 +844,7 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[5]_asm_proceduresetup_return_4 "" => void
+[5]_asm_proceduresetup_return_4 => void
          L0
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
@@ -855,12 +855,12 @@ procedure SETUP:[]{O---}:
           RETURN
 
 reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
-[0]_asm_procedurefindpartner_setprocedurevariable_0 "" Object => void
-      _randomfloat double => double
-        _sum LogoList => double
-          _of
+[0]_asm_procedurefindpartner_setprocedurevariable_0 Object => void
+      _randomfloat "random-float sum [count link-neighbors] of turtles" double => double
+        _sum "sum [count link-neighbors] of turtles" LogoList => double
+          _of "count link-neighbors] of turtles"
             _asm_procedurefindpartner_count_1 "count link-neighbors" AgentSet => double
-              _linkneighbors:null => AgentSet
+              _linkneighbors:null "link-neighbors" => AgentSet
                  L0
                   ALOAD 0
                   GETFIELD org/nlogo/prim/_asm_procedurefindpartner_count_1.kept2_breedName : Ljava/lang/String;
@@ -992,8 +992,8 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L9
           RETURN
-[1]_asm_procedurefindpartner_setprocedurevariable_3 "" Object => void
-      _nobody => Nobody$
+[1]_asm_procedurefindpartner_setprocedurevariable_3 Object => void
+      _nobody "nobody" => Nobody$
          L0
           GETSTATIC org/nlogo/core/Nobody$.MODULE$ : Lorg/nlogo/core/Nobody$;
          L1
@@ -1010,7 +1010,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
          L2
           RETURN
 [2]_asm_procedurefindpartner_ask_4 "ask turtles" AgentSet => void
-      _turtles => AgentSet
+      _turtles "turtles" => AgentSet
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurefindpartner_ask_4.world : Lorg/nlogo/agent/World;
@@ -1030,9 +1030,9 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"
-          INVOKEINTERFACE org/nlogo/api/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -1046,9 +1046,9 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim.$common.onlyObserverCanAskAllPatches"
-          INVOKEINTERFACE org/nlogo/api/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L2
@@ -1062,9 +1062,9 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[3]_let
+[3]_let "let nc count link-neighbors"
       _asm_procedurefindpartner_count_5 "count link-neighbors" AgentSet => double
-        _linkneighbors:null => AgentSet
+        _linkneighbors:null "link-neighbors" => AgentSet
            L0
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_procedurefindpartner_count_5.kept2_breedName : Ljava/lang/String;
@@ -1108,9 +1108,9 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
 [4]_asm_procedurefindpartner_if_6 "if partner = nobody" boolean => void
-      _equal Object,Object => boolean
-        _procedurevariable:PARTNER => Object
-        _nobody => Nobody$
+      _equal "partner = nobody" Object,Object => boolean
+        _procedurevariable:PARTNER "partner" => Object
+        _nobody "nobody" => Nobody$
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1141,9 +1141,9 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
          L6
           RETURN
 [5]_asm_procedurefindpartner_ifelse_7 "ifelse nc > total" boolean => void
-      _greaterthan Object,Object => boolean
-        _letvariable(NC) => Object
-        _procedurevariable:TOTAL => Object
+      _greaterthan "nc > total" Object,Object => boolean
+        _letvariable(NC) "nc" => Object
+        _procedurevariable:TOTAL "total" => Object
          L0
           ALOAD 1
           ALOAD 0
@@ -1239,7 +1239,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim._greaterthan.cannotCompareParameters"
           ICONST_2
           ANEWARRAY java/lang/Object
@@ -1253,7 +1253,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           ALOAD 3
           INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L6
@@ -1273,7 +1273,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
          L15
           RETURN
 [6]_asm_procedurefindpartner_setprocedurevariable_8 "set partner self" Object => void
-      _self => Agent
+      _self "self" => Agent
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -1290,7 +1290,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[7]_asm_procedurefindpartner_goto_9 "" => void
+[7]_asm_procedurefindpartner_goto_9 => void
          L0
           ALOAD 1
           BIPUSH 9
@@ -1298,9 +1298,9 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
          L1
           RETURN
 [8]_asm_procedurefindpartner_setprocedurevariable_10 "set total total - nc" Object => void
-      _minus double,double => double
-        _procedurevariable:TOTAL => Object
-        _letvariable(NC) => Object
+      _minus "total - nc" double,double => double
+        _procedurevariable:TOTAL "total" => Object
+        _letvariable(NC) "nc" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           TRYCATCHBLOCK L2 L3 L3 java/lang/ClassCastException
          L4
@@ -1378,7 +1378,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L10
           RETURN
-[9]_asm_procedurefindpartner_done_11 "" => void
+[9]_asm_procedurefindpartner_done_11 => void
          L0
           ALOAD 1
           ICONST_1
@@ -1386,7 +1386,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
          L1
           RETURN
 [10]_asm_procedurefindpartner_report_12 "report partner" Object => void
-      _procedurevariable:PARTNER => Object
+      _procedurevariable:PARTNER "partner" => Object
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1423,7 +1423,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim._report.canOnlyUseInToReport"
           ICONST_1
           ANEWARRAY java/lang/Object
@@ -1431,7 +1431,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           ICONST_0
           LDC "REPORT"
           AASTORE
-          INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -1443,7 +1443,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim._report.mustImmediatelyBeUsedInToReport"
           ICONST_1
           ANEWARRAY java/lang/Object
@@ -1451,21 +1451,21 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           ICONST_0
           LDC "REPORT"
           AASTORE
-          INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L4
          FRAME SAME
           RETURN
-[11]_asm_procedurefindpartner_returnreport_13 "" => void
+[11]_asm_procedurefindpartner_returnreport_13 => void
          L0
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim._returnreport.reportNotCalledInReportProcedure"
-          INVOKEINTERFACE org/nlogo/api/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L1

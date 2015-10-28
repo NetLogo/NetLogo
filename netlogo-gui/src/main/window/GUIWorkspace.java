@@ -10,9 +10,13 @@ import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.BooleanConstraint;
 import org.nlogo.agent.Observer;
 import org.nlogo.agent.SliderConstraint;
-import org.nlogo.api.CommandRunnable;
+import org.nlogo.core.ShapeParser;
+import org.nlogo.core.AgentKind;
+import org.nlogo.core.AgentKindJ;
 import org.nlogo.core.CompilerException;
-import org.nlogo.api.I18N;
+import org.nlogo.core.I18N;
+import org.nlogo.api.AgentFollowingPerspective;
+import org.nlogo.api.CommandRunnable;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.ModelSectionJ;
 import org.nlogo.api.ModelTypeJ;
@@ -21,11 +25,13 @@ import org.nlogo.api.PreviewCommands$;
 import org.nlogo.api.RendererInterface;
 import org.nlogo.api.ReporterRunnable;
 import org.nlogo.api.SimpleJobOwner;
+import org.nlogo.shape.ShapeConverter;
 import org.nlogo.log.Logger;
 import org.nlogo.nvm.Procedure;
 import org.nlogo.nvm.Workspace;
 
 import java.util.HashMap;
+import java.util.ArrayList;
 
 public abstract strictfp class GUIWorkspace // can't be both abstract and strictfp
     extends org.nlogo.workspace.AbstractWorkspaceScala
@@ -322,7 +328,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     return world.patchSize();
   }
 
-  public void setDimensions(final org.nlogo.api.WorldDimensions d) {
+  public void setDimensions(final org.nlogo.core.WorldDimensions d) {
     Runnable runner =
         new Runnable() {
           public void run() {
@@ -342,7 +348,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     }
   }
 
-  public void setDimensions(final org.nlogo.api.WorldDimensions d, final double patchSize) {
+  public void setDimensions(final org.nlogo.core.WorldDimensions d, final double patchSize) {
     Runnable runner =
         new Runnable() {
           public void run() {
@@ -482,8 +488,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       if (glView.displayOn()) {
         view.thaw();
       }
-      if ((world.observer().perspective() != PerspectiveJ.FOLLOW()) &&
-          (world.observer().perspective() != PerspectiveJ.RIDE())) {
+      if (! (world.observer().perspective() instanceof AgentFollowingPerspective)) {
         world.observer().home();
       }
       viewWidget.setVisible(true);
@@ -712,7 +717,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   }
 
   // for notification of a changed shape
-  public void shapeChanged(org.nlogo.api.Shape shape) {
+  public void shapeChanged(org.nlogo.core.Shape shape) {
     viewManager.shapeChanged(shape);
   }
 
@@ -732,7 +737,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     }
 
     try {
-      evaluateCommands(new SimpleJobOwner("startup", world.mainRNG, Observer.class),
+      evaluateCommands(new SimpleJobOwner("startup", world.mainRNG(), AgentKindJ.Observer()),
           "without-interruption [ startup ]", false);
     } catch (CompilerException error) {
       org.nlogo.util.Exceptions.ignore(error);
@@ -794,6 +799,10 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     view.renderer.trailDrawer().readImage(is);
   }
 
+  public void readImage(java.awt.image.BufferedImage image) throws java.io.IOException {
+    view.renderer.trailDrawer().readImage(image);
+  }
+
   public void rescaleDrawing() {
     view.renderer.trailDrawer().rescaleDrawing();
   }
@@ -831,7 +840,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
         agents == null) {
       JobWidget widget = (JobWidget) owner;
       if (widget.useAgentClass()) {
-        agents = world.agentClassToAgentSet(widget.agentClass());
+        agents = world.agentKindToAgentSet(widget.kind());
       }
     }
     if (owner.ownsPrimaryJobs()) {
@@ -928,9 +937,9 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
 
   public abstract void closeAgentMonitors();
 
-  public abstract void inspectAgent(Class<? extends Agent> agentClass, org.nlogo.agent.Agent agent, double radius);
+  public abstract void inspectAgent(AgentKind agentClass, org.nlogo.agent.Agent agent, double radius);
 
-  public void inspectAgent(Class<? extends Agent> agentClass) {
+  public void inspectAgent(AgentKind agentClass) {
     inspectAgent(agentClass, null, (world.worldWidth() - 1) / 2);
   }
 
@@ -1295,12 +1304,20 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       getHubNetManager().load(e.lines, e.version);
     }
     if (e.section == ModelSectionJ.SHAPES()) {
-      world.turtleShapeList().replaceShapes
-          (org.nlogo.shape.VectorShape.parseShapes(e.lines, e.version));
+      ArrayList<org.nlogo.core.Shape> shapes = new ArrayList<org.nlogo.core.Shape>();
+      scala.collection.Iterator<? extends org.nlogo.core.Shape.VectorShape> shapeIterator = ShapeParser.parseVectorShapes(e.lines).iterator();
+      while (shapeIterator.hasNext()) {
+        shapes.add(ShapeConverter.baseVectorShapeToVectorShape(shapeIterator.next()));
+      }
+      world.turtleShapeList().replaceShapes(shapes);
     }
     if (e.section == ModelSectionJ.LINK_SHAPES()) {
-      world.linkShapeList().replaceShapes
-          (org.nlogo.shape.LinkShape.parseShapes(e.lines, e.version));
+      ArrayList<org.nlogo.core.Shape> shapes = new ArrayList<org.nlogo.core.Shape>();
+      scala.collection.Iterator<? extends org.nlogo.core.Shape.LinkShape> shapeIterator = ShapeParser.parseLinkShapes(e.lines).iterator();
+      while (shapeIterator.hasNext()) {
+        shapes.add(ShapeConverter.baseLinkShapeToLinkShape(shapeIterator.next()));
+      }
+      world.linkShapeList().replaceShapes(shapes);
     }
   }
 

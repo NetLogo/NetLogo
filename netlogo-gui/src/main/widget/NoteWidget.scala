@@ -2,7 +2,8 @@
 
 package org.nlogo.widget
 
-import org.nlogo.api.{Editable, I18N, ModelReader}
+import org.nlogo.api.{Editable, ModelReader}
+import org.nlogo.core.I18N
 import org.nlogo.window.{InterfaceColors, SingleErrorWidget,Widget}
 import java.awt.{Font, Color, FontMetrics, Graphics, Dimension, Rectangle}
 

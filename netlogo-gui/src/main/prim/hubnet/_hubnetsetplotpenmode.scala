@@ -2,7 +2,8 @@
 
 package org.nlogo.prim.hubnet
 
-import org.nlogo.api.{ CommandRunnable, PlotPenInterface, Syntax }
+import org.nlogo.api.{ CommandRunnable, Syntax }
+import org.nlogo.core.PlotPenInterface
 import org.nlogo.nvm.{ Command, Context, EngineException }
 
 class _hubnetsetplotpenmode extends Command {

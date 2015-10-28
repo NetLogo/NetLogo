@@ -1,8 +1,7 @@
 import org.scalajs.sbtplugin.cross.{ CrossProject, CrossType }
 import org.scalastyle.sbt.ScalastylePlugin.scalastyleTarget
 import ModelIndex.modelsDirectory
-import Extensions.extensionRoot
-
+import Extensions.{ excludedExtensions, extensionRoot }
 
 lazy val root =
    project.in(file(".")).
@@ -66,6 +65,7 @@ lazy val netlogo = project.in(file("netlogo-gui"))
         Seq()),
     unmanagedSourceDirectories in Test      += baseDirectory.value / "src" / "tools",
     unmanagedResourceDirectories in Compile += baseDirectory.value / "resources",
+    unmanagedResourceDirectories in Compile ++= (unmanagedResourceDirectories in Compile in sharedResources).value,
     mainClass in (Compile, run)        := Some("org.nlogo.app.App"),
     mainClass in (Compile, packageBin) := Some("org.nlogo.app.App"),
     sourceGenerators in Compile += EventsGenerator.task.taskValue,
@@ -102,11 +102,13 @@ lazy val netlogo = project.in(file("netlogo-gui"))
       (excludeFilter in unmanagedSources in Compile).value ||
       new SimpleFileFilter({ f =>
         f.getParentFile.getPath.contains((file("netlogo-core") / "src" / "main").getPath) &&
-          (baseDirectory.value / "src" / "main" / "api" / f.getName).exists
+          (baseDirectory.value / "src" / "main" / f.getParentFile.getName / f.getName).exists
       })
     },
     // includes all classes from parserJVM in the finished jar
     products in Compile in packageBin ++= (products in Compile in parserJVM).value,
+    mappings in Compile in packageBin ~= { mappings =>
+      mappings.filterNot(t => t._2 == "version.txt" && t._1.getPath.contains("parser-jvm")) },
     all <<= (baseDirectory, streams) map { (base, s) =>
       s.log.info("making resources/system/dict.txt and docs/dict folder")
       IO.delete(base / "docs" / "dict")
@@ -292,7 +294,8 @@ lazy val headless = (project in file ("netlogo-headless")).
     mappings in (Compile, packageSrc) ++= mappings.in(parserJVM, Compile, packageSrc).value,
     unmanagedSourceDirectories in Compile += file(".").getAbsoluteFile / "netlogo-core" / "src" / "main",
     unmanagedResourceDirectories in Compile += (baseDirectory in parserJVM).value / "resources" / "main",
-    unmanagedResourceDirectories in Test += baseDirectory.value / "resources" / "test"
+    unmanagedResourceDirectories in Test += baseDirectory.value / "resources" / "test",
+    excludedExtensions := Seq("arduino", "bitmap", "gis", "gogo", "nw", "palette", "sound")
   )
 
 lazy val netlogoVersion = taskKey[String]("from api.Version")

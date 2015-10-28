@@ -3,6 +3,7 @@
 package org.nlogo.hubnet.server
 
 import java.io.{ Serializable => JSerializable , InterruptedIOException, IOException}
+import org.nlogo.core.AgentKind
 import org.nlogo.workspace.AbstractWorkspaceScala
 import org.nlogo.hubnet.connection.MessageEnvelope.MessageEnvelope
 import org.nlogo.plot.Plot
@@ -241,8 +242,8 @@ class ConnectionManager(val connection: ConnectionInterface,
     val widgetDescriptions = connection.getClientInterface
     val widgets = ModelReader.parseWidgets(widgetDescriptions).asScala.toList.map(_.asScala.toList).toList
     val clientInterfaceSpec = new ClientInterface(widgets, widgetDescriptions.toList,
-      world.turtleShapeList.getShapes.asScala,
-      world.linkShapeList.getShapes.asScala, workspace)
+      world.turtleShapeList.shapes,
+      world.linkShapeList.shapes, workspace)
     clientInterfaceSpec
   }
 
@@ -361,22 +362,22 @@ class ConnectionManager(val connection: ConnectionInterface,
   }
 
   /// view stuff
-  def sendOverrideList (client:String, agentClass: Class[_ <: org.nlogo.api.Agent],
+  def sendOverrideList (client:String, agentKind: AgentKind,
                                  varName: String, overrides:Map[java.lang.Long, AnyRef]) = {
-    sendUserMessage(client, new OverrideMessage(new SendOverride(agentClass, varName, overrides), false))
+    sendUserMessage(client, new OverrideMessage(new SendOverride(agentKind, varName, overrides), false))
   }
 
-  def clearOverride (client:String, agentClass: Class[_ <: org.nlogo.api.Agent],
+  def clearOverride (client:String, agentKind: AgentKind,
                               varName:String, overrides:Seq[java.lang.Long]) = {
-    sendUserMessage(client, new OverrideMessage(new ClearOverride(agentClass, varName, overrides), true))
+    sendUserMessage(client, new OverrideMessage(new ClearOverride(agentKind, varName, overrides), true))
   }
 
   def clearOverrideLists(client:String) { sendUserMessage(client, ClearOverrideMessage) }
 
-  def sendAgentPerspective(client:String, perspective:Int, agentClass: Class[_ <: org.nlogo.api.Agent],
+  def sendAgentPerspective(client:String, perspective:Int, agentKind: AgentKind,
                                     id: Long, radius: Double, serverMode: Boolean) {
     sendUserMessage(client, new AgentPerspectiveMessage(
-      new AgentPerspective(agentClass, id, perspective, radius, serverMode).toByteArray))
+      new AgentPerspective(agentKind, id, perspective, radius, serverMode).toByteArray))
   }
 
   private var lastPatches: AgentSet = null

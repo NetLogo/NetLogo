@@ -102,7 +102,11 @@ object I18N {
 
   lazy val errors = new BundleKind("Errors")
 
+  lazy val gui = new BundleKind("GUI_Strings")
+
   // for easy use from Java
   def errorsJ: I18NJava = errors
+
+  def guiJ = gui
 
 }

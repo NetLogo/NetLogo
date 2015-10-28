@@ -3,11 +3,12 @@
 package org.nlogo.app
 
 
+import org.nlogo.core.AgentKind
 import org.nlogo.agent.{Agent, Link, Observer, Patch, Turtle}
 
 import scala.collection.JavaConverters._
 
-class AgentMonitorWindow(agentClass: Class[_ <: Agent], _agent: Agent, radius: Double,
+class AgentMonitorWindow(agentKind: AgentKind, _agent: Agent, radius: Double,
                          manager: AgentMonitorManager, parent: java.awt.Frame)
 // JWindow not JFrame so we can float on top of the App window - ev 1/7/09
 extends javax.swing.JWindow(parent)
@@ -18,13 +19,11 @@ with org.nlogo.window.Events.LoadBeginEvent.Handler
 {
 
   private val monitor = {
-    val O = classOf[Observer]; val T = classOf[Turtle]
-    val P = classOf[Patch];    val L = classOf[Link]
-    agentClass match {
-      case O => new ObserverMonitor(this)
-      case T => new TurtleMonitor(this)
-      case P => new PatchMonitor(this)
-      case L => new LinkMonitor(this)
+    agentKind match {
+      case AgentKind.Observer => new ObserverMonitor(this)
+      case AgentKind.Turtle   => new TurtleMonitor(this)
+      case AgentKind.Patch    => new PatchMonitor(this)
+      case AgentKind.Link     => new LinkMonitor(this)
     }
   }
 
@@ -102,22 +101,20 @@ with org.nlogo.window.Events.LoadBeginEvent.Handler
   }
 
   def title = {
-    val O = classOf[Observer]; val T = classOf[Turtle]
-    val P = classOf[Patch];    val L = classOf[Link]
-    monitor.agentClass match {
-      case O => "Globals"
-      case T if agent == null => "(no turtle)"
-      case T if agent.id == -1 => lastAliveTitle + " (dead)"
-      case T =>
+    monitor.agentKind match {
+      case AgentKind.Observer => "Globals"
+      case AgentKind.Turtle if agent == null => "(no turtle)"
+      case AgentKind.Turtle if agent.id == -1 => lastAliveTitle + " (dead)"
+      case AgentKind.Turtle =>
         lastAliveTitle = agent.toString
         lastAliveTitle
-      case L if agent == null => "(no link)"
-      case L if agent.id == -1 => lastAliveTitle + " (dead)"
-      case L =>
+      case AgentKind.Link if agent == null => "(no link)"
+      case AgentKind.Link if agent.id == -1 => lastAliveTitle + " (dead)"
+      case AgentKind.Link =>
         lastAliveTitle = agent.toString
         lastAliveTitle
-      case P if agent == null => "(no patch)"
-      case P => agent.toString
+      case AgentKind.Patch if agent == null => "(no patch)"
+      case AgentKind.Patch => agent.toString
     }
   }
 
@@ -138,7 +135,7 @@ with org.nlogo.window.Events.LoadBeginEvent.Handler
 
   class ObserverMonitor(window: javax.swing.JWindow)
   extends AgentMonitor(manager.workspace, window) {
-    override def agentClass = classOf[Observer]
+    override def agentKind = AgentKind.Observer
     override def repaintPrompt() { }
     override def vars = {
       val allGlobals = workspace.world.program.globals
@@ -151,7 +148,7 @@ with org.nlogo.window.Events.LoadBeginEvent.Handler
 
   class TurtleMonitor(window: javax.swing.JWindow)
   extends AgentMonitor(manager.workspace, window){
-    override def agentClass = classOf[Turtle]
+    override def agentKind = AgentKind.Turtle
     override def repaintPrompt() { }
     override def vars = {
       val turtleVars = workspace.world.program.turtlesOwn
@@ -167,14 +164,14 @@ with org.nlogo.window.Events.LoadBeginEvent.Handler
 
   class PatchMonitor(window: javax.swing.JWindow)
   extends AgentMonitor(manager.workspace, window) {
-    override def agentClass = classOf[Patch]
+    override def agentKind = AgentKind.Patch
     override def repaintPrompt() { }
     override def vars = workspace.world.program.patchesOwn.asJava
   }
 
   class LinkMonitor(window: javax.swing.JWindow)
   extends AgentMonitor(manager.workspace, window) {
-    override def agentClass = classOf[Link]
+    override def agentKind = AgentKind.Link
     override def repaintPrompt() { }
     override def vars = {
       val linkVars = workspace.world.program.linksOwn

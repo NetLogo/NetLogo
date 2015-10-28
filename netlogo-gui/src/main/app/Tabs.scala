@@ -6,7 +6,7 @@ import org.nlogo.swing.Implicits._
 import org.nlogo.window.{EditDialogFactoryInterface, GUIWorkspace}
 import org.nlogo.window.Events._
 import org.nlogo.swing.RichAction
-import org.nlogo.api.I18N
+import org.nlogo.core.I18N
 
 class Tabs(val workspace: GUIWorkspace,
            monitorManager: AgentMonitorManager,

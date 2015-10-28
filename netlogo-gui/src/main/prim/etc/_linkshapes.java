@@ -2,13 +2,16 @@
 
 package org.nlogo.prim.etc;
 
+import java.util.List;
+
+import org.nlogo.core.LogoList$;
+import org.nlogo.core.Shape;
 import org.nlogo.api.LogoListBuilder;
-import org.nlogo.api.Shape;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 
-import java.util.List;
+import scala.collection.Iterator;
 
 public final strictfp class _linkshapes
     extends Reporter {
@@ -19,11 +22,11 @@ public final strictfp class _linkshapes
 
   @Override
   public Object report(Context context) {
-    List<Shape> shapes = world.linkShapeList().getShapes();
-    LogoListBuilder result = new LogoListBuilder();
-    for (Shape shape : shapes) {
-      result.add(shape.getName());
+    Iterator<Shape> shapes = world.linkShapeList().shapes().iterator();
+    LogoListBuilder b = new LogoListBuilder();
+    while (shapes.hasNext()) {
+      b.add(shapes.next().name());
     }
-    return result.toLogoList();
+    return b.toLogoList();
   }
 }

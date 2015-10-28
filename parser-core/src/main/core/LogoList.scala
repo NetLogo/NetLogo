@@ -14,7 +14,7 @@ object LogoList {
     import collection.JavaConverters._
     fromIterator(objs.iterator.asScala)
   }
-  def fromIterator(it: scala.Iterator[AnyRef]) =
+  def fromIterator(it: scala.Iterator[_ <: AnyRef]) =
     new LogoList(it.toVector)
   def fromVector(v: Vector[AnyRef]) =
     new LogoList(v)

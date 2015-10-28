@@ -11,6 +11,7 @@ import org.nlogo.api.Turtle3D;
 import org.nlogo.api.ViewSettings;
 import org.nlogo.api.World;
 import org.nlogo.api.World3D;
+import org.nlogo.api.WorldWithWorldRenderable;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
@@ -19,7 +20,7 @@ import java.util.List;
 
 public class Renderer3D
     extends org.nlogo.gl.render.Renderer {
-  public Renderer3D(World world,
+  public Renderer3D(WorldWithWorldRenderable world,
                     ViewSettings graphicsSettings,
                     DrawingInterface drawing,
                     GLViewSettings glSettings) {

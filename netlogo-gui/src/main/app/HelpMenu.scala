@@ -5,7 +5,8 @@ package org.nlogo.app
 import org.nlogo.editor.Colorizer
 import org.nlogo.editor.Actions
 import org.nlogo.swing.BrowserLauncher
-import org.nlogo.api.{I18N, Version}
+import org.nlogo.api.{ Version}
+import org.nlogo.core.I18N
 
 // note that multiple instances of this class may exist as there are now multiple frames that each
 // have their own menu bar and menus - ev 8/25/05

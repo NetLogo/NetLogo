@@ -2,17 +2,16 @@
 
 package org.nlogo.lite
 
+import org.nlogo.core.{ AgentKind, Femto }
 import org.nlogo.agent.{ Agent, World }
-import org.nlogo.api.{ AggregateManagerInterface, RendererInterface }
+import org.nlogo.api.{ AggregateManagerInterface, NetLogoThreeDDialect, NetLogoLegacyDialect, RendererInterface, Version }
 import org.nlogo.nvm.CompilerInterface
-import org.nlogo.util.Femto
 import org.nlogo.window.{ GUIWorkspace, NetLogoListenerManager, UpdateManager }
 import org.nlogo.workspace.BufferedReaderImporter
 
 class LiteWorkspace(appletPanel: AppletPanel, isApplet: Boolean, world: World, frame: java.awt.Frame, listenerManager: NetLogoListenerManager)
 extends GUIWorkspace(world, GUIWorkspace.KioskLevel.MODERATE, frame, frame, null, null, listenerManager) {
-  val compiler = Femto.scalaSingleton(
-    classOf[CompilerInterface], "org.nlogo.compiler.Compiler")
+  val compiler = Femto.get[CompilerInterface]("org.nlogo.compiler.Compiler", if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect)
   // lazy to avoid initialization order snafu - ST 3/1/11
   lazy val updateManager = new UpdateManager() {
     override def defaultFrameRate = LiteWorkspace.this.frameRate
@@ -20,8 +19,8 @@ extends GUIWorkspace(world, GUIWorkspace.KioskLevel.MODERATE, frame, frame, null
     override def ticks = world.tickCounter.ticks
   }
   val aggregateManager =
-    Femto.get(classOf[AggregateManagerInterface],
-              "org.nlogo.sdm.AggregateManagerLite", Array())
+    Femto.get[AggregateManagerInterface](
+      "org.nlogo.sdm.AggregateManagerLite", Array())
   override def doImport(importer: BufferedReaderImporter) {
     if(isApplet)
       // it's pretty gruesome here efficiency-wise that we slurp
@@ -35,10 +34,10 @@ extends GUIWorkspace(world, GUIWorkspace.KioskLevel.MODERATE, frame, frame, null
       super.doImport(importer)
   }
   override def inspectAgent(agent: org.nlogo.api.Agent, radius: Double) { }
-  override def inspectAgent(agentClass: Class[_ <: Agent], agent: Agent, radius: Double) { }
+  override def inspectAgent(agentClass: AgentKind, agent: Agent, radius: Double) { }
   override def stopInspectingAgent(agent: org.nlogo.agent.Agent): Unit = { }
   override def stopInspectingDeadAgents(): Unit = { }
   override def closeAgentMonitors() { }
-  override def newRenderer = Femto.get(
-    classOf[RendererInterface], "org.nlogo.render.Renderer", Array(world))
+  override def newRenderer = Femto.get[RendererInterface](
+    "org.nlogo.render.Renderer", Array(world))
 }

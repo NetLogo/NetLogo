@@ -2,6 +2,7 @@
 
 package org.nlogo.agent;
 
+import org.nlogo.core.AgentKindJ;
 import org.nlogo.api.AgentException;
 
 public final strictfp class Torus3D
@@ -124,7 +125,7 @@ public final strictfp class Torus3D
   }
 
   public AgentSet getNeighbors3d(Patch3D source) {
-    return new ArrayAgentSet(Patch.class,
+    return new ArrayAgentSet(AgentKindJ.Patch(),
         new Agent[]{getPatchNorth(source), getPatchEast(source),
             getPatchSouth(source), getPatchWest(source),
             getPatchNorthEast(source), getPatchSouthEast(source),
@@ -138,17 +139,15 @@ public final strictfp class Torus3D
             getPSD(source), getPWD(source),
             getPNED(source), getPSED(source),
             getPSWD(source), getPNWD(source)
-        },
-        world);
+        });
   }
 
   public AgentSet getNeighbors6(Patch3D source) {
-    return new ArrayAgentSet(Patch.class,
+    return new ArrayAgentSet(AgentKindJ.Patch(),
         new Agent[]{getPatchNorth(source), getPatchEast(source),
             getPatchSouth(source), getPatchWest(source),
             getPatchUp(source), getPatchDown(source)
-        },
-        world);
+        });
   }
 
   public Patch getPNU(Patch3D source) {

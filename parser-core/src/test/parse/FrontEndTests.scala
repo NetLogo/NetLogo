@@ -342,4 +342,39 @@ class FrontEndTests extends FunSuite {
     duplicateName("to a6 [b] let b 5 end",
       "There is already a local variable here called B")
   }
+
+  test("findIncludes lists all includes when there is a valid includes statement") {
+    assertResult(Seq())(FrontEnd.findIncludes(""))
+    assertResult(Seq("foo.nls"))(FrontEnd.findIncludes("__includes [\"foo.nls\"]"))
+    assertResult(Seq("foo.nls"))(FrontEnd.findIncludes("__includes [\"foo.nls\"] to foo show \"bar\" end"))
+    assertResult(Seq("foo.nls"))(FrontEnd.findIncludes("__includes [\"foo.nls\"] foo \"bar\" end"))
+    assertResult(Seq("foo.nls", "bar"))(FrontEnd.findIncludes("__includes [\"foo.nls\" foo \"bar\" end"))
+  }
+
+  test("findProcedurePositions maps procedures to their critical syntax tokens") {
+    import org.nlogo.core.{ Token, TokenType }
+    val procedurePos = FrontEnd.findProcedurePositions("""to foo show "bar" end""", None).get("foo")
+    assert(procedurePos.nonEmpty)
+    assert(procedurePos.get.declarationKeyword == Token("to", TokenType.Keyword, "TO")(0, 2, ""))
+    assert(procedurePos.get.identifier         == Token("foo", TokenType.Ident, "FOO")(3, 6, ""))
+    assert(procedurePos.get.endKeyword         == Token("end", TokenType.Keyword, "END")(18, 21, ""))
+
+    val procedurePos2 = FrontEnd.findProcedurePositions("""to foo end to bar show "foo" end""", None).get("bar")
+    assert(procedurePos2.nonEmpty)
+  }
+
+  test("findProcedurePositions maps procedures to critical syntax tokens in a way that is tolerant of errors") {
+    import org.nlogo.core.{ Token, TokenType }
+    val procedurePos = FrontEnd.findProcedurePositions("""to foo show "bar" to bar show "foo" end""", None).get("foo")
+    assert(procedurePos.get.identifier == Token("foo", TokenType.Ident, "FOO")(3, 6, ""))
+    assert(procedurePos.get.endKeyword == Token("end", TokenType.Keyword, "END")(36, 39, ""))
+    val unclosedProcedure = FrontEnd.findProcedurePositions("""to foo show""", None).get("foo")
+    assert(unclosedProcedure.nonEmpty)
+    assert(unclosedProcedure.get.identifier.text == "foo")
+    val barProcedure = FrontEnd.findProcedurePositions("""to bar show "foo" end""", None).get("bar")
+    assert(barProcedure.nonEmpty)
+    assert(barProcedure.get.identifier.text == "bar")
+    val noNameProcedure = FrontEnd.findProcedurePositions("""to show "foo" end""", None)
+    assert(noNameProcedure.isEmpty)
+  }
 }

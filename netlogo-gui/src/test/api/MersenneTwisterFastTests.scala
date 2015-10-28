@@ -2,6 +2,7 @@
 
 package org.nlogo.util
 
+import org.nlogo.api.MersenneTwisterFast
 import org.scalatest.FunSuite
 import org.nlogo.api.MersenneTwisterFast
 

@@ -8,6 +8,7 @@ import scala.Tuple2;
 
 import org.nlogo.agent.Agent;
 import org.nlogo.api.CommandRunnable;
+import org.nlogo.core.AgentKind;
 import org.nlogo.core.CompilerException;
 import org.nlogo.api.CompilerServices;
 import org.nlogo.api.HubNetInterface;
@@ -117,7 +118,7 @@ public interface Workspace
 
   void inspectAgent(org.nlogo.api.Agent agent, double radius);
 
-  void inspectAgent(Class<? extends Agent> agentClass, org.nlogo.agent.Agent agent, double radius);
+  void inspectAgent(AgentKind agentClass, org.nlogo.agent.Agent agent, double radius);
 
   void stopInspectingAgent(org.nlogo.agent.Agent agent);
 
@@ -201,7 +202,7 @@ public interface Workspace
   Procedure compileCommands(String source)
       throws CompilerException;
 
-  Procedure compileCommands(String source, Class<? extends Agent> agentClass)
+  Procedure compileCommands(String source, AgentKind agentClass)
       throws CompilerException;
 
   Procedure compileReporter(String source)

@@ -4,7 +4,10 @@ package org.nlogo.app
 
 import org.nlogo.agent.{Agent, World3D, World}
 import org.nlogo.api._
-import org.nlogo.core.CompilerException
+import org.nlogo.core.I18N
+import org.nlogo.core.Shape
+import org.nlogo.core.I18N
+import org.nlogo.core.AgentKind
 import org.nlogo.core.LogoList
 import org.nlogo.core.LogoList
 import org.nlogo.core.Nobody
@@ -80,7 +83,11 @@ object App{
     Logger.beQuiet()
     processCommandLineArguments(args)
     Splash.beginSplash() // also initializes AWT
-    pico.addScalaObject("org.nlogo.compiler.Compiler")
+    pico.add("org.nlogo.compiler.Compiler")
+    if (Version.is3D)
+      pico.addScalaObject("org.nlogo.api.NetLogoThreeDDialect")
+    else
+      pico.addScalaObject("org.nlogo.api.NetLogoLegacyDialect")
     pico.addComponent(classOf[ProceduresToHtml])
     pico.addComponent(classOf[App])
     pico.as(NO_CACHE).addComponent(classOf[FileMenu])
@@ -278,7 +285,7 @@ class App extends
   // all these guys get set in the locally block
   private var _workspace: GUIWorkspace = null
   def workspace = _workspace
-  lazy val owner = new SimpleJobOwner("App", workspace.world.mainRNG, classOf[Observer])
+  lazy val owner = new SimpleJobOwner("App", workspace.world.mainRNG, AgentKind.Observer)
   private var _tabs: Tabs = null
   def tabs = _tabs
   var dirtyMonitor:DirtyMonitor = null // accessed from FileMenu - ST 2/26/04
@@ -342,9 +349,9 @@ class App extends
       def aggregateManager: AggregateManagerInterface = App.this.aggregateManager
       def inspectAgent(agent: org.nlogo.api.Agent, radius: Double) {
         val a = agent.asInstanceOf[org.nlogo.agent.Agent]
-        monitorManager.inspect(a.getAgentClass(), a, radius)
+        monitorManager.inspect(a.kind, a, radius)
       }
-      override def inspectAgent(agentClass: Class[_ <: Agent], agent: Agent, radius: Double) {
+      override def inspectAgent(agentClass: AgentKind, agent: Agent, radius: Double) {
         monitorManager.inspect(agentClass, agent, radius)
       }
       override def stopInspectingAgent(agent: Agent): Unit = {
@@ -367,12 +374,15 @@ class App extends
     }
     pico.addComponent(new EditorColorizer(workspace))
     pico.addComponent(new ShapeChangeListener() {
-      def shapeChanged(shape: Shape) {workspace.shapeChanged(shape)}
-      def shapeRemoved(shape: org.nlogo.api.Shape) {
+      def shapeChanged(shape: Shape) {
+        workspace.shapeChanged(shape)
+      }
+
+      def shapeRemoved(shape: org.nlogo.core.Shape) {
         if (shape.isInstanceOf[org.nlogo.shape.LinkShape]) {
-          workspace.world.linkBreedShapes.removeFromBreedShapes(shape.getName)
+          workspace.world.linkBreedShapes.removeFromBreedShapes(shape.name)
         }
-        else workspace.world.turtleBreedShapes.removeFromBreedShapes(shape.getName)
+        else workspace.world.turtleBreedShapes.removeFromBreedShapes(shape.name)
       }
     })
 
@@ -1038,10 +1048,8 @@ class App extends
   }
   def info:             String =
     tabs.infoTab.info
-  def turtleShapes:     Seq[Shape] = {
-    import collection.JavaConverters._
-    tabs.workspace.world.turtleShapeList.getShapes.asScala
-  }
+  def turtleShapes:     Seq[Shape] =
+    tabs.workspace.world.turtleShapeList.shapes
   def version:          String =
     Version.version
   def previewCommands:  String =
@@ -1051,10 +1059,8 @@ class App extends
     }
   def hubnetManager:    ModelSections.BufSaveable =
     workspace.hubnetManager
-  def linkShapes:       Seq[Shape] = {
-    import collection.JavaConverters._
-    tabs.workspace.world.linkShapeList.getShapes.asScala
-  }
+  def linkShapes:       Seq[Shape] =
+    tabs.workspace.world.linkShapeList.shapes
   def snapOn:           Boolean =
     tabs.workspace.snapOn
 }

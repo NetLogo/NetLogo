@@ -2,6 +2,7 @@
 
 package org.nlogo.hubnet.client
 
+import org.nlogo.core.{ I18N, LogoList }
 import javax.swing.JPanel
 import org.nlogo.agent.{AbstractExporter, ConstantSliderConstraint}
 import org.nlogo.plot.{PlotExporter, Plot, PlotManager}
@@ -16,8 +17,7 @@ import org.nlogo.awt.EventQueue.invokeLater
 import org.nlogo.awt.Hierarchy.getFrame
 import org.nlogo.swing.Implicits._
 import org.nlogo.window.{PlotWidgetExportType, MonitorWidget, InterfaceGlobalWidget, Widget, ButtonWidget, PlotWidget}
-import org.nlogo.api.{I18N, Version, ModelSection, Dump, PlotInterface, DummyLogoThunkFactory, CompilerServices}
-import org.nlogo.core.LogoList
+import org.nlogo.api.{ Version, ModelSection, Dump, PlotInterface, DummyLogoThunkFactory, CompilerServices}
 import org.nlogo.hubnet.connection.{Streamable, ConnectionTypes, AbstractConnection}
 
 // Normally we try not to use the org.nlogo.window.Events stuff except in
@@ -62,11 +62,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
   // TODO: couldnt we use case class copy here or something?
   private def updatePlot(plot1: Plot, plot2: Plot) {
     plot2.currentPen = plot2.getPen(plot1.currentPen.get.name)
-    plot2.autoPlotOn = plot1.autoPlotOn
-    plot2.xMin = plot1.xMin
-    plot2.xMax = plot1.xMax
-    plot2.yMin = plot1.yMin
-    plot2.yMax = plot1.yMax
+    plot2.state = plot1.state
     for (pen1 <- plot1.pens) {
       val pen2 = if (pen1.temporary) plot2.createPlotPen(pen1.name, true)
       else plot2.getPen(pen1.name).get
@@ -183,9 +179,9 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
             plotWidget.makeDirty()
             plotWidget.repaintIfNeeded()
           case 'n' =>
-            plotWidget.plot.autoPlotOn = true
+            plotWidget.plot.state = plotWidget.plot.state.copy(autoPlotOn = true)
           case 'f' =>
-            plotWidget.plot.autoPlotOn = false
+            plotWidget.plot.state = plotWidget.plot.state.copy(autoPlotOn = false)
           case _ => throw new IllegalStateException()
         } catch {case ex: RuntimeException => org.nlogo.util.Exceptions.handle(ex)}
       }
@@ -201,15 +197,13 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
         case 'x' =>
           val min: Double = list(1).asInstanceOf[Double]
           val max: Double = list(2).asInstanceOf[Double]
-          plotWidget.plot.xMin = min
-          plotWidget.plot.xMax = max
+          plotWidget.plot.state = plotWidget.plot.state.copy(xMin = min, xMax = max)
           plotWidget.makeDirty()
           plotWidget.repaintIfNeeded()
         case _ =>
           val min: Double = list(1).asInstanceOf[Double]
           val max: Double = list(2).asInstanceOf[Double]
-          plotWidget.plot.yMin = min
-          plotWidget.plot.yMax = max
+          plotWidget.plot.state = plotWidget.plot.state.copy(yMin = min, yMax = max)
           plotWidget.makeDirty()
           plotWidget.repaintIfNeeded()
       }

@@ -2,7 +2,7 @@
 
 package org.nlogo.parse
 
-import org.nlogo.core.{DummyCompilationEnvironment, DummyExtensionManager, FrontEndInterface, Program, CompilerException, Femto, StructureResults}
+import org.nlogo.core.{ CompilationOperand, DummyCompilationEnvironment, DummyExtensionManager, FrontEndInterface, Program, CompilerException, Femto, StructureResults}
 import org.scalatest.FunSuite
 
 import org.nlogo._
@@ -13,9 +13,8 @@ class StructureParserTests extends FunSuite {
     Femto.scalaSingleton[core.TokenizerInterface]("org.nlogo.lex.Tokenizer")
 
   def compile(source: String): StructureResults =
-    new StructureParser(tokenizer.tokenizeString(source).map(Namer0),
-                        None, core.StructureResults.empty)
-      .parse(false)
+    new StructureParser(None, false).parse(
+      tokenizer.tokenizeString(source).map(Namer0), core.StructureResults.empty)
 
   def expectError(source: String, error: String) {
     val e = intercept[CompilerException] {
@@ -76,6 +75,7 @@ class StructureParserTests extends FunSuite {
       results.program.dump.split("\n").head)
     assertResult(2)(results.procedures.size)
     assertResult("procedure FOO:[]{OTPL}:\n")(results.procedures("FOO").dump)
+    assertResult("")(results.procedures("FOO").displayName)
     assertResult("procedure BAR:[]{OTPL}:\n")(results.procedures("BAR").dump)
   }
 
@@ -223,8 +223,8 @@ class StructureParserTests extends FunSuite {
       "TO or TO-REPORT expected") }
 
   def compileAll(src: String): StructureResults = {
-    StructureParser.parseAll(
-      tokenizer, src, None, Program.empty(), false, FrontEndInterface.NoProcedures, new DummyExtensionManager, new DummyCompilationEnvironment)
+    StructureParser.parseSources(
+      tokenizer, CompilationOperand(Map("" -> src), new DummyExtensionManager, new DummyCompilationEnvironment, subprogram = false))
   }
 
   def expectParseAllError(src: String, error: String) = {
@@ -240,5 +240,15 @@ class StructureParserTests extends FunSuite {
 
   test("nonexistent included file") {
     expectParseAllError("""__includes [ "foobar.nls" ]""", "Could not find foobar.nls")
+  }
+
+  test("mutually referrent sources") {
+    val sources = Map[String, String](
+      ""    -> "to foo bar end",
+      "baz" -> "to bar foo end"
+    )
+    val result =
+      StructureParser.parseSources(
+        tokenizer, CompilationOperand(sources, new DummyExtensionManager, new DummyCompilationEnvironment, subprogram = false))
   }
 }

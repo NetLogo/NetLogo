@@ -3,12 +3,11 @@
 package org.nlogo.compiler
 
 import org.scalatest.FunSuite
-import org.nlogo.api.{ DummyExtensionManager}
+import org.nlogo.api.DummyExtensionManager
 import org.nlogo.core.Program
 import org.nlogo.nvm.Procedure
 
 class OptimizerTests extends FunSuite {
-  implicit val tokenizer = Compiler.Tokenizer2D
   def compileReporter(source:String) =
     compile("globals [glob1] breed [frogs frog] to-report __test [x] report " + source + "\nend")
       .statements.body.head.args.head.toString

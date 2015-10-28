@@ -2,6 +2,7 @@
 
 package org.nlogo.prim
 
+import org.nlogo.core.AgentKind
 import org.nlogo.agent.{ AgentSet, ArrayAgentSet, Patch, Turtle }
 import org.nlogo.api.Syntax
 import org.nlogo.nvm.{ Context, Reporter }
@@ -19,7 +20,7 @@ class _breedhere(breedName: String) extends Reporter {
       case p: Patch  => p
     }
     val breed = world.getBreed(breedName)
-    val agentSet = new ArrayAgentSet(classOf[Turtle], patch.turtleCount, false, world)
+    val agentSet = new ArrayAgentSet(AgentKind.Turtle, patch.turtleCount, false)
     val itr = patch.turtlesHere.iterator
     while (itr.hasNext) {
       val turtle = itr.next()

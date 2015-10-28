@@ -2,6 +2,8 @@
 
 package org.nlogo.api;
 
+import org.nlogo.core.I18N;
+
 /**
  * The Scala compiler won't generate a Java varargs forwarder for a Scala varargs
  * method unless the method comes from a Java class or interface.  So this is in

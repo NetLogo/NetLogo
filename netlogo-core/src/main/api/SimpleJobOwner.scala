@@ -2,11 +2,11 @@
 
 package org.nlogo.api
 
-import org.nlogo.core
+import org.nlogo.core.AgentKind
 
 class SimpleJobOwner(override val displayName: String,
                      override val random: MersenneTwisterFast,
-                     override val kind: core.AgentKind = core.AgentKind.Observer)
+                     override val kind: AgentKind = AgentKind.Observer)
 extends JobOwner {
   override def isButton = false
   override def isTurtleForeverButton = false

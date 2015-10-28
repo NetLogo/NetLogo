@@ -272,7 +272,7 @@ FileReadBadToken
   O> file-print "598745879457894578945789457894578945789"
   O> file-close
   O> file-open glob2
-  O> __ignore file-read => ERROR Illegal number format (line number 1, character 1)
+  O> __ignore file-read => ERROR 598745879457894578945789457894578945789 is too large to be represented exactly as an integer in NetLogo (line number 1, character 1)
 
 FileWriteReadUTF8
   O> __mkdir "tmp/File"

@@ -2,7 +2,8 @@
 
 package org.nlogo.agent
 
-import org.nlogo.api.{I18N, ValueConstraint}
+import org.nlogo.api.{ ValueConstraint}
+import org.nlogo.core.I18N
 
 /**
  * Constraint suitable for Switch variables.

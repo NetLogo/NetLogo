@@ -3,7 +3,7 @@
 package org.nlogo.agent;
 
 import org.nlogo.api.AgentException;
-import org.nlogo.api.I18N;
+import org.nlogo.core.I18N;
 
 import javax.imageio.ImageIO;
 import java.awt.geom.AffineTransform;

@@ -2,8 +2,8 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api.{ I18N, LogoListBuilder, Syntax }
-import org.nlogo.core.LogoList
+import org.nlogo.core.{ I18N, LogoList }
+import org.nlogo.api.{ LogoListBuilder, Syntax }
 import org.nlogo.nvm.{ Context, EngineException, Reporter }
 
 class _nvalues extends Reporter {

@@ -24,6 +24,9 @@ trait Agent {
   /** Returns the size of this agent */
   def size: Double
 
+  /** Returns the name of the current shape, empty string in the case of patches. */
+  def shape: String
+
   /**
    * 0-255, 0 = invisible, 255 = opaque
    */

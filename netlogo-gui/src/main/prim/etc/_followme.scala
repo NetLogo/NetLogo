@@ -13,10 +13,10 @@ class _followme extends Command {
   switches = true
   override def perform(context: Context) {
     val turtle = context.agent.asInstanceOf[Turtle]
-    world.observer.setPerspective(Perspective.Follow, turtle)
     // the following code is duplicated in _follow and _followme - ST 6/28/05
     val distance = (turtle.size * 5).toInt
-    world.observer.followDistance(1 max distance min 100)
+    val followDistance = 1 max distance min 100
+    world.observer.setPerspective(Perspective.Follow(turtle, followDistance))
     context.ip = next
   }
 }

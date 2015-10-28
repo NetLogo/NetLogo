@@ -3,6 +3,7 @@
 package org.nlogo.app
 
 import java.awt.Window
+import org.nlogo.core.AgentKind
 import org.nlogo.agent.{Agent, Observer, Turtle, Patch, Link}
 import org.nlogo.swing.Tiler
 import org.nlogo.window.GUIWorkspace
@@ -98,35 +99,35 @@ with org.nlogo.window.Event.LinkParent
       emptyLinkMonitorWindow = null
   }
 
-  def inspect(agentClass: Class[_ <: Agent], a0: Agent, radius: Double) {
+  def inspect(agentKind: AgentKind, a0: Agent, radius: Double) {
     val frame = workspace.getFrame
     var window: AgentMonitorWindow = null
     var agent = a0
-    if(agent == null && (agentClass eq classOf[Observer]))
+    if(agent == null && (agentKind == AgentKind.Observer))
       agent = workspace.world.observer()
     if(agent != null)
       window = monitorWindows.get(agent).orNull
-    else if(agentClass eq classOf[Turtle])
+    else if(agentKind == AgentKind.Turtle)
       window = emptyTurtleMonitorWindow
-    else if(agentClass eq classOf[Patch])
+    else if(agentKind == AgentKind.Patch)
       window = emptyPatchMonitorWindow
-    else if(agentClass eq classOf[Link])
+    else if(agentKind == AgentKind.Link)
       window = emptyLinkMonitorWindow
     if(window == null) {
-      if(agentClass eq classOf[Observer])
-        window = new AgentMonitorWindow(classOf[Observer], agent, radius, this, frame)
-      else if(agentClass == classOf[Turtle]) {
-        window = new AgentMonitorWindow(classOf[Turtle], agent, radius, this, frame)
+      if(agentKind == AgentKind.Observer)
+        window = new AgentMonitorWindow(AgentKind.Observer, agent, radius, this, frame)
+      else if(agentKind == AgentKind.Turtle) {
+        window = new AgentMonitorWindow(AgentKind.Turtle, agent, radius, this, frame)
         if(agent == null)
           emptyTurtleMonitorWindow = window
       }
-      else if(agentClass eq classOf[Patch]) {
-        window = new AgentMonitorWindow(classOf[Patch], agent, radius, this, frame)
+      else if(agentKind == AgentKind.Patch) {
+        window = new AgentMonitorWindow(AgentKind.Patch, agent, radius, this, frame)
         if(agent == null)
           emptyPatchMonitorWindow = window
       }
-      else if(agentClass eq classOf[Link]) {
-        window = new AgentMonitorWindow(classOf[Link], agent, radius, this, frame)
+      else if(agentKind == AgentKind.Link) {
+        window = new AgentMonitorWindow(AgentKind.Link, agent, radius, this, frame)
         if(agent == null)
           emptyLinkMonitorWindow = window
       }
@@ -146,7 +147,7 @@ with org.nlogo.window.Event.LinkParent
     else window.radius(radius)
     window.setVisible(true)
     org.nlogo.window.Event.rehash()
-    if(agent == null && (agentClass ne classOf[Observer]))
+    if(agent == null && (agentKind != AgentKind.Observer))
       window.requestFocus()
     else
       org.nlogo.awt.EventQueue.invokeLater(

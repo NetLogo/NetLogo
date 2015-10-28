@@ -7,15 +7,20 @@ import org.nlogo.api.Color;
 import org.nlogo.api.CompilerServices;
 import org.nlogo.api.ImporterUser;
 import org.nlogo.api.LogoException;
-import org.nlogo.core.Nobody$;
+import org.nlogo.api.Timer;
+import org.nlogo.api.Version$;
+import org.nlogo.core.AgentKind;
+import org.nlogo.core.AgentKindJ;
 import org.nlogo.core.Breed;
+import org.nlogo.core.Dialect;
+import org.nlogo.core.Nobody$;
 import org.nlogo.core.Program;
-import org.nlogo.api.Shape;
-import org.nlogo.api.ShapeList;
+import org.nlogo.core.Shape;
+import org.nlogo.core.ShapeList;
 import org.nlogo.api.TrailDrawerInterface;
 import org.nlogo.api.ValueConstraint;
 import org.nlogo.api.WorldDimensionException;
-import org.nlogo.api.WorldDimensions;
+import org.nlogo.core.WorldDimensions;
 import org.nlogo.api.MersenneTwisterFast;
 
 import java.util.ArrayList;
@@ -34,7 +39,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 // it's true for the normal prims, false for the nowrap prims. - ST 5/24/06
 
 public strictfp class World
-    implements org.nlogo.api.World {
+    implements org.nlogo.api.World, org.nlogo.api.WorldRenderable, org.nlogo.api.WorldWithWorldRenderable {
 
   public static final Double ZERO = Double.valueOf(0.0);
   public static final Double ONE = Double.valueOf(1.0);
@@ -45,7 +50,13 @@ public strictfp class World
     return tickCounter.ticks();
   }
 
-  public final Timer timer = new Timer();
+  final Timer timer = new Timer();
+
+  @Override
+  public Timer timer() {
+    return timer;
+  }
+
   private final ShapeList _turtleShapeList;
 
   public ShapeList turtleShapeList() {
@@ -88,11 +99,11 @@ public strictfp class World
   public volatile boolean comeUpForAir = false;  // NOPMD pmd doesn't like 'volatile'
 
   public World() {
-    _turtleShapeList = new ShapeList();
-    _linkShapeList = new ShapeList();
+    _turtleShapeList = new ShapeList(AgentKindJ.Turtle());
+    _linkShapeList = new ShapeList(AgentKindJ.Link());
 
     _observer = createObserver();
-    _observers = new ArrayAgentSet(Observer.class, 1, "observers", false, this);
+    _observers = new ArrayAgentSet(AgentKindJ.Observer(), 1, "observers", false);
 
     linkManager = new LinkManager(this);
     tieManager = new TieManager(this, linkManager);
@@ -117,9 +128,9 @@ public strictfp class World
 
   /// empty agentsets
 
-  private final AgentSet _noTurtles = new ArrayAgentSet(Turtle.class, 0, false, this);
-  private final AgentSet _noPatches = new ArrayAgentSet(Patch.class, 0, false, this);
-  private final AgentSet _noLinks = new ArrayAgentSet(Link.class, 0, false, this);
+  private final AgentSet _noTurtles = new ArrayAgentSet(AgentKindJ.Turtle(), 0, false);
+  private final AgentSet _noPatches = new ArrayAgentSet(AgentKindJ.Patch(), 0, false);
+  private final AgentSet _noLinks = new ArrayAgentSet(AgentKindJ.Link(), 0, false);
 
   public AgentSet noTurtles() {
     return _noTurtles;
@@ -137,6 +148,10 @@ public strictfp class World
 
   public void trailDrawer(TrailDrawerInterface trailDrawer) {
     this.trailDrawer = trailDrawer;
+  }
+
+  public TrailDrawerInterface trailDrawer() {
+    return trailDrawer;
   }
 
   /// get/set methods for World Topology
@@ -207,11 +222,19 @@ public strictfp class World
 
   // anything that affects the outcome of the model should happen on the
   // main RNG
-  public final MersenneTwisterFast mainRNG = new MersenneTwisterFast();
+  final MersenneTwisterFast mainRNG = new MersenneTwisterFast();
+
+  public MersenneTwisterFast mainRNG() {
+    return mainRNG;
+  }
 
   // anything that doesn't and can happen non-deterministically (for example monitor updates)
   // should happen on the auxillary rng. JobOwners should know which RNG they use.
-  public final MersenneTwisterFast auxRNG = new MersenneTwisterFast();
+  final MersenneTwisterFast auxRNG = new MersenneTwisterFast();
+
+  public MersenneTwisterFast auxRNG() {
+    return auxRNG;
+  }
 
   /// random seed generator
 
@@ -423,22 +446,22 @@ public strictfp class World
     return _links;
   }
 
-  public AgentSet agentClassToAgentSet(Class<? extends Agent> agentClass) {
-    if (agentClass == Turtle.class) {
+  public AgentSet agentKindToAgentSet(AgentKind agentKind) {
+    if (agentKind == AgentKindJ.Turtle()) {
       return _turtles;
-    } else if (agentClass == Patch.class) {
+    } else if (agentKind == AgentKindJ.Patch()) {
       return _patches;
-    } else if (agentClass == Observer.class) {
+    } else if (agentKind == AgentKindJ.Observer()) {
       return _observers;
-    } else if (agentClass == Link.class) {
+    } else if (agentKind == AgentKindJ.Link()) {
       return _links;
     }
     throw new IllegalArgumentException
-        ("agentClass = " + agentClass);
+        ("agentKind = " + agentKind);
   }
 
   public WorldDimensions getDimensions() {
-    return new WorldDimensions(_minPxcor, _maxPxcor, _minPycor, _maxPycor);
+    return new WorldDimensions(_minPxcor, _maxPxcor, _minPycor, _maxPycor, patchSize, wrappingAllowedInX(), wrappingAllowedInY());
   }
 
   public boolean isDimensionVariable(String variableName) {
@@ -453,20 +476,23 @@ public strictfp class World
 
   public WorldDimensions setDimensionVariable(String variableName, int value, WorldDimensions d)
       throws WorldDimensionException {
+    WorldDimensions newDim = d;
     if (variableName.equalsIgnoreCase("MIN-PXCOR")) {
-      d.minPxcor_$eq(value);
+      return new WorldDimensions(value,        d.maxPxcor(), d.minPycor(), d.maxPycor(), patchSize, wrappingAllowedInX(), wrappingAllowedInY());
     } else if (variableName.equalsIgnoreCase("MAX-PXCOR")) {
-      d.maxPxcor_$eq(value);
+      return new WorldDimensions(d.minPxcor(), value,        d.minPycor(), d.maxPycor(), patchSize, wrappingAllowedInX(), wrappingAllowedInY());
     } else if (variableName.equalsIgnoreCase("MIN-PYCOR")) {
-      d.minPycor_$eq(value);
+      return new WorldDimensions(d.minPxcor(), d.maxPxcor(), value,        d.maxPycor(), patchSize, wrappingAllowedInX(), wrappingAllowedInY());
     } else if (variableName.equalsIgnoreCase("MAX-PYCOR")) {
-      d.maxPycor_$eq(value);
+      return new WorldDimensions(d.minPxcor(), d.maxPxcor(), d.minPycor(), value,     patchSize, wrappingAllowedInX(), wrappingAllowedInY());
     } else if (variableName.equalsIgnoreCase("WORLD-WIDTH")) {
-      d.minPxcor_$eq(growMin(_minPxcor, _maxPxcor, value, d.minPxcor()));
-      d.maxPxcor_$eq(growMax(_minPxcor, _maxPxcor, value, d.maxPxcor()));
+      int minPxcor = growMin(d.minPxcor(), d.maxPxcor(), value, d.minPxcor());
+      int maxPxcor = growMax(d.minPxcor(), d.maxPxcor(), value, d.maxPxcor());
+      return new WorldDimensions(minPxcor, maxPxcor, d.minPycor(), d.maxPycor(), patchSize, wrappingAllowedInX(), wrappingAllowedInY());
     } else if (variableName.equalsIgnoreCase("WORLD-HEIGHT")) {
-      d.minPycor_$eq(growMin(_minPycor, _maxPycor, value, d.minPycor()));
-      d.maxPycor_$eq(growMax(_minPycor, _maxPycor, value, d.maxPycor()));
+      int minPycor = growMin(d.minPycor(), d.maxPycor(), value, d.minPycor());
+      int maxPycor = growMax(d.minPycor(), d.maxPycor(), value, d.maxPycor());
+      return new WorldDimensions(d.minPxcor(), d.maxPxcor(), minPycor, maxPycor, patchSize, wrappingAllowedInX(), wrappingAllowedInY());
     }
     return d;
   }
@@ -697,11 +723,11 @@ public strictfp class World
     if (breedIterator.hasNext()) {
       while (breedIterator.hasNext()) {
         scala.Tuple2<String, Breed> b = breedIterator.next();
-        Class<? extends Agent> agentClass = Turtle.class;
+        AgentKind agentKind = AgentKindJ.Turtle();
         if (b._2.isLinkBreed()) {
-          agentClass = Link.class;
+          agentKind = AgentKindJ.Link();
         }
-        AgentSet agentset = new TreeAgentSet(agentClass, b._2.name(), this);
+        AgentSet agentset = new TreeAgentSet(agentKind, b._2.name());
         worldBreeds.put(b._1.toUpperCase(), agentset);
       }
     }
@@ -733,9 +759,9 @@ public strictfp class World
     createBreeds(_program.linkBreeds(), linkBreeds);
 
     if (_turtles != null) _turtles.clear(); // so a SimpleChangeEvent is published
-    _turtles = new TreeAgentSet(Turtle.class, "TURTLES", this);
+    _turtles = new TreeAgentSet(AgentKindJ.Turtle(), "TURTLES");
     if (_links != null) _links.clear(); // so a SimpleChangeEvent is published
-    _links = new TreeAgentSet(Link.class, "LINKS", this);
+    _links = new TreeAgentSet(AgentKindJ.Link(), "LINKS");
 
     int x = minPxcor;
     int y = maxPycor;
@@ -757,7 +783,7 @@ public strictfp class World
       }
       patchArray[i] = patch;
     }
-    _patches = new ArrayAgentSet(Patch.class, patchArray, "patches", this);
+    _patches = new ArrayAgentSet(AgentKindJ.Patch(), patchArray, "patches");
     patchesWithLabels = 0;
     patchesAllBlack = true;
     mayHavePartiallyTransparentObjects = false;
@@ -826,7 +852,7 @@ public strictfp class World
   }
 
   public void clearTurtles() {
-    if (_program.breeds() != null) {
+    if (_program.breeds().nonEmpty()) {
       for (AgentSet breed : breeds.values()) {
         breed.clear();
       }
@@ -846,8 +872,8 @@ public strictfp class World
   }
 
   public void clearLinks() {
-    if (_program.linkBreeds() != null) {
-      for (AgentSet linkBreed : breeds.values()) {
+    if (_program.linkBreeds().nonEmpty()) {
+      for (AgentSet linkBreed : linkBreeds.values()) {
         linkBreed.clear();
       }
     }
@@ -895,7 +921,7 @@ public strictfp class World
         String breedName = breedNameIterator.next().toUpperCase();
         AgentSet breedSet = oldBreeds.get(breedName);
         if (breedSet == null) {
-          breeds.put(breedName, new TreeAgentSet(Turtle.class, breedName, this));
+          breeds.put(breedName, new TreeAgentSet(AgentKindJ.Turtle(), breedName));
         } else {
           breeds.put(breedName, breedSet);
         }
@@ -912,7 +938,7 @@ public strictfp class World
         boolean directed  = breed.isDirected();
         AgentSet breedSet = oldLinkBreeds.get(breedName);
         if (breedSet == null) {
-          breedSet = new TreeAgentSet(Link.class, breedName, this);
+          breedSet = new TreeAgentSet(AgentKindJ.Link(), breedName);
         } else {
           breedSet.clearDirected();
         }
@@ -993,12 +1019,12 @@ public strictfp class World
 
   /// agent-owns
 
-  public int indexOfVariable(Class<? extends Agent> agentClass, String name) {
-    if (agentClass == Observer.class) {
+  public int indexOfVariable(AgentKind agentKind, String name) {
+    if (agentKind == AgentKindJ.Observer()) {
       return observerOwnsIndexOf(name);
-    } else if (agentClass == Turtle.class) {
+    } else if (agentKind == AgentKindJ.Turtle()) {
       return turtlesOwnIndexOf(name);
-    } else if (agentClass == Link.class) {
+    } else if (agentKind == AgentKindJ.Link()) {
       return linksOwnIndexOf(name);
     } else // patch
     {
@@ -1265,7 +1291,7 @@ public strictfp class World
     return breeds;
   }
 
-  public Map<String, ? extends org.nlogo.api.AgentSet> getBreeds() {
+  public Map<String, ? extends org.nlogo.agent.AgentSet> getBreeds() {
     return breeds;
   }
 
@@ -1282,7 +1308,7 @@ public strictfp class World
     return linkBreeds;
   }
 
-  public Map<String, ? extends org.nlogo.api.AgentSet> getLinkBreeds() {
+  public Map<String, ? extends org.nlogo.agent.AgentSet> getLinkBreeds() {
     return linkBreeds;
   }
 
@@ -1326,7 +1352,11 @@ public strictfp class World
   }
 
   public Program newProgram() {
-    return org.nlogo.core.Program$.MODULE$.empty();
+    Dialect dialect = org.nlogo.api.NetLogoLegacyDialect$.MODULE$;
+    if (Version$.MODULE$.is3D()) {
+      dialect = org.nlogo.api.NetLogoThreeDDialect$.MODULE$;
+    }
+    return org.nlogo.core.Program$.MODULE$.fromDialect(dialect);
   }
 
   public Program newProgram(List<String> interfaceGlobals) {

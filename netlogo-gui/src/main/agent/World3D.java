@@ -2,13 +2,14 @@
 
 package org.nlogo.agent;
 
+import org.nlogo.core.AgentKindJ;
 import org.nlogo.api.AgentException;
 import org.nlogo.api.Color;
 import org.nlogo.api.ImporterUser;
 import org.nlogo.core.Breed;
 import org.nlogo.core.Program;
 import org.nlogo.api.WorldDimensionException;
-import org.nlogo.api.WorldDimensions;
+import org.nlogo.core.WorldDimensions;
 import org.nlogo.api.WorldDimensions3D;
 
 import java.util.Arrays;
@@ -251,17 +252,16 @@ public final strictfp class World3D
     scala.collection.Iterator<scala.Tuple2<String, Breed>> breedIterator =
       program().breeds().iterator();
 
-    if (breedIterator.hasNext()) {
-      for (scala.Tuple2<String, Breed> b = breedIterator.next(); breedIterator.hasNext();) {
-        AgentSet agentset = new TreeAgentSet(Turtle.class, b._2.name(), this);
-        breeds.put(b._1.toUpperCase(), agentset);
-      }
+    while (breedIterator.hasNext()) {
+      scala.Tuple2<String, Breed> b = breedIterator.next();
+      AgentSet agentset = new TreeAgentSet(AgentKindJ.Turtle(), b._2.name());
+      breeds.put(b._1.toUpperCase(), agentset);
     }
 
     if (_turtles != null) _turtles.clear(); // so a SimpleChangeEvent is published
-    _turtles = new TreeAgentSet(Turtle.class, "TURTLES", this);
+    _turtles = new TreeAgentSet(AgentKindJ.Turtle(), "TURTLES");
     if (_links != null) _links.clear(); // so a SimpleChangeEvent is published
-    _links = new TreeAgentSet(Link.class, "LINKS", this);
+    _links = new TreeAgentSet(AgentKindJ.Link(), "LINKS");
 
     int x = _minPxcor;
     int y = _maxPycor;
@@ -288,7 +288,7 @@ public final strictfp class World3D
       }
       patchArray[i] = patch;
     }
-    _patches = new ArrayAgentSet(Patch.class, patchArray, "patches", this);
+    _patches = new ArrayAgentSet(AgentKindJ.Patch(), patchArray, "patches");
     patchesWithLabels = 0;
     patchesAllBlack = true;
     mayHavePartiallyTransparentObjects = false;
@@ -355,30 +355,19 @@ public final strictfp class World3D
   @Override
   public WorldDimensions setDimensionVariable(String variableName, int value, WorldDimensions d)
       throws WorldDimensionException {
-    if (variableName.equalsIgnoreCase("MIN-PXCOR")) {
-      d.minPxcor_$eq(value);
-    } else if (variableName.equalsIgnoreCase("MAX-PXCOR")) {
-      d.maxPxcor_$eq(value);
-    } else if (variableName.equalsIgnoreCase("MIN-PYCOR")) {
-      d.minPycor_$eq(value);
-    } else if (variableName.equalsIgnoreCase("MAX-PYCOR")) {
-      d.maxPycor_$eq(value);
-    } else if (variableName.equalsIgnoreCase("MIN-PZCOR")) {
-      ((WorldDimensions3D) d).minPzcor_$eq(value);
+    WorldDimensions3D wd = (WorldDimensions3D) d;
+    if (variableName.equalsIgnoreCase("MIN-PZCOR")) {
+      return new WorldDimensions3D(wd.minPxcor(), wd.maxPxcor(), wd.minPycor(), wd.maxPycor(), value, wd.maxPzcor());
     } else if (variableName.equalsIgnoreCase("MAX-PZCOR")) {
-      ((WorldDimensions3D) d).maxPzcor_$eq(value);
-    } else if (variableName.equalsIgnoreCase("WORLD-WIDTH")) {
-      d.minPxcor_$eq(growMin(_minPxcor, _maxPxcor, value, d.minPxcor()));
-      d.maxPxcor_$eq(growMax(_minPxcor, _maxPxcor, value, d.maxPxcor()));
-    } else if (variableName.equalsIgnoreCase("WORLD-HEIGHT")) {
-      d.minPycor_$eq(growMin(_minPycor, _maxPycor, value, d.minPycor()));
-      d.maxPycor_$eq(growMax(_minPycor, _maxPycor, value, d.maxPycor()));
+      return new WorldDimensions3D(wd.minPxcor(), wd.maxPxcor(), wd.minPycor(), wd.maxPycor(), wd.minPzcor(), value);
     } else if (variableName.equalsIgnoreCase("WORLD-DEPTH")) {
-      WorldDimensions3D wd = (WorldDimensions3D) d;
-      wd.minPzcor_$eq(growMin(_minPzcor, _maxPzcor, value, wd.minPzcor()));
-      wd.maxPzcor_$eq(growMax(_minPzcor, _maxPzcor, value, wd.maxPzcor()));
+      int minPzcor = growMin(wd.minPzcor(), wd.maxPzcor(), value, wd.minPzcor());
+      int maxPzcor = growMax(wd.minPzcor(), wd.maxPzcor(), value, wd.maxPzcor());
+      return new WorldDimensions3D(wd.minPxcor(), wd.maxPxcor(), wd.minPycor(), wd.maxPycor(), minPzcor, maxPzcor);
+    } else {
+      WorldDimensions newWd = super.setDimensionVariable(variableName, value, d);
+      return new WorldDimensions3D(newWd.minPxcor(), newWd.maxPxcor(), newWd.minPycor(), newWd.maxPycor(), wd.minPzcor(), wd.maxPzcor());
     }
-    return d;
   }
 
   @Override

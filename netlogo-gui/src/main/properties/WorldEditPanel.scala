@@ -2,14 +2,14 @@
 
 package org.nlogo.properties
 
+import org.nlogo.core.{ I18N, TokenType }
 import org.nlogo.editor.Colorizer
 import javax.swing.border.TitledBorder
 import org.nlogo.window.{WorldViewSettings, OriginConfiguration}
 import java.awt.{GridBagLayout, BorderLayout, GridBagConstraints}
 import javax.swing.{JLabel, JComboBox, JPanel}
 import java.awt.event.{ItemListener, ItemEvent}
-import org.nlogo.api.{I18N, Editable, CompilerServices}
-import org.nlogo.core.TokenType
+import org.nlogo.api.{ Editable, CompilerServices}
 import collection.JavaConverters._
 
 class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Colorizer[TokenType])

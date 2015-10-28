@@ -13,5 +13,5 @@ class EditorFactory(compiler: CompilerServices) extends org.nlogo.window.EditorF
       new java.awt.Font(org.nlogo.awt.Fonts.platformMonospacedFont, java.awt.Font.PLAIN, 12),
       disableFocusTraversal, listener,
       new org.nlogo.window.EditorColorizer(compiler),
-      org.nlogo.api.I18N.gui.get _)
+      org.nlogo.core.I18N.gui.get _)
 }

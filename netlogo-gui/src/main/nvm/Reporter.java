@@ -14,14 +14,14 @@ public abstract strictfp class Reporter
   public final void checkAgentClass(Agent agent, Context context)
       throws LogoException {
     if ((agent.getAgentBit() & agentBits) == 0) {
-      throwAgentClassException(context, agent.getAgentClass());
+      throwAgentClassException(context, agent.kind());
     }
   }
 
   public final void checkAgentSetClass(AgentSet agents, Context context)
       throws LogoException {
     if ((agents.getAgentBit() & agentBits) == 0) {
-      throwAgentClassException(context, agents.type());
+      throwAgentClassException(context, agents.kind());
     }
   }
 

@@ -15,9 +15,13 @@ import Shape.{
 
 object ShapeParser {
 
-  def parseVectorShapes(lines: Seq[String]): Seq[VectorShape] = parseNewlineSeparatedGroups(lines, parseShape)
+  def parseVectorShapes(lines: Seq[String]): Seq[VectorShape]   = parseNewlineSeparatedGroups(lines, parseShape)
+
+  def parseVectorShapes(lines: Array[String]): Seq[VectorShape] = parseNewlineSeparatedGroups(lines.toSeq, parseShape)
 
   def parseLinkShapes(lines: Seq[String]): Seq[LinkShape] = parseNewlineSeparatedGroups(lines, parseLink)
+
+  def parseLinkShapes(lines: Array[String]): Seq[LinkShape] = parseNewlineSeparatedGroups(lines.toSeq, parseLink)
 
   def formatVectorShapes(shapes: Seq[CoreVectorShape]): String = shapes.map(formatShape).mkString("\n\n")
 

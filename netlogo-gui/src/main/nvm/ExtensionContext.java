@@ -6,6 +6,7 @@ import scala.collection.Seq;
 import scala.Tuple2;
 
 import org.nlogo.api.MersenneTwisterFast;
+import org.nlogo.api.Activation;
 
 public strictfp class ExtensionContext
     implements org.nlogo.api.Context {
@@ -32,6 +33,10 @@ public strictfp class ExtensionContext
     return context.agent;
   }
 
+  public org.nlogo.api.World world() {
+    return workspace.world();
+  }
+
   public String attachModelDir(String filePath)
       throws java.net.MalformedURLException {
     return workspace.attachModelDir(filePath);
@@ -54,14 +59,7 @@ public strictfp class ExtensionContext
     org.nlogo.agent.ImportPatchColors.doImport(image, workspace.world(), asNetLogoColors);
   }
 
-  @Override
-  public void logCustomMessage(String msg) {
-    workspace.logCustomMessage(msg);
+  public Activation activation() {
+    return context.activation;
   }
-
-  @Override
-  public void logCustomGlobals(Seq<Tuple2<String, String>> nameValuePairs) {
-    workspace.logCustomGlobals(nameValuePairs);
-  }
-
 }

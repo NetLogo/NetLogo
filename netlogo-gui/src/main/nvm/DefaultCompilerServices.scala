@@ -12,14 +12,10 @@ import org.nlogo.core.Program
 // BehaviorSpace XML. - ST 2/23/09, 3/4/09
 
 class DefaultCompilerServices(compiler: CompilerInterface) extends CompilerServices {
-  def emptyProgram =
-    if (Version.is3D)
-      Program.fromDialect(NetLogoLegacyDialect)
-    else
-      Program.fromDialect(NetLogoThreeDDialect)
+  def emptyProgram = Program.fromDialect(compiler.defaultDialect)
   def autoConvert(source: String, subprogram: Boolean, reporter: Boolean, modelVersion: String) = source
   def readNumberFromString(source: String) =
-    compiler.readNumberFromString(source, null, null, false)
+    compiler.readNumberFromString(source, null, null)
   def checkReporterSyntax(source: String) =
     compiler.checkReporterSyntax(source, emptyProgram,
                                  new java.util.HashMap[String,Procedure],
@@ -29,19 +25,19 @@ class DefaultCompilerServices(compiler: CompilerInterface) extends CompilerServi
                                 new java.util.HashMap[String,Procedure],
                                 null, true, new DummyCompilationEnvironment())
   def readFromString(source: String) =
-    compiler.readFromString(source, false)
+    compiler.readFromString(source)
   def isConstant(s: String) =
-    compiler.isValidIdentifier(s, false)
+    compiler.isValidIdentifier(s)
   def isValidIdentifier(s: String) =
-    compiler.isValidIdentifier(s, false)
+    compiler.isValidIdentifier(s)
   def isReporter(s: String) =
     compiler.isReporter(s, emptyProgram, new java.util.HashMap[String, Procedure],
                         new org.nlogo.api.DummyExtensionManager, new DummyCompilationEnvironment())
   def tokenizeForColorization(source: String) =
     compiler.tokenizeForColorization(
-      source, new org.nlogo.api.DummyExtensionManager, false)
+      source, new org.nlogo.api.DummyExtensionManager)
   def getTokenAtPosition(source: String, pos: Int) =
     compiler.getTokenAtPosition(source, pos)
   def findProcedurePositions(source: String) =
-    compiler.findProcedurePositions(source, false)
+    compiler.findProcedurePositions(source)
 }

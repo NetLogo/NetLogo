@@ -23,7 +23,7 @@ object CompilerUtilities extends CompilerUtilitiesInterface {
   def readNumberFromString(source: String): java.lang.Double =
     numberOrElse[java.lang.Double](source, NullImportHandler, _.getNumberValue)
 
-  def readFromString(source: String, importHandler: LiteralImportHandler)(implicit dialect: Dialect): AnyRef =
+  def readFromString(source: String, importHandler: LiteralImportHandler): AnyRef =
     numberOrElse[AnyRef](source, importHandler, _.getLiteralValue)
 
   def readNumberFromString(source: String, importHandler: LiteralImportHandler): java.lang.Double =
@@ -56,8 +56,8 @@ object CompilerUtilities extends CompilerUtilitiesInterface {
         tokenizer.tokenizeString("to __is-reporter? report " + s + "\nend")
           .map(Namer0)
       val sp =
-        new StructureParser(namedTokens, None, StructureResults(program, procedures))
-      val results = sp.parse(subprogram = true)
+        new StructureParser(None, true)
+      val results = sp.parse(namedTokens, StructureResults(program, procedures))
       val namer =
         new Namer(program, procedures ++ results.procedures, extensionManager)
       val proc = results.procedures.values.head

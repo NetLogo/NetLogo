@@ -41,14 +41,14 @@ object StackTraceBuilder {
   }
 
   private def entries(act: Activation): List[String] = {
-    val activations = Iterator.iterate(act)(_.parent).takeWhile(_ != null).toList
+    val activations = Iterator.iterate(Option(act))(_.flatMap(_.parent)).takeWhile(_.nonEmpty).map(_.get).toList
     // flatMap because each activation can result in 1 or 2 entries
     activations.flatMap{a => a.procedure.displayName :: commandName(a).toList }
   }
 
   private def commandName(act: Activation): Option[String] =
-    for{p <- Option(act.parent)
-        if(p.procedure.code.isDefinedAt(act.returnAddress - 1))
+    for{p <- act.parent
+        if (p.procedure.code.isDefinedAt(act.returnAddress - 1))
         c = p.procedure.code(act.returnAddress - 1)
         if c.callsOtherCode}
     yield c.displayName

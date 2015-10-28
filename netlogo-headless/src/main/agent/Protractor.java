@@ -237,6 +237,12 @@ public strictfp class Protractor
     return towards(fromAgent, x, y, wrap);
   }
 
+  public double towardsPitch(double fromX, double fromY, double fromZ,
+    double toX, double toY, double toZ, boolean wrap)
+  throws AgentException {
+  throw new UnsupportedOperationException();
+}
+
   /**
    * @return 0 <= result < 360
    */

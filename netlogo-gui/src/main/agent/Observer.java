@@ -2,8 +2,12 @@
 
 package org.nlogo.agent;
 
+import org.nlogo.core.AgentKind;
+import org.nlogo.core.AgentKindJ;
 import org.nlogo.api.AgentException;
+import org.nlogo.api.AgentFollowingPerspective;
 import org.nlogo.api.LogoException;
+import org.nlogo.api.ObserverOrientation;
 import org.nlogo.api.Perspective;
 import org.nlogo.api.PerspectiveJ;
 import org.nlogo.api.ValueConstraint;
@@ -16,6 +20,8 @@ public strictfp class Observer
     super(world);
     resetPerspective();
   }
+
+  public AgentKind kind() { return AgentKindJ.Observer(); }
 
   @Override
   Agent realloc(boolean forRecompile) {
@@ -184,7 +190,7 @@ public strictfp class Observer
 
   ///
 
-  Perspective perspective = PerspectiveJ.OBSERVE();
+  Perspective perspective = PerspectiveJ.create(PerspectiveJ.OBSERVE);
 
   public Perspective perspective() {
     return perspective;
@@ -194,14 +200,14 @@ public strictfp class Observer
     this.perspective = perspective;
   }
 
-  org.nlogo.api.Agent targetAgent = null;
-
   public org.nlogo.api.Agent targetAgent() {
-    return targetAgent;
-  }
-
-  public void targetAgent(org.nlogo.api.Agent agent) {
-    targetAgent = agent;
+    if (perspective instanceof AgentFollowingPerspective) {
+      return ((AgentFollowingPerspective) perspective).targetAgent();
+    } else if (perspective instanceof Perspective.Watch) {
+      return ((Perspective.Watch) perspective).targetAgent();
+    } else {
+      return null;
+    }
   }
 
   ///
@@ -225,63 +231,45 @@ public strictfp class Observer
   }
 
   public double followOffsetX() {
-    if (perspective == PerspectiveJ.FOLLOW() || perspective == PerspectiveJ.RIDE()) {
+    if (perspective instanceof AgentFollowingPerspective) {
       return _oxcor - ((world.minPxcor() - 0.5) + world.worldWidth() / 2.0);
     }
     return 0.0;
   }
 
   public double followOffsetY() {
-    if (perspective == PerspectiveJ.FOLLOW() || perspective == PerspectiveJ.RIDE()) {
+    if (perspective instanceof AgentFollowingPerspective) {
       return _oycor - ((world.minPycor() - 0.5) + world.worldHeight() / 2.0);
     }
     return 0.0;
   }
 
-  double heading;
+  Orientation orientation = new Orientation(this);
 
-  public double heading() {
-    return heading;
+  public scala.Option<ObserverOrientation> orientation() {
+    return new scala.Some<ObserverOrientation>(orientation);
   }
 
   public void heading(double heading) {
-    this.heading = ((heading % 360) + 360) % 360;
-  }
-
-  double pitch;
-
-  public double pitch() {
-    return pitch;
+    this.orientation.heading = ((heading % 360) + 360) % 360;
   }
 
   public void pitch(double pitch) {
-    this.pitch = ((pitch % 360) + 360) % 360;
-  }
-
-  double roll;
-
-  public double roll() {
-    return roll;
+    this.orientation.pitch = ((pitch % 360) + 360) % 360;
   }
 
   public void roll(double roll) {
-    this.roll = ((roll % 360) + 360) % 360;
+    this.orientation.roll = ((roll % 360) + 360) % 360;
   }
 
   Vect rotationPoint;
 
-  public double dist() {
-    return StrictMath.sqrt((rotationPoint.x() - _oxcor) * (rotationPoint.x() - _oxcor)
-        + (rotationPoint.y() - _oycor) * (rotationPoint.y() - _oycor)
-        + ((rotationPoint.z() - _ozcor) * (rotationPoint.z() - _ozcor)));
-  }
-
   public void setRotationPoint(Vect v) {
-    rotationPoint = v;
+    orientation.rotationPoint = v;
   }
 
   public void setRotationPoint(double x, double y, double z) {
-    rotationPoint = new Vect(x, y, z);
+    orientation.rotationPoint = new Vect(x, y, z);
   }
 
   public void setRotationPoint(org.nlogo.api.Agent agent) {
@@ -298,49 +286,14 @@ public strictfp class Observer
   }
 
   public Vect rotationPoint() {
-    return rotationPoint;
+    return orientation.rotationPoint;
   }
-
-  int followDistance = 5;
 
   public int followDistance() {
-    return followDistance;
-  }
-
-  public void followDistance(int followDistance) {
-    this.followDistance = followDistance;
-  }
-
-  public void setOrientation(double heading, double pitch, double roll) {
-    this.heading = heading;
-    this.pitch = pitch;
-    this.roll = roll;
-  }
-
-  public double dx() {
-    double value = StrictMath.cos(StrictMath.toRadians(pitch)) *
-        StrictMath.sin(StrictMath.toRadians(heading));
-    if (StrictMath.abs(value) < org.nlogo.api.Constants.Infinitesimal()) {
-      value = 0;
+    if (perspective instanceof AgentFollowingPerspective) {
+      return ((AgentFollowingPerspective) perspective).followDistance();
     }
-    return value;
-  }
-
-  public double dy() {
-    double value = StrictMath.cos(StrictMath.toRadians(pitch)) *
-        StrictMath.cos(StrictMath.toRadians(heading));
-    if (StrictMath.abs(value) < org.nlogo.api.Constants.Infinitesimal()) {
-      value = 0;
-    }
-    return value;
-  }
-
-  public double dz() {
-    double value = StrictMath.sin(StrictMath.toRadians(pitch));
-    if (StrictMath.abs(value) < org.nlogo.api.Constants.Infinitesimal()) {
-      value = 0;
-    }
-    return value;
+    return 5;
   }
 
   public void face(org.nlogo.api.Agent agent) {
@@ -384,44 +337,38 @@ public strictfp class Observer
     } else {
       throw new AgentException("you can't move-to a link");
     }
-    face(rotationPoint.x(), rotationPoint.y());
-  }
-
-  public void setPerspective(Perspective perspective, org.nlogo.api.Agent agent) {
-    this.perspective = perspective;
-    targetAgent = agent;
-    updatePosition();
+    face(orientation.rotationPoint.x(), orientation.rotationPoint.y());
   }
 
   public void setPerspective(Perspective perspective) {
     this.perspective = perspective;
+    updatePosition();
   }
 
   public boolean updatePosition() {
     boolean changed = false;
 
-    if (perspective == PerspectiveJ.OBSERVE()) {
+    if (perspective.kind() == PerspectiveJ.OBSERVE) {
       return false;
-    } else if (perspective == PerspectiveJ.WATCH()) {
-      if (targetAgent.id() == -1) {
+    } else if (perspective.kind() == PerspectiveJ.WATCH && targetAgent() != null) {
+      if (targetAgent().id() == -1) {
         resetPerspective();
         return true;
       }
-      setRotationPoint(targetAgent);
-      face(targetAgent);
-    } else // follow and ride are the same save initial conditions.
-    {
-      if (targetAgent.id() == -1) // he's dead!
+      setRotationPoint(targetAgent());
+      face(targetAgent());
+    } else if (targetAgent() != null) {
+      if (targetAgent().id() == -1) // he's dead!
       {
         resetPerspective();
         return true;
       }
 
-      Turtle turtle = (Turtle) targetAgent;
+      Turtle turtle = (Turtle) targetAgent();
       oxyandzcor(turtle.xcor(), turtle.ycor(), 0);
-      double newHeading = headingSmoother.follow(targetAgent);
-      if (perspective == PerspectiveJ.FOLLOW()) {
-        changed = heading != newHeading;
+      double newHeading = headingSmoother.follow(targetAgent());
+      if (perspective.kind() == PerspectiveJ.FOLLOW) {
+        changed = orientation.heading != newHeading;
         heading(newHeading);
       } else {
         heading(turtle.heading());
@@ -461,7 +408,7 @@ public strictfp class Observer
   }
 
   public void resetPerspective() {
-    setPerspective(PerspectiveJ.OBSERVE(), null);
+    setPerspective(PerspectiveJ.create(PerspectiveJ.OBSERVE));
     home();
   }
 
@@ -469,22 +416,21 @@ public strictfp class Observer
     _oxcor = world.minPxcor() + ((world.maxPxcor() - world.minPxcor()) / 2.0);
     _oycor = world.minPycor() + ((world.maxPycor() - world.minPycor()) / 2.0);
     _ozcor = StrictMath.max(world.worldWidth(), world.worldHeight()) * 1.5;
-    heading = 0;
-    pitch = 90;
-    roll = 0;
+    orientation.heading = 0;
+    orientation.pitch = 90;
+    orientation.roll = 0;
     setRotationPoint(_oxcor, _oycor, 0);
   }
 
   public boolean atHome2D() {
-    return (perspective == PerspectiveJ.OBSERVE()) && (_oxcor == 0) && (_oycor == 0);
+    return (perspective.kind() == PerspectiveJ.OBSERVE) && (_oxcor == 0) && (_oycor == 0);
   }
 
   // This is a hack for now, there is prob. a better way of doing this - jrn 6/9/05
   public boolean atHome3D() {
-    return (perspective == PerspectiveJ.OBSERVE()) && (_oxcor == 0) && (_oycor == 0) &&
+    return (perspective.kind() == PerspectiveJ.OBSERVE) && (_oxcor == 0) && (_oycor == 0) &&
         (_ozcor == StrictMath.max(world.worldWidth(), world.worldHeight()) * 1.5) &&
-        (heading == 0) && (pitch == 90) && (roll == 0) &&
-        (rotationPoint.x() == 0 && rotationPoint.y() == 0 && rotationPoint.z() == 0);
+        orientation.atHome3D();
   }
 
   @Override
@@ -525,48 +471,120 @@ public strictfp class Observer
   }
 
   public void orbitRight(double delta) {
-    delta = -delta;
-
-    double newHeading = heading + delta;
-    double dxy = dist() * StrictMath.cos(StrictMath.toRadians(pitch));
-    double x = -dxy * StrictMath.sin(StrictMath.toRadians(newHeading));
-    double y = -dxy * StrictMath.cos(StrictMath.toRadians(newHeading));
-
-    oxyandzcor(x + rotationPoint.x(), y + rotationPoint.y(), _ozcor);
-    heading(newHeading);
+    orientation.orbitRight(delta);
   }
 
   public void orbitUp(double delta) {
-    delta = -delta;
-
-    double newPitch = pitch - delta;
-    double z = dist() * StrictMath.sin(StrictMath.toRadians(newPitch));
-    double dxy = dist() * StrictMath.cos(StrictMath.toRadians(newPitch));
-    double x = -dxy * StrictMath.sin(StrictMath.toRadians(heading));
-    double y = -dxy * StrictMath.cos(StrictMath.toRadians(heading));
-
-    // don't let observer go under patch-plane or be upside-down
-    if (z + rotationPoint.z() > 0 && newPitch < 90) {
-      oxyandzcor(x + rotationPoint.x(), y + rotationPoint.y(), z + rotationPoint.z());
-      pitch(newPitch);
-    }
+    orientation.orbitUp(delta);
   }
 
   public void translate(double thetaX, double thetaY) {
-    double headingR = StrictMath.toRadians(heading);
+    double headingR = StrictMath.toRadians(orientation.heading);
     double sinH = StrictMath.sin(headingR);
     double cosH = StrictMath.cos(headingR);
 
     _oxcor -= ((cosH * thetaX + sinH * thetaY) * 0.1);
     _oycor += ((sinH * thetaX - cosH * thetaY) * 0.1);
 
-    rotationPoint = new Vect(rotationPoint.x() - ((cosH * thetaX + sinH * thetaY) * 0.1),
-        rotationPoint.y() + ((sinH * thetaX - cosH * thetaY) * 0.1),
-        rotationPoint.z());
+    orientation.rotationPoint = new Vect(orientation.rotationPoint.x() - ((cosH * thetaX + sinH * thetaY) * 0.1),
+        orientation.rotationPoint.y() + ((sinH * thetaX - cosH * thetaY) * 0.1),
+        orientation.rotationPoint.z());
   }
 
   public int alpha() {
     return 0;
   }
 
+  class Orientation implements ObserverOrientation {
+    double pitch;
+    double heading;
+    double roll;
+    Vect rotationPoint;
+    Observer observer;
+
+    public Orientation(Observer observer) {
+      this.observer = observer;
+    }
+
+    public double dist() {
+      return StrictMath.sqrt((rotationPoint.x() - observer._oxcor) * (rotationPoint.x() - observer._oxcor)
+          + (rotationPoint.y() - observer._oycor) * (rotationPoint.y() - observer._oycor)
+          + ((rotationPoint.z() - observer._ozcor) * (rotationPoint.z() - observer._ozcor)));
+    }
+
+    public double heading() {
+      return heading;
+    }
+
+    public double pitch() {
+      return pitch;
+    }
+
+    public double roll() {
+      return roll;
+    }
+
+    public double dx() {
+      double value = StrictMath.cos(StrictMath.toRadians(orientation.pitch)) *
+        StrictMath.sin(StrictMath.toRadians(orientation.heading));
+      if (StrictMath.abs(value) < org.nlogo.api.Constants.Infinitesimal()) {
+        value = 0;
+      }
+      return value;
+    }
+
+    public double dy() {
+      double value = StrictMath.cos(StrictMath.toRadians(orientation.pitch)) *
+        StrictMath.cos(StrictMath.toRadians(orientation.heading));
+      if (StrictMath.abs(value) < org.nlogo.api.Constants.Infinitesimal()) {
+        value = 0;
+      }
+      return value;
+    }
+
+    public double dz() {
+      double value = StrictMath.sin(StrictMath.toRadians(orientation.pitch));
+      if (StrictMath.abs(value) < org.nlogo.api.Constants.Infinitesimal()) {
+        value = 0;
+      }
+      return value;
+    }
+
+    public boolean atHome3D() {
+      return (heading == 0) && (pitch == 90) && (roll == 0) &&
+        (rotationPoint.x() == 0 && rotationPoint.y() == 0 && rotationPoint.z() == 0);
+    }
+
+    public double normalizeDegrees(double d) {
+      return ((d % 360) + 360) % 360;
+    }
+
+    public void orbitRight(double delta) {
+      delta = -delta;
+
+      double newHeading = heading + delta;
+      double dxy = dist() * StrictMath.cos(StrictMath.toRadians(pitch));
+      double x = -dxy * StrictMath.sin(StrictMath.toRadians(newHeading));
+      double y = -dxy * StrictMath.cos(StrictMath.toRadians(newHeading));
+
+      observer.oxyandzcor(x + rotationPoint.x(), y + rotationPoint.y(), _ozcor);
+      heading = normalizeDegrees(newHeading);
+    }
+
+    public void orbitUp(double delta) {
+      delta = -delta;
+
+      double newPitch = pitch - delta;
+      double z = dist() * StrictMath.sin(StrictMath.toRadians(newPitch));
+      double dxy = dist() * StrictMath.cos(StrictMath.toRadians(newPitch));
+      double x = -dxy * StrictMath.sin(StrictMath.toRadians(heading));
+      double y = -dxy * StrictMath.cos(StrictMath.toRadians(heading));
+
+      // don't let observer go under patch-plane or be upside-down
+      if (z + orientation.rotationPoint.z() > 0 && newPitch < 90) {
+        observer.oxyandzcor(x + rotationPoint.x(), y + rotationPoint.y(), z + rotationPoint.z());
+        pitch = normalizeDegrees(newPitch);
+      }
+    }
+  }
 }

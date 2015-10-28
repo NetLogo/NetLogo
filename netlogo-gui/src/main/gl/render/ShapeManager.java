@@ -2,8 +2,8 @@
 
 package org.nlogo.gl.render;
 
-import org.nlogo.api.Shape;
-import org.nlogo.api.ShapeList;
+import org.nlogo.core.Shape;
+import org.nlogo.core.ShapeList;
 import org.nlogo.shape.InvalidShapeDescriptionException;
 import org.nlogo.shape.LinkShape;
 import org.nlogo.shape.VectorShape;
@@ -126,7 +126,7 @@ class ShapeManager {
         lastList = CustomShapes.addNewShape(gl, shapes, shape);
         customShapes.put(shape.name(), shape.javaLines());
       } else if (req.type == AddShapeRequestType.LIBRARY_TURTLE) {
-        List<Shape> modelShapeList = turtleShapeList.getShapes();
+        scala.collection.Seq<Shape> modelShapeList = turtleShapeList.shapes();
 
         if (modelShapes.containsKey(req.data)) {
           GLShape shape = modelShapes.get(req.data);
@@ -139,8 +139,8 @@ class ShapeManager {
         // locate new/changed shape in model library
         for (int j = 0; j < modelShapeList.size(); j++) {
           VectorShape vShape =
-              (VectorShape) modelShapeList.get(j);
-          if (vShape.getName().equals(req.data)) {
+              (VectorShape) modelShapeList.apply(j);
+          if (vShape.name().equals(req.data)) {
             // compile shape
             addModelShape(gl, glu, vShape, lastList);
             break;
@@ -163,32 +163,32 @@ class ShapeManager {
   }
 
   private void addLinkShapes(GL2 gl, GLU glu) {
-    List<Shape> lols = linkShapeList.getShapes();
+    scala.collection.Seq<Shape> lols = linkShapeList.shapes();
     int nextIndex = gl.glGenLists(lols.size());
-    Iterator<Shape> iter = lols.iterator();
+    scala.collection.Iterator<Shape> iter = lols.iterator();
     for (int i = nextIndex; iter.hasNext(); i++) {
       addLinkShape(gl, glu, (LinkShape) iter.next(), i);
     }
   }
 
   private void addLinkShape(GL2 gl, GLU glu, LinkShape shape, int index) {
-    VectorShape vShape = (VectorShape) shape.getDirectionIndicator();
+    VectorShape vShape = shape.directionIndicator();
     GLLinkShape gShape =
       is3D
-      ? new GLLinkShape3D(shape, new GLShape(vShape.getName(), index, vShape.isRotatable()))
-      : new GLLinkShape  (shape, new GLShape(vShape.getName(), index, vShape.isRotatable()));
-    linkShapes.put(shape.getName(), gShape);
+      ? new GLLinkShape3D(shape, new GLShape(vShape.name(), index, vShape.isRotatable()))
+      : new GLLinkShape  (shape, new GLShape(vShape.name(), index, vShape.isRotatable()));
+    linkShapes.put(shape.name(), gShape);
     compileShape(gl, glu, vShape, index, vShape.isRotatable());
   }
 
   private void addModelShapes(GL2 gl, GLU glu) {
-    List<Shape> modelShapeList = turtleShapeList.getShapes();
+    scala.collection.Seq<Shape> modelShapeList = turtleShapeList.shapes();
     lastList = gl.glGenLists(modelShapeList.size());
 
     // compile each shape in the model
     for (int i = 0; i < modelShapeList.size(); i++) {
       VectorShape vShape =
-          (VectorShape) modelShapeList.get(i);
+          (VectorShape) modelShapeList.apply(i);
       addModelShape(gl, glu, vShape, (lastList + i));
     }
   }
@@ -197,8 +197,8 @@ class ShapeManager {
                              VectorShape vShape,
                              int index) {
     boolean rotatable = vShape.isRotatable();
-    modelShapes.put(vShape.getName(),
-        new GLShape(vShape.getName(), index, rotatable));
+    modelShapes.put(vShape.name(),
+        new GLShape(vShape.name(), index, rotatable));
 
     compileShape(gl, glu, vShape, index, rotatable);
   }
@@ -248,7 +248,7 @@ class ShapeManager {
     float zDepth = 0.01f + offset * 0.0001f;
 
     if (!rect.marked()) {
-      float[] rgb = rect.getColor().getRGBColorComponents(null);
+      float[] rgb = rect.awtColor().getRGBColorComponents(null);
       gl.glPushAttrib(GL2.GL_CURRENT_BIT);
       gl.glColor3fv(java.nio.FloatBuffer.wrap(rgb));
     }
@@ -283,17 +283,17 @@ class ShapeManager {
     float zDepth = 0.01f + offset * 0.0001f;
 
     if (!circle.marked()) {
-      float[] rgb = circle.getColor().getRGBColorComponents(null);
+      float[] rgb = circle.awtColor().getRGBColorComponents(null);
       gl.glPushAttrib(GL2.GL_CURRENT_BIT);
       gl.glColor3fv(java.nio.FloatBuffer.wrap(rgb));
     }
 
     // for now assume it is a circle
 
-    float radius = (float) circle.getBounds().getWidth() * .0005f;
+    float radius = (float) circle.bounds().getWidth() * .0005f;
     float origin[] =
-        {(float) circle.getOrigin().getX() * .001f - 0.15f,
-            (300 - (float) circle.getOrigin().getY()) * .001f - 0.15f};
+        {((float) circle.origin().getX()) * .001f - 0.15f,
+            (300 - ((float) circle.origin().getY())) * .001f - 0.15f};
 
     gl.glPushMatrix();
 
@@ -350,7 +350,7 @@ class ShapeManager {
     float zDepth = offset * 0.0001f;
 
     if (!line.marked()) {
-      float[] rgb = line.getColor().getRGBColorComponents(null);
+      float[] rgb = line.awtColor().getRGBColorComponents(null);
       gl.glPushAttrib(GL2.GL_CURRENT_BIT);
       gl.glColor3fv(java.nio.FloatBuffer.wrap(rgb));
     }

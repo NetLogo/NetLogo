@@ -9,8 +9,10 @@ import org.nlogo.agent.Link;
 import org.nlogo.agent.Observer;
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
-import org.nlogo.api.I18N;
+import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
+import org.nlogo.core.AgentKind;
+import org.nlogo.core.AgentKindJ;
 import org.nlogo.core.LogoList;
 import org.nlogo.core.Syntax;
 import org.nlogo.core.Token;
@@ -107,6 +109,7 @@ public abstract strictfp class Instruction
   // ~Forrest (10/12/2006)
   public int storedSourceStartPosition = -1;
   public int storedSourceEndPosition = -1;
+  public String storedFilename = null;
 
   public int getSourceStartPosition() {
     if (storedSourceStartPosition > -1) {
@@ -142,6 +145,14 @@ public abstract strictfp class Instruction
     }
     storedSourceEndPosition = end;
     return end;
+  }
+
+  public String getFilename() {
+    if (token != null) {
+      return token.filename();
+    } else {
+      return storedFilename;
+    }
   }
 
   // We want this information for creating some error messages
@@ -312,21 +323,21 @@ public abstract strictfp class Instruction
                 : "a non-number"));
   }
 
-  public void throwAgentClassException(Context context, Class<? extends Agent> agentClass)
+  public void throwAgentClassException(Context context, AgentKind agentClass)
       throws EngineException {
-    List<Class<? extends Agent>> allowedAgentClasses =
-        new ArrayList<Class<? extends Agent>>();
+    List<AgentKind> allowedAgentClasses =
+        new ArrayList<AgentKind>();
     if (syntax().agentClassString().indexOf("O") != -1) {
-      allowedAgentClasses.add(Observer.class);
+      allowedAgentClasses.add(AgentKindJ.Observer());
     }
     if (syntax().agentClassString().indexOf("T") != -1) {
-      allowedAgentClasses.add(Turtle.class);
+      allowedAgentClasses.add(AgentKindJ.Turtle());
     }
     if (syntax().agentClassString().indexOf("P") != -1) {
-      allowedAgentClasses.add(Patch.class);
+      allowedAgentClasses.add(AgentKindJ.Patch());
     }
     if (syntax().agentClassString().indexOf("L") != -1) {
-      allowedAgentClasses.add(Link.class);
+      allowedAgentClasses.add(AgentKindJ.Link());
     }
     if (allowedAgentClasses.size() == 1) {
       throw new EngineException
@@ -340,14 +351,14 @@ public abstract strictfp class Instruction
     }
   }
 
-  protected static String agentClassDescription(Class<? extends Agent> agentClass) {
-    if (agentClass == Observer.class) {
+  protected static String agentClassDescription(AgentKind agentKind) {
+    if (agentKind == AgentKindJ.Observer()) {
       return "the observer";
-    } else if (agentClass == Turtle.class) {
+    } else if (agentKind == AgentKindJ.Turtle()) {
       return "a turtle";
-    } else if (agentClass == Patch.class) {
+    } else if (agentKind == AgentKindJ.Patch()) {
       return "a patch";
-    } else if (agentClass == Link.class) {
+    } else if (agentKind == AgentKindJ.Link()) {
       return "a link";
     }
     return null;
@@ -382,14 +393,14 @@ public abstract strictfp class Instruction
     }
   }
 
-  public org.nlogo.agent.AgentSet argEvalAgentSet(Context context, int argIndex, Class<? extends Agent> type)
+  public org.nlogo.agent.AgentSet argEvalAgentSet(Context context, int argIndex, AgentKind kind)
       throws LogoException {
     Object obj = args[argIndex].report(context);
     try {
       AgentSet set = (org.nlogo.agent.AgentSet) obj;
-      if (set.type() != type) {
+      if (set.kind() != kind) {
         throw new ArgumentTypeException(context, this, argIndex,
-            getAgentSetMask(type), obj);
+            getAgentSetMask(kind), obj);
       }
       return set;
     } catch (ClassCastException ex) {
@@ -515,14 +526,14 @@ public abstract strictfp class Instruction
     }
   }
 
-  private static int getAgentSetMask(Class<? extends Agent> type) {
-    if (org.nlogo.api.Turtle.class.isAssignableFrom(type)) {
+  private static int getAgentSetMask(AgentKind kind) {
+    if (AgentKindJ.Turtle() == kind) {
       return Syntax.TurtlesetType();
     }
-    if (org.nlogo.api.Patch.class.isAssignableFrom(type)) {
+    if (AgentKindJ.Patch() == kind) {
       return Syntax.PatchsetType();
     }
-    if (org.nlogo.api.Link.class.isAssignableFrom(type)) {
+    if (AgentKindJ.Link() == kind) {
       return Syntax.LinksetType();
     }
     return Syntax.AgentsetType();

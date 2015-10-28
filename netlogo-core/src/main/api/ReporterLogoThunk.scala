@@ -11,5 +11,6 @@ package org.nlogo.api
  */
 
 trait ReporterLogoThunk {
+  @throws(classOf[LogoException])
   def call(): AnyRef
 }

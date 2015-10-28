@@ -2,7 +2,7 @@
 
 package org.nlogo.lex
 
-import org.nlogo.core.{ Token, TokenizerInterface },
+import org.nlogo.core.{ Token, TokenType, TokenizerInterface },
   TokenLexer.WrappedInput
 
 // caller's responsibility to check for TokenType.Bad!
@@ -13,6 +13,24 @@ object Tokenizer extends TokenizerInterface {
 
   def tokenize(reader: java.io.Reader, filename: String = ""): Iterator[Token] =
     new TokenLexIterator(StandardLexer, reader, filename).map(_._1)
+
+  def getTokenAtPosition(source: String, position: Int): Option[Token] = {
+    val interestingTokenTypes =
+      Seq(TokenType.Ident, TokenType.Command, TokenType.Keyword, TokenType.Reporter)
+    tokenizeString(source)
+      .sliding(2)
+      .find(ts => ts.head.start <= position && ts.head.tpe != TokenType.Eof)
+      .map {
+        case Seq(a, b) if a.end    <= position && ! interestingTokenTypes.contains(b.tpe) => a
+        case Seq(a, b) if position <  a.end => a
+        case Seq(a, b)                      => b
+      }
+  }
+
+  def isValidIdentifier(ident: String): Boolean = {
+    val is = tokenizeString(ident)
+    is.next.tpe == TokenType.Ident && is.next.tpe == TokenType.Eof
+  }
 
   def tokenizeSkippingTrailingWhitespace(reader: java.io.Reader, filename: String = ""): Iterator[(Token, Int)] = {
     var lastOffset = 0

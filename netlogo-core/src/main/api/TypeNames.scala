@@ -3,8 +3,8 @@
 package org.nlogo.api
 
 import org.nlogo.core,
-  core.{LogoList, Nobody, Syntax},
-  Syntax._
+  core.{LogoList, Nobody, Syntax => CoreSyntax},
+    CoreSyntax._
 
 object TypeNames {
 
@@ -15,6 +15,12 @@ object TypeNames {
     else
       core.TypeNames.addAOrAn(result)
   }
+
+  def aName(mask: Int): String =
+    core.TypeNames.name(mask) match {
+      case result @ ("NOBODY" | "anything") => result
+      case result => core.TypeNames.addAOrAn(result)
+    }
 
   def name(obj: AnyRef): String =
     obj match {

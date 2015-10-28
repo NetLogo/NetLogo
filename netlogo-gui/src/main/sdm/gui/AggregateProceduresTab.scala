@@ -2,8 +2,7 @@
 
 package org.nlogo.sdm.gui
 
-import org.nlogo.core.CompilerException
-import org.nlogo.core.TokenType
+import org.nlogo.core.{ CompilerException, TokenType }
 import org.nlogo.editor.Colorizer
 
 class AggregateProceduresTab(colorizer: Colorizer[TokenType]) extends javax.swing.JPanel {
@@ -16,7 +15,7 @@ class AggregateProceduresTab(colorizer: Colorizer[TokenType]) extends javax.swin
     new java.awt.event.TextListener() {
         override def textValueChanged(e: java.awt.event.TextEvent) { } },
     colorizer,
-    org.nlogo.api.I18N.gui.get _)
+    org.nlogo.core.I18N.gui.get _)
   text.setBorder(
     javax.swing.BorderFactory.createEmptyBorder(4, 7, 4, 7))
   text.setEditable(false)

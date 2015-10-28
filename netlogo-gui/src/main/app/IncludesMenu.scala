@@ -26,8 +26,7 @@ with org.nlogo.window.Events.CompiledEvent.Handler
   override def populate(menu: javax.swing.JPopupMenu) {
     import collection.JavaConverters._
     target.getIncludesTable match {
-      case Some(includesTableJ) =>
-        includesTable = includesTableJ.asScala.toMap
+      case Some(includesTable) =>
         val includes = new java.util.ArrayList[String]
         includesTable.keys.foreach(includes.add)
         java.util.Collections.sort(includes, String.CASE_INSENSITIVE_ORDER)

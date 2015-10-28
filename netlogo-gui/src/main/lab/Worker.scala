@@ -3,9 +3,8 @@
 package org.nlogo.lab
 
 import java.util.concurrent.{Callable, Executors, TimeUnit}
-import org.nlogo.agent.Observer
-import org.nlogo.api.{Dump,LogoException,
-                      WorldDimensions, WorldDimensionException, SimpleJobOwner}
+import org.nlogo.core.{ AgentKind, WorldDimensions }
+import org.nlogo.api.{Dump,LogoException, WorldDimensionException, SimpleJobOwner}
 import org.nlogo.nvm.{LabInterface, Workspace}
 import org.nlogo.api.MersenneTwisterFast
 import LabInterface.ProgressListener
@@ -76,7 +75,7 @@ class Worker(val protocol: Protocol)
   {
     class FailedException(message: String) extends LogoException(message)
     private def owner(rng: MersenneTwisterFast) =
-      new SimpleJobOwner("BehaviorSpace", rng, classOf[Observer])
+      new SimpleJobOwner("BehaviorSpace", rng, AgentKind.Observer)
     @volatile var aborted = false
     // each Runner is on its own thread, but all the Runners share a ProgressListener,
     // so we need to synchronize

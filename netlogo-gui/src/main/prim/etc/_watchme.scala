@@ -12,7 +12,7 @@ class _watchme extends Command {
   switches = true
   override def perform(context: Context) {
     world.observer.home()
-    world.observer.setPerspective(Perspective.Watch, context.agent)
+    world.observer.setPerspective(Perspective.Watch(context.agent))
     context.ip = next
   }
 }

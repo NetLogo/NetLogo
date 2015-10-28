@@ -218,7 +218,7 @@ class ExtensionManagerTests extends FunSuite with BeforeAndAfter {
   test("finishFullCompilation catches exceptions thrown by the jar when unloading") {
     new InMemoryExtensionTest {
       override lazy val dummyClassManager = new DummyClassManager() {
-        override def unload(em: org.nlogo.core.ExtensionManager) = { super.unload(em); throw new Exception("stuff") }
+        override def unload(em: org.nlogo.api.ExtensionManager) = { super.unload(em); throw new Exception("stuff") }
       }
       inmemoryManager.importExtension("foo", null)
       inmemoryManager.startFullCompilation()

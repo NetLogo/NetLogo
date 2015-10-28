@@ -2,23 +2,21 @@
 
 package org.nlogo.compiler
 
+import org.nlogo.core.{ DummyCompilationEnvironment, Program }
 import org.scalatest.FunSuite
-import org.nlogo.api.{ DummyExtensionManager, Version, NetLogoThreeDDialect, NetLogoLegacyDialect }
-import org.nlogo.core.DummyCompilationEnvironment
-import org.nlogo.core.Program
+import org.nlogo.api.{ AgentVariableNumbers, DummyExtensionManager, Version, NetLogoThreeDDialect, NetLogoLegacyDialect }
 import org.nlogo.nvm.Procedure
 
 class TestGenerator extends FunSuite {
 
-  val program = {
-    import collection.JavaConverters._
-    val d = if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect
-    Program.fromDialect(d).copy(userGlobals = Seq("GLOB1"))
-  }
+  val dialect =
+    if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect
+  val compiler = new Compiler(dialect)
+  val program = Program.fromDialect(dialect).copy(userGlobals = Seq("GLOB1"))
   def condense(disassembly: String) =
     disassembly.split("\n").map(_.trim).mkString("\n")
   def compile(source: String, preamble: String) =
-    Compiler.compileMoreCode(
+    compiler.compileMoreCode(
       "to foo " + preamble + source + "\nend", None,
       program, java.util.Collections.emptyMap[String, Procedure],
       new DummyExtensionManager, new DummyCompilationEnvironment()).head.code.head
@@ -58,8 +56,13 @@ class TestGenerator extends FunSuite {
   // not the double-returning one, when the result is to be stored in a variable
   if(Version.useGenerator)
     test("useBoxedConstant") {
-      assert(disassembleCommand("set plabel 1")
-             .matches("(?s).*ICONST_3\n" +
+      val patchLabelVarNum =
+        if (Version.is3D)
+          AgentVariableNumbers.VAR_PLABEL3D
+        else
+          AgentVariableNumbers.VAR_PLABEL
+      val actual = disassembleCommand("set plabel 1")
+      assert(actual.matches(s"(?s).*ICONST_${patchLabelVarNum}\n" +
                       "ALOAD 2\n" +
                       "INVOKEVIRTUAL org/nlogo/agent/Agent.setPatchVariable.*"))
     }
@@ -103,12 +106,17 @@ class TestGenerator extends FunSuite {
   // make sure we generate good code for comparison of a variable known to be numeric
   if(Version.useGenerator)
     test("xcorEqualsNumber") {
+      val xcorVarNumber =
+        if (Version.is3D)
+          AgentVariableNumbers.VAR_XCOR3D
+        else
+          AgentVariableNumbers.VAR_XCOR
       assertResult(List(
         // context.agent.getTurtleVariableDouble
         "L0","ALOAD 1",
         "GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;",
         "CHECKCAST org/nlogo/agent/Turtle",
-        "ICONST_3",
+        s"ICONST_${xcorVarNumber}",
         "INVOKEVIRTUAL org/nlogo/agent/Turtle.getTurtleVariableDouble (I)D",
         // ... = 0
         "L1","DCONST_0",
@@ -136,7 +144,7 @@ class TestGenerator extends FunSuite {
           import collection.JavaConverters._
           Program.empty()
         }
-        Compiler.compileProgram(
+        compiler.compileProgram(
           """
           |breed [agents agent]
           |

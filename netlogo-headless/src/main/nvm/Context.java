@@ -176,7 +176,7 @@ public final strictfp class Context {
 
   public void returnFromProcedure() {
     ip = activation.returnAddress();
-    activation = activation.parent();
+    activation = activation.parent().nonEmpty() ? activation.parent().get() : null;
   }
 
   public void stop() {
@@ -252,7 +252,7 @@ public final strictfp class Context {
       inReporterProcedure = oldInReporterProcedure;
     }
     ip = activation.returnAddress();
-    activation = activation.parent();
+    activation = activation.parent().get();
     Object result = job.result;
     job.result = null;
     return result;

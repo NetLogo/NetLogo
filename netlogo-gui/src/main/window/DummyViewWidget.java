@@ -3,7 +3,7 @@
 package org.nlogo.window;
 
 import org.nlogo.api.Editable;
-import org.nlogo.api.I18N;
+import org.nlogo.core.I18N;
 import org.nlogo.api.Property;
 
 import java.util.List;

@@ -50,8 +50,7 @@ public final strictfp class _withmax
       }
     }
     return new org.nlogo.agent.ArrayAgentSet
-        (sourceSet.type(),
-            result.toArray(new Agent[result.size()]),
-            world);
+        (sourceSet.kind(),
+            result.toArray(new Agent[result.size()]));
   }
 }

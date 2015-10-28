@@ -2,6 +2,7 @@
 
 package org.nlogo.compiler
 
+import org.nlogo.core.{ Femto, TokenizerInterface }
 import org.scalatest.FunSuite
 
 class AutoConverter1Tests extends FunSuite {
@@ -14,7 +15,7 @@ class AutoConverter1Tests extends FunSuite {
 
   def test(version:String,before:String,after:String,subprogram:Boolean) {
     assertResult(after) {
-      new AutoConverter1()(Compiler.Tokenizer2D)
+      new AutoConverter1()(Femto.scalaSingleton[TokenizerInterface]("org.nlogo.lex.Tokenizer"))
         .convert(before, subprogram, false,"NetLogo " + version)
     }
   }

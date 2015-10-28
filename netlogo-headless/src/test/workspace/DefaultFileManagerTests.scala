@@ -318,7 +318,7 @@ class DefaultFileManagerTests extends FunSuite with OneInstancePerTest {
 
     override def readFromString(source: String): AnyRef = ???
 
-    override def readFromString(source: String, importHandler: LiteralImportHandler)(implicit dialect: Dialect): AnyRef = ???
+    override def readFromString(source: String, importHandler: LiteralImportHandler): AnyRef = ???
 
     override def isReporter(s: String,
                             program: Program,
@@ -333,9 +333,9 @@ class DefaultFileManagerTests extends FunSuite with OneInstancePerTest {
       "abc"
     }
 
-    override def readNumberFromString(source: String): AnyRef = ???
+    override def readNumberFromString(source: String): java.lang.Double = ???
 
-    override def readNumberFromString(source: String, importHandler: LiteralImportHandler): AnyRef = ???
+    override def readNumberFromString(source: String, importHandler: LiteralImportHandler): java.lang.Double = ???
   }
 
   def testReadLine(fileText: String, expectedRead: String, i: Int) = {

@@ -14,7 +14,8 @@ import java.awt.print.PageFormat
 import javax.swing._
 import javax.swing.event.{DocumentListener, HyperlinkListener, DocumentEvent, HyperlinkEvent}
 import javax.swing.text.JTextComponent
-import org.nlogo.api.{I18N, VersionHistory, ModelSection}
+import org.nlogo.api.{ VersionHistory, ModelSection}
+import org.nlogo.core.I18N
 import text.html.HTMLDocument
 import java.io.File
 

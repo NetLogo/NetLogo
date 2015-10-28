@@ -2,7 +2,7 @@
 
 package org.nlogo.app;
 
-import org.nlogo.api.I18N;
+import org.nlogo.core.I18N;
 import org.nlogo.window.DummyPlotWidget;
 import org.nlogo.window.EditorColorizer;
 import org.nlogo.window.GUIWorkspace;

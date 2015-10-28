@@ -2,7 +2,8 @@
 
 package org.nlogo.workspace
 
-import org.nlogo.api.{ I18N, VersionHistory, WorldDimensions, WorldDimensions3D }
+import org.nlogo.core.{ I18N, WorldDimensions }
+import org.nlogo.api.{ VersionHistory, WorldDimensions3D }
 import org.nlogo.nvm.Workspace.UpdateMode
 
 class WorldLoader {

@@ -3,7 +3,7 @@
 package org.nlogo.agent
 
 import org.scalatest.FunSuite
-import org.nlogo.api.WorldDimensions
+import org.nlogo.core.WorldDimensions
 
 class WorldTests extends FunSuite with AbstractTestWorld {
 

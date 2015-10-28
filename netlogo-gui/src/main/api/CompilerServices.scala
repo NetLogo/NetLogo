@@ -3,6 +3,7 @@
 package org.nlogo.api
 
 import org.nlogo.core.CompilerException
+import org.nlogo.core.ProcedureSyntax
 import org.nlogo.core.Token
 
 trait CompilerServices {
@@ -20,5 +21,5 @@ trait CompilerServices {
   def isValidIdentifier(s: String): Boolean
   def tokenizeForColorization(source: String): Array[Token]
   def getTokenAtPosition(source: String, position: Int): Token
-  def findProcedurePositions(source: String): java.util.Map[String, java.util.List[Object]]
+  def findProcedurePositions(source: String): Map[String, ProcedureSyntax]
 }

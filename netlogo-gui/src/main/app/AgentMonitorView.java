@@ -20,7 +20,7 @@ public strictfp class AgentMonitorView
     addMouseListener(popupListener);
   }
 
-  private Perspective perspective = PerspectiveJ.OBSERVE();
+  private Perspective perspective = PerspectiveJ.create(PerspectiveJ.OBSERVE);
 
   @Override
   public boolean isDead() {
@@ -33,9 +33,14 @@ public strictfp class AgentMonitorView
     return agent;
   }
 
+  // NOTE: This sets a follow perspective without specifying a follow distance
+  // This is because the follow distance is tracked separately in this class
+  // through radius, viewWidth, and viewHeight. It would be great if in the future
+  // this used the followDistance of the perspective, but I expect it would
+  // be fairly difficult to get there. RG 2/16
   public void agent(Agent agent) {
     this.agent = agent;
-    perspective = PerspectiveJ.FOLLOW();
+    perspective = PerspectiveJ.create(PerspectiveJ.FOLLOW, agent);
   }
 
   private double radius;
@@ -66,7 +71,7 @@ public strictfp class AgentMonitorView
 
   @Override
   public double viewOffsetX() {
-    if (perspective == PerspectiveJ.OBSERVE() || agent instanceof org.nlogo.agent.DummyLink) {
+    if (perspective.kind() == PerspectiveJ.OBSERVE || agent instanceof org.nlogo.agent.DummyLink) {
       return 0;
     }
 
@@ -83,7 +88,7 @@ public strictfp class AgentMonitorView
 
   @Override
   public double viewOffsetY() {
-    if (perspective == PerspectiveJ.OBSERVE() || agent instanceof org.nlogo.agent.DummyLink) {
+    if (perspective.kind() == PerspectiveJ.OBSERVE || agent instanceof org.nlogo.agent.DummyLink) {
       return 0;
     }
 

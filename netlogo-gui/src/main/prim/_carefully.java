@@ -39,8 +39,7 @@ public final strictfp class _carefully
 
   public void perform_1(final Context context) {
     AgentSet agentset =
-        new org.nlogo.agent.ArrayAgentSet
-            (context.agent.getAgentClass(), 1, false, world);
+        new org.nlogo.agent.ArrayAgentSet(context.agent.kind(), 1, false);
     agentset.add(context.agent);
     try {
       // start new job that skips over the _goto command

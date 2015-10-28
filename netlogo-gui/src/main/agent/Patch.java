@@ -2,12 +2,14 @@
 
 package org.nlogo.agent;
 
+import org.nlogo.core.AgentKind;
+import org.nlogo.core.AgentKindJ;
 import org.nlogo.api.AgentException;
 import org.nlogo.api.AgentVariableNumbers;
 import org.nlogo.api.AgentVariables;
 import org.nlogo.api.Color;
 import org.nlogo.api.Dump;
-import org.nlogo.api.I18N;
+import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
 
@@ -16,6 +18,9 @@ import java.util.ArrayList;
 public strictfp class Patch
     extends Agent
     implements org.nlogo.api.Patch {
+
+  public AgentKind kind() { return AgentKindJ.Patch(); }
+
   public static final int VAR_PXCOR = AgentVariableNumbers.VAR_PXCOR;
   public static final int VAR_PYCOR = AgentVariableNumbers.VAR_PYCOR;
   public static final int VAR_PCOLOR = AgentVariableNumbers.VAR_PCOLOR;
@@ -51,9 +56,8 @@ public strictfp class Patch
 
   public AgentSet turtlesHereAgentSet() {
     return new ArrayAgentSet
-        (Turtle.class,
-            _turtlesHere.toArray(new Agent[_turtlesHere.size()]),
-            world);
+        (AgentKindJ.Turtle(),
+            _turtlesHere.toArray(new Agent[_turtlesHere.size()]));
   }
 
   // 0 because user might never create any turtles!

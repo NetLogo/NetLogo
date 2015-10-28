@@ -2,7 +2,8 @@
 
 package org.nlogo.widget
 
-import org.nlogo.api.{Editable, I18N}
+import org.nlogo.api.Editable
+import org.nlogo.core.I18N
 import org.nlogo.window.Widget
 
 class DummySwitchWidget extends Switch with Editable {

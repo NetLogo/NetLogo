@@ -3,7 +3,7 @@
 package org.nlogo.gl.render
 
 import com.jogamp.opengl.{ GL, GL2 }
-import org.nlogo.api.{ Drawing3D, DrawingLine3D, World3D, Perspective }
+import org.nlogo.api.{ AgentFollowingPerspective, Drawing3D, DrawingLine3D, World3D, Perspective }
 import collection.JavaConverters._
 
 private class TrailRenderer3D(world: World3D, renderer: TurtleRenderer3D, linkRenderer: LinkRenderer3D)
@@ -30,10 +30,10 @@ extends DrawingRendererInterface {
     var defaultDist = 1.5 * (world.worldWidth max world.worldHeight max world.worldDepth)
     // Link stamps
     for(stamp <- drawing.linkStamps.asScala) {
-      val distance =
-        if (world.observer.perspective == Perspective.Follow || world.observer.perspective == Perspective.Ride)
-          world.observer.followDistance
-        else world.observer.dist
+      val distance = world.observer.perspective match {
+        case afp: AgentFollowingPerspective => afp.followDistance
+        case _                              => world.observer.orientation.get.dist
+      }
       var lineScale: Double = 0
       if(distance != 0)
         lineScale = (math.max(world.worldWidth, world.worldHeight)) * 1.5 / distance

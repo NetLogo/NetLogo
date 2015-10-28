@@ -4,9 +4,9 @@ package org.nlogo.gl.render
 
 import com.jogamp.opengl.{ GL, GL2, GL2GL3, GL2ES3 }
 import com.jogamp.opengl.fixedfunc.GLLightingFunc.GL_LIGHTING
-import org.nlogo.api.{ World, Patch, Patch3D, Perspective, DrawingInterface}
+import org.nlogo.api.{ AgentFollowingPerspective, World, WorldRenderable, Patch, Patch3D, Perspective, DrawingInterface}
 
-private class PatchRenderer(world: World, drawing: DrawingInterface, shapeRenderer: ShapeRenderer)
+private class PatchRenderer(world: World with WorldRenderable, drawing: DrawingInterface, shapeRenderer: ShapeRenderer)
 extends TextureRenderer(world) {
 
   def getPatchCoords(patch: Patch): Array[Float] = {
@@ -49,16 +49,17 @@ extends TextureRenderer(world) {
   def renderLabel(gl: GL2, col: Float, row: Float, dep: Float,
                   patch: Patch, fontSize: Int, patchSize: Double) {
     val observer = world.observer
+    val orientation = observer.orientation.get
     gl.glTranslated(col, row, dep)
-    gl.glRotated(-observer.heading, 0.0, 0.0, 1.0)
+    gl.glRotated(-orientation.heading, 0.0, 0.0, 1.0)
     gl.glRotated(90, 1.0, 0.0, 0.0)
-    if(observer.perspective == Perspective.Follow || observer.perspective == Perspective.Ride) {
-      gl.glRotated(-observer.pitch, -1.0, 0.0, 0.0)
-      gl.glRotated(-observer.roll, 0.0, 0.0, 1.0)
-    }
-    else {
-      gl.glRotated(observer.pitch, -1.0, 0.0, 0.0)
-      gl.glRotated(observer.roll, 0.0, 0.0, 1.0)
+    observer.perspective match {
+      case (_: AgentFollowingPerspective) =>
+        gl.glRotated(-orientation.pitch, -1.0, 0.0, 0.0)
+        gl.glRotated(-orientation.roll, 0.0, 0.0, 1.0)
+      case _ =>
+        gl.glRotated(orientation.pitch, -1.0, 0.0, 0.0)
+        gl.glRotated(orientation.roll, 0.0, 0.0, 1.0)
     }
     AgentRenderer.renderString(
       gl, world, patch.labelString, patch.labelColor, fontSize, patchSize)

@@ -8,10 +8,10 @@ package org.nlogo.headless
 
 import org.nlogo.agent.{ Agent, Observer }
 import org.nlogo.api.{ Version, RendererInterface,
-                       WorldDimensions, WorldDimensions3D, AggregateManagerInterface,
+                       WorldDimensions3D, AggregateManagerInterface,
                        ModelReader, LogoException, SimpleJobOwner,
                        HubNetInterface, CommandRunnable, ReporterRunnable }
-import org.nlogo.core.CompilerException
+import org.nlogo.core.{ AgentKind, CompilerException, WorldDimensions}
 import org.nlogo.agent.{ World, World3D }
 import org.nlogo.nvm.{ LabInterface,
                        Workspace, DefaultCompilerServices, CompilerInterface }
@@ -37,7 +37,11 @@ object HeadlessWorkspace {
   def newInstance(subclass: Class[_ <: HeadlessWorkspace]): HeadlessWorkspace = {
     val pico = new Pico
     pico.addComponent(if (Version.is3D) classOf[World3D] else classOf[World])
-    pico.addScalaObject("org.nlogo.compiler.Compiler")
+    pico.add("org.nlogo.compiler.Compiler")
+    if (Version.is3D)
+      pico.addScalaObject("org.nlogo.api.NetLogoThreeDDialect")
+    else
+      pico.addScalaObject("org.nlogo.api.NetLogoLegacyDialect")
     pico.add("org.nlogo.sdm.AggregateManagerLite")
     pico.add("org.nlogo.render.Renderer")
     pico.add(classOf[HubNetInterface],
@@ -54,7 +58,11 @@ object HeadlessWorkspace {
 
   def newLab: LabInterface = {
     val pico = new Pico
-    pico.addScalaObject("org.nlogo.compiler.Compiler")
+    pico.add("org.nlogo.compiler.Compiler")
+    if (Version.is3D)
+      pico.addScalaObject("org.nlogo.api.NetLogoThreeDDialect")
+    else
+      pico.addScalaObject("org.nlogo.api.NetLogoLegacyDialect")
     pico.add("org.nlogo.lab.Lab")
     pico.add("org.nlogo.lab.ProtocolLoader")
     pico.addComponent(classOf[DefaultCompilerServices])
@@ -70,14 +78,14 @@ object HeadlessWorkspace {
     "breed [mice mouse]\n " +
     "breed [frogs frog]\n " +
     "breed [nodes node]\n " +
-    "directed-link-breed [directed-links directed-link]\n" +
-    "undirected-link-breed [undirected-links undirected-link]\n" +
+    "directed-link-breed [directed-edges directed-edge]\n" +
+    "undirected-link-breed [undirected-edges undirected-edge]\n" +
     "turtles-own [tvar]\n" +
     "patches-own [pvar]\n" +
     "mice-own [age fur]\n" +
     "frogs-own [age spots]\n" +
-    "directed-links-own [lvar]\n" +
-    "undirected-links-own [weight]\n"
+    "directed-edges-own [lvar]\n" +
+    "undirected-edges-own [weight]\n"
 
 }
 
@@ -113,7 +121,7 @@ with org.nlogo.api.ViewSettings {
   AbstractWorkspace.isApplet(false)
   world.trailDrawer(renderer.trailDrawer)
   val defaultOwner =
-    new SimpleJobOwner("HeadlessWorkspace", world.mainRNG, classOf[Observer])
+    new SimpleJobOwner("HeadlessWorkspace", world.mainRNG, AgentKind.Observer)
 
   /**
    * Has a model been opened in this workspace?
@@ -211,14 +219,10 @@ with org.nlogo.api.ViewSettings {
     clearDrawing()
   }
 
-  def initForTesting(minPxcor: Int, maxPxcor: Int, minPycor: Int, maxPycor: Int) {
-    initForTesting(new WorldDimensions(minPxcor, maxPxcor, minPycor, maxPycor))
-  }
-
   /**
    * Internal use only.
    */
-  def initForTesting(d: org.nlogo.api.WorldDimensions) {
+  def initForTesting(d: org.nlogo.core.WorldDimensions) {
     world.createPatches(d)
     world.realloc()
     clearDrawing()
@@ -293,7 +297,7 @@ with org.nlogo.api.ViewSettings {
     if (!silent)
       println(agent)
   }
-  def inspectAgent(agentClass: Class[_ <: Agent], agent: org.nlogo.agent.Agent, radius: Double) {
+  def inspectAgent(agentClass: AgentKind, agent: org.nlogo.agent.Agent, radius: Double) {
     if (!silent) {
       println(agent)
     }

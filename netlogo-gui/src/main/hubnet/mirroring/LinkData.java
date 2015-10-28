@@ -3,6 +3,8 @@
 package org.nlogo.hubnet.mirroring;
 
 import org.nlogo.api.Dump;
+import org.nlogo.core.AgentKind;
+import org.nlogo.core.AgentKindJ;
 import org.nlogo.core.LogoList;
 
 import java.io.DataInputStream;
@@ -15,6 +17,9 @@ import java.io.IOException;
 public strictfp class LinkData
     extends AgentData
     implements org.nlogo.api.Link {
+
+  public AgentKind kind() { return AgentKindJ.Link(); }
+
   public static final short DEAD = 0x0000;
   public static final short ENDS = 0x0001;
   public static final short X1 = 0x0002;

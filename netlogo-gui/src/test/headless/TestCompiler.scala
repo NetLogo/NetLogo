@@ -3,8 +3,8 @@
 package org.nlogo.headless
 
 import org.scalatest.{ FunSuite, OneInstancePerTest, BeforeAndAfterEach }
-import org.nlogo.api.{ Version, I18N }
-import org.nlogo.core.CompilerException
+import org.nlogo.api.Version
+import org.nlogo.core.{ CompilerException, I18N }
 
 class TestCompiler extends FunSuite with OneInstancePerTest with BeforeAndAfterEach {
 

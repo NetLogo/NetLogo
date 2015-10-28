@@ -3,6 +3,7 @@
 package org.nlogo.gl.render;
 
 import org.nlogo.api.Agent;
+import org.nlogo.api.AgentFollowingPerspective;
 import org.nlogo.api.AgentException;
 import org.nlogo.api.Drawing3D;
 import org.nlogo.api.DrawingInterface;
@@ -14,6 +15,7 @@ import org.nlogo.api.PerspectiveJ;
 import org.nlogo.api.Turtle;
 import org.nlogo.api.ViewSettings;
 import org.nlogo.api.World;
+import org.nlogo.api.WorldWithWorldRenderable;
 import org.nlogo.api.World3D;
 
 import com.jogamp.opengl.GL;
@@ -30,7 +32,7 @@ import java.util.PriorityQueue;
 
 public class Renderer
     implements GLEventListener {
-  final World world;
+  final WorldWithWorldRenderable world;
   final ViewSettings renderer;
   private final TurtleRenderer turtleRenderer;
   private final PatchRenderer patchRenderer;
@@ -71,14 +73,14 @@ public class Renderer
   private DoubleBuffer projMatrix;
   private IntBuffer viewPort;
 
-  public Renderer(World world,
+  public Renderer(WorldWithWorldRenderable world,
                   ViewSettings graphicsSettings,
                   DrawingInterface drawing,
                   GLViewSettings glSettings) {
     this(world, graphicsSettings, drawing, glSettings, new ShapeRenderer(world));
   }
 
-  public Renderer(World world,
+  public Renderer(WorldWithWorldRenderable world,
                   ViewSettings graphicsSettings,
                   DrawingInterface drawing,
                   GLViewSettings glSettings,
@@ -303,7 +305,7 @@ public class Renderer
     if (agent instanceof Turtle) {
       Turtle turtle = (Turtle) agent;
 
-      boolean riding_agent = (world.observer().perspective() == PerspectiveJ.RIDE())
+      boolean riding_agent = (world.observer().perspective().kind() == PerspectiveJ.RIDE)
           && (world.observer().targetAgent() == turtle);
 
       return !riding_agent && !turtle.hidden()
@@ -325,6 +327,11 @@ public class Renderer
     } else {
       throw new IllegalStateException("Agent must be an instance of Turtle, Patch, or Link.");
     }
+  }
+
+  private boolean isPartiallyTransparent(Agent agent) {
+    int alpha = agent.alpha();
+    return alpha > 0 && alpha < 255;
   }
 
   void render(GL2 gl) {
@@ -464,7 +471,7 @@ public class Renderer
 
         for (Agent agent : world.turtles().agents()) {
           if (agentIsVisible(agent)) {
-            if (agent.isPartiallyTransparent()) {
+            if (isPartiallyTransparent(agent)) {
               transparentAgents.add(agent);
             } else {
               opaqueAgents.add(agent);
@@ -474,7 +481,7 @@ public class Renderer
 
         for (Agent agent : world.patches().agents()) {
           if (agentIsVisible(agent)) {
-            if (agent.isPartiallyTransparent()) {
+            if (isPartiallyTransparent(agent)) {
               transparentAgents.add(agent);
             } else {
               opaqueAgents.add(agent);
@@ -484,7 +491,7 @@ public class Renderer
 
         for (Agent agent : world.links().agents()) {
           if (agentIsVisible(agent)) {
-            if (agent.isPartiallyTransparent()) {
+            if (isPartiallyTransparent(agent)) {
               transparentAgents.add(agent);
             } else {
               opaqueAgents.add(agent);
@@ -502,7 +509,7 @@ public class Renderer
           // Link stamps
           for (org.nlogo.api.Link stamp : ((Drawing3D) world.getDrawing()).linkStamps()) {
             if (agentIsVisible(stamp)) {
-              if (stamp.isPartiallyTransparent()) {
+              if (isPartiallyTransparent(stamp)) {
                 transparentAgents.add(stamp);
               } else {
                 opaqueAgents.add(stamp);
@@ -513,7 +520,7 @@ public class Renderer
           // Turtle stamps
           for (org.nlogo.api.Turtle stamp : ((Drawing3D) world.getDrawing()).turtleStamps()) {
             if (agentIsVisible(stamp)) {
-              if (stamp.isPartiallyTransparent()) {
+              if (isPartiallyTransparent(stamp)) {
                 transparentAgents.add(stamp);
               } else {
                 opaqueAgents.add(stamp);
@@ -584,7 +591,7 @@ public class Renderer
           performPick();
         }
 
-        if ((perspective != PerspectiveJ.OBSERVE())
+        if ((perspective.kind() != PerspectiveJ.OBSERVE)
             && mouseState.inside() && (mouseState.point() != null)) {
           updateMouseCors();
         }
@@ -647,10 +654,10 @@ public class Renderer
 
     Perspective p = world.observer().perspective();
 
-    if (p == PerspectiveJ.FOLLOW() || p == PerspectiveJ.RIDE()) {
-      distance = world.observer().followDistance();
+    if (p instanceof AgentFollowingPerspective) {
+      distance = ((AgentFollowingPerspective) p).followDistance();
     } else {
-      distance = world.observer().dist();
+      distance = world.observer().orientation().get().dist();
     }
 
     if (distance != 0) {

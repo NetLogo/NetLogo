@@ -6,9 +6,9 @@ import org.nlogo.api.GraphicsInterface;
 import org.nlogo.shape.LinkShape;
 
 public strictfp class LinkDrawer {
-  final org.nlogo.api.ShapeList linkShapes;
+  final org.nlogo.core.ShapeList linkShapes;
 
-  public LinkDrawer(org.nlogo.api.ShapeList linkShapes) {
+  public LinkDrawer(org.nlogo.core.ShapeList linkShapes) {
     this.linkShapes = linkShapes;
   }
 

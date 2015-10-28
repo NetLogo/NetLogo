@@ -210,12 +210,12 @@ public abstract strictfp class AbstractRenderer
   }
 
   protected boolean darkenPeripheral(ViewSettings settings) {
-    return (settings.perspective() == PerspectiveJ.WATCH()) && settings.renderPerspective();
+    return (settings.perspective().kind() == PerspectiveJ.WATCH) && settings.renderPerspective();
   }
 
   protected boolean spotlightAgent(Perspective perspective) {
-    return (perspective == PerspectiveJ.WATCH() ||
-        perspective == PerspectiveJ.FOLLOW() ||
-        perspective == PerspectiveJ.RIDE());
+    return (perspective.kind() == PerspectiveJ.WATCH ||
+        perspective.kind() == PerspectiveJ.FOLLOW ||
+        perspective.kind() == PerspectiveJ.RIDE);
   }
 }

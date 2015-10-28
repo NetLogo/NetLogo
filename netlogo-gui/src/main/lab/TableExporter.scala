@@ -3,7 +3,7 @@
 package org.nlogo.lab
 
 import org.nlogo.api.Dump
-import org.nlogo.api.WorldDimensions
+import org.nlogo.core.WorldDimensions
 import org.nlogo.nvm.Workspace
 
 class TableExporter(modelFileName: String,

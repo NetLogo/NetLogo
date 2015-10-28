@@ -4,7 +4,7 @@ package org.nlogo.window;
 
 import org.nlogo.core.CompilerException;
 import org.nlogo.api.Editable;
-import org.nlogo.api.I18N;
+import org.nlogo.core.I18N;
 import org.nlogo.api.Property;
 import org.nlogo.nvm.Workspace;
 
@@ -460,14 +460,14 @@ public abstract strictfp class WorldViewSettings
     return gWidget.calculateWidth(worldWidth, patchSize);
   }
 
-  public void setDimensions(org.nlogo.api.WorldDimensions d, double patchSize) {
+  public void setDimensions(org.nlogo.core.WorldDimensions d, double patchSize) {
     workspace.world.patchSize(patchSize);
     setDimensions(d);
     patchSize(patchSize);
     gWidget.resetSize();
   }
 
-  public void setDimensions(org.nlogo.api.WorldDimensions d) {
+  public void setDimensions(org.nlogo.core.WorldDimensions d) {
     setDimensions(d.minPxcor(), d.maxPxcor(), d.minPycor(), d.maxPycor());
   }
 

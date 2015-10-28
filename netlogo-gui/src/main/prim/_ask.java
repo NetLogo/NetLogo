@@ -6,7 +6,7 @@ import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.ArrayAgentSet;
 import org.nlogo.agent.Observer;
-import org.nlogo.api.I18N;
+import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
@@ -61,7 +61,7 @@ public final strictfp class _ask
         throw new EngineException(context, this,
           I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
       }
-      agentset = new ArrayAgentSet(agent.getAgentClass(), 1, false, world);
+      agentset = new ArrayAgentSet(agent.kind(), 1, false);
       agentset.add(agent);
     } else {
       throw new ArgumentTypeException(context, this, 0, Syntax.AgentsetType() | Syntax.AgentType(), target);
@@ -92,7 +92,7 @@ public final strictfp class _ask
       throw new EngineException(context, this,
         I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
     }
-    AgentSet agentset = new ArrayAgentSet(agent.getAgentClass(), 1, false, world);
+    AgentSet agentset = new ArrayAgentSet(agent.kind(), 1, false);
     agentset.add(agent);
     context.runExclusiveJob(agentset, next);
     context.ip = offset;

@@ -563,8 +563,7 @@ public abstract strictfp class AbstractWorkspace
       public Object readFromString(String s)
           throws Importer.StringReaderException {
         try {
-          return compiler().readFromString
-            (s, world, extensionManager, world.program().dialect().is3D());
+          return compiler().readFromString(s, world, extensionManager);
         } catch (CompilerException ex) {
           throw new Importer.StringReaderException
               (ex.getMessage());
@@ -701,9 +700,7 @@ public abstract strictfp class AbstractWorkspace
   }
 
   public String autoConvert(String source, boolean subprogram, boolean reporter, String modelVersion) {
-    return compiler().autoConvert
-        (source, subprogram, reporter, modelVersion,
-         this, true, world().program().dialect().is3D());
+    return compiler().autoConvert(source, subprogram, reporter, modelVersion, this, true);
   }
 
   public void loadWorld(String[] strings, String version, WorldLoaderInterface worldInterface) {
@@ -715,17 +712,16 @@ public abstract strictfp class AbstractWorkspace
   }
 
   public org.nlogo.api.MersenneTwisterFast auxRNG() {
-    return world.auxRNG;
+    return world.auxRNG();
   }
 
   public org.nlogo.api.MersenneTwisterFast mainRNG() {
-    return world.mainRNG;
+    return world.mainRNG();
   }
 
   public Object readNumberFromString(String source)
       throws CompilerException {
-    return compiler().readNumberFromString
-      (source, world, getExtensionManager(), world.program().dialect().is3D());
+    return compiler().readNumberFromString(source, world, getExtensionManager());
   }
 
   public void checkReporterSyntax(String source)
@@ -742,7 +738,7 @@ public abstract strictfp class AbstractWorkspace
 
   public boolean isConstant(String s) {
     try {
-      compiler().readFromString(s, world.program().dialect().is3D());
+      compiler().readFromString(s);
       return true;
     }
     catch(CompilerException e) {
@@ -751,7 +747,7 @@ public abstract strictfp class AbstractWorkspace
   }
 
   public boolean isValidIdentifier(String s) {
-    return compiler().isValidIdentifier(s, world.program().dialect().is3D());
+    return compiler().isValidIdentifier(s);
   }
 
   public boolean isReporter(String s) {
@@ -759,16 +755,15 @@ public abstract strictfp class AbstractWorkspace
   }
 
   public Token[] tokenizeForColorization(String s) {
-    return compiler().tokenizeForColorization
-      (s, getExtensionManager(), world.program().dialect().is3D());
+    return compiler().tokenizeForColorization(s, getExtensionManager());
   }
 
   public Token getTokenAtPosition(String s, int pos) {
     return compiler().getTokenAtPosition(s, pos);
   }
 
-  public java.util.Map<String, java.util.List<Object>> findProcedurePositions(String source) {
-    return compiler().findProcedurePositions(source, world.program().dialect().is3D());
+  public scala.collection.immutable.Map<String, org.nlogo.core.ProcedureSyntax> findProcedurePositions(String source) {
+    return compiler().findProcedurePositions(source);
   }
 
   public abstract org.nlogo.nvm.CompilerInterface compiler();

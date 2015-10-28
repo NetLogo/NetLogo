@@ -2,21 +2,22 @@
 
 package org.nlogo.compiler
 
+import org.nlogo.core.{ DummyCompilationEnvironment, Program }
 import org.scalatest.FunSuite
-import org.nlogo.api.{ DummyExtensionManager}
-import org.nlogo.core.Program
+import org.nlogo.api.{ DummyExtensionManager, NetLogoLegacyDialect, NetLogoThreeDDialect, Version }
 import org.nlogo.nvm.Procedure
-import org.nlogo.core.DummyCompilationEnvironment
 import org.nlogo.api.Version.useGenerator
 
 class TestSourcePositions extends FunSuite {
   val program = Program.empty()
+  val dialect = if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect
+  val compiler = new Compiler(dialect)
   def compileReporter(source: String) =
-    Compiler.compileMoreCode("to foo __ignore " + source + "\nend", None, program,
+    compiler.compileMoreCode("to foo __ignore " + source + "\nend", None, program,
       java.util.Collections.emptyMap[String, Procedure],
       new DummyExtensionManager, new DummyCompilationEnvironment()).head.code.head.args.head.source
   def compileCommand(source: String) =
-    Compiler.compileMoreCode("to foo " + source + "\nend", None, program,
+    compiler.compileMoreCode("to foo " + source + "\nend", None, program,
       java.util.Collections.emptyMap[String, Procedure],
       new DummyExtensionManager, new DummyCompilationEnvironment()).head.code.head.source
   def reporter(s: String) { assertResult(s)(compileReporter(s)) }
