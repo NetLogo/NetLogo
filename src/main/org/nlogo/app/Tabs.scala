@@ -24,7 +24,7 @@ class Tabs(val workspace: GUIWorkspace,
 
   val interfaceTab = new InterfaceTab(workspace, monitorManager, dialogFactory)
   val infoTab = new InfoTab(workspace.attachModelDir(_))
-  val proceduresTab = new MainProceduresTab(workspace)
+  val codeTab = new MainCodeTab(workspace)
 
   var previousTab: java.awt.Component = interfaceTab
   var currentTab: java.awt.Component = interfaceTab
@@ -32,7 +32,7 @@ class Tabs(val workspace: GUIWorkspace,
   def init(moreTabs: (String, java.awt.Component) *) {
     addTab(I18N.gui.get("tabs.run"), interfaceTab)
     addTab(I18N.gui.get("tabs.info"), infoTab)
-    addTab(I18N.gui.get("tabs.code"), proceduresTab)
+    addTab(I18N.gui.get("tabs.code"), codeTab)
     for((name, tab) <- moreTabs)
       addTab(name, tab)
     tabsMenu = new org.nlogo.swing.TabsMenu(I18N.gui.get("menu.tabs"), this)
@@ -49,8 +49,8 @@ class Tabs(val workspace: GUIWorkspace,
   def handle(e: LoadBeginEvent) { setSelectedComponent(interfaceTab) }
   def handle(e: RuntimeErrorEvent) {
     if(!e.jobOwner.isInstanceOf[org.nlogo.window.MonitorWidget])
-      if(e.sourceOwner == proceduresTab)
-        highlightRuntimeError(proceduresTab, e)
+      if(e.sourceOwner == codeTab)
+        highlightRuntimeError(codeTab, e)
       else if(e.sourceOwner.isInstanceOf[org.nlogo.window.ExternalFileInterface]) {
         val filename = e.sourceOwner.asInstanceOf[org.nlogo.window.ExternalFileInterface].getFileName
         val tab = getTabWithFilename(filename).getOrElse{
@@ -61,7 +61,7 @@ class Tabs(val workspace: GUIWorkspace,
       }
   }
 
-  def highlightRuntimeError(tab: ProceduresTab, e: RuntimeErrorEvent) {
+  def highlightRuntimeError(tab: CodeTab, e: RuntimeErrorEvent) {
     setSelectedComponent(tab)
     // the use of invokeLater here is a desperate attempt to work around the Mac bug where sometimes
     // the selection happens and sometime it doesn't - ST 8/28/04
@@ -73,7 +73,7 @@ class Tabs(val workspace: GUIWorkspace,
   def handle(e: CompiledEvent) {
     def clearErrors() {
       for(i <- 0 until getTabCount)
-        if(getComponentAt(i).isInstanceOf[ProceduresTab])
+        if(getComponentAt(i).isInstanceOf[CodeTab])
           setForegroundAt(i, null)
     }
     def recolorTab(component: java.awt.Component, hasError: Boolean) {
@@ -81,8 +81,8 @@ class Tabs(val workspace: GUIWorkspace,
     }
 
     // recolor tabs
-    if(e.sourceOwner.isInstanceOf[ProceduresTab]) {
-      val tab = e.sourceOwner.asInstanceOf[ProceduresTab]
+    if(e.sourceOwner.isInstanceOf[CodeTab]) {
+      val tab = e.sourceOwner.asInstanceOf[CodeTab]
       if(e.error != null) setSelectedComponent(tab)
       // on null error, clear all errors, as we only get one event for all the files
       if(e.error == null) clearErrors() else recolorTab(tab, e.error != null)
@@ -121,17 +121,17 @@ class Tabs(val workspace: GUIWorkspace,
 
   def getSource(filename: String): String = getTabWithFilename(filename).map(_.innerSource).orNull
 
-  private def getTabWithFilename(name: String): Option[TemporaryProceduresTab] =
+  private def getTabWithFilename(name: String): Option[TemporaryCodeTab] =
     // start at 3 because 0, 1, and 2 are the permanent tabs
     (3 until getTabCount)
       .map(getComponentAt)
-      .collect{case tab: TemporaryProceduresTab => tab}
+      .collect{case tab: TemporaryCodeTab => tab}
       .find(_.filename == name)
 
-  def newTemporaryFile() { addNewTab(TemporaryProceduresTab.NewFile, false) }
+  def newTemporaryFile() { addNewTab(TemporaryCodeTab.NewFile, false) }
 
   def addNewTab(name: String, fileMustExist: Boolean) {
-    val tab = new TemporaryProceduresTab(workspace, this, name, fileMustExist, proceduresTab.smartTabbingEnabled)
+    val tab = new TemporaryCodeTab(workspace, this, name, fileMustExist, codeTab.smartTabbingEnabled)
     addTab(stripPath(name), tab)
     addMenuItem(getTabCount() - 1, stripPath(name))
     org.nlogo.window.Event.rehash()
@@ -146,20 +146,20 @@ class Tabs(val workspace: GUIWorkspace,
   def saveExternalFiles() {
     (3 until getTabCount)
       .map(getComponentAt)
-      .collect{case tab: TemporaryProceduresTab => tab}
+      .collect{case tab: TemporaryCodeTab => tab}
       .foreach(_.doSave())
   }
 
-  def saveTemporaryFile(tab: TemporaryProceduresTab, filename: String) {
+  def saveTemporaryFile(tab: TemporaryCodeTab, filename: String) {
     val index = getIndexOfComponent(tab)
     setTitleAt(index, stripPath(filename))
     tabsMenu.getItem(index).setText(filename)
   }
 
-  def getIndexOfComponent(tab: ProceduresTab): Int =
+  def getIndexOfComponent(tab: CodeTab): Int =
     (0 until getTabCount).find(n => getComponentAt(n) == tab).get
 
-  def closeTemporaryFile(tab: TemporaryProceduresTab) {
+  def closeTemporaryFile(tab: TemporaryCodeTab) {
     val index = getIndexOfComponent(tab)
     remove(tab)
     removeMenuItem(index)

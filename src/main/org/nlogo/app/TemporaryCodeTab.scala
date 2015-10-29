@@ -7,15 +7,15 @@ import org.nlogo.awt.UserCancelException
 import org.nlogo.workspace.AbstractWorkspace
 import org.nlogo.api.{I18N, FileIO, LocalFile}
 
-object TemporaryProceduresTab {
+object TemporaryCodeTab {
   val NewFile = "New File"
 }
-class TemporaryProceduresTab(workspace: AbstractWorkspace,
+class TemporaryCodeTab(workspace: AbstractWorkspace,
                              tabs: Tabs,
                              var filename: String,
                              fileMustExist: Boolean,
                              smartIndent: Boolean)
-extends ProceduresTab(workspace)
+extends CodeTab(workspace)
 with org.nlogo.app.Events.IndenterChangedEvent.Handler
 with org.nlogo.window.Events.LoadBeginEvent.Handler
 with org.nlogo.window.Events.AboutToQuitEvent.Handler
@@ -33,7 +33,7 @@ with org.nlogo.window.Events.AboutToQuitEvent.Handler
         add(new org.nlogo.swing.ToolBar.Separator)
         add(new javax.swing.JButton(new FileCloseAction))
         add(new org.nlogo.swing.ToolBar.Separator)
-        add(new ProceduresMenu(TemporaryProceduresTab.this))
+        add(new ProceduresMenu(TemporaryCodeTab.this))
         add(includesMenu)
       }
     }
@@ -44,7 +44,7 @@ with org.nlogo.window.Events.AboutToQuitEvent.Handler
   def isDirty = _dirty
 
   private def load(fileMustExist: Boolean) {
-    if(filename != TemporaryProceduresTab.NewFile) {
+    if(filename != TemporaryCodeTab.NewFile) {
       try {
         val sourceFile = new LocalFile(filename)
         val origSource = sourceFile.readFile()
@@ -66,7 +66,7 @@ with org.nlogo.window.Events.AboutToQuitEvent.Handler
     if((e.sourceOwner.isInstanceOf[org.nlogo.window.ExternalFileInterface] &&
         e.sourceOwner.asInstanceOf[org.nlogo.window.ExternalFileInterface].getFileName == filename)
         // if the Code tab compiles then get rid of the error ev 7/26/07
-        || (e.sourceOwner.isInstanceOf[ProceduresTab] && e.error == null))
+        || (e.sourceOwner.isInstanceOf[CodeTab] && e.error == null))
       errorLabel.setError(e.error, e.sourceOwner.headerSource.size)
   }
 
@@ -99,7 +99,7 @@ with org.nlogo.window.Events.AboutToQuitEvent.Handler
 
   @throws(classOf[UserCancelException])
   def save() {
-    if(filename == TemporaryProceduresTab.NewFile) {
+    if(filename == TemporaryCodeTab.NewFile) {
       filename = userChooseSavePath
       tabs.saveTemporaryFile(this, filename)
       dirty()

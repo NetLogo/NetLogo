@@ -13,7 +13,7 @@ import java.awt.print.PageFormat
 import javax.swing.{JButton, ImageIcon, AbstractAction, Action, ScrollPaneConstants, JScrollPane, BorderFactory, JPanel}
 import org.nlogo.api.I18N
 
-class ProceduresTab(val workspace: AbstractWorkspace) extends JPanel
+class CodeTab(val workspace: AbstractWorkspace) extends JPanel
   with org.nlogo.window.ProceduresInterface
   with ProceduresMenuTarget
   with Events.SwitchedTabsEvent.Handler
@@ -57,10 +57,10 @@ class ProceduresTab(val workspace: AbstractWorkspace) extends JPanel
 
   private class CompileAction extends AbstractAction(I18N.gui.get("tabs.code.checkButton")) {
     putValue(Action.SMALL_ICON,
-      new ImageIcon(classOf[ProceduresTab].getResource(
+      new ImageIcon(classOf[CodeTab].getResource(
         "/images/check.gif")))
     def actionPerformed(e: ActionEvent) {
-      new org.nlogo.window.Events.CompileAllEvent().raise(ProceduresTab.this)
+      new org.nlogo.window.Events.CompileAllEvent().raise(CodeTab.this)
     }
   }
 
@@ -69,7 +69,7 @@ class ProceduresTab(val workspace: AbstractWorkspace) extends JPanel
       add(new JButton(org.nlogo.app.FindDialog.FIND_ACTION))
       add(new JButton(compileAction))
       add(new org.nlogo.swing.ToolBar.Separator())
-      add(new ProceduresMenu(ProceduresTab.this))
+      add(new ProceduresMenu(CodeTab.this))
     }
   }
 

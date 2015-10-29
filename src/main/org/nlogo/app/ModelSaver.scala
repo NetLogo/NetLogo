@@ -22,7 +22,7 @@ class ModelSaver(app: App) {
 
     // procedures
     section {
-      buf ++= app.tabs.proceduresTab.innerSource
+      buf ++= app.tabs.codeTab.innerSource
       if(buf.nonEmpty && buf.last != '\n')
         buf += '\n'
     }
