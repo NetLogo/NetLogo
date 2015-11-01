@@ -34,6 +34,10 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
   val errorLabel = new EditorAreaErrorLabel(text)
   val lineNumbers = new LineNumbersBar(text)
   val toolBar = getToolBar
+  val scrollableEditor = new JScrollPane(
+    text,
+    ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+    ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
   def compiler = workspace
   def program = workspace.world.program
 
@@ -41,11 +45,6 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
     setIndenter(false)
     setLayout(new BorderLayout)
     add(toolBar, BorderLayout.NORTH)
-    val scrollableEditor = new JScrollPane(
-      text,
-      ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-      ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
-    scrollableEditor.setRowHeaderView(lineNumbers)
     val codePanel = new JPanel(new BorderLayout) {
       add(scrollableEditor, BorderLayout.CENTER)
       add(errorLabel, BorderLayout.NORTH)
@@ -154,4 +153,7 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
     if(isSmart) text.setIndenter(new SmartIndenter(new EditorAreaWrapper(text), workspace))
     else text.setIndenter(new org.nlogo.editor.DumbIndenter(text))
   }
+
+  def lineNumbersVisible = scrollableEditor.getRowHeader != null && scrollableEditor.getRowHeader.getView != null
+  def lineNumbersVisible_=(visible: Boolean) = scrollableEditor.setRowHeaderView(if(visible) lineNumbers else null)
 }

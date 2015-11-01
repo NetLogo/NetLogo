@@ -24,6 +24,7 @@ with org.nlogo.window.Events.AboutToQuitEvent.Handler
   val includesMenu = new IncludesMenu(this)
   load(fileMustExist)
   setIndenter(smartIndent)
+  lineNumbersVisible = tabs.codeTab.lineNumbersVisible
 
   override def getToolBar =
     new org.nlogo.swing.ToolBar() {

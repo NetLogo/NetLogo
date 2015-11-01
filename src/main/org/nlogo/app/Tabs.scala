@@ -165,6 +165,9 @@ class Tabs(val workspace: GUIWorkspace,
     removeMenuItem(index)
   }
 
+  def forAllCodeTabs(fn: CodeTab => Unit) =
+    getComponents collect { case tab: CodeTab => tab } foreach (fn)
+
   def removeMenuItem(index: Int) {
     // first remove all the menu items after this one...
     for(i <- tabsMenu.getItemCount() - 1 to index by -1) tabsMenu.remove(i)
