@@ -5,8 +5,8 @@ libraryDependencies +=
 
 libraryDependencies +=
   "classycle" % "classycle" % "1.3.2" from
-    "http://ccl.northwestern.edu/devel/classycle-1.3.2.jar"
+    "http://ccl-artifacts.s3-website-us-east-1.amazonaws.com/classycle-1.3.2.jar"
 
 libraryDependencies +=
   "net.sf.proguard" % "proguard" % "4.8" from
-    "http://ccl.northwestern.edu/devel/proguard-4.8.jar"
+    "http://ccl-artifacts.s3-website-us-east-1.amazonaws.com/proguard-4.8.jar"
