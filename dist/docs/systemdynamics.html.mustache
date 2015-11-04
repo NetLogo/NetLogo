@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<title>
+      NetLogo {{version}} User Manual: System Dynamics Guide
+    </title>
+    <link rel="stylesheet" href="netlogo.css" type="text/css">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <h1>
+      System Dynamics Guide
+    </h1>
+    {{> versionTag.html }}
+    <p>
+      This guide has three parts:
+    <ul>
+      <li>
+        <a href="#what"><b>What is the System Dynamics Modeler?</b></a>: A
+        general description of the tool, including the ideas and principles
+        behind it.
+      <li>
+        <a href="#how"><b>How It Works</b></a>: Describes the interface and
+        how you use it.
+      <li>
+        <a href="#tutorial"><b>Tutorial: Wolf-Sheep Predation
+        (aggregate)</b></a>: Walks you through creating a model with the
+        System Dynamics Modeler.
+      </ul>
+    <h2>
+      <a id="what">What is the NetLogo System Dynamics
+      Modeler?</a>
+    </h2>
+    <p>
+      System Dynamics is a type of modeling where you try to understand how
+      things relate to one another. It is a little different from the
+      agent-based approach we normally use in NetLogo models.
+    <p>
+      With the agent-based approach we usually use in NetLogo, you program
+      the behavior of individual agents and watch what emerges from their
+      interaction. In a model of Wolf-Sheep Predation, for example, you
+      provide rules for how wolves, sheep and grass interact with each
+      other. When you run the simulation, you watch the emergent
+      aggregate-level behavior: for example, how the populations of wolves
+      and sheep change over time.
+    <p>
+      With the System Dynamics Modeler, you don't program the behavior
+      of individual agents. Instead, you program how populations of agents
+      behave as a whole. For example, using System Dynamics to model
+      Wolf-Sheep Predation, you specify how the total number of sheep would
+      change as the total number of wolves goes up or down, and vice versa.
+      You then run the simulation to see how both populations change over
+      time.
+    <p>
+      The System Dynamics Modeler allows you to draw a diagram that defines
+      these populations, or &quot;stocks&quot;, and how they affect each
+      other. The Modeler reads your diagram and generates the appropriate
+      NetLogo code -- global variables, procedures and reporters -- to run
+      your System Dynamics model inside of NetLogo.
+    <h3>
+      Basic Concepts
+    </h3>
+    <p>
+      A System Dynamics diagram is made of four kinds of elements: Stocks,
+      Variables, Flows and Links.
+    <p>
+      A <b>Stock</b> is a collection of stuff, an aggregate. For example, a
+      Stock can represent a population of sheep, the water in a lake, or
+      the number of widgets in a factory.
+    <p>
+      A <b>Flow</b> brings things into, or out of a Stock. Flows look like
+      pipes with a faucet because the faucet controls how much stuff passes
+      through the pipe.
+    <p>
+      A <b>Variable</b> is a value used in the diagram. It can be an
+      equation that depends on other Variables, or it can be a constant.
+    <p>
+      A <b>Link</b> makes a value from one part of the diagram available to
+      another. A link transmits a number from a Variable or a Stock into a
+      Stock or a Flow.
+    <p>
+      The System Dynamics Modeler figures out how the value of your Stocks
+      change over time by estimating them over and over. The estimation
+      isn't always perfect, but you can affect its accuracy by changing
+      the value of <b>dt</b>. As dt decreases, you estimate the model more
+      frequently, so it gets more accurate. However, decreasing dt also
+      makes the model slower.
+    <h3>
+      Sample Models
+    </h3>
+    <p>
+      There are four basic models in the Sample Models section of the NetLogo
+      Models Library that demonstrate the use of the System Dynamics Modeler.
+      All four basic models explore population growth (and, in models with
+      predation, population decline).
+    <p>
+      <b>Exponential Growth</b> and <b>Logistic Growth</b> are simple
+      examples of growth in one stock.
+    <p>
+      <b>Wolf Sheep Predation (System Dynamics)</b> is an example of a system
+      with multiple stocks influencing one another. It models a
+      predator-prey ecosystem using the System Dynamics Modeler.
+    <p>
+      <b>Wolf Sheep Predation (Docked Hybrid)</b> is an example of a model that
+      runs both the a System Dynamics model and an agent-based model
+      side-by-side. It runs the System Dynamics implementation of
+      Wolf-Sheep Predation next to the agent-based Wolf Sheep Predation
+      model from the Biology section of Sample Models.
+    <h2>
+      <a id="how">How it Works</a>
+    </h2>
+    <p>
+      To open the System Dynamics Modeler, choose the System Dynamics
+      Modeler item in the Tools menu. The System Dynamics Modeler window
+      will appear.
+    <p class="screenshot">
+      <img alt="screen shot" src="images/systemdynamics/window.jpg">
+    <h3>
+      Diagram Tab
+    </h3>
+    <p>
+      The Diagram tab is where you draw your System Dynamics diagram.
+    <p>
+      The toolbar contains buttons to edit, delete and create items in your
+      diagram.
+    <h4>
+      Creating Diagram Elements
+    </h4>
+    <p class="screenshot">
+      <img alt="screen shot" src="images/systemdynamics/elementbuttons.jpg">
+    <p>
+      A System Dynamics diagram is made up of four kinds of components:
+      Stocks, Variables, Flows and Links.
+    <dl>
+      <dt>
+        Stock
+      <dd>
+        <p>
+          To create a Stock, press the Stock button in the toolbar and
+          click in the diagram area below. A new Stock appears. Each Stock
+          requires a unique name, which becomes a global variable. Stocks
+          also require an <b>Initial value</b>. It can be a number, a
+          variable, a complex NetLogo expression, or a call to a NetLogo
+          reporter.
+        <dt>
+        Variable
+      <dd>
+        <p>
+          To create a Variable, press the Variable button and click on the
+          diagram. Each Variable in the System Dynamics Model requires a
+          unique name, which becomes the name of a procedure, or a global
+          variable. Variables also require an <b>Expression</b>. This
+          expression can be a number, a variable, a complex NetLogo
+          expression, or a call to a NetLogo reporter.
+        <dt>
+        Flow
+      <dd>
+        <p>
+          To create a Flow, press the Flow button. Click and hold where you
+          want the Flow to begin -- either on a Stock or in an empty area
+          -- and drag the mouse to where you want the Flow to end -- on a
+          Stock or in an empty area. Each Flow requires a unique name,
+          which becomes a NetLogo reporter. Flows require an
+          <b>Expression</b>, which is the rate of flow from the input to
+          the output. This expression can be a number, a variable, a
+          complex NetLogo expression, or a call to a NetLogo reporter. If
+          the value is negative, the flow is in the opposite direction.
+        <p>
+          When more than one Flow is connected to a Stock, it is important
+          to consider how they should interact with one another. NetLogo
+          will not enforce that the Flows out of a stock occur in any
+          particular order. Also, NetLogo will not ensure that the sum of
+          Flows out of a Stock are less than or equal to the value of the
+          Stock. These behaviors can be implemented explicitly when
+          creating the <b>Expression</b> for a Flow.
+        <p>
+          For example, if the Flow is defined as a constant value, 10, you
+          can ensure it never draws more than the value of the Stock by
+          using the <a href="dictionary.html#min"><code>min</code></a>
+          primitive: <code>min (list stock 10)</code>. If I want Flow A to
+          deplete a Stock before Flow B is calculated, I can link Flow A to
+          Flow B and modify Flow B to subtract Flow A's value from the
+          stock: <code>min (list (max (list 0 (stock - flow-a))) 10)</code>.
+        <dt>
+        Link
+      <dd>
+        <p>
+          To create a Link, click and hold on the starting point for the
+          link -- a Variable, Stock or Flow -- and drag the mouse to the
+          destination Variable or Flow.
+        </dl>
+    <h4>
+      Working with Diagram Elements
+    </h4>
+    <p>
+      When you create a Stock, Variable, or Flow, you see a red
+      question-mark on the element. The question-mark indicates that the
+      element doesn't have a name yet. The red color indicates that the
+      Stock is incomplete: it's missing one or more values required to
+      generate a System Dynamics model. When a diagram element is complete,
+      the name turns black.
+    <p>
+      <b>Selecting:</b> To select a diagram element, click on it. To select
+      multiple elements, hold the shift key. You can also select one or
+      more elements by dragging a selection box.
+    <p>
+      <b>Editing:</b> To edit a diagram element, select the element and
+      press the &quot;Edit&quot; button on the toolbar. Or just
+      double-click the element. (You can edit Stocks, Flows and Variables,
+      but you can't edit Links).
+    <p>
+      <b>Moving:</b> To move a diagram element, select it and drag the
+      mouse to a new location.
+    <h4>
+      Editing dt
+    </h4>
+    <p class="screenshot">
+      <img alt="screen shot" src="images/systemdynamics/dt.jpg">
+    <p>
+      On the right side of the toolbar is the default dt, the interval used
+      to approximate the results of your System Dynamics model. To change
+      the value of the default dt for your aggregate model, press the Edit
+      button next to the dt display and enter a new value.
+    <h4>
+      Errors
+    </h4>
+    <p>
+      When you click the &quot;check&quot; button or when you edit a stock,
+      flow, or variable the modeler will automatically generate the NetLogo
+      code the corresponds to your diagram and try to compile that code. If
+      there is an error the Code tab will turn red and a message will
+      appear, and the portion of the generated code that is causing the
+      trouble will be highlighted.
+    <p class="screenshot">
+      <img alt="screen shot" src="images/systemdynamics/error.gif">
+    <p>
+      This should give you a better idea which element in the diagram is
+      causing the problem.
+    <p class="screenshot">
+      <img alt="screen shot" src="images/systemdynamics/errordialog.jpg">
+    <h3>
+      Code Tab
+    </h3>
+    <p>
+      The System Dynamics Modeler generates NetLogo variables and
+      procedures based on the contents of your diagram. These procedures
+      are what make the diagram actually perform calculations. The Code tab
+      in the System Dynamics Modeler window displays the NetLogo procedures
+      generated from your diagram.
+    <p>
+      You can't edit the contents of the Code tab. To modify your
+      System Dynamics mode, edit the diagram.
+    <p>
+      Let's take a closer look at how the generated code relates to the
+      diagram.:
+    <ul>
+      <li>
+        <p>
+          Stocks correspond to a global variable that is initialized to the
+          value or expression you provided in the <b>Initial value</b>
+          field. Each Stock will be updated every step based on the Flows
+          in and out.
+        <li>
+        <p>
+          Flows correspond to a procedure that contains the expression you
+          provided in the <b>Expression</b> field.
+        <li>
+        <p>
+          Variables can either be global variables or procedures. If the
+          <b>Expression</b> you provided is a constant it will be a global
+          variable and initialized to that value. If you used a more
+          complicated <b>Expression</b> to define the Variable it will
+          create a procedure like a Flow.
+        </ul>
+    <p>
+      The variables and procedures defined in this tab are accessible in
+      the main NetLogo window, just like the variables and procedures you
+      define yourself in the main NetLogo Code tab. You can call the
+      procedures from the main Code tab, from the Command Center, or from
+      buttons in the Interface tab. You can refer to the global variables
+      anywhere, including in the main Code tab and in monitors.
+    <p>
+      There are three important procedures to notice:
+      <code>system-dynamics-setup</code>, <code>system-dynamics-go</code>,
+      and <code>system-dynamics-do-plot</code>.
+    <p>
+      <b><code>system-dynamics-setup</code></b> initializes the aggregate
+      model. It sets the value of <code>dt</code>, calls
+      <code>reset-ticks</code>, and initializes your stocks and your
+      converters. Converters with a constant value are initialized first,
+      followed by the stocks with constant values. The remaining stocks are
+      initialized in alphabetical order.
+    <p>
+      <b><code>system-dynamics-go</code></b> runs the aggregate model for
+      <code>dt</code> time units. It computes the values of Flows and
+      Variables and updates the value of Stocks. It also calls
+      <code>tick-advance</code> with the value of <code>dt</code>.
+      Converters and Flows with non-constant <b>Expressions</b> will be
+      calculated only once when this procedure is called, however, their
+      order of evaluation is undefined
+    <p>
+      <b><code>system-dynamics-do-plot</code></b> plots the values of
+      Stocks in the aggregate model. To use this, first create a plot in
+      the main NetLogo window. You then need to define a plot pen for each
+      Stock you want to be plotted. This procedure will use the current
+      plot, which you can change using the <code>set-current-plot</code>
+      command.
+    <h3>
+      The System Dynamics Modeler and NetLogo
+    </h3>
+    <p>
+      The diagram you create with the System Dynamics Modeler, and the
+      procedures generated from your diagram, are part of your NetLogo
+      model. When you a save the NetLogo model, your diagram is saved with
+      it, in the same file.
+    <h2>
+      <a id="tutorial">Tutorial: Wolf-Sheep Predation</a>
+    </h2>
+    <p>
+      Let's create a model of Wolf-Sheep Predation with the System
+      Dynamics Modeler.
+    <h3>
+      Step 1: Sheep Reproduction
+    </h3>
+    <div class="blockquote">
+      <ul>
+        <li>Open a new model in NetLogo.
+        <li>Launch the System Dynamics Modeler in the Tools menu.
+          <p class="screenshot">
+            <img alt="screen shot" src="images/systemdynamics/tutorial1.jpg">
+          </ul>
+    </div>
+    <p>
+      Our model will have a population of wolves and a population of sheep.
+      Let's start with the sheep. First, create a Stock that holds a
+      population of Sheep.
+    <div class="blockquote">
+      <ul>
+        <li>Press the Stock button in the toolbar.
+          <p class="screenshot">
+            <img alt="screen shot" src="images/systemdynamics/tutorial2-0.jpg">
+          <li>Click in the diagram area.
+        </ul>
+    </div>
+    <p>
+      You see a Stock with a red question-mark in the middle.
+    <p class="screenshot">
+      <img alt="screen shot" src="images/systemdynamics/tutorial2-1.jpg">
+    <div class="blockquote">
+      <ul>
+        <li>Double-click the Stock to edit.
+        <li>Name the stock <code>sheep</code>
+        <li>Set the initial value to <code>100</code>.
+        <li>Deselect the Allow Negative Values checkbox. It doesn't
+        make sense to have negative sheep!
+          <p class="screenshot">
+            <img alt="screen shot" src="images/systemdynamics/tutorial2-2.jpg">
+          </ul>
+    </div>
+    <p>
+      Our sheep population can increase if new sheep are born. To add this
+      to our diagram, we create a Flow into the stock of sheep.
+    <div class="blockquote">
+      <ul>
+        <li>Click on the Flow button in the toolbar and press the mouse
+        button in an empty area to the left of the sheep Stock. Drag the
+        Flow to the right until it connects to the sheep Stock and let go.
+        <li>Edit the Flow and name it <code>sheep-births</code>.
+        <li>For now, enter a constant, such as <code>1</code>, into the
+        Expression field.
+        </ul>
+    </div>
+    <p>
+      The number of sheep born during a period of time depends on the
+      number of sheep that are alive: more sheep means more reproduction.
+    <div class="blockquote">
+      <ul>
+        <li>Draw a Link from the <code>sheep</code> Stock to the
+        <code>sheep-births</code> Flow.
+        </ul>
+    </div>
+    <p>
+      The rate of sheep births also depends on some constant factors that
+      are beyond the scope of this model: the rate of reproduction, etc.
+    <div class="blockquote">
+      <ul>
+        <li>Create a Variable and name it <code>sheep-birth-rate</code>.
+        Set its value to <code>0.04</code>
+        <li>Draw a Link from the <code>sheep-birth-rate</code> Variable to
+        the <code>sheep-births</code>.
+        </ul>
+    </div>
+    <p>
+      Your diagram should look something like this:
+    <p class="screenshot">
+      <img alt="screen shot" src="images/systemdynamics/tutorial5.jpg">
+    <p>
+      The <code>sheep-births</code> Flow has a red label because we
+      haven't given it an expression. Red indicates that there's
+      something missing from that part of the diagram.
+    <p>
+      The amount of sheep flowing into our stock will depend positively
+      with the number of sheep and the sheep birth rate.
+    <div class="blockquote">
+      <ul>
+        <li>Edit the <code>sheep-births</code> Flow and set the expression
+        to <code>sheep-birth-rate * sheep</code>.
+        </ul>
+    </div>
+    <p>
+      We now have a complete diagram. To see the NetLogo code generated by
+      our diagram, you can click on the Code tab of the System Dynamics
+      Modeler window. It looks like this:
+    <p class="screenshot">
+      <img alt="screen shot" src="images/systemdynamics/tutorial8.gif">
+    <h3>
+      Step 2: NetLogo Integration
+    </h3>
+    <p>
+      Once you create an aggregate model with the System Dynamics Modeler,
+      you can interact with the model through the main NetLogo interface
+      window. Let's build our NetLogo model to run the code generated
+      by our diagram. We'll need a <code>setup</code> and
+      <code>go</code> buttons which call the
+      <code>system-dynamics-setup</code> and <code>system-dynamics-go
+      procedures</code> created by the System Dynamics Modeler. And
+      we'll want a monitor and a plot to watch the changes in sheep
+      population.
+    <div class="blockquote">
+      <ul>
+        <li>Select the main NetLogo window
+        <li>In the Code tab, write:
+          <pre>
+to setup
+  ca
+  system-dynamics-setup
+end
+
+to go
+  system-dynamics-go
+  system-dynamics-do-plot
+end
+</pre>
+        <li>Move to the Interface tab
+        <li>Create a <code>setup</code> button
+        <li>Create a <code>go</code> button (don't forget to make it
+        forever)
+        <li>Create a <code>sheep</code> monitor.
+        <li>Create a plot called &quot;populations&quot; with a pen named
+        &quot;sheep&quot;.
+        </ul>
+    </div>
+    <p>
+      Now we're ready to run our model.
+    <div class="blockquote">
+      <ul>
+        <li>Press the setup button.
+        <li>Don't press the &quot;go&quot; button yet. Instead, type
+        <code>go</code> four or five times into the Command Center
+        </ul>
+    </div>
+    <p>
+      Notice what happens. The sheep population increases exponentially.
+      After four or five iterations, we have an enormous number of sheep.
+      That's because we have sheep reproduction, but our sheep never
+      die.
+    <p>
+      To fix that, let's finish our diagram by introducing a population
+      of wolves which eat sheep.
+    <h3>
+      Step 3: Wolf Predation
+    </h3>
+    <div class="blockquote">
+      <ul>
+        <li>Move back to the System Dynamics window
+        <li>Add a stock of wolves
+        <li>Add Flows, Variables and Links to make your diagram look like
+        this:
+          <p class="screenshot">
+            <img alt="screen shot" src="images/systemdynamics/tutorial9.jpg">
+          <li>Add one more Flow from the <code>wolves</code> Stock to the
+          Flow that goes out of the Sheep stock.
+        <li>Fill in the names of the diagram elements so it looks like
+        this:
+          <p class="screenshot">
+            <img alt="screen shot" src="images/systemdynamics/tutorial10.jpg">
+          <p>
+            where
+            <br>
+            initial-value of <code>wolves</code> is <code>30</code>,
+            <br>
+            <code>wolf-deaths</code> is <code>wolves *
+            wolf-death-rate</code> ,
+            <br>
+            <code>wolf-death-rate</code> is <code>0.15</code>,
+            <br>
+            <code>predator-efficiency</code> is <code>.8</code>,
+            <br>
+            <code>wolf-births</code> is <code>wolves * predator-efficiency
+            * predation-rate * sheep</code>,
+            <br>
+            <code>predation-rate</code> is <code>3.0E-4</code>,
+            <br>
+            and <code>sheep-deaths</code> is <code>sheep * predation-rate *
+            wolves</code>.
+          </ul>
+    </div>
+    <p>
+      Now we're really done.
+    <div class="blockquote">
+      <ul>
+        <li>Go back to the main NetLogo window
+        <li>Add a plot pen named &quot;wolves&quot; to the population plot
+        <li>Press <code>setup</code> and <code>go</code> to see your System
+        Dynamics Modeler diagram in action.
+        </ul>
+    </div>
+    <p>
+      You see a plot of the populations that looks like this:
+    <p class="screenshot">
+      <img alt="screen shot" src="images/systemdynamics/tutorial11.jpg">
+

@@ -12,7 +12,7 @@ object Packaging {
       classpath =>
         Package.ManifestAttributes((
           "Class-Path", classpath.files
-            .map(f => "lib/" + f.getName)
+            .map(f => f.getName)
             .filter(_.endsWith(".jar"))
             .mkString(" ")))},
     packageBin in Compile <<= (packageBin in Compile, scalaInstance, baseDirectory, cacheDirectory, streams) map {

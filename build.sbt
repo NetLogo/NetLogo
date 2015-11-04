@@ -101,11 +101,7 @@ libraryDependencies ++= Seq(
   "com.googlecode.json-simple" % "json-simple" % "1.1.1"
 )
 
-all <<= (baseDirectory, streams) map { (base, s) =>
-  s.log.info("making resources/system/dict.txt and docs/dict folder")
-  IO.delete(base / "docs" / "dict")
-  Process("python bin/dictsplit.py").!!
-}
+all <<= (streams) map { (s) => }
 
 all <<= all.dependsOn(
   packageBin in Test,

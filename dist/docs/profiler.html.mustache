@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<title>
+      NetLogo {{version}} User Manual: Profiler Extension
+    </title>
+    <link rel="stylesheet" href="netlogo.css" type="text/css">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <h1>
+      Profiler Extension
+    </h1>
+    <p>
+      If you'd like your model to run faster, the profiler extension
+      may be useful to you. It includes primitives that measure how many
+      times the procedures in your model are called during a run and how
+      long each call takes. You can use this information to where to focus
+      your speedup efforts.
+    <h2>
+      Caution
+    </h2>
+    <p>
+      The profiler extension is experimental. It is not yet well tested or
+      user friendly. Nonetheless, we think some users will find it useful.
+    <h2>
+      Usage
+    </h2>
+    <p>
+      The profiler extension comes preinstalled. To use the extension in
+      your model, add a line to the top of your Code tab:
+    <pre>
+extensions [profiler]
+</pre>
+    <p>
+      If your model already uses other extensions, then it already has an
+      <a href="dictionary.html#extensions"><code>extensions</code></a> line in
+      it, so just add <code>profiler</code> to the list.
+    <p>
+      For more information on using NetLogo extensions, see the <a href="extensions.html">Extensions Guide</a>.
+    <h3>
+      Example
+    </h3>
+    <pre>
+setup                  ;; set up the model
+profiler:start         ;; start profiling
+repeat 20 [ go ]       ;; run something you want to measure
+profiler:stop          ;; stop profiling
+print profiler:report  ;; view the results
+profiler:reset         ;; clear the data
+</pre>
+    <div class="blockquote">
+        <b>Code Example:</b> Profiler Example
+      </div>
+    <h2>
+      Primitives
+    </h2>
+    <p>
+      <a href="#profiler:calls">profiler:calls</a>
+      <a href="#profiler:exclusive-time">profiler:exclusive-time</a>
+      <a href="#profiler:inclusive-time">profiler:inclusive-time</a>
+      <a href="#profiler:start">profiler:start</a>
+      <a href="#profiler:stop">profiler:stop</a>
+      <a href="#profiler:reset">profiler:reset</a>
+      <a href="#profiler:report">profiler:report</a>
+      <div class="dict_entry" id="profiler:calls">
+        <h3>
+          <a>profiler:calls</a>
+        </h3>
+        <h4>
+          <span class="prim_example">profiler:calls <i>procedure-name</i></span>
+        </h4>
+        <p>
+        Reports the number of times that <i>procedure-name</i> was called. If
+        <i>procedure-name</i> is not defined, then reports 0.
+      </div>
+      <div class="dict_entry" id="profiler:exclusive-time">
+        <h3>
+          <a>profiler:exclusive-time</a>
+        </h3>
+        <h4>
+          <span class="prim_example">profiler:exclusive-time <i>procedure-name</i></span>
+        </h4>
+        <p>
+        Reports the exclusive time, in milliseconds, that
+        <i>procedure-name</i> was running for. Exclusive time is the time
+        from when the procedure was entered, until it finishes, but does not
+        include any time spent in other user-defined procedures which it
+        calls.
+        <p>
+        If <i>procedure-name</i> is not defined, then reports 0.
+      </div>
+      <div class="dict_entry" id="profiler:inclusive-time">
+        <h3>
+          <a>profiler:inclusive-time</a>
+        </h3>
+        <h4>
+          <span class="prim_example">profiler:inclusive-time <i>procedure-name</i></span>
+        </h4>
+        <p>
+        Reports the inclusive time, in milliseconds, that
+        <i>procedure-name</i> was running for. Inclusive time is the time
+        from when the procedure was entered, until it finishes.
+        <p>
+        If <i>procedure-name</i> is not defined, then reports 0.
+      </div>
+      <div class="dict_entry" id="profiler:start">
+        <h3>
+          <a>profiler:start</a>
+        </h3>
+        <h4>
+          <span class="prim_example">profiler:start</span>
+        </h4>
+        <p>
+        Instructs the profiler to begin recording user-defined procedure
+        calls.
+      </div>
+      <div class="dict_entry" id="profiler:stop">
+        <h3>
+          <a>profiler:stop</a>
+        </h3>
+        <h4>
+          <span class="prim_example">profiler:stop</span>
+        </h4>
+        <p>
+        Instructs the profiler to stop recording user-defined procedure
+        calls.
+      </div>
+      <div class="dict_entry" id="profiler:reset">
+        <h3>
+          <a>profiler:reset</a>
+        </h3>
+        <h4>
+          <span class="prim_example">profiler:reset</span>
+        </h4>
+        <p>
+        Instructs the profiler to erase all collected data.
+      </div>
+      <div class="dict_entry" id="profiler:report">
+        <h3>
+          <a>profiler:report</a>
+        </h3>
+        <h4>
+          <span class="prim_example">profiler:report</span>
+        </h4>
+        <p>
+        Reports a string containing a breakdown of all user-defined procedure
+        calls. The <code>Calls</code> column contains the number of times a
+        user-defined procedure was called. The <code>Incl T(ms)</code> column
+        is the total time, in milliseconds, it took for the call to complete,
+        including the time spent in other user-defined procedures. The
+        <code>Excl T(ms)</code> column is the total time, in milliseconds,
+        spent within that user-defined procedure, not counting other
+        user-define procedures it called. The <code>Excl/calls</code> column
+        is an estimate of the time, in milliseconds, spent in that
+        user-defined procedure for each call.
+        <p>
+        Here is example output:
+        <pre>
+Sorted by Exclusive Time
+Name                               Calls Incl T(ms) Excl T(ms) Excl/calls
+CALLTHEM                              13     26.066     19.476      1.498
+CALLME                                13      6.413      6.413      0.493
+REPORTME                              13      0.177      0.177      0.014
+
+Sorted by Inclusive Time
+Name                               Calls Incl T(ms) Excl T(ms) Excl/calls
+CALLTHEM                              13     26.066     19.476      1.498
+CALLME                                13      6.413      6.413      0.493
+REPORTME                              13      0.177      0.177      0.014
+
+Sorted by Number of Calls
+Name                               Calls Incl T(ms) Excl T(ms) Excl/calls
+CALLTHEM                              13     26.066     19.476      1.498
+</pre>
+        </div>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<title>
+      NetLogo {{version}} User Manual: QuickTime Extension
+    </title>
+    <link rel="stylesheet" href="netlogo.css" type="text/css">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <h1>
+      QuickTime Extension
+    </h1>
+    <h2>
+      What does the QuickTime Extension do?
+    </h2>
+    <p>
+      The QuickTime Extension allows you to interact with and create images
+      for importing from webcams and movie files.
+    <h2>
+      Installing the QuickTime Extension
+    </h2>
+    <h3>
+      Windows
+    </h3>
+    <p>
+      First, make sure you have QuickTime installed if you don't you
+      can download it here:
+    <p>
+      <a href="http://www.apple.com/quicktime/download/">http://www.apple.com/quicktime/download/</a>
+    <p>
+      A few files from your QuickTime installation need to be moved into
+      the extension directory in order for the video extension to work.
+    <ul>
+      <li>Copy <code>C:\Program Files\QuickTime\QTSystem\QTJava.zip</code> into
+      the extension directory and rename it <code>QTJava.jar</code>.
+      <li>Make a directory called <code>lib</code> in the QTJ extension
+      directory, then create a directory called <code>Windows</code> inside
+      <code>lib</code>.
+      <li>Copy <code>C:\Program
+      Files\QuickTime\QTSystem\QTJavaNative.dll</code> and <code>C:\Program
+      Files\QuickTime\QTSystem\QTJNative.dll</code> into the <code>Windows</code>
+      directory.
+      </ul>
+    <p>
+      You will also need to install a digitizer, we recommend WinVDIG which
+      can be downloaded here:
+    <p>
+      <a href="http://www.eden.net.nz/7/20071008/">http://www.eden.net.nz/7/20071008/</a>
+    <p>
+      You must install version 1.0.1 not a newer version.
+    <p>
+      You can then test that QTJ and the digitizer are installed correctly
+      through their test application QTCap. (If you have trouble, see
+      <a href="contact.html">Contacting Us</a>.)
+    <p>
+      On Windows Vista you will need to start NetLogo as administrator in
+      order to use the video extension. You can do so by right clicking on
+      the executable and selecting &quot;Run As Administrator&quot;. You
+      can also permanently change this setting: open the properties dialog,
+      select the Compatibility tab and select &quot;Run As
+      Administrator&quot; checkbox.
+    <h3>
+      Mac OS X
+    </h3>
+    <p>
+      A few files from your QuickTime installation need to be moved into
+      the extension directory in order for the video extension to work.
+    <ul>
+      <li>Copy <code>/System/Library/Java/Extensions/QTJava.zip</code> into the
+      extension directory and rename it <code>QTJava.jar</code>.
+      <li>Make a directory called <code>lib</code> in the QTJ extension
+      directory, then create a directory called <code>Mac OS X</code> inside
+      <code>lib</code>.
+      <li>Copy <code>/System/Library/Java/Extensions/libQTJNative.jnilib</code>
+      into the <code>Mac OS X</code> directory.
+      </ul>
+    <p>
+      Also, on 64-bit Macs (which includes all currently sold models), you
+      will need to change NetLogo to run in 32-bit mode in order to use the
+      extension. If you don't, the usual result is a
+      java.lang.UnsatisfiedLinkError dialog. Here are the steps to follow:
+    <ul>
+      <li>Select the NetLogo application icon in the Finder.
+      <li>On the File menu, choose Get Info.
+      <li>Check this checkbox: &quot;Open in 32-bit mode&quot;
+      <li>Open the application.
+      </ul>
+    <p>
+      If you want, you can make a copy of the application first and
+      performs these steps on the copy, so the original still opens in
+      64-bit mode. (64-bit mode is the recommended default unless you are
+      using this extension.)
+    <h3>
+      Linux
+    </h3>
+    <p>
+      The QuickTime Extension is not compatible with Linux, because Apple
+      does not have a Linux version of QuickTime.
+    <h2>
+      Getting started
+    </h2>
+    <p>
+      To import images from webcams and movies into NetLogo you will need
+      to include both the QTJ and the Bitmap Extensions.
+    <pre>
+extensions[ bitmap qtj ]
+</pre>
+    <p>
+      There are two code examples that present the basic functions of these
+      extensions.
+    <div class="blockquote">
+        <b>Code Example:</b> QuickTime Extension/QuickTime Camera Example
+      </div>
+    <div class="blockquote">
+        <b>Code Example:</b> QuickTime Extension/QuickTime Movie Example
+      </div>
+    <h2>
+      Primitives
+    </h2>
+    <p>
+      <a href="#qtj:camera-image">qtj:camera-image</a>
+      <a href="#qtj:camera-select">qtj:camera-select</a>
+      <a href="#qtj:camera-start">qtj:camera-start</a>
+      <a href="#qtj:camera-stop">qtj:camera-stop</a>
+      <a href="#qtj:movie-close">qtj:movie-close</a>
+      <a href="#qtj:movie-image">qtj:movie-image</a>
+      <a href="#qtj:movie-open">qtj:movie-open</a>
+      <a href="#qtj:movie-open-player">qtj:movie-open-player</a>
+      <a href="#qtj:movie-set-time">qtj:movie-set-time</a>
+      <a href="#qtj:movie-start">qtj:movie-start</a>
+      <a href="#qtj:movie-stop">qtj:movie-stop</a>
+    <h3>
+      <a id="qtj:camera-image">qtj:camera-image</a>
+    </h3>
+    <h4>
+      <span class="prim_example">qtj:camera-image</span>
+    </h4>
+    <p>
+      Returns an image from the currently open camera suitable for
+      importing with the bitmap extension
+    <h3>
+      <a id="qtj:camera-select">qtj:camera-select</a>
+    </h3>
+    <h4>
+      <span class="prim_example">qtj:camera-select <i>width</i> <i>height</i></span>
+    </h4>
+    <p>
+      Offers a dialog of installed cameras for you to choose from. When you
+      select one a connection is opened with the selected camera at the
+      given resolution. If you use <code>camera-select</code> you do not need
+      to call <code>camera-start</code>. You must call either select or start
+      before using <code>camera-image</code>.
+    <h3>
+      <a id="qtj:camera-start">qtj:camera-start</a>
+    </h3>
+    <h4>
+      <span class="prim_example">qtj:camera-start <i>width</i> <i>height</i></span>
+    </h4>
+    <p>
+      Opens the connected camera at the given resolution (given in patches)
+      and prepares it to grab images. You must always call
+      <code>camera-start</code> or <code>camera-select</code> before using
+      <code>camera-image</code>. You should not use <code>camera-start</code> when
+      the camera is already open. To select a different camera use
+      <code>camera-stop</code> then <code>camera-select</code>.
+    <h3>
+      <a id="qtj:camera-stop">qtj:camera-stop</a>
+    </h3>
+    <h4>
+      <span class="prim_example">qtj:camera-stop</span>
+    </h4>
+    <p>
+      Closes the connected camera. You should always stop the camera before
+      exiting NetLogo or before opening a new model.
+    <h3>
+      <a id="qtj:movie-close">qtj:movie-close</a>
+    </h3>
+    <h4>
+      <span class="prim_example">qtj:movie-close</span>
+    </h4>
+    <p>
+      Closes the currently open movie, disposes of any related resources
+      including the player window. You should always close a movie before
+      opening a new one or before exiting NetLogo.
+    <h3>
+      <a id="qtj:movie-image">qtj:movie-image</a>
+    </h3>
+    <h4>
+      <span class="prim_example">qtj:movie-image</span>
+    </h4>
+    <p>
+      Returns an image of the current frame of the open movie suitable for
+      importing with the bitmap extension.
+    <h3>
+      <a id="qtj:movie-open">qtj:movie-open</a>
+    </h3>
+    <h4>
+      <span class="prim_example">qtj:movie-open <i>width</i> <i>height</i></span>
+    </h4>
+    <p>
+      Loads the specified movie at the specified resolution (given in
+      patches).
+    <h3>
+      <a id="qtj:movie-open-player">qtj:movie-player</a>
+    </h3>
+    <h4>
+      <span class="prim_example">qtj:movie-open-player</span>
+    </h4>
+    <p>
+      Opens a window where you can view the open movie.
+    <h3>
+      <a id="qtj:movie-set-time">qtj:movie-set-time</a>
+    </h3>
+    <h4>
+      <span class="prim_example">qtj:movie-set-time <i>seconds</i></span>
+    </h4>
+    <p>
+      Changes the frame of the movie to the frame corresponding to the
+      given time.
+    <h3>
+      <a id="qtj:movie-start">qtj:movie-start</a>
+    </h3>
+    <h4>
+      <span class="prim_example">qtj:movie-start</span>
+    </h4>
+    <p>
+      Starts playing the movie.
+    <h3>
+      <a id="qtj:movie-stop">qtj:movie-stop</a>
+    </h3>
+    <h4>
+      <span class="prim_example">qtj:movie-stop</span>
+    </h4>
+    <p>
+      Stops playing the movie.
+
