@@ -8,6 +8,24 @@ lazy val macApp = project.in(file("mac-app"))
 // build application jar
 val packageMacApp = taskKey[Unit]("package mac app")
 
+val buildNetLogo = taskKey[Unit]("build NetLogo")
+
+
+buildNetLogo := {
+  val netLogoDir   = baseDirectory.value.getParentFile
+
+  def netLogoCmd(cmd: String): Unit = {
+    val res = Process(Seq("./sbt", cmd), netLogoDir).!
+    if (res != 0)
+      sys.error("netlogo " + cmd + "failed! Aborting.")
+  }
+
+  netLogoCmd("package")
+  netLogoCmd("extensions")
+  netLogoCmd("model-index")
+  netLogoCmd("native-libs")
+}
+
 packageMacApp := {
   val distDir = baseDirectory.value
 
@@ -19,11 +37,12 @@ packageMacApp := {
 
   val netLogoJar   = netLogoDir / "NetLogo.jar"
 
-  def packageProject(base: File): Unit = {
-    Process("./sbt package".split(" "), base).!!
-  }
+  //val scalaJar     =
+  //  file(System.getProperty("user.home") + "/.sbt/boot/scala-2.9.2/lib/scala-library.jar")
 
-  val dependencies = (netLogoDir / "lib_managed" ** "*.jar").get
+  val dependencies = (dependencyClasspath in macApp in Runtime).value.files
+    .filterNot(f => f.getName.contains("scalatest") || f.getName.contains("scalacheck") || f.getName.contains("jmock"))
+
 
   val additionalResources: Seq[File] = Seq(
     distDir / "NetLogo.app" / "Contents" / "Resources",
@@ -38,22 +57,41 @@ packageMacApp := {
   // $JREHOME
   // $CACHEDIR
 
-  packageProject(netLogoDir)
+  def repathFile(originalBase: File)(f: File): File = {
+    val Some(relativeFile) = f relativeTo originalBase
+    new java.io.File(artifactsDir / originalBase.getName, relativeFile.getPath)
+  }
+
+  val bundledDirs = Seq[BundledDirectory](
+    new ExtensionDir(),
+    new ModelsDir(),
+    new LibDir(),
+    new NativesDir())
+
+  val copiedBundleFiles: Seq[(File, File)] = bundledDirs.flatMap { bd =>
+    val sourceDir = netLogoDir / bd.directoryName
+    val files     = bd.files(sourceDir)
+    files zip files.map(repathFile(sourceDir))
+  }
+
+  // def libFileTargets = libFiles.map(repathFile(libDir)).map(f => new File(f.getPath.stripSuffix("jnilib") + "dylib"))
 
   val allJars = (dependencies :+ macAppJar :+ netLogoJar).filterNot(_.isDirectory)
 
   IO.delete(artifactsDir)
   IO.createDirectory(artifactsDir)
   IO.copy(allJars zip allJars.map(f => artifactsDir / f.getName), overwrite = true)
+  IO.copy(copiedBundleFiles)
   additionalResources.foreach {
     case f if f.isDirectory => IO.copyDirectory(f, artifactsDir / f.getName)
     case f if f.isFile      => IO.copyFile(f, artifactsDir / f.getName)
   }
-  // IO.copyDirectory(file("extensions"), artifactsDir / "extensions")
-  // IO.copyDirectory(file("models"), artifactsDir / "models")
 
   val allFiles: Seq[String] =
-    (allJars ++ additionalResources).map(_.getName)
+    (allJars ++ additionalResources).map(_.getName) ++ bundledDirs.map(_.directoryName)
+
+  val jvmOptions =
+    "-Dapple.awt.graphics.UseQuartz=true -Djava.ext.dirs= -Xmx1024m -Dfile.encoding=UTF-8".split(" ")
 
   val args = Seq("javapackager", "-deploy",
     "-title", "NetLogo",
@@ -64,9 +102,10 @@ packageMacApp := {
     "-outfile", "NetLogo",
     "-verbose",
     "-srcdir", artifactsDir.getAbsolutePath,
-    "-srcfiles", allFiles.mkString(":"))
+    "-srcfiles", allFiles.mkString(":")) ++
+      jvmOptions.map(s => "-BjvmOptions=" + s)
 
-  println(args.mkString(" "))
-
-  Process(args, distDir).!!
+  val ret = Process(args, distDir).!
+  if (ret != 0)
+    sys.error("packaging failed!")
 }

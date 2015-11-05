@@ -23,9 +23,12 @@ mainClass in Compile in run := Some("org.nlogo.app.MacApplication")
 
 fork in run := true
 
+libraryDependencies += "org.scala-lang" % "scala-library" % "2.9.2"
+
 packageOptions in (Compile, packageBin) += {
   val distClassPath =
-    Attributed.data((unmanagedJars in Compile).value).map(f => "$APPDIR/Java/" + f.getName).mkString(" ")
+    (dependencyClasspath in Runtime).value.files.map(f =>
+        "$APPDIR/Java/" + f.getName).mkString(" ")
   import java.util.jar.Attributes.Name._
   Package.ManifestAttributes(
     "Permissions" -> "sandbox",
