@@ -17,19 +17,6 @@ object JOGLLoader {
   @throws(classOf[JOGLException])
   def load(classLoader: ClassLoader) {
     checkJOGLVersion(classLoader)
-    // if we let jogl load itself, it might try to load a native library from the VM's extensions
-    // directory instead of our copy of the library, and it might be the wrong version.  so let's
-    // force-load our own native library. - ST 2/25/05
-    // first, tell JOGL not to call System.loadLibrary() to load native libraries - ST 2/25/05,
-    // 2/28/05
-    // this next bit is based on code from NativeLibLoader - ST 2/28/05
-    // if both the 2003 build and a newer build are in the classpath the version number will be
-    // reported wrong and this call will fail.
-    try com.sun.opengl.impl.NativeLibLoader.disableLoading()
-    catch {
-      case e: NoSuchMethodError =>
-        throw new JOGLException(VersionMismatch, e)
-    }
     val isMac = System.getProperty("os.name").startsWith("Mac")
     def withErrorReporting(body: => Unit) {
       try body
@@ -82,7 +69,7 @@ object JOGLLoader {
 
   ///
 
-  private val RecommendedVersion = "1.1.1"
+  private val RecommendedVersion = "2.3.2"
 
   // Note that it's possible to have more than one version of JOGL in your classpath, which means
   // that the classloader may get some classes from one and some from the other.  In particular, the
@@ -98,7 +85,7 @@ object JOGLLoader {
   // not entirely certain how relevant all this is anymore versioning seems to have changed
   // drastically. ev 5/4/06
   def getVersion(classLoader: ClassLoader) = {
-    val pkgName = "javax.media.opengl"
+    val pkgName = "com.jogamp.opengl"
     val className = "GL"
     try {
       classLoader.loadClass(pkgName + "." + className)
@@ -112,7 +99,7 @@ object JOGLLoader {
   }
 
   private def checkJOGLVersion(classLoader: ClassLoader)   {
-    val pkgName = "javax.media.opengl"
+    val pkgName = "com.jogamp.opengl"
     val className = "GL"
     try {
       classLoader.loadClass(pkgName + "." + className)

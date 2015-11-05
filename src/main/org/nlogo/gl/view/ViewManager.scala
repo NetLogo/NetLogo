@@ -54,16 +54,6 @@ class ViewManager(val workspace: GUIWorkspace,
 
   def init() {
     var jvmex: JOGLException = null
-    if (!JOGLLoader.isLoaded)
-      try JOGLLoader.load(getClass.getClassLoader)
-      catch {
-        case ex: JOGLException =>
-          if (ex.throwImmediately)
-            throw new JOGLLoadingException(ex.getMessage, ex.t)
-          // We should try to initialize even if we have a version mismatch, so we hold off on
-          // throwing the exception until the end of the method. - AZS 6/27/05
-          jvmex = ex
-      }
 
     // if we have a frame already, dispose of it
     Option(observerView).foreach(_.dispose())

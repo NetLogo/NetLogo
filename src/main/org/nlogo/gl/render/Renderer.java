@@ -16,10 +16,12 @@ import org.nlogo.api.ViewSettings;
 import org.nlogo.api.World;
 import org.nlogo.api.World3D;
 
-import javax.media.opengl.GL;
-import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLEventListener;
-import javax.media.opengl.glu.GLU;
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GLEventListener;
+import com.jogamp.opengl.glu.GLU;
+import com.jogamp.opengl.glu.gl2.GLUgl2;
 import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -59,7 +61,7 @@ public class Renderer
   */
   private final PriorityQueue<Agent> transparentAgents ;
 
-  final GLU glu = new GLU();
+  final GLUgl2 glu = new GLUgl2();
   ShapeManager shapeManager;
   PickListener pickListener;
 
@@ -115,6 +117,10 @@ public class Renderer
     shapeRenderer.shapeManager_$eq(shapeManager);
   }
 
+  @Override
+  public void dispose(GLAutoDrawable autoDrawable) {
+  }
+
   TurtleRenderer createTurtleRenderer(World world) {
     return new TurtleRenderer(world, shapeRenderer);
   }
@@ -150,25 +156,25 @@ public class Renderer
     // needed, instead of in here. Other parts of the application might
     // change these settings, which creates hard-to-debug issues.
 
-    GL gl = gLDrawable.getGL();
+    GL2 gl = (GL2) gLDrawable.getGL();
 
     ClassLoader classLoader = getClass().getClassLoader();
     org.nlogo.util.SysInfo.getJOGLInfoString_$eq
         ("JOGL: " + JOGLLoader.getVersion(classLoader));
 
     org.nlogo.util.SysInfo.getGLInfoString_$eq(
-        "OpenGL graphics: " + gl.glGetString(GL.GL_RENDERER) + "\n"
-            + "OpenGL version: " + gl.glGetString(GL.GL_VERSION) + "\n"
-            + "OpenGL vendor: " + gl.glGetString(GL.GL_VENDOR)
+        "OpenGL graphics: " + gl.glGetString(GL2.GL_RENDERER) + "\n"
+            + "OpenGL version: " + gl.glGetString(GL2.GL_VERSION) + "\n"
+            + "OpenGL vendor: " + gl.glGetString(GL2.GL_VENDOR)
     );
 
-    gl.glShadeModel(GL.GL_SMOOTH);                     // Enable Smooth Shading
+    gl.glShadeModel(GL2.GL_SMOOTH);                     // Enable Smooth Shading
     gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);          // Black Background
     gl.glClearDepth(1.0f);                            // Depth Buffer Setup
-    gl.glEnable(GL.GL_DEPTH_TEST);              // Enables Depth Testing
-    gl.glDepthFunc(GL.GL_LEQUAL);              // The Type Of Depth Testing To Do
+    gl.glEnable(GL2.GL_DEPTH_TEST);              // Enables Depth Testing
+    gl.glDepthFunc(GL2.GL_LEQUAL);              // The Type Of Depth Testing To Do
 
-    gl.glHint(GL.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_FASTEST);
+    gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_FASTEST);
 
     // Lighting
 
@@ -188,17 +194,17 @@ public class Renderer
 
     // This is necessary for properly rendering scaled objects. Without this, small objects
     // may look too bright, and large objects will look flat.
-    gl.glEnable(GL.GL_NORMALIZE);
+    gl.glEnable(GL2.GL_NORMALIZE);
 
     // Coloring
 
-    gl.glColorMaterial(GL.GL_FRONT, GL.GL_AMBIENT_AND_DIFFUSE);
-    gl.glEnable(GL.GL_COLOR_MATERIAL);
+    gl.glColorMaterial(GL2.GL_FRONT, GL2.GL_AMBIENT_AND_DIFFUSE);
+    gl.glEnable(GL2.GL_COLOR_MATERIAL);
 
     // Remove back-face rendering
 
-    gl.glCullFace(GL.GL_BACK);
-    gl.glEnable(GL.GL_CULL_FACE);
+    gl.glCullFace(GL2.GL_BACK);
+    gl.glEnable(GL2.GL_CULL_FACE);
 
     // Initialize ShapesManager
 
@@ -210,12 +216,12 @@ public class Renderer
 
     // Check for stencil support
     int StencilBits[] = new int[1];
-    gl.glGetIntegerv(GL.GL_STENCIL_BITS, IntBuffer.wrap(StencilBits));
+    gl.glGetIntegerv(GL2.GL_STENCIL_BITS, IntBuffer.wrap(StencilBits));
     shapeRenderer.stencilSupport_$eq(StencilBits[0] > 0);
   }
 
   public void reshape(GLAutoDrawable gLDrawable, int x, int y, int width, int height) {
-    GL gl = gLDrawable.getGL();
+    GL2 gl = (GL2) gLDrawable.getGL();
     this.width = width;
     this.height = (height > 0) ? height : 1;
     ratio = (float) this.width / (float) this.height;
@@ -223,9 +229,9 @@ public class Renderer
     mainViewport(gl);
   }
 
-  private void mainViewport(GL gl) {
+  private void mainViewport(GL2 gl) {
     gl.glViewport(0, 0, width, height);
-    gl.glMatrixMode(GL.GL_PROJECTION);
+    gl.glMatrixMode(GL2.GL_PROJECTION);
     gl.glLoadIdentity();
 
     // make the z-clip proportional to the max screen edge so the world doesn't
@@ -235,27 +241,27 @@ public class Renderer
             world.worldHeight()) * 4;
 
     glu.gluPerspective(45.0f, ratio, 0.1, zClip);
-    gl.glMatrixMode(GL.GL_MODELVIEW);
+    gl.glMatrixMode(GL2.GL_MODELVIEW);
     gl.glLoadIdentity();
   }
 
   public void display(GLAutoDrawable gLDrawable) {
-    final GL gl = gLDrawable.getGL();
+    final GL2 gl = (GL2) gLDrawable.getGL();
 
-    gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+    gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
     shapeManager.checkQueue(gl, glu);
 
     render(gl);
     gl.glFlush();
   }
 
-  void renderClippingPlane(GL gl, double[] eqn, int plane) {
+  void renderClippingPlane(GL2 gl, double[] eqn, int plane) {
     java.nio.DoubleBuffer eqnBuffer = java.nio.DoubleBuffer.wrap(eqn);
     gl.glClipPlane(plane, eqnBuffer);
     gl.glEnable(plane);
   }
 
-  void setClippingPlanes(GL gl) {
+  void setClippingPlanes(GL2 gl) {
     // we get 6 clipping planes guaranteed (0-5).
     // there might be more we can check GL_MAX_CLIPPING_PLANES
     // ev 4/20/06
@@ -265,26 +271,26 @@ public class Renderer
     renderClippingPlane
         (gl, new double[]
             {1.0f, 0.0, 0.0f, (float) (-(world.minPxcor() - 0.5) * WORLD_SCALE) + 0.01f},
-            GL.GL_CLIP_PLANE0);
+            GL2.GL_CLIP_PLANE0);
     renderClippingPlane
         (gl, new double[]
             {-1.0, 0.0, 0.0, (float) ((world.maxPxcor() + 0.5) * WORLD_SCALE) + 0.01f},
-            GL.GL_CLIP_PLANE1);
+            GL2.GL_CLIP_PLANE1);
     renderClippingPlane
         (gl, new double[]
             {0.0, -1.0, 0.0, (float) ((world.maxPycor() + 0.5) * WORLD_SCALE) + 0.01f},
-            GL.GL_CLIP_PLANE2);
+            GL2.GL_CLIP_PLANE2);
     renderClippingPlane
         (gl, new double[]
             {0.0, 1.0, 0.0, (float) (-(world.minPycor() - 0.5) * WORLD_SCALE) + 0.01f},
-            GL.GL_CLIP_PLANE3);
+            GL2.GL_CLIP_PLANE3);
   }
 
-  void disableClippingPlanes(GL gl) {
-    gl.glDisable(GL.GL_CLIP_PLANE0);
-    gl.glDisable(GL.GL_CLIP_PLANE1);
-    gl.glDisable(GL.GL_CLIP_PLANE2);
-    gl.glDisable(GL.GL_CLIP_PLANE3);
+  void disableClippingPlanes(GL2 gl) {
+    gl.glDisable(GL2.GL_CLIP_PLANE0);
+    gl.glDisable(GL2.GL_CLIP_PLANE1);
+    gl.glDisable(GL2.GL_CLIP_PLANE2);
+    gl.glDisable(GL2.GL_CLIP_PLANE3);
     gl.glPopMatrix();
   }
 
@@ -321,7 +327,7 @@ public class Renderer
     }
   }
 
-  void render(GL gl) {
+  void render(GL2 gl) {
     // Notes:
     //
     // This render function only gets called in NetLogo 3D, or in the "3D View" of
@@ -450,8 +456,8 @@ public class Renderer
         }
       } else {
         // Make sure everything needed for transparency is enabled.
-        gl.glEnable(GL.GL_BLEND);
-        gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
+        gl.glEnable(GL2.GL_BLEND);
+        gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
 
         opaqueAgents.clear();
         transparentAgents.clear();
@@ -552,7 +558,7 @@ public class Renderer
           renderAgent(gl, agent, lineScale);
         }
 
-        gl.glDisable(GL.GL_BLEND);
+        gl.glDisable(GL2.GL_BLEND);
       }
 
 
@@ -586,7 +592,7 @@ public class Renderer
     }
   }
 
-  void renderAgent(GL gl, Agent agent, Double lineScale) {
+  void renderAgent(GL2 gl, Agent agent, Double lineScale) {
     if (agent instanceof Turtle) {
       turtleRenderer.renderWrappedTurtle(gl, (Turtle) agent, renderer.fontSize(),
           renderer.patchSize(), (agent == outlineAgent), lineScale);
@@ -603,7 +609,7 @@ public class Renderer
     // have to check if( agent instanceof Patch ).
   }
 
-  void renderWorld(GL gl, World world) {
+  void renderWorld(GL2 gl, World world) {
     // This version of renderWorld gets called when we're in the 3D view in 2D.
     // For NetLogo 3D, look in Renderer3D.renderWorld().
     //
@@ -695,10 +701,10 @@ public class Renderer
   }
 
   // saves current transformation matricies and viewport
-  private void storeMatricies(GL gl) {
-    gl.glGetDoublev(GL.GL_MODELVIEW_MATRIX, modelMatrix);
-    gl.glGetDoublev(GL.GL_PROJECTION_MATRIX, projMatrix);
-    gl.glGetIntegerv(GL.GL_VIEWPORT, viewPort);
+  private void storeMatricies(GL2 gl) {
+    gl.glGetDoublev(GL2.GL_MODELVIEW_MATRIX, modelMatrix);
+    gl.glGetDoublev(GL2.GL_PROJECTION_MATRIX, projMatrix);
+    gl.glGetIntegerv(GL2.GL_VIEWPORT, viewPort);
   }
 
   // generates a pick/selection ray from mouse coordinates
@@ -895,7 +901,7 @@ public class Renderer
     shapeManager.invalidateLinkShape(shape);
   }
 
-  public void translateWorld(GL gl, World world) {
+  public void translateWorld(GL2 gl, World world) {
     gl.glTranslated
         ((world.maxPxcor() + world.minPxcor()) / 2.0 * Renderer.WORLD_SCALE,
             (world.maxPycor() + world.minPycor()) / 2.0 * Renderer.WORLD_SCALE,

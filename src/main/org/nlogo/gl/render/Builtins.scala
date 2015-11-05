@@ -3,15 +3,17 @@
 package org.nlogo.gl.render
 
 import java.util.{ Map => JMap }
-import javax.media.opengl.GL
-import javax.media.opengl.glu.{ GLU, GLUquadric }
+import com.jogamp.opengl.{ GL, GL2, GL2ES3 }
+import com.jogamp.opengl.glu.{ GLU, GLUquadric }
+import com.jogamp.opengl.fixedfunc.{ GLLightingFunc => GLL }
 import ShapeManager.SMOOTHNESS
 
-private class Builtins(gl: GL, glu: GLU, quadric: GLUquadric) {
+private class Builtins(gl: GL2, glu: GLU, quadric: GLUquadric) {
 
+  import GL._
   import gl._
   import glu._
-  import GL._
+  import GL2._
 
   def add(shapes: JMap[String, GLShape],
           shapeMap: JMap[String, String]): Int = {
@@ -22,7 +24,7 @@ private class Builtins(gl: GL, glu: GLU, quadric: GLUquadric) {
     def shape(name: String, rotatable: Boolean = true)(body: => Unit) {
       lastList += 1
       shapes.put(name, new GLShape(name, lastList, rotatable))
-      glNewList(lastList, GL.GL_COMPILE)
+      glNewList(lastList, GL2.GL_COMPILE)
       body
       glEndList()
     }
@@ -101,7 +103,7 @@ private class Builtins(gl: GL, glu: GLU, quadric: GLUquadric) {
     glRotatef(90f, 1f, 0f, 0f)
     glRotatef(90f, 0f, 1f, 0f)
     glScalef(0.5f, 0.5f, 0.5f)
-    begin(GL_QUADS) {
+    begin(GL2ES3.GL_QUADS) {
 
       // Left (or is it right?) Face
       glNormal3f(0f, 0f, 1f)
@@ -219,7 +221,7 @@ private class Builtins(gl: GL, glu: GLU, quadric: GLUquadric) {
   }
 
   private def plane() {
-    begin(GL_QUADS) {
+    begin(GL2ES3.GL_QUADS) {
       glNormal3f(0f, 0f, 1f)
       glVertex3f(.14f, .14f, -.14f)
       glVertex3f(-.14f, .14f, -.14f)
@@ -236,13 +238,13 @@ private class Builtins(gl: GL, glu: GLU, quadric: GLUquadric) {
 
   private def crosshairs() {
     attrib(GL_ENABLE_BIT, GL_CURRENT_BIT) {
-      glDisable(GL_LIGHTING)
+      glDisable(GLL.GL_LIGHTING)
       glDisable(GL_CULL_FACE)
 
       glColor3f(0f, 0f, 1f)
       gluDisk(quadric, 0.120f, 0.135f, SMOOTHNESS, 1)
 
-      begin(GL_QUADS) {
+      begin(GL2ES3.GL_QUADS) {
         glVertex3f(-0.03f, 0.12f, 0f)
         glVertex3f(-0.03f, -0.12f, 0f)
         glVertex3f(0.03f, -0.12f, 0f)
@@ -265,7 +267,7 @@ private class Builtins(gl: GL, glu: GLU, quadric: GLUquadric) {
   private def halo() {
     attrib(GL_ENABLE_BIT, GL_CURRENT_BIT) {
 
-      glDisable(GL_LIGHTING)
+      glDisable(GLL.GL_LIGHTING)
       glDisable(GL_CULL_FACE)
 
       // inner-circle (used by stencil buffer)
