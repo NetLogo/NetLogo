@@ -8,10 +8,11 @@ import org.nlogo.shape.InvalidShapeDescriptionException;
 import org.nlogo.shape.LinkShape;
 import org.nlogo.shape.VectorShape;
 
-import javax.media.opengl.GL;
-import javax.media.opengl.glu.GLU;
-import javax.media.opengl.glu.GLUquadric;
-import javax.media.opengl.glu.GLUtessellator;
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.glu.GLU;
+import com.jogamp.opengl.glu.GLUquadric;
+import com.jogamp.opengl.glu.GLUtessellator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -38,7 +39,7 @@ class ShapeManager {
   private final GLUtessellator tess;
   private final boolean is3D;
 
-  ShapeManager(GL gl, GLU glu, ShapeList turtleShapeList, ShapeList linkShapeList,
+  ShapeManager(GL2 gl, GLU glu, ShapeList turtleShapeList, ShapeList linkShapeList,
                Map<String, List<String>> customShapes, boolean is3D)
 
   {
@@ -118,7 +119,7 @@ class ShapeManager {
   }
 
   // Need to do it this way because we need the GL
-  void checkQueue(GL gl, GLU glu) {
+  void checkQueue(GL2 gl, GLU glu) {
     for (AddShapeRequest req : queue) {
       if (req.type == AddShapeRequestType.IMPORT) {
         CustomShapes.Description shape = (CustomShapes.Description) req.data;
@@ -161,7 +162,7 @@ class ShapeManager {
     queue.clear();
   }
 
-  private void addLinkShapes(GL gl, GLU glu) {
+  private void addLinkShapes(GL2 gl, GLU glu) {
     List<Shape> lols = linkShapeList.getShapes();
     int nextIndex = gl.glGenLists(lols.size());
     Iterator<Shape> iter = lols.iterator();
@@ -170,7 +171,7 @@ class ShapeManager {
     }
   }
 
-  private void addLinkShape(GL gl, GLU glu, LinkShape shape, int index) {
+  private void addLinkShape(GL2 gl, GLU glu, LinkShape shape, int index) {
     VectorShape vShape = (VectorShape) shape.getDirectionIndicator();
     GLLinkShape gShape =
       is3D
@@ -180,7 +181,7 @@ class ShapeManager {
     compileShape(gl, glu, vShape, index, vShape.isRotatable());
   }
 
-  private void addModelShapes(GL gl, GLU glu) {
+  private void addModelShapes(GL2 gl, GLU glu) {
     List<Shape> modelShapeList = turtleShapeList.getShapes();
     lastList = gl.glGenLists(modelShapeList.size());
 
@@ -192,7 +193,7 @@ class ShapeManager {
     }
   }
 
-  private void addModelShape(GL gl, GLU glu,
+  private void addModelShape(GL2 gl, GLU glu,
                              VectorShape vShape,
                              int index) {
     boolean rotatable = vShape.isRotatable();
@@ -202,13 +203,13 @@ class ShapeManager {
     compileShape(gl, glu, vShape, index, rotatable);
   }
 
-  void compileShape(GL gl, GLU glu,
+  void compileShape(GL2 gl, GLU glu,
                     VectorShape vShape,
                     int index, boolean rotatable) {
-    gl.glNewList(index, GL.GL_COMPILE);
+    gl.glNewList(index, GL2.GL_COMPILE);
 
     if (!rotatable) {
-      gl.glDisable(GL.GL_LIGHTING);
+      gl.glDisable(GL2.GL_LIGHTING);
     }
 
     // render each element in this shape
@@ -235,20 +236,20 @@ class ShapeManager {
     }
 
     if (!rotatable) {
-      gl.glEnable(GL.GL_LIGHTING);
+      gl.glEnable(GL2.GL_LIGHTING);
     }
 
     gl.glEndList();
   }
 
-  private void renderRectangle(GL gl, int offset,
+  private void renderRectangle(GL2 gl, int offset,
                                org.nlogo.shape.Rectangle rect,
                                boolean rotatable) {
     float zDepth = 0.01f + offset * 0.0001f;
 
     if (!rect.marked()) {
       float[] rgb = rect.getColor().getRGBColorComponents(null);
-      gl.glPushAttrib(GL.GL_CURRENT_BIT);
+      gl.glPushAttrib(GL2.GL_CURRENT_BIT);
       gl.glColor3fv(java.nio.FloatBuffer.wrap(rgb));
     }
 
@@ -270,20 +271,20 @@ class ShapeManager {
     }
   }
 
-  void renderRectangle(GL gl, float x0, float x1, float y0, float y1,
+  void renderRectangle(GL2 gl, float x0, float x1, float y0, float y1,
                        float z0, float z1, boolean filled, boolean rotatable) {
     Rectangle.renderRectangularPrism(gl, x0, x1, y0, y1,
         z0, z1, filled, is3D && rotatable, rotatable);
   }
 
-  private void renderCircle(GL gl, GLU glu, int offset,
+  private void renderCircle(GL2 gl, GLU glu, int offset,
                             org.nlogo.shape.Circle circle,
                             boolean rotatable) {
     float zDepth = 0.01f + offset * 0.0001f;
 
     if (!circle.marked()) {
       float[] rgb = circle.getColor().getRGBColorComponents(null);
-      gl.glPushAttrib(GL.GL_CURRENT_BIT);
+      gl.glPushAttrib(GL2.GL_CURRENT_BIT);
       gl.glColor3fv(java.nio.FloatBuffer.wrap(rgb));
     }
 
@@ -334,7 +335,7 @@ class ShapeManager {
     }
   }
 
-  private void renderCircle(GL gl, GLU glu,
+  private void renderCircle(GL2 gl, GLU glu,
                             float innerRadius, float outerRadius, float zDepth,
                             boolean rotatable) {
     glu.gluDisk(quadric, innerRadius, outerRadius, SMOOTHNESS, 1);
@@ -345,12 +346,12 @@ class ShapeManager {
     }
   }
 
-  private void renderLine(GL gl, int offset, org.nlogo.shape.Line line) {
+  private void renderLine(GL2 gl, int offset, org.nlogo.shape.Line line) {
     float zDepth = offset * 0.0001f;
 
     if (!line.marked()) {
       float[] rgb = line.getColor().getRGBColorComponents(null);
-      gl.glPushAttrib(GL.GL_CURRENT_BIT);
+      gl.glPushAttrib(GL2.GL_CURRENT_BIT);
       gl.glColor3fv(java.nio.FloatBuffer.wrap(rgb));
     }
 
@@ -360,7 +361,7 @@ class ShapeManager {
         {start.x * .001f - 0.15f, (300 - start.y) * .001f - 0.15f,
             end.x * .001f - 0.15f, (300 - end.y) * .001f - 0.15f};
 
-    gl.glBegin(GL.GL_LINES);
+    gl.glBegin(GL2.GL_LINES);
     gl.glNormal3f(0.0f, 0.0f, -1.0f);
 
     // top line

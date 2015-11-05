@@ -126,7 +126,7 @@ check [gl.render] independentOf [Sun-Swing] [bad-AWT]
 ### checks on external libraries
 
 [JOGL-free-zone] = org.nlogo.* excluding [gl.render] [gl.view]
-[JOGL] = net.java.games.* javax.media.opengl.*
+[JOGL] = net.java.games.* com.jogamp.opengl.*
 check [JOGL-free-zone] independentOf [JOGL]
 
 [ASM-free-zone] = org.nlogo.* excluding [generator]
@@ -141,7 +141,7 @@ check [MRJAdapter-free-zone] directlyIndependentOf net.roydesign.*
 check [JHotDraw-free-zone] independentOf org.jhotdraw.*
 
 [JMF-free-zone] = org.nlogo.* excluding org.nlogo.awt.JMFMovieEncoder org.nlogo.awt.JMFMovieEncoderDataStream org.nlogo.awt.JMFMovieEncoderDataSource
-[JMF] = javax.media.* excluding javax.media.opengl.*
+[JMF] = javax.media.* excluding com.jogamp.opengl.*
 check [JMF-free-zone] directlyIndependentOf [JMF]
 
 [Log4J-free-zone] = org.nlogo.* excluding [log] org.nlogo.app.App org.nlogo.lite.InterfaceComponent
