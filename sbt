@@ -6,12 +6,14 @@
 # an intermediary JH variable --JAB (3/22/13)
 if [[ `uname -s` == *CYGWIN* ]] ; then
   CURR_DIR="$( cd "$( dirname "$0" )" && pwd )"
-  JH=`cygpath -up "\Java\jdk1.6.0_31"`
+  JH=`cygpath -up "C:\Program Files\Java\jdk1.6.0_45"`
 else
   CURR_DIR=`dirname $0`
   if [ `uname -s` = Linux ] ; then
     if [ -a /usr/lib/jvm/java-6-sun ] ; then
       export JAVA_HOME=/usr/lib/jvm/java-6-sun
+    elif [ -a /usr/lib/jvm/jdk1.6.0_45 ] ; then
+      export JAVA_HOME=/usr/lib/jvm/jdk1.6.0_45
     elif ! $JAVA_HOME/bin/java -version 2>&1 | head -n 1 | grep "1\.6" >> /dev/null ; then
       echo "Please set JAVA_HOME to version 1.6"
       exit
@@ -29,6 +31,9 @@ fi
 
 export PATH=$JH/bin:$PATH
 JAVA=$JH/bin/java
+if [[ `uname -s` == *CYGWIN* ]] ; then
+  JAVA=$JH/bin/java.exe
+fi
 
 # Most of these settings are fine for everyone
 XSS=-Xss2m

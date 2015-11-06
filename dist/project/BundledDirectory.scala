@@ -29,8 +29,8 @@ class LibDir extends BundledDirectory {
     (sourceDir / "Mac OS X").listFiles
 }
 
-class NativesDir extends BundledDirectory {
+class NativesDir(platforms: String*) extends BundledDirectory {
   val directoryName = "natives"
   def files(sourceDir: File): Seq[File] =
-    (sourceDir / "macosx-universal").listFiles
+    platforms.flatMap(platform => (sourceDir / platform).listFiles)
 }

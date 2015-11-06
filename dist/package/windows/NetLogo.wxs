@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+    <Product Id="34aeeb9e-b5b2-4d64-8785-8cb19382f2dc" Name="NetLogo" 
+             Language="1033" Version="1.0"
+             Manufacturer="Unknown" 
+             UpgradeCode="7565b829-12ed-4613-be9e-8a00dc0718ea">
+        <Package Description="NetLogo" Comments="None"
+                 InstallerVersion="200" Compressed="yes"
+                 InstallScope="perMachine" Platform="x64"/>
+        <Media Id="1" Cabinet="simple.cab" EmbedCab="yes" />
+
+        <!-- We use RemoveFolderEx to ensure application folder is fully 
+             removed on uninstall. Including files created outside of MSI
+             after application had been installed (e.g. on AU or user state).
+             
+             Hovewer, RemoveFolderEx is only available in WiX 3.6, 
+             we will comment it out if we running older WiX.
+
+             RemoveFolderEx requires that we "remember" the path for uninstall.
+             Read the path value and set the APPLICATIONFOLDER property with the value.
+        -->
+        <Property Id="APPLICATIONFOLDER">
+            <RegistrySearch Key="SOFTWARE\Unknown\NetLogo" 
+                            Root="HKLM" Type="raw" 
+                            Id="APPLICATIONFOLDER_REGSEARCH" Name="Path" />
+        </Property>
+        <DirectoryRef Id="APPLICATIONFOLDER">
+            <Component Id="CleanupMainApplicationFolder" Guid="*" Win64="yes">
+                <RegistryValue Root="HKLM"
+                                   Key="SOFTWARE\Unknown\NetLogo"
+                                   Name="Path" Type="string" Value="[APPLICATIONFOLDER]"
+                                   KeyPath="yes" />
+                <!-- We need to use APPLICATIONFOLDER variable here or RemoveFolderEx
+                     will not remove on "install". But only if WiX 3.6 is used. -->
+                     
+                  <util:RemoveFolderEx On="uninstall" Property="APPLICATIONFOLDER" />
+                
+            </Component>
+        </DirectoryRef>        
+        <?include bundle.wxi ?>
+     <UI/>
+
+
+        <Icon Id="DesktopIcon.exe" SourceFile="NetLogo.ico" />
+        <Icon Id="StartMenuIcon.exe" SourceFile="NetLogo.ico" />
+
+    </Product>
+</Wix>
