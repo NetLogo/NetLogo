@@ -30,7 +30,15 @@ lazy val macApp = project.in(file("mac-app")).
 
 val packageMacApp = taskKey[File]("package mac app")
 
+val packageMacThreeDApp = taskKey[File]("package mac 3D app")
+
 val packageWinApp = taskKey[File]("package win app")
+
+val packageWinThreeDApp = taskKey[File]("package win 3D app")
+
+val packageLinuxApp = taskKey[File]("package linux app")
+
+val packageLinuxThreeDApp = taskKey[File]("package linux 3D app")
 
 // build application jar, resources
 val buildNetLogo = taskKey[Unit]("build NetLogo")
@@ -50,25 +58,56 @@ buildNetLogo := {
   netLogoCmd("native-libs")
 }
 
-def packagePlatformApp(pb: PlatformBuild): Def.Initialize[Task[File]] = {
+def packagePlatformApp(subApp: SubApplication)(platformBuild: PlatformBuild): Def.Initialize[Task[File]] = {
   Def.taskDyn {
-    val distDir      = baseDirectory.value
-    val netLogoDir   = distDir.getParentFile
-    val artifactsDir = distDir / "out" / "artifacts"
-    val netLogoJar   = netLogoDir / "NetLogo.jar"
-    pb.dependencyJars(netLogoDir).map { jars =>
-      val additionalResources = pb.additionalResources(distDir)
+    val distDir        = baseDirectory.value
+    val netLogoDir     = distDir.getParentFile
+    val netLogoJar     = netLogoDir / "NetLogo.jar"
+    val buildDirectory = target.value / subApp.name / platformBuild.shortName
+
+    platformBuild.dependencyJars(netLogoDir).map { jars =>
+      IO.delete(buildDirectory)
+      IO.createDirectory(buildDirectory)
+
+      val artifactsDir = buildDirectory / "out" / "artifacts"
+      val outputDirectory = buildDirectory / "target"
+      val packageConfigurationDir = buildDirectory / "package" / platformBuild.shortName
+
+      IO.createDirectory(packageConfigurationDir)
+
+      (distDir / "configuration" / "shared" / platformBuild.shortName * ExistsFileFilter).get.foreach { f =>
+        import com.github.mustachejava._
+        import scala.collection.JavaConverters._
+        val outputFile = packageConfigurationDir / f.getName.replaceAllLiterally("shared", subApp.name).stripSuffix(".mustache")
+        if (f.getName.endsWith(".mustache")) {
+          val mf = new DefaultMustacheFactory()
+          val mustache = IO.reader(f) { rdr =>
+            mf.compile(rdr, f.getName)
+          }
+          val variables = Map("appName" -> subApp.name, "version" -> "5.2.2")
+          Using.fileWriter()(outputFile) { wrtr =>
+            println("rendering: " + f.getName)
+            mustache.execute(wrtr, variables.asJava)
+          }
+        } else
+          IO.copyFile(f, outputFile)
+      }
+
+      (distDir / "configuration" / subApp.name / platformBuild.shortName * ExistsFileFilter).get.foreach { f =>
+        IO.copyFile(f, packageConfigurationDir / f.getName)
+      }
+
+      val additionalResources = platformBuild.additionalResources(distDir)
 
       def repathFile(originalBase: File)(f: File): File = {
         val Some(relativeFile) = f relativeTo originalBase
-        new java.io.File(artifactsDir / originalBase.getName, relativeFile.getPath)
+        new java.io.File(artifactsDir, relativeFile.getPath)
       }
 
       val copiedBundleFiles: Seq[(File, File)] =
-        pb.bundledDirs.flatMap { bd =>
-          val sourceDir = netLogoDir / bd.directoryName
-          val files     = bd.files(sourceDir)
-          files zip files.map(repathFile(sourceDir))
+        platformBuild.bundledDirs.flatMap { bd =>
+          val files = bd.files(netLogoDir / bd.directoryName)
+          files zip files.map(repathFile(netLogoDir))
         }
 
       val allJars = jars.filterNot(_.isDirectory)
@@ -83,31 +122,40 @@ def packagePlatformApp(pb: PlatformBuild): Def.Initialize[Task[File]] = {
       }
 
       val allFiles: Seq[String] =
-        (allJars ++ additionalResources).map(_.getName) ++ pb.bundledDirs.map(_.directoryName)
+        (allJars ++ additionalResources).map(_.getName) ++ platformBuild.bundledDirs.map(_.directoryName)
 
-      val args = Seq("javapackager", "-deploy",
-        "-title", "NetLogo",
-        "-name", "NetLogo",
-        "-appclass", pb.mainClass,
-        "-native", pb.nativeFormat,
-        "-outdir", target.value.getAbsolutePath,
-        "-outfile", "NetLogo",
-        "-verbose",
-        "-srcdir", artifactsDir.getAbsolutePath,
+      val args = Seq[String]("javapackager",
+        "-deploy", "-verbose",
+        "-title",    subApp.name,
+        "-name",     subApp.name,
+        "-appclass", subApp.mainClass,
+        "-native",   platformBuild.nativeFormat,
+        "-outdir",   outputDirectory.getAbsolutePath,
+        "-outfile",  subApp.name,
+        "-srcdir",   artifactsDir.getAbsolutePath,
         "-srcfiles", allFiles.mkString(File.pathSeparator),
-        "-BmainJar=" + pb.mainJarName) ++
-      pb.jvmOptions.map(s => "-BjvmOptions=" + s)
+        "-BmainJar=" + platformBuild.mainJarName,
+        "-BappVersion=5.2.2") ++
+      (subApp.jvmOptions ++ platformBuild.jvmOptions).map(s => "-BjvmOptions=" + s)
 
       println(args.mkString(" "))
-      val ret = Process(args, distDir).!
+      val ret = Process(args, buildDirectory).!
       if (ret != 0)
         sys.error("packaging failed!")
 
-      target.value / "bundles" / pb.productName
+      outputDirectory / platformBuild.productName
     }
   }
 }
 
-packageMacApp <<= packagePlatformApp(new MacPlatform(macApp))
+packageMacApp <<= packagePlatformApp(MacNetLogoApp)(new MacPlatform(macApp))
 
-packageWinApp <<= packagePlatformApp(WindowsPlatform)
+packageMacThreeDApp <<= packagePlatformApp(MacNetLogoThreeD)(new MacPlatform(macApp))
+
+packageWinApp <<= packagePlatformApp(WinLinuxNetLogoApp)(WindowsPlatform)
+
+packageWinThreeDApp <<= packagePlatformApp(WinLinuxThreeD)(WindowsPlatform)
+
+packageLinuxApp <<= packagePlatformApp(WinLinuxNetLogoApp)(LinuxPlatform)
+
+packageLinuxThreeDApp <<= packagePlatformApp(WinLinuxThreeD)(LinuxPlatform)
