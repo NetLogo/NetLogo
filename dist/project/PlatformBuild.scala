@@ -1,5 +1,9 @@
 import sbt._
+import Keys.target
 import java.io.File
+import Def.Initialize
+
+import DistSettings.netLogoRoot
 
 trait PlatformBuild {
   def productName: String
@@ -15,12 +19,11 @@ trait PlatformBuild {
 
   def additionalResources(distDir: File): Seq[File]
 
-  def scalaJar: File = {
+  def scalaJar: File =
     file(System.getProperty("user.home") + "/.sbt/boot/scala-2.9.2/lib/scala-library.jar")
-  }
 
-  def dependencyJars(netLogoDir: File): Def.Initialize[Task[Seq[File]]] =
-    Def.task { standardJars(netLogoDir) }
+  def dependencyJars: Initialize[Task[Seq[File]]] =
+    Def.task { standardJars(netLogoRoot.value) }
 
   protected def standardJars(netLogoDir: File): Seq[File] =
     (netLogoDir / "lib_managed" ** "*.jar").get
@@ -40,14 +43,13 @@ object WindowsPlatform extends PlatformBuild {
 
   override def nativeFormat: String = "image"
 
-  override def dependencyJars(netLogoDir: File): Def.Initialize[Task[Seq[File]]] = {
-    import Keys.target
+  override def dependencyJars: Initialize[Task[Seq[File]]] = {
     import java.util.jar.Manifest
     import java.util.jar.Attributes.Name._
 
     Def.task {
-      val jars = standardJars(netLogoDir)
-      val netLogoJar = netLogoDir / "NetLogo.jar"
+      val jars = standardJars(netLogoRoot.value)
+      val netLogoJar = netLogoRoot.value / "NetLogo.jar"
       val tmpDir = IO.createTemporaryDirectory
       IO.createDirectory(target.value / "win-build")
       IO.unzip(netLogoJar, tmpDir)
@@ -79,14 +81,13 @@ object LinuxPlatform extends PlatformBuild {
 
   override def nativeFormat: String = "image"
 
-  override def dependencyJars(netLogoDir: File): Def.Initialize[Task[Seq[File]]] = {
-    import Keys.target
+  override def dependencyJars: Initialize[Task[Seq[File]]] = {
     import java.util.jar.Manifest
     import java.util.jar.Attributes.Name._
 
     Def.task {
-      val jars = standardJars(netLogoDir)
-      val netLogoJar = netLogoDir / "NetLogo.jar"
+      val jars = standardJars(netLogoRoot.value)
+      val netLogoJar = netLogoRoot.value / "NetLogo.jar"
       val tmpDir = IO.createTemporaryDirectory
       IO.createDirectory(target.value / "linux-build")
       IO.unzip(netLogoJar, tmpDir)
@@ -121,7 +122,7 @@ class MacPlatform(macApp: Project) extends PlatformBuild {
     distDir / "NetLogo.app" / "Contents" / "Resources",
     distDir / "NetLogo.app" / "Contents" / "PkgInfo")
 
-  override def dependencyJars(netLogoDir: File): Def.Initialize[Task[Seq[File]]] =
+  override def dependencyJars: Def.Initialize[Task[Seq[File]]] =
     Def.task {
       (packageBin in Compile in macApp).value +:
       (dependencyClasspath in macApp in Runtime).value.files
