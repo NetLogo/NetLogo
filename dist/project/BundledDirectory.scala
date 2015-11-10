@@ -20,7 +20,16 @@ class ModelsDir extends BundledDirectory {
   val directoryName = "models"
 
   def files(sourceDir: File): Seq[File] =
-    (sourceDir ** ("index.txt" || "*.nlogo" || "*.nls" || "*.png" || "*.nlogo3d")).get
+    Seq("3D",
+      "Alternative Visualizations",
+      "Code Examples",
+      "Curricular Models",
+      "HubNet Activities",
+      "IABM Textbook",
+      "Sample Models")
+        .flatMap(subDir => Path.allSubpaths(sourceDir / subDir))
+        .map(_._1)
+        .filterNot(_.isHidden) :+ (sourceDir / "index.txt")
 }
 
 class LibDir extends BundledDirectory {

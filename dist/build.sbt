@@ -1,6 +1,7 @@
 import sbt._
 import sbt.complete.Parser, Parser._
 
+import java.util.jar.Attributes.Name.{ CLASS_PATH => JAR_CLASS_PATH }
 
 import java.io.File
 
@@ -20,7 +21,10 @@ val sharedAppProjectSettings = Seq(
       libraryDependencies      += "org.scala-lang" % "scala-library" % "2.9.2",
       unmanagedJars in Compile += netLogoRoot.value / "target" / "NetLogo.jar",
       unmanagedJars in Compile ++= (netLogoRoot.value / "lib_managed" ** "*.jar").get,
-      jfxPackageOptions                        := JavaPackager.jarAttributes((dependencyClasspath in Runtime).value.files),
+      jfxPackageOptions                       := JavaPackager.jarAttributes,
+      packageOptions in (Compile, packageBin) += {
+        Package.ManifestAttributes(JAR_CLASS_PATH.toString -> (dependencyClasspath in Runtime).value.files.map(_.getName).filter(_.endsWith("jar")).mkString(" "))
+      },
       packageOptions in (Compile, packageBin) <+= jfxPackageOptions
     ) ++ DistSettings.settings
 
@@ -38,12 +42,14 @@ netLogoRoot := baseDirectory.value.getParentFile
 val appMainClass: PartialFunction[(String, String), String] = {
   case ("windows" | "linux", "NetLogo" | "NetLogo 3D" | "NetLogo Logging") => "org.nlogo.app.App"
   case ("macosx",            "NetLogo" | "NetLogo 3D" | "NetLogo Logging") => "org.nlogo.app.MacApplication"
+  case (_,                   "HubNet Client")                              => "org.nlogo.hubnet.client.App"
 }
 
 lazy val subAppMap: Map[String, SubApplication] =
   Map("NetLogo"         -> NetLogoCoreApp,
       "NetLogo 3D"      -> NetLogoThreeDApp,
-      "NetLogo Logging" -> NetLogoLoggingApp)
+      "NetLogo Logging" -> NetLogoLoggingApp,
+      "HubNet Client"   -> HubNetClientApp)
 
 lazy val platformMap: Map[String, PlatformBuild] =
   Map("linux" -> LinuxPlatform,
@@ -59,9 +65,9 @@ lazy val packageApp = inputKey[File]("package specifief app on specified platfor
 lazy val packageAction: Def.Initialize[Task[((PlatformBuild, SubApplication)) => Def.Initialize[Task[File]]]] =
   Def.task[((PlatformBuild, SubApplication)) => Def.Initialize[Task[File]]] {
   { (platform: PlatformBuild, app: SubApplication) =>
-    Def.bind(platform.dependencyJars) { jarTask =>
+    Def.bind(platform.mainJarAndDependencies(app)) { jarTask =>
       Def.task {
-        val jars            = jarTask.value
+        val (mainJar, dependencies) = jarTask.value
         val distDir         = baseDirectory.value
         val netLogoDir      = netLogoRoot.value
         val buildDirectory  = target.value / app.name / platform.shortName
@@ -70,17 +76,16 @@ lazy val packageAction: Def.Initialize[Task[((PlatformBuild, SubApplication)) =>
         IO.delete(buildDirectory)
         IO.createDirectory(buildDirectory)
 
-        ConfigurationFiles.writeConfiguration(platform, app, distDir / "configuration", buildDirectory)
+        val variables = Map(
+          "appName"        -> app.name,
+          "version"        -> "5.2.2",
+          "buildDirectory" -> buildDirectory.getAbsolutePath
+        )
+        ConfigurationFiles.writeConfiguration(platform, app, distDir / "configuration", buildDirectory, variables)
 
         def repathFile(originalBase: File)(f: File): File = {
           val Some(relativeFile) = f relativeTo originalBase
           new java.io.File(artifactsDir, relativeFile.getPath)
-        }
-
-        val additionalResources = platform.additionalResources(distDir).flatMap {
-          case f if f.isDirectory => Seq((f, artifactsDir / f.getName)) ++
-            Path.allSubpaths(f).map(t => (t._1, new File(artifactsDir, f.getName + File.separator + t._2)))
-          case f                  => Seq((f, artifactsDir / f.getName))
         }
 
         val copiedBundleFiles: Seq[(File, File)] =
@@ -90,20 +95,20 @@ lazy val packageAction: Def.Initialize[Task[((PlatformBuild, SubApplication)) =>
           }
 
         val jarMap = {
-          val jarsLessDirs = jars.filterNot(_.isDirectory)
-          jarsLessDirs zip jarsLessDirs.map(f => artifactsDir / f.getName)
+          val allJars = (mainJar +: dependencies)
+          allJars zip allJars.map(f => artifactsDir / f.getName)
         }
 
         val copyLogging = (distDir / "netlogo_logging.xml", artifactsDir / "netlogo_logging.xml")
 
-        val allFileCopies: Seq[(File, File)] = jarMap ++ additionalResources ++ copiedBundleFiles :+ copyLogging
+        val allFileCopies: Seq[(File, File)] = jarMap ++ copiedBundleFiles :+ copyLogging
 
         IO.copy(allFileCopies)
 
         val allFiles: Seq[File] = allFileCopies.map(_._2)
 
         JavaPackager(appMainClass(platform.shortName, app.name), platform, app,
-          srcDir = artifactsDir, srcFiles = allFiles, outDir = outputDirectory, buildDirectory = buildDirectory)
+          srcDir = artifactsDir, srcFiles = allFiles, outDir = outputDirectory, buildDirectory = buildDirectory, mainJar = mainJar)
       }
     }
   }.tupled

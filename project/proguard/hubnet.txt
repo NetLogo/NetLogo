@@ -22,7 +22,23 @@
   *;
 }
 
+-keep public class scala.ScalaObject {
+  *;
+}
+
 -keep public class org.nlogo.hubnet.client.*
+
+-keepclassmembers class org.nlogo.hubnet.client.App {
+  public static final void main(java.lang.String[]);
+}
+
+-keep class org.nlogo.compiler.Compiler$ {
+    *;
+}
+
+-keep class org.nlogo.lex.Tokenizer?D {
+    *;
+}
 
 # the Event stuff works by reflection so we need to explicitly include these
 -keep public class * extends org.nlogo.window.Event
@@ -66,6 +82,10 @@
 }
 
 -keep public class org.nlogo.widget.* {
+ *;
+}
+
+-keep class scala.Predef$ {
  *;
 }
 

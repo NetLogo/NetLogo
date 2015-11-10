@@ -9,10 +9,8 @@ object DistSettings {
 
   lazy val settings = Seq(
     buildNetLogo := {
-      val netLogoDir = baseDirectory.value.getParentFile
-
       def netLogoCmd(cmd: String): Unit = {
-        val res = Process(Seq("./sbt", cmd), netLogoDir).!
+        val res = Process(Seq("./sbt", cmd), netLogoRoot.value).!
         if (res != 0)
           sys.error("netlogo " + cmd + "failed! Aborting.")
       }
@@ -23,5 +21,4 @@ object DistSettings {
       netLogoCmd("native-libs")
     }
   )
-
 }
