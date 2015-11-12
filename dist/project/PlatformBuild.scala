@@ -6,8 +6,6 @@ import Def.Initialize
 import DistSettings.netLogoRoot
 
 trait PlatformBuild {
-  def productName: String
-
   def shortName: String
 
   def mainJarName: String = "NetLogo.jar"
@@ -59,14 +57,10 @@ object WindowsPlatform extends PlatformBuild {
     super.bundledDirs ++ Seq(new NativesDir("windows-amd64", "windows-i586"))
 
   override def nativeFormat: String = "image"
-
-  override def productName = "NetLogo-win"
 }
 
 object LinuxPlatform extends PlatformBuild {
   override def shortName: String = "linux"
-
-  override def productName: String = "NetLogo-linux"
 
   override def bundledDirs =
     super.bundledDirs ++ Seq(new NativesDir("linux-amd64", "linux-i586"))
@@ -99,6 +93,9 @@ class MacPlatform(macApp: Project) extends PlatformBuild {
 
   override def nativeFormat =
     "dmg"
+}
 
-  override def productName: String = "NetLogo-1.0.dmg"
+// used in the mac aggregate build
+class MacImagePlatform(macApp: Project) extends MacPlatform(macApp) {
+  override def nativeFormat = "image"
 }

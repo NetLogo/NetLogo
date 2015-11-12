@@ -23,7 +23,10 @@ val sharedAppProjectSettings = Seq(
       unmanagedJars in Compile ++= (netLogoRoot.value / "lib_managed" ** "*.jar").get,
       jfxPackageOptions                       := JavaPackager.jarAttributes,
       packageOptions in (Compile, packageBin) += {
-        Package.ManifestAttributes(JAR_CLASS_PATH.toString -> (dependencyClasspath in Runtime).value.files.map(_.getName).filter(_.endsWith("jar")).mkString(" "))
+        Package.ManifestAttributes(JAR_CLASS_PATH.toString ->
+          ((dependencyClasspath in Runtime).value.files :+
+            (artifactPath in Compile in packageBin).value)
+          .map(_.getName).filter(_.endsWith("jar")).mkString(" "))
       },
       packageOptions in (Compile, packageBin) <+= jfxPackageOptions
     ) ++ DistSettings.settings
@@ -52,9 +55,10 @@ lazy val subAppMap: Map[String, SubApplication] =
       "HubNet Client"   -> HubNetClientApp)
 
 lazy val platformMap: Map[String, PlatformBuild] =
-  Map("linux" -> LinuxPlatform,
-      "mac"   -> new MacPlatform(macApp),
-      "win"   -> WindowsPlatform)
+  Map("linux"  -> LinuxPlatform,
+      "mac"    -> new MacPlatform(macApp),
+      "macimg" -> new MacImagePlatform(macApp),
+      "win"    -> WindowsPlatform)
 
 lazy val appParser: Parser[SubApplication] = subAppMap.map(t => t._1 ^^^ t._2).reduceLeft(_ | _)
 
@@ -115,3 +119,37 @@ lazy val packageAction: Def.Initialize[Task[((PlatformBuild, SubApplication)) =>
 }
 
 packageApp <<= InputTask.createDyn(Def.setting((s: State) => " " ~> (platformParser <~ " ") ~ appParser))(packageAction)
+
+lazy val packageLinuxAggregate = taskKey[File]("package all linux apps into a single directory")
+
+packageLinuxAggregate <<= packageAppAggregate("linux", AggregateLinuxBuild.apply _)
+
+lazy val packageMacAggregate = taskKey[File]("package all mac apps into a single directory")
+
+packageMacAggregate <<= packageAppAggregate("macimg", AggregateMacBuild.apply _)
+
+def packageAppAggregate(platformName: String, aggregatePackager: (File, Map[SubApplication, File]) => File): Def.Initialize[Task[File]] = {
+  val subApps = Seq(NetLogoCoreApp, NetLogoThreeDApp, NetLogoLoggingApp, HubNetClientApp)
+  val app = subApps.head
+
+  type AppPair = (SubApplication, File)
+
+  def appTuple(app: SubApplication): Def.Initialize[Task[AppPair]] =
+    Def.map(packageApp.toTask(s" $platformName " + app.name))(_.map(f => (app -> f)))
+
+  // this is a mess. both Task and Initialize have applicative instances, so it should
+  // be possible to make this conversion easier, but I couldn't get the type params to work out
+  val tuples: Def.Initialize[Task[Seq[(SubApplication, File)]]] =
+    subApps.map(appTuple).foldLeft(Def.task(Seq.empty[AppPair])) {
+      case (st, tt) => Def.bind(st)((st: Task[Seq[AppPair]]) =>
+          Def.map(tt)((t: Task[AppPair]) =>
+              st.flatMap((seq: Seq[AppPair]) =>
+                  t.map((tv: AppPair) => seq :+ tv))))
+
+    }
+
+  val appMap: Def.Initialize[Task[Map[SubApplication, File]]] =
+    Def.map(tuples)((appPairTask: Task[Seq[AppPair]]) => appPairTask.map(ts => Map(ts: _*)))
+
+  Def.task(aggregatePackager(target.value, appMap.value))
+}

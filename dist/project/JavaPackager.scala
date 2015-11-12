@@ -60,6 +60,6 @@ object JavaPackager {
     if (ret != 0)
       sys.error("packaging failed!")
 
-    outDir / platform.productName
+    (outDir / "bundles").listFiles.head
   }
 }

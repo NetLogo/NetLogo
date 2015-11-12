@@ -1,7 +1,11 @@
 #!/bin/bash -x
 
-cd ../images/`ls -1 ../images | head`
-TARGET=`ls -1 | head`
+if [ -z "$1" ]; then
+  cd ../images/`ls -1 ../images | head`
+  TARGET=`ls -1 | head`
+else
+  TARGET="$1"
+fi
 for d in `find "{{buildDirectory}}/image" -type d | sed 's;{{buildDirectory}}/image/*;;'`; do
   mkdir -p "${TARGET}/${d}"
 done
