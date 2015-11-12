@@ -176,7 +176,8 @@ public strictfp class ModelsLibrary {
   }
 
   private static void scanDirectory(java.io.File directory, Node grandparent, Node parent, boolean exclusive) {
-    if (!directory.isDirectory() || Utils$.MODULE$.isSymlink(directory)) {
+    // follow symlinks only at the top level
+    if (!directory.isDirectory()) {
       return;
     }
 
