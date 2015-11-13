@@ -35,25 +35,11 @@ object ConfigurationFiles {
     val packageConfigurationDir = packageConfigurationDirectory(platform, buildDirectory)
     val outputFile = packageConfigurationDir / outputFileName(f, app)
     if (f.getName.endsWith(".mustache"))
-      writeMustacheFile(f, outputFile, variables)
+      Mustache(f, outputFile, variables)
     else
       IO.copyFile(f, outputFile)
   }
 
   private def outputFileName(f: File, app: SubApplication): String =
     f.getName.replaceAllLiterally("shared", app.name).stripSuffix(".mustache")
-
-  private def writeMustacheFile(sourceFile: File, destFile: File, variables: Map[String, Object]): Unit = {
-      import com.github.mustachejava._
-      import scala.collection.JavaConverters._
-
-      val mf = new DefaultMustacheFactory()
-
-      val mustache = IO.reader(sourceFile)(mf.compile(_, sourceFile.getName))
-
-      Using.fileWriter()(destFile) { wrtr =>
-        println("rendering: " + sourceFile.getName)
-        mustache.execute(wrtr, variables.asJava)
-      }
-  }
 }

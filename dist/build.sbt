@@ -11,6 +11,16 @@ val bootCp = System.getProperty("java.home") + "/lib/rt.jar"
 
 lazy val jfxPackageOptions = taskKey[Package.ManifestAttributes]("Manifest attributes marking package for javapackager")
 
+lazy val packageApp = inputKey[File]("package specifief app on specified platform")
+
+lazy val packageLinuxAggregate = taskKey[File]("package all linux apps into a single directory")
+
+lazy val packageMacAggregate = taskKey[File]("package all mac apps into a dmg")
+
+lazy val packageWinAggregate = taskKey[File]("package all win apps into a single directory")
+
+lazy val buildDownloadPages  = taskKey[Seq[File]]("package the web download pages")
+
 val sharedAppProjectSettings = Seq(
   fork in run := true,
   javacOptions ++=
@@ -41,6 +51,44 @@ DistSettings.settings
 
 netLogoRoot := baseDirectory.value.getParentFile
 
+packageApp <<= InputTask.createDyn(Def.setting((s: State) => " " ~> (platformParser <~ " ") ~ appParser))(packageAction)
+
+packageLinuxAggregate <<= packageAppAggregate("linux", AggregateLinuxBuild.apply _)
+
+packageMacAggregate <<= packageAppAggregate("macimg", AggregateMacBuild.apply _)
+
+packageWinAggregate <<= packageAppAggregate("win", AggregateWindowsBuild.apply _)
+
+buildDownloadPages := {
+  // TODO: Make these dynamic
+  val webTarget = target.value / "downloadPages"
+  val variables = Map[String, Object](
+    "version"               -> "5.2.2-RC1",
+    "date"                  -> "December 1, 2015",
+    "macInstaller"          -> "NetLogo 5.2.2-RC1.dmg",
+    "macSize"               -> "148 MB",
+    "linuxInstaller"        -> "netlogo-full.zip",
+    "linuxSize"             -> "144 MB",
+    "winInstaller"          -> "NetLogo 5.2.2-RC1.msi",
+    "winSize"               -> "145 MB",
+    "winInstallerNoJre"     -> "NetLogo (w/o Java) 5.2.2-RC1.msi",
+    "winInstallerNoJreSize" -> "50 MB")
+  val templatedFiles =
+    (file("downloadPages") * "*.mustache").get.map(f => (f, webTarget / f.getName.stripSuffix(".mustache")))
+  val copiedFiles =
+    (file("downloadPages") ***).get
+      .filterNot(_.isDirectory)
+      .filterNot(_.getName.endsWith(".mustache"))
+      .map(f => (f, webTarget / f.getName))
+
+  templatedFiles.foreach {
+    case (src, dest) => Mustache(src, dest, variables)
+  }
+  IO.copy(copiedFiles)
+
+  templatedFiles.map(_._2) ++ copiedFiles.map(_._2)
+}
+
 // this value is unfortunately dependent upon both the platform and the application
 val appMainClass: PartialFunction[(String, String), String] = {
   case ("windows" | "linux", "NetLogo" | "NetLogo 3D" | "NetLogo Logging") => "org.nlogo.app.App"
@@ -63,8 +111,6 @@ lazy val platformMap: Map[String, PlatformBuild] =
 lazy val appParser: Parser[SubApplication] = subAppMap.map(t => t._1 ^^^ t._2).reduceLeft(_ | _)
 
 lazy val platformParser: Parser[PlatformBuild] = platformMap.map(t => t._1 ^^^ t._2).reduceLeft(_ | _)
-
-lazy val packageApp = inputKey[File]("package specifief app on specified platform")
 
 lazy val packageAction: Def.Initialize[Task[((PlatformBuild, SubApplication)) => Def.Initialize[Task[File]]]] =
   Def.task[((PlatformBuild, SubApplication)) => Def.Initialize[Task[File]]] {
@@ -117,20 +163,6 @@ lazy val packageAction: Def.Initialize[Task[((PlatformBuild, SubApplication)) =>
     }
   }.tupled
 }
-
-packageApp <<= InputTask.createDyn(Def.setting((s: State) => " " ~> (platformParser <~ " ") ~ appParser))(packageAction)
-
-lazy val packageLinuxAggregate = taskKey[File]("package all linux apps into a single directory")
-
-packageLinuxAggregate <<= packageAppAggregate("linux", AggregateLinuxBuild.apply _)
-
-lazy val packageMacAggregate = taskKey[File]("package all mac apps into a dmg")
-
-packageMacAggregate <<= packageAppAggregate("macimg", AggregateMacBuild.apply _)
-
-lazy val packageWinAggregate = taskKey[File]("package all win apps into a single directory")
-
-packageWinAggregate <<= packageAppAggregate("win", AggregateWindowsBuild.apply _)
 
 def packageAppAggregate(platformName: String, aggregatePackager: (File, Map[SubApplication, File]) => File): Def.Initialize[Task[File]] = {
   val subApps = Seq(NetLogoCoreApp, NetLogoThreeDApp, NetLogoLoggingApp, HubNetClientApp)
