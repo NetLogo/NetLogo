@@ -124,9 +124,13 @@ lazy val packageLinuxAggregate = taskKey[File]("package all linux apps into a si
 
 packageLinuxAggregate <<= packageAppAggregate("linux", AggregateLinuxBuild.apply _)
 
-lazy val packageMacAggregate = taskKey[File]("package all mac apps into a single directory")
+lazy val packageMacAggregate = taskKey[File]("package all mac apps into a dmg")
 
 packageMacAggregate <<= packageAppAggregate("macimg", AggregateMacBuild.apply _)
+
+lazy val packageWinAggregate = taskKey[File]("package all win apps into a single directory")
+
+packageWinAggregate <<= packageAppAggregate("win", AggregateWindowsBuild.apply _)
 
 def packageAppAggregate(platformName: String, aggregatePackager: (File, Map[SubApplication, File]) => File): Def.Initialize[Task[File]] = {
   val subApps = Seq(NetLogoCoreApp, NetLogoThreeDApp, NetLogoLoggingApp, HubNetClientApp)

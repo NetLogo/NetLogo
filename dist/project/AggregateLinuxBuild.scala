@@ -11,7 +11,6 @@ object AggregateLinuxBuild {
   // │   └── Other jars on the classpath
   // ├── libpackager.so
   // └── runtime
-  //     ├── JRE
   //     └── JRE
   //
   //  The desire is to merge all of the app folders, copy the libpackager and runtime, and be done
