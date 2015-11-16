@@ -57,7 +57,7 @@ packageLinuxAggregate <<= packageAppAggregate("linux", AggregateLinuxBuild.apply
 
 packageMacAggregate <<= packageAppAggregate("macimg", AggregateMacBuild.apply _)
 
-packageWinAggregate <<= packageAppAggregate("win", AggregateWindowsBuild.apply _)
+packageWinAggregate <<= Def.bind(baseDirectory)((bd) => packageAppAggregate("win", AggregateWindowsBuild.apply(_, _, bd / "configuration" / "aggregate" / "windows")))
 
 buildDownloadPages := {
   // TODO: Make these dynamic
@@ -173,19 +173,8 @@ def packageAppAggregate(platformName: String, aggregatePackager: (File, Map[SubA
   def appTuple(app: SubApplication): Def.Initialize[Task[AppPair]] =
     Def.map(packageApp.toTask(s" $platformName " + app.name))(_.map(f => (app -> f)))
 
-  // this is a mess. both Task and Initialize have applicative instances, so it should
-  // be possible to make this conversion easier, but I couldn't get the type params to work out
-  val tuples: Def.Initialize[Task[Seq[(SubApplication, File)]]] =
-    subApps.map(appTuple).foldLeft(Def.task(Seq.empty[AppPair])) {
-      case (st, tt) => Def.bind(st)((st: Task[Seq[AppPair]]) =>
-          Def.map(tt)((t: Task[AppPair]) =>
-              st.flatMap((seq: Seq[AppPair]) =>
-                  t.map((tv: AppPair) => seq :+ tv))))
-
-    }
-
   val appMap: Def.Initialize[Task[Map[SubApplication, File]]] =
-    Def.map(tuples)((appPairTask: Task[Seq[AppPair]]) => appPairTask.map(ts => Map(ts: _*)))
+    new Scoped.RichTaskSeq(subApps.map(appTuple)).join.map(_.toMap)
 
   Def.task(aggregatePackager(target.value, appMap.value))
 }

@@ -1,0 +1,109 @@
+<xsl:stylesheet version='1.0'
+  xmlns:xsl='http://www.w3.org/1999/XSL/Transform'
+  xmlns:ext="http://exslt.org/common"
+  xmlns:wix='http://schemas.microsoft.com/wix/2006/wi'>
+
+  <!-- the purpose of this is to tag components, files, and directories with their
+     filename, replacing '\' with '_'. This allows them to be referenced from the main wxs file -->
+
+    <xsl:preserve-space elements="*"/>
+
+    <xsl:attribute-set name="id-attribute">
+      <xsl:attribute name="Id"><xsl:value-of select="@Id" /></xsl:attribute>
+    </xsl:attribute-set>
+
+    <xsl:attribute-set name="name-attribute">
+      <xsl:attribute name="Name"><xsl:value-of select="@Name" /></xsl:attribute>
+    </xsl:attribute-set>
+
+    <xsl:template match="/wix:Wix|wix:Fragment" >
+      <xsl:variable name="vrtfPass1Result">
+        <xsl:copy>
+          <xsl:apply-templates select="@*|node()" />
+        </xsl:copy>
+      </xsl:variable>
+
+      <xsl:apply-templates mode="mPass2"
+        select="ext:node-set($vrtfPass1Result)/*"/>
+    </xsl:template>
+
+    <xsl:template match="node()|@*" mode="mPass2">
+      <xsl:copy>
+        <xsl:apply-templates select="node()|@*" />
+      </xsl:copy>
+    </xsl:template>
+
+    <xsl:template match="wix:Wix" mode="mPass2">
+      <xsl:copy>
+        <xsl:apply-templates select="wix:Fragment[1]" />
+        <wix:Fragment>
+          <wix:ComponentGroup>
+            <!-- This value won't copy properly for some reason.
+                 I suspect the two-pass assembly, but that's necessary
+                 to generate the ComponentRefs. At any rate, hardcoding works -->
+            <xsl:attribute name="Id">NetLogoApp</xsl:attribute>
+            <xsl:for-each select="wix:Fragment//wix:Component">
+              <wix:ComponentRef>
+                <xsl:attribute name="Id"><xsl:value-of select="@Id" /></xsl:attribute>
+              </wix:ComponentRef>
+            </xsl:for-each>
+          </wix:ComponentGroup>
+        </wix:Fragment>
+      </xsl:copy>
+    </xsl:template>
+
+    <xsl:template match="wix:ComponentGroup|wix:ComponentRef|wix:DirectoryRef" >
+      <xsl:copy use-attribute-sets="id-attribute">
+        <xsl:apply-templates select="node()" />
+      </xsl:copy>
+    </xsl:template>
+
+    <xsl:template match="wix:Directory">
+      <xsl:copy use-attribute-sets="name-attribute">
+        <xsl:attribute name="Id">
+          <xsl:value-of select='translate(concat("dir_", @Name, string(../@Name), string(position())), "\ -&amp;&apos;()", "__")' />
+        </xsl:attribute>
+        <xsl:apply-templates select="node()" />
+      </xsl:copy>
+    </xsl:template>
+
+    <xsl:template match="wix:Component">
+      <xsl:copy>
+        <xsl:attribute name="Guid">
+          <xsl:value-of select="@Guid" />
+        </xsl:attribute>
+        <xsl:attribute name="Id">
+          <xsl:choose>
+            <xsl:when test="string-length(wix:File/@Source) &lt; 72">
+              <xsl:value-of select='substring(translate(substring-after(wix:File/@Source, "\"), "\ -&amp;&apos;()", "__"), 0, 71)' />
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select='substring(translate(substring-after(wix:File/@Source, "\"), "\ -&amp;&apos;()", "__"), string-length(wix:File/@Source) - 72, string-length(wix:File/@Source))' />
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:attribute>
+        <xsl:apply-templates select="node()" />
+      </xsl:copy>
+    </xsl:template>
+
+    <xsl:template match="wix:File">
+      <xsl:copy>
+        <xsl:attribute name="Id">
+          <xsl:choose>
+            <xsl:when test="string-length(@Source) &lt; 72">
+              <xsl:value-of select='substring(translate(substring-after(@Source, "\"), "\ -&amp;&apos;()", "__"), 0, 71)' />
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select='substring(translate(substring-after(@Source, "\"), "\ -&amp;&apos;()", "__"), string-length(@Source) - 72, string-length(@Source))' />
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:attribute>
+        <xsl:attribute name="KeyPath">
+          <xsl:value-of select='@KeyPath' />
+        </xsl:attribute>
+        <xsl:attribute name="Source">
+          <xsl:value-of select='@Source' />
+        </xsl:attribute>
+      </xsl:copy>
+    </xsl:template>
+  </xsl:stylesheet>

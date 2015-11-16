@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='windows-1252'?>
+<Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
+  <Product Name='NetLogo {{version}}' Manufacturer="CCL"
+    Id='90393D49-CB1A-4CBC-A7A5-09E44B351649'
+    UpgradeCode='7DEBD71E-5C9C-44C5-ABBB-B39A797CA851'
+    Language='1033' Codepage='1252' Version='{{version}}'>
+    <Package Id='*' Keywords='Installer' Description='NetLogo {{version}} Installer'
+      Manufacturer='Center for Connected Learning' InstallerVersion='100'
+      Languages='1033' Compressed='yes' SummaryCodepage='1252' />
+
+    <Media Id='1' Cabinet='simple.cab' EmbedCab='yes' />
+
+    <Directory Id="TARGETDIR" Name='SourceDir'>
+      <Directory Id='ProgramFilesFolder' Name='PFiles'>
+        <Directory Id='INSTALLDIR' Name='NetLogo {{version}}'>
+        </Directory>
+      </Directory>
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="ApplicationProgramsFolder" Name="NetLogo {{version}}">
+          <Component Id="NetLogoStartMenuShortcut" Guid="AED4301A-C532-4E6D-B531-96289C472C74">
+            <Shortcut Id="NetLogoShortcut"
+              Name="NetLogo {{version}}"
+              Description="NetLogo"
+              Target="[#NetLogo.exe]"
+              WorkingDirectory="INSTALLDIR"/>
+            <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
+            <RegistryValue Root="HKCU" Key="Software\NetLogo\NetLogo {{version}}" Name="netlogo-installed" Type="integer" Value="1" KeyPath="yes" />
+          </Component>
+          <Component Id="NetLogo3DStartMenuShortcut" Guid="FF67AD21-B9A5-4B2D-928A-6C05FF0C18F6">
+            <Shortcut Id="NetLogo3DShortcut"
+              Name="NetLogo 3D {{version}}"
+              Description="NetLogo 3D"
+              Target="[#NetLogo_3D.exe]"
+              WorkingDirectory="INSTALLDIR"/>
+            <RegistryValue Root="HKCU" Key="Software\NetLogo\NetLogo {{version}}" Name="netlogo-3d-installed" Type="integer" Value="1" KeyPath="yes" />
+          </Component>
+          <Component Id="HubNetClientStartMenuShortcut" Guid="8197A493-D6AF-411C-B85A-B36F173DA276">
+            <Shortcut Id="HubNetClientShortcut"
+              Name="HubNet Client {{version}}"
+              Description="HubNet Client"
+              Target="[#HubNet_Client.exe]"
+              WorkingDirectory="INSTALLDIR"/>
+            <RegistryValue Root="HKCU" Key="Software\NetLogo\NetLogo {{version}}" Name="hubnet-client-installed" Type="integer" Value="1" KeyPath="yes" />
+          </Component>
+        </Directory>
+      </Directory>
+      <Component Id="nlogoFileAssociation" Guid="B58D5742-B3F6-481D-8656-8EF85BB87FA4">
+        <ProgId Id="NetLogo.nlogo" Description="NetLogo Model" Advertise="no" Icon="model.ico">
+          <Extension Id='nlogo' ContentType='text/nlogo'>
+            <Verb Id='opennlogo' Command='Edit with NetLogo' TargetFile='NetLogo.exe' Argument='--launch "%1"' />
+          </Extension>
+        </ProgId>
+        <RegistryValue Root="HKCU" Key="Software\NetLogo\NetLogo {{version}}" Name="nlogo-file-association" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+      <Component Id="nlogo3DFileAssociation" Guid="">
+        <ProgId Id="NetLogo.nlogo3d" Description="NetLogo 3D Model" Advertise="no" Icon="model.ico">
+          <Extension Id='nlogo3d' ContentType='text/nlogo3d'>
+            <Verb Id='opennlogo3d' Command='Edit with NetLogo 3D' TargetFile='NetLogo_3D.exe' Argument='--launch "%1"' />
+          </Extension>
+        </ProgId>
+        <RegistryValue Root="HKCU" Key="Software\NetLogo\NetLogo {{version}}" Name="nlogo3d-file-association" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+    </Directory>
+
+    <Feature Id='Complete' Level='1'>
+      <ComponentGroupRef Id='NetLogoApp' />
+      <ComponentRef Id='NetLogoStartMenuShortcut' />
+      <ComponentRef Id='NetLogo3DStartMenuShortcut' />
+      <ComponentRef Id='HubNetClientStartMenuShortcut' />
+      <ComponentRef Id='nlogoFileAssociation' />
+      <ComponentRef Id='nlogo3DFileAssociation' />
+    </Feature>
+  </Product>
+</Wix>

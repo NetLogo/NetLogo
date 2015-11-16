@@ -1,4 +1,5 @@
 import sbt._
+import java.nio.file.FileSystems
 
 object AggregateWindowsBuild {
   // each application maps to the root of the build product
@@ -22,7 +23,21 @@ object AggregateWindowsBuild {
   //  Should be pretty much the same as the linux build, with the
   //  exception that we'll do a bunch of WiX stuff at the end instead
   //  of just zipping it up
-  def apply(aggregateTarget: File, buildsMap: Map[SubApplication, File]): File = {
+
+  val WiXPath = {
+    val fs = FileSystems.getDefault
+    val basePaths =
+      Set(fs.getPath("C:", "Program Files (x86)"), fs.getPath("C:", "Program Files"))
+        .map(_.toFile).filter(_.exists)
+    basePaths.flatMap(_.listFiles).find(_.getName.contains("WiX")).getOrElse(
+      sys.error("Could not find WiX installation, please ensure WiX is installed"))
+  }
+
+  def wixCommand(commandName: String) =
+    WiXPath / "bin" / (commandName + ".exe")
+
+  // TODO: Pass in configuration map
+  def apply(aggregateTarget: File, buildsMap: Map[SubApplication, File], configurationDirectory: File): File = {
     val aggregateWindowsDir = aggregateTarget / "windows-full"
     IO.createDirectory(aggregateWindowsDir)
     val baseImage = buildsMap.head._2
@@ -40,8 +55,43 @@ object AggregateWindowsBuild {
         IO.copy(copies)
     }
 
-    // TODO: Tag with version
-    // TODO: Bunch of wix crap
+    Mustache(
+      configurationDirectory / "NetLogo.wxs.mustache",
+      aggregateTarget / "NetLogo.wxs",
+      Map("version" -> "5.2.2"))
+
+    IO.copyFile(configurationDirectory / "model.ico", aggregateWindowsDir / "model.ico")
+
+    val heatCommand =
+      Seq(wixCommand("heat").getPath,
+        "dir", aggregateWindowsDir.getPath,
+        "-sfrag", "-srd", "-gg",
+        "-template", "fragment",
+        "-cg", "NetLogoApp",
+        "-dr", "INSTALLDIR",
+        "-out", "NetLogoApp.wxs",
+        "-sw5150",
+        "-t", (configurationDirectory / "ElementNamer.xsl").getPath)
+
+    val candleCommand =
+      Seq(wixCommand("candle").getPath, "NetLogo.wxs", "NetLogoApp.wxs", "-sw1026")
+
+    val lightCommand =
+      Seq(wixCommand("light").getPath,
+        "NetLogo.wixobj", "NetLogoApp.wixobj",
+        "-sw69", "-sw1076",
+        "-o", "NetLogo.msi",
+        "-b", aggregateWindowsDir.getPath)
+
+    Seq(
+      heatCommand,
+      candleCommand,
+      lightCommand).foreach { command =>
+        val res = Process(command, aggregateTarget).!
+        if (res != 0)
+          sys.error("Command failed: " + command.mkString(" "))
+      }
+
     aggregateTarget / "windows-full"
   }
 }
