@@ -43,3 +43,9 @@ class NativesDir(platforms: String*) extends BundledDirectory {
   def files(sourceDir: File): Seq[File] =
     platforms.flatMap(platform => (sourceDir / platform).listFiles)
 }
+
+class DocsDir extends BundledDirectory {
+  val directoryName = "docs"
+  def files(sourceDir: File): Seq[File] =
+    Path.allSubpaths(sourceDir).map(_._1).filterNot(_.isHidden).toSeq
+}

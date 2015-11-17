@@ -41,7 +41,7 @@ object AggregateMacBuild {
   // │   ├── All dependency jars
   // |   └── links to extensions, models, etc.
   // └── Java.runtime (contains JRE)
-  val contentDirs = Seq("extensions", "models")
+  val contentDirs = Seq("extensions", "models", "docs")
   val libraryDirs = Seq("lib", "natives")
 
   def apply(aggregateTarget: File, buildsMap: Map[SubApplication, File]): File = {

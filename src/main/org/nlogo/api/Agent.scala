@@ -32,8 +32,8 @@ trait Agent {
   /** Sets the variable in the position vn of the agent variable array to value
     * @param vn    the index into the agent variable array
     * @param value the new value for the variable
-    * @throws LogoException
-    * @throws AgentException If value is the wrong type for the given variable or if you try to change variables that cannot be changed
+    * @throws org.nlogo.api.LogoException
+    * @throws org.nlogo.api.AgentException If value is the wrong type for the given variable or if you try to change variables that cannot be changed
     */
   @throws(classOf[LogoException])
   @throws(classOf[AgentException])

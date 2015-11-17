@@ -12,7 +12,8 @@ trait PlatformBuild {
 
   def bundledDirs: Seq[BundledDirectory] = Seq(
     new ExtensionDir(),
-    new ModelsDir()
+    new ModelsDir(),
+    new DocsDir()
   )
 
   def scalaJar: File =

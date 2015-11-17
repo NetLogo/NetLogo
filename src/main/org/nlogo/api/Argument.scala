@@ -17,8 +17,8 @@ trait Argument {
   /**
    * Returns the argument as an <code>Object</code> without type checking.
    *
-   * @throws ExtensionException
-   * @throws LogoException      if a LogoException occurred while evaluating this argument
+   * @throws org.nlogo.api.ExtensionException
+   * @throws org.nlogo.api.LogoException      if a LogoException occurred while evaluating this argument
    */
   @throws(classOf[ExtensionException])
   @throws(classOf[LogoException])
@@ -27,8 +27,8 @@ trait Argument {
   /**
    * Returns the argument as an <code>org.nlogo.api.AgentSet</code>.
    *
-   * @throws ExtensionException if the argument is not an <code>AgentSet</code>
-   * @throws LogoException      if a LogoException occurred while evaluating this argument
+   * @throws org.nlogo.api.ExtensionException if the argument is not an <code>AgentSet</code>
+   * @throws org.nlogo.api.LogoException      if a LogoException occurred while evaluating this argument
    */
   @throws(classOf[ExtensionException])
   @throws(classOf[LogoException])
@@ -37,8 +37,8 @@ trait Argument {
   /**
    * Returns the argument as an <code>Agent</code>.
    *
-   * @throws ExtensionException if the argument is not an <code>Agent</code>
-   * @throws LogoException      if a LogoException occurred while evaluating this argument
+   * @throws org.nlogo.api.ExtensionException if the argument is not an <code>Agent</code>
+   * @throws org.nlogo.api.LogoException      if a LogoException occurred while evaluating this argument
    */
   @throws(classOf[ExtensionException])
   @throws(classOf[LogoException])
@@ -47,8 +47,8 @@ trait Argument {
   /**
    * Returns the argument as a boxed <code>java.lang.Boolean</code>
    *
-   * @throws ExtensionException if the argument is not a <code>Boolean</code>
-   * @throws LogoException      if a LogoException occurred while evaluating this argument
+   * @throws org.nlogo.api.ExtensionException if the argument is not a <code>Boolean</code>
+   * @throws org.nlogo.api.LogoException      if a LogoException occurred while evaluating this argument
    */
   @throws(classOf[ExtensionException])
   @throws(classOf[LogoException])
@@ -57,8 +57,8 @@ trait Argument {
   /**
    * Returns the value of the argument as an unboxed <code>boolean</code>.
    *
-   * @throws ExtensionException if the argument is not a <code>boolean</code>
-   * @throws LogoException      if a LogoException occurred while evaluating this argument
+   * @throws org.nlogo.api.ExtensionException if the argument is not a <code>boolean</code>
+   * @throws org.nlogo.api.LogoException      if a LogoException occurred while evaluating this argument
    */
   @throws(classOf[ExtensionException])
   @throws(classOf[LogoException])
@@ -68,8 +68,8 @@ trait Argument {
    * Returns the value of the argument as an unboxed <code>int</code>.
    * Any fractional part is discarded.
    *
-   * @throws ExtensionException if the argument is not a number.
-   * @throws LogoException      if a LogoException occurred while evaluating this argument
+   * @throws org.nlogo.api.ExtensionException if the argument is not a number.
+   * @throws org.nlogo.api.LogoException      if a LogoException occurred while evaluating this argument
    */
   @throws(classOf[ExtensionException])
   @throws(classOf[LogoException])
@@ -78,8 +78,8 @@ trait Argument {
   /**
    * Returns the value of the argument as an unboxed <code>double</code>.
    *
-   * @throws ExtensionException if the argument is not a number.
-   * @throws LogoException      if a LogoException occurred while evaluating this argument
+   * @throws org.nlogo.api.ExtensionException if the argument is not a number.
+   * @throws org.nlogo.api.LogoException      if a LogoException occurred while evaluating this argument
    */
   @throws(classOf[ExtensionException])
   @throws(classOf[LogoException])
@@ -88,8 +88,8 @@ trait Argument {
   /**
    * Returns the argument as a <code>org.nlogo.api.LogoList</code>
    *
-   * @throws ExtensionException if the argument is not a <code>LogoList</code>
-   * @throws LogoException      if a LogoException occurred while evaluating this argument
+   * @throws org.nlogo.api.ExtensionException if the argument is not a <code>LogoList</code>
+   * @throws org.nlogo.api.LogoException      if a LogoException occurred while evaluating this argument
    */
   @throws(classOf[ExtensionException])
   @throws(classOf[LogoException])
@@ -98,8 +98,8 @@ trait Argument {
   /**
    * Returns the argument as an <code>org.nlogo.api.Patch</code>
    *
-   * @throws ExtensionException if the argument is not a <code>Patch</code>
-   * @throws LogoException      if a LogoException occurred while evaluating this argument
+   * @throws org.nlogo.api.ExtensionException if the argument is not a <code>Patch</code>
+   * @throws org.nlogo.api.LogoException      if a LogoException occurred while evaluating this argument
    */
   @throws(classOf[ExtensionException])
   @throws(classOf[LogoException])
@@ -108,8 +108,8 @@ trait Argument {
   /**
    * Returns the argument as a <code>String</code>
    *
-   * @throws ExtensionException if the argument cannot be cast to a <code>String</code>
-   * @throws LogoException      if a LogoException occurred while evaluating this argument
+   * @throws org.nlogo.api.ExtensionException if the argument cannot be cast to a <code>String</code>
+   * @throws org.nlogo.api.LogoException      if a LogoException occurred while evaluating this argument
    */
   @throws(classOf[ExtensionException])
   @throws(classOf[LogoException])
@@ -118,8 +118,8 @@ trait Argument {
   /**
    * Returns the argument as a <code>org.nlogo.api.Turtle</code>.
    *
-   * @throws ExtensionException if the argument is not a <code>Turtle</code>
-   * @throws LogoException      if a LogoException occurred while evaluating this argument
+   * @throws org.nlogo.api.ExtensionException if the argument is not a <code>Turtle</code>
+   * @throws org.nlogo.api.LogoException      if a LogoException occurred while evaluating this argument
    */
   @throws(classOf[ExtensionException])
   @throws(classOf[LogoException])
@@ -128,8 +128,8 @@ trait Argument {
   /**
    * Returns the argument as a <code>org.nlogo.api.Link</code>.
    *
-   * @throws ExtensionException if the argument is not a <code>Link</code>
-   * @throws LogoException      if a LogoException occurred while evaluating this argument
+   * @throws org.nlogo.api.ExtensionException if the argument is not a <code>Link</code>
+   * @throws org.nlogo.api.LogoException      if a LogoException occurred while evaluating this argument
    */
   @throws(classOf[ExtensionException])
   @throws(classOf[LogoException])
@@ -138,8 +138,8 @@ trait Argument {
   /**
    * Returns the argument as a <code>org.nlogo.api.ReporterTask</code>.
    *
-   * @throws ExtensionException if the argument is not a <code>ReporterTask</code>
-   * @throws LogoException      if a LogoException occurred while evaluating this argument
+   * @throws org.nlogo.api.ExtensionException if the argument is not a <code>ReporterTask</code>
+   * @throws org.nlogo.api.LogoException if a LogoException occurred while evaluating this argument
    */
   @throws(classOf[ExtensionException])
   @throws(classOf[LogoException])
@@ -148,8 +148,8 @@ trait Argument {
   /**
    * Returns the argument as a <code>org.nlogo.api.CommandTask</code>.
    *
-   * @throws ExtensionException if the argument is not a <code>CommandTask</code>
-   * @throws LogoException      if a LogoException occurred while evaluating this argument
+   * @throws org.nlogo.api.ExtensionException if the argument is not a <code>CommandTask</code>
+   * @throws org.nlogo.api.LogoException      if a LogoException occurred while evaluating this argument
    */
   @throws(classOf[ExtensionException])
   @throws(classOf[LogoException])

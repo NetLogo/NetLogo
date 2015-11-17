@@ -37,6 +37,8 @@ packageApp linux NetLogo
 * java 1.8
 * `javapackager` on the `PATH` pointing to a the `javapackager` executable in java 1.8.
    The build may or may not work with java 8 below u60, due to the fact that `javapackager` remains under active development.
+* `pandoc` on the `PATH`
+* `htmldoc` on the `PATH`
 
 ### Platform-specific Prerequisites
 

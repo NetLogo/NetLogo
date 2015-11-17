@@ -21,6 +21,8 @@ lazy val packageWinAggregate = taskKey[File]("package all win apps into a single
 
 lazy val buildDownloadPages  = taskKey[Seq[File]]("package the web download pages")
 
+lazy val buildDocs           = taskKey[Seq[File]]("render NetLogo documentation")
+
 val sharedAppProjectSettings = Seq(
   fork in run := true,
   javacOptions ++=
@@ -59,12 +61,11 @@ packageMacAggregate <<= packageAppAggregate("macimg", AggregateMacBuild.apply _)
 
 packageWinAggregate <<= Def.bind(baseDirectory)((bd) => packageAppAggregate("win", AggregateWindowsBuild.apply(_, _, bd / "configuration" / "aggregate" / "windows")))
 
-buildDownloadPages := {
-  // TODO: Make these dynamic
-  val webTarget = target.value / "downloadPages"
-  val variables = Map[String, Object](
+lazy val dummyVariables = {
+  Map[String, Object](
     "version"               -> "5.2.2-RC1",
     "date"                  -> "December 1, 2015",
+    // below variables only required for download pages
     "macInstaller"          -> "NetLogo 5.2.2-RC1.dmg",
     "macSize"               -> "148 MB",
     "linuxInstaller"        -> "netlogo-full.zip",
@@ -73,20 +74,19 @@ buildDownloadPages := {
     "winSize"               -> "145 MB",
     "winInstallerNoJre"     -> "NetLogo (w/o Java) 5.2.2-RC1.msi",
     "winInstallerNoJreSize" -> "50 MB")
-  val templatedFiles =
-    (file("downloadPages") * "*.mustache").get.map(f => (f, webTarget / f.getName.stripSuffix(".mustache")))
-  val copiedFiles =
-    (file("downloadPages") ***).get
-      .filterNot(_.isDirectory)
-      .filterNot(_.getName.endsWith(".mustache"))
-      .map(f => (f, webTarget / f.getName))
+}
 
-  templatedFiles.foreach {
-    case (src, dest) => Mustache(src, dest, variables)
-  }
-  IO.copy(copiedFiles)
+buildDownloadPages := {
+  val webSource = file("downloadPages")
+  val webTarget = target.value / "downloadPages"
+  Mustache.betweenDirectories(webSource, webTarget, dummyVariables)
+}
 
-  templatedFiles.map(_._2) ++ copiedFiles.map(_._2)
+buildDocs := {
+  new NetLogoDocs(
+    baseDirectory.value / "docs",
+    netLogoRoot.value / "docs",
+    netLogoRoot.value).generate(dummyVariables)
 }
 
 // this value is unfortunately dependent upon both the platform and the application
@@ -150,10 +150,13 @@ lazy val packageAction: Def.Initialize[Task[((PlatformBuild, SubApplication)) =>
         }
 
         val copyLogging = (distDir / "netlogo_logging.xml", artifactsDir / "netlogo_logging.xml")
+        val copyManual = (netLogoDir / "NetLogo User Manual.pdf", artifactsDir / "NetLogo User Manual.pdf")
 
-        val allFileCopies: Seq[(File, File)] = jarMap ++ copiedBundleFiles :+ copyLogging
+        val allFileCopies: Seq[(File, File)] = jarMap ++ copiedBundleFiles :+ copyLogging :+ copyManual
 
         IO.copy(allFileCopies)
+
+        Mustache(distDir / "readme.md", artifactsDir / "readme.md", dummyVariables)
 
         val allFiles: Seq[File] = allFileCopies.map(_._2)
 
