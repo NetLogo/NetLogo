@@ -1,5 +1,6 @@
-NetLogo 5.2.1-RC1
-September 29, 2015
+NetLogo 5.2.2-RC1
+November 23, 2015
+NetLogo 5.2.1
 NetLogo 5.2
 NetLogo 5.1
 NetLogo 5.0
