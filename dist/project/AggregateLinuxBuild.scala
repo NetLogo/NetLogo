@@ -14,8 +14,7 @@ object AggregateLinuxBuild {
   //     └── JRE
   //
   //  The desire is to merge all of the app folders, copy the libpackager and runtime, and be done
-  def apply(aggregateTarget: File, buildsMap: Map[SubApplication, File]): File = {
-    val version = "5.2.2-RC1"
+  def apply(aggregateTarget: File, buildsMap: Map[SubApplication, File], version: String): File = {
     val aggregateLinuxDir = aggregateTarget / "linux-full"
     // we build the image in this directory, and we later use tar.gz to package it
     val imageDir = aggregateLinuxDir / s"netlogo-$version"

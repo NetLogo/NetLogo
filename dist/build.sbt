@@ -55,14 +55,16 @@ netLogoRoot := baseDirectory.value.getParentFile
 
 packageApp <<= InputTask.createDyn(Def.setting((s: State) => " " ~> (platformParser <~ " ") ~ appParser))(packageAction)
 
-packageLinuxAggregate <<= packageAppAggregate("linux", AggregateLinuxBuild.apply _)
+packageLinuxAggregate <<= packageAppAggregate("linux", AggregateLinuxBuild.apply(_, _, dummyVariables("version")))
 
-packageMacAggregate <<= packageAppAggregate("macimg", AggregateMacBuild.apply _)
+packageMacAggregate <<= packageAppAggregate("macimg", AggregateMacBuild.apply(_, _, dummyVariables("version")))
 
-packageWinAggregate <<= Def.bind(baseDirectory)((bd) => packageAppAggregate("win", AggregateWindowsBuild.apply(_, _, bd / "configuration" / "aggregate" / "windows", dummyVariables)))
+packageWinAggregate <<= Def.bind(baseDirectory)((bd) =>
+    packageAppAggregate("win",
+      AggregateWindowsBuild.apply(_, _, bd / "configuration" / "aggregate" / "windows", dummyVariables)))
 
 lazy val dummyVariables = {
-  Map[String, Object](
+  Map[String, String](
     "version"               -> "5.2.2-RC1",
     "numericOnlyVersion"    -> "5.2.2",
     "date"                  -> "December 1, 2015",

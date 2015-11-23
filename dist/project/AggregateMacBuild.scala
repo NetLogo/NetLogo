@@ -44,8 +44,8 @@ object AggregateMacBuild {
   val contentDirs = Seq("extensions", "models", "docs")
   val libraryDirs = Seq("lib", "natives")
 
-  def apply(aggregateTarget: File, buildsMap: Map[SubApplication, File]): File = {
-    val aggregateMacDir = aggregateTarget / "NetLogo Bundle" // TODO: Add version
+  def apply(aggregateTarget: File, buildsMap: Map[SubApplication, File], version: String): File = {
+    val aggregateMacDir = aggregateTarget / "NetLogo Bundle" / s"NetLogo $version"
     IO.delete(aggregateMacDir)
     val baseImage = buildsMap.head._2
     IO.copyDirectory(baseImage / "Contents" / "PlugIns" / "Java.runtime", aggregateMacDir / "JRE" )
@@ -111,11 +111,11 @@ object AggregateMacBuild {
         IO.writeLines(aggregatedAppDir / "Contents" / "Java" / (app.name + ".cfg"), alteredCfgContents)
     }
 
-    val buildName = "NetLogo 5.2.2-RC1"
+    val buildName = s"NetLogo-$version"
     val dmgArgs = Seq("hdiutil", "create",
         "-quiet", buildName + ".dmg",
         "-srcfolder", (aggregateTarget / "NetLogo Bundle").getAbsolutePath,
-        "-size", "300m",
+        "-size", "350m",
         "-volname", buildName, "-ov")
     val ret = Process(dmgArgs, aggregateTarget).!
     if (ret != 0)

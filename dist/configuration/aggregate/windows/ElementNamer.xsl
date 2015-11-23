@@ -61,7 +61,7 @@
     <xsl:template match="wix:Directory">
       <xsl:copy use-attribute-sets="name-attribute">
         <xsl:attribute name="Id">
-          <xsl:value-of select='translate(concat("dir_", @Name, string(../@Name), string(position())), "\ -&amp;&apos;()", "__")' />
+          <xsl:value-of select='translate(concat("dir_", string(../../@Name), "_", string(../@Name), "_", @Name, "_", string(position())), "\ -&amp;&apos;()", "__")' />
         </xsl:attribute>
         <xsl:apply-templates select="node()" />
       </xsl:copy>
