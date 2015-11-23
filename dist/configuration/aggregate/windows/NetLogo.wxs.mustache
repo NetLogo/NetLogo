@@ -3,12 +3,14 @@
   <Product Name='NetLogo {{version}}' Manufacturer="CCL"
     Id='90393D49-CB1A-4CBC-A7A5-09E44B351649'
     UpgradeCode='7DEBD71E-5C9C-44C5-ABBB-B39A797CA851'
-    Language='1033' Codepage='1252' Version='{{version}}'>
+    Language='1033' Codepage='1252' Version='{{numericOnlyVersion}}'>
     <Package Id='*' Keywords='Installer' Description='NetLogo {{version}} Installer'
       Manufacturer='Center for Connected Learning' InstallerVersion='100'
       Languages='1033' Compressed='yes' SummaryCodepage='1252' />
 
     <Media Id='1' Cabinet='simple.cab' EmbedCab='yes' />
+
+    <Icon Id='ProductIcon' SourceFile='NetLogo.ico' />
 
     <Directory Id="TARGETDIR" Name='SourceDir'>
       <Directory Id='ProgramFilesFolder' Name='PFiles'>
@@ -16,7 +18,7 @@
         </Directory>
       </Directory>
       <Directory Id="ProgramMenuFolder">
-        <Directory Id="ApplicationProgramsFolder" Name="NetLogo {{version}}">
+        <Directory Id="STARTMENU_DIR" Name="NetLogo {{version}}">
           <Component Id="NetLogoStartMenuShortcut" Guid="AED4301A-C532-4E6D-B531-96289C472C74">
             <Shortcut Id="NetLogoShortcut"
               Name="NetLogo {{version}}"
@@ -44,6 +46,34 @@
           </Component>
         </Directory>
       </Directory>
+      <Directory Id="DesktopFolder" SourceName="Desktop">
+        <Component Id="NetLogoDesktopShortcut" Guid="EEC3DCC6-A22B-4A3D-A13E-048C07089A60">
+          <Shortcut
+            Id="NetLogoDesktopShortcut"
+            Name="NetLogo {{version}}"
+            Description="NetLogo"
+            Target="[#NetLogo.exe]"
+            WorkingDirectory="INSTALLDIR" />
+          <RegistryValue Root="HKCU" Key="Software\NetLogo\NetLogo {{version}}" Name="netlogo-desktop-shortcut" Type="integer" Value="1" KeyPath="yes" />
+        </Component>
+        <Component Id="NetLogo3DDesktopShortcut" Guid="DD28ADDD-9C1D-46B3-89E8-48252B285B7F">
+          <Shortcut Id="NetLogo3DDesktopShortcut"
+            Name="NetLogo 3D {{version}}"
+            Description="NetLogo 3D"
+            Target="[#NetLogo_3D.exe]"
+            WorkingDirectory="INSTALLDIR"/>
+          <RegistryValue Root="HKCU" Key="Software\NetLogo\NetLogo {{version}}" Name="netlogo-3d-desktop-shortcut" Type="integer" Value="1" KeyPath="yes" />
+        </Component>
+        <Component Id="HubNetClientDesktopShortcut" Guid="911212BF-519F-4852-BD4F-18A09EAB2AFB">
+          <Shortcut Id="HubNetClientDesktopShortcut"
+            Name="HubNet Client {{version}}"
+            Description="HubNet Client"
+            Target="[#HubNet_Client.exe]"
+            WorkingDirectory="INSTALLDIR"/>
+          <RegistryValue Root="HKCU" Key="Software\NetLogo\NetLogo {{version}}" Name="hubnet-client-desktop-shortcut" Type="integer" Value="1" KeyPath="yes" />
+          <Condition>NETLOGO_INSTALL_DESKTOP_SHORTCUTS</Condition>
+        </Component>
+      </Directory>
       <Component Id="nlogoFileAssociation" Guid="B58D5742-B3F6-481D-8656-8EF85BB87FA4">
         <ProgId Id="NetLogo.nlogo" Description="NetLogo Model" Advertise="no" Icon="model.ico">
           <Extension Id='nlogo' ContentType='text/nlogo'>
@@ -51,24 +81,36 @@
           </Extension>
         </ProgId>
         <RegistryValue Root="HKCU" Key="Software\NetLogo\NetLogo {{version}}" Name="nlogo-file-association" Type="integer" Value="1" KeyPath="yes" />
+        <Condition>NETLOGO_INSTALL_DESKTOP_SHORTCUTS</Condition>
       </Component>
-      <Component Id="nlogo3DFileAssociation" Guid="">
+      <Component Id="nlogo3DFileAssociation" Guid="D2F8CCF5-B6DB-4C32-BD4A-697EFFCA481B">
         <ProgId Id="NetLogo.nlogo3d" Description="NetLogo 3D Model" Advertise="no" Icon="model.ico">
           <Extension Id='nlogo3d' ContentType='text/nlogo3d'>
             <Verb Id='opennlogo3d' Command='Edit with NetLogo 3D' TargetFile='NetLogo_3D.exe' Argument='--launch "%1"' />
           </Extension>
         </ProgId>
         <RegistryValue Root="HKCU" Key="Software\NetLogo\NetLogo {{version}}" Name="nlogo3d-file-association" Type="integer" Value="1" KeyPath="yes" />
+        <Condition>NETLOGO_INSTALL_DESKTOP_SHORTCUTS</Condition>
       </Component>
     </Directory>
 
-    <Feature Id='Complete' Level='1'>
+    <Feature Id='NetLogoFeatures' Level='1'>
       <ComponentGroupRef Id='NetLogoApp' />
       <ComponentRef Id='NetLogoStartMenuShortcut' />
       <ComponentRef Id='NetLogo3DStartMenuShortcut' />
       <ComponentRef Id='HubNetClientStartMenuShortcut' />
       <ComponentRef Id='nlogoFileAssociation' />
       <ComponentRef Id='nlogo3DFileAssociation' />
+      <ComponentRef Id="NetLogoDesktopShortcut" />
+      <ComponentRef Id="NetLogo3DDesktopShortcut" />
+      <ComponentRef Id="HubNetClientDesktopShortcut" />
     </Feature>
+
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
+    <Property Id="NETLOGO_STARTMENU_LOCATION" Value="STARTMENU_DIR" />
+    <Property Id="NETLOGO_INSTALL_DESKTOP_SHORTCUTS" Value="false" />
+    <Property Id='ARPPRODUCTICON' Value='ProductIcon' />
+
+    <UIRef Id="NetLogoUI" />
   </Product>
 </Wix>

@@ -37,7 +37,7 @@ object AggregateWindowsBuild {
     WiXPath / "bin" / (commandName + ".exe")
 
   // TODO: Pass in configuration map
-  def apply(aggregateTarget: File, buildsMap: Map[SubApplication, File], configurationDirectory: File): File = {
+  def apply(aggregateTarget: File, buildsMap: Map[SubApplication, File], configurationDirectory: File, variables: Map[String, Object]): File = {
     val aggregateWindowsDir = aggregateTarget / "windows-full"
     IO.createDirectory(aggregateWindowsDir)
     val baseImage = buildsMap.head._2
@@ -55,10 +55,7 @@ object AggregateWindowsBuild {
         IO.copy(copies)
     }
 
-    Mustache(
-      configurationDirectory / "NetLogo.wxs.mustache",
-      aggregateTarget / "NetLogo.wxs",
-      Map("version" -> "5.2.2"))
+    Mustache.betweenDirectories(configurationDirectory, aggregateTarget, variables)
 
     IO.copyFile(configurationDirectory / "model.ico", aggregateWindowsDir / "model.ico")
 
@@ -74,11 +71,13 @@ object AggregateWindowsBuild {
         "-t", (configurationDirectory / "ElementNamer.xsl").getPath)
 
     val candleCommand =
-      Seq(wixCommand("candle").getPath, "NetLogo.wxs", "NetLogoApp.wxs", "-sw1026")
+      Seq(wixCommand("candle").getPath, "NetLogo.wxs", "NetLogoApp.wxs", "NetLogoUI.wxs", "ShortcutDialog.wxs", "-sw1026")
 
     val lightCommand =
       Seq(wixCommand("light").getPath,
-        "NetLogo.wixobj", "NetLogoApp.wixobj",
+        "NetLogo.wixobj", "NetLogoUI.wixobj", "NetLogoApp.wixobj", "ShortcutDialog.wixobj",
+        "-cultures:en-us", "-loc", "NetLogoTranslation.wxl",
+        "-ext", "WixUIExtension",
         "-sw69", "-sw1076",
         "-o", "NetLogo.msi",
         "-b", aggregateWindowsDir.getPath)

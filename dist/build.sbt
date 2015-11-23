@@ -59,11 +59,12 @@ packageLinuxAggregate <<= packageAppAggregate("linux", AggregateLinuxBuild.apply
 
 packageMacAggregate <<= packageAppAggregate("macimg", AggregateMacBuild.apply _)
 
-packageWinAggregate <<= Def.bind(baseDirectory)((bd) => packageAppAggregate("win", AggregateWindowsBuild.apply(_, _, bd / "configuration" / "aggregate" / "windows")))
+packageWinAggregate <<= Def.bind(baseDirectory)((bd) => packageAppAggregate("win", AggregateWindowsBuild.apply(_, _, bd / "configuration" / "aggregate" / "windows", dummyVariables)))
 
 lazy val dummyVariables = {
   Map[String, Object](
     "version"               -> "5.2.2-RC1",
+    "numericOnlyVersion"    -> "5.2.2",
     "date"                  -> "December 1, 2015",
     // below variables only required for download pages
     "macInstaller"          -> "NetLogo 5.2.2-RC1.dmg",
