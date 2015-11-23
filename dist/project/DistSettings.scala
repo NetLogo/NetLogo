@@ -7,6 +7,9 @@ object DistSettings {
   // build application jar, resources
   lazy val buildNetLogo = taskKey[Unit]("build NetLogo")
 
+  lazy val modelCrossReference = taskKey[Unit]("add model cross references")
+
+
   lazy val settings = Seq(
     buildNetLogo := {
       def netLogoCmd(cmd: String): Unit = {
@@ -19,6 +22,10 @@ object DistSettings {
       netLogoCmd("extensions")
       netLogoCmd("model-index")
       netLogoCmd("native-libs")
+    },
+    buildNetLogo <<= buildNetLogo dependsOn modelCrossReference,
+    modelCrossReference := {
+      ModelCrossReference(netLogoRoot.value)
     }
   )
 }
