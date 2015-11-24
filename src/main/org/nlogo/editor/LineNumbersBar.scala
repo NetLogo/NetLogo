@@ -2,13 +2,14 @@
 
 package org.nlogo.editor
 
-import java.awt.Dimension
+import java.awt.{ Color, Dimension }
 import javax.swing.JTextPane
 import javax.swing.event.{ DocumentEvent, DocumentListener }
 
 class LineNumbersBar(editor: EditorArea[_]) extends JTextPane with DocumentListener {
   updateNumbers()
   setEnabled(false)
+  setBackground(new Color(240, 240, 240))
   editor.getDocument.addDocumentListener(this)
 
   def updateNumbers() = {
