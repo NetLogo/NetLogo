@@ -61,7 +61,7 @@ object Depend {
       "lex" -> List("api"),
       "lite" -> List("window"),
       "log" -> List("api"),
-      "mc" -> List("nvm", "swing"),
+      "mc" -> List("workspace", "swing"),
       "nvm" -> List("agent"),
       "plot" -> List("api"),
       "prim" -> List("nvm"),
