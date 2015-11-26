@@ -128,6 +128,12 @@ object App{
     }
 
     pico.addComponent(classOf[WorkspaceFactory], factory)
+    pico.addComponent(classOf[GraphicsPreview])
+    pico.add(
+      classOf[PreviewCommandsEditorInterface],
+      "org.nlogo.app.previewcommands.PreviewCommandsEditor",
+      new ComponentParameter(classOf[AppFrame]),
+      new ComponentParameter(), new ComponentParameter())
     pico.addComponent(classOf[Tabs])
     pico.addComponent(classOf[AgentMonitorManager])
     app = pico.getComponent(classOf[App])
@@ -276,6 +282,7 @@ class App extends
   var labManager:LabManagerInterface = null
   private val listenerManager = new NetLogoListenerManager
   lazy val modelingCommons = pico.getComponent(classOf[ModelingCommonsInterface])
+  lazy val previewCommandsEditor = pico.getComponent(classOf[PreviewCommandsEditorInterface])
   private val ImportWorldURLProp = "netlogo.world_state_url"
   private val ImportRawWorldURLProp = "netlogo.raw_world_state_url"
 

@@ -1,19 +1,16 @@
 package org.nlogo.workspace
 
 import java.awt.image.BufferedImage
-import scala.util.Try
-import org.nlogo.api.Observer
+
+import org.nlogo.api.CompilerException
 import org.nlogo.api.JobOwner
+import org.nlogo.api.Observer
 import org.nlogo.api.PreviewCommands
 import org.nlogo.api.SimpleJobOwner
 import org.nlogo.nvm.Workspace
 import org.nlogo.nvm.Procedure
-import org.nlogo.api.JobOwner
-import org.nlogo.nvm.Workspace
-import org.nlogo.api.SimpleJobOwner
-import org.nlogo.nvm.Procedure
-import org.nlogo.nvm.Workspace
-import org.nlogo.api.JobOwner
+
+import scala.util.Try
 
 object PreviewCommandsRunner {
 
@@ -68,6 +65,11 @@ class PreviewCommandsRunner private (
   jobOwner: JobOwner) {
 
   lazy val previewImage: Try[BufferedImage] = Try {
+    try
+      workspace.evaluateCommands(jobOwner, "startup", workspace.world.observers, true)
+    catch {
+      case e: CompilerException => /* ignore */
+    }
     workspace.runCompiledCommands(jobOwner, procedure)
     val image = workspace.exportView
     workspace.dispose()
