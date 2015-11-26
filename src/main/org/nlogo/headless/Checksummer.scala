@@ -2,6 +2,7 @@
 
 package org.nlogo.headless
 
+import org.nlogo.api.PreviewCommands
 import org.nlogo.workspace.AbstractWorkspaceScala
 import org.nlogo.util.HexString.toHexString
 import java.io.PrintWriter
@@ -10,10 +11,12 @@ import ChecksumsAndPreviews.Previews.needsManualPreview
 object Checksummer {
   def initModelForChecksumming(workspace: HeadlessWorkspace) {
     workspace.renderer.renderLabelsAsRectangles_=(true)
-    if (needsManualPreview(workspace.previewCommands))
-      workspace.previewCommands = AbstractWorkspaceScala.DefaultPreviewCommands
+    val source = workspace.previewCommands match {
+      case PreviewCommands.Custom(source) => source
+      case _ => PreviewCommands.Default.source // may or may not compile, but we'll try
+    }
     workspace.command("random-seed 0")
-    workspace.command(workspace.previewCommands)
+    workspace.command(source)
   }
   def calculateWorldChecksum(workspace: HeadlessWorkspace): String =
     calculateChecksum(workspace.exportWorld _)

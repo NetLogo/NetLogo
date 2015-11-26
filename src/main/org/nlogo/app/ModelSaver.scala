@@ -2,7 +2,9 @@
 
 package org.nlogo.app
 
-import org.nlogo.api.{ModelReader, Shape, Version}
+import org.nlogo.api.{ModelReader, PreviewCommands, Shape, Version}
+import org.nlogo.util.Implicits.RichString
+import org.nlogo.util.Implicits.RichStringLike
 import org.nlogo.workspace.AbstractWorkspaceScala
 import collection.JavaConverters._
 
@@ -51,9 +53,10 @@ class ModelSaver(app: App) {
 
     // preview commands
     section {
-      val cmds = app.tabs.workspace.previewCommands.trim
-      if(cmds.nonEmpty && cmds != AbstractWorkspaceScala.DefaultPreviewCommands)
-        buf ++= app.tabs.workspace.previewCommands.trim + "\n"
+      app.tabs.workspace.previewCommands match {
+        case PreviewCommands.Default => // do nothing
+        case commands => buf ++= commands.source.stripTrailingWhiteSpace + "\n"
+      }
     }
 
     // system dynamics modeler

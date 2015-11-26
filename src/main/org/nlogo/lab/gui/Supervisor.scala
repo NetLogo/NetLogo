@@ -5,7 +5,8 @@ package org.nlogo.lab.gui
 import org.nlogo.awt.UserCancelException
 import org.nlogo.lab.{Exporter,Protocol,SpreadsheetExporter,TableExporter,Worker}
 import org.nlogo.window.{EditDialogFactoryInterface,GUIWorkspace}
-import org.nlogo.nvm.{EngineException, Workspace, WorkspaceFactory}
+import org.nlogo.nvm.{EngineException, Workspace}
+import org.nlogo.workspace.{CurrentModelOpener, WorkspaceFactory}
 import org.nlogo.nvm.LabInterface.ProgressListener
 import org.nlogo.api.{I18N, CompilerException, LogoException}
 
@@ -15,7 +16,7 @@ object Supervisor {
 class Supervisor(dialog: java.awt.Dialog,
                  val workspace: GUIWorkspace,
                  protocol: Protocol,
-                 factory: WorkspaceFactory,
+                 factory: WorkspaceFactory with CurrentModelOpener,
                  dialogFactory: EditDialogFactoryInterface)
   extends Thread("BehaviorSpace Supervisor")
 {
@@ -88,6 +89,7 @@ class Supervisor(dialog: java.awt.Dialog,
     queue.enqueue(workspace)
     (2 to options.threadCount).foreach{_ =>
       val w = factory.newInstance
+      factory.openCurrentModelIn(w)
       headlessWorkspaces += w
       queue.enqueue(w)
     }

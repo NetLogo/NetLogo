@@ -3,7 +3,7 @@
 package org.nlogo.workspace
 
 import org.nlogo.agent.{World, Agent, Observer, AbstractExporter, AgentSet, ArrayAgentSet}
-import org.nlogo.api.{PlotInterface, Dump, CommandLogoThunk, ReporterLogoThunk, CompilerException, JobOwner, SimpleJobOwner}
+import org.nlogo.api.{PreviewCommands, PlotInterface, Dump, CommandLogoThunk, ReporterLogoThunk, CompilerException, JobOwner, SimpleJobOwner}
 import org.nlogo.nvm.{Instruction, EngineException, Context, Procedure}
 import org.nlogo.plot.{ PlotExporter, PlotManager }
 import org.nlogo.workspace.AbstractWorkspace.HubNetManagerFactory
@@ -12,10 +12,6 @@ import java.io.{IOException,PrintWriter}
 
 import AbstractWorkspaceTraits._
 
-object AbstractWorkspaceScala {
-  val DefaultPreviewCommands = "setup repeat 75 [ go ]"
-}
-
 abstract class AbstractWorkspaceScala(private val _world: World, hubNetManagerFactory: HubNetManagerFactory)
   extends AbstractWorkspace(_world, hubNetManagerFactory)
   with Plotting with Exporting with Evaluating {
@@ -23,7 +19,7 @@ abstract class AbstractWorkspaceScala(private val _world: World, hubNetManagerFa
   /**
    * previewCommands used by make-preview and model test
    */
-  var previewCommands = AbstractWorkspaceScala.DefaultPreviewCommands
+  var previewCommands: PreviewCommands = PreviewCommands.Default
 
   // the original instruction here is _tick or a ScalaInstruction (currently still experimental)
   // it is only ever used if we need to generate an EngineException

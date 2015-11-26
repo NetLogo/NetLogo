@@ -5,7 +5,7 @@ package org.nlogo.mc;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.nlogo.api.ModelingCommonsInterface;
-import org.nlogo.nvm.WorkspaceFactory;
+import org.nlogo.workspace.WorkspaceFactory;
 import org.nlogo.swing.MessageDialog;
 import scala.Function0;
 
