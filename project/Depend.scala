@@ -91,10 +91,10 @@ object Depend {
       p.depends = allPackages.filter(p2 => packageDefs(p.dir).contains(p2.dir))
     def generate(p: Package) {
       val name = p.dir.replaceAll("/",".")
-      println("[" + name + "] = org.nlogo." + name + ".* excluding org.nlogo." + name + ".*.*")
-      println("[" + name + "+] = [" + name + "]" + p.depends.map(p2 => "[" + p2.dir.replaceAll("/",".") + "+]").mkString(" "," ",""))
-      println("[" + name + "-] = org.nlogo.* excluding [" + name + "+]")
-      println("check [" + name + "] independentOf [" + name + "-]")
+      println(s"[$name] = org.nlogo.$name.* excluding org.nlogo.$name.*.*")
+      println(s"[$name+] = [$name]" + p.depends.map(p2 => "[" + p2.dir.replaceAll("/",".") + "+]").mkString(" "," ",""))
+      println(s"[$name-] = org.nlogo.* excluding [$name+]")
+      println(s"check [$name] independentOf [$name-]")
       println("")
     }
     def generateFooter() {
