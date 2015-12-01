@@ -1,7 +1,3 @@
-resolvers += "Typesafe Public Repo" at "http://repo.typesafe.com/typesafe/releases"
-
-resolvers += "sonatype-releases" at "https://oss.sonatype.org/content/repositories/releases/"
-
 libraryDependencies +=
   "de.jflex" % "jflex" % "1.4.3"
 
