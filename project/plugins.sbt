@@ -2,8 +2,6 @@ resolvers += "Typesafe Public Repo" at "http://repo.typesafe.com/typesafe/releas
 
 resolvers += "sonatype-releases" at "https://oss.sonatype.org/content/repositories/releases/"
 
-addSbtPlugin("com.typesafe.sbt" % "sbt-git" % "0.8.4")
-
 libraryDependencies +=
   "de.jflex" % "jflex" % "1.4.3"
 
