@@ -18,8 +18,8 @@ object NativeLibs {
         val joglTmp = base / "jogl-2.3.2.zip"
         val joglUrl = new URL(baseURL + "jogl-2.3.2.zip")
         val quaquas = Seq(
-          new URL(baseURL + "libquaqua-7.3.4.jnilib")   -> base / "lib" / "Mac OS X" / "libquaqua.jnilib",
-          new URL(baseURL + "libquaqua64-7.3.4.jnilib") -> base / "lib" / "Mac OS X" / "libquaqua64.jnilib")
+          new URL(baseURL + "libquaqua-9.1.jnilib")   -> base / "lib" / "Mac OS X" / "libquaqua.jnilib",
+          new URL(baseURL + "libquaqua64-9.1.jnilib") -> base / "lib" / "Mac OS X" / "libquaqua64.jnilib")
         IO.createDirectory(base / "lib" / "Mac OS X")
         for ((url, file) <- quaquas) {
           IO.download(url, file)
