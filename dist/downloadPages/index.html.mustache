@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -45,38 +45,57 @@ h1 {
         </tr>
 
         <tr>
-          <td></td>
-          <td></td>
-          <td colspan=4 style="font-size:80%">On OS X 10.10 (Yosemite) or later?  See below!</td>
-        </tr>
-
-
-
-        <tr>
           <td valign="middle"></td>
           <td align="center" valign="middle"><img alt="" height="30" width="38" src="os-win.gif"></td>
-          <td valign="middle"><b>Windows</b></td>
+          <td valign="middle"><b>Windows (32-bit)</b></td>
           <td valign="middle">
           <td valign="middle"></td>
           <td valign="middle">
             <center>
-              <a href="{{winInstaller}}">Download</a>
-              ({{winSize}})</center>
+              <a href="{{winInstaller32}}">Download</a>
+              ({{winSize32}})</center>
             </td>
           <td valign="middle"></td>
         </tr>
 
+        <tr>
+          <td valign="middle"></td>
+          <td align="center" valign="middle"><img alt="" height="30" width="38" src="os-win.gif"></td>
+          <td valign="middle"><b>Windows (64-bit)</b></td>
+          <td valign="middle">
+          <td valign="middle"></td>
+          <td valign="middle">
+            <center>
+              <a href="{{winInstaller64}}">Download</a>
+              ({{winSize64}})</center>
+            </td>
+          <td valign="middle"></td>
+        </tr>
 
         <tr>
           <td valign="middle"></td>
           <td valign="middle"><img alt="" height="30" width="38" src="os-other.gif"></td>
-          <td valign="middle"><b>Other</b></td>
+          <td valign="middle"><b>Other (32-bit)</b></td>
           <td valign="middle"></td>
           <td valign="middle"></td>
           <td valign="middle">
             <center>
-              <a href="{{linuxInstaller}}">Download</a>
-              ({{linuxSize}})</center>
+              <a href="{{linuxInstaller32}}">Download</a>
+              ({{linuxSize32}})</center>
+            </td>
+          <td valign="middle"></td>
+        </tr>
+
+        <tr>
+          <td valign="middle"></td>
+          <td valign="middle"><img alt="" height="30" width="38" src="os-other.gif"></td>
+          <td valign="middle"><b>Other (64-bit)</b></td>
+          <td valign="middle"></td>
+          <td valign="middle"></td>
+          <td valign="middle">
+            <center>
+              <a href="{{linuxInstaller64}}">Download</a>
+              ({{linuxSize64}})</center>
             </td>
           <td valign="middle"></td>
         </tr>
@@ -113,12 +132,12 @@ h1 {
       <p><img alt="" height="30" width="38" src="os-win.gif"><b>Notes for Windows users:</b><br>
 
       <ul>
-        <li>Our installer includes Java 6 for NetLogo&rsquo;s private use only.
+        <li>Our installer includes Java 8 for NetLogo&rsquo;s private use only.
             Other programs on your computer are not affected.
-        <li>Want to run NetLogo using a Java VM you have
-            already installed yourself, instead of one bundled
-            with NetLogo?  <a href="windows.html">Click here</a>
-            for instructions, cautions, and download link.
+        <li>If in doubt about which version to download, choose
+            32-bit, which works on either 32-bit or 64-bit Windows.
+            More information is available
+            <a href="requirements.html#32-bit-or-64-bit">on the requirements page</a>.
      </ul>
 
       <p>
@@ -127,13 +146,8 @@ h1 {
       <p><img alt="" height="30" width="38" src="os-other.gif"><b>Notes for Linux users:</b><br>
 
       <ul>
-        <li>Some Linux distributions include a Java implementation which is not good
-            enough to run NetLogo.  If you have trouble,
-            <a href='http://www.java.com/en/download/index.jsp'>try Java from Oracle</a>,
-            not OpenJDK (or, try a newer OpenJDK).
-        <li>Once you have done that, you can
-            <a href='http://java.com/en/download/testjava.jsp'>test if Java is working properly</a>
-            and <a href='http://java.com/en/download/help/enable_browser.xml'>do some troubleshooting if it does not</a>.
+        <li>Our installer includes Java 8 for NetLogo&rsquo;s private use only.
+            Other programs on your computer are not affected.
      </ul>
 
 <p><hr>

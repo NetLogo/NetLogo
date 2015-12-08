@@ -19,34 +19,31 @@
       Windows
     </h3>
     <p>
-      NetLogo runs on Windows 8, Windows 7, Vista, 2000, and XP.
+      NetLogo runs on Windows 10, Windows 8, Windows 7, Vista, and XP.
     <p>
-      The NetLogo installer for Windows installs Java 6 for NetLogo's
+      The NetLogo installer for Windows installs Java 8 for NetLogo's
       private use only. Other programs on your computer are not affected.
     <h3>
       Mac OS X
     </h3>
     <p>
-      Mac OS X 10.6 or newer is required. (NetLogo 5.1 was the last version
-      to support 10.5 and 10.4.)
+      Mac OS X 10.7.4 or newer is required. (NetLogo 5.1 was the last version
+      to support 10.5 and 10.4; NetLogo 5.2.1 was the last version to support
+      10.6)
     <p>
-      NetLogo should work fine with whatever version of Java you
-      already have on your Mac.  Regardless, we recommend keeping your
-      system up to date in Software Update, including installing any
-      Java updates it offers you.
+      The NetLogo application contains a distribution of the Java 8 runtime
+      for NetLogo's private use only. Other programs on your computer
+      will not be affected.
     <h3>
       Other platforms
     </h3>
     <p>
-      NetLogo should work on any platform on which Java 6 or later is
-      installed. (If you have any trouble, try using the official Java
-      from Oracle, not some alternate.  GNU libgcj does not work. Very
-      recent versions of OpenJDK, 1.6.0.0-22.b22 or newer, may work;
-      older ones don't.)
+      NetLogo should work on any platform on standard Debian-based
+      and Red Hat-based linux distributions. The NetLogo tarball
+      includes a copy of the Java 8 runtime.
     <p>
-      Start NetLogo by running the provided <code>netlogo.sh</code> script.
-      Double-clicking NetLogo.jar may appear to work but is not
-      recommended.
+      Start NetLogo by running the provided <code>NetLogo</code>
+      executable.
     <h2>
       <a>3D Requirements</a>
     </h2>
@@ -58,35 +55,33 @@
       depends on the graphics card or controller. (For example, the ATI
       Radeon IGP 345 and Intel 82845 probably will not work.)
     <h2>
-      <a>Java Notes for Windows Users</a>
+      <a>32-bit or 64-bit?</a>
     </h2>
     <!-- this needs to be kept in sync with dist/index.html and dist/windows.html -->
-    <p id="jre">
-      Most Windows users should choose the standard NetLogo download, which
-      includes a bundled Java 6 which is for NetLogo's private use
-      only; other programs on your computer are not affected.
+    <p id="32-or-64-bit">
+      For most users on Linux or Windows, the 32-bit version of
+      NetLogo is the simplest way to a working NetLogo installation.
+      Advanced users will want to understand the advantages of
+      64-bit NetLogo as well as how to determine whether their machine
+      meets the requirements.
     <p>
-      There are two reasons you might want to use the alternate download,
-      without bundled Java:
-    <ol>
-      <li>You want a smaller download so it arrives faster and uses up less
-      space on your hard drive.
-      <li>For specific technical reasons of your own, you want to run
-      NetLogo using a different Java than the one we bundle.
-      </ol>
+      The primary advantage of the 64-bit version is the ability to add
+      additional heap space by changing the "-Xmx" JVM option.
+      For more information, see
+      <a href="faq.html#howbig">How big can my model be</a>.
+      You may also find it helpful to browse
+      <a target="_blank" href="http://www.oracle.com/technetwork/java/hotspotfaq-138619.html#64bit_performance">Oracle's documentation on the performance characteristics of the 64-bit JVM</a>
     <p>
-      If you think the alternate download might be appropriate for you,
-      please read on.
+      To run 64-bit NetLogo, you must be running 64-bit Windows.
+      To determine whether your version of Windows is 64-bit, see
+      <a target="_blank" href="http://windows.microsoft.com/en-us/windows7/find-out-32-or-64-bit">Is my PC running the 32-bit or 64-bit version of Windows</a>
+      if you're using Windows XP, Vista, or Windows 7, or
+      <a target="_blank" href="http://windows.microsoft.com/en-us/windows/which-operating-system">Which Windows operating system am I running?</a>
+      if you are running any other version of windows.
     <p>
-      Even if you already have Java installed on your computer, using that
-      Java may make NetLogo run slowly.
-    <p>
-      For maximum performance, NetLogo uses a special option called the
-      &quot;server&quot; VM. The default Java Runtime Environment (JRE)
-      installer from Oracle does not install this option. It is only
-      included in Oracle's Java Development Kit (JDK).
-    <p>
-      If you are not a Java developer, then you probably have the JRE, not
-      the JDK, and if you use it with NetLogo, models may run somewhat
-      slower.
-
+      For linux users, the easiest way to determine whether your
+      operating system is 64-bit is checking the output of <pre>
+uname -m
+</pre>
+      If the output shows "x86_64" or "amd64", you should be able
+      to run the 64-bit version.
