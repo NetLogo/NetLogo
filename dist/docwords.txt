@@ -566,6 +566,7 @@ gnirts
 gnutar
 gogo
 gogoboard
+gogoboardpi
 gogowiki
 gov
 grayscale
