@@ -6,27 +6,30 @@ import Keys._
 
 object Depend {
 
-  val depend = TaskKey[Unit](
-    "depend", "use Classycle to ferret out forbidden dependencies")
+  val depend = taskKey[Unit](
+    "use Classycle to ferret out forbidden dependencies")
 
   lazy val dependTask =
-    depend <<= (fullClasspath in Test, baseDirectory, classDirectory in Compile, classDirectory in Test, streams).map{
-      (cp, base, classes, testClasses, s) =>
-        IO.write(base / "tmp" / "depend.ddf", ddfContents)
-        import classycle.dependency.DependencyChecker
-        def main() = TrapExit(
-          DependencyChecker.main(Array("-dependencies=@tmp/depend.ddf",
-                                       classes.toString)),
-          s.log)
-        def test() = TrapExit(
-          DependencyChecker.main(Array("-dependencies=@tmp/depend.ddf",
-                                       testClasses.toString)),
-          s.log)
-        main() match {
-          case 0 => test() match { case 0 => ; case fail => sys.error(fail.toString) }
-          case fail => sys.error(fail.toString)
-        }
-      }.dependsOn(compile in Test)
+    depend := {
+      val _ = (compile in Test).value
+      val s = streams.value
+      val classes = (classDirectory in Compile).value.toString
+      val testClasses = (classDirectory in Test).value.toString
+      IO.write(baseDirectory.value / "tmp" / "depend.ddf", ddfContents)
+      import classycle.dependency.DependencyChecker
+      def main() = TrapExit(
+        DependencyChecker.main(Array("-dependencies=@tmp/depend.ddf",
+                                     classes)),
+        s.log)
+      def test() = TrapExit(
+        DependencyChecker.main(Array("-dependencies=@tmp/depend.ddf",
+                                     testClasses)),
+        s.log)
+      main() match {
+        case 0 => test() match { case 0 => ; case fail => sys.error(fail.toString) }
+        case fail => sys.error(fail.toString)
+      }
+    }
 
   private def ddfContents: String = {
     val buf = new StringBuilder
@@ -88,10 +91,10 @@ object Depend {
       p.depends = allPackages.filter(p2 => packageDefs(p.dir).contains(p2.dir))
     def generate(p: Package) {
       val name = p.dir.replaceAll("/",".")
-      println("[" + name + "] = org.nlogo." + name + ".* excluding org.nlogo." + name + ".*.*")
-      println("[" + name + "+] = [" + name + "]" + p.depends.map(p2 => "[" + p2.dir.replaceAll("/",".") + "+]").mkString(" "," ",""))
-      println("[" + name + "-] = org.nlogo.* excluding [" + name + "+]")
-      println("check [" + name + "] independentOf [" + name + "-]")
+      println(s"[$name] = org.nlogo.$name.* excluding org.nlogo.$name.*.*")
+      println(s"[$name+] = [$name]" + p.depends.map(p2 => "[" + p2.dir.replaceAll("/",".") + "+]").mkString(" "," ",""))
+      println(s"[$name-] = org.nlogo.* excluding [$name+]")
+      println(s"check [$name] independentOf [$name-]")
       println("")
     }
     def generateFooter() {
