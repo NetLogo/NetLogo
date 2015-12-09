@@ -38,6 +38,24 @@ unmanagedResourceDirectories in Compile <+= baseDirectory { _ / "resources" }
 
 mainClass in (Compile, run) := Some("org.nlogo.app.App")
 
+javaOptions in run ++= (
+  if (System.getProperty("os.name").contains("Mac"))
+    Seq(
+      "-Dapple.awt.graphics.UseQuartz=true",
+      "-Dnetlogo.quaqua.laf=ch.randelshofer.quaqua.snowleopard.Quaqua16SnowLeopardLookAndFeel",
+      "-Dapple.awt.showGrowBox=true",
+      "-Dapple.laf.useScreenMenuBar=true")
+  else
+    Seq())
+
+fork in (Compile, run) := true
+
+javaHome in (Compile, run) := (
+  if (System.getProperty("os.name").contains("Mac"))
+    Some(file(Process(Seq("/usr/libexec/java_home", "-v", "1.8")).!!.dropRight(1)))
+  else
+    None)
+
 mainClass in (Compile, packageBin) := Some("org.nlogo.app.App")
 
 sourceGenerators in Compile <+= EventsGenerator.task
