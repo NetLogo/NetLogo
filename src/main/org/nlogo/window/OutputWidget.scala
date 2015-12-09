@@ -70,7 +70,7 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
   override def load(strings:Array[String], helper:Widget.LoadHelper): Object = {
     val List(x1,y1,x2,y2) = strings.drop(1).take(4).map(_.toInt).toList
     setSize(x2 - x1, y2 - y1)
-    if(strings.length > 5){ outputArea.fontSize(strings(5).toInt) }
+    if (strings.length > 5) { fontSize = strings(5).toInt }
     this
   }
 }
