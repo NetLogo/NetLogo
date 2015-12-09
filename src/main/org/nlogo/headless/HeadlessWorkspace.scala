@@ -548,7 +548,7 @@ with org.nlogo.api.ViewSettings {
    * @param source The command or commands to run
    * @throws org.nlogo.api.CompilerException
    *                       if the code fails to compile
-   * @throws LogoException if the code fails to run
+   * @throws org.nlogo.api.LogoException if the code fails to run
    */
   @throws(classOf[CompilerException])
   @throws(classOf[LogoException])
@@ -570,7 +570,7 @@ with org.nlogo.api.ViewSettings {
    *         {@link org.nlogo.api.Agent}, AgentSet, or Nobody
    * @throws org.nlogo.api.CompilerException
    *                       if the code fails to compile
-   * @throws LogoException if the code fails to run
+   * @throws org.nlogo.api.LogoException if the code fails to run
    */
   @throws(classOf[CompilerException])
   @throws(classOf[LogoException])
