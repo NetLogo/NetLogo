@@ -22,16 +22,20 @@ class HelpMenu(app: App, colorizer: Colorizer[_])
       } }
   def launch(name: String, isLocal: Boolean, url: String) =
     action(name, () => BrowserLauncher.openURL(HelpMenu.this, url, isLocal))
+
+  def docPath(docName: String): String =
+    System.getProperty("netlogo.docs.dir", "docs") + "/" + docName
+
   addMenuItem(
     I18N.gui("lookUpInDictionary(F1)"),
     Actions.quickHelpAction(colorizer, I18N.gui.get _))
   addSeparator()
   addMenuItem(
     launch(I18N.gui("netLogoUserManual"), true,
-           "docs/index.html"))
+           docPath("index.html")))
   addMenuItem(
     launch(I18N.gui("netLogoDictionary"), true,
-           "docs/index2.html"))
+           docPath("index2.html")))
   addMenuItem(
     launch(I18N.gui("netLogoUsersGroup"), false,
            "http://groups.yahoo.com/group/netlogo-users/"))

@@ -61,6 +61,10 @@ public strictfp class BrowserLauncher {
     if (osName.startsWith("Windows")) {
       Runtime.getRuntime().exec(
           new String[]{"cmd.exe", "/c", "start", "\"\"", '"' + url + '"'});
+    } else if (osName.startsWith("Mac")) {
+      throw new BrowserNotFoundException(
+          "We were unable to open a browser on your system.\n" +
+          "This error can be reported to ccl-bugs@ccl.northwestern.edu");
     } else {
       try {
         Process process = Runtime.getRuntime().exec(new String[]{

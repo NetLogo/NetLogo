@@ -44,11 +44,15 @@ final strictfp class QuickHelp<TokenType> {
     return words;
   }
 
+  private static String docPath(String docName) {
+    return System.getProperty("netlogo.docs.dir", "docs") + "/" + docName;
+  }
+
   private static void openDictionary(java.awt.Component comp, String theWord,
                                      Map<String, String> words) {
     String theFile = words.get(theWord);
     org.nlogo.swing.BrowserLauncher.openURL
-        (comp, "docs/dict/" + theFile, true);
+        (comp, docPath("dict/" + theFile), true);
   }
 
   public static void doHelp(java.awt.Component comp, String token) {
@@ -81,7 +85,7 @@ final strictfp class QuickHelp<TokenType> {
                   "Would you like to open the full NetLogo Dictionary?",
               "NetLogo", javax.swing.JOptionPane.YES_NO_OPTION)) {
         org.nlogo.swing.BrowserLauncher.openURL
-            (comp, "docs/index2.html", true);
+            (comp, docPath("index2.html"), true);
       }
     }
   }

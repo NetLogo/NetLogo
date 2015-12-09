@@ -20,6 +20,10 @@ public strictfp class ModelsLibrary {
 
   public static Node rootNode = null;
 
+  public static String modelsRoot() {
+    return System.getProperty("netlogo.models.dir", "models");
+  }
+
   public static String[] getModelPaths() {
     return getModelPaths(false);
   }
@@ -125,12 +129,12 @@ public strictfp class ModelsLibrary {
       return;
     }
     if (!org.nlogo.api.Version.is3D() || !exclusive) {
-      java.io.File directoryRoot = new java.io.File("models", "");
-      rootNode = new Node("models", "", true);
+      java.io.File directoryRoot = new java.io.File(modelsRoot(), "");
+      rootNode = new Node(modelsRoot(), "", true);
       scanDirectory(directoryRoot, null, rootNode, exclusive);
     } else {
-      java.io.File directoryRoot = new java.io.File("models/3D", "");
-      rootNode = new Node("models/3D", "", true);
+      java.io.File directoryRoot = new java.io.File(modelsRoot(), "3D");
+      rootNode = new Node(modelsRoot() + "/3D", "", true);
       scanDirectory(directoryRoot, null, rootNode, exclusive);
     }
   }
