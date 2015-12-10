@@ -128,14 +128,19 @@ public strictfp class ModelsLibrary {
     if (!needsModelScan()) {
       return;
     }
-    if (!org.nlogo.api.Version.is3D() || !exclusive) {
-      java.io.File directoryRoot = new java.io.File(modelsRoot(), "");
-      rootNode = new Node(modelsRoot(), "", true);
-      scanDirectory(directoryRoot, null, rootNode, exclusive);
-    } else {
-      java.io.File directoryRoot = new java.io.File(modelsRoot(), "3D");
-      rootNode = new Node(modelsRoot() + "/3D", "", true);
-      scanDirectory(directoryRoot, null, rootNode, exclusive);
+    try {
+      if (!org.nlogo.api.Version.is3D() || !exclusive) {
+        java.io.File directoryRoot = new java.io.File(modelsRoot(), "").getCanonicalFile();
+        rootNode = new Node(modelsRoot(), "", true);
+        scanDirectory(directoryRoot, null, rootNode, exclusive);
+      } else {
+        java.io.File directoryRoot = new java.io.File(modelsRoot(), "3D").getCanonicalFile();
+        rootNode = new Node(modelsRoot() + "/3D", "", true);
+        scanDirectory(directoryRoot, null, rootNode, exclusive);
+      }
+    } catch (java.io.IOException e) {
+      org.nlogo.api.Logger$.MODULE$.logCustomMessage("error: IOException canonicalizing models library path");
+      org.nlogo.api.Logger$.MODULE$.logCustomMessage(e.getMessage());
     }
   }
 
