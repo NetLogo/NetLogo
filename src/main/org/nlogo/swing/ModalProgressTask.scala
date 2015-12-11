@@ -63,7 +63,9 @@ object ModalProgressTask {
   extends Thread("ModalProgressTask#Boss") {
     override def run() {
       try {
-        while (!dialog.isVisible) Thread.sleep(50)
+        while (!dialog.isVisible) {
+          Thread.sleep(50)
+        }
         dialog.repaint() // ensure repaint before blocking on the runnable -- NP 2015-04-24
         org.nlogo.awt.EventQueue.invokeAndWait(r)
       }
