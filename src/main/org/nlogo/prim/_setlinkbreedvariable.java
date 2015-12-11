@@ -13,7 +13,7 @@ public final strictfp class _setlinkbreedvariable
   String name;
 
   public _setlinkbreedvariable(_linkbreedvariable original) {
-    name = original.name;
+    name = original.name();
   }
 
   @Override

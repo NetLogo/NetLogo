@@ -1079,33 +1079,31 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
                 ALOAD 4
                 ICONST_1
                 INVOKEVIRTUAL org/nlogo/agent/LinkManager.findLinkFrom (Lorg/nlogo/agent/Turtle;Lorg/nlogo/agent/Turtle;Lorg/nlogo/agent/AgentSet;Z)Lorg/nlogo/agent/Link;
-                IFNULL L10
+                IFNONNULL L9
+                ICONST_0
+                GOTO L10
                L9
                FRAME APPEND [org/nlogo/agent/AgentSet org/nlogo/agent/LinkManager]
                 ICONST_1
-                GOTO L11
                L10
-               FRAME SAME
-                ICONST_0
-               L11
                FRAME SAME1 I
                 ISTORE 2
                 ILOAD 2
-                IFNE L12
+                IFNE L11
                 ICONST_1
-                GOTO L13
-               L12
+                GOTO L12
+               L11
                FRAME FULL [org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_not_5 org/nlogo/nvm/Context I org/nlogo/agent/Turtle org/nlogo/agent/AgentSet org/nlogo/agent/LinkManager] []
                 ICONST_0
-               L13
+               L12
                FRAME SAME1 I
-                IFEQ L14
+                IFEQ L13
                 GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
-                GOTO L15
-               L14
+                GOTO L14
+               L13
                FRAME SAME
                 GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
-               L15
+               L14
                FRAME SAME1 java/lang/Boolean
                 ARETURN
              L0

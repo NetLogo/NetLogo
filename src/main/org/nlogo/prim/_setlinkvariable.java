@@ -13,7 +13,7 @@ public final strictfp class _setlinkvariable
   int vn = 0;
 
   public _setlinkvariable(_linkvariable original) {
-    vn = original.vn;
+    vn = original.vn();
   }
 
   @Override
