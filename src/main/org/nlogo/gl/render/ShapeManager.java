@@ -45,14 +45,14 @@ class ShapeManager {
   {
     this.is3D = is3D;
     // tessellation for concave polygons in model shapes
-    tess = glu.gluNewTess();
-    glu.gluTessCallback(tess, GLU.GLU_TESS_BEGIN_DATA, tessellator);
-    glu.gluTessCallback(tess, GLU.GLU_TESS_EDGE_FLAG_DATA, tessellator);
-    glu.gluTessCallback(tess, GLU.GLU_TESS_VERTEX_DATA, tessellator);
-    glu.gluTessCallback(tess, GLU.GLU_TESS_END_DATA, tessellator);
-    glu.gluTessCallback(tess, GLU.GLU_TESS_COMBINE_DATA, tessellator);
-    glu.gluTessCallback(tess, GLU.GLU_TESS_ERROR_DATA, tessellator);
-    glu.gluTessProperty
+    tess = GLU.gluNewTess();
+    GLU.gluTessCallback(tess, GLU.GLU_TESS_BEGIN_DATA, tessellator);
+    GLU.gluTessCallback(tess, GLU.GLU_TESS_EDGE_FLAG_DATA, tessellator);
+    GLU.gluTessCallback(tess, GLU.GLU_TESS_VERTEX_DATA, tessellator);
+    GLU.gluTessCallback(tess, GLU.GLU_TESS_END_DATA, tessellator);
+    GLU.gluTessCallback(tess, GLU.GLU_TESS_COMBINE_DATA, tessellator);
+    GLU.gluTessCallback(tess, GLU.GLU_TESS_ERROR_DATA, tessellator);
+    GLU.gluTessProperty
         (tess, GLU.GLU_TESS_WINDING_RULE, GLU.GLU_TESS_WINDING_ODD);
 
     quadric = glu.gluNewQuadric();

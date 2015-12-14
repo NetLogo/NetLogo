@@ -139,8 +139,8 @@ public strictfp class ModelsLibrary {
         scanDirectory(directoryRoot, null, rootNode, exclusive);
       }
     } catch (java.io.IOException e) {
-      org.nlogo.api.Logger$.MODULE$.logCustomMessage("error: IOException canonicalizing models library path");
-      org.nlogo.api.Logger$.MODULE$.logCustomMessage(e.getMessage());
+      System.err.println("error: IOException canonicalizing models library path");
+      System.err.println(e.getMessage());
     }
   }
 
