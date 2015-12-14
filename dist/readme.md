@@ -35,7 +35,7 @@ to drag this icon to the dock for easy access.)
 You may be able to just double-click `NetLogo` in your file manager.
 Or, from the command line, typical Unix shell commands would be:
 
-    $ cd {{netlogo}}-version
+    $ cd netlogo-{{version}}-*
     $ ./NetLogo
 
 ## Citing
