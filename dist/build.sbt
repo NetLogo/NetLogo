@@ -82,7 +82,7 @@ lazy val dist = project.in(file("."))
       "NetLogo 3D"      -> NetLogoThreeDApp,
       "NetLogo Logging" -> NetLogoLoggingApp,
       "HubNet Client"   -> HubNetClientApp),
-    netLogoVersion     := "5.3-RC1",
+    netLogoVersion     := "5.3",
     numericOnlyVersion := "5.3",
     buildVariables := Map[String, String](
       "version"               -> netLogoVersion.value,

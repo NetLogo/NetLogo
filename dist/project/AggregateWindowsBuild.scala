@@ -28,7 +28,9 @@ object AggregateWindowsBuild extends PackageAction.AggregateBuild {
   val productIDs = Map[String, String](
     "5.2.2-RC2-32" -> "90393D49-CB1A-4CBC-A7A5-09E44B351649",
     "5.3-RC1-32"   -> "CF0A58E0-4CC9-44B7-B316-B4EE5A2CDBC4",
-    "5.3-RC1-64"   -> "81E8BCF2-8BAE-40DD-8373-3ECD4CFF007B"
+    "5.3-RC1-64"   -> "81E8BCF2-8BAE-40DD-8373-3ECD4CFF007B",
+    "5.3-32"       -> "A6C64B81-FC8D-42E0-A55F-983705E52879",
+    "5.3-64"       -> "BE6BDFA6-8DB5-47DB-94EC-B7504A3F7EBC"
   )
 
   val vars32 = Map[String, String](
