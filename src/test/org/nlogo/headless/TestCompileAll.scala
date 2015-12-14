@@ -52,7 +52,6 @@ class TestCompileAll extends FunSuite with SlowTest {
     }
     finally {workspace.dispose()}
   }
-<<<<<<< 708a3a1018a9f147134cdf7a34cd7349aa80d27b
 
   def compilePreviewCommands(ws: AbstractWorkspace) {
     if (!(ws.previewCommands.isEmpty || needsManualPreview(ws.previewCommands))) {
