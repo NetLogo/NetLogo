@@ -6,7 +6,7 @@ class NetLogoDocs(docsSource: File, docsTarget: File, netLogoRoot: File) {
   def manualComponents(base: File): Seq[File] = Seq(
     "whatis", "copyright", "versions", "requirements", "contact",
     "sample", "tutorial1", "tutorial2", "tutorial3", "interface",
-    "infotab", "programming", "transition", "applet", "shapes",
+    "infotab", "programming", "transition", "shapes",
     "behaviorspace", "systemdynamics", "hubnet", "hubnet-authoring",
     "modelingcommons", "logging", "controlling", "3d",
     "extensions", "arraystables", "matrix", "sound",
