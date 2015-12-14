@@ -31,7 +31,7 @@ object NetLogoLoggingApp extends SubApplication {
 
 object HubNetClientApp extends SubApplication {
   override def name          = "HubNet Client"
-  override def jarName       = "HubNet"
+  override def jarName       = "NetLogo"
   override def jvmOptions    = Seq()
   override def jvmArguments  = Seq()
   override def jvmProperties = Map("apple.laf.useScreenMenuBar" -> "true")

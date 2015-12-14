@@ -8,8 +8,6 @@ import DistSettings.netLogoRoot
 trait PlatformBuild {
   def shortName: String
 
-  def mainJarName: String = "NetLogo.jar"
-
   def bundledDirs: Seq[BundledDirectory] = Seq(
     new ExtensionDir(),
     new ModelsDir(),
@@ -25,16 +23,17 @@ trait PlatformBuild {
     }
   }
 
-  protected def standardJars(app: SubApplication, netLogoDir: File): Seq[File] = {
-    val standardDeps =
-      (netLogoDir / "lib_managed" ** "*.jar").get
-        .filter(_.isFile)
-        .filterNot(f => f.getName.contains("scalatest") || f.getName.contains("scalacheck")) :+ scalaJar
-    if (app.jarName.contains("HubNet"))
-      standardDeps :+ netLogoDir / "NetLogoLite.jar"
-    else
-      standardDeps
-  }
+  protected def jarExcluded(f: File): Boolean = (
+    f.getName.contains("scalatest") ||
+      f.getName.contains("scalacheck") ||
+      f.getName.contains("jmock") ||
+      f.getName.contains("junit") ||
+      f.getName.contains("hamcrest"))
+
+  protected def standardJars(app: SubApplication, netLogoDir: File): Seq[File] =
+    (netLogoDir / "lib_managed" ** "*.jar").get
+      .filter(_.isFile)
+      .filterNot(jarExcluded) :+ scalaJar
 
   protected def repackageJar(app: SubApplication): Initialize[Task[File]] =
     Def.task {
@@ -42,7 +41,11 @@ trait PlatformBuild {
       val platformBuildDir = target.value / s"$shortName-build"
       IO.createDirectory(platformBuildDir)
       val newJarLocation = platformBuildDir / s"${app.jarName}.jar"
-      JavaPackager.packageJar(netLogoJar, newJarLocation)
+      if (app.name.contains("HubNet"))
+        JavaPackager.packageJar(netLogoJar, newJarLocation,
+          Some("org.nlogo.hubnet.client.App"))
+      else
+        JavaPackager.packageJar(netLogoJar, newJarLocation, None)
       newJarLocation
     }
 
@@ -74,17 +77,15 @@ class MacPlatform(macApp: Project) extends PlatformBuild {
 
   override def shortName: String = "macosx"
 
-  override def mainJarName: String = "netlogo-mac-app.jar"
-
   override def bundledDirs =
     super.bundledDirs ++ Seq(new LibDir(), new NativesDir("macosx-universal"))
 
   override def mainJarAndDependencies(app: SubApplication): Def.Initialize[Task[(File, Seq[File])]] =
-    if (app.jarName == "NetLogo")
+    if (! app.name.contains("HubNet"))
       Def.task {
         ((packageBin in Compile in macApp).value,
           (dependencyClasspath in macApp in Runtime).value.files
-            .filterNot(f => f.getName.contains("scalatest") || f.getName.contains("scalacheck") || f.getName.contains("jmock"))
+            .filterNot(jarExcluded)
             .filterNot(_.isDirectory))
       }
     else super.mainJarAndDependencies(app)

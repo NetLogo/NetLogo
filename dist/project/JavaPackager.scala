@@ -78,7 +78,7 @@ object JavaPackager {
   }
 
 
-  def packageJar(jarFile: File, targetFile: File): Unit = {
+  def packageJar(jarFile: File, targetFile: File, mainClass: Option[String]): Unit = {
     import java.util.jar.Manifest
 
     val tmpDir = IO.createTemporaryDirectory
@@ -91,7 +91,8 @@ object JavaPackager {
     JavaPackager.jarAttributes.attributes.foreach {
       case (k, v) => manifest.getMainAttributes.put(k, v)
     }
-    manifest.getMainAttributes.put(MAIN_CLASS, oldManifest.getMainAttributes.getValue(MAIN_CLASS))
+    manifest.getMainAttributes.put(MAIN_CLASS,
+      mainClass.getOrElse(oldManifest.getMainAttributes.getValue(MAIN_CLASS)))
     manifest.getMainAttributes.put(CLASS_PATH, oldManifest.getMainAttributes.getValue(CLASS_PATH))
     IO.jar(Path.allSubpaths(tmpDir), targetFile, manifest)
     IO.delete(tmpDir)
