@@ -23,7 +23,16 @@
       <li>Java 8 is now bundled with all versions of NetLogo, this removes the need for a separate Java 6 installation on Mac OS X</li>
       <li>The Windows installer is now an msi instead of an exe</li>
       <li>javax.media.opengl is no longer supported in Java 8, it has been replaced by com.jogamp.opengl</li>
-      <li>Mathematica Link is not distributed due to Java Version changes</li>
+      <li>Mathematica Link is not distributed due to Java version changes</li>
+    </ul>
+    <h3>Extension Changes</h3>
+    <ul>
+      <li>
+      A minor update to the `nw` extension makes `nw:weighted-path-to`
+      behave as documented.</li>
+      <li>Most extensions should continue to work without change unless they
+      rely on javax.media.opengl, which was renamed in the updated version of
+      JOGL.</li>
     </ul>
     <h2>
       Version 5.2.1 (September 2015)
