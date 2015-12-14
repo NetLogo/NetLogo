@@ -59,23 +59,13 @@ object App{
    *             is not currently documented.)
    */
   def main(args:Array[String]){
-    // on Mac OS X 10.5, we have to explicitly ask for the Quartz
-    // renderer. perhaps we should eventually switch to the Sun
-    // renderer since that's the new default, but for now, the
-    // Quartz renderer is what we've long used and tested, so
-    // let's stick with it - ST 12/4/07
-    System.setProperty("apple.awt.graphics.UseQuartz", "true")
-    System.setProperty("apple.awt.showGrowBox", "true")
-    System.setProperty("apple.laf.useScreenMenuBar", "true")
+    mainWithAppHandler(args, NullAppHandler)
+  }
+
+  def mainWithAppHandler(args: Array[String], appHandler: AppHandler) {
     // tweak behavior of Quaqua
     System.setProperty("Quaqua.visualMargin", "1,1,1,1")
-    // we need to call MacHandlers.init() very early (I'm guessing
-    // it must be before the AWT initializes), in order for the
-    // handlers to work.  At this point, we don't have an app
-    // instance yet, so that's why we have to pass it in later
-    // when we call MacHandlers.ready() - ST 11/13/03
-    if(System.getProperty("os.name").startsWith("Mac")) MacHandlers.init()
-
+    appHandler.init()
     AbstractWorkspace.isApp(true)
     AbstractWorkspace.isApplet(false)
     org.nlogo.window.VMCheck.detectBadJVMs()
@@ -135,6 +125,7 @@ object App{
         w
       }
     }
+
     pico.addComponent(classOf[WorkspaceFactory], factory)
     pico.addComponent(classOf[Tabs])
     pico.addComponent(classOf[AgentMonitorManager])
@@ -148,7 +139,7 @@ object App{
     // exceptions because we're doing too much on the main thread.
         // Hey, it's important to make a good first impression.
     //   - ST 8/19/03
-    org.nlogo.awt.EventQueue.invokeAndWait(()=>app.finishStartup())
+    org.nlogo.awt.EventQueue.invokeAndWait(()=>app.finishStartup(appHandler))
   }
 
   private def processCommandLineArguments(args: Array[String]) {
@@ -398,7 +389,7 @@ class App extends
 
   }
 
-  private def finishStartup() {
+  private def finishStartup(appHandler: AppHandler) {
     pico.add(classOf[ModelingCommonsInterface],
           "org.nlogo.mc.ModelingCommons",
           Array[Parameter] (
@@ -460,7 +451,7 @@ class App extends
 
     Splash.endSplash()
     frame.setVisible(true)
-    if(System.getProperty("os.name").startsWith("Mac")){ MacHandlers.ready(this) }
+    if(System.getProperty("os.name").startsWith("Mac")){ appHandler.ready(this) }
   }
 
   def startLogging(properties:String) {

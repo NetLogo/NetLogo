@@ -39,6 +39,24 @@ unmanagedResourceDirectories in Compile <+= baseDirectory { _ / "resources" }
 
 mainClass in (Compile, run) := Some("org.nlogo.app.App")
 
+javaOptions in run ++= (
+  if (System.getProperty("os.name").contains("Mac"))
+    Seq(
+      "-Dapple.awt.graphics.UseQuartz=true",
+      "-Dnetlogo.quaqua.laf=ch.randelshofer.quaqua.snowleopard.Quaqua16SnowLeopardLookAndFeel",
+      "-Dapple.awt.showGrowBox=true",
+      "-Dapple.laf.useScreenMenuBar=true")
+  else
+    Seq())
+
+fork in (Compile, run) := true
+
+javaHome in (Compile, run) := (
+  if (System.getProperty("os.name").contains("Mac"))
+    Some(file(Process(Seq("/usr/libexec/java_home", "-v", "1.8")).!!.dropRight(1)))
+  else
+    None)
+
 mainClass in (Compile, packageBin) := Some("org.nlogo.app.App")
 
 sourceGenerators in Compile += EventsGenerator.task.taskValue
@@ -68,12 +86,12 @@ libraryDependencies ++= Seq(
   "javax.media" % "jmf" % "2.1.1e",
   "org.pegdown" % "pegdown" % "1.5.0",
   "org.parboiled" % "parboiled-java" % "1.0.2",
-  "steveroy" % "mrjadapter" % "1.2" from "http://ccl-artifacts.s3-website-us-east-1.amazonaws.com/mrjadapter-1.2.jar",
-  "org.jhotdraw" % "jhotdraw" % "6.0b1" from "http://ccl-artifacts.s3-website-us-east-1.amazonaws.com/jhotdraw-6.0b1.jar",
-  "ch.randelshofer" % "quaqua" % "7.3.4" from "http://ccl-artifacts.s3-website-us-east-1.amazonaws.com/quaqua-7.3.4.jar",
-  "ch.randelshofer" % "swing-layout" % "7.3.4" from "http://ccl-artifacts.s3-website-us-east-1.amazonaws.com/swing-layout-7.3.4.jar",
-  "org.jogl" % "jogl" % "1.1.1" from "http://ccl-artifacts.s3-website-us-east-1.amazonaws.com/jogl-1.1.1.jar",
-  "org.gluegen-rt" % "gluegen-rt" % "1.1.1" from "http://ccl-artifacts.s3-website-us-east-1.amazonaws.com/gluegen-rt-1.1.1.jar",
+  "steveroy" % "mrjadapter" % "1.2"            from "http://ccl-artifacts.s3-website-us-east-1.amazonaws.com/mrjadapter-1.2.jar",
+  "org.jhotdraw" % "jhotdraw" % "6.0b1"        from "http://ccl-artifacts.s3-website-us-east-1.amazonaws.com/jhotdraw-6.0b1.jar",
+  "ch.randelshofer" % "quaqua" % "9.1"         from "http://ccl-artifacts.s3-website-us-east-1.amazonaws.com/quaqua-9.1.jar",
+  "ch.randelshofer" % "swing-layout" % "9.1"   from "http://ccl-artifacts.s3-website-us-east-1.amazonaws.com/swing-layout-9.1.jar",
+  "com.jogamp" % "jogl" % "2.3.2"              from "http://ccl-artifacts.s3-website-us-east-1.amazonaws.com/jogl-all-2.3.2.jar",
+  "com.jogamp" % "gluegen-rt" % "2.3.2"        from "http://ccl-artifacts.s3-website-us-east-1.amazonaws.com/gluegen-rt-2.3.2.jar",
   "org.jmock" % "jmock" % "2.5.1" % "test",
   "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
   "org.jmock" % "jmock-junit4" % "2.5.1" % "test",
@@ -84,11 +102,7 @@ libraryDependencies ++= Seq(
   "com.googlecode.json-simple" % "json-simple" % "1.1.1"
 )
 
-all <<= (baseDirectory, streams) map { (base, s) =>
-  s.log.info("making resources/system/dict.txt and docs/dict folder")
-  IO.delete(base / "docs" / "dict")
-  Process("python bin/dictsplit.py").!!
-}
+all <<= (streams) map { (s) => }
 
 all <<= all.dependsOn(
   packageBin in Test,

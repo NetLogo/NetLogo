@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<title>
+      NetLogo {{version}} User Manual: Matrix Extension
+    </title>
+    <link rel="stylesheet" href="netlogo.css" type="text/css">
+    <style type="text/css">
+p { margin-left: 1.5em ; }
+    h3 { font-size: 115% ; }
+    h4 { font-size: 100% ; margin-left: 1.5em ; background: white ; }
+    </style>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <h1>
+      Matrix Extension
+    </h1>
+    <p>
+      The matrix extension adds a new matrix data structure to NetLogo. A
+      matrix is a mutable 2-dimensional array containing only numbers.
+    <h2>
+      When to use
+    </h2>
+    <p>
+      Although matrices store numbers, much like a list of lists, or an
+      array of arrays, the primary reason to use the matrix data type is to
+      take advantage of special mathematical operations associated with
+      matrices. For instance, matrix multiplication is a convenient way to
+      perform geometric transformations, and the repeated application of
+      matrix multiplication can also be used to simulate other dynamic
+      processes (for instance, processes on graph/network structures).
+    <p>
+      If you'd like to know more about matrices and how they can be
+      used, you might consider a course on linear algebra, or search the
+      web for tutorials. The matrix extension also allows you to solve
+      linear algebraic equations (specified in a matrix format), and even
+      to identify trends in your data and perform linear (ordinary least
+      squares) regressions on data sets with multiple explanatory
+      variables.
+    <h2>
+      How to use
+    </h2>
+    <p>
+      The matrix extension comes preinstalled.
+    <p>
+      To use the matrix extension in your model, add a line to the top of
+      your Code tab:
+    <pre>
+extensions [matrix]
+</pre>
+    <p>
+      If your model already uses other extensions, then it already has an
+      <a href="dictionary.html#extensions"><code>extensions</code></a> line in
+      it, so just add <code>matrix</code> to the list.
+    <p>
+      For more information on using NetLogo extensions, see the <a href="extensions.html">Extensions Guide</a>.
+    <h2>
+      Matrix example
+    </h2>
+    <pre>
+let m matrix:from-row-list [[1 2 3] [4 5 6]]
+print m
+=&gt; {{matrix:  [ [ 1 2 3 ][ 4 5 6 ] ]}}
+print matrix:pretty-print-text m
+=&gt;
+[[ 1  2  3 ]
+ [ 4  5  6 ]]
+
+print matrix:dimensions m
+=&gt; [2 3]
+;;(NOTE: row &amp; column indexing starts at 0, not 1)
+print matrix:get m 1 2 ;; what number is in row 1, column 2?
+=&gt; 6
+matrix:set m 1 2 10 ;; change the 6 to a 10
+print m
+=&gt; {{matrix:  [ [ 1 2 3 ][ 4 5 10 ] ]}}
+
+let m2 matrix:make-identity 3
+print m2
+=&gt; {{matrix:  [ [ 1 0 0 ][ 0 1 0 ][ 0 0 1 ] ]}}
+print matrix:times m m2 ;; multiplying by the identity changes nothing
+=&gt; {{matrix:  [ [ 1 2 3 ][ 4 5 10 ] ]}}
+
+;; make a new matrix with the middle 1 changed to -1
+let m3 (matrix:set-and-report m2 1 1 -1)
+print m3
+=&gt; {{matrix:  [ [ 1 0 0 ][ 0 -1 0 ][ 0 0 1 ] ]}}
+print matrix:times m m3
+=&gt; {{matrix:  [ [ 1 -2 3 ][ 4 -5 10 ] ]}}
+
+print matrix:to-row-list (matrix:plus m2 m3)
+=&gt; [[2 0 0] [0 0 0] [0 0 2]]
+</pre>
+    <div class="blockquote">
+        <b>Code Example:</b> Matrix Example
+      </div>
+    <h2>
+      Credits:
+    </h2>
+    <p>
+      The Matrix extension for NetLogo was originally written by <a href="http://forrest.stonedahl.com/">Forrest Stonedahl</a>, with
+      significant contributions from Charles Staelin (in particular, the
+      forecast &amp; regression primitives). The matrix extension provides
+      a wrapper around <a href="http://math.nist.gov/javanumerics/jama/">Jama</a>, which is a
+      free/open-source matrix library for Java.
+    <p>
+      The source code for the Matrix extension is hosted <a href="https://github.com/NetLogo/Matrix-Extension">on GitHub</a> You are
+      more than welcome to modify/improve upon the existing functionality
+      and features and we encourage you to contribute your changes back to
+      the NetLogo community.
+    <h2>
+      Matrix Primitives
+    </h2>
+    <h3>
+      Matrix creation &amp; conversion to/from lists
+    </h3>
+    <p>
+      <a href="#matrix:make-constant">matrix:make-constant</a>
+      <a href="#matrix:make-identity">matrix:make-identity</a>
+      <a href="#matrix:from-row-list">matrix:from-row-list</a>
+      <a href="#matrix:from-column-list">matrix:from-column-list</a>
+      <a href="#matrix:to-row-list">matrix:to-row-list</a>
+      <a href="#matrix:to-column-list">matrix:to-column-list</a>
+      <a href="#matrix:copy">matrix:copy</a>
+      <a href="#matrix:pretty-print-text">matrix:pretty-print-text</a>
+    <h3>
+      Matrix data retrieval and manipulation
+    </h3>
+    <p>
+      <a href="#matrix:get">matrix:get</a>
+      <a href="#matrix:get-row">matrix:get-row</a>
+      <a href="#matrix:get-column">matrix:get-column</a>
+      <a href="#matrix:set">matrix:set</a>
+      <a href="#matrix:set-row">matrix:set-row</a>
+      <a href="#matrix:set-column">matrix:set-column</a>
+      <a href="#matrix:swap-rows">matrix:swap-rows</a>
+      <a href="#matrix:swap-columns">matrix:swap-columns</a>
+      <a href="#matrix:set-and-report">matrix:set-and-report</a>
+      <a href="#matrix:dimensions">matrix:dimensions</a>
+      <a href="#matrix:submatrix">matrix:submatrix</a>
+      <a href="#matrix:map">matrix:map</a>
+    <h3>
+      Math operations
+    </h3>
+    <p>
+      <a href="#matrix:times-scalar">matrix:times-scalar</a> 
+      <a href="#matrix:times">matrix:times</a>
+      <a href="#matrix:*">matrix:*</a>
+      <a href="#matrix:times-element-wise">matrix:times-element-wise</a>
+      <a href="#matrix:plus-scalar">matrix:plus-scalar</a>
+      <a href="#matrix:plus">matrix:plus</a>
+      <a href="#matrix:+">matrix:+</a>
+      <a href="#matrix:minus">matrix:minus</a>
+      <a href="#matrix:-">matrix:-</a>
+      <a href="#matrix:inverse">matrix:inverse</a>
+      <a href="#matrix:transpose">matrix:transpose</a>
+      <a href="#matrix:real-eigenvalues">matrix:real-eigenvalues</a>
+      <a href="#matrix:imaginary-eigenvalues">matrix:imaginary-eigenvalues</a>
+      <a href="#matrix:eigenvectors">matrix:eigenvectors</a>
+      <a href="#matrix:det">matrix:det</a>
+      <a href="#matrix:rank">matrix:rank</a>
+      <a href="#matrix:cond">matrix:cond</a>
+      <a href="#matrix:trace">matrix:trace</a>
+    <h3>
+      Advanced features
+    </h3>
+    <p>
+      <a href="#matrix:solve">matrix:solve</a>
+      <a href="#matrix:forecast-linear-growth">matrix:forecast-linear-growth</a>
+      <a href="#matrix:forecast-compound-growth">matrix:forecast-compound-growth</a>
+      <a href="#matrix:forecast-continuous-growth">matrix:forecast-continuous-growth</a>
+      <a href="#matrix:regress">matrix:regress</a>
+    <h2>
+      Matrix creation &amp; conversion to/from lists
+    </h2>
+    <div class="dict_entry" id="matrix:make-constant">
+      <h3>
+        <a>matrix:make-constant</a>
+      </h3>
+      <h4>
+        <span class="prim_example">matrix:make-constant <i>n-rows</i> <i>n-cols</i> <i>number</i></span>
+      </h4>
+      <p>
+        Reports a new n-rows by n-cols matrix object, with all entries in
+        the matrix containing the same value (number).
+      </div>
+    <div class="dict_entry" id="matrix:make-identity">
+      <h3>
+        <a>matrix:make-identity</a>
+      </h3>
+      <h4>
+        <span class="prim_example">matrix:make-identity <i>n-size</i></span>
+      </h4>
+      <p>
+        Reports a new square matrix object (with dimensions n-size x
+        n-size), consisting of the identity matrix (1s along the main
+        diagonal, 0s elsewhere).
+      </div>
+    <div class="dict_entry" id="matrix:from-row-list">
+      <h3>
+        <a>matrix:from-row-list</a>
+      </h3>
+      <h4>
+        <span class="prim_example">matrix:from-row-list <i>nested-list</i></span>
+      </h4>
+      <p>
+        Reports a new matrix object, created from a NetLogo list, where
+        each item in that list is another list (corresponding to each of
+        the rows of the matrix.)
+      <pre>
+ print matrix:from-row-list [[1 2] [3 4]]
+ =&gt; {{matrix:  [ [ 1 2 ][ 3 4 ] ]}}
+ ;; Corresponds to this matrix:
+ ;; 1 2
+ ;; 3 4
+</pre>
+    </div>
+    <div class="dict_entry" id="matrix:from-column-list">
+      <h3>
+        <a>matrix:from-column-list</a>
+      </h3>
+      <h4>
+        <span class="prim_example">matrix:from-column-list <i>nested-list</i></span>
+      </h4>
+      <p>
+        Reports a new matrix object, created from a NetLogo list containing
+        each of the <i>columns</i> of the matrix.
+      </div>
+    <div class="dict_entry" id="matrix:to-row-list">
+      <h3>
+        <a>matrix:to-row-list</a>
+      </h3>
+      <h4>
+        <span class="prim_example">matrix:to-row-list <i>matrix</i></span>
+      </h4>
+      <p>
+        Reports a list of lists, containing each row of the matrix.
+      </div>
+    <div class="dict_entry" id="matrix:to-column-list">
+      <h3>
+        <a>matrix:to-column-list</a>
+      </h3>
+      <h4>
+        <span class="prim_example">matrix:to-column-list <i>matrix</i></span>
+      </h4>
+      <p>
+        Reports a list of lists, containing each column of the matrix.
+      </div>
+    <div class="dict_entry" id="matrix:copy">
+      <h3>
+        <a>matrix:copy</a>
+      </h3>
+      <h4>
+        <span class="prim_example">matrix:copy matrix</span>
+      </h4>
+      <p>
+        Reports a new matrix that is an exact copy of the given matrix.
+        This primitive is important because the matrix type is mutable
+        (changeable). Here's a code example:
+      <pre>
+let m1 matrix:from-column-list [[1 4 7][2 5 8][3 6 9]] ; a 3x3 matrix
+print m1
+=&gt; {{matrix:  [ [ 1 2 3 ][ 4 5 6 ][ 7 8 9 ] ]}}
+let m2 m1 ;; m2 refers to the same matrix object as m1
+let m3 matrix:copy m1 ;; m3 is a new copy containing m1's data
+matrix:set m1 0 0 100 ;; now m1 is changed
+
+print m1
+=&gt; {{matrix:  [ [ 100 2 3 ][ 4 5 6 ][ 7 8 9 ] ]}}
+
+print m2
+=&gt; {{matrix:  [ [ 100 2 3 ][ 4 5 6 ][ 7 8 9 ] ]}}
+;;Notice that m2 was also changed, when m1 was changed!
+
+print m3
+=&gt; {{matrix:  [ [ 1 2 3 ][ 4 5 6 ][ 7 8 9 ] ]}}
+</pre>
+    </div>
+    <div class="dict_entry" id="matrix:pretty-print-text">
+      <h3>
+        <a>matrix:pretty-print-text</a>
+      </h3>
+      <h4>
+        <span class="prim_example">matrix:pretty-print-text <i>matrix</i></span>
+      </h4>
+      <p>
+        Reports a string that is a textual representation of the matrix, in
+        a format that is reasonably human-readable when displayed.
+      </div>
+    <h2>
+      Matrix modification and math operations
+    </h2>
+    <div class="dict_entry" id="matrix:get">
+      <h3>
+        <a>matrix:get</a>
+      </h3>
+      <h4>
+        <span class="prim_example">matrix:get <i>matrix</i> <i>row-i</i> <i>col-j</i></span>
+      </h4>
+      <p>
+        Reports the (numeric) value at location <i>row-i</i>,<i>col-j</i>
+        in the given <i>matrix</i>.
+      </div>
+    <div class="dict_entry" id="matrix:get-row">
+      <h3>
+        <a>matrix:get-row</a>
+      </h3>
+      <h4>
+        <span class="prim_example">matrix:get-row <i>matrix</i> <i>row-i</i></span>
+      </h4>
+      <p>
+        Reports a simple (not nested) NetLogo list containing the elements
+        of <i>row-i</i> of the given <i>matrix</i>.
+      </div>
+    <div class="dict_entry" id="matrix:get-column">
+      <h3>
+        <a>matrix:get-column</a>
+      </h3>
+      <h4>
+        <span class="prim_example">matrix:get-column <i>matrix</i> <i>col-j</i></span>
+      </h4>
+      <p>
+        Reports a simple (not nested) NetLogo list containing the elements
+        of <i>col-j</i> of the given <i>matrix</i>.
+      </div>
+    <div class="dict_entry" id="matrix:set">
+      <h3>
+        <a>matrix:set</a>
+      </h3>
+      <h4>
+        <span class="prim_example">matrix:set <i>matrix</i> <i>row-i</i> <i>col-j</i> <i>new-value</i></span>
+      </h4>
+      <p>
+        Changes the given <i>matrix</i>, by setting the location
+        <i>row-i</i>,<i>col-j</i> to <i>new-value</i>
+      </div>
+    <div class="dict_entry" id="matrix:set-row">
+      <h3>
+        <a>matrix:set-row</a>
+      </h3>
+      <h4>
+        <span class="prim_example">matrix:set-row <i>matrix</i> <i>row-i</i> <i>simple-list</i></span>
+      </h4>
+      <p>
+        Changes the given matrix <i>matrix</i> by replacing the row at
+        <i>row-i</i> with the contents of the simple (not nested) NetLogo
+        list <i>simple-list</i>. The <i>simple-list</i> must have a length
+        equal to the number of columns in the matrix, i.e., the matrix row
+        length.
+      </div>
+    <div class="dict_entry" id="matrix:set-column">
+      <h3>
+        <a>matrix:set-column</a>
+      </h3>
+      <h4>
+        <span class="prim_example">matrix:set-column <i>matrix</i> <i>col-j</i> <i>simple-list</i></span>
+      </h4>
+      <p>
+        Changes the given matrix <i>matrix</i> by replacing the column at
+        <i>col-j</i> with the contents of the simple (not nested) NetLogo
+        list <i>simple-list</i>. The <i>simple-list</i> must have a length
+        equal to the number of rows in the matrix, i.e., the matrix column
+        length.
+      </div>
+    <div class="dict_entry" id="matrix:swap-rows">
+      <h3>
+        <a>matrix:swap-rows</a>
+      </h3>
+      <h4>
+        <span class="prim_example">matrix:swap-rows <i>matrix</i> <i>row1</i> <i>row2</i></span>
+      </h4>
+      <p>
+        Changes the given matrix <i>matrix</i> by swapping the rows at
+        <i>row1</i> and <i>row2</i> with each other.
+      </div>
+    <div class="dict_entry" id="matrix:swap-columns">
+      <h3>
+        <a>matrix:swap-columns</a>
+      </h3>
+      <h4>
+        <span class="prim_example">matrix:swap-columns <i>matrix</i> <i>col1</i> <i>col2</i></span>
+      </h4>
+      <p>
+        Changes the given matrix <i>matrix</i> by swapping the columns at
+        <i>col1</i> and <i>col2</i> with each other.
+      </div>
+    <div class="dict_entry" id="matrix:set-and-report">
+      <h3>
+        <a>matrix:set-and-report</a>
+      </h3>
+      <h4>
+        <span class="prim_example">matrix:set-and-report <i>matrix</i> <i>row-i</i> <i>col-j</i> <i>new-value</i></span>
+      </h4>
+      <p>
+        Reports a new matrix, which is a copy of the given matrix except
+        that the value at <i>row-i</i>,<i>col-j</i> has been changed to
+        <i>new-value</i>. A NetLogo statement such as &quot;set mat
+        matrix:set-and-report mat 2 3 10&quot; will result in mat pointing
+        to this new matrix, a copy of the old version of mat with the
+        element at row 2, column 3 being set to 10. The old version of mat
+        will be &quot;lost&quot;.
+      </div>
+    <div class="dict_entry" id="matrix:dimensions">
+      <h3>
+        <a>matrix:dimensions</a>
+      </h3>
+      <h4>
+        <span class="prim_example">matrix:dimensions <i>matrix</i></span>
+      </h4>
+      <p>
+        Reports a 2-element list ([num-rows,num-cols]), containing the
+        number of rows and number of columns in the given <i>matrix</i>
+      </div>
+    <div class="dict_entry" id="matrix:submatrix">
+      <h3>
+        <a>matrix:submatrix</a>
+      </h3>
+      <h4>
+        <span class="prim_example">matrix:submatrix <i>matrix</i> <i>r1</i> <i>c1</i> <i>r2</i></span>
+        <span class="prim_example"><i>c2</i></span>
+      </h4>
+      <p>
+        Reports a new matrix object, consisting of a rectangular subsection
+        of the given matrix. The rectangular region is from row <i>r1</i>
+        up to (but not including) row <i>r2</i>, and from column <i>c1</i>
+        up to (but not including) column <i>c2</i>. Here is an example:
+      <pre>
+let m matrix:from-row-list [[1 2 3][4 5 6][7 8 9]]
+print matrix:submatrix m 0 1 2 3 ; matrix, row-start, col-start, row-end, col-end
+                                 ; rows from 0 (inclusive) to 2 (exclusive),
+                                 ; columns from 1 (inclusive) to 3 (exclusive)
+=&gt; {{matrix:  [ [ 2 3 ][ 5 6 ] ]}}
+</pre>
+    </div>
+    <div class="dict_entry" id="matrix:map">
+      <h3>
+        <a>matrix:map</a>
+      </h3>
+      <h4>
+        <span class="prim_example">matrix:map <i>reporter-task</i> <i>matrix</i></span>
+        <span class="prim_example">(matrix:map <i>reporter-task</i> <i>m1</i> <i>m2</i> ...)</span>
+      </h4>
+      <p>
+        Reports a new matrix which results from applying <i>reporter-task</i>
+        to each of the elements of the given matrix. For example,
+        <pre>matrix:map sqrt matrix</pre>
+      <p>
+        would take the square root of each
+        element of <i>matrix</i>. If more than one matrix argument is provided,
+        the task is given the elements of each matrix as arguments. Thus,
+        <pre>(matrix:map + matrix1 matrix2)</pre>
+      <p>
+        would add <i>matrix1</i> and
+        <i>matrix2</i>.
+      <p>
+        This reporter is meant to be the same as <i>map</i>, but for matrices
+        instead of lists.
+    </div>
+    <div class="dict_entry" id="matrix:times-scalar">
+      <h3>
+        <a>matrix:times-scalar</a>
+      </h3>
+      <h4>
+        <span class="prim_example">matrix:times-scalar matrix factor</span>
+      </h4>
+      <p>
+        As of NetLogo 5.1, <i>matrix:times</i> can multiply matrices by scalars
+        making this function obsolete. Use <i>matrix:times</i> instead.
+      <p>
+        Reports a new matrix, which is the result of multiplying every
+        entry in the original <i>matrix</i> by the given scaling
+        <i>factor</i>.
+      </div>
+    <div class="dict_entry" id="matrix:times">
+      <h3>
+        <a>matrix:times</a>
+      </h3>
+      <h4>
+        <span class="prim_example">matrix:times <i>m1</i> <i>m2</i>...</span>
+        <span class="prim_example">(matrix:times <i>m1</i> <i>m2</i> ...)</span>
+      </h4>
+      <p>
+        Reports a matrix, which is the result of multiplying the given matrices
+        and scalars (using standard matrix multiplication -- make sure your matrix 
+        dimensions match up.)
+        Without parentheses, it takes two arguments. With parentheses it takes
+        two or more. The arguments may either be numbers or matrices, but at
+        least one must be a matrix.
+      </div>
+    <div class="dict_entry" id="matrix:*">
+      <h3>
+        <a>matrix:*</a>
+      </h3>
+      <h4>
+        <span class="prim_example"><i>m1</i> matrix:* <i>m2</i></span>
+      </h4>
+      <p>
+        Reports a matrix, which is the result of multiplying the given matrices
+        and/or scalars (using standard matrix multiplication -- make sure your matrix 
+        dimensions match up.) This is exactly the same as <pre>matrix:times m1 m2</pre>
+      <p>
+        Takes precedence over <i>matrix:+</i> and <i>matrix:-</i>, same as normal
+        multiplication.
+      </div>
+    <div class="dict_entry" id="matrix:times-element-wise">
+      <h3>
+        <a>matrix:times-element-wise</a>
+      </h3>
+      <h4>
+        <span class="prim_example">matrix:times-element-wise <i>m1</i> <i>m2</i></span>
+        <span class="prim_example">(matrix:times-element-wise <i>m1</i> <i>m2</i> ...)</span>
+      </h4>
+      <p>
+        Reports a matrix, which is the result of multiplying the given matrices
+        together, element-wise. All elements are multiplied by scalar arguments
+        as well. 
+        Note that all matrix arguments must have the same dimensions.
+        Without parentheses, it takes two arguments. With parentheses it takes
+        two or more. The arguments may either be numbers or matrices, but at
+        least one must be a matrix.
+        
+      </div>
+    <div class="dict_entry" id="matrix:plus-scalar">
+      <h3>
+        <a>matrix:plus-scalar</a>
+      </h3>
+      <h4>
+        <span class="prim_example">matrix:plus-scalar <i>matrix</i> <i>number</i></span>
+      </h4>
+      <p>
+        As of NetLogo 5.1, <i>matrix:plus</i> can add matrices and scalars
+        making this function obsolete. Use <i>matrix:plus</i> instead.
+      <p>
+        Reports a matrix, which is the result of adding the constant
+        <i>number</i> to each element of the given <i>matrix</i>.
+      </div>
+    <div class="dict_entry" id="matrix:plus">
+      <h3>
+        <a>matrix:plus</a>
+      </h3>
+      <h4>
+        <span class="prim_example">matrix:plus <i>m1</i> <i>m2</i></span>
+        <span class="prim_example">(matrix:plus <i>m1</i> <i>m2</i> ...)</span>
+      </h4>
+      <p>
+        Reports a matrix, which is the result of adding the given matrices
+        and scalars. Scalars are added to each element.
+        Without parentheses, it takes two arguments. With parentheses it takes
+        two or more. The arguments may either be numbers or matrices, but at
+        least one must be a matrix.
+      </div>
+    <div class="dict_entry" id="matrix:+">
+      <h3>
+        <a>matrix:+</a>
+      </h3>
+      <h4>
+        <span class="prim_example"><i>m1</i> matrix:+ <i>m2</i></span>
+      </h4>
+      <p>
+        Reports a matrix, which is the result of adding the given matrices
+        and/or scalars. This is exactly the same as <pre>matrix:plus m1 m2</pre>
+      <p>
+        Takes precedence after <i>matrix:*</i>, same as normal addition.
+      </div>
+    <div class="dict_entry" id="matrix:minus">
+      <h3>
+        <a>matrix:minus</a>
+      </h3>
+      <h4>
+        <span class="prim_example">matrix:minus <i>m1</i> <i>m2</i></span>
+        <span class="prim_example">(matrix:minus <i>m1</i> <i>m2</i> ...)</span>
+      </h4>
+      <p>
+        Reports a matrix, which is the result of subtracting all arguments
+        besides <i>m1</i> from <i>m1</i>. Scalar arguments are treated as
+        matrices of the same size as the matrix arguments with every element
+        equal to that scalar.
+        Without parentheses, it takes two arguments. With parentheses it takes
+        two or more. The arguments may either be numbers or matrices, but at
+        least one must be a matrix.
+      </div>
+    <div class="dict_entry" id="matrix:-">
+      <h3>
+        <a>matrix:-</a>
+      </h3>
+      <h4>
+        <span class="prim_example"><i>m1</i> matrix:- <i>m2</i></span>
+      </h4>
+      <p>
+        Reports a matrix, which is the result of subtracting the given matrices
+        and/or scalars. This is exactly the same as <pre>matrix:minus m1 m2</pre>
+      <p>
+        Takes precedence after <i>matrix:*</i>, same as normal subtraction.
+      </div>
+    <div class="dict_entry" id="matrix:inverse">
+      <h3>
+        <a>matrix:inverse</a>
+      </h3>
+      <h4>
+        <span class="prim_example">matrix:inverse <i>matrix</i></span>
+      </h4>
+      <p>
+        Reports the inverse of the given <i>matrix</i>, or results in an
+        error if the matrix is not invertible.
+      </div>
+    <div class="dict_entry" id="matrix:transpose">
+      <h3>
+        <a>matrix:transpose</a>
+      </h3>
+      <h4>
+        <span class="prim_example">matrix:transpose <i>matrix</i></span>
+      </h4>
+      <p>
+        Reports the transpose of the given <i>matrix</i>.
+      </div>
+    <div class="dict_entry" id="matrix:real-eigenvalues">
+      <h3>
+        <a>matrix:real-eigenvalues</a>
+      </h3>
+      <h4>
+        <span class="prim_example">matrix:real-eigenvalues <i>matrix</i></span>
+      </h4>
+      <p>
+        Reports a list containing the real eigenvalues of the given
+        <i>matrix</i>.
+      </div>
+    <div class="dict_entry" id="matrix:imaginary-eigenvalues">
+      <h3>
+        <a>matrix:imaginary-eigenvalues</a>
+      </h3>
+      <h4>
+        <span class="prim_example">matrix:imaginary-eigenvalues <i>matrix</i></span>
+      </h4>
+      <p>
+        Reports a list containing the imaginary eigenvalues of the given
+        <i>matrix</i>.
+      </div>
+    <div class="dict_entry" id="matrix:eigenvectors">
+      <h3>
+        <a>matrix:eigenvectors</a>
+      </h3>
+      <h4>
+        <span class="prim_example">matrix:eigenvectors <i>matrix</i></span>
+      </h4>
+      <p>
+        Reports a matrix that contains the eigenvectors of the given
+        <i>matrix</i>. (Each eigenvector as a column of the resulting
+        matrix.)
+      </div>
+    <div class="dict_entry" id="matrix:det">
+      <h3>
+        <a>matrix:det</a>
+      </h3>
+      <h4>
+        <span class="prim_example">matrix:det <i>matrix</i></span>
+      </h4>
+      <p>
+        Reports the determinant of the <i>matrix</i>.
+      </div>
+    <div class="dict_entry" id="matrix:rank">
+      <h3>
+        <a>matrix:rank</a>
+      </h3>
+      <h4>
+        <span class="prim_example">matrix:rank <i>matrix</i></span>
+      </h4>
+      <p>
+        Reports the effective numerical rank of the <i>matrix</i>,obtained
+        from SVD (Singular Value Decomposition).
+      </div>
+    <div class="dict_entry" id="matrix:cond">
+      <h3>
+        <a>matrix:cond</a>
+      </h3>
+      <h4>
+        <span class="prim_example">matrix:cond <i>matrix</i></span>
+      </h4>
+      <p>
+        Reports the matrix condition (2 norm), which is the ratio of
+        largest to smallest singular value (obtained from SVD).
+      </div>
+    <div class="dict_entry" id="matrix:trace">
+      <h3>
+        <a>matrix:trace</a>
+      </h3>
+      <h4>
+        <span class="prim_example">matrix:trace <i>matrix</i></span>
+      </h4>
+      <p>
+        Reports the trace of the <i>matrix</i>, which is simply the sum of
+        the main diagonal elements.
+      </div>
+    <h2>
+      Advanced features
+    </h2>
+    <div class="dict_entry" id="matrix:solve">
+      <h3>
+        <a>matrix:solve</a>
+      </h3>
+      <h4>
+        <span class="prim_example">matrix:solve <i>A</i> <i>C</i></span>
+      </h4>
+      <p>
+        Reports the solution to a linear system of equations, specified by
+        the <i>A</i> and <i>C</i> matrices. In general, solving a set of
+        linear equations is akin to matrix division. That is, the goal is
+        to find a matrix B such that <i>A</i> * B = <i>C</i>. (For simple
+        linear systems, <i>C</i> and B can both be 1-dimensional matrices
+        -- i.e. vectors). If A is not a square matrix, then a &quot;least
+        squares&quot; solution is returned.
+      <pre>
+;; To solve the set of equations x + 3y = 10 and 7x - 4y = 20
+;; We make our A matrix [[1 3][7 -4]], and our C matrix [[10][20]]
+let A matrix:from-row-list [[1 3][7 -4]]
+let C matrix:from-row-list [[10][20]]
+print matrix:solve A C
+=&gt; {{matrix:  [ [ 4 ][ 2.0000000000000004 ] ]}}
+;; NOTE: as you can see, the results may be only approximate
+;; (In this case, the true solution should be x=4 and y=2.)
+</pre>
+    </div>
+    <div class="dict_entry" id="matrix:forecast-linear-growth">
+      <h3>
+        <a>matrix:forecast-linear-growth</a>
+      </h3>
+      <h4>
+        <span class="prim_example">matrix:forecast-linear-growth <i>data-list</i></span>
+      </h4>
+      <p>
+        Reports a four-element list of the form: [ <i>forecast</i>
+        &nbsp;<i>constant</i> &nbsp;<i>slope</i> &nbsp;<i>R<sup>2</sup></i>
+        ]. The <i>forecast</i> is the predicted next value that would
+        follow in the sequence given by the <i>data-list</i> input, based
+        on a linear trend-line. Normally <i>data-list</i> will contain
+        observations on some variable, Y, from time t = 0 to time t = (n-1)
+        where n is the number of observations. The <i>forecast</i> is the
+        predicted value of Y at t = n. The <i>constant</i> and <i>slope</i>
+        are the parameters of the trend-line
+      <p>
+        Y = <i>constant</i> + <i>slope</i> * t.
+      <p>
+        The <i>R<sup>2</sup></i> value measures the goodness of fit of the
+        trend-line to the data, with an R<sup>2</sup> = 1 being a perfect
+        fit and an R<sup>2</sup> of 0 indicating no discernible trend.
+        Linear growth assumes that the variable Y grows by a constant
+        absolute amount each period.
+      <pre>
+;; a linear extrapolation of the next item in the list.
+print matrix:forecast-linear-growth [20 25 28 32 35 39]
+=&gt; [42.733333333333334 20.619047619047638 3.6857142857142824 0.9953743395474031]
+;; These results tell us:
+;; * the next predicted value is roughly 42.7333
+;; * the linear trend line is given by Y = 20.6190 + 3.6857 * t
+;; * Y grows by approximately 3.6857 units each period
+;; * the R^2 value is roughly 0.9954 (a good fit)
+</pre>
+    </div>
+    <div class="dict_entry" id="matrix:forecast-compound-growth">
+      <h3>
+        <a>matrix:forecast-compound-growth</a>
+      </h3>
+      <h4>
+        <span class="prim_example">matrix:forecast-compound-growth <i>data-list</i></span>
+      </h4>
+      <p>
+        Reports a four-element list of the form: [ <i>forecast</i>
+        &nbsp;<i>constant</i> &nbsp;<i>growth-proportion</i>
+        &nbsp;<i>R<sup>2</sup></i> ]. Whereas <a href="#matrix:forecast-linear-growth">matrix:forecast-linear-growth</a>
+        assumes growth by a constant absolute amount each period, <a href="#matrix:forecast-compound-growth">matrix:forecast-compound-growth</a>
+        assumes that Y grows by a constant <b>proportion</b> each period.
+        The <i>constant</i> and <i>growth-proportion</i> are the parameters
+        of the trend-line
+      <p>
+        Y = <i>constant</i> * <i>growth-proportion</i><sup>t</sup>.
+      <p>
+        Note that the growth proportion is typically interpreted as
+        <i>growth-proportion</i> = <i>(1.0 + growth-rate)</i>. Therefore,
+        if <a href="#matrix:forecast-compound-growth">matrix:forecast-compound-growth</a>
+        returns a <i>growth-proportion</i> of 1.10, that implies that Y
+        grows by (1.10 - 1.0) = 10% each period. Note that if growth is
+        negative, <a href="#matrix:forecast-compound-growth">matrix:forecast-compound-growth</a>
+        will return a <i>growth-proportion</i> of less than one. E.g., a
+        <i>growth-proportion</i> of 0.90 implies a growth rate of -10%.
+      <p>
+        <b>NOTE:</b> The compound growth forecast is achieved by taking the
+        ln of Y. (See <a href="#matrix:regress">matrix:regress</a>, below.)
+        Because it is impossible to take the natural log of zero or a
+        negative number, <a href="#matrix:forecast-compound-growth">matrix:forecast-compound-growth</a>
+        will result in an error if it finds a zero or negative number in
+        <i>data-list</i>.
+      <pre>
+;; a compound growth extrapolation of the next item in the list.
+print matrix:forecast-compound-growth [20 25 28 32 35 39]
+=&gt; [45.60964465307147 21.15254147944863 1.136621034423892 0.9760867518334806]
+;; These results tell us:
+;; * the next predicted value is approximately 45.610
+;; * the compound growth trend line is given by Y = 21.1525 * 1.1366 ^ t
+;; * Y grows by approximately 13.66% each period
+;; * the R^2 value is roughly 0.9761 (a good fit)
+</pre>
+    </div>
+    <div class="dict_entry" id="matrix:forecast-continuous-growth">
+      <h3>
+        <a>matrix:forecast-continuous-growth</a>
+      </h3>
+      <h4>
+        <span class="prim_example">matrix:forecast-continuous-growth <i>data-list</i></span>
+      </h4>
+      <p>
+        Reports a four-element list of the form: [ <i>forecast</i>
+        &nbsp;<i>constant</i> &nbsp;<i>growth-rate</i>
+        &nbsp;<i>R<sup>2</sup></i> ]. Whereas <a href="#matrix:forecast-compound-growth">matrix:forecast-compound-growth</a>
+        assumes discrete time with Y growing by a given proportion each
+        finite period of time (e.g., a month or a year), <a href="#matrix:forecast-continuous-growth">matrix:forecast-continuous-growth</a>
+        assumes that Y is compounded <b>continuously</b> (e.g., each second
+        or fraction of a second). The <i>constant</i> and
+        <i>growth-rate</i> are the parameters of the trend-line
+      <p>
+        Y = <i>constant</i> * e<sup>(growth-rate * t)</sup>.
+      <p>
+        <a href="#matrix:forecast-continuous-growth">matrix:forecast-continuous-growth</a>
+        is the &quot;calculus&quot; analog of <a href="#matrix:forecast-compound-growth">matrix:forecast-compound-growth</a>.
+        The two will normally yield similar (but not identical) results, as
+        shown in the example below. <i>growth-rate</i> may, of course, be
+        negative.
+      <p>
+        <b>NOTE:</b> The continuous growth forecast is achieved by taking
+        the ln of Y. (See <a href="#matrix:regress">matrix:regress</a>,
+        below.) Because it is impossible to take the natural log of zero or
+        a negative number, <a href="#matrix:forecast-continuous-growth">matrix:forecast-continuous-growth</a>
+        will result in an error if it finds a zero or negative number in
+        <i>data-list</i>.
+      <pre>
+;; a continuous growth extrapolation of the next item in the list.
+print matrix:forecast-continuous-growth [20 25 28 32 35 39]
+=&gt; [45.60964465307146 21.15254147944863 0.12805985615332668 0.9760867518334806]
+;; These results tell us:
+;; * the next predicted value is approximately 45.610
+;; * the compound growth trend line is given by Y = 21.1525 * e ^ (0.1281 * t)
+;; * Y grows by approximately 12.81% each period if compounding takes place continuously
+;; * the R^2 value is roughly 0.9761 (a good fit)
+</pre>
+    </div>
+    <div class="dict_entry" id="matrix:regress">
+      <h3>
+        <a>matrix:regress</a>
+      </h3>
+      <h4>
+        <span class="prim_example">matrix:regress <i>data-matrix</i></span>
+      </h4>
+      <p>
+        All three of the forecast primitives above are just special cases
+        of performing an OLS (ordinary-least-squares) linear regression --
+        the matrix:regress primitive provides a flexible/general-purpose
+        approach. The input is a matrix <i>data-matrix</i>, with the first
+        column being the observations on the dependent variable and each
+        subsequent column being the observations on the (1 or more)
+        independent variables. Thus each row consists of an observation of
+        the dependent variable followed by the corresponding observations
+        for each independent variable.
+      <p>
+        The output is a Logo nested list composed of two elements. The
+        first element is a list containing the regression constant followed
+        by the coefficients on each of the independent variables. The
+        second element is a 3-element list containing the R<sup>2</sup>
+        statistic, the total sum of squares, and the residual sum of
+        squares. The following code example shows how the <a href="#matrix:regress">matrix:regress</a> primitive can be used to
+        perform the same function as the code examples shown in the
+        matrix:forecast-*-growth primitives above. (However, keep in mind
+        that the <a href="#matrix:regress">matrix:regress</a> primitive is
+        more powerful than this, and can have many more independent
+        variables in the regression, as indicated in the fourth example
+        below.)
+      <pre>
+;; this is equivalent to what the matrix:forecast-linear-growth does
+let data-list [20 25 28 32 35 39]
+let indep-var (n-values length data-list [?]) ; 0,1,2...,5
+let lin-output matrix:regress matrix:from-column-list (list data-list indep-var)
+let lincnst item 0 (item 0 lin-output)
+let linslpe item 1 (item 0 lin-output)
+let linR2   item 0 (item 1 lin-output)
+;;Note the &quot;6&quot; here is because we want to forecast the value at time t=6.
+print (list (lincnst + linslpe * 6) (lincnst) (linslpe) (linR2))
+
+;; this is equivalent to what the matrix:forecast-compound-growth does
+let com-log-data-list  (map [ln ?] [20 25 28 32 35 39])
+let com-indep-var2 (n-values length com-log-data-list [?]) ; 0,1,2...,5
+let com-output matrix:regress matrix:from-column-list (list com-log-data-list com-indep-var2)
+let comcnst exp item 0 (item 0 com-output)
+let comprop exp item 1 (item 0 com-output)
+let comR2       item 0 (item 1 com-output)
+;;Note the &quot;6&quot; here is because we want to forecast the value at time t=6.
+print (list (comcnst * comprop ^ 6) (comcnst) (comprop) (comR2))
+
+;; this is equivalent to what the matrix:forecast-continuous-growth does
+let con-log-data-list  (map [ln ?] [20 25 28 32 35 39])
+let con-indep-var2 (n-values length con-log-data-list [?]) ; 0,1,2...,5
+let con-output matrix:regress matrix:from-column-list (list con-log-data-list con-indep-var2)
+let concnst exp item 0 (item 0 con-output)
+let conrate     item 1 (item 0 con-output)
+let conR2       item 0 (item 1 con-output)
+print (list (concnst * exp (conrate * 6)) (concnst) (conrate) (conR2))
+
+;; example of a regression with two independent variables:
+;; Pretend we have a dataset, and we want to know how well happiness
+;; is correlated to snack-food consumption and accomplishing goals.
+let happiness [2 4 5 8 10]
+let snack-food-consumed [3 4 3 7 8]
+let goals-accomplished [2 3 5 8 9]
+print matrix:regress matrix:from-column-list (list happiness snack-food-consumed goals-accomplished)
+=&gt; [[-0.14606741573033788 0.3033707865168543 0.8202247191011234] [0.9801718440185063 40.8 0.8089887640449439]]
+;; linear regression: happiness = -0.146 + 0.303*snack-food-consumed + 0.820*goals-accomplished
+;; (Since the 0.820 coefficient is higher than the 0.303 coefficient, it appears that each goal
+;; accomplished yields more happiness than does each snack consumed, although both are positively
+;; correlated with happiness.)
+;; Also, we see that R^2 = 0.98, so the two factors together provide a good fit.
+</pre>
+    </div>
+

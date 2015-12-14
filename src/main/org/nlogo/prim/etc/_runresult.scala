@@ -21,8 +21,7 @@ class _runresult extends Reporter {
           throw new EngineException(context, this,
             token.name + " doesn't accept further inputs if the first is a string")
         try {
-          val procedure = workspace.compileForRun(
-            argEvalString(context, 0), context, true)
+          val procedure = workspace.compileForRun(s, context, true)
           val newActivation = new Activation(
             procedure, context.activation, context.ip)
           newActivation.setUpArgsForRunOrRunresult()

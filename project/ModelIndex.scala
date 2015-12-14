@@ -1,4 +1,5 @@
 import java.io.File
+import java.util.regex.Pattern
 import sbt._
 import Keys._
 
@@ -32,10 +33,11 @@ object ModelIndex {
     for(path <- paths) {
       val info = infoTab(path)
       // The (?s) part allows . to match line endings
-      val pattern = "(?s).*## WHAT IS IT\\?\\s*\\n"
-      if(info.matches(pattern + ".*") ) {
-        val firstParagraph = info.replaceFirst(pattern, "").split('\n').head
-        println("models" + path.replaceFirst(modelsPath.toString, ""))
+      val whatIsItPattern = "(?s).*## WHAT IS IT\\?\\s*\\n"
+      val modelPathPattern = Pattern.quote(modelsPath.toString)
+      if(info.matches(whatIsItPattern + ".*") ) {
+        val firstParagraph = info.replaceFirst(whatIsItPattern, "").split('\n').head
+        println("models" + path.replaceFirst(modelPathPattern, ""))
         println(firstParagraph)
       } else {
         System.err.println("WHAT IS IT not found: " + path)

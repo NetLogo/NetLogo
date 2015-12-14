@@ -47,43 +47,42 @@ public strictfp class BrowserLauncher {
 
   private static void openURL(String url) throws BrowserNotFoundException, IOException {
     String osName = System.getProperty("os.name");
-    // on Macs, trust MRJAdapter above all
-    if (osName.startsWith("Mac")) {
-      net.roydesign.mac.MRJAdapter.openURL(url);
+    // first see if we can call Java 6's Desktop.browse() method
+    try {
+      Class<?> desktopClass = Class.forName("java.awt.Desktop");
+      Object result = desktopClass.getMethod("isDesktopSupported").invoke(null);
+      if (result instanceof Boolean && ((Boolean) result).booleanValue()) {
+        Object desktop = desktopClass.getMethod("getDesktop").invoke(null);
+        desktopClass.getMethod("browse", java.net.URI.class).invoke(desktop, new java.net.URI(url));
+        return;
+      }
+    } catch (Exception e) { } // ignore NOPMD
+    // fall back on stuff that works on Java 5
+    if (osName.startsWith("Windows")) {
+      Runtime.getRuntime().exec(
+          new String[]{"cmd.exe", "/c", "start", "\"\"", '"' + url + '"'});
+    } else if (osName.startsWith("Mac")) {
+      throw new BrowserNotFoundException(
+          "We were unable to open a browser on your system.\n" +
+          "This error can be reported to ccl-bugs@ccl.northwestern.edu");
     } else {
-      // first see if we can call Java 6's Desktop.browse() method
       try {
-        Class<?> desktopClass = Class.forName("java.awt.Desktop");
-        Object result = desktopClass.getMethod("isDesktopSupported").invoke(null);
-        if (result instanceof Boolean && ((Boolean) result).booleanValue()) {
-          Object desktop = desktopClass.getMethod("getDesktop").invoke(null);
-          desktopClass.getMethod("browse", java.net.URI.class).invoke(desktop, new java.net.URI(url));
-          return;
+        Process process = Runtime.getRuntime().exec(new String[]{
+          "firefox", "-remote", "'openURL(", url + ")'"});
+        int exitCode = process.waitFor();
+        if (exitCode != 0) {  // if Firefox was not open
+          Runtime.getRuntime().exec(new String[]{"firefox", url});
         }
-      } catch (Exception e) { } // ignore NOPMD
-      // fall back on stuff that works on Java 5
-      if (osName.startsWith("Windows")) {
-        Runtime.getRuntime().exec(
-            new String[]{"cmd.exe", "/c", "start", "\"\"", '"' + url + '"'});
-      } else {
-        try {
-          Process process = Runtime.getRuntime().exec(new String[]{
-              "firefox", "-remote", "'openURL(", url + ")'"});
-          int exitCode = process.waitFor();
-          if (exitCode != 0) {  // if Firefox was not open
-            Runtime.getRuntime().exec(new String[]{"firefox", url});
-          }
-        } catch (InterruptedException ie) {
-          throw new IllegalStateException(ie);
-        } catch (IOException ex) {
-          throw new BrowserNotFoundException(
-              "NetLogo could not find and execute a web browser named \'firefox\'." +
-                  "Please install Firefox and ensure that the \'firefox\' command " +
-                  "is in your executable PATH.  Firefox is available here:\n " +
-                  "http://www.mozilla.com/firefox/\n\n" +
-                  "The full error message was:\n " + ex.getLocalizedMessage()
-          );
-        }
+      } catch (InterruptedException ie) {
+        throw new IllegalStateException(ie);
+      } catch (IOException ex) {
+        throw new BrowserNotFoundException(
+            "NetLogo could not find and execute a web browser named \'firefox\'." +
+            "Please install Firefox and ensure that the \'firefox\' command " +
+            "is in your executable PATH.  Firefox is available here:\n " +
+            "http://www.mozilla.com/firefox/\n\n" +
+            "The full error message was:\n " + ex.getLocalizedMessage()
+            );
       }
     }
   }

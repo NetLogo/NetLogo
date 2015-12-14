@@ -24,7 +24,10 @@ class InfoTab(attachModelDir: String => String) extends JPanel with
         org.nlogo.window.Events.ZoomedEvent.Handler with
         org.nlogo.window.Zoomable {
 
-  val baseDocUrl = "docs/infotab.html"
+  val baseDocUrl: String = {
+    val docRoot = System.getProperty("netlogo.docs.dir", "docs")
+    docRoot + "/infotab.html"
+  }
 
   private val undoManager = new UndoManager()
   // 90 columns seems reasonable: wide enough to not waste screen real estate, but narrow enough so

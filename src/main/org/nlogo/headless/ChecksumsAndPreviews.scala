@@ -41,18 +41,20 @@ object ChecksumsAndPreviews {
   }
 
   object Previews {
+    def needsManualPreview(previewCommands: String) =
+      previewCommands contains "need-to-manually-make-preview-for-this-model"
     def okPath(path: String) =
       List("HUBNET", "/GOGO/", "/CODE EXAMPLES/SOUND/")
         .forall(!path.toUpperCase.containsSlice(_))
     def remake(path: String) {
-      val previewPath = path.replaceFirst("\\.nlogo$", ".png")
+      val previewPath = path.replaceFirst("\\.nlogo(3d)?$", ".png")
       val workspace = HeadlessWorkspace.newInstance
       try {
         // we set the random seed before opening the model, so that the random-seed will affect the
         // startup procedure if any - ST 7/12/06
         workspace.command("random-seed 0")
         workspace.open(path)
-        if(workspace.previewCommands.containsSlice("need-to-manually-make-preview-for-this-model"))
+        if (needsManualPreview(workspace.previewCommands))
           println("skipping: " + path)
         else {
           println("making preview for: " + path)

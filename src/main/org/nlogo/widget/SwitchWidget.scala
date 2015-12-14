@@ -10,7 +10,7 @@ class SwitchWidget extends Switch with Editable with InterfaceGlobalWidget
   with org.nlogo.window.Events.PeriodicUpdateEvent.Handler {
 
   override def classDisplayName= I18N.gui.get("tabs.run.widgets.switch")
-  override def propertySet = Properties.swiitch
+  override def propertySet = Properties.switch
 
   def valueObject: AnyRef = constraint.defaultValue
   def valueObject(value: AnyRef) {

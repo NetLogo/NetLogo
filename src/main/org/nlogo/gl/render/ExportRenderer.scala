@@ -2,16 +2,20 @@
 
 package org.nlogo.gl.render
 
-import javax.media.opengl.{ GL, GLEventListener, GLAutoDrawable }
-import com.sun.opengl.util.BufferUtil
+import com.jogamp.opengl.{ GL, GL2, GLEventListener, GLAutoDrawable }
+import com.jogamp.common.nio.Buffers
 
 trait ExportRenderer extends Renderer with GLEventListener {
 
   var pixelInts: Array[Int] = null
 
+  override def dispose(glDrawable: GLAutoDrawable): Unit = {
+  }
+
+
   override def display(gLDrawable: GLAutoDrawable) {
     init(gLDrawable)
-    val gl = gLDrawable.getGL()
+    val gl = gLDrawable.getGL().asInstanceOf[GL2]
     gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
     shapeManager.checkQueue(gl, glu)
     render(gl)
@@ -20,10 +24,10 @@ trait ExportRenderer extends Renderer with GLEventListener {
   }
 
   private def exportGraphics(drawable: GLAutoDrawable) {
-    width = drawable.getWidth
-    height = drawable.getHeight
-    val pixelsRGB = BufferUtil.newByteBuffer(width * height * 3)
-    val gl = drawable.getGL
+    width = drawable.getSurfaceWidth
+    height = drawable.getSurfaceHeight
+    val pixelsRGB = Buffers.newDirectByteBuffer(width * height * 3)
+    val gl = drawable.getGL.asInstanceOf[GL2]
     gl.glReadBuffer(GL.GL_BACK)
     gl.glPixelStorei(GL.GL_PACK_ALIGNMENT, 1)
     gl.glReadPixels(

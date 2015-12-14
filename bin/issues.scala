@@ -1,6 +1,4 @@
-#!/bin/sh
-exec scalas "$0" "$@"
-!#
+#!/usr/bin/env sbt -Dsbt.version=0.13.8 -Dsbt.main.class=sbt.ScriptMain --error
 
 // This generates Markdown suitable for pasting into
 // https://github.com/NetLogo/NetLogo/wiki/Release-notes
@@ -20,7 +18,7 @@ exec scalas "$0" "$@"
 //         wait at least a few minutes for it to try downloading the dependencies before panicking!
 
 /***
-scalaVersion := "2.10.3"
+scalaVersion := "2.11.7"
 
 onLoadMessage := ""
 

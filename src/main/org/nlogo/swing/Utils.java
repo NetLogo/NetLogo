@@ -38,9 +38,8 @@ public final strictfp class Utils {
       javax.swing.UIManager.put("Slider.paintValue", Boolean.FALSE);
       if (System.getProperty("os.name").startsWith("Mac")) {
         preloadQuaquaNativeLibraries();
-        javax.swing.UIManager.setLookAndFeel
-            (ch.randelshofer.quaqua.QuaquaManager
-                .getLookAndFeelClassName());
+        String lookAndFeel = System.getProperty("netlogo.quaqua.laf", QuaquaManager.getLookAndFeelClassName());
+        javax.swing.UIManager.setLookAndFeel(lookAndFeel);
       } else if (System.getProperty("os.name").startsWith("Windows")) {
         javax.swing.UIManager.setLookAndFeel
             (javax.swing.UIManager.getSystemLookAndFeelClassName());

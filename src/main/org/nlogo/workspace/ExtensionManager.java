@@ -62,6 +62,10 @@ public strictfp class ExtensionManager
   public static final String EXTENSION_NOT_FOUND =
     "Can't find extension: ";
 
+  public static String extensionPath() {
+    return System.getProperty("netlogo.extensions.dir", "extensions");
+  }
+
   private final Map<String, JarContainer> jars =
       new HashMap<String, JarContainer>();
   private final AbstractWorkspace workspace;
@@ -303,7 +307,7 @@ public strictfp class ExtensionManager
     // Then try the extensions folder
     try {
       java.io.File jarFile =
-          new java.io.File("extensions" + java.io.File.separator + path);
+          new java.io.File(extensionPath() + java.io.File.separator + path);
       if (jarFile.exists()) {
         return toURL(jarFile).toString();
       }
@@ -347,7 +351,7 @@ public strictfp class ExtensionManager
     }
 
     // Then try the extensions folder
-    java.io.File f = new java.io.File("extensions" + java.io.File.separator + path);
+    java.io.File f = new java.io.File(extensionPath() + java.io.File.separator + path);
     if (f.exists()) {
       return f.getPath();
     }
@@ -378,7 +382,7 @@ public strictfp class ExtensionManager
       urls.addAll(getAdditionalJars(folder));
 
       // Get other Jars in extensions folder
-      folder = new java.io.File("extensions");
+      folder = new java.io.File(extensionPath());
       urls.addAll(getAdditionalJars(folder));
 
       // We use the URLClassLoader.newInstance method because that works with

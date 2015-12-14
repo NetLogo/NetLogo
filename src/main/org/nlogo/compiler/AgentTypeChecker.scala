@@ -66,7 +66,7 @@ package org.nlogo.compiler
 import org.nlogo.compiler.CompilerExceptionThrowers._
 import org.nlogo.api.Syntax
 import org.nlogo.nvm.{ Instruction, Procedure }
-import org.nlogo.prim.{ _call, _callreport, _task }
+import org.nlogo.prim.{ _call, _callreport, _task, _reportertask, _commandtask }
 
 private class AgentTypeChecker(defs: Seq[ProcedureDefinition]) {
 
@@ -105,7 +105,7 @@ private class AgentTypeChecker(defs: Seq[ProcedureDefinition]) {
     override def visitReporterApp(app: ReporterApp) {
       val r = app.reporter
       usableBy = typeCheck(currentProcedure, r, usableBy)
-      if(r.isInstanceOf[_task])
+      if(r.isInstanceOf[_task] || r.isInstanceOf[_reportertask])
         app.args.head.accept(new AgentTypeCheckerVisitor(currentProcedure, "OTPL"))
       else if(r.syntax.blockAgentClassString != null)
         chooseVisitorAndContinue(r.syntax.blockAgentClassString, app.args)

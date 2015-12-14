@@ -6,6 +6,9 @@ import org.nlogo.api.Version
 import org.nlogo.workspace.ModelsLibrary
 import org.scalatest.FunSuite
 import org.nlogo.util.SlowTest
+import org.nlogo.workspace.AbstractWorkspace
+import ChecksumsAndPreviews.Previews.needsManualPreview
+import org.nlogo.api.CompilerException
 
 class TestCompileAll extends FunSuite with SlowTest {
 
@@ -16,16 +19,10 @@ class TestCompileAll extends FunSuite with SlowTest {
         Seq("Arduino", "QuickTime", "Serial").exists(path.contains)
         // ^^ this branch is a transition away from QTJ, and gogo-serial. Arduino is skipped because it isn't bundled
 
-
   // and those are exempt from having their preview commands tested:
   def excludePreviewCommands(path: String) =
     Seq(makePath("extensions"), makePath("models", "test"))
       .exists(path.contains)
-
-  def makePath(folderNames: String*) = {
-    val sep = java.io.File.separatorChar.toString
-    folderNames.mkString(sep, sep, sep)
-  }
 
   val modelPaths =
     (ModelsLibrary.getModelPaths ++ ModelsLibrary.getModelPathsAtRoot("extensions"))
@@ -39,17 +36,6 @@ class TestCompileAll extends FunSuite with SlowTest {
   }
 
   def compile(path: String) {
-    import java.io.File.separatorChar
-    def pathMatches(bad: String) =
-      path.toUpperCase.containsSlice(separatorChar + bad + separatorChar)
-    if (pathMatches("DOESN'T COMPILE") ||
-        // letting the textbook team deal with these should help ensure
-        // the book gets updated too - ST 4/22/10
-        pathMatches("TEXTBOOK MODELS") ||
-        !Version.is3D && path.endsWith(".nlogo3d") ||
-        // in 3D skip models that aren't in the 3D directory.
-        Version.is3D && !pathMatches("3D"))
-      return
     val workspace = HeadlessWorkspace.newInstance
     // this keeps patches from being created, which we don't need,
     // and which was slowing things down - ST 1/13/05
@@ -57,11 +43,30 @@ class TestCompileAll extends FunSuite with SlowTest {
     workspace.compilerTestingMode = true
     try {
       workspace.open(path)
+      if (!excludePreviewCommands(path))
+        compilePreviewCommands(workspace)
       // compile BehaviorSpace experiments
       val lab = HeadlessWorkspace.newLab
       lab.load(HeadlessModelOpener.protocolSection(path))
       lab.names.foreach(lab.newWorker(_).compile(workspace))
     }
     finally {workspace.dispose()}
+  }
+<<<<<<< 708a3a1018a9f147134cdf7a34cd7349aa80d27b
+
+  def compilePreviewCommands(ws: AbstractWorkspace) {
+    if (!(ws.previewCommands.isEmpty || needsManualPreview(ws.previewCommands))) {
+      val source = "to __custom-preview-commands " + ws.previewCommands + "\nend"
+      try {
+        ws.compiler.compileMoreCode(source, None, ws.world.program, ws.getProcedures, ws.getExtensionManager)
+      } catch {
+        case e: CompilerException => throw new Exception("Error compiling preview commands: " + e.getMessage, e)
+      }
+    }
+  }
+
+  def makePath(folderNames: String*) = {
+    val sep = java.io.File.separatorChar.toString
+    folderNames.mkString(sep, sep, sep)
   }
 }

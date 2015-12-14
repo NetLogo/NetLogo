@@ -10,8 +10,9 @@ if [[ `uname -s` == *CYGWIN* ]] ; then
 else
   CURR_DIR=`dirname $0`
   if [ `uname -s` = Linux ] ; then
-    if [ -a /usr/lib/jvm/java-8-sun ] ; then
-      export JAVA_HOME=/usr/lib/jvm/java-8-oracle
+    HIGHEST_PRIORITY_JAVA_8=`update-alternatives --display javac | grep priority | grep 1.8 | sort -k 4 | tail -1 | cut -d\  -f1`
+    if [ -e "$HIGHEST_PRIORITY_JAVA_8" ] ; then
+      export JAVA_HOME="${HIGHEST_PRIORITY_JAVA_8%/bin/javac}"
     elif ! $JAVA_HOME/bin/java -version 2>&1 | head -n 1 | grep "1\.8" >> /dev/null ; then
       echo "Please set JAVA_HOME to version 1.8"
       exit
@@ -28,11 +29,16 @@ fi
 
 export PATH=$JH/bin:$PATH
 JAVA=$JH/bin/java
+
+if [[ `uname -s` == *CYGWIN* ]] ; then
+  JAVA=$JH/bin/java.exe
+fi
+
 JJS=$JH/bin/jjs
 
 # Most of these settings are fine for everyone
-XSS=-Xss2m
-XMX=-Xmx1900m
+XSS=-Xss10m
+XMX=-Xmx2048m
 XX=
 ENCODING=-Dfile.encoding=UTF-8
 HEADLESS=-Djava.awt.headless=true
