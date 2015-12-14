@@ -46,7 +46,7 @@ trait PlatformBuild {
       newJarLocation
     }
 
-  def jvmOptions: Seq[String] = "-Djava.ext.dirs= -Xmx1024m -Dfile.encoding=UTF-8".split(" ")
+  def jvmOptions: Seq[String] = "-Xmx1024m -Dfile.encoding=UTF-8".split(" ")
 
   def nativeFormat: String
 }
