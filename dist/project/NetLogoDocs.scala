@@ -18,7 +18,7 @@ class NetLogoDocs(docsSource: File, docsTarget: File, netLogoRoot: File) {
       "-o", targetFile.getAbsolutePath,
       "-t", "html",
       "-T", title,
-      "-c", (docsSource / "netlogo.css").getAbsolutePath)
+      "-c", "netlogo.css")
     val res = Process(args, docsTarget).!
     if (res != 0)
       sys.error(s"failed to generate document: $title")

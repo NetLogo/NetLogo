@@ -6,8 +6,8 @@ import java.util.jar.Attributes.Name.{ CLASS_PATH => JAR_CLASS_PATH }
 import java.io.File
 
 import DistSettings.{ aggregateJDKParser, buildNetLogo, buildVariables,
-  mapToParser, netLogoRoot, netLogoVersion, numericOnlyVersion, packageAppParser,
-  platformMap, settings, subApplicationMap, webTarget }
+  mapToParser, netLogoRoot, netLogoVersion, netLogoLongVersion, numericOnlyVersion,
+  packageAppParser, platformMap, settings, subApplicationMap, webTarget }
 
 val bootCp = System.getProperty("java.home") + "/lib/rt.jar"
 
@@ -83,11 +83,12 @@ lazy val dist = project.in(file("."))
       "NetLogo Logging" -> NetLogoLoggingApp,
       "HubNet Client"   -> HubNetClientApp),
     netLogoVersion     := "5.3",
+    netLogoLongVersion := { if (netLogoVersion.value.length == 3) netLogoVersion.value + ".0" else netLogoVersion.value },
     numericOnlyVersion := "5.3",
     buildVariables := Map[String, String](
       "version"               -> netLogoVersion.value,
       "numericOnlyVersion"    -> numericOnlyVersion.value,
-      "date"                  -> "December 4, 2015"),
+      "date"                  -> "December 14, 2015"),
     packageApp            <<=
       InputTask.createDyn(packageAppParser)(PackageAction.subApplication(appMainClass, jvmOptions)),
     packageLinuxAggregate <<=
@@ -131,13 +132,15 @@ lazy val dist = project.in(file("."))
       Mustache.betweenDirectories(webSource, webTarget.value, vars)
     },
     uploadWebsite := {
-      val tmpTarget = target.value / netLogoVersion.value
+      val tmpTarget = target.value / netLogoLongVersion.value
       val user = System.getenv("USER")
       val host = "ccl.northwestern.edu"
       val targetDir = "/usr/local/www/netlogo"
       IO.copyDirectory(webTarget.value, tmpTarget)
-      IO.copyDirectory(netLogoRoot.value / "docs", tmpTarget)
+      IO.copyDirectory(netLogoRoot.value / "docs", tmpTarget / "docs")
       RunProcess(Seq("rsync", "-av", "--inplace", "--progress", tmpTarget.getPath, s"${user}@${host}:${targetDir}"), "rsync")
+      RunProcess(Seq("ssh", s"${user}@${host}", s""""chgrp -R apache ${targetDir}/${netLogoLongVersion.value}""""), "ssh - change release group")
+      RunProcess(Seq("ssh", s"${user}@${host}", s""""chmod -R g+rwX ${targetDir}/${netLogoLongVersion.value}""""), "ssh - change release permissions")
     }
   )
 

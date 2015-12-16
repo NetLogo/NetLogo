@@ -29,6 +29,8 @@ object DistSettings {
 
   lazy val netLogoVersion = settingKey[String]("Version of NetLogo under construction")
 
+  lazy val netLogoLongVersion = settingKey[String]("Full version of NetLogo under construction")
+
   lazy val numericOnlyVersion = settingKey[String]("Version of NetLogo under construction (only numbers and periods)")
 
   lazy val packageAppParser = settingKey[State => Parser[(PlatformBuild, SubApplication, BuildJDK)]]("parser for packageApp settings")
