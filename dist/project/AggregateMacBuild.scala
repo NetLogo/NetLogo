@@ -45,8 +45,9 @@ object AggregateMacBuild extends PackageAction.AggregateBuild {
   val contentDirs = Seq("extensions", "models", "docs")
   val libraryDirs = Seq("lib", "natives")
 
-  private def postProcessSubApplication(aggregateMacDir: File)(app: SubApplication, image: File): Unit = {
-    val aggregatedAppDir = aggregateMacDir / image.getName
+  private def postProcessSubApplication(aggregateMacDir: File)(app: SubApplication, image: File, version: String): Unit = {
+    val name = image.getName.split('.')
+    val aggregatedAppDir = aggregateMacDir / (name(0) + " " + version + ".app")
     Process(Seq("bash",
       (image.getParentFile.getParentFile.getParentFile / "package" / "macosx" / (app.name + "-post-image.sh")).getAbsolutePath, image.getAbsolutePath)).!!
 
@@ -122,17 +123,17 @@ object AggregateMacBuild extends PackageAction.AggregateBuild {
     }
 
     buildsMap.foreach {
-      case (app, image) => postProcessSubApplication(aggregateMacDir)(app, image)
+      case (app, image) => postProcessSubApplication(aggregateMacDir)(app, image, version)
     }
 
-    val apps = buildsMap.map(_._2).map(f => (aggregateMacDir / f.getName).getAbsolutePath)
+    val apps = buildsMap.map(_._2).map(f => (aggregateMacDir / (f.getName.split('.')(0) + " " + version + ".app")).getAbsolutePath)
 
     RunProcess(Seq("codesign", "--deep", "-s", "Developer ID Application") ++ apps, "codesigning")
 
     val dmgArgs = Seq("hdiutil", "create",
         "-quiet", s"$buildName.dmg",
         "-srcfolder", (aggregateTarget / "NetLogo Bundle").getAbsolutePath,
-        "-size", "350m",
+        "-size", "400m",
         "-volname", buildName, "-ov")
     RunProcess(dmgArgs, aggregateTarget, "dmg packaging")
 
