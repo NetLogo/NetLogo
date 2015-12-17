@@ -4,6 +4,18 @@ import org.nlogo.util.Implicits.RichString
 import scala.util.Try
 import java.awt.image.BufferedImage
 
+/**
+ * A model's "preview commands" are the commands that are used to
+ * generate the preview that appears in the Models Library dialog,
+ * the NetLogo website (http://ccl.northwestern.edu/netlogo/models/),
+ * the Modeling Commons (http://www.modelingcommons.org/) and potentially
+ * other places. By default, they're just `setup repeat 75 [ go ]` but
+ * they can be customized. Some models require manually generated previews.
+ *
+ * Preview commands are always run in a fresh headless workspace with
+ * `random-seed 0` called before opening the model. The `startup`
+ * procedure, if present, runs before the preview commands.
+ */
 sealed trait PreviewCommands {
   def source: String
   def description: String

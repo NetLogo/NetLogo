@@ -16,9 +16,6 @@ abstract class AbstractWorkspaceScala(private val _world: World, hubNetManagerFa
   extends AbstractWorkspace(_world, hubNetManagerFactory)
   with Plotting with Exporting with Evaluating {
 
-  /**
-   * previewCommands used by make-preview and model test
-   */
   var previewCommands: PreviewCommands = PreviewCommands.Default
 
   // the original instruction here is _tick or a ScalaInstruction (currently still experimental)
