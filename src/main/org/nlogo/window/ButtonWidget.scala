@@ -206,7 +206,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
     if (error == null){
       if (hasButton1(e) && isEnabled) {
         e.translatePoint(getX(), getY())
-        if (getBounds().contains(e.getPoint()) && ! disabledWaitingForSetup) buttonUp = false
+        if (getBounds().contains(e.getPoint()) && !e.isPopupTrigger && ! disabledWaitingForSetup) buttonUp = false
         else if (!forever || !foreverOn) buttonUp = true
       }
     }
