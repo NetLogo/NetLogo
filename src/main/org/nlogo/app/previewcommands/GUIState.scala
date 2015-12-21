@@ -15,6 +15,7 @@ import org.nlogo.workspace.WorkspaceFactory
 
 class GUIState(
   modelContents: String,
+  modelPath: String,
   workspaceFactory: WorkspaceFactory)
   extends HasPropertyChangeSupport {
 
@@ -35,7 +36,7 @@ class GUIState(
     _previewCommandsRunner = newPreviewCommands match {
       case compilableCommands: Compilable =>
         Try(PreviewCommandsRunner.fromModelContents(
-          workspaceFactory, modelContents, newPreviewCommands
+          workspaceFactory, modelContents, modelPath, newPreviewCommands
         )) match {
           case Success(runner)               => Some(Right(runner))
           case Failure(e: CompilerException) => Some(Left(e))

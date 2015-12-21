@@ -25,8 +25,13 @@ object PreviewCommandsRunner {
   def fromModelContents(
     workspaceFactory: WorkspaceFactory,
     modelContents: String,
+    modelPath: String,
     previewCommands: PreviewCommands): PreviewCommandsRunner = {
-    this(workspaceFactory, _.openString(modelContents), Some(previewCommands))
+    val open = (w: Workspace) => {
+      w.openString(modelContents)
+      Option(modelPath).foreach(w.setModelPath)
+    }
+    this(workspaceFactory, open, Some(previewCommands))
   }
 
   def fromModelPath(
