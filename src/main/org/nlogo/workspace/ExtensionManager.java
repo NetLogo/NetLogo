@@ -9,6 +9,7 @@ import org.nlogo.api.ErrorSource;
 import org.nlogo.api.ExtensionException;
 import org.nlogo.api.Primitive;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -635,6 +636,14 @@ public strictfp class ExtensionManager
         // and continue with the operation ev 7/3/08
         ex.printStackTrace();
       }
+
+      try {
+        jc.jarClassLoader.close();
+      } catch (IOException ex) {
+        System.err.println(ex);
+        ex.printStackTrace();
+      }
+
       jc.loaded = false;
       jc.live = false;
       jc.jarClassLoader = null;
