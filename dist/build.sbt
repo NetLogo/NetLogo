@@ -45,11 +45,11 @@ def jvmOptions(platform: PlatformBuild, app: SubApplication): Seq[String] = {
 val sharedAppProjectSettings = Seq(
   fork in run := true,
   javacOptions ++=
-    s"-bootclasspath $bootCp -deprecation -g -encoding us-ascii -Werror -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path -source 1.6 -target 1.6"
+    s"-bootclasspath $bootCp -deprecation -g -encoding us-ascii -Werror -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path -source 1.8 -target 1.8"
       .split(" ").toSeq,
       netLogoRoot              := baseDirectory.value.getParentFile.getParentFile,
-      scalaVersion             := "2.9.2",
-      libraryDependencies      += "org.scala-lang" % "scala-library" % "2.9.2",
+      scalaVersion             := "2.11.7",
+      libraryDependencies      += "org.scala-lang" % "scala-library" % "2.11.7",
       unmanagedJars in Compile += netLogoRoot.value / "target" / "NetLogo.jar",
       unmanagedJars in Compile ++= (netLogoRoot.value / "lib_managed" ** "*.jar").get,
       jfxPackageOptions                       := JavaPackager.jarAttributes,
