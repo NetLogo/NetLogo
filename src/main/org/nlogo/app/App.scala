@@ -6,12 +6,12 @@ import org.nlogo.agent.{Agent, World3D, World}
 import org.nlogo.api._
 import org.nlogo.awt.UserCancelException
 import org.nlogo.log.Logger
-import org.nlogo.nvm.{CompilerInterface, Workspace, WorkspaceFactory}
+import org.nlogo.nvm.{CompilerInterface, Workspace}
 import org.nlogo.shape.{ShapesManagerInterface, ShapeChangeListener, LinkShapesManagerInterface, TurtleShapesManagerInterface}
 import org.nlogo.util.Pico
 import org.nlogo.window._
 import org.nlogo.window.Events._
-import org.nlogo.workspace.{AbstractWorkspace, Controllable}
+import org.nlogo.workspace.{AbstractWorkspace, AbstractWorkspaceScala, Controllable, CurrentModelOpener, WorkspaceFactory}
 import org.nlogo.window.Event.LinkParent
 import org.nlogo.swing.Implicits.thunk2runnable
 
@@ -116,17 +116,24 @@ object App{
     // to use the same container in both places, so I'm going to keep the
     // containers separate and just use Plain Old Java Reflection to
     // call HeadlessWorkspace's newInstance() method. - ST 3/11/09
-    val factory = new WorkspaceFactory() {
-      def newInstance: Workspace = {
-        val w = Class.forName("org.nlogo.headless.HeadlessWorkspace").
-                getMethod("newInstance").invoke(null).asInstanceOf[Workspace]
+    // And we'll conveniently reuse it for the preview commands editor! - NP 2015-11-18
+    val factory = new WorkspaceFactory() with CurrentModelOpener {
+      def newInstance: AbstractWorkspaceScala =
+        Class.forName("org.nlogo.headless.HeadlessWorkspace")
+          .getMethod("newInstance").invoke(null).asInstanceOf[AbstractWorkspaceScala]
+      def openCurrentModelIn(w: Workspace): Unit = {
         w.setModelPath(app.workspace.getModelPath())
         w.openString(new ModelSaver(pico.getComponent(classOf[App])).save)
-        w
       }
     }
 
     pico.addComponent(classOf[WorkspaceFactory], factory)
+    pico.addComponent(classOf[GraphicsPreview])
+    pico.add(
+      classOf[PreviewCommandsEditorInterface],
+      "org.nlogo.app.previewcommands.PreviewCommandsEditor",
+      new ComponentParameter(classOf[AppFrame]),
+      new ComponentParameter(), new ComponentParameter())
     pico.addComponent(classOf[Tabs])
     pico.addComponent(classOf[AgentMonitorManager])
     app = pico.getComponent(classOf[App])
@@ -275,6 +282,7 @@ class App extends
   var labManager:LabManagerInterface = null
   private val listenerManager = new NetLogoListenerManager
   lazy val modelingCommons = pico.getComponent(classOf[ModelingCommonsInterface])
+  lazy val previewCommandsEditor = pico.getComponent(classOf[PreviewCommandsEditorInterface])
   private val ImportWorldURLProp = "netlogo.world_state_url"
   private val ImportRawWorldURLProp = "netlogo.raw_world_state_url"
 

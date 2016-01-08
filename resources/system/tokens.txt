@@ -36,7 +36,6 @@ C __let _let
 C __life etc._life
 C __linkcode etc._linkcode
 C __magic-open etc._magicopen
-C __make-preview etc._makepreview
 C __mkdir etc._mkdir
 C __observercode etc._observercode
 C __patchcode etc._patchcode

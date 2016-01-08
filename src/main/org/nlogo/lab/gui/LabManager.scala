@@ -5,13 +5,13 @@ package org.nlogo.lab.gui
 import org.nlogo.api.ModelSection
 import org.nlogo.lab.{Protocol, ProtocolLoader, ProtocolSaver}
 import org.nlogo.window.{GUIWorkspace, EditDialogFactoryInterface, LabManagerInterface}
-import org.nlogo.nvm.WorkspaceFactory
+import org.nlogo.workspace.{CurrentModelOpener, WorkspaceFactory}
 import org.nlogo.window.Events._
 import scala.collection.mutable.ListBuffer
 
 class LabManager(val workspace: GUIWorkspace,
                  dialogFactory: EditDialogFactoryInterface,
-                 val workspaceFactory: WorkspaceFactory)
+                 val workspaceFactory: WorkspaceFactory with CurrentModelOpener)
   extends LabManagerInterface
   with CompiledEvent.Handler
   with LoadBeginEvent.Handler

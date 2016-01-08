@@ -13,6 +13,7 @@ import org.nlogo.api.HubNetInterface;
 import org.nlogo.api.ImporterUser;
 import org.nlogo.api.JobOwner;
 import org.nlogo.api.LogoException;
+import org.nlogo.api.PreviewCommands;
 import org.nlogo.api.RandomServices;
 import org.nlogo.api.ReporterRunnable;
 
@@ -160,7 +161,7 @@ public interface Workspace
 
   void setupPlots(Context c);
 
-  String previewCommands();
+  PreviewCommands previewCommands();
 
   void tick(Context c, Instruction originalInstruction);
 

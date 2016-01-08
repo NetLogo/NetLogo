@@ -413,7 +413,6 @@ class TestAllSyntaxes extends FunSuite {
                     |_load3Dshapes string,O---,null,0,1,1 *
                     |_loop command block,OTPL,null,0,1,1
                     |_magicopen string,O---,null,0,1,1 *
-                    |_makepreview ,O---,null,0,0,0
                     |_mkdir string,OTPL,null,0,1,1
                     |_moveto turtle or patch,OT--,null,0,1,1 *
                     |_moviecancel ,OTPL,null,0,0,0

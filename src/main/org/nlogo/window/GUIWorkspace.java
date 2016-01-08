@@ -17,6 +17,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.api.ModelSectionJ;
 import org.nlogo.api.ModelTypeJ;
 import org.nlogo.api.PerspectiveJ;
+import org.nlogo.api.PreviewCommands$;
 import org.nlogo.api.RendererInterface;
 import org.nlogo.api.ReporterRunnable;
 import org.nlogo.api.SimpleJobOwner;
@@ -1228,7 +1229,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     jobManager.haltPrimary();
     getExtensionManager().reset();
     fileManager.handleModelChange();
-    previewCommands_$eq(DefaultPreviewCommands());
+    previewCommands_$eq(PreviewCommands$.MODULE$.DEFAULT());
     clearDrawing();
     viewManager.resetMouseCors();
     displaySwitchOn(true);
@@ -1285,9 +1286,8 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   /// preview commands & aggregate
 
   public void handle(org.nlogo.window.Events.LoadSectionEvent e) {
-    if (e.section == ModelSectionJ.PREVIEW_COMMANDS() &&
-        e.text.trim().length() > 0) {
-      previewCommands_$eq(e.text);
+    if (e.section == ModelSectionJ.PREVIEW_COMMANDS()) {
+      previewCommands_$eq(PreviewCommands$.MODULE$.apply(e.text));
     }
     if (e.section == ModelSectionJ.CLIENT() &&
         e.lines.length > 0 &&

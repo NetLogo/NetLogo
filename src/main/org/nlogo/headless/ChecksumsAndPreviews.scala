@@ -2,8 +2,16 @@
 
 package org.nlogo.headless
 
+import java.io.File
+import java.io.IOException
+
+import org.nlogo.api.CompilerException
+import org.nlogo.api.LogoException
 import org.nlogo.api.Version
 import org.nlogo.workspace.ModelsLibrary
+import org.nlogo.workspace.PreviewCommandsRunner
+
+import javax.imageio.ImageIO
 
 object ChecksumsAndPreviews {
 
@@ -47,23 +55,17 @@ object ChecksumsAndPreviews {
       List("HUBNET", "/GOGO/", "/CODE EXAMPLES/SOUND/")
         .forall(!path.toUpperCase.containsSlice(_))
     def remake(path: String) {
-      val previewPath = path.replaceFirst("\\.nlogo(3d)?$", ".png")
-      val workspace = HeadlessWorkspace.newInstance
+      val previewPath = path.replaceFirst("\\.nlogo$", ".png")
       try {
-        // we set the random seed before opening the model, so that the random-seed will affect the
-        // startup procedure if any - ST 7/12/06
-        workspace.command("random-seed 0")
-        workspace.open(path)
-        if (needsManualPreview(workspace.previewCommands))
-          println("skipping: " + path)
-        else {
-          println("making preview for: " + path)
-          workspace.command(workspace.previewCommands)
-          workspace.exportView(previewPath, "PNG")
-        }
+        val runner = PreviewCommandsRunner.fromModelPath(new WorkspaceFactory, path)
+        println("making preview for: " + path)
+        ImageIO.write(runner.previewImage.get, "PNG", new File(previewPath))
+      } catch {
+        case _: PreviewCommandsRunner.NonCompilableCommandsException =>
+          println("skipping: " + path + "\n  (non-compilable preview commands)")
+        case e: CompilerException =>
+          println("skipping: " + path + "\n  " + e.getMessage)
       }
-      catch { case e: Throwable => e.printStackTrace() }
-      finally { workspace.dispose() }
     }
   }
 
