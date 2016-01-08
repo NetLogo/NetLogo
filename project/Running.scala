@@ -8,10 +8,8 @@ object Running {
     fork in run := true,
     javaOptions in run ++= Seq(
       "-XX:-OmitStackTraceInFastThrow",  // issue #104
-      "-XX:MaxPermSize=128m",
       "-Xmx1024m",
       "-Dfile.encoding=UTF-8",
-      "-Djava.ext.dirs=",
       "-Dapple.awt.graphics.UseQuartz=true") ++
     (if(System.getProperty("os.name").startsWith("Mac"))
       Seq("-Xdock:name=NetLogo")
