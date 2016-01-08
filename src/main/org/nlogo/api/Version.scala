@@ -24,7 +24,7 @@ object Version {
       else
         lines(0)
     val versionDropZeroPatch =
-      if(version.endsWith(".0")) version.dropRight(2) else version
+      if (version.endsWith(".0")) version.take(3) else version
     val buildDate = lines(1)
     val knownVersions = collection.mutable.ArrayBuffer[String]()
     knownVersions += version
