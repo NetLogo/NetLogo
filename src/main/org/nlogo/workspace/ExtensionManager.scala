@@ -8,7 +8,7 @@ import org.nlogo.api.{ ClassManager, CompilerException, Dump, ErrorSource,
   ImportErrorHandler, Primitive, Reporter }
 
 import java.lang.{ ClassLoader, Iterable => JIterable }
-import java.io.{ IOException, PrintWriter }
+import java.io.{ Closeable, IOException, PrintWriter }
 import java.util.{ List => JList }
 
 import org.nlogo.nvm.FileManager
@@ -255,7 +255,20 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
   )
 
   def reset() = {
-    jars.values.foreach(_.unload(this))
+    jars.values.foreach { jar =>
+      jar.unload(this)
+      jar.jarClassLoader match {
+        case closeable: Closeable =>
+          try {
+            closeable.close()
+          } catch {
+            case e: IOException =>
+              val error = s"Error while unloading extension ${e.getMessage} (this can probably be ignored)"
+              System.err.println(error)
+          }
+        case _ =>
+      }
+    }
     jars = Map[URL, JarContainer]()
     liveJars = Set[JarContainer]()
   }
