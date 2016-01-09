@@ -69,6 +69,8 @@ public interface Workspace
 
   org.nlogo.api.ExtensionManager getExtensionManager();
 
+  CompilationEnvironment getCompilationEnvironment();
+
   void waitFor(CommandRunnable runnable)
       throws LogoException;
 

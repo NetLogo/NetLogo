@@ -6,7 +6,7 @@ import CompilerExceptionThrowers.{ cAssert, exception }
 import org.nlogo.agent.{ Agent, Link, Turtle }
 import org.nlogo.api.{ ErrorSource, ExtensionManager, Let,
                        Program, Token, TokenizerInterface, TokenType }
-import org.nlogo.nvm.{ Instruction, Procedure }
+import org.nlogo.nvm.{ CompilationEnvironment, Instruction, Procedure }
 import org.nlogo.prim._let
 
 private object StructureParser {
@@ -62,7 +62,8 @@ private class StructureParser(
   displayName: Option[String],
   program: Program,
   oldProcedures: java.util.Map[String, Procedure],
-  extensionManager: ExtensionManager)
+  extensionManager: ExtensionManager,
+  compilationEnv: CompilationEnvironment)
 (implicit tokenizer: TokenizerInterface) {
 
   import StructureParser.TokenBuffer
@@ -212,9 +213,9 @@ private class StructureParser(
               pathToken = tokenBuffer.next()
               filePath =
                 if(fileName.isEmpty)
-                  // because extensionManager has a ref to the workspace and thus the modelDir, which
+                  // because compilationEnv has a ref to the workspace and thus the modelDir, which
                   // is what we resolve against if we have no filename set -- CLB 02/01/05
-                  extensionManager.resolvePath(pathToken.value.asInstanceOf[String])
+                  compilationEnv.resolvePath(pathToken.value.asInstanceOf[String])
                 else
                   StructureParser.resolvePath(fileName, pathToken.value.asInstanceOf[String])
               if(filePath != null && !usingFiles.exists(_._1 == filePath))
@@ -228,7 +229,7 @@ private class StructureParser(
       if(index < usingFiles.size) {
         fileName = usingFiles(index)._1
         val source:String =
-          try extensionManager.getSource(fileName)
+          try compilationEnv.getSource(fileName)
           catch { case _:java.io.IOException =>
             exception("Could not find " + fileName,usingFiles(index)._2) }
         tokenBuffer.appendAll(tokenizer.tokenize(source, fileName))

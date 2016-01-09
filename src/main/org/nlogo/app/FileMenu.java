@@ -26,15 +26,13 @@ public strictfp class FileMenu
 
   private final App app;
   private final ModelSaver modelSaver;
-  private final AppletSaver appletSaver;
 
   ///
 
-  public FileMenu(App app, ModelSaver modelSaver, AppletSaver appletSaver) {
+  public FileMenu(App app, ModelSaver modelSaver) {
     super(I18N.guiJ().get("menu.file"));
     this.app = app;
     this.modelSaver = modelSaver;
-    this.appletSaver = appletSaver;
     setMnemonic('F');
     addMenuItem('N', new NewAction());
     addMenuItem('O', new OpenAction());
@@ -45,7 +43,6 @@ public strictfp class FileMenu
     addMenuItem('S', true, new SaveAsAction());
     addMenuItem(new SaveModelingCommonsAction());
     addSeparator();
-    addMenuItem(new SaveAppletAction());
     addMenuItem(new SaveAsNetLogoWebAction());
     addSeparator();
     addMenuItem(I18N.guiJ().get("menu.file.print"), 'P', app.tabs().printAction());
@@ -210,72 +207,6 @@ private class SaveModelingCommonsAction extends FileMenuAction {
     }
   }
 
-  private boolean appletWarningIgnored = false;
-
-  private class SaveAppletAction extends FileMenuAction {
-    SaveAppletAction(String title) {
-      super(title);
-    }
-
-    SaveAppletAction() {
-      super(I18N.guiJ().get("menu.file.saveAsApplet"));
-      // disabled for 3-D since it doesn't work - ST 2/25/05
-      setEnabled(!org.nlogo.api.Version.is3D());
-    }
-
-    @Override
-    void action()
-        throws UserCancelException {
-
-      while(!appletWarningIgnored) {
-        final int choice =
-            org.nlogo.swing.OptionDialog.show
-                (app.workspace().getFrame(),
-                    "Applets Are Deprecated",
-                    "Use of this feature is no longer recommended.",
-                    new String[]{"Why?", "Continue anyway", I18N.guiJ().get("common.buttons.cancel")});
-        if (choice == 1) {
-          break;
-        }
-        if (choice == 2) {
-           throw new UserCancelException();
-        }
-        org.nlogo.swing.BrowserLauncher.openURL
-          (FileMenu.this, "https://github.com/NetLogo/NetLogo/wiki/Applets", false);
-      }
-
-      appletWarningIgnored = true;
-
-      String exportPath = getExportPath("");
-
-      app.resetZoom();
-
-      // Use workspace.modelNameForDisplay() and
-      // workspace.getModelFileName() to guarantee consistency. this should
-      // be fine since we forced a save.
-      appletSaver.save
-          (org.nlogo.awt.Hierarchy.getFrame(FileMenu.this),
-              app.tabs().interfaceTab().getInterfacePanel(),
-              app.workspace().modelNameForDisplay(),
-              exportPath,
-              app.workspace().getModelFileName(),
-              app.tabs().infoTab().info(),
-              app.tabs().proceduresTab().getText(),
-              app.workspace().getExtensionManager().getJarPaths(),
-              app.workspace().getExtensionManager().getExtensionNames());
-    }
-
-    String getExportPath(String suffix)
-        throws UserCancelException {
-      String suggestedFileName = suggestedSaveFileName(suffix + ".html");
-
-      // make the user choose the actual destination...
-      return org.nlogo.swing.FileDialog.show
-          (FileMenu.this, "Saving as Applet", java.awt.FileDialog.SAVE,
-              suggestedFileName);
-    }
-  }
-
   private class SaveAsNetLogoWebAction extends FileMenuAction {
     SaveAsNetLogoWebAction() {
       super(I18N.guiJ().get("menu.file.saveAsNetLogoWeb"));
@@ -343,34 +274,6 @@ private class SaveModelingCommonsAction extends FileMenuAction {
     // report if UI values (sliders, etc.) have been changed - RG 9/10/15
     private boolean doesNotMatchWorkingCopy(String lastSaved) {
       return ! lastSaved.equals(modelSaver.save());
-    }
-  }
-
-  public javax.swing.AbstractAction saveClientAppletAction() {
-    return new SaveClientAppletAction();
-  }
-
-  private class SaveClientAppletAction extends SaveAppletAction {
-    SaveClientAppletAction() {
-      super(I18N.guiJ().get("menu.file.saveClientAsApplet")); // TODO i18n
-    }
-
-    @Override
-    void action()
-        throws UserCancelException {
-      String exportPath = getExportPath("-client");
-
-      app.resetZoom();
-
-      // Use workspace.modelNameForDisplay() and
-      // workspace.getModelFileName() to guarantee consistency. this should
-      // be fine since we forced a save.
-      appletSaver.saveClient
-          (org.nlogo.awt.Hierarchy.getFrame(FileMenu.this),
-              app.workspace().getHubNetManager().getInterfaceWidth(),
-              app.workspace().getHubNetManager().getInterfaceHeight(),
-              app.workspace().modelNameForDisplay(),
-              exportPath);
     }
   }
 

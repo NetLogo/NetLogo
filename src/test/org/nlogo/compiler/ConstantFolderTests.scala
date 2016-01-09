@@ -9,12 +9,8 @@ import org.nlogo.nvm.Procedure
 class ConstantFolderTests extends FunSuite {
 
   def compile(source: String): String = {
-    implicit val tokenizer = Compiler.Tokenizer2D
     val program = new Program(false)
-    val results = new StructureParser(
-      tokenizer.tokenize("to-report __test report " + source + "\nend"), None,
-      program, java.util.Collections.emptyMap[String, Procedure], new DummyExtensionManager)
-      .parse(false)
+    val results = TestHelper.structureParse(s"to-report __test report $source \nend", program)
     assertResult(1)(results.procedures.size)
     val procedure = results.procedures.values.iterator.next()
     val tokens =

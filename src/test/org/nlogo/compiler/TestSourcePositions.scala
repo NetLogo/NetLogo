@@ -4,7 +4,7 @@ package org.nlogo.compiler
 
 import org.scalatest.FunSuite
 import org.nlogo.api.{ DummyExtensionManager, Program }
-import org.nlogo.nvm.Procedure
+import org.nlogo.nvm.{ DummyCompilationEnvironment, Procedure }
 import org.nlogo.api.Version.useGenerator
 
 class TestSourcePositions extends FunSuite {
@@ -12,11 +12,11 @@ class TestSourcePositions extends FunSuite {
   def compileReporter(source: String) =
     Compiler.compileMoreCode("to foo __ignore " + source + "\nend", None, program,
       java.util.Collections.emptyMap[String, Procedure],
-      new DummyExtensionManager).head.code.head.args.head.source
+      new DummyExtensionManager, new DummyCompilationEnvironment()).head.code.head.args.head.source
   def compileCommand(source: String) =
     Compiler.compileMoreCode("to foo " + source + "\nend", None, program,
       java.util.Collections.emptyMap[String, Procedure],
-      new DummyExtensionManager).head.code.head.source
+      new DummyExtensionManager, new DummyCompilationEnvironment()).head.code.head.source
   def reporter(s: String) { assertResult(s)(compileReporter(s)) }
   def command(s: String) { assertResult(s)(compileCommand(s)) }
   def command(expected: String, s: String) { assertResult(expected)(compileCommand(s)) }

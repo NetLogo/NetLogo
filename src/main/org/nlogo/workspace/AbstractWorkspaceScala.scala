@@ -51,6 +51,29 @@ abstract class AbstractWorkspaceScala(private val _world: World, hubNetManagerFa
     plotManager.clearAll()
     extensionManager.clearAll()
   }
+
+  override def getCompilationEnvironment = {
+    import java.io.{ File => JFile }
+    import java.net.MalformedURLException
+
+    new org.nlogo.nvm.CompilationEnvironment {
+      def getSource(filename: String): String = AbstractWorkspaceScala.this.getSource(filename)
+      def profilingEnabled: Boolean = AbstractWorkspaceScala.this.profilingEnabled
+      def resolvePath(path: String): String = {
+        try {
+          val r = new JFile(attachModelDir(path))
+          try {
+            r.getCanonicalPath
+          } catch {
+            case ex: IOException => r.getPath
+          }
+        } catch {
+          case ex: MalformedURLException =>
+            throw new IllegalStateException(s"$path is not a valid pathname: $ex")
+        }
+      }
+    }
+  }
 }
 
 object AbstractWorkspaceTraits {

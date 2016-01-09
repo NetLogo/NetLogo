@@ -18,11 +18,7 @@ class ExpressionParserTests extends FunSuite {
     val wrappedSource = PREAMBLE + source + POSTAMBLE
     val program = new Program(is3D)
     implicit val tokenizer = if (is3D) Compiler.Tokenizer3D else Compiler.Tokenizer2D
-    val results = new StructureParser(
-      tokenizer.tokenizeAllowingRemovedPrims(wrappedSource), None,
-      program, java.util.Collections.emptyMap[String, Procedure],
-      new DummyExtensionManager)
-      .parse(false)
+    val results = TestHelper.structureParse(tokenizer.tokenizeAllowingRemovedPrims(wrappedSource), program)
     assertResult(1)(results.procedures.size)
     val procedure = results.procedures.values.iterator.next()
     val tokens =

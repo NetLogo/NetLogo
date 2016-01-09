@@ -8,7 +8,7 @@ package org.nlogo.compiler
 // StructureParser. - ST 2/21/08, 1/21/09
 
 import org.nlogo.api.{ExtensionManager, Program, Version}
-import org.nlogo.nvm.{GeneratorInterface, Procedure}
+import org.nlogo.nvm.{GeneratorInterface, CompilationEnvironment, Procedure}
 import org.nlogo.util.Femto
 
 private object CompilerMain {
@@ -17,11 +17,11 @@ private object CompilerMain {
 
   def compile(source: String, displayName: Option[String], program: Program, subprogram: Boolean,
               oldProcedures: java.util.Map[String, Procedure],
-              extensionManager: ExtensionManager): Seq[Procedure] = {
+              extensionManager: ExtensionManager, compilationEnv: CompilationEnvironment): Seq[Procedure] = {
 
     implicit val tokenizer = if(program.is3D) Compiler.Tokenizer3D else Compiler.Tokenizer2D
     val structureResults = new StructureParser(tokenizer.tokenize(source), // tokenize
-                                               displayName, program, oldProcedures, extensionManager)
+                                               displayName, program, oldProcedures, extensionManager, compilationEnv)
       .parse(subprogram)  // process declarations
     val defs = new collection.mutable.ArrayBuffer[ProcedureDefinition]
     import collection.JavaConverters._  // structureResults.procedures.values is a java.util.Collection
@@ -54,8 +54,7 @@ private object CompilerMain {
         procdef.procedure.code =
           Femto.get(classOf[GeneratorInterface], "org.nlogo.generator.Generator",
                     Array(source, procdef.procedure,
-                          Boolean.box(
-                            extensionManager.profilingEnabled)))
+                          Boolean.box(compilationEnv.profilingEnabled)))
             .generate()
     }
     // only return top level procedures.

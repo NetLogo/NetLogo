@@ -17,6 +17,7 @@ class DummyWorkspace extends DummyCompilerServices with Workspace {
   override def joinForeverButtons(agent: Agent) = unsupported
   override def addJobFromJobThread(job: Job) = unsupported
   override def getExtensionManager() = new DummyExtensionManager
+  override def getCompilationEnvironment() = new DummyCompilationEnvironment
   override def waitFor(runnable: CommandRunnable) = unsupported
   override def waitForResult[T](runnable: ReporterRunnable[T]): T = unsupported
   override def importWorld(path: String) = unsupported

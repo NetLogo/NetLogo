@@ -93,7 +93,7 @@ class AutoConverter2(workspace:Workspace,ignoreErrors:Boolean)(implicit tokenize
     val results:StructureParser.Results =
       new StructureParser(tokenizer.tokenizeAllowingRemovedPrims(wrappedSource), None,
                           workspace.world.program, workspace.getProcedures,
-                          workspace.getExtensionManager).parse(subprogram)
+                          workspace.getExtensionManager, workspace.getCompilationEnvironment).parse(subprogram)
     val identifierParser:IdentifierParser =
       new IdentifierParser(workspace.world.program, workspace.getProcedures,
                            results.procedures, true )

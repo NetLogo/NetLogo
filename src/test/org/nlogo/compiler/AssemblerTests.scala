@@ -10,11 +10,7 @@ class AssemblerTests extends FunSuite {
   def compile(keyword: String, source: String): Procedure = {
     implicit val tokenizer = Compiler.Tokenizer2D
     val program = new Program(false)
-    val results = new StructureParser(
-      tokenizer.tokenize(keyword + " foo " + source + "\nend"), None,
-      program, java.util.Collections.emptyMap[String, Procedure],
-      new DummyExtensionManager)
-      .parse(false)
+    val results = TestHelper.structureParse(keyword + " foo " + source + "\nend", program)
     assertResult(1)(results.procedures.size)
     val procedure = results.procedures.values.iterator.next()
     val tokens =

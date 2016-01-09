@@ -22,6 +22,7 @@ import org.nlogo.util.Femto;
 
 public abstract strictfp class AbstractWorkspace
     implements Workspace,
+    ExtendableWorkspace,
     org.nlogo.api.LogoThunkFactory,
     org.nlogo.api.HubNetWorkspaceInterface {
 
@@ -110,7 +111,7 @@ public abstract strictfp class AbstractWorkspace
     jobManager = Femto.get(JobManagerInterface.class, "org.nlogo.job.JobManager",
         new Object[]{this, world, world});
     fileManager = new DefaultFileManager(this);
-    extensionManager = new ExtensionManager(this);
+    extensionManager = new ExtensionManager(this, new JarLoader(this));
   }
 
   public org.nlogo.api.ExtensionManager getExtensionManager() {
@@ -723,13 +724,13 @@ public abstract strictfp class AbstractWorkspace
   public void checkReporterSyntax(String source)
       throws CompilerException {
     compiler().checkReporterSyntax
-        (source, world.program(), getProcedures(), getExtensionManager(), false);
+        (source, world.program(), getProcedures(), getExtensionManager(), false, getCompilationEnvironment());
   }
 
   public void checkCommandSyntax(String source)
       throws CompilerException {
     compiler().checkCommandSyntax
-        (source, world.program(), getProcedures(), getExtensionManager(), false);
+        (source, world.program(), getProcedures(), getExtensionManager(), false, getCompilationEnvironment());
   }
 
   public boolean isConstant(String s) {
@@ -747,7 +748,7 @@ public abstract strictfp class AbstractWorkspace
   }
 
   public boolean isReporter(String s) {
-    return compiler().isReporter(s, world.program(), getProcedures(), getExtensionManager());
+    return compiler().isReporter(s, world.program(), getProcedures(), getExtensionManager(), getCompilationEnvironment());
   }
 
   public Token[] tokenizeForColorization(String s) {

@@ -684,7 +684,6 @@ Go figure! - ST 12/2/04
       System
     </h3>
     <p id="systemgroup">
-      <a href="#netlogo-applet">netlogo-applet?</a>
       <a href="#netlogo-version">netlogo-version</a>
       <a href="#netlogo-web">netlogo-web?</a>
       <!-- ======================================== -->
@@ -5277,18 +5276,7 @@ ask turtle 1
   show link-neighbor? turtle 0     ;; prints true
 ]
 </pre>
-      </div>
     </div>
-    <div class="dict_entry" id="netlogo-applet">
-      <h3>
-        <a>netlogo-applet?</a>
-      </h3>
-      <h4>
-        <span class="prim_example">netlogo-applet?</span>
-      </h4>
-      <p>
-        Reports true if the model is running as an applet.
-      </div>
     <div class="dict_entry" id="netlogo-version">
       <h3>
         <a>netlogo-version</a>
@@ -6952,10 +6940,6 @@ show (sentence [1 2] 3 [4 5] (3 + 3) 7)
         within a string by using another backslash &quot;C:\\&quot;
       <p>
         The change is temporary and is not saved with the model.
-      <p>
-        Note: in applets, this command has no effect, since applets are
-        only allowed to read files from the same directory on the server
-        where the model is stored.
       <pre>
 set-current-directory &quot;C:\\NetLogo&quot;
 ;; Assume it is a Windows Machine

@@ -4,7 +4,7 @@ package org.nlogo.compiler
 
 import org.nlogo.api.{ CompilerException, ExtensionManager, NumberParser, Program, Token,
                        TokenizerInterface, TokenReaderInterface, TokenType, TokenMapperInterface, World }
-import org.nlogo.nvm.{ CompilerInterface, CompilerResults, Procedure, Workspace }
+import org.nlogo.nvm.{ CompilerInterface, CompilerResults, CompilationEnvironment, Procedure, Workspace }
 import org.nlogo.util.Femto
 
 // This is intended to be called from Java as well as Scala, so @throws declarations are included.
@@ -24,35 +24,35 @@ object Compiler extends CompilerInterface {
 
   // used to compile the Code tab, including declarations
   @throws(classOf[CompilerException])
-  def compileProgram(source: String, program: Program, extensionManager: ExtensionManager): CompilerResults =
-    new CompilerResults(CompilerMain.compile(source, None, program, false, noProcedures, extensionManager),
+  def compileProgram(source: String, program: Program, extensionManager: ExtensionManager, compilationEnv: CompilationEnvironment): CompilerResults =
+    new CompilerResults(CompilerMain.compile(source, None, program, false, noProcedures, extensionManager, compilationEnv),
                         program)
 
   // used to compile a single procedures only, from outside the Code tab
   @throws(classOf[CompilerException])
-  def compileMoreCode(source:String,displayName: Option[String], program:Program,oldProcedures:ProceduresMap,extensionManager:ExtensionManager):CompilerResults =
-    new CompilerResults(CompilerMain.compile(source,displayName,program,true,oldProcedures,extensionManager), program)
+  def compileMoreCode(source:String,displayName: Option[String], program:Program,oldProcedures:ProceduresMap,extensionManager:ExtensionManager, compilationEnv:CompilationEnvironment):CompilerResults =
+    new CompilerResults(CompilerMain.compile(source,displayName,program,true,oldProcedures,extensionManager,compilationEnv), program)
 
   // these two used by input boxes
   @throws(classOf[CompilerException])
-  def checkCommandSyntax(source: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean) {
+  def checkCommandSyntax(source: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean, compilationEnv: CompilationEnvironment) {
     checkSyntax("to __bogus-name " + source + "\nend",
-                true, program, procedures, extensionManager, parse)
+                true, program, procedures, extensionManager, parse, compilationEnv)
   }
   @throws(classOf[CompilerException])
-  def checkReporterSyntax(source: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean) {
+  def checkReporterSyntax(source: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean, compilationEnv: CompilationEnvironment) {
     checkSyntax("to-report __bogus-name report " + source + "\nend",
-                true, program, procedures, extensionManager, parse)
+                true, program, procedures, extensionManager, parse, compilationEnv)
   }
 
   // like in the auto-converter we want to compile as far as we can but
   // we assume that any tokens we don't recognize are actually globals
   // that we don't know about.
   @throws(classOf[CompilerException])
-  private def checkSyntax(source: String, subprogram: Boolean, program: Program, oldProcedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean) {
+  private def checkSyntax(source: String, subprogram: Boolean, program: Program, oldProcedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean, compilationEnv: CompilationEnvironment) {
     implicit val t = tokenizer(program.is3D)
     val results = new StructureParser(t.tokenizeRobustly(source), None,
-                                      program, oldProcedures, extensionManager)
+                                      program, oldProcedures, extensionManager, compilationEnv)
       .parse(subprogram)
     val identifierParser = new IdentifierParser(program, noProcedures, results.procedures, !parse)
     import collection.JavaConverters._  // results.procedures.values is a java.util.Collection
@@ -140,12 +140,12 @@ object Compiler extends CompilerInterface {
   def isValidIdentifier(s: String, is3D: Boolean) = tokenizer(is3D).isValidIdentifier(s)
 
   // used by CommandLine
-  def isReporter(s: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager) =
+  def isReporter(s: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager, compilationEnv: CompilationEnvironment) =
     try {
       implicit val t = tokenizer(program.is3D)
       val results =
         new StructureParser(t.tokenize("to __is-reporter? report " + s + "\nend"),
-                            None, program, procedures, extensionManager)
+                            None, program, procedures, extensionManager, compilationEnv)
           .parse(subprogram = true)
       val identifierParser =
         new IdentifierParser(program, procedures, results.procedures, forgiving = false)
