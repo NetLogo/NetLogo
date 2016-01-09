@@ -43,7 +43,7 @@ object Extensions {
       val (packagedNetLogoJar, packagedNetLogoTestJar) = extensionDeps.value
       val s = streams.value
       val scala = scalaInstance.value
-      "git submodule --quiet update --init" ! s.log
+      ("git -C " + base + " submodule --quiet update --init") ! s.log
       val dirs = extensionDirs(baseDirectory.value)
       dirs.flatMap{ dir =>
         cacheBuild(s.cacheDirectory, dir, Set(base / "NetLogo.jar", base / "NetLogoLite.jar"))(
