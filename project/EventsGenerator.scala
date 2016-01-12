@@ -8,7 +8,7 @@ object EventsGenerator {
     (cacheDirectory, javaSource in Compile, baseDirectory, streams) map {
       (cacheDir, dir, base, s) =>
         val cache =
-          FileFunction.cached(cacheDir / "autogen", inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
+          FileFunction.cached(cacheDir / "autogen" / "events", inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
             in: Set[File] =>
               Set(events(s.log.info(_), base, dir, "window"),
                   events(s.log.info(_), base, dir, "app"))

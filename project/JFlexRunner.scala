@@ -8,7 +8,7 @@ object JFlexRunner {
     (cacheDirectory, javaSource in Compile, baseDirectory, streams) map {
       (cacheDir, dir, base, s) =>
         val cache =
-          FileFunction.cached(cacheDir / "autogen", inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
+          FileFunction.cached(cacheDir / "autogen" / "lex", inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
             in: Set[File] =>
               Set(flex(s.log.info(_), base, dir, "agent", "ImportLexer"),
                   flex(s.log.info(_), base, dir, "lex", "TokenLexer"))
