@@ -129,4 +129,22 @@ class AgentTypeCheckerTests extends FunSuite {
     testError("to foo ask turtles [ ___foo ] end",
       "You can't use __magic-open in a turtle context, because __magic-open is observer-only.")
   }
+
+  // the next tests check correctness of task type-checking
+  test("map") {
+    val foo = compile("to foo print map [ my-links ] [ 1 2 3 ] end", false).head
+    val reporterTask = foo.statements.head
+      .args.head.asInstanceOf[ReporterApp]
+      .args.head.asInstanceOf[ReporterApp]
+    expect(reporterTask.reporter.agentClassString)("-T--")
+  }
+  test("tasks type-check properly") {
+    val foo = compile("to foo ask turtles [ let bar task [ print 1 ] ] end", false).head
+    expect(foo.procedure.usableBy)("OTPL")
+    val barTask = foo.statements.head.args(1).asInstanceOf[CommandBlock]
+    .statements.head.args(1).asInstanceOf[ReporterApp]
+    expect("OTPL")(barTask.reporter.agentClassString)
+    val cmdTask = barTask.args(0).asInstanceOf[ReporterApp]
+    expect(cmdTask.reporter.agentClassString)("OTPL")
+  }
 }
