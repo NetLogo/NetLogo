@@ -1,5 +1,6 @@
 import sbt._
 import java.nio.file.FileSystems
+import AggregateMacBuild.copyAny
 
 object AggregateWindowsBuild extends PackageAction.AggregateBuild {
   // each application maps to the root of the build product
@@ -81,7 +82,8 @@ object AggregateWindowsBuild extends PackageAction.AggregateBuild {
     configurationDirectory: File,
     jdk:                    BuildJDK,
     buildsMap:              Map[SubApplication, File],
-    variables:              Map[String, String]): File = {
+    variables:              Map[String, String],
+    additionalFiles: Seq[File]): File = {
     val productIDMap =
       Map("productID" -> productIDs.get(s"${variables("version")}-${jdk.arch}")
         .getOrElse(sys.error("generate a new product ID for this version before packaging windows aggregate")))
@@ -105,6 +107,8 @@ object AggregateWindowsBuild extends PackageAction.AggregateBuild {
         }
         IO.copy(copies)
     }
+
+    additionalFiles.foreach { f => copyAny(f, packageResourceLocation / f.getName) }
 
     Mustache.betweenDirectories(configurationDirectory, aggregateWindowsDir, winVariables)
 

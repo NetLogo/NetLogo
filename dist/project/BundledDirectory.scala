@@ -3,7 +3,18 @@ import java.io.File
 
 trait BundledDirectory {
   def directoryName: String
+
   def files(sourceDir: File): Seq[File]
+
+  def bundleFiles(sourceDir: File, targetDir: File): Seq[(File, File)] = {
+    val fs = files(sourceDir)
+    fs zip fs.map(repathFile(sourceDir.getParentFile, targetDir))
+  }
+
+  def repathFile(originalBase: File, targetDir: File)(f: File): File = {
+    val Some(relativeFile) = f relativeTo originalBase
+    new java.io.File(targetDir, relativeFile.getPath)
+  }
 }
 
 class ExtensionDir extends BundledDirectory {
@@ -34,8 +45,10 @@ class ModelsDir extends BundledDirectory {
 
 class LibDir extends BundledDirectory {
   val directoryName = "lib"
+
   def files(sourceDir: File): Seq[File] =
-    (sourceDir / "Mac OS X").listFiles
+    Option((sourceDir / "Mac OS X").listFiles)
+      .getOrElse(throw new Exception("Mac lib directory not present, run buildNetLogo first"))
 }
 
 class NativesDir(platforms: String*) extends BundledDirectory {
