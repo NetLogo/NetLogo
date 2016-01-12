@@ -2,7 +2,7 @@
 
 package org.nlogo.app
 
-class IncludesMenu(target: ProceduresTab)
+class IncludesMenu(target: CodeTab)
 extends org.nlogo.swing.ToolBarMenu("Includes")
 with org.nlogo.window.Events.CompiledEvent.Handler
 {
@@ -13,7 +13,7 @@ with org.nlogo.window.Events.CompiledEvent.Handler
   private var includesTable: Map[String, String] = null
 
   def handle(e: org.nlogo.window.Events.CompiledEvent) {
-    if(e.sourceOwner.isInstanceOf[ProceduresTab])
+    if(e.sourceOwner.isInstanceOf[CodeTab])
       updateVisibility()
   }
 

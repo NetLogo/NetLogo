@@ -8,8 +8,8 @@ import org.nlogo.api.{I18N, ModelSection}
 // This is THE Code tab.  Certain settings and things that are only accessible here.
 // Other Code tabs come and go.
 
-class MainProceduresTab(workspace: AbstractWorkspace)
-extends ProceduresTab(workspace)
+class MainCodeTab(workspace: AbstractWorkspace)
+extends CodeTab(workspace)
 with org.nlogo.window.Events.LoadSectionEvent.Handler
 {
 
@@ -20,7 +20,7 @@ with org.nlogo.window.Events.LoadSectionEvent.Handler
     def actionPerformed(e: java.awt.event.ActionEvent) {
       setIndenter(tabbing.isSelected)
       new org.nlogo.app.Events.IndenterChangedEvent(tabbing.isSelected)
-        .raise(MainProceduresTab.this)
+        .raise(MainCodeTab.this)
     }
   }
 
@@ -33,10 +33,10 @@ with org.nlogo.window.Events.LoadSectionEvent.Handler
           org.nlogo.app.FindDialog.FIND_ACTION))
         add(new javax.swing.JButton(compileAction))
         add(new org.nlogo.swing.ToolBar.Separator)
-        add(new ProceduresMenu(MainProceduresTab.this))
+        add(new ProceduresMenu(MainCodeTab.this))
         // we add this here, however, unless there are includes it will not be displayed, as it sets
         // it's preferred size to 0x0 -- CLB
-        add(new IncludesMenu(MainProceduresTab.this))
+        add(new IncludesMenu(MainCodeTab.this))
         // turning auto-indent checkbox back on
         add(new org.nlogo.swing.ToolBar.Separator)
         tabbing = new javax.swing.JCheckBox(smartTabAction)

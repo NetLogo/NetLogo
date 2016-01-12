@@ -13,7 +13,7 @@ import org.nlogo.api.PreviewCommands.Compilable
 import org.nlogo.api.PreviewCommands.Custom
 import org.nlogo.api.PreviewCommands.Default
 import org.nlogo.api.PreviewCommands.Manual
-import org.nlogo.app.ProceduresTab
+import org.nlogo.app.CodeTab
 import org.nlogo.awt.Fonts.platformMonospacedFont
 import org.nlogo.swing.HasPropertyChangeSupport
 import org.nlogo.util.Implicits.RichString
@@ -36,7 +36,7 @@ class EditorPanel(colorizer: EditorColorizer) extends JPanel {
   val comboBox = new ComboBox
   val compileButton = new JButton(
     I18N.gui.get("tabs.code.checkButton"),
-    new ImageIcon(classOf[ProceduresTab].getResource("/images/check.gif"))
+    new ImageIcon(classOf[CodeTab].getResource("/images/check.gif"))
   )
 
   private var dirty = false

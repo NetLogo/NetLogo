@@ -3,6 +3,7 @@
 package org.nlogo.app
 
 import org.nlogo.agent.Observer
+import org.nlogo.editor.LineNumbersBar
 import org.nlogo.window.EditorAreaErrorLabel
 import org.nlogo.workspace.AbstractWorkspace
 
@@ -12,7 +13,7 @@ import java.awt.print.PageFormat
 import javax.swing.{JButton, ImageIcon, AbstractAction, Action, ScrollPaneConstants, JScrollPane, BorderFactory, JPanel}
 import org.nlogo.api.I18N
 
-class ProceduresTab(val workspace: AbstractWorkspace) extends JPanel
+class CodeTab(val workspace: AbstractWorkspace) extends JPanel
   with org.nlogo.window.ProceduresInterface
   with ProceduresMenuTarget
   with Events.SwitchedTabsEvent.Handler
@@ -31,7 +32,12 @@ class ProceduresTab(val workspace: AbstractWorkspace) extends JPanel
   override def zoomTarget = text
 
   val errorLabel = new EditorAreaErrorLabel(text)
+  val lineNumbers = new LineNumbersBar(text)
   val toolBar = getToolBar
+  val scrollableEditor = new JScrollPane(
+    text,
+    ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+    ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
   def compiler = workspace
   def program = workspace.world.program
 
@@ -40,11 +46,7 @@ class ProceduresTab(val workspace: AbstractWorkspace) extends JPanel
     setLayout(new BorderLayout)
     add(toolBar, BorderLayout.NORTH)
     val codePanel = new JPanel(new BorderLayout) {
-      add(new JScrollPane(
-        text,
-        ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED),
-        BorderLayout.CENTER)
+      add(scrollableEditor, BorderLayout.CENTER)
       add(errorLabel, BorderLayout.NORTH)
     }
     add(codePanel, BorderLayout.CENTER)
@@ -54,10 +56,10 @@ class ProceduresTab(val workspace: AbstractWorkspace) extends JPanel
 
   private class CompileAction extends AbstractAction(I18N.gui.get("tabs.code.checkButton")) {
     putValue(Action.SMALL_ICON,
-      new ImageIcon(classOf[ProceduresTab].getResource(
+      new ImageIcon(classOf[CodeTab].getResource(
         "/images/check.gif")))
     def actionPerformed(e: ActionEvent) {
-      new org.nlogo.window.Events.CompileAllEvent().raise(ProceduresTab.this)
+      new org.nlogo.window.Events.CompileAllEvent().raise(CodeTab.this)
     }
   }
 
@@ -66,7 +68,7 @@ class ProceduresTab(val workspace: AbstractWorkspace) extends JPanel
       add(new JButton(org.nlogo.app.FindDialog.FIND_ACTION))
       add(new JButton(compileAction))
       add(new org.nlogo.swing.ToolBar.Separator())
-      add(new ProceduresMenu(ProceduresTab.this))
+      add(new ProceduresMenu(CodeTab.this))
     }
   }
 
@@ -110,6 +112,7 @@ class ProceduresTab(val workspace: AbstractWorkspace) extends JPanel
     if(originalFontSize == -1)
       originalFontSize = text.getFont.getSize
     text.setFont(text.getFont.deriveFont(StrictMath.ceil(originalFontSize * zoomFactor).toFloat))
+    lineNumbers.setFont(text.getFont)
     errorLabel.zoom(zoomFactor)
   }
 
@@ -150,4 +153,7 @@ class ProceduresTab(val workspace: AbstractWorkspace) extends JPanel
     if(isSmart) text.setIndenter(new SmartIndenter(new EditorAreaWrapper(text), workspace))
     else text.setIndenter(new org.nlogo.editor.DumbIndenter(text))
   }
+
+  def lineNumbersVisible = scrollableEditor.getRowHeader != null && scrollableEditor.getRowHeader.getView != null
+  def lineNumbersVisible_=(visible: Boolean) = scrollableEditor.setRowHeaderView(if(visible) lineNumbers else null)
 }

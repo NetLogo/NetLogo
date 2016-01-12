@@ -381,7 +381,7 @@ class App extends
     pico.addComponent(tabs.interfaceTab.getInterfacePanel)
     frame.getContentPane.add(tabs, java.awt.BorderLayout.CENTER)
 
-    frame.addLinkComponent(new CompilerManager(workspace, tabs.proceduresTab))
+    frame.addLinkComponent(new CompilerManager(workspace, tabs.codeTab))
     frame.addLinkComponent(listenerManager)
 
     org.nlogo.util.Exceptions.setHandler(this)
@@ -875,7 +875,7 @@ class App extends
    * Returns the contents of the Code tab.
    * @return contents of Code tab
    */
-  def getProcedures: String = dispatchThreadOrBust(tabs.proceduresTab.innerSource)
+  def getProcedures: String = dispatchThreadOrBust(tabs.codeTab.innerSource)
 
   /**
    * Replaces the contents of the Code tab.
@@ -883,7 +883,7 @@ class App extends
    * @param source new contents
    * @see #compile
    */
-  def setProcedures(source:String) { dispatchThreadOrBust(tabs.proceduresTab.innerSource(source)) }
+  def setProcedures(source:String) { dispatchThreadOrBust(tabs.codeTab.innerSource(source)) }
 
   /**
    * Recompiles the model.  Useful after calling
