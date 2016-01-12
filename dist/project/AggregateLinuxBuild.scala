@@ -1,4 +1,5 @@
 import sbt._
+import AggregateMacBuild.copyAny
 
 object AggregateLinuxBuild extends PackageAction.AggregateBuild {
   // each application maps to the root of the build product
@@ -18,7 +19,8 @@ object AggregateLinuxBuild extends PackageAction.AggregateBuild {
             configurationDirectory: File,
             jdk:                    BuildJDK,
             buildsMap:              Map[SubApplication, File],
-            variables:              Map[String, String]): File = {
+            variables:              Map[String, String],
+            additionalFiles:        Seq[File]): File = {
     val version = variables("version")
     val aggregateLinuxDir = aggregateTarget / s"linux-full-${jdk.arch}"
     // we build the image in this directory, and we later use tar.gz to package it
@@ -44,6 +46,8 @@ object AggregateLinuxBuild extends PackageAction.AggregateBuild {
     buildsMap.map(_._1.name.replaceAllLiterally(" ", "")).foreach { executableName =>
       (imageDir / executableName).setExecutable(true)
     }
+
+    additionalFiles.foreach { f => copyAny(f, imageDir / f.getName) }
 
     RunProcess(Seq("tar", "-zcf", archiveName, imageDir.getName), aggregateLinuxDir, "tar linux aggregate")
 

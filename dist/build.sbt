@@ -5,7 +5,7 @@ import java.util.jar.Attributes.Name.{ CLASS_PATH => JAR_CLASS_PATH }
 
 import java.io.File
 
-import DistSettings.{ aggregateJDKParser, buildNetLogo, buildVariables,
+import DistSettings.{ aggregateOnlyFiles, aggregateJDKParser, buildNetLogo, buildVariables,
   mapToParser, netLogoRoot, netLogoVersion, netLogoLongVersion, numericOnlyVersion,
   packageAppParser, platformMap, settings, subApplicationMap, webTarget }
 
@@ -26,6 +26,8 @@ lazy val buildDownloadPages  = taskKey[Seq[File]]("package the web download page
 lazy val uploadWebsite       = inputKey[Unit]("package the web download pages")
 
 lazy val buildVersionedSite  = taskKey[File]("package the web download pages")
+
+lazy val packagedMathematicaLink = taskKey[File]("Mathematica link, ready for packaging")
 
 // this value is unfortunately dependent upon both the platform and the application
 val appMainClass: PartialFunction[(String, String), String] = {
@@ -105,6 +107,23 @@ lazy val dist = project.in(file("."))
         aggregateJDKParser.value(s)).map {
           case ((platform: PlatformBuild, subApp: SubApplication), jpkgr: BuildJDK) => (platform, subApp, jpkgr)
         }
+    },
+    packagedMathematicaLink := {
+      val mathematicaLinkDir = netLogoRoot.value / "Mathematica-Link"
+      IO.createDirectory(target.value / "Mathematica Link")
+      Seq(
+        mathematicaLinkDir / "NetLogo-Mathematica Tutorial.nb",
+        mathematicaLinkDir / "NetLogo-Mathematica Tutorial.pdf",
+        mathematicaLinkDir / "NetLogo.m",
+        mathematicaLinkDir / "target" / "mathematica-link.jar")
+        .foreach { f =>
+          IO.copyFile(f, target.value / "Mathematica Link" / f.getName)
+        }
+      target.value / "Mathematica Link"
+    },
+    aggregateOnlyFiles := {
+      Mustache(baseDirectory.value / "readme.md", target.value / "readme.md", buildVariables.value)
+      Seq(target.value / "readme.md", netLogoRoot.value / "NetLogo User Manual.pdf", packagedMathematicaLink.value)
     },
     webTarget := target.value / "downloadPages",
     buildDownloadPages := {

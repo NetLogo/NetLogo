@@ -1,12 +1,12 @@
 import sbt._
 import Keys._
 import Def.Initialize
-import DistSettings.{ netLogoRoot, netLogoVersion, numericOnlyVersion, buildVariables, webTarget }
+import DistSettings.{ aggregateOnlyFiles, netLogoRoot, netLogoVersion, numericOnlyVersion, buildVariables, webTarget }
 
 object PackageAction {
   type JVMOptionFinder = (PlatformBuild, SubApplication) => Seq[String]
   type MainClassFinder = PartialFunction[(String, String), String]
-  type AggregateBuild = (File, File, BuildJDK, Map[SubApplication, File], Map[String, String]) => File
+  type AggregateBuild = (File, File, BuildJDK, Map[SubApplication, File], Map[String, String], Seq[File]) => File
 
   private def buildSubApplication(
     appMainClass: MainClassFinder,
@@ -38,24 +38,20 @@ object PackageAction {
       }
 
       val copiedBundleFiles: Seq[(File, File)] =
-        platform.bundledDirs.flatMap { bd =>
-          val files = bd.files(netLogoDir / bd.directoryName)
-          files zip files.map(repathFile(netLogoDir))
-        }
+        platform.bundledDirs.flatMap(bd =>
+            bd.bundleFiles(netLogoDir / bd.directoryName, artifactsDir))
 
       val jarMap = {
         val allJars = (mainJar +: dependencies)
         allJars zip allJars.map(f => artifactsDir / f.getName)
       }
 
-      val copyLogging = (distDir / "netlogo_logging.xml",        artifactsDir / "netlogo_logging.xml")
-      val copyManual =  (netLogoDir / "NetLogo User Manual.pdf", artifactsDir / "NetLogo User Manual.pdf")
+      val additionalArtifacts = app.additionalArtifacts(distDir)
+      val artifactCopies = additionalArtifacts zip additionalArtifacts.map(artifactsDir / _.getName)
 
-      val allFileCopies: Seq[(File, File)] = jarMap ++ copiedBundleFiles :+ copyLogging :+ copyManual
+      val allFileCopies: Seq[(File, File)] = jarMap ++ copiedBundleFiles ++ artifactCopies
 
       IO.copy(allFileCopies)
-
-      Mustache(distDir / "readme.md", artifactsDir / "readme.md", variables)
 
       val allFiles: Seq[File] = allFileCopies.map(_._2)
 
@@ -123,7 +119,7 @@ object PackageAction {
         val initialInstaller: File =
           aggregatePackager.apply(target.value,
             baseDirectory.value / "configuration" / "aggregate" / platformName,
-            jdk, appMap.value, buildVariables.value)
+            jdk, appMap.value, buildVariables.value, aggregateOnlyFiles.value)
         val dlPath = downloadPath(initialInstaller, webTarget.value, netLogoVersion.value)
         IO.createDirectory(webTarget.value)
         IO.move(initialInstaller, dlPath)

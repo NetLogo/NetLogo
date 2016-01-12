@@ -41,6 +41,8 @@ object DistSettings {
 
   lazy val webTarget = settingKey[File]("location of finished website")
 
+  lazy val aggregateOnlyFiles = taskKey[Seq[File]]("Files to be included in the aggregate root")
+
   lazy val jdkParser: Parser[BuildJDK] =
     (mapToParserOpt(JavaPackager.systemPackagerOptions.map(j => (j.version + "-" + j.arch -> j)).toMap)
       .map(p => (" " ~> p))
@@ -64,6 +66,8 @@ object DistSettings {
       buildDocs.value
 
       netLogoCmd("native-libs")
+
+      RunProcess(Seq("./sbt", "package"), netLogoRoot.value / "Mathematica-Link", s"package mathematica link")
     },
     modelCrossReference := {
       ModelCrossReference(netLogoRoot.value)
