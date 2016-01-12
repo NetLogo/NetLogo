@@ -105,13 +105,15 @@ private class AgentTypeChecker(defs: Seq[ProcedureDefinition]) {
     override def visitReporterApp(app: ReporterApp) {
       val r = app.reporter
       usableBy = typeCheck(currentProcedure, r, usableBy)
-      if(r.isInstanceOf[_task] || r.isInstanceOf[_reportertask])
+      if(r.isInstanceOf[_task])
         app.args.head.accept(new AgentTypeCheckerVisitor(currentProcedure, "OTPL"))
       else if(r.syntax.blockAgentClassString != null)
         chooseVisitorAndContinue(r.syntax.blockAgentClassString, app.args)
       else
         super.visitReporterApp(app)
-      r.agentClassString = usableBy
+
+      if (! r.isInstanceOf[_task])
+        r.agentClassString = usableBy
     }
 
     private def chooseVisitorAndContinue(blockAgentClassString: String, exps: Seq[Expression]) {
