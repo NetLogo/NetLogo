@@ -4653,7 +4653,7 @@ crt 100 [ setxy random-float max-pxcor
         </h4>
         <p>
           Reports the statistical mean of the numeric items in the given
-          list. Ignores non-numeric items. The mean is the average, i.e.,
+          list. Errors on non-numeric items. The mean is the average, i.e.,
           the sum of the items divided by the total number of items.
         <pre>
 show mean [xcor] of turtles
@@ -5040,8 +5040,8 @@ print movie-status
           <img alt="Turtle Command" src="images/turtle.gif">
         </h4>
         <p>
-          Reports an agentset of all undirected links connected to the
-          caller.
+          Reports an agentset of all links connected to the
+          caller, regardless of directedness.
         <pre>
 crt 5
 ask turtle 0
