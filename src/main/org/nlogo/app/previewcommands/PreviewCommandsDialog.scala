@@ -18,6 +18,7 @@ import org.nlogo.window.EditorColorizer
 import org.nlogo.window.GraphicsPreviewInterface
 import org.nlogo.workspace.Evaluator
 import org.nlogo.workspace.ModelsLibrary.getImagePath
+import org.nlogo.workspace.PreviewCommandsRunner.initWorkspace
 import org.nlogo.workspace.WorkspaceFactory
 
 import javax.swing.AbstractAction
@@ -36,8 +37,7 @@ class PreviewCommandsDialog(
   extends JDialog(owner, title, true) {
   org.nlogo.awt.Fonts.adjustDefaultFont(this)
 
-  private val workspace = workspaceFactory.newInstance
-  workspace.openString(modelContents)
+  private val workspace = initWorkspace(workspaceFactory, _.openString(modelContents))
 
   private var _previewCommands = workspace.previewCommands
   def previewCommands = _previewCommands
