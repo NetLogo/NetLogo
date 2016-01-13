@@ -7451,9 +7451,9 @@ show sort-by [length ?1 &lt; length ?2] [&quot;Grumpy&quot; &quot;Doc&quot; &quo
         same type.
       <pre>
 crt 3
-show sort-on [who] [turtles]
+show sort-on [who] turtles
 =&gt; [(turtle 0) (turtle 1) (turtle 2)]
-show sort-on [(- who)] [turtles]
+show sort-on [(- who)] turtles
 =&gt; [(turtle 2) (turtle 1) (turtle 0)]
 foreach sort-on [size] turtles
   [ ask ? [ do-something ] ]
