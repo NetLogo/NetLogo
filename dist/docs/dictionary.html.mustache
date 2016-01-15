@@ -5328,7 +5328,8 @@ show netlogo-version
         time in milliseconds and lie in the generator's usable range of
         seeds, -2147483648 to 2147483647.
       <p>
-        new-seed never reports the same number twice in succession. (This
+        new-seed never reports the same number twice in succession, even
+        across parallel BehaviorSpace runs. (This
         is accomplished by waiting a millisecond if the seed for the
         current millisecond was already used.)
       <p>
