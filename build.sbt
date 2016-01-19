@@ -46,6 +46,11 @@ lazy val root = project.in(file("netlogo-gui"))
       "-Dnetlogo.extensions.dir=" + extensionRoot.value.getAbsolutePath.toString,
       "-Dnetlogo.docs.dir="       + file("docs").getAbsolutePath.toString
     ),
+    javaOptions in Test ++= Seq(
+      "-Dnetlogo.models.dir="     + modelsDirectory.value.getAbsolutePath.toString,
+      "-Dnetlogo.extensions.dir=" + extensionRoot.value.getAbsolutePath.toString,
+      "-Dnetlogo.docs.dir="       + file("docs").getAbsolutePath.toString
+    ),
     javaOptions in run ++= (
       if (System.getProperty("os.name").contains("Mac"))
         Seq(
