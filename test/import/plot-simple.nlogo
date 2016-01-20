@@ -1,4 +1,3 @@
-
 @#$#@#$#@
 GRAPHICS-WINDOW
 265
@@ -21,6 +20,11 @@ GRAPHICS-WINDOW
 0
 0
 0
+0
+0
+1
+ticks
+30.0
 
 PLOT
 37
@@ -36,8 +40,9 @@ NIL
 10.0
 true
 false
+"" ""
 PENS
-"default" 1.0 0 -16777216 true
+"default" 1.0 0 -16777216 true "" ""
 
 @#$#@#$#@
 @#$#@#$#@
@@ -45,17 +50,6 @@ default
 true
 0
 Polygon -7500403 true true 150 5 40 250 150 205 260 250
-
-link
-true
-0
-Line -7500403 true 150 0 150 300
-
-link direction
-true
-0
-Line -7500403 true 150 150 30 225
-Line -7500403 true 150 150 270 225
 
 airplane
 true
@@ -218,6 +212,17 @@ true
 0
 Line -7500403 true 150 0 150 150
 
+link
+true
+0
+Line -7500403 true 150 0 150 300
+
+link direction
+true
+0
+Line -7500403 true 150 150 30 225
+Line -7500403 true 150 150 270 225
+
 pentagon
 false
 0
@@ -335,8 +340,23 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 3.2pre5
+NetLogo 6.0-PREVIEW-12-15
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
+@#$#@#$#@
+@#$#@#$#@
+default
+0.0
+-0.2 0 0.0 1.0
+0.0 1 1.0 0.0
+0.2 0 0.0 1.0
+link direction
+true
+0
+Line -7500403 true 150 150 90 180
+Line -7500403 true 150 150 210 180
+
+@#$#@#$#@
+0
 @#$#@#$#@

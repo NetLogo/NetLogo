@@ -1,4 +1,3 @@
-
 @#$#@#$#@
 GRAPHICS-WINDOW
 205
@@ -25,6 +24,7 @@ GRAPHICS-WINDOW
 0
 1
 ticks
+30.0
 
 PLOT
 7
@@ -40,8 +40,9 @@ NIL
 10.0
 true
 false
+"" ""
 PENS
-"default" 1.0 0 -7171555 true
+"default" 1.0 0 -7171555 true "" ""
 
 @#$#@#$#@
 @#$#@#$#@
@@ -328,7 +329,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 4.0.2
+NetLogo 6.0-PREVIEW-12-15
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
@@ -345,4 +346,6 @@ true
 Line -7500403 true 150 150 90 180
 Line -7500403 true 150 150 210 180
 
+@#$#@#$#@
+0
 @#$#@#$#@
