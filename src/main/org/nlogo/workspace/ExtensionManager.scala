@@ -220,12 +220,10 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
   }
 
   def replaceIdentifier(name: String): Primitive = {
-    val (primName, isRelevantJar) =
-      if (name.contains(':')) {
-        val Array(prefix, pname) = name.split(":")
-        (pname, { (jc: JarContainer) => prefix.toUpperCase == jc.normalizedName })
-      } else
-        (name,  { (jc: JarContainer) => jc.primManager.autoImportPrimitives })
+    val (primName, isRelevantJar) = name.split(":") match {
+      case Array(prefix, pname) => (pname, (jc: JarContainer) => prefix.toUpperCase == jc.normalizedName)
+      case _                    => (name,  (jc: JarContainer) => jc.primManager.autoImportPrimitives)
+    }
     jars.values.filter(liveJars.contains)
       .filter(isRelevantJar)
       .map(_.primManager.getPrimitive(primName)).headOption.orNull
