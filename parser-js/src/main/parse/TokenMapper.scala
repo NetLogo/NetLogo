@@ -18,8 +18,8 @@ class TokenMapper(location: String, prefix: String) {
   def allCommandNames = commands.keySet
   def allReporterNames = reporters.keySet
 
-  def allCommandClassNames = commands.values.toSet
-  def allReporterClassNames = reporters.values.toSet
+  def allCommandClassNames = commands.keys.toSet
+  def allReporterClassNames = reporters.keys.toSet
 
   val reverseProcedureMap = TokenClasses.reverseProcedureMap
 

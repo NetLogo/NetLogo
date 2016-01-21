@@ -4,6 +4,8 @@ package org.nlogo.core
 
 import org.scalatest.FunSuite
 
+import org.nlogo.util.TestUtils.cleanJsNumbers
+
 class ShapeParserTests extends FunSuite {
   import Shape.{ Element, RgbColor }
   import ShapeParser._
@@ -228,9 +230,10 @@ class ShapeParserTests extends FunSuite {
 
   test("shapeParser formats linkShapes correctly") {
     assertResult(
-      (linkShapeString("default") ++ Seq("") ++ linkShapeString("default2")).mkString("\n"))(
-        ShapeParser.formatLinkShapes(
-          Seq(LinkShape("default", 0.0, defaultLinkLines, defaultDirectionIndicator),
-            LinkShape("default2", 0.0, defaultLinkLines, defaultDirectionIndicator))))
+      cleanJsNumbers((linkShapeString("default") ++ Seq("") ++ linkShapeString("default2")).mkString("\n")))(
+        cleanJsNumbers(
+          ShapeParser.formatLinkShapes(
+            Seq(LinkShape("default", 0.0, defaultLinkLines, defaultDirectionIndicator),
+              LinkShape("default2", 0.0, defaultLinkLines, defaultDirectionIndicator)))))
   }
 }

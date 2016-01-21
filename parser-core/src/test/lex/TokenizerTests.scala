@@ -5,6 +5,8 @@ package org.nlogo.lex
 import org.scalatest.FunSuite
 import org.nlogo.core.{ Token, TokenType }
 
+import org.nlogo.util.TestUtils.cleanJsNumbers
+
 class TokenizerTests extends FunSuite {
 
   def tokenize(s: String) = {
@@ -130,7 +132,7 @@ class TokenizerTests extends FunSuite {
                       |Token(-456,Literal,-456.0)
                       |Token("a",Literal,a)
                       |Token(],CloseBracket,null)""".stripMargin.replaceAll("\n", "")
-    assertResult(expected)(tokens.mkString)
+    assertResult(cleanJsNumbers(expected))(cleanJsNumbers(tokens.mkString))
 
   }
 
@@ -212,32 +214,32 @@ class TokenizerTests extends FunSuite {
 
   test("TokenizeWithSkipWhitespaceSkipsBeginningWhitespace") {
     val tokens = tokenizeSkippingWhitespace("    123")
-    assertResult("Token(123,Literal,123.0)")(tokens.head._1.toString)
+    assertResult(cleanJsNumbers("Token(123,Literal,123.0)"))(cleanJsNumbers(tokens.head._1.toString))
     assertResult(4)(tokens.head._2)
   }
   test("TokenizeWithSkipWhitespaceSkipsNoWhitespace") {
     val tokens = tokenizeSkippingWhitespace("123")
-    assertResult("Token(123,Literal,123.0)")(tokens.head._1.toString)
+    assertResult(cleanJsNumbers("Token(123,Literal,123.0)"))(cleanJsNumbers(tokens.head._1.toString))
     assertResult(0)(tokens.head._2)
   }
 
   test("TokenizeWithSkipWhitespaceSkipsEndingWhitespace") {
     val tokens = tokenizeSkippingWhitespace("123   ")
-    assertResult("Token(123,Literal,123.0)")(tokens.head._1.toString)
+    assertResult(cleanJsNumbers("Token(123,Literal,123.0)"))(cleanJsNumbers(tokens.head._1.toString))
     assertResult(3)(tokens.head._2)
   }
 
   test("TokenizeWithSkipWhitespaceSkipsBeginningAndEndWhitespace") {
     val tokens = tokenizeSkippingWhitespace("  123   ")
-    assertResult("Token(123,Literal,123.0)")(tokens.head._1.toString)
+    assertResult(cleanJsNumbers("Token(123,Literal,123.0)"))(cleanJsNumbers(tokens.head._1.toString))
     assertResult(5)(tokens.head._2)
   }
 
   test("TokenizeWithSkipWhitespaceOnMultipleTokens") {
     val tokens = tokenizeSkippingWhitespace("  123  456 ")
-    assertResult("Token(123,Literal,123.0)")(tokens(0)._1.toString)
+    assertResult(cleanJsNumbers("Token(123,Literal,123.0)"))(cleanJsNumbers(tokens(0)._1.toString))
     assertResult(4)(tokens(0)._2)
-    assertResult("Token(456,Literal,456.0)")(tokens(1)._1.toString)
+    assertResult(cleanJsNumbers("Token(456,Literal,456.0)"))(cleanJsNumbers(tokens(1)._1.toString))
     assertResult(1)(tokens(1)._2)
   }
 }

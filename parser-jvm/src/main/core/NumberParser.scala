@@ -7,6 +7,19 @@ package org.nlogo.core
 import java.lang.{ Double => JDouble, Long => JLong }
 
 object NumberParser {
+  // this is used on error to determine whether a number
+  // is truly invalid, or just too large
+  private val decimalFormat = {
+    val f = new java.text.DecimalFormat()
+    f.setParseBigDecimal(true)
+    f
+  }
+
+  val IsTooLarge = "Number too large"
+  val IsTooLargeForExactness =
+    "is too large to be represented exactly as an integer in NetLogo"
+  val IllegalFormat = "Illegal number format"
+
   def parse(text: String): Either[String, JDouble] = {
     try {
       // parseDouble is costly, especially if it fails, so bail first if we can
@@ -31,18 +44,23 @@ object NumberParser {
         // reject integer constants out of range representable exactly in a double - ST 1/29/08
         val d = JDouble.parseDouble(text)
         if (d.isInfinite)
-          Left("Number too large")
+          Left(IsTooLarge)
         else if (".eE".exists(text.contains(_)))
           Right(d)
         else if (outOfRange)
-          Left(text + " is too large to be represented exactly as an integer in NetLogo")
+          Left(s"$text $IsTooLargeForExactness")
         else
           Right(d)
       }
     }
     catch {
       case ex: NumberFormatException =>
-        Left("Illegal number format")
+        Option(decimalFormat.parse(text)) match {
+          case Some(num: Number) if (num.longValue > 9007199254740992L || num.longValue < -9007199254740992L) =>
+            Left(s"$text $IsTooLargeForExactness")
+          case _ =>
+            Left(IllegalFormat)
+        }
     }
   }
 }

@@ -7,6 +7,8 @@ import org.scalatest.FunSuite
 import org.nlogo.core.{Dump, CompilerException, LogoList, Token, LiteralImportHandler, StringEscaper},
   LiteralImportHandler.Parser
 
+import org.nlogo.util.TestUtils.cleanJsNumbers
+
 class TestLiteralParser extends FunSuite {
 
   def importHandler(isImport: Boolean) =
@@ -69,8 +71,8 @@ class TestLiteralParser extends FunSuite {
   test("literalIntParens2") { assertResult(Double.box(4))(toLiteral(" ((4)\t)")) }
   test("literalIntBadParens") { testError("((4)", "Expected a closing parenthesis.") }
   test("literalIntBadParens2") { testError("((4)))", "Extra characters after literal.") }
-  test("largeLiteral1") { testError("9999999999999999999999999999999999999999999999999", "Illegal number format") }
-  test("largeLiteral2") { testError("-9999999999999999999999999999999999999999999999999", "Illegal number format") }
+  test("largeLiteral1") { testError("9999999999999999999999999999999999999999999999999", "9999999999999999999999999999999999999999999999999 is too large to be represented exactly as an integer in NetLogo") }
+  test("largeLiteral2") { testError("-9999999999999999999999999999999999999999999999999", "-9999999999999999999999999999999999999999999999999 is too large to be represented exactly as an integer in NetLogo") }
   test("largeLiteral3") { testError("9007199254740993", "9007199254740993 is too large to be represented exactly as an integer in NetLogo") }
   test("largeLiteral4") { testError("-9007199254740993", "-9007199254740993 is too large to be represented exactly as an integer in NetLogo") }
   test("literalString") { assertResult("hi there")(toLiteral("\"hi there\"")) }
@@ -78,7 +80,7 @@ class TestLiteralParser extends FunSuite {
   test("literalList2") { assertResult("[1 [2] 3]")(dumpObject(toLiteralList("[1 [2] 3]"))) }
   test("literalList3") { assertResult("[[1 2 3]]")(dumpObject(toLiteralList("[[1 2 3]]"))) }
   test("literalList4") { assertResult("[1 hi true]")(dumpObject(toLiteralList("[1 \"hi\" true]"))) }
-  test("literalList5") { assertResult("[[1.0, hi, true]]")(toLiteral("([([1 \"hi\" true])])").toString) }
+  test("literalList5") { assertResult(cleanJsNumbers("[[1.0, hi, true]]"))(cleanJsNumbers(toLiteral("([([1 \"hi\" true])])").toString)) }
   test("parseLiteralList") { assertResult("[1 2 3]")(dumpObject(toLiteralList("[1 2 3]"))) }
   test("parseLiteralList2a") { assertResult("[1 [2] 3]")(dumpObject(toLiteralList("[1 [2] 3]"))) }
   test("parseLiteralList2b") { assertResult("[[1] [2] [3]]")(dumpObject(toLiteralList("[[1] [2] [3]]"))) }

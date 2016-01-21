@@ -20,8 +20,8 @@ object CompilerUtilities extends CompilerUtilitiesInterface {
   def readFromString(source: String): AnyRef =
     numberOrElse[AnyRef](source, NullImportHandler, _.getLiteralValue)
 
-  def readNumberFromString(source: String): AnyRef =
-    numberOrElse[AnyRef](source, NullImportHandler, _.getNumberValue)
+  def readNumberFromString(source: String): java.lang.Double =
+    numberOrElse[java.lang.Double](source, NullImportHandler, _.getNumberValue)
 
   def readFromString(source: String, importHandler: LiteralImportHandler): AnyRef =
     numberOrElse[AnyRef](source, importHandler, _.getLiteralValue)

@@ -207,7 +207,8 @@ lazy val parserSettings: Seq[Setting[_]] = Seq(
   isSnapshot := true,
   name := "parser",
   version := "0.0.1",
-  unmanagedSourceDirectories in Compile += file(".").getAbsoluteFile / "parser-core" / "src" / "main"
+  unmanagedSourceDirectories in Compile += file(".").getAbsoluteFile / "parser-core" / "src" / "main",
+  unmanagedSourceDirectories in Test += file(".").getAbsoluteFile / "parser-core" / "src" / "test"
 )
 
 lazy val sharedResources = (project in file ("shared")).
@@ -248,12 +249,12 @@ lazy val parser = CrossProject("parser", file("."),
       name := "parser-js",
       ivyScala := ivyScala.value map { _.copy(overrideScalaVersion = true) },
       resolvers += Resolver.sonatypeRepo("releases"),
-      testFrameworks += new TestFramework("utest.runner.Framework"),
       libraryDependencies ++= {
       import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport.toScalaJSGroupID
         Seq(
-          "org.scala-js" %%%! "scala-parser-combinators" % "1.0.2",
-          "com.lihaoyi"  %%%! "utest" % "0.3.1"
+          "org.scala-js"  %%%! "scala-parser-combinators" % "1.0.2",
+          "org.scalatest" %%%! "scalatest" % "3.0.0-M15" % "test",
+          "org.scalacheck" %%%! "scalacheck" % "1.12.5" % "test"
       )}).
   jvmConfigure(_.dependsOn(sharedResources)).
   jvmSettings(jvmSettings: _*).

@@ -10,7 +10,7 @@ import scala.collection.immutable.ListMap
 class BreedIdentifierHandlerTests extends FunSuite {
 
   val tokenizer: TokenizerInterface =
-    Femto.scalaSingleton("org.nlogo.lex.Tokenizer")
+    Femto.scalaSingleton[TokenizerInterface]("org.nlogo.lex.Tokenizer")
 
   def tester(handler: BreedIdentifierHandler.BreedPrimSpec, code: String, tokenString: String): (String, String, TokenType) = {
     val program =

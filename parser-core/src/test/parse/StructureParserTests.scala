@@ -10,7 +10,7 @@ import org.nlogo._
 class StructureParserTests extends FunSuite {
 
   val tokenizer: core.TokenizerInterface =
-    Femto.scalaSingleton("org.nlogo.lex.Tokenizer")
+    Femto.scalaSingleton[core.TokenizerInterface]("org.nlogo.lex.Tokenizer")
 
   def compile(source: String): StructureResults =
     new StructureParser(tokenizer.tokenizeString(source).map(Namer0),
