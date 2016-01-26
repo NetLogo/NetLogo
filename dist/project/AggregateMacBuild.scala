@@ -132,6 +132,8 @@ object AggregateMacBuild extends PackageAction.AggregateBuild {
 
     val apps = buildsMap.map(_._2).map(f => (aggregateMacDir / (f.getName.split('.')(0) + " " + version + ".app")).getAbsolutePath)
 
+    (aggregateMacDir / "JRE" / "Contents" / "Home" / "jre" / "lib" / "jspawnhelper").setExecutable(true)
+
     RunProcess(Seq("codesign", "--deep", "-s", "Developer ID Application") ++ apps, "codesigning")
 
     val dmgArgs = Seq("hdiutil", "create",
