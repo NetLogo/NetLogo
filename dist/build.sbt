@@ -84,13 +84,13 @@ lazy val dist = project.in(file("."))
       "NetLogo 3D"      -> NetLogoThreeDApp,
       "NetLogo Logging" -> NetLogoLoggingApp,
       "HubNet Client"   -> HubNetClientApp),
-    netLogoVersion     := "5.3",
+    netLogoVersion     := "5.3.1-RC1",
     netLogoLongVersion := { if (netLogoVersion.value.length == 3) netLogoVersion.value + ".0" else netLogoVersion.value },
-    numericOnlyVersion := "5.3",
+    numericOnlyVersion := "5.3.1",
     buildVariables := Map[String, String](
       "version"               -> netLogoVersion.value,
       "numericOnlyVersion"    -> numericOnlyVersion.value,
-      "date"                  -> "December 14, 2015"),
+      "date"                  -> "January 26, 2016"),
     packageApp            <<=
       InputTask.createDyn(packageAppParser)(PackageAction.subApplication(appMainClass, jvmOptions)),
     packageLinuxAggregate <<=
