@@ -158,8 +158,8 @@ trait Argument {
   /**
    * Returns the argument as a <code>org.nlogo.api.CommandTask</code>.
    *
-   * @throws ExtensionException if the argument is not a <code>CommandTask</code>
-   * @throws LogoException      if a LogoException occurred while evaluating this argument
+   * @throws org.nlogo.api.ExtensionException if the argument is not a <code>CommandTask</code>
+   * @throws org.nlogo.api.LogoException      if a LogoException occurred while evaluating this argument
    */
   @throws(classOf[ExtensionException])
   @throws(classOf[LogoException])
@@ -168,8 +168,8 @@ trait Argument {
   /**
    * Returns the argument as a <code>org.nlogo.api.Token</code>.
    *
-   * @throws ExtensionException if the argument is not a <code>Token</code>
-   * @throws LogoException      if a LogoException occurred while evaluating this argument
+   * @throws org.nlogo.api.ExtensionException if the argument is not a <code>Token</code>
+   * @throws org.nlogo.api.LogoException      if a LogoException occurred while evaluating this argument
    */
   @throws(classOf[ExtensionException])
   @throws(classOf[LogoException])
