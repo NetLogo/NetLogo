@@ -3,6 +3,7 @@
 package org.nlogo.prim;
 
 import org.nlogo.agent.AgentSet;
+import org.nlogo.agent.Link;
 import org.nlogo.agent.LinkManager;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.LogoException;
@@ -46,7 +47,7 @@ public final strictfp class _linkneighbor extends Reporter {
             : world.getLinkBreed(breedName);
     mustNotBeDirected(breed, context);
     LinkManager linkManager = world.linkManager;
-    return linkManager.findLinkFrom(parent, target, breed, true) != null
-        || linkManager.findLinkFrom(target, parent, breed, true) != null;
+    Link sharedLink = linkManager.findLinkEitherWay(parent, target, breed, true);
+    return sharedLink != null && ! sharedLink.isDirectedLink();
   }
 }
