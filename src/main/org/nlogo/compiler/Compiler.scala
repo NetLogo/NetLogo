@@ -54,7 +54,7 @@ object Compiler extends CompilerInterface {
     val results = new StructureParser(t.tokenizeRobustly(source), None,
                                       program, oldProcedures, extensionManager, compilationEnv)
       .parse(subprogram)
-    val identifierParser = new IdentifierParser(program, noProcedures, results.procedures, !parse)
+    val identifierParser = new IdentifierParser(program, noProcedures, results.procedures)
     import collection.JavaConverters._  // results.procedures.values is a java.util.Collection
     for(procedure <- results.procedures.values.asScala) {
       val tokens = identifierParser.process(results.tokens(procedure).iterator, procedure)
@@ -147,8 +147,7 @@ object Compiler extends CompilerInterface {
         new StructureParser(t.tokenize("to __is-reporter? report " + s + "\nend"),
                             None, program, procedures, extensionManager, compilationEnv)
           .parse(subprogram = true)
-      val identifierParser =
-        new IdentifierParser(program, procedures, results.procedures, forgiving = false)
+      val identifierParser = new IdentifierParser(program, procedures, results.procedures)
       import collection.JavaConverters._  // results.procedures.values is a java.util.Collection
       val proc = results.procedures.values.asScala.head
       val tokens = identifierParser.process(results.tokens(proc).iterator, proc)

@@ -14,8 +14,7 @@ class AssemblerTests extends FunSuite {
     assertResult(1)(results.procedures.size)
     val procedure = results.procedures.values.iterator.next()
     val tokens =
-      new IdentifierParser(program, java.util.Collections.emptyMap[String, Procedure],
-        results.procedures, false)
+      new IdentifierParser(program, java.util.Collections.emptyMap[String, Procedure], results.procedures)
         .process(results.tokens(procedure).iterator, procedure)
     for (procdef <- new ExpressionParser(procedure).parse(tokens)) {
       procdef.accept(new ArgumentStuffer)

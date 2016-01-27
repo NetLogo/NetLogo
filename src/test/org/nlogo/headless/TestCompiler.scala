@@ -167,8 +167,7 @@ class TestCompiler extends FunSuite with OneInstancePerTest with BeforeAndAfterE
   /// isReporter
 
   val reporters = Seq("3", "[]", "[", "((5))", "timer", "glob1")
-  val nonReporters = Seq("", ";", " ; ", "ca", "((ca))",
-                         "5984783478344387487348734", "gkhjfghkjfhjkg")
+  val nonReporters = Seq("", ";", " ; ", "ca", "((ca))", "5984783478344387487348734")
   for(x <- reporters)
     test("is a reporter: '" + x + "'") {
       workspace.initForTesting(5, HeadlessWorkspace.TestDeclarations)

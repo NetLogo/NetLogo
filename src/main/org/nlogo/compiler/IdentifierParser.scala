@@ -14,8 +14,7 @@ import collection.JavaConverters._
  * compiler doesn't know about yet. - ST 7/7/06 */
 private class IdentifierParser(program:Program,
                                oldProcedures:java.util.Map[String,Procedure],
-                               newProcedures:java.util.Map[String,Procedure],
-                               forgiving:Boolean) {
+                               newProcedures:java.util.Map[String,Procedure]) {
   def process(tokens: Iterator[Token], procedure: Procedure): Seq[Token] = {
     // make sure the procedure name doesn't conflict with a special identifier -- CLB
     checkProcedureName(procedure)
@@ -95,12 +94,8 @@ private class IdentifierParser(program:Program,
       new _breedvariable(varName)
     else if(program.linkBreedsOwn.asScala.values.exists(_.asScala.contains(varName)))
       new _linkbreedvariable(varName)
-    else if(forgiving)
-      new _unknownidentifier
     else
-      exception(I18N.errors.getN("compiler.LocalsVisitor.notDefined", varName),
-                new Token(varName,tok.tyype,tok.value)
-                         (tok.startPos,tok.startPos + varName.length,tok.fileName))
+      new _unknownidentifier
   }
   private def checkProcedureName(procedure:Procedure) {
     val newVal:AnyRef =

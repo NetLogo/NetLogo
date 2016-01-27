@@ -16,8 +16,7 @@ class AgentTypeCheckerTests extends FunSuite {
     import collection.JavaConverters._ // results.procedures.values is a java.util.Collection
     for (procedure <- results.procedures.asScala.values) {
       val tokens =
-        new IdentifierParser(program, java.util.Collections.emptyMap[String, Procedure],
-          results.procedures, false)
+        new IdentifierParser(program, java.util.Collections.emptyMap[String, Procedure], results.procedures)
           .process(results.tokens(procedure).iterator, procedure)
       defs ++= new ExpressionParser(procedure).parse(tokens)
     }

@@ -94,13 +94,7 @@ class AutoConverter2(workspace:Workspace,ignoreErrors:Boolean)(implicit tokenize
       new StructureParser(tokenizer.tokenizeAllowingRemovedPrims(wrappedSource), None,
                           workspace.world.program, workspace.getProcedures,
                           workspace.getExtensionManager, workspace.getCompilationEnvironment).parse(subprogram)
-    val identifierParser:IdentifierParser =
-      new IdentifierParser(workspace.world.program, workspace.getProcedures,
-                           results.procedures, true )
-                          // true = parse in "forgiving" mode, in which any
-                          // unknown identifiers are assumed to be global
-                          // variables (i.e., sliders/switches/choices that we
-                          // don't know about in this context)
+    val identifierParser = new IdentifierParser(workspace.world.program, workspace.getProcedures, results.procedures)
     val replacements = new collection.mutable.ArrayBuffer[Replacement]
     import collection.JavaConverters._ // results.procedures.values is a java.util.Collection
     for(procedure <- results.procedures.values.asScala) {

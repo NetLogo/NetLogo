@@ -19,8 +19,7 @@ class IdentifierParserTests extends FunSuite {
     val results = TestHelper.structureParse(tokenizer.tokenizeAllowingRemovedPrims(wrappedSource), program)
     assertResult(1)(results.procedures.size)
     val procedure = results.procedures.values.iterator.next()
-    new IdentifierParser(program, java.util.Collections.emptyMap[String, Procedure],
-      results.procedures, false)
+    new IdentifierParser(program, java.util.Collections.emptyMap[String, Procedure], results.procedures)
       .process(results.tokens(procedure).iterator, procedure)
       .iterator.takeWhile(_.tyype != TokenType.EOF)
   }
