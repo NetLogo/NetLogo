@@ -167,7 +167,6 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     workspace.initForTesting(5, "extensions [profiler]")
     assertResult(false) { workspace.isReporter("profiler:start") }
     assertResult(true) { workspace.isReporter("profiler:report") }
-    assertResult(false) { workspace.isReporter("profiler:ghjfgjhkfhgjk") }
   }
 
 }
