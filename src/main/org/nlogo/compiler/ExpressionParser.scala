@@ -569,7 +569,6 @@ private class ExpressionParser(procedure: Procedure,
       new ReporterApp(task, openBracket.startPos, closeBracket.endPos, openBracket.fileName)
     }
     else if(compatible(goalType,Syntax.CodeBlockType)) {
-      //new CodeBlock(block.tokens.mkString(" "),tokens.head.startPos,block.tokens.last.endPos,tokens.head.fileName)
       import scala.collection.JavaConverters._
 
       // Because we don't parse the inside of the code block, precisely because we don't want to define
@@ -577,7 +576,7 @@ private class ExpressionParser(procedure: Procedure,
       // checking here to make sure that at the very least, parenthesis and brackets are matched up
       // without being mixed and matched.  FD 8/19/2015
 
-      def check(remaining: Seq[Token], stack: Seq[Token] = Seq()) {
+      @scala.annotation.tailrec def check(remaining: Seq[Token], stack: Seq[Token] = Seq()) {
         if(remaining.isEmpty) {
           if(!stack.isEmpty) {
             if(stack.head.tyype == TokenType.OPEN_PAREN) {

@@ -273,8 +273,8 @@ public final strictfp class Context {
     while ((Object) rest != scala.collection.immutable.Nil$.MODULE$) // NOPMD
     {
       LetBinding binding = rest.head();
-      if (let == binding.let) {
-        return binding.value;
+      if (let == binding.let()) {
+        return binding.value();
       }
       rest = (scala.collection.immutable.List<LetBinding>) rest.tail(); // NOPMD
     }
@@ -287,8 +287,8 @@ public final strictfp class Context {
     while ((Object) rest != scala.collection.immutable.Nil$.MODULE$) // NOPMD
     {
       LetBinding binding = rest.head();
-      if (let == binding.let) {
-        binding.value = value;
+      if (let == binding.let()) {
+        binding.value_$eq(value);
         return;
       }
       rest = (scala.collection.immutable.List<LetBinding>) rest.tail(); // NOPMD
