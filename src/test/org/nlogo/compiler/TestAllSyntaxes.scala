@@ -40,6 +40,7 @@ class TestAllSyntaxes extends FunSuite {
                      |_basecolors ,list,OTPL,null,10,0,0
                      |_behaviorspaceexperimentname ,string,OTPL,null,10,0,0
                      |_behaviorspacerunnumber ,number,OTPL,null,10,0,0
+                     |_block code block,string,OTPL,null,10,1,1
                      |_boom ,anything,OTPL,null,10,0,0
                      |_bothends ,agentset,---L,null,10,0,0
                      |_butfirst string or list,string or list,OTPL,null,10,1,1
@@ -248,6 +249,7 @@ class TestAllSyntaxes extends FunSuite {
                      |_substring string/number/number,string,OTPL,null,10,3,3
                      |_subtractheadings number/number,number,OTPL,null,10,2,2
                      |_sum list,number,OTPL,null,10,1,1
+                     |_symbol symbol,string,OTPL,null,10,1,1
                      |_tan number,number,OTPL,null,10,1,1
                      |_task reporter task or command task,reporter task or command task,OTPL,null,10,1,1
                      |_ticks ,number,OTPL,null,10,0,0
