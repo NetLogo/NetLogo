@@ -32,7 +32,9 @@ object AggregateWindowsBuild extends PackageAction.AggregateBuild {
     "5.3-32"       -> "A6C64B81-FC8D-42E0-A55F-983705E52879",
     "5.3-64"       -> "BE6BDFA6-8DB5-47DB-94EC-B7504A3F7EBC",
     "6.0-PREVIEW-12-15-32" -> "367B7025-7977-4DAA-8856-E9AAA3421707",
-    "6.0-PREVIEW-12-15-64" -> "38EE8625-BFFF-430E-BFF3-D069B4F8F75C"
+    "6.0-PREVIEW-12-15-64" -> "38EE8625-BFFF-430E-BFF3-D069B4F8F75C",
+    "6.0-CONSTRUCTIONISM-2016-PREVIEW-32" -> "AF62E985-570B-4C70-8573-3EC367FBFF9B",
+    "6.0-CONSTRUCTIONISM-2016-PREVIEW-64" -> "4F480248-F0CD-44FF-B51C-6DAB9AEAE21B"
   )
 
   val vars32 = Map[String, String](
@@ -84,9 +86,10 @@ object AggregateWindowsBuild extends PackageAction.AggregateBuild {
     jdk:                    BuildJDK,
     buildsMap:              Map[SubApplication, File],
     variables:              Map[String, String]): File = {
+      val productIDKey = s"${variables("version")}-${jdk.arch}"
     val productIDMap =
-      Map("productID" -> productIDs.get(s"${variables("version")}-${jdk.arch}")
-        .getOrElse(sys.error("generate a new product ID for this version before packaging windows aggregate")))
+      Map("productID" -> productIDs.get(productIDKey)
+        .getOrElse(sys.error(s"generate a new product ID for $productIDKey before re-running package windows aggregate")))
     val winVariables: Map[String, String] =
       variables ++ (if (jdk.arch == "64") vars64 else vars32) ++ productIDMap
     val aggregateWindowsDir = aggregateTarget / s"windows-full-${jdk.arch}"
