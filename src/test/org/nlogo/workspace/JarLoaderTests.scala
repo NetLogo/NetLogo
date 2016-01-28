@@ -20,10 +20,14 @@ class JarLoaderTests extends FunSuite with BeforeAndAfter {
   val arrayJarURL = new File("extensions/array/array.jar").toURI.toURL
   val madeUpURL   = new File("extensions/foobar/foobar.jar").toURI.toURL
 
-  val dummyJarFile      = new File("tmp/dummy/dummy.jar")
-  val dummyJarURL       = dummyJarFile.toURI.toURL
-  val dummyOtherJarFile = new File("tmp/dummy/other.jar")
-  val emptyJarFile      = new File("tmp/empty/empty.jar")
+  val dummyJarFile        = new File("tmp/dummy/dummy.jar")
+  val dummyJarURL         = dummyJarFile.toURI.toURL
+  val dummyJarFileWSpaces = new File("tmp/space path/dummy/space dummy.jar")
+  val dummyJarURLWSpaces  = dummyJarFileWSpaces.toURI.toURL
+  val otherJarFileWSpaces = new File("tmp/space path/dummy/other.jar")
+  val otherJarURLWSpaces  = otherJarFileWSpaces.toURI.toURL
+  val dummyOtherJarFile   = new File("tmp/dummy/other.jar")
+  val emptyJarFile        = new File("tmp/empty/empty.jar")
 
   val dummyExtensionData =
     new ExtensionData("dummy", dummyJarURL, "dummy", "org.nlogo.workspace.DummyClassManager", Some("5.0"), 0)
@@ -39,8 +43,10 @@ class JarLoaderTests extends FunSuite with BeforeAndAfter {
 
 
   before {
-    val streams = Seq((dummyJarFile, dummyManifest), (dummyOtherJarFile, null), (emptyJarFile, null)).map {
+    val streams = Seq((dummyJarFile, dummyManifest), (dummyJarFileWSpaces, dummyManifest), (otherJarFileWSpaces, null), (dummyOtherJarFile, null), (emptyJarFile, null)).map {
       case (f, manifest) =>
+        if (! f.getParentFile.getParentFile.exists)
+          f.getParentFile.getParentFile.mkdir()
         if (! f.getParentFile.exists)
           f.getParentFile.mkdir()
         if (f.exists)
@@ -110,6 +116,15 @@ class JarLoaderTests extends FunSuite with BeforeAndAfter {
         assert(ucl.getParent == getClass.getClassLoader)
         assert(ucl.getURLs.contains(dummyJarURL))
         assert(ucl.getURLs.contains(dummyOtherJarFile.toURI.toURL))
+      case _ => fail("should create a URLClassLoader")
+    }
+  }
+
+  test("extensionClassLoader returns a URLClassLoader when the file has a space name") {
+    jarLoader.extensionClassLoader(dummyJarURLWSpaces, getClass.getClassLoader) match {
+      case ucl: URLClassLoader =>
+        assert(ucl.getURLs.contains(dummyJarURLWSpaces))
+        assert(ucl.getURLs.contains(otherJarURLWSpaces))
       case _ => fail("should create a URLClassLoader")
     }
   }

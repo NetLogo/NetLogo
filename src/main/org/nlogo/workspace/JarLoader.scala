@@ -38,7 +38,7 @@ class JarLoader(workspace: ExtendableWorkspace) extends ExtensionManager.Extensi
   }
 
   def extensionClassLoader(fileURL: URL, parentLoader: ClassLoader): ClassLoader = {
-    val folderContainingJar = new File(new File(fileURL.getFile).getParent)
+    val folderContainingJar = new File(new File(fileURL.toURI).getParent)
     val urls = fileURL +: (getAdditionalJars(folderContainingJar) ++ getAdditionalJars(new File("extensions")))
     java.net.URLClassLoader.newInstance(urls.toArray, parentLoader)
   }
