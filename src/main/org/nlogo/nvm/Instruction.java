@@ -12,6 +12,7 @@ import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.Syntax;
+import org.nlogo.api.Token;
 import org.nlogo.util.Thunk;
 
 import java.util.ArrayList;
@@ -491,6 +492,25 @@ public abstract strictfp class Instruction
       return (CommandTask) obj;
     } catch (ClassCastException ex) {
       throw new ArgumentTypeException(context, this, argIndex, Syntax.CommandTaskType(), obj);
+    }
+  }
+
+  public Token argEvalSymbol(Context context, int argIndex) throws LogoException {
+    Object obj = args[argIndex].report(context);
+    try {
+      return (Token) obj;
+    } catch (ClassCastException ex) {
+      throw new ArgumentTypeException(context, this, argIndex, Syntax.SymbolType(), obj);
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  public List<Token> argEvalCodeBlock(Context context, int argIndex) throws LogoException {
+    Object obj = args[argIndex].report(context);
+    try {
+      return (List<Token>) obj;
+    } catch (ClassCastException ex) {
+      throw new ArgumentTypeException(context, this, argIndex, Syntax.CodeBlockType(), obj);
     }
   }
 

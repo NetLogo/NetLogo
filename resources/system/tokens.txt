@@ -262,6 +262,7 @@ R = _equal
 R > _greaterthan
 R >= etc._greaterorequal
 R ^ etc._pow
+R __block etc._block
 R __boom etc._boom
 R __check-syntax etc._checksyntax
 R __dump etc._dump
@@ -283,6 +284,7 @@ R __patchrow _patchrow
 R __processors etc._processors
 R __random-state etc._randomstate
 R __stack-trace etc._stacktrace
+R __symbol etc._symbol
 R __to-string etc._tostring
 R abs etc._abs
 R acos etc._acos
