@@ -5,16 +5,16 @@ import Keys._
 object EventsGenerator {
 
   val task =
-    (cacheDirectory, javaSource in Compile, baseDirectory, streams) map {
-      (cacheDir, dir, base, s) =>
-        val cache =
-          FileFunction.cached(cacheDir / "autogen" / "events", inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
-            in: Set[File] =>
-              Set(events(s.log.info(_), base, dir, "window"),
-                  events(s.log.info(_), base, dir, "app"))
-          }
-        cache(Set(base / "project" / "autogen" / "warning.txt",
-                  base / "project" / "autogen" / "events.txt")).toSeq
+    Def.task {
+        val cachedEvents = FileFunction.cached(streams.value.cacheDirectory / "events", inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
+          (in: Set[File]) =>
+            Set("window", "app").map { pkg =>
+              events(streams.value.log.info(_), baseDirectory.value, (sourceManaged in Compile).value, pkg)
+            }
+        }
+        cachedEvents(Set(
+          baseDirectory.value / "project" / "autogen" / "events.txt",
+          baseDirectory.value / "project" / "autogen" / "warning.txt")).toSeq
     }
 
   def events(log: String => Unit, base: File, dir: File, ppackage: String): File = {
@@ -39,7 +39,7 @@ object EventsGenerator {
     append("    private Events() { throw new IllegalStateException() ; }")
     append("\n")
 
-    for{line <- IO.read(base /"project" / "autogen" / "events.txt").split("\n")
+    for{line <- IO.read(base / "project" / "autogen" / "events.txt").split("\n")
         if !line.trim.isEmpty // skip blank lines
         if !line.startsWith("#") // skip comment lines
         if line.startsWith(ppackage)} // skip unless in right package
@@ -78,5 +78,4 @@ object EventsGenerator {
     IO.write(file, codeString)
     file
   }
-
 }

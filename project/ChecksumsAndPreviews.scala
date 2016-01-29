@@ -1,4 +1,5 @@
 import sbt._
+import Def.spaceDelimited
 import Keys._
 
 object ChecksumsAndPreviews {
@@ -18,11 +19,10 @@ object ChecksumsAndPreviews {
   )
 
   private def makeTask(flag: String) =
-    inputTask { (argTask: TaskKey[Seq[String]]) =>
-      (argTask, fullClasspath in Compile, runner, streams) map {
-        (args, cp, runner, s) =>
-          Run.run("org.nlogo.headless.ChecksumsAndPreviews",
-                  cp.map(_.data), flag +: args, s.log)(runner)
-      }}.dependsOn(compile in Compile)
+    Def.inputTask {
+      val args = spaceDelimited("").parsed
+      Run.run("org.nlogo.headless.ChecksumsAndPreviews",
+        (fullClasspath in Compile).value.map(_.data), flag +: args, streams.value.log)(runner.value)
+    }.dependsOn(compile in Compile)
 
 }

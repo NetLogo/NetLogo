@@ -51,12 +51,12 @@ object Testing {
 
   // mostly copy-and-pasted from Defaults.inputTests. there may well be a better
   // way this could be done - ST 6/17/12
-  def oneTest(key: InputKey[Unit], name: String): Project.Initialize[InputTask[Unit]] =
-    inputTask { (argTask: TaskKey[Seq[String]]) =>
+  def oneTest(key: InputKey[Unit], name: String): Def.Initialize[InputTask[Unit]] =
+    Def.inputTask { (argTask: TaskKey[Seq[String]]) =>
       (argTask, streams, loadedTestFrameworks, testGrouping in key, testExecution in key, testLoader, resolvedScoped, fullClasspath in key, javaHome in key, state) flatMap {
         case (args, s, frameworks, groups, config, loader, scoped, cp, javaHome, st) =>
           implicit val display = Project.showContextKey(st)
-          val filter = Tests.Filter(Defaults.selectedFilter(Seq(name)))
+          val filter = Tests.Filters(Defaults.selectedFilter(Seq(name)))
           val mungedArgs =
             if(args.isEmpty) Nil
             else List("-n", args.mkString(" "))
@@ -65,7 +65,7 @@ object Testing {
           val newConfig = config.copy(options = modifiedOpts)
           Defaults.allTestGroupsTask(
             s, frameworks, loader, groups, newConfig, cp, javaHome) map
-              (Tests.showResults(s.log, _, "not found"))
+              (TestResultLogger.Default.run(s.log, _, "not found"))
       }
     }
 

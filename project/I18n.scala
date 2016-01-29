@@ -7,12 +7,12 @@ object I18n {
   // path handling details are inelegant/repetitive, should be cleaned up - ST 5/30/12
 
   val resourceGeneratorTask =
-    (cacheDirectory, baseDirectory, resourceManaged, streams) map {
-      (cacheDir, baseDir, resourceDir, s) => {
+    (baseDirectory, resourceManaged, streams) map {
+      (baseDir, resourceDir, s) => {
         val names: Set[String] =
           IO.listFiles(baseDir / "dist" / "i18n").map(_.getName).filter(_.endsWith(".txt")).map(_.dropRight(4)).toSet
         val cache =
-          FileFunction.cached(cacheDir / "native2ascii", inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
+          FileFunction.cached(s.cacheDirectory / "native2ascii", inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
             in: Set[File] =>
               names.map(name => native2ascii(s.log.info(_), baseDir, resourceDir, name))
           }
