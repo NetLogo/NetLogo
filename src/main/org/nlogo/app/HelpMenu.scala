@@ -39,6 +39,9 @@ class HelpMenu(app: App, colorizer: Colorizer[_])
   addMenuItem(
     launch(I18N.gui("netLogoUsersGroup"), false,
            "http://groups.yahoo.com/group/netlogo-users/"))
+  addMenuItem(
+    launch(I18N.gui("netLogoStackOverflow"), false,
+           "http://stackoverflow.com/questions/tagged/netlogo"))
   addSeparator()
   addMenuItem(
     launch(I18N.gui("donate"), false,

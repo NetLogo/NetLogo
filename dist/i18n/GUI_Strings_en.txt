@@ -103,6 +103,7 @@ menu.help.lookUpInDictionary(F1) = Look Up In Dictionary (F1)
 menu.help.netLogoUserManual = NetLogo User Manual
 menu.help.netLogoDictionary = NetLogo Dictionary
 menu.help.netLogoUsersGroup = NetLogo Users Group
+menu.help.netLogoStackOverflow = NetLogo Q & A - Stack Overflow
 menu.help.donate = Donate
 
 tabs.run = Interface
