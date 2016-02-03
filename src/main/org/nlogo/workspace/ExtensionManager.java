@@ -635,6 +635,18 @@ public strictfp class ExtensionManager
         // and continue with the operation ev 7/3/08
         ex.printStackTrace();
       }
+
+      try {
+        java.lang.reflect.Method close = java.net.URLClassLoader.class.getMethod("close");
+        close.invoke(jc.jarClassLoader);
+      } catch (NoSuchMethodException e) {
+        // this means we're in Java 6, ignore since we can't close the loader
+      } catch (SecurityException e) {
+        System.err.println("Failed to close classloader due to security exception");
+      } catch (Exception e) {
+        System.err.println("Error closing classloader " + e.getMessage());
+      }
+
       jc.loaded = false;
       jc.live = false;
       jc.jarClassLoader = null;
