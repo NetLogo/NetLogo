@@ -79,8 +79,7 @@ public strictfp class ViewMouseHandler
   }
 
   public void mouseReleased(java.awt.event.MouseEvent e) {
-    if (!e.isPopupTrigger() &&
-        org.nlogo.awt.Mouse.hasButton1(e)) {
+    if (org.nlogo.awt.Mouse.hasButton1(e)) {
       mouseDown(false);
     }
   }
@@ -93,17 +92,20 @@ public strictfp class ViewMouseHandler
   }
 
   public void mouseDragged(java.awt.event.MouseEvent e) {
-    // technically this is redundant, we should already have gotten
-    // a mousePressed, but just in case we didn't in some buggy VM,
-    // we do this for good measure... - ST 10/5/04
-    mouseDown(true);
-    // if we press the mouse button inside and then drag outside, we
-    // still get mouseDragged events even though the mouse isn't inside
-    // us anymore, so unlike in the mouseMoved case, we need this next check
-    if (parent.contains(e.getPoint())) {
-      updateMouseInside(e.getPoint());
-      translatePointToXCorYCor(e.getPoint());
-      pt = e.getPoint();
+    if (!e.isPopupTrigger() &&
+        org.nlogo.awt.Mouse.hasButton1(e)) {
+      // technically this is redundant, we should already have gotten
+      // a mousePressed, but just in case we didn't in some buggy VM,
+      // we do this for good measure... - ST 10/5/04
+      mouseDown(true);
+      // if we press the mouse button inside and then drag outside, we
+      // still get mouseDragged events even though the mouse isn't inside
+      // us anymore, so unlike in the mouseMoved case, we need this next check
+      if (parent.contains(e.getPoint())) {
+        updateMouseInside(e.getPoint());
+        translatePointToXCorYCor(e.getPoint());
+        pt = e.getPoint();
+      }
     }
   }
 
