@@ -64,7 +64,7 @@ class LightManager {
    * Note that directional lights don't actually have a position (they are infinitely far away). However,
    * this method will approximate the source of the light by rendering it outside of the world.
    */
-  def showLights(glu: GLU, world: World3D, worldScale: Float, observerDistance: Double,
+  final def showLights(glu: GLU, world: World3D, worldScale: Float, observerDistance: Double,
                  shapeRenderer: ShapeRenderer) {
     lights.foreach(_.showLight(glu, world, worldScale, observerDistance, shapeRenderer))
   }
@@ -123,8 +123,8 @@ abstract class Light {
   /**
    * Shows the light's position in 3D space. This is intended as a debugging aid.
    */
-  def showLight(glu: GLU, world: World3D, worldScale: Float, observerDistance: Double,
-                  shapeRenderer: ShapeRenderer);
+  private[render] def showLight(glu: GLU, world: World3D, worldScale: Float, observerDistance: Double,
+                  shapeRenderer: ShapeRenderer)
 
   /**
    * Helps visualize the light's position in 3D space by drawing some lines. This is intended as a debugging aid.
@@ -259,7 +259,7 @@ class DirectionalLight(val direction: Direction) extends Light {
     }
   }
 
-  def showLight(glu: GLU, world: World3D, worldScale: Float, observerDistance: Double,
+  final def showLight(glu: GLU, world: World3D, worldScale: Float, observerDistance: Double,
                   shapeRenderer: ShapeRenderer) {
     val gl = getGL
 
@@ -313,7 +313,7 @@ class PositionalLight(val position: Position) extends Light {
     }
   }
 
-  def showLight(glu: GLU, world: World3D, worldScale: Float, observerDistance: Double,
+  final def showLight(glu: GLU, world: World3D, worldScale: Float, observerDistance: Double,
                   shapeRenderer: ShapeRenderer) {
     val gl = getGL
 

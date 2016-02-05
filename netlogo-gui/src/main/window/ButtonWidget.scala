@@ -2,18 +2,17 @@
 
 package org.nlogo.window
 
+import org.nlogo.core.{ AgentKind, I18N }
 import java.awt.{List=>AWTList, _}
 import event.{MouseEvent, MouseListener, MouseMotionListener}
 import image.FilteredImageSource
 import org.nlogo.awt.DarkenImageFilter
 import javax.swing.ImageIcon
 import org.nlogo.api.MersenneTwisterFast
-import org.nlogo.core.AgentKind
 import org.nlogo.awt.Mouse.hasButton1
 import org.nlogo.agent.{Agent, Observer, Turtle, Patch, Link}
 import org.nlogo.nvm.Procedure
 import org.nlogo.api.{ Editable, ModelReader, Options, Version}
-import org.nlogo.core.I18N
 import scala.language.existentials
 
 object ButtonWidget {
@@ -302,7 +301,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
         // a forever button or a once button that is now down because
         // it was just clicked.  it needs to run.
         else {
-          new Events.AddJobEvent(this, agents(), procedure()).raise(this)
+          new Events.AddJobEvent(this, agents, procedure).raise(this)
           if(Version.isLoggingEnabled)
             org.nlogo.log.Logger.logButtonPressed(displayName)
         }
@@ -332,17 +331,27 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   }
 
   /// source code
-  private def chooseDisplayName = if (name == "") displayName(getSourceName) else displayName(name)
+  private def chooseDisplayName(): Unit = {
+    if (name == "")
+      displayName(getSourceName)
+    else
+      displayName(name)
+  }
 
   // behold the mighty regular expression
-  private def getSourceName = innerSource().trim.replaceAll("\\s+", " ")
-  override def innerSource(newInnerSource:String){
+  private def getSourceName: String = {
+    (innerSource: String).trim.replaceAll("\\s+", " ")
+  }
+
+  override def innerSource(newInnerSource:String): Unit = {
     super.innerSource(newInnerSource)
     chooseDisplayName
   }
-  def wrapSource = innerSource()
-  def wrapSource(newInnerSource:String){
-    if(newInnerSource != "" && newInnerSource != innerSource()){
+
+  def wrapSource: String = innerSource
+
+  def wrapSource(newInnerSource:String) {
+    if (newInnerSource != "" && newInnerSource != (innerSource: String)) {
       this.innerSource(newInnerSource)
       recompile()
     }
@@ -428,8 +437,9 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
 
     if(name.trim != "") s.append(name + "\n") else s.append("NIL\n")
 
-    if(innerSource() != null  && innerSource().trim != "")
-      s.append(ModelReader.stripLines(innerSource()) + "\n")
+    val iSource: String = innerSource
+    if (iSource != null  && iSource.trim != "")
+      s.append(ModelReader.stripLines(innerSource) + "\n")
     else s.append("NIL\n")
 
     if(forever) s.append("T\n") else s.append("NIL\n")

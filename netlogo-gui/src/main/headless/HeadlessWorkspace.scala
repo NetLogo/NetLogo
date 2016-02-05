@@ -362,7 +362,7 @@ with org.nlogo.api.ViewSettings {
 
   /// world importing error handling
 
-  var importerErrorHandler =
+  var importerErrorHandler: org.nlogo.agent.Importer.ErrorHandler =
     new org.nlogo.agent.Importer.ErrorHandler {
       override def showError(title: String, errorDetails: String, fatalError: Boolean) = {
         System.err.println(

@@ -63,8 +63,8 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer[TokenType] {
   }
 
   def isMatch(token1: TokenType, token2: TokenType) =
-    (token1, token2) == (TokenType.OpenParen, TokenType.CloseParen) ||
-    (token1, token2) == (TokenType.OpenBracket, TokenType.CloseBracket)
+    (token1, token2) == ((TokenType.OpenParen, TokenType.CloseParen)) ||
+    (token1, token2) == ((TokenType.OpenBracket, TokenType.CloseBracket))
 
   def isOpener(token: TokenType) =
     token == TokenType.OpenParen || token == TokenType.OpenBracket

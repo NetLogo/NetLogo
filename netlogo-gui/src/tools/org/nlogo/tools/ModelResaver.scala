@@ -49,7 +49,7 @@ object ModelResaver {
           App.app.open(path)
           org.nlogo.api.FileIO.writeFile(path, modelSaver.save);
         } catch {
-          case e: Exception => failedModels :+= (path, e.getMessage)
+          case e: Exception => failedModels :+= ((path, e.getMessage))
         }
       }
     }

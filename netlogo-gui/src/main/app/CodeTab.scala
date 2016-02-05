@@ -104,7 +104,7 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
 
   protected var _needsCompile = false
 
-  def handle(e: Events.SwitchedTabsEvent) {
+  final def handle(e: Events.SwitchedTabsEvent) {
     if(_needsCompile && e.oldTab == this)
       recompile()
   }

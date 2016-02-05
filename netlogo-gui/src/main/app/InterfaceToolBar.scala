@@ -140,7 +140,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
 
   private val deleteableObjects = new HashSet[Widget]
 
-  def handle(e: Events.WidgetSelectedEvent) {
+  final def handle(e: Events.WidgetSelectedEvent) {
     val w = e.widget
     if(wPanel.getWrapper(w).selected) {
       if(!selectedObjects.contains(w)) selectedObjects.add(w)

@@ -2,6 +2,7 @@
 
 package org.nlogo.properties
 
+import org.nlogo.core.{ I18N, TokenType }
 import javax.swing.border.{EtchedBorder, TitledBorder}
 import javax.swing._
 import javax.swing.BorderFactory._
@@ -14,8 +15,6 @@ import org.nlogo.window.{ColorDialog, PlotWidget}
 import org.nlogo.plot.{Plot, PlotPen}
 import javax.swing.event.{ListSelectionEvent, ListSelectionListener}
 
-import org.nlogo.core.I18N
-import org.nlogo.core.TokenType
 
 class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Colorizer[TokenType])
         extends PropertyEditor(accessor, handlesOwnErrors = true) {
@@ -176,7 +175,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
     def getPlotPens: List[PlotPen] = model.pens.map(_.convertToPlotPen(plot)).toList
 
     // add a dummy pen to the list so that the user can then modify it.
-    def newPen {
+    def newPen(): Unit = {
       val nextName = "pen-" + model.pens.size
       val nextColor = {
         val colorsInUse:List[ColorInfo] = model.pens.toList.map(_.color)

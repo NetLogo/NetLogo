@@ -84,7 +84,7 @@ with org.nlogo.window.Events.AboutToQuitEvent.Handler
     close()
   }
 
-  def handle(e: org.nlogo.app.Events.IndenterChangedEvent) {
+  final def handle(e: org.nlogo.app.Events.IndenterChangedEvent) {
     setIndenter(e.isSmart)
   }
 

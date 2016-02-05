@@ -2,13 +2,11 @@
 
 package org.nlogo.gl.render
 
+import org.nlogo.api.{ Agent, AgentFollowingPerspective, Perspective, World }
 import com.jogamp.opengl.{ GL, GL2, GL2GL3, GL2ES3 }
 
-import org.nlogo.api.World
-import org.nlogo.api.Perspective
-import org.nlogo.api.Agent
 
-private class ShapeRenderer(world: World) {
+private[render] class ShapeRenderer(world: World) {
 
   // We use a stencil buffer to highlight turtles. Some graphics cards, including the NVIDIA GeForce
   // FX 5200 Ultra, don't seem to support a stencil buffer, so we keep track of whether this card
@@ -120,7 +118,7 @@ private class ShapeRenderer(world: World) {
       gl.glRotated(-observerOrientation.heading, 0.0, 0.0, 1.0)
       gl.glRotated(90, 1.0, 0.0, 0.0)
       world.observer.perspective match {
-        case (_: Perspective.Follow | _: Perspective.Ride) =>
+        case (_: AgentFollowingPerspective) =>
           gl.glRotated(-observerOrientation.pitch, -1.0, 0.0, 0.0)
           gl.glRotated(-observerOrientation.roll, 0.0, 0.0, 1.0)
         case _ =>
@@ -220,7 +218,7 @@ private class ShapeRenderer(world: World) {
     gl.glRotated(-orientation.heading, 0.0, 0.0, 1.0)
     gl.glRotated(90, 1.0, 0.0, 0.0)
     observer.perspective match {
-      case (_: Perspective.Follow | _: Perspective.Ride) =>
+      case (_: AgentFollowingPerspective) =>
         gl.glRotated(-orientation.pitch, -1.0, 0.0, 0.0)
         gl.glRotated(-orientation.roll, 0.0, 0.0, 1.0)
       case _ =>

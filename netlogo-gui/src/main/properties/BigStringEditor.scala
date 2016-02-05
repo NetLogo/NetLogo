@@ -26,7 +26,7 @@ abstract class BigStringEditor(accessor: PropertyAccessor[String])
     editor.select(0, 0)
   }
   override def requestFocus() { editor.requestFocus() }
-  override def getConstraints() = {
+  override def getConstraints = {
     val c = super.getConstraints
     c.fill = java.awt.GridBagConstraints.BOTH
     c.weightx = 1.0

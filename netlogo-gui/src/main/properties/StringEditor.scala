@@ -16,7 +16,7 @@ abstract class StringEditor(accessor: PropertyAccessor[String])
   override def get = Option(editor.getText)
   override def set(value: String) { editor.setText(value) }
   override def requestFocus() { editor.requestFocus() }
-  override def getConstraints() = {
+  override def getConstraints = {
     val c = super.getConstraints
     c.fill = java.awt.GridBagConstraints.HORIZONTAL
     c.weightx = 0.25

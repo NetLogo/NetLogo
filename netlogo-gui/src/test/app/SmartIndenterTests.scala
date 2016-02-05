@@ -54,8 +54,18 @@ class SmartIndenterTests extends FunSuite {
 
   class Scaffold(var text: String) extends EditorAreaInterface {
     import scala.beans.BeanProperty
-    @BeanProperty var selectionStart = 0
-    @BeanProperty var selectionEnd = 0
+
+    private var selectionStart = 0
+    private var selectionEnd = 0
+
+    def getSelectionStart = selectionStart
+    def setSelectionStart(pos: Int): Unit = {
+      selectionStart = pos
+    }
+    def getSelectionEnd = selectionEnd
+    def setSelectionEnd(pos: Int): Unit = {
+      selectionEnd = pos
+    }
     selectAll()
     def lines: Array[String] = text.split("\\n")
 

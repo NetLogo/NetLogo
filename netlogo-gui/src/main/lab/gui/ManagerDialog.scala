@@ -84,14 +84,14 @@ private class ManagerDialog(manager: LabManager,
     deleteAction.setEnabled(count > 0)
   }
   /// action implementations
-  private def run() {
+  private def run(): Unit = {
     try {
       manager.prepareForRun()
       new Supervisor(this, manager.workspace, selectedProtocol, manager.workspaceFactory, dialogFactory).start()
     }
     catch { case ex: org.nlogo.awt.UserCancelException => org.nlogo.util.Exceptions.ignore(ex) }
   }
-  private def makeNew {
+  private def makeNew(): Unit = {
     import collection.JavaConverters._
     editProtocol(
       new Protocol(

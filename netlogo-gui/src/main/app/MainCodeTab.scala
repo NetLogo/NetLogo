@@ -27,7 +27,7 @@ with org.nlogo.window.Events.LoadSectionEvent.Handler
 
   def smartTabbingEnabled = tabbing.isSelected
 
-  override def getToolBar() =
+  override def getToolBar =
     new org.nlogo.swing.ToolBar() {
       override def addControls() {
         add(new javax.swing.JButton(

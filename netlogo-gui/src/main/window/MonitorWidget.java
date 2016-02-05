@@ -147,7 +147,7 @@ public strictfp class MonitorWidget
 
   private String getSourceName() {
     // behold the mighty regular expression
-    return innerSource.trim().replaceAll("\\s+", " ");
+    return innerSource().trim().replaceAll("\\s+", " ");
   }
 
   @Override
@@ -166,7 +166,7 @@ public strictfp class MonitorWidget
   @Override
   public void suppressRecompiles(boolean suppressRecompiles) {
     if (innerSource().trim().equals("")) {
-      recompilePending = false;
+      recompilePending(false);
     }
     super.suppressRecompiles(suppressRecompiles);
   }
@@ -290,7 +290,7 @@ public strictfp class MonitorWidget
     } else {
       s.append("NIL\n");
     }
-    if (!innerSource.trim().equals("")) {
+    if (!innerSource().trim().equals("")) {
       s.append(ModelReader.stripLines(innerSource()) + "\n");
     } else {
       s.append("NIL\n");

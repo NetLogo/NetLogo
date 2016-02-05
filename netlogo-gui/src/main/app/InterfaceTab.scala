@@ -73,7 +73,7 @@ class InterfaceTab(workspace: GUIWorkspace,
     else if(commandCenter != null) commandCenter.requestFocus()
   }
 
-  def handle(e: Events.SwitchedTabsEvent) {
+  final def handle(e: Events.SwitchedTabsEvent) {
     commandCenterAction.setEnabled(e.newTab == this)
   }
 

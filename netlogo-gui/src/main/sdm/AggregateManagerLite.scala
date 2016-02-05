@@ -22,6 +22,6 @@ class AggregateManagerLite extends AggregateManagerInterface {
 
   /// these AggregateManagerInterface methods aren't relevant when running headless
   def showEditor() = unsupported
-  def save() = unsupported
+  def save = unsupported
 
 }

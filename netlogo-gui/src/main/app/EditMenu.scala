@@ -59,7 +59,7 @@ with org.nlogo.window.Events.AboutToQuitEvent.Handler
   lineNumbersAction.setEnabled(false)
   if (lineNumbersItem.isSelected) lineNumbersAction.actionPerformed(null)
 
-  def handle(e: Events.SwitchedTabsEvent) {
+  final def handle(e: Events.SwitchedTabsEvent) {
     snapAction.setEnabled(e.newTab == app.tabs.interfaceTab)
     lineNumbersAction.setEnabled(e.newTab != app.tabs.interfaceTab && e.newTab != app.tabs.infoTab)
   }
