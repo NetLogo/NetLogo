@@ -1,6 +1,6 @@
 import sbt._
 
-class NetLogoDocs(docsSource: File, docsTarget: File, netLogoRoot: File) {
+class NetLogoDocs(docsSource: File, docsTarget: File, netLogoRoot: File, modelsDirectory: File, extensionsDirectory: File) {
   val dictTarget = docsTarget / "dict"
 
   def manualComponents(base: File): Seq[File] = Seq(
@@ -45,14 +45,14 @@ class NetLogoDocs(docsSource: File, docsTarget: File, netLogoRoot: File) {
       "csv"     -> "CSV Extension",
       "palette" -> "Palette Extension").foreach {
         case (ext, title) =>
-          pandoc(netLogoRoot / "extensions" / ext / "README.md",
+          pandoc(extensionsDirectory / ext / "README.md",
             htmlFileRoot / (ext + ".html"),
             s"NetLogo User Manual: $title")
       }
   }
 
   private def infoTabHTML: String = {
-    InfoTabGenerator(netLogoRoot / "models" / "Code Examples" / "Info Tab Example.nlogo")
+    InfoTabGenerator(modelsDirectory / "Code Examples" / "Info Tab Example.nlogo")
   }
 
   private def generateManualPDF(htmlFileRoot: File): File = {
@@ -76,6 +76,7 @@ class NetLogoDocs(docsSource: File, docsTarget: File, netLogoRoot: File) {
   }
 
   private def generateDocs(targetDir: File, variables: Map[String, Object]): Unit = {
+    IO.createDirectory(targetDir)
     Mustache.betweenDirectories(docsSource, targetDir, variables)
     generateExtensionDocs(targetDir)
     IO.copyFile(netLogoRoot / "models" / "Code Examples" / "Perspective Example.png", targetDir / "Perspective Example.png")

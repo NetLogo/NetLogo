@@ -1,5 +1,6 @@
 import sbt._
 import java.nio.file.FileSystems
+import NetLogoPackaging.RunProcess
 
 object AggregateWindowsBuild extends PackageAction.AggregateBuild {
   // each application maps to the root of the build product

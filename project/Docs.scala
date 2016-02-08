@@ -1,13 +1,12 @@
 import sbt._
 import Keys._
 import NetLogoBuild.{ buildDate, marketingVersion, numericMarketingVersion, autogenRoot }
+import ModelsLibrary.modelsDirectory
+import Extensions.extensionRoot
+import NetLogoPackaging.{ netLogoRoot, buildVariables }
 
 object Docs {
   lazy val netLogoDocs = taskKey[NetLogoDocs]("netlogo docs object used to build documentation")
-
-  lazy val buildVariables = taskKey[Map[String, String]]("NetLogo template variables")
-
-  lazy val netLogoRoot = taskKey[File]("root of the netlogo project")
 
   lazy val allDocs = taskKey[Seq[File]]("all documentation: html and pdf")
 
@@ -15,14 +14,23 @@ object Docs {
 
   lazy val manualPDF = taskKey[File]("NetLogo manual PDF")
 
+  lazy val docsRoot = taskKey[File]("location to which docs are generated")
+
   lazy val settings = Seq(
+    javaOptions     += "-Dnetlogo.docs.dir=" + docsRoot.value.getAbsolutePath.toString,
+    docsRoot       := file("docs"),
     buildVariables := Map[String, String](
       "version"               -> marketingVersion.value,
       "numericOnlyVersion"    -> numericMarketingVersion.value,
       "date"                  -> buildDate.value),
     netLogoRoot := baseDirectory.value.getParentFile,
     netLogoDocs := {
-      new NetLogoDocs(autogenRoot.value / "docs", baseDirectory.value / "docs", netLogoRoot.value)
+      new NetLogoDocs(
+        autogenRoot.value / "docs",
+        docsRoot.value.getAbsoluteFile,
+        netLogoRoot.value,
+        modelsDirectory.value,
+        extensionRoot.value)
     },
     allDocs := {
       htmlDocs.value :+ manualPDF.value

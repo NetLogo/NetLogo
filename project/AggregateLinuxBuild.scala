@@ -1,4 +1,5 @@
 import sbt._
+import NetLogoPackaging.RunProcess
 
 object AggregateLinuxBuild extends PackageAction.AggregateBuild {
   // each application maps to the root of the build product

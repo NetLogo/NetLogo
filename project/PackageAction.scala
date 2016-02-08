@@ -1,17 +1,20 @@
 import sbt._
 import Keys._
 import Def.Initialize
-import DistSettings.{ netLogoRoot, netLogoVersion, numericOnlyVersion, buildVariables, webTarget }
+import NetLogoPackaging.{ netLogoRoot, netLogoVersion, numericOnlyVersion, buildVariables, webTarget }
 
 object PackageAction {
-  type JVMOptionFinder = (PlatformBuild, SubApplication) => Seq[String]
-  type MainClassFinder = PartialFunction[(String, String), String]
-  type AggregateBuild = (File, File, BuildJDK, Map[SubApplication, File], Map[String, String]) => File
+  type JVMOptionFinder  = (PlatformBuild, SubApplication) => Seq[String]
+  type JarAndDepFinder  = (PlatformBuild, SubApplication) => Def.Initialize[Task[(File, Seq[File])]]
+  type BundledDirFinder = (PlatformBuild) => Seq[BundledDirectory]
+  type MainClassFinder  = PartialFunction[(String, String), String]
+  type AggregateBuild   = (File, File, BuildJDK, Map[SubApplication, File], Map[String, String]) => File
 
   private def buildSubApplication(
     appMainClass: MainClassFinder,
     jvmOptions: JVMOptionFinder,
     platform: PlatformBuild,
+    bundledDirs: Seq[BundledDirectory],
     app: SubApplication,
     jdk: BuildJDK,
     version: String,
@@ -30,18 +33,11 @@ object PackageAction {
       ("appName"        -> app.name) +
       ("buildDirectory" -> buildDirectory.getAbsolutePath)
 
-      ConfigurationFiles.writeConfiguration(platform, app, distDir / "configuration", buildDirectory, configurationVariables)
-
-      def repathFile(originalBase: File)(f: File): File = {
-        val Some(relativeFile) = f relativeTo originalBase
-        new java.io.File(artifactsDir, relativeFile.getPath)
-      }
+      ConfigurationFiles.writeConfiguration(platform.shortName, app, distDir / "configuration", buildDirectory, configurationVariables)
 
       val copiedBundleFiles: Seq[(File, File)] =
-        platform.bundledDirs.flatMap { bd =>
-          val files = bd.files(netLogoDir / bd.directoryName)
-          files zip files.map(repathFile(netLogoDir))
-        }
+        bundledDirs.flatMap(_.fileMappings.map(
+            t => (t._1, new java.io.File(artifactsDir, t._2))))
 
       val jarMap = {
         val allJars = (mainJar +: dependencies)
@@ -49,7 +45,7 @@ object PackageAction {
       }
 
       val copyLogging = (distDir / "netlogo_logging.xml",        artifactsDir / "netlogo_logging.xml")
-      val copyManual =  (netLogoDir / "NetLogo User Manual.pdf", artifactsDir / "NetLogo User Manual.pdf")
+      val copyManual =  (netLogoDir.getParentFile / "NetLogo User Manual.pdf", artifactsDir / "NetLogo User Manual.pdf")
 
       val allFileCopies: Seq[(File, File)] = jarMap ++ copiedBundleFiles :+ copyLogging :+ copyManual
 
@@ -59,16 +55,20 @@ object PackageAction {
 
       val allFiles: Seq[File] = allFileCopies.map(_._2)
 
-      JavaPackager(jdk, appMainClass(platform.shortName, app.name), platform, app,
+      JavaPackager(jdk, appMainClass(platform.shortName, app.name), platform.nativeFormat, platform.jvmOptions, app,
         srcDir = artifactsDir, srcFiles = allFiles, outDir = outputDirectory,
         buildDirectory = buildDirectory, mainJar = mainJar, appVersion = version, jvmOptions = jvmOptions(platform, app))
   }
 
   type SubAppFunc = ((PlatformBuild, SubApplication, BuildJDK)) => Def.Initialize[Task[File]]
-  def subApplication(appMainClass: MainClassFinder, jvmOptions: JVMOptionFinder): Def.Initialize[Task[SubAppFunc]] =
+  def subApplication(
+    appMainClass:    MainClassFinder,
+    jarAndDepFinder: JarAndDepFinder,
+    bundledDirsInit: Def.Initialize[BundledDirFinder],
+    jvmOptions:      JVMOptionFinder): Def.Initialize[Task[SubAppFunc]] =
       Def.task[SubAppFunc] {
       { (platform: PlatformBuild, app: SubApplication, buildJDK: BuildJDK) =>
-        Def.bind(platform.mainJarAndDependencies(app)) { jarTask =>
+        Def.bind(jarAndDepFinder(platform, app)) { jarTask =>
           Def.task {
             val (mainJar, dependencies) = jarTask.value
             val distDir         = baseDirectory.value
@@ -77,8 +77,8 @@ object PackageAction {
             val variables       = buildVariables.value
             buildSubApplication(
               appMainClass, jvmOptions,
-              platform, app, buildJDK, numericOnlyVersion.value,
-              variables, buildDirectory, mainJar,
+              platform, bundledDirsInit.value(platform), app, buildJDK,
+              numericOnlyVersion.value, variables, buildDirectory, mainJar,
               dependencies, distDir, netLogoDir)
           }
         }

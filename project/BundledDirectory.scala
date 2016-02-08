@@ -1,25 +1,31 @@
 import sbt._
 import java.io.File
 
-trait BundledDirectory {
+abstract class BundledDirectory(val sourceDir: File) {
   def directoryName: String
-  def files(sourceDir: File): Seq[File]
+  def files:         Seq[File]
+  def fileMappings:  Seq[(File, String)] = {
+    files zip files.map { f =>
+      val Some(relativePath) = Path.relativeTo(sourceDir)(f)
+      directoryName + java.io.File.separator + relativePath
+    }
+  }
 }
 
-class ExtensionDir extends BundledDirectory {
+class ExtensionDir(sourceDir: File) extends BundledDirectory(sourceDir) {
   val directoryName = "extensions"
 
-  def files(sourceDir: File): Seq[File] = {
+  def files: Seq[File] = {
     sourceDir.listFiles.flatMap(_.listFiles)
       .filter(_.getName.endsWith(".jar"))
       .filterNot(f => f.getName.contains("NetLogo") || f.getName.contains("scala-library") || f.getName.contains("QTJava"))
   }
 }
 
-class ModelsDir extends BundledDirectory {
+class ModelsDir(sourceDir: File) extends BundledDirectory(sourceDir) {
   val directoryName = "models"
 
-  def files(sourceDir: File): Seq[File] =
+  def files: Seq[File] =
     Seq("3D",
       "Alternative Visualizations",
       "Code Examples",
@@ -32,20 +38,20 @@ class ModelsDir extends BundledDirectory {
         .filterNot(_.isHidden) :+ (sourceDir / "index.txt")
 }
 
-class LibDir extends BundledDirectory {
+class LibDir(sourceDir: File) extends BundledDirectory(sourceDir) {
   val directoryName = "lib"
-  def files(sourceDir: File): Seq[File] =
+  def files: Seq[File] =
     (sourceDir / "Mac OS X").listFiles
 }
 
-class NativesDir(platforms: String*) extends BundledDirectory {
+class NativesDir(sourceDir: File, platforms: String*) extends BundledDirectory(sourceDir) {
   val directoryName = "natives"
-  def files(sourceDir: File): Seq[File] =
+  def files: Seq[File] =
     platforms.flatMap(platform => (sourceDir / platform).listFiles)
 }
 
-class DocsDir extends BundledDirectory {
+class DocsDir(sourceDir: File) extends BundledDirectory(sourceDir) {
   val directoryName = "docs"
-  def files(sourceDir: File): Seq[File] =
+  def files: Seq[File] =
     Path.allSubpaths(sourceDir).map(_._1).filterNot(_.isHidden).toSeq
 }

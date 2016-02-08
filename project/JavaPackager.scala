@@ -1,10 +1,22 @@
 import sbt._
 
+import Keys.{ artifactPath, dependencyClasspath, packageOptions, packageBin }
 import java.nio.file.FileSystems
 import java.io.File
 import java.util.jar.Attributes.Name._
 
 object JavaPackager {
+  def mainArtifactSettings: Seq[Setting[_]] =
+    Seq(
+      packageOptions in (Compile, packageBin) += {
+        Package.ManifestAttributes(CLASS_PATH.toString ->
+          ((dependencyClasspath in Runtime).value.files :+
+            (artifactPath in Compile in packageBin).value)
+          .map(_.getName).filter(_.endsWith("jar")).mkString(" "))
+      },
+      packageOptions in (Compile, packageBin) += jarAttributes
+    )
+
   def jarAttributes: Package.ManifestAttributes = {
     import java.util.jar.Attributes.Name._
     Package.ManifestAttributes(
@@ -101,7 +113,8 @@ object JavaPackager {
   def apply(
     packagerJDK: BuildJDK,
     appClass: String,
-    platform: PlatformBuild,
+    nativeFormat: String,
+    platformJvmOptions: Seq[String],
     app: SubApplication,
     srcDir: File,
     srcFiles: Seq[File],
@@ -120,13 +133,13 @@ object JavaPackager {
       "-outfile",  app.name,
       "-appclass", appClass,
       "-nosign",
-      "-native",   platform.nativeFormat,
+      "-native",   nativeFormat,
       "-outdir",   outDir.getAbsolutePath,
       "-srcdir",   srcDir.getAbsolutePath,
       "-srcfiles", srcDir.listFiles.map(_.getName).mkString(File.pathSeparator),
       "-BmainJar=" + mainJar.getName,
       s"-BappVersion=${appVersion}") ++
-    (jvmOptions ++ app.jvmOptions ++ platform.jvmOptions).map(s => "-BjvmOptions=" + s) ++
+    (jvmOptions ++ app.jvmOptions ++ platformJvmOptions).map(s => "-BjvmOptions=" + s) ++
     app.jvmArguments.flatMap(arg => Seq("-argument", arg)) ++
     app.jvmProperties.map(p => "-BjvmProperties=" + p._1 + "=" + p._2)
 

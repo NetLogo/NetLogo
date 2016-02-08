@@ -45,7 +45,7 @@ lazy val jvmSettings = Seq(
 lazy val scalatestSettings = Seq(
   // show test failures again at end, after all tests complete.
   // T gives truncated stack traces; change to G if you need full.
-  testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oT"),
+  testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oS"),
   logBuffered in testOnly in Test := false,
   libraryDependencies ++= Seq(
     "org.scalatest"  %% "scalatest"  % "2.2.1"  % "test",
@@ -64,25 +64,31 @@ lazy val mockDependencies = Seq(
 )
 
 lazy val scalastyleSettings = Seq(
-  scalastyleTarget in Compile := { file("target") / s"scalastyle-result-${name.value}.xml" }
-)
+  scalastyleTarget in Compile := {
+  file("target") / s"scalastyle-result-${name.value}.xml"
+  })
+
+lazy val publicationSettings =
+  bintrayPublishSettings ++ Seq(
+    bintray.Keys.repository in bintray.Keys.bintray := "NetLogoHeadless",
+    bintray.Keys.bintrayOrganization in bintray.Keys.bintray := Some("netlogo"))
 
 lazy val root =
    project.in(file(".")).
    aggregate(netlogo, parserJVM)
 
-lazy val netlogo = project.in(file("netlogo-gui"))
-   .dependsOn(parserJVM)
-   .settings(commonSettings: _*)
-   .settings(jvmSettings: _*)
-   .settings(scalaSettings: _*)
-   .settings(scalatestSettings: _*)
-   .settings(JFlexRunner.settings: _*)
-   .settings(EventsGenerator.settings: _*)
-   .settings(Docs.settings: _*)
-   .settings(includeProject(parserJVM): _*)
-   .settings(shareSourceDirectory(file("netlogo-core")): _*)
-   .settings(Defaults.coreDefaultSettings ++
+lazy val netlogo = project.in(file("netlogo-gui")).
+   dependsOn(parserJVM).
+   settings(commonSettings: _*).
+   settings(jvmSettings: _*).
+   settings(scalaSettings: _*).
+   settings(scalatestSettings: _*).
+   settings(JFlexRunner.settings: _*).
+   settings(EventsGenerator.settings: _*).
+   settings(Docs.settings: _*).
+   settings(includeProject(parserJVM): _*).
+   settings(shareSourceDirectory(file("netlogo-core")): _*).
+   settings(Defaults.coreDefaultSettings ++
              Testing.settings ++
              Packaging.settings ++
              Running.settings ++
@@ -94,8 +100,8 @@ lazy val netlogo = project.in(file("netlogo-gui"))
              ModelsLibrary.settings ++
              NativeLibs.nativeLibsTask ++
              GUISettings.settings ++
-             Depend.dependTask: _*)
-  .settings(
+             Depend.dependTask: _*).
+  settings(
     name := "NetLogo",
     mainClass in Compile := Some("org.nlogo.app.App"),
     modelsDirectory := file("models"),
@@ -143,15 +149,58 @@ lazy val netlogo = project.in(file("netlogo-gui"))
 lazy val threed = TaskKey[Unit]("threed", "enable NetLogo 3D")
 lazy val nogen = TaskKey[Unit]("nogen", "disable bytecode generator")
 
-lazy val publicationSettings =
-  bintrayPublishSettings ++
-  Seq(
-    bintray.Keys.repository in bintray.Keys.bintray := "NetLogoHeadless",
-    bintray.Keys.bintrayOrganization in bintray.Keys.bintray := Some("netlogo")
+lazy val headless = (project in file ("netlogo-headless")).
+  dependsOn(parserJVM % "test-internal->test;compile-internal->compile").
+  settings(scalaSettings: _*).
+  settings(scalastyleSettings: _*).
+  settings(jvmSettings: _*).
+  settings(scalatestSettings: _*).
+  settings(mockDependencies: _*).
+  settings(Scaladoc.settings: _*).
+  settings(Testing.settings: _*).
+  settings(Depend.dependTask: _*).
+  settings(Extensions.settings: _*).
+  settings(publicationSettings: _*).
+  settings(JFlexRunner.settings: _*).
+  settings(includeProject(parserJVM): _*).
+  settings(shareSourceDirectory(file("netlogo-core")): _*).
+  settings(
+    name          := "NetLogoHeadless",
+    version       := "6.0",
+    isSnapshot    := true,
+    autogenRoot   := file("autogen"),
+    extensionRoot := file("extensions").getAbsoluteFile,
+    mainClass in Compile         := Some("org.nlogo.headless.Main"),
+    nogen                        := { System.setProperty("org.nlogo.noGenerator", "true") },
+    libraryDependencies          += "org.ow2.asm" % "asm-all" % "5.0.4",
+    (fullClasspath in Runtime)   ++= (fullClasspath in Runtime in parserJVM).value,
+    resourceDirectory in Compile := baseDirectory.value / "resources" / "main",
+    resourceDirectory in Test    := baseDirectory.value / "resources" / "test",
+    excludedExtensions           := Seq("arduino", "bitmap", "csv", "gis", "gogo", "nw", "palette", "sound"),
+    all := { val _ = (
+      (packageBin in Compile).value,
+      (packageBin in Test).value,
+      (compile in Test).value,
+      Extensions.extensions
+    )}
   )
 
-lazy val parserSettings: Seq[Setting[_]] = Seq(
-)
+// this project exists as a wrapper for the mac-specific NetLogo components
+lazy val macApp = project.in(file("mac-app")).
+  dependsOn(netlogo).
+  settings(commonSettings: _*).
+  settings(jvmSettings: _*).
+  settings(JavaPackager.mainArtifactSettings: _*).
+  settings(
+    fork in run                           := true,
+    name                                  := "NetLogo-Mac-App",
+    unmanagedJars in Compile              += (packageBin in Compile in netlogo).value,
+    artifactPath in Compile in packageBin := target.value / "netlogo-mac-app.jar",
+    javacOptions                          ++= Seq("-bootclasspath", System.getProperty("java.home") + "/lib/rt.jar"))
+
+// this project is all about packaging NetLogo for distribution
+lazy val dist = project.in(file("dist")).
+  settings(NetLogoPackaging.settings(netlogo, macApp): _*)
 
 lazy val sharedResources = (project in file ("shared")).
   settings(commonSettings: _*).
@@ -207,41 +256,6 @@ lazy val parser = CrossProject("parser", file("."),
 
 lazy val parserJVM = parser.jvm
 lazy val parserJS  = parser.js
-
-lazy val headless = (project in file ("netlogo-headless")).
-  dependsOn(parserJVM % "test-internal->test;compile-internal->compile").
-  settings(scalaSettings: _*).
-  settings(scalastyleSettings: _*).
-  settings(jvmSettings: _*).
-  settings(scalatestSettings: _*).
-  settings(mockDependencies: _*).
-  settings(Scaladoc.settings: _*).
-  settings(Testing.settings: _*).
-  settings(Depend.dependTask: _*).
-  settings(Extensions.settings: _*).
-  settings(publicationSettings: _*).
-  settings(JFlexRunner.settings: _*).
-  settings(includeProject(parserJVM): _*).
-  settings(shareSourceDirectory(file("netlogo-core")): _*).
-  settings(
-    name          := "NetLogoHeadless",
-    version       := "6.0",
-    isSnapshot    := true,
-    autogenRoot   := file("autogen"),
-    extensionRoot := file("extensions"),
-    mainClass in Compile := Some("org.nlogo.headless.Main"),
-    nogen  := { System.setProperty("org.nlogo.noGenerator", "true") },
-    libraryDependencies += "org.ow2.asm" % "asm-all" % "5.0.4",
-    (fullClasspath in Runtime) ++= (fullClasspath in Runtime in parserJVM).value,
-    unmanagedResourceDirectories in Test  += baseDirectory.value / "resources" / "test",
-    excludedExtensions := Seq("arduino", "bitmap", "gis", "gogo", "nw", "palette", "sound"),
-    all := { val _ = (
-      (packageBin in Compile).value,
-      (packageBin in Test).value,
-      (compile in Test).value,
-      Extensions.extensions
-    )}
-  )
 
 // only exists for scalastyling
 lazy val parserCore = (project in file("parser-core")).

@@ -2,7 +2,7 @@
 
 package org.nlogo.app;
 
-import org.nlogo.api.I18N;
+import org.nlogo.core.I18N;
 import org.nlogo.awt.UserCancelException;
 
 import java.io.File;

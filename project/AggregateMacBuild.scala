@@ -3,6 +3,8 @@ import sbt._
 import java.nio.file.Files
 import java.nio.file.Paths
 
+import NetLogoPackaging.RunProcess
+
 object AggregateMacBuild extends PackageAction.AggregateBuild {
   // each application maps to the root of the build product
   // in mac, the build product is a that looks like:
