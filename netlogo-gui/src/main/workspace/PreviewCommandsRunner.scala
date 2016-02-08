@@ -1,14 +1,10 @@
 package org.nlogo.workspace
 
+import org.nlogo.core.{ AgentKind, CompilerException }
+import org.nlogo.api.{ JobOwner, PreviewCommands, SimpleJobOwner }
+import org.nlogo.nvm.{ Procedure, Workspace }
 import java.awt.image.BufferedImage
 
-import org.nlogo.core.AgentKind
-import org.nlogo.core.CompilerException
-import org.nlogo.api.JobOwner
-import org.nlogo.api.PreviewCommands
-import org.nlogo.api.SimpleJobOwner
-import org.nlogo.nvm.Workspace
-import org.nlogo.nvm.Procedure
 import org.nlogo.util.Utils.getResourceAsString
 
 import scala.util.Try
@@ -84,13 +80,19 @@ object PreviewCommandsRunner {
 
     val ws = initWorkspace(workspaceFactory, openModelIn, previewCommands)
 
-    ws.previewCommands match {
-      case compilableCommands: PreviewCommands.Compilable =>
-        val procedure = ws.compileCommands(compilableCommands.source)
-        new PreviewCommandsRunner(ws, procedure)
-      case _ => // non-compilable preview commands
+    try {
+      ws.previewCommands match {
+        case compilableCommands: PreviewCommands.Compilable =>
+          val procedure = ws.compileCommands(compilableCommands.source)
+          new PreviewCommandsRunner(ws, procedure)
+        case _ => // non-compilable preview commands
+          ws.dispose()
+          throw new NonCompilableCommandsException
+      }
+    } catch {
+      case e: CompilerException =>
         ws.dispose()
-        throw new NonCompilableCommandsException
+        throw e
     }
   }
 
@@ -101,16 +103,18 @@ class PreviewCommandsRunner private (
   procedure: Procedure) {
 
   lazy val previewImage: Try[BufferedImage] = Try {
-    val jobOwner = new SimpleJobOwner(this.getClass.getName, workspace.world.mainRNG, AgentKind.Observer)
-    try
+    try {
+      val jobOwner = new SimpleJobOwner(this.getClass.getName, workspace.world.mainRNG, AgentKind.Observer)
+      try
       workspace.evaluateCommands(jobOwner, "startup", workspace.world.observers, true)
-    catch {
-      case e: CompilerException => /* ignore */
+      catch {
+        case e: CompilerException => /* ignore */
+      }
+      workspace.runCompiledCommands(jobOwner, procedure)
+      workspace.exportView
+    } finally {
+      workspace.dispose()
     }
-    workspace.runCompiledCommands(jobOwner, procedure)
-    val image = workspace.exportView
-    workspace.dispose()
-    image
   }
 
   trait Runnable extends java.lang.Runnable {
