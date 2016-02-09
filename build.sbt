@@ -95,7 +95,7 @@ libraryDependencies ++= Seq(
   "org.jmock" % "jmock" % "2.5.1" % "test",
   "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
   "org.jmock" % "jmock-junit4" % "2.5.1" % "test",
-  "org.scalacheck" %% "scalacheck" % "1.12.2" % "test",
+  "org.scalacheck" %% "scalacheck" % "1.13.0" % "test",
   "org.scalatest" %% "scalatest" % "2.2.4" % "test",
   "org.apache.httpcomponents" % "httpclient" % "4.2",
   "org.apache.httpcomponents" % "httpmime" % "4.2",
