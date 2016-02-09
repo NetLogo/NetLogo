@@ -412,7 +412,6 @@ class TestAllSyntaxes extends FunSuite {
                     |_life ,O---,None,0,0,0
                     |_linkcode ,---L,None,0,0,0
                     |_loop command block,OTPL,None,0,1,1
-                    |_magicopen string,O---,None,0,1,1
                     |_mkdir string,OTPL,None,0,1,1
                     |_moveto turtle or patch,OT--,None,0,1,1
                     |_moviecancel ,OTPL,None,0,0,0

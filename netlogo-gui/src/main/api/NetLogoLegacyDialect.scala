@@ -3,7 +3,7 @@
 package org.nlogo.api
 
 import org.nlogo.core.{ AgentVariableSet, DefaultTokenMapper, Dialect, NetLogoCore, Resource,
-  TokenMapperInterface => CoreTokenMapperInterface, Command => CoreCommand, Reporter => CoreReporter }
+  TokenMapperInterface => CoreTokenMapperInterface, Command => CoreCommand, Reporter => CoreReporter, Syntax => CoreSyntax }
 
 object NetLogoLegacyDialect extends Dialect {
   override val is3D           = false
@@ -14,7 +14,15 @@ object NetLogoLegacyDialect extends Dialect {
     val getImplicitLinkVariables: Seq[String]     = AgentVariables.getImplicitLinkVariables
   }
   override val tokenMapper    = NetLogoLegacyDialectTokenMapper
+
+  case class _magicopen(name: Option[String]) extends CoreCommand {
+    def syntax = CoreSyntax.commandSyntax(
+      agentClassString = "O---",
+      right = name.map(_ => List()).getOrElse(List(CoreSyntax.StringType)))
+  }
 }
+
+import NetLogoLegacyDialect._magicopen
 
 trait DelegatingMapper extends CoreTokenMapperInterface {
   def defaultMapper: CoreTokenMapperInterface
@@ -38,9 +46,17 @@ trait DelegatingMapper extends CoreTokenMapperInterface {
   private def instantiate[T](name: String) =
     Class.forName(name).newInstance.asInstanceOf[T]
 
+  private def magicOpenToken(s: String): Option[CoreCommand] =
+    if (s.startsWith("___") && s.length > 3)
+      Some(_magicopen(Some(s.stripPrefix("___"))))
+    else if (s.equalsIgnoreCase("_magic-open"))
+      Some(_magicopen(None))
+    else
+      None
+
   def getCommand(s: String): Option[CoreCommand] =
     commands.get(s.toUpperCase).map(instantiate[CoreCommand]) orElse
-      defaultMapper.getCommand(s)
+      magicOpenToken(s) orElse defaultMapper.getCommand(s)
 
   def getReporter(s: String): Option[CoreReporter] =
     reporters.get(s.toUpperCase).map(instantiate[CoreReporter]) orElse

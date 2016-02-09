@@ -117,10 +117,6 @@ package etc {
     def syntax = Syntax.commandSyntax(agentClassString = "O---")
   }
 
-  case class _magicopen() extends Command {
-    def syntax = Syntax.commandSyntax(agentClassString = "O---", right = List(StringType))
-  }
-
   case class _monitorprecision() extends Reporter {
     def syntax = Syntax.reporterSyntax(ret = NumberType, agentClassString = "O---", right = List(WildcardType, NumberType))
   }

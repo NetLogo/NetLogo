@@ -26,7 +26,6 @@ C __hubnet-wait-for-clients hubnet._hubnetwaitforclients
 C __hubnet-wait-for-messages hubnet._hubnetwaitformessages
 C __inspect-with-radius gui._inspectwithradius
 C __life etc._life
-C __magic-open etc._magicopen
 C __reload gui._reload
 C __set-error-locale etc._seterrorlocale
 C __spanish etc._spanish

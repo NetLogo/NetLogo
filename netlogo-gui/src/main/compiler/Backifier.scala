@@ -136,6 +136,8 @@ class Backifier(program: Program,
         val l = new nvmprim._let()
         l.let = let
         l
+      case api.NetLogoLegacyDialect._magicopen(name) =>
+        new nvmprim._magicopen(name)
       case cc: core.prim._carefully =>
         new nvmprim._carefully(cc.let)
       case _ =>
