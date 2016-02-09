@@ -9,29 +9,32 @@ class VersionTests extends FunSuite {
   /// update this section every time the version changes -- ev 11/7/07
   test("currentVersion") {
     // these differ from the current version in suffix only
-    assert(compatibleVersion("NetLogo 5.2"))
-    assert(compatibleVersion("NetLogo 5.2RC1"))
-    assert(compatibleVersion("NetLogo 5.2beta1"))
-    assert(compatibleVersion("NetLogo 5.2pre1"))
-    assert(compatibleVersion("NetLogo 5.2alpha1"))
-    assert(compatibleVersion("NetLogo 5.2.1"))
-    assert(compatibleVersion("NetLogo 5.2.1weirdversion"))
-    assert(compatibleVersion("NetLogo 5.2weirdversion"))
+    assert(compatibleVersion("NetLogo 6.0"))
+    assert(compatibleVersion("NetLogo 6.0RC1"))
+    assert(compatibleVersion("NetLogo 6.0beta1"))
+    assert(compatibleVersion("NetLogo 6.0pre1"))
+    assert(compatibleVersion("NetLogo 6.0alpha1"))
+    assert(compatibleVersion("NetLogo 6.0.1"))
+    assert(compatibleVersion("NetLogo 6.0.1weirdversion"))
+    assert(compatibleVersion("NetLogo 6.0weirdversion"))
   }
   test("futureMinor") {
     // these differ from the current version by minor version only
-    assert(!compatibleVersion("NetLogo 5.3"))
-    assert(!compatibleVersion("NetLogo 5.3RC1"))
-    assert(!compatibleVersion("NetLogo 5.3beta1"))
-    assert(!compatibleVersion("NetLogo 5.3pre1"))
-    assert(!compatibleVersion("NetLogo 5.3alpha1"))
-    assert(!compatibleVersion("NetLogo 5.3.1"))
-    assert(!compatibleVersion("NetLogo 5.3.1weirdversion"))
-    assert(!compatibleVersion("NetLogo 5.3weirdversion"))
+    assert(!compatibleVersion("NetLogo 6.1"))
+    assert(!compatibleVersion("NetLogo 6.1RC1"))
+    assert(!compatibleVersion("NetLogo 6.1beta1"))
+    assert(!compatibleVersion("NetLogo 6.1pre1"))
+    assert(!compatibleVersion("NetLogo 6.1alpha1"))
+    assert(!compatibleVersion("NetLogo 6.1.1"))
+    assert(!compatibleVersion("NetLogo 6.1.1weirdversion"))
+    assert(!compatibleVersion("NetLogo 6.1weirdversion"))
   }
   // these don't need to be changed very often; they should always
   // pass properly since we're long past these versions -- ev
   test("OldVersions") {
+    assert(!compatibleVersion("NetLogo 5.1"))
+    assert(!compatibleVersion("NetLogo 5.1RC1"))
+    assert(!compatibleVersion("NetLogo 5.1.1"))
     assert(!compatibleVersion("NetLogo 4.0"))
     assert(!compatibleVersion("NetLogo 4.0beta1"))
     assert(!compatibleVersion("NetLogo 4.0pre1"))

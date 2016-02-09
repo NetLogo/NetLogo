@@ -6,7 +6,7 @@ import Shape.{ VectorShape, LinkShape }
 
 import ShapeParser.{ parseVectorShapes, parseLinkShapes }
 
-case class Model(code: String = "", widgets: List[Widget] = List(View()), info: String = "", version: String = "NetLogo 5.0",
+case class Model(code: String = "", widgets: List[Widget] = List(View()), info: String = "", version: String = "NetLogo 6.0",
   turtleShapes: List[VectorShape] = Model.defaultShapes, behaviorSpace: List[String] = Nil,
   linkShapes: List[LinkShape] = Model.defaultLinkShapes, previewCommands: List[String] = Nil) {
 
