@@ -4,7 +4,8 @@ package org.nlogo.parse
 
 import org.nlogo.core,
   core.{Dialect, DummyExtensionManager, CompilerException, CompilerUtilitiesInterface,
-        File, FrontEndInterface, ExtensionManager, StructureResults, Program, LiteralImportHandler}
+        Femto, File, FrontEndInterface, ExtensionManager, StructureResults, Program,
+        LiteralImportHandler, TokenColorizer }
 
 object CompilerUtilities extends CompilerUtilitiesInterface {
   import FrontEndInterface.ProceduresMap
@@ -76,10 +77,11 @@ object CompilerUtilities extends CompilerUtilitiesInterface {
       case OpenBracket | Literal | Ident =>
         true
       case Reporter =>
-        !token.value.isInstanceOf[core.prim._letvariable]
+        ! (token.value.isInstanceOf[core.prim._letvariable] || token.value.isInstanceOf[core.prim._symbol])
       case _ =>
         false
     }
   }
 
+  val colorizer: TokenColorizer = Colorizer
 }

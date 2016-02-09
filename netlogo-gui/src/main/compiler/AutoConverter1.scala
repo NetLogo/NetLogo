@@ -2,10 +2,8 @@
 
 package org.nlogo.compiler
 
+import org.nlogo.core.{ Token, TokenType, TokenizerInterface }
 import org.nlogo.api.VersionHistory
-import org.nlogo.core.Token
-import org.nlogo.core.TokenizerInterface
-import org.nlogo.core.TokenType
 import VersionHistory._  // olderThan* methods
 
 // AutoConverter1 handles easy conversions that don't require parsing.
@@ -230,7 +228,7 @@ class AutoConverter1(implicit tokenizer:TokenizerInterface) {
     var offset:Int = 0
     while(tokens.hasNext) {
       var token:Token = tokens.next()
-      if(token.tpe == TokenType.Ident && token.value.asInstanceOf[String] .equals("BREEDS")) {
+      if (token.tpe == TokenType.Ident && token.value.asInstanceOf[String].equals("BREEDS")) {
         val breeds = new collection.mutable.ArrayBuffer[String]
         val start:Int = token.start
         token = tokens.head
@@ -263,7 +261,7 @@ class AutoConverter1(implicit tokenizer:TokenizerInterface) {
     var offset:Int = 0
     while(tokens.hasNext) {
       var token:Token = tokens.next()
-      if(token.tpe == TokenType.Ident && token.value.asInstanceOf[String] .equals("__EXTENSIONS")) {
+      if(token.tpe == TokenType.Ident && token.value.asInstanceOf[String].equals("__EXTENSIONS")) {
         val extensions = new collection.mutable.ArrayBuffer[String]
         val start:Int = token.start
         token = tokens.head
@@ -303,8 +301,8 @@ class AutoConverter1(implicit tokenizer:TokenizerInterface) {
     var offset:Int = 0
     while(tokens.hasNext) {
       var token:Token = tokens.next()
-      if(token.tpe == TokenType.Ident && (token.value.asInstanceOf[String] .equals("NSUM") || token.value.asInstanceOf[String] .equals("NSUM4"))) {
-        val neighbors:String = if(token.value.asInstanceOf[String] .equals("NSUM")) "neighbors" else "neighbors4"
+      if(token.tpe == TokenType.Ident && (token.value.asInstanceOf[String].equals("NSUM") || token.value.asInstanceOf[String].equals("NSUM4"))) {
+        val neighbors:String = if(token.value.asInstanceOf[String].equals("NSUM")) "neighbors" else "neighbors4"
         var start:Int = token.start + offset
         var end:Int = token.end + offset
         val replacement:String = "sum values-from " + neighbors

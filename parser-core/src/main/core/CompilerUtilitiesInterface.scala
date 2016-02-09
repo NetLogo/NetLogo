@@ -27,4 +27,10 @@ trait CompilerUtilitiesInterface extends LiteralParser {
                  extensionManager: ExtensionManager): Boolean
 
   def isReporter(s: String): Boolean
+
+  def colorizer: TokenColorizer
+}
+
+trait TokenColorizer {
+  def toHtml(line: String): String
 }

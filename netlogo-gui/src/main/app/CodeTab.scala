@@ -2,7 +2,7 @@
 
 package org.nlogo.app
 
-import org.nlogo.core.AgentKind
+import org.nlogo.core.{ AgentKind, I18N }
 import org.nlogo.agent.Observer
 import org.nlogo.editor.LineNumbersBar
 import org.nlogo.window.EditorAreaErrorLabel
@@ -12,7 +12,6 @@ import java.awt.{BorderLayout, Dimension, Graphics}
 import java.awt.event.{ActionEvent, TextEvent, TextListener}
 import java.awt.print.PageFormat
 import javax.swing.{JButton, ImageIcon, AbstractAction, Action, ScrollPaneConstants, JScrollPane, BorderFactory, JPanel}
-import org.nlogo.core.I18N
 
 class CodeTab(val workspace: AbstractWorkspace) extends JPanel
   with org.nlogo.window.ProceduresInterface

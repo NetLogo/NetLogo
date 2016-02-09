@@ -1,10 +1,9 @@
 package org.nlogo.app.previewcommands
 
+import org.nlogo.window.{ GraphicsPreviewInterface, PreviewCommandsEditorInterface }
 import java.awt.Frame
 
 import org.nlogo.api.PreviewCommands
-import org.nlogo.window.GraphicsPreviewInterface
-import org.nlogo.window.PreviewCommandsEditorInterface
 import org.nlogo.workspace.WorkspaceFactory
 
 class PreviewCommandsEditor(

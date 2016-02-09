@@ -2,8 +2,7 @@
 
 package org.nlogo.api
 
-import org.nlogo.core.LogoList
-import org.nlogo.core.CompilerException
+import org.nlogo.core.{ CompilerException, LogoList }
 
 /**
  * Implements NetLogoListener with empty methods, which can be overriden

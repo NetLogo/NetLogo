@@ -2,8 +2,7 @@
 
 package org.nlogo.compiler
 
-import org.nlogo.core.CompilerException
-import org.nlogo.core.Token
+import org.nlogo.core.{ CompilerException, Token }
 
 object CompilerExceptionThrowers {
 

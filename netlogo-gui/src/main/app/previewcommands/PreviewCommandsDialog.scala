@@ -1,5 +1,8 @@
 package org.nlogo.app.previewcommands
 
+import org.nlogo.window.{ EditorColorizer, GraphicsPreviewInterface }
+import org.nlogo.workspace.{ Evaluator, WorkspaceFactory }
+import org.nlogo.core.{ AgentKind, CompilerException, I18N }
 import java.awt.BorderLayout
 import java.awt.Frame
 import java.awt.event.ActionEvent
@@ -9,18 +12,11 @@ import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
 
 import org.nlogo.agent.Observer
-import org.nlogo.core.AgentKind
-import org.nlogo.core.CompilerException
-import org.nlogo.core.I18N
 import org.nlogo.api.PreviewCommands
 import org.nlogo.awt.Positioning.center
 import org.nlogo.swing.Utils.addEscKeyAction
-import org.nlogo.window.EditorColorizer
-import org.nlogo.window.GraphicsPreviewInterface
-import org.nlogo.workspace.Evaluator
 import org.nlogo.workspace.ModelsLibrary.getImagePath
 import org.nlogo.workspace.PreviewCommandsRunner.initWorkspace
-import org.nlogo.workspace.WorkspaceFactory
 
 import javax.swing.AbstractAction
 import javax.swing.BorderFactory

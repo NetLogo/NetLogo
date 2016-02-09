@@ -2,8 +2,7 @@
 
 package org.nlogo.api
 
-import org.nlogo.core.LogoList
-import org.nlogo.core.Nobody
+import org.nlogo.core.{ LogoList, Nobody }
 import org.nlogo.core.{ Syntax => CoreSyntax, TypeNames => CoreTypeNames }
 /**
  * Specifies the arguments accepted by a primitive.

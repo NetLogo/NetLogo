@@ -1,5 +1,6 @@
 package org.nlogo.app.previewcommands
 
+import org.nlogo.window.{ CodeEditor, EditorAreaErrorLabel, EditorColorizer }
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.Font
@@ -17,9 +18,6 @@ import org.nlogo.app.CodeTab
 import org.nlogo.awt.Fonts.platformMonospacedFont
 import org.nlogo.swing.HasPropertyChangeSupport
 import org.nlogo.util.Implicits.RichString
-import org.nlogo.window.CodeEditor
-import org.nlogo.window.EditorAreaErrorLabel
-import org.nlogo.window.EditorColorizer
 
 import javax.swing.BorderFactory
 import javax.swing.DefaultComboBoxModel

@@ -2,20 +2,12 @@
 
 package org.nlogo.app
 
-import org.nlogo.agent.Agent
-import org.nlogo.agent.ArrayAgentSet
-import org.nlogo.agent.OutputObject
-import org.nlogo.core.AgentKind
-import org.nlogo.core.CompilerException
-import org.nlogo.core.I18N
-import org.nlogo.core.TokenType
+import org.nlogo.window.{ CommandCenterInterface, EditorColorizer, JobWidget, Widget }
+import org.nlogo.agent.{ Agent, ArrayAgentSet, OutputObject }
+import org.nlogo.core.{ AgentKind, CompilerException, I18N, TokenType }
 import org.nlogo.editor.EditorField
 import org.nlogo.nvm.Workspace
-import org.nlogo.window.CommandCenterInterface
-import org.nlogo.window.EditorColorizer
 import org.nlogo.window.Events.{ AddJobEvent, CompiledEvent, OutputEvent }
-import org.nlogo.window.JobWidget
-import org.nlogo.window.Widget
 
 import scala.collection.immutable.List
 

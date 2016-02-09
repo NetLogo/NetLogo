@@ -2,7 +2,7 @@
 
 package org.nlogo.agent
 
-import org.nlogo.api.{ ValueConstraint}
+import org.nlogo.api.ValueConstraint
 import org.nlogo.core.I18N
 
 /**

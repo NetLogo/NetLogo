@@ -2,17 +2,9 @@
 
 package org.nlogo.app
 
+import org.nlogo.core.{ AgentKind, CompilerException, I18N, LogoList, Nobody, Shape, Token }
 import org.nlogo.agent.{Agent, World3D, World}
 import org.nlogo.api._
-import org.nlogo.core.I18N
-import org.nlogo.core.Shape
-import org.nlogo.core.I18N
-import org.nlogo.core.AgentKind
-import org.nlogo.core.LogoList
-import org.nlogo.core.LogoList
-import org.nlogo.core.Nobody
-import org.nlogo.core.CompilerException
-import org.nlogo.core.Token
 import org.nlogo.awt.UserCancelException
 import org.nlogo.log.Logger
 import org.nlogo.nvm.{CompilerInterface, Workspace}

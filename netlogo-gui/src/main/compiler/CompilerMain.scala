@@ -7,7 +7,7 @@ package org.nlogo.compiler
 // big exception to that principle, though, which is that the ExtensionManager gets side-effected in
 // StructureParser. - ST 2/21/08, 1/21/09
 
-import org.nlogo.api.{ Version }
+import org.nlogo.api.Version
 import org.nlogo.core.Program
 import org.nlogo.nvm.{GeneratorInterface, Procedure}
 import org.nlogo.core.{ CompilationEnvironment, CompilationOperand, ExtensionManager, FrontEndInterface, FrontEndProcedure, Femto }
@@ -16,8 +16,8 @@ import scala.collection.JavaConversions._
 
 private object CompilerMain {
 
-  private val frontEnd = Femto.scalaSingleton[FrontEndInterface](
-    "org.nlogo.parse.FrontEnd")
+  private val frontEnd =
+    Femto.scalaSingleton[FrontEndInterface]("org.nlogo.parse.FrontEnd")
 
   def compile(sources: Map[String, String], displayName: Option[String], program: Program, subprogram: Boolean,
               oldProcedures: java.util.Map[String, Procedure],

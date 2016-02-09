@@ -2,10 +2,9 @@
 
 package org.nlogo.window
 
+import org.nlogo.core.{ Token, TokenType }
 import java.awt.Color
-import org.nlogo.api.{ CompilerServices}
-import org.nlogo.core.Token
-import org.nlogo.core.TokenType
+import org.nlogo.api.CompilerServices
 import org.nlogo.editor.Colorizer
 import collection.JavaConverters._
 
@@ -77,23 +76,16 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer[TokenType] {
 
   ///
 
+  private val tokenTypeColors = Map[TokenType, java.awt.Color](
+    TokenType.Literal  -> SyntaxColors.CONSTANT_COLOR,
+    TokenType.Command  -> SyntaxColors.COMMAND_COLOR,
+    TokenType.Reporter -> SyntaxColors.REPORTER_COLOR,
+    TokenType.Keyword  -> SyntaxColors.KEYWORD_COLOR,
+    TokenType.Comment  -> SyntaxColors.COMMENT_COLOR
+  )
+
   private def getTokenColor(tpe: TokenType) =
-    tpe match {
-      case TokenType.Literal =>
-        SyntaxColors.CONSTANT_COLOR
-      case TokenType.Command =>
-        SyntaxColors.COMMAND_COLOR
-      case TokenType.Reporter =>
-        SyntaxColors.REPORTER_COLOR
-      case TokenType.Ident =>
-        SyntaxColors.REPORTER_COLOR
-      case TokenType.Keyword =>
-        SyntaxColors.KEYWORD_COLOR
-      case TokenType.Comment =>
-        SyntaxColors.COMMENT_COLOR
-      case _ =>
-        SyntaxColors.DEFAULT_COLOR
-    }
+    tokenTypeColors.getOrElse(tpe, SyntaxColors.DEFAULT_COLOR)
 
   def getTokenAtPosition(text: String, position: Int): String =
     Option(compiler.getTokenAtPosition(text, position))

@@ -3,7 +3,7 @@
 package org.nlogo.app
 
 import org.nlogo.workspace.AbstractWorkspace
-import org.nlogo.api.{ ModelSection}
+import org.nlogo.api.ModelSection
 import org.nlogo.core.I18N
 
 // This is THE Code tab.  Certain settings and things that are only accessible here.

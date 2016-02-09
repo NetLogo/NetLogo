@@ -2,9 +2,7 @@
 
 package org.nlogo.api
 
-import org.nlogo.core.CompilerException
-import org.nlogo.core.ProcedureSyntax
-import org.nlogo.core.Token
+import org.nlogo.core.{ CompilerException, ProcedureSyntax, Token }
 
 // just enough functionality to make the tests pass
 

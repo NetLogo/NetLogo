@@ -1,5 +1,6 @@
 package org.nlogo.app.previewcommands
 
+import org.nlogo.workspace.{ PreviewCommandsRunner, WorkspaceFactory }
 import scala.Left
 import scala.Right
 import scala.util.Failure
@@ -10,8 +11,6 @@ import org.nlogo.core.CompilerException
 import org.nlogo.api.PreviewCommands
 import org.nlogo.api.PreviewCommands.Compilable
 import org.nlogo.swing.HasPropertyChangeSupport
-import org.nlogo.workspace.PreviewCommandsRunner
-import org.nlogo.workspace.WorkspaceFactory
 
 class GUIState(
   modelContents: String,

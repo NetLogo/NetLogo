@@ -87,6 +87,11 @@ object Namer {
 
     (Namer0.nameKeywordsAndConstants _)             andThen
     (makeToken(new ReporterHandler(tokenMapper)) _) andThen
-    (makeToken(new CommandHandler(tokenMapper)) _)
+    (makeToken(new CommandHandler(tokenMapper)) _)  andThen
+    ((t: Token) =>
+        if (t.tpe == TokenType.Reporter && t.value.isInstanceOf[core.prim._symbol])
+          t.copy(tpe = TokenType.Ident, value = t.value)
+        else
+          t)
   }
 }

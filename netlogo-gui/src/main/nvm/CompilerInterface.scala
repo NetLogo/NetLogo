@@ -2,7 +2,7 @@
 
 package org.nlogo.nvm
 
-import org.nlogo.core.{ CompilationEnvironment, Dialect }
+import org.nlogo.core.{ CompilationEnvironment, CompilerUtilitiesInterface, Dialect }
 import org.nlogo.api.World
 import org.nlogo.core.{ CompilerException, ProcedureSyntax, Program, Token }
 import org.nlogo.api.{ ExtensionManager => ApiExtensionManager, SourceOwner }
@@ -12,6 +12,8 @@ import org.nlogo.api.{ ExtensionManager => ApiExtensionManager, SourceOwner }
 trait CompilerInterface {
 
   def defaultDialect: Dialect
+
+  def compilerUtilities: CompilerUtilitiesInterface
 
   @throws(classOf[CompilerException])
   def compileProgram(source: String, program: Program, extensionManager: ApiExtensionManager, compilationEnv: CompilationEnvironment): CompilerResults

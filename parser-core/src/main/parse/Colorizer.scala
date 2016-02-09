@@ -5,11 +5,11 @@ package org.nlogo.parse
 import
   java.awt.Color,
   org.nlogo.core,
-    core.{Program, Token, TokenType}
+    core.{Program, Token, TokenType, TokenColorizer }
 
 // code in, HTML out!
 
-object Colorizer {
+object Colorizer extends TokenColorizer {
 
   // for standalone use, for example on a web server
   def main(argv: Array[String]) {

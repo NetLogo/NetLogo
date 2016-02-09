@@ -2,13 +2,12 @@
 
 package org.nlogo.app
 
-import org.nlogo.core.AgentKind
+import org.nlogo.core.{ AgentKind, I18N }
 import org.nlogo.agent.{Agent, Observer, Turtle, Patch, Link}
 import org.nlogo.swing.Implicits._
 import java.awt._
 import event.{MouseEvent,MouseListener}
 import javax.swing._
-import org.nlogo.core.I18N
 
 class LinePrompt(commandLine: CommandLine) extends JComponent with MouseListener {
 

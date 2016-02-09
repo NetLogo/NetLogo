@@ -1,10 +1,8 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.util
+package org.nlogo.api
 
-import org.nlogo.api.MersenneTwisterFast
 import org.scalatest.FunSuite
-import org.nlogo.api.MersenneTwisterFast
 
 class MersenneTwisterFastTests extends FunSuite {
   // Note: I got the expected values in the following tests by actually running our actual code, not

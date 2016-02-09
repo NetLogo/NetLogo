@@ -1,7 +1,7 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 package org.nlogo.shape
 
-import org.nlogo.api.GraphicsInterface
+import org.nlogo.api.{ GraphicsInterface, Link }
 import java.awt.{ Shape => JShape, Color }
 import java.awt.geom.AffineTransform
 import java.awt.geom.Line2D
@@ -10,7 +10,6 @@ import java.awt.geom.Point2D
 import java.awt.geom.Ellipse2D
 import java.awt.Point
 import org.nlogo.core.{ShapeParser, Shape}, Shape.{ LinkShape => BaseLinkShape }
-import org.nlogo.api.Link
 
 @SerialVersionUID(0L)
 object LinkShape {

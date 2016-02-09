@@ -5,7 +5,7 @@ package org.nlogo.agent
 import java.io.PrintWriter
 import java.util.{ ArrayList, Collections, HashMap => JHashMap, List => JList, Map => JMap }
 import java.lang.{ Double => JDouble, Integer => JInteger, Long => JLong }
-import org.nlogo.api.{ Dump}
+import org.nlogo.api.Dump
 import org.nlogo.core.Nobody
 import Dump.csv
 import collection.JavaConverters._

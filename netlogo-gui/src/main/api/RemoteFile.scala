@@ -2,8 +2,7 @@
 
 package org.nlogo.api
 
-import org.nlogo.core.FileMode
-import org.nlogo.core.File
+import org.nlogo.core.{ File, FileMode }
 
 object RemoteFile {
   def exists(path: String): Boolean = {

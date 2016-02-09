@@ -2,7 +2,7 @@
 
 package org.nlogo.app
 
-import org.nlogo.api.{CompilerServices}
+import org.nlogo.api.CompilerServices
 import org.nlogo.core.I18N
 
 class EditorFactory(compiler: CompilerServices) extends org.nlogo.window.EditorFactory {

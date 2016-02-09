@@ -2,9 +2,8 @@
 
 package org.nlogo.app
 
+import org.nlogo.core.{ Token, TokenType }
 import org.nlogo.api.{ CompilerServices, EditorAreaInterface}
-import org.nlogo.core.Token
-import org.nlogo.core.TokenType
 import org.nlogo.editor.IndenterInterface
 
 class SmartIndenter(code: EditorAreaInterface, compiler: CompilerServices)
