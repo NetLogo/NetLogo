@@ -13,4 +13,3 @@ PatchAt_3D
   [patch-at  0 -1  0 ] of (patch 2 3 0) = (patch 2 2 0) => true
   [patch-at  0  0  1 ] of (patch 2 3 0) = (patch 2 3 1) => true
   [patch-at  0  0 -1 ] of (patch 2 3 0) = (patch 2 3 -1) => true
-

@@ -1,4 +1,7 @@
 ComparingLinks
+  globals [ glob1 ]
+  directed-link-breed [directed-edges directed-edge]
+  undirected-link-breed [undirected-edges undirected-edge]
  O> crt 3 [ fd 5 ]
  O> ask turtle 0 [ create-directed-edges-to other turtles ]
  O> ask turtle 1 [ create-directed-edges-to other turtles ]
@@ -63,4 +66,3 @@ ComparingPatches_3D
   patch 0 0 0 >= patch 0 0 1 => true
   patch 0 0 0 < patch 0 0 1 => false
   patch 0 0 0 <= patch 0 0 1 => false
-

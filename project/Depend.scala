@@ -48,10 +48,12 @@ object Depend {
       "core/prim" -> Nil,
       "editor" -> Nil,
       "generator" -> List("prim","prim/dead","prim/threed"),
+      "generate" -> List("prim"), // for headless
       "gl/render" -> List("shape"),
       "gl/view" -> List("gl/render","window"),
-      "headless" -> List("shape","workspace"),
+      "headless" -> List("shape","workspace","headless/test"),
       "headless/hubnet" -> List("headless", "hubnet/protocol"),
+      "headless/test" -> List("core"),
       "hubnet/client" -> List("hubnet/connection","hubnet/mirroring","hubnet/protocol","render","widget"),
       "hubnet/connection" -> List("api"),
       "hubnet/mirroring" -> List("api"),
@@ -136,7 +138,7 @@ check [gl.render] independentOf [Sun-Swing] [bad-AWT]
 [JOGL] = net.java.games.* com.jogamp.opengl.*
 check [JOGL-free-zone] independentOf [JOGL]
 
-[ASM-free-zone] = org.nlogo.* excluding [generator]
+[ASM-free-zone] = org.nlogo.* excluding [generator] [generate]
 check [ASM-free-zone] independentOf org.objectweb.*
 
 check org.nlogo.* independentOf com.wolfram.*

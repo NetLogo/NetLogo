@@ -20,6 +20,8 @@ Agentsets1
   any? turtles => false
 
 Agentsets2
+  breed [mice mouse]
+  breed [frogs frog]
   O> ask one-of turtles [ die ] => ERROR ASK expected input to be an agent or agentset but got NOBODY instead.
   O> crt 10
   [who] of min-one-of turtles [who] => 0
@@ -45,6 +47,7 @@ Agentsets3
   count (n-of 50 patches) => 50
 
 Agentsets4_2D
+  globals [ glob1 ]
   O> random-seed 29020
   O> crt 100
   T> fd 3
@@ -167,7 +170,6 @@ Agentsets5HCylind_2D
   O> ask patches [ ask patches at-points [ [ 1 1 ] ] [ set pcolor green ] ]
   count patches with [ pcolor != green ] => 11
 
-
 Agentsets6
   O> random-seed 383
   O> crt 2
@@ -184,6 +186,8 @@ Agentsets7
   count patches with [ pcolor = .23456 ] at-points [ [ 0 0 ] [ 1 1 ] ] => 0
 
 Agentsets8
+  breed [mice mouse]
+  breed [frogs frog]
   O> random-seed 9119
   O> create-frogs 3
   O> create-mice 5
@@ -216,6 +220,7 @@ Agentsets10
   count (turtles with [who != 37]) at-points [[0 0] [0 0] [-0.5 -0.5]] => 99
 
 Agentsets11
+  breed [mice mouse]
   O> create-mice 10
   O> create-mice 10 [ setxy 1 1 ]
   count mice at-points [[0 0] [0 0]] => 10
@@ -241,6 +246,7 @@ Agentsets13
   count (patches with [true]) at-points [[-3 -4] [-3 -4] [-3.5 -4.5]] => 1
 
 AgentSetEquality
+  globals [ glob1 ]
   turtles = turtles => true
   turtles = patches => false
   links = links => true
@@ -290,6 +296,7 @@ CountTurtlesOptimization
   count turtles with [true] > 0 => true
 
 LinkAgentsetDeadLinks
+  globals [ glob1 ]
   O> crt 10 [ create-links-with other turtles ]
   O> set glob1 links with [true]
   O> ask links [ die ]
@@ -299,6 +306,7 @@ LinkAgentsetDeadLinks
   n-of 5 glob1 => ERROR Requested 5 random agents from a set of only 0 agents.
 
 RemoveDuplicates
+  globals [ glob1 ]
   O> set glob1 one-of patches
   length remove-duplicates (list (patch-set glob1) (patch-set glob1)) => 1
   O> crt 2

@@ -1,9 +1,11 @@
 IncorrectlyTypedUseOfPatchPrimitiveOnAPatch_2D
+  globals [ glob1 ]
   O> set glob1 patch 0 0
   O> __ignore patch glob1 => COMPILER ERROR PATCH expected 2 inputs, a number and a number.
   O> ask patch glob1 [ ] => COMPILER ERROR Expected a number here, rather than a list or block.
 
 IncorrectlyTypedUseOfPatchPrimitiveOnAPatch_3D
+  globals [ glob1 ]
   O> set glob1 patch 0 0 0
   O> __ignore patch glob1 => COMPILER ERROR PATCH expected 3 inputs, a number, a number and a number.
   O> ask patch glob1 [ ] => COMPILER ERROR PATCH expected 3 inputs, a number, a number and a number.

@@ -15,4 +15,3 @@ RandomCoords1_3D
   max [      random-pzcor] of patches = max-pzcor => true
   min [round random-zcor ] of patches = min-pzcor => true
   max [round random-zcor ] of patches = max-pzcor => true
-

@@ -1,53 +1,65 @@
 LetSimple
+  globals [ glob1 ]
   O> let x 5 set glob1 x
   glob1 => 5
 
 LetWithAsk
+  turtles-own [tvar]
   O> crt 5
   T> let x who  set tvar x  set tvar x
   sum [tvar] of turtles => 10
 
 LetWithinIf
+  globals [ glob1 ]
   O> if not any? turtles [ let x 6 set glob1 x ]
   glob1 => 6
 
 LetWithSet
+  globals [ glob1 ]
   O> let x 5 set x 6 set glob1 x
   glob1 => 6
 
 LetWithWith_2D
+  globals [ glob1 ]
   O> let x 5 set glob1 count patches with [pxcor = x]
   glob1 => 11
 
 LetWithWith_3D
+  globals [ glob1 ]
   O> let x 5 set glob1 count patches with [pxcor = x]
   glob1 => 121
 
 LetTwiceInDifferentBlocks
+  globals [ glob1 ]
   O> set glob1 0
   O> foreach [true false] [ ifelse ? [ let x 5 set glob1 glob1 + x ] [ let x 6 set glob1 glob1 + x ] ]
   glob1 => 11
 
 LetInsideForeach1
+  globals [ glob1 ]
   O> set glob1 0
   O> foreach [1 2 3 4] [ let x ? set glob1 glob1 + x ]
   glob1 => 10
 
 LetInsideForeach2
+  globals [ glob1 ]
   to f let x 0 foreach [0] [ repeat 1 [ ] set glob1 x < 5 ] end
   O> f
   glob1 => true
 
 LetWithLet
+  globals [ glob1 ]
   O> let x 5 let y x set glob1 y
   glob1 => 5
 
 LetImmediatelyBeforeProcedureCall
+  globals [ glob1 ]
   to foo [x] set glob1 x end
   O> let y 5 foo y
   glob1 => 5
 
 LetInsideAsk1
+  globals [ glob1 ]
   to go ask turtles [ let x who fd 1 set glob1 glob1 + x ] end
   O> crt 10 set glob1 0
   O> set glob1 0
@@ -55,15 +67,18 @@ LetInsideAsk1
   glob1 => 45
 
 LetInsideAsk2
+  globals [ glob1 ]
   O> crt 1
   O> ask turtle 0 [ let a0 9 let a1 90 set glob1 a0 + a1 ]
   glob1 => 99
 
 LotsAndLotsOfLets
+  globals [ glob1 ]
   O> let a0 100 let a1 1 let a2 2 let a3 3 let a4 4 let a5 5 let a6 6 let a7 7 let a8 8 let a9 9 set glob1 a0 + a1 + a2 + a3 + a4 + a5 + a6 + a7 + a8 + a9
   glob1 => 145
 
 LotsAndLotsOfLetsInsideAsk
+  globals [ glob1 ]
   O> crt 1
   O> ask turtle 0 [ let a0 100 let a1 1 let a2 2 let a3 3 let a4 4 let a5 5 let a6 6 let a7 7 let a8 8 let a9 9 set glob1 a0 + a1 + a2 + a3 + a4 + a5 + a6 + a7 + a8 + a9 ]
   glob1 => 145
@@ -77,6 +92,7 @@ LetInsideRecursiveProcedure2
   O> foo 1
 
 LetAndTemplateVariables
+  globals [ glob1 ]
   O> set glob1 0
   O> let index 0 foreach [1 2 4] [ set glob1 glob1 + index * ? set index index + 1 ]
   glob1 => 10

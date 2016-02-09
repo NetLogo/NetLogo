@@ -37,4 +37,3 @@ MoveTo_3D
   [ycor] of turtle 0 => 3
   [zcor] of turtle 0 => 2
   sort [heading] of turtles => [0 180]
-

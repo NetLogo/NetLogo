@@ -32,8 +32,7 @@ class _runresult extends Reporter {
           result
         } catch {
           case ex: CompilerException =>
-            throw new EngineException(
-              context, this, ex.getMessage)
+            throw new EngineException(context, this, ex.getMessage.stripPrefix(CompilerException.RuntimeErrorAtCompileTimePrefix))
           case ex: EngineException =>
             throw new EngineException(context, ex.instruction, ex.getMessage)
           case ex: LogoException =>

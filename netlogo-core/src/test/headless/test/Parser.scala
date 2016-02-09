@@ -56,8 +56,7 @@ object Parser {
       case CommandErrorRegex(kind, command, err) =>
         errorParsers.flatMap(_(err)).headOption
           .map(Command(command, agentKind(kind), _))
-          .getOrElse(
-            throw new IllegalArgumentException(s"error missing!: $err"))
+          .getOrElse(throw new IllegalArgumentException(s"error missing!: $err"))
       case ReporterRegex(reporter, result) =>
         errorParsers.flatMap(_(result)).headOption
           .map(Reporter(reporter, _))
@@ -68,8 +67,7 @@ object Parser {
       case CompileRegex(err) =>
         errorParsers.flatMap(_(err)).headOption
           .map(Compile(_))
-          .getOrElse(
-            throw new IllegalArgumentException(s"error missing!: $err"))
+          .getOrElse(throw new IllegalArgumentException(s"error missing!: $err"))
       case _ =>
         throw new IllegalArgumentException(
           s"could not parse: $line")

@@ -7,11 +7,14 @@ package org.nlogo.headless
 // that framework should be extended so these tests could be done in it.)  - ST 3/18/08, 8/21/13
 
 import org.scalatest.{ FunSuite, BeforeAndAfterEach }
-import org.nlogo.core.CompilerException
+import org.nlogo.core.{ CompilerException, Model }
 import org.nlogo.nvm.{ ArgumentTypeException, EngineException }
 
 class TestErrorMessages extends FunSuite with AbstractTestLanguage with BeforeAndAfterEach {
-  override def beforeEach() { init() }
+  override def beforeEach() {
+    init()
+    openModel(Model("globals [glob1] breed [ frogs frog ] frogs-own [ age spots ]"))
+  }
   override def afterEach() { workspace.dispose() }
   test("perspectiveChangeWithOf") {
     testCommand("create-frogs 3 [ set spots turtle ((who + 1) mod count turtles) ]")

@@ -1,4 +1,5 @@
 SortByNonDestructive
+  globals [ glob1 glob2 ]
   O> set glob1 [5 4 3 2 1]
   O> set glob2 sort-by [?1 < ?2] glob1
   glob1 => [5 4 3 2 1]
@@ -19,6 +20,8 @@ SortingListsOfAgents_3D
   map [list [pxcor] of ? [pycor] of ?] sort (list (patch 1 1 0) (patch -1 1 0) (patch 1 -1 0) (patch -1 -1 0)) => [[-1 1] [1 1] [-1 -1] [1 -1]]
 
 SortingListsOfLinks
+  directed-link-breed [directed-edges directed-edge]
+  undirected-link-breed [undirected-edges undirected-edge]
   O> crt 5
   T> create-links-with turtles with [ who > [who] of myself ]
   map [[(list [who] of end1 [who] of end2) ] of ?] sort (list (link 1 4) (link 2 3) (link 1 2) (link 0 3) (link 1 3)) => [[0 3] [1 2] [1 3] [1 4] [2 3]]
@@ -75,6 +78,7 @@ sort-on-rejects-mixed-types
   sort-on [label] turtles => ERROR SORT-ON works on numbers, strings, or agents of the same type, but not on a string and a number
 
 sort-on-respects-with-local-randomness
+  globals [ glob1 glob2 ]
   O> random-seed 0
   O> crt 10
   O> with-local-randomness [ set glob1 map [[who] of ?] sort-on [xcor] turtles ]
@@ -82,6 +86,7 @@ sort-on-respects-with-local-randomness
   glob1 = glob2 => true
 
 sort-by-catches-java-7-general-contract-violation-error
+  globals [ glob1 ]
   to test __ignore sort-by [?1 <= ?2] n-values 1000 [random 5] end
   O> carefully [ test set glob1 "success" ] [ set glob1 error-message ]
   glob1 = "success" or glob1 = "predicate is not a strictly-less-than or strictly-greater than relation" => true

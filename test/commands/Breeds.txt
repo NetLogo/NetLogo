@@ -1,4 +1,7 @@
 TestIsBreed
+  globals [ glob1 ]
+  breed [mice mouse]
+  breed [frogs frog]
   is-frog? nobody => false
   is-frog? turtle 0 => false
   O> create-turtles 1
@@ -14,6 +17,9 @@ TestIsBreed
   is-frog? glob1 => false
 
 IsLinkBreed
+  globals [ glob1 ]
+  directed-link-breed [directed-edges directed-edge]
+  undirected-link-breed [undirected-edges undirected-edge]
   is-directed-edge? nobody => false
   is-directed-edge? link 0 1 => false
   O> crt 2
@@ -29,10 +35,11 @@ IsLinkBreed
   is-undirected-edge? glob1 => false
 
 SetBreedToNonBreed
+  breed [frogs frog]
+  directed-link-breed [directed-edges directed-edge]
   O> crt 1 [ set breed turtles ]
   O> crt 1 [ set breed frogs ]
   O> crt 1 [ set breed patches ] => ERROR You can't set BREED to a non-breed agentset.
   O> crt 1 [ set breed turtles with [true] ] => ERROR You can't set BREED to a non-breed agentset.
   O> crt 1 [ set breed links ] => ERROR You can't set BREED to a non-breed agentset.
   O> crt 1 [ set breed directed-edges ] => ERROR You can't set BREED to a non-breed agentset.
-

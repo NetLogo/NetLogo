@@ -66,11 +66,13 @@ InconeInvalidInputs
   T> ask patches in-cone 0 361 [set pcolor red] => ERROR IN-CONE cannot take an angle greater than 360.
 
 InconeLargeRadiusDuplicationCheck
+  globals [ glob1 ]
   O> crt 1
   T> set glob1 count patches in-cone 100 360
   count patches = glob1 => true
 
 InconeLargeRadiusDuplicationCheck_3D
+  globals [ glob1 ]
   O> crt 1
   T> tilt-up 90
   T> set glob1 count patches in-cone 100 360

@@ -62,6 +62,7 @@ RandomFloat2
   min [random-float -10] of patches < -9 => true
 
 RandomGamma
+  globals [ glob1 ]
   O> random-seed 2722
   O> set glob1 n-values 100000 [random-gamma 50 5]
   abs (mean glob1 - 10) < 0.01 => true
@@ -91,6 +92,7 @@ RandomOneOfWithLists
   n-values 100 [?] = sort remove-duplicates n-values 1000 [one-of n-values 100 [?]] => true
 
 RandomNOfWithLists
+  globals [ glob1 ]
   O> random-seed 27892
   n-of -1 [] => ERROR First input to N-OF can't be negative.
   n-of -1 [1 2 3] => ERROR First input to N-OF can't be negative.
@@ -213,6 +215,7 @@ RandomNOfIsFairForLinks
   ratio < 3 => true
 
 RandomNOfIsFairForABreed
+  breed [mice mouse]
   to-report ratio let x [label] of mice report max x / min x end
   O> random-seed 39823
   O> create-mice 200
@@ -238,6 +241,7 @@ RandomNOfIsFairForABreed
   ratio < 3 => true
 
 RandomNOfIsFairForAnAgentsetConstructedOnTheFly
+  globals [ glob1 ]
   to-report ratio let x [label] of glob1 report max x / min x end
   O> random-seed 39823
   O> crt 200

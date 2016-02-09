@@ -25,4 +25,3 @@ CanMove2Box_2D
   [can-move? 1  ] of turtle 0 => false
   [can-move? 0.5] of turtle 0 => false
   [can-move? 0.2] of turtle 0 => true
-

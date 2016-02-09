@@ -45,12 +45,13 @@ object NetLogoBuild {
 
   def shareSourceDirectory(dir: File): Seq[Setting[_]] = Seq(
     unmanagedSourceDirectories in Compile += dir.getAbsoluteFile / "src" / "main",
-    excludeFilter in unmanagedSources in Compile := {
-      (excludeFilter in unmanagedSources in Compile).value ||
-      new SimpleFileFilter({ f =>
-        ! f.isDirectory &&
+    unmanagedSourceDirectories in Test    += dir.getAbsoluteFile / "src" / "test"
+    ) ++ Seq(Compile, Test).map(config =>
+      excludeFilter in unmanagedSources in config := {
+        (excludeFilter in unmanagedSources in config).value ||
+        new SimpleFileFilter({ f =>
+          ! f.isDirectory &&
           Path.rebase(dir, baseDirectory.value)(f).map(_.exists).getOrElse(false)
+        })
       })
-    }
-  )
 }

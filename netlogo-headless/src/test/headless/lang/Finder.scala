@@ -28,7 +28,6 @@ trait TaggedLanguageTest extends Finder {
 }
 
 trait TaggedSlowTest extends Finder {
-  println("In TaggedSlowTest!")
   override def test(name: String, otherTags: Tag*)(testFun: => Unit) = {
     super.test(name, (SlowTestTag +: otherTags):_*)(testFun)
   }
@@ -37,6 +36,4 @@ trait TaggedSlowTest extends Finder {
 class TestCommands extends CommandTests with TaggedLanguageTest
 class TestReporters extends ReporterTests with TaggedLanguageTest
 class TestModels extends ModelTests with TaggedSlowTest
-class TestExtensions extends ExtensionTests with TaggedSlowTest {
-  println("In TestExtensions!")
-}
+class TestExtensions extends ExtensionTests with TaggedSlowTest

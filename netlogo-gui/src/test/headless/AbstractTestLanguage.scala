@@ -5,8 +5,7 @@ package org.nlogo.headless
 import org.scalatest.Assertions
 import org.nlogo.agent.Agent
 import org.nlogo.api.{Equality, JobOwner, LogoException, NetLogoLegacyDialect, NetLogoThreeDDialect, Version, WorldDimensions3D}
-import org.nlogo.core.WorldDimensions
-import org.nlogo.core.{ AgentKind, CompilerException }
+import org.nlogo.core.{ AgentKind, CompilerException, Model, WorldDimensions }
 import org.nlogo.nvm.CompilerInterface
 import org.nlogo.core.Femto
 
@@ -32,8 +31,7 @@ trait AbstractTestLanguage extends Assertions {
       if(Version.is3D)
         new WorldDimensions3D(-5, 5, -5, 5, -5, 5)
       else
-        new WorldDimensions(-5, 5, -5, 5),
-      HeadlessWorkspace.TestDeclarations)
+        new WorldDimensions(-5, 5, -5, 5), "")
   }
 
   def defineProcedures(source: String) {
@@ -41,6 +39,20 @@ trait AbstractTestLanguage extends Assertions {
       import collection.JavaConverters._
       compiler.compileProgram(
         HeadlessWorkspace.TestDeclarations + source,
+        workspace.world.newProgram(List[String]().asJava),
+        workspace.getExtensionManager(), workspace.getCompilationEnvironment)
+    }
+    workspace.setProcedures(results.proceduresMap)
+    workspace.world.program(results.program)
+    workspace.init()
+    workspace.world.realloc()
+  }
+
+  def openModel(model: Model): Unit = {
+    val results = {
+      import collection.JavaConverters._
+      compiler.compileProgram(
+        model.code,
         workspace.world.newProgram(List[String]().asJava),
         workspace.getExtensionManager(), workspace.getCompilationEnvironment)
     }
@@ -72,30 +84,32 @@ trait AbstractTestLanguage extends Assertions {
   }
   private def privateTestReporterError(reporter: String,
                                        expectedError: String,
-                                       actualError: => String,
+                                       actualError: => Option[String],
                                        mode: TestMode) {
     try {
       testReporter(reporter, expectedError, mode)
       fail("failed to cause runtime error: \"" + reporter + "\"")
-    }
-    catch {
+    } catch {
+      // PureConstantOptimizer throws would-be runtime errors at compile-time, so we check those
+      case ex: CompilerException
+        if (ex.getMessage.startsWith(CompilerException.RuntimeErrorAtCompileTimePrefix)) =>
+          assertResult(CompilerException.RuntimeErrorAtCompileTimePrefix + expectedError)(ex.getMessage)
+      case ex: CompilerException =>
+        fail("expected runtime error, got compile error: " + ex.getMessage)
       case ex: Throwable =>
-        // PureConstantOptimizer turns some errors that would be runtime errors into compile-time
-        // errors, so we have to check for those
-        if(ex.getMessage.startsWith(CompilerException.RuntimeErrorAtCompileTimePrefix))
-          assertResult(CompilerException.RuntimeErrorAtCompileTimePrefix + expectedError)(
-            ex.getMessage)
-        else
-          withClue(mode + ": reporter: " + reporter) {
-            assertResult(expectedError)(actualError)
-          }
+        withClue(mode + ": reporter: " + reporter) {
+          if (actualError.isEmpty)
+            fail("expected to find an error, but none found")
+          else
+            assertResult(expectedError)(actualError.get)
+        }
     }
   }
   def testReporterError(reporter: String, error: String, mode: TestMode) {
-    privateTestReporterError(reporter, error, workspace.lastLogoException.getMessage, mode)
+    privateTestReporterError(reporter, error, Option(workspace.lastLogoException).map(_.getMessage), mode)
   }
   def testReporterErrorStackTrace(reporter: String, stackTrace: String, mode: TestMode) {
-    privateTestReporterError(reporter, stackTrace, workspace.lastErrorReport.stackTrace.get, mode)
+    privateTestReporterError(reporter, stackTrace, Option(workspace.lastErrorReport).flatMap(_.stackTrace), mode)
   }
   def testCommand(command: String,
                   agentClass: AgentKind = AgentKind.Observer,
@@ -149,9 +163,9 @@ trait AbstractTestLanguage extends Assertions {
     }
   }
 
-  def testCompilerError(source: String, errorMessage: String): Unit = {
+  def testCompilerError(model: Model, errorMessage: String): Unit = {
     try {
-      defineProcedures(source)
+      openModel(model)
       fail("no CompilerException occurred")
     } catch {
       case ex: CompilerException =>

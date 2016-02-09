@@ -69,4 +69,3 @@ DistanceWrappingAsymetrical_3D
   [ distancexyz 9 10 10] of patch 0 0 10 => 2.23606797749979
   [ distancexyz 10 0 10] of patch 10 10 10 => 1
   [ distancexyz 0 10 10] of patch 10 10 10 => 1
-
