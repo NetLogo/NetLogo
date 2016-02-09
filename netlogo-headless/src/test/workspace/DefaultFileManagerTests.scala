@@ -336,6 +336,8 @@ class DefaultFileManagerTests extends FunSuite with OneInstancePerTest {
     override def readNumberFromString(source: String): java.lang.Double = ???
 
     override def readNumberFromString(source: String, importHandler: LiteralImportHandler): java.lang.Double = ???
+
+    override def colorizer = ???
   }
 
   def testReadLine(fileText: String, expectedRead: String, i: Int) = {
