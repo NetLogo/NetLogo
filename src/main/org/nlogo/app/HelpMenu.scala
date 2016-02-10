@@ -39,9 +39,14 @@ class HelpMenu(app: App, colorizer: Colorizer[_])
   addMenuItem(
     launch(I18N.gui("netLogoUsersGroup"), false,
            "http://groups.yahoo.com/group/netlogo-users/"))
+  if (System.getProperty("netlogo.ui.help.showStackOverflow", "") == "true") {
+    addMenuItem(
+      launch(I18N.gui("netLogoStackOverflow"), false,
+             "http://stackoverflow.com/questions/tagged/netlogo"))
+  }
   addMenuItem(
-    launch(I18N.gui("netLogoStackOverflow"), false,
-           "http://stackoverflow.com/questions/tagged/netlogo"))
+    launch(I18N.gui("introToABM"), false,
+      "https://mitpress.mit.edu/books/introduction-agent-based-modeling"))
   addSeparator()
   addMenuItem(
     launch(I18N.gui("donate"), false,
