@@ -6,7 +6,7 @@ import org.nlogo.workspace.{ AbstractWorkspace, ModelsLibrary, Checksummer }
 
 object ChecksumsAndPreviews {
 
-  val Path = "test/checksums.txt"
+  val Path = "test/checksums-headless.txt"
 
   val allBenchmarks =
     List("Ants", "Bureaucrats", "BZ", "CA1D", "Erosion", "Fire", "FireBig", "Flocking", "GasLabCirc",
@@ -88,7 +88,26 @@ object ChecksumsAndPreviews {
         Some("it uses the sound extension") -> List(
           "/GAMES/FROGGER.NLOGO",
           "/ART/SOUND MACHINES.NLOGO",
-          "/CODE EXAMPLES/SOUND/"))
+          "/CODE EXAMPLES/SOUND/"),
+        Some("it involves the system dynamics modeler") -> List(
+          "/SAMPLE MODELS/SYSTEM DYNAMICS/"),
+        Some("it involves user interaction") -> List(
+          "/CODE EXAMPLES/USER INTERACTION EXAMPLE.NLOGO",
+          "/CODE EXAMPLES/MOUSE EXAMPLE.NLOGO"),
+        Some("it uses the qtj extension") -> List(
+          "/CODE EXAMPLES/QUICKTIME EXTENSION/"),
+        Some("it uses the movie prims") -> List(
+          "/CODE EXAMPLES/MOVIE EXAMPLE.NLOGO"),
+        Some("it uses the gogo extension") -> List(
+          "/CODE EXAMPLES/GOGO"),
+        Some("it uses the arduino extension") -> List(
+          "/IABM TEXTBOOK/CHAPTER 8/ARDUINO EXAMPLE.NLOGO"),
+        Some("it uses the gis extension") -> List(
+          "/CODE EXAMPLES/GIS/",
+          "/IABM TEXTBOOK/CHAPTER 8/TICKET SALES.NLOGO"
+          ),
+        Some("it uses the nw extension") -> List(
+          "/IABM TEXTBOOK/CHAPTER 8/SIMPLE VIRAL MARKETING.NLOGO"))
       slice <- slices
       if path.toUpperCase.containsSlice(slice)
     } yield {
