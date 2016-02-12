@@ -142,13 +142,20 @@ extends (Iterator[Token] => AnyRef)  // returns Agent or AgentSet
       var token = tokens.next()
       while(token.tpe != TokenType.CloseBrace) {
         cAssert(token.tpe == TokenType.OpenBracket, ERR_BAD_PATCH_SET_ARGS, token)
+        val expectedArity = world match {
+          case w: World3D => 3
+          case w: World   => 2
+        }
         val listVal = readLiteralPrefix(token, tokens).asInstanceOf[core.LogoList]
-        cAssert(listVal.size == 2 && listVal.scalaIterator.forall(_.isInstanceOf[java.lang.Double]),
+        cAssert(listVal.size == expectedArity && listVal.scalaIterator.forall(_.isInstanceOf[java.lang.Double]),
                 ERR_BAD_PATCH_SET_ARGS, token)
-        agentset.add(
-          getPatchAt(token,
-            listVal.get(0).asInstanceOf[java.lang.Double].intValue,
-            listVal.get(1).asInstanceOf[java.lang.Double].intValue))
+        val doubledPatchSet: Seq[Double] = listVal.scalaIterator.collect {
+          case d: java.lang.Double => d.doubleValue
+          case other               =>
+            cAssert(other.isInstanceOf[java.lang.Double], ERR_BAD_PATCH_SET_ARGS, token)
+            0
+        }.toSeq
+        agentset.add(getPatchAt(token, doubledPatchSet: _*))
         token = tokens.next()
       }
       agentset
@@ -164,15 +171,17 @@ extends (Iterator[Token] => AnyRef)  // returns Agent or AgentSet
   }
 
   /**
-  * parses a literal agent (e.g. "{turtle 3}" or "{patch 1 2}" or "{link 5 6}"
+  * parses a literal agent (e.g. "{turtle 3}" or "{patch 1 2} / {patch 1 2 3} (3D)" or "{link 5 6}"
   */
   private def parseLiteralAgent(token: Token, tokens: Iterator[Token]) = {
     // we shouldn't get here if we aren't importing, but check just in case
     cAssert(world != null, ERR_ILLEGAL_AGENT_LITERAL, token)
     token.value match {
       case "PATCH" =>
-        getPatchAt(token,
-          parsePcor(tokens), parsePcor(tokens))
+        world match {
+          case w: World3D => getPatchAt(token, parsePcor(tokens), parsePcor(tokens), parsePcor(tokens))
+          case w: World   => getPatchAt(token, parsePcor(tokens), parsePcor(tokens))
+        }
       case "TURTLE" =>
         val token = tokens.next()
         cAssert(token.tpe == TokenType.Literal && token.value.isInstanceOf[java.lang.Double],
@@ -190,10 +199,18 @@ extends (Iterator[Token] => AnyRef)  // returns Agent or AgentSet
 
   // put the try/catch in a separate method or we run afoul of SI-6191; that bug has trouble with
   // try/catch nested inside other constructs - ST 5/2/13
-  private def getPatchAt(token: Token, pxcor: Double, pycor: Double) =
-    try world.getPatchAt(pxcor, pycor)
-    catch { case _: org.nlogo.api.AgentException =>
-        exception("Invalid patch coordinates ( " + pxcor + " , " + pycor + " ) ", token) }
+  private def getPatchAt(token: Token, cors: Double*) =
+    try {
+      if (cors.length == 2)
+        world.getPatchAt(cors(0), cors(1))
+      else if (cors.length == 3)
+        world.asInstanceOf[World3D].getPatchAt(cors(0), cors(1), cors(2))
+      else
+        exception(s"Invalid patch coordinates ( ${cors.mkString(", ")} ) ", token)
+    } catch {
+      case _: org.nlogo.api.AgentException =>
+        exception(s"Invalid patch coordinates ( ${cors.mkString(", ")} ) ", token)
+    }
 
   /**
    * parses a double. This is a helper method for parseLiteralAgent().
