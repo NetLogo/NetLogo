@@ -176,7 +176,6 @@ class TestProfiler extends FixtureSuite  {
     declare(Model(code = "extensions [profiler]"))
     assertResult(false) { workspace.isReporter("profiler:start") }
     assertResult(true) { workspace.isReporter("profiler:report") }
-    assertResult(false) { workspace.isReporter("profiler:ghjfgjhkfhgjk") }
   }
 
 }
