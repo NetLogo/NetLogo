@@ -10,6 +10,14 @@ class TokenMapper(path: String, prefix: String) extends TokenMapperInterface {
     commands.get(s.toUpperCase).map(instantiate[Command])
   def getReporter(s: String): Option[Reporter] =
     reporters.get(s.toUpperCase).map(instantiate[Reporter])
+  def breedInstruction(primName: String, breedName: String): Option[Instruction] =
+    try {
+      Some(Instantiator.newInstance[Instruction](
+        Class.forName(s"org.nlogo.core.prim.$primName"), breedName))
+    } catch {
+      case e: ClassNotFoundException => None
+    }
+
   private def entries(entryType: String): Iterator[(String, String)] =
     for {
       line <- Resource.lines(path)

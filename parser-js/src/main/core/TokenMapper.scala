@@ -10,7 +10,11 @@ class TokenMapper(location: String, prefix: String) extends TokenMapperInterface
     commands.get(s.toUpperCase).map(_())
   def getReporter(s: String): Option[Reporter] =
     reporters.get(s.toUpperCase).map(_())
+  def breedInstruction(primName: String, breedName: String): Option[Instruction] =
+    breedConstructorPool.get(primName).map(_(breedName))
 
+  val breedConstructorPool: Map[String, String => Instruction] =
+    TokenClasses.packageConstructors[Instruction]("org.nlogo.core.prim")
   val reporters:Map[String, () => Reporter] =
     TokenClasses.compiledReporters[Reporter]("org.nlogo.core.prim")
   val commands:Map[String, () => Command] =

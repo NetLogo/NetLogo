@@ -5,7 +5,7 @@ package org.nlogo.compiler.prim.threed
 import org.nlogo.core.{ Reporter, Command, Syntax },
   Syntax.{ NumberType, TurtlesetType, PatchType, NobodyType, PatchsetType, StringType, TurtleType }
 
-case class _breedat() extends Reporter {
+case class _breedat(breedName: String) extends Reporter {
   def syntax = Syntax.reporterSyntax(ret = TurtlesetType, agentClassString = "-TP-", right = List(NumberType, NumberType, NumberType))
 }
 

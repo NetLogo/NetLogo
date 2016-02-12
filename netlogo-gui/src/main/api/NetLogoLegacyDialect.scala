@@ -3,7 +3,7 @@
 package org.nlogo.api
 
 import org.nlogo.core.{ AgentVariableSet, DefaultTokenMapper, Dialect, NetLogoCore, Resource,
-  TokenMapperInterface => CoreTokenMapperInterface, Command => CoreCommand, Reporter => CoreReporter, Syntax => CoreSyntax }
+  TokenMapperInterface => CoreTokenMapperInterface, Command => CoreCommand, Instruction => CoreInstruction, Reporter => CoreReporter, Syntax => CoreSyntax }
 
 object NetLogoLegacyDialect extends Dialect {
   override val is3D           = false
@@ -54,6 +54,8 @@ trait DelegatingMapper extends CoreTokenMapperInterface {
     else
       None
 
+  def overrideBreedInstruction(primName: String, breedName: String): Option[CoreInstruction] = None
+
   def getCommand(s: String): Option[CoreCommand] =
     commands.get(s.toUpperCase).map(instantiate[CoreCommand]) orElse
       magicOpenToken(s) orElse defaultMapper.getCommand(s)
@@ -61,6 +63,10 @@ trait DelegatingMapper extends CoreTokenMapperInterface {
   def getReporter(s: String): Option[CoreReporter] =
     reporters.get(s.toUpperCase).map(instantiate[CoreReporter]) orElse
       defaultMapper.getReporter(s)
+
+  def breedInstruction(primName: String, breedName: String): Option[CoreInstruction] =
+    overrideBreedInstruction(primName, breedName) orElse
+      defaultMapper.breedInstruction(primName, breedName)
 }
 
 object NetLogoLegacyDialectTokenMapper extends DelegatingMapper {
