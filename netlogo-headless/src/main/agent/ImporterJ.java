@@ -354,16 +354,17 @@ public abstract strictfp class ImporterJ
     }
   }
 
+  int perspectiveType = 0;
+
   void handleSpecialObserverVariable(Observer observer, Object val, String header) {
     if (header.equals(PERSPECTIVE_HEADER)) {
-      observer.setPerspective(PerspectiveJ.create(((Double) val).intValue()));
+      perspectiveType = ((Double) val).intValue();
     } else if (header.equals(SUBJECT_HEADER) && val instanceof Agent) {
-      Perspective existingPerspective = observer.perspective();
       int followDistance = 0;
-      if (existingPerspective.kind() == PerspectiveJ.FOLLOW) {
+      if (perspectiveType == PerspectiveJ.FOLLOW) {
         followDistance = 5;
       }
-      Perspective newPerspective = PerspectiveJ.create(existingPerspective.kind(), (Agent) val, followDistance);
+      Perspective newPerspective = PerspectiveJ.create(perspectiveType, (Agent) val, followDistance);
       observer.setPerspective(newPerspective);
     } else if (header.equals(NEXT_INDEX_HEADER)) {
       world.nextTurtleIndex(((Double) val).longValue());

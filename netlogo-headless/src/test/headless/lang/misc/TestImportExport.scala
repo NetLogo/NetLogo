@@ -5,8 +5,10 @@ package lang
 package misc
 
 import
-  org.nlogo.{ api, core, util, workspace => ws },
+  org.nlogo.{ api, agent, core, util, workspace => ws },
+    api.Agent,
     api.FileIO.file2String,
+    agent.AgentSet,
     core._,
     util.SlowTestTag,
     ws.Checksummer
@@ -248,33 +250,37 @@ class TestImportExport extends FixtureSuite  {
   }
 
   test("ImportSubject", SlowTestTag) { implicit fixture =>
-    import fixture._
+    import fixture.{ declare, testReporter, testCommand, workspace }
+    import scala.collection.JavaConversions._
     val filename = getUniqueFilename()
     declare(Model())
     exportWorld(filename)
     importWorld(filename)
     testReporter("subject", "nobody")
-    assertResult(workspace.world.observer().perspective)(api.Perspective.Observe)
+    assertResult(workspace.world.observer.perspective)(api.Perspective.Observe)
     testCommand("crt 1")
     testCommand("watch turtle 0")
     exportWorld(filename)
     testCommand("ca")
     importWorld(filename)
     testReporter("[who] of subject", "0")
-    assertResult(workspace.world.observer().perspective)(api.Perspective.Watch)
+    val watchAgent: Agent = workspace.world.turtles.agents.iterator.next()
+    assertResult(workspace.world.observer.perspective)(api.Perspective.Watch(watchAgent))
     testCommand("crt 1")
     testCommand("follow turtle 1")
     exportWorld(filename)
     testCommand("ca")
     importWorld(filename)
     testReporter("[who] of subject", "1")
-    assertResult(workspace.world.observer().perspective)(api.Perspective.Follow)
+    val followAgent: Agent = workspace.world.turtles.agents.iterator.toSeq(1)
+    assertResult(workspace.world.observer.perspective)(api.Perspective.Follow(followAgent, 5))
     testCommand("ride turtle 1")
     exportWorld(filename)
     testCommand("ca")
     importWorld(filename)
     testReporter("[who] of subject", "1")
-    assertResult(workspace.world.observer().perspective)(api.Perspective.Ride)
+    val rideAgent: Agent = workspace.world.turtles.agents.iterator.toSeq(1)
+    assertResult(workspace.world.observer.perspective)(api.Perspective.Ride(rideAgent))
   }
 
   test("NonExistentPlot", SlowTestTag) { implicit fixture =>
