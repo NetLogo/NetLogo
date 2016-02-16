@@ -55,3 +55,6 @@
 [submodule "extensions/arduino"]
 	path = extensions/arduino
 	url = https://github.com/NetLogo/Arduino-Extension/
+[submodule "extensions/cf"]
+	path = extensions/cf
+	url = https://github.com/qiemem/ControlFlowExtension
