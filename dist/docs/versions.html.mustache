@@ -16,13 +16,29 @@
     <p>
       For help running models made in old versions, see the <a href="transition.html">Transition Guide</a>.
     <h2>
-      Version 5.3.1 (??? 2016)
+      Version 5.3.1 (February 2016)
     </h2>
     <h3>Feature Changes</h3>
       <ul>
         <li>Mathematica Link is now included and has been tested to work with Mathematica 10.</li>
+        <li>A link to Introduction to Agent-Based Modelling has been added to the "Help" menu.</li>
       </ul>
     </h3>
+    <h3>Extension Changes</h3>
+      <ul>
+        <li>The gogo extension now prompts the user for the location of Java upon opening. This version of Java is used to launch the gogo hid daemon.</li>
+        <li>The correct version of the network extension is now bundled, which will open properly</li>
+        <li>Bundles the cf extension, which adds match, case, and select primitives.</li>
+      </ul>
+    <h3>Bugfixes</h3>
+      <ul>
+        <li>Corrects a bug where turtles wrapping around a torus-shaped world with pen down would sometimes cause NetLogo to loop infinitely.</li>
+        <li>Fixes a bug where buttons would appear to remain pressed after a right click on Mac.</li>
+        <li>Fixes a bug where pressing the right mouse button while dragging would confuse the mouse-down? primitive.</li>
+        <li>Fixes agent type-checking of tasks (bug appeared in 5.2.1).</li>
+        <li>link-neighbor? now returns true if and only if the neighbor is connected through an undirected link.</li>
+        <li>Documentation fixes for my-links and mean primitives.</li>
+      </ul>
     <h2>
       Version 5.3 (December 2015)
     </h2>
