@@ -16,9 +16,6 @@ trait PlatformBuild {
     new DocsDir()
   )
 
-  def scalaJar: File =
-    file(System.getProperty("user.home") + "/.sbt/boot/scala-2.9.2/lib/scala-library.jar")
-
   def mainJarAndDependencies(app: SubApplication): Initialize[Task[(File, Seq[File])]] = {
     Def.bind(repackageJar(app)) { repackagedJar =>
       Def.task { (repackagedJar.value, standardJars(app, netLogoRoot.value)) }
@@ -29,7 +26,8 @@ trait PlatformBuild {
     val standardDeps =
       (netLogoDir / "lib_managed" ** "*.jar").get
         .filter(_.isFile)
-        .filterNot(f => f.getName.contains("scalatest") || f.getName.contains("scalacheck")) :+ scalaJar
+        .filterNot(f => f.getName.contains("scalatest") || f.getName.contains("scalacheck") ||
+          f.getName.contains("hamcrest") || f.getName.contains("scala-compiler-2.9.2"))
     if (app.jarName.contains("HubNet"))
       standardDeps :+ netLogoDir / "NetLogoLite.jar"
     else
@@ -84,7 +82,9 @@ class MacPlatform(macApp: Project) extends PlatformBuild {
       Def.task {
         ((packageBin in Compile in macApp).value,
           (dependencyClasspath in macApp in Runtime).value.files
-            .filterNot(f => f.getName.contains("scalatest") || f.getName.contains("scalacheck") || f.getName.contains("jmock"))
+            .filterNot(f => f.getName.contains("scalatest") ||
+              f.getName.contains("scala-library-2.9.2") || f.getName.contains("scala-compiler-2.9.2") ||
+              f.getName.contains("scalacheck") || f.getName.contains("jmock"))
             .filterNot(_.isDirectory))
       }
     else super.mainJarAndDependencies(app)

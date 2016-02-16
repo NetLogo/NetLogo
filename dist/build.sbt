@@ -51,9 +51,8 @@ val sharedAppProjectSettings = Seq(
       .split(" ").toSeq,
       netLogoRoot              := baseDirectory.value.getParentFile.getParentFile,
       scalaVersion             := "2.9.2",
-      libraryDependencies      += "org.scala-lang" % "scala-library" % "2.9.2",
       unmanagedJars in Compile += netLogoRoot.value / "target" / "NetLogo.jar",
-      unmanagedJars in Compile ++= (netLogoRoot.value / "lib_managed" ** "*.jar").get,
+      unmanagedJars in Compile ++= (netLogoRoot.value / "lib_managed" ** "*.jar").get.filterNot(_.getName.contains("scala-compiler")),
       jfxPackageOptions                       := JavaPackager.jarAttributes,
       packageOptions in (Compile, packageBin) += {
         Package.ManifestAttributes(JAR_CLASS_PATH.toString ->
@@ -158,8 +157,8 @@ lazy val dist = project.in(file("."))
       IO.copyDirectory(webTarget.value, tmpTarget)
       IO.copyDirectory(netLogoRoot.value / "docs", tmpTarget / "docs")
       RunProcess(Seq("rsync", "-av", "--inplace", "--progress", tmpTarget.getPath, s"${user}@${host}:${targetDir}"), "rsync")
-      RunProcess(Seq("ssh", s"${user}@${host}", s""""chgrp -R apache ${targetDir}/${netLogoLongVersion.value}""""), "ssh - change release group")
-      RunProcess(Seq("ssh", s"${user}@${host}", s""""chmod -R g+rwX ${targetDir}/${netLogoLongVersion.value}""""), "ssh - change release permissions")
+      RunProcess(Seq("ssh", s"${user}@${host}", "chgrp", "-R", "apache", s"${targetDir}/${netLogoLongVersion.value}"), "ssh - change release group")
+      RunProcess(Seq("ssh", s"${user}@${host}", "chmod", "-R", "g+rwX",  s"${targetDir}/${netLogoLongVersion.value}"), "ssh - change release permissions")
     }
   )
 

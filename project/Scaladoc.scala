@@ -21,7 +21,7 @@ object Scaladoc {
     },
     scalacOptions in (Compile, doc) := {
       (scalacOptions in Compile in doc).value ++
-      Seq("-no-link-warnings", "-encoding", "us-ascii") ++
+      Seq("-encoding", "us-ascii") ++
       Seq("-sourcepath", baseDirectory.value.getAbsolutePath) ++
       Opts.doc.title("NetLogo") ++
       Opts.doc.version(netlogoVersion.value) ++
