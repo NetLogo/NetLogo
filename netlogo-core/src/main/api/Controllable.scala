@@ -2,6 +2,8 @@
 
 package org.nlogo.api
 
+import org.nlogo.core.CompilerException
+
 /**
  * Interface provides access to the NetLogo controlling API's report and command methods found in
  * methods independent of App.app and headless.HeadlessWorkspace.  This is useful for making java
@@ -16,4 +18,11 @@ trait Controllable {
   @throws(classOf[java.io.IOException])
   def open(path: String)
 
+  @throws(classOf[CompilerException])
+  def evaluateCommands(owner: JobOwner, source: String): Unit
+  @throws(classOf[CompilerException])
+  def evaluateCommands(owner: JobOwner, source: String, waitForCompletion: Boolean): Unit
+
+  @throws(classOf[CompilerException])
+  def evaluateReporter(owner: JobOwner, source: String): AnyRef
 }

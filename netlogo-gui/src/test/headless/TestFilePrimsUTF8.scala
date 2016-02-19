@@ -36,7 +36,7 @@ to-report read-line [a-file]
 end
 """
 
-  testModel(testName="file-read", model=Model(code=code, "")){
+  testModel(testName="file-read", model=Model(code=code)){
     val utfStringIn = reporter("read-string " + quoted("utf8-file.txt") ).get
     assert(utfStringIn === new String("A" + "\u00ea" + "\u00f1" + "\u00fc" + "C"))
 
@@ -50,7 +50,7 @@ end
   }
 
 
-  testModel(testName="file-read-line", model=Model(code=code, "")){
+  testModel(testName="file-read-line", model=Model(code=code)){
     val utfStringIn = reporter("read-line " + quoted("utf8-file.txt") ).get.toString
     assert(utfStringIn === new String(" \"A" + "\u00ea" + "\u00f1" + "\u00fc" + "C\""))
   }

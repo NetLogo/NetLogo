@@ -1,6 +1,6 @@
 package org.nlogo.workspace
 
-import org.nlogo.core.{ AgentKind, CompilerException }
+import org.nlogo.core.{ AgentKind, CompilerException, UpdateMode }
 import org.nlogo.api.{ JobOwner, PreviewCommands, SimpleJobOwner }
 import org.nlogo.nvm.{ Procedure, Workspace }
 import java.awt.image.BufferedImage

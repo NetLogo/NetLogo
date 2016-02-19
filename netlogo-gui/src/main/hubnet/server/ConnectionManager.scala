@@ -44,7 +44,7 @@ class ConnectionManager(val connection: ConnectionInterface,
   val VALID_SEND_TYPES_MESSAGE =
     "You can only send strings, booleans (true or false), numbers, and lists of these types."
 
-  private val world = workspace.world()
+  private val world = workspace.world
   private var worldBuffer = new ServerWorld(worldProps)
   private def worldProps =
     if(workspace.getPropertiesInterface != null) workspace.getPropertiesInterface

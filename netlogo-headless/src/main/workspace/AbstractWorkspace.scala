@@ -14,7 +14,7 @@ import
   org.nlogo.{ agent, api, core, nvm, plot },
   agent.{ AbstractExporter, Agent, AgentSet, World },
   api.{PlotInterface, CommandLogoThunk, Dump, Exceptions,
-    JobOwner, LogoException, ModelType, ReporterLogoThunk, SimpleJobOwner},
+    JobOwner, LogoException, ModelType, PreviewCommands, ReporterLogoThunk, SimpleJobOwner},
   core.{ CompilationEnvironment, CompilerUtilitiesInterface, Dialect, AgentKind, CompilerException, Femto, File, FileMode, LiteralParser},
   nvm.{ Activation, Command, Context, EngineException, FileManager, ImportHandler,
     Instruction, Job, MutableLong, Procedure, Workspace },
@@ -71,7 +71,7 @@ with ExtendableWorkspace with ExtensionCompilationEnvironment {
   /**
    * previewCommands used by make-preview and model test
    */
-  var previewCommands = AbstractWorkspace.DefaultPreviewCommands
+  var previewCommands: PreviewCommands = PreviewCommands.Default
 
   val lastRunTimes = new WeakHashMap[Job, WeakHashMap[Agent, WeakHashMap[Command, MutableLong]]]
 

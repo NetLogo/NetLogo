@@ -21,14 +21,37 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
 
   var state = PlotState()
 
-  override def toString = "Plot(" + name + ")"
-
   // this is kind of terrible, but its for
   // AbstractPlotWidget (plot.dirtyListener = Some(this))
   // JC - 12/20/10
   var dirtyListener: Option[Plot.DirtyListener] = None
 
   var plotListener: Option[PlotListener] = None
+
+  var _pens = List[PlotPen]()
+  var pensDirty = false
+
+  private var _currentPen: Option[PlotPen] = None
+
+  // This only affects the UI, not headless operation, but because it is included when a plot is
+  // exported, we keep it here rather than in PlotWidget, so that exporting can stay totally
+  // headless - ST 3/9/06
+  var legendIsOpen = false
+
+  /// default properties
+  private var _defaultXMin = 0.0
+  private var _defaultXMax = 10.0
+  private var _defaultYMin = 0.0
+  private var _defaultYMax = 10.0
+  private var _defaultAutoPlotOn = true
+  var setupCode: String = ""
+  var updateCode: String = ""
+
+  /// clearing
+  clear() // finally after all fields have been initialized, clear. unsure why...
+
+  override def toString = "Plot(" + name + ")"
+
   def setPlotListener(plotListener:PlotListener){
     if(plotListener == null) sys.error("null plotListener")
     this.plotListener = Some(plotListener)
@@ -38,21 +61,17 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
   def name(newName:String){ name = newName }
 
   def makeDirty(){ dirtyListener.foreach{_.makeDirty() }}
-
-  var _pens = List[PlotPen]()
   def pens = _pens
   def pens_=(pens:List[PlotPen]){
     _pens = pens
     currentPen = pens.headOption
   }
-  var pensDirty = false
 
-  def addPen(p:PlotPen){
+  def addPen(p:PlotPen) = {
     pens = pens :+ p
     pensDirty = true
   }
 
-  private var _currentPen: Option[PlotPen] = None
   // take the first pen if there is no current pen set
   override def currentPen: Option[PlotPen] = _currentPen.orElse(pens.headOption)
   def currentPen_=(p: PlotPen): Unit = currentPen=(if(p==null) None else Some(p))
@@ -61,45 +80,34 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
      // TODO this line must be cleaned up when we fix up hubnet plotting. the .get here is bad. JC - 6/2/10
     plotListener.foreach(_.currentPen(p.get.name))
   }
+
   def currentPenByName: String = currentPen.map(_.name).getOrElse(null)
   def currentPenByName_=(penName: String): Unit = { currentPen=(getPen(penName)) }
   def getPen(penName: String): Option[PlotPen] = pens.find(_.name.toLowerCase==penName.toLowerCase)
-
-  // This only affects the UI, not headless operation, but because it is included when a plot is
-  // exported, we keep it here rather than in PlotWidget, so that exporting can stay totally
-  // headless - ST 3/9/06
-  var legendIsOpen = false
-
-  /// default properties
-  private var _defaultXMin = 0.0
   def defaultXMin = _defaultXMin
   def defaultXMin_=(defaultXMin: Double){
     _defaultXMin = defaultXMin
     plotListener.foreach(_.defaultXMin(defaultXMin))
   }
 
-  private var _defaultXMax = 10.0
   def defaultXMax = _defaultXMax
   def defaultXMax_=(defaultXMax: Double){
     _defaultXMax = defaultXMax
     plotListener.foreach(_.defaultXMax(defaultXMax))
   }
 
-  private var _defaultYMin = 0.0
   def defaultYMin = _defaultYMin
   def defaultYMin_=(defaultYMin: Double) {
     _defaultYMin = defaultYMin
     plotListener.foreach(_.defaultYMin(defaultYMin))
   }
 
-  private var _defaultYMax = 10.0
   def defaultYMax = _defaultYMax
   def defaultYMax_=(defaultYMax: Double){
     _defaultYMax = defaultYMax
     plotListener.foreach(_.defaultYMax(defaultYMax))
   }
 
-  private var _defaultAutoPlotOn = true
   def defaultAutoPlotOn = _defaultAutoPlotOn
   def defaultAutoPlotOn_=(defaultAutoPlotOn: Boolean){
     _defaultAutoPlotOn = defaultAutoPlotOn
@@ -119,16 +127,10 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
 
   def yMax = state.yMax
 
-  var setupCode: String = ""
-  var updateCode:String = ""
-
   def saveString = {
     import org.nlogo.api.StringUtils.escapeString
     "\"" + escapeString(setupCode.trim) + "\"" + " " + "\"" + escapeString(updateCode.trim) + "\""
   }
-
-  /// clearing
-  clear() // finally after all fields have been initialized, clear. unsure why...
 
   override def plot(y: Double): Unit = {
     currentPen.foreach { p =>

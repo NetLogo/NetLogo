@@ -1,15 +1,13 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.headless
+package org.nlogo.workspace
 
-import org.nlogo.api.PreviewCommands
-import org.nlogo.workspace.AbstractWorkspaceScala
+import org.nlogo.api.{ PreviewCommands, Workspace }
 import org.nlogo.util.HexString.toHexString
 import java.io.PrintWriter
-import ChecksumsAndPreviews.Previews.needsManualPreview
 
 object Checksummer {
-  def initModelForChecksumming(workspace: HeadlessWorkspace) {
+  def initModelForChecksumming(workspace: Workspace) {
     workspace.renderer.renderLabelsAsRectangles_=(true)
     val source = workspace.previewCommands match {
       case PreviewCommands.Custom(source) => source
@@ -18,9 +16,9 @@ object Checksummer {
     workspace.command("random-seed 0")
     workspace.command(source)
   }
-  def calculateWorldChecksum(workspace: HeadlessWorkspace): String =
+  def calculateWorldChecksum(workspace: Workspace): String =
     calculateChecksum(workspace.exportWorld _)
-  def calculateGraphicsChecksum(workspace: HeadlessWorkspace): String =
+  def calculateGraphicsChecksum(workspace: Workspace): String =
     calculateChecksum{writer =>
       val raster = workspace.renderer.exportView(workspace)
       raster.getData.getPixels(0, 0, raster.getWidth, raster.getHeight, null: Array[Int])

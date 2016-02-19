@@ -76,7 +76,7 @@ object ModelLoader {
           ModelSection.BehaviorSpace,
           ModelSection.HubNetClient,
           ModelSection.LinkShapes,
-          ModelSection.ModelSettings)
+          ModelSection.ModelSettings)  // snap to grid
 
         val loadSectionEvents = sectionTypes.map { section => // kludgey - ST 2/11/08
           val lines = (section, map.get(section).length) match {

@@ -449,7 +449,7 @@ public strictfp class WidgetPanel
       // the entry in the model - ST 7/13/04, 3/14/06
       return null;
     } else if (type.equals("DUMMY GRAPHICS-WINDOW") || type.equals("DUMMY VIEW") || type.equals("VIEW")) {
-      view = new org.nlogo.window.DummyViewWidget(workspace.world);
+      view = new org.nlogo.window.DummyViewWidget(workspace.world());
       return view;
     } else {
       throw new IllegalStateException

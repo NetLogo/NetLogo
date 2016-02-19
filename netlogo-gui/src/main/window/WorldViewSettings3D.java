@@ -11,7 +11,7 @@ public strictfp class WorldViewSettings3D
 
   WorldViewSettings3D(GUIWorkspace workspace, ViewWidget gw) {
     super(workspace, gw);
-    world = (World3D) workspace.world;
+    world = (World3D) workspace.world();
   }
 
   protected int newMinZ;

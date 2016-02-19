@@ -53,16 +53,16 @@ public strictfp class CompilerManager
     // we can't clear all here because globals and such might not be allocated yet
     // however, we're about to change the program in world, which can be needed to
     // clear the turtles. ev 1/17/07
-    workspace.world.clearLinks();
+    workspace.world().clearLinks();
     // not really clear on why the rigmarole here with two different
     // Program objects is necessary, but when I tried using the same
     // one, I got ClassCastExceptions when I tried to open the
     // Capacitance model - ST 12/5/07
-    workspace.world.program(workspace.world.newProgram());
-    workspace.world.rememberOldProgram();
-    Program program = workspace.world.newProgram();
-    workspace.world.program(program);
-    workspace.world.setUpShapes(true);
+    workspace.world().program(workspace.world().newProgram());
+    workspace.world().rememberOldProgram();
+    Program program = workspace.world().newProgram();
+    workspace.world().program(program);
+    workspace.world().setUpShapes(true);
   }
 
   public void handle(org.nlogo.window.Events.LoadEndEvent e) {
@@ -74,7 +74,7 @@ public strictfp class CompilerManager
 
   private void compileAll() {
     new org.nlogo.window.Events.RemoveAllJobsEvent().raise(this);
-    workspace.world.displayOn(true);
+    workspace.world().displayOn(true);
     // We can't compile the Code tab until the contents of
     // InterfaceGlobals is known, which won't happen until the
     // widgets are loaded, which happens later.  So the isLoading
@@ -85,8 +85,8 @@ public strictfp class CompilerManager
     if (!isLoading) {
       boolean proceed = compileProcedures();
       if (proceed) {
-        workspace.world.realloc();
-        workspace.world.rememberOldProgram();
+        workspace.world().realloc();
+        workspace.world().rememberOldProgram();
         setGlobalVariables(); // also updates constraints
         compileWidgets();
 
@@ -101,7 +101,7 @@ public strictfp class CompilerManager
   }
 
   private boolean compileProcedures() {
-    workspace.world.program(workspace.world.newProgram());
+    workspace.world().program(workspace.world().newProgram());
     try {
       scala.collection.mutable.Builder<org.nlogo.api.SourceOwner, scala.collection.immutable.Seq<org.nlogo.api.SourceOwner>> builder = scala.collection.immutable.Seq$.MODULE$.newBuilder();
       if (workspace.aggregateManager() != null) {
@@ -109,7 +109,7 @@ public strictfp class CompilerManager
       }
       CompilerResults results =
           workspace.compiler().compileProgram
-              (proceduresInterface.innerSource(), builder.result(), workspace.world.newProgram(getGlobalVariableNames()),
+              (proceduresInterface.innerSource(), builder.result(), workspace.world().newProgram(getGlobalVariableNames()),
                   workspace.getExtensionManager(), workspace.getCompilationEnvironment());
       workspace.setProcedures(results.proceduresMap());
       for (Procedure procedure : workspace.getProcedures().values()) {
@@ -122,7 +122,7 @@ public strictfp class CompilerManager
         }
       }
       workspace.init();
-      workspace.world.program(results.program());
+      workspace.world().program(results.program());
       new org.nlogo.window.Events.CompiledEvent
           (proceduresInterface, results.program(), null, null)
           .raise(this);
@@ -157,7 +157,7 @@ public strictfp class CompilerManager
     while (iter.hasNext()) {
       InterfaceGlobalWidget w = iter.next();
       try {
-        workspace.world.setObserverVariableByName(w.name(), w.valueObject());
+        workspace.world().setObserverVariableByName(w.name(), w.valueObject());
       } catch (org.nlogo.api.AgentException ex) {
         throw new IllegalStateException(ex);
       } catch (org.nlogo.api.LogoException ex) {
@@ -179,18 +179,18 @@ public strictfp class CompilerManager
       CompilerResults results =
           workspace.compiler().compileMoreCode
               (owner.source(), scala.Some.apply(owner.classDisplayName() + " '" + owner.displayName() + "'"),
-                  workspace.world.program(), workspace.getProcedures(), workspace.getExtensionManager(), workspace.getCompilationEnvironment());
+                  workspace.world().program(), workspace.getProcedures(), workspace.getExtensionManager(), workspace.getCompilationEnvironment());
 
       if (!results.procedures().isEmpty()) {
         results.head().init(workspace);
         results.head().owner_$eq(owner);
         new org.nlogo.window.Events.CompiledEvent
-            (owner, workspace.world.program(), results.head(), null).raise(this);
+            (owner, workspace.world().program(), results.head(), null).raise(this);
       }
     } catch (CompilerException error) {
       errorEvents.add
           (new org.nlogo.window.Events.CompiledEvent
-              (owner, workspace.world.program(), null, error));
+              (owner, workspace.world().program(), null, error));
     }
   }
 
@@ -201,7 +201,7 @@ public strictfp class CompilerManager
     // handle special case where there are no more widgets.
     if (!iter.hasNext()) {
       new org.nlogo.window.Events.CompiledEvent
-          (null, workspace.world.program(), null, null)
+          (null, workspace.world().program(), null, null)
           .raise(this);
     }
     while (iter.hasNext()) {
@@ -236,15 +236,15 @@ public strictfp class CompilerManager
       try {
         CompilerResults results =
             workspace.compiler().compileMoreCode
-                (owner.source(), scala.Some.apply(owner.classDisplayName()), workspace.world.program(),
+                (owner.source(), scala.Some.apply(owner.classDisplayName()), workspace.world().program(),
                     workspace.getProcedures(), workspace.getExtensionManager(), workspace.getCompilationEnvironment());
         results.head().init(workspace);
         results.head().owner_$eq(owner);
         new org.nlogo.window.Events.CompiledEvent
-            (owner, workspace.world.program(), results.head(), null).raise(this);
+            (owner, workspace.world().program(), results.head(), null).raise(this);
       } catch (CompilerException error) {
         new org.nlogo.window.Events.CompiledEvent
-            (owner, workspace.world.program(), null, error)
+            (owner, workspace.world().program(), null, error)
             .raise(this);
       }
     } else {
@@ -260,10 +260,10 @@ public strictfp class CompilerManager
     }
     // this check is needed because it might be a brand new widget
     // that doesn't have a variable yet - ST 3/3/04
-    else if (workspace.world.observerOwnsIndexOf(widget.name().toUpperCase()) != -1) {
+    else if (workspace.world().observerOwnsIndexOf(widget.name().toUpperCase()) != -1) {
       if (e.updating) {
         widget.valueObject
-            (workspace.world.getObserverVariableByName(widget.name()));
+            (workspace.world().getObserverVariableByName(widget.name()));
       }
       // note that we do this even if e.updating() is true -- that's because
       // the widget may not have accepted the new value as is - ST 8/17/03
@@ -272,10 +272,10 @@ public strictfp class CompilerManager
 
         // Only set the global if the value has changed.  This prevents
         // use from firing our constraint code all the time.
-        if (val != workspace.world.getObserverVariableByName(widget.name())) {
+        if (val != workspace.world().getObserverVariableByName(widget.name())) {
           // so that we do not interrupt without-interruption
-          synchronized (workspace.world) {
-            workspace.world.setObserverVariableByName(widget.name(), widget.valueObject());
+          synchronized (workspace.world()) {
+            workspace.world().setObserverVariableByName(widget.name(), widget.valueObject());
           }
         }
       } catch (org.nlogo.api.ValueConstraint.Violation ex) {

@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api.Syntax
+import org.nlogo.api.{ OutputDestination, Syntax }
 import org.nlogo.nvm.{ Command, Context, Workspace }
 
 class _outputwrite extends Command {
@@ -11,7 +11,7 @@ class _outputwrite extends Command {
   override def perform(context: Context) {
     workspace.outputObject(
       args(0).report(context), null, false, true,
-      Workspace.OutputDestination.OUTPUT_AREA)
+      OutputDestination.OutputArea)
     context.ip = next
   }
 }

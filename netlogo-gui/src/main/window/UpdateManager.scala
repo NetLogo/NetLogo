@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import org.nlogo.nvm.Workspace.UpdateMode
+import org.nlogo.core.UpdateMode
 import System.nanoTime
 import StrictMath.pow
 
@@ -172,8 +172,8 @@ abstract class UpdateManager extends UpdateManagerInterface {
   // (well, except for the nasty bit of stateful logic in checkTicks() which we call below)
 
   private def updatePolicy: UpdatePolicy = updateMode match {
-    case UpdateMode.CONTINUOUS => ContinuousPolicy
-    case UpdateMode.TICK_BASED => TickBasedPolicy
+    case UpdateMode.Continuous => ContinuousPolicy
+    case UpdateMode.TickBased  => TickBasedPolicy
   }
 
   private trait UpdatePolicy {

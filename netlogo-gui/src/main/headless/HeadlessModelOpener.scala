@@ -2,11 +2,11 @@
 
 package org.nlogo.headless
 
-import org.nlogo.core.{ CompilerException, LogoList, Program }
-import org.nlogo.agent.{BooleanConstraint, ChooserConstraint, InputBoxConstraint, SliderConstraint}
+import org.nlogo.agent.{BooleanConstraint, ChooserConstraint, InputBoxConstraint, NumericConstraint, SliderConstraint}
 import org.nlogo.api.{ FileIO, LogoException, ModelReader, ModelSection,
                         NetLogoLegacyDialect, NetLogoThreeDDialect, SourceOwner, ValueConstraint, Version}
 import org.nlogo.core.ShapeParser.{ parseVectorShapes, parseLinkShapes }
+import org.nlogo.core.{ Button, CompilerException, ConstraintSpecification, LogoList, Model, Monitor, Program }
 import org.nlogo.plot.PlotLoader
 import org.nlogo.core.Shape.{ LinkShape => CoreLinkShape, VectorShape => CoreVectorShape }
 import org.nlogo.shape.{LinkShape, VectorShape}
@@ -28,58 +28,65 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
 
   @throws(classOf[CompilerException])
   @throws(classOf[LogoException])
-  def openFromMap(map: java.util.Map[ModelSection, Array[String]]) {
-
-    val dialect = if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect
+  def openFromModel(model: Model) {
     // get out if the model is opened. (WHY? - JC 10/27/09)
     if (ws.modelOpened) throw new IllegalStateException
     ws.modelOpened = true
 
     // get out if unknown version
-    val netLogoVersion = map.get(ModelSection.Version).head
+    val netLogoVersion = model.version
     if (!Version.compatibleVersion(netLogoVersion))
       throw new IllegalStateException("unknown NetLogo version: " + netLogoVersion)
 
-    // parse all the widgets in the WIDGETS section
-    val (interfaceGlobals, constraints, buttonCode, monitorCode, interfaceGlobalCommands) = {
-      WidgetParser.parseWidgets(map.get(ModelSection.Interface), netLogoVersion)
-    }
+    // this is UGLY. I'm only doing it here because once you start to mess
+    // with world loading, you go down quite a rabbit hole
+    ws.loadWorld(org.nlogo.core.model.WidgetReader.format(model.view, null).lines.toArray, netLogoVersion, ws)
+
+    for (plot <- model.plots)
+      PlotLoader.loadPlot(plot, ws.plotManager.newPlot(""), identity)
+
+    // this should check model.version, but we aren't there yet
+    val dialect = if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect
 
     // read system dynamics modeler diagram
-    val sdmLines = map.get(ModelSection.SystemDynamics)
-    if (!sdmLines.isEmpty) ws.aggregateManager.load(sdmLines.mkString("", "\n", "\n"), ws)
+    val sdmLines = model.otherSections.get("org.nlogo.sdm").flatMap(lines => if (lines.isEmpty) None else Some(lines))
+    sdmLines.foreach { (lines: List[String]) =>
+      ws.aggregateManager.load(lines.mkString("", "\n", "\n"), ws)
+    }
 
     // read procedures, compile them.
     val results = {
       import collection.JavaConverters._
 
       val additionalSources: Seq[SourceOwner] = if (sdmLines.isEmpty) Seq() else Seq(ws.aggregateManager)
-      val code = map.get(ModelSection.Code).mkString("", "\n", "\n")
-      val newProg = Program.fromDialect(dialect).copy(interfaceGlobals = interfaceGlobals)
+      val code = model.code
+      val newProg = Program.fromDialect(dialect).copy(interfaceGlobals = model.interfaceGlobals)
       ws.compiler.compileProgram(code, additionalSources, newProg, ws.getExtensionManager, ws.getCompilationEnvironment)
     }
     ws.setProcedures(results.proceduresMap)
     ws.codeBits.clear() //(WTH IS THIS? - JC 10/27/09)
 
     // Read preview commands. If the model doesn't specify preview commands, the default ones will be used.
-    val previewCommandsSource = map.get(ModelSection.PreviewCommands).mkString("\n")
+    val previewCommandsSource = model.previewCommands.mkString("\n")
     ws.previewCommands = PreviewCommands(previewCommandsSource)
 
     // parse turtle and link shapes, updating the workspace.
-    attachWorldShapes(
-      parseVectorShapes(map.get(ModelSection.TurtleShapes)).toList,
-      parseLinkShapes(map.get(ModelSection.LinkShapes)).toList)
+    attachWorldShapes(model.turtleShapes, model.linkShapes)
 
-    ws.getHubNetManager.load(map.get(ModelSection.HubNetClient), netLogoVersion)
+    model.otherSections.get("org.nlogo.hubnet.client").foreach { lines =>
+      ws.getHubNetManager.load(lines.toArray, model.version)
+    }
 
     ws.init()
     ws.world.program(results.program)
 
     // test code is mixed with actual code here, which is a bit funny.
     if (ws.compilerTestingMode)
-      testCompileWidgets(results.program, netLogoVersion, buttonCode.toList, monitorCode.toList)
+      testCompileWidgets(
+        model.widgets.collect { case b: Button => b },
+        model.widgets.collect { case m: Monitor => m })
     else
-      finish(Map() ++ constraints, results.program, interfaceGlobalCommands)
+      finish(model.constraints, results.program, model.interfaceGlobalCommands.mkString("\n"))
   }
 
   private def attachWorldShapes(turtleShapes: List[CoreVectorShape], linkShapes: List[CoreLinkShape]) = {
@@ -93,149 +100,46 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
       ws.world.linkShapeList.add(LinkShape.getDefaultLinkShape)
   }
 
-  private def finish(constraints: Map[String, List[String]], program: Program, interfaceGlobalCommands: StringBuilder) {
+  private def finish(constraints: Map[String, ConstraintSpecification], program: Program, interfaceGlobalCommands: String) {
     ws.world.realloc()
 
     val errors = ws.plotManager.compileAllPlots()
     if(errors.nonEmpty) throw errors(0)
 
+    import ConstraintSpecification._
     for ((vname, spec) <- constraints) {
-      val con: ValueConstraint = spec(0) match {
-        // to autoconvert sliders, we would have to convert spec 1, 2 and 3.
-        // JC - 9/14/10
-        case "SLIDER" =>
-          SliderConstraint.makeSliderConstraint(
-            ws.world.observer(), spec(1), spec(2), spec(3), spec(4).toDouble, vname, ws)
-        case "CHOOSER" =>
-          val vals = ws.compiler.readFromString(spec(1)).asInstanceOf[LogoList]
-          val defaultIndex = spec(2).toInt
-          val defaultAsString = org.nlogo.api.Dump.logoObject(vals.get(defaultIndex), true, false)
-          interfaceGlobalCommands.append("set " + vname + " " + defaultAsString + "\n")
-          new ChooserConstraint(vals, defaultIndex)
-        case "SWITCH" => new BooleanConstraint(spec(1))
-        case "INPUTBOX" =>
-          var defaultVal: AnyRef = spec(1)
-          if (spec(2) == "Number" || spec(2) == "Color")
-            defaultVal = ws.compiler.readNumberFromString(spec(1), ws.world, ws.getExtensionManager)
-          new InputBoxConstraint(spec(2), defaultVal)
+      val con: ValueConstraint = spec match {
+        case NumericConstraintSpecification(default) => new NumericConstraint(default)
+        case ChoiceConstraintSpecification(vals, defaultIndex) => new ChooserConstraint(
+          LogoList.fromIterator(vals.iterator),
+          defaultIndex
+        )
+        case BooleanConstraintSpecification(default) => new BooleanConstraint(default)
+        case StringInputConstraintSpecification(typeName, default) => new InputBoxConstraint(typeName, default)
+        case NumericInputConstraintSpecification(typeName, default) => new InputBoxConstraint(typeName, default)
       }
       ws.world.observer().variableConstraint(ws.world.observerOwnsIndexOf(vname.toUpperCase), con)
     }
-    ws.command(interfaceGlobalCommands.toString)
+
+    ws.command(interfaceGlobalCommands)
   }
 
-  private def testCompileWidgets(program: Program, netLogoVersion: String, buttons: List[String], monitors:List[String]) {
+  private def testCompileWidgets(buttons: List[Button], monitors: List[Monitor]) {
     val errors = ws.plotManager.compileAllPlots()
     if(errors.nonEmpty) throw errors(0)
-    for (widgetSource <- buttons ::: monitors)
-      // we could convert monitors and buttons by using this line:
-      // ws.autoConvert(widgetSource, true, false, netLogoVersion)
-      // JC - 9/14/10
-      try ws.compileCommands(widgetSource)
+    for (button <- buttons)
+      try ws.compileCommands(button.source, button.agentKind)
       catch {
         case ex: CompilerException =>
-          println("compiling: \"" + ModelReader.stripLines(widgetSource) + "\"")
+          println("compiling: \"" + button + "\"")
           throw ex
       }
-  }
-
-  private object WidgetParser {
-
-    def parseWidgets(widgetsSection: Array[String], netLogoVersion: String) = {
-
-      // parsing widgets dumps information into these four mutable vals.
-      // as well as a few places in the workspace.
-      val interfaceGlobals = new collection.mutable.ArrayBuffer[String]
-      val constraints = new collection.mutable.HashMap[String, List[String]]
-      val buttons = new collection.mutable.ArrayBuffer[String] // for TestCompileAll
-      val monitors = new collection.mutable.ArrayBuffer[String] // for TestCompileAll
-      val interfaceGlobalCommands = new StringBuilder
-
-      //===
-      // each widget type has its own parsing method
-      //===
-
-      def parseSlider(widget: Array[String]) {
-        interfaceGlobals += widget(6)
-        interfaceGlobalCommands.append("set " + widget(6) + " " + widget(9) + "\n")
-        constraints(widget(6)) = List("SLIDER", widget(7), widget(8), widget(10), widget(9))
+    for (monitor <- monitors)
+      try ws.compileReporter(monitor.source)
+      catch {
+        case ex: CompilerException =>
+          println("compiling: \"" + monitor + "\"")
+          throw ex
       }
-
-      def parseSwitch(widget: Array[String]) {
-        interfaceGlobals += widget(6)
-        val defaultAsString = (widget(7).toDouble == 0).toString
-        interfaceGlobalCommands.append("set " + widget(6) + " " + defaultAsString + "\n")
-        constraints(widget(6)) = List("SWITCH", defaultAsString)
-      }
-
-      def parseChoiceOrChooser(widget: Array[String]) {
-        interfaceGlobals += widget(6)
-        val valSpec = "[" + widget(7) + "]"
-        constraints(widget(6)) = List("CHOOSER", valSpec, widget(8))
-      }
-
-      def parseInputBox(widget: Array[String]) {
-        interfaceGlobals += widget(5)
-        val defaultVal = escapeString(ModelReader.restoreLines(widget(6)))
-        if (widget(9) == "Number" || widget(9) == "Color")
-          interfaceGlobalCommands.append("set " + widget(5) + " " + defaultVal + "\n")
-        else
-          interfaceGlobalCommands.append("set " + widget(5) + " \"" + defaultVal + "\"\n")
-        constraints(widget(5)) = List("INPUTBOX", defaultVal, widget(9))
-      }
-
-      def parsePlot(widget: Array[String]) {
-        // ick, side effects.
-        // might replace identity soon as we might actually convert old models for headless.
-        // JC - 9/14/10
-        PlotLoader.parsePlot(widget, ws.plotManager.newPlot(""), identity)
-      }
-
-      def parseButton(widget: Array[String]) {
-        val buttonSource = ModelReader.restoreLines(widget(6)) match {
-          case "NIL" => ""
-          case s => s
-        }
-        buttons +=
-          (widget(10) match {
-            case "TURTLE" => "ask turtles [" + buttonSource + "\n]" // newline to protect against comments
-            case "PATCH"  => "ask patches [" + buttonSource + "\n]" // newline to protect against comments
-            case "OBSERVER" => buttonSource
-          })
-      }
-
-      def parseMonitor(widget: Array[String]) {
-        val monitorSource = widget(6)
-        if (monitorSource != "NIL")
-        // add "__ignore" to turn the reporter into a command, so we can handle buttons and
-        // monitors uniformly.  newline to protect against comments
-          monitors += "__ignore (" + ModelReader.restoreLines(monitorSource) + "\n)"
-      }
-
-      def parseGraphicsWindow(widget: Array[String]) {
-        ws.loadWorld(widget, netLogoVersion, ws)
-      }
-
-      // finally parse all the widgets in the WIDGETS section
-      val widgets = ModelReader.parseWidgets(widgetsSection)
-
-      import collection.JavaConverters._
-      for (widget <- widgets.asScala.map(_.asScala.toArray))
-        widget(0) match {
-          case "SLIDER" => parseSlider(widget)
-          case "SWITCH" => parseSwitch(widget)
-          case "CHOICE" | "CHOOSER" => parseChoiceOrChooser(widget)
-          case "INPUTBOX" => parseInputBox(widget)
-          case "PLOT" => parsePlot(widget)
-          case "BUTTON" if ws.compilerTestingMode => parseButton(widget)
-          case "MONITOR" if ws.compilerTestingMode => parseMonitor(widget)
-          case "GRAPHICS-WINDOW" => parseGraphicsWindow(widget)
-          case _ => // ignore
-        }
-
-      (interfaceGlobals, constraints, buttons, monitors, interfaceGlobalCommands)
-
-    }
-
   }
 }

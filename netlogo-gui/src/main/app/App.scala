@@ -132,7 +132,7 @@ object App{
         Class.forName("org.nlogo.headless.HeadlessWorkspace")
           .getMethod("newInstance").invoke(null).asInstanceOf[AbstractWorkspaceScala]
       def openCurrentModelIn(w: Workspace): Unit = {
-        w.setModelPath(app.workspace.getModelPath())
+        w.setModelPath(app.workspace.getModelPath)
         w.openString(new ModelSaver(pico.getComponent(classOf[App])).save)
       }
     }
@@ -603,7 +603,7 @@ class App extends
       case START_LOGGING =>
         startLogging(e.args(0).toString)
         if(logger!=null)
-          logger.modelOpened(workspace.getModelPath())
+          logger.modelOpened(workspace.getModelPath)
       case ZIP_LOG_FILES =>
         if (logger==null)
           org.nlogo.log.Files.zipSessionFiles(System.getProperty("java.io.tmpdir"), e.args(0).toString)
@@ -755,7 +755,7 @@ class App extends
    * Generates OS standard frame title.
    */
   private def makeFrameTitle = {
-    if(workspace.getModelFileName() == null) "NetLogo"
+    if(workspace.getModelFileName == null) "NetLogo"
     else{
       var title = workspace.modelNameForDisplay
       // on OS X, use standard window title format. otherwise use Windows convention
@@ -765,7 +765,7 @@ class App extends
       else title = "NetLogo " + (8212.toChar) + " " + title
 
       // OS X UI guidelines prohibit paths in title bars, but oh well...
-      if (workspace.getModelType() == ModelType.Normal) title += " {" + workspace.getModelDir() + "}"
+      if (workspace.getModelType == ModelType.Normal) title += " {" + workspace.getModelDir + "}"
       title
     }
   }

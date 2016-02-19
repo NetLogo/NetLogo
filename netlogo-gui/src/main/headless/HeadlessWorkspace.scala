@@ -11,7 +11,8 @@ import org.nlogo.api.{ Version, RendererInterface,
                        WorldDimensions3D, AggregateManagerInterface,
                        ModelReader, LogoException, SimpleJobOwner,
                        HubNetInterface, CommandRunnable, ReporterRunnable }
-import org.nlogo.core.{ AgentKind, CompilerException, WorldDimensions}
+import org.nlogo.core.{ AgentKind, CompilerException, Model, UpdateMode, WorldDimensions, model => coremodel },
+  coremodel.{ ModelReader => CoreModelReader }
 import org.nlogo.agent.{ World, World3D }
 import org.nlogo.nvm.{ LabInterface,
                        Workspace, DefaultCompilerServices, CompilerInterface }
@@ -120,8 +121,6 @@ with org.nlogo.api.ViewSettings {
 
   AbstractWorkspace.isApplet(false)
   world.trailDrawer(renderer.trailDrawer)
-  val defaultOwner =
-    new SimpleJobOwner("HeadlessWorkspace", world.mainRNG, AgentKind.Observer)
 
   /**
    * Has a model been opened in this workspace?
@@ -245,10 +244,6 @@ with org.nlogo.api.ViewSettings {
     clearDrawing()
   }
 
-  private var _fontSize = 13
-  override def fontSize = _fontSize
-  override def fontSize(i: Int) { _fontSize = i }
-
   private var _frameRate = 0.0
   override def frameRate = _frameRate
   override def frameRate(frameRate: Double) { _frameRate = frameRate }
@@ -287,7 +282,7 @@ with org.nlogo.api.ViewSettings {
   override def renderPerspective = true
   override def viewOffsetX = world.observer.followOffsetX
   override def viewOffsetY = world.observer.followOffsetY
-  override def updateMode(updateMode: Workspace.UpdateMode) { }
+  override def updateMode(updateMode: UpdateMode) { }
   override def setSize(x: Int, y: Int) { }
   override def clearTurtles() {
     if (!compilerTestingMode)
@@ -473,14 +468,9 @@ with org.nlogo.api.ViewSettings {
 
   def logCustomGlobals(nameValuePairs: Seq[(String, String)]): Unit = unsupported
 
-  // This lastLogoException stuff is gross.  We should write methods that are declared to throw
-  // LogoException, rather than requiring that this variable be checked. - ST 2/28/05
-
   /**
    * Internal use only.
    */
-  override var lastLogoException: LogoException = null
-  override def clearLastLogoException() { lastLogoException = null }
 
   // this is a blatant hack that makes it possible to test the new stack trace stuff.
   // lastErrorReport gives more information than the regular exception that gets thrown from the
@@ -533,7 +523,7 @@ with org.nlogo.api.ViewSettings {
    */
   override def openString(modelContents: String) {
     fileManager.handleModelChange()
-    new HeadlessModelOpener(this).openFromMap(ModelReader.parseModel(modelContents))
+    openFromSource(modelContents)
   }
 
   /**
@@ -544,49 +534,11 @@ with org.nlogo.api.ViewSettings {
    *               in the same format as it would be stored in a file.
    */
   def openFromSource(source: String) {
-    new HeadlessModelOpener(this).openFromMap(ModelReader.parseModel(source))
+    openModel(CoreModelReader.parseModel(source, compiler.compilerUtilities))
   }
 
-  /**
-   * Runs NetLogo commands and waits for them to complete.
-   *
-   * @param source The command or commands to run
-   * @throws org.nlogo.core.CompilerException
-   *                       if the code fails to compile
-   * @throws org.nlogo.api.LogoException if the code fails to run
-   */
-  @throws(classOf[CompilerException])
-  @throws(classOf[LogoException])
-  def command(source: String) {
-    evaluateCommands(defaultOwner, source, true)
-    if (lastLogoException != null) {
-      val ex = lastLogoException
-      lastLogoException = null
-      throw ex
-    }
-  }
-
-  /**
-   * Runs a NetLogo reporter.
-   *
-   * @param source The reporter to run
-   * @return the result reported; may be of type java.lang.Integer, java.lang.Double,
-   *         java.lang.Boolean, java.lang.String, {@link org.nlogo.core.LogoList},
-   *         {@link org.nlogo.api.Agent}, AgentSet, or Nobody
-   * @throws org.nlogo.core.CompilerException
-   *                       if the code fails to compile
-   * @throws org.nlogo.api.LogoException if the code fails to run
-   */
-  @throws(classOf[CompilerException])
-  @throws(classOf[LogoException])
-  def report(source: String): AnyRef = {
-    val result = evaluateReporter(defaultOwner, source, world.observer)
-    if (lastLogoException != null) {
-      val ex = lastLogoException
-      lastLogoException = null
-      throw ex
-    }
-    result
+  def openModel(model: Model): Unit = {
+    new HeadlessModelOpener(this).openFromModel(model)
   }
 
   /**
@@ -599,5 +551,4 @@ with org.nlogo.api.ViewSettings {
   }
 
   def unsupported = throw new UnsupportedOperationException
-
 }

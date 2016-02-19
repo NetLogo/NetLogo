@@ -3,16 +3,16 @@
 package org.nlogo.workspace
 
 import java.io.PrintWriter
-import org.nlogo.api.Workspace
+import org.nlogo.api.{ PreviewCommands, Workspace }
 import org.nlogo.api.HexString
 
 object Checksummer {
   def initModelForChecksumming(workspace: Workspace) {
     workspace.renderer.renderLabelsAsRectangles_=(true)
-    val commands =
-      Some(workspace.previewCommands)
-        .filterNot(_.containsSlice("need-to-manually-make-preview-for-this-model"))
-        .getOrElse(AbstractWorkspace.DefaultPreviewCommands)
+    val commands = workspace.previewCommands match {
+      case PreviewCommands.Custom(source) => source
+      case _ => PreviewCommands.Default.source // may or may not compile, but we'll try
+    }
     workspace.command("random-seed 0\n" + commands)
   }
   def calculateWorldChecksum(workspace: Workspace): String =

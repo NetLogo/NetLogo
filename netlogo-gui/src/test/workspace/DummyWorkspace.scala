@@ -10,10 +10,10 @@ class DummyWorkspace extends ExtendableWorkspace {
   def setTesting(t: Boolean) = { _isTesting = t }
   def attachModelDir(fileName: String): String =
     dummyFileManager.attachModelDir(fileName)
-  def compilerTestingMode(): Boolean = _isTesting
+  def compilerTestingMode: Boolean = _isTesting
   val fileManager: org.nlogo.nvm.FileManager = dummyFileManager
   def getSource(x$1: String): String = "abcdef"
-  def profilingEnabled(): Boolean = ???
+  def profilingEnabled: Boolean = ???
   def readFromString(s: String): Object = s
   def warningMessage(x$1: String): Boolean = ???
   def setProfilingTracer(tracer: org.nlogo.nvm.Tracer) = ???
