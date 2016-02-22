@@ -3,20 +3,22 @@ import java.util.regex.Pattern
 import sbt._
 import Keys._
 
-object ModelIndex {
+object ModelsLibrary {
 
   val modelsDirectory = settingKey[File]("models directory")
 
   val modelIndex = TaskKey[Seq[File]](
-    "model-index", "builds models/index.txt for use in Models Library dialog")
+    "modelIndex", "builds models/index.txt for use in Models Library dialog")
 
-  val modelIndexTask =
+  lazy val settings = Seq(
     modelIndex := {
       streams.value.log.info("creating models/index.txt")
       val path = modelsDirectory.value / "index.txt"
       IO.write(path, generateIndex(modelsDirectory.value))
       Seq(path)
-    }
+    },
+    javaOptions += "-Dnetlogo.models.dir=" + modelsDirectory.value.getAbsolutePath.toString
+  )
 
   private def generateIndex(modelsPath: File): String = {
     val buf = new StringBuilder

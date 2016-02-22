@@ -1,15 +1,3 @@
-import Extensions.extensions
-
-///
-/// nogen
-///
-
-val nogen = taskKey[Unit]("disable bytecode generator")
-
-nogen := {
-  System.setProperty("org.nlogo.noGenerator", "true")
-}
-
 ///
 /// checksums and previews
 ///
@@ -66,16 +54,3 @@ val dumper = InputKey[Unit]("dump", "dump compiled models")
 
 fullRunInputTask(dumper, Test, "org.nlogo.headless.misc.Dump")
 
-
-///
-/// all
-///
-
-val all = taskKey[Unit]("build all the things!!!")
-
-all := { val _ = (
-  (packageBin in Compile).value,
-  (packageBin in Test).value,
-  (compile in Test).value,
-  extensions.value
-)}

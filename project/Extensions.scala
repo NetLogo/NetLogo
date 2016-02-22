@@ -27,7 +27,7 @@ object Extensions {
     }
   }
 
-  val extensionsTask = Seq(
+  lazy val settings = Seq(
     extensionDeps := {
       val packagedNetLogoJar     = (packageBin in Compile).value
       val packagedNetLogoTestJar = (packageBin in Test).value
@@ -53,7 +53,9 @@ object Extensions {
           buildExtension(dir, scala.libraryJar, packagedNetLogoJar, s.log, state.value))
       }
     },
-    excludedExtensions := Seq()
+    excludedExtensions := Seq(),
+    javaOptions +=
+      "-Dnetlogo.extensions.dir=" + extensionRoot.value.getAbsolutePath.toString
   )
 
 

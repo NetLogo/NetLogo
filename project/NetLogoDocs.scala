@@ -81,9 +81,19 @@ class NetLogoDocs(docsSource: File, docsTarget: File, netLogoRoot: File) {
     IO.copyFile(netLogoRoot / "models" / "Code Examples" / "Perspective Example.png", targetDir / "Perspective Example.png")
   }
 
+  def generatePDF(buildVariables: Map[String, Object]): File = {
+    val mustacheVars =
+      buildVariables + ("infoTabModelHTML" -> infoTabHTML)
 
-  def generate(buildVariables: Map[String, Object]): Seq[File] = {
+    val tmp = IO.createTemporaryDirectory
+    generateDocs(tmp, mustacheVars)
+    generateManualPDF(tmp)
+  }
+
+  def generateHTML(buildVariables: Map[String, Object]): Seq[File] = {
     import scala.collection.JavaConverters._
+
+    IO.delete(docsTarget)
 
     val mustacheVars =
       buildVariables + ("infoTabModelHTML" -> infoTabHTML)
@@ -98,10 +108,6 @@ class NetLogoDocs(docsSource: File, docsTarget: File, netLogoRoot: File) {
     generatePrimIndices(docsTarget / "dict")
     supportFiles.foreach(IO.delete)
 
-    val tmp = IO.createTemporaryDirectory
-    generateDocs(tmp, mustacheVars)
-    val pdf = generateManualPDF(tmp)
-
-    Path.allSubpaths(docsTarget).map(_._1).toSeq :+ pdf
+    Path.allSubpaths(docsTarget).map(_._1).toSeq
   }
 }

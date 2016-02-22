@@ -17,7 +17,6 @@ object DistSettings {
 
   lazy val aggregateJDKParser = settingKey[State => Parser[BuildJDK]]("parser for packageApp settings")
 
-  lazy val buildDocs           = taskKey[Seq[File]]("render NetLogo documentation")
   // build application jar, resources
   lazy val buildNetLogo = taskKey[Unit]("build NetLogo")
 
@@ -47,28 +46,20 @@ object DistSettings {
   lazy val settings = Seq(
     buildNetLogo := {
       def netLogoCmd(cmd: String): Unit = {
-        RunProcess(Seq("./sbt", cmd), netLogoRoot.value, s"netlogo $cmd")
+        RunProcess(Seq("./sbt", s"netlogo/$cmd"), netLogoRoot.value, s"netlogo $cmd")
       }
 
-      netLogoCmd("package")
-      netLogoCmd("extensions")
+      netLogoCmd("all")
 
       netLogoCmd("all-previews")
       netLogoCmd("test:run-main org.nlogo.tools.ModelResaver")
       modelCrossReference.value
-      netLogoCmd("model-index")
+      netLogoCmd("modelIndex")
 
-      netLogoCmd("doc-smaller")
-      buildDocs.value
-
-      netLogoCmd("native-libs")
+      netLogoCmd("nativeLibs")
     },
     modelCrossReference := {
       ModelCrossReference(netLogoRoot.value)
-    },
-    buildDocs := {
-      new NetLogoDocs(baseDirectory.value / "docs", netLogoRoot.value / "docs", netLogoRoot.value)
-        .generate(buildVariables.value)
     },
     aggregateJDKParser := Def.toSParser(jdkParser)
   )

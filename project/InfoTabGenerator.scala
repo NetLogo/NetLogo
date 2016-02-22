@@ -1,6 +1,6 @@
 import sbt._
 
-import org.pegdown.{ PegDownProcessor, Extensions }
+import org.pegdown.{ PegDownProcessor, Extensions => PegdownExtensions }
 
 object InfoTabGenerator {
   def apply(model: File): String = {
@@ -13,10 +13,10 @@ object InfoTabGenerator {
   }
 
   def pegdown(str: String): String = {
-    new PegDownProcessor(Extensions.SMARTYPANTS |       // beautifies quotes, dashes, etc.
-                         Extensions.AUTOLINKS |         // angle brackets around URLs and email addresses not needed
-                         Extensions.HARDWRAPS |         // GitHub flavored newlines
-                         Extensions.FENCED_CODE_BLOCKS) // delimit code blocks with ```
+    new PegDownProcessor(PegdownExtensions.SMARTYPANTS |       // beautifies quotes, dashes, etc.
+                         PegdownExtensions.AUTOLINKS |         // angle brackets around URLs and email addresses not needed
+                         PegdownExtensions.HARDWRAPS |         // GitHub flavored newlines
+                         PegdownExtensions.FENCED_CODE_BLOCKS) // delimit code blocks with ```
       .markdownToHtml(str)
   }
 

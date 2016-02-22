@@ -1,32 +1,24 @@
 import java.io.File
 import sbt._
 import Keys._
+import NetLogoBuild.netlogoVersion
 
 object Scaladoc {
 
   val docSmaller = TaskKey[File]("doc-smaller", "for docs/scaladoc/")
-  val netlogoVersion = TaskKey[String]("netlogo-version", "from api.Version")
-
-  val settings = Seq(
+  val settings = NetLogoBuild.settings ++ Seq(
     apiMappings += (
       file(System.getenv("JAVA_HOME") + "/jre/lib/rt.jar") ->
       url("http://docs.oracle.com/javase/8/docs/api")),
     // automagically link scaladoc with appropriate library docs
     autoAPIMappings := true,
-    netlogoVersion <<= (testLoader in Test) map {
-      _.loadClass("org.nlogo.api.Version")
-       .getMethod("version")
-       .invoke(null).asInstanceOf[String]
-       .stripPrefix("NetLogo ")
-    },
-    scalacOptions in (Compile, doc) := {
-      (scalacOptions in Compile in doc).value ++
+    scalacOptions in (Compile, doc) ++= {
       Seq("-no-link-warnings", "-encoding", "us-ascii") ++
-      Seq("-sourcepath", baseDirectory.value.getAbsolutePath) ++
+      Seq("-sourcepath", baseDirectory.value.getParentFile.getAbsolutePath) ++
       Opts.doc.title("NetLogo") ++
       Opts.doc.version(netlogoVersion.value) ++
       Opts.doc.sourceUrl("https://github.com/NetLogo/NetLogo/blob/" +
-        netlogoVersion.value + "/" + baseDirectory.value.getName + "€{FILE_PATH}.scala")
+        netlogoVersion.value + "€{FILE_PATH}.scala")
     },
     doc in Compile ~= mungeScaladocSourceUrls,
     // The regular doc task includes doc for the entire main source tree.  But for the NetLogo
@@ -44,6 +36,7 @@ object Scaladoc {
         // not sure these are being accounted for
         val classpath = inputs.config.classpath
         val out = base / "docs" / "scaladoc"
+        IO.createDirectory(out)
         val sources = inputs.config.sources.filter(sourceFilter)
         Doc.scaladoc("NetLogo", s.cacheDirectory / "docSmaller",
           inputs.compilers.scalac, options)(
@@ -55,10 +48,9 @@ object Scaladoc {
 
   // compensate for issues.scala-lang.org/browse/SI-5388
   private def mungeScaladocSourceUrls(path: File): File = {
-    for(file <- Process(Seq("find", path.toString, "-name", "*.html")).lines)
-      IO.write(
-        new File(file),
-        IO.read(new File(file)).replaceAll("\\.java\\.scala", ".java"))
+    for (file <- (path ** "*.html").get)
+      IO.write(file,
+        IO.read(file).replaceAll("\\.java\\.scala", ".java"))
     path
   }
 
