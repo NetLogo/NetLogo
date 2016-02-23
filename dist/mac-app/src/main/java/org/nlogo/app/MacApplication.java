@@ -3,6 +3,8 @@
 package org.nlogo.app;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 import com.apple.eawt.Application;
 
@@ -31,11 +33,18 @@ public class MacApplication {
     System.setProperty("apple.awt.showGrowBox", "true");
     System.setProperty("apple.laf.useScreenMenuBar", "true");
 
-    // we need to call MacHandlers.init() very early (I'm guessing
-    // it must be before the AWT initializes), in order for the
-    // handlers to work.  At this point, we don't have an app
-    // instance yet, so that's why we have to pass it in later
-    // when we call MacHandlers.ready() - ST 11/13/03
-    App$.MODULE$.mainWithAppHandler(args, handler);
+    try {
+      String mainApplicationClassName = System.getProperty("org.nlogo.mac.appClassName", "org.nlogo.app.App$");
+      Class<?> mainAppClass = Class.forName(mainApplicationClassName);
+      Field appField = mainAppClass.getDeclaredField("MODULE$");
+      Object app = appField.get(mainAppClass);
+      Method mainWithHandler =
+        mainAppClass.getDeclaredMethod("mainWithAppHandler", String[].class, Object.class);
+
+      mainWithHandler.invoke(app, args, handler);
+    } catch (Exception e) {
+      System.err.println(e.getMessage());
+      e.printStackTrace();
+    }
   }
 }

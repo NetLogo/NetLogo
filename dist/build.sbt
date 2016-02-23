@@ -31,15 +31,19 @@ lazy val packagedMathematicaLink = taskKey[File]("Mathematica link, ready for pa
 
 // this value is unfortunately dependent upon both the platform and the application
 val appMainClass: PartialFunction[(String, String), String] = {
+  case ("macosx",            _)                                            => "org.nlogo.app.MacApplication"
   case ("windows" | "linux", "NetLogo" | "NetLogo 3D" | "NetLogo Logging") => "org.nlogo.app.App"
-  case ("macosx",            "NetLogo" | "NetLogo 3D" | "NetLogo Logging") => "org.nlogo.app.MacApplication"
   case (_,                   "HubNet Client")                              => "org.nlogo.hubnet.client.App"
 }
 
 def jvmOptions(platform: PlatformBuild, app: SubApplication): Seq[String] = {
   (platform.shortName, app.name) match {
-    case ("macosx", "HubNet Client") => Seq("-Xdock:name=HubNet")
-    case ("macosx", _              ) => Seq("-Xdock:name=NetLogo")
+    case ("macosx", "HubNet Client") => Seq(
+      "-Xdock:name=HubNet",
+      "-Dorg.nlogo.mac.appClassName=org.nlogo.hubnet.client.App$")
+    case ("macosx", _              ) => Seq(
+      "-Xdock:name=NetLogo",
+      "-Dorg.nlogo.mac.appClassName=org.nlogo.app.App$")
     case _                           => Seq()
   }
 }

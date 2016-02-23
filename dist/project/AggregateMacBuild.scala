@@ -71,7 +71,8 @@ object AggregateMacBuild extends PackageAction.AggregateBuild {
 
     def alterCfgContents(cfgFile: File, app: SubApplication): Seq[String] = {
       val sharedRootPath = "$APPDIR/../.."
-      IO.readLines(cfgFile).flatMap { l =>
+      val lines = IO.readLines(cfgFile).toSeq
+      lines.flatMap { l =>
         if (l.startsWith("app.classpath")) {
           val classpathJars = l.split("=")(1).split(":").toSet + s"${app.jarName}.jar"
           val newClasspath  = classpathJars.map(jar => s"$sharedRootPath/Java/$jar").mkString(":")
