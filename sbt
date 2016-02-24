@@ -44,6 +44,8 @@ HEADLESS=-Djava.awt.headless=true
 USE_QUARTZ=-Dapple.awt.graphics.UseQuartz=false
 DISABLE_EXT_DIRS=-Djava.ext.dirs=
 BOOT=xsbt.boot.Boot
+LAF=-Dnetlogo.quaqua.laf=ch.randelshofer.quaqua.snowleopard.Quaqua16SnowLeopardLookAndFeel
+GOGO_JAVA=-Dnetlogo.extensions.gogo.javaexecutable=$JAVA
 
 
 SBT_LAUNCH=$HOME/.sbt/sbt-launch-0.13.9.jar
@@ -79,6 +81,7 @@ fi
     $HEADLESS \
     $TERMINAL \
     $USE_QUARTZ \
+    $LAF \
     $DISABLE_EXT_DIRS \
     -classpath $SBT_LAUNCH \
     $BOOT "$@"

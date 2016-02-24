@@ -32,6 +32,10 @@
   public static final void main(java.lang.String[]);
 }
 
+-keep public class org.nlogo.hubnet.client.App$ {
+  *;
+}
+
 -keep class org.nlogo.compiler.Compiler$ {
     *;
 }
@@ -42,6 +46,16 @@
 
 # the Event stuff works by reflection so we need to explicitly include these
 -keep public class * extends org.nlogo.window.Event
+
+# The null app handler is used in windows and linux because we
+# use a real app handler on Mac
+-keep public class org.nlogo.util.NullAppHandler {
+ *;
+}
+
+-keep public class org.nlogo.util.NullAppHandler$ {
+ *;
+}
 
 # this is a bit of magic needed to make Java enums work, taken from the ProGuard manual
 -keepclassmembers enum * {
@@ -78,18 +92,18 @@
 }
 
 -keep public class org.nlogo.hubnet.mirroring.* {
- *;
+  *;
 }
 
 -keep public class org.nlogo.widget.* {
- *;
+  *;
 }
 
 -keep class scala.Predef$ {
- *;
+  *;
 }
 
 # needed or extensions written in Scala won't build
 -keep class scala.reflect.ScalaSignature {
-    *;
+  *;
 }

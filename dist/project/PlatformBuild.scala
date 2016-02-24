@@ -85,9 +85,13 @@ class MacPlatform(macApp: Project) extends PlatformBuild {
             .filterNot(f => f.getName.contains("scalatest") ||
               f.getName.contains("scala-library-2.9.2") || f.getName.contains("scala-compiler-2.9.2") ||
               f.getName.contains("scalacheck") || f.getName.contains("jmock"))
-            .filterNot(_.isDirectory))
+                .filterNot(_.isDirectory))
       }
-    else super.mainJarAndDependencies(app)
+    else
+      Def.bind(super.mainJarAndDependencies(app))(jarAndDeps =>
+          Def.task {
+            ((packageBin in Compile in macApp).value, jarAndDeps.value._2)
+          })
 
   override def jvmOptions =
     Seq("-Dapple.awt.graphics.UseQuartz=true",

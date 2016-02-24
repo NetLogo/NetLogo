@@ -10,7 +10,7 @@ class NetLogoDocs(docsSource: File, docsTarget: File, netLogoRoot: File) {
     "behaviorspace", "systemdynamics", "hubnet", "hubnet-authoring",
     "modelingcommons", "logging", "controlling", "3d",
     "extensions", "arraystables", "matrix", "sound",
-    "netlogolab", "profiler", "gis", "nw", "csv", "palette",
+    "netlogolab", "profiler", "gis", "nw", "cf", "csv", "palette",
     "faq", "dictionary").map(n => (base / s"$n.html"))
 
   private def pandoc(input: File, targetFile: File, title: String): Unit = {
@@ -42,6 +42,7 @@ class NetLogoDocs(docsSource: File, docsTarget: File, netLogoRoot: File) {
   private def generateExtensionDocs(htmlFileRoot: File): Unit = {
     Map(
       "nw"      -> "Networks Extension",
+      "cf"      -> "Control Flow Extension",
       "csv"     -> "CSV Extension",
       "palette" -> "Palette Extension").foreach {
         case (ext, title) =>

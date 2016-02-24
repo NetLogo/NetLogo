@@ -2,13 +2,12 @@
 
 package org.nlogo.app;
 
-import org.nlogo.api.I18N;
-import org.nlogo.awt.UserCancelException;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.FileNotFoundException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import com.apple.eawt.AboutHandler;
 import com.apple.eawt.Application;
@@ -18,10 +17,10 @@ import com.apple.eawt.OpenURIHandler;
 import com.apple.eawt.QuitHandler;
 import com.apple.eawt.QuitResponse;
 
-class MacHandler implements AppHandler {
+public class MacHandler {
   Application application;
   FileOutputStream output;
-  App app;
+  Object app;
   String openMeLater;
 
   MacHandler(Application application) {
@@ -68,7 +67,14 @@ class MacHandler implements AppHandler {
   class MyAboutHandler implements AboutHandler {
     @Override
     public void handleAbout(AppEvent.AboutEvent event) {
-      app.showAboutWindow();
+      try {
+        Class<?> appClass = app.getClass();
+        appClass.getDeclaredMethod("handleShowAbout").invoke(app);
+      } catch (NoSuchMethodException e) {
+      } catch (IllegalAccessException e) {
+      } catch (InvocationTargetException e) {
+        log("failed to invoke handleOpenPath");
+      }
     }
   }
 
@@ -76,9 +82,21 @@ class MacHandler implements AppHandler {
     @Override
     public void handleQuitRequestWith(AppEvent.QuitEvent event, QuitResponse response) {
       try {
-        app.fileMenu().quit();
-      } catch (UserCancelException e) {
-        response.cancelQuit();
+        Class<?> appClass = app.getClass();
+        Method handleQuit = appClass.getDeclaredMethod("handleQuit");
+        handleQuit.invoke(app);
+      } catch (NoSuchMethodException e) {
+        response.performQuit();
+      } catch (InvocationTargetException e) {
+        if (e.getCause().getClass().getName().contains("UserCancelException")) {
+          log("cancelled quit");
+          response.cancelQuit();
+        } else {
+          log("invocation of handleQuit failed");
+          e.printStackTrace();
+          log(e.getMessage());
+          response.performQuit();
+        }
       } catch (Exception e) {
         response.performQuit();
       }
@@ -87,7 +105,7 @@ class MacHandler implements AppHandler {
 
   public void init() { }
 
-  public void ready(App app) {
+  public void ready(Object app) {
     this.app = app;
     if (openMeLater != null) {
       doOpen(openMeLater);
@@ -99,15 +117,12 @@ class MacHandler implements AppHandler {
       openMeLater = path;
     } else {
       try {
-        org.nlogo.awt.EventQueue.mustBeEventDispatchThread();
-        app.fileMenu().offerSave();
-        app.open(path);
-      } catch (org.nlogo.awt.UserCancelException ex) {
-        org.nlogo.util.Exceptions.ignore(ex);
-      } catch (java.io.IOException ex) {
-        javax.swing.JOptionPane.showMessageDialog(
-          app.frame(), ex.getMessage(),
-          I18N.guiJ().get("common.messages.error"), javax.swing.JOptionPane.ERROR_MESSAGE);
+        Class<?> appClass = app.getClass();
+        appClass.getDeclaredMethod("handleOpenPath", String.class).invoke(app, path);
+      } catch (NoSuchMethodException e) {
+      } catch (IllegalAccessException e) {
+      } catch (InvocationTargetException e) {
+        log("failed to invoke handleOpenPath");
       }
     }
   }
