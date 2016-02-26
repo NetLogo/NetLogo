@@ -2,14 +2,14 @@
 
 package org.nlogo.editor;
 
-strictfp class HighlightView<TokenType>
+strictfp class HighlightView
     extends javax.swing.text.PlainView {
 
   private final javax.swing.JEditorPane pane;
-  private final Colorizer<TokenType> colorizer;
+  private final Colorizer colorizer;
 
   HighlightView(javax.swing.JEditorPane pane,
-                javax.swing.text.Element element, Colorizer<TokenType> colorizer) {
+                javax.swing.text.Element element, Colorizer colorizer) {
     super(element);
     this.pane = pane;
     this.colorizer = colorizer;

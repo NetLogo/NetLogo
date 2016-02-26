@@ -5,9 +5,9 @@ package org.nlogo.editor;
 public strictfp class DumbIndenter
     implements IndenterInterface {
 
-  protected final EditorArea<?> code;
+  protected final EditorArea code;
 
-  public DumbIndenter(EditorArea<?> code) {
+  public DumbIndenter(EditorArea code) {
     this.code = code;
   }
 

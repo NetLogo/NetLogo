@@ -8,7 +8,7 @@ import org.nlogo.api.CompilerServices
 import org.nlogo.editor.Colorizer
 import collection.JavaConverters._
 
-class EditorColorizer(compiler: CompilerServices) extends Colorizer[TokenType] {
+class EditorColorizer(compiler: CompilerServices) extends Colorizer {
 
   // cache last studied line, so we don't retokenize the same string over and over again when the
   // user isn't even doing anything
@@ -87,9 +87,9 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer[TokenType] {
   private def getTokenColor(tpe: TokenType) =
     tokenTypeColors.getOrElse(tpe, SyntaxColors.DEFAULT_COLOR)
 
-  def getTokenAtPosition(text: String, position: Int): String =
+  def getTokenAtPosition(text: String, position: Int): Option[String] =
     Option(compiler.getTokenAtPosition(text, position))
-      .map(_.text).orNull
+      .map(_.text)
 
   def doHelp(comp: java.awt.Component, name: String) {
     QuickHelp.doHelp(comp, name)

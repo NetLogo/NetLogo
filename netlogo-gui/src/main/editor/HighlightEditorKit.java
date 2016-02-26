@@ -2,7 +2,7 @@
 
 package org.nlogo.editor;
 
-strictfp class HighlightEditorKit<TokenType>
+strictfp class HighlightEditorKit
     extends javax.swing.text.DefaultEditorKit
     implements
     javax.swing.text.ViewFactory,
@@ -10,10 +10,10 @@ strictfp class HighlightEditorKit<TokenType>
 
   private final java.awt.event.TextListener listener; // allowed to be null
   private javax.swing.JEditorPane pane;
-  private final Colorizer<TokenType> colorizer;
+  private final Colorizer colorizer;
 
   HighlightEditorKit(java.awt.event.TextListener listener,
-                     Colorizer<TokenType> colorizer) {
+                     Colorizer colorizer) {
     this.listener = listener;
     this.colorizer = colorizer;
   }
@@ -29,7 +29,7 @@ strictfp class HighlightEditorKit<TokenType>
   }
 
   public javax.swing.text.View create(javax.swing.text.Element elem) {
-    return new HighlightView<TokenType>(pane, elem, colorizer);
+    return new HighlightView(pane, elem, colorizer);
   }
 
   @Override

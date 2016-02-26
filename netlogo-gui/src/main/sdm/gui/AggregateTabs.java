@@ -15,7 +15,7 @@ strictfp class AggregateTabs
   AggregateTabs(
       javax.swing.JPanel activePanel,
       AggregateModelEditor editor,
-      org.nlogo.editor.Colorizer<TokenType> colorizer) {
+      org.nlogo.editor.Colorizer colorizer) {
     addChangeListener(this);
     this.editor = editor;
 

@@ -35,16 +35,16 @@ object Actions {
   class UncommentAction extends MyTextAction("uncomment-line", _.uncomment())
   class ShiftLeftAction extends MyTextAction("shift-line-left", _.shiftLeft() )
   class ShiftRightAction extends MyTextAction("shift-line-right", _.insertBeforeEachSelectedLine(" ") )
-  def quickHelpAction(colorizer: Colorizer[_], i18n: String => String) =
+  def quickHelpAction(colorizer: Colorizer, i18n: String => String) =
     new MyTextAction(i18n("tabs.code.rightclick.quickhelp"),
-                     e => colorizer.doHelp(e, e.getHelpTarget(e.getSelectionStart)))
-  def mouseQuickHelpAction(colorizer: Colorizer[_], i18n: String => String) =
+      e => e.getHelpTarget(e.getSelectionStart).foreach(t => colorizer.doHelp(e, t)))
+  def mouseQuickHelpAction(colorizer: Colorizer, i18n: String => String) =
     new MyTextAction(i18n("tabs.code.rightclick.quickhelp"),
-                     e => colorizer.doHelp(e, e.getHelpTarget(e.getMousePos)))
-  class MyTextAction(name:String, f: EditorArea[_] => Unit) extends TextAction(name) {
+      e => e.getHelpTarget(e.getMousePos).foreach(t => colorizer.doHelp(e, t)))
+  class MyTextAction(name:String, f: EditorArea => Unit) extends TextAction(name) {
     override def actionPerformed(e:ActionEvent){
       val component = getTextComponent(e)
-      if(component.isInstanceOf[EditorArea[_]]) f(component.asInstanceOf[EditorArea[_]])
+      if(component.isInstanceOf[EditorArea]) f(component.asInstanceOf[EditorArea])
     }
   }
 }

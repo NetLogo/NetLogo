@@ -5,18 +5,18 @@ package org.nlogo.editor;
 import javax.swing.text.JTextComponent;
 import java.util.List;
 
+import org.nlogo.core.TokenType;
+
 /**
  * Highlights a section of code that lies between two matching
  * parentheses or brackets
  */
-strictfp class DoubleClickCaret<TokenType>
-    extends javax.swing.text.DefaultCaret {
+strictfp class DoubleClickCaret extends javax.swing.text.DefaultCaret {
 
-  private final Colorizer<TokenType> colorizer;
-  private final BracketMatcher<TokenType> bracketMatcher;
+  private final Colorizer colorizer;
+  private final BracketMatcher bracketMatcher;
 
-  DoubleClickCaret(Colorizer<TokenType> colorizer,
-                   BracketMatcher<TokenType> bracketMatcher) {
+  DoubleClickCaret(Colorizer colorizer, BracketMatcher bracketMatcher) {
     this.colorizer = colorizer;
     this.bracketMatcher = bracketMatcher;
   }

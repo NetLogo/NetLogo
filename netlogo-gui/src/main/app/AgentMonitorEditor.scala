@@ -136,7 +136,7 @@ with org.nlogo.window.Events.JobRemovedEvent.Handler
     javax.swing.BorderFactory.createLineBorder(
       org.nlogo.window.InterfaceColors.AGENT_EDITOR_BACKGROUND, 1))
 
-  private val editor = new org.nlogo.editor.EditorField[TokenType](
+  private val editor = new org.nlogo.editor.EditorField(
     17, new java.awt.Font(org.nlogo.awt.Fonts.platformMonospacedFont,
                          java.awt.Font.PLAIN, 12),
     false, new EditorColorizer(workspace), I18N.gui.get _)

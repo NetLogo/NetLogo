@@ -11,7 +11,7 @@ import org.nlogo.api.{ CompilerServices, Editable, Property}
 import scala.reflect.ClassTag
 // This is the contents of an EditDialog, except for the buttons at the bottom (OK/Apply/Cancel).
 
-class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer: Colorizer[TokenType])
+class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer: Colorizer)
   extends JPanel {
 
   val liveUpdate =

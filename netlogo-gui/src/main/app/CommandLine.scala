@@ -48,8 +48,8 @@ class CommandLine(commandCenter: CommandCenterInterface,
   private var historyBaseClass: AgentKind = AgentKind.Observer
   private var history: List[ExecutionString] = List()
 
-  val textField: EditorField[TokenType] =
-    new org.nlogo.editor.EditorField[TokenType](30,
+  val textField: EditorField =
+    new org.nlogo.editor.EditorField(30,
       new java.awt.Font(org.nlogo.awt.Fonts.platformMonospacedFont,
         java.awt.Font.PLAIN, 12),
       true, new EditorColorizer(workspace),

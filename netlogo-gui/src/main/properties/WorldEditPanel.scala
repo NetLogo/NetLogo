@@ -12,7 +12,7 @@ import java.awt.event.{ItemListener, ItemEvent}
 import org.nlogo.api.{ Editable, CompilerServices}
 import collection.JavaConverters._
 
-class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Colorizer[TokenType])
+class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Colorizer)
   extends EditPanel(widget, compiler, colorizer){
 
   private implicit val i18nPrefix = I18N.Prefix("edit.viewSettings")

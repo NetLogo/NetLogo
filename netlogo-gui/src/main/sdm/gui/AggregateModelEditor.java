@@ -34,7 +34,7 @@ strictfp class AggregateModelEditor
 
   /// Instance variables
 
-  private final org.nlogo.editor.Colorizer<TokenType> colorizer;
+  private final org.nlogo.editor.Colorizer colorizer;
   private final java.awt.Component linkParent;
   private final org.nlogo.window.MenuBarFactory menuBarFactory;
   private final CompilerServices compiler;
@@ -49,7 +49,7 @@ strictfp class AggregateModelEditor
 
   AggregateModelEditor
       (java.awt.Component linkParent,
-       org.nlogo.editor.Colorizer<TokenType> colorizer,
+       org.nlogo.editor.Colorizer colorizer,
        org.nlogo.window.MenuBarFactory menuBarFactory,
        CompilerServices compiler,
        EditDialogFactoryInterface dialogFactory) {
@@ -58,7 +58,7 @@ strictfp class AggregateModelEditor
 
   AggregateModelEditor
       (java.awt.Component linkParent,
-       org.nlogo.editor.Colorizer<TokenType> colorizer,
+       org.nlogo.editor.Colorizer colorizer,
        org.nlogo.window.MenuBarFactory menuBarFactory,
        AggregateDrawing drawing,
        CompilerServices compiler,

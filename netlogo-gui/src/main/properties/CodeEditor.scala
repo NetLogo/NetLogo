@@ -19,7 +19,7 @@ import org.nlogo.api.DummyEditable
 import scala.language.reflectiveCalls
 
 object CodeEditor {
-  def apply(displayName: String, colorizer: Colorizer[_],
+  def apply(displayName: String, colorizer: Colorizer,
             collapsible: Boolean = false,
             collapseWhenEmpty: Boolean = false,
             rows: Int = 5, columns: Int = 30,
@@ -38,7 +38,7 @@ object CodeEditor {
 }
 
 abstract class CodeEditor(accessor: PropertyAccessor[String],
-                              colorizer: Colorizer[_],
+                              colorizer: Colorizer,
                               collapsible: Boolean = false,
                               collapseWhenEmpty: Boolean = false,
                               rows: Int = 5, columns: Int = 30)

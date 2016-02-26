@@ -28,7 +28,7 @@ trait EditDialog extends javax.swing.JDialog {
   def window: java.awt.Window
   def target: org.nlogo.api.Editable
   def compiler: CompilerServices
-  def colorizer: Colorizer[TokenType]
+  def colorizer: Colorizer
   var canceled = false
 
   getContentPane.setBackground(java.awt.Color.LIGHT_GRAY)

@@ -6,9 +6,9 @@ import org.nlogo.core.CompilerException;
 
 public strictfp class EditorAreaErrorLabel
     extends ErrorLabel {
-  org.nlogo.editor.EditorArea<?> editorArea = null;
+  org.nlogo.editor.EditorArea editorArea = null;
 
-  public EditorAreaErrorLabel(org.nlogo.editor.EditorArea<?> editorArea) {
+  public EditorAreaErrorLabel(org.nlogo.editor.EditorArea editorArea) {
     super();
     this.editorArea = editorArea;
   }

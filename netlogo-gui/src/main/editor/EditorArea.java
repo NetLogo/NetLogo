@@ -8,25 +8,25 @@
 
 package org.nlogo.editor;
 
-public strictfp class EditorArea<TokenType>
+public strictfp class EditorArea
     extends AbstractEditorArea
     implements java.awt.event.FocusListener {
   private final int rows;
   private final int columns;
   protected final boolean disableFocusTraversalKeys;
-  private final BracketMatcher<TokenType> bracketMatcher;
+  private final BracketMatcher bracketMatcher;
   private final UndoManager undoManager = new UndoManager();
-  protected final Colorizer<TokenType> colorizer;
+  protected final Colorizer colorizer;
   protected IndenterInterface indenter;
   private final scala.Function1<String, String> i18n;
 
-  private final DoubleClickCaret<TokenType> caret;
+  private final DoubleClickCaret caret;
 
   public EditorArea(int rows, int columns,
                     java.awt.Font font,
                     boolean disableFocusTraversalKeys,
                     java.awt.event.TextListener listener,
-                    Colorizer<TokenType> colorizer,
+                    Colorizer colorizer,
                     scala.Function1<String, String> i18n) {
     this.rows = rows;
     this.columns = columns;
@@ -37,10 +37,10 @@ public strictfp class EditorArea<TokenType>
     enableEvents(java.awt.AWTEvent.MOUSE_EVENT_MASK);
     addFocusListener(this);
 
-    bracketMatcher = new BracketMatcher<TokenType>(colorizer);
+    bracketMatcher = new BracketMatcher(colorizer);
     addCaretListener(bracketMatcher);
     int blinkRate = getCaret().getBlinkRate();
-    caret = new DoubleClickCaret<TokenType>(colorizer, bracketMatcher);
+    caret = new DoubleClickCaret(colorizer, bracketMatcher);
     // I don't really understand why, but if we don't set the blink rate,
     // it doesn't blink, even though the normal caret does - ST 6/9/04
     caret.setBlinkRate(blinkRate);
@@ -66,7 +66,7 @@ public strictfp class EditorArea<TokenType>
               Actions.shiftTabKeyAction());
     }
     setFont(font);
-    setEditorKit(new HighlightEditorKit<TokenType>(listener, colorizer));
+    setEditorKit(new HighlightEditorKit(listener, colorizer));
     getInputMap().put
         (javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ENTER, 0),
             new EnterAction());
@@ -452,7 +452,7 @@ public strictfp class EditorArea<TokenType>
 
   ///
 
-  String getHelpTarget(int startition) {
+  scala.Option<String> getHelpTarget(int startition) {
     // determine the current "word" that the cursor is on
     javax.swing.text.PlainDocument doc = (javax.swing.text.PlainDocument) getDocument();
     try {

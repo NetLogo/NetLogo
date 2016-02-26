@@ -9,7 +9,7 @@ import editor.{EditorField, Colorizer}
 import java.awt.{Dimension, Font}
 
 abstract class ReporterLineEditor(accessor: PropertyAccessor[String],
-                                  colorizer: Colorizer[_])
+                                  colorizer: Colorizer)
          extends CodeEditor(accessor, colorizer, false, false){
 
   override lazy val editor = new EditorField(

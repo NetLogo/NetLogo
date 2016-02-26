@@ -16,7 +16,7 @@ import org.nlogo.plot.{Plot, PlotPen}
 import javax.swing.event.{ListSelectionEvent, ListSelectionListener}
 
 
-class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Colorizer[TokenType])
+class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Colorizer)
         extends PropertyEditor(accessor, handlesOwnErrors = true) {
 
   private implicit val i18nPrefix = I18N.Prefix("edit.plot.pen")
@@ -268,7 +268,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
 
     class CodeCellRenderer extends TableCellRenderer {
       val font = new Font(platformMonospacedFont, Font.PLAIN, 12)
-      val editor = new EditorField[TokenType](30, font, false, colorizer, I18N.gui.get _)
+      val editor = new EditorField(30, font, false, colorizer, I18N.gui.get _)
       def getTableCellRendererComponent(table: JTable, value: Object,
                                         isSelected: Boolean, hasFocus: Boolean, row: Int, col: Int) = {
         editor.setText(value.asInstanceOf[String])
@@ -278,7 +278,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
 
     class CodeCellEditor extends AbstractCellEditor with TableCellEditor {
       val goodFont = new Font(platformMonospacedFont, Font.PLAIN, 12)
-      val editor = new EditorField[TokenType](30, goodFont, false, colorizer, I18N.gui.get _) {
+      val editor = new EditorField(30, goodFont, false, colorizer, I18N.gui.get _) {
         // for some reason QuaquaTableUI calls setFont(table.getFont()) on cell editors. I don't
         // understand why it does that, but it means that in order to get the right font in our cell
         // editors, we need to do this. - ST 4/29/10

@@ -7,6 +7,8 @@ import javax.swing.text.Highlighter;
 import javax.swing.text.JTextComponent;
 import java.util.List;
 
+import org.nlogo.core.TokenType;
+
 /**
  * Highlights two corresponding parentheses/brackets and identifies if they are
  * of the same type.  Two different colors are used to indicate "good"
@@ -17,14 +19,14 @@ import java.util.List;
  * also used by DoubleClickCaret.
  */
 
-strictfp class BracketMatcher<TokenType>
+strictfp class BracketMatcher
     implements javax.swing.event.CaretListener {
 
   private static final java.awt.Color GOOD_COLOR = java.awt.Color.GRAY;
   private static final java.awt.Color BAD_COLOR = java.awt.Color.RED;
 
   // this object breaks the text up into tokens for us
-  private final Colorizer<TokenType> colorizer;
+  private final Colorizer colorizer;
 
   // remember what the whole document text was so we only retokenize when it changes
   private String oldText = "";
@@ -36,7 +38,7 @@ strictfp class BracketMatcher<TokenType>
   private final BracketHighlightPainter goodPainter;
   private final BracketHighlightPainter badPainter;
 
-  BracketMatcher(Colorizer<TokenType> colorizer) {
+  BracketMatcher(Colorizer colorizer) {
     this.colorizer = colorizer;
     goodPainter = new BracketHighlightPainter(GOOD_COLOR);
     badPainter = new BracketHighlightPainter(BAD_COLOR);
@@ -54,7 +56,7 @@ strictfp class BracketMatcher<TokenType>
   // We don't want to call the tokenizer unless necessary.  We especially
   // don't want to retokenize the whole document unless necessary.
   public void caretUpdate(javax.swing.event.CaretEvent e) {
-    EditorArea<?> source = (EditorArea<?>) e.getSource();
+    EditorArea source = (EditorArea) e.getSource();
     Highlighter highlighter = source.getHighlighter();
     removeOldHighlights(highlighter);
     int dot = e.getDot();
@@ -101,7 +103,7 @@ strictfp class BracketMatcher<TokenType>
     }
   }
 
-  void focusLost(EditorArea<?> source) {
+  void focusLost(EditorArea source) {
     removeOldHighlights(source.getHighlighter());
     oldText = "";
     tokenTypes = null;
@@ -149,7 +151,7 @@ strictfp class BracketMatcher<TokenType>
    *
    * @return location of close paren in document, or -1 if none found
    */
-  int findCloser(Colorizer<TokenType> colorizer, List<TokenType> tokens, int opener) {
+  int findCloser(Colorizer colorizer, List<TokenType> tokens, int opener) {
     int parenCount = 1;
     for (int i = opener + 1; i < tokens.size(); i++) {
       if (colorizer.isOpener(tokens.get(i))) {
@@ -172,7 +174,7 @@ strictfp class BracketMatcher<TokenType>
    *
    * @return location of open paren in document, or -1 if none found
    */
-  int findOpener(Colorizer<TokenType> colorizer, List<TokenType> tokens, int closer) {
+  int findOpener(Colorizer colorizer, List<TokenType> tokens, int closer) {
     int parenCount = 1;
     for (int i = closer - 1; i >= 0; i--) {
       if (colorizer.isCloser(tokens.get(i))) {

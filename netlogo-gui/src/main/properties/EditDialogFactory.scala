@@ -8,7 +8,7 @@ import org.nlogo.editor.Colorizer
 
 // see commentary in EditDialogFactoryInterface
 
-class EditDialogFactory(_compiler: CompilerServices, _colorizer: Colorizer[TokenType])
+class EditDialogFactory(_compiler: CompilerServices, _colorizer: Colorizer)
   extends org.nlogo.window.EditDialogFactoryInterface
 {
   def canceled(frame: java.awt.Frame, _target: Editable) =

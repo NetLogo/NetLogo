@@ -4,7 +4,7 @@ package org.nlogo.app
 import org.nlogo.api.EditorAreaInterface
 import org.nlogo.editor.EditorArea
 // wraps an EditorArea to satisfy EditorAreaInterface, for the benefit of SmartIndenter
-class EditorAreaWrapper(text:EditorArea[_]) extends EditorAreaInterface {
+class EditorAreaWrapper(text:EditorArea) extends EditorAreaInterface {
   def getLineOfText(lineNum:Int) = {
     val lineStart = lineToStartOffset(lineNum)
     val lineEnd = lineToEndOffset(lineNum)

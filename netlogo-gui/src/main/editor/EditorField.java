@@ -2,12 +2,14 @@
 
 package org.nlogo.editor;
 
-public strictfp class EditorField<TokenType>
-    extends EditorArea<TokenType> {
+import org.nlogo.core.TokenType;
+
+public strictfp class EditorField
+    extends EditorArea {
 
   public EditorField(int columns, java.awt.Font font,
                      boolean disableFocusTraversalKeys,
-                     Colorizer<TokenType> colorizer,
+                     Colorizer colorizer,
                      scala.Function1<String, String> i18n) {
     super(1, columns, font, disableFocusTraversalKeys, null, colorizer, i18n);
     // shut off the default actions for some keystrokes... let

@@ -10,7 +10,7 @@ import org.nlogo.window.{ EditDialogFactoryInterface, MenuBarFactory }
 class GUIAggregateManager(linkParent: java.awt.Component,
                           menuBarFactory: MenuBarFactory,
                           compiler: CompilerServices,
-                          colorizer: Colorizer[TokenType],
+                          colorizer: Colorizer,
                           dialogFactory: EditDialogFactoryInterface)
 extends org.nlogo.api.AggregateManagerInterface
 with org.nlogo.window.Event.LinkChild
