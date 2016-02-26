@@ -46,7 +46,7 @@ object Depend {
       "compiler" -> List("core/prim","prim","prim/dead","prim/threed"),
       "core" -> Nil,
       "core/prim" -> Nil,
-      "editor" -> Nil,
+      "editor" -> List("core"),
       "generator" -> List("prim","prim/dead","prim/threed"),
       "generate" -> List("prim"), // for headless
       "gl/render" -> List("shape"),
