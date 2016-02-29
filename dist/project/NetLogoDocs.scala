@@ -8,7 +8,7 @@ class NetLogoDocs(docsSource: File, docsTarget: File, netLogoRoot: File) {
     "sample", "tutorial1", "tutorial2", "tutorial3", "interface",
     "infotab", "programming", "transition", "applet", "shapes",
     "behaviorspace", "systemdynamics", "hubnet", "hubnet-authoring",
-    "modelingcommons", "logging", "controlling", "3d",
+    "modelingcommons", "logging", "controlling", "mathematica", "3d",
     "extensions", "arraystables", "matrix", "sound",
     "netlogolab", "profiler", "gis", "nw", "cf", "csv", "palette",
     "faq", "dictionary").map(n => (base / s"$n.html"))
