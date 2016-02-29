@@ -58,10 +58,17 @@ class CommandCenter(workspace: org.nlogo.workspace.AbstractWorkspace,
       // get right appearance on Mac - ST 10/4/05
       putClientProperty("Quaqua.Button.style", "square")
       putClientProperty("Quaqua.Component.visualMargin", new Insets(0, 0, 0, 0))
+      override def setFont(font: Font): Unit = {
+        // Zoomer sometimes resizes the font to be too small, which causes
+        // quaqua to error RG 2/29/16
+        if (font.getSize >= 9) {
+          super.setFont(font)
+        }
+      }
       override def getInsets = {
         val insets = super.getInsets()
         // this is very ad hoc. we want to save vertical screen real estate - ST 7/13/04
-        new Insets(0, insets.left, 2, insets.right)
+        new Insets(0, insets.left max 0, 2, insets.right max 0)
       }
     }
 
