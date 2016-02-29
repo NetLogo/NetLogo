@@ -1,5 +1,5 @@
-NetLogo 5.3.1-RC3
-February 23, 2016
+NetLogo 5.3.1
+February 29, 2016
 NetLogo 5.3
 NetLogo 5.2.1
 NetLogo 5.2
