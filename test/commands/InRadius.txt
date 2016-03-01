@@ -55,6 +55,8 @@ InRadius2_2D
   [count patches in-radius 1] of patch max-pxcor max-pycor => 4
 
 InRadius2_3D
+  globals [ glob1 ]
+  breed [frogs frog]
   O> create-frogs 100 [ setxy random-xcor random-ycor set color red ]
   O> set glob1 [count turtles in-radius 3] of turtle 0
   glob1 = [ count turtles with [ color = red ] in-radius 3 ] of turtle 0 => true

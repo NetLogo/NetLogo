@@ -1,0 +1,92 @@
+TurtlesHere1
+  breed [mice mouse]
+  breed [frogs frog]
+  globals [glob1]
+  O> crt       10 [ set heading 0 fd 5 ]
+  O> create-mice  10 [ set heading 0 fd 5 ]
+  O> create-frogs 10 [ set heading 0 fd 5 ]
+  O> set glob1 turtles with [breed = turtles]
+  remove-duplicates [count turtles-here] of glob1 => [30]
+  remove-duplicates [count other turtles-here] of glob1 => [29]
+  remove-duplicates [count mice-here] of glob1 => [10]
+  remove-duplicates [count other mice-here] of glob1 => [10]
+  remove-duplicates [count frogs-here] of glob1 => [10]
+  remove-duplicates [count other frogs-here] of glob1 => [10]
+  remove-duplicates [count turtles-here] of mice => [30]
+  remove-duplicates [count other turtles-here] of mice => [29]
+  remove-duplicates [count mice-here] of mice => [10]
+  remove-duplicates [count other mice-here] of mice => [9]
+  remove-duplicates [count frogs-here] of mice => [10]
+  remove-duplicates [count other frogs-here] of mice => [10]
+  remove-duplicates [count turtles-here] of frogs => [30]
+  remove-duplicates [count other turtles-here] of frogs => [29]
+  remove-duplicates [count mice-here] of frogs => [10]
+  remove-duplicates [count other mice-here] of frogs => [10]
+  remove-duplicates [count frogs-here] of frogs => [10]
+  remove-duplicates [count other frogs-here] of frogs => [9]
+
+TurtlesHere2
+  O> crt 1 [ ask turtles-here [ set label "foo" ] ]
+  [label] of turtle 0 => "foo"
+
+TurtlesHereCheckOrder1
+  O> random-seed 70000
+  O> crt 10
+  [[who] of turtles-here] of turtle 0 => [6 5 4 7 9 8 0 3 2 1]
+
+TurtlesHereCheckOrder2
+  O> random-seed 20154
+  O> crt 20
+  [[who] of turtles-here] of turtle 7 => [8 7 0 12 2 10 13 15 1 5 17 9 14 4 19 3 11 18 6 16]
+
+TurtlesHereCheckOrder3
+  globals [glob1]
+  O> set glob1 []
+  O> random-seed 70000
+  O> crt 10
+  O> ask turtle 0 [ ask turtles-here [ set glob1 (lput who glob1) ] ]
+  glob1 => [6 5 4 7 9 8 0 3 2 1]
+
+TurtlesHereCheckOrder4
+  O> random-seed 70000
+  O> crt 10
+  [who] of [turtles-here] of turtle 0 => [6 5 4 7 9 8 0 3 2 1]
+
+TurtlesHereCheckOrder5
+  O> random-seed 70000
+  O> repeat 10 [ crt 1 ]
+  [[who] of turtles-here] of turtle 0 => [6 5 4 7 9 8 0 3 2 1]
+
+TurtlesHereInVariable
+  globals [glob1]
+  O> crt 1 [ set glob1 turtles-here ]
+  count glob1 => 1
+  O> crt 1
+  count glob1 => 1
+
+PatchDoesOtherTurtlesHere
+  globals [glob1]
+  O> create-turtles 1 [ set glob1 patch-here ]
+  [length sort other turtles-here] of glob1 => 1
+
+PatchDoesOtherBreedHere
+  globals [glob1]
+  breed [frogs frog]
+  O> create-frogs 1 [ set glob1 patch-here ]
+  [length sort other frogs-here] of glob1 => 1
+
+PatchDoesCountOtherTurtlesHere
+  globals [glob1]
+  O> create-turtles 1 [ set glob1 patch-here ]
+  [count other turtles-here] of glob1 => 1
+
+PatchDoesCountOtherBreedHere
+  globals [glob1]
+  breed [frogs frog]
+  O> create-frogs 1 [ set glob1 patch-here ]
+  [count other frogs-here] of glob1 => 1
+
+SimpleCountAndString
+  O> crt 10
+  count [turtles-here] of patch 0 0 => 10
+  (word [turtles-here] of patch 0 0) => "(agentset, 10 turtles)"

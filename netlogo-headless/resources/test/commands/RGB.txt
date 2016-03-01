@@ -1,0 +1,102 @@
+ColorValuesInvariantOnTripThroughRGB
+  globals [glob1]
+  to-report round-trip [col] let vals extract-rgb col report approximate-rgb (item 0 vals) (item 1 vals) (item 2 vals) end
+  O> set glob1 n-values 1400 [? / 10]
+  glob1 = map [round-trip ?] glob1 => true
+
+ColorValuesInvariantOnTripThroughHSB
+  globals [glob1]
+  to-report round-trip [col] let vals extract-hsb col report approximate-hsb (item 0 vals) (item 1 vals) (item 2 vals) end
+  O> set glob1 n-values 1400 [? / 10]
+  glob1 = map [round-trip ?] glob1 => true
+
+PatchesRGBColor
+  globals [glob1]
+  O> cro 1 [ set glob1 patch-here die ]
+  [pcolor] of glob1 => 0
+  O> ask glob1 [ set pcolor [0 0 0] ]
+  [pcolor] of glob1 => [0 0 0]
+  O> ask glob1 [ set pcolor [0 0 0 0] ] => ERROR An rgb list must contain 3 numbers 0-255
+  O> ask glob1 [ set pcolor [0 0 [0]] ] => ERROR An rgb list must contain 3 numbers 0-255
+  O> ask glob1 [ set pcolor [500 0 0] ] => ERROR RGB values must be 0-255
+  O> ask glob1 [ set pcolor [-1 0 0] ] => ERROR RGB values must be 0-255
+  [pcolor] of glob1 => [0 0 0]
+  O> ask glob1 [ set pcolor red ]
+  [pcolor] of glob1 => 15
+  O> ask glob1 [ set pcolor [0 0 0] ]
+  O> ca
+  O> cro 1 [ set glob1 patch-here die ]
+  [pcolor] of glob1 => 0
+  O> ask glob1 [ set plabel-color [255 0 0] ]
+  [plabel-color] of glob1 => [255 0 0]
+  O> ask glob1 [ set plabel-color [0 0 0 0] ]
+  [plabel-color] of glob1 => [0 0 0 0]
+  O> ask glob1 [ set plabel-color [0 0 0 0 0] ] => ERROR An rgb list must contain 3 or 4 numbers 0-255
+  O> ask glob1 [ set plabel-color [0 0 [0]] ] => ERROR An rgb list must contain 3 or 4 numbers 0-255
+  O> ask glob1 [ set plabel-color [500 0 0] ] => ERROR RGB values must be 0-255
+  O> ask glob1 [ set plabel-color [-1 0 0] ] => ERROR RGB values must be 0-255
+  [plabel-color] of glob1 => [0 0 0 0]
+
+TurtlesRGBColor
+  O> cro 1
+  [color] of turtle 0 => 5
+  T> set color [0 0 0]
+  [color] of turtle 0 => [0 0 0]
+  T> set color [0 0 0 0]
+  [color] of turtle 0 => [0 0 0 0]
+  T> set color [0 0 0 0 0] => ERROR An rgb list must contain 3 or 4 numbers 0-255
+  T> set color [0 0 [0]] => ERROR An rgb list must contain 3 or 4 numbers 0-255
+  T> set color [500 0 0] => ERROR RGB values must be 0-255
+  T> set color [-1 0 0] => ERROR RGB values must be 0-255
+  [color] of turtle 0 => [0 0 0 0]
+  T> set color red
+  [color] of turtle 0 => 15
+  T> set label-color [255 0 0]
+  [label-color] of turtle 0 => [255 0 0]
+  T> set label-color [0 0 0 0]
+  [label-color] of turtle 0 => [0 0 0 0]
+  T> set label-color [0 0 0 0 0] => ERROR An rgb list must contain 3 or 4 numbers 0-255
+  T> set label-color [0 0[0]] => ERROR An rgb list must contain 3 or 4 numbers 0-255
+  T> set label-color [500 0 0] => ERROR RGB values must be 0-255
+  T> set label-color [-1 0 0] => ERROR RGB values must be 0-255
+  [label-color] of turtle 0 => [0 0 0 0]
+
+LinksRGBColor
+  O> crt 2 [ create-links-with other turtles ]
+  [color] of link 0 1 => 5
+  L> set color [0 0 0]
+  [color] of link 0 1 => [0 0 0]
+  L> set color [0 0 0 0]
+  [color] of link 0 1 => [0 0 0 0]
+  L> set color [0 0 0 0 0] => ERROR An rgb list must contain 3 or 4 numbers 0-255
+  L> set color [0 0[0]] => ERROR An rgb list must contain 3 or 4 numbers 0-255
+  L> set color [500 0 0] => ERROR RGB values must be 0-255
+  L> set color [-1 0 0] => ERROR RGB values must be 0-255
+  [color] of link 0 1 => [0 0 0 0]
+  L> set color red
+  [color] of link 0 1 => 15
+  L> set label-color [255 0 0]
+  [label-color] of link 0 1 => [255 0 0]
+  L> set label-color [0 0 0 0]
+  [label-color] of link 0 1 => [0 0 0 0]
+  L> set label-color [0 0 0 0 0] => ERROR An rgb list must contain 3 or 4 numbers 0-255
+  L> set label-color [0 0[0]] => ERROR An rgb list must contain 3 or 4 numbers 0-255
+  L> set label-color [500 0 0] => ERROR RGB values must be 0-255
+  L> set label-color [-1 0 0] => ERROR RGB values must be 0-255
+
+RGBColorImport
+  O> crt 2 [ create-links-with other turtles [ set color [255 0 0] set label-color [255 0 0]] ]
+  T> set color [0 255 0]
+  T> set label-color [0 255 0]
+  O> ask patch 0 0 [ set pcolor [0 0 255] set plabel-color [0 0 255] ]
+  O> __mkdir "tmp/RGB"
+  O> export-world "tmp/RGB/rgb-color.csv"
+  O> ca
+  O> import-world "tmp/RGB/rgb-color.csv"
+  [color] of link 0 1 => [255 0 0]
+  [label-color] of link 0 1 => [255 0 0]
+  [color] of turtle 0 => [0 255 0]
+  [label-color] of turtle 0 => [0 255 0]
+  [pcolor] of patch 0 0 => [0 0 255]
+  [plabel-color] of patch 0 0 => [0 0 255]
+  [pcolor] of patch 0 1 => 0

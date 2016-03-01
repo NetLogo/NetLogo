@@ -35,6 +35,7 @@ ResizeWorldBad_3D
   O> resize-world 0 0 0 0 1 0 => ERROR You must include the point (0, 0, 0) in the world.
 
 ResizeWorldBreedsEmptied_2D
+  breed [mice mouse]
   O> create-mice 5
   count mice => 5
   O> resize-world 0 0 0 0

@@ -1,0 +1,36 @@
+TicksBasic
+  O> reset-ticks
+  ticks => 0
+  O> tick
+  ticks => 1
+  O> tick-advance 0.1
+  ticks => 1.1
+  O> tick
+  ticks => 2.1
+  O> reset-ticks
+  ticks => 0
+
+TicksNonNegative
+  O> reset-ticks
+  O> tick-advance -1 => ERROR Cannot advance the tick counter by a negative amount.
+  O> tick
+  O> tick-advance -0.1 => ERROR Cannot advance the tick counter by a negative amount.
+
+TicksNeedReset
+  ticks => ERROR The tick counter has not been started yet. Use RESET-TICKS.
+  O> tick => ERROR The tick counter has not been started yet. Use RESET-TICKS.
+  O> tick-advance 0.1 => ERROR The tick counter has not been started yet. Use RESET-TICKS.
+  O> reset-ticks
+  ticks => 0
+
+TicksClear
+  O> reset-ticks
+  ticks => 0
+  O> clear-ticks
+  ticks => ERROR The tick counter has not been started yet. Use RESET-TICKS.
+
+TicksClearAll
+  O> reset-ticks
+  ticks => 0
+  O> clear-all
+  ticks => ERROR The tick counter has not been started yet. Use RESET-TICKS.

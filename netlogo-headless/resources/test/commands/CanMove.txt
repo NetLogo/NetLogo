@@ -1,0 +1,28 @@
+CanMoveTorus
+  O> __change-topology true true
+  O> cro 1 [ fd 5.1 ]
+  [can-move? 1  ] of turtle 0 => true
+  [can-move? 0.5] of turtle 0 => true
+  [can-move? 0  ] of turtle 0 => true
+
+CanMove2HCylinder
+  O> __change-topology false true
+  O> cro 1 [ fd 5.1 ]
+  [can-move? 1  ] of turtle 0 => true
+  [can-move? 0.5] of turtle 0 => true
+  [can-move? 0.2] of turtle 0 => true
+
+CanMove2VCylinder
+  O> __change-topology true false
+  O> crt 1 [ set heading 0 fd 5.1 ]
+  [can-move? 1  ] of turtle 0 => false
+  [can-move? 0.5] of turtle 0 => false
+  [can-move? 0.2] of turtle 0 => true
+
+CanMove2Box
+  O> __change-topology false false
+  O> crt 1 [ set heading 0 fd 5.1 ]
+  [can-move? 1  ] of turtle 0 => false
+  [can-move? 0.5] of turtle 0 => false
+  [can-move? 0.2] of turtle 0 => true
+

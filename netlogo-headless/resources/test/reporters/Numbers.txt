@@ -1,0 +1,564 @@
+NumberFormats
+  [3 -3 3. -3. -.3 -0.3 .3 0.3] => [3 -3 3 -3 -0.3 -0.3 0.3 0.3]
+
+Sqrt1
+  sqrt -1 => ERROR The square root of -1 is an imaginary number.
+
+Sqrt2
+  sqrt 0.0 => 0
+
+Sqrt3
+  sqrt 0 => 0
+
+Sqrt4
+  sqrt -0.1 => ERROR The square root of -0.1 is an imaginary number.
+
+Sqrt5
+  sqrt 25 => 5
+
+Sqrt6
+  sqrt 25.0 => 5
+
+Sqrt7
+  sqrt 37.21 => 6.1
+
+Abs
+  map [abs ?] [-7 -3.7 0 0.0 0.4 1 1.0] => [7 3.7 0 0 0.4 1 1]
+
+Round
+  map [round ?] [-1.5 -1 -0.5 0 0.5 1 1.5] => [-1 -1 0 0 1 1 2]
+
+DivByZero1
+  3 / 0 => ERROR Division by zero.
+
+DivByZero2
+  0 / 0 => ERROR Division by zero.
+
+DivByZero3
+  -1 / 0 => ERROR Division by zero.
+
+DivByZero4
+  3 / 0.0 => ERROR Division by zero.
+
+DivByZero5
+  0 / 0.0 => ERROR Division by zero.
+
+DivByZero6
+  -1 / 0.0 => ERROR Division by zero.
+
+Acos1
+  map [acos ?] [0 1 -1] => [90 0 180]
+
+Acos2
+  acos -1.00001 => ERROR math operation produced a non-number
+
+Acos3
+  acos 1.00001 => ERROR math operation produced a non-number
+
+Asin1
+  map [asin ?] [0 1 -1] => [0 90 -90]
+
+Asin2
+  asin -1.00001 => ERROR math operation produced a non-number
+
+Asin3
+  asin 1.00001 => ERROR math operation produced a non-number
+
+Atan1
+  atan 1 -1 => 135
+
+Atan2
+  atan -1 1 => 315
+
+Atan3
+  atan 3 0 => 90
+
+Atan4
+  atan 0 0 => ERROR atan is undefined when both inputs are zero.
+
+Atan5
+  atan -3 0 => 270
+
+Atan6
+  atan 0 10 => 0
+
+Atan7
+  atan 0 -9 => 180
+
+Arithmetic1
+  1 + 2 * 3 => 7
+
+Arithmetic2
+  2 * 3 + 4 => 10
+
+Arithmetic3
+  2 * 3 + 4 * 5 => 26
+
+Arithmetic5
+  5 * (6 + 6) / 3 => 20
+
+Arithmetic6
+  5 * 6 + 6 / 3 => 32
+
+Arithmetic7
+  sin 90 + 1 => 2
+
+Arithmetic8
+  3 * 0 => 0
+
+Arithmetic9
+  3.0 * 0 => 0
+
+Arithmetic10
+  3 * 0.0 => 0
+
+Arithmetic11
+  1 - 5 - 10 => -14
+
+Arithmetic12
+  3 - 1.0 => 2
+
+Arithmetic13
+  3.0 - 1.0 => 2
+
+Arithmetic14
+  3.0 - 1 => 2
+
+Arithmetic15
+  3 - 1 => 2
+
+Arithmetic16
+  3 + 1.0 => 4
+
+Arithmetic17
+  3.0 + 1.0 => 4
+
+Arithmetic18
+  3.0 + 1 => 4
+
+Arithmetic19
+  3 + 1 => 4
+
+Exponentiation1
+  9 ^ 2 => 81
+
+Exponentiation2
+  9 ^ 0.5 => 3
+
+Exponentiation3
+  -1 ^ 0.5 => ERROR math operation produced a non-number
+
+Exponentiation4
+  2 ^ 3 ^ 4 => 4096
+
+Exponentiation5
+  2 ^ -1 => 0.5
+
+Exponentiation6
+  2 ^ -3 => 0.125
+
+Exponentiation7
+  2 ^ 0 => 1
+
+Ceiling1
+  ceiling 4.5 => 5
+
+Ceiling2
+  ceiling -4.5 => -4
+
+Floor1
+  floor 4.5 => 4
+
+Floor2
+  floor -4.5 => -5
+
+Cos1
+  cos 0 => 1
+
+Cos2
+  cos 90 => 6.123233995736766E-17
+
+Cos3
+  cos 180 => -1
+
+Cos4
+  cos 270 => -1.8369701987210297E-16
+
+Sin1
+  sin 0 => 0
+
+Sin2
+  sin 90 => 1
+
+Sin3
+  sin 180 => 1.2246467991473532E-16
+
+Sin4
+  sin 270 => -1
+
+Exp1
+  exp 1 => 2.7182818284590455
+
+Exp2
+  exp 0 => 1
+
+Exp3
+  ln exp -1 => -1
+
+Int1
+  int 4.7 => 4
+
+Int2
+  int -3.5 => -3
+
+Log1
+  log 64 2 => 6
+
+Log2
+  log 64.0 2 => 6
+
+Log3
+  log 1 10 => 0
+
+Log4
+  log 1 10.0 => 0
+
+Log5
+  log 9 0 => ERROR 0 isn't a valid base for a logarithm.
+
+Log6
+  log 9 -2 => ERROR -2 isn't a valid base for a logarithm.
+
+Log7
+  log 100 10 + 2 => 4
+
+Log8
+  log 216 6 => 3.0000000000000004
+
+Max1
+  max [] => ERROR Can't find the maximum of a list with no numbers: []
+
+Max2
+  max [3] => 3
+
+Max3
+  max [3 4] => 4
+
+Max4
+  max [4 3] => 4
+
+Max5
+  max [373 37 373733 337 37] => 373733
+
+Max6
+  max [373 37 373733 337.0 37] => 373733
+
+Min1
+  min [] => ERROR Can't find the minimum of a list with no numbers: []
+
+Min2
+  min [3] => 3
+
+Min3
+  min [3 4] => 3
+
+Min4
+  min [4 3] => 3
+
+Min5
+  min [373 37 373733 337 37] => 37
+
+Min6
+  min [373 37 373733 337.0 37] => 37
+
+Mean1
+  mean [] => ERROR List is empty.
+
+Mean2
+  mean [1] => 1
+
+Mean3
+  mean [1.0] => 1
+
+Mean4
+  mean [1 2 3] => 2
+
+Mean5
+  mean [1 2.0 3] => 2
+
+StdDev1
+  standard-deviation [1 2 3 4 5 6] => 1.8708286933869707
+
+StdDev2
+  standard-deviation [4 4 4 4] => 0
+
+StdDev3
+  standard-deviation [] => ERROR Can't find the standard deviation of a list without at least two numbers: []
+
+StdDev4
+  standard-deviation [1] => ERROR Can't find the standard deviation of a list without at least two numbers: [1]
+
+Variance1
+  variance [] => ERROR Can't find the variance of a list without at least two numbers: [].
+
+Variance2
+  variance [5] => ERROR Can't find the variance of a list without at least two numbers: [5].
+
+Variance3
+  variance [3 3 3 3] => 0
+
+Variance4
+  variance [2 7 4 3 5] => 3.7
+
+Sum1
+  sum [] => 0
+
+Sum2
+  sum [1 2 3] => 6
+
+Sum3
+  sum [1 2 3.0] => 6
+
+Tan1
+  tan 0 => 0
+
+Tan2
+  tan 45 => 0.9999999999999999
+
+Tan3
+  tan 135 => -1.0000000000000002
+
+Tan4
+  tan 225 => 0.9999999999999997
+
+Tan5
+  tan 315 => -1.0000000000000004
+
+Median1
+  median [] => ERROR Can't find the median of a list with no numbers: [].
+
+Median2
+  median [1] => 1
+
+Median3
+  median [1.0] => 1
+
+Median4
+  median [1.0 2 3.0] => 2
+
+Median5
+  median [1.0 2 3 4.0] => 2.5
+
+Median6
+  median [1.0 2 4 5.0] => 3
+
+Median7
+  median [1 2 3 4] => 2.5
+
+Median8
+  median [1 2 4 5] => 3
+
+Median9
+  median [1 2 4 5.0] => 3
+
+Median10
+  median [1 2 4.0 5.0] => 3
+
+Median11
+  median [1 2.0 4 5.0] => 3
+
+Mod1
+  62 mod 5 => 2
+
+Mod2
+  -8 mod 3 => 1
+
+Remainder1
+  remainder 62 5 => 2
+
+Remainder2
+  remainder -8 3 => -2
+
+Precision1
+  precision 375 -3 => 0
+
+Precision2
+  precision 375 -2 => 400
+
+Precision3
+  precision 375 -1 => 380
+
+Precision4
+  precision 375 0 => 375
+
+Precision5
+  precision 375.0 0 => 375
+
+Precision6
+  precision 375.0 -1 => 380
+
+Precision7
+  precision 375 1 => 375
+
+Precision8
+  precision 375.124 0 => 375
+
+Precision9
+  precision 375.124 1 => 375.1
+
+Precision10
+  precision 375.124 1 => 375.1
+
+Precision11
+  precision 375.124 2 => 375.12
+
+Precision12
+  precision 1 2 + 3 => 4
+
+NegPrecision1
+  precision -375 -3 => 0
+
+NegPrecision2
+  precision -375 -2 => -400
+
+NegPrecision3
+  precision -375 -1 => -370
+
+NegPrecision4
+  precision -375 0 => -375
+
+NegPrecision5
+  precision -375.0 0 => -375
+
+NegPrecision6
+  precision -375.0 -1 => -370
+
+NegPrecision7
+  precision -375 1 => -375
+
+NegPrecision8
+  precision -375.124 0 => -375
+
+NegPrecision9
+  precision -375.124 1 => -375.1
+
+NegPrecision10
+  precision -375.124 1 => -375.1
+
+NegPrecision11
+  precision -375.124 2 => -375.12
+
+NegPrecision12
+  precision (1019498 * 1.1) -5 => 1100000
+
+NegPrecision13
+  precision (10194983 * 1.1) -5 => 11200000
+
+NegPrecision14
+  precision (101949833 * 1.1) -5 => 112100000
+
+NegPrecision15
+  precision (1019498333 * 1.1) -5 => 1121400000
+
+NegPrecision16
+  precision (10194983333 * 1.1) -5 => 11214500000
+
+NegPrecision17
+  precision (101949833333 * 1.1) -5 => 112144800000
+
+NegPrecision18
+  precision (1019498333333 * 1.1) -5 => 1121448200000
+
+NegPrecision19
+  precision (10194983333333 * 1.1) -5 => 11214481700000
+
+NegPrecision20
+  precision (101949833333333 * 1.1) -5 => 112144816700000
+
+NegPrecision21
+  precision (1019498333333333 * 1.1) -5 => 1121448166700000
+
+SubHeadingsI1
+  subtract-headings 10 0 => 10
+
+SubHeadingsI2
+  subtract-headings 0 10 => -10
+
+SubHeadingsI3
+  subtract-headings 10 355 => 15
+
+SubHeadingsI4
+  subtract-headings 355 10 => -15
+
+SubHeadingsI5
+  subtract-headings 180 0 => 180
+
+SubHeadingsI6
+  subtract-headings 0 180 => 180
+
+SubHeadingsI7
+  subtract-headings 3660 10 => 50
+
+SubHeadingsI8
+  subtract-headings 10 3660 => -50
+
+SubHeadingsI9
+  subtract-headings 10 -3660 => 70
+
+SubHeadingsI10
+  subtract-headings -3660 10 => -70
+
+SubHeadingsI11
+  subtract-headings 80 60 => 20
+
+SubHeadingsI12
+  subtract-headings 60 80 => -20
+
+SubHeadingsI13
+  subtract-headings 5 355 => 10
+
+SubHeadingsI14
+  subtract-headings 355 5 => -10
+
+SubHeadingsF1
+  subtract-headings 10.0 0.0 => 10
+
+SubHeadingsF2
+  subtract-headings 0.0 10.0 => -10
+
+SubHeadingsF3
+  subtract-headings 10.0 355.0 => 15
+
+SubHeadingsF4
+  subtract-headings 355.0 10.0 => -15
+
+SubHeadingsF5
+  subtract-headings 180.0 0.0 => 180
+
+SubHeadingsF6
+  subtract-headings 0.0 180.0 => 180
+
+SubHeadingsF7
+  subtract-headings 3660.0 10.0 => 50
+
+SubHeadingsF8
+  subtract-headings 10.0 3660.0 => -50
+
+SubHeadingsF9
+  subtract-headings 10.0 -3660.0 => 70
+
+SubHeadingsF10
+  subtract-headings -3660.0 10.0 => -70
+
+SubHeadingsF11
+  subtract-headings 80.0 60.0 => 20
+
+SubHeadingsF12
+  subtract-headings 60.0 80.0 => -20
+
+SubHeadingsF13
+  subtract-headings 5.0 355.0 => 10
+
+SubHeadingsF14
+  subtract-headings 355.0 5.0 => -10
+

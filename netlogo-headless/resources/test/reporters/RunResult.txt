@@ -1,0 +1,18 @@
+RunResult1
+  runresult "3" => 3
+
+RunResult2
+  runresult "1 + 2" => 3
+
+RunResult3
+  runresult runresult "runresult (word \"(word \" \"\\\"1\\\" \\\" + \\\" \" \"\\\"4\\\")\")" => 5
+
+RunResult4
+  runresult "" => ERROR Expected reporter.
+
+# The error message we get here is a lousy one. The reason it talks about parentheses
+# is that Evaluator wraps the code like "to-report foo report (3 die) end".  Without
+# parens it would pass the compiler which we definitely don't want, but including
+# the parens results it this confusing error message. - ST 11/12/09
+RunResult5
+  runresult "3 die" => ERROR No closing parenthesis for this open parenthesis.

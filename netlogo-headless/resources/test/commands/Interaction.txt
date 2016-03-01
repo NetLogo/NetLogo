@@ -1,0 +1,264 @@
+Interaction1Torus
+  O> __change-topology true true
+  O> cro 200 [ fd who set pcolor red ]
+  count turtles with [pcolor != red] => 0
+  count patches with [pcolor = red] => 93
+
+Interaction1Box
+  O> __change-topology false false
+  O> cro 200 [ fd who set pcolor red ]
+  count turtles with [pcolor != red] => 0
+  count patches with [pcolor = red] => 45
+
+Interaction1VCylind
+  O> __change-topology true false
+  O> cro 200 [ fd who set pcolor red ]
+  count turtles with [pcolor != red] => 0
+  count patches with [pcolor = red] => 34
+
+Interaction1HCylind
+  O> __change-topology false true
+  O> cro 200 [ fd who set pcolor red ]
+  count turtles with [pcolor != red] => 0
+  count patches with [pcolor = red] => 38
+
+Interaction2
+  O> cro 3
+  O> ask turtle 0 [ fd 1 ]
+  O> ask turtle 1 [ set color green ]
+  O> ask turtle 2 [ rt 90 ]
+  O> ask patch 2 -2 [ set pcolor blue ]
+  O> ask turtle 0 [ ask patch-at 1 0 [ set pcolor red ] ]
+  map [[xcor] of ?] sort turtles => [0 0 0]
+  map [[ycor] of ?] sort turtles => [1 0 0]
+  map [[heading] of ?] sort turtles => [0 120 330]
+  map [[color] of ?] sort turtles => [5 55 25]
+  map [[pcolor] of ?] sort patches => [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 15 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 105 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+
+Interaction3a
+  O> random-seed 4373
+  O> ask one-of patches [ sprout 1 ]
+  [list pxcor pycor] of turtle 0 => [1 -2]
+  O> cro 10
+  T> fd max-pxcor
+  O> ask max-one-of turtles [xcor] [ die ]
+  O> ask min-one-of turtles [xcor] [ die ]
+  count turtles => 9
+  map [[xcor] of ?] sort turtles => [0 2.938926261462366 4.755282581475767 4.755282581475768 2.9389262614623664 0 -2.938926261462365 -4.755282581475767 -2.938926261462367]
+
+Interaction3b1
+  O> random-seed 2381
+  O> cro 10
+  [who] of min-one-of turtles [xcor] => 3
+  [who] of max-one-of turtles [xcor] => 5
+
+Interaction3b2
+  turtles-own [tvar]
+  O> random-seed 2381
+  O> crt 10
+  O> ask turtles [ set color blue ]
+  O> ask turtles [ set tvar 0 ]
+  O> ask turtle 0 [ set tvar -1.7976931348623157E308 ]
+  O> ask turtle 1 [ set tvar 1.7976931348623157E308 ]
+  O> ask turtle 2 [ set tvar 1.7976931348623157E308 ]
+  O> ask turtle 3 [ set tvar -1.7976931348623157E308 ]
+  O> ask min-one-of turtles [tvar] [ set color pink ]
+  O> ask max-one-of turtles [tvar] [ set color orange ]
+  [color] of turtle 0 = pink => true
+  [color] of turtle 1 = blue => true
+  [color] of turtle 2 = orange => true
+  [color] of turtle 3 = blue => true
+
+Interaction3c
+  turtles-own [tvar]
+  min-one-of turtles [ xcor ] => nobody
+  max-one-of turtles [ xcor ] => nobody
+  O> crt 10
+  O> ask turtles [ set tvar "this string" ]
+  min-one-of turtles [ tvar ] => nobody
+  max-one-of turtles [ tvar ] => nobody
+
+Interaction4
+  O> random-seed 4721
+  P> sprout 1
+  count turtles = count patches => true
+  any? turtles with [self != [one-of turtles-here] of patch-here] => false
+
+Interaction5
+  O> cro 2 [ fd 2 ]
+  [distance turtle 1] of turtle 0 => 4
+  [distance turtle 0] of turtle 1 => 4
+  [distance one-of turtles with [pxcor = 5]] of turtle 0 => ERROR DISTANCE expected input to be an agent but got NOBODY instead.
+  [towards turtle 1] of turtle 0 => 180
+  [towards turtle 0] of turtle 1 => 0
+  [towards one-of turtles with [pxcor = 5]] of turtle 0 => ERROR TOWARDS expected input to be an agent but got NOBODY instead.
+
+Interaction6
+  O> crt 2
+  T> if who = 0 [ ask turtle 1 [ die ] ]
+  [who] of turtles => [0]
+
+Interaction7
+  O> crt 1
+  T> hatch 1
+  count turtles => 2
+
+Interaction8
+  breed [mice mouse]
+  breed [frogs frog]
+  O> create-mice 1 [ ask mice [ hatch 1 [ set breed frogs ] ] ]
+  count turtles => 2
+  count mice => 1
+  count frogs => 1
+
+Interaction9
+  breed [mice mouse]
+  breed [frogs frog]
+  O> create-mice 1 [ ask mice [ hatch 1 [ set breed frogs ] ] ]
+  count turtles => 2
+  count mice => 1
+  count frogs => 1
+
+Interaction10
+  O> crt 1
+  T> repeat 5 [ hatch 2 ]
+  count turtles => 11
+
+Interaction11a
+  O> random-seed 711
+  P> sprout 1
+  max [towards one-of turtles with [self != myself]] of turtles < 360 => true
+  min [towards one-of turtles with [self != myself]] of turtles >= 0 => true
+  max [towards one-of patches with [self != [patch-here] of myself]] of turtles < 360 => true
+  min [towards one-of patches with [self != [patch-here] of myself]] of turtles >= 0 => true
+
+Interaction11
+  O> __change-topology false false
+  O> random-seed 711
+  P> sprout 1
+  max [towards one-of turtles with [self != myself]] of turtles < 360 => true
+  min [towards one-of turtles with [self != myself]] of turtles >= 0 => true
+  max [towards one-of patches with [self != [patch-here] of myself]] of turtles < 360 => true
+  max [towards one-of patches with [self != [patch-here] of myself]] of turtles >= 0 => true
+
+Interaction12
+  O> cro 20 [ fd 5 ]
+  map [[towardsxy 0 0] of ?] sort turtles => [180 198 216 234 252 270 288 306 324 342 0 18 36 54 72 90 108 126 144 162]
+  remove-duplicates [precision (distancexy 0 0) 15] of turtles => [5]
+
+Interaction13
+  O> crt 2
+  [towards turtle 1] of turtle 0 => ERROR No heading is defined from a point (0,0) to that same point.
+  [towardsxy 0 0] of turtle 0 => ERROR No heading is defined from a point (0,0) to that same point.
+  [towards patch-here] of turtle 0 => ERROR No heading is defined from a point (0,0) to that same point.
+
+Interaction14
+  O> crt 2 [ set heading 0 ]
+  T> repeat 2 [ hatch 1 rt 1 ]
+  sort [heading] of turtles => [0 0 1 1 2 2]
+
+Interaction15
+  breed [mice mouse]
+  O> create-mice 1 [ ask mice [ hatch 1 ] ]
+  count turtles => 2
+  count mice => 2
+
+Interaction16
+  breed [mice mouse]
+  breed [frogs frog]
+  O> create-mice 1 [ ask mice [ hatch-frogs 1 [set color blue] ] ]
+  count turtles => 2
+  count mice => 1
+  count frogs => 1
+
+Interaction17
+  breed [mice mouse]
+  breed [frogs frog]
+  O> create-mice 1 [ ask mice [ hatch-frogs 1 ] ]
+  count turtles => 2
+  count mice => 1
+  count frogs => 1
+
+Interaction18
+  breed [mice mouse]
+  breed [frogs frog]
+  O> ask one-of patches [ sprout-mice 1 [ ask mice [ hatch-frogs 1 ] ] ]
+  count turtles => 2
+  count mice => 1
+  count frogs => 1
+
+Interaction19
+  breed [mice mouse]
+  O> ask one-of patches [ sprout-mice 2 ]
+  count turtles => 2
+  count mice => 2
+
+Interaction20
+  turtles-own [tvar]
+  patches-own [pvar]
+  O> ask patches with-max [ pxcor ] [ set pcolor red ]
+  count patches with [ pcolor = red ] => 11
+  O> ask patches with-min [ pycor ] [ set pcolor blue ]
+  count patches with [ pcolor = blue ] => 11
+  count patches with [ pcolor = red ] => 10
+  O> ask turtles with-max [ xcor ] [ die ]
+  count turtles => 0
+  O> cro 10
+  O> ask turtles with-min [ xcor ] [ set color red ]
+  count turtles with [ color = red ] => 10
+  O> ask turtles [ fd 4 ]
+  O> ask turtles with-max [ xcor ] [ die ]
+  count turtles => 9
+  O> ask turtles [ set tvar "a" ]
+  O> ask turtle 1 [ set tvar "b" ]
+  O> ask turtles with-max [ tvar ] [ set color green ]
+  count turtles with [ pcolor = green ] => 0
+  O> ask patches [ set pvar 0 ]
+  O> ask patches with-max [ pxcor ] [ set pvar 0.346754 ]
+  O> ask patches with-min [ pycor ] [ set pvar -0.3467 ]
+  O> ask patches with-max [ pvar ] [ set pcolor pink ]
+  O> ask turtles [ set tvar 1.7976931348623157E308 ]
+  O> ask turtles with-max [ tvar ] [ set color orange ]
+  count turtles with [ color = orange ] => 9
+  O> ask turtle 1 [ set tvar -1.7976931348623157E308 ]
+  O> ask turtles with-min [ tvar ] [ die ]
+  count turtles => 8
+
+Interaction21
+  globals [glob1]
+  O> crt 1 [ set glob1 self ]
+  is-turtle? turtle 0 => true
+  is-agent? turtle 0 => true
+  turtle 0 = nobody => false
+  is-turtle? glob1 => true
+  is-agent? glob1 => true
+  glob1 = nobody => false
+  T> die
+  turtle 0 => nobody
+  turtle 0 = nobody => true
+  is-turtle? turtle 0 => false
+  is-agent? turtle 0 => false
+  glob1 => nobody
+  glob1 = nobody => true
+  is-turtle? glob1 => false
+  is-agent? glob1 => false
+
+PatchTriesTurtleReporter
+  globals [glob1]
+  O> set glob1 one-of patches
+  [dx] of glob1 => ERROR this code can't be run by a patch, only a turtle
+  [dx + dy] of glob1 => ERROR this code can't be run by a patch, only a turtle
+  O> ask glob1 [ __ignore dx ] => ERROR this code can't be run by a patch, only a turtle
+
+BreedAt
+  breed [frogs frog]
+  patches-own [pvar]
+  P> set pvar 1 + count frogs-at 0 0
+  all? patches [pvar = 1] => true
+
+SingleQuotesInIdents
+  breed [ sheep sheep' ]
+  globals [ g' ]
+  g' => 0
+  O> create-sheep 10
+  [size] of sheep' 0 => 1

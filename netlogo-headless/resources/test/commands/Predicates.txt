@@ -1,0 +1,84 @@
+Predicates1
+  breed [nodes node]
+  directed-link-breed [directed-links directed-link]
+  undirected-link-breed [undirected-links undirected-link]
+  O> crt 2 [ create-undirected-links-with turtles with [ who > [who] of myself ] ]
+  O> ask turtles [ create-directed-links-to other turtles ]
+  is-agent? nobody => false
+  is-agent? 3 => false
+  is-agent? turtle 0 => true
+  is-agent? one-of patches => true
+  is-agent? undirected-link 0 1 => true
+  is-agent? patches => false
+  is-agent? turtles => false
+  is-agent? links => false
+  is-turtle? nobody => false
+  is-turtle? 3 => false
+  is-turtle? turtle 0 => true
+  is-turtle? one-of patches => false
+  is-turtle? undirected-link 0 1 => false
+  is-turtle? patches => false
+  is-turtle? turtles => false
+  is-turtle? links => false
+  is-patch? nobody => false
+  is-patch? 3 => false
+  is-patch? turtle 0 => false
+  is-patch? one-of patches => true
+  is-patch? undirected-link 0 1 => false
+  is-patch? patches => false
+  is-patch? turtles => false
+  is-patch? links => false
+  is-link? nobody => false
+  is-link? 3 => false
+  is-link? turtle 0 => false
+  is-link? one-of patches => false
+  is-link? undirected-link 0 1 => true
+  is-link? patches => false
+  is-link? turtles => false
+  is-link? links => false
+  is-directed-link? nobody => false
+  is-directed-link? 3 => false
+  is-directed-link? turtle 0 => false
+  is-directed-link? one-of patches => false
+  is-directed-link? undirected-link 0 1 => false
+  is-directed-link? patches => false
+  is-directed-link? turtles => false
+  is-directed-link? links => false
+  is-directed-link? directed-link 0 1 => true
+  is-undirected-link? nobody => false
+  is-undirected-link? 3 => false
+  is-undirected-link? turtle 0 => false
+  is-undirected-link? one-of patches => false
+  is-undirected-link? undirected-link 0 1 => true
+  is-undirected-link? patches => false
+  is-undirected-link? turtles => false
+  is-undirected-link? links => false
+  is-undirected-link? directed-link 0 1 => false
+  is-turtle-set? nobody => false
+  is-turtle-set? 3 => false
+  is-turtle-set? turtle 0 => false
+  is-turtle-set? one-of patches => false
+  is-turtle-set? undirected-link 0 1 => false
+  is-turtle-set? patches => false
+  is-turtle-set? turtles => true
+  is-turtle-set? links => false
+  is-patch-set? nobody => false
+  is-patch-set? 3 => false
+  is-patch-set? turtle 0 => false
+  is-patch-set? one-of patches => false
+  is-patch-set? undirected-link 0 1 => false
+  is-patch-set? patches => true
+  is-patch-set? turtles => false
+  is-patch-set? links => false
+  is-link-set? nobody => false
+  is-link-set? 3 => false
+  is-link-set? turtle 0 => false
+  is-link-set? one-of patches => false
+  is-link-set? undirected-link 0 1 => false
+  is-link-set? patches => false
+  is-link-set? turtles => false
+  is-link-set? links => true
+  O> create-nodes 1
+  is-node? one-of nodes => true
+  is-node? one-of turtles with [ breed != nodes ] => false
+

@@ -1,4 +1,6 @@
 TurtleSet_2D
+  breed [mice mouse]
+  breed [frogs frog]
   O> crt 1
   [turtle-set self] of turtle 0 = turtles => true
   O> crt 10
@@ -13,6 +15,8 @@ TurtleSet_2D
   [turtle-set self] of patch 0 0 => ERROR TURTLE-SET expected input to be a turtle agentset or turtle but got the patch (patch 0 0) instead.
 
 TurtleSet_3D
+  breed [mice mouse]
+  breed [frogs frog]
   [turtle-set self] of patch 0 0 0 => ERROR TURTLE-SET expected input to be a turtle agentset or turtle but got the patch (patch 0 0 0) instead.
   O> crt 1
   [turtle-set self] of turtle 0 = turtles => true
@@ -40,6 +44,7 @@ TurtleSetNestedLists
   (turtle-set (list (list (list turtle 1)) (list (list (turtle 0))))) = turtles => true
 
 PatchSet2_2D
+  globals [ glob1 ]
   O> crt 1 [ __ignore patch-set self ] => ERROR PATCH-SET expected input to be a patch agentset or patch but got the turtle (turtle 0) instead.
   O> ask patch 0 0 [ set glob1 patch-set self ]
   count glob1 => 1
@@ -51,6 +56,7 @@ PatchSet2_2D
   count (patch-set patch 0 0 patch 0 0) => 1
 
 PatchSet2_3D
+  globals [ glob1 ]
   O> crt 1 [ __ignore patch-set self ] => ERROR PATCH-SET expected input to be a patch agentset or patch but got the turtle (turtle 0) instead.
   O> ask patch 0 0 0 [ set glob1 patch-set self ]
   count glob1 => 1
@@ -112,4 +118,3 @@ LinkSetNestedLists
   (link-set (list (list (list (list link 2 1))))) = links => false
   (link-set link 0 1 link 2 0 (list (list (list (list link 2 1))))) = links => true
   (link-set (list (list (list link 2 1)) link 0 1 (list (list (link 2 0))))) = links => true
-

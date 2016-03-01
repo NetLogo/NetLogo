@@ -30,4 +30,3 @@ FilterTypeError
   to-report foo [x] report 5 end
   filter [foo ?] [] => []
   filter [foo ?] [1] => ERROR FILTER expected input to be a TRUE/FALSE but got the number 5 instead.
-

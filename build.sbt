@@ -1,113 +1,268 @@
-scalaVersion := "2.11.7"
-
-name := "NetLogo"
-
-onLoadMessage := ""
-
-resourceDirectory in Compile <<= baseDirectory(_ / "resources")
-
-scalacOptions ++=
-  "-deprecation -unchecked -feature -Xfatal-warnings -Xcheckinit -encoding us-ascii"
-  .split(" ").toSeq
-
-javacOptions ++=
-  "-g -deprecation -encoding us-ascii -Werror -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path -source 1.8 -target 1.8"
-  .format(java.io.File.pathSeparator)
-  .split(" ").toSeq
+import org.scalajs.sbtplugin.cross.{ CrossProject, CrossType }
+import org.scalastyle.sbt.ScalastylePlugin.scalastyleTarget
+import ModelsLibrary.modelsDirectory
+import Extensions.{ excludedExtensions, extensionRoot }
+import NetLogoBuild.{ all, autogenRoot, cclArtifacts, includeProject, netlogoVersion, shareSourceDirectory }
+import Docs.htmlDocs
 
 
-// only log problems plz
-ivyLoggingLevel := UpdateLogging.Quiet
-
-// this makes jar-building and script-writing easier
-retrieveManaged := true
-
-// we're not cross-building for different Scala versions
-crossPaths := false
-
-scalaSource in Compile <<= baseDirectory(_ / "src" / "main")
-
-scalaSource in Test <<= baseDirectory(_ / "src" / "test")
-
-javaSource in Compile <<= baseDirectory(_ / "src" / "main")
-
-javaSource in Test <<= baseDirectory(_ / "src" / "test")
-
-unmanagedSourceDirectories in Test <+= baseDirectory(_ / "src" / "tools")
-
-unmanagedResourceDirectories in Compile <+= baseDirectory { _ / "resources" }
-
-mainClass in (Compile, run) := Some("org.nlogo.app.App")
-
-javaOptions in run ++= (
-  if (System.getProperty("os.name").contains("Mac"))
-    Seq(
-      "-Dapple.awt.graphics.UseQuartz=true",
-      "-Dnetlogo.quaqua.laf=ch.randelshofer.quaqua.snowleopard.Quaqua16SnowLeopardLookAndFeel",
-      "-Dapple.awt.showGrowBox=true",
-      "-Dapple.laf.useScreenMenuBar=true")
-  else
-    Seq())
-
-fork in (Compile, run) := true
-
-javaHome in (Compile, run) := (
-  if (System.getProperty("os.name").contains("Mac"))
-    Some(file(Process(Seq("/usr/libexec/java_home", "-v", "1.8")).!!.dropRight(1)))
-  else
-    None)
-
-mainClass in (Compile, packageBin) := Some("org.nlogo.app.App")
-
-sourceGenerators in Compile += EventsGenerator.task.taskValue
-
-sourceGenerators in Compile += JFlexRunner.task.taskValue
-
-resourceGenerators in Compile <+= I18n.resourceGeneratorTask
-
-Extensions.extensionsTask
-
-InfoTab.infoTabTask
-
-ModelIndex.modelIndexTask
-
-NativeLibs.nativeLibsTask
-
-Depend.dependTask
-
-threed := { System.setProperty("org.nlogo.is3d", "true") }
-
-nogen  := { System.setProperty("org.nlogo.noGenerator", "true") }
-
-libraryDependencies ++= Seq(
-  "org.ow2.asm" % "asm-all" % "5.0.3",
-  "org.picocontainer" % "picocontainer" % "2.13.6",
-  "log4j" % "log4j" % "1.2.16",
-  "javax.media" % "jmf" % "2.1.1e",
-  "org.pegdown" % "pegdown" % "1.5.0",
-  "org.parboiled" % "parboiled-java" % "1.0.2",
-  "steveroy" % "mrjadapter" % "1.2"            from "http://ccl-artifacts.s3-website-us-east-1.amazonaws.com/mrjadapter-1.2.jar",
-  "org.jhotdraw" % "jhotdraw" % "6.0b1"        from "http://ccl-artifacts.s3-website-us-east-1.amazonaws.com/jhotdraw-6.0b1.jar",
-  "ch.randelshofer" % "quaqua" % "9.1"         from "http://ccl-artifacts.s3-website-us-east-1.amazonaws.com/quaqua-9.1.jar",
-  "ch.randelshofer" % "swing-layout" % "9.1"   from "http://ccl-artifacts.s3-website-us-east-1.amazonaws.com/swing-layout-9.1.jar",
-  "com.jogamp" % "jogl" % "2.3.2"              from "http://ccl-artifacts.s3-website-us-east-1.amazonaws.com/jogl-all-2.3.2.jar",
-  "com.jogamp" % "gluegen-rt" % "2.3.2"        from "http://ccl-artifacts.s3-website-us-east-1.amazonaws.com/gluegen-rt-2.3.2.jar",
-  "org.jmock" % "jmock" % "2.5.1" % "test",
-  "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
-  "org.jmock" % "jmock-junit4" % "2.5.1" % "test",
-  "org.scalacheck" %% "scalacheck" % "1.12.2" % "test",
-  "org.scalatest" %% "scalatest" % "2.2.4" % "test",
-  "org.apache.httpcomponents" % "httpclient" % "4.2",
-  "org.apache.httpcomponents" % "httpmime" % "4.2",
-  "com.googlecode.json-simple" % "json-simple" % "1.1.1"
+// these settings are common to ALL BUILDS
+// if it doesn't belong in every build, it can't go in here
+lazy val commonSettings = Seq(
+  organization          := "org.nlogo",
+  licenses              += ("GPL-2.0", url("http://opensource.org/licenses/GPL-2.0")),
+  javaSource in Compile := baseDirectory.value / "src" / "main",
+  javaSource in Test    := baseDirectory.value / "src" / "test",
+  onLoadMessage         := "",
+  ivyLoggingLevel       := UpdateLogging.Quiet
 )
 
-all <<= (streams) map { (s) => }
+// These settings are common to all builds involving scala
+// Any scala-specific settings should change here (and thus for all projects at once)
+lazy val scalaSettings = Seq(
+  scalaVersion           := "2.11.7",
+  scalaSource in Compile := baseDirectory.value / "src" / "main",
+  scalaSource in Test    := baseDirectory.value / "src" / "test",
+  crossPaths             := false, // don't cross-build for different Scala versions
+  scalacOptions ++=
+    "-deprecation -unchecked -feature -Xcheckinit -encoding us-ascii -target:jvm-1.7 -Xlint -Xfatal-warnings"
+      .split(" ").toSeq
+)
 
-all <<= all.dependsOn(
-  packageBin in Test,
-  Extensions.extensions,
-  NativeLibs.nativeLibs,
-  ModelIndex.modelIndex,
-  InfoTab.infoTab,
-  Scaladoc.docSmaller)
+// These settings are common to all builds that compile against Java
+// Any java-specific settings should change here (and thus for all java projects at once)
+lazy val jvmSettings = Seq(
+  javaSource in Compile   := baseDirectory.value / "src" / "main",
+  javaSource in Test      := baseDirectory.value / "src" / "test",
+  publishArtifact in Test := true,
+  javacOptions ++=
+    "-g -deprecation -encoding us-ascii -Werror -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path -source 1.8 -target 1.8"
+    .split(" ").toSeq
+)
+
+// These are scalatest-specific settings
+// Any scalatest-specific settings should change here
+lazy val scalatestSettings = Seq(
+  // show test failures again at end, after all tests complete.
+  // T gives truncated stack traces; change to G if you need full.
+  testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oS"),
+  logBuffered in testOnly in Test := false,
+  libraryDependencies ++= Seq(
+    "org.scalatest"  %% "scalatest"  % "2.2.1"  % "test",
+    "org.scalacheck" %% "scalacheck" % "1.12.5" % "test"
+  )
+)
+
+lazy val mockDependencies = Seq(
+  libraryDependencies ++= Seq(
+    "org.jmock" % "jmock" % "2.8.1" % "test",
+    "org.jmock" % "jmock-legacy" % "2.8.1" % "test",
+    "org.jmock" % "jmock-junit4" % "2.8.1" % "test",
+    "org.reflections" % "reflections" % "0.9.10" % "test",
+    "org.slf4j" % "slf4j-nop" % "1.7.12" % "test"
+  )
+)
+
+lazy val scalastyleSettings = Seq(
+  scalastyleTarget in Compile := {
+  file("target") / s"scalastyle-result-${name.value}.xml"
+  })
+
+lazy val publicationSettings =
+  bintrayPublishSettings ++ Seq(
+    bintray.Keys.repository in bintray.Keys.bintray := "NetLogoHeadless",
+    bintray.Keys.bintrayOrganization in bintray.Keys.bintray := Some("netlogo"))
+
+lazy val root =
+   project.in(file(".")).
+   aggregate(netlogo, parserJVM)
+
+lazy val netlogo = project.in(file("netlogo-gui")).
+   dependsOn(parserJVM).
+   settings(commonSettings: _*).
+   settings(jvmSettings: _*).
+   settings(scalaSettings: _*).
+   settings(scalatestSettings: _*).
+   settings(JFlexRunner.settings: _*).
+   settings(EventsGenerator.settings: _*).
+   settings(Docs.settings: _*).
+   settings(includeProject(parserJVM): _*).
+   settings(shareSourceDirectory(file("netlogo-core")): _*).
+   settings(Defaults.coreDefaultSettings ++
+             Testing.settings ++
+             Packaging.settings ++
+             Running.settings ++
+             Dump.settings ++
+             Scaladoc.settings ++
+             ChecksumsAndPreviews.settings ++
+             Extensions.settings ++
+             InfoTab.infoTabTask ++
+             ModelsLibrary.settings ++
+             NativeLibs.nativeLibsTask ++
+             GUISettings.settings ++
+             Depend.dependTask: _*).
+  settings(
+    name := "NetLogo",
+    mainClass in Compile := Some("org.nlogo.app.App"),
+    modelsDirectory := file("models"),
+    extensionRoot   := file("extensions").getAbsoluteFile,
+    autogenRoot     := file("autogen"),
+    // this makes jar-building and script-writing easier
+    retrieveManaged := true,
+    javaOptions     += "-Dnetlogo.docs.dir=" + file("docs").getAbsolutePath.toString,
+    unmanagedSourceDirectories in Test      += baseDirectory.value / "src" / "tools",
+    resourceDirectory in Compile            := baseDirectory.value / "resources",
+    unmanagedResourceDirectories in Compile ++= (unmanagedResourceDirectories in Compile in sharedResources).value,
+    resourceGenerators in Compile <+= I18n.resourceGeneratorTask,
+    threed := { System.setProperty("org.nlogo.is3d", "true") },
+    nogen  := { System.setProperty("org.nlogo.noGenerator", "true") },
+    libraryDependencies ++= Seq(
+      "org.ow2.asm" % "asm-all" % "5.0.4",
+      "org.picocontainer" % "picocontainer" % "2.13.6",
+      "log4j" % "log4j" % "1.2.16",
+      "javax.media" % "jmf" % "2.1.1e",
+      "org.pegdown" % "pegdown" % "1.5.0",
+      "org.parboiled" % "parboiled-java" % "1.0.2",
+      "steveroy" % "mrjadapter" % "1.2"          from cclArtifacts("mrjadapter-1.2.jar"),
+      "org.jhotdraw" % "jhotdraw" % "6.0b1"      from cclArtifacts("jhotdraw-6.0b1.jar"),
+      "ch.randelshofer" % "quaqua" % "9.1"       from cclArtifacts("quaqua-9.1.jar"),
+      "ch.randelshofer" % "swing-layout" % "9.1" from cclArtifacts("swing-layout-9.1.jar"),
+      "com.jogamp" % "jogl" % "2.3.2"            from cclArtifacts("jogl-all-2.3.2.jar"),
+      "com.jogamp" % "gluegen-rt" % "2.3.2"      from cclArtifacts("gluegen-rt-2.3.2.jar"),
+      "org.jmock" % "jmock" % "2.5.1" % "test",
+      "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
+      "org.jmock" % "jmock-junit4" % "2.5.1" % "test",
+      "org.apache.httpcomponents" % "httpclient" % "4.2",
+      "org.apache.httpcomponents" % "httpmime" % "4.2",
+      "com.googlecode.json-simple" % "json-simple" % "1.1.1"
+    ),
+    all := {},
+    all <<= all.dependsOn(
+      htmlDocs,
+      packageBin in Test,
+      Extensions.extensions,
+      NativeLibs.nativeLibs,
+      ModelsLibrary.modelIndex,
+      Scaladoc.docSmaller)
+  )
+
+lazy val threed = TaskKey[Unit]("threed", "enable NetLogo 3D")
+lazy val nogen = TaskKey[Unit]("nogen", "disable bytecode generator")
+
+lazy val headless = (project in file ("netlogo-headless")).
+  dependsOn(parserJVM % "test-internal->test;compile-internal->compile").
+  settings(scalaSettings: _*).
+  settings(scalastyleSettings: _*).
+  settings(jvmSettings: _*).
+  settings(scalatestSettings: _*).
+  settings(mockDependencies: _*).
+  settings(Scaladoc.settings: _*).
+  settings(Testing.settings: _*).
+  settings(Depend.dependTask: _*).
+  settings(Extensions.settings: _*).
+  settings(publicationSettings: _*).
+  settings(JFlexRunner.settings: _*).
+  settings(includeProject(parserJVM): _*).
+  settings(shareSourceDirectory(file("netlogo-core")): _*).
+  settings(
+    name          := "NetLogoHeadless",
+    version       := "6.0",
+    isSnapshot    := true,
+    autogenRoot   := file("autogen"),
+    extensionRoot := file("extensions").getAbsoluteFile,
+    mainClass in Compile         := Some("org.nlogo.headless.Main"),
+    nogen                        := { System.setProperty("org.nlogo.noGenerator", "true") },
+    libraryDependencies          += "org.ow2.asm" % "asm-all" % "5.0.4",
+    (fullClasspath in Runtime)   ++= (fullClasspath in Runtime in parserJVM).value,
+    resourceDirectory in Compile := baseDirectory.value / "resources" / "main",
+    resourceDirectory in Test    := baseDirectory.value / "resources" / "test",
+    excludedExtensions           := Seq("arduino", "bitmap", "csv", "gis", "gogo", "nw", "palette", "sound"),
+    all := { val _ = (
+      (packageBin in Compile).value,
+      (packageBin in Test).value,
+      (compile in Test).value,
+      Extensions.extensions
+    )}
+  )
+
+// this project exists as a wrapper for the mac-specific NetLogo components
+lazy val macApp = project.in(file("mac-app")).
+  dependsOn(netlogo).
+  settings(commonSettings: _*).
+  settings(jvmSettings: _*).
+  settings(JavaPackager.mainArtifactSettings: _*).
+  settings(
+    fork in run                           := true,
+    name                                  := "NetLogo-Mac-App",
+    unmanagedJars in Compile              += (packageBin in Compile in netlogo).value,
+    artifactPath in Compile in packageBin := target.value / "netlogo-mac-app.jar",
+    javacOptions                          ++= Seq("-bootclasspath", System.getProperty("java.home") + "/lib/rt.jar"))
+
+// this project is all about packaging NetLogo for distribution
+lazy val dist = project.in(file("dist")).
+  settings(NetLogoPackaging.settings(netlogo, macApp): _*)
+
+lazy val sharedResources = (project in file ("shared")).
+  settings(commonSettings: _*).
+  settings(scalaSettings: _*).
+  settings(scalastyleSettings: _*).
+  settings(unmanagedResourceDirectories in Compile += baseDirectory.value / "resources" / "main")
+
+lazy val macros = (project in file("macros")).
+  dependsOn(sharedResources).
+  settings(commonSettings: _*).
+  settings(scalaSettings: _*).
+  settings(scalastyleSettings: _*).
+  settings(libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value)
+
+lazy val parser = CrossProject("parser", file("."),
+  new CrossType {
+    override def projectDir(crossBase: File, projectType: String): File =
+      crossBase / s"parser-$projectType"
+    override def sharedSrcDir(projectBase: File, conf: String): Option[File] =
+      Some(projectBase / "parser-core" / "src" / conf)
+  }).
+  settings(commonSettings: _*).
+  settings(scalaSettings: _*).
+  settings(scalastyleSettings: _*).
+  settings(
+    isSnapshot := true,
+    name := "parser",
+    version := "0.0.1",
+    unmanagedSourceDirectories in Compile += file(".").getAbsoluteFile / "parser-core" / "src" / "main",
+    unmanagedSourceDirectories in Test += file(".").getAbsoluteFile / "parser-core" / "src" / "test").
+  jsConfigure(_.dependsOn(sharedResources % "compile-internal->compile")).
+  jsConfigure(_.dependsOn(macros % "compile-internal->compile;test-internal->compile")).
+  jsSettings(publicationSettings: _*).
+  jsSettings(
+      name := "parser-js",
+      ivyScala := ivyScala.value map { _.copy(overrideScalaVersion = true) },
+      resolvers += Resolver.sonatypeRepo("releases"),
+      libraryDependencies ++= {
+      import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport.toScalaJSGroupID
+        Seq(
+          "org.scala-js"  %%%! "scala-parser-combinators" % "1.0.2",
+          "org.scalatest" %%%! "scalatest" % "3.0.0-M15" % "test",
+          "org.scalacheck" %%%! "scalacheck" % "1.12.5" % "test"
+      )}).
+  jvmConfigure(_.dependsOn(sharedResources)).
+  jvmSettings(jvmSettings: _*).
+  jvmSettings(scalatestSettings: _*).
+  jvmSettings(
+      mappings in (Compile, packageBin) ++= mappings.in(sharedResources, Compile, packageBin).value,
+      mappings in (Compile, packageSrc) ++= mappings.in(sharedResources, Compile, packageSrc).value,
+      libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.3"
+    )
+
+lazy val parserJVM = parser.jvm
+lazy val parserJS  = parser.js
+
+// only exists for scalastyling
+lazy val parserCore = (project in file("parser-core")).
+  settings(scalastyleSettings: _*).
+  settings(skip in (Compile, compile) := true)
+
+// only exists for scalastyling
+lazy val netlogoCore = (project in file("netlogo-core")).
+  settings(scalastyleSettings: _*).
+  settings(skip in (Compile, compile) := true)

@@ -1,0 +1,50 @@
+TurtlesRepeat1
+  O> crt 10
+  O> ask turtles [ repeat 4 [ fd 1 ] ]
+  remove-duplicates [precision (distancexy 0 0) 15] of turtles => [4]
+
+TurtlesRepeat2
+  O> crt 10
+  T> repeat 4 [ fd 1 ]
+  remove-duplicates [precision (distancexy 0 0) 15] of turtles => [4]
+
+TurtlesRepeat3
+  to foo repeat 4 [ fd 1 ] end
+  O> crt 10
+  T> foo
+  remove-duplicates [precision (distancexy 0 0) 15] of turtles => [4]
+
+TurtlesRepeat4
+  to foo fd 1 end
+  O> crt 10
+  T> repeat 4 [ foo ]
+  remove-duplicates [precision (distancexy 0 0) 15] of turtles => [4]
+
+RepeatInsideRecursiveProcedure1
+  globals [glob1]
+  to make-tree [depth] set glob1 lput depth glob1 if depth < 1 [ stop ] repeat 2 [ make-tree depth - 1 ] end
+  O> set glob1 []
+  O> make-tree 3
+  glob1 => [3 2 1 0 0 1 0 0 2 1 0 0 1 0 0]
+
+RepeatInsideRecursiveProcedure2
+  to-report tree [depth] let result (list depth) if depth > 0 [ repeat 2 [ set result sentence result tree (depth - 1) ] ] report result end
+  tree 3 => [3 2 1 0 0 1 0 0 2 1 0 0 1 0 0]
+
+RepeatInsideAskConcurrent1
+  O> cro 4
+  O> ask-concurrent turtles [ repeat 4 [ fd 1 ] ]
+  [list xcor ycor] of turtle 0 => [0 4]
+  [list xcor ycor] of turtle 1 => [4 0]
+  [list xcor ycor] of turtle 2 => [0 -4]
+  [list xcor ycor] of turtle 3 => [-4 0]
+
+NonIntegerCount
+  O> repeat 2.3 [ crt 1 ]
+  count turtles => 2
+  O> ca repeat 14.9 [ crt 1 ]
+  count turtles => 14
+
+RepeatWithReport
+  to-report three let i 0 repeat 20 [ set i i + 1 if i = 3 [report i] ] report i end
+  three => 3

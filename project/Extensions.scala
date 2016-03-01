@@ -8,6 +8,8 @@ import sbt.complete.{ Parser, DefaultParsers }, Parser.success, DefaultParsers._
 object Extensions {
 
   private val extensionDeps = TaskKey[(File, File)]("extension dependencies")
+  val extensionRoot = SettingKey[File]("extension root", "root directory of extensions")
+  val excludedExtensions = SettingKey[Seq[String]]("extensions excluded for this configuration")
   val extensions = TaskKey[Seq[File]]("extensions", "builds extensions")
   val extension = InputKey[Seq[File]]("extension", "build a single extension")
 
@@ -15,16 +17,17 @@ object Extensions {
     override def accept(f: File) = f.isDirectory
   }
 
-  def extensionDirs(base: File) = IO.listFiles(isDirectory)(base / "extensions").toSeq
+  def extensionDirs(base: File) = IO.listFiles(isDirectory)(base).toSeq
 
   val extensionParser: Initialize[Parser[File]] = {
     import Parser._
     Def.setting {
-      (Space ~> extensionDirs(baseDirectory.value).map(d => (d.getName ^^^ d)).reduce(_ | _))
+      (Space ~> extensionDirs(extensionRoot.value)
+        .map(d => (d.getName ^^^ d)).reduce(_ | _))
     }
   }
 
-  val extensionsTask = Seq(
+  lazy val settings = Seq(
     extensionDeps := {
       val packagedNetLogoJar     = (packageBin in Compile).value
       val packagedNetLogoTestJar = (packageBin in Test).value
@@ -44,12 +47,15 @@ object Extensions {
       val s = streams.value
       val scala = scalaInstance.value
       ("git -C " + base + " submodule --quiet update --init") ! s.log
-      val dirs = extensionDirs(baseDirectory.value)
-      dirs.flatMap{ dir =>
+      val dirs = extensionDirs(extensionRoot.value)
+      dirs.filterNot(f => excludedExtensions.value.contains(f.getName)).flatMap{ dir =>
         cacheBuild(s.cacheDirectory, dir, Set(base / "NetLogo.jar", base / "NetLogoLite.jar"))(
           buildExtension(dir, scala.libraryJar, packagedNetLogoJar, s.log, state.value))
       }
-    }
+    },
+    excludedExtensions := Seq(),
+    javaOptions +=
+      "-Dnetlogo.extensions.dir=" + extensionRoot.value.getAbsolutePath.toString
   )
 
 

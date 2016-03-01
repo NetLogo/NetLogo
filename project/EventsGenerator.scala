@@ -2,19 +2,23 @@ import java.io.File
 import sbt._
 import Keys._
 
+import NetLogoBuild.autogenRoot
+
 object EventsGenerator {
 
-  val task =
+  lazy val settings = Seq(sourceGenerators in Compile += task.taskValue)
+
+  lazy val task =
     Def.task {
         val cachedEvents = FileFunction.cached(streams.value.cacheDirectory / "events", inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
           (in: Set[File]) =>
             Set("window", "app").map { pkg =>
-              events(streams.value.log.info(_), baseDirectory.value, (sourceManaged in Compile).value, pkg)
+              events(streams.value.log.info(_), autogenRoot.value, (sourceManaged in Compile).value, pkg)
             }
         }
         cachedEvents(Set(
-          baseDirectory.value / "project" / "autogen" / "events.txt",
-          baseDirectory.value / "project" / "autogen" / "warning.txt")).toSeq
+          autogenRoot.value / "events" / "events.txt",
+          autogenRoot.value / "events" / "warning.txt")).toSeq
     }
 
   def events(log: String => Unit, base: File, dir: File, ppackage: String): File = {
@@ -29,7 +33,7 @@ object EventsGenerator {
       case "app" => ("", "org.nlogo.window.")
     }
 
-    append(IO.read(base / "project" / "autogen" / "warning.txt"))
+    append(IO.read(base / "events" / "warning.txt"))
 
     append("package org.nlogo." + ppackage + " ;")
     append("\n")
@@ -39,7 +43,7 @@ object EventsGenerator {
     append("    private Events() { throw new IllegalStateException() ; }")
     append("\n")
 
-    for{line <- IO.read(base / "project" / "autogen" / "events.txt").split("\n")
+    for{line <- IO.read(base / "events" / "events.txt").split("\n")
         if !line.trim.isEmpty // skip blank lines
         if !line.startsWith("#") // skip comment lines
         if line.startsWith(ppackage)} // skip unless in right package

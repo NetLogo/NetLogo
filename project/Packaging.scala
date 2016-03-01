@@ -14,18 +14,6 @@ object Packaging {
           "Class-Path", classpath.files
             .map(f => f.getName)
             .filter(_.endsWith(".jar"))
-            .mkString(" ")))},
-
-    packageBin in Compile <<= (packageBin in Compile, scalaInstance, baseDirectory, streams) map {
-      (jar, instance, base, s) =>
-        val cache =
-          FileFunction.cached(s.cacheDirectory / "jars", inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
-            in: Set[File] =>
-              IO.copyFile(jar, base / "NetLogo.jar")
-              Set(base / "NetLogo.jar")
-          }
-        cache(Set(jar))
-        jar
-      }
+            .mkString(" ")))}
   )
 }

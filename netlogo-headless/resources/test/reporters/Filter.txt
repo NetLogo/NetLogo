@@ -1,0 +1,15 @@
+Filter1
+  filter [?] [] => []
+
+Filter2
+  filter [?] [true] => [true]
+
+Filter3
+  filter [?] [false] => []
+
+Filter4
+  filter [?] [false false] => []
+
+Filter5
+  filter [?] [true true] => [true true]
+

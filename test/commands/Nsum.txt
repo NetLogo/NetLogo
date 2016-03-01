@@ -42,4 +42,3 @@ Nsum_3D
   sort remove-duplicates [sum [pxcor] of neighbors4 - pxcor * 4] of patches => [-11 0 11]
   sort remove-duplicates [sum [pycor] of neighbors - pycor * 26] of patches => [-99 0 99]
   sort remove-duplicates [sum [pycor] of neighbors4 - pycor * 4] of patches => [-11 0 11]
-

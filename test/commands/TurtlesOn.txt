@@ -1,4 +1,6 @@
 TurtlesOn1_2D
+  breed [mice mouse]
+  breed [frogs frog]
   P> sprout 1
   count turtles-on patches = count patches => true
   any? mice-on patches => false
@@ -18,6 +20,8 @@ TurtlesOn1_2D
   count mice-on one-of turtles-on patch 0 0 => 0
 
 TurtlesOn1_3D
+  breed [mice mouse]
+  breed [frogs frog]
   P> sprout 1
   count turtles-on patches = count patches => true
   any? mice-on patches => false
@@ -35,4 +39,3 @@ TurtlesOn1_3D
   count frogs-on one-of frogs-on patch 0 0 0 => 1
   count frogs-on one-of mice-on patch 0 0 0 => ERROR FROGS-ON expected input to be a turtle agentset or patch agentset or turtle or patch but got NOBODY instead.
   count mice-on one-of turtles-on patch 0 0 0 => 0
-

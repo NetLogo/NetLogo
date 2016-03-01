@@ -15,14 +15,15 @@ object Depend {
       val s = streams.value
       val classes = (classDirectory in Compile).value.toString
       val testClasses = (classDirectory in Test).value.toString
-      IO.write(baseDirectory.value / "tmp" / "depend.ddf", ddfContents)
+      val ddfFile = baseDirectory.value / "tmp" / "depend.ddf"
+      IO.write(ddfFile, ddfContents)
       import classycle.dependency.DependencyChecker
       def main() = TrapExit(
-        DependencyChecker.main(Array("-dependencies=@tmp/depend.ddf",
+        DependencyChecker.main(Array("-dependencies=@" + ddfFile.getPath,
                                      classes)),
         s.log)
       def test() = TrapExit(
-        DependencyChecker.main(Array("-dependencies=@tmp/depend.ddf",
+        DependencyChecker.main(Array("-dependencies=@" + ddfFile.getPath,
                                      testClasses)),
         s.log)
       main() match {
@@ -39,16 +40,20 @@ object Depend {
     val packageDefs = Map(
       "" -> Nil,
       "agent" -> List("api"),
-      "api" -> List("util"),
+      "api" -> List("core", "util"),
       "app" -> List("window"),
       "awt" -> Nil,
-      "compiler" -> List("prim","prim/dead","prim/threed"),
-      "editor" -> Nil,
+      "compiler" -> List("core/prim","prim","prim/dead","prim/threed"),
+      "core" -> Nil,
+      "core/prim" -> Nil,
+      "editor" -> List("core"),
       "generator" -> List("prim","prim/dead","prim/threed"),
+      "generate" -> List("prim"), // for headless
       "gl/render" -> List("shape"),
       "gl/view" -> List("gl/render","window"),
-      "headless" -> List("shape","workspace"),
+      "headless" -> List("shape","workspace","headless/test"),
       "headless/hubnet" -> List("headless", "hubnet/protocol"),
+      "headless/test" -> List("core"),
       "hubnet/client" -> List("hubnet/connection","hubnet/mirroring","hubnet/protocol","render","widget"),
       "hubnet/connection" -> List("api"),
       "hubnet/mirroring" -> List("api"),
@@ -63,6 +68,7 @@ object Depend {
       "log" -> List("api"),
       "mc" -> List("workspace", "swing"),
       "nvm" -> List("agent"),
+      "parse" -> List("core", "core/prim"),
       "plot" -> List("api"),
       "prim" -> List("nvm"),
       "prim/dead" -> List("nvm"),
@@ -132,7 +138,7 @@ check [gl.render] independentOf [Sun-Swing] [bad-AWT]
 [JOGL] = net.java.games.* com.jogamp.opengl.*
 check [JOGL-free-zone] independentOf [JOGL]
 
-[ASM-free-zone] = org.nlogo.* excluding [generator]
+[ASM-free-zone] = org.nlogo.* excluding [generator] [generate]
 check [ASM-free-zone] independentOf org.objectweb.*
 
 check org.nlogo.* independentOf com.wolfram.*

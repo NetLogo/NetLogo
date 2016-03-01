@@ -12,6 +12,9 @@ language: scala
 before_install:
   - git submodule update --init --recursive
 install:
+  # Stolen from https://github.com/yihui/knitr/blob/master/.travis.yml
+  - "[ ! -d ~/bin ] && mkdir ~/bin || true"
+  - "wget -q -O - https://github.com/yihui/crandalf/raw/master/inst/scripts/install-pandoc | bash"
   - travis_wait ./sbt update
 script:
   - ./sbt depend

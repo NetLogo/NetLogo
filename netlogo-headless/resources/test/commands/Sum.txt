@@ -1,0 +1,70 @@
+MaxMinMeanSumPatchTurtleBreedVars
+  breed [frogs frog]
+  frogs-own [spots]
+  turtles-own [tvar]
+  sum [pxcor] of patches => 0
+  max [pxcor] of patches => 5
+  min [pxcor] of patches => -5
+  mean [pxcor] of patches => 0
+  P> sprout 1
+  sum [pxcor] of turtles => 0
+  max [pxcor] of turtles => 5
+  min [pxcor] of turtles => -5
+  mean [pxcor] of turtles => 0
+  sum [pxcor] of turtles with [true] => 0
+  max [pxcor] of turtles with [true] => 5
+  min [pxcor] of turtles with [true] => -5
+  mean [pxcor] of turtles with [true] => 0
+  T> set tvar pxcor
+  sum [tvar] of turtles => 0
+  max [tvar] of turtles => 5
+  min [tvar] of turtles => -5
+  mean [tvar] of turtles => 0
+  T> die
+  P> sprout-frogs 1
+  T> set spots pxcor
+  sum [spots] of turtles => 0
+  max [spots] of turtles => 5
+  min [spots] of turtles => -5
+  mean [spots] of turtles => 0
+
+SumOf1
+  globals [glob1]
+  patches-own [pvar]
+  O> set glob1 one-of patches
+  O> ask glob1 [ set pvar [ 1 2 3 ] ]
+  sum [pvar] of glob1 => 6
+  sum [sentence pvar 2 ] of glob1 => 8
+  mean [pvar] of glob1 => 2
+  mean [sentence pvar 1 ] of glob1 => 1.75
+  min [pvar] of glob1 => 1
+  min [sentence pvar 1 ] of glob1 => 1
+  max [pvar] of glob1 => 3
+  max [sentence pvar 1 ] of glob1 => 3
+
+SumOf2
+  turtles-own [tvar]
+  O> crt 1 [ set tvar [ 1 2 3 ] ]
+  sum [tvar] of turtle 0 => 6
+  mean [tvar] of turtle 0 => 2
+  max [tvar] of turtle 0 => 3
+  min [tvar] of turtle 0 => 1
+
+SumOf3
+  breed [frogs frog]
+  frogs-own [spots]
+  O> create-frogs 1 [ set spots [1 2 3] ]
+  sum [spots] of frog 0 => 6
+  mean [spots] of frog 0 => 2
+  max [spots] of frog 0 => 3
+  min [spots] of frog 0 => 1
+
+SumOf4
+  directed-link-breed [directed-links directed-link]
+  directed-links-own [lvar]
+  O> crt 2
+  O> ask turtle 0 [ create-directed-link-to turtle 1 [ set lvar [1 2 3]] ]
+  sum [lvar] of directed-link 0 1 => 6
+  mean [lvar] of directed-link 0 1 => 2
+  min [lvar] of directed-link 0 1 => 1
+  max [lvar] of directed-link 0 1 => 3

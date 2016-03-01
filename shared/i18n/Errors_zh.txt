@@ -1,0 +1,185 @@
+org.nlogo.agent.Agent.breedDoesNotOwnVariable = 品种 {0} 不拥有变量 {1}
+org.nlogo.agent.Agent.cantMoveToLink = 不能移动到 连接 上.
+# can't set turtle variable XCOR to non-number foo
+org.nlogo.agent.Agent.wrongTypeOnSetError = 不能设置 {0} 变量 {1} 为非-{2} {3}
+org.nlogo.agent.Agent.rgbListSizeError.3 = rgb列表必须包含3个取值在0-255之间的数字
+org.nlogo.agent.Agent.rgbListSizeError.3or4 = rgb列表必须包含3个或4个取值在0-255之间的数字
+org.nlogo.agent.Agent.rgbValueError = RGB值必须在0-255之间
+org.nlogo.agent.Agent.shapeUndefined = \"{0}\" 形状未定义
+
+org.nlogo.agent.BooleanConstraint.bool = 必须是布尔值.
+org.nlogo.agent.Box.cantMoveTurtleBeyondWorldEdge = 海龟不能运动到世界外.
+
+# Value must be one of: ["Hello" 5 [1 2 3]]
+org.nlogo.agent.ChooserConstraint.invalidValue = 值必须从以下列表中选择: {0}
+org.nlogo.agent.ImportPatchColors.unsupportedImageFormat = 该文件不是软件支持的图像格式: {0}
+
+org.nlogo.agent.Turtle.patchBeyondLimits = 不能取得世界外的网格.
+org.nlogo.agent.Turtle.cantChangeWho = 不能改变海龟的ID号.
+
+# look at the blow , key should be plot.plotmanager
+org.nlogo.plot.noPlotSelected = 没有选中的绘图。请使用set-current-plot指令选择绘图.
+
+# Patch 311 and 336 -> needs checking, I think that these are unreachable also turtle 471 and 376
+org.nlogo.agent.Agent.notADoubleVariable = {0}不是浮点变量.
+# seems unreachable
+org.nlogo.agent.Agent.cantSetUnknownVariable =  未知变量 {0}.
+
+
+org.nlogo.agent.Patch.cantAccessLinkVarWithoutSpecifyingLink = 网格不能访问连接的变量，除非指名是哪条连接.
+# Neither Myself Nor Seth were able to reproduce the following errors. - Dhrumil 1/20
+# These are now unreachable and can also be found in unreproducable-errors.txt - Dhrumil 1/28
+org.nlogo.agent.Patch.cantAccessTurtleWithoutSpecifyingTurtle = 网格不能访问海龟的变量，除非指名是哪只海龟.
+org.nlogo.agent.Patch.cantAccessTurtleOrLinkWithoutSpecifyingAgent = 网格不能访问连接或海龟的变量，除非指名是哪个主体.
+org.nlogo.agent.Patch.cantSetTurtleWithoutSpecifyingTurtle = 网格不能设置海龟的变量，除非指名是哪只海龟.
+#also unreachable
+org.nlogo.agent.Patch.pcolorNotADouble = Pcolor不是浮点数.
+org.nlogo.prim._lessthan.cantUseLessthanOnDifferentArgs = < 只能用于两个数字、字符串或同类主体，不能用于 {0} 和 {1}.
+
+org.nlogo.agent.Patch.cantChangePatchCoordinates = 不能改变网格的坐标.
+
+
+# TURTLE FILE
+org.nlogo.agent.Turtle.cantSetBreedToNonBreedAgentSet = 该主体集不支持品种设置.
+
+## These are now unreachable
+org.nlogo.agent.Turtle.cantAccessLinkWithoutSpecifyingLink = 海龟不能访问连接的变量，除非指名是哪条连接.
+
+
+# LINK FILE
+
+org.nlogo.agent.Link.cantHaveBreededAndUnbreededLinks = 同一个世界中不能同时存在有品种(breeded)和无品种(unbreeded)的连接.
+org.nlogo.agent.Link.cantSetBreedToNonLinkBreedAgentSet = 该主体集不支持连接品种设置.
+
+#Commit 2
+
+
+
+org.nlogo.agent.Protractor.noHeadingFromPointToSelf = 不能定义从点({0},{1})到其自身的方向.
+org.nlogo.agent.Protractor.noHeadingFromAgentToSelf = 不能定义主体到其自身的方向.
+
+org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink = 需要提供海龟或网格，而非连接.
+
+
+
+org.nlogo.prim.etc.$common.noNegativeRadius ={0} 不能为负半径.
+org.nlogo.prim.etc.$common.noNegativeNumber ={0} 不能为负值.
+org.nlogo.prim.etc.$common.noNegativeAngle ={0} 不能为负角度.
+org.nlogo.prim.etc.$common.noAngleGreaterThan360 ={0} 不能超过360°.
+org.nlogo.prim.$common.turtleCantLinkToSelf = 海龟不能连接到自身.
+
+org.nlogo.prim.$common.onlyObserverCanAskAllTurtles = 只有观察员能操作海龟全集.
+org.nlogo.prim.$common.onlyObserverCanAskAllPatches = 只有观察员能操作网格全集.
+
+org.nlogo.prim.etc._atpoints.invalidListOfPoints = 非法点列表: {0}
+org.nlogo.prim.etc._setxy.pointOutsideWorld =点 [ {0} , {1} ] 在世界外，却并未设置循环边界.
+
+org.nlogo.prim.etc._sqrt.squareRootIsImaginary = {0} 的平方根是虚数.
+org.nlogo.prim.etc._standarddeviation.needListGreaterThanOneItem = 列表至少要有两个数值元素才能计算标准差: {0}
+
+org.nlogo.prim.etc._setDefaultShape.notADefinedLinkShape =连接形状 "{0}" 未定义.
+org.nlogo.prim.etc._setDefaultShape.notADefinedTurtleShape =海龟形状 "{0}" 未定义.
+
+org.nlogo.prim._greaterthan.cannotCompareParameters = > 只能用于两个数字、字符串或同类主体，不能用于 {0} 和 {1}.
+org.nlogo.prim._max.cantFindMaxOfListWithNoNumbers = 不包含数值的列表无法找到最大值: {0}
+org.nlogo.prim._min.cantFindMinOfListWithNoNumbers = 不包含数值的列表无法找到最小值: {0}
+org.nlogo.prim._mean.cantFindMeanOfNonNumbers= 不包含数值的列表无法计算平均值: {0} is a {1}.
+
+org.nlogo.prim.etc.$common.emptyList = 空列表.
+org.nlogo.prim.etc.$common.emptyString = 空字符串.
+
+org.nlogo.prim._greaterorequal.cannotCompareParameters = >= 只能用于两个数字、字符串或同类主体，不能用于 {0} 和 {1}.
+org.nlogo.prim._lessorequal.cannotCompareParameters = <= 只能用于两个数字、字符串或同类主体，不能用于 {0} 和 {1}.
+
+org.nlogo.prim.etc.$common.cantTakeLogarithmOf = {0} 不能取对数.
+org.nlogo.prim.etc._log.notAValidBase = {0} 不是合法的对数底.
+
+org.nlogo.prim.etc.$common.emptyListInput = {0} 输入为空列表.
+org.nlogo.prim.etc.$common.emptyStringInput = {0} 输入为空字符串.
+
+org.nlogo.prim.etc.$common.firstInputCantBeNegative = {0} 的第一个输入不能为负.
+org.nlogo.prim.etc.$common.requestMoreItemsThanInList = 从长为 {1} 的列表中取 {0} 个随机元素.
+
+org.nlogo.prim.etc.$common.negativeIndex = {0} 为负.
+org.nlogo.prim.etc.$common.indexExceedsListSize = 列表 {1} (长度为 {2} )中找不到元素 {0} .
+org.nlogo.prim.etc.$common.indexExceedsStringSize = 字符串 {1} (长度为 {2} )中找不到元素 {0} .
+
+org.nlogo.prim.etc._median.emptyList = 不包含数值的列表无法找到中值: {0}
+
+org.nlogo.$common.tooBigForInt = NetLogo无法精确表示大整数 {0} .
+
+# diffuse
+org.nlogo.prim.$common.paramOutOfBounds = {0} 不在 0.0 和 1.0之间
+
+org.nlogo.prim.etc.atan.bothInputsCannotBeZero = atan 的2个输入不能都是0.
+
+org.nlogo.prim.etc._exportoutput.emptyPath = 不能导出到空路径.
+
+org.nlogo.prim.etc.median.cantFindMedianOfListWithNoNumbers = 不包含数值的列表无法找到中值: {0}
+
+org.nlogo.prim.etc._linkset.invalidListInputs = {0} 的输入列表应只包含连接、连接集或列表元素. 列表 {1} 中的 {2} 不是连接或连接集.
+org.nlogo.prim.etc._linkset.invalidLAgentsetTypeInputToList = {0} 的输入列表应只包含连接、连接集或列表元素. 列表 {1} 包含了其他类型的主体集: {2}.
+
+org.nlogo.prim.etc._resizeworld.worldMustIncludeOrigin = 世界必须包含点 (0, 0).
+org.nlogo.prim.etc._sublist.startIsLessThanZero = {0} 小于0.
+org.nlogo.prim.etc._sublist.endIsLessThanStart = {0} 小于 {1}.
+org.nlogo.prim.etc._sublist.endIsGreaterThanListSize =  {0} 大于输入列表 ({1})的长度.
+org.nlogo.prim.etc._substring.endIsGreaterThanListSize = {0} 超过了列表 {1} 的长度 {2}.
+
+org.nlogo.prim.etc.$common.divByZero = 零除.
+org.nlogo.prim.etc._myself.noAgentMyself = 没有MYSELF指代的主体.
+org.nlogo.prim.etc._otherend.onlyTurtleCanGetLinkEnd = 只有海龟能获得连接的 OTHER-END.
+org.nlogo.prim.etc._otherend.onlyLinkCanGetTurtleEnd = 只有连接能获得海龟的 OTHER-END.
+org.nlogo.prim.etc._layoutcircle.patchesImmovable = 网格不能运动.
+org.nlogo.prim.etc._patchset.listInputNonPatch = {0} 的输入列表应只包含网格、网格集或列表元素. 列表 {1} 中的 {2} 不是网格或网格集.
+
+org.nlogo.prim.etc._patchset.listInputNonPatchAgentset = {0} 的输入列表应只包含网格、网格集或列表元素. 列表 {1} 包含了其他类型的主体集: {2}.
+
+org.nlogo.prim.etc._setdefaultshape.cantSetDefaultShapeOfPatch = 不能设置网格的默认形状，因为网格没有形状.
+org.nlogo.prim.etc._setdefaultshape.canOnlySetDefaultShapeOfEntireBreed = 不能设置所有海龟、所有连接或整个品种的默认形状.
+
+org.nlogo.prim.etc._tickadvance.noNegativeTickAdvances = 时间步计数器不能倒退.
+org.nlogo.prim.etc.$common.tickCounterNotStarted = 时间步计数器尚未启动，使用 RESET-TICKS.
+org.nlogo.prim.etc._turtleset.incorrectInputType = {0} 的输入列表应只包含海龟、海龟集或列表元素. 列表 {1} 中的 {2} 不是海龟或海龟集.
+org.nlogo.prim.etc._variance.listMustHaveMoreThanOneNumber = 列表至少要有两个数值元素才能计算方差: {0}.
+
+org.nlogo.prim.etc._randomgamma.noNegativeInputs = {0} 的输入必须为正数.
+
+org.nlogo.prim.$common.withExpectedBooleanValue = WITH 期望从 {0} 获得布尔值，却得到了 {1}.
+org.nlogo.prim.$common.expectedBooleanValue = {0} 期望从 {1} 获得布尔值，却得到了 {2}.
+
+
+org.nlogo.prim.etc._turtleset.listInputsMustBeTurtleOrTurtleAgentset = {0} 的输入列表应只包含海龟、海龟集或列表元素. 列表 {1} 包含了其他类型的主体集: {2}.
+
+org.nlogo.prim.etc._linkheading.noLinkHeadingWithSameEndpoints = 两端在一个位置的连接没有方向值.
+
+org.nlogo.prim.etc.$common.notThatManyAgentsExist = 只有{1}的主体的集合无法得到{0}个随机主体.
+
+org.nlogo.prim.etc._otherend.incorrectLink = {0} 不被 {1} 连接.
+
+org.nlogo.prim._reduce.emptyListInvalidInput = 'reduce'的列表参数不能为空.
+org.nlogo.prim._report.canOnlyUseInToReport =  {0} 只能用在TO-REPORT内.
+org.nlogo.prim._report.mustImmediatelyBeUsedInToReport = {0} 必须放在TO-REPORT内.
+
+org.nlogo.prim.etc.$common.syntaxError = 语法错误: {0}
+org.nlogo.prim.etc._runresult.failedToReportResult = 汇报结果失败.
+org.nlogo.prim.etc._stop.notAllowedInsideToReport = {0} 不允许出现在TO-REPORT内.
+
+org.nlogo.prim._askconcurrent.onlyObserverCanAskAllTurtles = 只有观察员能操作海龟全集.
+
+org.nlogo.$common.thatAgentIsDead = {0} 已死亡.
+org.nlogo.workspace.DefaultFileManager.canOnlyDeleteFiles = 只能删除文件.
+org.nlogo.workspace.DefaultFileManager.cannotDeleteNonExistantFile = 删除的文件不存在.
+org.nlogo.workspace.DefaultFileManager.noOpenFile = 没有打开文件.
+
+org.nlogo.prim.etc._foreach.listsMustBeSameLength = FOREACH的所有列表元素应具有相同长度.
+org.nlogo.prim.$common.noSumOfListWithNonNumbers =  不包含数值的列表无法计算总和: {0} is a {1}.
+org.nlogo.prim._returnreport.reportNotCalledInReportProcedure = 汇报函数末尾未调用REPORT.
+org.nlogo.prim.etc.$common.expectedLastInputToBeLinkBreed = 最后一个输入应为 link breed.
+
+org.nlogo.prim.etc._randomNormal.secondInputNotNegative = random-normal的第二个输入不能为负.
+
+compiler.CarefullyVisitor.badNesting = {0} 不能在 CAREFULLY 外面使用.
+compiler.SetVisitor.notSettable = 不能对其使用set.
+compiler.TaskVisitor.notDefined = 该变量未定义.
+compiler.LetVariable.notDefined = {0} 未定义.

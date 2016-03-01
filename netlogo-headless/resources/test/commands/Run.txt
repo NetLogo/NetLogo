@@ -1,0 +1,40 @@
+RunRejectExtraArgumentsIfFirstArgIsString
+  O> (run "__ignore 5" 1) => ERROR run doesn't accept further inputs if the first is a string
+
+RunResultRejectExtraArgumentsIfFirstArgIsString
+  O> __ignore (runresult "5" 1) => ERROR runresult doesn't accept further inputs if the first is a string
+
+LuisIzquierdoRun1
+  to foo [x] run "reset-timer" end
+  O> run "reset-timer"
+  O> foo 0
+
+LuisIzquierdoRunResult1
+  to-report foo [x] report runresult "count turtles" end
+  O> __ignore runresult "count turtles"
+  O> __ignore foo 0
+
+# these may take longer to fail because it depends on the exact timing of garbage collection
+# causing a cached Procedure to be discarded - ST 5/14/09
+
+LuisIzquierdoRun2
+  globals [glob1]
+  to setup crt 1 [ while [glob1 < 100000] [ foo 0 run "reset-timer" set glob1 glob1 + 1 ] ] end
+  to foo [x] run "reset-timer" end
+  O> setup
+  glob1 => 100000
+
+LuisIzquierdoRunResult2
+  globals [glob1]
+  to setup crt 1 [ while [glob1 < 100000] [ foo runresult "color" set glob1 glob1 + 1 ] ] end
+  to foo [x] __ignore runresult "color" end
+  O> setup
+  glob1 => 100000
+
+run-evaluate-string-input-only-once
+  globals [glob1]
+  to-report foo set glob1 glob1 + 1 report "__ignore glob1" end
+  O> run foo
+  glob1 => 1
+
+

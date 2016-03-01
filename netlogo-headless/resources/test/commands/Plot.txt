@@ -1,0 +1,14 @@
+CreateTemporaryPlotPen
+  O> set-current-plot "plot1"
+  O> create-temporary-plot-pen "foobar"
+  plot-pen-exists? "foobar" => true
+  plot-pen-exists? "pen1" => true
+  plot-pen-exists? "dummy" => false
+  O> set-current-plot-pen "foobar"
+  O> set-current-plot-pen "pen1"
+  O> set-current-plot-pen "foobar"
+  O> clear-plot
+  plot-pen-exists? "foobar" => false
+  O> set-current-plot-pen "foobar" => ERROR There is no pen named "foobar" in the current plot
+  O> set-current-plot-pen "pen1"
+

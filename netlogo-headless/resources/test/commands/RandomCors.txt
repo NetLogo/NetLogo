@@ -1,0 +1,10 @@
+RandomCoords1
+  O> random-seed 38923
+  min [      random-pxcor] of patches = min-pxcor => true
+  max [      random-pxcor] of patches = max-pxcor => true
+  min [round random-xcor ] of patches = min-pxcor => true
+  max [round random-xcor ] of patches = max-pxcor => true
+  min [      random-pycor] of patches = min-pycor => true
+  max [      random-pycor] of patches = max-pycor => true
+  min [round random-ycor ] of patches = min-pycor => true
+  max [round random-ycor ] of patches = max-pycor => true

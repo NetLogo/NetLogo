@@ -8,7 +8,7 @@ import java.net.URL
 object NativeLibs {
 
   val nativeLibs = TaskKey[Seq[File]](
-    "native-libs", "download native libraries for JOGL and Quaqua")
+    "nativeLibs", "download native libraries for JOGL and Quaqua")
 
   lazy val nativeLibsTask =
     nativeLibs <<= (baseDirectory, streams) map {

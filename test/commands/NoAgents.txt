@@ -27,4 +27,3 @@ NoLinks
   is-patch-set? no-links => false
   is-link-set? no-links => true
   O> ask no-links [ __ignore __boom ]
-

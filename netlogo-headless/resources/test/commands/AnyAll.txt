@@ -1,0 +1,41 @@
+All1
+  all? patches [true] => true
+  all? patches [false] => false
+  all? turtles [true] => true
+  all? turtles [false] => true
+
+All2
+  O> crt 1
+  all? turtles [false] => false
+
+All3
+  all? patches [patch 0 0 = self] => false
+  all? patches [patch-at 0 0 = self] => true
+
+All4
+  P> sprout 1
+  all? patches [self = [patch-here] of one-of turtles-here] => true
+
+All5
+  O> random-seed 38923
+  P> set plabel true
+  all? patches [plabel] => true
+  O> ask one-of patches [ set plabel 5 ]
+  all? patches [plabel] => ERROR ALL? expected a true/false value from (patch -4 3), but got 5 instead.
+  P> set plabel false
+  O> random-seed 0
+  O> ask one-of patches [ set plabel 5 ]
+  all? patches [false] => false
+
+AnyOptimizations
+  any? turtles => false
+  not any? turtles => true
+  count turtles = 0 => true
+  count turtles != 0 => false
+  count turtles > 0 => false
+  O> crt 1
+  any? turtles => true
+  not any? turtles => false
+  count turtles = 0 => false
+  count turtles != 0 => true
+  count turtles > 0 => true

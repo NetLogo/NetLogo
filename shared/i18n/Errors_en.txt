@@ -1,0 +1,187 @@
+org.nlogo.agent.Agent.breedDoesNotOwnVariable = {0} breed does not own variable {1}
+org.nlogo.agent.Agent.cantMoveToLink = You can''t move-to a link.
+# can't set turtle variable XCOR to non-number foo
+org.nlogo.agent.Agent.wrongTypeOnSetError = can''t set {0} variable {1} to non-{2} {3}
+org.nlogo.agent.Agent.rgbListSizeError.3 = An rgb list must contain 3 numbers 0-255
+org.nlogo.agent.Agent.rgbListSizeError.3or4 = An rgb list must contain 3 or 4 numbers 0-255
+org.nlogo.agent.Agent.rgbValueError = RGB values must be 0-255
+org.nlogo.agent.Agent.shapeUndefined = \"{0}\" is not a currently defined shape.
+
+org.nlogo.agent.BooleanConstraint.bool = Value must be a boolean.
+
+# Value must be one of: ["Hello" 5 [1 2 3]]
+org.nlogo.agent.ChooserConstraint.invalidValue = Value must be one of: {0}
+org.nlogo.agent.ImportPatchColors.unsupportedImageFormat = The following file is not in a supported image format: {0}
+
+org.nlogo.agent.Topology.cantMoveTurtleBeyondWorldEdge = Cannot move turtle beyond the world''s edge.
+
+org.nlogo.agent.Turtle.patchBeyondLimits = Cannot get patch beyond limits of current world.
+org.nlogo.agent.Turtle.cantChangeWho = You can''t change a turtle''s ID number.
+
+# look at the blow , key should be plot.plotmanager
+org.nlogo.plot.noPlotSelected = There is no current plot. Please select a current plot using the set-current-plot command.
+
+# Patch 311 and 336 -> needs checking, I think that these are unreachable also turtle 471 and 376
+org.nlogo.agent.Agent.notADoubleVariable = {0} is not a double variable.
+# seems unreachable
+org.nlogo.agent.Agent.cantSetUnknownVariable =  Unknown variable {0}.
+
+
+org.nlogo.agent.Patch.cantAccessLinkVarWithoutSpecifyingLink = A patch can''t access a link variable without specifying which link.
+# Neither Myself Nor Seth were able to reproduce the following errors. - Dhrumil 1/20
+# These are now unreachable and can also be found in unreproducable-errors.txt - Dhrumil 1/28
+org.nlogo.agent.Patch.cantAccessTurtleWithoutSpecifyingTurtle = A patch can''t access a turtle variable without specifying which turtle.
+org.nlogo.agent.Patch.cantAccessTurtleOrLinkWithoutSpecifyingAgent = A patch can''t access a turtle or link variable without specifying which agent.
+org.nlogo.agent.Patch.cantSetTurtleWithoutSpecifyingTurtle = A patch can''t set a turtle variable without specifying which turtle.
+#also unreachable
+org.nlogo.agent.Patch.pcolorNotADouble = Pcolor is not a double.
+org.nlogo.prim._lessthan.cantUseLessthanOnDifferentArgs =  The < operator can only be used on two numbers, two strings, or two agents of the same type, but not on {0} and {1}.
+
+org.nlogo.agent.Patch.cantChangePatchCoordinates = You can''t change a patch''s coordinates.
+
+
+# TURTLE FILE
+org.nlogo.agent.Turtle.cantSetBreedToNonBreedAgentSet = You can''t set BREED to a non-breed agentset.
+
+## These are now unreachable
+org.nlogo.agent.Turtle.cantAccessLinkWithoutSpecifyingLink = A turtle can''t access a link variable without specifying which link.
+
+
+# LINK FILE
+
+org.nlogo.agent.Link.cantHaveBreededAndUnbreededLinks = You cannot have both breeded and unbreeded links in the same world.
+org.nlogo.agent.Link.cantSetBreedToNonLinkBreedAgentSet = You can''t set BREED to a non-link-breed agentset.
+
+#Commit 2
+
+
+
+org.nlogo.agent.Protractor.noHeadingFromPointToSelf = No heading is defined from a point ({0},{1}) to that same point.
+org.nlogo.agent.Protractor.noHeadingFromAgentToSelf = No heading is defined from an agent to itself.
+
+org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink = Expected a turtle or a patch but got a link.
+
+
+
+org.nlogo.prim.etc.$common.noNegativeRadius ={0} cannot take a negative radius.
+org.nlogo.prim.etc.$common.noNegativeNumber ={0} cannot take a negative number.
+org.nlogo.prim.etc.$common.noNegativeAngle ={0} cannot take a negative angle.
+org.nlogo.prim.etc.$common.noAngleGreaterThan360 ={0} cannot take an angle greater than 360.
+org.nlogo.prim.$common.turtleCantLinkToSelf = A turtle cannot link to itself.
+
+org.nlogo.prim.$common.onlyObserverCanAskAllTurtles = Only the observer can ASK the set of all turtles.
+org.nlogo.prim.$common.onlyObserverCanAskAllPatches = Only the observer can ASK the set of all patches.
+
+org.nlogo.prim.etc._atpoints.invalidListOfPoints = Invalid list of points: {0}
+org.nlogo.prim.etc._setxy.pointOutsideWorld =The point [ {0} , {1} ] is outside of the boundaries of the world and wrapping is not permitted in one or both directions.
+
+org.nlogo.prim.etc._sqrt.squareRootIsImaginary = The square root of {0} is an imaginary number.
+org.nlogo.prim.etc._standarddeviation.needListGreaterThanOneItem =Can''t find the standard deviation of a list without at least two numbers: {0}
+
+org.nlogo.prim.etc._setDefaultShape.notADefinedLinkShape ="{0}" is not a currently defined link shape.
+org.nlogo.prim.etc._setDefaultShape.notADefinedTurtleShape ="{0}" is not a currently defined turtle shape.
+
+org.nlogo.prim._greaterthan.cannotCompareParameters = The > operator can only be used on two numbers, two strings, or two agents of the same type, but not on {0} and {1}.
+org.nlogo.prim._max.cantFindMaxOfListWithNoNumbers = Can''t find the maximum of a list with no numbers: {0}
+org.nlogo.prim._min.cantFindMinOfListWithNoNumbers = Can''t find the minimum of a list with no numbers: {0}
+org.nlogo.prim._mean.cantFindMeanOfNonNumbers= Can''t find the mean of a list that contains non-numbers : {0} is a {1}.
+
+org.nlogo.prim.etc.$common.emptyList = List is empty.
+org.nlogo.prim.etc.$common.emptyString = String is empty.
+
+org.nlogo.prim._greaterorequal.cannotCompareParameters = The >= operator can only be used on two numbers, two strings, or two agents of the same type, but not on {0} and {1}.
+org.nlogo.prim._lessorequal.cannotCompareParameters = The <= operator can only be used on two numbers, two strings, or two agents of the same type, but not on {0} and {1}.
+
+org.nlogo.prim.etc.$common.cantTakeLogarithmOf = Can''t take logarithm of {0}.
+org.nlogo.prim.etc._log.notAValidBase = {0} isn''t a valid base for a logarithm.
+
+org.nlogo.prim.etc.$common.emptyListInput = {0} got an empty list as input.
+org.nlogo.prim.etc.$common.emptyStringInput = {0} got an empty string as input.
+
+org.nlogo.prim.etc.$common.firstInputCantBeNegative = First input to {0} can''t be negative.
+org.nlogo.prim.etc.$common.requestMoreItemsThanInList = Requested {0} random items from a list of length {1}.
+
+org.nlogo.prim.etc.$common.negativeIndex = {0} isn''t greater than or equal to zero.
+org.nlogo.prim.etc.$common.indexExceedsListSize = Can''t find element {0} of the list {1}, which is only of length {2}.
+org.nlogo.prim.etc.$common.indexExceedsStringSize = Can''t find element {0} of the string {1}, which is only of length {2}.
+
+org.nlogo.prim.etc._median.emptyList = Can''t find the median of a list with no numbers: {0}
+
+org.nlogo.$common.tooBigForInt = {0} is too large to be represented exactly as an integer in NetLogo.
+
+# diffuse
+org.nlogo.prim.$common.paramOutOfBounds = {0} is not in the range 0.0 to 1.0
+
+org.nlogo.prim.etc.atan.bothInputsCannotBeZero = atan is undefined when both inputs are zero.
+
+org.nlogo.prim.etc._exportoutput.emptyPath = Can''t export to empty pathname.
+
+org.nlogo.prim.etc.median.cantFindMedianOfListWithNoNumbers = Can''t find the median of a list with no numbers: {0}.
+
+org.nlogo.prim.etc._linkset.invalidListInputs = List inputs to {0} must only contain link, link agentset, or list elements.  The list {1} contained {2} which is NOT a link or link agentset.
+org.nlogo.prim.etc._linkset.invalidLAgentsetTypeInputToList = List inputs to {0} must only contain link, link agentset, or list elements.  The list {1} contained a different type agentset: {2}.
+
+org.nlogo.prim.etc._resizeworld.worldMustIncludeOrigin = You must include the point (0, 0) in the world.
+org.nlogo.prim.etc._sublist.startIsLessThanZero = {0} is less than zero.
+org.nlogo.prim.etc._sublist.endIsLessThanStart = {0} is less than {1}.
+org.nlogo.prim.etc._sublist.endIsGreaterThanListSize =  {0} is greater than the length of the input list ({1}).
+org.nlogo.prim.etc._substring.endIsGreaterThanListSize = {0} is too big for {1}, which is only of length {2}.
+
+org.nlogo.prim.etc.$common.divByZero = Division by zero.
+org.nlogo.prim.etc._myself.noAgentMyself = There is no agent for MYSELF to refer to.
+org.nlogo.prim.etc._otherend.onlyTurtleCanGetLinkEnd = Only a turtle can get the OTHER-END of a link.
+org.nlogo.prim.etc._otherend.onlyLinkCanGetTurtleEnd = Only a link can get the OTHER-END from a turtle.
+org.nlogo.prim.etc._layoutcircle.patchesImmovable = Patches are immovable.
+org.nlogo.prim.etc._patchset.listInputNonPatch = List inputs to {0} must only contain patch, patch agentset, or list elements.  The list {1} contained {2} which is NOT a patch or patch agentset.
+
+org.nlogo.prim.etc._patchset.listInputNonPatchAgentset = List inputs to {0} must only contain patch, patch agentset, or list elements.  The list {1} contained a different type agentset: {2}.
+
+org.nlogo.prim.etc._setdefaultshape.cantSetDefaultShapeOfPatch = Cannot set the default shape of patches, because patches do not have shapes.
+org.nlogo.prim.etc._setdefaultshape.canOnlySetDefaultShapeOfEntireBreed = Can only set the default shape of all turtles , all links, or an entire breed.
+
+org.nlogo.prim.etc._tickadvance.noNegativeTickAdvances = Cannot advance the tick counter by a negative amount.
+org.nlogo.prim.etc.$common.tickCounterNotStarted = The tick counter has not been started yet. Use RESET-TICKS.
+org.nlogo.prim.etc._turtleset.incorrectInputType = List inputs to {0} must only contain turtle or turtle agentset elements.  The list {1} contained {2} which is NOT a turtle or turtle agentset.
+org.nlogo.prim.etc._variance.listMustHaveMoreThanOneNumber = Can''t find the variance of a list without at least two numbers: {0}.
+
+org.nlogo.prim.etc._randomgamma.noNegativeInputs = Both inputs to {0} must be positive.
+
+org.nlogo.prim.$common.withExpectedBooleanValue = WITH expected a true/false value from {0}, but got {1} instead.
+org.nlogo.prim.$common.expectedBooleanValue = {0} expected a true/false value from {1}, but got {2} instead.
+
+
+org.nlogo.prim.etc._turtleset.listInputsMustBeTurtleOrTurtleAgentset = List inputs to {0} must only contain turtle or turtle agentset elements.  The list {1} contained a different type agentset: {2}.
+
+
+org.nlogo.prim.etc._linkheading.noLinkHeadingWithSameEndpoints = There is no heading of a link whose endpoints are in the same position.
+
+org.nlogo.prim.etc.$common.notThatManyAgentsExist = Requested {0} random agents from a set of only {1} agents.
+
+org.nlogo.prim.etc._otherend.incorrectLink = {0} is not linked by {1}.
+
+org.nlogo.prim._reduce.emptyListInvalidInput = The list argument to 'reduce' must not be empty.
+org.nlogo.prim._report.canOnlyUseInToReport =  {0} can only be used inside TO-REPORT.
+org.nlogo.prim._report.mustImmediatelyBeUsedInToReport = {0} must be immediately inside a TO-REPORT.
+
+org.nlogo.prim.etc.$common.syntaxError = Syntax Error: {0}
+org.nlogo.prim.etc._runresult.failedToReportResult = Failed to report a result.
+org.nlogo.prim.etc._stop.notAllowedInsideToReport = {0} is not allowed inside TO-REPORT.
+
+org.nlogo.prim._askconcurrent.onlyObserverCanAskAllTurtles only the observer can ASK the set of all turtles
+
+org.nlogo.$common.thatAgentIsDead = That {0} is dead.
+org.nlogo.workspace.DefaultFileManager.canOnlyDeleteFiles = You can only delete files.
+org.nlogo.workspace.DefaultFileManager.cannotDeleteNonExistantFile = You cannot delete a non-existent file.
+org.nlogo.workspace.DefaultFileManager.noOpenFile = No file has been opened.
+
+org.nlogo.prim.etc._foreach.listsMustBeSameLength = All the list arguments to FOREACH must be the same length.
+org.nlogo.prim.$common.noSumOfListWithNonNumbers =  Can''t find the sum of a list that contains non-numbers {0} is a {1}.
+org.nlogo.prim._returnreport.reportNotCalledInReportProcedure = Reached end of reporter procedure without REPORT being called.
+org.nlogo.prim.etc.$common.expectedLastInputToBeLinkBreed = Expected the last input to be a link breed.
+
+org.nlogo.prim.etc._randomNormal.secondInputNotNegative = random-normal''s second input can''t be negative.
+
+compiler.CarefullyVisitor.badNesting = {0} cannot be used outside of CAREFULLY.
+compiler.SetVisitor.notSettable = This isn''t something you can use "set" on.
+compiler.TaskVisitor.notDefined = This special variable isn''t defined here.
+compiler.LetVariable.notDefined = Nothing named {0} has been defined.

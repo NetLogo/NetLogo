@@ -72,8 +72,8 @@ Diffuse4Conservation_2D
   sum map [[pcolor] of ?] sort patches => 600
 
 DiffuseConservation
+  globals [ glob1 ]
   O> ask patches with [ abs pxcor = max-pxcor or abs pycor = max-pycor ][ set pcolor red ]
   O> set glob1 sum [pcolor] of patches
   O> diffuse pcolor 0.5
   abs( glob1 - sum [pcolor] of patches ) < 0.000000001 => true
-

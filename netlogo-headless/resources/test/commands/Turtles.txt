@@ -1,0 +1,206 @@
+Turtles1
+  O> crt 2
+  count turtles => 2
+  turtle 2 => nobody
+  [who] of [self] of turtle 0 => 0
+
+Turtles1a
+  breed [mice mouse]
+  breed [frogs frog]
+  O> crt 2
+  turtle 0 = turtle 0.0 => true
+  turtle 1 = turtle 1.0 => true
+  turtle -0.1 => ERROR -0.1 is not an integer
+  turtle 0.1 => ERROR 0.1 is not an integer
+  turtle 0.9 => ERROR 0.9 is not an integer
+  turtle 1.1 => ERROR 1.1 is not an integer
+  turtle 2 => nobody
+  turtle 2.0 => nobody
+  frog 0 => ERROR turtle 0 is not a FROG
+  mouse 0 => ERROR turtle 0 is not a MOUSE
+  O> ask turtle 0 [ set breed frogs ]
+  is-turtle? turtle 0 => true
+  is-frog? turtle 0 => true
+  turtle 0 = frog 0 => true
+  turtle 0 = frog 0.0 => true
+  frog -0.1 => ERROR -0.1 is not an integer
+  frog 0.1 => ERROR 0.1 is not an integer
+  frog 0.9 => ERROR 0.9 is not an integer
+  frog 1.1 => ERROR 1.1 is not an integer
+  mouse 0 => ERROR frog 0 is not a MOUSE
+  mouse 0.0 => ERROR frog 0 is not a MOUSE
+  frog 1 => ERROR turtle 1 is not a FROG
+  frog 1.0 => ERROR turtle 1 is not a FROG
+
+Turtles2
+  O> cro 2 [ fd 2 ]
+  [who] of turtle 0 => 0
+  [xcor] of turtle 0 => 0
+  [ycor] of turtle 0 => 2
+  [shape] of turtle 0 => "default"
+  [pen-mode] of turtle 0 => "up"
+  [label] of turtle 0 = "" => true
+  [label-color] of turtle 0 => 9.9
+  [breed] of turtle 0 = turtles => true
+  [hidden?] of turtle 0 => false
+  [size] of turtle 0 => 1
+  [color] of turtle 0 => 5
+  [heading] of turtle 0 => 0
+  [pxcor] of turtle 0 => 0
+  [pycor] of turtle 0 => 2
+  [pcolor] of turtle 0 => 0
+  [plabel] of turtle 0 = "" => true
+  [plabel-color] of turtle 0 => 9.9
+  [who] of turtle 1 => 1
+  [xcor] of turtle 1 => 0
+  [ycor] of turtle 1 => -2
+  [shape] of turtle 1 => "default"
+  [pen-mode] of turtle 1 => "up"
+  [label] of turtle 1 = "" => true
+  [label-color] of turtle 1 => 9.9
+  [breed] of turtle 1 = turtles => true
+  [hidden?] of turtle 1 => false
+  [size] of turtle 1 => 1
+  [color] of turtle 1 => 15
+  [heading] of turtle 1 => 180
+  [pxcor] of turtle 1 => 0
+  [pycor] of turtle 1 => -2
+  [pcolor] of turtle 1 => 0
+  [plabel] of turtle 1 = "" => true
+  [plabel-color] of turtle 1 => 9.9
+
+Turtles3
+  O> cro 2
+  T> fd 1
+  [distance turtle 1] of turtle 0 => 2
+  [distance turtle 0] of turtle 1 => 2
+
+Turtles4
+  O> create-turtles 20 [ set color red ]
+  count turtles => 20
+  count turtles with [color = red] => 20
+  count turtles with [color = blue] => 0
+  O> ask turtles with [who < 10] [ die ]
+  count turtles => 10
+  T> die
+  count turtles => 0
+
+Turtles5Torus
+  O> __change-topology true true
+  O> cro 4
+  T> fd 5.5
+  map [list [xcor] of ? [ycor] of ?] sort turtles => [[0 -5.5] [-5.5 0] [0 -5.5] [-5.5 0]]
+
+Turtles5Box
+  O> __change-topology false false
+  O> cro 4
+  T> fd 5.5
+  map [list [xcor] of ? [ycor] of ?] sort turtles => [[0 5] [5 0] [0 -5.5] [-5.5 0]]
+
+Turtles5VCylind
+  O> __change-topology true false
+  O> cro 4
+  T> fd 5.5
+  map [list [xcor] of ? [ycor] of ?] sort turtles => [[0 5] [-5.5 0] [0 -5.5] [-5.5 0]]
+
+Turtles5HCylind
+  O> __change-topology false true
+  O> cro 4
+  T> fd 5.5
+  map [list [xcor] of ? [ycor] of ?] sort turtles => [[0 -5.5] [5 0] [0 -5.5] [-5.5 0]]
+
+# because the order of summing can vary according to whether
+# the optimizer is on, we can only insist on a certain number
+# of decimal places here - ST 3/9/06
+Turtles6Torus
+  O> __change-topology true true
+  O> cro 1000
+  T> fd who mod 37
+  precision (sum [xcor] of turtles) 11 => 43.39618111125
+  precision (sum [ycor] of turtles) 11 => -7.0041492675
+
+# ditto - ST 3/9/06
+Turtles6Box
+  O> __change-topology false false
+  O> cro 1000
+  T> fd who mod 37
+  precision (sum [xcor] of turtles) 11 => 3.74490034643
+  precision (sum [ycor] of turtles) 11 => -9.90977539772
+
+Turtles7
+  O> crt 1
+  O> ask turtle 0 [ set color 140 ]
+  [color] of turtle 0 => 0
+  O> ask turtle 0 [ set color -10 ]
+  [color] of turtle 0 => 130
+  O> ask turtle 0 [ set color 150 ]
+  [color] of turtle 0 => 10
+
+Turtles8
+  O> crt 1 [ fd 10 ] crt 1 [ fd 15 ]
+  count turtles => 2
+
+Turtles9
+  O> crt 0 [ __ignore __boom ]
+  O> crt -1 [ __ignore __boom ]
+  O> crt -5 [ __ignore __boom ]
+
+Turtles10
+  to p1 hatch 1 die end
+  O> crt 10 [ p1 ]
+  count turtles => 10
+
+Turtles11
+  O> crt 2
+  [who] of [one-of other turtles-here] of turtle 0 => 1
+
+SimpleDontReuseWhos
+  O> crt 1
+  O> ask turtles [ die ]
+  O> crt 1
+  [who] of turtles => [1]
+  O> ca
+  O> crt 1
+  [who] of turtles => [0]
+  O> ct
+  O> crt 1
+  [who] of turtles => [0]
+  O> crt 1
+  O> ask turtle 1 [ die ]
+  O> cp
+  O> crt 1
+  sort [who] of turtles => [0 2]
+
+TurtleHeadingPrecision
+  O> crt 1 [ set heading 73.1 ]
+  [heading] of turtle 0 => 73.1
+
+EmptySprout
+  P> sprout 0
+  P> sprout 0 [ set color blue ]
+  P> sprout -1
+  P> sprout -1 [ set color blue ]
+
+EmptyHatch
+  O> crt 1
+  T> hatch 0
+  T> hatch 0 [ set color __boom ]
+  T> hatch -1
+  T> hatch -1 [ set color __boom ]
+  count turtles => 1
+
+ForwardToBoundary1
+  O> __change-topology true false
+  O> cro 1 [ fd max-pycor + 0.6 bk max-pycor]
+  [list precision xcor 10 precision ycor 10] of turtles => [[0 0]]
+
+ForwardToBoundary2
+  O> __change-topology true false
+  O> cro 1 [ fd (max-pycor * 10) + 0.1 bk max-pycor ]
+  [list precision xcor 10 precision ycor 10] of turtles => [[0 0]]
+
+HatchInheritShape
+  O> crt 1
+  T> set shape "circle"
+  T> hatch 1
+  [shape] of turtles => ["circle" "circle"]

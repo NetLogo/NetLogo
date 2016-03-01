@@ -34,6 +34,7 @@ Not1
   not false => true
 
 Not2
+  globals [ glob1 ]
   O> set glob1 true
   not glob1 => false
   O> set glob1 false
@@ -58,6 +59,7 @@ BasicArithmetic
   10 / 5 => 2
 
 NumericTypeConversion
+  globals [ glob1 ]
   O> set glob1 1
   glob1 - glob1 => 0
   glob1 + glob1 => 2
@@ -66,6 +68,7 @@ NumericTypeConversion
   glob1 + glob1 => 5
 
 BooleanTypeConversion
+  globals [ glob1 ]
   O> set glob1 true
   glob1 and glob1 => true
   glob1 and false => false

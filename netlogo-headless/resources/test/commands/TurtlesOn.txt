@@ -1,0 +1,25 @@
+TurtlesOn1
+  breed [mice mouse]
+  breed [frogs frog]
+  P> sprout 1
+  count turtles-on patches = count patches => true
+  any? mice-on patches => false
+  any? frogs-on patches => false
+  P> if (pxcor + pycor) mod 2 = 0 [ sprout 1 [ set breed frogs ] ]
+  any? mice-on patches => false
+  any? frogs-on patches => true
+  count turtles-on [neighbors] of patch 0 0 => 12
+  count frogs-on [neighbors] of patch 0 0 => 4
+  count turtles-on patch 2 4 => 2
+  count frogs-on patch 2 4 => 1
+  count mice-on patch 2 4 => 0
+  count turtles-on one-of turtles-on patch 0 0 => 2
+  count frogs-on one-of turtles-on patch 0 0 => 1
+  count frogs-on one-of frogs-on patch 0 0 => 1
+  count frogs-on one-of mice-on patch 0 0 => ERROR FROGS-ON expected input to be a turtle agentset or patch agentset or turtle or patch but got NOBODY instead.
+  count mice-on one-of turtles-on patch 0 0 => 0
+
+SimpleCountAndString
+  O> crt 10
+  count turtles-on patch 0 0 => 10
+  (word turtles-on patch 0 0) => "(agentset, 10 turtles)"

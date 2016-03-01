@@ -1,4 +1,6 @@
 InitialEnvironment_2D
+  breed [mice mouse]
+  breed [frogs frog]
   min-pxcor => -5
   max-pxcor => 5
   min-pycor => -5
@@ -11,6 +13,8 @@ InitialEnvironment_2D
   count patches => 121
 
 InitialEnvironment_3D
+  breed [mice mouse]
+  breed [frogs frog]
   min-pxcor => -5
   max-pxcor => 5
   min-pycor => -5
@@ -24,4 +28,3 @@ InitialEnvironment_3D
   count frogs => 0
   count mice => 0
   count patches => 1331
-
