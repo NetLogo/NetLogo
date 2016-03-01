@@ -1,10 +1,12 @@
 package org.nlogo.tools
 
 import java.awt.EventQueue
+import java.io.File
 
 import scala.sys.process.Process
 
 import org.nlogo.app.App
+import org.nlogo.workspace.ModelsLibrary.getModelPaths
 
 /**
  *
@@ -34,10 +36,9 @@ object ModelResaver {
   }
 
   def main(args: Array[String]): Unit = {
-    val find = "find models -name test -prune -o -name *.nlogo -print"
-    val paths = Process(find)
-      .lineStream.toSeq
-      .filterNot(_.contains("HubNet")) // for some reason, I'm having a hard time doing this with 'find'
+    val paths = getModelPaths
+      .filterNot(_.contains("HubNet"))
+      .filterNot(_.contains("3D"))
 
     App.main(Array[String]())
     val modelSaver = new org.nlogo.app.ModelSaver(App.app)
