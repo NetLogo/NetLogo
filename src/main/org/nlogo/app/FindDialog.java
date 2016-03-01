@@ -226,7 +226,12 @@ public strictfp class FindDialog
         notFoundLabel.setVisible(false);
       }
     } else if (e.getSource().equals(replaceAndFindButton)) {
-      replace(replaceBox.getText());
+      // Stores if the Replace and Find is selected for the first time.
+      // Also checks if the text in find field and selected text are same or not.
+      boolean firstTime = target.getSelectedText() == null || (target.getSelectedText() != null && !target.getSelectedText().equals(findBox.getText())); 
+      if (!firstTime) {
+          replace(replaceBox.getText());
+      }
       if (!next(search, ignoreCaseCheckBox.isSelected(), wrapAroundCheckBox.isSelected())) {
         java.awt.Toolkit.getDefaultToolkit().beep();
         notFoundLabel.setVisible(true);
