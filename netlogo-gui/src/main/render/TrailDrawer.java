@@ -318,11 +318,12 @@ public strictfp class TrailDrawer
   private void drawWrappedLine(Graphics2DWrapper tg,
                                double x1, double y1, double x2, double y2,
                                double penSize) {
-    double startX = x1;
-    double startY = y1;
-    double endX = x1;
-    double endY = y1;
+    double startX = x1; // .016
+    double startY = y1; // 16
+    double endX = x1;   // .016
+    double endY = y1;   // 16
     double temp;
+    // these are never called
     if (endX < startX) {
       temp = endX;
       endX = startX;
@@ -346,13 +347,15 @@ public strictfp class TrailDrawer
     double minx = world.minPxcor() - 0.5;
     double pixelSize = 1 / world.patchSize();
 
+    int count = 0;
+
     do {
       endX = startX + distX;
       endY = startY + distY;
 
       if (endY < miny) {
-        endX = (miny - startY) * xdiff / ydiff + startX;
         endY = miny;
+        endX = (xdiff * (endY - startY)) / ydiff + startX;
         newStartY = maxy;
         newStartX = endX;
         if (newStartX == minx) {
@@ -362,8 +365,8 @@ public strictfp class TrailDrawer
         }
       }
       if (endY > maxy) {
-        endX = startX + ((maxy - startY) * xdiff / ydiff);
         endY = maxy;
+        endX = (xdiff * (endY - startY)) / ydiff + startX;
         newStartX = endX;
         newStartY = miny;
         if (newStartX == minx) {
@@ -403,7 +406,8 @@ public strictfp class TrailDrawer
       startX = newStartX;
       startY = newStartY;
 
-    } while (StrictMath.abs(distY) >= pixelSize || StrictMath.abs(distX) >= pixelSize);
+      count++;
+    } while (count < 100 && (StrictMath.abs(distY) >= pixelSize || StrictMath.abs(distX) >= pixelSize));
 
     markDirty();
   }

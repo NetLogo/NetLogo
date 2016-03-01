@@ -82,10 +82,6 @@ Copyright 1999 CERN - European Organization for Nuclear Research.  Permission to
 
 ===
 
-NetLogo uses the MRJ Adapter library, which is Copyright (c) 2003-2005 Steve Roy <sroy@roydesign.net>.  The library is covered by the Artistic License. MRJ Adapter is available from https://mrjadapter.dev.java.net/ .
-
-===
-
 NetLogo uses the Quaqua Look and Feel library, which is Copyright (c) 2003-2005 Werner Randelshofer, http://www.randelshofer.ch/, werner.randelshofer@bluewin.ch, All Rights Reserved.  The library is covered by the GNU LGPL (Lesser General Public License).  The text of that license is included in the "docs" folder which accompanies the NetLogo download, and is also available from http://www.gnu.org/copyleft/lesser.html .
 
 ===

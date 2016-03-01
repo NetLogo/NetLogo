@@ -6,6 +6,7 @@ import NetLogoBuild.netlogoVersion
 object Scaladoc {
 
   val docSmaller = TaskKey[File]("doc-smaller", "for docs/scaladoc/")
+
   val settings = NetLogoBuild.settings ++ Seq(
     apiMappings += (
       file(System.getenv("JAVA_HOME") + "/jre/lib/rt.jar") ->

@@ -40,6 +40,7 @@ class ModelsDir(sourceDir: File) extends BundledDirectory(sourceDir) {
 
 class LibDir(sourceDir: File) extends BundledDirectory(sourceDir) {
   val directoryName = "lib"
+
   def files: Seq[File] =
     (sourceDir / "Mac OS X").listFiles
 }

@@ -143,9 +143,6 @@ check [ASM-free-zone] independentOf org.objectweb.*
 
 check org.nlogo.* independentOf com.wolfram.*
 
-[MRJAdapter-free-zone] = org.nlogo.* excluding [app] [hubnet.client] [swing]
-check [MRJAdapter-free-zone] directlyIndependentOf net.roydesign.*
-
 [JHotDraw-free-zone] = org.nlogo.* excluding [sdm.gui]
 check [JHotDraw-free-zone] independentOf org.jhotdraw.*
 

@@ -2,10 +2,6 @@
 
 package org.nlogo.swing;
 
-/**
- * Note that this class depends on MRJAdapter.jar.
- */
-
 public final strictfp class FileDialog {
 
   // this class is not instantiable
@@ -101,7 +97,7 @@ public final strictfp class FileDialog {
       currentDirectory = selectedDirectory(chooser);
       return chooser.getSelectedFile().getAbsolutePath();
     }
-    if (!MAC && directoriesOnly) {
+    if (directoriesOnly) {
       javax.swing.JFileChooser chooser =
           new javax.swing.JFileChooser(currentDirectory);
       chooser.setFileSelectionMode
@@ -113,12 +109,7 @@ public final strictfp class FileDialog {
       currentDirectory = selectedDirectory(chooser);
       return chooser.getSelectedFile().getAbsolutePath();
     }
-    java.awt.FileDialog dialog;
-    if (directoriesOnly) {
-      dialog = new net.roydesign.ui.FolderDialog(parentFrame, title);
-    } else {
-      dialog = new java.awt.FileDialog(parentFrame, title, mode);
-    }
+    java.awt.FileDialog dialog = new java.awt.FileDialog(parentFrame, title, mode);
     if (!directoriesOnly) {
       dialog.setDirectory(currentDirectory); // ???
       if (file != null) {

@@ -271,7 +271,12 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
       val editor = new EditorField(30, font, false, colorizer, I18N.gui.get _)
       def getTableCellRendererComponent(table: JTable, value: Object,
                                         isSelected: Boolean, hasFocus: Boolean, row: Int, col: Int) = {
-        editor.setText(value.asInstanceOf[String])
+        // This null check is from strange behavior in java
+        // http://stackoverflow.com/questions/3054775/jtable-strange-behavior-from-getaccessiblechild-method-resulting-in-null-point
+        // RG 2/22/16
+        if (value != null) {
+          editor.setText(value.asInstanceOf[String])
+        }
         editor
       }
     }

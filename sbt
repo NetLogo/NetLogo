@@ -44,10 +44,12 @@ ENCODING=-Dfile.encoding=UTF-8
 HEADLESS=-Djava.awt.headless=true
 USE_QUARTZ=-Dapple.awt.graphics.UseQuartz=false
 BOOT=xsbt.boot.Boot
+LAF=-Dnetlogo.quaqua.laf=ch.randelshofer.quaqua.snowleopard.Quaqua16SnowLeopardLookAndFeel
+GOGO_JAVA=-Dnetlogo.extensions.gogo.javaexecutable=$JAVA
 
 
-SBT_LAUNCH=$HOME/.sbt/sbt-launch-0.13.8.jar
-URL='https://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.13.8/sbt-launch.jar'
+SBT_LAUNCH=$HOME/.sbt/sbt-launch-0.13.9.jar
+URL='http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.13.9/sbt-launch.jar'
 
 if [ ! -f $SBT_LAUNCH ] ; then
   echo "downloading" $URL
@@ -79,5 +81,6 @@ fi
     $HEADLESS \
     $TERMINAL \
     $USE_QUARTZ \
+    $LAF \
     -classpath $SBT_LAUNCH \
     $BOOT "$@"

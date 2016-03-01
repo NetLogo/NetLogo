@@ -202,7 +202,6 @@ LogoListBuilder
 LogoLists
 Lossy
 Lucida
-MRJ
 MX
 MacFarlane
 MacOS
@@ -674,7 +673,6 @@ mkdir
 monospaced
 mov
 mozilla
-mrjadapter
 multi
 multicast
 multiuser

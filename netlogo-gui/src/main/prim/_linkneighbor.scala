@@ -23,7 +23,7 @@ class _linkneighbor(breedName: String) extends Reporter {
     val breed = if (breedName == null) world.links else world.getLinkBreed(breedName)
     mustNotBeDirected(breed, context)
     val linkManager = world.linkManager
-    linkManager.findLinkFrom(parent, target, breed, true) != null ||
-      linkManager.findLinkFrom(target, parent, breed, true) != null
+    val sharedLink = linkManager.findLinkEitherWay(parent, target, breed, true)
+    sharedLink != null && ! sharedLink.isDirectedLink
   }
 }

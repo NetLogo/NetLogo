@@ -47,18 +47,22 @@ object AggregateMacBuild extends PackageAction.AggregateBuild {
   val contentDirs = Seq("extensions", "models", "docs")
   val libraryDirs = Seq("lib", "natives")
 
-  private def postProcessSubApplication(aggregateMacDir: File)(app: SubApplication, image: File): Unit = {
-    val aggregatedAppDir = aggregateMacDir / image.getName
+  def copyAny(src: File, dest: File): Unit =
+    src match {
+      case f if f.isDirectory => IO.copyDirectory(src, dest)
+      case f                  => IO.copyFile(src, dest)
+    }
+
+  private def postProcessSubApplication(aggregateMacDir: File)(app: SubApplication, image: File, version: String): Unit = {
+    val name = image.getName.split('.')
+    val aggregatedAppDir = aggregateMacDir / (name(0) + " " + version + ".app")
     Process(Seq("bash",
       (image.getParentFile.getParentFile.getParentFile / "package" / "macosx" / (app.name + "-post-image.sh")).getAbsolutePath, image.getAbsolutePath)).!!
 
     def copyToNewPath(fileName: String) = {
       val sourceFile = image / "Contents" / fileName
       val destFile = aggregatedAppDir / "Contents" / fileName
-      sourceFile match {
-        case f if f.isDirectory => IO.copyDirectory(sourceFile, destFile)
-        case f                  => IO.copyFile(sourceFile, destFile)
-      }
+      copyAny(sourceFile, destFile)
     }
 
     def createRelativeSymlink(linkLocation: File, linkTarget: File): Unit = {
@@ -69,7 +73,8 @@ object AggregateMacBuild extends PackageAction.AggregateBuild {
 
     def alterCfgContents(cfgFile: File, app: SubApplication): Seq[String] = {
       val sharedRootPath = "$APPDIR/../.."
-      IO.readLines(cfgFile).flatMap { l =>
+      val lines = IO.readLines(cfgFile).toSeq
+      lines.flatMap { l =>
         if (l.startsWith("app.classpath")) {
           val classpathJars = l.split("=")(1).split(":").toSet + s"${app.jarName}.jar"
           val newClasspath  = classpathJars.map(jar => s"$sharedRootPath/Java/$jar").mkString(":")
@@ -91,7 +96,6 @@ object AggregateMacBuild extends PackageAction.AggregateBuild {
 
     libraryDirs.foreach(d => copyToNewPath(s"Java/$d"))
 
-    IO.delete(image / "Contents" / "Java" / "NetLogo User Manual.pdf")
     (image / "Contents" / "Java" * (- ("*.jar" || DirectoryFilter))).get.foreach(f => IO.copyFile(f, javaDir / f.getName))
     val cfgFile = image / "Contents" / "Java" / (app.name + ".cfg")
     IO.writeLines(javaDir / (app.name + ".cfg"), alterCfgContents(cfgFile, app))
@@ -102,7 +106,8 @@ object AggregateMacBuild extends PackageAction.AggregateBuild {
     configurationDirectory: File,
     buildJDK: BuildJDK,
     buildsMap: Map[SubApplication, File],
-    variables: Map[String, String]): File = {
+    variables: Map[String, String],
+    additionalFiles: Seq[File]): File = {
 
     val version = variables("version")
     val aggregateMacDir = aggregateTarget / "NetLogo Bundle" / s"NetLogo $version"
@@ -112,7 +117,8 @@ object AggregateMacBuild extends PackageAction.AggregateBuild {
     val buildName = s"NetLogo-$version"
     IO.createDirectory(sharedJars)
     IO.copyDirectory(baseImage / "Contents" / "PlugIns" / "Java.runtime", aggregateMacDir / "JRE" )
-    IO.copyFile(baseImage / "Contents" / "Java" / "NetLogo User Manual.pdf", aggregateMacDir / "NetLogo User Manual.pdf" )
+
+    additionalFiles.foreach { f => copyAny(f, aggregateMacDir / f.getName) }
 
     contentDirs.foreach { subdir =>
       IO.copyDirectory(baseImage / "Contents" / "Java" / subdir, aggregateMacDir / subdir)
@@ -124,10 +130,12 @@ object AggregateMacBuild extends PackageAction.AggregateBuild {
     }
 
     buildsMap.foreach {
-      case (app, image) => postProcessSubApplication(aggregateMacDir)(app, image)
+      case (app, image) => postProcessSubApplication(aggregateMacDir)(app, image, version)
     }
 
-    val apps = buildsMap.map(_._2).map(f => (aggregateMacDir / f.getName).getAbsolutePath)
+    val apps = buildsMap.map(_._2).map(f => (aggregateMacDir / (f.getName.split('.')(0) + " " + version + ".app")).getAbsolutePath)
+
+    (aggregateMacDir / "JRE" / "Contents" / "Home" / "jre" / "lib" / "jspawnhelper").setExecutable(true)
 
     RunProcess(Seq("codesign", "--deep", "-s", "Developer ID Application") ++ apps, "codesigning")
 
