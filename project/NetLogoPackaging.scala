@@ -17,6 +17,7 @@ object NetLogoPackaging {
   lazy val aggregateOnlyFiles = taskKey[Seq[File]]("Files to be included in the aggregate root")
   lazy val buildNetLogo = taskKey[Unit]("build NetLogo")
   lazy val buildVariables = taskKey[Map[String, String]]("NetLogo template variables")
+  lazy val mathematicaRoot = settingKey[File]("root of Mathematica-Link directory")
   lazy val modelCrossReference = taskKey[Unit]("add model cross references")
   lazy val netLogoRoot = settingKey[File]("Root directory of NetLogo project")
   lazy val netLogoVersion = settingKey[String]("Version of NetLogo under construction")
@@ -78,7 +79,7 @@ object NetLogoPackaging {
         newJarLocation
       }
 
-    if (! app.name.contains("HubNet") && platform.shortName == "macosx")
+    if (platform.shortName == "macosx")
       Def.task {
         ((packageBin in Compile in macApp).value,
           (dependencyClasspath in macApp in Runtime).value.files
@@ -118,10 +119,11 @@ object NetLogoPackaging {
       modelCrossReference.value
       (modelIndex in netlogo).value
       (nativeLibs in netlogo).value
-      RunProcess(Seq("./sbt", "package"), netLogoRoot.value / "Mathematica-Link", s"package mathematica link")
+      RunProcess(Seq("./sbt", "package"), mathematicaRoot.value, s"package mathematica link")
     },
+    mathematicaRoot := netLogoRoot.value.getParentFile / "Mathematica-Link",
     packagedMathematicaLink := {
-      val mathematicaLinkDir = netLogoRoot.value / "Mathematica-Link"
+      val mathematicaLinkDir = mathematicaRoot.value
       IO.createDirectory(target.value / "Mathematica Link")
       Seq(
         mathematicaLinkDir / "NetLogo-Mathematica Tutorial.nb",
@@ -135,7 +137,7 @@ object NetLogoPackaging {
     },
     aggregateOnlyFiles := {
       Mustache(baseDirectory.value / "readme.md", target.value / "readme.md", buildVariables.value)
-      Seq(target.value / "readme.md", netLogoRoot.value / "NetLogo User Manual.pdf", packagedMathematicaLink.value)
+      Seq(target.value / "readme.md", netLogoRoot.value.getParentFile / "NetLogo User Manual.pdf", packagedMathematicaLink.value)
     },
     modelCrossReference := {
       ModelCrossReference((baseDirectory in netlogo).value)
@@ -152,9 +154,9 @@ object NetLogoPackaging {
       "NetLogo 3D"      -> NetLogoThreeDApp,
       "NetLogo Logging" -> NetLogoLoggingApp,
       "HubNet Client"   -> HubNetClientApp),
-    netLogoVersion     := "6.0-PREVIEW-12-15",
-    netLogoLongVersion := { if (netLogoVersion.value.length == 3) netLogoVersion.value + ".0" else netLogoVersion.value },
+    netLogoVersion     := "6.0-M1",
     numericOnlyVersion := "6.0",
+    netLogoLongVersion := { if (netLogoVersion.value.length == 3) netLogoVersion.value + ".0" else netLogoVersion.value },
     buildVariables := Map[String, String](
       "version"               -> netLogoVersion.value,
       "numericOnlyVersion"    -> numericOnlyVersion.value,

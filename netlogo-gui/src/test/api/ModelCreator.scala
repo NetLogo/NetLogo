@@ -35,7 +35,7 @@ trait ModelCreator {
                             |@#$#@#$#@
                             |@#$#@#$#@
                             |@#$#@#$#@
-                            |NetLogo 5.0
+                            |NetLogo 6.0
                             |@#$#@#$#@
                             |<<PREVIEW SECTION>>
                             |@#$#@#$#@

@@ -144,14 +144,16 @@ LinkedTest3
   [link-neighbor? turtle 0] of turtle 1 => true
 
 LinkNeighbor
+  directed-link-breed [directed-edges directed-edge]
   O> crt 2
-  O> ask turtle 0 [create-directed-link-to turtle 1]
+  O> ask turtle 0 [create-directed-edge-to turtle 1]
   [link-neighbor? turtle 1] of turtle 0 => false
   [link-neighbor? turtle 0] of turtle 1 => false
 
 LinkNeighbor2
+  undirected-link-breed [undirected-edges undirected-edge]
   O> crt 2
-  O> ask turtle 0 [create-undirected-link-with turtle 1]
+  O> ask turtle 0 [create-undirected-edge-with turtle 1]
   [ link-neighbor? turtle 1 ] of turtle 0 => true
   [ link-neighbor? turtle 0 ] of turtle 1 => true
 

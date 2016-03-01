@@ -171,7 +171,6 @@ class Backifier(program: Program,
 
       case core.prim._reportertask(argcount) =>
         new nvmprim._reportertask()
-        // new nvmprim._reportertask(argcount)
 
       case core.prim._externreport(_) =>
         new nvmprim._externreport(
