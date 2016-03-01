@@ -228,7 +228,9 @@ public strictfp class FindDialog
     } else if (e.getSource().equals(replaceAndFindButton)) {
       // Stores if the Replace and Find is selected for the first time.
       // Also checks if the text in find field and selected text are same or not.
-      boolean firstTime = target.getSelectedText() == null || (target.getSelectedText() != null && !target.getSelectedText().equals(findBox.getText())); 
+      boolean firstTime = target.getSelectedText() == null || (target.getSelectedText() != null
+                && !(ignoreCaseCheckBox.isSelected() ? target.getSelectedText().equalsIgnoreCase(findBox.getText())
+                : target.getSelectedText().equals(findBox.getText())));
       if (!firstTime) {
           replace(replaceBox.getText());
       }
