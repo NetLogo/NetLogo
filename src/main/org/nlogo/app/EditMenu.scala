@@ -38,7 +38,7 @@ with org.nlogo.window.Events.LoadSectionEvent.Handler
   addSeparator()
   addMenuItem(I18N.gui("shiftLeft"), '[', org.nlogo.editor.Actions.shiftLeftAction)
   addMenuItem(I18N.gui("shiftRight"), ']', org.nlogo.editor.Actions.shiftRightAction)
-  addMenuItem(I18N.gui("indent"), (java.awt.event.KeyEvent.VK_TAB).toChar, org.nlogo.editor.Actions.tabKeyAction, false)
+  addMenuItem(I18N.gui("format"), (java.awt.event.KeyEvent.VK_TAB).toChar, org.nlogo.editor.Actions.tabKeyAction, false)
   addSeparator()
   addMenuItem(I18N.gui("comment"), ';', org.nlogo.editor.Actions.commentAction)
   addMenuItem(I18N.gui("uncomment"), ';', true, org.nlogo.editor.Actions.uncommentAction)
