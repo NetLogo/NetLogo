@@ -62,6 +62,12 @@ public strictfp class FindDialog
       FindDialog.getInstance().setVisible(true);
       FindDialog.getInstance().findBox.requestFocus();
       FindDialog.getInstance().findBox.selectAll();
+      // Setting find field by default to selected text
+      FindDialog findDialog = getInstance();
+      String selectedText = findDialog.target.getSelectedText();
+      if(selectedText != null){
+        FindDialog.getInstance().findBox.setText(selectedText);
+      }
       FindDialog.getInstance().setLocation
           (instance.owner.getLocation().x + instance.owner.getWidth()
               - instance.getPreferredSize().width,
