@@ -68,6 +68,7 @@ menu.edit.find = Find...
 menu.edit.findNext = Find Next
 menu.edit.shiftLeft = Shift Left
 menu.edit.shiftRight = Shift Right
+menu.edit.indent = Indent
 menu.edit.comment = Comment
 menu.edit.uncomment = Uncomment
 menu.edit.snapToGrid = Snap to Grid
