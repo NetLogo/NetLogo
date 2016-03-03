@@ -36,7 +36,8 @@ object StackTraceBuilder {
       case e =>
         "error (" + e.getClass.getSimpleName + ")\n while "
     }
-    errorMessage.getOrElse("") + agent + " running " + instruction.displayName + "\n" +
+    val instructionName = Option(instruction).map(_.displayName).getOrElse("")
+    errorMessage.getOrElse("") + agent + " running " + instructionName + "\n" +
       entries(act).map("  called by " + _).mkString("\n")
   }
 

@@ -3,6 +3,8 @@ import Keys._
 
 import java.net.URL
 
+import scala.language.postfixOps
+
 // native libraries for JOGL and Quaqua
 
 object NativeLibs {

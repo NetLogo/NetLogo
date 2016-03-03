@@ -1059,39 +1059,39 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
                 ALOAD 2
                 ALOAD 4
                 ICONST_1
-                INVOKEVIRTUAL org/nlogo/agent/LinkManager.findLinkFrom (Lorg/nlogo/agent/Turtle;Lorg/nlogo/agent/Turtle;Lorg/nlogo/agent/AgentSet;Z)Lorg/nlogo/agent/Link;
-                IFNONNULL L9
-                ALOAD 5
-                ALOAD 2
-                ALOAD 3
-                ALOAD 4
-                ICONST_1
-                INVOKEVIRTUAL org/nlogo/agent/LinkManager.findLinkFrom (Lorg/nlogo/agent/Turtle;Lorg/nlogo/agent/Turtle;Lorg/nlogo/agent/AgentSet;Z)Lorg/nlogo/agent/Link;
-                IFNONNULL L9
-                ICONST_0
-                GOTO L10
+                INVOKEVIRTUAL org/nlogo/agent/LinkManager.findLinkEitherWay (Lorg/nlogo/agent/Turtle;Lorg/nlogo/agent/Turtle;Lorg/nlogo/agent/AgentSet;Z)Lorg/nlogo/agent/Link;
+                ASTORE 6
+                ALOAD 6
+                IFNULL L9
+                ALOAD 6
+                INVOKEVIRTUAL org/nlogo/agent/Link.isDirectedLink ()Z
+                IFEQ L10
                L9
-               FRAME APPEND [org/nlogo/agent/AgentSet org/nlogo/agent/LinkManager]
-                ICONST_1
+               FRAME APPEND [org/nlogo/agent/AgentSet org/nlogo/agent/LinkManager org/nlogo/agent/Link]
+                ICONST_0
+                GOTO L11
                L10
+               FRAME SAME
+                ICONST_1
+               L11
                FRAME SAME1 I
                 ISTORE 2
                 ILOAD 2
-                IFNE L11
+                IFNE L12
                 ICONST_1
-                GOTO L12
-               L11
-               FRAME FULL [org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_not_4 org/nlogo/nvm/Context I org/nlogo/agent/Turtle org/nlogo/agent/AgentSet org/nlogo/agent/LinkManager] []
-                ICONST_0
+                GOTO L13
                L12
-               FRAME SAME1 I
-                IFEQ L13
-                GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
-                GOTO L14
+               FRAME FULL [org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_not_4 org/nlogo/nvm/Context I org/nlogo/agent/Turtle org/nlogo/agent/AgentSet org/nlogo/agent/LinkManager org/nlogo/agent/Link] []
+                ICONST_0
                L13
+               FRAME SAME1 I
+                IFEQ L14
+                GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
+                GOTO L15
+               L14
                FRAME SAME
                 GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
-               L14
+               L15
                FRAME SAME1 java/lang/Boolean
                 ARETURN
              L0

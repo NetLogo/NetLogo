@@ -6,6 +6,7 @@ trait Instruction extends TokenHolder {
   def syntax: Syntax
   var token: Token = null
   var agentClassString = syntax.agentClassString
+  var blockAgentClassString = syntax.blockAgentClassString
   def displayName = token.text.toUpperCase
 
   // Unfortunately, token and instruction are recursively referential and token

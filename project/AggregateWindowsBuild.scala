@@ -1,6 +1,7 @@
 import sbt._
 import java.nio.file.FileSystems
 import NetLogoPackaging.RunProcess
+import AggregateMacBuild.copyAny
 
 object AggregateWindowsBuild extends PackageAction.AggregateBuild {
   // each application maps to the root of the build product
@@ -32,8 +33,18 @@ object AggregateWindowsBuild extends PackageAction.AggregateBuild {
     "5.3-RC1-64"   -> "81E8BCF2-8BAE-40DD-8373-3ECD4CFF007B",
     "5.3-32"       -> "A6C64B81-FC8D-42E0-A55F-983705E52879",
     "5.3-64"       -> "BE6BDFA6-8DB5-47DB-94EC-B7504A3F7EBC",
+    "5.3.1-RC1-32" -> "AB7522FA-0F90-43F7-AB78-CA14BBA3F0D4",
+    "5.3.1-RC1-64" -> "A2B3AD1C-992F-4DEE-8C08-317B13BACBD2",
+    "5.3.1-RC2-32" -> "D6D1E47D-40E3-4A8F-801C-2CD9926E88B1",
+    "5.3.1-RC2-64" -> "F37E74D4-61D0-41EC-BEEE-7056D8CBFCC0",
+    "5.3.1-RC3-32" -> "1F07A977-1323-428D-8708-C3FE6D6BC956",
+    "5.3.1-RC3-64" -> "D754C720-1486-48FB-AAAB-40FD7CE9EE71",
+    "5.3.1-32"     -> "EB5AB27B-F791-490D-9C46-FC3A9BA5270B",
+    "5.3.1-64"     -> "54AB7C31-BB52-4579-BAE7-B75968DECAE0",
     "6.0-PREVIEW-12-15-32" -> "367B7025-7977-4DAA-8856-E9AAA3421707",
-    "6.0-PREVIEW-12-15-64" -> "38EE8625-BFFF-430E-BFF3-D069B4F8F75C"
+    "6.0-PREVIEW-12-15-64" -> "38EE8625-BFFF-430E-BFF3-D069B4F8F75C",
+    "6.0-M1-32"            -> "97E5CCED-0294-44AC-8114-3AFFEAD974EB",
+    "6.0-M1-64"            -> "0CD72DC9-2178-4846-8AAE-A2396A461EF7"
   )
 
   val vars32 = Map[String, String](
@@ -84,7 +95,8 @@ object AggregateWindowsBuild extends PackageAction.AggregateBuild {
     configurationDirectory: File,
     jdk:                    BuildJDK,
     buildsMap:              Map[SubApplication, File],
-    variables:              Map[String, String]): File = {
+    variables:              Map[String, String],
+    additionalFiles: Seq[File]): File = {
     val productIDMap =
       Map("productID" -> productIDs.get(s"${variables("version")}-${jdk.arch}")
         .getOrElse(sys.error("generate a new product ID for this version before packaging windows aggregate")))
@@ -108,6 +120,8 @@ object AggregateWindowsBuild extends PackageAction.AggregateBuild {
         }
         IO.copy(copies)
     }
+
+    additionalFiles.foreach { f => copyAny(f, packageResourceLocation / f.getName) }
 
     Mustache.betweenDirectories(configurationDirectory, aggregateWindowsDir, winVariables)
 

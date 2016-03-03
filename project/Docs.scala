@@ -17,8 +17,8 @@ object Docs {
   lazy val docsRoot = taskKey[File]("location to which docs are generated")
 
   lazy val settings = Seq(
-    javaOptions     += "-Dnetlogo.docs.dir=" + docsRoot.value.getAbsolutePath.toString,
-    docsRoot       := file("docs"),
+    javaOptions    += "-Dnetlogo.docs.dir=" + docsRoot.value.getAbsolutePath.toString,
+    docsRoot       := baseDirectory.value / "docs",
     buildVariables := Map[String, String](
       "version"               -> marketingVersion.value,
       "numericOnlyVersion"    -> numericMarketingVersion.value,

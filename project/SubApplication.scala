@@ -1,3 +1,4 @@
+import sbt._
 import sbt.File
 
 trait SubApplication {
@@ -6,6 +7,7 @@ trait SubApplication {
   def jvmOptions:    Seq[String]
   def jvmArguments:  Seq[String]
   def jvmProperties: Map[String, String] = Map()
+  def additionalArtifacts(dist: File): Seq[File] = Seq()
 }
 
 object NetLogoCoreApp extends SubApplication {
@@ -27,6 +29,8 @@ object NetLogoLoggingApp extends SubApplication {
   override def jarName       = "NetLogo"
   override def jvmOptions    = Seq()
   override def jvmArguments  = Seq("--logging", "netlogo_logging.xml")
+  override def additionalArtifacts(dist: File): Seq[File] =
+    Seq(dist / "netlogo_logging.xml")
 }
 
 object HubNetClientApp extends SubApplication {

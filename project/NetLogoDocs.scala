@@ -8,9 +8,9 @@ class NetLogoDocs(docsSource: File, docsTarget: File, netLogoRoot: File, modelsD
     "sample", "tutorial1", "tutorial2", "tutorial3", "interface",
     "infotab", "programming", "transition", "shapes",
     "behaviorspace", "systemdynamics", "hubnet", "hubnet-authoring",
-    "modelingcommons", "logging", "controlling", "3d",
+    "modelingcommons", "logging", "controlling", "mathematica", "3d",
     "extensions", "arraystables", "matrix", "sound",
-    "netlogolab", "profiler", "gis", "nw", "csv", "palette",
+    "netlogolab", "profiler", "gis", "nw", "cf", "csv", "palette",
     "faq", "dictionary").map(n => (base / s"$n.html"))
 
   private def pandoc(input: File, targetFile: File, title: String): Unit = {
@@ -18,7 +18,7 @@ class NetLogoDocs(docsSource: File, docsTarget: File, netLogoRoot: File, modelsD
       "-o", targetFile.getAbsolutePath,
       "-t", "html",
       "-T", title,
-      "-c", (docsSource / "netlogo.css").getAbsolutePath)
+      "-c", "netlogo.css")
     val res = Process(args, docsTarget).!
     if (res != 0)
       sys.error(s"failed to generate document: $title")
@@ -42,6 +42,7 @@ class NetLogoDocs(docsSource: File, docsTarget: File, netLogoRoot: File, modelsD
   private def generateExtensionDocs(htmlFileRoot: File): Unit = {
     Map(
       "nw"      -> "Networks Extension",
+      "cf"      -> "Control Flow Extension",
       "csv"     -> "CSV Extension",
       "palette" -> "Palette Extension").foreach {
         case (ext, title) =>

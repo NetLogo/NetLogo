@@ -22,8 +22,6 @@ object ClientApp {
   def mainHelper(args: Array[String], editorFactory: EditorFactory, workspace: CompilerServices) {
     try {
       val app = new ClientApp()
-      if (System.getProperty("os.name").startsWith("Mac"))
-        net.roydesign.mac.MRJAdapter.addQuitApplicationListener(() => app.handleQuit())
       org.nlogo.swing.Utils.setSystemLookAndFeel()
 
       var isRoboClient = false

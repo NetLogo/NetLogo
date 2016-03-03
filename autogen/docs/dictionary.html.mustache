@@ -4652,7 +4652,7 @@ crt 100 [ setxy random-float max-pxcor
         </h4>
         <p>
           Reports the statistical mean of the numeric items in the given
-          list. Ignores non-numeric items. The mean is the average, i.e.,
+          list. Errors on non-numeric items. The mean is the average, i.e.,
           the sum of the items divided by the total number of items.
         <pre>
 show mean [xcor] of turtles
@@ -5039,8 +5039,8 @@ print movie-status
           <img alt="Turtle Command" src="images/turtle.gif">
         </h4>
         <p>
-          Reports an agentset of all undirected links connected to the
-          caller.
+          Reports an agentset of all links connected to the
+          caller, regardless of directedness.
         <pre>
 crt 5
 ask turtle 0
@@ -5316,7 +5316,8 @@ show netlogo-version
         time in milliseconds and lie in the generator's usable range of
         seeds, -2147483648 to 2147483647.
       <p>
-        new-seed never reports the same number twice in succession. (This
+        new-seed never reports the same number twice in succession, even
+        across parallel BehaviorSpace runs. (This
         is accomplished by waiting a millisecond if the seed for the
         current millisecond was already used.)
       <p>
@@ -7435,9 +7436,9 @@ show sort-by [length ?1 &lt; length ?2] [&quot;Grumpy&quot; &quot;Doc&quot; &quo
         same type.
       <pre>
 crt 3
-show sort-on [who] [turtles]
+show sort-on [who] turtles
 =&gt; [(turtle 0) (turtle 1) (turtle 2)]
-show sort-on [(- who)] [turtles]
+show sort-on [(- who)] turtles
 =&gt; [(turtle 2) (turtle 1) (turtle 0)]
 foreach sort-on [size] turtles
   [ ask ? [ do-something ] ]

@@ -573,16 +573,16 @@ NetLogo{{version}}Installer.exe -q
         Why does NetLogo bundle Java?
     </h3>
     <p>
-      For backwards compatibility, NetLogo 5.0.0-5.2.1 required that Java 6
-      from Apple be installed. As OS X continued to update, java 6 was removed
-      from the default distribution and available for download from Apple,
-      adding to the complexity of installing NetLogo.
+      For backwards compatibility, NetLogo 5.0.0-5.2.1 on Mac OS X required
+      that Java 6 from Apple be installed. As OS X continued to update,
+      java 6 was removed from the default distribution and only available for
+      download from Apple, adding to the complexity of installing NetLogo.
     <p>
       The decision was made to bundle Java 8 with 5.3, reducing installation
       complexity and hopefully promoting stability. To minimize any disruption,
       the upgrade NetLogo 5.3 avoided any changes not directly related to
       bundling java 8.  If you're running 5.2.1 happily on Java 6, or stuck
-      on a version of OS X older than 10.7.4, there are <b>no</b>
+      on a version of OS X older than 10.8.3, there are <b>no</b>
       features that you need to upgrade in order to get.
     </div>
     <h3>
@@ -670,12 +670,10 @@ NetLogo{{version}}Installer.exe -q
     <p id="autosave">
       Yes. NetLogo auto-saves files as you are working on them. The
       auto-save files can be found in your OS-specific temporary directory.
-      On most Unix-like systems (including MacOS) that is <code>/tmp</code>. On
-      Windows XP, logs can be found in <code>C:\Documents and
-      Settings\&lt;user&gt;\Local Settings\Temp</code>, where
-      <code>&lt;user&gt;</code> is the logged in user and on Windows Vista the
-      logs can be found in
-      <code>C:\Users\&lt;user&gt;\AppData\Local\Temp</code>. The files are
+      On most Unix-like systems (including MacOS) that is <code>/tmp</code>.
+      On Windows Vista the logs can be found in
+      <code>C:\Users\&lt;user&gt;\AppData\Local\Temp</code>,
+      where <code>&lt;user&gt;</code> is the logged in user. The files are
       named according to the following format:
       <code>autosave_yyyy-MM-dd.HH_mm_ss.nlogo</code> where the time and date
       are the time and date the model was opened.

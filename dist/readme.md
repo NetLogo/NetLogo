@@ -195,14 +195,6 @@ that code is as follows:
 > suitability of this software for any purpose.  It is provided "as is"
 > without expressed or implied warranty.
 
-### MRJAdapter
-
-This software uses the MRJ Adapter library:
-
-> Copyright (c) 2003-2005 Steve Roy <sroy@roydesign.net>.  The library
-> is covered by the Artistic License.  MRJ Adapter is available from
-> https://mrjadapter.dev.java.net/ .
-
 ### Quaqua
 
 This software uses the Quaqua Look and Feel library:

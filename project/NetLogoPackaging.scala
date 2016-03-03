@@ -14,11 +14,14 @@ object NetLogoPackaging {
   lazy val aggregateJDKParser = settingKey[State => Parser[BuildJDK]]("parser for packageApp settings")
 
   // build application jar, resources
+  lazy val aggregateOnlyFiles = taskKey[Seq[File]]("Files to be included in the aggregate root")
   lazy val buildNetLogo = taskKey[Unit]("build NetLogo")
   lazy val buildVariables = taskKey[Map[String, String]]("NetLogo template variables")
+  lazy val mathematicaRoot = settingKey[File]("root of Mathematica-Link directory")
   lazy val modelCrossReference = taskKey[Unit]("add model cross references")
   lazy val netLogoRoot = settingKey[File]("Root directory of NetLogo project")
   lazy val netLogoVersion = settingKey[String]("Version of NetLogo under construction")
+  lazy val netLogoLongVersion = settingKey[String]("Long version number (including trailing zero) of NetLogo under construction")
   lazy val numericOnlyVersion = settingKey[String]("Version of NetLogo under construction (only numbers and periods)")
   lazy val packageAppParser = settingKey[State => Parser[(PlatformBuild, SubApplication, BuildJDK)]]("parser for packageApp settings")
   lazy val platformMap = settingKey[Map[String, PlatformBuild]]("map of names to platforms")
@@ -29,14 +32,15 @@ object NetLogoPackaging {
   lazy val packageLinuxAggregate = inputKey[File]("package all linux apps into a single directory")
   lazy val packageMacAggregate = taskKey[File]("package all mac apps into a dmg")
   lazy val packageWinAggregate = inputKey[File]("package all win apps into a single directory")
+  lazy val packagedMathematicaLink = taskKey[File]("Mathematica link, ready for packaging")
   lazy val buildDownloadPages  = taskKey[Seq[File]]("package the web download pages")
   lazy val uploadWebsite       = inputKey[Unit]("package the web download pages")
   lazy val buildVersionedSite  = taskKey[File]("package the web download pages")
 
   // this value is unfortunately dependent upon both the platform and the application
   val appMainClass: PartialFunction[(String, String), String] = {
+    case ("macosx",            _)                                            => "org.nlogo.app.MacApplication"
     case ("windows" | "linux", "NetLogo" | "NetLogo 3D" | "NetLogo Logging") => "org.nlogo.app.App"
-    case ("macosx",            "NetLogo" | "NetLogo 3D" | "NetLogo Logging") => "org.nlogo.app.MacApplication"
     case (_,                   "HubNet Client")                              => "org.nlogo.hubnet.client.App"
   }
 
@@ -75,7 +79,7 @@ object NetLogoPackaging {
         newJarLocation
       }
 
-    if (! app.name.contains("HubNet") && platform.shortName == "macosx")
+    if (platform.shortName == "macosx")
       Def.task {
         ((packageBin in Compile in macApp).value,
           (dependencyClasspath in macApp in Runtime).value.files
@@ -91,8 +95,12 @@ object NetLogoPackaging {
 
   def jvmOptions(platform: PlatformBuild, app: SubApplication): Seq[String] = {
     (platform.shortName, app.name) match {
-      case ("macosx", "HubNet Client") => Seq("-Xdock:name=HubNet")
-      case ("macosx", _              ) => Seq("-Xdock:name=NetLogo")
+      case ("macosx", "HubNet Client") => Seq(
+          "-Xdock:name=HubNet",
+          "-Dorg.nlogo.mac.appClassName=org.nlogo.hubnet.client.App$")
+      case ("macosx", _              ) => Seq(
+          "-Xdock:name=NetLogo",
+          "-Dorg.nlogo.mac.appClassName=org.nlogo.app.App$")
       case _                           => Seq()
     }
   }
@@ -111,6 +119,25 @@ object NetLogoPackaging {
       modelCrossReference.value
       (modelIndex in netlogo).value
       (nativeLibs in netlogo).value
+      RunProcess(Seq("./sbt", "package"), mathematicaRoot.value, s"package mathematica link")
+    },
+    mathematicaRoot := netLogoRoot.value.getParentFile / "Mathematica-Link",
+    packagedMathematicaLink := {
+      val mathematicaLinkDir = mathematicaRoot.value
+      IO.createDirectory(target.value / "Mathematica Link")
+      Seq(
+        mathematicaLinkDir / "NetLogo-Mathematica Tutorial.nb",
+        mathematicaLinkDir / "NetLogo-Mathematica Tutorial.pdf",
+        mathematicaLinkDir / "NetLogo.m",
+        mathematicaLinkDir / "target" / "mathematica-link.jar")
+        .foreach { f =>
+          IO.copyFile(f, target.value / "Mathematica Link" / f.getName)
+        }
+      target.value / "Mathematica Link"
+    },
+    aggregateOnlyFiles := {
+      Mustache(baseDirectory.value / "readme.md", target.value / "readme.md", buildVariables.value)
+      Seq(target.value / "readme.md", netLogoRoot.value.getParentFile / "NetLogo User Manual.pdf", packagedMathematicaLink.value)
     },
     modelCrossReference := {
       ModelCrossReference((baseDirectory in netlogo).value)
@@ -127,8 +154,9 @@ object NetLogoPackaging {
       "NetLogo 3D"      -> NetLogoThreeDApp,
       "NetLogo Logging" -> NetLogoLoggingApp,
       "HubNet Client"   -> HubNetClientApp),
-    netLogoVersion     := "6.0-PREVIEW-12-15",
+    netLogoVersion     := "6.0-M1",
     numericOnlyVersion := "6.0",
+    netLogoLongVersion := { if (netLogoVersion.value.length == 3) netLogoVersion.value + ".0" else netLogoVersion.value },
     buildVariables := Map[String, String](
       "version"               -> netLogoVersion.value,
       "numericOnlyVersion"    -> numericOnlyVersion.value,
@@ -184,6 +212,8 @@ object NetLogoPackaging {
       IO.copyDirectory(webTarget.value, tmpTarget)
       IO.copyDirectory(netLogoRoot.value / "docs", tmpTarget)
       RunProcess(Seq("rsync", "-av", "--inplace", "--progress", tmpTarget.getPath, s"${user}@${host}:${targetDir}"), "rsync")
+      RunProcess(Seq("ssh", s"${user}@${host}", "chgrp", "-R", "apache", s"${targetDir}/${netLogoLongVersion.value}"), "ssh - change release group")
+      RunProcess(Seq("ssh", s"${user}@${host}", "chmod", "-R", "g+rwX",  s"${targetDir}/${netLogoLongVersion.value}"), "ssh - change release permissions")
     }
   )
 

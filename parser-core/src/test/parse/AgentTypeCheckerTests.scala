@@ -2,7 +2,7 @@
 
 package org.nlogo.parse
 
-import org.nlogo.core.{CompilerException, ProcedureDefinition}
+import org.nlogo.core.{CommandBlock, CompilerException, ProcedureDefinition, ReporterApp}
 import org.scalatest.FunSuite
 
 class AgentTypeCheckerTests extends FunSuite {
@@ -113,4 +113,23 @@ class AgentTypeCheckerTests extends FunSuite {
   test("crt3") {
     testError("to foo crt 1 [ crt 1 ] end",
       "You can't use CRT in a turtle context, because CRT is observer-only.") }
+
+  // the next tests check correctness of task type-checking
+  test("map") {
+    val foo = compile("to foo print map [ my-links ] [ 1 2 3 ] end").head
+    val rt = foo.statements.stmts.head
+      .args.head.asInstanceOf[ReporterApp]
+      .args.head.asInstanceOf[ReporterApp]
+    assertResult("OTPL")(rt.reporter.agentClassString)
+    assertResult(Some("-T--"))(rt.reporter.blockAgentClassString)
+  }
+
+  test("tasks type-check properly") {
+    val foo = compile("to foo ask turtles [ let bar task [ print 1 ] ] end").head
+    assertResult(foo.procedure.agentClassString)("OTPL")
+    val barTask =
+      foo.statements.stmts.head.args(1).asInstanceOf[CommandBlock]
+         .statements.stmts.head.args(0).asInstanceOf[ReporterApp]
+    assertResult("OTPL")(barTask.reporter.agentClassString)
+  }
 }

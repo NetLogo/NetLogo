@@ -143,6 +143,31 @@ LinkedTest3
   [link-neighbor? turtle 1] of turtle 0 => true
   [link-neighbor? turtle 0] of turtle 1 => true
 
+LinkNeighbor
+  directed-link-breed [directed-edges directed-edge]
+  O> crt 2
+  O> ask turtle 0 [create-directed-edge-to turtle 1]
+  [link-neighbor? turtle 1] of turtle 0 => false
+  [link-neighbor? turtle 0] of turtle 1 => false
+
+LinkNeighbor2
+  undirected-link-breed [undirected-edges undirected-edge]
+  O> crt 2
+  O> ask turtle 0 [create-undirected-edge-with turtle 1]
+  [ link-neighbor? turtle 1 ] of turtle 0 => true
+  [ link-neighbor? turtle 0 ] of turtle 1 => true
+
+LinkNeighbor3
+  O> crt 2
+  O> ask turtle 0 [create-link-with turtle 1]
+  [ link-neighbor? turtle 1 ] of turtle 0 => true
+  [ link-neighbor? turtle 0 ] of turtle 1 => true
+
+LinkNeighbor4
+  O> crt 2
+  O> ask turtle 0 [create-link-to turtle 1]
+  [ link-neighbor? turtle 1 ] of turtle 0 => ERROR LINKS is a directed breed.
+
 NodeDies1
   breed [nodes node]
   O> create-nodes 2

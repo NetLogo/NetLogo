@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <title>
-      NetLogo 5.2 User Manual: What's New?
+  NetLogo {{version}} User Manual: What's New?
     </title>
     <link rel="stylesheet" href="netlogo.css" type="text/css">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -8,7 +8,7 @@
       What's New?
     </h1>
     <div class="version">
-      NetLogo 5.2 User Manual&nbsp;&nbsp;&nbsp;
+      NetLogo {{version}} User Manual&nbsp;&nbsp;&nbsp;
     </div>
     <p>
       The following is a condensed history. <a href="https://github.com/NetLogo/NetLogo/wiki/Release-notes">Detailed
@@ -16,11 +16,36 @@
     <p>
       For help running models made in old versions, see the <a href="transition.html">Transition Guide</a>.
     <h2>
+      Version 5.3.1 (February 2016)
+    </h2>
+    <h3>Feature Changes</h3>
+      <ul>
+        <li>Mathematica Link is now included and has been tested to work with Mathematica 10.</li>
+        <li>A link to Introduction to Agent-Based Modelling has been added to the "Help" menu.</li>
+      </ul>
+    </h3>
+    <h3>Extension Changes</h3>
+      <ul>
+        <li>The gogo extension now prompts the user for the location of Java upon opening. This version of Java is used to launch the gogo hid daemon.</li>
+        <li>The correct version of the network extension is now bundled, which will open properly</li>
+        <li>Bundles the cf extension, which adds match, case, and select primitives.</li>
+      </ul>
+    <h3>Bugfixes</h3>
+      <ul>
+        <li>Corrects a bug where turtles wrapping around a torus-shaped world with pen down would sometimes cause NetLogo to loop infinitely.</li>
+        <li>Fixes a bug where buttons would appear to remain pressed after a right click on Mac.</li>
+        <li>Fixes a bug where pressing the right mouse button while dragging would confuse the mouse-down? primitive.</li>
+        <li>Fixes agent type-checking of tasks (bug appeared in 5.2.1).</li>
+        <li>link-neighbor? now returns true if and only if the neighbor is connected through an undirected link.</li>
+        <li>Documentation fixes for my-links and mean primitives.</li>
+      </ul>
+    <h2>
       Version 5.3 (December 2015)
     </h2>
     <h3>Feature Changes</h3>
     <ul>
       <li>Java 8 is now bundled with all versions of NetLogo, this removes the need for a separate Java 6 installation on Mac OS X</li>
+      <li>Separate 32-bit and 64-bit versions are available for both Windows and Linux</li>
       <li>The Windows installer is now an msi instead of an exe</li>
       <li>javax.media.opengl is no longer supported in Java 8, it has been replaced by com.jogamp.opengl</li>
       <li>Mathematica Link is not distributed due to Java version changes</li>

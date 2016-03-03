@@ -12,6 +12,7 @@ import org.nlogo.shape.{ShapesManagerInterface, ShapeChangeListener, LinkShapesM
 import org.nlogo.util.Implicits.RichString
 import org.nlogo.util.Implicits.RichStringLike
 import org.nlogo.util.Pico
+import org.nlogo.util.{ NullAppHandler, Pico }
 import org.nlogo.window._
 import org.nlogo.window.Events._
 import org.nlogo.workspace.{AbstractWorkspace, AbstractWorkspaceScala, Controllable, CurrentModelOpener, WorkspaceFactory}
@@ -65,10 +66,13 @@ object App{
     mainWithAppHandler(args, NullAppHandler)
   }
 
-  def mainWithAppHandler(args: Array[String], appHandler: AppHandler) {
+  def mainWithAppHandler(args: Array[String], appHandler: Object) {
     // tweak behavior of Quaqua
     System.setProperty("Quaqua.visualMargin", "1,1,1,1")
-    appHandler.init()
+
+    // this call is reflective to avoid complicating dependencies
+    appHandler.getClass.getDeclaredMethod("init").invoke(appHandler)
+
     AbstractWorkspace.isApp(true)
     AbstractWorkspace.isApplet(false)
     org.nlogo.window.VMCheck.detectBadJVMs()
@@ -402,7 +406,7 @@ class App extends
 
   }
 
-  private def finishStartup(appHandler: AppHandler) {
+  private def finishStartup(appHandler: Object) {
     pico.add(classOf[ModelingCommonsInterface],
           "org.nlogo.mc.ModelingCommons",
           Array[Parameter] (
@@ -464,7 +468,9 @@ class App extends
 
     Splash.endSplash()
     frame.setVisible(true)
-    if(System.getProperty("os.name").startsWith("Mac")){ appHandler.ready(this) }
+    if(System.getProperty("os.name").startsWith("Mac")){
+      appHandler.getClass.getDeclaredMethod("ready", classOf[AnyRef]).invoke(appHandler, this)
+    }
   }
 
   def startLogging(properties:String) {
@@ -814,6 +820,41 @@ class App extends
   def open(path: String) {
     dispatchThreadOrBust(fileMenu.openFromPath(path, ModelType.Normal))
   }
+
+  /**
+   * This is called reflectively by the mac app wrapper with the full path.
+   * This will only be called after appHandler.ready has been called.
+   * @param path the path (absolute) to the NetLogo model to open.
+   */
+  def handleOpenPath(path: String) = {
+    try {
+      dispatchThreadOrBust {
+        fileMenu.offerSave()
+        open(path)
+      }
+    } catch {
+      case ex: UserCancelException => org.nlogo.util.Exceptions.ignore(ex)
+      case ex: java.io.IOException =>
+        javax.swing.JOptionPane.showMessageDialog(
+          frame, ex.getMessage,
+          I18N.gui.get("common.messages.error"), javax.swing.JOptionPane.ERROR_MESSAGE)
+    }
+  }
+
+  /**
+   * This is called reflectively by the mac app wrapper.
+   */
+  def handleQuit(): Unit = {
+    fileMenu.quit()
+  }
+
+  /**
+   * This is called reflectively by the mac app wrapper.
+   */
+  def handleShowAbout(): Unit = {
+    showAboutWindow()
+  }
+
   @throws(classOf[java.io.IOException])
   def libraryOpen(path: String) {
     dispatchThreadOrBust(fileMenu.openFromPath(path, ModelType.Library))

@@ -8,9 +8,12 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-git" % "0.8.4")
 
 // so we can use native2ascii on Linux.
 unmanagedJars in Compile += {
-  // use JAVA_HOME not the java.home
-  // system property because the latter may have "/jre" tacked onto it.
-  val home = javaHome.value.getOrElse(file(System.getenv("JAVA_HOME")))
+  // prefer JAVA_HOME to java.home
+  val home =
+    (javaHome.value orElse
+      Option(System.getenv("JAVA_HOME")).map(p => file(p)) orElse
+      Option(System.getProperty("java.home")).map(_.stripSuffix("/jre")).map(p => file(p))).getOrElse(
+        sys.error("unable to find java home"))
   home / "lib" / "tools.jar"
 }
 

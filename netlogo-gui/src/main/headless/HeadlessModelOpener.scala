@@ -37,7 +37,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
 
     // get out if unknown version
     val netLogoVersion = map.get(ModelSection.Version).head
-    if (!Version.knownVersion(netLogoVersion))
+    if (!Version.compatibleVersion(netLogoVersion))
       throw new IllegalStateException("unknown NetLogo version: " + netLogoVersion)
 
     // parse all the widgets in the WIDGETS section
