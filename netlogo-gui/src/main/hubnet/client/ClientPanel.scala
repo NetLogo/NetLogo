@@ -289,7 +289,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
     try {
       val socket = new java.net.Socket(hostip, port)
       socket.setSoTimeout(0)
-      /**
+      /*
        * do not uncomment the following line to enable tcp_no_delay.
        * in theory, it should get our messages out to clients slightly faster.
        * in practice, it was creating hundreds of extra tiny packets, consuming bandwidth.

@@ -68,9 +68,9 @@ lazy val scalastyleSettings = Seq(
   file("target") / s"scalastyle-result-${name.value}.xml"
   })
 
-lazy val publicationSettings =
+def publicationSettings(repository: String) =
   bintrayPublishSettings ++ Seq(
-    bintray.Keys.repository in bintray.Keys.bintray := "NetLogoHeadless",
+    bintray.Keys.repository          in bintray.Keys.bintray := repository,
     bintray.Keys.bintrayOrganization in bintray.Keys.bintray := Some("netlogo"))
 
 lazy val root =
@@ -87,6 +87,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
    settings(EventsGenerator.settings: _*).
    settings(Docs.settings: _*).
    settings(includeProject(parserJVM): _*).
+   settings(publicationSettings("NetLogo-JVM"): _*).
    settings(shareSourceDirectory(file("netlogo-core")): _*).
    settings(Defaults.coreDefaultSettings ++
              Testing.settings ++
@@ -103,6 +104,8 @@ lazy val netlogo = project.in(file("netlogo-gui")).
              Depend.dependTask: _*).
   settings(
     name := "NetLogo",
+    version := "6.0-M1",
+    isSnapshot := true,
     mainClass in Compile := Some("org.nlogo.app.App"),
     modelsDirectory := file("models"),
     extensionRoot   := file("extensions").getAbsoluteFile,
@@ -159,7 +162,7 @@ lazy val headless = (project in file ("netlogo-headless")).
   settings(Testing.settings: _*).
   settings(Depend.dependTask: _*).
   settings(Extensions.settings: _*).
-  settings(publicationSettings: _*).
+  settings(publicationSettings("NetLogoHeadless"): _*).
   settings(JFlexRunner.settings: _*).
   settings(includeProject(parserJVM): _*).
   settings(shareSourceDirectory(file("netlogo-core")): _*).
@@ -232,7 +235,7 @@ lazy val parser = CrossProject("parser", file("."),
     unmanagedSourceDirectories in Test += file(".").getAbsoluteFile / "parser-core" / "src" / "test").
   jsConfigure(_.dependsOn(sharedResources % "compile-internal->compile")).
   jsConfigure(_.dependsOn(macros % "compile-internal->compile;test-internal->compile")).
-  jsSettings(publicationSettings: _*).
+  jsSettings(publicationSettings("NetLogoHeadless"): _*).
   jsSettings(
       name := "parser-js",
       ivyScala := ivyScala.value map { _.copy(overrideScalaVersion = true) },

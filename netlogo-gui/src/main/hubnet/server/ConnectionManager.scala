@@ -91,7 +91,7 @@ class ConnectionManager(val connection: ConnectionInterface,
   def nodesHaveView = clientInterfaceMap.nonEmpty && clientInterfaceSpec.containsViewWidget
   def isRunning = running
 
-  /**
+  /*
    * NetLogo calls this method when starting the ConnectionManager.
    * Creates a new Thread for <code>nodeThread</code> and starts it.
    * This is called when NetLogo executes the <code>hubnet-reset</code> primitive.
@@ -189,7 +189,7 @@ class ConnectionManager(val connection: ConnectionInterface,
   private def waitForConnection(): Unit = {
     val newSocket = socket.accept()
     newSocket.setSoTimeout(0)
-    /**
+    /*
      * do not uncomment the following line to enable tcp_no_delay.
      * in theory, it should get our messages out to clients slightly faster.
      * in practice, it was creating hundreds of extra tiny packets, consuming bandwidth.

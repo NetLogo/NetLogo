@@ -93,7 +93,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   // agentKind from outside of this class anyway.
   // the ui edits work through agent options, which now just set the button type
   override def kind = buttonType.agentKind
-  override def agentKind(c:AgentKind) { /** ignoring, no one should call this. */ }
+  override def agentKind(c:AgentKind) { /* ignoring, no one should call this. */ }
   def agentOptions = buttonType.toAgentOptions
   def agentOptions(newAgentOptions:Options[String]){
     if (newAgentOptions.chosenValue != this.agentOptions.chosenValue){
