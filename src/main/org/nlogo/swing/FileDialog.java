@@ -54,7 +54,6 @@ public final strictfp class FileDialog {
       System.getProperty("os.name").startsWith("Mac");
   private static final boolean LINUX =
       System.getProperty("os.name").startsWith("Linux");
-
   private static String show(java.awt.Frame parentFrame, String title,
                              int mode, boolean directoriesOnly, String file)
       throws org.nlogo.awt.UserCancelException {
@@ -69,14 +68,26 @@ public final strictfp class FileDialog {
     // but that code already seems strangely more complicated than expected, so I decided
     // not to mess with it.  Probably it's just left-over cruft from a pre-JFileChooser era,
     // but I'm not sure.
-    // Incidentally, I'd like to make NetLogo properly support filename filters too...
-    // But I'm guessing this late in the "ready-to-release" cycle, people might not be
-    // too pleased with me hacking much and possibly introducing new bugs.  :-)
-    //  So I'm just making a change that affects Linux users...
     //  ~Forrest (6/8/2009)
     if (LINUX) {
+      javax.swing.filechooser.FileFilter filter = new javax.swing.filechooser.FileFilter(){
+        String ext = org.nlogo.api.Version.is3D() ? ".nlogo3d" : ".nlogo";
+        @Override
+        public boolean accept(java.io.File f) {
+          if(f.isDirectory()){
+            return true;
+          }
+          return f.getName().endsWith(ext);
+        }
+
+        @Override
+        public String getDescription() {
+          return "NetLogo files (*" + ext + ")";
+        }
+	  };
       javax.swing.JFileChooser chooser =
           new javax.swing.JFileChooser(currentDirectory);
+      chooser.addChoosableFileFilter(filter);
       chooser.setDialogTitle(title);
       if (file != null && file.length() > 0) {
         chooser.setSelectedFile(new java.io.File(file));
