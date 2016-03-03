@@ -120,7 +120,8 @@ class AgentTypeCheckerTests extends FunSuite {
     val rt = foo.statements.stmts.head
       .args.head.asInstanceOf[ReporterApp]
       .args.head.asInstanceOf[ReporterApp]
-    assertResult("-T--")(rt.reporter.agentClassString)
+    assertResult("OTPL")(rt.reporter.agentClassString)
+    assertResult(Some("-T--"))(rt.reporter.blockAgentClassString)
   }
 
   test("tasks type-check properly") {

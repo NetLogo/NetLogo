@@ -119,9 +119,11 @@ class AgentTypeChecker(defs: Seq[ProcedureDefinition]) {
       else
         super.visitReporterApp(app)
 
-      r.agentClassString = r match {
-        case (_: _commandtask | _: _reportertask) => visitor.agentClassString
-        case _ => agentClassString
+      r match {
+        case (_: _commandtask | _: _reportertask) =>
+          r.blockAgentClassString = Some(visitor.agentClassString)
+        case _ =>
+          r.agentClassString = agentClassString
       }
     }
 
