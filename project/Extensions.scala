@@ -23,10 +23,14 @@ object Extensions {
 
   lazy val extensionDirs: Def.Initialize[Task[Seq[File]]] =
     Def.task {
-      val isDirectory = new java.io.FileFilter {
-        override def accept(f: File) = f.isDirectory
+      val validExtensionDirectory = new java.io.FileFilter {
+        override def accept(f: File) =
+          if (f.getName == "qtj")
+            System.getProperty("os.name").startsWith("Mac")
+          else
+            f.isDirectory
       }
-      IO.listFiles(isDirectory)(baseDirectory.value / "extensions").toSeq
+      IO.listFiles(validExtensionDirectory)(baseDirectory.value / "extensions").toSeq
     }
 
   lazy val fileDependencies: Def.Initialize[Set[File]] =
