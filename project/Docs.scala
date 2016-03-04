@@ -14,7 +14,7 @@ object Docs {
 
   lazy val manualPDF = taskKey[File]("NetLogo manual PDF")
 
-  lazy val docsRoot = taskKey[File]("location to which docs are generated")
+  lazy val docsRoot = settingKey[File]("location to which docs are generated")
 
   lazy val settings = Seq(
     javaOptions    += "-Dnetlogo.docs.dir=" + docsRoot.value.getAbsolutePath.toString,

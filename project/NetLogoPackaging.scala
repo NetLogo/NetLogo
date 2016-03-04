@@ -1,7 +1,7 @@
 import sbt._
 import sbt.complete.Parser, Parser._
 import Keys.{ baseDirectory, dependencyClasspath, packageBin, runMain, target }
-import Docs.manualPDF
+import Docs.{ allDocs, docsRoot, manualPDF }
 import NetLogoBuild.all
 import Extensions.extensionRoot
 import ModelsLibrary.modelsDirectory
@@ -52,7 +52,7 @@ object NetLogoPackaging {
         Seq(
           new ExtensionDir((extensionRoot in netlogo).value),
           new ModelsDir((modelsDirectory in netlogo).value),
-          new DocsDir((baseDirectory in netlogo).value.getParentFile / "docs")
+          new DocsDir((docsRoot in netlogo).value)
         ) ++ (platform.shortName match {
           case "windows" => Seq(new NativesDir(nlDir / "natives", "windows-amd64", "windows-i586"))
           case "linux"   => Seq(new NativesDir(nlDir / "natives", "linux-amd64", "linux-i586"))
@@ -114,7 +114,7 @@ object NetLogoPackaging {
   def settings(netlogo: Project, macApp: Project): Seq[Setting[_]] = Seq(
     buildNetLogo := {
       (all in netlogo).value
-      (manualPDF in netlogo).value
+      (allDocs in netlogo).value
       (allPreviews in netlogo).value
       (runMain in Test in netlogo).toTask(" org.nlogo.tools.ModelResaver").value
       modelCrossReference.value
@@ -183,7 +183,7 @@ object NetLogoPackaging {
       PackageAction.aggregate("macimg", AggregateMacBuild, packageApp)(),
     webTarget := target.value / "downloadPages",
     buildDownloadPages := {
-      val webSource = file("downloadPages")
+      val webSource = baseDirectory.value / "downloadPages"
       val downloadLocations =
         Map(
           "macInstaller"     -> s"NetLogo-${netLogoVersion.value}.dmg",
