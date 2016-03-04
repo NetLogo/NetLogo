@@ -70,11 +70,12 @@ public final strictfp class FileDialog {
     // but I'm not sure.
     //  ~Forrest (6/8/2009)
     if (LINUX) {
-      javax.swing.filechooser.FileFilter filter = new javax.swing.filechooser.FileFilter(){
+      javax.swing.filechooser.FileFilter filter = new javax.swing.filechooser.FileFilter() {
         String ext = org.nlogo.api.Version.is3D() ? ".nlogo3d" : ".nlogo";
+
         @Override
         public boolean accept(java.io.File f) {
-          if(f.isDirectory()){
+          if (f.isDirectory()) {
             return true;
           }
           return f.getName().endsWith(ext);
@@ -84,7 +85,7 @@ public final strictfp class FileDialog {
         public String getDescription() {
           return "NetLogo files (*" + ext + ")";
         }
-	  };
+      };
       javax.swing.JFileChooser chooser =
           new javax.swing.JFileChooser(currentDirectory);
       chooser.addChoosableFileFilter(filter);
