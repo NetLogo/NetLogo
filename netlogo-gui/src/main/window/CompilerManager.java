@@ -103,9 +103,13 @@ public strictfp class CompilerManager
   private boolean compileProcedures() {
     workspace.world.program(workspace.world.newProgram());
     try {
+      scala.collection.mutable.Builder<org.nlogo.api.SourceOwner, scala.collection.immutable.Seq<org.nlogo.api.SourceOwner>> builder = scala.collection.immutable.Seq$.MODULE$.newBuilder();
+      if (workspace.aggregateManager() != null) {
+        builder.$plus$eq(workspace.aggregateManager());
+      }
       CompilerResults results =
           workspace.compiler().compileProgram
-              (proceduresInterface.innerSource(), workspace.world.newProgram(getGlobalVariableNames()),
+              (proceduresInterface.innerSource(), builder.result(), workspace.world.newProgram(getGlobalVariableNames()),
                   workspace.getExtensionManager(), workspace.getCompilationEnvironment());
       workspace.setProcedures(results.proceduresMap());
       for (Procedure procedure : workspace.getProcedures().values()) {

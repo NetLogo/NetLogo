@@ -46,7 +46,6 @@ class Compiler(dialect: Dialect) extends CompilerInterface {
   def compileProgram(source: String, additionalSources: Seq[SourceOwner], program: Program, extensionManager: ExtensionManager, compilationEnv: CompilationEnvironment): CompilerResults = {
     import scala.collection.JavaConverters._
 
-
     val sources =
       Map("" -> source) ++ additionalSources.map(additionalSource =>
           additionalSource.classDisplayName -> additionalSource.innerSource).toMap
