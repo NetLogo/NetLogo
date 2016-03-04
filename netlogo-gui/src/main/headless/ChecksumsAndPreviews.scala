@@ -25,7 +25,6 @@ object ChecksumsAndPreviews {
       val library =
         ModelsLibrary.getModelPaths(true)
           .filter(fn)
-          .map(p => p.substring(p.indexOf("models/")))
           .toList
       if (includeBenchmarks)
         benchmarks ::: library
@@ -160,7 +159,7 @@ object ChecksumsAndPreviews {
         new java.io.InputStreamReader(
           Runtime.getRuntime().exec(cmds,
                                     Array[String](),
-                                    new java.io.File("models"))
+                                    new java.io.File(ModelsLibrary.modelsRoot))
           .getInputStream))
       stdInput.readLine().trim
     }
