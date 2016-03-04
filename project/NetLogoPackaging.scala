@@ -8,6 +8,7 @@ import ModelsLibrary.modelsDirectory
 import ChecksumsAndPreviews.allPreviews
 import ModelsLibrary.modelIndex
 import NativeLibs.nativeLibs
+import Scaladoc.docSmaller
 
 object NetLogoPackaging {
 
@@ -119,6 +120,7 @@ object NetLogoPackaging {
       modelCrossReference.value
       (modelIndex in netlogo).value
       (nativeLibs in netlogo).value
+      (docSmaller in netlogo).value
       RunProcess(Seq("./sbt", "package"), mathematicaRoot.value, s"package mathematica link")
     },
     mathematicaRoot := netLogoRoot.value.getParentFile / "Mathematica-Link",
