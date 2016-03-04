@@ -14,9 +14,11 @@ object Extensions {
 
   lazy val extensionsTask = Seq(
     submoduleUpdate := { "git submodule --quiet update --init" ! streams.value.log },
-    extensions <<= Def.taskDyn {
-      new Scoped.RichTaskSeq(extensionDirs.value.map(buildExtensionTask)).join dependsOn(submoduleUpdate, packageBin in Compile)
-    }
+    extensions <<= Def.task {
+      extensionDirs.value.map(ext =>
+          cacheBuild(streams.value.cacheDirectory, fileDependencies.value, ext)(in =>
+              buildExtension(ext, scalaInstance.value.libraryJar, streams.value.log)))
+    }.dependsOn(submoduleUpdate, packageBin in Compile)
   )
 
   lazy val extensionDirs: Def.Initialize[Task[Seq[File]]] =
@@ -35,15 +37,13 @@ object Extensions {
       )
     }
 
-  private def buildExtensionTask(dir: File): Def.Initialize[Task[File]] =
-    Def.task {
-      // we only generate one file, so we only return one file
-      FileFunction.cached(streams.value.cacheDirectory / "extensions" / dir.getName,
-        inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
-          in =>
-            Set(buildExtension(dir, scalaInstance.value.libraryJar, streams.value.log))
-        }(fileDependencies.value).head
-    }
+  private def cacheBuild(cacheDirectory: File, deps: Set[File], dir: File)(build: File => File): File = {
+    // we only generate one file, so we only return one file
+    FileFunction.cached(cacheDirectory / "extensions" / dir.getName,
+      inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) { files =>
+        Set(build(dir))
+      }(deps).head
+  }
 
   private def buildExtension(dir: File, scalaLibrary: File, log: Logger): File = {
     log.info("building extension: " + dir.getName)
