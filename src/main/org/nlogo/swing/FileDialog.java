@@ -107,6 +107,9 @@ public final strictfp class FileDialog {
       if (result != javax.swing.JFileChooser.APPROVE_OPTION) {
         throw new org.nlogo.awt.UserCancelException();
       }
+      if(mode == java.awt.FileDialog.LOAD && !new java.io.File(chooser.getSelectedFile().getAbsolutePath()).exists()){
+        return show(parentFrame, title, mode, directoriesOnly, chooser.getSelectedFile().getAbsolutePath());
+      }
       currentDirectory = selectedDirectory(chooser);
       return chooser.getSelectedFile().getAbsolutePath();
     }
