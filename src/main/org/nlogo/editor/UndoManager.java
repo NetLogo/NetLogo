@@ -136,9 +136,11 @@ public strictfp class UndoManager extends javax.swing.undo.UndoManager
     }
 
     public void actionPerformed(java.awt.event.ActionEvent e) {
-      currentManager.undo();
-      updateUndoState();
-      redoAction.updateRedoState();
+      if(currentManager.canUndo()) {
+        currentManager.undo();
+        updateUndoState();
+        redoAction.updateRedoState();
+      }
     }
 
     protected void updateUndoState() {
