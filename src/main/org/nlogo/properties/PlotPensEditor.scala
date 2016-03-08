@@ -136,12 +136,13 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
     val model = new PenTableModel()
     locally{
       setModel(model)
-
-      setRowHeight(getRowHeight + 10)
+      setRowHeight(getRowHeight + 14)
+      setRowMargin(1)
       setGridColor(Color.BLACK)
       setShowGrid(true)
       setRowSelectionAllowed(false)
       getTableHeader.setReorderingAllowed(false)
+      getColumnModel().setColumnMargin(1)
 
       getSelectionModel.addListSelectionListener(new RowListener())
       getColumnModel.getSelectionModel.addListSelectionListener(new ColumnListener())
