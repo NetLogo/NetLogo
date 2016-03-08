@@ -85,7 +85,7 @@ public strictfp class SpeedSliderPanel
   void enableLabels(int value) {
     if (value == 0) {
       if (labelsBelow) {
-        normal.setText("      " + I18N.guiJ().get("tabs.run.speedslider.normalspeed"));
+        normal.setText("        " + I18N.guiJ().get("tabs.run.speedslider.normalspeed"));
       } else {
         normal.setText(I18N.guiJ().get("tabs.run.speedslider.normalspeed"));
       }

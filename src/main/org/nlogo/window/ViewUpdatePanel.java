@@ -38,7 +38,14 @@ public strictfp class ViewUpdatePanel
         });
     org.nlogo.awt.Fonts.adjustDefaultFont(displaySwitch);
     settings = workspace.viewWidget.settings();
-    add(speedSlider);
+
+    javax.swing.JPanel speedPanel = new javax.swing.JPanel();
+    speedPanel.setLayout(new javax.swing.BoxLayout(speedPanel, javax.swing.BoxLayout.PAGE_AXIS));
+    workspace.viewWidget.tickCounter.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT);
+    speedPanel.add(speedSlider);
+    speedPanel.add(workspace.viewWidget.tickCounter);
+
+    add(speedPanel);
     SettingsButton settingsButton = new SettingsButton();
     viewUpdates.addItem(I18N.guiJ().get("tabs.run.viewUpdates.dropdown.onticks"));
     viewUpdates.addItem(I18N.guiJ().get("tabs.run.viewUpdates.dropdown.continuous"));
