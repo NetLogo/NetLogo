@@ -36,8 +36,10 @@ with ModelSavedEvent.Handler
       // developer.apple.com/qa/qa2001/qa1146.html - ST 7/30/04
       if (System.getProperty("os.name").startsWith("Mac"))
         frame.getRootPane.putClientProperty("Window.documentModified", dirty)
-        else if (!lockTitleBar)
-      if (dirty) frame.setTitle("* " + frame.getTitle) else frame.setTitle(frame.getTitle.substring(2))
+      else if (!lockTitleBar)
+        frame.setTitle(
+          if (dirty) "* " + frame.getTitle
+          else frame.getTitle.substring(2))
     }
   }
 
@@ -66,7 +68,7 @@ with ModelSavedEvent.Handler
 
   /// how we get clean
   def handle(e: ModelSavedEvent) {
-    dirty(false, true)
+    dirty(false, lockTitleBar = true)
   }
   def handle(e: BeforeLoadEvent) {
     dirty(false)
