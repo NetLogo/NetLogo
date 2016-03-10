@@ -21,8 +21,8 @@ public final strictfp class _distancexynowrap extends Reporter {
         argEvalDoubleValue(context, 1));
   }
 
-  public double report_1(Context context, double arg0, double arg1) {
-    return world.protractor().distance
-        (context.agent, arg0, arg1, false); // false = don't wrap
+  public double report_1(Context context, double arg0, double arg1) throws LogoException {
+    return validDouble(world.protractor().distance
+        (context.agent, arg0, arg1, false)); // false = don't wrap
   }
 }

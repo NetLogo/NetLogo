@@ -34,7 +34,7 @@ public final strictfp class _atan extends Reporter implements Pure {
     if (d2 == 0) {
       return d1 > 0 ? 90 : 270;
     }
-    return (StrictMath.toDegrees(StrictMath.atan2(d1, d2))
+    return validDouble(StrictMath.toDegrees(StrictMath.atan2(d1, d2))
         + 360)
         % 360;
   }

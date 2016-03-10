@@ -20,7 +20,7 @@ public final strictfp class _randomfloat extends Reporter {
     return report_1(context, argEvalDoubleValue(context, 0));
   }
 
-  public double report_1(Context context, double d) {
-    return d * context.job.random.nextDouble();
+  public double report_1(Context context, double d) throws LogoException {
+    return validDouble(d * context.job.random.nextDouble());
   }
 }
