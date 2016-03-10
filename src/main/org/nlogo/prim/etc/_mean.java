@@ -29,8 +29,9 @@ public final strictfp class _mean extends Reporter implements Pure {
   }
 
   public double report_1(Context context, LogoList list) throws LogoException {
-    double sum = 0;
-    if (list.isEmpty()) {
+    double mean = 0;
+    double size = list.size();
+    if (size == 0.0) {
       throw new EngineException(
         context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.emptyList"));
     }
@@ -41,8 +42,8 @@ public final strictfp class _mean extends Reporter implements Pure {
             I18N.errorsJ().getN("org.nlogo.prim._mean.cantFindMeanOfNonNumbers",
                 Dump.logoObject(elt), TypeNames.name(elt)));
       }
-      sum += ((Double) elt).doubleValue();
+      mean += ((Double) elt).doubleValue() / size;
     }
-    return validDouble(sum / list.size());
+    return mean;
   }
 }
