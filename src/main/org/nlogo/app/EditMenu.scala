@@ -45,6 +45,21 @@ with org.nlogo.window.Events.LoadSectionEvent.Handler
   addSeparator()
   snapper = addCheckBoxMenuItem(I18N.gui("snapToGrid"), app.workspace.snapOn(), snapAction)
 
+  addMenuListener(new javax.swing.event.MenuListener() {
+    override def menuSelected(e: javax.swing.event.MenuEvent): Unit = {
+      Actions.CUT_ACTION.setEnabled(app.tabs.proceduresTab.isTextSelected())
+      Actions.COPY_ACTION.setEnabled(app.tabs.proceduresTab.isTextSelected())
+      Actions.PASTE_ACTION.setEnabled(java.awt.Toolkit.getDefaultToolkit().getSystemClipboard()
+        .isDataFlavorAvailable(java.awt.datatransfer.DataFlavor.stringFlavor))
+    }
+
+    override def menuDeselected(e: javax.swing.event.MenuEvent): Unit = {
+    }
+
+    override def menuCanceled(e: javax.swing.event.MenuEvent): Unit = {
+    }
+  })
+
   def handle(e: Events.SwitchedTabsEvent) {
     snapAction.setEnabled(e.newTab == app.tabs.interfaceTab)
   }
