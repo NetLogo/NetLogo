@@ -46,8 +46,8 @@ class Procedure(
 
   def getTaskFormal(n: Int, token: Token): Let = {
     while (taskFormals.size < n)
-      taskFormals += new Let("?" + n)
-    taskFormals.last
+      taskFormals += new Let("?" + (taskFormals.size + 1).toString)
+    taskFormals(n - 1)
   }
 
   var code = Array[Command]()
