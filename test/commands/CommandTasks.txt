@@ -56,6 +56,12 @@ NestedForeach3
   O> foreach [1 2 3] [ __let x ? foreach [10 20 30] [ set glob1 glob1 + x + ? ] ]
   glob1 => 198
 
+OutOfOrderArgsForeach
+  globals [ glob1 ]
+  O> set glob1 (list)
+  O> (foreach [1 2 3] [4 5 6] [ set glob1 (fput ?2 glob1) set glob1 (fput ?1 glob1) ])
+  glob1 => [3 6 2 5 1 4]
+
 CloseOverUnoptimizedLet
   globals [ glob1 glob2 ]
   O> __let x 5 set glob1 task [ set glob2 x ]

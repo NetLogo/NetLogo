@@ -48,7 +48,8 @@ lazy val scalatestSettings = Seq(
   testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oS"),
   logBuffered in testOnly in Test := false,
   libraryDependencies ++= Seq(
-    "org.scalatest"  %% "scalatest"  % "2.2.1"  % "test",
+    "org.scalatest"  %% "scalatest"  % "2.2.6"  % "test",
+    // scalatest doesn't yet play nice with scalacheck 1.13.0
     "org.scalacheck" %% "scalacheck" % "1.12.5" % "test"
   )
 )
@@ -243,8 +244,9 @@ lazy val parser = CrossProject("parser", file("."),
       libraryDependencies ++= {
       import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport.toScalaJSGroupID
         Seq(
-          "org.scala-js"  %%%! "scala-parser-combinators" % "1.0.2",
-          "org.scalatest" %%%! "scalatest" % "3.0.0-M15" % "test",
+          "org.scala-js"   %%%! "scala-parser-combinators" % "1.0.2",
+          "org.scalatest"  %%%! "scalatest" % "3.0.0-M15" % "test",
+          // scalatest doesn't yet play nice with scalacheck 1.13.0
           "org.scalacheck" %%%! "scalacheck" % "1.12.5" % "test"
       )}).
   jvmConfigure(_.dependsOn(sharedResources)).
