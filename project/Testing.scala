@@ -15,9 +15,15 @@ object Testing {
   lazy val tm = InputKey[Unit]("tm", "run TestModels", test)
   lazy val testChecksums = InputKey[Unit]("test-checksums", "run TestChecksums", test)
 
+  lazy val testTempDirectory = settingKey[File]("Temp directory for tests to write files to")
+
   private val testKeys = Seq(tr, tc, te, tm, testChecksums)
 
   val settings = inConfig(Test)(
+    Seq(
+      testTempDirectory := baseDirectory.value / "tmp",
+      test     <<= test     dependsOn Def.task { IO.createDirectory(testTempDirectory.value) },
+      testOnly <<= testOnly dependsOn Def.task { IO.createDirectory(testTempDirectory.value) }) ++
     inConfig(FastTest)(Defaults.testTasks) ++
     inConfig(MediumTest)(Defaults.testTasks) ++
     inConfig(SlowTest)(Defaults.testTasks) ++
