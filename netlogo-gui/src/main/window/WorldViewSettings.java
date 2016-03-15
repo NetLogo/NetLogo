@@ -10,7 +10,6 @@ import org.nlogo.nvm.Workspace;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;
 
 public abstract strictfp class WorldViewSettings
     implements Editable,
@@ -478,13 +477,6 @@ public abstract strictfp class WorldViewSettings
     newMaxX = maxPxcor;
     newMinY = minPycor;
     newMaxY = maxPycor;
-    if(maxPxcor - minPxcor <= 0 || maxPycor - minPycor <= 0) {
-      JOptionPane.showMessageDialog(gWidget, "The world dimensions set are negative.\nCheck that "
-            + "the maximum x and y coordinates are larger\nthan their minimum counterparts."
-            + " Using default values.", 
-                "Invalid World Dimensions.", JOptionPane.WARNING_MESSAGE);
-      return;
-    }
     if (minPxcor != workspace.world.minPxcor() ||
         maxPxcor != workspace.world.maxPxcor() ||
         minPycor != workspace.world.minPycor() ||
