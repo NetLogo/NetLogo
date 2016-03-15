@@ -15,6 +15,8 @@ object Testing {
   lazy val tm = inputKey[Unit]("org.nlogo.headless.TestModels")
   lazy val ts = inputKey[Unit]("org.nlogo.headless.TestChecksums")
 
+  lazy val testTempDirectory = settingKey[File]("Temp directory for tests to write files to")
+
   private val testKeys = Seq(tr, tc, te, tm, ts)
 
   lazy val suiteSettings = Seq(
@@ -36,6 +38,10 @@ object Testing {
 
   val settings = suiteSettings ++
     inConfig(Test)(
+      Seq(
+        testTempDirectory := file("tmp"),
+        testOnly <<= testOnly dependsOn Def.task{ IO.createDirectory(testTempDirectory.value) },
+        test     <<= test     dependsOn Def.task{ IO.createDirectory(testTempDirectory.value) }) ++
       testKeys.flatMap(key =>
           Defaults.defaultTestTasks(key) ++
           Defaults.testTaskOptions(key)) ++

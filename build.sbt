@@ -4,6 +4,7 @@ import ModelsLibrary.modelsDirectory
 import Extensions.{ excludedExtensions, extensionRoot }
 import NetLogoBuild.{ all, autogenRoot, cclArtifacts, includeProject, netlogoVersion, shareSourceDirectory }
 import Docs.htmlDocs
+import Testing.testTempDirectory
 
 
 // these settings are common to ALL BUILDS
@@ -14,6 +15,7 @@ lazy val commonSettings = Seq(
   javaSource in Compile := baseDirectory.value / "src" / "main",
   javaSource in Test    := baseDirectory.value / "src" / "test",
   onLoadMessage         := "",
+  testTempDirectory     := file("tmp"),
   ivyLoggingLevel       := UpdateLogging.Quiet
 )
 
