@@ -69,9 +69,9 @@ lazy val scalastyleSettings = Seq(
   })
 
 def publicationSettings(repository: String) =
-  bintrayPublishSettings ++ Seq(
-    bintray.Keys.repository          in bintray.Keys.bintray := repository,
-    bintray.Keys.bintrayOrganization in bintray.Keys.bintray := Some("netlogo"))
+  Seq(
+    bintrayRepository   := repository,
+    bintrayOrganization := Some("netlogo"))
 
 lazy val root =
    project.in(file(".")).
@@ -105,7 +105,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
   settings(
     name := "NetLogo",
     version := "6.0-M1",
-    isSnapshot := true,
+    isSnapshot := false,
     mainClass in Compile := Some("org.nlogo.app.App"),
     modelsDirectory := file("models"),
     extensionRoot   := file("extensions").getAbsoluteFile,
