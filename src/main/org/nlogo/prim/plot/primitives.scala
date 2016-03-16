@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.plot
 
-import org.nlogo.api.{ CommandRunnable, I18N, Syntax }
+import org.nlogo.api.{ CommandRunnable, I18N, Syntax, LogoList }
 import org.nlogo.nvm.{ Command, Context, EngineException, Instruction, Reporter }
 import org.nlogo.plot.PlotManager
 
@@ -317,12 +317,24 @@ final class _setplotpenmode extends PlotCommand(Syntax.NumberType) {
   }
 }
 
-final class _setplotpencolor extends PlotCommand(Syntax.NumberType) {
+final class _setplotpencolor extends PlotCommand(Syntax.NumberType | Syntax.ListType) {
   import org.nlogo.api.Color
   override def perform(context: Context) {
-    currentPen(context).color =
-      Color.getARGBbyPremodulatedColorNumber(
-        Color.modulateDouble(argEvalDoubleValue(context, 0)))
+    val obj = args(0).report(context)
+    obj match {
+      case rgbList: LogoList =>
+        try
+          currentPen(context).color = Color.getARGBIntByRGBAList(rgbList)
+        catch {
+          case e: ClassCastException =>
+            throw new org.nlogo.nvm.EngineException(context, this, displayName + " an rgb list must contain only numbers")
+        }
+      case c: java.lang.Double =>
+        currentPen(context).color =
+          Color.getARGBbyPremodulatedColorNumber(
+            Color.modulateDouble(c))
+      case _ => throw new org.nlogo.nvm.ArgumentTypeException(context, this, 0, Syntax.ListType | Syntax.NumberType, obj)
+    }
     context.ip = next
   }
 }

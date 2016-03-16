@@ -463,7 +463,7 @@ class TestAllSyntaxes extends FunSuite {
                     |_sethistogramnumbars number,OTPL,null,0,1,1
                     |_setlinethickness number,-T--,null,0,1,1 *
                     |_setpatchsize number,O---,null,0,1,1 *
-                    |_setplotpencolor number,OTPL,null,0,1,1
+                    |_setplotpencolor number or list,OTPL,null,0,1,1
                     |_setplotpeninterval number,OTPL,null,0,1,1
                     |_setplotpenmode number,OTPL,null,0,1,1
                     |_setplotxrange number/number,OTPL,null,0,2,2
