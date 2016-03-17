@@ -14,6 +14,7 @@ object InfoTab {
           FileFunction.cached(s.cacheDirectory / "infotab",
                               inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
             in: Set[File] =>
+              IO.createDirectory(base / "docs")
               Run.run("org.nlogo.tools.InfoTabDocGenerator",
                       cp.map(_.data), Seq(), s.log)(runner)
               Set(base / "docs" / "infotab.html")

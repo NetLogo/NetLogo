@@ -28,15 +28,21 @@ with ModelSavedEvent.Handler
   private var loading = true
   private var _dirty = false
   def dirty = _dirty && !loading
-  private def dirty(dirty: Boolean) {
-    if(dirty != _dirty) {
+  private def dirty(dirty: Boolean, lockTitleBar: Boolean = false) {
+    if (dirty != _dirty && !loading) {
       _dirty = dirty
       // on a Mac, this will make a gray dot appear in the red close button in the frame's title bar
       // to indicate that the document has unsaved changes, as documented at
       // developer.apple.com/qa/qa2001/qa1146.html - ST 7/30/04
-      frame.getRootPane().putClientProperty("windowModified", dirty)
+      if (System.getProperty("os.name").startsWith("Mac"))
+        frame.getRootPane.putClientProperty("Window.documentModified", dirty)
+      else if (!lockTitleBar)
+        frame.setTitle(
+          if (dirty) "* " + frame.getTitle
+          else frame.getTitle.substring(2))
     }
   }
+
   def handle(e: AboutToQuitEvent) {
     new java.io.File(DirtyMonitor.autoSaveFileName).delete()
   }
@@ -44,7 +50,7 @@ with ModelSavedEvent.Handler
   private def doAutoSave() {
     // autoSave when we get a dirty event but no more than once a minute I have no idea if this is a
     // good number or even the right ballpark.  feel free to change it. ev 8/22/06
-    if(!dirty || (System.currentTimeMillis() - lastTimeAutoSaved) < 60000)
+    if (!dirty || (System.currentTimeMillis() - lastTimeAutoSaved) < 60000)
       return
     try {
       lastTimeAutoSaved = System.currentTimeMillis()
@@ -62,7 +68,7 @@ with ModelSavedEvent.Handler
 
   /// how we get clean
   def handle(e: ModelSavedEvent) {
-    dirty(false)
+    dirty(false, lockTitleBar = true)
   }
   def handle(e: BeforeLoadEvent) {
     dirty(false)
