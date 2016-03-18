@@ -671,9 +671,11 @@ procedure GO:[]{O---}:
          L8
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurego_setobservervariable_12.validDouble (D)D
          L9
           DSTORE 2
           NEW java/lang/Double
@@ -814,9 +816,11 @@ procedure GO:[]{O---}:
          L10
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurego_setpatchvariable_15.validDouble (D)D
          L11
           DSTORE 2
           NEW java/lang/Double
@@ -1408,17 +1412,21 @@ procedure PERCENT-BURNED:[]{OTPL}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L9
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DDIV
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurepercentburned_report_1.validDouble (D)D
          L10
           LDC 100.0
          L11
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurepercentburned_report_1.validDouble (D)D
          L12
           DSTORE 2
           NEW java/lang/Double
@@ -1695,9 +1703,11 @@ procedure SETUP:[]{O---}:
          L5
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_if_2.validDouble (D)D
          L6
           DSTORE 4
           DSTORE 2
@@ -1859,9 +1869,11 @@ procedure SETUP:[]{O---}:
          L5
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_if_5.validDouble (D)D
          L6
           DSTORE 4
           DSTORE 2

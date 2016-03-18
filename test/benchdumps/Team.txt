@@ -591,9 +591,11 @@ procedure GO:[]{O---}:
          L10
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurego_setturtlevariable_15.validDouble (D)D
          L11
           DSTORE 2
           NEW java/lang/Double
@@ -1922,12 +1924,14 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           LDC 100.0
          L1
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
           INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextDouble ()D
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurepickteammembers_ifelse_2.validDouble (D)D
          L2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -2247,12 +2251,14 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           LDC 100.0
          L1
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
           INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextDouble ()D
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurepickteammembers_ifelse_6.validDouble (D)D
          L2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -3742,9 +3748,11 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L9
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DDIV
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setturtlevariable_12.validDouble (D)D
          L10
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -3754,9 +3762,11 @@ procedure SETUP:[_repeatlocal:0]{O---}:
          L11
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setturtlevariable_12.validDouble (D)D
          L12
           DSTORE 2
           NEW java/lang/Double
@@ -4102,9 +4112,11 @@ procedure EXPLORE:[]{-T--}:
          L8
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureexplore_setobservervariable_3.validDouble (D)D
          L9
           DSTORE 2
           NEW java/lang/Double
@@ -4469,9 +4481,11 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
          L10
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduredoplot_setprocedurevariable_5.validDouble (D)D
          L11
           DSTORE 2
           NEW java/lang/Double
@@ -4729,9 +4743,11 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
          L10
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduredoplot_setprocedurevariable_12.validDouble (D)D
          L11
           DSTORE 2
           NEW java/lang/Double
@@ -4989,9 +5005,11 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
          L10
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduredoplot_setprocedurevariable_19.validDouble (D)D
          L11
           DSTORE 2
           NEW java/lang/Double
@@ -5249,9 +5267,11 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
          L10
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduredoplot_setprocedurevariable_26.validDouble (D)D
          L11
           DSTORE 2
           NEW java/lang/Double
@@ -5416,9 +5436,11 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
            L7
+            ALOAD 0
             DLOAD 2
             DLOAD 4
             DDIV
+            INVOKEVIRTUAL org/nlogo/prim/_asm_proceduredoplot_div_33.validDouble (D)D
            L8
             DSTORE 2
             NEW java/lang/Double

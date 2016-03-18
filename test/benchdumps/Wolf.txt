@@ -173,9 +173,11 @@ procedure GO:[]{O---}:
          L10
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurego_setturtlevariable_3.validDouble (D)D
          L11
           DSTORE 2
           NEW java/lang/Double
@@ -385,9 +387,11 @@ procedure GO:[]{O---}:
          L10
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurego_setturtlevariable_10.validDouble (D)D
          L11
           DSTORE 2
           NEW java/lang/Double
@@ -948,12 +952,14 @@ procedure REPRODUCE-WOLVES:[]{-T--}:
           LDC 100.0
          L1
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
           INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextDouble ()D
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurereproducewolves_if_0.validDouble (D)D
          L2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -1075,14 +1081,18 @@ procedure REPRODUCE-WOLVES:[]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L11
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DDIV
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurereproducewolves_setturtlevariable_1.validDouble (D)D
          L12
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           ICONST_0
           INVOKESTATIC org/nlogo/api/Approximate.approximate (DI)D
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurereproducewolves_setturtlevariable_1.validDouble (D)D
          L13
           DSTORE 2
           NEW java/lang/Double
@@ -1187,12 +1197,14 @@ procedure REPRODUCE-SHEEP:[]{-T--}:
           LDC 100.0
          L1
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
           INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextDouble ()D
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurereproducesheep_if_0.validDouble (D)D
          L2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -1314,14 +1326,18 @@ procedure REPRODUCE-SHEEP:[]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L11
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DDIV
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurereproducesheep_setturtlevariable_1.validDouble (D)D
          L12
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           ICONST_0
           INVOKESTATIC org/nlogo/api/Approximate.approximate (DI)D
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurereproducesheep_setturtlevariable_1.validDouble (D)D
          L13
           DSTORE 2
           NEW java/lang/Double
@@ -1771,9 +1787,11 @@ procedure GRAPH:[]{OTPL}:
             INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
            L8
+            ALOAD 0
             DLOAD 2
             DLOAD 4
             DDIV
+            INVOKEVIRTUAL org/nlogo/prim/_asm_proceduregraph_div_6.validDouble (D)D
            L9
             DSTORE 2
             NEW java/lang/Double
@@ -2043,9 +2061,11 @@ procedure GROW-GRASS:[]{-TP-}:
          L10
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduregrowgrass_setpatchvariable_5.validDouble (D)D
          L11
           DSTORE 2
           NEW java/lang/Double
@@ -2584,17 +2604,21 @@ procedure SETUP:[]{O---}:
          L8
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setturtlevariable_12.validDouble (D)D
          L9
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
           INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextDouble ()D
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setturtlevariable_12.validDouble (D)D
          L10
           DSTORE 2
           NEW java/lang/Double
@@ -2957,17 +2981,21 @@ procedure SETUP:[]{O---}:
          L8
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setturtlevariable_19.validDouble (D)D
          L9
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
           INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextDouble ()D
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setturtlevariable_19.validDouble (D)D
          L10
           DSTORE 2
           NEW java/lang/Double
@@ -3291,9 +3319,11 @@ procedure MOVE:[]{-T--}:
          L2
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduremove_right_0.validDouble (D)D
          L3
           DSTORE 2
           ALOAD 1
@@ -3720,9 +3750,11 @@ procedure CATCH-SHEEP:[]{-T--}:
          L13
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecatchsheep_setturtlevariable_5.validDouble (D)D
          L14
           DSTORE 2
           NEW java/lang/Double
@@ -3919,9 +3951,11 @@ procedure EAT-GRASS:[]{-T--}:
          L13
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureeatgrass_setturtlevariable_2.validDouble (D)D
          L14
           DSTORE 2
           NEW java/lang/Double

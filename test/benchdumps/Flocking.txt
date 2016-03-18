@@ -69,9 +69,11 @@ procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
          L8
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduremysubtractheadings_ifelse_0.validDouble (D)D
          L9
           DSTORE 2
           DLOAD 2
@@ -166,9 +168,11 @@ procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
          L8
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduremysubtractheadings_report_1.validDouble (D)D
          L9
           DSTORE 2
           NEW java/lang/Double
@@ -423,17 +427,21 @@ procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
          L8
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduremysubtractheadings_report_4.validDouble (D)D
          L9
           LDC 360.0
          L10
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduremysubtractheadings_report_4.validDouble (D)D
          L11
           DSTORE 2
           NEW java/lang/Double
@@ -567,17 +575,21 @@ procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
          L8
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduremysubtractheadings_report_6.validDouble (D)D
          L9
           LDC 360.0
          L10
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduremysubtractheadings_report_6.validDouble (D)D
          L11
           DSTORE 2
           NEW java/lang/Double
@@ -809,9 +821,11 @@ procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
                  L4
                   DSTORE 4
                   DSTORE 2
+                  ALOAD 0
                   DLOAD 2
                   DLOAD 4
                   DADD
+                  INVOKEVIRTUAL org/nlogo/prim/_asm_procedureaverageheadingtowardsflockmates_sin_1.validDouble (D)D
                  L5
                   DSTORE 2
                   DLOAD 2
@@ -903,9 +917,11 @@ procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
                  L4
                   DSTORE 4
                   DSTORE 2
+                  ALOAD 0
                   DLOAD 2
                   DLOAD 4
                   DADD
+                  INVOKEVIRTUAL org/nlogo/prim/_asm_procedureaverageheadingtowardsflockmates_cos_4.validDouble (D)D
                  L5
                   DSTORE 2
                   DLOAD 2
@@ -1169,12 +1185,14 @@ procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
          L25
           GOTO L22
          L23
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           INVOKESTATIC java/lang/StrictMath.atan2 (DD)D
           INVOKESTATIC java/lang/StrictMath.toDegrees (D)D
           LDC 360.0
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureaverageheadingtowardsflockmates_report_0.validDouble (D)D
           LDC 360.0
           DREM
          L22
@@ -1785,9 +1803,11 @@ procedure SETUP:[]{O---}:
          L5
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setturtleorlinkvariable_1.validDouble (D)D
          L6
           DSTORE 2
           NEW java/lang/Double
@@ -1833,12 +1853,14 @@ procedure SETUP:[]{O---}:
           I2D
          L4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
           INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextDouble ()D
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setxy_2.validDouble (D)D
          L5
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetup_setxy_2.world : Lorg/nlogo/agent/World;
@@ -1846,12 +1868,14 @@ procedure SETUP:[]{O---}:
           I2D
          L6
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
           INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextDouble ()D
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setxy_2.validDouble (D)D
          L7
           DSTORE 4
           DSTORE 2
@@ -1906,12 +1930,14 @@ procedure SETUP:[]{O---}:
           LDC 360.0
          L1
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
           INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextDouble ()D
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_right_3.validDouble (D)D
          L2
           DSTORE 2
           ALOAD 1
@@ -2807,12 +2833,14 @@ procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
          L25
           GOTO L22
          L23
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           INVOKESTATIC java/lang/StrictMath.atan2 (DD)D
           INVOKESTATIC java/lang/StrictMath.toDegrees (D)D
           LDC 360.0
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureaverageflockmateheading_report_0.validDouble (D)D
           LDC 360.0
           DREM
          L22

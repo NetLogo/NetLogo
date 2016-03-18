@@ -21,7 +21,7 @@ public final strictfp class _round extends Reporter implements Pure {
     return report_1(context, argEvalDoubleValue(context, 0));
   }
 
-  public double report_1(Context context, double d0) {
-    return org.nlogo.api.Approximate.approximate(d0, 0);
+  public double report_1(Context context, double d0) throws LogoException {
+    return validDouble(org.nlogo.api.Approximate.approximate(d0, 0));
   }
 }

@@ -132,9 +132,11 @@ procedure GO:[]{O---}:
             INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
            L6
+            ALOAD 0
             DLOAD 2
             DLOAD 4
             DDIV
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurego_div_3.validDouble (D)D
            L7
             DSTORE 2
             NEW java/lang/Double
@@ -933,9 +935,11 @@ procedure LOOK-FOR-FOOD:[]{-T--}:
          L10
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurelookforfood_setpatchvariable_2.validDouble (D)D
          L11
           DSTORE 2
           NEW java/lang/Double
@@ -3113,15 +3117,19 @@ procedure GO-PATCHES:[]{-TP-}:
          L14
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduregopatches_setpatchvariable_0.validDouble (D)D
          L15
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduregopatches_setpatchvariable_0.validDouble (D)D
          L16
           LDC 100.0
          L17
@@ -3141,9 +3149,11 @@ procedure GO-PATCHES:[]{-TP-}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L18
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DDIV
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduregopatches_setpatchvariable_0.validDouble (D)D
          L19
           DSTORE 2
           NEW java/lang/Double
@@ -3809,9 +3819,11 @@ procedure RETURN-TO-NEST:[]{-T--}:
          L15
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurereturntonest_setpatchvariable_5.validDouble (D)D
          L16
           DSTORE 2
           NEW java/lang/Double
@@ -3890,9 +3902,11 @@ procedure RETURN-TO-NEST:[]{-T--}:
          L10
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurereturntonest_setturtlevariable_6.validDouble (D)D
          L11
           DSTORE 2
           NEW java/lang/Double
@@ -4782,12 +4796,14 @@ procedure SETUP-TURTLES:[]{O---}:
           LDC 360.0
          L1
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
           INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextDouble ()D
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupturtles_right_4.validDouble (D)D
          L2
           DSTORE 2
           ALOAD 1
@@ -4903,9 +4919,11 @@ procedure WIGGLE:[]{-T--}:
          L2
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurewiggle_right_0.validDouble (D)D
          L3
           DSTORE 2
           ALOAD 1
@@ -5568,6 +5586,7 @@ procedure SETUP-NEST:[]{-TP-}:
           DSTORE 4
           DSTORE 2
           ALOAD 0
+          ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetupnest_setpatchvariable_0.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.protractor ()Lorg/nlogo/agent/Protractor;
           ALOAD 1
@@ -5576,6 +5595,7 @@ procedure SETUP-NEST:[]{-TP-}:
           DLOAD 4
           ICONST_1
           INVOKEVIRTUAL org/nlogo/agent/Protractor.distance (Lorg/nlogo/api/Agent;DDZ)D
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupnest_setpatchvariable_0.validDouble (D)D
          L6
           LDC 5.0
          L7
@@ -5638,6 +5658,7 @@ procedure SETUP-NEST:[]{-TP-}:
           DSTORE 4
           DSTORE 2
           ALOAD 0
+          ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetupnest_setpatchvariable_1.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.protractor ()Lorg/nlogo/agent/Protractor;
           ALOAD 1
@@ -5646,12 +5667,15 @@ procedure SETUP-NEST:[]{-TP-}:
           DLOAD 4
           ICONST_1
           INVOKEVIRTUAL org/nlogo/agent/Protractor.distance (Lorg/nlogo/api/Agent;DDZ)D
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupnest_setpatchvariable_1.validDouble (D)D
          L7
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupnest_setpatchvariable_1.validDouble (D)D
          L8
           DSTORE 2
           NEW java/lang/Double
@@ -5712,14 +5736,17 @@ procedure SETUP-FOOD:[]{-TP-}:
          L2
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupfood_if_0.validDouble (D)D
          L3
           DCONST_0
          L4
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetupfood_if_0.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.protractor ()Lorg/nlogo/agent/Protractor;
@@ -5729,6 +5756,7 @@ procedure SETUP-FOOD:[]{-TP-}:
           DLOAD 4
           ICONST_1
           INVOKEVIRTUAL org/nlogo/agent/Protractor.distance (Lorg/nlogo/api/Agent;DDZ)D
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupfood_if_0.validDouble (D)D
          L5
           LDC 5.0
          L6
@@ -5807,9 +5835,11 @@ procedure SETUP-FOOD:[]{-TP-}:
          L2
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupfood_if_2.validDouble (D)D
          L3
           LDC -0.6
          L4
@@ -5820,12 +5850,15 @@ procedure SETUP-FOOD:[]{-TP-}:
          L5
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupfood_if_2.validDouble (D)D
          L6
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetupfood_if_2.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.protractor ()Lorg/nlogo/agent/Protractor;
@@ -5835,6 +5868,7 @@ procedure SETUP-FOOD:[]{-TP-}:
           DLOAD 4
           ICONST_1
           INVOKEVIRTUAL org/nlogo/agent/Protractor.distance (Lorg/nlogo/api/Agent;DDZ)D
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupfood_if_2.validDouble (D)D
          L7
           LDC 5.0
          L8
@@ -5913,9 +5947,11 @@ procedure SETUP-FOOD:[]{-TP-}:
          L2
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupfood_if_4.validDouble (D)D
          L3
           LDC 0.8
          L4
@@ -5926,12 +5962,15 @@ procedure SETUP-FOOD:[]{-TP-}:
          L5
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupfood_if_4.validDouble (D)D
          L6
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetupfood_if_4.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.protractor ()Lorg/nlogo/agent/Protractor;
@@ -5941,6 +5980,7 @@ procedure SETUP-FOOD:[]{-TP-}:
           DLOAD 4
           ICONST_1
           INVOKEVIRTUAL org/nlogo/agent/Protractor.distance (Lorg/nlogo/api/Agent;DDZ)D
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupfood_if_4.validDouble (D)D
          L7
           LDC 5.0
          L8
@@ -6094,9 +6134,11 @@ procedure SETUP-FOOD:[]{-TP-}:
          L5
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupfood_setpatchvariable_7.validDouble (D)D
          L6
           DSTORE 2
           NEW java/lang/Double
