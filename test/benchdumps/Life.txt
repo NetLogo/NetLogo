@@ -678,12 +678,14 @@ procedure SETUP-RANDOM:[]{O---}:
           DCONST_1
          L1
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
           INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextDouble ()D
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetuprandom_ifelse_1.validDouble (D)D
          L2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;

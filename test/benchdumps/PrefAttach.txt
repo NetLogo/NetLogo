@@ -931,12 +931,14 @@ procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindpartner_setprocedurevariable_0.validDouble (D)D
          L7
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
           INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextDouble ()D
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindpartner_setprocedurevariable_0.validDouble (D)D
          L8
           DSTORE 2
           NEW java/lang/Double
@@ -1306,9 +1308,11 @@ procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
          L8
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindpartner_setprocedurevariable_11.validDouble (D)D
          L9
           DSTORE 2
           NEW java/lang/Double

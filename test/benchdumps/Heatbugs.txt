@@ -335,15 +335,19 @@ procedure RECOLOR-PATCHES:[]{OTPL}:
          L14
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerecolorpatches_setpatchvariable_1.validDouble (D)D
          L15
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerecolorpatches_setpatchvariable_1.validDouble (D)D
          L16
           DSTORE 2
           NEW java/lang/Double
@@ -842,9 +846,11 @@ procedure STEP:[TARGET]{-T--}:
          L15
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurestep_setturtlevariable_0.validDouble (D)D
          L16
           DSTORE 2
           DLOAD 2
@@ -1022,9 +1028,11 @@ procedure STEP:[TARGET]{-T--}:
          L15
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurestep_setpatchvariable_2.validDouble (D)D
          L16
           DSTORE 2
           NEW java/lang/Double
@@ -1313,9 +1321,11 @@ procedure STEP:[TARGET]{-T--}:
          L15
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurestep_setpatchvariable_7.validDouble (D)D
          L16
           DSTORE 2
           NEW java/lang/Double
@@ -1541,9 +1551,11 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
          L5
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebugmove_setprocedurevariable_6.validDouble (D)D
          L6
           DSTORE 2
           NEW java/lang/Double
@@ -2097,9 +2109,11 @@ procedure SETUP:[]{O---}:
          L15
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setturtlevariable_6.validDouble (D)D
          L16
           DSTORE 2
           DLOAD 2
@@ -2165,9 +2179,11 @@ procedure SETUP:[]{O---}:
          L23
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setturtlevariable_6.validDouble (D)D
          L25
           DSTORE 2
           NEW java/lang/Double
@@ -2283,9 +2299,11 @@ procedure SETUP:[]{O---}:
          L15
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setturtlevariable_7.validDouble (D)D
          L16
           DSTORE 2
           DLOAD 2
@@ -2351,9 +2369,11 @@ procedure SETUP:[]{O---}:
          L23
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setturtlevariable_7.validDouble (D)D
          L25
           DSTORE 2
           NEW java/lang/Double
@@ -2468,9 +2488,11 @@ procedure SETUP:[]{O---}:
          L15
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setturtlevariable_8.validDouble (D)D
          L16
           DSTORE 2
           DLOAD 2

@@ -283,9 +283,11 @@ procedure SETUP:[]{O---}:
          L8
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setpatchvariable_1.validDouble (D)D
          L9
           DSTORE 2
           ALOAD 0
@@ -1653,9 +1655,11 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L16
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DDIV
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindnewstate_setpatchvariable_8.validDouble (D)D
          L17
           DSTORE 2
           ALOAD 0
@@ -1726,9 +1730,11 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L23
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DDIV
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindnewstate_setpatchvariable_8.validDouble (D)D
          L24
           DSTORE 2
           ALOAD 0
@@ -1738,9 +1744,11 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
          L25
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindnewstate_setpatchvariable_8.validDouble (D)D
          L26
           DSTORE 2
           NEW java/lang/Double
@@ -1893,9 +1901,11 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
          L12
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindnewstate_setprocedurevariable_10.validDouble (D)D
          L13
           DSTORE 2
           NEW java/lang/Double
@@ -2005,17 +2015,21 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
          L17
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindnewstate_setpatchvariable_11.validDouble (D)D
          L18
           DCONST_1
          L19
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindnewstate_setpatchvariable_11.validDouble (D)D
          L20
           DSTORE 4
           DSTORE 2
@@ -2033,9 +2047,11 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L21
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DDIV
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindnewstate_setpatchvariable_11.validDouble (D)D
          L22
           DSTORE 2
           ALOAD 0
@@ -2068,9 +2084,11 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
          L25
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindnewstate_setpatchvariable_11.validDouble (D)D
          L26
           DSTORE 2
           NEW java/lang/Double
