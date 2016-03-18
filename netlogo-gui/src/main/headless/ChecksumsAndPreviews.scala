@@ -25,6 +25,8 @@ object ChecksumsAndPreviews {
       val library =
         ModelsLibrary.getModelPaths(true)
           .filter(fn)
+          .map(p => p.substring(p.indexOf(ModelsLibrary.modelsRoot)))
+          .distinct
           .toList
       if (includeBenchmarks)
         benchmarks ::: library
