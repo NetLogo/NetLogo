@@ -405,14 +405,21 @@ public strictfp class EditorArea<TokenType>
 
   private void doPopup(java.awt.event.MouseEvent e) {
     javax.swing.JPopupMenu menu = new javax.swing.JPopupMenu();
-    menu.add(new javax.swing.JMenuItem(Actions.COPY_ACTION()));
+    javax.swing.JMenuItem copyItem = new javax.swing.JMenuItem(Actions.COPY_ACTION());
+    menu.add(copyItem);
     Actions.COPY_ACTION().putValue(javax.swing.Action.NAME, i18n.apply("menu.edit.copy"));
-    menu.add(new javax.swing.JMenuItem(Actions.CUT_ACTION()));
+    javax.swing.JMenuItem cutItem = new javax.swing.JMenuItem(Actions.CUT_ACTION());
+    menu.add(cutItem);
     Actions.CUT_ACTION().putValue(javax.swing.Action.NAME, i18n.apply("menu.edit.cut"));
-    menu.add(new javax.swing.JMenuItem(Actions.PASTE_ACTION()));
+    javax.swing.JMenuItem pasteItem = new javax.swing.JMenuItem(Actions.PASTE_ACTION());
+    menu.add(pasteItem);
     Actions.PASTE_ACTION().putValue(javax.swing.Action.NAME, i18n.apply("menu.edit.paste"));
     menu.addSeparator();
     menu.add(new javax.swing.JMenuItem(Actions.mouseQuickHelpAction(colorizer, i18n)));
+    boolean isTextSelected = getSelectedText() != null && (getSelectedText().length() > 0);
+    copyItem.setEnabled(isTextSelected);
+    cutItem.setEnabled(isTextSelected);
+    pasteItem.setEnabled(java.awt.Toolkit.getDefaultToolkit().getSystemClipboard().isDataFlavorAvailable(java.awt.datatransfer.DataFlavor.stringFlavor));
     menu.show(this, e.getX(), e.getY());
   }
 

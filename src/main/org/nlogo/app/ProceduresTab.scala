@@ -150,4 +150,7 @@ class ProceduresTab(val workspace: AbstractWorkspace) extends JPanel
     if(isSmart) text.setIndenter(new SmartIndenter(new EditorAreaWrapper(text), workspace))
     else text.setIndenter(new org.nlogo.editor.DumbIndenter(text))
   }
+  def isTextSelected(): Boolean = {
+    text.getSelectedText() != null && !text.getSelectedText().isEmpty()
+  }
 }
