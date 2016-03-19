@@ -122,6 +122,10 @@ public final strictfp class FileDialog {
           != javax.swing.JFileChooser.APPROVE_OPTION) {
         throw new org.nlogo.awt.UserCancelException();
       }
+      if(mode == java.awt.FileDialog.LOAD && !new java.io.File(chooser.getSelectedFile().getAbsolutePath()).exists()){
+        currentDirectory = chooser.getSelectedFile().getAbsolutePath();
+        return show(parentFrame, title, mode, directoriesOnly, currentDirectory);
+      }
       currentDirectory = selectedDirectory(chooser);
       return chooser.getSelectedFile().getAbsolutePath();
     }
@@ -138,6 +142,9 @@ public final strictfp class FileDialog {
       throw new org.nlogo.awt.UserCancelException();
     }
     currentDirectory = dialog.getDirectory();
+    if(mode == java.awt.FileDialog.LOAD && !new java.io.File(currentDirectory + dialog.getFile()).exists()){
+      return show(parentFrame, title, mode, directoriesOnly, dialog.getFile());
+    }  
     if (directoriesOnly) {
       return currentDirectory;
     }
