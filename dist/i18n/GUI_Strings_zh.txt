@@ -1,18 +1,18 @@
 # COMMON
 
-common.observer = 观察员
+common.observer = 观察者
 common.turtle = 海龟
-common.patch = 网格
-common.link = 连接
+common.patch = 嵌块
+common.link = 链接
 common.turtles = 海龟集
-common.patches = 网格集
-common.links = 连接集
+common.patches = 嵌块集
+common.links = 链接集
 
 common.buttons.ok = 确定
 common.buttons.cancel = 取消
 common.buttons.apply = 应用
 common.buttons.help = 帮助
-common.buttons.quit = 退出
+common.buttons.quit = 取消
 common.buttons.exit = 退出
 common.buttons.continue = 继续
 common.buttons.save = 保存
@@ -27,26 +27,33 @@ common.messages.warning = 警告
 
 menu.file = 文件
 menu.file.new = 新建
-menu.file.open = 打开...
+menu.file.open = 打开…
 menu.file.modelsLibrary = 模型库
 menu.file.save = 保存
-menu.file.saveAs = 另存为...
-menu.file.saveAsApplet = 另存为Applet (deprecated)...
-menu.file.saveClientAsApplet = 客户端另存为Applet (deprecated)...
-menu.file.print = 打印...
+menu.file.saveAs = 另存为…
+menu.file.saveAsApplet = 另存为小应用程序（已弃用）…
+menu.file.saveAsNetLogoWeb = 另存为NetLogo网页版…
+menu.file.nlw.prompt.fromSave = 从上次的存档
+menu.file.nlw.prompt.fromLibrary = 从模型库
+menu.file.nlw.prompt.fromCurrentCopy = 从当前的副本
+menu.file.nlw.prompt.title = 选择导出来源
+menu.file.nlw.prompt.message.fromSave = 从上次的存档还是当前打开的副本导出模型？
+menu.file.nlw.prompt.message.fromLibrary = 从模型库还是当前打开的副本导出模型？
+menu.file.saveClientAsApplet = 将客户端另存为小应用程序（已弃用）…
+menu.file.print = 打印…
 menu.file.export = 导出
-menu.file.export.world = 导出世界...
-menu.file.export.plot = 导出当前绘图的数据...
-menu.file.export.allPlots = 导出所有绘图的数据...
-menu.file.export.view = 导出当前视图...
-menu.file.export.interface = 导出界面...
-menu.file.export.output = 导出输出结果...
+menu.file.export.world = 导出世界…
+menu.file.export.plot = 导出绘图数据…
+menu.file.export.allPlots = 导出全部绘图数据…
+menu.file.export.view = 导出视图…
+menu.file.export.interface = 导出界面…
+menu.file.export.output = 导出输出结果…
 menu.file.import = 导入
-menu.file.import.world = 导入世界...
-menu.file.import.patchColors = 导入网格颜色...
-menu.file.import.patchColorsRGB = 导入网格RGB颜色...
-menu.file.import.drawing = 导入图片...
-menu.file.import.hubNetClientInterface = 导入HubNet客户端界面...
+menu.file.import.world = 导入世界…
+menu.file.import.patchColors = 导入嵌块颜色…
+menu.file.import.patchColorsRGB = 导入RGB嵌块颜色…
+menu.file.import.drawing = 导入图片…
+menu.file.import.hubNetClientInterface = 导入HubNet客户端界面…
 menu.file.quit = 退出
 
 menu.edit = 编辑
@@ -54,162 +61,166 @@ menu.edit.cut = 剪切
 menu.edit.copy = 复制
 menu.edit.paste = 粘贴
 menu.edit.delete = 删除
-menu.edit.undo = 撤消
+menu.edit.undo = 撤销
 menu.edit.redo = 重做
 menu.edit.selectAll = 全选
-menu.edit.find = 查找...
+menu.edit.find = 查找…
 menu.edit.findNext = 查找下一个
-menu.edit.shiftLeft = 减少缩进
-menu.edit.shiftRight = 增加缩进
+menu.edit.shiftLeft = 左移
+menu.edit.shiftRight = 右移
+menu.edit.format = 格式
 menu.edit.comment = 添加注释
 menu.edit.uncomment = 取消注释
-menu.edit.snapToGrid = 对齐网格
+menu.edit.snapToGrid = 锁定物件至网格
 
 menu.tools = 工具
 menu.tools.halt = 停止
 menu.tools.globalsMonitor = 全局变量监视器
 menu.tools.turtleMonitor = 海龟监视器
-menu.tools.patchMonitor = 网格监视器
-menu.tools.linkMonitor = 连接监视器
-menu.tools.closeAllAgentMonitors = 关闭所有监视器
-menu.tools.hideCommandCenter = 隐藏指令中心
-menu.tools.showCommandCenter = 显示指令中心
+menu.tools.patchMonitor = 嵌块监视器
+menu.tools.linkMonitor = 链接监视器
+menu.tools.closeAllAgentMonitors = 关闭所有主体监视器
+menu.tools.closeDeadAgentMonitors = 不再监视已失效的主体
+menu.tools.hideCommandCenter = 隐藏命令中心
+menu.tools.showCommandCenter = 显示命令中心
 menu.tools.3DView = 3D视图
-menu.tools.colorSwatches = 色板
+menu.tools.colorSwatches = 颜色样块
 menu.tools.turtleShapesEditor = 海龟形状编辑器
-menu.tools.linkShapesEditor = 连接形状编辑器
+menu.tools.linkShapesEditor = 链接形状编辑器
 menu.tools.behaviorSpace = 行为空间
-menu.tools.systemDynamicsModeler = 系统动态模拟器
+menu.tools.systemDynamicsModeler = 系统动力学建模工具
 menu.tools.hubNetClientEditor = HubNet客户端编辑器
 menu.tools.hubNetControlCenter = HubNet控制中心
 
 menu.zoom = 缩放
 menu.zoom.larger = 放大
-menu.zoom.normalSize = 正常尺寸
+menu.zoom.normalSize = 正常大小
 menu.zoom.smaller = 缩小
 
 menu.tabs = 标签页
 
 menu.help = 帮助
-menu.help.lookUpInDictionary(F1) = 查看辞典(F1)
+menu.help.lookUpInDictionary(F1) = 在词典中查找（F1）
 menu.help.netLogoUserManual = NetLogo用户手册
-menu.help.netLogoDictionary = NetLogo辞典
+menu.help.netLogoDictionary = NetLogo词典
 menu.help.netLogoUsersGroup = NetLogo用户组
+menu.help.netLogoStackOverflow = NetLogo问答 - Stack Overflow
+menu.help.introToABM = Introduction to Agent-Based Modeling
 menu.help.donate = 捐赠
 
 tabs.run = 界面
 tabs.run.editButton = 编辑
-tabs.run.editButton.tooltip = 编辑选中的界面组件
+tabs.run.editButton.tooltip = 编辑选中的界面物件
 tabs.run.deleteButton = 删除
-tabs.run.deleteButton.tooltip = 删除选中的界面组件
+tabs.run.deleteButton.tooltip = 删除选中的界面物件
 tabs.run.addButton = 添加
-tabs.run.addButton.tooltip = 添加新的界面组件
-tabs.run.settingsButton = 设置...
-tabs.run.settingsButton.tooltip = 编辑模型参数
-tabs.run.viewUpdates.checkbox = 更新视图
+tabs.run.addButton.tooltip = 添加新的界面物件
+tabs.run.settingsButton = 设置…
+tabs.run.settingsButton.tooltip = 编辑模型设置
+tabs.run.viewUpdates.checkbox = 视图更新方式
 tabs.run.viewUpdates.checkbox.tooltip = 冻结或解冻视图
-tabs.run.viewUpdates.dropdown.onticks = 每时间步更新
+tabs.run.viewUpdates.dropdown.onticks = 按时间步更新
 tabs.run.viewUpdates.dropdown.continuous = 连续更新
-tabs.run.viewUpdates.dropdown.tooltip = 设置视图更新方式
+tabs.run.viewUpdates.dropdown.tooltip = 更改视图更新方式
 
 tabs.run.speedslider.normalspeed = 正常速度
-tabs.run.speedslider.faster = 快速
-tabs.run.speedslider.slower = 慢速
+tabs.run.speedslider.faster = 较快
+tabs.run.speedslider.slower = 较慢
 
 tabs.run.widgets.button = 按钮
-tabs.run.widgets.slider = 滑动条
+tabs.run.widgets.slider = 滑块
 tabs.run.widgets.switch = 开关
-tabs.run.widgets.chooser = 选择框
+tabs.run.widgets.chooser = 选择器
 tabs.run.widgets.input = 输入框
-tabs.run.widgets.monitor = 数据监视器
-tabs.run.widgets.plot = 绘图
-tabs.run.widgets.output = 输出框
-tabs.run.widgets.note = 笔记
+tabs.run.widgets.monitor = 监视器
+tabs.run.widgets.plot = 图
+tabs.run.widgets.output = 输出区
+tabs.run.widgets.note = 注释
 tabs.run.widgets.view = 视图
-tabs.run.widgets.tooltip = 选择要添加的界面组件类型
+tabs.run.widgets.tooltip = 选择要添加的界面物件类型
 
-tabs.run.commandcenter = 指令中心
+tabs.run.commandcenter = 命令中心
 tabs.run.commandcenter.clearButton = 清空
-tabs.run.commandcenter.nohistory = 无历史指令
-tabs.run.commandcenter.orusetabkey = 或使用Tab键
-tabs.run.commandcenter.exporting = 导出
-tabs.run.commandcenter.history = 历史
-tabs.run.commandcenter.useArrowKeys = 或使用向上/向下的方向键
-tabs.run.commandcenter.clearHistory = 清空历史
+tabs.run.commandcenter.nohistory = 无历史记录
+tabs.run.commandcenter.orusetabkey = 亦可使用Tab键
+tabs.run.commandcenter.exporting = 导出中
+tabs.run.commandcenter.history = 历史记录
+tabs.run.commandcenter.useArrowKeys = 亦可使用上下键
+tabs.run.commandcenter.clearHistory = 清空历史记录
 
-tabs.info = 说明
+tabs.info = 信息
 tabs.info.edit = 编辑
 tabs.info.help = 帮助
 
-tabs.code = 程序
-tabs.code.rightclick.quickhelp = 快捷帮助
+tabs.code = 代码
+tabs.code.rightclick.quickhelp = 快速帮助
 tabs.code.checkButton = 检查
-tabs.code.procedures = 函数
-tabs.code.procedures.none = 空
+tabs.code.procedures = 例程
+tabs.code.procedures.none = 无
 tabs.code.indentAutomatically = 自动缩进
 
 # find actions and dialog
 dialog.find.title = 查找
 dialog.find.find = 查找内容:
-dialog.find.replaceWith = 替换为:
+dialog.find.replaceWith = 替换为：
 dialog.find.ignoreCase = 忽略大小写
 dialog.find.wrapAround = 循环查找
-dialog.find.notFound = 找不到符合的字符串
+dialog.find.notFound = 未找到该短语
 dialog.find.next = 下一个
 dialog.find.previous = 上一个
-dialog.find.replaceAndFind = 查找和替换
+dialog.find.replaceAndFind = 查找并替换
 dialog.find.replace = 替换
-dialog.find.replaceAll = 全部替换
+dialog.find.replaceAll = 替换全部
 
 # widget editors
 
-edit.button.agents = 指令执行主体
-edit.button.forever = 循环执行
+edit.button.agents = 执行主体
+edit.button.forever = 持续执行
 edit.button.disable = 时间步开始前禁用
-edit.button.commands = 指令
-edit.button.displayName = 标题
+edit.button.commands = 命令
+edit.button.displayName = 显示名称
 edit.button.actionKey = 快捷键
 
 edit.plot.name = 名称
-edit.plot.xLabel = X 轴标题
-edit.plot.xmin = X 最小值
-edit.plot.xmax = X 最大值
-edit.plot.yLabel = Y 轴标题
-edit.plot.ymin = Y 最小值
-edit.plot.ymax = Y 最大值
-edit.plot.autoScale = 自动比例?
-edit.plot.showLegend = 显示图例?
-edit.plot.setupCode = 绘图初始化指令
-edit.plot.updateCode = 绘图更新指令
-edit.plot.pen.plotPens = 绘图画笔
+edit.plot.xLabel = X轴标记
+edit.plot.xmin = X最小值
+edit.plot.xmax = X最大值
+edit.plot.yLabel = Y轴标记
+edit.plot.ymin = Y最小值
+edit.plot.ymax = Y最大值
+edit.plot.autoScale = 自动调整尺度？
+edit.plot.showLegend = 显示图例？
+edit.plot.setupCode = 绘图setup命令
+edit.plot.updateCode = 绘图更新命令
+edit.plot.pen.plotPens = 绘图笔
 edit.plot.pen.color = 颜色
-edit.plot.pen.name = 画笔名称
-edit.plot.pen.add = 添加画笔
-edit.plot.pen.editing = 编辑:
-edit.plot.pen.advanced = 画笔高级选项
-edit.plot.pen.mode = 类型
-edit.plot.pen.mode.line = 线
-edit.plot.pen.mode.bar = 柱
-edit.plot.pen.mode.point = 点
-edit.plot.pen.interval = X 绘图间隔
+edit.plot.pen.name = 绘图笔名称
+edit.plot.pen.add = 添加绘图笔
+edit.plot.pen.editing = 编辑：
+edit.plot.pen.advanced = 绘图笔高级选项
+edit.plot.pen.mode = 模式
+edit.plot.pen.mode.line = 线形
+edit.plot.pen.mode.bar = 条形
+edit.plot.pen.mode.point = 点状
+edit.plot.pen.interval = 区间
 edit.plot.pen.showInLegend = 在图例中显示
-edit.plot.pen.setupCommands = 画笔初始化指令
-edit.plot.pen.updateCommands = 画笔更新指令
+edit.plot.pen.setupCommands = 绘图笔setup命令
+edit.plot.pen.updateCommands = 绘图笔更新命令
 
 edit.chooser.globalVar = 全局变量
-edit.chooser.choices = 选项
+edit.chooser.choices = 选择
 
 edit.slider.globalVar = 全局变量
 edit.slider.minimum = 最小值
-edit.slider.increment = 步长
+edit.slider.increment = 增量
 edit.slider.maximum = 最大值
 edit.slider.value = 值
-edit.slider.units = 单位 (可选)
-edit.slider.vertical = 垂直?
+edit.slider.units = 单位（可选）
+edit.slider.vertical = 竖直？
 
-edit.monitor.reporter = Reporter(有返回值的函数)
-edit.monitor.name = 标题
-edit.monitor.decimalPlaces = 小数点位置
+edit.monitor.reporter = 报告器
+edit.monitor.name = 显示名称
+edit.monitor.decimalPlaces = 小数位
 edit.monitor.fontSize = 字体大小
 
 edit.output.fontSize = 字体大小
@@ -218,11 +229,11 @@ edit.input.globalVar = 全局变量
 edit.input.type = 类型
 edit.input.type.number = 数值
 edit.input.type.string = 字符串
-edit.input.type.string.reporter = 字符串 (reporter,有返回值的函数)
-edit.input.type.string.commands = 字符串 (commands,无返回值的函数)
+edit.input.type.string.reporter = 字符串 (报告器)
+edit.input.type.string.commands = 字符串（命令）
 edit.input.type.color = 颜色
 
-edit.text.text = 文本
+edit.text.text = 文字
 edit.text.fontSize = 字体大小
 edit.text.transparency = 透明背景
 edit.text.color = 文字颜色
@@ -232,105 +243,105 @@ edit.switch.globalVar = 全局变量
 edit.viewSettings.world = 世界
 edit.viewSettings.view = 视图
 edit.viewSettings.tickCounter = 时间步计数器
-edit.viewSettings.origin.location = 原点位置:
+edit.viewSettings.origin.location = 原点位置：
 
 edit.viewSettings.origin.location.center = 中心
 edit.viewSettings.origin.location.corner = 角
 edit.viewSettings.origin.location.edge = 边
 edit.viewSettings.origin.location.custom = 自定义
 
-edit.viewSettings.origin.location.corner.bottomLeft = 左下角
-edit.viewSettings.origin.location.corner.topLeft = 左上角
-edit.viewSettings.origin.location.corner.topRight = 右上角
-edit.viewSettings.origin.location.corner.bottomRight = 右下角
+edit.viewSettings.origin.location.corner.bottomLeft = 左下
+edit.viewSettings.origin.location.corner.topLeft = 左上
+edit.viewSettings.origin.location.corner.topRight = 右上
+edit.viewSettings.origin.location.corner.bottomRight = 右下
 
-edit.viewSettings.origin.location.edge.bottom = 底
-edit.viewSettings.origin.location.edge.top = 顶
-edit.viewSettings.origin.location.edge.right = 右
-edit.viewSettings.origin.location.edge.left = 左
+edit.viewSettings.origin.location.edge.bottom = 底部
+edit.viewSettings.origin.location.edge.top = 顶部
+edit.viewSettings.origin.location.edge.right = 右侧
+edit.viewSettings.origin.location.edge.left = 左侧
 
-edit.viewSettings.3D.origin.location.corner.bottomSouthwest = 底 西南
-edit.viewSettings.3D.origin.location.corner.bottomNorthwest = 底 西北
-edit.viewSettings.3D.origin.location.corner.bottomNortheast = 底 东北
-edit.viewSettings.3D.origin.location.corner.bottomSoutheast = 底 东南
-edit.viewSettings.3D.origin.location.corner.topSouthwest = 顶 西南
-edit.viewSettings.3D.origin.location.corner.topNorthwest = 顶 西北
-edit.viewSettings.3D.origin.location.corner.topNortheast = 顶 东北
-edit.viewSettings.3D.origin.location.corner.topSoutheast = 顶 东南
+edit.viewSettings.3D.origin.location.corner.bottomSouthwest = 底部 西南
+edit.viewSettings.3D.origin.location.corner.bottomNorthwest = 底部 西北
+edit.viewSettings.3D.origin.location.corner.bottomNortheast = 底部 东北
+edit.viewSettings.3D.origin.location.corner.bottomSoutheast = 底部 东南
+edit.viewSettings.3D.origin.location.corner.topSouthwest = 顶部 西南
+edit.viewSettings.3D.origin.location.corner.topNorthwest = 顶部 西北
+edit.viewSettings.3D.origin.location.corner.topNortheast = 顶部 东北
+edit.viewSettings.3D.origin.location.corner.topSoutheast = 顶部 东南
 
-edit.viewSettings.3D.origin.location.edge.south = 南
-edit.viewSettings.3D.origin.location.edge.north = 北
-edit.viewSettings.3D.origin.location.edge.east = 东
-edit.viewSettings.3D.origin.location.edge.west = 西
-edit.viewSettings.3D.origin.location.edge.bottom = 底
-edit.viewSettings.3D.origin.location.edge.top = 顶
+edit.viewSettings.3D.origin.location.edge.south = 南面
+edit.viewSettings.3D.origin.location.edge.north = 北面
+edit.viewSettings.3D.origin.location.edge.east = 东面
+edit.viewSettings.3D.origin.location.edge.west = 西面
+edit.viewSettings.3D.origin.location.edge.bottom = 底部
+edit.viewSettings.3D.origin.location.edge.top = 顶部
 
 edit.viewSettings.showTickCounter = 显示时间步计数器
-edit.viewSettings.tickCounterLabel = 时间步计数器标题
+edit.viewSettings.tickCounterLabel = 时间步计数器标记
 
-edit.viewSettings.2D.patchSize = 网格尺寸
-edit.viewSettings.2D.patchSize.info = 单位：像素
+edit.viewSettings.2D.patchSize = 嵌块大小
+edit.viewSettings.2D.patchSize.info = 以像素数测算
 edit.viewSettings.2D.fontSize = 字体大小
-edit.viewSettings.2D.fontSize.info = 主体标题
-edit.viewSettings.2D.wrapX = 世界在水平方向循环
-edit.viewSettings.2D.wrapY = 世界在垂直方向循环
+edit.viewSettings.2D.fontSize.info = 用于主体标记
+edit.viewSettings.2D.wrapX = 水平方向世界回绕
+edit.viewSettings.2D.wrapY = 竖直方向世界回绕
 edit.viewSettings.2D.frameRate = 帧率
-edit.viewSettings.2D.frameRate.info = 帧/秒（正常速度）
+edit.viewSettings.2D.frameRate.info = 正常速度下每秒的帧数
 
-edit.viewSettings.2D.minPxcor = 网格的最小x坐标
-edit.viewSettings.2D.maxPxcor = 网格的最大x坐标
-edit.viewSettings.2D.minPycor = 网格的最小y坐标
-edit.viewSettings.2D.maxPycor = 网格的最大y坐标
+edit.viewSettings.2D.minPxcor = 嵌块的最小x坐标
+edit.viewSettings.2D.maxPxcor = 嵌块的最大x坐标
+edit.viewSettings.2D.minPycor = 嵌块的最小y坐标
+edit.viewSettings.2D.maxPycor = 嵌块的最大y坐标
 
-edit.viewSettings.3D.smooth = 边缘平滑 (较慢)
+edit.viewSettings.3D.smooth = 平滑边缘（较慢）
 edit.viewSettings.3D.affects = 仅在3D视图中有效
-edit.viewSettings.3D.wireFrame = 显示轮廓线
-edit.viewSettings.3D.fontSize.info = 主体标题
+edit.viewSettings.3D.wireFrame = 显示线框
+edit.viewSettings.3D.fontSize.info = 用于主体标记
 edit.viewSettings.3D.dualView = 更新2D视图
-edit.viewSettings.3D.wrapX = 世界在X方向循环 (东/西)
-edit.viewSettings.3D.wrapY = 世界在Y方向循环 (北/南)
-edit.viewSettings.3D.wrapZ = 世界在Z方向循环 (顶/底)
-edit.viewSettings.3D.minPxcor = 网格的最小x坐标
-edit.viewSettings.3D.maxPxcor = 网格的最大x坐标
-edit.viewSettings.3D.minPycor = 网格的最小y坐标
-edit.viewSettings.3D.maxPycor = 网格的最大y坐标
-edit.viewSettings.3D.minPzcor = 网格的最小z坐标
-edit.viewSettings.3D.maxPzcor = 网格的最大z坐标
+edit.viewSettings.3D.wrapX = X方向（东/西）世界回绕
+edit.viewSettings.3D.wrapY = Y方向（南/北）世界回绕
+edit.viewSettings.3D.wrapZ = Z方向（上/下）世界回绕
+edit.viewSettings.3D.minPxcor = 嵌块的最小x坐标
+edit.viewSettings.3D.maxPxcor = 嵌块的最大x坐标
+edit.viewSettings.3D.minPycor = 嵌块的最小y坐标
+edit.viewSettings.3D.maxPycor = 嵌块的最大y坐标
+edit.viewSettings.3D.minPzcor = 嵌块的最小z坐标
+edit.viewSettings.3D.maxPzcor = 嵌块的最大z坐标
 
 edit.hubnet.tag = 标签
-edit.hubnet.view.width = 宽 (像素)
-edit.hubnet.view.height = 高 (像素)
+edit.hubnet.view.width = 宽度（像素）
+edit.hubnet.view.height = 高度（像素）
 
 # tools
 
-tools.colorswatch = 色板
+tools.colorswatch = 颜色样块
 tools.colorswatch.preview = 预览
 tools.colorswatch.copy = 复制选中的颜色
-tools.colorswatch.numbers = 显示数值
-tools.colorswatch.increment = 步长
+tools.colorswatch.numbers = 数值
+tools.colorswatch.increment = 增量
 
-tools.shapesEditor.importFromModel = 从模型导入...
-tools.shapesEditor.importFromLibrary = 从库导入...
+tools.shapesEditor.importFromModel = 从模型导入…
+tools.shapesEditor.importFromLibrary = 从库导入…
 tools.shapesEditor.edit = 编辑
 tools.shapesEditor.new = 新建
 tools.shapesEditor.delete = 删除
 tools.shapesEditor.duplicate = 创建副本
-tools.shapesEditor.info = (更多形状请查看库)
-tools.shapesEditor.import.note = 从模型中导入形状
-tools.shapesEditor.import.error = 文件不包含任何形状.
+tools.shapesEditor.info = （更多形状可从库中获取）
+tools.shapesEditor.import.note = 从模型导入形状
+tools.shapesEditor.import.error = 未在文件中找到形状。
 
-tools.sdm.diagram = Diagram
-tools.sdm.stock = Stock
-tools.sdm.variable = Variable
-tools.sdm.flow = Flow
-tools.sdm.link = Link
+tools.sdm.diagram = 图表
+tools.sdm.stock = 存量
+tools.sdm.variable = 变量
+tools.sdm.flow = 流量
+tools.sdm.link = 链接
 tools.sdm.check = 检查
 tools.sdm.edit = 编辑
 tools.sdm.delete = 删除
-tools.sdm.dtNumberError = dt 必须是数值
-tools.sdm.dtZeroError = dt 必须大于0
+tools.sdm.dtNumberError = dt必须是一个数值
+tools.sdm.dtZeroError = dt必须大于0
 
-tools.behaviorSpace.experiments = 实验:
+tools.behaviorSpace.experiments = 实验：
 tools.behaviorSpace.new = 新建
 tools.behaviorSpace.edit = 编辑
 tools.behaviorSpace.duplicate = 创建副本
@@ -339,61 +350,61 @@ tools.behaviorSpace.run = 运行
 tools.behaviorSpace.close = 关闭
 
 tools.behaviorSpace.experimentName = 实验名称
-tools.behaviorSpace.vary = 实验的变量列表 (注意括号和引号):
+tools.behaviorSpace.vary = 按以下方式改变变量的值（注意括号和引号）：
 
 # this property extends across several lines, and has HTML breaks in it.
-tools.behaviorSpace.vary.info = 可以使用列表值，比如:<br>\
+tools.behaviorSpace.vary.info = 既可将要用的值列出，例如：<br>\
 ["my-slider" 1 2 7 8]<br>\
-也可以指定初值、步长和终值，比如:<br>\
-["my-slider" [0 1 10]] (注意额外的括号)<br>\
-测试变量my-slider的取值从0到10，每次加1.<br>\
-还可以改变max-pxcor, min-pxcor, max-pycor, min-pycor, random-seed的值.
+也可通过指定初值、增量和终值，例如：<br>\
+["my-slider" [0 1 10]] （注意额外的括号）<br>\
+将变量的值从0递增到10，每次加1。<br>\
+您亦可改变max-pxcor、min-pxcor、max-pycor、min-pycor、random-seed的值。
 
 tools.behaviorSpace.repetitions = 重复次数
-tools.behaviorSpace.repetitions.info = 对于每种参数组合，模型都运算多次
-tools.behaviorSpace.metrics = 实验需要测量的值:
+tools.behaviorSpace.repetitions.info = 对于每种组合，运行以上的次数
+tools.behaviorSpace.metrics = 用这些报告器测算运行结果：
 # this property has an HTML break in it.
-tools.behaviorSpace.metrics.info = 每行一个; 不要把一个测量值写到多行上去
-tools.behaviorSpace.runMetricsEveryStep = 每步计算都进行测量
-tools.behaviorSpace.runMetricsEveryStep.info = 不勾选代表每种参数组合运算结束后再进行测量
-tools.behaviorSpace.setupCommands = Setup指令:
-tools.behaviorSpace.goCommands = Go指令:
-tools.behaviorSpace.exitCondition = 停止条件:
-tools.behaviorSpace.exitCondition.info = 条件为真时停止计算
-tools.behaviorSpace.finalCommands = 结束时运行指令:
-tools.behaviorSpace.finalCommands.info = 每种参数组合运算结束后执行
+tools.behaviorSpace.metrics.info = 每行一个报告器；请勿将一个报告器分多行写
+tools.behaviorSpace.runMetricsEveryStep = 每一步都测算运行结果
+tools.behaviorSpace.runMetricsEveryStep.info = 如不勾选，运行结果将在运行完毕后进行测算
+tools.behaviorSpace.setupCommands = setup命令：
+tools.behaviorSpace.goCommands = go命令：
+tools.behaviorSpace.exitCondition = 终止条件：
+tools.behaviorSpace.exitCondition.info = 若此报告器的值为真即终止运行
+tools.behaviorSpace.finalCommands = 最终命令：
+tools.behaviorSpace.finalCommands.info = 在每次运行后执行
 tools.behaviorSpace.timeLimit = 时间限制
-tools.behaviorSpace.timeLimit.info = 在此时间步后停止 (0代表无限制)
+tools.behaviorSpace.timeLimit.info = 在此时间步后终止 (0 = 无限制)
 
 # Models Library
 
 modelsLibrary.clear = 清除
-modelsLibrary.community = 访问用户社区模型网页
+modelsLibrary.community = 前往用户社区模型网页
 modelsLibrary.open = 打开
-modelsLibrary.loading = 加载模型库...
+modelsLibrary.loading = 加载模型库…
 
 
 # CONTROL CENTER
-menu.tools.hubnetControlCenter.removedViaControlCenter = 通过控制中心移除.
+menu.tools.hubnetControlCenter.removedViaControlCenter = 已通过控制中心移除。
 menu.tools.hubnetControlCenter.kick = 踢出
 menu.tools.hubnetControlCenter.local = 本地
 menu.tools.hubnetControlCenter.reset = 重置
 menu.tools.hubnetControlCenter.clientName = 客户端名称
-menu.tools.hubnetControlCenter.clients = 客户端:
+menu.tools.hubnetControlCenter.clients = 客户端：
 menu.tools.hubnetControlCenter.dateFormat = h:mm:ss
-menu.tools.hubnetControlCenter.broadcastMessage = 广播消息
-menu.tools.hubnetControlCenter.mirrorViewOn2dClients = 在客户端镜像2D视图
-menu.tools.hubnetControlCenter.mirrorPlotsOnClients = 在客户端镜像绘图 (试验中)
-menu.tools.hubnetControlCenter.name = 名称:
-menu.tools.hubnetControlCenter.activity = 活动:
+menu.tools.hubnetControlCenter.broadcastMessage = 播送消息
+menu.tools.hubnetControlCenter.mirrorViewOn2dClients = 将2D视图镜像到客户端
+menu.tools.hubnetControlCenter.mirrorPlotsOnClients = 将图镜像到客户端（实验性功能）
+menu.tools.hubnetControlCenter.name = 会话名称：
+menu.tools.hubnetControlCenter.activity = 活动：
 menu.tools.hubnetControlCenter.unknown = 未知
-menu.tools.hubnetControlCenter.serverAddress = 服务器地址:
-menu.tools.hubnetControlCenter.portNumber = 端口:
-menu.tools.hubnetControlCenter.settings = 设置:
-menu.tools.hubnetControlCenter.messagePanel.clientJoined =  ''{0}'' 加入自: {1}.
-menu.tools.hubnetControlCenter.messagePanel.clientDisconnected = ''{0}'' 断开连接.
+menu.tools.hubnetControlCenter.serverAddress = 服务器地址：
+menu.tools.hubnetControlCenter.portNumber = 端口：
+menu.tools.hubnetControlCenter.settings = 设置：
+menu.tools.hubnetControlCenter.messagePanel.clientJoined =  ''{0}''加入自: {1}。
+menu.tools.hubnetControlCenter.messagePanel.clientDisconnected = ''{0}''已断开。
 
-view.3d.orbit = 旋转
+view.3d.orbit = 环绕
 view.3d.zoom = 缩放
 view.3d.move = 移动
 view.3d.interact = 交互
@@ -402,4 +413,4 @@ view.3d.riding = 骑乘
 view.3d.following = 跟随
 view.3d.fullScreen = 全屏
 view.3d.resetPerspective = 重置视角
-view.3d.fullScreenWarning = 在某些系统中，全屏模式可能会导致Windows锁定.
+view.3d.fullScreenWarning = 在某些Windows系统上，全屏模式可能会导致系统锁死。
