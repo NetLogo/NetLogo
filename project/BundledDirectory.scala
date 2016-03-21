@@ -18,7 +18,7 @@ class ExtensionDir(sourceDir: File) extends BundledDirectory(sourceDir) {
   def files: Seq[File] = {
     sourceDir.listFiles.flatMap(_.listFiles)
       .filter(_.getName.endsWith(".jar"))
-      .filterNot(f => f.getName.contains("NetLogo") || f.getName.contains("scala-library") || f.getName.contains("QTJava"))
+      .filterNot(f => f.getName.contains("netlogo") || f.getName.contains("scala-library") || f.getName.contains("QTJava"))
   }
 }
 

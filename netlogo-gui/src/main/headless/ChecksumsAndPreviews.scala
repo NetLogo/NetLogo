@@ -25,7 +25,8 @@ object ChecksumsAndPreviews {
       val library =
         ModelsLibrary.getModelPaths(true)
           .filter(fn)
-          .map(p => p.substring(p.indexOf("models/")))
+          .map(p => p.substring(p.indexOf(ModelsLibrary.modelsRoot)))
+          .distinct
           .toList
       if (includeBenchmarks)
         benchmarks ::: library
@@ -155,14 +156,13 @@ object ChecksumsAndPreviews {
     }
     def getRevisionNumber(modelPath: String): String = {
       val cmds = Array("git", "log", "--pretty=format:%h",
-                       new java.io.File(modelPath).getAbsolutePath)
-      val stdInput = new java.io.BufferedReader(
-        new java.io.InputStreamReader(
-          Runtime.getRuntime().exec(cmds,
-                                    Array[String](),
-                                    new java.io.File("models"))
-          .getInputStream))
-      stdInput.readLine().trim
+        new java.io.File(modelPath).getAbsolutePath)
+      val proc =
+        Runtime.getRuntime().exec(cmds, Array[String](), new java.io.File(ModelsLibrary.modelsRoot))
+      val stdInput = new java.io.BufferedReader(new java.io.InputStreamReader(proc.getInputStream))
+      val stdError = scala.io.Source.fromInputStream(proc.getErrorStream)
+      Option(stdInput.readLine()).map(_.trim).getOrElse(
+        throw new Exception("Error fetching SHA1 of model: " + stdError.mkString))
     }
   }
 }
