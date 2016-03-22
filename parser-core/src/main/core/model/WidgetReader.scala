@@ -172,7 +172,11 @@ object ButtonReader extends BaseWidgetReader {
                         TNilBooleanLine(),  // forever?
                         ReservedLine(),
                         ReservedLine(),
-                        StringLine(),   // buttonType
+                        MapLine(List(
+                          "OBSERVER" -> AgentKind.Observer,
+                          "PATCH"    -> AgentKind.Patch,
+                          "TURTLE"   -> AgentKind.Turtle,
+                          "LINK"     -> AgentKind.Link)), // buttonKind
                         ReservedLine(),
                         StringLine(),  // actionkey
                         ReservedLine(),
@@ -180,13 +184,13 @@ object ButtonReader extends BaseWidgetReader {
                         IntLine()  // Enabled before ticks start implemented as an int
                       )
   def asList(button: Button) = List((), button.left, button.top, button.right, button.bottom, button.display,
-                                    button.source, button.forever, (), (), button.buttonType, (), button.actionKey,
+                                    button.source, button.forever, (), (), button.buttonKind, (), button.actionKey,
                                     (), (), if(button.disableUntilTicksStart) 0 else 1)
   def asWidget(vals: List[Any]): Button = {
     val List(_, left: Int, top: Int, right: Int, bottom: Int, rawDisplay: Option[String] @unchecked,
-      source: String, forever: Boolean, _, _, buttonType: String, _, actionKey: String, _, _,
+      source: String, forever: Boolean, _, _, buttonKind: AgentKind, _, actionKey: String, _, _,
       enabledBeforeTicks: Int) = vals
-    Button(rawDisplay, left, top, right, bottom, source, forever, buttonType, actionKey, enabledBeforeTicks == 0)
+    Button(rawDisplay, left, top, right, bottom, source, forever, buttonKind, actionKey, enabledBeforeTicks == 0)
   }
 }
 

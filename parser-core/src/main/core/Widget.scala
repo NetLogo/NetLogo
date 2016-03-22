@@ -28,17 +28,9 @@ sealed trait DeclaresGlobalCommand {
   def command: String = "set " + varName + " " + asNetLogoString(default)
 }
 case class Button(display: Option[String], left: Int, top: Int, right: Int, bottom: Int,
-             source: String, forever: Boolean, buttonType: String = "OBSERVER",
+             source: String, forever: Boolean, buttonKind: AgentKind = AgentKind.Observer,
              actionKey: String = "NIL", disableUntilTicksStart: Boolean = false)
-extends Widget {
-  def agentKind: AgentKind = buttonType match {
-    case "OBSERVER" => AgentKind.Observer
-    case "PATCH"    => AgentKind.Patch
-    case "TURTLE"   => AgentKind.Turtle
-    case "LINK"     => AgentKind.Link
-    case invalid    => throw new Exception("Invalid button type: " + invalid)
-  }
-}
+extends Widget
 
 case class Plot(display: String, left: Int = 0, top: Int = 0, right: Int = 5, bottom: Int = 5,
              xAxis: String = "", yAxis: String = "", xmin: Double = 0, xmax: Double = 0, ymin: Double = 0, ymax: Double = 0,

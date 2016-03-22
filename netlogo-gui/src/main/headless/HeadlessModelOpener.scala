@@ -128,7 +128,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     val errors = ws.plotManager.compileAllPlots()
     if(errors.nonEmpty) throw errors(0)
     for (button <- buttons)
-      try ws.compileCommands(button.source, button.agentKind)
+      try ws.compileCommands(button.source, button.buttonKind)
       catch {
         case ex: CompilerException =>
           println("compiling: \"" + button + "\"")

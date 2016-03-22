@@ -2,7 +2,7 @@
 
 package org.nlogo.core
 
-sealed trait AgentKind {
+sealed trait AgentKind extends Product with Serializable {
   def mortal: Boolean
 }
 
