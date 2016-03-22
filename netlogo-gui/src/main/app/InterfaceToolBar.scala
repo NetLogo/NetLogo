@@ -69,8 +69,8 @@ class InterfaceToolBar(wPanel: WidgetPanel,
 
   def handle(e: org.nlogo.window.Events.EditWidgetEvent) {
     // this is to support the "Edit..." button in the view control strip - ST 7/18/03
-    val targetOption = Option(e.widget).orElse{
-      if(!editButton.isEnabled) return
+    val targetOption = Option(e.widget).orElse {
+      if (!editButton.isEnabled) return
       editTarget
     }.filter(wPanel.contains)
     for(target <- targetOption) {

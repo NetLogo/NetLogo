@@ -171,6 +171,10 @@ dialog.find.replaceAndFind = Replace & Find
 dialog.find.replace = Replace
 dialog.find.replaceAll = Replace All
 
+# interface dialogs and modals
+dialog.interface.export.file = Export Interface
+dialog.interface.export.task = Exporting...
+
 # widget editors
 
 edit.button.agents = Agent(s)

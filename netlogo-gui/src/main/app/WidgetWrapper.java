@@ -446,7 +446,7 @@ public strictfp class WidgetWrapper
       default:
         throw new IllegalStateException();
     }
-    if (interfacePanel.workspace.snapOn() && !interfacePanel.isZoomed()) {
+    if (interfacePanel.workspace().snapOn() && !interfacePanel.isZoomed()) {
       enforceGridSnapSize(bounds);
     }
     enforceMinimumSize(bounds);
@@ -455,7 +455,7 @@ public strictfp class WidgetWrapper
   }
 
   public int gridSnap() {
-    return interfacePanel.workspace.snapOn() ? WidgetPanel.GRID_SNAP : 1;
+    return interfacePanel.workspace().snapOn() ? WidgetPanel.GridSnap() : 1;
   }
 
   public void mouseMoved(java.awt.event.MouseEvent e) {
@@ -765,8 +765,8 @@ public strictfp class WidgetWrapper
 
   private void enforceGridSnapSize(java.awt.Rectangle r) {
     if (widget() != null) {
-      int newWidth = (r.width / WidgetPanel.GRID_SNAP) * WidgetPanel.GRID_SNAP;
-      int newHeight = (r.height / WidgetPanel.GRID_SNAP) * WidgetPanel.GRID_SNAP;
+      int newWidth = (r.width / WidgetPanel.GridSnap()) * WidgetPanel.GridSnap();
+      int newHeight = (r.height / WidgetPanel.GridSnap()) * WidgetPanel.GridSnap();
 
       switch (mouseMode()) {
         case S:
