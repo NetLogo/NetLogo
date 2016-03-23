@@ -128,7 +128,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       "log4j" % "log4j" % "1.2.16",
       "javax.media" % "jmf" % "2.1.1e",
       "org.pegdown" % "pegdown" % "1.5.0",
-      "org.parboiled" % "parboiled-java" % "1.0.2",
+      "org.parboiled" %% "parboiled-scala" % "1.1.7",
       "org.jhotdraw" % "jhotdraw" % "6.0b1"      from cclArtifacts("jhotdraw-6.0b1.jar"),
       "ch.randelshofer" % "quaqua" % "9.1"       from cclArtifacts("quaqua-9.1.jar"),
       "ch.randelshofer" % "swing-layout" % "9.1" from cclArtifacts("swing-layout-9.1.jar"),

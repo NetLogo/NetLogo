@@ -6,7 +6,8 @@ import org.nlogo.agent.{BooleanConstraint, ChooserConstraint, InputBoxConstraint
 import org.nlogo.api.{ FileIO, LogoException, ModelReader, ModelSection,
                         NetLogoLegacyDialect, NetLogoThreeDDialect, SourceOwner, ValueConstraint, Version}
 import org.nlogo.core.ShapeParser.{ parseVectorShapes, parseLinkShapes }
-import org.nlogo.core.{ Button, CompilerException, ConstraintSpecification, LogoList, Model, Monitor, Program }
+import org.nlogo.core.{ Button, CompilerException, ConstraintSpecification, LogoList, Model, Monitor, Program, model => coremodel },
+  coremodel.WidgetReader
 import org.nlogo.plot.PlotLoader
 import org.nlogo.core.Shape.{ LinkShape => CoreLinkShape, VectorShape => CoreVectorShape }
 import org.nlogo.shape.{LinkShape, VectorShape}
@@ -40,7 +41,10 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
 
     // this is UGLY. I'm only doing it here because once you start to mess
     // with world loading, you go down quite a rabbit hole
-    ws.loadWorld(org.nlogo.core.model.WidgetReader.format(model.view, null).lines.toArray, netLogoVersion, ws)
+    val additionalReaders =
+      if (Version.is3D) Map[String, WidgetReader]("GRAPHICS-WINDOW" -> org.nlogo.workspace.ThreeDViewReader)
+      else Map[String, WidgetReader]()
+    ws.loadWorld(org.nlogo.core.model.WidgetReader.format(model.view, null, additionalReaders).lines.toArray, netLogoVersion, ws)
 
     for (plot <- model.plots)
       PlotLoader.loadPlot(plot, ws.plotManager.newPlot(""), identity)

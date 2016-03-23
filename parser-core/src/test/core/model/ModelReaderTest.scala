@@ -11,7 +11,7 @@ class ModelReaderTest extends FunSuite {
     import org.nlogo.core.Model
     val slider = Slider(display = "xs", varName = "x")
     val model = Model(widgets = List(slider, View()))
-    val parsedModel = ModelReader.parseModel(ModelReader.formatModel(model, null), null)
+    val parsedModel = ModelReader.parseModel(ModelReader.formatModel(model, null), null, Seq())
     assertResult(model.widgets)(parsedModel.widgets)
   }
 }

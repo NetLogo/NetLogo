@@ -12,7 +12,7 @@ import org.nlogo.api.{ Version, RendererInterface,
                        ModelReader, LogoException, SimpleJobOwner,
                        HubNetInterface, CommandRunnable, ReporterRunnable }
 import org.nlogo.core.{ AgentKind, CompilerException, Model, UpdateMode, WorldDimensions, model => coremodel },
-  coremodel.{ ModelReader => CoreModelReader }
+  coremodel.{ ModelReader => CoreModelReader, WidgetReader }
 import org.nlogo.agent.{ World, World3D }
 import org.nlogo.nvm.{ LabInterface,
                        Workspace, DefaultCompilerServices, CompilerInterface }
@@ -534,7 +534,10 @@ with org.nlogo.api.ViewSettings {
    *               in the same format as it would be stored in a file.
    */
   def openFromSource(source: String) {
-    openModel(CoreModelReader.parseModel(source, compiler.compilerUtilities))
+    val additionalReaders =
+      if (Version.is3D) Map[String, WidgetReader]("GRAPHICS-WINDOW" -> org.nlogo.workspace.ThreeDViewReader)
+      else Map[String, WidgetReader]()
+    openModel(CoreModelReader.parseModel(source, compiler.compilerUtilities, additionalReaders))
   }
 
   def openModel(model: Model): Unit = {

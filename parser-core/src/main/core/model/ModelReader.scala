@@ -10,7 +10,7 @@ object ModelReader {
 
   // This should really be changed in the future to not need a compiler to parse widgets, but that is not
   // a things for today.  FD 4/17/14
-  def parseModel(model: String, parser: LiteralParser): Model = {
+  def parseModel(model: String, parser: LiteralParser, additionalWidgetReaders: Map[String, WidgetReader]): Model = {
     var sections = Vector[Vector[String]]()
     var sectionContents = Vector[String]()
     def sectionDone() {
@@ -34,7 +34,7 @@ object ModelReader {
     val linkShapes   = ShapeParser.parseLinkShapes(linkShapeLines)
     new Model(
       code            = code.mkString("\n"),
-      widgets         = WidgetReader.readInterface(interface.toList, parser),
+      widgets         = WidgetReader.readInterface(interface.toList, parser, additionalWidgetReaders),
       info            = info.mkString("\n"),
       version         = version.head,
       turtleShapes    = turtleShapes.toList,

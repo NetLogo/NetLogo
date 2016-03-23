@@ -335,7 +335,7 @@ public final strictfp class World3D
   @Override
   public WorldDimensions getDimensions() {
     return new WorldDimensions3D
-        (_minPxcor, _maxPxcor, _minPycor, _maxPycor, _minPzcor, _maxPzcor);
+        (_minPxcor, _maxPxcor, _minPycor, _maxPycor, _minPzcor, _maxPzcor, 12.0, true, true, true);
   }
 
   @Override
@@ -357,16 +357,16 @@ public final strictfp class World3D
       throws WorldDimensionException {
     WorldDimensions3D wd = (WorldDimensions3D) d;
     if (variableName.equalsIgnoreCase("MIN-PZCOR")) {
-      return new WorldDimensions3D(wd.minPxcor(), wd.maxPxcor(), wd.minPycor(), wd.maxPycor(), value, wd.maxPzcor());
+      return new WorldDimensions3D(wd.minPxcor(), wd.maxPxcor(), wd.minPycor(), wd.maxPycor(), value, wd.maxPzcor(), 12.0, true, true, true);
     } else if (variableName.equalsIgnoreCase("MAX-PZCOR")) {
-      return new WorldDimensions3D(wd.minPxcor(), wd.maxPxcor(), wd.minPycor(), wd.maxPycor(), wd.minPzcor(), value);
+      return new WorldDimensions3D(wd.minPxcor(), wd.maxPxcor(), wd.minPycor(), wd.maxPycor(), wd.minPzcor(), value, 12.0, true, true, true);
     } else if (variableName.equalsIgnoreCase("WORLD-DEPTH")) {
       int minPzcor = growMin(wd.minPzcor(), wd.maxPzcor(), value, wd.minPzcor());
       int maxPzcor = growMax(wd.minPzcor(), wd.maxPzcor(), value, wd.maxPzcor());
-      return new WorldDimensions3D(wd.minPxcor(), wd.maxPxcor(), wd.minPycor(), wd.maxPycor(), minPzcor, maxPzcor);
+      return new WorldDimensions3D(wd.minPxcor(), wd.maxPxcor(), wd.minPycor(), wd.maxPycor(), minPzcor, maxPzcor, 12.0, true, true, true);
     } else {
       WorldDimensions newWd = super.setDimensionVariable(variableName, value, d);
-      return new WorldDimensions3D(newWd.minPxcor(), newWd.maxPxcor(), newWd.minPycor(), newWd.maxPycor(), wd.minPzcor(), wd.maxPzcor());
+      return new WorldDimensions3D(newWd.minPxcor(), newWd.maxPxcor(), newWd.minPycor(), newWd.maxPycor(), wd.minPzcor(), wd.maxPzcor(), 12.0, true, true, true);
     }
   }
 
