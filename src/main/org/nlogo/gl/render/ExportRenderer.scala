@@ -7,6 +7,8 @@ import com.jogamp.common.nio.Buffers
 
 trait ExportRenderer extends Renderer with GLEventListener {
 
+  addsLights = false
+
   var pixelInts: Array[Int] = null
 
   override def dispose(glDrawable: GLAutoDrawable): Unit = {
