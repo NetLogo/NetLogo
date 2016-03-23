@@ -3,7 +3,7 @@
 package org.nlogo.parse
 
 import org.nlogo.core,
-  core.{FrontEndInterface, DummyExtensionManager, ExtensionManager, FrontEndProcedure,
+  core.{FrontEndInterface, DummyExtensionManager, ExtensionManager, FrontEndProcedure, Instruction,
   Program, Token, TokenMapperInterface, TokenType},
   core.Fail._
 
@@ -75,10 +75,11 @@ class Namer(
 object Namer {
 
   // provides token type information for commands, reporters, keywords, and constants
-  def basicNamer(tokenMapper: TokenMapperInterface): Token => Token = {
+  def basicNamer(tokenMapper: TokenMapperInterface, extensionManager: ExtensionManager): Token => Token = {
     def makeToken(f: Token => Option[(TokenType, AnyRef)])(tok: Token): Token =
       if (tok.tpe == TokenType.Ident)
         f(tok) match {
+          case Some((tpe, v: Instruction)) => tok.refine(v, tpe = tpe)
           case Some((tpe, v: AnyRef)) => tok.copy(tpe = tpe, value = v)
           case None                   => tok
         }
@@ -88,6 +89,7 @@ object Namer {
     (Namer0.nameKeywordsAndConstants _)             andThen
     (makeToken(new ReporterHandler(tokenMapper)) _) andThen
     (makeToken(new CommandHandler(tokenMapper)) _)  andThen
+    (makeToken(new ExtensionPrimitiveHandler(extensionManager)) _)  andThen
     ((t: Token) =>
         if (t.tpe == TokenType.Reporter && t.value.isInstanceOf[core.prim._symbol])
           t.copy(tpe = TokenType.Ident, value = t.value)
