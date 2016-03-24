@@ -64,7 +64,7 @@ object NetLogoPackaging {
   def mainJarAndDependencies(netlogo: Project, macApp: Project)(platform: PlatformBuild, app: SubApplication): Def.Initialize[Task[(File, Seq[File])]] = {
     def jarExcluded(f: File): Boolean =
       Seq("scalatest", "scalacheck", "jmock", "junit", "hamcrest")
-        .exists(excludedName => f.getName.contains(excludedName))
+        .exists(f.getName.contains)
 
     def repackageJar(app: SubApplication): Def.Initialize[Task[File]] =
       Def.task {
@@ -111,19 +111,26 @@ object NetLogoPackaging {
       .map(p => (" " ~> p))
       .getOrElse(Parser.success(PathSpecifiedJDK)))
 
-  def resaveModels(netlogo: Project): Def.Initialize[Task[Unit]] =
-    (runMain in Test in netlogo).toTask(" org.nlogo.tools.ModelResaver") dependsOn (all in netlogo)
+  def modelTasks(netlogo: Project): Def.Initialize[Task[Unit]] = {
+    val resaveModels = (runMain in Test in netlogo).toTask(" org.nlogo.tools.ModelResaver")
+    val generatePreviews = (allPreviews in netlogo).toTask("")
+    val crossReference = modelCrossReference
+    val indexTask = (modelIndex in netlogo)
+
+    Def.task {
+      System.setProperty("netlogo.extensions.gogo.javaexecutable",
+        (file(System.getProperty("java.home")) / "bin" / "java").getAbsolutePath)
+      (resaveModels dependsOn (all in netlogo)).value
+      (crossReference dependsOn generatePreviews).value
+      (indexTask dependsOn crossReference).value
+    }
+  }
 
   def settings(netlogo: Project, macApp: Project): Seq[Setting[_]] = Seq(
     buildNetLogo := {
       (all in netlogo).value
       (allDocs in netlogo).value
-      (allPreviews in netlogo).value
-      modelCrossReference.value
-      resaveModels(netlogo).value
-      (modelIndex in netlogo).value
-      (nativeLibs in netlogo).value
-      (docSmaller in netlogo).value
+      modelTasks(netlogo).value
       RunProcess(Seq("./sbt", "package"), mathematicaRoot.value, s"package mathematica link")
     },
     mathematicaRoot := netLogoRoot.value.getParentFile / "Mathematica-Link",
