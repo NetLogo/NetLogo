@@ -111,13 +111,16 @@ object NetLogoPackaging {
       .map(p => (" " ~> p))
       .getOrElse(Parser.success(PathSpecifiedJDK)))
 
+  def resaveModels(netlogo: Project): Def.Initialize[Task[Unit]] =
+    (runMain in Test in netlogo).toTask(" org.nlogo.tools.ModelResaver") dependsOn (all in netlogo)
+
   def settings(netlogo: Project, macApp: Project): Seq[Setting[_]] = Seq(
     buildNetLogo := {
       (all in netlogo).value
       (allDocs in netlogo).value
       (allPreviews in netlogo).value
-      (runMain in Test in netlogo).toTask(" org.nlogo.tools.ModelResaver").value
       modelCrossReference.value
+      resaveModels(netlogo).value
       (modelIndex in netlogo).value
       (nativeLibs in netlogo).value
       (docSmaller in netlogo).value
