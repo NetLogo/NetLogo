@@ -1,5 +1,5 @@
-NetLogo 6.0-M1
-March 2, 2016
+NetLogo 6.0-M2
+March 24, 2016
 NetLogo 5.3.1
 NetLogo 5.3
 NetLogo 5.2.1

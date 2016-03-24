@@ -166,7 +166,7 @@ object NetLogoPackaging {
       "NetLogo 3D"      -> NetLogoThreeDApp,
       "NetLogo Logging" -> NetLogoLoggingApp,
       "HubNet Client"   -> HubNetClientApp),
-    netLogoVersion     := "6.0-M1",
+    netLogoVersion     := "6.0-M2",
     numericOnlyVersion := "6.0",
     netLogoLongVersion := { if (netLogoVersion.value.length == 3) netLogoVersion.value + ".0" else netLogoVersion.value },
     buildVariables := Map[String, String](
