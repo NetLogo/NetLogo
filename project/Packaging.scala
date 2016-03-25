@@ -41,6 +41,8 @@ object Packaging {
     log.info("building " + config + " jar")
     def doIt() {
       System.setProperty("org.nlogo.scala-library", scalaLibraryPath)
+      val java6Classes = System.getProperty("sun.boot.class.path").split(File.pathSeparator).filter(_.contains("classes.jar")).head
+      System.setProperty("org.nlogo.java6classes", java6Classes)
       proguard.ProGuard.main(Array("@project/proguard/" + config + ".txt"))
     }
     assert(TrapExit(doIt(), log) == 0)
