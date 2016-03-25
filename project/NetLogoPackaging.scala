@@ -172,7 +172,7 @@ object NetLogoPackaging {
     buildVariables := Map[String, String](
       "version"               -> netLogoVersion.value,
       "numericOnlyVersion"    -> numericOnlyVersion.value,
-      "date"                  -> "December 4, 2015"),
+      "date"                  -> "March 25, 2016"),
     packageAppParser := { (s: State) =>
       ((" " ~> mapToParser(platformMap.value)) ~
         (" " ~> mapToParser(subApplicationMap.value)) ~
