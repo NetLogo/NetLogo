@@ -30,7 +30,7 @@ object NetLogoLoggingApp extends SubApplication {
   override def jvmOptions    = Seq()
   override def jvmArguments  = Seq("--logging", "netlogo_logging.xml")
   override def additionalArtifacts(dist: File): Seq[File] =
-    Seq(dist / "netlogo_logging.xml")
+    Seq(dist / "netlogo_logging.xml", dist / "netlogo_logging.xml")
 }
 
 object HubNetClientApp extends SubApplication {
