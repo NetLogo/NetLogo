@@ -1,0 +1,406 @@
+# COMMON
+
+common.observer = observer
+common.turtle = タートル
+common.patch = パッチ
+common.link = リンク
+common.turtles = turtles
+common.patches = patches
+common.links = links
+
+common.buttons.ok = OK
+common.buttons.cancel = キャンセル
+common.buttons.apply = 適用
+common.buttons.help = ヘルプ
+common.buttons.quit = 終了
+common.buttons.exit = 終了
+common.buttons.continue = 続ける
+common.buttons.save = 保存
+common.buttons.halt = 停止
+common.buttons.yes = はい
+common.buttons.no = いいえ
+
+common.messages.error = エラー
+common.messages.warning = 警告
+
+# GUI
+
+menu.file = ファイル
+menu.file.new = 新規作成
+menu.file.open = 開く
+menu.file.modelsLibrary = モデルライブラリ
+menu.file.save = 上書き保存
+menu.file.saveAs = 名前を付けて保存
+menu.file.saveAsApplet = アプレットとして保存（非推奨）
+menu.file.saveClientAsApplet = クライアントをアプレットとして保存（非推奨）
+menu.file.print = 印刷
+menu.file.export = エクスポート
+menu.file.export.world = ワールドをエクスポート
+menu.file.export.plot = プロットをエクスポート
+menu.file.export.allPlots = すべてのプロットをエクスポート
+menu.file.export.view = ビューをエクスポート
+menu.file.export.interface = インターフェースタブをエクスポート
+menu.file.export.output = 出力領域をエクスポート
+menu.file.import = インポート
+menu.file.import.world = ワールドをインポート
+menu.file.import.patchColors = パッチの色をインポート
+menu.file.import.patchColorsRGB = パッチのRGB色をインポート
+menu.file.import.drawing = ドローイングをインポート
+menu.file.import.hubNetClientInterface = HubNetクライアントインターフェースをインポート
+menu.file.quit = 終了
+
+menu.edit = 編集
+menu.edit.cut = 切り取り
+menu.edit.copy = コピー
+menu.edit.paste = 貼り付け
+menu.edit.delete = 削除
+menu.edit.undo = 元に戻す
+menu.edit.redo = やり直し
+menu.edit.selectAll = すべて選択
+menu.edit.find = 検索
+menu.edit.findNext = 次を検索
+menu.edit.shiftLeft = 左へシフト
+menu.edit.shiftRight = 右へシフト
+menu.edit.comment = コメントアウト
+menu.edit.uncomment = アンコメント
+menu.edit.snapToGrid = 位置をグリッドに合わせる
+
+menu.tools = ツール
+menu.tools.halt = 一時停止
+menu.tools.globalsMonitor = グローバル変数モニター
+menu.tools.turtleMonitor = タートルモニター
+menu.tools.patchMonitor = パッチモニター
+menu.tools.linkMonitor = リンクモニター
+menu.tools.closeAllAgentMonitors = すべてのエージェントモニターを閉じる
+menu.tools.closeDeadAgentMonitors = 除去されたエージェントのモニターを閉じる
+menu.tools.hideCommandCenter = コマンドセンターを非表示
+menu.tools.showCommandCenter = コマンドセンターを表示
+menu.tools.3DView = 3Dビュー
+menu.tools.colorSwatches = 色見本
+menu.tools.turtleShapesEditor = タートル形状エディター
+menu.tools.linkShapesEditor = リンク形状エディター
+menu.tools.behaviorSpace = BehaviorSpace
+menu.tools.systemDynamicsModeler = システムダイナミクスモデラー
+menu.tools.hubNetClientEditor = HubNetクライアントエディター
+menu.tools.hubNetControlCenter = HubNetコントロールセンター
+
+menu.zoom = ズーム
+menu.zoom.larger = 拡大
+menu.zoom.normalSize = 元のサイズ
+menu.zoom.smaller = 縮小
+
+menu.tabs = タブ
+
+menu.help = ヘルプ
+menu.help.lookUpInDictionary(F1) = ディクショナリで検索 (F1)
+menu.help.netLogoUserManual = NetLogoユーザーマニュアル
+menu.help.netLogoDictionary = NetLogoディクショナリ
+menu.help.netLogoUsersGroup = NetLogoユーザーグループ
+menu.help.donate = 寄付
+
+tabs.run = インターフェース
+tabs.run.editButton = 編集
+tabs.run.editButton.tooltip = 選択したアイテムを編集
+tabs.run.deleteButton = 削除
+tabs.run.deleteButton.tooltip = 選択したアイテムを削除
+tabs.run.addButton = 追加
+tabs.run.addButton.tooltip = アイテムを追加
+tabs.run.settingsButton = 設定
+tabs.run.settingsButton.tooltip = モデル設定を編集
+tabs.run.viewUpdates.checkbox = ビューを更新
+tabs.run.viewUpdates.checkbox.tooltip = ビューを固定もしくは更新
+tabs.run.viewUpdates.dropdown.onticks = ティックごと
+tabs.run.viewUpdates.dropdown.continuous = 連続更新
+tabs.run.viewUpdates.dropdown.tooltip = ビュー更新モードを変更
+
+tabs.run.speedslider.normalspeed = 通常スピード
+tabs.run.speedslider.faster = 速くする
+tabs.run.speedslider.slower = 遅くする
+
+tabs.run.widgets.button = ボタン
+tabs.run.widgets.slider = スライダー
+tabs.run.widgets.switch = スイッチ
+tabs.run.widgets.chooser = チューザー
+tabs.run.widgets.input = 入力ボックス
+tabs.run.widgets.monitor = モニター
+tabs.run.widgets.plot = プロット
+tabs.run.widgets.output = 出力領域
+tabs.run.widgets.note = ノート
+tabs.run.widgets.view = ビュー
+tabs.run.widgets.tooltip = 追加するアイテムを選ぶ
+
+tabs.run.commandcenter = コマンドセンター
+tabs.run.commandcenter.clearButton = クリア
+tabs.run.commandcenter.nohistory = 履歴がありません
+tabs.run.commandcenter.orusetabkey = Tabキーで切り替え
+tabs.run.commandcenter.exporting = エクスポート中
+tabs.run.commandcenter.history = 履歴
+tabs.run.commandcenter.useArrowKeys = または上下の矢印キーを使用
+tabs.run.commandcenter.clearHistory = 履歴をクリア
+
+tabs.info = 情報
+tabs.info.edit = 編集
+tabs.info.help = ヘルプ
+
+tabs.code = コード
+tabs.code.rightclick.quickhelp = クイックヘルプ
+tabs.code.checkButton = チェック
+tabs.code.procedures = プロシージャ
+tabs.code.procedures.none = なし
+tabs.code.indentAutomatically = 自動インデント
+
+# find actions and dialog
+dialog.find.title = 検索
+dialog.find.find = 検索する文字列：
+dialog.find.replaceWith = 置換後の文字列：
+dialog.find.ignoreCase = 大文字と小文字を区別しない
+dialog.find.wrapAround = 先頭（末尾）から再検索
+dialog.find.notFound = 文字列が見つかりません
+dialog.find.next = 下候補
+dialog.find.previous = 上候補
+dialog.find.replaceAndFind = 置換して検索
+dialog.find.replace = 置換
+dialog.find.replaceAll = すべて置換
+
+# widget editors
+
+edit.button.agents = エージェント
+edit.button.forever = フォーエバー
+edit.button.disable = ティック開始後に実行可能とする
+edit.button.commands = コマンド
+edit.button.displayName = 表示名
+edit.button.actionKey = アクションキー
+
+edit.plot.name = プロット名
+edit.plot.xLabel = X軸ラベル
+edit.plot.xmin = X最小値
+edit.plot.xmax = X最大値
+edit.plot.yLabel = Y軸ラベル
+edit.plot.ymin = Y最小値
+edit.plot.ymax = Y最大値
+edit.plot.autoScale = 自動スケール
+edit.plot.showLegend = 凡例を表示
+edit.plot.setupCode = プロット初期設定コマンド
+edit.plot.updateCode = プロット更新コマンド
+edit.plot.pen.plotPens = プロットペン
+edit.plot.pen.color = 色
+edit.plot.pen.name = ペン名
+edit.plot.pen.add = ペンを追加
+edit.plot.pen.editing = 編集：
+edit.plot.pen.advanced = ペンの詳細オプション
+edit.plot.pen.mode = モード
+edit.plot.pen.mode.line = 折れ線
+edit.plot.pen.mode.bar = 棒
+edit.plot.pen.mode.point = 点
+edit.plot.pen.interval = 間隔
+edit.plot.pen.showInLegend = 凡例に表示
+edit.plot.pen.setupCommands = ペン設定コマンド
+edit.plot.pen.updateCommands = ペン更新コマンド
+
+edit.chooser.globalVar = グローバル変数
+edit.chooser.choices = 選択肢
+
+edit.slider.globalVar = グローバル変数
+edit.slider.minimum = 最小値
+edit.slider.increment = 増分
+edit.slider.maximum = 最大値
+edit.slider.value = 値
+edit.slider.units = 単位（オプション）
+edit.slider.vertical = 縦向きに配置
+
+edit.monitor.reporter = レポーター
+edit.monitor.name = 表示名
+edit.monitor.decimalPlaces = 小数点以下桁数
+edit.monitor.fontSize = フォントサイズ
+
+edit.output.fontSize = フォントサイズ
+
+edit.input.globalVar = グローバル変数
+edit.input.type = 種類
+edit.input.type.number = 数値
+edit.input.type.string = 文字列
+edit.input.type.string.reporter = 文字列（レポーター）
+edit.input.type.string.commands = 文字列（コマンド）
+edit.input.type.color = 色
+
+edit.text.text = テキスト
+edit.text.fontSize = フォントサイズ
+edit.text.transparency = 透明な背景
+edit.text.color = テキストの色
+
+edit.switch.globalVar = グローバル変数
+
+edit.viewSettings.world = ワールド
+edit.viewSettings.view = ビュー
+edit.viewSettings.tickCounter = ティックカウンター
+edit.viewSettings.origin.location = 原点の位置：
+
+edit.viewSettings.origin.location.center = 中心
+edit.viewSettings.origin.location.corner = 頂点
+edit.viewSettings.origin.location.edge = 辺
+edit.viewSettings.origin.location.custom = カスタム
+
+edit.viewSettings.origin.location.corner.bottomLeft = 左下
+edit.viewSettings.origin.location.corner.topLeft = 左上
+edit.viewSettings.origin.location.corner.topRight = 右上
+edit.viewSettings.origin.location.corner.bottomRight = 右下
+
+edit.viewSettings.origin.location.edge.bottom = 下辺
+edit.viewSettings.origin.location.edge.top = 上辺
+edit.viewSettings.origin.location.edge.right = 右辺
+edit.viewSettings.origin.location.edge.left = 左辺
+
+edit.viewSettings.3D.origin.location.corner.bottomSouthwest = 下南西
+edit.viewSettings.3D.origin.location.corner.bottomNorthwest = 下北西
+edit.viewSettings.3D.origin.location.corner.bottomNortheast = 下北東
+edit.viewSettings.3D.origin.location.corner.bottomSoutheast = 下南東
+edit.viewSettings.3D.origin.location.corner.topSouthwest = 上南西
+edit.viewSettings.3D.origin.location.corner.topNorthwest = 上北西
+edit.viewSettings.3D.origin.location.corner.topNortheast = 上北東
+edit.viewSettings.3D.origin.location.corner.topSoutheast = 上南東
+
+edit.viewSettings.3D.origin.location.edge.south = 南側
+edit.viewSettings.3D.origin.location.edge.north = 北側
+edit.viewSettings.3D.origin.location.edge.east = 東側
+edit.viewSettings.3D.origin.location.edge.west = 西側
+edit.viewSettings.3D.origin.location.edge.bottom = 下側
+edit.viewSettings.3D.origin.location.edge.top = 上側
+
+edit.viewSettings.showTickCounter = ティックカウンターを表示
+edit.viewSettings.tickCounterLabel = ティックカウンターのラベル
+
+edit.viewSettings.2D.patchSize = パッチサイズ
+edit.viewSettings.2D.patchSize.info = パッチの画面上での大きさ（ピクセル単位）
+edit.viewSettings.2D.fontSize = フォントサイズ
+edit.viewSettings.2D.fontSize.info = エージェントのラベルのフォントサイズ
+edit.viewSettings.2D.wrapX = 左右で循環
+edit.viewSettings.2D.wrapY = 上下で循環
+edit.viewSettings.2D.frameRate = フレームレート
+edit.viewSettings.2D.frameRate.info = 標準スピードの場合の毎秒のフレーム数
+
+edit.viewSettings.2D.minPxcor = パッチのx座標の最小値
+edit.viewSettings.2D.maxPxcor = パッチのx座標の最大値
+edit.viewSettings.2D.minPycor = パッチのy座標の最小値
+edit.viewSettings.2D.maxPycor = パッチのy座標の最大値
+
+edit.viewSettings.3D.smooth = 辺を滑らかにする
+edit.viewSettings.3D.affects = 3Dビューのみの効果
+edit.viewSettings.3D.wireFrame = ワイヤーフレームを表示
+edit.viewSettings.3D.fontSize.info = エージェントのラベルのフォントサイズ
+edit.viewSettings.3D.dualView = 2Dビューを更新
+edit.viewSettings.3D.wrapX = X軸（東西）で循環
+edit.viewSettings.3D.wrapY = Y軸（南北）で循環
+edit.viewSettings.3D.wrapZ = Z軸（上下）で循環
+edit.viewSettings.3D.minPxcor = パッチのx座標の最小値
+edit.viewSettings.3D.maxPxcor = パッチのx座標の最大値
+edit.viewSettings.3D.minPycor = パッチのy座標の最小値
+edit.viewSettings.3D.maxPycor = パッチのy座標の最大値
+edit.viewSettings.3D.minPzcor = パッチのz座標の最小値
+edit.viewSettings.3D.maxPzcor = パッチのz座標の最大値
+
+edit.hubnet.tag = タグ
+edit.hubnet.view.width = 幅（ピクセル）
+edit.hubnet.view.height = 高さ（ピクセル）
+
+# tools
+
+tools.colorswatch = 色見本
+tools.colorswatch.preview = プレビュー
+tools.colorswatch.copy = 選択した色をコピー
+tools.colorswatch.numbers = 数値を表示
+tools.colorswatch.increment = 増分
+
+tools.shapesEditor.importFromModel = モデルからのインポート
+tools.shapesEditor.importFromLibrary = ライブラリからのインポート
+tools.shapesEditor.edit = 編集
+tools.shapesEditor.new = 新規作成
+tools.shapesEditor.delete = 削除
+tools.shapesEditor.duplicate = 複製
+tools.shapesEditor.info = （ライブラリには他の形状が多数登録されています）
+tools.shapesEditor.import.note = モデルから形状をインポート
+tools.shapesEditor.import.error = ファイルには形状は含まれていません。
+
+tools.sdm.diagram = ダイヤグラム
+tools.sdm.stock = ストック
+tools.sdm.variable = 変数
+tools.sdm.flow = フロー
+tools.sdm.link = リンク
+tools.sdm.check = チェック
+tools.sdm.edit = 編集
+tools.sdm.delete = 削除
+tools.sdm.dtNumberError = dt は数値である必要があります
+tools.sdm.dtZeroError = dt は 0 より大きい数である必要があります
+
+tools.behaviorSpace.experiments = 実験：
+tools.behaviorSpace.new = 新規作成
+tools.behaviorSpace.edit = 編集
+tools.behaviorSpace.duplicate = 複製
+tools.behaviorSpace.delete = 削除
+tools.behaviorSpace.run = 実行
+tools.behaviorSpace.close = 閉じる
+
+tools.behaviorSpace.experimentName = 実験名
+tools.behaviorSpace.vary = 変数を次のように変化させる（括弧と引用符に注意）：
+
+# this property extends across several lines, and has HTML breaks in it.
+tools.behaviorSpace.vary.info = 使用する値のリストを記載します。たとえば：<br>\
+["my-slider" 1 2 7 8]<br>\
+もしくは、開始時の値、増分、終了時の値を記載します。たとえば：<br>\
+["my-slider" [0 1 10]] （括弧内に括弧が記載されていることに注意）<br>\
+これは 0 から始まり、 1 を増分とし、 10 で終わることを意味します。<br>\
+max-pxcor, min-pxcor, max-pycor, min-pycor, random-seed を変化させることもできます。
+
+tools.behaviorSpace.repetitions = 反復試行回数
+tools.behaviorSpace.repetitions.info = 各組み合わせをこの回数だけ試行します。
+tools.behaviorSpace.metrics = 次のレポーターを用いて試行を評価：
+# this property has an HTML break in it.
+tools.behaviorSpace.metrics.info = 1行に1つのレポーターを記載します<br>レポーターを複数の行に分けて記載することはできません。
+tools.behaviorSpace.runMetricsEveryStep = 各ステップに試行を評価
+tools.behaviorSpace.runMetricsEveryStep.info = チェックされていない場合、各試行は終了時にのみ評価されます。
+tools.behaviorSpace.setupCommands = Setupコマンド：
+tools.behaviorSpace.goCommands = Goコマンド：
+tools.behaviorSpace.exitCondition = 停止条件：
+tools.behaviorSpace.exitCondition.info = このレポーターが真になったら試行を停止
+tools.behaviorSpace.finalCommands = 終了時のコマンド：
+tools.behaviorSpace.finalCommands.info = 各試行の終了時に実行
+tools.behaviorSpace.timeLimit = タイムリミット
+tools.behaviorSpace.timeLimit.info = このステップ数に達したら停止する（0は上限なしの意味）
+
+# Models Library
+
+modelsLibrary.clear = クリア
+modelsLibrary.community = User Community Modelsのウェブサイトを開く
+modelsLibrary.open = 開く
+modelsLibrary.loading = モデルライブラリをロード中...
+
+
+# CONTROL CENTER
+menu.tools.hubnetControlCenter.removedViaControlCenter = コントロールセンター経由で削除しました。
+menu.tools.hubnetControlCenter.kick = キック
+menu.tools.hubnetControlCenter.local = ローカル
+menu.tools.hubnetControlCenter.reset = リセット
+menu.tools.hubnetControlCenter.clientName = クライアント名
+menu.tools.hubnetControlCenter.clients = クライアント：
+menu.tools.hubnetControlCenter.dateFormat = h:mm:ss
+menu.tools.hubnetControlCenter.broadcastMessage = ブロードキャストメッセージ
+menu.tools.hubnetControlCenter.mirrorViewOn2dClients = 2D ビューをクライアントにも表示
+menu.tools.hubnetControlCenter.mirrorPlotsOnClients = プロットをクライアントにも表示（試験中）
+menu.tools.hubnetControlCenter.name = 名称：
+menu.tools.hubnetControlCenter.activity = アクティビティ：
+menu.tools.hubnetControlCenter.unknown = 不明
+menu.tools.hubnetControlCenter.serverAddress = サーバーアドレス：
+menu.tools.hubnetControlCenter.portNumber = ポート番号：
+menu.tools.hubnetControlCenter.settings = 設定：
+menu.tools.hubnetControlCenter.messagePanel.clientJoined =  ''{0}'' が {1} から参加しました。
+menu.tools.hubnetControlCenter.messagePanel.clientDisconnected = ''{0}'' が切断しました。
+
+view.3d.orbit = 回転
+view.3d.zoom = ズーム
+view.3d.move = 移動
+view.3d.interact = インタラクティブ
+view.3d.watching = ウォッチ
+view.3d.riding = ライド
+view.3d.following = フォロー
+view.3d.fullScreen = フルスクリーン
+view.3d.resetPerspective = 視点をリセット
+view.3d.fullScreenWarning = フルスクリーンモードにするとウインドウが停止する場合があります。
