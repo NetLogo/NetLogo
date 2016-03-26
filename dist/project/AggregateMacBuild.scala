@@ -48,7 +48,10 @@ object AggregateMacBuild extends PackageAction.AggregateBuild {
   def copyAny(src: File, dest: File): Unit =
     src match {
       case f if f.isDirectory => IO.copyDirectory(src, dest)
-      case f                  => IO.copyFile(src, dest)
+      case f                  =>
+        IO.copyFile(src, dest)
+        if (f.canExecute)
+          dest.setExecutable(true)
     }
 
   private def postProcessSubApplication(aggregateMacDir: File)(app: SubApplication, image: File, version: String): Unit = {
