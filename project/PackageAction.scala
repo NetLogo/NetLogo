@@ -87,7 +87,8 @@ object PackageAction {
     def aggregate(
       platformName:      String,
       aggregatePackager: PackageAction.AggregateBuild,
-      packageApp:        Initialize[InputTask[File]])
+      packageApp:        Initialize[InputTask[File]],
+      aggregateKey:      Scoped)
     (jdk:               BuildJDK = PathSpecifiedJDK): Def.Initialize[Task[File]] = {
 
       val subApps = Seq(NetLogoCoreApp, NetLogoThreeDApp, NetLogoLoggingApp, HubNetClientApp)
@@ -121,7 +122,8 @@ object PackageAction {
         val initialInstaller: File =
           aggregatePackager(target.value,
             baseDirectory.value / "configuration" / "aggregate" / platformName,
-            jdk, appMap.value, buildVariables.value, aggregateOnlyFiles.value)
+            jdk, appMap.value, buildVariables.value,
+            (aggregateOnlyFiles in aggregateKey).value) // specialize on aggregateKey for platform-dependant files
         val dlPath = downloadPath(initialInstaller, webTarget.value, netLogoVersion.value)
         IO.createDirectory(webTarget.value)
         IO.move(initialInstaller, dlPath)

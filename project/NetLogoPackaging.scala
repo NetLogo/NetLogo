@@ -1,6 +1,6 @@
 import sbt._
 import sbt.complete.Parser, Parser._
-import Keys.{ baseDirectory, dependencyClasspath, packageBin, runMain, target }
+import Keys.{ artifactPath, baseDirectory, dependencyClasspath, packageBin, runMain, target }
 import Docs.{ allDocs, docsRoot, manualPDF }
 import NetLogoBuild.all
 import Extensions.extensionRoot
@@ -151,6 +151,12 @@ object NetLogoPackaging {
       Mustache(baseDirectory.value / "readme.md", target.value / "readme.md", buildVariables.value)
       Seq(target.value / "readme.md", netLogoRoot.value.getParentFile / "NetLogo User Manual.pdf", packagedMathematicaLink.value)
     },
+    aggregateOnlyFiles in packageLinuxAggregate += {
+      val targetFile = target.value / "netlogo-headless.sh"
+      Mustache(baseDirectory.value / "netlogo-headless.sh", targetFile, buildVariables.value)
+      targetFile.setExecutable(true)
+      targetFile
+    },
     modelCrossReference := {
       ModelCrossReference((baseDirectory in netlogo).value)
     },
@@ -185,12 +191,12 @@ object NetLogoPackaging {
         mainJarAndDependencies(netlogo, macApp), bundledDirs(netlogo), jvmOptions)),
     packageLinuxAggregate <<=
       InputTask.createDyn(aggregateJDKParser)(Def.task(
-        PackageAction.aggregate("linux", AggregateLinuxBuild, packageApp))),
+        PackageAction.aggregate("linux", AggregateLinuxBuild, packageApp, packageLinuxAggregate))),
     packageWinAggregate   <<=
       InputTask.createDyn(aggregateJDKParser)(Def.task(
-        PackageAction.aggregate("win", AggregateWindowsBuild, packageApp))),
+        PackageAction.aggregate("win", AggregateWindowsBuild, packageApp, packageWinAggregate))),
     packageMacAggregate   <<=
-      PackageAction.aggregate("macimg", AggregateMacBuild, packageApp)(),
+      PackageAction.aggregate("macimg", AggregateMacBuild, packageApp, packageMacAggregate)(),
     webTarget := target.value / "downloadPages",
     buildDownloadPages := {
       val webSource = baseDirectory.value / "downloadPages"
