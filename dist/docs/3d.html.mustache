@@ -495,7 +495,7 @@ end-shape
     </h3>
     <div class="dict_entry" id="at-points">
       <h3>
-        <a>at-points</a>
+        <a>at-points<span class="since">4.1</span></a>
       </h3>
       <h4>
         <span class="prim_example"><i>agentset</i> at-points [[<i>x1 y1 z1</i>] [<i>x2 y2 z2</i>] ...]</span>
@@ -522,8 +522,8 @@ ask turtles at-points [[2 4 0] [1 2 1] [10 15 10]]
     </div>
     <div class="dict_entry" id="distance-3d">
       <h3>
-        <a>distancexyz<span class="since">3.1</span></a>
-        <a>distancexyz-nowrap<span class="since">3.1</span></a>
+        <a>distancexyz<span class="since">4.1</span></a>
+        <a>distancexyz-nowrap<span class="since">4.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">distancexyz <i>xcor</i> <i>ycor</i> <i>zcor</i></span>
@@ -552,7 +552,7 @@ if (distancexyz 0 0 0) &lt; 10
     </div>
     <div class="dict_entry" id="dz">
       <h3>
-        <a>dz<span class="since">3.1</span></a>
+        <a>dz<span class="since">4.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">dz</span>
@@ -572,7 +572,7 @@ if (distancexyz 0 0 0) &lt; 10
     <div class="dict_entry" id="face-3d">
       <h3>
         <a>face</a>
-        <a>facexyz<span class="since">4.0</span></a>
+        <a>facexyz<span class="since">4.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">face <i>agent</i></span>
@@ -590,7 +590,7 @@ if (distancexyz 0 0 0) &lt; 10
       </div>
     <div class="dict_entry" id="left">
       <h3>
-        <a>left</a>
+        <a>left<span class="since">4.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">left <i>number</i></span>
@@ -606,7 +606,7 @@ if (distancexyz 0 0 0) &lt; 10
       </div>
     <div class="dict_entry" id="link-pitch">
       <h3>
-        <a>link-pitch<span class="since">4.0.2</span></a>
+        <a>link-pitch<span class="since">4.1.2</span></a>
       </h3>
       <h4>
         <span class="prim_example">link-pitch</span>
@@ -624,7 +624,7 @@ ask link 0 1 [ print link-pitch ]
       </div>
     <div class="dict_entry" id="load-shapes-3d">
       <h3>
-        <a>load-shapes-3d</a>
+        <a>load-shapes-3d<span class="since">4.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">load-shapes-3d <i>filename</i></span>
@@ -637,8 +637,8 @@ ask link 0 1 [ print link-pitch ]
       </div>
     <div class="dict_entry" id="min-max-pzcor">
       <h3>
-        <a>max-pzcor<span class="since">3.1</span></a>
-        <a>min-pzcor<span class="since">3.1</span></a>
+        <a>max-pzcor<span class="since">4.1</span></a>
+        <a>min-pzcor<span class="since">4.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">max-pzcor</span>
@@ -661,8 +661,8 @@ ask link 0 1 [ print link-pitch ]
       </div>
     <div class="dict_entry" id="neighbors-3d">
       <h3>
-        <a>neighbors</a>
-        <a>neighbors6<span class="since">3.1</span></a>
+        <a>neighbors<span class="since">4.1</span></a>
+        <a>neighbors6<span class="since">4.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">neighbors</span>
@@ -685,10 +685,10 @@ ask neighbors6 [ set pcolor red ]
     </div>
     <div class="dict_entry" id="orbit-cmds">
       <h3>
-        <a>orbit-down<span class="since">4.0</span></a>
-        <a>orbit-left<span class="since">4.0</span></a>
-        <a>orbit-right<span class="since">4.0</span></a>
-        <a>orbit-up<span class="since">4.0</span></a>
+        <a>orbit-down<span class="since">4.1</span></a>
+        <a>orbit-left<span class="since">4.1</span></a>
+        <a>orbit-right<span class="since">4.1</span></a>
+        <a>orbit-up<span class="since">4.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">orbit-down <i>number</i></span>
@@ -727,7 +727,7 @@ ask neighbors6 [ set pcolor red ]
       <p>
         See also <a href="#setxyz">setxyz</a>
       <h3>
-        <a id="patch">patch<span class="since">4.0</span></a>
+        <a id="patch">patch<span class="since">4.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">patch <i>pxcor</i> <i>pycor</i> <i>pzcor</i></span>
@@ -747,7 +747,7 @@ ask (patch 3 -4 2) [ set pcolor green ]
       </div>
     <div class="dict_entry" id="patch-at">
       <h3>
-        <a>patch-at<span class="since">4.0</span></a>
+        <a>patch-at<span class="since">4.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">patch-at <i>dx</i> <i>dy</i> <i>dz</i></span>
@@ -766,7 +766,7 @@ ask patch-at 1 -1 1 [ set pcolor green ]
     </div>
     <div class="dict_entry" id="patch-at-heading-pitch-and-distance">
       <h3>
-        <a>patch-at-heading-pitch-and-distance<span class="since">3.1</span></a>
+        <a>patch-at-heading-pitch-and-distance<span class="since">4.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">patch-at-heading-pitch-and-distance <i>heading</i> <i>pitch</i> <i>distance</i></span>
@@ -837,7 +837,7 @@ set heading heading + 10 ;; same effect as &quot;tilt-up 10&quot;
       </div>
     <div class="dict_entry" id="random-pzcor">
       <h3>
-        <a>random-pzcor<span class="since">3.1</span></a>
+        <a>random-pzcor<span class="since">4.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">random-pzcor</span>
@@ -856,7 +856,7 @@ ask turtles [
       </div>
     <div class="dict_entry" id="random-zcor">
       <h3>
-        <a>random-zcor<span class="since">3.1</span></a>
+        <a>random-zcor<span class="since">4.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">random-zcor</span>
@@ -879,7 +879,7 @@ ask turtles [
       </div>
     <div class="dict_entry" id="right">
       <h3>
-        <a>right</a>
+        <a>right<span class="since">4.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">right <i>number</i></span>
@@ -920,7 +920,7 @@ set roll roll + 10 ;; same effect as &quot;roll-right 10&quot;
       </div>
     <div class="dict_entry" id="roll-left">
       <h3>
-        <a>roll-left<span class="since">3.1</span></a>
+        <a>roll-left<span class="since">4.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">roll-left <i>number</i></span>
@@ -932,7 +932,7 @@ set roll roll + 10 ;; same effect as &quot;roll-right 10&quot;
       </div>
     <div class="dict_entry" id="roll-right">
       <h3>
-        <a>roll-right<span class="since">3.1</span></a>
+        <a>roll-right<span class="since">4.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">roll-right <i>number</i></span>
@@ -944,7 +944,7 @@ set roll roll + 10 ;; same effect as &quot;roll-right 10&quot;
       </div>
     <div class="dict_entry" id="setxyz">
       <h3>
-        <a>setxyz<span class="since">3.1</span></a>
+        <a>setxyz<span class="since">4.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">setxyz <i>x y z</i></span>
@@ -967,8 +967,8 @@ setxyz 0 0 0
     </div>
     <div class="dict_entry" id="tilt-cmds">
       <h3>
-        <a>tilt-down<span class="since">4.0</span></a>
-        <a>tilt-up<span class="since">4.0</span></a>
+        <a>tilt-down<span class="since">4.1</span></a>
+        <a>tilt-up<span class="since">4.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">tilt-down <i>number</i></span>
@@ -983,8 +983,8 @@ setxyz 0 0 0
       </div>
     <div class="dict_entry" id="towards-pitch-cmd">
       <h3>
-        <a>towards-pitch<span class="since">3.1</span></a>
-        <a>towards-pitch-nowrap<span class="since">3.1</span></a>
+        <a>towards-pitch<span class="since">4.1</span></a>
+        <a>towards-pitch-nowrap<span class="since">4.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">towards-pitch <i>agent</i></span>
@@ -1008,8 +1008,8 @@ setxyz 0 0 0
       </div>
     <div class="dict_entry" id="towards-pitch-xyz-cmd">
       <h3>
-        <a>towards-pitch-xyz<span class="since">3.1</span></a>
-        <a>towards-pitch-xyz-nowrap<span class="since">3.1</span></a>
+        <a>towards-pitch-xyz<span class="since">4.1</span></a>
+        <a>towards-pitch-xyz-nowrap<span class="since">4.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">towards-pitch-xyz <i>x</i> <i>y</i> <i>z</i></span>
@@ -1033,7 +1033,7 @@ setxyz 0 0 0
       </div>
     <div class="dict_entry" id="turtles-at breeds-at">
       <h3>
-        <a>turtles-at<span class="since">4.0</span></a>
+        <a>turtles-at<span class="since">4.1</span></a>
         <a>&lt;breeds&gt;-at</a>
       </h3>
       <h4>
@@ -1056,7 +1056,7 @@ show [count turtles-at 0 0 0] of turtle 0
     </div>
     <div class="dict_entry" id="world-depth">
       <h3>
-        <a>world-depth<span class="since">3.1</span></a>
+        <a>world-depth<span class="since">4.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">world-depth</span>
@@ -1089,7 +1089,7 @@ show [count turtles-at 0 0 0] of turtle 0
       </div>
     <div class="dict_entry" id="zoom">
       <h3>
-        <a>zoom<span class="since">4.0</span></a>
+        <a>zoom<span class="since">4.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">zoom <i>number</i></span>
