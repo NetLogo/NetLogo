@@ -44,7 +44,9 @@ object AggregateWindowsBuild extends PackageAction.AggregateBuild {
     "6.0-PREVIEW-12-15-32" -> "367B7025-7977-4DAA-8856-E9AAA3421707",
     "6.0-PREVIEW-12-15-64" -> "38EE8625-BFFF-430E-BFF3-D069B4F8F75C",
     "6.0-M1-32"            -> "97E5CCED-0294-44AC-8114-3AFFEAD974EB",
-    "6.0-M1-64"            -> "0CD72DC9-2178-4846-8AAE-A2396A461EF7"
+    "6.0-M1-64"            -> "0CD72DC9-2178-4846-8AAE-A2396A461EF7",
+    "6.0-M2-32"            -> "2D720641-CF8D-4D65-A27E-D13AEAE8668C",
+    "6.0-M2-64"            -> "D159116B-C8E9-47E1-BDF7-912A2AF513F8"
   )
 
   val vars32 = Map[String, String](

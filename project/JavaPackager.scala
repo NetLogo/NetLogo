@@ -45,14 +45,17 @@ object JavaPackager {
     val is64 = System.getenv("PROCESSOR_ARCHITECTURE") == "AMD64"
     val pkgers = windowsJavaPackagers
     pkgers.flatMap { p =>
-      val arch = if (is64 && ! p.contains("(x86)")) "64" else "32"
-      p.split("\\\\")
+      val arch = if (is64 && ! p.getAbsolutePath.contains("(x86)")) "64" else "32"
+      p.getAbsolutePath
+        .split("\\\\") // File.separator doesn't play nice with Regex
         .find(_.contains("jdk"))
-        .map(n => SpecifiedJDK(arch, n.drop(3), p))
+        .map(_.drop(3))
+        .map(jdkVersion =>
+          SpecifiedJDK(arch, jdkVersion, p, javaHome = Some(p.getParentFile.getParentFile.getAbsolutePath)))
     }
   }
 
-  def windowsJavaPackagers: Seq[String] = {
+  def windowsJavaPackagers: Seq[File] = {
     import scala.collection.JavaConversions._
     val fs = FileSystems.getDefault
     fs.getRootDirectories.toSeq.flatMap(r =>
@@ -64,7 +67,6 @@ object JavaPackager {
        .filter(_.getName.contains("jdk"))
        .map(_ / "bin" / "javapackager.exe")
        .filter(_.exists)
-       .map(_.getAbsolutePath)
   }
 
   // maps from a descriptive string to the javapackager path associated
@@ -85,7 +87,7 @@ object JavaPackager {
       } yield {
         val jdkSplit = jdkName.split('-')
         val arch = if (jdkSplit(1).contains("64")) "64" else "32"
-        SpecifiedJDK(arch, jdkSplit(0).drop(3), n, javaHome = Some(n.split('/').dropRight(2).mkString("/")))
+        SpecifiedJDK(arch, jdkSplit(0).drop(3), file(n), javaHome = Some(n.split('/').dropRight(2).mkString("/")))
       }
   }
 
@@ -138,12 +140,14 @@ object JavaPackager {
       "-srcdir",   srcDir.getAbsolutePath,
       "-srcfiles", srcDir.listFiles.map(_.getName).mkString(File.pathSeparator),
       "-BmainJar=" + mainJar.getName,
+      "-Bclasspath=" + srcDir.listFiles.map(_.getName).filter(_.endsWith(".jar")).mkString(File.pathSeparator),
       s"-BappVersion=${appVersion}") ++
     (jvmOptions ++ app.jvmOptions ++ platformJvmOptions).map(s => "-BjvmOptions=" + s) ++
     app.jvmArguments.flatMap(arg => Seq("-argument", arg)) ++
     app.jvmProperties.map(p => "-BjvmProperties=" + p._1 + "=" + p._2)
 
     val envArgs = packagerJDK.javaHome.map(h => Seq("JAVA_HOME" -> h)).getOrElse(Seq())
+
     val ret = Process(args, buildDirectory, envArgs: _*).!
     if (ret != 0)
       sys.error("packaging failed!")

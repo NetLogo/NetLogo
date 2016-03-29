@@ -37,7 +37,7 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer {
             TokenType.Keyword
           else
             tok.tpe
-        )
+        ).getOrElse(SyntaxColors.DEFAULT_COLOR)
         for (j <- tok.start until tok.end)
           // guard against any bugs in tokenization causing out-of-bounds positions
           if(result.isDefinedAt(j))
@@ -84,8 +84,8 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer {
     TokenType.Comment  -> SyntaxColors.COMMENT_COLOR
   )
 
-  private def getTokenColor(tpe: TokenType) =
-    tokenTypeColors.getOrElse(tpe, SyntaxColors.DEFAULT_COLOR)
+  private def getTokenColor(tpe: TokenType): Option[java.awt.Color] =
+    tokenTypeColors.get(tpe)
 
   def getTokenAtPosition(text: String, position: Int): Option[String] =
     Option(compiler.getTokenAtPosition(text, position))

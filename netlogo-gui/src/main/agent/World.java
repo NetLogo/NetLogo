@@ -120,6 +120,7 @@ public strictfp class World
     // often because almost always load the default model first, and there
     // aren't many 1x1 models. ev 2/5/07
     createPatches(_minPxcor, _maxPxcor, _minPycor, _maxPycor);
+    setUpShapes(true);
   }
 
   Observer createObserver() {
@@ -1000,8 +1001,7 @@ public strictfp class World
     // call Agent.realloc() on the observer
     _observer.realloc(_oldProgram != null);
     // and finally...
-    turtleBreedShapes.setUpBreedShapes(false, breeds);
-    linkBreedShapes.setUpBreedShapes(false, linkBreeds);
+    setUpShapes(false);
     _oldProgram = null;
   }
 

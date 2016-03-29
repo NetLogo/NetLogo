@@ -64,7 +64,7 @@ object NetLogoPackaging {
   def mainJarAndDependencies(netlogo: Project, macApp: Project)(platform: PlatformBuild, app: SubApplication): Def.Initialize[Task[(File, Seq[File])]] = {
     def jarExcluded(f: File): Boolean =
       Seq("scalatest", "scalacheck", "jmock", "junit", "hamcrest")
-        .exists(excludedName => f.getName.contains(excludedName))
+        .exists(f.getName.contains)
 
     def repackageJar(app: SubApplication): Def.Initialize[Task[File]] =
       Def.task {
@@ -111,16 +111,26 @@ object NetLogoPackaging {
       .map(p => (" " ~> p))
       .getOrElse(Parser.success(PathSpecifiedJDK)))
 
+  def modelTasks(netlogo: Project): Def.Initialize[Task[Unit]] = {
+    val resaveModels = (runMain in Test in netlogo).toTask(" org.nlogo.tools.ModelResaver")
+    val generatePreviews = (allPreviews in netlogo).toTask("")
+    val crossReference = modelCrossReference
+    val indexTask = (modelIndex in netlogo)
+
+    Def.task {
+      System.setProperty("netlogo.extensions.gogo.javaexecutable",
+        (file(System.getProperty("java.home")) / "bin" / "java").getAbsolutePath)
+      (resaveModels dependsOn (all in netlogo)).value
+      (crossReference dependsOn generatePreviews).value
+      (indexTask dependsOn crossReference).value
+    }
+  }
+
   def settings(netlogo: Project, macApp: Project): Seq[Setting[_]] = Seq(
     buildNetLogo := {
       (all in netlogo).value
       (allDocs in netlogo).value
-      (allPreviews in netlogo).value
-      (runMain in Test in netlogo).toTask(" org.nlogo.tools.ModelResaver").value
-      modelCrossReference.value
-      (modelIndex in netlogo).value
-      (nativeLibs in netlogo).value
-      (docSmaller in netlogo).value
+      modelTasks(netlogo).value
       RunProcess(Seq("./sbt", "package"), mathematicaRoot.value, s"package mathematica link")
     },
     mathematicaRoot := netLogoRoot.value.getParentFile / "Mathematica-Link",
@@ -141,6 +151,12 @@ object NetLogoPackaging {
       Mustache(baseDirectory.value / "readme.md", target.value / "readme.md", buildVariables.value)
       Seq(target.value / "readme.md", netLogoRoot.value.getParentFile / "NetLogo User Manual.pdf", packagedMathematicaLink.value)
     },
+    aggregateOnlyFiles in packageLinuxAggregate += {
+      val targetFile = target.value / "netlogo-headless.sh"
+      Mustache(baseDirectory.value / "netlogo-headless.sh", targetFile, buildVariables.value)
+      targetFile.setExecutable(true)
+      targetFile
+    },
     modelCrossReference := {
       ModelCrossReference((baseDirectory in netlogo).value)
     },
@@ -156,13 +172,13 @@ object NetLogoPackaging {
       "NetLogo 3D"      -> NetLogoThreeDApp,
       "NetLogo Logging" -> NetLogoLoggingApp,
       "HubNet Client"   -> HubNetClientApp),
-    netLogoVersion     := "6.0-M1",
+    netLogoVersion     := "6.0-M2",
     numericOnlyVersion := "6.0",
     netLogoLongVersion := { if (netLogoVersion.value.length == 3) netLogoVersion.value + ".0" else netLogoVersion.value },
     buildVariables := Map[String, String](
       "version"               -> netLogoVersion.value,
       "numericOnlyVersion"    -> numericOnlyVersion.value,
-      "date"                  -> "December 4, 2015"),
+      "date"                  -> "March 25, 2016"),
     packageAppParser := { (s: State) =>
       ((" " ~> mapToParser(platformMap.value)) ~
         (" " ~> mapToParser(subApplicationMap.value)) ~
@@ -175,12 +191,12 @@ object NetLogoPackaging {
         mainJarAndDependencies(netlogo, macApp), bundledDirs(netlogo), jvmOptions)),
     packageLinuxAggregate <<=
       InputTask.createDyn(aggregateJDKParser)(Def.task(
-        PackageAction.aggregate("linux", AggregateLinuxBuild, packageApp))),
+        PackageAction.aggregate("linux", AggregateLinuxBuild, packageApp, packageLinuxAggregate))),
     packageWinAggregate   <<=
       InputTask.createDyn(aggregateJDKParser)(Def.task(
-        PackageAction.aggregate("win", AggregateWindowsBuild, packageApp))),
+        PackageAction.aggregate("win", AggregateWindowsBuild, packageApp, packageWinAggregate))),
     packageMacAggregate   <<=
-      PackageAction.aggregate("macimg", AggregateMacBuild, packageApp)(),
+      PackageAction.aggregate("macimg", AggregateMacBuild, packageApp, packageMacAggregate)(),
     webTarget := target.value / "downloadPages",
     buildDownloadPages := {
       val webSource = baseDirectory.value / "downloadPages"

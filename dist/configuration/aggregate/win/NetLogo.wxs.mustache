@@ -31,7 +31,7 @@
               Description="NetLogo"
               Target="[#NetLogo.exe]"
               WorkingDirectory="INSTALLDIR"/>
-            <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
+            <RemoveFolder Id="STARTMENU_DIR" On="uninstall"/>
             <RegistryValue Root="HKCU" Key="Software\NetLogo\NetLogo {{version}}" Name="netlogo-installed" Type="integer" Value="1" KeyPath="yes" />
           </Component>
           <Component Id="NetLogo3DStartMenuShortcut" Guid="{{NetLogo3DStartMenuShortcutId}}">
@@ -82,7 +82,7 @@
       <Component Id="nlogoFileAssociation" Guid="{{nlogoFileAssociationId}}">
         <ProgId Id="NetLogo.nlogo" Description="NetLogo Model" Advertise="no" Icon="model.ico">
           <Extension Id='nlogo' ContentType='text/nlogo'>
-            <Verb Id='opennlogo' Command='Edit with NetLogo' TargetFile='NetLogo.exe' Argument='--launch "%1"' />
+            <Verb Id='opennlogo' Command='Edit with NetLogo {{numericOnlyVersion}}' TargetFile='NetLogo.exe' Argument='--launch "%1"' />
           </Extension>
         </ProgId>
         <RegistryValue Root="HKCU" Key="Software\NetLogo\NetLogo {{version}}" Name="nlogo-file-association" Type="integer" Value="1" KeyPath="yes" />
@@ -90,7 +90,7 @@
       <Component Id="nlogo3DFileAssociation" Guid="{{nlogo3DFileAssociationId}}">
         <ProgId Id="NetLogo.nlogo3d" Description="NetLogo 3D Model" Advertise="no" Icon="model.ico">
           <Extension Id='nlogo3d' ContentType='text/nlogo3d'>
-            <Verb Id='opennlogo3d' Command='Edit with NetLogo 3D' TargetFile='NetLogo_3D.exe' Argument='--launch "%1"' />
+            <Verb Id='opennlogo3d' Command='Edit with NetLogo 3D {{numericOnlyVersion}}' TargetFile='NetLogo_3D.exe' Argument='--launch "%1"' />
           </Extension>
         </ProgId>
         <RegistryValue Root="HKCU" Key="Software\NetLogo\NetLogo {{version}}" Name="nlogo3d-file-association" Type="integer" Value="1" KeyPath="yes" />

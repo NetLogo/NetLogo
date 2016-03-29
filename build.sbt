@@ -27,7 +27,7 @@ lazy val scalaSettings = Seq(
   scalaSource in Test    := baseDirectory.value / "src" / "test",
   crossPaths             := false, // don't cross-build for different Scala versions
   scalacOptions ++=
-    "-deprecation -unchecked -feature -Xcheckinit -encoding us-ascii -target:jvm-1.7 -Xlint -Xfatal-warnings"
+    "-deprecation -unchecked -feature -Xcheckinit -encoding us-ascii -target:jvm-1.8 -Xlint -Xfatal-warnings"
       .split(" ").toSeq
 )
 
@@ -107,7 +107,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
              Depend.dependTask: _*).
   settings(
     name := "NetLogo",
-    version := "6.0-M1",
+    version := "6.0.0-M2",
     isSnapshot := false,
     mainClass in Compile := Some("org.nlogo.app.App"),
     modelsDirectory := file("models"),
@@ -129,11 +129,11 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       "javax.media" % "jmf" % "2.1.1e",
       "org.pegdown" % "pegdown" % "1.5.0",
       "org.parboiled" %% "parboiled-scala" % "1.1.7",
+      "org.jogamp.jogl" % "jogl-all" % "2.3.2",
+      "org.jogamp.gluegen" % "gluegen-rt" % "2.3.2",
       "org.jhotdraw" % "jhotdraw" % "6.0b1"      from cclArtifacts("jhotdraw-6.0b1.jar"),
       "ch.randelshofer" % "quaqua" % "9.1"       from cclArtifacts("quaqua-9.1.jar"),
       "ch.randelshofer" % "swing-layout" % "9.1" from cclArtifacts("swing-layout-9.1.jar"),
-      "com.jogamp" % "jogl" % "2.3.2"            from cclArtifacts("jogl-all-2.3.2.jar"),
-      "com.jogamp" % "gluegen-rt" % "2.3.2"      from cclArtifacts("gluegen-rt-2.3.2.jar"),
       "org.jmock" % "jmock" % "2.5.1" % "test",
       "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
       "org.jmock" % "jmock-junit4" % "2.5.1" % "test",

@@ -1,3 +1,4 @@
+import java.io.File
 
 trait BuildJDK {
   def arch: String
@@ -6,7 +7,9 @@ trait BuildJDK {
   def javapackager: String
 }
 
-case class SpecifiedJDK(arch: String, version: String, javapackager: String, javaHome: Option[String] = None) extends BuildJDK
+case class SpecifiedJDK(arch: String, version: String, packagerFile: File, javaHome: Option[String] = None) extends BuildJDK {
+  def javapackager = packagerFile.getAbsolutePath
+}
 
 case object PathSpecifiedJDK extends BuildJDK {
   val arch         = "universal"

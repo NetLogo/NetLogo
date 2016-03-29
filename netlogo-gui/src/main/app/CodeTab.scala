@@ -124,6 +124,8 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
     _needsCompile = false
     compileAction.setEnabled(e.error != null)
     if(e.sourceOwner == this) errorLabel.setError(e.error, headerSource.length)
+    // this was needed to get extension colorization showing up reliably in the editor area - RG 23/3/16
+    text.revalidate()
   }
 
   def recompile() { new org.nlogo.window.Events.CompileAllEvent().raise(this) }
