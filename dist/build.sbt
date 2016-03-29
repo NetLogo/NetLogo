@@ -98,12 +98,12 @@ lazy val dist = project.in(file("."))
       InputTask.createDyn(packageAppParser)(PackageAction.subApplication(appMainClass, jvmOptions)),
     packageLinuxAggregate <<=
       InputTask.createDyn(aggregateJDKParser)(Def.task(
-        PackageAction.aggregate("linux", AggregateLinuxBuild, packageApp))),
+        PackageAction.aggregate("linux", AggregateLinuxBuild, packageApp, packageLinuxAggregate))),
     packageWinAggregate   <<=
       InputTask.createDyn(aggregateJDKParser)(Def.task(
-        PackageAction.aggregate("win", AggregateWindowsBuild, packageApp))),
+        PackageAction.aggregate("win", AggregateWindowsBuild, packageApp, packageWinAggregate))),
     packageMacAggregate   <<=
-      PackageAction.aggregate("macimg", AggregateMacBuild, packageApp)(),
+      PackageAction.aggregate("macimg", AggregateMacBuild, packageApp, packageMacAggregate)(),
     packageAppParser := { (s: State) =>
       ((" " ~> mapToParser(platformMap.value)) ~
         (" " ~> mapToParser(subApplicationMap.value)) ~
@@ -128,6 +128,7 @@ lazy val dist = project.in(file("."))
       Mustache(baseDirectory.value / "readme.md", target.value / "readme.md", buildVariables.value)
       Seq(target.value / "readme.md", netLogoRoot.value / "NetLogo User Manual.pdf", packagedMathematicaLink.value)
     },
+    aggregateOnlyFiles in packageLinuxAggregate += { baseDirectory.value / "netlogo-headless.sh" },
     webTarget := target.value / "downloadPages",
     buildDownloadPages := {
       val webSource = file("downloadPages")
