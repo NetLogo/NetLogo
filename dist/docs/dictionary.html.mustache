@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="netlogo.css" type="text/css">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <style type="text/css">
-p { margin-left: 1.5em ; }
+    p  { margin-left: 1.5em ; }
     h3 { font-size: 115% ; }
     h4 { font-size: 100% ; margin-left: 1.5em ; background: white ; }
     </style>
@@ -839,7 +839,7 @@ Go figure! - ST 12/2/04
     <div id="A">
     <div class="dict_entry" id="abs">
       <h3>
-        <a>abs</a>
+        <a>abs<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">abs <i>number</i></span>
@@ -855,7 +855,7 @@ show abs 5
     </div>
     <div class="dict_entry" id="acos">
       <h3>
-        <a>acos</a>
+        <a>acos<span class="since">1.3</span></a>
       </h3>
       <h4>
         <span class="prim_example">acos <i>number</i></span>
@@ -867,7 +867,7 @@ show abs 5
       </div>
     <div class="dict_entry" id="all">
       <h3>
-        <a>all?</a>
+        <a>all?<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">all? <i>agentset</i> [<i>reporter</i>]</span>
@@ -890,7 +890,7 @@ if all? turtles [color = red]
       </div>
     <div class="dict_entry" id="and">
       <h3>
-        <a>and</a>
+        <a>and<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example"><i>condition1</i> and <i>condition2</i></span>
@@ -909,7 +909,7 @@ if (pxcor &gt; 0) and (pycor &gt; 0)
     </div>
     <div class="dict_entry" id="any">
       <h3>
-        <a>any?</a>
+        <a>any?<span class="since">2.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">any? <i>agentset</i></span>
@@ -932,7 +932,7 @@ if any? turtles with [color = red]
       </div>
     <div class="dict_entry" id="approximate-hsb">
       <h3>
-        <a>approximate-hsb</a>
+        <a>approximate-hsb<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">approximate-hsb <i>hue saturation brightness</i></span>
@@ -958,7 +958,7 @@ show approximate-hsb 180 57.143 76.863
       </div>
     <div class="dict_entry" id="approximate-rgb">
       <h3>
-        <a>approximate-rgb</a>
+        <a>approximate-rgb<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">approximate-rgb <i>red green blue</i></span>
@@ -986,17 +986,17 @@ show approximate-rgb 0 255 255
     <div class="dict_entry" id="Symbols">
       <h3>
         <a>Arithmetic Operators</a>
-        <a>+</a>
-        <a>*</a>
-        <a>-</a>
-        <a>/</a>
-        <a>^</a>
-        <a>&lt;</a>
-        <a>&gt;</a>
-        <a>=</a>
-        <a>!=</a>
-        <a>&lt;=</a>
-        <a>&gt;=</a>
+        <a>+<span class="since">1.0</span></a>
+        <a>*<span class="since">1.0</span></a>
+        <a>-<span class="since">1.0</span></a>
+        <a>/<span class="since">1.0</span></a>
+        <a>^<span class="since">1.0</span></a>
+        <a>&lt;<span class="since">1.0</span></a>
+        <a>&gt;<span class="since">1.0</span></a>
+        <a>=<span class="since">1.0</span></a>
+        <a>!=<span class="since">1.0</span></a>
+        <a>&lt;=<span class="since">1.0</span></a>
+        <a>&gt;=<span class="since">1.0</span></a>
       </h3>
       <p>
         All of these operators take two inputs, and all act as &quot;infix
@@ -1041,7 +1041,7 @@ show 5 * (6 + 6) / 3
     </div>
     <div class="dict_entry" id="asin">
       <h3>
-        <a>asin</a>
+        <a>asin<span class="since">1.3</span></a>
       </h3>
       <h4>
         <span class="prim_example">asin <i>number</i></span>
@@ -1053,7 +1053,7 @@ show 5 * (6 + 6) / 3
       </div>
     <div class="dict_entry" id="ask">
       <h3>
-        <a>ask</a>
+        <a>ask<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">ask <i>agentset</i> [<i>commands</i>]</span>
@@ -1081,7 +1081,7 @@ ask turtle 4 [ rt 90 ]
       </div>
     <div class="dict_entry" id="ask-concurrent">
       <h3>
-        <a>ask-concurrent</a>
+        <a>ask-concurrent<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">ask-concurrent <i>agentset</i> [<i>commands</i>]</span>
@@ -1102,7 +1102,7 @@ ask turtle 4 [ rt 90 ]
       </div>
     <div class="dict_entry" id="at-points">
       <h3>
-        <a>at-points</a>
+        <a>at-points<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example"><i>agentset</i> at-points [[<i>x1 y1</i>] [<i>x2 y2</i>] ...]</span>
@@ -1129,7 +1129,7 @@ ask turtles at-points [[2 4] [1 2] [10 15]]
     </div>
     <div class="dict_entry" id="atan">
       <h3>
-        <a>atan</a>
+        <a>atan<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">atan <i>x y</i></span>
@@ -1170,7 +1170,7 @@ end
     </div>
     <div class="dict_entry" id="autoplot">
       <h3>
-        <a>autoplot?</a>
+        <a>autoplot?<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">autoplot?</span>
@@ -1181,8 +1181,8 @@ end
       </div>
     <div class="dict_entry" id="auto-plot-status">
       <h3>
-        <a>auto-plot-off</a>
-        <a>auto-plot-on</a>
+        <a>auto-plot-off<span class="since">1.0</span></a>
+        <a>auto-plot-on<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">auto-plot-off</span>
@@ -1203,8 +1203,8 @@ end
     <div id="B">
     <div class="dict_entry" id="back">
       <h3>
-        <a>back</a>
-        <a>bk</a>
+        <a>back<span class="since">1.0</span></a>
+        <a>bk<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">back <i>number</i></span>
@@ -1227,7 +1227,7 @@ end
       </div>
     <div class="dict_entry" id="base-colors">
       <h3>
-        <a>base-colors</a>
+        <a>base-colors<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">base-colors</span>
@@ -1245,7 +1245,7 @@ ask turtles [ set color one-of remove gray base-colors ]
     </div>
     <div class="dict_entry" id="beep">
       <h3>
-        <a>beep</a>
+        <a>beep<span class="since">2.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">beep</span>
@@ -1268,7 +1268,7 @@ repeat 3 [ beep wait 0.1 ] ;; produces 3 beeps in succession,
       </div>
     <div class="dict_entry" id="behaviorspace-experiment-name">
       <h3>
-        <a>behaviorspace-experiment-name</a>
+        <a>behaviorspace-experiment-name<span class="since">5.2</span></a>
       </h3>
       <h4>
         <span class="prim_example">behaviorspace-experiment-name</span>
@@ -1280,7 +1280,7 @@ repeat 3 [ beep wait 0.1 ] ;; produces 3 beeps in succession,
       </div>
     <div class="dict_entry" id="behaviorspace-run-number">
       <h3>
-        <a>behaviorspace-run-number</a>
+        <a>behaviorspace-run-number<span class="since">4.1.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">behaviorspace-run-number</span>
@@ -1293,7 +1293,7 @@ repeat 3 [ beep wait 0.1 ] ;; produces 3 beeps in succession,
       </div>
     <div class="dict_entry" id="both-ends">
       <h3>
-        <a>both-ends</a>
+        <a>both-ends<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">both-ends</span>
@@ -1392,12 +1392,12 @@ show turtle 51
       </div>
     <div class="dict_entry" id="but-first-and-last">
       <h3>
-        <a>but-first</a>
-        <a>butfirst</a>
-        <a>bf</a>
-        <a>but-last</a>
-        <a>butlast</a>
-        <a>bl</a>
+        <a>but-first<span class="since">1.0</span></a>
+        <a>butfirst<span class="since">1.0</span></a>
+        <a>bf<span class="since">1.0</span></a>
+        <a>but-last<span class="since">1.0</span></a>
+        <a>butlast<span class="since">1.0</span></a>
+        <a>bl<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">but-first <i>list</i></span>
@@ -1431,7 +1431,7 @@ show but-last &quot;string&quot;
     <div id="C">
     <div class="dict_entry" id="can-move">
       <h3>
-        <a>can-move?</a>
+        <a>can-move?<span class="since">3.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">can-move? <i>distance</i></span>
@@ -1449,7 +1449,7 @@ patch-ahead <i>distance</i> != nobody
     </div>
     <div class="dict_entry" id="carefully">
       <h3>
-        <a>carefully</a>
+        <a>carefully<span class="since">2.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">carefully [ <i>commands1</i> ] [ <i>commands2</i> ]</span>
@@ -1471,7 +1471,7 @@ observer&gt; carefully [ print one-of [] ] [ print error-message ]
     </div>
     <div class="dict_entry" id="ceiling">
       <h3>
-        <a>ceiling</a>
+        <a>ceiling<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">ceiling <i>number</i></span>
@@ -1491,8 +1491,8 @@ show ceiling -4.5
       </div>
     <div class="dict_entry" id="clear-all">
       <h3>
-        <a>clear-all</a>
-        <a>ca</a>
+        <a>clear-all<span class="since">1.0</span></a>
+        <a>ca<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">clear-all</span>
@@ -1505,7 +1505,7 @@ show ceiling -4.5
       </div>
     <div class="dict_entry" id="clear-all-plots">
       <h3>
-        <a>clear-all-plots</a>
+        <a>clear-all-plots<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">clear-all-plots</span>
@@ -1516,8 +1516,8 @@ show ceiling -4.5
       </div>
     <div class="dict_entry" id="clear-drawing">
       <h3>
-        <a>clear-drawing</a>
-        <a>cd</a>
+        <a>clear-drawing<span class="since">3.0</span></a>
+        <a>cd<span class="since">3.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">clear-drawing</span>
@@ -1528,7 +1528,7 @@ show ceiling -4.5
       </div>
     <div class="dict_entry" id="clear-globals">
       <h3>
-        <a>clear-globals</a>
+        <a>clear-globals<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">clear-globals</span>
@@ -1539,7 +1539,7 @@ show ceiling -4.5
       </div>
     <div class="dict_entry" id="clear-links">
       <h3>
-        <a>clear-links</a>
+        <a>clear-links<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">clear-links</span>
@@ -1552,7 +1552,7 @@ show ceiling -4.5
       </div>
     <div class="dict_entry" id="clear-output">
       <h3>
-        <a>clear-output</a>
+        <a>clear-output<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">clear-output</span>
@@ -1564,8 +1564,8 @@ show ceiling -4.5
       </div>
     <div class="dict_entry" id="clear-patches">
       <h3>
-        <a>clear-patches</a>
-        <a>cp</a>
+        <a>clear-patches<span class="since">1.0</span></a>
+        <a>cp<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">clear-patches</span>
@@ -1604,7 +1604,7 @@ show ceiling -4.5
       </div>
     <div class="dict_entry" id="clear-ticks">
       <h3>
-        <a>clear-ticks</a>
+        <a>clear-ticks<span class="since">5.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">clear-ticks</span>
@@ -1621,8 +1621,8 @@ show ceiling -4.5
       </div>
     <div class="dict_entry" id="clear-turtles">
       <h3>
-        <a>clear-turtles</a>
-        <a>ct</a>
+        <a>clear-turtles<span class="since">1.0</span></a>
+        <a>ct<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">clear-turtles</span>
@@ -1656,7 +1656,7 @@ show ceiling -4.5
       </div>
     <div class="dict_entry" id="cos">
       <h3>
-        <a>cos</a>
+        <a>cos<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">cos <i>number</i></span>
@@ -1671,7 +1671,7 @@ show cos 180
     </div>
     <div class="dict_entry" id="count">
       <h3>
-        <a>count</a>
+        <a>count<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">count <i>agentset</i></span>
@@ -1687,8 +1687,8 @@ show count patches with [pcolor = red]
     </div>
     <div class="dict_entry" id="create-ordered-turtles">
       <h3>
-        <a>create-ordered-turtles</a>
-        <a>cro</a>
+        <a>create-ordered-turtles<span class="since">4.0</span></a>
+        <a>cro<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">create-ordered-turtles <i>number</i></span>
@@ -1721,12 +1721,12 @@ cro 100 [ fd 10 ]  ;; makes an evenly spaced circle
         <a>create-&lt;breeds&gt;-from</a>
         <a>create-&lt;breed&gt;-with</a>
         <a>create-&lt;breeds&gt;-with</a>
-        <a>create-link-to</a>
-        <a>create-links-to</a>
-        <a>create-link-from</a>
-        <a>create-links-from</a>
-        <a>create-link-with</a>
-        <a>create-links-with</a>
+        <a>create-link-to<span class="since">4.0</span></a>
+        <a>create-links-to<span class="since">4.0</span></a>
+        <a>create-link-from<span class="since">4.0</span></a>
+        <a>create-links-from<span class="since">4.0</span></a>
+        <a>create-link-with<span class="since">4.0</span></a>
+        <a>create-links-with<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">create-&lt;breed&gt;-to <i>turtle</i></span>
@@ -1814,8 +1814,8 @@ end
     </div>
     <div class="dict_entry" id="create-turtles">
       <h3>
-        <a>create-turtles</a>
-        <a>crt</a>
+        <a>create-turtles<span class="since">1.0</span></a>
+        <a>crt<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">create-turtles <i>number</i></span>
@@ -1853,7 +1853,7 @@ end
       </div>
     <div class="dict_entry" id="create-temporary-plot-pen">
       <h3>
-        <a>create-temporary-plot-pen</a>
+        <a>create-temporary-plot-pen<span class="since">1.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">create-temporary-plot-pen <i>string</i></span>
@@ -1889,7 +1889,7 @@ end
     <div id="D">
     <div class="dict_entry" id="date-and-time">
       <h3>
-        <a>date-and-time</a>
+        <a>date-and-time<span class="since">3.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">date-and-time</span>
@@ -1908,7 +1908,7 @@ show date-and-time
     </div>
     <div class="dict_entry" id="die">
       <h3>
-        <a>die</a>
+        <a>die<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">die</span>
@@ -1945,7 +1945,7 @@ ask links with [color = blue] [ die ]
       </div>
     <div class="dict_entry" id="diffuse">
       <h3>
-        <a>diffuse</a>
+        <a>diffuse<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">diffuse <i>patch-variable</i> <i>number</i></span>
@@ -1973,7 +1973,7 @@ diffuse chemical 0.5
     </div>
     <div class="dict_entry" id="diffuse4">
       <h3>
-        <a>diffuse4</a>
+        <a>diffuse4<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">diffuse4 <i>patch-variable</i> <i>number</i></span>
@@ -2038,7 +2038,7 @@ ask turtle 0 [ show one-of my-out-links ]
       </div>
     <div class="dict_entry" id="display">
       <h3>
-        <a>display</a>
+        <a>display<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">display</span>
@@ -2079,7 +2079,7 @@ ask turtles [ set color blue]
       </div>
     <div class="dict_entry" id="distance">
       <h3>
-        <a>distance</a>
+        <a>distance<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">distance <i>agent</i></span>
@@ -2099,7 +2099,7 @@ ask turtles [ show max-one-of turtles [distance myself] ]
     </div>
     <div class="dict_entry" id="distancexy">
       <h3>
-        <a>distancexy</a>
+        <a>distancexy<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">distancexy <i>xcor</i> <i>ycor</i></span>
@@ -2122,8 +2122,8 @@ if (distancexy 0 0) &gt; 10
     </div>
     <div class="dict_entry" id="downhill">
       <h3>
-        <a>downhill</a>
-        <a>downhill4</a>
+        <a>downhill<span class="since">1.0</span></a>
+        <a>downhill4<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">downhill <i>patch-variable</i></span>
@@ -2158,8 +2158,8 @@ if [<i>patch-variable</i>] of p &lt; <i>patch-variable</i> [
       </div>
     <div class="dict_entry" id="dxy">
       <h3>
-        <a>dx</a>
-        <a>dy</a>
+        <a>dx<span class="since">1.0</span></a>
+        <a>dy<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">dx</span>
@@ -2188,7 +2188,7 @@ if [<i>patch-variable</i>] of p &lt; <i>patch-variable</i> [
     <div id="E">
     <div class="dict_entry" id="empty">
       <h3>
-        <a>empty?</a>
+        <a>empty?<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">empty? <i>list</i></span>
@@ -2212,7 +2212,7 @@ if [<i>patch-variable</i>] of p &lt; <i>patch-variable</i> [
       </div>
     <div class="dict_entry" id="end1">
       <h3>
-        <a>end1</a>
+        <a>end1<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">end1</span>
@@ -2233,7 +2233,7 @@ ask links
     </div>
     <div class="dict_entry" id="end2">
       <h3>
-        <a>end2</a>
+        <a>end2<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">end2</span>
@@ -2254,7 +2254,7 @@ ask links
     </div>
     <div class="dict_entry" id="error">
       <h3>
-        <a>error</a>
+        <a>error<span class="since">5.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">error <i>value</i></span>
@@ -2269,7 +2269,7 @@ ask links
       </div>
     <div class="dict_entry" id="error-message">
       <h3>
-        <a>error-message</a>
+        <a>error-message<span class="since">2.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">error-message</span>
@@ -2285,7 +2285,7 @@ ask links
       </div>
     <div class="dict_entry" id="every">
       <h3>
-        <a>every</a>
+        <a>every<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">every <i>number</i> [ <i>commands</i> ]</span>
@@ -2317,7 +2317,7 @@ every 2 [ set index index + 1 ]
       </div>
     <div class="dict_entry" id="exp">
       <h3>
-        <a>exp</a>
+        <a>exp<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">exp <i>number</i></span>
@@ -2329,12 +2329,12 @@ every 2 [ set index index + 1 ]
       </div>
     <div class="dict_entry" id="export-cmds">
       <h3>
-        <a>export-view</a>
-        <a>export-interface</a>
-        <a>export-output</a>
-        <a>export-plot</a>
-        <a>export-all-plots</a>
-        <a>export-world</a>
+        <a>export-view<span class="since">3.0</span></a>
+        <a>export-interface<span class="since">2.0</span></a>
+        <a>export-output<span class="since">1.0</span></a>
+        <a>export-plot<span class="since">1.0</span></a>
+        <a>export-all-plots<span class="since">1.2.1</span></a>
+        <a>export-world<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">export-view <i>filename</i></span>
@@ -2427,7 +2427,7 @@ export-world (word &quot;results &quot; random-float 1.0 &quot;.csv&quot;)
       </div>
     <div class="dict_entry" id="extract-hsb">
       <h3>
-        <a>extract-hsb</a>
+        <a>extract-hsb<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">extract-hsb <i>color</i></span>
@@ -2449,7 +2449,7 @@ show extract-hsb cyan
       </div>
     <div class="dict_entry" id="extract-rgb">
       <h3>
-        <a>extract-rgb</a>
+        <a>extract-rgb<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">extract-rgb <i>color</i></span>
@@ -2475,7 +2475,7 @@ show extract-rgb cyan
     <div id="F">
     <div class="dict_entry" id="face">
       <h3>
-        <a>face</a>
+        <a>face<span class="since">3.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">face <i>agent</i></span>
@@ -2493,7 +2493,7 @@ show extract-rgb cyan
       </div>
     <div class="dict_entry" id="facexy">
       <h3>
-        <a>facexy</a>
+        <a>facexy<span class="since">3.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">facexy <i>number</i> <i>number</i></span>
@@ -2511,7 +2511,7 @@ show extract-rgb cyan
       </div>
     <div class="dict_entry" id="file-at-end">
       <h3>
-        <a>file-at-end?</a>
+        <a>file-at-end?<span class="since">2.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">file-at-end?</span>
@@ -2533,7 +2533,7 @@ print file-at-end?
       </div>
     <div class="dict_entry" id="file-close">
       <h3>
-        <a>file-close</a>
+        <a>file-close<span class="since">2.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">file-close</span>
@@ -2550,7 +2550,7 @@ print file-at-end?
       </div>
     <div class="dict_entry" id="file-close-all">
       <h3>
-        <a>file-close-all</a>
+        <a>file-close-all<span class="since">2.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">file-close-all</span>
@@ -2563,7 +2563,7 @@ print file-at-end?
       </div>
     <div class="dict_entry" id="file-delete">
       <h3>
-        <a>file-delete</a>
+        <a>file-delete<span class="since">2.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">file-delete <i>string</i></span>
@@ -2582,7 +2582,7 @@ print file-at-end?
       </div>
     <div class="dict_entry" id="file-exists">
       <h3>
-        <a>file-exists?</a>
+        <a>file-exists?<span class="since">2.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">file-exists? <i>string</i></span>
@@ -2598,7 +2598,7 @@ print file-at-end?
       </div>
     <div class="dict_entry" id="file-flush">
       <h3>
-        <a>file-flush</a>
+        <a>file-flush<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">file-flush</span>
@@ -2616,7 +2616,7 @@ print file-at-end?
       </div>
     <div class="dict_entry" id="file-open">
       <h3>
-        <a>file-open</a>
+        <a>file-open<span class="since">2.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">file-open <i>string</i></span>
@@ -2665,7 +2665,7 @@ file-print &quot;Hello World&quot; ;; File is in writing mode
       </div>
     <div class="dict_entry" id="file-print">
       <h3>
-        <a>file-print</a>
+        <a>file-print<span class="since">2.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">file-print <i>value</i></span>
@@ -2683,7 +2683,7 @@ file-print &quot;Hello World&quot; ;; File is in writing mode
       </div>
     <div class="dict_entry" id="file-read">
       <h3>
-        <a>file-read</a>
+        <a>file-read<span class="since">2.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">file-read</span>
@@ -2718,7 +2718,7 @@ print length file-read
       </div>
     <div class="dict_entry" id="file-read-characters">
       <h3>
-        <a>file-read-characters</a>
+        <a>file-read-characters<span class="since">2.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">file-read-characters <i>number</i></span>
@@ -2746,7 +2746,7 @@ print file-read-characters 5
       </div>
     <div class="dict_entry" id="file-read-line">
       <h3>
-        <a>file-read-line</a>
+        <a>file-read-line<span class="since">2.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">file-read-line</span>
@@ -2771,7 +2771,7 @@ print file-read-line
       </div>
     <div class="dict_entry" id="file-show">
       <h3>
-        <a>file-show</a>
+        <a>file-show<span class="since">2.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">file-show <i>value</i></span>
@@ -2790,7 +2790,7 @@ print file-read-line
       </div>
     <div class="dict_entry" id="file-type">
       <h3>
-        <a>file-type</a>
+        <a>file-type<span class="since">2.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">file-type <i>value</i></span>
@@ -2810,7 +2810,7 @@ print file-read-line
       </div>
     <div class="dict_entry" id="file-write">
       <h3>
-        <a>file-write</a>
+        <a>file-write<span class="since">2.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">file-write <i>value</i></span>
@@ -2837,7 +2837,7 @@ ask turtles
       </div>
     <div class="dict_entry" id="filter">
       <h3>
-        <a>filter</a>
+        <a>filter<span class="since">1.3</span></a>
       </h3>
       <h4>
         <span class="prim_example">filter <i>reporter-task</i> <i>list</i></span>
@@ -2860,7 +2860,7 @@ show filter [first ? != &quot;t&quot;] [&quot;hi&quot; &quot;there&quot; &quot;e
       </div>
     <div class="dict_entry" id="first">
       <h3>
-        <a>first</a>
+        <a>first<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">first <i>list</i></span>
@@ -2874,7 +2874,7 @@ show filter [first ? != &quot;t&quot;] [&quot;hi&quot; &quot;there&quot; &quot;e
       </div>
     <div class="dict_entry" id="floor">
       <h3>
-        <a>floor</a>
+        <a>floor<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">floor <i>number</i></span>
@@ -2892,7 +2892,7 @@ show floor -4.5
       </div>
     <div class="dict_entry" id="follow">
       <h3>
-        <a>follow</a>
+        <a>follow<span class="since">3.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">follow <i>turtle</i></span>
@@ -2906,7 +2906,7 @@ show floor -4.5
       </div>
     <div class="dict_entry" id="follow-me">
       <h3>
-        <a>follow-me</a>
+        <a>follow-me<span class="since">3.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">follow-me</span>
@@ -2919,7 +2919,7 @@ show floor -4.5
       </div>
     <div class="dict_entry" id="foreach">
       <h3>
-        <a>foreach</a>
+        <a>foreach<span class="since">1.3</span></a>
       </h3>
       <h4>
         <span class="prim_example">foreach <i>list</i> <i>command-task</i></span>
@@ -2959,8 +2959,8 @@ foreach [1.1 2.2 2.6] [ show (word ? &quot; -&gt; &quot; round ?) ]
       </div>
     <div class="dict_entry" id="forward">
       <h3>
-        <a>forward</a>
-        <a>fd</a>
+        <a>forward<span class="since">1.0</span></a>
+        <a>fd<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">forward <i>number</i></span>
@@ -2982,7 +2982,7 @@ foreach [1.1 2.2 2.6] [ show (word ? &quot; -&gt; &quot; round ?) ]
       </div>
     <div class="dict_entry" id="fput">
       <h3>
-        <a>fput</a>
+        <a>fput<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">fput <i>item list</i></span>
@@ -3026,7 +3026,7 @@ set mylist fput 2 mylist
     <div id="H">
     <div class="dict_entry" id="hatch">
       <h3>
-        <a>hatch</a>
+        <a>hatch<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">hatch <i>number</i> [ <i>commands</i> ]</span>
@@ -3108,7 +3108,7 @@ set hidden? not hidden?
     </div>
     <div class="dict_entry" id="hide-link">
       <h3>
-        <a>hide-link</a>
+        <a>hide-link<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">hide-link</span>
@@ -3124,8 +3124,8 @@ set hidden? not hidden?
       </div>
     <div class="dict_entry" id="hide-turtle">
       <h3>
-        <a>hide-turtle</a>
-        <a>ht</a>
+        <a>hide-turtle<span class="since">1.0</span></a>
+        <a>ht<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">hide-turtle</span>
@@ -3141,7 +3141,7 @@ set hidden? not hidden?
       </div>
     <div class="dict_entry" id="histogram">
       <h3>
-        <a>histogram</a>
+        <a>histogram<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">histogram <i>list</i></span>
@@ -3179,7 +3179,7 @@ histogram [color] of turtles
     </div>
     <div class="dict_entry" id="home">
       <h3>
-        <a>home</a>
+        <a>home<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">home</span>
@@ -3191,7 +3191,7 @@ histogram [color] of turtles
       </div>
     <div class="dict_entry" id="hsb">
       <h3>
-        <a>hsb</a>
+        <a>hsb<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">hsb <i>hue saturation brightness</i></span>
@@ -3206,7 +3206,7 @@ histogram [color] of turtles
       </div>
     <div class="dict_entry" id="hubnet-broadcast">
       <h3>
-        <a>hubnet-broadcast</a>
+        <a>hubnet-broadcast<span class="since">1.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">hubnet-broadcast <i>tag-name value</i></span>
@@ -3220,7 +3220,7 @@ histogram [color] of turtles
       </div>
     <div class="dict_entry" id="hubnet-broadcast-clear-output">
       <h3>
-        <a>hubnet-broadcast-clear-output</a>
+        <a>hubnet-broadcast-clear-output<span class="since">4.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">hubnet-broadcast-clear-output</span>
@@ -3232,7 +3232,7 @@ histogram [color] of turtles
       </div>
     <div class="dict_entry" id="hubnet-broadcast-message">
       <h3>
-        <a>hubnet-broadcast-message</a>
+        <a>hubnet-broadcast-message<span class="since">4.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">hubnet-broadcast-message <i>value</i></span>
@@ -3246,8 +3246,8 @@ histogram [color] of turtles
       </div>
     <div class="dict_entry" id="hubnet-clear-override">
       <h3>
-        <a>hubnet-clear-override</a>
-        <a>hubnet-clear-overrides</a>
+        <a>hubnet-clear-override<span class="since">4.1</span></a>
+        <a>hubnet-clear-overrides<span class="since">4.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">hubnet-clear-override <i>client</i> <i>agent-or-set</i> <i>variable-name</i></span>
@@ -3264,7 +3264,7 @@ histogram [color] of turtles
       </div>
     <div class="dict_entry" id="hubnet-clients-list">
       <h3>
-        <a>hubnet-clients-list</a>
+        <a>hubnet-clients-list<span class="since">5.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">hubnet-clients-list</span>
@@ -3275,7 +3275,7 @@ histogram [color] of turtles
       </div>
     <div class="dict_entry" id="hubnet-enter-message">
       <h3>
-        <a>hubnet-enter-message?</a>
+        <a>hubnet-enter-message?<span class="since">1.2.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">hubnet-enter-message?</span>
@@ -3290,7 +3290,7 @@ histogram [color] of turtles
       </div>
     <div class="dict_entry" id="hubnet-exit-message">
       <h3>
-        <a>hubnet-exit-message?</a>
+        <a>hubnet-exit-message?<span class="since">1.2.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">hubnet-exit-message?</span>
@@ -3305,7 +3305,7 @@ histogram [color] of turtles
       </div>
     <div class="dict_entry" id="hubnet-fetch-message">
       <h3>
-        <a>hubnet-fetch-message</a>
+        <a>hubnet-fetch-message<span class="since">1.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">hubnet-fetch-message</span>
@@ -3320,7 +3320,7 @@ histogram [color] of turtles
       </div>
     <div class="dict_entry" id="hubnet-kick-client">
       <h3>
-        <a>hubnet-kick-client</a>
+        <a>hubnet-kick-client<span class="since">5.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">hubnet-kick-client <i>client-name</i></span>
@@ -3332,7 +3332,7 @@ histogram [color] of turtles
       </div>
     <div class="dict_entry" id="hubnet-kick-all-clients">
       <h3>
-        <a>hubnet-kick-all-clients</a>
+        <a>hubnet-kick-all-clients<span class="since">5.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">hubnet-kick-all-clients</span>
@@ -3344,7 +3344,7 @@ histogram [color] of turtles
       </div>
     <div class="dict_entry" id="hubnet-message">
       <h3>
-        <a>hubnet-message</a>
+        <a>hubnet-message<span class="since">1.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">hubnet-message</span>
@@ -3357,7 +3357,7 @@ histogram [color] of turtles
       </div>
     <div class="dict_entry" id="hubnet-message-source">
       <h3>
-        <a>hubnet-message-source</a>
+        <a>hubnet-message-source<span class="since">1.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">hubnet-message-source</span>
@@ -3371,7 +3371,7 @@ histogram [color] of turtles
       </div>
     <div class="dict_entry" id="hubnet-message-tag">
       <h3>
-        <a>hubnet-message-tag</a>
+        <a>hubnet-message-tag<span class="since">1.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">hubnet-message-tag</span>
@@ -3387,7 +3387,7 @@ histogram [color] of turtles
       </div>
     <div class="dict_entry" id="hubnet-message-waiting">
       <h3>
-        <a>hubnet-message-waiting?</a>
+        <a>hubnet-message-waiting?<span class="since">1.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">hubnet-message-waiting?</span>
@@ -3401,7 +3401,7 @@ histogram [color] of turtles
       </div>
     <div class="dict_entry" id="hubnet-reset">
       <h3>
-        <a>hubnet-reset</a>
+        <a>hubnet-reset<span class="since">1.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">hubnet-reset</span>
@@ -3415,7 +3415,7 @@ histogram [color] of turtles
       </div>
     <div class="dict_entry" id="hubnet-reset-perspective">
       <h3>
-        <a>hubnet-reset-perspective</a>
+        <a>hubnet-reset-perspective<span class="since">4.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">hubnet-reset-perspective <i>tag-name</i></span>
@@ -3429,7 +3429,7 @@ histogram [color] of turtles
       </div>
     <div class="dict_entry" id="hubnet-send">
       <h3>
-        <a>hubnet-send</a>
+        <a>hubnet-send<span class="since">1.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">hubnet-send <i>string tag-name value</i></span>
@@ -3454,7 +3454,7 @@ histogram [color] of turtles
       </div>
     <div class="dict_entry" id="hubnet-send-clear-output">
       <h3>
-        <a>hubnet-send-clear-output</a>
+        <a>hubnet-send-clear-output<span class="since">4.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">hubnet-send-clear-output <i>string</i></span>
@@ -3472,7 +3472,7 @@ histogram [color] of turtles
       </div>
     <div class="dict_entry" id="hubnet-send-follow">
       <h3>
-        <a>hubnet-send-follow</a>
+        <a>hubnet-send-follow<span class="since">4.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">hubnet-send-follow <i>client-name agent radius</i></span>
@@ -3487,7 +3487,7 @@ histogram [color] of turtles
       </div>
     <div class="dict_entry" id="hubnet-send-message">
       <h3>
-        <a>hubnet-send-message</a>
+        <a>hubnet-send-message<span class="since">4.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">hubnet-send-message <i>string</i> <i>value</i></span>
@@ -3500,7 +3500,7 @@ histogram [color] of turtles
       </div>
     <div class="dict_entry" id="hubnet-send-override">
       <h3>
-        <a>hubnet-send-override</a>
+        <a>hubnet-send-override<span class="since">4.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">hubnet-send-override <i>client-name agent-or-set variable-name</i></span>
@@ -3528,7 +3528,7 @@ ask turtles [ hubnet-send-override client-name self &quot;color&quot; [ red ] ]
       </div>
     <div class="dict_entry" id="hubnet-send-watch">
       <h3>
-        <a>hubnet-send-watch</a>
+        <a>hubnet-send-watch<span class="since">4.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">hubnet-send-watch <i>client-name agent</i></span>
@@ -3542,7 +3542,7 @@ ask turtles [ hubnet-send-override client-name self &quot;color&quot; [ red ] ]
       </div>
     <div class="dict_entry" id="hubnet-set-client-interface">
       <h3>
-        <a>hubnet-set-client-interface</a>
+        <a>hubnet-set-client-interface<span class="since">1.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">hubnet-set-client-interface <i>client-type</i> <i>client-info</i></span>
@@ -3568,7 +3568,7 @@ hubnet-set-client-interface &quot;COMPUTER&quot; []
     <div id="I">
     <div class="dict_entry" id="if">
       <h3>
-        <a>if</a>
+        <a>if<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">if <i>condition</i> [ <i>commands</i> ]</span>
@@ -3590,7 +3590,7 @@ if xcor &gt; 0[ set color blue ]
       </div>
     <div class="dict_entry" id="ifelse">
       <h3>
-        <a>ifelse</a>
+        <a>ifelse<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">ifelse <i>reporter</i> [ <i>commands1</i> ] [ <i>commands2</i> ]</span>
@@ -3618,7 +3618,7 @@ ask patches
       </div>
     <div class="dict_entry" id="ifelse-value">
       <h3>
-        <a>ifelse-value</a>
+        <a>ifelse-value<span class="since">2.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">ifelse-value <i>reporter</i> [<i>reporter1</i>] [<i>reporter2</i>]</span>
@@ -3652,7 +3652,7 @@ show reduce [ifelse-value (?1 &gt; ?2) [?1] [?2]]
       </div>
     <div class="dict_entry" id="import-drawing">
       <h3>
-        <a>import-drawing</a>
+        <a>import-drawing<span class="since">3.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">import-drawing <i>filename</i></span>
@@ -3675,7 +3675,7 @@ show reduce [ifelse-value (?1 &gt; ?2) [?1] [?2]]
       </div>
     <div class="dict_entry" id="import-pcolors">
       <h3>
-        <a>import-pcolors</a>
+        <a>import-pcolors<span class="since">3.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">import-pcolors <i>filename</i></span>
@@ -3703,7 +3703,7 @@ show reduce [ifelse-value (?1 &gt; ?2) [?1] [?2]]
       </div>
     <div class="dict_entry" id="import-pcolors-rgb">
       <h3>
-        <a>import-pcolors-rgb</a>
+        <a>import-pcolors-rgb<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">import-pcolors-rgb <i>filename</i></span>
@@ -3724,7 +3724,7 @@ show reduce [ifelse-value (?1 &gt; ?2) [?1] [?2]]
       </div>
     <div class="dict_entry" id="import-world">
       <h3>
-        <a>import-world</a>
+        <a>import-world<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">import-world <i>filename</i></span>
@@ -3760,7 +3760,7 @@ show reduce [ifelse-value (?1 &gt; ?2) [?1] [?2]]
       </div>
     <div class="dict_entry" id="in-cone">
       <h3>
-        <a>in-cone</a>
+        <a>in-cone<span class="since">3.0</span></a>
       </h3>
       <h4>
         <span class="prim_example"><i>agentset</i> in-cone <i>distance</i> <i>angle</i></span>
@@ -3790,7 +3790,7 @@ ask turtles
     <div class="dict_entry" id="in-link-neighbor">
       <h3>
         <a>in-&lt;breed&gt;-neighbor?</a>
-        <a>in-link-neighbor?</a>
+        <a>in-link-neighbor?<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">in-&lt;breed&gt;-neighbor? <i>agent</i></span>
@@ -3816,7 +3816,7 @@ ask turtle 1 [
     <div class="dict_entry" id="in-link-neighbors">
       <h3>
         <a>in-&lt;breed&gt;-neighbors</a>
-        <a>in-link-neighbors</a>
+        <a>in-link-neighbors<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">in-&lt;breed&gt;-neighbors</span>
@@ -3835,7 +3835,7 @@ ask turtle 1 [ ask in-link-neighbors [ set color blue ] ] ;; turtle 0 turns blue
     <div class="dict_entry" id="in-link-from">
       <h3>
         <a>in-&lt;breed&gt;-from</a>
-        <a>in-link-from</a>
+        <a>in-link-from<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">in-&lt;breed&gt;-from <i>turtle</i></span>
@@ -3869,7 +3869,7 @@ ask turtle 0 [ show in-link-from turtle 1 ] ;; shows nobody
       </div>
     <div class="dict_entry" id="in-radius">
       <h3>
-        <a>in-radius</a>
+        <a>in-radius<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example"><i>agentset</i> in-radius <i>number</i></span>
@@ -3891,7 +3891,7 @@ ask turtles
     </div>
     <div class="dict_entry" id="inspect">
       <h3>
-        <a>inspect</a>
+        <a>inspect<span class="since">1.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">inspect <i>agent</i></span>
@@ -3910,7 +3910,7 @@ inspect one-of sheep
     </div>
     <div class="dict_entry" id="int">
       <h3>
-        <a>int</a>
+        <a>int<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">int <i>number</i></span>
@@ -3927,22 +3927,22 @@ show int -3.5
     </div>
     <div class="dict_entry" id="is-of-type">
       <h3>
-        <a>is-agent?</a>
-        <a>is-agentset?</a>
-        <a>is-boolean?</a>
-        <a>is-command-task?</a>
-        <a>is-directed-link?</a>
-        <a>is-link?</a>
-        <a>is-link-set?</a>
-        <a>is-list?</a>
-        <a>is-number?</a>
-        <a>is-patch?</a>
-        <a>is-patch-set?</a>
-        <a>is-reporter-task?</a>
-        <a>is-string?</a>
-        <a>is-turtle?</a>
-        <a>is-turtle-set?</a>
-        <a>is-undirected-link?</a>
+        <a>is-agent?<span class="since">1.2.1</span></a>
+        <a>is-agentset?<span class="since">1.2.1</span></a>
+        <a>is-boolean?<span class="since">1.2.1</span></a>
+        <a>is-command-task?<span class="since">5.0</span></a>
+        <a>is-directed-link?<span class="since">4.0</span></a>
+        <a>is-link?<span class="since">4.0</span></a>
+        <a>is-link-set?<span class="since">4.0</span></a>
+        <a>is-list?<span class="since">1.0</span></a>
+        <a>is-number?<span class="since">1.2.1</span></a>
+        <a>is-patch?<span class="since">1.2.1</span></a>
+        <a>is-patch-set?<span class="since">4.0</span></a>
+        <a>is-reporter-task?<span class="since">5.0</span></a>
+        <a>is-string?<span class="since">1.0</span></a>
+        <a>is-turtle?<span class="since">1.2.1</span></a>
+        <a>is-turtle-set?<span class="since">4.0</span></a>
+        <a>is-undirected-link?<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">is-agent? <i>value</i></span>
@@ -3968,7 +3968,7 @@ show int -3.5
       </div>
     <div class="dict_entry" id="item">
       <h3>
-        <a>item</a>
+        <a>item<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">item <i>index list</i></span>
@@ -3998,7 +3998,7 @@ show item 3 &quot;my-shoe&quot;
     <div id="J">
     <div class="dict_entry" id="jump">
       <h3>
-        <a>jump</a>
+        <a>jump<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">jump <i>number</i></span>
@@ -4069,7 +4069,7 @@ ask turtles [ set label-color red ]
     </div>
     <div class="dict_entry" id="last">
       <h3>
-        <a>last</a>
+        <a>last<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">last <i>list</i></span>
@@ -4083,7 +4083,7 @@ ask turtles [ set label-color red ]
       </div>
     <div class="dict_entry" id="layout-circle">
       <h3>
-        <a>layout-circle</a>
+        <a>layout-circle<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">layout-circle <i>agentset</i> <i>radius</i></span>
@@ -4112,7 +4112,7 @@ layout-circle sort-by [[size] of ?1 &lt; [size] of ?2] turtles 10
     </div>
     <div class="dict_entry" id="layout-radial">
       <h3>
-        <a>layout-radial</a>
+        <a>layout-radial<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">layout-radial <i>turtle-set</i> <i>link-set</i> <i>root-agent</i></span>
@@ -4149,7 +4149,7 @@ end
     </div>
     <div class="dict_entry" id="layout-spring">
       <h3>
-        <a>layout-spring</a>
+        <a>layout-spring<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">layout-spring <i>turtle-set</i> <i>link-set</i>
@@ -4203,7 +4203,7 @@ end
     </div>
     <div class="dict_entry" id="layout-tutte">
       <h3>
-        <a>layout-tutte</a>
+        <a>layout-tutte<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">layout-tutte <i>turtle-set</i> <i>link-set</i> <i>radius</i></span>
@@ -4249,8 +4249,8 @@ end
     </div>
     <div class="dict_entry" id="left">
       <h3>
-        <a>left</a>
-        <a>lt</a>
+        <a>left<span class="since">1.0</span></a>
+        <a>lt<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">left <i>number</i></span>
@@ -4262,7 +4262,7 @@ end
       </div>
     <div class="dict_entry" id="length">
       <h3>
-        <a>length</a>
+        <a>length<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">length <i>list</i></span>
@@ -4274,7 +4274,7 @@ end
       </div>
     <div class="dict_entry" id="let">
       <h3>
-        <a>let</a>
+        <a>let<span class="since">2.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">let <i>variable</i> <i>value</i></span>
@@ -4295,7 +4295,7 @@ if prey != nobody
     </div>
     <div class="dict_entry" id="link">
       <h3>
-        <a>link</a>
+        <a>link<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">link <i>end1</i> <i>end2</i> &lt;breed&gt; <i>end1</i> <i>end2</i></span>
@@ -4316,7 +4316,7 @@ ask directed-link 0 1 [ set color red ]
       </div>
     <div class="dict_entry" id="link-heading">
       <h3>
-        <a>link-heading</a>
+        <a>link-heading<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">link-heading</span>
@@ -4335,7 +4335,7 @@ ask link 0 1 [ print link-heading ]
       </div>
     <div class="dict_entry" id="link-length">
       <h3>
-        <a>link-length</a>
+        <a>link-length<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">link-length</span>
@@ -4352,7 +4352,7 @@ ask link 0 1 [ print link-length ]
       </div>
     <div class="dict_entry" id="link-set">
       <h3>
-        <a>link-set</a>
+        <a>link-set<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">link-set <i>value</i></span>
@@ -4371,7 +4371,7 @@ link-set [my-links] of nodes with [color = red]
       </div>
     <div class="dict_entry" id="link-shapes">
       <h3>
-        <a>link-shapes</a>
+        <a>link-shapes<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">link-shapes</span>
@@ -4389,7 +4389,7 @@ show link-shapes
     </div>
     <div class="dict_entry" id="links">
       <h3>
-        <a>links</a>
+        <a>links<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">links</span>
@@ -4427,7 +4427,7 @@ streets-own [cars bikes]
 </pre>
       <div class="dict_entry" id="list">
         <h3>
-          <a>list</a>
+          <a>list<span class="since">1.0</span></a>
         </h3>
         <h4>
           <span class="prim_example">list <i>value1</i> <i>value2</i></span>
@@ -4447,7 +4447,7 @@ show (list (random 10) 1 2 3 (random 10))
       </div>
       <div class="dict_entry" id="ln">
         <h3>
-          <a>ln</a>
+          <a>ln<span class="since">1.0</span></a>
         </h3>
         <h4>
           <span class="prim_example">ln <i>number</i></span>
@@ -4460,7 +4460,7 @@ show (list (random 10) 1 2 3 (random 10))
         </div>
       <div class="dict_entry" id="log">
         <h3>
-          <a>log</a>
+          <a>log<span class="since">1.0</span></a>
         </h3>
         <h4>
           <span class="prim_example">log <i>number</i> <i>base</i></span>
@@ -4476,7 +4476,7 @@ show log 64 2
         </div>
       <div class="dict_entry" id="loop">
         <h3>
-          <a>loop</a>
+          <a>loop<span class="since">1.0</span></a>
         </h3>
         <h4>
           <span class="prim_example">loop [ <i>commands</i> ]</span>
@@ -4501,7 +4501,7 @@ end</pre>
         </div>
       <div class="dict_entry" id="lput">
         <h3>
-          <a>lput</a>
+          <a>lput<span class="since">1.0</span></a>
         </h3>
         <h4>
           <span class="prim_example">lput <i>value list</i></span>
@@ -4521,7 +4521,7 @@ set mylist lput 42 mylist
       <div id="M">
       <div class="dict_entry" id="map">
         <h3>
-          <a>map</a>
+          <a>map<span class="since">1.3</span></a>
         </h3>
         <h4>
           <span class="prim_example">map <i>reporter-task</i> <i>list</i></span>
@@ -4554,7 +4554,7 @@ show (map [?1 + ?2 = ?3] [1 2 3] [2 4 6] [3 5 9])
         </div>
       <div class="dict_entry" id="max">
         <h3>
-          <a>max</a>
+          <a>max<span class="since">1.0</span></a>
         </h3>
         <h4>
           <span class="prim_example">max <i>list</i></span>
@@ -4574,7 +4574,7 @@ show max (list a b c)
       </div>
       <div class="dict_entry" id="max-n-of">
         <h3>
-          <a>max-n-of</a>
+          <a>max-n-of<span class="since">4.0</span></a>
         </h3>
         <h4>
           <span class="prim_example">max-n-of <i>number</i> <i>agentset</i> [<i>reporter</i>]</span>
@@ -4600,7 +4600,7 @@ show max-n-of 5 patches with [pycor = 0] [pxcor]
         </div>
       <div class="dict_entry" id="max-one-of">
         <h3>
-          <a>max-one-of</a>
+          <a>max-one-of<span class="since">1.0</span></a>
         </h3>
         <h4>
           <span class="prim_example">max-one-of <i>agentset</i> [<i>reporter</i>]</span>
@@ -4619,8 +4619,8 @@ show max-one-of patches [count turtles-here]
         </div>
       <div class="dict_entry" id="max-pcor">
         <h3>
-          <a>max-pxcor</a>
-          <a>max-pycor</a>
+          <a>max-pxcor<span class="since">3.1</span></a>
+          <a>max-pycor<span class="since">3.1</span></a>
         </h3>
         <h4>
           <span class="prim_example">max-pxcor</span>
@@ -4648,7 +4648,7 @@ crt 100 [ setxy random-float max-pxcor
         </div>
       <div class="dict_entry" id="mean">
         <h3>
-          <a>mean</a>
+          <a>mean<span class="since">1.0</span></a>
         </h3>
         <h4>
           <span class="prim_example">mean <i>list</i></span>
@@ -4664,7 +4664,7 @@ show mean [xcor] of turtles
       </div>
       <div class="dict_entry" id="median">
         <h3>
-          <a>median</a>
+          <a>median<span class="since">1.0</span></a>
         </h3>
         <h4>
           <span class="prim_example">median <i>list</i></span>
@@ -4682,7 +4682,7 @@ show median [xcor] of turtles
       </div>
       <div class="dict_entry" id="member">
         <h3>
-          <a>member?</a>
+          <a>member?<span class="since">1.0</span></a>
         </h3>
         <h4>
           <span class="prim_example">member? <i>value list</i></span>
@@ -4716,7 +4716,7 @@ show member? turtle 0 patches
         </div>
       <div class="dict_entry" id="min">
         <h3>
-          <a>min</a>
+          <a>min<span class="since">1.0</span></a>
         </h3>
         <h4>
           <span class="prim_example">min <i>list</i></span>
@@ -4735,7 +4735,7 @@ show min (list a b c)
       </div>
       <div class="dict_entry" id="min-n-of">
         <h3>
-          <a>min-n-of</a>
+          <a>min-n-of<span class="since">4.0</span></a>
         </h3>
         <h4>
           <span class="prim_example">min-n-of <i>number</i> <i>agentset</i> [<i>reporter</i>]</span>
@@ -4761,7 +4761,7 @@ show min-n-of 5 patches with [pycor = 0] [pxcor]
         </div>
       <div class="dict_entry" id="min-one-of">
         <h3>
-          <a>min-one-of</a>
+          <a>min-one-of<span class="since">1.0</span></a>
         </h3>
         <h4>
           <span class="prim_example">min-one-of <i>agentset</i> [<i>reporter</i>]</span>
@@ -4781,8 +4781,8 @@ show min-one-of turtles [xcor + ycor]
         </div>
       <div class="dict_entry" id="min-pcor">
         <h3>
-          <a>min-pxcor</a>
-          <a>min-pycor</a>
+          <a>min-pxcor<span class="since">3.1</span></a>
+          <a>min-pycor<span class="since">3.1</span></a>
         </h3>
         <h4>
           <span class="prim_example">min-pxcor</span>
@@ -4810,7 +4810,7 @@ crt 100 [ setxy random-float min-pxcor
         </div>
       <div class="dict_entry" id="mod">
         <h3>
-          <a>mod</a>
+          <a>mod<span class="since">1.0</span></a>
         </h3>
         <h4>
           <span class="prim_example"><i>number1</i> mod <i>number2</i></span>
@@ -4838,7 +4838,7 @@ show -8 mod 3
         </div>
       <div class="dict_entry" id="modes">
         <h3>
-          <a>modes</a>
+          <a>modes<span class="since">2.0</span></a>
         </h3>
         <h4>
           <span class="prim_example">modes <i>list</i></span>
@@ -4863,7 +4863,7 @@ show modes [pxcor] of turtles
       </div>
       <div class="dict_entry" id="mouse-down">
         <h3>
-          <a>mouse-down?</a>
+          <a>mouse-down?<span class="since">1.0</span></a>
         </h3>
         <h4>
           <span class="prim_example">mouse-down?</span>
@@ -4876,7 +4876,7 @@ show modes [pxcor] of turtles
         </div>
       <div class="dict_entry" id="mouse-inside">
         <h3>
-          <a>mouse-inside?</a>
+          <a>mouse-inside?<span class="since">3.0</span></a>
         </h3>
         <h4>
           <span class="prim_example">mouse-inside?</span>
@@ -4887,8 +4887,8 @@ show modes [pxcor] of turtles
         </div>
       <div class="dict_entry" id="mouse-cor">
         <h3>
-          <a>mouse-xcor</a>
-          <a>mouse-ycor</a>
+          <a>mouse-xcor<span class="since">1.0</span></a>
+          <a>mouse-ycor<span class="since">1.0</span></a>
         </h3>
         <h4>
           <span class="prim_example">mouse-xcor</span>
@@ -4910,7 +4910,7 @@ if mouse-down?
       </div>
       <div class="dict_entry" id="move-to">
         <h3>
-          <a>move-to</a>
+          <a>move-to<span class="since">4.0</span></a>
         </h3>
         <h4>
           <span class="prim_example">move-to <i>agent</i></span>
@@ -4939,7 +4939,7 @@ move-to max-one-of turtles [size]
         </div>
       <div class="dict_entry" id="movie-cancel">
         <h3>
-          <a>movie-cancel</a>
+          <a>movie-cancel<span class="since">2.1</span></a>
         </h3>
         <h4>
           <span class="prim_example">movie-cancel</span>
@@ -4949,7 +4949,7 @@ move-to max-one-of turtles [size]
         </div>
       <div class="dict_entry" id="movie-close">
         <h3>
-          <a>movie-close</a>
+          <a>movie-close<span class="since">2.1</span></a>
         </h3>
         <h4>
           <span class="prim_example">movie-close</span>
@@ -4959,8 +4959,8 @@ move-to max-one-of turtles [size]
         </div>
       <div class="dict_entry" id="movie-grab-view">
         <h3>
-          <a>movie-grab-view</a>
-          <a>movie-grab-interface</a>
+          <a>movie-grab-view<span class="since">3.0</span></a>
+          <a>movie-grab-interface<span class="since">2.1</span></a>
         </h3>
         <h4>
           <span class="prim_example">movie-grab-view</span>
@@ -4982,7 +4982,7 @@ movie-close
       </div>
       <div class="dict_entry" id="movie-set-frame-rate">
         <h3>
-          <a>movie-set-frame-rate</a>
+          <a>movie-set-frame-rate<span class="since">2.1</span></a>
         </h3>
         <h4>
           <span class="prim_example">movie-set-frame-rate <i>frame-rate</i></span>
@@ -4999,7 +4999,7 @@ movie-close
         </div>
       <div class="dict_entry" id="movie-start">
         <h3>
-          <a>movie-start</a>
+          <a>movie-start<span class="since">2.1</span></a>
         </h3>
         <h4>
           <span class="prim_example">movie-start <i>filename</i></span>
@@ -5013,7 +5013,7 @@ movie-close
         </div>
       <div class="dict_entry" id="movie-status">
         <h3>
-          <a>movie-status</a>
+          <a>movie-status<span class="since">2.1</span></a>
         </h3>
         <h4>
           <span class="prim_example">movie-status</span>
@@ -5034,7 +5034,7 @@ print movie-status
       <div class="dict_entry" id="my-links">
         <h3>
           <a>my-&lt;breeds&gt;</a>
-          <a>my-links</a>
+          <a>my-links<span class="since">4.0</span></a>
         </h3>
         <h4>
           <span class="prim_example">my-&lt;breeds&gt;</span>
@@ -5062,7 +5062,7 @@ end
       <div class="dict_entry" id="my-in-links">
         <h3>
           <a>my-in-&lt;breeds&gt;</a>
-          <a>my-in-links</a>
+          <a>my-in-links<span class="since">4.0</span></a>
         </h3>
         <h4>
           <span class="prim_example">my-in-&lt;breeds&gt;</span>
@@ -5088,7 +5088,7 @@ ask turtle 1
       <div class="dict_entry" id="my-out-links">
         <h3>
           <a>my-out-&lt;breeds&gt;</a>
-          <a>my-out-links</a>
+          <a>my-out-links<span class="since">4.0</span></a>
         </h3>
         <h4>
           <span class="prim_example">my-out-&lt;breeds&gt;</span>
@@ -5113,7 +5113,7 @@ ask turtle 1
       </div>
       <div class="dict_entry" id="myself">
         <h3>
-          <a>myself</a>
+          <a>myself<span class="since">1.0</span></a>
         </h3>
         <h4>
           <span class="prim_example">myself</span>
@@ -5154,7 +5154,7 @@ ask turtles
       <div id="N">
       <div class="dict_entry" id="n-of">
         <h3>
-          <a>n-of</a>
+          <a>n-of<span class="since">3.1</span></a>
         </h3>
         <h4>
           <span class="prim_example">n-of <i>size</i> <i>agentset</i></span>
@@ -5180,7 +5180,7 @@ ask n-of 50 patches [ set pcolor green ]
         </div>
       <div class="dict_entry" id="n-values">
         <h3>
-          <a>n-values</a>
+          <a>n-values<span class="since">2.0</span></a>
         </h3>
         <h4>
           <span class="prim_example">n-values <i>size</i> <i>reporter-task</i></span>
@@ -5206,8 +5206,8 @@ show n-values 5 [? * ?]
         </div>
       <div class="dict_entry" id="neighbors">
         <h3>
-          <a>neighbors</a>
-          <a>neighbors4</a>
+          <a>neighbors<span class="since">1.1</span></a>
+          <a>neighbors4<span class="since">1.1</span></a>
         </h3>
         <h4>
           <span class="prim_example">neighbors</span>
@@ -5230,7 +5230,7 @@ ask neighbors4 [ set pcolor red ]
       <div class="dict_entry" id="link-neighbors">
         <h3>
           <a>&lt;breed&gt;-neighbors</a>
-          <a>link-neighbors</a>
+          <a>link-neighbors<span class="since">4.0</span></a>
         </h3>
         <h4>
           <span class="prim_example">&lt;breed&gt;-neighbors</span>
@@ -5257,7 +5257,7 @@ end
       <div class="dict_entry" id="link-neighbor">
         <h3>
           <a>&lt;breed&gt;-neighbor?</a>
-          <a>link-neighbor?</a>
+          <a>link-neighbor?<span class="since">4.0</span></a>
         </h3>
         <h4>
           <span class="prim_example">&lt;breed&gt;-neighbor? <i>turtle</i></span>
@@ -5283,7 +5283,7 @@ ask turtle 1
     </div>
     <div class="dict_entry" id="netlogo-applet">
       <h3>
-        <a>netlogo-applet?</a>
+        <a>netlogo-applet?<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">netlogo-applet?</span>
@@ -5293,7 +5293,7 @@ ask turtle 1
       </div>
     <div class="dict_entry" id="netlogo-version">
       <h3>
-        <a>netlogo-version</a>
+        <a>netlogo-version<span class="since">3.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">netlogo-version</span>
@@ -5308,7 +5308,7 @@ show netlogo-version
     </div>
     <div class="dict_entry" id="netlogo-web">
       <h3>
-        <a>netlogo-web?</a>
+        <a>netlogo-web?<span class="since">5.2</span></a>
       </h3>
       <h4>
         <span class="prim_example">netlogo-web?</span>
@@ -5318,7 +5318,7 @@ show netlogo-version
       </div>
     <div class="dict_entry" id="new-seed">
       <h3>
-        <a>new-seed</a>
+        <a>new-seed<span class="since">3.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">new-seed</span>
@@ -5339,7 +5339,7 @@ show netlogo-version
       </div>
     <div class="dict_entry" id="no-display">
       <h3>
-        <a>no-display</a>
+        <a>no-display<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">no-display</span>
@@ -5387,7 +5387,7 @@ if target != nobody
     </div>
     <div class="dict_entry" id="no-links">
       <h3>
-        <a>no-links</a>
+        <a>no-links<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">no-links</span>
@@ -5397,7 +5397,7 @@ if target != nobody
     </div>
     <div class="dict_entry" id="no-patches">
       <h3>
-        <a>no-patches</a>
+        <a>no-patches<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">no-patches</span>
@@ -5407,7 +5407,7 @@ if target != nobody
     </div>
     <div class="dict_entry" id="not">
       <h3>
-        <a>not</a>
+        <a>not<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">not <i>boolean</i></span>
@@ -5420,7 +5420,7 @@ if not any? turtles [ crt 10 ]
     </div>
     <div class="dict_entry" id="no-turtles">
       <h3>
-        <a>no-turtles</a>
+        <a>no-turtles<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">no-turtles</span>
@@ -5435,7 +5435,7 @@ if not any? turtles [ crt 10 ]
     <div id="O">
     <div class="dict_entry" id="of">
       <h3>
-        <a>of</a>
+        <a>of<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">[<i>reporter</i>] of <i>agent</i></span>
@@ -5468,7 +5468,7 @@ show sort [who * who] of turtles
     </div>
     <div class="dict_entry" id="one-of">
       <h3>
-        <a>one-of</a>
+        <a>one-of<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">one-of <i>agentset</i></span>
@@ -5497,7 +5497,7 @@ show one-of mylist
       </div>
     <div class="dict_entry" id="or">
       <h3>
-        <a>or</a>
+        <a>or<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example"><i>boolean1</i> or <i>boolean2</i></span>
@@ -5515,7 +5515,7 @@ if (pxcor &gt; 0) or (pycor &gt; 0) [ set pcolor red ]
     </div>
     <div class="dict_entry" id="other">
       <h3>
-        <a>other</a>
+        <a>other<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">other <i>agentset</i></span>
@@ -5533,7 +5533,7 @@ show count other turtles-here
     </div>
     <div class="dict_entry" id="other-end">
       <h3>
-        <a>other-end</a>
+        <a>other-end<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">other-end</span>
@@ -5561,7 +5561,7 @@ ask link 0 1 [ ask turtle 0 [ show other-end ] ] ;; prints turtle 1
     <div class="dict_entry" id="out-link-neighbor">
       <h3>
         <a>out-&lt;breed&gt;-neighbor?</a>
-        <a>out-link-neighbor?</a>
+        <a>out-link-neighbor?<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">out-&lt;breed&gt;-neighbor? <i>turtle</i></span>
@@ -5587,7 +5587,7 @@ ask turtle 1 [
     <div class="dict_entry" id="out-link-neighbors">
       <h3>
         <a>out-&lt;breed&gt;-neighbors</a>
-        <a>out-link-neighbors</a>
+        <a>out-link-neighbors<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">out-&lt;breed&gt;-neighbors</span>
@@ -5615,7 +5615,7 @@ end
     <div class="dict_entry" id="out-link-to">
       <h3>
         <a>out-&lt;breed&gt;-to</a>
-        <a>out-link-to</a>
+        <a>out-link-to<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">out-&lt;breed&gt;-to <i>turtle</i></span>
@@ -5641,10 +5641,10 @@ ask turtle 1
       </div>
     <div class="dict_entry" id="output-cmds">
       <h3>
-        <a>output-print</a>
-        <a>output-show</a>
-        <a>output-type</a>
-        <a>output-write</a>
+        <a>output-print<span class="since">2.1</span></a>
+        <a>output-show<span class="since">2.1</span></a>
+        <a>output-type<span class="since">2.1</span></a>
+        <a>output-write<span class="since">2.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">output-print <i>value</i></span>
@@ -5666,7 +5666,7 @@ ask turtle 1
     <div id="P">
     <div class="dict_entry" id="patch">
       <h3>
-        <a>patch</a>
+        <a>patch<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">patch <i>xcor</i> <i>ycor</i></span>
@@ -5699,7 +5699,7 @@ show patch 18 19
       </div>
     <div class="dict_entry" id="patch-ahead">
       <h3>
-        <a>patch-ahead</a>
+        <a>patch-ahead<span class="since">2.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">patch-ahead <i>distance</i></span>
@@ -5721,7 +5721,7 @@ ask patch-ahead 1 [ set pcolor green ]
       </div>
     <div class="dict_entry" id="patch-at">
       <h3>
-        <a>patch-at</a>
+        <a>patch-at<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">patch-at <i>dx</i> <i>dy</i></span>
@@ -5743,7 +5743,7 @@ ask patch-at 1 -1 [ set pcolor green ]
       </div>
     <div class="dict_entry" id="patch-at-heading-and-distance">
       <h3>
-        <a>patch-at-heading-and-distance</a>
+        <a>patch-at-heading-and-distance<span class="since">2.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">patch-at-heading-and-distance <i>heading</i> <i>distance</i></span>
@@ -5765,7 +5765,7 @@ ask patch-at-heading-and-distance -90 1 [ set pcolor green ]
       </div>
     <div class="dict_entry" id="patch-here">
       <h3>
-        <a>patch-here</a>
+        <a>patch-here<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">patch-here</span>
@@ -5779,8 +5779,8 @@ ask patch-at-heading-and-distance -90 1 [ set pcolor green ]
       </div>
     <div class="dict_entry" id="patch-lr-and-ahead">
       <h3>
-        <a>patch-left-and-ahead</a>
-        <a>patch-right-and-ahead</a>
+        <a>patch-left-and-ahead<span class="since">2.0</span></a>
+        <a>patch-right-and-ahead<span class="since">2.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">patch-left-and-ahead <i>angle</i> <i>distance</i></span>
@@ -5808,7 +5808,7 @@ ask patch-right-and-ahead 30 1 [ set pcolor green ]
       </div>
     <div class="dict_entry" id="patch-set">
       <h3>
-        <a>patch-set</a>
+        <a>patch-set<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">patch-set <i>value1</i></span>
@@ -5834,7 +5834,7 @@ patch-set [neighbors] of turtles
       </div>
     <div class="dict_entry" id="patch-size">
       <h3>
-        <a>patch-size</a>
+        <a>patch-size<span class="since">4.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">patch-size</span>
@@ -5847,7 +5847,7 @@ patch-set [neighbors] of turtles
       </div>
     <div class="dict_entry" id="patches">
       <h3>
-        <a>patches</a>
+        <a>patches<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">patches</span>
@@ -5899,12 +5899,12 @@ patch-set [neighbors] of turtles
       </div>
     <div class="dict_entry" id="pen-switch-status">
       <h3>
-        <a>pen-down</a>
-        <a>pd</a>
-        <a>pen-erase</a>
-        <a>pe</a>
-        <a>pen-up</a>
-        <a>pu</a>
+        <a>pen-down<span class="since">1.0</span></a>
+        <a>pd<span class="since">1.0</span></a>
+        <a>pen-erase<span class="since">3.0</span></a>
+        <a>pe<span class="since">3.0</span></a>
+        <a>pen-up<span class="since">1.0</span></a>
+        <a>pu<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">pen-down</span>
@@ -5994,7 +5994,7 @@ patch-set [neighbors] of turtles
       </div>
     <div class="dict_entry" id="plot">
       <h3>
-        <a>plot</a>
+        <a>plot<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">plot <i>number</i></span>
@@ -6007,7 +6007,7 @@ patch-set [neighbors] of turtles
       </div>
     <div class="dict_entry" id="plot-name">
       <h3>
-        <a>plot-name</a>
+        <a>plot-name<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">plot-name</span>
@@ -6017,7 +6017,7 @@ patch-set [neighbors] of turtles
       </div>
     <div class="dict_entry" id="plot-pen-exists">
       <h3>
-        <a>plot-pen-exists?</a>
+        <a>plot-pen-exists?<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">plot-pen-exists? <i>string</i></span>
@@ -6028,8 +6028,8 @@ patch-set [neighbors] of turtles
       </div>
     <div class="dict_entry" id="plot-pen-switch-status">
       <h3>
-        <a>plot-pen-down</a>
-        <a>plot-pen-up</a>
+        <a>plot-pen-down<span class="since">1.0</span></a>
+        <a>plot-pen-up<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">plot-pen-down</span>
@@ -6041,7 +6041,7 @@ patch-set [neighbors] of turtles
       </div>
     <div class="dict_entry" id="plot-pen-reset">
       <h3>
-        <a>plot-pen-reset</a>
+        <a>plot-pen-reset<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">plot-pen-reset</span>
@@ -6054,7 +6054,7 @@ patch-set [neighbors] of turtles
       </div>
     <div class="dict_entry" id="plotxy">
       <h3>
-        <a>plotxy</a>
+        <a>plotxy<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">plotxy <i>number1 number2</i></span>
@@ -6066,10 +6066,10 @@ patch-set [neighbors] of turtles
       </div>
     <div class="dict_entry" id="plot-cor-max-or-min">
       <h3>
-        <a>plot-x-min</a>
-        <a>plot-x-max</a>
-        <a>plot-y-min</a>
-        <a>plot-y-max</a>
+        <a>plot-x-min<span class="since">1.0</span></a>
+        <a>plot-x-max<span class="since">1.0</span></a>
+        <a>plot-y-min<span class="since">1.0</span></a>
+        <a>plot-y-max<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">plot-x-min</span>
@@ -6087,7 +6087,7 @@ patch-set [neighbors] of turtles
       </div>
     <div class="dict_entry" id="position">
       <h3>
-        <a>position</a>
+        <a>position<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">position <i>item</i> <i>list</i></span>
@@ -6116,7 +6116,7 @@ show position &quot;in&quot; &quot;string&quot;
       </div>
     <div class="dict_entry" id="precision">
       <h3>
-        <a>precision</a>
+        <a>precision<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">precision <i>number places</i></span>
@@ -6137,7 +6137,7 @@ show precision 3834 -3
       </div>
     <div class="dict_entry" id="print">
       <h3>
-        <a>print</a>
+        <a>print<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">print <i>value</i></span>
@@ -6183,7 +6183,7 @@ show precision 3834 -3
     <div id="R">
     <div class="dict_entry" id="random">
       <h3>
-        <a>random</a>
+        <a>random<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">random <i>number</i></span>
@@ -6214,7 +6214,7 @@ show random 3.5
       </div>
     <div class="dict_entry" id="random-float">
       <h3>
-        <a>random-float</a>
+        <a>random-float<span class="since">2.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">random-float <i>number</i></span>
@@ -6240,10 +6240,10 @@ show random-float 2.5
     </div>
     <div class="dict_entry" id="random-reporters">
       <h3>
-        <a>random-exponential</a>
-        <a>random-gamma</a>
-        <a>random-normal</a>
-        <a>random-poisson</a>
+        <a>random-exponential<span class="since">1.2.1</span></a>
+        <a>random-gamma<span class="since">2.0</span></a>
+        <a>random-normal<span class="since">1.2.1</span></a>
+        <a>random-poisson<span class="since">1.2.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">random-exponential <i>mean</i></span>
@@ -6286,8 +6286,8 @@ show random-poisson 3.4
     </div>
     <div class="dict_entry" id="random-pcor">
       <h3>
-        <a>random-pxcor</a>
-        <a>random-pycor</a>
+        <a>random-pxcor<span class="since">3.1</span></a>
+        <a>random-pycor<span class="since">3.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">random-pxcor</span>
@@ -6307,7 +6307,7 @@ ask turtles [
       </div>
     <div class="dict_entry" id="random-seed">
       <h3>
-        <a>random-seed</a>
+        <a>random-seed<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">random-seed <i>number</i></span>
@@ -6336,8 +6336,8 @@ show random 100
     </div>
     <div class="dict_entry" id="random-cor">
       <h3>
-        <a>random-xcor</a>
-        <a>random-ycor</a>
+        <a>random-xcor<span class="since">3.1</span></a>
+        <a>random-ycor<span class="since">3.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">random-xcor</span>
@@ -6361,7 +6361,7 @@ ask turtles [
       </div>
     <div class="dict_entry" id="read-from-string">
       <h3>
-        <a>read-from-string</a>
+        <a>read-from-string<span class="since">1.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">read-from-string <i>string</i></span>
@@ -6386,7 +6386,7 @@ crt read-from-string user-input &quot;Make how many turtles?&quot;
     </div>
     <div class="dict_entry" id="reduce">
       <h3>
-        <a>reduce</a>
+        <a>reduce<span class="since">1.3</span></a>
       </h3>
       <h4>
         <span class="prim_example">reduce <i>reporter-task</i> <i>list</i></span>
@@ -6455,7 +6455,7 @@ show evaluate-polynomial [3 2 1] 4
     </div>
     <div class="dict_entry" id="remainder">
       <h3>
-        <a>remainder</a>
+        <a>remainder<span class="since">1.2.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">remainder <i>number1</i> <i>number2</i></span>
@@ -6478,7 +6478,7 @@ show remainder -8 3
       </div>
     <div class="dict_entry" id="remove">
       <h3>
-        <a>remove</a>
+        <a>remove<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">remove <i>item</i> <i>list</i></span>
@@ -6500,7 +6500,7 @@ show remove &quot;to&quot; &quot;phototonic&quot;
     </div>
     <div class="dict_entry" id="remove-duplicates">
       <h3>
-        <a>remove-duplicates</a>
+        <a>remove-duplicates<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">remove-duplicates <i>list</i></span>
@@ -6516,7 +6516,7 @@ set mylist remove-duplicates mylist
     </div>
     <div class="dict_entry" id="remove-item">
       <h3>
-        <a>remove-item</a>
+        <a>remove-item<span class="since">2.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">remove-item <i>index</i> <i>list</i></span>
@@ -6541,7 +6541,7 @@ show remove-item 2 &quot;string&quot;
     </div>
     <div class="dict_entry" id="repeat">
       <h3>
-        <a>repeat</a>
+        <a>repeat<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">repeat <i>number</i> [ <i>commands</i> ]</span>
@@ -6557,7 +6557,7 @@ show remove-item 2 &quot;string&quot;
     </div>
     <div class="dict_entry" id="replace-item">
       <h3>
-        <a>replace-item</a>
+        <a>replace-item<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">replace-item <i>index list value</i></span>
@@ -6580,7 +6580,7 @@ show replace-item 1 &quot;cat&quot; &quot;are&quot;
     </div>
     <div class="dict_entry" id="report">
       <h3>
-        <a>report</a>
+        <a>report<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">report <i>value</i></span>
@@ -6592,8 +6592,8 @@ show replace-item 1 &quot;cat&quot; &quot;are&quot;
       </div>
     <div class="dict_entry" id="reset-perspective">
       <h3>
-        <a>reset-perspective</a>
-        <a>rp</a>
+        <a>reset-perspective<span class="since">3.0</span></a>
+        <a>rp<span class="since">3.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">reset-perspective</span>
@@ -6609,7 +6609,7 @@ show replace-item 1 &quot;cat&quot; &quot;are&quot;
       </div>
     <div class="dict_entry" id="reset-ticks">
       <h3>
-        <a>reset-ticks</a>
+        <a>reset-ticks<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">reset-ticks</span>
@@ -6625,7 +6625,7 @@ show replace-item 1 &quot;cat&quot; &quot;are&quot;
       </div>
     <div class="dict_entry" id="reset-timer">
       <h3>
-        <a>reset-timer</a>
+        <a>reset-timer<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">reset-timer</span>
@@ -6639,7 +6639,7 @@ show replace-item 1 &quot;cat&quot; &quot;are&quot;
       </div>
     <div class="dict_entry" id="resize-world">
       <h3>
-        <a>resize-world</a>
+        <a>resize-world<span class="since">4.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">resize-world <i>min-pxcor</i> <i>max-pxcor</i> <i>min-pycor</i> <i>max-pycor</i></span>
@@ -6659,7 +6659,7 @@ show replace-item 1 &quot;cat&quot; &quot;are&quot;
       </div>
     <div class="dict_entry" id="reverse">
       <h3>
-        <a>reverse</a>
+        <a>reverse<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">reverse <i>list</i></span>
@@ -6678,7 +6678,7 @@ show reverse &quot;live&quot;
     </div>
     <div class="dict_entry" id="rgb">
       <h3>
-        <a>rgb</a>
+        <a>rgb<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">rgb <i>red green blue</i></span>
@@ -6691,7 +6691,7 @@ show reverse &quot;live&quot;
       </div>
     <div class="dict_entry" id="ride">
       <h3>
-        <a>ride</a>
+        <a>ride<span class="since">3.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">ride <i>turtle</i></span>
@@ -6710,7 +6710,7 @@ show reverse &quot;live&quot;
       </div>
     <div class="dict_entry" id="ride-me">
       <h3>
-        <a>ride-me</a>
+        <a>ride-me<span class="since">3.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">ride-me</span>
@@ -6723,8 +6723,8 @@ show reverse &quot;live&quot;
       </div>
     <div class="dict_entry" id="right">
       <h3>
-        <a>right</a>
-        <a>rt</a>
+        <a>right<span class="since">1.0</span></a>
+        <a>rt<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">right <i>number</i></span>
@@ -6736,7 +6736,7 @@ show reverse &quot;live&quot;
       </div>
     <div class="dict_entry" id="round">
       <h3>
-        <a>round</a>
+        <a>round<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">round <i>number</i></span>
@@ -6771,8 +6771,8 @@ show round -4.5
       </div>
     <div class="dict_entry" id="run">
       <h3>
-        <a>run</a>
-        <a>runresult</a>
+        <a>run<span class="since">1.3</span></a>
+        <a>runresult<span class="since">1.3</span></a>
       </h3>
       <h4>
         <span class="prim_example">run <i>command-task</i></span>
@@ -6822,7 +6822,7 @@ show (runresult task [ ?1 + ?2 ] 10 5)
     <div id="S">
     <div class="dict_entry" id="scale-color">
       <h3>
-        <a>scale-color</a>
+        <a>scale-color<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">scale-color <i>color number range1 range2</i></span>
@@ -6851,7 +6851,7 @@ ask turtles [ set color scale-color red age 0 50 ]
     </div>
     <div class="dict_entry" id="self">
       <h3>
-        <a>self</a>
+        <a>self<span class="since">1.3</span></a>
       </h3>
       <h4>
         <span class="prim_example">self</span>
@@ -6888,8 +6888,8 @@ ask turtles [ set color scale-color red age 0 50 ]
       </div>
     <div class="dict_entry" id="sentence">
       <h3>
-        <a>sentence</a>
-        <a>se</a>
+        <a>sentence<span class="since">1.0</span></a>
+        <a>se<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">sentence <i>value1</i> <i>value2</i></span>
@@ -6916,7 +6916,7 @@ show (sentence [1 2] 3 [4 5] (3 + 3) 7)
     </div>
     <div class="dict_entry" id="set">
       <h3>
-        <a>set</a>
+        <a>set<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">set <i>variable</i> <i>value</i></span>
@@ -6938,7 +6938,7 @@ show (sentence [1 2] 3 [4 5] (3 + 3) 7)
     </div>
     <div class="dict_entry" id="set-current-directory">
       <h3>
-        <a>set-current-directory</a>
+        <a>set-current-directory<span class="since">2.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">set-current-directory <i>string</i></span>
@@ -6968,7 +6968,7 @@ file-open &quot;my-file.txt&quot;
     </div>
     <div class="dict_entry" id="set-current-plot">
       <h3>
-        <a>set-current-plot</a>
+        <a>set-current-plot<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">set-current-plot <i>plotname</i></span>
@@ -6979,7 +6979,7 @@ file-open &quot;my-file.txt&quot;
       </div>
     <div class="dict_entry" id="set-current-plot-pen">
       <h3>
-        <a>set-current-plot-pen</a>
+        <a>set-current-plot-pen<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">set-current-plot-pen <i>penname</i></span>
@@ -6991,7 +6991,7 @@ file-open &quot;my-file.txt&quot;
       </div>
     <div class="dict_entry" id="set-default-shape">
       <h3>
-        <a>set-default-shape</a>
+        <a>set-default-shape<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">set-default-shape turtles <i>string</i></span>
@@ -7037,7 +7037,7 @@ ask cats [ set breed dogs ]
       </div>
     <div class="dict_entry" id="set-histogram-num-bars">
       <h3>
-        <a>set-histogram-num-bars</a>
+        <a>set-histogram-num-bars<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">set-histogram-num-bars <i>number</i></span>
@@ -7073,7 +7073,7 @@ ask cats [ set breed dogs ]
       </div>
     <div class="dict_entry" id="set-patch-size">
       <h3>
-        <a>set-patch-size</a>
+        <a>set-patch-size<span class="since">4.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">set-patch-size <i>size</i></span>
@@ -7087,7 +7087,7 @@ ask cats [ set breed dogs ]
       </div>
     <div class="dict_entry" id="set-plot-pen-color">
       <h3>
-        <a>set-plot-pen-color</a>
+        <a>set-plot-pen-color<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">set-plot-pen-color <i>color</i></span>
@@ -7097,7 +7097,7 @@ ask cats [ set breed dogs ]
       </div>
     <div class="dict_entry" id="set-plot-pen-interval">
       <h3>
-        <a>set-plot-pen-interval</a>
+        <a>set-plot-pen-interval<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">set-plot-pen-interval <i>number</i></span>
@@ -7109,7 +7109,7 @@ ask cats [ set breed dogs ]
       </div>
     <div class="dict_entry" id="set-plot-pen-mode">
       <h3>
-        <a>set-plot-pen-mode</a>
+        <a>set-plot-pen-mode<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">set-plot-pen-mode <i>number</i></span>
@@ -7131,7 +7131,7 @@ ask cats [ set breed dogs ]
       </div>
     <div class="dict_entry" id="setup-plots">
       <h3>
-        <a>setup-plots</a>
+        <a>setup-plots<span class="since">5.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">setup-plots</span>
@@ -7151,8 +7151,8 @@ ask cats [ set breed dogs ]
       </div>
     <div class="dict_entry" id="set-plot--range">
       <h3>
-        <a>set-plot-x-range</a>
-        <a>set-plot-y-range</a>
+        <a>set-plot-x-range<span class="since">1.0</span></a>
+        <a>set-plot-y-range<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">set-plot-x-range <i>min max</i></span>
@@ -7168,7 +7168,7 @@ ask cats [ set breed dogs ]
       </div>
     <div class="dict_entry" id="setxy">
       <h3>
-        <a>setxy</a>
+        <a>setxy<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">setxy <i>x y</i></span>
@@ -7201,7 +7201,7 @@ setxy random-pxcor random-pycor
       </div>
     <div class="dict_entry" id="shade-of">
       <h3>
-        <a>shade-of?</a>
+        <a>shade-of?<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">shade-of? <i>color1</i> <i>color2</i></span>
@@ -7249,7 +7249,7 @@ ask links [ set shape &quot;link 1&quot; ]
       </div>
     <div class="dict_entry" id="shapes">
       <h3>
-        <a>shapes</a>
+        <a>shapes<span class="since">2.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">shapes</span>
@@ -7268,7 +7268,7 @@ ask turtles [ set shape one-of shapes ]
     </div>
     <div class="dict_entry" id="show">
       <h3>
-        <a>show</a>
+        <a>show<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">show <i>value</i></span>
@@ -7286,8 +7286,8 @@ ask turtles [ set shape one-of shapes ]
       </div>
     <div class="dict_entry" id="show-turtle">
       <h3>
-        <a>show-turtle</a>
-        <a>st</a>
+        <a>show-turtle<span class="since">1.0</span></a>
+        <a>st<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">show-turtle</span>
@@ -7303,7 +7303,7 @@ ask turtles [ set shape one-of shapes ]
       </div>
     <div class="dict_entry" id="show-link">
       <h3>
-        <a>show-link</a>
+        <a>show-link<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">show-link</span>
@@ -7319,7 +7319,7 @@ ask turtles [ set shape one-of shapes ]
       </div>
     <div class="dict_entry" id="shuffle">
       <h3>
-        <a>shuffle</a>
+        <a>shuffle<span class="since">2.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">shuffle <i>list</i></span>
@@ -7336,7 +7336,7 @@ show shuffle [1 2 3 4 5]
     </div>
     <div class="dict_entry" id="sin">
       <h3>
-        <a>sin</a>
+        <a>sin<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">sin <i>number</i></span>
@@ -7365,7 +7365,7 @@ show sin 270
       </div>
     <div class="dict_entry" id="sort">
       <h3>
-        <a>sort</a>
+        <a>sort<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">sort <i>list</i></span>
@@ -7407,7 +7407,7 @@ foreach sort patches [
       </div>
     <div class="dict_entry" id="sort-by">
       <h3>
-        <a>sort-by</a>
+        <a>sort-by<span class="since">1.3</span></a>
       </h3>
       <h4>
         <span class="prim_example">sort-by <i>reporter-task</i> <i>list</i></span>
@@ -7441,7 +7441,7 @@ show sort-by [length ?1 &lt; length ?2] [&quot;Grumpy&quot; &quot;Doc&quot; &quo
       </div>
     <div class="dict_entry" id="sort-on">
       <h3>
-        <a>sort-on</a>
+        <a>sort-on<span class="since">5.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">sort-on [<i>reporter</i>] <i>agentset</i></span>
@@ -7468,7 +7468,7 @@ foreach sort-on [size] turtles
       </div>
     <div class="dict_entry" id="sprout">
       <h3>
-        <a>sprout</a>
+        <a>sprout<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">sprout <i>number</i> [ <i>commands</i> ]</span>
@@ -7496,7 +7496,7 @@ sprout-sheep 1 [ set color black ]
       </div>
     <div class="dict_entry" id="sqrt">
       <h3>
-        <a>sqrt</a>
+        <a>sqrt<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">sqrt <i>number</i></span>
@@ -7506,7 +7506,7 @@ sprout-sheep 1 [ set color black ]
       </div>
     <div class="dict_entry" id="stamp">
       <h3>
-        <a>stamp</a>
+        <a>stamp<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">stamp</span>
@@ -7521,7 +7521,7 @@ sprout-sheep 1 [ set color black ]
       </div>
     <div class="dict_entry" id="stamperase">
       <h3>
-        <a>stamp-erase</a>
+        <a>stamp-erase<span class="since">3.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">stamp-erase</span>
@@ -7536,7 +7536,7 @@ sprout-sheep 1 [ set color black ]
       </div>
     <div class="dict_entry" id="standard-deviation">
       <h3>
-        <a>standard-deviation</a>
+        <a>standard-deviation<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">standard-deviation <i>list</i></span>
@@ -7578,7 +7578,7 @@ end
       </div>
     <div class="dict_entry" id="stop">
       <h3>
-        <a>stop</a>
+        <a>stop<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">stop</span>
@@ -7602,7 +7602,7 @@ if not any? turtles [ stop ]
       </div>
     <div class="dict_entry" id="stop-inspecting">
       <h3>
-        <a>stop-inspecting</a>
+        <a>stop-inspecting<span class="since">5.2</span></a>
       </h3>
       <h4>
         <span class="prim_example">stop-inspecting <i>agent</i></span>
@@ -7622,7 +7622,7 @@ ask sheep [ stop-inspecting self ]
     </div>
     <div class="dict_entry" id="stop-inspecting-dead-agents">
       <h3>
-        <a>stop-inspecting-dead-agents</a>
+        <a>stop-inspecting-dead-agents<span class="since">5.2</span></a>
       </h3>
       <h4>
         <span class="prim_example">stop-inspecting-dead-agents</span>
@@ -7633,7 +7633,7 @@ ask sheep [ stop-inspecting self ]
     </div>
     <div class="dict_entry" id="subject">
       <h3>
-        <a>subject</a>
+        <a>subject<span class="since">3.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">subject</span>
@@ -7647,8 +7647,8 @@ ask sheep [ stop-inspecting self ]
       </div>
     <div class="dict_entry" id="subliststring">
       <h3>
-        <a>sublist</a>
-        <a>substring</a>
+        <a>sublist<span class="since">2.1</span></a>
+        <a>substring<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">sublist <i>list position1 position2</i></span>
@@ -7668,7 +7668,7 @@ show substring &quot;apartment&quot; 1 5
     </div>
     <div class="dict_entry" id="subtract-headings">
       <h3>
-        <a>subtract-headings</a>
+        <a>subtract-headings<span class="since">2.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">subtract-headings <i>heading1 heading2</i></span>
@@ -7702,7 +7702,7 @@ show subtract-headings 0 180
     </div>
     <div class="dict_entry" id="sum">
       <h3>
-        <a>sum</a>
+        <a>sum<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">sum <i>list</i></span>
@@ -7722,7 +7722,7 @@ show sum [energy] of turtles
     <div id="T">
     <div class="dict_entry" id="tan">
       <h3>
-        <a>tan</a>
+        <a>tan<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">tan <i>number</i></span>
@@ -7733,7 +7733,7 @@ show sum [energy] of turtles
       </div>
     <div class="dict_entry" id="task">
       <h3>
-        <a>task</a>
+        <a>task<span class="since">5.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">task [ <i>commands</i> ]</span>
@@ -7765,7 +7765,7 @@ show sum [energy] of turtles
       </div>
     <div class="dict_entry" id="tick">
       <h3>
-        <a>tick</a>
+        <a>tick<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">tick</span>
@@ -7783,7 +7783,7 @@ show sum [energy] of turtles
       </div>
     <div class="dict_entry" id="tick-advance">
       <h3>
-        <a>tick-advance</a>
+        <a>tick-advance<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">tick-advance <i>number</i></span>
@@ -7810,7 +7810,7 @@ show sum [energy] of turtles
       </div>
     <div class="dict_entry" id="ticks">
       <h3>
-        <a>ticks</a>
+        <a>ticks<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">ticks</span>
@@ -7831,7 +7831,7 @@ show sum [energy] of turtles
       </div>
     <div class="dict_entry" id="tie">
       <h3>
-        <a>tie</a>
+        <a>tie<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">tie</span>
@@ -7884,7 +7884,7 @@ show sum [energy] of turtles
       </div>
     <div class="dict_entry" id="timer">
       <h3>
-        <a>timer</a>
+        <a>timer<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">timer</span>
@@ -7954,7 +7954,7 @@ end
     </div>
     <div class="dict_entry" id="towards">
       <h3>
-        <a>towards</a>
+        <a>towards<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">towards <i>agent</i></span>
@@ -7978,7 +7978,7 @@ set heading towards turtle 1
       </div>
     <div class="dict_entry" id="towardsxy">
       <h3>
-        <a>towardsxy</a>
+        <a>towardsxy<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">towardsxy <i>x</i> <i>y</i></span>
@@ -7999,7 +7999,7 @@ set heading towards turtle 1
       </div>
     <div class="dict_entry" id="turtle">
       <h3>
-        <a>turtle</a>
+        <a>turtle<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">turtle <i>number</i> &lt;breed&gt; <i>number</i></span>
@@ -8014,7 +8014,7 @@ ask turtle 5 [ set color red ]
     </div>
     <div class="dict_entry" id="turtle-set">
       <h3>
-        <a>turtle-set</a>
+        <a>turtle-set<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">turtle-set <i>value1</i></span>
@@ -8036,7 +8036,7 @@ turtle-set self
       </div>
     <div class="dict_entry" id="turtles">
       <h3>
-        <a>turtles</a>
+        <a>turtles<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">turtles</span>
@@ -8050,7 +8050,7 @@ show count turtles
     </div>
     <div class="dict_entry" id="turtles-at">
       <h3>
-        <a>turtles-at</a>
+        <a>turtles-at<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">turtles-at <i>dx</i> <i>dy</i></span>
@@ -8072,7 +8072,7 @@ show count [turtles-at 1 1] of patch 1 2
       </div>
     <div class="dict_entry" id="turtles-here">
       <h3>
-        <a>turtles-here</a>
+        <a>turtles-here<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">turtles-here</span>
@@ -8100,7 +8100,7 @@ ask dogs [ show count cats-here ]
     </div>
     <div class="dict_entry" id="turtles-on">
       <h3>
-        <a>turtles-on</a>
+        <a>turtles-on<span class="since">2.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">turtles-on <i>agent</i></span>
@@ -8159,7 +8159,7 @@ dogs-own [hair puppies]
       </div>
     <div class="dict_entry" id="type">
       <h3>
-        <a>type</a>
+        <a>type<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">type <i>value</i></span>
@@ -8228,7 +8228,7 @@ ask turtle 0 [ show sort my-links ]
       </div>
     <div class="dict_entry" id="untie">
       <h3>
-        <a>untie</a>
+        <a>untie<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">untie</span>
@@ -8247,7 +8247,7 @@ ask turtle 0 [ show sort my-links ]
       </div>
     <div class="dict_entry" id="update-plots">
       <h3>
-        <a>update-plots</a>
+        <a>update-plots<span class="since">5.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">update-plots</span>
@@ -8267,8 +8267,8 @@ ask turtle 0 [ show sort my-links ]
       </div>
     <div class="dict_entry" id="uphill">
       <h3>
-        <a>uphill</a>
-        <a>uphill4</a>
+        <a>uphill<span class="since">1.0</span></a>
+        <a>uphill4<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">uphill <i>patch-variable</i></span>
@@ -8303,7 +8303,7 @@ if [<i>patch-variable</i>] of p &gt; <i>patch-variable</i> [
       </div>
     <div class="dict_entry" id="user-directory">
       <h3>
-        <a>user-directory</a>
+        <a>user-directory<span class="since">3.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">user-directory</span>
@@ -8321,7 +8321,7 @@ set-current-directory user-directory
     </div>
     <div class="dict_entry" id="user-file">
       <h3>
-        <a>user-file</a>
+        <a>user-file<span class="since">3.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">user-file</span>
@@ -8339,7 +8339,7 @@ file-open user-file
     </div>
     <div class="dict_entry" id="user-new-file">
       <h3>
-        <a>user-new-file</a>
+        <a>user-new-file<span class="since">3.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">user-new-file</span>
@@ -8364,7 +8364,7 @@ file-open user-new-file
       </div>
     <div class="dict_entry" id="user-input">
       <h3>
-        <a>user-input</a>
+        <a>user-input<span class="since">1.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">user-input <i>value</i></span>
@@ -8380,7 +8380,7 @@ show user-input &quot;What is your name?&quot;
     </div>
     <div class="dict_entry" id="user-message">
       <h3>
-        <a>user-message</a>
+        <a>user-message<span class="since">1.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">user-message <i>value</i></span>
@@ -8395,7 +8395,7 @@ user-message (word &quot;There are &quot; count turtles &quot; turtles.&quot;)
     </div>
     <div class="dict_entry" id="user-one-of">
       <h3>
-        <a>user-one-of</a>
+        <a>user-one-of<span class="since">3.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">user-one-of <i>value</i> <i>list-of-choices</i></span>
@@ -8415,7 +8415,7 @@ if &quot;yes&quot; = user-one-of &quot;Set up the model?&quot; [&quot;yes&quot; 
     </div>
     <div class="dict_entry" id="user-yes-or-no">
       <h3>
-        <a>user-yes-or-no?</a>
+        <a>user-yes-or-no?<span class="since">2.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">user-yes-or-no? <i>value</i></span>
@@ -8437,7 +8437,7 @@ if user-yes-or-no? &quot;Set up the model?&quot;
     <div id="V">
     <div class="dict_entry" id="variance">
       <h3>
-        <a>variance</a>
+        <a>variance<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">variance <i>list</i></span>
@@ -8465,7 +8465,7 @@ show variance [2 7 4 3 5]
     <div id="W">
     <div class="dict_entry" id="wait">
       <h3>
-        <a>wait</a>
+        <a>wait<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">wait <i>number</i></span>
@@ -8486,7 +8486,7 @@ repeat 10 [ fd 1 wait 0.5 ]
       </div>
     <div class="dict_entry" id="watch">
       <h3>
-        <a>watch</a>
+        <a>watch<span class="since">3.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">watch <i>agent</i></span>
@@ -8500,7 +8500,7 @@ repeat 10 [ fd 1 wait 0.5 ]
       </div>
     <div class="dict_entry" id="watch-me">
       <h3>
-        <a>watch-me</a>
+        <a>watch-me<span class="since">3.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">watch-me</span>
@@ -8513,7 +8513,7 @@ repeat 10 [ fd 1 wait 0.5 ]
       </div>
     <div class="dict_entry" id="while">
       <h3>
-        <a>while</a>
+        <a>while<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">while [<i>reporter</i>] [ <i>commands</i> ]</span>
@@ -8584,7 +8584,7 @@ ask turtles [ print who ]
       </div>
     <div class="dict_entry" id="with">
       <h3>
-        <a>with</a>
+        <a>with<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example"><i>agentset</i> with [<i>reporter</i>]</span>
@@ -8603,7 +8603,7 @@ show count patches with [pcolor = red]
     <div class="dict_entry" id="link-with">
       <h3>
         <a>&lt;breed&gt;-with</a>
-        <a>link-with</a>
+        <a>link-with<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">&lt;breed&gt;-with <i>turtle</i></span>
@@ -8625,7 +8625,7 @@ ask turtle 0 [
       </div>
     <div class="dict_entry" id="with-max">
       <h3>
-        <a>with-max</a>
+        <a>with-max<span class="since">2.1</span></a>
       </h3>
       <h4>
         <span class="prim_example"><i>agentset</i> with-max [<i>reporter</i>]</span>
@@ -8644,7 +8644,7 @@ show count patches with-max [pxcor]
       </div>
     <div class="dict_entry" id="with-min">
       <h3>
-        <a>with-min</a>
+        <a>with-min<span class="since">2.1</span></a>
       </h3>
       <h4>
         <span class="prim_example"><i>agentset</i> with-min [<i>reporter</i>]</span>
@@ -8663,7 +8663,7 @@ show count patches with-min [pycor]
       </div>
     <div class="dict_entry" id="with-local-randomness">
       <h3>
-        <a>with-local-randomness</a>
+        <a>with-local-randomness<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">with-local-randomness [ <i>commands</i> ]</span>
@@ -8704,7 +8704,7 @@ print n-values 10 [random 10]
     </div>
     <div class="dict_entry" id="without-interruption">
       <h3>
-        <a>without-interruption</a>
+        <a>without-interruption<span class="since">1.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">without-interruption [ <i>commands</i> ]</span>
@@ -8725,7 +8725,7 @@ print n-values 10 [random 10]
       </div>
     <div class="dict_entry" id="word">
       <h3>
-        <a>word</a>
+        <a>word<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">word <i>value1</i> <i>value2</i></span>
@@ -8752,8 +8752,8 @@ show (word &quot;a&quot; &quot;b&quot; &quot;c&quot; 1 23)
     </div>
     <div class="dict_entry" id="world-dim">
       <h3>
-        <a>world-width</a>
-        <a>world-height</a>
+        <a>world-width<span class="since">3.1</span></a>
+        <a>world-height<span class="since">3.1</span></a>
       </h3>
       <h4>
         <span class="prim_example">world-width</span>
@@ -8771,7 +8771,7 @@ show (word &quot;a&quot; &quot;b&quot; &quot;c&quot; 1 23)
       </div>
     <div class="dict_entry" id="wrap-color">
       <h3>
-        <a>wrap-color</a>
+        <a>wrap-color<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">wrap-color <i>number</i></span>
@@ -8796,7 +8796,7 @@ show wrap-color -10
     </div>
     <div class="dict_entry" id="write">
       <h3>
-        <a>write</a>
+        <a>write<span class="since">2.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">write <i>value</i></span>
@@ -8845,7 +8845,7 @@ write &quot;hello world&quot;
       </div>
     <div class="dict_entry" id="xor">
       <h3>
-        <a>xor</a>
+        <a>xor<span class="since">1.0</span></a>
       </h3>
       <h4>
         <span class="prim_example"><i>boolean1</i> xor <i>boolean2</i></span>

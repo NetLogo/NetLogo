@@ -38,7 +38,7 @@ object PrimIndex {
     val primIndex = entries.filterNot(_.id.contains("constants")).map(entry =>
       IndexElement(
         entry.id,
-        entry.select("h3 > a").iterator.asScala.map(_.text).toSeq,
+        entry.select("h3 > a").iterator.asScala.map(_.ownText).toSeq,
         entry.outerHtml)
     )
 
