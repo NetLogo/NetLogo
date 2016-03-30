@@ -3,7 +3,7 @@
 package org.nlogo.prim.file
 
 import org.nlogo.core.{ CompilerException, FileMode }
-import org.nlogo.api.Syntax
+import org.nlogo.api.{ Syntax, OutputDestination }
 import org.nlogo.nvm.{ Command, Context, EngineException, Reporter, Workspace }
 import java.io.IOException
 
@@ -131,7 +131,7 @@ class _fileprint extends Command {
     }
     workspace.outputObject(
       args(0).report(context), null, true, false,
-      Workspace.OutputDestination.FILE)
+      OutputDestination.File)
     context.ip = next
   }
 }
@@ -195,7 +195,7 @@ class _fileshow extends Command {
         throw new EngineException(context, this, ex.getMessage)
     }
     workspace.outputObject(s, context.agent, true, true,
-                           Workspace.OutputDestination.FILE)
+                           OutputDestination.File)
     context.ip = next
   }
 }
@@ -211,7 +211,7 @@ class _filetype extends Command {
         throw new EngineException(context, this, ex.getMessage)
     }
     workspace.outputObject(s, null, false, false,
-                           Workspace.OutputDestination.FILE)
+                           OutputDestination.File)
     context.ip = next
   }
 }
@@ -228,7 +228,7 @@ class _filewrite extends Command {
         throw new EngineException(context, this, ex.getMessage)
     }
     workspace.outputObject(s, null, false, true,
-                           Workspace.OutputDestination.FILE)
+                           OutputDestination.File)
     context.ip = next
   }
 }

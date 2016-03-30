@@ -5,24 +5,23 @@ package org.nlogo.nvm
 import org.nlogo.core.{ AgentKind, DummyCompilationEnvironment, CompilationEnvironment }
 import org.nlogo.agent.{Agent, AgentSet, World}
 import org.nlogo.api.{ DummyCompilerServices, JobOwner,
-                      DummyExtensionManager, CommandRunnable, ReporterRunnable, ImportErrorHandler}
+                      DummyExtensionManager, CommandRunnable, ReporterRunnable, ImportErrorHandler, OutputDestination}
 import org.nlogo.core.WorldDimensions
 
 class DummyWorkspace extends DummyCompilerServices with Workspace {
   private def unsupported = throw new UnsupportedOperationException
   val world = new World
-  override def getProcedures():java.util.Map[String,Procedure] = java.util.Collections.emptyMap()
-  override def setProcedures(procedures: java.util.Map[String,Procedure]) { }
-  override def aggregateManager() = unsupported
+  override def getProcedures:java.util.Map[String,Procedure] = java.util.Collections.emptyMap()
+  override def aggregateManager = unsupported
   override def requestDisplayUpdate(force: Boolean) = unsupported
   override def breathe() = unsupported
   override def joinForeverButtons(agent: Agent) = unsupported
   override def addJobFromJobThread(job: Job) = unsupported
-  override def getExtensionManager() = new DummyExtensionManager with ExtensionManager {
+  override def getExtensionManager = new DummyExtensionManager with ExtensionManager {
     override def dumpExtensionPrimitives: String = ???
     override def dumpExtensions: String = ???
   }
-  override def getCompilationEnvironment() = new DummyCompilationEnvironment
+  override def getCompilationEnvironment = new DummyCompilationEnvironment
   override def waitFor(runnable: CommandRunnable) = unsupported
   override def waitForResult[T](runnable: ReporterRunnable[T]): T = unsupported
   override def importWorld(path: String) = unsupported
@@ -31,7 +30,7 @@ class DummyWorkspace extends DummyCompilerServices with Workspace {
   override def clearDrawing() = unsupported
   override def exportDrawing(path: String, format: String) = unsupported
   override def exportView(path: String, format: String) = unsupported
-  override def exportView() = unsupported
+  override def exportView = unsupported
   override def exportInterface(path: String) = unsupported
   override def exportWorld(path: String) = unsupported
   override def exportWorld(writer: java.io.PrintWriter) = unsupported
@@ -42,58 +41,55 @@ class DummyWorkspace extends DummyCompilerServices with Workspace {
   override def inspectAgent(agentClass: AgentKind, agent: Agent, radius: Double) = unsupported
   override def stopInspectingAgent(agent: org.nlogo.agent.Agent) = unsupported
   override def stopInspectingDeadAgents() = unsupported
-  override def getAndCreateDrawing() = unsupported
-  override def getHubNetManager() = unsupported
+  override def getAndCreateDrawing = unsupported
+  override def getHubNetManager = unsupported
   override def waitForQueuedEvents() = unsupported
   override def outputObject(obj: AnyRef, owner: AnyRef, addNewline: Boolean, readable: Boolean,
-                   destination: Workspace.OutputDestination) = unsupported
+                   destination: OutputDestination) = unsupported
   override def clearOutput() = unsupported
   override def clearAll() = unsupported
   override def compileForRun(source: String, context: Context, reporter: Boolean) = unsupported
   override def convertToNormal() = unsupported
-  override def getModelPath() = unsupported
+  override def getModelPath = unsupported
   override def setModelPath(path: String) = unsupported
-  override def getModelDir() = unsupported
-  override def getModelFileName() = unsupported
-  override def fileManager() = unsupported
-  override def plotManager() = unsupported
+  override def getModelDir = unsupported
+  override def getModelFileName = unsupported
+  override def fileManager = unsupported
+  override def plotManager = unsupported
   override def attachModelDir(filePath: String) = unsupported
-  override def evaluateCommands(owner: JobOwner, source: String) = unsupported
-  override def evaluateCommands(owner: JobOwner, source: String, waitForCompletion: Boolean) = unsupported
-  override def evaluateCommands(owner: JobOwner, source: String, agent: Agent, waitForCompletion: Boolean) = unsupported
   override def evaluateCommands(owner: JobOwner, source: String, agents: AgentSet, waitForCompletion: Boolean) = unsupported
-  override def evaluateReporter(owner: JobOwner, source: String) = unsupported
-  override def evaluateReporter(owner: JobOwner, source: String, agent: Agent) = unsupported
-  override def evaluateReporter(owner: JobOwner, source: String, agents: AgentSet) = unsupported
   override def compileCommands(source: String) = unsupported
   override def compileCommands(source: String,  agentClass: AgentKind) = unsupported
+  override def evaluateCommands(owner: org.nlogo.api.JobOwner,source: String,agent: org.nlogo.agent.Agent,waitForCompletion: Boolean): Unit = ???
+  override def evaluateReporter(owner: org.nlogo.api.JobOwner,source: String,agents: org.nlogo.agent.AgentSet): AnyRef = ???
+  override def evaluateReporter(owner: org.nlogo.api.JobOwner,source: String,agent: org.nlogo.agent.Agent): AnyRef = ???
+  override def evaluateCommands(owner: org.nlogo.api.JobOwner,source: String,waitForCompletion: Boolean): Unit = ???
+  override def evaluateCommands(owner: org.nlogo.api.JobOwner,source: String): Unit = ???
+  override def evaluateReporter(owner: org.nlogo.api.JobOwner,source: String): AnyRef = ???
   override def compileReporter(source: String) = unsupported
   override def runCompiledCommands(owner: JobOwner, procedure: Procedure) = unsupported
   override def runCompiledReporter(owner: JobOwner, procedure: Procedure) = unsupported
-  override def patchSize() = unsupported
+  override def patchSize = unsupported
   override def changeTopology(wrapX: Boolean, wrapY: Boolean) = unsupported
   override def magicOpen(name: String) = unsupported
   override def changeLanguage() = unsupported
   override def startLogging(properties: String) = unsupported
   override def zipLogFiles(filename: String) = unsupported
   override def deleteLogFiles() = unsupported
-  override def getIsApplet() = unsupported
-  override def lastRunTimes() = unsupported
-  override def completedActivations() = unsupported
-  override def compiler() = unsupported
+  override def lastRunTimes = unsupported
+  override def completedActivations = unsupported
+  override def compiler = unsupported
   override def open(modelPath: String) = unsupported
   override def openString(modelContents: String) = unsupported
   override def dispose() { }
-  override def lastLogoException() = unsupported
+  override def lastLogoException = unsupported
   override def clearLastLogoException() = unsupported
-  override def isHeadless() = unsupported
+  override def isHeadless = unsupported
   override def behaviorSpaceRunNumber = 0
   override def behaviorSpaceRunNumber(n: Int) = unsupported
   override def behaviorSpaceExperimentName = ""
   override def behaviorSpaceExperimentName(name: String) = unsupported
   override def previewCommands = unsupported
-  override def logCustomMessage(msg: String): Unit = unsupported
-  override def logCustomGlobals(nameValuePairs: Seq[(String, String)]): Unit = unsupported
 
   // from ImporterUser
   override def setOutputAreaContents(text: String) = unsupported
@@ -126,4 +122,27 @@ class DummyWorkspace extends DummyCompilerServices with Workspace {
   override def clearTicks = unsupported
   override def setupPlots(c:Context) = unsupported
   override def updatePlots(c:Context) = unsupported
+
+  // Members declared in org.nlogo.api.Controllable
+  def command(source: String): Unit = unsupported
+  def report(source: String): AnyRef = unsupported
+
+  // Members declared in org.nlogo.api.ViewSettings
+  def drawSpotlight: Boolean = unsupported
+  def fontSize: Int = unsupported
+  def perspective: org.nlogo.api.Perspective = unsupported
+  def renderPerspective: Boolean = unsupported
+  def viewHeight: Double = unsupported
+  def viewOffsetX: Double = unsupported
+  def viewOffsetY: Double = unsupported
+  def viewWidth: Double = unsupported
+
+  // Members declared in org.nlogo.api.Workspace
+  def benchmark(minTime: Int,maxTime: Int): Unit = unsupported
+  def compilerTestingMode: Boolean = unsupported
+  def graphicsChecksum: String = unsupported
+  def openModel(model: org.nlogo.core.Model): Unit = unsupported
+  def renderer: org.nlogo.api.RendererInterface = unsupported
+  def warningMessage(message: String): Boolean = unsupported
+  def worldChecksum: String = unsupported
 }

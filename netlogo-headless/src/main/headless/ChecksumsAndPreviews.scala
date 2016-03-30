@@ -2,6 +2,7 @@
 
 package org.nlogo.headless
 
+import org.nlogo.api.PreviewCommands
 import org.nlogo.workspace.{ AbstractWorkspace, ModelsLibrary, Checksummer }
 
 object ChecksumsAndPreviews {
@@ -56,11 +57,11 @@ object ChecksumsAndPreviews {
         // startup procedure if any - ST 7/12/06
         workspace.command("random-seed 0")
         workspace.open(path)
-        if(workspace.previewCommands.containsSlice("need-to-manually-make-preview-for-this-model"))
+        if (workspace.previewCommands == PreviewCommands.Manual)
           println("skipping: " + path)
         else {
           println("making preview for: " + path)
-          workspace.command(workspace.previewCommands)
+          workspace.command(workspace.previewCommands.source)
           workspace.exportView(previewPath, "PNG")
         }
       }

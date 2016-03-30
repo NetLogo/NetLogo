@@ -39,7 +39,7 @@ trait AbstractTestModels extends FunSuite with ModelCreator {
   // use DynamicVariable to simplify calls to testModel - ST 3/4/10
   private val _workspace = new DynamicVariable[HeadlessWorkspace](null)
   def workspace = _workspace.value
-  def world = _workspace.value.world()
+  def world = _workspace.value.world
 
   // part of the DSL enabling reporter("someValue") -> expected
   def reporter(s: String) = Reported(workspace.report(s))
@@ -65,7 +65,7 @@ trait AbstractTestModels extends FunSuite with ModelCreator {
     // very useful, do not just remove.
     // println(model.toString)
     // println(".")
-    run(ws => ws.openFromSource(model.toString)){ f }
+    run(ws => ws.openModel(model)){ f }
   }
   // lods the model from the given file, and runs it in a new workspace
   def runModelFromFile(path: String)(f: => Unit) = run(ws => ws.open(path)){ f }

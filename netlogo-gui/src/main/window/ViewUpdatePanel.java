@@ -3,6 +3,8 @@
 package org.nlogo.window;
 
 import org.nlogo.core.I18N;
+import org.nlogo.core.UpdateMode;
+import org.nlogo.core.UpdateModeJ;
 
 public strictfp class ViewUpdatePanel
     extends javax.swing.JPanel
@@ -120,23 +122,21 @@ public strictfp class ViewUpdatePanel
   /// methods for keeping menu in sync with reality
 
   private void refreshSelection() {
-    switch (workspace.updateMode()) {
-      case TICK_BASED:
-        viewUpdates.setSelectedIndex(0);
-        break;
-      case CONTINUOUS:
-        viewUpdates.setSelectedIndex(1);
-        break;
-      default:
-        throw new IllegalStateException();
+    UpdateMode selectedMode = workspace.updateMode();
+    if (selectedMode.equals(UpdateModeJ.TICK_BASED())) {
+      viewUpdates.setSelectedIndex(0);
+    } else if (selectedMode.equals(UpdateModeJ.CONTINUOUS())) {
+      viewUpdates.setSelectedIndex(1);
+    } else {
+      throw new IllegalStateException();
     }
   }
 
   private void setMode(String name) {
     if (name.equals(I18N.guiJ().get("tabs.run.viewUpdates.dropdown.onticks"))) {
-      workspace.updateMode(org.nlogo.nvm.Workspace.UpdateMode.TICK_BASED);
+      workspace.updateMode(UpdateModeJ.TICK_BASED());
     } else if (name.equals(I18N.guiJ().get("tabs.run.viewUpdates.dropdown.continuous"))) {
-      workspace.updateMode(org.nlogo.nvm.Workspace.UpdateMode.CONTINUOUS);
+      workspace.updateMode(UpdateModeJ.CONTINUOUS());
     } else {
       throw new IllegalStateException();
     }

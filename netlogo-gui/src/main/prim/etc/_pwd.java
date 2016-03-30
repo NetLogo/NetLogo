@@ -3,9 +3,9 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.LogoException;
+import org.nlogo.api.OutputDestinationJ;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Command;
-import org.nlogo.nvm.Workspace;
 
 /**
  * prints the working directory
@@ -26,7 +26,7 @@ public final strictfp class _pwd
     }
     workspace.outputObject
         (path, null, true, true,
-            Workspace.OutputDestination.NORMAL);
+            OutputDestinationJ.NORMAL());
     context.ip = next;
   }
 }

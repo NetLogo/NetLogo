@@ -2,11 +2,39 @@
 
 package org.nlogo.plot
 
+import org.nlogo.core.{ Pen => CorePen, Plot => CorePlot }
 import org.nlogo.api.Color.translateSavedColor
 import org.nlogo.api.StringUtils.unEscapeString
 
 object PlotLoader {
 
+  def loadPlot(corePlot: CorePlot, plot: Plot, autoConvert: String => String): Plot = {
+    plot.name = corePlot.display
+    plot.defaultXMin = corePlot.xmin
+    plot.defaultXMax = corePlot.xmax
+    plot.defaultYMax = corePlot.ymax
+    plot.defaultYMin = corePlot.ymin
+    plot.defaultAutoPlotOn = corePlot.autoPlotOn
+    plot.setupCode = autoConvert(corePlot.setupCode)
+    plot.updateCode = autoConvert(corePlot.updateCode)
+    plot.pens = corePlot.pens.map(loadPen(plot, autoConvert))
+    plot.clear()
+    plot
+  }
+
+  def loadPen(plot: Plot, autoConvert: String => String)(pen: CorePen): PlotPen = {
+    val newPen = plot.createPlotPen(pen.display, false,
+      autoConvert(pen.setupCode),
+      autoConvert(pen.updateCode))
+    newPen.defaultInterval = pen.interval
+    newPen.defaultMode = pen.mode
+    newPen.defaultColor = pen.color
+    newPen.inLegend = pen.inLegend
+    newPen.hardReset()
+    newPen
+  }
+
+  @deprecated("use loadPlot instead", "hexy")
   def parsePlot(widget: Array[String], plot: Plot, autoConvert: String => String) {
     val (plotLines, penLines) =
       widget.toList.span(_ != "PENS")

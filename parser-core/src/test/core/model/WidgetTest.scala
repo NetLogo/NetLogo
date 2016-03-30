@@ -4,9 +4,10 @@ package org.nlogo.core.model
 
 import org.nlogo.core.{ model, Col, TextBox, Output, CompilerException, LiteralParser, LogoList,
   Str, NumberParser, StrReporter, Num, InputBox, Chooser, ChooseableString, Pen, Plot, Switch,
-  Monitor, UpdateMode, View, Horizontal, Button, Slider, Widget },
+  Monitor, UpdateMode, View, Horizontal, Button, Slider, Widget, WorldDimensions },
   model._
 import org.scalatest.FunSuite
+import scala.reflect.ClassTag
 
 class WidgetTest extends FunSuite {
 
@@ -14,6 +15,7 @@ class WidgetTest extends FunSuite {
     case class TestWidget(vals: List[Any])  extends Widget
     object AllLineTest extends BaseWidgetReader {
       type T = TestWidget
+      def classTag = ClassTag(classOf[TestWidget])
       def definition = List(new SpecifiedLine("A"),
                             MapLine(List(("a", 1), ("b", 2))),
                             IntLine(),
@@ -57,6 +59,7 @@ class WidgetTest extends FunSuite {
     case class TestWidget(vals: List[Any])  extends Widget
     object AllLineTest extends BaseWidgetReader {
       type T = TestWidget
+      def classTag = ClassTag(classOf[TestWidget])
       def definition = List(new SpecifiedLine("B"),
                             IntLine(Some(1)),
                             StringLine(Some("2")),
@@ -243,10 +246,10 @@ class WidgetTest extends FunSuite {
                   |30.0""".stripMargin.split("\n").toList
 
     assert(ViewReader.validate(view))
-    assert(View(430, 12, 806, 409, 6.0, 20, true, true, -30, 30, -30, 30, UpdateMode.Continuous, true, "ticks", 30.0) ==
+    assert(View(430, 12, 806, 409, new WorldDimensions(-30, 30, -30, 30, patchSize = 6.0, true, true), fontSize = 20, UpdateMode.Continuous, true, "ticks", 30.0) ==
       ViewReader.parse(view))
     assert(ViewReader.validate(ViewReader.format(ViewReader.parse(view)).split("\n").toList))
-    assert(View(430, 12, 806, 409, 6.0, 20, true, true, -30, 30, -30, 30, UpdateMode.Continuous, true, "ticks", 30.0) ==
+    assert(View(430, 12, 806, 409, new WorldDimensions(-30, 30, -30, 30, patchSize = 6.0, true, true), fontSize = 20, UpdateMode.Continuous, true, "ticks", 30.0) ==
       ViewReader.parse(ViewReader.format(ViewReader.parse(view)).split("\n").toList))
   }
 

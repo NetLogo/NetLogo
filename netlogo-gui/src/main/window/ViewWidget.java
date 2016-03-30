@@ -70,9 +70,9 @@ public strictfp class ViewWidget
   @Override
   public void doLayout() {
     int availableWidth = getWidth() - getInsets().left - getInsets().right;
-    double patchSize = computePatchSize(availableWidth, workspace.world.worldWidth());
+    double patchSize = computePatchSize(availableWidth, workspace.world().worldWidth());
     int graphicsHeight =
-        (int) StrictMath.round(patchSize * workspace.world.worldHeight());
+        (int) StrictMath.round(patchSize * workspace.world().worldHeight());
     int stripHeight = getHeight() - graphicsHeight - getInsets().top - getInsets().bottom;
     // Note that we set the patch size first and then set the bounds of the view.
     // view.setBounds will force the Renderer to a particular size, overriding the
@@ -134,8 +134,8 @@ public strictfp class ViewWidget
       // this gets tricky because if it's the control strip that's
       // determining the minimum width, then we need to calculate
       // what the graphics window's height will be at that width
-      int ssx = workspace.world.worldWidth();
-      int ssy = workspace.world.worldHeight();
+      int ssx = workspace.world().worldWidth();
+      int ssy = workspace.world().worldHeight();
       double minPatchSize = computePatchSize(stripSize.width, ssx);
       return new java.awt.Dimension
           (stripSize.width + getInsets().left + getInsets().right,
@@ -161,8 +161,8 @@ public strictfp class ViewWidget
   }
 
   void resetSize() {
-    view.setSize(workspace.world.worldWidth(), workspace.world.worldHeight(),
-        workspace.world.patchSize());
+    view.setSize(workspace.world().worldWidth(), workspace.world().worldHeight(),
+        workspace.world().patchSize());
 
     java.awt.Dimension dim = view.getPreferredSize();
 
@@ -176,7 +176,7 @@ public strictfp class ViewWidget
   public void setSize(int width, int height) {
     super.setSize(width, height);
     new org.nlogo.window.Events.ResizeViewEvent
-        (workspace.world.worldWidth(), workspace.world.worldHeight())
+        (workspace.world().worldWidth(), workspace.world().worldHeight())
         .raise(this);
   }
 
@@ -244,10 +244,10 @@ public strictfp class ViewWidget
     int stripHeight = controlStrip.getMinimumSize().height;
     double patchSizeBasedOnNewWidth =
         computePatchSize(newBounds.width - getInsets().left + getInsets().right,
-            workspace.world.worldWidth());
+            workspace.world().worldWidth());
     double patchSizeBasedOnNewHeight =
         computePatchSize(newBounds.height - stripHeight - getExtraHeight(),
-            workspace.world.worldHeight());
+            workspace.world().worldHeight());
     double newPatchSize;
     // case 1: only width changed; adjust height to match
     if (newBounds.height == originalBounds.height) {
@@ -265,17 +265,17 @@ public strictfp class ViewWidget
     // since the new patch size is based on the new width make sure
     // to take into account the change in width due to zooming
     // newPatchSize -= view.renderer.zoom() ;
-    workspace.world.patchSize(newPatchSize);
-    view.setSize(workspace.world.worldWidth(), workspace.world.worldHeight(),
+    workspace.world().patchSize(newPatchSize);
+    view.setSize(workspace.world().worldWidth(), workspace.world().worldHeight(),
         newPatchSize);
 
     view.renderer.trailDrawer().rescaleDrawing();
 
     int newWidth = (int)
-        (newPatchSize * workspace.world.worldWidth()) +
+        (newPatchSize * workspace.world().worldWidth()) +
         getInsets().left + getInsets().right;
     int newHeight = (int)
-        (newPatchSize * workspace.world.worldHeight()) +
+        (newPatchSize * workspace.world().worldHeight()) +
         getExtraHeight() + stripHeight;
     int widthAdjust = newBounds.width - newWidth;
     int heightAdjust = newBounds.height - newHeight;
@@ -363,7 +363,7 @@ public strictfp class ViewWidget
   }
 
   public void handle(org.nlogo.window.Events.PeriodicUpdateEvent e) {
-    double ticks = workspace.world.tickCounter.ticks();
+    double ticks = workspace.world().tickCounter.ticks();
     String tickText =
         ticks == -1
             ? ""

@@ -41,7 +41,7 @@ public strictfp class View
     this.workspace = workspace;
     setOpaque(true);
     renderer = workspace.newRenderer();
-    mouser = new ViewMouseHandler(this, workspace.world, this);
+    mouser = new ViewMouseHandler(this, workspace.world(), this);
     addMouseListener(mouser);
     addMouseMotionListener(mouser);
     workspace.viewManager.add(this);
@@ -53,7 +53,7 @@ public strictfp class View
 
   public boolean displayOn() {
     return (!workspace.glView.isFullscreen() &&
-        workspace.world.displayOn() &&
+        workspace.world().displayOn() &&
         workspace.displaySwitchOn());
   }
 
@@ -123,7 +123,7 @@ public strictfp class View
   @Override
   public java.awt.Dimension getMinimumSize() {
     return new java.awt.Dimension
-        (workspace.world.worldWidth(), workspace.world.worldHeight());
+        (workspace.world().worldWidth(), workspace.world().worldHeight());
   }
 
   @Override
@@ -176,7 +176,7 @@ public strictfp class View
       }
       // this might happen since the view widget is not displayable in 3D ev 7/5/07
       if (gOff != null) {
-        synchronized (workspace.world) {
+        synchronized (workspace.world()) {
           renderer.paint(gOff, this);
         }
       }
@@ -218,7 +218,7 @@ public strictfp class View
       workspace.updateManager().donePainting();
 
       // update the mouse coordinates if following
-      if (workspace.world.observer().perspective() instanceof AgentFollowingPerspective) {
+      if (workspace.world().observer().perspective() instanceof AgentFollowingPerspective) {
         mouser.updateMouseCors();
       }
     }
@@ -227,7 +227,7 @@ public strictfp class View
   @Override
   public void paintComponent(java.awt.Graphics g) {
     frameCount++;
-    if (frozen || !workspace.world.displayOn()) {
+    if (frozen || !workspace.world().displayOn()) {
       if (dirty) {
         g.setColor(InterfaceColors.GRAPHICS_BACKGROUND);
         g.fillRect(0, 0, getWidth(), getHeight());
@@ -236,7 +236,7 @@ public strictfp class View
       }
       framesSkipped = false;
     } else if (paintingImmediately) {
-      synchronized (workspace.world) {
+      synchronized (workspace.world()) {
         renderer.paint((java.awt.Graphics2D) g, this);
       }
       framesSkipped = false;
@@ -286,7 +286,7 @@ public strictfp class View
     java.awt.Graphics2D graphics =
         (java.awt.Graphics2D) image.getGraphics();
     graphics.setFont(getFont());
-    synchronized (workspace.world) {
+    synchronized (workspace.world()) {
       renderer.paint(graphics, this);
     }
     return image;
@@ -299,7 +299,7 @@ public strictfp class View
   void freeze() {
     if (!frozen) {
       frozen = true;
-      if (workspace.world.displayOn()) {
+      if (workspace.world().displayOn()) {
         beClean();
       }
     }
@@ -332,8 +332,8 @@ public strictfp class View
   }
 
   public void handle(org.nlogo.window.Events.LoadEndEvent e) {
-    renderer.changeTopology(workspace.world.wrappingAllowedInX(),
-        workspace.world.wrappingAllowedInY());
+    renderer.changeTopology(workspace.world().wrappingAllowedInX(),
+        workspace.world().wrappingAllowedInY());
     setVisible(true);
   }
 
@@ -424,7 +424,7 @@ public strictfp class View
   }
 
   public Perspective perspective() {
-    return workspace.world.observer().perspective();
+    return workspace.world().observer().perspective();
   }
 
   public boolean drawSpotlight() {
@@ -432,11 +432,11 @@ public strictfp class View
   }
 
   public double viewOffsetX() {
-    return workspace.world.observer().followOffsetX();
+    return workspace.world().observer().followOffsetX();
   }
 
   public double viewOffsetY() {
-    return workspace.world.observer().followOffsetY();
+    return workspace.world().observer().followOffsetY();
   }
 
   public boolean renderPerspective = true;
@@ -483,7 +483,7 @@ public strictfp class View
     });
     menu.add(inspectGlobalsItem);
 
-    if (!workspace.world.observer().atHome2D()) {
+    if (!workspace.world().observer().atHome2D()) {
       menu.add(new javax.swing.JPopupMenu.Separator());
       javax.swing.JMenuItem resetItem =
           new javax.swing.JMenuItem(
@@ -492,7 +492,7 @@ public strictfp class View
       resetItem.addActionListener
           (new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
-              workspace.world.observer().resetPerspective();
+              workspace.world().observer().resetPerspective();
               workspace.viewManager.incrementalUpdateFromEventThread();
             }
           });
@@ -500,7 +500,7 @@ public strictfp class View
     }
     p = new java.awt.Point(p);
     mouser.translatePointToXCorYCor(p);
-    synchronized (workspace.world) {
+    synchronized (workspace.world()) {
       double xcor = mouser.translatePointToUnboundedX(p.x);
       double ycor = mouser.translatePointToUnboundedY(p.y);
 
@@ -509,7 +509,7 @@ public strictfp class View
       if (!AbstractWorkspace.isApplet()) {
 
         try {
-          patch = workspace.world.getPatchAt(xcor, ycor);
+          patch = workspace.world().getPatchAt(xcor, ycor);
           menu.add(new javax.swing.JPopupMenu.Separator());
           menu.add(new AgentMenuItem(patch, AgentMenuType.INSPECT, "inspect", false));
         } catch (AgentException e) {
@@ -517,12 +517,12 @@ public strictfp class View
         }
 
         boolean linksAdded = false;
-        for (AgentSet.Iterator links = workspace.world.links().iterator();
+        for (AgentSet.Iterator links = workspace.world().links().iterator();
              links.hasNext();) {
           org.nlogo.agent.Link link = (org.nlogo.agent.Link) links.next();
 
           if (!link.hidden() &&
-              workspace.world.protractor().distance(link, xcor, ycor, true) < link.lineThickness() + 0.5) {
+              workspace.world().protractor().distance(link, xcor, ycor, true) < link.lineThickness() + 0.5) {
             if (!linksAdded) {
               menu.add(new javax.swing.JPopupMenu.Separator());
               linksAdded = true;
@@ -534,20 +534,20 @@ public strictfp class View
 
       // detect any turtles in the pick-ray
       boolean turtlesAdded = false;
-      for (AgentSet.Iterator turtles = workspace.world.turtles().iterator();
+      for (AgentSet.Iterator turtles = workspace.world().turtles().iterator();
            turtles.hasNext();) {
         org.nlogo.agent.Turtle turtle = (org.nlogo.agent.Turtle) turtles.next();
         if (!turtle.hidden()) {
           double offset = turtle.size() * 0.5;
-          if (offset * workspace.world.patchSize() < 3) {
-            offset += (3 / workspace.world.patchSize());
+          if (offset * workspace.world().patchSize() < 3) {
+            offset += (3 / workspace.world().patchSize());
           }
 
           org.nlogo.shape.VectorShape shape = (org.nlogo.shape.VectorShape)
-              workspace.world.turtleShapeList().shape(turtle.shape());
+              workspace.world().turtleShapeList().shape(turtle.shape());
 
           if (shape.isRotatable() && !turtle.hidden()) {
-            double dist = workspace.world.protractor().distance(turtle, xcor, ycor, true);
+            double dist = workspace.world().protractor().distance(turtle, xcor, ycor, true);
 
             if (dist <= offset) {
               if (!turtlesAdded) {
@@ -564,15 +564,15 @@ public strictfp class View
             double xMouse = xcor;
             double yMouse = ycor;
 
-            if (workspace.world.wrappingAllowedInX()) {
-              double x = xCor > xMouse ? xMouse + workspace.world.worldWidth() :
-                  xMouse - workspace.world.worldWidth();
+            if (workspace.world().wrappingAllowedInX()) {
+              double x = xCor > xMouse ? xMouse + workspace.world().worldWidth() :
+                  xMouse - workspace.world().worldWidth();
               xMouse = StrictMath.abs(xMouse - xCor)
                   < StrictMath.abs(x - xCor) ? xMouse : x;
             }
-            if (workspace.world.wrappingAllowedInY()) {
-              double y = yCor > yMouse ? yMouse + workspace.world.worldHeight() :
-                  yMouse - workspace.world.worldHeight();
+            if (workspace.world().wrappingAllowedInY()) {
+              double y = yCor > yMouse ? yMouse + workspace.world().worldHeight() :
+                  yMouse - workspace.world().worldHeight();
               yMouse = StrictMath.abs(yMouse - yCor)
                   < StrictMath.abs(y - yCor) ? yMouse : y;
             }
@@ -690,12 +690,12 @@ public strictfp class View
         int distance = (int) ((org.nlogo.agent.Turtle) item.agent).size() * 5;
         newPerspective = PerspectiveJ.create(PerspectiveJ.FOLLOW, item.agent,
             StrictMath.max(1, StrictMath.min(distance, 100)));
-        workspace.world.observer().setPerspective(newPerspective);
+        workspace.world().observer().setPerspective(newPerspective);
         break;
       case WATCH:
-        workspace.world.observer().home();
+        workspace.world().observer().home();
         newPerspective = PerspectiveJ.create(PerspectiveJ.WATCH, item.agent);
-        workspace.world.observer().setPerspective(newPerspective);
+        workspace.world().observer().setPerspective(newPerspective);
         break;
       default:
         throw new IllegalStateException();

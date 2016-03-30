@@ -15,6 +15,8 @@ import org.nlogo.core.AgentKind;
 import org.nlogo.core.AgentKindJ;
 import org.nlogo.core.CompilerException;
 import org.nlogo.core.I18N;
+import org.nlogo.core.UpdateMode;
+import org.nlogo.core.UpdateModeJ;
 import org.nlogo.api.AgentFollowingPerspective;
 import org.nlogo.api.CommandRunnable;
 import org.nlogo.api.LogoException;
@@ -139,7 +141,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       try {
         while (true) {
           if (jobManager.anyPrimaryJobs()) {
-            world.comeUpForAir = true;
+            world().comeUpForAir = true;
           }
           // 100 times a second seems like plenty
           Thread.sleep(10);
@@ -222,7 +224,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
 
   @Override
   public void clearDrawing() {
-    world.clearDrawing();
+    world().clearDrawing();
     view.renderer.trailDrawer().clearDrawing();
     if (hubNetManager != null) {
       hubNetManager.sendClear();
@@ -325,7 +327,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   }
 
   public double patchSize() {
-    return world.patchSize();
+    return world().patchSize();
   }
 
   public void setDimensions(final org.nlogo.core.WorldDimensions d) {
@@ -386,7 +388,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   }
 
   public void changeTopology(boolean wrapX, boolean wrapY) {
-    world.changeTopology(wrapX, wrapY);
+    world().changeTopology(wrapX, wrapY);
     viewWidget.view.renderer.changeTopology(wrapX, wrapY);
   }
 
@@ -413,6 +415,16 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   @Override
   public void openString(String modelContents) {
     throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void openModel(org.nlogo.core.Model model) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public RendererInterface renderer() {
+    return view.renderer;
   }
 
   // called from the job thread
@@ -488,8 +500,8 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       if (glView.displayOn()) {
         view.thaw();
       }
-      if (! (world.observer().perspective() instanceof AgentFollowingPerspective)) {
-        world.observer().home();
+      if (! (world().observer().perspective() instanceof AgentFollowingPerspective)) {
+        world().observer().home();
       }
       viewWidget.setVisible(true);
       try {
@@ -572,7 +584,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   // intermittent compile failures on this line since upgrading to
   // Scala 2.8.0.RC1 - ST 4/16/10
   @Override
-  public void updateMode(Workspace.UpdateMode updateMode) {
+  public void updateMode(UpdateMode updateMode) {
     super.updateMode(updateMode);
     updateManager().recompute();
   }
@@ -598,7 +610,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   // this is called *only* from job thread - ST 8/20/03, 1/15/04
   public void updateDisplay(boolean haveWorldLockAlready) {
     view.dirty();
-    if (!world.displayOn()) {
+    if (!world().displayOn()) {
       return;
     }
     if (!updateManager().shouldUpdateNow()) {
@@ -659,11 +671,11 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   @Override
   public void breathe() {
     jobManager.maybeRunSecondaryJobs();
-    if (updateMode() == UpdateMode.CONTINUOUS) {
+    if (updateMode().equals(UpdateModeJ.CONTINUOUS())) {
       updateManager().pseudoTick();
       updateDisplay(true);
     }
-    world.comeUpForAir = updateManager().shouldComeUpForAirAgain();
+    world().comeUpForAir = updateManager().shouldComeUpForAirAgain();
     notifyListeners();
   }
 
@@ -695,7 +707,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   private double lastTicksListenersHeard = -1.0;
 
   private void notifyListeners() {
-    double ticks = world.tickCounter.ticks();
+    double ticks = world().tickCounter.ticks();
     if (ticks != lastTicksListenersHeard) {
       lastTicksListenersHeard = ticks;
       listenerManager.tickCounterChanged(ticks);
@@ -723,7 +735,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
 
   public void handle(org.nlogo.window.Events.AfterLoadEvent e) {
     setPeriodicUpdatesEnabled(true);
-    world.observer().resetPerspective();
+    world().observer().resetPerspective();
     updateManager().reset();
     updateManager().speed_$eq(0);
     // even when we're in 3D close the window first
@@ -732,12 +744,12 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     if (glView != null) {
       glView.close();
     }
-    if (world.program().dialect().is3D()) {
+    if (world().program().dialect().is3D()) {
       open3DView();
     }
 
     try {
-      evaluateCommands(new SimpleJobOwner("startup", world.mainRNG(), AgentKindJ.Observer()),
+      evaluateCommands(new SimpleJobOwner("startup", world().mainRNG(), AgentKindJ.Observer()),
           "without-interruption [ startup ]", false);
     } catch (CompilerException error) {
       org.nlogo.util.Exceptions.ignore(error);
@@ -840,7 +852,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
         agents == null) {
       JobWidget widget = (JobWidget) owner;
       if (widget.useAgentClass()) {
-        agents = world.agentKindToAgentSet(widget.kind());
+        agents = world().agentKindToAgentSet(widget.kind());
       }
     }
     if (owner.ownsPrimaryJobs()) {
@@ -877,28 +889,28 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
         new BooleanConstraint(e.defaultValue);
 
     // now we set the constraint in the observer, so that it is enforced.
-    int index = world.observerOwnsIndexOf(e.varname.toUpperCase());
+    int index = world().observerOwnsIndexOf(e.varname.toUpperCase());
 
     if (index != -1) {
-      world.observer().variableConstraint(index, con);
+      world().observer().variableConstraint(index, con);
     }
   }
 
   public void handle(org.nlogo.window.Events.AddInputBoxConstraintEvent e) {
     // now we set the constraint in the observer, so that it is enforced.
-    int index = world.observerOwnsIndexOf(e.varname.toUpperCase());
+    int index = world().observerOwnsIndexOf(e.varname.toUpperCase());
 
     if (index != -1) {
-      world.observer().variableConstraint(index, e.constraint);
+      world().observer().variableConstraint(index, e.constraint);
     }
   }
 
   public void handle(org.nlogo.window.Events.AddChooserConstraintEvent e) {
     // now we set the constraint in the observer, so that it is enforced.
-    int index = world.observerOwnsIndexOf(e.varname.toUpperCase());
+    int index = world().observerOwnsIndexOf(e.varname.toUpperCase());
 
     if (index != -1) {
-      world.observer().variableConstraint(index, e.constraint);
+      world().observer().variableConstraint(index, e.constraint);
     }
   }
 
@@ -906,13 +918,13 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   public void handle(org.nlogo.window.Events.AddSliderConstraintEvent e) {
     try {
       SliderConstraint con = SliderConstraint.makeSliderConstraint
-          (world.observer(), e.minSpec, e.maxSpec, e.incSpec, e.value, e.slider.name(), this);
+          (world().observer(), e.minSpec, e.maxSpec, e.incSpec, e.value, e.slider.name(), this);
       e.slider.removeAllErrors();
       e.slider.setSliderConstraint(con);
       // now we set the constraint in the observer, so that it is enforced.
-      int index = world.observerOwnsIndexOf(e.varname.toUpperCase());
+      int index = world().observerOwnsIndexOf(e.varname.toUpperCase());
       if (index != -1) {
-        world.observer().variableConstraint(index, con);
+        world().observer().variableConstraint(index, con);
       }
     } catch (SliderConstraint.ConstraintExceptionHolder ex) {
       for (SliderConstraint.SliderConstraintException cce :
@@ -923,9 +935,9 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   }
 
   public void handle(org.nlogo.window.Events.RemoveConstraintEvent e) {
-    int index = world.observerOwnsIndexOf(e.varname.toUpperCase());
+    int index = world().observerOwnsIndexOf(e.varname.toUpperCase());
     if (index != -1) {
-      world.observer().variableConstraint(index, null);
+      world().observer().variableConstraint(index, null);
     }
   }
 
@@ -940,7 +952,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   public abstract void inspectAgent(AgentKind agentClass, org.nlogo.agent.Agent agent, double radius);
 
   public void inspectAgent(AgentKind agentClass) {
-    inspectAgent(agentClass, null, (world.worldWidth() - 1) / 2);
+    inspectAgent(agentClass, null, (world().worldWidth() - 1) / 2);
   }
 
   /// output
@@ -1177,7 +1189,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
         ((org.nlogo.nvm.HaltException) ex).haltAll()) {
       halt(); // includes turning graphics back on
     } else if (!(owner instanceof MonitorWidget)) {
-      world.displayOn(true);
+      world().displayOn(true);
     }
     // tell the world!
     if (!(ex instanceof org.nlogo.nvm.HaltException)) {
@@ -1309,7 +1321,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       while (shapeIterator.hasNext()) {
         shapes.add(ShapeConverter.baseVectorShapeToVectorShape(shapeIterator.next()));
       }
-      world.turtleShapeList().replaceShapes(shapes);
+      world().turtleShapeList().replaceShapes(shapes);
     }
     if (e.section == ModelSectionJ.LINK_SHAPES()) {
       ArrayList<org.nlogo.core.Shape> shapes = new ArrayList<org.nlogo.core.Shape>();
@@ -1317,7 +1329,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       while (shapeIterator.hasNext()) {
         shapes.add(ShapeConverter.baseLinkShapeToLinkShape(shapeIterator.next()));
       }
-      world.linkShapeList().replaceShapes(shapes);
+      world().linkShapeList().replaceShapes(shapes);
     }
   }
 
@@ -1343,12 +1355,10 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     return source;
   }
 
-  @Override
   public void logCustomMessage(String msg) {
     Logger.logCustomMessage(msg);
   }
 
-  @Override
   public void logCustomGlobals(Seq<Tuple2<String, String>> nameValuePairs) {
     Logger.logCustomGlobals(nameValuePairs);
   }

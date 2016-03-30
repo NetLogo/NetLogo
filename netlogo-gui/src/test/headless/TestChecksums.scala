@@ -3,13 +3,14 @@
 package org.nlogo.headless
 
 import org.nlogo.api.Version
+import org.nlogo.workspace.Checksummer
 import java.util.concurrent.{Executors, TimeUnit}
 import org.nlogo.util.SlowTest
 import org.scalatest._
 
 import scala.language.implicitConversions
 
-class TestChecksums extends FunSuite with SlowTest {
+class TestChecksums extends FunSuite {
 
   // overriding this so we can pass in a model filter to run checksums against a single model.
   // example   sbt> checksums model=Echo

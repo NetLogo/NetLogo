@@ -5,7 +5,7 @@ import org.nlogo.workspace
 import workspace.WorldLoader
 import org.nlogo.plot.PlotLoader
 import org.nlogo.agent.{BooleanConstraint, ChooserConstraint, InputBoxConstraint, NumericConstraint}
-import org.nlogo.api.{ValueConstraint, Version}
+import org.nlogo.api.{PreviewCommands, ValueConstraint, Version}
 import org.nlogo.core.{model, Shape, ShapeParser, CompilerException, Program, ConstraintSpecification, LogoList, Model},
   model.ModelReader,
   ConstraintSpecification._,
@@ -56,8 +56,9 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
 
     // read preview commands. (if the model doesn't specify preview commands, allow the default ones
     // from our superclass to stand)
-    val previewCommands = model.previewCommands.mkString("", "\n", "\n")
-    if (!previewCommands.trim.isEmpty) ws.previewCommands = previewCommands
+    val previewCommandsSource = model.previewCommands.mkString("", "\n", "\n")
+    if (!previewCommandsSource.trim.isEmpty)
+      ws.previewCommands = PreviewCommands(previewCommandsSource)
 
     // parse turtle and link shapes, updating the workspace.
     parseShapes(model.turtleShapes,
@@ -105,6 +106,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
       }
       ws.world.observer().setConstraint(ws.world.observerOwnsIndexOf(vname.toUpperCase), con)
     }
+
     ws.command(interfaceGlobalCommands)
   }
 

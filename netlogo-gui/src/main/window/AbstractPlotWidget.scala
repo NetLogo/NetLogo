@@ -7,6 +7,7 @@ import org.nlogo.swing.VTextIcon
 
 import org.nlogo.api.Editable
 import org.nlogo.core.I18N
+import org.nlogo.core.model.WidgetReader
 import org.nlogo.plot.{PlotManagerInterface, PlotLoader, PlotPen, Plot}
 
 import java.awt.GridBagConstraints.REMAINDER
@@ -256,17 +257,23 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   }
 
   def load(strings: Array[String], helper: Widget.LoadHelper): Object = {
-    val List(x1,y1,x2,y2) = strings.drop(1).take(4).map(_.toInt).toList
-    setSize(x2 - x1, y2 - y1)
-    if (7 < strings.length) {
-      xLabel(if (strings(6) == "NIL") "" else strings(6))
-      yLabel(if (strings(7) == "NIL") "" else strings(7))
+    val literalParser = new org.nlogo.core.LiteralParser {
+      def readFromString(s: String): AnyRef = ???
+      def readNumberFromString(source: String): AnyRef = ???
     }
-    if (13 < strings.length) { legend.open=strings(13).toBoolean }
-    PlotLoader.parsePlot(strings, plot, helper.convert(_, false))
-    plotName(plot.name)
-    clear()
-    this
+    WidgetReader.read(strings.toList, literalParser) match {
+      case corePlot: org.nlogo.core.Plot =>
+        setSize(corePlot.right - corePlot.left, corePlot.bottom - corePlot.top)
+        xLabel(corePlot.xAxis)
+        yLabel(corePlot.yAxis)
+        legend.open = corePlot.legendOn
+        PlotLoader.loadPlot(corePlot, plot, helper.convert(_, false))
+        plotName(plot.name)
+        clear()
+        this
+      case _ =>
+        throw new Exception("failed to load plot")
+    }
   }
 
   /// exporting an image of the plot

@@ -66,6 +66,7 @@ extends AbstractWorkspaceScala(
   override def zipLogFiles(filename: String) = unsupported
   override def deleteLogFiles(): Unit = unsupported
   override def compiler: CompilerInterface = unsupported
-  override def logCustomMessage(msg: String): Unit = unsupported
-  override def logCustomGlobals(nameValuePairs: Seq[(String, String)]): Unit = unsupported
+
+  def openModel(model: org.nlogo.core.Model): Unit = unsupported
+  def renderer: org.nlogo.api.RendererInterface = unsupported
 }

@@ -5,7 +5,7 @@ package org.nlogo.headless
 // This is in org.nlogo.headless and not org.nlogo.workspace because it uses workspace.open(), which
 // (at present!) DummyAbstractWorkspace does not support. - ST 4/8/08
 
-import org.nlogo.agent.{BooleanConstraint, ConstantSliderConstraint, DynamicSliderConstraint, SliderConstraint}
+import org.nlogo.agent.{BooleanConstraint, ConstantSliderConstraint, DynamicSliderConstraint, NumericConstraint, SliderConstraint}
 
 class TestConstraintModels extends AbstractTestModels {
 
@@ -37,9 +37,9 @@ class TestConstraintModels extends AbstractTestModels {
 
   testModel("Chooser Constraint",
     Model(
-      Chooser(name = "foo", choices = List(1, 2, 3, 4, 5), index = 0),
+      Chooser(name = "foo", choices = List(1, 2, 3, 4, 5).map(i => Double.box(i)), index = 0),
       Chooser(name = "bar", choices = List("a", "b", "c", "d"), index = 3),
-      Chooser(name = "mix", choices = List(12, "aaa", 34, "bbb", 56), index = 0))) {
+      Chooser(name = "mix", choices = List(Double.box(12), "aaa", Double.box(34), "bbb", Double.box(56)), index = 0))) {
 
     reporter("foo") -> 1d
     reporter("bar") -> "d"
@@ -155,7 +155,7 @@ class TestConstraintModels extends AbstractTestModels {
 
     observer>>"setup"
     val index = world.observerOwnsIndexOf("X-LOC")
-    val con = world.observer().variableConstraint(index).asInstanceOf[SliderConstraint]
+    val con = world.observer().variableConstraint(index).asInstanceOf[NumericConstraint]
 
     // the maximum should be 40
     var coerced = con.coerceValue(Double.box(41)).asInstanceOf[java.lang.Double]

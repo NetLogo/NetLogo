@@ -6,9 +6,15 @@ import Shape.{ VectorShape, LinkShape }
 
 import ShapeParser.{ parseVectorShapes, parseLinkShapes }
 
-case class Model(code: String = "", widgets: List[Widget] = List(View()), info: String = "", version: String = "NetLogo 6.0",
-  turtleShapes: List[VectorShape] = Model.defaultShapes, behaviorSpace: List[String] = Nil,
-  linkShapes: List[LinkShape] = Model.defaultLinkShapes, previewCommands: List[String] = Nil) {
+case class Model(code: String = "",
+  widgets: List[Widget] = List(View()),
+  info: String = "",
+  version: String = "NetLogo 6.0",
+  turtleShapes: List[VectorShape] = Model.defaultShapes,
+  behaviorSpace: List[String] = Nil,
+  linkShapes: List[LinkShape] = Model.defaultLinkShapes,
+  previewCommands: List[String] = Nil,
+  otherSections: Map[String, List[String]] = Map()) {
 
   def interfaceGlobals: List[String] = widgets.collect{case x:DeclaresGlobal => x}.map(_.varName)
   def constraints: Map[String, ConstraintSpecification] = widgets.collect{case x:DeclaresConstraint => (x.varName, x.constraint)}.toMap

@@ -1,6 +1,6 @@
 import sbt._
 import sbt.complete.Parser, Parser._
-import Keys.{ artifactPath, baseDirectory, dependencyClasspath, packageBin, runMain, target }
+import Keys.{ baseDirectory, dependencyClasspath, packageBin, runMain, target }
 import Docs.{ allDocs, docsRoot, manualPDF }
 import NetLogoBuild.all
 import Extensions.extensionRoot

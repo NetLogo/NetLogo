@@ -4,20 +4,20 @@ package org.nlogo.window
 
 import org.scalatest.FunSuite
 import org.nlogo.nvm.Workspace
-import Workspace.UpdateMode._
+import org.nlogo.core.UpdateMode, UpdateMode._
 
 class UpdateManagerTests extends FunSuite {
 
   // at present, we're not testing the stateful parts of UpdateManager, we're just testing
   // the (functional) formulas in the two UpdatePolicy objects. - ST 2/28/11
 
-  class MyUpdateManager(mode: Workspace.UpdateMode) extends UpdateManager {
+  class MyUpdateManager(mode: UpdateMode) extends UpdateManager {
     override def defaultFrameRate = 30
     override def ticks = 0
     override def updateMode = mode
   }
 
-  def debugInfo(mode: Workspace.UpdateMode, speed: Int) = {
+  def debugInfo(mode: UpdateMode, speed: Int) = {
     val manager = new MyUpdateManager(mode)
     manager.speed = speed
     manager.debugInfo
@@ -25,25 +25,25 @@ class UpdateManagerTests extends FunSuite {
 
   // first test some common speeds
   test("tick-based: default speed") {
-    assert(debugInfo(TICK_BASED, 0) ===
+    assert(debugInfo(TickBased, 0) ===
       "speed = 0, frameRateGap = 30.00 fps, nanoGap = Infinity fps, slowdown = 0.0 ms, every 1.000 ticks")
   }
   test("tick-based: max speed") {
-    assert(debugInfo(TICK_BASED, 50) ===
+    assert(debugInfo(TickBased, 50) ===
       "speed = 50, frameRateGap = 498256.10 fps, nanoGap = 0.33 fps, slowdown = 0.0 ms, every 1000026.000 ticks")
   }
   test("tick-based: min speed") {
-    assert(debugInfo(TICK_BASED, -50) ===
+    assert(debugInfo(TickBased, -50) ===
       "speed = -50, frameRateGap = 0.15 fps, nanoGap = Infinity fps, slowdown = 9000.0 ms, every 0.010 ticks")
   }
 
   test("tick-based: all speeds") {
-    assert((-50 to 50).map(debugInfo(TICK_BASED, _)).mkString("\n", "\n", "\n")
+    assert((-50 to 50).map(debugInfo(TickBased, _)).mkString("\n", "\n", "\n")
            === tickBased)
   }
 
   test("continuous: all speeds") {
-    assert((-50 to 50).map(debugInfo(CONTINUOUS, _)).mkString("\n", "\n", "\n")
+    assert((-50 to 50).map(debugInfo(Continuous, _)).mkString("\n", "\n", "\n")
            === continuous)
   }
 

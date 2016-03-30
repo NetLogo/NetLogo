@@ -40,18 +40,19 @@ object Depend {
     val packageDefs = Map(
       "" -> Nil,
       "agent" -> List("api"),
-      "api" -> List("core", "util"),
+      "api" -> List("core", "core/model", "util"),
       "app" -> List("window"),
       "awt" -> Nil,
       "compiler" -> List("core/prim","prim","prim/dead","prim/threed"),
       "core" -> Nil,
       "core/prim" -> Nil,
+      "core/model" -> List("core"),
       "editor" -> List("core"),
       "generator" -> List("prim","prim/dead","prim/threed"),
       "generate" -> List("prim"), // for headless
       "gl/render" -> List("shape"),
       "gl/view" -> List("gl/render","window"),
-      "headless" -> List("shape","workspace","headless/test"),
+      "headless" -> List("core/model", "shape","workspace","headless/test"),
       "headless/hubnet" -> List("headless", "hubnet/protocol"),
       "headless/test" -> List("core"),
       "hubnet/client" -> List("hubnet/connection","hubnet/mirroring","hubnet/protocol","render","widget"),
@@ -87,7 +88,7 @@ object Depend {
       "swing" -> List("awt"),
       "util" -> Nil,
       "widget" -> List("window"),
-      "window" -> List("editor","log","shape","swing","workspace"),
+      "window" -> List("core/model", "editor","log","shape","swing","workspace"),
       "workspace" -> List("nvm", "plot"))
     case class Package(val dir: String, var depends: Set[Package]) {
       def ancestors:Set[Package] = depends ++ depends.flatMap(_.ancestors)

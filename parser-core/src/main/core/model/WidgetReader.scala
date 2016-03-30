@@ -7,6 +7,7 @@ import org.nlogo.core.StringEscaper.unescapeString
 import org.nlogo.core.StringEscaper.escapeString
 import org.nlogo.core._
 
+import scala.reflect.ClassTag
 import scala.annotation.tailrec
 
 // parse and valid are separated for clarity later on in the overarching reader, FD 4/16/14
@@ -87,15 +88,28 @@ case class OptionLine[T](noneLine: String, someLineReader: WidgetLine[T]) extend
 
 trait WidgetReader {
   type T <: Widget
+  def classTag: ClassTag[T]
   def format(t: T): String
   def validate(lines: List[String]): Boolean
   def parse(lines: List[String]): T
 }
 
 object WidgetReader {
-  def read(lines: List[String], parser: LiteralParser): Widget = {
-    val readers = List(ButtonReader, SliderReader, ViewReader, MonitorReader, SwitchReader, PlotReader, ChooserReader(parser),
-      OutputReader, TextBoxReader, new InputBoxReader())
+    def defaultReaders(parser: LiteralParser) = Map[String, WidgetReader](
+      "BUTTON"          -> ButtonReader,
+      "SLIDER"          -> SliderReader,
+      "GRAPHICS-WINDOW" -> ViewReader,
+      "MONITOR"         -> MonitorReader,
+      "SWITCH"          -> SwitchReader,
+      "PLOT"            -> PlotReader,
+      "CHOOSER"         -> new ChooserReader(parser),
+      "OUTPUT"          -> OutputReader,
+      "TEXTBOX"         -> TextBoxReader,
+      "INPUTBOX"        -> new InputBoxReader {type U = Any}
+    )
+
+  def read(lines: List[String], parser: LiteralParser, additionalReaders: Map[String, WidgetReader] = Map()): Widget = {
+    val readers = (defaultReaders(parser) ++ additionalReaders).values
     readers.find(_.validate(lines)) match {
       case Some(reader) => reader.parse(lines)
       case None =>
@@ -105,22 +119,17 @@ object WidgetReader {
     }
   }
 
-  def format(widget: Widget, parser: LiteralParser): String =
-    widget match {
-      case b: Button => ButtonReader.format(b)
-      case s: Slider => SliderReader.format(s)
-      case v: View => ViewReader.format(v)
-      case m: Monitor => MonitorReader.format(m)
-      case s: Switch => SwitchReader.format(s)
-      case p: Plot => PlotReader.format(p)
-      case c: Chooser => new ChooserReader(parser).format(c)
-      case o: Output => OutputReader.format(o)
-      case t: TextBox => TextBoxReader.format(t)
-      case i: InputBox[_] => new InputBoxReader{type U = Any}.format(i.asInstanceOf[InputBox[Any]])
-      case _ => throw new UnsupportedOperationException("Widget type is not supported: " + widget.getClass.getName)
-    }
+  def format(widget: Widget, parser: LiteralParser, additionalReaders: Map[String, WidgetReader] = Map()): String = {
+    (defaultReaders(parser) ++ additionalReaders)
+      .values
+      .flatMap(r => r.classTag.unapply(widget).map(w => r.format(w)))
+      .headOption
+      .getOrElse(
+        throw new UnsupportedOperationException("Widget type is not supported: " + widget.getClass.getName)
+      )
+   }
 
-  def readInterface(lines: List[String], parser: LiteralParser): List[Widget] = {
+  def readInterface(lines: List[String], parser: LiteralParser, additionalReaders: Map[String, WidgetReader] = Map()): List[Widget] = {
     var widgets = Vector[Widget]()
     var widgetLines = Vector[String]()
     for(line <- lines)
@@ -128,11 +137,11 @@ object WidgetReader {
         widgetLines :+= line
       else {
         if(!widgetLines.forall(_.isEmpty))
-          widgets :+= read(widgetLines.toList, parser)
+          widgets :+= read(widgetLines.toList, parser, additionalReaders)
         widgetLines = Vector()
       }
     if(!widgetLines.forall(_.isEmpty))
-      widgets :+= read(widgetLines.toList, parser)
+      widgets :+= read(widgetLines.toList, parser, additionalReaders)
 
     widgets.toList
   }
@@ -162,6 +171,7 @@ abstract class BaseWidgetReader extends WidgetReader {
 
 object ButtonReader extends BaseWidgetReader {
   type T = Button
+  def classTag: ClassTag[Button] = ClassTag(classOf[Button])
   def definition = List(new SpecifiedLine("BUTTON"),
                         IntLine(),  // left
                         IntLine(),  // top
@@ -172,7 +182,11 @@ object ButtonReader extends BaseWidgetReader {
                         TNilBooleanLine(),  // forever?
                         ReservedLine(),
                         ReservedLine(),
-                        StringLine(),   // buttonType
+                        MapLine(List(
+                          "OBSERVER" -> AgentKind.Observer,
+                          "PATCH"    -> AgentKind.Patch,
+                          "TURTLE"   -> AgentKind.Turtle,
+                          "LINK"     -> AgentKind.Link)), // buttonKind
                         ReservedLine(),
                         StringLine(),  // actionkey
                         ReservedLine(),
@@ -180,13 +194,13 @@ object ButtonReader extends BaseWidgetReader {
                         IntLine()  // Enabled before ticks start implemented as an int
                       )
   def asList(button: Button) = List((), button.left, button.top, button.right, button.bottom, button.display,
-                                    button.source, button.forever, (), (), button.buttonType, (), button.actionKey,
+                                    button.source, button.forever, (), (), button.buttonKind, (), button.actionKey,
                                     (), (), if(button.disableUntilTicksStart) 0 else 1)
   def asWidget(vals: List[Any]): Button = {
     val List(_, left: Int, top: Int, right: Int, bottom: Int, rawDisplay: Option[String] @unchecked,
-      source: String, forever: Boolean, _, _, buttonType: String, _, actionKey: String, _, _,
+      source: String, forever: Boolean, _, _, buttonKind: AgentKind, _, actionKey: String, _, _,
       enabledBeforeTicks: Int) = vals
-    Button(rawDisplay, left, top, right, bottom, source, forever, buttonType, actionKey, enabledBeforeTicks == 0)
+    Button(rawDisplay, left, top, right, bottom, source, forever, buttonKind, actionKey, enabledBeforeTicks == 0)
   }
 }
 
@@ -241,6 +255,7 @@ object PenReader {
 
 object PlotReader extends BaseWidgetReader {
   type T = Plot
+  def classTag: ClassTag[T] = ClassTag(classOf[Plot])
 
   def definition = List(new SpecifiedLine("PLOT"),
                         IntLine(),  // left
@@ -287,6 +302,7 @@ object PlotReader extends BaseWidgetReader {
 
 object SliderReader extends BaseWidgetReader {
   type T = Slider
+  def classTag: ClassTag[T] = ClassTag(classOf[Slider])
 
   def definition = List(new SpecifiedLine("SLIDER"),
                         IntLine(),  // left
@@ -315,6 +331,7 @@ object SliderReader extends BaseWidgetReader {
 
 object TextBoxReader extends BaseWidgetReader {
   type T = TextBox
+  def classTag: ClassTag[T] = ClassTag(classOf[TextBox])
 
   def definition = List(new SpecifiedLine("TEXTBOX"),
                         IntLine(),           // left
@@ -336,6 +353,7 @@ object TextBoxReader extends BaseWidgetReader {
 
 object SwitchReader extends BaseWidgetReader {
   type T = Switch
+  def classTag: ClassTag[T] = ClassTag(classOf[Switch])
 
   def definition = List(new SpecifiedLine("SWITCH"),
                         IntLine(),  // left
@@ -358,6 +376,7 @@ object SwitchReader extends BaseWidgetReader {
 
 case class ChooserReader(parser: LiteralParser) extends BaseWidgetReader {
   type T = Chooser
+  def classTag: ClassTag[T] = ClassTag(classOf[Chooser])
 
   def definition = List(new SpecifiedLine("CHOOSER"),
                         IntLine(),  // left
@@ -393,6 +412,7 @@ case class ChooserReader(parser: LiteralParser) extends BaseWidgetReader {
 
 object MonitorReader extends BaseWidgetReader {
   type T = Monitor
+  def classTag: ClassTag[T] = ClassTag(classOf[Monitor])
 
   def definition = List(new SpecifiedLine("MONITOR"),
                         IntLine(),  // left
@@ -416,6 +436,7 @@ object MonitorReader extends BaseWidgetReader {
 
 object OutputReader extends BaseWidgetReader {
   type T = Output
+  def classTag: ClassTag[T] = ClassTag(classOf[Output])
 
   def definition = List(new SpecifiedLine("OUTPUT"),
                         IntLine(),  // left
@@ -434,6 +455,7 @@ object OutputReader extends BaseWidgetReader {
 class InputBoxReader extends BaseWidgetReader {
   type U
   type T = InputBox[U]
+  def classTag: ClassTag[T] = ClassTag(classOf[InputBox[U]])
 
   val inputBoxTypes =
     List((Num, DoubleLine()), (Col, IntLine()), (Str, StringLine()), (StrCommand, StringLine()), (StrReporter, StringLine()))
@@ -467,6 +489,7 @@ class InputBoxReader extends BaseWidgetReader {
 
 object ViewReader extends BaseWidgetReader {
   type T = View
+  def classTag: ClassTag[T] = ClassTag(classOf[View])
 
   def definition = List(new SpecifiedLine("GRAPHICS-WINDOW"),
                         IntLine(),  // left
@@ -506,8 +529,8 @@ object ViewReader extends BaseWidgetReader {
          (fontSize: Int) :: _ :: _ :: _ :: _ :: (wrappingAllowedInX: Boolean) :: (wrappingAllowedInY: Boolean) ::
          _ :: (minPxcor: Int) :: (maxPxcor: Int) :: (minPycor: Int) :: (maxPycor: Int) :: (updateMode: UpdateMode) ::
          _ :: (showTickCounter: Boolean) :: (tickCounterLabel: String) :: (frameRate: Double) :: Nil) = vals
-    View(left, top, right, bottom, patchSize, fontSize,
-      wrappingAllowedInX, wrappingAllowedInY, minPxcor, maxPxcor, minPycor, maxPycor,
-      updateMode, showTickCounter, tickCounterLabel, frameRate)
+    View(left, top, right, bottom,
+      new WorldDimensions(minPxcor, maxPxcor, minPycor, maxPycor, patchSize, wrappingAllowedInX, wrappingAllowedInY),
+        fontSize, updateMode, showTickCounter, tickCounterLabel, frameRate)
   }
 }

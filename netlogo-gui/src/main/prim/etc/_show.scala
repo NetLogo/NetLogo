@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api.Syntax
+import org.nlogo.api.{ Syntax, OutputDestination }
 import org.nlogo.nvm.{ Command, Context, Workspace }
 
 class _show extends Command {
@@ -11,7 +11,7 @@ class _show extends Command {
   override def perform(context: Context) {
     workspace.outputObject(
       args(0).report(context), context.agent,
-      true, true, Workspace.OutputDestination.NORMAL)
+      true, true, OutputDestination.Normal)
     context.ip = next
   }
 }

@@ -45,7 +45,9 @@ class PlotPen (
 extends org.nlogo.core.PlotPenInterface with JSerializable {
 
   hardReset()
+
   plot.addPen(this)
+
   override def toString = "PlotPen("+name+", "+plot+")"
 
   override def state: PlotPenState =

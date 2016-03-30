@@ -190,7 +190,7 @@ public strictfp class Importer3D
       if (minx != world.minPxcor() || maxx != world.maxPxcor() ||
           miny != world.minPycor() || maxy != world.maxPycor() ||
           minz != w.minPzcor() || maxz != w.maxPzcor()) {
-        importerUser.setDimensions(new WorldDimensions3D(minx, maxx, miny, maxy, minz, maxz));
+        importerUser.setDimensions(new WorldDimensions3D(minx, maxx, miny, maxy, minz, maxz, 12.0, true, true, true));
         needToResize = true;
       }
     } catch (ClassCastException cce) {

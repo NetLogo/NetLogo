@@ -56,25 +56,30 @@ class TestStackTraces extends AbstractTestModels {
   callToPrimIsNested_Test(prim = "UPDATE-PLOTS", codeType = PenUpdate)
 
   trait CodeType {
+    def displayName: String
     val procName: String
-    def plot(code: String): Plot
+    def plot(code: String): org.nlogo.core.Plot
   }
   object PlotSetup extends CodeType {
+    val displayName = "plot setup code"
     val procName = "plot 'p' setup code"
     def plot(code: String) =
       Plot(name = "p", setupCode = code)
   }
   object PlotUpdate extends CodeType {
+    val displayName = "plot update code"
     val procName = "plot 'p' update code"
     def plot(code: String) =
       Plot(name = "p", updateCode = code)
   }
   object PenSetup extends CodeType {
+    val displayName = "pen setup code"
     val procName = "plot 'p' pen 'pp' setup code"
     def plot(code: String) =
       Plot(name = "p", pens = Pens(Pen(name = "pp", setupCode = code)))
   }
   object PenUpdate extends CodeType {
+    val displayName = "pen update code"
     val procName = "plot 'p' pen 'pp' update code"
     def plot(code: String) =
       Plot(name = "p", pens = Pens(Pen(name = "pp", updateCode = code)))
@@ -83,8 +88,9 @@ class TestStackTraces extends AbstractTestModels {
   def trace = workspace.lastErrorReport.stackTrace.get.trim
 
   def callPrimDirectly_Test(prim: String, codeType: CodeType) {
-    testModel("direct call to " + prim + " with failure in " + codeType,
-      Model("globals [x]", codeType.plot("if x = 1 [plot __boom]"))) {
+    val model =
+      Model("globals [x]", codeType.plot("if x = 1 [plot __boom]"))
+    testModel("direct call to " + prim + " with failure in " + codeType.displayName, model) {
       observer >> "reset-ticks"
       observer >> "set x 1"
       intercept[LogoException] {observer >> prim}
@@ -106,7 +112,8 @@ error while observer running __BOOM
   to do-it if x = 1 [explode] end
   to explode print 1 / zero end
 """
-    testModel("nesting " + prim + " in " + codeType, Model(code, codeType.plot("do-it"))) {
+    val model = Model(code, codeType.plot("do-it"))
+    testModel("nesting " + prim + " in " + codeType.displayName, model) {
       observer >> "reset-ticks"
       observer >> "set x 1"
       intercept[LogoException] {observer >> "go1"}

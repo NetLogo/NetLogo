@@ -84,7 +84,7 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
   override def getPreferredSize: Dimension = toolBar.getPreferredSize
 
   def getIncludesTable: Option[Map[String, String]] = {
-    val path = Option(workspace.getModelPath()).getOrElse{
+    val path = Option(workspace.getModelPath).getOrElse{
       // we create an arbitrary model name for checking include paths when we don't have an actual
       // modelPath or directory
       try workspace.attachModelDir("foo.nlogo")
