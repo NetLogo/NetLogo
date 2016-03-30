@@ -2,7 +2,7 @@ import org.scalajs.sbtplugin.cross.{ CrossProject, CrossType }
 import org.scalastyle.sbt.ScalastylePlugin.scalastyleTarget
 import ModelsLibrary.modelsDirectory
 import Extensions.{ excludedExtensions, extensionRoot }
-import NetLogoBuild.{ all, autogenRoot, cclArtifacts, includeProject, netlogoVersion, shareSourceDirectory }
+import NetLogoBuild.{ all, autogenRoot, cclArtifacts, includeProject, marketingVersion, numericMarketingVersion, netlogoVersion, shareSourceDirectory }
 import Docs.htmlDocs
 import Testing.testTempDirectory
 
@@ -86,6 +86,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
    settings(jvmSettings: _*).
    settings(scalaSettings: _*).
    settings(scalatestSettings: _*).
+   settings(NetLogoBuild.settings: _*).
    settings(JFlexRunner.settings: _*).
    settings(EventsGenerator.settings: _*).
    settings(Docs.settings: _*).
@@ -107,7 +108,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
              Depend.dependTask: _*).
   settings(
     name := "NetLogo",
-    version := "6.0.0-M2",
+    version := "6.0.0-M3",
     isSnapshot := false,
     mainClass in Compile := Some("org.nlogo.app.App"),
     modelsDirectory := file("models"),
@@ -205,7 +206,8 @@ lazy val macApp = project.in(file("mac-app")).
 
 // this project is all about packaging NetLogo for distribution
 lazy val dist = project.in(file("dist")).
-  settings(NetLogoPackaging.settings(netlogo, macApp): _*)
+  settings(NetLogoPackaging.settings(netlogo, macApp): _*).
+  settings(NetLogoBuild.settings: _*)
 
 lazy val sharedResources = (project in file ("shared")).
   settings(commonSettings: _*).

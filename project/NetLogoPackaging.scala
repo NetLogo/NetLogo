@@ -2,7 +2,7 @@ import sbt._
 import sbt.complete.Parser, Parser._
 import Keys.{ baseDirectory, dependencyClasspath, packageBin, runMain, target }
 import Docs.{ allDocs, docsRoot, manualPDF }
-import NetLogoBuild.all
+import NetLogoBuild.{ all, buildDate, marketingVersion, numericMarketingVersion }
 import Extensions.extensionRoot
 import ModelsLibrary.modelsDirectory
 import ChecksumsAndPreviews.allPreviews
@@ -21,9 +21,7 @@ object NetLogoPackaging {
   lazy val mathematicaRoot = settingKey[File]("root of Mathematica-Link directory")
   lazy val modelCrossReference = taskKey[Unit]("add model cross references")
   lazy val netLogoRoot = settingKey[File]("Root directory of NetLogo project")
-  lazy val netLogoVersion = settingKey[String]("Version of NetLogo under construction")
   lazy val netLogoLongVersion = settingKey[String]("Long version number (including trailing zero) of NetLogo under construction")
-  lazy val numericOnlyVersion = settingKey[String]("Version of NetLogo under construction (only numbers and periods)")
   lazy val packageAppParser = settingKey[State => Parser[(PlatformBuild, SubApplication, BuildJDK)]]("parser for packageApp settings")
   lazy val platformMap = settingKey[Map[String, PlatformBuild]]("map of names to platforms")
   lazy val subApplicationMap = settingKey[Map[String, SubApplication]]("map of names to sub-application")
@@ -172,13 +170,11 @@ object NetLogoPackaging {
       "NetLogo 3D"      -> NetLogoThreeDApp,
       "NetLogo Logging" -> NetLogoLoggingApp,
       "HubNet Client"   -> HubNetClientApp),
-    netLogoVersion     := "6.0-M2",
-    numericOnlyVersion := "6.0",
-    netLogoLongVersion := { if (netLogoVersion.value.length == 3) netLogoVersion.value + ".0" else netLogoVersion.value },
+    netLogoLongVersion := { if (marketingVersion.value.length == 3) marketingVersion.value + ".0" else marketingVersion.value },
     buildVariables := Map[String, String](
-      "version"               -> netLogoVersion.value,
-      "numericOnlyVersion"    -> numericOnlyVersion.value,
-      "date"                  -> "March 25, 2016"),
+      "version"               -> marketingVersion.value,
+      "numericOnlyVersion"    -> numericMarketingVersion.value,
+      "date"                  -> buildDate.value),
     packageAppParser := { (s: State) =>
       ((" " ~> mapToParser(platformMap.value)) ~
         (" " ~> mapToParser(subApplicationMap.value)) ~
@@ -202,11 +198,11 @@ object NetLogoPackaging {
       val webSource = baseDirectory.value / "downloadPages"
       val downloadLocations =
         Map(
-          "macInstaller"     -> s"NetLogo-${netLogoVersion.value}.dmg",
-          "winInstaller32"   -> s"NetLogo-${netLogoVersion.value}-32.msi",
-          "winInstaller64"   -> s"NetLogo-${netLogoVersion.value}-64.msi",
-          "linuxInstaller32" -> s"NetLogo-${netLogoVersion.value}-32.tgz",
-          "linuxInstaller64" -> s"NetLogo-${netLogoVersion.value}-64.tgz")
+          "macInstaller"     -> s"NetLogo-${marketingVersion.value}.dmg",
+          "winInstaller32"   -> s"NetLogo-${marketingVersion.value}-32.msi",
+          "winInstaller64"   -> s"NetLogo-${marketingVersion.value}-64.msi",
+          "linuxInstaller32" -> s"NetLogo-${marketingVersion.value}-32.tgz",
+          "linuxInstaller64" -> s"NetLogo-${marketingVersion.value}-64.tgz")
               .map(t => (t._1, webTarget.value / t._2))
 
       downloadLocations.map(_._2).filterNot(_.exists).foreach { f =>
@@ -223,7 +219,7 @@ object NetLogoPackaging {
       Mustache.betweenDirectories(webSource, webTarget.value, vars)
     },
     uploadWebsite := {
-      val tmpTarget = target.value / netLogoVersion.value
+      val tmpTarget = target.value / marketingVersion.value
       val user = System.getenv("USER")
       val host = "ccl.northwestern.edu"
       val targetDir = "/usr/local/www/netlogo"

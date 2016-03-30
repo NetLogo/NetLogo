@@ -13,12 +13,11 @@ object NetLogoBuild {
 
   lazy val buildDate = taskKey[String]("date of build")
 
-  lazy val marketingVersion = taskKey[String]("Version attached to the build for end-user identification")
-
-  lazy val numericMarketingVersion = taskKey[String]("Numeric-only version attached to the build for end-user identification")
+  lazy val marketingVersion = settingKey[String]("Version attached to the build for end-user identification")
+  lazy val numericMarketingVersion = settingKey[String]("Numeric-only version attached to the build for end-user identification")
 
   val settings = Seq(
-    marketingVersion        := "6.0-PREVIEW-2-16",
+    marketingVersion        := "6.0-M3",
     numericMarketingVersion := "6.0",
     buildDate := {
       val dateFormat =

@@ -1,7 +1,8 @@
 import sbt._
 import Keys._
 import Def.Initialize
-import NetLogoPackaging.{ aggregateOnlyFiles, netLogoRoot, netLogoVersion, numericOnlyVersion, buildVariables, webTarget }
+import NetLogoBuild.{ marketingVersion, numericMarketingVersion }
+import NetLogoPackaging.{ aggregateOnlyFiles, netLogoRoot, buildVariables, webTarget }
 
 object PackageAction {
   type JVMOptionFinder  = (PlatformBuild, SubApplication) => Seq[String]
@@ -76,7 +77,7 @@ object PackageAction {
             buildSubApplication(
               appMainClass, jvmOptions,
               platform, bundledDirsInit.value(platform), app, buildJDK,
-              numericOnlyVersion.value, variables, buildDirectory, mainJar,
+              numericMarketingVersion.value, variables, buildDirectory, mainJar,
               dependencies, distDir, netLogoDir)
           }
         }
@@ -124,7 +125,7 @@ object PackageAction {
             baseDirectory.value / "configuration" / "aggregate" / platformName,
             jdk, appMap.value, buildVariables.value,
             (aggregateOnlyFiles in aggregateKey).value) // specialize on aggregateKey for platform-dependant files
-        val dlPath = downloadPath(initialInstaller, webTarget.value, netLogoVersion.value)
+        val dlPath = downloadPath(initialInstaller, webTarget.value, marketingVersion.value)
         IO.createDirectory(webTarget.value)
         IO.move(initialInstaller, dlPath)
         dlPath
