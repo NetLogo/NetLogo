@@ -19,8 +19,7 @@ extends GUIWorkspace(world, GUIWorkspace.KioskLevel.MODERATE, frame, frame, null
     override def ticks = world.tickCounter.ticks
   }
   val aggregateManager =
-    Femto.get[AggregateManagerInterface](
-      "org.nlogo.sdm.AggregateManagerLite", Array())
+    Femto.get[AggregateManagerInterface]("org.nlogo.sdm.AggregateManagerLite")
   override def doImport(importer: BufferedReaderImporter) {
     if(isApplet)
       // it's pretty gruesome here efficiency-wise that we slurp
@@ -38,6 +37,5 @@ extends GUIWorkspace(world, GUIWorkspace.KioskLevel.MODERATE, frame, frame, null
   override def stopInspectingAgent(agent: org.nlogo.agent.Agent): Unit = { }
   override def stopInspectingDeadAgents(): Unit = { }
   override def closeAgentMonitors() { }
-  override def newRenderer = Femto.get[RendererInterface](
-    "org.nlogo.render.Renderer", Array(world))
+  override def newRenderer = Femto.get[RendererInterface]("org.nlogo.render.Renderer", world)
 }
