@@ -104,8 +104,10 @@ class TestCompileAll extends FunSuite  {
     try {
       workspace.open(path)
       val lab = HeadlessWorkspace.newLab
-      lab.load(ModelReader.parseModel(text, workspace.parser, Map())
-        .behaviorSpace.mkString("", "\n", "\n"))
+      lab.load(ModelReader
+        .parseModel(text, workspace.parser, Map())
+        .behaviorSpace
+        .mkString("", "\n", "\n"))
       lab.names.foreach(lab.newWorker(_).compile(workspace))
     }
     finally workspace.dispose()
