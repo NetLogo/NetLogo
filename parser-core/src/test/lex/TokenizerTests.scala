@@ -3,9 +3,8 @@
 package org.nlogo.lex
 
 import org.scalatest.FunSuite
-import org.nlogo.core.{ Token, TokenType }
-
-import org.nlogo.util.TestUtils.cleanJsNumbers
+import org.nlogo.core.{ Token, TokenType, TestUtils },
+  TestUtils.cleanJsNumbers
 
 class TokenizerTests extends FunSuite {
   import Tokenizer.{ isValidIdentifier, getTokenAtPosition }

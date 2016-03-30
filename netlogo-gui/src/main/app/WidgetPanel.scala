@@ -4,7 +4,10 @@ package org.nlogo.app
 
 import org.nlogo.api.Editable
 import org.nlogo.api.ModelReader
-import org.nlogo.core.I18N
+import org.nlogo.api.Version
+import org.nlogo.core.{ I18N, Widget => CoreWidget }
+import org.nlogo.core.model.WidgetReader
+import org.nlogo.fileformat
 import org.nlogo.window.DummyPlotWidget
 import org.nlogo.window.PlotWidget
 import org.nlogo.window.EditorColorizer
@@ -398,8 +401,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
         new DefaultCompilerServices(workspace.compiler))
     } else if (widgetType == "DUMMY OUTPUT") // currently in saved models only - ST 3/17/04
       new OutputWidget()
-    else if (widgetType == "DUMMY CC-WINDOW") // definitely in saved models only
-      null
     else if (widgetType == "DUMMY GRAPHICS-WINDOW" || widgetType == "DUMMY VIEW" || widgetType == "VIEW")
       new DummyViewWidget(workspace.world)
     else
@@ -550,7 +551,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   /// loading and saving
 
-  def loadWidget(strings: Array[String], modelVersion: String): Widget = {
+  def loadWidget(strings: Array[String], coreWidget: CoreWidget, modelVersion: String): Widget = {
     val helper: Widget.LoadHelper =
       new Widget.LoadHelper() {
         def version: String = modelVersion
@@ -562,9 +563,17 @@ class WidgetPanel(val workspace: GUIWorkspace)
     val widgetType = strings(0)
     val x = Integer.parseInt(strings(1))
     val y = Integer.parseInt(strings(2))
+    makeAndLoadWidget(widgetType, strings, coreWidget, helper, x, y)
+  }
+
+  protected def makeAndLoadWidget(widgetType: String,
+    strings: Array[String],
+    coreWidget: CoreWidget,
+    helper: Widget.LoadHelper,
+    x: Int, y: Int): Widget = {
     val newGuy = makeWidget(widgetType, true)
     if (newGuy != null) {
-      newGuy.load(strings, helper)
+      newGuy.load(coreWidget.asInstanceOf[newGuy.WidgetModel], helper)
       enforceMinimumAndMaximumWidgetSizes(newGuy)
       addWidget(newGuy, x, y, false, true)
     }
@@ -587,6 +596,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
           case w: WidgetWrapper =>
             if (w.widget.isInstanceOf[DummyPlotWidget] && e.widget.displayName == w.widget.displayName)
               removeWidget(w)
+          case _ =>
         }
         repaint()
       case _ =>
@@ -598,12 +608,18 @@ class WidgetPanel(val workspace: GUIWorkspace)
     zoomer.forgetAllZoomInfo()
   }
 
-  override def loadWidgets(lines: Array[String], version: String): Unit = {
+  override def loadWidgets(lines: Array[String], version: String, readerOverrides: Map[String, WidgetReader] = Map()): Unit = {
     try {
-      val v: JList[JList[String]] = ModelReader.parseWidgets(lines)
+      val additionalReaders = fileformat.nlogoReaders(Version.is3D(version))
+
+      val v: Seq[JList[String]] = ModelReader.parseWidgets(lines).asScala.toSeq
       if (null != v) {
         setVisible(false)
-        v.asScala.foreach((v2: JList[String]) => loadWidget(v2.toArray(new Array[String](v2.size)), version))
+        val linesAndWidgets = v zip v.map(lines =>
+            WidgetReader.read(lines.asScala.toList, workspace, additionalReaders ++ readerOverrides))
+        linesAndWidgets.foreach {
+          case (lines, coreWidget) => loadWidget(lines.toArray(new Array[String](lines.size)), coreWidget, version)
+        }
       }
     } finally {
       setVisible(true)

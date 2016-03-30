@@ -2,12 +2,15 @@
 
 package org.nlogo.widget
 
-import org.nlogo.api.{Editable, ModelReader}
+import org.nlogo.api.{ Color => NlogoColor, Editable, ModelReader }
+import org.nlogo.core.{ TextBox => CoreTextBox }
 import org.nlogo.core.I18N
 import org.nlogo.window.{InterfaceColors, SingleErrorWidget,Widget}
 import java.awt.{Font, Color, FontMetrics, Graphics, Dimension, Rectangle}
 
 class NoteWidget extends SingleErrorWidget with Editable {
+
+  type WidgetModel = CoreTextBox
 
   setBackground(InterfaceColors.TRANSPARENT)
   setOpaque(false)
@@ -95,14 +98,17 @@ class NoteWidget extends SingleErrorWidget with Editable {
     s.toString
   }
 
-  def load(strings: Array[String], helper: Widget.LoadHelper) = {
-    text = if (strings(5) == "NIL") "" else ModelReader.restoreLines(strings(5))
-    if (strings.length >= 7) fontSize = strings(6).toInt
-    if (strings.length >= 8) color = org.nlogo.api.Color.getColor(strings(7).toDouble: java.lang.Double)
-    if (strings.length >= 9) transparency(strings(8).toInt != 0)
-    else transparency(false)
-    val Array(x1,y1,x2,y2) = strings.drop(1).take(4).map(_.toInt)
-    setSize(x2 - x1, y2 - y1)
+  override def model: WidgetModel =
+    CoreTextBox(display = text, fontSize = fontSize,
+      color = NlogoColor.getClosestColorNameByARGB(color.getRGB)
+      transparent = model.transparency)
+
+  override def load(model: WidgetModel, helper: Widget.LoadHelper) = {
+    text = model.display.getOrElse("")
+    fontSize = model.fontSize
+    color = NlogoColor.getColor(Double.box(model.color))
+    transparency(model.transparent)
+    setSize(model.right - model.left, model.bottom - model.top)
     this
   }
 }

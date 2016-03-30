@@ -44,13 +44,13 @@ trait HubNetInterface extends ViewInterface with ModelSections.BufSaveable {
    * Send a message to each node (client) in the list for the given tag
    */
   @throws(classOf[LogoException])
-  def send(nodes: Seq[String], tag: String, message: JSerializable)
+  def send(nodes: Seq[String], tag: String, message: JSerializable with AnyRef)
 
   /**
    * Send message to a single client for the given tag
    */
   @throws(classOf[LogoException])
-  def send(node: String, tag: String, message: JSerializable): Boolean
+  def send(node: String, tag: String, message: JSerializable with AnyRef): Boolean
 
   /// connection management
   def disconnect()

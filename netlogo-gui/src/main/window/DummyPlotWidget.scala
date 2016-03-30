@@ -20,8 +20,8 @@ object DummyPlotWidget{
 class DummyPlotWidget(plot:Plot, plotManager: PlotManager) extends AbstractPlotWidget(plot, plotManager) {
   var nameOptions = createNameOptions()
 
-  override def load(strings: Array[String], helper: Widget.LoadHelper): Object = {
-    super.load(strings, helper)
+  override def load(model: WidgetModel, helper: Widget.LoadHelper): Object = {
+    super.load(model, helper)
     nameOptions = createNameOptions()
     if (nameOptions.names.contains(plot.name)) {
       nameOptions.selectByName(plot.name)

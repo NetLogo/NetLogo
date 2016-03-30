@@ -54,7 +54,8 @@ class GUIHubNetManager(workspace: GUIWorkspace,
   }
 
   /// client editor
-  def getClientInterface: Array[String] = _clientEditor.getWidgetsAsStrings.toArray
+  def getClientInterface: Array[String] =
+    _clientEditor.getWidgetsAsStrings.toArray
   def clientEditor: AnyRef = _clientEditor
   def getInterfaceWidth = _clientEditor.interfacePanel.getPreferredSize.width
   def getInterfaceHeight = _clientEditor.interfacePanel.getPreferredSize.height

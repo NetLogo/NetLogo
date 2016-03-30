@@ -208,8 +208,8 @@ public abstract strictfp class WorldViewSettings
     }
   }
 
-  public Object load(String[] strings, String version) {
-    workspace.loadWorld(strings, version, this);
+  public Object load(org.nlogo.core.View view, String version) {
+    workspace.loadWorld(view, version, this);
     // we can't clearAll here because the globals may not
     // be allocated yet ev 7/12/06
     // note that we clear turtles inside the load method so
@@ -367,7 +367,7 @@ public abstract strictfp class WorldViewSettings
   protected int newFontSize;
 
   public int fontSize() {
-    return gWidget.view.fontSize();
+    return gWidget.view().fontSize();
   }
 
   // this must be public because it's listed in our property set - ST 1/20/04

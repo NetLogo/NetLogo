@@ -2,9 +2,9 @@
 
 package org.nlogo.api
 
-import org.nlogo.core.{ CompilerException, ProcedureSyntax, Token }
+import org.nlogo.core.{ CompilerException, LiteralParser, ProcedureSyntax, Token }
 
-trait CompilerServices {
+trait CompilerServices extends LiteralParser {
   def isConstant(s: String): Boolean
   @throws(classOf[CompilerException])
   def readFromString(s: String): AnyRef

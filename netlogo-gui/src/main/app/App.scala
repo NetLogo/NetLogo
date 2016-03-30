@@ -933,7 +933,7 @@ class App extends
    * @param source new contents
    * @see #compile
    */
-  def setProcedures(source:String) { dispatchThreadOrBust(tabs.codeTab.innerSource(source)) }
+  def setProcedures(source:String) { dispatchThreadOrBust(tabs.codeTab.innerSource = source) }
 
   /**
    * Recompiles the model.  Useful after calling
@@ -986,8 +986,9 @@ class App extends
    * in the same (undocumented) format found in a saved model.
    * @param text the widget specification
    */
-  def makeWidget(text:String){
-    dispatchThreadOrBust( tabs.interfaceTab.getInterfacePanel.loadWidget(text.split("\n").toArray, Version.version) )
+  def makeWidget(text:String) {
+    // TODO: This must be fixed
+    dispatchThreadOrBust( tabs.interfaceTab.getInterfacePanel.loadWidget(text.split("\n").toArray, null, Version.version) )
   }
 
   /// helpers for controlling methods

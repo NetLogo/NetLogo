@@ -58,11 +58,11 @@ public strictfp class View
   }
 
   public void displaySwitch(boolean on) {
-    workspace.viewWidget.displaySwitch.setOn(on);
+    workspace.viewWidget.displaySwitch().setOn(on);
   }
 
   public boolean displaySwitch() {
-    return workspace.viewWidget.displaySwitch.isSelected();
+    return workspace.viewWidget.displaySwitch().isSelected();
   }
 
   private final Runnable paintRunnable =

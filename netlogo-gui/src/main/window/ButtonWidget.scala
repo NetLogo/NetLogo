@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import org.nlogo.core.{ AgentKind, I18N }
+import org.nlogo.core.{ AgentKind, Button => CoreButton, I18N }
 import java.awt.{List=>AWTList, _}
 import event.{MouseEvent, MouseListener, MouseMotionListener}
 import image.FilteredImageSource
@@ -78,6 +78,8 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
         with Events.JobRemovedEvent.Handler with Events.TickStateChangeEvent.Handler {
 
   import ButtonWidget._
+
+  type WidgetModel = CoreButton
 
   private var buttonType: ButtonType = ButtonType.ObserverButton
 
@@ -236,11 +238,11 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   def name = _name
   def name_=(newName:String){
     _name = newName
-    chooseDisplayName
+    chooseDisplayName()
   }
 
-  override def procedure(p: Procedure) {
-    super.procedure(p)
+  override def procedure_=(p: Procedure): Unit = {
+    super.procedure_=(p)
   }
 
   def action() {
@@ -343,16 +345,16 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
     (innerSource: String).trim.replaceAll("\\s+", " ")
   }
 
-  override def innerSource(newInnerSource:String): Unit = {
-    super.innerSource(newInnerSource)
+  override def innerSource_=(newInnerSource:String): Unit = {
+    super.innerSource_=(newInnerSource)
     chooseDisplayName
   }
 
   def wrapSource: String = innerSource
 
   def wrapSource(newInnerSource:String) {
-    if (newInnerSource != "" && newInnerSource != (innerSource: String)) {
-      this.innerSource(newInnerSource)
+    if (newInnerSource != "" && newInnerSource != innerSource) {
+      this.innerSource = newInnerSource
       recompile()
     }
   }
@@ -363,7 +365,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
       (if(forever) "__foreverbuttonend ] " else "__done ") + "end"
     new Events.RemoveJobEvent(this).raise(this)
     source(header, innerSource, footer)
-    chooseDisplayName
+    chooseDisplayName()
   }
 
   /// sizing
@@ -465,27 +467,20 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
     s.toString
   }
 
-  override def load(strings:Array[String], helper: Widget.LoadHelper) = {
-    forever = strings(7) == "T"
-    // ButtonType handles converting the saved button type name into a ButtonType object.
-    if (10 < strings.length) buttonType = ButtonType(strings(10).toLowerCase)
+  override def load(button: WidgetModel, helper: Widget.LoadHelper): Object = {
+    forever = button.forever
+    buttonType = ButtonType(button.buttonKind)
 
-    // strings[11] used to control the autoUpdate flag,
-    // but that's now a global setting
-    if(strings.length > 12 && strings(12) != "NIL") actionKey = strings(12).charAt(0)
+    button.actionKey.foreach(k => actionKey = k)
 
-    if(strings.length > 15) goTime = strings(15) == "0"
+    goTime = button.disableUntilTicksStart
+    name = button.display.getOrElse("")
 
-    // strings[13] and strings[14] were temporarily added, then gotten rid of,
-    // so we just skip those lines
-    name = if(strings(5) != "NIL") strings(5) else ""
+    button.source.foreach(k =>
+        wrapSource(helper.convert(k, false)))
 
-    val source = org.nlogo.api.ModelReader.restoreLines(strings(6))
-    wrapSource(helper.convert(if(source=="NIL") "" else source, false))
-
-    val List(x1,y1,x2,y2) = strings.drop(1).take(4).map(_.toInt).toList
-    setSize(x2 - x1, y2 - y1)
-    chooseDisplayName
+    setSize(button.right - button.left, button.bottom - button.top)
+    chooseDisplayName()
     this
   }
 }

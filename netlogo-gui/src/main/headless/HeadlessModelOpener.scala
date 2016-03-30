@@ -34,23 +34,16 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     if (ws.modelOpened) throw new IllegalStateException
     ws.modelOpened = true
 
-    // get out if unknown version
-    val netLogoVersion = model.version
-    if (!Version.compatibleVersion(netLogoVersion))
-      throw new IllegalStateException("unknown NetLogo version: " + netLogoVersion)
+    if (!Version.compatibleVersion(model.version))
+      throw new IllegalStateException("unknown NetLogo version: " + model.version)
 
-    // this is UGLY. I'm only doing it here because once you start to mess
-    // with world loading, you go down quite a rabbit hole
-    val additionalReaders =
-      if (Version.is3D) Map[String, WidgetReader]("GRAPHICS-WINDOW" -> org.nlogo.workspace.ThreeDViewReader)
-      else Map[String, WidgetReader]()
-    ws.loadWorld(org.nlogo.core.model.WidgetReader.format(model.view, null, additionalReaders).lines.toArray, netLogoVersion, ws)
+    ws.loadWorld(model.view, netLogoVersion, ws)
 
     for (plot <- model.plots)
       PlotLoader.loadPlot(plot, ws.plotManager.newPlot(""), identity)
 
-    // this should check model.version, but we aren't there yet
-    val dialect = if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect
+    val dialect = if (Version.is3D(model.version)) NetLogoThreeDDialect
+      else NetLogoLegacyDialect
 
     // read system dynamics modeler diagram
     val sdmLines = model.otherSections.get("org.nlogo.sdm").flatMap(lines => if (lines.isEmpty) None else Some(lines))
@@ -131,15 +124,21 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
   private def testCompileWidgets(buttons: List[Button], monitors: List[Monitor]) {
     val errors = ws.plotManager.compileAllPlots()
     if(errors.nonEmpty) throw errors(0)
-    for (button <- buttons)
-      try ws.compileCommands(button.source, button.buttonKind)
+    for {
+      button <- buttons
+      source <- button.source
+    }
+      try ws.compileCommands(source, button.buttonKind)
       catch {
         case ex: CompilerException =>
           println("compiling: \"" + button + "\"")
           throw ex
       }
-    for (monitor <- monitors)
-      try ws.compileReporter(monitor.source)
+    for {
+      monitor <- monitors
+      source <- monitor.source
+    }
+      try ws.compileReporter(source)
       catch {
         case ex: CompilerException =>
           println("compiling: \"" + monitor + "\"")

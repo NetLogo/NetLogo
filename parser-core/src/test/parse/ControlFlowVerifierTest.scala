@@ -3,10 +3,10 @@
 package org.nlogo.parse
 
 import
-  org.nlogo.core.{ Command, CommandBlock, CompilerException, Expression, FrontEndProcedure, prim,
+  org.nlogo.core.{ Command, CommandBlock, CompilerException, Expression,
+    Femto, FrontEndProcedure, prim,
     ProcedureDefinition, Statement, Statements, StructureDeclarations, Token },
-    prim.{ _ask, _carefully, _createturtles => _crt, etc, _fd, _report, _run, _stop },
-      etc.{ _die, _foreach, _if, _ifelse }
+    prim.{ _ask, _carefully, _createturtles => _crt, etc, _fd, _report, _run, _stop }
 
 import
   org.scalacheck.Gen
@@ -43,7 +43,7 @@ class ControlFlowVerifierTest extends FunSuite with GeneratorDrivenPropertyCheck
   }
 
   test("reporter procedures are non-local exit") {
-    forAll(generateProcedure(genNestingPrim, Gen.const(_report()), true)) { pd =>
+    forAll(generateProcedure(genNestingPrim, Gen.const(cmd("report")), true)) { pd =>
       val newPd = (new ControlFlowVerifier).visitProcedureDefinition(pd)
       assert(newPd.nonLocalExit)
       assert(newPd.statements.nonLocalExit)
@@ -53,18 +53,26 @@ class ControlFlowVerifierTest extends FunSuite with GeneratorDrivenPropertyCheck
   def stmt(prim: Command, args: Expression*) =
     new Statement(prim, 0, 0, "foo.nlogo", args)
 
+  def cmd(name: String): Command =
+    try {
+      Femto.get[Command](s"org.nlogo.core.prim._$name")
+    } catch {
+      case e: ClassNotFoundException =>
+        Femto.get[Command](s"org.nlogo.core.prim.etc._$name")
+    }
+
   val genNestingPrim: Gen[Command] =
-    Gen.oneOf(_if(), _ifelse(), _foreach())
+    Gen.oneOf(cmd("if"), cmd("ifelse"), cmd("foreach"))
 
   val genContextPrim: Gen[Command] =
     Gen.oneOf(_ask(), _carefully())
 
   //prims that are none of nesting, non-local-exit, nor context-creating
   val genericPrim: Gen[Command] =
-    Gen.oneOf(_die(), _crt("TURTLE"), _fd())
+    Gen.oneOf(cmd("die"), _crt("TURTLE"), _fd())
 
   val commandNonLocalExits =
-    Gen.oneOf(_stop(), _run())
+    Gen.oneOf(cmd("stop"), cmd("run"))
 
   def statements(stmts: Seq[Statement]): Statements =
     new Statements("abc").copy(stmts = stmts)

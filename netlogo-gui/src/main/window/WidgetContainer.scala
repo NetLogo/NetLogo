@@ -1,0 +1,22 @@
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
+
+package org.nlogo.window
+
+import org.nlogo.core.{ Widget => CoreWidget }
+import java.awt.{ Component, Rectangle }
+
+// implemented by InterfacePanel and InterfacePanelLite - ST 10/14/03
+
+trait WidgetContainer {
+  def getBoundsString(widget: Widget): String
+
+  def getUnzoomedBounds(component: Component): Rectangle
+
+  def resetZoomInfo(widget: Widget): Unit
+
+  def resetSizeInfo(widget: Widget): Unit
+
+  def isZoomed: Boolean;
+
+  def loadWidget(strings: Array[String], coreWidget: CoreWidget, modelVersion: String): Widget;
+}

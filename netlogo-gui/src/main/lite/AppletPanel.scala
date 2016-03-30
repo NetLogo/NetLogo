@@ -187,9 +187,9 @@ with Event.LinkParent {
    *
    * @param source new contents
    */
-  def setProcedures(source: String) {
+  def setProcedures(source: String): Unit = {
     org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
-    procedures.innerSource(source)
+    procedures.innerSource = source
   }
 
   /**

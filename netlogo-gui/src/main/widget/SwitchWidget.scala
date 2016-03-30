@@ -4,12 +4,15 @@ package org.nlogo.widget
 
 import org.nlogo.api.Editable
 import org.nlogo.core.I18N
+import org.nlogo.core.{ Switch => CoreSwitch }
 import org.nlogo.window.{Events, Widget, InterfaceGlobalWidget}
 
 class SwitchWidget extends Switch with Editable with InterfaceGlobalWidget
   with org.nlogo.window.Events.PeriodicUpdateEvent.Handler {
 
-  override def classDisplayName= I18N.gui.get("tabs.run.widgets.switch")
+  type WidgetModel = CoreSwitch
+
+  override def classDisplayName = I18N.gui.get("tabs.run.widgets.switch")
   override def propertySet = Properties.switch
 
   def valueObject: AnyRef = constraint.defaultValue
@@ -66,11 +69,10 @@ class SwitchWidget extends Switch with Editable with InterfaceGlobalWidget
     s.toString
   }
 
-  def load(strings: Array[String], helper: Widget.LoadHelper): AnyRef = {
-    name(org.nlogo.api.ModelReader.restoreLines(strings(6)), true)
-    isOn = strings(7).toDouble == 0
-    val Array(x1,y1,x2,y2) = strings.drop(1).take(4).map(_.toInt)
-    setSize(x2 - x1, y2 - y1)
+  override def load(model: WidgetModel, helper: Widget.LoadHelper): Object = {
+    name(model.varName, true)
+    isOn = model.on
+    setSize(model.right - model.left, model.bottom - model.top)
     this
   }
 

@@ -9,7 +9,7 @@ import org.nlogo.api.StringUtils.unEscapeString
 object PlotLoader {
 
   def loadPlot(corePlot: CorePlot, plot: Plot, autoConvert: String => String): Plot = {
-    plot.name = corePlot.display
+    plot.name = corePlot.display.getOrElse("")
     plot.defaultXMin = corePlot.xmin
     plot.defaultXMax = corePlot.xmax
     plot.defaultYMax = corePlot.ymax

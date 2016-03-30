@@ -518,14 +518,6 @@ public abstract strictfp class AbstractWorkspace
     return compiler().autoConvert(source, subprogram, reporter, modelVersion, this, true);
   }
 
-  public void loadWorld(String[] strings, String version, WorldLoaderInterface worldInterface) {
-    WorldLoader loader =
-        org.nlogo.api.Version.is3D(version)
-            ? new WorldLoader3D()
-            : new WorldLoader();
-    loader.load(strings, version, worldInterface);
-  }
-
   public org.nlogo.api.MersenneTwisterFast auxRNG() {
     return _world.auxRNG();
   }

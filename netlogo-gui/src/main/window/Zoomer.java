@@ -223,9 +223,9 @@ public strictfp class Zoomer {
       // individual font sizes of other widget types
       if (component instanceof ViewWidget) {
         fonts.remove
-            (((ViewWidget) component).view);
+            (((ViewWidget) component).view());
         fontZooms.remove
-            (((ViewWidget) component).view);
+            (((ViewWidget) component).view());
       }
     }
   }

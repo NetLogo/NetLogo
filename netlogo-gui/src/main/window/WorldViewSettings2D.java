@@ -39,8 +39,8 @@ public strictfp class WorldViewSettings2D
       gWidget.applyNewFontSize(newFontSize);
       fontSizeChanged = false;
     }
-    gWidget.view.dirty();
-    gWidget.view.repaint();
+    gWidget.view().dirty();
+    gWidget.view().repaint();
     workspace.glView.editFinished();
     return true;
   }
@@ -84,9 +84,9 @@ public strictfp class WorldViewSettings2D
         }
 
         if (edgesChanged) {
-          gWidget.view.renderer.trailDrawer().clearDrawing();
+          gWidget.view().renderer.trailDrawer().clearDrawing();
         } else {
-          gWidget.view.renderer.trailDrawer().rescaleDrawing();
+          gWidget.view().renderer.trailDrawer().rescaleDrawing();
         }
       }
 
@@ -114,8 +114,8 @@ public strictfp class WorldViewSettings2D
     gWidget.displaySwitchOn(true);
     if (oldGraphicsOn) {
       world.displayOn(true);
-      gWidget.view.dirty();
-      gWidget.view.repaint();
+      gWidget.view().dirty();
+      gWidget.view().repaint();
     }
   }
 
@@ -130,7 +130,7 @@ public strictfp class WorldViewSettings2D
                 == world.maxPycor()) ? world.maxPycor() : -1) + "\n" +
             world.patchSize() + "\n" + //7
             "1\n" + //8 bye bye shapesOn
-            gWidget.view.fontSize() + "\n" + //9
+            gWidget.view().fontSize() + "\n" + //9
             // old exactDraw & hex settings, no longer used - ST 8/13/03
             "1\n1\n1\n0\n" +  // 10 11 12 13
             (world.wrappingAllowedInX() ? "1" : "0") + "\n" + // 14

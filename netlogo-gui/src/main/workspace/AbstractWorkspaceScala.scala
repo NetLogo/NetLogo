@@ -3,8 +3,8 @@
 package org.nlogo.workspace
 
 import org.nlogo.agent.{World, Agent, Observer, AbstractExporter, AgentSet, ArrayAgentSet, OutputObject}
-import org.nlogo.api.{ PlotInterface, Dump, CommandLogoThunk, LogoException, ReporterLogoThunk, JobOwner, OutputDestination, SimpleJobOwner, PreviewCommands, Workspace => APIWorkspace }
-import org.nlogo.core.{ AgentKind, CompilerException }
+import org.nlogo.api.{ PlotInterface, Dump, CommandLogoThunk, LogoException, ReporterLogoThunk, JobOwner, OutputDestination, SimpleJobOwner, PreviewCommands, Workspace => APIWorkspace, Version }
+import org.nlogo.core.{ AgentKind, CompilerException, LiteralParser, View }
 import org.nlogo.nvm.{ Activation, Instruction, EngineException, Context, Procedure, Tracer }
 import org.nlogo.plot.{ PlotExporter, PlotManager }
 import org.nlogo.workspace.AbstractWorkspace.HubNetManagerFactory
@@ -65,6 +65,15 @@ abstract class AbstractWorkspaceScala(val world: World, hubNetManagerFactory: Hu
     clearDrawing()
     plotManager.clearAll()
     extensionManager.clearAll()
+  }
+
+  def loadWorld(view: View, version: String, worldInterface: WorldLoaderInterface): Unit = {
+    val loader =
+      if (Version.is3D(version))
+        new WorldLoader3D()
+      else
+        new WorldLoader()
+    loader.load(view, version, worldInterface)
   }
 
   override def getCompilationEnvironment = {

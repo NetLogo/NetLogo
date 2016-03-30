@@ -3,10 +3,12 @@
 package org.nlogo.widget
 
 import org.nlogo.api.Editable
-import org.nlogo.core.I18N
+import org.nlogo.core.{ I18N, Switch => CoreSwitch }
 import org.nlogo.window.Widget
 
 class DummySwitchWidget extends Switch with Editable {
+
+  type WidgetModel = CoreSwitch
 
   override def classDisplayName = I18N.gui.get("tabs.run.widgets.switch")
   def propertySet = Properties.dummySwitch
@@ -18,11 +20,10 @@ class DummySwitchWidget extends Switch with Editable {
   def handle(e:org.nlogo.window.Events.AfterLoadEvent) {}
 
   /// load and save
-  override def load(strings:Array[String], helper:Widget.LoadHelper) = {
-    super.name = (org.nlogo.api.ModelReader.restoreLines(strings(6)))
-    isOn = strings(7).toDouble == 0
-    val Array(x1,y1,x2,y2) = strings.drop(1).take(4).map(_.toInt)
-    setSize(x2 - x1, y2 - y1)
+  override def load(model: WidgetModel, helper: Widget.LoadHelper): Object = {
+    super.name = model.varName
+    isOn = model.on
+    setSize(model.right - model.left, model.bottom - model.top)
     this
   }
 

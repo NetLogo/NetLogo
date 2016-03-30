@@ -11,7 +11,27 @@ import TestUtils._
 
 import org.scalatest.FunSuite
 
+import java.io.{ByteArrayInputStream, ObjectOutputStream, ByteArrayOutputStream}
+
 class TestClientInterface extends TestUsingWorkspace {
+
+  import org.scalatest.Assertions._
+
+  implicit class RoundTrip[T](t: T) {
+    def writeThenRead: T = roundTripSerialization(t)
+    def isSerializable = roundTripSerialization(t) === t
+  }
+
+  def roundTripSerialization[T](t: T) = {
+    val bytes = new ByteArrayOutputStream()
+    val out = new ObjectOutputStream(bytes)
+    out.writeObject(t)
+    out.flush()
+    val in = ClassLoaderObjectInputStream(
+      Thread.currentThread.getContextClassLoader,
+      new ByteArrayInputStream(bytes.toByteArray))
+    in.readObject().asInstanceOf[T]
+  }
 
   testUsingWorkspace("empty ClientInterface is serializable"){ workspace =>
     val ci = new ClientInterface(Nil, Nil, Nil, Nil, workspace)

@@ -95,7 +95,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     hubNetControlCenterAction.setEnabled(false);
 
     viewWidget = new ViewWidget(this);
-    view = viewWidget.view;
+    view = viewWidget.view();
     viewManager.setPrimary(view);
 
     periodicUpdater = new PeriodicUpdater(jobManager);
@@ -389,7 +389,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
 
   public void changeTopology(boolean wrapX, boolean wrapY) {
     world().changeTopology(wrapX, wrapY);
-    viewWidget.view.renderer.changeTopology(wrapX, wrapY);
+    viewWidget.view().renderer.changeTopology(wrapX, wrapY);
   }
 
   /// very kludgy stuff for communicating with stuff in app
@@ -505,7 +505,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       }
       viewWidget.setVisible(true);
       try {
-        viewWidget.displaySwitch.setOn(glView.displaySwitch());
+        viewWidget.displaySwitch().setOn(glView.displaySwitch());
       } catch (IllegalStateException e) {
         org.nlogo.api.Exceptions.ignore(e);
       }
@@ -516,7 +516,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
         viewManager.remove(view);
         view.freeze();
       }
-      glView.displaySwitch(viewWidget.displaySwitch.isSelected());
+      glView.displaySwitch(viewWidget.displaySwitch().isSelected());
       viewWidget.setVisible(dualView);
     }
     view.renderPerspective = enabled;

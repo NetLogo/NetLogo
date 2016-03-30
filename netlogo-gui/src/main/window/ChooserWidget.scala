@@ -3,11 +3,15 @@
 package org.nlogo.window
 
 import org.nlogo.core.{ I18N, LogoList }
+import org.nlogo.core.{ Chooseable, Chooser => CoreChooser }
 import org.nlogo.window.Events.{AfterLoadEvent, PeriodicUpdateEvent, InterfaceGlobalEvent}
-import org.nlogo.api.{ CompilerServices, Dump, Editable}
+import org.nlogo.api.{ CompilerServices, Dump, Editable, LogoListBuilder }
 
 class ChooserWidget(compiler: CompilerServices) extends Chooser(compiler) with Editable with
         InterfaceGlobalWidget with PeriodicUpdateEvent.Handler {
+
+  type WidgetModel = CoreChooser
+
   setBorder(widgetBorder)
 
   override def propertySet = Properties.chooser
@@ -47,7 +51,12 @@ class ChooserWidget(compiler: CompilerServices) extends Chooser(compiler) with E
 
   def choicesWrapper(choicesString: String) {
     var obj: Object = compiler.readFromString("[ " + choicesString + " ]")
-    if (obj.isInstanceOf[LogoList]) {setChoices(obj.asInstanceOf[LogoList])}
+    if (obj.isInstanceOf[LogoList]) { setChoices(obj.asInstanceOf[LogoList]) }
+    updateConstraints()
+  }
+
+  def choicesWrapper(choices: LogoList) {
+    setChoices(choices)
     updateConstraints()
   }
 
@@ -81,15 +90,14 @@ class ChooserWidget(compiler: CompilerServices) extends Chooser(compiler) with E
     }
   }
 
-  def load(strings: Array[String], helper: Widget.LoadHelper): Object = {
-    val x1 = strings(1).toInt
-    val y1 = strings(2).toInt
-    val x2 = strings(3).toInt
-    val y2 = strings(4).toInt
-    setSize(x2 - x1, y2 - y1)
-    name(org.nlogo.api.ModelReader.restoreLines(strings(5)))
-    choicesWrapper(strings(7))
-    index(Integer.parseInt(strings(8)))
+  private def chooseableListToLogoList(choices: List[Chooseable]): LogoList =
+    LogoList(choices.map(_.value): _*)
+
+  override def load(model: WidgetModel, helper: Widget.LoadHelper): Object = {
+    setSize(model.right - model.left, model.bottom - model.top)
+    name(model.display.getOrElse(""))
+    choicesWrapper(chooseableListToLogoList(model.choices))
+    index(model.currentChoice)
     this
   }
 

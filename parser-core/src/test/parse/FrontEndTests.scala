@@ -5,7 +5,7 @@ package org.nlogo.parse
 import org.nlogo.core.CompilerException
 import org.scalatest.FunSuite
 import org.nlogo.core
-import org.nlogo.util.TestUtils.cleanJsNumbers
+import org.nlogo.core.TestUtils.cleanJsNumbers
 
 // This is where ExpressionParser gets most of its testing.  (It's a lot easier to test it as part
 // of the overall front end than it would be to test in strict isolation.)

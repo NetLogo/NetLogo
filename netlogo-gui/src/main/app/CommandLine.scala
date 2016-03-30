@@ -38,6 +38,9 @@ class CommandLine(commandCenter: CommandCenterInterface,
     with java.awt.event.KeyListener
     with CompiledEvent.Handler {
 
+
+  type WidgetModel = org.nlogo.core.Widget
+
   // this is needed for if we're embedded in an agent monitor instead
   // of the command center - ST 7/30/03
   var agent: Agent = null
@@ -272,7 +275,7 @@ class CommandLine(commandCenter: CommandCenterInterface,
     throw new UnsupportedOperationException()
   }
 
-  override def load(strings: Array[String], helper: Widget.LoadHelper): Object = {
+  override def load(model: org.nlogo.core.Widget, helper: Widget.LoadHelper): Object = {
     throw new UnsupportedOperationException()
   }
 

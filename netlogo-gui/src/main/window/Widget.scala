@@ -6,6 +6,7 @@ import java.awt.{List=>AWTList, _}
 import event.{MouseAdapter, MouseEvent, MouseListener}
 import javax.swing.border.Border
 import org.nlogo.window.Events.{WidgetRemovedEvent, WidgetEditedEvent, WidgetAddedEvent}
+import org.nlogo.core.{ Widget => CoreWidget }
 import org.nlogo.api.{MultiErrorHandler, SingleErrorHandler, ModelSections},
   ModelSections.Saveable
 import javax.swing.{JPanel, JMenuItem, JPopupMenu}
@@ -26,6 +27,8 @@ abstract class Widget extends JPanel with Saveable {
 
   import Widget.LoadHelper
 
+  type WidgetModel <: CoreWidget
+
   def helpLink: Option[String] = None
   var originalFont: Font = null
   var displayName: String = ""
@@ -36,12 +39,13 @@ abstract class Widget extends JPanel with Saveable {
   override def getPreferredSize: Dimension = getPreferredSize(getFont)
   def getPreferredSize(font: Font): Dimension = super.getPreferredSize
   def widgetWrapperOpaque = true
-  def save: String
   def getEditable: Object = this
   def copyable = true // only OutputWidget and ViewWidget are not copyable
   def constrainDrag(newBounds: Rectangle, originalBounds: Rectangle, mouseMode: MouseMode): Rectangle = newBounds
   def isZoomed = if (findWidgetContainer != null) findWidgetContainer.isZoomed else false
-  def load(strings: Array[String], helper: LoadHelper): Object
+
+  def save: String
+  def load(widget: WidgetModel, helper: LoadHelper): Object
   def sourceOffset = 0
   def hasContextMenuInApplet = false
   def getUnzoomedPreferredSize: Dimension = getPreferredSize(originalFont)

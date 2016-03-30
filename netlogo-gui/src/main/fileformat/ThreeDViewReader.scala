@@ -1,4 +1,6 @@
-package org.nlogo.workspace
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
+
+package org.nlogo.fileformat
 
 import org.parboiled.scala._
 import org.nlogo.api.WorldDimensions3D
@@ -7,14 +9,8 @@ import org.nlogo.core.model.WidgetReader
 
 import scala.reflect.ClassTag
 
-object ThreeDViewReader extends WidgetReader {
-  class ThreeDParser extends Parser {
-    implicit class RichRule[S](r: Rule1[S]) {
-      def through(otherRule: Rule0): Rule1[S] =
-        rule { group(r ~ otherRule) }
-      def mapThrough(otherRule: Rule1[S => S]) =
-        (r ~ otherRule) ~~> ((s: S, f: S => S) => f(s))
-    }
+object ThreeDViewReader extends WidgetReader with DefaultParboiledWidgetParser {
+  class ThreeDParser extends Parser with ParboiledWidgetParser.RichRule {
 
     def ThreeDViewWidget: Rule1[View] = rule {
       GraphicsWindow ~ NewLine ~
@@ -70,9 +66,9 @@ object ThreeDViewReader extends WidgetReader {
       group(StringValue ~ NewLine) ~> ((s: String) => { (v: View) =>
           val trimmed = s.stripSuffix("\n")
           if (trimmed == "NIL")
-            v.copy(tickCounterLabel = "")
+            v.copy(tickCounterLabel = None)
           else
-            v.copy(tickCounterLabel = trimmed)
+            v.copy(tickCounterLabel = Some(trimmed))
       })
     }
 
@@ -99,48 +95,21 @@ object ThreeDViewReader extends WidgetReader {
           dimensionTransform(_.copyThreeD(wrappingAllowedInZ = allowed)))
     }
 
-    def IgnoredLine: Rule0 = rule { zeroOrMore(noneOf("\n")) ~ NewLine }
-
-    def IgnoredNegOne: Rule0 = rule { "-1" ~ NewLine }
-
-    def NewLine: Rule0 = rule { "\n" }
-
     def GraphicsWindow: Rule0 = rule { "GRAPHICS-WINDOW" }
-
-    def IntValue: Rule1[Int] = rule { IntDigits ~> (digits => digits.toInt) }
-
-    def IntDigits: Rule0 = rule { optional("-") ~ oneOrMore(Digit) }
-
-    def Digit: Rule0 = rule { "0" - "9" }
-
-    def DoubleValue: Rule1[Double] = rule { DoubleDigits ~> (digits => digits.toDouble) }
-
-    def DoubleDigits: Rule0 = rule { IntDigits ~ optional("." ~ zeroOrMore(Digit)) }
-
-    def StringValue: Rule0 = rule { zeroOrMore("a" - "z" | "A" - "Z") }
-
-    def BooleanDigit: Rule1[Boolean] = rule { "0" ~ push(false) | "1" ~ push(true) }
   }
 
   type T = View
 
+  type ParsedWidget = View
+
   def classTag: ClassTag[T] = ClassTag(classOf[View])
 
-  val parser = new ThreeDParser {
+  def parser = new ThreeDParser {
     override val buildParseTree = true
   }
 
-  def runParse(lines: List[String]): Option[View] = {
-    ReportingParseRunner(parser.ThreeDViewWidget).run(lines.mkString("\n")).result
-  }
-
-  def validate(widget: List[String]): Boolean = {
-    runParse(widget).isDefined
-  }
-
-  def parse(lines: List[String]): View = {
-    runParse(lines).get
-  }
+  override def parseRule =
+    parser.ThreeDViewWidget
 
   def format(t: View): String = {
     val dimensions = t.dimensions.asInstanceOf[WorldDimensions3D]
@@ -171,7 +140,7 @@ object ThreeDViewReader extends WidgetReader {
       if (dimensions.wrappingAllowedInZ) "1" else "0",
       t.updateMode.save.toString,
       if (t.showTickCounter) "1" else "0",
-      if (t.tickCounterLabel.trim == "") "NIL" else t.tickCounterLabel,
+      t.tickCounterLabel.getOrElse("NIL"),
       t.frameRate).mkString("", "\n", "\n")
 
   }

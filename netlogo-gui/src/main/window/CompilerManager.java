@@ -221,7 +221,7 @@ public strictfp class CompilerManager
   private void resetWidgetProcedures() {
     for (JobOwner owner : widgets) {
       if (owner instanceof JobWidget) {
-        ((JobWidget) owner).procedure(null);
+        ((JobWidget) owner).procedure_$eq(null);
       }
     }
   }

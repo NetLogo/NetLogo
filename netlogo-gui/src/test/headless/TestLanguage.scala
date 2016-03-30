@@ -18,8 +18,8 @@ object TestLanguage {
     import org.nlogo.core.{ Plot, Pen, View }
     List(
       View.square(5),
-      Plot(display = "plot1", pens = List(Pen(display = "pen1"), Pen(display = "pen2"))),
-      Plot(display = "plot2", pens = List(Pen(display = "pen1"), Pen(display = "pen2"))))
+      Plot(display = Some("plot1"), pens = List(Pen(display = "pen1"), Pen(display = "pen2"))),
+      Plot(display = Some("plot2"), pens = List(Pen(display = "pen1"), Pen(display = "pen2"))))
   }
   implicit class LegacyLanguageTest(languageTest: LanguageTest) {
     import languageTest._

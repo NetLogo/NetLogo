@@ -2,8 +2,7 @@
 
 package org.nlogo.app
 
-import org.nlogo.core.AgentKind
-import org.nlogo.core.I18N
+import org.nlogo.core.{ AgentKind, I18N, View => CoreView, Widget => CoreWidget }
 import org.nlogo.api.Editable
 import org.nlogo.api.ModelSection
 import org.nlogo.api.Version
@@ -192,7 +191,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
         // a button or monitor that doesn't compile; we need to remove it
         // from the errors tab - ST 12/17/04
         case jobWidget: JobWidget =>
-          jobWidget.innerSource("")
+          jobWidget.innerSource = ""
           new CompileMoreSourceEvent(jobWidget).raise(this)
         case _ =>
       }
@@ -226,15 +225,15 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
 
   /// loading and saving
 
-  override def loadWidget(strings: Array[String], modelVersion: String): Widget =
-    loadWidget(strings, modelVersion, 0, 0)
+  override def loadWidget(strings: Array[String], coreWidget: CoreWidget, modelVersion: String): Widget =
+    loadWidget(strings, coreWidget, modelVersion, 0, 0)
 
   // TODO: consider cleaning up this x and y business
   // it was added for copying/pasting widgets.
   // the regular loadWidget just uses the x and y from the string array
   // it passes in x=0, y=0 and we do a check. ugly, but works for now.
   // paste uses the x and y from the right click location.
-  private def loadWidget(strings: Array[String], modelVersion: String, _x: Int, _y: Int): Widget = {
+  private def loadWidget(strings: Array[String], coreWidget: CoreWidget, modelVersion: String, _x: Int, _y: Int): Widget = {
     val helper =
       new Widget.LoadHelper() {
         val version = modelVersion
@@ -252,7 +251,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     if (widgetType.equals("GRAPHICS-WINDOW")) {
       // the graphics widget (and the command center) are special cases because
       // they are not recreated at load time, but reused
-      viewWidget.asWidget.load(strings, helper)
+      viewWidget.asInstanceOf[ViewWidget].load(coreWidget.asInstanceOf[CoreView], helper)
       // in 3D we don't add the viewWidget to the interface panel
       // so don't worry about all the sizing junk ev 7/5/07
       val parent = viewWidget.asWidget.getParent
@@ -272,13 +271,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
       }
       viewWidget.asWidget
     } else {
-      val newGuy = makeWidget(widgetType, true)
-      if (newGuy != null) {
-        newGuy.load(strings, helper)
-        enforceMinimumAndMaximumWidgetSizes(newGuy)
-        addWidget(newGuy, x, y, false, true)
-      }
-      newGuy
+      makeAndLoadWidget(widgetType, strings, coreWidget, helper, x, y)
     }
   }
 

@@ -4,10 +4,11 @@ package org.nlogo.window
 
 import org.nlogo.swing.RichJMenuItem
 import org.nlogo.api.Editable
-import org.nlogo.core.I18N
+import org.nlogo.core.{ I18N, Output => CoreOutput }
 
 class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
   org.nlogo.window.Events.ExportWorldEvent.Handler with Editable {
+  type WidgetModel = CoreOutput
 
   setLayout(new java.awt.BorderLayout())
   setBorder(widgetBorder)
@@ -68,10 +69,10 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
     s.append(fontSize + "\n")
     s.toString
   }
-  override def load(strings:Array[String], helper:Widget.LoadHelper): Object = {
-    val List(x1,y1,x2,y2) = strings.drop(1).take(4).map(_.toInt).toList
-    setSize(x2 - x1, y2 - y1)
-    if (strings.length > 5) { fontSize = strings(5).toInt }
+
+  override def load(model: WidgetModel, helper: Widget.LoadHelper): Object = {
+    setSize(model.right - model.left, model.bottom - model.top)
+    fontSize = model.fontSize
     this
   }
 }

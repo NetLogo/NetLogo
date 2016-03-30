@@ -240,6 +240,7 @@ class ConnectionManager(val connection: ConnectionInterface,
 
   private def createClientInterfaceSpec: ClientInterface = {
     val widgetDescriptions = connection.getClientInterface
+    println(widgetDescriptions.mkString(", "))
     val widgets = ModelReader.parseWidgets(widgetDescriptions).asScala.toList.map(_.asScala.toList).toList
     val clientInterfaceSpec = new ClientInterface(widgets, widgetDescriptions.toList,
       world.turtleShapeList.shapes,
@@ -269,8 +270,8 @@ class ConnectionManager(val connection: ConnectionInterface,
   def broadcast(tag:String, message:Any) = {
     if (!isValidTag(tag)) throw new HubNetException(tag + " is not a valid tag on the client.")
     message match {
-      case m: JSerializable => broadcastMessage(new WidgetControl(m, tag))
-      case _                => throw new HubNetException(VALID_SEND_TYPES_MESSAGE)
+      case m: JSerializable with AnyRef => broadcastMessage(new WidgetControl(m, tag))
+      case _                            => throw new HubNetException(VALID_SEND_TYPES_MESSAGE)
     }
   }
 
@@ -280,7 +281,7 @@ class ConnectionManager(val connection: ConnectionInterface,
    * @return true if the message was sent
    */
   @throws(classOf[HubNetException])
-  def send(userId:String, tag:String, message:JSerializable) = {
+  def send(userId:String, tag:String, message:JSerializable with AnyRef) = {
     if (!isValidTag(tag)) throw new HubNetException(tag + " is not a valid tag on the client.")
     sendUserMessage(userId, new WidgetControl(message, tag))
   }

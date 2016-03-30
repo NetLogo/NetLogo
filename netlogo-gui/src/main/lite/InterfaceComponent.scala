@@ -66,7 +66,8 @@ with Event.LinkChild {
     while (tokenizer.hasMoreTokens)
       result.add(tokenizer.nextToken())
     val strings = result.asScala.toArray
-    iP.loadWidget(strings, Version.version)
+    //TODO: Fix this, shouldn't use null here
+    iP.loadWidget(strings, null, Version.version)
   }
 
   /**

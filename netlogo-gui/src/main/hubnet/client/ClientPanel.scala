@@ -109,7 +109,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
   }
 
   /// Message Handlers
-  private def handleWidgetControlMessage(value: Any, widgetName: String) {
+  private def handleWidgetControlMessage(value: AnyRef, widgetName: String) {
     org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     if (widgetName == "VIEW") value match {
       case t: HubNetTurtleStamp => viewWidget.renderer.stamp(t)

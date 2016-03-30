@@ -4,6 +4,7 @@ package org.nlogo.hubnet.server.gui
 
 import org.nlogo.api.ModelType
 import org.nlogo.core.I18N
+import org.nlogo.fileformat
 import javax.swing.{JMenuBar, JScrollPane, JFrame, ScrollPaneConstants}
 import java.awt.{Dimension, BorderLayout, Component}
 import java.io.{IOException, StringReader, BufferedReader}
@@ -60,15 +61,15 @@ class HubNetClientEditor(workspace: GUIWorkspace,
     widgets.map(widgetToStrings).flatten
   }
 
-  def save (buf:scala.collection.mutable.StringBuilder) {
+  def save(buf:scala.collection.mutable.StringBuilder) = {
     val keys = interfacePanel.getWidgetsForSaving.iterator
     while (keys.hasNext()) {
       buf ++= (wrapString(keys.next.save + "\n") )
     }
   }
 
-  def load(lines: Array[String], version:String) {
-    interfacePanel.loadWidgets(lines, version)
+  def load(lines: Array[String], version:String): Unit = {
+    interfacePanel.loadWidgets(lines, version, fileformat.hubNetReaders)
     setSize (getPreferredSize)
   }
 

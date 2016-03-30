@@ -2,7 +2,8 @@
 
 package org.nlogo.window
 
-import org.nlogo.core.{ CompilerException, I18N }
+import org.nlogo.core.{ BoxedValue, CompilerException, I18N,
+  InputBox => CoreInputBox, NumericInput, StringInput }
 import org.nlogo.agent.InputBoxConstraint
 import org.nlogo.editor.AbstractEditorArea
 import org.nlogo.api.Exceptions
@@ -20,12 +21,18 @@ import javax.swing.KeyStroke.getKeyStroke
 import javax.swing.{JDialog, JOptionPane, AbstractAction, ScrollPaneConstants, JScrollPane, JButton, JLabel}
 import javax.swing.plaf.basic.BasicButtonUI
 
+object InputBox {
+  val MinWidth  = 50
+  val MinHeight = 60
+}
+
 abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:AbstractEditorArea,
             compiler:CompilerServices, nextComponent:Component)
   extends SingleErrorWidget with Editable with Events.InputBoxLoseFocusEvent.Handler {
+  type WidgetModel = CoreInputBox
 
-   val MIN_WIDTH = 50
-   val MIN_HEIGHT = 60
+  import InputBox._
+
 
   /// be editable
   override def classDisplayName = I18N.gui.get("tabs.run.widgets.input")
@@ -57,14 +64,21 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
   // however, for numbers there will be a Double rather than
   // a String in the value field.  ev 8/13/06
   protected var text = ""
-  protected var value: AnyRef = ""
+  protected var value: AnyRef = _
   def valueObject = value
   def valueObject(value: AnyRef) {valueObject(value, false)}
-  def valueObject(value: AnyRef, raiseEvent: Boolean) {
-    text = Dump.logoObject(value)
-    this.value = value
+  def valueObject(value: Any, raiseEvent: Boolean) {
+    text = Dump.logoObject(toAnyRef(value))
+    this.value = toAnyRef(value)
     if (text != textArea.getText) textArea.setText(text)
   }
+
+  protected def toAnyRef(value: Any): AnyRef =
+    value match {
+      case a: AnyRef => a
+      case d: Double => Double.box(d)
+    }
+
   protected def inputText(input: Object) {
     if (input != null) valueObject(input, true)
   }
@@ -264,7 +278,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
       constraint.setType(inputType.baseName, inputType.defaultValue)
       // if the current value doesn't comply with the new constraint
       // set it to a default value ev 12/14/06
-      try constraint.assertConstraint(value)
+      try constraint.assertConstraint(toAnyRef(value))
       catch {
         case v: ValueConstraint.Violation => valueObject(inputType.defaultValue, true)
       }
@@ -284,7 +298,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
     }
   }
 
-  override def getMinimumSize = new Dimension(MIN_WIDTH, MIN_HEIGHT)
+  override def getMinimumSize = new Dimension(MinWidth, MinHeight)
   override def getPreferredSize(font: Font) = {
     val result = super.getPreferredSize(font)
     val insets = getInsets
@@ -293,7 +307,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
     result.width =
             textArea.getPreferredSize.width + insets.left + insets.right +
             textArea.getInsets.right + textArea.getInsets.left + 4
-    new Dimension(StrictMath.max(MIN_WIDTH, result.width), StrictMath.max(MIN_HEIGHT, result.height))
+    new Dimension(StrictMath.max(MinWidth, result.width), StrictMath.max(MinHeight, result.height))
   }
 
   override def save = {
@@ -303,7 +317,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
     if((null != name) && (name.trim != "")) s.append(name + "\n")
     else s.append("NIL\n")
     val nilValue = value == null || (value.isInstanceOf[String] && value.asInstanceOf[String].trim == "")
-    if(! nilValue) s.append(stripLines(Dump.logoObject(value).replaceAll("\r\n", "\n")) + "\n")
+    if(! nilValue) s.append(stripLines(Dump.logoObject(toAnyRef(value)).replaceAll("\r\n", "\n")) + "\n")
     else s.append("NIL\n")
     s.append("1\n")  //7
     s.append((if(multiline) "1" else "0") + "\n")  //8
@@ -311,19 +325,13 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
     s.toString
   }
 
-  override def load(strings:Array[String], helper:Widget.LoadHelper) = {
-    val displayName = strings(5)
+  override def load(model: WidgetModel, helper: Widget.LoadHelper): Object = {
+    val displayName = model.varName
     if(displayName ==  "NIL") name("") else name(displayName)
-    var contents = org.nlogo.api.ModelReader.restoreLines(strings(6))
-    if(contents == "NIL") contents = ""
-    if(strings.length > 8) multiline(strings(8) == "1")
+    multiline(model.multiline)
 
-    def setType(i: String) {
-      this.inputType = InputType.create(i match{
-        case "Reporter" => "String (reporter)"
-        case "Commands" => "String (commands)"
-        case _ => i
-      })
+    def setType(i: BoxedValue) {
+      this.inputType = InputType.create(i)
       textArea.setEditorKit(this.inputType.getEditorKit)
       textArea.setFont(this.inputType.getFont)
       textArea.enableBracketMatcher(this.inputType.enableBracketMatcher)
@@ -331,15 +339,14 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
       constraint.setType(this.inputType.baseName, this.inputType.defaultValue)
       changeButton.setVisible(this.inputType.changeVisible)
     }
-    if(strings.length > 9) setType(strings(9)) else setType("String")
+    setType(model.boxedValue)
 
-    try valueObject(inputType.readValue(contents), true)
+    try valueObject(model.boxedValue.asString, true)
     catch{
       case e@(_:CompilerException|_:ValueConstraint.Violation|_:LogoException) =>
-        valueObject(inputType.defaultValue, true)
+        valueObject(model.boxedValue.defaultString, true)
     }
-    val List(x1,y1,x2,y2) = strings.drop(1).take(4).map(_.toInt).toList
-    setSize(x2 - x1, y2 - y1)
+    setSize(model.right - model.left, model.bottom - model.top)
     this
   }
 
@@ -456,19 +463,24 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
   }
 
   object InputType {
-    val baseNames = List("Number", "String", "Color", "String (reporter)", "String (commands)")
-    def create(inputType: String) = {
-      if (inputType == "Number") new NumberInputType(codeEditorKit)
-      else if (inputType == "Color") new ColorInputType(codeEditorKit)
-      else if (inputType == "String (reporter)") new ReporterInputType(codeEditorKit)
-      else if (inputType == "String (commands)") new CommandInputType(codeEditorKit)
-      else new StringInputType()
-    }
+    def create(boxedValue: BoxedValue) =
+      boxedValue match {
+        case NumericInput(num,   CoreInputBox.NumberLabel)      =>
+          new NumberInputType(codeEditorKit)
+        case NumericInput(color, CoreInputBox.ColorLabel)       =>
+          new ColorInputType(codeEditorKit)
+        case StringInput(cmd,    CoreInputBox.CommandLabel, _)  =>
+          new CommandInputType(codeEditorKit)
+        case StringInput(rep,    CoreInputBox.ReporterLabel, _) =>
+          new ReporterInputType(codeEditorKit)
+        case StringInput(str,    _, _)   =>
+          new StringInputType()
+      }
 
     def addTypeOptions(options:Options[InputType]){
-      baseNames.map{ name =>
-        val t = create(name)
-        typeOptions.addOption(t.displayName, t)
+      BoxedValue.Defaults.map { tpe =>
+        val t = create(tpe)
+        options.addOption(t.displayName, t)
       }
     }
   }

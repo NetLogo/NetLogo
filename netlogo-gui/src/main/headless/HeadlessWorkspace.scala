@@ -7,16 +7,15 @@ package org.nlogo.headless
 // here and document it here.  The overriding method can simply call super(). - ST 6/1/05, 7/28/11
 
 import org.nlogo.agent.{ Agent, Observer }
-import org.nlogo.api.{ Version, RendererInterface,
-                       WorldDimensions3D, AggregateManagerInterface,
-                       ModelReader, LogoException, SimpleJobOwner,
-                       HubNetInterface, CommandRunnable, ReporterRunnable }
+import org.nlogo.api.{ Version, RendererInterface, WorldDimensions3D, AggregateManagerInterface,
+                       LogoException, SimpleJobOwner, HubNetInterface, CommandRunnable, ReporterRunnable }
 import org.nlogo.core.{ AgentKind, CompilerException, Model, UpdateMode, WorldDimensions, model => coremodel },
   coremodel.{ ModelReader => CoreModelReader, WidgetReader }
 import org.nlogo.agent.{ World, World3D }
 import org.nlogo.nvm.{ LabInterface,
                        Workspace, DefaultCompilerServices, CompilerInterface }
 import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala }
+import org.nlogo.fileformat
 import org.nlogo.util.Pico
 import org.picocontainer.Parameter
 import org.picocontainer.parameters.ComponentParameter
@@ -534,9 +533,7 @@ with org.nlogo.api.ViewSettings {
    *               in the same format as it would be stored in a file.
    */
   def openFromSource(source: String) {
-    val additionalReaders =
-      if (Version.is3D) Map[String, WidgetReader]("GRAPHICS-WINDOW" -> org.nlogo.workspace.ThreeDViewReader)
-      else Map[String, WidgetReader]()
+    val additionalReaders = fileformat.nlogoReaders(Version.is3D)
     openModel(CoreModelReader.parseModel(source, compiler.compilerUtilities, additionalReaders))
   }
 

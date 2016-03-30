@@ -53,7 +53,7 @@ with org.nlogo.window.Events.AboutToQuitEvent.Handler
         if (sourceFile.reader == null)
           sourceFile.open(FileMode.Read)
         val origSource = reader2String(sourceFile.reader)
-        innerSource(origSource.replaceAll("\r\n", "\n"))
+        innerSource = origSource.replaceAll("\r\n", "\n")
         _dirty = false
         _needsCompile = false
         return
@@ -62,7 +62,7 @@ with org.nlogo.window.Events.AboutToQuitEvent.Handler
         case _: java.io.IOException => assert(!fileMustExist)
       }
     }
-    innerSource("")
+    innerSource = ""
   }
 
   override def handle(e: org.nlogo.window.Events.CompiledEvent) {
