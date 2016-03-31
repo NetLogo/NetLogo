@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import org.nlogo.util.Femto
+import org.nlogo.core.Femto
 
 object WidgetRegistry {
 
@@ -19,7 +19,7 @@ object WidgetRegistry {
 
   def apply(name: String): Widget =
     map.get(name)
-       .map(className => Femto.get(classOf[Widget], className, Array()))
+       .map(className => Femto.get[Widget](className))
        .orNull
 
 }

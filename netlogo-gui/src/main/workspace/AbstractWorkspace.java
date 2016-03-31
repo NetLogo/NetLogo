@@ -10,6 +10,7 @@ import java.util.WeakHashMap;
 import org.nlogo.agent.Agent;
 import org.nlogo.api.*;
 import org.nlogo.core.CompilerException;
+import org.nlogo.core.Femto;
 import org.nlogo.core.FileModeJ;
 import org.nlogo.core.File;
 import org.nlogo.core.CompilerException;
@@ -26,7 +27,6 @@ import org.nlogo.nvm.JobManagerInterface;
 import org.nlogo.nvm.MutableLong;
 import org.nlogo.nvm.Procedure;
 import org.nlogo.nvm.Workspace;
-import org.nlogo.util.Femto;
 
 public abstract strictfp class AbstractWorkspace
     implements Workspace,
@@ -75,7 +75,7 @@ public abstract strictfp class AbstractWorkspace
     modelType = ModelTypeJ.NEW();
     evaluator = new Evaluator(this);
     world.compiler_$eq(this);
-    jobManager = Femto.get(JobManagerInterface.class, "org.nlogo.job.JobManager",
+    jobManager = Femto.getJ(JobManagerInterface.class, "org.nlogo.job.JobManager",
         new Object[]{this, world, world});
     fileManager = new DefaultFileManager(this);
     extensionManager = new ExtensionManager(this, new JarLoader(this));
