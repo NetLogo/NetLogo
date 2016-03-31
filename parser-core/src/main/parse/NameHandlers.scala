@@ -3,7 +3,7 @@
 package org.nlogo.parse
 
 import org.nlogo.core,
-  core.{ Command, ExtensionManager, Fail, FrontEndInterface, Instruction,
+  core.{ AgentVariableSet, Command, ExtensionManager, Fail, FrontEndInterface, Instruction,
     Primitive, PrimitiveCommand, PrimitiveReporter, Program, Reporter,
     Token, TokenMapperInterface, TokenType},
     FrontEndInterface.ProceduresMap,
@@ -125,4 +125,22 @@ class AgentVariableReporterHandler(program: Program) extends NameHandler {
       case n if n != -1 => new core.prim._linkvariable(n) } orElse
     condOpt(program.globals.indexOf(varName)) {
       case n if n != -1 => new core.prim._observervariable(n) }
+}
+
+// this should only be used for colorization, when we may or may not have
+// a complete program
+class BuiltInAgentVariableReporterHandler(agentVariables: AgentVariableSet)
+  extends NameHandler {
+    val variableMap = Map[Seq[String], Int => core.Reporter](
+      agentVariables.getImplicitObserverVariables -> (i => new core.prim._observervariable(i)),
+      agentVariables.getImplicitTurtleVariables -> (i => new core.prim._turtlevariable(i)),
+      agentVariables.getImplicitPatchVariables -> (i => new core.prim._patchvariable(i)),
+      agentVariables.getImplicitLinkVariables -> (i => new core.prim._linkvariable(i)))
+
+  override def apply(token: Token) =
+    variableMap.find {
+      case (vars, _) => vars.contains(token.value.asInstanceOf[String])
+    }.map {
+      case (vars, newReporter) => (TokenType.Reporter -> newReporter(vars.indexOf(token.value.asInstanceOf[String])))
+    }
 }
