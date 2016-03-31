@@ -16,6 +16,16 @@ object Femto {
       .newInstance(args.map(_.asInstanceOf[AnyRef]): _*)
       .asInstanceOf[T]
   }
+
+  // used by java to avoid trouble with scala generics
+  def getJ[T](clazz: Class[_], implementationClassName: String, args: Array[AnyRef]): T = {
+    val runtimeClazz = Class.forName(implementationClassName)
+    val constructors =
+      runtimeClazz.getConstructors.filter(_.getParameterTypes.size == args.size)
+    assert(constructors.size == 1)
+    constructors.head.newInstance(args: _*).asInstanceOf[T]
+  }
+
   def scalaSingleton[T](className: String): T =
     Class.forName(className + "$")
       .getField("MODULE$").get(null).asInstanceOf[T]

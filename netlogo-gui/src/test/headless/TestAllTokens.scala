@@ -6,7 +6,6 @@ import org.nlogo.api.{ NetLogoLegacyDialect, NetLogoThreeDDialect }
 import org.scalatest.FunSuite
 import org.nlogo.compiler.Compiler
 import org.nlogo.core.TokenizerInterface
-import org.nlogo.util.Femto
 
 class TestAllTokens extends FunSuite {
   val tokenMappers = Seq(
