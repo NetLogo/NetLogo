@@ -77,12 +77,12 @@ trait FrontEndMain {
   }
 
   def tokenizeForColorization(source: String, dialect: Dialect, extensionManager: ExtensionManager): Seq[core.Token] = {
-    tokenizer.tokenizeString(source).map(Namer.basicNamer(dialect.tokenMapper, extensionManager)).toSeq
+    tokenizer.tokenizeString(source).map(Namer.basicNamer(dialect, extensionManager)).toSeq
   }
 
   def findProcedurePositions(source: String, dialectOption: Option[Dialect]): Map[String, ProcedureSyntax] = {
-    val tokenMapper = dialectOption.getOrElse(NetLogoCore).tokenMapper
-    val tokens = tokenizer.tokenizeString(source).map(Namer.basicNamer(tokenMapper, new DummyExtensionManager))
+    val dialect = dialectOption.getOrElse(NetLogoCore)
+    val tokens = tokenizer.tokenizeString(source).map(Namer.basicNamer(dialect, new DummyExtensionManager))
     StructureParser.findProcedurePositions(tokens.toSeq)
   }
 

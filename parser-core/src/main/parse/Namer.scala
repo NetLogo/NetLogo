@@ -3,8 +3,8 @@
 package org.nlogo.parse
 
 import org.nlogo.core,
-  core.{FrontEndInterface, DummyExtensionManager, ExtensionManager, FrontEndProcedure, Instruction,
-  Program, Token, TokenMapperInterface, TokenType},
+  core.{ Dialect, DummyExtensionManager, ExtensionManager, FrontEndInterface, FrontEndProcedure, Instruction,
+  Program, Token, TokenMapperInterface, TokenType },
   core.Fail._
 
 /**
@@ -75,7 +75,7 @@ class Namer(
 object Namer {
 
   // provides token type information for commands, reporters, keywords, and constants
-  def basicNamer(tokenMapper: TokenMapperInterface, extensionManager: ExtensionManager): Token => Token = {
+  def basicNamer(dialect: Dialect, extensionManager: ExtensionManager): Token => Token = {
     def makeToken(f: Token => Option[(TokenType, AnyRef)])(tok: Token): Token =
       if (tok.tpe == TokenType.Ident)
         f(tok) match {
@@ -87,9 +87,10 @@ object Namer {
         tok
 
     (Namer0.nameKeywordsAndConstants _)             andThen
-    (makeToken(new ReporterHandler(tokenMapper)) _) andThen
-    (makeToken(new CommandHandler(tokenMapper)) _)  andThen
+    (makeToken(new ReporterHandler(dialect.tokenMapper)) _) andThen
+    (makeToken(new CommandHandler(dialect.tokenMapper)) _)  andThen
     (makeToken(new ExtensionPrimitiveHandler(extensionManager)) _)  andThen
+    (makeToken(new BuiltInAgentVariableReporterHandler(dialect.agentVariables)) _)  andThen
     ((t: Token) =>
         if (t.tpe == TokenType.Reporter && t.value.isInstanceOf[core.prim._symbol])
           t.copy(tpe = TokenType.Ident, value = t.value)
