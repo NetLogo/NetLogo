@@ -43,11 +43,7 @@ public final strictfp class _extern
     } catch (org.nlogo.api.ExtensionException ex) {
       LogoException le =
           new EngineException
-              (context, this, "Extension exception: " + ex.getMessage());
-      // it might be better to use the Java 1.4 setCause() stuff, for
-      // the long term... but then i think the handler would have to
-      // be changed, too.
-      le.setStackTrace(ex.getStackTrace());
+              (context, this, "Extension exception: " + ex.getMessage(), ex);
       throw le;
     }
     context.ip = offset;
