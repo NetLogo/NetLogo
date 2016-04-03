@@ -121,7 +121,7 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
 
   private var obj: AnyRef = null
 
-  private[workspace] def addLoader(alternateLoader: ExtensionLoader): Unit = {
+  private[nlogo] def addLoader(alternateLoader: ExtensionLoader): Unit = {
     loaders = loaders :+ alternateLoader
   }
 

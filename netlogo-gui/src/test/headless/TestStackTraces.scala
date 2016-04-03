@@ -22,7 +22,9 @@ its ok that these tests don't run in 'run' mode because we are only testing
 the stack traces, not the results.
  */
 
-import org.nlogo.api.LogoException
+import org.scalatest.FunSuite
+import org.nlogo.api.{LogoException, Syntax, ExtensionException, Argument, Context, Command}
+import org.nlogo.workspace.{DummyClassManager, InMemoryExtensionLoader, ExtensionManager}
 
 class TestStackTraces extends AbstractTestModels {
 
@@ -173,4 +175,37 @@ error while observer running __BOOM
   }
 */
 
+}
+
+class TestExtensionStackTraces extends FunSuite {
+  test("extension exceptions keep causes") {
+    val primaryCause = new Exception()
+    val wrapperCause = new Exception(primaryCause)
+    val dummyClassManager = new DummyClassManager() {
+      override val barPrim = new Command {
+        def getAgentClassString = "OTPL"
+        override def getSyntax = Syntax.commandSyntax()
+        override def perform(args: Array[Argument], context: Context) {
+          throw new ExtensionException(wrapperCause)
+        }
+      }
+    }
+
+    val memoryLoader = new InMemoryExtensionLoader("foo", dummyClassManager)
+    val ws = HeadlessWorkspace.newInstance
+    ws.getExtensionManager.addLoader(memoryLoader)
+    ws.initForTesting(10)
+    ws.openModel(org.nlogo.core.Model(code = "extensions [ foo ]"))
+
+    try {
+      ws.command("foo:bar")
+    } catch {
+      case e: org.nlogo.nvm.EngineException => {
+        var ex: Throwable = e
+        while (ex != null && ex != wrapperCause) ex = ex.getCause
+        assert(ex === wrapperCause)
+        assert(ex.getCause === primaryCause)
+      }
+    }
+  }
 }
