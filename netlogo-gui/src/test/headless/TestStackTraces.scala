@@ -23,8 +23,9 @@ the stack traces, not the results.
  */
 
 import org.scalatest.FunSuite
-import org.nlogo.api.{LogoException, Syntax, ExtensionException, Argument, Context, Command}
+import org.nlogo.api.{LogoException, Syntax, ExtensionException, Argument, Context, Command, WorldDimensions3D, Version}
 import org.nlogo.workspace.{DummyClassManager, InMemoryExtensionLoader, ExtensionManager}
+import org.nlogo.core.{WorldDimensions, View, Model}
 
 class TestStackTraces extends AbstractTestModels {
 
@@ -194,8 +195,16 @@ class TestExtensionStackTraces extends FunSuite {
     val memoryLoader = new InMemoryExtensionLoader("foo", dummyClassManager)
     val ws = HeadlessWorkspace.newInstance
     ws.getExtensionManager.addLoader(memoryLoader)
-    ws.initForTesting(10)
-    ws.openModel(org.nlogo.core.Model(code = "extensions [ foo ]"))
+    val dims = if(Version.is3D)
+                 new WorldDimensions3D(-5, 5, -5, 5, -5, 5)
+               else
+                 new WorldDimensions(-5, 5, -5, 5)
+    ws.initForTesting(dims, "")
+    ws.openModel(Model(
+      code = "extensions [ foo ]",
+      widgets = List(View(dimensions = dims)),
+      version = Version.version
+    ))
 
     try {
       ws.command("foo:bar")
