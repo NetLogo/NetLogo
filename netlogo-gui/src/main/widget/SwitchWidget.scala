@@ -54,19 +54,15 @@ class SwitchWidget extends Switch with Editable with InterfaceGlobalWidget
     new Events.InterfaceGlobalEvent(this, false, true, false, false).raise(this)
   }
 
-  def save: String = {
-    val s: StringBuilder = new StringBuilder
-    s.append("SWITCH\n")
-    s.append(getBoundsString)
-    if ((null != displayName) && (!displayName.trim.equals(""))) s.append(displayName + "\n")
-    else s.append("NIL\n")
-    if ((null != this._name) && (!this._name.trim.equals(""))) s.append(this._name + "\n")
-    else s.append("NIL\n")
-    if (isOn) s.append(0 + "\n")
-    else s.append(1 + "\n")
-    s.append(1 + "\n")
-    s.append(-1000 + "\n")
-    s.toString
+  override def model: WidgetModel = {
+    val b = getBoundsTuple
+    val savedDisplayName =
+      if (displayName != null && displayName != "") Some(displayName) else None
+    val varName =
+      if (_name != null && _name.trim != "") Some(_name) else None
+    CoreSwitch(display = savedDisplayName,
+      left = b._1, top = b._2, right = b._3, bottom = b._4,
+      variable = varName, on = isOn)
   }
 
   override def load(model: WidgetModel, helper: Widget.LoadHelper): Object = {

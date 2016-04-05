@@ -417,3 +417,9 @@ view.3d.following = Following
 view.3d.fullScreen = Full Screen
 view.3d.resetPerspective = Reset Perspective
 view.3d.fullScreenWarning = On some systems, fullscreen mode may cause Windows to lock up.
+
+view.resize.progress = Resizing...
+view.resize.hubnet.warning = Resizing the world kills all turtles. This may cause HubNet clients to be unresponsive. Consider kicking out all clients before proceeding.
+view.resize.hubnet.prompt = Kick clients?
+view.resize.hubnet.kick = Kick clients
+view.resize.hubnet.dontkick = Don't kick

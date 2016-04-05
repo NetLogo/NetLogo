@@ -23,6 +23,7 @@ object DummyMonitorWidget {
 
 class DummyMonitorWidget
   extends SingleErrorWidget
+  with MonitorWidget.ToMonitorModel
   with Editable {
 
   type WidgetModel = CoreMonitor
@@ -31,6 +32,9 @@ class DummyMonitorWidget
 
   private var _name: String = ""
   private var _decimalPlaces: Int = 3;
+
+  def innerSource = ""
+  def fontSize = 11
 
   setOpaque(true)
   setBackground(InterfaceColors.MONITOR_BACKGROUND)
@@ -85,23 +89,6 @@ class DummyMonitorWidget
   def decimalPlaces(decimalPlaces: Int): Unit = {
     if (decimalPlaces != _decimalPlaces)
       _decimalPlaces = decimalPlaces
-  }
-
-  override def save: String = {
-    val s = new StringBuilder()
-    s.append("MONITOR\n")
-    s.append(getBoundsString)
-    if (null != name && name.trim != "") {
-      s.append(name + "\n")
-    } else {
-      s.append("NIL\n")
-    }
-    s.append("NIL\n")
-
-    s.append(decimalPlaces + "\n")
-    s.append("1\n")  // for compatability
-
-    return s.toString
   }
 
   override def load(monitor: WidgetModel, helper: Widget.LoadHelper): AnyRef = {

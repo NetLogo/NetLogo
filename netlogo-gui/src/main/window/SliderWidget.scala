@@ -3,10 +3,10 @@
 package org.nlogo.window
 
 import org.nlogo.api.MersenneTwisterFast
-import org.nlogo.core.{ Slider => CoreSlider, Vertical }
+import org.nlogo.core.{ Horizontal, Slider => CoreSlider, Vertical }
 import java.awt.event.{ MouseAdapter, MouseEvent }
 import org.nlogo.window.Events.{ InterfaceGlobalEvent, AfterLoadEvent, PeriodicUpdateEvent, AddSliderConstraintEvent, InputBoxLoseFocusEvent }
-import org.nlogo.api.{ Dump, Editable, LogoException, ModelReader }
+import org.nlogo.api.{ Dump, Editable, LogoException }
 import org.nlogo.core.I18N
 import org.nlogo.agent.SliderConstraint.SliderConstraintException
 import org.nlogo.agent.SliderConstraint
@@ -237,20 +237,15 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast) ext
     this
   }
 
-  def save: String = {
-    val s: StringBuilder = new StringBuilder
-    s.append("SLIDER\n")
-    s.append(getBoundsString)
-    if ((null != name) && (name.trim != "")) { s.append(name + "\n"); s.append(name + "\n") }
-    else { s.append("NIL\n"); s.append("NIL\n") }
-    s.append(ModelReader.stripLines(minimumCode) + "\n")
-    s.append(ModelReader.stripLines(maximumCode) + "\n")
-    s.append(Dump.number(value) + "\n")
-    s.append(ModelReader.stripLines(incrementCode) + "\n")
-    s.append("1\n")
-    if ((null != units) && (units.trim!="")) s.append(units + "\n")
-    else { s.append("NIL\n") }
-    if (vertical) s.append("VERTICAL\n") else s.append("HORIZONTAL\n")
-    s.toString
+  override def model: WidgetModel = {
+    val savedName = if (name != null && name.trim != "") Some(name) else None
+    val savedUnits = if (units != null && units.trim != "") Some(units) else None
+    val dir = if (vertical) Vertical else Horizontal
+    val b = getBoundsTuple
+    CoreSlider(display = savedName,
+      left = b._1, top = b._2, right = b._3, bottom = b._4,
+      variable = savedName, min = minimumCode, max = maximumCode,
+      default = value, step = incrementCode,
+      units = savedUnits, direction = dir)
   }
 }

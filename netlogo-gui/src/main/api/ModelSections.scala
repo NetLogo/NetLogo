@@ -2,14 +2,14 @@
 
 package org.nlogo.api
 
-import org.nlogo.core.Shape
+import org.nlogo.core.{ Shape, Widget }
 
 import
   ModelSections._
 
 trait ModelSections {
   def procedureSource:  String
-  def widgets:          Seq[Saveable]
+  def widgets:          Seq[Widget]
   def info:             String
   def turtleShapes:     Seq[Shape]
   def version:          String

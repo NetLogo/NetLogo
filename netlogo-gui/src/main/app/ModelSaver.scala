@@ -5,11 +5,15 @@ package org.nlogo.app
 import org.nlogo.api.{ModelReader, ModelSections, PreviewCommands, Version}
 import org.nlogo.util.Implicits.RichString
 import org.nlogo.util.Implicits.RichStringLike
-import org.nlogo.core.Shape
+import org.nlogo.core.{ LiteralParser, Shape }
+import org.nlogo.core.model.WidgetReader
+import org.nlogo.fileformat
 import org.nlogo.workspace.AbstractWorkspaceScala
 import collection.JavaConverters._
 
 class ModelSaver(model: ModelSections) {
+
+  val additionalReaders = fileformat.nlogoReaders(Version.is3D)
 
   def save: String = {
 
@@ -31,7 +35,8 @@ class ModelSaver(model: ModelSections) {
     // widgets
     section {
       for(w <- model.widgets)
-        buf ++= (w.save + "\n")
+        buf ++=
+          WidgetReader.format(w, additionalReaders) + "\n\n"
     }
 
     // info

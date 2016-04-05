@@ -51,9 +51,9 @@ object ModelReader {
 
   }
 
-  def formatModel(model: Model, parser: LiteralParser): String = {
+  def formatModel(model: Model): String = {
     model.code + s"\n$SEPARATOR\n" +
-      WidgetReader.formatInterface(model.widgets, parser) + s"\n$SEPARATOR\n" +
+      WidgetReader.formatInterface(model.widgets) + s"\n$SEPARATOR\n" +
       model.info + s"\n$SEPARATOR\n" +
       ShapeParser.formatVectorShapes(model.turtleShapes) + s"\n$SEPARATOR\n" +
       model.version + s"\n$SEPARATOR" +

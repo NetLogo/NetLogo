@@ -627,12 +627,10 @@ class WidgetPanel(val workspace: GUIWorkspace)
     }
   }
 
-  override def getWidgetsForSaving: JList[Widget] =
-    // loop backwards so JLayeredPane gives us the components
-    // in back-to-front order for saving - ST 9/29/03
+  override def getWidgetsForSaving: Seq[CoreWidget] =
     getComponents.reverse.collect {
-      case w: WidgetWrapper => w.widget
-    }.distinct.toList.asJava
+      case w: WidgetWrapper => w.widget.model
+    }.distinct.toSeq
 
   override def removeAllWidgets(): Unit = {
     val comps = getComponents
@@ -702,12 +700,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
     }
 
   /// dispatch WidgetContainer methods
-
-  def getBoundsString(widget: Widget): String = {
-    val r = getUnzoomedBounds(widget)
-    Seq(r.x, r.y, r.x + r.width, r.y + r.height)
-      .mkString("", "\n", "\n")
-  }
 
   def getUnzoomedBounds(component: Component): Rectangle =
     zoomer.getUnzoomedBounds(component)

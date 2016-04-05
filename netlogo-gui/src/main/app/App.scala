@@ -2,12 +2,13 @@
 
 package org.nlogo.app
 
-import org.nlogo.core.{ AgentKind, CompilerException, I18N, LogoList, Nobody, Shape, Token }
+import org.nlogo.core.{ AgentKind, CompilerException, I18N, LogoList, Nobody, Shape, Token, Widget => CoreWidget }
 import org.nlogo.agent.{Agent, World3D, World}
 import org.nlogo.api._
 import org.nlogo.awt.UserCancelException
 import org.nlogo.log.Logger
 import org.nlogo.nvm.{CompilerInterface, Workspace}
+import org.nlogo.fileformat
 import org.nlogo.shape.{ShapesManagerInterface, ShapeChangeListener, LinkShapesManagerInterface, TurtleShapesManagerInterface}
 import org.nlogo.util.Implicits.RichString
 import org.nlogo.util.Implicits.RichStringLike
@@ -404,10 +405,11 @@ class App extends
   }
 
   private def finishStartup(appHandler: Object) {
+    val app = pico.getComponent(classOf[App])
     pico.add(classOf[ModelingCommonsInterface],
           "org.nlogo.mc.ModelingCommons",
           Array[Parameter] (
-            new ConstantParameter(new ModelSaver(pico.getComponent(classOf[App])).save _),
+            new ConstantParameter(new ModelSaver(app).save _),
             new ComponentParameter(classOf[AppFrame]),
             new ConstantParameter(() => workspace.exportView()),
             new ConstantParameter(() => Boolean.box(
@@ -1074,9 +1076,9 @@ class App extends
 
   def procedureSource:  String =
     tabs.codeTab.innerSource
-  def widgets:          Seq[ModelSections.Saveable] = {
+  def widgets:          Seq[CoreWidget] = {
     import collection.JavaConverters._
-    tabs.interfaceTab.iP.getWidgetsForSaving.asScala
+    tabs.interfaceTab.iP.getWidgetsForSaving
   }
   def info:             String =
     tabs.infoTab.info

@@ -62,17 +62,16 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
     Dump.csv.stringToCSV(e.writer, outputArea.text.getText())
   }
 
-  override def save = {
-    val s = new StringBuilder()
-    s.append("OUTPUT\n")
-    s.append(getBoundsString)
-    s.append(fontSize + "\n")
-    s.toString
-  }
-
   override def load(model: WidgetModel, helper: Widget.LoadHelper): Object = {
     setSize(model.right - model.left, model.bottom - model.top)
     fontSize = model.fontSize
     this
+  }
+
+  override def model: WidgetModel = {
+    val b = getBoundsTuple
+    CoreOutput(
+      left = b._1, top = b._2, right = b._3, bottom = b._4,
+      fontSize = fontSize)
   }
 }

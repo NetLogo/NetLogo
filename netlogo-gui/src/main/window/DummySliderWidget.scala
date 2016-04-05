@@ -4,7 +4,7 @@ package org.nlogo.window
 
 import org.nlogo.api.{ Dump, Editable }
 import org.nlogo.agent.ConstantSliderConstraint
-import org.nlogo.core.{ I18N, Slider => CoreSlider, Vertical }
+import org.nlogo.core.{ Horizontal, I18N, Slider => CoreSlider, Vertical }
 
 // This widget works iff the slider has a ConstantSliderConstraint
 // object.  Since this is only being used to construct HubNet client
@@ -49,32 +49,17 @@ class DummySliderWidget extends AbstractSliderWidget with Editable {
     this
   }
 
-  override def save = {
-    val s = new StringBuilder()
-    s.append( "SLIDER\n" )
-    s.append( getBoundsString )
-    // the file format has separate entries for name and display name,
-    // but at least at present, they are always equal, so we just
-    // write out the name twice - ST 6/3/02
-    if( null != name && name.trim != ""  ){
-      s.append( name + "\n" )
-      s.append( name + "\n" )
-    }
-    else{
-      s.append("NIL\n")
-      s.append("NIL\n")
-    }
-    s.append( Dump.number( minimum ) + "\n" )
-    s.append( Dump.number( maximum ) + "\n" )
-    s.append( Dump.number( value ) + "\n" )
-    s.append( Dump.number( increment ) + "\n" )
-    s.append( "1\n" )   // for compatibility
-    if( ( null != units ) && ( units.trim!= "" )  ) s.append( units + "\n" )
-    else s.append("NIL\n")
-
-    if ( vertical ) s.append( "VERTICAL\n" )
-    else s.append( "HORIZONTAL\n" )
-
-    s.toString
+  override def model: WidgetModel = {
+    val b = getBoundsTuple
+    val savedName = if (name != null && name.trim != "") Some(name) else None
+    CoreSlider(
+      display = savedName,
+      left = b._1, top = b._2, right = b._3, bottom = b._4,
+      variable = savedName,
+      min = constraint.minimum.toString,
+      max = constraint.maximum.toString,
+      default = constraint.defaultValue,
+      step = constraint.increment.toString,
+      direction = if (vertical) Vertical else Horizontal)
   }
 }

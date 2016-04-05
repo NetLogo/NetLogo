@@ -22,7 +22,7 @@ class HeadlessHubNetManager(workspace: AbstractWorkspaceScala) extends HubNetMan
   // save should never be called.
   var widgets: Array[String] = Array()
   def load(lines:Array[String], version: String) { widgets = lines }
-  def getClientInterface: Array[String] = widgets
+  def getClientInterface: Seq[String] = widgets.toSeq
   def save(buf:scala.collection.mutable.StringBuilder) {}
 
   // should we be logging or doing something else here besides just println? JC - 12/28/10

@@ -253,7 +253,7 @@ class ViewWidget(workspace: GUIWorkspace)
 
   /// font handling for turtle and patch labels
 
-  protected def applyNewFontSize(newFontSize: Int): Unit = {
+  private[window] def applyNewFontSize(newFontSize: Int): Unit = {
     val font = view.getFont
     val zoomDiff = font.getSize - view.fontSize
     view.applyNewFontSize(newFontSize, zoomDiff)
@@ -324,14 +324,15 @@ class ViewWidget(workspace: GUIWorkspace)
 
   /// display switch
 
-  protected def displaySwitchOn(on: Boolean): Unit = {
+  private[window] def displaySwitchOn(on: Boolean): Unit = {
     displaySwitch.actionPerformed(null)
   }
 
 
   /// load & save
 
-  override def save: String = settings.save
+  override def model: WidgetModel =
+    settings.model
 
   override def load(view: WidgetModel, helper: Widget.LoadHelper): AnyRef =
     settings.load(view, helper.version)

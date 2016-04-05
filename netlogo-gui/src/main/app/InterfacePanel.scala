@@ -275,29 +275,12 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     }
   }
 
-  override def getWidgetsForSaving: JList[Widget] = {
-    val result = new ArrayList[Widget]()
-    val comps = getComponents
-    // automatically add the view widget in 3D isn't not
-    // in the comp list but we definitely want to save it
-    // it won't be added twice as we're checking contains
-    // below.  ev 7/5/07
-    result.add(viewWidget.asInstanceOf[Widget])
-    // loop backwards so JLayeredPane gives us the components
-    // in back-to-front order for saving - ST 9/29/03
-    var i = comps.length - 1
-    while (i >= 0) {
-      comps(i) match {
-        case wrapper: WidgetWrapper =>
-          val widget = wrapper.widget()
-          if (!result.contains(widget))
-            result.add(widget)
-        case _ =>
-      }
-      i -= 1
-    }
-    result
-  }
+  override def getWidgetsForSaving: Seq[CoreWidget] =
+    // automatically add the view widget since it isn't in
+    // the components list in 3D - ev 7/5/07
+    (viewWidget.model +: getComponents.reverse.collect {
+      case wrapper: WidgetWrapper => wrapper.widget.model
+    }).distinct
 
   override private[app] def contains(w: Editable): Boolean =
     if (w == viewWidget.asInstanceOf[Widget].getEditable)

@@ -12,7 +12,7 @@ import org.nlogo.api.MersenneTwisterFast
 import org.nlogo.awt.Mouse.hasButton1
 import org.nlogo.agent.{Agent, Observer, Turtle, Patch, Link}
 import org.nlogo.nvm.Procedure
-import org.nlogo.api.{ Editable, ModelReader, Options, Version}
+import org.nlogo.api.{ Editable, Options, Version}
 import scala.language.existentials
 
 object ButtonWidget {
@@ -432,39 +432,18 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   }
 
   // saving and loading
-  override def save = {
-    val s = new StringBuilder()
-    s.append("BUTTON\n")
-    s.append(getBoundsString)
-
-    if(name.trim != "") s.append(name + "\n") else s.append("NIL\n")
-
-    val iSource: String = innerSource
-    if (iSource != null  && iSource.trim != "")
-      s.append(ModelReader.stripLines(innerSource) + "\n")
-    else s.append("NIL\n")
-
-    if(forever) s.append("T\n") else s.append("NIL\n")
-
-    s.append(1 + "\n") // for compatability
-    s.append("T\n")  // show display name
-
-    // agent type
-    s.append(buttonType.name.toUpperCase + "\n")
-
-    // former autoUpdate flag
-    s.append("NIL\n")
-
-    if(actionKey == 0 || actionKey == ' ') s.append("NIL\n")
-    else s.append(actionKey + "\n")
-
-    s.append("NIL\n") // intermediateupdates were optional for a short time
-    s.append("NIL\n") // being affected by the speed slider was optional for a short time
-
-    // go time only button.
-    s.append((if(goTime) 0 else 1) + "\n")
-
-    s.toString
+  override def model: WidgetModel = {
+    val b = getBoundsTuple
+    val savedName = if (name != null && name.trim != "") Some(name) else None
+    val savedSource = if (innerSource != null && innerSource.trim != "") Some(innerSource) else None
+    val savedActionKey =
+      if (actionKey == 0 || actionKey == ' ') None else Some(actionKey)
+    CoreButton(
+      display = savedName,
+      left = b._1, top = b._2, right = b._3, bottom = b._4,
+      source = savedSource, forever = forever,
+      buttonKind = buttonType.agentKind,
+      actionKey = savedActionKey, disableUntilTicksStart = goTime)
   }
 
   override def load(button: WidgetModel, helper: Widget.LoadHelper): Object = {

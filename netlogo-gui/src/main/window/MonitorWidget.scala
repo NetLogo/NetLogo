@@ -9,7 +9,6 @@ import org.nlogo.core.{ Monitor => CoreMonitor }
 import org.nlogo.api.Dump
 import org.nlogo.api.MersenneTwisterFast
 import org.nlogo.api.Editable
-import org.nlogo.api.ModelReader
 import org.nlogo.api.Property
 import org.nlogo.awt.{ Fonts => NlogoFonts }
 import org.nlogo.nvm.Procedure
@@ -22,6 +21,7 @@ import org.nlogo.window.Events.RemoveJobEvent
 
 import java.awt.event.MouseListener
 import java.awt.event.MouseEvent
+import java.awt.Component
 import java.awt.EventQueue
 import java.awt.Font
 import java.awt.Graphics
@@ -39,19 +39,38 @@ object MonitorWidget {
   private val DefaultDecimalPlaces = 17
   private val DefaultFontSize = 11
   private val PreferredSizePad = 12
+
+  trait ToMonitorModel { self: Widget with Component =>
+    def decimalPlaces: Int
+    def fontSize: Int
+    def innerSource: String
+    def name: String
+
+    override def model: CoreMonitor = {
+      val b = getBoundsTuple
+      val display = if (null != name && name.trim != "") Some(name) else None
+      val src = if (null != innerSource && innerSource.trim != "") Some(innerSource) else None
+
+      CoreMonitor(display = display,
+        left = b._1, top = b._2, right = b._3, bottom = b._4,
+        source = src, precision = decimalPlaces,
+        fontSize = fontSize)
+    }
+  }
 }
+
+import MonitorWidget._
 
 class MonitorWidget(random: MersenneTwisterFast)
     extends JobWidget(random)
     with Editable
+    with ToMonitorModel
     with RuntimeErrorEvent.Handler
     with PeriodicUpdateEvent.Handler
     with JobRemovedEvent.Handler
     with java.awt.event.MouseListener {
 
   type WidgetModel = CoreMonitor
-
-  import MonitorWidget._
 
   private var jobRunning: Boolean = false
   private var hasError: Boolean = false
@@ -263,27 +282,6 @@ class MonitorWidget(random: MersenneTwisterFast)
 
   def halt(): Unit = {
     new RemoveJobEvent(this).raise(this)
-  }
-
-  override def save: String = {
-    val s = new StringBuilder();
-    s.append("MONITOR\n");
-    s.append(getBoundsString);
-    if (null != name && name.trim != "")
-      s.append(name + "\n")
-    else
-      s.append("NIL\n")
-    if (innerSource.trim != "")
-      s.append(ModelReader.stripLines(innerSource) + "\n")
-    else
-      s.append("NIL\n");
-
-    s.append(decimalPlaces + "\n")
-    s.append("1\n")  // for compatability
-
-    s.append(fontSize + "\n")
-
-    s.toString()
   }
 
   override def load(model: WidgetModel, helper: Widget.LoadHelper): Object = {

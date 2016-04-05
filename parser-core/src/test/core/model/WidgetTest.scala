@@ -183,6 +183,26 @@ class WidgetTest extends FunSuite {
     runSerializationTests(button, buttonWidget, ButtonReader)
   }
 
+  test("button with action key") {
+    val button = """|BUTTON
+                    |0
+                    |0
+                    |5
+                    |5
+                    |NIL
+                    |bar
+                    |T
+                    |1
+                    |T
+                    |OBSERVER
+                    |NIL
+                    |I
+                    |NIL
+                    |NIL
+                    |1""".stripMargin.split("\n").toList
+    val buttonWidget = Button(Some("bar"),0,0,5,5,None,true, actionKey = Some('I'))
+    runSerializationTests(button, buttonWidget, ButtonReader)
+  }
   test("button disabled until ticks start") {
     val button = """|BUTTON
                     |202

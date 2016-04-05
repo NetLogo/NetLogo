@@ -5,6 +5,8 @@ package org.nlogo.hubnet.server.gui
 import org.nlogo.api.ModelType
 import org.nlogo.core.I18N
 import org.nlogo.fileformat
+import org.nlogo.core.model.WidgetReader
+import org.nlogo.core.{ I18N, Widget => CoreWidget }
 import javax.swing.{JMenuBar, JScrollPane, JFrame, ScrollPaneConstants}
 import java.awt.{Dimension, BorderLayout, Component}
 import java.io.{IOException, StringReader, BufferedReader}
@@ -44,28 +46,19 @@ class HubNetClientEditor(workspace: GUIWorkspace,
   def getLinkParent = linkParent
   def close() {interfacePanel.removeAllWidgets()}
   override def requestFocus() {interfacePanel.requestFocus()}
-  def getWidgetsForSaving: java.util.List[org.nlogo.window.Widget] = interfacePanel.getWidgetsForSaving
+  def getWidgetsForSaving: Seq[CoreWidget] = interfacePanel.getWidgetsForSaving
 
   def getWidgetsAsStrings: Seq[String] = {
-    val widgets = scala.collection.JavaConversions.asScalaBuffer(getWidgetsForSaving)
-    def widgetToStrings(w:Widget): List[String] = {
-      try {
-        val br = new BufferedReader(new StringReader(w.save))
-        Iterator.continually(br.readLine()).takeWhile(_ != null).toList ::: List("")
-      }
-      catch {
-        case ex: RuntimeException => org.nlogo.api.Exceptions.handle(ex); Nil
-        case ex: IOException => org.nlogo.api.Exceptions.handle(ex); Nil
-      }
-    }
+    val widgets = getWidgetsForSaving
+    def widgetToStrings(w: CoreWidget): List[String] =
+      (WidgetReader.format(w, fileformat.hubNetReaders).lines.toSeq :+ "").toList
     widgets.map(widgetToStrings).flatten
   }
 
   def save(buf:scala.collection.mutable.StringBuilder) = {
-    val keys = interfacePanel.getWidgetsForSaving.iterator
-    while (keys.hasNext()) {
-      buf ++= (wrapString(keys.next.save + "\n") )
-    }
+    buf ++= interfacePanel.getWidgetsForSaving.iterator
+      .map(w => WidgetReader.format(w, fileformat.hubNetReaders))
+      .mkString("", "\n", "\n")
   }
 
   def load(lines: Array[String], version:String): Unit = {

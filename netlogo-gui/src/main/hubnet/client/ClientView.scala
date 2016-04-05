@@ -105,6 +105,13 @@ class ClientView(clientPanel: ClientPanel) extends Widget with ViewWidgetInterfa
     this
   }
 
+  override def model: WidgetModel = {
+    val b = getBoundsTuple
+    CoreView(
+      left = b._1, top = b._2, right = b._3, bottom = b._4,
+      dimensions = world.getDimensions)
+  }
+
   def fontSize = world.fontSize
   def patchSize = world.patchSize
   def viewWidth = world.viewWidth
@@ -114,7 +121,5 @@ class ClientView(clientPanel: ClientPanel) extends Widget with ViewWidgetInterfa
   def viewOffsetY = world.followOffsetY
   def renderPerspective = true
   def drawSpotlight = world.serverMode() || world.perspective.isInstanceOf[Perspective.Follow]
-  override def save: String = throw new UnsupportedOperationException()
-  def asWidget: Widget = this
   def getAdditionalHeight = 0
 }

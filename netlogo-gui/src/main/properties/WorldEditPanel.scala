@@ -38,7 +38,7 @@ class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Co
           setLayout(panelGridbag)
         }
         addProperties(worldStaticPropertiesPanel,
-                      settings.getWrappingProperties.asScala,
+                      settings.wrappingProperties.asScala,
                       panelGridbag)
         add(worldStaticPropertiesPanel, BorderLayout.SOUTH)
       }, BorderLayout.CENTER)
@@ -49,22 +49,22 @@ class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Co
       setLayout(panelGridbag)
     }
 
-    addProperties(viewPanel, settings.getViewProperties.asScala, panelGridbag)
+    addProperties(viewPanel, settings.viewProperties.asScala, panelGridbag)
 
     val modelPanel = new JPanel(){
       setBorder(new TitledBorder(I18N.gui("tickCounter")))
       setLayout(panelGridbag)
     }
 
-    addProperties(modelPanel, settings.getModelProperties.asScala, panelGridbag)
+    addProperties(modelPanel, settings.modelProperties.asScala, panelGridbag)
 
     add(worldPanel, BorderLayout.NORTH)
     add(viewPanel, BorderLayout.CENTER)
     add(modelPanel, BorderLayout.SOUTH)
 
-    positionChoices.setSelectedIndex(settings.getSelectedLocation())
+    positionChoices.setSelectedIndex(settings.getSelectedLocation)
     selectPosition(
-      positionChoices.getSelectedItem().asInstanceOf[OriginConfiguration], settings.getSelectedConfiguration())
+      positionChoices.getSelectedItem.asInstanceOf[OriginConfiguration], settings.getSelectedConfiguration)
 
     if(! editors(0).isEnabled) editors(1) else editors(0)
   }
@@ -77,7 +77,7 @@ class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Co
 
     buttons.add(new JLabel(I18N.gui("origin.location") + " "))
     positionChoices = new JComboBox()
-    for(config <- settings.getOriginConfigurations.asScala)
+    for(config <- settings.originConfigurations.asScala)
        positionChoices.addItem(config)
     positionChoices.addItemListener(new LocationItemListener())
 
@@ -86,7 +86,7 @@ class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Co
     buttons.add(positionChoices)
 
     edgeChoices = new JComboBox()
-    for(config <- settings.getEdgeChoices.asScala)
+    for(config <- settings.edgeChoices.asScala)
       edgeChoices.addItem(config)
     edgeChoices.addItemListener(new ConfigurationListener())
     buttonsLayout.setConstraints(edgeChoices, c)
@@ -94,7 +94,7 @@ class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Co
     edgeChoices.setVisible(false)
 
     cornerChoices = new JComboBox()
-    for(config <- settings.getCornerChoices.asScala)
+    for(config <- settings.cornerChoices.asScala)
       cornerChoices.addItem(config)
     cornerChoices.addItemListener(new ConfigurationListener())
     buttonsLayout.setConstraints(cornerChoices, c)
@@ -102,7 +102,7 @@ class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Co
     cornerChoices.setVisible(false)
 
     try
-      addProperties(buttons, settings.getDimensionProperties.asScala, buttonsLayout)
+      addProperties(buttons, settings.dimensionProperties.asScala, buttonsLayout)
     catch {
       case t: Throwable => t.printStackTrace
     }

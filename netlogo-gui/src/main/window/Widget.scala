@@ -23,7 +23,7 @@ object Widget {
 abstract class SingleErrorWidget extends Widget with SingleErrorHandler
 abstract class MultiErrorWidget extends Widget with MultiErrorHandler
 
-abstract class Widget extends JPanel with Saveable {
+abstract class Widget extends JPanel {
 
   import Widget.LoadHelper
 
@@ -44,7 +44,7 @@ abstract class Widget extends JPanel with Saveable {
   def constrainDrag(newBounds: Rectangle, originalBounds: Rectangle, mouseMode: MouseMode): Rectangle = newBounds
   def isZoomed = if (findWidgetContainer != null) findWidgetContainer.isZoomed else false
 
-  def save: String
+  def model: WidgetModel
   def load(widget: WidgetModel, helper: LoadHelper): Object
   def sourceOffset = 0
   def hasContextMenuInApplet = false
@@ -146,6 +146,14 @@ abstract class Widget extends JPanel with Saveable {
       buf.append((r.x + r.width) + "\n")
       buf.append((r.y + r.height) + "\n")
       buf.toString
+    }
+  }
+
+  def getBoundsTuple: (Int, Int, Int, Int) = {
+    if (findWidgetContainer != null) findWidgetContainer.getBoundsTuple(this)
+    else {
+      var r: Rectangle = getBounds
+      (r.x, r.y, r.x + r.width, r.y + r.height)
     }
   }
 

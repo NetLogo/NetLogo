@@ -62,7 +62,7 @@ trait ModelCreator {
   }
 
   class Model(code: String, widgets: List[core.Widget]) extends core.Model(code = code, widgets = widgets) {
-    override def toString = core.model.ModelReader.formatModel(this, null)
+    override def toString = core.model.ModelReader.formatModel(this)
   }
 
   val counter = Iterator.from(0)

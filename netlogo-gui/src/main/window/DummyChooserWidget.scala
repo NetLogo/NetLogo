@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import org.nlogo.core.{ Chooser => CoreChooser, CompilerException }
+import org.nlogo.core.{ Chooseable, Chooser => CoreChooser, CompilerException }
 import org.nlogo.api.CompilerServices
 import org.nlogo.api.Dump
 import org.nlogo.api.Editable
@@ -73,23 +73,14 @@ class DummyChooserWidget(compiler: CompilerServices)
     this
   }
 
-  override def save: String = {
-    val s = new StringBuilder()
-
-    s.append("CHOOSER\n")
-    s.append(getBoundsString)
-    // the file format has separate entries for name and display name,
-    // but at least at present, they are always equal, so we just
-    // write out the name twice - ST 6/3/02
-    if ((null != name()) && (!name().trim.equals(""))) {
-      s.append(name() + "\n")
-      s.append(name() + "\n")
-    } else {
-      s.append("NIL\n")
-      s.append("NIL\n")
-    }
-    s.append(choicesWrapper.trim.replaceAll("\n", " ") + "\n");
-    s.append(index + "\n");
-    s.toString
+  override def model: WidgetModel = {
+    val bounds = getBounds()
+    val savedName = if (name().trim != null && name().trim != "") Some(name()) else None
+    CoreChooser(display = savedName,
+      left     = bounds.x,                top    = bounds.y,
+      right    = bounds.x + bounds.width, bottom = bounds.y + bounds.height,
+      variable = savedName,
+      choices  = constraint.acceptedValues.map(Chooseable.apply).toList,
+      currentChoice = index)
   }
 }

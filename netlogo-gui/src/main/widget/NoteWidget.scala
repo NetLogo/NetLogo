@@ -2,7 +2,7 @@
 
 package org.nlogo.widget
 
-import org.nlogo.api.{ Color => NlogoColor, Editable, ModelReader }
+import org.nlogo.api.{ Color => NlogoColor, Editable }
 import org.nlogo.core.{ TextBox => CoreTextBox }
 import org.nlogo.core.I18N
 import org.nlogo.window.{InterfaceColors, SingleErrorWidget,Widget}
@@ -86,22 +86,15 @@ class NoteWidget extends SingleErrorWidget with Editable {
       g.drawString(line, 0, i * stringHeight + stringAscent)
   }
 
-  def save: String = {
-    val s = new StringBuilder
-    s.append("TEXTBOX\n")
-    s.append(getBoundsString)
-    if (_text.trim == "") s.append("NIL\n")
-    else  s.append(ModelReader.stripLines(_text) + "\n")
-    s.append(fontSize + "\n")
-    s.append(org.nlogo.api.Color.getClosestColorNumberByARGB(color.getRGB) + "\n")
-    s.append((if (transparency) "1" else "0") + "\n")
-    s.toString
+  override def model: WidgetModel = {
+    val b = getBoundsTuple
+    val txt = if (text != null && text.trim != "") Some(text) else None
+    CoreTextBox(display = txt,
+      left = b._1, top = b._2, right = b._3, bottom = b._4,
+      fontSize = fontSize,
+      color = NlogoColor.argbToColor(color.getRGB),
+      transparent = transparency)
   }
-
-  override def model: WidgetModel =
-    CoreTextBox(display = text, fontSize = fontSize,
-      color = NlogoColor.getClosestColorNameByARGB(color.getRGB)
-      transparent = model.transparency)
 
   override def load(model: WidgetModel, helper: Widget.LoadHelper) = {
     text = model.display.getOrElse("")

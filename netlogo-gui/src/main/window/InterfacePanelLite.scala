@@ -170,11 +170,6 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
 
   ///
 
-  def getBoundsString(widget: Widget): String = {
-    val r = getUnzoomedBounds(widget)
-    Seq(r.x, r.y, r.x + r.width, r.y + r.height).mkString("", "\n", "\n")
-  }
-
   def getUnzoomedBounds(component: Component): Rectangle =
     component.getBounds
 

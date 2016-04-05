@@ -230,26 +230,6 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   override def getPreferredSize(font: Font) = AbstractPlotWidget.PREF_SIZE
   override def getMaximumSize: Dimension = null
 
-  /// saving and loading
-  override def save: String = {
-    val s: StringBuilder = new StringBuilder
-    s.append("PLOT\n")
-    s.append(getBoundsString)
-    s.append((if (null != plotName && plotName.trim != "") plotName else "NIL") + "\n")
-    s.append((if (null != xLabel && xLabel.trim != "") xLabel else "NIL") + "\n")
-    s.append((if (null != yLabel && yLabel.trim != "") yLabel else "NIL") + "\n")
-    s.append(plot.defaultXMin + "\n")
-    s.append(plot.defaultXMax + "\n")
-    s.append(plot.defaultYMin + "\n")
-    s.append(plot.defaultYMax + "\n")
-    s.append(plot.defaultAutoPlotOn + "\n")
-    s.append(legend.open + "\n")
-    s.append(plot.saveString + "\n")
-    s.append("PENS\n")
-    savePens(s)
-    s.toString
-  }
-
   def savePens(s: StringBuilder){
     import org.nlogo.api.StringUtils.escapeString
     for (pen <- plot.pens; if (!pen.temporary)) {
@@ -268,6 +248,29 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     plotName(plot.name)
     clear()
     this
+  }
+
+  override def model: WidgetModel = {
+    val b = getBoundsTuple
+
+    val displayName = if (plotName != null && plotName.trim != "") Some(plotName) else None
+    val savedXLabel = if (xLabel != null && xLabel.trim != "") Some(xLabel) else None
+    val savedYLabel = if (yLabel != null && yLabel.trim != "") Some(yLabel) else None
+
+    val pens =
+      for (pen <- plot.pens; if (!pen.temporary))
+        yield CorePen(display = pen.name, pen.defaultInterval,
+          pen.defaultMode, color = pen.defaultColor, inLegend = pen.inLegend,
+          pen.setupCode, pen.updateCode)
+
+    CorePlot(displayName,
+      left = b._1, top = b._2, right = b._3, bottom = b._4,
+      xAxis = savedXLabel, yAxis = savedYLabel,
+      xmin = plot.defaultXMin, xmax = plot.defaultXMax,
+      ymin = plot.defaultYMin, ymax = plot.defaultYMax,
+      autoPlotOn = plot.defaultAutoPlotOn, legendOn = legend.open,
+      setupCode = plot.setupCode, updateCode = plot.updateCode,
+      pens = pens.toList)
   }
 
   /// exporting an image of the plot

@@ -271,12 +271,11 @@ class CommandLine(commandCenter: CommandCenterInterface,
     textField.setEnabled(enabled)
   }
 
-  override def save: String = {
-    throw new UnsupportedOperationException()
-  }
-
   override def load(model: org.nlogo.core.Widget, helper: Widget.LoadHelper): Object = {
     throw new UnsupportedOperationException()
   }
 
+  override def model: org.nlogo.core.Widget = {
+    throw new UnsupportedOperationException()
+  }
 }

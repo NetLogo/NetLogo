@@ -9,7 +9,6 @@ import org.nlogo.editor.AbstractEditorArea
 import org.nlogo.api.Exceptions
 import org.nlogo.api.Approximate.approximate
 import org.nlogo.api.Color.{getColor, getColorNameByIndex, modulateDouble}
-import org.nlogo.api.ModelReader.stripLines
 import org.nlogo.swing.ButtonPanel
 import org.nlogo.awt.Fonts.{platformFont, platformMonospacedFont}
 import org.nlogo.swing.Implicits._
@@ -310,21 +309,6 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
     new Dimension(StrictMath.max(MinWidth, result.width), StrictMath.max(MinHeight, result.height))
   }
 
-  override def save = {
-    val s = new StringBuilder()
-    s.append("INPUTBOX\n")
-    s.append(getBoundsString)
-    if((null != name) && (name.trim != "")) s.append(name + "\n")
-    else s.append("NIL\n")
-    val nilValue = value == null || (value.isInstanceOf[String] && value.asInstanceOf[String].trim == "")
-    if(! nilValue) s.append(stripLines(Dump.logoObject(toAnyRef(value)).replaceAll("\r\n", "\n")) + "\n")
-    else s.append("NIL\n")
-    s.append("1\n")  //7
-    s.append((if(multiline) "1" else "0") + "\n")  //8
-    s.append(inputType.saveName + "\n")  //9
-    s.toString
-  }
-
   override def load(model: WidgetModel, helper: Widget.LoadHelper): Object = {
     val displayName = model.varName
     if(displayName ==  "NIL") name("") else name(displayName)
@@ -348,6 +332,16 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
     }
     setSize(model.right - model.left, model.bottom - model.top)
     this
+  }
+
+  override def model: WidgetModel = {
+    val b = getBoundsTuple
+    val savedName = if (name != null && name.trim != "") Some(name) else None
+    val boxedValue = inputType.boxValue(text)
+    CoreInputBox(
+      left = b._1, top = b._2, right = b._3, bottom = b._4,
+      variable = savedName,
+      boxedValue = boxedValue)
   }
 
   override def needsPreferredWidthFudgeFactor = false
@@ -512,15 +506,17 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
       case it@InputType(bn, _, _, _) => bn == baseName
       case _ => false
     }}
+    def boxValue(text: String): BoxedValue =
+      StringInput(text, StringInput.StringLabel, multiline)
   }
 
   private class StringInputType extends InputType(
     "String", "string",
     textArea.getEditorKitForContentType("String"),
-    javax.swing.UIManager.getFont("Label.font").deriveFont(12.0f)){
-  }
+    javax.swing.UIManager.getFont("Label.font").deriveFont(12.0f)){}
 
   def plainFont = new Font(platformMonospacedFont, Font.PLAIN, 12)
+
   private class ReporterInputType(kit: EditorKit) extends InputType("String (reporter)", "string.reporter", kit, plainFont) {
     override def defaultValue = "0"
     override def enableBracketMatcher = true
@@ -533,6 +529,9 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
       }
       text
     }
+
+    override def boxValue(text: String): BoxedValue =
+      StringInput(text, StringInput.ReporterLabel, multiline)
   }
 
   private class CommandInputType(kit: EditorKit) extends InputType("String (commands)", "string.commands", kit, plainFont) {
@@ -546,18 +545,32 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
       }
       text
     }
+
+    override def boxValue(text: String): BoxedValue =
+      StringInput(text, StringInput.CommandLabel, multiline)
   }
 
   private class NumberInputType(kit: EditorKit) extends InputType("Number", "number", kit, plainFont) {
     @throws(classOf[CompilerException])
     override def readValue(text: String) = compiler.readNumberFromString(text)
+    override def boxValue(text: String): BoxedValue = {
+      val num = compiler.readNumberFromString(text).asInstanceOf[java.lang.Double]
+      NumericInput(num.doubleValue, NumericInput.NumberLabel)
+    }
     override def enableMultiline = false
     override def defaultValue = org.nlogo.agent.World.ZERO
   }
 
   private class ColorInputType(kit: EditorKit) extends InputType("Color", "color", kit, plainFont) {
     @throws(classOf[CompilerException])
-    override def readValue(text: String) = compiler.readNumberFromString(text)
+    override def readValue(text: String) =
+      compiler.readNumberFromString(text)
+
+    override def boxValue(text: String): BoxedValue = {
+      val num = compiler.readNumberFromString(text).asInstanceOf[java.lang.Double]
+      NumericInput(num.doubleValue, NumericInput.ColorLabel)
+    }
+
     override def colorPanel(panel: JButton) {
       panel.setVisible(true)
       scroller.setVisible(false)

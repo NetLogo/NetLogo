@@ -27,17 +27,11 @@ class DummySwitchWidget extends Switch with Editable {
     this
   }
 
-  override def save: String = {
-    val s = new StringBuilder
-    s.append("SWITCH\n")
-    s.append(getBoundsString)
-    if ((null != displayName) && (displayName.trim!="")) s.append(displayName + "\n")
-    else s.append("NIL\n")
-    if ((null != name) && (name.trim != "")) s.append(name + "\n")
-    else s.append("NIL\n")
-    if (isOn) s.append(0 + "\n") else s.append(1 + "\n")
-    s.append(1 + "\n")  // for compatibility
-    s.append(-1000 + "\n") // for compatibility
-    s.toString
+  override def model: WidgetModel = {
+    val b = getBoundsTuple
+    val varName = if (_name != null && _name.trim != "") Some(_name) else None
+    CoreSwitch(display = varName,
+      left = b._1, top = b._2, right = b._3, bottom = b._4,
+      variable = varName, on = isOn)
   }
 }

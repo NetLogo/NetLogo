@@ -54,6 +54,11 @@ case class StringLine(override val default: Option[String] = None) extends Widge
   def format(v: String): String = v
   def valid(v: String): Boolean = true
 }
+case class CharLine(override val default: Option[Char] = None) extends WidgetLine[Char] {
+  def parse(line: String): Char = line(0)
+  def format(v: Char): String = v.toString
+  def valid(v: String): Boolean = v.length >= 1
+}
 case class EscapedStringLine(override val default: Option[String] = None) extends WidgetLine[String] {
   def parse(line: String): String = unescapeString(line)
   def format(v: String): String = escapeString(v)
@@ -150,7 +155,7 @@ object WidgetReader {
   }
 
   def formatInterface(widgets: List[Widget]): String =
-    widgets.map(w => format(w)).mkString("\n\n")
+    widgets.map(format(_)).mkString("\n\n")
 }
 
 abstract class BaseWidgetReader extends WidgetReader {
@@ -183,17 +188,17 @@ object ButtonReader extends BaseWidgetReader {
                         OptionLine[String]("NIL", StringLine()),   // rawDisplay
                         OptionLine[String]("NIL", EscapedStringLine()),   // code to execute
                         TNilBooleanLine(),  // forever?
-                        ReservedLine(),
-                        ReservedLine(),
+                        ReservedLine("1"),
+                        ReservedLine("T"),
                         MapLine(List(
                           "OBSERVER" -> AgentKind.Observer,
                           "PATCH"    -> AgentKind.Patch,
                           "TURTLE"   -> AgentKind.Turtle,
                           "LINK"     -> AgentKind.Link)), // buttonKind
-                        ReservedLine(),
-                        OptionLine[String]("NIL", StringLine()),  // actionkey
-                        ReservedLine(),
-                        ReservedLine(),
+                        ReservedLine("NIL"),
+                        OptionLine[Char]("NIL", CharLine()),  // actionkey
+                        ReservedLine("NIL"),
+                        ReservedLine("NIL"),
                         IntLine()  // Enabled before ticks start implemented as an int
                       )
   def asList(button: Button) = List((), button.left, button.top, button.right, button.bottom, button.display,
@@ -201,9 +206,9 @@ object ButtonReader extends BaseWidgetReader {
                                     (), (), if(button.disableUntilTicksStart) 0 else 1)
   def asWidget(vals: List[Any], literalParser: LiteralParser): Button = {
     val List(_, left: Int, top: Int, right: Int, bottom: Int, rawDisplay: Option[String] @unchecked,
-      source: Option[String] @unchecked, forever: Boolean, _, _, buttonKind: AgentKind, _, actionKey: Option[String] @unchecked, _, _,
+      source: Option[String] @unchecked, forever: Boolean, _, _, buttonKind: AgentKind, _, actionKey: Option[Char] @unchecked, _, _,
       enabledBeforeTicks: Int) = vals
-    Button(source, left, top, right, bottom, rawDisplay, forever, buttonKind, actionKey.map(_.head), enabledBeforeTicks == 0)
+    Button(source, left, top, right, bottom, rawDisplay, forever, buttonKind, actionKey, enabledBeforeTicks == 0)
   }
 }
 
@@ -319,10 +324,9 @@ object SliderReader extends BaseWidgetReader {
     StringLine(),   // max
     DoubleLine(),    // default
     StringLine(),   // step
-    ReservedLine(),
+    ReservedLine("1"),
     OptionLine[String]("NIL", StringLine()),   // units
-    new MapLine(List(("HORIZONTAL", Horizontal), ("VERTICAL", Vertical)))
-                      )
+    new MapLine(List(("HORIZONTAL", Horizontal), ("VERTICAL", Vertical))))
   def asList(slider: Slider) = List((), slider.left, slider.top, slider.right, slider.bottom, slider.display,
                                     slider.variable, slider.min, slider.max, slider.default, slider.step,
                                     (), slider.units, slider.direction)
@@ -368,8 +372,8 @@ object SwitchReader extends BaseWidgetReader {
     OptionLine[String]("NIL", StringLine()),   // display
     OptionLine[String]("NIL", StringLine()),   // varname
     InvertedBooleanLine(),  // on
-    ReservedLine(),
-    ReservedLine())
+    ReservedLine("1"),
+    ReservedLine("-1000"))
   def asList(switch: Switch) = List((), switch.left, switch.top, switch.right, switch.bottom,
                                     switch.display, switch.variable, switch.on, (), ())
   def asWidget(vals: List[Any], literalParser: LiteralParser): Switch = {
@@ -388,9 +392,9 @@ object ChooserReader extends BaseWidgetReader {
     IntLine(),  // top
     IntLine(),  // right
     IntLine(),  // bottom
-    OptionLine[String]("NIL", StringLine()), // display
+    OptionLine[String]("NIL", EscapedStringLine()), // display
     OptionLine[String]("NIL", StringLine()), // varname
-    EscapedStringLine(),   // choices
+    StringLine(),   // choices
     IntLine())   // current choice
 
   def asList(chooser: Chooser) = List((), chooser.left, chooser.top, chooser.right, chooser.bottom, chooser.display,
@@ -429,7 +433,7 @@ object MonitorReader extends BaseWidgetReader {
     OptionLine[String]("NIL", StringLine()),   // rawDisplay
     OptionLine[String]("NIL", EscapedStringLine()),   // source
     IntLine(),   // precision
-    ReservedLine(),
+    ReservedLine("1"),
     IntLine())    // font size
   def asList(monitor: Monitor) = List((), monitor.left, monitor.top, monitor.right, monitor.bottom, monitor.display,
     monitor.source, monitor.precision, (), monitor.fontSize)
@@ -472,16 +476,16 @@ object InputBoxReader extends BaseWidgetReader {
     IntLine(),  // bottom
     OptionLine[String]("NIL", StringLine()),   // varname
     StringLine(),   // value
+    ReservedLine("1"),
     BooleanLine(),  // multiline
-    ReservedLine(),
     StringLine())    // inputboxtype
 
   def asList(inputbox: InputBox) = List((), inputbox.left, inputbox.top, inputbox.right, inputbox.bottom, inputbox.variable,
-    inputbox.boxedValue.asString, inputbox.boxedValue.multiline, (), inputbox.boxedValue.name)
+    inputbox.boxedValue.asString, (), inputbox.boxedValue.multiline, inputbox.boxedValue.name)
   def asWidget(vals: List[Any], literalParser: LiteralParser): InputBox = {
 
     val List((), left: Int, top: Int, right: Int, bottom: Int, variable: Option[String] @unchecked, value: String,
-      multiline: Boolean, _, inputBoxTypeStr: String) = vals
+      _, multiline: Boolean, inputBoxTypeStr: String) = vals
 
     val inputBoxValue = inputBoxTypeStr match {
       case "Number" | "Color" => NumericInput(StringEscaper.unescapeString(value).toDouble, NumericInput.label(inputBoxTypeStr))
@@ -505,17 +509,17 @@ object ViewReader extends BaseWidgetReader {
                         ReservedLine("-1"), // maxPxCor or -1
                         ReservedLine("-1"), // maxPyCor or -1
                         DoubleLine(),    // patchsize
-                        ReservedLine(), // shapes on, not used
+                        ReservedLine("1"), // shapes on, not used
                         IntLine(),    // font size
 
-                        ReservedLine(), // hex settings
-                        ReservedLine(), // and
-                        ReservedLine(), // exactDraw
-                        ReservedLine(), // not used
+                        ReservedLine("1"), // hex settings
+                        ReservedLine("1"), // and
+                        ReservedLine("1"), // exactDraw
+                        ReservedLine("0"), // not used
 
                         BooleanLine(),  // wrappingAllowedInX
                         BooleanLine(),  // wrappingAllowedInY
-                        ReservedLine(), // thin turtle pens!  Always on
+                        ReservedLine("1"), // thin turtle pens!  Always on
                         IntLine(),  // minPxcor
                         IntLine(),  // maxPxcor
                         IntLine(),  // minPycor

@@ -76,23 +76,11 @@ class DummyViewWidget(val world: World)
   override def hasContextMenu: Boolean = false
 
   /// load & save
-
-  override def save: String = {
-    "VIEW\n" +
-      getBoundsString +
-      "0\n0\n" + // screen-edge-x/y
-      "0\n" + //7
-      "1\n1\n" + // 8 9
-      // old exactDraw settings, no longer used - ST 8/13/03
-      "1\n1\n1\n" +  // 10 11 12
-      // hooray for hex! - ST 6/16/04
-      "0\n" + // 13
-      "1\n1\n" + // 14 15
-      "1\n" + // thin turtle pens are always on 16
-      world.minPxcor + "\n" + // 17
-      world.maxPxcor + "\n" + // 18
-      world.minPycor + "\n" + // 19
-      world.maxPycor + "\n";// 20
+  override def model: WidgetModel = {
+    val b = getBoundsTuple
+    CoreView(
+      left = b._1, top = b._2, right = b._3, bottom = b._4,
+      dimensions = world.getDimensions)
   }
 
   override def load(view: WidgetModel, helper: Widget.LoadHelper): AnyRef = {

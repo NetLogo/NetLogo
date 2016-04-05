@@ -3,7 +3,7 @@
 package org.nlogo.window
 
 import org.nlogo.api.Editable
-import org.nlogo.core.{ I18N, Button => CoreButton }
+import org.nlogo.core.{ AgentKind, I18N, Button => CoreButton }
 import org.nlogo.api.Property
 import org.nlogo.awt.{ Fonts => NlogoFonts }
 
@@ -126,27 +126,18 @@ class DummyButtonWidget
 
   ///
 
-  override def save: String = {
-    val s = new StringBuilder
-    s.append("BUTTON\n")
-    s.append(getBoundsString)
-    if (!name.trim.equals(""))
-      s.append(name + "\n")
-    else
-      s.append("NIL\n")
-    s.append("NIL\n")
-    s.append("NIL\n")
-    s.append(1 + "\n") // for compatability
-    s.append("T\n")  // show display name
-
-    val temp = "OBSERVER\n" // assume Observer button
-    s.append(temp)
-    s.append("NIL\n")
-    if (actionKey == 0 || actionKey == ' ')
-      s.append("NIL\n")
-    else
-      s.append(actionKey + "\n")
-    return s.toString
+  override def model: WidgetModel = {
+    val b = getBoundsTuple
+    val savedName = if (name != null && name.trim != "") Some(name) else None
+    val savedActionKey =
+      if (actionKey == 0 || actionKey == ' ') None else Some(actionKey)
+    CoreButton(
+      display = savedName,
+      left = b._1, top = b._2, right = b._3, bottom = b._4,
+      source = None,
+      forever = false,
+      buttonKind = AgentKind.Observer,
+      actionKey = savedActionKey)
   }
 
   override def load(button: WidgetModel, helper: Widget.LoadHelper): AnyRef = {
