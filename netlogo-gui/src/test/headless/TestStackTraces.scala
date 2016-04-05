@@ -22,7 +22,10 @@ its ok that these tests don't run in 'run' mode because we are only testing
 the stack traces, not the results.
  */
 
-import org.nlogo.api.LogoException
+import org.scalatest.FunSuite
+import org.nlogo.api.{LogoException, Syntax, ExtensionException, Argument, Context, Command, WorldDimensions3D, Version}
+import org.nlogo.workspace.{DummyClassManager, InMemoryExtensionLoader, ExtensionManager}
+import org.nlogo.core.{WorldDimensions, View, Model}
 
 class TestStackTraces extends AbstractTestModels {
 
@@ -173,4 +176,45 @@ error while observer running __BOOM
   }
 */
 
+}
+
+class TestExtensionStackTraces extends FunSuite {
+  test("extension exceptions keep causes") {
+    val primaryCause = new Exception()
+    val wrapperCause = new Exception(primaryCause)
+    val dummyClassManager = new DummyClassManager() {
+      override val barPrim = new Command {
+        def getAgentClassString = "OTPL"
+        override def getSyntax = Syntax.commandSyntax()
+        override def perform(args: Array[Argument], context: Context) {
+          throw new ExtensionException(wrapperCause)
+        }
+      }
+    }
+
+    val memoryLoader = new InMemoryExtensionLoader("foo", dummyClassManager)
+    val ws = HeadlessWorkspace.newInstance
+    ws.getExtensionManager.addLoader(memoryLoader)
+    val dims = if(Version.is3D)
+                 new WorldDimensions3D(-5, 5, -5, 5, -5, 5)
+               else
+                 new WorldDimensions(-5, 5, -5, 5)
+    ws.initForTesting(dims, "")
+    ws.openModel(Model(
+      code = "extensions [ foo ]",
+      widgets = List(View(dimensions = dims)),
+      version = Version.version
+    ))
+
+    try {
+      ws.command("foo:bar")
+    } catch {
+      case e: org.nlogo.nvm.EngineException => {
+        var ex: Throwable = e
+        while (ex != null && ex != wrapperCause) ex = ex.getCause
+        assert(ex === wrapperCause)
+        assert(ex.getCause === primaryCause)
+      }
+    }
+  }
 }

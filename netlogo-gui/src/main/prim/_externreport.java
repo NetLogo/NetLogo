@@ -37,12 +37,8 @@ public final strictfp class _externreport
                   new ExtensionContext(workspace, context));
     } catch (org.nlogo.api.ExtensionException ex) {
       EngineException ee =
-          new EngineException(context, this, "Extension exception: "
-              + ex.getMessage());
-      // it might be better to use the Java 1.4 setCause() stuff, for
-      // the long term... but then i think the handler would have to
-      // be changed, too.
-      ee.setStackTrace(ex.getStackTrace());
+          new EngineException
+              (context, this, "Extension exception: " + ex.getMessage(), ex);
       throw ee;
     }
     return result;

@@ -19,7 +19,7 @@ import AbstractWorkspaceTraits._
 
 abstract class AbstractWorkspaceScala(val world: World, hubNetManagerFactory: HubNetManagerFactory)
   extends AbstractWorkspace(world, hubNetManagerFactory)
-  with APIWorkspace with APIConformant with Benchmarking
+  with APIConformant with Benchmarking
   with Checksums with Evaluating
   with ModelDir with BehaviorSpaceInformation
   with Traceable

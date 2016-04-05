@@ -12,14 +12,22 @@ public strictfp class EngineException
   public Context context = null;
   public Instruction instruction = null;
 
+  public EngineException(Context context, Instruction instruction,
+                         String message, Exception cause) {
+    super(message, cause);
+    if (!org.nlogo.api.Version.useGenerator() && instruction == null) {
+      throw new IllegalStateException();
+    }
+    this.context = context;
+    this.instruction = instruction;
+  }
+
   // force caller to provide a context, in theory it got
   // set later but it was sometimes the wrong context, thus, error
   // messages were not correct. ev 8/3/05
   public EngineException(Context context, Instruction instruction,
                          String message) {
-    super(message, null);
-    this.context = context;
-    this.instruction = instruction;
+    this(context, instruction, message, null);
   }
 
   // With the new bytecode generation compiler stuff, we need
@@ -27,12 +35,7 @@ public strictfp class EngineException
   // Later, when we catch the exception, we can use line number
   // information to figure out what token the error happened on.
   public EngineException(Context context, String message) {
-    super(message, null);
-    if (!org.nlogo.api.Version.useGenerator()) {
-      throw new IllegalStateException();
-    }
-    this.context = context;
-    instruction = null;
+    this(context, null, message, null);
   }
 
   // previously this method was flattening all LogoExceptions into EngineExceptions
