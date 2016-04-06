@@ -6,16 +6,16 @@ import ConstraintSpecification._
 
 trait Widget
 
-sealed trait DeclaresGlobal {
+trait DeclaresGlobal {
   def varName: String
 }
 
-sealed trait DeclaresConstraint {
+trait DeclaresConstraint {
   def varName: String
   def constraint: ConstraintSpecification
 }
 
-sealed trait DeclaresGlobalCommand {
+trait DeclaresGlobalCommand {
   def varName: String
   def default: Any
   def asNetLogoString(x: Any): String = x match {
@@ -27,17 +27,24 @@ sealed trait DeclaresGlobalCommand {
   }
   def command: String = "set " + varName + " " + asNetLogoString(default)
 }
+
 case class Button(display: Option[String], left: Int, top: Int, right: Int, bottom: Int,
              source: String, forever: Boolean, buttonKind: AgentKind = AgentKind.Observer,
              actionKey: String = "NIL", disableUntilTicksStart: Boolean = false)
 extends Widget
 
 case class Plot(display: String, left: Int = 0, top: Int = 0, right: Int = 5, bottom: Int = 5,
-             xAxis: String = "", yAxis: String = "", xmin: Double = 0, xmax: Double = 0, ymin: Double = 0, ymax: Double = 0,
+             xAxis: String = "", yAxis: String = "",
+             xmin: Double = 0, xmax: Double = 0,
+             ymin: Double = 0, ymax: Double = 0,
              autoPlotOn: Boolean = true, legendOn: Boolean = false,
-             setupCode: String = "", updateCode: String = "", pens: List[Pen] = Nil) extends Widget
-case class Pen(display: String, interval: Double = 1, mode: Int = 0, color: Int = 0, inLegend: Boolean = false,
-             setupCode: String = "", updateCode: String = "") extends Widget
+             setupCode: String = "", updateCode: String = "",
+             pens: List[Pen] = Nil) extends Widget
+
+case class Pen(display: String, interval: Double = 1,
+  mode: Int = 0, color: Int = 0, inLegend: Boolean = false,
+  setupCode: String = "", updateCode: String = "") extends Widget
+
 case class TextBox(display: String, left: Int = 0, top: Int = 0, right: Int = 5, bottom: Int = 5,
              fontSize: Int, color: Double, transparent: Boolean) extends Widget
 case class Switch(display: String, left: Int = 0, top: Int = 0, right: Int = 0, bottom: Int = 0,
@@ -98,27 +105,9 @@ case class Slider(display: String, left: Int = 0, top: Int = 0, right: Int = 0, 
   override def constraint = NumericConstraintSpecification(default)
 }
 case class Monitor(display: Option[String], left: Int, top: Int, right: Int, bottom: Int,
-             source: String, precision: Int, fontSize: Int) extends Widget
+             source: String, precision: Int, fontSize: Int = 11) extends Widget
 
 case class Output(left: Int, top: Int, right: Int, bottom: Int, fontSize: Int) extends Widget
-
-sealed abstract class InputBoxType(val name:String)
-case object Num extends InputBoxType("Number")
-case object Str extends InputBoxType("String")
-case object StrReporter extends InputBoxType("String (reporter)")
-case object StrCommand extends InputBoxType("String (commands)")
-case object Col extends InputBoxType("Color")
-
-case class InputBox[T](left: Int = 0, top: Int = 0, right: Int = 0, bottom: Int = 0, varName: String,
-             value: T, multiline: Boolean = false, boxtype: InputBoxType)
-           extends Widget with DeclaresGlobal with DeclaresGlobalCommand with DeclaresConstraint {
-  override def default = value
-  override def constraint = boxtype match {
-    case Col => NumericInputConstraintSpecification(boxtype.name, value.asInstanceOf[Int].toDouble)
-    case Num => NumericInputConstraintSpecification(boxtype.name, value.asInstanceOf[Double])
-    case _ => StringInputConstraintSpecification(boxtype.name, value.asInstanceOf[String])
-  }
-}
 
 case class View(left: Int = 0, top: Int = 0, right: Int = 5, bottom: Int = 5,
   dimensions: WorldDimensions = View.defaultDimensions,
