@@ -13,10 +13,10 @@ trait ModelSections {
   def info:             String
   def turtleShapes:     Seq[Shape]
   def version:          String
-  def previewCommands:  String
+  def previewCommands:  PreviewCommands
   def aggregateManager: Saveable
   def labManager:       Saveable
-  def hubnetManager:    BufSaveable
+  def hubnetInterface:  Option[Seq[Widget]]
   def linkShapes:       Seq[Shape]
   def snapOn:           Boolean
 }

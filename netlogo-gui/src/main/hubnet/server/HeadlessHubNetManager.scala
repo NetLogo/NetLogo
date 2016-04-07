@@ -23,7 +23,7 @@ class HeadlessHubNetManager(workspace: AbstractWorkspaceScala) extends HubNetMan
   var widgets: Array[String] = Array()
   def load(lines:Array[String], version: String) { widgets = lines }
   def getClientInterface: Seq[String] = widgets.toSeq
-  def save(buf:scala.collection.mutable.StringBuilder) {}
+  def interfaceWidgets = Seq()
 
   // should we be logging or doing something else here besides just println? JC - 12/28/10
   private val listener = new ClientEventListener() {

@@ -290,14 +290,14 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
   def handle(e: LoadSectionEvent): Unit =
     if (e.section == ModelSection.Interface) {
       try {
-        val v: Seq[JList[String]] = ModelReader.parseWidgets(e.lines).asScala.toSeq
+        val v = ModelReader.parseWidgets(e.lines)
         if (null != v) {
           setVisible(false)
           // not sure we have access to workspace...
           val linesAndWidgets = v zip v.map(lines =>
-              WidgetReader.read(lines.asScala.toList, compiler, fileformat.hubNetReaders))
+              WidgetReader.read(lines, compiler, fileformat.hubNetReaders))
           linesAndWidgets.foreach {
-            case (lines, coreWidget) => loadWidget(lines.toArray(new Array[String](lines.size)), coreWidget, e.version)
+            case (lines, coreWidget) => loadWidget(lines.toArray, coreWidget, e.version)
           }
         }
       } finally {

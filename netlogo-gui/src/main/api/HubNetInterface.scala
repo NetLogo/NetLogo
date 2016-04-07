@@ -2,10 +2,10 @@
 
 package org.nlogo.api
 
-import org.nlogo.core.AgentKind
+import org.nlogo.core.{ AgentKind, Widget => CoreWidget }
 import java.io.{ Serializable => JSerializable }
 
-trait HubNetInterface extends ViewInterface with ModelSections.BufSaveable {
+trait HubNetInterface extends ViewInterface {
   /// getting messages
   @throws(classOf[LogoException])
   def messageWaiting: Boolean
@@ -97,7 +97,7 @@ trait HubNetInterface extends ViewInterface with ModelSections.BufSaveable {
   def getInQueueSize: Int
 
   /// client editor
-  def save(buf: StringBuilder)
+  def interfaceWidgets: Seq[CoreWidget]
   def closeClientEditor()
   def openClientEditor()
   def clientEditor: AnyRef

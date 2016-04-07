@@ -55,11 +55,8 @@ class HubNetClientEditor(workspace: GUIWorkspace,
     widgets.map(widgetToStrings).flatten
   }
 
-  def save(buf:scala.collection.mutable.StringBuilder) = {
-    buf ++= interfacePanel.getWidgetsForSaving.iterator
-      .map(w => WidgetReader.format(w, fileformat.hubNetReaders))
-      .mkString("", "\n", "\n")
-  }
+  def interfaceWidgets: Seq[CoreWidget] =
+    interfacePanel.getWidgetsForSaving
 
   def load(lines: Array[String], version:String): Unit = {
     interfacePanel.loadWidgets(lines, version, fileformat.hubNetReaders)

@@ -1086,13 +1086,10 @@ class App extends
     tabs.workspace.world.turtleShapeList.shapes
   def version:          String =
     Version.version
-  def previewCommands:  String =
-    tabs.workspace.previewCommands match {
-      case PreviewCommands.Default => ""
-      case commands                => commands.source.stripTrailingWhiteSpace + "\n"
-    }
-  def hubnetManager:    ModelSections.BufSaveable =
-    workspace.hubnetManager
+  def previewCommands:  PreviewCommands =
+    tabs.workspace.previewCommands
+  def hubnetInterface:  Option[Seq[CoreWidget]] =
+    Option(workspace.hubnetManager).map(_.interfaceWidgets)
   def linkShapes:       Seq[Shape] =
     tabs.workspace.world.linkShapeList.shapes
   def snapOn:           Boolean =

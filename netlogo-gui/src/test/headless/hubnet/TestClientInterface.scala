@@ -42,7 +42,7 @@ class TestClientInterface extends TestUsingWorkspace {
     import collection.JavaConverters._
     val model = "test/hubnet/client-interface.nlogo"
     val unparsedWidgets = getClientWidgets(model)
-    val parsedWidgets = ModelReader.parseWidgets(unparsedWidgets).asScala.map(_.asScala.toList).toList
+    val parsedWidgets = ModelReader.parseWidgets(unparsedWidgets)
     val ci = new ClientInterface(parsedWidgets, unparsedWidgets.toList,
                                  workspace.world.turtleShapeList.shapes,
                                  workspace.world.linkShapeList.shapes,

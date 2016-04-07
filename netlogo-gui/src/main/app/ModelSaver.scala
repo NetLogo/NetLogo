@@ -13,8 +13,6 @@ import collection.JavaConverters._
 
 class ModelSaver(model: ModelSections) {
 
-  val additionalReaders = fileformat.nlogoReaders(Version.is3D)
-
   def save: String = {
 
     val buf = new StringBuilder
@@ -34,6 +32,7 @@ class ModelSaver(model: ModelSections) {
 
     // widgets
     section {
+      val additionalReaders = fileformat.nlogoReaders(Version.is3D)
       for(w <- model.widgets)
         buf ++=
           WidgetReader.format(w, additionalReaders) + "\n\n"
@@ -59,7 +58,10 @@ class ModelSaver(model: ModelSections) {
 
     // preview commands
     section {
-      buf ++= model.previewCommands
+      buf ++= (model.previewCommands match {
+        case PreviewCommands.Default => ""
+        case commands                => commands.source.stripTrailingWhiteSpace + "\n"
+      })
     }
 
     // system dynamics modeler
@@ -78,8 +80,9 @@ class ModelSaver(model: ModelSections) {
 
     // reserved for HubNet client
     section {
-      for(manager <- Option(model.hubnetManager))
-        manager.save(buf)
+      model.hubnetInterface.foreach { interface =>
+        buf ++= interface.map(w => WidgetReader.format(w, fileformat.hubNetReaders)).mkString("", "\n", "\n")
+      }
     }
 
     //link shapes

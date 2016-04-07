@@ -612,13 +612,13 @@ class WidgetPanel(val workspace: GUIWorkspace)
     try {
       val additionalReaders = fileformat.nlogoReaders(Version.is3D(version))
 
-      val v: Seq[JList[String]] = ModelReader.parseWidgets(lines).asScala.toSeq
+      val v = ModelReader.parseWidgets(lines)
       if (null != v) {
         setVisible(false)
         val linesAndWidgets = v zip v.map(lines =>
-            WidgetReader.read(lines.asScala.toList, workspace, additionalReaders ++ readerOverrides))
+            WidgetReader.read(lines, workspace, additionalReaders ++ readerOverrides))
         linesAndWidgets.foreach {
-          case (lines, coreWidget) => loadWidget(lines.toArray(new Array[String](lines.size)), coreWidget, version)
+          case (lines, coreWidget) => loadWidget(lines.toArray, coreWidget, version)
         }
       }
     } finally {

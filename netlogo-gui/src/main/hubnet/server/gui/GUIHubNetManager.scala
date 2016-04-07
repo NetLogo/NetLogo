@@ -4,7 +4,7 @@ package org.nlogo.hubnet.server.gui
 
 import org.nlogo.hubnet.connection.HubNetException
 import org.nlogo.hubnet.server.{HubNetManager, ClientEventListener, ConnectionManager}
-import org.nlogo.core.{ Femto, FileMode }
+import org.nlogo.core.{ Femto, FileMode, Widget => CoreWidget }
 import org.nlogo.nvm.DefaultCompilerServices
 import org.nlogo.util.Utils, Utils.reader2String
 import org.nlogo.api._
@@ -60,7 +60,7 @@ class GUIHubNetManager(workspace: GUIWorkspace,
   def getInterfaceWidth = _clientEditor.interfacePanel.getPreferredSize.width
   def getInterfaceHeight = _clientEditor.interfacePanel.getPreferredSize.height
   def load(lines:Array[String], version: String) { _clientEditor.load(lines, version) }
-  def save(buf:scala.collection.mutable.StringBuilder) { _clientEditor.save(buf) }
+  def interfaceWidgets: Seq[CoreWidget] = _clientEditor.interfaceWidgets
 
 
   @throws(classOf[java.io.IOException])
