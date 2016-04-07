@@ -28,8 +28,14 @@ class WidgetTest extends FunSuite {
 
   val literalParser = SimpleLiteralParser
 
+  case class TestWidget(vals: List[Any]) extends Widget {
+    def left = 0
+    def top = 0
+    def right = 5
+    def bottom = 5
+  }
+
   test("Required reader lines") {
-    case class TestWidget(vals: List[Any])  extends Widget
     object AllLineTest extends BaseWidgetReader {
       type T = TestWidget
       def classTag = ClassTag(classOf[TestWidget])
@@ -74,7 +80,6 @@ class WidgetTest extends FunSuite {
 
 
   test("Unrequired reader lines") {
-    case class TestWidget(vals: List[Any])  extends Widget
     object AllLineTest extends BaseWidgetReader {
       type T = TestWidget
       def classTag = ClassTag(classOf[TestWidget])
@@ -131,7 +136,7 @@ class WidgetTest extends FunSuite {
                     |NIL
                     |1""".stripMargin.split("\n").toList
     val buttonWidget =
-      Button(Some("go"),202,101,271,134,"go",true)
+      Button(Some("go"),202,101,271,134,Some("go"),true)
     runSerializationTests(button, buttonWidget, ButtonReader)
   }
 
@@ -153,7 +158,7 @@ class WidgetTest extends FunSuite {
                     |NIL
                     |1""".stripMargin.split("\n").toList
     val buttonWidget =
-      Button(None,202,101,271,134,"go",true)
+      Button(Some("go"),202,101,271,134,None,true)
     runSerializationTests(button, buttonWidget, ButtonReader)
   }
 
@@ -174,7 +179,7 @@ class WidgetTest extends FunSuite {
                     |NIL
                     |NIL
                     |1""".stripMargin.split("\n").toList
-    val buttonWidget = Button(None,202,101,271,134,"\"bar\"",true)
+    val buttonWidget = Button(Some("\"bar\""),202,101,271,134,None,true)
     runSerializationTests(button, buttonWidget, ButtonReader)
   }
 
@@ -195,20 +200,30 @@ class WidgetTest extends FunSuite {
                     |NIL
                     |NIL
                     |0""".stripMargin.split("\n").toList
-    val buttonWidget = Button(None,202,101,271,134,"\"bar\"",true,disableUntilTicksStart = true)
+    val buttonWidget = Button(Some("\"bar\""),202,101,271,134,None,true,disableUntilTicksStart = true)
     runSerializationTests(button, buttonWidget, ButtonReader, {(button: Button) => assert(button.display == None)})
   }
 
-  def runSerializationTests[W <: Widget](serializedLines: List[String], widget: W, reader: WidgetReader, extraAssertions: W => Unit = {w: W => })(implicit ev: reader.T =:= W) = {
-    assert(reader.validate(serializedLines))
-    val deserializedWidget =
-      reader.parse(serializedLines, literalParser)
-    assertResult(widget)(deserializedWidget)
-    extraAssertions(deserializedWidget)
-    val reserializedLines =
-      reader.format(deserializedWidget).split("\n").toList
-    assert(reader.validate(reserializedLines))
-    assert(widget == reader.parse(reserializedLines, literalParser))
+  test("button with source conversion") {
+    val button = """|BUTTON
+                    |202
+                    |101
+                    |271
+                    |134
+                    |NIL
+                    |\"bar\"
+                    |T
+                    |1
+                    |T
+                    |OBSERVER
+                    |NIL
+                    |NIL
+                    |NIL
+                    |NIL
+                    |1""".stripMargin.split("\n").toList
+    val buttonWidget = Button(Some("\"bar\"\"bar\""),202,101,271,134,None,true)
+    val deserializedWidget = WidgetReader.read(button, literalParser, conversion = (x => x + x))
+    assertResult(buttonWidget)(deserializedWidget)
   }
 
   test("slider") {
@@ -226,7 +241,7 @@ class WidgetTest extends FunSuite {
                      |1
                      |NIL
                      |HORIZONTAL""".stripMargin.split("\n").toList
-    val sliderWidget = Slider("initial-sheep-stride", 20, 65, 201, 98, "initial-sheep-stride", "0", "1", 0.2, "0.1", None, Horizontal)
+    val sliderWidget = Slider(Some("initial-sheep-stride"), 20, 65, 201, 98, Some("initial-sheep-stride"), "0", "1", 0.2, "0.1", None, Horizontal)
     runSerializationTests(slider, sliderWidget, SliderReader)
   }
 
@@ -259,7 +274,7 @@ class WidgetTest extends FunSuite {
                   |30.0""".stripMargin.split("\n").toList
 
 
-    val viewWidget = View(430, 12, 806, 409, new WorldDimensions(-30, 30, -30, 30, patchSize = 6.0, true, true), fontSize = 20, UpdateMode.Continuous, true, "ticks", 30.0)
+    val viewWidget = View(430, 12, 806, 409, new WorldDimensions(-30, 30, -30, 30, patchSize = 6.0, true, true), fontSize = 20, UpdateMode.Continuous, true, Some("ticks"), 30.0)
     runSerializationTests(view, viewWidget, ViewReader)
   }
 
@@ -279,7 +294,7 @@ class WidgetTest extends FunSuite {
                      |3
                      |1
                      |11""".stripMargin.split("\n").toList
-    val monitorWidget = Monitor(Some("sheep"), 74, 214, 152, 259, "count sheep", 3, 11)
+    val monitorWidget = Monitor(Some("count sheep"), 74, 214, 152, 259, Some("sheep"), 3, 11)
     runSerializationTests(monitor, monitorWidget, MonitorReader)
   }
 
@@ -294,7 +309,7 @@ class WidgetTest extends FunSuite {
                      |3
                      |1
                      |11""".stripMargin.split("\n").toList
-    val monitorWidget = Monitor(None, 74, 214, 152, 259, "count sheep", 3, 11)
+    val monitorWidget = Monitor(Some("count sheep"), 74, 214, 152, 259, None, 3, 11)
     runSerializationTests(monitor, monitorWidget, MonitorReader, { (m: Monitor) => assert(None == m.display) })
   }
 
@@ -309,7 +324,7 @@ class WidgetTest extends FunSuite {
                      |3
                      |1
                      |11""".stripMargin.split("\n").toList
-    val monitorWidget = Monitor(None, 74, 214, 152, 259, "\"foo\"", 3, 11)
+    val monitorWidget = Monitor(Some("\"foo\""), 74, 214, 152, 259, None, 3, 11)
     runSerializationTests(monitor, monitorWidget, MonitorReader)
   }
 
@@ -324,7 +339,7 @@ class WidgetTest extends FunSuite {
                     |0
                     |1
                     |-1000""".stripMargin.split("\n").toList
-    val switchWidget = Switch("stride-length-penalty?", 111, 174, 307, 207, "stride-length-penalty?", true)
+    val switchWidget = Switch(Some("stride-length-penalty?"), 111, 174, 307, 207, Some("stride-length-penalty?"), true)
     runSerializationTests(switch, switchWidget, SwitchReader)
   }
 
@@ -349,7 +364,7 @@ class WidgetTest extends FunSuite {
                   |"wolves" 1.0 0 -2674135 true "" "plot count wolves"
                   |"grass / 4" 1.0 0 -10899396 true "" ";; divide by four to keep it within similar\n;; range as wolf and sheep populations\nplot count patches with [ pcolor = green ] / 4" """.stripMargin.split("\n").toList
     val plotWidget =
-      Plot("populations", 33, 265, 369, 408, "time", "pop.", 0.0, 100.0, 0.0, 100.0, true, true, "", "",
+      Plot(Some("populations"), 33, 265, 369, 408, Some("time"), Some("pop."), 0.0, 100.0, 0.0, 100.0, true, true, "", "",
         List(Pen("sheep", 1.0, 0, -13345367, true, "", "plot count sheep"),
           Pen("wolves", 1.0, 0, -2674135, true, "", "plot count wolves"),
           Pen("grass / 4", 1.0, 0, -10899396, true, "", ";; divide by four to keep it within similar\n;; range as wolf and sheep populations\nplot count patches with [ pcolor = green ] / 4")))
@@ -359,7 +374,7 @@ class WidgetTest extends FunSuite {
   test("chooser") {
     val chooser = chooserWithChoices(""""days" "years"""")
     val chooserWidget =
-      Chooser("visualize-time-steps", 164, 10, 315, 55, "visualize-time-steps", List(ChooseableString("days"), ChooseableString("years")), 1)
+      Chooser(Some("visualize-time-steps"), 164, 10, 315, 55, Some("visualize-time-steps"), List(ChooseableString("days"), ChooseableString("years")), 1)
     runSerializationTests(chooser, chooserWidget, ChooserReader)
   }
 
@@ -411,7 +426,7 @@ class WidgetTest extends FunSuite {
                      |11
                      |0.0
                      |0""".stripMargin.split("\n").toList
-    val textBoxWidget = TextBox("Sheep settings", 28, 11, 168, 30, 11, 0.0, false)
+    val textBoxWidget = TextBox(Some("Sheep settings"), 28, 11, 168, 30, 11, 0.0, false)
     runSerializationTests(textBox, textBoxWidget, TextBoxReader)
   }
 
@@ -426,7 +441,7 @@ class WidgetTest extends FunSuite {
                      |0.0
                      |1""".stripMargin.split("\n").toList
     val escapedText = "Note, with\ttabs and\n\nnewlines and\nescaped newlines \"\\n\""
-    val textBoxWidget = TextBox(escapedText, 18, 95, 168, 151, 11, 0.0, true)
+    val textBoxWidget = TextBox(Some(escapedText), 18, 95, 168, 151, 11, 0.0, true)
     runSerializationTests(textBox, textBoxWidget, TextBoxReader)
   }
 
@@ -441,9 +456,8 @@ class WidgetTest extends FunSuite {
                       |1
                       |0
                       |Color""".stripMargin.split("\n").toList
-    object ibr extends InputBoxReader { type U = Int }
-    val inputBoxWidget = InputBox(119, 309, 274, 369, "fgcolor", NumericInput(123, NumericInput.ColorLabel))
-    runSerializationTests(inputBox, inputBoxWidget, ibr)
+    val inputBoxWidget = InputBox(Some("fgcolor"), 119, 309, 274, 369, NumericInput(123, NumericInput.ColorLabel))
+    runSerializationTests(inputBox, inputBoxWidget, InputBoxReader)
   }
 
   test("inputbox num") {
@@ -458,9 +472,8 @@ class WidgetTest extends FunSuite {
                       |0
                       |Number""".stripMargin.split("\n").toList
 
-    val ibr = new InputBoxReader() { type U = Double }
-    val inputBoxWidget = InputBox(31, 301, 112, 361, "step-size", NumericInput(1.0, NumericInput.NumberLabel))
-    runSerializationTests(inputBox, inputBoxWidget, ibr)
+    val inputBoxWidget = InputBox(Some("step-size"), 31, 301, 112, 361, NumericInput(1.0, NumericInput.NumberLabel))
+    runSerializationTests(inputBox, inputBoxWidget, InputBoxReader)
   }
 
   test("inputbox str") {
@@ -474,10 +487,8 @@ class WidgetTest extends FunSuite {
                       |1
                       |0
                       |String""".stripMargin.split("\n").toList
-
-    val ibr = new InputBoxReader() { type U = String }
-    val inputBoxWidget = InputBox(5, 330, 255, 390, "user-created-code", StringInput("AAAAA", StringInput.StringLabel, true))
-    runSerializationTests(inputBox, inputBoxWidget, ibr)
+    val inputBoxWidget = InputBox(Some("user-created-code"), 5, 330, 255, 390, StringInput("AAAAA", StringInput.StringLabel, false))
+    runSerializationTests(inputBox, inputBoxWidget, InputBoxReader)
   }
 
   test("inputbox str reporter") {
@@ -491,8 +502,19 @@ class WidgetTest extends FunSuite {
                       |1
                       |0
                       |String (reporter)""".stripMargin.split("\n").toList
-    val ibr = new InputBoxReader() { type U = String }
-    val inputBoxWidget = InputBox(245, 134, 470, 214, "my-equation", StringInput("0", StringInput.ReporterLabel, true))
-    runSerializationTests(inputBox, inputBoxWidget, ibr)
+    val inputBoxWidget = InputBox(Some("my-equation"), 245, 134, 470, 214, StringInput("0", StringInput.ReporterLabel, false))
+    runSerializationTests(inputBox, inputBoxWidget, InputBoxReader)
+  }
+
+  def runSerializationTests[W <: Widget](serializedLines: List[String], widget: W, reader: WidgetReader, extraAssertions: W => Unit = {w: W => })(implicit ev: reader.T =:= W) = {
+    assert(reader.validate(serializedLines))
+    val deserializedWidget =
+      reader.parse(serializedLines, literalParser)
+    assertResult(widget)(deserializedWidget)
+    extraAssertions(deserializedWidget)
+    val reserializedLines =
+      reader.format(deserializedWidget).split("\n").toList
+    assert(reader.validate(reserializedLines))
+    assert(widget == reader.parse(reserializedLines, literalParser))
   }
 }

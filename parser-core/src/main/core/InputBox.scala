@@ -61,7 +61,7 @@ case class StringInput(value: String, label: StringInput.StringKind, multiline: 
   def name = label.display
   def constraint = StringInputConstraintSpecification(name, value)
   def default = value
-  def asString = value.toString
+  def asString = StringEscaper.escapeString(Dump.logoObject(value.toString))
   def defaultString = value.toString
 }
 
@@ -81,12 +81,16 @@ sealed trait BoxedValue {
   def defaultString: String
 }
 
-case class InputBox(left: Int = 0, top: Int = 0, right: Int = 0, bottom: Int = 0,
-  varName: String, boxedValue: BoxedValue)
+case class InputBox(variable: Option[String],
+  left:  Int = 0, top:    Int = 0,
+  right: Int = 0, bottom: Int = 0,
+  boxedValue: BoxedValue = StringInput("", StringInput.StringLabel, false))
   extends Widget
   with DeclaresGlobal
   with DeclaresGlobalCommand
   with DeclaresConstraint {
+
+  override def varName = variable.getOrElse("")
 
   override def default = boxedValue match {
     case NumericInput(value, _) => value

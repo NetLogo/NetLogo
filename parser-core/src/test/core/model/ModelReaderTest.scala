@@ -9,7 +9,7 @@ import org.scalatest.FunSuite
 class ModelReaderTest extends FunSuite {
   test("writes and reads sliders without units") {
     import org.nlogo.core.Model
-    val slider = Slider(display = "xs", varName = "x")
+    val slider = Slider(display = Some("xs"), variable = Some("xs"))
     val model = Model(widgets = List(slider, View()))
     val parsedModel = ModelReader.parseModel(ModelReader.formatModel(model, null), null, Map())
     assertResult(model.widgets)(parsedModel.widgets)
