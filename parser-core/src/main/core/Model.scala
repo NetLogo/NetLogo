@@ -6,6 +6,12 @@ import Shape.{ VectorShape, LinkShape }
 
 import ShapeParser.{ parseVectorShapes, parseLinkShapes }
 
+trait ComponentProvider {
+  type Component
+  def getComponent: Component
+  def defaultComponent: Component
+}
+
 case class Model(code: String = "",
   widgets: List[Widget] = List(View()),
   info: String = "",
@@ -14,7 +20,8 @@ case class Model(code: String = "",
   behaviorSpace: List[String] = Nil,
   linkShapes: List[LinkShape] = Model.defaultLinkShapes,
   previewCommands: List[String] = Nil,
-  otherSections: Map[String, List[String]] = Map()) {
+  otherSections: Map[String, List[String]] = Map(),
+  optionalSections: Map[String, ComponentProvider] = Map()) {
 
   def interfaceGlobals: List[String] = widgets.collect{case x:DeclaresGlobal => x}.map(_.varName)
   def constraints: Map[String, ConstraintSpecification] = widgets.collect{case x:DeclaresConstraint => (x.varName, x.constraint)}.toMap
