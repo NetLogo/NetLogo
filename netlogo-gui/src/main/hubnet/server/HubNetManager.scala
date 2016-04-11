@@ -4,13 +4,18 @@ package org.nlogo.hubnet.server
 
 import org.nlogo.hubnet.connection.{HubNetException, ConnectionInterface}
 import org.nlogo.core.AgentKind
-import org.nlogo.api.HubNetInterface
+import org.nlogo.core.model.WidgetReader
+import org.nlogo.core.{ FileMode, ShapeParser }
+import org.nlogo.api.{ HubNetInterface, LocalFile, ModelReader, ModelSection }, HubNetInterface.ClientInterface
+import org.nlogo.fileformat
 import org.nlogo.hubnet.mirroring
 import org.nlogo.hubnet.mirroring.{HubNetLinkStamp, HubNetDrawingMessage, HubNetTurtleStamp, HubNetLine}
 import org.nlogo.hubnet.connection.MessageEnvelope._
 import org.nlogo.hubnet.connection.MessageEnvelope.MessageEnvelope
+import org.nlogo.hubnet.protocol.{ CalculatorInterface, ComputerInterface }
 import org.nlogo.workspace.AbstractWorkspaceScala
 import org.nlogo.agent.{Link, Turtle}
+import org.nlogo.util.Utils, Utils.reader2String
 
 import java.io.{ Serializable => JSerializable }
 import java.util.concurrent.LinkedBlockingQueue
@@ -143,7 +148,7 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetIn
 
   /// clients
   @throws(classOf[HubNetException])
-  def setClientInterface(interfaceType:String, interfaceInfo: Iterable[AnyRef]){
+  def setClientInterface(interfaceType:String, interfaceInfo: Iterable[ClientInterface]){
     connectionManager.setClientInterface(interfaceType, interfaceInfo)
     resetPlotManager()
   }
@@ -312,4 +317,24 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetIn
   // we could implement these to send messages on these events.
   def shapeChanged(shape:org.nlogo.core.Shape){}
   def applyNewFontSize(fontSize:Int, zoom:Int) {}
+
+  def calculatorInterface(activity: String,tags: Seq[String]): ClientInterface =
+    CalculatorInterface(activity, tags)
+
+  def fileInterface(path: String): ClientInterface = {
+    // Load the file
+    val file = new LocalFile(path)
+    file.open(FileMode.Read)
+    val fileContents = reader2String(file.reader)
+    // Parse the file
+    val parsedFile = ModelReader.parseModel(fileContents)
+    val version = parsedFile.get(ModelSection.Version)(0)
+    // Load the widget descriptions
+    val widgets = parsedFile.get(ModelSection.HubNetClient)
+    val coreWidgets = WidgetReader.readInterface(
+      widgets.toList, workspace, fileformat.hubNetReaders, conversion = workspace.autoConvert(version))
+    val turtleShapes = ShapeParser.parseVectorShapes(parsedFile.get(ModelSection.TurtleShapes))
+    val linkShapes = ShapeParser.parseLinkShapes(parsedFile.get(ModelSection.LinkShapes))
+    ComputerInterface(coreWidgets, turtleShapes, linkShapes)
+  }
 }

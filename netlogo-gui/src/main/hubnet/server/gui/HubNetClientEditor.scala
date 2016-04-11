@@ -6,7 +6,6 @@ import org.nlogo.api.ModelType
 import org.nlogo.core.I18N
 import org.nlogo.core.{ I18N, Widget => CoreWidget }
 import org.nlogo.core.model.WidgetReader
-import org.nlogo.fileformat
 import javax.swing.{JMenuBar, JScrollPane, JFrame, ScrollPaneConstants}
 import java.awt.{Dimension, BorderLayout, Component}
 import java.io.{IOException, StringReader, BufferedReader}

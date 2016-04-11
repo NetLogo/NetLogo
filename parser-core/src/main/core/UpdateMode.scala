@@ -2,7 +2,8 @@
 
 package org.nlogo.core
 
-sealed abstract class UpdateMode(val save: Int)
+sealed abstract class UpdateMode(val save: Int) extends Serializable
+
 object UpdateMode {
   case object Continuous extends UpdateMode(0)
   case object TickBased extends UpdateMode(1)

@@ -68,7 +68,7 @@ trait HubNetInterface extends ViewInterface {
 
   /// clients
   @throws(classOf[LogoException])
-  def setClientInterface(clientType: String, interfaceInfo:Iterable[AnyRef])
+  def setClientInterface(clientType: String, clientInterface: Iterable[HubNetInterface.ClientInterface])
   def newClient(isRobo: Boolean, waitTime: Int)
   def sendFromLocalClient(clientName:String, tag: String, content: AnyRef): Option[String]
   def isOverridable(agentType: AgentKind, varName: String): Boolean
@@ -117,4 +117,17 @@ trait HubNetInterface extends ViewInterface {
   def setPlotPenMode(clientId: String, plotPenMode: Int)
   def setHistogramNumBars(clientId: String, num: Int)
   def setPlotPenInterval(clientId: String, interval: Double)
+  def currentlyActiveInterface: HubNetInterface.ClientInterface
+  def calculatorInterface(activity: String, tags: Seq[String]): HubNetInterface.ClientInterface
+  def fileInterface(path: String): HubNetInterface.ClientInterface
+}
+
+object HubNetInterface {
+  import org.nlogo.core.{ LogoList, NamedWidget, Shape, Chooser => CoreChooser,
+    Monitor => CoreMonitor, View => CoreView, Widget => CoreWidget }
+
+  trait ClientInterface extends Serializable {
+    def containsViewWidget: Boolean
+    def containsWidgetTag(tag: String): Boolean
+  }
 }

@@ -4,9 +4,10 @@ package org.nlogo.hubnet.server.gui
 
 import org.nlogo.hubnet.connection.HubNetException
 import org.nlogo.hubnet.server.{HubNetManager, ClientEventListener, ConnectionManager}
-import org.nlogo.core.{ Femto, FileMode, Widget => CoreWidget }
+import org.nlogo.api.HubNetInterface.ClientInterface
+import org.nlogo.core.{ ComponentProvider, Femto, FileMode, Widget => CoreWidget }
+import org.nlogo.hubnet.protocol.ComputerInterface
 import org.nlogo.core.model.WidgetReader
-import org.nlogo.fileformat
 import org.nlogo.nvm.DefaultCompilerServices
 import org.nlogo.util.Utils, Utils.reader2String
 import org.nlogo.api._
@@ -21,7 +22,7 @@ class GUIHubNetManager(workspace: GUIWorkspace,
                        linkParent: Component,
                        editorFactory: EditorFactory,
                        ifactory: InterfaceFactory,
-                       menuFactory: MenuBarFactory) extends HubNetManager(workspace) with ViewInterface {
+                       menuFactory: MenuBarFactory) extends HubNetManager(workspace) with ComponentProvider with ViewInterface {
 
   private var _clientEditor: HubNetClientEditor = new HubNetClientEditor(workspace, linkParent, ifactory, menuFactory)
   // used in the discovery messages, and displayed in the control center.
@@ -56,13 +57,20 @@ class GUIHubNetManager(workspace: GUIWorkspace,
   }
 
   /// client editor
-  override def getClientInterface: Seq[CoreWidget] = _clientEditor.interfaceWidgets
+  override def modelWidgets: Seq[CoreWidget] = _clientEditor.interfaceWidgets
+
+  override def currentlyActiveInterface: ClientInterface =
+    ComputerInterface(_clientEditor.interfaceWidgets, workspace.world.turtleShapeList.shapes, workspace.world.linkShapeList.shapes)
+
   def clientEditor: AnyRef = _clientEditor
   def getInterfaceWidth = _clientEditor.interfacePanel.getPreferredSize.width
   def getInterfaceHeight = _clientEditor.interfacePanel.getPreferredSize.height
   def load(widgets: Seq[CoreWidget]) { _clientEditor.load(widgets) }
   def interfaceWidgets: Seq[CoreWidget] = _clientEditor.interfaceWidgets
 
+  type Component       = Seq[CoreWidget]
+  def getComponent     = _clientEditor.interfaceWidgets
+  def defaultComponent = Seq()
 
   @throws(classOf[java.io.IOException])
   def importClientInterface(filePath: String, client: Boolean) {

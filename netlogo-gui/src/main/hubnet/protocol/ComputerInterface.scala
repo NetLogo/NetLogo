@@ -2,26 +2,18 @@
 
 package org.nlogo.hubnet.protocol
 
+import org.nlogo.api.HubNetInterface.ClientInterface
 import org.nlogo.core.{ LogoList, NamedWidget, Shape, Chooser => CoreChooser,
   Monitor => CoreMonitor, View => CoreView, Widget => CoreWidget }
-import org.nlogo.api.CompilerServices
 
-/**
- * Holds the specification for the client-side interface.
- */
-@SerialVersionUID(0)
-case class ClientInterface(
-  // these are parsed and unparsed versions of the same strings.  ev 9/10/08
-  // why the heck to we do this? why not just parse them in here?
-  // why have a user parse them and pass in both? wtf? -JC 8/22/10
+@SerialVersionUID(1)
+case class ComputerInterface(
   widgets: Seq[CoreWidget],
   turtleShapes: Seq[Shape],
   linkShapes: Seq[Shape],
-  chooserChoices:collection.mutable.HashMap[String, LogoList] = collection.mutable.HashMap()) {
+  chooserChoices:collection.mutable.HashMap[String, LogoList] = collection.mutable.HashMap()) extends ClientInterface {
 
-  println("initializing client interface")
-  println(widgets)
-  /** Transient cache of valid tags */
+    /** Transient cache of valid tags */
   @transient private val clientWidgetTags: List[String] =
     if (widgets.isEmpty) Nil
     else
@@ -35,13 +27,12 @@ case class ClientInterface(
         case w: CoreWidget  => w.getClass.getSimpleName.toUpperCase
       }.toList
 
-  def containsWidget(tag: String) = clientWidgetTags.contains(tag)
+  def containsWidgetTag(tag: String) = clientWidgetTags.contains(tag)
 
   def containsViewWidget = widgets != null && widgets.exists(_.isInstanceOf[CoreView])
 
   override def toString =
     "ClientInterface(\n\t" + "TURTLE SHAPES = " + turtleShapes + "\n\t" +
-    "LINK SHAPES = " + linkShapes + "\n\t" +
-    "WIDGETS = " + widgets.mkString("\n") + ")"
-
+  "LINK SHAPES = " + linkShapes + "\n\t" +
+  "WIDGETS = " + widgets.mkString("\n") + ")"
 }

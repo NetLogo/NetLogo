@@ -6,9 +6,8 @@ import org.nlogo.hubnet.connection.HubNetException
 import org.nlogo.workspace.AbstractWorkspaceScala
 import org.nlogo.core.{ Widget => CoreWidget }
 import org.nlogo.core.model.WidgetReader
-import org.nlogo.fileformat
 import org.nlogo.api.ModelType
-import org.nlogo.hubnet.protocol.TestClient
+import org.nlogo.hubnet.protocol.{ ComputerInterface, TestClient }
 import collection.mutable.ListBuffer
 import java.util.concurrent.{Executors, ExecutorService}
 
@@ -25,7 +24,9 @@ class HeadlessHubNetManager(workspace: AbstractWorkspaceScala) extends HubNetMan
   // save should never be called.
   var widgets: Seq[CoreWidget] = Seq()
   def load(ws: Seq[CoreWidget]) { widgets = ws }
-  def getClientInterface: Seq[CoreWidget] = widgets
+  override def modelWidgets: Seq[CoreWidget] = widgets
+  override def currentlyActiveInterface =
+    ComputerInterface(widgets, workspace.world.turtleShapeList.shapes, workspace.world.linkShapeList.shapes)
   def interfaceWidgets = Seq()
 
   // should we be logging or doing something else here besides just println? JC - 12/28/10

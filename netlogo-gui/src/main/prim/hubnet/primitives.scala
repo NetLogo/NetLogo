@@ -159,9 +159,23 @@ class _hubnetsetclientinterface extends Command {
   def perform(context: Context) {
     val interfaceType = argEvalString(context, 0)
     val interfaceInfo = argEvalList(context, 1)
+    val clientInterface = interfaceType match {
+      case "COMPUTER" =>
+        workspace.getHubNetManager.fileInterface(interfaceInfo(0).asInstanceOf[String])
+      case "TI-83+"   =>
+        val activity = interfaceInfo(0).asInstanceOf[String]
+        val tags =
+          if (interfaceInfo.length > 1 && interfaceInfo(1).isInstanceOf[LogoList])
+            interfaceInfo(1).asInstanceOf[LogoList].toVector.collect {
+              case s: String => s
+            }.toSeq
+          else
+            Seq()
+        workspace.getHubNetManager.calculatorInterface(activity, tags)
+    }
     workspace.waitFor(new CommandRunnable {
       override def run() {
-        workspace.getHubNetManager.setClientInterface(interfaceType, interfaceInfo.toIterable)
+        workspace.getHubNetManager.setClientInterface(interfaceType, Seq(clientInterface))
       }
     })
     context.ip = next

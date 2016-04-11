@@ -11,7 +11,8 @@ import org.nlogo.hubnet.protocol._
 import org.nlogo.hubnet.mirroring.{AgentPerspective, ClearOverride, SendOverride, ServerWorld}
 import org.nlogo.agent.AgentSet
 import java.net.{BindException, ServerSocket}
-import org.nlogo.api.{WorldPropertiesInterface, ModelReader, PlotInterface}
+import org.nlogo.api.{WorldPropertiesInterface, PlotInterface}
+import org.nlogo.api.HubNetInterface.ClientInterface
 import org.nlogo.hubnet.connection.{Streamable, ConnectionTypes, Ports, HubNetException, ConnectionInterface}
 import collection.JavaConverters._
 
@@ -73,7 +74,7 @@ class ConnectionManager(val connection: ConnectionInterface,
   }
 
   private type ClientType = String
-  private val clientInterfaceMap = collection.mutable.HashMap[ClientType, Iterable[AnyRef]]()
+  private val clientInterfaceMap = collection.mutable.HashMap[ClientType, Iterable[ClientInterface]]()
   private def clientInterfaceSpec: ClientInterface = {
     clientInterfaceMap(ConnectionTypes.COMP_CONNECTION).head.asInstanceOf[ClientInterface]
   }
@@ -225,7 +226,7 @@ class ConnectionManager(val connection: ConnectionInterface,
     plotManager.initPlotListeners()
   }
 
-  def setClientInterface(interfaceType: ClientType, interfaceInfo: Iterable[AnyRef]) {
+  def setClientInterface(interfaceType: ClientType, interfaceInfo: Iterable[ClientInterface]) {
     // we set this when hubnet-reset is called now, instead
     // of forcing users to call hubnet-set-client-interface "COMPUTER" []
     // however, if they still want to call it, we should just update it here anyway.
@@ -239,9 +240,7 @@ class ConnectionManager(val connection: ConnectionInterface,
   }
 
   private def createClientInterfaceSpec: ClientInterface = {
-    val widgets = connection.getClientInterface
-    new ClientInterface(widgets,
-      world.turtleShapeList.shapes, world.linkShapeList.shapes)
+    new ComputerInterface(connection.modelWidgets, world.turtleShapeList.shapes, world.linkShapeList.shapes)
   }
 
   /**
@@ -254,13 +253,13 @@ class ConnectionManager(val connection: ConnectionInterface,
    * Called by ServerSideConnection.
    */
   def createHandshakeMessage(clientType:ClientType) = {
-    new HandshakeFromServer(workspace.modelNameForDisplay, clientInterfaceMap(clientType))
+    new HandshakeFromServer(workspace.modelNameForDisplay, clientInterfaceSpec)
   }
 
   def isSupportedClientType(clientType:String): Boolean =
     clientInterfaceMap.isDefinedAt(clientType)
 
-  def isValidTag(tag:String) = clientInterfaceSpec.containsWidget(tag)
+  def isValidTag(tag:String) = clientInterfaceSpec.containsWidgetTag(tag)
 
   @throws(classOf[HubNetException])
   def broadcast(tag:String, message:Any) = {

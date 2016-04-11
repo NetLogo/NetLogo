@@ -223,7 +223,10 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
     clientGUI = new ClientGUI(editorFactory, viewWidget, plotManager, compiler)
     add(clientGUI, java.awt.BorderLayout.CENTER)
     clientGUI.setStatus(userid, activityName, hostip, port)
-    val clientInterface = handshake.interfaceSpecList.head.asInstanceOf[ClientInterface]
+    val clientInterface = handshake.clientInterface match {
+      case c: ComputerInterface => c
+      case _                    => throw new IllegalStateException()
+    }
     val widgets = clientInterface.widgets
     new LoadHubNetInterfaceEvent(widgets).raise(this)
     // so that constrained widgets can initialize themselves -- CLB

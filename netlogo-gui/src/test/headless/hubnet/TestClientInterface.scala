@@ -2,16 +2,20 @@
 
 package org.nlogo.headless.hubnet
 
-import org.nlogo.api.{ FileIO, LocalFile, ModelSection, ModelReader}
+import org.nlogo.core.{ LiteralParser, Widget => CoreWidget }
+import org.nlogo.core.model.WidgetReader
+import org.nlogo.api.{ FileIO, ModelSection, ModelReader}
+import org.nlogo.fileformat
+import org.nlogo.hubnet.protocol.ComputerInterface
 import org.nlogo.headless.TestUsingWorkspace
-import org.nlogo.hubnet.protocol.ClientInterface
+
+import java.io.{ByteArrayInputStream, ObjectOutputStream, ByteArrayOutputStream}
+
 import org.nlogo.util.ClassLoaderObjectInputStream
 
 import TestUtils._
 
 import org.scalatest.FunSuite
-
-import java.io.{ByteArrayInputStream, ObjectOutputStream, ByteArrayOutputStream}
 
 class TestClientInterface extends TestUsingWorkspace {
 
@@ -33,25 +37,27 @@ class TestClientInterface extends TestUsingWorkspace {
     in.readObject().asInstanceOf[T]
   }
 
-  testUsingWorkspace("empty ClientInterface is serializable"){ workspace =>
-    val ci = new ClientInterface(Nil, Nil, Nil, Nil, workspace)
+  testUsingWorkspace("empty ComputerInterface is serializable"){ workspace =>
+    val ci = new ComputerInterface(Nil, Nil, Nil)
     assert(ci.toString === roundTripSerialization(ci).toString)
   }
 
-  testUsingWorkspace("legit ClientInterface is serialiazble"){ workspace =>
+  testUsingWorkspace("legit ComputerInterface is serializable"){ workspace =>
     import collection.JavaConverters._
     val model = "test/hubnet/client-interface.nlogo"
-    val unparsedWidgets = getClientWidgets(model)
-    val parsedWidgets = ModelReader.parseWidgets(unparsedWidgets)
-    val ci = new ClientInterface(parsedWidgets, unparsedWidgets.toList,
+    val parsedWidgets = getClientWidgets(model, workspace)
+    val ci = new ComputerInterface(parsedWidgets,
                                  workspace.world.turtleShapeList.shapes,
-                                 workspace.world.linkShapeList.shapes,
-                                 workspace)
+                                 workspace.world.linkShapeList.shapes)
     assert(ci.toString === roundTripSerialization(ci).toString)
   }
 
-  private def getClientWidgets(modelFilePath: String) = {
-    ModelReader.parseModel(FileIO.file2String(modelFilePath)).get(ModelSection.HubNetClient)
+  private def getClientWidgets(modelFilePath: String, workspace: LiteralParser): Seq[CoreWidget] = {
+    val widgetsString =
+      ModelReader.parseModel(
+        FileIO.file2String(modelFilePath)).get(ModelSection.HubNetClient)
+    WidgetReader.readInterface(
+      widgetsString.toList, workspace, fileformat.hubNetReaders, identity)
   }
 
   test("test roundTripSerialization method"){

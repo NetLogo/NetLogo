@@ -10,7 +10,7 @@ import org.nlogo.api.RandomServices
 import org.nlogo.api.Version
 import org.nlogo.api.VersionHistory
 import org.nlogo.plot.PlotManager
-import org.nlogo.window.Events.{ LoadWidgetsEvent, OutputEvent }
+import org.nlogo.window.Events.{ LoadHubNetInterfaceEvent, LoadWidgetsEvent, OutputEvent }
 import org.nlogo.fileformat
 import org.nlogo.util.SysInfo
 import org.nlogo.api.Exceptions
@@ -39,6 +39,7 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
   with WidgetContainer
   with FocusListener
   with LoadWidgetsEvent.Handler
+  with LoadHubNetInterfaceEvent.Handler
   with OutputEvent.Handler {
 
   // widget name -> Widget
@@ -276,6 +277,16 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
   }
 
   def handle(e: LoadWidgetsEvent): Unit = {
+    try {
+      setVisible(false)
+      e.widgets.foreach(loadWidget)
+    } finally {
+      setVisible(true)
+      revalidate()
+    }
+  }
+
+  def handle(e: LoadHubNetInterfaceEvent): Unit = {
     try {
       setVisible(false)
       e.widgets.foreach(loadWidget)

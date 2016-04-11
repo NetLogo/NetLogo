@@ -4,6 +4,7 @@ package org.nlogo.hubnet.protocol
 
 import java.net.Socket
 import org.nlogo.api.Version
+import org.nlogo.api.HubNetInterface.ClientInterface
 import java.io.{IOException, ObjectOutputStream}
 import org.nlogo.util.ClassLoaderObjectInputStream
 import java.util.concurrent.{Executors, ExecutorService, TimeUnit, LinkedBlockingQueue}
@@ -46,7 +47,7 @@ case class TestClient(userId: String, clientType: String="COMPUTER", ip:String="
 
   // attempts the handshake and explodes if it fails
   // called from the constructor.
-  private def handshake(): (String, Iterable[AnyRef]) = {
+  private def handshake(): (String, ClientInterface) = {
     def sendAndReceive(a: AnyRef): AnyRef = {
       rawSend(a)
       in.readObject()
@@ -58,11 +59,11 @@ case class TestClient(userId: String, clientType: String="COMPUTER", ip:String="
         case h: HandshakeFromServer =>
           send(EnterMessage)
           executor.submit(new Receiver())
-          (h.activityName, h.interfaceSpecList)
+          (h.activityName, h.clientInterface)
         case r => throw new IllegalStateException(userId + " handshake failed. response:" + r)
       }
       result
-    }catch {
+    } catch {
       case e:Exception => throw new IllegalStateException("dead client: " + userId)
     }
   }
