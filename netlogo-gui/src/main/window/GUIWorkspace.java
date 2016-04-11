@@ -46,6 +46,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     org.nlogo.window.Events.ExportPlotEvent.Handler,
     org.nlogo.window.Events.JobStoppingEvent.Handler,
     org.nlogo.window.Events.LoadSectionEvent.Handler,
+    org.nlogo.window.Events.LoadHubNetInterfaceEvent.Handler,
     org.nlogo.window.Events.RemoveAllJobsEvent.Handler,
     org.nlogo.window.Events.RemoveJobEvent.Handler,
     org.nlogo.window.Events.AddSliderConstraintEvent.Handler,
@@ -1310,11 +1311,6 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     if (e.section == ModelSectionJ.PREVIEW_COMMANDS()) {
       previewCommands_$eq(PreviewCommands$.MODULE$.apply(e.text));
     }
-    if (e.section == ModelSectionJ.CLIENT() &&
-        e.lines.length > 0 &&
-        !isApplet()) {
-      getHubNetManager().load(e.lines, e.version);
-    }
     if (e.section == ModelSectionJ.SHAPES()) {
       ArrayList<org.nlogo.core.Shape> shapes = new ArrayList<org.nlogo.core.Shape>();
       scala.collection.Iterator<? extends org.nlogo.core.Shape.VectorShape> shapeIterator = ShapeParser.parseVectorShapes(e.lines).iterator();
@@ -1331,6 +1327,10 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       }
       world().linkShapeList().replaceShapes(shapes);
     }
+  }
+
+  public void handle(org.nlogo.window.Events.LoadHubNetInterfaceEvent e) {
+    getHubNetManager().load(e.widgets);
   }
 
   public void snapOn(boolean snapOn) {

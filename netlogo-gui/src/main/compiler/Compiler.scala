@@ -89,9 +89,9 @@ class Compiler(dialect: Dialect) extends CompilerInterface {
       frontEnd.frontEnd(source, None, program, subprogram, oldProceduresListMap, extensionManager)
   }
 
-  def autoConvert(source: String, subprogram: Boolean, reporter: Boolean, version: String, w: AnyRef, ignoreErrors: Boolean): String = {
+  def autoConvert(source: String, version: String): String = {
     // AutoConverter1 handles simple textual conversions
-    new AutoConverter1()(parserTokenizer).convert(source, subprogram, reporter, version)
+    new AutoConverter1()(parserTokenizer).convert(source, version)
   }
 
   /// TODO: remove all direct dependencies on world by having below methods take an ImportHandler

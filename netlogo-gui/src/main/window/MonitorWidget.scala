@@ -32,13 +32,13 @@ object MonitorWidget {
     def name: String
 
     override def model: CoreMonitor = {
-      val b = getBoundsTuple
-      val display = if (null != name && name.trim != "") Some(name) else None
-      val src = if (null != innerSource && innerSource.trim != "") Some(innerSource) else None
+      val b       = getBoundsTuple
+      val display = name.potentiallyEmptyStringToOption
+      val src     = innerSource.potentiallyEmptyStringToOption
 
       CoreMonitor(display = display,
         left = b._1, top = b._2, right = b._3, bottom = b._4,
-        source = src, precision = decimalPlaces,
+        source   = src, precision = decimalPlaces,
         fontSize = fontSize)
     }
   }
@@ -60,7 +60,7 @@ class MonitorWidget(random: MersenneTwisterFast)
   private var jobRunning: Boolean = false
   private var hasError: Boolean = false
   private var _name: String = ""
-  private var _value: AnyRef = null
+  private var _value: Option[AnyRef] = Option.empty[AnyRef]
   private var valueString: String = ""
   private var _decimalPlaces: Int = DefaultDecimalPlaces
 
@@ -124,7 +124,7 @@ class MonitorWidget(random: MersenneTwisterFast)
     false
 
   override def procedure_=(procedure: Procedure): Unit = {
-    super.procedure_=(procedure)
+    super.procedure = procedure
     setForeground(if (procedure == null) AwtColor.RED else null)
     halt()
     if (procedure != null) {
@@ -135,10 +135,10 @@ class MonitorWidget(random: MersenneTwisterFast)
     repaint()
   }
 
-  def value: AnyRef = _value
+  def value: AnyRef = _value.orNull
 
   def value(value: AnyRef): Unit = {
-    this._value = value;
+    this._value = Option(value);
     val newString = Dump.logoObject(value)
     if (newString != valueString) {
       valueString = newString
@@ -150,7 +150,7 @@ class MonitorWidget(random: MersenneTwisterFast)
     Properties.monitor
 
   def chooseDisplayName(): Unit =
-    if (name == null || name.equals(""))
+    if (name == null || name == "")
       displayName(getSourceName)
     else
       displayName(name)
@@ -227,7 +227,7 @@ class MonitorWidget(random: MersenneTwisterFast)
   }
 
   override def innerSource_=(innerSource: String): Unit = {
-    super.innerSource_=(innerSource)
+    super.innerSource = innerSource
     chooseDisplayName()
   }
 

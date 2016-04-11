@@ -7,7 +7,7 @@ import javax.swing.{ JPopupMenu, BorderFactory, JLabel }
 
 import org.nlogo.api.{ Approximate, Dump, Version }
 import org.nlogo.awt.{ Fonts => NlogoFonts }
-import org.nlogo.core.{ I18N, View => CoreView }
+import org.nlogo.core.{ View => CoreView }
 import org.nlogo.window.Events.{ PeriodicUpdateEvent, LoadBeginEvent, LoadEndEvent, ResizeViewEvent }
 import org.nlogo.window.MouseMode._
 
@@ -293,7 +293,7 @@ class ViewWidget(workspace: GUIWorkspace)
 
   def tickCounterLabel: String = _tickCounterLabel
 
-  private class TickCounterLabel extends javax.swing.JLabel {
+  private class TickCounterLabel extends JLabel {
     override def getPreferredSize: Dimension = getMinimumSize
 
     override def getMinimumSize: Dimension = {

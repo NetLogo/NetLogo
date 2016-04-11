@@ -5,6 +5,7 @@ package org.nlogo.headless
 import org.nlogo.agent.{BooleanConstraint, ChooserConstraint, InputBoxConstraint, NumericConstraint, SliderConstraint}
 import org.nlogo.api.{ FileIO, LogoException, ModelReader, ModelSection,
                         NetLogoLegacyDialect, NetLogoThreeDDialect, SourceOwner, ValueConstraint, Version}
+import org.nlogo.fileformat
 import org.nlogo.core.ShapeParser.{ parseVectorShapes, parseLinkShapes }
 import org.nlogo.core.{ Button, CompilerException, ConstraintSpecification, LogoList, Model, Monitor, Program, model => coremodel },
   coremodel.WidgetReader
@@ -70,8 +71,9 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     // parse turtle and link shapes, updating the workspace.
     attachWorldShapes(model.turtleShapes, model.linkShapes)
 
-    model.otherSections.get("org.nlogo.hubnet.client").foreach { lines =>
-      ws.getHubNetManager.load(lines.toArray, model.version)
+    model.otherSections.get("org.nlogo.modelsection.hubnetclient").foreach { lines =>
+      val hnWidgets = WidgetReader.readInterface(lines, ws, fileformat.hubNetReaders, ws.autoConvert(model.version))
+      ws.getHubNetManager.load(hnWidgets)
     }
 
     ws.init()

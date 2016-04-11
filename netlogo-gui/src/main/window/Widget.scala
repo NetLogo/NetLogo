@@ -2,14 +2,14 @@
 
 package org.nlogo.window
 
-import java.awt.{List=>AWTList, _}
-import event.{MouseAdapter, MouseEvent, MouseListener}
+import java.awt.{ Component, Container, Dimension, Font, Graphics, Graphics2D, List=>AWTList, Point, Rectangle, event },
+  event.{MouseAdapter, MouseEvent, MouseListener}
 import javax.swing.border.Border
-import org.nlogo.window.Events.{WidgetRemovedEvent, WidgetEditedEvent, WidgetAddedEvent}
-import org.nlogo.core.{ Widget => CoreWidget }
-import org.nlogo.api.{MultiErrorHandler, SingleErrorHandler, ModelSections},
-  ModelSections.Saveable
 import javax.swing.{JPanel, JMenuItem, JPopupMenu}
+
+import org.nlogo.api.{ MultiErrorHandler, SingleErrorHandler }
+import org.nlogo.core.{ Widget => CoreWidget }
+import org.nlogo.window.Events.{ WidgetRemovedEvent, WidgetEditedEvent, WidgetAddedEvent }
 
 object Widget {
   trait LoadHelper {

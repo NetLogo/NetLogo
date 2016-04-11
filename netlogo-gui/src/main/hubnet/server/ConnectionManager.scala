@@ -239,12 +239,9 @@ class ConnectionManager(val connection: ConnectionInterface,
   }
 
   private def createClientInterfaceSpec: ClientInterface = {
-    val widgetDescriptions = connection.getClientInterface
-    val widgets = ModelReader.parseWidgets(widgetDescriptions.toArray)
-    val clientInterfaceSpec = new ClientInterface(widgets, widgetDescriptions.toList,
-      world.turtleShapeList.shapes,
-      world.linkShapeList.shapes, workspace)
-    clientInterfaceSpec
+    val widgets = connection.getClientInterface
+    new ClientInterface(widgets,
+      world.turtleShapeList.shapes, world.linkShapeList.shapes)
   }
 
   /**

@@ -16,7 +16,7 @@ class AutoConverter1Tests extends FunSuite {
   def test(version:String,before:String,after:String,subprogram:Boolean) {
     assertResult(after) {
       new AutoConverter1()(Femto.scalaSingleton[TokenizerInterface]("org.nlogo.lex.Tokenizer"))
-        .convert(before, subprogram, false,"NetLogo " + version)
+        .convert(before, "NetLogo " + version)
     }
   }
   test("stamp1") { test("1.0", "stamp red", "set pcolor red") }

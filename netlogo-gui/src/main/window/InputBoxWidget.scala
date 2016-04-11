@@ -26,9 +26,9 @@ class InputBoxWidget(textArea: AbstractEditorArea, dialogTextArea: AbstractEdito
   }
 
   override def valueObject(value: Any, raiseEvent: Boolean) {
-    if (this.value != value) {
+    if (! this.value.contains(toAnyRef(value))) {
       text = Dump.logoObject(toAnyRef(value))
-      this.value = toAnyRef(value)
+      this.value = Option(toAnyRef(value))
       if (!text.equals(textArea.getText())) textArea.setText(text)
       if (raiseEvent) new org.nlogo.window.Events.InterfaceGlobalEvent(this, false, false, true, false).raise(this)
       inputType.colorPanel(colorSwatch)

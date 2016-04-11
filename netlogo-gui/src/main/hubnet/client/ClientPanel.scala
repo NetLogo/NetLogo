@@ -7,7 +7,7 @@ import javax.swing.JPanel
 import org.nlogo.agent.{AbstractExporter, ConstantSliderConstraint}
 import org.nlogo.plot.{PlotExporter, Plot, PlotManager}
 import java.io.{IOException, PrintWriter}
-import org.nlogo.window.Events.{AfterLoadEvent, LoadSectionEvent}
+import org.nlogo.window.Events.{AfterLoadEvent, LoadHubNetInterfaceEvent}
 import org.nlogo.swing.OptionDialog
 import org.nlogo.hubnet.mirroring.{OverrideList, HubNetLinkStamp, HubNetPlotPoint, HubNetLine, HubNetTurtleStamp}
 import java.net.{Socket, ConnectException, UnknownHostException, NoRouteToHostException}
@@ -224,8 +224,8 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
     add(clientGUI, java.awt.BorderLayout.CENTER)
     clientGUI.setStatus(userid, activityName, hostip, port)
     val clientInterface = handshake.interfaceSpecList.head.asInstanceOf[ClientInterface]
-    val widgets = clientInterface.widgetDescriptions
-    new LoadSectionEvent("HubNet", ModelSection.Interface, widgets.toArray, widgets.mkString("\n")).raise(this)
+    val widgets = clientInterface.widgets
+    new LoadHubNetInterfaceEvent(widgets).raise(this)
     // so that constrained widgets can initialize themselves -- CLB
     new AfterLoadEvent().raise(this)
     clientGUI.setChoices(clientInterface.chooserChoices.toMap)

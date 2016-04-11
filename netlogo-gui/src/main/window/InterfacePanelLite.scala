@@ -5,7 +5,6 @@ package org.nlogo.window;
 import org.nlogo.core.{ Widget => CoreWidget, View => CoreView }
 import org.nlogo.core.model.WidgetReader
 import org.nlogo.api.CompilerServices
-import org.nlogo.api.ModelReader
 import org.nlogo.api.ModelSection
 import org.nlogo.api.RandomServices
 import org.nlogo.api.Version

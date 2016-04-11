@@ -35,12 +35,12 @@ class LabManager(val workspace: GUIWorkspace,
     def autoConvert(protocol:Protocol):Protocol = {
       import protocol._
       new Protocol(name,
-                   workspace.autoConvert(setupCommands, true, false, e.version),
-                   workspace.autoConvert(goCommands, true, false, e.version),
-                   workspace.autoConvert(finalCommands, true, false, e.version),
+                   workspace.autoConvert(e.version)(setupCommands),
+                   workspace.autoConvert(e.version)(goCommands),
+                   workspace.autoConvert(e.version)(finalCommands),
                    repetitions, runMetricsEveryStep, timeLimit,
-                   workspace.autoConvert(exitCondition, true, true, e.version),
-                   metrics.map(workspace.autoConvert(_, true, true, e.version)),
+                   workspace.autoConvert(e.version)(exitCondition),
+                   metrics.map(workspace.autoConvert(e.version)),
                    valueSets)
     }
     if(e.section == ModelSection.BehaviorSpace && !e.text.trim.isEmpty)

@@ -754,13 +754,13 @@ private class SaveModelingCommonsAction extends FileMenuAction {
       if (firstLoad) {
         firstLoad = false;
         // app frame isn't even showing yet, so no need for ModalProgressTask
-        org.nlogo.window.ModelLoader.load(this, path, modelType, map);
+        org.nlogo.window.ModelLoader.load(this, path, modelType, map, app.workspace());
       } else {
         Runnable loader = new Runnable() {
           public void run() {
             try {
               org.nlogo.window.ModelLoader.load
-                  (FileMenu.this, path, modelType, map);
+                  (FileMenu.this, path, modelType, map, app.workspace());
             } catch (org.nlogo.window.InvalidVersionException e) {
               // we've already checked the version
               // so I don't expect this ever to happen

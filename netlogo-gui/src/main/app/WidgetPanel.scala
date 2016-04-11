@@ -2,62 +2,29 @@
 
 package org.nlogo.app
 
-import org.nlogo.api.Editable
-import org.nlogo.api.ModelReader
-import org.nlogo.api.Version
+import org.nlogo.api.{ Editable, Version }
+import org.nlogo.window.{ AbstractWidgetPanel, ButtonWidget, CodeEditor,
+  DummyButtonWidget, DummyChooserWidget, DummyInputBoxWidget, DummyMonitorWidget,
+  DummyPlotWidget, DummySliderWidget, DummyViewWidget, EditorColorizer,
+  GUIWorkspace, OutputWidget, PlotWidget, Widget, WidgetContainer, WidgetRegistry }
+import org.nlogo.window.Events.{ DirtyEvent,
+  EditWidgetEvent, WidgetEditedEvent, WidgetRemovedEvent, LoadBeginEvent, ZoomedEvent }
 import org.nlogo.core.{ I18N, Widget => CoreWidget,
   Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox,
   Monitor => CoreMonitor, Plot => CorePlot, Slider => CoreSlider,
   Switch => CoreSwitch, TextBox => CoreTextBox, View => CoreView }
 import org.nlogo.core.model.WidgetReader
 import org.nlogo.fileformat
-import org.nlogo.window.DummyPlotWidget
-import org.nlogo.window.PlotWidget
-import org.nlogo.window.EditorColorizer
-import org.nlogo.window.GUIWorkspace
-import org.nlogo.window.Widget
-import org.nlogo.window.ButtonWidget
-import org.nlogo.window.OutputWidget
-import org.nlogo.awt.{ Mouse => NlogoMouse }
-import org.nlogo.awt.{ Fonts => NlogoFonts }
-
-import java.util.ArrayList
-import java.util.Iterator
-import java.util.List
-import org.nlogo.log.Logger
+import org.nlogo.awt.{ Mouse => NlogoMouse, Fonts => NlogoFonts }
 import org.nlogo.nvm.DefaultCompilerServices
-import org.nlogo.window.AbstractWidgetPanel
-import org.nlogo.window.CodeEditor
-import org.nlogo.window.DummyButtonWidget
-import org.nlogo.window.DummyInputBoxWidget
-import org.nlogo.window.DummyMonitorWidget
-import org.nlogo.window.DummySliderWidget
-import org.nlogo.window.DummyChooserWidget
-import org.nlogo.window.DummyViewWidget
-import org.nlogo.window.Widget
-import org.nlogo.window.WidgetContainer
-import org.nlogo.window.WidgetRegistry
-import java.awt.event.ActionListener
-import java.awt.event.ActionEvent
-import java.awt.event.MouseListener
-import java.awt.event.MouseMotionListener
-import java.awt.event.FocusListener
-import java.awt.event.FocusEvent
-import org.nlogo.window.Events.{ DirtyEvent, EditWidgetEvent, WidgetEditedEvent, WidgetRemovedEvent, LoadBeginEvent, ZoomedEvent }
-import javax.swing.JComponent
-import javax.swing.JMenuItem
-import javax.swing.JPopupMenu
+
+import org.nlogo.log.Logger
+import java.awt.event.{ ActionListener, ActionEvent,
+  MouseListener, MouseMotionListener, FocusListener, FocusEvent }
+import javax.swing.{ JComponent, JMenuItem, JPopupMenu }
 import javax.swing.JLayeredPane.DRAG_LAYER
-import java.awt.{ Color => AwtColor }
 import java.awt.event.MouseEvent
-import java.awt.Component
-import java.awt.Cursor
-import java.awt.Dimension
-import java.awt.Font
-import java.awt.Rectangle
-import java.awt.Point
-import java.awt.Graphics
-import java.util.{ List => JList }
+import java.awt.{ Color => AwtColor, Component, Cursor, Dimension, Rectangle, Point, Graphics }
 
 import scala.collection.JavaConverters._
 
@@ -97,18 +64,18 @@ class WidgetPanel(val workspace: GUIWorkspace)
   protected var startDragPoint: Point = null // convert to Option?
   protected var newWidget: WidgetWrapper = null // convert to Option?
   protected var glassPane: JComponent =
-      new JComponent() {
-        override def paintComponent(g: Graphics): Unit = {
-          if (selectionRect != null) {
-            g.setColor(AwtColor.WHITE)
-            g.drawRect(selectionRect.x, selectionRect.y,
-                selectionRect.width - 1, selectionRect.height - 1)
-            g.setColor(new AwtColor(180, 180, 180, 120))
-            g.fillRect(selectionRect.x, selectionRect.y,
-                selectionRect.width - 1, selectionRect.height - 1)
-          }
+    new JComponent() {
+      override def paintComponent(g: Graphics): Unit = {
+        if (selectionRect != null) {
+          g.setColor(AwtColor.WHITE)
+          g.drawRect(selectionRect.x, selectionRect.y,
+            selectionRect.width - 1, selectionRect.height - 1)
+          g.setColor(new AwtColor(180, 180, 180, 120))
+          g.fillRect(selectionRect.x, selectionRect.y,
+            selectionRect.width - 1, selectionRect.height - 1)
         }
       }
+    }
 
   setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR))
   setOpaque(true)
@@ -133,23 +100,13 @@ class WidgetPanel(val workspace: GUIWorkspace)
   }
 
   def focusLost(e: FocusEvent): Unit = {
-    _hasFocus = false;
+    _hasFocus = false
   }
 
   override def getMinimumSize: Dimension =
     new java.awt.Dimension(0, 0)
 
-  override def getPreferredSize: Dimension =
-    getPreferredSize(false)
-
-  override def empty: Boolean =
-    getComponents.exists {
-      case w: WidgetWrapper => true
-      case _ => false
-    }
-
-  // TODO: Remove `savingAsApplet` parameter - that's no longer useful
-  def getPreferredSize(savingAsApplet: Boolean): Dimension = {
+  override def getPreferredSize: Dimension = {
     var maxX = 0
     var maxY = 0
     for { component <- getComponents if component ne glassPane } {
@@ -157,8 +114,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
       val size = component.getSize
       var x = location.x + size.width
       var y = location.y + size.height
-      if (!savingAsApplet &&
-        component.isInstanceOf[WidgetWrapper] &&
+      if (component.isInstanceOf[WidgetWrapper] &&
         ! component.asInstanceOf[WidgetWrapper].selected) {
         x += WidgetWrapper.BORDER_E
         y += WidgetWrapper.BORDER_S
@@ -168,14 +124,18 @@ class WidgetPanel(val workspace: GUIWorkspace)
       if (y > maxY)
         maxY = y
     }
-    if (!savingAsApplet) {
-      // allow for the intrusion of the window grow box into the
-      // lower right corner
-      maxX += 8
-      maxY += 8
-    }
+    // allow for the intrusion of the window grow box into the
+    // lower right corner
+    maxX += 8
+    maxY += 8
     new Dimension(maxX, maxY)
   }
+
+  override def empty: Boolean =
+    getComponents.exists {
+      case w: WidgetWrapper => true
+      case _ => false
+    }
 
   ///
 
@@ -203,17 +163,18 @@ class WidgetPanel(val workspace: GUIWorkspace)
   protected def aboutToDragSelectedWidgets(startPressX: Int, startPressY: Int): Unit = {
     widgetsBeingDragged = selectedWrappers
     widgetsBeingDragged.foreach { w =>
-      // TODO: Better encapsulate this interaction, if possible
-      w.startPressX = startPressX
-      w.startPressY = startPressY
-      w.aboutToDrag()
+      w.aboutToDrag(startPressX, startPressY)
     }
   }
 
   protected def dragSelectedWidgets(x: Int, y: Int): Unit = {
-    val p = new Point(x, y)
-    widgetsBeingDragged.foreach { w => restrictDrag(p, w) }
-    widgetsBeingDragged.foreach { w => w.doDrag(p.x, p.y) }
+    if (widgetsBeingDragged.nonEmpty) {
+      val p = new Point(x, y)
+      val restrictedPoint = widgetsBeingDragged.foldLeft(p) {
+        case (p, w) => restrictDrag(p, w)
+      }
+      widgetsBeingDragged.foreach { w => w.doDrag(restrictedPoint.x, restrictedPoint.y) }
+    }
   }
 
   protected def restrictDrag(p: Point, w: WidgetWrapper): Point = {
@@ -222,7 +183,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     val wb = w.originalBounds
     val b = getBounds()
     val newWb = new Rectangle(wb.x + x, wb.y + y, wb.width, wb.height)
-    if (workspace.snapOn && !this.isZoomed) {
+    if (workspace.snapOn && ! isZoomed) {
       val xGridSnap = newWb.x - (newWb.x / GridSnap) * GridSnap
       val yGridSnap = newWb.y - (newWb.y / GridSnap) * GridSnap
       x -= xGridSnap
@@ -271,7 +232,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
           glassPane.setBounds(0, 0, getWidth(), getHeight())
           glassPane.setVisible(true)
         }
-        scrollRectToVisible(new Rectangle(e.getX - 20, e.getY - 20, 40, 40));
+        scrollRectToVisible(new Rectangle(e.getX - 20, e.getY - 20, 40, 40))
         val oldSelectionRect = selectionRect
         val x = StrictMath.min(getWidth, StrictMath.max(e.getX, 0))
         val y = StrictMath.min(getHeight, StrictMath.max(e.getY, 0))
@@ -327,19 +288,19 @@ class WidgetPanel(val workspace: GUIWorkspace)
   // that seems like bugs waiting to happen. JC - 12/20/10
   protected def doPopup(e: MouseEvent): Unit = {
     val menu = new JPopupMenu()
-    def menuItem(i18nKey: String, widget: CoreWidget): WidgetCreationMenuItem = {
-      new WidgetCreationMenuItem(I18N.gui.get(i18nKey), widget, e.getX, e.getY)
+    def menuItem(keyName: String, widget: CoreWidget): WidgetCreationMenuItem = {
+      new WidgetCreationMenuItem(I18N.gui.get(s"tabs.run.widgets.$keyName"), widget, e.getX, e.getY)
     }
-    val plot = menuItem("tabs.run.widgets.plot", CorePlot(None))
+    val plot = menuItem("plot", CorePlot(None))
     val menuItems = Seq(
-      menuItem("tabs.run.widgets.button", CoreButton(None, 0, 0, 0, 0)),
-      menuItem("tabs.run.widgets.slider", CoreSlider(None)),
-      menuItem("tabs.run.widgets.switch", CoreSwitch(None)),
-      menuItem("tabs.run.widgets.chooser", CoreChooser(None)),
-      menuItem("tabs.run.widgets.input", CoreInputBox(None)),
-      menuItem("tabs.run.widgets.monitor", CoreMonitor(None, 0, 0, 0, 0, None, 10)),
+      menuItem("button", CoreButton(None, 0, 0, 0, 0)),
+      menuItem("slider", CoreSlider(None)),
+      menuItem("switch", CoreSwitch(None)),
+      menuItem("chooser", CoreChooser(None)),
+      menuItem("input", CoreInputBox(None)),
+      menuItem("monitor", CoreMonitor(None, 0, 0, 0, 0, None, 10)),
       plot,
-      menuItem("tabs.run.widgets.note", CoreTextBox(None, fontSize = 11, color = 0)))
+      menuItem("note", CoreTextBox(None, fontSize = 11, color = 0)))
     menuItems.foreach(menu.add)
 
     // if there are no plots in this model, then you can't have a plot in a hubnet client.
@@ -350,12 +311,12 @@ class WidgetPanel(val workspace: GUIWorkspace)
   }
 
   protected class WidgetCreationMenuItem(displayName: String, coreWidget: CoreWidget, x: Int, y: Int)
-  extends JMenuItem(displayName) {
-    addActionListener(new ActionListener() {
-      override def actionPerformed(e: ActionEvent): Unit = {
-        createWidget(coreWidget, x, y)
-      }
-    })
+    extends JMenuItem(displayName) with ActionListener {
+    addActionListener(this)
+
+    override def actionPerformed(e: ActionEvent): Unit = {
+      createWidget(coreWidget, x, y)
+    }
   }
 
   def createWidget(coreWidget: CoreWidget, x: Int, y: Int): Unit = {
@@ -379,27 +340,28 @@ class WidgetPanel(val workspace: GUIWorkspace)
     val fromRegistry = WidgetRegistry(widgetType)
     if (fromRegistry != null)
       fromRegistry
-    widget match {
-      case v: CoreView => new DummyViewWidget(workspace.world)
-      case c: CoreChooser => new DummyChooserWidget(new DefaultCompilerServices(workspace.compiler))
-      case p: CorePlot =>
-        // note that plots on the HubNet client must have the name of a plot
-        // on the server, thus, feed the dummy plot widget the names of
-        // the current plots so the user can select one. We override
-        // this method in InterfacePanel since regular plots are handled
-        // differently ev 1/25/07
-        val names = workspace.plotManager.getPlotNames;
-        DummyPlotWidget(names.headOption.getOrElse("plot 1"), workspace.plotManager)
-      case i: CoreInputBox =>
-        val font = new Font(NlogoFonts.platformMonospacedFont, Font.PLAIN, 12)
-        new DummyInputBoxWidget(
-          new CodeEditor(1, 20, font, false, null, new EditorColorizer(workspace), I18N.guiJ.fn),
-          new CodeEditor(5, 20, font, true, null, new EditorColorizer(workspace), I18N.guiJ.fn),
-          this,
-          new DefaultCompilerServices(workspace.compiler))
-      case _ =>
-        throw new IllegalStateException("unknown widget type: " + widget.getClass)
-    }
+    else
+      widget match {
+        case v: CoreView    => new DummyViewWidget(workspace.world)
+        case c: CoreChooser => new DummyChooserWidget(new DefaultCompilerServices(workspace.compiler))
+        case p: CorePlot    =>
+          // note that plots on the HubNet client must have the name of a plot
+          // on the server, thus, feed the dummy plot widget the names of
+          // the current plots so the user can select one. We override
+          // this method in InterfacePanel since regular plots are handled
+          // differently ev 1/25/07
+          val names = workspace.plotManager.getPlotNames
+          DummyPlotWidget(names.headOption.getOrElse("plot 1"), workspace.plotManager)
+        case i: CoreInputBox =>
+          val font = NlogoFonts.monospacedFont
+          new DummyInputBoxWidget(
+            new CodeEditor(1, 20, font, false, null, new EditorColorizer(workspace), I18N.guiJ.fn),
+            new CodeEditor(5, 20, font, true, null, new EditorColorizer(workspace), I18N.guiJ.fn),
+            this,
+            new DefaultCompilerServices(workspace.compiler))
+        case _ =>
+          throw new IllegalStateException("unknown widget type: " + widget.getClass)
+      }
   }
 
   def mouseReleased(e: MouseEvent): Unit =
@@ -470,7 +432,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     if (workspace.snapOn && ! loadingWidget) {
       val gridX = (x / GridSnap) * GridSnap
       val gridY = (y / GridSnap) * GridSnap
-      wrapper.setLocation(gridX, gridY);
+      wrapper.setLocation(gridX, gridY)
     } else {
       wrapper.setLocation(x, y)
     }
@@ -534,13 +496,13 @@ class WidgetPanel(val workspace: GUIWorkspace)
   }
 
   def sliderEventOnReleaseOnly(sliderEventOnReleaseOnly: Boolean): Unit = {
-    this.sliderEventOnReleaseOnly = sliderEventOnReleaseOnly;
+    this.sliderEventOnReleaseOnly = sliderEventOnReleaseOnly
   }
 
   override def handle(e: ZoomedEvent): Unit = {
     super.handle(e)
     unselectWidgets()
-    zoomer.zoomWidgets(zoomFactor);
+    zoomer.zoomWidgets(zoomFactor)
     revalidate()
   }
 
@@ -590,18 +552,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   override def loadWidgets(widgets: Seq[CoreWidget]): Unit = {
     try {
-      // val additionalReaders = fileformat.nlogoReaders(Version.is3D(version))
-      // val v = ModelReader.parseWidgets(lines)
-      /*
-    val helper: Widget.LoadHelper =
-      new Widget.LoadHelper() {
-        def version: String = modelVersion
-
-        def convert(source: String, reporter: Boolean): String = {
-          workspace.autoConvert(source, true, reporter, modelVersion)
-        }
-      }
-    */
       if (widgets.nonEmpty) {
         setVisible(false)
         widgets.foreach(loadWidget)
@@ -619,7 +569,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   override def removeAllWidgets(): Unit = {
     val comps = getComponents
-    setVisible(false);
+    setVisible(false)
     comps.foreach {
       case w: WidgetWrapper => removeWidget(w)
       case _ =>
@@ -697,20 +647,18 @@ class WidgetPanel(val workspace: GUIWorkspace)
     getWrapper(widget).widgetResized()
   }
 
-  def isZoomed: Boolean = {
-    return zoomer.zoomFactor != 1.0;
-  }
+  def isZoomed: Boolean =
+    zoomer.zoomFactor != 1.0
 
   def canAddWidget(widget: String): Boolean = {
-    if (widget.equals(I18N.gui.get("tabs.run.widgets.view"))) {
-      ! hasView;
-    } else if (widget.equals(I18N.gui.get("tabs.run.widgets.plot"))) {
+    if (widget.equals(I18N.gui.get("tabs.run.widgets.view")))
+      ! hasView
+    else if (widget.equals(I18N.gui.get("tabs.run.widgets.plot")))
       // you can't add a plot to the client interface unless
       // there are plots in the server interface so enable the
       // plot button accordingly ev 1/25/07
-      workspace.plotManager.getPlotNames.length > 0;
-    } else {
+      workspace.plotManager.getPlotNames.length > 0
+    else
       true
-    }
   }
 }

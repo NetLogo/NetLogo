@@ -5,6 +5,8 @@ package org.nlogo.hubnet.server.gui
 import org.nlogo.hubnet.connection.HubNetException
 import org.nlogo.hubnet.server.{HubNetManager, ClientEventListener, ConnectionManager}
 import org.nlogo.core.{ Femto, FileMode, Widget => CoreWidget }
+import org.nlogo.core.model.WidgetReader
+import org.nlogo.fileformat
 import org.nlogo.nvm.DefaultCompilerServices
 import org.nlogo.util.Utils, Utils.reader2String
 import org.nlogo.api._
@@ -54,12 +56,11 @@ class GUIHubNetManager(workspace: GUIWorkspace,
   }
 
   /// client editor
-  def getClientInterface: Seq[String] =
-    _clientEditor.getWidgetsAsStrings
+  override def getClientInterface: Seq[CoreWidget] = _clientEditor.interfaceWidgets
   def clientEditor: AnyRef = _clientEditor
   def getInterfaceWidth = _clientEditor.interfacePanel.getPreferredSize.width
   def getInterfaceHeight = _clientEditor.interfacePanel.getPreferredSize.height
-  def load(lines:Array[String], version: String) { _clientEditor.load(lines, version) }
+  def load(widgets: Seq[CoreWidget]) { _clientEditor.load(widgets) }
   def interfaceWidgets: Seq[CoreWidget] = _clientEditor.interfaceWidgets
 
 
@@ -72,9 +73,12 @@ class GUIHubNetManager(workspace: GUIWorkspace,
     val fileContents = reader2String(file.reader)
     // Parse the file
     val parsedFile = ModelReader.parseModel(fileContents)
+    val version = parsedFile.get(ModelSection.Version)(0)
     // Load the widget descriptions
     val widgets = parsedFile.get(if (client) ModelSection.HubNetClient else ModelSection.Interface)
-    _clientEditor.load(widgets, parsedFile.get(ModelSection.Version)(0))
+    val coreWidgets = WidgetReader.readInterface(widgets.toList, workspace,
+      fileformat.hubNetReaders, conversion = workspace.autoConvert(version))
+    _clientEditor.load(coreWidgets)
     openClientEditor()
   }
 

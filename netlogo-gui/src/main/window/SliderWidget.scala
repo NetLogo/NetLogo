@@ -221,10 +221,10 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast) ext
     val max: String = model.max
     val v = model.default
     val inc: String = model.step
-    units = model.units.getOrElse("")
+    units = model.units.optionToPotentiallyEmptyString
     vertical = (model.direction == Vertical)
 
-    this.name = model.display.getOrElse("")
+    this.name = model.display.optionToPotentiallyEmptyString
     minimumCode = min
     maximumCode = max
     // i think this next line is here because of some weird bounds checking
@@ -238,8 +238,8 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast) ext
   }
 
   override def model: WidgetModel = {
-    val savedName = if (name != null && name.trim != "") Some(name) else None
-    val savedUnits = if (units != null && units.trim != "") Some(units) else None
+    val savedName = name.potentiallyEmptyStringToOption
+    val savedUnits = units.potentiallyEmptyStringToOption
     val dir = if (vertical) Vertical else Horizontal
     val b = getBoundsTuple
     CoreSlider(display = savedName,

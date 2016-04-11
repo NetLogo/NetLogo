@@ -22,7 +22,7 @@ with Event.LinkChild with Events.LoadSectionEvent.Handler
   override def innerSource_=(text: String) { this.text = text }
   override def handle(e: Events.LoadSectionEvent) {
     if(e.section == ModelSection.Code) {
-      innerSource = workspace.autoConvert(e.text, false, false, e.version)
+      innerSource = workspace.autoConvert(e.version)(e.text)
       (new Events.CompileAllEvent).raise(this)
     }
   }

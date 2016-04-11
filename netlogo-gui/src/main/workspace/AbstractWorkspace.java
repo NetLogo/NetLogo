@@ -514,10 +514,6 @@ public abstract strictfp class AbstractWorkspace
     return source.replaceAll("\r\n", "\n");
   }
 
-  public String autoConvert(String source, boolean subprogram, boolean reporter, String modelVersion) {
-    return compiler().autoConvert(source, subprogram, reporter, modelVersion, this, true);
-  }
-
   public org.nlogo.api.MersenneTwisterFast auxRNG() {
     return _world.auxRNG();
   }

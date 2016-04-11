@@ -526,13 +526,15 @@ public strictfp class WidgetWrapper
     if (mouseMode() == MouseMode.DRAG) {
       interfacePanel().aboutToDragSelectedWidgets(startPressX, startPressY);
     } else {
-      aboutToDrag();
+      aboutToDrag(startPressX, startPressY);
     }
   }
 
   public java.awt.Rectangle originalBounds;
 
-  void aboutToDrag() {
+  void aboutToDrag(int startX, int startY) {
+    startPressX = startX;
+    startPressY = startY;
     selected(false, true); // true = change is temporary, don't raise events
     originalBounds = getBounds();
   }

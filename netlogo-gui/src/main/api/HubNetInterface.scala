@@ -101,7 +101,7 @@ trait HubNetInterface extends ViewInterface {
   def closeClientEditor()
   def openClientEditor()
   def clientEditor: AnyRef
-  def load(lines: Array[String], version: String)
+  def load(widgets: Seq[CoreWidget])
   @throws(classOf[java.io.IOException])
   def importClientInterface(path: String, client: Boolean)
   def setTitle(title: String, directory: String, modelType: ModelType)

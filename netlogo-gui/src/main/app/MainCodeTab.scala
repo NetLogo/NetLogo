@@ -51,7 +51,7 @@ with org.nlogo.window.Events.LoadSectionEvent.Handler
 
   def handle(e: org.nlogo.window.Events.LoadSectionEvent) {
     if(e.section == ModelSection.Code) {
-      innerSource = workspace.autoConvert(e.text, false, false, e.version)
+      innerSource = workspace.autoConvert(e.version)(e.text)
       recompile()
     }
   }

@@ -4,9 +4,9 @@ package org.nlogo.hubnet.server.gui
 
 import org.nlogo.api.ModelType
 import org.nlogo.core.I18N
-import org.nlogo.fileformat
-import org.nlogo.core.model.WidgetReader
 import org.nlogo.core.{ I18N, Widget => CoreWidget }
+import org.nlogo.core.model.WidgetReader
+import org.nlogo.fileformat
 import javax.swing.{JMenuBar, JScrollPane, JFrame, ScrollPaneConstants}
 import java.awt.{Dimension, BorderLayout, Component}
 import java.io.{IOException, StringReader, BufferedReader}
@@ -48,18 +48,11 @@ class HubNetClientEditor(workspace: GUIWorkspace,
   override def requestFocus() {interfacePanel.requestFocus()}
   def getWidgetsForSaving: Seq[CoreWidget] = interfacePanel.getWidgetsForSaving
 
-  def getWidgetsAsStrings: Seq[String] = {
-    val widgets = getWidgetsForSaving
-    def widgetToStrings(w: CoreWidget): List[String] =
-      (WidgetReader.format(w, fileformat.hubNetReaders).lines.toSeq :+ "").toList
-    widgets.map(widgetToStrings).flatten
-  }
-
   def interfaceWidgets: Seq[CoreWidget] =
     interfacePanel.getWidgetsForSaving
 
-  def load(lines: Array[String], version:String): Unit = {
-    interfacePanel.loadWidgets(WidgetReader.readInterface(lines.toList, workspace, fileformat.hubNetReaders))
+  def load(widgets: Seq[CoreWidget]): Unit = {
+    interfacePanel.loadWidgets(widgets)
     setSize(getPreferredSize)
   }
 
