@@ -93,7 +93,7 @@ class ChooserWidget(compiler: CompilerServices) extends Chooser(compiler) with E
   private def chooseableListToLogoList(choices: List[Chooseable]): LogoList =
     LogoList(choices.map(_.value): _*)
 
-  override def load(model: WidgetModel, helper: Widget.LoadHelper): Object = {
+  override def load(model: WidgetModel): AnyRef = {
     setSize(model.right - model.left, model.bottom - model.top)
     name(model.display.getOrElse(""))
     choicesWrapper(chooseableListToLogoList(model.choices))

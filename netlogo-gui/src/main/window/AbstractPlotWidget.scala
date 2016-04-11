@@ -239,12 +239,12 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     }
   }
 
-  override def load(corePlot: WidgetModel, helper: Widget.LoadHelper): Object = {
+  override def load(corePlot: WidgetModel): Object = {
     setSize(corePlot.right - corePlot.left, corePlot.bottom - corePlot.top)
     xLabel(corePlot.xAxis.getOrElse(""))
     yLabel(corePlot.yAxis.getOrElse(""))
     legend.open = corePlot.legendOn
-    PlotLoader.loadPlot(corePlot, plot, helper.convert(_, false))
+    PlotLoader.loadPlot(corePlot, plot)
     plotName(plot.name)
     clear()
     this

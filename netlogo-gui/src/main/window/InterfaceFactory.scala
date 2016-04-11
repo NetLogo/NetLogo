@@ -4,26 +4,32 @@ package org.nlogo.window
 
 import javax.swing.ImageIcon
 import org.nlogo.core.I18N
+import org.nlogo.core.{ AgentKind, I18N, View => CoreView, Widget => CoreWidget,
+  Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox,
+  Monitor => CoreMonitor, Output => CoreOutput, Plot => CorePlot, Slider => CoreSlider,
+  Switch => CoreSwitch, TextBox => CoreTextBox }
 
 object WidgetInfo {
-  def apply(widgetType: String, imageName: String): WidgetInfo = {
+  def apply(widgetType: String, imageName: String, widgetThunk: () => CoreWidget): WidgetInfo = {
     implicit val i18nPrefix = I18N.Prefix("tabs.run.widgets")
-    WidgetInfo(I18N.gui(widgetType.toLowerCase), widgetType.toUpperCase, imageName)
+    WidgetInfo(I18N.gui(widgetType.toLowerCase), widgetThunk, imageName)
   }
-  val button = WidgetInfo("button", "button.gif")
-  val slider = WidgetInfo("slider", "slider.gif")
-  val switch = WidgetInfo("switch", "switch.gif")
-  val chooser = WidgetInfo("chooser", "chooser.gif")
-  val input = WidgetInfo("input", "input.gif")
-  val monitor = WidgetInfo("monitor", "monitor.gif")
-  val plot = WidgetInfo("plot", "plot.gif")
-  val output = WidgetInfo("output", "output.gif")
-  val note = WidgetInfo("note", "note.gif")
-  val view = WidgetInfo("view", "view.gif")
+
+  val button  = WidgetInfo("button", "button.gif", () => CoreButton(None, 0, 0, 0, 0))
+  val slider  = WidgetInfo("slider", "slider.gif", () => CoreSlider(None))
+  val switch  = WidgetInfo("switch", "switch.gif", () => CoreSwitch(None))
+  val chooser = WidgetInfo("chooser", "chooser.gif", () => CoreChooser(None))
+  val input   = WidgetInfo("input", "input.gif", () => CoreInputBox(None))
+  val monitor = WidgetInfo("monitor", "monitor.gif", () => CoreMonitor(None, 0, 0, 0, 0, None, 10))
+  val plot    = WidgetInfo("plot", "plot.gif", () => CorePlot(None))
+  val output  = WidgetInfo("output", "output.gif", () => CoreOutput(0, 0, 0, 0, 11))
+  val note    = WidgetInfo("note", "note.gif", () => CoreTextBox(None, fontSize = 11, color = 0))
+  val view    = WidgetInfo("view", "view.gif", () => CoreView())
 }
 
-case class WidgetInfo(displayName: String, widgetType: String, imageName: String) {
+case class WidgetInfo(displayName: String, widgetThunk: () => CoreWidget, imageName: String) {
   def icon = new ImageIcon(classOf[WidgetInfo].getResource("/images/" + imageName))
+  def coreWidget = widgetThunk()
 }
 
 trait InterfaceFactory {

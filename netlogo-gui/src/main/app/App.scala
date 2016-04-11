@@ -3,6 +3,7 @@
 package org.nlogo.app
 
 import org.nlogo.core.{ AgentKind, CompilerException, I18N, LogoList, Nobody, Shape, Token, Widget => CoreWidget }
+import org.nlogo.core.model.WidgetReader
 import org.nlogo.agent.{Agent, World3D, World}
 import org.nlogo.api._
 import org.nlogo.awt.UserCancelException
@@ -989,8 +990,8 @@ class App extends
    * @param text the widget specification
    */
   def makeWidget(text:String) {
-    // TODO: This must be fixed
-    dispatchThreadOrBust( tabs.interfaceTab.getInterfacePanel.loadWidget(text.split("\n").toArray, null, Version.version) )
+    dispatchThreadOrBust(
+      tabs.interfaceTab.getInterfacePanel.loadWidget(WidgetReader.read(text.lines.toList, workspace, fileformat.nlogoReaders(Version.is3D))))
   }
 
   /// helpers for controlling methods

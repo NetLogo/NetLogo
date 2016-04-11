@@ -2,31 +2,16 @@
 
 package org.nlogo.window
 
-import org.nlogo.core.AgentKind
-import org.nlogo.core.AgentKindJ
-import org.nlogo.core.I18N
-import org.nlogo.core.{ Monitor => CoreMonitor }
-import org.nlogo.api.Dump
-import org.nlogo.api.MersenneTwisterFast
-import org.nlogo.api.Editable
-import org.nlogo.api.Property
+import org.nlogo.core.{ AgentKind, AgentKindJ, I18N, Monitor => CoreMonitor }
+import org.nlogo.api.{ Dump, Editable, MersenneTwisterFast, Property }
 import org.nlogo.awt.{ Fonts => NlogoFonts }
 import org.nlogo.nvm.Procedure
-import org.nlogo.window.Events.AddJobEvent
-import org.nlogo.window.Events.EditWidgetEvent
-import org.nlogo.window.Events.RuntimeErrorEvent
-import org.nlogo.window.Events.PeriodicUpdateEvent
-import org.nlogo.window.Events.JobRemovedEvent
-import org.nlogo.window.Events.RemoveJobEvent
+import org.nlogo.window.Events.{ AddJobEvent, EditWidgetEvent,
+  RuntimeErrorEvent, PeriodicUpdateEvent, JobRemovedEvent, RemoveJobEvent }
 
-import java.awt.event.MouseListener
-import java.awt.event.MouseEvent
-import java.awt.Component
-import java.awt.EventQueue
-import java.awt.Font
-import java.awt.Graphics
-import java.awt.Dimension
-import java.awt.{ Color => AwtColor }
+import java.awt.event.{ MouseListener, MouseEvent }
+import java.awt.{ Component, EventQueue,
+  Font, Graphics, Dimension, Color => AwtColor }
 import java.util.{ List => JList }
 
 
@@ -284,12 +269,12 @@ class MonitorWidget(random: MersenneTwisterFast)
     new RemoveJobEvent(this).raise(this)
   }
 
-  override def load(model: WidgetModel, helper: Widget.LoadHelper): Object = {
+  override def load(model: WidgetModel): AnyRef = {
     name(model.display.getOrElse(""))
     _decimalPlaces = model.precision
     fontSize(model.fontSize)
 
-    model.source.foreach(src => wrapSource(helper.convert(src, true)))
+    model.source.foreach(wrapSource)
 
     setSize(model.right - model.left, model.bottom - model.top)
     chooseDisplayName()

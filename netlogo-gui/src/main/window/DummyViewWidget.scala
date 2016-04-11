@@ -2,14 +2,11 @@
 
 package org.nlogo.window
 
+import org.nlogo.api.{ Editable, Property }
 import org.nlogo.core.{ I18N, View => CoreView }
-import org.nlogo.api.Editable
-import org.nlogo.api.Property
 import org.nlogo.agent.World
 
-import java.awt.Color
-import java.awt.Dimension
-import java.awt.Rectangle
+import java.awt.{ Color, Dimension, Rectangle }
 import java.util.{ List => JList }
 
 import javax.swing.BorderFactory
@@ -83,7 +80,7 @@ class DummyViewWidget(val world: World)
       dimensions = world.getDimensions)
   }
 
-  override def load(view: WidgetModel, helper: Widget.LoadHelper): AnyRef = {
+  override def load(view: WidgetModel): AnyRef = {
     setBounds(view.left, view.top, view.right - view.left, view.bottom - view.top)
 
     newWidth = getWidth

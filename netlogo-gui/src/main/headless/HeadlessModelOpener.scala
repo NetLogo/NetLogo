@@ -37,10 +37,10 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     if (!Version.compatibleVersion(model.version))
       throw new IllegalStateException("unknown NetLogo version: " + model.version)
 
-    ws.loadWorld(model.view, netLogoVersion, ws)
+    ws.loadWorld(model.view, ws)
 
     for (plot <- model.plots)
-      PlotLoader.loadPlot(plot, ws.plotManager.newPlot(""), identity)
+      PlotLoader.loadPlot(plot, ws.plotManager.newPlot(""))
 
     val dialect = if (Version.is3D(model.version)) NetLogoThreeDDialect
       else NetLogoLegacyDialect

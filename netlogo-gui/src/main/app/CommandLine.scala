@@ -4,7 +4,7 @@ package org.nlogo.app
 
 import org.nlogo.window.{ CommandCenterInterface, EditorColorizer, JobWidget, Widget }
 import org.nlogo.agent.{ Agent, ArrayAgentSet, OutputObject }
-import org.nlogo.core.{ AgentKind, CompilerException, I18N, TokenType }
+import org.nlogo.core.{ AgentKind, CompilerException, I18N, TokenType, Widget => CoreWidget }
 import org.nlogo.editor.EditorField
 import org.nlogo.nvm.Workspace
 import org.nlogo.window.Events.{ AddJobEvent, CompiledEvent, OutputEvent }
@@ -271,11 +271,11 @@ class CommandLine(commandCenter: CommandCenterInterface,
     textField.setEnabled(enabled)
   }
 
-  override def load(model: org.nlogo.core.Widget, helper: Widget.LoadHelper): Object = {
+  override def load(model: CoreWidget): Object = {
     throw new UnsupportedOperationException()
   }
 
-  override def model: org.nlogo.core.Widget = {
+  override def model: CoreWidget = {
     throw new UnsupportedOperationException()
   }
 }

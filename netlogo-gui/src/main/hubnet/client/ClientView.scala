@@ -93,7 +93,7 @@ class ClientView(clientPanel: ClientPanel) extends Widget with ViewWidgetInterfa
 
   /// satisfy ViewWidgetInterface
 
-  override def load(view: WidgetModel, helper: Widget.LoadHelper): AnyRef = {
+  override def load(view: WidgetModel): AnyRef = {
     setBounds(view.left, view.top, view.right - view.left, view.bottom - view.top)
     world.viewWidth(getWidth)
     world.viewHeight(getHeight)

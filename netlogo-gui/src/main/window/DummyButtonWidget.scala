@@ -2,15 +2,11 @@
 
 package org.nlogo.window
 
-import org.nlogo.api.Editable
+import org.nlogo.api.{ Editable, Property }
 import org.nlogo.core.{ AgentKind, I18N, Button => CoreButton }
-import org.nlogo.api.Property
 import org.nlogo.awt.{ Fonts => NlogoFonts }
 
-import java.awt.Color
-import java.awt.Dimension
-import java.awt.Font
-import java.awt.Graphics
+import java.awt.{ Color, Dimension, Font, Graphics }
 import java.util.{ List => JList }
 
 object DummyButtonWidget {
@@ -140,7 +136,7 @@ class DummyButtonWidget
       actionKey = savedActionKey)
   }
 
-  override def load(button: WidgetModel, helper: Widget.LoadHelper): AnyRef = {
+  override def load(button: WidgetModel): AnyRef = {
     button.actionKey.foreach(k => actionKey(k))
 
     val normalizedName =

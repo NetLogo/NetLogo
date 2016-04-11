@@ -8,24 +8,22 @@ import org.nlogo.api.StringUtils.unEscapeString
 
 object PlotLoader {
 
-  def loadPlot(corePlot: CorePlot, plot: Plot, autoConvert: String => String): Plot = {
+  def loadPlot(corePlot: CorePlot, plot: Plot): Plot = {
     plot.name = corePlot.display.getOrElse("")
     plot.defaultXMin = corePlot.xmin
     plot.defaultXMax = corePlot.xmax
     plot.defaultYMax = corePlot.ymax
     plot.defaultYMin = corePlot.ymin
     plot.defaultAutoPlotOn = corePlot.autoPlotOn
-    plot.setupCode = autoConvert(corePlot.setupCode)
-    plot.updateCode = autoConvert(corePlot.updateCode)
-    plot.pens = corePlot.pens.map(loadPen(plot, autoConvert))
+    plot.setupCode = corePlot.setupCode
+    plot.updateCode = corePlot.updateCode
+    plot.pens = corePlot.pens.map(loadPen(plot))
     plot.clear()
     plot
   }
 
-  def loadPen(plot: Plot, autoConvert: String => String)(pen: CorePen): PlotPen = {
-    val newPen = plot.createPlotPen(pen.display, false,
-      autoConvert(pen.setupCode),
-      autoConvert(pen.updateCode))
+  def loadPen(plot: Plot)(pen: CorePen): PlotPen = {
+    val newPen = plot.createPlotPen(pen.display, false, pen.setupCode, pen.updateCode)
     newPen.defaultInterval = pen.interval
     newPen.defaultMode = pen.mode
     newPen.defaultColor = pen.color

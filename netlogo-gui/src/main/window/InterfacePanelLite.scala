@@ -2,7 +2,7 @@
 
 package org.nlogo.window;
 
-import org.nlogo.core.{ Widget => CoreWidget }
+import org.nlogo.core.{ Widget => CoreWidget, View => CoreView }
 import org.nlogo.core.model.WidgetReader
 import org.nlogo.api.CompilerServices
 import org.nlogo.api.ModelReader
@@ -11,7 +11,7 @@ import org.nlogo.api.RandomServices
 import org.nlogo.api.Version
 import org.nlogo.api.VersionHistory
 import org.nlogo.plot.PlotManager
-import org.nlogo.window.Events.{ LoadSectionEvent, OutputEvent }
+import org.nlogo.window.Events.{ LoadWidgetsEvent, OutputEvent }
 import org.nlogo.fileformat
 import org.nlogo.util.SysInfo
 import org.nlogo.api.Exceptions
@@ -39,7 +39,7 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
   extends JLayeredPane
   with WidgetContainer
   with FocusListener
-  with LoadSectionEvent.Handler
+  with LoadWidgetsEvent.Handler
   with OutputEvent.Handler {
 
   // widget name -> Widget
@@ -227,55 +227,44 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
 
   /// loading and saving
 
-  def loadWidget(strings: Array[String], coreWidget: CoreWidget, modelVersion: String): Widget = {
-    val helper = new Widget.LoadHelper() {
-      def version: String = modelVersion
-
-      def convert(source: String, reporter: Boolean): String =
-        compiler.autoConvert(source, true, reporter, modelVersion)
-    }
-
+  def loadWidget(coreWidget: CoreWidget): Widget = {
+   val widgetMap = Map[String, () => Widget](
+     "Monitor"  -> (() => new MonitorWidget(random.auxRNG)),
+     "Plot"     -> (() => PlotWidget.apply(plotManager)),
+     "Slider"   -> (() => new SliderWidget(sliderEventOnReleaseOnly, random.auxRNG)),
+     "Chooser"  -> (() => new ChooserWidget(compiler)),
+     "InputBox" -> (() => new InputBoxWidget(
+       editorFactory.newEditor(1, 20, false), editorFactory.newEditor(5, 20, true),
+       compiler, this)),
+     "Button"   -> (() => new ButtonWidget(random.mainRNG)),
+     "Output"   -> (() => new OutputWidget()))
     try {
-      val widgetType = strings(0);
-      val x = strings(1).toInt
-      val y = strings(2).toInt
-      if (widgetType == "GRAPHICS-WINDOW" || widgetType == "VIEW") {
-        // the graphics widget (and the command center) are special cases because
-        // they are not recreated at load time, but reused
-        val widget = viewWidget.asWidget
-        try {
-          widget.load(coreWidget.asInstanceOf[widget.WidgetModel], helper)
-        } catch {
-          case ex: RuntimeException => Exceptions.handle(ex)
-        }
-        widget.setSize(viewWidget.asWidget.getSize)
-        widget.setLocation(x, y)
-        widget
-      } else {
-        val widgetMap = Map[String, () => Widget](
-          "MONITOR" -> (() => new MonitorWidget(random.auxRNG)),
-          "PLOT" -> (() => PlotWidget.apply(plotManager)),
-          "SLIDER" -> (() => new SliderWidget(sliderEventOnReleaseOnly, random.auxRNG)),
-          // for new models
-          "CHOOSER" -> (() => new ChooserWidget(compiler)),
-          // for old models
-          "CHOICE" -> (() => new ChooserWidget(compiler)),
-          "INPUTBOX" -> (() => new InputBoxWidget(
-            editorFactory.newEditor(1, 20, false), editorFactory.newEditor(5, 20, true),
-            compiler, this)),
-          "BUTTON" -> (() => new ButtonWidget(random.mainRNG)),
-          "OUTPUT" -> (() => new OutputWidget()))
-
-        val newGuy = widgetMap.get(widgetType).flatMap(createWidget =>
-          try Some(createWidget())
-          catch {
-            case ex: RuntimeException =>
-              Exceptions.handle(ex)
-              None
-          })
+      val x = coreWidget.left
+      val y = coreWidget.top
+      coreWidget match {
+        case v: CoreView =>
+          // the graphics widget (and the command center) are special cases because
+          // they are not recreated at load time, but reused
+          val widget = viewWidget.asWidget.asInstanceOf[ViewWidgetInterface]
+          try {
+            widget.load(v)
+          } catch {
+            case ex: RuntimeException => Exceptions.handle(ex)
+          }
+          widget.setSize(widget.getSize)
+          widget.setLocation(x, y)
+          widget
+        case _ =>
+          val newGuy = widgetMap.get(coreWidget.getClass.getSimpleName).flatMap(createWidget =>
+            try Some(createWidget())
+            catch {
+              case ex: RuntimeException =>
+                Exceptions.handle(ex)
+                None
+            })
 
         newGuy.foreach { w =>
-          w.load(coreWidget.asInstanceOf[w.WidgetModel], helper)
+          w.load(coreWidget.asInstanceOf[w.WidgetModel])
           addWidget(w, x, y)
         }
         newGuy.orNull
@@ -287,22 +276,13 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
     }
   }
 
-  def handle(e: LoadSectionEvent): Unit =
-    if (e.section == ModelSection.Interface) {
-      try {
-        val v = ModelReader.parseWidgets(e.lines)
-        if (null != v) {
-          setVisible(false)
-          // not sure we have access to workspace...
-          val linesAndWidgets = v zip v.map(lines =>
-              WidgetReader.read(lines, compiler, fileformat.hubNetReaders))
-          linesAndWidgets.foreach {
-            case (lines, coreWidget) => loadWidget(lines.toArray, coreWidget, e.version)
-          }
-        }
-      } finally {
-        setVisible(true)
-        revalidate()
-      }
+  def handle(e: LoadWidgetsEvent): Unit = {
+    try {
+      setVisible(false)
+      e.widgets.foreach(loadWidget)
+    } finally {
+      setVisible(true)
+      revalidate()
     }
+  }
 }

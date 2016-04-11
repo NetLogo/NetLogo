@@ -2,26 +2,14 @@
 
 package org.nlogo.window
 
-// if the size of the border surrounding the View changes, be sure
-// to change the associated constants in ModelLoader
+import java.awt.{ Component, Dimension, Font, Point, Rectangle }
+import javax.swing.{ JPopupMenu, BorderFactory, JLabel }
 
-import org.nlogo.api.Dump
-import org.nlogo.api.Approximate
-import org.nlogo.api.Version
+import org.nlogo.api.{ Approximate, Dump, Version }
 import org.nlogo.awt.{ Fonts => NlogoFonts }
 import org.nlogo.core.{ I18N, View => CoreView }
-import org.nlogo.window.Events.{ PeriodicUpdateEvent, LoadBeginEvent, LoadEndEvent }
-import org.nlogo.window.Events.ResizeViewEvent
+import org.nlogo.window.Events.{ PeriodicUpdateEvent, LoadBeginEvent, LoadEndEvent, ResizeViewEvent }
 import org.nlogo.window.MouseMode._
-
-import java.awt.Component
-import java.awt.Dimension
-import java.awt.Font
-import java.awt.Point
-import java.awt.Rectangle
-import javax.swing.JPopupMenu
-import javax.swing.BorderFactory
-import javax.swing.JLabel
 
 
 object ViewWidget {
@@ -334,8 +322,8 @@ class ViewWidget(workspace: GUIWorkspace)
   override def model: WidgetModel =
     settings.model
 
-  override def load(view: WidgetModel, helper: Widget.LoadHelper): AnyRef =
-    settings.load(view, helper.version)
+  override def load(view: WidgetModel): AnyRef =
+    settings.load(view)
 
   override def copyable: Boolean = false
 }

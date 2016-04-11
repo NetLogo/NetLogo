@@ -45,7 +45,7 @@ abstract class Widget extends JPanel {
   def isZoomed = if (findWidgetContainer != null) findWidgetContainer.isZoomed else false
 
   def model: WidgetModel
-  def load(widget: WidgetModel, helper: LoadHelper): Object
+  def load(widget: WidgetModel): Object
   def sourceOffset = 0
   def hasContextMenuInApplet = false
   def getUnzoomedPreferredSize: Dimension = getPreferredSize(originalFont)

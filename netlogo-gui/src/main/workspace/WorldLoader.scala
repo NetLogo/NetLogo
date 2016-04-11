@@ -7,7 +7,7 @@ import org.nlogo.api.{ VersionHistory, WorldDimensions3D }
 import org.nlogo.core.{ UpdateMode, View => CoreView }
 
 class WorldLoader {
-  def load(view: CoreView, version: String, worldInterface: WorldLoaderInterface) {
+  def load(view: CoreView, worldInterface: WorldLoaderInterface) {
     val d = view.dimensions
 
     // set the visiblity of the ticks counter first because it changes the minimum size of the

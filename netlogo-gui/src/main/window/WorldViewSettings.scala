@@ -2,18 +2,12 @@
 
 package org.nlogo.window
 
-import org.nlogo.core.CompilerException
-import org.nlogo.core.UpdateMode
-import org.nlogo.core.WorldDimensions
-import org.nlogo.core.{ I18N, View => CoreView }
-import org.nlogo.api.Editable
-import org.nlogo.api.WorldPropertiesInterface
-import org.nlogo.api.Property
+import java.util.{ ArrayList => ArrayJList, List => JList }
+
+import org.nlogo.core.{ CompilerException, I18N, UpdateMode, View => CoreView, WorldDimensions }
+import org.nlogo.api.{ Editable, Property, WorldPropertiesInterface }
 import org.nlogo.nvm.Workspace
 import org.nlogo.workspace.WorldLoaderInterface
-
-import java.util.{ ArrayList => ArrayJList }
-import java.util.{ List => JList }
 
 abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protected val gWidget: ViewWidget)
     extends Editable
@@ -181,8 +175,8 @@ abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protecte
       0
   }
 
-  def load(view: CoreView, version: String): AnyRef = {
-    workspace.loadWorld(view, version, this)
+  def load(view: CoreView): AnyRef = {
+    workspace.loadWorld(view, this)
     // we can't clearAll here because the globals may not
     // be allocated yet ev 7/12/06
     // note that we clear turtles inside the load method so

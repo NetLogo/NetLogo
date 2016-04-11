@@ -125,10 +125,10 @@ trait ModelCreator {
     value: String = "",
     name: String,
     multiline: Boolean = false): core.InputBox = {
-      core.InputBox(5, 5, 5, 5, Some(name), core.StringInput(value, label, multiline))
+      core.InputBox(Some(name), 5, 5, 5, 5, core.StringInput(value, label, multiline))
   }
 
   def InputBox(label: core.NumericInput.NumericKind, value: Double, name: String): core.InputBox = {
-      core.InputBox(5, 5, 5, 5, Some(name), core.NumericInput(value, label))
+      core.InputBox(Some(name), 5, 5, 5, 5, core.NumericInput(value, label))
   }
 }

@@ -62,7 +62,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     if(noneButton.isSelected) null
     else {
       noneButton.setSelected(true)
-      wPanel.makeWidget(widgetMenu.getSelectedWidgetType, false)
+      wPanel.makeWidget(widgetMenu.getSelectedWidget)
     }
 
   var editTarget: Option[Editable] = None
@@ -165,9 +165,10 @@ class InterfaceToolBar(wPanel: WidgetPanel,
 
   def actionPerformed(e: java.awt.event.ActionEvent) { addButton.setSelected(true) }
 
-  def getItems: Array[JMenuItem] = WidgetInfos.map( spec => new JMenuItem(spec.displayName, spec.icon)).toArray
+  def getItems: Array[JMenuItem] = WidgetInfos.map(spec => new JMenuItem(spec.displayName, spec.icon)).toArray
   class WidgetMenu extends org.nlogo.swing.ToolBarComboBox(getItems) {
-    def getSelectedWidgetType = WidgetInfos.find(_.displayName == getSelectedItem.getText).get.widgetType
+    def getSelectedWidget =
+      WidgetInfos.find(_.displayName == getSelectedItem.getText).get.coreWidget
     override def populate(menu: JPopupMenu) {
       super.populate(menu)
       for(i <- items) {

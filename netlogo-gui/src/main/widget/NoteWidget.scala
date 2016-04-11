@@ -96,7 +96,7 @@ class NoteWidget extends SingleErrorWidget with Editable {
       transparent = transparency)
   }
 
-  override def load(model: WidgetModel, helper: Widget.LoadHelper) = {
+  override def load(model: WidgetModel): AnyRef = {
     text = model.display.getOrElse("")
     fontSize = model.fontSize
     color = NlogoColor.getColor(Double.box(model.color))

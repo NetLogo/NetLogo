@@ -65,7 +65,7 @@ class SwitchWidget extends Switch with Editable with InterfaceGlobalWidget
       variable = varName, on = isOn)
   }
 
-  override def load(model: WidgetModel, helper: Widget.LoadHelper): Object = {
+  override def load(model: WidgetModel): AnyRef = {
     name(model.varName, true)
     isOn = model.on
     setSize(model.right - model.left, model.bottom - model.top)

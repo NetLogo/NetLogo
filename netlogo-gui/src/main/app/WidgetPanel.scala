@@ -5,7 +5,10 @@ package org.nlogo.app
 import org.nlogo.api.Editable
 import org.nlogo.api.ModelReader
 import org.nlogo.api.Version
-import org.nlogo.core.{ I18N, Widget => CoreWidget }
+import org.nlogo.core.{ I18N, Widget => CoreWidget,
+  Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox,
+  Monitor => CoreMonitor, Plot => CorePlot, Slider => CoreSlider,
+  Switch => CoreSwitch, TextBox => CoreTextBox, View => CoreView }
 import org.nlogo.core.model.WidgetReader
 import org.nlogo.fileformat
 import org.nlogo.window.DummyPlotWidget
@@ -324,19 +327,19 @@ class WidgetPanel(val workspace: GUIWorkspace)
   // that seems like bugs waiting to happen. JC - 12/20/10
   protected def doPopup(e: MouseEvent): Unit = {
     val menu = new JPopupMenu()
-    def menuItem(i18nKey: String, widgetType: String): WidgetCreationMenuItem = {
-      new WidgetCreationMenuItem(I18N.gui.get(i18nKey), widgetType, e.getX, e.getY)
+    def menuItem(i18nKey: String, widget: CoreWidget): WidgetCreationMenuItem = {
+      new WidgetCreationMenuItem(I18N.gui.get(i18nKey), widget, e.getX, e.getY)
     }
-    val plot = menuItem("tabs.run.widgets.plot", "PLOT")
+    val plot = menuItem("tabs.run.widgets.plot", CorePlot(None))
     val menuItems = Seq(
-      menuItem("tabs.run.widgets.button", "BUTTON"),
-      menuItem("tabs.run.widgets.slider", "SLIDER"),
-      menuItem("tabs.run.widgets.switch", "SWITCH"),
-      menuItem("tabs.run.widgets.chooser", "CHOOSER"),
-      menuItem("tabs.run.widgets.input", "INPUT"),
-      menuItem("tabs.run.widgets.monitor", "MONITOR"),
+      menuItem("tabs.run.widgets.button", CoreButton(None, 0, 0, 0, 0)),
+      menuItem("tabs.run.widgets.slider", CoreSlider(None)),
+      menuItem("tabs.run.widgets.switch", CoreSwitch(None)),
+      menuItem("tabs.run.widgets.chooser", CoreChooser(None)),
+      menuItem("tabs.run.widgets.input", CoreInputBox(None)),
+      menuItem("tabs.run.widgets.monitor", CoreMonitor(None, 0, 0, 0, 0, None, 10)),
       plot,
-      menuItem("tabs.run.widgets.note", "NOTE"))
+      menuItem("tabs.run.widgets.note", CoreTextBox(None, fontSize = 11, color = 0)))
     menuItems.foreach(menu.add)
 
     // if there are no plots in this model, then you can't have a plot in a hubnet client.
@@ -346,17 +349,17 @@ class WidgetPanel(val workspace: GUIWorkspace)
     menu.show(this, e.getX, e.getY)
   }
 
-  protected class WidgetCreationMenuItem(displayName: String, name: String, x: Int, y: Int)
+  protected class WidgetCreationMenuItem(displayName: String, coreWidget: CoreWidget, x: Int, y: Int)
   extends JMenuItem(displayName) {
     addActionListener(new ActionListener() {
       override def actionPerformed(e: ActionEvent): Unit = {
-        createWidget(name, x, y)
+        createWidget(coreWidget, x, y)
       }
     })
   }
 
-  def createWidget(name: String, x: Int, y: Int): Unit = {
-    val widget = makeWidget(name, false)
+  def createWidget(coreWidget: CoreWidget, x: Int, y: Int): Unit = {
+    val widget = makeWidget(coreWidget)
     val wrapper = addWidget(widget, x, y, true, false)
     revalidate()
     wrapper.selected(true)
@@ -371,40 +374,32 @@ class WidgetPanel(val workspace: GUIWorkspace)
   // This is used both when loading a model and when the user is making
   // new widgets in the UI.  For most widget types, the same type string
   // is used in both places. - ST 3/17/04
-  def makeWidget(tpe: String, loading: Boolean): Widget = {
-    val widgetType = "DUMMY " + tpe.toUpperCase
+  def makeWidget(widget: CoreWidget): Widget = {
+    val widgetType = "Dummy " + widget.getClass.getSimpleName
     val fromRegistry = WidgetRegistry(widgetType)
     if (fromRegistry != null)
       fromRegistry
-    else if (widgetType == "DUMMY SLIDER") {
-      new DummySliderWidget()
-    } else if (widgetType == "DUMMY CHOOSER" || widgetType == "DUMMY CHOICE") // "...CHOICE" is name used in old models
-      new DummyChooserWidget(new DefaultCompilerServices(workspace.compiler))
-    else if (widgetType == "DUMMY BUTTON")
-      new DummyButtonWidget
-    else if (widgetType == "DUMMY PLOT") {
-      // note that plots on the HubNet client must have the name of a plot
-      // on the server, thus, feed the dummy plot widget the names of
-      // the current plots so the user can select one. We override
-      // this method in InterfacePanel since regular plots are handled
-      // differently ev 1/25/07
-      val names = workspace.plotManager.getPlotNames;
-      DummyPlotWidget(names.headOption.getOrElse("plot 1"), workspace.plotManager)
-    } else if (widgetType == "DUMMY MONITOR")
-      new DummyMonitorWidget()
-    else if (widgetType == "DUMMY INPUT" || widgetType == "DUMMY INPUTBOX") { // in the GUI: "Input Box", saved models: "INPUTBOX"
-      val font = new Font(NlogoFonts.platformMonospacedFont, Font.PLAIN, 12)
-      new DummyInputBoxWidget(
-        new CodeEditor(1, 20, font, false, null, new EditorColorizer(workspace), I18N.guiJ.fn),
-        new CodeEditor(5, 20, font, true, null, new EditorColorizer(workspace), I18N.guiJ.fn),
-        this,
-        new DefaultCompilerServices(workspace.compiler))
-    } else if (widgetType == "DUMMY OUTPUT") // currently in saved models only - ST 3/17/04
-      new OutputWidget()
-    else if (widgetType == "DUMMY GRAPHICS-WINDOW" || widgetType == "DUMMY VIEW" || widgetType == "VIEW")
-      new DummyViewWidget(workspace.world)
-    else
-      throw new IllegalStateException("unknown widget type: " + widgetType)
+    widget match {
+      case v: CoreView => new DummyViewWidget(workspace.world)
+      case c: CoreChooser => new DummyChooserWidget(new DefaultCompilerServices(workspace.compiler))
+      case p: CorePlot =>
+        // note that plots on the HubNet client must have the name of a plot
+        // on the server, thus, feed the dummy plot widget the names of
+        // the current plots so the user can select one. We override
+        // this method in InterfacePanel since regular plots are handled
+        // differently ev 1/25/07
+        val names = workspace.plotManager.getPlotNames;
+        DummyPlotWidget(names.headOption.getOrElse("plot 1"), workspace.plotManager)
+      case i: CoreInputBox =>
+        val font = new Font(NlogoFonts.platformMonospacedFont, Font.PLAIN, 12)
+        new DummyInputBoxWidget(
+          new CodeEditor(1, 20, font, false, null, new EditorColorizer(workspace), I18N.guiJ.fn),
+          new CodeEditor(5, 20, font, true, null, new EditorColorizer(workspace), I18N.guiJ.fn),
+          this,
+          new DefaultCompilerServices(workspace.compiler))
+      case _ =>
+        throw new IllegalStateException("unknown widget type: " + widget.getClass)
+    }
   }
 
   def mouseReleased(e: MouseEvent): Unit =
@@ -551,29 +546,14 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   /// loading and saving
 
-  def loadWidget(strings: Array[String], coreWidget: CoreWidget, modelVersion: String): Widget = {
-    val helper: Widget.LoadHelper =
-      new Widget.LoadHelper() {
-        def version: String = modelVersion
-
-        def convert(source: String, reporter: Boolean): String = {
-          workspace.autoConvert(source, true, reporter, modelVersion)
-        }
-      }
-    val widgetType = strings(0)
-    val x = Integer.parseInt(strings(1))
-    val y = Integer.parseInt(strings(2))
-    makeAndLoadWidget(widgetType, strings, coreWidget, helper, x, y)
+  def loadWidget(coreWidget: CoreWidget): Widget = {
+    makeAndLoadWidget(coreWidget, coreWidget.left, coreWidget.top)
   }
 
-  protected def makeAndLoadWidget(widgetType: String,
-    strings: Array[String],
-    coreWidget: CoreWidget,
-    helper: Widget.LoadHelper,
-    x: Int, y: Int): Widget = {
-    val newGuy = makeWidget(widgetType, true)
+  protected def makeAndLoadWidget(coreWidget: CoreWidget, x: Int, y: Int): Widget = {
+    val newGuy = makeWidget(coreWidget)
     if (newGuy != null) {
-      newGuy.load(coreWidget.asInstanceOf[newGuy.WidgetModel], helper)
+      newGuy.load(coreWidget.asInstanceOf[newGuy.WidgetModel])
       enforceMinimumAndMaximumWidgetSizes(newGuy)
       addWidget(newGuy, x, y, false, true)
     }
@@ -608,18 +588,23 @@ class WidgetPanel(val workspace: GUIWorkspace)
     zoomer.forgetAllZoomInfo()
   }
 
-  override def loadWidgets(lines: Array[String], version: String, readerOverrides: Map[String, WidgetReader] = Map()): Unit = {
+  override def loadWidgets(widgets: Seq[CoreWidget]): Unit = {
     try {
-      val additionalReaders = fileformat.nlogoReaders(Version.is3D(version))
+      // val additionalReaders = fileformat.nlogoReaders(Version.is3D(version))
+      // val v = ModelReader.parseWidgets(lines)
+      /*
+    val helper: Widget.LoadHelper =
+      new Widget.LoadHelper() {
+        def version: String = modelVersion
 
-      val v = ModelReader.parseWidgets(lines)
-      if (null != v) {
-        setVisible(false)
-        val linesAndWidgets = v zip v.map(lines =>
-            WidgetReader.read(lines, workspace, additionalReaders ++ readerOverrides))
-        linesAndWidgets.foreach {
-          case (lines, coreWidget) => loadWidget(lines.toArray, coreWidget, version)
+        def convert(source: String, reporter: Boolean): String = {
+          workspace.autoConvert(source, true, reporter, modelVersion)
         }
+      }
+    */
+      if (widgets.nonEmpty) {
+        setVisible(false)
+        widgets.foreach(loadWidget)
       }
     } finally {
       setVisible(true)

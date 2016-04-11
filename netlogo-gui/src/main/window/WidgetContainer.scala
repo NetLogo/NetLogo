@@ -24,7 +24,7 @@ trait WidgetContainer {
 
   def resetSizeInfo(widget: Widget): Unit
 
-  def isZoomed: Boolean;
+  def isZoomed: Boolean
 
-  def loadWidget(strings: Array[String], coreWidget: CoreWidget, modelVersion: String): Widget;
+  def loadWidget(coreWidget: CoreWidget): Widget
 }

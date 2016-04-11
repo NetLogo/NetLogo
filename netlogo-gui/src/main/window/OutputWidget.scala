@@ -62,7 +62,7 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
     Dump.csv.stringToCSV(e.writer, outputArea.text.getText())
   }
 
-  override def load(model: WidgetModel, helper: Widget.LoadHelper): Object = {
+  override def load(model: WidgetModel): AnyRef = {
     setSize(model.right - model.left, model.bottom - model.top)
     fontSize = model.fontSize
     this

@@ -33,7 +33,7 @@ class DummySliderWidget extends AbstractSliderWidget with Editable {
 
   private def con = constraint.asInstanceOf[ConstantSliderConstraint]
 
-  override def load(model: WidgetModel, helper: Widget.LoadHelper): Object = {
+  override def load(model: WidgetModel): AnyRef = {
     val min = model.min.toDouble
     val max = model.max.toDouble
     val value = model.default

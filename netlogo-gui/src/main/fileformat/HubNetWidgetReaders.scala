@@ -346,7 +346,7 @@ object HubNetChooserReader
         Chooser(restoredVarName,
           left  = pos._1, top    = pos._2,
           right = pos._3, bottom = pos._4,
-          variable = restoredVarName, choices = choices,
+          display = restoredVarName, choices = choices,
           currentChoice = selectedIndex)
     }
 

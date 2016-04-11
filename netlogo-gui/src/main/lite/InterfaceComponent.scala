@@ -3,6 +3,7 @@
 package org.nlogo.lite
 
 import java.util.{ ArrayList, List => JList }
+import org.nlogo.core.{ Widget => CoreWidget }
 import org.nlogo.window.{ Event, Widget, ButtonWidget, PlotWidget }
 import java.util.StringTokenizer
 import org.nlogo.api.Version
@@ -59,15 +60,8 @@ with Event.LinkChild {
    *
    * @param text the widget specification
    */
-  def makeWidget(text: String) {
-    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
-    val result = new ArrayList[String]
-    val tokenizer = new StringTokenizer(text, "\n")
-    while (tokenizer.hasMoreTokens)
-      result.add(tokenizer.nextToken())
-    val strings = result.asScala.toArray
-    //TODO: Fix this, shouldn't use null here
-    iP.loadWidget(strings, null, Version.version)
+  def makeWidget(widget: CoreWidget): Unit = {
+    iP.loadWidget(widget)
   }
 
   /**

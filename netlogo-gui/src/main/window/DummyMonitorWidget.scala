@@ -2,14 +2,10 @@
 
 package org.nlogo.window
 
-import org.nlogo.api.Editable
+import org.nlogo.api.{ Editable, Property }
 import org.nlogo.core.{ I18N, Monitor => CoreMonitor }
-import org.nlogo.api.Property
 
-import java.awt.Color
-import java.awt.Dimension
-import java.awt.Graphics
-import java.awt.Font
+import java.awt.{ Color, Dimension, Graphics, Font }
 import java.util.{ List => JList }
 
 object DummyMonitorWidget {
@@ -91,7 +87,7 @@ class DummyMonitorWidget
       _decimalPlaces = decimalPlaces
   }
 
-  override def load(monitor: WidgetModel, helper: Widget.LoadHelper): AnyRef = {
+  override def load(monitor: WidgetModel): AnyRef = {
     val displayName = monitor.display.getOrElse("")
 
     if (displayName.equals("NIL"))

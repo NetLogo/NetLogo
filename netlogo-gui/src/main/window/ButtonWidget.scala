@@ -446,7 +446,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
       actionKey = savedActionKey, disableUntilTicksStart = goTime)
   }
 
-  override def load(button: WidgetModel, helper: Widget.LoadHelper): Object = {
+  override def load(button: WidgetModel): Object = {
     forever = button.forever
     buttonType = ButtonType(button.buttonKind)
 
@@ -455,8 +455,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
     goTime = button.disableUntilTicksStart
     name = button.display.getOrElse("")
 
-    button.source.foreach(k =>
-        wrapSource(helper.convert(k, false)))
+    button.source.foreach(wrapSource)
 
     setSize(button.right - button.left, button.bottom - button.top)
     chooseDisplayName()

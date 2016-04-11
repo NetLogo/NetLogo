@@ -10,7 +10,7 @@ extends javax.swing.JLayeredPane
 with Zoomable {
   def removeAllWidgets()
   def getWidgetsForSaving: Seq[CoreWidget]
-  def loadWidgets(widgets:Array[String], version:String, additionalReaders: Map[String, WidgetReader] = Map())
+  def loadWidgets(widgets: Seq[CoreWidget])
   def hasView: Boolean
   def empty: Boolean
 }

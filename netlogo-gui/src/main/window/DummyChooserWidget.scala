@@ -2,15 +2,10 @@
 
 package org.nlogo.window
 
+import org.nlogo.api.{ CompilerServices, Dump, Editable, Property }
+import org.nlogo.core.{ I18N, LogoList }
 import org.nlogo.core.{ Chooseable, Chooser => CoreChooser, CompilerException }
-import org.nlogo.api.CompilerServices
-import org.nlogo.api.Dump
-import org.nlogo.api.Editable
-import org.nlogo.core.I18N
-import org.nlogo.core.LogoList
-import org.nlogo.api.Property
 
-import java.util.{ Iterator => JIterator }
 import java.util.{ List => JList }
 
 class DummyChooserWidget(compiler: CompilerServices)
@@ -65,7 +60,7 @@ class DummyChooserWidget(compiler: CompilerServices)
   }
 
 
-  override def load(model: WidgetModel, helper: Widget.LoadHelper): Object = {
+  override def load(model: WidgetModel): AnyRef = {
     setSize(model.right - model.left, model.bottom - model.top)
     name(model.varName)
     choicesWrapper(model.choices.map(c => Dump.logoObject(c.value)).mkString("\n"))

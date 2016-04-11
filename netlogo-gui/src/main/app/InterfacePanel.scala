@@ -2,7 +2,10 @@
 
 package org.nlogo.app
 
-import org.nlogo.core.{ AgentKind, I18N, View => CoreView, Widget => CoreWidget }
+import org.nlogo.core.{ AgentKind, I18N, View => CoreView, Widget => CoreWidget,
+  Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox,
+  Monitor => CoreMonitor, Output => CoreOutput, Plot => CorePlot, Slider => CoreSlider,
+  Switch => CoreSwitch, TextBox => CoreTextBox }
 import org.nlogo.api.Editable
 import org.nlogo.api.ModelSection
 import org.nlogo.api.Version
@@ -21,7 +24,7 @@ import org.nlogo.window.EditorColorizer
 import org.nlogo.window.Events.EditWidgetEvent
 import org.nlogo.window.Events.CompileAllEvent
 import org.nlogo.window.Events.CompileMoreSourceEvent
-import org.nlogo.window.Events.LoadSectionEvent
+import org.nlogo.window.Events.LoadWidgetsEvent
 import org.nlogo.window.Events.RemoveConstraintEvent
 import org.nlogo.window.ViewWidgetInterface
 import org.nlogo.window.Widget
@@ -59,7 +62,7 @@ import scala.collection.JavaConverters._
 class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspace)
   extends WidgetPanel(workspace)
   with java.awt.event.KeyListener
-  with LoadSectionEvent.Handler
+  with LoadWidgetsEvent.Handler
   with org.nlogo.window.Events.ExportInterfaceEvent.Handler {
 
   workspace.setWidgetContainer(this)
@@ -88,19 +91,30 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
 
   override protected def doPopup(e: MouseEvent): Unit = {
     val menu = new JPopupMenu()
-    Seq("button", "slider", "switch", "chooser", "input", "monitor", "plot").foreach { widgetKind =>
-      menu.add(new WidgetCreationMenuItem(I18N.gui.get(s"tabs.run.widgets.$widgetKind"), widgetKind.toUpperCase, e.getX, e.getY))
+    Seq(
+      "button"  -> CoreButton(None, 0, 0, 0, 0),
+      "slider"  -> CoreSlider(None),
+      "switch"  -> CoreSwitch(None),
+      "chooser" -> CoreChooser(None),
+      "input"   -> CoreInputBox(None),
+      "monitor" -> CoreMonitor(None, 0, 0, 0, 0, None, 10),
+      "plot"    -> CorePlot(None)).foreach {
+        case (widgetKind, widget) =>
+          menu.add(
+            new WidgetCreationMenuItem(I18N.gui.get(s"tabs.run.widgets.$widgetKind"),
+              widget, e.getX, e.getY))
     }
 
     // add all the widgets
     val outputItem =
-        new WidgetCreationMenuItem(I18N.gui.get("tabs.run.widgets.output"), "OUTPUT", e.getX, e.getY)
+        new WidgetCreationMenuItem(I18N.gui.get("tabs.run.widgets.output"),
+          CoreOutput(0, 0, 0, 0, 11), e.getX, e.getY)
     if (getOutputWidget != null) {
       outputItem.setEnabled(false)
     }
     menu.add(outputItem)
 
-    menu.add(new WidgetCreationMenuItem(I18N.gui.get("tabs.run.widgets.note"), "NOTE", e.getX, e.getY))
+    menu.add(new WidgetCreationMenuItem(I18N.gui.get("tabs.run.widgets.note"), CoreTextBox(None, fontSize = 11, color = 0), e.getX, e.getY))
 
     // add extra stuff
     menu.add(new JPopupMenu.Separator())
@@ -127,11 +141,11 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     exportItem
   }
 
-  class WidgetCreationMenuItem(val displayName: String, val widgetType: String, x: Int, y: Int)
+  class WidgetCreationMenuItem(val displayName: String, val coreWidget: CoreWidget, x: Int, y: Int)
   extends JMenuItem(displayName) {
     val listener = new ActionListener() {
       override def actionPerformed(e: ActionEvent): Unit = {
-        val widget = makeWidget(widgetType, false)
+        val widget = makeWidget(coreWidget)
         val wrapper = addWidget(widget, x, y, true, false)
         revalidate()
         wrapper.selected(true)
@@ -149,37 +163,33 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
   // This is used both when loading a model and when the user is making
   // new widgets in the UI.  For most widget types, the same type string
   // is used in both places. - ST 3/17/04
-  override def makeWidget(lowerCaseType: String, loading: Boolean): Widget = {
-    val tpe = lowerCaseType.toUpperCase
-    val fromRegistry = WidgetRegistry(tpe)
+  override def makeWidget(coreWidget: CoreWidget): Widget = {
+    val fromRegistry = WidgetRegistry(coreWidget.getClass.getSimpleName)
     if (fromRegistry != null)
       fromRegistry
-    else if (tpe.equalsIgnoreCase("SLIDER")) {
-      new SliderWidget(workspace.world.auxRNG) {
-        override def sourceOffset: Int =
-          Evaluator.sourceOffset(AgentKind.Observer, false)
-      }
-    } else if (tpe.equals("CHOOSER") || // current name
-        tpe.equals("CHOICE"))   // old name, used in old models
-      new org.nlogo.window.ChooserWidget(workspace)
-    else if (tpe.equals("BUTTON"))
-      new ButtonWidget(workspace.world.mainRNG)
-    else if (tpe.equals("PLOT"))
-      PlotWidget(workspace.plotManager)
-    else if (tpe.equals("MONITOR"))
-      new MonitorWidget(workspace.world.auxRNG)
-    else if (tpe.equals("INPUT") ||  // in the GUI, it's "Input Box"
-        tpe.equals("INPUTBOX"))  // in saved models, it's "INPUTBOX"
-    {
-      val font = new Font(Fonts.platformMonospacedFont,
-        Font.PLAIN, 12)
-      val textArea = new CodeEditor(1, 20, font, false, null, new EditorColorizer(workspace), I18N.gui.fn)
-      val dialogTextArea = new CodeEditor(5, 20, font, true, null, new EditorColorizer(workspace), I18N.gui.fn)
-      new InputBoxWidget(textArea, dialogTextArea, workspace, this)
-    } else if (tpe.equals("OUTPUT"))  // currently in saved models only - ST 3/17/04
-      new OutputWidget()
-    else
-      throw new IllegalStateException("unknown widget type: " + tpe)
+    else coreWidget match {
+      case s: CoreSlider =>
+        new SliderWidget(workspace.world.auxRNG) {
+          override def sourceOffset: Int =
+            Evaluator.sourceOffset(AgentKind.Observer, false)
+        }
+      case c: CoreChooser =>
+        new org.nlogo.window.ChooserWidget(workspace)
+      case b: CoreButton =>
+        new ButtonWidget(workspace.world.mainRNG)
+      case p: CorePlot =>
+        PlotWidget(workspace.plotManager)
+      case m: CoreMonitor =>
+        new MonitorWidget(workspace.world.auxRNG)
+      case i: CoreInputBox =>
+        val font = new Font(Fonts.platformMonospacedFont,
+          Font.PLAIN, 12)
+        val textArea = new CodeEditor(1, 20, font, false, null, new EditorColorizer(workspace), I18N.gui.fn)
+        val dialogTextArea = new CodeEditor(5, 20, font, true, null, new EditorColorizer(workspace), I18N.gui.fn)
+        new InputBoxWidget(textArea, dialogTextArea, workspace, this)
+      case _ =>
+        throw new IllegalStateException("unknown widget type: " + coreWidget.getClass.getName)
+    }
   }
 
   override private[app] def deleteWidgets(hitList: Seq[WidgetWrapper]): Unit = {
@@ -225,53 +235,50 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
 
   /// loading and saving
 
-  override def loadWidget(strings: Array[String], coreWidget: CoreWidget, modelVersion: String): Widget =
-    loadWidget(strings, coreWidget, modelVersion, 0, 0)
+  override def loadWidget(coreWidget: CoreWidget): Widget =
+    loadWidget(coreWidget, 0, 0)
 
   // TODO: consider cleaning up this x and y business
   // it was added for copying/pasting widgets.
   // the regular loadWidget just uses the x and y from the string array
   // it passes in x=0, y=0 and we do a check. ugly, but works for now.
   // paste uses the x and y from the right click location.
-  private def loadWidget(strings: Array[String], coreWidget: CoreWidget, modelVersion: String, _x: Int, _y: Int): Widget = {
+  private def loadWidget(coreWidget: CoreWidget, _x: Int, _y: Int): Widget = {
+    /*
     val helper =
       new Widget.LoadHelper() {
         val version = modelVersion
         def convert(source: String, reporter: Boolean): String =
           workspace.autoConvert(source, true, reporter, modelVersion);
       }
-    val widgetType = strings(0)
-    val x = if (_x == 0) Integer.parseInt(strings(1)) else _x
-    val parsedY = if (_y == 0) Integer.parseInt(strings(2)) else _y
-    val y = if (viewWidget.isInstanceOf[ViewWidget] && !widgetType.equals("GRAPHICS-WINDOW") && VersionHistory.olderThan13pre1(modelVersion))
-        parsedY + viewWidget.asInstanceOf[ViewWidget].getExtraHeight +
-        viewWidget.asInstanceOf[ViewWidget].controlStrip.getHeight
-      else
-        parsedY
-    if (widgetType.equals("GRAPHICS-WINDOW")) {
-      // the graphics widget (and the command center) are special cases because
-      // they are not recreated at load time, but reused
-      viewWidget.asInstanceOf[ViewWidget].load(coreWidget.asInstanceOf[CoreView], helper)
-      // in 3D we don't add the viewWidget to the interface panel
-      // so don't worry about all the sizing junk ev 7/5/07
-      val parent = viewWidget.asWidget.getParent
-      if (parent != null) {
-        parent.setSize(viewWidget.asWidget.getSize)
-        enforceMinimumAndMaximumWidgetSizes(viewWidget.asWidget)
-        parent.setLocation(x, y)
-        zoomer.zoomWidgetLocation(
-          getWrapper(viewWidget.asWidget),
-                true, true, 1.0, zoomer.zoomFactor)
-        zoomer.zoomWidgetSize(
-          getWrapper(viewWidget.asWidget),
-                true, true, 1.0, zoomer.zoomFactor)
-        zoomer.scaleComponentFont(
-          viewWidget.asInstanceOf[ViewWidget].view,
-               zoomFactor, 1.0, false)
-      }
-      viewWidget.asWidget
-    } else {
-      makeAndLoadWidget(widgetType, strings, coreWidget, helper, x, y)
+    */
+    val x = if (_x == 0) coreWidget.left else _x
+    val y = if (_y == 0) coreWidget.top  else _y
+    coreWidget match {
+      case view: CoreView =>
+        // the graphics widget (and the command center) are special cases because
+        // they are not recreated at load time, but reused
+        viewWidget.asInstanceOf[ViewWidget].load(view)
+        // in 3D we don't add the viewWidget to the interface panel
+        // so don't worry about all the sizing junk ev 7/5/07
+        val parent = viewWidget.asWidget.getParent
+        if (parent != null) {
+          parent.setSize(viewWidget.asWidget.getSize)
+          enforceMinimumAndMaximumWidgetSizes(viewWidget.asWidget)
+          parent.setLocation(x, y)
+          zoomer.zoomWidgetLocation(
+            getWrapper(viewWidget.asWidget),
+                  true, true, 1.0, zoomer.zoomFactor)
+          zoomer.zoomWidgetSize(
+            getWrapper(viewWidget.asWidget),
+                  true, true, 1.0, zoomer.zoomFactor)
+          zoomer.scaleComponentFont(
+            viewWidget.asInstanceOf[ViewWidget].view,
+                 zoomFactor, 1.0, false)
+        }
+        viewWidget.asWidget
+      case _ =>
+        makeAndLoadWidget(coreWidget, x, y)
     }
   }
 
@@ -322,9 +329,8 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     }
   }
 
-  def handle(e: LoadSectionEvent): Unit = {
-    if (e.section == ModelSection.Interface)
-      loadWidgets(e.lines, e.version)
+  def handle(e: LoadWidgetsEvent): Unit = {
+    loadWidgets(e.widgets)
   }
 
   override def removeAllWidgets(): Unit = {

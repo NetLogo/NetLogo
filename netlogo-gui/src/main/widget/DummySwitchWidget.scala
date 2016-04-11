@@ -20,7 +20,7 @@ class DummySwitchWidget extends Switch with Editable {
   def handle(e:org.nlogo.window.Events.AfterLoadEvent) {}
 
   /// load and save
-  override def load(model: WidgetModel, helper: Widget.LoadHelper): Object = {
+  override def load(model: WidgetModel): AnyRef = {
     super.name = model.varName
     isOn = model.on
     setSize(model.right - model.left, model.bottom - model.top)

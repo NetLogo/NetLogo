@@ -309,7 +309,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
     new Dimension(StrictMath.max(MinWidth, result.width), StrictMath.max(MinHeight, result.height))
   }
 
-  override def load(model: WidgetModel, helper: Widget.LoadHelper): Object = {
+  override def load(model: WidgetModel): AnyRef = {
     val displayName = model.varName
     if(displayName ==  "NIL") name("") else name(displayName)
     multiline(model.multiline)

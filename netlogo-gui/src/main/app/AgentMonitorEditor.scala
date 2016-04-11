@@ -5,7 +5,7 @@ package org.nlogo.app
 import org.nlogo.agent.{Agent, AgentSet, Observer, Turtle, Patch, Link}
 import org.nlogo.window.{EditorColorizer, Widget}
 import org.nlogo.api.{ AgentVariables, Dump }
-import org.nlogo.core.I18N
+import org.nlogo.core.{ I18N, Widget => CoreWidget }
 import org.nlogo.core.{ AgentKind, TokenType, Nobody }
 import collection.JavaConverters._
 
@@ -423,9 +423,9 @@ with org.nlogo.window.Events.JobRemovedEvent.Handler
 
   /// load and save are inapplicable
 
-  override def load(model: org.nlogo.core.Widget, helper: Widget.LoadHelper): AnyRef =
+  override def load(model: CoreWidget): AnyRef =
     throw new UnsupportedOperationException
 
-  override def model: org.nlogo.core.Widget =
+  override def model: CoreWidget =
     throw new UnsupportedOperationException
 }
