@@ -22,7 +22,7 @@ object WidgetInfo {
   val input   = WidgetInfo("input", "input.gif", () => CoreInputBox(None))
   val monitor = WidgetInfo("monitor", "monitor.gif", () => CoreMonitor(None, 0, 0, 0, 0, None, 10))
   val plot    = WidgetInfo("plot", "plot.gif", () => CorePlot(None))
-  val output  = WidgetInfo("output", "output.gif", () => CoreOutput(0, 0, 0, 0, 11))
+  val output  = WidgetInfo("output", "output.gif", () => CoreOutput(0, 0, 0, 0, 13))
   val note    = WidgetInfo("note", "note.gif", () => CoreTextBox(None, fontSize = 11, color = 0))
   val view    = WidgetInfo("view", "view.gif", () => CoreView())
 }

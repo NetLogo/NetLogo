@@ -2,60 +2,30 @@
 
 package org.nlogo.app
 
+import java.awt.{ Cursor, Font, FileDialog => AwtFileDialog }
+import java.awt.event.{ ActionListener, ActionEvent, KeyEvent, FocusEvent, MouseEvent }
+import java.io.IOException
+import java.util.{ ArrayList, List => JList }
+
+import javax.imageio.ImageIO
+import javax.swing.{ JMenuItem, JPopupMenu, JOptionPane }
+
+import org.nlogo.window.{ ButtonWidget, ChooserWidget, CodeEditor,
+  EditorColorizer, GUIWorkspace, InputBoxWidget, InterfaceGlobalWidget,
+  JobWidget, MonitorWidget, OutputWidget, PlotWidget, SliderWidget,
+  ViewWidget, ViewWidgetInterface, Widget, WidgetInfo, WidgetRegistry }
+import org.nlogo.api.{ Editable, Exceptions, ModelSection, Version, VersionHistory }
+import org.nlogo.awt.{ Fonts, Hierarchy, Images, UserCancelException }
 import org.nlogo.core.{ AgentKind, I18N, View => CoreView, Widget => CoreWidget,
   Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox,
   Monitor => CoreMonitor, Output => CoreOutput, Plot => CorePlot, Slider => CoreSlider,
   Switch => CoreSwitch, TextBox => CoreTextBox }
-import org.nlogo.api.Editable
-import org.nlogo.api.ModelSection
-import org.nlogo.api.Version
-import org.nlogo.api.VersionHistory
-import org.nlogo.awt.Fonts
-import org.nlogo.awt.Images
-import org.nlogo.awt.Hierarchy
-import org.nlogo.awt.UserCancelException
 import org.nlogo.log.Logger
 import org.nlogo.swing.{ FileDialog => SwingFileDialog }
 import org.nlogo.swing.ModalProgressTask
-import org.nlogo.api.{ Exceptions => ApiExceptions }
-import org.nlogo.window.GUIWorkspace
-import org.nlogo.window.CodeEditor
-import org.nlogo.window.EditorColorizer
-import org.nlogo.window.Events.EditWidgetEvent
-import org.nlogo.window.Events.CompileAllEvent
-import org.nlogo.window.Events.CompileMoreSourceEvent
-import org.nlogo.window.Events.LoadWidgetsEvent
-import org.nlogo.window.Events.RemoveConstraintEvent
-import org.nlogo.window.ViewWidgetInterface
-import org.nlogo.window.Widget
-import org.nlogo.window.WidgetRegistry
-import org.nlogo.window.ButtonWidget
-import org.nlogo.window.ChooserWidget
-import org.nlogo.window.InputBoxWidget
-import org.nlogo.window.InterfaceGlobalWidget
-import org.nlogo.window.JobWidget
-import org.nlogo.window.MonitorWidget
-import org.nlogo.window.OutputWidget
-import org.nlogo.window.PlotWidget
-import org.nlogo.window.SliderWidget
-import org.nlogo.window.ViewWidget
+import org.nlogo.window.Events.{ CompileAllEvent, CompileMoreSourceEvent,
+  EditWidgetEvent, LoadWidgetsEvent, RemoveConstraintEvent }
 import org.nlogo.workspace.Evaluator
-
-import javax.imageio.ImageIO
-import javax.swing.JMenuItem
-import javax.swing.JPopupMenu
-import javax.swing.JOptionPane
-import java.awt.Cursor
-import java.awt.Font
-import java.awt.{ FileDialog => AwtFileDialog }
-import java.awt.event.ActionListener
-import java.awt.event.ActionEvent
-import java.awt.event.KeyEvent
-import java.awt.event.FocusEvent
-import java.awt.event.MouseEvent
-import java.io.IOException
-import java.util.ArrayList
-import java.util.{ List => JList }
 
 import scala.collection.JavaConverters._
 
@@ -91,18 +61,17 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
 
   override protected def doPopup(e: MouseEvent): Unit = {
     val menu = new JPopupMenu()
-    Seq(
-      "button"  -> CoreButton(None, 0, 0, 0, 0),
-      "slider"  -> CoreSlider(None),
-      "switch"  -> CoreSwitch(None),
-      "chooser" -> CoreChooser(None),
-      "input"   -> CoreInputBox(None),
-      "monitor" -> CoreMonitor(None, 0, 0, 0, 0, None, 10),
-      "plot"    -> CorePlot(None)).foreach {
-        case (widgetKind, widget) =>
-          menu.add(
-            new WidgetCreationMenuItem(I18N.gui.get(s"tabs.run.widgets.$widgetKind"),
-              widget, e.getX, e.getY))
+    Seq(WidgetInfo.button,
+      WidgetInfo.slider,
+      WidgetInfo.switch,
+      WidgetInfo.chooser,
+      WidgetInfo.input,
+      WidgetInfo.monitor,
+      WidgetInfo.plot)
+    .map(i => i.displayName -> i.widgetThunk)
+    .foreach {
+        case (displayName, widgetThunk) =>
+          menu.add(new WidgetCreationMenuItem(displayName, widgetThunk(), e.getX, e.getY))
     }
 
     // add all the widgets
@@ -244,14 +213,6 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
   // it passes in x=0, y=0 and we do a check. ugly, but works for now.
   // paste uses the x and y from the right click location.
   private def loadWidget(coreWidget: CoreWidget, _x: Int, _y: Int): Widget = {
-    /*
-    val helper =
-      new Widget.LoadHelper() {
-        val version = modelVersion
-        def convert(source: String, reporter: Boolean): String =
-          workspace.autoConvert(source, true, reporter, modelVersion);
-      }
-    */
     val x = if (_x == 0) coreWidget.left else _x
     val y = if (_y == 0) coreWidget.top  else _y
     coreWidget match {
@@ -325,7 +286,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
         I18N.gui.get("dialog.interface.export.task"), runExport)
       exception.foreach(e => throw e)
     } catch {
-      case ex: UserCancelException => ApiExceptions.ignore(ex)
+      case ex: UserCancelException => Exceptions.ignore(ex)
     }
   }
 
@@ -345,7 +306,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
         }
       }
     } catch {
-      case ex: RuntimeException => ApiExceptions.handle(ex)
+      case ex: RuntimeException => Exceptions.handle(ex)
     } finally {
       setVisible(false)
     }
