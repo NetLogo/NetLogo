@@ -19,6 +19,7 @@ public strictfp class RuntimeErrorDialog
   private String eventTrace;
   private final String className;
   private String threadName;
+  private String extra;
 
   private String textWithoutDetails;
   private String textWithDetails;
@@ -120,7 +121,8 @@ public strictfp class RuntimeErrorDialog
       copyButton.addActionListener
           (new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
-              textArea.selectAll();
+              int beginIndex = textArea.getText().indexOf(extra) + extra.length();
+              textArea.select(beginIndex, textArea.getText().length());
               textArea.copy();
               textArea.setCaretPosition(0);
             }
@@ -146,7 +148,7 @@ public strictfp class RuntimeErrorDialog
   }
 
   private void buildTexts() {
-    String extra = "";
+    extra = "";
     if (askForBugReport) {
       extra = "NetLogo is unable to supply you with more details about this error.  Please report the problem\n"
           + "at https://github.com/NetLogo/NetLogo/issues, or to bugs@ccl.northwestern.edu, and paste the\n"
