@@ -129,7 +129,7 @@ public strictfp class ModelsLibrary {
       return;
     }
     try {
-      if (!org.nlogo.api.Version.is3D() || !exclusive) {
+      if (!org.nlogo.api.Version$.MODULE$.is3D() || !exclusive) {
         java.io.File directoryRoot = new java.io.File(modelsRoot(), "").getCanonicalFile();
         rootNode = new Node(modelsRoot(), "", true);
         scanDirectory(directoryRoot, null, rootNode, exclusive);
@@ -259,7 +259,7 @@ public strictfp class ModelsLibrary {
   private static List<String> orderItems(List<String> names, boolean topLevel, boolean exclusive) {
     String[] orderednames;
     if (topLevel) {
-      if (org.nlogo.api.Version.is3D()) {
+      if (org.nlogo.api.Version$.MODULE$.is3D()) {
         if (exclusive) {
           orderednames = new String[]{"3D"};
         }
@@ -318,7 +318,7 @@ public strictfp class ModelsLibrary {
             // for the Beatbox model
             name.equals("BEATS") ||
             // when we're not 3D ignore the 3D models.
-            (!org.nlogo.api.Version.is3D() &&
+            (!org.nlogo.api.Version$.MODULE$.is3D() &&
                 (name.equals("3D") ||
                     // the vrml extension is our only 3D extension at present
                     // so just special case it - ST 6/12/08

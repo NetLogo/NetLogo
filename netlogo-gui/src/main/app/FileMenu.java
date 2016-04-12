@@ -62,7 +62,7 @@ public strictfp class FileMenu
     importMenu.addMenuItem(new ImportWorldAction());
     importMenu.addMenuItem(new ImportPatchColorsAction());
     importMenu.addMenuItem(new ImportPatchColorsRGBAction());
-    if (!org.nlogo.api.Version.is3D()) {
+    if (!org.nlogo.api.Version$.MODULE$.is3D()) {
       importMenu.addMenuItem(new ImportDrawingAction());
     }
     importMenu.addMenuItem(new ImportClientAction());
@@ -75,7 +75,7 @@ public strictfp class FileMenu
     // initialize here, unless there's a big problem early on in the
     // initial load process it'll get initialize properly below
     // maybe this fixes Nigel Gilbert's bug. maybe. ev 1/30/07
-    savedVersion = org.nlogo.api.Version.version();
+    savedVersion = org.nlogo.api.Version$.MODULE$.version();
   }
 
   ///
@@ -211,7 +211,7 @@ private class SaveModelingCommonsAction extends FileMenuAction {
     SaveAsNetLogoWebAction() {
       super(I18N.guiJ().get("menu.file.saveAsNetLogoWeb"));
       // disabled for 3-D since you can't do that in NetLogo Web - RG 9/10/15
-      setEnabled(!org.nlogo.api.Version.is3D());
+      setEnabled(!org.nlogo.api.Version$.MODULE$.is3D());
     }
 
     @Override
@@ -693,8 +693,7 @@ private class SaveModelingCommonsAction extends FileMenuAction {
     try {
       String source = org.nlogo.api.FileIO.file2String(path);
       if (source == null) {
-        throw new IllegalStateException
-            ("couldn't open: '" + path + "'");
+        throw new IllegalStateException("couldn't open: '" + path + "'");
       }
       openFromSource(source, path, "Loading...", modelType);
     } catch (UserCancelException ex) {
@@ -730,15 +729,15 @@ private class SaveModelingCommonsAction extends FileMenuAction {
     if (version == null || !version.startsWith("NetLogo")) {
       notifyUserNotValidFile();
     }
-    if (org.nlogo.api.Version.is3D() &&
-        !org.nlogo.api.Version.is3D(version)) {
+    if (org.nlogo.api.Version$.MODULE$.is3D() &&
+        !org.nlogo.api.Version$.MODULE$.is3D(version)) {
       checkWithUserBeforeOpening2DModelin3D();
     }
-    if (!org.nlogo.api.Version.is3D() &&
-        org.nlogo.api.Version.is3D(version)) {
+    if (!org.nlogo.api.Version$.MODULE$.is3D() &&
+        org.nlogo.api.Version$.MODULE$.is3D(version)) {
       checkWithUserBeforeOpening3DModelin2D(version);
     } else {
-      if (!org.nlogo.api.Version.knownVersion(version)) {
+      if (!org.nlogo.api.Version$.MODULE$.knownVersion(version)) {
         checkWithUserBeforeOpeningModelFromFutureVersion(version);
       }
     }
@@ -939,16 +938,16 @@ private class SaveModelingCommonsAction extends FileMenuAction {
 
   private void checkWithUserBeforeSavingModelFromOldVersion()
       throws UserCancelException {
-    if (!org.nlogo.api.Version.compatibleVersion(savedVersion)) {
+    if (!org.nlogo.api.Version$.MODULE$.compatibleVersion(savedVersion)) {
       String[] options = {I18N.guiJ().get("common.buttons.save"), I18N.guiJ().get("common.buttons.cancel")};
       String message = "This model was made with " + savedVersion + ". "
-          + "If you save it in " + org.nlogo.api.Version.version()
+          + "If you save it in " + org.nlogo.api.Version$.MODULE$.version()
           + " it may not work in the old version anymore.";
       if (org.nlogo.swing.OptionDialog.show
           (this, "NetLogo", message, options) != 0) {
         throw new UserCancelException();
       }
-      savedVersion = org.nlogo.api.Version.version();
+      savedVersion = org.nlogo.api.Version$.MODULE$.version();
     }
   }
 
@@ -957,7 +956,7 @@ private class SaveModelingCommonsAction extends FileMenuAction {
     String[] options = {I18N.guiJ().get("common.buttons.continue"), I18N.guiJ().get("common.buttons.cancel")};
     String message = "You are attempting to open a model that was created" +
         " in a newer version of NetLogo.  (This is " +
-        org.nlogo.api.Version.version() + "; " +
+        org.nlogo.api.Version$.MODULE$.version() + "; " +
         "the model was created in " + version + ".) " +
         "NetLogo can try to open the model, but it may " +
         "or may not work.";
@@ -972,7 +971,7 @@ private class SaveModelingCommonsAction extends FileMenuAction {
     String[] options = {I18N.guiJ().get("common.buttons.continue"), I18N.guiJ().get("common.buttons.cancel")};
     String message = "You are attempting to open a model that was created" +
         " in a 3D version of NetLogo.  (This is " +
-        org.nlogo.api.Version.version() + "; " +
+        org.nlogo.api.Version$.MODULE$.version() + "; " +
         "the model was created in " + version + ".) " +
         "NetLogo can try to open the model, but it may " +
         "or may not work.";
@@ -986,7 +985,7 @@ private class SaveModelingCommonsAction extends FileMenuAction {
       throws UserCancelException {
     String[] options = {I18N.guiJ().get("common.buttons.continue"), I18N.guiJ().get("common.buttons.cancel")};
     String message = "You are attempting to open a 2D model in " +
-        org.nlogo.api.Version.version() + ". " +
+        org.nlogo.api.Version$.MODULE$.version() + ". " +
         "You might need to make changes before it will work in 3D.";
     if (org.nlogo.swing.OptionDialog.show
         (this, "NetLogo", message, options) != 0) {

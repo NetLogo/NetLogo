@@ -75,7 +75,7 @@ public strictfp class SpeedSliderPanel
       value = 0;
     }
     workspace.speedSliderPosition(value / 2);
-    if (org.nlogo.api.Version.isLoggingEnabled()) {
+    if (org.nlogo.api.Version$.MODULE$.isLoggingEnabled()) {
       org.nlogo.log.Logger.logSpeedSlider(value);
     }
     enableLabels(value);

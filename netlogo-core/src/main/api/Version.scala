@@ -4,7 +4,7 @@ package org.nlogo.api
 
 import org.nlogo.core.Resource
 
-object Version {
+trait Version {
 
   val noVersion =
     if (is3D)
@@ -123,3 +123,5 @@ object Version {
     version + " (" + buildDate + ")"
 
 }
+
+object Version extends Version

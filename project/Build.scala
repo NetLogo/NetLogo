@@ -25,10 +25,11 @@ object NetLogoBuild {
       dateFormat.format(new java.util.Date())
     },
     netlogoVersion := {
-      (testLoader in Test).value
-        .loadClass("org.nlogo.api.Version")
-        .getMethod("version")
-        .invoke(null).asInstanceOf[String]
+      val loader = (testLoader in Test).value
+      val klass = loader.loadClass("org.nlogo.api.Version$")
+      val version = klass.getField("MODULE$").get(klass)
+      klass.getMethod("version")
+        .invoke(version).asInstanceOf[String]
         .stripPrefix("NetLogo ")
     })
 

@@ -164,7 +164,7 @@ public strictfp class RuntimeErrorDialog
     }
     textWithDetails +=
         extra + javaStackTrace + "\n" +
-            org.nlogo.api.Version.version() + "\n" +
+            org.nlogo.api.Version$.MODULE$.version() + "\n" +
             "main: " + className + "\n" +
             "thread: " + threadName + "\n" +
             org.nlogo.util.SysInfo.getVMInfoString() + "\n" +

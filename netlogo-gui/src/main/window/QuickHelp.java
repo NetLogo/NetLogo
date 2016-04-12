@@ -61,7 +61,7 @@ final strictfp class QuickHelp<TokenType> {
       // if we're not in 3D don't load the 3d dictionary words
       // cause we don't need 'em and they'll override the 2d
       // dictionary ev 10/25/07
-      if (org.nlogo.api.Version.is3D()) {
+      if (org.nlogo.api.Version$.MODULE$.is3D()) {
         quickHelpWords3d = loadHelp(QUICKHELPWORDS_PATH3D);
       } else {
         quickHelpWords3d = new HashMap<String, String>();
