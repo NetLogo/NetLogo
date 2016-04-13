@@ -5,22 +5,27 @@ package org.nlogo.hubnet.server
 import org.nlogo.hubnet.connection.{HubNetException, ConnectionInterface}
 import org.nlogo.core.AgentKind
 import org.nlogo.core.model.WidgetReader
-import org.nlogo.core.{ FileMode, ShapeParser }
-import org.nlogo.api.{ HubNetInterface, LocalFile, ModelReader, ModelSection }, HubNetInterface.ClientInterface
-import org.nlogo.fileformat
+import org.nlogo.core.{ Widget => CoreWidget }
+import org.nlogo.api.{ HubNetInterface, ModelSection, Version }, HubNetInterface.ClientInterface
+import org.nlogo.fileformat.NLogoHubNetFormat
 import org.nlogo.hubnet.mirroring
 import org.nlogo.hubnet.mirroring.{HubNetLinkStamp, HubNetDrawingMessage, HubNetTurtleStamp, HubNetLine}
 import org.nlogo.hubnet.connection.MessageEnvelope._
 import org.nlogo.hubnet.connection.MessageEnvelope.MessageEnvelope
 import org.nlogo.hubnet.protocol.{ CalculatorInterface, ComputerInterface }
-import org.nlogo.workspace.AbstractWorkspaceScala
+import org.nlogo.workspace.{ AbstractWorkspaceScala, OpenModel }
+import org.nlogo.fileformat.NLogoFormat
 import org.nlogo.agent.{Link, Turtle}
 import org.nlogo.util.Utils, Utils.reader2String
 
+import java.nio.file.Paths
+import java.net.URI
 import java.io.{ Serializable => JSerializable }
 import java.util.concurrent.LinkedBlockingQueue
 
-abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetInterface with ConnectionInterface {
+abstract class HubNetManager(workspace: AbstractWorkspaceScala)
+  extends HubNetInterface
+  with ConnectionInterface {
 
   val connectionManager: ConnectionManager
 
@@ -321,20 +326,25 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetIn
   def calculatorInterface(activity: String,tags: Seq[String]): ClientInterface =
     CalculatorInterface(activity, tags)
 
-  def fileInterface(path: String): ClientInterface = {
-    // Load the file
-    val file = new LocalFile(path)
-    file.open(FileMode.Read)
-    val fileContents = reader2String(file.reader)
-    // Parse the file
-    val parsedFile = ModelReader.parseModel(fileContents)
-    val version = parsedFile.get(ModelSection.Version)(0)
-    // Load the widget descriptions
-    val widgets = parsedFile.get(ModelSection.HubNetClient)
-    val coreWidgets = WidgetReader.readInterface(
-      widgets.toList, workspace, fileformat.hubNetReaders, conversion = workspace.autoConvert(version))
-    val turtleShapes = ShapeParser.parseVectorShapes(parsedFile.get(ModelSection.TurtleShapes))
-    val linkShapes = ShapeParser.parseLinkShapes(parsedFile.get(ModelSection.LinkShapes))
-    ComputerInterface(coreWidgets, turtleShapes, linkShapes)
+  def fileInterface(path: String): Option[ClientInterface] = {
+    val uri = Paths.get(path).toUri
+    OpenModel[Array[String], NLogoFormat](uri, HubNetLoadController,
+      new NLogoFormat(workspace.autoConvert _), Version,
+      Seq(new NLogoHubNetFormat(workspace, workspace.autoConvert _)))
+        .flatMap { model =>
+          model.optionalSectionValue[Seq[CoreWidget]]("org.nlogo.modelsection.hubnetclient")
+            .map(widgets => ComputerInterface(widgets, model.turtleShapes, model.linkShapes))
+        }
+  }
+
+  object HubNetLoadController extends OpenModel.Controller {
+    // empty implementations of the following three methods will cause
+    // OpenModel to return None, which is fine
+    def errorOpeningURI(uri: URI,exception: Exception): Unit = { }
+    def invalidModel(uri: URI): Unit = { }
+    def invalidModelVersion(uri: java.net.URI,version: String): Unit = { }
+    def shouldOpenModelOfDifferingArity(arity: Int,version: String): Boolean = true
+    def shouldOpenModelOfLegacyVersion(version: String): Boolean = true
+    def shouldOpenModelOfUnknownVersion(version: String): Boolean = true
   }
 }

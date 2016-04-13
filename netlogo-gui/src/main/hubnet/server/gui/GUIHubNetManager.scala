@@ -5,24 +5,25 @@ package org.nlogo.hubnet.server.gui
 import org.nlogo.hubnet.connection.HubNetException
 import org.nlogo.hubnet.server.{HubNetManager, ClientEventListener, ConnectionManager}
 import org.nlogo.api.HubNetInterface.ClientInterface
-import org.nlogo.core.{ ComponentProvider, Femto, FileMode, Widget => CoreWidget }
+import org.nlogo.core.{ Femto, FileMode, Widget => CoreWidget }
 import org.nlogo.hubnet.protocol.ComputerInterface
+import org.nlogo.core.Model
 import org.nlogo.core.model.WidgetReader
 import org.nlogo.nvm.DefaultCompilerServices
 import org.nlogo.util.Utils, Utils.reader2String
 import org.nlogo.api._
 import org.nlogo.awt.EventQueue.invokeLater
 import org.nlogo.swing.Implicits._
+import org.nlogo.window._
 
 import java.net.InetAddress
-import org.nlogo.window._
 import java.awt.Component
 
 class GUIHubNetManager(workspace: GUIWorkspace,
                        linkParent: Component,
                        editorFactory: EditorFactory,
                        ifactory: InterfaceFactory,
-                       menuFactory: MenuBarFactory) extends HubNetManager(workspace) with ComponentProvider with ViewInterface {
+                       menuFactory: MenuBarFactory) extends HubNetManager(workspace) with ViewInterface {
 
   private var _clientEditor: HubNetClientEditor = new HubNetClientEditor(workspace, linkParent, ifactory, menuFactory)
   // used in the discovery messages, and displayed in the control center.
@@ -65,7 +66,11 @@ class GUIHubNetManager(workspace: GUIWorkspace,
   def clientEditor: AnyRef = _clientEditor
   def getInterfaceWidth = _clientEditor.interfacePanel.getPreferredSize.width
   def getInterfaceHeight = _clientEditor.interfacePanel.getPreferredSize.height
-  def load(widgets: Seq[CoreWidget]) { _clientEditor.load(widgets) }
+  def load(model: Model) {
+    val hubNetWidgets = model.optionalSectionValue[Seq[CoreWidget]]("org.nlogo.modelsection.hubnetclient").foreach { hubNetWidgets =>
+      _clientEditor.load(hubNetWidgets)
+    }
+  }
   def interfaceWidgets: Seq[CoreWidget] = _clientEditor.interfaceWidgets
 
   type Component       = Seq[CoreWidget]
@@ -73,20 +78,14 @@ class GUIHubNetManager(workspace: GUIWorkspace,
   def defaultComponent = Seq()
 
   @throws(classOf[java.io.IOException])
-  def importClientInterface(filePath: String, client: Boolean) {
+  def importClientInterface(model: Model, client: Boolean) {
     _clientEditor.close()
-    // Load the file
-    val file = new LocalFile(filePath)
-    file.open(FileMode.Read)
-    val fileContents = reader2String(file.reader)
-    // Parse the file
-    val parsedFile = ModelReader.parseModel(fileContents)
-    val version = parsedFile.get(ModelSection.Version)(0)
-    // Load the widget descriptions
-    val widgets = parsedFile.get(if (client) ModelSection.HubNetClient else ModelSection.Interface)
-    val coreWidgets = WidgetReader.readInterface(widgets.toList, workspace,
-      fileformat.hubNetReaders, conversion = workspace.autoConvert(version))
-    _clientEditor.load(coreWidgets)
+    val widgets: Seq[CoreWidget] =
+      if (client)
+        model.optionalSectionValue[Seq[CoreWidget]]("org.nlogo.modelsection.hubnetclient").getOrElse(Seq())
+      else
+        model.widgets
+    _clientEditor.load(widgets)
     openClientEditor()
   }
 

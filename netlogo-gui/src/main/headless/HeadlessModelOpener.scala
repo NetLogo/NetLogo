@@ -71,9 +71,8 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     // parse turtle and link shapes, updating the workspace.
     attachWorldShapes(model.turtleShapes, model.linkShapes)
 
-    model.otherSections.get("org.nlogo.modelsection.hubnetclient").foreach { lines =>
-      val hnWidgets = WidgetReader.readInterface(lines, ws, fileformat.hubNetReaders, ws.autoConvert(model.version))
-      ws.getHubNetManager.load(hnWidgets)
+    if (model.optionalSections.contains("org.nlogo.modelsection.hubnetclient")) {
+      ws.getHubNetManager.load(model)
     }
 
     ws.init()
@@ -88,7 +87,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
       finish(model.constraints, results.program, model.interfaceGlobalCommands.mkString("\n"))
   }
 
-  private def attachWorldShapes(turtleShapes: List[CoreVectorShape], linkShapes: List[CoreLinkShape]) = {
+  private def attachWorldShapes(turtleShapes: Seq[CoreVectorShape], linkShapes: Seq[CoreLinkShape]) = {
     import collection.JavaConverters._
     ws.world.turtleShapeList.replaceShapes(turtleShapes.map(ShapeConverter.baseVectorShapeToVectorShape))
     if (turtleShapes.isEmpty)
@@ -123,7 +122,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     ws.command(interfaceGlobalCommands)
   }
 
-  private def testCompileWidgets(buttons: List[Button], monitors: List[Monitor]) {
+  private def testCompileWidgets(buttons: Seq[Button], monitors: Seq[Monitor]) {
     val errors = ws.plotManager.compileAllPlots()
     if(errors.nonEmpty) throw errors(0)
     for {

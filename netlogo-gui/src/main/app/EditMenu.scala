@@ -9,12 +9,13 @@ import java.awt.event.ActionEvent
 import java.util.prefs.Preferences
 import javax.swing.{ AbstractAction, JCheckBoxMenuItem }
 
+import org.nlogo.api.ModelSettings
 import org.nlogo.editor.Actions
 import org.nlogo.core.I18N
 
 class EditMenu(app: App) extends org.nlogo.swing.Menu(I18N.gui.get("menu.edit"))
 with Events.SwitchedTabsEvent.Handler
-with org.nlogo.window.Events.LoadSectionEvent.Handler
+with org.nlogo.window.Events.LoadModelEvent.Handler
 with org.nlogo.window.Events.AboutToQuitEvent.Handler
 {
 
@@ -80,13 +81,12 @@ with org.nlogo.window.Events.AboutToQuitEvent.Handler
     lineNumbersAction.setEnabled(e.newTab != app.tabs.interfaceTab && e.newTab != app.tabs.infoTab)
   }
 
-  def handle(e: org.nlogo.window.Events.LoadSectionEvent) {
-    if(e.section == org.nlogo.api.ModelSection.ModelSettings) {
-      app.workspace.snapOn(e.lines != null &&
-                           e.lines.nonEmpty &&
-                           e.lines.head.trim.nonEmpty &&
-                           e.lines.head.toInt != 0)
-      snapper.setState(app.workspace.snapOn)
+  def handle(e: org.nlogo.window.Events.LoadModelEvent) {
+    e.model.optionalSectionValue[ModelSettings]("org.nlogo.modelsection.modelsettings") match {
+      case Some(settings: ModelSettings) =>
+        app.workspace.snapOn(settings.snapToGrid)
+        snapper.setState(settings.snapToGrid)
+      case _ =>
     }
   }
 

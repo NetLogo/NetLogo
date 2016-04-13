@@ -16,6 +16,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import java.net.URI;
+
 import javax.swing.JOptionPane;
 import javax.swing.event.HyperlinkEvent;
 
@@ -25,7 +27,7 @@ strictfp class ModelsLibraryDialog
     javax.swing.event.TreeExpansionListener {
   private static ModelsLibraryDialog me = null;
 
-  public static String open(java.awt.Frame parent)
+  public static URI open(java.awt.Frame parent)
       throws org.nlogo.awt.UserCancelException {
     if (me == null)  // NOPMD not threadsafe, but OK since it's event-thread-only
     {
@@ -38,10 +40,10 @@ strictfp class ModelsLibraryDialog
     // - ST 12/17/04
     me.setFocusable(false);
     me.setVisible(true);
-    if (me.source == null) {
+    if (me.sourceURI == null) {
       throw new org.nlogo.awt.UserCancelException();
     }
-    return me.source;
+    return me.sourceURI;
   }
 
   public static String getModelPath() {
@@ -54,7 +56,7 @@ strictfp class ModelsLibraryDialog
   private final ModelPreviewPanel modelPreviewPanel;
 
   private Node selected = null;
-  private String source = null;
+  private URI sourceURI = null;
   private String path = null;
 
   private String searchText = null;
@@ -64,13 +66,8 @@ strictfp class ModelsLibraryDialog
   javax.swing.Action openAction =
       new javax.swing.AbstractAction(I18N.guiJ().get("modelsLibrary.open")) {
         public void actionPerformed(java.awt.event.ActionEvent e) {
-          path = selected.getFilePath();
-          try {
-            source = org.nlogo.api.FileIO.file2String(path);
-            setVisible(false);
-          } catch (java.io.IOException ex) {
-            throw new IllegalStateException(ex);
-          }
+          sourceURI = selected.getFileURI();
+          setVisible(false);
         }
       };
 
@@ -93,7 +90,7 @@ strictfp class ModelsLibraryDialog
   javax.swing.Action cancelAction =
       new javax.swing.AbstractAction(I18N.guiJ().get("common.buttons.cancel")) {
         public void actionPerformed(java.awt.event.ActionEvent e) {
-          source = null;
+          sourceURI = null;
           path = null;
           setVisible(false);
         }
@@ -705,6 +702,10 @@ strictfp class ModelsLibraryDialog
 
     public String getFilePath() {
       return path;
+    }
+
+    public URI getFileURI() {
+      return new java.io.File(path).toURI();
     }
 
     public String getInfo() {

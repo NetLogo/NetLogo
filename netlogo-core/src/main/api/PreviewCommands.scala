@@ -35,6 +35,9 @@ object PreviewCommands {
   case class Custom(override val source: String) extends Compilable {
     override val description = "Custom preview commands"
   }
+  def apply(source: List[String]): PreviewCommands = {
+    apply(source.mkString(""))
+  }
   def apply(source: String): PreviewCommands = {
     val strippedSource = source.stripTrailingWhiteSpace
     strippedSource.toLowerCase match {

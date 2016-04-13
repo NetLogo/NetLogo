@@ -6,9 +6,13 @@ import java.util.{ ArrayList, List => JList }
 import org.nlogo.agent.{ World, World3D }
 import org.nlogo.api.{ LogoException, ModelSection, ModelType, Version, SimpleJobOwner }
 import org.nlogo.core.{ AgentKind, CompilerException }
-import org.nlogo.window.{ Event, AppletAdPanel, CompilerManager, InterfacePanelLite, InvalidVersionException,
+import org.nlogo.window.{ Event, FileController, AppletAdPanel, CompilerManager, InterfacePanelLite, InvalidVersionException,
                           ModelLoader, NetLogoListenerManager, RuntimeErrorDialog }
 import org.nlogo.window.Events.{ CompiledEvent, LoadSectionEvent }
+import org.nlogo.workspace.OpenModel
+import org.nlogo.fileformat.{ NLogoFormat, NLogoHubNetFormat, NLogoPreviewCommandsFormat, NLogoModelSettings }
+
+import java.net.URI
 
 /**
  * The superclass of org.nlogo.lite.InterfaceComponent.  Also used by org.nlogo.lite.Applet.
@@ -200,7 +204,7 @@ with Event.LinkParent {
    *               in the same format as it would be stored in a file.
    */
   @throws(classOf[InvalidVersionException])
-  def openFromSource(name: String, path: String, source: String) {
+  def openFromURI(uri: URI) {
     iP.reset()
     // I haven't thoroughly searched for all the places where the type of model matters, but it
     // seems to me like it ought to be OK; the main thing the model type affects in the engine (as
@@ -208,8 +212,11 @@ with Event.LinkParent {
     // from, but in the applet case 1) you can't write files and 2) we have special code for the
     // reading case that goes out to the web server instead of 1the file system.... so, I think
     // TYPE_LIBRARY is probably OK. - ST 10/11/05
-    RuntimeErrorDialog.setModelName(name)
-    ModelLoader.load(this, path, ModelType.Library, source, workspace)
+    RuntimeErrorDialog.setModelName(uri.getPath.split("/").last)
+    val controller = new FileController(this)
+    val modelOpt = OpenModel[Array[String], NLogoFormat](uri, controller,
+        new NLogoFormat(workspace.autoConvert _), Version, Seq(NLogoModelSettings, new NLogoHubNetFormat(workspace, workspace.autoConvert _), new NLogoPreviewCommandsFormat()))
+    modelOpt.foreach(model =>
+        ModelLoader.load(this, uri, ModelType.Library, model, workspace))
   }
-
 }

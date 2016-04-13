@@ -45,8 +45,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     org.nlogo.window.Events.BeforeLoadEvent.Handler,
     org.nlogo.window.Events.ExportPlotEvent.Handler,
     org.nlogo.window.Events.JobStoppingEvent.Handler,
-    org.nlogo.window.Events.LoadSectionEvent.Handler,
-    org.nlogo.window.Events.LoadHubNetInterfaceEvent.Handler,
+    org.nlogo.window.Events.LoadModelEvent.Handler,
     org.nlogo.window.Events.RemoveAllJobsEvent.Handler,
     org.nlogo.window.Events.RemoveJobEvent.Handler,
     org.nlogo.window.Events.AddSliderConstraintEvent.Handler,
@@ -1307,30 +1306,28 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
 
   /// preview commands & aggregate
 
-  public void handle(org.nlogo.window.Events.LoadSectionEvent e) {
-    if (e.section == ModelSectionJ.PREVIEW_COMMANDS()) {
-      previewCommands_$eq(PreviewCommands$.MODULE$.apply(e.text));
+  public void handle(org.nlogo.window.Events.LoadModelEvent e) {
+    // NOTE: This should use the model optional sections once we convert the class to scala
+    if (e.model.previewCommands().isEmpty()) {
+      previewCommands_$eq(PreviewCommands$.MODULE$.apply(""));
+    } else {
+      previewCommands_$eq(PreviewCommands$.MODULE$.apply(e.model.previewCommands().get()));
     }
-    if (e.section == ModelSectionJ.SHAPES()) {
-      ArrayList<org.nlogo.core.Shape> shapes = new ArrayList<org.nlogo.core.Shape>();
-      scala.collection.Iterator<? extends org.nlogo.core.Shape.VectorShape> shapeIterator = ShapeParser.parseVectorShapes(e.lines).iterator();
-      while (shapeIterator.hasNext()) {
-        shapes.add(ShapeConverter.baseVectorShapeToVectorShape(shapeIterator.next()));
-      }
-      world().turtleShapeList().replaceShapes(shapes);
+    ArrayList<org.nlogo.core.Shape> shapes = new ArrayList<org.nlogo.core.Shape>();
+    scala.collection.Iterator<? extends org.nlogo.core.Shape.VectorShape> shapeIterator = e.model.turtleShapes().iterator();
+    while (shapeIterator.hasNext()) {
+      shapes.add(ShapeConverter.baseVectorShapeToVectorShape(shapeIterator.next()));
     }
-    if (e.section == ModelSectionJ.LINK_SHAPES()) {
-      ArrayList<org.nlogo.core.Shape> shapes = new ArrayList<org.nlogo.core.Shape>();
-      scala.collection.Iterator<? extends org.nlogo.core.Shape.LinkShape> shapeIterator = ShapeParser.parseLinkShapes(e.lines).iterator();
-      while (shapeIterator.hasNext()) {
-        shapes.add(ShapeConverter.baseLinkShapeToLinkShape(shapeIterator.next()));
-      }
-      world().linkShapeList().replaceShapes(shapes);
+    world().turtleShapeList().replaceShapes(shapes);
+    ArrayList<org.nlogo.core.Shape> linkShapes = new ArrayList<org.nlogo.core.Shape>();
+    scala.collection.Iterator<? extends org.nlogo.core.Shape.LinkShape> linkShapeIterator = e.model.linkShapes().iterator();
+    while (linkShapeIterator.hasNext()) {
+      linkShapes.add(ShapeConverter.baseLinkShapeToLinkShape(linkShapeIterator.next()));
     }
-  }
-
-  public void handle(org.nlogo.window.Events.LoadHubNetInterfaceEvent e) {
-    getHubNetManager().load(e.widgets);
+    world().linkShapeList().replaceShapes(linkShapes);
+    // NOTE: really ought to just pass in hubnet bits, but
+    // that's tricky...
+    getHubNetManager().load(e.model);
   }
 
   public void snapOn(boolean snapOn) {

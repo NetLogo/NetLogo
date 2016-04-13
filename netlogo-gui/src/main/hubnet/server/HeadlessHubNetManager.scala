@@ -4,7 +4,7 @@ package org.nlogo.hubnet.server
 
 import org.nlogo.hubnet.connection.HubNetException
 import org.nlogo.workspace.AbstractWorkspaceScala
-import org.nlogo.core.{ Widget => CoreWidget }
+import org.nlogo.core.{ Model, Widget => CoreWidget }
 import org.nlogo.core.model.WidgetReader
 import org.nlogo.api.ModelType
 import org.nlogo.hubnet.protocol.{ ComputerInterface, TestClient }
@@ -23,7 +23,11 @@ class HeadlessHubNetManager(workspace: AbstractWorkspaceScala) extends HubNetMan
   // load is called from HeadlessModelOpener
   // save should never be called.
   var widgets: Seq[CoreWidget] = Seq()
-  def load(ws: Seq[CoreWidget]) { widgets = ws }
+  def load(m: Model) {
+    m.optionalSectionValue[Seq[CoreWidget]]("org.nlogo.modelsection.hubnetclient").foreach { ws =>
+      widgets = ws
+    }
+  }
   override def modelWidgets: Seq[CoreWidget] = widgets
   override def currentlyActiveInterface =
     ComputerInterface(widgets, workspace.world.turtleShapeList.shapes, workspace.world.linkShapeList.shapes)
@@ -77,7 +81,7 @@ class HeadlessHubNetManager(workspace: AbstractWorkspaceScala) extends HubNetMan
 
   // other no-op gui related stuff
   def setTitle(name: String, dir: String, modelType: ModelType) {}
-  def importClientInterface(filePath: String, client: Boolean) {} // only called from the File menu.
+  def importClientInterface(model: Model, client: Boolean) {} // only called from the File menu.
 
   private val clientIds = Iterator.from(0)
   private val clientsAddedViaNewClient = ListBuffer[TestClient]()

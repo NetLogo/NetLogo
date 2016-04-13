@@ -3,7 +3,7 @@
 package org.nlogo.lab.gui
 
 import org.nlogo.api.ModelSection
-import org.nlogo.lab.{Protocol, ProtocolLoader, ProtocolSaver}
+import org.nlogo.lab.{ Protocol, ProtocolLoader, ProtocolSaver }
 import org.nlogo.window.{GUIWorkspace, EditDialogFactoryInterface, LabManagerInterface}
 import org.nlogo.workspace.{CurrentModelOpener, WorkspaceFactory}
 import org.nlogo.window.Events._
@@ -18,6 +18,17 @@ class LabManager(val workspace: GUIWorkspace,
   with LoadSectionEvent.Handler
 {
   val protocols = new ListBuffer[Protocol]
+
+  def getComponent: Seq[Protocol] = protocols.toSeq
+  def defaultComponent: Seq[Protocol] = Seq()
+
+  def addProtocol(p: Protocol): Unit = {
+    protocols += p
+  }
+
+  def clearProtocols(): Unit = {
+    protocols.clear()
+  }
   private lazy val dialog = new ManagerDialog(this, dialogFactory)
   def show() { dialog.update(); dialog.setVisible(true) }
   def close() { dialog.setVisible(false) }

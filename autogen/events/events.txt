@@ -33,9 +33,9 @@ window.JobStopping - org.nlogo.api.JobOwner owner
 window.Load3DShapes - String filename
 window.LoadBegin
 window.LoadEnd
+window.LoadModel - org.nlogo.core.Model model
 window.LoadSection - String version - Object section - String[] lines - String text
 window.LoadWidgets - scala.collection.Seq<org.nlogo.core.Widget> widgets
-window.LoadHubNetInterface - scala.collection.Seq<org.nlogo.core.Widget> widgets
 window.ModelSaved - String modelPath
 window.OpenModel - String path
 window.Output - boolean clear - org.nlogo.agent.OutputObject outputObject - boolean wrapLines - boolean toCommandCenter

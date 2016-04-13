@@ -162,6 +162,8 @@ class _hubnetsetclientinterface extends Command {
     val clientInterface = interfaceType match {
       case "COMPUTER" =>
         workspace.getHubNetManager.fileInterface(interfaceInfo(0).asInstanceOf[String])
+          .getOrElse(
+            throw new EngineException(context, this, "unable to load interface from " + interfaceInfo(0)))
       case "TI-83+"   =>
         val activity = interfaceInfo(0).asInstanceOf[String]
         val tags =

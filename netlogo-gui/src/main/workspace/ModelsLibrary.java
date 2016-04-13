@@ -152,30 +152,6 @@ public strictfp class ModelsLibrary {
     return node;
   }
 
-  public static String getInfoWindow(String filePath)
-      throws java.io.IOException {
-    String file = org.nlogo.api.FileIO.file2String(filePath);
-    // parse out info text
-    String delimiter = org.nlogo.api.ModelReader$.MODULE$.SEPARATOR();
-    int dlength = delimiter.length();
-    int startIndex = 0;
-    int endIndex;
-    for (int i = 0; i < 2; i++) {
-      startIndex = file.indexOf(delimiter, startIndex);
-      if (i < 1) {
-        startIndex += dlength;
-      }
-    }
-    startIndex += delimiter.length();
-    endIndex = file.indexOf(delimiter, startIndex);
-    if (startIndex >= 0 && startIndex <= file.length() &&
-        endIndex >= 0 && endIndex <= file.length()) {
-      return file.substring(startIndex, endIndex).trim();
-    } else {
-      return "";
-    }
-  }
-
   public static String getImagePath(String filePath) {
     int index = filePath.indexOf(".nlogo");
     if (index != -1) {

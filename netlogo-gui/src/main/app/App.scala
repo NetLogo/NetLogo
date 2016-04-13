@@ -264,7 +264,7 @@ class App extends
     AppEvent.Handler with
     BeforeLoadEvent.Handler with
     LoadBeginEvent.Handler with
-    LoadSectionEvent.Handler with
+    LoadModelEvent.Handler with
     LoadEndEvent.Handler with
     ModelSavedEvent.Handler with
     ModelSections with
@@ -528,10 +528,7 @@ class App extends
 
       try {
 
-        val modelStr = org.nlogo.util.Utils.url2String(commandLineURL)
-        fileMenu.openFromSource(
-          modelStr,
-          java.net.URLDecoder.decode(commandLineURL.reverse takeWhile (_ != '/') reverse, "UTF-8"), "Starting...", ModelType.Library)
+        fileMenu.openFromURI(new java.net.URI(commandLineURL), ModelType.Library)
 
         import org.nlogo.awt.EventQueue, org.nlogo.swing.Implicits.thunk2runnable
 
@@ -570,7 +567,7 @@ class App extends
         })
       }
       catch {
-        case ex: java.net.ConnectException =>
+        case ex: Exception =>
           fileMenu.newModel()
           JOptionPane.showConfirmDialog(null,
             "Could not obtain NetLogo model from URL '%s'.\nNetLogo will instead start without any model loaded.".format(commandLineURL),
@@ -872,9 +869,10 @@ class App extends
   }
 
   def openFromSource(source:String, path:String, modelType:ModelType){
+    import java.nio.file.Paths
     dispatchThreadOrBust(
-      try fileMenu.openFromSource(source, path, "Loading...", modelType)
-      catch{ case ex:UserCancelException => org.nlogo.api.Exceptions.ignore(ex) })
+      try fileMenu.openFromURI(Paths.get(path).toUri, modelType)
+      catch { case ex:UserCancelException => org.nlogo.api.Exceptions.ignore(ex) })
   }
 
   /**
@@ -1057,9 +1055,11 @@ class App extends
   /**
    * Internal use only.
    */
-  def handle(e:LoadSectionEvent){
+  def handle(e:LoadModelEvent){
+    /*
     if(e.section == ModelSection.HubNetClient && e.lines.length > 0)
       frame.addLinkComponent(workspace.getHubNetManager.clientEditor)
+    */
   }
 
   /**

@@ -42,7 +42,7 @@ object ModelReader {
       turtleShapes    = turtleShapes.toList,
       behaviorSpace   = behaviorSpace.toList,
       linkShapes      = linkShapes.toList,
-      previewCommands = previewCommands.toList,
+      previewCommands = Some(previewCommands.mkString("\n")),
       otherSections   = Map(
         "org.nlogo.sdm"                  -> systemDynamics.toList,
         "org.nlogo.hubnet.client"        -> hubNetClient.toList,

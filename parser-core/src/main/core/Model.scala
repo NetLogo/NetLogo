@@ -5,34 +5,43 @@ package org.nlogo.core
 import Shape.{ VectorShape, LinkShape }
 
 import ShapeParser.{ parseVectorShapes, parseLinkShapes }
+import scala.reflect.ClassTag
 
-trait ComponentProvider {
-  type Component
-  def getComponent: Component
-  def defaultComponent: Component
+class OptionalSection[A <: AnyRef](val key: String, value: Option[A], val default: A) {
+  def get: Option[A] = value
 }
 
 case class Model(code: String = "",
-  widgets: List[Widget] = List(View()),
+  widgets: Seq[Widget] = List(View()),
   info: String = "",
   version: String = "NetLogo 6.0",
-  turtleShapes: List[VectorShape] = Model.defaultShapes,
+  turtleShapes: Seq[VectorShape] = Model.defaultShapes,
   behaviorSpace: List[String] = Nil,
-  linkShapes: List[LinkShape] = Model.defaultLinkShapes,
-  previewCommands: List[String] = Nil,
+  linkShapes: Seq[LinkShape] = Model.defaultLinkShapes,
+  previewCommands: Option[String] = None,
   otherSections: Map[String, List[String]] = Map(),
-  optionalSections: Map[String, ComponentProvider] = Map()) {
+  optionalSections: Seq[OptionalSection[_]] = Seq()) {
 
-  def interfaceGlobals: List[String] = widgets.collect{case x:DeclaresGlobal => x}.map(_.varName)
+  def interfaceGlobals: Seq[String] = widgets.collect{case x:DeclaresGlobal => x}.map(_.varName)
   def constraints: Map[String, ConstraintSpecification] = widgets.collect{case x:DeclaresConstraint => (x.varName, x.constraint)}.toMap
-  def interfaceGlobalCommands: List[String] = widgets.collect{case x:DeclaresGlobalCommand => x}.map(_.command)
+  def interfaceGlobalCommands: Seq[String] = widgets.collect{case x:DeclaresGlobalCommand => x}.map(_.command)
 
   if(widgets.collectFirst{case (w: View) => w}.isEmpty)
-    throw new RuntimeException(
-      "Every model must have at least a view...")
+    throw new Model.InvalidModelError("Every model must have at least a view...")
 
   def view: View = widgets.collectFirst{case (w: View) => w}.get
-  def plots: List[Plot] = widgets.collect{case (w: Plot) => w}
+  def plots: Seq[Plot] = widgets.collect{case (w: Plot) => w}
+
+  def optionalSectionValue[A <: AnyRef](key: String)(implicit ct: ClassTag[OptionalSection[A]]): Option[A] = {
+    optionalSections.find(_.key == key)
+      .flatMap(ct.unapply)
+      .map(sect => sect.get.getOrElse(sect.default))
+  }
+
+  def withOptionalSection[A <: AnyRef](key: String, sectionValue: Option[A], default: A): Model =
+    copy(optionalSections =
+      optionalSections.filterNot(_.key == key) :+
+      new OptionalSection[A](key, sectionValue, default))
 }
 
 object Model {
@@ -40,4 +49,5 @@ object Model {
     parseVectorShapes(Resource.lines("/system/defaultShapes.txt").toSeq).toList
   lazy val defaultLinkShapes: List[LinkShape] =
     parseLinkShapes(Resource.lines("/system/defaultLinkShapes.txt").toSeq).toList
+  class InvalidModelError(message: String) extends RuntimeException(message)
 }

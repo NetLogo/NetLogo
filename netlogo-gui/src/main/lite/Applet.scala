@@ -51,13 +51,11 @@ with org.nlogo.window.Events.CompiledEvent.Handler {
           name = unescapeSpacesInURL(name)
         val modelURL = new java.net.URL(getCodeBase, name)
         panel.setPrefix(modelURL)
-        val source = url2String(modelURL.toString)
-        panel.openFromSource(name, name, source)
+        panel.openFromURI(modelURL.toURI)
         // not really sure why the invokeLater seems to be necessary here - ST 8/31/04
         invokeLater(new Runnable() {
           override def run() { requestFocus() } })
-      }
-      catch {
+      } catch {
         case ex: java.io.FileNotFoundException =>
           showModelNotFoundDialog(ex.getMessage)
         case _: org.nlogo.window.InvalidVersionException =>

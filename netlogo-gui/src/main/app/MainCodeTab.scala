@@ -12,7 +12,7 @@ import org.nlogo.swing.ToolBarActionButton
 
 class MainCodeTab(workspace: AbstractWorkspace)
 extends CodeTab(workspace)
-with org.nlogo.window.Events.LoadSectionEvent.Handler
+with org.nlogo.window.Events.LoadModelEvent.Handler
 {
 
   var tabbing: javax.swing.JCheckBox = null
@@ -49,10 +49,8 @@ with org.nlogo.window.Events.LoadSectionEvent.Handler
       }
     }
 
-  def handle(e: org.nlogo.window.Events.LoadSectionEvent) {
-    if(e.section == ModelSection.Code) {
-      innerSource = workspace.autoConvert(e.version)(e.text)
-      recompile()
-    }
+  def handle(e: org.nlogo.window.Events.LoadModelEvent) {
+    innerSource = e.model.code
+    recompile()
   }
 }

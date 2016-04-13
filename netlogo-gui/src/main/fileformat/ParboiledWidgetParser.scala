@@ -114,3 +114,5 @@ trait ParsingStringUtils {
     loop(Vector(), s).mkString
   }
 }
+
+object ParsingStringUtils extends ParsingStringUtils

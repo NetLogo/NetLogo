@@ -2,33 +2,18 @@
 
 package org.nlogo.window;
 
+import org.nlogo.api.{ CompilerServices, Exceptions, ModelSection, RandomServices, Version, VersionHistory }
 import org.nlogo.core.{ Widget => CoreWidget, View => CoreView }
 import org.nlogo.core.model.WidgetReader
-import org.nlogo.api.CompilerServices
-import org.nlogo.api.ModelSection
-import org.nlogo.api.RandomServices
-import org.nlogo.api.Version
-import org.nlogo.api.VersionHistory
 import org.nlogo.plot.PlotManager
-import org.nlogo.window.Events.{ LoadHubNetInterfaceEvent, LoadWidgetsEvent, OutputEvent }
-import org.nlogo.fileformat
+import org.nlogo.window.Events.{ LoadWidgetsEvent, OutputEvent }
 import org.nlogo.util.SysInfo
-import org.nlogo.api.Exceptions
 
-import javax.swing.JLayeredPane
-import javax.swing.JPopupMenu
-import javax.swing.JMenuItem
-import java.awt.Color
-import java.awt.Component
-import java.awt.Dimension
-import java.awt.Rectangle
-import java.awt.event.FocusListener
-import java.awt.event.FocusEvent
-import java.awt.event.KeyEvent
-import java.awt.event.KeyAdapter
-import java.awt.event.MouseAdapter
-import java.awt.event.MouseEvent
-import java.util.{ List => JList }
+import javax.swing.{ JLayeredPane, JPopupMenu, JMenuItem }
+
+import java.awt.{ Color, Component, Dimension, Rectangle }
+import java.awt.event.{ FocusListener, FocusEvent,
+  KeyEvent, KeyAdapter, MouseAdapter, MouseEvent }
 
 import scala.collection.JavaConverters._
 import scala.collection.mutable.{ Map => MutableMap }
@@ -39,7 +24,6 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
   with WidgetContainer
   with FocusListener
   with LoadWidgetsEvent.Handler
-  with LoadHubNetInterfaceEvent.Handler
   with OutputEvent.Handler {
 
   // widget name -> Widget
@@ -277,16 +261,6 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
   }
 
   def handle(e: LoadWidgetsEvent): Unit = {
-    try {
-      setVisible(false)
-      e.widgets.foreach(loadWidget)
-    } finally {
-      setVisible(true)
-      revalidate()
-    }
-  }
-
-  def handle(e: LoadHubNetInterfaceEvent): Unit = {
     try {
       setVisible(false)
       e.widgets.foreach(loadWidget)

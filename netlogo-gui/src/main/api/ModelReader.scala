@@ -19,11 +19,6 @@ object ModelReader {
 
   val sections = ModelSection.allSections
 
-  lazy val defaultShapes =
-    Utils.getResourceAsStringArray("/system/defaultShapes.txt")
-  lazy val defaultLinkShapes =
-    Utils.getResourceAsStringArray("/system/defaultLinkShapes.txt")
-
   def parseModel(model: String): ModelMap = {
     val map: collection.mutable.HashMap[ModelSection, Array[String]] =
       sections.map(_ -> Array[String]())(collection.breakOut)
@@ -49,46 +44,5 @@ object ModelReader {
 
   def parseVersion(map: ModelMap): String =
     map.get(ModelSection.Version)(0)
-
-  def parseWidgets(lines: Array[String]): List[List[String]] = {
-    val widgets = new collection.mutable.ListBuffer[List[String]]
-    val widget = new collection.mutable.ListBuffer[String]
-    for(line <- lines)
-      if(line.nonEmpty)
-        widget += line
-      else {
-        if(!widget.forall(_.isEmpty))
-          widgets += widget.toList
-        widget.clear()
-      }
-    if(!widget.isEmpty)
-      widgets += widget.toList
-    widgets.toList
-  }
-
-  def stripLines(st: String): String =
-    st.flatMap{
-      case '\n' => "\\n"
-      case '\\' => "\\\\"
-      case '\"' => "\\\""
-      case c => c.toString
-    }
-
-  def restoreLines(s: String): String = {
-    @scala.annotation.tailrec
-    def loop(acc: Vector[Char], rest: String): Vector[Char] = {
-      if (rest.size < 2)
-        acc ++ rest
-      else if (rest.head == '\\')
-        rest.tail.head match {
-          case 'n'  => loop(acc :+ '\n', rest.tail.tail)
-          case '\\' => loop(acc :+ '\\', rest.tail.tail)
-          case '"'  => loop(acc :+ '"', rest.tail.tail)
-          case _    => sys.error("invalid escape sequence in \"" + s + "\"")
-        }
-      else loop(acc :+ rest.head, rest.tail)
-    }
-    loop(Vector(), s).mkString
-  }
 
 }

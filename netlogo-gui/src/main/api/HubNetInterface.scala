@@ -2,7 +2,7 @@
 
 package org.nlogo.api
 
-import org.nlogo.core.{ AgentKind, Widget => CoreWidget }
+import org.nlogo.core.{ AgentKind, Model, Widget => CoreWidget }
 import java.io.{ Serializable => JSerializable }
 
 trait HubNetInterface extends ViewInterface {
@@ -101,9 +101,9 @@ trait HubNetInterface extends ViewInterface {
   def closeClientEditor()
   def openClientEditor()
   def clientEditor: AnyRef
-  def load(widgets: Seq[CoreWidget])
+  def load(m: Model)
   @throws(classOf[java.io.IOException])
-  def importClientInterface(path: String, client: Boolean)
+  def importClientInterface(model: Model, client: Boolean)
   def setTitle(title: String, directory: String, modelType: ModelType)
   def getInterfaceWidth: Int
   def getInterfaceHeight: Int
@@ -119,7 +119,7 @@ trait HubNetInterface extends ViewInterface {
   def setPlotPenInterval(clientId: String, interval: Double)
   def currentlyActiveInterface: HubNetInterface.ClientInterface
   def calculatorInterface(activity: String, tags: Seq[String]): HubNetInterface.ClientInterface
-  def fileInterface(path: String): HubNetInterface.ClientInterface
+  def fileInterface(path: String): Option[HubNetInterface.ClientInterface]
 }
 
 object HubNetInterface {

@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.app
+package org.nlogo.fileformat
 
 /**
  * Through NetLogo 4.1 (since 2.0 or so), we used a custom wiki-type format, with custom code for

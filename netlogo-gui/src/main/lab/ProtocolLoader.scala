@@ -2,7 +2,7 @@
 
 package org.nlogo.lab
 
-import org.nlogo.api.CompilerServices
+import org.nlogo.core.LiteralParser
 import org.w3c.dom
 import org.xml.sax
 import scala.language.implicitConversions
@@ -12,7 +12,7 @@ object ProtocolLoader
   val DOCTYPE = "<!DOCTYPE experiments SYSTEM \"behaviorspace.dtd\">"
 }
 
-class ProtocolLoader(services: CompilerServices)
+class ProtocolLoader(literalParser: LiteralParser)
 {
   def loadOne(file: java.io.File):Protocol =
     new Loader().load(file) match { case Seq(ps) => ps }
@@ -82,7 +82,7 @@ class ProtocolLoader(services: CompilerServices)
           new EnumeratedValueSet(e.getAttribute("variable"),
                                  e.getElementsByTagName("value")
                                  .map(e =>
-                                   services.readFromString(e.getAttribute("value"))))
+                                   literalParser.readFromString(e.getAttribute("value"))))
         for{e <- element.getChildNodes
             valueSet <- e.getNodeName match {
               case "steppedValueSet" => Some(readSteppedValueSetElement(e))

@@ -154,7 +154,7 @@ object WidgetReader {
     widgets.toList
   }
 
-  def formatInterface(widgets: List[Widget]): String =
+  def formatInterface(widgets: Seq[Widget]): String =
     widgets.map(format(_)).mkString("\n\n")
 }
 

@@ -2,8 +2,8 @@
 
 package org.nlogo.headless
 
-import org.nlogo.api.{ ModelReader, Version }
-import org.nlogo.core.CompilerException
+import org.nlogo.api.Version
+import org.nlogo.core.{ CompilerException, Model }
 import java.io.{ BufferedReader, InputStreamReader }
 import org.nlogo.util.Utils.url2String
 
@@ -21,7 +21,7 @@ object Shell {
     val workspace = HeadlessWorkspace.newInstance
     argv.headOption match {
       case None =>
-        workspace.openFromSource(url2String(ModelReader.emptyModelPath))
+        workspace.openModel(Model())
       case Some(path) =>
         workspace.open(path)
     }
