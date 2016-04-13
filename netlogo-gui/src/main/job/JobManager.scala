@@ -6,7 +6,7 @@ import org.nlogo.nvm.{ExclusiveJob, ConcurrentJob, Procedure, Job, JobManagerOwn
 import org.nlogo.api.{LogoException, JobOwner}
 import org.nlogo.agent.{Agent, Observer, Turtle, Link, AgentSet, World}
 import java.util.List
-import org.nlogo.util.Exceptions.ignoring
+import org.nlogo.api.Exceptions.ignoring
 import collection.JavaConverters._
 
 class JobManager(jobManagerOwner: JobManagerOwner,

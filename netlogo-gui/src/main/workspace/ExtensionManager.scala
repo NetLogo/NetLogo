@@ -87,7 +87,7 @@ object ExtensionManager {
       try {
         classManager.unload(extensionManager)
       } catch {
-        case ex: Exception => org.nlogo.util.Exceptions.ignore(ex)
+        case ex: Exception => org.nlogo.api.Exceptions.ignore(ex)
       }
     }
   }

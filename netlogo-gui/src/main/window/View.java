@@ -513,7 +513,7 @@ public strictfp class View
           menu.add(new javax.swing.JPopupMenu.Separator());
           menu.add(new AgentMenuItem(patch, AgentMenuType.INSPECT, "inspect", false));
         } catch (AgentException e) {
-          org.nlogo.util.Exceptions.ignore(e);
+          org.nlogo.api.Exceptions.ignore(e);
         }
 
         boolean linksAdded = false;

@@ -149,7 +149,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       } catch (InterruptedException ex) {
         // ignore because we may be interrupted during
         // applet shutdown, e.g. in Camino - ST 11/29/07
-        org.nlogo.util.Exceptions.ignore(ex);
+        org.nlogo.api.Exceptions.ignore(ex);
       }
     }
   }
@@ -345,7 +345,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       try {
         org.nlogo.awt.EventQueue.invokeAndWait(runner);
       } catch (InterruptedException ex) {
-        org.nlogo.util.Exceptions.handle(ex);
+        org.nlogo.api.Exceptions.handle(ex);
       }
     }
   }
@@ -365,7 +365,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       try {
         org.nlogo.awt.EventQueue.invokeAndWait(runner);
       } catch (InterruptedException ex) {
-        org.nlogo.util.Exceptions.handle(ex);
+        org.nlogo.api.Exceptions.handle(ex);
       }
     }
   }
@@ -507,7 +507,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       try {
         viewWidget.displaySwitch.setOn(glView.displaySwitch());
       } catch (IllegalStateException e) {
-        org.nlogo.util.Exceptions.ignore(e);
+        org.nlogo.api.Exceptions.ignore(e);
       }
     } else {
       viewManager.setPrimary(glView);
@@ -634,7 +634,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
           ThreadUtils.waitForQueuedEvents(this);
         }
       } catch (org.nlogo.nvm.HaltException ex) {
-        org.nlogo.util.Exceptions.ignore(ex);
+        org.nlogo.api.Exceptions.ignore(ex);
       } catch (LogoException ex) {
         throw new IllegalStateException(ex);
       }
@@ -752,7 +752,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       evaluateCommands(new SimpleJobOwner("startup", world().mainRNG(), AgentKindJ.Observer()),
           "without-interruption [ startup ]", false);
     } catch (CompilerException error) {
-      org.nlogo.util.Exceptions.ignore(error);
+      org.nlogo.api.Exceptions.ignore(error);
     }
   }
 
@@ -1060,7 +1060,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
         throw exception[0];
       }
     } catch (org.nlogo.awt.UserCancelException ex) {
-      org.nlogo.util.Exceptions.ignore(ex);
+      org.nlogo.api.Exceptions.ignore(ex);
     } catch (java.io.IOException ex) {
       javax.swing.JOptionPane.showMessageDialog
           (getExportWindowFrame(), ex.getMessage(),

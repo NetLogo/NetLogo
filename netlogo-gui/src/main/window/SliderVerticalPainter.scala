@@ -81,7 +81,7 @@ class SliderVerticalPainter(private val slider: AbstractSliderWidget) extends Sl
   def handlePositionChanged(y: Int, buttonRelease: Boolean) {
     if(!slider.anyErrors){
       try slider.value_=(slider.coerceValue(slider.maximum - y * scaleFactor), buttonRelease)
-      catch { case e: LogoException => org.nlogo.util.Exceptions.ignore(e) }
+      catch { case e: LogoException => org.nlogo.api.Exceptions.ignore(e) }
     }
   }
 
@@ -94,7 +94,7 @@ class SliderVerticalPainter(private val slider: AbstractSliderWidget) extends Sl
         if (y + thisRect.y > center) slider.coerceValue(slider.value - slider.increment)
         else slider.coerceValue(slider.value + slider.increment)
     }
-    catch { case e: LogoException => org.nlogo.util.Exceptions.ignore(e) }
+    catch { case e: LogoException => org.nlogo.api.Exceptions.ignore(e) }
   }
 
   private def scaleFactor = (slider.maximum - slider.minimum) /
@@ -154,7 +154,7 @@ class SliderVerticalPainter(private val slider: AbstractSliderWidget) extends Sl
       if (e.getWheelRotation >= 1) slider.value = slider.coerceValue(slider.value - slider.increment)
       else slider.value = slider.coerceValue(slider.value + slider.increment)
     }
-    catch {case ex: LogoException => org.nlogo.util.Exceptions.ignore(ex)}
+    catch {case ex: LogoException => org.nlogo.api.Exceptions.ignore(ex)}
   }
 
   private class Channel extends JComponent {

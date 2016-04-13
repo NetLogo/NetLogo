@@ -160,7 +160,7 @@ public strictfp class OutputArea
       try {
         file.close(false);
       } catch (java.io.IOException ex2) {
-        org.nlogo.util.Exceptions.ignore(ex2);
+        org.nlogo.api.Exceptions.ignore(ex2);
       }
     }
   }

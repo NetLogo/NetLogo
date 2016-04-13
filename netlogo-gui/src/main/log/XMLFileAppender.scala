@@ -9,7 +9,7 @@ import javax.xml.transform.stream.StreamResult
 import org.xml.sax.helpers.AttributesImpl
 import org.apache.log4j.FileAppender
 import scala.beans.BeanProperty
-import org.nlogo.util.Exceptions.ignoring
+import org.nlogo.api.Exceptions.ignoring
 
 //  This class must be public because log4j needs to be able to find it and we refer to it in the
 //  configuration file

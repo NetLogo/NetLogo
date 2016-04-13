@@ -15,7 +15,7 @@ object ThreadUtils {
   def waitFor(workspace: GUIWorkspace, runnable: Runnable): Unit = {
     try waitForResult(workspace, reporter(runnable.run _))
     catch {
-      case ex: HaltException => org.nlogo.util.Exceptions.ignore(ex)
+      case ex: HaltException => org.nlogo.api.Exceptions.ignore(ex)
       case ex: LogoException => throw new IllegalStateException(ex)
     }
   }

@@ -143,7 +143,7 @@ public abstract strictfp class Agent
         return;
       } catch (ClassCastException e) {
         // just fall through and throw the error below
-        org.nlogo.util.Exceptions.ignore(e);
+        org.nlogo.api.Exceptions.ignore(e);
       }
     }
     String key =

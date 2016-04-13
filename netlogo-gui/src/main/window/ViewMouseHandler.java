@@ -139,7 +139,7 @@ public strictfp class ViewMouseHandler
     try {
       xcor = world.wrapX(xcor);
     } catch (AgentException e) {
-      org.nlogo.util.Exceptions.ignore(e);
+      org.nlogo.api.Exceptions.ignore(e);
     }
 
     if (settings.patchSize() <= 1.0) {
@@ -160,7 +160,7 @@ public strictfp class ViewMouseHandler
     try {
       ycor = world.wrapY(ycor);
     } catch (AgentException e) {
-      org.nlogo.util.Exceptions.ignore(e);
+      org.nlogo.api.Exceptions.ignore(e);
     }
 
     if (settings.patchSize() <= 1.0) {

@@ -772,7 +772,7 @@ public class Renderer
           Patch patch = world.getPatchAt(xi, yi);
           agents.add(patch);
         } catch (AgentException e) {
-          org.nlogo.util.Exceptions.ignore(e);
+          org.nlogo.api.Exceptions.ignore(e);
         }
       }
     }

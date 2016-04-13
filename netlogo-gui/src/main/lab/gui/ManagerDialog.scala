@@ -88,7 +88,7 @@ private class ManagerDialog(manager: LabManager,
       manager.prepareForRun()
       new Supervisor(this, manager.workspace, selectedProtocol, manager.workspaceFactory, dialogFactory).start()
     }
-    catch { case ex: org.nlogo.awt.UserCancelException => org.nlogo.util.Exceptions.ignore(ex) }
+    catch { case ex: org.nlogo.awt.UserCancelException => org.nlogo.api.Exceptions.ignore(ex) }
   }
   private def makeNew(): Unit = {
     import collection.JavaConverters._

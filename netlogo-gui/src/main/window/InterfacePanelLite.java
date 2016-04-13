@@ -333,7 +333,7 @@ public strictfp class InterfacePanelLite
         try {
           viewWidget.asWidget().load(strings, helper);
         } catch (RuntimeException ex) {
-          org.nlogo.util.Exceptions.handle(ex);
+          org.nlogo.api.Exceptions.handle(ex);
         }
         viewWidget.asWidget().setSize
             (viewWidget.asWidget().getSize());
@@ -362,7 +362,7 @@ public strictfp class InterfacePanelLite
             newGuy = new OutputWidget();
           }
         } catch (RuntimeException ex) {
-          org.nlogo.util.Exceptions.handle(ex);
+          org.nlogo.api.Exceptions.handle(ex);
         }
         if (newGuy != null) {
           newGuy.load(strings, helper);
@@ -371,7 +371,7 @@ public strictfp class InterfacePanelLite
         return newGuy;
       }
     } catch (RuntimeException ex) {
-      org.nlogo.util.Exceptions.handle(ex);
+      org.nlogo.api.Exceptions.handle(ex);
       return null;
     }
   }

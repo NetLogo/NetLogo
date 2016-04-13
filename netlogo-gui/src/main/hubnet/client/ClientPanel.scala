@@ -93,7 +93,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
               new PlotExporter(e.plot, Dump.csv).export(writer)
             }
           }.export("plot", "HubNet Client", "")
-          catch {case ex: IOException => org.nlogo.util.Exceptions.handle(ex)}
+          catch {case ex: IOException => org.nlogo.api.Exceptions.handle(ex)}
         }
     }
   }
@@ -183,7 +183,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
           case 'f' =>
             plotWidget.plot.state = plotWidget.plot.state.copy(autoPlotOn = false)
           case _ => throw new IllegalStateException()
-        } catch {case ex: RuntimeException => org.nlogo.util.Exceptions.handle(ex)}
+        } catch {case ex: RuntimeException => org.nlogo.api.Exceptions.handle(ex)}
       }
       // This instance changes the plot-pen-mode
       case s:Short =>
@@ -372,7 +372,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
         handleEx(clientEvent.info.asInstanceOf[Exception],
           clientEvent.asInstanceOf[ClientAWTExceptionEvent].sendingException)
       else if (clientEvent.receivedData) receiveData(clientEvent.info)
-      catch {case ex: RuntimeException => org.nlogo.util.Exceptions.handle(ex)}
+      catch {case ex: RuntimeException => org.nlogo.api.Exceptions.handle(ex)}
     } else super.processEvent(e)
   }
 
@@ -398,7 +398,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
       // let's disconnect and let them re-enter.  This will
       // really only occur whent he socket is already in an
       // unusable state -- CLB 11/22/04
-      catch { case e: IOException => org.nlogo.util.Exceptions.warn(e) }
+      catch { case e: IOException => org.nlogo.api.Exceptions.warn(e) }
     } else System.err.println("Attempted to send data on a shutdown listener, ignoring.")
   }
 

@@ -37,7 +37,7 @@ object ClientApp {
             try waitTime = args(i + 1).toLong.toInt
             catch {
               // it is not the optional wait time parameter
-              case nfe: NumberFormatException => org.nlogo.util.Exceptions.ignore(nfe)
+              case nfe: NumberFormatException => org.nlogo.api.Exceptions.ignore(nfe)
             }
           }
         }
@@ -47,7 +47,7 @@ object ClientApp {
       }
       app.startup(editorFactory, userid, hostip, port, false, isRoboClient, waitTime, workspace)
     } catch {
-      case ex: RuntimeException => org.nlogo.util.Exceptions.handle(ex)
+      case ex: RuntimeException => org.nlogo.api.Exceptions.handle(ex)
     }
   }
 }
@@ -69,7 +69,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
     EventQueue.invokeLater(() => {
       Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
         def uncaughtException(t: Thread, e: Throwable) {
-          org.nlogo.util.Exceptions.handle(e)
+          org.nlogo.api.Exceptions.handle(e)
         }
       })
 

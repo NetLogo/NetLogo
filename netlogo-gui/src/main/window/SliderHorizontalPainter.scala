@@ -91,7 +91,7 @@ class SliderHorizontalPainter(private val slider:AbstractSliderWidget) extends S
       val newValue = slider.minimum + x * scaleFactor
       slider.value_=(slider.coerceValue(newValue), buttonRelease)
     }
-    catch{ case e:LogoException => org.nlogo.util.Exceptions.ignore(e) }
+    catch{ case e:LogoException => org.nlogo.api.Exceptions.ignore(e) }
   }
 
   def incrementClick(x:Int){
@@ -102,7 +102,7 @@ class SliderHorizontalPainter(private val slider:AbstractSliderWidget) extends S
       if(x + thisRect.x > center) slider.value = (slider.coerceValue(slider.value + slider.increment))
       else slider.value = (slider.coerceValue(slider.value - slider.increment))
     }
-    catch{ case ex:LogoException=> org.nlogo.util.Exceptions.ignore(ex)  }
+    catch{ case ex:LogoException=> org.nlogo.api.Exceptions.ignore(ex)  }
   }
 
   private def scaleFactor = {
@@ -139,7 +139,7 @@ class SliderHorizontalPainter(private val slider:AbstractSliderWidget) extends S
       if (e.getWheelRotation() >= 1) slider.value = slider.coerceValue(slider.value - slider.increment)
       else slider.value = slider.coerceValue(slider.value + slider.increment)
     }
-    catch { case ex: LogoException => org.nlogo.util.Exceptions.ignore(ex) }
+    catch { case ex: LogoException => org.nlogo.api.Exceptions.ignore(ex) }
   }
 
   class Channel extends JComponent {

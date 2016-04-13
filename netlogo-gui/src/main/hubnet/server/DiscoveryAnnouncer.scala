@@ -50,6 +50,6 @@ class DiscoveryAnnouncer(uniqueId: String, modelName: String, portNumber: Int) e
       catch { case ie: InterruptedException => dump("Multicast announcement thread interrupted.\n\t", ie) }
     }
     try multicastSocket.close()
-    catch { case e: RuntimeException => org.nlogo.util.Exceptions.ignore(e) }
+    catch { case e: RuntimeException => org.nlogo.api.Exceptions.ignore(e) }
   }
 }

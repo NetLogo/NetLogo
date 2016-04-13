@@ -176,7 +176,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
     catch {
       case ex: InterruptedException =>
         // we may get interrupted if the user aborts the run - ST 10/30/03
-        org.nlogo.util.Exceptions.ignore(ex)
+        org.nlogo.api.Exceptions.ignore(ex)
     }
 
   private def resetPlot() {

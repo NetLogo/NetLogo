@@ -335,10 +335,10 @@ with org.nlogo.api.ViewSettings {
         try file.close(false)
         catch {
           case ex2: java.io.IOException =>
-            org.nlogo.util.Exceptions.ignore(ex2)
+            org.nlogo.api.Exceptions.ignore(ex2)
         }
       case ex: RuntimeException =>
-        org.nlogo.util.Exceptions.handle(ex)
+        org.nlogo.api.Exceptions.handle(ex)
     }
   }
 
@@ -488,7 +488,7 @@ with org.nlogo.api.ViewSettings {
         lastErrorReport = new ErrorReport(owner, context, instruction, le)
       case _ =>
         System.err.println("owner: " + owner.displayName)
-        org.nlogo.util.Exceptions.handle(ex)
+        org.nlogo.api.Exceptions.handle(ex)
     }
   }
 

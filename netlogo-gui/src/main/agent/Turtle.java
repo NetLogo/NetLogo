@@ -1014,7 +1014,7 @@ public strictfp class Turtle
       // an agent to itself, or to an agent at the exact same position.
       // Since face is nice, it just ignores the exception and doesn't change
       // the callers heading. - AZS 6/22/05
-      org.nlogo.util.Exceptions.ignore(ex);
+      org.nlogo.api.Exceptions.ignore(ex);
     }
   }
 
@@ -1026,7 +1026,7 @@ public strictfp class Turtle
       // an agent to itself, or to an agent at the exact same position.
       // Since face is nice, it just ignores the exception and doesn't change
       // the callers heading. - AZS 6/22/05
-      org.nlogo.util.Exceptions.ignore(ex);
+      org.nlogo.api.Exceptions.ignore(ex);
     }
   }
 

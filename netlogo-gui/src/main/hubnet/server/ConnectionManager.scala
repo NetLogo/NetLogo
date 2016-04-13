@@ -128,7 +128,7 @@ class ConnectionManager(val connection: ConnectionInterface,
     catch {
       case ex: BindException =>
         val message = "Could not start the HubNet server. No ports are available."
-        org.nlogo.util.Exceptions.handle(new Exception(message, ex))
+        org.nlogo.api.Exceptions.handle(new Exception(message, ex))
       false
     }
   }
@@ -145,7 +145,7 @@ class ConnectionManager(val connection: ConnectionInterface,
         try Thread.sleep(50)
         catch {
           // we don't care if we are Interrupted
-          case ie: InterruptedException => org.nlogo.util.Exceptions.ignore(ie)
+          case ie: InterruptedException => org.nlogo.api.Exceptions.ignore(ie)
         }
       }
       clients.synchronized {
@@ -172,8 +172,8 @@ class ConnectionManager(val connection: ConnectionInterface,
         catch {
           // accept timed out
           case e: InterruptedIOException => // do nothing.
-          case e: IOException => org.nlogo.util.Exceptions.handle(e)
-          case e: RuntimeException => org.nlogo.util.Exceptions.handle(e)
+          case e: IOException => org.nlogo.api.Exceptions.handle(e)
+          case e: RuntimeException => org.nlogo.api.Exceptions.handle(e)
         }
       }
       announcer.shutdown()
@@ -181,7 +181,7 @@ class ConnectionManager(val connection: ConnectionInterface,
       this.socket = null
     }
     catch {
-      case e: IOException => org.nlogo.util.Exceptions.handle(e)
+      case e: IOException => org.nlogo.api.Exceptions.handle(e)
     }
   }
 

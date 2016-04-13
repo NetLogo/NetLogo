@@ -94,7 +94,7 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
             sendData(new LoginFailure("\"" + userId + "\" is already taken by another user.\nPlease choose another name."))
           }
         }
-        catch { case ex: RuntimeException => org.nlogo.util.Exceptions.handle(ex) }
+        catch { case ex: RuntimeException => org.nlogo.api.Exceptions.handle(ex) }
       }
       // TODO
       // its possible that the server doesnt even know who this client is!
@@ -165,9 +165,9 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
           "An incompatible version of the HubNet Client tried logging in.\n" +
           "Please ensure that everyone is using the version of the HubNet Client that  came with this release. " +
           Version.version
-        org.nlogo.util.Exceptions.handle(new Exception(message, e))
+        org.nlogo.api.Exceptions.handle(new Exception(message, e))
       } else {
-        if (!sendingEx) org.nlogo.util.Exceptions.handle(e)
+        if (!sendingEx) org.nlogo.api.Exceptions.handle(e)
         else{
           // sending exceptions we just print to standard err
           System.err.println("@ " + new Date() + " : ")

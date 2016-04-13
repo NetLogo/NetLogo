@@ -284,7 +284,7 @@ public strictfp class CompilerManager
         // widget had it's value set.  The widget will be updated
         // and thus will result in its current value being constrained
         // appropriately by the widget. -- CLB
-        org.nlogo.util.Exceptions.ignore(ex);
+        org.nlogo.api.Exceptions.ignore(ex);
       } catch (org.nlogo.api.AgentException ex) {
         throw new IllegalStateException(ex);
       } catch (org.nlogo.api.LogoException ex) {
@@ -293,7 +293,7 @@ public strictfp class CompilerManager
         // of Violation exceptions, we are working under the
         // assumption that Sliders will always give us a
         // coerced value back. -- CLB
-        org.nlogo.util.Exceptions.ignore(ex);
+        org.nlogo.api.Exceptions.ignore(ex);
       }
     }
   }

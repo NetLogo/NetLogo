@@ -110,7 +110,7 @@ public strictfp class InRadiusOrCone {
             }
           }
         } catch (AgentException e) {
-          org.nlogo.util.Exceptions.ignore(e);
+          org.nlogo.api.Exceptions.ignore(e);
         }
       }
     }

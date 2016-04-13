@@ -257,7 +257,7 @@ object App{
 
 class App extends
     org.nlogo.window.Event.LinkChild with
-    org.nlogo.util.Exceptions.Handler with
+    org.nlogo.api.Exceptions.Handler with
     org.nlogo.window.ExternalFileManager with
     AppEvent.Handler with
     BeforeLoadEvent.Handler with
@@ -310,7 +310,7 @@ class App extends
     org.nlogo.swing.Utils.setSystemLookAndFeel()
 
     Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-      def uncaughtException(t: Thread, e: Throwable) { org.nlogo.util.Exceptions.handle(e) }
+      def uncaughtException(t: Thread, e: Throwable) { org.nlogo.api.Exceptions.handle(e) }
     })
 
     val interfaceFactory = new InterfaceFactory() {
@@ -396,7 +396,7 @@ class App extends
     frame.addLinkComponent(new CompilerManager(workspace, tabs.codeTab))
     frame.addLinkComponent(listenerManager)
 
-    org.nlogo.util.Exceptions.setHandler(this)
+    org.nlogo.api.Exceptions.setHandler(this)
 
     if(loggingName != null)
      startLogging(loggingName)
@@ -501,7 +501,7 @@ class App extends
       catch{
         // if not implemented in this VM (e.g. 1.4 on Mac as of right now),
         // then oh well - ST 6/23/03, 8/6/03
-        case e: Error => org.nlogo.util.Exceptions.ignore(e)
+        case e: Error => org.nlogo.api.Exceptions.ignore(e)
       }
       newMenu
     }
@@ -830,7 +830,7 @@ class App extends
         open(path)
       }
     } catch {
-      case ex: UserCancelException => org.nlogo.util.Exceptions.ignore(ex)
+      case ex: UserCancelException => org.nlogo.api.Exceptions.ignore(ex)
       case ex: java.io.IOException =>
         javax.swing.JOptionPane.showMessageDialog(
           frame, ex.getMessage,
@@ -871,7 +871,7 @@ class App extends
   def openFromSource(source:String, path:String, modelType:ModelType){
     dispatchThreadOrBust(
       try fileMenu.openFromSource(source, path, "Loading...", modelType)
-      catch{ case ex:UserCancelException => org.nlogo.util.Exceptions.ignore(ex) })
+      catch{ case ex:UserCancelException => org.nlogo.api.Exceptions.ignore(ex) })
   }
 
   /**
@@ -976,7 +976,7 @@ class App extends
       })
       while (button.running) {
         try Thread sleep 100
-        catch { case ex: InterruptedException => org.nlogo.util.Exceptions.ignore(ex) }
+        catch { case ex: InterruptedException => org.nlogo.api.Exceptions.ignore(ex) }
       }
     }
   }
@@ -1105,7 +1105,7 @@ class AppFrame extends JFrame with LinkParent {
   addWindowListener(new WindowAdapter() {
     override def windowClosing(e: WindowEvent) {
       try App.app.fileMenu.quit()
-      catch {case ex: UserCancelException => org.nlogo.util.Exceptions.ignore(ex)}
+      catch {case ex: UserCancelException => org.nlogo.api.Exceptions.ignore(ex)}
     }
     override def windowIconified(e: WindowEvent) {new IconifiedEvent(AppFrame.this, true).raise(App.app)}
     override def windowDeiconified(e: WindowEvent) {new IconifiedEvent(AppFrame.this, false).raise(App.app)}

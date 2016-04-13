@@ -368,7 +368,7 @@ strictfp class InterfacePanel
         throw exception[0];
       }
     } catch (org.nlogo.awt.UserCancelException ex) {
-      org.nlogo.util.Exceptions.ignore(ex);
+      org.nlogo.api.Exceptions.ignore(ex);
     }
   }
 
@@ -392,7 +392,7 @@ strictfp class InterfacePanel
         }
       }
     } catch (RuntimeException ex) {
-      org.nlogo.util.Exceptions.handle(ex);
+      org.nlogo.api.Exceptions.handle(ex);
     } finally {
       setVisible(false);
     }

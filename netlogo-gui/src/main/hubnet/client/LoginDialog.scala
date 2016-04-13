@@ -293,7 +293,7 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
             Thread.sleep(EXPIRE_SERVER_FREQUENCY)
             SwingUtilities.invokeLater(ServerTable.this)
           }
-          catch {case ex: InterruptedException => org.nlogo.util.Exceptions.ignore(ex)}
+          catch {case ex: InterruptedException => org.nlogo.api.Exceptions.ignore(ex)}
         }
       }
     }

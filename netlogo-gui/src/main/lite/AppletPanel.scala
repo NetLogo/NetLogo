@@ -19,7 +19,7 @@ import org.nlogo.window.Events.{ CompiledEvent, LoadSectionEvent }
 abstract class AppletPanel(
   frame: java.awt.Frame, iconListener: java.awt.event.MouseListener, isApplet: Boolean)
 extends javax.swing.JPanel
-with org.nlogo.util.Exceptions.Handler
+with org.nlogo.api.Exceptions.Handler
 with Event.LinkParent {
 
   /// LinkComponent stuff
@@ -40,7 +40,7 @@ with Event.LinkParent {
 
   org.nlogo.workspace.AbstractWorkspace.isApplet(isApplet)
   RuntimeErrorDialog.init(this)
-  org.nlogo.util.Exceptions.setHandler(this)
+  org.nlogo.api.Exceptions.setHandler(this)
 
   protected val world = if(Version.is3D) new World3D() else new World
   val workspace = new LiteWorkspace(this, isApplet, world, frame, listenerManager)
