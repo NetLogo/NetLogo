@@ -19,7 +19,9 @@ object Tokenizer extends TokenizerInterface {
       Seq(TokenType.Ident, TokenType.Command, TokenType.Keyword, TokenType.Reporter)
     tokenizeString(source)
       .sliding(2)
-      .find(ts => ts.head.start <= position && ts.head.tpe != TokenType.Eof)
+      .find { ts =>
+        ts.head.start <= position && ts.head.end >= position && ts.head.tpe != TokenType.Eof
+      }
       .map {
         case Seq(a, b) if a.end    <= position && ! interestingTokenTypes.contains(b.tpe) => a
         case Seq(a, b) if position <  a.end => a
