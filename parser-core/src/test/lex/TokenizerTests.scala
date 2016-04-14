@@ -259,6 +259,7 @@ class TokenizerTests extends FunSuite {
     assert(getTokenAtPosition("t s", 2) == Some(Token("s", TokenType.Ident, "S")(2, 3, "")))
     assert(getTokenAtPosition("abc def", 2) == Some(Token("abc", TokenType.Ident, "ABC")(0, 3, "")))
     assert(getTokenAtPosition("abc def", 4) == Some(Token("def", TokenType.Ident, "DEF")(4, 7, "")))
+    assert(getTokenAtPosition("abc def ghi", 10) == Some(Token("ghi", TokenType.Ident, "GHI")(8, 11, "")))
   }
 
   test("prefers ident and keyword tokens to punctuation and literals") {
