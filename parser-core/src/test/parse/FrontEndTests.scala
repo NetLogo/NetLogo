@@ -69,8 +69,8 @@ class FrontEndTests extends FunSuite {
   def doFailure(input: String, message: String, start: Int, end: Int) {
     val e = intercept[CompilerException] { compile(input) }
     assertResult(message)(e.getMessage)
-    assertResult(start + PREAMBLE.length)(e.start)
-    assertResult(end + PREAMBLE.length)(e.end)
+    assertResult(start)(e.start - PREAMBLE.length)
+    assertResult(end)(e.end - PREAMBLE.length)
   }
 
   /// now, the actual tests
@@ -96,6 +96,9 @@ class FrontEndTests extends FunSuite {
   }
   test("WrongArgumentType") {
     runFailure("__ignore count 0", "COUNT expected this input to be an agentset, but got a number instead", 15, 16)
+  }
+  test("tooManyCloseBrackets") {
+    runFailure("ask turtles [ fd 1 ] ] ]", "Expected command.", 21, 22)
   }
   test("missingCloseBracket") {
     // You could argue that it ought to point to the second bracket and not the first, but this is
