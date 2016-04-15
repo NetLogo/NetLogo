@@ -108,7 +108,10 @@ class LetScoper(usedNames: Map[String, String]) {
     def get(name: String): Option[Let] =
       lets.flatten.find(_.name == name)
     def pop(): Unit =
-      lets = lets.tail
+      lets = lets match {
+        case Nil => Nil
+        case hd::tail => tail
+      }
     def used: Map[String, String] =
       lets.flatten
         .map(_.name -> "local variable here")
