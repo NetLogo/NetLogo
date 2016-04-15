@@ -19,7 +19,7 @@ public strictfp class EditorArea
   protected final Colorizer colorizer;
   protected IndenterInterface indenter;
   private final scala.Function1<String, String> i18n;
-
+  private javax.swing.JPopupMenu contextMenu;
   private final DoubleClickCaret caret;
 
   public EditorArea(int rows, int columns,
@@ -37,6 +37,7 @@ public strictfp class EditorArea
     enableEvents(java.awt.AWTEvent.MOUSE_EVENT_MASK);
     addFocusListener(this);
 
+    contextMenu = editorContextMenu(colorizer, i18n);
     bracketMatcher = new BracketMatcher(colorizer);
     addCaretListener(bracketMatcher);
     int blinkRate = getCaret().getBlinkRate();
@@ -395,7 +396,7 @@ public strictfp class EditorArea
     if (me.getID() == java.awt.event.MouseEvent.MOUSE_PRESSED) {
       mouseEvent = true;
     }
-    if (me.isPopupTrigger()) {
+    if (me.isPopupTrigger() && ! contextMenu.isShowing()) {
       mousePos = caret.getMousePosition(me);
       doPopup(me);
       return;
@@ -403,7 +404,7 @@ public strictfp class EditorArea
     super.processMouseEvent(me);
   }
 
-  private void doPopup(java.awt.event.MouseEvent e) {
+  private javax.swing.JPopupMenu editorContextMenu(Colorizer colorizer, scala.Function1<String, String> i18n) {
     javax.swing.JPopupMenu menu = new javax.swing.JPopupMenu();
     menu.add(new javax.swing.JMenuItem(Actions.COPY_ACTION()));
     Actions.COPY_ACTION().putValue(javax.swing.Action.NAME, i18n.apply("menu.edit.copy"));
@@ -413,7 +414,11 @@ public strictfp class EditorArea
     Actions.PASTE_ACTION().putValue(javax.swing.Action.NAME, i18n.apply("menu.edit.paste"));
     menu.addSeparator();
     menu.add(new javax.swing.JMenuItem(Actions.mouseQuickHelpAction(colorizer, i18n)));
-    menu.show(this, e.getX(), e.getY());
+    return menu;
+  }
+
+  private void doPopup(java.awt.event.MouseEvent e) {
+    contextMenu.show(this, e.getX(), e.getY());
   }
 
   @Override
