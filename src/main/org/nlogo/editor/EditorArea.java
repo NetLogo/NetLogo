@@ -154,7 +154,7 @@ public strictfp class EditorArea<TokenType>
     return javax.swing.text.TextAction.augmentList
         (super.getActions(),
             new javax.swing.Action[]{
-                Actions.commentAction(), Actions.uncommentAction(),
+                Actions.commentToggleAction(),
                 Actions.shiftLeftAction(), Actions.shiftRightAction(),
                 Actions.quickHelpAction(colorizer, i18n),
             });
@@ -259,25 +259,44 @@ public strictfp class EditorArea<TokenType>
     }
   }
 
-  void uncomment() {
+  void toggleComment() {
     javax.swing.text.PlainDocument doc = (javax.swing.text.PlainDocument) getDocument();
     try {
-      int currentLine = offsetToLine(doc, getSelectionStart());
+      int startLine = offsetToLine(doc, getSelectionStart());
       int endLine = offsetToLine(doc, getSelectionEnd());
 
       // The two following cases are to take care of selections that include
       // only the very edge of a line of text, either at the top or bottom
       // of the selection.  Because these lines do not have *any* highlighted
       // text, it does not make sense to modify these lines. ~Forrest (9/22/2006)
-      if (endLine > currentLine &&
+      if (endLine > startLine &&
           getSelectionEnd() == lineToStartOffset(doc, endLine)) {
         endLine--;
       }
-      if (endLine > currentLine &&
-          getSelectionStart() == (lineToEndOffset(doc, currentLine) - 1)) {
-        currentLine++;
+      if (endLine > startLine &&
+          getSelectionStart() == (lineToEndOffset(doc, startLine) - 1)) {
+        startLine++;
       }
-
+      // Test if the selection has to commented
+      int currentLine;
+      for(currentLine = startLine; currentLine <= endLine; currentLine++) {
+        int lineStart = lineToStartOffset(doc, currentLine);
+        int lineEnd = lineToEndOffset(doc, currentLine);
+        String text = doc.getText(lineStart, lineEnd - lineStart);
+        int semicolonPos = text.indexOf(';');
+        if(semicolonPos == -1){
+          insertBeforeEachSelectedLine(";");
+          return;
+        }
+        for(int j = 0; j < semicolonPos; j++) {
+          if(!Character.isWhitespace(text.charAt(j))){
+            insertBeforeEachSelectedLine(";");
+            return;
+          }
+        }
+      }
+      // Logic to uncomment the selected section
+      currentLine = startLine;
       while (currentLine <= endLine) {
         int lineStart = lineToStartOffset(doc, currentLine);
         int lineEnd = lineToEndOffset(doc, currentLine);

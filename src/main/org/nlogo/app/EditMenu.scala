@@ -40,8 +40,7 @@ with org.nlogo.window.Events.LoadSectionEvent.Handler
   addMenuItem(I18N.gui("shiftRight"), ']', org.nlogo.editor.Actions.shiftRightAction)
   addMenuItem(I18N.gui("format"), (java.awt.event.KeyEvent.VK_TAB).toChar, org.nlogo.editor.Actions.tabKeyAction, false)
   addSeparator()
-  addMenuItem(I18N.gui("comment"), ';', org.nlogo.editor.Actions.commentAction)
-  addMenuItem(I18N.gui("uncomment"), ';', true, org.nlogo.editor.Actions.uncommentAction)
+  addMenuItem(I18N.gui("comment") + " / " + I18N.gui("uncomment"), ';', org.nlogo.editor.Actions.commentToggleAction)
   addSeparator()
   snapper = addCheckBoxMenuItem(I18N.gui("snapToGrid"), app.workspace.snapOn(), snapAction)
 
