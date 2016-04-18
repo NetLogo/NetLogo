@@ -29,7 +29,7 @@ with org.nlogo.window.Events.LoadSectionEvent.Handler
   addMenuItem(I18N.gui("cut"), 'X', Actions.CUT_ACTION )
   addMenuItem(I18N.gui("copy"), 'C', Actions.COPY_ACTION)
   addMenuItem(I18N.gui("paste"), 'V', Actions.PASTE_ACTION)
-  addMenuItem(I18N.gui("delete"), Actions.DELETE_ACTION)
+  addMenuItem(I18N.gui("delete"), (java.awt.event.KeyEvent.VK_DELETE).toChar, Actions.DELETE_ACTION, false)
   addSeparator()
   addMenuItem(I18N.gui("selectAll"), 'A', Actions.SELECT_ALL_ACTION)
   addSeparator()
