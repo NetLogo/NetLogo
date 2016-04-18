@@ -191,8 +191,8 @@ with org.nlogo.api.ViewSettings {
    * Internal use only.
    */
   def initForTesting(d: WorldDimensions, source: String) {
-    world.turtleShapeList.add(org.nlogo.shape.VectorShape.getDefaultShape)
-    world.linkShapeList.add(org.nlogo.shape.LinkShape.getDefaultLinkShape)
+    world.turtleShapes.add(org.nlogo.shape.VectorShape.getDefaultShape)
+    world.linkShapes.add(org.nlogo.shape.LinkShape.getDefaultLinkShape)
     world.createPatches(d)
     import collection.JavaConverters._
     val results = compiler.compileProgram(

@@ -116,7 +116,8 @@ class NLogoFormat(autoConvert: String => String => String) extends ModelFormat[A
       ShapeParser.formatVectorShapes(m.turtleShapes).lines.toArray
     def validationErrors(m: Model): Option[String] = None
     override def deserialize(s: Array[String]) = {(m: Model) =>
-      m.copy(turtleShapes = ShapeParser.parseVectorShapes(s))
+      if (s.isEmpty) addDefault(m)
+      else m.copy(turtleShapes = ShapeParser.parseVectorShapes(s))
     }
   }
 
@@ -126,7 +127,8 @@ class NLogoFormat(autoConvert: String => String => String) extends ModelFormat[A
     def serialize(m: Model): Array[String] = ShapeParser.formatLinkShapes(m.linkShapes).lines.toArray
     def validationErrors(m: Model): Option[String] = None
     override def deserialize(s: Array[String]) = { (m: Model) =>
-      m.copy(linkShapes = ShapeParser.parseLinkShapes(s))
+      if (s.isEmpty) addDefault(m)
+      else m.copy(linkShapes = ShapeParser.parseLinkShapes(s))
     }
   }
 

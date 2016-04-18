@@ -89,13 +89,13 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
 
   private def attachWorldShapes(turtleShapes: Seq[CoreVectorShape], linkShapes: Seq[CoreLinkShape]) = {
     import collection.JavaConverters._
-    ws.world.turtleShapeList.replaceShapes(turtleShapes.map(ShapeConverter.baseVectorShapeToVectorShape))
+    ws.world.turtleShapes.replaceShapes(turtleShapes.map(ShapeConverter.baseVectorShapeToVectorShape))
     if (turtleShapes.isEmpty)
-      ws.world.turtleShapeList.add(VectorShape.getDefaultShape)
+      ws.world.turtleShapes.add(VectorShape.getDefaultShape)
 
-    ws.world.linkShapeList.replaceShapes(linkShapes.map(ShapeConverter.baseLinkShapeToLinkShape))
+    ws.world.linkShapes.replaceShapes(linkShapes.map(ShapeConverter.baseLinkShapeToLinkShape))
     if (linkShapes.isEmpty)
-      ws.world.linkShapeList.add(LinkShape.getDefaultLinkShape)
+      ws.world.linkShapes.add(LinkShape.getDefaultLinkShape)
   }
 
   private def finish(constraints: Map[String, ConstraintSpecification], program: Program, interfaceGlobalCommands: String) {

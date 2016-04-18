@@ -2,45 +2,50 @@
 
 package org.nlogo.shape.editor
 
-import org.nlogo.shape.{ ShapeConverter, ShapeChangeListener, LinkShape}
-
-import org.nlogo.core.Shape
-import org.nlogo.core.ShapeParser.parseLinkShapes
+import org.nlogo.api.ModelLoader
+import org.nlogo.core.{ AgentKind, Model, Shape, ShapeListTracker }, Shape.{ LinkShape => CoreLinkShape }
+import org.nlogo.shape.ShapeConverter
+import org.nlogo.shape.LinkShape
 
 class LinkShapeManagerDialog(parentFrame: java.awt.Frame,
                              world: org.nlogo.api.World,
-                             shapeChangeListener: ShapeChangeListener,
-                             modelReader: org.nlogo.shape.ModelSectionReader)
-        extends ManagerDialog(parentFrame, modelReader, new DrawableList(world.linkShapeList, shapeChangeListener, 10, 34))
+                             modelLoader: ModelLoader)
+        extends ManagerDialog[LinkShape](parentFrame, modelLoader, world.linkShapes)
                 with org.nlogo.shape.LinkShapesManagerInterface {
 
-  libraryButton.setVisible(false)
   libraryLabel.setVisible(false)
   shapesList.addListSelectionListener(this)
 
+  override def shapeKind: AgentKind = AgentKind.Link
+
+  override def modelShapes(m: Model): Seq[Shape] = m.linkShapes
+
+  def displayableShapeFromCoreShape(shape: Shape): Option[LinkShape] = {
+    shape match {
+      case l: CoreLinkShape => Some(ShapeConverter.baseLinkShapeToLinkShape(l))
+      case _ => None
+    }
+  }
+
   // Load a new shapes editor to let the user create a new shape
-  override def newShape() {
+  override def newShape(): Unit = {
     new LinkEditorDialog(shapesList, new LinkShape(), getLocation.x, getLocation.y)
   }
 
   // Edit an existing shape
-  override def editShape() {
-    val shape = shapesList.getOneSelected.asInstanceOf[LinkShape]
-    if (shape != null) new LinkEditorDialog(shapesList, shape, getLocation.x, getLocation.y)
+  override def editShape(): Unit = {
+    shapesList.getOneSelected.foreach { shape =>
+      new LinkEditorDialog(shapesList, shape, getLocation.x, getLocation.y)
+    }
   }
 
   // Duplicate a shape, which can then be edited
-  override def duplicateShape() {
-    val shape = shapesList.getOneSelected.asInstanceOf[LinkShape]
-    // You can only duplicate one shape at a time
-    if (shape != null) {
+  override def duplicateShape(): Unit = {
+    shapesList.getOneSelected.foreach { shape =>
+      // You can only duplicate one shape at a time
       val newShape = shape.clone.asInstanceOf[LinkShape]
       newShape.name_$eq("")
       new LinkEditorDialog(shapesList, newShape, getLocation.x, getLocation.y)
     }
-  }
-
-  override def parseShapes(shapes: Array[String], version: String): Seq[Shape] = {
-    parseLinkShapes(shapes).map(ShapeConverter.baseLinkShapeToLinkShape)
   }
 }

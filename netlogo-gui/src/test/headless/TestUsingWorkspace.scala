@@ -46,8 +46,8 @@ trait TestUsingWorkspace extends MockSuite {
     try {
       workspace.initForTesting(-radius, radius, -radius, radius, HeadlessWorkspace.TestDeclarations)
       workspace.changeTopology(worldType.xWrap, worldType.yWrap)
-      workspace.world.turtleShapeList.replaceShapes(Model.defaultShapes.map(ShapeConverter.baseVectorShapeToVectorShape))
-      workspace.world.linkShapeList.replaceShapes(Model.defaultLinkShapes.map(ShapeConverter.baseLinkShapeToLinkShape))
+      workspace.world.turtleShapes.replaceShapes(Model.defaultShapes.map(ShapeConverter.baseVectorShapeToVectorShape))
+      workspace.world.linkShapes.replaceShapes(Model.defaultLinkShapes.map(ShapeConverter.baseLinkShapeToLinkShape))
       f(workspace)
     }
     finally {workspace.dispose()}

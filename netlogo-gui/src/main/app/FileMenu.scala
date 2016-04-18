@@ -6,12 +6,12 @@ import java.util.Map
 
 import org.nlogo.agent.ImportPatchColors
 import org.nlogo.swing.{ FileDialog, ModalProgressTask, OptionDialog }
-import org.nlogo.api.{ Exceptions, FileIO, LocalFile, ModelReader,
+import org.nlogo.api.{ Exceptions, FileIO, LocalFile, ModelLoader, ModelReader,
   ModelSection, ModelSectionJ, ModelType, ModelTypeJ, Version },
     ModelReader.{ modelSuffix, emptyModelPath }
 import org.nlogo.core.{ I18N, Model }
 import org.nlogo.awt.{ Hierarchy => NLogoHierarchy, UserCancelException }
-import org.nlogo.window.{ FileController, ModelLoader, PlotWidgetExportType, Events => WindowEvents },
+import org.nlogo.window.{ FileController, PlotWidgetExportType, Events => WindowEvents, ReconfigureWorkspaceUI },
   WindowEvents.{ AboutToQuitEvent, ExportOutputEvent, ExportPlotEvent, ModelSavedEvent, OpenModelEvent }
 import org.nlogo.workspace.OpenModel
 import org.nlogo.swing.{ Menu => SwingMenu }
@@ -30,7 +30,7 @@ import javax.swing.{ AbstractAction => SwingAbstractAction, JOptionPane }
  * and menus ev 8/25/05
  */
 
-class FileMenu(app: App, modelSaver: ModelSaver)
+class FileMenu(app: App, modelSaver: ModelSaver, modelLoader: ModelLoader)
   extends SwingMenu(I18N.gui.get("menu.file")) with OpenModelEvent.Handler {
 
   private var savedVersion: String = Version.version
@@ -491,9 +491,7 @@ class FileMenu(app: App, modelSaver: ModelSaver)
   private def loadModel(uri: URI): Option[Model] = {
     println("loading from URI " + uri.toString)
     val controller = new FileController(this)
-    OpenModel[Array[String], NLogoFormat](uri, controller,
-      new NLogoFormat(app.workspace.autoConvert _), Version, Seq(NLogoModelSettings,
-        new NLogoHubNetFormat(app.workspace, app.workspace.autoConvert _), new NLogoPreviewCommandsFormat()))
+    OpenModel(uri, controller, modelLoader, Version)
   }
 
   private def openFromModel(model: Model, uri: URI, modelType: ModelType): Unit = {
@@ -514,7 +512,7 @@ class FileMenu(app: App, modelSaver: ModelSaver)
   }
 
   private def runLoad(linkParent: Container, uri: URI, model: Model, modelType: ModelType): Unit = {
-    ModelLoader.load(linkParent, uri, modelType, model, app.workspace)
+    ReconfigureWorkspaceUI(linkParent, uri, modelType, model, app.workspace)
   }
 
   def handle(e: OpenModelEvent): Unit = {
@@ -615,11 +613,10 @@ class FileMenu(app: App, modelSaver: ModelSaver)
     var suggestedFileName = app.workspace.getModelFileName;
 
     // don't add the suffix on twice
-    if (suggestedFileName.endsWith(s".$modelSuffix")) {
-      suggestedFileName = suggestedFileName.stripSuffix(s".$modelSuffix")
-    }
-
-    suggestedFileName + suffix
+    if (suggestedFileName.endsWith(s".$modelSuffix"))
+      suggestedFileName
+    else
+      suggestedFileName + suffix
   }
 
   @throws(classOf[UserCancelException])

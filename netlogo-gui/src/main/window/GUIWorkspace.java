@@ -1318,15 +1318,14 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     while (shapeIterator.hasNext()) {
       shapes.add(ShapeConverter.baseVectorShapeToVectorShape(shapeIterator.next()));
     }
-    world().turtleShapeList().replaceShapes(shapes);
+    world().turtleShapes().replaceShapes(shapes);
     ArrayList<org.nlogo.core.Shape> linkShapes = new ArrayList<org.nlogo.core.Shape>();
     scala.collection.Iterator<? extends org.nlogo.core.Shape.LinkShape> linkShapeIterator = e.model.linkShapes().iterator();
     while (linkShapeIterator.hasNext()) {
       linkShapes.add(ShapeConverter.baseLinkShapeToLinkShape(linkShapeIterator.next()));
     }
-    world().linkShapeList().replaceShapes(linkShapes);
-    // NOTE: really ought to just pass in hubnet bits, but
-    // that's tricky...
+    world().linkShapes().replaceShapes(linkShapes);
+    // NOTE: really ought to just pass in hubnet bits, but that's tricky...
     getHubNetManager().load(e.model);
   }
 

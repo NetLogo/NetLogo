@@ -51,7 +51,7 @@ abstract class JobWidget(val random: MersenneTwisterFast)
   def handle(e: CompiledEvent): Unit = {
     if (e.sourceOwner eq this) {
       // use setter method, so subclasses can catch
-      procedure_=(e.procedure)
+      procedure = e.procedure
       error(e.error)
     }
 

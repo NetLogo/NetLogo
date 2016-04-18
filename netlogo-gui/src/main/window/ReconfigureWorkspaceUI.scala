@@ -11,8 +11,8 @@ import org.nlogo.window.Events.{ AfterLoadEvent, BeforeLoadEvent,
 import org.nlogo.api.{ CompilerServices, ModelType }
 import org.nlogo.core.{ I18N, Model }
 
-object ModelLoader {
-  def load(linkParent: Container, uri: URI, modelType: ModelType, model: Model,
+object ReconfigureWorkspaceUI {
+  def apply(linkParent: Container, uri: URI, modelType: ModelType, model: Model,
     compilerServices: CompilerServices): Unit = {
       new Loader(linkParent).loadHelper(uri, modelType, model, compilerServices)
   }

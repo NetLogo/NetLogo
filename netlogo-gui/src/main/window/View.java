@@ -11,7 +11,6 @@ import org.nlogo.api.AgentFollowingPerspective;
 import org.nlogo.api.Perspective;
 import org.nlogo.api.PerspectiveJ;
 import org.nlogo.api.RendererInterface;
-import org.nlogo.workspace.AbstractWorkspace;
 
 import javax.swing.JPopupMenu;
 import java.awt.event.ActionEvent;

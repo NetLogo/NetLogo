@@ -14,5 +14,4 @@ package object fileformat {
 
   def hubNetReaders: Map[String, WidgetReader] =
     HubNetWidgetReaders.additionalReaders
-
 }

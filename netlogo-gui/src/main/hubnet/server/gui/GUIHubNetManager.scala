@@ -4,6 +4,7 @@ package org.nlogo.hubnet.server.gui
 
 import org.nlogo.hubnet.connection.HubNetException
 import org.nlogo.hubnet.server.{HubNetManager, ClientEventListener, ConnectionManager}
+import org.nlogo.api.ModelLoader
 import org.nlogo.api.HubNetInterface.ClientInterface
 import org.nlogo.core.{ Femto, FileMode, Widget => CoreWidget }
 import org.nlogo.hubnet.protocol.ComputerInterface
@@ -23,7 +24,8 @@ class GUIHubNetManager(workspace: GUIWorkspace,
                        linkParent: Component,
                        editorFactory: EditorFactory,
                        ifactory: InterfaceFactory,
-                       menuFactory: MenuBarFactory) extends HubNetManager(workspace) with ViewInterface {
+                       menuFactory: MenuBarFactory,
+                       loader: ModelLoader) extends HubNetManager(workspace, loader) with ViewInterface {
 
   private var _clientEditor: HubNetClientEditor = new HubNetClientEditor(workspace, linkParent, ifactory, menuFactory)
   // used in the discovery messages, and displayed in the control center.

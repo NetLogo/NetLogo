@@ -6,6 +6,7 @@ import org.nlogo.core.AgentKindJ;
 import org.nlogo.core.I18N;
 import org.nlogo.core.Shape;
 import org.nlogo.core.ShapeList;
+import org.nlogo.core.ShapeListTracker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,34 +15,22 @@ public strictfp class ImportDialog   // public for DeltaTick - ST 12/2/11
     extends javax.swing.JDialog
     implements javax.swing.event.ListSelectionListener {
 
-  final ManagerDialog manager;
-  final DrawableList list;
+  final ManagerDialog<? extends Shape> manager;
+  final DrawableList<? extends Shape> list;
 
   ///
 
   public ImportDialog(java.awt.Frame frame,
-               ManagerDialog manager,
-               String[] shapes, String version,
-               ShapeParser shapeParser) {
+               ManagerDialog<? extends Shape> manager,
+               DrawableList<? extends Shape> drawableList) {
     // The Java 1.1 version of Swing doesn't allow us to pass a JDialog as the first arg to
     // the JDialog constructor, hence the necessity of passing in the frame instead - ST 3/24/02
     super(frame, "Library", true);
     this.manager = manager;
 
-    ShapeList shapeList = null;
-    try {
-      scala.collection.Seq<Shape> foreignShapes =
-        ShapeList.sortShapes(shapeParser.parseShapes(shapes, version));
-      shapeList = new ShapeList(AgentKindJ.Turtle(), foreignShapes);
-    } catch (IllegalArgumentException e) {
-      dispose(); // Importing failed, so quit
-      list = null;
-      return;
-    }
-
-    list = new DrawableList(shapeList, null, 10, 34);
-    list.setParent(this);
-    list.setCellRenderer(new ShapeCellRenderer(list));
+    list = drawableList;
+    // list.setParent(this);
+    list.setCellRenderer(new ShapeCellRenderer());
     list.update();
 
     // Create the buttons
@@ -114,7 +103,7 @@ public strictfp class ImportDialog   // public for DeltaTick - ST 12/2/11
 
     // For each selected shape, add it to the current model's file and the turtledrawer,
     for (int i = 0; i < selected.length; ++i) {
-      shape = list.getShape(selected[i]);
+      shape = list.getShape(selected[i]).get();
 
       // If the shape exists, give the user the chance to overwrite or rename
       while (manager.shapesList().exists(shape.name())) {
@@ -161,10 +150,6 @@ public strictfp class ImportDialog   // public for DeltaTick - ST 12/2/11
   void sendImportWarning(String message) {
     javax.swing.JOptionPane.showMessageDialog
         (this, message, "Import", javax.swing.JOptionPane.WARNING_MESSAGE);
-  }
-
-  public interface ShapeParser {
-    scala.collection.Seq<Shape> parseShapes(String[] shapes, String version) throws IllegalStateException;
   }
 
   @Override

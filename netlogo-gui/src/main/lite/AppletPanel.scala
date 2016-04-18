@@ -4,10 +4,10 @@ package org.nlogo.lite
 
 import java.util.{ ArrayList, List => JList }
 import org.nlogo.agent.{ World, World3D }
-import org.nlogo.api.{ LogoException, ModelSection, ModelType, Version, SimpleJobOwner }
+import org.nlogo.api.{ ConfigurableModelLoader, LogoException, ModelLoader, ModelSection, ModelType, Version, SimpleJobOwner }
 import org.nlogo.core.{ AgentKind, CompilerException }
 import org.nlogo.window.{ Event, FileController, AppletAdPanel, CompilerManager, InterfacePanelLite, InvalidVersionException,
-                          ModelLoader, NetLogoListenerManager, RuntimeErrorDialog }
+                          ReconfigureWorkspaceUI, NetLogoListenerManager, RuntimeErrorDialog }
 import org.nlogo.window.Events.{ CompiledEvent, LoadSectionEvent }
 import org.nlogo.workspace.OpenModel
 import org.nlogo.fileformat.{ NLogoFormat, NLogoHubNetFormat, NLogoPreviewCommandsFormat, NLogoModelSettings }
@@ -214,9 +214,13 @@ with Event.LinkParent {
     // TYPE_LIBRARY is probably OK. - ST 10/11/05
     RuntimeErrorDialog.setModelName(uri.getPath.split("/").last)
     val controller = new FileController(this)
-    val modelOpt = OpenModel[Array[String], NLogoFormat](uri, controller,
-        new NLogoFormat(workspace.autoConvert _), Version, Seq(NLogoModelSettings, new NLogoHubNetFormat(workspace, workspace.autoConvert _), new NLogoPreviewCommandsFormat()))
-    modelOpt.foreach(model =>
-        ModelLoader.load(this, uri, ModelType.Library, model, workspace))
+    val loader = new ConfigurableModelLoader()
+      .addFormat[Array[String], NLogoFormat](new NLogoFormat(workspace.autoConvert _))
+      .addSerializers[Array[String], NLogoFormat](Seq(
+        NLogoModelSettings,
+        new NLogoHubNetFormat(workspace, workspace.autoConvert _),
+        new NLogoPreviewCommandsFormat()))
+      val modelOpt = OpenModel(uri, controller, loader, Version)
+    modelOpt.foreach(model => ReconfigureWorkspaceUI(this, uri, ModelType.Library, model, workspace))
   }
 }

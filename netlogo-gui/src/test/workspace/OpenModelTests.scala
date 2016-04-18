@@ -6,7 +6,7 @@ import org.scalatest.FunSuite
 
 import java.net.URI
 import org.nlogo.core.{ Shape, Model, Widget }, Shape.{ LinkShape, VectorShape }
-import org.nlogo.api.{ ComponentSerialization, ModelFormat, Version }
+import org.nlogo.api.{ ComponentSerialization, ConfigurableModelLoader, ModelFormat, Version }
 
 import scala.util.{ Failure, Success, Try }
 
@@ -29,18 +29,21 @@ class OpenModelTests extends FunSuite {
           v == currentVersion || super.knownVersion(v)
         }
       }
-      val res = OpenModel(uri, controller, format, VersionInfo, additionalSerializers)
+      val loader = new ConfigurableModelLoader()
+        .addFormat[String, MockFormat](format)
+        .addSerializers[String, MockFormat](additionalSerializers)
+      val res = OpenModel(uri, controller, loader, VersionInfo)
       assertions(res, controller)
   }
 
-  test("if asked to open a model will a null path, raises an illegal state exception") {
+  test("if asked to open a model will a null path, returns none and reports an invalid URI") {
     testOpenModel(uri = null) { (model, controller) =>
       assert(model.isEmpty)
       assert(controller.invalidURI == null)
     }
   }
 
-  test("if the model doesn't match the format, notifies the user it is invalid") {
+  test("if the model doesn't match an available format, notifies the user it is invalid") {
     val uri = new URI("file://foo.jpg")
     testOpenModel(uri = uri) { (model, controller) =>
       assert(model.isEmpty)

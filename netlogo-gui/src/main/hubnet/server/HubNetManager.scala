@@ -6,8 +6,7 @@ import org.nlogo.hubnet.connection.{HubNetException, ConnectionInterface}
 import org.nlogo.core.AgentKind
 import org.nlogo.core.model.WidgetReader
 import org.nlogo.core.{ Widget => CoreWidget }
-import org.nlogo.api.{ HubNetInterface, ModelSection, Version }, HubNetInterface.ClientInterface
-import org.nlogo.fileformat.NLogoHubNetFormat
+import org.nlogo.api.{ HubNetInterface, ModelLoader, ModelSection, Version }, HubNetInterface.ClientInterface
 import org.nlogo.hubnet.mirroring
 import org.nlogo.hubnet.mirroring.{HubNetLinkStamp, HubNetDrawingMessage, HubNetTurtleStamp, HubNetLine}
 import org.nlogo.hubnet.connection.MessageEnvelope._
@@ -23,7 +22,7 @@ import java.net.URI
 import java.io.{ Serializable => JSerializable }
 import java.util.concurrent.LinkedBlockingQueue
 
-abstract class HubNetManager(workspace: AbstractWorkspaceScala)
+abstract class HubNetManager(workspace: AbstractWorkspaceScala, modelLoader: ModelLoader)
   extends HubNetInterface
   with ConnectionInterface {
 
@@ -328,13 +327,11 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala)
 
   def fileInterface(path: String): Option[ClientInterface] = {
     val uri = Paths.get(path).toUri
-    OpenModel[Array[String], NLogoFormat](uri, HubNetLoadController,
-      new NLogoFormat(workspace.autoConvert _), Version,
-      Seq(new NLogoHubNetFormat(workspace, workspace.autoConvert _)))
-        .flatMap { model =>
-          model.optionalSectionValue[Seq[CoreWidget]]("org.nlogo.modelsection.hubnetclient")
-            .map(widgets => ComputerInterface(widgets, model.turtleShapes, model.linkShapes))
-        }
+    OpenModel(uri, HubNetLoadController, modelLoader, Version)
+      .flatMap { model =>
+        model.optionalSectionValue[Seq[CoreWidget]]("org.nlogo.modelsection.hubnetclient")
+          .map(widgets => ComputerInterface(widgets, model.turtleShapes, model.linkShapes))
+      }
   }
 
   object HubNetLoadController extends OpenModel.Controller {

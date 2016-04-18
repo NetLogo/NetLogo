@@ -6,14 +6,14 @@ import org.nlogo.hubnet.connection.HubNetException
 import org.nlogo.workspace.AbstractWorkspaceScala
 import org.nlogo.core.{ Model, Widget => CoreWidget }
 import org.nlogo.core.model.WidgetReader
-import org.nlogo.api.ModelType
+import org.nlogo.api.{ ModelType, ModelLoader }
 import org.nlogo.hubnet.protocol.{ ComputerInterface, TestClient }
 import collection.mutable.ListBuffer
 import java.util.concurrent.{Executors, ExecutorService}
 
 // TODO: we really need to do something about the printlns in this class.
 // but what?
-class HeadlessHubNetManager(workspace: AbstractWorkspaceScala) extends HubNetManager(workspace){
+class HeadlessHubNetManager(workspace: AbstractWorkspaceScala, loader: ModelLoader) extends HubNetManager(workspace, loader){
   // since the server is headless, the clients cant be, or no one would have a view.
   // so, set this to true by default. JC 12/28/10
   HubNetUtils.viewMirroring = true

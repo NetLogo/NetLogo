@@ -59,7 +59,7 @@ class VectorShape extends Observable with BaseVectorShape with Cloneable with ja
   def getEditableColorIndex: Int =
     editableColorIndex
 
-  override def clone: AnyRef =
+  override def clone: VectorShape =
     try {
       val newShape = super.clone.asInstanceOf[VectorShape]
       newShape.elementList = ArrayBuffer(elementList.map(_.clone.asInstanceOf[Element]): _*)

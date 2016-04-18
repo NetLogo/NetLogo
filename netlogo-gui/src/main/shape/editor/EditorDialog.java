@@ -61,7 +61,7 @@ strictfp class EditorDialog
     this.originalShape = originalShape;
 
     // edit a copy, not the original
-    shape = (VectorShape) originalShape.clone();
+    shape = originalShape.clone();
     shape.addObserver(this);
     shapeView = new ShapeView(this, shape);
     shape.addObserver(shapeView);
@@ -665,7 +665,7 @@ strictfp class EditorDialog
   }
 
   private VectorShape getCurrentShape() {
-    VectorShape currentShape = (VectorShape) shape.clone();
+    VectorShape currentShape = shape.clone();
     currentShape.name_$eq(nameText.getText());
     currentShape.setRotatable(shapeRotatable);
     currentShape.markRecolorableElements(getColor(shape.getEditableColorIndex()),

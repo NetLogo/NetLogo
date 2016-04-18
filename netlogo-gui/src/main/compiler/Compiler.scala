@@ -89,7 +89,7 @@ class Compiler(dialect: Dialect) extends CompilerInterface {
       frontEnd.frontEnd(source, None, program, subprogram, oldProceduresListMap, extensionManager)
   }
 
-  def autoConvert(source: String, version: String): String = {
+  def autoConvert(version: String)(source: String): String = {
     // AutoConverter1 handles simple textual conversions
     new AutoConverter1()(parserTokenizer).convert(source, version)
   }

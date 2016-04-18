@@ -232,10 +232,8 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
     // so that constrained widgets can initialize themselves -- CLB
     new AfterLoadEvent().raise(this)
     clientGUI.setChoices(clientInterface.chooserChoices.toMap)
-    viewWidget.renderer.replaceTurtleShapes(
-      scala.collection.JavaConversions.seqAsJavaList(clientInterface.turtleShapes))
-    viewWidget.renderer.replaceLinkShapes(
-      scala.collection.JavaConversions.seqAsJavaList(clientInterface.linkShapes))
+    viewWidget.renderer.replaceTurtleShapes(clientInterface.turtleShapes)
+    viewWidget.renderer.replaceLinkShapes(clientInterface.linkShapes)
     sendDataAndWait(EnterMessage)
     connected = true
     invokeLater(() => {

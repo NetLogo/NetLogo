@@ -750,7 +750,15 @@ public strictfp class ClientWorld
     throw new UnsupportedOperationException();
   }
 
+  public org.nlogo.core.ShapeListTracker turtleShapes() {
+    throw new UnsupportedOperationException();
+  }
+
   public org.nlogo.core.ShapeList turtleShapeList() {
+    throw new UnsupportedOperationException();
+  }
+
+  public org.nlogo.core.ShapeListTracker linkShapes() {
     throw new UnsupportedOperationException();
   }
 

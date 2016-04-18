@@ -10,7 +10,7 @@ import org.nlogo.awt.UserCancelException
 import org.nlogo.log.Logger
 import org.nlogo.nvm.{CompilerInterface, Workspace}
 import org.nlogo.fileformat
-import org.nlogo.shape.{ShapesManagerInterface, ShapeChangeListener, LinkShapesManagerInterface, TurtleShapesManagerInterface}
+import org.nlogo.shape.{ShapesManagerInterface, LinkShapesManagerInterface, TurtleShapesManagerInterface}
 import org.nlogo.util.Implicits.RichString
 import org.nlogo.util.Implicits.RichStringLike
 import org.nlogo.util.Pico
@@ -83,6 +83,16 @@ object App{
       pico.addScalaObject("org.nlogo.api.NetLogoThreeDDialect")
     else
       pico.addScalaObject("org.nlogo.api.NetLogoLegacyDialect")
+
+    import org.nlogo.fileformat.{ NLogoFormat, NLogoHubNetFormat, NLogoModelSettings, NLogoPreviewCommandsFormat }
+    val autoConvert = pico.getComponent(classOf[CompilerInterface]).autoConvert _
+    val modelLoader = new ConfigurableModelLoader()
+      .addFormat[Array[String], NLogoFormat](new NLogoFormat(autoConvert))
+      .addSerializer[Array[String], NLogoFormat](NLogoModelSettings)
+      .addSerializer[Array[String], NLogoFormat](new NLogoHubNetFormat(pico.getComponent(classOf[CompilerServices]), autoConvert))
+      .addSerializer[Array[String], NLogoFormat](new NLogoPreviewCommandsFormat())
+    pico.addComponent(modelLoader)
+
     pico.addComponent(classOf[ProceduresToHtml])
     pico.addComponent(classOf[App])
     pico.as(NO_CACHE).addComponent(classOf[FileMenu])
@@ -92,20 +102,16 @@ object App{
     // Anything that needs a parent Frame, we need to use ComponentParameter
     // and specify classOf[AppFrame], otherwise PicoContainer won't know which
     // Frame to use - ST 6/16/09
-    // we need to give TurtleShapeManagerDialog and LinkShapeManagerDialog different
-    // ShapeSectionReader objects, so we use ConstantParameter for that - ST 6/16/09
     pico.add(classOf[TurtleShapesManagerInterface],
           "org.nlogo.shape.editor.TurtleShapeManagerDialog",
           Array[Parameter] (
             new ComponentParameter(classOf[AppFrame]),
-            new ComponentParameter(), new ComponentParameter(),
-            new ConstantParameter(new ShapeSectionReader(ModelSection.TurtleShapes))))
+            new ComponentParameter(), new ComponentParameter()))
     pico.add(classOf[LinkShapesManagerInterface],
           "org.nlogo.shape.editor.LinkShapeManagerDialog",
           Array[Parameter] (
             new ComponentParameter(classOf[AppFrame]),
-            new ComponentParameter(), new ComponentParameter(),
-            new ConstantParameter(new ShapeSectionReader(ModelSection.LinkShapes))))
+            new ComponentParameter(), new ComponentParameter()))
     pico.add(classOf[AggregateManagerInterface],
           "org.nlogo.sdm.gui.GUIAggregateManager",
           Array[Parameter] (
@@ -117,7 +123,7 @@ object App{
           Array[Parameter] (
             new ComponentParameter(), new ComponentParameter(classOf[AppFrame]),
             new ComponentParameter(), new ComponentParameter(),
-            new ComponentParameter()))
+            new ComponentParameter(), new ComponentParameter()))
     pico.add("org.nlogo.lab.gui.LabManager")
     pico.add("org.nlogo.properties.EditDialogFactory")
     // we need to make HeadlessWorkspace objects for BehaviorSpace to use.
@@ -224,35 +230,6 @@ object App{
           throw new IllegalStateException("File specified to open (" + token + ") was not found!")
         commandLineModel = modelFile.getAbsolutePath()
       }
-    }
-  }
-
-  // TODO: lots of duplication here...
-  private class ShapeSectionReader(section: ModelSection) extends org.nlogo.shape.ModelSectionReader {
-    @throws(classOf[java.io.IOException])
-    def read(path: String) = {
-      val map = ModelReader.parseModel(FileIO.file2String(path))
-      if (map == null ||
-              map.get(ModelSection.Version) == null ||
-              map.get(ModelSection.Version).length == 0 ||
-              !ModelReader.parseVersion(map).startsWith("NetLogo")) {
-        // not a valid model file
-        Array.empty[String]
-      }
-      else map.get(section)
-    }
-
-    @throws(classOf[java.io.IOException])
-    override def getVersion(path:String) = {
-      val map = ModelReader.parseModel(FileIO.file2String(path))
-      if (map == null ||
-              map.get(ModelSection.Version) == null ||
-              map.get(ModelSection.Version).length == 0 ||
-              !ModelReader.parseVersion(map).startsWith("NetLogo")) {
-        // not a valid model file
-        null;
-      }
-      else ModelReader.parseVersion(map)
     }
   }
 }
@@ -367,19 +344,10 @@ class App extends
         pico.getComponent(classOf[RendererInterface])
       }
     }
-    pico.addComponent(new EditorColorizer(workspace))
-    pico.addComponent(new ShapeChangeListener() {
-      def shapeChanged(shape: Shape) {
-        workspace.shapeChanged(shape)
-      }
 
-      def shapeRemoved(shape: org.nlogo.core.Shape) {
-        if (shape.isInstanceOf[org.nlogo.shape.LinkShape]) {
-          workspace.world.linkBreedShapes.removeFromBreedShapes(shape.name)
-        }
-        else workspace.world.turtleBreedShapes.removeFromBreedShapes(shape.name)
-      }
-    })
+    val shapeChangeListener = new ShapeChangeListener(workspace, world)
+
+    pico.addComponent(new EditorColorizer(workspace))
 
     frame.addLinkComponent(workspace)
 

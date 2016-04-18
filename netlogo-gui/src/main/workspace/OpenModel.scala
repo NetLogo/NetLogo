@@ -5,7 +5,7 @@ package org.nlogo.workspace
 import java.net.URI
 
 import org.nlogo.core.Model
-import org.nlogo.api.{ ComponentSerialization, ModelFormat, Version }
+import org.nlogo.api.{ ComponentSerialization, ModelFormat, ModelLoader, Version }
 
 import scala.util.{ Failure, Success }
 
@@ -21,30 +21,33 @@ object OpenModel {
     def shouldOpenModelOfLegacyVersion(version: String): Boolean
   }
 
-  def apply[A, B <: ModelFormat[A, B]](uri: URI,
+  def apply(uri: URI,
     controller: Controller,
-    format: B,
-    currentVersion: Version,
-    optionalSerializers: Seq[ComponentSerialization[A, B]]): Option[Model] = {
-    if (uri == null || ! getFileExtension(uri).exists(_ == format.name)) {
-      controller.invalidModel(uri)
-      None
-    } else {
-      format.load(uri, optionalSerializers) match {
-        case Failure(exception: Exception) =>
-          controller.errorOpeningURI(uri, exception)
-          None
-        case Failure(throwable) => throw throwable
-        case Success(model)     =>
-          if (! model.version.startsWith("NetLogo")) {
-            controller.invalidModelVersion(uri, model.version)
+    loader: ModelLoader,
+    currentVersion: Version): Option[Model] = {
+      val isValidURI = Option(uri)
+        .flatMap(getFileExtension)
+        .map(ext => loader.formats.map(_.name).contains(ext))
+        .getOrElse(false)
+      if (! isValidURI) {
+        controller.invalidModel(uri)
+        None
+      } else {
+        loader.readModel(uri) match {
+          case Success(model) =>
+            if (! model.version.startsWith("NetLogo")) {
+              controller.invalidModelVersion(uri, model.version)
+              None
+            } else if (shouldNotContinueOpeningModel(model, controller, currentVersion))
+              None
+            else
+              Some(model)
+          case Failure(exception: Exception) =>
+            controller.errorOpeningURI(uri, exception)
             None
-          } else if (shouldNotContinueOpeningModel(model, controller, currentVersion))
-            None
-          else
-            Some(model)
+          case Failure(ex) => throw ex
+        }
       }
-    }
   }
 
   private def shouldNotContinueOpeningModel(model: Model, controller: Controller, currentVersion: Version): Boolean = {
@@ -54,6 +57,7 @@ object OpenModel {
       (! currentVersion.knownVersion(model.version) && ! controller.shouldOpenModelOfUnknownVersion(model.version)) ||
       (! currentVersion.compatibleVersion(model.version) && ! controller.shouldOpenModelOfLegacyVersion(model.version)))
   }
+
   private def getFileExtension(uri: URI): Option[String] = {
     uri.getPath.split("\\.").lastOption
   }

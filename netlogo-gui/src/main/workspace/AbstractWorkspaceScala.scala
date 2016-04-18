@@ -78,7 +78,7 @@ abstract class AbstractWorkspaceScala(val world: World, hubNetManagerFactory: Hu
   }
 
   def autoConvert(modelVersion: String)(source: String): String =
-    compiler.autoConvert(source, modelVersion)
+    compiler.autoConvert(modelVersion)(source)
 
   override def getCompilationEnvironment = {
     import java.io.{ File => JFile }

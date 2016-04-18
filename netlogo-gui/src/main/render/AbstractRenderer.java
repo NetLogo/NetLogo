@@ -51,7 +51,7 @@ ST 8/19/05
 import org.nlogo.api.GraphicsInterface;
 import org.nlogo.api.Perspective;
 import org.nlogo.api.PerspectiveJ;
-import org.nlogo.core.ShapeList;
+import org.nlogo.core.ShapeListTracker;
 import org.nlogo.api.TrailDrawerInterface;
 import org.nlogo.api.ViewSettings;
 
@@ -74,10 +74,10 @@ public abstract strictfp class AbstractRenderer
   public boolean renderLabelsAsRectangles() { return _renderLabelsAsRectangles; }
   public void renderLabelsAsRectangles_$eq(boolean b) { _renderLabelsAsRectangles = b; }
 
-  public AbstractRenderer(org.nlogo.api.World world, ShapeList turtleShapeList, ShapeList linkShapeList) {
+  public AbstractRenderer(org.nlogo.api.World world, ShapeListTracker turtleShapes, ShapeListTracker linkShapes) {
     this.world = world;
-    linkDrawer = new LinkDrawer(linkShapeList);
-    turtleDrawer = new TurtleDrawer(turtleShapeList);
+    linkDrawer = new LinkDrawer(linkShapes);
+    turtleDrawer = new TurtleDrawer(turtleShapes);
     _trailDrawer = new TrailDrawer(world, turtleDrawer, linkDrawer);
     changeTopology(world.wrappingAllowedInX(), world.wrappingAllowedInY());
   }
@@ -207,12 +207,12 @@ public abstract strictfp class AbstractRenderer
     turtleDrawer.shapes.resetCache(patchSize);
   }
 
-  public void replaceTurtleShapes(java.util.List<org.nlogo.core.Shape> shapes) {
-    turtleDrawer.shapes.shapeList.replaceShapes(shapes);
+  public void replaceTurtleShapes(scala.collection.Seq<org.nlogo.core.Shape> shapes) {
+    turtleDrawer.shapes.shapeTracker.replaceShapes(shapes);
   }
 
-  public void replaceLinkShapes(java.util.List<org.nlogo.core.Shape> shapes) {
-    linkDrawer.linkShapes.replaceShapes(shapes);
+  public void replaceLinkShapes(scala.collection.Seq<org.nlogo.core.Shape> shapes) {
+    linkDrawer.linkShapeTracker.replaceShapes(shapes);
   }
 
   protected boolean darkenPeripheral(ViewSettings settings) {
