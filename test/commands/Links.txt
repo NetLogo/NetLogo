@@ -740,5 +740,26 @@ LinkCreationTypeChecking_2D
   T> create-links-with neighbors => COMPILER ERROR CREATE-LINKS-WITH expected this input to be a turtle agentset, but got a patch agentset instead
   T> let x neighbors create-links-with x => ERROR CREATE-LINKS-WITH expected input to be a turtle agentset but got the agentset (agentset, 8 patches) instead.
 
+MyLinksListsUndirectedLinks
+  O> crt 2
+  O> ask turtle 0 [ create-link-with turtle 1 ]
+  [ count my-links ] of turtle 0 => 1
+  [ count my-links ] of turtle 1 => 1
+
+MyLinksListsDirectedLinks
+  O> crt 2
+  O> ask turtle 0 [ create-link-to turtle 1 ]
+  O> ask turtle 1 [ create-link-to turtle 0 ]
+  [ count my-links ] of turtle 0 => 2
+  [ count my-links ] of turtle 1 => 2
+
+MyLinksListsBreededLinks
+  directed-link-breed [directed-edges directed-edge]
+  undirected-link-breed [undirected-edges undirected-edge]
+  O> crt 2
+  O> ask turtle 0 [ create-directed-edge-to turtle 1 create-undirected-edge-with turtle 1 ]
+  [ count my-links ] of turtle 0 => 2
+  [ count my-links ] of turtle 1 => 2
+
 LinkShapes
   link-shapes => ["default"]
