@@ -370,7 +370,7 @@ with org.nlogo.workspace.WorldLoaderInterface {
   override def open(path: String) {
     setModelPath(path)
     val modelContents = FileIO.file2String(path)
-    try openModel(ModelReader.parseModel(modelContents, compiler.utilities))
+    try openModel(ModelReader.parseModel(modelContents, compiler.utilities, Map()))
     catch {
       case ex: CompilerException =>
         // models with special comment are allowed not to compile
