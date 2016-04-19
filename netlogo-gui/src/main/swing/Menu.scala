@@ -8,24 +8,28 @@ class Menu(text: String) extends javax.swing.JMenu(text) {
   def addMenuItem(name: String, c: Char, shifted: Boolean, fn: () => Unit): javax.swing.JMenuItem =
     addMenuItem(c, shifted, RichAction(name) { _ => fn() })
   def addMenuItem(text: String): javax.swing.JMenuItem =
-    addMenuItem(text, 0.toChar, false, null: javax.swing.Action)
+    addMenuItem(text, 0.toChar, false, null: javax.swing.Action, true)
   def addMenuItem(text: String, shortcut: Char): javax.swing.JMenuItem =
-    addMenuItem(text, shortcut, false, null: javax.swing.Action)
+    addMenuItem(text, shortcut, false, null: javax.swing.Action, true)
   def addMenuItem(action: javax.swing.Action): javax.swing.JMenuItem =
     addMenuItem(action.getValue(javax.swing.Action.NAME).asInstanceOf[String], action)
   def addMenuItem(text: String, action: javax.swing.Action): javax.swing.JMenuItem =
-    addMenuItem(text, 0.toChar, false, action)
+    addMenuItem(text, 0.toChar, false, action, true)
   def addMenuItem(text: String, shortcut: Char, action: javax.swing.Action): javax.swing.JMenuItem =
-    addMenuItem(text, shortcut, false, action)
+    addMenuItem(text, shortcut, false, action, true)
+  def addMenuItem(text: String, shortcut: Char, action: javax.swing.Action, addMenuMask: Boolean): javax.swing.JMenuItem =
+    addMenuItem(text, shortcut, false, action, addMenuMask)
   def addMenuItem(shortcut: Char, action: javax.swing.Action): javax.swing.JMenuItem =
     addMenuItem(action.getValue(javax.swing.Action.NAME).asInstanceOf[String],
-                shortcut, action)
+                shortcut, action, true)
   def addMenuItem(shortcut: Char, shift: Boolean, action: javax.swing.Action): javax.swing.JMenuItem =
     addMenuItem(action.getValue(javax.swing.Action.NAME).asInstanceOf[String],
-                shortcut, shift, action)
+                shortcut, shift, action, true)
   def addMenuItem(text: String, shortcut: Char, shift: Boolean): javax.swing.JMenuItem =
-    addMenuItem(text, shortcut, shift, null: javax.swing.Action)
-  def addMenuItem(text: String, shortcut: Char, shift: Boolean, action: javax.swing.Action): javax.swing.JMenuItem = {
+    addMenuItem(text, shortcut, shift, null: javax.swing.Action, true)
+  def addMenuItem(text: String, shortcut: Char, shift: Boolean, action: javax.swing.Action): javax.swing.JMenuItem =
+    addMenuItem(text, shortcut, shift, action, true)
+  def addMenuItem(text: String, shortcut: Char, shift: Boolean, action: javax.swing.Action, addMenuMask: Boolean): javax.swing.JMenuItem = {
     val item =
       if(action == null)
         new javax.swing.JMenuItem(text)
@@ -35,10 +39,12 @@ class Menu(text: String) extends javax.swing.JMenu(text) {
         item
       }
     val mask = if(shift) java.awt.event.InputEvent.SHIFT_MASK else 0
-    if(shortcut != 0)
+    if(shortcut != 0) {
+      val menuMask = if(addMenuMask) java.awt.Toolkit.getDefaultToolkit.getMenuShortcutKeyMask else 0
       item.setAccelerator(
         javax.swing.KeyStroke.getKeyStroke(
-          shortcut, mask | java.awt.Toolkit.getDefaultToolkit.getMenuShortcutKeyMask))
+          shortcut, mask | menuMask))
+    }
     item.setIcon(null) // unwanted visual clutter - ST 7/31/03
     add(item)
     item

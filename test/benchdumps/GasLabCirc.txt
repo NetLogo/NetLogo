@@ -1256,9 +1256,11 @@ procedure GO:[]{O---}:
          FRAME FULL [org/nlogo/prim/_asm_procedurego_jump_37 org/nlogo/nvm/Context java/lang/Object] [D D]
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurego_jump_37.validDouble (D)D
          L14
           DSTORE 2
          L7
@@ -1412,9 +1414,11 @@ procedure GO:[]{O---}:
          FRAME FULL [org/nlogo/prim/_asm_procedurego_if_42 org/nlogo/nvm/Context java/lang/Object] [D D]
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurego_if_42.validDouble (D)D
          L7
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -2627,9 +2631,11 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
          L6
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresortcollisions_ifelse_18.validDouble (D)D
          L7
           DCONST_1
          L8
@@ -2716,9 +2722,11 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
          L9
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresortcollisions_setobservervariable_19.validDouble (D)D
          L10
           DSTORE 2
           NEW java/lang/Double
@@ -3611,9 +3619,11 @@ reporter procedure OVERLAPPING?:[]{-T--}:
              FRAME FULL [org/nlogo/prim/_asm_procedureoverlapping_lessthan_1 org/nlogo/nvm/Context java/lang/Object] [D D D]
               DSTORE 4
               DSTORE 2
+              ALOAD 0
               DLOAD 2
               DLOAD 4
               DADD
+              INVOKEVIRTUAL org/nlogo/prim/_asm_procedureoverlapping_lessthan_1.validDouble (D)D
              L18
               LDC 2.0
              L19
@@ -3634,9 +3644,11 @@ reporter procedure OVERLAPPING?:[]{-T--}:
               ATHROW
              L20
              FRAME FULL [org/nlogo/prim/_asm_procedureoverlapping_lessthan_1 org/nlogo/nvm/Context D D] [D]
+              ALOAD 0
               DLOAD 2
               DLOAD 4
               DDIV
+              INVOKEVIRTUAL org/nlogo/prim/_asm_procedureoverlapping_lessthan_1.validDouble (D)D
              L21
               DSTORE 4
               DSTORE 2
@@ -3700,9 +3712,11 @@ reporter procedure OVERLAPPING?:[]{-T--}:
          FRAME FULL [org/nlogo/prim/_asm_procedureoverlapping_report_0 org/nlogo/nvm/Context java/lang/Object] [org/nlogo/agent/AgentSet D D]
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureoverlapping_report_0.validDouble (D)D
          L7
           LDC 2.0
          L8
@@ -3723,9 +3737,11 @@ reporter procedure OVERLAPPING?:[]{-T--}:
           ATHROW
          L9
          FRAME FULL [org/nlogo/prim/_asm_procedureoverlapping_report_0 org/nlogo/nvm/Context D D] [org/nlogo/agent/AgentSet]
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DDIV
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureoverlapping_report_0.validDouble (D)D
          L10
           DSTORE 3
           ASTORE 2
@@ -4068,9 +4084,11 @@ procedure RANDOM-POSITION:[]{-T--}:
          L18
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerandomposition_setxy_0.validDouble (D)D
          L19
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -4097,29 +4115,37 @@ procedure RANDOM-POSITION:[]{-T--}:
           ATHROW
          L22
          FRAME FULL [org/nlogo/prim/_asm_procedurerandomposition_setxy_0 org/nlogo/nvm/Context D D] [D D]
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DDIV
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerandomposition_setxy_0.validDouble (D)D
          L23
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerandomposition_setxy_0.validDouble (D)D
          L24
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextDouble ()D
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerandomposition_setxy_0.validDouble (D)D
          L25
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerandomposition_setxy_0.validDouble (D)D
          L26
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurerandomposition_setxy_0.kept15_value : Lorg/nlogo/core/LogoList;
@@ -4204,9 +4230,11 @@ procedure RANDOM-POSITION:[]{-T--}:
          L33
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerandomposition_setxy_0.validDouble (D)D
          L34
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -4233,29 +4261,37 @@ procedure RANDOM-POSITION:[]{-T--}:
           ATHROW
          L37
          FRAME FULL [org/nlogo/prim/_asm_procedurerandomposition_setxy_0 org/nlogo/nvm/Context D D] [D D D]
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DDIV
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerandomposition_setxy_0.validDouble (D)D
          L38
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerandomposition_setxy_0.validDouble (D)D
          L39
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextDouble ()D
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerandomposition_setxy_0.validDouble (D)D
          L40
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerandomposition_setxy_0.validDouble (D)D
          L41
           DSTORE 4
           DSTORE 2
@@ -4548,9 +4584,11 @@ procedure ASSIGN-COLLIDING-WALL:[TIME-TO-COLLISION WALL COLLIDING-PAIR]{-TPL}:
          L7
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureassigncollidingwall_setprocedurevariable_0.validDouble (D)D
          L8
           DSTORE 2
           NEW java/lang/Double
@@ -4971,9 +5009,11 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          L11
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecollidewith_setprocedurevariable_7.validDouble (D)D
          L12
           DSTORE 2
           DLOAD 2
@@ -4982,9 +5022,11 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          L13
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecollidewith_setprocedurevariable_7.validDouble (D)D
          L14
           DSTORE 2
           NEW java/lang/Double
@@ -5087,9 +5129,11 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          L11
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecollidewith_setprocedurevariable_8.validDouble (D)D
          L12
           DSTORE 2
           DLOAD 2
@@ -5098,9 +5142,11 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          L13
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecollidewith_setprocedurevariable_8.validDouble (D)D
          L14
           DSTORE 2
           NEW java/lang/Double
@@ -5210,9 +5256,11 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_setprocedurevariable_9 org/nlogo/nvm/Context java/lang/Object] [D D D]
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecollidewith_setprocedurevariable_9.validDouble (D)D
          L13
           DSTORE 2
           DLOAD 2
@@ -5221,9 +5269,11 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          L14
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecollidewith_setprocedurevariable_9.validDouble (D)D
          L15
           DSTORE 2
           NEW java/lang/Double
@@ -5333,9 +5383,11 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_setprocedurevariable_10 org/nlogo/nvm/Context java/lang/Object] [D D D]
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecollidewith_setprocedurevariable_10.validDouble (D)D
          L13
           DSTORE 2
           DLOAD 2
@@ -5344,9 +5396,11 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          L14
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecollidewith_setprocedurevariable_10.validDouble (D)D
          L15
           DSTORE 2
           NEW java/lang/Double
@@ -5453,9 +5507,11 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_setprocedurevariable_11 org/nlogo/nvm/Context java/lang/Object] [D D]
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecollidewith_setprocedurevariable_11.validDouble (D)D
          L22
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -5511,15 +5567,19 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_setprocedurevariable_11 org/nlogo/nvm/Context java/lang/Object T D] [D D D]
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecollidewith_setprocedurevariable_11.validDouble (D)D
          L27
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecollidewith_setprocedurevariable_11.validDouble (D)D
          L11
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -5588,9 +5648,11 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_setprocedurevariable_11 org/nlogo/nvm/Context java/lang/Object T D] [D D D]
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecollidewith_setprocedurevariable_11.validDouble (D)D
          L32
           DSTORE 4
           DSTORE 2
@@ -5609,9 +5671,11 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           ATHROW
          L33
          FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_setprocedurevariable_11 org/nlogo/nvm/Context D D] []
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DDIV
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecollidewith_setprocedurevariable_11.validDouble (D)D
          L34
           DSTORE 2
           NEW java/lang/Double
@@ -5669,9 +5733,11 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_setprocedurevariable_12 org/nlogo/nvm/Context java/lang/Object] [D D]
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecollidewith_setprocedurevariable_12.validDouble (D)D
          L8
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -5701,9 +5767,11 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_setprocedurevariable_12 org/nlogo/nvm/Context java/lang/Object T D] [D D]
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecollidewith_setprocedurevariable_12.validDouble (D)D
          L11
           DSTORE 2
           NEW java/lang/Double
@@ -5761,9 +5829,11 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_setprocedurevariable_13 org/nlogo/nvm/Context java/lang/Object] [D D]
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecollidewith_setprocedurevariable_13.validDouble (D)D
          L8
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -5793,9 +5863,11 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_setprocedurevariable_13 org/nlogo/nvm/Context java/lang/Object T D] [D D]
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecollidewith_setprocedurevariable_13.validDouble (D)D
          L11
           DSTORE 2
           NEW java/lang/Double
@@ -5882,9 +5954,11 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
            FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_sqrt_14 org/nlogo/nvm/Context java/lang/Object] [D D]
             DSTORE 4
             DSTORE 2
+            ALOAD 0
             DLOAD 2
             DLOAD 4
             DMUL
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecollidewith_sqrt_14.validDouble (D)D
            L13
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -5940,15 +6014,19 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
            FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_sqrt_14 org/nlogo/nvm/Context java/lang/Object T D] [D D D]
             DSTORE 4
             DSTORE 2
+            ALOAD 0
             DLOAD 2
             DLOAD 4
             DMUL
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecollidewith_sqrt_14.validDouble (D)D
            L18
             DSTORE 4
             DSTORE 2
+            ALOAD 0
             DLOAD 2
             DLOAD 4
             DADD
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecollidewith_sqrt_14.validDouble (D)D
            L19
             DSTORE 2
             DLOAD 2
@@ -6215,21 +6293,25 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           GOTO L20
          L21
          FRAME SAME1 D
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           INVOKESTATIC java/lang/StrictMath.atan2 (DD)D
           INVOKESTATIC java/lang/StrictMath.toDegrees (D)D
           LDC 360.0
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecollidewith_setturtlevariable_16.validDouble (D)D
           LDC 360.0
           DREM
          L20
          FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_setturtlevariable_16 org/nlogo/nvm/Context D D] [D D]
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecollidewith_setturtlevariable_16.validDouble (D)D
          L24
           DSTORE 2
           NEW java/lang/Double
@@ -6448,9 +6530,11 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
            FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_sqrt_18 org/nlogo/nvm/Context java/lang/Object] [D D]
             DSTORE 4
             DSTORE 2
+            ALOAD 0
             DLOAD 2
             DLOAD 4
             DMUL
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecollidewith_sqrt_18.validDouble (D)D
            L13
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -6506,15 +6590,19 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
            FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_sqrt_18 org/nlogo/nvm/Context java/lang/Object T D] [D D D]
             DSTORE 4
             DSTORE 2
+            ALOAD 0
             DLOAD 2
             DLOAD 4
             DMUL
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecollidewith_sqrt_18.validDouble (D)D
            L18
             DSTORE 4
             DSTORE 2
+            ALOAD 0
             DLOAD 2
             DLOAD 4
             DADD
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecollidewith_sqrt_18.validDouble (D)D
            L19
             DSTORE 2
             DLOAD 2
@@ -6905,21 +6993,25 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           GOTO L20
          L21
          FRAME SAME1 D
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           INVOKESTATIC java/lang/StrictMath.atan2 (DD)D
           INVOKESTATIC java/lang/StrictMath.toDegrees (D)D
           LDC 360.0
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecollidewith_setturtlevariable_22.validDouble (D)D
           LDC 360.0
           DREM
          L20
          FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_setturtlevariable_22 org/nlogo/nvm/Context D D] [D D]
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecollidewith_setturtlevariable_22.validDouble (D)D
          L24
           DSTORE 2
           NEW java/lang/Double
@@ -7236,23 +7328,29 @@ procedure MAKE-PARTICLES:[]{O---}:
          FRAME FULL [org/nlogo/prim/_asm_proceduremakeparticles_setturtlevariable_2 org/nlogo/nvm/Context java/lang/Object] [D D D]
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduremakeparticles_setturtlevariable_2.validDouble (D)D
          L16
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextDouble ()D
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduremakeparticles_setturtlevariable_2.validDouble (D)D
          L17
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduremakeparticles_setturtlevariable_2.validDouble (D)D
          L18
           DSTORE 2
           NEW java/lang/Double
@@ -7305,9 +7403,11 @@ procedure MAKE-PARTICLES:[]{O---}:
            L2
             DSTORE 4
             DSTORE 2
+            ALOAD 0
             DLOAD 2
             DLOAD 4
             DMUL
+            INVOKEVIRTUAL org/nlogo/prim/_asm_proceduremakeparticles_mult_3.validDouble (D)D
            L3
             DSTORE 2
             NEW java/lang/Double
@@ -7341,12 +7441,14 @@ procedure MAKE-PARTICLES:[]{O---}:
           LDC 360.0
          L4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextDouble ()D
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduremakeparticles_setturtlevariable_5.validDouble (D)D
          L5
           DSTORE 2
           NEW java/lang/Double
@@ -7503,9 +7605,11 @@ procedure RECOLOR-SHADED:[AVG-SPEED]{-T--}:
          FRAME FULL [org/nlogo/prim/_asm_procedurerecolorshaded_ifelse_1 org/nlogo/nvm/Context java/lang/Object] [java/lang/Object D D]
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerecolorshaded_ifelse_1.validDouble (D)D
          L9
           DSTORE 3
           ASTORE 2
@@ -7626,9 +7730,11 @@ procedure RECOLOR-SHADED:[AVG-SPEED]{-T--}:
          FRAME FULL [org/nlogo/prim/_asm_procedurerecolorshaded_setturtleorlinkvariable_2 org/nlogo/nvm/Context java/lang/Object] [D D D]
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerecolorshaded_setturtleorlinkvariable_2.validDouble (D)D
          L14
           LDC 3.0
          L15
@@ -7660,9 +7766,11 @@ procedure RECOLOR-SHADED:[AVG-SPEED]{-T--}:
          FRAME FULL [org/nlogo/prim/_asm_procedurerecolorshaded_setturtleorlinkvariable_2 org/nlogo/nvm/Context java/lang/Object T D] [D D D D]
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerecolorshaded_setturtleorlinkvariable_2.validDouble (D)D
          L18
           DSTORE 4
           DSTORE 2
@@ -7681,15 +7789,19 @@ procedure RECOLOR-SHADED:[AVG-SPEED]{-T--}:
           ATHROW
          L19
          FRAME FULL [org/nlogo/prim/_asm_procedurerecolorshaded_setturtleorlinkvariable_2 org/nlogo/nvm/Context D D] [D]
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DDIV
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerecolorshaded_setturtleorlinkvariable_2.validDouble (D)D
          L20
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerecolorshaded_setturtleorlinkvariable_2.validDouble (D)D
          L21
           DSTORE 2
           NEW java/lang/Double
@@ -7874,9 +7986,11 @@ procedure SETUP:[]{O---}:
          L5
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setobservervariable_4.validDouble (D)D
          L6
           DSTORE 2
           NEW java/lang/Double
@@ -7991,8 +8105,10 @@ procedure SETUP:[]{O---}:
          L8
          FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setobservervariable_7 org/nlogo/nvm/Context java/lang/Object] [D D]
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           INVOKESTATIC java/lang/StrictMath.ceil (D)D
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setobservervariable_7.validDouble (D)D
          L9
           DSTORE 4
           DSTORE 2
@@ -8011,9 +8127,11 @@ procedure SETUP:[]{O---}:
           ATHROW
          L10
          FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setobservervariable_7 org/nlogo/nvm/Context D D] []
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DDIV
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setobservervariable_7.validDouble (D)D
          L11
           DSTORE 2
           NEW java/lang/Double
@@ -8849,9 +8967,11 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
          FRAME FULL [org/nlogo/prim/_asm_procedurecheckforwallcollision_setprocedurevariable_0 org/nlogo/nvm/Context java/lang/Object] [D D]
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforwallcollision_setprocedurevariable_0.validDouble (D)D
          L15
           DSTORE 2
           NEW java/lang/Double
@@ -8988,9 +9108,11 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
          FRAME FULL [org/nlogo/prim/_asm_procedurecheckforwallcollision_setprocedurevariable_1 org/nlogo/nvm/Context java/lang/Object] [D D]
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforwallcollision_setprocedurevariable_1.validDouble (D)D
          L15
           DSTORE 2
           NEW java/lang/Double
@@ -9044,9 +9166,11 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
          L5
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforwallcollision_setprocedurevariable_2.validDouble (D)D
          L6
           DSTORE 2
           NEW java/lang/Double
@@ -9105,9 +9229,11 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
          L6
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforwallcollision_setprocedurevariable_3.validDouble (D)D
          L7
           DSTORE 2
           NEW java/lang/Double
@@ -9161,9 +9287,11 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
          L5
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforwallcollision_setprocedurevariable_4.validDouble (D)D
          L6
           DSTORE 2
           NEW java/lang/Double
@@ -9222,9 +9350,11 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
          L6
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforwallcollision_setprocedurevariable_5.validDouble (D)D
          L7
           DSTORE 2
           NEW java/lang/Double
@@ -9281,15 +9411,19 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           ATHROW
          L4
          FRAME FULL [org/nlogo/prim/_asm_procedurecheckforwallcollision_setprocedurevariable_6 org/nlogo/nvm/Context D D] [D]
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DDIV
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforwallcollision_setprocedurevariable_6.validDouble (D)D
          L5
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforwallcollision_setprocedurevariable_6.validDouble (D)D
          L6
           DSTORE 2
           NEW java/lang/Double
@@ -9346,15 +9480,19 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           ATHROW
          L4
          FRAME FULL [org/nlogo/prim/_asm_procedurecheckforwallcollision_setprocedurevariable_7 org/nlogo/nvm/Context D D] [D]
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DDIV
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforwallcollision_setprocedurevariable_7.validDouble (D)D
          L5
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforwallcollision_setprocedurevariable_7.validDouble (D)D
          L6
           DSTORE 2
           NEW java/lang/Double
@@ -9411,15 +9549,19 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           ATHROW
          L4
          FRAME FULL [org/nlogo/prim/_asm_procedurecheckforwallcollision_setprocedurevariable_8 org/nlogo/nvm/Context D D] [D]
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DDIV
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforwallcollision_setprocedurevariable_8.validDouble (D)D
          L5
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforwallcollision_setprocedurevariable_8.validDouble (D)D
          L6
           DSTORE 2
           NEW java/lang/Double
@@ -9476,15 +9618,19 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           ATHROW
          L4
          FRAME FULL [org/nlogo/prim/_asm_procedurecheckforwallcollision_setprocedurevariable_9 org/nlogo/nvm/Context D D] [D]
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DDIV
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforwallcollision_setprocedurevariable_9.validDouble (D)D
          L5
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforwallcollision_setprocedurevariable_9.validDouble (D)D
          L6
           DSTORE 2
           NEW java/lang/Double
@@ -9564,9 +9710,11 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
          FRAME FULL [org/nlogo/prim/_asm_procedurecheckforwallcollision_setprocedurevariable_10 org/nlogo/nvm/Context java/lang/Object] [D D]
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforwallcollision_setprocedurevariable_10.validDouble (D)D
          L9
           DSTORE 2
           NEW java/lang/Double
@@ -9646,9 +9794,11 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
          FRAME FULL [org/nlogo/prim/_asm_procedurecheckforwallcollision_setprocedurevariable_11 org/nlogo/nvm/Context java/lang/Object] [D D]
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforwallcollision_setprocedurevariable_11.validDouble (D)D
          L9
           DSTORE 2
           NEW java/lang/Double
@@ -9728,9 +9878,11 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
          FRAME FULL [org/nlogo/prim/_asm_procedurecheckforwallcollision_setprocedurevariable_12 org/nlogo/nvm/Context java/lang/Object] [D D]
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforwallcollision_setprocedurevariable_12.validDouble (D)D
          L9
           DSTORE 2
           NEW java/lang/Double
@@ -9810,9 +9962,11 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
          FRAME FULL [org/nlogo/prim/_asm_procedurecheckforwallcollision_setprocedurevariable_13 org/nlogo/nvm/Context java/lang/Object] [D D]
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforwallcollision_setprocedurevariable_13.validDouble (D)D
          L9
           DSTORE 2
           NEW java/lang/Double
@@ -9972,9 +10126,11 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           ATHROW
          L9
          FRAME FULL [org/nlogo/prim/_asm_procedurecheckforwallcollision_setprocedurevariable_16 org/nlogo/nvm/Context D D] []
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DDIV
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforwallcollision_setprocedurevariable_16.validDouble (D)D
          L10
           DSTORE 2
           NEW java/lang/Double
@@ -10269,9 +10425,11 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           ATHROW
          L9
          FRAME FULL [org/nlogo/prim/_asm_procedurecheckforwallcollision_setprocedurevariable_23 org/nlogo/nvm/Context D D] []
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DDIV
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforwallcollision_setprocedurevariable_23.validDouble (D)D
          L10
           DSTORE 2
           NEW java/lang/Double
@@ -10566,9 +10724,11 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           ATHROW
          L9
          FRAME FULL [org/nlogo/prim/_asm_procedurecheckforwallcollision_setprocedurevariable_30 org/nlogo/nvm/Context D D] []
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DDIV
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforwallcollision_setprocedurevariable_30.validDouble (D)D
          L10
           DSTORE 2
           NEW java/lang/Double
@@ -10863,9 +11023,11 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           ATHROW
          L9
          FRAME FULL [org/nlogo/prim/_asm_procedurecheckforwallcollision_setprocedurevariable_37 org/nlogo/nvm/Context D D] []
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DDIV
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforwallcollision_setprocedurevariable_37.validDouble (D)D
          L10
           DSTORE 2
           NEW java/lang/Double
@@ -11700,9 +11862,11 @@ procedure COLLIDE-WINNERS:[]{OTPL}:
          L5
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecollidewinners_setturtlevariable_9.validDouble (D)D
          L6
           DSTORE 2
           NEW java/lang/Double
@@ -12033,9 +12197,11 @@ procedure RECOLOR-BANDED:[AVG-SPEED]{-T--}:
          FRAME FULL [org/nlogo/prim/_asm_procedurerecolorbanded_ifelse_1 org/nlogo/nvm/Context java/lang/Object] [java/lang/Object D D]
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerecolorbanded_ifelse_1.validDouble (D)D
          L9
           DSTORE 3
           ASTORE 2
@@ -12195,9 +12361,11 @@ procedure RECOLOR-BANDED:[AVG-SPEED]{-T--}:
          FRAME FULL [org/nlogo/prim/_asm_procedurerecolorbanded_ifelse_4 org/nlogo/nvm/Context java/lang/Object] [java/lang/Object D D]
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerecolorbanded_ifelse_4.validDouble (D)D
          L9
           DSTORE 3
           ASTORE 2
@@ -13005,9 +13173,11 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
          FRAME FULL [org/nlogo/prim/_asm_procedurecheckforparticlecollision_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object] [D D]
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforparticlecollision_setprocedurevariable_3.validDouble (D)D
          L15
           DSTORE 2
           NEW java/lang/Double
@@ -13144,9 +13314,11 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
          FRAME FULL [org/nlogo/prim/_asm_procedurecheckforparticlecollision_setprocedurevariable_4 org/nlogo/nvm/Context java/lang/Object] [D D]
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforparticlecollision_setprocedurevariable_4.validDouble (D)D
          L15
           DSTORE 2
           NEW java/lang/Double
@@ -13295,9 +13467,11 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
            FRAME FULL [org/nlogo/prim/_asm_procedurecheckforparticlecollision_minus_6 org/nlogo/nvm/Context java/lang/Object] [D D]
             DSTORE 4
             DSTORE 2
+            ALOAD 0
             DLOAD 2
             DLOAD 4
             DSUB
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforparticlecollision_minus_6.validDouble (D)D
            L6
             DSTORE 2
             NEW java/lang/Double
@@ -13345,9 +13519,11 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
            FRAME FULL [org/nlogo/prim/_asm_procedurecheckforparticlecollision_minus_7 org/nlogo/nvm/Context java/lang/Object] [D D]
             DSTORE 4
             DSTORE 2
+            ALOAD 0
             DLOAD 2
             DLOAD 4
             DSUB
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforparticlecollision_minus_7.validDouble (D)D
            L6
             DSTORE 2
             NEW java/lang/Double
@@ -13473,9 +13649,11 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
            FRAME FULL [org/nlogo/prim/_asm_procedurecheckforparticlecollision_mult_8 org/nlogo/nvm/Context java/lang/Object] [D D]
             DSTORE 4
             DSTORE 2
+            ALOAD 0
             DLOAD 2
             DLOAD 4
             DMUL
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforparticlecollision_mult_8.validDouble (D)D
            L15
             DSTORE 2
             NEW java/lang/Double
@@ -13601,9 +13779,11 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
            FRAME FULL [org/nlogo/prim/_asm_procedurecheckforparticlecollision_mult_9 org/nlogo/nvm/Context java/lang/Object] [D D]
             DSTORE 4
             DSTORE 2
+            ALOAD 0
             DLOAD 2
             DLOAD 4
             DMUL
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforparticlecollision_mult_9.validDouble (D)D
            L15
             DSTORE 2
             NEW java/lang/Double
@@ -13671,9 +13851,11 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
            FRAME FULL [org/nlogo/prim/_asm_procedurecheckforparticlecollision_minus_10 org/nlogo/nvm/Context java/lang/Object] [D D]
             DSTORE 4
             DSTORE 2
+            ALOAD 0
             DLOAD 2
             DLOAD 4
             DSUB
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforparticlecollision_minus_10.validDouble (D)D
            L9
             DSTORE 2
             NEW java/lang/Double
@@ -13741,9 +13923,11 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
            FRAME FULL [org/nlogo/prim/_asm_procedurecheckforparticlecollision_minus_11 org/nlogo/nvm/Context java/lang/Object] [D D]
             DSTORE 4
             DSTORE 2
+            ALOAD 0
             DLOAD 2
             DLOAD 4
             DSUB
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforparticlecollision_minus_11.validDouble (D)D
            L9
             DSTORE 2
             NEW java/lang/Double
@@ -13809,9 +13993,11 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
             ATHROW
            L11
            FRAME FULL [org/nlogo/prim/_asm_procedurecheckforparticlecollision_plus_12 org/nlogo/nvm/Context D D] []
+            ALOAD 0
             DLOAD 2
             DLOAD 4
             DDIV
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforparticlecollision_plus_12.validDouble (D)D
            L12
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -13897,15 +14083,19 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
             ATHROW
            L17
            FRAME FULL [org/nlogo/prim/_asm_procedurecheckforparticlecollision_plus_12 org/nlogo/nvm/Context D D] [D]
+            ALOAD 0
             DLOAD 2
             DLOAD 4
             DDIV
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforparticlecollision_plus_12.validDouble (D)D
            L18
             DSTORE 4
             DSTORE 2
+            ALOAD 0
             DLOAD 2
             DLOAD 4
             DADD
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforparticlecollision_plus_12.validDouble (D)D
            L19
             DSTORE 2
             NEW java/lang/Double
@@ -13983,9 +14173,11 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
            FRAME FULL [org/nlogo/prim/_asm_procedurecheckforparticlecollision_minus_13 org/nlogo/nvm/Context java/lang/Object] [D D]
             DSTORE 4
             DSTORE 2
+            ALOAD 0
             DLOAD 2
             DLOAD 4
             DMUL
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforparticlecollision_minus_13.validDouble (D)D
            L15
             ALOAD 1
             ALOAD 0
@@ -14039,15 +14231,19 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
            FRAME FULL [org/nlogo/prim/_asm_procedurecheckforparticlecollision_minus_13 org/nlogo/nvm/Context java/lang/Object T D] [D D D]
             DSTORE 4
             DSTORE 2
+            ALOAD 0
             DLOAD 2
             DLOAD 4
             DMUL
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforparticlecollision_minus_13.validDouble (D)D
            L20
             DSTORE 4
             DSTORE 2
+            ALOAD 0
             DLOAD 2
             DLOAD 4
             DADD
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforparticlecollision_minus_13.validDouble (D)D
            L21
             ALOAD 1
             ALOAD 0
@@ -14086,9 +14282,11 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
            L25
             DSTORE 4
             DSTORE 2
+            ALOAD 0
             DLOAD 2
             DLOAD 4
             DSUB
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforparticlecollision_minus_13.validDouble (D)D
            L26
             DSTORE 2
             NEW java/lang/Double
@@ -14165,9 +14363,11 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
            FRAME FULL [org/nlogo/prim/_asm_procedurecheckforparticlecollision_mult_14 org/nlogo/nvm/Context java/lang/Object] [D D D]
             DSTORE 4
             DSTORE 2
+            ALOAD 0
             DLOAD 2
             DLOAD 4
             DMUL
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforparticlecollision_mult_14.validDouble (D)D
            L14
             ALOAD 1
             ALOAD 0
@@ -14221,21 +14421,27 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
            FRAME FULL [org/nlogo/prim/_asm_procedurecheckforparticlecollision_mult_14 org/nlogo/nvm/Context java/lang/Object T D] [D D D D]
             DSTORE 4
             DSTORE 2
+            ALOAD 0
             DLOAD 2
             DLOAD 4
             DMUL
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforparticlecollision_mult_14.validDouble (D)D
            L19
             DSTORE 4
             DSTORE 2
+            ALOAD 0
             DLOAD 2
             DLOAD 4
             DADD
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforparticlecollision_mult_14.validDouble (D)D
            L20
             DSTORE 4
             DSTORE 2
+            ALOAD 0
             DLOAD 2
             DLOAD 4
             DMUL
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforparticlecollision_mult_14.validDouble (D)D
            L21
             DSTORE 2
             NEW java/lang/Double
@@ -14308,9 +14514,11 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
            FRAME FULL [org/nlogo/prim/_asm_procedurecheckforparticlecollision_plus_15 org/nlogo/nvm/Context java/lang/Object] [D D]
             DSTORE 4
             DSTORE 2
+            ALOAD 0
             DLOAD 2
             DLOAD 4
             DMUL
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforparticlecollision_plus_15.validDouble (D)D
            L13
             ALOAD 1
             ALOAD 0
@@ -14364,15 +14572,19 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
            FRAME FULL [org/nlogo/prim/_asm_procedurecheckforparticlecollision_plus_15 org/nlogo/nvm/Context java/lang/Object T D] [D D D]
             DSTORE 4
             DSTORE 2
+            ALOAD 0
             DLOAD 2
             DLOAD 4
             DMUL
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforparticlecollision_plus_15.validDouble (D)D
            L18
             DSTORE 4
             DSTORE 2
+            ALOAD 0
             DLOAD 2
             DLOAD 4
             DADD
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforparticlecollision_plus_15.validDouble (D)D
            L19
             DSTORE 2
             NEW java/lang/Double
@@ -14458,9 +14670,11 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
            FRAME FULL [org/nlogo/prim/_asm_procedurecheckforparticlecollision_minus_16 org/nlogo/nvm/Context java/lang/Object T D] [D D D]
             DSTORE 4
             DSTORE 2
+            ALOAD 0
             DLOAD 2
             DLOAD 4
             DMUL
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforparticlecollision_minus_16.validDouble (D)D
            L14
             ALOAD 1
             ALOAD 0
@@ -14489,15 +14703,19 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
            FRAME FULL [org/nlogo/prim/_asm_procedurecheckforparticlecollision_minus_16 org/nlogo/nvm/Context java/lang/Object T D] [D D D]
             DSTORE 4
             DSTORE 2
+            ALOAD 0
             DLOAD 2
             DLOAD 4
             DMUL
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforparticlecollision_minus_16.validDouble (D)D
            L17
             DSTORE 4
             DSTORE 2
+            ALOAD 0
             DLOAD 2
             DLOAD 4
             DSUB
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforparticlecollision_minus_16.validDouble (D)D
            L18
             DSTORE 2
             NEW java/lang/Double
@@ -14679,9 +14897,11 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
            L13
             DSTORE 4
             DSTORE 2
+            ALOAD 0
             DLOAD 2
             DLOAD 4
             DSUB
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforparticlecollision_div_19.validDouble (D)D
            L14
             LDC 2.0
            L15
@@ -14712,9 +14932,11 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
            FRAME FULL [org/nlogo/prim/_asm_procedurecheckforparticlecollision_div_19 org/nlogo/nvm/Context java/lang/Object T D] [D D D]
             DSTORE 4
             DSTORE 2
+            ALOAD 0
             DLOAD 2
             DLOAD 4
             DMUL
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforparticlecollision_div_19.validDouble (D)D
            L18
             DSTORE 4
             DSTORE 2
@@ -14733,9 +14955,11 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
             ATHROW
            L19
            FRAME FULL [org/nlogo/prim/_asm_procedurecheckforparticlecollision_div_19 org/nlogo/nvm/Context D D] []
+            ALOAD 0
             DLOAD 2
             DLOAD 4
             DDIV
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforparticlecollision_div_19.validDouble (D)D
            L20
             DSTORE 2
             NEW java/lang/Double
@@ -14876,9 +15100,11 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
            L7
             DSTORE 4
             DSTORE 2
+            ALOAD 0
             DLOAD 2
             DLOAD 4
             DADD
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforparticlecollision_list_21.validDouble (D)D
            L8
             DSTORE 2
             NEW java/lang/Double
@@ -15347,9 +15573,11 @@ procedure TEST-TIME-REVERSAL:[N OLD-CLOCK]{O---}:
          FRAME FULL [org/nlogo/prim/_asm_proceduretesttimereversal_while_10 org/nlogo/nvm/Context java/lang/Object] [D D D]
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduretesttimereversal_while_10.validDouble (D)D
          L8
           DSTORE 4
           DSTORE 2

@@ -73,6 +73,18 @@ h4 {
 
 h3 > a {
   display: block;
+  clear: both;
+}
+
+.since:before {
+  content: "Since ";
+}
+
+.since {
+  padding: 2px 5px 0 5px;
+  background-color: rgba(0, 255, 0, 0.5);
+  font-style: italic;
+  float: right;
 }
 
 span.prim_example {

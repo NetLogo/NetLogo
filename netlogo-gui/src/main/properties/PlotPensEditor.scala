@@ -137,12 +137,13 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
     val model = new PenTableModel()
     locally{
       setModel(model)
-
-      setRowHeight(getRowHeight + 10)
+      setRowHeight(getRowHeight + 14)
+      setRowMargin(1)
       setGridColor(Color.BLACK)
       setShowGrid(true)
       setRowSelectionAllowed(false)
       getTableHeader.setReorderingAllowed(false)
+      getColumnModel().setColumnMargin(1)
 
       getSelectionModel.addListSelectionListener(new RowListener())
       getColumnModel.getSelectionModel.addListSelectionListener(new ColumnListener())
@@ -257,7 +258,15 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
       }
       editButton.putClientProperty("JComponent.sizeVariant", "small")
       deleteButton.putClientProperty("JComponent.sizeVariant", "small")
-      val buttonPanel = new JPanel {add(editButton); add(deleteButton)}
+      val buttonPanel = new JPanel()
+      val layout = new GroupLayout(buttonPanel)
+      layout.setAutoCreateGaps(true)
+      layout.setVerticalGroup(layout.createParallelGroup().addComponent(editButton).addComponent(deleteButton))
+      layout.setHorizontalGroup(layout.createSequentialGroup()
+        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MaxValue)
+        .addComponent(editButton).addComponent(deleteButton)
+        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MaxValue))
+      buttonPanel.setLayout(layout)
       def getTableCellRendererComponent(table: JTable, value: Object,
                                         isSelected: Boolean, hasFocus: Boolean,
                                         row: Int, col: Int) = buttonPanel

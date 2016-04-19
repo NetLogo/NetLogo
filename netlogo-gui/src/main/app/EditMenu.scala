@@ -38,7 +38,7 @@ with org.nlogo.window.Events.AboutToQuitEvent.Handler
   addMenuItem(I18N.gui("cut"), 'X', Actions.CUT_ACTION )
   addMenuItem(I18N.gui("copy"), 'C', Actions.COPY_ACTION)
   addMenuItem(I18N.gui("paste"), 'V', Actions.PASTE_ACTION)
-  addMenuItem(I18N.gui("delete"), Actions.DELETE_ACTION)
+  addMenuItem(I18N.gui("delete"), (java.awt.event.KeyEvent.VK_DELETE).toChar, Actions.DELETE_ACTION, false)
   addSeparator()
   addMenuItem(I18N.gui("selectAll"), 'A', Actions.SELECT_ALL_ACTION)
   addSeparator()
@@ -50,6 +50,7 @@ with org.nlogo.window.Events.AboutToQuitEvent.Handler
   addSeparator()
   addMenuItem(I18N.gui("shiftLeft"), '[', org.nlogo.editor.Actions.shiftLeftAction)
   addMenuItem(I18N.gui("shiftRight"), ']', org.nlogo.editor.Actions.shiftRightAction)
+  addMenuItem(I18N.gui("format"), (java.awt.event.KeyEvent.VK_TAB).toChar, org.nlogo.editor.Actions.tabKeyAction, false)
   addSeparator()
   addMenuItem(I18N.gui("comment"), ';', org.nlogo.editor.Actions.commentAction)
   addMenuItem(I18N.gui("uncomment"), ';', true, org.nlogo.editor.Actions.uncommentAction)
@@ -58,6 +59,21 @@ with org.nlogo.window.Events.AboutToQuitEvent.Handler
 
   lineNumbersAction.setEnabled(false)
   if (lineNumbersItem.isSelected) lineNumbersAction.actionPerformed(null)
+
+  addMenuListener(new javax.swing.event.MenuListener() {
+    override def menuSelected(e: javax.swing.event.MenuEvent): Unit = {
+      Actions.CUT_ACTION.setEnabled(app.tabs.codeTab.isTextSelected())
+      Actions.COPY_ACTION.setEnabled(app.tabs.codeTab.isTextSelected())
+      Actions.PASTE_ACTION.setEnabled(java.awt.Toolkit.getDefaultToolkit().getSystemClipboard()
+        .isDataFlavorAvailable(java.awt.datatransfer.DataFlavor.stringFlavor))
+    }
+
+    override def menuDeselected(e: javax.swing.event.MenuEvent): Unit = {
+    }
+
+    override def menuCanceled(e: javax.swing.event.MenuEvent): Unit = {
+    }
+  })
 
   final def handle(e: Events.SwitchedTabsEvent) {
     snapAction.setEnabled(e.newTab == app.tabs.interfaceTab)

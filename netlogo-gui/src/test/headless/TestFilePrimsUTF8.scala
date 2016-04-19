@@ -17,6 +17,7 @@ to write-out
  file-write utf-string
  file-print ""
  file-close
+ wait 0.05 ; help prevent test failure
 end
 
 to-report read-string [a-file]

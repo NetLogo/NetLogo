@@ -24,7 +24,7 @@ public final strictfp class _mult extends Reporter implements Pure {
         argEvalDoubleValue(context, 1));
   }
 
-  public double report_1(Context context, double arg0, double arg1) {
-    return arg0 * arg1;
+  public double report_1(Context context, double arg0, double arg1) throws LogoException {
+    return validDouble(arg0 * arg1);
   }
 }

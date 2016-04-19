@@ -66,7 +66,6 @@ object Extensions {
     extension  := {
       val extensionDir = extensionParser.parsed
       val (packagedNetLogoJar, packagedNetLogoTestJar) = extensionDeps.value
-
       streams.value.log.info("building extension: " + extensionDir.getName)
       buildExtension(extensionDir, packagedNetLogoJar, state.value)(Set()).toSeq
     },
@@ -86,7 +85,6 @@ object Extensions {
     javaOptions +=
       "-Dnetlogo.extensions.dir=" + extensionRoot.value.getAbsolutePath.toString
   )
-
 
   class NestedConfiguration(val config: xsbti.AppConfiguration, baseDir: File, args: Array[String]) extends xsbti.AppConfiguration {
     override val arguments = args

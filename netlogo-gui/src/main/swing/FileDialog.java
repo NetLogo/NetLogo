@@ -69,14 +69,27 @@ public final strictfp class FileDialog {
     // but that code already seems strangely more complicated than expected, so I decided
     // not to mess with it.  Probably it's just left-over cruft from a pre-JFileChooser era,
     // but I'm not sure.
-    // Incidentally, I'd like to make NetLogo properly support filename filters too...
-    // But I'm guessing this late in the "ready-to-release" cycle, people might not be
-    // too pleased with me hacking much and possibly introducing new bugs.  :-)
-    //  So I'm just making a change that affects Linux users...
     //  ~Forrest (6/8/2009)
     if (LINUX) {
+      javax.swing.filechooser.FileFilter filter = new javax.swing.filechooser.FileFilter() {
+        String ext = org.nlogo.api.Version.is3D() ? ".nlogo3d" : ".nlogo";
+
+        @Override
+        public boolean accept(java.io.File f) {
+          if (f.isDirectory()) {
+            return true;
+          }
+          return f.getName().endsWith(ext);
+        }
+
+        @Override
+        public String getDescription() {
+          return "NetLogo files (*" + ext + ")";
+        }
+      };
       javax.swing.JFileChooser chooser =
           new javax.swing.JFileChooser(currentDirectory);
+      chooser.addChoosableFileFilter(filter);
       chooser.setDialogTitle(title);
       if (file != null && file.length() > 0) {
         chooser.setSelectedFile(new java.io.File(file));
@@ -94,6 +107,9 @@ public final strictfp class FileDialog {
       if (result != javax.swing.JFileChooser.APPROVE_OPTION) {
         throw new org.nlogo.awt.UserCancelException();
       }
+      if(mode == java.awt.FileDialog.LOAD && !new java.io.File(chooser.getSelectedFile().getAbsolutePath()).exists()){
+        return show(parentFrame, title, mode, directoriesOnly, chooser.getSelectedFile().getAbsolutePath());
+      }
       currentDirectory = selectedDirectory(chooser);
       return chooser.getSelectedFile().getAbsolutePath();
     }
@@ -105,6 +121,10 @@ public final strictfp class FileDialog {
       if (chooser.showOpenDialog(parentFrame)
           != javax.swing.JFileChooser.APPROVE_OPTION) {
         throw new org.nlogo.awt.UserCancelException();
+      }
+      if(mode == java.awt.FileDialog.LOAD && !new java.io.File(chooser.getSelectedFile().getAbsolutePath()).exists()){
+        currentDirectory = chooser.getSelectedFile().getAbsolutePath();
+        return show(parentFrame, title, mode, directoriesOnly, currentDirectory);
       }
       currentDirectory = selectedDirectory(chooser);
       return chooser.getSelectedFile().getAbsolutePath();
@@ -122,6 +142,9 @@ public final strictfp class FileDialog {
       throw new org.nlogo.awt.UserCancelException();
     }
     currentDirectory = dialog.getDirectory();
+    if(mode == java.awt.FileDialog.LOAD && !new java.io.File(currentDirectory + dialog.getFile()).exists()){
+      return show(parentFrame, title, mode, directoriesOnly, dialog.getFile());
+    }  
     if (directoriesOnly) {
       return currentDirectory;
     }

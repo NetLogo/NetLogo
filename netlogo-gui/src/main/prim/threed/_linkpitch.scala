@@ -12,7 +12,7 @@ class _linkpitch extends Reporter {
       Syntax.NumberType, "---L")
   override def report(context: Context) = {
     val link = context.agent.asInstanceOf[Link]
-    try Double.box(world.protractor.towardsPitch(link.end1, link.end2, true))
+    try newValidDouble(world.protractor.towardsPitch(link.end1, link.end2, true))
     catch {
       case e: org.nlogo.api.AgentException =>
         throw new org.nlogo.nvm.EngineException(
