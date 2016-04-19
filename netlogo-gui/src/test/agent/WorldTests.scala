@@ -3,7 +3,9 @@
 package org.nlogo.agent
 
 import org.scalatest.FunSuite
-import org.nlogo.core.WorldDimensions
+import org.nlogo.core.{ Breed, Program, WorldDimensions }
+
+import scala.collection.immutable.ListMap
 
 class WorldTests extends FunSuite with AbstractTestWorld {
 
@@ -24,6 +26,30 @@ class WorldTests extends FunSuite with AbstractTestWorld {
   override def makeLink(world: World, ends: Array[Int]) =
     new Link(world, world.getTurtle(ends(0)),
              world.getTurtle(ends(1)), world.links)
+
+  def makeBreededTurtle(world: World, breedName: String) =
+    new Turtle(world, world.getBreed(breedName), 0.0, 0.0)
+
+  def makeBreededLink(world: World, breedName: String, end1: Int, end2: Int) =
+    new Link(world, world.getTurtle(end1), world.getTurtle(end2),
+      world.getLinkBreed(breedName))
+
+  def makeWorld(dimensions: WorldDimensions, program: Program) = {
+    val w = new World() {
+      createPatches(dimensions)
+      realloc()
+    }
+    w.program(program)
+    w.realloc()
+    w
+  }
+
+  def changeProgram(w: World, program: Program) = {
+    w.rememberOldProgram()
+    w.program(program)
+    w.realloc()
+  }
+
   test("IteratorSkipsDeadTurtles1_2D") {
     testIteratorSkipsDeadTurtles1(worldSquare, turtles5)
   }
@@ -53,5 +79,32 @@ class WorldTests extends FunSuite with AbstractTestWorld {
   }
   test("ChangePublishedAfterWorldResize_2D") {
     testChangePublishedAfterWorldResize(worldSquare, worldRectangle)
+  }
+  test("saves turtles between recompiles") {
+    val world = makeWorld(worldRectangle, Program.empty)
+    for (i <- 1 to 100) { makeTurtle(world, Array(0, 0)) }
+    changeProgram(world, Program.empty)
+    assertResult(100)(world.turtles.count)
+  }
+  test("saves breeds between recompiles") {
+    val breedProgram = Program.empty.copy(breeds = ListMap("FOOS" -> Breed("FOOS", "FOO")))
+    val world = makeWorld(worldRectangle, breedProgram)
+    for (i <- 1 to 100) { makeBreededTurtle(world, "FOOS") }
+    changeProgram(world,
+      breedProgram.copy(breeds = breedProgram.breeds + ("BARS" -> Breed("BARS", "BAR"))))
+    assertResult(100)(world.turtles.count)
+    assertResult(100)(world.getBreed("FOOS").count)
+    assertResult(0)(world.getBreed("BARS").count)
+  }
+  test("saves link breeds between recompiles") {
+    val lbProgram = Program.empty.copy(linkBreeds = ListMap("FOOS" -> Breed("FOOS", "FOO", isLinkBreed = true)))
+    val world = makeWorld(worldRectangle, lbProgram)
+    for (i <- 1 to 100) { makeTurtle(world, Array(0, 0)) }
+    for (i <- 1 to 99) { makeBreededLink(world, "FOOS", i - 1, i) }
+    changeProgram(world,
+      lbProgram.copy(linkBreeds = lbProgram.linkBreeds + ("BARS" -> Breed("BARS", "BAR", isLinkBreed = true))))
+    assertResult(99)(world.links.count)
+    assertResult(99)(world.getLinkBreed("FOOS").count)
+    assertResult(0)(world.getLinkBreed("BARS").count)
   }
 }

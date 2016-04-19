@@ -1378,8 +1378,8 @@ public strictfp class World
 
   public void rememberOldProgram() {
     _oldProgram = _program;
-    oldBreeds = breeds;
-    oldLinkBreeds = linkBreeds;
+    oldBreeds = new HashMap<String, AgentSet>(breeds);
+    oldLinkBreeds = new HashMap<String, AgentSet>(linkBreeds);
   }
 
   /// display on/off
