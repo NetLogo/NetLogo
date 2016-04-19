@@ -114,8 +114,6 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     modelsDirectory := file("models"),
     extensionRoot   := file("extensions").getAbsoluteFile,
     autogenRoot     := file("autogen"),
-    // this makes jar-building and script-writing easier
-    retrieveManaged := true,
     javaOptions     += "-Dnetlogo.docs.dir=" + file("docs").getAbsolutePath.toString,
     unmanagedSourceDirectories in Test      += baseDirectory.value / "src" / "tools",
     resourceDirectory in Compile            := baseDirectory.value / "resources",
