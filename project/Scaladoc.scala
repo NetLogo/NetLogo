@@ -31,7 +31,7 @@ object Scaladoc {
         val apiSources = Seq(
           "app/App.scala", "headless/HeadlessWorkspace.scala",
           "lite/InterfaceComponent.scala", "lite/Applet.scala", "lite/AppletPanel.scala",
-          "api/", "agent/", "workspace/", "nvm/")
+          "api/", "agent/", "core/", "workspace/", "nvm/")
         val sourceFilter: File => Boolean = path =>
           apiSources.exists(ok => path.toString.containsSlice("src/main/" + ok))
         // not sure these are being accounted for
