@@ -450,29 +450,27 @@ public strictfp class View
     // the only ones that do are watch, follow and reset-perspective
     // this check (and others below) prevent items from being added
     // when we are running in Applet. JC - 6/8/10
-    if (!AbstractWorkspace.isApplet()) {
-      javax.swing.JMenuItem copyItem =
-          new javax.swing.JMenuItem("Copy View");
-      copyItem.addActionListener
-          (new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent e) {
-              java.awt.Toolkit.getDefaultToolkit().getSystemClipboard().setContents
-                  (new org.nlogo.awt.ImageSelection
-                      (exportView()),
-                      null);
-            }
-          });
-      menu.add(copyItem);
-      javax.swing.JMenuItem exportItem =
-          new javax.swing.JMenuItem("Export View...");
-      exportItem.addActionListener
-          (new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent e) {
-              workspace.doExportView(View.this);
-            }
-          });
-      menu.add(exportItem);
-    }
+    javax.swing.JMenuItem copyItem =
+      new javax.swing.JMenuItem("Copy View");
+    copyItem.addActionListener
+      (new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent e) {
+          java.awt.Toolkit.getDefaultToolkit().getSystemClipboard().setContents
+        (new org.nlogo.awt.ImageSelection
+         (exportView()),
+         null);
+        }
+      });
+    menu.add(copyItem);
+    javax.swing.JMenuItem exportItem =
+      new javax.swing.JMenuItem("Export View...");
+    exportItem.addActionListener
+      (new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent e) {
+          workspace.doExportView(View.this);
+        }
+      });
+    menu.add(exportItem);
 
     menu.add(new JPopupMenu.Separator());
     javax.swing.JMenuItem inspectGlobalsItem = new javax.swing.JMenuItem("inspect globals");
@@ -506,29 +504,26 @@ public strictfp class View
 
       org.nlogo.agent.Patch patch = null;
 
-      if (!AbstractWorkspace.isApplet()) {
+      try {
+        patch = workspace.world().getPatchAt(xcor, ycor);
+        menu.add(new javax.swing.JPopupMenu.Separator());
+        menu.add(new AgentMenuItem(patch, AgentMenuType.INSPECT, "inspect", false));
+      } catch (AgentException e) {
+        org.nlogo.api.Exceptions.ignore(e);
+      }
 
-        try {
-          patch = workspace.world().getPatchAt(xcor, ycor);
-          menu.add(new javax.swing.JPopupMenu.Separator());
-          menu.add(new AgentMenuItem(patch, AgentMenuType.INSPECT, "inspect", false));
-        } catch (AgentException e) {
-          org.nlogo.api.Exceptions.ignore(e);
-        }
+      boolean linksAdded = false;
+      for (AgentSet.Iterator links = workspace.world().links().iterator();
+           links.hasNext();) {
+        org.nlogo.agent.Link link = (org.nlogo.agent.Link) links.next();
 
-        boolean linksAdded = false;
-        for (AgentSet.Iterator links = workspace.world().links().iterator();
-             links.hasNext();) {
-          org.nlogo.agent.Link link = (org.nlogo.agent.Link) links.next();
-
-          if (!link.hidden() &&
-              workspace.world().protractor().distance(link, xcor, ycor, true) < link.lineThickness() + 0.5) {
-            if (!linksAdded) {
-              menu.add(new javax.swing.JPopupMenu.Separator());
-              linksAdded = true;
-            }
-            menu.add(new AgentMenuItem(link, AgentMenuType.INSPECT, "inspect", false));
+        if (!link.hidden() &&
+            workspace.world().protractor().distance(link, xcor, ycor, true) < link.lineThickness() + 0.5) {
+          if (!linksAdded) {
+            menu.add(new javax.swing.JPopupMenu.Separator());
+            linksAdded = true;
           }
+          menu.add(new AgentMenuItem(link, AgentMenuType.INSPECT, "inspect", false));
         }
       }
 
@@ -608,10 +603,8 @@ public strictfp class View
   private void addTurtleToContextMenu(javax.swing.JPopupMenu menu,
                                       org.nlogo.agent.Turtle turtle) {
     javax.swing.JMenu submenu = new AgentMenu(turtle);
-    if (!AbstractWorkspace.isApplet()) {
-      submenu.add(new AgentMenuItem(turtle, AgentMenuType.INSPECT, "inspect", true));
-      submenu.add(new javax.swing.JPopupMenu.Separator());
-    }
+    submenu.add(new AgentMenuItem(turtle, AgentMenuType.INSPECT, "inspect", true));
+    submenu.add(new javax.swing.JPopupMenu.Separator());
     submenu.add(new AgentMenuItem(turtle, AgentMenuType.WATCH, "watch", true));
     submenu.add(new AgentMenuItem(turtle, AgentMenuType.FOLLOW, "follow", true));
     menu.add(submenu);
