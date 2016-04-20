@@ -597,9 +597,11 @@ procedure SETUP-CONTINUE:[ON?-LIST]{O---}:
              L4
               DSTORE 4
               DSTORE 2
+              ALOAD 0
               DLOAD 2
               DLOAD 4
               DADD
+              INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupcontinue_plus_11.validDouble (D)D
              L5
               DSTORE 2
               NEW java/lang/Double
@@ -1383,9 +1385,11 @@ procedure GO:[]{O---}:
          L8
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurego_setobservervariable_11.validDouble (D)D
          L9
           DSTORE 2
           NEW java/lang/Double
@@ -1695,9 +1699,11 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L2
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebenchmark_repeatlocal_2.validDouble (D)D
          L3
           DSTORE 2
           ALOAD 1
@@ -3900,9 +3906,11 @@ reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
          L5
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculaterule_setprocedurevariable_2.validDouble (D)D
          L6
           DSTORE 2
           NEW java/lang/Double
@@ -4000,9 +4008,11 @@ reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
          L5
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculaterule_setprocedurevariable_4.validDouble (D)D
          L6
           DSTORE 2
           NEW java/lang/Double
@@ -4100,9 +4110,11 @@ reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
          L5
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculaterule_setprocedurevariable_6.validDouble (D)D
          L6
           DSTORE 2
           NEW java/lang/Double
@@ -4200,9 +4212,11 @@ reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
          L5
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculaterule_setprocedurevariable_8.validDouble (D)D
          L6
           DSTORE 2
           NEW java/lang/Double
@@ -4300,9 +4314,11 @@ reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
          L5
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculaterule_setprocedurevariable_10.validDouble (D)D
          L6
           DSTORE 2
           NEW java/lang/Double
@@ -4400,9 +4416,11 @@ reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
          L5
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculaterule_setprocedurevariable_12.validDouble (D)D
          L6
           DSTORE 2
           NEW java/lang/Double
@@ -4500,9 +4518,11 @@ reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
          L5
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculaterule_setprocedurevariable_14.validDouble (D)D
          L6
           DSTORE 2
           NEW java/lang/Double
@@ -4600,9 +4620,11 @@ reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
          L5
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculaterule_setprocedurevariable_16.validDouble (D)D
          L6
           DSTORE 2
           NEW java/lang/Double
@@ -5090,9 +5112,11 @@ procedure SHOW-RULES:[RULES]{O---}:
              L5
               DSTORE 4
               DSTORE 2
+              ALOAD 0
               DLOAD 2
               DLOAD 4
               DSUB
+              INVOKEVIRTUAL org/nlogo/prim/_asm_procedureshowrules_greaterthan_3.validDouble (D)D
              L6
               DSTORE 4
               DSTORE 2
@@ -5394,9 +5418,11 @@ procedure SHOW-RULES:[RULES]{O---}:
              L12
               DSTORE 4
               DSTORE 2
+              ALOAD 0
               DLOAD 2
               DLOAD 4
               DADD
+              INVOKEVIRTUAL org/nlogo/prim/_asm_procedureshowrules_and_7.validDouble (D)D
              L13
               ALOAD 0
               GETFIELD org/nlogo/prim/_asm_procedureshowrules_and_7.world : Lorg/nlogo/agent/World;
@@ -5422,9 +5448,11 @@ procedure SHOW-RULES:[RULES]{O---}:
               ATHROW
              L16
              FRAME FULL [org/nlogo/prim/_asm_procedureshowrules_and_7 org/nlogo/nvm/Context D D] [D]
+              ALOAD 0
               DLOAD 2
               DLOAD 4
               DDIV
+              INVOKEVIRTUAL org/nlogo/prim/_asm_procedureshowrules_and_7.validDouble (D)D
              L17
               DSTORE 2
               DLOAD 2
@@ -9366,9 +9394,11 @@ reporter procedure BINDIGIT:[NUMBER POWER-OF-TWO]{OTPL}:
           ATHROW
          L10
          FRAME FULL [org/nlogo/prim/_asm_procedurebindigit_report_3 org/nlogo/nvm/Context D D] [org/nlogo/nvm/Activation [Ljava/lang/Object; I]
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DDIV
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebindigit_report_3.validDouble (D)D
          L11
           DSTORE 2
           NEW java/lang/Double
@@ -9410,9 +9440,11 @@ reporter procedure BINDIGIT:[NUMBER POWER-OF-TWO]{OTPL}:
          L15
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebindigit_report_3.validDouble (D)D
          L16
           DSTORE 2
           NEW java/lang/Double

@@ -73,6 +73,9 @@ public class Renderer
   private DoubleBuffer projMatrix;
   private IntBuffer viewPort;
 
+  // subclasses/traits should this to false to avoid re-adding lights
+  boolean addsLights = true;
+
   public Renderer(WorldWithWorldRenderable world,
                   ViewSettings graphicsSettings,
                   DrawingInterface drawing,
@@ -179,20 +182,21 @@ public class Renderer
     gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_FASTEST);
 
     // Lighting
+    if (addsLights) {
+      lightManager.init(gl);
 
-    lightManager.init(gl);
+      Light light1 = new DirectionalLight(new Direction(-1.0f, -0.3f, 0.4f));
+      light1.ambient_$eq(new RGBA(0.25f, 0.25f, 0.25f, 1.0f));
+      light1.diffuse_$eq(new RGBA(0.35f, 0.35f, 0.35f, 1.0f));
+      light1.specular_$eq(new RGBA(0.0f, 0.0f, 0.0f, 0.0f));
+      lightManager.addLight(light1);
 
-    Light light1 = new DirectionalLight(new Direction(-1.0f, -0.3f, 0.4f));
-    light1.ambient_$eq(new RGBA(0.25f, 0.25f, 0.25f, 1.0f));
-    light1.diffuse_$eq(new RGBA(0.35f, 0.35f, 0.35f, 1.0f));
-    light1.specular_$eq(new RGBA(0.0f, 0.0f, 0.0f, 0.0f));
-    lightManager.addLight(light1);
-
-    Light light2 = new DirectionalLight(new Direction(1.0f, 0.6f, -0.5f));
-    light2.ambient_$eq(new RGBA(0.25f, 0.25f, 0.25f, 1.0f));
-    light2.diffuse_$eq(new RGBA(0.35f, 0.35f, 0.35f, 1.0f));
-    light2.specular_$eq(new RGBA(0.0f, 0.0f, 0.0f, 0.0f));
-    lightManager.addLight(light2);
+      Light light2 = new DirectionalLight(new Direction(1.0f, 0.6f, -0.5f));
+      light2.ambient_$eq(new RGBA(0.25f, 0.25f, 0.25f, 1.0f));
+      light2.diffuse_$eq(new RGBA(0.35f, 0.35f, 0.35f, 1.0f));
+      light2.specular_$eq(new RGBA(0.0f, 0.0f, 0.0f, 0.0f));
+      lightManager.addLight(light2);
+    }
 
     // This is necessary for properly rendering scaled objects. Without this, small objects
     // may look too bright, and large objects will look flat.
@@ -413,7 +417,9 @@ public class Renderer
 
       worldRenderer.renderCrossHairs(gl);
 
-      lightManager.applyLighting();
+      if (addsLights) {
+        lightManager.applyLighting();
+      }
 
       // Uncomment the code below to show the positions and directions of all the lights
       // in the world (only works in NetLogo 3D, not the 3D view in 2D).

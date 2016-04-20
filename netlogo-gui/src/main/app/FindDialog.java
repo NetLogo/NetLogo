@@ -62,6 +62,12 @@ public strictfp class FindDialog
       FindDialog.getInstance().setVisible(true);
       FindDialog.getInstance().findBox.requestFocus();
       FindDialog.getInstance().findBox.selectAll();
+      // Setting find field by default to selected text
+      FindDialog findDialog = getInstance();
+      String selectedText = findDialog.target.getSelectedText();
+      if(selectedText != null){
+        FindDialog.getInstance().findBox.setText(selectedText);
+      }
       FindDialog.getInstance().setLocation
           (instance.owner.getLocation().x + instance.owner.getWidth()
               - instance.getPreferredSize().width,
@@ -226,7 +232,14 @@ public strictfp class FindDialog
         notFoundLabel.setVisible(false);
       }
     } else if (e.getSource().equals(replaceAndFindButton)) {
-      replace(replaceBox.getText());
+      // Stores if the Replace and Find is selected for the first time.
+      // Also checks if the text in find field and selected text are same or not.
+      boolean firstTime = target.getSelectedText() == null || (target.getSelectedText() != null
+                && !(ignoreCaseCheckBox.isSelected() ? target.getSelectedText().equalsIgnoreCase(findBox.getText())
+                : target.getSelectedText().equals(findBox.getText())));
+      if (!firstTime) {
+          replace(replaceBox.getText());
+      }
       if (!next(search, ignoreCaseCheckBox.isSelected(), wrapAroundCheckBox.isSelected())) {
         java.awt.Toolkit.getDefaultToolkit().beep();
         notFoundLabel.setVisible(true);

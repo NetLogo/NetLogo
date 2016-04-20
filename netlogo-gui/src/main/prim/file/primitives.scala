@@ -50,14 +50,14 @@ class _filedelete extends Command {
   override def syntax =
     Syntax.commandSyntax(Array(Syntax.StringType))
   override def perform(context: Context) {
+    val argString = argEvalString(context, 0)
     try
       workspace.fileManager.deleteFile(
-        workspace.fileManager.attachPrefix(
-          argEvalString(context, 0)))
+        workspace.fileManager.attachPrefix(argString))
     catch {
       case ex: java.net.MalformedURLException =>
         throw new EngineException(
-          context, this, argEvalString(context, 0) +
+          context, this, argString +
           " is not a valid path name: " + ex.getMessage)
       case ex: IOException =>
         throw new EngineException(context, this, ex.getMessage)
@@ -70,20 +70,21 @@ class _fileexists extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(Array(Syntax.StringType),
                           Syntax.BooleanType)
-  override def report(context: Context) =
+  override def report(context: Context) = {
+    val argString = argEvalString(context, 0)
     try
       Boolean.box(
         workspace.fileManager.fileExists(
-          workspace.fileManager.attachPrefix(
-            argEvalString(context, 0))))
+          workspace.fileManager.attachPrefix(argString)))
     catch {
       case ex: java.net.MalformedURLException =>
         throw new EngineException(
-          context, this, argEvalString(context, 0) +
-          " is not a valid path name: " + ex.getMessage)
+          context, this, argString +
+            " is not a valid path name: " + ex.getMessage)
       case ex: IOException =>
         throw new EngineException(context, this, ex.getMessage)
     }
+  }
 }
 
 class _fileflush extends Command {

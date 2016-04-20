@@ -474,7 +474,7 @@ public strictfp class WidgetWrapper
   public int startPressY;
 
   public void mousePressed(java.awt.event.MouseEvent e) {
-    if (e.isPopupTrigger()) {
+    if (e.isPopupTrigger() && mouseMode() != MouseMode.DRAG) {
       doPopup(e);
       return;
     }
@@ -577,7 +577,7 @@ public strictfp class WidgetWrapper
   }
 
   public void mouseReleased(java.awt.event.MouseEvent e) {
-    if (e.isPopupTrigger()) {
+    if (e.isPopupTrigger() && mouseMode() != MouseMode.DRAG) {
       doPopup(e);
       return;
     } else if (org.nlogo.awt.Mouse.hasButton1(e)) {

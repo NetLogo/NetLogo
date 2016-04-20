@@ -37,9 +37,12 @@ with ModelSavedEvent.Handler
       if (System.getProperty("os.name").startsWith("Mac"))
         frame.getRootPane.putClientProperty("Window.documentModified", dirty)
       else if (!lockTitleBar)
-        if (dirty) frame.setTitle("* " + frame.getTitle) else frame.setTitle(frame.getTitle.substring(2))
+        frame.setTitle(
+          if (dirty) "* " + frame.getTitle
+          else frame.getTitle.substring(2))
     }
   }
+
   def handle(e: AboutToQuitEvent) {
     new java.io.File(DirtyMonitor.autoSaveFileName).delete()
   }
@@ -65,7 +68,7 @@ with ModelSavedEvent.Handler
 
   /// how we get clean
   def handle(e: ModelSavedEvent) {
-    dirty(false, true)
+    dirty(false, lockTitleBar = true)
   }
   def handle(e: BeforeLoadEvent) {
     dirty(false)

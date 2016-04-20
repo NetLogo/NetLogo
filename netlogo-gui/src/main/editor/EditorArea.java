@@ -8,6 +8,8 @@
 
 package org.nlogo.editor;
 
+import java.awt.Component;
+
 public strictfp class EditorArea
     extends AbstractEditorArea
     implements java.awt.event.FocusListener {
@@ -404,17 +406,41 @@ public strictfp class EditorArea
     super.processMouseEvent(me);
   }
 
+  private class EditorContextMenu extends javax.swing.JPopupMenu {
+    Colorizer colorizer;
+    scala.Function1<String, String> i18n;
+
+    javax.swing.JMenuItem copyItem = new javax.swing.JMenuItem(Actions.COPY_ACTION());
+    javax.swing.JMenuItem cutItem = new javax.swing.JMenuItem(Actions.CUT_ACTION());
+    javax.swing.JMenuItem pasteItem = new javax.swing.JMenuItem(Actions.PASTE_ACTION());
+
+    EditorContextMenu(Colorizer colorizer, scala.Function1<String, String> i18n) {
+      super();
+      this.colorizer = colorizer;
+      this.i18n = i18n;
+      add(copyItem);
+      Actions.COPY_ACTION().putValue(javax.swing.Action.NAME, i18n.apply("menu.edit.copy"));
+      add(cutItem);
+      Actions.CUT_ACTION().putValue(javax.swing.Action.NAME, i18n.apply("menu.edit.cut"));
+      add(pasteItem);
+      Actions.PASTE_ACTION().putValue(javax.swing.Action.NAME, i18n.apply("menu.edit.paste"));
+      addSeparator();
+      add(new javax.swing.JMenuItem(Actions.mouseQuickHelpAction(colorizer, i18n)));
+    }
+
+    @Override
+    public void show(Component invoker, int x, int y) {
+      String text = EditorArea.this.getSelectedText();
+      boolean isTextSelected = text != null && (text.length() > 0);
+      copyItem.setEnabled(isTextSelected);
+      cutItem.setEnabled(isTextSelected);
+      pasteItem.setEnabled(java.awt.Toolkit.getDefaultToolkit().getSystemClipboard().isDataFlavorAvailable(java.awt.datatransfer.DataFlavor.stringFlavor));
+      super.show(invoker, x, y);
+    }
+  }
+
   private javax.swing.JPopupMenu editorContextMenu(Colorizer colorizer, scala.Function1<String, String> i18n) {
-    javax.swing.JPopupMenu menu = new javax.swing.JPopupMenu();
-    menu.add(new javax.swing.JMenuItem(Actions.COPY_ACTION()));
-    Actions.COPY_ACTION().putValue(javax.swing.Action.NAME, i18n.apply("menu.edit.copy"));
-    menu.add(new javax.swing.JMenuItem(Actions.CUT_ACTION()));
-    Actions.CUT_ACTION().putValue(javax.swing.Action.NAME, i18n.apply("menu.edit.cut"));
-    menu.add(new javax.swing.JMenuItem(Actions.PASTE_ACTION()));
-    Actions.PASTE_ACTION().putValue(javax.swing.Action.NAME, i18n.apply("menu.edit.paste"));
-    menu.addSeparator();
-    menu.add(new javax.swing.JMenuItem(Actions.mouseQuickHelpAction(colorizer, i18n)));
-    return menu;
+    return new EditorContextMenu(colorizer, i18n);
   }
 
   private void doPopup(java.awt.event.MouseEvent e) {

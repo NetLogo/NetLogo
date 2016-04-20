@@ -160,4 +160,8 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
 
   def lineNumbersVisible = scrollableEditor.getRowHeader != null && scrollableEditor.getRowHeader.getView != null
   def lineNumbersVisible_=(visible: Boolean) = scrollableEditor.setRowHeaderView(if(visible) lineNumbers else null)
+
+  def isTextSelected(): Boolean = {
+    text.getSelectedText() != null && !text.getSelectedText().isEmpty()
+  }
 }

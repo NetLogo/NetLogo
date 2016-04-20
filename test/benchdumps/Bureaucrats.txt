@@ -332,9 +332,11 @@ procedure SETUP:[]{O---}:
          L6
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DMUL
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setobservervariable_4.validDouble (D)D
          L7
           DSTORE 2
           NEW java/lang/Double
@@ -595,9 +597,11 @@ procedure GO:[ACTIVE-PATCHES OVERLOADED-PATCHES]{O---}:
          L10
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurego_setpatchvariable_3.validDouble (D)D
          L11
           DSTORE 2
           NEW java/lang/Double
@@ -667,9 +671,11 @@ procedure GO:[ACTIVE-PATCHES OVERLOADED-PATCHES]{O---}:
          L8
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurego_setobservervariable_4.validDouble (D)D
          L9
           DSTORE 2
           NEW java/lang/Double
@@ -1114,9 +1120,11 @@ procedure GO:[ACTIVE-PATCHES OVERLOADED-PATCHES]{O---}:
          L10
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurego_setpatchvariable_11.validDouble (D)D
          L11
           DSTORE 2
           NEW java/lang/Double
@@ -1186,9 +1194,11 @@ procedure GO:[ACTIVE-PATCHES OVERLOADED-PATCHES]{O---}:
          L8
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DSUB
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurego_setobservervariable_12.validDouble (D)D
          L9
           DSTORE 2
           NEW java/lang/Double
@@ -1358,9 +1368,11 @@ procedure GO:[ACTIVE-PATCHES OVERLOADED-PATCHES]{O---}:
          L10
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurego_setpatchvariable_15.validDouble (D)D
          L11
           DSTORE 2
           NEW java/lang/Double
@@ -1430,9 +1442,11 @@ procedure GO:[ACTIVE-PATCHES OVERLOADED-PATCHES]{O---}:
          L8
           DSTORE 4
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           DLOAD 4
           DADD
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurego_setobservervariable_16.validDouble (D)D
          L9
           DSTORE 2
           NEW java/lang/Double

@@ -21,7 +21,7 @@ public final strictfp class _ceil extends Reporter implements Pure {
     return report_1(context, argEvalDoubleValue(context, 0));
   }
 
-  public double report_1(Context context, double d0) {
-    return StrictMath.ceil(d0);
+  public double report_1(Context context, double d0) throws LogoException {
+    return validDouble(StrictMath.ceil(d0));
   }
 }
