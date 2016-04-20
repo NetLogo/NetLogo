@@ -45,4 +45,9 @@ trait Context {
    * This method returns the context activation, the current procedure at the time of call.
    */
   def activation: Activation
+
+  /**
+   * This method returns the active workspace.
+   */
+  def workspace: Workspace
 }

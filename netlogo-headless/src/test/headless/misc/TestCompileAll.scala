@@ -71,7 +71,7 @@ class TestCompileAll extends FunSuite  {
   for(path <- ModelsLibrary.getModelPaths ++ ModelsLibrary.getModelPathsAtRoot("extensions"))
     test("version: " + path, SlowTestTag) {
       val workspace = HeadlessWorkspace.newInstance
-      val version = ModelReader.parseModel(FileIO.file2String(path), workspace.parser).version
+      val version = ModelReader.parseModel(FileIO.file2String(path), workspace.parser, Map()).version
       assert(Version.compatibleVersion(version))
     }
 
@@ -79,9 +79,9 @@ class TestCompileAll extends FunSuite  {
     val workspace = HeadlessWorkspace.newInstance
     try {
       val modelContents = text
-      val model = ModelReader.parseModel(modelContents, workspace.parser)
+      val model = ModelReader.parseModel(modelContents, workspace.parser, Map())
       val newModel = ModelReader.parseModel(
-        ModelReader.formatModel(model, workspace.parser), workspace.parser)
+        ModelReader.formatModel(model, workspace.parser), workspace.parser, Map())
       assertResult(model.code)(newModel.code)
       assertResult(model.widgets)(newModel.widgets)
       assertResult(model.info)(newModel.info)
@@ -103,8 +103,8 @@ class TestCompileAll extends FunSuite  {
     try {
       workspace.open(path)
       val lab = HeadlessWorkspace.newLab
-      lab.load(ModelReader.parseModel(
-        text, workspace.parser).behaviorSpace.mkString("", "\n", "\n"))
+      lab.load(ModelReader.parseModel(text, workspace.parser, Map())
+        .behaviorSpace.mkString("", "\n", "\n"))
       lab.names.foreach(lab.newWorker(_).compile(workspace))
     }
     finally workspace.dispose()

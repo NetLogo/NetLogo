@@ -108,14 +108,12 @@ lazy val netlogo = project.in(file("netlogo-gui")).
              Depend.dependTask: _*).
   settings(
     name := "NetLogo",
-    version := "6.0.0-M4",
+    version := "6.0.0-M5",
     isSnapshot := false,
     mainClass in Compile := Some("org.nlogo.app.App"),
     modelsDirectory := file("models"),
     extensionRoot   := file("extensions").getAbsoluteFile,
     autogenRoot     := file("autogen"),
-    // this makes jar-building and script-writing easier
-    retrieveManaged := true,
     javaOptions     += "-Dnetlogo.docs.dir=" + file("docs").getAbsolutePath.toString,
     unmanagedSourceDirectories in Test      += baseDirectory.value / "src" / "tools",
     resourceDirectory in Compile            := baseDirectory.value / "resources",

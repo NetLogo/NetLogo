@@ -6,13 +6,13 @@ package misc
 import org.nlogo.api.FileIO
 import org.scalatest.{ FunSuite, OneInstancePerTest, BeforeAndAfterEach }
 import org.nlogo.api
-import org.nlogo.core.{Model, View}
+import org.nlogo.core.{ Model, View, WorldDimensions }
 import org.nlogo.nvm.{ LabInterface, Workspace }
 import org.nlogo.workspace.AbstractWorkspace
 import org.nlogo.util.SlowTestTag
 
-class TestBehaviorSpace extends FunSuite 
-with OneInstancePerTest with BeforeAndAfterEach {
+class TestBehaviorSpace extends FunSuite
+ with OneInstancePerTest with BeforeAndAfterEach {
 
   val workspaces = new collection.mutable.ListBuffer[HeadlessWorkspace]
   def newWorkspace() = {
@@ -170,7 +170,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
     runExperimentFromModel("models/test/lab/FireWithExperiments.nlogo", "test2", "models/test/lab/FireWithExperiments2")
   }
   test("ResizingWorld3", SlowTestTag) {
-    runExperiment(View(minPycor = 0, minPxcor = 0, maxPycor = 1, maxPxcor = 1), "", "testResizingWorld3")
+    runExperiment(View(dimensions = WorldDimensions(minPycor = 0, minPxcor = 0, maxPycor = 1, maxPxcor = 1)), "", "testResizingWorld3")
   }
   test("Stopping1", SlowTestTag) {
     runExperiment(0, "globals [x]",
