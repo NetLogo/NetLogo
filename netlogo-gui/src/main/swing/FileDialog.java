@@ -72,19 +72,17 @@ public final strictfp class FileDialog {
     //  ~Forrest (6/8/2009)
     if (LINUX) {
       javax.swing.filechooser.FileFilter filter = new javax.swing.filechooser.FileFilter() {
-        String ext = org.nlogo.api.Version.is3D() ? ".nlogo3d" : ".nlogo";
-
         @Override
         public boolean accept(java.io.File f) {
           if (f.isDirectory()) {
             return true;
           }
-          return f.getName().endsWith(ext);
+          return f.getName().endsWith(".nlogo") || f.getName().endsWith(".nlogo3d");
         }
 
         @Override
         public String getDescription() {
-          return "NetLogo files (*" + ext + ")";
+          return "NetLogo files (*.nlogo, *.nlogo3d)";
         }
       };
       javax.swing.JFileChooser chooser =
