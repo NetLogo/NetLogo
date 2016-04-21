@@ -13,11 +13,7 @@ public final strictfp class _xor
   public Object report(final org.nlogo.nvm.Context context) throws LogoException {
     boolean b1 = argEvalBooleanValue(context, 0);
     boolean b2 = argEvalBooleanValue(context, 1);
-    if (b1) {
-      return b2 ? Boolean.FALSE : Boolean.TRUE;
-    } else {
-      return b2 ? Boolean.TRUE : Boolean.FALSE;
-    }
+    return b1 != b2 ? Boolean.TRUE : Boolean.FALSE;
   }
 
   @Override
