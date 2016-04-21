@@ -147,7 +147,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       Extensions.extensions,
       NativeLibs.nativeLibs,
       ModelsLibrary.modelIndex,
-      Scaladoc.docSmaller)
+      Scaladoc.apiScaladoc)
   )
 
 lazy val threed = TaskKey[Unit]("threed", "enable NetLogo 3D")

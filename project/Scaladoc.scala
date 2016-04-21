@@ -5,7 +5,7 @@ import NetLogoBuild.netlogoVersion
 
 object Scaladoc {
 
-  val docSmaller = TaskKey[File]("doc-smaller", "for docs/scaladoc/")
+  val apiScaladoc = TaskKey[File]("apiScaladoc", "for docs/scaladoc/")
 
   val settings = NetLogoBuild.settings ++ Seq(
     apiMappings += (
@@ -26,26 +26,27 @@ object Scaladoc {
     // web site we want to document only select classes.  So I copy and pasted
     // the code for the main doc task and tweaked it. - ST 6/29/12, 7/18/12
     // sureiscute.com/images/cutepictures/I_Have_No_Idea_What_I_m_Doing.jpg
-    docSmaller <<= (baseDirectory, scalacOptions in (Compile, doc), compileInputs in compile in Compile, netlogoVersion, streams) map {
-      (base, options, inputs, version, s) =>
-        val apiSources = Seq(
-          "app/App.scala", "headless/HeadlessWorkspace.scala",
-          "lite/InterfaceComponent.scala", "lite/Applet.scala", "lite/AppletPanel.scala",
-          "api/", "agent/", "core/", "workspace/", "nvm/")
-        val sourceFilter: File => Boolean = path =>
-          apiSources.exists(ok => path.toString.containsSlice("src/main/" + ok))
-        // not sure these are being accounted for
-        val classpath = inputs.config.classpath
-        val out = base / "docs" / "scaladoc"
-        IO.createDirectory(out)
-        val sources = inputs.config.sources.filter(sourceFilter)
-        Doc.scaladoc("NetLogo", s.cacheDirectory / "docSmaller",
-          inputs.compilers.scalac, options)(
-            sources, classpath, out, options,
-            inputs.config.maxErrors, s.log)
-        mungeScaladocSourceUrls(out)
-      }
-  )
+    apiScaladoc := {
+      val classpath = (compileInputs in compile in Compile).value.config.classpath
+      val out = baseDirectory.value / "docs" / "scaladoc"
+      IO.createDirectory(out)
+      val excludedePackages = Seq("org.nlogo.app.previewcommands", "org.nlogo.awt",
+        "org.nlogo.compiler", "org.nlogo.core.prim",
+        "org.nlogo.gl", "org.nlogo.hubnet", "org.nlogo.job",
+        "org.nlogo.lex", "org.nlogo.log", "org.nlogo.mc",
+        "org.nlogo.parse", "org.nlogo.plot", "org.nlogo.properties",
+        "org.nlogo.sdm", "org.nlogo.shape", "org.nlogo.widget",
+        "org.nlogo.window", "org.nlogo.generator", "org.nlogo.lab",
+        "org.nlogo.prim", "org.nlogo.swing")
+      val opts = (scalacOptions in Compile in doc).value ++
+        Seq("-skip-packages", excludedePackages.mkString(":"))
+      Doc.scaladoc("NetLogo", streams.value.cacheDirectory / "apiScaladoc",
+        (compileInputs in compile in Compile).value.compilers.scalac, opts)(
+          (sources in Compile).value, classpath, out, opts,
+          (compileInputs in compile in Compile).value.config.maxErrors, streams.value.log)
+      mungeScaladocSourceUrls(out)
+    }
+    )
 
   // compensate for issues.scala-lang.org/browse/SI-5388
   private def mungeScaladocSourceUrls(path: File): File = {

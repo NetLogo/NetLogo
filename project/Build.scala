@@ -33,7 +33,7 @@ object NetLogoBuild {
     })
 
   def includeProject(project: Project): Seq[Setting[_]] = Seq(
-    sources in (Compile, doc)         ++= (sources in (project, Compile)).value,
+    sources in Compile                      ++= (sources in (project, Compile)).value,
     unmanagedResourceDirectories in Compile += (baseDirectory in project).value / "resources" / "main"
     ) ++ Seq(packageBin, packageSrc, packageDoc).flatMap(task => inTask(task)(
       mappings in Compile ++= {
