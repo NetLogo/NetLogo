@@ -131,8 +131,6 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       "org.jogamp.jogl" % "jogl-all" % "2.3.2",
       "org.jogamp.gluegen" % "gluegen-rt" % "2.3.2",
       "org.jhotdraw" % "jhotdraw" % "6.0b1"      from cclArtifacts("jhotdraw-6.0b1.jar"),
-      "ch.randelshofer" % "quaqua" % "9.1"       from cclArtifacts("quaqua-9.1.jar"),
-      "ch.randelshofer" % "swing-layout" % "9.1" from cclArtifacts("swing-layout-9.1.jar"),
       "org.jmock" % "jmock" % "2.5.1" % "test",
       "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
       "org.jmock" % "jmock-junit4" % "2.5.1" % "test",

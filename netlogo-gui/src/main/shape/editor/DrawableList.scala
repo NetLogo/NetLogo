@@ -15,7 +15,6 @@ class DrawableList(val shapeList: ShapeList, private val shapeChangeListener: Sh
   var shapes = new JArrayList[Shape]()
   private var dlParent: java.awt.Component = _
 
-  putClientProperty("Quaqua.List.style", "striped")
   setVisibleRowCount(rows)
   setModel(listModel)
   setFixedCellHeight(height)

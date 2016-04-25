@@ -67,9 +67,6 @@ object App{
   }
 
   def mainWithAppHandler(args: Array[String], appHandler: Object) {
-    // tweak behavior of Quaqua
-    System.setProperty("Quaqua.visualMargin", "1,1,1,1")
-
     // this call is reflective to avoid complicating dependencies
     appHandler.getClass.getDeclaredMethod("init").invoke(appHandler)
 

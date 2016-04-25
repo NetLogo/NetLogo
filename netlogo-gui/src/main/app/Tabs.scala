@@ -7,10 +7,12 @@ import org.nlogo.window.{EditDialogFactoryInterface, GUIWorkspace}
 import org.nlogo.window.Events._
 import org.nlogo.swing.RichAction
 import org.nlogo.core.I18N
+import javax.swing.UIManager
+import javax.swing.JTabbedPane
 
 class Tabs(val workspace: GUIWorkspace,
            monitorManager: AgentMonitorManager,
-           dialogFactory: EditDialogFactoryInterface) extends javax.swing.JTabbedPane
+           dialogFactory: EditDialogFactoryInterface) extends JTabbedPane(javax.swing.SwingConstants.TOP)
   with javax.swing.event.ChangeListener with org.nlogo.window.Event.LinkParent
   with LoadBeginEvent.Handler with RuntimeErrorEvent.Handler with CompiledEvent.Handler{
 

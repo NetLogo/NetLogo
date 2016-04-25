@@ -44,7 +44,6 @@ ENCODING=-Dfile.encoding=UTF-8
 HEADLESS=-Djava.awt.headless=true
 USE_QUARTZ=-Dapple.awt.graphics.UseQuartz=false
 BOOT=xsbt.boot.Boot
-LAF=-Dnetlogo.quaqua.laf=ch.randelshofer.quaqua.snowleopard.Quaqua16SnowLeopardLookAndFeel
 GOGO_JAVA=-Dnetlogo.extensions.gogo.javaexecutable=$JAVA
 
 
@@ -81,6 +80,5 @@ fi
     $HEADLESS \
     $TERMINAL \
     $USE_QUARTZ \
-    $LAF \
     -classpath $SBT_LAUNCH \
     $BOOT "$@"

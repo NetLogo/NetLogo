@@ -154,9 +154,6 @@ check [JMF-free-zone] directlyIndependentOf [JMF]
 [Log4J-free-zone] = org.nlogo.* excluding [log] org.nlogo.app.App org.nlogo.lite.InterfaceComponent
 check [Log4J-free-zone] directlyIndependentOf org.apache.log4j.*
 
-[Quaqua-free-zone] = org.nlogo.* excluding org.nlogo.swing.Utils
-check [Quaqua-free-zone] directlyIndependentOf ch.randelshofer.*
-
 [PicoContainer-free-zone] = org.nlogo.* excluding org.nlogo.util.Pico [app] [headless]
 check [PicoContainer-free-zone] independentOf org.picocontainer.*
 

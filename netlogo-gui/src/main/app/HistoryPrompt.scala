@@ -22,52 +22,9 @@ class HistoryPrompt(commandLine: CommandLine) extends javax.swing.JButton {
       override def mousePressed(e: java.awt.event.MouseEvent) {
         if(!e.isPopupTrigger && org.nlogo.awt.Mouse.hasButton1(e))
           doPopupMenu()}})
-  // get right appearance on Mac - ST 10/4/05
-  putClientProperty("Quaqua.Button.style", "square")
-
   lazy val isMac = System.getProperty("os.name").startsWith("Mac")
 
-  private var usedInsets = new java.awt.Insets(0, 4, 0, 4)  // ad hoc - ST 11/24/04
-
-  override def getInsets = usedInsets
-
-  override def setFont(font: Font): Unit = {
-    if (isMac) {
-      // Zoomer sometimes resizes the font to be too small, which causes
-      // quaqua to error RG 2/29/16
-      if (font.getSize >= 9) {
-        usedInsets = new java.awt.Insets(0, 4, 0, 4)
-        super.setFont(font)
-      } else {
-        usedInsets = new java.awt.Insets(0, 0, 0, 0)
-      }
-    } else {
-      super.setFont(font)
-    }
-  }
-
-  override def getHeight: Int = {
-    if (isMac)
-      super.getHeight max 14
-    else
-      super.getHeight
-  }
-
-  override def getWidth: Int = {
-    if (isMac)
-      super.getWidth max 14
-    else
-      super.getWidth
-  }
-
-  override def getMinimumSize: java.awt.Dimension = {
-    if (isMac) {
-      val s = super.getMinimumSize()
-      new java.awt.Dimension(s.getWidth.toInt max 14, s.getHeight.toInt max 14)
-    } else {
-      super.getMinimumSize
-    }
-  }
+  override def getInsets =  new java.awt.Insets(0, 4, 0, 4)  // ad hoc - ST 11/24/04
 
   private def doPopupMenu() {
     val popMenu = new javax.swing.JPopupMenu(I18N.gui.get("tabs.run.commandcenter.history"))

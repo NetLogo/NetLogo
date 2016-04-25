@@ -33,7 +33,6 @@ private class ManagerDialog(manager: LabManager,
       override def windowClosing(e: java.awt.event.WindowEvent) { closeAction.actionPerformed(null) } })
     setTitle(I18N.gui.get("menu.tools.behaviorSpace"))
     // set up the list
-    jlist.putClientProperty("Quaqua.List.style", "striped")
     jlist.setVisibleRowCount(5)
     jlist.setModel(listModel)
     jlist.addListSelectionListener(this)

@@ -50,7 +50,7 @@ strictfp class ShapeView
     this.editorDialog = editorDialog;
     this.shape = shape;
     setBackground(java.awt.Color.DARK_GRAY.darker().darker());
-    setOpaque(true); // needed with new Quaqua - ST 11/3/05
+    setOpaque(true);
     setCursor(java.awt.Cursor.getPredefinedCursor
         (java.awt.Cursor.CROSSHAIR_CURSOR));
     javax.swing.event.MouseInputAdapter handler =

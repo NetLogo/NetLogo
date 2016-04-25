@@ -30,9 +30,7 @@ class MacPlatform(macApp: Project) extends PlatformBuild {
   override def shortName: String = "macosx"
 
   override def jvmOptions =
-    super.jvmOptions ++ Seq(
-      "-Dapple.awt.graphics.UseQuartz=true",
-      "-Dnetlogo.quaqua.laf=ch.randelshofer.quaqua.snowleopard.Quaqua16SnowLeopardLookAndFeel")
+    super.jvmOptions ++ Seq("-Dapple.awt.graphics.UseQuartz=true")
 
   override def nativeFormat = "dmg"
 }
