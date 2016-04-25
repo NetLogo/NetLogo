@@ -127,7 +127,7 @@ C print etc._print
 C pu etc._penup
 C random-seed etc._randomseed
 C repeat _repeat
-C report etc._report
+C report _report
 C reset-perspective etc._resetperspective
 C reset-ticks etc._resetticks
 C reset-timer etc._resettimer
@@ -137,7 +137,7 @@ C ride-me etc._rideme
 C right etc._right
 C rp etc._resetperspective
 C rt etc._right
-C run etc._run
+C run _run
 C set _set
 C set-current-directory etc._setcurdir
 C set-current-plot etc._setcurrentplot
@@ -159,7 +159,7 @@ C sprout _sprout
 C st etc._showturtle
 C stamp etc._stamp
 C stamp-erase etc._stamperase
-C stop etc._stop
+C stop _stop
 C stop-inspecting etc._stopinspecting
 C stop-inspecting-dead-agents etc._stopinspectingdeadagents
 C tick etc._tick

@@ -6,7 +6,7 @@ import
   org.nlogo.core.{ AstTransformer, CommandBlock, Fail, I18N,
                    prim, ProcedureDefinition, ReporterBlock, Statement, Statements },
     Fail._,
-    prim.etc.{ _report, _run, _stop }
+    prim.{ _report, _run, _stop }
 
 import
   scala.collection.mutable.Stack

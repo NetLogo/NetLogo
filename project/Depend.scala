@@ -45,7 +45,7 @@ object Depend {
       "awt" -> Nil,
       "compiler" -> List("core/prim","prim","prim/dead","prim/threed"),
       "core" -> Nil,
-      "core/prim" -> Nil,
+      "core/prim" -> List("core"),
       "core/model" -> List("core"),
       "editor" -> List("core"),
       "generator" -> List("prim","prim/dead","prim/threed"),
