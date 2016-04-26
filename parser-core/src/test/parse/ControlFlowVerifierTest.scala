@@ -5,8 +5,8 @@ package org.nlogo.parse
 import
   org.nlogo.core.{ Command, CommandBlock, CompilerException, Expression, FrontEndProcedure, prim,
     ProcedureDefinition, Statement, Statements, StructureDeclarations, Token },
-    prim.{ _ask, _carefully, _createturtles => _crt, etc, _fd },
-      etc.{ _die, _foreach, _if, _ifelse, _report, _run, _stop }
+    prim.{ _ask, _carefully, _createturtles => _crt, etc, _fd, _report, _run, _stop },
+      etc.{ _die, _foreach, _if, _ifelse }
 
 import
   org.scalacheck.Gen
