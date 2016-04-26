@@ -222,7 +222,6 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
       // Set the appearance of the table
       setFont(getFont.deriveFont(FONT_SIZE))
       setShowVerticalLines(false)
-      putClientProperty("Quaqua.Table.style", "striped")
 
       // Set column sizes
       setAutoResizeMode(JTable.AUTO_RESIZE_NEXT_COLUMN)

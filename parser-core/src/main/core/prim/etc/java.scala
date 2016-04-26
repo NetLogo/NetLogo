@@ -414,11 +414,6 @@ case class _replaceitem() extends Reporter {
       right = List(Syntax.NumberType, Syntax.ListType | Syntax.StringType, Syntax.WildcardType),
       ret = Syntax.ListType | Syntax.StringType)
 }
-case class _report() extends Command {
-  override def syntax =
-    Syntax.commandSyntax(
-      right = List(Syntax.WildcardType))
-}
 case class _resizeworld() extends Command {
   override def syntax =
     Syntax.commandSyntax(
@@ -490,10 +485,6 @@ case class _standarddeviation() extends Reporter with Pure {
     Syntax.reporterSyntax(
       right = List(Syntax.ListType),
       ret = Syntax.NumberType)
-}
-case class _stop() extends Command {
-  override def syntax =
-    Syntax.commandSyntax()
 }
 case class _sublist() extends Reporter {
   override def syntax =

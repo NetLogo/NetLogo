@@ -117,7 +117,6 @@ public strictfp class ColorDialog extends JDialog implements ActionListener,
 
     createControls(plotPenMode);
     selectSwatch(Color.black);
-    workAroundQuaquaBug(this);
     setVisible(true);
   }
 
@@ -127,7 +126,6 @@ public strictfp class ColorDialog extends JDialog implements ActionListener,
 
     createControls(plotPenMode);
     selectSwatch(initialColor);
-    workAroundQuaquaBug(this);
     setVisible(true);
 
     if (okCancelFlag == 1) {
@@ -141,7 +139,6 @@ public strictfp class ColorDialog extends JDialog implements ActionListener,
     plotPenMode = true;
     createControls(plotPenMode);
     selectSwatch(org.nlogo.api.Color.getColor(initialColor));
-    workAroundQuaquaBug(this);
     setVisible(true);
     if (okCancelFlag == 1) {
       return selectedColorNumber;
@@ -613,24 +610,4 @@ public strictfp class ColorDialog extends JDialog implements ActionListener,
 
   public void windowDeactivated(WindowEvent arg0) {
   }
-
-  // work around bug in Quaqua 6.5 causing NullPointerExceptions in
-  // QuaquaButtonUI.getMinimumSize() - ST 5/12/10
-
-  public void workAroundQuaquaBug(java.awt.Container root) {
-    org.nlogo.awt.Tree.walkComponentTree
-        (root, 0,
-            new org.nlogo.awt.Tree.ComponentTreeWalker() {
-              public void touch(java.awt.Component comp, int level) {
-                if (comp instanceof javax.swing.JComponent) {
-                  // using a different style than the default doesn't affect
-                  // the visual appearance, and it avoids the code path
-                  // that was causing the exceptions - ST 5/12/10
-                  ((javax.swing.JComponent) comp).putClientProperty
-                      ("Quaqua.Button.style", "toggle");
-                }
-              }
-            });
-  }
-
 }

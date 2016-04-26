@@ -116,9 +116,6 @@ strictfp class EditorDialog
         (new javax.swing.ImageIcon
             (EditorDialog.class.getResource
                 ("/images/shapes-editor/arrow.gif")), false);
-    // get right appearance on Mac - ST 10/4/05
-    editElements.putClientProperty
-        ("Quaqua.Button.style", "square");
     editElements.setToolTipText("Select");
     editElements.addActionListener
         (new java.awt.event.ActionListener() {
@@ -699,9 +696,6 @@ strictfp class EditorDialog
           }
         };
     newButton.setText(null);
-    // get right appearance on Mac - ST 10/4/05
-    newButton.putClientProperty
-        ("Quaqua.Button.style", "square");
     toolbar.add(newButton);
     group.add(newButton);
     return newButton;

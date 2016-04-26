@@ -347,6 +347,11 @@ case class _repeat() extends Command {
     Syntax.commandSyntax(
       right = List(Syntax.NumberType, Syntax.CommandBlockType))
 }
+case class _report() extends Command {
+  override def syntax =
+    Syntax.commandSyntax(
+      right = List(Syntax.WildcardType))
+}
 case class _reportertask(minArgCount: Int = 0) extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(
@@ -363,6 +368,14 @@ case class _return() extends Command {
   // for use in error messages
   override def displayName =
     "END"
+}
+case class _run() extends Command {
+  override def syntax =
+    Syntax.commandSyntax(
+      right = List(
+        Syntax.StringType | Syntax.CommandTaskType,
+        Syntax.RepeatableType | Syntax.WildcardType),
+      defaultOption = Some(1))
 }
 case class _sentence() extends Reporter with Pure {
   override def syntax =
@@ -384,6 +397,10 @@ case class _sprout(breedName: String) extends Command {
       right = List(Syntax.NumberType, Syntax.CommandBlockType | Syntax.OptionalType),
       agentClassString = "--P-",
       blockAgentClassString = Option("-T--"))
+}
+case class _stop() extends Command {
+  override def syntax =
+    Syntax.commandSyntax()
 }
 case class _sum() extends Reporter with Pure {
   override def syntax =

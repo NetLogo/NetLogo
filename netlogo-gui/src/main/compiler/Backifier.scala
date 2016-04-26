@@ -12,6 +12,9 @@ class Backifier(program: Program,
 
   val replacements = Map[String, String](
     "org.nlogo.prim._inradius"            -> "org.nlogo.prim.etc._inradius",
+    "org.nlogo.prim._report"              -> "org.nlogo.prim.etc._report",
+    "org.nlogo.prim._run"                 -> "org.nlogo.prim.etc._run",
+    "org.nlogo.prim._stop"                -> "org.nlogo.prim.etc._stop",
     "org.nlogo.prim.etc._plus"            -> "org.nlogo.prim._plus",
     "org.nlogo.prim.etc._breedon"         -> "org.nlogo.prim._breedon",
     "org.nlogo.prim.etc._breedat"         -> "org.nlogo.prim._breedat",

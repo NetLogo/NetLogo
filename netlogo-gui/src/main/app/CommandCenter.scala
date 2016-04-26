@@ -35,40 +35,32 @@ class CommandCenter(workspace: org.nlogo.workspace.AbstractWorkspace,
 
     //NORTH
     //-----------------------------------------
-    val titleLabel = new JLabel(I18N.gui.get("tabs.run.commandcenter")){
-      // tweak spacing on Mac
-      putClientProperty("Quaqua.Component.visualMargin", new Insets(0, 0, 0, 0))
-    }
+    val titleLabel = new JLabel(I18N.gui.get("tabs.run.commandcenter"))
 
     val locationToggleButton =
       if(locationToggleAction == null) null
       else new JButton(locationToggleAction) {
         setText("")
         setFocusable(false)
-        // get right appearance on Mac - ST 10/4/05
-        putClientProperty("Quaqua.Button.style", "square")
-        putClientProperty("Quaqua.Component.visualMargin", new Insets(0, 0, 0, 0))
         // this is very ad hoc. we want to save vertical screen real estate and also keep the
         // button from being too wide on Windows and Linux - ST 7/13/04, 11/24/04
         override def getInsets = new Insets(2, 4, 3, 4)
       }
+
     val clearButton = new JButton(RichAction(I18N.gui.get("tabs.run.commandcenter.clearButton")) { _ => output.clear() }) {
       setFocusable(false)
       setFont(new Font(org.nlogo.awt.Fonts.platformFont, Font.PLAIN, 9))
-      // get right appearance on Mac - ST 10/4/05
-      putClientProperty("Quaqua.Button.style", "square")
-      putClientProperty("Quaqua.Component.visualMargin", new Insets(0, 0, 0, 0))
-      override def setFont(font: Font): Unit = {
-        // Zoomer sometimes resizes the font to be too small, which causes
-        // quaqua to error RG 2/29/16
-        if (font.getSize >= 9) {
-          super.setFont(font)
-        }
+
+      override def getPreferredSize: Dimension = {
+        val ps = super.getPreferredSize
+        val ms = super.getMinimumSize
+        new Dimension(ps.getWidth.toInt, (ms.getHeight * 0.8).toInt)
       }
+
       override def getInsets = {
         val insets = super.getInsets()
         // this is very ad hoc. we want to save vertical screen real estate - ST 7/13/04
-        new Insets(0, insets.left max 0, 2, insets.right max 0)
+        new Insets(0, insets.left, 2, insets.right)
       }
     }
 
@@ -81,6 +73,7 @@ class CommandCenter(workspace: org.nlogo.workspace.AbstractWorkspace,
     titleLabel.setFont(titleLabel.getFont.deriveFont(Font.BOLD))
     if(locationToggleButton != null) northPanel.add(locationToggleButton)
     northPanel.add(clearButton)
+    resizeNorthPanel()
 
     //CENTER
     //-----------------------------------------
@@ -136,6 +129,14 @@ class CommandCenter(workspace: org.nlogo.workspace.AbstractWorkspace,
     commandLine.reset()
     repaintPrompt()
     output.clear()
+    resizeNorthPanel()
+  }
+
+  def resizeNorthPanel(): Unit = {
+    val preferredSize = northPanel.getPreferredSize
+    northPanel.setMaximumSize(new Dimension(
+      preferredSize.getWidth.toInt,
+      (northPanel.getMinimumSize.getHeight * zoomFactor).toInt))
   }
 
   def cycleAgentType(forward: Boolean) {

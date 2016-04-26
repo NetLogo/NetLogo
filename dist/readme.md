@@ -195,17 +195,6 @@ that code is as follows:
 > suitability of this software for any purpose.  It is provided "as is"
 > without expressed or implied warranty.
 
-### Quaqua
-
-This software uses the Quaqua Look and Feel library:
-
-> Copyright (c) 2003-2005 Werner Randelshofer,
-> http://www.randelshofer.ch/, werner.randelshofer@bluewin.ch, All
-> Rights Reserved.  The library is covered by the GNU LGPL (Lesser
-> General Public License).  This license is available online from
-> http://www.gnu.org/copyleft/lesser.html and is also included with
-> every download of NetLogo (in the "docs" folder).
-
 ### JHotDraw
 
 For the system dynamics modeler, NetLogo uses the JHotDraw library:

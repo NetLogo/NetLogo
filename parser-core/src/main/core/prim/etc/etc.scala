@@ -843,14 +843,6 @@ case class _round() extends Reporter with Pure {
       right = List(Syntax.NumberType),
       ret = Syntax.NumberType)
 }
-case class _run() extends Command {
-  override def syntax =
-    Syntax.commandSyntax(
-      right = List(
-        Syntax.StringType | Syntax.CommandTaskType,
-        Syntax.RepeatableType | Syntax.WildcardType),
-      defaultOption = Some(1))
-}
 case class _runresult() extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(

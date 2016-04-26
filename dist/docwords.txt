@@ -277,7 +277,6 @@ QTJavaNative
 QTSystem
 QTjava
 Quadro
-Quaqua
 QuickStart
 QuickTime
 README

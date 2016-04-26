@@ -21,20 +21,6 @@ public strictfp class WrappingPopupMenu
     super.show(invoker, x, y);
   }
 
-  // Mac menus are supposed to have top and bottom insets.
-  // Quaqua should be taking care of this for us, but unfortunately
-  // QuaquaMenuBorder is written so that only instances of JPopupMenu
-  // get the right insets, not subclasses of JPopupMenu.  So we force
-  // the right insets here ourselves. - ST 1/7/05
-  @Override
-  public java.awt.Insets getInsets() {
-    if (System.getProperty("os.name").startsWith("Mac")) {
-      return new java.awt.Insets(4, 0, 4, 0);
-    } else {
-      return super.getInsets();
-    }
-  }
-
   private class WrappingLayout
       implements java.awt.LayoutManager {
     private final int rows;

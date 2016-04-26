@@ -292,14 +292,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
 
     class CodeCellEditor extends AbstractCellEditor with TableCellEditor {
       val goodFont = new Font(platformMonospacedFont, Font.PLAIN, 12)
-      val editor = new EditorField(30, goodFont, false, colorizer, I18N.gui.get _) {
-        // for some reason QuaquaTableUI calls setFont(table.getFont()) on cell editors. I don't
-        // understand why it does that, but it means that in order to get the right font in our cell
-        // editors, we need to do this. - ST 4/29/10
-        override def setFont(badFont: java.awt.Font) {
-          super.setFont(goodFont)
-        }
-      }
+      val editor = new EditorField(30, goodFont, false, colorizer, I18N.gui.get _)
       def getTableCellEditorComponent(table: JTable, value: Object, isSelected: Boolean, row: Int, col: Int) = {
         editor.setText(value.asInstanceOf[String])
         editor
