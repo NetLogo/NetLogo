@@ -264,11 +264,11 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     WidgetReader.read(strings.toList, literalParser) match {
       case corePlot: org.nlogo.core.Plot =>
         setSize(corePlot.right - corePlot.left, corePlot.bottom - corePlot.top)
-        xLabel(corePlot.xAxis)
-        yLabel(corePlot.yAxis)
+        xLabel(if (corePlot.xAxis == "NIL") "" else corePlot.xAxis)
+        yLabel(if (corePlot.yAxis == "NIL") "" else corePlot.yAxis)
         legend.open = corePlot.legendOn
         PlotLoader.loadPlot(corePlot, plot, helper.convert(_, false))
-        plotName(plot.name)
+        plotName(if (corePlot.display == "NIL") "" else corePlot.display)
         clear()
         this
       case _ =>
