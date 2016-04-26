@@ -58,6 +58,7 @@ FileReadWrite_2D
   O> file-write "Once upon a time"
   O> file-write "[1 2 3]"
   O> file-write "true 5"
+  O> file-flush
   O> file-write count patches with [ pxcor = 0 ]
   O> file-write ( 1 + -1 = 0 )
   O> file-write turtle 1
