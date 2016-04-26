@@ -175,6 +175,9 @@ class StructureParserTests extends FunSuite {
   test("redeclaration of breed-own") {
     expectError("breed [hunters hunter] hunters-own [fear] hunters-own [loathing]",
       "Redeclaration of HUNTERS-OWN") }
+  test("breeds-own for nonexistent breed") {
+    expectError("hunters-own [fear]", "There is no breed \"HUNTERS\"")
+  }
   test("redeclaration of extensions") {
     expectError("extensions [foo] extensions [bar]",
       "Redeclaration of EXTENSIONS") }

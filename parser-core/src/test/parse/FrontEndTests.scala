@@ -16,8 +16,8 @@ class FrontEndTests extends FunSuite {
   val POSTAMBLE = "\nend"
 
   /// helpers
-  def compile(source: String, preamble: String = PREAMBLE): Seq[core.Statements] =
-    FrontEnd.frontEnd(preamble + source + POSTAMBLE) match {
+  def compile(source: String, preamble: String = PREAMBLE, postamble: String = POSTAMBLE): Seq[core.Statements] =
+    FrontEnd.frontEnd(preamble + source + postamble) match {
       case (procs, _) =>
         procs.map(_.statements)
     }

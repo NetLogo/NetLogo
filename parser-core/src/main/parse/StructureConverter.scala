@@ -3,7 +3,7 @@
 package org.nlogo.parse
 
 import org.nlogo.core,
-  core.{FrontEndProcedure, StructureResults, Program, Token}
+  core.{ CompilerException, FrontEndProcedure, I18N, StructureResults, Program, Token}
 
 /// Stage #3 of StructureParser
 
@@ -56,8 +56,8 @@ object StructureConverter {
           program.copy(patchesOwn = program.patchesOwn ++ identifiers.map(_.name))
         case (program, Variables(Identifier("LINKS-OWN", _), identifiers)) =>
           program.copy(linksOwn = program.linksOwn ++ identifiers.map(_.name))
-        case (program, Variables(Identifier(breedOwn, _), identifiers)) =>
-          updateBreedVariables(program, breedOwn.stripSuffix("-OWN"), identifiers.map(_.name))
+        case (program, Variables(Identifier(breedOwn, tok), identifiers)) =>
+          updateBreedVariables(program, breedOwn.stripSuffix("-OWN"), identifiers.map(_.name), tok)
         case (program, _) =>
           program
       }
@@ -78,32 +78,36 @@ object StructureConverter {
     updateVariables(updateBreeds(program))
   }
 
-  def updateBreedVariables(program: Program, breedName: String, newOwns: Seq[String]): Program = {
-    import collection.immutable.ListMap
-    type BreedMap = ListMap[String, core.Breed]
-    // a bit of unpleasantness here is that (as I only belatedly discovered) ListMap.updated
-    // doesn't preserve the ordering of existing keys, which is bad for us because we need
-    // to preserve the declaration order of breeds because later in Renderer it's going to
-    // determine the z-ordering of turtles in the view.  so we resort to a bit of ugliness
-    // here: remember the order the keys were in, then after we've updated the map, restore
-    // the original order. - ST 7/14/12
-    def orderPreservingUpdate(breedMap: BreedMap, breed: core.Breed): BreedMap = {
-      val keys = breedMap.keys.toSeq
-      val newMapInWrongOrder = breedMap.updated(breed.name, breed)
-      val result = ListMap(keys.map { k => (k, newMapInWrongOrder(k))}.toSeq: _*)
-      assert(keys sameElements result.keys.toSeq)
-      result
-    }
-    // if we had lenses this wouldn't need to be so repetitious - ST 7/15/12
-    if (program.linkBreeds.isDefinedAt(breedName))
-      program.copy(linkBreeds =
-        orderPreservingUpdate(
-          program.linkBreeds,
-          program.linkBreeds(breedName).copy(owns = newOwns)))
-    else
-      program.copy(breeds =
-        orderPreservingUpdate(
-          program.breeds,
-          program.breeds(breedName).copy(owns = newOwns)))
+  def updateBreedVariables(program: Program, breedName: String, newOwns: Seq[String], tok: Token): Program = {
+    if ((program.breeds.keySet ++ program.linkBreeds.keySet).contains(breedName)) {
+      import collection.immutable.ListMap
+      type BreedMap = ListMap[String, core.Breed]
+      // a bit of unpleasantness here is that (as I only belatedly discovered) ListMap.updated
+      // doesn't preserve the ordering of existing keys, which is bad for us because we need
+      // to preserve the declaration order of breeds because later in Renderer it's going to
+      // determine the z-ordering of turtles in the view.  so we resort to a bit of ugliness
+      // here: remember the order the keys were in, then after we've updated the map, restore
+      // the original order. - ST 7/14/12
+      def orderPreservingUpdate(breedMap: BreedMap, breed: core.Breed): BreedMap = {
+        val keys = breedMap.keys.toSeq
+        val newMapInWrongOrder = breedMap.updated(breed.name, breed)
+        val result = ListMap(keys.map { k => (k, newMapInWrongOrder(k))}.toSeq: _*)
+        assert(keys sameElements result.keys.toSeq)
+        result
+      }
+      // if we had lenses this wouldn't need to be so repetitious - ST 7/15/12
+      if (program.linkBreeds.isDefinedAt(breedName))
+        program.copy(linkBreeds =
+          orderPreservingUpdate(
+            program.linkBreeds,
+            program.linkBreeds(breedName).copy(owns = newOwns)))
+      else
+        program.copy(breeds =
+          orderPreservingUpdate(
+            program.breeds,
+            program.breeds(breedName).copy(owns = newOwns)))
+    } else
+      throw new CompilerException(
+        I18N.errors.getN("compiler.StructureConverter.noBreed", breedName), tok.start, tok.end, tok.filename)
   }
 }
