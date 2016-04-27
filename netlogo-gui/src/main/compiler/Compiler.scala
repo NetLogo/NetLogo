@@ -126,12 +126,13 @@ class Compiler(dialect: Dialect) extends CompilerInterface {
     frontEnd.findProcedurePositions(source, Some(dialect))
 
   // used for includes menu
-  def findIncludes(sourceFileName: String, source: String): Option[Map[String, String]] = {
+  def findIncludes(sourceFileName: String, source: String,
+    compilationEnvironment: CompilationEnvironment): Option[Map[String, String]] = {
     val includes = frontEnd.findIncludes(source)
     if (includes.isEmpty)
       None
     else
-      Some((includes zip includes.map(resolvePath(sourceFileName, _))).toMap)
+      Some((includes zip includes.map(compilationEnvironment.resolvePath)).toMap)
   }
 
   // used by VariableNameEditor

@@ -27,6 +27,7 @@ with org.nlogo.window.Events.CompiledEvent.Handler
     import collection.JavaConverters._
     target.getIncludesTable match {
       case Some(includesTable) =>
+        this.includesTable = includesTable
         val includes = new java.util.ArrayList[String]
         includesTable.keys.foreach(includes.add)
         java.util.Collections.sort(includes, String.CASE_INSENSITIVE_ORDER)

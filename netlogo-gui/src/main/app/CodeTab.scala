@@ -94,7 +94,7 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
           return None
       }
     }
-    workspace.compiler.findIncludes(path, getText)
+    workspace.compiler.findIncludes(path, getText, workspace.getCompilationEnvironment)
   }
 
   def agentClass = classOf[Observer]
