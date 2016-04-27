@@ -12,6 +12,7 @@ import org.nlogo.workspace.AbstractWorkspace.HubNetManagerFactory
 import java.util.WeakHashMap
 import java.net.URL
 import java.io.File
+import java.nio.file.Paths
 
 import java.io.{IOException,PrintWriter}
 
@@ -75,7 +76,7 @@ abstract class AbstractWorkspaceScala(val world: World, hubNetManagerFactory: Hu
       def profilingEnabled: Boolean = AbstractWorkspaceScala.this.profilingEnabled
       def resolvePath(path: String): String = {
         try {
-          val r = new JFile(attachModelDir(path))
+          val r = Paths.get(attachModelDir(path)).toFile
           try {
             r.getCanonicalPath
           } catch {
@@ -419,14 +420,16 @@ object AbstractWorkspaceTraits {
      */
     @throws(classOf[java.net.MalformedURLException])
     def attachModelDir(filePath: String): String = {
-      if (AbstractWorkspace.isApplet || new File(filePath).isAbsolute)
+      if (new File(filePath).isAbsolute)
         filePath
       else {
-        val path = Option(getModelPath).getOrElse(
-          System.getProperty("user.home") + File.separatorChar + "dummy.txt")
-        val urlForm = new URL(new File(path).toURI.toURL, filePath)
+        val defaultPath = Paths.get(System.getProperty("user.home"))
+        val modelParentPath =
+          Option(getModelPath).map(s => Paths.get(s)).map(_.getParent)
+            .getOrElse(defaultPath)
+        val attachedPath = modelParentPath.resolve(filePath)
 
-        new File(urlForm.getFile()).getAbsolutePath()
+        attachedPath.toAbsolutePath.toString
       }
     }
   }

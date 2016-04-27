@@ -20,8 +20,8 @@ package org.nlogo.parse
 
 import
   org.nlogo.core,
-    core.{CompilationOperand, ErrorSource, ExtensionManager, BreedIdentifierHandler, CompilationEnvironment,
-    FrontEndInterface, ProcedureSyntax, Program, Token, TokenMapperInterface, StructureDeclarations, StructureResults},
+    core.{ CompilationOperand, ErrorSource, ExtensionManager, BreedIdentifierHandler, CompilationEnvironment,
+    I18N, FrontEndInterface, ProcedureSyntax, Program, Token, TokenMapperInterface, StructureDeclarations, StructureResults},
       FrontEndInterface.ProceduresMap,
     core.Fail._
 
@@ -48,7 +48,7 @@ object StructureParser {
               case Some((path, fileContents)) =>
                 parseOne(tokenizer, structureParser, fileContents, path, results.copy(includes = results.includes.tail))
               case None =>
-                exception(s"Could not find $suppliedPath", results.includes.head)
+                exception(I18N.errors.getN("compiler.StructureParser.includeNotFound", suppliedPath), results.includes.head)
             }
           }.dropWhile(_.includes.nonEmpty).next
         }
