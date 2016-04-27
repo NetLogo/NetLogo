@@ -29,10 +29,13 @@ private object CompilerMain {
 
     val defs = CompilerBridge(feStructureResults, extensionManager, oldProceduresListMap, topLevelDefs)
 
+    val allSources = sources ++
+      feStructureResults.includedSources.map(i =>
+          (i -> compilationEnv.getSource(compilationEnv.resolvePath(i))))
+
     val returnedProcedures =
-      defs
-        .map(assembleProcedure(_, feStructureResults.program, sources, compilationEnv))
-        .filterNot(_.isTask) ++ oldProcedures.values
+      defs.map(assembleProcedure(_, feStructureResults.program, allSources, compilationEnv))
+      .filterNot(_.isTask) ++ oldProcedures.values
 
     // only return top level procedures.
     // task procedures can be reached via the children field on Procedure.
