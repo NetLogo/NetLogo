@@ -227,7 +227,9 @@ class StructureParserTests extends FunSuite {
 
   def compileAll(src: String): StructureResults = {
     StructureParser.parseSources(
-      tokenizer, CompilationOperand(Map("" -> src), new DummyExtensionManager, new DummyCompilationEnvironment, subprogram = false))
+      tokenizer,
+      CompilationOperand(Map("" -> src), new DummyExtensionManager, new DummyCompilationEnvironment, subprogram = false),
+      (_, name) => if (name == "foo.nls") Some(("foo.nls", "")) else None)
   }
 
   def expectParseAllError(src: String, error: String) = {
@@ -243,6 +245,11 @@ class StructureParserTests extends FunSuite {
 
   test("nonexistent included file") {
     expectParseAllError("""__includes [ "foobar.nls" ]""", "Could not find foobar.nls")
+  }
+
+  test("included file returns correct results") {
+    val results = compileAll("""__includes [ "foo.nls" ]""")
+    assert(results.includes.nonEmpty || results.includedSources.nonEmpty)
   }
 
   test("mutually referrent sources") {

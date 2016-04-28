@@ -33,6 +33,7 @@ object StructureConverter {
         case (p, toks) => p.name -> toks
       },
       includes = oldResults.includes ++ is,
+      includedSources = oldResults.includedSources,
       extensions = oldResults.extensions ++
         declarations.collect {
           case e: Extensions =>

@@ -50,7 +50,7 @@ trait CompilerInterface {
   def readFromFile(currFile: org.nlogo.core.File, world: World, extensionManager: ApiExtensionManager): AnyRef
 
   def findProcedurePositions(source: String): Map[String, ProcedureSyntax]
-  def findIncludes(sourceFileName: String, source: String): Option[Map[String, String]]
+  def findIncludes(sourceFileName: String, source: String, environment: CompilationEnvironment): Option[Map[String, String]]
   def isValidIdentifier(s: String): Boolean
   def isReporter(s: String, program: Program, procedures: java.util.Map[String, Procedure], extensionManager: ApiExtensionManager, compilationEnv: CompilationEnvironment): Boolean
   def getTokenAtPosition(source: String, position: Int): Token

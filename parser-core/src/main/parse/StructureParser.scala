@@ -20,8 +20,8 @@ package org.nlogo.parse
 
 import
   org.nlogo.core,
-    core.{CompilationOperand, ErrorSource, ExtensionManager, BreedIdentifierHandler, CompilationEnvironment,
-    FrontEndInterface, ProcedureSyntax, Program, Token, TokenMapperInterface, StructureDeclarations, StructureResults},
+    core.{ CompilationOperand, ErrorSource, ExtensionManager, BreedIdentifierHandler, CompilationEnvironment,
+    I18N, FrontEndInterface, ProcedureSyntax, Program, Token, TokenMapperInterface, StructureDeclarations, StructureResults},
       FrontEndInterface.ProceduresMap,
     core.Fail._
 
@@ -29,7 +29,8 @@ object StructureParser {
   val IncludeFilesEndInNLS = "Included files must end with .nls"
 
   /// main entry point.  handles gritty extensions stuff and includes stuff.
-  def parseSources(tokenizer: core.TokenizerInterface, compilationData: CompilationOperand): StructureResults = {
+  def parseSources(tokenizer: core.TokenizerInterface, compilationData: CompilationOperand,
+    includeFile: (CompilationEnvironment, String) => Option[(String, String)] = IncludeFile.apply _): StructureResults = {
       import compilationData.{ compilationEnvironment, displayName, oldProcedures, subprogram, sources, containingProgram => program }
       parsingWithExtensions(compilationData) {
         val structureParser = new StructureParser(displayName, subprogram)
@@ -44,11 +45,13 @@ object StructureParser {
           Iterator.iterate(firstResults) { results =>
             val suppliedPath = results.includes.head.value.asInstanceOf[String]
             cAssert(suppliedPath.endsWith(".nls"), IncludeFilesEndInNLS, results.includes.head)
-            IncludeFile(compilationEnvironment, suppliedPath) match {
+            includeFile(compilationEnvironment, suppliedPath) match {
               case Some((path, fileContents)) =>
-                parseOne(tokenizer, structureParser, fileContents, path, results.copy(includes = results.includes.tail))
+                parseOne(tokenizer, structureParser, fileContents, suppliedPath,
+                  results.copy(includes = results.includes.tail,
+                    includedSources = results.includedSources :+ suppliedPath))
               case None =>
-                exception(s"Could not find $suppliedPath", results.includes.head)
+                exception(I18N.errors.getN("compiler.StructureParser.includeNotFound", suppliedPath), results.includes.head)
             }
           }.dropWhile(_.includes.nonEmpty).next
         }
