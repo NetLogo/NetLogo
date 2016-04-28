@@ -90,6 +90,7 @@ class TestCompileAll extends FunSuite  {
       assertResult(model.behaviorSpace)(newModel.behaviorSpace)
       assertResult(model.linkShapes)(newModel.linkShapes)
       assertResult(model.previewCommands)(newModel.previewCommands)
+      assertResult(model.otherSections)(newModel.otherSections)
       assertResult(model)(newModel)
     }
     finally workspace.dispose()
