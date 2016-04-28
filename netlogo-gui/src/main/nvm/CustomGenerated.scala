@@ -2,4 +2,6 @@
 
 package org.nlogo.nvm
 
-trait CustomGenerated
+trait CustomGenerated {
+  def returnType: Int
+}

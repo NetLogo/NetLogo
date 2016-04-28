@@ -22,7 +22,7 @@ public final strictfp class _constlist
   }
 
   @Override
-  public Object report(final org.nlogo.nvm.Context context) {
+  public LogoList report(final org.nlogo.nvm.Context context) {
     return value;
   }
 

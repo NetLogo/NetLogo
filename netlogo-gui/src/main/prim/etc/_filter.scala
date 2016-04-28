@@ -12,7 +12,7 @@ class _filter extends Reporter {
     Syntax.reporterSyntax(Array(Syntax.ReporterTaskType, Syntax.ListType),
       Syntax.ListType)
 
-  def report(context: Context) = {
+  def report(context: Context): LogoList = {
     val task = argEvalReporterTask(context, 0)
     val list = argEvalList(context, 1)
     if(task.formals.size > 1)

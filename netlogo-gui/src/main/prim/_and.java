@@ -10,6 +10,12 @@ import org.nlogo.nvm.Reporter;
 public final strictfp class _and
     extends Reporter
     implements org.nlogo.nvm.Pure, org.nlogo.nvm.CustomGenerated {
+
+  @Override
+  public int returnType() {
+    return Syntax.BooleanType();
+  }
+
   @Override
   public org.nlogo.core.Syntax syntax() {
     return Syntax.reporterSyntax(Syntax.BooleanType(),

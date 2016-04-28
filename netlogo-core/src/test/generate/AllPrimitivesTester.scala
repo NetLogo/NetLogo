@@ -17,7 +17,7 @@ trait AllPrimitivesTester extends FunSuite {
 
   // not all primitives are listed in tokens.txt, because some of them are only used internally so
   // they only have an internal name.  so we have to actually look on disk. - ST 2/12/09
-  val primDir = new java.io.File("netlogo-headless/target/classes/org/nlogo/prim")
+  val primDir = PrimsRoot.file
 
   if(Version.useGenerator)
     for(c <- allPrimitiveClasses(primDir))

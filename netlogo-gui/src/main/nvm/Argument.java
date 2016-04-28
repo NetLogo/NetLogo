@@ -4,8 +4,8 @@ package org.nlogo.nvm;
 
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.Dump;
-import org.nlogo.api.Syntax;
 import org.nlogo.api.TypeNames;
+import org.nlogo.core.Syntax;
 import java.util.List;
 
 /**

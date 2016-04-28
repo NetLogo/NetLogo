@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.generator
+package org.nlogo.generate
 
 /**
  * This class catches one specific inefficient pattern of bytecode that the
@@ -19,7 +19,7 @@ package org.nlogo.generator
 import org.objectweb.asm.{ Label, MethodVisitor }
 import org.objectweb.asm.Opcodes.{ ALOAD, POP }
 
-private class PeepholeOptimizer2(mv: MethodVisitor) extends AbstractPeepholeOptimizer(mv) {
+class PeepholeOptimizer2(mv: MethodVisitor) extends AbstractPeepholeOptimizer(mv) {
 
   private var seenAload0 = false
 
@@ -46,8 +46,7 @@ private class PeepholeOptimizer2(mv: MethodVisitor) extends AbstractPeepholeOpti
   override def visitInsn(opcode: Int) {
     if (seenAload0 && opcode == POP)
       seenAload0 = false
-    else
-      super.visitInsn(opcode)
+    else super.visitInsn(opcode)
   }
 
 }

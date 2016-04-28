@@ -411,8 +411,8 @@ procedure GO:[]{O---}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          INVOKESTATIC org/nlogo/api/Syntax.AgentsetType ()I
-          INVOKESTATIC org/nlogo/api/Syntax.AgentType ()I
+          INVOKESTATIC org/nlogo/core/Syntax.AgentsetType ()I
+          INVOKESTATIC org/nlogo/core/Syntax.AgentType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -552,8 +552,8 @@ procedure GO:[]{O---}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          INVOKESTATIC org/nlogo/api/Syntax.AgentsetType ()I
-          INVOKESTATIC org/nlogo/api/Syntax.AgentType ()I
+          INVOKESTATIC org/nlogo/core/Syntax.AgentsetType ()I
+          INVOKESTATIC org/nlogo/core/Syntax.AgentType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -887,8 +887,8 @@ procedure GO:[]{O---}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          INVOKESTATIC org/nlogo/api/Syntax.AgentsetType ()I
-          INVOKESTATIC org/nlogo/api/Syntax.AgentType ()I
+          INVOKESTATIC org/nlogo/core/Syntax.AgentsetType ()I
+          INVOKESTATIC org/nlogo/core/Syntax.AgentType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -1067,8 +1067,8 @@ procedure GO:[]{O---}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          INVOKESTATIC org/nlogo/api/Syntax.AgentsetType ()I
-          INVOKESTATIC org/nlogo/api/Syntax.AgentType ()I
+          INVOKESTATIC org/nlogo/core/Syntax.AgentsetType ()I
+          INVOKESTATIC org/nlogo/core/Syntax.AgentType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -2438,8 +2438,8 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          INVOKESTATIC org/nlogo/api/Syntax.ListType ()I
-          INVOKESTATIC org/nlogo/api/Syntax.StringType ()I
+          INVOKESTATIC org/nlogo/core/Syntax.ListType ()I
+          INVOKESTATIC org/nlogo/core/Syntax.StringType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -2982,8 +2982,8 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
                 ALOAD 1
                 ALOAD 0
                 ICONST_0
-                INVOKESTATIC org/nlogo/api/Syntax.ListType ()I
-                INVOKESTATIC org/nlogo/api/Syntax.StringType ()I
+                INVOKESTATIC org/nlogo/core/Syntax.ListType ()I
+                INVOKESTATIC org/nlogo/core/Syntax.StringType ()I
                 IOR
                 ALOAD 2
                 INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -3054,8 +3054,8 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
                 ALOAD 1
                 ALOAD 0
                 ICONST_0
-                INVOKESTATIC org/nlogo/api/Syntax.ListType ()I
-                INVOKESTATIC org/nlogo/api/Syntax.StringType ()I
+                INVOKESTATIC org/nlogo/core/Syntax.ListType ()I
+                INVOKESTATIC org/nlogo/core/Syntax.StringType ()I
                 IOR
                 ALOAD 2
                 INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -4877,8 +4877,8 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           ALOAD 1
           ALOAD 0
           ICONST_0
-          INVOKESTATIC org/nlogo/api/Syntax.TurtlesetType ()I
-          INVOKESTATIC org/nlogo/api/Syntax.TurtleType ()I
+          INVOKESTATIC org/nlogo/core/Syntax.TurtlesetType ()I
+          INVOKESTATIC org/nlogo/core/Syntax.TurtleType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -6445,8 +6445,8 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           ALOAD 1
           ALOAD 0
           ICONST_0
-          INVOKESTATIC org/nlogo/api/Syntax.AgentsetType ()I
-          INVOKESTATIC org/nlogo/api/Syntax.AgentType ()I
+          INVOKESTATIC org/nlogo/core/Syntax.AgentsetType ()I
+          INVOKESTATIC org/nlogo/core/Syntax.AgentType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -6830,8 +6830,8 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           ALOAD 1
           ALOAD 0
           ICONST_0
-          INVOKESTATIC org/nlogo/api/Syntax.AgentsetType ()I
-          INVOKESTATIC org/nlogo/api/Syntax.AgentType ()I
+          INVOKESTATIC org/nlogo/core/Syntax.AgentsetType ()I
+          INVOKESTATIC org/nlogo/core/Syntax.AgentType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -7170,8 +7170,8 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           ALOAD 1
           ALOAD 0
           ICONST_0
-          INVOKESTATIC org/nlogo/api/Syntax.AgentsetType ()I
-          INVOKESTATIC org/nlogo/api/Syntax.AgentType ()I
+          INVOKESTATIC org/nlogo/core/Syntax.AgentsetType ()I
+          INVOKESTATIC org/nlogo/core/Syntax.AgentType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -11551,8 +11551,8 @@ procedure COLLIDE-WINNERS:[]{OTPL}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          INVOKESTATIC org/nlogo/api/Syntax.AgentsetType ()I
-          INVOKESTATIC org/nlogo/api/Syntax.AgentType ()I
+          INVOKESTATIC org/nlogo/core/Syntax.AgentsetType ()I
+          INVOKESTATIC org/nlogo/core/Syntax.AgentType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -11829,8 +11829,8 @@ procedure COLLIDE-WINNERS:[]{OTPL}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          INVOKESTATIC org/nlogo/api/Syntax.AgentsetType ()I
-          INVOKESTATIC org/nlogo/api/Syntax.AgentType ()I
+          INVOKESTATIC org/nlogo/core/Syntax.AgentsetType ()I
+          INVOKESTATIC org/nlogo/core/Syntax.AgentType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -12057,8 +12057,8 @@ procedure COLLIDE-WINNERS:[]{OTPL}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          INVOKESTATIC org/nlogo/api/Syntax.AgentsetType ()I
-          INVOKESTATIC org/nlogo/api/Syntax.AgentType ()I
+          INVOKESTATIC org/nlogo/core/Syntax.AgentsetType ()I
+          INVOKESTATIC org/nlogo/core/Syntax.AgentType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -12729,8 +12729,8 @@ procedure ARRANGE:[PARTICLE-SET]{OTPL}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          INVOKESTATIC org/nlogo/api/Syntax.AgentsetType ()I
-          INVOKESTATIC org/nlogo/api/Syntax.AgentType ()I
+          INVOKESTATIC org/nlogo/core/Syntax.AgentsetType ()I
+          INVOKESTATIC org/nlogo/core/Syntax.AgentType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V

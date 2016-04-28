@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.util
+package org.nlogo.nvm
 
 import org.scalatest.FunSuite
 

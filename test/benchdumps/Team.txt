@@ -1234,8 +1234,8 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
               ALOAD 1
               ALOAD 0
               ICONST_0
-              INVOKESTATIC org/nlogo/api/Syntax.TurtlesetType ()I
-              INVOKESTATIC org/nlogo/api/Syntax.TurtleType ()I
+              INVOKESTATIC org/nlogo/core/Syntax.TurtlesetType ()I
+              INVOKESTATIC org/nlogo/core/Syntax.TurtleType ()I
               IOR
               ALOAD 2
               INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -1386,8 +1386,8 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
               ALOAD 1
               ALOAD 0
               ICONST_0
-              INVOKESTATIC org/nlogo/api/Syntax.TurtlesetType ()I
-              INVOKESTATIC org/nlogo/api/Syntax.TurtleType ()I
+              INVOKESTATIC org/nlogo/core/Syntax.TurtlesetType ()I
+              INVOKESTATIC org/nlogo/core/Syntax.TurtleType ()I
               IOR
               ALOAD 2
               INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -1764,8 +1764,8 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          INVOKESTATIC org/nlogo/api/Syntax.TurtlesetType ()I
-          INVOKESTATIC org/nlogo/api/Syntax.TurtleType ()I
+          INVOKESTATIC org/nlogo/core/Syntax.TurtlesetType ()I
+          INVOKESTATIC org/nlogo/core/Syntax.TurtleType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -1916,8 +1916,8 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          INVOKESTATIC org/nlogo/api/Syntax.TurtlesetType ()I
-          INVOKESTATIC org/nlogo/api/Syntax.TurtleType ()I
+          INVOKESTATIC org/nlogo/core/Syntax.TurtlesetType ()I
+          INVOKESTATIC org/nlogo/core/Syntax.TurtleType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -2142,8 +2142,8 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          INVOKESTATIC org/nlogo/api/Syntax.TurtlesetType ()I
-          INVOKESTATIC org/nlogo/api/Syntax.TurtleType ()I
+          INVOKESTATIC org/nlogo/core/Syntax.TurtlesetType ()I
+          INVOKESTATIC org/nlogo/core/Syntax.TurtleType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -2294,8 +2294,8 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          INVOKESTATIC org/nlogo/api/Syntax.TurtlesetType ()I
-          INVOKESTATIC org/nlogo/api/Syntax.TurtleType ()I
+          INVOKESTATIC org/nlogo/core/Syntax.TurtlesetType ()I
+          INVOKESTATIC org/nlogo/core/Syntax.TurtleType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -3612,8 +3612,8 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          INVOKESTATIC org/nlogo/api/Syntax.AgentsetType ()I
-          INVOKESTATIC org/nlogo/api/Syntax.AgentType ()I
+          INVOKESTATIC org/nlogo/core/Syntax.AgentsetType ()I
+          INVOKESTATIC org/nlogo/core/Syntax.AgentType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -7362,8 +7362,8 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          INVOKESTATIC org/nlogo/api/Syntax.AgentsetType ()I
-          INVOKESTATIC org/nlogo/api/Syntax.AgentType ()I
+          INVOKESTATIC org/nlogo/core/Syntax.AgentsetType ()I
+          INVOKESTATIC org/nlogo/core/Syntax.AgentType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V

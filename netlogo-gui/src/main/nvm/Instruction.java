@@ -16,30 +16,23 @@ import org.nlogo.core.AgentKindJ;
 import org.nlogo.core.LogoList;
 import org.nlogo.core.Syntax;
 import org.nlogo.core.Token;
-import org.nlogo.util.Thunk;
+import org.nlogo.nvm.Thunk;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract strictfp class Instruction
-    implements org.nlogo.core.TokenHolder {
+    extends AbstractScalaInstruction {
 
   public Workspace workspace;
   public org.nlogo.agent.World world;  // public so the engine can get to World.comeUpForAir easily
 
+  // for extra-efficient agent class checking
+  public String agentClassString = "OTPL";
+  public int agentBits = 0;
   public Reporter[] args = new Reporter[0];
 
-  public abstract Syntax syntax();
-
-  private org.nlogo.core.Token token;
-
-  public org.nlogo.core.Token token() {
-    return token;
-  }
-
-  public void token_$eq(org.nlogo.core.Token token) {
-    this.token = token;
-  }
+  // When we convert this to scala, this can use accessor methods
 
   // for some instructions two tokens are relevant for example
   // _setturtlevariable, the SET is what we want to report
@@ -49,7 +42,7 @@ public abstract strictfp class Instruction
   private org.nlogo.core.Token token2 = null;
 
   public org.nlogo.core.Token tokenLimitingType() {
-    return token2 == null ? token : token2;
+    return token2 == null ? token() : token2;
   }
 
   public void tokenLimitingType(org.nlogo.core.Token token) {
@@ -66,10 +59,6 @@ public abstract strictfp class Instruction
           return "";
         }
       };
-
-  // for extra-efficient agent class checking
-  public String agentClassString = "OTPL";
-  public int agentBits = 0;
 
   // for primitives which use ReferenceType
   public Reference reference = null;
@@ -148,8 +137,8 @@ public abstract strictfp class Instruction
   }
 
   public String getFilename() {
-    if (token != null) {
-      return token.filename();
+    if (token() != null) {
+      return token().filename();
     } else {
       return storedFilename;
     }
@@ -173,8 +162,8 @@ public abstract strictfp class Instruction
     * instead returning the displayName() of the GeneratedInstruction. ~Forrest (summer 2006)
     */
   public String displayName() {
-    if (token != null) {
-      return token.text().toUpperCase();
+    if (token() != null) {
+      return token().text().toUpperCase();
     } else {
       // well, returning some weird ugly internal class name
       // is better than nothing, I guess
@@ -321,34 +310,6 @@ public abstract strictfp class Instruction
                 + (Double.isInfinite(d)
                 ? "a number too large for NetLogo"
                 : "a non-number"));
-  }
-
-  public void throwAgentClassException(Context context, AgentKind agentClass)
-      throws EngineException {
-    List<AgentKind> allowedAgentClasses =
-        new ArrayList<AgentKind>();
-    if (syntax().agentClassString().indexOf("O") != -1) {
-      allowedAgentClasses.add(AgentKindJ.Observer());
-    }
-    if (syntax().agentClassString().indexOf("T") != -1) {
-      allowedAgentClasses.add(AgentKindJ.Turtle());
-    }
-    if (syntax().agentClassString().indexOf("P") != -1) {
-      allowedAgentClasses.add(AgentKindJ.Patch());
-    }
-    if (syntax().agentClassString().indexOf("L") != -1) {
-      allowedAgentClasses.add(AgentKindJ.Link());
-    }
-    if (allowedAgentClasses.size() == 1) {
-      throw new EngineException
-          (context, this, "this code can't be run by "
-              + agentClassDescription(agentClass) +
-              ", only " + agentClassDescription(allowedAgentClasses.get(0)));
-    } else {
-      throw new EngineException
-          (context, this, "this code can't be run by "
-              + agentClassDescription(agentClass));
-    }
   }
 
   protected static String agentClassDescription(AgentKind agentKind) {
@@ -542,7 +503,7 @@ public abstract strictfp class Instruction
   public void copyFieldsFrom(Instruction sourceInstr) {
     this.workspace = sourceInstr.workspace;
     this.world = sourceInstr.world;
-    this.token = sourceInstr.token;
+    this.token_$eq(sourceInstr.token());
   }
 
   // overridden by GeneratedInstruction

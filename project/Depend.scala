@@ -48,7 +48,7 @@ object Depend {
       "core/prim" -> List("core"),
       "core/model" -> List("core"),
       "editor" -> List("core"),
-      "generator" -> List("prim","prim/dead","prim/threed"),
+      "generate" -> List("prim","prim/dead","prim/threed"),
       "generate" -> List("prim"), // for headless
       "gl/render" -> List("shape"),
       "gl/view" -> List("gl/render","window"),
@@ -139,7 +139,7 @@ check [gl.render] independentOf [Sun-Swing] [bad-AWT]
 [JOGL] = net.java.games.* com.jogamp.opengl.*
 check [JOGL-free-zone] independentOf [JOGL]
 
-[ASM-free-zone] = org.nlogo.* excluding [generator] [generate]
+[ASM-free-zone] = org.nlogo.* excluding [generate]
 check [ASM-free-zone] independentOf org.objectweb.*
 
 check org.nlogo.* independentOf com.wolfram.*

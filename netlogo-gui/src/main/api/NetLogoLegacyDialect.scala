@@ -3,7 +3,7 @@
 package org.nlogo.api
 
 import org.nlogo.core.{ AgentVariableSet, DefaultTokenMapper, Dialect, NetLogoCore, Resource,
-  TokenMapperInterface => CoreTokenMapperInterface, Command => CoreCommand, Instruction => CoreInstruction, Reporter => CoreReporter, Syntax => CoreSyntax }
+  TokenMapperInterface => CoreTokenMapperInterface, Command => CoreCommand, Instruction => CoreInstruction, Reporter => CoreReporter, Syntax }
 
 object NetLogoLegacyDialect extends Dialect {
   override val is3D           = false
@@ -16,9 +16,9 @@ object NetLogoLegacyDialect extends Dialect {
   override val tokenMapper    = NetLogoLegacyDialectTokenMapper
 
   case class _magicopen(name: Option[String]) extends CoreCommand {
-    def syntax = CoreSyntax.commandSyntax(
+    def syntax = Syntax.commandSyntax(
       agentClassString = "O---",
-      right = name.map(_ => List()).getOrElse(List(CoreSyntax.StringType)))
+      right = name.map(_ => List()).getOrElse(List(Syntax.StringType)))
   }
 }
 

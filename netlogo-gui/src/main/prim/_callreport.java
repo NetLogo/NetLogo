@@ -27,6 +27,11 @@ public final strictfp class _callreport
   }
 
   @Override
+  public int returnType() {
+    return procedure.syntax().ret();
+  }
+
+  @Override
   public org.nlogo.core.Syntax syntax() {
     return procedure.syntax();
   }

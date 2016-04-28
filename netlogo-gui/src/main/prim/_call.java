@@ -26,6 +26,11 @@ public final strictfp class _call
   }
 
   @Override
+  public int returnType() {
+    return Syntax.VoidType();
+  }
+
+  @Override
   public org.nlogo.core.Syntax syntax() {
     return procedure.syntax();
   }
