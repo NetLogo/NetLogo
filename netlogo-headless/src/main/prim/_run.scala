@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.prim.etc
+package org.nlogo.prim
 
 import org.nlogo.core.{ CompilerException, Syntax }
 import org.nlogo.nvm.{ Activation, ArgumentTypeException, Command,
