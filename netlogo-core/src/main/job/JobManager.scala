@@ -3,8 +3,9 @@
 package org.nlogo.job
 
 import org.nlogo.nvm.{ExclusiveJob, ConcurrentJob, Procedure, Job, JobManagerOwner}
-import org.nlogo.api.{LogoException, JobOwner}
-import org.nlogo.agent.{Agent, Observer, Turtle, Link, AgentSet, World}
+import org.nlogo.core.AgentKind
+import org.nlogo.api.{JobOwner, LogoException}
+import org.nlogo.agent.{Agent, Turtle, Link, AgentSet, World}
 import java.util.List
 import org.nlogo.api.Exceptions.ignoring
 import collection.JavaConverters._
@@ -16,7 +17,7 @@ class JobManager(jobManagerOwner: JobManagerOwner,
 
   /// misc public methods
   def isInterrupted = thread.isInterrupted()
-  def interrupt() = thread.interrupt()
+  def interrupt() { thread.interrupt() }
   @throws(classOf[InterruptedException])
   def die() {thread.die()}
   def timeToRunSecondaryJobs() { thread.isTimeToRunSecondaryJobs = true }
@@ -103,7 +104,7 @@ class JobManager(jobManagerOwner: JobManagerOwner,
   // this is for the resize-world primitive - ST 4/6/09
   def haltNonObserverJobs() {
     val goners = thread.primaryJobs.synchronized {
-      thread.primaryJobs.asScala.filter {j => j != null && j.agentset.`type` != classOf[Observer]}
+      thread.primaryJobs.asScala.filter {j => j != null && j.agentset.kind != AgentKind.Observer}
     }.asJava
     finishJobs(goners, null)
     waitForFinishedJobs(goners)
@@ -154,7 +155,7 @@ class JobManager(jobManagerOwner: JobManagerOwner,
       thread.isTimeToRunSecondaryJobs = true
       ignoring(classOf[InterruptedException]) { job.synchronized {job.wait(50)} }
     }
-    if (job.result.isInstanceOf[Exception] && ! job.result.isInstanceOf[LogoException])
+    if (job.result.isInstanceOf[Exception] && !job.result.isInstanceOf[LogoException])
       throw job.result.asInstanceOf[Exception]
   }
 

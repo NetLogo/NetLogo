@@ -19,7 +19,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
   val workspace = supervisor.workspace
   private val totalRuns = protocol.countRuns
   private val progressArea = new JTextArea(10 min (protocol.valueSets.size + 3), 0)
-  private val timer = new Timer(PeriodicUpdateDelay.PERIODIC_UPDATE_DELAY, periodicUpdateAction)
+  private val timer = new Timer(PeriodicUpdateDelay.DelayInMilliseconds, periodicUpdateAction)
 
   private var updatePlots = true
   private var started = 0L
