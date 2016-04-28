@@ -190,7 +190,7 @@ class Tabs(val workspace: GUIWorkspace,
       case printable: org.nlogo.swing.Printable =>
         try org.nlogo.swing.PrinterManager.print(printable, workspace.modelNameForDisplay)
         catch {
-          case abortEx: java.awt.print.PrinterAbortException => org.nlogo.util.Exceptions.ignore(abortEx)
+          case abortEx: java.awt.print.PrinterAbortException => org.nlogo.api.Exceptions.ignore(abortEx)
         }
     }
   }

@@ -12,7 +12,7 @@ public strictfp class PeriodicUpdater
   private final JobManagerInterface jobManager;
 
   public PeriodicUpdater(JobManagerInterface jobManager) {
-    super(PeriodicUpdateDelay.PERIODIC_UPDATE_DELAY(), null);
+    super(PeriodicUpdateDelay.DelayInMilliseconds(), null);
     this.jobManager = jobManager;
     addActionListener(this);
   }

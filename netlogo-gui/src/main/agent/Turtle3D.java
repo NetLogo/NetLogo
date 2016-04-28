@@ -915,12 +915,12 @@ public final strictfp class Turtle3D
       // an agent to itself, or to an agent at the exact same position.
       // Since face is nice, it just ignores the exception and doesn't change
       // the callers heading. - AZS 6/22/05
-      org.nlogo.util.Exceptions.ignore(ex);
+      org.nlogo.api.Exceptions.ignore(ex);
     }
     try {
       newPitch = world.protractor().towardsPitch(this, x, y, z, wrap);
     } catch (AgentException ex) {
-      org.nlogo.util.Exceptions.ignore(ex);
+      org.nlogo.api.Exceptions.ignore(ex);
     }
 
     headingPitchAndRoll(newHeading, newPitch, roll());

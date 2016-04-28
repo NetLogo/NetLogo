@@ -44,7 +44,7 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetIn
       // chew all the CPU, so let's sleep for a little while
       // - ST 3/29/05
       try messagesList.synchronized{ messagesList.wait( 50 ) }
-      catch{ case ex:InterruptedException => org.nlogo.util.Exceptions.ignore( ex ) }
+      catch{ case ex:InterruptedException => org.nlogo.api.Exceptions.ignore( ex ) }
       !messagesList.isEmpty
     }
   }

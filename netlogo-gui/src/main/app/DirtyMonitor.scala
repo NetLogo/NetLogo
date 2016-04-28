@@ -62,7 +62,7 @@ with ModelSavedEvent.Handler
         // not sure what the right thing to do here is we probably
         // don't want to be telling the user all the time that they
         // the auto save failed. ev 8/22/06
-        org.nlogo.util.Exceptions.ignore(ex)
+        org.nlogo.api.Exceptions.ignore(ex)
     }
   }
 

@@ -65,7 +65,7 @@ class ClientView(clientPanel: ClientPanel) extends Widget with ViewWidgetInterfa
           renderer.resetCache(patchSize)
           _displayOn=true
         }
-        catch {case e: java.io.IOException => org.nlogo.util.Exceptions.handle(e)}
+        catch {case e: java.io.IOException => org.nlogo.api.Exceptions.handle(e)}
         repaint()
       }
     }

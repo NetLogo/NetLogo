@@ -150,7 +150,7 @@ strictfp class AggregateModelEditor
       f.invalidate();
     } catch (ClassCastException ex) {
       // if it's not editable, do nothing
-      org.nlogo.util.Exceptions.ignore(ex);
+      org.nlogo.api.Exceptions.ignore(ex);
     }
   }
 

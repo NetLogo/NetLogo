@@ -81,15 +81,15 @@ class DiscoveryListener extends Thread {
           multicastSocket.receive(packet)
           notifyListeners(DiscoveryMessage.deserialize(packet.getAddress.getHostName, packet.getData))
         }
-        catch {case ex: IOException => org.nlogo.util.Exceptions.ignore(ex)}
+        catch {case ex: IOException => org.nlogo.api.Exceptions.ignore(ex)}
       }
       multicastSocket.leaveGroup(group)
     }
     catch {
       // must be in an applet, so ignore - ST 8/17/11
-      case ex: java.security.AccessControlException => org.nlogo.util.Exceptions.ignore(ex)
+      case ex: java.security.AccessControlException => org.nlogo.api.Exceptions.ignore(ex)
       // Im not sure how we should handle this...
-      case ex: IOException => org.nlogo.util.Exceptions.ignore(ex)
+      case ex: IOException => org.nlogo.api.Exceptions.ignore(ex)
     }
 
     if (multicastSocket != null) multicastSocket.close()

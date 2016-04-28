@@ -938,7 +938,7 @@ public strictfp class WidgetWrapper
                               (widget.getDefaultExportName()));
                   widget().export(exportPath);
                 } catch (org.nlogo.awt.UserCancelException uce) {
-                  org.nlogo.util.Exceptions.ignore(uce);
+                  org.nlogo.api.Exceptions.ignore(uce);
                 }
               }
             });

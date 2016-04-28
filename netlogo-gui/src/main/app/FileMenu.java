@@ -93,7 +93,7 @@ public strictfp class FileMenu
       try {
         action();
       } catch (UserCancelException ex) {
-        org.nlogo.util.Exceptions.ignore(ex);
+        org.nlogo.api.Exceptions.ignore(ex);
       } catch (java.io.IOException ex) {
         javax.swing.JOptionPane.showMessageDialog
             (FileMenu.this, ex.getMessage(),
@@ -115,7 +115,7 @@ public strictfp class FileMenu
       try {
         action();
       } catch (UserCancelException ex) {
-        org.nlogo.util.Exceptions.ignore(ex);
+        org.nlogo.api.Exceptions.ignore(ex);
       } catch (java.io.IOException ex) {
         javax.swing.JOptionPane.showMessageDialog
             (FileMenu.this, ex.getMessage(),
@@ -622,7 +622,7 @@ private class SaveModelingCommonsAction extends FileMenuAction {
       try {
         quit();
       } catch (UserCancelException ex) {
-        org.nlogo.util.Exceptions.ignore(ex);
+        org.nlogo.api.Exceptions.ignore(ex);
       }
     }
   }
@@ -698,7 +698,7 @@ private class SaveModelingCommonsAction extends FileMenuAction {
       }
       openFromSource(source, path, "Loading...", modelType);
     } catch (UserCancelException ex) {
-      org.nlogo.util.Exceptions.ignore(ex);
+      org.nlogo.api.Exceptions.ignore(ex);
     }
   }
 

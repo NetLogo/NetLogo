@@ -5,7 +5,7 @@ package org.nlogo.app
 // This is a little piece of ModelsLibraryDialog I wanted to write in Scala without having to
 // convert the whole thing to Scala. - ST 2/27/11
 
-import org.nlogo.util.Exceptions.handling
+import org.nlogo.api.Exceptions.handling
 import org.nlogo.workspace.ModelsLibrary
 import java.io.File
 import collection.JavaConverters._

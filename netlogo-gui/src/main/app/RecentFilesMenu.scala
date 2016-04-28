@@ -124,7 +124,7 @@ class RecentFilesMenu(app: App, fileMenu: FileMenu)
       fileMenu.openFromPath(modelEntry.path, modelEntry.modelType)
     } catch {
       case ex: org.nlogo.awt.UserCancelException =>
-        org.nlogo.util.Exceptions.ignore(ex)
+        org.nlogo.api.Exceptions.ignore(ex)
       case ex: java.io.IOException => {
         JOptionPane.showMessageDialog(
           RecentFilesMenu.this,

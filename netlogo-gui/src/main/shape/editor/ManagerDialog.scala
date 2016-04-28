@@ -139,7 +139,7 @@ abstract class ManagerDialog(parentFrame: java.awt.Frame,
       else importDialog = new ImportDialog(parentFrame, this, shapesV, path, this)
     }
     catch {
-      case e: org.nlogo.awt.UserCancelException => org.nlogo.util.Exceptions.ignore(e)
+      case e: org.nlogo.awt.UserCancelException => org.nlogo.api.Exceptions.ignore(e)
     }
     shapesList.requestFocus()
   }

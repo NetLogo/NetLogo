@@ -5,7 +5,7 @@ package org.nlogo.job
 import org.nlogo.api.{ JobOwner, LogoException, PeriodicUpdateDelay }
 import org.nlogo.nvm.{ ConcurrentJob, Job, JobManagerOwner }
 import java.util.{ Collections => JCollections, List => JList, ArrayList => JArrayList }
-import org.nlogo.util.Exceptions.{ ignoring, handling }
+import org.nlogo.api.Exceptions.{ ignoring, handling }
 
 object JobThread {
 
@@ -15,12 +15,7 @@ object JobThread {
 
   // allow override through property
   def stackSize: Int =
-    try java.lang.Integer.getInteger("org.nlogo.stackSize", defaultStackSize)
-    // can't check arbitrary properties from applets... - ST 10/4/04, 1/31/05
-    catch {
-      case _: java.security.AccessControlException =>
-        defaultStackSize
-    }
+    java.lang.Integer.getInteger("org.nlogo.stackSize", defaultStackSize)
 }
 
 class JobThread(manager: JobManager, owner: JobManagerOwner, lock: AnyRef)
@@ -50,20 +45,15 @@ extends Thread(null, null, "JobThread", JobThread.stackSize * 1024 * 1024) {
 
   @throws(classOf[InterruptedException])
   def die() {
-    // Ignore NPE because sometimes setPriority throws it for no good reason.
-    // It was happening to me when using the controlling API with multiple HeadlessWorkspaces,
-    // on both Sun Java 1.5.0_07 and IBM Java 1.5.0, both on 64 bit linux machines.  It wasn't
-    // happening to me on a 32-bit Java 1.6 computer.  It seems like it might be related to
-    // Sun's Java bug #4515956, though it looks like that was fixed before 1.5 so I don't know.
-    // Anyway, I don't think there's any harm in ignoring this exception, since no one else was
-    // being affected by it anyway.   ~Forrest (8/11/2009)
-    // ignore ACE because we might get this during applet shutdown on Mac OS X 10.3 ev 12/4/07
-    ignoring(classOf[NullPointerException], classOf[java.security.AccessControlException]) {
-      // I don't understand why this line should be necessary, but without it, this method runs
-      // very slowly (a noticeable fraction of a second) on Windows.  Or maybe it's not a Windows
-      // thing, but a single-CPU thing...? - ST 1/19/05
-      setPriority(Thread.MAX_PRIORITY)
-    }
+    // In the days of applets, this used to ignore NPE and AccessControlException
+    // when thrown by `setPriority`. In the modern Java 8 world
+    // (where applets are dead), I think it would be better to go ahead
+    // and error if this fails, since it indicates a serious
+    // issue we should probably account for - RG 4/28/16
+    // I don't understand why this line should be necessary, but without it, this method runs
+    // very slowly (a noticeable fraction of a second) on Windows.  Or maybe it's not a Windows
+    // thing, but a single-CPU thing...? - ST 1/19/05
+    setPriority(Thread.MAX_PRIORITY)
     dying = true
     newJobsCondition.synchronized {
       newJobsCondition.notifyAll()
@@ -84,7 +74,7 @@ extends Thread(null, null, "JobThread", JobThread.stackSize * 1024 * 1024) {
             ignoring(classOf[InterruptedException]) {
               // only sleep for a short time, since there may still
               // be secondary jobs that need attention - ST 8/10/03
-              newJobsCondition.wait(PeriodicUpdateDelay.PERIODIC_UPDATE_DELAY)
+              newJobsCondition.wait(PeriodicUpdateDelay.DelayInMilliseconds)
             } } } }
   }
 
@@ -96,7 +86,7 @@ extends Thread(null, null, "JobThread", JobThread.stackSize * 1024 * 1024) {
       // tells us to; we want to take the time they take to run into account too, so we don't hog
       // the CPU; hence the lastSecondaryRunDuration variable - ST 8/10/03
       if (now - lastSecondaryRun >
-          PeriodicUpdateDelay.PERIODIC_UPDATE_DELAY / 2 + lastSecondaryRunDuration) {
+          PeriodicUpdateDelay.DelayInMilliseconds / 2 + lastSecondaryRunDuration) {
         compact(secondaryJobs)
         runSecondaryJobs()
         isTimeToRunSecondaryJobs = false

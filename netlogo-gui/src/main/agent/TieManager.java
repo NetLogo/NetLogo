@@ -107,7 +107,7 @@ public strictfp class TieManager {
           // topological reasons.  In such cases we want to
           // keep the turtle where it is at and translate
           // all the other tied turtles. -- CLB
-          org.nlogo.util.Exceptions.ignore(ex);
+          org.nlogo.api.Exceptions.ignore(ex);
         }
       }
     } finally {
@@ -232,7 +232,7 @@ public strictfp class TieManager {
           // topological reasons.  In such cases we want to
           // keep the turtle where it is at and translate
           // all the other tied turtles. -- CLB
-          org.nlogo.util.Exceptions.ignore(ex);
+          org.nlogo.api.Exceptions.ignore(ex);
         }
       }
     } finally {

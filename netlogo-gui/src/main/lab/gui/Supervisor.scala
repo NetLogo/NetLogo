@@ -42,7 +42,7 @@ class Supervisor(dialog: java.awt.Dialog,
             System.err.println("Run #" + runNumber + ", JAVA EXCEPTION: " + e.getMessage)
             e.printStackTrace(System.err)
         }
-        org.nlogo.util.Exceptions.handle(e)
+        org.nlogo.api.Exceptions.handle(e)
       }}
   def nextWorkspace = queue.synchronized { queue.dequeue() }
   val runnable = new Runnable { override def run() {
@@ -115,7 +115,7 @@ class Supervisor(dialog: java.awt.Dialog,
     }
     catch {
       case e: InterruptedException => // ignore
-      case e: Throwable            => org.nlogo.util.Exceptions.handle(e)
+      case e: Throwable            => org.nlogo.api.Exceptions.handle(e)
     }
     finally { bailOut() }
   }
@@ -152,7 +152,7 @@ class Supervisor(dialog: java.awt.Dialog,
           workspace.getFrame, "Error During Experiment",
           "Experiment aborted due to I/O error:\n" + ex.getMessage,
           Array(I18N.gui.get("common.buttons.ok")))
-      case _ => org.nlogo.util.Exceptions.handle(t)
+      case _ => org.nlogo.api.Exceptions.handle(t)
     }
   }
 }

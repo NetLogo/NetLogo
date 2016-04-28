@@ -53,8 +53,8 @@ class HubNetClientEditor(workspace: GUIWorkspace,
         Iterator.continually(br.readLine()).takeWhile(_ != null).toList ::: List("")
       }
       catch {
-        case ex: RuntimeException => org.nlogo.util.Exceptions.handle(ex); Nil
-        case ex: IOException => org.nlogo.util.Exceptions.handle(ex); Nil
+        case ex: RuntimeException => org.nlogo.api.Exceptions.handle(ex); Nil
+        case ex: IOException => org.nlogo.api.Exceptions.handle(ex); Nil
       }
     }
     widgets.map(widgetToStrings).flatten

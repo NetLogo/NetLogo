@@ -344,7 +344,7 @@ public abstract strictfp class AbstractWorkspace
             "", text, false, false), true);
       }
     } catch (LogoException e) {
-      org.nlogo.util.Exceptions.handle(e);
+      org.nlogo.api.Exceptions.handle(e);
     }
   }
 
@@ -448,7 +448,7 @@ public abstract strictfp class AbstractWorkspace
       try {
         file.close(false);
       } catch (java.io.IOException ex2) {
-        org.nlogo.util.Exceptions.ignore(ex2);
+        org.nlogo.api.Exceptions.ignore(ex2);
       }
     }
   }

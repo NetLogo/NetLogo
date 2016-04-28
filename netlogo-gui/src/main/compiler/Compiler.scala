@@ -156,7 +156,7 @@ class Compiler(dialect: Dialect) extends CompilerInterface {
       try result.getCanonicalPath
       catch {
         case ex:java.io.IOException =>
-          org.nlogo.util.Exceptions.ignore(ex)
+          org.nlogo.api.Exceptions.ignore(ex)
           result.getPath
       }
     }

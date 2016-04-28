@@ -116,7 +116,7 @@ class CommandCenter(workspace: org.nlogo.workspace.AbstractWorkspace,
               output, I18N.gui.get("tabs.run.commandcenter.exporting"), FileDialog.SAVE,
               workspace.guessExportName("command center output.txt")))
           catch {
-            case uce: org.nlogo.awt.UserCancelException => org.nlogo.util.Exceptions.ignore(uce)
+            case uce: org.nlogo.awt.UserCancelException => org.nlogo.api.Exceptions.ignore(uce)
           }
         )
       })

@@ -79,7 +79,7 @@ with org.nlogo.window.Events.CompiledEvent.Handler
       }
       catch {
         case ex: org.nlogo.awt.UserCancelException =>
-          org.nlogo.util.Exceptions.ignore(ex)
+          org.nlogo.api.Exceptions.ignore(ex)
       }
     }
   }

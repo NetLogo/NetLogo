@@ -5,7 +5,7 @@ package org.nlogo.log
 import java.util.zip.ZipOutputStream
 import java.io.FileOutputStream
 import org.nlogo.api.FileIO.file2String
-import org.nlogo.util.Exceptions.ignoring
+import org.nlogo.api.Exceptions.ignoring
 
 object Files {
 

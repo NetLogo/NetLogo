@@ -181,8 +181,8 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast) ext
       catch {
         case ex: SliderConstraint.ConstraintRuntimeException =>
           setConstraintError(ex.spec.fieldName, ex)
-          org.nlogo.util.Exceptions.handle(ex)
-        case ex: LogoException => org.nlogo.util.Exceptions.handle(ex)
+          org.nlogo.api.Exceptions.handle(ex)
+        case ex: LogoException => org.nlogo.api.Exceptions.handle(ex)
         false
       }
     }

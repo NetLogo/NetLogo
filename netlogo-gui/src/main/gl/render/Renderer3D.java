@@ -217,7 +217,7 @@ public class Renderer3D
               wrapY(y + w.followOffsetY()),
               wrapZ(z + w.followOffsetZ())));
         } catch (AgentException e) {
-          org.nlogo.util.Exceptions.ignore(e);
+          org.nlogo.api.Exceptions.ignore(e);
         }
       }
       xi += xinc;

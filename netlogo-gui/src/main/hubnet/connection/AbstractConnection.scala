@@ -5,7 +5,7 @@ package org.nlogo.hubnet.connection
 import java.io._
 import java.util.concurrent.TimeUnit
 import java.net.SocketException
-import org.nlogo.util.Exceptions
+import org.nlogo.api.Exceptions
 
 abstract class AbstractConnection(name: String, connectionStreams: Streamable) extends Thread(name) {
   private val writingThread = new WritingThread(name)

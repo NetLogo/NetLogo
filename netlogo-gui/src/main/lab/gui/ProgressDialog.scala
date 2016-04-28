@@ -19,7 +19,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
   val workspace = supervisor.workspace
   private val totalRuns = protocol.countRuns
   private val progressArea = new JTextArea(10 min (protocol.valueSets.size + 3), 0)
-  private val timer = new Timer(PeriodicUpdateDelay.PERIODIC_UPDATE_DELAY, periodicUpdateAction)
+  private val timer = new Timer(PeriodicUpdateDelay.DelayInMilliseconds, periodicUpdateAction)
 
   private var updatePlots = true
   private var started = 0L
@@ -176,7 +176,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
     catch {
       case ex: InterruptedException =>
         // we may get interrupted if the user aborts the run - ST 10/30/03
-        org.nlogo.util.Exceptions.ignore(ex)
+        org.nlogo.api.Exceptions.ignore(ex)
     }
 
   private def resetPlot() {
