@@ -7,25 +7,14 @@ import org.nlogo.agent.AgentSet;
 import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoListBuilder;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _of
     extends Reporter {
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    return Syntax.reporterSyntax
-        (Syntax.ReporterBlockType(),  // input on left
-            new int[]{Syntax.AgentType() | Syntax.AgentsetType()}, // inputs on right
-            Syntax.WildcardType(), // return type
-            org.nlogo.api.Syntax.NormalPrecedence() + 1,
-            true, // right associative
-            "OTPL",
-            "?"    // takes reporter block of unknown agent type
-        );
-  }
+
 
   @Override
   public Object report(final Context context) throws LogoException {

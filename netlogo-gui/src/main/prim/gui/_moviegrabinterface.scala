@@ -2,13 +2,12 @@
 
 package org.nlogo.prim.gui
 
-import org.nlogo.api.Syntax
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Command, Context, EngineException }
 import org.nlogo.window.GUIWorkspace
 
 class _moviegrabinterface extends Command {
-  override def syntax =
-    Syntax.commandSyntax
+
   override def perform(context: Context) {
     if (world.program.dialect.is3D)
       throw new EngineException(

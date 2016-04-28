@@ -2,15 +2,13 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api, api.{ Syntax, LogoListBuilder, Color },
+import org.nlogo.api, api.{ LogoListBuilder, Color },
   Color.convertGoodHSBListToDumbOldHSBFormat
-import org.nlogo.core.LogoList
+import org.nlogo.core.{ LogoList, Syntax }
 import org.nlogo.nvm.{ Context, Pure, Reporter }
 
 class _extracthsb extends Reporter with Pure {
-  override def syntax =
-    Syntax.reporterSyntax(Array(Syntax.NumberType | Syntax.ListType),
-                          Syntax.ListType)
+
   override def report(context: Context): LogoList =
     report_1(context, args(0).report(context))
 
@@ -41,9 +39,7 @@ class _extracthsb extends Reporter with Pure {
 }
 
 class _extracthsbold extends Reporter with Pure {
-  override def syntax =
-    Syntax.reporterSyntax(Array(Syntax.NumberType | Syntax.ListType),
-                          Syntax.ListType)
+
   override def report(context: Context): LogoList =
     report_1(context, args(0).report(context))
 

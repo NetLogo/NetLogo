@@ -8,7 +8,7 @@ import org.nlogo.agent.ArrayAgentSet;
 import org.nlogo.agent.Observer;
 import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
@@ -21,13 +21,7 @@ public final strictfp class _ask
     this.switches = true;
   }
 
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    return Syntax.commandSyntax
-        (new int[]{Syntax.AgentsetType() | Syntax.AgentType(),
-            Syntax.CommandBlockType()},
-            "OTPL", "?");
-  }
+
 
   @Override
   public String toString() {

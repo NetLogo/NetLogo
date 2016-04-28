@@ -4,18 +4,13 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _extractrgb
     extends Reporter {
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    int[] right = {Syntax.NumberType()};
-    int ret = Syntax.ListType();
-    return Syntax.reporterSyntax(right, ret);
-  }
+
 
   @Override
   public Object report(final org.nlogo.nvm.Context context) throws LogoException {

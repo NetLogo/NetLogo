@@ -6,7 +6,7 @@ import org.nlogo.agent.LogoHashObject;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
 import org.nlogo.api.LogoListBuilder;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.MutableInteger;
 import org.nlogo.nvm.Pure;
 import org.nlogo.nvm.Reporter;
@@ -55,10 +55,5 @@ public final strictfp class _modes
     return modes.toLogoList();
   }
 
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    int[] right = {Syntax.ListType()};
-    int ret = Syntax.ListType();
-    return Syntax.reporterSyntax(right, ret);
-  }
+
 }

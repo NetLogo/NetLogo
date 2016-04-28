@@ -7,7 +7,7 @@ import org.nlogo.api.AgentException;
 import org.nlogo.api.Dump;
 import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.api.TypeNames;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
@@ -19,12 +19,7 @@ public final strictfp class _diffuse
     this.switches = true;
   }
 
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    return Syntax.commandSyntax
-        (new int[]{Syntax.ReferenceType(), Syntax.NumberType()},
-            "O---");
-  }
+
 
   @Override
   public String toString() {

@@ -4,7 +4,7 @@ package org.nlogo.prim;
 
 import org.nlogo.api.Dump;
 import org.nlogo.core.LogoList;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Pure;
 import org.nlogo.nvm.Reporter;
 
@@ -16,10 +16,7 @@ public final strictfp class _constlist
     this.value = value;
   }
 
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    return Syntax.reporterSyntax(Syntax.ListType());
-  }
+
 
   @Override
   public LogoList report(final org.nlogo.nvm.Context context) {

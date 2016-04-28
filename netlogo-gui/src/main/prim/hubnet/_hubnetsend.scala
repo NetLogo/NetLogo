@@ -3,16 +3,13 @@
 package org.nlogo.prim.hubnet
 
 import java.io.{ Serializable => JSerializable }
-import org.nlogo.api.{ Dump, Syntax, TypeNames }
+import org.nlogo.api.{ Dump, TypeNames }
+import org.nlogo.core.Syntax
 import org.nlogo.core.LogoList
 import org.nlogo.nvm.{ ArgumentTypeException, Command, Context, EngineException }
 
 class _hubnetsend extends Command {
-  override def syntax =
-    Syntax.commandSyntax(
-      Array(Syntax.StringType | Syntax.ListType,
-            Syntax.StringType,
-            Syntax.WildcardType))
+
   override def perform(context: Context) {
     val nodesArg = args(0).report(context)
     val tag = argEvalString(context, 1)

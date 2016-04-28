@@ -4,7 +4,7 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
@@ -16,11 +16,7 @@ public final strictfp class _facenowrap
   }
 
   // turtle only since face for the observer is always nowrap -- AZS 4/12/05
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    return Syntax.commandSyntax
-        (new int[]{Syntax.AgentType()}, "-T--");
-  }
+
 
   @Override
   public void perform(final Context context)

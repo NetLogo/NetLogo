@@ -2,7 +2,7 @@
 
 package org.nlogo.prim;
 
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Pure;
 import org.nlogo.nvm.Reporter;
@@ -17,10 +17,7 @@ public final strictfp class _constboolean
     primVal = value.booleanValue();
   }
 
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    return Syntax.reporterSyntax(Syntax.BooleanType());
-  }
+
 
   @Override
   public String toString() {

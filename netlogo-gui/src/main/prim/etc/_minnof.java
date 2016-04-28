@@ -6,7 +6,7 @@ import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
 
@@ -16,12 +16,7 @@ import java.util.TreeMap;
 
 public final strictfp class _minnof
     extends Reporter {
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    int[] right = {Syntax.NumberType(), Syntax.AgentsetType(), Syntax.NumberBlockType()};
-    int ret = Syntax.AgentsetType();
-    return Syntax.reporterSyntax(right, ret, "OTPL", "?");
-  }
+
 
   @Override
   public Object report(final org.nlogo.nvm.Context context) throws LogoException {

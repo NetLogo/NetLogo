@@ -5,7 +5,7 @@ package org.nlogo.prim;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _outlinkneighbor
@@ -20,13 +20,7 @@ public final strictfp class _outlinkneighbor
     this.breedName = breedName;
   }
 
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    int[] right = {Syntax.AgentType()};
-    int ret = Syntax.BooleanType();
-    return Syntax.reporterSyntax
-        (right, ret, "-T--");
-  }
+
 
   @Override
   public String toString() {

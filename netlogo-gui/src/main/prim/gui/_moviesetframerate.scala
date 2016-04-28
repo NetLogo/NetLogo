@@ -2,14 +2,14 @@
 
 package org.nlogo.prim.gui
 
-import org.nlogo.api.{ CommandRunnable, Syntax }
+import org.nlogo.api.{ CommandRunnable}
+import org.nlogo.core.Syntax
 import org.nlogo.awt.MovieEncoder
 import org.nlogo.nvm.{ Command, Context, EngineException }
 import org.nlogo.window.GUIWorkspace
 
 class _moviesetframerate extends Command {
-  override def syntax =
-    Syntax.commandSyntax(Array(Syntax.NumberType))
+
   override def perform(context: Context) {
     val rate = argEvalDoubleValue(context, 0).toFloat
     workspace match {

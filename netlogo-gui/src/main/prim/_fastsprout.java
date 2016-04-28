@@ -4,7 +4,7 @@ package org.nlogo.prim;
 
 import org.nlogo.core.AgentKindJ;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 
 // replaces _sprout when initialization block is empty
@@ -18,12 +18,7 @@ public final strictfp class _fastsprout
     this.switches = true;
   }
 
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    return Syntax.commandSyntax
-        (new int[]{Syntax.NumberType()},
-            "--P-");
-  }
+
 
   @Override
   public String toString() {

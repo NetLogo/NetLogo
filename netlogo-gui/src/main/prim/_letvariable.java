@@ -3,7 +3,7 @@
 package org.nlogo.prim;
 
 import org.nlogo.core.Let;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 
@@ -17,10 +17,7 @@ public final strictfp class _letvariable
     this.name = name;
   }
 
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    return Syntax.reporterSyntax(Syntax.WildcardType());
-  }
+
 
   @Override
   public String toString() {

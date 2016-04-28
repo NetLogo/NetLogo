@@ -2,7 +2,7 @@
 
 package org.nlogo.prim;
 
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.MutableLong;
 
@@ -15,10 +15,7 @@ public final strictfp class _repeatlocalinternal
     this.offset = offset;
   }
 
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    return Syntax.commandSyntax();
-  }
+
 
   @Override
   public String toString() {

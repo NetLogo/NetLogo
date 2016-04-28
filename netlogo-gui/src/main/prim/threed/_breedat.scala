@@ -4,16 +4,13 @@ package org.nlogo.prim.threed
 
 import org.nlogo.core.AgentKind
 import org.nlogo.agent.{ Agent3D, ArrayAgentSet, Turtle }
-import org.nlogo.api.{ AgentException, Syntax }
+import org.nlogo.api.{ AgentException}
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Context, Reporter }
 
 class _breedat(breedName: String) extends Reporter {
   def this() = this(null)
-  override def syntax =
-    Syntax.reporterSyntax(Array(Syntax.NumberType,
-                                Syntax.NumberType,
-                                Syntax.NumberType),
-                          Syntax.TurtlesetType, "-TP-")
+
   override def toString =
     super.toString + ":" + breedName
   override def report(context: Context): ArrayAgentSet = {

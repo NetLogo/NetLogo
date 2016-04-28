@@ -3,7 +3,7 @@
 package org.nlogo.prim;
 
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 
@@ -16,13 +16,7 @@ public final strictfp class _and
     return Syntax.BooleanType();
   }
 
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    return Syntax.reporterSyntax(Syntax.BooleanType(),
-        new int[]{Syntax.BooleanType()},
-        Syntax.BooleanType(),
-        org.nlogo.api.Syntax.NormalPrecedence() - 6);
-  }
+
 
   @Override
   public Object report(final Context context) throws LogoException {

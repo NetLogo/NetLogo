@@ -2,18 +2,14 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api.Syntax
+import org.nlogo.core.Syntax
 import org.nlogo.core.CompilerException
 import org.nlogo.nvm.{ Activation, ArgumentTypeException, Command, CommandTask, Context,
                        EngineException, NonLocalExit, Procedure }
 
 class _run extends Command {
 
-  override def syntax =
-    Syntax.commandSyntax(
-      Array(Syntax.StringType | Syntax.CommandTaskType,
-            Syntax.RepeatableType | Syntax.WildcardType),
-      1)
+
 
   override def perform(context: Context) {
     args(0).report(context) match {

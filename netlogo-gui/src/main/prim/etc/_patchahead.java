@@ -3,18 +3,13 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _patchahead
     extends Reporter {
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    return Syntax.reporterSyntax
-        (new int[]{Syntax.NumberType()},
-            Syntax.PatchType(), "-T--");
-  }
+
 
   @Override
   public Object report(final Context context)

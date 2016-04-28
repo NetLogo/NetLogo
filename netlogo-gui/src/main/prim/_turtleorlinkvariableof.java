@@ -8,7 +8,7 @@ import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
 import org.nlogo.api.LogoListBuilder;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
@@ -61,12 +61,7 @@ public final strictfp class _turtleorlinkvariableof
     return super.toString() + ":" + varName;
   }
 
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    int[] right = {Syntax.LinkType() | Syntax.LinksetType() | Syntax.TurtleType() | Syntax.TurtlesetType()};
-    int ret = Syntax.WildcardType();
-    return Syntax.reporterSyntax(right, ret);
-  }
+
 
   public Object report_1(final Context context, Object agentOrSet) throws LogoException {
     if (agentOrSet instanceof Agent) {

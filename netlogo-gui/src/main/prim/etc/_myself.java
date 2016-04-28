@@ -6,18 +6,14 @@ import org.nlogo.agent.Agent;
 import org.nlogo.agent.Observer;
 import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _myself
     extends Reporter {
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    return Syntax.reporterSyntax
-        (Syntax.AgentType(), "-TPL");
-  }
+
 
   @Override
   public Object report(final Context context) throws LogoException {

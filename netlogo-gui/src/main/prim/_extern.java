@@ -3,7 +3,7 @@
 package org.nlogo.prim;
 
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
@@ -18,10 +18,7 @@ public final strictfp class _extern
     this.command = command;
   }
 
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    return command.getSyntax();
-  }
+
 
   @Override
   public String toString() {

@@ -3,7 +3,7 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _lput
@@ -15,11 +15,5 @@ public final strictfp class _lput
     return argEvalList(context, 1).lput(obj);
   }
 
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    int[] right = {Syntax.WildcardType(),
-        Syntax.ListType()};
-    int ret = Syntax.ListType();
-    return Syntax.reporterSyntax(right, ret);
-  }
+
 }

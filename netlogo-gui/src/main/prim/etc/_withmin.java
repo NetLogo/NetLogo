@@ -5,7 +5,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 
@@ -14,18 +14,7 @@ import java.util.List;
 
 public final strictfp class _withmin
     extends Reporter {
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    return Syntax.reporterSyntax
-        (Syntax.AgentsetType(),
-            new int[]{Syntax.NumberBlockType()},
-            Syntax.AgentsetType(),
-            org.nlogo.api.Syntax.NormalPrecedence() + 2,
-            false, // left associative
-            "OTPL",
-            "?"    // takes reporter block of unknown agent type
-        );
-  }
+
 
   @Override
   public Object report(final Context context) throws LogoException {

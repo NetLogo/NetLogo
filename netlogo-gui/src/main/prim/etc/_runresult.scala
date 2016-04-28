@@ -2,18 +2,14 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api.{ LogoException, Syntax }
+import org.nlogo.api.{ LogoException}
+import org.nlogo.core.Syntax
 import org.nlogo.core.CompilerException
 import org.nlogo.nvm.{ Activation, ArgumentTypeException, Context, EngineException, Reporter, ReporterTask }
 
 class _runresult extends Reporter {
 
-  override def syntax =
-    Syntax.reporterSyntax(
-      Array(Syntax.StringType | Syntax.ReporterTaskType,
-        Syntax.RepeatableType | Syntax.WildcardType),
-      Syntax.WildcardType,
-      1)
+
 
   override def report(context: Context) =
     args(0).report(context) match {

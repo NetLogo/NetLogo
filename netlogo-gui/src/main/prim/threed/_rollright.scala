@@ -3,12 +3,11 @@
 package org.nlogo.prim.threed
 
 import org.nlogo.agent.Turtle3D
-import org.nlogo.api.Syntax
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Command, Context }
 
 class _rollright extends Command {
-  override def syntax =
-    Syntax.commandSyntax(Array(Syntax.NumberType), "-T--")
+
 
   switches = true
   override def perform(context: Context) {

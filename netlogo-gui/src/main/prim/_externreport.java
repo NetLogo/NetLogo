@@ -3,7 +3,7 @@
 package org.nlogo.prim;
 
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.ExtensionContext;
@@ -17,10 +17,7 @@ public final strictfp class _externreport
     this.reporter = reporter;
   }
 
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    return reporter.getSyntax();
-  }
+
 
   @Override
   public Object report(final Context context)

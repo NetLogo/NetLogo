@@ -3,15 +3,11 @@
 package org.nlogo.prim.hubnet;
 
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 
 public final strictfp class _hubnetclearplot
     extends org.nlogo.nvm.Command {
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    return Syntax.commandSyntax
-        (new int[]{Syntax.StringType()});
-  }
+
 
   @Override
   public void perform(final org.nlogo.nvm.Context context) throws LogoException {

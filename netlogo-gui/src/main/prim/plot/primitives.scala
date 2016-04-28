@@ -2,7 +2,8 @@
 
 package org.nlogo.prim.plot
 
-import org.nlogo.api.{ CommandRunnable, Syntax }
+import org.nlogo.api.{ CommandRunnable}
+import org.nlogo.core.Syntax
 import org.nlogo.core.{ I18N, LogoList }
 import org.nlogo.nvm.{ Command, Context, EngineException, Instruction, Reporter }
 import org.nlogo.plot.PlotManager
@@ -29,14 +30,10 @@ trait Helpers extends Instruction {
 
 abstract class PlotCommand(args: Int*)
 extends Command with Helpers {
-  override def syntax =
-    Syntax.commandSyntax(args.toArray)
 }
 
 abstract class PlotReporter(returnType: Int, args: Int*)
 extends Reporter with Helpers {
-  override def syntax =
-    Syntax.reporterSyntax(args.toArray, returnType)
 }
 
 //

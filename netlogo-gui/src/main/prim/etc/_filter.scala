@@ -2,15 +2,14 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api.{ LogoListBuilder, Syntax }
+import org.nlogo.api.{ LogoListBuilder}
+import org.nlogo.core.Syntax
 import org.nlogo.core.LogoList
 import org.nlogo.nvm.{ ArgumentTypeException, Context, EngineException, Reporter }
 
 class _filter extends Reporter {
 
-  override def syntax =
-    Syntax.reporterSyntax(Array(Syntax.ReporterTaskType, Syntax.ListType),
-      Syntax.ListType)
+
 
   def report(context: Context): LogoList = {
     val task = argEvalReporterTask(context, 0)

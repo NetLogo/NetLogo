@@ -3,18 +3,13 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Pure;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _tan extends Reporter implements Pure {
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    int[] right = {Syntax.NumberType()};
-    int ret = Syntax.NumberType();
-    return Syntax.reporterSyntax(right, ret);
-  }
+
 
   @Override
   public Object report(Context context) throws LogoException {

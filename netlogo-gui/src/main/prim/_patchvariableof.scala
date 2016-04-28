@@ -3,15 +3,13 @@
 package org.nlogo.prim
 
 import org.nlogo.agent.{ Agent, AgentSet }
-import org.nlogo.api.{ AgentException, LogoException, LogoListBuilder, Syntax }
+import org.nlogo.api.{ AgentException, LogoException, LogoListBuilder}
+import org.nlogo.core.Syntax
 import org.nlogo.core.I18N
 import org.nlogo.nvm.{ ArgumentTypeException, Context, EngineException, Reporter }
 
 class _patchvariableof(private[this] val _vn: Int) extends Reporter {
-  override def syntax =
-    Syntax.reporterSyntax(
-      Array[Int](Syntax.TurtleType | Syntax.PatchType | Syntax.TurtlesetType | Syntax.PatchsetType),
-      Syntax.WildcardType)
+
 
   override def toString: String =
     s"${super.toString}:${if (world == null) vn else world.patchesOwnNameAt(vn)}"

@@ -3,7 +3,7 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
@@ -14,10 +14,7 @@ import org.nlogo.nvm.Reporter;
 
 public final strictfp class _boom
     extends Reporter {
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    return Syntax.reporterSyntax(Syntax.WildcardType());
-  }
+
 
   @Override
   public Object report(Context context)

@@ -2,12 +2,11 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api.Syntax
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Context, Reporter }
 
 class _randomxcor extends Reporter {
-  override def syntax =
-    Syntax.reporterSyntax(Syntax.NumberType)
+
   override def report(context: Context) =
     Double.box(report_1(context))
   def report_1(context: Context): Double = {

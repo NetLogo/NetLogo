@@ -3,7 +3,7 @@
 package org.nlogo.prim;
 
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.EngineException;
 
@@ -16,11 +16,7 @@ public final strictfp class _setturtlevariable
     this.switches = true;
   }
 
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    return Syntax.commandSyntax
-        (new int[]{Syntax.WildcardType()}, "-T--");
-  }
+
 
   @Override
   public String toString() {

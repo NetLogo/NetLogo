@@ -2,7 +2,8 @@
 
 package org.nlogo.prim.gui
 
-import org.nlogo.api.{ Dump, ReporterRunnable, Syntax }
+import org.nlogo.api.{ Dump, ReporterRunnable}
+import org.nlogo.core.Syntax
 import org.nlogo.core.I18N
 import org.nlogo.nvm.{ Command, Context }
 import org.nlogo.swing.OptionDialog
@@ -10,8 +11,7 @@ import org.nlogo.window.GUIWorkspace
 
 class _usermessage extends Command {
 
-  def syntax =
-    Syntax.commandSyntax(Array(Syntax.WildcardType))
+
 
   override def perform(context: Context) {
     val message = Dump.logoObject(args(0).report(context))

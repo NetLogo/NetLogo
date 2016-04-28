@@ -4,19 +4,13 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _fput
     extends Reporter
     implements org.nlogo.nvm.Pure {
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    int[] right = {Syntax.WildcardType(),
-        Syntax.ListType()};
-    int ret = Syntax.ListType();
-    return Syntax.reporterSyntax(right, ret);
-  }
+
 
   @Override
   public Object report(final org.nlogo.nvm.Context context) throws LogoException {

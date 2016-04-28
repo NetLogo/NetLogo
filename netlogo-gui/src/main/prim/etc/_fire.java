@@ -4,7 +4,7 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.World;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 
@@ -51,10 +51,7 @@ public final strictfp class _fire
   private static final int FIRE_VAR = Patch.LAST_PREDEFINED_VAR + 1;
   private static final int COUNTS_VAR = Patch.LAST_PREDEFINED_VAR + 2;
 
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    return Syntax.commandSyntax("O---");
-  }
+
 
   @Override
   public void perform(final Context context) {

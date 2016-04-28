@@ -6,15 +6,11 @@ import org.nlogo.core.{ AgentKind, I18N }
 import scala.collection.mutable
 
 import org.nlogo.agent.{ Agent, AgentSet, ArrayAgentSet, Patch, Turtle }
-import org.nlogo.api.Syntax
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ ArgumentTypeException, Context, EngineException, Reporter }
 
 class _breedon(breedName: String) extends Reporter {
-  override def syntax: org.nlogo.core.Syntax =
-    Syntax.reporterSyntax(
-      Array[Int](Syntax.TurtleType | Syntax.PatchType |
-        Syntax.TurtlesetType | Syntax.PatchsetType),
-      Syntax.TurtlesetType)
+
 
   override def toString: String = s"${super.toString}:$breedName"
 

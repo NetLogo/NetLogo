@@ -11,14 +11,6 @@ class _magicopen(_name: Option[String]) extends Command {
 
   switches = true
 
-  def syntax: Syntax = {
-    Syntax.commandSyntax(
-      right = List(Syntax.StringType | Syntax.RepeatableType),
-      agentClassString = "O---",
-      defaultOption = Some(1),
-      minimumOption = Some(0));
-  }
-
   override def perform(context: Context): Unit = {
     val openName = name.getOrElse(argEvalString(context, 0))
     workspace.magicOpen(openName)

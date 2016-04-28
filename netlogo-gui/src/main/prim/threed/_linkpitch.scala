@@ -3,13 +3,11 @@
 package org.nlogo.prim.threed
 
 import org.nlogo.agent.Link
-import org.nlogo.api.Syntax
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Context, Reporter }
 
 class _linkpitch extends Reporter {
-  override def syntax =
-    Syntax.reporterSyntax(
-      Syntax.NumberType, "---L")
+
   override def report(context: Context) = {
     val link = context.agent.asInstanceOf[Link]
     try newValidDouble(world.protractor.towardsPitch(link.end1, link.end2, true))

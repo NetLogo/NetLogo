@@ -4,7 +4,7 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Patch;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 
 /*
@@ -29,10 +29,7 @@ public final strictfp class _life
   private static final int LIVING_VAR = Patch.LAST_PREDEFINED_VAR + 1;
   private static final int LIVE_NEIGHBORS_VAR = Patch.LAST_PREDEFINED_VAR + 2;
 
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    return Syntax.commandSyntax("O---");
-  }
+
 
   @Override
   public void perform(final org.nlogo.nvm.Context context) {

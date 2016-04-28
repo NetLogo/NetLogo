@@ -2,12 +2,12 @@
 
 package org.nlogo.prim
 
-import org.nlogo.api.{ AgentException, LogoException, Syntax }
+import org.nlogo.api.{ AgentException, LogoException}
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Context, EngineException, Reporter }
 
 class _linkbreedvariable(private[this] val _name: String) extends Reporter {
-  override def syntax =
-    Syntax.reporterSyntax(Syntax.WildcardType | Syntax.ReferenceType, "---L")
+
 
   override def toString: String = s"${super.toString}:$name"
 

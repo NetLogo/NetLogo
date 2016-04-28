@@ -2,15 +2,12 @@
 
 package org.nlogo.prim.threed
 
-import org.nlogo.api.{ AgentException, Syntax }
+import org.nlogo.api.{ AgentException}
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Context, EngineException, Reporter }
 
 class _towardspitchxyznowrap extends Reporter {
-  override def syntax =
-    Syntax.reporterSyntax(Array(Syntax.NumberType,
-                                Syntax.NumberType,
-                                Syntax.NumberType),
-                          Syntax.NumberType, "-TP-")
+
   override def report(context: Context) =
     try newValidDouble(world.protractor.towardsPitch(
       context.agent,

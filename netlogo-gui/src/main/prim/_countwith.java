@@ -7,18 +7,13 @@ import org.nlogo.agent.AgentSet;
 import org.nlogo.api.Dump;
 import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _countwith extends Reporter {
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    return Syntax.reporterSyntax
-        (new int[]{Syntax.AgentsetType(), Syntax.BooleanBlockType()},
-            Syntax.NumberType(), "OTPL", "?");
-  }
+
 
   @Override
   public Object report(Context context) throws LogoException {

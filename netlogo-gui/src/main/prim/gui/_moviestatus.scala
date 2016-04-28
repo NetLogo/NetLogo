@@ -2,14 +2,13 @@
 
 package org.nlogo.prim.gui
 
-import org.nlogo.api.Syntax
+import org.nlogo.core.Syntax
 import org.nlogo.awt.MovieEncoder
 import org.nlogo.nvm.{ Context, EngineException, Reporter }
 import org.nlogo.window.GUIWorkspace
 
 class _moviestatus extends Reporter {
-  override def syntax =
-    Syntax.reporterSyntax(Syntax.StringType)
+
   override def report(context: Context) = {
     workspace match {
       case gw: GUIWorkspace =>
