@@ -2,6 +2,8 @@
 
 package org.nlogo.core
 
+import scala.util.matching.Regex
+
 // This is highly performance-critical code for import-world. - ST 4/7/11
 
 import java.lang.{ Double => JDouble, Long => JLong }
@@ -11,6 +13,12 @@ object NumberParser {
   val IsTooLargeForExactness =
     "is too large to be represented exactly as an integer in NetLogo"
   val IllegalFormat = "Illegal number format"
+
+  // this regex is *only* used for determining whether we should display
+  // an "Illegal number format" or "Too large" error. If it's used for
+  // anything else it should be suitably tested and hardened.
+  // Also note that it's different than in java because we're in scala-js. RG 4/29/16
+  val numberFormatRegex = new Regex("^-?[0-9]*(\\.[0-9]*)?([Ee]-?[0-9]+)?$")
 
   def parse(text: String): Either[String, JDouble] = {
     try {
@@ -47,7 +55,10 @@ object NumberParser {
     }
     catch {
       case ex: NumberFormatException =>
-        Left(IllegalFormat)
+        if (numberFormatRegex.findFirstIn(text).isDefined)
+          Left(s"$text $IsTooLargeForExactness")
+        else
+          Left(IllegalFormat)
     }
   }
 }

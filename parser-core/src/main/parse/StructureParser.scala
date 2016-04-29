@@ -140,20 +140,23 @@ object StructureParser {
   }
 
   def findIncludes(tokens: Iterator[Token]): Seq[String] = {
-
     val includesPositionedTokens =
       tokens.dropWhile(! _.text.equalsIgnoreCase("__includes"))
-    includesPositionedTokens.next
-    if (includesPositionedTokens.next.tpe != core.TokenType.OpenBracket)
+    if (includesPositionedTokens.isEmpty)
       Seq()
-    else
-      includesPositionedTokens
-        .takeWhile(_.tpe != core.TokenType.CloseBracket)
-        .filter(_.tpe == core.TokenType.Literal)
-        .map(_.value)
-        .collect {
-          case s: String => s
-        }.toSeq
+    else {
+      includesPositionedTokens.next
+      if (includesPositionedTokens.next.tpe != core.TokenType.OpenBracket)
+        Seq()
+      else
+        includesPositionedTokens
+          .takeWhile(_.tpe != core.TokenType.CloseBracket)
+          .filter(_.tpe == core.TokenType.Literal)
+          .map(_.value)
+          .collect {
+            case s: String => s
+          }.toSeq
+    }
   }
 
 }

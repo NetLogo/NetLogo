@@ -60,7 +60,7 @@ object ModelReader {
       (if(model.behaviorSpace.nonEmpty) model.behaviorSpace.mkString("\n", "\n", "\n") else "\n") + s"$SEPARATOR\n" +
       s"$SEPARATOR\n" +
       ShapeParser.formatLinkShapes(model.linkShapes) + s"\n$SEPARATOR\n" +
-      model.otherSections("org.nlogo.model.settings").mkString("\n") +
+      model.otherSections.getOrElse("org.nlogo.model.settings", Seq()).mkString("\n") +
       s"\n$SEPARATOR\n"
   }
 }
