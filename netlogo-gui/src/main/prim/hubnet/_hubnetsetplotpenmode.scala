@@ -2,13 +2,13 @@
 
 package org.nlogo.prim.hubnet
 
-import org.nlogo.api.{ CommandRunnable, Syntax }
+import org.nlogo.api.{ CommandRunnable}
+import org.nlogo.core.Syntax
 import org.nlogo.core.PlotPenInterface
 import org.nlogo.nvm.{ Command, Context, EngineException }
 
 class _hubnetsetplotpenmode extends Command {
-  override def syntax =
-    Syntax.commandSyntax(Array(Syntax.StringType, Syntax.NumberType))
+
   override def perform(context: Context) {
     val name = argEvalString(context, 0)
     val mode = argEvalIntValue(context, 1)

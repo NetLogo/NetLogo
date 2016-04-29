@@ -4,7 +4,7 @@ package org.nlogo.prim;
 
 import org.nlogo.api.Dump;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Pure;
 import org.nlogo.nvm.Reporter;
@@ -13,11 +13,11 @@ public final strictfp class _word
     extends Reporter
     implements Pure, org.nlogo.nvm.CustomGenerated {
   @Override
-  public org.nlogo.core.Syntax syntax() {
-    return Syntax.reporterSyntax
-        (new int[]{Syntax.RepeatableType() | Syntax.WildcardType()},
-            Syntax.StringType(), 2, 0);
+  public int returnType() {
+    return Syntax.StringType();
   }
+
+
 
   @Override
   public Object report(final Context context)

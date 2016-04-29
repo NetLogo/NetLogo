@@ -3,14 +3,11 @@
 package org.nlogo.prim.threed
 
 import org.nlogo.agent.Protractor3D
-import org.nlogo.api.Syntax
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Context, Reporter }
 
 class _distancexyznowrap extends Reporter {
-  override def syntax =
-    Syntax.reporterSyntax(
-      Array(Syntax.NumberType, Syntax.NumberType, Syntax.NumberType),
-      Syntax.NumberType, "-TP-")
+
   override def report(context: Context) =
     newValidDouble(
       world.protractor.asInstanceOf[Protractor3D].distance(

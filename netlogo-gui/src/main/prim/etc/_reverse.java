@@ -4,7 +4,7 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Reporter;
 
@@ -24,10 +24,5 @@ public final strictfp class _reverse
     }
   }
 
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    int[] right = {Syntax.ListType() | Syntax.StringType()};
-    int ret = Syntax.ListType() | Syntax.StringType();
-    return Syntax.reporterSyntax(right, ret);
-  }
+
 }

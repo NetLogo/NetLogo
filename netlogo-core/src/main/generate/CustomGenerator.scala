@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.generator
+package org.nlogo.generate
 
 // This is where the knowledge of how to custom-bytecode-generate some special primitives resides.
 // It used to reside in the individual primitives, but I didn't like that the prims had to depend on
@@ -28,7 +28,7 @@ import asm.Opcodes._
 import org.nlogo.nvm.CustomGenerated
 import org.nlogo.prim.{ _and, _call, _callreport, _list, _or, _word }
 
-private class CustomGenerator(profilingEnabled: Boolean) {
+class CustomGenerator(profilingEnabled: Boolean) {
 
   def generate(instr: CustomGenerated, nlgen: GeneratorAdapter, thisInstrUID: Int, ip: Int) {
     instr match {

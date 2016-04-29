@@ -4,7 +4,7 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.agent.Link;
 import org.nlogo.agent.Turtle;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 
 public final strictfp class _die
@@ -13,10 +13,7 @@ public final strictfp class _die
     this.switches = true;
   }
 
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    return Syntax.commandSyntax("-T-L");
-  }
+
 
   @Override
   public void perform(final org.nlogo.nvm.Context context) {

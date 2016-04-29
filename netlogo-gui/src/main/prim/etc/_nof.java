@@ -7,7 +7,7 @@ import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
 import org.nlogo.api.LogoListBuilder;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
@@ -70,11 +70,5 @@ public final strictfp class _nof
     return result.toLogoList();
   }
 
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    return Syntax.reporterSyntax
-        (new int[]{Syntax.NumberType(),
-            Syntax.AgentsetType() | Syntax.ListType()},
-            Syntax.AgentsetType() | Syntax.ListType());
-  }
+
 }

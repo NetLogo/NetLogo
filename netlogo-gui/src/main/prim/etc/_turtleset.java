@@ -9,7 +9,7 @@ import org.nlogo.api.Dump;
 import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
@@ -21,14 +21,7 @@ import java.util.Set;
 
 public final strictfp class _turtleset
     extends Reporter {
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    int[] right = {Syntax.RepeatableType() | Syntax.TurtleType()
-        | Syntax.TurtlesetType() | Syntax.NobodyType()
-        | Syntax.ListType()};
-    int ret = Syntax.TurtlesetType();
-    return Syntax.reporterSyntax(right, ret, 1, 0);
-  }
+
 
   @Override
   public Object report(final Context context)

@@ -2,13 +2,13 @@
 
 package org.nlogo.prim.gui
 
-import org.nlogo.api.{ CommandRunnable, Syntax }
+import org.nlogo.api.{ CommandRunnable}
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Command, Context, EngineException }
 import org.nlogo.window.GUIWorkspace
 
 class _movieclose extends Command {
-  override def syntax =
-    Syntax.commandSyntax
+
   override def perform(context: Context) {
     workspace match {
       case gw: GUIWorkspace =>

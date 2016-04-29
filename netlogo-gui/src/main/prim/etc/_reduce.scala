@@ -2,14 +2,13 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api.Syntax
+import org.nlogo.core.Syntax
 import org.nlogo.core.I18N
 import org.nlogo.nvm.{ EngineException, Context, Reporter }
 
 class _reduce extends Reporter {
 
-  override def syntax =
-    Syntax.reporterSyntax(Array(Syntax.ReporterTaskType, Syntax.ListType), Syntax.WildcardType)
+
 
   override def report(context: Context) = {
     val task = argEvalReporterTask(context, 0)

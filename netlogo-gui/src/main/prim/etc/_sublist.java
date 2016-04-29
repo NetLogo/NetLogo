@@ -5,7 +5,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
 
@@ -32,10 +32,5 @@ public final strictfp class _sublist
     return list.logoSublist(start, stop);
   }
 
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    return Syntax.reporterSyntax
-        (new int[]{Syntax.ListType(), Syntax.NumberType(), Syntax.NumberType()},
-            Syntax.ListType());
-  }
+
 }

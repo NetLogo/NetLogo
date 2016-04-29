@@ -3,7 +3,6 @@
 package org.nlogo.nvm;
 
 import org.nlogo.api.Dump;
-import org.nlogo.api.Syntax;
 import org.nlogo.api.TypeNames;
 
 public strictfp class ArgumentTypeException
@@ -42,7 +41,7 @@ public strictfp class ArgumentTypeException
     // a value at all -- it's just something to tell us what
     // kind of bad value was returned.
     if (badValue instanceof Class<?>) {
-      result += " but got " + TypeNames.aName(Syntax.getTypeConstant((Class<?>) badValue)) + " instead";
+      result += " but got " + TypeNames.aName(TypeNames.getTypeConstant((Class<?>) badValue)) + " instead";
     } else if (badValue != null) {
       String badValueStr = Dump.logoObject(badValue, true, false);
 

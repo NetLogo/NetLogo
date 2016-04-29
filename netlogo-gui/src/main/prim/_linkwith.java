@@ -6,7 +6,7 @@ import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Link;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _linkwith
@@ -21,12 +21,7 @@ public final strictfp class _linkwith
     this.breedName = breedName;
   }
 
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    int[] right = {Syntax.AgentType()};
-    int ret = Syntax.LinkType();
-    return Syntax.reporterSyntax(right, ret, "-T--");
-  }
+
 
   @Override
   public String toString() {

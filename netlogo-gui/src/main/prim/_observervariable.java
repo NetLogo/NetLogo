@@ -3,7 +3,7 @@
 package org.nlogo.prim;
 
 import org.nlogo.agent.Observer;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.core.Reference;
 import org.nlogo.core.AgentKindJ;
 import org.nlogo.nvm.Reporter;
@@ -34,10 +34,7 @@ public final strictfp class _observervariable
     }
   }
 
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    return Syntax.reporterSyntax(Syntax.WildcardType() | Syntax.ReferenceType());
-  }
+
 
   public Object report_1(final org.nlogo.nvm.Context context) {
     return context.agent.getObserverVariable(vn);

@@ -4,14 +4,12 @@ package org.nlogo.prim
 
 import org.nlogo.core.{ I18N, LogoList }
 import org.nlogo.agent.{ Agent, AgentSet }
-import org.nlogo.api.{ AgentException, LogoException, LogoListBuilder, Syntax }
+import org.nlogo.api.{ AgentException, LogoException, LogoListBuilder}
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ ArgumentTypeException, Context, EngineException, Reporter }
 
 class _linkvariableof(private[this] val _vn: Int) extends Reporter {
-  override def syntax =
-    Syntax.reporterSyntax(
-      Array[Int](Syntax.LinksetType | Syntax.LinkType),
-      Syntax.WildcardType)
+
 
   override def toString =
       s"${super.toString()}:${if (world != null) world.linksOwnNameAt(vn) else vn}"

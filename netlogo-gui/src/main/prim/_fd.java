@@ -4,7 +4,7 @@ package org.nlogo.prim;
 
 import org.nlogo.core.Let;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.MutableDouble;
@@ -16,12 +16,7 @@ public final strictfp class _fd
     implements org.nlogo.nvm.CustomAssembled {
   final Let let = new Let(null);
 
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    return Syntax.commandSyntax
-        (new int[]{Syntax.NumberType()},
-            "-T--");
-  }
+
 
   @Override
   public void perform(Context context) throws LogoException {

@@ -2,15 +2,12 @@
 
 package org.nlogo.prim;
 
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 
 public final strictfp class _return extends Command {
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    return Syntax.commandSyntax();
-  }
+
 
   @Override
   public String displayName() {

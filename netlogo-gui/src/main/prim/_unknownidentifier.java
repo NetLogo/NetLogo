@@ -7,7 +7,7 @@ package org.nlogo.prim;
 // references to global variables that the compiler doesn't know
 // about. - ST 7/7/06
 
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _unknownidentifier
@@ -17,8 +17,5 @@ public final strictfp class _unknownidentifier
     throw new IllegalStateException();
   }
 
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    return Syntax.reporterSyntax(Syntax.WildcardType());
-  }
+
 }

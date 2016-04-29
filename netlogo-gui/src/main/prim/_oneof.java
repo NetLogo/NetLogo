@@ -6,7 +6,7 @@ import org.nlogo.agent.AgentSet;
 import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
@@ -39,12 +39,7 @@ public final strictfp class _oneof
     }
   }
 
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    int[] right = {Syntax.AgentsetType() | Syntax.ListType()};
-    int ret = Syntax.WildcardType();
-    return Syntax.reporterSyntax(right, ret);
-  }
+
 
   public Object report_1(Context context, AgentSet agents) {
     int count = agents.count();

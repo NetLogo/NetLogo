@@ -3,18 +3,14 @@
 package org.nlogo.prim.threed
 
 import org.nlogo.agent.World3D
-import org.nlogo.api.Syntax
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Command, Context, EngineException }
 
 class _resizeworld extends Command {
 
   switches = true
 
-  override def syntax =
-    Syntax.commandSyntax(Array(
-      Syntax.NumberType, Syntax.NumberType,
-      Syntax.NumberType, Syntax.NumberType,
-      Syntax.NumberType, Syntax.NumberType), "O---")
+
 
   override def perform(context: Context) {
 

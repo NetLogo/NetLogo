@@ -3,8 +3,8 @@
 package org.nlogo.nvm
 
 import org.nlogo.api
-import api.{ SourceOwner, Syntax }
-import org.nlogo.core.{ Let, FrontEndProcedure, Token, Syntax => CoreSyntax }
+import api.{ SourceOwner }
+import org.nlogo.core.{ Let, FrontEndProcedure, Token, Syntax }
 
 class Procedure(
   val isReporter: Boolean,
@@ -64,12 +64,12 @@ class Procedure(
       displayName.getOrElse("procedure " + nameAndFile)
     }
 
-  override def syntax: CoreSyntax = {
-    val right = Array.fill(args.size - localsCount)(Syntax.WildcardType)
+  override def syntax: Syntax = {
+    val right = List.fill(args.size - localsCount)(Syntax.WildcardType)
     if (isReporter)
-      Syntax.reporterSyntax(right, Syntax.WildcardType)
+      Syntax.reporterSyntax(right = right, ret = Syntax.WildcardType)
     else
-      Syntax.commandSyntax(right)
+      Syntax.commandSyntax(right = right)
   }
 
   override def toString =

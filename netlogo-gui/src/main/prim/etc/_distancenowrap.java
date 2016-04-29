@@ -5,17 +5,13 @@ package org.nlogo.prim.etc;
 import org.nlogo.agent.Agent;
 import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _distancenowrap extends Reporter {
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    int[] right = {Syntax.TurtleType() | Syntax.PatchType()};
-    return Syntax.reporterSyntax(right, Syntax.NumberType(), "-TP-");
-  }
+
 
   @Override
   public Object report(Context context) throws LogoException {

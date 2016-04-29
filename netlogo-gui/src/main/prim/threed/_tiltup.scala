@@ -3,14 +3,14 @@
 package org.nlogo.prim.threed
 
 import org.nlogo.agent.Turtle3D
-import org.nlogo.api.{ Syntax, Vect }
+import org.nlogo.api.{ Vect }
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Command, Context }
 
 class _tiltup extends Command {
   switches = true
 
-  override def syntax =
-    Syntax.commandSyntax(Array(Syntax.NumberType), "-T--")
+
 
   override def perform(context: Context) {
     val delta = argEvalDoubleValue(context, 0)

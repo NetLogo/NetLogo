@@ -2,7 +2,8 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api.{ Syntax, LogoListBuilder }
+import org.nlogo.api.{ LogoListBuilder }
+import org.nlogo.core.Syntax
 import org.nlogo.core.LogoList
 import org.nlogo.nvm.{ Context, Pure, Reporter }
 
@@ -26,9 +27,7 @@ object hsb {
 }
 
 class _hsb extends Reporter with Pure {
-  override def syntax =
-    Syntax.reporterSyntax(Array(Syntax.NumberType, Syntax.NumberType, Syntax.NumberType),
-                          Syntax.ListType)
+
   override def report(context: Context) =
     report_1(context,
         argEvalDoubleValue(context, 0),
@@ -40,9 +39,7 @@ class _hsb extends Reporter with Pure {
 }
 
 class _hsbold extends Reporter with Pure {
-  override def syntax =
-    Syntax.reporterSyntax(Array(Syntax.NumberType, Syntax.NumberType, Syntax.NumberType),
-                          Syntax.ListType)
+
   override def report(context: Context) =
     report_1(context,
         argEvalDoubleValue(context, 0),

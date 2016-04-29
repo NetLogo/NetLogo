@@ -6,7 +6,7 @@ import org.nlogo.core.AgentKindJ;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 
 public final strictfp class _hatch
@@ -25,13 +25,7 @@ public final strictfp class _hatch
     this.switches = true;
   }
 
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    return Syntax.commandSyntax
-        (new int[]{Syntax.NumberType(),
-            Syntax.CommandBlockType() | Syntax.OptionalType()},
-            "-T--", "-T--");
-  }
+
 
   @Override
   public String toString() {

@@ -3,15 +3,13 @@
 package org.nlogo.prim
 
 import org.nlogo.agent.{ Agent, AgentSet }
-import org.nlogo.api.{ AgentException, LogoException, LogoListBuilder, Syntax }
+import org.nlogo.api.{ AgentException, LogoException, LogoListBuilder}
+import org.nlogo.core.Syntax
 import org.nlogo.core.I18N
 import org.nlogo.nvm.{ ArgumentTypeException, Context, EngineException, Reporter }
 
 class _linkbreedvariableof(name: String) extends Reporter {
-  override def syntax =
-    Syntax.reporterSyntax(
-      Array[Int](Syntax.LinksetType | Syntax.LinkType),
-      Syntax.WildcardType)
+
 
   override def toString: String = s"${super.toString}:$name"
 

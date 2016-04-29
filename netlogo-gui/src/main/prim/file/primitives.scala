@@ -3,13 +3,13 @@
 package org.nlogo.prim.file
 
 import org.nlogo.core.{ CompilerException, FileMode }
-import org.nlogo.api.{ Syntax, OutputDestination }
+import org.nlogo.api.{ OutputDestination }
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Command, Context, EngineException, Reporter, Workspace }
 import java.io.IOException
 
 class _fileatend extends Reporter {
-  override def syntax =
-    Syntax.reporterSyntax(Syntax.BooleanType)
+
   override def report(context: Context) =
     try Boolean.box(workspace.fileManager.eof)
     catch {
@@ -19,8 +19,7 @@ class _fileatend extends Reporter {
 }
 
 class _fileclose extends Command {
-  override def syntax =
-    Syntax.commandSyntax
+
   override def perform(context: Context) {
     try
       if (workspace.fileManager.hasCurrentFile)
@@ -34,8 +33,7 @@ class _fileclose extends Command {
 }
 
 class _filecloseall extends Command {
-  override def syntax =
-    Syntax.commandSyntax
+
   override def perform(context: Context) {
     try workspace.fileManager.closeAllFiles()
     catch {
@@ -47,8 +45,7 @@ class _filecloseall extends Command {
 }
 
 class _filedelete extends Command {
-  override def syntax =
-    Syntax.commandSyntax(Array(Syntax.StringType))
+
   override def perform(context: Context) {
     val argString = argEvalString(context, 0)
     try
@@ -67,9 +64,7 @@ class _filedelete extends Command {
 }
 
 class _fileexists extends Reporter {
-  override def syntax =
-    Syntax.reporterSyntax(Array(Syntax.StringType),
-                          Syntax.BooleanType)
+
   override def report(context: Context) = {
     val argString = argEvalString(context, 0)
     try
@@ -88,8 +83,7 @@ class _fileexists extends Reporter {
 }
 
 class _fileflush extends Command {
-  override def syntax =
-    Syntax.commandSyntax
+
   override def perform(context: Context) {
     try
       if (workspace.fileManager.hasCurrentFile)
@@ -103,8 +97,7 @@ class _fileflush extends Command {
 }
 
 class _fileopen extends Command {
-  override def syntax =
-    Syntax.commandSyntax(Array(Syntax.StringType))
+
   override def perform(context: Context) {
     try
       // DefaultFileManager.openFile attaches the prefix for us, so we need not normalize our path
@@ -120,8 +113,7 @@ class _fileopen extends Command {
 }
 
 class _fileprint extends Command {
-  override def syntax =
-    Syntax.commandSyntax(Array(Syntax.WildcardType))
+
   override def perform(context: Context) {
     try
       workspace.fileManager.ensureMode(
@@ -138,8 +130,7 @@ class _fileprint extends Command {
 }
 
 class _fileread extends Reporter {
-  override def syntax =
-    Syntax.reporterSyntax(Syntax.ReadableType)
+
   override def report(context: Context) =
     try workspace.fileManager.read(world)
     catch {
@@ -156,9 +147,7 @@ class _fileread extends Reporter {
 }
 
 class _filereadchars extends Reporter {
-  override def syntax =
-    Syntax.reporterSyntax(Array(Syntax.NumberType),
-                          Syntax.StringType)
+
   override def report(context: Context) =
     try workspace.fileManager.readChars(argEvalIntValue(context, 0))
     catch {
@@ -171,8 +160,7 @@ class _filereadchars extends Reporter {
 }
 
 class _filereadline extends Reporter {
-  override def syntax =
-    Syntax.reporterSyntax(Syntax.StringType)
+
   override def report(context: Context) =
     try workspace.fileManager.readLine()
     catch {
@@ -185,8 +173,7 @@ class _filereadline extends Reporter {
 }
 
 class _fileshow extends Command {
-  override def syntax =
-    Syntax.commandSyntax(Array(Syntax.WildcardType))
+
   override def perform(context: Context) {
     val s = args(0).report(context)
     try
@@ -202,8 +189,7 @@ class _fileshow extends Command {
 }
 
 class _filetype extends Command {
-  override def syntax =
-    Syntax.commandSyntax(Array(Syntax.WildcardType))
+
   override def perform(context: Context) {
     val s = args(0).report(context)
     try workspace.fileManager.ensureMode(FileMode.Append)
@@ -218,8 +204,7 @@ class _filetype extends Command {
 }
 
 class _filewrite extends Command {
-  override def syntax =
-    Syntax.commandSyntax(Array(Syntax.ReadableType))
+
   override def perform(context: Context) {
     val s = args(0).report(context)
     try

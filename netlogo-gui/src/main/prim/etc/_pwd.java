@@ -4,7 +4,7 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.api.LogoException;
 import org.nlogo.api.OutputDestinationJ;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 
 /**
@@ -12,10 +12,7 @@ import org.nlogo.nvm.Command;
  */
 public final strictfp class _pwd
     extends Command {
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    return Syntax.commandSyntax("O---");
-  }
+
 
   @Override
   public void perform(final org.nlogo.nvm.Context context)

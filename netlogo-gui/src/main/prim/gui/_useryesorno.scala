@@ -2,16 +2,15 @@
 
 package org.nlogo.prim.gui
 
-import org.nlogo.api.{ Dump, ReporterRunnable, Syntax }
+import org.nlogo.api.{ Dump, ReporterRunnable}
+import org.nlogo.core.Syntax
 import org.nlogo.core.I18N
 import org.nlogo.nvm.{ Context, EngineException, HaltException, Reporter }
 import org.nlogo.swing.OptionDialog
 import org.nlogo.window.GUIWorkspace
 
 class _useryesorno extends Reporter {
-  override def syntax =
-    Syntax.reporterSyntax(Array(Syntax.WildcardType),
-                          Syntax.BooleanType)
+
   override def report(context: Context) =
     workspace match {
       case gw: GUIWorkspace =>

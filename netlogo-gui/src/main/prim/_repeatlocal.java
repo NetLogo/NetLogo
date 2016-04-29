@@ -3,7 +3,7 @@
 package org.nlogo.prim;
 
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.MutableLong;
@@ -17,11 +17,7 @@ public final strictfp class _repeatlocal
     this.vn = vn;
   }
 
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    int[] right = {Syntax.NumberType(), Syntax.CommandBlockType()};
-    return Syntax.commandSyntax(right);
-  }
+
 
   @Override
   public String toString() {

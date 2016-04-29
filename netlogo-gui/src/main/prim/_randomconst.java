@@ -2,17 +2,14 @@
 
 package org.nlogo.prim;
 
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _randomconst extends Reporter {
   public long n;
 
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    return Syntax.reporterSyntax(Syntax.NumberType());
-  }
+
 
   @Override
   public String toString() {

@@ -2,13 +2,12 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api, api.{ Syntax, LogoListBuilder }
+import org.nlogo.core.Syntax
+import org.nlogo.api, api.{ LogoListBuilder }
 import org.nlogo.nvm.{ Context, Pure, Reporter }
 
 class _approximatehsb extends Reporter with Pure {
-  override def syntax =
-    Syntax.reporterSyntax(Array(Syntax.NumberType, Syntax.NumberType, Syntax.NumberType),
-                          Syntax.NumberType)
+
   override def report(context: Context): java.lang.Double =
     report_1(context,
         argEvalDoubleValue(context, 0),
@@ -20,9 +19,7 @@ class _approximatehsb extends Reporter with Pure {
 }
 
 class _approximatehsbold extends Reporter with Pure {
-  override def syntax =
-    Syntax.reporterSyntax(Array(Syntax.NumberType, Syntax.NumberType, Syntax.NumberType),
-                          Syntax.NumberType)
+
   override def report(context: Context): java.lang.Double =
     report_1(context,
         argEvalDoubleValue(context, 0),

@@ -4,7 +4,7 @@ package org.nlogo.prim;
 
 import org.nlogo.core.Let;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 
@@ -24,10 +24,7 @@ public final strictfp class _errormessage
     this.let = let;
   }
 
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    return Syntax.reporterSyntax(Syntax.StringType());
-  }
+
 
   @Override
   public Object report(final Context context) {

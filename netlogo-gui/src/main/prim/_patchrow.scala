@@ -4,14 +4,12 @@ package org.nlogo.prim
 
 import org.nlogo.core.AgentKind
 import org.nlogo.agent.{ AgentSet, ArrayAgentSet }
-import org.nlogo.api.{ LogoException, Syntax }
+import org.nlogo.api.{ LogoException}
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Context, Reporter }
 
 class _patchrow extends Reporter {
-  override def syntax =
-    Syntax.reporterSyntax(
-      Array[Int](Syntax.NumberType),
-      Syntax.PatchsetType)
+
 
   override def report(context: Context): AnyRef = {
     val result = new ArrayAgentSet(AgentKind.Patch, world.worldWidth, false)

@@ -4,15 +4,12 @@ package org.nlogo.prim.threed
 
 import org.nlogo.core.AgentKind
 import org.nlogo.agent.{ Agent3D, ArrayAgentSet, Turtle }
-import org.nlogo.api.{ AgentException, Syntax }
+import org.nlogo.api.{ AgentException}
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Context, Reporter }
 
 class _turtlesat extends Reporter {
-  override def syntax =
-    Syntax.reporterSyntax(Array(Syntax.NumberType,
-                                Syntax.NumberType,
-                                Syntax.NumberType),
-                          Syntax.TurtlesetType, "-TP-")
+
   override def report(context: Context): ArrayAgentSet = {
     val dx = argEvalDoubleValue(context, 0)
     val dy = argEvalDoubleValue(context, 1)

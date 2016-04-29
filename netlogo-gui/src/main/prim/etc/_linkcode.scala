@@ -2,12 +2,11 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api.Syntax
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Command, Context, CustomAssembled, AssemblerAssistant }
 
 class _linkcode extends Command with CustomAssembled {
-  override def syntax =
-    Syntax.commandSyntax("---L")
+
   override def perform(context: Context) {
     throw new UnsupportedOperationException
   }

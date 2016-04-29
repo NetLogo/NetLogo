@@ -7,7 +7,7 @@ import org.nlogo.agent.Turtle;
 import org.nlogo.api.AgentException;
 import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.EngineException;
 
@@ -17,11 +17,7 @@ public final strictfp class _moveto
     this.switches = true;
   }
 
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    int[] right = {Syntax.TurtleType() | Syntax.PatchType()};
-    return Syntax.commandSyntax(right, "OT--");
-  }
+
 
   @Override
   public void perform(final org.nlogo.nvm.Context context)

@@ -4,7 +4,7 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.core.LogoList;
 import org.nlogo.api.LogoListBuilder;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 
@@ -20,10 +20,7 @@ public final strictfp class _basecolors
     return result.toLogoList();
   }
 
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    return Syntax.reporterSyntax(Syntax.ListType());
-  }
+
 
   @Override
   public Object report(Context context) {

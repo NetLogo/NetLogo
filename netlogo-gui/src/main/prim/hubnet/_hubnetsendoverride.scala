@@ -3,16 +3,13 @@
 package org.nlogo.prim.hubnet
 
 import org.nlogo.agent.{ ArrayAgentSet, Agent, AgentSet }
-import org.nlogo.api.{ CommandRunnable, Dump, Syntax }
+import org.nlogo.api.{ CommandRunnable, Dump}
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Command, Context, EngineException }
 
 class _hubnetsendoverride extends Command {
 
-  override def syntax = Syntax.commandSyntax(
-    Array(Syntax.StringType, Syntax.AgentsetType | Syntax.AgentType,
-          Syntax.StringType,
-          Syntax.ReporterBlockType),
-    "OTPL", "?")
+
 
   override def perform(context: Context) {
     val client = argEvalString(context, 0)

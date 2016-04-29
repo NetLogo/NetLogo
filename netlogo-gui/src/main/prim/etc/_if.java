@@ -3,7 +3,7 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 
@@ -16,11 +16,7 @@ public final strictfp class _if
     perform_1(context, argEvalBooleanValue(context, 0));
   }
 
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    int[] right = {Syntax.BooleanType(), Syntax.CommandBlockType()};
-    return Syntax.commandSyntax(right);
-  }
+
 
   @Override
   public String toString() {

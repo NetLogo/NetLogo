@@ -1,12 +1,12 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.generator
+package org.nlogo.generate
 
 import org.nlogo.nvm.{ Command, EngineException, Instruction, Reporter, Workspace }
 
 trait GeneratedInstruction extends Instruction {
   var original: Instruction = null
-  def syntax = original.syntax
+
   // Given an enclosing GeneratedInstruction and an exception, use line number information in the stack trace
   // to find the exact original instruction that caused the error.  ~Forrest (10/24/2006)
   override def extractErrorInstruction(ex: EngineException): Instruction = {

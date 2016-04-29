@@ -5,7 +5,7 @@ package org.nlogo.prim.hubnet;
 import org.nlogo.api.Dump;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.api.TypeNames;
 import org.nlogo.nvm.EngineException;
 
@@ -47,9 +47,5 @@ public final strictfp class _hubnetsendmessage
     context.ip = next;
   }
 
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    int[] right = {Syntax.StringType() | Syntax.ListType(), Syntax.WildcardType()};
-    return Syntax.commandSyntax(right);
-  }
+
 }

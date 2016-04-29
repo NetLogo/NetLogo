@@ -658,9 +658,9 @@ LinksNotAllowed
  O> follow glob1 => ERROR FOLLOW expected input to be a turtle but got the link (link 0 1) instead.
  O> ride glob1 => ERROR RIDE expected input to be a turtle but got the link (link 0 1) instead.
  T> face glob1 => ERROR Expected a turtle or a patch but got a link.
- O> ask glob1 [ facexy 0 1 ] => ERROR this code can't be run by a link
+ O> ask glob1 [ facexy 0 1 ] => ERROR this code can't be run by a link, only a turtle
  O> ask glob1 [ facexy-nowrap 0 1 ] => ERROR this code can't be run by a link, only a turtle
- O> ask glob1 [ face turtle 0 ] => ERROR this code can't be run by a link
+ O> ask glob1 [ face turtle 0 ] => ERROR this code can't be run by a link, only a turtle
  O> ask glob1 [ face-nowrap turtle 0 ] => ERROR this code can't be run by a link, only a turtle
  O> ask glob1 [ follow-me ] => ERROR this code can't be run by a link, only a turtle
  O> set glob1 links

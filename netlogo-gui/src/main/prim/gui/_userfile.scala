@@ -2,7 +2,8 @@
 
 package org.nlogo.prim.gui
 
-import org.nlogo.api.{ ReporterRunnable, Syntax }
+import org.nlogo.api.{ ReporterRunnable}
+import org.nlogo.core.Syntax
 import org.nlogo.awt.UserCancelException
 import org.nlogo.nvm.{ Context, EngineException, Reporter }
 import org.nlogo.window.GUIWorkspace
@@ -11,8 +12,7 @@ import org.nlogo.swing.FileDialog
 
 class _userfile extends Reporter {
 
-  override def syntax =
-    Syntax.reporterSyntax(Syntax.StringType | Syntax.BooleanType)
+
 
   override def report(context: Context) = {
     if (isApplet)

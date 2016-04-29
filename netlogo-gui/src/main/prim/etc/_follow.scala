@@ -8,8 +8,7 @@ import org.nlogo.api.{ LogoException, Perspective }
 import org.nlogo.nvm.{ Command, Context, EngineException }
 
 class _follow extends Command {
-  override def syntax = Syntax.commandSyntax(
-    right = List(Syntax.TurtleType), agentClassString = "O---")
+
 
   this.switches = true;
 

@@ -3,14 +3,14 @@
 package org.nlogo.prim
 
 import org.nlogo.agent.{ AgentSet, Turtle }
-import org.nlogo.api.{ LogoException, Syntax }
+import org.nlogo.api.{ LogoException}
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Context, Reporter }
 
 class _linkneighbors(breedName: String) extends Reporter {
   def this() = this(null)
 
-  override def syntax =
-    Syntax.reporterSyntax(Syntax.AgentsetType, "-T--")
+
 
   override def toString = s"${super.toString}:$breedName"
 

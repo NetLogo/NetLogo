@@ -2,7 +2,7 @@
 
 package org.nlogo.prim;
 
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.core.Reference;
 import org.nlogo.nvm.Reporter;
@@ -15,10 +15,7 @@ public final strictfp class _reference
     this.reference = reference;
   }
 
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    return Syntax.reporterSyntax(Syntax.ReferenceType());
-  }
+
 
   @Override
   public String toString() {

@@ -6,17 +6,13 @@ import org.nlogo.agent.Link;
 import org.nlogo.agent.Turtle;
 import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _otherend
     extends Reporter {
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    return Syntax.reporterSyntax
-        (Syntax.AgentType(), "-T-L");
-  }
+
 
   @Override
   public Object report(final org.nlogo.nvm.Context context) throws LogoException {

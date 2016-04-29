@@ -10,8 +10,7 @@ import org.nlogo.nvm.{ Context, Reporter }
 class _mylinks(private[this] val _breedName: String) extends Reporter {
   def this() = this(null)
 
-  override def syntax: Syntax =
-    Syntax.reporterSyntax(ret = Syntax.AgentsetType, agentClassString = "-T--")
+
 
   @Override
   override def toString: String = s"${super.toString}:${_breedName}"

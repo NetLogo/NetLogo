@@ -59,27 +59,6 @@ abstract class Instruction extends InstructionJ with TokenHolder {
   def extractErrorInstruction(ex: EngineException): Instruction =
     this
 
-  ///
-
-  def throwAgentClassException(context: Context, kind: AgentKind): Nothing = {
-    val pairs =
-      Seq(
-        (AgentKind.Observer, 'O'), (AgentKind.Turtle, 'T'),
-        (AgentKind.Patch, 'P'), (AgentKind.Link, 'L'))
-    val allowedKinds =
-      for {
-        (kind, c) <- pairs
-        if agentClassString.contains(c)
-      }
-      yield kind
-    throw new EngineException(context, this,
-      "this code can't be run by " + Instruction.agentKindDescription(kind) +
-      (if (allowedKinds.size == 1)
-         ", only " + Instruction.agentKindDescription(allowedKinds.head)
-       else
-         ""))
-  }
-
   // These methods are for evaluating arguments --
   // they serve the same sort of purpose that the "reportX()" methods
   // in Reporter used to serve.  ~Forrest(11/10/2006)

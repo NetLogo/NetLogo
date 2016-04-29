@@ -2,12 +2,11 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api.Syntax
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Command, Context, CustomAssembled, AssemblerAssistant }
 
 class _turtlecode extends Command with CustomAssembled {
-  override def syntax =
-    Syntax.commandSyntax("-T--")
+
   override def perform(context: Context) {
     throw new UnsupportedOperationException
   }

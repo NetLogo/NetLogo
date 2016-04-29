@@ -3,7 +3,7 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _xor
@@ -20,12 +20,5 @@ public final strictfp class _xor
     }
   }
 
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    int left = Syntax.BooleanType();
-    int[] right = {Syntax.BooleanType()};
-    int ret = Syntax.BooleanType();
-    return Syntax.reporterSyntax(left, right, ret,
-        org.nlogo.api.Syntax.NormalPrecedence() - 6);
-  }
+
 }

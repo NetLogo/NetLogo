@@ -3,17 +3,13 @@
 package org.nlogo.prim.threed
 
 import org.nlogo.agent.{ Protractor3D, Patch3D, Turtle3D }
-import org.nlogo.api.{ AgentException, Syntax }
+import org.nlogo.api.{ AgentException}
+import org.nlogo.core.Syntax
 import org.nlogo.core.Nobody
 import org.nlogo.nvm.{ Context, Reporter }
 
 class _patchatheadingpitchanddistance extends Reporter {
-  override def syntax =
-    Syntax.reporterSyntax(
-      Array(Syntax.NumberType,
-            Syntax.NumberType,
-            Syntax.NumberType),
-      Syntax.PatchType, "-TP-")
+
   override def report(context: Context) =
     try context.agent match {
       case turtle: Turtle3D =>

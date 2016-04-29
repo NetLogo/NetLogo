@@ -3,7 +3,8 @@
 package org.nlogo.prim
 
 import org.nlogo.agent.{ Patch, Turtle }
-import org.nlogo.api.{ AgentException, LogoException, Syntax }
+import org.nlogo.api.{ AgentException, LogoException}
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Context, EngineException, Reporter }
 
 class _patchvariabledouble extends Reporter {
@@ -11,8 +12,7 @@ class _patchvariabledouble extends Reporter {
   def vn = _vn
   def vn_=(new_vn: Int) = _vn = new_vn
 
-  override def syntax =
-    Syntax.reporterSyntax(Syntax.NumberType, "-TP-")
+
 
   override def toString: String =
     s"${super.toString}:${if (world == null) vn else world.patchesOwnNameAt(vn)}"

@@ -8,7 +8,7 @@ import org.nlogo.agent.Turtle;
 import org.nlogo.api.Dump;
 import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.api.TypeNames;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
@@ -17,12 +17,7 @@ import org.nlogo.nvm.Reporter;
 public final strictfp class _nsum extends Reporter {
   public int vn;
 
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    return Syntax.reporterSyntax
-        (new int[]{Syntax.ReferenceType()},
-            Syntax.NumberType(), "-TP-");
-  }
+
 
   @Override
   public String toString() {

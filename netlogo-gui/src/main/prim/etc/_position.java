@@ -5,7 +5,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.api.Equality;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Reporter;
 
@@ -43,11 +43,5 @@ public final strictfp class _position
     }
   }
 
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    int[] right = {Syntax.WildcardType(),
-        Syntax.ListType() | Syntax.StringType()};
-    int ret = Syntax.NumberType() | Syntax.BooleanType();
-    return Syntax.reporterSyntax(right, ret);
-  }
+
 }

@@ -8,7 +8,7 @@ import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
 import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.api.TypeNames;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
@@ -17,13 +17,7 @@ import org.nlogo.nvm.Reporter;
 
 public final strictfp class _greaterthan
     extends Reporter implements Pure {
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    int left = Syntax.NumberType() | Syntax.StringType() | Syntax.AgentType();
-    int[] right = {Syntax.NumberType() | Syntax.StringType() | Syntax.AgentType()};
-    int ret = Syntax.BooleanType();
-    return Syntax.reporterSyntax(left, right, ret, org.nlogo.api.Syntax.NormalPrecedence() - 4);
-  }
+
 
   @Override
   public Object report(Context context) throws LogoException {

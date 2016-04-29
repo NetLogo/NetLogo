@@ -5,7 +5,7 @@ package org.nlogo.prim;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.EngineException;
 
@@ -16,12 +16,7 @@ public final strictfp class _askconcurrent
     this.switches = true;
   }
 
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    return Syntax.commandSyntax
-        (new int[]{Syntax.AgentsetType(), Syntax.CommandBlockType()},
-            "OTPL", "?");
-  }
+
 
   @Override
   public String toString() {

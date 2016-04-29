@@ -5,18 +5,12 @@ package org.nlogo.prim.hubnet;
 import org.nlogo.agent.Agent;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.PerspectiveJ;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 
 public strictfp class _hubnetsendfollow
     extends org.nlogo.nvm.Command {
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    return Syntax.commandSyntax
-        (new int[]
-            {Syntax.StringType(), Syntax.AgentType(), Syntax.NumberType()},
-            "OTPL");
-  }
+
 
   @Override
   public void perform(final Context context) throws LogoException {

@@ -3,16 +3,13 @@
 package org.nlogo.prim.threed
 
 import org.nlogo.agent.Agent3D
-import org.nlogo.api.{ AgentException, Syntax }
+import org.nlogo.api.{ AgentException}
+import org.nlogo.core.Syntax
 import org.nlogo.core.Nobody
 import org.nlogo.nvm.{ Context, Reporter }
 
 class _patchat extends Reporter {
-  override def syntax =
-    Syntax.reporterSyntax(Array(Syntax.NumberType,
-                                Syntax.NumberType,
-                                Syntax.NumberType),
-                          Syntax.PatchType, "-TP-")
+
   override def report(context: Context) = {
     try context.agent.asInstanceOf[Agent3D].getPatchAtOffsets(
       argEvalDoubleValue(context, 0),

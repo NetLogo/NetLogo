@@ -2,15 +2,14 @@
 
 package org.nlogo.prim.gui
 
-import org.nlogo.api.Syntax
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Command, Context }
 import org.nlogo.window.MonitorWidget
 
 class _updatemonitor extends Command {
   switches = true
 
-  override def syntax =
-    Syntax.commandSyntax(Array(Syntax.WildcardType), "O---")
+
 
   override def perform(context: Context) {
     context.job.owner.asInstanceOf[MonitorWidget]

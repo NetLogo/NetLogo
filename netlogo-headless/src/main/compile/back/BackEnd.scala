@@ -14,6 +14,7 @@ object BackEnd extends BackEndInterface {
       if (flags.foldConstants)
         procdef.accept(new ConstantFolder)  // en.wikipedia.org/wiki/Constant_folding
       procdef.accept(new ArgumentStuffer) // fill args arrays in Commands & Reporters
+      procdef.accept(new SourceTagger(source))
       new Assembler().assemble(procdef)     // flatten tree to command array
       if (flags.useGenerator) // generate byte code
         procdef.procedure.code =

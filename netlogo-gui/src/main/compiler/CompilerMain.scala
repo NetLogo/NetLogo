@@ -62,7 +62,7 @@ private object CompilerMain {
     new Assembler().assemble(procdef) // flatten tree to command array
     if(Version.useGenerator) // generate byte code
       procdef.procedure.code =
-        Femto.get[GeneratorInterface]("org.nlogo.generator.Generator", procdef.procedure,
+        Femto.get[GeneratorInterface]("org.nlogo.generate.Generator", procdef.procedure,
           Boolean.box(compilationEnv.profilingEnabled)).generate()
 
     procdef.procedure

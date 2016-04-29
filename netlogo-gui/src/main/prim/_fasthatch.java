@@ -5,7 +5,7 @@ package org.nlogo.prim;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 
 // replaces _hatch when initialization block is empty
@@ -19,12 +19,7 @@ public final strictfp class _fasthatch
     this.switches = true;
   }
 
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    return Syntax.commandSyntax
-        (new int[]{Syntax.NumberType()},
-            "-T--");
-  }
+
 
   @Override
   public String toString() {

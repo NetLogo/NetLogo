@@ -4,11 +4,11 @@ package org.nlogo.prim.etc
 
 import org.nlogo.agent.Turtle
 import org.nlogo.nvm.{ Command, Context }
-import org.nlogo.api.{ Perspective, Syntax }
+import org.nlogo.api.{ Perspective}
+import org.nlogo.core.Syntax
 
 class _followme extends Command {
-  override def syntax =
-    Syntax.commandSyntax("-T--")
+
 
   switches = true
   override def perform(context: Context) {

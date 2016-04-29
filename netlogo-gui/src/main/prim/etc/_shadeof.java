@@ -3,7 +3,7 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Syntax;
+import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _shadeof
@@ -18,11 +18,5 @@ public final strictfp class _shadeof
     return color1 == color2 ? Boolean.TRUE : Boolean.FALSE;
   }
 
-  @Override
-  public org.nlogo.core.Syntax syntax() {
-    int[] right = {Syntax.NumberType(),
-        Syntax.NumberType()};
-    int ret = Syntax.BooleanType();
-    return Syntax.reporterSyntax(right, ret);
-  }
+
 }

@@ -3,18 +3,11 @@
 package org.nlogo.prim
 
 import org.nlogo.core.{ LogoList }
-import org.nlogo.api.{ Syntax, LogoListBuilder }
+import org.nlogo.api.{ LogoListBuilder }
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Context, Reporter, Pure }
 
 class _sentence extends Reporter with Pure {
-
-  override def syntax =
-    Syntax.reporterSyntax(
-      Array(Syntax.RepeatableType | Syntax.WildcardType),
-      Syntax.ListType, dfault = 2, minimum = 0)
-
-  // for fear of https://issues.scala-lang.org/browse/SI-7725
-  // we must never do (Vector ++ Vector) - ST 8/7/13
   override def report(context: Context): LogoList =
     args.size match {
       case 0 =>

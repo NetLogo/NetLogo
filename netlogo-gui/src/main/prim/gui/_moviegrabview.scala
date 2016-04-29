@@ -2,13 +2,12 @@
 
 package org.nlogo.prim.gui
 
-import org.nlogo.api.Syntax
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Command, Context, EngineException }
 import org.nlogo.window.GUIWorkspace
 
 class _moviegrabview extends Command {
-  override def syntax =
-    Syntax.commandSyntax
+
   override def perform(context: Context) {
     workspace match {
       case gw: GUIWorkspace =>
