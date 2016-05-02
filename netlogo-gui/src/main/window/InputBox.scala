@@ -31,6 +31,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
   protected val widgetLabel = new JLabel()
   protected var dialog: InputDialog = null
   private var _hasFocus = false
+  private var _returningFocus = false
   // grab the current editor kit from the editor area
   // everyone but string will use it but we need to
   // keep it around so we know what to set it to.
@@ -76,6 +77,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
     editing = false
   }
 
+  var errorShowing = false
   var typeOptions = new org.nlogo.api.Options[InputType]()
   var name = ""
   var nameChanged = false
@@ -166,8 +168,13 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
             try inputText(inputType.readValue(InputBox.this.textArea.getText))
             catch {
               case ex@(_:LogoException|_:CompilerException|_:ValueConstraint.Violation) =>
-                showError(ex.asInstanceOf[Exception])
-                org.nlogo.awt.EventQueue.invokeLater(() => InputBox.this.textArea.requestFocus())
+                println("erroring on focus lost")
+                if (! _returningFocus) showError(ex.asInstanceOf[Exception])
+                _returningFocus = true
+                org.nlogo.awt.EventQueue.invokeLater { () =>
+                  InputBox.this.textArea.requestFocus()
+                  _returningFocus = false
+                }
             }
             editing = false
           }
@@ -248,7 +255,9 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
     try inputText(constraint.coerceValue(inputType.readValue(text)))
     catch {
       case ex: LogoException => throw new IllegalStateException(ex)
-      case ex@(_: CompilerException | _: ValueConstraint.Violation) => showError(ex.asInstanceOf[Exception])
+      case ex@(_: CompilerException | _: ValueConstraint.Violation) =>
+        println("erroring editFinished")
+        showError(ex.asInstanceOf[Exception])
     }
     true
   }
@@ -381,6 +390,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
         }
         catch {
           case ex@(_:LogoException | _:CompilerException | _:ValueConstraint.Violation) =>
+            println("erroring on okAction")
             showError(ex.asInstanceOf[Exception])
         }
       }
@@ -400,6 +410,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
         try inputText(inputType.readValue(textArea1.getText))
         catch {
           case ex@(_:LogoException | _:CompilerException | _:ValueConstraint.Violation) =>
+            println("erroring on applyAction")
             showError(ex.asInstanceOf[Exception])
         }
       }
