@@ -49,3 +49,6 @@
 [submodule "extensions/cf"]
 	path = extensions/cf
 	url = https://github.com/qiemem/ControlFlowExtension
+[submodule "extensions/vid"]
+	path = extensions/vid
+	url = https://github.com/NetLogo/vid.git
