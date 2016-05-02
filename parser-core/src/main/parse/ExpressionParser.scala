@@ -237,8 +237,8 @@ object ExpressionParser {
       case _ => originalArg
     }
     cAssert(compatible(goalType, arg.reportedType),
-            instruction + " expected this input to be " + core.TypeNames.aName(goalType) + ", but got " +
-            core.TypeNames.aName(arg.reportedType) + " instead", arg)
+      s"$instruction expected this input to be ${core.TypeNames.aName(goalType)}, but got ${core.TypeNames.aName(arg.reportedType)} instead",
+      arg)
     arg
   }
 
@@ -331,6 +331,12 @@ object ExpressionParser {
           expr
         case TokenType.OpenBracket =>
           delayBlock(token, tokens)
+        case TokenType.Reporter | TokenType.Command
+          if compatible(goalType, Syntax.SymbolType) =>
+          tokens.next()
+          val symbol = new core.prim._symbol()
+          token.refine(symbol)
+          new core.ReporterApp(symbol, token.start, token.end, token.filename)
         case TokenType.Reporter | TokenType.Literal =>
           tokens.next()
           val (syntax, rApp) = token.tpe match {

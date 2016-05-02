@@ -129,10 +129,6 @@ package etc {
     def syntax = Syntax.commandSyntax(agentClassString = "O---", right = List(StringType, StringType))
   }
 
-  case class _symbol() extends Reporter {
-    def syntax = Syntax.reporterSyntax(right = List(SymbolType), ret = StringType)
-  }
-
   case class _spanish() extends Command {
     def syntax = Syntax.commandSyntax(agentClassString = "O---")
   }
