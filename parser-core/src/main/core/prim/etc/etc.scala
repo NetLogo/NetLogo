@@ -958,6 +958,12 @@ case class _subtractheadings() extends Reporter with Pure {
       right = List(Syntax.NumberType, Syntax.NumberType),
       ret = Syntax.NumberType)
 }
+case class _symbolstring() extends Reporter {
+  override def syntax =
+    Syntax.reporterSyntax(
+      right = List(Syntax.SymbolType),
+      ret = Syntax.StringType)
+}
 case class _tan() extends Reporter with Pure {
   override def syntax =
     Syntax.reporterSyntax(

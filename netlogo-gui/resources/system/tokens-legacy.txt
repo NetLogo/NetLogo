@@ -70,7 +70,6 @@ R __hubnet-out-q-size hubnet._hubnetoutqsize
 R __monitorprecision etc._monitorprecision
 R __patchcol _patchcol
 R __patchrow _patchrow
-R __symbol etc._symbol
 R behaviorspace-experiment-name etc._behaviorspaceexperimentname
 R behaviorspace-run-number etc._behaviorspacerunnumber
 R butfirst etc._butfirst

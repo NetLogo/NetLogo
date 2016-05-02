@@ -63,10 +63,10 @@ class FrontEndTests extends FunSuite {
   def runTest(input: String, result: String, preamble: String = PREAMBLE) {
     assertResult(cleanJsNumbers(result))(cleanJsNumbers(compile(input, preamble).mkString))
   }
-  def runFailure(input: String, message: String, start: Int, end: Int) {
-    doFailure(input, message, start, end)
+  def runFailure(input: String, message: String, start: Int, end: Int, preamble: String = PREAMBLE) {
+    doFailure(input, message, start, end, preamble)
   }
-  def doFailure(input: String, message: String, start: Int, end: Int) {
+  def doFailure(input: String, message: String, start: Int, end: Int, preamble: String = PREAMBLE) {
     val e = intercept[CompilerException] { compile(input) }
     assertResult(message)(e.getMessage)
     assertResult(start)(e.start - PREAMBLE.length)
@@ -110,6 +110,18 @@ class FrontEndTests extends FunSuite {
     runFailure("let", "Expected variable name here",
       core.Token.Eof.start - PREAMBLE.size,
       core.Token.Eof.end - PREAMBLE.size)
+  }
+  test("parseSymbolUnknownName") {
+    runTest("report __symbol foo", "_report()[_symbolstring()[_symbol()[]]]", preamble = "to-report sym ")
+  }
+  test("parseSymbolKnownName1") {
+    runTest("report __symbol turtles", "_report()[_symbolstring()[_symbol()[]]]", preamble = "to-report sym ")
+  }
+  test("parseSymbolKnownName2") {
+    runTest("report __symbol turtle", "_report()[_symbolstring()[_symbol()[]]]", preamble = "to-report sym ")
+  }
+  test("errorsOnParseSymbolWithArgs") {
+    runFailure("report __symbol turtle 0", "Expected command.", 23, 24, preamble = "to-report sym ")
   }
   // https://github.com/NetLogo/NetLogo/issues/348
   test("let of task variable") {

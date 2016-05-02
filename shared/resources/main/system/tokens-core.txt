@@ -200,6 +200,7 @@ R __nano-time etc._nanotime
 R __processors etc._processors
 R __random-state etc._randomstate
 R __stack-trace etc._stacktrace
+R __symbol etc._symbolstring
 R __to-string etc._tostring
 R abs etc._abs
 R acos etc._acos
