@@ -13,6 +13,8 @@ object InfoFormatter {
   type HTML = String
   type CSS = String
 
+  val MaxParsingTimeMillis = 4000 // set high for Travis, won't take that long on most computers
+
   /**
    * for standalone use, for example on a web server
    */
@@ -35,7 +37,8 @@ object InfoFormatter {
     new PegDownProcessor(Extensions.SMARTYPANTS |       // beautifies quotes, dashes, etc.
                          Extensions.AUTOLINKS |         // angle brackets around URLs and email addresses not needed
                          Extensions.HARDWRAPS |         // GitHub flavored newlines
-                         Extensions.FENCED_CODE_BLOCKS) // delimit code blocks with ```
+                         Extensions.FENCED_CODE_BLOCKS, // delimit code blocks with ```
+                         MaxParsingTimeMillis)
       .markdownToHtml(str)
 
   def wrapHtml(body: HTML, fontSize:Int=defaultFontSize): HTML = {
