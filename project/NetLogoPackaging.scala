@@ -54,7 +54,7 @@ object NetLogoPackaging {
         ) ++ (platform.shortName match {
           case "windows" => Seq(new NativesDir(nlDir / "natives", "windows-amd64", "windows-i586"))
           case "linux"   => Seq(new NativesDir(nlDir / "natives", "linux-amd64", "linux-i586"))
-          case "macosx"  => Seq(new LibDir(nlDir / "lib"), new NativesDir(nlDir / "natives", "macosx-universal"))
+          case "macosx"  => Seq(new NativesDir(nlDir / "natives", "macosx-universal"))
         })
       }
     }

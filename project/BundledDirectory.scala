@@ -38,13 +38,6 @@ class ModelsDir(sourceDir: File) extends BundledDirectory(sourceDir) {
         .filterNot(_.isHidden) :+ (sourceDir / "index.txt")
 }
 
-class LibDir(sourceDir: File) extends BundledDirectory(sourceDir) {
-  val directoryName = "lib"
-
-  def files: Seq[File] =
-    (sourceDir / "Mac OS X").listFiles
-}
-
 class NativesDir(sourceDir: File, platforms: String*) extends BundledDirectory(sourceDir) {
   val directoryName = "natives"
   def files: Seq[File] =

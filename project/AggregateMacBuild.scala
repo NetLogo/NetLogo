@@ -45,7 +45,7 @@ object AggregateMacBuild extends PackageAction.AggregateBuild {
   // |   └── links to extensions, models, etc.
   // └── Java.runtime (contains JRE)
   val contentDirs = Seq("extensions", "models", "docs")
-  val libraryDirs = Seq("lib", "natives")
+  val libraryDirs = Seq("natives")
 
   def copyAny(src: File, dest: File): Unit =
     src match {
