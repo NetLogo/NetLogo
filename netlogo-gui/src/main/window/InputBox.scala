@@ -5,6 +5,7 @@ package org.nlogo.window
 import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.agent.InputBoxConstraint
 import org.nlogo.editor.AbstractEditorArea
+import org.nlogo.api.Exceptions
 import org.nlogo.api.Approximate.approximate
 import org.nlogo.api.Color.{getColor, getColorNameByIndex, modulateDouble}
 import org.nlogo.api.ModelReader.stripLines
@@ -76,6 +77,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
     editing = false
   }
 
+  var errorShowing = false
   var typeOptions = new org.nlogo.api.Options[InputType]()
   var name = ""
   var nameChanged = false
@@ -166,8 +168,9 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
             try inputText(inputType.readValue(InputBox.this.textArea.getText))
             catch {
               case ex@(_:LogoException|_:CompilerException|_:ValueConstraint.Violation) =>
-                showError(ex.asInstanceOf[Exception])
-                org.nlogo.awt.EventQueue.invokeLater(() => InputBox.this.textArea.requestFocus())
+                org.nlogo.awt.EventQueue.invokeLater { () =>
+                  InputBox.this.textArea.requestFocus()
+                }
             }
             editing = false
           }
@@ -248,7 +251,8 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
     try inputText(constraint.coerceValue(inputType.readValue(text)))
     catch {
       case ex: LogoException => throw new IllegalStateException(ex)
-      case ex@(_: CompilerException | _: ValueConstraint.Violation) => showError(ex.asInstanceOf[Exception])
+      case ex@(_: CompilerException | _: ValueConstraint.Violation) =>
+        showError(ex.asInstanceOf[Exception])
     }
     true
   }
@@ -512,7 +516,9 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
     @throws(classOf[CompilerException])
     override def readValue(text: String) = {
       constraint.assertConstraint(text)
-      compiler.checkReporterSyntax(text)
+      Exceptions.ignoring(classOf[CompilerException]) {
+        compiler.checkReporterSyntax(text)
+      }
       text
     }
   }
