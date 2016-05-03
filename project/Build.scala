@@ -42,15 +42,17 @@ object NetLogoBuild {
         newMappings.filterNot(n => existingMappings.contains(n._2))
       }))
 
-  def shareSourceDirectory(dir: File): Seq[Setting[_]] = Seq(
-    unmanagedSourceDirectories in Compile += dir.getAbsoluteFile / "src" / "main",
-    unmanagedSourceDirectories in Test    += dir.getAbsoluteFile / "src" / "test"
-    ) ++ Seq(Compile, Test).map(config =>
-      excludeFilter in unmanagedSources in config := {
-        (excludeFilter in unmanagedSources in config).value ||
-        new SimpleFileFilter({ f =>
-          ! f.isDirectory &&
-          Path.rebase(dir, baseDirectory.value)(f).map(_.exists).getOrElse(false)
-        })
-      })
+    def shareSourceDirectory(path: String): Seq[Setting[_]] = {
+      Seq(
+        unmanagedSourceDirectories in Compile += baseDirectory.value.getParentFile / path / "src" / "main",
+        unmanagedSourceDirectories in Test    += baseDirectory.value.getParentFile / path / "src" / "test"
+        ) ++ Seq(Compile, Test).map(config =>
+          excludeFilter in unmanagedSources in config := {
+            (excludeFilter in unmanagedSources in config).value ||
+            new SimpleFileFilter({ f =>
+              ! f.isDirectory &&
+              Path.rebase(baseDirectory.value.getParentFile / path, baseDirectory.value)(f).map(_.exists).getOrElse(false)
+            })
+          })
+    }
 }
