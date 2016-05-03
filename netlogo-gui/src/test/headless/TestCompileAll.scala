@@ -16,9 +16,11 @@ import org.scalatest.FunSuite
 class TestCompileAll extends FunSuite with SlowTest {
 
   // Models whose path contains any of these strings will not be tested at all:
-  def excludeModel(path: String) =
-    if (Version.is3D) !path.contains(makePath("3D")) // when in 3D, skip models that aren't in the 3D directory.
-    else path.endsWith(".nlogo3d") // when not in 3D, skip 3D models
+  def excludeModel(path: String): Boolean = {
+    if (Version.is3D) ! path.contains(makePath("3D")) // when in 3D, skip models that aren't in the 3D directory.
+    else (path.endsWith(".nlogo3d") || // when not in 3D, skip 3D models
+      path.contains("vid")) // the vid extension loads javafx on startup, which we don't want in headless mode
+  }
 
   // and those are exempt from having their preview commands tested:
   def excludePreviewCommands(path: String) =
