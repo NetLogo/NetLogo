@@ -77,7 +77,7 @@ object Version {
   def useGenerator =
     try
       !java.lang.Boolean.getBoolean("org.nlogo.noGenerator") && {
-        Class.forName("org.nlogo.generator.Generator");
+        Class.forName("org.nlogo.generate.Generator");
         true
       }
     catch {
