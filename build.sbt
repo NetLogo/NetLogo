@@ -15,7 +15,7 @@ lazy val commonSettings = Seq(
   javaSource in Compile := baseDirectory.value / "src" / "main",
   javaSource in Test    := baseDirectory.value / "src" / "test",
   onLoadMessage         := "",
-  testTempDirectory     := file("tmp"),
+  testTempDirectory     := (baseDirectory.value.getParentFile / "tmp").getAbsoluteFile,
   ivyLoggingLevel       := UpdateLogging.Quiet
 )
 
@@ -68,7 +68,7 @@ lazy val mockDependencies = Seq(
 
 lazy val scalastyleSettings = Seq(
   scalastyleTarget in Compile := {
-  file("target") / s"scalastyle-result-${name.value}.xml"
+  baseDirectory.value.getParentFile / "target" / s"scalastyle-result-${name.value}.xml"
   })
 
 def publicationSettings(repository: String) =
@@ -92,7 +92,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
    settings(Docs.settings: _*).
    settings(includeProject(parserJVM): _*).
    settings(publicationSettings("NetLogo-JVM"): _*).
-   settings(shareSourceDirectory(file("netlogo-core")): _*).
+   settings(shareSourceDirectory("netlogo-core"): _*).
    settings(Defaults.coreDefaultSettings ++
              Testing.settings ++
              Packaging.settings ++
@@ -111,10 +111,10 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     version := "6.0.0-M6",
     isSnapshot := false,
     mainClass in Compile := Some("org.nlogo.app.App"),
-    modelsDirectory := file("models"),
+    modelsDirectory := baseDirectory.value.getParentFile / "models",
     extensionRoot   := (baseDirectory.value.getParentFile / "extensions").getAbsoluteFile,
-    autogenRoot     := file("autogen"),
-    javaOptions     += "-Dnetlogo.docs.dir=" + file("docs").getAbsolutePath.toString,
+    autogenRoot     := baseDirectory.value.getParentFile / "autogen",
+    javaOptions     += "-Dnetlogo.docs.dir=" + (baseDirectory.value.getParentFile / "docs").getAbsolutePath.toString,
     unmanagedSourceDirectories in Test      += baseDirectory.value / "src" / "tools",
     resourceDirectory in Compile            := baseDirectory.value / "resources",
     unmanagedResourceDirectories in Compile ++= (unmanagedResourceDirectories in Compile in sharedResources).value,
@@ -165,12 +165,12 @@ lazy val headless = (project in file ("netlogo-headless")).
   settings(publicationSettings("NetLogoHeadless"): _*).
   settings(JFlexRunner.settings: _*).
   settings(includeProject(parserJVM): _*).
-  settings(shareSourceDirectory(file("netlogo-core")): _*).
+  settings(shareSourceDirectory("netlogo-core"): _*).
   settings(
     name          := "NetLogoHeadless",
     version       := "6.0",
     isSnapshot    := true,
-    autogenRoot   := file("autogen"),
+    autogenRoot   := (baseDirectory.value.getParentFile / "autogen").getAbsoluteFile,
     extensionRoot := baseDirectory.value.getParentFile / "extensions",
     mainClass in Compile         := Some("org.nlogo.headless.Main"),
     nogen                        := { System.setProperty("org.nlogo.noGenerator", "true") },
@@ -232,8 +232,8 @@ lazy val parser = CrossProject("parser", file("."),
     isSnapshot := true,
     name := "parser",
     version := "0.0.1",
-    unmanagedSourceDirectories in Compile += file(".").getAbsoluteFile / "parser-core" / "src" / "main",
-    unmanagedSourceDirectories in Test += file(".").getAbsoluteFile / "parser-core" / "src" / "test").
+    unmanagedSourceDirectories in Compile += baseDirectory.value.getParentFile / "parser-core" / "src" / "main",
+    unmanagedSourceDirectories in Test    += baseDirectory.value.getParentFile / "parser-core" / "src" / "test").
   jsConfigure(_.dependsOn(sharedResources % "compile-internal->compile")).
   jsConfigure(_.dependsOn(macros % "compile-internal->compile;test-internal->compile")).
   jsSettings(publicationSettings("NetLogoHeadless"): _*).
