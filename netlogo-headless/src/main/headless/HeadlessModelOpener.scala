@@ -76,15 +76,17 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
   }
 
 
-  private def parseShapes(turtleShapes: List[CoreVectorShape], linkShapes: List[CoreLinkShape], netLogoVersion: String) {
-    ws.world.turtleShapeList.replaceShapes(
+  private def parseShapes(turtleShapes: Seq[CoreVectorShape], linkShapes: Seq[CoreLinkShape], netLogoVersion: String) {
+    ws.world.turtleShapes.replaceShapes(
       turtleShapes.map(ShapeConverter.baseVectorShapeToVectorShape))
-    if (turtleShapes.isEmpty) ws.world.turtleShapeList.add(VectorShape.getDefaultShape)
+    if (turtleShapes.isEmpty)
+      ws.world.turtleShapes.add(VectorShape.getDefaultShape)
 
     // A new model is being loaded, so get rid of all previous shapes
-    ws.world.linkShapeList.replaceShapes(
+    ws.world.linkShapes.replaceShapes(
       linkShapes.map(ShapeConverter.baseLinkShapeToLinkShape))
-    if (linkShapes.isEmpty) ws.world.linkShapeList.add(LinkShape.getDefaultLinkShape)
+    if (linkShapes.isEmpty)
+      ws.world.linkShapes.add(LinkShape.getDefaultLinkShape)
   }
 
   private def finish(constraints: Map[String, ConstraintSpecification], program: Program, interfaceGlobalCommands: String) {

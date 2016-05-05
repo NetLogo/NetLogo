@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.lab
+package org.nlogo.fileformat
 
 import org.nlogo.api.{ EnumeratedValueSet, LabProtocol, SteppedValueSet }
 import javax.xml.transform
@@ -18,8 +18,7 @@ import org.nlogo.api.Dump
 // It would mean pulling in a whole sector of the Scala standard library that we don't depend on at
 // present, but that's fine since it wouldn't go in the lite jar. - ST 3/4/09
 
-object ProtocolSaver
-{
+object LabSaver {
   // it's a bit ugly to return a String instead of writing to a PrintWriter, but the assumption is
   // that we're never going to be writing huge amounts of data - ST 2/23/04
   def save(protocols: Iterable[LabProtocol]): String = {

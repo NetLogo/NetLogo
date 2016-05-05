@@ -2,6 +2,7 @@
 
 package org.nlogo.nvm
 
+import org.nlogo.api.LabProtocol
 import org.nlogo.core.WorldDimensions
 
 object LabInterface {
@@ -22,21 +23,17 @@ object LabInterface {
     def runCompleted(w: Workspace, runNumber: Int, steps: Int) { }
     def runtimeError(w: Workspace, runNumber: Int, t: Throwable) { }
   }
-  case class Settings(model: String,
-                      setupFile: Option[java.io.File],
-                      experiment: Option[String],
-                      tableWriter: Option[java.io.PrintWriter],
-                      spreadsheetWriter: Option[java.io.PrintWriter],
-                      dims: Option[WorldDimensions],
-                      threads: Int,
-                      suppressErrors: Boolean)
+  case class Settings(modelPath: String,
+    protocolName: Option[String],
+    externalXMLFile: Option[java.io.File],
+    tableWriter: Option[java.io.PrintWriter],
+    spreadsheetWriter: Option[java.io.PrintWriter],
+    dims: Option[WorldDimensions],
+    threads: Int,
+    suppressErrors: Boolean)
 }
 trait LabInterface {
   import LabInterface._
-  def load(protocols: String)
-  def names: List[String]
-  def newWorker(protocolName: String): Worker
-  def newWorker(setupFile: java.io.File): Worker
-  def newWorker(protocolName: String, setupFile: java.io.File): Worker
-  def run(settings: Settings, fn: ()=>Workspace)
+  def newWorker(protocol: LabProtocol): Worker
+  def run(settings: Settings, protocol: LabProtocol, fn: ()=>Workspace)
 }

@@ -16,6 +16,8 @@ class FileController(owner: Component) extends OpenModelController {
   // OpenModel.Controller methods
   def errorOpeningURI(uri: URI, exception: Exception): Unit = {
     val options = Array[Object](I18N.gui.get("common.buttons.ok"))
+    println(exception)
+    exception.printStackTrace()
     OptionDialog.show(owner, "NetLogo",
       I18N.gui.getN("file.open.error.unableToOpen",
         Paths.get(uri).toString, exception.getMessage),

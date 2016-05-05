@@ -21,6 +21,7 @@ import org.nlogo.workspace.{AbstractWorkspace, AbstractWorkspaceScala, Controlla
 import org.nlogo.window.Event.LinkParent
 import org.nlogo.swing.Implicits.thunk2runnable
 
+import org.picocontainer.adapters.AbstractAdapter
 import org.picocontainer.Characteristics._
 import org.picocontainer.parameters.{ConstantParameter, ComponentParameter}
 import org.picocontainer.Parameter
@@ -84,14 +85,21 @@ object App{
     else
       pico.addScalaObject("org.nlogo.api.NetLogoLegacyDialect")
 
-    import org.nlogo.fileformat.{ NLogoFormat, NLogoHubNetFormat, NLogoModelSettings, NLogoPreviewCommandsFormat }
-    val autoConvert = pico.getComponent(classOf[CompilerInterface]).autoConvert _
-    val modelLoader = new ConfigurableModelLoader()
-      .addFormat[Array[String], NLogoFormat](new NLogoFormat(autoConvert))
-      .addSerializer[Array[String], NLogoFormat](NLogoModelSettings)
-      .addSerializer[Array[String], NLogoFormat](new NLogoHubNetFormat(pico.getComponent(classOf[CompilerServices]), autoConvert))
-      .addSerializer[Array[String], NLogoFormat](new NLogoPreviewCommandsFormat())
-    pico.addComponent(modelLoader)
+    class ModelLoaderComponent extends AbstractAdapter[ModelLoader](classOf[ModelLoader], classOf[ConfigurableModelLoader]) {
+      import org.nlogo.fileformat
+
+      def getDescriptor(): String = "ModelLoaderComponent"
+
+      def verify(x$1: org.picocontainer.PicoContainer): Unit = {}
+
+      def getComponentInstance(container: org.picocontainer.PicoContainer, into: java.lang.reflect.Type) = {
+        val autoConvert =
+          container.getComponent(classOf[CompilerInterface]).autoConvert _
+        fileformat.standardLoader(container.getComponent(classOf[CompilerServices]), autoConvert)
+      }
+    }
+
+    pico.addAdapter(new ModelLoaderComponent())
 
     pico.addComponent(classOf[ProceduresToHtml])
     pico.addComponent(classOf[App])

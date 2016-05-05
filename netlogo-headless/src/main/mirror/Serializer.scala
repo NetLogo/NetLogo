@@ -173,10 +173,8 @@ object Serializer {
                 AgentKind.Turtle
               case "Link" =>
                 AgentKind.Link
-            })
-          result.replaceShapes(
-            parser(
-              readValues().mkString("\n\n").split("\n")))
+            },
+            ShapeList.shapesToMap(parser(readValues().mkString("\n\n").split("\n"))))
           result
       }
     def readValues(): Vector[AnyRef] =

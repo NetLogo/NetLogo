@@ -2,7 +2,7 @@
 
 package org.nlogo.util
 
-import org.picocontainer.{DefaultPicoContainer,Parameter}
+import org.picocontainer.{ComponentAdapter,DefaultPicoContainer,Parameter}
 import org.picocontainer.behaviors.Caching
 
 class Pico extends DefaultPicoContainer(new Caching)

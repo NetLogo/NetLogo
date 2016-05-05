@@ -2,6 +2,7 @@
 
 package org.nlogo.lab
 
+import org.nlogo.api.{ EnumeratedValueSet, LabProtocol, SteppedValueSet }
 import org.nlogo.core.LiteralParser
 import org.w3c.dom
 import org.xml.sax
@@ -14,11 +15,11 @@ object ProtocolLoader
 
 class ProtocolLoader(literalParser: LiteralParser)
 {
-  def loadOne(file: java.io.File):Protocol =
+  def loadOne(file: java.io.File):LabProtocol =
     new Loader().load(file) match { case Seq(ps) => ps }
-  def loadOne(xml: String):Protocol =
+  def loadOne(xml: String):LabProtocol =
     new Loader().load(xml) match { case Seq(ps) => ps }
-  def loadOne(file: java.io.File,name:String):Protocol =
+  def loadOne(file: java.io.File,name:String):LabProtocol =
     new Loader().load(file).find(_.name == name)
       .getOrElse(throw new IllegalStateException(
         "no experiment named \"" + name + "\""))
@@ -26,9 +27,9 @@ class ProtocolLoader(literalParser: LiteralParser)
     new Loader().load(xml).find(_.name == name)
       .getOrElse(throw new IllegalStateException(
         "no experiment named \"" + name + "\""))
-  def loadAll(file: java.io.File):List[Protocol] =
+  def loadAll(file: java.io.File):List[LabProtocol] =
     new Loader().load(file).toList
-  def loadAll(xml: String):List[Protocol] =
+  def loadAll(xml: String):List[LabProtocol] =
     new Loader().load(xml).toList
   // old NetLogo versions used "tick" where we now use "step" because "tick" got added to the language
   def ticksToSteps(str: String) =
@@ -49,7 +50,7 @@ class ProtocolLoader(literalParser: LiteralParser)
   ///
   def file2xml(file: java.io.File): String = ""
   class Loader {
-    def load(inputSource: sax.InputSource): Seq[Protocol] = {
+    def load(inputSource: sax.InputSource): Seq[LabProtocol] = {
       inputSource.setSystemId(getClass.getResource("/system/").toString)
       val factory = javax.xml.parsers.DocumentBuilderFactory.newInstance
       factory.setValidating(true)
@@ -63,7 +64,7 @@ class ProtocolLoader(literalParser: LiteralParser)
         .getElementsByTagName("experiment")
         .map(readProtocolElement)
     }
-    def readProtocolElement(element: dom.Element): Protocol = {
+    def readProtocolElement(element: dom.Element): LabProtocol = {
       def readOneAttribute(name: String, attr: String) =
         element.getElementsByTagName(name).head.getAttribute(attr)
       def readAll(name: String) =
@@ -90,7 +91,7 @@ class ProtocolLoader(literalParser: LiteralParser)
               case _ => None } }
         yield valueSet
       }
-      new Protocol(
+      new LabProtocol(
         element.getAttribute("name"),
         readOptional("setup"),
         readOptional("go"),

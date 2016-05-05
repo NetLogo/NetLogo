@@ -2,10 +2,11 @@
 
 package org.nlogo.headless
 
-import org.nlogo.core.WorldDimensions
-import org.nlogo.api.{ APIVersion, Version }
+import org.nlogo.core.{ Femto, LiteralParser, WorldDimensions }
+import org.nlogo.api.{ APIVersion, LabProtocol, ModelLoader, NetLogoLegacyDialect, Version }
 import org.nlogo.workspace.AbstractWorkspace
 import org.nlogo.nvm.LabInterface.Settings
+import org.nlogo.nvm
 
 object Main {
   def main(args: Array[String]) {
@@ -13,15 +14,20 @@ object Main {
     setHeadlessProperty()
     parseArgs(args).foreach(runExperiment)
   }
+
   def runExperiment(settings: Settings) {
     def newWorkspace = {
       val w = HeadlessWorkspace.newInstance
-      w.open(settings.model)
+      w.open(settings.modelPath)
       w
     }
-    val lab = HeadlessWorkspace.newLab
-    lab.load(HeadlessModelOpener.protocolSection(settings.model))
-    lab.run(settings, newWorkspace _)
+    BehaviorSpaceCoordinator.selectProtocol(settings) match {
+      case Some(protocol) =>
+        val lab = HeadlessWorkspace.newLab
+        lab.run(settings, protocol, newWorkspace _)
+      case None =>
+        throw new IllegalArgumentException("Invalid run, specify experiment name or setup file")
+    }
   }
   def setHeadlessProperty() {
     // force headless mode if it is not set.  This is necessary for the headless workspace to run
@@ -105,7 +111,7 @@ object Main {
       else
         Some(new WorldDimensions(minPxcor.get.toInt, maxPxcor.get.toInt,
                                  minPycor.get.toInt, maxPycor.get.toInt))
-    Some(new Settings(model.get, setupFile, experiment, tableWriter,
+    Some(new Settings(model.get, experiment, setupFile, tableWriter,
                       spreadsheetWriter, dims, threads, suppressErrors))
   }
 }

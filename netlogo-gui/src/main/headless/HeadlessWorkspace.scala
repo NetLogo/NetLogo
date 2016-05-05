@@ -64,7 +64,6 @@ object HeadlessWorkspace {
     else
       pico.addScalaObject("org.nlogo.api.NetLogoLegacyDialect")
     pico.add("org.nlogo.lab.Lab")
-    pico.add("org.nlogo.lab.ProtocolLoader")
     pico.addComponent(classOf[DefaultCompilerServices])
     pico.getComponent(classOf[LabInterface])
   }

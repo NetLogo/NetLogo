@@ -2,6 +2,7 @@
 
 package org.nlogo.lab
 
+import org.nlogo.api.LabProtocol
 import org.nlogo.api.LogoException
 import org.nlogo.nvm.{EngineException,LabInterface,Workspace}
 
@@ -10,7 +11,7 @@ import org.nlogo.nvm.{EngineException,LabInterface,Workspace}
 class Lab(loader: ProtocolLoader)
   extends LabInterface
 {
-  var protocols: List[Protocol] = Nil
+  var protocols: List[LabProtocol] = Nil
   def names = protocols.map(_.name)
   def load(s: String) {
     if(s.trim.isEmpty) Nil

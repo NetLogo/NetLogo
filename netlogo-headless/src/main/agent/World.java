@@ -12,6 +12,7 @@ import org.nlogo.core.Nobody$;
 import org.nlogo.core.Program;
 import org.nlogo.core.Shape;
 import org.nlogo.core.ShapeList;
+import org.nlogo.core.ShapeListTracker;
 import org.nlogo.api.Timer;
 import org.nlogo.api.TrailDrawerInterface;
 import org.nlogo.api.ValueConstraint;
@@ -42,16 +43,25 @@ public strictfp class World
 
   private final Timer _timer = new Timer();
   public Timer timer() { return _timer; }
-  private final ShapeList _turtleShapeList;
 
-  public ShapeList turtleShapeList() {
-    return _turtleShapeList;
+  private final ShapeListTracker _turtleShapes;
+
+  public ShapeListTracker turtleShapes() {
+    return _turtleShapes;
   }
 
-  private final ShapeList _linkShapeList;
+  public ShapeList turtleShapeList() {
+    return _turtleShapes.shapeList();
+  }
+
+  private final ShapeListTracker _linkShapes;
+
+  public ShapeListTracker linkShapes() {
+    return _linkShapes;
+  }
 
   public ShapeList linkShapeList() {
-    return _linkShapeList;
+    return _linkShapes.shapeList();
   }
 
   private double patchSize = 12.0; // keep the unzoomed patchSize here
@@ -108,8 +118,8 @@ public strictfp class World
   public volatile boolean comeUpForAir = false;
 
   public World() {
-    _turtleShapeList = new ShapeList(AgentKindJ.Turtle());
-    _linkShapeList = new ShapeList(AgentKindJ.Link());
+    _turtleShapes = new ShapeListTracker(AgentKindJ.Turtle());
+    _linkShapes = new ShapeListTracker(AgentKindJ.Link());
 
     _observer = createObserver();
     _observers = AgentSet.fromAgent(_observer);
@@ -1055,7 +1065,7 @@ public strictfp class World
 
   public String checkTurtleShapeName(String name) {
     name = name.toLowerCase();
-    if (_turtleShapeList.exists(name)) {
+    if (turtleShapeList().exists(name)) {
       return name;
     } else {
       return null; // indicates failure
@@ -1064,7 +1074,7 @@ public strictfp class World
 
   public String checkLinkShapeName(String name) {
     name = name.toLowerCase();
-    if (_linkShapeList.exists(name)) {
+    if (linkShapeList().exists(name)) {
       return name;
     } else {
       return null; // indicates failure
@@ -1072,7 +1082,7 @@ public strictfp class World
   }
 
   public Shape getLinkShape(String name) {
-    return _linkShapeList.shape(name);
+    return linkShapeList().shape(name);
   }
 
   public boolean breedOwns(AgentSet breed, String name) {

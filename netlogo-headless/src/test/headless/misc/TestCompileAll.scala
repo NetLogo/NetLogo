@@ -81,7 +81,7 @@ class TestCompileAll extends FunSuite  {
       val modelContents = text
       val model = ModelReader.parseModel(modelContents, workspace.parser, Map())
       val newModel = ModelReader.parseModel(
-        ModelReader.formatModel(model, workspace.parser), workspace.parser, Map())
+        ModelReader.formatModel(model), workspace.parser, Map())
       assertResult(model.code)(newModel.code)
       assertResult(model.widgets)(newModel.widgets)
       assertResult(model.info)(newModel.info)

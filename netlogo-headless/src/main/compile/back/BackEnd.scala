@@ -19,7 +19,7 @@ object BackEnd extends BackEndInterface {
       if (flags.useGenerator) // generate byte code
         procdef.procedure.code =
           Femto.get[nvm.GeneratorInterface]("org.nlogo.generate.Generator",
-                    source, procdef.procedure, profilingEnabled)
+                    procdef.procedure, profilingEnabled)
             .generate()
     }
     // only return top level procedures.

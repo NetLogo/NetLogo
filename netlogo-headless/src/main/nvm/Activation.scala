@@ -14,7 +14,7 @@ class Activation(val procedure: Procedure, _parent: Activation, val returnAddres
     Option(_parent)
 
   // "var" so ReporterTask can swap in the definition-site args - ST 2/5/11
-  var args: Array[AnyRef] = {
+  private[nlogo] var args: Array[AnyRef] = {
     val size = procedure.size
     if (size > 0)
       new Array[AnyRef](size)

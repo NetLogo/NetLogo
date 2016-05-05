@@ -2,9 +2,11 @@
 
 package org.nlogo.lab.gui
 
+import org.nlogo.api.LabProtocol
 import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.awt.UserCancelException
-import org.nlogo.lab.{Exporter,Protocol,SpreadsheetExporter,TableExporter,Worker}
+import org.nlogo.lab.{Exporter,SpreadsheetExporter,TableExporter,Worker}
+import org.nlogo.api.LabProtocol
 import org.nlogo.window.{EditDialogFactoryInterface,GUIWorkspace}
 import org.nlogo.nvm.{EngineException, Workspace}
 import org.nlogo.workspace.{CurrentModelOpener, WorkspaceFactory}
@@ -16,7 +18,7 @@ object Supervisor {
 }
 class Supervisor(dialog: java.awt.Dialog,
                  val workspace: GUIWorkspace,
-                 protocol: Protocol,
+                 protocol: LabProtocol,
                  factory: WorkspaceFactory with CurrentModelOpener,
                  dialogFactory: EditDialogFactoryInterface)
   extends Thread("BehaviorSpace Supervisor")

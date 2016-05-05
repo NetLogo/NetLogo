@@ -4,60 +4,62 @@ package org.nlogo.plot
 
 import org.scalatest.FunSuite
 import org.nlogo.api.DummyLogoThunkFactory
+import org.nlogo.core.{ Femto, LiteralParser }
 import org.nlogo.core.model.{PlotReader, PenReader}
 
 class PlotLoaderTests extends TestPlotLoaderHelper{
 
   // PlotLoader.parsePen
+  private val literalParser = Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
 
   test("easy pen") {
     assertResult("Pen(sheep,1.0,0,-13345367,true,,)")(
-      PenReader.parse("\"sheep\" 1.0 0 -13345367 true").toString)
+      PenReader.parse("\"sheep\" 1.0 0 -13345367 true", literalParser).toString)
   }
 
   test("pen with spaces in name") {
     assertResult("Pen(grass / 4,1.0,0,-10899396,true,,)")(
-      PenReader.parse("\"grass / 4\" 1.0 0 -10899396 true").toString)
+      PenReader.parse("\"grass / 4\" 1.0 0 -10899396 true", literalParser).toString)
   }
 
   test("pen with adjacent spaces in name") {
     assertResult("Pen(  grass  /  4    ,1.0,0,-10899396,true,,)")(
-      PenReader.parse("\"  grass  /  4    \" 1.0 0 -10899396 true").toString)
+      PenReader.parse("\"  grass  /  4    \" 1.0 0 -10899396 true", literalParser).toString)
   }
 
   test("pen with double quotes in name") {
     assertResult("Pen(\"\"\",1.0,0,-10899396,true,,)")(
-      PenReader.parse("\"\\\"\\\"\\\"\" 1.0 0 -10899396 true").toString)
+      PenReader.parse("\"\\\"\\\"\\\"\" 1.0 0 -10899396 true", literalParser).toString)
   }
 
   test("a bunch of white space before code is ok.") {
     assertResult("Pen(sheep,1.0,0,-13345367,true,count turtles,)")(
-      PenReader.parse("\"sheep\" 1.0 0 -13345367 true       \"count turtles\" \"\"").toString)
+      PenReader.parse("\"sheep\" 1.0 0 -13345367 true       \"count turtles\" \"\"", literalParser).toString)
   }
 
   test("pen with command code, with escaped quotes command code") {
     assertResult("Pen(sheep,1.0,0,-13345367,true,ticks \" \" ticks,)")(
-      PenReader.parse("\"sheep\" 1.0 0 -13345367 true \"ticks \\\" \\\" ticks\" \"\"").toString)
+      PenReader.parse("\"sheep\" 1.0 0 -13345367 true \"ticks \\\" \\\" ticks\" \"\"", literalParser).toString)
   }
 
   test("pen with simple command code") {
     assertResult("Pen(sheep,1.0,0,-13345367,true,crt 1,)")(
-      PenReader.parse("\"sheep\" 1.0 0 -13345367 true \"crt 1\" \"\"").toString)
+      PenReader.parse("\"sheep\" 1.0 0 -13345367 true \"crt 1\" \"\"", literalParser).toString)
   }
 
   test("pen with no x and y axis code") {
     assertResult("Pen(sheep,1.0,0,-13345367,true,,)")(
-      PenReader.parse("\"sheep\" 1.0 0 -13345367 true").toString)
+      PenReader.parse("\"sheep\" 1.0 0 -13345367 true", literalParser).toString)
   }
 
   test("pen with empty command code") {
     assertResult("Pen(sheep,1.0,0,-13345367,true,,)")(
-      PenReader.parse("\"sheep\" 1.0 0 -13345367 true \"\" \"\"").toString)
+      PenReader.parse("\"sheep\" 1.0 0 -13345367 true \"\" \"\"", literalParser).toString)
   }
 
   test("pen with multi-line code") {
     assertResult("Pen(sheep,1.0,0,-13345367,true,foo\nbar,)")(
-      PenReader.parse("\"sheep\" 1.0 0 -13345367 true \"foo\\nbar\" \"\"").toString)
+      PenReader.parse("\"sheep\" 1.0 0 -13345367 true \"foo\\nbar\" \"\"", literalParser).toString)
   }
 
     // PlotLoader.parsePlot
@@ -308,6 +310,7 @@ PENS
 
 
 trait TestPlotLoaderHelper extends FunSuite {
+  private val literalParser = Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
 
   def testPlotsFromModels(model:String, plots:List[String]) {
     plots.zipWithIndex.foreach{ case (lines,i) =>
@@ -318,7 +321,7 @@ trait TestPlotLoaderHelper extends FunSuite {
   def load(lines:String): Plot = {
     val plot = new PlotManager(new DummyLogoThunkFactory).newPlot("test")
     assert(PlotReader.validate(lines.trim.split("\n").toList))
-    PlotLoader.loadPlot(PlotReader.parse(lines.trim.split("\n").toList), plot)
+    PlotLoader.loadPlot(PlotReader.parse(lines.trim.split("\n").toList, literalParser), plot)
     plot
   }
 }

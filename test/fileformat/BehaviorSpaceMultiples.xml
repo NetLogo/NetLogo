@@ -1,0 +1,62 @@
+<experiments>
+  <experiment name="experiment" repetitions="100" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <timeLimit steps="1600"/>
+    <enumeratedValueSet variable="world-size">
+      <value value="20"/>
+      <value value="30"/>
+      <value value="40"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="exchange-rate-exponent">
+      <value value="-6"/>
+      <value value="-5.5"/>
+      <value value="-5"/>
+      <value value="-4.5"/>
+      <value value="-4"/>
+      <value value="-3.5"/>
+      <value value="-3.25"/>
+      <value value="-3"/>
+      <value value="-2.75"/>
+      <value value="-2.5"/>
+      <value value="-2"/>
+      <value value="-1.5"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="selection-rate">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="reproduction-rate">
+      <value value="1"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="experiment" repetitions="50" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <timeLimit steps="1601"/>
+    <enumeratedValueSet variable="world-size">
+      <value value="20"/>
+      <value value="30"/>
+      <value value="40"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="exchange-rate-exponent">
+      <value value="-6"/>
+      <value value="-5.5"/>
+      <value value="-5"/>
+      <value value="-4.5"/>
+      <value value="-4"/>
+      <value value="-3.5"/>
+      <value value="-3.25"/>
+      <value value="-3"/>
+      <value value="-2.75"/>
+      <value value="-2.5"/>
+      <value value="-2"/>
+      <value value="-1.5"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="selection-rate">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="reproduction-rate">
+      <value value="1"/>
+    </enumeratedValueSet>
+  </experiment>
+</experiments>

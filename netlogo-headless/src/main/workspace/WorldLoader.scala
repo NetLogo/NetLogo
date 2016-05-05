@@ -11,7 +11,7 @@ object WorldLoader {
     // set the visiblity of the ticks counter first because it changes the minimum size of the
     // viewWidget which could cause patchSize ugliness down the line ev 7/30/07
     val label = view.tickCounterLabel
-    worldInterface.tickCounterLabel(if(label == "NIL") "" else label)
+    worldInterface.tickCounterLabel(view.tickCounterLabel.getOrElse(""))
 
     worldInterface.showTickCounter(view.showTickCounter)
 
