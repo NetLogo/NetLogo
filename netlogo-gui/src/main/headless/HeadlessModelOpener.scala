@@ -3,7 +3,7 @@
 package org.nlogo.headless
 
 import org.nlogo.agent.{BooleanConstraint, ChooserConstraint, InputBoxConstraint, NumericConstraint, SliderConstraint}
-import org.nlogo.api.{ FileIO, LogoException, ModelReader, ModelSection,
+import org.nlogo.api.{ FileIO, LogoException, ModelSection,
                         NetLogoLegacyDialect, NetLogoThreeDDialect, SourceOwner, ValueConstraint, Version}
 import org.nlogo.fileformat
 import org.nlogo.core.ShapeParser.{ parseVectorShapes, parseLinkShapes }

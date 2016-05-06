@@ -4,12 +4,13 @@ package org.nlogo.headless.hubnet
 
 import org.nlogo.core.{ LiteralParser, Widget => CoreWidget }
 import org.nlogo.core.model.WidgetReader
-import org.nlogo.api.{ FileIO, ModelSection, ModelReader}
+import org.nlogo.api.{ FileIO, ModelSection }
 import org.nlogo.fileformat
 import org.nlogo.hubnet.protocol.ComputerInterface
 import org.nlogo.headless.TestUsingWorkspace
 
 import java.io.{ByteArrayInputStream, ObjectOutputStream, ByteArrayOutputStream}
+import java.nio.file.Paths
 
 import org.nlogo.util.ClassLoaderObjectInputStream
 
@@ -53,11 +54,11 @@ class TestClientInterface extends TestUsingWorkspace {
   }
 
   private def getClientWidgets(modelFilePath: String, workspace: LiteralParser): Seq[CoreWidget] = {
-    val widgetsString =
-      ModelReader.parseModel(
-        FileIO.file2String(modelFilePath)).get(ModelSection.HubNetClient)
-    WidgetReader.readInterface(
-      widgetsString.toList, workspace, fileformat.hubNetReaders, identity)
+    fileformat.standardLoader(workspace, _ => identity)
+      .readModel(Paths.get(modelFilePath).toUri)
+      .get
+      .optionalSectionValue[Seq[CoreWidget]]("org.nlogo.modelsection.hubnetclient")
+      .get
   }
 
   test("test roundTripSerialization method"){

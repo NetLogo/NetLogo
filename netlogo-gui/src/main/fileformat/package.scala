@@ -16,6 +16,11 @@ package object fileformat {
   def hubNetReaders: Map[String, WidgetReader] =
     HubNetWidgetReaders.additionalReaders
 
+  def basicLoader(autoConvert: String => String => String = _ => identity): ModelLoader =
+    new ConfigurableModelLoader()
+      .addFormat[Array[String], NLogoFormat](new NLogoFormat(autoConvert))
+      .addSerializer[Array[String], NLogoFormat](NLogoModelSettings)
+
   def standardLoader(literalParser: LiteralParser, autoConvert: String => String => String): ModelLoader =
     new ConfigurableModelLoader()
       .addFormat[Array[String], NLogoFormat](new NLogoFormat(autoConvert))
