@@ -197,8 +197,8 @@ public abstract strictfp class AbstractWorkspace
    */
   public String convertToNormal()
       throws java.io.IOException {
-    java.io.File git = new java.io.File(".git");
-    if (!git.exists() || !git.isDirectory()) {
+    java.io.File git = new java.io.File(ModelsLibrary.modelsRoot() + "/.git");
+    if (!git.exists()) {
       throw new java.io.IOException("no .git directory found");
     }
     modelType = ModelTypeJ.NORMAL();
