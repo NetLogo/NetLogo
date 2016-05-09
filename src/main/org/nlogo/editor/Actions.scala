@@ -9,8 +9,7 @@ import javax.swing.text.DefaultEditorKit.{CutAction, CopyAction, PasteAction, In
 
 object Actions {
 
-  val commentAction = new CommentAction()
-  val uncommentAction = new UncommentAction()
+  val commentToggleAction = new CommentToggleAction()
   val shiftLeftAction = new ShiftLeftAction()
   val shiftRightAction = new ShiftRightAction()
   val tabKeyAction = new TabKeyAction()
@@ -26,13 +25,12 @@ object Actions {
   val SELECT_ALL_ACTION = getDefaultEditorKitAction(DefaultEditorKit.selectAllAction)
 
   def setEnabled(enabled:Boolean){
-    List(commentAction,uncommentAction,shiftLeftAction,shiftRightAction).foreach(_.setEnabled(enabled))
+    List(commentToggleAction,shiftLeftAction,shiftRightAction).foreach(_.setEnabled(enabled))
   }
 
   class TabKeyAction extends MyTextAction("tab-key", _.indentSelection() )
   class ShiftTabKeyAction extends MyTextAction("shift-tab-key", e => { e.shiftLeft(); e.shiftLeft() })
-  class CommentAction extends MyTextAction("comment-line", _.insertBeforeEachSelectedLine(";"))
-  class UncommentAction extends MyTextAction("uncomment-line", _.uncomment())
+  class CommentToggleAction extends MyTextAction("toggle-comment", _.toggleComment())
   class ShiftLeftAction extends MyTextAction("shift-line-left", _.shiftLeft() )
   class ShiftRightAction extends MyTextAction("shift-line-right", _.insertBeforeEachSelectedLine(" ") )
   def quickHelpAction(colorizer: Colorizer[_], i18n: String => String) =
