@@ -10,7 +10,7 @@ import org.nlogo.api.DummyCompilerServices
 class LoaderTests extends FunSuite {
 
   test("scientific notation") {
-    assertResult(expected)(Loader.load(ScientificDT, new DummyCompilerServices))
+    assertResult(expected)(new Translator(Loader.load(ScientificDT).get, new DummyCompilerServices).source)
   }
   val ScientificDT =
     """|1.0E-4
@@ -60,7 +60,7 @@ class LoaderTests extends FunSuite {
        |""".stripMargin.replaceAll("\r\n", "\n")
 
   test("issue #35") {
-    assertResult(issue35Expected)(Loader.load(issue35Input, new DummyCompilerServices))
+    assertResult(issue35Expected)(new Translator(Loader.load(issue35Input).get, new DummyCompilerServices).source)
   }
   val issue35Input =
     """|0.01

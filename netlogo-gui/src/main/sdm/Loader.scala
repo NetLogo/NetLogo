@@ -11,7 +11,7 @@ import org.nlogo.api.CompilerServices
 
 object Loader {
 
-  def load(input: String, compiler: CompilerServices): String = {
+  def load(input: String): Option[Model] = {
     val lines =
       io.Source.fromString(mungeClassNames(input))
         .getLines
@@ -20,11 +20,11 @@ object Loader {
         .toSeq
     // get dt first, since StreamTokenizer doesn't know scientific notation
     lines.headOption match {
-      case None => ""
+      case None => None
       case Some(dt) =>
         val model = buildModel(new Tokenizer(lines.tail.mkString("", "\n", "\n")),
                                dt.toDouble)
-        new Translator(model, compiler).source
+        Some(model)
     }
   }
 

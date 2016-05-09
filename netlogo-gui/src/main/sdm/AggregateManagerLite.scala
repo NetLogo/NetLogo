@@ -2,20 +2,25 @@
 
 package org.nlogo.sdm
 
+import org.nlogo.core.{ Model => CoreModel }
 import org.nlogo.api.{ AggregateManagerInterface, CompilerServices }
 
 class AggregateManagerLite extends AggregateManagerInterface {
 
   private def unsupported = throw new UnsupportedOperationException
 
-  def load(lines: String, compiler: CompilerServices) {
-    source = Loader.load(lines, compiler)
+  def load(model: CoreModel, compiler: CompilerServices) {
+    model.optionalSectionValue[Model]("org.nlogo.modelsection.systemdynamics")
+      .foreach { (m: Model) =>
+        source = new Translator(m, compiler).source
+      }
   }
 
   /// implementations of SourceOwner methods
   var source = ""
   override def innerSource = source
   override def innerSource_=(s: String) = unsupported
+  override def isLoaded = source.nonEmpty
   def classDisplayName = "System Dynamics"
   def kind = unsupported
   def headerSource = ""

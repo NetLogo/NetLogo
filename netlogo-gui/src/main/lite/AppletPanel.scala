@@ -8,7 +8,7 @@ import org.nlogo.api.{ ConfigurableModelLoader, LogoException, ModelLoader, Mode
 import org.nlogo.core.{ AgentKind, CompilerException }
 import org.nlogo.window.{ Event, FileController, AppletAdPanel, CompilerManager, InterfacePanelLite, InvalidVersionException,
                           ReconfigureWorkspaceUI, NetLogoListenerManager, RuntimeErrorDialog }
-import org.nlogo.window.Events.{ CompiledEvent, LoadSectionEvent }
+import org.nlogo.window.Events.{ CompiledEvent, LoadModelEvent }
 import org.nlogo.workspace.OpenModel
 import org.nlogo.fileformat.{ NLogoFormat, NLogoHubNetFormat, NLogoPreviewCommandsFormat, NLogoModelSettings }
 
@@ -66,10 +66,9 @@ with Event.LinkParent {
       if (e.error != null)
         e.error.printStackTrace()
   }})
-  addLinkComponent(new LoadSectionEvent.Handler {
-    override def handle(e: LoadSectionEvent) {
-      if (e.section == ModelSection.SystemDynamics)
-        workspace.aggregateManager.load(e.text, workspace)
+  addLinkComponent(new LoadModelEvent.Handler {
+    override def handle(e: LoadModelEvent) {
+      workspace.aggregateManager.load(e.model, workspace)
   }})
   workspace.setWidgetContainer(iP)
   setBackground(java.awt.Color.WHITE)

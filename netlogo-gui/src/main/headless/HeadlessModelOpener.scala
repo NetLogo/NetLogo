@@ -41,17 +41,14 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     val dialect = if (Version.is3D(model.version)) NetLogoThreeDDialect
       else NetLogoLegacyDialect
 
-    // read system dynamics modeler diagram
-    val sdmLines = model.otherSections.get("org.nlogo.sdm").flatMap(lines => if (lines.isEmpty) None else Some(lines))
-    sdmLines.foreach { (lines: List[String]) =>
-      ws.aggregateManager.load(lines.mkString("", "\n", "\n"), ws)
-    }
+    // load system dynamics model (if present)
+    ws.aggregateManager.load(model, ws)
 
     // read procedures, compile them.
     val results = {
       import collection.JavaConverters._
 
-      val additionalSources: Seq[SourceOwner] = if (sdmLines.isEmpty) Seq() else Seq(ws.aggregateManager)
+      val additionalSources: Seq[SourceOwner] = if (ws.aggregateManager.isLoaded) Seq(ws.aggregateManager) else Seq()
       val code = model.code
       val newProg = Program.fromDialect(dialect).copy(interfaceGlobals = model.interfaceGlobals)
       ws.compiler.compileProgram(code, additionalSources, newProg, ws.getExtensionManager, ws.getCompilationEnvironment)

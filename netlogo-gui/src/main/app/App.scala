@@ -85,8 +85,11 @@ object App{
     else
       pico.addScalaObject("org.nlogo.api.NetLogoLegacyDialect")
 
+    pico.add("org.nlogo.sdm.gui.NLogoGuiSDMFormat")
+
     class ModelLoaderComponent extends AbstractAdapter[ModelLoader](classOf[ModelLoader], classOf[ConfigurableModelLoader]) {
-      import org.nlogo.fileformat
+      import org.nlogo.fileformat, fileformat.NLogoFormat
+      import scala.collection.JavaConversions._
 
       def getDescriptor(): String = "ModelLoaderComponent"
 
@@ -95,7 +98,17 @@ object App{
       def getComponentInstance(container: org.picocontainer.PicoContainer, into: java.lang.reflect.Type) = {
         val autoConvert =
           container.getComponent(classOf[CompilerInterface]).autoConvert _
-        fileformat.standardLoader(container.getComponent(classOf[CompilerServices]), autoConvert)
+        val loader = fileformat
+          .standardLoader(container.getComponent(classOf[CompilerServices]), autoConvert)
+        val additionalComponents =
+          pico.getComponents(classOf[ComponentSerialization[Array[String], NLogoFormat]])
+        if (additionalComponents.nonEmpty)
+          additionalComponents.foldLeft(loader) {
+            case (l, serialization) =>
+              l.addSerializer[Array[String], NLogoFormat](serialization)
+          }
+        else
+          loader
       }
     }
 

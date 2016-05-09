@@ -3,6 +3,7 @@
 package org.nlogo.sdm.gui;
 
 import org.jhotdraw.framework.Figure;
+import org.jhotdraw.framework.FigureEnumeration;
 import org.jhotdraw.standard.StandardDrawing;
 import org.nlogo.sdm.Model;
 
@@ -13,6 +14,17 @@ public strictfp class AggregateDrawing
 
   public Model getModel() {
     return model;
+  }
+
+  public void synchronizeModel() {
+    FigureEnumeration figs = figures();
+    while (figs.hasNextFigure()) {
+      Figure fig = figs.nextFigure();
+      if (fig instanceof ModelElementFigure &&
+          ((ModelElementFigure) fig).getModelElement() != null) {
+        getModel().addElement(((ModelElementFigure) fig).getModelElement());
+          }
+    }
   }
 
   @Override

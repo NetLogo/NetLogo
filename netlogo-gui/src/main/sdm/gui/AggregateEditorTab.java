@@ -9,13 +9,11 @@ import java.awt.BorderLayout;
 strictfp class AggregateEditorTab
     extends javax.swing.JPanel {
 
-  AggregateEditorTab(AggregateModelEditor editor, java.awt.Component contents) {
+  AggregateEditorTab(AggregateModelEditor editor, AggregateModelEditorToolBar toolbar, java.awt.Component contents) {
     setAlignmentX(LEFT_ALIGNMENT);
     setAlignmentY(TOP_ALIGNMENT);
     setLayout(new BorderLayout());
 
-    AggregateModelEditorToolBar toolbar =
-        new AggregateModelEditorToolBar(editor);
     editor.setToolbar(toolbar);
     add(toolbar, BorderLayout.NORTH);
 

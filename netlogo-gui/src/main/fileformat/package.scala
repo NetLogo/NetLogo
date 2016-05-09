@@ -21,7 +21,7 @@ package object fileformat {
       .addFormat[Array[String], NLogoFormat](new NLogoFormat(autoConvert))
       .addSerializer[Array[String], NLogoFormat](NLogoModelSettings)
 
-  def standardLoader(literalParser: LiteralParser, autoConvert: String => String => String): ModelLoader =
+  def standardLoader(literalParser: LiteralParser, autoConvert: String => String => String): ConfigurableModelLoader =
     new ConfigurableModelLoader()
       .addFormat[Array[String], NLogoFormat](new NLogoFormat(autoConvert))
       .addSerializer[Array[String], NLogoFormat](NLogoModelSettings)

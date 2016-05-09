@@ -2,20 +2,22 @@
 
 package org.nlogo.headless
 
+import java.nio.file.Paths
+
 // Note that in the Scaladoc we distribute, this class is included, but Workspace and
 // AbstractWorkspace are not, so if you want to document a method for everyone, override that method
 // here and document it here.  The overriding method can simply call super(). - ST 6/1/05, 7/28/11
 
 import org.nlogo.agent.{ Agent, Observer }
-import org.nlogo.api.{ Version, RendererInterface, WorldDimensions3D, AggregateManagerInterface,
-                       LogoException, SimpleJobOwner, HubNetInterface, CommandRunnable, ReporterRunnable }
-import org.nlogo.core.{ AgentKind, CompilerException, Model, UpdateMode, WorldDimensions, model => coremodel },
+import org.nlogo.api.{ ComponentSerialization, Version, RendererInterface, WorldDimensions3D, AggregateManagerInterface,
+                       FileIO, LogoException, SimpleJobOwner, HubNetInterface, CommandRunnable, ReporterRunnable }
+import org.nlogo.core.{ AgentKind, CompilerException, Femto, Model, UpdateMode, WorldDimensions, model => coremodel },
   coremodel.{ ModelReader => CoreModelReader, WidgetReader }
 import org.nlogo.agent.{ World, World3D }
 import org.nlogo.nvm.{ LabInterface,
                        Workspace, DefaultCompilerServices, CompilerInterface }
 import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala }
-import org.nlogo.fileformat
+import org.nlogo.fileformat, fileformat.NLogoFormat
 import org.nlogo.util.Pico
 import org.picocontainer.Parameter
 import org.picocontainer.parameters.ComponentParameter
@@ -490,6 +492,11 @@ with org.nlogo.api.ViewSettings {
     }
   }
 
+
+  private lazy val loader =
+    fileformat.standardLoader(compiler.compilerUtilities, compiler.autoConvert _)
+      .addSerializer[Array[String], NLogoFormat](
+        Femto.get[ComponentSerialization[Array[String], NLogoFormat]]("org.nlogo.sdm.NLogoSDMFormat"))
   /// Controlling API methods
 
   /**
@@ -502,13 +509,17 @@ with org.nlogo.api.ViewSettings {
   @throws(classOf[LogoException])
   override def open(path: String) {
     setModelPath(path)
-    val modelContents = org.nlogo.api.FileIO.file2String(path)
-    try openString(modelContents)
+    try {
+      loader.readModel(Paths.get(path).toUri).foreach { m =>
+        fileManager.handleModelChange()
+        openModel(m)
+      }
+    }
     catch {
       case ex: CompilerException =>
         // models with special comment are allowed not to compile
         if (compilerTestingMode &&
-            modelContents.startsWith(";; DOESN'T COMPILE IN CURRENT BUILD"))
+            FileIO.file2String(path).startsWith(";; DOESN'T COMPILE IN CURRENT BUILD"))
           System.out.println("ignored compile error: " + path)
         else throw ex
     }
@@ -520,8 +531,7 @@ with org.nlogo.api.ViewSettings {
    * @param modelContents
    */
   override def openString(modelContents: String) {
-    fileManager.handleModelChange()
-    openFromSource(modelContents)
+    openFromSource(modelContents, "nlogo")
   }
 
   /**
@@ -531,9 +541,8 @@ with org.nlogo.api.ViewSettings {
    * @param source The complete model, including widgets and so forth,
    *               in the same format as it would be stored in a file.
    */
-  def openFromSource(source: String) {
-    val additionalReaders = fileformat.nlogoReaders(Version.is3D)
-    openModel(CoreModelReader.parseModel(source, compiler.compilerUtilities, additionalReaders))
+  def openFromSource(source: String, extension: String) {
+    loader.readModel(source, extension)
   }
 
   def openModel(model: Model): Unit = {
