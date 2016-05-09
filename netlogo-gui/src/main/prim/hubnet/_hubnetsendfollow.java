@@ -21,7 +21,7 @@ public strictfp class _hubnetsendfollow
     workspace.waitFor
         (new org.nlogo.api.CommandRunnable() {
           public void run() {
-            workspace.getHubNetManager().sendAgentPerspective
+            workspace.getHubNetManager().get().sendAgentPerspective
                 (client,
                     PerspectiveJ.FOLLOW, agent.kind(), agent.id, radius, false);
           }

@@ -28,4 +28,8 @@ package object fileformat {
       .addSerializer[Array[String], NLogoFormat](new NLogoHubNetFormat(literalParser, autoConvert))
       .addSerializer[Array[String], NLogoFormat](new NLogoPreviewCommandsFormat())
       .addSerializer[Array[String], NLogoFormat](new NLogoLabFormat(autoConvert, literalParser))
+      .addFormat[Array[String], NLogoThreeDFormat](new NLogoThreeDFormat(autoConvert))
+      .addSerializer[Array[String], NLogoThreeDFormat](new NLogoThreeDLabFormat(autoConvert, literalParser))
+      .addSerializer[Array[String], NLogoThreeDFormat](NLogoThreeDModelSettings)
+      .addSerializer[Array[String], NLogoThreeDFormat](NLogoThreeDPreviewCommandsFormat)
 }

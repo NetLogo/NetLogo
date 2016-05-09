@@ -22,8 +22,9 @@ class NLogoHubNetFormat(literalParser: LiteralParser, autoConvert: String => Str
   def validationErrors(m: Model): Option[String] = None
 
   override def deserialize(widgetLines: Array[String]) = { (m: Model) =>
-    val widgets = WidgetReader.readInterface(
-      widgetLines.toList, literalParser, hubNetReaders, identity).toSeq.map(_.convertSource(autoConvert(m.version)))
+    val widgets =
+      WidgetReader.readInterface(widgetLines.toList, literalParser, hubNetReaders, identity)
+        .toSeq.map(_.convertSource(autoConvert(m.version)))
     m.withOptionalSection(componentName, Some(widgets), Seq[CoreWidget]())
   }
 }

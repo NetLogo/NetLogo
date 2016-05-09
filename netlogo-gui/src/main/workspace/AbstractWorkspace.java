@@ -46,8 +46,6 @@ public abstract strictfp class AbstractWorkspace
   }
 
   public final org.nlogo.nvm.JobManagerInterface jobManager;
-  private final HubNetManagerFactory hubNetManagerFactory;
-  protected HubNetInterface hubNetManager;
   protected final Evaluator evaluator;
   protected final ExtensionManager extensionManager;
 
@@ -68,10 +66,8 @@ public abstract strictfp class AbstractWorkspace
 
   /// startup
 
-  protected AbstractWorkspace(org.nlogo.agent.World world,
-                              AbstractWorkspace.HubNetManagerFactory hubNetManagerFactory) {
+  protected AbstractWorkspace(org.nlogo.agent.World world) {
     this._world = world;
-    this.hubNetManagerFactory = hubNetManagerFactory;
     modelType = ModelTypeJ.NEW();
     evaluator = new Evaluator(this);
     world.compiler_$eq(this);
@@ -102,9 +98,6 @@ public abstract strictfp class AbstractWorkspace
       throws InterruptedException {
     jobManager.die();
     getExtensionManager().reset();
-    if (hubNetManager != null) {
-      hubNetManager.disconnect();
-    }
   }
 
   /**
@@ -147,31 +140,7 @@ public abstract strictfp class AbstractWorkspace
 
   /// hubnet
 
-  public HubNetInterface getHubNetManager() {
-    if (hubNetManager == null && hubNetManagerFactory != null) {
-      hubNetManager = hubNetManagerFactory.newInstance(this);
-    }
-    return hubNetManager;
-  }
 
-  // merely return, don't create if it isn't already there.
-  public HubNetInterface hubnetManager() {
-    return hubNetManager;
-  }
-
-  public interface HubNetManagerFactory {
-    HubNetInterface newInstance(AbstractWorkspace workspace);
-  }
-
-  protected boolean hubNetRunning = false;
-
-  public boolean hubNetRunning() {
-    return hubNetRunning;
-  }
-
-  public void hubNetRunning(boolean hubNetRunning) {
-    this.hubNetRunning = hubNetRunning;
-  }
 
   public org.nlogo.api.WorldPropertiesInterface getPropertiesInterface() {
     return null;

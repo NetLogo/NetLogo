@@ -1174,7 +1174,10 @@ public strictfp class World
   }
 
   public int observerOwnsIndexOf(String name) {
-    return _program.globals().indexOf(name);
+    int index = _program.globals().indexOf(name);
+    if (_observer.variables().length > index)
+      return index;
+    return -1;
   }
 
   /// breeds & shapes

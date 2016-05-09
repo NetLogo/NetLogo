@@ -19,7 +19,7 @@ public final strictfp class _hubnetmakeplotnarrowcast
     workspace.waitFor
         (new org.nlogo.api.CommandRunnable() {
           public void run() throws LogoException {
-            if (!workspace.getHubNetManager().addNarrowcastPlot(name)) {
+            if (!workspace.getHubNetManager().get().addNarrowcastPlot(name)) {
               throw new EngineException
                   (context, _hubnetmakeplotnarrowcast.this,
                       "no such plot: \"" + name + "\"");

@@ -13,7 +13,7 @@ public final strictfp class _hubnetsetplotpeninterval
     final double interval = argEvalDoubleValue(context, 1);
     workspace.waitFor(new org.nlogo.api.CommandRunnable() {
       public void run() {
-        workspace.getHubNetManager().setPlotPenInterval(name, interval);
+        workspace.getHubNetManager().get().setPlotPenInterval(name, interval);
       }
     });
     context.ip = next;

@@ -63,8 +63,8 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     // parse turtle and link shapes, updating the workspace.
     attachWorldShapes(model.turtleShapes, model.linkShapes)
 
-    if (model.optionalSections.contains("org.nlogo.modelsection.hubnetclient")) {
-      ws.getHubNetManager.load(model)
+    if (model.hasValueForOptionalSection("org.nlogo.modelsection.hubnetclient")) {
+      ws.getHubNetManager.foreach(_.load(model))
     }
 
     ws.init()

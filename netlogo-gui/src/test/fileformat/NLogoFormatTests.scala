@@ -2,11 +2,17 @@
 
 package org.nlogo.fileformat
 
+import java.net.URI
+import java.nio.file.{ Files, Paths }
+import java.util.Arrays
+
+import org.scalatest.FunSuite
+
 import org.nlogo.api.ComponentSerialization
 
 import org.nlogo.core.{ Model, Shape, Widget }, Shape.{ LinkShape, VectorShape }
 
-import java.util.Arrays
+import scala.collection.JavaConversions._
 
 abstract class NLogoFormatTest[A] extends ModelSectionTest[Array[String], NLogoFormat, A] {
   def autoConvert(v: String)(c: String): String =
@@ -20,6 +26,30 @@ abstract class NLogoFormatTest[A] extends ModelSectionTest[Array[String], NLogoF
 
   override def displaySerialized(a: Array[String]): String =
     a.mkString(s"Array[${a.length}](", ", ", ")")
+}
+
+class NLogoFormatIOTest extends FunSuite {
+  lazy val modelsLibrary = System.getProperty("netlogo.models.dir", "models")
+
+  val format = new NLogoFormat(_ => identity)
+
+  lazy val antsBenchmarkPath = Paths.get(modelsLibrary, "test", "benchmarks", "Ants Benchmark.nlogo")
+  // sanity checking, if these fail NetLogo will be pretty unusable
+  test("fails when reading in sections from a bad URI") {
+    assert(format.sections(new URI("file:///not-a-real-file")).isFailure)
+  }
+  test("reads in sections from a given URI") {
+    assert(format.sections(antsBenchmarkPath.toUri).isSuccess)
+  }
+  test("saves specified sections to a given URI") {
+    val sections =
+      format.sections(antsBenchmarkPath.toUri).get
+    val pathToWrite = Paths.get("tmp", "AntsCopy"+ System.currentTimeMillis +".nlogo")
+    val result = format.writeSections(sections, pathToWrite.toUri)
+    assert(result.isSuccess)
+    assert(Paths.get(result.get).toAbsolutePath == pathToWrite.toAbsolutePath)
+    assert(Files.readAllLines(Paths.get(result.get)).mkString("\n") == Files.readAllLines(antsBenchmarkPath).mkString("\n"))
+  }
 }
 
 class CodeComponentTest extends NLogoFormatTest[String] {

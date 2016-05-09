@@ -62,7 +62,9 @@ class ToolsMenu(app: App) extends org.nlogo.swing.Menu(I18N.gui.get("menu.tools"
     }
   }
   def openHubNetClientEditor() {
-    app.workspace.getHubNetManager.openClientEditor()
-    app.frame.addLinkComponent(app.workspace.getHubNetManager.clientEditor)
+    app.workspace.getHubNetManager.foreach { mgr =>
+      mgr.openClientEditor()
+      app.frame.addLinkComponent(mgr.clientEditor)
+    }
   }
 }

@@ -9,14 +9,14 @@ import java.nio.file.Paths
 // here and document it here.  The overriding method can simply call super(). - ST 6/1/05, 7/28/11
 
 import org.nlogo.agent.{ Agent, Observer }
-import org.nlogo.api.{ ComponentSerialization, Version, RendererInterface, WorldDimensions3D, AggregateManagerInterface,
-                       FileIO, LogoException, SimpleJobOwner, HubNetInterface, CommandRunnable, ReporterRunnable }
-import org.nlogo.core.{ AgentKind, CompilerException, Femto, Model, UpdateMode, WorldDimensions, model => coremodel },
-  coremodel.{ ModelReader => CoreModelReader, WidgetReader }
+import org.nlogo.api.{ ComponentSerialization, Version, ModelLoader, RendererInterface,
+  WorldDimensions3D, AggregateManagerInterface, FileIO, LogoException, ModelReader, SimpleJobOwner,
+  HubNetInterface, CommandRunnable, ReporterRunnable }, ModelReader.modelSuffix
+import org.nlogo.core.{ AgentKind, CompilerException, Femto, Model, UpdateMode, WorldDimensions }
 import org.nlogo.agent.{ World, World3D }
 import org.nlogo.nvm.{ LabInterface,
                        Workspace, DefaultCompilerServices, CompilerInterface }
-import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala }
+import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala, HubNetManagerFactory }
 import org.nlogo.fileformat, fileformat.NLogoFormat
 import org.nlogo.util.Pico
 import org.picocontainer.Parameter
@@ -46,15 +46,9 @@ object HeadlessWorkspace {
       pico.addScalaObject("org.nlogo.api.NetLogoLegacyDialect")
     pico.add("org.nlogo.sdm.AggregateManagerLite")
     pico.add("org.nlogo.render.Renderer")
-    pico.add(classOf[HubNetInterface],
-             "org.nlogo.hubnet.server.HeadlessHubNetManager",
-             Array[Parameter](new ComponentParameter))
     pico.addComponent(subclass)
-    val hubNetManagerFactory = new AbstractWorkspace.HubNetManagerFactory {
-      override def newInstance(workspace: AbstractWorkspace) =
-        pico.getComponent(classOf[HubNetInterface])
-    }
-    pico.addComponent(hubNetManagerFactory)
+    pico.addAdapter(new ModelLoaderComponent())
+    pico.add(classOf[HubNetManagerFactory], "org.nlogo.hubnet.server.HeadlessHubNetManagerFactory")
     pico.getComponent(subclass)
   }
 
@@ -113,7 +107,7 @@ class HeadlessWorkspace(
   val compiler: CompilerInterface,
   val renderer: RendererInterface,
   val aggregateManager: AggregateManagerInterface,
-  hubNetManagerFactory: AbstractWorkspace.HubNetManagerFactory)
+  hubNetManagerFactory: HubNetManagerFactory)
 extends AbstractWorkspaceScala(_world, hubNetManagerFactory)
 with org.nlogo.workspace.Controllable
 with org.nlogo.workspace.WorldLoaderInterface
@@ -425,8 +419,7 @@ with org.nlogo.api.ViewSettings {
    * Internal use only.
    */
   override def requestDisplayUpdate(force: Boolean) {
-    if (hubnetManager != null)
-      hubnetManager.incrementalUpdateFromEventThread()
+    hubNetManager.foreach(_.incrementalUpdateFromEventThread())
   }
 
   /**
@@ -492,7 +485,6 @@ with org.nlogo.api.ViewSettings {
     }
   }
 
-
   private lazy val loader =
     fileformat.standardLoader(compiler.compilerUtilities, compiler.autoConvert _)
       .addSerializer[Array[String], NLogoFormat](
@@ -531,7 +523,7 @@ with org.nlogo.api.ViewSettings {
    * @param modelContents
    */
   override def openString(modelContents: String) {
-    openFromSource(modelContents, "nlogo")
+    openFromSource(modelContents, modelSuffix)
   }
 
   /**
@@ -542,7 +534,7 @@ with org.nlogo.api.ViewSettings {
    *               in the same format as it would be stored in a file.
    */
   def openFromSource(source: String, extension: String) {
-    loader.readModel(source, extension)
+    loader.readModel(source, extension).foreach(openModel)
   }
 
   def openModel(model: Model): Unit = {

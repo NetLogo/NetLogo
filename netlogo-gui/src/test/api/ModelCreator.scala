@@ -61,9 +61,7 @@ trait ModelCreator {
         new Model(code = code, widgets = core.View() :: widgets.toList)
   }
 
-  class Model(code: String, widgets: List[core.Widget]) extends core.Model(code = code, widgets = widgets) {
-    override def toString = core.model.ModelReader.formatModel(this)
-  }
+  class Model(code: String, widgets: List[core.Widget]) extends core.Model(code = code, widgets = widgets)
 
   val counter = Iterator.from(0)
   def quoted(s:String) = '"' + s + '"'

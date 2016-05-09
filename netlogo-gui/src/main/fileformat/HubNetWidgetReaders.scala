@@ -32,7 +32,7 @@ object HubNetWidgetReaders {
 
 import HubNetWidgetReaders._
 
-object HubNetSwitchReader extends DefaultParboiledWidgetParser with WidgetReader {
+object HubNetSwitchReader extends DefaultParboiledWidgetParser with ConstantRuleWidgetParser with WidgetReader {
   class SwitchParser extends Parser with ParboiledWidgetParser.RichRule {
     def parserToSwitch(
       pos: (Int, Int, Int, Int),
@@ -87,7 +87,7 @@ object HubNetSwitchReader extends DefaultParboiledWidgetParser with WidgetReader
   }
 }
 
-object HubNetViewReader extends DefaultParboiledWidgetParser with WidgetReader {
+object HubNetViewReader extends DefaultParboiledWidgetParser with ConstantRuleWidgetParser with WidgetReader {
   class ViewParser extends Parser with ParboiledWidgetParser.RichRule {
     def parserToView(
       pos: (Int, Int, Int, Int),
@@ -148,7 +148,7 @@ object HubNetViewReader extends DefaultParboiledWidgetParser with WidgetReader {
   }
 }
 
-object HubNetButtonReader extends DefaultParboiledWidgetParser with WidgetReader {
+object HubNetButtonReader extends DefaultParboiledWidgetParser with ConstantRuleWidgetParser with WidgetReader {
   class ButtonParser extends Parser with ParboiledWidgetParser.RichRule {
     def parserToButton(
       pos: (Int, Int, Int, Int),
@@ -206,16 +206,17 @@ object HubNetButtonReader extends DefaultParboiledWidgetParser with WidgetReader
   }
 }
 
-object HubNetMonitorReader extends DefaultParboiledWidgetParser with WidgetReader {
+object HubNetMonitorReader extends DefaultParboiledWidgetParser with ConstantRuleWidgetParser with WidgetReader {
   class MonitorParser extends Parser with ParboiledWidgetParser.RichRule {
     def parserToMonitor(
       pos: (Int, Int, Int, Int),
       name: Option[String],
+      source: Option[String],
       precision: Int): Monitor = {
         Monitor(
           display = name,
           left = pos._1, top = pos._2, right = pos._3, bottom = pos._4,
-          source = None,
+          source = source,
           precision = precision, fontSize = 11)
     }
 
@@ -223,7 +224,7 @@ object HubNetMonitorReader extends DefaultParboiledWidgetParser with WidgetReade
       MonitorHeader ~ NewLine ~
       PositionInformation ~
       NillableString ~ NewLine ~
-      IgnoredLine ~
+      NillableString ~ NewLine ~
       IntValue ~ NewLine ~
       IntDigits ~~> parserToMonitor _
     }
@@ -251,14 +252,14 @@ object HubNetMonitorReader extends DefaultParboiledWidgetParser with WidgetReade
       monitor.right.toString,
       monitor.bottom.toString,
       monitor.display.map(saveNillableString).getOrElse("NIL"),
-      "NIL",
+      monitor.source.map(saveNillableString).getOrElse("NIL"),
       monitor.precision,
       "1").mkString("", "\n", "\n")
   }
 }
 
 
-object HubNetSliderReader extends DefaultParboiledWidgetParser with WidgetReader {
+object HubNetSliderReader extends DefaultParboiledWidgetParser with ConstantRuleWidgetParser with WidgetReader {
   class SliderParser extends Parser with ParboiledWidgetParser.RichRule {
     def parserToSlider(
       pos: (Int, Int, Int, Int),
@@ -332,10 +333,7 @@ object HubNetSliderReader extends DefaultParboiledWidgetParser with WidgetReader
   }
 }
 
-object HubNetChooserReader
-  extends ParboiledWidgetParser
-  with DebuggingWidgetParser
-  with WidgetReader {
+object HubNetChooserReader extends DefaultParboiledWidgetParser with WidgetReader {
 
   class ChooserParser(literalParser: Option[LiteralParser]) extends Parser with ParboiledWidgetParser.RichRule {
     def parserToChooser(

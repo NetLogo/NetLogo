@@ -3,7 +3,7 @@
 package org.nlogo.prim.hubnet
 
 import org.nlogo.agent.Observer
-import org.nlogo.api.{ CommandRunnable, Dump}
+import org.nlogo.api.{ CommandRunnable, Dump, HubNetInterface }
 import org.nlogo.core.Syntax
 import org.nlogo.core.{ AgentKind, LogoList }
 import org.nlogo.nvm.{ EngineException, Command, Context, Reporter }
@@ -12,49 +12,49 @@ import Syntax._
 class _hubnetmessage extends Reporter {
 
   override def report(context: Context) =
-    workspace.getHubNetManager.getMessage
+    workspace.getHubNetManager.map(_.getMessage).get
 }
 
 class _hubnetmessagesource extends Reporter {
 
   override def report(context: Context) =
-    workspace.getHubNetManager.getMessageSource
+    workspace.getHubNetManager.map(_.getMessageSource).get
 }
 
 class _hubnetmessagetag extends Reporter {
 
   override def report(context: Context) =
-    workspace.getHubNetManager.getMessageTag
+    workspace.getHubNetManager.map(_.getMessageTag).get
 }
 
 class _hubnetmessagewaiting extends Reporter {
 
   override def report(context: Context) =
-    workspace.getHubNetManager.messageWaiting.asInstanceOf[AnyRef]
+    workspace.getHubNetManager.map(_.messageWaiting.asInstanceOf[AnyRef]).get
 }
 
 class _hubnetentermessage extends Reporter {
 
   override def report(context: Context) =
-    workspace.getHubNetManager.enterMessage.asInstanceOf[AnyRef]
+    workspace.getHubNetManager.map(_.enterMessage.asInstanceOf[AnyRef]).get
 }
 
 class _hubnetexitmessage extends Reporter {
 
   override def report(context: Context) =
-    workspace.getHubNetManager.exitMessage.asInstanceOf[AnyRef]
+    workspace.getHubNetManager.map(_.exitMessage.asInstanceOf[AnyRef]).get
 }
 
 class _hubnetclientslist extends Reporter {
 
   override def report(context: Context): AnyRef =
-    LogoList(workspace.getHubNetManager.clients.toSeq.map(_.asInstanceOf[AnyRef]): _*)
+    LogoList(workspace.getHubNetManager.map(_.clients.toSeq.map(_.asInstanceOf[AnyRef])).get: _*)
 }
 
 class _hubnetkickclient extends Command {
 
   override def perform(context: Context) {
-    workspace.getHubNetManager.kick(argEvalString(context, 0))
+    workspace.getHubNetManager.foreach(_.kick(argEvalString(context, 0)))
     context.ip = next
   }
 }
@@ -65,7 +65,7 @@ class _hubnetkickallclients extends Command {
 
 
   override def perform(context: Context) {
-    workspace.getHubNetManager.kickAll()
+    workspace.getHubNetManager.foreach(_.kickAll())
     context.ip = next
   }
 }
@@ -73,19 +73,19 @@ class _hubnetkickallclients extends Command {
 class _hubnetinqsize extends Reporter {
 
   override def report(context: Context) =
-    workspace.getHubNetManager.getInQueueSize.toDouble.asInstanceOf[AnyRef]
+    workspace.getHubNetManager.map(_.getInQueueSize.toDouble.asInstanceOf[AnyRef]).get
 }
 
 class _hubnetoutqsize extends Reporter {
 
   override def report(context: Context) =
-    workspace.getHubNetManager.getOutQueueSize.toDouble.asInstanceOf[AnyRef]
+    workspace.getHubNetManager.map(_.getOutQueueSize.toDouble.asInstanceOf[AnyRef]).get
 }
 
 class _hubnetcreateclient extends Command {
 
   override def perform(context: Context) {
-    workspace.getHubNetManager.newClient(false,0)
+    workspace.getHubNetManager.map(_.newClient(false,0)).get
     context.ip = next
   }
 }
@@ -97,7 +97,7 @@ class _hubnetsendfromlocalclient extends Command {
     val messageTag = argEvalString(context, 1)
     val payload = args(2).report(context)
     // todo: check if we got an error back here!
-    workspace.getHubNetManager.sendFromLocalClient(clientId, messageTag, payload)
+    workspace.getHubNetManager.foreach(_.sendFromLocalClient(clientId, messageTag, payload))
     context.ip = next
   }
 }
@@ -111,7 +111,7 @@ class _hubnetwaitforclients extends Command {
     val numClients = argEvalDoubleValue(context, 0).toInt
     val timeout = argEvalDoubleValue(context, 1).toLong
     val (ok, numConnected) =
-      workspace.getHubNetManager.waitForClients(numClients, timeout)
+      workspace.getHubNetManager.map(_.waitForClients(numClients, timeout)).get
     if(! ok)
       throw new EngineException(context, this,
         "waited " + timeout + "ms for " + numClients +
@@ -129,7 +129,7 @@ class _hubnetwaitformessages extends Command {
     val numMessages = argEvalDoubleValue(context, 0).toInt
     val timeout = argEvalDoubleValue(context, 1).toLong
     val (ok, numReceived) =
-      workspace.getHubNetManager.waitForMessages(numMessages, timeout)
+      workspace.getHubNetManager.map(_.waitForMessages(numMessages, timeout)).get
     if(! ok)
       throw new EngineException(context, this,
         "waited " + timeout + "ms for " + numMessages +
@@ -141,7 +141,7 @@ class _hubnetwaitformessages extends Command {
 class _hubnetsetviewmirroring extends Command {
 
   override def perform(context: Context) {
-    workspace.getHubNetManager.setViewMirroring(argEvalBooleanValue(context, 0))
+    workspace.getHubNetManager.foreach(_.setViewMirroring(argEvalBooleanValue(context, 0)))
     context.ip = next
   }
 }
@@ -149,7 +149,7 @@ class _hubnetsetviewmirroring extends Command {
 class _hubnetsetplotmirroring extends Command {
 
   override def perform(context: Context) {
-    workspace.getHubNetManager.setPlotMirroring(argEvalBooleanValue(context, 0))
+    workspace.getHubNetManager.foreach(_.setPlotMirroring(argEvalBooleanValue(context, 0)))
     context.ip = next
   }
 }
@@ -159,9 +159,9 @@ class _hubnetsetclientinterface extends Command {
   def perform(context: Context) {
     val interfaceType = argEvalString(context, 0)
     val interfaceInfo = argEvalList(context, 1)
-    val clientInterface = interfaceType match {
+    val clientInterface: HubNetInterface.ClientInterface = interfaceType match {
       case "COMPUTER" =>
-        workspace.getHubNetManager.fileInterface(interfaceInfo(0).asInstanceOf[String])
+        workspace.getHubNetManager.flatMap(_.fileInterface(interfaceInfo(0).asInstanceOf[String]))
           .getOrElse(
             throw new EngineException(context, this, "unable to load interface from " + interfaceInfo(0)))
       case "TI-83+"   =>
@@ -173,11 +173,11 @@ class _hubnetsetclientinterface extends Command {
             }.toSeq
           else
             Seq()
-        workspace.getHubNetManager.calculatorInterface(activity, tags)
+        workspace.getHubNetManager.map(_.calculatorInterface(activity, tags)).get
     }
     workspace.waitFor(new CommandRunnable {
       override def run() {
-        workspace.getHubNetManager.setClientInterface(interfaceType, Seq(clientInterface))
+        workspace.getHubNetManager.foreach(_.setClientInterface(interfaceType, Seq(clientInterface)))
       }
     })
     context.ip = next
@@ -187,7 +187,7 @@ class _hubnetsetclientinterface extends Command {
 class _hubnetfetchmessage extends Command {
 
   override def perform(context: Context) {
-    workspace.getHubNetManager.fetchMessage()
+    workspace.getHubNetManager.foreach(_.fetchMessage())
     context.ip = next
   }
 }
@@ -198,7 +198,7 @@ class _hubnetreset extends Command {
     workspace.waitFor(
       new CommandRunnable {
         override def run() {
-          workspace.getHubNetManager.reset()
+          workspace.getHubNetManager.foreach(_.reset())
         }})
     context.ip = next
   }
@@ -215,9 +215,9 @@ class _hubnetresetperspective extends Command {
     workspace.waitFor(
       new CommandRunnable {
         override def run() {
-          workspace.getHubNetManager.sendAgentPerspective(
+          workspace.getHubNetManager.foreach(_.sendAgentPerspective(
             client, world.observer.perspective.export,
-            agentKind, id, (world.worldWidth() - 1) / 2, true)
+            agentKind, id, (world.worldWidth() - 1) / 2, true))
         }})
     context.ip = next
   }
@@ -228,7 +228,7 @@ class _hubnetbroadcast extends Command {
   override def perform(context: Context) {
     val variableName = argEvalString(context, 0)
     val data = args(1).report(context)
-    workspace.getHubNetManager.broadcast(variableName, data)
+    workspace.getHubNetManager.foreach(_.broadcast(variableName, data))
     context.ip = next
   }
 }
@@ -236,7 +236,7 @@ class _hubnetbroadcast extends Command {
 class _hubnetbroadcastclearoutput extends Command {
 
   override def perform(context: Context) {
-    workspace.getHubNetManager.broadcastClearText()
+    workspace.getHubNetManager.foreach(_.broadcastClearText())
     context.ip = next
   }
 }
@@ -245,7 +245,7 @@ class _hubnetbroadcastmessage extends Command {
 
   override def perform(context: Context) {
     val data = args(0).report(context)
-    workspace.getHubNetManager.broadcast(Dump.logoObject(data) + "\n")
+    workspace.getHubNetManager.foreach(_.broadcast(Dump.logoObject(data) + "\n"))
     context.ip = next
   }
 }
@@ -254,7 +254,7 @@ class _hubnetbroadcastusermessage extends Command {
 
   override def perform(context: Context) {
     val data = args(0).report(context)
-    workspace.getHubNetManager.broadcastUserMessage(Dump.logoObject(data))
+    workspace.getHubNetManager.foreach(_.broadcastUserMessage(Dump.logoObject(data)))
     context.ip = next
   }
 }
@@ -262,7 +262,7 @@ class _hubnetbroadcastusermessage extends Command {
 class _hubnetroboclient extends Command {
 
   override def perform(context: Context) {
-    workspace.getHubNetManager.newClient(true, argEvalIntValue(context, 0))
+    workspace.getHubNetManager.foreach(_.newClient(true, argEvalIntValue(context, 0)))
     context.ip = next
   }
 }
@@ -274,7 +274,7 @@ class _hubnetclearoverrides extends Command {
     workspace.waitFor(
       new CommandRunnable {
         override def run() {
-          workspace.getHubNetManager.clearOverrideLists(client)
+          workspace.getHubNetManager.foreach(_.clearOverrideLists(client))
         }})
     context.ip = next
   }
@@ -295,7 +295,7 @@ class _hubnetclearoverride extends Command {
       case set: AgentSet =>
         set
     }
-    if(!workspace.getHubNetManager.isOverridable(set.kind, varName))
+    if(!workspace.getHubNetManager.exists(_.isOverridable(set.kind, varName)))
       throw new EngineException(context, this,
         "you cannot override " + varName)
     val overrides = new collection.mutable.ArrayBuffer[java.lang.Long](set.count)
@@ -305,8 +305,8 @@ class _hubnetclearoverride extends Command {
     workspace.waitFor(
       new CommandRunnable() {
         override def run() {
-          workspace.getHubNetManager.clearOverride(
-            client, set.kind, varName, overrides)}})
+          workspace.getHubNetManager.foreach(_.clearOverride(
+            client, set.kind, varName, overrides))}})
     context.ip = next
   }
 }

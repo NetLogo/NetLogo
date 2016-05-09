@@ -71,7 +71,7 @@ trait DebuggingWidgetParser { this: ParboiledWidgetParser =>
     val result =
       ReportingParseRunner(rule).run(formattedLines).result
     if (result.isEmpty) {
-      println("initial parse failed for:\n" + formattedLines)
+      println("initial parse by " + this.getClass + " failed for:\n" + formattedLines)
       TracingParseRunner(rule).run(formattedLines).result
     }
     result
@@ -86,7 +86,12 @@ trait ConstantRuleWidgetParser { this: ParboiledWidgetParser =>
   def parsingRule(lines: List[String], literalParser: LiteralParser): Rule1[this.ParsedWidget] = parseRule
 }
 
-trait DefaultParboiledWidgetParser extends ParboiledWidgetParser with DebuggingWidgetParser with ConstantRuleWidgetParser
+trait DefaultParboiledWidgetParser extends ParboiledWidgetParser {
+  override def runRule(rule: Rule1[this.ParsedWidget], lines: List[String]): Option[this.ParsedWidget] = {
+    val formattedLines = lines.mkString("\n")
+    ReportingParseRunner(rule).run(formattedLines).result
+  }
+}
 
 trait ParsingStringUtils {
   def stripLines(st: String): String =

@@ -3,7 +3,7 @@
 package org.nlogo.headless
 
 import org.nlogo.util.{ MockSuite, WorldType }
-import org.nlogo.api.{ModelReader, Version, ViewSettings, Perspective}
+import org.nlogo.api.{ Version, ViewSettings, Perspective }
 import org.nlogo.shape.ShapeConverter
 import org.nlogo.core.Model
 

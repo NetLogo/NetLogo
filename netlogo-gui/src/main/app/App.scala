@@ -8,7 +8,7 @@ import org.nlogo.agent.{Agent, World3D, World}
 import org.nlogo.api._
 import org.nlogo.awt.UserCancelException
 import org.nlogo.log.Logger
-import org.nlogo.nvm.{CompilerInterface, Workspace}
+import org.nlogo.nvm.{CompilerInterface, DefaultCompilerServices, Workspace}
 import org.nlogo.fileformat
 import org.nlogo.shape.{ShapesManagerInterface, LinkShapesManagerInterface, TurtleShapesManagerInterface}
 import org.nlogo.util.Implicits.RichString
@@ -17,7 +17,7 @@ import org.nlogo.util.Pico
 import org.nlogo.util.{ NullAppHandler, Pico }
 import org.nlogo.window._
 import org.nlogo.window.Events._
-import org.nlogo.workspace.{AbstractWorkspace, AbstractWorkspaceScala, Controllable, CurrentModelOpener, WorkspaceFactory}
+import org.nlogo.workspace.{AbstractWorkspace, AbstractWorkspaceScala, Controllable, CurrentModelOpener, HubNetManagerFactory, WorkspaceFactory}
 import org.nlogo.window.Event.LinkParent
 import org.nlogo.swing.Implicits.thunk2runnable
 
@@ -96,10 +96,11 @@ object App{
       def verify(x$1: org.picocontainer.PicoContainer): Unit = {}
 
       def getComponentInstance(container: org.picocontainer.PicoContainer, into: java.lang.reflect.Type) = {
-        val autoConvert =
-          container.getComponent(classOf[CompilerInterface]).autoConvert _
-        val loader = fileformat
-          .standardLoader(container.getComponent(classOf[CompilerServices]), autoConvert)
+        val compiler =
+          container.getComponent(classOf[CompilerInterface])
+        val autoConvert = compiler.autoConvert _
+        val compilerServices = new DefaultCompilerServices(compiler)
+        val loader = fileformat.standardLoader(compilerServices, autoConvert)
         val additionalComponents =
           pico.getComponents(classOf[ComponentSerialization[Array[String], NLogoFormat]])
         if (additionalComponents.nonEmpty)
@@ -139,12 +140,6 @@ object App{
             new ComponentParameter(classOf[AppFrame]),
             new ComponentParameter(), new ComponentParameter(),
             new ComponentParameter(), new ComponentParameter()))
-    pico.add(classOf[HubNetInterface],
-          "org.nlogo.hubnet.server.gui.GUIHubNetManager",
-          Array[Parameter] (
-            new ComponentParameter(), new ComponentParameter(classOf[AppFrame]),
-            new ComponentParameter(), new ComponentParameter(),
-            new ComponentParameter(), new ComponentParameter()))
     pico.add("org.nlogo.lab.gui.LabManager")
     pico.add("org.nlogo.properties.EditDialogFactory")
     // we need to make HeadlessWorkspace objects for BehaviorSpace to use.
@@ -159,6 +154,7 @@ object App{
           .getMethod("newInstance").invoke(null).asInstanceOf[AbstractWorkspaceScala]
       def openCurrentModelIn(w: Workspace): Unit = {
         w.setModelPath(app.workspace.getModelPath)
+        // TODO: This should openModel instead of opening string
         w.openString(new ModelSaver(pico.getComponent(classOf[App])).save)
       }
     }
@@ -320,18 +316,19 @@ class App extends
           pico.getComponent(classOf[EditDialogFactoryInterface]))
       }
     }
+    pico.add(classOf[HubNetManagerFactory], "org.nlogo.hubnet.server.gui.HubNetManagerFactory",
+          Array[Parameter] (
+            new ComponentParameter(classOf[AppFrame]),
+            new ComponentParameter(), new ComponentParameter(),
+            new ComponentParameter(), new ComponentParameter()))
     pico.addComponent(interfaceFactory)
-
-    val hubNetManagerFactory = new AbstractWorkspace.HubNetManagerFactory() {
-      def newInstance(workspace: AbstractWorkspace): HubNetInterface = {
-        pico.getComponent(classOf[HubNetInterface])
-      }
-    }
+    pico.addComponent(new EditorFactory(pico.getComponent(classOf[CompilerServices])))
+    pico.addComponent(new MenuBarFactory())
 
     val world = if(Version.is3D) new World3D() else new World()
     pico.addComponent(world)
     _workspace = new GUIWorkspace(world, GUIWorkspace.KioskLevel.NONE,
-                                  frame, frame, hubNetManagerFactory, App.this, listenerManager) {
+                                  frame, frame, pico.getComponent(classOf[HubNetManagerFactory]), App.this, listenerManager) {
       val compiler = pico.getComponent(classOf[CompilerInterface])
       // lazy to avoid initialization order snafu - ST 3/1/11
       lazy val updateManager = new UpdateManager {
@@ -406,11 +403,8 @@ class App extends
               workspace.getProcedures.get("SETUP") != null &&
                 workspace.getProcedures.get("GO") != null)),
             new ComponentParameter()))
-    pico.addComponent(new MenuBarFactory())
     aggregateManager = pico.getComponent(classOf[AggregateManagerInterface])
     frame.addLinkComponent(aggregateManager)
-
-    pico.addComponent(new EditorFactory(workspace))
 
     labManager = pico.getComponent(classOf[LabManagerInterface])
     frame.addLinkComponent(labManager)
@@ -664,9 +658,8 @@ class App extends
     org.nlogo.window.RuntimeErrorDialog.setModelName(workspace.modelNameForDisplay)
     if (AbstractWorkspace.isApp) {
       frame.setTitle(makeFrameTitle)
-      if (workspace.hubnetManager() != null) {
-        workspace.hubnetManager().setTitle(workspace.modelNameForDisplay,
-          workspace.getModelDir, workspace.getModelType)
+      workspace.hubNetManager.foreach { manager =>
+        manager.setTitle(workspace.modelNameForDisplay, workspace.getModelDir, workspace.getModelType)
       }
     }
   }
@@ -678,7 +671,7 @@ class App extends
     val modelName = workspace.modelNameForDisplay
     RuntimeErrorDialog.setModelName(modelName)
     if(AbstractWorkspace.isApp) frame.setTitle(makeFrameTitle)
-    if(workspace.hubnetManager() != null) workspace.hubnetManager().closeClientEditor()
+    workspace.hubNetManager.foreach(_.closeClientEditor())
   }
 
   private var wasAtPreferredSizeBeforeLoadBegan = false
@@ -1079,7 +1072,7 @@ class App extends
   def previewCommands:  PreviewCommands =
     tabs.workspace.previewCommands
   def hubnetInterface:  Option[Seq[CoreWidget]] =
-    Option(workspace.hubnetManager).map(_.interfaceWidgets)
+    workspace.hubNetManager.map(_.interfaceWidgets)
   def linkShapes:       Seq[Shape] =
     tabs.workspace.world.linkShapeList.shapes
   def snapOn:           Boolean =

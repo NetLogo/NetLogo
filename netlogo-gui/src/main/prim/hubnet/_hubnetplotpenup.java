@@ -13,7 +13,7 @@ public final strictfp class _hubnetplotpenup
     workspace.waitFor
         (new org.nlogo.api.CommandRunnable() {
           public void run() {
-            workspace.getHubNetManager().plotPenDown(name, false);
+            workspace.getHubNetManager().get().plotPenDown(name, false);
           }
         });
     context.ip = next;

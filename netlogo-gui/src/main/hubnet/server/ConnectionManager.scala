@@ -99,7 +99,7 @@ class ConnectionManager(val connection: ConnectionInterface,
    * @return true if startup was succesful
    */
   def startup(serverName:String): Boolean = {
-    workspace.hubNetRunning(true)
+    workspace.hubNetRunning = true
     running = true
     // we set this when hubnet-reset is called now, instead
     // of forcing users to call hubnet-set-client-interface "COMPUTER" []
@@ -154,7 +154,7 @@ class ConnectionManager(val connection: ConnectionInterface,
         clients.clear()
       }
     }
-    workspace.hubNetRunning(false)
+    workspace.hubNetRunning = false
     running = false
     true // why do we need this? we never return false...
   }

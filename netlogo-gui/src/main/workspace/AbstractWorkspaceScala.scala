@@ -3,13 +3,12 @@
 package org.nlogo.workspace
 
 import org.nlogo.agent.{World, Agent, Observer, AbstractExporter, AgentSet, ArrayAgentSet, OutputObject}
-import org.nlogo.api.{ PlotInterface, Dump, CommandLogoThunk, LogoException,
+import org.nlogo.api.{ PlotInterface, Dump, CommandLogoThunk, HubNetInterface, LogoException,
   ReporterLogoThunk, JobOwner, OutputDestination, SimpleJobOwner, PreviewCommands,
   Workspace => APIWorkspace, WorldDimensions3D, Version }
 import org.nlogo.core.{ AgentKind, CompilerException, LiteralParser, View, WorldDimensions }
 import org.nlogo.nvm.{ Activation, Instruction, EngineException, Context, Procedure, Tracer }
 import org.nlogo.plot.{ PlotExporter, PlotManager }
-import org.nlogo.workspace.AbstractWorkspace.HubNetManagerFactory
 
 import java.util.WeakHashMap
 import java.net.URL
@@ -20,12 +19,16 @@ import java.io.{IOException,PrintWriter}
 
 import AbstractWorkspaceTraits._
 
-abstract class AbstractWorkspaceScala(val world: World, hubNetManagerFactory: HubNetManagerFactory)
-  extends AbstractWorkspace(world, hubNetManagerFactory)
+trait HubNetManagerFactory {
+  def newInstance(workspace: AbstractWorkspaceScala): HubNetInterface
+}
+
+abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory: HubNetManagerFactory)
+  extends AbstractWorkspace(world)
   with APIConformant with Benchmarking
   with Checksums with Evaluating
   with ModelDir with BehaviorSpaceInformation
-  with Traceable
+  with Traceable with HubNetManager
   with ExtendableWorkspaceMethods with Exporting
   with Plotting {
 
@@ -477,6 +480,35 @@ object AbstractWorkspaceTraits {
 
     def setProfilingTracer(t: Tracer): Unit = {
       tracer = t
+    }
+  }
+
+  trait HubNetManager extends AbstractWorkspace { this: AbstractWorkspaceScala =>
+    def hubNetManagerFactory: HubNetManagerFactory
+
+    private var _hubNetManager = Option.empty[HubNetInterface]
+
+    private var _hubNetRunning: Boolean = false
+
+    def hubNetManager = _hubNetManager
+
+    @throws(classOf[InterruptedException])
+    abstract override def dispose(): Unit = {
+      super.dispose()
+      hubNetManager.foreach(_.disconnect())
+    }
+
+    def getHubNetManager: Option[HubNetInterface] = {
+      if (hubNetManager.isEmpty && hubNetManagerFactory != null) {
+        _hubNetManager = Some(hubNetManagerFactory.newInstance(this))
+      }
+      _hubNetManager
+    }
+
+    def hubNetRunning = _hubNetRunning
+
+    def hubNetRunning_=(running: Boolean): Unit = {
+      _hubNetRunning = running;
     }
   }
 }

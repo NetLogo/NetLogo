@@ -42,7 +42,7 @@ public final strictfp class _hubnetsendclearoutput
           (context, this, 0, Syntax.ListType() | Syntax.StringType(), clients);
     }
 
-    workspace.getHubNetManager().clearText(asScalaBuffer(nodes));
+    workspace.getHubNetManager().get().clearText(asScalaBuffer(nodes));
     context.ip = next;
   }
 

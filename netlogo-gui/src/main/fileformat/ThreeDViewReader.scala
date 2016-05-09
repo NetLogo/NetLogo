@@ -9,7 +9,7 @@ import org.nlogo.core.model.WidgetReader
 
 import scala.reflect.ClassTag
 
-object ThreeDViewReader extends WidgetReader with DefaultParboiledWidgetParser {
+object ThreeDViewReader extends WidgetReader with ConstantRuleWidgetParser with DefaultParboiledWidgetParser {
   class ThreeDParser extends Parser with ParboiledWidgetParser.RichRule {
 
     def ThreeDViewWidget: Rule1[View] = rule {

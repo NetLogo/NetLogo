@@ -3,9 +3,9 @@
 package org.nlogo.fileformat
 
 import org.nlogo.core.Model
-import org.nlogo.api.{ ComponentSerialization, ModelSettings }
+import org.nlogo.api.{ ComponentSerialization, ModelSettings, ModelFormat }
 
-object NLogoModelSettings extends ComponentSerialization[Array[String], NLogoFormat] {
+trait ModelSettingsComponent[A <: ModelFormat[Array[String], A]] extends ComponentSerialization[Array[String], A] {
   val componentName = "org.nlogo.modelsection.modelsettings"
   override def addDefault = { (m: Model) =>
     m.withOptionalSection(componentName, None, ModelSettings(false))
@@ -24,3 +24,6 @@ object NLogoModelSettings extends ComponentSerialization[Array[String], NLogoFor
     m.withOptionalSection(componentName, Some(foundValue), ModelSettings(false))
   }
 }
+
+object NLogoModelSettings extends ModelSettingsComponent[NLogoFormat]
+object NLogoThreeDModelSettings extends ModelSettingsComponent[NLogoThreeDFormat]

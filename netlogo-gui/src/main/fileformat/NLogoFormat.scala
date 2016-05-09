@@ -3,6 +3,7 @@
 package org.nlogo.fileformat
 
 import java.net.URI
+import java.nio.file.{ Files, Paths }
 
 import org.nlogo.core.{ Femto, LiteralParser, Model, Shape, ShapeParser, View, Widget }, Shape.{ LinkShape, VectorShape }
 import org.nlogo.core.model.WidgetReader
@@ -11,9 +12,19 @@ import scala.util.{ Failure, Success, Try }
 import org.nlogo.util.Utils
 import scala.io.Source
 
-class NLogoFormat(autoConvert: String => String => String) extends ModelFormat[Array[String], NLogoFormat] {
-  def name: String = "nlogo"
-  val SEPARATOR = "@#\\$#@#\\$#@"
+class NLogoFormat(val autoConvert: String => String => String)
+  extends ModelFormat[Array[String], NLogoFormat]
+  with AbstractNLogoFormat[NLogoFormat] {
+    def name: String = "nlogo"
+    def widgetReaders: Map[String, WidgetReader] = Map()
+  }
+
+trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] {
+  def autoConvert: String => String => String
+  val Separator = "@#$#@#$#@"
+  val SeparatorRegex = "@#\\$#@#\\$#@"
+
+  def widgetReaders: Map[String, WidgetReader]
 
   def sections(location: URI) =
     Try(Source.fromURI(location)).flatMap { s =>
@@ -22,16 +33,41 @@ class NLogoFormat(autoConvert: String => String => String) extends ModelFormat[A
       sections
     }
 
+  lazy val sectionNames =
+    ModelSection.allSections.map(s => "org.nlogo.modelsection." +
+      s.getClass.getSimpleName.replaceAll("\\$", "").toLowerCase)
+
+  def writeSections(sections: Map[String, Array[String]], location: URI): Try[URI] = {
+    Try {
+      val filePath = Paths.get(location)
+      val writer = Files.newBufferedWriter(filePath)
+      try {
+        val fileText = sectionNames.map { name =>
+          val sectionLines = sections.getOrElse(name, Array[String]())
+          if (sectionLines.isEmpty)
+            "\n"
+          else if (sectionLines.head.isEmpty || sectionLines.head.startsWith("\n") || name == "org.nlogo.modelsection.code")
+            sectionLines.mkString("", "\n", "\n")
+          else
+            sectionLines.mkString("\n", "\n", "\n")
+        }.mkString(Separator)
+        writer.write(fileText)
+        writer.flush()
+        location
+      }
+      finally {
+        writer.close
+      }
+    }
+  }
+
   def sectionsFromSource(source: String): Try[Map[String, Array[String]]] = {
     try {
       val sectionLines = source
-        .split(SEPARATOR)
+        .split(SeparatorRegex)
         .map(_.lines.toSeq)
         .map(s => if (s.headOption.contains("")) s.tail else s)
         .map(_.toArray)
-        val sectionNames =
-          ModelSection.allSections.map(s => "org.nlogo.modelsection." +
-            s.getClass.getSimpleName.replaceAll("\\$", "").toLowerCase)
         Success((sectionNames zip sectionLines).toMap)
     }
     catch {
@@ -39,7 +75,7 @@ class NLogoFormat(autoConvert: String => String => String) extends ModelFormat[A
     }
   }
 
-  object CodeComponent extends ComponentSerialization[Array[String], NLogoFormat] {
+  object CodeComponent extends ComponentSerialization[Array[String], A] {
     val componentName = "org.nlogo.modelsection.code"
     override def addDefault = ((m: Model) => m.copy(code = ""))
     def serialize(m: Model): Array[String] = m.code.lines.toArray
@@ -49,7 +85,7 @@ class NLogoFormat(autoConvert: String => String => String) extends ModelFormat[A
     }
   }
 
-  object InfoComponent extends ComponentSerialization[Array[String], NLogoFormat] {
+  object InfoComponent extends ComponentSerialization[Array[String], A] {
     val componentName = "org.nlogo.modelsection.info"
     val EmptyInfoPath = "/system/empty-info.md"
     override def addDefault =
@@ -66,7 +102,7 @@ class NLogoFormat(autoConvert: String => String => String) extends ModelFormat[A
     }
   }
 
-  object VersionComponent extends ComponentSerialization[Array[String], NLogoFormat] {
+  object VersionComponent extends ComponentSerialization[Array[String], A] {
     val componentName = "org.nlogo.modelsection.version"
     override def addDefault = (_.copy(version = Version.version))
     def serialize(m: Model): Array[String] = Array(m.version)
@@ -76,10 +112,10 @@ class NLogoFormat(autoConvert: String => String => String) extends ModelFormat[A
     }
   }
 
-  object InterfaceComponent extends ComponentSerialization[Array[String], NLogoFormat] {
+  object InterfaceComponent extends ComponentSerialization[Array[String], A] {
     import org.nlogo.fileformat
     val componentName = "org.nlogo.modelsection.interface"
-    private val additionalReaders = fileformat.nlogoReaders(Version.is3D)
+    private val additionalReaders = AbstractNLogoFormat.this.widgetReaders
     private val literalParser = Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
     override def addDefault = _.copy(widgets = Seq(View()))
 
@@ -113,7 +149,7 @@ class NLogoFormat(autoConvert: String => String => String) extends ModelFormat[A
     }
   }
 
-  object VectorShapesComponent extends ComponentSerialization[Array[String], NLogoFormat] {
+  object VectorShapesComponent extends ComponentSerialization[Array[String], A] {
     val componentName = "org.nlogo.modelsection.turtleshapes"
     override def addDefault = _.copy(turtleShapes = Model.defaultShapes)
     def serialize(m: Model): Array[String] =
@@ -125,7 +161,7 @@ class NLogoFormat(autoConvert: String => String => String) extends ModelFormat[A
     }
   }
 
-  object LinkShapesComponent extends ComponentSerialization[Array[String], NLogoFormat] {
+  object LinkShapesComponent extends ComponentSerialization[Array[String], A] {
     val componentName = "org.nlogo.modelsection.linkshapes"
     override def addDefault = ((m: Model) => m.copy(linkShapes = Model.defaultLinkShapes.toSeq))
     def serialize(m: Model): Array[String] = ShapeParser.formatLinkShapes(m.linkShapes).lines.toArray

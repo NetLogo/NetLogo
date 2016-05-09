@@ -84,7 +84,7 @@ object TestLanguage {
             case o => throw new RuntimeException("Invalid test case: " + o)
           }
         }
-        finally workspace.dispose()
+        finally if (workspace != null) workspace.dispose()
       }
       new Tester(NormalMode)
       if(!testName.startsWith("*")) new Tester(RunMode)

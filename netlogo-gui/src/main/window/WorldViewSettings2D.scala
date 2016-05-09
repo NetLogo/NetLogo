@@ -64,7 +64,7 @@ class WorldViewSettings2D(workspace: GUIWorkspace, gw: ViewWidget)
         new org.nlogo.window.Events.RemoveAllJobsEvent().raise(gWidget)
         if (hubnetDecision() == HubNetKick) {
           /* kick clients first, then resize world */
-         workspace.hubnetManager.reset()
+         workspace.hubNetManager.foreach(_.reset())
         }
 
         world.clearTurtles()

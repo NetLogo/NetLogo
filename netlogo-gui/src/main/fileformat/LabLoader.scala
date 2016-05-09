@@ -16,6 +16,8 @@ object LabLoader {
 import LabLoader._
 
 class LabLoader(literalParser: LiteralParser) {
+  if (literalParser == null)
+    throw new Exception("Invalid lab loader!")
   def apply(xml: String): Seq[LabProtocol] = {
     // what about character encodings?  String.getBytes() will use the platform's default encoding;
     // presumably sax.InputSource will also then use that same encoding?  I'm not really sure...  it
@@ -58,11 +60,17 @@ class LabLoader(literalParser: LiteralParser) {
         new SteppedValueSet(e.getAttribute("variable"),parse("first"),
           parse("step"),parse("last"))
       }
-      def readEnumeratedValueSetElement(e: dom.Element) =
-        new EnumeratedValueSet(e.getAttribute("variable"),
-          e.getElementsByTagName("value")
-            .map(e =>
-                literalParser.readFromString(e.getAttribute("value"))))
+      def readEnumeratedValueSetElement(e: dom.Element) = {
+        val valueElems = e.getElementsByTagName("value")
+        val values = for {
+          i <- 0 to valueElems.getLength
+          elem = valueElems.item(i) if elem != null
+        } yield {
+          literalParser.readFromString(
+            elem.getAttributes.getNamedItem("value").getNodeValue)
+        }
+        new EnumeratedValueSet(e.getAttribute("variable"), values.toList)
+      }
       for{e <- element.getChildNodes
         valueSet <- e.getNodeName match {
           case "steppedValueSet" => Some(readSteppedValueSetElement(e))

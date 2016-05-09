@@ -236,11 +236,11 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala, modelLoader: Mod
   def setPlotMirroring(onOff:Boolean){ HubNetUtils.plotMirroring = onOff }
 
   def waitForClients(numClientsToWaitFor:Int, timeoutMillis: Long): (Boolean, Int) = {
-    waitForEvents(numClientsToWaitFor, timeoutMillis)(workspace.getHubNetManager.clients.size)
+    waitForEvents(numClientsToWaitFor, timeoutMillis)(workspace.getHubNetManager.map(_.clients.size).get)
   }
 
   def waitForMessages(numMessagesToWaitFor:Int, timeoutMillis: Long): (Boolean, Int) = {
-    waitForEvents(numMessagesToWaitFor, timeoutMillis)(workspace.getHubNetManager.getInQueueSize)
+    waitForEvents(numMessagesToWaitFor, timeoutMillis)(workspace.getHubNetManager.map(_.getInQueueSize).get)
   }
 
   // this is called from __hubnet-wait-for-clients and __hubnet-wait-for-messages.

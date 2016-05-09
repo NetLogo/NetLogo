@@ -83,7 +83,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   public GUIWorkspace(final org.nlogo.agent.World world,
                       KioskLevel kioskLevel, java.awt.Frame frame,
                       java.awt.Component linkParent,
-                      org.nlogo.workspace.AbstractWorkspace.HubNetManagerFactory hubNetManagerFactory,
+                      org.nlogo.workspace.HubNetManagerFactory hubNetManagerFactory,
                       ExternalFileManager externalFileManager,
                       NetLogoListenerManager listenerManager) {
     super(world, hubNetManagerFactory);
@@ -176,8 +176,8 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   public void stamp(org.nlogo.api.Agent agent, boolean erase) {
     view.renderer.prepareToPaint(view, view.renderer.trailDrawer().getWidth(), view.renderer.trailDrawer().getHeight());
     view.renderer.trailDrawer().stamp(agent, erase);
-    if (hubNetManager != null) {
-      hubNetManager.sendStamp(agent, erase);
+    if (hubNetManager().isDefined()) {
+      hubNetManager().get().sendStamp(agent, erase);
     }
   }
 
@@ -226,8 +226,8 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   public void clearDrawing() {
     world().clearDrawing();
     view.renderer.trailDrawer().clearDrawing();
-    if (hubNetManager != null) {
-      hubNetManager.sendClear();
+    if (hubNetManager().isDefined()) {
+      hubNetManager().get().sendClear();
     }
   }
 
@@ -823,8 +823,8 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
                        Object color, double size, String mode) {
     view.renderer.trailDrawer().drawLine
         (x0, y0, x1, y1, color, size, mode);
-    if (hubNetManager != null) {
-      hubNetManager.sendLine(x0, y0, x1, y1, color, size, mode);
+    if (hubNetManager().isDefined()) {
+      hubNetManager().get().sendLine(x0, y0, x1, y1, color, size, mode);
     }
   }
 
@@ -1243,8 +1243,8 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       setModelPath(e.modelPath);
       setModelType(e.modelType);
     }
-    if (hubNetManager != null) {
-      hubNetManager.disconnect();
+    if (hubNetManager().isDefined()) {
+      hubNetManager().get().disconnect();
     }
     jobManager.haltSecondary();
     jobManager.haltPrimary();
@@ -1271,29 +1271,29 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   }
 
   public void handle(org.nlogo.window.Events.AboutToQuitEvent e) {
-    if (hubNetManager != null) {
-      hubNetManager.disconnect();
+    if (hubNetManager().isDefined()) {
+      hubNetManager().get().disconnect();
     }
   }
 
   @Override
-  public void hubNetRunning(boolean hubNetRunning) {
-    if (this.hubNetRunning != hubNetRunning) {
-      if (hubNetRunning) {
-        viewManager.add(hubNetManager);
+  public void hubNetRunning_$eq(boolean running) {
+    if (this.hubNetRunning() != running) {
+      if (running) {
+        viewManager.add(hubNetManager().get());
       } else {
-        viewManager.remove(hubNetManager);
+        viewManager.remove(hubNetManager().get());
       }
     }
 
-    this.hubNetRunning = hubNetRunning;
-    hubNetControlCenterAction.setEnabled(hubNetRunning);
+    super.hubNetRunning_$eq(running);
+    hubNetControlCenterAction.setEnabled(hubNetRunning());
   }
 
   public final javax.swing.Action hubNetControlCenterAction =
       new javax.swing.AbstractAction(I18N.guiJ().get("menu.tools.hubNetControlCenter")) {
         public void actionPerformed(java.awt.event.ActionEvent e) {
-          hubNetManager.showControlCenter();
+          hubNetManager().get().showControlCenter();
         }
       };
 
@@ -1326,7 +1326,9 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     }
     world().linkShapes().replaceShapes(linkShapes);
     // NOTE: really ought to just pass in hubnet bits, but that's tricky...
-    getHubNetManager().load(e.model);
+    if (getHubNetManager().isDefined()) {
+      getHubNetManager().get().load(e.model);
+    }
   }
 
   public void snapOn(boolean snapOn) {

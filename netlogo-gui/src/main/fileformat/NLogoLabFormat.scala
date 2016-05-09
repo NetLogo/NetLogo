@@ -3,11 +3,14 @@
 package org.nlogo.fileformat
 
 import org.nlogo.core.{ LiteralParser, Model }
-import org.nlogo.api.LabProtocol
-import org.nlogo.api.ComponentSerialization
+import org.nlogo.api.{ LabProtocol, ModelFormat, ComponentSerialization }
 
-class NLogoLabFormat(autoConvert: String => String => String, literalParser: LiteralParser)
-  extends ComponentSerialization[Array[String], NLogoFormat] {
+trait LabFormat[A <: ModelFormat[Array[String], A]]
+  extends ComponentSerialization[Array[String], A] {
+  def autoConvert: String => String => String
+
+  def literalParser: LiteralParser
+
   def componentName = "org.nlogo.modelsection.behaviorspace"
 
   val loader = new LabLoader(literalParser)
@@ -44,4 +47,11 @@ class NLogoLabFormat(autoConvert: String => String => String, literalParser: Lit
   def load(s: Array[String], version: Option[String]): Option[Seq[LabProtocol]] =
     if (s.isEmpty || s.forall(_.isEmpty)) None
     else Some(loader(s.mkString("\n")).map(autoConvertProtocol(version)))
-  }
+}
+
+class NLogoLabFormat(val autoConvert: String => String => String, val literalParser: LiteralParser)
+  extends LabFormat[NLogoFormat]
+
+class NLogoThreeDLabFormat(val autoConvert: String => String => String, val literalParser: LiteralParser)
+  extends LabFormat[NLogoThreeDFormat]
+

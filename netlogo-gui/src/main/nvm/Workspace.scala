@@ -21,7 +21,7 @@ trait Workspace extends org.nlogo.api.Workspace
   def world: org.nlogo.agent.World
 
   def fileManager: FileManager
-  def getHubNetManager: HubNetInterface
+  def getHubNetManager: Option[HubNetInterface]
 
   def runCompiledCommands(owner: JobOwner, procedure: Procedure): Boolean
   def runCompiledReporter(owner: JobOwner, procedure: Procedure): AnyRef

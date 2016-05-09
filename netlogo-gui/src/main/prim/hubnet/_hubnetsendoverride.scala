@@ -25,7 +25,7 @@ class _hubnetsendoverride extends Command {
       case _ => throw new IllegalStateException("cant happen...")
     }
 
-    if(!workspace.getHubNetManager.isOverridable(set.kind, varName))
+    if(!workspace.getHubNetManager.get.isOverridable(set.kind, varName))
       throw new EngineException(context, this,
         "you cannot override " + varName)
 
@@ -49,7 +49,8 @@ class _hubnetsendoverride extends Command {
     }
 
     workspace.waitFor(new CommandRunnable() {
-      def run() { workspace.getHubNetManager.sendOverrideList(client, set.kind, varName, overrides.toMap) }
+      def run() { workspace.getHubNetManager.foreach(
+      _.sendOverrideList(client, set.kind, varName, overrides.toMap)) }
     })
     context.ip = next
   }

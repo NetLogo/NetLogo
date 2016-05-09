@@ -54,7 +54,7 @@ class MockConnectionManager(connection: ConnectionInterface, workspace: Abstract
   // JC - 12/28/10
   override def startup(serverName:String): Boolean = {
     running = true
-    workspace.hubNetRunning(true)
+    workspace.hubNetRunning = true
     true
   }
 }

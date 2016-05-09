@@ -399,7 +399,7 @@ class FileMenu(app: App, modelSaver: ModelSaver, modelLoader: ModelLoader)
         def run(): Unit = {
           try {
             loadModel(Paths.get(importPath).toUri).map(model =>
-              app.workspace.getHubNetManager.importClientInterface(model, sectionChoice == 1))
+              app.workspace.getHubNetManager.foreach(_.importClientInterface(model, sectionChoice == 1)))
           } catch {
             case ex: IOException => exception = Some(ex)
           }

@@ -32,6 +32,11 @@ case class Model(code: String = "",
   def view: View = widgets.collectFirst{case (w: View) => w}.get
   def plots: Seq[Plot] = widgets.collect{case (w: Plot) => w}
 
+  /* true only when the value is not a default */
+  def hasValueForOptionalSection(key: String): Boolean = {
+    optionalSections.find(_.key == key).isDefined
+  }
+
   def optionalSectionValue[A <: AnyRef](key: String)(implicit ct: ClassTag[OptionalSection[A]]): Option[A] = {
     optionalSections.find(_.key == key)
       .flatMap(ct.unapply)

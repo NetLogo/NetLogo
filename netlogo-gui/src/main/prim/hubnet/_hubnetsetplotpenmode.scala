@@ -19,7 +19,7 @@ class _hubnetsetplotpenmode extends Command {
             throw new EngineException(
               context, _hubnetsetplotpenmode.this,
               mode + " is not a valid plot pen mode (valid modes are 0, 1, and 2)")
-          workspace.getHubNetManager.setPlotPenMode(name, mode)
+          workspace.getHubNetManager.foreach(_.setPlotPenMode(name, mode))
         }})
     context.ip = next
   }

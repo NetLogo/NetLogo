@@ -56,12 +56,17 @@ class HubNetWidgetReadersTest extends FunSuite with GeneratorDrivenPropertyCheck
     right = pos._3, bottom = pos._4,
     source = None, forever = false, actionKey = actionKey)
 
+  val escapedChars = Gen.oneOf('\n', '\t', '\r', '\\', '"')
+
+  val chooserAcceptableString = Gen.listOf(Gen.oneOf(Gen.alphaNumChar, escapedChars)).map(l =>
+      if (l.isEmpty) "" else l.foldLeft("") { case (a, b) => a + b })
+
   val chooseableList: Gen[List[Chooseable]] =
     Gen.listOf(
     Gen.oneOf(
       Arbitrary.arbDouble.arbitrary.map(d => ChooseableDouble(Double.box(d))),
         Arbitrary.arbBool.arbitrary.map(b => ChooseableBoolean(Boolean.box(b))),
-      Arbitrary.arbString.arbitrary.map(ChooseableString),
+      chooserAcceptableString.map(ChooseableString.apply),
       Gen.listOf(Gen.identifier).map(l => ChooseableList(LogoList(l: _*)))))
 
   val chooserWidget: Gen[Chooser] = for {
@@ -78,12 +83,13 @@ class HubNetWidgetReadersTest extends FunSuite with GeneratorDrivenPropertyCheck
   val monitorWidget: Gen[Monitor] =
     for {
       display   <- optionalNameString
+      source    <- Gen.oneOf(display, Option.empty[String])
       pos       <- genPos
       precision <- Gen.choose(0, 17)
     } yield Monitor(display = display,
       left = pos._1, top = pos._2,
       right = pos._3, bottom = pos._4,
-      source = None, precision = precision, fontSize = 11)
+      source = source, precision = precision, fontSize = 11)
 
   val sliderWidget: Gen[Slider] =
     for {
@@ -138,6 +144,9 @@ class HubNetWidgetReadersTest extends FunSuite with GeneratorDrivenPropertyCheck
       new ClassyReader(reader)
   }
 
+  lazy val litParser =
+    Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
+
   class ClassyReader(val reader: WidgetReader) {
     def applies(w: Widget): Boolean =
       reader.classTag.unapply(w).nonEmpty
@@ -149,7 +158,6 @@ class HubNetWidgetReadersTest extends FunSuite with GeneratorDrivenPropertyCheck
       reader.validate(s.lines.toList)
 
     def parse(s: String): Widget = {
-      val litParser = Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
       reader.parse(s.lines.toList, litParser)
     }
   }
@@ -162,5 +170,15 @@ class HubNetWidgetReadersTest extends FunSuite with GeneratorDrivenPropertyCheck
       val deserialized = reader.parse(serialized)
       assert(widget == deserialized, "round-trip must not change widget, written as:\n" + serialized)
     }
+  }
+
+  test("pathological case 1") {
+    val chooser =
+      Chooser(None,-2147483648,-185212488,2147483647,859780949,None,List(ChooseableBoolean(true), ChooseableBoolean(true), ChooseableBoolean(false), ChooseableDouble(8.502858506075463E-83)), 10)
+    val reader = HubNetChooserReader
+    val serialized = reader.format(chooser)
+    assert(reader.validate(serialized.lines.toList), "serialized wiget should be valid")
+    val deserialized = reader.parse(serialized.lines.toList, litParser)
+    assert(chooser == deserialized, "round-trip must not change widget, written as:\n" + serialized)
   }
 }
