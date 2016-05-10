@@ -18,11 +18,19 @@ import javax.swing.text.EditorKit
 import javax.swing.KeyStroke.getKeyStroke
 import javax.swing.{JDialog, JOptionPane, AbstractAction, ScrollPaneConstants, JScrollPane, JButton, JLabel}
 import javax.swing.plaf.basic.BasicButtonUI
+import java.util.prefs.Preferences
 
 abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:AbstractEditorArea,
             compiler:CompilerServices, nextComponent:Component)
   extends SingleErrorWidget with Editable with Events.InputBoxLoseFocusEvent.Handler {
 
+  object Prefs {
+    private val prefs = Preferences.userNodeForPackage(InputBox.this.getClass)
+    def inputTypeName = prefs.get("inputTypeName", "Number")
+    def updateTo(inputTypeName: String): Unit = {
+      prefs.put("inputTypeName", inputTypeName)
+    }
+  }
    val MIN_WIDTH = 50
    val MIN_HEIGHT = 60
 
@@ -35,7 +43,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
   // everyone but string will use it but we need to
   // keep it around so we know what to set it to.
   private val codeEditorKit: EditorKit = textArea.getEditorKit
-  protected var inputType: InputType = new StringInputType()
+  protected var inputType: InputType = InputType.create(Prefs.inputTypeName)
   private val constraint: InputBoxConstraint = new InputBoxConstraint(inputType.baseName, inputType.defaultValue)
   protected val changeButton: JButton = new NLButton("Change") {
     addActionListener(new EditActionListener())
@@ -263,6 +271,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
       textArea.enableBracketMatcher(inputType.enableBracketMatcher)
       changeButton.setVisible(inputType.changeVisible)
       inputType.colorPanel(colorSwatch)
+      Prefs.updateTo(typeOptions.chosenName)
     }
     scroller.setHorizontalScrollBarPolicy(
       if (inputType.multiline) ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED
