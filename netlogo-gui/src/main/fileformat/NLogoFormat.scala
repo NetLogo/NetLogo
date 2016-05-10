@@ -38,27 +38,34 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] {
       s.getClass.getSimpleName.replaceAll("\\$", "").toLowerCase)
 
   def writeSections(sections: Map[String, Array[String]], location: URI): Try[URI] = {
-    Try {
-      val filePath = Paths.get(location)
-      val writer = Files.newBufferedWriter(filePath)
-      try {
-        val fileText = sectionNames.map { name =>
-          val sectionLines = sections.getOrElse(name, Array[String]())
-          if (sectionLines.isEmpty)
-            "\n"
-          else if (sectionLines.head.isEmpty || sectionLines.head.startsWith("\n") || name == "org.nlogo.modelsection.code")
-            sectionLines.mkString("", "\n", "\n")
-          else
-            sectionLines.mkString("\n", "\n", "\n")
-        }.mkString(Separator)
-        writer.write(fileText)
-        writer.flush()
-        location
-      }
-      finally {
-        writer.close
+    Try(Paths.get(location)).flatMap { filePath =>
+      sectionsToSource(sections).flatMap { fileText =>
+        Try {
+          val writer = Files.newBufferedWriter(filePath)
+          try {
+            writer.write(fileText)
+            writer.flush()
+            location
+          }
+          finally {
+            writer.close
+          }
+        }
       }
     }
+  }
+
+  def sectionsToSource(sections: Map[String, Array[String]]): Try[String] = {
+    Try(
+      sectionNames.map { name =>
+        val sectionLines = sections.getOrElse(name, Array[String]())
+        if (sectionLines.isEmpty)
+          "\n"
+        else if (sectionLines.head.isEmpty || sectionLines.head.startsWith("\n") || name == "org.nlogo.modelsection.code")
+          sectionLines.mkString("", "\n", "\n")
+        else
+          sectionLines.mkString("\n", "\n", "\n")
+      }.mkString(Separator))
   }
 
   def sectionsFromSource(source: String): Try[Map[String, Array[String]]] = {

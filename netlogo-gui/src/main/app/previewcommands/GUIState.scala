@@ -7,13 +7,13 @@ import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
 
-import org.nlogo.core.CompilerException
+import org.nlogo.core.{ CompilerException, Model }
 import org.nlogo.api.PreviewCommands
 import org.nlogo.api.PreviewCommands.Compilable
 import org.nlogo.swing.HasPropertyChangeSupport
 
 class GUIState(
-  modelContents: String,
+  model: Model,
   modelPath: String,
   workspaceFactory: WorkspaceFactory)
   extends HasPropertyChangeSupport {
@@ -35,7 +35,7 @@ class GUIState(
     _previewCommandsRunner = newPreviewCommands match {
       case compilableCommands: Compilable =>
         Try(PreviewCommandsRunner.fromModelContents(
-          workspaceFactory, modelContents, modelPath, newPreviewCommands
+          workspaceFactory, model, modelPath, newPreviewCommands
         )) match {
           case Success(runner)               => Some(Right(runner))
           case Failure(e: CompilerException) => Some(Left(e))

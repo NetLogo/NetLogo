@@ -6,8 +6,9 @@ import java.util.{ ArrayList, List => JList }
 import org.nlogo.agent.{ World, World3D }
 import org.nlogo.api.{ ConfigurableModelLoader, LogoException, ModelLoader, ModelSection, ModelType, Version, SimpleJobOwner }
 import org.nlogo.core.{ AgentKind, CompilerException }
-import org.nlogo.window.{ Event, FileController, AppletAdPanel, CompilerManager, InterfacePanelLite, InvalidVersionException,
-                          ReconfigureWorkspaceUI, NetLogoListenerManager, RuntimeErrorDialog }
+import org.nlogo.window.{ Event, FileController, AppletAdPanel, CompilerManager, LinkRoot,
+  InterfacePanelLite, InvalidVersionException,
+  ReconfigureWorkspaceUI, NetLogoListenerManager, RuntimeErrorDialog }
 import org.nlogo.window.Events.{ CompiledEvent, LoadModelEvent }
 import org.nlogo.workspace.OpenModel
 import org.nlogo.fileformat.{ NLogoFormat, NLogoHubNetFormat, NLogoPreviewCommandsFormat, NLogoModelSettings }
@@ -24,15 +25,8 @@ abstract class AppletPanel(
   frame: java.awt.Frame, iconListener: java.awt.event.MouseListener, isApplet: Boolean)
 extends javax.swing.JPanel
 with org.nlogo.api.Exceptions.Handler
-with Event.LinkParent {
-
-  /// LinkComponent stuff
-
-  val linkComponents: JList[AnyRef] = new ArrayList[AnyRef]
-  /** internal use only */
-  def addLinkComponent(c: AnyRef) { linkComponents.add(c) }
-  /** internal use only */
-  override def getLinkChildren = linkComponents.toArray
+with Event.LinkParent
+with LinkRoot {
 
   /**
    * The NetLogoListenerManager stored in this field can be used to add and remove NetLogoListeners,
@@ -212,7 +206,7 @@ with Event.LinkParent {
     // reading case that goes out to the web server instead of 1the file system.... so, I think
     // TYPE_LIBRARY is probably OK. - ST 10/11/05
     RuntimeErrorDialog.setModelName(uri.getPath.split("/").last)
-    val controller = new FileController(this)
+    val controller = new FileController(this, workspace)
     val loader = new ConfigurableModelLoader()
       .addFormat[Array[String], NLogoFormat](new NLogoFormat(workspace.autoConvert _))
       .addSerializers[Array[String], NLogoFormat](Seq(

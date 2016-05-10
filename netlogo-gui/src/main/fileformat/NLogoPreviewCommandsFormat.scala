@@ -18,20 +18,20 @@ class NLogoPreviewCommandsFormat extends ComponentSerialization[Array[String], N
       .withOptionalSection[PreviewCommands](componentName, None, PreviewCommands.Default)
   }
 
-  def serialize(m: Model): Array[String] =
+  def serialize(m: Model): Array[String] = {
     m.optionalSectionValue[PreviewCommands](componentName) match {
       case Some(PreviewCommands.Default) => Array("")
-      case Some(commands) => Array(
-        commands.source.stripTrailingWhiteSpace + "\n")
+      case Some(commands) =>
+        commands.source.lines.map(_.stripTrailingWhiteSpace).toArray
       case _ => Array("")
     }
+  }
 
   def validationErrors(m: Model) = None
 
   override def deserialize(commands: Array[String]) = { (m: Model) =>
-    m.copy(previewCommands =
-      if (commands.nonEmpty) Some(commands.mkString("\n")) else None)
-      .withOptionalSection[PreviewCommands](componentName, Some(PreviewCommands(commands.toList)), PreviewCommands.Default)
+    m.copy(previewCommands = if (commands.nonEmpty) Some(commands.mkString("\n")) else None)
+     .withOptionalSection[PreviewCommands](componentName, Some(PreviewCommands(commands.mkString("\n"))), PreviewCommands.Default)
   }
 }
 

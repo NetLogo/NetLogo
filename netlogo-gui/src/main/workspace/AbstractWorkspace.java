@@ -39,12 +39,6 @@ public abstract strictfp class AbstractWorkspace
 
   public final org.nlogo.agent.World _world;
 
-  protected final DefaultFileManager fileManager;
-
-  public FileManager fileManager() {
-    return fileManager;
-  }
-
   public final org.nlogo.nvm.JobManagerInterface jobManager;
   protected final Evaluator evaluator;
   protected final ExtensionManager extensionManager;
@@ -56,24 +50,16 @@ public abstract strictfp class AbstractWorkspace
     return lastRunTimes;
   }
 
-  /**
-   * type of the currently loaded model. Certain aspects of NetLogo's
-   * behavior depend on this, i.e. whether to force a save-as and so on.
-   */
-  private ModelType modelType;
-
   //public final WorldLoader worldLoader ;
 
   /// startup
 
   protected AbstractWorkspace(org.nlogo.agent.World world) {
     this._world = world;
-    modelType = ModelTypeJ.NEW();
     evaluator = new Evaluator(this);
     world.compiler_$eq(this);
     jobManager = Femto.getJ(JobManagerInterface.class, "org.nlogo.job.JobManager",
         new Object[]{this, world, world});
-    fileManager = new DefaultFileManager(this);
     extensionManager = new ExtensionManager(this, new JarLoader(this));
   }
 
@@ -157,62 +143,6 @@ public abstract strictfp class AbstractWorkspace
   public static java.net.URL toURL(java.io.File file)
       throws java.net.MalformedURLException {
     return file.toURL();
-  }
-
-  /**
-   * instantly converts the current model to ModelTypeJ.NORMAL. This is used
-   * by the __edit command to enable quick saving of library models. It
-   * probably shouldn't be used anywhere else.
-   */
-  public String convertToNormal()
-      throws java.io.IOException {
-    java.io.File git = new java.io.File(ModelsLibrary.modelsRoot() + "/.git");
-    if (!git.exists()) {
-      throw new java.io.IOException("no .git directory found");
-    }
-    modelType = ModelTypeJ.NORMAL();
-    return getModelPath();
-  }
-
-  protected void setModelType(ModelType modelType) {
-    this.modelType = modelType;
-  }
-
-  public ModelType getModelType() {
-    return modelType;
-  }
-
-  /**
-   * whether the user needs to enter a new filename to save this model.
-   * We need to do a "save as" if the model is new, from the
-   * models library, or converted.
-   * <p/>
-   * Basically, only normal models can get silently saved.
-   */
-  public boolean forceSaveAs() {
-    return modelType == ModelTypeJ.NEW()
-      || modelType == ModelTypeJ.LIBRARY();
-  }
-
-  /**
-   * converts a model's filename to an externally displayable model name.
-   * The argument may be null, the return value will never be.
-   * <p/>
-   * Package protected for unit testing.
-   */
-  static String makeModelNameForDisplay(String str) {
-    if (str == null) {
-      return "Untitled";
-    }
-    int suffixIndex = str.lastIndexOf(".nlogo");
-    if (suffixIndex > 0 && suffixIndex == str.length() - 6) {
-      str = str.substring(0, str.length() - 6);
-    }
-    suffixIndex = str.lastIndexOf(".nlogo3d");
-    if (suffixIndex > 0 && suffixIndex == str.length() - 8) {
-      str = str.substring(0, str.length() - 8);
-    }
-    return str;
   }
 
   /// procedures
@@ -472,12 +402,7 @@ public abstract strictfp class AbstractWorkspace
 
     final org.nlogo.core.File sourceFile;
 
-    if (AbstractWorkspace.isApplet()) {
-      String url = fileManager().attachPrefix(filename);
-      sourceFile = new org.nlogo.api.RemoteFile(url);
-    } else {
-      sourceFile = new org.nlogo.api.LocalFile(filename);
-    }
+    sourceFile = new org.nlogo.api.LocalFile(filename);
     sourceFile.open(FileModeJ.READ());
     String source = org.nlogo.util.Utils.reader2String(sourceFile.reader());
     return source.replaceAll("\r\n", "\n");

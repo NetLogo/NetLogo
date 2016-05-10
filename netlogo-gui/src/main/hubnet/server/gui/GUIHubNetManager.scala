@@ -73,6 +73,11 @@ class GUIHubNetManager(workspace: GUIWorkspace,
       _clientEditor.load(hubNetWidgets)
     }
   }
+
+  override def updateModel(m: Model): Model = {
+    m.withOptionalSection("org.nlogo.modelsection.hubnetclient", Some(interfaceWidgets), Seq())
+  }
+
   def interfaceWidgets: Seq[CoreWidget] = _clientEditor.interfaceWidgets
 
   type Component       = Seq[CoreWidget]

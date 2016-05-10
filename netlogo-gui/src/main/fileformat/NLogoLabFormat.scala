@@ -20,7 +20,7 @@ trait LabFormat[A <: ModelFormat[Array[String], A]]
 
   def serialize(m: Model): Array[String] = {
     m.optionalSectionValue[Seq[LabProtocol]](componentName)
-      .map(ps => LabSaver.save(ps).lines.toArray)
+      .map(ps => if (ps.isEmpty) Array[String]() else LabSaver.save(ps).lines.toArray)
       .getOrElse(Array[String]())
   }
 

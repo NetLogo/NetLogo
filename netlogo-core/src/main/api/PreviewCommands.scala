@@ -1,5 +1,6 @@
 package org.nlogo.api
 
+import org.nlogo.core.Model
 import org.nlogo.util.Implicits.RichString
 import scala.util.Try
 import java.awt.image.BufferedImage
@@ -16,10 +17,13 @@ import java.awt.image.BufferedImage
  * `random-seed 0` called before opening the model. The `startup`
  * procedure, if present, runs before the preview commands.
  */
-sealed trait PreviewCommands {
+sealed trait PreviewCommands extends ModelSections.ModelSaveable {
   def source: String
   def description: String
   override def toString = description
+  override def updateModel(m: Model): Model = {
+    m.withOptionalSection[PreviewCommands]("org.nlogo.modelsection.previewcommands", Some(this), PreviewCommands.Default)
+  }
 }
 
 object PreviewCommands {

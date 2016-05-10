@@ -2,8 +2,11 @@
 
 package org.nlogo.app
 
+import java.net.URI
+
 import org.nlogo.window.Events._
-import org.nlogo.api
+import org.nlogo.workspace.{ ModelTracker, SaveModel }
+import org.nlogo.api, api.{ ModelLoader, ModelType, Version }
 
 object DirtyMonitor {
   val autoSaveFileName = {
@@ -15,7 +18,7 @@ object DirtyMonitor {
   }
 }
 
-class DirtyMonitor(frame: javax.swing.JFrame)
+class DirtyMonitor(frame: javax.swing.JFrame, modelSaver: ModelSaver, modelLoader: ModelLoader, modelTracker: ModelTracker)
 extends BeforeLoadEvent.Handler
 with AfterLoadEvent.Handler
 with WidgetAddedEvent.Handler
@@ -23,6 +26,7 @@ with WidgetRemovedEvent.Handler
 with DirtyEvent.Handler
 with AboutToQuitEvent.Handler
 with ModelSavedEvent.Handler
+with SaveModel.Controller
 {
   // we don't want auto save to kick in when a model isn't completely loaded yet - ST 8/6/09
   private var loading = true
@@ -54,8 +58,7 @@ with ModelSavedEvent.Handler
       return
     try {
       lastTimeAutoSaved = System.currentTimeMillis()
-      api.FileIO.writeFile(DirtyMonitor.autoSaveFileName,
-                           new ModelSaver(App.app).save)
+      SaveModel(modelSaver.currentModel, modelLoader, this, modelTracker, Version)
     }
     catch {
       case ex: java.io.IOException =>
@@ -92,4 +95,13 @@ with ModelSavedEvent.Handler
     dirty(true)
     doAutoSave()
   }
+
+  // SaveModel.Controller
+
+  // autosaving doesn't choose a file path
+  def chooseFilePath(modelType: ModelType): Option[URI] = None
+
+  // should never automatically save a model in a different version
+  def shouldSaveModelOfDifferingVersion(version: String): Boolean = false
+  def warnInvalidFileFormat(format: String): Unit = {}
 }

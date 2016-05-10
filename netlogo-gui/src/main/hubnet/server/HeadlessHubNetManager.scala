@@ -28,6 +28,9 @@ class HeadlessHubNetManager(workspace: AbstractWorkspaceScala, loader: ModelLoad
       widgets = ws
     }
   }
+  override def updateModel(m: Model): Model = {
+    m.withOptionalSection("org.nlogo.modelsection.hubnetclient", Some(widgets), Seq())
+  }
   override def modelWidgets: Seq[CoreWidget] = widgets
   override def currentlyActiveInterface =
     ComputerInterface(widgets, workspace.world.turtleShapeList.shapes, workspace.world.linkShapeList.shapes)

@@ -28,12 +28,12 @@ trait ModelSectionTest[A, B <: ModelFormat[A, _], C] extends FunSuite {
     }
   }
 
-  def testDeserializes(description: String, serializedVersion: A, deserializedVersion: C): Unit = {
+  def testDeserializes(description: String, serializedVersion: A, deserializedVersion: C, display: C => String = (_.toString)): Unit = {
     test(s"deserializes $description") {
       val s = subject
       val m = s.deserialize(serializedVersion)(new Model())
       val component = modelComponent(m)
-      assert(deserializedVersion == component)
+      assert(deserializedVersion == component, display(deserializedVersion) + " did not equal " + display(component))
     }
   }
 

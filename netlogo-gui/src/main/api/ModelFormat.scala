@@ -2,6 +2,8 @@
 
 package org.nlogo.api
 
+import java.net.URI
+
 import org.nlogo.core.Model
 
 import scala.util.Try
@@ -17,7 +19,9 @@ trait ComponentSerialization[A, B <: ModelFormat[A, _]] {
 trait ModelFormat[Section, Format <: ModelFormat[Section, _]] {
   def name: String
 
-  def sections(location: java.net.URI): Try[Map[String, Section]]
+  def sections(location: URI): Try[Map[String, Section]]
+  def writeSections(sections: Map[String, Section], location: URI): Try[URI]
+  def sectionsToSource(sections: Map[String, Section]): Try[String]
   def sectionsFromSource(source: String): Try[Map[String, Section]]
 
   def baseModel: Model = Model()
@@ -36,17 +40,33 @@ trait ModelFormat[Section, Format <: ModelFormat[Section, _]] {
     for {
       loadedSections <- sectionsFromSource(source)
     } yield
-      (defaultComponents ++ optionalComponents).foldLeft(baseModel)(addOptionalSection(loadedSections))
+      (defaultComponents ++ optionalComponents).foldLeft(baseModel)(addModelSection(loadedSections))
   }
 
-  def load(location: java.net.URI, optionalComponents: Seq[ComponentSerialization[Section, Format]]): Try[Model] = {
+  def load(location: URI, optionalComponents: Seq[ComponentSerialization[Section, Format]]): Try[Model] = {
     for {
       loadedSections <- sections(location)
     } yield
-      (defaultComponents ++ optionalComponents).foldLeft(baseModel)(addOptionalSection(loadedSections))
+      (defaultComponents ++ optionalComponents).foldLeft(baseModel)(addModelSection(loadedSections))
   }
 
-  private def addOptionalSection(sections: Map[String, Section])(
+  def save(model: Model, uri: URI, optionalComponents: Seq[ComponentSerialization[Section, Format]]): Try[URI] = {
+    val serializedSections =
+      (defaultComponents ++ optionalComponents).foldLeft(Map[String, Section]())(addSerializedSection(model))
+    writeSections(serializedSections, uri)
+  }
+
+  def sourceString(model: Model, optionalComponents: Seq[ComponentSerialization[Section, Format]]): Try[String] = {
+    val serializedSections =
+      (defaultComponents ++ optionalComponents).foldLeft(Map[String, Section]())(addSerializedSection(model))
+    sectionsToSource(serializedSections)
+  }
+
+  private def addSerializedSection(model: Model)(sections: Map[String, Section], component: ComponentSerialization[Section, Format]): Map[String, Section] = {
+    sections + (component.componentName -> component.serialize(model))
+  }
+
+  private def addModelSection(sections: Map[String, Section])(
     model: Model, component: ComponentSerialization[Section, Format]): Model = {
       val addComponent = sections
         .get(component.componentName)

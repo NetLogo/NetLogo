@@ -1,6 +1,6 @@
 package org.nlogo.workspace
 
-import org.nlogo.core.{ AgentKind, CompilerException, UpdateMode }
+import org.nlogo.core.{ AgentKind, CompilerException, Model, UpdateMode }
 import org.nlogo.api.{ JobOwner, PreviewCommands, SimpleJobOwner }
 import org.nlogo.nvm.{ Procedure, Workspace }
 import java.awt.image.BufferedImage
@@ -21,11 +21,11 @@ object PreviewCommandsRunner {
 
   def fromModelContents(
     workspaceFactory: WorkspaceFactory,
-    modelContents: String,
+    model: Model,
     modelPath: String,
     previewCommands: PreviewCommands): PreviewCommandsRunner = {
     val open = (w: Workspace) => {
-      w.openString(modelContents)
+      w.openModel(model)
       Option(modelPath).foreach(w.setModelPath)
     }
     this(workspaceFactory, open, Some(previewCommands))

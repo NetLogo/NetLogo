@@ -8,7 +8,7 @@ package org.nlogo.app
 import org.nlogo.core.AgentKind
 import org.nlogo.core.I18N
 
-class ToolsMenu(app: App) extends org.nlogo.swing.Menu(I18N.gui.get("menu.tools")) {
+class ToolsMenu(app: App, modelSaver: ModelSaver) extends org.nlogo.swing.Menu(I18N.gui.get("menu.tools")) {
 
   implicit val i18nName = I18N.Prefix("menu.tools")
 
@@ -32,7 +32,7 @@ class ToolsMenu(app: App) extends org.nlogo.swing.Menu(I18N.gui.get("menu.tools"
               () => app.linkShapesManager.init(I18N.gui("linkShapesEditor")))
   addMenuItem(app.previewCommandsEditor.title, 'P', true, () =>
     app.workspace.previewCommands =
-      app.previewCommandsEditor.getPreviewCommands(new ModelSaver(app).save, app.workspace.getModelPath))
+      app.previewCommandsEditor.getPreviewCommands(modelSaver.currentModel, app.workspace.getModelPath))
   addMenuItem(I18N.gui("behaviorSpace"), 'B', true, () => app.labManager.show())
   addMenuItem(I18N.gui("systemDynamicsModeler"), 'D', true, app.aggregateManager.showEditor _)
   addSeparator()

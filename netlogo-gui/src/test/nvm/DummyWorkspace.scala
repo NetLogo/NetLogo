@@ -145,4 +145,6 @@ class DummyWorkspace extends DummyCompilerServices with Workspace {
   def renderer: org.nlogo.api.RendererInterface = unsupported
   def warningMessage(message: String): Boolean = unsupported
   def worldChecksum: String = unsupported
+  def handleModelChange(): Unit = unsupported
+  def writeOutputObject(x$1: org.nlogo.agent.OutputObject): Unit = unsupported
 }

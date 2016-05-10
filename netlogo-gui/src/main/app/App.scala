@@ -2,7 +2,8 @@
 
 package org.nlogo.app
 
-import org.nlogo.core.{ AgentKind, CompilerException, I18N, LogoList, Nobody, Shape, Token, Widget => CoreWidget }
+import org.nlogo.core.{ AgentKind, CompilerException, I18N, LogoList, Model, Nobody,
+  Shape, Token, Widget => CoreWidget }, Shape.{ LinkShape, VectorShape }
 import org.nlogo.core.model.WidgetReader
 import org.nlogo.agent.{Agent, World3D, World}
 import org.nlogo.api._
@@ -154,8 +155,7 @@ object App{
           .getMethod("newInstance").invoke(null).asInstanceOf[AbstractWorkspaceScala]
       def openCurrentModelIn(w: Workspace): Unit = {
         w.setModelPath(app.workspace.getModelPath)
-        // TODO: This should openModel instead of opening string
-        w.openString(new ModelSaver(pico.getComponent(classOf[App])).save)
+        w.openModel(pico.getComponent(classOf[ModelSaver]).currentModel)
       }
     }
 
@@ -277,7 +277,6 @@ class App extends
   lazy val owner = new SimpleJobOwner("App", workspace.world.mainRNG, AgentKind.Observer)
   private var _tabs: Tabs = null
   def tabs = _tabs
-  var dirtyMonitor:DirtyMonitor = null // accessed from FileMenu - ST 2/26/04
   var helpMenu:HelpMenu = null
   var fileMenu: FileMenu = null
   var monitorManager:AgentMonitorManager = null
@@ -361,6 +360,10 @@ class App extends
         }
         pico.getComponent(classOf[RendererInterface])
       }
+
+      def updateModel(model: Model): Model = {
+        model.withOptionalSection("org.nlogo.modelsection.modelsettings", Some(ModelSettings(snapOn)), Some(ModelSettings(false)))
+      }
     }
 
     val shapeChangeListener = new ShapeChangeListener(workspace, world)
@@ -368,9 +371,6 @@ class App extends
     pico.addComponent(new EditorColorizer(workspace))
 
     frame.addLinkComponent(workspace)
-
-    dirtyMonitor = new DirtyMonitor(frame)
-    frame.addLinkComponent(dirtyMonitor)
 
     frame.addLinkComponent(new ExtensionAssistant(frame))
 
@@ -393,10 +393,14 @@ class App extends
 
   private def finishStartup(appHandler: Object) {
     val app = pico.getComponent(classOf[App])
+    val currentModelAsString = {() =>
+      val modelSaver = pico.getComponent(classOf[ModelSaver])
+      modelSaver.modelAsString(modelSaver.currentModel, ModelReader.modelSuffix)
+    }
     pico.add(classOf[ModelingCommonsInterface],
           "org.nlogo.mc.ModelingCommons",
           Array[Parameter] (
-            new ConstantParameter(new ModelSaver(app).save _),
+            new ConstantParameter(currentModelAsString),
             new ComponentParameter(classOf[AppFrame]),
             new ConstantParameter(() => workspace.exportView()),
             new ConstantParameter(() => Boolean.box(
@@ -478,7 +482,7 @@ class App extends
   private class MenuBarFactory extends org.nlogo.window.MenuBarFactory{
     def createFileMenu:  JMenu = pico.getComponent(classOf[FileMenu])
     def createEditMenu:  JMenu = new EditMenu(App.this)
-    def createToolsMenu: JMenu = new ToolsMenu(App.this)
+    def createToolsMenu: JMenu = new ToolsMenu(App.this, pico.getComponent(classOf[ModelSaver]))
     def createZoomMenu:  JMenu = new ZoomMenu
     override def addHelpMenu(menuBar:JMenuBar) = {
       val newMenu = new HelpMenu (App.this, new EditorColorizer(workspace))
@@ -734,7 +738,7 @@ class App extends
    * Generates OS standard frame title.
    */
   private def makeFrameTitle = {
-    if(workspace.getModelFileName == null) "NetLogo"
+    if (workspace.getModelFileName == null) "NetLogo"
     else{
       var title = workspace.modelNameForDisplay
       // on OS X, use standard window title format. otherwise use Windows convention
@@ -1065,26 +1069,25 @@ class App extends
   }
   def info:             String =
     tabs.infoTab.info
-  def turtleShapes:     Seq[Shape] =
-    tabs.workspace.world.turtleShapeList.shapes
-  def version:          String =
-    Version.version
-  def previewCommands:  PreviewCommands =
-    tabs.workspace.previewCommands
-  def hubnetInterface:  Option[Seq[CoreWidget]] =
-    workspace.hubNetManager.map(_.interfaceWidgets)
-  def linkShapes:       Seq[Shape] =
-    tabs.workspace.world.linkShapeList.shapes
-  def snapOn:           Boolean =
-    tabs.workspace.snapOn
+  def turtleShapes:     Seq[VectorShape] =
+    tabs.workspace.world.turtleShapeList.shapes.collect { case s: VectorShape => s }
+  def linkShapes:       Seq[LinkShape] =
+    tabs.workspace.world.linkShapeList.shapes.collect { case s: LinkShape => s }
+  def additionalSections: Seq[ModelSections.ModelSaveable] = {
+    val sections =
+      Seq(tabs.workspace.previewCommands,
+        labManager,
+        aggregateManager,
+        tabs.workspace)
+    workspace.hubNetManager.map(_ +: sections).getOrElse(sections)
+  }
 }
 
-class AppFrame extends JFrame with LinkParent {
+class AppFrame extends JFrame with LinkParent with LinkRoot {
   setIconImage(org.nlogo.awt.Images.loadImageResource("/images/arrowhead.gif"))
   setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE)
   getContentPane.setLayout(new java.awt.BorderLayout)
   org.nlogo.awt.FullScreenUtilities.setWindowCanFullScreen(this, true)
-  private val linkComponents = new collection.mutable.ListBuffer[Object]()
   addWindowListener(new WindowAdapter() {
     override def windowClosing(e: WindowEvent) {
       try App.app.fileMenu.quit()
@@ -1093,6 +1096,4 @@ class AppFrame extends JFrame with LinkParent {
     override def windowIconified(e: WindowEvent) {new IconifiedEvent(AppFrame.this, true).raise(App.app)}
     override def windowDeiconified(e: WindowEvent) {new IconifiedEvent(AppFrame.this, false).raise(App.app)}
   })
-  def addLinkComponent(c:Object) { linkComponents += (c) }
-  def getLinkChildren: Array[Object] = linkComponents.toArray
 }

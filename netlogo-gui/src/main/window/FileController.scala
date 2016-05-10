@@ -2,17 +2,20 @@
 
 package org.nlogo.window
 
-import org.nlogo.swing.{ BrowserLauncher, OptionDialog }
+import org.nlogo.swing.{ BrowserLauncher, FileDialog, OptionDialog }
+import org.nlogo.workspace.{ ModelTracker }
 import org.nlogo.workspace.OpenModel.{ Controller => OpenModelController }
-import org.nlogo.api.Version
+import org.nlogo.workspace.SaveModel.{ Controller => SaveModelController }
+import org.nlogo.api.{ ModelReader, ModelType, Version }, ModelReader.modelSuffix
 import org.nlogo.core.I18N
 import org.nlogo.awt.UserCancelException
 
+import java.awt.{ FileDialog => AWTFileDialog }
 import java.nio.file.Paths
 import java.net.URI
 import java.awt.Component
 
-class FileController(owner: Component) extends OpenModelController {
+class FileController(owner: Component, modelTracker: ModelTracker) extends OpenModelController with SaveModelController {
   // OpenModel.Controller methods
   def errorOpeningURI(uri: URI, exception: Exception): Unit = {
     val options = Array[Object](I18N.gui.get("common.buttons.ok"))
@@ -109,5 +112,48 @@ class FileController(owner: Component) extends OpenModelController {
         showVersionWarningAndGetResponse(version)
       case 2 => false
     }
+  }
+
+  def chooseFilePath(modelType: org.nlogo.api.ModelType): Option[java.net.URI] = {
+    val newFileName = guessFileName
+
+    // we only default to saving in the model dir for normal
+    // models. for library and new models, we use the current
+    // FileDialog dir.
+    if (modelTracker.getModelType == ModelType.Normal) {
+      FileDialog.setDirectory(modelTracker.getModelDir)
+    }
+
+    var path = FileDialog.show(
+      owner, I18N.gui.get("menu.file.saveAs.dialog"), AWTFileDialog.SAVE,
+      newFileName)
+    if(! path.endsWith("." + modelSuffix)) {
+      path += "." + modelSuffix
+    }
+    Some(Paths.get(path).toUri)
+  }
+
+  /**
+   * makes a guess as to what the user would like to save this model as.
+   * This is the model name if there is one, "Untitled.nlogo" otherwise.
+   */
+  private def guessFileName: String = {
+    Option(modelTracker.getModelFileName).getOrElse(s"Untitled.$modelSuffix")
+  }
+
+  def shouldSaveModelOfDifferingVersion(version: String): Boolean = {
+    Version.compatibleVersion(version) || {
+      val options = Array[Object](
+        I18N.gui.get("common.buttons.save"),
+        I18N.gui.get("common.buttons.cancel"))
+      val message = I18N.gui.getN("file.save.warn.savingInNewerVersion", version, Version.version)
+      OptionDialog.show(owner, "NetLogo", message, options) == 0
+    }
+  }
+
+  def warnInvalidFileFormat(format: String): Unit = {
+    val options = Array[Object](I18N.gui.get("common.buttons.ok"))
+    val message = I18N.gui.getN("file.save.warn.invalidFormat", format)
+    OptionDialog.show(owner, I18N.gui.get("common.messages.warning"), message, options)
   }
 }

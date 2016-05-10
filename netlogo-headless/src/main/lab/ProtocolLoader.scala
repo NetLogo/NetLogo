@@ -2,7 +2,7 @@
 
 package org.nlogo.lab
 
-import org.nlogo.api.{ EnumeratedValueSet, LabProtocol, SteppedValueSet }
+import org.nlogo.api.{ EnumeratedValueSet, FileIO, LabProtocol, SteppedValueSet }
 import org.nlogo.core.CompilerUtilitiesInterface
 import org.w3c.dom
 import org.xml.sax
@@ -10,6 +10,7 @@ import language.implicitConversions
 
 object ProtocolLoader
 {
+  val PREAMBLE = """<?xml version="1.0" encoding="us-ascii"?>"""
   val DOCTYPE = "<!DOCTYPE experiments SYSTEM \"behaviorspace.dtd\">"
 }
 
@@ -36,15 +37,19 @@ class ProtocolLoader(services: CompilerUtilitiesInterface)
     str.replaceAll("runMetricsEveryTick=\"", "runMetricsEveryStep=\"")
        .replaceAll("<timeLimit ticks=\"", "<timeLimit steps=\"")
   implicit def file2inputSource(file: java.io.File): sax.InputSource =
-    new sax.InputSource(
-      new java.io.StringReader(
-        ticksToSteps(io.Source.fromFile(file).mkString)))
-  implicit def xml2inputSource(xml: String): sax.InputSource =
+    xml2inputSource(FileIO.file2String(file))
+
+  implicit def xml2inputSource(xml: String): sax.InputSource = {
+    val doctypedXml =
+      if (xml.startsWith(ProtocolLoader.PREAMBLE))
+        ticksToSteps(xml)
+      else
+        ProtocolLoader.PREAMBLE + "\n" + ProtocolLoader.DOCTYPE + "\n" + ticksToSteps(xml)
     // what about character encodings?  String.getBytes() will use the platform's default encoding;
     // presumably sax.InputSource will also then use that same encoding?  I'm not really sure...  it
     // doesn't seem worth stressing about - ST 12/21/04
-    new sax.InputSource(new java.io.ByteArrayInputStream(
-      (ProtocolLoader.DOCTYPE + "\n" + ticksToSteps(xml)).getBytes))
+    new sax.InputSource(new java.io.ByteArrayInputStream(doctypedXml.getBytes))
+  }
   ///
   def file2xml(file: java.io.File): String = ""
   class Loader {

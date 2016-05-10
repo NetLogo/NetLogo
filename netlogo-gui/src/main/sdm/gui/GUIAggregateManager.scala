@@ -3,7 +3,7 @@
 package org.nlogo.sdm.gui
 
 import org.nlogo.api.{ CompilerServices, ModelSection }
-import org.nlogo.core.{ AgentKind, Model, TokenType }
+import org.nlogo.core.{ AgentKind, Model => CoreModel, TokenType }
 import org.nlogo.editor.Colorizer
 import org.nlogo.window.{ EditDialogFactoryInterface, MenuBarFactory }
 
@@ -31,22 +31,6 @@ with org.nlogo.window.Events.LoadModelEvent.Handler {
 
   override def getLinkParent = linkParent
 
-  override def save: String = {
-    if (editor == null || !editor.getDrawing.figures.hasNextFigure)
-      null
-    else {
-      val s = new java.io.ByteArrayOutputStream
-      val output = new org.jhotdraw.util.StorableOutput(s)
-      output.writeDouble(editor.getDrawing.getModel.getDt)
-      output.writeStorable(editor.getDrawing)
-      output.close()
-      // JHotDraw has an annoying habit of including spaces at the end of lines.  we have stripped
-      // those out of the models in version control, so to prevent spurious diffs, we need to keep
-      // them from coming back - ST 3/10/09
-      s.toString.replaceAll(" *\n", "\n").trim
-    }
-  }
-
   override def handle(e: org.nlogo.window.Events.BeforeLoadEvent) {
     if (editor != null) {
       editor.dispose()
@@ -58,7 +42,7 @@ with org.nlogo.window.Events.LoadModelEvent.Handler {
     load(e.model, compiler)
   }
 
-  override def load(model: Model, compiler: CompilerServices) = {
+  override def load(model: CoreModel, compiler: CompilerServices) = {
     model.optionalSectionValue[AggregateDrawing]("org.nlogo.modelsection.systemdynamics")
       .foreach { drawing =>
         editor = new AggregateModelEditor(
@@ -66,6 +50,14 @@ with org.nlogo.window.Events.LoadModelEvent.Handler {
         if (drawing.getModel.elements.isEmpty)
           editor.setVisible(false)
       }
+  }
+
+  override def updateModel(m: CoreModel): CoreModel = {
+    if (editor == null || !editor.getDrawing.figures.hasNextFigure)
+      m
+    else
+      m.withOptionalSection[AggregateDrawing]("org.nlogo.modelsection.systemdynamics",
+        Some(editor.getDrawing), editor.getDrawing)
   }
 
   override def isLoaded: Boolean = editor != null

@@ -24,17 +24,24 @@ class FormatterPair[A, B <: ModelFormat[A, B]](
 
     def load(source: String): Try[Model] =
       modelFormat.load(source, serializers)
+
+    def save(model: Model, uri: URI): Try[URI] =
+      modelFormat.save(model, uri, serializers)
+
+    def sourceString(model: Model): Try[String] =
+      modelFormat.sourceString(model, serializers)
   }
 
 trait ModelLoader {
   def formats: Seq[FormatterPair[_, _]]
 
+  protected def uriFormat(uri: URI): Option[FormatterPair[_, _]] =
+    uri.getPath.split("\\.").lastOption
+      .flatMap(extension => formats.find(_.name == extension))
+
   def readModel(uri: URI): Try[Model] = {
-    val format =
-      uri.getPath.split("\\.").lastOption
-        .flatMap(extension => formats.find(_.name == extension))
-        .getOrElse(
-          throw new Exception("Unable to open NetLogo model " + uri.getPath))
+    val format = uriFormat(uri)
+      .getOrElse(throw new Exception("Unable to open NetLogo model " + uri.getPath))
     format.load(uri)
   }
 
@@ -43,6 +50,19 @@ trait ModelLoader {
       formats.find(_.name == extension)
         .getOrElse(throw new Exception("Unable to open model with extension: " + extension))
     format.load(source)
+  }
+
+  def save(model: Model, uri: URI): Try[URI] = {
+    val format = uriFormat(uri)
+      .getOrElse(throw new Exception("Unable to save NetLogo model in format specified by " + uri.getPath))
+    format.save(model, uri)
+  }
+
+  def sourceString(model: Model, extension: String): Try[String] = {
+    val format =
+      formats.find(_.name == extension)
+        .getOrElse(throw new Exception("Unable to get source for NetLogo model in format: " + extension))
+    format.sourceString(model)
   }
 }
 

@@ -3,10 +3,8 @@
 package org.nlogo.window
 
 import org.nlogo.window.Event.LinkChild
-import org.nlogo.api.ModelSections.Saveable
+import org.nlogo.api.ModelSections.ModelSaveable
 
-trait LabManagerInterface extends LinkChild with Saveable {
+trait LabManagerInterface extends LinkChild with ModelSaveable {
   def show(): Unit
-
-  def save: String
 }

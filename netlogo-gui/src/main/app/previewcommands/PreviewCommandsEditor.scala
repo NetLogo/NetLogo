@@ -1,5 +1,6 @@
 package org.nlogo.app.previewcommands
 
+import org.nlogo.core.Model
 import org.nlogo.window.{ GraphicsPreviewInterface, PreviewCommandsEditorInterface }
 import java.awt.Frame
 
@@ -12,9 +13,9 @@ class PreviewCommandsEditor(
   graphicsPreview: GraphicsPreviewInterface)
   extends PreviewCommandsEditorInterface {
   val title = "Preview Commands Editor"
-  def getPreviewCommands(modelContent: String, modelPath: String): PreviewCommands = {
+  def getPreviewCommands(model: Model, modelPath: String): PreviewCommands = {
     val dialog = new PreviewCommandsDialog(
-      owner, title, modelContent, modelPath,
+      owner, title, model, modelPath,
       workspaceFactory, graphicsPreview)
     dialog.setVisible(true)
     val previewCommands = dialog.previewCommands

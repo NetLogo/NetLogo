@@ -7,10 +7,6 @@ import Shape.{ VectorShape, LinkShape }
 import ShapeParser.{ parseVectorShapes, parseLinkShapes }
 import scala.reflect.ClassTag
 
-class OptionalSection[A <: AnyRef](val key: String, value: Option[A], val default: A) {
-  def get: Option[A] = value
-}
-
 case class Model(code: String = "",
   widgets: Seq[Widget] = List(View()),
   info: String = "",
@@ -56,3 +52,8 @@ object Model {
     parseLinkShapes(Resource.lines("/system/defaultLinkShapes.txt").toSeq).toList
   class InvalidModelError(message: String) extends RuntimeException(message)
 }
+
+class OptionalSection[A <: AnyRef](val key: String, value: Option[A], val default: A) {
+  def get: Option[A] = value
+}
+

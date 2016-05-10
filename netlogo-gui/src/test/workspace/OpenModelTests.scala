@@ -17,7 +17,6 @@ class OpenModelTests extends FunSuite {
     modelChanges: Model => Model = identity,
     userActions: MockController => MockController = identity,
     currentVersion: String = "NetLogo 6.0",
-    additionalSerializers: Seq[ComponentSerialization[String, MockFormat]] = Seq(),
     error: Option[Exception] = None
     )(
     assertions: (Option[Model], MockController) => Unit): Unit = {
@@ -31,7 +30,6 @@ class OpenModelTests extends FunSuite {
       }
       val loader = new ConfigurableModelLoader()
         .addFormat[String, MockFormat](format)
-        .addSerializers[String, MockFormat](additionalSerializers)
       val res = OpenModel(uri, controller, loader, VersionInfo)
       assertions(res, controller)
   }
@@ -101,12 +99,6 @@ class OpenModelTests extends FunSuite {
       assertResult(Some(Model()))(model)
     }
   }
-  test("passes in additional serializations for use in the model") {
-    testOpenModel(additionalSerializers = Seq(new FooSerializer)) { (model, controller) =>
-      assert(model.isDefined)
-      assert(model.flatMap(_.optionalSectionValue[String]("org.nlogo.foo")) == Some("bar"))
-    }
-  }
   test("notifies the user if an error occurs while loading the file") {
     val exception = new java.io.IOException("file ain't there")
     testOpenModel(error = Some(exception)) { (model, controller) =>
@@ -160,25 +152,4 @@ class MockController extends OpenModel.Controller {
     notifiedModelVersion = version
     willOpenModel
   }
-}
-
-class MockFormat(val model: Model, error: Option[Exception]) extends ModelFormat[String, MockFormat] {
-  type Section = String
-  def name: String = "test"
-  override def baseModel = model
-  def sections(location: java.net.URI): Try[Map[String, String]] =
-    error.map(Failure.apply).getOrElse(Success(Map[String, String]()))
-  def sectionsFromSource(source: String): Try[Map[String, Section]] =
-    Failure(new UnsupportedOperationException("MockFormat doesn't support this operation"))
-  object DefaultSerialization extends ComponentSerialization[String, MockFormat] {
-    def componentName: String = "org.nlogo.modelsection.code"
-    def serialize(m: Model): String = ""
-    def validationErrors(m: Model): Option[String] = None
-  }
-  def codeComponent = DefaultSerialization
-  def infoComponent = DefaultSerialization
-  def interfaceComponent = DefaultSerialization
-  def shapesComponent = DefaultSerialization
-  def linkShapesComponent = DefaultSerialization
-  def version = DefaultSerialization
 }

@@ -55,7 +55,8 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     org.nlogo.window.Events.AddInputBoxConstraintEvent.Handler,
     org.nlogo.window.Events.CompiledEvent.Handler,
     org.nlogo.api.TrailDrawerInterface,
-    org.nlogo.api.DrawingInterface {
+    org.nlogo.api.DrawingInterface,
+    org.nlogo.api.ModelSections.ModelSaveable {
 
   public enum KioskLevel {NONE, MODERATE}
 
@@ -454,7 +455,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     try {
       new org.nlogo.window.Events.AppEvent
           (AppEventType.START_LOGGING,
-              new Object[]{fileManager.attachPrefix(properties)})
+              new Object[]{fileManager().attachPrefix(properties)})
           .raiseLater(this);
     } catch (java.net.MalformedURLException ex) {
       throw new IllegalStateException(ex);
@@ -466,7 +467,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     try {
       new org.nlogo.window.Events.AppEvent
           (AppEventType.ZIP_LOG_FILES,
-              new Object[]{fileManager.attachPrefix(filename)})
+              new Object[]{fileManager().attachPrefix(filename)})
           .raiseLater(this);
     } catch (java.net.MalformedURLException ex) {
       throw new IllegalStateException(ex);
@@ -772,7 +773,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       throws java.io.IOException,
       org.nlogo.shape.InvalidShapeDescriptionException {
     try {
-      glView.addCustomShapes(fileManager.attachPrefix(filename));
+      glView.addCustomShapes(fileManager().attachPrefix(filename));
     } catch (java.net.MalformedURLException ex) {
       throw new IllegalStateException(ex);
     }
@@ -1249,7 +1250,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     jobManager.haltSecondary();
     jobManager.haltPrimary();
     getExtensionManager().reset();
-    fileManager.handleModelChange();
+    fileManager().handleModelChange();
     previewCommands_$eq(PreviewCommands$.MODULE$.DEFAULT());
     clearDrawing();
     viewManager.resetMouseCors();

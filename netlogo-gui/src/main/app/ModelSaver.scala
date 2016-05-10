@@ -5,7 +5,7 @@ package org.nlogo.app
 import org.nlogo.api.{ModelReader, ModelSections, PreviewCommands, Version}
 import org.nlogo.util.Implicits.RichString
 import org.nlogo.util.Implicits.RichStringLike
-import org.nlogo.core.{ LiteralParser, Shape }
+import org.nlogo.core.{ LiteralParser, Model, Shape }
 import org.nlogo.core.model.WidgetReader
 import org.nlogo.fileformat
 import org.nlogo.workspace.AbstractWorkspaceScala
@@ -13,92 +13,33 @@ import collection.JavaConverters._
 
 class ModelSaver(model: ModelSections) {
 
-  def save: String = {
+  private var _currentModel: Model = Model()
 
-    val buf = new StringBuilder
-    def section(fn: => Unit) {
-      fn
-      if(buf.nonEmpty && buf.last != '\n')
-        buf += '\n'
-      buf ++= ModelReader.SEPARATOR + "\n"
-    }
+  def priorModel: Model = _currentModel
 
-    // procedures
-    section {
-      buf ++= model.procedureSource
-      if(buf.nonEmpty && buf.last != '\n')
-        buf += '\n'
-    }
-
-    // widgets
-    section {
-      val additionalReaders = fileformat.nlogoReaders(Version.is3D)
-      for(w <- model.widgets)
-        buf ++=
-          WidgetReader.format(w, additionalReaders) + "\n\n"
-    }
-
-    // info
-    section {
-      buf ++= model.info
-    }
-
-    // turtle shapes
-    section {
-      for(shape <- model.turtleShapes) {
-        buf ++= shape.asInstanceOf[Shape].toString
-        buf ++= "\n\n"
+  def currentModel = {
+    val m = _currentModel.copy(
+      code = model.procedureSource,
+      widgets = model.widgets,
+      info = model.info,
+      turtleShapes = model.turtleShapes,
+      linkShapes = model.linkShapes)
+    if (model.additionalSections.isEmpty)
+      m
+    else
+      model.additionalSections.foldLeft(m) {
+        case (newModel, section) => section.updateModel(newModel)
       }
-    }
-
-    // version
-    section {
-      buf ++= model.version + "\n"
-    }
-
-    // preview commands
-    section {
-      buf ++= (model.previewCommands match {
-        case PreviewCommands.Default => ""
-        case commands                => commands.source.stripTrailingWhiteSpace + "\n"
-      })
-    }
-
-    // system dynamics modeler
-    section {
-      if(model.aggregateManager != null) {
-        val s = model.aggregateManager.save
-        if(s != null)
-          buf.append(s + "\n")
-      }
-    }
-
-    // BehaviorSpace
-    section {
-      buf ++= model.labManager.save
-    }
-
-    // reserved for HubNet client
-    section {
-      model.hubnetInterface.foreach { interface =>
-        buf ++= interface.map(w => WidgetReader.format(w, fileformat.hubNetReaders)).mkString("", "\n", "\n")
-      }
-    }
-
-    //link shapes
-    section {
-      for(shape <- model.linkShapes) {
-        buf ++= shape.asInstanceOf[Shape].toString
-        buf ++= "\n\n"
-      }
-    }
-
-    // interface tab settings
-    section {
-      buf ++= (if(model.snapOn) "1\n" else "0\n")
-    }
-
-    buf.stripTrailingWhiteSpace + "\n"
   }
 
+  def setCurrentModel(m: Model) = {
+    _currentModel = m
+  }
+
+  // this is only used by Modeling Commons and NetLogo Web Export
+  // at the moment. It should *not* be used by anything else
+  // (and it shouldn't be used by NLW or MC either if they can be changed).
+  private[nlogo] def modelAsString(model: Model, format: String): String = {
+    fileformat.basicLoader().sourceString(model, format).get
+  }
 }

@@ -4,10 +4,10 @@ package org.nlogo.workspace
 
 import org.nlogo.agent.{World, Agent, Observer, AbstractExporter, AgentSet, ArrayAgentSet, OutputObject}
 import org.nlogo.api.{ PlotInterface, Dump, CommandLogoThunk, HubNetInterface, LogoException,
-  ReporterLogoThunk, JobOwner, OutputDestination, SimpleJobOwner, PreviewCommands,
+  ReporterLogoThunk, JobOwner, ModelType, OutputDestination, SimpleJobOwner, PreviewCommands,
   Workspace => APIWorkspace, WorldDimensions3D, Version }
 import org.nlogo.core.{ AgentKind, CompilerException, LiteralParser, View, WorldDimensions }
-import org.nlogo.nvm.{ Activation, Instruction, EngineException, Context, Procedure, Tracer }
+import org.nlogo.nvm.{ Activation, CompilerInterface, FileManager, Instruction, EngineException, Context, Procedure, Tracer }
 import org.nlogo.plot.{ PlotExporter, PlotManager }
 
 import java.util.WeakHashMap
@@ -27,7 +27,8 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
   extends AbstractWorkspace(world)
   with APIConformant with Benchmarking
   with Checksums with Evaluating
-  with ModelDir with BehaviorSpaceInformation
+  with ModelTracker
+  with BehaviorSpaceInformation
   with Traceable with HubNetManager
   with ExtendableWorkspaceMethods with Exporting
   with Plotting {
@@ -108,202 +109,6 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
 }
 
 object AbstractWorkspaceTraits {
-
-  trait Plotting { this: AbstractWorkspace =>
-
-    val plotManager = new PlotManager(this)
-
-    // methods used when importing plots
-    def currentPlot(plot: String) {
-      plotManager.currentPlot = Some(plotManager.getPlot(plot))
-    }
-
-    def getPlot(plot: String): PlotInterface = plotManager.getPlot(plot)
-
-    // The PlotManager has already-compiled thunks that it runs to setup and update
-    // plots.  But those thunks need a Context to run in, which isn't known until
-    // runtime.  So once we know the Context, we store it in a bit of mutable state
-    // in Evaluator. - ST 3/2/10
-
-    def updatePlots(c: Context) {
-      evaluator.withContext(c){ plotManager.updatePlots() }
-    }
-
-    def setupPlots(c: Context) {
-      evaluator.withContext(c){ plotManager.setupPlots() }
-    }
-
-  }
-
-  trait Exporting extends Plotting { this: AbstractWorkspace with ModelDir =>
-
-    def exportDrawingToCSV(writer:PrintWriter)
-    def exportOutputAreaToCSV(writer:PrintWriter)
-
-    @throws(classOf[IOException])
-    def exportWorld(filename: String) {
-      new AbstractExporter(filename) {
-        def export(writer:PrintWriter){
-          world.exportWorld(writer,true)
-          exportDrawingToCSV(writer)
-          exportOutputAreaToCSV(writer)
-          exportPlotsToCSV(writer)
-          extensionManager.exportWorld(writer)
-        } }.export("world",modelFileName,"")
-    }
-
-    def exportWorld(writer:PrintWriter){
-      world.exportWorld(writer,true)
-      exportDrawingToCSV(writer)
-      exportOutputAreaToCSV(writer)
-      exportPlotsToCSV(writer)
-      extensionManager.exportWorld(writer)
-    }
-
-    def exportPlotsToCSV(writer: PrintWriter) = {
-      writer.println(Dump.csv.encode("PLOTS"))
-      writer.println(
-        Dump.csv.encode(
-          plotManager.currentPlot.map(_.name).getOrElse("")))
-      plotManager.getPlotNames.foreach { name =>
-        new PlotExporter(plotManager.getPlot(name),Dump.csv).export(writer)
-        writer.println()
-      }
-    }
-
-    @throws(classOf[IOException])
-    def exportPlot(plotName: String,filename: String) {
-      new AbstractExporter(filename) {
-        override def export(writer: PrintWriter) {
-          exportInterfaceGlobals(writer)
-          new PlotExporter(plotManager.getPlot(plotName),Dump.csv).export(writer)
-        }
-      }.export("plot",modelFileName,"")
-    }
-
-    @throws(classOf[IOException])
-    def exportAllPlots(filename: String) {
-      new AbstractExporter(filename) {
-        override def export(writer: PrintWriter) {
-          exportInterfaceGlobals(writer)
-
-          plotManager.getPlotNames.foreach { name =>
-            new PlotExporter(plotManager.getPlot(name),Dump.csv).export(writer)
-            writer.println()
-          }
-        }
-      }.export("plots",modelFileName,"")
-    }
-  }
-
-  trait Evaluating { this: AbstractWorkspace =>
-    var lastLogoException: LogoException = null
-
-    override def clearLastLogoException() { lastLogoException = null }
-
-    @throws(classOf[CompilerException])
-    def makeReporterThunk(source: String, jobOwnerName: String): ReporterLogoThunk =
-      evaluator.makeReporterThunk(source, world.observer,
-                                  new SimpleJobOwner(jobOwnerName, auxRNG, AgentKind.Observer))
-    @throws(classOf[CompilerException])
-    def makeCommandThunk(source: String, jobOwnerName: String): CommandLogoThunk =
-      evaluator.makeCommandThunk(source, world.observer,
-                                 new SimpleJobOwner(jobOwnerName, auxRNG, AgentKind.Observer))
-    @throws(classOf[CompilerException])
-    def evaluateCommands(owner: JobOwner, source: String) {
-      evaluator.evaluateCommands(owner, source)
-    }
-    @throws(classOf[CompilerException])
-    def evaluateCommands(owner: JobOwner, source: String, waitForCompletion: Boolean) {
-      evaluator.evaluateCommands(owner, source, world.observers, waitForCompletion)
-    }
-    @throws(classOf[CompilerException])
-    def evaluateCommands(owner: JobOwner, source: String, agent: Agent,
-                         waitForCompletion: Boolean) {
-      val agents = new ArrayAgentSet(agent.kind, 1, false)
-      agents.add(agent)
-      evaluator.evaluateCommands(owner, source, agents, waitForCompletion)
-    }
-    @throws(classOf[CompilerException])
-    def evaluateCommands(owner: JobOwner, source: String, agents: AgentSet,
-                         waitForCompletion: Boolean) {
-      evaluator.evaluateCommands(owner, source, agents, waitForCompletion)
-    }
-    @throws(classOf[CompilerException])
-    def evaluateReporter(owner: JobOwner, source: String) =
-      evaluator.evaluateReporter(owner, source, world.observers)
-    @throws(classOf[CompilerException])
-    def evaluateReporter(owner: JobOwner, source: String, agent: Agent) = {
-      val agents = new ArrayAgentSet(agent.kind, 1, false)
-      agents.add(agent)
-      evaluator.evaluateReporter(owner, source, agents)
-    }
-    @throws(classOf[CompilerException])
-    def evaluateReporter(owner: JobOwner, source: String, agents: AgentSet) =
-      evaluator.evaluateReporter(owner, source, agents)
-    @throws(classOf[CompilerException])
-    def compileCommands(source: String): Procedure =
-      compileCommands(source, AgentKind.Observer)
-    @throws(classOf[CompilerException])
-    def compileCommands(source: String, agentClass: AgentKind): Procedure =
-      evaluator.compileCommands(source, agentClass)
-    @throws(classOf[CompilerException])
-    def compileReporter(source: String): Procedure =
-      evaluator.compileReporter(source)
-    def runCompiledCommands(owner: JobOwner, procedure: Procedure): Boolean =
-      evaluator.runCompiledCommands(owner, procedure)
-    def runCompiledReporter(owner: JobOwner, procedure: Procedure): AnyRef =
-      evaluator.runCompiledReporter(owner, procedure)
-
-    @throws(classOf[CompilerException])
-    def readFromString(string: String): AnyRef =
-      evaluator.readFromString(string)
-
-    val defaultOwner =
-      new SimpleJobOwner(getClass.getSimpleName, world.mainRNG, AgentKind.Observer)
-    /**
-     * Runs NetLogo commands and waits for them to complete.
-     *
-     * @param source The command or commands to run
-     * @throws org.nlogo.core.CompilerException
-     *                       if the code fails to compile
-     * @throws org.nlogo.api.LogoException if the code fails to run
-     */
-    @throws(classOf[CompilerException])
-    @throws(classOf[LogoException])
-    def command(source: String): Unit = {
-      evaluator.evaluateCommands(defaultOwner, source, world.observers, true)
-      if (lastLogoException != null) {
-        val ex = lastLogoException
-        lastLogoException = null
-        throw ex
-      }
-    }
-
-    /**
-     * Runs a NetLogo reporter.
-     *
-     * @param source The reporter to run
-     * @return the result reported; may be of type java.lang.Integer, java.lang.Double,
-     *         java.lang.Boolean, java.lang.String, {@link org.nlogo.core.LogoList},
-     *         {@link org.nlogo.api.Agent}, AgentSet, or Nobody
-     * @throws org.nlogo.core.CompilerException
-     *                       if the code fails to compile
-     * @throws org.nlogo.api.LogoException if the code fails to run
-     */
-    @throws(classOf[CompilerException])
-    @throws(classOf[LogoException])
-    def report(source: String): AnyRef = {
-      val result = evaluator.evaluateReporter(defaultOwner, source, world.observers)
-      if (lastLogoException != null) {
-        val ex = lastLogoException
-        lastLogoException = null
-        throw ex
-      }
-      result
-    }
-  }
-
   trait Benchmarking { this: AbstractWorkspace =>
     def benchmark(minTime: Int, maxTime: Int) {
       new Thread("__bench") {
@@ -319,69 +124,6 @@ object AbstractWorkspaceTraits {
       Checksummer.calculateWorldChecksum(this)
     override def graphicsChecksum =
       Checksummer.calculateGraphicsChecksum(this)
-  }
-
-  trait ModelDir { this: AbstractWorkspace =>
-    /**
-     * path to the directory from which the current model was loaded. NetLogo
-     * uses this as the default path for file I/O, when reloading models,
-     * locating HubNet clients, etc. This is null if this is a new (unsaved)
-     * model.
-     */
-    private[workspace] var modelDir: String = null
-
-    /**
-     * name of the currently loaded model. Will be null if this is a new
-     * (unsaved) model. To get a version for display to the user, see
-     * modelNameForDisplay(). This is NOT a full path name, however, it does
-     * end in ".nlogo".
-     */
-    var _modelFileName: String = null
-
-    /**
-     * returns the full path to the directory from which the current model was
-     * loaded. May be null if, for example, this is a new model.
-     */
-    def getModelDir: String = modelDir
-
-    /**
-     * returns the name of the file from which the current model was loaded.
-     * May be null if, for example, this is a new model.
-     */
-    def getModelFileName: String = _modelFileName
-
-    def modelFileName: String = _modelFileName
-
-    /**
-     * returns the full pathname of the currently loaded model, if any. This
-     * may return null in some cases, for instance if this is a new model.
-     */
-    def getModelPath: String = {
-      if (modelDir == null || modelFileName == null)
-        null
-      else
-        modelDir + java.io.File.separatorChar + modelFileName
-    }
-
-    def setModelPath(modelPath: String): Unit = {
-      if (modelPath == null) {
-        _modelFileName = null
-        modelDir = null
-      } else {
-        val file = new java.io.File(modelPath).getAbsoluteFile
-        _modelFileName = file.getName
-        modelDir = file.getParent
-        if (modelDir == "") {
-          modelDir = null
-        }
-        if (modelDir != null) {
-          fileManager.setPrefix(modelDir)
-        }
-      }
-    }
-
-    def modelNameForDisplay: String =
-      AbstractWorkspace.makeModelNameForDisplay(modelFileName)
   }
 
   trait APIConformant { this: AbstractWorkspace =>

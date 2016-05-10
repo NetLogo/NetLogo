@@ -11,6 +11,10 @@ object FileIO {
     io.Source.fromFile(path).mkString
 
   @throws(classOf[java.io.IOException])
+  def file2String(file: java.io.File) =
+    io.Source.fromFile(file).mkString
+
+  @throws(classOf[java.io.IOException])
   def writeFile(path: String, text: String) {
     writeFile(path, text, false)
   }

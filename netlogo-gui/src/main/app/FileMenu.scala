@@ -6,14 +6,14 @@ import java.util.Map
 
 import org.nlogo.agent.ImportPatchColors
 import org.nlogo.swing.{ FileDialog, ModalProgressTask, OptionDialog }
-import org.nlogo.api.{ Exceptions, FileIO, LocalFile, ModelLoader, ModelReader,
+import org.nlogo.api.{ Exceptions, FileIO, LocalFile, ModelingCommonsInterface, ModelLoader, ModelReader,
   ModelSection, ModelSectionJ, ModelType, ModelTypeJ, Version },
     ModelReader.{ modelSuffix, emptyModelPath }
 import org.nlogo.core.{ I18N, Model }
 import org.nlogo.awt.{ Hierarchy => NLogoHierarchy, UserCancelException }
-import org.nlogo.window.{ FileController, PlotWidgetExportType, Events => WindowEvents, ReconfigureWorkspaceUI },
+import org.nlogo.window.{ LinkRoot, FileController, GUIWorkspace, PlotWidgetExportType, Events => WindowEvents, ReconfigureWorkspaceUI },
   WindowEvents.{ AboutToQuitEvent, ExportOutputEvent, ExportPlotEvent, ModelSavedEvent, OpenModelEvent }
-import org.nlogo.workspace.OpenModel
+import org.nlogo.workspace.{ OpenModel, SaveModel, SaveModelAs }
 import org.nlogo.swing.{ Menu => SwingMenu }
 import org.nlogo.fileformat.{ NLogoFormat, NLogoModelSettings, NLogoHubNetFormat, NLogoPreviewCommandsFormat }
 
@@ -24,24 +24,30 @@ import java.awt.event.ActionEvent
 import java.awt.{ Container, FileDialog => AWTFileDialog }
 import javax.swing.{ AbstractAction => SwingAbstractAction, JOptionPane }
 
-/*
- * note that multiple instances of this class may exist
- * as there are now multiple frames that each have their own menu bar
- * and menus ev 8/25/05
- */
+import scala.util.Try
 
-class FileMenu(app: App, modelSaver: ModelSaver, modelLoader: ModelLoader)
+class FileMenu(workspace: GUIWorkspace,
+  modelSaver: ModelSaver,
+  modelLoader: ModelLoader,
+  tabs: Tabs,
+  modelingCommons: ModelingCommonsInterface,
+  frame: AppFrame)
   extends SwingMenu(I18N.gui.get("menu.file")) with OpenModelEvent.Handler {
 
   private var savedVersion: String = Version.version
 
   private var firstLoad: Boolean = true
 
+  val dirtyMonitor = new DirtyMonitor(frame, modelSaver, modelLoader, workspace)
+  frame.addLinkComponent(dirtyMonitor)
+
+  val controller = new FileController(this, workspace)
+
   setMnemonic('F')
   addMenuItem('N', new NewAction())
   addMenuItem('O', new OpenAction())
   addMenuItem('M', new ModelsLibraryAction())
-  add(new RecentFilesMenu(app, this))
+  add(new RecentFilesMenu(frame, this))
   addSeparator()
   addMenuItem('S', new SaveAction())
   addMenuItem('S', true, new SaveAsAction())
@@ -49,7 +55,7 @@ class FileMenu(app: App, modelSaver: ModelSaver, modelLoader: ModelLoader)
   addSeparator()
   addMenuItem(new SaveAsNetLogoWebAction())
   addSeparator()
-  addMenuItem(I18N.gui.get("menu.file.print"), 'P', app.tabs.printAction)
+  addMenuItem(I18N.gui.get("menu.file.print"), 'P', tabs.printAction)
   addSeparator()
   val exportMenu =
     new SwingMenu(I18N.gui.get("menu.file.export"))
@@ -128,24 +134,21 @@ class FileMenu(app: App, modelSaver: ModelSaver, modelLoader: ModelLoader)
   private class SaveModelingCommonsAction extends FileMenuAction(I18N.gui.get("menu.file.uploadMc")) {
     @throws(classOf[UserCancelException])
     override def action(): Unit = {
-      //Very verbosely named method, this is called in doSave before calling modelSaver.doSave
-      //so we call it here before saving to Modeling Commons as well
-      checkWithUserBeforeSavingModelFromOldVersion()
-      app.modelingCommons.saveToModelingCommons()
+      modelingCommons.saveToModelingCommons()
     }
   }
 
   private class SaveAction extends FileMenuAction(I18N.gui.get("menu.file.save")) {
     @throws(classOf[UserCancelException])
     override def action(): Unit = {
-      save()
+      save(false)
     }
   }
 
   private class SaveAsAction extends FileMenuAction(I18N.gui.get("menu.file.saveAs")) {
     @throws(classOf[UserCancelException])
     override def action(): Unit = {
-      saveAs()
+      save(true)
     }
   }
 
@@ -168,26 +171,25 @@ class FileMenu(app: App, modelSaver: ModelSaver, modelLoader: ModelLoader)
 
     @throws(classOf[UserCancelException])
     def suggestedFileName: String = {
-      if (app.workspace.getModelType == ModelType.New)
-        suggestedSaveFileName("") + ".html"
-      else
+      if (workspace.getModelType == ModelType.New) {
+        save(false)
+        workspace.getModelFileName.stripSuffix(".nlogo") + ".html"
+      } else
         guessFileName.stripSuffix(".nlogo") + ".html"
     }
 
     @throws(classOf[UserCancelException])
     @throws(classOf[IOException])
     def modelToSave: String = {
-      val lastSaved =
-        FileIO.file2String(app.workspace.getModelPath)
-      if (doesNotMatchWorkingCopy(lastSaved) && userWantsLastSaveExported())
-        lastSaved
+      if (doesNotMatchWorkingCopy && userWantsLastSaveExported())
+        modelSaver.modelAsString(modelSaver.priorModel, "nlogo")
       else
-        modelSaver.save
+        modelSaver.modelAsString(modelSaver.currentModel, "nlogo")
     }
 
     @throws(classOf[UserCancelException])
     private def userWantsLastSaveExported(): Boolean = {
-      val modelType = app.workspace.getModelType;
+      val modelType = workspace.getModelType
       val typeKey =
         if (modelType == ModelType.Normal) "fromSave" else "fromLibrary"
       val options = Array[Object](
@@ -207,15 +209,24 @@ class FileMenu(app: App, modelSaver: ModelSaver, modelLoader: ModelLoader)
 
     // We compare last saved to current save here because dirtyMonitor doesn't
     // report if UI values (sliders, etc.) have been changed - RG 9/10/15
-    private def doesNotMatchWorkingCopy(lastSaved: String): Boolean = {
-      lastSaved != modelSaver.save
+    private def doesNotMatchWorkingCopy: Boolean = {
+      modelSaver.priorModel != modelSaver.currentModel
     }
   }
 
-  abstract class ExportAction(taskName: String, suggestedFileName: String)
+  abstract class ExportAction(taskName: String, suggestedFileName: String, performExport: String => Unit = {(s) => })
     extends FileMenuAction(I18N.gui.get("menu.file.export." + taskName)) {
 
-    def exportTask(path: String): Runnable
+    def exportTask(path: String): Runnable = new Runnable() {
+      override def run(): Unit = {
+        try {
+          performExport(path)
+        }
+        catch {
+          case ex: IOException => exception = Some(ex)
+        }
+      }
+    }
 
     var exception = Option.empty[IOException]
 
@@ -225,7 +236,7 @@ class FileMenu(app: App, modelSaver: ModelSaver, modelLoader: ModelLoader)
       val exportPath = FileDialog.show(
         FileMenu.this,
         I18N.gui.get(s"menu.file.export.$taskName.dialog"),
-        AWTFileDialog.SAVE, app.workspace.guessExportName(suggestedFileName))
+        AWTFileDialog.SAVE, workspace.guessExportName(suggestedFileName))
       exception = None
 
       ModalProgressTask.apply(
@@ -236,73 +247,41 @@ class FileMenu(app: App, modelSaver: ModelSaver, modelLoader: ModelLoader)
     }
   }
 
-  private class ExportWorldAction extends ExportAction("world", "world.csv") {
-    def exportTask(exportPath: String) = new Runnable() {
-      override def run(): Unit = {
-        try {
-          app.workspace.exportWorld(exportPath)
-        } catch {
-          case ex: IOException => exception = Some(ex)
-        }
-      }
-    }
-  }
+  private class ExportWorldAction extends ExportAction("world", "world.csv", workspace.exportWorld _)
 
-  private class ExportGraphicsAction extends ExportAction("view", "view.png") {
-    def exportTask(exportPath: String) = new Runnable() {
-      override def run(): Unit = {
-        try {
-          app.workspace.exportView(exportPath, "png");
-        } catch {
-          case ex: IOException => exception = Some(ex)
-        }
-      }
-    }
-  }
+  private class ExportGraphicsAction extends ExportAction("view", "view.png", { exportPath =>
+    workspace.exportView(exportPath, "png") })
 
-  private class ExportInterfaceAction extends ExportAction("interface", "interface.png") {
-    def exportTask(exportPath: String) = new Runnable() {
-      override def run(): Unit = {
-        try {
-          app.workspace.exportInterface(exportPath)
-        } catch  {
-          case ex: IOException => exception = Some(ex)
-        }
-      }
-    }
-  }
+  private class ExportInterfaceAction extends ExportAction("interface", "interface.png", workspace.exportInterface _)
 
-  private class ExportOutputAction extends ExportAction("output", "output.txt") {
-    def exportTask(exportPath: String) = new Runnable() {
-      override def run(): Unit = {
-        new ExportOutputEvent(exportPath).raise(FileMenu.this)
-      }
-    }
-  }
+  private class ExportOutputAction extends ExportAction("output", "output.txt", { exportPath =>
+    new ExportOutputEvent(exportPath).raise(FileMenu.this)
+  })
 
-  private class ExportPlotAction extends ExportAction("plot", "plot.csv") {
-    def exportTask(exportPath: String) = new Runnable() {
-      override def run(): Unit = {
-        new ExportPlotEvent(PlotWidgetExportType.PROMPT, null, exportPath)
-          .raise(FileMenu.this)
-      }
-    }
-  }
+  private class ExportPlotAction extends ExportAction("plot", "plot.csv", { exportPath =>
+    new ExportPlotEvent(PlotWidgetExportType.PROMPT, null, exportPath)
+      .raise(FileMenu.this)
+  })
 
-  private class ExportAllPlotsAction extends ExportAction("allPlots", "plots.csv") {
-    def exportTask(exportPath: String) = new Runnable() {
-      override def run(): Unit = {
-        new ExportPlotEvent(PlotWidgetExportType.ALL, null, exportPath)
-          .raise(FileMenu.this)
-      }
-    }
-  }
+  private class ExportAllPlotsAction extends ExportAction("allPlots", "plots.csv", { exportPath =>
+    new ExportPlotEvent(PlotWidgetExportType.ALL, null, exportPath)
+      .raise(FileMenu.this)
+  })
 
-  abstract class ImportAction(taskName: String)
+  abstract class ImportAction(taskName: String, performImport: String => Unit = { s => })
     extends FileMenuAction(I18N.gui.get(s"menu.file.import.$taskName")) {
     var exception = Option.empty[IOException]
 
-    def importTask(importPath: String): Runnable
+    def importTask(path: String): Runnable = new Runnable() {
+      override def run(): Unit = {
+        try {
+          performImport(path)
+        }
+        catch {
+          case ex: IOException => exception = Some(ex)
+        }
+      }
+    }
 
     @throws(classOf[UserCancelException])
     @throws(classOf[IOException])
@@ -318,78 +297,38 @@ class FileMenu(app: App, modelSaver: ModelSaver, modelLoader: ModelLoader)
     }
   }
 
-  private class ImportWorldAction extends ImportAction("world") {
-    def importTask(importPath: String) = {
-      new Runnable() {
-        override def run(): Unit = {
-          try {
-            app.workspace.importWorld(importPath)
-            app.workspace.view.dirty()
-            app.workspace.view.repaint()
-          } catch {
-            case ex: IOException => exception = Some(ex)
-          }
-        }
-      }
-    }
-  }
+  private class ImportWorldAction extends ImportAction("world", { importPath =>
+    workspace.importWorld(importPath)
+    workspace.view.dirty()
+    workspace.view.repaint()
+  })
 
-  private class ImportPatchColorsAction extends ImportAction("patchColors") {
-    def importTask(importPath: String) = {
-      new Runnable() {
-        def run(): Unit = {
-          try {
-            // We can't wait for the thread to complete, or we end
-            // up locking up the app since the Model Dialog and the
-            // job wedge against one another. -- CLB 07/19/05
-            ImportPatchColors.importPatchColors(
-              new LocalFile(importPath),
-              app.workspace.world, true)
-            app.workspace.view.dirty()
-            app.workspace.view.repaint()
-          } catch {
-            case ex: IOException => exception = Some(ex)
-          }
-        }
-      }
-    }
-  }
+  private class ImportPatchColorsAction extends ImportAction("patchColors", { importPath =>
+    // We can't wait for the thread to complete, or we end
+    // up locking up the app since the Model Dialog and the
+    // job wedge against one another. -- CLB 07/19/05
+    ImportPatchColors.importPatchColors(
+      new LocalFile(importPath),
+      workspace.world, true)
+    workspace.view.dirty()
+    workspace.view.repaint()
+  })
 
-  private class ImportPatchColorsRGBAction extends ImportAction("patchColorsRGB") {
-    def importTask(importPath: String) = {
-      new Runnable() {
-        override def run(): Unit = {
-          try {
-            // We can't wait for the thread to complete, or we end
-            // up locking up the app since the Model Dialog and the
-            // job wedge against one another. -- CLB 07/19/05
-            ImportPatchColors.importPatchColors(
-              new LocalFile(importPath), app.workspace.world, false)
-            app.workspace.view.dirty()
-            app.workspace.view.repaint()
-          } catch  {
-            case ex: IOException => exception = Some(ex)
-          }
-        }
-      }
-    }
-  }
+  private class ImportPatchColorsRGBAction extends ImportAction("patchColorsRGB", { importPath =>
+    // We can't wait for the thread to complete, or we end
+    // up locking up the app since the Model Dialog and the
+    // job wedge against one another. -- CLB 07/19/05
+    ImportPatchColors.importPatchColors(
+      new LocalFile(importPath), workspace.world, false)
+    workspace.view.dirty()
+    workspace.view.repaint()
+  })
 
-  private class ImportDrawingAction extends ImportAction("drawing") {
-    def importTask(importPath: String) = {
-      new Runnable() {
-        override def run(): Unit = {
-          try {
-            app.workspace.importDrawing(importPath);
-            app.workspace.view.dirty();
-            app.workspace.view.repaint();
-          } catch {
-            case ex: IOException => exception = Some(ex)
-          }
-        }
-      }
-    }
-  }
+  private class ImportDrawingAction extends ImportAction("drawing", { importPath =>
+    workspace.importDrawing(importPath);
+    workspace.view.dirty();
+    workspace.view.repaint();
+  })
 
   private class ImportClientAction extends FileMenuAction(I18N.gui.get("menu.file.import.hubNetClientInterface")) {
     var exception = Option.empty[IOException]
@@ -399,7 +338,7 @@ class FileMenu(app: App, modelSaver: ModelSaver, modelLoader: ModelLoader)
         def run(): Unit = {
           try {
             loadModel(Paths.get(importPath).toUri).map(model =>
-              app.workspace.getHubNetManager.foreach(_.importClientInterface(model, sectionChoice == 1)))
+              workspace.getHubNetManager.foreach(_.importClientInterface(model, sectionChoice == 1)))
           } catch {
             case ex: IOException => exception = Some(ex)
           }
@@ -412,7 +351,7 @@ class FileMenu(app: App, modelSaver: ModelSaver, modelLoader: ModelLoader)
       val importPath = org.nlogo.swing.FileDialog.show(
           FileMenu.this, I18N.gui.get("menu.file.import.hubNetClientInterface.dialog"), java.awt.FileDialog.LOAD, null);
       val choice =
-          OptionDialog.show(app.workspace.getFrame,
+          OptionDialog.show(workspace.getFrame,
                   I18N.gui.get("menu.file.import.hubNetClientInterface.message"),
                   I18N.gui.get("menu.file.import.hubNetClientInterface.prompt"),
                   Array[Object](
@@ -446,7 +385,7 @@ class FileMenu(app: App, modelSaver: ModelSaver, modelLoader: ModelLoader)
   def quit(): Unit = {
     offerSave()
     new AboutToQuitEvent().raise(this)
-    app.workspace.getExtensionManager.reset()
+    workspace.getExtensionManager.reset()
     System.exit(0)
   }
 
@@ -457,7 +396,7 @@ class FileMenu(app: App, modelSaver: ModelSaver, modelLoader: ModelLoader)
    * This is the model name if there is one, "Untitled.nlogo" otherwise.
    */
   private def guessFileName: String = {
-    val fileName = app.workspace.getModelFileName
+    val fileName = workspace.getModelFileName
     if (fileName == null)
       "Untitled." + modelSuffix
     else
@@ -489,8 +428,6 @@ class FileMenu(app: App, modelSaver: ModelSaver, modelLoader: ModelLoader)
   }
 
   private def loadModel(uri: URI): Option[Model] = {
-    println("loading from URI " + uri.toString)
-    val controller = new FileController(this)
     OpenModel(uri, controller, modelLoader, Version)
   }
 
@@ -506,75 +443,61 @@ class FileMenu(app: App, modelSaver: ModelSaver, modelLoader: ModelLoader)
       }
       ModalProgressTask(
           NLogoHierarchy.getFrame(this), I18N.gui.get("dialog.interface.loading.task"), loader)
-      app.tabs.requestFocus()
+      tabs.requestFocus()
     }
     savedVersion = model.version // maybe the whole model should be stored?
   }
 
   private def runLoad(linkParent: Container, uri: URI, model: Model, modelType: ModelType): Unit = {
-    ReconfigureWorkspaceUI(linkParent, uri, modelType, model, app.workspace)
+    ReconfigureWorkspaceUI(linkParent, uri, modelType, model, workspace)
   }
 
   def handle(e: OpenModelEvent): Unit = {
     openFromPath(e.path, ModelType.Library)
   }
 
+  def currentModel: Model = modelSaver.currentModel
+
   /// saving
   @throws(classOf[UserCancelException])
-  private def save(): Unit = {
-    if (app.workspace.forceSaveAs)
-      saveAs()
-    else
-      doSave(app.workspace.getModelPath)
+  private[app] def save(saveAs: Boolean): Unit = {
+    val saveThunk =
+      if (saveAs)
+        SaveModelAs(currentModel, modelLoader, controller, workspace, Version)
+      else
+        SaveModel(currentModel, modelLoader, controller, workspace, Version)
+
+    // if there's no thunk, the user canceled the save
+    saveThunk.foreach { thunk =>
+      val saver = new Saver(thunk)
+
+      ModalProgressTask(NLogoHierarchy.getFrame(this),
+        I18N.gui.get("dialog.interface.saving.task"), saver)
+
+      if (! saver.result.isDefined)
+        throw new UserCancelException()
+
+      saver.result.foreach(_.failed.foreach { e =>
+        JOptionPane.showMessageDialog(this,
+          I18N.gui.getN("menu.file.save.error", e.getMessage),
+          "NetLogo", JOptionPane.ERROR_MESSAGE)
+      })
+
+      tabs.saveExternalFiles()
+    }
   }
 
-  @throws(classOf[UserCancelException])
-  private def saveAs(): Unit = {
-    doSave(userChooseSavePath())
-  }
-
-  private class Saver(val path: String) extends Runnable {
-
-    private var result = true
-    private var exception = Option.empty[IOException]
-
-    def getResult: Boolean = result
-
-    def getException: Option[IOException] = exception
+  private class Saver(val thunk: () => Try[URI]) extends Runnable {
+    var result = Option.empty[Try[URI]]
 
     def run(): Unit = {
-      try {
-        FileIO.writeFile(path, modelSaver.save)
+      val r = thunk()
+      r.foreach { uri =>
+        val path = Paths.get(uri).toString
         new ModelSavedEvent(path).raise(FileMenu.this)
-      } catch {
-        case ex: IOException =>
-          result = false
-          exception = Some(ex)
-          // we don't want to call JOptionPane.showMessageDialog() here
-          // because Java on Macs tends to barf when multiple modal dialogs
-          // appear on top of each other, so we just hang onto the exception
-          // until the modal progress task is done... - ST 11/3/04
       }
+      result = Some(r)
     }
-  }
-
-  @throws(classOf[UserCancelException])
-  private def doSave(path: String): Unit = {
-    checkWithUserBeforeSavingModelFromOldVersion()
-    val saver = new Saver(path)
-
-    ModalProgressTask(NLogoHierarchy.getFrame(this),
-      I18N.gui.get("dialog.interface.saving.task"), saver)
-    saver.getException.foreach { e =>
-      JOptionPane.showMessageDialog(this,
-        I18N.gui.getN("menu.file.save.error", e.getMessage),
-        "NetLogo", JOptionPane.ERROR_MESSAGE)
-    }
-
-    if (!saver.getResult)
-      throw new UserCancelException()
-
-    app.tabs.saveExternalFiles()
   }
 
   /// and now, a whole bunch of dialog boxes
@@ -583,7 +506,7 @@ class FileMenu(app: App, modelSaver: ModelSaver, modelLoader: ModelLoader)
   @throws(classOf[UserCancelException])
   def offerSave(): Unit = {
     // check if we have an open movie
-    if (app.workspace.movieEncoder != null) {
+    if (workspace.movieEncoder != null) {
       val options = Array[Object](
         I18N.gui.get("common.buttons.ok"),
         I18N.gui.get("common.buttons.cancel"))
@@ -592,57 +515,18 @@ class FileMenu(app: App, modelSaver: ModelSaver, modelLoader: ModelLoader)
       if (OptionDialog.show(this, "NetLogo", message, options) == 1) {
         throw new UserCancelException()
       }
-      app.workspace.movieEncoder.cancel();
-      app.workspace.movieEncoder = null;
+      workspace.movieEncoder.cancel();
+      workspace.movieEncoder = null;
     }
 
-    if (app.dirtyMonitor.dirty && userWantsToSaveFirst()) {
-      save()
+    if (dirtyMonitor.dirty && userWantsToSaveFirst()) {
+      save(false)
     }
-  }
-
-  @throws(classOf[UserCancelException])
-  private def suggestedSaveFileName(suffix: String): String = {
-    // first, force the user to save.
-    save()
-
-    // we use workspace.getModelFileName() here, because it really should
-    // never any longer be null, now that we've forced the user to save.
-    // it's important that it not be, in fact, since the applet relies
-    // on the model having been saved to some file.
-    var suggestedFileName = app.workspace.getModelFileName;
-
-    // don't add the suffix on twice
-    if (suggestedFileName.endsWith(s".$modelSuffix"))
-      suggestedFileName
-    else
-      suggestedFileName + suffix
   }
 
   @throws(classOf[UserCancelException])
   private def userChooseLoadPath(): String = {
-    FileDialog.show(this, I18N.gui.get("menu.file.open.dialog"),
-        AWTFileDialog.LOAD, null)
-  }
-
-  @throws(classOf[UserCancelException])
-  private def userChooseSavePath(): String = {
-    val newFileName = guessFileName
-
-    // we only default to saving in the model dir for normal and
-    // models. for library and new models, we use the current
-    // FileDialog dir.
-    if (app.workspace.getModelType == ModelType.Normal) {
-      FileDialog.setDirectory(app.workspace.getModelDir)
-    }
-
-    var path = FileDialog.show(
-      this, I18N.gui.get("menu.file.saveAs.dialog"), AWTFileDialog.SAVE,
-      newFileName)
-    if(! path.endsWith("." + modelSuffix)) {
-      path += "." + modelSuffix
-    }
-    path
+    FileDialog.show(this, I18N.gui.get("menu.file.open.dialog"), AWTFileDialog.LOAD, null)
   }
 
   @throws(classOf[UserCancelException])
@@ -656,7 +540,7 @@ class FileMenu(app: App, modelSaver: ModelSaver, modelLoader: ModelLoader)
 
     OptionDialog.show(this, "NetLogo", message, options) match {
       case 0 => true
-      case 1 =>false
+      case 1 => false
       case _ => throw new UserCancelException()
     }
   }

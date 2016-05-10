@@ -2,7 +2,7 @@
 
 package org.nlogo.lite
 
-import org.nlogo.core.{ AgentKind, Femto }
+import org.nlogo.core.{ AgentKind, Model, Femto }
 import org.nlogo.agent.{ Agent, World }
 import org.nlogo.api.{ AggregateManagerInterface, NetLogoThreeDDialect, NetLogoLegacyDialect, RendererInterface, Version }
 import org.nlogo.nvm.CompilerInterface
@@ -38,4 +38,5 @@ extends GUIWorkspace(world, GUIWorkspace.KioskLevel.MODERATE, frame, frame, null
   override def stopInspectingDeadAgents(): Unit = { }
   override def closeAgentMonitors() { }
   override def newRenderer = Femto.get[RendererInterface]("org.nlogo.render.Renderer", world)
+  override def updateModel(m: Model): Model = m
 }

@@ -5,7 +5,7 @@ package org.nlogo.lab.gui
 import org.nlogo.api.LabProtocol
 import org.nlogo.api.ModelSection
 import org.nlogo.lab.ProtocolSaver
-import org.nlogo.api.LabProtocol
+import org.nlogo.core.Model
 import org.nlogo.window.{GUIWorkspace, EditDialogFactoryInterface, LabManagerInterface}
 import org.nlogo.workspace.{CurrentModelOpener, WorkspaceFactory}
 import org.nlogo.window.Events._
@@ -48,9 +48,9 @@ class LabManager(val workspace: GUIWorkspace,
       .optionalSectionValue[Seq[LabProtocol]]("org.nlogo.modelsection.behaviorspace")
       .getOrElse(Seq[LabProtocol]())
   }
-  def save =
-    if(protocols.isEmpty) ""
-    else ProtocolSaver.save(protocols)
+  override def updateModel(m: Model): Model =
+    m.withOptionalSection("org.nlogo.modelsection.behaviorspace", Some(protocols), Seq())
+
   /// making sure everything gets compiled before an experiment run
   private var lastCompileAllWasSuccessful = false
   def handle(e:CompiledEvent) {

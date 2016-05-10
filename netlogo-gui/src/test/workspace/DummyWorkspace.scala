@@ -64,4 +64,6 @@ class DummyFileManager extends org.nlogo.nvm.FileManager {
   def readLine(): String = ???
   def setPrefix(x$1: java.net.URL): Unit = ???
   def setPrefix(x$1: String): Unit = ???
+  def handleModelChange(): Unit = ???
+  def writeOutputObject(x$1: org.nlogo.agent.OutputObject): Unit = ???
 }

@@ -58,7 +58,7 @@ menu.file.export.view.dialog = Export World
 menu.file.export.interface = Export Interface...
 menu.file.export.interface.dialog = Export Interface
 menu.file.export.output = Export Output...
-menu.file.export.output..dialog = Export Output
+menu.file.export.output.dialog = Export Output
 menu.file.import = Import
 menu.file.import.world = Import World...
 menu.file.import.world.dialog = Import World
@@ -199,6 +199,7 @@ file.open.error.invalidmodel = The file is not a valid NetLogo model file.
 file.open.error.unableToOpen = NetLogo can''t open the model {0}:\n\n{1}.
 file.close.warn.movieInProgress = There is a movie in progress. Are you sure you want to exit this model? You will lose the contents of your movie.
 file.save.warn.savingInNewerVersion = This model was made with {0}. If you save it in {1} it may not work in the old version anymore.
+file.save.warn.invalidFormat = NetLogo doesn't know how to save in ".{0}" format, please choose a different format.
 
 # find actions and dialog
 dialog.find.title = Find

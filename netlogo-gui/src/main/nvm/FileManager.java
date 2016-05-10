@@ -61,4 +61,8 @@ public interface FileManager {
 
   String readChars(int num)
       throws java.io.IOException;
+
+  void handleModelChange();
+
+  void writeOutputObject(org.nlogo.agent.OutputObject oo);
 }

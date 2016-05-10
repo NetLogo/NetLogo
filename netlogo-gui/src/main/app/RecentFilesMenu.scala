@@ -67,14 +67,14 @@ class RecentFiles {
   }
 }
 
-class RecentFilesMenu(app: App, fileMenu: FileMenu)
+class RecentFilesMenu(frame: AppFrame, fileMenu: FileMenu)
   extends org.nlogo.swing.Menu("Recent Files")
   with ModelSavedEvent.Handler
   with BeforeLoadEvent.Handler {
 
   val recentFiles = new RecentFiles
   refreshMenu()
-  app.frame.addLinkComponent(this)
+  frame.addLinkComponent(this)
 
   private def trimForDisplay(path: String): String = {
     val maxDisplayLength = 100

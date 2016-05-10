@@ -22,6 +22,7 @@ class NLogoLabFormatTest extends NLogoFormatTest[Seq[LabProtocol]] {
 
   testDeserializes("empty section", Array[String](), Seq[LabProtocol]())
   testDeserializes("non-empty section", sampleLines, Seq(expectedProto))
+  testRoundTripsObjectForm("empty list of experiment protocols", Seq())
   testRoundTripsObjectForm("a simple experiment protocol", Seq(expectedProto))
   testRoundTripsSerialForm("a multi-experiment protocol", testBehaviorSpaceXml("BehaviorSpaceMultiples.xml"))
 }
