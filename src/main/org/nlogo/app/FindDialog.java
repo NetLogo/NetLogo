@@ -113,12 +113,16 @@ public strictfp class FindDialog
   private final javax.swing.JTextField findBox;
   private final javax.swing.JTextField replaceBox;
   private final javax.swing.JLabel replaceLabel;
+  private final javax.swing.JLabel findLabel;
   private final javax.swing.JLabel notFoundLabel;
   private final Frame owner;
 
   private FindDialog(Frame owner) {
     super(owner, I18N.guiJ().get("dialog.find.title"), false);
     this.owner = owner;
+    javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+    layout.setAutoCreateGaps(true);
+    layout.setAutoCreateContainerGaps(true);
 
     // initialize GUI elements
 
@@ -128,25 +132,19 @@ public strictfp class FindDialog
 
     findBox = new org.nlogo.swing.TextField(25);
     findBox.setEditable(true);
-    findPanel.addField(I18N.guiJ().get("dialog.find.find"), findBox);
+    findLabel = new javax.swing.JLabel(I18N.guiJ().get("dialog.find.find"));
 
     replaceBox = new org.nlogo.swing.TextField(25);
     replaceBox.setEditable(true);
     replaceLabel = new javax.swing.JLabel(I18N.guiJ().get("dialog.find.replaceWith"));
-    findPanel.addField(replaceLabel, replaceBox);
 
     // options panel elements
-    javax.swing.JPanel optionsPanel = new javax.swing.JPanel();
-    optionsPanel.setLayout(new javax.swing.BoxLayout(optionsPanel, javax.swing.BoxLayout.X_AXIS));
     ignoreCaseCheckBox = new javax.swing.JCheckBox(I18N.guiJ().get("dialog.find.ignoreCase"), true);
     wrapAroundCheckBox = new javax.swing.JCheckBox(I18N.guiJ().get("dialog.find.wrapAround"), true);
     notFoundLabel = new javax.swing.JLabel(I18N.guiJ().get("dialog.find.notFound"));
+    notFoundLabel.setFont(notFoundLabel.getFont().deriveFont(java.awt.Font.BOLD));
+    notFoundLabel.setForeground(java.awt.Color.RED);
 
-    optionsPanel.add(ignoreCaseCheckBox);
-    optionsPanel.add(javax.swing.Box.createHorizontalStrut(12));
-    optionsPanel.add(wrapAroundCheckBox);
-    optionsPanel.add(javax.swing.Box.createHorizontalStrut(24));
-    optionsPanel.add(notFoundLabel);
     notFoundLabel.setVisible(false);
 
     // buttons
@@ -196,15 +194,58 @@ public strictfp class FindDialog
                 }
             );
 
-    // borders and layout
-    optionsPanel.setBorder(new javax.swing.border.EmptyBorder(8, 8, 8, 8));
-    findPanel.setBorder(new javax.swing.border.EmptyBorder(16, 8, 8, 8));
-    buttonPanel.setBorder(new javax.swing.border.EmptyBorder(16, 8, 8, 8));
+    layout.setHorizontalGroup(layout
+        .createSequentialGroup()
+        .addGroup(layout.createParallelGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, // TRAILING makes everything right alinged
+                layout.createSequentialGroup()
+                    .addGap(replaceLabel.getPreferredSize().width
+                        - findLabel.getPreferredSize().width)
+                    .addComponent(findLabel)
+                    .addComponent(findBox))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING,
+                layout.createSequentialGroup()
+                    .addComponent(replaceLabel)
+                    .addGroup(layout.createParallelGroup()
+                        .addComponent(replaceBox)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING,
+                            layout.createSequentialGroup()
+                                .addComponent(ignoreCaseCheckBox)
+                                .addComponent(wrapAroundCheckBox)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED,
+                                    javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(notFoundLabel))))
+            .addGroup(layout.createSequentialGroup()
+            .addComponent(nextButton)
+            .addComponent(prevButton)
+            .addComponent(replaceAndFindButton)
+            .addComponent(replaceButton)
+            .addComponent(replaceAllButton))
+        )
+    );
+      // Uncommnet to make all the buttons of same size
+//    layout.linkSize(SwingConstants.HORIZONTAL, findButton, replaceButton, replaceAllButton, replaceAndFindButton, previousButton);
 
-    getContentPane().setLayout(new java.awt.BorderLayout());
-    getContentPane().add(findPanel, java.awt.BorderLayout.NORTH);
-    getContentPane().add(optionsPanel, java.awt.BorderLayout.CENTER);
-    getContentPane().add(buttonPanel, java.awt.BorderLayout.SOUTH);
+    layout.setVerticalGroup(layout.createSequentialGroup()
+        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+            .addComponent(findLabel)
+            .addComponent(findBox))
+        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+            .addComponent(replaceLabel)
+            .addComponent(replaceBox))
+        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+            .addComponent(ignoreCaseCheckBox)
+            .addComponent(wrapAroundCheckBox)
+            .addComponent(notFoundLabel))
+        .addGroup(layout.createParallelGroup()
+            .addComponent(nextButton)
+            .addComponent(prevButton)
+            .addComponent(replaceAndFindButton)
+            .addComponent(replaceButton)
+            .addComponent(replaceAllButton))
+    );
+
+    getContentPane().setLayout(layout);
 
     pack();
     setResizable(false);
