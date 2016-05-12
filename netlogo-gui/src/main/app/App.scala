@@ -805,6 +805,15 @@ class App extends
   }
 
   /**
+   * Saves the currently open model.
+   * Should only be used by ModelResaver.
+   */
+  @throws(classOf[java.io.IOException])
+  private[nlogo] def saveOpenModel(): Unit = {
+    dispatchThreadOrBust(fileMenu.save(false))
+  }
+
+  /**
    * This is called reflectively by the mac app wrapper with the full path.
    * This will only be called after appHandler.ready has been called.
    * @param path the path (absolute) to the NetLogo model to open.
@@ -1075,7 +1084,7 @@ class App extends
     tabs.workspace.world.linkShapeList.shapes.collect { case s: LinkShape => s }
   def additionalSections: Seq[ModelSections.ModelSaveable] = {
     val sections =
-      Seq(tabs.workspace.previewCommands,
+      Seq[ModelSections.ModelSaveable](tabs.workspace.previewCommands,
         labManager,
         aggregateManager,
         tabs.workspace)

@@ -50,40 +50,53 @@ object ModelResaver {
       .filterNot(_.contains("HubNet"))
       .filterNot(_.contains("3D"))
 
-    App.main(Array[String]())
     val modelSaver = new org.nlogo.app.ModelSaver(App.app)
-    var failedModels = List[(String, String)]()
     var systemDynamicsModels: Seq[String] = Seq()
     for (path <- paths) {
-      try {
-        // doesn't resave system dynamics models, need to use the App for that
-        val ws = HeadlessWorkspace.newInstance
-        val modelLoader =
-          org.nlogo.fileformat.standardLoader(ws.compiler.compilerUtilities, ws.compiler.autoConvert _)
-            .addSerializer[Array[String], NLogoFormat](new NLogoSDMFormat())
-        val uri = Paths.get(path).toUri
-        val controller = new ResaveController(uri)
-        OpenModel(uri, controller, modelLoader, Version).foreach { model =>
-          if (model.hasValueForOptionalSection("org.nlogo.modelsection.systemdynamics"))
-            systemDynamicsModels = systemDynamicsModels :+ path
-          else
-            SaveModel(model, modelLoader, controller, ws, Version).map(_.apply()) match {
-              case Some(Success(u)) => println("resaved: " + u)
-              case Some(Failure(e)) => println("errored resaving: " + path + " " + e.toString)
-              case None => println("failed to resave: " + path)
-            }
+      val ws = HeadlessWorkspace.newInstance
+      val modelLoader =
+        org.nlogo.fileformat.standardLoader(ws.compiler.compilerUtilities, ws.compiler.autoConvert _)
+          .addSerializer[Array[String], NLogoFormat](new NLogoSDMFormat())
+      val uri = Paths.get(path).toUri
+      val controller = new ResaveController(uri)
+      OpenModel(uri, controller, modelLoader, Version).foreach { model =>
+        if (model.hasValueForOptionalSection("org.nlogo.modelsection.systemdynamics"))
+          systemDynamicsModels = systemDynamicsModels :+ path
+        else
+          SaveModel(model, modelLoader, controller, ws, Version).map(_.apply()) match {
+            case Some(Success(u)) => println("resaved: " + u)
+            case Some(Failure(e)) => println("errored resaving: " + path + " " + e.toString)
+            case None => println("failed to resave: " + path)
+          }
+      }
+    }
+
+    val failedModels = resaveSystemDynamicsModels(systemDynamicsModels)
+
+    println("FAILED MODELS:")
+    println(failedModels.mkString("\n"))
+  }
+
+  def resaveSystemDynamicsModels(paths: Seq[String]): Seq[(String, String)] = {
+    App.main(Array[String]())
+
+    var failedModels = List[(String, String)]()
+
+    for (path <- paths) {
+      wait {
+        try {
+          App.app.open(path)
+          App.app.saveOpenModel()
         }
-      } catch {
-        case e: Exception => failedModels :+= ((path, e.getMessage))
+        catch {
+          case e: Exception => failedModels :+= ((path, e.getMessage))
+        }
       }
     }
     wait {
       App.app.quit()
     }
-
-
-    println("FAILED MODELS:")
-    println(failedModels.mkString("\n"))
+    failedModels
   }
 
   class ResaveController(path: URI) extends OpenModelController with SaveModelController {
