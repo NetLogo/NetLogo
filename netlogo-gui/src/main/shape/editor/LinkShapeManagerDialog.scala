@@ -2,13 +2,17 @@
 
 package org.nlogo.shape.editor
 
+import java.awt.Frame
+
 import org.nlogo.api.ModelLoader
-import org.nlogo.core.{ AgentKind, Model, Shape, ShapeListTracker }, Shape.{ LinkShape => CoreLinkShape }
+
+import org.nlogo.api.World
+import org.nlogo.core.{ AgentKind, Model, Shape }, Shape.{ LinkShape => CoreLinkShape }
 import org.nlogo.shape.ShapeConverter
 import org.nlogo.shape.LinkShape
 
-class LinkShapeManagerDialog(parentFrame: java.awt.Frame,
-                             world: org.nlogo.api.World,
+class LinkShapeManagerDialog(parentFrame: Frame,
+                             world: World,
                              modelLoader: ModelLoader)
         extends ManagerDialog[LinkShape](parentFrame, modelLoader, world.linkShapes)
                 with org.nlogo.shape.LinkShapesManagerInterface {
@@ -44,7 +48,7 @@ class LinkShapeManagerDialog(parentFrame: java.awt.Frame,
     shapesList.getOneSelected.foreach { shape =>
       // You can only duplicate one shape at a time
       val newShape = shape.clone.asInstanceOf[LinkShape]
-      newShape.name_$eq("")
+      newShape.name = ""
       new LinkEditorDialog(shapesList, newShape, getLocation.x, getLocation.y)
     }
   }

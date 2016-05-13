@@ -38,9 +38,9 @@ class DummySliderWidget extends AbstractSliderWidget with Editable {
     val max = model.max.toDouble
     val value = model.default
     val inc = model.step.toDouble
-    units = model.units.getOrElse("")
+    units = model.units.optionToPotentiallyEmptyString
     vertical = model.direction == Vertical
-    name = model.display.getOrElse("")
+    name = model.display.optionToPotentiallyEmptyString
     val con = ConstantSliderConstraint(min, max, inc)
     con.defaultValue = value
     setSliderConstraint(con)  // ensure cached values are updated
@@ -51,7 +51,7 @@ class DummySliderWidget extends AbstractSliderWidget with Editable {
 
   override def model: WidgetModel = {
     val b = getBoundsTuple
-    val savedName = if (name != null && name.trim != "") Some(name) else None
+    val savedName = name.potentiallyEmptyStringToOption
     CoreSlider(
       display = savedName,
       left = b._1, top = b._2, right = b._3, bottom = b._4,
@@ -60,6 +60,7 @@ class DummySliderWidget extends AbstractSliderWidget with Editable {
       max = constraint.maximum.toString,
       default = constraint.defaultValue,
       step = constraint.increment.toString,
+      units = units.potentiallyEmptyStringToOption,
       direction = if (vertical) Vertical else Horizontal)
   }
 }

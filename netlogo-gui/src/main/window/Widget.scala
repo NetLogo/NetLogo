@@ -171,4 +171,12 @@ abstract class Widget extends JPanel {
     org.nlogo.window.Event.rehash()
     new WidgetAddedEvent(this).raise(this)
   }
+
+  implicit class RichStringOption(s: Option[String]) {
+    def optionToPotentiallyEmptyString = s.getOrElse("")
+  }
+
+  implicit class RichWidgetString(s: String) {
+    def potentiallyEmptyStringToOption = if (s != null && s.trim != "") Some(s) else None
+  }
 }

@@ -62,8 +62,7 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) ex
       override protected def setAddedFigure(newAddedFigure: Figure): Unit = {
         super.setAddedFigure(newAddedFigure)
         newAddedFigure match {
-          case mef: ModelElementFigure =>
-            model.addElement(mef.getModelElement)
+          case mef: ModelElementFigure => model.addElement(mef.getModelElement)
           case _ =>
         }
       }

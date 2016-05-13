@@ -32,8 +32,7 @@ class DummyButtonWidget
   private var _keyEnabled: Boolean = false
   private var _name: String = ""
 
-  def propertySet: JList[Property] =
-    Properties.dummyButton
+  def propertySet: JList[Property] = Properties.dummyButton
 
   def actionKey: Char = _actionKey
 
@@ -124,25 +123,18 @@ class DummyButtonWidget
 
   override def model: WidgetModel = {
     val b = getBoundsTuple
-    val savedName = if (name != null && name.trim != "") Some(name) else None
     val savedActionKey =
       if (actionKey == 0 || actionKey == ' ') None else Some(actionKey)
     CoreButton(
-      display = savedName,
+      display    = name.potentiallyEmptyStringToOption,
       left = b._1, top = b._2, right = b._3, bottom = b._4,
-      source = None,
-      forever = false,
-      buttonKind = AgentKind.Observer,
-      actionKey = savedActionKey)
+      source     = None,               forever    = false,
+      buttonKind = AgentKind.Observer, actionKey  = savedActionKey)
   }
 
   override def load(button: WidgetModel): AnyRef = {
     button.actionKey.foreach(k => actionKey(k))
-
-    val normalizedName =
-      button.display.map(n => if (n == "NIL") "" else n).getOrElse("")
-    name(normalizedName)
-
+    name(button.display.optionToPotentiallyEmptyString)
     setSize(button.right - button.left, button.top - button.bottom)
     this
   }

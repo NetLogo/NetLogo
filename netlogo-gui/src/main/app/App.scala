@@ -258,7 +258,6 @@ class App extends
     AppEvent.Handler with
     BeforeLoadEvent.Handler with
     LoadBeginEvent.Handler with
-    LoadModelEvent.Handler with
     LoadEndEvent.Handler with
     ModelSavedEvent.Handler with
     ModelSections with
@@ -366,9 +365,9 @@ class App extends
       }
     }
 
-    val shapeChangeListener = new ShapeChangeListener(workspace, world)
-
     pico.addComponent(new EditorColorizer(workspace))
+
+     val shapeChangeListener = new ShapeChangeListener(workspace, world)
 
     frame.addLinkComponent(workspace)
 
@@ -554,7 +553,7 @@ class App extends
         })
       }
       catch {
-        case ex: Exception =>
+        case ex: java.net.ConnectException =>
           fileMenu.newModel()
           JOptionPane.showConfirmDialog(null,
             "Could not obtain NetLogo model from URL '%s'.\nNetLogo will instead start without any model loaded.".format(commandLineURL),
@@ -1046,16 +1045,6 @@ class App extends
    */
   // used both from HelpMenu and MacHandlers - ST 2/2/09
   def showAboutWindow() { new AboutWindow(frame).setVisible(true) }
-
-  /**
-   * Internal use only.
-   */
-  def handle(e:LoadModelEvent){
-    /*
-    if(e.section == ModelSection.HubNetClient && e.lines.length > 0)
-      frame.addLinkComponent(workspace.getHubNetManager.clientEditor)
-    */
-  }
 
   /**
    * Internal use only.

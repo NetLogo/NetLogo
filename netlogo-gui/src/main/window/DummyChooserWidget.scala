@@ -23,8 +23,7 @@ class DummyChooserWidget(compiler: CompilerServices)
   override def classDisplayName: String =
     I18N.gui.get("tabs.run.widgets.chooser")
 
-  def propertySet: JList[Property] =
-    Properties.dummyChooser
+  def propertySet: JList[Property] = Properties.dummyChooser
 
   override def editFinished: Boolean = {
     super.editFinished
@@ -70,11 +69,11 @@ class DummyChooserWidget(compiler: CompilerServices)
 
   override def model: WidgetModel = {
     val bounds = getBounds()
-    val savedName = if (name().trim != null && name().trim != "") Some(name()) else None
-    CoreChooser(display = savedName,
+    CoreChooser(
+      display  = name().potentiallyEmptyStringToOption,
       left     = bounds.x,                top    = bounds.y,
       right    = bounds.x + bounds.width, bottom = bounds.y + bounds.height,
-      variable = savedName,
+      variable = name().potentiallyEmptyStringToOption,
       choices  = constraint.acceptedValues.map(Chooseable.apply).toList,
       currentChoice = index)
   }

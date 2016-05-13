@@ -2,7 +2,7 @@
 
 package org.nlogo.app
 
-import java.awt.{ Cursor, Font, FileDialog => AwtFileDialog }
+import java.awt.{ Cursor, FileDialog => AwtFileDialog }
 import java.awt.event.{ ActionListener, ActionEvent, KeyEvent, FocusEvent, MouseEvent }
 import java.io.IOException
 import java.util.{ ArrayList, List => JList }
@@ -100,7 +100,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
         } catch  {
           case ex: IOException =>
             JOptionPane.showMessageDialog(InterfacePanel.this, ex.getMessage(),
-              I18N.gui.get("common.messages.error"), JOptionPane.ERROR_MESSAGE);
+              I18N.gui.get("common.messages.error"), JOptionPane.ERROR_MESSAGE)
         }
       }
     }
@@ -111,22 +111,21 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
   }
 
   class WidgetCreationMenuItem(val displayName: String, val coreWidget: CoreWidget, x: Int, y: Int)
-  extends JMenuItem(displayName) {
-    val listener = new ActionListener() {
-      override def actionPerformed(e: ActionEvent): Unit = {
-        val widget = makeWidget(coreWidget)
-        val wrapper = addWidget(widget, x, y, true, false)
-        revalidate()
-        wrapper.selected(true)
-        wrapper.foreground()
-        wrapper.isNew(true)
-        new EditWidgetEvent(null).raise(InterfacePanel.this)
-        newWidget.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))
-        wrapper.isNew(false)
-        newWidget = null
-      }
+  extends JMenuItem(displayName) with ActionListener {
+    addActionListener(this)
+
+    override def actionPerformed(e: ActionEvent): Unit = {
+      val widget = makeWidget(coreWidget)
+      val wrapper = addWidget(widget, x, y, true, false)
+      revalidate()
+      wrapper.selected(true)
+      wrapper.foreground()
+      wrapper.isNew(true)
+      new EditWidgetEvent(null).raise(InterfacePanel.this)
+      newWidget.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))
+      wrapper.isNew(false)
+      newWidget = null
     }
-    addActionListener(listener)
   }
 
   // This is used both when loading a model and when the user is making
@@ -137,22 +136,17 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     if (fromRegistry != null)
       fromRegistry
     else coreWidget match {
+      case c: CoreChooser  => new org.nlogo.window.ChooserWidget(workspace)
+      case b: CoreButton   => new ButtonWidget(workspace.world.mainRNG)
+      case p: CorePlot     => PlotWidget(workspace.plotManager)
+      case m: CoreMonitor  => new MonitorWidget(workspace.world.auxRNG)
       case s: CoreSlider =>
         new SliderWidget(workspace.world.auxRNG) {
           override def sourceOffset: Int =
             Evaluator.sourceOffset(AgentKind.Observer, false)
         }
-      case c: CoreChooser =>
-        new org.nlogo.window.ChooserWidget(workspace)
-      case b: CoreButton =>
-        new ButtonWidget(workspace.world.mainRNG)
-      case p: CorePlot =>
-        PlotWidget(workspace.plotManager)
-      case m: CoreMonitor =>
-        new MonitorWidget(workspace.world.auxRNG)
       case i: CoreInputBox =>
-        val font = new Font(Fonts.platformMonospacedFont,
-          Font.PLAIN, 12)
+        val font = Fonts.monospacedFont
         val textArea = new CodeEditor(1, 20, font, false, null, new EditorColorizer(workspace), I18N.gui.fn)
         val dialogTextArea = new CodeEditor(5, 20, font, true, null, new EditorColorizer(workspace), I18N.gui.fn)
         new InputBoxWidget(textArea, dialogTextArea, workspace, this)
@@ -279,8 +273,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
         def run(): Unit = {
           try workspace.exportInterface(exportPath)
           catch {
-            case ex: IOException =>
-              exception = Some(ex)
+            case ex: IOException => exception = Some(ex)
           }}}
       ModalProgressTask(Hierarchy.getFrame(this),
         I18N.gui.get("dialog.interface.export.task"), runExport)
@@ -343,10 +336,9 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
 
   def keyTyped(e: KeyEvent): Unit = {
     if (e.getKeyChar() != KeyEvent.CHAR_UNDEFINED &&
-        !e.isActionKey &&
-        (e.getModifiers & getToolkit.getMenuShortcutKeyMask) == 0) {
-      val button = findActionButton(e.getKeyChar)
-      if (button != null) {
+      !e.isActionKey &&
+    (e.getModifiers & getToolkit.getMenuShortcutKeyMask) == 0) {
+      Option(findActionButton(e.getKeyChar)).foreach { button =>
         button.keyTriggered()
       }
     }
@@ -357,6 +349,6 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
   def keyReleased(evt: KeyEvent): Unit = { }
 
   override def canAddWidget(widget: String): Boolean = {
-    return (!widget.equals("Output")) || (getOutputWidget == null);
+    return (widget != "Output" || getOutputWidget == null)
   }
 }

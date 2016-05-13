@@ -3,7 +3,7 @@
 package org.nlogo.window
 
 import org.nlogo.swing.{ BrowserLauncher, FileDialog, OptionDialog }
-import org.nlogo.workspace.{ ModelTracker }
+import org.nlogo.workspace.ModelTracker
 import org.nlogo.workspace.OpenModel.{ Controller => OpenModelController }
 import org.nlogo.workspace.SaveModel.{ Controller => SaveModelController }
 import org.nlogo.api.{ ModelReader, ModelType, Version }, ModelReader.modelSuffix

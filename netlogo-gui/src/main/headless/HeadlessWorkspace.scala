@@ -191,7 +191,7 @@ with org.nlogo.api.ViewSettings {
     world.createPatches(d)
     import collection.JavaConverters._
     val results = compiler.compileProgram(
-      source, world.newProgram(List[String]().asJava),
+      source, world.newProgram(Seq[String]()),
       getExtensionManager, getCompilationEnvironment)
     setProcedures(results.proceduresMap)
     codeBits.clear()

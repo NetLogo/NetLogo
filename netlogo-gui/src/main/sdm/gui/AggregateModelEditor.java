@@ -38,7 +38,7 @@ strictfp class AggregateModelEditor
   private final java.awt.Component linkParent;
   private final org.nlogo.window.MenuBarFactory menuBarFactory;
   private final CompilerServices compiler;
-  private AggregateDrawing drawing;
+  private final AggregateDrawing drawing;
   private AggregateModelEditorToolBar toolbar;
   private final UndoManager undoManager;
   private Tool currentTool;

@@ -31,7 +31,6 @@ class ProtocolTests extends FunSuite {
     assertResult(6)(protocol.countRuns)
     assertResult("List((foo,1.0)) List((foo,1.0)) List((foo,2.0)) List((foo,2.0)) List((foo,3.0)) List((foo,3.0))")(
       protocol.elements.mkString(" "))
-    assertResult("enumerated2 (6 runs)")(protocol.toString)
   }
   test("stepped 1") {
     val protocol = new LabProtocol("", "", "", "", 1, true, 0, "", Nil,
@@ -44,7 +43,6 @@ class ProtocolTests extends FunSuite {
     val protocol = new LabProtocol("stepped2", "", "", "", 10, true, 0, "", Nil,
                                 List(new SteppedValueSet("foo", 1d, 1d, 5d)))
     assertResult(50)(protocol.countRuns)
-    assertResult("stepped2 (50 runs)")(protocol.toString)
   }
   // bug #62. by doing the calculations in BigDecimal we avoid weird 00000 and 99999 type numbers
   test("avoid floating point error") {

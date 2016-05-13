@@ -6,7 +6,6 @@ import java.util.{ ArrayList => ArrayJList, List => JList }
 
 import org.nlogo.core.{ CompilerException, I18N, UpdateMode, View => CoreView, WorldDimensions }
 import org.nlogo.api.{ Editable, Property, WorldPropertiesInterface }
-import org.nlogo.nvm.Workspace
 import org.nlogo.workspace.WorldLoaderInterface
 
 abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protected val gWidget: ViewWidget)

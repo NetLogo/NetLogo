@@ -2,18 +2,17 @@
 
 package org.nlogo.window;
 
+import java.awt.{ Color, Component, Dimension, Rectangle }
+import java.awt.event.{ FocusListener, FocusEvent,
+  KeyEvent, KeyAdapter, MouseAdapter, MouseEvent }
+import javax.swing.{ JLayeredPane, JPopupMenu, JMenuItem }
+
 import org.nlogo.api.{ CompilerServices, Exceptions, ModelSection, RandomServices, Version, VersionHistory }
 import org.nlogo.core.{ Widget => CoreWidget, View => CoreView }
 import org.nlogo.core.model.WidgetReader
 import org.nlogo.plot.PlotManager
 import org.nlogo.window.Events.{ LoadWidgetsEvent, OutputEvent }
 import org.nlogo.util.SysInfo
-
-import javax.swing.{ JLayeredPane, JPopupMenu, JMenuItem }
-
-import java.awt.{ Color, Component, Dimension, Rectangle }
-import java.awt.event.{ FocusListener, FocusEvent,
-  KeyEvent, KeyAdapter, MouseAdapter, MouseEvent }
 
 import scala.collection.JavaConverters._
 import scala.collection.mutable.{ Map => MutableMap }
@@ -211,17 +210,18 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
 
   /// loading and saving
 
+  private val widgetBuilderMap = Map[String, () => Widget](
+    "Monitor"  -> (() => new MonitorWidget(random.auxRNG)),
+    "Plot"     -> (() => PlotWidget.apply(plotManager)),
+    "Slider"   -> (() => new SliderWidget(sliderEventOnReleaseOnly, random.auxRNG)),
+    "Chooser"  -> (() => new ChooserWidget(compiler)),
+    "InputBox" -> (() => new InputBoxWidget(
+      editorFactory.newEditor(1, 20, false), editorFactory.newEditor(5, 20, true),
+      compiler, this)),
+    "Button"   -> (() => new ButtonWidget(random.mainRNG)),
+    "Output"   -> (() => new OutputWidget()))
+
   def loadWidget(coreWidget: CoreWidget): Widget = {
-   val widgetMap = Map[String, () => Widget](
-     "Monitor"  -> (() => new MonitorWidget(random.auxRNG)),
-     "Plot"     -> (() => PlotWidget.apply(plotManager)),
-     "Slider"   -> (() => new SliderWidget(sliderEventOnReleaseOnly, random.auxRNG)),
-     "Chooser"  -> (() => new ChooserWidget(compiler)),
-     "InputBox" -> (() => new InputBoxWidget(
-       editorFactory.newEditor(1, 20, false), editorFactory.newEditor(5, 20, true),
-       compiler, this)),
-     "Button"   -> (() => new ButtonWidget(random.mainRNG)),
-     "Output"   -> (() => new OutputWidget()))
     try {
       val x = coreWidget.left
       val y = coreWidget.top
@@ -239,7 +239,7 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
           widget.setLocation(x, y)
           widget
         case _ =>
-          val newGuy = widgetMap.get(coreWidget.getClass.getSimpleName).flatMap(createWidget =>
+          val newGuy = widgetBuilderMap.get(coreWidget.getClass.getSimpleName).flatMap(createWidget =>
             try Some(createWidget())
             catch {
               case ex: RuntimeException =>

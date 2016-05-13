@@ -2,17 +2,28 @@
 
 package org.nlogo.shape.editor
 
-import org.nlogo.api.ModelLoader
-import org.nlogo.swing.Implicits._
-import org.nlogo.shape.VectorShape
-import org.nlogo.core.{ AgentKind, I18N, Model, Shape, ShapeList }, Shape.{ VectorShape => CoreVectorShape }
-import org.nlogo.core.ShapeParser.parseVectorShapes
-import org.nlogo.shape.ShapeConverter
-import java.awt.Component
-import javax.swing.{ JButton, Box }
+import java.awt.{ Component, Frame }
+import javax.swing.{ Box, JButton }
 
-class TurtleShapeManagerDialog(parentFrame: java.awt.Frame,
-                               world: org.nlogo.api.World,
+import org.nlogo.api.{ ModelLoader, World }
+import org.nlogo.swing.Implicits._
+import org.nlogo.shape.{ ShapeConverter, VectorShape },
+  ShapeConverter.baseVectorShapeToVectorShape
+import org.nlogo.core.{ AgentKind, I18N, Model, Shape, ShapeList, ShapeParser },
+  Shape.{ VectorShape => CoreVectorShape },
+  ShapeList.{ isDefaultShapeName, sortShapes },
+  ShapeParser.parseVectorShapes
+import org.nlogo.util.Utils
+
+object TurtleShapeManagerDialog {
+  val DefaultShapePath = "/system/defaultShapes.txt"
+  val LibraryShapePath = "/system/libraryShapes.txt"
+}
+
+import TurtleShapeManagerDialog._
+
+class TurtleShapeManagerDialog(parentFrame: Frame,
+                               world: World,
                                modelLoader: ModelLoader)
         extends ManagerDialog[VectorShape](parentFrame, modelLoader, world.turtleShapes)
                 with org.nlogo.shape.TurtleShapesManagerInterface {
@@ -31,7 +42,7 @@ class TurtleShapeManagerDialog(parentFrame: java.awt.Frame,
 
   def displayableShapeFromCoreShape(shape: Shape): Option[VectorShape] = {
     shape match {
-      case v: CoreVectorShape => Some(ShapeConverter.baseVectorShapeToVectorShape(v))
+      case v: CoreVectorShape => Some(baseVectorShapeToVectorShape(v))
       case _ => None
     }
   }
@@ -44,28 +55,27 @@ class TurtleShapeManagerDialog(parentFrame: java.awt.Frame,
   // Edit an existing shape
   override def editShape(): Unit = {
     shapesList.getOneSelected.foreach { shape =>
-      new EditorDialog(shapesList, shape, getLocation.x, getLocation.y, !ShapeList.isDefaultShapeName(shape.name))
+      new EditorDialog(shapesList, shape, getLocation.x, getLocation.y, !isDefaultShapeName(shape.name))
     }
   }
 
   // Duplicate a shape, which can then be edited
   override def duplicateShape(): Unit = {
     shapesList.getOneSelected.foreach { (shape: VectorShape) =>
-      // You can only duplicate one shape at a time
       val newShape = shape.clone
-      newShape.name_$eq("")
+      newShape.name = ""
       new EditorDialog(shapesList, newShape, getLocation.x, getLocation.y, true)
     }
   }
 
   // Import shapes from shapes library
   private def importFromLibrary(): Unit = {
-    val defaultShapes = org.nlogo.util.Utils.getResourceAsStringArray("/system/defaultShapes.txt")
-    val libraryShapes = org.nlogo.util.Utils.getResourceAsStringArray("/system/libraryShapes.txt")
+    val defaultShapes = Utils.getResourceAsStringArray(DefaultShapePath)
+    val libraryShapes = Utils.getResourceAsStringArray(LibraryShapePath)
     val mergedShapes = defaultShapes.toList ::: ("" :: libraryShapes.toList)
     drawableListFromImportedShapes(mergedShapes.toArray) match {
       case Some(drawableList) =>
-        importDialog = new ImportDialog(parentFrame, this, drawableList)
+        importDialog = Some(new ImportDialog(parentFrame, this, drawableList))
         shapesList.requestFocus()
       case None =>
         javax.swing.JOptionPane.showMessageDialog(this,
@@ -78,8 +88,8 @@ class TurtleShapeManagerDialog(parentFrame: java.awt.Frame,
   private def drawableListFromImportedShapes(shapeStrings: Array[String]): Option[DrawableList[VectorShape]] = {
     try {
       val parsedShapes = parseVectorShapes(shapeStrings)
-        .map(ShapeConverter.baseVectorShapeToVectorShape)
-      Some(drawableListFromModelShapes(ShapeList.sortShapes(parsedShapes)))
+        .map(baseVectorShapeToVectorShape)
+      Some(drawableListFromModelShapes(sortShapes(parsedShapes)))
     } catch {
       case e: IllegalArgumentException =>
         None

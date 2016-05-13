@@ -3,7 +3,7 @@
 package org.nlogo.fileformat
 
 import org.nlogo.core.{ Femto, LiteralParser, Model }
-import org.nlogo.api.{ EnumeratedValueSet, LabProtocol }
+import org.nlogo.api.{ EnumeratedValueSet, FileIO, LabProtocol }
 
 class NLogoLabFormatTest extends NLogoFormatTest[Seq[LabProtocol]] {
   private val litParser =
@@ -25,4 +25,5 @@ class NLogoLabFormatTest extends NLogoFormatTest[Seq[LabProtocol]] {
   testRoundTripsObjectForm("empty list of experiment protocols", Seq())
   testRoundTripsObjectForm("a simple experiment protocol", Seq(expectedProto))
   testRoundTripsSerialForm("a multi-experiment protocol", testBehaviorSpaceXml("BehaviorSpaceMultiples.xml"))
+  testRoundTripsSerialForm("all test protocols", FileIO.file2String("test/lab/protocols.xml").lines.toArray)
 }

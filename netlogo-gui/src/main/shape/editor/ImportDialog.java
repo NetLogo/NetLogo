@@ -2,11 +2,8 @@
 
 package org.nlogo.shape.editor;
 
-import org.nlogo.core.AgentKindJ;
 import org.nlogo.core.I18N;
 import org.nlogo.core.Shape;
-import org.nlogo.core.ShapeList;
-import org.nlogo.core.ShapeListTracker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +26,6 @@ public strictfp class ImportDialog   // public for DeltaTick - ST 12/2/11
     this.manager = manager;
 
     list = drawableList;
-    // list.setParent(this);
-    list.setCellRenderer(new ShapeCellRenderer());
     list.update();
 
     // Create the buttons

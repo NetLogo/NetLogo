@@ -2,17 +2,15 @@
 
 package org.nlogo.hubnet.server.gui
 
+import org.nlogo.api.{ ModelLoader, ModelType, ViewInterface }
+import org.nlogo.api.HubNetInterface.ClientInterface
+import org.nlogo.core.{ Femto, FileMode, Model, Widget => CoreWidget }
+import org.nlogo.core.model.WidgetReader
+import org.nlogo.hubnet.protocol.ComputerInterface
 import org.nlogo.hubnet.connection.HubNetException
 import org.nlogo.hubnet.server.{HubNetManager, ClientEventListener, ConnectionManager}
-import org.nlogo.api.ModelLoader
-import org.nlogo.api.HubNetInterface.ClientInterface
-import org.nlogo.core.{ Femto, FileMode, Widget => CoreWidget }
-import org.nlogo.hubnet.protocol.ComputerInterface
-import org.nlogo.core.Model
-import org.nlogo.core.model.WidgetReader
 import org.nlogo.nvm.DefaultCompilerServices
 import org.nlogo.util.Utils, Utils.reader2String
-import org.nlogo.api._
 import org.nlogo.awt.EventQueue.invokeLater
 import org.nlogo.swing.Implicits._
 import org.nlogo.window._
@@ -38,7 +36,7 @@ class GUIHubNetManager(workspace: GUIWorkspace,
     def clientDisconnect(clientId: String) {
       invokeLater(() => controlCenter.clientDisconnect(clientId))
     }
-    def logMessage(message:String){
+    def logMessage(message:String) {
       invokeLater(() => controlCenter.logMessage(message))
     }
   }

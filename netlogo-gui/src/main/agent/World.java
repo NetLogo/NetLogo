@@ -1376,14 +1376,10 @@ public strictfp class World
     return org.nlogo.core.Program$.MODULE$.fromDialect(dialect);
   }
 
-  public Program newProgram(List<String> interfaceGlobals) {
-    scala.collection.mutable.Builder<String, scala.collection.immutable.Seq<String>> builder = scala.collection.immutable.Seq$.MODULE$.newBuilder();
-    for (String global : interfaceGlobals) {
-      builder.$plus$eq(global);
-    }
+  public Program newProgram(scala.collection.Seq<String> interfaceGlobals) {
     Program emptyProgram = newProgram();
     return emptyProgram.copy(
-        builder.result(),
+        interfaceGlobals,
         emptyProgram.userGlobals(),
         emptyProgram.turtlesOwn(),
         emptyProgram.patchesOwn(),

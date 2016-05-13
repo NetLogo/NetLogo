@@ -23,6 +23,9 @@ object Fonts {
         .find(_.equalsIgnoreCase("Lucida Console")).getOrElse("Monospaced")
     else "Monospaced"
 
+  lazy val monospacedFont: Font =
+    new Font(platformMonospacedFont, Font.PLAIN, 12)
+
   def adjustDefaultFont(comp: Component) {
     def plain(size: Int) =
       new Font(platformFont, Font.PLAIN, size)

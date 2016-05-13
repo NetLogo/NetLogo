@@ -4,7 +4,6 @@ package org.nlogo.lab.gui
 
 import org.nlogo.api.LabProtocol
 import org.nlogo.api.ModelSection
-import org.nlogo.lab.ProtocolSaver
 import org.nlogo.core.Model
 import org.nlogo.window.{GUIWorkspace, EditDialogFactoryInterface, LabManagerInterface}
 import org.nlogo.workspace.{CurrentModelOpener, WorkspaceFactory}

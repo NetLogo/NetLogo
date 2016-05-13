@@ -19,11 +19,7 @@ import org.nlogo.api.ValueConstraint
 import org.nlogo.api.Exceptions
 import org.nlogo.api.LogoException
 
-import java.util.{ ArrayList => ArrayJList }
-import java.util.{ HashSet => JHashSet }
-import java.util.{ Set => JSet }
-import java.util.{ List => JList }
-
+import scala.collection.mutable.HashSet
 import scala.collection.JavaConversions._
 
 class CompilerManager(val workspace: AbstractWorkspace,
@@ -38,8 +34,8 @@ class CompilerManager(val workspace: AbstractWorkspace,
     with WidgetRemovedEvent.Handler
     with CompileAllEvent.Handler {
 
-  private[window] val widgets:       JSet[JobOwner]              = new JHashSet[JobOwner]()
-  private[window] val globalWidgets: JSet[InterfaceGlobalWidget] = new JHashSet[InterfaceGlobalWidget]()
+  private[window] val widgets       = HashSet[JobOwner]()
+  private[window] val globalWidgets = HashSet[InterfaceGlobalWidget]()
 
   private def raiseEvent(e: Event): Unit =
     eventRaiser(e, this)
@@ -77,7 +73,7 @@ class CompilerManager(val workspace: AbstractWorkspace,
   def handle(e: CompileMoreSourceEvent): Unit = {
     val owner = e.owner
     if (isLoading)
-      widgets.add(owner)
+      widgets += owner
     else if (! owner.isCommandCenter)
       compileWidgets()
     else {
@@ -88,8 +84,8 @@ class CompilerManager(val workspace: AbstractWorkspace,
             displayName, workspace.world.program,
             workspace.getProcedures, workspace.getExtensionManager,
             workspace.getCompilationEnvironment);
-        results.head.init(workspace);
-        results.head.owner_=(owner);
+        results.head.init(workspace)
+        results.head.owner = owner
         raiseEvent(new CompiledEvent(owner, workspace.world.program, results.head, null))
       } catch {
         case error: CompilerException =>
@@ -148,20 +144,24 @@ class CompilerManager(val workspace: AbstractWorkspace,
 
   def handle(e: WidgetAddedEvent): Unit = {
     e.widget match {
-      case globalWidgetJobOwner: JobOwner with InterfaceGlobalWidget =>
-        widgets.add(globalWidgetJobOwner)
-        globalWidgets.add(globalWidgetJobOwner)
-      case jobOwner: JobOwner                     =>
-        widgets.add(jobOwner)
-      case interfaceGlobal: InterfaceGlobalWidget =>
-        globalWidgets.add(interfaceGlobal)
+      case jobOwner: JobOwner => widgets += jobOwner
+      case _ =>
+    }
+    e.widget match {
+      case interfaceGlobal: InterfaceGlobalWidget => globalWidgets += interfaceGlobal
       case _ =>
     }
   }
 
-  def handle(e: WidgetRemovedEvent) {
-    widgets.remove(e.widget)
-    globalWidgets.remove(e.widget)
+  def handle(e: WidgetRemovedEvent): Unit = {
+    e.widget match {
+      case jobOwner: JobOwner => widgets -= jobOwner
+      case _ =>
+    }
+    e.widget match {
+      case interfaceGlobal: InterfaceGlobalWidget => globalWidgets -= interfaceGlobal
+      case _ =>
+    }
   }
 
   private def compileAll(): Unit = {
@@ -212,7 +212,7 @@ class CompilerManager(val workspace: AbstractWorkspace,
           case "aggregate" => workspace.aggregateManager
           case fileName    => new ExternalFileInterface(fileName)
         }
-        procedure.owner_=(owner)
+        procedure.owner = owner
       }
       workspace.init()
       workspace.world.program(results.program)
@@ -257,7 +257,7 @@ class CompilerManager(val workspace: AbstractWorkspace,
 
       if (!results.procedures.isEmpty) {
         results.head.init(workspace)
-        results.head.owner_=(owner)
+        results.head.owner = owner
         raiseEvent(new CompiledEvent(owner, workspace.world.program, results.head, null))
       }
       None
@@ -291,9 +291,6 @@ class CompilerManager(val workspace: AbstractWorkspace,
     }
   }
 
-  private def getGlobalVariableNames: JList[String] = {
-    val results = new ArrayJList[String]()
-    globalWidgets.foreach(w => results.add(w.name))
-    results
-  }
+  private def getGlobalVariableNames: Seq[String] =
+    globalWidgets.map(_.name).toSeq
 }

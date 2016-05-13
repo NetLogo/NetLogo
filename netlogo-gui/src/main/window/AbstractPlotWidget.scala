@@ -241,8 +241,8 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
 
   override def load(corePlot: WidgetModel): Object = {
     setSize(corePlot.right - corePlot.left, corePlot.bottom - corePlot.top)
-    xLabel(corePlot.xAxis.getOrElse(""))
-    yLabel(corePlot.yAxis.getOrElse(""))
+    xLabel(corePlot.xAxis.optionToPotentiallyEmptyString)
+    yLabel(corePlot.yAxis.optionToPotentiallyEmptyString)
     legend.open = corePlot.legendOn
     PlotLoader.loadPlot(corePlot, plot)
     plotName(plot.name)
@@ -253,9 +253,9 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   override def model: WidgetModel = {
     val b = getBoundsTuple
 
-    val displayName = if (plotName != null && plotName.trim != "") Some(plotName) else None
-    val savedXLabel = if (xLabel != null && xLabel.trim != "") Some(xLabel) else None
-    val savedYLabel = if (yLabel != null && yLabel.trim != "") Some(yLabel) else None
+    val displayName = plotName.potentiallyEmptyStringToOption
+    val savedXLabel = xLabel.potentiallyEmptyStringToOption
+    val savedYLabel = yLabel.potentiallyEmptyStringToOption
 
     val pens =
       for (pen <- plot.pens; if (!pen.temporary))

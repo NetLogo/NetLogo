@@ -107,6 +107,6 @@ object I18N {
   // for easy use from Java
   def errorsJ: I18NJava = errors
 
-  def guiJ = gui
+  def guiJ: I18NJava = gui
 
 }

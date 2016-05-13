@@ -25,7 +25,7 @@ abstract class NLogoFormatTest[A] extends ModelSectionTest[Array[String], NLogoF
   }
 
   override def displaySerialized(a: Array[String]): String =
-    a.mkString(s"Array[${a.length}](", ", ", ")")
+    a.mkString(s"Array[${a.length}](", ",\n", ")")
 }
 
 class NLogoFormatIOTest extends FunSuite {

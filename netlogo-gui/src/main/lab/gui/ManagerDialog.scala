@@ -5,7 +5,8 @@ package org.nlogo.lab.gui
 import org.nlogo.api.LabProtocol
 import org.nlogo.api.{ EnumeratedValueSet, LabProtocol }
 import org.nlogo.window.EditDialogFactoryInterface
-import javax.swing.{JButton,JDialog,JLabel,JList,JOptionPane,JPanel,JScrollPane}
+import java.awt.Component
+import javax.swing.{JButton,JDialog,JLabel,JList,JOptionPane,JPanel,JScrollPane,ListCellRenderer}
 import org.nlogo.core.I18N
 
 private class ManagerDialog(manager: LabManager,
@@ -41,6 +42,7 @@ private class ManagerDialog(manager: LabManager,
     jlist.addMouseListener(new javax.swing.event.MouseInputAdapter {
       override def mouseClicked(e: java.awt.event.MouseEvent) {
         if(e.getClickCount > 1) edit() } })
+    jlist.setCellRenderer(new ProtocolRenderer())
     // Setup the first row of buttons
     val buttonPanel = new JPanel
     val runButton = new JButton(runAction)
@@ -153,4 +155,24 @@ private class ManagerDialog(manager: LabManager,
     jlist.getSelectedIndices match { case Array(i: Int) => i }
   private def selectedProtocol =
     manager.protocols(jlist.getSelectedIndices()(0))
+
+  class ProtocolRenderer extends JLabel with ListCellRenderer[LabProtocol] {
+    def getListCellRendererComponent(list: JList[_ <: LabProtocol],
+      proto: LabProtocol, index: Int,
+      isSelected: Boolean, cellHasFocus: Boolean): Component = {
+        val text =
+          s"${proto.name} (${proto.countRuns} run${(if(proto.countRuns != 1) "s" else "")})"
+        setText(text)
+        if (isSelected) {
+          setOpaque(true)
+          setForeground(list.getSelectionForeground())
+          setBackground(list.getSelectionBackground())
+        } else {
+          setOpaque(false)
+          setForeground(list.getForeground())
+          setBackground(list.getBackground())
+        }
+        this
+    }
+  }
 }

@@ -5,7 +5,7 @@ package org.nlogo.window
 import org.nlogo.core.{ I18N, LogoList }
 import org.nlogo.core.{ Chooseable, Chooser => CoreChooser }
 import org.nlogo.window.Events.{AfterLoadEvent, PeriodicUpdateEvent, InterfaceGlobalEvent}
-import org.nlogo.api.{ CompilerServices, Dump, Editable, LogoListBuilder }
+import org.nlogo.api.{ CompilerServices, Dump, Editable }
 
 class ChooserWidget(compiler: CompilerServices) extends Chooser(compiler) with Editable with
         InterfaceGlobalWidget with PeriodicUpdateEvent.Handler {
@@ -95,7 +95,7 @@ class ChooserWidget(compiler: CompilerServices) extends Chooser(compiler) with E
 
   override def load(model: WidgetModel): AnyRef = {
     setSize(model.right - model.left, model.bottom - model.top)
-    name(model.display.getOrElse(""))
+    name(model.display.optionToPotentiallyEmptyString)
     choicesWrapper(chooseableListToLogoList(model.choices))
     index(model.currentChoice)
     this
@@ -103,11 +103,12 @@ class ChooserWidget(compiler: CompilerServices) extends Chooser(compiler) with E
 
   override def model: WidgetModel = {
     val b = getBoundsTuple
-    val savedName = if (name().trim != null && name().trim != "") Some(name()) else None
-    CoreChooser(display = savedName,
+    val savedName = name().potentiallyEmptyStringToOption
+    CoreChooser(
+      display       = savedName,
       left = b._1, top = b._2, right = b._3, bottom = b._4,
-      variable = savedName,
-      choices  = constraint.acceptedValues.map(Chooseable.apply).toList,
+      variable      = savedName,
+      choices       = constraint.acceptedValues.map(Chooseable.apply).toList,
       currentChoice = index)
   }
 }

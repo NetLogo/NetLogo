@@ -2,18 +2,16 @@
 
 package org.nlogo.hubnet.server
 
-import org.nlogo.hubnet.connection.{HubNetException, ConnectionInterface}
-import org.nlogo.core.AgentKind
+import org.nlogo.core.{ AgentKind, Widget => CoreWidget }
 import org.nlogo.core.model.WidgetReader
-import org.nlogo.core.{ Widget => CoreWidget }
-import org.nlogo.api.{ HubNetInterface, ModelLoader, ModelSection, Version }, HubNetInterface.ClientInterface
+import org.nlogo.api.{ HubNetInterface, ModelLoader, Version }, HubNetInterface.ClientInterface
 import org.nlogo.hubnet.mirroring
-import org.nlogo.hubnet.mirroring.{HubNetLinkStamp, HubNetDrawingMessage, HubNetTurtleStamp, HubNetLine}
+import org.nlogo.hubnet.mirroring.{ HubNetLinkStamp, HubNetDrawingMessage, HubNetTurtleStamp, HubNetLine }
+import org.nlogo.hubnet.connection.{ HubNetException, ConnectionInterface }
 import org.nlogo.hubnet.connection.MessageEnvelope._
 import org.nlogo.hubnet.connection.MessageEnvelope.MessageEnvelope
 import org.nlogo.hubnet.protocol.{ CalculatorInterface, ComputerInterface }
 import org.nlogo.workspace.{ AbstractWorkspaceScala, OpenModel }
-import org.nlogo.fileformat.NLogoFormat
 import org.nlogo.agent.{Link, Turtle}
 import org.nlogo.util.Utils, Utils.reader2String
 

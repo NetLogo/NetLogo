@@ -12,10 +12,4 @@ object ModelReader {
 
   val emptyModelPath =
     "/system/empty." + modelSuffix
-
-  type ModelMap = java.util.Map[ModelSection, Array[String]]
-
-  val SEPARATOR = "@#$#@#$#@"
-
-  val sections = ModelSection.allSections
 }

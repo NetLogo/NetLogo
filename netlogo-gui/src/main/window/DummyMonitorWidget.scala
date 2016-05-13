@@ -15,6 +15,8 @@ object DummyMonitorWidget {
   private val FontPadding = 12;
   private val MinWidth = 50;
   private val MaxHeight = 49;
+  private val DefaultDecimalPlaces = 3
+  private val DefaultFontSize = 11
 }
 
 class DummyMonitorWidget
@@ -27,10 +29,10 @@ class DummyMonitorWidget
   import DummyMonitorWidget._
 
   private var _name: String = ""
-  private var _decimalPlaces: Int = 3;
+  private var _decimalPlaces: Int = DefaultDecimalPlaces;
 
   def innerSource = ""
-  def fontSize = 11
+  def fontSize = DefaultFontSize
 
   setOpaque(true)
   setBackground(InterfaceColors.MONITOR_BACKGROUND)
@@ -38,6 +40,7 @@ class DummyMonitorWidget
   org.nlogo.awt.Fonts.adjustDefaultFont(this)
 
   def name: String = _name
+
   def name(name: String): Unit = {
     _name = name
     displayName = name
@@ -88,15 +91,8 @@ class DummyMonitorWidget
   }
 
   override def load(monitor: WidgetModel): AnyRef = {
-    val displayName = monitor.display.getOrElse("")
-
-    if (displayName.equals("NIL"))
-      name("")
-    else
-      name(displayName)
-
+    name(monitor.display.optionToPotentiallyEmptyString)
     decimalPlaces(monitor.precision)
-
     setSize(monitor.right - monitor.left, monitor.bottom - monitor.top)
     this
   }

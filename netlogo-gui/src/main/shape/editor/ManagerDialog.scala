@@ -2,19 +2,21 @@
 
 package org.nlogo.shape.editor
 
-import org.nlogo.api.ModelLoader
-import org.nlogo.core.{ AgentKind, I18N, Model, ShapeList, ShapeListTracker }, ShapeList.shapesToMap
-import org.nlogo.core.{ Shape => CoreShape }
-import org.nlogo.swing.Implicits._
-import javax.swing.{JComponent, JScrollPane, SwingConstants,
-  Box, BoxLayout, JPanel, JLabel, JDialog, JButton, JOptionPane}
 import java.awt.{Font, Component}
+import java.awt.event.MouseEvent
+import javax.swing.{ JScrollPane, SwingConstants, Box, BoxLayout,
+  JPanel, JLabel, JDialog, JButton, JOptionPane}
 import javax.swing.event.{ListSelectionEvent, MouseInputAdapter, ListSelectionListener}
+
 import java.nio.file.Paths
+
+import org.nlogo.api.ModelLoader
+import org.nlogo.core.{ AgentKind, I18N, Model, Shape => CoreShape, ShapeList, ShapeListTracker },
+  ShapeList.{ shapesToMap, isDefaultShapeName }
+import org.nlogo.swing.Implicits._
+
 import scala.util.{ Failure, Success }
-
 import scala.reflect.ClassTag
-
 
 abstract class ManagerDialog[A <: CoreShape](parentFrame: java.awt.Frame,
   modelLoader: ModelLoader,
@@ -26,8 +28,20 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: java.awt.Frame,
 
   val shapesList = new DrawableList(shapeListTracker, 10, 34, this)
 
-  // this is horrible
-  protected var importDialog: ImportDialog = null
+  protected var importDialog = Option.empty[ImportDialog]
+
+  // abstract defs
+  def newShape()
+  def editShape()
+  def duplicateShape()
+
+  def displayableShapeFromCoreShape(shape: CoreShape): Option[A]
+
+  def modelShapes(m: Model): Seq[CoreShape]
+
+  def shapeKind: AgentKind
+
+  def importButtons: Seq[Component] = Seq(modelImportButton)
 
   // Create the buttons
   lazy val modelImportButton = new JButton(I18N.gui("importFromModel")) {addActionListener(() => importFromModel())}
@@ -40,7 +54,7 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: java.awt.Frame,
       setEnabled(true)
       val shape = ManagerDialog.this.shapesList.getOneSelected
       // Don't delete the default turtle
-      if (shape.map(_.name).exists(ShapeList.isDefaultShapeName)) {
+      if (shape.map(_.name).exists(isDefaultShapeName)) {
         setEnabled(false)
       }
     })
@@ -54,12 +68,10 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: java.awt.Frame,
   }
 
   locally {
-    ///
     shapesList.addMouseListener(new MouseInputAdapter() {
       // Listen for double-clicks, and edit the selected shape
-      override def mouseClicked(e: java.awt.event.MouseEvent) {if (e.getClickCount() > 1) editShape()}
+      override def mouseClicked(e: MouseEvent) {if (e.getClickCount() > 1) editShape()}
     })
-    shapesList.setCellRenderer(new ShapeCellRenderer())
 
     org.nlogo.swing.Utils.addEscKeyAction(this, () => dispose())
 
@@ -110,19 +122,6 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: java.awt.Frame,
     pack()
   }
 
-  // abstract defs
-  def newShape()
-  def editShape()
-  def duplicateShape()
-
-  def displayableShapeFromCoreShape(shape: CoreShape): Option[A]
-
-  def modelShapes(m: Model): Seq[CoreShape]
-
-  def shapeKind: AgentKind
-
-  def importButtons: Seq[Component] = Seq(modelImportButton)
-
   // Initialize then display the manager
   def init(title: String) {
     shapesList.update()
@@ -151,9 +150,9 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: java.awt.Frame,
               JOptionPane.WARNING_MESSAGE)
           case Success(drawableList) =>
             if (drawableList.shapeList.isEmpty)
-              importDialog.sendImportWarning(I18N.gui("import.error"))
+              importDialog.foreach(_.sendImportWarning(I18N.gui("import.error")))
             else
-              importDialog = new ImportDialog(parentFrame, this, drawableList)
+              importDialog = Some(new ImportDialog(parentFrame, this, drawableList))
         }
     } catch {
       case e: org.nlogo.awt.UserCancelException => org.nlogo.api.Exceptions.ignore(e)

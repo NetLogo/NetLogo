@@ -2,16 +2,18 @@
 
 package org.nlogo.lite
 
-import java.util.{ ArrayList, List => JList }
+import java.util.{ ArrayList, List => JList, StringTokenizer }
 import java.nio.file.Paths
 
-import org.nlogo.window.{ Event, Widget, ButtonWidget, PlotWidget }
-import java.util.StringTokenizer
+import org.apache.log4j.xml.DOMConfigurator
+
 import org.nlogo.api.Version
+import org.nlogo.awt.EventQueue
 import org.nlogo.core.{ CompilerException, Widget => CoreWidget }
 import org.nlogo.log.Logger
-import org.apache.log4j.xml.DOMConfigurator
-import collection.JavaConverters._
+import org.nlogo.window.{ Event, Widget, ButtonWidget, PlotWidget }
+
+import scala.collection.JavaConverters._
 
 /**
  * This component is a wrapper around the contents of the
@@ -51,7 +53,7 @@ with Event.LinkChild {
    * @see #setProcedures
    */
   def compile() {
-    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
+    EventQueue.mustBeEventDispatchThread()
     (new org.nlogo.window.Events.CompileAllEvent).raise(this)
   }
 
@@ -62,7 +64,7 @@ with Event.LinkChild {
    * @param text the widget specification
    */
   def makeWidget(widget: CoreWidget) {
-    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
+    EventQueue.mustBeEventDispatchThread()
     iP.loadWidget(widget)
   }
 
@@ -77,7 +79,7 @@ with Event.LinkChild {
    * @see #hideWidget
    */
   def hideWidget(name: String) {
-    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
+    EventQueue.mustBeEventDispatchThread()
     iP.hideWidget(name)
   }
 
@@ -92,7 +94,7 @@ with Event.LinkChild {
    * @see #hideWidget
    */
   def showWidget(name: String) {
-    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
+    EventQueue.mustBeEventDispatchThread()
     iP.showWidget(name)
   }
 
@@ -104,7 +106,7 @@ with Event.LinkChild {
   @throws(classOf[java.io.IOException])
   @throws(classOf[org.nlogo.window.InvalidVersionException])
   def open(path: String) {
-    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
+    EventQueue.mustBeEventDispatchThread()
     openFromURI(Paths.get(path).toUri)
   }
 
@@ -146,13 +148,13 @@ with Event.LinkChild {
    * up.  (For "forever" buttons, it returns immediately.)
    */
   def pressButton(name: String) {
-    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
+    EventQueue.mustBeEventDispatchThread()
     val button = findWidget(name, classOf[ButtonWidget]).asInstanceOf[ButtonWidget]
     button.keyTriggered()
   }
 
   def findWidget(name: String, tpe: Class[_]): Widget = {
-    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
+    EventQueue.mustBeEventDispatchThread()
     def matches(comp: java.awt.Component) =
       comp.getClass() == tpe && comp.asInstanceOf[Widget].displayName == name
     iP.getComponents.find(matches)
@@ -165,7 +167,7 @@ with Event.LinkChild {
    * user later, etc.
    */
   def getViewImage: java.awt.image.RenderedImage = {
-    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
+    EventQueue.mustBeEventDispatchThread()
     workspace.exportView()
   }
 

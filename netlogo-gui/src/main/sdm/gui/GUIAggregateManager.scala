@@ -2,16 +2,17 @@
 
 package org.nlogo.sdm.gui
 
-import org.nlogo.api.{ CompilerServices, ModelSection }
-import org.nlogo.core.{ AgentKind, Model => CoreModel, TokenType }
+import org.nlogo.api.CompilerServices
+import org.nlogo.core.{ AgentKind, Model => CoreModel }
 import org.nlogo.editor.Colorizer
 import org.nlogo.window.{ EditDialogFactoryInterface, MenuBarFactory }
 
-class GUIAggregateManager(linkParent: java.awt.Component,
-                          menuBarFactory: MenuBarFactory,
-                          compiler: CompilerServices,
-                          colorizer: Colorizer,
-                          dialogFactory: EditDialogFactoryInterface)
+class GUIAggregateManager(
+  linkParent: java.awt.Component,
+  menuBarFactory: MenuBarFactory,
+  compiler: CompilerServices,
+  colorizer: Colorizer,
+  dialogFactory: EditDialogFactoryInterface)
 extends org.nlogo.api.AggregateManagerInterface
 with org.nlogo.window.Event.LinkChild
 with org.nlogo.window.Events.CompiledEvent.Handler

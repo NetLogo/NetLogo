@@ -15,10 +15,6 @@ case class LabProtocol(name: String,
 {
   def countRuns = repetitions * valueSets.map(_.toList.size).product
 
-  // careful, gui.ManagerDialog shows this to the user
-  override def toString =
-    s"$name ($countRuns run${(if(countRuns != 1) "s" else "")})"
-
   // Generate all the possible combinations of values from the ValueSets, in order.  (I'm using
   // Iterator here so that each combination we generate can be garbage collected when we're done
   // with it, instead of them all being held in memory until the end of the experiment.

@@ -2,16 +2,16 @@
 
 package org.nlogo.window;
 
-import org.nlogo.core.AgentKind;
 import org.nlogo.core.AgentKindJ;
 import org.nlogo.agent.AgentSet;
-import org.nlogo.agent.Observer;
 import org.nlogo.api.AgentException;
 import org.nlogo.api.AgentFollowingPerspective;
 import org.nlogo.api.Perspective;
 import org.nlogo.api.PerspectiveJ;
 import org.nlogo.api.RendererInterface;
+import org.nlogo.awt.ImageSelection;
 
+import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -449,50 +449,43 @@ public strictfp class View
     // the only ones that do are watch, follow and reset-perspective
     // this check (and others below) prevent items from being added
     // when we are running in Applet. JC - 6/8/10
-    javax.swing.JMenuItem copyItem =
-      new javax.swing.JMenuItem("Copy View");
-    copyItem.addActionListener
-      (new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent e) {
-          java.awt.Toolkit.getDefaultToolkit().getSystemClipboard().setContents
-        (new org.nlogo.awt.ImageSelection
-         (exportView()),
-         null);
-        }
-      });
+    JMenuItem copyItem = new JMenuItem("Copy View");
+    copyItem.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        java.awt.Toolkit.getDefaultToolkit().getSystemClipboard().setContents(
+          new ImageSelection(exportView()), null);
+      }
+    });
     menu.add(copyItem);
-    javax.swing.JMenuItem exportItem =
-      new javax.swing.JMenuItem("Export View...");
-    exportItem.addActionListener
-      (new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent e) {
-          workspace.doExportView(View.this);
-        }
-      });
+    JMenuItem exportItem = new JMenuItem("Export View...");
+    exportItem.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        workspace.doExportView(View.this);
+      }
+    });
     menu.add(exportItem);
 
     menu.add(new JPopupMenu.Separator());
-    javax.swing.JMenuItem inspectGlobalsItem = new javax.swing.JMenuItem("inspect globals");
+    JMenuItem inspectGlobalsItem = new JMenuItem("inspect globals");
     inspectGlobalsItem.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent actionEvent) {
-          workspace.inspectAgent(AgentKindJ.Observer());
+        workspace.inspectAgent(AgentKindJ.Observer());
       }
     });
     menu.add(inspectGlobalsItem);
 
     if (!workspace.world().observer().atHome2D()) {
-      menu.add(new javax.swing.JPopupMenu.Separator());
-      javax.swing.JMenuItem resetItem =
-          new javax.swing.JMenuItem(
-              "<html>"
-                  + org.nlogo.awt.Colors.colorize("reset-perspective", SyntaxColors.COMMAND_COLOR));
-      resetItem.addActionListener
-          (new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent e) {
-              workspace.world().observer().resetPerspective();
-              workspace.viewManager.incrementalUpdateFromEventThread();
-            }
-          });
+      menu.add(new JPopupMenu.Separator());
+      JMenuItem resetItem =
+        new JMenuItem(
+            "<html>"
+            + org.nlogo.awt.Colors.colorize("reset-perspective", SyntaxColors.COMMAND_COLOR));
+      resetItem.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+          workspace.world().observer().resetPerspective();
+          workspace.viewManager.incrementalUpdateFromEventThread();
+        }
+      });
       menu.add(resetItem);
     }
     p = new java.awt.Point(p);
@@ -505,7 +498,7 @@ public strictfp class View
 
       try {
         patch = workspace.world().getPatchAt(xcor, ycor);
-        menu.add(new javax.swing.JPopupMenu.Separator());
+        menu.add(new JPopupMenu.Separator());
         menu.add(new AgentMenuItem(patch, AgentMenuType.INSPECT, "inspect", false));
       } catch (AgentException e) {
         org.nlogo.api.Exceptions.ignore(e);
@@ -574,7 +567,7 @@ public strictfp class View
             if ((xMouse >= xCor - offset) && (xMouse <= xCor + offset) &&
                 (yMouse >= yCor - offset) && (yMouse <= yCor + offset)) {
               if (!turtlesAdded) {
-                menu.add(new javax.swing.JPopupMenu.Separator());
+                menu.add(new JPopupMenu.Separator());
                 turtlesAdded = true;
               }
 

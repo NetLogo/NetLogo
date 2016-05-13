@@ -433,16 +433,13 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
 
   // saving and loading
   override def model: WidgetModel = {
-    val b = getBoundsTuple
-    val savedName = if (name != null && name.trim != "") Some(name) else None
-    val savedSource = if (innerSource != null && innerSource.trim != "") Some(innerSource) else None
-    val savedActionKey =
-      if (actionKey == 0 || actionKey == ' ') None else Some(actionKey)
+    val b              = getBoundsTuple
+    val savedActionKey = if (actionKey == 0 || actionKey == ' ') None else Some(actionKey)
     CoreButton(
-      display = savedName,
+      display = name.potentiallyEmptyStringToOption,
       left = b._1, top = b._2, right = b._3, bottom = b._4,
-      source = savedSource, forever = forever,
-      buttonKind = buttonType.agentKind,
+      source    = innerSource.potentiallyEmptyStringToOption,
+      forever   = forever,        buttonKind             = buttonType.agentKind,
       actionKey = savedActionKey, disableUntilTicksStart = goTime)
   }
 
@@ -453,7 +450,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
     button.actionKey.foreach(k => actionKey = k)
 
     goTime = button.disableUntilTicksStart
-    name = button.display.getOrElse("")
+    name = button.display.optionToPotentiallyEmptyString
 
     button.source.foreach(wrapSource)
 

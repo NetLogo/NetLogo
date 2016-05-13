@@ -2,14 +2,13 @@
 
 package org.nlogo.hubnet.server.gui
 
-import org.nlogo.api.ModelType
-import org.nlogo.core.I18N
-import org.nlogo.core.{ I18N, Widget => CoreWidget }
-import org.nlogo.core.model.WidgetReader
-import javax.swing.{JMenuBar, JScrollPane, JFrame, ScrollPaneConstants}
 import java.awt.{Dimension, BorderLayout, Component}
 import java.io.{IOException, StringReader, BufferedReader}
-import org.nlogo.window.{Widget, WidgetInfo, MenuBarFactory, InterfaceFactory, GUIWorkspace, AbstractWidgetPanel}
+import javax.swing.{JMenuBar, JScrollPane, JFrame, ScrollPaneConstants}
+
+import org.nlogo.api.ModelType
+import org.nlogo.core.{ I18N, Widget => CoreWidget }
+import org.nlogo.window.{ WidgetInfo, MenuBarFactory, InterfaceFactory, GUIWorkspace, AbstractWidgetPanel }
 
 class HubNetClientEditor(workspace: GUIWorkspace,
                          linkParent: Component,

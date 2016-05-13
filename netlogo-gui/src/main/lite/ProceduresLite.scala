@@ -3,7 +3,6 @@
 package org.nlogo.lite
 
 import org.nlogo.core.AgentKind
-import org.nlogo.api.ModelSection
 import org.nlogo.nvm.Workspace
 import org.nlogo.window.{ Event, Events, ProceduresInterface }
 

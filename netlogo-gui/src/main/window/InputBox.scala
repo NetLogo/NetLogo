@@ -63,12 +63,12 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
   // however, for numbers there will be a Double rather than
   // a String in the value field.  ev 8/13/06
   protected var text = ""
-  protected var value: AnyRef = _
-  def valueObject = value
+  protected var value: Option[AnyRef] = Option.empty[AnyRef]
+  def valueObject = value.orNull
   def valueObject(value: AnyRef) {valueObject(value, false)}
   def valueObject(value: Any, raiseEvent: Boolean) {
     text = Dump.logoObject(toAnyRef(value))
-    this.value = toAnyRef(value)
+    this.value = Option(toAnyRef(value))
     if (text != textArea.getText) textArea.setText(text)
   }
 
@@ -81,6 +81,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
   protected def inputText(input: Object) {
     if (input != null) valueObject(input, true)
   }
+
   // multiline property
   protected var multiline = false
   def multiline(multiline: Boolean) {
@@ -217,8 +218,8 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
     def actionPerformed(e: ActionEvent) {
       val colorDialog = new ColorDialog(org.nlogo.awt.Hierarchy.getFrame(InputBox.this), true)
       valueObject(colorDialog.showInputBoxDialog(
-        if (value.isInstanceOf[Double])
-          org.nlogo.api.Color.modulateDouble(value.asInstanceOf[Double])
+        if (value.exists(_.isInstanceOf[Double]))
+          org.nlogo.api.Color.modulateDouble(value.get.asInstanceOf[Double])
         else 0d
        ).asInstanceOf[AnyRef], true)
     }
@@ -310,8 +311,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
   }
 
   override def load(model: WidgetModel): AnyRef = {
-    val displayName = model.varName
-    if(displayName ==  "NIL") name("") else name(displayName)
+    name(model.varName)
     multiline(model.multiline)
 
     def setType(i: BoxedValue) {
@@ -336,11 +336,10 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
 
   override def model: WidgetModel = {
     val b = getBoundsTuple
-    val savedName = if (name != null && name.trim != "") Some(name) else None
     val boxedValue = inputType.boxValue(text)
     CoreInputBox(
-      left = b._1, top = b._2, right = b._3, bottom = b._4,
-      variable = savedName,
+      left       = b._1, top = b._2, right = b._3, bottom = b._4,
+      variable   = name.potentiallyEmptyStringToOption,
       boxedValue = boxedValue)
   }
 
@@ -577,8 +576,8 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
       panel.setOpaque(true)
 
       val (colorval, c) =
-        if (value.isInstanceOf[Double]) {
-          val cv = modulateDouble(value.asInstanceOf[Double]): java.lang.Double
+        if (value.exists(_.isInstanceOf[Double])) {
+          val cv = modulateDouble(value.get.asInstanceOf[Double]): java.lang.Double
           (cv, getColor(cv))
         }
         else (0d: java.lang.Double, Color.BLACK)

@@ -5,7 +5,7 @@ package org.nlogo.window
 import org.nlogo.core.{ Widget => CoreWidget }
 import java.awt.{ Component, Rectangle }
 
-// implemented by InterfacePanel and InterfacePanelLite - ST 10/14/03
+// implemented by WidgetPanel and InterfacePanelLite - ST 10/14/03
 
 trait WidgetContainer {
   def getBoundsString(widget: Widget): String = {
