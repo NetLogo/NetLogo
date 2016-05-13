@@ -94,11 +94,13 @@ object TestLanguage {
 // We parse the tests first, then run them.
 // Parsing is separate so we can write tests for the parser itself.
 abstract class TestLanguage(files: Iterable[File]) extends FunSuite with SlowTest {
+  def tag: Tag = SlowTest.Tag
+
   import TestLanguage._
   def additionalTags: Seq[Tag] = Seq()
 
   for(t:LanguageTest <- TestParser.parseFiles(files); if(t.shouldRun))
-    test(t.fullName, (additionalTags ++ Seq(new Tag(t.suiteName){}, new Tag(t.fullName){}, SlowTest.Tag)): _*) {
+    test(t.fullName, (additionalTags ++ Seq(new Tag(t.suiteName){}, new Tag(t.fullName){}, tag)): _*) {
       t.run
     }
 }
@@ -121,7 +123,9 @@ class TestCommands extends TestLanguage(TxtsInDir("test/commands")) {
 class TestReporters extends TestLanguage(TxtsInDir("test/reporters")) {
   override def additionalTags = Seq(LanguageTestTag)
 }
-class TestExtensions extends TestLanguage(ExtensionTestsDotTxt)
+class TestExtensions extends TestLanguage(ExtensionTestsDotTxt) {
+  override def tag = SlowTest.ExtensionTag
+}
 class TestModels extends TestLanguage(
   TxtsInDir("models/test")
     .filterNot(_.getName.startsWith("checksums")))
