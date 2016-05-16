@@ -36,7 +36,7 @@ object Dump {
   def benchPath(name:String) = "models/test/benchmarks/" + name + " Benchmark.nlogo"
   def dumpBenchmarks() {
     for(name <- ChecksumsAndPreviews.allBenchmarks)
-      writeFile("test/benchdumps/" + name + ".txt",
+      writeFile("netlogo-headless/test/benchdumps/" + name + ".txt",
                 dump(benchPath(name)))
   }
   def dumpAll() {
