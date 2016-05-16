@@ -59,6 +59,7 @@ object ChecksumsAndPreviews {
         else {
           println("making preview for: " + path)
           workspace.command(workspace.previewCommands)
+          println(previewPath)
           workspace.exportView(previewPath, "PNG")
         }
       }
