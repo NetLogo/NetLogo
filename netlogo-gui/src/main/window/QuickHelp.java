@@ -35,7 +35,7 @@ final strictfp class QuickHelp<TokenType> {
   private static Map<String, String> quickHelpWords3d;
 
   private static Map<String, String> loadHelp(String path) {
-    String[] lines = org.nlogo.util.Utils$.MODULE$.getResourceAsStringArray(path);
+    String[] lines = org.nlogo.api.FileIO$.MODULE$.getResourceAsStringArray(path);
     HashMap<String, String> words =
         new HashMap<String, String>();
     for (int i = 0; i < lines.length; i++) {

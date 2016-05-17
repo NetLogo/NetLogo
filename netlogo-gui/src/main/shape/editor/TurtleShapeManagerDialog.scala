@@ -5,7 +5,7 @@ package org.nlogo.shape.editor
 import java.awt.{ Component, Frame }
 import javax.swing.{ Box, JButton }
 
-import org.nlogo.api.{ ModelLoader, World }
+import org.nlogo.api.{ FileIO, ModelLoader, World }
 import org.nlogo.swing.Implicits._
 import org.nlogo.shape.{ ShapeConverter, VectorShape },
   ShapeConverter.baseVectorShapeToVectorShape
@@ -13,7 +13,6 @@ import org.nlogo.core.{ AgentKind, I18N, Model, Shape, ShapeList, ShapeParser },
   Shape.{ VectorShape => CoreVectorShape },
   ShapeList.{ isDefaultShapeName, sortShapes },
   ShapeParser.parseVectorShapes
-import org.nlogo.util.Utils
 
 object TurtleShapeManagerDialog {
   val DefaultShapePath = "/system/defaultShapes.txt"
@@ -70,8 +69,8 @@ class TurtleShapeManagerDialog(parentFrame: Frame,
 
   // Import shapes from shapes library
   private def importFromLibrary(): Unit = {
-    val defaultShapes = Utils.getResourceAsStringArray(DefaultShapePath)
-    val libraryShapes = Utils.getResourceAsStringArray(LibraryShapePath)
+    val defaultShapes = FileIO.getResourceAsStringArray(DefaultShapePath)
+    val libraryShapes = FileIO.getResourceAsStringArray(LibraryShapePath)
     val mergedShapes = defaultShapes.toList ::: ("" :: libraryShapes.toList)
     drawableListFromImportedShapes(mergedShapes.toArray) match {
       case Some(drawableList) =>

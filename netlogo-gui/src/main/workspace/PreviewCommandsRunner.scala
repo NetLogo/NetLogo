@@ -1,11 +1,9 @@
 package org.nlogo.workspace
 
 import org.nlogo.core.{ AgentKind, CompilerException, Model, UpdateMode }
-import org.nlogo.api.{ JobOwner, PreviewCommands, SimpleJobOwner }
+import org.nlogo.api.{ FileIO, JobOwner, PreviewCommands, SimpleJobOwner }
 import org.nlogo.nvm.{ Procedure, Workspace }
 import java.awt.image.BufferedImage
-
-import org.nlogo.util.Utils.getResourceAsString
 
 import scala.util.Try
 
@@ -67,7 +65,7 @@ object PreviewCommandsRunner {
         // way widgets behave when there is an error in the code tab.
         // And in the unlikely case where the preview commands don't depend on
         // the rest of the model, they'll work. NP 2016-01-12
-        newWorkspace(_.openString(getResourceAsString("/system/empty.nlogo")))
+        newWorkspace(_.openString(FileIO.getResourceAsString("/system/empty.nlogo")))
     }
     previewCommands.foreach(ws.previewCommands = _)
     ws

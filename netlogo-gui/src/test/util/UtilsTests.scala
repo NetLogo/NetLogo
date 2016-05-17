@@ -13,11 +13,6 @@ class UtilsTests extends FunSuite {
       " at org.nlogo.util.UtilsTests$$anonfun$1.apply$mcV$sp(UtilsTests.scala:"
     assert(Utils.getStackTrace(new Throwable).filter(_!='\r').take(expected.size) === expected)
   }
-  test("getResourceLines") {
-    val expected = "\nNetLogo author: Uri Wilensky"
-    assert(Utils.getResourceAsString("/system/about.txt").take(expected.size) ===
-      expected)
-  }
 }
 
 class UtilsTests2 extends PropSpec with PropertyChecks {
@@ -34,11 +29,4 @@ class UtilsTests2 extends PropSpec with PropertyChecks {
     forAll((ns: String) =>
       assertResult(ns)(
         Utils.unescapeSpacesInURL(Utils.escapeSpacesInURL(ns))))}
-
-  property("reader2String is inverse of StringReader") {
-    forAll(arbitrary[String], Gen.chooseNum(1, 4096))(
-      (ns, bufferSize) =>
-        assertResult(ns)(
-          Utils.reader2String(new java.io.StringReader(ns), bufferSize)))}
-
 }

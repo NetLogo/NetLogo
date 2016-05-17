@@ -3,7 +3,6 @@
 package org.nlogo.app
 
 import org.nlogo.api.FileIO
-import org.nlogo.util.Utils
 import scala.io.Source
 
 trait NLWTemplateLoader {
@@ -13,7 +12,7 @@ trait NLWTemplateLoader {
 class JarTemplateLoader(resourceName: String) extends NLWTemplateLoader {
   override def loadTemplate(): String = {
     if (getClass.getResourceAsStream(resourceName) != null)
-      Utils.getResourceAsString(resourceName)
+      FileIO.getResourceAsString(resourceName)
     else
       throw new Exception("Could not find " + resourceName)
   }
