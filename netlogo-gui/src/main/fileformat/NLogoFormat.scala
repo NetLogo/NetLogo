@@ -15,23 +15,27 @@ class NLogoFormat(autoConvert: String => String => String) extends ModelFormat[A
   def name: String = "nlogo"
   val SEPARATOR = "@#\\$#@#\\$#@"
 
-  def sections(location: URI) = {
-    Try(Source.fromURI(location)).flatMap { source =>
-        try {
-          val sectionLines = source.mkString
-            .split(SEPARATOR)
-            .map(_.lines.toSeq)
-            .map(s => if (s.headOption.contains("")) s.tail else s)
-            .map(_.toArray)
-          val sectionNames =
-            ModelSection.allSections.map(s => "org.nlogo.modelsection." +
-              s.getClass.getSimpleName.replaceAll("\\$", "").toLowerCase)
-            Success((sectionNames zip sectionLines).toMap)
-        } catch {
-          case ex: Exception => Failure(ex)
-        } finally {
-          source.close()
-        }
+  def sections(location: URI) =
+    Try(Source.fromURI(location)).flatMap { s =>
+      val sections = sectionsFromSource(s.mkString)
+      s.close()
+      sections
+    }
+
+  def sectionsFromSource(source: String): Try[Map[String, Array[String]]] = {
+    try {
+      val sectionLines = source
+        .split(SEPARATOR)
+        .map(_.lines.toSeq)
+        .map(s => if (s.headOption.contains("")) s.tail else s)
+        .map(_.toArray)
+        val sectionNames =
+          ModelSection.allSections.map(s => "org.nlogo.modelsection." +
+            s.getClass.getSimpleName.replaceAll("\\$", "").toLowerCase)
+        Success((sectionNames zip sectionLines).toMap)
+    }
+    catch {
+      case ex: Exception => Failure(ex)
     }
   }
 

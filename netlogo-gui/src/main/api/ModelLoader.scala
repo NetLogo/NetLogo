@@ -21,6 +21,9 @@ class FormatterPair[A, B <: ModelFormat[A, B]](
 
     def load(uri: URI): Try[Model] =
       modelFormat.load(uri, serializers)
+
+    def load(source: String): Try[Model] =
+      modelFormat.load(source, serializers)
   }
 
 trait ModelLoader {
@@ -33,6 +36,13 @@ trait ModelLoader {
         .getOrElse(
           throw new Exception("Unable to open NetLogo model " + uri.getPath))
     format.load(uri)
+  }
+
+  def readModel(source: String, extension: String): Try[Model] = {
+    val format =
+      formats.find(_.name == extension)
+        .getOrElse(throw new Exception("Unable to open model with extension: " + extension))
+    format.load(source)
   }
 }
 

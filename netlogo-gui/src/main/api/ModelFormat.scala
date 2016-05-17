@@ -18,6 +18,7 @@ trait ModelFormat[Section, Format <: ModelFormat[Section, _]] {
   def name: String
 
   def sections(location: java.net.URI): Try[Map[String, Section]]
+  def sectionsFromSource(source: String): Try[Map[String, Section]]
 
   def baseModel: Model = Model()
 
@@ -31,18 +32,29 @@ trait ModelFormat[Section, Format <: ModelFormat[Section, _]] {
   def defaultComponents =
     Seq(version, codeComponent, infoComponent, interfaceComponent, shapesComponent, linkShapesComponent)
 
+  def load(source: String, optionalComponents: Seq[ComponentSerialization[Section, Format]]): Try[Model] = {
+    for {
+      loadedSections <- sectionsFromSource(source)
+    } yield
+      (defaultComponents ++ optionalComponents).foldLeft(baseModel)(addOptionalSection(loadedSections))
+  }
+
   def load(location: java.net.URI, optionalComponents: Seq[ComponentSerialization[Section, Format]]): Try[Model] = {
     for {
       loadedSections <- sections(location)
-    } yield (defaultComponents ++ optionalComponents).foldLeft(baseModel) {
-      case (model, component) =>
-        val addComponent = loadedSections
-          .get(component.componentName)
-          .map(component.deserialize _)
-          .getOrElse(component.addDefault)
-        addComponent(model)
-    }
+    } yield
+      (defaultComponents ++ optionalComponents).foldLeft(baseModel)(addOptionalSection(loadedSections))
   }
+
+  private def addOptionalSection(sections: Map[String, Section])(
+    model: Model, component: ComponentSerialization[Section, Format]): Model = {
+      val addComponent = sections
+        .get(component.componentName)
+        .map(component.deserialize _)
+        .getOrElse(component.addDefault)
+      addComponent(model)
+  }
+
 }
 
 case class ModelSettings(snapToGrid: Boolean)

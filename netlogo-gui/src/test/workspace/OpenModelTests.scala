@@ -168,6 +168,8 @@ class MockFormat(val model: Model, error: Option[Exception]) extends ModelFormat
   override def baseModel = model
   def sections(location: java.net.URI): Try[Map[String, String]] =
     error.map(Failure.apply).getOrElse(Success(Map[String, String]()))
+  def sectionsFromSource(source: String): Try[Map[String, Section]] =
+    Failure(new UnsupportedOperationException("MockFormat doesn't support this operation"))
   object DefaultSerialization extends ComponentSerialization[String, MockFormat] {
     def componentName: String = "org.nlogo.modelsection.code"
     def serialize(m: Model): String = ""
