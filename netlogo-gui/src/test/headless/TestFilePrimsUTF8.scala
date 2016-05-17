@@ -2,16 +2,19 @@
 
 package org.nlogo.headless
 
+import java.nio.file.Files
+
 // this test is modeled after info found in:
 // http://download.oracle.com/javase/tutorial/i18n/text/string.html
 class TestFilePrimsUTF8 extends AbstractTestModels {
 
-  val code = """
+  val testDir = Files.createTempDirectory("file-prim-files").toString
+
+  val code = s"""
 globals [f utf-string]
 
 to write-out
- __mkdir "/tmp"
- set f (word "test/file-prim-files/utf8-file-written-by-test.txt" )
+ set f (word "$testDir/utf8-file-written-by-test.txt" )
  if file-exists? f [ file-delete f ]
  file-open f
  file-write utf-string
@@ -21,7 +24,7 @@ to write-out
 end
 
 to-report read-string [a-file]
- set f (word "test/file-prim-files/" a-file)
+ set f a-file
  file-open f
  set utf-string file-read
  file-close
@@ -29,7 +32,7 @@ to-report read-string [a-file]
 end
 
 to-report read-line [a-file]
- set f (word "test/file-prim-files/" a-file)
+ set f a-file
  file-open f
  set utf-string file-read-line
  file-close
@@ -37,22 +40,23 @@ to-report read-line [a-file]
 end
 """
 
+
   testModel(testName="file-read", model=Model(code=code)){
-    val utfStringIn = reporter("read-string " + quoted("utf8-file.txt") ).get
+    val utfStringIn = reporter("read-string " + quoted("test/file-prim-files/utf8-file.txt") ).get
     assert(utfStringIn === new String("A" + "\u00ea" + "\u00f1" + "\u00fc" + "C"))
 
     observer >> "set utf-string " +  quoted(utfStringIn.toString)
 
     observer >> "write-out"
 
-    val utfStringReadInAfterWriting = reporter("read-string " + quoted("utf8-file-written-by-test.txt") ).get
+    val utfStringReadInAfterWriting = reporter("read-string " + quoted(s"$testDir/utf8-file-written-by-test.txt") ).get
 
     assert(utfStringIn === utfStringReadInAfterWriting)
   }
 
 
   testModel(testName="file-read-line", model=Model(code=code)){
-    val utfStringIn = reporter("read-line " + quoted("utf8-file.txt") ).get.toString
+    val utfStringIn = reporter("read-line " + quoted("test/file-prim-files/utf8-file.txt") ).get.toString
     assert(utfStringIn === new String(" \"A" + "\u00ea" + "\u00f1" + "\u00fc" + "C\""))
   }
 }
