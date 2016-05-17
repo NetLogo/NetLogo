@@ -54,11 +54,8 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     ws.procedures = results.proceduresMap
     ws.clearRunCache()
 
-    // read preview commands. (if the model doesn't specify preview commands, allow the default ones
-    // from our superclass to stand)
-    val previewCommandsSource = model.previewCommands.mkString("", "\n", "\n")
-    if (!previewCommandsSource.trim.isEmpty)
-      ws.previewCommands = PreviewCommands(previewCommandsSource)
+    // Read preview commands. If the model doesn't specify preview commands, the default ones will be used.
+    model.optionalSectionValue[PreviewCommands]("org.nlogo.modelsection.previewcommands").foreach(ws.previewCommands = _)
 
     // parse turtle and link shapes, updating the workspace.
     parseShapes(model.turtleShapes,

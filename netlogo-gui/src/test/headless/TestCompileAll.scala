@@ -56,7 +56,7 @@ class TestCompileAll extends FunSuite with SlowTest {
 
   def compilePreviewCommands(ws: Workspace): Unit =
     if (ws.previewCommands.isInstanceOf[PreviewCommands.Compilable]) {
-      Try(ws.compileCommands(ws.previewCommands.source)) match {
+      Try (ws.compileCommands(ws.previewCommands.source)) match {
         case Failure(e: CompilerException) =>
           fail("Error compiling preview commands: " + e.getMessage)
         case Failure(e) => throw e

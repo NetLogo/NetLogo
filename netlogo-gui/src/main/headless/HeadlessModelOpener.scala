@@ -57,8 +57,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     ws.codeBits.clear() //(WTH IS THIS? - JC 10/27/09)
 
     // Read preview commands. If the model doesn't specify preview commands, the default ones will be used.
-    val previewCommandsSource = model.previewCommands.mkString("\n")
-    ws.previewCommands = PreviewCommands(previewCommandsSource)
+    model.optionalSectionValue[PreviewCommands]("org.nlogo.modelsection.previewcommands").foreach(ws.previewCommands = _)
 
     // parse turtle and link shapes, updating the workspace.
     attachWorldShapes(model.turtleShapes, model.linkShapes)

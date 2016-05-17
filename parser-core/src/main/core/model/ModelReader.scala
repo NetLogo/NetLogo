@@ -40,8 +40,7 @@ object ModelReader {
       info            = info.mkString("\n"),
       version         = version.head,
       turtleShapes    = turtleShapes.toList,
-      linkShapes      = linkShapes.toList,
-      previewCommands = Some(previewCommands.mkString("\n")))
+      linkShapes      = linkShapes.toList)
 
   }
 
@@ -51,7 +50,7 @@ object ModelReader {
       model.info + s"\n$SEPARATOR\n" +
       ShapeParser.formatVectorShapes(model.turtleShapes) + s"\n$SEPARATOR\n" +
       model.version + s"\n$SEPARATOR\n" +
-      (if(model.previewCommands.nonEmpty) model.previewCommands.mkString("", "\n", "\n") else "") + s"$SEPARATOR\n" +
+      s"$SEPARATOR\n" +
       s"$SEPARATOR\n" +
       s"$SEPARATOR\n" +
       s"$SEPARATOR\n" +

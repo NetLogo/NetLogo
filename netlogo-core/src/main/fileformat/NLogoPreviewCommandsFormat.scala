@@ -14,8 +14,7 @@ class NLogoPreviewCommandsFormat extends ComponentSerialization[Array[String], N
   def componentName: String = "org.nlogo.modelsection.previewcommands"
 
   override def addDefault = { (m: Model) =>
-    m.copy(previewCommands = Some(PreviewCommands.Default.source))
-      .withOptionalSection[PreviewCommands](componentName, None, PreviewCommands.Default)
+    m.withOptionalSection[PreviewCommands](componentName, None, PreviewCommands.Default)
   }
 
   def serialize(m: Model): Array[String] = {
@@ -30,8 +29,7 @@ class NLogoPreviewCommandsFormat extends ComponentSerialization[Array[String], N
   def validationErrors(m: Model) = None
 
   override def deserialize(commands: Array[String]) = { (m: Model) =>
-    m.copy(previewCommands = if (commands.nonEmpty) Some(commands.mkString("\n")) else None)
-     .withOptionalSection[PreviewCommands](componentName, Some(PreviewCommands(commands.mkString("\n"))), PreviewCommands.Default)
+    m.withOptionalSection[PreviewCommands](componentName, Some(PreviewCommands(commands.mkString("\n"))), PreviewCommands.Default)
   }
 }
 
@@ -39,8 +37,7 @@ object NLogoThreeDPreviewCommandsFormat extends ComponentSerialization[Array[Str
   def componentName: String = "org.nlogo.modelsection.previewcommands"
 
   override def addDefault = { (m: Model) =>
-    m.copy(previewCommands = Some(PreviewCommands.Default.source))
-      .withOptionalSection[PreviewCommands](componentName, None, PreviewCommands.Manual)
+    m.withOptionalSection[PreviewCommands](componentName, None, PreviewCommands.Manual)
   }
 
   def serialize(m: Model): Array[String] = {
@@ -55,7 +52,6 @@ object NLogoThreeDPreviewCommandsFormat extends ComponentSerialization[Array[Str
   def validationErrors(m: Model) = None
 
   override def deserialize(commands: Array[String]) = { (m: Model) =>
-    m.copy(previewCommands = if (commands.nonEmpty) Some(commands.mkString("\n")) else None)
-     .withOptionalSection[PreviewCommands](componentName, Some(PreviewCommands(commands.mkString("\n"))), PreviewCommands.Manual)
+    m.withOptionalSection[PreviewCommands](componentName, Some(PreviewCommands(commands.mkString("\n"))), PreviewCommands.Manual)
   }
 }

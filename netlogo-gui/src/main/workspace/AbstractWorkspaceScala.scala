@@ -6,7 +6,7 @@ import org.nlogo.agent.{World, Agent, Observer, AbstractExporter, AgentSet, Arra
 import org.nlogo.api.{ PlotInterface, Dump, CommandLogoThunk, HubNetInterface, LogoException,
   ReporterLogoThunk, JobOwner, ModelType, OutputDestination, SimpleJobOwner, PreviewCommands,
   Workspace => APIWorkspace, WorldDimensions3D, Version }
-import org.nlogo.core.{ AgentKind, CompilerException, LiteralParser, View, WorldDimensions }
+import org.nlogo.core.{ AgentKind, CompilerException, LiteralParser, Model, View, WorldDimensions }
 import org.nlogo.nvm.{ Activation, CompilerInterface, FileManager, Instruction, EngineException, Context, Procedure, Tracer }
 import org.nlogo.plot.{ PlotExporter, PlotManager }
 
@@ -105,6 +105,13 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
         }
       }
     }
+  }
+
+  protected def loadFromModel(model: Model): Unit = {
+    model.optionalSectionValue[PreviewCommands]("org.nlogo.modelsection.previewcommands").foreach { pc =>
+      previewCommands = pc
+    }
+    getHubNetManager.foreach(_.load(model))
   }
 }
 

@@ -1308,12 +1308,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   /// preview commands & aggregate
 
   public void handle(org.nlogo.window.Events.LoadModelEvent e) {
-    // NOTE: This should use the model optional sections once we convert the class to scala
-    if (e.model.previewCommands().isEmpty()) {
-      previewCommands_$eq(PreviewCommands$.MODULE$.apply(""));
-    } else {
-      previewCommands_$eq(PreviewCommands$.MODULE$.apply(e.model.previewCommands().get()));
-    }
+    loadFromModel(e.model);
     ArrayList<org.nlogo.core.Shape> shapes = new ArrayList<org.nlogo.core.Shape>();
     scala.collection.Iterator<? extends org.nlogo.core.Shape.VectorShape> shapeIterator = e.model.turtleShapes().iterator();
     while (shapeIterator.hasNext()) {
@@ -1326,10 +1321,6 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       linkShapes.add(ShapeConverter.baseLinkShapeToLinkShape(linkShapeIterator.next()));
     }
     world().linkShapes().replaceShapes(linkShapes);
-    // NOTE: really ought to just pass in hubnet bits, but that's tricky...
-    if (getHubNetManager().isDefined()) {
-      getHubNetManager().get().load(e.model);
-    }
   }
 
   public void snapOn(boolean snapOn) {

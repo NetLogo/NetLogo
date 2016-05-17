@@ -13,7 +13,6 @@ case class Model(code: String = "",
   version: String = "NetLogo 6.0",
   turtleShapes: Seq[VectorShape] = Model.defaultShapes,
   linkShapes: Seq[LinkShape] = Model.defaultLinkShapes,
-  previewCommands: Option[String] = None,
   optionalSections: Seq[OptionalSection[_]] = Seq()) {
 
   def interfaceGlobals: Seq[String] = widgets.collect{case x:DeclaresGlobal => x}.map(_.varName)
