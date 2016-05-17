@@ -31,7 +31,7 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer {
         // colorize it correctly; so as a kludge we colorize it as a keyword if it's right at the
         // beginning of the line (position 0) - ST 7/11/06
         val color = getTokenColor(
-          if (tok.tpe == TokenType.Ident &&
+          if (tok.tpe == TokenType.Reporter &&
               tok.start == 0 &&
               tok.text.equalsIgnoreCase("BREED"))
             TokenType.Keyword
