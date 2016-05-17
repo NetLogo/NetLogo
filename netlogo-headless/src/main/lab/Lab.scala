@@ -11,25 +11,9 @@ import org.nlogo.nvm.{EngineException,LabInterface,Workspace}
 class Lab(loader: ProtocolLoader)
   extends LabInterface
 {
-  var protocols: List[LabProtocol] = Nil
-  def names = protocols.map(_.name)
-  def load(s: String) {
-    if(s.trim.isEmpty) Nil
-    else protocols = loader.loadAll(s)
-  }
-  def newWorker(protocolName: String) =
-    protocols.find(_.name == protocolName) match {
-      case None =>
-        throw new IllegalArgumentException(
-          "experiment '" + protocolName + "' not found")
-      case Some(protocol) =>
-        new Worker(protocol)
-    }
-  def newWorker(setupFile: java.io.File) =
-    new Worker(loader.loadOne(setupFile))
-  def newWorker(protocolName: String, setupFile: java.io.File) =
-    new Worker(loader.loadOne(setupFile, protocolName))
-  def run(settings: LabInterface.Settings, fn: ()=>Workspace) {
+  def newWorker(protocol: LabProtocol) =
+    new Worker(protocol)
+  def run(settings: LabInterface.Settings, protocol: LabProtocol, fn: ()=>Workspace) {
     import settings._
     // pool of workspaces, same size as thread pool
     val workspaces = (1 to threads).map(_ => fn.apply).toList
@@ -38,17 +22,11 @@ class Lab(loader: ProtocolLoader)
     try {
       queue.foreach(w => dims.foreach(w.setDimensions _))
       def modelDims = queue.head.world.getDimensions
-      val worker =
-        (setupFile, experiment) match {
-          case (Some(file), Some(name)) => newWorker(name, file)
-          case (Some(file), None) => newWorker(file)
-          case (None, Some(name)) => newWorker(name)
-          case (None, None) => throw new IllegalArgumentException
-        }
+      val worker = newWorker(protocol)
       tableWriter.foreach(
-        worker.addTableWriter(model, dims.getOrElse(modelDims), _))
+        worker.addTableWriter(modelPath, dims.getOrElse(modelDims), _))
       spreadsheetWriter.foreach(
-        worker.addSpreadsheetWriter(model, dims.getOrElse(modelDims), _))
+        worker.addSpreadsheetWriter(modelPath, dims.getOrElse(modelDims), _))
       worker.addListener(
         new LabInterface.ProgressListener {
           override def runCompleted(w: Workspace, runNumber: Int, step: Int) {

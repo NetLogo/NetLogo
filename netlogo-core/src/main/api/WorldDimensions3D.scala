@@ -4,7 +4,11 @@ package org.nlogo.api
 
 import org.nlogo.core.WorldDimensions
 
-/** for wrapping up dimensions to resize the world using WorldResizer */
+/** for wrapping up dimensions to resize the world using WorldResizer
+ *  This class is shared between NetLogo and NetLogo-Headless.
+ *  That *does not* mean that it is available for use in Headless.
+ *  Headless *does not* support 3D at this time (and may never support 3D).
+ */
 
 class WorldDimensions3D(minPxcor: Int, maxPxcor: Int,
                         minPycor: Int, maxPycor: Int,

@@ -175,6 +175,7 @@ lazy val headless = (project in file ("netlogo-headless")).
     mainClass in Compile         := Some("org.nlogo.headless.Main"),
     nogen                        := { System.setProperty("org.nlogo.noGenerator", "true") },
     libraryDependencies          += "org.ow2.asm" % "asm-all" % "5.0.4",
+    libraryDependencies          += "org.parboiled" %% "parboiled-scala" % "1.1.7",
     (fullClasspath in Runtime)   ++= (fullClasspath in Runtime in parserJVM).value,
     resourceDirectory in Compile := baseDirectory.value / "resources" / "main",
     resourceDirectory in Test    := baseDirectory.value / "resources" / "test",

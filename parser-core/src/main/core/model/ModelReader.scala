@@ -40,14 +40,8 @@ object ModelReader {
       info            = info.mkString("\n"),
       version         = version.head,
       turtleShapes    = turtleShapes.toList,
-      behaviorSpace   = behaviorSpace.toList,
       linkShapes      = linkShapes.toList,
-      previewCommands = Some(previewCommands.mkString("\n")),
-      otherSections   = Map(
-        "org.nlogo.sdm"                  -> systemDynamics.toList,
-        "org.nlogo.hubnet.client"        -> hubNetClient.toList,
-        "org.nlogo.model.settings"       -> modelSettings.toList,
-        "org.nlogo.deprecated.deltatick" -> deltaTick.toList))
+      previewCommands = Some(previewCommands.mkString("\n")))
 
   }
 
@@ -56,13 +50,12 @@ object ModelReader {
       WidgetReader.formatInterface(model.widgets) + s"\n$SEPARATOR\n" +
       model.info + s"\n$SEPARATOR\n" +
       ShapeParser.formatVectorShapes(model.turtleShapes) + s"\n$SEPARATOR\n" +
-      model.version + s"\n$SEPARATOR" +
-      (if(model.previewCommands.nonEmpty) model.previewCommands.mkString("\n", "\n", "\n") else "\n") + s"$SEPARATOR\n" +
-      s"$SEPARATOR" +
-      (if(model.behaviorSpace.nonEmpty) model.behaviorSpace.mkString("\n", "\n", "\n") else "\n") + s"$SEPARATOR\n" +
+      model.version + s"\n$SEPARATOR\n" +
+      (if(model.previewCommands.nonEmpty) model.previewCommands.mkString("", "\n", "\n") else "") + s"$SEPARATOR\n" +
+      s"$SEPARATOR\n" +
+      s"$SEPARATOR\n" +
       s"$SEPARATOR\n" +
       ShapeParser.formatLinkShapes(model.linkShapes) + s"\n$SEPARATOR\n" +
-      model.otherSections.getOrElse("org.nlogo.model.settings", Seq()).mkString("\n") +
       s"\n$SEPARATOR\n"
   }
 }

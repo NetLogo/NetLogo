@@ -2,30 +2,46 @@
 
 package org.nlogo.headless
 
-import org.nlogo.core.model.ModelReader
-import org.nlogo.core.WorldDimensions
-import org.nlogo.api.{ APIVersion, FileIO, Version }
-import org.nlogo.workspace.AbstractWorkspace.setHeadlessProperty
+import org.nlogo.core.{ Femto, LiteralParser, WorldDimensions }
+import org.nlogo.api.{ APIVersion, LabProtocol, ModelLoader, Version }
+import org.nlogo.workspace.AbstractWorkspace
 import org.nlogo.nvm.LabInterface.Settings
+import org.nlogo.nvm
 
 object Main {
   class CancelException extends RuntimeException
-  def main(args: Array[String]): Unit =
+
+  def main(args: Array[String]) {
     try {
       setHeadlessProperty()
       parseArgs(args).foreach(runExperiment)
+    } catch {
+      case e: CancelException => // ignore
     }
-    catch { case _: CancelException => } // ignore
+  }
+
   def runExperiment(settings: Settings) {
     def newWorkspace = {
       val w = HeadlessWorkspace.newInstance
-      w.open(settings.model)
+      w.open(settings.modelPath)
       w
     }
-    val lab = HeadlessWorkspace.newLab
-    lab.load(ModelReader.parseModel(FileIO.file2String(settings.model), newWorkspace.compiler.utilities, Map())
-      .behaviorSpace.mkString("", "\n", "\n"))
-    lab.run(settings, newWorkspace _)
+    BehaviorSpaceCoordinator.selectProtocol(settings) match {
+      case Some(protocol) =>
+        val lab = HeadlessWorkspace.newLab
+        lab.run(settings, protocol, newWorkspace _)
+      case None =>
+        throw new IllegalArgumentException("Invalid run, specify experiment name or setup file")
+    }
+  }
+  def setHeadlessProperty() {
+    // force headless mode if it is not set.  This is necessary for the headless workspace to run
+    // on most platforms when a display is not available. --CLB
+    // note that since our check is for null, so the user can still force the property to false and
+    // not be overridden by this - ST 4/21/05
+    val p = "java.awt.headless"
+    if(System.getProperty(p) == null)
+      System.setProperty(p, "true")
   }
   private def parseArgs(args: Array[String]): Option[Settings] = {
     var model: Option[String] = None
@@ -40,7 +56,7 @@ object Main {
     var threads = Runtime.getRuntime.availableProcessors
     var suppressErrors = false
     val it = args.iterator
-    def die(msg: String) { Console.err.println(msg) ; throw new CancelException}
+    def die(msg: String) { Console.err.println(msg); throw new CancelException }
     def path2writer(path: String) =
       if(path == "-")
         new java.io.PrintWriter(Console.out) {
@@ -100,7 +116,7 @@ object Main {
       else
         Some(new WorldDimensions(minPxcor.get.toInt, maxPxcor.get.toInt,
                                  minPycor.get.toInt, maxPycor.get.toInt))
-    Some(new Settings(model.get, setupFile, experiment, tableWriter,
+    Some(new Settings(model.get, experiment, setupFile, tableWriter,
                       spreadsheetWriter, dims, threads, suppressErrors))
   }
 }

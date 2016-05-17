@@ -3,14 +3,13 @@
 package org.nlogo.headless
 
 import org.nlogo.core.{ Femto, LiteralParser, WorldDimensions }
-import org.nlogo.api.{ APIVersion, LabProtocol, ModelLoader, NetLogoLegacyDialect, Version }
+import org.nlogo.api.{ APIVersion, LabProtocol, ModelLoader, Version }
 import org.nlogo.workspace.AbstractWorkspace
 import org.nlogo.nvm.LabInterface.Settings
 import org.nlogo.nvm
 
 object Main {
   def main(args: Array[String]) {
-    AbstractWorkspace.isApplet(false)
     setHeadlessProperty()
     parseArgs(args).foreach(runExperiment)
   }

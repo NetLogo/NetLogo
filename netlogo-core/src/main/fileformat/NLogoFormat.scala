@@ -7,9 +7,8 @@ import java.nio.file.{ Files, Paths }
 
 import org.nlogo.core.{ Femto, LiteralParser, Model, Shape, ShapeParser, View, Widget }, Shape.{ LinkShape, VectorShape }
 import org.nlogo.core.model.WidgetReader
-import org.nlogo.api.{ ComponentSerialization, ModelFormat, ModelSection, Version, VersionHistory }
+import org.nlogo.api.{ ComponentSerialization, FileIO, ModelFormat, Version, VersionHistory }
 import scala.util.{ Failure, Success, Try }
-import org.nlogo.util.Utils
 import scala.io.Source
 
 class NLogoFormat(val autoConvert: String => String => String)
@@ -34,8 +33,18 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] {
     }
 
   lazy val sectionNames =
-    ModelSection.allSections.map(s => "org.nlogo.modelsection." +
-      s.getClass.getSimpleName.replaceAll("\\$", "").toLowerCase)
+    Seq("code",
+      "interface",
+      "info",
+      "turtleshapes",
+      "version",
+      "previewcommands",
+      "systemdynamics",
+      "behaviorspace",
+      "hubnetclient",
+      "linkshapes",
+      "modelsettings",
+      "deltatick").map(s => "org.nlogo.modelsection." + s)
 
   def writeSections(sections: Map[String, Array[String]], location: URI): Try[URI] = {
     Try(Paths.get(location)).flatMap { filePath =>
@@ -96,7 +105,7 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] {
     val componentName = "org.nlogo.modelsection.info"
     val EmptyInfoPath = "/system/empty-info.md"
     override def addDefault =
-      ((m: Model) => m.copy(info = Utils.url2String(EmptyInfoPath)))
+      ((m: Model) => m.copy(info = FileIO.url2String(EmptyInfoPath)))
     def serialize(m: Model): Array[String] = m.info.lines.toArray
     def validationErrors(m: Model): Option[String] = None
     override def deserialize(s: Array[String]) = {(m: Model) =>
