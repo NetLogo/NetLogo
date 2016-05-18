@@ -8,6 +8,7 @@ import org.nlogo.api.Editable
 import org.nlogo.core.I18N
 import java.awt.event.{ActionListener, MouseAdapter, MouseEvent, ActionEvent}
 import org.nlogo.window.{WidgetInfo, EditDialogFactoryInterface, Widget}
+import org.nlogo.swing.{ ToolBarActionButton, ToolBarToggleButton }
 
 class InterfaceToolBar(wPanel: WidgetPanel,
                        workspace: org.nlogo.window.GUIWorkspace,
@@ -25,13 +26,13 @@ class InterfaceToolBar(wPanel: WidgetPanel,
 
   private val selectedObjects = new collection.mutable.HashSet[Widget]
   private val editAction = new EditAction()
-  private val editButton = new JButton(editAction)
+  private val editButton = new ToolBarActionButton(editAction)
   private val addAction = new AddAction
   private val addButton = new AddButton
   private val group = new ButtonGroup()
   private val noneButton = new JToggleButton()
   private val deleteAction = new DeleteAction()
-  private val deleteButton = new JButton(deleteAction)
+  private val deleteButton = new ToolBarActionButton(deleteAction)
   private val widgetMenu = new WidgetMenu
 
   wPanel.setWidgetCreator(this)
@@ -94,7 +95,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     }
   }
 
-  private class AddButton extends JToggleButton(addAction) {
+  private class AddButton extends ToolBarToggleButton(addAction) {
     // normally ToggleButtons when pressed again stay pressed, but we want it to pop back up if
     // pressed again; this variable is used to produce that behavior - ST 7/30/03, 2/22/07
     private var wasSelectedWhenMousePressed = false
@@ -102,7 +103,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
       override def mousePressed(e: MouseEvent) { wasSelectedWhenMousePressed = isSelected }
     })
     addActionListener(new ActionListener() {
-      def actionPerformed(e: ActionEvent) { if(wasSelectedWhenMousePressed) noneButton.setSelected(true) }
+      def actionPerformed(e: ActionEvent) { if (wasSelectedWhenMousePressed) noneButton.setSelected(true) }
     })
   }
 
