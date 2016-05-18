@@ -5,6 +5,7 @@ package org.nlogo.app
 import org.nlogo.workspace.AbstractWorkspace
 import org.nlogo.api.ModelSection
 import org.nlogo.core.I18N
+import org.nlogo.swing.ToolBarActionButton
 
 // This is THE Code tab.  Certain settings and things that are only accessible here.
 // Other Code tabs come and go.
@@ -30,9 +31,8 @@ with org.nlogo.window.Events.LoadSectionEvent.Handler
   override def getToolBar =
     new org.nlogo.swing.ToolBar() {
       override def addControls() {
-        add(new javax.swing.JButton(
-          org.nlogo.app.FindDialog.FIND_ACTION))
-        add(new javax.swing.JButton(compileAction))
+        add(new ToolBarActionButton(org.nlogo.app.FindDialog.FIND_ACTION))
+        add(new ToolBarActionButton(compileAction))
         add(new org.nlogo.swing.ToolBar.Separator)
         add(new ProceduresMenu(MainCodeTab.this))
         // we add this here, however, unless there are includes it will not be displayed, as it sets

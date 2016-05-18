@@ -2,6 +2,7 @@
 
 package org.nlogo.swing;
 
+import java.awt.Color;
 import javax.swing.UIManager;
 
 public final strictfp class Utils {
@@ -38,12 +39,9 @@ public final strictfp class Utils {
       javax.swing.UIManager.put("Slider.paintValue", Boolean.FALSE);
       if (System.getProperty("os.name").startsWith("Mac")) {
         String lookAndFeel = System.getProperty("netlogo.swing.laf", javax.swing.UIManager.getSystemLookAndFeelClassName());
-        UIManager.getDefaults().put("TabbedPane.foreground", new java.awt.Color(0, 0, 0));
-        UIManager.getDefaults().put("TabbedPane.tabInsets", new java.awt.Insets(0,10,0,10));
-        UIManager.getDefaults().put("TabbedPane.selectedTabPadInsets", new java.awt.Insets(-2,0,-2,0));
-        UIManager.getDefaults().put("TabbedPane.tabAreaInsets", new java.awt.Insets(0,0,0,0));
-        UIManager.getDefaults().put("TabbedPane.contentBorderInsets", new java.awt.Insets(0,-8,-9,-8));
-        UIManager.getDefaults().put("TabbedPane.tabsOverlapBorder", Boolean.FALSE);
+        UIManager.getDefaults().put("TabbedPane.foreground", new Color(0, 0, 0));
+        UIManager.getDefaults().put("TabbedPane.selectedTabPadInsets", new java.awt.Insets(0,0,-2,0));
+        UIManager.getDefaults().put("TabbedPane.contentBorderInsets", new java.awt.Insets(0,-10,-13,-9));
         UIManager.setLookAndFeel(lookAndFeel);
       } else if (System.getProperty("os.name").startsWith("Windows")) {
         javax.swing.UIManager.setLookAndFeel

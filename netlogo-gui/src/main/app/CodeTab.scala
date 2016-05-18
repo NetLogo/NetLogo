@@ -7,6 +7,7 @@ import org.nlogo.agent.Observer
 import org.nlogo.editor.LineNumbersBar
 import org.nlogo.window.EditorAreaErrorLabel
 import org.nlogo.workspace.AbstractWorkspace
+import org.nlogo.swing.{ ToolBarActionButton }
 
 import java.awt.{BorderLayout, Dimension, Graphics}
 import java.awt.event.{ActionEvent, TextEvent, TextListener}
@@ -65,8 +66,8 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
 
   def getToolBar = new org.nlogo.swing.ToolBar() {
     override def addControls() {
-      add(new JButton(org.nlogo.app.FindDialog.FIND_ACTION))
-      add(new JButton(compileAction))
+      add(new ToolBarActionButton(org.nlogo.app.FindDialog.FIND_ACTION))
+      add(new ToolBarActionButton(compileAction))
       add(new org.nlogo.swing.ToolBar.Separator())
       add(new ProceduresMenu(CodeTab.this))
     }

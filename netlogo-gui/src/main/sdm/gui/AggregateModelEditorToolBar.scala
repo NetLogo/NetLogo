@@ -9,6 +9,7 @@ import java.awt.event.{ActionEvent, MouseEvent}
 import javax.swing.{JOptionPane, ImageIcon, Action, AbstractAction, ButtonGroup, JButton, JLabel, JPanel, JToggleButton}
 import org.nlogo.sdm.Model
 import org.nlogo.core.I18N
+import org.nlogo.swing.{ ToolBarActionButton, ToolBarToggleButton }
 
 class AggregateModelEditorToolBar(editor: AggregateModelEditor) extends org.nlogo.swing.ToolBar {
   // Invisible button allows no selection in visible buttongroup
@@ -17,14 +18,14 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor) extends org.nlog
   implicit val i18nPrefix = I18N.Prefix("tools.sdm")
 
   override def addControls() {
-    add(new JButton(editAction))
-    add(new JButton(deleteAction))
+    add(new ToolBarActionButton(editAction))
+    add(new ToolBarActionButton(deleteAction))
     add(new Separator())
-    add(new JButton(compileAction))
+    add(new ToolBarActionButton(compileAction))
     add(new Separator())
 
     def makeButton(name:String, image:String, tool:Tool) = {
-      new JToggleButton(new ToolAction(I18N.gui(name.toLowerCase), image, tool))
+      new ToolBarToggleButton(new ToolAction(I18N.gui(name.toLowerCase), image, tool))
     }
     val stockButton = makeButton("Stock", "/images/stock.gif", new StockFigureCreationTool(editor))
     val variablButton = makeButton("Variable", "/images/converter.gif", new ConverterFigureCreationTool(editor))

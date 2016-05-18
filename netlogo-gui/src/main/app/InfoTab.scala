@@ -4,7 +4,8 @@ package org.nlogo.app
 
 import org.nlogo.editor.UndoManager
 import org.nlogo.swing.Implicits._
-import org.nlogo.swing.{OptionDialog, ToolBar, Printable, PrinterManager, BrowserLauncher, RichJButton}
+import org.nlogo.swing.{OptionDialog, ToolBar, ToolBarButton, ToolBarActionButton, ToolBarToggleButton,
+  Printable, PrinterManager, BrowserLauncher, RichJButton}
 import org.nlogo.awt.Hierarchy
 
 import java.awt.{Font, Dimension, BorderLayout, Graphics}
@@ -60,10 +61,9 @@ class InfoTab(attachModelDir: String => String) extends JPanel with
     setContentType("text/html")
     addHyperlinkListener(InfoTab.this)
   }
-  private val editableButton = new JToggleButton(new EditableAction(I18N.gui.get("tabs.info.edit")))
-  private val helpButton = RichJButton(I18N.gui.get("tabs.info.help")) {
-    BrowserLauncher.openURL(this, baseDocUrl, "#information", true)
-  }
+  private val editableButton = new ToolBarToggleButton(new EditableAction(I18N.gui.get("tabs.info.edit")))
+  private val helpButton = new ToolBarButton(I18N.gui.get("tabs.info.help"),
+    BrowserLauncher.openURL(this, baseDocUrl, "#information", true))
   helpButton.setIcon(new ImageIcon(classOf[FindDialog].getResource("/images/questionmark.gif")))
   helpButton.setVisible(false)
   private def toggleHelpButton(){ helpButton.setVisible(view == textArea) }
@@ -85,7 +85,7 @@ class InfoTab(attachModelDir: String => String) extends JPanel with
     setLayout(new BorderLayout())
     add(new ToolBar() {
       override def addControls() {
-        this.addAll(new JButton(FindDialog.FIND_ACTION), editableButton, helpButton)
+        this.addAll(new ToolBarActionButton(FindDialog.FIND_ACTION), editableButton, helpButton)
       }
     }, BorderLayout.NORTH)
     add(scrollPane,BorderLayout.CENTER)
