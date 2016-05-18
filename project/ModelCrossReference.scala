@@ -34,8 +34,8 @@ object ModelCrossReference {
   ( "Sample Models/Biology/Evolution/Unverified", "Divide*", "Sample Models/Social Science/Unverified"),
   ( "Sample Models/System Dynamics/Unverified", "Tabonuco*", "Sample Models/Biology/Unverified"),
 
-  ( "Sample Models/Mathematics/Probability/ProbLab", "*.{nlogo,png}",  "Curricular Models/ProbLab"), // copy all of the files from this folder into Problab
-  ( "Sample Models/Mathematics/Probability/ProbLab/Unverified", "*",   "Curricular Models/ProbLab"), // copy all of the files from this folder into Problab
+  ( "Sample Models/Mathematics/Probability/ProbLab", new SimpleFileFilter(_.isFile), "Curricular Models/ProbLab"), // copy the files, but not the Unverified folder
+  ( "Sample Models/Mathematics/Probability/ProbLab/Unverified", "*",                 "Curricular Models/ProbLab"), // copy all of the files from the Unverified folder
 
   ( "Sample Models/Biology/Evolution",            "Altruism*",    "Curricular Models/EACH"),
   ( "Sample Models/Biology/Evolution",            "Cooperation*", "Curricular Models/EACH"),
