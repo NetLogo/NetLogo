@@ -1,9 +1,8 @@
 import sbt._
 
 object ModelCrossReference {
-  def apply(netLogoRoot: File): Unit = {
-    directoriesToCreate.foreach(netLogoRoot / _)
-    val modelsDir = netLogoRoot / "models"
+  def apply(modelsDir: File): Unit = {
+    directoriesToCreate.foreach(modelsDir / _)
     modelDuplications.foreach {
       case (src, filter, dest) =>
         (modelsDir / src * filter).get.foreach { f =>
@@ -16,9 +15,7 @@ object ModelCrossReference {
     }
   }
 
-  val directoriesToCreate = Seq(
-    "models/Curricular Models",
-    "models/Curricular Models/EACH/Unverified")
+  val directoriesToCreate = Seq("Curricular Models/EACH/Unverified")
 
   val foldersToCopy = Seq(
     "Sample Models/Chemistry & Physics/GasLab"      -> "Curricular Models/GasLab",
@@ -35,8 +32,8 @@ object ModelCrossReference {
   ( "Sample Models/Biology/Evolution/Unverified", "Divide*", "Sample Models/Social Science/Unverified"),
   ( "Sample Models/System Dynamics/Unverified", "Tabonuco*", "Sample Models/Biology/Unverified"),
 
-  ( "Sample Models/Mathematics/Probability/ProbLab", "*.{nlogo,png}",  "Curricular Models/ProbLab"), // copy all of the files from this folder into Problab
-  ( "Sample Models/Mathematics/Probability/ProbLab/Unverified", "*",   "Curricular Models/ProbLab"), // copy all of the files from this folder into Problab
+  ( "Sample Models/Mathematics/Probability/ProbLab", new SimpleFileFilter(_.isFile), "Curricular Models/ProbLab"), // copy the files, but not the Unverified folder
+  ( "Sample Models/Mathematics/Probability/ProbLab/Unverified", "*",                 "Curricular Models/ProbLab"), // copy all of the files from the Unverified folder
 
   ( "Sample Models/Biology/Evolution",            "Altruism*",    "Curricular Models/EACH"),
   ( "Sample Models/Biology/Evolution",            "Cooperation*", "Curricular Models/EACH"),
@@ -63,6 +60,9 @@ object ModelCrossReference {
   ("Curricular Models/BEAGLE Evolution/HubNet Activities", "Bug Hunters Competition HubNet*", "HubNet Activities"),
   ("Curricular Models/BEAGLE Evolution/HubNet Activities", "Critter Designers HubNet*",       "HubNet Activities"),
   ("Curricular Models/BEAGLE Evolution/HubNet Activities", "Fish Spotters HubNet*",           "HubNet Activities"),
+
+  // Copy Oil Cartel HubNet to HubNet Activities
+  ("Sample Models/Social Science",                         "Oil Cartel HubNet*",              "HubNet Activities"),
 
   // IABM Textbook models duplicated in Sample Models
   ("IABM Textbook/chapter 3/El Farol Extensions", "El Farol.nlogo",   "Sample Models/Social Science"),
