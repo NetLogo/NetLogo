@@ -19,6 +19,7 @@ object NetLogoPackaging {
   lazy val buildNetLogo = taskKey[Unit]("build NetLogo")
   lazy val buildVariables = taskKey[Map[String, String]]("NetLogo template variables")
   lazy val mathematicaRoot = settingKey[File]("root of Mathematica-Link directory")
+  lazy val localSiteTarget = settingKey[File]("directory into which local copy of the site is built")
   lazy val modelCrossReference = taskKey[Unit]("add model cross references")
   lazy val netLogoRoot = settingKey[File]("Root directory of NetLogo project")
   lazy val netLogoLongVersion = settingKey[String]("Long version number (including trailing zero) of NetLogo under construction")
@@ -33,8 +34,8 @@ object NetLogoPackaging {
   lazy val packageWinAggregate = inputKey[File]("package all win apps into a single directory")
   lazy val packagedMathematicaLink = taskKey[File]("Mathematica link, ready for packaging")
   lazy val buildDownloadPages  = taskKey[Seq[File]]("package the web download pages")
-  lazy val uploadWebsite       = inputKey[Unit]("package the web download pages")
-  lazy val buildVersionedSite  = taskKey[File]("package the web download pages")
+  lazy val generateLocalWebsite = taskKey[File]("package the web download pages")
+  lazy val uploadWebsite       = inputKey[Unit]("upload the web download pages to the ccl server")
 
   // this value is unfortunately dependent upon both the platform and the application
   val appMainClass: PartialFunction[(String, String), String] = {
@@ -218,14 +219,19 @@ object NetLogoPackaging {
         downloadLocations.map(t => (t._1, t._2.getName))
       Mustache.betweenDirectories(webSource, webTarget.value, vars)
     },
+    localSiteTarget := target.value / marketingVersion.value,
+    generateLocalWebsite := {
+      IO.copyDirectory(webTarget.value, localSiteTarget.value)
+      IO.copyDirectory((modelsDirectory in netlogo).value, localSiteTarget.value / "models")
+      IO.copyDirectory(netLogoRoot.value / "docs", localSiteTarget.value / "docs")
+      localSiteTarget.value
+    },
     uploadWebsite := {
-      val tmpTarget = target.value / marketingVersion.value
       val user = System.getenv("USER")
       val host = "ccl.northwestern.edu"
       val targetDir = "/usr/local/www/netlogo"
-      IO.copyDirectory(webTarget.value, tmpTarget)
-      IO.copyDirectory(netLogoRoot.value / "docs", tmpTarget)
-      RunProcess(Seq("rsync", "-av", "--inplace", "--progress", tmpTarget.getPath, s"${user}@${host}:${targetDir}"), "rsync")
+      val generatedSite = generateLocalWebsite.value
+      RunProcess(Seq("rsync", "-av", "--inplace", "--progress", generatedSite.getPath, s"${user}@${host}:${targetDir}"), "rsync")
       RunProcess(Seq("ssh", s"${user}@${host}", "chgrp", "-R", "apache", s"${targetDir}/${netLogoLongVersion.value}"), "ssh - change release group")
       RunProcess(Seq("ssh", s"${user}@${host}", "chmod", "-R", "g+rwX",  s"${targetDir}/${netLogoLongVersion.value}"), "ssh - change release permissions")
     }
