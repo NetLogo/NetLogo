@@ -529,7 +529,9 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
     @throws(classOf[CompilerException])
     override def readValue(text: String) = {
       constraint.assertConstraint(text)
-      compiler.checkCommandSyntax(text)
+      Exceptions.ignoring(classOf[CompilerException]) {
+        compiler.checkCommandSyntax(text)
+      }
       text
     }
   }
