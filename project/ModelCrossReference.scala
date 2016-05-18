@@ -63,6 +63,9 @@ object ModelCrossReference {
   ("Curricular Models/BEAGLE Evolution/HubNet Activities", "Critter Designers HubNet*",       "HubNet Activities"),
   ("Curricular Models/BEAGLE Evolution/HubNet Activities", "Fish Spotters HubNet*",           "HubNet Activities"),
 
+  // Copy Oil Cartel HubNet to HubNet Activities
+  ("Sample Models/Social Science",                         "Oil Cartel HubNet*",              "HubNet Activities"),
+
   // IABM Textbook models duplicated in Sample Models
   ("IABM Textbook/chapter 3/El Farol Extensions", "El Farol.nlogo",   "Sample Models/Social Science"),
   ("IABM Textbook/chapter 3/DLA extensions",      "DLA Simple.nlogo", "Sample Models/Chemistry & Physics/Diffusion Limited Aggregation")
