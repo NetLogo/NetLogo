@@ -2,13 +2,15 @@
 
 package org.nlogo.app
 
+import java.awt.Graphics
+import javax.swing.{ JTabbedPane, UIManager }
+import javax.swing.plaf.ComponentUI
+
 import org.nlogo.swing.Implicits._
 import org.nlogo.window.{EditDialogFactoryInterface, GUIWorkspace}
 import org.nlogo.window.Events._
 import org.nlogo.swing.RichAction
 import org.nlogo.core.I18N
-import javax.swing.UIManager
-import javax.swing.JTabbedPane
 
 class Tabs(val workspace: GUIWorkspace,
            monitorManager: AgentMonitorManager,
@@ -20,7 +22,16 @@ class Tabs(val workspace: GUIWorkspace,
     setOpaque(false)
     setFocusable(false)
     addChangeListener(this)
+    if (System.getProperty("os.name").startsWith("Mac")) {
+      try {
+        val ui = Class.forName("org.nlogo.app.MacTabbedPaneUI").newInstance.asInstanceOf[ComponentUI]
+        setUI(ui)
+      } catch {
+        case e: ClassNotFoundException =>
+      }
+    }
   }
+
 
   var tabsMenu: org.nlogo.swing.TabsMenu = null
 
