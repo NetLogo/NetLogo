@@ -15,9 +15,7 @@ object ModelCrossReference {
     }
   }
 
-  val directoriesToCreate = Seq(
-    "Curricular Models",
-    "Curricular Models/EACH/Unverified")
+  val directoriesToCreate = Seq("Curricular Models/EACH/Unverified")
 
   val foldersToCopy = Seq(
     "Sample Models/Chemistry & Physics/GasLab"      -> "Curricular Models/GasLab",
