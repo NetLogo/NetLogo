@@ -1,9 +1,8 @@
 import sbt._
 
 object ModelCrossReference {
-  def apply(netLogoRoot: File): Unit = {
-    directoriesToCreate.foreach(netLogoRoot / _)
-    val modelsDir = netLogoRoot / "models"
+  def apply(modelsDir: File): Unit = {
+    directoriesToCreate.foreach(modelsDir / _)
     modelDuplications.foreach {
       case (src, filter, dest) =>
         (modelsDir / src * filter).get.foreach { f =>
@@ -17,8 +16,8 @@ object ModelCrossReference {
   }
 
   val directoriesToCreate = Seq(
-    "models/Curricular Models",
-    "models/Curricular Models/EACH/Unverified")
+    "Curricular Models",
+    "Curricular Models/EACH/Unverified")
 
   val foldersToCopy = Seq(
     "Sample Models/Chemistry & Physics/GasLab"      -> "Curricular Models/GasLab",

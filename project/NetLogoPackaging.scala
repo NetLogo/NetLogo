@@ -156,7 +156,7 @@ object NetLogoPackaging {
       targetFile
     },
     modelCrossReference := {
-      ModelCrossReference((baseDirectory in netlogo).value)
+      ModelCrossReference((modelsDirectory in netlogo).value)
     },
     aggregateJDKParser := Def.toSParser(jdkParser),
     netLogoRoot := (baseDirectory in netlogo).value,
