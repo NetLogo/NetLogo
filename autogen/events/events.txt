@@ -14,7 +14,7 @@ window.AddJob - org.nlogo.api.JobOwner owner - org.nlogo.agent.AgentSet agents -
 window.AddSliderConstraint - SliderWidget slider - String varname - String minSpec - String maxSpec - String incSpec - Double value
 window.AfterLoad
 window.App - AppEventType type - Object[] args
-window.BeforeLoad - String modelPath - org.nlogo.api.ModelType modelType
+window.BeforeLoad - scala.Option<String> modelPath - org.nlogo.api.ModelType modelType
 window.CompileAll
 window.CompileMoreSource - org.nlogo.api.JobOwner owner
 window.Compiled - org.nlogo.api.SourceOwner sourceOwner - org.nlogo.core.Program program - org.nlogo.nvm.Procedure procedure - org.nlogo.core.CompilerException error

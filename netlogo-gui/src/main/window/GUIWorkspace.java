@@ -1240,10 +1240,12 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
    */
   public void handle(org.nlogo.window.Events.BeforeLoadEvent e) {
     setPeriodicUpdatesEnabled(false);
-    if (!isApplet()) {
-      setModelPath(e.modelPath);
-      setModelType(e.modelType);
+    if (e.modelPath.isDefined()) {
+      setModelPath(e.modelPath.get());
+    } else {
+      setModelPath(null);
     }
+    setModelType(e.modelType);
     if (hubNetManager().isDefined()) {
       hubNetManager().get().disconnect();
     }

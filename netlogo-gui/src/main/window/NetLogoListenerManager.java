@@ -25,8 +25,11 @@ public strictfp class NetLogoListenerManager
       new ArrayList<NetLogoListener>();
 
   public void handle(BeforeLoadEvent e) {
-    for (NetLogoListener listener : listeners) {
-      listener.modelOpened(e.modelPath);
+    if (e.modelPath.isDefined()) {
+      final String modelPath = e.modelPath.get();
+      for (NetLogoListener listener : listeners) {
+        listener.modelOpened(modelPath);
+      }
     }
   }
 

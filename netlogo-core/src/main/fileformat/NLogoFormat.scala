@@ -26,11 +26,14 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] {
   def widgetReaders: Map[String, WidgetReader]
 
   def sections(location: URI) =
-    Try(Source.fromURI(location)).flatMap { s =>
-      val sections = sectionsFromSource(s.mkString)
-      s.close()
-      sections
-    }
+    Try {
+      if (location.getScheme == "jar") Source.fromInputStream(location.toURL.openStream)
+      else Source.fromURI(location)
+      }.flatMap { s =>
+        val sections = sectionsFromSource(s.mkString)
+        s.close()
+        sections
+      }
 
   lazy val sectionNames =
     Seq("code",

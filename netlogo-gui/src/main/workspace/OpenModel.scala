@@ -26,7 +26,7 @@ object OpenModel {
     loader: ModelLoader,
     currentVersion: Version): Option[Model] = {
       val isValidURI = Option(uri)
-        .flatMap(getFileExtension)
+        .flatMap(ModelLoader.getURIExtension)
         .map(ext => loader.formats.map(_.name).contains(ext))
         .getOrElse(false)
       if (! isValidURI) {
@@ -56,9 +56,5 @@ object OpenModel {
     ((modelArityDiffers && ! controller.shouldOpenModelOfDifferingArity(modelArity, model.version)) ||
       (! currentVersion.knownVersion(model.version) && ! controller.shouldOpenModelOfUnknownVersion(model.version)) ||
       (! currentVersion.compatibleVersion(model.version) && ! controller.shouldOpenModelOfLegacyVersion(model.version)))
-  }
-
-  private def getFileExtension(uri: URI): Option[String] = {
-    uri.getPath.split("\\.").lastOption
   }
 }

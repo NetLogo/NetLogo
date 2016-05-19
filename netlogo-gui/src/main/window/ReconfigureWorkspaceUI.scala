@@ -11,6 +11,8 @@ import org.nlogo.window.Events.{ AfterLoadEvent, BeforeLoadEvent,
 import org.nlogo.api.{ CompilerServices, ModelType }
 import org.nlogo.core.{ I18N, Model }
 
+import scala.util.Try
+
 object ReconfigureWorkspaceUI {
   def apply(linkParent: Container, uri: URI, modelType: ModelType, model: Model,
     compilerServices: CompilerServices): Unit = {
@@ -21,8 +23,9 @@ object ReconfigureWorkspaceUI {
     def getLinkParent = linkParent
 
     def loadHelper(modelURI: URI, modelType: ModelType, model: Model, compilerServices: CompilerServices) {
+      val uriOption = Try(Paths.get(modelURI).toString).toOption
       val beforeEvents = List(
-        new BeforeLoadEvent(Paths.get(modelURI).toString, modelType),
+        new BeforeLoadEvent(uriOption, modelType),
         new LoadBeginEvent())
 
       val loadSectionEvents = List(

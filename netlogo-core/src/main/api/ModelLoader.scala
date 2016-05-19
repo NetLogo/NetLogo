@@ -32,11 +32,20 @@ class FormatterPair[A, B <: ModelFormat[A, B]](
       modelFormat.sourceString(model, serializers)
   }
 
+object ModelLoader {
+  def getURIExtension(uri: URI): Option[String] = {
+    if (uri.getScheme == "jar")
+      uri.getSchemeSpecificPart.split("\\.").lastOption
+    else
+      uri.getPath.split("\\.").lastOption
+  }
+}
+
 trait ModelLoader {
   def formats: Seq[FormatterPair[_, _]]
 
   protected def uriFormat(uri: URI): Option[FormatterPair[_, _]] =
-    uri.getPath.split("\\.").lastOption
+    ModelLoader.getURIExtension(uri)
       .flatMap(extension => formats.find(_.name == extension))
 
   def readModel(uri: URI): Try[Model] = {

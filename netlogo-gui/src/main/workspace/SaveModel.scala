@@ -42,11 +42,11 @@ trait SaveModel {
   protected final def validFilePath(controller: Controller, loader: ModelLoader, modelType: ModelType): Option[URI] = {
     controller.chooseFilePath(modelType) match {
       case res@Some(uri) =>
-        val extension = uri.getPath.split("\\.").last
-        if (loader.formats.map(_.name).contains(extension))
+        val extension = ModelLoader.getURIExtension(uri)
+        if (extension.exists(ext => loader.formats.map(_.name).contains(ext)))
           res
         else {
-          controller.warnInvalidFileFormat(extension)
+          controller.warnInvalidFileFormat(extension.getOrElse(""))
           validFilePath(controller, loader, modelType)
         }
       case other => other

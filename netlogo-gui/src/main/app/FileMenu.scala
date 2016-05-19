@@ -414,7 +414,7 @@ class FileMenu(app: App,
       openFromURI(getClass.getResource(emptyModelPath).toURI, ModelType.New);
     } catch  {
       case ex: URISyntaxException =>
-        println("Invalid model path: " + emptyModelPath)
+        println("Unable to locate empty model: " + emptyModelPath)
     }
   }
 

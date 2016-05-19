@@ -190,14 +190,17 @@ lazy val headless = (project in file ("netlogo-headless")).
 
 // this project exists as a wrapper for the mac-specific NetLogo components
 lazy val macApp = project.in(file("mac-app")).
-  dependsOn(netlogo).
   settings(commonSettings: _*).
   settings(jvmSettings: _*).
+  settings(scalaSettings: _*).
   settings(JavaPackager.mainArtifactSettings: _*).
   settings(
     fork in run                           := true,
     name                                  := "NetLogo-Mac-App",
+    compile in Compile                    <<= (compile in Compile) dependsOn (packageBin in Compile in netlogo),
     unmanagedJars in Compile              += (packageBin in Compile in netlogo).value,
+    libraryDependencies                   ++= (libraryDependencies in netlogo).value,
+    libraryDependencies                   ++= (libraryDependencies in parserJVM).value,
     artifactPath in Compile in packageBin := target.value / "netlogo-mac-app.jar",
     javacOptions                          ++= Seq("-bootclasspath", System.getProperty("java.home") + "/lib/rt.jar"))
 
