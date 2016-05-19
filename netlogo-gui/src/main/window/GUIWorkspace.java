@@ -45,7 +45,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     org.nlogo.window.Events.BeforeLoadEvent.Handler,
     org.nlogo.window.Events.ExportPlotEvent.Handler,
     org.nlogo.window.Events.JobStoppingEvent.Handler,
-    org.nlogo.window.Events.LoadSectionEvent.Handler,
+    org.nlogo.window.Events.LoadModelEvent.Handler,
     org.nlogo.window.Events.RemoveAllJobsEvent.Handler,
     org.nlogo.window.Events.RemoveJobEvent.Handler,
     org.nlogo.window.Events.AddSliderConstraintEvent.Handler,
@@ -55,7 +55,8 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     org.nlogo.window.Events.AddInputBoxConstraintEvent.Handler,
     org.nlogo.window.Events.CompiledEvent.Handler,
     org.nlogo.api.TrailDrawerInterface,
-    org.nlogo.api.DrawingInterface {
+    org.nlogo.api.DrawingInterface,
+    org.nlogo.api.ModelSections.ModelSaveable {
 
   public enum KioskLevel {NONE, MODERATE}
 
@@ -83,7 +84,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   public GUIWorkspace(final org.nlogo.agent.World world,
                       KioskLevel kioskLevel, java.awt.Frame frame,
                       java.awt.Component linkParent,
-                      org.nlogo.workspace.AbstractWorkspace.HubNetManagerFactory hubNetManagerFactory,
+                      org.nlogo.workspace.HubNetManagerFactory hubNetManagerFactory,
                       ExternalFileManager externalFileManager,
                       NetLogoListenerManager listenerManager) {
     super(world, hubNetManagerFactory);
@@ -95,7 +96,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     hubNetControlCenterAction.setEnabled(false);
 
     viewWidget = new ViewWidget(this);
-    view = viewWidget.view;
+    view = viewWidget.view();
     viewManager.setPrimary(view);
 
     periodicUpdater = new PeriodicUpdater(jobManager);
@@ -176,8 +177,8 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   public void stamp(org.nlogo.api.Agent agent, boolean erase) {
     view.renderer.prepareToPaint(view, view.renderer.trailDrawer().getWidth(), view.renderer.trailDrawer().getHeight());
     view.renderer.trailDrawer().stamp(agent, erase);
-    if (hubNetManager != null) {
-      hubNetManager.sendStamp(agent, erase);
+    if (hubNetManager().isDefined()) {
+      hubNetManager().get().sendStamp(agent, erase);
     }
   }
 
@@ -226,8 +227,8 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   public void clearDrawing() {
     world().clearDrawing();
     view.renderer.trailDrawer().clearDrawing();
-    if (hubNetManager != null) {
-      hubNetManager.sendClear();
+    if (hubNetManager().isDefined()) {
+      hubNetManager().get().sendClear();
     }
   }
 
@@ -389,7 +390,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
 
   public void changeTopology(boolean wrapX, boolean wrapY) {
     world().changeTopology(wrapX, wrapY);
-    viewWidget.view.renderer.changeTopology(wrapX, wrapY);
+    viewWidget.view().renderer.changeTopology(wrapX, wrapY);
   }
 
   /// very kludgy stuff for communicating with stuff in app
@@ -454,7 +455,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     try {
       new org.nlogo.window.Events.AppEvent
           (AppEventType.START_LOGGING,
-              new Object[]{fileManager.attachPrefix(properties)})
+              new Object[]{fileManager().attachPrefix(properties)})
           .raiseLater(this);
     } catch (java.net.MalformedURLException ex) {
       throw new IllegalStateException(ex);
@@ -466,7 +467,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     try {
       new org.nlogo.window.Events.AppEvent
           (AppEventType.ZIP_LOG_FILES,
-              new Object[]{fileManager.attachPrefix(filename)})
+              new Object[]{fileManager().attachPrefix(filename)})
           .raiseLater(this);
     } catch (java.net.MalformedURLException ex) {
       throw new IllegalStateException(ex);
@@ -505,7 +506,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       }
       viewWidget.setVisible(true);
       try {
-        viewWidget.displaySwitch.setOn(glView.displaySwitch());
+        viewWidget.displaySwitch().setOn(glView.displaySwitch());
       } catch (IllegalStateException e) {
         org.nlogo.api.Exceptions.ignore(e);
       }
@@ -516,7 +517,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
         viewManager.remove(view);
         view.freeze();
       }
-      glView.displaySwitch(viewWidget.displaySwitch.isSelected());
+      glView.displaySwitch(viewWidget.displaySwitch().isSelected());
       viewWidget.setVisible(dualView);
     }
     view.renderPerspective = enabled;
@@ -772,7 +773,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       throws java.io.IOException,
       org.nlogo.shape.InvalidShapeDescriptionException {
     try {
-      glView.addCustomShapes(fileManager.attachPrefix(filename));
+      glView.addCustomShapes(fileManager().attachPrefix(filename));
     } catch (java.net.MalformedURLException ex) {
       throw new IllegalStateException(ex);
     }
@@ -823,8 +824,8 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
                        Object color, double size, String mode) {
     view.renderer.trailDrawer().drawLine
         (x0, y0, x1, y1, color, size, mode);
-    if (hubNetManager != null) {
-      hubNetManager.sendLine(x0, y0, x1, y1, color, size, mode);
+    if (hubNetManager().isDefined()) {
+      hubNetManager().get().sendLine(x0, y0, x1, y1, color, size, mode);
     }
   }
 
@@ -1239,17 +1240,19 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
    */
   public void handle(org.nlogo.window.Events.BeforeLoadEvent e) {
     setPeriodicUpdatesEnabled(false);
-    if (!isApplet()) {
-      setModelPath(e.modelPath);
-      setModelType(e.modelType);
+    if (e.modelPath.isDefined()) {
+      setModelPath(e.modelPath.get());
+    } else {
+      setModelPath(null);
     }
-    if (hubNetManager != null) {
-      hubNetManager.disconnect();
+    setModelType(e.modelType);
+    if (hubNetManager().isDefined()) {
+      hubNetManager().get().disconnect();
     }
     jobManager.haltSecondary();
     jobManager.haltPrimary();
     getExtensionManager().reset();
-    fileManager.handleModelChange();
+    fileManager().handleModelChange();
     previewCommands_$eq(PreviewCommands$.MODULE$.DEFAULT());
     clearDrawing();
     viewManager.resetMouseCors();
@@ -1271,29 +1274,29 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   }
 
   public void handle(org.nlogo.window.Events.AboutToQuitEvent e) {
-    if (hubNetManager != null) {
-      hubNetManager.disconnect();
+    if (hubNetManager().isDefined()) {
+      hubNetManager().get().disconnect();
     }
   }
 
   @Override
-  public void hubNetRunning(boolean hubNetRunning) {
-    if (this.hubNetRunning != hubNetRunning) {
-      if (hubNetRunning) {
-        viewManager.add(hubNetManager);
+  public void hubNetRunning_$eq(boolean running) {
+    if (this.hubNetRunning() != running) {
+      if (running) {
+        viewManager.add(hubNetManager().get());
       } else {
-        viewManager.remove(hubNetManager);
+        viewManager.remove(hubNetManager().get());
       }
     }
 
-    this.hubNetRunning = hubNetRunning;
-    hubNetControlCenterAction.setEnabled(hubNetRunning);
+    super.hubNetRunning_$eq(running);
+    hubNetControlCenterAction.setEnabled(hubNetRunning());
   }
 
   public final javax.swing.Action hubNetControlCenterAction =
       new javax.swing.AbstractAction(I18N.guiJ().get("menu.tools.hubNetControlCenter")) {
         public void actionPerformed(java.awt.event.ActionEvent e) {
-          hubNetManager.showControlCenter();
+          hubNetManager().get().showControlCenter();
         }
       };
 
@@ -1306,31 +1309,20 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
 
   /// preview commands & aggregate
 
-  public void handle(org.nlogo.window.Events.LoadSectionEvent e) {
-    if (e.section == ModelSectionJ.PREVIEW_COMMANDS()) {
-      previewCommands_$eq(PreviewCommands$.MODULE$.apply(e.text));
+  public void handle(org.nlogo.window.Events.LoadModelEvent e) {
+    loadFromModel(e.model);
+    ArrayList<org.nlogo.core.Shape> shapes = new ArrayList<org.nlogo.core.Shape>();
+    scala.collection.Iterator<? extends org.nlogo.core.Shape.VectorShape> shapeIterator = e.model.turtleShapes().iterator();
+    while (shapeIterator.hasNext()) {
+      shapes.add(ShapeConverter.baseVectorShapeToVectorShape(shapeIterator.next()));
     }
-    if (e.section == ModelSectionJ.CLIENT() &&
-        e.lines.length > 0 &&
-        !isApplet()) {
-      getHubNetManager().load(e.lines, e.version);
+    world().turtleShapes().replaceShapes(shapes);
+    ArrayList<org.nlogo.core.Shape> linkShapes = new ArrayList<org.nlogo.core.Shape>();
+    scala.collection.Iterator<? extends org.nlogo.core.Shape.LinkShape> linkShapeIterator = e.model.linkShapes().iterator();
+    while (linkShapeIterator.hasNext()) {
+      linkShapes.add(ShapeConverter.baseLinkShapeToLinkShape(linkShapeIterator.next()));
     }
-    if (e.section == ModelSectionJ.SHAPES()) {
-      ArrayList<org.nlogo.core.Shape> shapes = new ArrayList<org.nlogo.core.Shape>();
-      scala.collection.Iterator<? extends org.nlogo.core.Shape.VectorShape> shapeIterator = ShapeParser.parseVectorShapes(e.lines).iterator();
-      while (shapeIterator.hasNext()) {
-        shapes.add(ShapeConverter.baseVectorShapeToVectorShape(shapeIterator.next()));
-      }
-      world().turtleShapeList().replaceShapes(shapes);
-    }
-    if (e.section == ModelSectionJ.LINK_SHAPES()) {
-      ArrayList<org.nlogo.core.Shape> shapes = new ArrayList<org.nlogo.core.Shape>();
-      scala.collection.Iterator<? extends org.nlogo.core.Shape.LinkShape> shapeIterator = ShapeParser.parseLinkShapes(e.lines).iterator();
-      while (shapeIterator.hasNext()) {
-        shapes.add(ShapeConverter.baseLinkShapeToLinkShape(shapeIterator.next()));
-      }
-      world().linkShapeList().replaceShapes(shapes);
-    }
+    world().linkShapes().replaceShapes(linkShapes);
   }
 
   public void snapOn(boolean snapOn) {

@@ -2,6 +2,7 @@
 
 package org.nlogo.lab
 
+import org.nlogo.api.LabProtocol
 import java.util.concurrent.{Callable, Executors, TimeUnit}
 import org.nlogo.core.WorldDimensions
 import org.nlogo.api.{Dump,LogoException, World,
@@ -10,7 +11,7 @@ import org.nlogo.nvm.{LabInterface, Workspace}
 import org.nlogo.api.MersenneTwisterFast
 import LabInterface.ProgressListener
 
-class Worker(val protocol: Protocol)
+class Worker(val protocol: LabProtocol)
   extends LabInterface.Worker
 {
   val listeners = new collection.mutable.ListBuffer[ProgressListener]

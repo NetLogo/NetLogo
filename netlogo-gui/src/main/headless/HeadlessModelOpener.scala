@@ -3,8 +3,9 @@
 package org.nlogo.headless
 
 import org.nlogo.agent.{BooleanConstraint, ChooserConstraint, InputBoxConstraint, NumericConstraint, SliderConstraint}
-import org.nlogo.api.{ FileIO, LogoException, ModelReader, ModelSection,
+import org.nlogo.api.{ FileIO, LogoException, ModelSection,
                         NetLogoLegacyDialect, NetLogoThreeDDialect, SourceOwner, ValueConstraint, Version}
+import org.nlogo.fileformat
 import org.nlogo.core.ShapeParser.{ parseVectorShapes, parseLinkShapes }
 import org.nlogo.core.{ Button, CompilerException, ConstraintSpecification, LogoList, Model, Monitor, Program, model => coremodel },
   coremodel.WidgetReader
@@ -15,11 +16,6 @@ import org.nlogo.api.StringUtils.escapeString
 import org.nlogo.api.PreviewCommands
 
 import org.nlogo.shape.{ShapeConverter, LinkShape, VectorShape}
-
-object HeadlessModelOpener {
-  def protocolSection(path: String) =
-    ModelReader.parseModel(FileIO.file2String(path)).get(ModelSection.BehaviorSpace).mkString("", "\n", "\n")
-}
 
 // this class is an abomination
 // everything works off of side effects, asking the workspace to update something
@@ -34,35 +30,25 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     if (ws.modelOpened) throw new IllegalStateException
     ws.modelOpened = true
 
-    // get out if unknown version
-    val netLogoVersion = model.version
-    if (!Version.compatibleVersion(netLogoVersion))
-      throw new IllegalStateException("unknown NetLogo version: " + netLogoVersion)
+    if (!Version.compatibleVersion(model.version))
+      throw new IllegalStateException("unknown NetLogo version: " + model.version)
 
-    // this is UGLY. I'm only doing it here because once you start to mess
-    // with world loading, you go down quite a rabbit hole
-    val additionalReaders =
-      if (Version.is3D) Map[String, WidgetReader]("GRAPHICS-WINDOW" -> org.nlogo.workspace.ThreeDViewReader)
-      else Map[String, WidgetReader]()
-    ws.loadWorld(org.nlogo.core.model.WidgetReader.format(model.view, null, additionalReaders).lines.toArray, netLogoVersion, ws)
+    ws.loadWorld(model.view, ws)
 
     for (plot <- model.plots)
-      PlotLoader.loadPlot(plot, ws.plotManager.newPlot(""), identity)
+      PlotLoader.loadPlot(plot, ws.plotManager.newPlot(""))
 
-    // this should check model.version, but we aren't there yet
-    val dialect = if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect
+    val dialect = if (Version.is3D(model.version)) NetLogoThreeDDialect
+      else NetLogoLegacyDialect
 
-    // read system dynamics modeler diagram
-    val sdmLines = model.otherSections.get("org.nlogo.sdm").flatMap(lines => if (lines.isEmpty) None else Some(lines))
-    sdmLines.foreach { (lines: List[String]) =>
-      ws.aggregateManager.load(lines.mkString("", "\n", "\n"), ws)
-    }
+    // load system dynamics model (if present)
+    ws.aggregateManager.load(model, ws)
 
     // read procedures, compile them.
     val results = {
       import collection.JavaConverters._
 
-      val additionalSources: Seq[SourceOwner] = if (sdmLines.isEmpty) Seq() else Seq(ws.aggregateManager)
+      val additionalSources: Seq[SourceOwner] = if (ws.aggregateManager.isLoaded) Seq(ws.aggregateManager) else Seq()
       val code = model.code
       val newProg = Program.fromDialect(dialect).copy(interfaceGlobals = model.interfaceGlobals)
       ws.compiler.compileProgram(code, additionalSources, newProg, ws.getExtensionManager, ws.getCompilationEnvironment)
@@ -71,14 +57,13 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     ws.codeBits.clear() //(WTH IS THIS? - JC 10/27/09)
 
     // Read preview commands. If the model doesn't specify preview commands, the default ones will be used.
-    val previewCommandsSource = model.previewCommands.mkString("\n")
-    ws.previewCommands = PreviewCommands(previewCommandsSource)
+    model.optionalSectionValue[PreviewCommands]("org.nlogo.modelsection.previewcommands").foreach(ws.previewCommands = _)
 
     // parse turtle and link shapes, updating the workspace.
     attachWorldShapes(model.turtleShapes, model.linkShapes)
 
-    model.otherSections.get("org.nlogo.hubnet.client").foreach { lines =>
-      ws.getHubNetManager.load(lines.toArray, model.version)
+    if (model.hasValueForOptionalSection("org.nlogo.modelsection.hubnetclient")) {
+      ws.getHubNetManager.foreach(_.load(model))
     }
 
     ws.init()
@@ -93,15 +78,15 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
       finish(model.constraints, results.program, model.interfaceGlobalCommands.mkString("\n"))
   }
 
-  private def attachWorldShapes(turtleShapes: List[CoreVectorShape], linkShapes: List[CoreLinkShape]) = {
+  private def attachWorldShapes(turtleShapes: Seq[CoreVectorShape], linkShapes: Seq[CoreLinkShape]) = {
     import collection.JavaConverters._
-    ws.world.turtleShapeList.replaceShapes(turtleShapes.map(ShapeConverter.baseVectorShapeToVectorShape))
+    ws.world.turtleShapes.replaceShapes(turtleShapes.map(ShapeConverter.baseVectorShapeToVectorShape))
     if (turtleShapes.isEmpty)
-      ws.world.turtleShapeList.add(VectorShape.getDefaultShape)
+      ws.world.turtleShapes.add(VectorShape.getDefaultShape)
 
-    ws.world.linkShapeList.replaceShapes(linkShapes.map(ShapeConverter.baseLinkShapeToLinkShape))
+    ws.world.linkShapes.replaceShapes(linkShapes.map(ShapeConverter.baseLinkShapeToLinkShape))
     if (linkShapes.isEmpty)
-      ws.world.linkShapeList.add(LinkShape.getDefaultLinkShape)
+      ws.world.linkShapes.add(LinkShape.getDefaultLinkShape)
   }
 
   private def finish(constraints: Map[String, ConstraintSpecification], program: Program, interfaceGlobalCommands: String) {
@@ -128,18 +113,24 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     ws.command(interfaceGlobalCommands)
   }
 
-  private def testCompileWidgets(buttons: List[Button], monitors: List[Monitor]) {
+  private def testCompileWidgets(buttons: Seq[Button], monitors: Seq[Monitor]) {
     val errors = ws.plotManager.compileAllPlots()
     if(errors.nonEmpty) throw errors(0)
-    for (button <- buttons)
-      try ws.compileCommands(button.source, button.buttonKind)
+    for {
+      button <- buttons
+      source <- button.source
+    }
+      try ws.compileCommands(source, button.buttonKind)
       catch {
         case ex: CompilerException =>
           println("compiling: \"" + button + "\"")
           throw ex
       }
-    for (monitor <- monitors)
-      try ws.compileReporter(monitor.source)
+    for {
+      monitor <- monitors
+      source <- monitor.source
+    }
+      try ws.compileReporter(source)
       catch {
         case ex: CompilerException =>
           println("compiling: \"" + monitor + "\"")

@@ -20,7 +20,7 @@ strictfp class LinkEditorDialog
 
   private final LinkShape shape;
   private final LinkShape originalShape;
-  private final DrawableList list;
+  private final DrawableList<LinkShape> list;
 
   public void update(Shape originalShape, Shape newShape) {
     shape.directionIndicator_$eq((org.nlogo.shape.VectorShape) newShape);
@@ -30,7 +30,7 @@ strictfp class LinkEditorDialog
     return false;
   }
 
-  LinkEditorDialog(final DrawableList list, final LinkShape shape, int x, int y) {
+  LinkEditorDialog(final DrawableList<LinkShape> list, final LinkShape shape, int x, int y) {
     super((javax.swing.JFrame) null, true);
     this.originalShape = shape;
     this.shape = (LinkShape) shape.clone();

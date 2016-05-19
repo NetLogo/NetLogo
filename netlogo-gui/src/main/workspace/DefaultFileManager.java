@@ -16,9 +16,9 @@ public final strictfp class DefaultFileManager
       new ArrayList<org.nlogo.core.File>();
   private org.nlogo.core.File currentFile;
   private String prefix;
-  private final AbstractWorkspace workspace;
+  private final ModelTracker workspace;
 
-  public DefaultFileManager(AbstractWorkspace workspace) {
+  public DefaultFileManager(ModelTracker workspace) {
     this.workspace = workspace;
     if (AbstractWorkspace.isApp()) {
       setPrefix(System.getProperty("user.home"));

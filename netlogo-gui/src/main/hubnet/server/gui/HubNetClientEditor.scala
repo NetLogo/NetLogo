@@ -2,12 +2,13 @@
 
 package org.nlogo.hubnet.server.gui
 
-import org.nlogo.api.ModelType
-import org.nlogo.core.I18N
-import javax.swing.{JMenuBar, JScrollPane, JFrame, ScrollPaneConstants}
 import java.awt.{Dimension, BorderLayout, Component}
 import java.io.{IOException, StringReader, BufferedReader}
-import org.nlogo.window.{Widget, WidgetInfo, MenuBarFactory, InterfaceFactory, GUIWorkspace, AbstractWidgetPanel}
+import javax.swing.{JMenuBar, JScrollPane, JFrame, ScrollPaneConstants}
+
+import org.nlogo.api.ModelType
+import org.nlogo.core.{ I18N, Widget => CoreWidget }
+import org.nlogo.window.{ WidgetInfo, MenuBarFactory, InterfaceFactory, GUIWorkspace, AbstractWidgetPanel }
 
 class HubNetClientEditor(workspace: GUIWorkspace,
                          linkParent: Component,
@@ -43,33 +44,14 @@ class HubNetClientEditor(workspace: GUIWorkspace,
   def getLinkParent = linkParent
   def close() {interfacePanel.removeAllWidgets()}
   override def requestFocus() {interfacePanel.requestFocus()}
-  def getWidgetsForSaving: java.util.List[org.nlogo.window.Widget] = interfacePanel.getWidgetsForSaving
+  def getWidgetsForSaving: Seq[CoreWidget] = interfacePanel.getWidgetsForSaving
 
-  def getWidgetsAsStrings: Seq[String] = {
-    val widgets = scala.collection.JavaConversions.asScalaBuffer(getWidgetsForSaving)
-    def widgetToStrings(w:Widget): List[String] = {
-      try {
-        val br = new BufferedReader(new StringReader(w.save))
-        Iterator.continually(br.readLine()).takeWhile(_ != null).toList ::: List("")
-      }
-      catch {
-        case ex: RuntimeException => org.nlogo.api.Exceptions.handle(ex); Nil
-        case ex: IOException => org.nlogo.api.Exceptions.handle(ex); Nil
-      }
-    }
-    widgets.map(widgetToStrings).flatten
-  }
+  def interfaceWidgets: Seq[CoreWidget] =
+    interfacePanel.getWidgetsForSaving
 
-  def save (buf:scala.collection.mutable.StringBuilder) {
-    val keys = interfacePanel.getWidgetsForSaving.iterator
-    while (keys.hasNext()) {
-      buf ++= (wrapString(keys.next.save + "\n") )
-    }
-  }
-
-  def load(lines: Array[String], version:String) {
-    interfacePanel.loadWidgets(lines, version)
-    setSize (getPreferredSize)
+  def load(widgets: Seq[CoreWidget]): Unit = {
+    interfacePanel.loadWidgets(widgets)
+    setSize(getPreferredSize)
   }
 
   def handle(e: org.nlogo.window.Events.ZoomedEvent) {setSize(getPreferredSize)}

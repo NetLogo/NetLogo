@@ -15,7 +15,7 @@ public final strictfp class _hubnetplotxy
     workspace.waitFor
         (new org.nlogo.api.CommandRunnable() {
           public void run() {
-            workspace.getHubNetManager().plot(name, x, y);
+            workspace.getHubNetManager().get().plot(name, x, y);
           }
         });
     context.ip = next;

@@ -3,7 +3,7 @@
 package org.nlogo.app
 
 import org.nlogo.util.SysInfo
-import org.nlogo.api.{APIVersion, Version}
+import org.nlogo.api.{FileIO, APIVersion, Version}
 import org.nlogo.swing.Implicits._
 import java.awt._
 import event._
@@ -65,7 +65,7 @@ class AboutWindow(parent:Frame) extends JDialog(parent,false) {
     }
     getContentPane.add(graphic,BorderLayout.NORTH)
 
-    val credits = new JTextArea(org.nlogo.util.Utils.getResourceAsString("/system/about.txt"),15,0){
+    val credits = new JTextArea(FileIO.getResourceAsString("/system/about.txt"),15,0){
       setFont(new Font(org.nlogo.awt.Fonts.platformMonospacedFont,Font.PLAIN,12))
       setDragEnabled(false)
       setLineWrap(true)

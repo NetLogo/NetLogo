@@ -13,15 +13,19 @@ install:
   # Stolen from https://github.com/yihui/knitr/blob/master/.travis.yml
   - wget -q -O - https://github.com/yihui/crandalf/raw/master/inst/scripts/install-pandoc | bash
   - travis_wait ./sbt update
+
+# we run extension tests separately because some extensions leak resources which
+# are only claimed on process exit
 script:
   - ./sbt depend
   - travis_wait ./sbt all
-  - ./sbt test:fast
-  - ./sbt nogen test:fast
-  - ./sbt threed test:fast
-  - ./sbt test:slow
-  - ./sbt nogen test:slow
-  - ./sbt threed test:slow
+  - ./sbt netlogo/test:fast
+  - ./sbt nogen netlogo/test:fast
+  - ./sbt threed netlogo/test:fast
+  - ./sbt netlogo/test:slow
+  - ./sbt nogen netlogo/test:slow
+  - ./sbt threed netlogo/test:slow
+  - ./sbt netlogo/test:extensionTests
 
 before_deploy:
   - tar -czf /tmp/NetLogo-build-$TRAVIS_COMMIT.tar.gz .

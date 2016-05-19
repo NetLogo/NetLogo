@@ -3,11 +3,15 @@
 package org.nlogo.window
 
 import org.nlogo.core.{ I18N, LogoList }
+import org.nlogo.core.{ Chooseable, Chooser => CoreChooser }
 import org.nlogo.window.Events.{AfterLoadEvent, PeriodicUpdateEvent, InterfaceGlobalEvent}
-import org.nlogo.api.{ CompilerServices, Dump, Editable}
+import org.nlogo.api.{ CompilerServices, Dump, Editable }
 
 class ChooserWidget(compiler: CompilerServices) extends Chooser(compiler) with Editable with
         InterfaceGlobalWidget with PeriodicUpdateEvent.Handler {
+
+  type WidgetModel = CoreChooser
+
   setBorder(widgetBorder)
 
   override def propertySet = Properties.chooser
@@ -47,7 +51,12 @@ class ChooserWidget(compiler: CompilerServices) extends Chooser(compiler) with E
 
   def choicesWrapper(choicesString: String) {
     var obj: Object = compiler.readFromString("[ " + choicesString + " ]")
-    if (obj.isInstanceOf[LogoList]) {setChoices(obj.asInstanceOf[LogoList])}
+    if (obj.isInstanceOf[LogoList]) { setChoices(obj.asInstanceOf[LogoList]) }
+    updateConstraints()
+  }
+
+  def choicesWrapper(choices: LogoList) {
+    setChoices(choices)
     updateConstraints()
   }
 
@@ -81,35 +90,25 @@ class ChooserWidget(compiler: CompilerServices) extends Chooser(compiler) with E
     }
   }
 
-  def load(strings: Array[String], helper: Widget.LoadHelper): Object = {
-    val x1 = strings(1).toInt
-    val y1 = strings(2).toInt
-    val x2 = strings(3).toInt
-    val y2 = strings(4).toInt
-    setSize(x2 - x1, y2 - y1)
-    name(org.nlogo.api.ModelReader.restoreLines(strings(5)))
-    choicesWrapper(strings(7))
-    index(Integer.parseInt(strings(8)))
+  private def chooseableListToLogoList(choices: List[Chooseable]): LogoList =
+    LogoList(choices.map(_.value): _*)
+
+  override def load(model: WidgetModel): AnyRef = {
+    setSize(model.right - model.left, model.bottom - model.top)
+    name(model.display.optionToPotentiallyEmptyString)
+    choicesWrapper(chooseableListToLogoList(model.choices))
+    index(model.currentChoice)
     this
   }
 
-  def save: String = {
-    var s: StringBuilder = new StringBuilder
-    s.append("CHOOSER\n")
-    s.append(getBoundsString)
-    // the file format has separate entries for name and display name,
-    // but at least at present, they are always equal, so we just
-    // write out the name twice - ST 6/3/02
-    if ((null != name()) && (!name().trim.equals(""))) {
-      s.append(name() + "\n")
-      s.append(name() + "\n")
-    }
-    else {
-      s.append("NIL\n")
-      s.append("NIL\n")
-    }
-    s.append(choicesWrapper.trim.replaceAll("\n", " ") + "\n")
-    s.append(index() + "\n")
-    s.toString
+  override def model: WidgetModel = {
+    val b = getBoundsTuple
+    val savedName = name().potentiallyEmptyStringToOption
+    CoreChooser(
+      display       = savedName,
+      left = b._1, top = b._2, right = b._3, bottom = b._4,
+      variable      = savedName,
+      choices       = constraint.acceptedValues.map(Chooseable.apply).toList,
+      currentChoice = index)
   }
 }

@@ -16,7 +16,7 @@ public final strictfp class _hubnetclearplot
     workspace.waitFor
         (new org.nlogo.api.CommandRunnable() {
           public void run() {
-            workspace.getHubNetManager().clearPlot(name);
+            workspace.getHubNetManager().get().clearPlot(name);
           }
         });
     context.ip = next;

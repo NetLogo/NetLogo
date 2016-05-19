@@ -2,7 +2,7 @@
 
 package org.nlogo.sdm.gui
 
-import org.jhotdraw.framework.{DrawingEditor, DrawingView, FigureSelectionListener, Tool}
+import org.jhotdraw.framework.{DrawingEditor, DrawingView, Figure, FigureSelectionListener, Tool}
 import org.jhotdraw.standard.{CreationTool, DeleteCommand}
 import javax.swing.JToolBar.Separator
 import java.awt.event.{ActionEvent, MouseEvent}
@@ -11,7 +11,7 @@ import org.nlogo.sdm.Model
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ ToolBarActionButton, ToolBarToggleButton }
 
-class AggregateModelEditorToolBar(editor: AggregateModelEditor) extends org.nlogo.swing.ToolBar {
+class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) extends org.nlogo.swing.ToolBar {
   // Invisible button allows no selection in visible buttongroup
   private val noToolButton = new JToggleButton("")
   private var dtLabel: JLabel = null
@@ -27,10 +27,10 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor) extends org.nlog
     def makeButton(name:String, image:String, tool:Tool) = {
       new ToolBarToggleButton(new ToolAction(I18N.gui(name.toLowerCase), image, tool))
     }
-    val stockButton = makeButton("Stock", "/images/stock.gif", new StockFigureCreationTool(editor))
-    val variablButton = makeButton("Variable", "/images/converter.gif", new ConverterFigureCreationTool(editor))
-    val flowButton = makeButton("Flow", "/images/rate.gif", new RateConnectionTool(editor, new RateConnection()))
-    val linkButton = makeButton("Link", "/images/connector.gif", new AggregateConnectionTool(editor, new BindingConnection()))
+    val stockButton = makeButton("Stock", "/images/stock.gif", new StockFigureCreationTool(model, editor))
+    val variablButton = makeButton("Variable", "/images/converter.gif", new ConverterFigureCreationTool(model, editor))
+    val flowButton = makeButton("Flow", "/images/rate.gif", new RateConnectionTool(model, editor, new RateConnection()))
+    val linkButton = makeButton("Link", "/images/connector.gif", new AggregateConnectionTool(model, editor, new BindingConnection()))
 
     val toolButtonGroup = new ButtonGroup(){ add(noToolButton) }
     for (b <- List(stockButton, variablButton, flowButton, linkButton)) {
@@ -40,7 +40,7 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor) extends org.nlog
     add(new Separator())
 
     // dt Panel
-    dtLabel = new JLabel("dt = " + editor.getModel.getDt){ setOpaque(false) }
+    dtLabel = new JLabel("dt = " + model.getDt){ setOpaque(false) }
     add(new JPanel(new java.awt.FlowLayout()) {
       add(dtLabel)
       add(new JButton(changeDTAction))
@@ -57,8 +57,19 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor) extends org.nlog
 
   def popButtons() {noToolButton.setSelected(true)}
 
+  private class ModelElementCreationTool(model: Model, editor: DrawingEditor, figure: ModelElementFigure with Figure)
+    extends CreationTool(editor, figure) {
+      override protected def setAddedFigure(newAddedFigure: Figure): Unit = {
+        super.setAddedFigure(newAddedFigure)
+        newAddedFigure match {
+          case mef: ModelElementFigure => model.addElement(mef.getModelElement)
+          case _ =>
+        }
+      }
+    }
+
   /// Figure creation tools
-  private class ConverterFigureCreationTool(editor: DrawingEditor) extends CreationTool(editor, new ConverterFigure()) {
+  private class ConverterFigureCreationTool(model: Model, editor: DrawingEditor) extends ModelElementCreationTool(model, editor, new ConverterFigure()) {
     // We override these to create a fixed-size shape, rather than allow
     // user to drag out the size
     override def mouseDown(e: MouseEvent, x: Int, y: Int) {
@@ -68,7 +79,7 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor) extends org.nlog
     override def mouseDrag(e: MouseEvent, x: Int, y: Int) {}
   }
 
-  private class StockFigureCreationTool(editor: DrawingEditor) extends CreationTool(editor, new StockFigure()) {
+  private class StockFigureCreationTool(model: Model, editor: DrawingEditor) extends ModelElementCreationTool(model, editor, new StockFigure()) {
     // We override these to create a fixed-size shape, rather than allow
     // user to drag out the size
     override def mouseDown(e: MouseEvent, x: Int, y: Int) {
@@ -99,10 +110,10 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor) extends org.nlog
   }
   val changeDTAction = new AbstractAction(I18N.gui("edit")) {
     def actionPerformed(e: ActionEvent) {
-      val newDt = JOptionPane.showInputDialog(editor, "dt", editor.getModel.getDt)
+      val newDt = JOptionPane.showInputDialog(editor, "dt", model.getDt)
       try if (newDt != null) {
-        editor.getModel.setDt(newDt.toDouble)
-        dtLabel.setText("dt = " + editor.getModel.getDt)
+        model.setDt(newDt.toDouble)
+        dtLabel.setText("dt = " + model.getDt)
         new org.nlogo.window.Events.CompileAllEvent().raise(editor)
         new org.nlogo.window.Events.DirtyEvent().raise(editor)
       }

@@ -4,19 +4,27 @@ package org.nlogo.core
 
 import ConstraintSpecification._
 
-trait Widget
+trait Widget {
+  def left:   Int
+  def top:    Int
+  def right:  Int
+  def bottom: Int
 
-sealed trait DeclaresGlobal {
+  def convertSource(conversion: String => String): Widget = this
+}
+
+trait NamedWidget {
   def varName: String
 }
 
-sealed trait DeclaresConstraint {
-  def varName: String
+
+trait DeclaresGlobal extends NamedWidget
+
+trait DeclaresConstraint extends NamedWidget {
   def constraint: ConstraintSpecification
 }
 
-sealed trait DeclaresGlobalCommand {
-  def varName: String
+trait DeclaresGlobalCommand extends NamedWidget {
   def default: Any
   def asNetLogoString(x: Any): String = x match {
     case s: String => s""""${StringEscaper.escapeString(s)}""""
@@ -27,106 +35,85 @@ sealed trait DeclaresGlobalCommand {
   }
   def command: String = "set " + varName + " " + asNetLogoString(default)
 }
-case class Button(display: Option[String], left: Int, top: Int, right: Int, bottom: Int,
-             source: String, forever: Boolean, buttonKind: AgentKind = AgentKind.Observer,
-             actionKey: String = "NIL", disableUntilTicksStart: Boolean = false)
-extends Widget
 
-case class Plot(display: String, left: Int = 0, top: Int = 0, right: Int = 5, bottom: Int = 5,
-             xAxis: String = "", yAxis: String = "", xmin: Double = 0, xmax: Double = 0, ymin: Double = 0, ymax: Double = 0,
-             autoPlotOn: Boolean = true, legendOn: Boolean = false,
-             setupCode: String = "", updateCode: String = "", pens: List[Pen] = Nil) extends Widget
-case class Pen(display: String, interval: Double = 1, mode: Int = 0, color: Int = 0, inLegend: Boolean = false,
-             setupCode: String = "", updateCode: String = "") extends Widget
-case class TextBox(display: String, left: Int = 0, top: Int = 0, right: Int = 5, bottom: Int = 5,
-             fontSize: Int, color: Double, transparent: Boolean) extends Widget
-case class Switch(display: String, left: Int = 0, top: Int = 0, right: Int = 0, bottom: Int = 0,
-             varName: String, on: Boolean = false)
-              extends Widget with DeclaresGlobal with DeclaresGlobalCommand with DeclaresConstraint {
+case class Button(source: Option[String],
+  left: Int, top: Int,
+  right: Int, bottom: Int,
+  display: Option[String] = None,
+  forever: Boolean = false,
+  buttonKind: AgentKind = AgentKind.Observer,
+  actionKey: Option[Char] = None,
+  disableUntilTicksStart: Boolean = false) extends Widget {
+    override def convertSource(conversion: String => String): Button =
+      this.copy(source = source.map(conversion))
+  }
+
+case class TextBox(display: Option[String],
+  left:  Int = 0, top:    Int = 0,
+  right: Int = 5, bottom: Int = 5,
+  fontSize: Int,
+  color: Double,
+  transparent: Boolean = false) extends Widget
+
+case class Switch(variable: Option[String],
+  left:  Int = 0, top:    Int = 0,
+  right: Int = 0, bottom: Int = 0,
+  display: Option[String] = None,
+  on: Boolean = false) extends Widget
+  with DeclaresGlobal
+  with DeclaresGlobalCommand
+  with DeclaresConstraint {
+  override def varName = variable.getOrElse("")
   override def default = on
   override def constraint = BooleanConstraintSpecification(default)
-}
-
-sealed trait Chooseable {
-  type ChosenType <: AnyRef
-
-  def value: ChosenType
-}
-
-object Chooseable {
-  def apply(a: AnyRef): Chooseable = {
-    a match {
-      case s: String => ChooseableString(s)
-      case d: java.lang.Double => ChooseableDouble(d)
-      case b: java.lang.Boolean => ChooseableBoolean(b)
-      case l: LogoList => ChooseableList(l)
-      case invalidElement => throw new RuntimeException(s"Invalid chooser option $invalidElement")
-    }
-  }
-}
-
-case class ChooseableDouble(value: java.lang.Double) extends Chooseable {
-  type ChosenType = java.lang.Double
-}
-
-case class ChooseableString(value: String) extends Chooseable {
-  type ChosenType = String
-}
-
-case class ChooseableList(value: LogoList) extends Chooseable {
-  type ChosenType = LogoList
-}
-
-case class ChooseableBoolean(value: java.lang.Boolean) extends Chooseable {
-  type ChosenType = java.lang.Boolean
-}
-
-case class Chooser(display: String, left: Int = 0, top: Int = 0, right: Int = 0, bottom: Int = 0,
-             varName: String, choices: List[Chooseable] = Nil, currentChoice: Int = 0)
-           extends Widget with DeclaresGlobal with DeclaresGlobalCommand with DeclaresConstraint {
-  override def default = choices(currentChoice).value
-  override def constraint = ChoiceConstraintSpecification(choices.map(_.value), currentChoice)
 }
 
 sealed trait Direction
 case object Horizontal extends Direction
 case object Vertical extends Direction
-case class Slider(display: String, left: Int = 0, top: Int = 0, right: Int = 0, bottom: Int = 0,
-             varName: String, min: String = "1", max: String = "10", default: Double = 1, step: String = "1",
-             units: Option[String] = None, direction: Direction = Horizontal)
-             extends Widget with DeclaresGlobal with DeclaresGlobalCommand with DeclaresConstraint {
+case class Slider(variable: Option[String],
+  left:  Int = 0, top:    Int = 0,
+  right: Int = 0, bottom: Int = 0,
+  display:  Option[String]  = None,
+  min:       String         = "0",
+  max:       String         = "100",
+  default:   Double         = 1,
+  step:      String         = "1",
+  units:     Option[String] = None,
+  direction: Direction      = Horizontal)
+  extends Widget
+  with DeclaresGlobal
+  with DeclaresGlobalCommand
+  with DeclaresConstraint {
+  override def varName = variable.getOrElse("")
   override def constraint = NumericConstraintSpecification(default)
+  override def convertSource(conversion: String => String): Slider =
+    this.copy(min = conversion(min), max = conversion(max), step = conversion(step))
 }
-case class Monitor(display: Option[String], left: Int, top: Int, right: Int, bottom: Int,
-             source: String, precision: Int, fontSize: Int) extends Widget
 
-case class Output(left: Int, top: Int, right: Int, bottom: Int, fontSize: Int) extends Widget
-
-sealed abstract class InputBoxType(val name:String)
-case object Num extends InputBoxType("Number")
-case object Str extends InputBoxType("String")
-case object StrReporter extends InputBoxType("String (reporter)")
-case object StrCommand extends InputBoxType("String (commands)")
-case object Col extends InputBoxType("Color")
-
-case class InputBox[T](left: Int = 0, top: Int = 0, right: Int = 0, bottom: Int = 0, varName: String,
-             value: T, multiline: Boolean = false, boxtype: InputBoxType)
-           extends Widget with DeclaresGlobal with DeclaresGlobalCommand with DeclaresConstraint {
-  override def default = value
-  override def constraint = boxtype match {
-    case Col => NumericInputConstraintSpecification(boxtype.name, value.asInstanceOf[Int].toDouble)
-    case Num => NumericInputConstraintSpecification(boxtype.name, value.asInstanceOf[Double])
-    case _ => StringInputConstraintSpecification(boxtype.name, value.asInstanceOf[String])
+case class Monitor(
+  source: Option[String],
+  left:  Int, top:    Int,
+  right: Int, bottom: Int,
+  display: Option[String],
+  precision: Int,
+  fontSize:  Int = 11) extends Widget {
+    override def convertSource(conversion: String => String): Monitor =
+      this.copy(source = source.map(conversion))
   }
-}
+
+case class Output(
+  left:  Int, top:    Int,
+  right: Int, bottom: Int,
+  fontSize: Int) extends Widget
 
 case class View(left: Int = 0, top: Int = 0, right: Int = 5, bottom: Int = 5,
-  dimensions: WorldDimensions = View.defaultDimensions,
-  fontSize: Int = 9,
-  updateMode: UpdateMode = UpdateMode.TickBased,
-  showTickCounter: Boolean = true,
-  tickCounterLabel: String = "ticks",
-  frameRate: Double = 25)
+  dimensions:       WorldDimensions = View.defaultDimensions,
+  fontSize:         Int             = 13,
+  updateMode:       UpdateMode      = UpdateMode.TickBased,
+  showTickCounter:  Boolean         = true,
+  tickCounterLabel: Option[String]  = Some("ticks"),
+  frameRate:        Double          = 30)
 extends Widget {
   val minPxcor = dimensions.minPxcor
   val maxPxcor = dimensions.maxPxcor
@@ -138,6 +125,7 @@ extends Widget {
 
   val patchSize = dimensions.patchSize
 }
+
 object View {
   def defaultDimensions: WorldDimensions =
     new WorldDimensions(0, 0, 0, 0, 12.0, true, true)

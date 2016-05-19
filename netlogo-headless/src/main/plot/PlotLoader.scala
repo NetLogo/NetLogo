@@ -7,7 +7,7 @@ import org.nlogo.core.{Plot => ParsedPlot, Pen => ParsedPen}
 object PlotLoader {
 
   def loadPlot(parsedPlot: ParsedPlot, plot: Plot) {
-    plot.name(parsedPlot.display)
+    plot.name(parsedPlot.display.getOrElse(""))
     plot.defaultState = plot.defaultState.copy(
         xMin = parsedPlot.xmin,
         xMax = parsedPlot.xmax,

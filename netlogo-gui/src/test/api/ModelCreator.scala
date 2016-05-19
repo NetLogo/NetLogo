@@ -61,9 +61,7 @@ trait ModelCreator {
         new Model(code = code, widgets = core.View() :: widgets.toList)
   }
 
-  class Model(code: String, widgets: List[core.Widget]) extends core.Model(code = code, widgets = widgets) {
-    override def toString = core.model.ModelReader.formatModel(this, null)
-  }
+  class Model(code: String, widgets: List[core.Widget]) extends core.Model(code = code, widgets = widgets)
 
   val counter = Iterator.from(0)
   def quoted(s:String) = '"' + s + '"'
@@ -76,7 +74,7 @@ trait ModelCreator {
 
   def Plot(name: String = "Plot" + counter.next,
     setupCode: String = "", updateCode: String = "", pens: List[core.Pen] = Nil): core.Plot =
-      core.Plot(name, 5, 5, 5, 5, "time", "num of turtles", 0.0, 10.0, 0.0, 10.0, true, false, setupCode, updateCode, pens)
+      core.Plot(Some(name), 5, 5, 5, 5, Some("time"), Some("num of turtles"), 0.0, 10.0, 0.0, 10.0, true, false, setupCode, updateCode, pens)
 
   def Pen(name:String = "Pen" + counter.next, setupCode:String = "", updateCode: String = ""): core.Pen =
     core.Pen(name, 1.0, 0, -16777216, true, setupCode, updateCode)
@@ -96,43 +94,39 @@ trait ModelCreator {
                     // this is something we should work out in the future. josh - 3/5/10
                     min: String = "0", max: String = "100", current: String = "50", inc: String = "1",
                     units:String = "NIL", direction: Direction = HORIZONTAL): core.Slider =
-    core.Slider(name, 5, 5, 5, 5, name, min, max, current.toDouble, inc, if (units == "NIL") None else Some(units), if (direction == HORIZONTAL) core.Horizontal else core.Vertical)
+    core.Slider(Some(name), 5, 5, 5, 5, Some(name), min, max, current.toDouble, inc, if (units == "NIL") None else Some(units), if (direction == HORIZONTAL) core.Horizontal else core.Vertical)
 
   //
   // Code to create switches
   //
 
   def Switch(name:String = "Switch" + counter.next, on: Boolean = true): core.Switch =
-    core.Switch(name, 5, 5, 5, 5, name, on)
+    core.Switch(Some(name), 5, 5, 5, 5, Some(name), on)
 
   //
   // Code to create choosers
   //
 
   def Chooser(name:String = "Chooser" + counter.next, choices:List[AnyRef] = Nil, index:Int = 0): core.Chooser = {
-    core.Chooser(name, 5, 5, 5, 5, name, choices.map(core.Chooseable(_)), index)
+    core.Chooser(Some(name), 5, 5, 5, 5, Some(name), choices.map(core.Chooseable(_)), index)
   }
 
-  object InputBoxTypes{
-    abstract class InputBoxType(val name:String)
-    case object Num extends InputBoxType("Number")
-    case object Str extends InputBoxType("String")
-    case object StrReporter extends InputBoxType("String (reporter)")
-    case object StrCommand extends InputBoxType("String (commands)")
-    case object Col extends InputBoxType("Color")
+  object InputBoxTypes {
+    val Num         = core.NumericInput.NumberLabel
+    val Col         = core.NumericInput.ColorLabel
+    val Str         = core.StringInput.StringLabel
+    val StrReporter = core.StringInput.ReporterLabel
+    val StrCommand  = core.StringInput.CommandLabel
   }
 
-  def InputBox[T](name:String = "InputBox" + counter.next, multiline: Boolean = false,
-          value: T = null, typ: InputBoxTypes.InputBoxType): core.InputBox[T] = {
-      def toCore(i: InputBoxTypes.InputBoxType): core.InputBoxType = i match {
-        case InputBoxTypes.Num         => core.Num
-        case InputBoxTypes.Str         => core.Str
-        case InputBoxTypes.StrReporter => core.StrReporter
-        case InputBoxTypes.StrCommand  => core.StrCommand
-        case InputBoxTypes.Col         => core.Col
-      }
-
-      core.InputBox[T](5, 5, 5, 5, name, value, multiline, toCore(typ))
+  def InputBox(label: core.StringInput.StringKind,
+    value: String = "",
+    name: String,
+    multiline: Boolean = false): core.InputBox = {
+      core.InputBox(Some(name), 5, 5, 5, 5, core.StringInput(value, label, multiline))
   }
 
+  def InputBox(label: core.NumericInput.NumericKind, value: Double, name: String): core.InputBox = {
+      core.InputBox(Some(name), 5, 5, 5, 5, core.NumericInput(value, label))
+  }
 }

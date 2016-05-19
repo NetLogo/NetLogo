@@ -2,7 +2,7 @@
 
 package org.nlogo.render
 
-import org.nlogo.core.{ AgentKind, ShapeList }
+import org.nlogo.core.{ AgentKind, ShapeList, ShapeListTracker }
 import org.nlogo.api.{AgentSet, Color, GraphicsInterface, Turtle, World}
 import org.nlogo.util.MockSuite
 
@@ -95,7 +95,8 @@ class TurtleTestsDrawer extends MockSuite {
     val patchSize = 13
     def makeTurtleDrawer = {
       import org.nlogo.shape.TestHelpers._
-      new TurtleDrawer(new ShapeList(AgentKind.Turtle, Seq(makeSquarePolygon(recolorable = testShapeIsRecolorable)))) {
+      new TurtleDrawer(new ShapeListTracker(AgentKind.Turtle,
+        ShapeList.shapesToMap(Seq(makeSquarePolygon(recolorable = testShapeIsRecolorable))))) {
         shapes.resetCache(patchSize)
       }
     }

@@ -6,10 +6,10 @@ import org.nlogo.api.GraphicsInterface;
 import org.nlogo.shape.LinkShape;
 
 public strictfp class LinkDrawer {
-  final org.nlogo.core.ShapeList linkShapes;
+  final org.nlogo.core.ShapeListTracker linkShapeTracker;
 
-  public LinkDrawer(org.nlogo.core.ShapeList linkShapes) {
-    this.linkShapes = linkShapes;
+  public LinkDrawer(org.nlogo.core.ShapeListTracker linkShapeTracker) {
+    this.linkShapeTracker = linkShapeTracker;
   }
 
   public void drawLink(GraphicsInterface g, TopologyRenderer topology, org.nlogo.api.Link link,
@@ -47,7 +47,7 @@ public strictfp class LinkDrawer {
   }
 
   private LinkDrawable getLinkDrawable(org.nlogo.api.Link link) {
-    LinkShape shape = (LinkShape) linkShapes.shape(link.shape());
+    LinkShape shape = (LinkShape) linkShapeTracker.shapeList().shape(link.shape());
 
     if (shape.isTooSimpleToPaint() && !link.isDirectedLink()) {
       return new LineDrawer();

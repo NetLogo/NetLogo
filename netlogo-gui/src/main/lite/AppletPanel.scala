@@ -3,12 +3,17 @@
 package org.nlogo.lite
 
 import java.util.{ ArrayList, List => JList }
+
+import org.nlogo.api.{ LogoException, ModelType, Version, SimpleJobOwner }
 import org.nlogo.agent.{ World, World3D }
-import org.nlogo.api.{ LogoException, ModelSection, ModelType, Version, SimpleJobOwner }
 import org.nlogo.core.{ AgentKind, CompilerException }
-import org.nlogo.window.{ Event, AppletAdPanel, CompilerManager, InterfacePanelLite, InvalidVersionException,
-                          ModelLoader, NetLogoListenerManager, RuntimeErrorDialog }
-import org.nlogo.window.Events.{ CompiledEvent, LoadSectionEvent }
+import org.nlogo.window.{ Event, FileController, AppletAdPanel, CompilerManager, LinkRoot,
+  InterfacePanelLite, InvalidVersionException, ReconfigureWorkspaceUI, NetLogoListenerManager, RuntimeErrorDialog }
+import org.nlogo.window.Events.{ CompiledEvent, LoadModelEvent }
+import org.nlogo.workspace.OpenModel
+import org.nlogo.fileformat
+
+import java.net.URI
 
 /**
  * The superclass of org.nlogo.lite.InterfaceComponent.  Also used by org.nlogo.lite.Applet.
@@ -20,15 +25,8 @@ abstract class AppletPanel(
   frame: java.awt.Frame, iconListener: java.awt.event.MouseListener, isApplet: Boolean)
 extends javax.swing.JPanel
 with org.nlogo.api.Exceptions.Handler
-with Event.LinkParent {
-
-  /// LinkComponent stuff
-
-  val linkComponents: JList[AnyRef] = new ArrayList[AnyRef]
-  /** internal use only */
-  def addLinkComponent(c: AnyRef) { linkComponents.add(c) }
-  /** internal use only */
-  override def getLinkChildren = linkComponents.toArray
+with Event.LinkParent
+with LinkRoot {
 
   /**
    * The NetLogoListenerManager stored in this field can be used to add and remove NetLogoListeners,
@@ -62,10 +60,9 @@ with Event.LinkParent {
       if (e.error != null)
         e.error.printStackTrace()
   }})
-  addLinkComponent(new LoadSectionEvent.Handler {
-    override def handle(e: LoadSectionEvent) {
-      if (e.section == ModelSection.SystemDynamics)
-        workspace.aggregateManager.load(e.text, workspace)
+  addLinkComponent(new LoadModelEvent.Handler {
+    override def handle(e: LoadModelEvent) {
+      workspace.aggregateManager.load(e.model, workspace)
   }})
   workspace.setWidgetContainer(iP)
   setBackground(java.awt.Color.WHITE)
@@ -187,9 +184,9 @@ with Event.LinkParent {
    *
    * @param source new contents
    */
-  def setProcedures(source: String) {
+  def setProcedures(source: String): Unit = {
     org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
-    procedures.innerSource(source)
+    procedures.innerSource = source
   }
 
   /**
@@ -200,7 +197,7 @@ with Event.LinkParent {
    *               in the same format as it would be stored in a file.
    */
   @throws(classOf[InvalidVersionException])
-  def openFromSource(name: String, path: String, source: String) {
+  def openFromURI(uri: URI) {
     iP.reset()
     // I haven't thoroughly searched for all the places where the type of model matters, but it
     // seems to me like it ought to be OK; the main thing the model type affects in the engine (as
@@ -208,8 +205,10 @@ with Event.LinkParent {
     // from, but in the applet case 1) you can't write files and 2) we have special code for the
     // reading case that goes out to the web server instead of 1the file system.... so, I think
     // TYPE_LIBRARY is probably OK. - ST 10/11/05
-    RuntimeErrorDialog.setModelName(name)
-    ModelLoader.load(this, path, ModelType.Library, source)
+    RuntimeErrorDialog.setModelName(uri.getPath.split("/").last)
+    val controller = new FileController(this, workspace)
+    val loader = fileformat.standardLoader(workspace.compiler.compilerUtilities, workspace.autoConvert _)
+    val modelOpt = OpenModel(uri, controller, loader, Version)
+    modelOpt.foreach(model => ReconfigureWorkspaceUI(this, uri, ModelType.Library, model, workspace))
   }
-
 }

@@ -2,9 +2,16 @@
 
 package org.nlogo.headless.hubnet
 
-import org.nlogo.api.{ FileIO, LocalFile, ModelSection, ModelReader}
+import org.nlogo.core.{ LiteralParser, Widget => CoreWidget }
+import org.nlogo.core.model.WidgetReader
+import org.nlogo.api.{ FileIO, ModelSection }
+import org.nlogo.fileformat
+import org.nlogo.hubnet.protocol.ComputerInterface
 import org.nlogo.headless.TestUsingWorkspace
-import org.nlogo.hubnet.protocol.ClientInterface
+
+import java.io.{ByteArrayInputStream, ObjectOutputStream, ByteArrayOutputStream}
+import java.nio.file.Paths
+
 import org.nlogo.util.ClassLoaderObjectInputStream
 
 import TestUtils._
@@ -13,25 +20,45 @@ import org.scalatest.FunSuite
 
 class TestClientInterface extends TestUsingWorkspace {
 
-  testUsingWorkspace("empty ClientInterface is serializable"){ workspace =>
-    val ci = new ClientInterface(Nil, Nil, Nil, Nil, workspace)
+  import org.scalatest.Assertions._
+
+  implicit class RoundTrip[T](t: T) {
+    def writeThenRead: T = roundTripSerialization(t)
+    def isSerializable = roundTripSerialization(t) === t
+  }
+
+  def roundTripSerialization[T](t: T) = {
+    val bytes = new ByteArrayOutputStream()
+    val out = new ObjectOutputStream(bytes)
+    out.writeObject(t)
+    out.flush()
+    val in = ClassLoaderObjectInputStream(
+      Thread.currentThread.getContextClassLoader,
+      new ByteArrayInputStream(bytes.toByteArray))
+    in.readObject().asInstanceOf[T]
+  }
+
+  testUsingWorkspace("empty ComputerInterface is serializable"){ workspace =>
+    val ci = new ComputerInterface(Nil, Nil, Nil)
     assert(ci.toString === roundTripSerialization(ci).toString)
   }
 
-  testUsingWorkspace("legit ClientInterface is serialiazble"){ workspace =>
+  testUsingWorkspace("legit ComputerInterface is serializable"){ workspace =>
     import collection.JavaConverters._
     val model = "test/hubnet/client-interface.nlogo"
-    val unparsedWidgets = getClientWidgets(model)
-    val parsedWidgets = ModelReader.parseWidgets(unparsedWidgets).asScala.map(_.asScala.toList).toList
-    val ci = new ClientInterface(parsedWidgets, unparsedWidgets.toList,
+    val parsedWidgets = getClientWidgets(model, workspace)
+    val ci = new ComputerInterface(parsedWidgets,
                                  workspace.world.turtleShapeList.shapes,
-                                 workspace.world.linkShapeList.shapes,
-                                 workspace)
+                                 workspace.world.linkShapeList.shapes)
     assert(ci.toString === roundTripSerialization(ci).toString)
   }
 
-  private def getClientWidgets(modelFilePath: String) = {
-    ModelReader.parseModel(FileIO.file2String(modelFilePath)).get(ModelSection.HubNetClient)
+  private def getClientWidgets(modelFilePath: String, workspace: LiteralParser): Seq[CoreWidget] = {
+    fileformat.standardLoader(workspace, _ => identity)
+      .readModel(Paths.get(modelFilePath).toUri)
+      .get
+      .optionalSectionValue[Seq[CoreWidget]]("org.nlogo.modelsection.hubnetclient")
+      .get
   }
 
   test("test roundTripSerialization method"){

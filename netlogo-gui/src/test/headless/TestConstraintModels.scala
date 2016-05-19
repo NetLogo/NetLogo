@@ -56,11 +56,11 @@ class TestConstraintModels extends AbstractTestModels {
 
   testModel("InputBox Constraint Loading",
     Model(
-      InputBox(name="number", value=5d, typ=InputBoxTypes.Num),
-      InputBox(name="string", value="this is a string", typ=InputBoxTypes.Str),
-      InputBox(name="reporter", value="max-pxcor", typ=InputBoxTypes.StrReporter),
-      InputBox(name="commands", value="show 1", typ=InputBoxTypes.StrCommand),
-      InputBox(name="colors", value=0, typ=InputBoxTypes.Col)
+      InputBox(name="number", value=5d, label=InputBoxTypes.Num),
+      InputBox(name="string", value="this is a string", label=InputBoxTypes.Str),
+      InputBox(name="reporter", value="max-pxcor", label=InputBoxTypes.StrReporter),
+      InputBox(name="commands", value="show 1", label=InputBoxTypes.StrCommand),
+      InputBox(value=0d, name="colors", label=InputBoxTypes.Col)
       )){
 
     reporter("string") -> "this is a string"

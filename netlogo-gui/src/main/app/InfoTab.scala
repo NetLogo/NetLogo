@@ -22,7 +22,7 @@ import java.io.File
 
 class InfoTab(attachModelDir: String => String) extends JPanel with
         DocumentListener with Printable with HyperlinkListener with
-        org.nlogo.window.Events.LoadSectionEvent.Handler with
+        org.nlogo.window.Events.LoadModelEvent.Handler with
         org.nlogo.window.Events.ZoomedEvent.Handler with
         org.nlogo.window.Zoomable {
 
@@ -141,13 +141,9 @@ class InfoTab(attachModelDir: String => String) extends JPanel with
     updateEditorPane()
   }
 
-  def handle(e: org.nlogo.window.Events.LoadSectionEvent) {
-    if(e.section == ModelSection.Info) {
-      info(if(VersionHistory.olderThan42pre2(e.version))
-             InfoConverter.convert(e.text)
-           else e.text)
-      resetView()
-    }
+  def handle(e: org.nlogo.window.Events.LoadModelEvent) {
+    info(e.model.info)
+    resetView()
   }
 
   private var editorPaneFontSize = InfoFormatter.defaultFontSize

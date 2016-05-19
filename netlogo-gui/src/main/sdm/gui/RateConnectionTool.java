@@ -2,6 +2,8 @@
 
 package org.nlogo.sdm.gui;
 
+import org.nlogo.sdm.Model;
+
 import org.jhotdraw.framework.ConnectionFigure;
 import org.jhotdraw.framework.Drawing;
 import org.jhotdraw.framework.Figure;
@@ -14,9 +16,10 @@ import java.awt.event.MouseEvent;
 strictfp class RateConnectionTool
     extends AggregateConnectionTool {
   RateConnectionTool
-      (org.jhotdraw.framework.DrawingEditor newDrawingEditor,
+      (Model model,
+       AggregateModelEditor newDrawingEditor,
        ConnectionFigure newPrototype) {
-    super(newDrawingEditor, newPrototype);
+    super(model, newDrawingEditor, newPrototype);
   }
 
   public Figure implyReservoir(int x, int y, Drawing drawing) {

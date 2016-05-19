@@ -4,14 +4,16 @@ package org.nlogo.hubnet.server
 
 import org.nlogo.hubnet.connection.HubNetException
 import org.nlogo.workspace.AbstractWorkspaceScala
-import org.nlogo.api.ModelType
-import org.nlogo.hubnet.protocol.TestClient
+import org.nlogo.core.{ Model, Widget => CoreWidget }
+import org.nlogo.core.model.WidgetReader
+import org.nlogo.api.{ ModelType, ModelLoader }
+import org.nlogo.hubnet.protocol.{ ComputerInterface, TestClient }
 import collection.mutable.ListBuffer
 import java.util.concurrent.{Executors, ExecutorService}
 
 // TODO: we really need to do something about the printlns in this class.
 // but what?
-class HeadlessHubNetManager(workspace: AbstractWorkspaceScala) extends HubNetManager(workspace){
+class HeadlessHubNetManager(workspace: AbstractWorkspaceScala, loader: ModelLoader) extends HubNetManager(workspace, loader){
   // since the server is headless, the clients cant be, or no one would have a view.
   // so, set this to true by default. JC 12/28/10
   HubNetUtils.viewMirroring = true
@@ -20,10 +22,19 @@ class HeadlessHubNetManager(workspace: AbstractWorkspaceScala) extends HubNetMan
   // and is now running it in headless.
   // load is called from HeadlessModelOpener
   // save should never be called.
-  var widgets: Array[String] = Array()
-  def load(lines:Array[String], version: String) { widgets = lines }
-  def getClientInterface: Array[String] = widgets
-  def save(buf:scala.collection.mutable.StringBuilder) {}
+  var widgets: Seq[CoreWidget] = Seq()
+  def load(m: Model) {
+    m.optionalSectionValue[Seq[CoreWidget]]("org.nlogo.modelsection.hubnetclient").foreach { ws =>
+      widgets = ws
+    }
+  }
+  override def updateModel(m: Model): Model = {
+    m.withOptionalSection("org.nlogo.modelsection.hubnetclient", Some(widgets), Seq())
+  }
+  override def modelWidgets: Seq[CoreWidget] = widgets
+  override def currentlyActiveInterface =
+    ComputerInterface(widgets, workspace.world.turtleShapeList.shapes, workspace.world.linkShapeList.shapes)
+  def interfaceWidgets = Seq()
 
   // should we be logging or doing something else here besides just println? JC - 12/28/10
   private val listener = new ClientEventListener() {
@@ -73,7 +84,7 @@ class HeadlessHubNetManager(workspace: AbstractWorkspaceScala) extends HubNetMan
 
   // other no-op gui related stuff
   def setTitle(name: String, dir: String, modelType: ModelType) {}
-  def importClientInterface(filePath: String, client: Boolean) {} // only called from the File menu.
+  def importClientInterface(model: Model, client: Boolean) {} // only called from the File menu.
 
   private val clientIds = Iterator.from(0)
   private val clientsAddedViaNewClient = ListBuffer[TestClient]()

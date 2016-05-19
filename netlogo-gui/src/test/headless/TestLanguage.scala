@@ -18,8 +18,8 @@ object TestLanguage {
     import org.nlogo.core.{ Plot, Pen, View }
     List(
       View.square(5),
-      Plot(display = "plot1", pens = List(Pen(display = "pen1"), Pen(display = "pen2"))),
-      Plot(display = "plot2", pens = List(Pen(display = "pen1"), Pen(display = "pen2"))))
+      Plot(display = Some("plot1"), pens = List(Pen(display = "pen1"), Pen(display = "pen2"))),
+      Plot(display = Some("plot2"), pens = List(Pen(display = "pen1"), Pen(display = "pen2"))))
   }
   implicit class LegacyLanguageTest(languageTest: LanguageTest) {
     import languageTest._
@@ -84,7 +84,7 @@ object TestLanguage {
             case o => throw new RuntimeException("Invalid test case: " + o)
           }
         }
-        finally workspace.dispose()
+        finally if (workspace != null) workspace.dispose()
       }
       new Tester(NormalMode)
       if(!testName.startsWith("*")) new Tester(RunMode)
@@ -94,11 +94,13 @@ object TestLanguage {
 // We parse the tests first, then run them.
 // Parsing is separate so we can write tests for the parser itself.
 abstract class TestLanguage(files: Iterable[File]) extends FunSuite with SlowTest {
+  def tag: Tag = SlowTest.Tag
+
   import TestLanguage._
   def additionalTags: Seq[Tag] = Seq()
 
   for(t:LanguageTest <- TestParser.parseFiles(files); if(t.shouldRun))
-    test(t.fullName, (additionalTags ++ Seq(new Tag(t.suiteName){}, new Tag(t.fullName){}, SlowTest.Tag)): _*) {
+    test(t.fullName, (additionalTags ++ Seq(new Tag(t.suiteName){}, new Tag(t.fullName){}, tag)): _*) {
       t.run
     }
 }
@@ -121,7 +123,9 @@ class TestCommands extends TestLanguage(TxtsInDir("test/commands")) {
 class TestReporters extends TestLanguage(TxtsInDir("test/reporters")) {
   override def additionalTags = Seq(LanguageTestTag)
 }
-class TestExtensions extends TestLanguage(ExtensionTestsDotTxt)
+class TestExtensions extends TestLanguage(ExtensionTestsDotTxt) {
+  override def tag = SlowTest.ExtensionTag
+}
 class TestModels extends TestLanguage(
   TxtsInDir("models/test")
     .filterNot(_.getName.startsWith("checksums")))

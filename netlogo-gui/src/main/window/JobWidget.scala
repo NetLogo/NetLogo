@@ -18,7 +18,12 @@ abstract class JobWidget(val random: MersenneTwisterFast)
 
   var agentKind: AgentKind = null
 
-  var procedure: Procedure = null
+  var _procedure: Procedure = null
+
+  def procedure: Procedure = _procedure
+
+  def procedure_=(procedure: Procedure) =
+    _procedure = procedure
 
   var agents: AgentSet = null
 
@@ -35,10 +40,6 @@ abstract class JobWidget(val random: MersenneTwisterFast)
     this.agents = as
   }
 
-  def procedure(proc: Procedure): Unit = {
-    this.procedure = proc
-  }
-
   // override in subclasses
   def ownsPrimaryJobs: Boolean = true
 
@@ -50,7 +51,7 @@ abstract class JobWidget(val random: MersenneTwisterFast)
   def handle(e: CompiledEvent): Unit = {
     if (e.sourceOwner eq this) {
       // use setter method, so subclasses can catch
-      procedure(e.procedure)
+      procedure = e.procedure
       error(e.error)
     }
 
@@ -80,10 +81,12 @@ abstract class JobWidget(val random: MersenneTwisterFast)
 
   ///
 
-  var innerSource = ""
+  var _innerSource = ""
 
-  def innerSource(innerSource: String): Unit = {
-    this.innerSource = innerSource
+  def innerSource: String = _innerSource
+
+  def innerSource_=(s: String): Unit = {
+    _innerSource = s
   }
 
   var headerSource = ""

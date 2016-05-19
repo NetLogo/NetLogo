@@ -39,7 +39,7 @@ trait AbstractTestLanguage extends Assertions {
       import collection.JavaConverters._
       compiler.compileProgram(
         HeadlessWorkspace.TestDeclarations + source,
-        workspace.world.newProgram(List[String]().asJava),
+        workspace.world.newProgram(Seq[String]()),
         workspace.getExtensionManager(), workspace.getCompilationEnvironment)
     }
     workspace.setProcedures(results.proceduresMap)
@@ -53,7 +53,7 @@ trait AbstractTestLanguage extends Assertions {
       import collection.JavaConverters._
       compiler.compileProgram(
         model.code,
-        workspace.world.newProgram(List[String]().asJava),
+        workspace.world.newProgram(Seq[String]()),
         workspace.getExtensionManager(), workspace.getCompilationEnvironment)
     }
     workspace.setProcedures(results.proceduresMap)

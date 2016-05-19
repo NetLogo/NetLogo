@@ -2,7 +2,7 @@
 
 package org.nlogo.api
 
-import org.nlogo.core, core.{ Program, ShapeList }
+import org.nlogo.core, core.{ Program, ShapeList, ShapeListTracker }
 
 trait World {
   def patchSize: Double
@@ -35,7 +35,9 @@ trait World {
   def patches: AgentSet
   def links: AgentSet
   def program: Program
+  def turtleShapes: ShapeListTracker
   def turtleShapeList: ShapeList
+  def linkShapes: ShapeListTracker
   def linkShapeList: ShapeList
   def getDrawing: AnyRef
   def trailDrawer: TrailDrawerInterface

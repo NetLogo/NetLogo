@@ -36,15 +36,15 @@ public strictfp class TurtleShapeManager {
       new LinkedList<CacheKey>();
   private final Map<CacheKey, CachedShape> shapeCache =
       new HashMap<CacheKey, CachedShape>();
-  final org.nlogo.core.ShapeList shapeList;
+  final org.nlogo.core.ShapeListTracker shapeTracker;
 
   private int cellSize;
   private int pixelCount = 0;  // measured in pixels
   private int angleStep;
   private int numAngleSteps;
 
-  TurtleShapeManager(org.nlogo.core.ShapeList shapeList) {
-    this.shapeList = shapeList;
+  TurtleShapeManager(org.nlogo.core.ShapeListTracker shapeTracker) {
+    this.shapeTracker = shapeTracker;
   }
 
   public int cacheSize() {
@@ -84,7 +84,7 @@ public strictfp class TurtleShapeManager {
   }
 
   VectorShape getShape(org.nlogo.api.Turtle turtle) {
-    return (VectorShape) shapeList.shape(turtle.shape());
+    return (VectorShape) shapeTracker.shapeList().shape(turtle.shape());
   }
 
   CachedShape getCachedShape(VectorShape shape, java.awt.Color color,

@@ -27,7 +27,7 @@ class TestCompileBenchmarks extends FixtureSuite  {
         import fixture.workspace.{ open, report }
         open("models/test/benchmarks/" + name + " Benchmark.nlogo")
         val expected =
-          io.Source.fromFile("test/benchdumps/" + name + ".txt")
+          io.Source.fromFile("netlogo-headless/test/benchdumps/" + name + ".txt")
             .getLines.mkString("","\n","\n")
         assertResult(expected)(report("__dump"))
       }

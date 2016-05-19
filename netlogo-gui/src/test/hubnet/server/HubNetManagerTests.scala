@@ -2,6 +2,8 @@
 
 package org.nlogo.hubnet.server
 
+import org.nlogo.api.ConfigurableModelLoader
+import org.nlogo.fileformat.{ NLogoFormat, NLogoHubNetFormat }
 import org.nlogo.hubnet.connection.HubNetException
 import org.nlogo.workspace.DummyAbstractWorkspace
 import org.scalatest.FunSuite
@@ -62,7 +64,10 @@ class HubNetManagerTests extends FunSuite {
   def hubnetTest(name: String)(f: (HubNetManager, MockConnectionManager) => Unit) {
     test(name){
       val workspace = new DummyAbstractWorkspace
-      val manager = new HeadlessHubNetManager(workspace) {
+      val loader = new ConfigurableModelLoader()
+        .addFormat[Array[String], NLogoFormat](new NLogoFormat(workspace.autoConvert _))
+        .addSerializer[Array[String], NLogoFormat](new NLogoHubNetFormat(workspace, workspace.autoConvert _))
+      val manager = new HeadlessHubNetManager(workspace, loader) {
         override val connectionManager = new MockConnectionManager(this, workspace)
       }
       manager.reset()

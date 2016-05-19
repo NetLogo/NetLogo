@@ -243,18 +243,7 @@ class Generator(procedure: Procedure, profilingEnabled: Boolean) extends Generat
       result.source = original.source
 
       // disassembly is stored as a thunk, so it's not generated unless used
-      result.disassembly = new Thunk[String] {
-        def isBoring(line: String) =
-          List("\\s*LINENUMBER.*", "\\s*MAXSTACK.*", "\\s*MAXLOCALS.*").exists(line.matches(_))
-        def compute = {
-          val sw = new java.io.StringWriter
-          new ClassReader(bytecode).accept(new TraceClassVisitor(new java.io.PrintWriter(sw)), 0)
-          // (?s) = let dot match newlines. match until blank line (don't include init method)
-          """(?s)public final strictfp (?:perform|report).*?\n(.*?)\n\s*\n""".r
-            .findFirstMatchIn(sw.getBuffer.toString).get.subgroups.head
-            .split("\n").filter(!isBoring(_)).mkString("\n")
-        }
-      }
+      result.disassembly = new DisassemblyThunk(bytecode)
       if (debugEndOfMethodLabel.getOffset > Generator.METHOD_SIZE_WARNING_THRESHOLD) {
         System.err.println
         System.err.println("WARNING: method size=" + debugEndOfMethodLabel.getOffset +

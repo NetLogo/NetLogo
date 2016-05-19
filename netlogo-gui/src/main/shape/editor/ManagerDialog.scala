@@ -2,61 +2,76 @@
 
 package org.nlogo.shape.editor
 
-import org.nlogo.core.{ I18N, ShapeList }
-import org.nlogo.swing.Implicits._
-import javax.swing.{JScrollPane, SwingConstants, Box, BoxLayout, JPanel, JLabel, JDialog, JButton}
 import java.awt.{Font, Component}
+import java.awt.event.MouseEvent
+import javax.swing.{ JScrollPane, SwingConstants, Box, BoxLayout,
+  JPanel, JLabel, JDialog, JButton, JOptionPane}
 import javax.swing.event.{ListSelectionEvent, MouseInputAdapter, ListSelectionListener}
-import org.nlogo.shape.{ShapeConverter, ModelSectionReader, LinkShape, VectorShape}
-import org.nlogo.core.{ Shape => CoreShape }
-import org.nlogo.core.ShapeParser.parseVectorShapes
 
+import java.nio.file.Paths
 
-abstract class ManagerDialog(parentFrame: java.awt.Frame,
-                             sectionReader: ModelSectionReader,
-                             val shapesList: DrawableList) extends JDialog(parentFrame)
-        with ListSelectionListener with ImportDialog.ShapeParser {
+import org.nlogo.api.ModelLoader
+import org.nlogo.core.{ AgentKind, I18N, Model, Shape => CoreShape, ShapeList, ShapeListTracker },
+  ShapeList.{ shapesToMap, isDefaultShapeName }
+import org.nlogo.swing.Implicits._
+
+import scala.util.{ Failure, Success }
+import scala.reflect.ClassTag
+
+abstract class ManagerDialog[A <: CoreShape](parentFrame: java.awt.Frame,
+  modelLoader: ModelLoader,
+  val shapeListTracker: ShapeListTracker)(implicit ct: ClassTag[A])
+  extends JDialog(parentFrame)
+  with ListSelectionListener {
+
+  implicit val i18nPrefix = I18N.Prefix("tools.shapesEditor")
+
+  val shapesList = new DrawableList(shapeListTracker, 10, 34, this)
+
+  protected var importDialog = Option.empty[ImportDialog]
 
   // abstract defs
   def newShape()
   def editShape()
   def duplicateShape()
 
-  // this is horrible
-  private var importDialog: ImportDialog = null
+  def displayableShapeFromCoreShape(shape: CoreShape): Option[A]
 
-  implicit val i18nPrefix = I18N.Prefix("tools.shapesEditor")
+  def modelShapes(m: Model): Seq[CoreShape]
+
+  def shapeKind: AgentKind
+
+  def importButtons: Seq[Component] = Seq(modelImportButton)
 
   // Create the buttons
-  val importButton = new JButton(I18N.gui("importFromModel")) {addActionListener(() => importFromModel())}
-  val libraryButton = new JButton(I18N.gui("importFromLibrary")) {addActionListener(() => importFromLibrary())}
-  val editButton = new JButton(I18N.gui("edit")) {addActionListener(() => editShape())}
-  val newButton = new JButton(I18N.gui("new")) {addActionListener(() => newShape())}
-  val deleteButton = new JButton(I18N.gui("delete")) {
+  lazy val modelImportButton = new JButton(I18N.gui("importFromModel")) {addActionListener(() => importFromModel())}
+  lazy val editButton = new JButton(I18N.gui("edit")) {addActionListener(() => editShape())}
+  lazy val newButton = new JButton(I18N.gui("new")) {addActionListener(() => newShape())}
+  lazy val deleteButton = new JButton(I18N.gui("delete")) {
     addActionListener(() => {
       ManagerDialog.this.shapesList.deleteShapes()
       editButton.setEnabled(true) // Since at most one shape is highlighted now, enable edit
       setEnabled(true)
       val shape = ManagerDialog.this.shapesList.getOneSelected
       // Don't delete the default turtle
-      if (shape != null && ShapeList.isDefaultShapeName(shape.name)) setEnabled(false)
+      if (shape.map(_.name).exists(isDefaultShapeName)) {
+        setEnabled(false)
+      }
     })
     setEnabled(false)
   }
-  val duplicateButton = new JButton(I18N.gui("duplicate")) {addActionListener(() => duplicateShape())}
 
-  val libraryLabel = new JLabel(I18N.gui("info"), SwingConstants.CENTER) {
+  lazy val duplicateButton = new JButton(I18N.gui("duplicate")) {addActionListener(() => duplicateShape())}
+
+  lazy val libraryLabel = new JLabel(I18N.gui("info"), SwingConstants.CENTER) {
     setFont(new Font(org.nlogo.awt.Fonts.platformFont, Font.PLAIN, 10))
   }
 
-  ///
   locally {
-    shapesList.setParent(this)
     shapesList.addMouseListener(new MouseInputAdapter() {
       // Listen for double-clicks, and edit the selected shape
-      override def mouseClicked(e: java.awt.event.MouseEvent) {if (e.getClickCount() > 1) editShape()}
+      override def mouseClicked(e: MouseEvent) {if (e.getClickCount() > 1) editShape()}
     })
-    shapesList.setCellRenderer(new ShapeCellRenderer(shapesList))
 
     org.nlogo.swing.Utils.addEscKeyAction(this, () => dispose())
 
@@ -90,15 +105,12 @@ abstract class ManagerDialog(parentFrame: java.awt.Frame,
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
         add(Box.createHorizontalGlue())
         add(Box.createHorizontalStrut(20))
-        add(libraryButton)
-        add(Box.createHorizontalStrut(5))
-        add(importButton)
+        importButtons.foreach(add)
         add(Box.createHorizontalStrut(20))
         add(Box.createHorizontalGlue())
       })
       add(libraryLabel)
     }, java.awt.BorderLayout.SOUTH)
-    pack()
 
     // Set the window size
     val maxBounds = getGraphicsConfiguration().getBounds()
@@ -106,6 +118,8 @@ abstract class ManagerDialog(parentFrame: java.awt.Frame,
 
     // set the default button
     getRootPane().setDefaultButton(editButton)
+
+    pack()
   }
 
   // Initialize then display the manager
@@ -121,31 +135,35 @@ abstract class ManagerDialog(parentFrame: java.awt.Frame,
     shapesList.selectShapeName("default")
   }
 
-  // Import shapes from shapes library
-  private def importFromLibrary() {
-    val defaultShapes = org.nlogo.util.Utils.getResourceAsStringArray("/system/defaultShapes.txt")
-    val libraryShapes = org.nlogo.util.Utils.getResourceAsStringArray("/system/libraryShapes.txt")
-    val mergedShapes = defaultShapes.toList ::: ("" :: libraryShapes.toList)
-    importDialog = new ImportDialog(parentFrame, this, mergedShapes.toArray, null, this)
-    shapesList.requestFocus()
-  }
-
   // Import shapes from another model
-  private def importFromModel() {
+  private def importFromModel(): Unit = {
     try {
       val path = org.nlogo.swing.FileDialog.show(parentFrame, I18N.gui("import.note"), java.awt.FileDialog.LOAD)
-      val shapesV = sectionReader.read(path)
-      if (shapesV.length == 0) importDialog.sendImportWarning(I18N.gui("import.error"))
-      else importDialog = new ImportDialog(parentFrame, this, shapesV, path, this)
-    }
-    catch {
+      val modelUri = Paths.get(path).toUri
+      modelLoader.readModel(modelUri)
+        .map(modelShapes)
+        .map(drawableListFromModelShapes) match {
+          case Failure(ex) =>
+            JOptionPane.showMessageDialog(this,
+              I18N.gui.get("import.invalidError"),
+              I18N.gui.get("import"),
+              JOptionPane.WARNING_MESSAGE)
+          case Success(drawableList) =>
+            if (drawableList.shapeList.isEmpty)
+              importDialog.foreach(_.sendImportWarning(I18N.gui("import.error")))
+            else
+              importDialog = Some(new ImportDialog(parentFrame, this, drawableList))
+        }
+    } catch {
       case e: org.nlogo.awt.UserCancelException => org.nlogo.api.Exceptions.ignore(e)
     }
     shapesList.requestFocus()
   }
 
-  def parseShapes(shapes: Array[String], version: String): Seq[CoreShape] = {
-    parseVectorShapes(shapes).map(ShapeConverter.baseVectorShapeToVectorShape)
+  def drawableListFromModelShapes(shapes: Seq[CoreShape]): DrawableList[A] = {
+    val sortedShapes = ShapeList.sortShapes(shapes.flatMap(displayableShapeFromCoreShape))
+    val shapeListTracker = new ShapeListTracker(shapeKind, shapesToMap(sortedShapes))
+    new DrawableList[A](shapeListTracker, 10, 34, this)
   }
 
   // Listen for changes in list selection, and make the edit and delete buttons inoperative if necessary
@@ -163,7 +181,7 @@ abstract class ManagerDialog(parentFrame: java.awt.Frame,
     }
 
     if (selected.length == 0 ||
-            (selected.length == 1 && ShapeList.isDefaultShapeName(shapesList.elementAt(selected(0)).asInstanceOf[String])))
+       (selected.length == 1 && ShapeList.isDefaultShapeName(shapesList.elementAt(selected(0)).name)))
       deleteButton.setEnabled(false)
     else // You can't delete the default turtle shapes
       deleteButton.setEnabled(true)

@@ -43,7 +43,7 @@ public final strictfp class _hubnetsendusermessage
           (context, this, 0, Syntax.ListType() | Syntax.StringType(), clients);
     }
 
-    workspace.getHubNetManager().sendUserMessage(asScalaBuffer(nodes), Dump.logoObject(data));
+    workspace.getHubNetManager().get().sendUserMessage(asScalaBuffer(nodes), Dump.logoObject(data));
     context.ip = next;
   }
 

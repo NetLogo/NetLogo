@@ -2,10 +2,10 @@
 
 package org.nlogo.api
 
-import org.nlogo.core.AgentKind
+import org.nlogo.core.{ AgentKind, Model, Widget => CoreWidget }
 import java.io.{ Serializable => JSerializable }
 
-trait HubNetInterface extends ViewInterface with ModelSections.BufSaveable {
+trait HubNetInterface extends ViewInterface with ModelSections.ModelSaveable {
   /// getting messages
   @throws(classOf[LogoException])
   def messageWaiting: Boolean
@@ -44,13 +44,13 @@ trait HubNetInterface extends ViewInterface with ModelSections.BufSaveable {
    * Send a message to each node (client) in the list for the given tag
    */
   @throws(classOf[LogoException])
-  def send(nodes: Seq[String], tag: String, message: JSerializable)
+  def send(nodes: Seq[String], tag: String, message: JSerializable with AnyRef)
 
   /**
    * Send message to a single client for the given tag
    */
   @throws(classOf[LogoException])
-  def send(node: String, tag: String, message: JSerializable): Boolean
+  def send(node: String, tag: String, message: JSerializable with AnyRef): Boolean
 
   /// connection management
   def disconnect()
@@ -68,7 +68,7 @@ trait HubNetInterface extends ViewInterface with ModelSections.BufSaveable {
 
   /// clients
   @throws(classOf[LogoException])
-  def setClientInterface(clientType: String, interfaceInfo:Iterable[AnyRef])
+  def setClientInterface(clientType: String, clientInterface: Iterable[HubNetInterface.ClientInterface])
   def newClient(isRobo: Boolean, waitTime: Int)
   def sendFromLocalClient(clientName:String, tag: String, content: AnyRef): Option[String]
   def isOverridable(agentType: AgentKind, varName: String): Boolean
@@ -97,13 +97,13 @@ trait HubNetInterface extends ViewInterface with ModelSections.BufSaveable {
   def getInQueueSize: Int
 
   /// client editor
-  def save(buf: StringBuilder)
+  def interfaceWidgets: Seq[CoreWidget]
   def closeClientEditor()
   def openClientEditor()
   def clientEditor: AnyRef
-  def load(lines: Array[String], version: String)
+  def load(m: Model)
   @throws(classOf[java.io.IOException])
-  def importClientInterface(path: String, client: Boolean)
+  def importClientInterface(model: Model, client: Boolean)
   def setTitle(title: String, directory: String, modelType: ModelType)
   def getInterfaceWidth: Int
   def getInterfaceHeight: Int
@@ -117,4 +117,17 @@ trait HubNetInterface extends ViewInterface with ModelSections.BufSaveable {
   def setPlotPenMode(clientId: String, plotPenMode: Int)
   def setHistogramNumBars(clientId: String, num: Int)
   def setPlotPenInterval(clientId: String, interval: Double)
+  def currentlyActiveInterface: HubNetInterface.ClientInterface
+  def calculatorInterface(activity: String, tags: Seq[String]): HubNetInterface.ClientInterface
+  def fileInterface(path: String): Option[HubNetInterface.ClientInterface]
+}
+
+object HubNetInterface {
+  import org.nlogo.core.{ LogoList, NamedWidget, Shape, Chooser => CoreChooser,
+    Monitor => CoreMonitor, View => CoreView, Widget => CoreWidget }
+
+  trait ClientInterface extends Serializable {
+    def containsViewWidget: Boolean
+    def containsWidgetTag(tag: String): Boolean
+  }
 }

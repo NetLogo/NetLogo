@@ -5,7 +5,7 @@ package org.nlogo.app
 import org.nlogo.agent.{Agent, AgentSet, Observer, Turtle, Patch, Link}
 import org.nlogo.window.{EditorColorizer, Widget}
 import org.nlogo.api.{ AgentVariables, Dump }
-import org.nlogo.core.I18N
+import org.nlogo.core.{ I18N, Widget => CoreWidget }
 import org.nlogo.core.{ AgentKind, TokenType, Nobody }
 import collection.JavaConverters._
 
@@ -99,6 +99,8 @@ with java.awt.event.FocusListener
 with org.nlogo.window.Events.JobRemovedEvent.Handler
 {
 
+  type WidgetModel = org.nlogo.core.Widget
+
   private def specialCase = {
     parent.agentKind match {
       case AgentKind.Turtle if AgentVariables.isSpecialTurtleVariable(index) =>
@@ -167,9 +169,9 @@ with org.nlogo.window.Events.JobRemovedEvent.Handler
   override def isCommandCenter = true
 
   // this is how we're notified when we've been recompiled
-  override def procedure(procedure: org.nlogo.nvm.Procedure) {
-    super.procedure(procedure)
-    if(procedure != null)
+  override def procedure_=(procedure: org.nlogo.nvm.Procedure) {
+    super.procedure_=(procedure)
+    if (procedure != null)
       new org.nlogo.window.Events.AddJobEvent(this, agents, procedure).raise(this)
   }
 
@@ -199,7 +201,7 @@ with org.nlogo.window.Events.JobRemovedEvent.Handler
   // CompileMoreSourceEvent stuff to call the compiler and add a job if compilation succeeds
   def wrapSource(innerSource: String) {
     setEnabled(false)
-    this.innerSource(innerSource)
+    this.innerSource = innerSource
     var header = "to __agentvareditor [] "
     if(parent.agentKind == AgentKind.Turtle)
       header += " __turtlecode "
@@ -421,10 +423,9 @@ with org.nlogo.window.Events.JobRemovedEvent.Handler
 
   /// load and save are inapplicable
 
-  override def save: String =
+  override def load(model: CoreWidget): AnyRef =
     throw new UnsupportedOperationException
 
-  override def load(strings: Array[String], helper: Widget.LoadHelper): AnyRef =
+  override def model: CoreWidget =
     throw new UnsupportedOperationException
-
 }

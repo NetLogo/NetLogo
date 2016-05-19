@@ -11,6 +11,8 @@ import org.nlogo.util.SlowTest
 class TestBehaviorSpace extends FunSuite with SlowTest
 with OneInstancePerTest with BeforeAndAfterEach {
 
+  val TestProtocolsFilePath = "test/lab/protocols.xml"
+
   val workspaces = new collection.mutable.ListBuffer[HeadlessWorkspace]
   def newWorkspace() = {
     val w = HeadlessWorkspace.newInstance
@@ -18,8 +20,13 @@ with OneInstancePerTest with BeforeAndAfterEach {
     w
   }
 
-  def newWorker(name: String) =
-    HeadlessWorkspace.newLab.newWorker(name, new java.io.File("test/lab/protocols.xml"))
+  def newWorker(name: String): LabInterface.Worker = {
+    val protocol =
+      BehaviorSpaceCoordinator.externalProtocols(TestProtocolsFilePath)
+        .flatMap(_.find(_.name == name))
+        .getOrElse(throw new Exception(s"Invalid protocol: $name"))
+    HeadlessWorkspace.newLab.newWorker(protocol)
+  }
 
   override def beforeEach() { AbstractWorkspace.isApplet(false) }
   override def afterEach() { workspaces.foreach(_.dispose()) }

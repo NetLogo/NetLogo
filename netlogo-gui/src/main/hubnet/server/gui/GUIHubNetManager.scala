@@ -2,24 +2,28 @@
 
 package org.nlogo.hubnet.server.gui
 
+import org.nlogo.api.{ ModelLoader, ModelType, ViewInterface }
+import org.nlogo.api.HubNetInterface.ClientInterface
+import org.nlogo.core.{ Femto, FileMode, Model, Widget => CoreWidget }
+import org.nlogo.core.model.WidgetReader
+import org.nlogo.hubnet.protocol.ComputerInterface
 import org.nlogo.hubnet.connection.HubNetException
 import org.nlogo.hubnet.server.{HubNetManager, ClientEventListener, ConnectionManager}
-import org.nlogo.core.{ Femto, FileMode }
 import org.nlogo.nvm.DefaultCompilerServices
 import org.nlogo.util.Utils, Utils.reader2String
-import org.nlogo.api._
 import org.nlogo.awt.EventQueue.invokeLater
 import org.nlogo.swing.Implicits._
+import org.nlogo.window._
 
 import java.net.InetAddress
-import org.nlogo.window._
 import java.awt.Component
 
 class GUIHubNetManager(workspace: GUIWorkspace,
                        linkParent: Component,
                        editorFactory: EditorFactory,
                        ifactory: InterfaceFactory,
-                       menuFactory: MenuBarFactory) extends HubNetManager(workspace) with ViewInterface {
+                       menuFactory: MenuBarFactory,
+                       loader: ModelLoader) extends HubNetManager(workspace, loader) with ViewInterface {
 
   private var _clientEditor: HubNetClientEditor = new HubNetClientEditor(workspace, linkParent, ifactory, menuFactory)
   // used in the discovery messages, and displayed in the control center.
@@ -32,7 +36,7 @@ class GUIHubNetManager(workspace: GUIWorkspace,
     def clientDisconnect(clientId: String) {
       invokeLater(() => controlCenter.clientDisconnect(clientId))
     }
-    def logMessage(message:String){
+    def logMessage(message:String) {
       invokeLater(() => controlCenter.logMessage(message))
     }
   }
@@ -54,26 +58,39 @@ class GUIHubNetManager(workspace: GUIWorkspace,
   }
 
   /// client editor
-  def getClientInterface: Array[String] = _clientEditor.getWidgetsAsStrings.toArray
+  override def modelWidgets: Seq[CoreWidget] = _clientEditor.interfaceWidgets
+
+  override def currentlyActiveInterface: ClientInterface =
+    ComputerInterface(_clientEditor.interfaceWidgets, workspace.world.turtleShapeList.shapes, workspace.world.linkShapeList.shapes)
+
   def clientEditor: AnyRef = _clientEditor
   def getInterfaceWidth = _clientEditor.interfacePanel.getPreferredSize.width
   def getInterfaceHeight = _clientEditor.interfacePanel.getPreferredSize.height
-  def load(lines:Array[String], version: String) { _clientEditor.load(lines, version) }
-  def save(buf:scala.collection.mutable.StringBuilder) { _clientEditor.save(buf) }
+  def load(model: Model) {
+    val hubNetWidgets = model.optionalSectionValue[Seq[CoreWidget]]("org.nlogo.modelsection.hubnetclient").foreach { hubNetWidgets =>
+      _clientEditor.load(hubNetWidgets)
+    }
+  }
 
+  override def updateModel(m: Model): Model = {
+    m.withOptionalSection("org.nlogo.modelsection.hubnetclient", Some(interfaceWidgets), Seq())
+  }
+
+  def interfaceWidgets: Seq[CoreWidget] = _clientEditor.interfaceWidgets
+
+  type Component       = Seq[CoreWidget]
+  def getComponent     = _clientEditor.interfaceWidgets
+  def defaultComponent = Seq()
 
   @throws(classOf[java.io.IOException])
-  def importClientInterface(filePath: String, client: Boolean) {
+  def importClientInterface(model: Model, client: Boolean) {
     _clientEditor.close()
-    // Load the file
-    val file = new LocalFile(filePath)
-    file.open(FileMode.Read)
-    val fileContents = reader2String(file.reader)
-    // Parse the file
-    val parsedFile = ModelReader.parseModel(fileContents)
-    // Load the widget descriptions
-    val widgets = parsedFile.get(if (client) ModelSection.HubNetClient else ModelSection.Interface)
-    _clientEditor.load(widgets, parsedFile.get(ModelSection.Version)(0))
+    val widgets: Seq[CoreWidget] =
+      if (client)
+        model.optionalSectionValue[Seq[CoreWidget]]("org.nlogo.modelsection.hubnetclient").getOrElse(Seq())
+      else
+        model.widgets
+    _clientEditor.load(widgets)
     openClientEditor()
   }
 

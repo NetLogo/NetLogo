@@ -1,5 +1,3 @@
-<?xml version="1.0" encoding="us-ascii"?>
-<!DOCTYPE experiments SYSTEM "behaviorspace.dtd">
 <experiments>
   <experiment name="testBehaviorSpace1" repetitions="2" runMetricsEveryStep="true">
     <setup>set counter 0</setup>

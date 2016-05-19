@@ -4,7 +4,7 @@ package org.nlogo.app
 
 import org.nlogo.window.{ CommandCenterInterface, EditorColorizer, JobWidget, Widget }
 import org.nlogo.agent.{ Agent, ArrayAgentSet, OutputObject }
-import org.nlogo.core.{ AgentKind, CompilerException, I18N, TokenType }
+import org.nlogo.core.{ AgentKind, CompilerException, I18N, TokenType, Widget => CoreWidget }
 import org.nlogo.editor.EditorField
 import org.nlogo.nvm.Workspace
 import org.nlogo.window.Events.{ AddJobEvent, CompiledEvent, OutputEvent }
@@ -37,6 +37,9 @@ class CommandLine(commandCenter: CommandCenterInterface,
     with java.awt.event.ActionListener
     with java.awt.event.KeyListener
     with CompiledEvent.Handler {
+
+
+  type WidgetModel = org.nlogo.core.Widget
 
   // this is needed for if we're embedded in an agent monitor instead
   // of the command center - ST 7/30/03
@@ -268,12 +271,11 @@ class CommandLine(commandCenter: CommandCenterInterface,
     textField.setEnabled(enabled)
   }
 
-  override def save: String = {
+  override def load(model: CoreWidget): Object = {
     throw new UnsupportedOperationException()
   }
 
-  override def load(strings: Array[String], helper: Widget.LoadHelper): Object = {
+  override def model: CoreWidget = {
     throw new UnsupportedOperationException()
   }
-
 }

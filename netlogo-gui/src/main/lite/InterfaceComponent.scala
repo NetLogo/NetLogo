@@ -2,14 +2,18 @@
 
 package org.nlogo.lite
 
-import java.util.{ ArrayList, List => JList }
-import org.nlogo.window.{ Event, Widget, ButtonWidget, PlotWidget }
-import java.util.StringTokenizer
-import org.nlogo.api.Version
-import org.nlogo.core.CompilerException
-import org.nlogo.log.Logger
+import java.util.{ ArrayList, List => JList, StringTokenizer }
+import java.nio.file.Paths
+
 import org.apache.log4j.xml.DOMConfigurator
-import collection.JavaConverters._
+
+import org.nlogo.api.Version
+import org.nlogo.awt.EventQueue
+import org.nlogo.core.{ CompilerException, Widget => CoreWidget }
+import org.nlogo.log.Logger
+import org.nlogo.window.{ Event, Widget, ButtonWidget, PlotWidget }
+
+import scala.collection.JavaConverters._
 
 /**
  * This component is a wrapper around the contents of the
@@ -49,7 +53,7 @@ with Event.LinkChild {
    * @see #setProcedures
    */
   def compile() {
-    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
+    EventQueue.mustBeEventDispatchThread()
     (new org.nlogo.window.Events.CompileAllEvent).raise(this)
   }
 
@@ -59,14 +63,9 @@ with Event.LinkChild {
    *
    * @param text the widget specification
    */
-  def makeWidget(text: String) {
-    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
-    val result = new ArrayList[String]
-    val tokenizer = new StringTokenizer(text, "\n")
-    while (tokenizer.hasMoreTokens)
-      result.add(tokenizer.nextToken())
-    val strings = result.asScala.toArray
-    iP.loadWidget(strings, Version.version)
+  def makeWidget(widget: CoreWidget) {
+    EventQueue.mustBeEventDispatchThread()
+    iP.loadWidget(widget)
   }
 
   /**
@@ -80,7 +79,7 @@ with Event.LinkChild {
    * @see #hideWidget
    */
   def hideWidget(name: String) {
-    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
+    EventQueue.mustBeEventDispatchThread()
     iP.hideWidget(name)
   }
 
@@ -95,7 +94,7 @@ with Event.LinkChild {
    * @see #hideWidget
    */
   def showWidget(name: String) {
-    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
+    EventQueue.mustBeEventDispatchThread()
     iP.showWidget(name)
   }
 
@@ -107,11 +106,8 @@ with Event.LinkChild {
   @throws(classOf[java.io.IOException])
   @throws(classOf[org.nlogo.window.InvalidVersionException])
   def open(path: String) {
-    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
-    val source = org.nlogo.api.FileIO.file2String(path)
-    if (source == null)
-      sys.error("couldn't open: '" + path + "'")
-    openFromSource(path, path, source)
+    EventQueue.mustBeEventDispatchThread()
+    openFromURI(Paths.get(path).toUri)
   }
 
   /**
@@ -152,13 +148,13 @@ with Event.LinkChild {
    * up.  (For "forever" buttons, it returns immediately.)
    */
   def pressButton(name: String) {
-    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
+    EventQueue.mustBeEventDispatchThread()
     val button = findWidget(name, classOf[ButtonWidget]).asInstanceOf[ButtonWidget]
     button.keyTriggered()
   }
 
   def findWidget(name: String, tpe: Class[_]): Widget = {
-    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
+    EventQueue.mustBeEventDispatchThread()
     def matches(comp: java.awt.Component) =
       comp.getClass() == tpe && comp.asInstanceOf[Widget].displayName == name
     iP.getComponents.find(matches)
@@ -171,7 +167,7 @@ with Event.LinkChild {
    * user later, etc.
    */
   def getViewImage: java.awt.image.RenderedImage = {
-    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
+    EventQueue.mustBeEventDispatchThread()
     workspace.exportView()
   }
 

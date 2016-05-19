@@ -17,6 +17,7 @@ import org.nlogo.core.Nobody$;
 import org.nlogo.core.Program;
 import org.nlogo.core.Shape;
 import org.nlogo.core.ShapeList;
+import org.nlogo.core.ShapeListTracker;
 import org.nlogo.api.TrailDrawerInterface;
 import org.nlogo.api.ValueConstraint;
 import org.nlogo.api.WorldDimensionException;
@@ -57,16 +58,24 @@ public strictfp class World
     return timer;
   }
 
-  private final ShapeList _turtleShapeList;
+  private final ShapeListTracker _turtleShapes;
 
-  public ShapeList turtleShapeList() {
-    return _turtleShapeList;
+  public ShapeListTracker turtleShapes() {
+    return _turtleShapes;
   }
 
-  private final ShapeList _linkShapeList;
+  public ShapeList turtleShapeList() {
+    return _turtleShapes.shapeList();
+  }
+
+  private final ShapeListTracker _linkShapes;
+
+  public ShapeListTracker linkShapes() {
+    return _linkShapes;
+  }
 
   public ShapeList linkShapeList() {
-    return _linkShapeList;
+    return _linkShapes.shapeList();
   }
 
   private double patchSize = 12.0; // keep the unzoomed patchSize here
@@ -99,8 +108,11 @@ public strictfp class World
   public volatile boolean comeUpForAir = false;  // NOPMD pmd doesn't like 'volatile'
 
   public World() {
-    _turtleShapeList = new ShapeList(AgentKindJ.Turtle());
-    _linkShapeList = new ShapeList(AgentKindJ.Link());
+    _turtleShapes = new ShapeListTracker(AgentKindJ.Turtle());
+    _linkShapes = new ShapeListTracker(AgentKindJ.Link());
+
+    linkBreedShapes = new BreedShapes("LINKS", _linkShapes);
+    turtleBreedShapes = new BreedShapes("TURTLES", _turtleShapes);
 
     _observer = createObserver();
     _observers = new ArrayAgentSet(AgentKindJ.Observer(), 1, "observers", false);
@@ -1162,7 +1174,10 @@ public strictfp class World
   }
 
   public int observerOwnsIndexOf(String name) {
-    return _program.globals().indexOf(name);
+    int index = _program.globals().indexOf(name);
+    if (_observer.variables().length > index)
+      return index;
+    return -1;
   }
 
   /// breeds & shapes
@@ -1267,7 +1282,7 @@ public strictfp class World
 
   public String checkTurtleShapeName(String name) {
     name = name.toLowerCase();
-    if (_turtleShapeList.exists(name)) {
+    if (turtleShapeList().exists(name)) {
       return name;
     } else {
       return null; // indicates failure
@@ -1276,7 +1291,7 @@ public strictfp class World
 
   public String checkLinkShapeName(String name) {
     name = name.toLowerCase();
-    if (_linkShapeList.exists(name)) {
+    if (linkShapeList().exists(name)) {
       return name;
     } else {
       return null; // indicates failure
@@ -1284,7 +1299,7 @@ public strictfp class World
   }
 
   public Shape getLinkShape(String name) {
-    return _linkShapeList.shape(name);
+    return linkShapeList().shape(name);
   }
 
   Map<String, AgentSet> getAgentBreeds() {
@@ -1321,8 +1336,8 @@ public strictfp class World
     return breedOwns.contains(name);
   }
 
-  public final BreedShapes linkBreedShapes = new BreedShapes("LINKS");
-  public final BreedShapes turtleBreedShapes = new BreedShapes("TURTLES");
+  public final BreedShapes linkBreedShapes;
+  public final BreedShapes turtleBreedShapes;
 
   /// program
 
@@ -1347,6 +1362,8 @@ public strictfp class World
     }
     _program = program;
 
+    breeds.clear();
+    linkBreeds.clear();
     createBreeds(_program.breeds(), breeds);
     createBreeds(_program.linkBreeds(), linkBreeds);
   }
@@ -1359,14 +1376,10 @@ public strictfp class World
     return org.nlogo.core.Program$.MODULE$.fromDialect(dialect);
   }
 
-  public Program newProgram(List<String> interfaceGlobals) {
-    scala.collection.mutable.Builder<String, scala.collection.immutable.Seq<String>> builder = scala.collection.immutable.Seq$.MODULE$.newBuilder();
-    for (String global : interfaceGlobals) {
-      builder.$plus$eq(global);
-    }
+  public Program newProgram(scala.collection.Seq<String> interfaceGlobals) {
     Program emptyProgram = newProgram();
     return emptyProgram.copy(
-        builder.result(),
+        interfaceGlobals,
         emptyProgram.userGlobals(),
         emptyProgram.turtlesOwn(),
         emptyProgram.patchesOwn(),

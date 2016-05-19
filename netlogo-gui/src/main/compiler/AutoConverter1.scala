@@ -19,7 +19,7 @@ object AutoConverter1 {
     "  __clear-all-and-reset-ticks"
 }
 class AutoConverter1(implicit tokenizer:TokenizerInterface) {
-  def convert(originalSource:String, subprogram:Boolean, reporter:Boolean, version:String):String = {
+  def convert(originalSource:String, version:String):String = {
     var source = originalSource
     if(source.trim.length == 0) return source
     if(olderThan20alpha1(version))

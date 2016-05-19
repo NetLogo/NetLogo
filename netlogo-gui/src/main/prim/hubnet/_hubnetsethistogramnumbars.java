@@ -13,7 +13,7 @@ public final strictfp class _hubnetsethistogramnumbars
     final int num = argEvalIntValue(context, 1);
     workspace.waitFor(new org.nlogo.api.CommandRunnable() {
       public void run() {
-        workspace.getHubNetManager().setHistogramNumBars(name, num);
+        workspace.getHubNetManager().get().setHistogramNumBars(name, num);
       }
     });
     context.ip = next;

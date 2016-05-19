@@ -2,23 +2,24 @@
 
 package org.nlogo.hubnet.client
 
-import org.nlogo.core.{ I18N, LogoList }
-import javax.swing.JPanel
-import org.nlogo.agent.{AbstractExporter, ConstantSliderConstraint}
-import org.nlogo.plot.{PlotExporter, Plot, PlotManager}
-import java.io.{IOException, PrintWriter}
-import org.nlogo.window.Events.{AfterLoadEvent, LoadSectionEvent}
-import org.nlogo.swing.OptionDialog
-import org.nlogo.hubnet.mirroring.{OverrideList, HubNetLinkStamp, HubNetPlotPoint, HubNetLine, HubNetTurtleStamp}
-import java.net.{Socket, ConnectException, UnknownHostException, NoRouteToHostException}
 import java.awt.AWTEvent
+import java.io.{IOException, PrintWriter}
+import java.net.{Socket, ConnectException, UnknownHostException, NoRouteToHostException}
+import javax.swing.JPanel
+
+import org.nlogo.core.{ I18N, LogoList }
+import org.nlogo.api.{ Version, Dump, PlotInterface, DummyLogoThunkFactory, CompilerServices }
+import org.nlogo.agent.{ AbstractExporter, ConstantSliderConstraint }
+import org.nlogo.plot.{ PlotExporter, Plot, PlotManager }
+import org.nlogo.hubnet.connection.{ Streamable, ConnectionTypes, AbstractConnection }
+import org.nlogo.hubnet.mirroring.{ OverrideList, HubNetLinkStamp, HubNetPlotPoint, HubNetLine, HubNetTurtleStamp }
 import org.nlogo.hubnet.protocol._
 import org.nlogo.awt.EventQueue.invokeLater
 import org.nlogo.awt.Hierarchy.getFrame
+import org.nlogo.swing.OptionDialog
 import org.nlogo.swing.Implicits._
-import org.nlogo.window.{PlotWidgetExportType, MonitorWidget, InterfaceGlobalWidget, Widget, ButtonWidget, PlotWidget}
-import org.nlogo.api.{ Version, ModelSection, Dump, PlotInterface, DummyLogoThunkFactory, CompilerServices}
-import org.nlogo.hubnet.connection.{Streamable, ConnectionTypes, AbstractConnection}
+import org.nlogo.window.{ PlotWidgetExportType, MonitorWidget, InterfaceGlobalWidget, Widget, ButtonWidget, PlotWidget }
+import org.nlogo.window.Events.{ AddJobEvent, AddSliderConstraintEvent, AfterLoadEvent, ExportPlotEvent, InterfaceGlobalEvent, LoadWidgetsEvent }
 
 // Normally we try not to use the org.nlogo.window.Events stuff except in
 // the app and window packages.  But currently there's no better
@@ -27,10 +28,10 @@ import org.nlogo.hubnet.connection.{Streamable, ConnectionTypes, AbstractConnect
 class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
                   errorHandler:ErrorHandler,
                   compiler:CompilerServices) extends JPanel with
-        org.nlogo.window.Events.AddJobEvent.Handler with
-        org.nlogo.window.Events.ExportPlotEvent.Handler with
-        org.nlogo.window.Events.InterfaceGlobalEvent.Handler with
-        org.nlogo.window.Events.AddSliderConstraintEvent.Handler {
+        AddJobEvent.Handler with
+        ExportPlotEvent.Handler with
+        InterfaceGlobalEvent.Handler with
+        AddSliderConstraintEvent.Handler {
 
   var clientGUI:ClientGUI = null
   var viewWidget:ClientView = null
@@ -109,7 +110,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
   }
 
   /// Message Handlers
-  private def handleWidgetControlMessage(value: Any, widgetName: String) {
+  private def handleWidgetControlMessage(value: AnyRef, widgetName: String) {
     org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     if (widgetName == "VIEW") value match {
       case t: HubNetTurtleStamp => viewWidget.renderer.stamp(t)
@@ -223,16 +224,17 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
     clientGUI = new ClientGUI(editorFactory, viewWidget, plotManager, compiler)
     add(clientGUI, java.awt.BorderLayout.CENTER)
     clientGUI.setStatus(userid, activityName, hostip, port)
-    val clientInterface = handshake.interfaceSpecList.head.asInstanceOf[ClientInterface]
-    val widgets = clientInterface.widgetDescriptions
-    new LoadSectionEvent("HubNet", ModelSection.Interface, widgets.toArray, widgets.mkString("\n")).raise(this)
+    val clientInterface = handshake.clientInterface match {
+      case c: ComputerInterface => c
+      case _                    => throw new IllegalStateException()
+    }
+    val widgets = clientInterface.widgets
+    new LoadWidgetsEvent(widgets).raise(this)
     // so that constrained widgets can initialize themselves -- CLB
     new AfterLoadEvent().raise(this)
     clientGUI.setChoices(clientInterface.chooserChoices.toMap)
-    viewWidget.renderer.replaceTurtleShapes(
-      scala.collection.JavaConversions.seqAsJavaList(clientInterface.turtleShapes))
-    viewWidget.renderer.replaceLinkShapes(
-      scala.collection.JavaConversions.seqAsJavaList(clientInterface.linkShapes))
+    viewWidget.renderer.replaceTurtleShapes(clientInterface.turtleShapes)
+    viewWidget.renderer.replaceLinkShapes(clientInterface.linkShapes)
     sendDataAndWait(EnterMessage)
     connected = true
     invokeLater(() => {

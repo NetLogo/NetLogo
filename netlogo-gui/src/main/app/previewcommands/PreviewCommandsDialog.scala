@@ -2,7 +2,7 @@ package org.nlogo.app.previewcommands
 
 import org.nlogo.window.{ EditorColorizer, GraphicsPreviewInterface }
 import org.nlogo.workspace.{ Evaluator, WorkspaceFactory }
-import org.nlogo.core.{ AgentKind, CompilerException, I18N }
+import org.nlogo.core.{ AgentKind, CompilerException, I18N, Model }
 import java.awt.BorderLayout
 import java.awt.Frame
 import java.awt.event.ActionEvent
@@ -27,19 +27,21 @@ import javax.swing.JPanel
 class PreviewCommandsDialog(
   owner: Frame,
   title: String,
-  modelContents: String,
+  model: Model,
   modelPath: String,
   workspaceFactory: WorkspaceFactory,
   graphicsPreview: GraphicsPreviewInterface)
   extends JDialog(owner, title, true) {
   org.nlogo.awt.Fonts.adjustDefaultFont(this)
 
-  private val workspace = initWorkspace(workspaceFactory, _.openString(modelContents))
+  private val workspace = initWorkspace(workspaceFactory, _.openModel(model))
 
-  private var _previewCommands = workspace.previewCommands
+  private var _previewCommands =
+    model.optionalSectionValue[PreviewCommands]("org.nlogo.modelsection.previewcommands")
+      .getOrElse(PreviewCommands.Default)
   def previewCommands = _previewCommands
 
-  val guiState = new GUIState(modelContents, modelPath, workspaceFactory)
+  val guiState = new GUIState(model, modelPath, workspaceFactory)
   val editorPanel = new EditorPanel(new EditorColorizer(workspace))
   val comboBox = editorPanel.comboBox
   val editor = editorPanel.editor

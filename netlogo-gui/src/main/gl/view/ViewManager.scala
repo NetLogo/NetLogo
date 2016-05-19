@@ -17,6 +17,7 @@ class ViewManager(val workspace: GUIWorkspace,
     with org.nlogo.window.Event.LinkChild
     with org.nlogo.window.Event.LinkParent
     with org.nlogo.window.Events.PeriodicUpdateEvent.Handler
+    with org.nlogo.window.LinkRoot
     with GLViewSettings {
 
   val world = workspace.world
@@ -194,15 +195,10 @@ class ViewManager(val workspace: GUIWorkspace,
 
   def exportView = currentView.exportView
 
-  private val linkComponents = new collection.mutable.ArrayBuffer[AnyRef]
-
-  def addLinkComponent(c: AnyRef) {
+  override def addLinkComponent(c: AnyRef) {
     linkComponents.clear()
-    linkComponents += c
+    super.addLinkComponent(c)
   }
-
-  override def getLinkChildren =
-    linkComponents.toArray
 
   def handle(e: org.nlogo.window.Events.PeriodicUpdateEvent) {
     if (observerView != null)

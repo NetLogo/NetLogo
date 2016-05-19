@@ -2,16 +2,23 @@
 
 package org.nlogo.sdm.gui;
 
+import org.nlogo.sdm.Model;
 import org.jhotdraw.framework.ConnectionFigure;
+import org.jhotdraw.framework.DrawingEditor;
+import org.jhotdraw.framework.Figure;
 import org.jhotdraw.standard.ConnectionTool;
 
 public strictfp class AggregateConnectionTool
     extends ConnectionTool {
 
+  private Model model;
+
   public AggregateConnectionTool
-      (org.jhotdraw.framework.DrawingEditor newDrawingEditor,
+      (Model model,
+       DrawingEditor newDrawingEditor,
        ConnectionFigure newPrototype) {
     super(newDrawingEditor, newPrototype);
+    this.model = model;
   }
 
   @Override
@@ -32,6 +39,14 @@ public strictfp class AggregateConnectionTool
         getConnection().endPoint(ex, ey);
         setAddedFigure(view().add(getConnection()));
       }
+    }
+  }
+
+  @Override
+  public void setAddedFigure(Figure figure) {
+    super.setAddedFigure(figure);
+    if (figure instanceof ModelElementFigure) {
+      this.model.addElement(((ModelElementFigure) figure).getModelElement());
     }
   }
 }

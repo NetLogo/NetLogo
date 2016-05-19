@@ -13,7 +13,7 @@ import org.nlogo.core.Program
 
 class DefaultCompilerServices(compiler: CompilerInterface) extends CompilerServices {
   def emptyProgram = Program.fromDialect(compiler.defaultDialect)
-  def autoConvert(source: String, subprogram: Boolean, reporter: Boolean, modelVersion: String) = source
+  def autoConvert(modelVersion: String)(source: String) = source
   def readNumberFromString(source: String) =
     compiler.readNumberFromString(source, null, null)
   def checkReporterSyntax(source: String) =

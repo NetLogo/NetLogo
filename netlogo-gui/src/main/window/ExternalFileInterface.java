@@ -34,7 +34,7 @@ public strictfp class ExternalFileInterface
     return "";
   }
 
-  public void innerSource(String s) {
+  public void innerSource_$eq(String s) {
   }
 
   public String source() {

@@ -25,7 +25,7 @@ trait SourceOwner {
   def classDisplayName: String
   def headerSource: String
   def innerSource: String
-  def innerSource(s: String)
+  def innerSource_=(s: String)
   def source: String
   def kind: core.AgentKind
 }

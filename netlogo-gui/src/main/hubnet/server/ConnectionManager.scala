@@ -11,7 +11,8 @@ import org.nlogo.hubnet.protocol._
 import org.nlogo.hubnet.mirroring.{AgentPerspective, ClearOverride, SendOverride, ServerWorld}
 import org.nlogo.agent.AgentSet
 import java.net.{BindException, ServerSocket}
-import org.nlogo.api.{WorldPropertiesInterface, ModelReader, PlotInterface}
+import org.nlogo.api.{WorldPropertiesInterface, PlotInterface}
+import org.nlogo.api.HubNetInterface.ClientInterface
 import org.nlogo.hubnet.connection.{Streamable, ConnectionTypes, Ports, HubNetException, ConnectionInterface}
 import collection.JavaConverters._
 
@@ -73,7 +74,7 @@ class ConnectionManager(val connection: ConnectionInterface,
   }
 
   private type ClientType = String
-  private val clientInterfaceMap = collection.mutable.HashMap[ClientType, Iterable[AnyRef]]()
+  private val clientInterfaceMap = collection.mutable.HashMap[ClientType, Iterable[ClientInterface]]()
   private def clientInterfaceSpec: ClientInterface = {
     clientInterfaceMap(ConnectionTypes.COMP_CONNECTION).head.asInstanceOf[ClientInterface]
   }
@@ -98,7 +99,7 @@ class ConnectionManager(val connection: ConnectionInterface,
    * @return true if startup was succesful
    */
   def startup(serverName:String): Boolean = {
-    workspace.hubNetRunning(true)
+    workspace.hubNetRunning = true
     running = true
     // we set this when hubnet-reset is called now, instead
     // of forcing users to call hubnet-set-client-interface "COMPUTER" []
@@ -153,7 +154,7 @@ class ConnectionManager(val connection: ConnectionInterface,
         clients.clear()
       }
     }
-    workspace.hubNetRunning(false)
+    workspace.hubNetRunning = false
     running = false
     true // why do we need this? we never return false...
   }
@@ -225,7 +226,7 @@ class ConnectionManager(val connection: ConnectionInterface,
     plotManager.initPlotListeners()
   }
 
-  def setClientInterface(interfaceType: ClientType, interfaceInfo: Iterable[AnyRef]) {
+  def setClientInterface(interfaceType: ClientType, interfaceInfo: Iterable[ClientInterface]) {
     // we set this when hubnet-reset is called now, instead
     // of forcing users to call hubnet-set-client-interface "COMPUTER" []
     // however, if they still want to call it, we should just update it here anyway.
@@ -239,12 +240,7 @@ class ConnectionManager(val connection: ConnectionInterface,
   }
 
   private def createClientInterfaceSpec: ClientInterface = {
-    val widgetDescriptions = connection.getClientInterface
-    val widgets = ModelReader.parseWidgets(widgetDescriptions).asScala.toList.map(_.asScala.toList).toList
-    val clientInterfaceSpec = new ClientInterface(widgets, widgetDescriptions.toList,
-      world.turtleShapeList.shapes,
-      world.linkShapeList.shapes, workspace)
-    clientInterfaceSpec
+    new ComputerInterface(connection.modelWidgets, world.turtleShapeList.shapes, world.linkShapeList.shapes)
   }
 
   /**
@@ -257,20 +253,20 @@ class ConnectionManager(val connection: ConnectionInterface,
    * Called by ServerSideConnection.
    */
   def createHandshakeMessage(clientType:ClientType) = {
-    new HandshakeFromServer(workspace.modelNameForDisplay, clientInterfaceMap(clientType))
+    new HandshakeFromServer(workspace.modelNameForDisplay, clientInterfaceSpec)
   }
 
   def isSupportedClientType(clientType:String): Boolean =
     clientInterfaceMap.isDefinedAt(clientType)
 
-  def isValidTag(tag:String) = clientInterfaceSpec.containsWidget(tag)
+  def isValidTag(tag:String) = clientInterfaceSpec.containsWidgetTag(tag)
 
   @throws(classOf[HubNetException])
   def broadcast(tag:String, message:Any) = {
     if (!isValidTag(tag)) throw new HubNetException(tag + " is not a valid tag on the client.")
     message match {
-      case m: JSerializable => broadcastMessage(new WidgetControl(m, tag))
-      case _                => throw new HubNetException(VALID_SEND_TYPES_MESSAGE)
+      case m: JSerializable with AnyRef => broadcastMessage(new WidgetControl(m, tag))
+      case _                            => throw new HubNetException(VALID_SEND_TYPES_MESSAGE)
     }
   }
 
@@ -280,7 +276,7 @@ class ConnectionManager(val connection: ConnectionInterface,
    * @return true if the message was sent
    */
   @throws(classOf[HubNetException])
-  def send(userId:String, tag:String, message:JSerializable) = {
+  def send(userId:String, tag:String, message:JSerializable with AnyRef) = {
     if (!isValidTag(tag)) throw new HubNetException(tag + " is not a valid tag on the client.")
     sendUserMessage(userId, new WidgetControl(message, tag))
   }

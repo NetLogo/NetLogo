@@ -50,12 +50,12 @@ public strictfp class ViewControlStrip
 
       add(sizeControlPanel, java.awt.BorderLayout.WEST);
       sizeControlPanel.setOpaque(false);
-      add(viewWidget.tickCounter, java.awt.BorderLayout.CENTER);
+      add(viewWidget.tickCounter(), java.awt.BorderLayout.CENTER);
     } else {
       sizeControlXY = null;
       sizeControlX = null;
       sizeControlY = null;
-      add(viewWidget.tickCounter, java.awt.BorderLayout.WEST);
+      add(viewWidget.tickCounter(), java.awt.BorderLayout.WEST);
       SpeedSliderPanel speedSlider = new SpeedSliderPanel(workspace, false);
       speedSlider.setOpaque(false);
       add(speedSlider, java.awt.BorderLayout.CENTER);

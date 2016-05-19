@@ -4,6 +4,7 @@ package org.nlogo.hubnet.client
 
 import java.awt.event.MouseEvent
 import java.awt.{Font, Graphics2D, Graphics}
+import org.nlogo.core.{ View => CoreView }
 import java.io.{ByteArrayInputStream, DataInputStream}
 import org.nlogo.api.{Perspective, Graphics2DWrapper, ViewSettings}
 import org.nlogo.hubnet.mirroring._
@@ -11,6 +12,9 @@ import org.nlogo.window.{InterfaceColors, ViewMouseHandler, ViewWidgetInterface,
 
 // The view widget in the client.
 class ClientView(clientPanel: ClientPanel) extends Widget with ViewWidgetInterface with ViewSettings {
+
+  type WidgetModel = CoreView
+
   val world = new ClientWorld()
   val renderer = new ClientRenderer(world)
   def isHeadless = false
@@ -89,16 +93,23 @@ class ClientView(clientPanel: ClientPanel) extends Widget with ViewWidgetInterfa
 
   /// satisfy ViewWidgetInterface
 
-  //Loads a view specification from file data.
-  override def load(strings: Array[String], helper: Widget.LoadHelper) = {
-    val Array(x1, y1, x2, y2) = strings.drop(1).take(4).map(_.toInt)
-    setSize(x2 - x1, y2 - y1)
+  override def load(view: WidgetModel): AnyRef = {
+    setBounds(view.left, view.top, view.right - view.left, view.bottom - view.top)
     world.viewWidth(getWidth)
     world.viewHeight(getHeight)
-    world.setWorldSize(strings(17).toInt, strings(18).toInt, strings(19).toInt, strings(20).toInt)
+    world.setWorldSize(
+      view.dimensions.minPxcor, view.dimensions.maxPxcor,
+      view.dimensions.minPycor, view.dimensions.maxPycor)
     if (getWidth > getHeight) world.patchSize(getWidth / world.worldWidth)
     else world.patchSize(getHeight / world.worldHeight)
     this
+  }
+
+  override def model: WidgetModel = {
+    val b = getBoundsTuple
+    CoreView(
+      left = b._1, top = b._2, right = b._3, bottom = b._4,
+      dimensions = world.getDimensions)
   }
 
   def fontSize = world.fontSize
@@ -110,7 +121,5 @@ class ClientView(clientPanel: ClientPanel) extends Widget with ViewWidgetInterfa
   def viewOffsetY = world.followOffsetY
   def renderPerspective = true
   def drawSpotlight = world.serverMode() || world.perspective.isInstanceOf[Perspective.Follow]
-  override def save: String = throw new UnsupportedOperationException()
-  def asWidget: Widget = this
   def getAdditionalHeight = 0
 }

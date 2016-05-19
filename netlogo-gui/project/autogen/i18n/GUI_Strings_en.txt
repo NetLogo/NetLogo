@@ -16,6 +16,7 @@ common.buttons.quit = Quit
 common.buttons.exit = Exit
 common.buttons.continue = Continue
 common.buttons.save = Save
+common.buttons.discard = Discard
 common.buttons.halt = Halt
 common.buttons.yes = Yes
 common.buttons.no = No
@@ -28,10 +29,16 @@ common.messages.warning = Warning
 menu.file = File
 menu.file.new = New
 menu.file.open = Open...
+menu.file.open.dialog = Open
 menu.file.modelsLibrary = Models Library
+menu.file.uploadMc = Upload To Modeling Commons
 menu.file.save = Save
+menu.file.save.error = Save failed.  Error: {0}
+menu.file.save.confirm = Do you want to save the changes you made to this model?
 menu.file.saveAs = Save As...
+menu.file.saveAs.dialog = Save As
 menu.file.saveAsNetLogoWeb = Save As NetLogo Web...
+menu.file.saveAsNetLogoWeb.dialog = Saving as NetLogo Web HTML Page
 menu.file.nlw.prompt.fromSave = From last save
 menu.file.nlw.prompt.fromLibrary = From Models Library
 menu.file.nlw.prompt.fromCurrentCopy = From open copy
@@ -41,17 +48,32 @@ menu.file.nlw.prompt.message.fromLibrary = Export model from Models Library or o
 menu.file.print = Print...
 menu.file.export = Export
 menu.file.export.world = Export World...
+menu.file.export.world.dialog = Export World
 menu.file.export.plot = Export Plot...
+menu.file.export.plot.dialog = Export Plot...
 menu.file.export.allPlots = Export All Plots...
+menu.file.export.allPlots.dialog = Export All Plots
 menu.file.export.view = Export View...
+menu.file.export.view.dialog = Export World
 menu.file.export.interface = Export Interface...
+menu.file.export.interface.dialog = Export Interface
 menu.file.export.output = Export Output...
+menu.file.export.output.dialog = Export Output
 menu.file.import = Import
 menu.file.import.world = Import World...
+menu.file.import.world.dialog = Import World
 menu.file.import.patchColors = Import Patch Colors...
+menu.file.import.patchColors.dialog = Import Patch Colors
 menu.file.import.patchColorsRGB = Import Patch Colors RGB...
+menu.file.import.patchColorsRGB.dialog = Import Patch Colors RGB
 menu.file.import.drawing = Import Drawing...
+menu.file.import.drawing.dialog = Import Drawing
 menu.file.import.hubNetClientInterface = Import HubNet Client Interface...
+menu.file.import.hubNetClientInterface.dialog = Import HubNet Client Interface
+menu.file.import.hubNetClientInterface.message = Import HubNet Client
+menu.file.import.hubNetClientInterface.prompt = Which section would you like to import from?
+menu.file.import.hubNetClientInterface.fromInterface = Interface Tab
+menu.file.import.hubNetClientInterface.fromClient = HubNet client
 menu.file.quit = Quit
 
 menu.edit = Edit
@@ -153,10 +175,33 @@ tabs.info.help = Help
 
 tabs.code = Code
 tabs.code.rightclick.quickhelp = Quick Help
+tabs.code.rightclick.quickhelp.notfound = {0} could not be found in the NetLogo Dictionary.\n \
+   Would you like to open the full NetLogo Dictionary?
 tabs.code.checkButton = Check
 tabs.code.procedures = Procedures
 tabs.code.procedures.none = none
 tabs.code.indentAutomatically = Indent automatically
+
+# File and model operations
+file.open.transitionGuide.url = http://ccl.northwestern.edu/netlogo/5.0/docs/transition.html
+file.open.warn.version.newer = You are attempting to open a model \
+  that was created in a newer version of NetLogo. \
+  (This is {0}; the model was created in {1}.) \
+  NetLogo can try to open the model, but it may or may not work.
+file.open.warn.version.older = This model was created in {0}. \
+    You may need to make changes for it to work in {1}.
+file.open.warn.version.transitionGuide = Open Transition Guide
+file.open.warn.intwod.openthreed = You are attempting to open a model \
+  that was created in a 3D version of NetLogo.  \
+  (This is {0}; the model was created in {1}.) \
+  NetLogo can try to open the model, but it may or may not work.
+file.open.warn.inthreed.opentwod = You are attempting to open \
+  a 2D model in {0}. You might need to make changes before it will work in 3D.
+file.open.error.invalidmodel = The file is not a valid NetLogo model file.
+file.open.error.unableToOpen = NetLogo can''t open the model {0}:\n\n{1}.
+file.close.warn.movieInProgress = There is a movie in progress. Are you sure you want to exit this model? You will lose the contents of your movie.
+file.save.warn.savingInNewerVersion = This model was made with {0}. If you save it in {1} it may not work in the old version anymore.
+file.save.warn.invalidFormat = NetLogo doesn't know how to save in ".{0}" format, please choose a different format.
 
 # find actions and dialog
 dialog.find.title = Find
@@ -170,6 +215,13 @@ dialog.find.previous = Previous
 dialog.find.replaceAndFind = Replace & Find
 dialog.find.replace = Replace
 dialog.find.replaceAll = Replace All
+
+# interface dialogs and modals
+dialog.interface.export.file = Export Interface
+dialog.interface.export.task = Exporting...
+dialog.interface.import.task = Importing...
+dialog.interface.loading.task = Loading...
+dialog.interface.saving.task = Saving...
 
 # widget editors
 
@@ -326,8 +378,13 @@ tools.shapesEditor.new = New
 tools.shapesEditor.delete = Delete
 tools.shapesEditor.duplicate = Duplicate
 tools.shapesEditor.info = (many more shapes are available in the library)
+tools.shapesEditor.import = Import
 tools.shapesEditor.import.note = Import Shapes from Model
+tools.shapesEditor.import.libraryError = NetLogo has encountered an error reading shapes from the shapes library. Please report to bugs@ccl.northwestern.edu!
+tools.shapesEditor.import.invalidError = NetLogo was unable to read shapes from this file. Please ensure it is a valid NetLogo file.
 tools.shapesEditor.import.error = No shapes found in this file.
+tools.shapesEditor.delete.one.confirm = Are you sure you want to delete this shape?
+tools.shapesEditor.delete.many.confirm = Are you sure you want to delete these {0} shapes?
 
 tools.sdm.diagram = Diagram
 tools.sdm.stock = Stock
@@ -413,3 +470,9 @@ view.3d.following = Following
 view.3d.fullScreen = Full Screen
 view.3d.resetPerspective = Reset Perspective
 view.3d.fullScreenWarning = On some systems, fullscreen mode may cause Windows to lock up.
+
+view.resize.progress = Resizing...
+view.resize.hubnet.warning = Resizing the world kills all turtles. This may cause HubNet clients to be unresponsive. Consider kicking out all clients before proceeding.
+view.resize.hubnet.prompt = Kick clients?
+view.resize.hubnet.kick = Kick clients
+view.resize.hubnet.dontkick = Don't kick

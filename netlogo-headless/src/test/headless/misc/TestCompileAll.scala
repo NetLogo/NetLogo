@@ -5,6 +5,7 @@ package misc
 
 import org.nlogo.core.model.ModelReader
 import org.nlogo.api.{ FileIO, Version }
+import org.nlogo.fileformat
 import org.nlogo.workspace.ModelsLibrary
 import org.scalatest.FunSuite
 import org.nlogo.util.SlowTestTag
@@ -79,19 +80,16 @@ class TestCompileAll extends FunSuite  {
     val workspace = HeadlessWorkspace.newInstance
     try {
       val modelContents = text
-      val model = ModelReader.parseModel(modelContents, workspace.parser, Map())
-      val newModel = ModelReader.parseModel(
-        ModelReader.formatModel(model, workspace.parser), workspace.parser, Map())
+      val loader = fileformat.standardLoader(workspace, _ => identity)
+      val model = loader.readModel(text, "nlogo").get
+      val newModel = loader.readModel(loader.sourceString(model, "nlogo").get, "nlogo").get
       assertResult(model.code)(newModel.code)
       assertResult(model.widgets)(newModel.widgets)
       assertResult(model.info)(newModel.info)
       assertResult(model.version)(newModel.version)
       assertResult(model.turtleShapes)(newModel.turtleShapes)
-      assertResult(model.behaviorSpace)(newModel.behaviorSpace)
       assertResult(model.linkShapes)(newModel.linkShapes)
-      assertResult(model.previewCommands)(newModel.previewCommands)
-      assertResult(model.otherSections)(newModel.otherSections)
-      assertResult(model)(newModel)
+      assertResult(model.optionalSections)(model.optionalSections)
     }
     finally workspace.dispose()
   }
@@ -104,9 +102,8 @@ class TestCompileAll extends FunSuite  {
     try {
       workspace.open(path)
       val lab = HeadlessWorkspace.newLab
-      lab.load(ModelReader.parseModel(text, workspace.parser, Map())
-        .behaviorSpace.mkString("", "\n", "\n"))
-      lab.names.foreach(lab.newWorker(_).compile(workspace))
+      val protocols = BehaviorSpaceCoordinator.protocolsFromModel(path)
+      protocols.foreach(lab.newWorker(_).compile(workspace))
     }
     finally workspace.dispose()
   }

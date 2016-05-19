@@ -332,5 +332,22 @@ abstract class Instruction extends InstructionJ with TokenHolder {
              "a number too large for NetLogo"
            else
              "a non-number"))
-
+  def throwAgentClassException(context: Context, kind: AgentKind): Nothing = {
+   val pairs =
+     Seq(
+       (AgentKind.Observer, 'O'), (AgentKind.Turtle, 'T'),
+       (AgentKind.Patch, 'P'), (AgentKind.Link, 'L'))
+   val allowedKinds =
+     for {
+       (kind, c) <- pairs
+       if agentClassString.contains(c)
+     }
+     yield kind
+   throw new EngineException(context, this,
+     "this code can't be run by " + Instruction.agentKindDescription(kind) +
+     (if (allowedKinds.size == 1)
+        ", only " + Instruction.agentKindDescription(allowedKinds.head)
+      else
+        ""))
+  }
 }

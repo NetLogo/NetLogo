@@ -2,22 +2,12 @@
 
 package org.nlogo.nvm
 
-import org.nlogo.core.CompilationEnvironment
+import org.nlogo.core.{ AgentKind, CompilationEnvironment, CompilerException }
+import org.nlogo.api.{ AggregateManagerInterface, CommandRunnable, CompilerServices,
+  HubNetInterface, ImporterUser, JobOwner, LogoException, OutputDestination,
+  PreviewCommands, RandomServices, ReporterRunnable }
 
 import org.nlogo.agent.{ Agent, AgentSet, World }
-import org.nlogo.api.AggregateManagerInterface
-import org.nlogo.api.CommandRunnable
-import org.nlogo.api.CompilerServices
-import org.nlogo.api.HubNetInterface
-import org.nlogo.api.ImporterUser
-import org.nlogo.api.JobOwner
-import org.nlogo.api.LogoException
-import org.nlogo.api.PreviewCommands
-import org.nlogo.api.OutputDestination
-import org.nlogo.api.RandomServices
-import org.nlogo.api.ReporterRunnable
-import org.nlogo.core.AgentKind
-import org.nlogo.core.CompilerException
 
 import java.util.Map
 import java.util.WeakHashMap
@@ -31,7 +21,7 @@ trait Workspace extends org.nlogo.api.Workspace
   def world: org.nlogo.agent.World
 
   def fileManager: FileManager
-  def getHubNetManager: HubNetInterface
+  def getHubNetManager: Option[HubNetInterface]
 
   def runCompiledCommands(owner: JobOwner, procedure: Procedure): Boolean
   def runCompiledReporter(owner: JobOwner, procedure: Procedure): AnyRef

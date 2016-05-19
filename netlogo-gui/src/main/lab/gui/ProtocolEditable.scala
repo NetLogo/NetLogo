@@ -2,15 +2,16 @@
 
 package org.nlogo.lab.gui
 
+import org.nlogo.api.LabProtocol
 import org.nlogo.core.{ CompilerException, I18N, LogoList }
-import org.nlogo.lab.{EnumeratedValueSet,Protocol,SteppedValueSet,ValueSet}
+import org.nlogo.api.{ EnumeratedValueSet, LabProtocol, SteppedValueSet, ValueSet }
 import java.awt.{GridBagConstraints,Window}
 import org.nlogo.api.{ Dump, CompilerServices, Editable, Property}
 import collection.JavaConverters._
 
 // normally we'd be package-private but the org.nlogo.properties stuff requires we be public - ST 2/25/09
 
-class ProtocolEditable(protocol: Protocol,
+class ProtocolEditable(protocol: LabProtocol,
                        window: Window,
                        compiler: CompilerServices,
                        worldLock: AnyRef)
@@ -47,7 +48,7 @@ class ProtocolEditable(protocol: Protocol,
          Property("timeLimit", Property.Integer, I18N.gui("timeLimit"),
                   "<html>"+I18N.gui("timeLimit.info")+"</html>")).asJava
   // These are the actual vars the user edits.  Before editing they are copied out of the
-  // original Protocol; after editing a new Protocol is created.
+  // original LabProtocol; after editing a new LabProtocol is created.
   var name = protocol.name
   var setupCommands = protocol.setupCommands
   var goCommands = protocol.goCommands
@@ -68,15 +69,15 @@ class ProtocolEditable(protocol: Protocol,
        }) + "]\n"
     protocol.valueSets.map(setString).mkString
   }
-  // make a new Protocol based on what user entered
+  // make a new LabProtocol based on what user entered
   def editFinished: Boolean = get.isDefined
-  def get: Option[Protocol] = {
+  def get: Option[LabProtocol] = {
     def complain(message: String) {
       javax.swing.JOptionPane.showMessageDialog(
         window, "Invalid spec for varying variables. Error:\n" + message,
        "Invalid", javax.swing.JOptionPane.ERROR_MESSAGE)
     }
-    Some(new Protocol(
+    Some(new LabProtocol(
       name.trim, setupCommands.trim, goCommands.trim,
       finalCommands.trim, repetitions, runMetricsEveryStep,
       timeLimit, exitCondition.trim,

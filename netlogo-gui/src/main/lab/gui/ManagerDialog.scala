@@ -2,9 +2,11 @@
 
 package org.nlogo.lab.gui
 
-import org.nlogo.lab.{EnumeratedValueSet,Protocol}
+import org.nlogo.api.LabProtocol
+import org.nlogo.api.{ EnumeratedValueSet, LabProtocol }
 import org.nlogo.window.EditDialogFactoryInterface
-import javax.swing.{JButton,JDialog,JLabel,JList,JOptionPane,JPanel,JScrollPane}
+import java.awt.Component
+import javax.swing.{JButton,JDialog,JLabel,JList,JOptionPane,JPanel,JScrollPane,ListCellRenderer}
 import org.nlogo.core.I18N
 
 private class ManagerDialog(manager: LabManager,
@@ -12,8 +14,8 @@ private class ManagerDialog(manager: LabManager,
   extends JDialog(manager.workspace.getFrame)
   with javax.swing.event.ListSelectionListener
 {
-  private val jlist = new JList[Protocol]
-  private val listModel = new javax.swing.DefaultListModel[Protocol]
+  private val jlist = new JList[LabProtocol]
+  private val listModel = new javax.swing.DefaultListModel[LabProtocol]
   private implicit val i18NPrefix = I18N.Prefix("tools.behaviorSpace")
   /// actions
   private def action(name: String, fn: ()=>Unit) =
@@ -40,6 +42,7 @@ private class ManagerDialog(manager: LabManager,
     jlist.addMouseListener(new javax.swing.event.MouseInputAdapter {
       override def mouseClicked(e: java.awt.event.MouseEvent) {
         if(e.getClickCount > 1) edit() } })
+    jlist.setCellRenderer(new ProtocolRenderer())
     // Setup the first row of buttons
     val buttonPanel = new JPanel
     val runButton = new JButton(runAction)
@@ -93,7 +96,7 @@ private class ManagerDialog(manager: LabManager,
   private def makeNew(): Unit = {
     import collection.JavaConverters._
     editProtocol(
-      new Protocol(
+      new LabProtocol(
         "experiment", "setup", "go", "", 1, true, 0, "", List("count turtles"),
         manager.workspace.world.synchronized {
           manager.workspace.world.program.interfaceGlobals.toList
@@ -104,7 +107,7 @@ private class ManagerDialog(manager: LabManager,
   }
   private def duplicate() { editProtocol(selectedProtocol, true) }
   private def edit() { editProtocol(selectedProtocol, false) }
-  private def editProtocol(protocol: Protocol, isNew: Boolean) {
+  private def editProtocol(protocol: LabProtocol, isNew: Boolean) {
     val editable = new ProtocolEditable(protocol, manager.workspace.getFrame,
                                         manager.workspace, manager.workspace.world)
     if(!dialogFactory.canceled(this, editable)) {
@@ -120,10 +123,10 @@ private class ManagerDialog(manager: LabManager,
     val selected = jlist.getSelectedIndices
     val message = "Are you sure you want to delete " +
       (if(selected.length > 1) "these " + selected.length + " experiments?"
-       else "\"" + listModel.getElementAt(selected(0)).asInstanceOf[Protocol].name + "\"?")
+       else "\"" + listModel.getElementAt(selected(0)).asInstanceOf[LabProtocol].name + "\"?")
     if(JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(this, message, "Delete", JOptionPane.YES_NO_OPTION)) {
       for(i <- 0 until selected.length)
-        manager.protocols -= listModel.getElementAt(selected(i)).asInstanceOf[Protocol]
+        manager.protocols -= listModel.getElementAt(selected(i)).asInstanceOf[LabProtocol]
       update()
       // it's annoying if nothing is left selected, so select something
       val newSize = manager.protocols.size
@@ -143,7 +146,7 @@ private class ManagerDialog(manager: LabManager,
     jlist.setSelectedIndices(Array(index))
     jlist.ensureIndexIsVisible(index)
   }
-  private def select(targetProtocol: Protocol) {
+  private def select(targetProtocol: LabProtocol) {
     val index = manager.protocols.indexWhere(_ eq targetProtocol)
     jlist.setSelectedIndices(Array(index))
     jlist.ensureIndexIsVisible(index)
@@ -152,4 +155,24 @@ private class ManagerDialog(manager: LabManager,
     jlist.getSelectedIndices match { case Array(i: Int) => i }
   private def selectedProtocol =
     manager.protocols(jlist.getSelectedIndices()(0))
+
+  class ProtocolRenderer extends JLabel with ListCellRenderer[LabProtocol] {
+    def getListCellRendererComponent(list: JList[_ <: LabProtocol],
+      proto: LabProtocol, index: Int,
+      isSelected: Boolean, cellHasFocus: Boolean): Component = {
+        val text =
+          s"${proto.name} (${proto.countRuns} run${(if(proto.countRuns != 1) "s" else "")})"
+        setText(text)
+        if (isSelected) {
+          setOpaque(true)
+          setForeground(list.getSelectionForeground())
+          setBackground(list.getSelectionBackground())
+        } else {
+          setOpaque(false)
+          setForeground(list.getForeground())
+          setBackground(list.getBackground())
+        }
+        this
+    }
+  }
 }

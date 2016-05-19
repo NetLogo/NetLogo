@@ -2,20 +2,27 @@
 
 package org.nlogo.hubnet.server
 
-import org.nlogo.hubnet.connection.{HubNetException, ConnectionInterface}
-import org.nlogo.core.AgentKind
-import org.nlogo.api.HubNetInterface
+import org.nlogo.core.{ AgentKind, Widget => CoreWidget }
+import org.nlogo.core.model.WidgetReader
+import org.nlogo.api.{ HubNetInterface, ModelLoader, Version }, HubNetInterface.ClientInterface
 import org.nlogo.hubnet.mirroring
-import org.nlogo.hubnet.mirroring.{HubNetLinkStamp, HubNetDrawingMessage, HubNetTurtleStamp, HubNetLine}
+import org.nlogo.hubnet.mirroring.{ HubNetLinkStamp, HubNetDrawingMessage, HubNetTurtleStamp, HubNetLine }
+import org.nlogo.hubnet.connection.{ HubNetException, ConnectionInterface }
 import org.nlogo.hubnet.connection.MessageEnvelope._
 import org.nlogo.hubnet.connection.MessageEnvelope.MessageEnvelope
-import org.nlogo.workspace.AbstractWorkspaceScala
+import org.nlogo.hubnet.protocol.{ CalculatorInterface, ComputerInterface }
+import org.nlogo.workspace.{ AbstractWorkspaceScala, OpenModel }
 import org.nlogo.agent.{Link, Turtle}
+import org.nlogo.util.Utils, Utils.reader2String
 
+import java.nio.file.Paths
+import java.net.URI
 import java.io.{ Serializable => JSerializable }
 import java.util.concurrent.LinkedBlockingQueue
 
-abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetInterface with ConnectionInterface {
+abstract class HubNetManager(workspace: AbstractWorkspaceScala, modelLoader: ModelLoader)
+  extends HubNetInterface
+  with ConnectionInterface {
 
   val connectionManager: ConnectionManager
 
@@ -91,7 +98,7 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetIn
    * string node ids.
    */
   @throws(classOf[HubNetException])
-  def send(nodes: Seq[String], tag: String, message: JSerializable) {
+  def send(nodes: Seq[String], tag: String, message: JSerializable with AnyRef) {
     checkRunningStatus()
     for (node <- nodes) if (!send(node, tag, message)) { simulateFailedExitMessage(node) }
   }
@@ -104,7 +111,7 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetIn
    * sends a message to a specific node (by String ID).
    */
   @throws(classOf[HubNetException])
-  def send(node: String, tag: String, message: JSerializable): Boolean =
+  override def send(node: String, tag: String, message: JSerializable with AnyRef): Boolean =
     connectionManager.send(node, tag, message)
 
   def sendUserMessage(nodes: Seq[String], text: String) {
@@ -143,7 +150,7 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetIn
 
   /// clients
   @throws(classOf[HubNetException])
-  def setClientInterface(interfaceType:String, interfaceInfo: Iterable[AnyRef]){
+  def setClientInterface(interfaceType:String, interfaceInfo: Iterable[ClientInterface]){
     connectionManager.setClientInterface(interfaceType, interfaceInfo)
     resetPlotManager()
   }
@@ -227,11 +234,11 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetIn
   def setPlotMirroring(onOff:Boolean){ HubNetUtils.plotMirroring = onOff }
 
   def waitForClients(numClientsToWaitFor:Int, timeoutMillis: Long): (Boolean, Int) = {
-    waitForEvents(numClientsToWaitFor, timeoutMillis)(workspace.getHubNetManager.clients.size)
+    waitForEvents(numClientsToWaitFor, timeoutMillis)(workspace.getHubNetManager.map(_.clients.size).get)
   }
 
   def waitForMessages(numMessagesToWaitFor:Int, timeoutMillis: Long): (Boolean, Int) = {
-    waitForEvents(numMessagesToWaitFor, timeoutMillis)(workspace.getHubNetManager.getInQueueSize)
+    waitForEvents(numMessagesToWaitFor, timeoutMillis)(workspace.getHubNetManager.map(_.getInQueueSize).get)
   }
 
   // this is called from __hubnet-wait-for-clients and __hubnet-wait-for-messages.
@@ -312,4 +319,27 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetIn
   // we could implement these to send messages on these events.
   def shapeChanged(shape:org.nlogo.core.Shape){}
   def applyNewFontSize(fontSize:Int, zoom:Int) {}
+
+  def calculatorInterface(activity: String,tags: Seq[String]): ClientInterface =
+    CalculatorInterface(activity, tags)
+
+  def fileInterface(path: String): Option[ClientInterface] = {
+    val uri = Paths.get(path).toUri
+    OpenModel(uri, HubNetLoadController, modelLoader, Version)
+      .flatMap { model =>
+        model.optionalSectionValue[Seq[CoreWidget]]("org.nlogo.modelsection.hubnetclient")
+          .map(widgets => ComputerInterface(widgets, model.turtleShapes, model.linkShapes))
+      }
+  }
+
+  object HubNetLoadController extends OpenModel.Controller {
+    // empty implementations of the following three methods will cause
+    // OpenModel to return None, which is fine
+    def errorOpeningURI(uri: URI,exception: Exception): Unit = { }
+    def invalidModel(uri: URI): Unit = { }
+    def invalidModelVersion(uri: java.net.URI,version: String): Unit = { }
+    def shouldOpenModelOfDifferingArity(arity: Int,version: String): Boolean = true
+    def shouldOpenModelOfLegacyVersion(version: String): Boolean = true
+    def shouldOpenModelOfUnknownVersion(version: String): Boolean = true
+  }
 }

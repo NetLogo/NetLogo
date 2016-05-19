@@ -6,7 +6,7 @@ import org.nlogo.shape.DrawableShape;
 
 public strictfp class ShapeCellRenderer   // public for DeltaTick - ST 12/2/11
     extends javax.swing.JPanel
-    implements javax.swing.ListCellRenderer<String> {
+    implements javax.swing.ListCellRenderer<org.nlogo.core.Shape> {
 
   protected Object theShape;
   protected final java.awt.Component shapeComponent;
@@ -14,10 +14,8 @@ public strictfp class ShapeCellRenderer   // public for DeltaTick - ST 12/2/11
       new java.awt.Dimension(90, 34);
   protected final javax.swing.JLabel shapeName =
       new javax.swing.JLabel("blah", javax.swing.SwingConstants.LEFT);
-  final DrawableList list;
 
-  public ShapeCellRenderer(DrawableList list) {
-    this.list = list;
+  public ShapeCellRenderer() {
     shapeComponent = getShapeComponent();
     setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.X_AXIS));
     add(shapeComponent);
@@ -79,10 +77,10 @@ public strictfp class ShapeCellRenderer   // public for DeltaTick - ST 12/2/11
   // Method that actually renders the item
   @Override
   public java.awt.Component getListCellRendererComponent
-  (javax.swing.JList<? extends String> list, String value, int index,
+  (javax.swing.JList<? extends org.nlogo.core.Shape> list, org.nlogo.core.Shape value, int index,
    boolean isSelected, boolean cellHasFocus) {
-    theShape = this.list.getShape(index);
-    shapeName.setText(value.toString());
+    theShape = value;
+    shapeName.setText(value.name());
     if (isSelected) {
       setOpaque(true);
       shapeName.setForeground(list.getSelectionForeground());

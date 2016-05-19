@@ -11,7 +11,7 @@ class WidgetTests extends FunSuite {
 
     val inputChoices = List(ChooseableList(l), ChooseableDouble(4.toDouble))
     val expectedChoices = List[AnyRef](l, 4.0.asInstanceOf[AnyRef]).asInstanceOf[List[AnyRef]]
-    val chooser = Chooser(display = "FOOBAR", varName = "FOOBAR", choices = inputChoices)
+    val chooser = Chooser(display = Some("FOOBAR"), variable = Some("FOOBAR"), choices = inputChoices)
     assertResult(ChoiceConstraintSpecification(expectedChoices, 0))(chooser.constraint)
   }
 }

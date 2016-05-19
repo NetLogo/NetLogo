@@ -7,24 +7,25 @@ package org.nlogo.app
 
 import org.nlogo.core.AgentKind
 import org.nlogo.core.I18N
+import org.nlogo.window.GUIWorkspace
 
-class ToolsMenu(app: App) extends org.nlogo.swing.Menu(I18N.gui.get("menu.tools")) {
+class ToolsMenu(app: App, modelSaver: ModelSaver) extends org.nlogo.swing.Menu(I18N.gui.get("menu.tools")) {
 
   implicit val i18nName = I18N.Prefix("menu.tools")
 
   setMnemonic('T')
-  addMenuItem(I18N.gui("halt"), app.workspace.halt _)
+  addMenuItem(new SimpleGUIWorkspaceAction(I18N.gui("halt"), app.workspace, _.halt))
   addSeparator()
-  addMenuItem(I18N.gui("globalsMonitor"), () => app.workspace.inspectAgent(AgentKind.Observer))
-  addMenuItem(I18N.gui("turtleMonitor"), () => app.workspace.inspectAgent(AgentKind.Turtle))
-  addMenuItem(I18N.gui("patchMonitor"), () => app.workspace.inspectAgent(AgentKind.Patch))
-  addMenuItem(I18N.gui("linkMonitor"), () => app.workspace.inspectAgent(AgentKind.Link))
-  addMenuItem(I18N.gui("closeAllAgentMonitors"), app.workspace.closeAgentMonitors _)
-  addMenuItem(I18N.gui("closeDeadAgentMonitors"), app.workspace.stopInspectingDeadAgents _)
+  addMenuItem(new SimpleGUIWorkspaceAction(I18N.gui("globalsMonitor"), app.workspace, _.inspectAgent(AgentKind.Observer)))
+  addMenuItem(new SimpleGUIWorkspaceAction(I18N.gui("turtleMonitor"), app.workspace, _.inspectAgent(AgentKind.Turtle)))
+  addMenuItem(new SimpleGUIWorkspaceAction(I18N.gui("patchMonitor"), app.workspace, _.inspectAgent(AgentKind.Patch)))
+  addMenuItem(new SimpleGUIWorkspaceAction(I18N.gui("linkMonitor"), app.workspace, _.inspectAgent(AgentKind.Link)))
+  addMenuItem(new SimpleGUIWorkspaceAction(I18N.gui("closeAllAgentMonitors"), app.workspace, _.closeAgentMonitors))
+  addMenuItem(new SimpleGUIWorkspaceAction(I18N.gui("closeDeadAgentMonitors"), app.workspace, _.stopInspectingDeadAgents))
   addSeparator()
   addMenuItem('/', app.tabs.interfaceTab.commandCenterAction)
   addSeparator()
-  addMenuItem(I18N.gui("3DView"), 'T', true, open3DView _)
+  addMenuItem('T', new Open3DViewAction(app.workspace))
   addMenuItem(I18N.gui("colorSwatches"), openColorDialog _)
   addMenuItem(I18N.gui("turtleShapesEditor"),
               () => app.turtleShapesManager.init(I18N.gui("turtleShapesEditor")))
@@ -32,7 +33,7 @@ class ToolsMenu(app: App) extends org.nlogo.swing.Menu(I18N.gui.get("menu.tools"
               () => app.linkShapesManager.init(I18N.gui("linkShapesEditor")))
   addMenuItem(app.previewCommandsEditor.title, 'P', true, () =>
     app.workspace.previewCommands =
-      app.previewCommandsEditor.getPreviewCommands(new ModelSaver(app).save, app.workspace.getModelPath))
+      app.previewCommandsEditor.getPreviewCommands(modelSaver.currentModel, app.workspace.getModelPath))
   addMenuItem(I18N.gui("behaviorSpace"), 'B', true, () => app.labManager.show())
   addMenuItem(I18N.gui("systemDynamicsModeler"), 'D', true, app.aggregateManager.showEditor _)
   addSeparator()
@@ -51,18 +52,41 @@ class ToolsMenu(app: App) extends org.nlogo.swing.Menu(I18N.gui.get("menu.tools"
       app.colorDialog.setVisible(true)
     }
   }
-  def open3DView() {
+
+  def openHubNetClientEditor() {
+    app.workspace.getHubNetManager.foreach { mgr =>
+      mgr.openClientEditor()
+      app.frame.addLinkComponent(mgr.clientEditor)
+    }
+  }
+}
+
+import java.awt.event.ActionEvent
+import javax.swing.AbstractAction
+
+class GUIWorkspaceAction(name: String, workspace: GUIWorkspace) extends AbstractAction(name) {
+  def performAction(workspace: GUIWorkspace): Unit = {}
+
+  override def actionPerformed(e: ActionEvent): Unit = {
+    performAction(workspace)
+  }
+}
+
+class Open3DViewAction(workspace: GUIWorkspace) extends GUIWorkspaceAction("3DView", workspace) {
+  override def performAction(workspace: GUIWorkspace): Unit = {
     try {
-      app.workspace.glView.open()
-      app.workspace.set2DViewEnabled(false)
+      workspace.glView.open()
+      workspace.set2DViewEnabled(false)
     }
     catch {
       case ex: org.nlogo.window.JOGLLoadingException =>
-        org.nlogo.swing.Utils.alert("3D", ex.getMessage, "" + ex.getCause, I18N.gui("common.buttons.continue") )
+        org.nlogo.swing.Utils.alert("3d", ex.getMessage, "" + ex.getCause, I18N.gui.get("common.buttons.continue") )
     }
   }
-  def openHubNetClientEditor() {
-    app.workspace.getHubNetManager.openClientEditor()
-    app.frame.addLinkComponent(app.workspace.getHubNetManager.clientEditor)
+}
+
+class SimpleGUIWorkspaceAction(name: String, workspace: GUIWorkspace, action: GUIWorkspace => Unit) extends GUIWorkspaceAction(name, workspace) {
+  override def performAction(workspace: GUIWorkspace): Unit = {
+    action(workspace)
   }
 }

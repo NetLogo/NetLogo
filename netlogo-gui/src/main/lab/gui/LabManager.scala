@@ -2,8 +2,9 @@
 
 package org.nlogo.lab.gui
 
+import org.nlogo.api.LabProtocol
 import org.nlogo.api.ModelSection
-import org.nlogo.lab.{Protocol, ProtocolLoader, ProtocolSaver}
+import org.nlogo.core.Model
 import org.nlogo.window.{GUIWorkspace, EditDialogFactoryInterface, LabManagerInterface}
 import org.nlogo.workspace.{CurrentModelOpener, WorkspaceFactory}
 import org.nlogo.window.Events._
@@ -15,9 +16,20 @@ class LabManager(val workspace: GUIWorkspace,
   extends LabManagerInterface
   with CompiledEvent.Handler
   with LoadBeginEvent.Handler
-  with LoadSectionEvent.Handler
+  with LoadModelEvent.Handler
 {
-  val protocols = new ListBuffer[Protocol]
+  val protocols = new ListBuffer[LabProtocol]
+
+  def getComponent: Seq[LabProtocol] = protocols.toSeq
+  def defaultComponent: Seq[LabProtocol] = Seq()
+
+  def addProtocol(p: LabProtocol): Unit = {
+    protocols += p
+  }
+
+  def clearProtocols(): Unit = {
+    protocols.clear()
+  }
   private lazy val dialog = new ManagerDialog(this, dialogFactory)
   def show() { dialog.update(); dialog.setVisible(true) }
   def close() { dialog.setVisible(false) }
@@ -30,25 +42,14 @@ class LabManager(val workspace: GUIWorkspace,
     protocols.clear()
     lastCompileAllWasSuccessful = false
   }
-  def handle(e:LoadSectionEvent) {
-    // autoconversion of protocols from old NetLogo versions
-    def autoConvert(protocol:Protocol):Protocol = {
-      import protocol._
-      new Protocol(name,
-                   workspace.autoConvert(setupCommands, true, false, e.version),
-                   workspace.autoConvert(goCommands, true, false, e.version),
-                   workspace.autoConvert(finalCommands, true, false, e.version),
-                   repetitions, runMetricsEveryStep, timeLimit,
-                   workspace.autoConvert(exitCondition, true, true, e.version),
-                   metrics.map(workspace.autoConvert(_, true, true, e.version)),
-                   valueSets)
-    }
-    if(e.section == ModelSection.BehaviorSpace && !e.text.trim.isEmpty)
-      protocols ++= new ProtocolLoader(workspace).loadAll(e.text).map(autoConvert)
+  def handle(e:LoadModelEvent) {
+    protocols ++= e.model
+      .optionalSectionValue[Seq[LabProtocol]]("org.nlogo.modelsection.behaviorspace")
+      .getOrElse(Seq[LabProtocol]())
   }
-  def save =
-    if(protocols.isEmpty) ""
-    else ProtocolSaver.save(protocols)
+  override def updateModel(m: Model): Model =
+    m.withOptionalSection("org.nlogo.modelsection.behaviorspace", Some(protocols), Seq())
+
   /// making sure everything gets compiled before an experiment run
   private var lastCompileAllWasSuccessful = false
   def handle(e:CompiledEvent) {

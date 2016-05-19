@@ -12,8 +12,8 @@ public strictfp class TurtleDrawer {
 
   final TurtleShapeManager shapes;
 
-  public TurtleDrawer(org.nlogo.core.ShapeList shapeList) {
-    shapes = new TurtleShapeManager(shapeList);
+  public TurtleDrawer(org.nlogo.core.ShapeListTracker shapeTracker) {
+    shapes = new TurtleShapeManager(shapeTracker);
   }
 
   public void drawTurtle(GraphicsInterface g, TopologyRenderer topology,
@@ -81,7 +81,7 @@ public strictfp class TurtleDrawer {
     double ycor = turtle.ycor();
 
     VectorShape shape = shapes.getShape(turtle);
-    VectorShape outline = (VectorShape) shape.clone();
+    VectorShape outline = shape.clone();
     outline.setOutline();
 
     double thickness = StrictMath.min(turtleSize / 5, 0.5);

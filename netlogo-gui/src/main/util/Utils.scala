@@ -28,6 +28,7 @@ object Utils {
 
   ///
 
+  @deprecated("use FileIO.getResourceLines instead", "6.0-M6")
   def getResourceLines(path: String): Iterator[String] = {
     val in = new java.io.BufferedReader(
       new java.io.InputStreamReader(
@@ -35,13 +36,15 @@ object Utils {
     Iterator.continually(in.readLine()).takeWhile(_ != null)
   }
 
-  // for convenience when calling from Java
+  @deprecated("use FileIO.getResourceAsStringArray instead", "6.0-M6")
   def getResourceAsStringArray(path: String): Array[String] =
     getResourceLines(path).toArray
 
+  @deprecated("use FileIO.getResourceAsString instead", "6.0-M6")
   def getResourceAsString(path: String): String =
     getResourceLines(path).mkString("", "\n", "\n")
 
+  @deprecated("use FileIO.url2String instead", "6.0-M6")
   @throws(classOf[java.io.IOException])
   def url2String(sampleURL: String): String = {
     if(sampleURL.startsWith("/"))
@@ -66,6 +69,7 @@ object Utils {
     }
   }
 
+  @deprecated("use FileIO.reader2String instead", "6.0-M6")
   @throws(classOf[java.io.IOException])
   def reader2String(reader: java.io.Reader): String =
     reader2String(reader, 8192) // arbitrary default

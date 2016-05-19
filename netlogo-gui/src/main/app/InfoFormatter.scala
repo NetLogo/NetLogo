@@ -2,6 +2,7 @@
 
 package org.nlogo.app
 
+import org.nlogo.api.FileIO
 import org.pegdown.{ PegDownProcessor, Extensions }
 import java.io.InputStream
 
@@ -23,7 +24,7 @@ object InfoFormatter {
   }
   def read(in:InputStream): String = io.Source.fromInputStream(in).mkString
 
-  def styleSheetFile: CSS = org.nlogo.util.Utils.getResourceAsString("/system/info.css")
+  def styleSheetFile: CSS = FileIO.getResourceAsString("/system/info.css")
   val defaultFontSize = 14
   val defaultStyleSheet: CSS = styleSheet(defaultFontSize)
   def styleSheet(fontSize: Int): CSS = "<style type=\"text/css\">\n<!--\n"+

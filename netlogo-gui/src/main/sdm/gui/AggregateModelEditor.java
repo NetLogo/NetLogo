@@ -38,6 +38,7 @@ strictfp class AggregateModelEditor
   private final java.awt.Component linkParent;
   private final org.nlogo.window.MenuBarFactory menuBarFactory;
   private final CompilerServices compiler;
+  private final AggregateDrawing drawing;
   private AggregateModelEditorToolBar toolbar;
   private final UndoManager undoManager;
   private Tool currentTool;
@@ -82,48 +83,23 @@ strictfp class AggregateModelEditor
     // but is not disposed of until the model is closed. - AZS 6/18/05
     setDefaultCloseOperation(HIDE_ON_CLOSE);
 
-    if (drawing == null) {
-      drawing = new AggregateDrawing();
-    } else {
-      FigureEnumeration figs = drawing.figures();
-      while (figs.hasNextFigure()) {
-        Figure fig = figs.nextFigure();
-        if (fig instanceof ModelElementFigure &&
-            ((ModelElementFigure) fig).getModelElement() != null) {
-          drawing.getModel().addElement
-              (((ModelElementFigure) fig).getModelElement());
-        }
-      }
-    }
+    this.drawing = (drawing == null) ? new AggregateDrawing() : drawing;
 
     DrawingView drawingView =
         new AggregateDrawingView
             (this, VIEW_SIZE.width, VIEW_SIZE.height);
-    drawingView.setDrawing(drawing);
+    drawingView.setDrawing(this.drawing);
 
 
     open(drawingView);
 
-    // OK, this is a little kludgy.  First we pack so everything
-    // is realized, and all addNotify() methods are called.  But
-    // the actual size we get won't be right yet, because the
-    // default model hasn't been loaded.  So load it, then pack
-    // again.  The first pack is needed because until everything
-    // has been realized, the NetLogo event system won't work.
-    //  - ST 8/16/03
     pack();
     setVisible(true);
-
-
   }
 
   void setError(org.nlogo.api.SourceOwner owner, CompilerException e) {
     errorLabel.setError(e, owner.headerSource().length());
     tabs.setError(e);
-  }
-
-  Model getModel() {
-    return ((AggregateDrawing) view().drawing()).getModel();
   }
 
   public Object getLinkParent() {
@@ -154,15 +130,19 @@ strictfp class AggregateModelEditor
     }
   }
 
+  public AggregateDrawing getDrawing() {
+    return drawing;
+  }
+
   /**
    * Translates the model into NetLogo code.
    */
   public String toNetLogoCode() {
     String src = "";
 
-    if (view() != null && view().drawing() != null) {
+    if (drawing != null) {
       org.nlogo.sdm.Translator translator =
-          new org.nlogo.sdm.Translator(getModel(), compiler);
+          new org.nlogo.sdm.Translator(drawing.getModel(), compiler);
       src = translator.source();
     }
 
@@ -190,7 +170,7 @@ strictfp class AggregateModelEditor
     getContentPane().add(errorLabel, BorderLayout.NORTH);
 
     AggregateEditorTab editorTab =
-        new AggregateEditorTab(this, (Component) view);
+        new AggregateEditorTab(this, new AggregateModelEditorToolBar(this, drawing.getModel()), (Component) view);
     tabs =
         new AggregateTabs(editorTab, this, colorizer);
     getContentPane().add(tabs, BorderLayout.CENTER);

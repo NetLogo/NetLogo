@@ -15,7 +15,7 @@ public strictfp class EngineException
   public EngineException(Context context, Instruction instruction,
                          String message, Exception cause) {
     super(message, cause);
-    if (!org.nlogo.api.Version.useGenerator() && instruction == null) {
+    if (!org.nlogo.api.Version$.MODULE$.useGenerator() && instruction == null) {
       throw new IllegalStateException();
     }
     this.context = context;

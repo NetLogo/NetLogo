@@ -4,7 +4,7 @@ package org.nlogo.core
 
 import org.scalatest.FunSuite
 
-import org.nlogo.util.TestUtils.cleanJsNumbers
+import TestUtils.cleanJsNumbers
 
 class ShapeParserTests extends FunSuite {
   import Shape.{ Element, RgbColor }

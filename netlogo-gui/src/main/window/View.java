@@ -2,17 +2,16 @@
 
 package org.nlogo.window;
 
-import org.nlogo.core.AgentKind;
 import org.nlogo.core.AgentKindJ;
 import org.nlogo.agent.AgentSet;
-import org.nlogo.agent.Observer;
 import org.nlogo.api.AgentException;
 import org.nlogo.api.AgentFollowingPerspective;
 import org.nlogo.api.Perspective;
 import org.nlogo.api.PerspectiveJ;
 import org.nlogo.api.RendererInterface;
-import org.nlogo.workspace.AbstractWorkspace;
+import org.nlogo.awt.ImageSelection;
 
+import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -58,11 +57,11 @@ public strictfp class View
   }
 
   public void displaySwitch(boolean on) {
-    workspace.viewWidget.displaySwitch.setOn(on);
+    workspace.viewWidget.displaySwitch().setOn(on);
   }
 
   public boolean displaySwitch() {
-    return workspace.viewWidget.displaySwitch.isSelected();
+    return workspace.viewWidget.displaySwitch().isSelected();
   }
 
   private final Runnable paintRunnable =
@@ -450,52 +449,43 @@ public strictfp class View
     // the only ones that do are watch, follow and reset-perspective
     // this check (and others below) prevent items from being added
     // when we are running in Applet. JC - 6/8/10
-    if (!AbstractWorkspace.isApplet()) {
-      javax.swing.JMenuItem copyItem =
-          new javax.swing.JMenuItem("Copy View");
-      copyItem.addActionListener
-          (new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent e) {
-              java.awt.Toolkit.getDefaultToolkit().getSystemClipboard().setContents
-                  (new org.nlogo.awt.ImageSelection
-                      (exportView()),
-                      null);
-            }
-          });
-      menu.add(copyItem);
-      javax.swing.JMenuItem exportItem =
-          new javax.swing.JMenuItem("Export View...");
-      exportItem.addActionListener
-          (new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent e) {
-              workspace.doExportView(View.this);
-            }
-          });
-      menu.add(exportItem);
-    }
+    JMenuItem copyItem = new JMenuItem("Copy View");
+    copyItem.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        java.awt.Toolkit.getDefaultToolkit().getSystemClipboard().setContents(
+          new ImageSelection(exportView()), null);
+      }
+    });
+    menu.add(copyItem);
+    JMenuItem exportItem = new JMenuItem("Export View...");
+    exportItem.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        workspace.doExportView(View.this);
+      }
+    });
+    menu.add(exportItem);
 
     menu.add(new JPopupMenu.Separator());
-    javax.swing.JMenuItem inspectGlobalsItem = new javax.swing.JMenuItem("inspect globals");
+    JMenuItem inspectGlobalsItem = new JMenuItem("inspect globals");
     inspectGlobalsItem.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent actionEvent) {
-          workspace.inspectAgent(AgentKindJ.Observer());
+        workspace.inspectAgent(AgentKindJ.Observer());
       }
     });
     menu.add(inspectGlobalsItem);
 
     if (!workspace.world().observer().atHome2D()) {
-      menu.add(new javax.swing.JPopupMenu.Separator());
-      javax.swing.JMenuItem resetItem =
-          new javax.swing.JMenuItem(
-              "<html>"
-                  + org.nlogo.awt.Colors.colorize("reset-perspective", SyntaxColors.COMMAND_COLOR));
-      resetItem.addActionListener
-          (new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent e) {
-              workspace.world().observer().resetPerspective();
-              workspace.viewManager.incrementalUpdateFromEventThread();
-            }
-          });
+      menu.add(new JPopupMenu.Separator());
+      JMenuItem resetItem =
+        new JMenuItem(
+            "<html>"
+            + org.nlogo.awt.Colors.colorize("reset-perspective", SyntaxColors.COMMAND_COLOR));
+      resetItem.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+          workspace.world().observer().resetPerspective();
+          workspace.viewManager.incrementalUpdateFromEventThread();
+        }
+      });
       menu.add(resetItem);
     }
     p = new java.awt.Point(p);
@@ -506,29 +496,26 @@ public strictfp class View
 
       org.nlogo.agent.Patch patch = null;
 
-      if (!AbstractWorkspace.isApplet()) {
+      try {
+        patch = workspace.world().getPatchAt(xcor, ycor);
+        menu.add(new JPopupMenu.Separator());
+        menu.add(new AgentMenuItem(patch, AgentMenuType.INSPECT, "inspect", false));
+      } catch (AgentException e) {
+        org.nlogo.api.Exceptions.ignore(e);
+      }
 
-        try {
-          patch = workspace.world().getPatchAt(xcor, ycor);
-          menu.add(new javax.swing.JPopupMenu.Separator());
-          menu.add(new AgentMenuItem(patch, AgentMenuType.INSPECT, "inspect", false));
-        } catch (AgentException e) {
-          org.nlogo.api.Exceptions.ignore(e);
-        }
+      boolean linksAdded = false;
+      for (AgentSet.Iterator links = workspace.world().links().iterator();
+           links.hasNext();) {
+        org.nlogo.agent.Link link = (org.nlogo.agent.Link) links.next();
 
-        boolean linksAdded = false;
-        for (AgentSet.Iterator links = workspace.world().links().iterator();
-             links.hasNext();) {
-          org.nlogo.agent.Link link = (org.nlogo.agent.Link) links.next();
-
-          if (!link.hidden() &&
-              workspace.world().protractor().distance(link, xcor, ycor, true) < link.lineThickness() + 0.5) {
-            if (!linksAdded) {
-              menu.add(new javax.swing.JPopupMenu.Separator());
-              linksAdded = true;
-            }
-            menu.add(new AgentMenuItem(link, AgentMenuType.INSPECT, "inspect", false));
+        if (!link.hidden() &&
+            workspace.world().protractor().distance(link, xcor, ycor, true) < link.lineThickness() + 0.5) {
+          if (!linksAdded) {
+            menu.add(new javax.swing.JPopupMenu.Separator());
+            linksAdded = true;
           }
+          menu.add(new AgentMenuItem(link, AgentMenuType.INSPECT, "inspect", false));
         }
       }
 
@@ -580,7 +567,7 @@ public strictfp class View
             if ((xMouse >= xCor - offset) && (xMouse <= xCor + offset) &&
                 (yMouse >= yCor - offset) && (yMouse <= yCor + offset)) {
               if (!turtlesAdded) {
-                menu.add(new javax.swing.JPopupMenu.Separator());
+                menu.add(new JPopupMenu.Separator());
                 turtlesAdded = true;
               }
 
@@ -608,10 +595,8 @@ public strictfp class View
   private void addTurtleToContextMenu(javax.swing.JPopupMenu menu,
                                       org.nlogo.agent.Turtle turtle) {
     javax.swing.JMenu submenu = new AgentMenu(turtle);
-    if (!AbstractWorkspace.isApplet()) {
-      submenu.add(new AgentMenuItem(turtle, AgentMenuType.INSPECT, "inspect", true));
-      submenu.add(new javax.swing.JPopupMenu.Separator());
-    }
+    submenu.add(new AgentMenuItem(turtle, AgentMenuType.INSPECT, "inspect", true));
+    submenu.add(new javax.swing.JPopupMenu.Separator());
     submenu.add(new AgentMenuItem(turtle, AgentMenuType.WATCH, "watch", true));
     submenu.add(new AgentMenuItem(turtle, AgentMenuType.FOLLOW, "follow", true));
     menu.add(submenu);

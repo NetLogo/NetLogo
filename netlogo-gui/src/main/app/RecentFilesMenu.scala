@@ -9,6 +9,9 @@ import org.nlogo.core.I18N
 import org.nlogo.api
 import org.nlogo.window
 
+import java.awt.event.ActionEvent
+import javax.swing.AbstractAction
+import javax.swing.JMenuItem
 import javax.swing.JOptionPane
 
 case class ModelEntry(path: String, modelType: api.ModelType) {
@@ -26,6 +29,42 @@ case class ModelEntry(path: String, modelType: api.ModelType) {
       case api.ModelType.Library => "L"
       case api.ModelType.New => throw new RuntimeException("Cannot add new file to menu!")
      }) + path
+}
+
+object OpenRecentFileAction {
+  def trimForDisplay(path: String): String = {
+    val maxDisplayLength = 100
+    val prefix = "..."
+    if (path.length > maxDisplayLength)
+      prefix + path.takeRight(maxDisplayLength - prefix.length)
+    else
+      path
+  }
+}
+
+import OpenRecentFileAction.trimForDisplay
+
+class OpenRecentFileAction(modelEntry: ModelEntry, fileMenu: FileMenu) extends AbstractAction(trimForDisplay(modelEntry.path)) {
+  override def actionPerformed(e: ActionEvent): Unit = {
+    open(modelEntry)
+  }
+
+  def open(modelEntry: ModelEntry): Unit = {
+    try {
+      fileMenu.offerSave()
+      fileMenu.openFromPath(modelEntry.path, modelEntry.modelType)
+    } catch {
+      case ex: org.nlogo.awt.UserCancelException =>
+        org.nlogo.api.Exceptions.ignore(ex)
+      case ex: java.io.IOException => {
+        JOptionPane.showMessageDialog(
+          fileMenu,
+          ex.getMessage,
+          I18N.gui.get("common.messages.error"),
+          JOptionPane.ERROR_MESSAGE)
+      }
+    }
+  }
 }
 
 class RecentFiles {
@@ -67,23 +106,14 @@ class RecentFiles {
   }
 }
 
-class RecentFilesMenu(app: App, fileMenu: FileMenu)
+class RecentFilesMenu(frame: AppFrame, fileMenu: FileMenu)
   extends org.nlogo.swing.Menu("Recent Files")
   with ModelSavedEvent.Handler
   with BeforeLoadEvent.Handler {
 
   val recentFiles = new RecentFiles
   refreshMenu()
-  app.frame.addLinkComponent(this)
-
-  private def trimForDisplay(path: String): String = {
-    val maxDisplayLength = 100
-    val prefix = "..."
-    if (path.length > maxDisplayLength)
-      prefix + path.takeRight(maxDisplayLength - prefix.length)
-    else
-      path
-  }
+  frame.addLinkComponent(this)
 
   // Add models to list when the current model is saved
   def handle(e: ModelSavedEvent) {
@@ -96,7 +126,7 @@ class RecentFilesMenu(app: App, fileMenu: FileMenu)
   // Add models to list when new models are opened
   def handle(e: BeforeLoadEvent) {
     if (e.modelType != api.ModelType.New) {
-      for (p <- Option(e.modelPath)) {
+      for (p <- e.modelPath) {
         recentFiles.add(ModelEntry(p, e.modelType))
         refreshMenu()
       }
@@ -104,34 +134,24 @@ class RecentFilesMenu(app: App, fileMenu: FileMenu)
   }
 
   def refreshMenu() {
+    getMenuComponents.foreach {
+      case j: JMenuItem => j.getActionListeners.foreach {
+        case o: OpenRecentFileAction => j.removeActionListener(o)
+        case _ =>
+      }
+      case _ =>
+    }
     removeAll()
     if (recentFiles.models.isEmpty)
       addMenuItem("<empty>").setEnabled(false)
     else {
       for (modelEntry <- recentFiles.models)
-        addMenuItem(trimForDisplay(modelEntry.path), () => open(modelEntry))
+        addMenuItem(new OpenRecentFileAction(modelEntry, fileMenu))
       addSeparator()
       addMenuItem("Clear Items", () => {
         recentFiles.clear
         refreshMenu()
       })
-    }
-  }
-
-  def open(modelEntry: ModelEntry) {
-    try {
-      fileMenu.offerSave()
-      fileMenu.openFromPath(modelEntry.path, modelEntry.modelType)
-    } catch {
-      case ex: org.nlogo.awt.UserCancelException =>
-        org.nlogo.api.Exceptions.ignore(ex)
-      case ex: java.io.IOException => {
-        JOptionPane.showMessageDialog(
-          RecentFilesMenu.this,
-          ex.getMessage,
-          I18N.gui.get("common.messages.error"),
-          JOptionPane.ERROR_MESSAGE)
-      }
     }
   }
 }

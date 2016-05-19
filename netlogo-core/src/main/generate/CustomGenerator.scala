@@ -103,7 +103,7 @@ class CustomGenerator(profilingEnabled: Boolean) {
     for (i <- 0 until (instr.procedure.args.size - instr.procedure.localsCount)) {
       // newActivation.args[ i ] = args[ i ].report(context)
       mv.visitInsn(DUP)
-      mv.visitFieldInsn(GETFIELD, "org/nlogo/nvm/Activation", "args", "[Ljava/lang/Object;")
+      generateArgsAccess(mv)
       mv.push(i)
       // operand stack: Activation Args[] i
       mv.generateArgument(instr, i, classOf[Object], thisInstrUID)
@@ -174,7 +174,7 @@ class CustomGenerator(profilingEnabled: Boolean) {
     for (i <- 0 until (instr.procedure.args.size - instr.procedure.localsCount)) {
       // newActivation.args[ i ] = args[ i ].report(context)
       mv.visitInsn(DUP)
-      mv.visitFieldInsn(GETFIELD, "org/nlogo/nvm/Activation", "args", "[Ljava/lang/Object;")
+      generateArgsAccess(mv)
       mv.push(i)
       // operand stack: Activation Args[] i
       mv.generateArgument(instr, i, classOf[Object], thisInstrUID)
@@ -291,4 +291,20 @@ class CustomGenerator(profilingEnabled: Boolean) {
       "()Ljava/lang/String;", false)
   }
 
+  protected def generateArgsAccess(mv: GeneratorAdapter): Unit = {
+    if (argsIsField)
+      mv.visitFieldInsn(GETFIELD, "org/nlogo/nvm/Activation", "args", "[Ljava/lang/Object;")
+    else
+      mv.visitMethodInsn(INVOKEVIRTUAL, "org/nlogo/nvm/Activation", "args", "()[Ljava/lang/Object;", false)
+  }
+
+  // This is a field in NetLogo Desktop, but a method in NetLogo Headless.
+  // We don't want to sacrifice speed in NetLogo-Desktop
+  protected lazy val argsIsField = try {
+    classOf[org.nlogo.nvm.Activation].getField("args")
+    true
+  }
+  catch {
+    case e: NoSuchFieldException => false
+  }
 }

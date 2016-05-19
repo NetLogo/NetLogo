@@ -202,14 +202,10 @@ public final strictfp class World3D
   }
 
   @Override
-  public Program newProgram(java.util.List<String> interfaceGlobals) {
-    scala.collection.mutable.Builder<String, scala.collection.immutable.Seq<String>> builder = scala.collection.immutable.Seq$.MODULE$.newBuilder();
-    for (String global : interfaceGlobals) {
-      builder.$plus$eq(global);
-    }
+  public Program newProgram(scala.collection.Seq<String> interfaceGlobals) {
     Program emptyProgram = newProgram();
     return emptyProgram.copy(
-        builder.result(),
+        interfaceGlobals,
         emptyProgram.userGlobals(),
         emptyProgram.turtlesOwn(),
         emptyProgram.patchesOwn(),

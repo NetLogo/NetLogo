@@ -1,5 +1,3 @@
-<?xml version="1.0" encoding="us-ascii"?>
-<!DOCTYPE experiments SYSTEM "behaviorspace.dtd">
 <experiments>
   <experiment name="testResizingWorld1" repetitions="1" runMetricsEveryTick="false">
     <exitCondition>true</exitCondition>

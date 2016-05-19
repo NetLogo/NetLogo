@@ -14,7 +14,7 @@ class _hubnetsend extends Command {
     val nodesArg = args(0).report(context)
     val tag = argEvalString(context, 1)
     val message = args(2).report(context)
-    val hubnetManager = workspace.getHubNetManager
+    val hubnetManager = workspace.getHubNetManager.get
     val nodes = new collection.mutable.ArrayBuffer[String]
     nodesArg match {
       case list: LogoList =>

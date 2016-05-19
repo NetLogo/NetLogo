@@ -16,7 +16,8 @@ class Tabs(val workspace: GUIWorkspace,
            monitorManager: AgentMonitorManager,
            dialogFactory: EditDialogFactoryInterface) extends JTabbedPane(javax.swing.SwingConstants.TOP)
   with javax.swing.event.ChangeListener with org.nlogo.window.Event.LinkParent
-  with LoadBeginEvent.Handler with RuntimeErrorEvent.Handler with CompiledEvent.Handler{
+  with org.nlogo.window.LinkRoot
+  with LoadBeginEvent.Handler with RuntimeErrorEvent.Handler with CompiledEvent.Handler {
 
   locally{
     setOpaque(false)
@@ -212,10 +213,4 @@ class Tabs(val workspace: GUIWorkspace,
     // see any reason why it needs to. It's causing flickering in the info tabs on the affected
     // platforms ev 2/2/09
   }
-
-  /// LinkComponent stuff
-
-  val linkComponents = new collection.mutable.ArrayBuffer[AnyRef]
-  def addLinkComponent(c: AnyRef) { linkComponents += c }
-  def getLinkChildren = linkComponents.toArray
 }

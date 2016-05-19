@@ -21,7 +21,7 @@ public strictfp class Renderer
   }
 
   public Renderer(World world, boolean renderLabelsAsRectangles) {
-    super(world, world.turtleShapeList(), world.linkShapeList());
+    super(world, world.turtleShapes(), world.linkShapes());
     renderLabelsAsRectangles_$eq(renderLabelsAsRectangles);
   }
 

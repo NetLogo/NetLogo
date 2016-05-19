@@ -3,6 +3,7 @@
 package org.nlogo.core
 
 import java.util.{ Collection => JCollection }
+import scala.collection.mutable.Publisher
 import scala.collection.JavaConverters._
 
 object ShapeList {
@@ -12,17 +13,17 @@ object ShapeList {
   def sortShapes(unsortedShapes: Seq[Shape]): Seq[Shape] =
     collection.mutable.ArrayBuffer(unsortedShapes: _*)
       .sortBy(_.name)
+  def shapesToMap(collection: Iterable[Shape]): Map[String, Shape] =
+    collection.map(s => (s.name -> s)).toMap
 }
 
-class ShapeList(val kind: AgentKind, _shapes: Seq[Shape]) {
+import ShapeList._
 
-  def this(kind: AgentKind) = this(kind, Seq())
+case class ShapeList(kind: AgentKind, shapeMap: Map[String, Shape]) {
+  def get(name: String): Option[Shape] = shapeMap.get(name)
+  def remove(shape: Shape): ShapeList = copy(shapeMap = shapeMap.filterNot(_._2 == shape))
 
-  private val shapeMap = collection.mutable.HashMap[String, Shape]()
-
-  _shapes.foreach(add)
-
-  import ShapeList._
+  def isEmpty: Boolean = shapeMap.isEmpty
 
   def shape(name: String): Shape =
     shapeMap.get(name).getOrElse(shapeMap(DefaultShapeName))
@@ -34,35 +35,49 @@ class ShapeList(val kind: AgentKind, _shapes: Seq[Shape]) {
       shapeMap.values.toSeq.filterNot(s => isDefaultShapeName(s.name)).sortBy(_.name)
 
   /** Returns a set of the names of all available shapes */
-  def names: Set[String] =
-    shapeMap.keySet.toSet
+  def names: Set[String] = shapeMap.keySet.toSet
 
   /** Returns true when a shape with the given name is already available to the current model */
-  def exists(name: String) =
-    shapeMap.contains(name)
+  def exists(name: String): Boolean = shapeMap.contains(name)
+}
 
-  /** Clears the list of shapes currently available */
+sealed trait ShapeEvent
+case class ShapeAdded(newShape: Shape, oldValue: Option[Shape], newShapeList: ShapeList) extends ShapeEvent
+case class ShapesAdded(addedShapes: Map[String, Shape], newShapeList: ShapeList) extends ShapeEvent
+case class AllShapesReplaced(oldShapeList: ShapeList, newShapeList: ShapeList) extends ShapeEvent
+case class ShapeRemoved(removedShape: Shape, newShapeList: ShapeList) extends ShapeEvent
+
+class ShapeListTracker(private var _shapeList: ShapeList) extends Publisher[ShapeEvent] {
+  def this(kind: AgentKind, map: Map[String, Shape]) = this(ShapeList(kind, map))
+  def this(kind: AgentKind) = this(ShapeList(kind, Map()))
+
+  def shapeList: ShapeList = _shapeList
+
+  def add(newShape: Shape): Unit = {
+    val removed = _shapeList.get(newShape.name)
+    _shapeList = _shapeList.copy(shapeMap = _shapeList.shapeMap.updated(newShape.name, newShape))
+    publish(ShapeAdded(newShape, removed, _shapeList))
+  }
+
+  def addAll(collection: Iterable[Shape]): Unit = {
+    val newMap = shapesToMap(collection)
+    _shapeList = _shapeList.copy(shapeMap = _shapeList.shapeMap ++ newMap)
+    publish(ShapesAdded(newMap, _shapeList))
+  }
+
   def replaceShapes(newShapes: Iterable[Shape]): Unit = {
-    shapeMap.clear()
-    addAll(newShapes)
+    val newMap = shapesToMap(newShapes)
+    val oldShapeList = _shapeList.copy()
+    _shapeList = _shapeList.copy(shapeMap = newMap)
+    publish(AllShapesReplaced(oldShapeList, _shapeList))
   }
 
   def replaceShapes(newShapes: JCollection[_ <: Shape]): Unit = {
     replaceShapes(newShapes.asScala)
   }
 
-  /** Adds a new shape to the ones currently available for use */
-  def add(newShape: Shape): Shape = {
-    val replaced = shapeMap.get(newShape.name).orNull
-    shapeMap(newShape.name) = newShape
-    replaced
+  def removeShape(shapeToRemove: Shape): Unit = {
+    _shapeList = _shapeList.remove(shapeToRemove)
+    publish(ShapeRemoved(shapeToRemove, _shapeList))
   }
-
-  /** Adds a collection of shapes to the ones currently available for use */
-  def addAll(collection: Iterable[Shape]) =
-    collection.foreach(add)
-
-  /** Removes a shape from those currently in use */
-  def removeShape(shapeToRemove: Shape) =
-    shapeMap.remove(shapeToRemove.name).orNull
 }

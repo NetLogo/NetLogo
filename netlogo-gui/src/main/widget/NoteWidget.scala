@@ -2,12 +2,15 @@
 
 package org.nlogo.widget
 
-import org.nlogo.api.{Editable, ModelReader}
+import org.nlogo.api.{ Color => NlogoColor, Editable }
+import org.nlogo.core.{ TextBox => CoreTextBox }
 import org.nlogo.core.I18N
 import org.nlogo.window.{InterfaceColors, SingleErrorWidget,Widget}
 import java.awt.{Font, Color, FontMetrics, Graphics, Dimension, Rectangle}
 
 class NoteWidget extends SingleErrorWidget with Editable {
+
+  type WidgetModel = CoreTextBox
 
   setBackground(InterfaceColors.TRANSPARENT)
   setOpaque(false)
@@ -83,26 +86,22 @@ class NoteWidget extends SingleErrorWidget with Editable {
       g.drawString(line, 0, i * stringHeight + stringAscent)
   }
 
-  def save: String = {
-    val s = new StringBuilder
-    s.append("TEXTBOX\n")
-    s.append(getBoundsString)
-    if (_text.trim == "") s.append("NIL\n")
-    else  s.append(ModelReader.stripLines(_text) + "\n")
-    s.append(fontSize + "\n")
-    s.append(org.nlogo.api.Color.getClosestColorNumberByARGB(color.getRGB) + "\n")
-    s.append((if (transparency) "1" else "0") + "\n")
-    s.toString
+  override def model: WidgetModel = {
+    val b = getBoundsTuple
+    val txt = if (text != null && text.trim != "") Some(text) else None
+    CoreTextBox(display = txt,
+      left = b._1, top = b._2, right = b._3, bottom = b._4,
+      fontSize = fontSize,
+      color = NlogoColor.argbToColor(color.getRGB),
+      transparent = transparency)
   }
 
-  def load(strings: Array[String], helper: Widget.LoadHelper) = {
-    text = if (strings(5) == "NIL") "" else ModelReader.restoreLines(strings(5))
-    if (strings.length >= 7) fontSize = strings(6).toInt
-    if (strings.length >= 8) color = org.nlogo.api.Color.getColor(strings(7).toDouble: java.lang.Double)
-    if (strings.length >= 9) transparency(strings(8).toInt != 0)
-    else transparency(false)
-    val Array(x1,y1,x2,y2) = strings.drop(1).take(4).map(_.toInt)
-    setSize(x2 - x1, y2 - y1)
+  override def load(model: WidgetModel): AnyRef = {
+    text = model.display.getOrElse("")
+    fontSize = model.fontSize
+    color = NlogoColor.getColor(Double.box(model.color))
+    transparency(model.transparent)
+    setSize(model.right - model.left, model.bottom - model.top)
     this
   }
 }

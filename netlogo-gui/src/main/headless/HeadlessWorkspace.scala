@@ -2,21 +2,22 @@
 
 package org.nlogo.headless
 
+import java.nio.file.Paths
+
 // Note that in the Scaladoc we distribute, this class is included, but Workspace and
 // AbstractWorkspace are not, so if you want to document a method for everyone, override that method
 // here and document it here.  The overriding method can simply call super(). - ST 6/1/05, 7/28/11
 
 import org.nlogo.agent.{ Agent, Observer }
-import org.nlogo.api.{ Version, RendererInterface,
-                       WorldDimensions3D, AggregateManagerInterface,
-                       ModelReader, LogoException, SimpleJobOwner,
-                       HubNetInterface, CommandRunnable, ReporterRunnable }
-import org.nlogo.core.{ AgentKind, CompilerException, Model, UpdateMode, WorldDimensions, model => coremodel },
-  coremodel.{ ModelReader => CoreModelReader, WidgetReader }
+import org.nlogo.api.{ ComponentSerialization, Version, ModelLoader, RendererInterface,
+  WorldDimensions3D, AggregateManagerInterface, FileIO, LogoException, ModelReader, SimpleJobOwner,
+  HubNetInterface, CommandRunnable, ReporterRunnable }, ModelReader.modelSuffix
+import org.nlogo.core.{ AgentKind, CompilerException, Femto, Model, UpdateMode, WorldDimensions }
 import org.nlogo.agent.{ World, World3D }
 import org.nlogo.nvm.{ LabInterface,
                        Workspace, DefaultCompilerServices, CompilerInterface }
-import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala }
+import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala, HubNetManagerFactory }
+import org.nlogo.fileformat, fileformat.NLogoFormat
 import org.nlogo.util.Pico
 import org.picocontainer.Parameter
 import org.picocontainer.parameters.ComponentParameter
@@ -45,15 +46,9 @@ object HeadlessWorkspace {
       pico.addScalaObject("org.nlogo.api.NetLogoLegacyDialect")
     pico.add("org.nlogo.sdm.AggregateManagerLite")
     pico.add("org.nlogo.render.Renderer")
-    pico.add(classOf[HubNetInterface],
-             "org.nlogo.hubnet.server.HeadlessHubNetManager",
-             Array[Parameter](new ComponentParameter))
     pico.addComponent(subclass)
-    val hubNetManagerFactory = new AbstractWorkspace.HubNetManagerFactory {
-      override def newInstance(workspace: AbstractWorkspace) =
-        pico.getComponent(classOf[HubNetInterface])
-    }
-    pico.addComponent(hubNetManagerFactory)
+    pico.addAdapter(new ModelLoaderComponent())
+    pico.add(classOf[HubNetManagerFactory], "org.nlogo.hubnet.server.HeadlessHubNetManagerFactory")
     pico.getComponent(subclass)
   }
 
@@ -65,7 +60,6 @@ object HeadlessWorkspace {
     else
       pico.addScalaObject("org.nlogo.api.NetLogoLegacyDialect")
     pico.add("org.nlogo.lab.Lab")
-    pico.add("org.nlogo.lab.ProtocolLoader")
     pico.addComponent(classOf[DefaultCompilerServices])
     pico.getComponent(classOf[LabInterface])
   }
@@ -113,7 +107,7 @@ class HeadlessWorkspace(
   val compiler: CompilerInterface,
   val renderer: RendererInterface,
   val aggregateManager: AggregateManagerInterface,
-  hubNetManagerFactory: AbstractWorkspace.HubNetManagerFactory)
+  hubNetManagerFactory: HubNetManagerFactory)
 extends AbstractWorkspaceScala(_world, hubNetManagerFactory)
 with org.nlogo.workspace.Controllable
 with org.nlogo.workspace.WorldLoaderInterface
@@ -192,12 +186,12 @@ with org.nlogo.api.ViewSettings {
    * Internal use only.
    */
   def initForTesting(d: WorldDimensions, source: String) {
-    world.turtleShapeList.add(org.nlogo.shape.VectorShape.getDefaultShape)
-    world.linkShapeList.add(org.nlogo.shape.LinkShape.getDefaultLinkShape)
+    world.turtleShapes.add(org.nlogo.shape.VectorShape.getDefaultShape)
+    world.linkShapes.add(org.nlogo.shape.LinkShape.getDefaultLinkShape)
     world.createPatches(d)
     import collection.JavaConverters._
     val results = compiler.compileProgram(
-      source, world.newProgram(List[String]().asJava),
+      source, world.newProgram(Seq[String]()),
       getExtensionManager, getCompilationEnvironment)
     setProcedures(results.proceduresMap)
     codeBits.clear()
@@ -425,8 +419,7 @@ with org.nlogo.api.ViewSettings {
    * Internal use only.
    */
   override def requestDisplayUpdate(force: Boolean) {
-    if (hubnetManager != null)
-      hubnetManager.incrementalUpdateFromEventThread()
+    hubNetManager.foreach(_.incrementalUpdateFromEventThread())
   }
 
   /**
@@ -492,6 +485,10 @@ with org.nlogo.api.ViewSettings {
     }
   }
 
+  private lazy val loader =
+    fileformat.standardLoader(compiler.compilerUtilities, compiler.autoConvert _)
+      .addSerializer[Array[String], NLogoFormat](
+        Femto.get[ComponentSerialization[Array[String], NLogoFormat]]("org.nlogo.sdm.NLogoSDMFormat"))
   /// Controlling API methods
 
   /**
@@ -504,13 +501,17 @@ with org.nlogo.api.ViewSettings {
   @throws(classOf[LogoException])
   override def open(path: String) {
     setModelPath(path)
-    val modelContents = org.nlogo.api.FileIO.file2String(path)
-    try openString(modelContents)
+    try {
+      loader.readModel(Paths.get(path).toUri).foreach { m =>
+        fileManager.handleModelChange()
+        openModel(m)
+      }
+    }
     catch {
       case ex: CompilerException =>
         // models with special comment are allowed not to compile
         if (compilerTestingMode &&
-            modelContents.startsWith(";; DOESN'T COMPILE IN CURRENT BUILD"))
+            FileIO.file2String(path).startsWith(";; DOESN'T COMPILE IN CURRENT BUILD"))
           System.out.println("ignored compile error: " + path)
         else throw ex
     }
@@ -522,8 +523,7 @@ with org.nlogo.api.ViewSettings {
    * @param modelContents
    */
   override def openString(modelContents: String) {
-    fileManager.handleModelChange()
-    openFromSource(modelContents)
+    openFromSource(modelContents, modelSuffix)
   }
 
   /**
@@ -533,11 +533,8 @@ with org.nlogo.api.ViewSettings {
    * @param source The complete model, including widgets and so forth,
    *               in the same format as it would be stored in a file.
    */
-  def openFromSource(source: String) {
-    val additionalReaders =
-      if (Version.is3D) Map[String, WidgetReader]("GRAPHICS-WINDOW" -> org.nlogo.workspace.ThreeDViewReader)
-      else Map[String, WidgetReader]()
-    openModel(CoreModelReader.parseModel(source, compiler.compilerUtilities, additionalReaders))
+  def openFromSource(source: String, extension: String) {
+    loader.readModel(source, extension).foreach(openModel)
   }
 
   def openModel(model: Model): Unit = {

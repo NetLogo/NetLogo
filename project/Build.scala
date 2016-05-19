@@ -25,15 +25,17 @@ object NetLogoBuild {
       dateFormat.format(new java.util.Date())
     },
     netlogoVersion := {
-      (testLoader in Test).value
-        .loadClass("org.nlogo.api.Version")
-        .getMethod("version")
-        .invoke(null).asInstanceOf[String]
+      val loader = (testLoader in Test).value
+      val klass = loader.loadClass("org.nlogo.api.Version$")
+      val version = klass.getField("MODULE$").get(klass)
+      klass.getMethod("version")
+        .invoke(version).asInstanceOf[String]
         .stripPrefix("NetLogo ")
     })
 
   def includeProject(project: Project): Seq[Setting[_]] = Seq(
     sources in Compile                      ++= (sources in (project, Compile)).value,
+    sources in Test                         ++= (sources in (project, Test)).value,
     unmanagedResourceDirectories in Compile += (baseDirectory in project).value / "resources" / "main"
     ) ++ Seq(packageBin, packageSrc, packageDoc).flatMap(task => inTask(task)(
       mappings in Compile ++= {

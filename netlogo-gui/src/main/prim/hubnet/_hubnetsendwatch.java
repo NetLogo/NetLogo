@@ -20,7 +20,7 @@ public strictfp class _hubnetsendwatch
     workspace.waitFor
         (new org.nlogo.api.CommandRunnable() {
           public void run() {
-            workspace.getHubNetManager().sendAgentPerspective
+            workspace.getHubNetManager().get().sendAgentPerspective
                 (client,
                     PerspectiveJ.WATCH,
                     agent.kind(), agent.id, ((world.worldWidth() - 1) / 2), false);

@@ -7,6 +7,7 @@ object Testing {
   lazy val medium   = taskKey[Unit]("medium tests")
   lazy val slow     = taskKey[Unit]("slow tests")
   lazy val language = taskKey[Unit]("language tests")
+  lazy val extensionTests = taskKey[Unit]("extension tests")
   lazy val crawl    = taskKey[Unit]("extremely slow tests")
 
   lazy val tr = inputKey[Unit]("org.nlogo.headless.TestReporters")
@@ -21,10 +22,10 @@ object Testing {
 
   lazy val suiteSettings = Seq(
     (fast in Test) := {
-      (testOnly in Test).toTask(" -- -l org.nlogo.util.SlowTestTag -l org.nlogo.headless.LanguageTestTag").value
+      (testOnly in Test).toTask(" -- -l org.nlogo.util.SlowTestTag -l org.nlogo.util.ExtensionTestTag -l org.nlogo.headless.LanguageTestTag").value
     },
     (medium in Test) := {
-      (testOnly in Test).toTask(" -- -l org.nlogo.util.SlowTestTag").value
+      (testOnly in Test).toTask(" -- -n org.nlogo.headless.LanguageTestTag -l org.nlogo.util.ExtensionTestTag").value
     },
     (language in Test) := {
       (testOnly in Test).toTask(" -- -n org.nlogo.headless.LanguageTestTag").value
@@ -32,8 +33,11 @@ object Testing {
     (crawl in Test) := {
       (testOnly in Test).toTask(" -- -n org.nlogo.util.SlowTestTag").value
     },
+    (extensionTests in Test) := {
+      (testOnly in Test).toTask(" -- -n org.nlogo.util.ExtensionTestTag").value
+    },
     (slow in Test) := {
-      (testOnly in Test).toTask(" -- -n org.nlogo.headless.LanguageTestTag -n org.nlogo.util.SlowTestTag").value
+      (testOnly in Test).toTask(" -- -n org.nlogo.util.SlowTestTag -l org.nlogo.headless.LanguageTestTag -l org.nlogo.util.ExtensionTestTag").value
     })
 
   val settings = suiteSettings ++

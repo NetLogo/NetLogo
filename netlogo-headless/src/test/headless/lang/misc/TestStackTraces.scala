@@ -66,22 +66,22 @@ class TestStackTraces extends FixtureSuite {
   case object PlotSetup extends CodeType {
     val procName = "plot 'p' setup code"
     def plot(code: String) =
-      Plot(display = "p", pens = List(Pen(display = "pp")), setupCode = code)
+      Plot(display = Some("p"), pens = List(Pen(display = "pp")), setupCode = code)
   }
   case object PlotUpdate extends CodeType {
     val procName = "plot 'p' update code"
     def plot(code: String) =
-      Plot(display = "p", pens = List(Pen(display = "pp")), updateCode = code)
+      Plot(display = Some("p"), pens = List(Pen(display = "pp")), updateCode = code)
   }
   case object PenSetup extends CodeType {
     val procName = "plot 'p' pen 'pp' setup code"
     def plot(code: String) =
-      Plot(display = "p", pens = List(Pen(display = "pp", setupCode = code)))
+      Plot(display = Some("p"), pens = List(Pen(display = "pp", setupCode = code)))
   }
   case object PenUpdate extends CodeType {
     val procName = "plot 'p' pen 'pp' update code"
     def plot(code: String) =
-      Plot(display = "p", pens = List(Pen(display = "pp", updateCode = code)))
+      Plot(display = Some("p"), pens = List(Pen(display = "pp", updateCode = code)))
   }
 
   def trace(implicit fixture: Fixture) =

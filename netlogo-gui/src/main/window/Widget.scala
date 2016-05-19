@@ -2,13 +2,14 @@
 
 package org.nlogo.window
 
-import java.awt.{List=>AWTList, _}
-import event.{MouseAdapter, MouseEvent, MouseListener}
+import java.awt.{ Component, Container, Dimension, Font, Graphics, Graphics2D, List=>AWTList, Point, Rectangle, event },
+  event.{MouseAdapter, MouseEvent, MouseListener}
 import javax.swing.border.Border
-import org.nlogo.window.Events.{WidgetRemovedEvent, WidgetEditedEvent, WidgetAddedEvent}
-import org.nlogo.api.{MultiErrorHandler, SingleErrorHandler, ModelSections},
-  ModelSections.Saveable
 import javax.swing.{JPanel, JMenuItem, JPopupMenu}
+
+import org.nlogo.api.{ MultiErrorHandler, SingleErrorHandler }
+import org.nlogo.core.{ Widget => CoreWidget }
+import org.nlogo.window.Events.{ WidgetRemovedEvent, WidgetEditedEvent, WidgetAddedEvent }
 
 object Widget {
   trait LoadHelper {
@@ -22,9 +23,11 @@ object Widget {
 abstract class SingleErrorWidget extends Widget with SingleErrorHandler
 abstract class MultiErrorWidget extends Widget with MultiErrorHandler
 
-abstract class Widget extends JPanel with Saveable {
+abstract class Widget extends JPanel {
 
   import Widget.LoadHelper
+
+  type WidgetModel <: CoreWidget
 
   def helpLink: Option[String] = None
   var originalFont: Font = null
@@ -36,12 +39,13 @@ abstract class Widget extends JPanel with Saveable {
   override def getPreferredSize: Dimension = getPreferredSize(getFont)
   def getPreferredSize(font: Font): Dimension = super.getPreferredSize
   def widgetWrapperOpaque = true
-  def save: String
   def getEditable: Object = this
   def copyable = true // only OutputWidget and ViewWidget are not copyable
   def constrainDrag(newBounds: Rectangle, originalBounds: Rectangle, mouseMode: MouseMode): Rectangle = newBounds
   def isZoomed = if (findWidgetContainer != null) findWidgetContainer.isZoomed else false
-  def load(strings: Array[String], helper: LoadHelper): Object
+
+  def model: WidgetModel
+  def load(widget: WidgetModel): Object
   def sourceOffset = 0
   def hasContextMenuInApplet = false
   def getUnzoomedPreferredSize: Dimension = getPreferredSize(originalFont)
@@ -145,6 +149,14 @@ abstract class Widget extends JPanel with Saveable {
     }
   }
 
+  def getBoundsTuple: (Int, Int, Int, Int) = {
+    if (findWidgetContainer != null) findWidgetContainer.getBoundsTuple(this)
+    else {
+      var r: Rectangle = getBounds
+      (r.x, r.y, r.x + r.width, r.y + r.height)
+    }
+  }
+
   override def removeNotify: Unit = {
     if (java.awt.EventQueue.isDispatchThread) {
       org.nlogo.window.Event.rehash()
@@ -158,5 +170,13 @@ abstract class Widget extends JPanel with Saveable {
     if (originalFont == null) { originalFont = getFont }
     org.nlogo.window.Event.rehash()
     new WidgetAddedEvent(this).raise(this)
+  }
+
+  implicit class RichStringOption(s: Option[String]) {
+    def optionToPotentiallyEmptyString = s.getOrElse("")
+  }
+
+  implicit class RichWidgetString(s: String) {
+    def potentiallyEmptyStringToOption = if (s != null && s.trim != "") Some(s) else None
   }
 }

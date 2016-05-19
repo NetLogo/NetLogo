@@ -129,7 +129,7 @@ public strictfp class ModelsLibrary {
       return;
     }
     try {
-      if (!org.nlogo.api.Version.is3D() || !exclusive) {
+      if (!org.nlogo.api.Version$.MODULE$.is3D() || !exclusive) {
         java.io.File directoryRoot = new java.io.File(modelsRoot(), "").getCanonicalFile();
         rootNode = new Node(modelsRoot(), "", true);
         scanDirectory(directoryRoot, null, rootNode, exclusive);
@@ -150,30 +150,6 @@ public strictfp class ModelsLibrary {
     Node node = new Node(path, "", true);
     scanDirectory(directoryRoot, null, node, exclusive);
     return node;
-  }
-
-  public static String getInfoWindow(String filePath)
-      throws java.io.IOException {
-    String file = org.nlogo.api.FileIO.file2String(filePath);
-    // parse out info text
-    String delimiter = org.nlogo.api.ModelReader$.MODULE$.SEPARATOR();
-    int dlength = delimiter.length();
-    int startIndex = 0;
-    int endIndex;
-    for (int i = 0; i < 2; i++) {
-      startIndex = file.indexOf(delimiter, startIndex);
-      if (i < 1) {
-        startIndex += dlength;
-      }
-    }
-    startIndex += delimiter.length();
-    endIndex = file.indexOf(delimiter, startIndex);
-    if (startIndex >= 0 && startIndex <= file.length() &&
-        endIndex >= 0 && endIndex <= file.length()) {
-      return file.substring(startIndex, endIndex).trim();
-    } else {
-      return "";
-    }
   }
 
   public static String getImagePath(String filePath) {
@@ -259,7 +235,7 @@ public strictfp class ModelsLibrary {
   private static List<String> orderItems(List<String> names, boolean topLevel, boolean exclusive) {
     String[] orderednames;
     if (topLevel) {
-      if (org.nlogo.api.Version.is3D()) {
+      if (org.nlogo.api.Version$.MODULE$.is3D()) {
         if (exclusive) {
           orderednames = new String[]{"3D"};
         }
@@ -318,7 +294,7 @@ public strictfp class ModelsLibrary {
             // for the Beatbox model
             name.equals("BEATS") ||
             // when we're not 3D ignore the 3D models.
-            (!org.nlogo.api.Version.is3D() &&
+            (!org.nlogo.api.Version$.MODULE$.is3D() &&
                 (name.equals("3D") ||
                     // the vrml extension is our only 3D extension at present
                     // so just special case it - ST 6/12/08

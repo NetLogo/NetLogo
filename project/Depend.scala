@@ -52,14 +52,14 @@ object Depend {
       "generate" -> List("prim"), // for headless
       "gl/render" -> List("shape"),
       "gl/view" -> List("gl/render","window"),
-      "headless" -> List("core/model", "shape","workspace","headless/test"),
+      "headless" -> List("core/model", "fileformat", "shape", "workspace", "headless/test"),
       "headless/hubnet" -> List("headless", "hubnet/protocol"),
       "headless/test" -> List("core"),
-      "hubnet/client" -> List("hubnet/connection","hubnet/mirroring","hubnet/protocol","render","widget"),
+      "hubnet/client" -> List("hubnet/connection","hubnet/mirroring","hubnet/protocol","render","fileformat","widget"),
       "hubnet/connection" -> List("api"),
       "hubnet/mirroring" -> List("api"),
       "hubnet/protocol" -> List("api"),
-      "hubnet/server" -> List("workspace","hubnet/connection","hubnet/mirroring","hubnet/protocol"),
+      "hubnet/server" -> List("workspace","hubnet/connection","hubnet/mirroring","hubnet/protocol","fileformat"),
       "hubnet/server/gui" -> List("hubnet/server","window"),
       "job" -> List("nvm"),
       "lab" -> List("nvm"),
@@ -81,15 +81,16 @@ object Depend {
       "prim/threed" -> List("nvm"),
       "properties" -> List("window"),
       "render" -> List("shape"),
-      "sdm" -> List("api"),
+      "fileformat" -> List("api", "core", "core/model"),
+      "sdm" -> List("api", "fileformat"),
       "sdm/gui" -> List("sdm","window"),
       "shape" -> List("api"),
       "shape/editor" -> List("shape","swing"),
       "swing" -> List("awt"),
       "util" -> Nil,
       "widget" -> List("window"),
-      "window" -> List("core/model", "editor","log","shape","swing","workspace"),
-      "workspace" -> List("nvm", "plot"))
+      "window" -> List("core/model","editor","log","fileformat","shape","swing","workspace"),
+      "workspace" -> List("fileformat", "nvm", "plot"))
     case class Package(val dir: String, var depends: Set[Package]) {
       def ancestors:Set[Package] = depends ++ depends.flatMap(_.ancestors)
     }

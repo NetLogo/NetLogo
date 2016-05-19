@@ -3,9 +3,10 @@
 package org.nlogo.window
 
 import org.nlogo.api.MersenneTwisterFast
+import org.nlogo.core.{ Horizontal, Slider => CoreSlider, Vertical }
 import java.awt.event.{ MouseAdapter, MouseEvent }
 import org.nlogo.window.Events.{ InterfaceGlobalEvent, AfterLoadEvent, PeriodicUpdateEvent, AddSliderConstraintEvent, InputBoxLoseFocusEvent }
-import org.nlogo.api.{ Dump, Editable, LogoException, ModelReader }
+import org.nlogo.api.{ Dump, Editable, LogoException }
 import org.nlogo.core.I18N
 import org.nlogo.agent.SliderConstraint.SliderConstraintException
 import org.nlogo.agent.SliderConstraint
@@ -108,6 +109,9 @@ trait AbstractSliderWidget extends MultiErrorWidget {
 class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast) extends MultiErrorWidget with
         AbstractSliderWidget with InterfaceGlobalWidget with Editable with
         org.nlogo.window.Events.PeriodicUpdateEvent.Handler with org.nlogo.window.Events.AfterLoadEvent.Handler {
+
+  type WidgetModel = CoreSlider
+
   def this(random: MersenneTwisterFast) = this (false, random)
 
   var minimumCode: String = "0"
@@ -211,44 +215,37 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast) ext
   }
 
   // LOADING AND SAVING
-  def load(strings: Array[String], helper: Widget.LoadHelper): Object = {
-    val min: String = ModelReader.restoreLines(strings(7))
-    val max: String = ModelReader.restoreLines(strings(8))
-    val v = strings(9).toDouble
-    val inc: String = ModelReader.restoreLines(strings(10))
-    if (strings.length > 12) {
-      units = strings(12)
-      if (units == "NIL") { units = "" }
-    }
-    if (strings.length > 13 && strings(13) == "VERTICAL") vertical = true
-    this.name = ModelReader.restoreLines(strings(6))
-    minimumCode=min
-    maximumCode=max
+
+  override def load(model: WidgetModel): AnyRef = {
+    val min: String = model.min
+    val max: String = model.max
+    val v = model.default
+    val inc: String = model.step
+    units = model.units.optionToPotentiallyEmptyString
+    vertical = (model.direction == Vertical)
+
+    this.name = model.display.optionToPotentiallyEmptyString
+    minimumCode = min
+    maximumCode = max
     // i think this next line is here because of some weird bounds checking
     // it needs to be tested more and maybe we can get rid of it. JC - 9/23/10
-    minimumCode=min
-    incrementCode=inc
-    value=v
+    minimumCode = min
+    incrementCode = inc
+    value = v
     defaultValue = v
-    val Array(x1,y1,x2,y2) = strings.drop(1).take(4).map(_.toInt)
-    setSize(x2 - x1, y2 - y1)
+    setSize(model.right - model.left, model.bottom - model.top)
     this
   }
 
-  def save: String = {
-    val s: StringBuilder = new StringBuilder
-    s.append("SLIDER\n")
-    s.append(getBoundsString)
-    if ((null != name) && (name.trim != "")) { s.append(name + "\n"); s.append(name + "\n") }
-    else { s.append("NIL\n"); s.append("NIL\n") }
-    s.append(ModelReader.stripLines(minimumCode) + "\n")
-    s.append(ModelReader.stripLines(maximumCode) + "\n")
-    s.append(Dump.number(value) + "\n")
-    s.append(ModelReader.stripLines(incrementCode) + "\n")
-    s.append("1\n")
-    if ((null != units) && (units.trim!="")) s.append(units + "\n")
-    else { s.append("NIL\n") }
-    if (vertical) s.append("VERTICAL\n") else s.append("HORIZONTAL\n")
-    s.toString
+  override def model: WidgetModel = {
+    val savedName = name.potentiallyEmptyStringToOption
+    val savedUnits = units.potentiallyEmptyStringToOption
+    val dir = if (vertical) Vertical else Horizontal
+    val b = getBoundsTuple
+    CoreSlider(display = savedName,
+      left = b._1, top = b._2, right = b._3, bottom = b._4,
+      variable = savedName, min = minimumCode, max = maximumCode,
+      default = value, step = incrementCode,
+      units = savedUnits, direction = dir)
   }
 }

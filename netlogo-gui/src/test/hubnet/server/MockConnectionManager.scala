@@ -5,7 +5,7 @@ package org.nlogo.hubnet.server
 import org.nlogo.core.AgentKind
 import org.nlogo.hubnet.connection.{ConnectionInterface, HubNetException}
 import collection.mutable.ListBuffer
-import org.nlogo.api.PlotInterface
+import org.nlogo.api.{ HubNetInterface, PlotInterface }, HubNetInterface.ClientInterface
 import org.nlogo.workspace.AbstractWorkspaceScala
 
 import java.io.{ Serializable => JSerializable }
@@ -34,9 +34,9 @@ class MockConnectionManager(connection: ConnectionInterface, workspace: Abstract
   override def isValidTag(tag:String) = validTag
   override def clientSendQueueSizes = null
   @throws(classOf[HubNetException])
-  override def send(node:String, tag:String, message:JSerializable) =
+  override def send(node:String, tag:String, message:JSerializable with AnyRef) =
     if (!validTag) throw new HubNetException(tag + " is an invalid tag") else true
-  override def setClientInterface(interfaceType:String, interfaceInfo: Iterable[AnyRef]){}
+  override def setClientInterface(interfaceType:String, interfaceInfo: Iterable[ClientInterface]){}
   override def sendPlot(clientId:String, plot:PlotInterface){}
   override def sendTextMessage(node:String, text:String) = true
   override def sendClearTextMessage(node:String) = true
@@ -54,7 +54,7 @@ class MockConnectionManager(connection: ConnectionInterface, workspace: Abstract
   // JC - 12/28/10
   override def startup(serverName:String): Boolean = {
     running = true
-    workspace.hubNetRunning(true)
+    workspace.hubNetRunning = true
     true
   }
 }

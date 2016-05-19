@@ -13,8 +13,8 @@ class TestConstraintModels extends FixtureSuite {
   test("Boolean Constraint Constructor") { implicit fixture =>
     import fixture._
     open(Model(widgets =
-      List(View(), Switch(varName="on?", display="on?", on=true),
-        Switch(varName="off?", display="on?", on=false))))
+      List(View(), Switch(variable=Some("on?"), display=Some("on?"), on=true),
+        Switch(variable=Some("off?"), display=Some("on?"), on=false))))
     testReporter("on?", "true")
     testReporter("off?", "false")
     object con extends BooleanConstraint {
@@ -36,10 +36,10 @@ class TestConstraintModels extends FixtureSuite {
     import fixture._
     open(Model(widgets = List(
       View(),
-      Chooser(display = "foo", varName = "foo", choices = List(1, 2, 3, 4, 5).map(Double.box(_)).map(ChooseableDouble(_)),
+      Chooser(display = Some("foo"), variable = Some("foo"), choices = List(1, 2, 3, 4, 5).map(Double.box(_)).map(ChooseableDouble(_)),
         currentChoice = 0),
-      Chooser(display = "bar", varName = "bar", choices = List("a", "b", "c", "d").map(ChooseableString(_)), currentChoice = 3),
-      Chooser(display = "mix", varName = "mix",
+      Chooser(display = Some("bar"), variable = Some("bar"), choices = List("a", "b", "c", "d").map(ChooseableString(_)), currentChoice = 3),
+      Chooser(display = Some("mix"), variable = Some("mix"),
         choices = List(
           ChooseableDouble(Double.box(12)),
           ChooseableString("aaa"),
@@ -61,11 +61,16 @@ class TestConstraintModels extends FixtureSuite {
     import fixture._
     open(Model(widgets = List(
       View(),
-      InputBox(varName="number", value=5d, boxtype=Num),
-      InputBox(varName="string", value="this is a string", boxtype=Str),
-      InputBox(varName="reporter", value="max-pxcor", boxtype=StrReporter),
-      InputBox(varName="commands", value="show 1", boxtype=StrCommand),
-      InputBox(varName="colors", value=0, boxtype=Col)
+      InputBox(variable=Some("number"),
+        boxedValue = NumericInput(5d, NumericInput.NumberLabel)),
+      InputBox(variable=Some("string"),
+        boxedValue = StringInput("this is a string", StringInput.StringLabel, false)),
+      InputBox(variable=Some("reporter"),
+        boxedValue = StringInput("max-pxcor", StringInput.ReporterLabel, false)),
+      InputBox(variable=Some("commands"),
+        boxedValue = StringInput("show 1", StringInput.CommandLabel, false)),
+      InputBox(variable=Some("colors"),
+        boxedValue = NumericInput(0, NumericInput.ColorLabel))
       )))
 
     testReporter("string", "\"this is a string\"")
@@ -116,7 +121,7 @@ class TestConstraintModels extends FixtureSuite {
 
   test("Slider Constraints") { implicit fixture =>
     import fixture._
-    open(Model(widgets = List(View(), Slider(display="x-loc", varName="x-loc", min="0", max="100", default=10, step="1"))))
+    open(Model(widgets = List(View(), Slider(display=Some("x-loc"), variable=Some("x-loc"), min="0", max="100", default=10, step="1"))))
     testReporter("x-loc", "10")
     testCommand(("set x-loc 20"))
     testReporter("x-loc", "20")
