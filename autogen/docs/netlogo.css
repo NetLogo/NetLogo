@@ -81,7 +81,7 @@ h3 > a {
 }
 
 .since {
-  padding: 2px 6px;
+  padding: 0px 6px;
   background-color: rgb(210,210,210);
   border: 1px solid rgb(150,150,150);
   font-weight: normal;
