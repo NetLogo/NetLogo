@@ -50,6 +50,8 @@ class PlotManager(factory: LogoThunkFactory) extends PlotManagerInterface {
   }
   def forgetAll() {
     _plots.clear()
+    plotThunks.clear()
+    penThunks.clear()
     currentPlot = None
   }
   def clearAll() {

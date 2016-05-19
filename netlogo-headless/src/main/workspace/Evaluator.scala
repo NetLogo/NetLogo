@@ -113,37 +113,43 @@ class Evaluator(workspace: AbstractWorkspace) {
   // needs makeReporterThunk. - ST 10/9/12
   def makeReporterThunk(source: String, agent: Agent, owner: JobOwner): ReporterLogoThunk =
     if(source.trim.isEmpty) throw new IllegalStateException("empty reporter source")
-    else new MyLogoThunk(source, agent, owner, false) with ReporterLogoThunk {
-      def call(): Object  = {
-        val job = new ExclusiveJob(owner, agentset, procedure, 0, null, owner.random)
-        val context = new Context(job, agent, 0, null)
-        try context.callReporterProcedure(new Activation(procedure, null, 0))
-        catch {
-          case ex @ (_: LogoException | _: RuntimeException) =>
-            // it would be nice if the pattern matcher would infer that ex is an Exception, not just a
-            // Throwable, since Exception is the common supertype of LogoException and
-            // RuntimeException, but it isn't that smart, so we have to cast - ST 7/1/10
-            if(!Thread.currentThread.isInterrupted)
-              context.runtimeError(ex.asInstanceOf[Exception])
-            throw ex
+    else {
+      val proc = invokeCompiler(source, Some(owner.displayName), false, agent.kind)
+      new MyLogoThunk(source, agent, owner, false, proc) with ReporterLogoThunk {
+        def call(): Object  = {
+          val job = new ExclusiveJob(owner, agentset, procedure, 0, null, owner.random)
+          val context = new Context(job, agent, 0, null)
+          try context.callReporterProcedure(new Activation(procedure, null, 0))
+          catch {
+            case ex @ (_: LogoException | _: RuntimeException) =>
+              // it would be nice if the pattern matcher would infer that ex is an Exception, not just a
+              // Throwable, since Exception is the common supertype of LogoException and
+              // RuntimeException, but it isn't that smart, so we have to cast - ST 7/1/10
+              if(!Thread.currentThread.isInterrupted)
+                context.runtimeError(ex.asInstanceOf[Exception])
+              throw ex
+          }
+          // this code was:
+          // workspace.jobManager.callReporterProcedure(owner, agentset, procedure)
+          // but i changed it so that we could have a context. this is all subject to change
+          // possibly in the near future. - JC 9/22/10
         }
-        // this code was:
-        // workspace.jobManager.callReporterProcedure(owner, agentset, procedure)
-        // but i changed it so that we could have a context. this is all subject to change
-        // possibly in the near future. - JC 9/22/10
       }
     }
 
   def makeCommandThunk(source: String, agent: Agent, owner: JobOwner): CommandLogoThunk =
     if(source.trim.isEmpty)
       new CommandLogoThunk { def call() = false }
-    else new MyLogoThunk(source + "\n__thunk-did-finish", agent, owner, true) with CommandLogoThunk {
-      def call(): Boolean = ProcedureRunner.run(procedure)
+    else {
+      val fullSource = source + "\n__thunk-did-finish"
+      val proc = invokeCompiler(fullSource, Some(owner.displayName), true, agent.kind)
+      new MyLogoThunk(fullSource, agent, owner, true, proc) with CommandLogoThunk {
+        def call(): Boolean = ProcedureRunner.run(procedure)
+      }
     }
 
-  private class MyLogoThunk(source: String, agent: Agent, owner: JobOwner, command: Boolean) {
+  private class MyLogoThunk(source: String, agent: Agent, owner: JobOwner, command: Boolean, val procedure: Procedure) {
     val agentset = AgentSet.fromAgent(agent)
-    val procedure = invokeCompiler(source, Some(owner.displayName), command, agent.kind)
     procedure.topLevel = false
   }
 

@@ -26,13 +26,15 @@ import javax.swing.{ AbstractAction => SwingAbstractAction, JOptionPane }
 
 import scala.util.Try
 
-class FileMenu(workspace: GUIWorkspace,
+class FileMenu(app: App,
   modelSaver: ModelSaver,
-  modelLoader: ModelLoader,
-  tabs: Tabs,
-  modelingCommons: ModelingCommonsInterface,
-  frame: AppFrame)
+  modelLoader: ModelLoader)
   extends SwingMenu(I18N.gui.get("menu.file")) with OpenModelEvent.Handler {
+
+  def workspace: GUIWorkspace = app.workspace
+  def tabs: Tabs = app.tabs
+  def modelingCommons: ModelingCommonsInterface = app.modelingCommons
+  def frame: AppFrame = app.frame
 
   private var savedVersion: String = Version.version
 
