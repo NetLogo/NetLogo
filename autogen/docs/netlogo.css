@@ -81,8 +81,10 @@ h3 > a {
 }
 
 .since {
-  padding: 2px 5px 0 5px;
-  background-color: rgba(0, 255, 0, 0.5);
+  padding: 0px 6px;
+  background-color: rgb(210,210,210);
+  border: 1px solid rgb(150,150,150);
+  font-weight: normal;
   font-style: italic;
   float: right;
 }
