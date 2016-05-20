@@ -46,13 +46,9 @@ object ModelResaver {
   }
 
   def main(args: Array[String]): Unit = {
-    val paths = getModelPaths
-      .filterNot(_.contains("HubNet"))
-      .filterNot(_.contains("3D"))
-
     val modelSaver = new org.nlogo.app.ModelSaver(App.app)
     var systemDynamicsModels: Seq[String] = Seq()
-    for (path <- paths) {
+    for (path <- getModelPaths) {
       val ws = HeadlessWorkspace.newInstance
       val modelLoader =
         org.nlogo.fileformat.standardLoader(ws.compiler.compilerUtilities, ws.compiler.autoConvert _)
