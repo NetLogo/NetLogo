@@ -107,7 +107,7 @@
       The GIS extension makes use of several open-source software
       libraries. For copyright and license information on those, see the
       <a href="copyright.html">copyright</a> section of the manual. The
-      extension also contains elements borrowed from <a href="http://www.myworldgis.org">My World GIS</a>.
+      extension also contains elements borrowed from <a href="http://www.myworldgis.org" target="_blank">My World GIS</a>.
     <p>
       This documentation and the example NetLogo models are in the public
       domain. The GIS extension itself is free and open source software.
@@ -115,7 +115,7 @@
     <p>
       We would love to hear your suggestions on how to improve the GIS
       extension, or just about what you're using it for. Post questions
-      and comments at the <a href="http://groups.yahoo.com/group/netlogo-users/">NetLogo Users
+      and comments at the <a href="http://groups.yahoo.com/group/netlogo-users/" target="_blank">NetLogo Users
       Group</a>, or write directly to Eric Russell and the NetLogo team at
       <a href="mailto:ccl-gis@ccl.northwestern.edu">ccl-gis@ccl.northwestern.edu</a>.
     <h2>
@@ -371,7 +371,7 @@ set-transformation-ds <i>gis-envelope</i> (list min-pxcor max-pxcor min-pycor ma
       <p>
         Loads a new global projection used for projecting or re- projecting
         GIS data as it is loaded from a file. The file must contain a valid
-        <a href="http://geoapi.sourceforge.net/2.0/javadoc/org/opengis/referencing/doc-files/WKT.html">
+        <a href="http://geoapi.sourceforge.net/2.0/javadoc/org/opengis/referencing/doc-files/WKT.html" target="_blank">
         Well-Known Text (WKT)</a> projection description.
       <p>
         WKT projection files are frequently distributed alongside GIS data
@@ -429,7 +429,7 @@ set-transformation-ds <i>gis-envelope</i> (list min-pxcor max-pxcor min-pycor ma
             </table>
       </div>
       <p>
-        See <a href="http://remotesensing.org/geotiff/proj_list/">remotesensing.org</a>
+        See <a href="http://remotesensing.org/geotiff/proj_list/" target="_blank">remotesensing.org</a>
         for a complete list of WKT projections and their parameters.
       </div>
     <div class="dict_entry" id="gis:set-coordinate-system">
@@ -442,7 +442,7 @@ set-transformation-ds <i>gis-envelope</i> (list min-pxcor max-pxcor min-pycor ma
       <p>
         Sets the global projection used for projecting or re- projecting
         GIS data as it is loaded. The <i>system</i> must be either a string
-        in <a href="http://geoapi.sourceforge.net/2.0/javadoc/org/opengis/referencing/doc-files/WKT.html">
+        in <a href="http://geoapi.sourceforge.net/2.0/javadoc/org/opengis/referencing/doc-files/WKT.html" target="_blank">
         Well-Known Text (WKT) format</a>, or a NetLogo list that consists
         of WKT converted to a list by moving each keyword inside its
         associated brackets and putting quotes around it. The latter is
@@ -626,7 +626,7 @@ set-transformation-ds <i>gis-envelope</i> (list min-pxcor max-pxcor min-pycor ma
         locations of the midpoints of all line segments in the feature,
         weighted by segment length. For polygon datasets, the centroid is
         defined as the weighted sum of the centroids of a decomposition of
-        the area into (possibly overlapping) triangles. See <a href="http://www.faqs.org/faqs/graphics/algorithms-faq/">this FAQ</a>
+        the area into (possibly overlapping) triangles. See <a href="http://www.faqs.org/faqs/graphics/algorithms-faq/" target="_blank">this FAQ</a>
         for more details on the polygon centroid algorithm.
       </div>
     <div class="dict_entry" id="gis:location-of">
@@ -705,7 +705,7 @@ set-transformation-ds <i>gis-envelope</i> (list min-pxcor max-pxcor min-pycor ma
         Reports a list of all VectorFeatures in the given dataset whose
         value for the property <i>property-name</i> is less than the given
         <i>value</i>. String values are compared using case-sensitive
-        lexicographic order as defined in the <a href="http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/String.html#compareTo(java.lang.String)">
+        lexicographic order as defined in the <a href="http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/String.html#compareTo(java.lang.String)" target="_blank">
         Java Documentation</a>. Using a string value for a numeric property
         or a numeric value for a string property will cause an error.
       </div>
@@ -720,7 +720,7 @@ set-transformation-ds <i>gis-envelope</i> (list min-pxcor max-pxcor min-pycor ma
         Reports a list of all VectorFeatures in the given dataset whose
         value for the property <i>property-name</i> is greater than the
         given <i>value</i>. String values are compared using case-sensitive
-        lexicographic order as defined in the <a href="http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/String.html#compareTo(java.lang.String)">
+        lexicographic order as defined in the <a href="http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/String.html#compareTo(java.lang.String)" target="_blank">
         Java Documentation</a>. Using a string value for a numeric property
         or a numeric value for a string property will cause an error.
       </div>
@@ -736,7 +736,7 @@ set-transformation-ds <i>gis-envelope</i> (list min-pxcor max-pxcor min-pycor ma
         value for the property <i>property-name</i> is strictly greater
         than <i>minimum-value</i> and strictly less than
         <i>maximum-value</i>. String values are compared using
-        case-sensitive lexicographic order as defined in the <a href="http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/String.html#compareTo(java.lang.String)">
+        case-sensitive lexicographic order as defined in the <a href="http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/String.html#compareTo(java.lang.String)" target="_blank">
         Java Documentation</a>. Using a string value for a numeric property
         or a numeric value for a string property will cause an error.
       </div>
@@ -750,7 +750,7 @@ set-transformation-ds <i>gis-envelope</i> (list min-pxcor max-pxcor min-pycor ma
       <p>
         Reports the smallest value for the given property over all of the
         VectorFeatures in the given dataset. String values are compared
-        using case-sensitive lexicographic order as defined in the <a href="http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/String.html#compareTo(java.lang.String)">
+        using case-sensitive lexicographic order as defined in the <a href="http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/String.html#compareTo(java.lang.String)" target="_blank">
         Java Documentation</a>.
       </div>
     <div class="dict_entry" id="gis:property-maximum">
@@ -763,7 +763,7 @@ set-transformation-ds <i>gis-envelope</i> (list min-pxcor max-pxcor min-pycor ma
       <p>
         Reports the largest value for the given property over all of the
         VectorFeatures in the given dataset. String values are compared
-        using case-sensitive lexicographic order as defined in the <a href="http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/String.html#compareTo(java.lang.String)">
+        using case-sensitive lexicographic order as defined in the <a href="http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/String.html#compareTo(java.lang.String)" target="_blank">
         Java Documentation</a>.
       </div>
     <div class="dict_entry" id="gis:apply-coverage">
@@ -1061,7 +1061,7 @@ gis:have-relationship? x y &quot;T*****FF*&quot;
       </pre>
       <p>
         A much more detailed and formal description of the DE-9IM matrix
-        and the associated point-set theory can be found in the <a href="http://www.opengeospatial.org/standards/sfs">OpenGIS Simple
+        and the associated point-set theory can be found in the <a href="http://www.opengeospatial.org/standards/sfs" target="_blank">OpenGIS Simple
         Features Specification for SQL</a>.
       <p>
         The objects x and y may be any one of
@@ -1164,7 +1164,7 @@ gis:have-relationship? x y &quot;T*****FF*&quot;
         as the string &quot;212101212&quot;.
       <p>
         A much more detailed and formal description of the DE-9IM matrix
-        and the associated point-set theory can be found in the <a href="http://www.opengeospatial.org/standards/sfs">OpenGIS Simple
+        and the associated point-set theory can be found in the <a href="http://www.opengeospatial.org/standards/sfs" target="_blank">OpenGIS Simple
         Features Specification for SQL</a>.
       <p>
         The objects x and y may be any one of
@@ -1312,7 +1312,7 @@ gis:have-relationship? x y &quot;T*****FF*&quot;
         </ul>
       <p>
         For more information on these sampling methods and on raster
-        sampling in general, see <a href="http://en.wikipedia.org/wiki/Image_scaling">this wikipedia
+        sampling in general, see <a href="http://en.wikipedia.org/wiki/Image_scaling" target="_blank">this wikipedia
         article</a>.
       </div>
     <div class="dict_entry" id="gis:set-sampling-method">
@@ -1490,7 +1490,7 @@ ifelse (value &lt;= 0) or (value &gt;= 0)
         The key element is specified by column and row within the matrix.
         Columns are numbered from left to right, beginning with zero. Rows
         are numbered from top to bottom, also beginning with zero. So, for
-        example, the kernel for the horizontal <a href="http://en.wikipedia.org/wiki/Sobel_operator">Sobel operator</a>,
+        example, the kernel for the horizontal <a href="http://en.wikipedia.org/wiki/Sobel_operator" target="_blank">Sobel operator</a>,
         which looks like this:
       <table width="25%" border="1" style="text-align: center; margin: 0 auto;" align="center">
         <tr>
@@ -1624,8 +1624,8 @@ let horizontal-gradient gis:convolve dataset 3 3 [1 0 -1 2 0 -2 1 0 -1] 1 1
         <span class="prim_example">gis:import-wms-drawing <i>server-url</i> <i>spatial-reference</i> <i>layers</i> <i>transparency</i></span>
       </h4>
       <p>
-        Imports an image into the NetLogo drawing layer using the <a href="http://www.opengeospatial.org/standards/wms">Web Mapping
-        Service</a> protocol, as defined by the <a href="http://www.opengeospatial.org/">Open Geospatial Consortium</a>.
+        Imports an image into the NetLogo drawing layer using the <a href="http://www.opengeospatial.org/standards/wms" target="_blank">Web Mapping
+        Service</a> protocol, as defined by the <a href="http://www.opengeospatial.org/" target="_blank">Open Geospatial Consortium</a>.
       <p>
         The <i>spatial reference</i> and <i>layers</i> inputs should be
         given as strings. The <i>spatial reference</i> input corresponds to
