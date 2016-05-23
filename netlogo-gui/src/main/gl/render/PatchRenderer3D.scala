@@ -47,19 +47,6 @@ extends PatchRenderer(world, drawing, shapeRenderer) {
     }
   }
 
-  def renderBlackPatches(gl: GL2, patch: Patch3D, fontSize: Int, patchSize: Double) {
-    if(!world.patchesAllBlack) {
-      if(patch.hasLabel) {
-        gl.glPushMatrix()
-        val coords = getPatchCoords(patch)
-        val scale = Renderer.WORLD_SCALE
-        renderLabel(gl, scale * coords(0), scale * coords(1), scale * coords(2),
-                    patch, fontSize, patchSize)
-        gl.glPopMatrix()
-      }
-    }
-  }
-
   override def renderPatches(gl: GL2, fontSize: Int, patchSize: Double) {
     if(!world.patchesAllBlack || world.patchesWithLabels != 0) {
       gl.glPushMatrix()
@@ -90,7 +77,7 @@ extends PatchRenderer(world, drawing, shapeRenderer) {
   def renderWrappedPatch(gl: GL2, patch: Patch3D, shape: GLShape,
                         fontSize: Int, patchSize: Double, outline: Boolean) {
     shapeRenderer.renderWrappedAgent(
-      gl, shapeRenderer.getShape("@@@PATCH@@@"),
+      gl, shape,
       1.0, Color.getColor(patch.pcolor),
       patch.labelString, patch.labelColor,
       world.wrappedObserverX(patch.pxcor),

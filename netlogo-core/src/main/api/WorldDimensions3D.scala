@@ -37,4 +37,8 @@ extends WorldDimensions(minPxcor, maxPxcor, minPycor, maxPycor, patchSize, wrapp
     wrappingAllowedInZ: Boolean = wrappingAllowedInZ): WorldDimensions3D = {
     new WorldDimensions3D(minPxcor, maxPxcor, minPycor, maxPycor, minPzcor, maxPzcor, patchSize, wrappingAllowedInX, wrappingAllowedInY, wrappingAllowedInZ)
   }
+
+  override def toString: String = {
+    s"WorldDimensions3D($minPxcor, $maxPxcor, $minPycor, $maxPycor, $minPzcor, $maxPzcor, $patchSize, $wrappingAllowedInX, $wrappingAllowedInY, $wrappingAllowedInZ)"
+  }
 }

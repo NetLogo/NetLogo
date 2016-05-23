@@ -17,11 +17,11 @@ with org.nlogo.window.Event.LinkChild {
   val picker = new Picker(this)
 
   if (org.nlogo.api.Version.is3D)
-    if (renderer == null)
+    if (renderer == null) {
       renderer = new org.nlogo.gl.render.Renderer3D(
         viewManager.world, viewManager.graphicsSettings,
         viewManager.workspace, viewManager)
-    else {
+    } else {
       renderer.cleanUp()
       renderer = new org.nlogo.gl.render.Renderer3D(renderer)
     }
@@ -123,4 +123,7 @@ with org.nlogo.window.Event.LinkChild {
     e.consume()
   }
 
+  override def dispose(): Unit = {
+    renderer.cleanUp()
+  }
 }

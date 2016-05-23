@@ -210,24 +210,30 @@ class WorldViewSettings3D(workspace: GUIWorkspace, gw: ViewWidget)
 
   class ResizeRunner extends Runnable {
     def run(): Unit = {
-      if (edgesChanged) {
-        new RemoveAllJobsEvent().raise(gWidget)
-        world.clearTurtles()
-        world.clearLinks()
-        world.createPatches(newMinX, newMaxX,
-          newMinY, newMaxY, newMinZ, newMaxZ)
-        workspace.patchesCreatedNotify()
-        gWidget.resetSize()
-      }
-      if (patchSizeChanged) {
-        world.patchSize(newPatchSize)
-        gWidget.resetSize()
-      }
+      try {
+        if (edgesChanged) {
+          new RemoveAllJobsEvent().raise(gWidget)
+          world.clearTurtles()
+          world.clearLinks()
+          world.createPatches(newMinX, newMaxX,
+            newMinY, newMaxY, newMinZ, newMaxZ)
+          workspace.patchesCreatedNotify()
+          gWidget.resetSize()
+        }
+        if (patchSizeChanged) {
+          world.patchSize(newPatchSize)
+          gWidget.resetSize()
+        }
 
-      if (edgesChanged)
-        workspace.clearDrawing()
-      else
-        gWidget.view.renderer.trailDrawer.rescaleDrawing();
+        if (edgesChanged)
+          workspace.clearDrawing()
+        else
+          gWidget.view.renderer.trailDrawer.rescaleDrawing()
+        } catch {
+          case e: Exception =>
+            println("Exception in resizing thread: " + e + " " + e.getMessage)
+            throw e
+        }
     }
   }
 
