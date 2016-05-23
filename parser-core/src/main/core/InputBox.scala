@@ -61,7 +61,7 @@ case class StringInput(value: String, label: StringInput.StringKind, multiline: 
   def name = label.display
   def constraint = StringInputConstraintSpecification(name, value)
   def default = value
-  def asString = StringEscaper.escapeString(Dump.logoObject(value.toString))
+  def asString = Dump.logoObject(value.toString)
   def defaultString = value.toString
 }
 

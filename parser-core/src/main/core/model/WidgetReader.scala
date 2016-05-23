@@ -64,6 +64,11 @@ case class EscapedStringLine(override val default: Option[String] = None) extend
   def format(v: String): String = escapeString(v)
   def valid(v: String): Boolean = true
 }
+case class OptionalEscapedStringLine(override val default: Option[String] = None) extends WidgetLine[String] {
+  def parse(line: String): String = if (line == "NIL") "" else unescapeString(line)
+  def format(v: String): String = if (v.isEmpty) "NIL" else escapeString(v)
+  def valid(v: String): Boolean = !v.isEmpty
+}
 case class SpecifiedLine(str: String) extends WidgetLine[Unit] {
   def parse(line: String): Unit = {}
   def format(x: Unit): String = str
@@ -475,7 +480,7 @@ object InputBoxReader extends BaseWidgetReader {
     IntLine(),  // right
     IntLine(),  // bottom
     OptionLine[String]("NIL", StringLine()),   // varname
-    StringLine(),   // value
+    OptionalEscapedStringLine(),   // value
     ReservedLine("1"),
     BooleanLine(),  // multiline
     StringLine())    // inputboxtype
@@ -488,8 +493,8 @@ object InputBoxReader extends BaseWidgetReader {
       _, multiline: Boolean, inputBoxTypeStr: String) = vals
 
     val inputBoxValue = inputBoxTypeStr match {
-      case "Number" | "Color" => NumericInput(StringEscaper.unescapeString(value).toDouble, NumericInput.label(inputBoxTypeStr))
-      case "String" | "String (reporter)" | "String (commands)" => StringInput(StringEscaper.unescapeString(value), StringInput.label(inputBoxTypeStr), multiline)
+      case "Number" | "Color" => NumericInput(value.toDouble, NumericInput.label(inputBoxTypeStr))
+      case "String" | "String (reporter)" | "String (commands)" => StringInput(value, StringInput.label(inputBoxTypeStr), multiline)
       case _ =>
         throw new RuntimeException("Couldn't find corresponding input box type for " + inputBoxTypeStr)
     }
