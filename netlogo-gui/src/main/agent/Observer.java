@@ -262,8 +262,6 @@ public strictfp class Observer
     this.orientation.roll = ((roll % 360) + 360) % 360;
   }
 
-  Vect rotationPoint;
-
   public void setRotationPoint(Vect v) {
     orientation.rotationPoint = v;
   }

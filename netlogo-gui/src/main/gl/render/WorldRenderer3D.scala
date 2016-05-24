@@ -78,8 +78,7 @@ extends WorldRenderer(world, patchRenderer, drawing, turtleRenderer, linkRendere
       if (world.worldDepth > 1)
         patchRenderer.renderPatches(gl, fontSize, patchSize)
       outlineAgent match {
-        case p: Patch =>
-          patchRenderer.renderOutline(gl, p)
+        case p: Patch => patchRenderer.renderOutline(gl, p)
         case _ =>
       }
     }
@@ -93,22 +92,22 @@ extends WorldRenderer(world, patchRenderer, drawing, turtleRenderer, linkRendere
 
   override def renderWorld(gl: GL2, fontSize: Int, patchSize: Double) {
     // we might get here before the world is set up
-    if(world.patches != null) {
+    if (world.patches != null) {
+      // We can get here two ways:
+      // - we open a 3D model and set the world depth to be 1 (by changing min/max-pzcor).
+      // - we open a 2D model in 3D (has world depth of 1 by default)
+      //
+      // This *won't* render the 3D view in 2D - that code is in WorldRenderer.renderWorld().
+      //
+      // Note that we disable textures explicitly in the else case since they are enabled by
+      // renderPatchTexture. Leaving them enabled screws up rendering if we're not rendering
+      // the patches as textures anymore.
       if (world.worldDepth == 1)
-        // I might be wrong, but the only way we can get here is if we're in 3D, and we manually set
-        // the world depth to be 1 (by changing min-pzcor and max-pzcor).
-        //
-        // If this was meant to determine whether we're in the 3D view in 2D, this wouldn't work
-        // because we would be in WorldRenderer.renderWorld(), instead of
-        // WorldRenderer3D.renderWorld().
-        //
-        // However, I'm going to leave this here anyway to avoid breaking something else I'm not
-        // aware of, or if I'm just plain wrong about this.
-        //
-        // Note: If we did manually change the world depth to be 1, this might result in patches
-        // being rendered twice, because PatchRenderer3D.renderPatchTexture() calls renderPatches().
         patchRenderer.renderPatchTexture(gl)
-      if(settings.wireframeOn)
+      else
+        gl.glDisable(GL.GL_TEXTURE_2D)
+
+      if (settings.wireframeOn)
         renderWorldWireFrame(gl)
     }
   }

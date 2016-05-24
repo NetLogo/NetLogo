@@ -574,7 +574,6 @@ public class Renderer
         gl.glDisable(GL2.GL_BLEND);
       }
 
-
       if (outlineAgent instanceof org.nlogo.api.Patch) {
         patchRenderer.renderOutline(gl, (org.nlogo.api.Patch) outlineAgent);
       }
