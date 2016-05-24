@@ -14,6 +14,9 @@ public final strictfp class Observer3D
     super(world);
   }
 
+  private Vect forward;
+  private Vect right;
+
   @Override
   public void home() {
     super.home();
@@ -23,7 +26,7 @@ public final strictfp class Observer3D
         (world.worldWidth(),
          StrictMath.max(world.worldHeight(), w.worldDepth())) * 2));
 
-    rotationPoint = new Vect(oxcor(), oycor(), zOff);
+    setRotationPoint(new Vect(oxcor(), oycor(), zOff));
     right = new Vect(1, 0, 0);
     forward = new Vect(0, 0, 1);
   }
@@ -125,7 +128,7 @@ public final strictfp class Observer3D
       Patch3D p = (Patch3D) otherAgent;
       oxyandzcor(p.pxcor, p.pycor, p.pzcor);
     }
-    face(rotationPoint.x(), rotationPoint.y(), rotationPoint.z());
+    face(rotationPoint().x(), rotationPoint().y(), rotationPoint().z());
   }
 
   public Patch3D getPatchAtOffsets(double dx, double dy, double dz)
@@ -159,13 +162,13 @@ public final strictfp class Observer3D
       delta = -delta;
     }
 
-    cors = cors.subtract(rotationPoint);
+    cors = cors.subtract(rotationPoint());
 
     cors = cors.rotateZ(delta);
     right = right.rotateZ(delta);
     forward = forward.rotateZ(delta);
 
-    cors = cors.add(rotationPoint);
+    cors = cors.add(rotationPoint());
 
     Vect rightxy = new Vect(right.x(), right.y(), 0);
     rightxy = rightxy.normalize();
@@ -174,15 +177,12 @@ public final strictfp class Observer3D
     oxyandzcor(cors.x(), cors.y(), cors.z());
   }
 
-  private Vect forward;
-  private Vect right;
-
   @Override
   public void orbitUp(double delta) {
     // translate the rotation point to the origin.
-    Vect pos = new Vect(oxcor() - rotationPoint.x(),
-        oycor() - rotationPoint.y(),
-        ozcor() - rotationPoint.z());
+    Vect pos = new Vect(oxcor() - rotationPoint().x(),
+                        oycor() - rotationPoint().y(),
+                        ozcor() - rotationPoint().z());
 
     // use the right vector rather than the forward vector
     // to determine the "heading" so it is continuous.
@@ -209,9 +209,9 @@ public final strictfp class Observer3D
     forward = v[0];
     right = v[1];
 
-    oxyandzcor(pos.x() + orientation.rotationPoint.x(),
-        pos.y() + orientation.rotationPoint.y(),
-        pos.z() + orientation.rotationPoint.z());
+    oxyandzcor(pos.x() + rotationPoint().x(),
+        pos.y() + rotationPoint().y(),
+        pos.z() + rotationPoint().z());
   }
 
   @Override
@@ -223,18 +223,18 @@ public final strictfp class Observer3D
     oycor(oycor() - v[1].y() * thetaX * 0.1);
     ozcor(ozcor() + v[1].z() * thetaX * 0.1);
 
-    rotationPoint = new Vect
-        (rotationPoint.x() - v[1].x() * thetaX * 0.1,
-         rotationPoint.y() - v[1].y() * thetaX * 0.1,
-         rotationPoint.z() + v[1].z() * thetaX * 0.1);
+    setRotationPoint(new Vect
+        (rotationPoint().x() - v[1].x() * thetaX * 0.1,
+         rotationPoint().y() - v[1].y() * thetaX * 0.1,
+         rotationPoint().z() + v[1].z() * thetaX * 0.1));
 
     oxcor(oxcor() + ortho.x() * thetaY * 0.1);
     oycor(oycor() + ortho.y() * thetaY * 0.1);
     ozcor(ozcor() - ortho.z() * thetaY * 0.1);
 
-    rotationPoint = new Vect
-        (rotationPoint.x() + ortho.x() * thetaY * 0.1,
-         rotationPoint.y() + ortho.y() * thetaY * 0.1,
-         rotationPoint.z() - ortho.z() * thetaY * 0.1);
+    setRotationPoint(new Vect
+        (rotationPoint().x() + ortho.x() * thetaY * 0.1,
+         rotationPoint().y() + ortho.y() * thetaY * 0.1,
+         rotationPoint().z() - ortho.z() * thetaY * 0.1));
   }
 }
