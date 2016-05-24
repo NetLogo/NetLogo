@@ -9,6 +9,9 @@ trait ExportRenderer extends Renderer with GLEventListener {
 
   addsLights = false
 
+  def getWidth = width
+  def getHeight = height
+
   var pixelInts: Array[Int] = null
 
   override def dispose(glDrawable: GLAutoDrawable): Unit = {

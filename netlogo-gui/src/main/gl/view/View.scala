@@ -104,9 +104,9 @@ with org.nlogo.window.Event.LinkChild {
     canvas.display()
     canvas.removeGLEventListener(exporter)
     val bufferedImage = new BufferedImage(
-      canvas.getWidth, canvas.getHeight, BufferedImage.TYPE_INT_ARGB)
-    bufferedImage.setRGB(0, 0, canvas.getWidth, canvas.getHeight,
-                         exporter.pixelInts, 0, canvas.getWidth)
+      exporter.getWidth, exporter.getHeight, BufferedImage.TYPE_INT_ARGB)
+    bufferedImage.setRGB(0, 0, exporter.getWidth, exporter.getHeight,
+                         exporter.pixelInts, 0, exporter.getWidth)
     bufferedImage
   }
 
