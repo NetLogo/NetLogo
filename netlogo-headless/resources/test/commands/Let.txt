@@ -162,4 +162,4 @@ LetSameNameAsTurtleVariable
 LetSameNameAsBreedVariable
   breed [mice mouse]
   mice-own [fur]
-  O> let fur 5 => COMPILER ERROR There is already a MICE variable called FUR
+  O> let fur 5 => COMPILER ERROR There is already a MICE-OWN variable called FUR

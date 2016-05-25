@@ -337,6 +337,14 @@ class FrontEndTests extends FunSuite {
     duplicateName("breed [mice mouse] mice-own [fur] to foo let fur 5 end",
       "There is already a MICE-OWN variable called FUR")
   }
+  test("BreedPrimSameNameAsBuiltInPrim") {
+    duplicateName("breed [strings string]",
+      "Defining a breed [STRINGS STRING] redefines IS-STRING?, a primitive reporter")
+  }
+  test("BreedPrimSameAsProcedure") {
+    duplicateName("breed [mice mouse] to-report mice-at report nobody end",
+      "There is already a breed reporter called MICE-AT")
+  }
   test("SameLocalVariableTwice1") {
     duplicateName("to a1 locals [b b] end",
       "Nothing named LOCALS has been defined.")

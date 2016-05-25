@@ -21,7 +21,7 @@ class TestTreeAgentSet extends FixtureSuite with GivenWhenThen {
     fixture.declare(
       """|breed [mice mouse]
          |breed [frogs frog]
-         |undirected-link-breed [undirected-links undirected-link]
+         |undirected-link-breed [undirected-edges undirected-edge]
          |""".stripMargin)
 
     Given("a subscriber to turtles")
