@@ -178,6 +178,12 @@ class StructureParserTests extends FunSuite {
   test("breeds-own for nonexistent breed") {
     expectError("hunters-own [fear]", "There is no breed \"HUNTERS\"")
   }
+  test("redeclaration of breed plural") {
+    expectError("breed [as a] breed [as b]", "There is already a breed called AS")
+  }
+  test("redeclaration of breed-singular") {
+    expectError("breed [as a] breed [bs a]", "There is already a singular breed name called A")
+  }
   test("redeclaration of extensions") {
     expectError("extensions [foo] extensions [bar]",
       "Redeclaration of EXTENSIONS") }
@@ -199,8 +205,12 @@ class StructureParserTests extends FunSuite {
       "closing bracket expected") }
 
   test("breed singular clash with global") { // ticket #446
-    expectError("breed[frogs frog] globals[frog]",
-      "There is already a breed called FROG") }
+    expectError("breed [frogs frog] globals [frog]",
+      "There is already a singular breed name called FROG") }
+
+  test("breed owns / link breed owns clashes") {
+    expectError("undirected-link-breed [edges edge] breed [nodes node] edges-own [weight] nodes-own [weight]",
+      "There is already a EDGES-OWN variable called WEIGHT") }
 
   // https://github.com/NetLogo/NetLogo/issues/414
   test("missing end 1") {

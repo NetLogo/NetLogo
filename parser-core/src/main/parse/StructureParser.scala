@@ -84,27 +84,41 @@ object StructureParser {
       structureParser.parse(tokens, oldResults)
     }
 
-  def usedNames(program: Program, procedures: ProceduresMap, declarations: Seq[StructureDeclarations.Declaration]): Map[String, String] = {
-    val alwaysUsedNames =
-      program.dialect.tokenMapper.allCommandNames.map(_ -> "primitive command") ++
-        program.dialect.tokenMapper.allReporterNames.map(_ -> "primitive reporter")
+  private[parse] def usedNames(program: Program, procedures: ProceduresMap, declarations: Seq[StructureDeclarations.Declaration]): SymbolType.SymbolTable = {
+    val symTable =
+      SymbolType.emptySymbolTable
+        .addSymbols(program.dialect.tokenMapper.allCommandNames, SymbolType.PrimitiveCommand)
+        .addSymbols(program.dialect.tokenMapper.allReporterNames, SymbolType.PrimitiveReporter)
+        .addSymbols(program.globals, SymbolType.GlobalVariable)
+        .addSymbols(program.turtlesOwn, SymbolType.TurtleVariable)
+        .addSymbols(program.patchesOwn, SymbolType.PatchVariable)
+        .addSymbols(program.linksOwn.filterNot(program.turtlesOwn.contains), SymbolType.LinkVariable)
+        .addSymbols(program.breeds.values.map(_.singular), SymbolType.TurtleBreedSingular)
+        .addSymbols(program.breeds.keys, SymbolType.TurtleBreed)
+        .addSymbols(program.linkBreeds.values.map(_.singular), SymbolType.LinkBreedSingular)
+        .addSymbols(program.linkBreeds.keys, SymbolType.LinkBreed)
+        .addSymbols(procedures.keys, SymbolType.ProcedureSymbol)
 
-    program.usedNames ++
-      breedPrimitives(declarations) ++
-      procedures.keys.map(_ -> "procedure") ++
-      alwaysUsedNames
+    val tableWithBreedsOwn = program.breeds.values.foldLeft(symTable) {
+      case (table, breed) if breed.isLinkBreed =>
+        table.addSymbols(breed.owns, SymbolType.LinkBreedVariable(breed.name))
+      case (table, breed) =>
+        table.addSymbols(breed.owns, SymbolType.BreedVariable(breed.name))
+    }
+
+    tableWithBreedsOwn ++ breedPrimitives(declarations)
   }
 
-  private def breedPrimitives(declarations: Seq[StructureDeclarations.Declaration]): Map[String, String] = {
+  private def breedPrimitives(declarations: Seq[StructureDeclarations.Declaration]): SymbolType.SymbolTable = {
     import BreedIdentifierHandler._
-    import org.nlogo.core.StructureDeclarations.Breed
+    import org.nlogo.core.StructureDeclarations.{ Breed => DeclBreed }
 
-    declarations.flatMap {
-      case breed: Breed =>
-        val pairs = Seq(breedCommands _ -> "breed command", breedReporters _ -> "breed reporter", breedHomonymProcedures _ -> "breed")
-        pairs flatMap { case (f, label) => f(breed).map(_ -> label) }
-      case _ => Seq()
-    }.toMap
+    declarations.foldLeft(SymbolType.emptySymbolTable) {
+      case (table, breed: DeclBreed) =>
+        table.addSymbols(breedCommands(breed), SymbolType.BreedCommand)
+             .addSymbols(breedReporters(breed), SymbolType.BreedReporter)
+      case (table, _) => table
+    }
   }
 
   def findProcedurePositions(tokens: Seq[Token]): Map[String, ProcedureSyntax] = {

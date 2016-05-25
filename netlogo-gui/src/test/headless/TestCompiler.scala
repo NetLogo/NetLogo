@@ -92,7 +92,7 @@ class TestCompiler extends FunSuite with OneInstancePerTest with BeforeAndAfterE
   test("LetSameNameAsBreedVariable") {
     declare("breed [mice mouse] mice-own [fur]")
     badCommand("let fur 5",
-               "There is already a MICE variable called FUR")
+               "There is already a MICE-OWN variable called FUR")
   }
   test("LetSameNameAsPrimitiveCommand") {
     badCommand("let fd 5",

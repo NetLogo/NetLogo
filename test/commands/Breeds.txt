@@ -43,3 +43,8 @@ SetBreedToNonBreed
   O> crt 1 [ set breed turtles with [true] ] => ERROR You can't set BREED to a non-breed agentset.
   O> crt 1 [ set breed links ] => ERROR You can't set BREED to a non-breed agentset.
   O> crt 1 [ set breed directed-edges ] => ERROR You can't set BREED to a non-breed agentset.
+
+BreedNoDupNames
+  breed [as a]
+  breed [bs a]
+  COMPILE> COMPILER ERROR There is already a singular breed name called A

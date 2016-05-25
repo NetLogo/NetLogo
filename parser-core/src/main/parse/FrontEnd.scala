@@ -31,7 +31,7 @@ trait FrontEndMain {
       val usedNames =
         StructureParser.usedNames(structureResults.program,
           oldProcedures ++ structureResults.procedures, Seq()) ++
-        procedure.args.map(_ -> "local variable here")
+        procedure.args.map(_ -> SymbolType.LocalVariable)
       // on LetNamer vs. Namer vs. LetScoper, see comments in LetScoper
       val namedTokens = {
         val letNamedTokens = LetNamer(rawTokens.iterator)

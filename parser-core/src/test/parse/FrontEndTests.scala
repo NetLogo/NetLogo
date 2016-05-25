@@ -333,6 +333,10 @@ class FrontEndTests extends FunSuite {
     duplicateName("to-report bazort let bazort 5 report bazort end",
       "There is already a procedure called BAZORT")
   }
+  test("LetNameSameAsBreedVariableName") {
+    duplicateName("breed [mice mouse] mice-own [fur] to foo let fur 5 end",
+      "There is already a MICE-OWN variable called FUR")
+  }
   test("SameLocalVariableTwice1") {
     duplicateName("to a1 locals [b b] end",
       "Nothing named LOCALS has been defined.")

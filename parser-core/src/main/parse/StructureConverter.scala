@@ -65,7 +65,7 @@ object StructureConverter {
     def updateBreeds(program: Program): Program =
       declarations.foldLeft(program) {
         case (program, Breed(plural, singular, isLinkBreed, isDirected)) =>
-          val breed = core.Breed(plural.name, singular.name,
+          val breed = core.Breed(plural.name, singular.map(_.name).getOrElse("TURTLE"),
             isLinkBreed = isLinkBreed, isDirected = isDirected)
           if (isLinkBreed)
             program.copy(

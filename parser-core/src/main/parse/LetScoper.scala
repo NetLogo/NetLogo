@@ -90,7 +90,7 @@ import org.nlogo.core,
 
 import scala.annotation.tailrec
 
-class LetScoper(usedNames: Map[String, String]) {
+class LetScoper(usedNames: Map[String, SymbolType]) {
 
   // Environment encapsulates state, namely, what variables are currently in scope.
   // Each List[Let] is a scope; we have a List[List[Let]] because scopes nest.
@@ -112,9 +112,9 @@ class LetScoper(usedNames: Map[String, String]) {
         case Nil => Nil
         case hd::tail => tail
       }
-    def used: Map[String, String] =
+    def used: Map[String, SymbolType] =
       lets.flatten
-        .map(_.name -> "local variable here")
+        .map(_.name -> SymbolType.LocalVariable)
         .toMap
   }
 
@@ -146,8 +146,8 @@ class LetScoper(usedNames: Map[String, String]) {
       case t @ Token(_, TokenType.Command, l: core.prim._let) =>
         val nameToken = iter.head
         val name = nameToken.text.toUpperCase
-        for (displayName <- (usedNames ++ Environment.used).get(name))
-          exception("There is already a " + displayName + " called " + name, nameToken)
+        for (tpe <- (usedNames ++ Environment.used).get(name))
+          exception("There is already a " + SymbolType.typeName(tpe) + " called " + name, nameToken)
         cAssert(nameToken.tpe == TokenType.Reporter,
            "Expected variable name here", nameToken)
         cAssert(!name.startsWith("?"),
