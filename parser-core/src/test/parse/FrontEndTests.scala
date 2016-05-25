@@ -312,7 +312,7 @@ class FrontEndTests extends FunSuite {
 
   def duplicateName(s: String, err: String) = {
     val e = intercept[CompilerException] {
-      FrontEnd.frontEnd(s)
+      FrontEnd.frontEnd(s, extensionManager = extensionManager)
     }
     assertResult(err)(e.getMessage)
   }
@@ -362,6 +362,11 @@ class FrontEndTests extends FunSuite {
       "There is already a local variable here called B")
   }
 
+  test("SameNameAsExtensionPrim") {
+    duplicateName("to foo:bar end",
+      "There is already an extension command called FOO:BAR")
+  }
+
   test("findIncludes lists all includes when there is a valid includes statement") {
     assertResult(Seq())(FrontEnd.findIncludes(""))
     assertResult(Seq("foo.nls"))(FrontEnd.findIncludes("__includes [\"foo.nls\"]"))
@@ -397,8 +402,7 @@ class FrontEndTests extends FunSuite {
     assert(noNameProcedure.isEmpty)
   }
 
-  def colorTokenize(source: String): Seq[core.Token] = {
-    val extensionManager = new core.DummyExtensionManager() {
+  lazy val extensionManager = new core.DummyExtensionManager() {
       override def anyExtensionsLoaded = true
       override def replaceIdentifier(name: String): core.Primitive =
         name match {
@@ -413,6 +417,8 @@ class FrontEndTests extends FunSuite {
           case _ => null
         }
     }
+
+  def colorTokenize(source: String): Seq[core.Token] = {
     FrontEnd.tokenizeForColorization(source, core.NetLogoCore, extensionManager)
   }
 
