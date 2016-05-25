@@ -50,7 +50,7 @@ class Namer(
       val ok = newVal.isInstanceOf[core.prim._call] ||
         newVal.isInstanceOf[core.prim._callreport] ||
         newVal.isInstanceOf[core.prim._procedurevariable]
-      cAssert(ok, alreadyTaken(newVal.getClass.getSimpleName, token.text.toUpperCase), token)
+      cAssert(ok, alreadyTaken(userFriendlyName(newVal), token.text.toUpperCase), token)
     }
     for (token <- procedure.nameToken +: procedure.argTokens)
       checkName(token)
@@ -68,7 +68,14 @@ class Namer(
   }
 
   private def alreadyTaken(theirs: String, ours: String) =
-    "There is already a " + theirs + " called " + ours
+    "There is already " + theirs + " called " + ours
+
+  private def userFriendlyName(a: AnyRef): String =
+    a match {
+      case _: core.prim._extern       => "an extension command"
+      case _: core.prim._externreport => "an extension reporter"
+      case _                          => s"a ${a.getClass.getSimpleName}"
+    }
 
 }
 

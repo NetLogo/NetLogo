@@ -73,7 +73,7 @@ class TestDuplicateNames extends FixtureSuite  {
   // at least we get errors on these, but the messages aren't great
   // https://github.com/NetLogo/NetLogo/issues/352
   testBadName("array:set",
-    "There is already a _extern called ARRAY:SET",
+    "There is already an extension command called ARRAY:SET",
     "extensions [array]")
 
 }
