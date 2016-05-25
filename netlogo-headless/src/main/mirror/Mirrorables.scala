@@ -6,26 +6,26 @@ import scala.collection.JavaConverters.iterableAsScalaIterableConverter
 import scala.language.implicitConversions
 import org.nlogo.{ api, core }
 import org.nlogo.api.AgentVariableNumbers._
-import org.nlogo.core.AgentVariables.getImplicitLinkVariables
-import org.nlogo.core.AgentVariables.getImplicitPatchVariables
-import org.nlogo.core.AgentVariables.getImplicitTurtleVariables
+import org.nlogo.core.AgentVariables.implicitLinkVariables
+import org.nlogo.core.AgentVariables.implicitPatchVariables
+import org.nlogo.core.AgentVariables.implicitTurtleVariables
 
 object Mirrorables {
 
   case object Patch extends Kind {
     object Variables extends Enumeration {
-      getImplicitPatchVariables.foreach(Value)
+      implicitPatchVariables.foreach(Value)
     }
   }
   case object Turtle extends Kind {
     object Variables extends Enumeration {
-      getImplicitTurtleVariables.foreach(Value)
+      implicitTurtleVariables.foreach(Value)
       val LineThickness = Value("lineThickness")
     }
   }
   case object Link extends Kind {
     object Variables extends Enumeration {
-      getImplicitLinkVariables.foreach(Value)
+      implicitLinkVariables.foreach(Value)
       val Size = Value("size")
       val Heading = Value("heading")
       val MidpointX = Value("midpointX")
@@ -79,7 +79,7 @@ object Mirrorables {
   }
 
   object MirrorableTurtle {
-    val tvLineThickness = getImplicitTurtleVariables.size
+    val tvLineThickness = implicitTurtleVariables.size
     val lastIndex = tvLineThickness
   }
   class MirrorableTurtle(turtle: api.Turtle) extends MirrorableAgent(turtle) {

@@ -104,25 +104,34 @@ object TaskVariableHandler extends NameHandler {
 }
 
 class AgentVariableReporterHandler(program: Program) extends NameHandler {
+  import scala.collection.immutable.ListMap
+  import PartialFunction.condOpt
   override def apply(token: Token) =
     getAgentVariableReporter(token.value.asInstanceOf[String])
       .map{(TokenType.Reporter, _)}
-  import PartialFunction.condOpt
   def boolOpt[T](b: Boolean)(x: => T) =
     if (b) Some(x) else None
+  def mapIndexOpt[T, S](map: ListMap[String, T], key: String)(f: (Int, T) => S): Option[S] =
+    if (map.contains(key)) {
+      val index = map.keys.toSeq.indexOf(key)
+      Some(f(index, map(key)))
+    } else None
   def getAgentVariableReporter(varName: String): Option[core.Reporter] =
     boolOpt(program.breeds.values.exists(_.owns.contains(varName)))(
       new core.prim._breedvariable(varName)) orElse
     boolOpt(program.linkBreeds.values.exists(_.owns.contains(varName)))(
       new core.prim._linkbreedvariable(varName)) orElse
     boolOpt(program.turtlesOwn.contains(varName) && program.linksOwn.contains(varName))(
-      new core.prim._turtleorlinkvariable(varName)) orElse
-    condOpt(program.turtlesOwn.indexOf(varName)) {
-      case n if n != -1 => new core.prim._turtlevariable(n) } orElse
-    condOpt(program.patchesOwn.indexOf(varName)) {
-      case n if n != -1 => new core.prim._patchvariable(n) } orElse
-    condOpt(program.linksOwn.indexOf(varName)) {
-      case n if n != -1 => new core.prim._linkvariable(n) } orElse
+      new core.prim._turtleorlinkvariable(varName,
+        program.turtleVars(varName) | program.linkVars(varName))) orElse
+    mapIndexOpt(program.turtleVars, varName) { (i, tpe) =>
+      new core.prim._turtlevariable(i, tpe) } orElse
+    mapIndexOpt(program.patchVars, varName) { (i, tpe) =>
+      new core.prim._patchvariable(i, tpe) } orElse
+    mapIndexOpt(program.linkVars, varName) { (i, tpe) =>
+      new core.prim._linkvariable(i, tpe) } orElse
+    mapIndexOpt(program.observerVars, varName) { (i, tpe) =>
+      new core.prim._observervariable(i, tpe) } orElse
     condOpt(program.globals.indexOf(varName)) {
       case n if n != -1 => new core.prim._observervariable(n) }
 }
@@ -132,10 +141,10 @@ class AgentVariableReporterHandler(program: Program) extends NameHandler {
 class BuiltInAgentVariableReporterHandler(agentVariables: AgentVariableSet)
   extends NameHandler {
     val variableMap = Map[Seq[String], Int => core.Reporter](
-      agentVariables.getImplicitObserverVariables -> (i => new core.prim._observervariable(i)),
-      agentVariables.getImplicitTurtleVariables -> (i => new core.prim._turtlevariable(i)),
-      agentVariables.getImplicitPatchVariables -> (i => new core.prim._patchvariable(i)),
-      agentVariables.getImplicitLinkVariables -> (i => new core.prim._linkvariable(i)))
+      agentVariables.implicitObserverVariableTypeMap.keys.toSeq -> (i => new core.prim._observervariable(i)),
+      agentVariables.implicitTurtleVariableTypeMap.keys.toSeq   -> (i => new core.prim._turtlevariable(i)),
+      agentVariables.implicitPatchVariableTypeMap.keys.toSeq    -> (i => new core.prim._patchvariable(i)),
+      agentVariables.implicitLinkVariableTypeMap.keys.toSeq     -> (i => new core.prim._linkvariable(i)))
 
   override def apply(token: Token) =
     variableMap.find {

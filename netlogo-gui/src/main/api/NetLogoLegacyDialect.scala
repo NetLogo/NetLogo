@@ -5,13 +5,15 @@ package org.nlogo.api
 import org.nlogo.core.{ AgentVariableSet, DefaultTokenMapper, Dialect, NetLogoCore, Resource,
   TokenMapperInterface => CoreTokenMapperInterface, Command => CoreCommand, Instruction => CoreInstruction, Reporter => CoreReporter, Syntax }
 
+import scala.collection.immutable.ListMap
+
 object NetLogoLegacyDialect extends Dialect {
   override val is3D           = false
   override val agentVariables = new AgentVariableSet {
-    val getImplicitObserverVariables: Seq[String] = Seq()
-    val getImplicitTurtleVariables: Seq[String]   = AgentVariables.getImplicitTurtleVariables(false)
-    val getImplicitPatchVariables: Seq[String]    = AgentVariables.getImplicitPatchVariables(false)
-    val getImplicitLinkVariables: Seq[String]     = AgentVariables.getImplicitLinkVariables
+    val implicitObserverVariableTypeMap: ListMap[String, Int] = ListMap()
+    val implicitTurtleVariableTypeMap:   ListMap[String, Int] = AgentVariables.implicitTurtleVariableTypeMap(false)
+    val implicitPatchVariableTypeMap:    ListMap[String, Int] = AgentVariables.implicitPatchVariableTypeMap(false)
+    val implicitLinkVariableTypeMap:     ListMap[String, Int] = AgentVariables.implicitLinkVariableTypeMap
   }
   override val tokenMapper    = NetLogoLegacyDialectTokenMapper
 

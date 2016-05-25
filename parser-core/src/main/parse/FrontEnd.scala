@@ -58,6 +58,10 @@ trait FrontEndMain {
 
     new AgentTypeChecker(topLevelDefs).check()  // catch agent type inconsistencies
 
+    // this must come after AgentTypeChecker so that we have typing information available
+    // val specializer = new VariableTypeSpecializer(compilationOperand.dialect)
+    // topLevelDefs = topLevelDefs.map(specializer.visitProcedureDefinition)
+
     val verifier = new TaskVariableVerifier
     topLevelDefs.foreach(verifier.visitProcedureDefinition)
 

@@ -14,7 +14,6 @@ trait FrontEndProcedure {
   var args = Vector[String]()
   var topLevel = false
   def dump: String
-
   def syntax: Syntax = {
     val right = List.fill(argTokens.size)(Syntax.WildcardType)
     if (isReporter)

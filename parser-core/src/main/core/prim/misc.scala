@@ -220,11 +220,9 @@ case class _linkbreedvariable(name: String) extends Reporter {
       ret = Syntax.WildcardType | Syntax.ReferenceType,
       agentClassString = "---L")
 }
-case class _linkvariable(vn: Int) extends Reporter {
+case class _linkvariable(vn: Int, returnType: Int = Syntax.WildcardType) extends Reporter {
   override def syntax =
-    Syntax.reporterSyntax(
-      ret = Syntax.WildcardType | Syntax.ReferenceType,
-      agentClassString = "---L")
+    Syntax.reporterSyntax(ret = returnType | Syntax.ReferenceType, agentClassString = "---L")
 }
 case class _list() extends Reporter with Pure {
   override def syntax =
@@ -273,12 +271,12 @@ case class _notequal() extends Reporter with Pure {
       ret = Syntax.BooleanType,
       precedence = Syntax.NormalPrecedence - 5)
 }
-case class _observervariable(vn: Int) extends Reporter with Referenceable {
+case class _observervariable(vn: Int, returnType: Int = Syntax.WildcardType) extends Reporter with Referenceable {
   override def syntax =
-    Syntax.reporterSyntax(
-      ret = Syntax.WildcardType | Syntax.ReferenceType)
+    Syntax.reporterSyntax(ret = returnType | Syntax.ReferenceType)
   def makeReference =
     new Reference(AgentKind.Observer, vn, this)
+  override def toString = s"_observervariable($vn)"
 }
 case class _of() extends Reporter {
   override def syntax =
@@ -323,13 +321,14 @@ case class _patches() extends Reporter {
     Syntax.reporterSyntax(
       ret = Syntax.PatchsetType)
 }
-case class _patchvariable(vn: Int) extends Reporter with Referenceable {
+case class _patchvariable(vn: Int, returnType: Int = Syntax.WildcardType) extends Reporter with Referenceable {
   override def syntax =
     Syntax.reporterSyntax(
-      ret = Syntax.WildcardType | Syntax.ReferenceType,
+      ret = returnType | Syntax.ReferenceType,
       agentClassString = "-TP-")
   def makeReference =
     new Reference(AgentKind.Patch, vn, this)
+  override def toString = s"_patchvariable($vn)"
 }
 case class _procedurevariable(vn: Int, name: String) extends Reporter {
   override def syntax =
@@ -436,17 +435,13 @@ case class _turtles() extends Reporter {
     Syntax.reporterSyntax(
       ret = Syntax.TurtlesetType)
 }
-case class _turtleorlinkvariable(varName: String) extends Reporter {
+case class _turtleorlinkvariable(varName: String, returnType: Int = Syntax.WildcardType) extends Reporter {
   override def syntax =
-    Syntax.reporterSyntax(
-      ret = Syntax.WildcardType | Syntax.ReferenceType,
-      agentClassString = "-T-L")
+    Syntax.reporterSyntax(ret = returnType | Syntax.ReferenceType, agentClassString = "-T-L")
 }
-case class _turtlevariable(vn: Int) extends Reporter {
+case class _turtlevariable(vn: Int, returnType: Int = Syntax.WildcardType) extends Reporter {
   override def syntax =
-    Syntax.reporterSyntax(
-      ret = Syntax.WildcardType | Syntax.ReferenceType,
-      agentClassString = "-T--")
+    Syntax.reporterSyntax(ret = returnType | Syntax.ReferenceType, agentClassString = "-T--")
 }
 case class _unaryminus() extends Reporter with Pure {
   override def syntax =

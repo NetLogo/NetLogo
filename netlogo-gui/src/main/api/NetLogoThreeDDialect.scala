@@ -4,13 +4,15 @@ package org.nlogo.api
 
 import org.nlogo.core.{ AgentVariableSet, Dialect, Instantiator, Instruction }
 
+import scala.collection.immutable.ListMap
+
 object NetLogoThreeDDialect extends Dialect {
   val is3D = true;
   val agentVariables = new AgentVariableSet {
-    val getImplicitObserverVariables: Seq[String] = Seq()
-    val getImplicitTurtleVariables: Seq[String]   = AgentVariables.getImplicitTurtleVariables(true)
-    val getImplicitPatchVariables: Seq[String]    = AgentVariables.getImplicitPatchVariables(true)
-    val getImplicitLinkVariables: Seq[String]     = AgentVariables.getImplicitLinkVariables
+    val implicitObserverVariableTypeMap: ListMap[String, Int] = ListMap()
+    val implicitTurtleVariableTypeMap: ListMap[String, Int]   = AgentVariables.implicitTurtleVariableTypeMap(true)
+    val implicitPatchVariableTypeMap: ListMap[String, Int]    = AgentVariables.implicitPatchVariableTypeMap(true)
+    val implicitLinkVariableTypeMap: ListMap[String, Int]     = AgentVariables.implicitLinkVariableTypeMap
   }
   val tokenMapper = ThreeDTokenMapper
 }

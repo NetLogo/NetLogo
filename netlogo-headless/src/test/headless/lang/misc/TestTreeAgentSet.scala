@@ -33,7 +33,7 @@ class TestTreeAgentSet extends FixtureSuite with GivenWhenThen {
     And("a subscriber to links")
     val linksSub = new SimpleChangeEventCounter(ws.world.links)
     And("a subscriber to undirected-links")
-    val undirLinksSub = new SimpleChangeEventCounter(ws.world.linkBreedAgents.get("UNDIRECTED-LINKS"))
+    val undirLinksSub = new SimpleChangeEventCounter(ws.world.linkBreedAgents.get("UNDIRECTED-EDGES"))
 
     val allSubs = Seq(turtlesSub, miceSub, frogSub, linksSub, undirLinksSub)
 
@@ -107,7 +107,7 @@ class TestTreeAgentSet extends FixtureSuite with GivenWhenThen {
     allSubs.foreach(_.eventCount = 0)
 
     When("creating an undirected-link between the two remaining mice")
-    ws.command("ask one-of mice [ create-undirected-links-with other mice ]")
+    ws.command("ask one-of mice [ create-undirected-edges-with other mice ]")
     Then("the links subscriber should get an event")
     assertResult(1)(linksSub.eventCount)
     And("the undirected-links subscriber should get an event")

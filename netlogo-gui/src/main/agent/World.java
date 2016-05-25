@@ -1381,9 +1381,9 @@ public strictfp class World
     return emptyProgram.copy(
         interfaceGlobals,
         emptyProgram.userGlobals(),
-        emptyProgram.turtlesOwn(),
-        emptyProgram.patchesOwn(),
-        emptyProgram.linksOwn(),
+        emptyProgram.turtleVars(),
+        emptyProgram.patchVars(),
+        emptyProgram.linkVars(),
         emptyProgram.breeds(),
         emptyProgram.linkBreeds(),
         emptyProgram.dialect());

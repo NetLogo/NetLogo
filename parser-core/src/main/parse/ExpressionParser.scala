@@ -236,9 +236,18 @@ object ExpressionParser {
       case block: DelayedBlock => parseDelayedBlock(block, goalType)
       case _ => originalArg
     }
-    cAssert(compatible(goalType, arg.reportedType),
-      s"$instruction expected this input to be ${core.TypeNames.aName(goalType)}, but got ${core.TypeNames.aName(arg.reportedType)} instead",
-      arg)
+    cAssert(compatible(goalType, arg.reportedType), {
+      // remove reference type from message unless it's part of the goalType, confusing to see
+      // "expected a variable or a number"
+      val displayedReportedType =
+        if ((goalType & Syntax.ReferenceType) == 0 &&
+          ((arg.reportedType & ~Syntax.ReferenceType) != 0))
+          arg.reportedType & ~Syntax.ReferenceType
+        else
+          arg.reportedType
+      s"$instruction expected this input to be ${core.TypeNames.aName(goalType)}, but got ${core.TypeNames.aName(displayedReportedType)} instead"
+    },
+    arg)
     arg
   }
 
