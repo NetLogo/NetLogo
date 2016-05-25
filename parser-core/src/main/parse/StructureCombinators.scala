@@ -101,17 +101,17 @@ extends scala.util.parsing.combinator.Parsers {
   def breed: Parser[Breed] =
     breedKeyword ~! openBracket ~> identifier ~ opt(identifier) <~ closeBracket ^^ {
       case plural ~ singularOption =>
-        Breed(plural, singularOption.getOrElse(Identifier("TURTLE", plural.token))) }
+        Breed(plural, singularOption) }
 
   def directedLinkBreed: Parser[Breed] =
     keyword("DIRECTED-LINK-BREED") ~! openBracket ~> identifier ~ identifier <~ closeBracket ^^ {
       case plural ~ singular =>
-        Breed(plural, singular, isLinkBreed = true, isDirected = true) }
+        Breed(plural, Some(singular), isLinkBreed = true, isDirected = true) }
 
   def undirectedLinkBreed: Parser[Breed] =
     keyword("UNDIRECTED-LINK-BREED") ~! openBracket ~> identifier ~ identifier <~ closeBracket ^^ {
       case plural ~ singular =>
-        Breed(plural, singular, isLinkBreed = true, isDirected = false) }
+        Breed(plural, Some(singular), isLinkBreed = true, isDirected = false) }
 
   def procedures: Parser[Seq[Procedure]] =
     rep1(procedure) <~ (eof | failure("TO or TO-REPORT expected"))

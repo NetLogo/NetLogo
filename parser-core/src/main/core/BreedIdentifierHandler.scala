@@ -90,8 +90,8 @@ object BreedIdentifierHandler {
 
   private def refineName(breed: DeclBreed)(helper: BreedPrimSpec): String =
     helper.patternString.
-      replaceAll("<BREED>", breed.singular.name).
-      replaceAll("<BREEDS>", breed.plural.name)
+      replaceAll("<BREEDS>", breed.plural.name).
+      replaceAll("<BREED>", breed.singular.map(_.name).getOrElse(breed.plural.name))
 
   trait BreedPrimSpec {
 

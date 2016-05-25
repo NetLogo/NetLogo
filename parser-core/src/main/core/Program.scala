@@ -39,6 +39,7 @@ case class Program private(
       patchesOwn.map(_ -> "patch variable") ++
       (linksOwn.filterNot(turtlesOwn.contains)).map(_ -> "link variable") ++
       breeds.keys.map(_ -> "breed") ++
+      breeds.values.map(_.singular).map(_ -> "singular breed name") ++
       linkBreeds.keys.map(_ -> "link breed") ++
       (for(breed <- breeds.values ++ linkBreeds.values; own <- breed.owns)
        yield own -> (breed.name + " variable"))

@@ -35,13 +35,13 @@ class TestDuplicateNames extends FixtureSuite  {
   testBadName("???",
     "Names beginning with ? are reserved for use as task inputs")
   testBadName("kitten",
-    "There is already a breed called KITTEN", "breed [kittens kitten]")
+    "There is already a singular breed name called KITTEN", "breed [kittens kitten]")
   testBadName("kittens",
     "There is already a breed called KITTENS", "breed [kittens kitten]")
   testBadName("turtles-at",
     "There is already a primitive reporter called TURTLES-AT")
   testBadName("shell",
-    "There is already a TURTLES-OWN variable called SHELL",
+    "There is already a turtle variable called SHELL",
     "turtles-own [shell]")
   testBadName("silliness",
     "There is already a KITTENS-OWN variable called SILLINESS",

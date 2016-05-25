@@ -14,6 +14,8 @@ import
       StructureDeclarations.{ Breed, Declaration, Extensions, Identifier, Includes, Procedure, Variables },
     core.Fail._
 
+import SymbolType._
+
 object StructureChecker {
 
   def rejectDuplicateDeclarations(declarations: Seq[Declaration]) {
@@ -48,73 +50,85 @@ object StructureChecker {
 
   }
 
-  def rejectDuplicateNames(declarations: Seq[Declaration], usedNames: Map[String, String]) {
+  def rejectDuplicateNames(declarations: Seq[Declaration], usedNames: SymbolTable) {
 
-    def checkForInconsistentIDs(usageIdentifier: String, usageTypeName: String, occ: Occurrence, takenNames: Seq[String]) {
-      val identifierNamesAreDifferent = usageIdentifier != occ.identifier.name
+    def checkForInconsistentIDs(usageIdentifier: String, usageType: SymbolType, occ: Occurrence) {
       cAssert(
-        identifierNamesAreDifferent || invalidBreedVariableDeclaration(usageIdentifier, usageTypeName, occ, takenNames),
-        duplicateOf(usageTypeName, occ.identifier.name),
+        usageDoesNotClashWithOccurence(usageIdentifier, usageType, occ),
+        duplicateOf(usageType, occ.identifier.name),
         occ.identifier.token)
     }
 
-    // `linkBreedNames` goes unused.  Is this a bug? --JAB (10/16/14)
-    val (linkBreedNames, turtleBreedNames) = linkAndTurtleBreedNames(declarations)
-    val occurrences                        = occurrencesFromDeclarations(declarations)
+    val occurrences = occurrencesFromDeclarations(declarations)
 
-    for {
-      firstUsage  <- occurrences.iterator
-      secondUsage <- occurrences
-    } {
-
-      if (firstUsage.isGlobal && (secondUsage ne firstUsage))
-        checkForInconsistentIDs(firstUsage.identifier.name, firstUsage.typeOfDeclaration, secondUsage, turtleBreedNames)
-
-      checkNotTaskVariable(firstUsage.identifier)
+    for { usage <- occurrences.iterator } {
+      checkNotTaskVariable(usage.identifier)
 
       for ((identifier, typeName) <- usedNames) {
-        checkForInconsistentIDs(identifier, typeName, firstUsage, turtleBreedNames)
+        checkForInconsistentIDs(identifier, typeName, usage)
       }
-
     }
 
+    for {
+      firstUsage  <- occurrences.iterator if firstUsage.isGlobal
+      secondUsage <- occurrences if (secondUsage ne firstUsage)
+    } {
+      checkForInconsistentIDs(firstUsage.identifier.name, firstUsage.typeOfDeclaration, secondUsage)
+    }
   }
 
   private def occurrencesFromDeclarations(declarations: Seq[Declaration]): Seq[Occurrence] = {
-    declarations.flatMap {
-      case decl@Variables(kind, names) =>
-        names.map(Occurrence(decl, _, s"${kind.name} variable"))
-      case decl@Procedure(name, _, inputs, _) =>
-        Occurrence(decl, name, "procedure") +: inputs.map(Occurrence(decl, _, "", isGlobal = false))
-      case _ =>
-        Seq()
+    val os = declarations.foldLeft(Seq[Occurrence]()) {
+      case (occs, decl@Variables(kind, names)) =>
+        val vars = kind.name.toUpperCase match {
+          case "TURTLES-OWN" => names.map(Occurrence(decl, _, TurtleVariable))
+          case "PATCHES-OWN" => names.map(Occurrence(decl, _, PatchVariable))
+          case "LINKS-OWN"   => names.map(Occurrence(decl, _, LinkVariable))
+          case "GLOBALS" => names.map(Occurrence(decl, _, GlobalVariable))
+          case breedName =>
+            val name = breedName.stripSuffix("-OWN")
+            occs.find(_.identifier.name == name).map { occ =>
+              occ.typeOfDeclaration match {
+                case LinkBreed   => names.map(Occurrence(decl, _, LinkBreedVariable(name)))
+                case TurtleBreed => names.map(Occurrence(decl, _, BreedVariable(name)))
+                case _ => Seq()
+              }
+            }.getOrElse(Seq())
+        }
+        occs ++ vars
+      case (occs , decl@Procedure(name, _, inputs, _)) =>
+        (Occurrence(decl, name, ProcedureSymbol) +: inputs.map(Occurrence(decl, _, LocalVariable, isGlobal = false))) ++ occs
+      case (occs, decl@Breed(plural, Some(singular), _, _)) =>
+        val (symType, singularSymType) =
+          if (decl.isLinkBreed) (LinkBreed, LinkBreedSingular)
+          else (TurtleBreed, TurtleBreedSingular)
+        occs ++
+          Seq(Occurrence(decl, plural, symType), Occurrence(decl, singular, singularSymType))
+      case (occs, decl@Breed(plural, None, _, _)) =>
+        val symType = if (decl.isLinkBreed) LinkBreed else TurtleBreed
+        occs :+ Occurrence(decl, plural, symType)
+      case (occs, _) => occs
     }
+    os.sortBy(_.typeOfDeclaration)
   }
 
-  private def linkAndTurtleBreedNames(declarations: Seq[Declaration]): (Seq[String], Seq[String]) = {
-    val (linkBreeds, turtleBreeds) = declarations
-      .collect { case breed: Breed => (breed, s"${breed.plural.name}-OWN") }
-      .partition(_._1.isLinkBreed)
-    (linkBreeds.map(_._2), turtleBreeds.map(_._2))
+  private def usageDoesNotClashWithOccurence(usageIdentifier: String, usageType: SymbolType, occ: Occurrence): Boolean = {
+    val identifierNamesAreDifferent = ! usageIdentifier.equalsIgnoreCase(occ.identifier.name)
+
+    identifierNamesAreDifferent || (usageType match {
+      case _: SymbolType.Variable => compatibleVariableDeclaration(usageIdentifier, usageType, occ)
+      case _ => false
+    })
   }
 
-  private def invalidBreedVariableDeclaration(usageIdentifier: String, usageTypeName: String, occ: Occurrence, turtleBreedNames: Seq[String]): Boolean = {
-
-    def sameBreediness(names: String*) = names.forall(turtleBreedNames.contains)
-    def isReserved(names: String*)     = names.exists(Set("TURTLES", "LINKS"))
-
-    val isVariable = usageTypeName.endsWith("variable")
-    val ownerName  = usageTypeName.stripSuffix(" variable")
-
-    isVariable && {
-      occ.declaration match {
-        case Variables(Identifier(breedName, _), _)  =>
-          ownerName != breedName && sameBreediness(ownerName, breedName) && !isReserved(ownerName, breedName)
-        case _ =>
-          false
-      }
+  private def compatibleVariableDeclaration(usageIdentifier: String, usageType: SymbolType, occ: Occurrence): Boolean = {
+    (usageType, occ.typeOfDeclaration) match {
+      case (TurtleVariable, BreedVariable(_))   | (BreedVariable(_), TurtleVariable)   => true
+      case (LinkVariable, LinkBreedVariable(_)) | (LinkBreedVariable(_), LinkVariable) => true
+      case (LinkBreedVariable(_), LinkBreedVariable(_)) => true
+      case (BreedVariable(_), BreedVariable(_)) => true
+      case _ => false
     }
-
   }
 
   private def allPairs[T <: AnyRef](xs: Seq[T]): Iterator[(T, T)] =
@@ -134,12 +148,14 @@ object StructureChecker {
   private def redeclarationOf(kind: String) =
     s"Redeclaration of $kind"
 
-  private def duplicateOf(typeName: String, origName: String) =
+  private def duplicateOf(symbolType: SymbolType, origName: String) = {
+    val typeName = SymbolType.typeName(symbolType)
     s"There is already a $typeName called $origName"
+  }
 
   private def duplicateVariableIdentifier(ident: Identifier) =
     s"There is already a local variable called ${ident.name} here"
 
-  private case class Occurrence(declaration: Declaration, identifier: Identifier, typeOfDeclaration: String, isGlobal: Boolean = true)
+  private case class Occurrence(declaration: Declaration, identifier: Identifier, typeOfDeclaration: SymbolType, isGlobal: Boolean = true)
 
 }
