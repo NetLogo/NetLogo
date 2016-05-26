@@ -22,6 +22,8 @@
       notes</a> for more complete details on differences between versions.
     <ul>
       <li>
+        <a href="#v60">Changes for NetLogo 6.0</a>
+      <li>
         <a href="#v52">Changes for NetLogo 5.2</a>
       <li>
         <a href="#v50">Changes for NetLogo 5.0</a>
@@ -32,6 +34,39 @@
       <li>
         <a href="#v31">Changes for NetLogo 3.1</a>
       </ul>
+    <div id="v60">
+    <h2>
+      <a>Changes for NetLogo 6.0</a>
+    </h2>
+    <h3>
+      Improved Name Collision Detection
+    </h3>
+    <p>
+      In NetLogo 6.0, expanded error-checking in the NetLogo compiler
+      causes models which define
+      <code>undirected-link-breed [ undirected-links undirected-link ]</code> and/or
+      <code>directed-link-breed [ directed-links directed-link ]</code> to error
+      for redefining a primitive reporter
+      (either <code>is-directed-link?</code> or <code>is-undirected-link?</code>).
+      If your model doesn't use <code>is-directed-link?</code> or <code>is-undirected-link?</code> at all,
+      simply changing the breed names should resolve the error.
+    <p>
+      If you used either of the <code>is-&lt;directedness&gt;-link?</code> prim,
+      there are several ways you might modify your model to account for this change.
+      If your model has no other breeded links, consider removing the link breed and using the
+      built-in link primitives.
+      If your model has other breeded links, but only of different directedness,
+      simply changing the breed name (and all related primitive names) should resolve the problem.
+      Note that in this case <code>is-directed-link?</code> and/or <code>is-undirected-link?</code>
+      continue to behave the same as before.
+      If your model has other breeded links of the same directedness,
+      the change will vary depending on your model. The breed name(s) must
+      be changed, but you must decide whether you used
+      <code>is-directed-link?</code> / <code>is-undirected-link?</code>
+      to check link directedneess or to check that link breed membership.
+      If you used it to check link directedness leaving it as-is should keep the current behavior of the model.
+      Otherwise, it can simply be replaced by <code>is-&lt;breed&gt;?</code>.
+    </div>
     <div id="v52">
     <h2>
       <a>Changes for NetLogo 5.2</a>
