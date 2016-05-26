@@ -65,8 +65,8 @@ trait ModelTracker {
   @throws(classOf[IOException])
   def convertToNormal(): String = {
     val git = new File(ModelsLibrary.modelsRoot(), ".git")
-    if (!git.exists() || !git.isDirectory()) {
-      throw new IOException("no .git directory found")
+    if (!git.exists()) {
+      throw new IOException("The models folder is not under version control.")
     }
     _modelType = ModelType.Normal
     getModelPath
