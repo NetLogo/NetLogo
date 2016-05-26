@@ -10,7 +10,7 @@ package org.nlogo.parse
 
 import
   org.nlogo.core,
-    core.{ Token, StructureDeclarations },
+    core.{ BreedIdentifierHandler, StructureDeclarations, Token },
       StructureDeclarations.{ Breed, Declaration, Extensions, Identifier, Includes, Procedure, Variables },
     core.Fail._
 
@@ -61,10 +61,16 @@ object StructureChecker {
 
     val occurrences = occurrencesFromDeclarations(declarations)
 
+    for { usage@Occurrence(Breed(_, _, _, _), _, _, _) <- occurrences.iterator } {
+      checkForBreedPrimsDuplicatingBuiltIn(usage, usedNames)
+    }
+
+    val usedNamesAndBreedNames = usedNames ++ breedPrimitives(declarations)
+
     for { usage <- occurrences.iterator } {
       checkNotTaskVariable(usage.identifier)
 
-      for ((identifier, typeName) <- usedNames) {
+      for ((identifier, typeName) <- usedNamesAndBreedNames) {
         checkForInconsistentIDs(identifier, typeName, usage)
       }
     }
@@ -74,6 +80,32 @@ object StructureChecker {
       secondUsage <- occurrences if (secondUsage ne firstUsage)
     } {
       checkForInconsistentIDs(firstUsage.identifier.name, firstUsage.typeOfDeclaration, secondUsage)
+    }
+  }
+
+  def breedPrimitives(declarations: Seq[Declaration]): SymbolType.SymbolTable = {
+    import BreedIdentifierHandler._
+    import org.nlogo.core.StructureDeclarations.{ Breed => DeclBreed }
+
+    declarations.foldLeft(SymbolType.emptySymbolTable) {
+      case (table, breed: DeclBreed) =>
+        table.addSymbols(breedCommands(breed), SymbolType.BreedCommand)
+             .addSymbols(breedReporters(breed), SymbolType.BreedReporter)
+      case (table, _) => table
+    }
+  }
+
+  private def checkForBreedPrimsDuplicatingBuiltIn(usage: Occurrence, usedNames: SymbolTable): Unit = {
+    usage.declaration match {
+      case breed@Breed(_, _, _, _) =>
+        val allBreedPrims = BreedIdentifierHandler.breedCommands(breed) ++ BreedIdentifierHandler.breedReporters(breed)
+        val matchedPrimAndType =
+          BreedIdentifierHandler.breedCommands(breed).filter(c => usedNames.contains(c.toUpperCase)).map(i => (i, BreedCommand)) ++
+        BreedIdentifierHandler.breedReporters(breed).filter(r => usedNames.contains(r.toUpperCase)).map(i => (i, BreedReporter))
+        matchedPrimAndType.foreach {
+          case (p, st) => exception(breedOverridesBuiltIn(breed, usedNames(p.toUpperCase), p), usage.identifier.token)
+        }
+      case _ =>
     }
   }
 
@@ -138,6 +170,11 @@ object StructureChecker {
       if x1 ne x2
     }
     yield (x1, x2)
+
+  private def breedOverridesBuiltIn(breed: Breed, duplicatedType: SymbolType, duplicatedName: String): String = {
+    val typeName = SymbolType.typeName(duplicatedType)
+    s"Defining a breed [${breed.plural.name}${breed.singular.map(" " + _.name).getOrElse("")}] redefines $duplicatedName, a $typeName"
+  }
 
   private def checkNotTaskVariable(ident: Identifier) {
     cAssert(!ident.name.startsWith("?"),

@@ -57,9 +57,9 @@ object SymbolType {
     def relativeWeight(s: SymbolType): Int =
       s match {
         case PrimitiveCommand     => 0
-        case PrimitiveReporter    => 1
+        case PrimitiveReporter    => 0
         case BreedCommand         => 2
-        case BreedReporter        => 3
+        case BreedReporter        => 2
         case (TurtleBreed | TurtleBreedSingular) => 4
         case (LinkBreed | LinkBreedSingular) => 4
         case GlobalVariable       => 5

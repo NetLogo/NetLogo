@@ -106,19 +106,7 @@ object StructureParser {
         table.addSymbols(breed.owns, SymbolType.BreedVariable(breed.name))
     }
 
-    tableWithBreedsOwn ++ breedPrimitives(declarations)
-  }
-
-  private def breedPrimitives(declarations: Seq[StructureDeclarations.Declaration]): SymbolType.SymbolTable = {
-    import BreedIdentifierHandler._
-    import org.nlogo.core.StructureDeclarations.{ Breed => DeclBreed }
-
-    declarations.foldLeft(SymbolType.emptySymbolTable) {
-      case (table, breed: DeclBreed) =>
-        table.addSymbols(breedCommands(breed), SymbolType.BreedCommand)
-             .addSymbols(breedReporters(breed), SymbolType.BreedReporter)
-      case (table, _) => table
-    }
+    tableWithBreedsOwn ++ StructureChecker.breedPrimitives(declarations)
   }
 
   def findProcedurePositions(tokens: Seq[Token]): Map[String, ProcedureSyntax] = {
@@ -186,7 +174,7 @@ class StructureParser(
         StructureChecker.rejectDuplicateDeclarations(declarations)
         StructureChecker.rejectDuplicateNames(declarations,
           StructureParser.usedNames(
-            oldResults.program, oldResults.procedures, declarations))
+            oldResults.program, oldResults.procedures, Seq()))
         StructureConverter.convert(declarations, displayName,
           if (subprogram)
             StructureResults(program = oldResults.program)
