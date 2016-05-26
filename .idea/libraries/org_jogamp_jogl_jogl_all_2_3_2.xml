@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="org.jogamp.jogl:jogl-all:2.3.2" type="repository">
+    <properties maven-id="org.jogamp.jogl:jogl-all:2.3.2" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib_idea/jogl-all-2.3.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

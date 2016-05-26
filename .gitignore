@@ -41,7 +41,8 @@ tmp/
 /.ensime
 /.ensime_lucene/
 /build/
-/.idea
+/.idea/workspace.xml
+/.idea/tasks.xml
 /lib/
 /netlogo-gui/lib/
 /natives/
