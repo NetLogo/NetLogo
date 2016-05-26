@@ -26,12 +26,12 @@ trait FrontEndMain {
   def frontEnd(compilationOperand: CompilationOperand): FrontEndResults = {
     import compilationOperand.{ extensionManager, oldProcedures }
     val structureResults = StructureParser.parseSources(tokenizer, compilationOperand)
+    val globallyUsedNames =
+      StructureParser.usedNames(structureResults.program,
+        oldProcedures ++ structureResults.procedures)
     def parseProcedure(procedure: FrontEndProcedure): ProcedureDefinition = {
       val rawTokens = structureResults.procedureTokens(procedure.name)
-      val usedNames =
-        StructureParser.usedNames(structureResults.program,
-          oldProcedures ++ structureResults.procedures, Seq()) ++
-        procedure.args.map(_ -> SymbolType.LocalVariable)
+      val usedNames = globallyUsedNames ++ procedure.args.map(_ -> SymbolType.LocalVariable)
       // on LetNamer vs. Namer vs. LetScoper, see comments in LetScoper
       val namedTokens = {
         val letNamedTokens = LetNamer(rawTokens.iterator)

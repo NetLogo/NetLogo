@@ -28,16 +28,16 @@ case class Program private(
   linkBreeds: ListMap[String, Breed] = ListMap(),
   dialect: Dialect = NetLogoCore) {
 
-  def observerVars = dialect.agentVariables.implicitObserverVariableTypeMap
+  val observerVars = dialect.agentVariables.implicitObserverVariableTypeMap
 
-  def globals: Seq[String] =
+  val globals: Seq[String] =
     observerVars.keys.toSeq ++ interfaceGlobals.map(_.toUpperCase) ++ userGlobals
 
-  def turtlesOwn = turtleVars.keys.toSeq
+  val turtlesOwn = turtleVars.keys.toSeq
 
-  def patchesOwn = patchVars.keys.toSeq
+  val patchesOwn = patchVars.keys.toSeq
 
-  def linksOwn   = linkVars.keys.toSeq
+  val linksOwn   = linkVars.keys.toSeq
 
   // for testing/debugging
   def dump = {
