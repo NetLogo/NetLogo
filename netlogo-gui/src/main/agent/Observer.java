@@ -21,21 +21,27 @@ public strictfp class Observer
     resetPerspective();
   }
 
+  private String[] varNames = new String[0];
+
   public AgentKind kind() { return AgentKindJ.Observer(); }
 
   @Override
   Agent realloc(boolean forRecompile) {
     Object[] oldvars = variables;
+    String[] oldVarNames = varNames;
     Object[] newvars = new Object[world.getVariablesArraySize(this)];
     ValueConstraint[] newcons = new ValueConstraint[world.getVariablesArraySize(this)];
+    String[] newVarNames = new String[world.getVariablesArraySize(this)];
     for (int i = 0; newvars.length != i; i++) {
       newvars[i] = World.ZERO;
       newcons[i] = null;
+      newVarNames[i] = world.program().globals().apply(i);
     }
+
     if (oldvars != null && world.oldProgram() != null && forRecompile) {
-      for (int i = 0; i < oldvars.length && i < world.oldProgram().globals().size(); i++) {
-        String name = world.oldProgram().globals().apply(i);
-        int newpos = world.observerOwnsIndexOf(name);
+      scala.collection.Seq<String> globals = world.program().globals();
+      for (int i = 0; i < oldvars.length && i < oldVarNames.length; i++) {
+        int newpos = globals.indexOf(oldVarNames[i]);
         if (newpos != -1) {
           newvars[newpos] = oldvars[i];
           // We do not populate the value constraints again.  When the widgets get compiled
@@ -45,8 +51,10 @@ public strictfp class Observer
         }
       }
     }
+
     variables = newvars;
     variableConstraints = newcons;
+    varNames = newVarNames;
 
     return null;
   }
@@ -58,6 +66,14 @@ public strictfp class Observer
 
   public String variableName(int vn) {
     return world.observerOwnsNameAt(vn);
+  }
+
+  public int variableIndex(String name) {
+    for (int i = 0; i < varNames.length; i++) {
+      if (varNames[i].equals(name))
+        return i;
+    }
+    return -1;
   }
 
   @Override
