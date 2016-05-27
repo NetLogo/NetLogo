@@ -13,9 +13,6 @@ class AgentTypeCheckerTests extends FunSuite {
     coreDefs
   }
 
-  def testBoth(source: String, expected: String) {
-    testOne(source, expected)
-  }
   def testOne(source: String, expected: String) {
     val defs = compile(source)
     assertResult(expected)(
@@ -24,9 +21,6 @@ class AgentTypeCheckerTests extends FunSuite {
         .mkString(" "))
   }
   def testError(source: String, error: String) {
-    doTestError(source, error)
-  }
-  def doTestError(source: String, error: String) {
     val e = intercept[CompilerException] {
       compile(source)
     }
@@ -34,14 +28,14 @@ class AgentTypeCheckerTests extends FunSuite {
   }
 
   /// tests not involving blocks (easy)
-  test("easy1") { testBoth("to foo end", "FOO:OTPL") }
-  test("easy2") { testBoth("to foo fd 1 end", "FOO:-T--") }
-  test("easy3") { testBoth("to foo sprout 1 end", "FOO:--P-") }
-  test("easy4") { testBoth("to foo print link-length end", "FOO:---L") }
-  test("easy5") { testBoth("to foo crt 1 end", "FOO:O---") }
-  test("easy6") { testBoth("to foo set pcolor red end", "FOO:-TP-") }
-  test("recursive1") { testBoth("to foo set pcolor red foo end", "FOO:-TP-") }
-  test("recursive2") { testBoth("to foo set pcolor red foo2 end to foo2 set color blue foo end", "FOO:-T-- FOO2:-T--") }
+  test("easy1") { testOne("to foo end", "FOO:OTPL") }
+  test("easy2") { testOne("to foo fd 1 end", "FOO:-T--") }
+  test("easy3") { testOne("to foo sprout 1 end", "FOO:--P-") }
+  test("easy4") { testOne("to foo print link-length end", "FOO:---L") }
+  test("easy5") { testOne("to foo crt 1 end", "FOO:O---") }
+  test("easy6") { testOne("to foo set pcolor red end", "FOO:-TP-") }
+  test("recursive1") { testOne("to foo set pcolor red foo end", "FOO:-TP-") }
+  test("recursive2") { testOne("to foo set pcolor red foo2 end to foo2 set color blue foo end", "FOO:-T-- FOO2:-T--") }
   test("oneProcedure1") {
     testError("to foo fd 1 sprout 1 end",
       "You can't use SPROUT in a turtle context, because SPROUT is patch-only.")
@@ -106,7 +100,7 @@ class AgentTypeCheckerTests extends FunSuite {
       "You can't use CRT in a turtle context, because CRT is observer-only.")
   }
   test("crt1") {
-    testBoth("to foo crt 1 [ print who ] end", "FOO:O---") }
+    testOne("to foo crt 1 [ print who ] end", "FOO:O---") }
   test("crt2") {
     testError("to foo crt 1 [ sprout 1 ] end",
       "You can't use SPROUT in a turtle context, because SPROUT is patch-only.") }

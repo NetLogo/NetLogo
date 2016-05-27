@@ -22,15 +22,14 @@ AgentClassChecking3a
 AgentClassChecking3b
   O> let p patches print p with [size] => ERROR this code can't be run by a patch, only a turtle
 
-# zzz TODO - ST 2/5/09
-#GeneratorCompileTypeChecking1
-#  O> ask patches [ print pxcor or true ] => COMPILER ERROR OR expected input to be a TRUE/FALSE but got a number instead.
-#
-#GeneratorCompileTypeChecking2
-#  O> ask patches [ print not pxcor ] => COMPILER ERROR NOT expected input to be a TRUE/FALSE but got a number instead.
-#
-#GeneratorCompileTypeChecking3
-#  O> ask patches [ print word "moo" not pxcor ] => COMPILER ERROR NOT expected input to be a TRUE/FALSE but got a number instead.
-#
-#GeneratorCompileTypeChecking4
-#  O> ask turtles [ print (true and not heading) ] => COMPILER ERROR NOT expected input to be a TRUE/FALSE but got a number instead.
+CompileTypeChecking1
+  P> __ignore pxcor or true => COMPILER ERROR OR expected this input to be a TRUE/FALSE, but got a number instead
+
+CompileTypeChecking2
+  P> __ignore not pxcor => COMPILER ERROR NOT expected this input to be a TRUE/FALSE, but got a number instead
+
+CompileTypeChecking3
+  P> __ignore word "moo" not pxcor => COMPILER ERROR NOT expected this input to be a TRUE/FALSE, but got a number instead
+
+CompileTypeChecking4
+  T> __ignore not heading => COMPILER ERROR NOT expected this input to be a TRUE/FALSE, but got a number instead

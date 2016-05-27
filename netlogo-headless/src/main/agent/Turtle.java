@@ -415,7 +415,7 @@ public strictfp class Turtle
             color((LogoList) value, VAR_COLOR);
           } else {
             wrongTypeForVariable
-                (AgentVariables.getImplicitTurtleVariables().apply(vn), Double.class, value);
+                (AgentVariables.getImplicitTurtleVariables()[vn], Double.class, value);
           }
           break;
         case VAR_HEADING:
@@ -423,7 +423,7 @@ public strictfp class Turtle
             heading((Double) value);
           } else {
             wrongTypeForVariable
-                (AgentVariables.getImplicitTurtleVariables().apply(vn), Double.class, value);
+                (AgentVariables.getImplicitTurtleVariables()[vn], Double.class, value);
           }
           break;
         case VAR_XCOR:
@@ -431,7 +431,7 @@ public strictfp class Turtle
             xcor((Double) value);
           } else {
             wrongTypeForVariable
-                (AgentVariables.getImplicitTurtleVariables().apply(vn), Double.class, value);
+                (AgentVariables.getImplicitTurtleVariables()[vn], Double.class, value);
           }
           break;
         case VAR_YCOR:
@@ -439,7 +439,7 @@ public strictfp class Turtle
             ycor((Double) value);
           } else {
             wrongTypeForVariable
-                (AgentVariables.getImplicitTurtleVariables().apply(vn), Double.class, value);
+                (AgentVariables.getImplicitTurtleVariables()[vn], Double.class, value);
           }
           break;
         case VAR_SHAPE:
@@ -452,7 +452,7 @@ public strictfp class Turtle
             shape(newShape);
           } else {
             wrongTypeForVariable
-                (AgentVariables.getImplicitTurtleVariables().apply(vn), String.class, value);
+                (AgentVariables.getImplicitTurtleVariables()[vn], String.class, value);
           }
           break;
         case VAR_LABEL:
@@ -465,7 +465,7 @@ public strictfp class Turtle
             labelColor((LogoList) value, VAR_LABELCOLOR);
           } else {
             wrongTypeForVariable
-                (AgentVariables.getImplicitTurtleVariables().apply(vn), Double.class, value);
+                (AgentVariables.getImplicitTurtleVariables()[vn], Double.class, value);
           }
           break;
         case VAR_BREED:
@@ -477,7 +477,7 @@ public strictfp class Turtle
             setBreed(breed);
           } else {
             wrongTypeForVariable
-                (AgentVariables.getImplicitTurtleVariables().apply(vn), AgentSet.class, value);
+                (AgentVariables.getImplicitTurtleVariables()[vn], AgentSet.class, value);
           }
           break;
         case VAR_HIDDEN:
@@ -485,7 +485,7 @@ public strictfp class Turtle
             hidden(((Boolean) value).booleanValue());
           } else {
             wrongTypeForVariable
-                (AgentVariables.getImplicitTurtleVariables().apply(vn), Boolean.class, value);
+                (AgentVariables.getImplicitTurtleVariables()[vn], Boolean.class, value);
           }
           break;
         case VAR_SIZE:
@@ -493,7 +493,7 @@ public strictfp class Turtle
             size(((Double) value).doubleValue());
           } else {
             wrongTypeForVariable
-                (AgentVariables.getImplicitTurtleVariables().apply(vn),
+                (AgentVariables.getImplicitTurtleVariables()[vn],
                     Double.class, value);
           }
           break;
@@ -501,7 +501,7 @@ public strictfp class Turtle
           if (value instanceof String) {
             penMode((String) value);
           } else {
-            wrongTypeForVariable(AgentVariables.getImplicitTurtleVariables().apply(vn),
+            wrongTypeForVariable(AgentVariables.getImplicitTurtleVariables()[vn],
                 String.class, value);
           }
           break;
@@ -510,7 +510,7 @@ public strictfp class Turtle
           if (value instanceof Double) {
             penSize(((Double) value).doubleValue());
           } else {
-            wrongTypeForVariable(AgentVariables.getImplicitTurtleVariables().apply(vn),
+            wrongTypeForVariable(AgentVariables.getImplicitTurtleVariables()[vn],
                 Double.class, value);
           }
           break;

@@ -84,7 +84,7 @@ object StructureParser {
       structureParser.parse(tokens, oldResults)
     }
 
-  private[parse] def usedNames(program: Program, procedures: ProceduresMap, declarations: Seq[StructureDeclarations.Declaration]): SymbolType.SymbolTable = {
+  private[parse] def usedNames(program: Program, procedures: ProceduresMap): SymbolType.SymbolTable = {
     val symTable =
       SymbolType.emptySymbolTable
         .addSymbols(program.dialect.tokenMapper.allCommandNames, SymbolType.PrimitiveCommand)
@@ -99,14 +99,12 @@ object StructureParser {
         .addSymbols(program.linkBreeds.keys, SymbolType.LinkBreed)
         .addSymbols(procedures.keys, SymbolType.ProcedureSymbol)
 
-    val tableWithBreedsOwn = program.breeds.values.foldLeft(symTable) {
+    program.breeds.values.foldLeft(symTable) {
       case (table, breed) if breed.isLinkBreed =>
         table.addSymbols(breed.owns, SymbolType.LinkBreedVariable(breed.name))
       case (table, breed) =>
         table.addSymbols(breed.owns, SymbolType.BreedVariable(breed.name))
     }
-
-    tableWithBreedsOwn ++ StructureChecker.breedPrimitives(declarations)
   }
 
   def findProcedurePositions(tokens: Seq[Token]): Map[String, ProcedureSyntax] = {
@@ -174,7 +172,7 @@ class StructureParser(
         StructureChecker.rejectDuplicateDeclarations(declarations)
         StructureChecker.rejectDuplicateNames(declarations,
           StructureParser.usedNames(
-            oldResults.program, oldResults.procedures, Seq()))
+            oldResults.program, oldResults.procedures))
         StructureConverter.convert(declarations, displayName,
           if (subprogram)
             StructureResults(program = oldResults.program)

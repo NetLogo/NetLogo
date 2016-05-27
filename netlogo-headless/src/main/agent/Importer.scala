@@ -23,13 +23,13 @@ extends ImporterJ(_errorHandler, _world, _importerUser, _stringReader) {
   override def getImplicitVariables(kind: AgentKind): Array[String] =
     kind match {
       case AgentKind.Observer =>
-        AgentVariables.getImplicitObserverVariables.toArray
+        AgentVariables.implicitObserverVariables.toArray
       case AgentKind.Turtle =>
-        AgentVariables.getImplicitTurtleVariables.toArray
+        AgentVariables.implicitTurtleVariables.toArray
       case AgentKind.Patch =>
-        AgentVariables.getImplicitPatchVariables.toArray
+        AgentVariables.implicitPatchVariables.toArray
       case AgentKind.Link =>
-        AgentVariables.getImplicitLinkVariables.toArray
+        AgentVariables.implicitLinkVariables.toArray
     }
 
   def getSpecialObserverVariables: Array[String] = {
@@ -42,19 +42,19 @@ extends ImporterJ(_errorHandler, _world, _importerUser, _stringReader) {
   }
 
   def getSpecialTurtleVariables: Array[String] = {
-    val vars = AgentVariables.getImplicitTurtleVariables
+    val vars = AgentVariables.implicitTurtleVariables
     Array(vars(Turtle.VAR_WHO), vars(Turtle.VAR_BREED),
           vars(Turtle.VAR_LABEL), vars(Turtle.VAR_SHAPE))
   }
 
   def getSpecialPatchVariables: Array[String] = {
-    val vars = AgentVariables.getImplicitPatchVariables
+    val vars = AgentVariables.implicitPatchVariables
     Array(vars(Patch.VAR_PXCOR), vars(Patch.VAR_PYCOR),
           vars(Patch.VAR_PLABEL))
   }
 
   def getSpecialLinkVariables: Array[String] = {
-    val vars = AgentVariables.getImplicitLinkVariables
+    val vars = AgentVariables.implicitLinkVariables
     Array(vars(Link.VAR_BREED), vars(Link.VAR_LABEL),
           vars(Link.VAR_END1), vars(Link.VAR_END2))
   }

@@ -2,30 +2,88 @@
 
 package org.nlogo.api
 
+import org.nlogo.core.Syntax
+
 import AgentVariableNumbers._
+
+import scala.collection.immutable.ListMap
 
 object AgentVariables {
 
-  def getImplicitObserverVariables =
-    Array[String]()
+  private val colorType = Syntax.NumberType | Syntax.ListType
 
-  def getImplicitTurtleVariables(is3D: Boolean) =
+  def implicitObserverVariableTypeMap =
+    ListMap[String, Int]()
+
+  def implicitTurtleVariableTypeMap(is3D: Boolean) =
     if (is3D)
-      Array("WHO", "COLOR", "HEADING", "PITCH", "ROLL", "XCOR", "YCOR", "ZCOR", "SHAPE",
-            "LABEL", "LABEL-COLOR", "BREED", "HIDDEN?", "SIZE", "PEN-SIZE", "PEN-MODE")
+      ListMap("WHO"   -> Syntax.NumberType,
+        "COLOR"       -> colorType,
+        "HEADING"     -> Syntax.NumberType,
+        "PITCH"       -> Syntax.NumberType,
+        "ROLL"        -> Syntax.NumberType,
+        "XCOR"        -> Syntax.NumberType,
+        "YCOR"        -> Syntax.NumberType,
+        "ZCOR"        -> Syntax.NumberType,
+        "SHAPE"       -> Syntax.StringType,
+        "LABEL"       -> Syntax.WildcardType,
+        "LABEL-COLOR" -> colorType,
+        "BREED"       -> Syntax.AgentsetType,
+        "HIDDEN?"     -> Syntax.BooleanType,
+        "SIZE"        -> Syntax.NumberType,
+        "PEN-SIZE"    -> Syntax.NumberType,
+        "PEN-MODE"    -> Syntax.StringType)
     else
-      Array("WHO", "COLOR", "HEADING", "XCOR", "YCOR", "SHAPE", "LABEL", "LABEL-COLOR", "BREED",
-            "HIDDEN?", "SIZE", "PEN-SIZE", "PEN-MODE")
+      ListMap("WHO"   -> Syntax.NumberType,
+        "COLOR"       -> colorType,
+        "HEADING"     -> Syntax.NumberType,
+        "XCOR"        -> Syntax.NumberType,
+        "YCOR"        -> Syntax.NumberType,
+        "SHAPE"       -> Syntax.StringType,
+        "LABEL"       -> Syntax.WildcardType,
+        "LABEL-COLOR" -> colorType,
+        "BREED"       -> Syntax.AgentsetType,
+        "HIDDEN?"     -> Syntax.BooleanType,
+        "SIZE"        -> Syntax.NumberType,
+        "PEN-SIZE"    -> Syntax.NumberType,
+        "PEN-MODE"    -> Syntax.StringType)
 
-  def getImplicitPatchVariables(is3D: Boolean) =
+  def implicitPatchVariableTypeMap(is3D: Boolean) =
     if (is3D)
-      Array("PXCOR", "PYCOR", "PZCOR", "PCOLOR", "PLABEL", "PLABEL-COLOR")
+      ListMap("PXCOR"  -> Syntax.NumberType,
+        "PYCOR"        -> Syntax.NumberType,
+        "PZCOR"        -> Syntax.NumberType,
+        "PCOLOR"       -> colorType,
+        "PLABEL"       -> Syntax.WildcardType,
+        "PLABEL-COLOR" -> colorType)
     else
-      Array("PXCOR", "PYCOR", "PCOLOR", "PLABEL", "PLABEL-COLOR")
+      ListMap("PXCOR"  -> Syntax.NumberType,
+        "PYCOR"        -> Syntax.NumberType,
+        "PCOLOR"       -> colorType,
+        "PLABEL"       -> Syntax.WildcardType,
+        "PLABEL-COLOR" -> colorType)
 
-  def getImplicitLinkVariables =
-    Array("END1", "END2", "COLOR", "LABEL", "LABEL-COLOR", "HIDDEN?", "BREED",
-          "THICKNESS", "SHAPE", "TIE-MODE")
+  def implicitLinkVariableTypeMap =
+    ListMap("END1"  -> Syntax.TurtleType,
+      "END2"        -> Syntax.TurtleType,
+      "COLOR"       -> colorType,
+      "LABEL"       -> Syntax.WildcardType,
+      "LABEL-COLOR" -> colorType,
+      "HIDDEN?"     -> Syntax.BooleanType,
+      "BREED"       -> Syntax.LinksetType,
+      "THICKNESS"   -> Syntax.NumberType,
+      "SHAPE"       -> Syntax.StringType,
+      "TIE-MODE"    -> Syntax.StringType)
+
+  val implicitObserverVariables              = implicitObserverVariableTypeMap.keys.toSeq
+  def implicitTurtleVariables(is3D: Boolean) = implicitTurtleVariableTypeMap(is3D).keys.toSeq
+  def implicitPatchVariables(is3D: Boolean)  = implicitPatchVariableTypeMap(is3D).keys.toSeq
+  val implicitLinkVariables                  = implicitLinkVariableTypeMap.keys.toSeq
+
+  val getImplicitObserverVariables              = implicitObserverVariableTypeMap.keys.toSeq.toArray
+  def getImplicitTurtleVariables(is3D: Boolean) = implicitTurtleVariableTypeMap(is3D).keys.toSeq.toArray
+  def getImplicitPatchVariables(is3D: Boolean)  = implicitPatchVariableTypeMap(is3D).keys.toSeq.toArray
+  val getImplicitLinkVariables                  = implicitLinkVariableTypeMap.keys.toSeq.toArray
 
   private val doubleTurtleVariables2D = Set(
     VAR_WHO, VAR_HEADING, VAR_XCOR, VAR_YCOR, VAR_SIZE, VAR_PENSIZE)

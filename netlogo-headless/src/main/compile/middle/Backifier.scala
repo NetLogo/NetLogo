@@ -78,15 +78,15 @@ class Backifier(
       case core.prim._taskvariable(vn) =>
         new prim._taskvariable(vn)
 
-      case core.prim._observervariable(vn) =>
+      case core.prim._observervariable(vn, _) =>
         new prim._observervariable(vn)
-      case core.prim._turtlevariable(vn) =>
+      case core.prim._turtlevariable(vn, _) =>
         new prim._turtlevariable(vn)
-      case core.prim._linkvariable(vn) =>
+      case core.prim._linkvariable(vn, _) =>
         new prim._linkvariable(vn)
-      case core.prim._patchvariable(vn) =>
+      case core.prim._patchvariable(vn, _) =>
         new prim._patchvariable(vn)
-      case core.prim._turtleorlinkvariable(varName) =>
+      case core.prim._turtleorlinkvariable(varName, _) =>
         new prim._turtleorlinkvariable(varName)
 
       case core.prim._callreport(proc) =>

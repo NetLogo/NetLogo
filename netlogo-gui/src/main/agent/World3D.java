@@ -208,9 +208,9 @@ public final strictfp class World3D
     return emptyProgram.copy(
         interfaceGlobals,
         emptyProgram.userGlobals(),
-        emptyProgram.turtlesOwn(),
-        emptyProgram.patchesOwn(),
-        emptyProgram.linksOwn(),
+        emptyProgram.turtleVars(),
+        emptyProgram.patchVars(),
+        emptyProgram.linkVars(),
         emptyProgram.breeds(),
         emptyProgram.linkBreeds(),
         emptyProgram.dialect());

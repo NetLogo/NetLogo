@@ -2,6 +2,8 @@
 
 package org.nlogo.core
 
+import scala.collection.immutable.ListMap
+
 trait Dialect extends LowPriorityDialect {
   def is3D:           Boolean
   def agentVariables: AgentVariableSet
@@ -21,8 +23,9 @@ case object NetLogoCore extends Dialect {
 }
 
 trait AgentVariableSet {
-  def getImplicitObserverVariables: Seq[String]
-  def getImplicitTurtleVariables: Seq[String]
-  def getImplicitPatchVariables: Seq[String]
-  def getImplicitLinkVariables: Seq[String]
+  type SyntaxType = Int
+  def implicitObserverVariableTypeMap: ListMap[String, SyntaxType]
+  def implicitTurtleVariableTypeMap:   ListMap[String, SyntaxType]
+  def implicitPatchVariableTypeMap:    ListMap[String, SyntaxType]
+  def implicitLinkVariableTypeMap:     ListMap[String, SyntaxType]
 }

@@ -3,7 +3,7 @@
 package org.nlogo.parse
 
 import org.nlogo.core,
-  core.{ CompilerException, FrontEndProcedure, I18N, StructureResults, Program, Token}
+  core.{ CompilerException, FrontEndProcedure, I18N, StructureResults, Program, Syntax, Token}
 
 /// Stage #3 of StructureParser
 
@@ -52,11 +52,11 @@ object StructureConverter {
         case (program, Variables(Identifier("GLOBALS", _), identifiers)) =>
           program.copy(userGlobals = program.userGlobals ++ identifiers.map(_.name))
         case (program, Variables(Identifier("TURTLES-OWN", _), identifiers)) =>
-          program.copy(turtlesOwn = program.turtlesOwn ++ identifiers.map(_.name))
+          program.copy(turtleVars = program.turtleVars ++ identifiers.map(i => i.name -> Syntax.WildcardType))
         case (program, Variables(Identifier("PATCHES-OWN", _), identifiers)) =>
-          program.copy(patchesOwn = program.patchesOwn ++ identifiers.map(_.name))
+          program.copy(patchVars = program.patchVars ++ identifiers.map(i => i.name -> Syntax.WildcardType))
         case (program, Variables(Identifier("LINKS-OWN", _), identifiers)) =>
-          program.copy(linksOwn = program.linksOwn ++ identifiers.map(_.name))
+          program.copy(linkVars = program.linkVars ++ identifiers.map(i => i.name -> Syntax.WildcardType))
         case (program, Variables(Identifier(breedOwn, tok), identifiers)) =>
           updateBreedVariables(program, breedOwn.stripSuffix("-OWN"), identifiers.map(_.name), tok)
         case (program, _) =>

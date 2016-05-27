@@ -910,19 +910,19 @@ public abstract strictfp class ImporterJ
 
   String[] getEssentialTurtleVariables() {
     return new String[]
-    {AgentVariables.getImplicitTurtleVariables().apply(Turtle.VAR_WHO)};
+    {AgentVariables.getImplicitTurtleVariables()[Turtle.VAR_WHO]};
   }
 
   String[] getEssentialPatchVariables() {
-    Seq<String> vars = AgentVariables.getImplicitPatchVariables();
+    String[] vars = AgentVariables.getImplicitPatchVariables();
     return new String[]{
-      vars.apply(Patch.VAR_PXCOR), vars.apply(Patch.VAR_PYCOR)};
+      vars[Patch.VAR_PXCOR], vars[Patch.VAR_PYCOR]};
   }
 
   String[] getEssentialLinkVariables() {
-    Seq<String> vars = AgentVariables.getImplicitLinkVariables();
+    String[] vars = AgentVariables.getImplicitLinkVariables();
     return new String[]{
-      vars.apply(Link.VAR_END1), vars.apply(Link.VAR_END2)};
+      vars[Link.VAR_END1], vars[Link.VAR_END2]};
   }
 
   //if essentialHeaders is true, if this returns successfully, then
