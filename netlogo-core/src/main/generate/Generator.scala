@@ -241,6 +241,9 @@ class Generator(procedure: Procedure, profilingEnabled: Boolean) extends Generat
       result.args   = original.args
       result.token = original.token
       result.source = original.source
+      result.fullSource = original.fullSource
+      result.storedSourceStartPosition = original.storedSourceStartPosition
+      result.storedSourceEndPosition = original.storedSourceEndPosition
 
       // disassembly is stored as a thunk, so it's not generated unless used
       result.disassembly = new DisassemblyThunk(bytecode)

@@ -47,14 +47,14 @@ private object CompilerMain {
   def assembleProcedure(procdef: ProcedureDefinition, program: Program, sources: Map[String, String], compilationEnv: CompilationEnvironment): Procedure = {
     val optimizers: Seq[DefaultAstVisitor] = Seq(
       new ReferenceVisitor, // handle ReferenceType
+      new SourceTagger(sources),
       new ConstantFolder, // en.wikipedia.org/wiki/Constant_folding
       new SimpleOfVisitor, // convert _of(_*variable) => _*variableof
       new TaskVisitor, // handle _reportertask
       new LocalsVisitor, // convert _let/_repeat to _locals
       new SetVisitor,  // convert _set to specific setters
       new Optimizer(program.dialect.is3D),  // do various code-improving rewrites
-      new ArgumentStuffer, // fill args arrays in Commands & Reporters
-      new SourceTagger(sources)
+      new ArgumentStuffer // fill args arrays in Commands & Reporters
     )
     for (optimizer <- optimizers) {
       procdef.accept(optimizer)

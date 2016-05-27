@@ -1,15 +1,15 @@
 *ToString3
-  (word task [print ?]) => "(command task from: procedure __EVALUATOR)"
+  (word task [print ?]) => "(command task from: procedure __EVALUATOR: [print ?])"
 
 *ToString4
-  (word task [print 5]) => "(command task from: procedure __EVALUATOR)"
+  (word task [print 5]) => "(command task from: procedure __EVALUATOR: [print 5])"
 
 *ToString5
-  (word task [(foreach [1 2] [3 4] [ __ignore ? + ? ])]) => "(command task from: procedure __EVALUATOR)"
+  (word task [(foreach [1 2] [3 4] [ __ignore ? + ? ])]) => "(command task from: procedure __EVALUATOR: [foreach [1 2] [3 4] task [ __ignore ? + ? ]])"
 
 *ToString6
   to foo end
-  (word task [foo]) => "(command task from: procedure __EVALUATOR)"
+  (word task [foo]) => "(command task from: procedure __EVALUATOR: [foo])"
 
 CallTask
   globals [ glob1 ]
@@ -81,7 +81,7 @@ CloseOverProcedureVariable
   glob1 => 10
 
 *WrongTypeOfTask1
-  O> __ignore runresult task [__ignore 5] => ERROR RUNRESULT expected input to be a string or reporter task but got the command task (command task from: procedure __EVALUATOR) instead.
+  O> __ignore runresult task [__ignore 5] => ERROR RUNRESULT expected input to be a string or reporter task but got the command task (command task from: procedure __EVALUATOR: [__ignore 5]) instead.
 
 WrongTypeOfTask2
   O> run task [5] => ERROR RUN expected input to be a string or command task but got the reporter task (reporter task) instead.
@@ -125,14 +125,14 @@ command-and-reporter-tasks-close-over-same-procedure-input
 *command-task-stack-trace
   O> run task [print __boom] => STACKTRACE boom!\
   error while observer running __BOOM\
-    called by (command task from: procedure __EVALUATOR)\
+    called by (command task from: procedure __EVALUATOR: [print __boom])\
     called by procedure __EVALUATOR
 
 *command-task-in-command-task-stack-trace
   O> run task [run task [print __boom]] => STACKTRACE boom!\
   error while observer running __BOOM\
-    called by (command task from: procedure __EVALUATOR)\
-    called by (command task from: procedure __EVALUATOR)\
+    called by (command task from: procedure __EVALUATOR: [print __boom])\
+    called by (command task from: procedure __EVALUATOR: [run task [print __boom]])\
     called by procedure __EVALUATOR
 
 turtle-executing-command-task

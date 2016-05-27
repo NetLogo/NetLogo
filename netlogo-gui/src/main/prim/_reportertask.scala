@@ -10,8 +10,6 @@ class _reportertask extends Reporter {
 
   val formals = collection.mutable.ArrayBuffer[Let]()
 
-
-
   override def report(c: Context): AnyRef =
     ReporterTask(body = args(0),
                  formals = formals.reverse.dropWhile(_==null).reverse.toArray,
