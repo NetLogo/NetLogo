@@ -13,6 +13,7 @@ import org.nlogo.core.model.WidgetReader
 import org.nlogo.plot.PlotManager
 import org.nlogo.window.Events.{ LoadWidgetsEvent, OutputEvent }
 import org.nlogo.util.SysInfo
+import org.nlogo.widget.{ SwitchWidget, NoteWidget }
 
 import scala.collection.JavaConverters._
 import scala.collection.mutable.{ Map => MutableMap }
@@ -217,9 +218,12 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
     "Chooser"  -> (() => new ChooserWidget(compiler)),
     "InputBox" -> (() => new InputBoxWidget(
       editorFactory.newEditor(1, 20, false), editorFactory.newEditor(5, 20, true),
-      compiler, this)),
+      compiler, this)
+    ),
     "Button"   -> (() => new ButtonWidget(random.mainRNG)),
-    "Output"   -> (() => new OutputWidget()))
+    "Output"   -> (() => new OutputWidget()),
+    "Switch"   -> (() => new SwitchWidget()),
+    "TextBox"  -> (() => new NoteWidget()))
 
   def loadWidget(coreWidget: CoreWidget): Widget = {
     try {
