@@ -81,11 +81,11 @@ private class SourceTagger(sources: Map[String, String]) extends DefaultAstVisit
   }
 
   private def applicationSource(src: String, argSources: Seq[String], syntax: Syntax): String = {
-    if (syntax.left != 0)
-      argSources.head + " " + src + argSources.tail.mkString(" ", " ", "")
-    else if (argSources.length > 0)
-      src + argSources.mkString(" ", " ", "")
-    else
-      src + argSources.mkString(" ")
+    val syntaxComponents =
+      if (syntax.isInfix)
+        argSources.head +: (src +: argSources.tail)
+      else
+        src +: argSources
+    if (syntax.isVariadic) syntaxComponents.mkString("(", " ", ")") else syntaxComponents.mkString(" ")
   }
 }

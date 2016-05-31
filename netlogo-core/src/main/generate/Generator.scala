@@ -239,11 +239,7 @@ class Generator(procedure: Procedure, profilingEnabled: Boolean) extends Generat
       val result = loader.loadBytecodeClass(cName, bytecode).newInstance.asInstanceOf[A]
       setAllKeptFields(result)
       result.args   = original.args
-      result.token = original.token
-      result.source = original.source
-      result.fullSource = original.fullSource
-      result.storedSourceStartPosition = original.storedSourceStartPosition
-      result.storedSourceEndPosition = original.storedSourceEndPosition
+      result.copyMetadataFrom(original)
 
       // disassembly is stored as a thunk, so it's not generated unless used
       result.disassembly = new DisassemblyThunk(bytecode)
