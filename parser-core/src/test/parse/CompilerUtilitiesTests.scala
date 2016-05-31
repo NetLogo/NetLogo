@@ -32,7 +32,7 @@ class CompilerUtilitiesTests extends FunSuite {
 
   val reporters = Seq("3", "[]", "[", "((5))", "timer", "glob1", "bar")
   val nonReporters = Seq("", ";", " ; ", "ca", "((ca))", "foo",
-                         "5984783478344387487348734")
+                         "5984783478344387487348734", "notaprim")
 
   for(x <- reporters)
     test("is a reporter: '" + x + "'") {

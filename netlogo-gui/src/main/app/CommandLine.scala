@@ -142,7 +142,7 @@ class CommandLine(commandCenter: CommandCenterInterface,
       setText("")
       return
     }
-    if(workspace.isReporter(inner)) {
+    if (workspace.isReporter(inner)) {
       inner = "show " + inner
       setText(inner)
     }

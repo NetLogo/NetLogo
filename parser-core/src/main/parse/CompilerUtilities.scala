@@ -77,7 +77,9 @@ object CompilerUtilities extends CompilerUtilitiesInterface {
       case OpenBracket | Literal | Ident =>
         true
       case Reporter =>
-        ! (token.value.isInstanceOf[core.prim._letvariable] || token.value.isInstanceOf[core.prim._symbol])
+        ! (token.value.isInstanceOf[core.prim._letvariable] ||
+          token.value.isInstanceOf[core.prim._symbol] ||
+          token.value.isInstanceOf[core.prim._unknownidentifier])
       case _ =>
         false
     }
