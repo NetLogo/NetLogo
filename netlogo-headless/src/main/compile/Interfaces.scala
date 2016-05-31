@@ -16,10 +16,10 @@ trait FrontMiddleBridgeInterface {
 }
 
 trait MiddleEndInterface {
-  def middleEnd(defs: Seq[ProcedureDefinition], flags: nvm.CompilerFlags): Seq[ProcedureDefinition]
+  def middleEnd(defs: Seq[ProcedureDefinition], source: String, flags: nvm.CompilerFlags): Seq[ProcedureDefinition]
 }
 
 trait BackEndInterface {
-  def backEnd(defs: Seq[ProcedureDefinition], program: Program, source: String,
+  def backEnd(defs: Seq[ProcedureDefinition], program: Program,
       profilingEnabled: Boolean, flags: nvm.CompilerFlags): nvm.CompilerResults
 }

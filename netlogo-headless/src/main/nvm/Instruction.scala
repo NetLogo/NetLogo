@@ -30,7 +30,8 @@ abstract class Instruction extends InstructionJ with TokenHolder {
   /// the bytecode generator uses these to store text for dump() to print
 
   var chosenMethod: java.lang.reflect.Method = null
-  var source: String = null
+  var source: String = null     // contains the source of this instruction only
+  var fullSource: String = null // contains the source of this instruction and all arguments
   var disassembly = new Thunk[String]() {
     override def compute = ""
   }
@@ -53,6 +54,15 @@ abstract class Instruction extends InstructionJ with TokenHolder {
     this.workspace = sourceInstr.workspace
     this.world = sourceInstr.world
     token = sourceInstr.token
+  }
+
+  def copyMetadataFrom(srcInstr: Instruction): Unit = {
+    token = srcInstr.token
+    this.agentClassString = srcInstr.agentClassString
+    this.source = srcInstr.source
+    this.fullSource = srcInstr.fullSource
+    this.storedSourceStartPosition = srcInstr.storedSourceStartPosition
+    this.storedSourceEndPosition = srcInstr.storedSourceEndPosition
   }
 
   // overridden by GeneratedInstruction
