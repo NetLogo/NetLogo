@@ -56,4 +56,14 @@ trait ModelSectionTest[A, B <: ModelFormat[A, _], C] extends FunSuite {
       assert(deserializedVersion == redeserialized)
     }
   }
+
+  def testAltersObjectRepresentation(description: String, deserializedVersion: C, alteredVersion: C): Unit = {
+    test(s"changes object by $description") {
+      val s = subject
+      val m = attachComponent(deserializedVersion)
+      val serialized = s.serialize(m)
+      val redeserialized = modelComponent(s.deserialize(serialized)(new Model()))
+      assert(redeserialized == alteredVersion)
+    }
+  }
 }

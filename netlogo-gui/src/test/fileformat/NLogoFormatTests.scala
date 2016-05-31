@@ -62,6 +62,7 @@ class CodeComponentTest extends NLogoFormatTest[String] {
 
   testDeserializes("empty code section to empty string", Array[String](), "")
   testDeserializes("code section and performs auto conversion", Array[String]("to foo ask zs [fd 1] end"), "to foo ask zzs [fd 1] end")
+  testAltersObjectRepresentation("stripping trailing whitespace from code", "to foo end        ", "to foo end")
   testRoundTripsSerialForm("single line of code", Array[String]("breed [foos foo]"))
   testRoundTripsObjectForm("empty line code", "")
   testRoundTripsObjectForm("single line of code", "breed [ foos foo ]")

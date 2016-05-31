@@ -97,7 +97,7 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] {
   object CodeComponent extends ComponentSerialization[Array[String], A] {
     val componentName = "org.nlogo.modelsection.code"
     override def addDefault = ((m: Model) => m.copy(code = ""))
-    def serialize(m: Model): Array[String] = m.code.lines.toArray
+    def serialize(m: Model): Array[String] = m.code.lines.map(_.replaceAll("\\s*$", "")).toArray
     def validationErrors(m: Model): Option[String] = None
     override def deserialize(lines: Array[String]) = { (m: Model) =>
       m.copy(code = autoConvert(m.version)(lines.mkString("\n")))
