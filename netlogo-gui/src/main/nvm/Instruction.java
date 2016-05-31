@@ -190,7 +190,7 @@ public abstract strictfp class Instruction
     StringBuilder buf = new StringBuilder(toString());
     if (source != null) {
       buf.append(" \"");
-      buf.append(source);
+      buf.append(fullSource);
       buf.append('"');
     }
     if (chosenMethod != null) {

@@ -7,8 +7,8 @@ breeds
 link-breeds 
 
 procedure GO:[]{O---}:
-[0]_asm_procedurego_if_0 "if all? turtles [not infected?" boolean => void
-      _all "all? turtles [not infected?" AgentSet,Reporter => boolean
+[0]_asm_procedurego_if_0 "if all? turtles [ not infected? ] [ stop ]" boolean => void
+      _all "all? turtles [ not infected? ]" AgentSet,Reporter => boolean
         _turtles "turtles" => AgentSet
         _asm_procedurego_not_1 "not infected?" boolean => boolean
           _turtlevariable:INFECTED? "infected?" => Object
@@ -217,7 +217,7 @@ procedure GO:[]{O---}:
          L2
          FRAME SAME
           RETURN
-[2]_asm_procedurego_ask_3 "ask turtles" AgentSet => void
+[2]_asm_procedurego_ask_3 "ask turtles set virus-check-timer virus-check-timer + 1 [ if virus-check-timer >= virus-check-frequency [ set virus-check-timer 0 ] ]" AgentSet => void
       _turtles "turtles" => AgentSet
          L0
           ALOAD 0
@@ -359,7 +359,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L13
           RETURN
-[4]_asm_procedurego_if_5 "if virus-check-timer >= virus-check-frequency" boolean => void
+[4]_asm_procedurego_if_5 "if virus-check-timer >= virus-check-frequency [ set virus-check-timer 0 ]" boolean => void
       _greaterorequal "virus-check-timer >= virus-check-frequency" Object,Object => boolean
         _turtlevariable:VIRUS-CHECK-TIMER "virus-check-timer" => Object
         _observervariable:VIRUS-CHECK-FREQUENCY "virus-check-frequency" => Object
@@ -725,8 +725,8 @@ procedure BECOME-SUSCEPTIBLE:[]{-T--}:
           RETURN
 
 procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
-[0]_asm_proceduresetupspatiallyclusterednetwork_setprocedurevariable_0 Object => void
-      _div "average-node-degree * number-of-nodes) / 2" double,double => double
+[0]_asm_proceduresetupspatiallyclusterednetwork_setprocedurevariable_0 "let average-node-degree * number-of-nodes / 2" Object => void
+      _div "average-node-degree * number-of-nodes / 2" double,double => double
         _mult "average-node-degree * number-of-nodes" double,double => double
           _observervariable:AVERAGE-NODE-DEGREE "average-node-degree" => Object
           _observervariable:NUMBER-OF-NODES "number-of-nodes" => Object
@@ -841,7 +841,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[2]_asm_proceduresetupspatiallyclusterednetwork_ask_2 "ask one-of turtles" Object => void
+[2]_asm_proceduresetupspatiallyclusterednetwork_ask_2 "ask one-of turtles let min-one-of other turtles with [ not link-neighbor? myself ] [ distance myself ] [ if choice != nobody [ create-link-with [ choice ] ] ]" Object => void
       _oneof "one-of turtles" AgentSet => Object
         _turtles "turtles" => AgentSet
          L0
@@ -977,11 +977,9 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L9
           RETURN
-[3]_let "let choice (min-one-of (other turtles with [not link-neighbor? myself])
-                   [distance myself"
-      _minoneof "min-one-of (other turtles with [not link-neighbor? myself])
-                   [distance myself"
-        _asm_proceduresetupspatiallyclusterednetwork_otherwith_3 "other turtles with [not link-neighbor? myself" AgentSet,Reporter => AgentSet
+[3]_let "let min-one-of other turtles with [ not link-neighbor? myself ] [ distance myself ]"
+      _minoneof "min-one-of other turtles with [ not link-neighbor? myself ] [ distance myself ]"
+        _asm_proceduresetupspatiallyclusterednetwork_otherwith_3 "other turtles with [ not link-neighbor? myself ]" AgentSet,Reporter => AgentSet
           _turtles "turtles" => AgentSet
           _asm_proceduresetupspatiallyclusterednetwork_not_4 "not link-neighbor? myself" boolean => boolean
             _linkneighbor:null "link-neighbor? myself" Turtle => boolean
@@ -1281,7 +1279,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
               DLOAD 2
               INVOKESPECIAL java/lang/Double.<init> (D)V
               ARETURN
-[4]_asm_proceduresetupspatiallyclusterednetwork_if_6 "if choice != nobody" boolean => void
+[4]_asm_proceduresetupspatiallyclusterednetwork_if_6 "if choice != nobody [ create-link-with [ choice ] ]" boolean => void
       _notequal "choice != nobody" Object,Object => boolean
         _letvariable(CHOICE) "choice" => Object
         _nobody "nobody" => Nobody$
@@ -1320,7 +1318,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[5]_createlinkwith:null,+7 "create-link-with choice"
+[5]_createlinkwith:null,+7 "create-link-with [ choice ]"
       _asm_proceduresetupspatiallyclusterednetwork_letvariable_7 "choice" => Object
            L0
             ALOAD 1
@@ -1343,7 +1341,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[8]_asm_proceduresetupspatiallyclusterednetwork_while_10 "while [count links < num-links" boolean => void
+[8]_asm_proceduresetupspatiallyclusterednetwork_while_10 "while [ count links < num-links ] [ ask one-of turtles let min-one-of other turtles with [ not link-neighbor? myself ] [ distance myself ] [ if choice != nobody [ create-link-with [ choice ] ] ] ]" boolean => void
       _lessthan "count links < num-links" double,Object => boolean
         _count "count links" AgentSet => double
           _links "links" => AgentSet
@@ -1423,7 +1421,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L10
           RETURN
-[9]_asm_proceduresetupspatiallyclusterednetwork_repeatlocal_11 double => void
+[9]_asm_proceduresetupspatiallyclusterednetwork_repeatlocal_11 "repeat 10 [ layout-spring turtles links 0.3 world-width / sqrt number-of-nodes 1 ]" double => void
       _constdouble:10.0 "10" => double
          L0
           LDC 10.0
@@ -1445,7 +1443,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[10]_layoutspring "layout-spring turtles links 0.3 (world-width / (sqrt number-of-nodes)) 1"
+[10]_layoutspring "layout-spring turtles links 0.3 world-width / sqrt number-of-nodes 1"
       _asm_proceduresetupspatiallyclusterednetwork_turtles_12 "turtles" => AgentSet
            L0
             ALOAD 0
@@ -1466,7 +1464,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
             GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_constdouble_14.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-      _asm_proceduresetupspatiallyclusterednetwork_div_15 "world-width / (sqrt number-of-nodes" double,double => double
+      _asm_proceduresetupspatiallyclusterednetwork_div_15 "world-width / sqrt number-of-nodes" double,double => double
         _worldwidth "world-width" => double
         _sqrt "sqrt number-of-nodes" double => double
           _observervariable:NUMBER-OF-NODES "number-of-nodes" => Object
@@ -1674,7 +1672,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedurebenchmark_repeatlocal_2 double => void
+[3]_asm_procedurebenchmark_repeatlocal_2 "repeat 2000 [ go ]" double => void
       _constdouble:2000.0 "2000" => double
          L0
           LDC 2000.0
@@ -1798,8 +1796,8 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           RETURN
 
 procedure DO-VIRUS-CHECKS:[]{OTPL}:
-[0]_asm_proceduredoviruschecks_ask_0 "ask turtles with [infected? and virus-check-timer = 0" AgentSet => void
-      _with "turtles with [infected? and virus-check-timer = 0" AgentSet,Reporter => AgentSet
+[0]_asm_proceduredoviruschecks_ask_0 "ask turtles with [ infected? and virus-check-timer = 0 ] [ if random 100 < recovery-chance [ ifelse random 100 < gain-resistance-chance [ become-resistant ] [ become-susceptible ] ] ]" AgentSet => void
+      _with "turtles with [ infected? and virus-check-timer = 0 ]" AgentSet,Reporter => AgentSet
         _turtles "turtles" => AgentSet
         _asm_proceduredoviruschecks_and_1 "infected? and virus-check-timer = 0"
           _turtlevariable:INFECTED? "infected?" => Object
@@ -2045,9 +2043,9 @@ procedure DO-VIRUS-CHECKS:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L9
           RETURN
-[1]_asm_proceduredoviruschecks_if_2 "if random 100 < recovery-chance" boolean => void
+[1]_asm_proceduredoviruschecks_if_2 "if random 100 < recovery-chance [ ifelse random 100 < gain-resistance-chance [ become-resistant ] [ become-susceptible ] ]" boolean => void
       _lessthan "random 100 < recovery-chance" double,Object => boolean
-        _randomconst:100 "random" => double
+        _randomconst:100 "random 100" => double
         _observervariable:RECOVERY-CHANCE "recovery-chance" => Object
          L0
           ALOAD 1
@@ -2121,9 +2119,9 @@ procedure DO-VIRUS-CHECKS:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L9
           RETURN
-[2]_asm_proceduredoviruschecks_ifelse_3 "ifelse random 100 < gain-resistance-chance" boolean => void
+[2]_asm_proceduredoviruschecks_ifelse_3 "ifelse random 100 < gain-resistance-chance [ become-resistant ] [ become-susceptible ]" boolean => void
       _lessthan "random 100 < gain-resistance-chance" double,Object => boolean
-        _randomconst:100 "random" => double
+        _randomconst:100 "random 100" => double
         _observervariable:GAIN-RESISTANCE-CHANCE "gain-resistance-chance" => Object
          L0
           ALOAD 1
@@ -2360,7 +2358,7 @@ procedure BECOME-RESISTANT:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[3]_asm_procedurebecomeresistant_ask_3 "ask my-links" Object => void
+[3]_asm_procedurebecomeresistant_ask_3 "ask my-links [ set color gray - 2 ]" Object => void
       _mylinks:null "my-links"
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurebecomeresistant_ask_3.keptinstr2 : Lorg/nlogo/prim/_mylinks;
@@ -2475,7 +2473,7 @@ procedure BECOME-RESISTANT:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[4]_asm_procedurebecomeresistant_setturtleorlinkvariable_4 "set" Object => void
+[4]_asm_procedurebecomeresistant_setturtleorlinkvariable_4 "set color gray - 2" Object => void
       _constdouble:3.0 "gray - 2" => Double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -2565,7 +2563,7 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[4]_asm_proceduresetup_ask_2 "ask n-of initial-outbreak-size turtles" Object => void
+[4]_asm_proceduresetup_ask_2 "ask n-of initial-outbreak-size turtles [ become-infected ]" Object => void
       _nof "n-of initial-outbreak-size turtles"
         _asm_proceduresetup_observervariable_3 "initial-outbreak-size" => Object
              L0
@@ -2720,7 +2718,7 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[7]_asm_proceduresetup_ask_7 "ask links" AgentSet => void
+[7]_asm_proceduresetup_ask_7 "ask links [ set color white ]" AgentSet => void
       _links "links" => AgentSet
          L0
           ALOAD 0
@@ -2855,10 +2853,10 @@ procedure UPDATE-PLOT:[]{OTPL}:
             LDC "susceptible"
            L1
             ARETURN
-[2]_plot "plot (count turtles with [not infected? and not resistant?]) / (count turtles) * 100"
-      _asm_procedureupdateplot_mult_2 "count turtles with [not infected? and not resistant?]) / (count turtles) * 100" double,double => double
-        _div "count turtles with [not infected? and not resistant?]) / (count turtles" double,double => double
-          _countwith "count turtles with [not infected? and not resistant?" AgentSet,Reporter => double
+[2]_plot "plot count turtles with [ not infected? and not resistant? ] / count turtles * 100"
+      _asm_procedureupdateplot_mult_2 "count turtles with [ not infected? and not resistant? ] / count turtles * 100" double,double => double
+        _div "count turtles with [ not infected? and not resistant? ] / count turtles" double,double => double
+          _countwith "count turtles with [ not infected? and not resistant? ]" AgentSet,Reporter => double
             _turtles "turtles" => AgentSet
             _asm_procedureupdateplot_and_3 "not infected? and not resistant?"
               _not "not infected?" boolean => boolean
@@ -3122,10 +3120,10 @@ procedure UPDATE-PLOT:[]{OTPL}:
             LDC "infected"
            L1
             ARETURN
-[4]_plot "plot (count turtles with [infected?]) / (count turtles) * 100"
-      _asm_procedureupdateplot_mult_5 "count turtles with [infected?]) / (count turtles) * 100" double,double => double
-        _div "count turtles with [infected?]) / (count turtles" double,double => double
-          _countwith "count turtles with [infected?" AgentSet,Reporter => double
+[4]_plot "plot count turtles with [ infected? ] / count turtles * 100"
+      _asm_procedureupdateplot_mult_5 "count turtles with [ infected? ] / count turtles * 100" double,double => double
+        _div "count turtles with [ infected? ] / count turtles" double,double => double
+          _countwith "count turtles with [ infected? ]" AgentSet,Reporter => double
             _turtles "turtles" => AgentSet
             _asm_procedureupdateplot_turtlevariable_6 "infected?" => Object
                   TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -3287,10 +3285,10 @@ procedure UPDATE-PLOT:[]{OTPL}:
             LDC "resistant"
            L1
             ARETURN
-[6]_plot "plot (count turtles with [resistant?]) / (count turtles) * 100"
-      _asm_procedureupdateplot_mult_8 "count turtles with [resistant?]) / (count turtles) * 100" double,double => double
-        _div "count turtles with [resistant?]) / (count turtles" double,double => double
-          _countwith "count turtles with [resistant?" AgentSet,Reporter => double
+[6]_plot "plot count turtles with [ resistant? ] / count turtles * 100"
+      _asm_procedureupdateplot_mult_8 "count turtles with [ resistant? ] / count turtles * 100" double,double => double
+        _div "count turtles with [ resistant? ] / count turtles" double,double => double
+          _countwith "count turtles with [ resistant? ]" AgentSet,Reporter => double
             _turtles "turtles" => AgentSet
             _asm_procedureupdateplot_turtlevariable_9 "resistant?" => Object
                   TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -3457,8 +3455,8 @@ procedure UPDATE-PLOT:[]{OTPL}:
           RETURN
 
 procedure SPREAD-VIRUS:[]{OTPL}:
-[0]_asm_procedurespreadvirus_ask_0 "ask turtles with [infected?" AgentSet => void
-      _with "turtles with [infected?" AgentSet,Reporter => AgentSet
+[0]_asm_procedurespreadvirus_ask_0 "ask turtles with [ infected? ] [ ask link-neighbors with [ not resistant? ] [ if random-float 100 < virus-spread-chance [ become-infected ] ] ]" AgentSet => void
+      _with "turtles with [ infected? ]" AgentSet,Reporter => AgentSet
         _turtles "turtles" => AgentSet
         _asm_procedurespreadvirus_turtlevariable_1 "infected?" => Object
               TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -3623,8 +3621,8 @@ procedure SPREAD-VIRUS:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L9
           RETURN
-[1]_asm_procedurespreadvirus_ask_2 "ask link-neighbors with [not resistant?" AgentSet => void
-      _with "link-neighbors with [not resistant?" AgentSet,Reporter => AgentSet
+[1]_asm_procedurespreadvirus_ask_2 "ask link-neighbors with [ not resistant? ] [ if random-float 100 < virus-spread-chance [ become-infected ] ]" AgentSet => void
+      _with "link-neighbors with [ not resistant? ]" AgentSet,Reporter => AgentSet
         _linkneighbors:null "link-neighbors" => AgentSet
         _asm_procedurespreadvirus_not_3 "not resistant?" boolean => boolean
           _turtlevariable:RESISTANT? "resistant?" => Object
@@ -3855,7 +3853,7 @@ procedure SPREAD-VIRUS:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L11
           RETURN
-[2]_asm_procedurespreadvirus_if_4 "if random-float 100 < virus-spread-chance" boolean => void
+[2]_asm_procedurespreadvirus_if_4 "if random-float 100 < virus-spread-chance [ become-infected ]" boolean => void
       _lessthan "random-float 100 < virus-spread-chance" double,Object => boolean
         _randomfloat "random-float 100" double => double
           _constdouble:100.0 "100" => double
@@ -3993,7 +3991,7 @@ procedure SETUP-NODES:[]{O---}:
             LDC "circle"
            L1
             ARETURN
-[1]_createturtles:,+6 "crt number-of-nodes"
+[1]_createturtles:,+6 "crt number-of-nodes setxy random-xcor * 0.95 random-ycor * 0.95 become-susceptible [ set virus-check-timer random virus-check-frequency ]"
       _asm_proceduresetupnodes_observervariable_2 "number-of-nodes" => Object
            L0
             ALOAD 1
@@ -4002,7 +4000,7 @@ procedure SETUP-NODES:[]{O---}:
             INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
            L1
             ARETURN
-[2]_asm_proceduresetupnodes_setxy_3 "setxy (random-xcor * 0.95) (random-ycor * 0.95" double,double => void
+[2]_asm_proceduresetupnodes_setxy_3 "setxy random-xcor * 0.95 random-ycor * 0.95" double,double => void
       _mult "random-xcor * 0.95" double,double => double
         _randomxcor "random-xcor" => double
         _constdouble:0.95 "0.95" => double

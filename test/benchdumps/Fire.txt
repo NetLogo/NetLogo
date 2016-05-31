@@ -7,9 +7,9 @@ breeds
 link-breeds 
 
 procedure GO:[]{O---}:
-[0]_asm_procedurego_if_0 "if (count patches with [burning?]) =" boolean => void
-      _not "patches with [burning?]) =" boolean => boolean
-        _anywith "patches with [burning?]) =" AgentSet,Reporter => boolean
+[0]_asm_procedurego_if_0 "if count patches with [ burning? ] = 0 [ stop ]" boolean => void
+      _not "count patches with [ burning? ] = 0" boolean => boolean
+        _anywith "count patches with [ burning? ] = 0" AgentSet,Reporter => boolean
           _patches "patches" => AgentSet
           _asm_procedurego_callreport_1 "burning?"
                L0
@@ -186,7 +186,7 @@ procedure GO:[]{O---}:
          L2
          FRAME SAME
           RETURN
-[2]_asm_procedurego_ask_3 "ask patches" AgentSet => void
+[2]_asm_procedurego_ask_3 "ask patches [ if pcolor = green [ set counts sum [ fire ] of neighbors4 ] ]" AgentSet => void
       _patches "patches" => AgentSet
          L0
           ALOAD 0
@@ -239,7 +239,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[3]_asm_procedurego_if_4 "if pcolor = green" boolean => void
+[3]_asm_procedurego_if_4 "if pcolor = green [ set counts sum [ fire ] of neighbors4 ]" boolean => void
       _equal "pcolor = green" Object,double => boolean
         _patchvariable:PCOLOR "pcolor" => Object
         _constdouble:55.0 "green" => double
@@ -298,8 +298,8 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L9
           RETURN
-[4]_asm_procedurego_setpatchvariable_5 "set counts (sum" Object => void
-      _nsum4:FIRE "sum" => double
+[4]_asm_procedurego_setpatchvariable_5 "set counts sum [ fire ] of neighbors4" Object => void
+      _nsum4:FIRE "sum [ fire ] of neighbors4" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 1
@@ -416,7 +416,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[6]_asm_procedurego_ask_7 "ask patches" AgentSet => void
+[6]_asm_procedurego_ask_7 "ask patches [ ifelse pcolor = green [ if counts > 0 set fire 1 set pcolor red [ set burned-trees burned-trees + 1 ] ] [ if burning? [ set pcolor pcolor - 0.3 ] ] ]" AgentSet => void
       _patches "patches" => AgentSet
          L0
           ALOAD 0
@@ -469,7 +469,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[7]_asm_procedurego_ifelse_8 "ifelse pcolor = green" boolean => void
+[7]_asm_procedurego_ifelse_8 "ifelse pcolor = green [ if counts > 0 set fire 1 set pcolor red [ set burned-trees burned-trees + 1 ] ] [ if burning? [ set pcolor pcolor - 0.3 ] ]" boolean => void
       _equal "pcolor = green" Object,double => boolean
         _patchvariable:PCOLOR "pcolor" => Object
         _constdouble:55.0 "green" => double
@@ -528,7 +528,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L9
           RETURN
-[8]_asm_procedurego_if_9 "if counts > 0" boolean => void
+[8]_asm_procedurego_if_9 "if counts > 0 set fire 1 set pcolor red [ set burned-trees burned-trees + 1 ]" boolean => void
       _greaterthan "counts > 0" Object,double => boolean
         _patchvariable:COUNTS "counts" => Object
         _constdouble:0.0 "0" => double
@@ -763,7 +763,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[13]_asm_procedurego_if_14 "if burning?" boolean => void
+[13]_asm_procedurego_if_14 "if burning? [ set pcolor pcolor - 0.3 ]" boolean => void
       _callreport:BURNING? "burning?"
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
@@ -999,7 +999,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedurebenchmark_repeatlocal_2 double => void
+[3]_asm_procedurebenchmark_repeatlocal_2 "repeat 100 [ go ]" double => void
       _constdouble:100.0 "100" => double
          L0
           LDC 100.0
@@ -1123,12 +1123,12 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           RETURN
 
 reporter procedure BURNING?:[]{-TP-}:
-[0]_asm_procedureburning_report_0 "report (pcolor > (red - 4)) and (pcolor <" Object => void
-      _and "pcolor > (red - 4)) and (pcolor <"
-        _greaterthan "pcolor >" Object,double => boolean
+[0]_asm_procedureburning_report_0 "report pcolor > red - 4 and pcolor < red + 1" Object => void
+      _and "pcolor > red - 4 and pcolor < red + 1"
+        _greaterthan "pcolor > red - 4" Object,double => boolean
           _patchvariable:PCOLOR "pcolor" => Object
           _constdouble:11.0 "red - 4" => double
-        _lessthan "pcolor <" Object,double => boolean
+        _lessthan "pcolor < red + 1" Object,double => boolean
           _patchvariable:PCOLOR "pcolor" => Object
           _constdouble:16.0 "red + 1" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -1361,7 +1361,7 @@ reporter procedure BURNING?:[]{-TP-}:
           ATHROW
 
 reporter procedure PERCENT-BURNED:[]{OTPL}:
-[0]_asm_procedurepercentburned_ifelse_0 "ifelse initial-trees > 0" boolean => void
+[0]_asm_procedurepercentburned_ifelse_0 "ifelse initial-trees > 0 [ report burned-trees / initial-trees * 100 ] [ report 0 ]" boolean => void
       _greaterthan "initial-trees > 0" Object,double => boolean
         _observervariable:INITIAL-TREES "initial-trees" => Object
         _constdouble:0.0 "0" => double
@@ -1432,8 +1432,8 @@ reporter procedure PERCENT-BURNED:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L9
           RETURN
-[1]_asm_procedurepercentburned_report_1 "report (burned-trees / initial-trees) * 100" Object => void
-      _mult "burned-trees / initial-trees) * 100" double,double => double
+[1]_asm_procedurepercentburned_report_1 "report burned-trees / initial-trees * 100" Object => void
+      _mult "burned-trees / initial-trees * 100" double,double => double
         _div "burned-trees / initial-trees" double,double => double
           _observervariable:BURNED-TREES "burned-trees" => Object
           _observervariable:INITIAL-TREES "initial-trees" => Object
@@ -1686,7 +1686,7 @@ reporter procedure PERCENT-BURNED:[]{OTPL}:
 procedure SETUP:[]{O---}:
 [0]_clearall "ca"
 [1]_resetticks "reset-ticks"
-[2]_asm_proceduresetup_ask_0 "ask patches" AgentSet => void
+[2]_asm_proceduresetup_ask_0 "ask patches set fire 0 if pxcor > 1 + min-pxcor [ if random 100 < density [ set pcolor green ] ] [ if pxcor = 1 + min-pycor set pcolor red [ set fire 1 ] ]" AgentSet => void
       _patches "patches" => AgentSet
          L0
           ALOAD 0
@@ -1773,7 +1773,7 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[4]_asm_proceduresetup_if_2 "if pxcor > 1 + min-pxcor" boolean => void
+[4]_asm_proceduresetup_if_2 "if pxcor > 1 + min-pxcor [ if random 100 < density [ set pcolor green ] ]" boolean => void
       _greaterthan "pxcor > 1 + min-pxcor" double,double => boolean
         _patchvariabledouble:PXCOR "pxcor" => double
         _plus "1 + min-pxcor" double,double => double
@@ -1848,9 +1848,9 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L11
           RETURN
-[5]_asm_proceduresetup_if_3 "if (random 100) < density" boolean => void
-      _lessthan "random 100) < density" double,Object => boolean
-        _randomconst:100 "random" => double
+[5]_asm_proceduresetup_if_3 "if random 100 < density [ set pcolor green ]" boolean => void
+      _lessthan "random 100 < density" double,Object => boolean
+        _randomconst:100 "random 100" => double
         _observervariable:DENSITY "density" => Object
          L0
           ALOAD 1
@@ -1958,7 +1958,7 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[7]_asm_proceduresetup_if_5 "if pxcor = 1 + min-pycor" boolean => void
+[7]_asm_proceduresetup_if_5 "if pxcor = 1 + min-pycor set pcolor red [ set fire 1 ]" boolean => void
       _equal "pxcor = 1 + min-pycor" double,double => boolean
         _patchvariabledouble:PXCOR "pxcor" => double
         _plus "1 + min-pycor" double,double => double
@@ -2108,8 +2108,8 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[11]_asm_proceduresetup_setobservervariable_9 "set initial-trees count patches with [pcolor = green" Object => void
-      _countwith "count patches with [pcolor = green" AgentSet,Reporter => double
+[11]_asm_proceduresetup_setobservervariable_9 "set initial-trees count patches with [ pcolor = green ]" Object => void
+      _countwith "count patches with [ pcolor = green ]" AgentSet,Reporter => double
         _patches "patches" => AgentSet
         _asm_proceduresetup_equal_10 "pcolor = green" Object,double => boolean
           _patchvariable:PCOLOR "pcolor" => Object

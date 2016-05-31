@@ -75,7 +75,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedurebenchmark_repeatlocal_2 double => void
+[3]_asm_procedurebenchmark_repeatlocal_2 "repeat 20 [ go ]" double => void
       _constdouble:20.0 "20" => double
          L0
           LDC 20.0
@@ -201,7 +201,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
 procedure SETUP:[]{O---}:
 [0]_clearall "ca"
 [1]_resetticks "reset-ticks"
-[2]_asm_proceduresetup_ask_0 "ask patches" AgentSet => void
+[2]_asm_proceduresetup_ask_0 "ask patches set state random n + 1 [ set pcolor scale-color red state 0 n ]" AgentSet => void
       _patches "patches" => AgentSet
          L0
           ALOAD 0
@@ -254,8 +254,8 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[3]_asm_proceduresetup_setpatchvariable_1 "set state random (n + 1" Object => void
-      _random "random (n + 1" double => double
+[3]_asm_proceduresetup_setpatchvariable_1 "set state random n + 1" Object => void
+      _random "random n + 1" double => double
         _plus "n + 1" double,double => double
           _observervariable:N "n" => Object
           _constdouble:1.0 "1" => double
@@ -622,7 +622,7 @@ procedure SETUP:[]{O---}:
           RETURN
 
 procedure GO:[]{O---}:
-[0]_asm_procedurego_ask_0 "ask patches" AgentSet => void
+[0]_asm_procedurego_ask_0 "ask patches [ find-new-state ]" AgentSet => void
       _patches "patches" => AgentSet
          L0
           ALOAD 0
@@ -700,7 +700,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[3]_asm_procedurego_ask_3 "ask patches" AgentSet => void
+[3]_asm_procedurego_ask_3 "ask patches set state new-state [ set pcolor scale-color red state 0 n ]" AgentSet => void
       _patches "patches" => AgentSet
          L0
           ALOAD 0
@@ -1041,7 +1041,7 @@ procedure GO:[]{O---}:
           RETURN
 
 procedure FIND-NEW-STATE:[A B S]{-TP-}:
-[0]_asm_procedurefindnewstate_ifelse_0 "ifelse state = n" boolean => void
+[0]_asm_procedurefindnewstate_ifelse_0 "ifelse state = n [ set new-state 0 ] let count neighbors with [ state > 0 and state < n ] let count neighbors with [ state = n ] ifelse state = 0 [ set new-state int a / k1 + int b / k2 ] let state + sum [ state ] of neighbors [ set new-state int s / a + b + 1 + g ] [ if new-state > n [ set new-state n ] ]" boolean => void
       _equal "state = n" Object,Object => boolean
         _patchvariable:STATE "state" => Object
         _observervariable:N "n" => Object
@@ -1132,8 +1132,8 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedurefindnewstate_setprocedurevariable_3 Object => void
-      _countwith "count neighbors with [state > 0 and state < n" AgentSet,Reporter => double
+[3]_asm_procedurefindnewstate_setprocedurevariable_3 "let count neighbors with [ state > 0 and state < n ]" Object => void
+      _countwith "count neighbors with [ state > 0 and state < n ]" AgentSet,Reporter => double
         _neighbors "neighbors" => AgentSet
         _asm_procedurefindnewstate_and_4 "state > 0 and state < n"
           _greaterthan "state > 0" Object,double => boolean
@@ -1465,8 +1465,8 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L8
           RETURN
-[4]_asm_procedurefindnewstate_setprocedurevariable_5 Object => void
-      _countwith "count neighbors with [state = n" AgentSet,Reporter => double
+[4]_asm_procedurefindnewstate_setprocedurevariable_5 "let count neighbors with [ state = n ]" Object => void
+      _countwith "count neighbors with [ state = n ]" AgentSet,Reporter => double
         _neighbors "neighbors" => AgentSet
         _asm_procedurefindnewstate_equal_6 "state = n" Object,Object => boolean
           _patchvariable:STATE "state" => Object
@@ -1623,7 +1623,7 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L8
           RETURN
-[5]_asm_procedurefindnewstate_ifelse_7 "ifelse state = 0" boolean => void
+[5]_asm_procedurefindnewstate_ifelse_7 "ifelse state = 0 [ set new-state int a / k1 + int b / k2 ] let state + sum [ state ] of neighbors [ set new-state int s / a + b + 1 + g ]" boolean => void
       _equal "state = 0" Object,double => boolean
         _patchvariable:STATE "state" => Object
         _constdouble:0.0 "0" => double
@@ -1682,13 +1682,13 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L9
           RETURN
-[6]_asm_procedurefindnewstate_setpatchvariable_8 "set new-state int (a / k1) + int (b / k2" Object => void
-      _plus "int (a / k1) + int (b / k2" double,double => double
-        _int "int (a / k1" double => double
+[6]_asm_procedurefindnewstate_setpatchvariable_8 "set new-state int a / k1 + int b / k2" Object => void
+      _plus "int a / k1 + int b / k2" double,double => double
+        _int "int a / k1" double => double
           _div "a / k1" double,double => double
             _procedurevariable:A "a" => Object
             _observervariable:K1 "k1" => Object
-        _int "int (b / k2" double => double
+        _int "int b / k2" double => double
           _div "b / k2" double,double => double
             _procedurevariable:B "b" => Object
             _observervariable:K2 "k2" => Object
@@ -1905,10 +1905,10 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[8]_asm_procedurefindnewstate_setprocedurevariable_10 Object => void
-      _plus "state + sum" double,double => double
+[8]_asm_procedurefindnewstate_setprocedurevariable_10 "let state + sum [ state ] of neighbors" Object => void
+      _plus "state + sum [ state ] of neighbors" double,double => double
         _patchvariable:STATE "state" => Object
-        _nsum:STATE "sum" => double
+        _nsum:STATE "sum [ state ] of neighbors" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
          L0
@@ -2051,10 +2051,10 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L14
           RETURN
-[9]_asm_procedurefindnewstate_setpatchvariable_11 "set new-state int (s / (a + b + 1)) + g" Object => void
-      _plus "int (s / (a + b + 1)) + g" double,double => double
-        _int "int (s / (a + b + 1" double => double
-          _div "s / (a + b + 1" double,double => double
+[9]_asm_procedurefindnewstate_setpatchvariable_11 "set new-state int s / a + b + 1 + g" Object => void
+      _plus "int s / a + b + 1 + g" double,double => double
+        _int "int s / a + b + 1" double => double
+          _div "s / a + b + 1" double,double => double
             _procedurevariable:S "s" => Object
             _plus "a + b + 1" double,double => double
               _plus "a + b" double,double => double
@@ -2258,7 +2258,7 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L28
           RETURN
-[10]_asm_procedurefindnewstate_if_12 "if new-state > n" boolean => void
+[10]_asm_procedurefindnewstate_if_12 "if new-state > n [ set new-state n ]" boolean => void
       _greaterthan "new-state > n" Object,Object => boolean
         _patchvariable:NEW-STATE "new-state" => Object
         _observervariable:N "n" => Object

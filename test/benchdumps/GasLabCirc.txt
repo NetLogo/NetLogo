@@ -7,7 +7,11 @@ breeds PARTICLES = Breed(PARTICLES, PARTICLE, SPEED MASS, false)
 link-breeds 
 
 procedure GO:[]{O---}:
-[0]_asm_procedurego_ifelse_0 "ifelse is-turtle? colliding-particle-2" boolean => void
+[0]_asm_procedurego_ifelse_0 "ifelse is-turtle? colliding-particle-2 set colliding-particles filter task [item 1 ? != colliding-particle-1 and
+                                    item 2 ? != colliding-particle-1 and
+                                    item 1 ? != colliding-particle-2 and
+                                    item 2 ? != colliding-particle-2] colliding-particles ask colliding-particle-2 [ check-for-wall-collision ] [ ask colliding-particle-2 [ check-for-particle-collision ] ] [ set colliding-particles filter task [item 1 ? != colliding-particle-1 and
+                                    item 2 ? != colliding-particle-1] colliding-particles ]" boolean => void
       _isturtle "is-turtle? colliding-particle-2"
         _asm_procedurego_observervariable_1 "colliding-particle-2" => Object
              L0
@@ -57,29 +61,21 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[1]_asm_procedurego_setobservervariable_2 "set colliding-particles filter [item 1 ? != colliding-particle-1 and
+[1]_asm_procedurego_setobservervariable_2 "set colliding-particles filter task [item 1 ? != colliding-particle-1 and
                                     item 2 ? != colliding-particle-1 and
                                     item 1 ? != colliding-particle-2 and
-                                    item 2 ? != colliding-particle-2]
-                              colliding-particles" Object => void
-      _filter "filter [item 1 ? != colliding-particle-1 and
+                                    item 2 ? != colliding-particle-2] colliding-particles" Object => void
+      _filter "filter task [item 1 ? != colliding-particle-1 and
                                     item 2 ? != colliding-particle-1 and
                                     item 1 ? != colliding-particle-2 and
-                                    item 2 ? != colliding-particle-2]
-                              colliding-particles"
-        _reportertask "[item 1 ? != colliding-particle-1 and
+                                    item 2 ? != colliding-particle-2] colliding-particles"
+        _reportertask "task [item 1 ? != colliding-particle-1 and
                                     item 2 ? != colliding-particle-1 and
                                     item 1 ? != colliding-particle-2 and
-                                    item 2 ? != colliding-particle-2"
-          _asm_procedurego_and_3 "item 1 ? != colliding-particle-1 and
-                                    item 2 ? != colliding-particle-1 and
-                                    item 1 ? != colliding-particle-2 and
-                                    item 2 ? != colliding-particle-2"
-            _and "item 1 ? != colliding-particle-1 and
-                                    item 2 ? != colliding-particle-1 and
-                                    item 1 ? != colliding-particle-2"
-              _and "item 1 ? != colliding-particle-1 and
-                                    item 2 ? != colliding-particle-1"
+                                    item 2 ? != colliding-particle-2]"
+          _asm_procedurego_and_3 "item 1 ? != colliding-particle-1 and item 2 ? != colliding-particle-1 and item 1 ? != colliding-particle-2 and item 2 ? != colliding-particle-2"
+            _and "item 1 ? != colliding-particle-1 and item 2 ? != colliding-particle-1 and item 1 ? != colliding-particle-2"
+              _and "item 1 ? != colliding-particle-1 and item 2 ? != colliding-particle-1"
                 _notequal "item 1 ? != colliding-particle-1" Object,Object => boolean
                   _item "item 1 ?"
                     _asm_procedurego_constdouble_4 "1" => Double
@@ -312,7 +308,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L5
           RETURN
-[2]_asm_procedurego_ask_13 "ask colliding-particle-2" Object => void
+[2]_asm_procedurego_ask_13 "ask colliding-particle-2 [ check-for-wall-collision ]" Object => void
       _observervariable:COLLIDING-PARTICLE-2 "colliding-particle-2" => Object
          L0
           ALOAD 1
@@ -453,7 +449,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[5]_asm_procedurego_ask_16 "ask colliding-particle-2" Object => void
+[5]_asm_procedurego_ask_16 "ask colliding-particle-2 [ check-for-particle-collision ]" Object => void
       _observervariable:COLLIDING-PARTICLE-2 "colliding-particle-2" => Object
          L0
           ALOAD 1
@@ -601,16 +597,13 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[9]_asm_procedurego_setobservervariable_20 "set colliding-particles filter [item 1 ? != colliding-particle-1 and
-                                    item 2 ? != colliding-particle-1]
-                              colliding-particles" Object => void
-      _filter "filter [item 1 ? != colliding-particle-1 and
-                                    item 2 ? != colliding-particle-1]
-                              colliding-particles"
-        _reportertask "[item 1 ? != colliding-particle-1 and
-                                    item 2 ? != colliding-particle-1"
-          _asm_procedurego_and_21 "item 1 ? != colliding-particle-1 and
-                                    item 2 ? != colliding-particle-1"
+[9]_asm_procedurego_setobservervariable_20 "set colliding-particles filter task [item 1 ? != colliding-particle-1 and
+                                    item 2 ? != colliding-particle-1] colliding-particles" Object => void
+      _filter "filter task [item 1 ? != colliding-particle-1 and
+                                    item 2 ? != colliding-particle-1] colliding-particles"
+        _reportertask "task [item 1 ? != colliding-particle-1 and
+                                    item 2 ? != colliding-particle-1]"
+          _asm_procedurego_and_21 "item 1 ? != colliding-particle-1 and item 2 ? != colliding-particle-1"
             _notequal "item 1 ? != colliding-particle-1" Object,Object => boolean
               _item "item 1 ?"
                 _asm_procedurego_constdouble_22 "1" => Double
@@ -749,7 +742,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L5
           RETURN
-[10]_asm_procedurego_if_27 "if colliding-particle-1 != nobody" boolean => void
+[10]_asm_procedurego_if_27 "if colliding-particle-1 != nobody [ ask colliding-particle-1 [ check-for-wall-collision ] ]" boolean => void
       _notequal "colliding-particle-1 != nobody" Object,Object => boolean
         _observervariable:COLLIDING-PARTICLE-1 "colliding-particle-1" => Object
         _nobody "nobody" => Nobody$
@@ -788,7 +781,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[11]_asm_procedurego_ask_28 "ask colliding-particle-1" Object => void
+[11]_asm_procedurego_ask_28 "ask colliding-particle-1 [ check-for-wall-collision ]" Object => void
       _observervariable:COLLIDING-PARTICLE-1 "colliding-particle-1" => Object
          L0
           ALOAD 1
@@ -929,7 +922,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[14]_asm_procedurego_if_31 "if colliding-particle-1 != nobody" boolean => void
+[14]_asm_procedurego_if_31 "if colliding-particle-1 != nobody [ ask colliding-particle-1 [ check-for-particle-collision ] ]" boolean => void
       _notequal "colliding-particle-1 != nobody" Object,Object => boolean
         _observervariable:COLLIDING-PARTICLE-1 "colliding-particle-1" => Object
         _nobody "nobody" => Nobody$
@@ -968,7 +961,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[15]_asm_procedurego_ask_32 "ask colliding-particle-1" Object => void
+[15]_asm_procedurego_ask_32 "ask colliding-particle-1 [ check-for-particle-collision ]" Object => void
       _observervariable:COLLIDING-PARTICLE-1 "colliding-particle-1" => Object
          L0
           ALOAD 1
@@ -1127,7 +1120,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[19]_asm_procedurego_ask_36 "ask particles" AgentSet => void
+[19]_asm_procedurego_ask_36 "ask particles [ jump speed * tick-length ]" AgentSet => void
       _breed:PARTICLES "particles" => AgentSet
          L0
           ALOAD 0
@@ -1315,7 +1308,7 @@ procedure GO:[]{O---}:
             INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
            L1
             ARETURN
-[24]_asm_procedurego_if_41 "if manage-view-updates?" boolean => void
+[24]_asm_procedurego_if_41 "if manage-view-updates? [ if ticks - last-view-update > view-update-rate display [ set last-view-update ticks ] ]" boolean => void
       _observervariable:MANAGE-VIEW-UPDATES? "manage-view-updates?" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
@@ -1358,8 +1351,8 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[25]_asm_procedurego_if_42 "if (ticks - last-view-update) > view-update-rate" boolean => void
-      _greaterthan "ticks - last-view-update) > view-update-rate" double,Object => boolean
+[25]_asm_procedurego_if_42 "if ticks - last-view-update > view-update-rate display [ set last-view-update ticks ]" boolean => void
+      _greaterthan "ticks - last-view-update > view-update-rate" double,Object => boolean
         _minus "ticks - last-view-update" double,double => double
           _ticks "ticks" => double
           _observervariable:LAST-VIEW-UPDATE "last-view-update" => Object
@@ -1553,7 +1546,7 @@ procedure GO:[]{O---}:
           RETURN
 
 procedure RECOLOR:[]{-T--}:
-[0]_asm_procedurerecolor_if_0 "if color-scheme = "red-green-blue"" boolean => void
+[0]_asm_procedurerecolor_if_0 "if color-scheme = "red-green-blue" [ recolor-banded ]" boolean => void
       _equal "color-scheme = "red-green-blue"" Object,String => boolean
         _observervariable:COLOR-SCHEME "color-scheme" => Object
         _conststring:"red-green-blue" ""red-green-blue"" => String
@@ -1603,7 +1596,7 @@ procedure RECOLOR:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[2]_asm_procedurerecolor_if_2 "if color-scheme = "blue shades"" boolean => void
+[2]_asm_procedurerecolor_if_2 "if color-scheme = "blue shades" [ recolor-shaded ]" boolean => void
       _equal "color-scheme = "blue shades"" Object,String => boolean
         _observervariable:COLOR-SCHEME "color-scheme" => Object
         _conststring:"blue shades" ""blue shades"" => String
@@ -1653,8 +1646,8 @@ procedure RECOLOR:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[4]_asm_procedurerecolor_if_4 "if color-scheme  = "one color"" boolean => void
-      _equal "color-scheme  = "one color"" Object,String => boolean
+[4]_asm_procedurerecolor_if_4 "if color-scheme = "one color" [ recolor-none ]" boolean => void
+      _equal "color-scheme = "one color"" Object,String => boolean
         _observervariable:COLOR-SCHEME "color-scheme" => Object
         _conststring:"one color" ""one color"" => String
          L0
@@ -1868,7 +1861,7 @@ procedure REBUILD-COLLISION-LIST:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[1]_asm_procedurerebuildcollisionlist_ask_1 "ask particles" AgentSet => void
+[1]_asm_procedurerebuildcollisionlist_ask_1 "ask particles [ check-for-wall-collision ]" AgentSet => void
       _breed:PARTICLES "particles" => AgentSet
          L0
           ALOAD 0
@@ -1947,7 +1940,7 @@ procedure REBUILD-COLLISION-LIST:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[4]_asm_procedurerebuildcollisionlist_ask_4 "ask particles" AgentSet => void
+[4]_asm_procedurerebuildcollisionlist_ask_4 "ask particles [ check-for-particle-collision ]" AgentSet => void
       _breed:PARTICLES "particles" => AgentSet
          L0
           ALOAD 0
@@ -2037,16 +2030,13 @@ procedure REBUILD-COLLISION-LIST:[]{OTPL}:
           RETURN
 
 procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
-[0]_asm_proceduresortcollisions_setobservervariable_0 "set colliding-particles filter [item 1 ? != colliding-particle-1 or
-                                  item 2 ? != colliding-particle-2]
-                                 colliding-particles" Object => void
-      _filter "filter [item 1 ? != colliding-particle-1 or
-                                  item 2 ? != colliding-particle-2]
-                                 colliding-particles"
-        _reportertask "[item 1 ? != colliding-particle-1 or
-                                  item 2 ? != colliding-particle-2"
-          _asm_proceduresortcollisions_or_1 "item 1 ? != colliding-particle-1 or
-                                  item 2 ? != colliding-particle-2"
+[0]_asm_proceduresortcollisions_setobservervariable_0 "set colliding-particles filter task [item 1 ? != colliding-particle-1 or
+                                  item 2 ? != colliding-particle-2] colliding-particles" Object => void
+      _filter "filter task [item 1 ? != colliding-particle-1 or
+                                  item 2 ? != colliding-particle-2] colliding-particles"
+        _reportertask "task [item 1 ? != colliding-particle-1 or
+                                  item 2 ? != colliding-particle-2]"
+          _asm_proceduresortcollisions_or_1 "item 1 ? != colliding-particle-1 or item 2 ? != colliding-particle-2"
             _notequal "item 1 ? != colliding-particle-1" Object,Object => boolean
               _item "item 1 ?"
                 _asm_proceduresortcollisions_constdouble_2 "1" => Double
@@ -2287,7 +2277,7 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[4]_asm_proceduresortcollisions_if_10 "if colliding-particles = []" boolean => void
+[4]_asm_proceduresortcollisions_if_10 "if colliding-particles = [] [ stop ]" boolean => void
       _equal "colliding-particles = []" Object,Object => boolean
         _observervariable:COLLIDING-PARTICLES "colliding-particles" => Object
         _constlist:[] "[]" => LogoList
@@ -2371,7 +2361,7 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
          L2
          FRAME SAME
           RETURN
-[6]_asm_proceduresortcollisions_setprocedurevariable_12 Object => void
+[6]_asm_proceduresortcollisions_setprocedurevariable_12 "let first colliding-particles" Object => void
       _first "first colliding-particles" Object => Object
         _observervariable:COLLIDING-PARTICLES "colliding-particles" => Object
          L0
@@ -2458,7 +2448,7 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[7]_foreach "foreach colliding-particles ["
+[7]_foreach "foreach colliding-particles task [if first ? < first winner [set winner ?]]"
       _asm_proceduresortcollisions_observervariable_13 "colliding-particles" => Object
            L0
             ALOAD 1
@@ -2467,8 +2457,8 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
             INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
            L1
             ARETURN
-      _commandtask:(command task from: procedure SORT-COLLISIONS) "["
-[8]_asm_proceduresortcollisions_setprocedurevariable_14 Object => void
+      _commandtask:(command task from: procedure SORT-COLLISIONS: [if first ? < first winner [ set winner ? ] set winner ?]) "task [if first ? < first winner [set winner ?]]"
+[8]_asm_proceduresortcollisions_setprocedurevariable_14 "let item 0 winner" Object => void
       _item "item 0 winner"
         _asm_proceduresortcollisions_constdouble_15 "0" => Double
              L0
@@ -2502,7 +2492,7 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[9]_asm_proceduresortcollisions_if_17 "if dt > 0" boolean => void
+[9]_asm_proceduresortcollisions_if_17 "if dt > 0 [ ifelse dt - ticks <= 1 set tick-length dt - ticks set colliding-particle-1 item 1 winner [ set colliding-particle-2 item 2 winner ] [ set tick-length 1 ] ]" boolean => void
       _greaterthan "dt > 0" Object,double => boolean
         _procedurevariable:DT "dt" => Object
         _constdouble:0.0 "0" => double
@@ -2574,7 +2564,7 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L9
           RETURN
-[10]_asm_proceduresortcollisions_ifelse_18 "ifelse dt - ticks <= 1" boolean => void
+[10]_asm_proceduresortcollisions_ifelse_18 "ifelse dt - ticks <= 1 set tick-length dt - ticks set colliding-particle-1 item 1 winner [ set colliding-particle-2 item 2 winner ] [ set tick-length 1 ]" boolean => void
       _lessorequal "dt - ticks <= 1" double,double => boolean
         _minus "dt - ticks" double,double => double
           _procedurevariable:DT "dt" => Object
@@ -2911,8 +2901,8 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
          L1
           RETURN
 
-   (command task from: procedure SORT-COLLISIONS):procedure SORT-COLLISIONS:[]{OTPL}:
-   [0]_asm_commandtaskfromproceduresortcollisions_if_0 "if first ? < first winner" boolean => void
+   (command task from: procedure SORT-COLLISIONS: [if first ? < first winner [ set winner ? ] set winner ?]):procedure SORT-COLLISIONS:[]{OTPL}:
+   [0]_asm_commandtaskfromproceduresortcollisionsiffirstfirstwinnersetwinnersetwinner_if_0 "if first ? < first winner [ set winner ? ]" boolean => void
             _lessthan "first ? < first winner" Object,Object => boolean
               _first "first ?" Object => Object
                 _letvariable(?1) "?" => Object
@@ -2921,7 +2911,7 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
                L0
                 ALOAD 1
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_commandtaskfromproceduresortcollisions_if_0.kept4_let : Lorg/nlogo/core/Let;
+                GETFIELD org/nlogo/prim/_asm_commandtaskfromproceduresortcollisionsiffirstfirstwinnersetwinnersetwinner_if_0.kept4_let : Lorg/nlogo/core/Let;
                 INVOKEVIRTUAL org/nlogo/nvm/Context.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
                L1
                 ASTORE 2
@@ -2989,7 +2979,7 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
                 INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
                 ATHROW
                L4
-               FRAME FULL [org/nlogo/prim/_asm_commandtaskfromproceduresortcollisions_if_0 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [java/lang/Object]
+               FRAME FULL [org/nlogo/prim/_asm_commandtaskfromproceduresortcollisionsiffirstfirstwinnersetwinnersetwinner_if_0 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [java/lang/Object]
                 ALOAD 1
                 GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
                 GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
@@ -3016,12 +3006,12 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
                 INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
                 ATHROW
                L9
-               FRAME FULL [org/nlogo/prim/_asm_commandtaskfromproceduresortcollisions_if_0 org/nlogo/nvm/Context java/lang/Object org/nlogo/core/LogoList] [java/lang/Object]
+               FRAME FULL [org/nlogo/prim/_asm_commandtaskfromproceduresortcollisionsiffirstfirstwinnersetwinnersetwinner_if_0 org/nlogo/nvm/Context java/lang/Object org/nlogo/core/LogoList] [java/lang/Object]
                 ALOAD 3
                 INVOKEVIRTUAL org/nlogo/core/LogoList.first ()Ljava/lang/Object;
                 GOTO L10
                L8
-               FRAME FULL [org/nlogo/prim/_asm_commandtaskfromproceduresortcollisions_if_0 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [java/lang/Object]
+               FRAME FULL [org/nlogo/prim/_asm_commandtaskfromproceduresortcollisionsiffirstfirstwinnersetwinnersetwinner_if_0 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [java/lang/Object]
                 ALOAD 2
                 INSTANCEOF java/lang/String
                 IFEQ L11
@@ -3041,14 +3031,14 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
                 INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
                 ATHROW
                L12
-               FRAME FULL [org/nlogo/prim/_asm_commandtaskfromproceduresortcollisions_if_0 org/nlogo/nvm/Context java/lang/Object java/lang/String] [java/lang/Object]
+               FRAME FULL [org/nlogo/prim/_asm_commandtaskfromproceduresortcollisionsiffirstfirstwinnersetwinnersetwinner_if_0 org/nlogo/nvm/Context java/lang/Object java/lang/String] [java/lang/Object]
                 ALOAD 3
                 ICONST_0
                 ICONST_1
                 INVOKEVIRTUAL java/lang/String.substring (II)Ljava/lang/String;
                 GOTO L10
                L11
-               FRAME FULL [org/nlogo/prim/_asm_commandtaskfromproceduresortcollisions_if_0 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [java/lang/Object]
+               FRAME FULL [org/nlogo/prim/_asm_commandtaskfromproceduresortcollisionsiffirstfirstwinnersetwinnersetwinner_if_0 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [java/lang/Object]
                 NEW org/nlogo/nvm/ArgumentTypeException
                 DUP
                 ALOAD 1
@@ -3061,7 +3051,7 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
                 INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
                 ATHROW
                L10
-               FRAME FULL [org/nlogo/prim/_asm_commandtaskfromproceduresortcollisions_if_0 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [java/lang/Object java/lang/Object]
+               FRAME FULL [org/nlogo/prim/_asm_commandtaskfromproceduresortcollisionsiffirstfirstwinnersetwinnersetwinner_if_0 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [java/lang/Object java/lang/Object]
                 ASTORE 3
                 ASTORE 2
                 ALOAD 2
@@ -3171,19 +3161,19 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
                 ICONST_1
                 GOTO L24
                L23
-               FRAME FULL [org/nlogo/prim/_asm_commandtaskfromproceduresortcollisions_if_0 org/nlogo/nvm/Context I java/lang/Object] [org/nlogo/nvm/Context]
+               FRAME FULL [org/nlogo/prim/_asm_commandtaskfromproceduresortcollisionsiffirstfirstwinnersetwinnersetwinner_if_0 org/nlogo/nvm/Context I java/lang/Object] [org/nlogo/nvm/Context]
                 ICONST_2
                L24
-               FRAME FULL [org/nlogo/prim/_asm_commandtaskfromproceduresortcollisions_if_0 org/nlogo/nvm/Context I java/lang/Object] [org/nlogo/nvm/Context I]
+               FRAME FULL [org/nlogo/prim/_asm_commandtaskfromproceduresortcollisionsiffirstfirstwinnersetwinnersetwinner_if_0 org/nlogo/nvm/Context I java/lang/Object] [org/nlogo/nvm/Context I]
                 PUTFIELD org/nlogo/nvm/Context.ip : I
                L25
                 RETURN
-   [1]_asm_commandtaskfromproceduresortcollisions_setprocedurevariable_1 "set winner ?" Object => void
+   [1]_asm_commandtaskfromproceduresortcollisionsiffirstfirstwinnersetwinnersetwinner_setprocedurevariable_1 "set winner ?" Object => void
             _letvariable(?1) "?" => Object
                L0
                 ALOAD 1
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_commandtaskfromproceduresortcollisions_setprocedurevariable_1.kept2_let : Lorg/nlogo/core/Let;
+                GETFIELD org/nlogo/prim/_asm_commandtaskfromproceduresortcollisionsiffirstfirstwinnersetwinnersetwinner_setprocedurevariable_1.kept2_let : Lorg/nlogo/core/Let;
                 INVOKEVIRTUAL org/nlogo/nvm/Context.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
                L1
                 ASTORE 2
@@ -3198,7 +3188,7 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
                 PUTFIELD org/nlogo/nvm/Context.ip : I
                L2
                 RETURN
-   [2]_asm_commandtaskfromproceduresortcollisions_done_2 => void
+   [2]_asm_commandtaskfromproceduresortcollisionsiffirstfirstwinnersetwinnersetwinner_done_2 => void
                L0
                 ALOAD 1
                 ICONST_1
@@ -3309,7 +3299,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[4]_asm_procedurebenchmark_repeatlocal_3 double => void
+[4]_asm_procedurebenchmark_repeatlocal_3 "repeat 3500 [ go ]" double => void
       _constdouble:3500.0 "3500" => double
          L0
           LDC 3500.0
@@ -3433,24 +3423,22 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           RETURN
 
 reporter procedure OVERLAPPING?:[]{-T--}:
-[0]_asm_procedureoverlapping_report_0 "report any? other particles in-radius ((size + largest-particle-size) / 2)
-                              with [distance myself < (size + [size] of myself) / 2" Object => void
-      _anyotherwith "any? other particles in-radius ((size + largest-particle-size) / 2)
-                              with [distance myself < (size + [size] of myself) / 2" AgentSet,Reporter => boolean
-        _inradius "particles in-radius ((size + largest-particle-size) / 2" AgentSet,double => AgentSet
+[0]_asm_procedureoverlapping_report_0 "report any? other particles in-radius size + largest-particle-size / 2 with [ distance myself < size + [ size ] of myself / 2 ]" Object => void
+      _anyotherwith "any? other particles in-radius size + largest-particle-size / 2 with [ distance myself < size + [ size ] of myself / 2 ]" AgentSet,Reporter => boolean
+        _inradius "particles in-radius size + largest-particle-size / 2" AgentSet,double => AgentSet
           _breed:PARTICLES "particles" => AgentSet
-          _div "size + largest-particle-size) / 2" double,double => double
+          _div "size + largest-particle-size / 2" double,double => double
             _plus "size + largest-particle-size" double,double => double
               _turtlevariabledouble:SIZE "size" => double
               _observervariable:LARGEST-PARTICLE-SIZE "largest-particle-size" => Object
             _constdouble:2.0 "2" => double
-        _asm_procedureoverlapping_lessthan_1 "distance myself < (size + [size] of myself) / 2" double,double => boolean
+        _asm_procedureoverlapping_lessthan_1 "distance myself < size + [ size ] of myself / 2" double,double => boolean
           _distance "distance myself" Agent => double
             _myself "myself" => Agent
-          _div "size + [size] of myself) / 2" double,double => double
-            _plus "size + [size] of myself" double,double => double
+          _div "size + [ size ] of myself / 2" double,double => double
+            _plus "size + [ size ] of myself" double,double => double
               _turtlevariabledouble:SIZE "size" => double
-              _turtlevariableof:SIZE "of myself" Agent => Object
+              _turtlevariableof:SIZE "[ size ] of myself" Agent => Object
                 _myself "myself" => Agent
             _constdouble:2.0 "2" => double
               TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -3971,12 +3959,11 @@ reporter procedure OVERLAPPING?:[]{-T--}:
           ATHROW
 
 procedure RANDOM-POSITION:[]{-T--}:
-[0]_asm_procedurerandomposition_setxy_0 "setxy one-of [1 -1] * random-float (box-edge - 0.5 - size / 2)
-        one-of [1 -1] * random-float (box-edge - 0.5 - size / 2" double,double => void
-      _mult "one-of [1 -1] * random-float (box-edge - 0.5 - size / 2" double,double => double
+[0]_asm_procedurerandomposition_setxy_0 "setxy one-of [1 -1] * random-float box-edge - 0.5 - size / 2 one-of [1 -1] * random-float box-edge - 0.5 - size / 2" double,double => void
+      _mult "one-of [1 -1] * random-float box-edge - 0.5 - size / 2" double,double => double
         _oneof "one-of [1 -1]" LogoList => Object
           _constlist:[1 -1] "[1 -1]" => LogoList
-        _randomfloat "random-float (box-edge - 0.5 - size / 2" double => double
+        _randomfloat "random-float box-edge - 0.5 - size / 2" double => double
           _minus "box-edge - 0.5 - size / 2" double,double => double
             _minus "box-edge - 0.5" double,double => double
               _observervariable:BOX-EDGE "box-edge" => Object
@@ -3984,10 +3971,10 @@ procedure RANDOM-POSITION:[]{-T--}:
             _div "size / 2" double,double => double
               _turtlevariabledouble:SIZE "size" => double
               _constdouble:2.0 "2" => double
-      _mult "one-of [1 -1] * random-float (box-edge - 0.5 - size / 2" double,double => double
+      _mult "one-of [1 -1] * random-float box-edge - 0.5 - size / 2" double,double => double
         _oneof "one-of [1 -1]" LogoList => Object
           _constlist:[1 -1] "[1 -1]" => LogoList
-        _randomfloat "random-float (box-edge - 0.5 - size / 2" double => double
+        _randomfloat "random-float box-edge - 0.5 - size / 2" double => double
           _minus "box-edge - 0.5 - size / 2" double,double => double
             _minus "box-edge - 0.5" double,double => double
               _observervariable:BOX-EDGE "box-edge" => Object
@@ -4352,7 +4339,7 @@ procedure RANDOM-POSITION:[]{-T--}:
           RETURN
 
 procedure REVERSE-TIME:[]{OTPL}:
-[0]_asm_procedurereversetime_ask_0 "ask particles" AgentSet => void
+[0]_asm_procedurereversetime_ask_0 "ask particles [ rt 180 ]" AgentSet => void
       _breed:PARTICLES "particles" => AgentSet
          L0
           ALOAD 0
@@ -4476,7 +4463,7 @@ procedure REVERSE-TIME:[]{OTPL}:
           RETURN
 
 procedure RECOLOR-NONE:[]{-T-L}:
-[0]_asm_procedurerecolornone_setturtleorlinkvariable_0 "set" Object => void
+[0]_asm_procedurerecolornone_setturtleorlinkvariable_0 "set color green - 1" Object => void
       _constdouble:54.0 "green - 1" => Double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -4521,8 +4508,8 @@ procedure RECOLOR-NONE:[]{-T-L}:
           RETURN
 
 procedure ASSIGN-COLLIDING-WALL:[TIME-TO-COLLISION WALL COLLIDING-PAIR]{-TPL}:
-[0]_asm_procedureassigncollidingwall_setprocedurevariable_0 Object => void
-      _list "list (time-to-collision + ticks) self wall"
+[0]_asm_procedureassigncollidingwall_setprocedurevariable_0 "let (list time-to-collision + ticks self wall)" Object => void
+      _list "(list time-to-collision + ticks self wall)"
         _plus "time-to-collision + ticks" double,double => double
           _procedurevariable:TIME-TO-COLLISION "time-to-collision" => Object
           _ticks "ticks" => double
@@ -4706,8 +4693,8 @@ procedure ASSIGN-COLLIDING-WALL:[TIME-TO-COLLISION WALL COLLIDING-PAIR]{-TPL}:
           RETURN
 
 procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V2L VCM]{-T--}:
-[0]_asm_procedurecollidewith_setprocedurevariable_0 Object => void
-      _breedvariableof:MASS "of other-particle"
+[0]_asm_procedurecollidewith_setprocedurevariable_0 "let [ mass ] of other-particle" Object => void
+      _breedvariableof:MASS "[ mass ] of other-particle"
         _asm_procedurecollidewith_procedurevariable_1 "other-particle" => Object
              L0
               ALOAD 1
@@ -4734,8 +4721,8 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[1]_asm_procedurecollidewith_setprocedurevariable_2 Object => void
-      _breedvariableof:SPEED "of other-particle"
+[1]_asm_procedurecollidewith_setprocedurevariable_2 "let [ speed ] of other-particle" Object => void
+      _breedvariableof:SPEED "[ speed ] of other-particle"
         _asm_procedurecollidewith_procedurevariable_3 "other-particle" => Object
              L0
               ALOAD 1
@@ -4762,8 +4749,8 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[2]_asm_procedurecollidewith_setprocedurevariable_4 Object => void
-      _turtlevariableof:HEADING "of other-particle" Object => Object
+[2]_asm_procedurecollidewith_setprocedurevariable_4 "let [ heading ] of other-particle" Object => void
+      _turtlevariableof:HEADING "[ heading ] of other-particle" Object => Object
         _procedurevariable:OTHER-PARTICLE "other-particle" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
@@ -4897,7 +4884,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L13
           RETURN
-[3]_asm_procedurecollidewith_setprocedurevariable_5 Object => void
+[3]_asm_procedurecollidewith_setprocedurevariable_5 "let towards other-particle" Object => void
       _towards "towards other-particle"
         _asm_procedurecollidewith_procedurevariable_6 "other-particle" => Object
              L0
@@ -4925,10 +4912,10 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[4]_asm_procedurecollidewith_setprocedurevariable_7 Object => void
-      _mult "speed * cos (theta - heading" double,double => double
+[4]_asm_procedurecollidewith_setprocedurevariable_7 "let speed * cos theta - heading" Object => void
+      _mult "speed * cos theta - heading" double,double => double
         _breedvariable:SPEED "speed" => Object
-        _cos "cos (theta - heading" double => double
+        _cos "cos theta - heading" double => double
           _minus "theta - heading" double,double => double
             _procedurevariable:THETA "theta" => Object
             _turtlevariabledouble:HEADING "heading" => double
@@ -5045,10 +5032,10 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L15
           RETURN
-[5]_asm_procedurecollidewith_setprocedurevariable_8 Object => void
-      _mult "speed * sin (theta - heading" double,double => double
+[5]_asm_procedurecollidewith_setprocedurevariable_8 "let speed * sin theta - heading" Object => void
+      _mult "speed * sin theta - heading" double,double => double
         _breedvariable:SPEED "speed" => Object
-        _sin "sin (theta - heading" double => double
+        _sin "sin theta - heading" double => double
           _minus "theta - heading" double,double => double
             _procedurevariable:THETA "theta" => Object
             _turtlevariabledouble:HEADING "heading" => double
@@ -5165,10 +5152,10 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L15
           RETURN
-[6]_asm_procedurecollidewith_setprocedurevariable_9 Object => void
-      _mult "speed2 * cos (theta - heading2" double,double => double
+[6]_asm_procedurecollidewith_setprocedurevariable_9 "let speed2 * cos theta - heading2" Object => void
+      _mult "speed2 * cos theta - heading2" double,double => double
         _procedurevariable:SPEED2 "speed2" => Object
-        _cos "cos (theta - heading2" double => double
+        _cos "cos theta - heading2" double => double
           _minus "theta - heading2" double,double => double
             _procedurevariable:THETA "theta" => Object
             _procedurevariable:HEADING2 "heading2" => Object
@@ -5292,10 +5279,10 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L16
           RETURN
-[7]_asm_procedurecollidewith_setprocedurevariable_10 Object => void
-      _mult "speed2 * sin (theta - heading2" double,double => double
+[7]_asm_procedurecollidewith_setprocedurevariable_10 "let speed2 * sin theta - heading2" Object => void
+      _mult "speed2 * sin theta - heading2" double,double => double
         _procedurevariable:SPEED2 "speed2" => Object
-        _sin "sin (theta - heading2" double => double
+        _sin "sin theta - heading2" double => double
           _minus "theta - heading2" double,double => double
             _procedurevariable:THETA "theta" => Object
             _procedurevariable:HEADING2 "heading2" => Object
@@ -5419,9 +5406,9 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L16
           RETURN
-[8]_asm_procedurecollidewith_setprocedurevariable_11 Object => void
-      _div "mass * v1t) + (mass2 * v2t)) / (mass + mass2" double,double => double
-        _plus "mass * v1t) + (mass2 * v2t" double,double => double
+[8]_asm_procedurecollidewith_setprocedurevariable_11 "let mass * v1t + mass2 * v2t / mass + mass2" Object => void
+      _div "mass * v1t + mass2 * v2t / mass + mass2" double,double => double
+        _plus "mass * v1t + mass2 * v2t" double,double => double
           _mult "mass * v1t" double,double => double
             _breedvariable:MASS "mass" => Object
             _procedurevariable:V1T "v1t" => Object
@@ -5694,7 +5681,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L35
           RETURN
-[9]_asm_procedurecollidewith_setprocedurevariable_12 "set v1t (2 * vcm - v1t" Object => void
+[9]_asm_procedurecollidewith_setprocedurevariable_12 "set v1t 2 * vcm - v1t" Object => void
       _minus "2 * vcm - v1t" double,double => double
         _mult "2 * vcm" double,double => double
           _constdouble:2.0 "2" => double
@@ -5790,7 +5777,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[10]_asm_procedurecollidewith_setprocedurevariable_13 "set v2t (2 * vcm - v2t" Object => void
+[10]_asm_procedurecollidewith_setprocedurevariable_13 "set v2t 2 * vcm - v2t" Object => void
       _minus "2 * vcm - v2t" double,double => double
         _mult "2 * vcm" double,double => double
           _constdouble:2.0 "2" => double
@@ -5886,9 +5873,9 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[11]_setbreedvariable:SPEED "set speed sqrt ((v1t * v1t) + (v1l * v1l"
-      _asm_procedurecollidewith_sqrt_14 "sqrt ((v1t * v1t) + (v1l * v1l" double => double
-        _plus "v1t * v1t) + (v1l * v1l" double,double => double
+[11]_setbreedvariable:SPEED "set speed sqrt v1t * v1t + v1l * v1l"
+      _asm_procedurecollidewith_sqrt_14 "sqrt v1t * v1t + v1l * v1l" double => double
+        _plus "v1t * v1t + v1l * v1l" double,double => double
           _mult "v1t * v1t" double,double => double
             _procedurevariable:V1T "v1t" => Object
             _procedurevariable:V1T "v1t" => Object
@@ -6060,7 +6047,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[12]_asm_procedurecollidewith_if_15 "if v1l != 0 or v1t != 0" boolean => void
+[12]_asm_procedurecollidewith_if_15 "if v1l != 0 or v1t != 0 [ set heading theta - atan v1l v1t ]" boolean => void
       _or "v1l != 0 or v1t != 0"
         _notequal "v1l != 0" Object,double => boolean
           _procedurevariable:V1L "v1l" => Object
@@ -6147,8 +6134,8 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L16
           RETURN
-[13]_asm_procedurecollidewith_setturtlevariable_16 "set heading (theta - (atan v1l v1t" Object => void
-      _minus "theta - (atan v1l v1t" double,double => double
+[13]_asm_procedurecollidewith_setturtlevariable_16 "set heading theta - atan v1l v1t" Object => void
+      _minus "theta - atan v1l v1t" double,double => double
         _procedurevariable:THETA "theta" => Object
         _atan "atan v1l v1t" double,double => double
           _procedurevariable:V1L "v1l" => Object
@@ -6345,7 +6332,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L26
           RETURN
-[14]_asm_procedurecollidewith_ask_17 "ask other-particle" Object => void
+[14]_asm_procedurecollidewith_ask_17 "ask other-particle [ set speed sqrt v2t * v2t + v2l * v2l ]" Object => void
       _procedurevariable:OTHER-PARTICLE "other-particle" => Object
          L0
           ALOAD 1
@@ -6462,9 +6449,9 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[15]_setbreedvariable:SPEED "set speed sqrt (((v2t * v2t) + (v2l * v2l"
-      _asm_procedurecollidewith_sqrt_18 "sqrt (((v2t * v2t) + (v2l * v2l" double => double
-        _plus "v2t * v2t) + (v2l * v2l" double,double => double
+[15]_setbreedvariable:SPEED "set speed sqrt v2t * v2t + v2l * v2l"
+      _asm_procedurecollidewith_sqrt_18 "sqrt v2t * v2t + v2l * v2l" double => double
+        _plus "v2t * v2t + v2l * v2l" double,double => double
           _mult "v2t * v2t" double,double => double
             _procedurevariable:V2T "v2t" => Object
             _procedurevariable:V2T "v2t" => Object
@@ -6643,7 +6630,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[17]_asm_procedurecollidewith_if_20 "if v2l != 0 or v2t != 0" boolean => void
+[17]_asm_procedurecollidewith_if_20 "if v2l != 0 or v2t != 0 [ ask other-particle [ set heading theta - atan v2l v2t ] ]" boolean => void
       _or "v2l != 0 or v2t != 0"
         _notequal "v2l != 0" Object,double => boolean
           _procedurevariable:V2L "v2l" => Object
@@ -6730,7 +6717,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L16
           RETURN
-[18]_asm_procedurecollidewith_ask_21 "ask other-particle" Object => void
+[18]_asm_procedurecollidewith_ask_21 "ask other-particle [ set heading theta - atan v2l v2t ]" Object => void
       _procedurevariable:OTHER-PARTICLE "other-particle" => Object
          L0
           ALOAD 1
@@ -6847,8 +6834,8 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[19]_asm_procedurecollidewith_setturtlevariable_22 "set heading (theta - (atan v2l v2t" Object => void
-      _minus "theta - (atan v2l v2t" double,double => double
+[19]_asm_procedurecollidewith_setturtlevariable_22 "set heading theta - atan v2l v2t" Object => void
+      _minus "theta - atan v2l v2t" double,double => double
         _procedurevariable:THETA "theta" => Object
         _atan "atan v2l v2t" double,double => double
           _procedurevariable:V2L "v2l" => Object
@@ -7070,7 +7057,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[22]_asm_procedurecollidewith_ask_25 "ask other-particle" Object => void
+[22]_asm_procedurecollidewith_ask_25 "ask other-particle [ recolor ]" Object => void
       _procedurevariable:OTHER-PARTICLE "other-particle" => Object
          L0
           ALOAD 1
@@ -7223,7 +7210,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           RETURN
 
 procedure MAKE-PARTICLES:[]{O---}:
-[0]_createorderedturtles:PARTICLES,+7 "create-ordered-particles number"
+[0]_createorderedturtles:PARTICLES,+7 "create-ordered-particles number set speed 1 set size smallest-particle-size + random-float largest-particle-size - smallest-particle-size set mass size * size recolor [ set heading random-float 360 ]"
       _asm_proceduremakeparticles_observervariable_0 "number" => Object
            L0
             ALOAD 1
@@ -7239,10 +7226,10 @@ procedure MAKE-PARTICLES:[]{O---}:
             GETFIELD org/nlogo/prim/_asm_proceduremakeparticles_constdouble_1.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-[2]_asm_proceduremakeparticles_setturtlevariable_2 "set size smallest-particle-size + random-float (largest-particle-size - smallest-particle-size" Object => void
-      _plus "smallest-particle-size + random-float (largest-particle-size - smallest-particle-size" double,double => double
+[2]_asm_proceduremakeparticles_setturtlevariable_2 "set size smallest-particle-size + random-float largest-particle-size - smallest-particle-size" Object => void
+      _plus "smallest-particle-size + random-float largest-particle-size - smallest-particle-size" double,double => double
         _observervariable:SMALLEST-PARTICLE-SIZE "smallest-particle-size" => Object
-        _randomfloat "random-float (largest-particle-size - smallest-particle-size" double => double
+        _randomfloat "random-float largest-particle-size - smallest-particle-size" double => double
           _minus "largest-particle-size - smallest-particle-size" double,double => double
             _observervariable:LARGEST-PARTICLE-SIZE "largest-particle-size" => Object
             _observervariable:SMALLEST-PARTICLE-SIZE "smallest-particle-size" => Object
@@ -7384,7 +7371,7 @@ procedure MAKE-PARTICLES:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L20
           RETURN
-[3]_setbreedvariable:MASS "set mass (size * size"
+[3]_setbreedvariable:MASS "set mass size * size"
       _asm_proceduremakeparticles_mult_3 "size * size" double,double => double
         _turtlevariabledouble:SIZE "size" => double
         _turtlevariabledouble:SIZE "size" => double
@@ -7529,7 +7516,7 @@ procedure MAKE-PARTICLES:[]{O---}:
           RETURN
 
 procedure RECOLOR-SHADED:[AVG-SPEED]{-T--}:
-[0]_asm_procedurerecolorshaded_setprocedurevariable_0 Object => void
+[0]_asm_procedurerecolorshaded_setprocedurevariable_0 "let 1" Object => void
       _constdouble:1.0 "1" => Double
          L0
           ALOAD 0
@@ -7547,8 +7534,8 @@ procedure RECOLOR-SHADED:[AVG-SPEED]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[1]_asm_procedurerecolorshaded_ifelse_1 "ifelse speed < (3 * avg-speed" boolean => void
-      _lessthan "speed < (3 * avg-speed" Object,double => boolean
+[1]_asm_procedurerecolorshaded_ifelse_1 "ifelse speed < 3 * avg-speed [ set color sky - 3.001 + 8 * speed / 3 * avg-speed ] [ set color sky + 4.999 ]" boolean => void
+      _lessthan "speed < 3 * avg-speed" Object,double => boolean
         _breedvariable:SPEED "speed" => Object
         _mult "3 * avg-speed" double,double => double
           _constdouble:3.0 "3" => double
@@ -7670,10 +7657,10 @@ procedure RECOLOR-SHADED:[AVG-SPEED]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L16
           RETURN
-[2]_asm_procedurerecolorshaded_setturtleorlinkvariable_2 "set color (sky - 3.001) + (8 * speed / (3 * avg-speed" Object => void
-      _plus "+ (8 * speed / (3 * avg-speed" double,double => double
+[2]_asm_procedurerecolorshaded_setturtleorlinkvariable_2 "set color sky - 3.001 + 8 * speed / 3 * avg-speed" Object => void
+      _plus "sky - 3.001 + 8 * speed / 3 * avg-speed" double,double => double
         _constdouble:91.999 "sky - 3.001" => double
-        _div "8 * speed / (3 * avg-speed" double,double => double
+        _div "8 * speed / 3 * avg-speed" double,double => double
           _mult "8 * speed" double,double => double
             _constdouble:8.0 "8" => double
             _breedvariable:SPEED "speed" => Object
@@ -7842,7 +7829,7 @@ procedure RECOLOR-SHADED:[AVG-SPEED]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[4]_asm_procedurerecolorshaded_setturtleorlinkvariable_4 "set" Object => void
+[4]_asm_procedurerecolorshaded_setturtleorlinkvariable_4 "set color sky + 4.999" Object => void
       _constdouble:99.999 "sky + 4.999" => Double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -7971,7 +7958,7 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[5]_asm_proceduresetup_setobservervariable_4 "set box-edge (max-pxcor - 1" Object => void
+[5]_asm_proceduresetup_setobservervariable_4 "set box-edge max-pxcor - 1" Object => void
       _minus "max-pxcor - 1" double,double => double
         _maxpxcor "max-pxcor" => double
         _constdouble:1.0 "1" => double
@@ -8060,12 +8047,12 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[8]_asm_proceduresetup_setobservervariable_7 "set tick-length (1 / (ceiling max [speed] of particles" Object => void
-      _div "1 / (ceiling max [speed] of particles" double,double => double
+[8]_asm_proceduresetup_setobservervariable_7 "set tick-length 1 / ceiling max [ speed ] of particles" Object => void
+      _div "1 / ceiling max [ speed ] of particles" double,double => double
         _constdouble:1.0 "1" => double
-        _ceil "ceiling max [speed] of particles" double => double
-          _max "max [speed] of particles"
-            _breedvariableof:SPEED "of particles"
+        _ceil "ceiling max [ speed ] of particles" double => double
+          _max "max [ speed ] of particles"
+            _breedvariableof:SPEED "[ speed ] of particles"
               _asm_proceduresetup_breed_8 "particles" => AgentSet
                    L0
                     ALOAD 0
@@ -8296,14 +8283,11 @@ procedure SETUP:[]{O---}:
           RETURN
 
 procedure MAKE-BOX:[]{OTPL}:
-[0]_asm_proceduremakebox_ask_0 "ask patches with [ ((abs pxcor = box-edge) and (abs pycor <= box-edge)) or
-                     ((abs pycor = box-edge) and (abs pxcor <= box-edge" AgentSet => void
-      _with "patches with [ ((abs pxcor = box-edge) and (abs pycor <= box-edge)) or
-                     ((abs pycor = box-edge) and (abs pxcor <= box-edge" AgentSet,Reporter => AgentSet
+[0]_asm_proceduremakebox_ask_0 "ask patches with [ abs pxcor = box-edge and abs pycor <= box-edge or abs pycor = box-edge and abs pxcor <= box-edge ] [ set pcolor yellow ]" AgentSet => void
+      _with "patches with [ abs pxcor = box-edge and abs pycor <= box-edge or abs pycor = box-edge and abs pxcor <= box-edge ]" AgentSet,Reporter => AgentSet
         _patches "patches" => AgentSet
-        _asm_proceduremakebox_or_1 "abs pxcor = box-edge) and (abs pycor <= box-edge)) or
-                     ((abs pycor = box-edge) and (abs pxcor <= box-edge"
-          _and "abs pxcor = box-edge) and (abs pycor <= box-edge"
+        _asm_proceduremakebox_or_1 "abs pxcor = box-edge and abs pycor <= box-edge or abs pycor = box-edge and abs pxcor <= box-edge"
+          _and "abs pxcor = box-edge and abs pycor <= box-edge"
             _equal "abs pxcor = box-edge" double,Object => boolean
               _abs "abs pxcor" double => double
                 _patchvariabledouble:PXCOR "pxcor" => double
@@ -8312,7 +8296,7 @@ procedure MAKE-BOX:[]{OTPL}:
               _abs "abs pycor" double => double
                 _patchvariabledouble:PYCOR "pycor" => double
               _observervariable:BOX-EDGE "box-edge" => Object
-          _and "abs pycor = box-edge) and (abs pxcor <= box-edge"
+          _and "abs pycor = box-edge and abs pxcor <= box-edge"
             _equal "abs pycor = box-edge" double,Object => boolean
               _abs "abs pycor" double => double
                 _patchvariabledouble:PYCOR "pycor" => double
@@ -8849,7 +8833,7 @@ procedure MAKE-BOX:[]{OTPL}:
           RETURN
 
 procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-PLANE YNEG-PLANE CONTACT-POINT-XPOS CONTACT-POINT-XNEG CONTACT-POINT-YPOS CONTACT-POINT-YNEG DPXPOS DPXNEG DPYPOS DPYNEG T-PLANE-XPOS T-PLANE-XNEG T-PLANE-YPOS T-PLANE-YNEG]{-T--}:
-[0]_asm_procedurecheckforwallcollision_setprocedurevariable_0 Object => void
+[0]_asm_procedurecheckforwallcollision_setprocedurevariable_0 "let speed * convert-heading-x heading" Object => void
       _mult "speed * convert-heading-x heading" double,double => double
         _breedvariable:SPEED "speed" => Object
         _callreport:CONVERT-HEADING-X "convert-heading-x heading"
@@ -8990,7 +8974,7 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L16
           RETURN
-[1]_asm_procedurecheckforwallcollision_setprocedurevariable_1 Object => void
+[1]_asm_procedurecheckforwallcollision_setprocedurevariable_1 "let speed * convert-heading-y heading" Object => void
       _mult "speed * convert-heading-y heading" double,double => double
         _breedvariable:SPEED "speed" => Object
         _callreport:CONVERT-HEADING-Y "convert-heading-y heading"
@@ -9131,7 +9115,7 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L16
           RETURN
-[2]_asm_procedurecheckforwallcollision_setprocedurevariable_2 Object => void
+[2]_asm_procedurecheckforwallcollision_setprocedurevariable_2 "let box-edge - 0.5" Object => void
       _minus "box-edge - 0.5" double,double => double
         _observervariable:BOX-EDGE "box-edge" => Object
         _constdouble:0.5 "0.5" => double
@@ -9189,7 +9173,7 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[3]_asm_procedurecheckforwallcollision_setprocedurevariable_3 Object => void
+[3]_asm_procedurecheckforwallcollision_setprocedurevariable_3 "let - box-edge + 0.5" Object => void
       _plus "- box-edge + 0.5" double,double => double
         _unaryminus "- box-edge" double => double
           _observervariable:BOX-EDGE "box-edge" => Object
@@ -9252,7 +9236,7 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L8
           RETURN
-[4]_asm_procedurecheckforwallcollision_setprocedurevariable_4 Object => void
+[4]_asm_procedurecheckforwallcollision_setprocedurevariable_4 "let box-edge - 0.5" Object => void
       _minus "box-edge - 0.5" double,double => double
         _observervariable:BOX-EDGE "box-edge" => Object
         _constdouble:0.5 "0.5" => double
@@ -9310,7 +9294,7 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[5]_asm_procedurecheckforwallcollision_setprocedurevariable_5 Object => void
+[5]_asm_procedurecheckforwallcollision_setprocedurevariable_5 "let - box-edge + 0.5" Object => void
       _plus "- box-edge + 0.5" double,double => double
         _unaryminus "- box-edge" double => double
           _observervariable:BOX-EDGE "box-edge" => Object
@@ -9373,8 +9357,8 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L8
           RETURN
-[6]_asm_procedurecheckforwallcollision_setprocedurevariable_6 Object => void
-      _plus "xcor + (size / 2" double,double => double
+[6]_asm_procedurecheckforwallcollision_setprocedurevariable_6 "let xcor + size / 2" Object => void
+      _plus "xcor + size / 2" double,double => double
         _turtlevariabledouble:XCOR "xcor" => double
         _div "size / 2" double,double => double
           _turtlevariabledouble:SIZE "size" => double
@@ -9442,8 +9426,8 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[7]_asm_procedurecheckforwallcollision_setprocedurevariable_7 Object => void
-      _minus "xcor - (size / 2" double,double => double
+[7]_asm_procedurecheckforwallcollision_setprocedurevariable_7 "let xcor - size / 2" Object => void
+      _minus "xcor - size / 2" double,double => double
         _turtlevariabledouble:XCOR "xcor" => double
         _div "size / 2" double,double => double
           _turtlevariabledouble:SIZE "size" => double
@@ -9511,8 +9495,8 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[8]_asm_procedurecheckforwallcollision_setprocedurevariable_8 Object => void
-      _plus "ycor + (size / 2" double,double => double
+[8]_asm_procedurecheckforwallcollision_setprocedurevariable_8 "let ycor + size / 2" Object => void
+      _plus "ycor + size / 2" double,double => double
         _turtlevariabledouble:YCOR "ycor" => double
         _div "size / 2" double,double => double
           _turtlevariabledouble:SIZE "size" => double
@@ -9580,8 +9564,8 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[9]_asm_procedurecheckforwallcollision_setprocedurevariable_9 Object => void
-      _minus "ycor - (size / 2" double,double => double
+[9]_asm_procedurecheckforwallcollision_setprocedurevariable_9 "let ycor - size / 2" Object => void
+      _minus "ycor - size / 2" double,double => double
         _turtlevariabledouble:YCOR "ycor" => double
         _div "size / 2" double,double => double
           _turtlevariabledouble:SIZE "size" => double
@@ -9649,7 +9633,7 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[10]_asm_procedurecheckforwallcollision_setprocedurevariable_10 Object => void
+[10]_asm_procedurecheckforwallcollision_setprocedurevariable_10 "let xpos-plane - contact-point-xpos" Object => void
       _minus "xpos-plane - contact-point-xpos" double,double => double
         _procedurevariable:XPOS-PLANE "xpos-plane" => Object
         _procedurevariable:CONTACT-POINT-XPOS "contact-point-xpos" => Object
@@ -9733,7 +9717,7 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L10
           RETURN
-[11]_asm_procedurecheckforwallcollision_setprocedurevariable_11 Object => void
+[11]_asm_procedurecheckforwallcollision_setprocedurevariable_11 "let xneg-plane - contact-point-xneg" Object => void
       _minus "xneg-plane - contact-point-xneg" double,double => double
         _procedurevariable:XNEG-PLANE "xneg-plane" => Object
         _procedurevariable:CONTACT-POINT-XNEG "contact-point-xneg" => Object
@@ -9817,7 +9801,7 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L10
           RETURN
-[12]_asm_procedurecheckforwallcollision_setprocedurevariable_12 Object => void
+[12]_asm_procedurecheckforwallcollision_setprocedurevariable_12 "let ypos-plane - contact-point-ypos" Object => void
       _minus "ypos-plane - contact-point-ypos" double,double => double
         _procedurevariable:YPOS-PLANE "ypos-plane" => Object
         _procedurevariable:CONTACT-POINT-YPOS "contact-point-ypos" => Object
@@ -9901,7 +9885,7 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L10
           RETURN
-[13]_asm_procedurecheckforwallcollision_setprocedurevariable_13 Object => void
+[13]_asm_procedurecheckforwallcollision_setprocedurevariable_13 "let yneg-plane - contact-point-yneg" Object => void
       _minus "yneg-plane - contact-point-yneg" double,double => double
         _procedurevariable:YNEG-PLANE "yneg-plane" => Object
         _procedurevariable:CONTACT-POINT-YNEG "contact-point-yneg" => Object
@@ -9985,7 +9969,7 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L10
           RETURN
-[14]_asm_procedurecheckforwallcollision_setprocedurevariable_14 Object => void
+[14]_asm_procedurecheckforwallcollision_setprocedurevariable_14 "let 0" Object => void
       _constdouble:0.0 "0" => Double
          L0
           ALOAD 0
@@ -10003,7 +9987,7 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[15]_asm_procedurecheckforwallcollision_ifelse_15 "ifelse  x-speed != 0" boolean => void
+[15]_asm_procedurecheckforwallcollision_ifelse_15 "ifelse x-speed != 0 [ set t-plane-xpos dpxpos / x-speed ] [ set t-plane-xpos 0 ]" boolean => void
       _notequal "x-speed != 0" Object,double => boolean
         _procedurevariable:X-SPEED "x-speed" => Object
         _constdouble:0.0 "0" => double
@@ -10050,7 +10034,7 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L8
           RETURN
-[16]_asm_procedurecheckforwallcollision_setprocedurevariable_16 "set t-plane-xpos (dpxpos / x-speed" Object => void
+[16]_asm_procedurecheckforwallcollision_setprocedurevariable_16 "set t-plane-xpos dpxpos / x-speed" Object => void
       _div "dpxpos / x-speed" double,double => double
         _procedurevariable:DPXPOS "dpxpos" => Object
         _procedurevariable:X-SPEED "x-speed" => Object
@@ -10174,7 +10158,7 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[19]_asm_procedurecheckforwallcollision_if_19 "if t-plane-xpos > 0" boolean => void
+[19]_asm_procedurecheckforwallcollision_if_19 "if t-plane-xpos > 0 [ assign-colliding-wall t-plane-xpos "plane-xpos" ]" boolean => void
       _greaterthan "t-plane-xpos > 0" Object,double => boolean
         _procedurevariable:T-PLANE-XPOS "t-plane-xpos" => Object
         _constdouble:0.0 "0" => double
@@ -10284,7 +10268,7 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L5
           RETURN
-[21]_asm_procedurecheckforwallcollision_setprocedurevariable_21 Object => void
+[21]_asm_procedurecheckforwallcollision_setprocedurevariable_21 "let 0" Object => void
       _constdouble:0.0 "0" => Double
          L0
           ALOAD 0
@@ -10302,7 +10286,7 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[22]_asm_procedurecheckforwallcollision_ifelse_22 "ifelse  x-speed != 0" boolean => void
+[22]_asm_procedurecheckforwallcollision_ifelse_22 "ifelse x-speed != 0 [ set t-plane-xneg dpxneg / x-speed ] [ set t-plane-xneg 0 ]" boolean => void
       _notequal "x-speed != 0" Object,double => boolean
         _procedurevariable:X-SPEED "x-speed" => Object
         _constdouble:0.0 "0" => double
@@ -10349,7 +10333,7 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L8
           RETURN
-[23]_asm_procedurecheckforwallcollision_setprocedurevariable_23 "set t-plane-xneg (dpxneg / x-speed" Object => void
+[23]_asm_procedurecheckforwallcollision_setprocedurevariable_23 "set t-plane-xneg dpxneg / x-speed" Object => void
       _div "dpxneg / x-speed" double,double => double
         _procedurevariable:DPXNEG "dpxneg" => Object
         _procedurevariable:X-SPEED "x-speed" => Object
@@ -10473,7 +10457,7 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[26]_asm_procedurecheckforwallcollision_if_26 "if t-plane-xneg > 0" boolean => void
+[26]_asm_procedurecheckforwallcollision_if_26 "if t-plane-xneg > 0 [ assign-colliding-wall t-plane-xneg "plane-xneg" ]" boolean => void
       _greaterthan "t-plane-xneg > 0" Object,double => boolean
         _procedurevariable:T-PLANE-XNEG "t-plane-xneg" => Object
         _constdouble:0.0 "0" => double
@@ -10583,7 +10567,7 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L5
           RETURN
-[28]_asm_procedurecheckforwallcollision_setprocedurevariable_28 Object => void
+[28]_asm_procedurecheckforwallcollision_setprocedurevariable_28 "let 0" Object => void
       _constdouble:0.0 "0" => Double
          L0
           ALOAD 0
@@ -10601,7 +10585,7 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[29]_asm_procedurecheckforwallcollision_ifelse_29 "ifelse  y-speed != 0" boolean => void
+[29]_asm_procedurecheckforwallcollision_ifelse_29 "ifelse y-speed != 0 [ set t-plane-ypos dpypos / y-speed ] [ set t-plane-ypos 0 ]" boolean => void
       _notequal "y-speed != 0" Object,double => boolean
         _procedurevariable:Y-SPEED "y-speed" => Object
         _constdouble:0.0 "0" => double
@@ -10648,7 +10632,7 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L8
           RETURN
-[30]_asm_procedurecheckforwallcollision_setprocedurevariable_30 "set t-plane-ypos (dpypos / y-speed" Object => void
+[30]_asm_procedurecheckforwallcollision_setprocedurevariable_30 "set t-plane-ypos dpypos / y-speed" Object => void
       _div "dpypos / y-speed" double,double => double
         _procedurevariable:DPYPOS "dpypos" => Object
         _procedurevariable:Y-SPEED "y-speed" => Object
@@ -10772,7 +10756,7 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[33]_asm_procedurecheckforwallcollision_if_33 "if t-plane-ypos > 0" boolean => void
+[33]_asm_procedurecheckforwallcollision_if_33 "if t-plane-ypos > 0 [ assign-colliding-wall t-plane-ypos "plane-ypos" ]" boolean => void
       _greaterthan "t-plane-ypos > 0" Object,double => boolean
         _procedurevariable:T-PLANE-YPOS "t-plane-ypos" => Object
         _constdouble:0.0 "0" => double
@@ -10882,7 +10866,7 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L5
           RETURN
-[35]_asm_procedurecheckforwallcollision_setprocedurevariable_35 Object => void
+[35]_asm_procedurecheckforwallcollision_setprocedurevariable_35 "let 0" Object => void
       _constdouble:0.0 "0" => Double
          L0
           ALOAD 0
@@ -10900,7 +10884,7 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[36]_asm_procedurecheckforwallcollision_ifelse_36 "ifelse  y-speed != 0" boolean => void
+[36]_asm_procedurecheckforwallcollision_ifelse_36 "ifelse y-speed != 0 [ set t-plane-yneg dpyneg / y-speed ] [ set t-plane-yneg 0 ]" boolean => void
       _notequal "y-speed != 0" Object,double => boolean
         _procedurevariable:Y-SPEED "y-speed" => Object
         _constdouble:0.0 "0" => double
@@ -10947,7 +10931,7 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L8
           RETURN
-[37]_asm_procedurecheckforwallcollision_setprocedurevariable_37 "set t-plane-yneg (dpyneg / y-speed" Object => void
+[37]_asm_procedurecheckforwallcollision_setprocedurevariable_37 "set t-plane-yneg dpyneg / y-speed" Object => void
       _div "dpyneg / y-speed" double,double => double
         _procedurevariable:DPYNEG "dpyneg" => Object
         _procedurevariable:Y-SPEED "y-speed" => Object
@@ -11071,7 +11055,7 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[40]_asm_procedurecheckforwallcollision_if_40 "if t-plane-yneg > 0" boolean => void
+[40]_asm_procedurecheckforwallcollision_if_40 "if t-plane-yneg > 0 [ assign-colliding-wall t-plane-yneg "plane-yneg" ]" boolean => void
       _greaterthan "t-plane-yneg > 0" Object,double => boolean
         _procedurevariable:T-PLANE-YNEG "t-plane-yneg" => Object
         _constdouble:0.0 "0" => double
@@ -11312,7 +11296,7 @@ reporter procedure CONVERT-HEADING-Y:[HEADING-ANGLE]{OTPL}:
           ATHROW
 
 procedure COLLIDE-WINNERS:[]{OTPL}:
-[0]_asm_procedurecollidewinners_if_0 "if colliding-particle-1 = nobody" boolean => void
+[0]_asm_procedurecollidewinners_if_0 "if colliding-particle-1 = nobody [ stop ]" boolean => void
       _equal "colliding-particle-1 = nobody" Object,Object => boolean
         _observervariable:COLLIDING-PARTICLE-1 "colliding-particle-1" => Object
         _nobody "nobody" => Nobody$
@@ -11395,7 +11379,7 @@ procedure COLLIDE-WINNERS:[]{OTPL}:
          L2
          FRAME SAME
           RETURN
-[2]_asm_procedurecollidewinners_if_2 "if colliding-particle-2 = "plane-xpos" or colliding-particle-2 = "plane-xneg"" boolean => void
+[2]_asm_procedurecollidewinners_if_2 "if colliding-particle-2 = "plane-xpos" or colliding-particle-2 = "plane-xneg" ask colliding-particle-1 [ set heading - heading ] [ stop ]" boolean => void
       _or "colliding-particle-2 = "plane-xpos" or colliding-particle-2 = "plane-xneg""
         _equal "colliding-particle-2 = "plane-xpos"" Object,String => boolean
           _observervariable:COLLIDING-PARTICLE-2 "colliding-particle-2" => Object
@@ -11452,7 +11436,7 @@ procedure COLLIDE-WINNERS:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[3]_asm_procedurecollidewinners_ask_3 "ask colliding-particle-1" Object => void
+[3]_asm_procedurecollidewinners_ask_3 "ask colliding-particle-1 [ set heading - heading ]" Object => void
       _observervariable:COLLIDING-PARTICLE-1 "colliding-particle-1" => Object
          L0
           ALOAD 1
@@ -11568,7 +11552,7 @@ procedure COLLIDE-WINNERS:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[4]_asm_procedurecollidewinners_setturtlevariable_4 "set heading (- heading" Object => void
+[4]_asm_procedurecollidewinners_setturtlevariable_4 "set heading - heading" Object => void
       _unaryminus "- heading" double => double
         _turtlevariabledouble:HEADING "heading" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -11673,7 +11657,7 @@ procedure COLLIDE-WINNERS:[]{OTPL}:
          L2
          FRAME SAME
           RETURN
-[7]_asm_procedurecollidewinners_if_7 "if colliding-particle-2 = "plane-ypos" or colliding-particle-2 = "plane-yneg"" boolean => void
+[7]_asm_procedurecollidewinners_if_7 "if colliding-particle-2 = "plane-ypos" or colliding-particle-2 = "plane-yneg" ask colliding-particle-1 [ set heading 180 - heading ] [ stop ]" boolean => void
       _or "colliding-particle-2 = "plane-ypos" or colliding-particle-2 = "plane-yneg""
         _equal "colliding-particle-2 = "plane-ypos"" Object,String => boolean
           _observervariable:COLLIDING-PARTICLE-2 "colliding-particle-2" => Object
@@ -11730,7 +11714,7 @@ procedure COLLIDE-WINNERS:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[8]_asm_procedurecollidewinners_ask_8 "ask colliding-particle-1" Object => void
+[8]_asm_procedurecollidewinners_ask_8 "ask colliding-particle-1 [ set heading 180 - heading ]" Object => void
       _observervariable:COLLIDING-PARTICLE-1 "colliding-particle-1" => Object
          L0
           ALOAD 1
@@ -11846,7 +11830,7 @@ procedure COLLIDE-WINNERS:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[9]_asm_procedurecollidewinners_setturtlevariable_9 "set heading (180 - heading" Object => void
+[9]_asm_procedurecollidewinners_setturtlevariable_9 "set heading 180 - heading" Object => void
       _minus "180 - heading" double,double => double
         _constdouble:180.0 "180" => double
         _turtlevariabledouble:HEADING "heading" => double
@@ -11958,7 +11942,7 @@ procedure COLLIDE-WINNERS:[]{OTPL}:
          L2
          FRAME SAME
           RETURN
-[12]_asm_procedurecollidewinners_ask_12 "ask colliding-particle-1" Object => void
+[12]_asm_procedurecollidewinners_ask_12 "ask colliding-particle-1 [ collide-with colliding-particle-2 ]" Object => void
       _observervariable:COLLIDING-PARTICLE-1 "colliding-particle-1" => Object
          L0
           ALOAD 1
@@ -12121,7 +12105,7 @@ procedure COLLIDE-WINNERS:[]{OTPL}:
           RETURN
 
 procedure RECOLOR-BANDED:[AVG-SPEED]{-T--}:
-[0]_asm_procedurerecolorbanded_setprocedurevariable_0 Object => void
+[0]_asm_procedurerecolorbanded_setprocedurevariable_0 "let 1" Object => void
       _constdouble:1.0 "1" => Double
          L0
           ALOAD 0
@@ -12139,8 +12123,8 @@ procedure RECOLOR-BANDED:[AVG-SPEED]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[1]_asm_procedurerecolorbanded_ifelse_1 "ifelse speed < (0.5 * avg-speed" boolean => void
-      _lessthan "speed < (0.5 * avg-speed" Object,double => boolean
+[1]_asm_procedurerecolorbanded_ifelse_1 "ifelse speed < 0.5 * avg-speed [ set color blue ] [ ifelse speed > 1.5 * avg-speed [ set color red ] [ set color green ] ]" boolean => void
+      _lessthan "speed < 0.5 * avg-speed" Object,double => boolean
         _breedvariable:SPEED "speed" => Object
         _mult "0.5 * avg-speed" double,double => double
           _constdouble:0.5 "0.5" => double
@@ -12303,8 +12287,8 @@ procedure RECOLOR-BANDED:[AVG-SPEED]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[4]_asm_procedurerecolorbanded_ifelse_4 "ifelse speed > (1.5 * avg-speed" boolean => void
-      _greaterthan "speed > (1.5 * avg-speed" Object,double => boolean
+[4]_asm_procedurerecolorbanded_ifelse_4 "ifelse speed > 1.5 * avg-speed [ set color red ] [ set color green ]" boolean => void
+      _greaterthan "speed > 1.5 * avg-speed" Object,double => boolean
         _breedvariable:SPEED "speed" => Object
         _mult "1.5 * avg-speed" double,double => double
           _constdouble:1.5 "1.5" => double
@@ -12512,7 +12496,7 @@ procedure RECOLOR-BANDED:[AVG-SPEED]{-T--}:
           RETURN
 
 procedure ARRANGE:[PARTICLE-SET]{OTPL}:
-[0]_asm_procedurearrange_if_0 "if not any? particle-set" boolean => void
+[0]_asm_procedurearrange_if_0 "if not any? particle-set [ stop ]" boolean => void
       _not "not any? particle-set" boolean => boolean
         _any "any? particle-set" AgentSet => boolean
           _procedurevariable:PARTICLE-SET "particle-set" => Object
@@ -12629,7 +12613,7 @@ procedure ARRANGE:[PARTICLE-SET]{OTPL}:
          L2
          FRAME SAME
           RETURN
-[2]_asm_procedurearrange_ask_2 "ask particle-set" Object => void
+[2]_asm_procedurearrange_ask_2 "ask particle-set [ random-position ]" Object => void
       _procedurevariable:PARTICLE-SET "particle-set" => Object
          L0
           ALOAD 1
@@ -12771,8 +12755,8 @@ procedure ARRANGE:[PARTICLE-SET]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[5]_asm_procedurearrange_call_5 "arrange particle-set with [overlapping?"
-      _with "particle-set with [overlapping?" AgentSet,Reporter => AgentSet
+[5]_asm_procedurearrange_call_5 "arrange particle-set with [ overlapping? ]"
+      _with "particle-set with [ overlapping? ]" AgentSet,Reporter => AgentSet
         _procedurevariable:PARTICLE-SET "particle-set" => Object
         _asm_procedurearrange_callreport_6 "overlapping?"
              L0
@@ -12947,7 +12931,7 @@ procedure ARRANGE:[PARTICLE-SET]{OTPL}:
           RETURN
 
 procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY-Y-SPEED]{-T--}:
-[0]_asm_procedurecheckforparticlecollision_setprocedurevariable_0 Object => void
+[0]_asm_procedurecheckforparticlecollision_setprocedurevariable_0 "let xcor" Object => void
       _turtlevariabledouble:XCOR "xcor" => Double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
@@ -12983,7 +12967,7 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[1]_asm_procedurecheckforparticlecollision_setprocedurevariable_1 Object => void
+[1]_asm_procedurecheckforparticlecollision_setprocedurevariable_1 "let ycor" Object => void
       _turtlevariabledouble:YCOR "ycor" => Double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
@@ -13019,7 +13003,7 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[2]_asm_procedurecheckforparticlecollision_setprocedurevariable_2 Object => void
+[2]_asm_procedurecheckforparticlecollision_setprocedurevariable_2 "let size" Object => void
       _turtlevariabledouble:SIZE "size" => Double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
@@ -13055,7 +13039,7 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[3]_asm_procedurecheckforparticlecollision_setprocedurevariable_3 Object => void
+[3]_asm_procedurecheckforparticlecollision_setprocedurevariable_3 "let speed * convert-heading-x heading" Object => void
       _mult "speed * convert-heading-x heading" double,double => double
         _breedvariable:SPEED "speed" => Object
         _callreport:CONVERT-HEADING-X "convert-heading-x heading"
@@ -13196,7 +13180,7 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L16
           RETURN
-[4]_asm_procedurecheckforparticlecollision_setprocedurevariable_4 Object => void
+[4]_asm_procedurecheckforparticlecollision_setprocedurevariable_4 "let speed * convert-heading-y heading" Object => void
       _mult "speed * convert-heading-y heading" double,double => double
         _breedvariable:SPEED "speed" => Object
         _callreport:CONVERT-HEADING-Y "convert-heading-y heading"
@@ -13337,7 +13321,7 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L16
           RETURN
-[5]_asm_procedurecheckforparticlecollision_ask_5 "ask other particles" AgentSet => void
+[5]_asm_procedurecheckforparticlecollision_ask_5 "ask other particles let xcor - my-x let ycor - my-y let speed * convert-heading-x heading let speed * convert-heading-y heading let x-speed - my-x-speed let y-speed - my-y-speed let my-particle-size / 2 + [ size ] of self / 2 let dpx * dpx + dpy * dpy - sum-r ^ 2 let 2 * dpx * dvx + dpy * dvy let dvx * dvx + dvy * dvy let pv ^ 2 - 4 * v-squared * p-squared let -1 if D1 >= 0 [ set time-to-collision - pv - sqrt D1 / 2 * v-squared ] [ if time-to-collision > 0 let (list time-to-collision + ticks self myself) [ set colliding-particles fput colliding-pair colliding-particles ] ]" AgentSet => void
       _other "other particles" AgentSet => AgentSet
         _breed:PARTICLES "particles" => AgentSet
          L0
@@ -13427,7 +13411,7 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L8
           RETURN
-[6]_let "let dpx (xcor - my-x"
+[6]_let "let xcor - my-x"
       _asm_procedurecheckforparticlecollision_minus_6 "xcor - my-x" double,double => double
         _turtlevariabledouble:XCOR "xcor" => double
         _procedurevariable:MY-X "my-x" => Object
@@ -13479,7 +13463,7 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[7]_let "let dpy (ycor - my-y"
+[7]_let "let ycor - my-y"
       _asm_procedurecheckforparticlecollision_minus_7 "ycor - my-y" double,double => double
         _turtlevariabledouble:YCOR "ycor" => double
         _procedurevariable:MY-Y "my-y" => Object
@@ -13531,7 +13515,7 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[8]_let "let x-speed (speed * convert-heading-x heading"
+[8]_let "let speed * convert-heading-x heading"
       _asm_procedurecheckforparticlecollision_mult_8 "speed * convert-heading-x heading" double,double => double
         _breedvariable:SPEED "speed" => Object
         _callreport:CONVERT-HEADING-X "convert-heading-x heading"
@@ -13661,7 +13645,7 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[9]_let "let y-speed (speed * convert-heading-y heading"
+[9]_let "let speed * convert-heading-y heading"
       _asm_procedurecheckforparticlecollision_mult_9 "speed * convert-heading-y heading" double,double => double
         _breedvariable:SPEED "speed" => Object
         _callreport:CONVERT-HEADING-Y "convert-heading-y heading"
@@ -13791,7 +13775,7 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[10]_let "let dvx (x-speed - my-x-speed"
+[10]_let "let x-speed - my-x-speed"
       _asm_procedurecheckforparticlecollision_minus_10 "x-speed - my-x-speed" double,double => double
         _letvariable(X-SPEED) "x-speed" => Object
         _procedurevariable:MY-X-SPEED "my-x-speed" => Object
@@ -13863,7 +13847,7 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[11]_let "let dvy (y-speed - my-y-speed"
+[11]_let "let y-speed - my-y-speed"
       _asm_procedurecheckforparticlecollision_minus_11 "y-speed - my-y-speed" double,double => double
         _letvariable(Y-SPEED) "y-speed" => Object
         _procedurevariable:MY-Y-SPEED "my-y-speed" => Object
@@ -13935,13 +13919,13 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[12]_let "let sum-r (((my-particle-size) / 2 ) + (([size] of self) / 2"
-      _asm_procedurecheckforparticlecollision_plus_12 "my-particle-size) / 2 ) + (([size] of self) / 2" double,double => double
-        _div "my-particle-size) / 2" double,double => double
+[12]_let "let my-particle-size / 2 + [ size ] of self / 2"
+      _asm_procedurecheckforparticlecollision_plus_12 "my-particle-size / 2 + [ size ] of self / 2" double,double => double
+        _div "my-particle-size / 2" double,double => double
           _procedurevariable:MY-PARTICLE-SIZE "my-particle-size" => Object
           _constdouble:2.0 "2" => double
-        _div "of self) / 2" double,double => double
-          _turtlevariableof:SIZE "of self" Agent => Object
+        _div "[ size ] of self / 2" double,double => double
+          _turtlevariableof:SIZE "[ size ] of self" Agent => Object
             _self "self" => Agent
           _constdouble:2.0 "2" => double
             TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
@@ -14103,9 +14087,9 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[13]_let "let p-squared   ((dpx * dpx) + (dpy * dpy)) - (sum-r ^ 2"
-      _asm_procedurecheckforparticlecollision_minus_13 "dpx * dpx) + (dpy * dpy)) - (sum-r ^ 2" double,double => double
-        _plus "dpx * dpx) + (dpy * dpy" double,double => double
+[13]_let "let dpx * dpx + dpy * dpy - sum-r ^ 2"
+      _asm_procedurecheckforparticlecollision_minus_13 "dpx * dpx + dpy * dpy - sum-r ^ 2" double,double => double
+        _plus "dpx * dpx + dpy * dpy" double,double => double
           _mult "dpx * dpx" double,double => double
             _letvariable(DPX) "dpx" => Object
             _letvariable(DPX) "dpx" => Object
@@ -14294,10 +14278,10 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[14]_let "let pv  (2 * ((dpx * dvx) + (dpy * dvy"
-      _asm_procedurecheckforparticlecollision_mult_14 "2 * ((dpx * dvx) + (dpy * dvy" double,double => double
+[14]_let "let 2 * dpx * dvx + dpy * dvy"
+      _asm_procedurecheckforparticlecollision_mult_14 "2 * dpx * dvx + dpy * dvy" double,double => double
         _constdouble:2.0 "2" => double
-        _plus "dpx * dvx) + (dpy * dvy" double,double => double
+        _plus "dpx * dvx + dpy * dvy" double,double => double
           _mult "dpx * dvx" double,double => double
             _letvariable(DPX) "dpx" => Object
             _letvariable(DVX) "dvx" => Object
@@ -14449,8 +14433,8 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[15]_let "let v-squared  ((dvx * dvx) + (dvy * dvy"
-      _asm_procedurecheckforparticlecollision_plus_15 "dvx * dvx) + (dvy * dvy" double,double => double
+[15]_let "let dvx * dvx + dvy * dvy"
+      _asm_procedurecheckforparticlecollision_plus_15 "dvx * dvx + dvy * dvy" double,double => double
         _mult "dvx * dvx" double,double => double
           _letvariable(DVX) "dvx" => Object
           _letvariable(DVX) "dvx" => Object
@@ -14592,8 +14576,8 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[16]_let "let D1 pv ^ 2 -  (4 * v-squared * p-squared"
-      _asm_procedurecheckforparticlecollision_minus_16 "pv ^ 2 -  (4 * v-squared * p-squared" double,double => double
+[16]_let "let pv ^ 2 - 4 * v-squared * p-squared"
+      _asm_procedurecheckforparticlecollision_minus_16 "pv ^ 2 - 4 * v-squared * p-squared" double,double => double
         _pow "pv ^ 2" double,double => double
           _letvariable(PV) "pv" => Object
           _constdouble:2.0 "2" => double
@@ -14723,14 +14707,14 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[17]_let "let time-to-collision  -1"
+[17]_let "let -1"
       _asm_procedurecheckforparticlecollision_constdouble_17 "-1" => Double
            L0
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_procedurecheckforparticlecollision_constdouble_17.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-[18]_asm_procedurecheckforparticlecollision_if_18 "if D1 >= 0" boolean => void
+[18]_asm_procedurecheckforparticlecollision_if_18 "if D1 >= 0 [ set time-to-collision - pv - sqrt D1 / 2 * v-squared ]" boolean => void
       _greaterorequal "D1 >= 0" Object,double => boolean
         _letvariable(D1) "D1" => Object
         _constdouble:0.0 "0" => double
@@ -14801,8 +14785,8 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L9
           RETURN
-[19]_setletvariable:TIME-TO-COLLISION "set time-to-collision (- pv - sqrt D1) / (2 * v-squared"
-      _asm_procedurecheckforparticlecollision_div_19 "- pv - sqrt D1) / (2 * v-squared" double,double => double
+[19]_setletvariable:TIME-TO-COLLISION "set time-to-collision - pv - sqrt D1 / 2 * v-squared"
+      _asm_procedurecheckforparticlecollision_div_19 "- pv - sqrt D1 / 2 * v-squared" double,double => double
         _minus "- pv - sqrt D1" double,double => double
           _unaryminus "- pv" double => double
             _letvariable(PV) "pv" => Object
@@ -14967,7 +14951,7 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[20]_asm_procedurecheckforparticlecollision_if_20 "if time-to-collision > 0" boolean => void
+[20]_asm_procedurecheckforparticlecollision_if_20 "if time-to-collision > 0 let (list time-to-collision + ticks self myself) [ set colliding-particles fput colliding-pair colliding-particles ]" boolean => void
       _greaterthan "time-to-collision > 0" Object,double => boolean
         _letvariable(TIME-TO-COLLISION) "time-to-collision" => Object
         _constdouble:0.0 "0" => double
@@ -15038,8 +15022,8 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L9
           RETURN
-[21]_let "let colliding-pair (list (time-to-collision + ticks) self myself"
-      _asm_procedurecheckforparticlecollision_list_21 "list (time-to-collision + ticks) self myself"
+[21]_let "let (list time-to-collision + ticks self myself)"
+      _asm_procedurecheckforparticlecollision_list_21 "(list time-to-collision + ticks self myself)"
         _plus "time-to-collision + ticks" double,double => double
           _letvariable(TIME-TO-COLLISION) "time-to-collision" => Object
           _ticks "ticks" => double
@@ -15252,7 +15236,7 @@ procedure TEST-TIME-REVERSAL:[N OLD-CLOCK]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[1]_asm_proceduretesttimereversal_ask_1 "ask particles" AgentSet => void
+[1]_asm_proceduretesttimereversal_ask_1 "ask particles [ stamp ]" AgentSet => void
       _breed:PARTICLES "particles" => AgentSet
          L0
           ALOAD 0
@@ -15339,7 +15323,7 @@ procedure TEST-TIME-REVERSAL:[N OLD-CLOCK]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[6]_asm_proceduretesttimereversal_while_5 "while [ticks < n" boolean => void
+[6]_asm_proceduretesttimereversal_while_5 "while [ ticks < n ] [ go ]" boolean => void
       _lessthan "ticks < n" double,Object => boolean
         _ticks "ticks" => double
         _procedurevariable:N "n" => Object
@@ -15430,7 +15414,7 @@ procedure TEST-TIME-REVERSAL:[N OLD-CLOCK]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L10
           RETURN
-[7]_asm_proceduretesttimereversal_setprocedurevariable_6 Object => void
+[7]_asm_proceduretesttimereversal_setprocedurevariable_6 "let ticks" Object => void
       _ticks "ticks" => double
          L0
           ALOAD 0
@@ -15514,7 +15498,7 @@ procedure TEST-TIME-REVERSAL:[N OLD-CLOCK]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[11]_asm_proceduretesttimereversal_while_10 "while [ticks < 2 * old-clock" boolean => void
+[11]_asm_proceduretesttimereversal_while_10 "while [ ticks < 2 * old-clock ] [ go ]" boolean => void
       _lessthan "ticks < 2 * old-clock" double,double => boolean
         _ticks "ticks" => double
         _mult "2 * old-clock" double,double => double
@@ -15606,7 +15590,7 @@ procedure TEST-TIME-REVERSAL:[N OLD-CLOCK]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L13
           RETURN
-[12]_asm_proceduretesttimereversal_ask_11 "ask particles" AgentSet => void
+[12]_asm_proceduretesttimereversal_ask_11 "ask particles [ set color white ]" AgentSet => void
       _breed:PARTICLES "particles" => AgentSet
          L0
           ALOAD 0

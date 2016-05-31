@@ -7,7 +7,7 @@ breeds
 link-breeds 
 
 procedure GO:[]{O---}:
-[0]_asm_procedurego_ask_0 "ask land" Object => void
+[0]_asm_procedurego_ask_0 "ask land [ if random-float 1.0 < rainfall [ set water water + 1 ] ]" Object => void
       _observervariable:LAND "land" => Object
          L0
           ALOAD 1
@@ -123,7 +123,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[1]_asm_procedurego_if_1 "if random-float 1.0 < rainfall" boolean => void
+[1]_asm_procedurego_if_1 "if random-float 1.0 < rainfall [ set water water + 1 ]" boolean => void
       _lessthan "random-float 1.0 < rainfall" double,Object => boolean
         _randomfloat "random-float 1.0" double => double
           _constdouble:1.0 "1.0" => double
@@ -301,7 +301,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[4]_asm_procedurego_ask_4 "ask land" Object => void
+[4]_asm_procedurego_ask_4 "ask land [ if water > 0 [ flow ] ]" Object => void
       _observervariable:LAND "land" => Object
          L0
           ALOAD 1
@@ -417,7 +417,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[5]_asm_procedurego_if_5 "if water > 0" boolean => void
+[5]_asm_procedurego_if_5 "if water > 0 [ flow ]" boolean => void
       _greaterthan "water > 0" Object,double => boolean
         _patchvariable:WATER "water" => Object
         _constdouble:0.0 "0" => double
@@ -528,7 +528,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[8]_asm_procedurego_ask_8 "ask drains" Object => void
+[8]_asm_procedurego_ask_8 "ask drains set water 0 [ set elevation -10000000 ]" Object => void
       _observervariable:DRAINS "drains" => Object
          L0
           ALOAD 1
@@ -719,7 +719,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[12]_asm_procedurego_ask_12 "ask land" Object => void
+[12]_asm_procedurego_ask_12 "ask land [ recolor ]" Object => void
       _observervariable:LAND "land" => Object
          L0
           ALOAD 1
@@ -872,7 +872,7 @@ procedure GO:[]{O---}:
           RETURN
 
 procedure RECOLOR:[]{-TP-}:
-[0]_asm_procedurerecolor_ifelse_0 "ifelse water = 0 or not show-water?" boolean => void
+[0]_asm_procedurerecolor_ifelse_0 "ifelse water = 0 or not show-water? [ set pcolor scale-color white elevation -250 100 ] [ set pcolor scale-color blue min list water 75 100 -10 ]" boolean => void
       _or "water = 0 or not show-water?"
         _equal "water = 0" Object,double => boolean
           _patchvariable:WATER "water" => Object
@@ -1179,8 +1179,8 @@ procedure RECOLOR:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedurerecolor_setpatchvariable_3 "set pcolor scale-color blue (min list water 75) 100 -10" Object => void
-      _scalecolor "scale-color blue (min list water 75) 100 -10" double,double,double,double => double
+[3]_asm_procedurerecolor_setpatchvariable_3 "set pcolor scale-color blue min list water 75 100 -10" Object => void
+      _scalecolor "scale-color blue min list water 75 100 -10" double,double,double,double => double
         _constdouble:105.0 "blue" => double
         _min "min list water 75" LogoList => double
           _list "list water 75"
@@ -1514,7 +1514,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedurebenchmark_repeatlocal_2 double => void
+[3]_asm_procedurebenchmark_repeatlocal_2 "repeat 250 [ go ]" double => void
       _constdouble:250.0 "250" => double
          L0
           LDC 250.0
@@ -1638,8 +1638,8 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           RETURN
 
 procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
-[0]_asm_procedureflow_setprocedurevariable_0 Object => void
-      _minoneof "min-one-of neighbors [elevation + water"
+[0]_asm_procedureflow_setprocedurevariable_0 "let min-one-of neighbors [ elevation + water ]" Object => void
+      _minoneof "min-one-of neighbors [ elevation + water ]"
         _asm_procedureflow_neighbors_1 "neighbors" => AgentSet
              L0
               ALOAD 1
@@ -1778,20 +1778,20 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[1]_asm_procedureflow_setprocedurevariable_3 Object => void
-      _min "min list water (0.5 * (elevation + water - [elevation] of target - [water] of target" LogoList => double
-        _list "list water (0.5 * (elevation + water - [elevation] of target - [water] of target"
+[1]_asm_procedureflow_setprocedurevariable_3 "let min list water 0.5 * elevation + water - [ elevation ] of target - [ water ] of target" Object => void
+      _min "min list water 0.5 * elevation + water - [ elevation ] of target - [ water ] of target" LogoList => double
+        _list "list water 0.5 * elevation + water - [ elevation ] of target - [ water ] of target"
           _patchvariable:WATER "water" => Object
-          _mult "0.5 * (elevation + water - [elevation] of target - [water] of target" double,double => double
+          _mult "0.5 * elevation + water - [ elevation ] of target - [ water ] of target" double,double => double
             _constdouble:0.5 "0.5" => double
-            _minus "elevation + water - [elevation] of target - [water] of target" double,double => double
-              _minus "elevation + water - [elevation] of target" double,double => double
+            _minus "elevation + water - [ elevation ] of target - [ water ] of target" double,double => double
+              _minus "elevation + water - [ elevation ] of target" double,double => double
                 _plus "elevation + water" double,double => double
                   _patchvariable:ELEVATION "elevation" => Object
                   _patchvariable:WATER "water" => Object
-                _patchvariableof:ELEVATION "of target" Object => Object
+                _patchvariableof:ELEVATION "[ elevation ] of target" Object => Object
                   _procedurevariable:TARGET "target" => Object
-              _patchvariableof:WATER "of target" Object => Object
+              _patchvariableof:WATER "[ water ] of target" Object => Object
                 _procedurevariable:TARGET "target" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
@@ -2339,7 +2339,7 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L60
           RETURN
-[2]_asm_procedureflow_if_4 "if amount > 0" boolean => void
+[2]_asm_procedureflow_if_4 "if amount > 0 let amount * 1 - soil-hardness set elevation elevation - erosion set amount min list water 0.5 * elevation + water - [ elevation ] of target - [ water ] of target set water water - amount [ ask target [ set water water + amount ] ]" boolean => void
       _greaterthan "amount > 0" Object,double => boolean
         _procedurevariable:AMOUNT "amount" => Object
         _constdouble:0.0 "0" => double
@@ -2411,8 +2411,8 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L9
           RETURN
-[3]_asm_procedureflow_setprocedurevariable_5 Object => void
-      _mult "amount * (1 - soil-hardness" double,double => double
+[3]_asm_procedureflow_setprocedurevariable_5 "let amount * 1 - soil-hardness" Object => void
+      _mult "amount * 1 - soil-hardness" double,double => double
         _procedurevariable:AMOUNT "amount" => Object
         _minus "1 - soil-hardness" double,double => double
           _constdouble:1.0 "1" => double
@@ -2620,20 +2620,20 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L16
           RETURN
-[5]_asm_procedureflow_setprocedurevariable_7 "set amount min list water (0.5 * (elevation + water - [elevation] of target - [water] of target" Object => void
-      _min "min list water (0.5 * (elevation + water - [elevation] of target - [water] of target" LogoList => double
-        _list "list water (0.5 * (elevation + water - [elevation] of target - [water] of target"
+[5]_asm_procedureflow_setprocedurevariable_7 "set amount min list water 0.5 * elevation + water - [ elevation ] of target - [ water ] of target" Object => void
+      _min "min list water 0.5 * elevation + water - [ elevation ] of target - [ water ] of target" LogoList => double
+        _list "list water 0.5 * elevation + water - [ elevation ] of target - [ water ] of target"
           _patchvariable:WATER "water" => Object
-          _mult "0.5 * (elevation + water - [elevation] of target - [water] of target" double,double => double
+          _mult "0.5 * elevation + water - [ elevation ] of target - [ water ] of target" double,double => double
             _constdouble:0.5 "0.5" => double
-            _minus "elevation + water - [elevation] of target - [water] of target" double,double => double
-              _minus "elevation + water - [elevation] of target" double,double => double
+            _minus "elevation + water - [ elevation ] of target - [ water ] of target" double,double => double
+              _minus "elevation + water - [ elevation ] of target" double,double => double
                 _plus "elevation + water" double,double => double
                   _patchvariable:ELEVATION "elevation" => Object
                   _patchvariable:WATER "water" => Object
-                _patchvariableof:ELEVATION "of target" Object => Object
+                _patchvariableof:ELEVATION "[ elevation ] of target" Object => Object
                   _procedurevariable:TARGET "target" => Object
-              _patchvariableof:WATER "of target" Object => Object
+              _patchvariableof:WATER "[ water ] of target" Object => Object
                 _procedurevariable:TARGET "target" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
@@ -3295,7 +3295,7 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L16
           RETURN
-[7]_asm_procedureflow_ask_9 "ask target" Object => void
+[7]_asm_procedureflow_ask_9 "ask target [ set water water + amount ]" Object => void
       _procedurevariable:TARGET "target" => Object
          L0
           ALOAD 1
@@ -3580,7 +3580,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[3]_asm_proceduresetup_ask_1 "ask patches" AgentSet => void
+[3]_asm_proceduresetup_ask_1 "ask patches ifelse bumpy? [ ifelse hill? [ set elevation -100 * distancexy 0 0 / max-pxcor + 100 + random 100 ] [ set elevation random 125 ] ] [ set elevation 100 ] set water 0 [ set drain? false ]" AgentSet => void
       _patches "patches" => AgentSet
          L0
           ALOAD 0
@@ -3633,7 +3633,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[4]_asm_proceduresetup_ifelse_2 "ifelse bumpy?" boolean => void
+[4]_asm_proceduresetup_ifelse_2 "ifelse bumpy? [ ifelse hill? [ set elevation -100 * distancexy 0 0 / max-pxcor + 100 + random 100 ] [ set elevation random 125 ] ] [ set elevation 100 ]" boolean => void
       _observervariable:BUMPY? "bumpy?" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
@@ -3676,7 +3676,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[5]_asm_proceduresetup_ifelse_3 "ifelse hill?" boolean => void
+[5]_asm_proceduresetup_ifelse_3 "ifelse hill? [ set elevation -100 * distancexy 0 0 / max-pxcor + 100 + random 100 ] [ set elevation random 125 ]" boolean => void
       _observervariable:HILL? "hill?" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
@@ -3719,10 +3719,10 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[6]_asm_proceduresetup_setpatchvariable_4 "set elevation -100 * (distancexy 0 0 / max-pxcor) + 100 + random" Object => void
-      _plus "-100 * (distancexy 0 0 / max-pxcor) + 100 + random" double,double => double
-        _plus "-100 * (distancexy 0 0 / max-pxcor) + 100" double,double => double
-          _mult "-100 * (distancexy 0 0 / max-pxcor" double,double => double
+[6]_asm_proceduresetup_setpatchvariable_4 "set elevation -100 * distancexy 0 0 / max-pxcor + 100 + random 100" Object => void
+      _plus "-100 * distancexy 0 0 / max-pxcor + 100 + random 100" double,double => double
+        _plus "-100 * distancexy 0 0 / max-pxcor + 100" double,double => double
+          _mult "-100 * distancexy 0 0 / max-pxcor" double,double => double
             _constdouble:-100.0 "-100" => double
             _div "distancexy 0 0 / max-pxcor" double,double => double
               _distancexy "distancexy 0 0" double,double => double
@@ -3730,7 +3730,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
                 _constdouble:0.0 "0" => double
               _maxpxcor "max-pxcor" => double
           _constdouble:100.0 "100" => double
-        _randomconst:100 "random" => double
+        _randomconst:100 "random 100" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           LDC -100.0
@@ -3853,8 +3853,8 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[8]_asm_proceduresetup_setpatchvariable_6 "set elevation random" Object => void
-      _randomconst:125 "random" => double
+[8]_asm_proceduresetup_setpatchvariable_6 "set elevation random 125" Object => void
+      _randomconst:125 "random 125" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 1
@@ -4012,7 +4012,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[14]_asm_proceduresetup_if_12 "if bumpy?" boolean => void
+[14]_asm_proceduresetup_if_12 "if bumpy? [ repeat terrain-smoothness [ diffuse 0.5 ] ]" boolean => void
       _observervariable:BUMPY? "bumpy?" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
@@ -4055,7 +4055,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[15]_asm_proceduresetup_repeatlocal_13 double => void
+[15]_asm_proceduresetup_repeatlocal_13 "repeat terrain-smoothness [ diffuse 0.5 ]" double => void
       _observervariable:TERRAIN-SMOOTHNESS "terrain-smoothness" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
@@ -4101,7 +4101,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L5
           RETURN
-[16]_diffuse:ELEVATION "diffuse elevation 0.5"
+[16]_diffuse:ELEVATION "diffuse 0.5"
       _asm_proceduresetup_constdouble_14 "0.5" => Double
            L0
             ALOAD 0
@@ -4140,8 +4140,8 @@ procedure SETUP:[_repeatlocal:0]{O---}:
          L2
          FRAME SAME
           RETURN
-[18]_asm_proceduresetup_ask_16 "ask patches with [count neighbors != 8" AgentSet => void
-      _with "patches with [count neighbors != 8" AgentSet,Reporter => AgentSet
+[18]_asm_proceduresetup_ask_16 "ask patches with [ count neighbors != 8 ] set drain? true [ set elevation -10000000 ]" AgentSet => void
+      _with "patches with [ count neighbors != 8 ]" AgentSet,Reporter => AgentSet
         _patches "patches" => AgentSet
         _asm_proceduresetup_notequal_17 "count neighbors != 8" double,double => boolean
           _count "count neighbors" AgentSet => double
@@ -4410,8 +4410,8 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[22]_asm_proceduresetup_setobservervariable_21 "set drains patches with [drain?" Object => void
-      _with "patches with [drain?" AgentSet,Reporter => AgentSet
+[22]_asm_proceduresetup_setobservervariable_21 "set drains patches with [ drain? ]" Object => void
+      _with "patches with [ drain? ]" AgentSet,Reporter => AgentSet
         _patches "patches" => AgentSet
         _asm_proceduresetup_patchvariable_22 "drain?" => Object
               TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -4558,8 +4558,8 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L11
           RETURN
-[23]_asm_proceduresetup_setobservervariable_23 "set land patches with [not drain?" Object => void
-      _with "patches with [not drain?" AgentSet,Reporter => AgentSet
+[23]_asm_proceduresetup_setobservervariable_23 "set land patches with [ not drain? ]" Object => void
+      _with "patches with [ not drain? ]" AgentSet,Reporter => AgentSet
         _patches "patches" => AgentSet
         _asm_proceduresetup_not_24 "not drain?" boolean => boolean
           _patchvariable:DRAIN? "drain?" => Object
@@ -4746,7 +4746,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L11
           RETURN
-[24]_asm_proceduresetup_ask_25 "ask land" Object => void
+[24]_asm_proceduresetup_ask_25 "ask land [ recolor ]" Object => void
       _observervariable:LAND "land" => Object
          L0
           ALOAD 1
@@ -4932,7 +4932,7 @@ procedure HIDE-WATER:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[1]_asm_procedurehidewater_ask_1 "ask land" Object => void
+[1]_asm_procedurehidewater_ask_1 "ask land [ recolor ]" Object => void
       _observervariable:LAND "land" => Object
          L0
           ALOAD 1
@@ -5118,7 +5118,7 @@ procedure SHOW-WATER:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[1]_asm_procedureshowwater_ask_1 "ask land" Object => void
+[1]_asm_procedureshowwater_ask_1 "ask land [ recolor ]" Object => void
       _observervariable:LAND "land" => Object
          L0
           ALOAD 1
