@@ -49,5 +49,5 @@ tmp/
 /out/
 /resources/Errors_??.properties
 /resources/GUI_Strings_??.properties
-/resources/system/dict.txt
-/resources/system/dict3d.txt
+/netlogo-gui/resources/system/dict.txt
+/netlogo-gui/resources/system/dict3d.txt
