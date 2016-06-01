@@ -80,7 +80,7 @@ class NetLogoDocs(docsSource: File, docsTarget: File, netLogoRoot: File, modelsD
     IO.createDirectory(targetDir)
     Mustache.betweenDirectories(docsSource, targetDir, variables)
     generateExtensionDocs(targetDir)
-    IO.copyFile(netLogoRoot / "models" / "Code Examples" / "Perspective Example.png", targetDir / "Perspective Example.png")
+    IO.copyFile(modelsDirectory / "Code Examples" / "Perspective Example.png", targetDir / "Perspective Example.png")
   }
 
   def generatePDF(buildVariables: Map[String, Object]): File = {
