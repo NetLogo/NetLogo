@@ -1,15 +1,15 @@
 ToString1
-  (word task [?]) => "(reporter task)"
+  (word task [?]) => "(reporter task: [ ? ])"
 
 ToString2
-  (word task [5]) => "(reporter task)"
+  (word task [5]) => "(reporter task: [ 5 ])"
 
 ToString3
-  (word task [(list 1 2 3)]) => "(reporter task)"
+  (word task [(list 1 2 3)]) => "(reporter task: [ (list 1 2 3) ])"
 
 ToString4
   to-report foo report 0 end
-  (word task [foo]) => "(reporter task)"
+  (word task [foo]) => "(reporter task: [ foo ])"
 
 FunCall-Simple
   runresult [5] => 5

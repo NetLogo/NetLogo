@@ -26,7 +26,7 @@ class SetVisitor extends DefaultAstVisitor {
       val newCommand =
         Instantiator.newInstance[nvm.Command](
           newCommandClass, rApp.reporter)
-      newCommand.token = stmt.command.token
+      newCommand.copyMetadataFrom(stmt.command)
       stmt.command = newCommand
       stmt.removeArgument(0)
     }

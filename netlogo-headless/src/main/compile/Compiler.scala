@@ -41,8 +41,8 @@ object Compiler extends nvm.CompilerInterface {
     val (topLevelDefs, structureResults) =
       frontEnd.frontEnd(source, displayName, oldProgram, subprogram, oldProcedures, extensionManager, compilationEnvironment)
     val bridged = bridge(structureResults, extensionManager, oldProcedures, topLevelDefs)
-    val allDefs = middleEnd.middleEnd(bridged, flags)
-    backEnd.backEnd(allDefs, structureResults.program, source, compilationEnvironment.profilingEnabled, flags)
+    val allDefs = middleEnd.middleEnd(bridged, source, flags)
+    backEnd.backEnd(allDefs, structureResults.program, compilationEnvironment.profilingEnabled, flags)
   }
 
   def makeLiteralReporter(value: AnyRef): nvm.Reporter =

@@ -51,3 +51,4 @@ tmp/
 /resources/GUI_Strings_??.properties
 /resources/system/dict.txt
 /resources/system/dict3d.txt
+/test/file-prim-files/utf8-file-written-by-test.txt

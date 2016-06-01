@@ -42,7 +42,7 @@ sealed trait Task {
 
 case class ReporterTask(body: Reporter, formals: Array[Let], lets: List[LetBinding], locals: Array[AnyRef])
 extends Task with org.nlogo.api.ReporterTask {
-  override def toString = "(reporter task)"
+  override def toString = "(reporter task: [ " + body.fullSource + " ])"
   def report(context: api.Context, args: Array[AnyRef]): AnyRef =
     report(context.asInstanceOf[ExtensionContext].nvmContext, args)
   def report(context: Context, args: Array[AnyRef]): AnyRef = {

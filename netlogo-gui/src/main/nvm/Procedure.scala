@@ -20,7 +20,7 @@ class Procedure(
   val filename = fileName // alias, may not be needed
   override def procedureDeclaration = null
 
-  val displayName = buildDisplayName(_displayName)
+  lazy val displayName = buildDisplayName(_displayName)
   var pos: Int = 0
   var end: Int = 0
   var usableBy = "OTPL"
@@ -53,9 +53,10 @@ class Procedure(
   var code = Array[Command]()
 
   private def buildDisplayName(displayName: Option[String]): String =
-    if (isTask)
-      "(command task from: " + parent.displayName + ")"
-    else {
+    if (isTask) {
+      val sourceCode = code.map(_.fullSource).filterNot(_ == null).mkString("[", " ", "]")
+      "(command task from: " + parent.displayName + ": " + sourceCode + ")"
+    } else {
       def nameAndFile =
         Option(fileName)
           .filter(_.nonEmpty)

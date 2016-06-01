@@ -9,8 +9,6 @@ class _commandtask(val argCount: Int) extends Reporter {
 
   var proc: Procedure = null
 
-
-
   override def toString =
     super.toString + ":" + proc.displayName
 

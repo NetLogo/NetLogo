@@ -1,14 +1,15 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.compiler
+package org.nlogo.compile.middle
 
 import org.nlogo.core.{ Syntax, Token }
 import org.nlogo.nvm.Instruction
+import org.nlogo.compile.{ CommandBlock, DefaultAstVisitor, ReporterApp, ReporterBlock, Statement }
 
 /**
  * Fills in the source of all of Instructions in the Procedure.
  */
-private class SourceTagger(sources: Map[String, String]) extends DefaultAstVisitor {
+private class SourceTagger(source: String) extends DefaultAstVisitor {
   var internalSources = Seq[String]()
 
   private def captureInternalSources(f: () => Unit): Seq[String] = {
@@ -65,18 +66,12 @@ private class SourceTagger(sources: Map[String, String]) extends DefaultAstVisit
   }
 
   private def instructionsOwnSource(i: Instruction): Option[String] = {
-    val filename = i.getFilename
-    val start = i.getSourceStartPosition
-    val end   = i.getSourceEndPosition
+    val start = i.sourceStartPosition
+    val end   = i.sourceEndPosition
     val validStartAndEnd = (start > 0 || start < end)
-    if (validStartAndEnd) {
-      Option(filename).map(sources.apply).flatMap { source =>
-        if (end < source.length)
-          Some(source.substring(start, end))
-        else
-          None
-      }
-    } else
+    if (validStartAndEnd && end < source.length)
+      Some(source.substring(start, end))
+    else
       None
   }
 

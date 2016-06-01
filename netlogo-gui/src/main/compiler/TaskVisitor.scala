@@ -23,17 +23,14 @@ private class TaskVisitor extends DefaultAstVisitor {
         super.visitReporterApp(expr)
         task = old
       case lv: _taskvariable =>
-        task match {
-          case None =>
+        val formal = task match {
+          case None                   =>
             cAssert(procedure.get.isTask, I18N.errors.get("compiler.TaskVisitor.notDefined"), expr)
-            val formal: Let = procedure.get.getTaskFormal(lv.varNumber, lv.token)
-            expr.reporter = new _letvariable(formal, formal.name)
-            expr.reporter.token_=(lv.token)
-          case Some(l: _reportertask) =>
-            val formal: Let = l.getFormal(lv.varNumber)
-            expr.reporter = new _letvariable(formal, formal.name)
-            expr.reporter.token_=(lv.token)
+            procedure.get.getTaskFormal(lv.varNumber, lv.token)
+          case Some(l: _reportertask) => l.getFormal(lv.varNumber)
         }
+        expr.reporter = new _letvariable(formal, formal.name)
+        expr.reporter.copyMetadataFrom(lv)
       case _ =>
         super.visitReporterApp(expr)
     }

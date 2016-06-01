@@ -146,6 +146,7 @@ trait AbstractTestLanguage extends Assertions {
     catch {
       case ex: LogoException =>
         withClue(mode + ": command: " + command) {
+          // println(workspace.lastErrorReport.stackTrace.get)
           assertResult(stackTrace)(workspace.lastErrorReport.stackTrace.get)
         }
     }

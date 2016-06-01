@@ -158,12 +158,10 @@ object Optimizer extends DefaultAstVisitor {
     def replace(newGuy: Instruction) {
       node match {
         case app: ReporterApp =>
-          newGuy.token = app.reporter.token
-          newGuy.agentClassString = app.reporter.agentClassString
+          newGuy.copyMetadataFrom(app.reporter)
           app.reporter = newGuy.asInstanceOf[Reporter]
         case stmt: Statement =>
-          newGuy.token = stmt.command.token
-          newGuy.agentClassString = stmt.command.agentClassString
+          newGuy.copyMetadataFrom(stmt.command)
           stmt.command = newGuy.asInstanceOf[Command]
       }
     }
@@ -171,19 +169,16 @@ object Optimizer extends DefaultAstVisitor {
       val newGuy = Instantiator.newInstance[Instruction](theClass, constructorArgs: _*)
       node match {
         case app: ReporterApp =>
-          newGuy.token = app.reporter.token
-          newGuy.agentClassString = app.reporter.agentClassString
+          newGuy.copyMetadataFrom(app.reporter)
           app.reporter = newGuy.asInstanceOf[Reporter]
         case stmt: Statement =>
-          newGuy.token = stmt.command.token
-          newGuy.agentClassString = stmt.command.agentClassString
+          newGuy.copyMetadataFrom(stmt.command)
           stmt.command = newGuy.asInstanceOf[Command]
       }
     }
     def addArg(theClass: Class[_ <: Reporter], original: ReporterApp): Match = {
       val newGuy = Instantiator.newInstance[Reporter](theClass)
-      newGuy.token = original.reporter.token
-      newGuy.agentClassString = original.reporter.agentClassString
+      newGuy.copyMetadataFrom(original.reporter)
       val result = new Match(new ReporterApp(original.coreReporter,
         newGuy, original.start, original.end, original.file))
       graftArg(result)

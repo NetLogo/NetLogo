@@ -42,8 +42,9 @@ private class LocalsVisitor extends DefaultAstVisitor {
         // to a local. This can be useful for testing. - ST 11/3/10, 2/6/11
         val exempt = l.token.text.equalsIgnoreCase("__LET")
         if (!procedure.isTask && askNestingLevel == 0 && !exempt) {
-          stmt.command = new _setprocedurevariable(new _procedurevariable(procedure.args.size, l.let.name))
-          stmt.command.token_=(stmt.command.token)
+          val newVar = new _setprocedurevariable(new _procedurevariable(procedure.args.size, l.let.name))
+          newVar.copyMetadataFrom(stmt.command)
+          stmt.command = newVar
           procedure.alteredLets.put(l.let, procedure.args.size)
           procedure.localsCount += 1
           procedure.args :+= l.let.name
@@ -53,7 +54,9 @@ private class LocalsVisitor extends DefaultAstVisitor {
       case r: _repeat =>
         if(!procedure.isTask && askNestingLevel == 0) {
           vn = procedure.args.size
-          stmt.command = new _repeatlocal(vn)
+          val newrepeat = new _repeatlocal(vn)
+          newrepeat.copyMetadataFrom(stmt.command)
+          stmt.command = newrepeat
           procedure.localsCount += 1
           // actual name here doesn't really matter, I don't think - ST 11/10/05
           procedure.args :+= "_repeatlocal:" + vn
@@ -61,8 +64,10 @@ private class LocalsVisitor extends DefaultAstVisitor {
         super.visitStatement(stmt)
       case ri: _repeatinternal =>
         if(askNestingLevel == 0) {
-          stmt.command = new _repeatlocalinternal(vn, // vn from the _repeat we just saw
+          val newRepeat = new _repeatlocalinternal(vn, // vn from the _repeat we just saw
                                                   ri.offset)
+          newRepeat.copyMetadataFrom(stmt.command)
+          stmt.command = newRepeat
         }
         super.visitStatement(stmt)
       case _ => super.visitStatement(stmt)
@@ -78,8 +83,9 @@ private class LocalsVisitor extends DefaultAstVisitor {
         // it would be nice if the next line were easier to read - ST 2/6/11
         for(index <- procedure.alteredLets.get(l.let).orElse(Option(procedure.parent).flatMap(_.alteredLets.get(l.let)))) {
           val oldToken = expr.reporter.token
-          expr.reporter = new _procedurevariable(index.intValue, l.let.name)
-          expr.reporter.token_=(oldToken)
+          val newVar = new _procedurevariable(index.intValue, l.let.name)
+          newVar.copyMetadataFrom(expr.reporter)
+          expr.reporter = newVar
         }
       case _ =>
     }

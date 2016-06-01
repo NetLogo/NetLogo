@@ -72,7 +72,7 @@ procedure GO:[]{-T--}:
           RETURN
 
 procedure FIND-EMPTY-SPOT:[]{-T--}:
-[0]_asm_procedurefindemptyspot_ifelse_0 "ifelse pcolor = black" boolean => void
+[0]_asm_procedurefindemptyspot_ifelse_0 "ifelse pcolor = black set pcolor yellow set color white [ get-away ] set heading random 360 fd 1 [ find-empty-spot ]" boolean => void
       _equal "pcolor = black" Object,double => boolean
         _patchvariable:PCOLOR "pcolor" => Object
         _constdouble:0.0 "black" => double
@@ -224,8 +224,8 @@ procedure FIND-EMPTY-SPOT:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[5]_asm_procedurefindemptyspot_setturtlevariable_5 "set heading random" Object => void
-      _randomconst:360 "random" => double
+[5]_asm_procedurefindemptyspot_setturtlevariable_5 "set heading random 360" Object => void
+      _randomconst:360 "random 360" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 1
@@ -267,7 +267,7 @@ procedure FIND-EMPTY-SPOT:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[6]_asm_procedurefindemptyspot_fd1_6 "fd" => void
+[6]_asm_procedurefindemptyspot_fd1_6 "fd 1" => void
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -384,7 +384,7 @@ procedure BENCHMARK:[]{O---}:
          L1
           RETURN
 [2]_resettimer "reset-timer"
-[3]_askconcurrent:+8 "ask-concurrent turtles"
+[3]_askconcurrent:+8 "ask-concurrent turtles [ repeat 350 [ go ] ]"
       _asm_procedurebenchmark_turtles_2 "turtles" => AgentSet
            L0
             ALOAD 0
@@ -392,7 +392,7 @@ procedure BENCHMARK:[]{O---}:
             INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
            L1
             ARETURN
-[4]_asm_procedurebenchmark_repeat_3 "repeat 350" double => void
+[4]_asm_procedurebenchmark_repeat_3 "repeat 350 [ go ]" double => void
       _constdouble:350.0 "350" => double
          L0
           LDC 350.0
@@ -521,8 +521,8 @@ procedure BENCHMARK:[]{O---}:
           RETURN
 
 procedure GET-AWAY:[]{-T--}:
-[0]_asm_proceduregetaway_setturtlevariable_0 "set heading random" Object => void
-      _randomconst:360 "random" => double
+[0]_asm_proceduregetaway_setturtlevariable_0 "set heading random 360" Object => void
+      _randomconst:360 "random 360" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 1
@@ -589,7 +589,7 @@ procedure GET-AWAY:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[2]_asm_proceduregetaway_if_2 "if pcolor != black" boolean => void
+[2]_asm_proceduregetaway_if_2 "if pcolor != black [ get-away ]" boolean => void
       _notequal "pcolor != black" Object,double => boolean
         _patchvariable:PCOLOR "pcolor" => Object
         _constdouble:0.0 "black" => double
@@ -680,7 +680,7 @@ procedure GET-AWAY:[]{-T--}:
 
 procedure SETUP:[]{O---}:
 [0]_clearall "ca"
-[1]_asm_proceduresetup_ask_0 "ask patches" AgentSet => void
+[1]_asm_proceduresetup_ask_0 "ask patches [ if random 100 < density [ set pcolor yellow ] ]" AgentSet => void
       _patches "patches" => AgentSet
          L0
           ALOAD 0
@@ -733,9 +733,9 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[2]_asm_proceduresetup_if_1 "if random 100 < density" boolean => void
+[2]_asm_proceduresetup_if_1 "if random 100 < density [ set pcolor yellow ]" boolean => void
       _lessthan "random 100 < density" double,Object => boolean
-        _randomconst:100 "random" => double
+        _randomconst:100 "random 100" => double
         _observervariable:DENSITY "density" => Object
          L0
           ALOAD 1
@@ -850,7 +850,7 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[5]_fastcreateorderedturtles: "create-ordered-turtles number"
+[5]_fastcreateorderedturtles: "create-ordered-turtles [ number ]"
       _asm_proceduresetup_observervariable_4 "number" => Object
            L0
             ALOAD 1
@@ -859,7 +859,7 @@ procedure SETUP:[]{O---}:
             INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
            L1
             ARETURN
-[6]_asm_proceduresetup_ask_5 "ask turtles" AgentSet => void
+[6]_asm_proceduresetup_ask_5 "ask turtles set color white [ setxy random world-width random world-height ]" AgentSet => void
       _turtles "turtles" => AgentSet
          L0
           ALOAD 0
@@ -1143,7 +1143,7 @@ procedure SETUP:[]{O---}:
           RETURN
 
 procedure SEARCH-FOR-CHIP:[]{-T--}:
-[0]_asm_proceduresearchforchip_ifelse_0 "ifelse pcolor = yellow" boolean => void
+[0]_asm_proceduresearchforchip_ifelse_0 "ifelse pcolor = yellow set pcolor black set color orange [ jump 20 ] wiggle [ search-for-chip ]" boolean => void
       _equal "pcolor = yellow" Object,double => boolean
         _patchvariable:PCOLOR "pcolor" => Object
         _constdouble:45.0 "yellow" => double
@@ -1349,7 +1349,7 @@ procedure SEARCH-FOR-CHIP:[]{-T--}:
           RETURN
 
 procedure WIGGLE:[]{-T--}:
-[0]_asm_procedurewiggle_fd1_0 "fd" => void
+[0]_asm_procedurewiggle_fd1_0 "fd 1" => void
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -1369,12 +1369,12 @@ procedure WIGGLE:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[1]_asm_procedurewiggle_setturtlevariable_1 "set heading heading + random 50 - random" Object => void
-      _minus "heading + random 50 - random" double,double => double
-        _plus "heading + random" double,double => double
+[1]_asm_procedurewiggle_setturtlevariable_1 "set heading heading + random 50 - random 50" Object => void
+      _minus "heading + random 50 - random 50" double,double => double
+        _plus "heading + random 50" double,double => double
           _turtlevariabledouble:HEADING "heading" => double
-          _randomconst:50 "random" => double
-        _randomconst:50 "random" => double
+          _randomconst:50 "random 50" => double
+        _randomconst:50 "random 50" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 1
@@ -1456,7 +1456,7 @@ procedure WIGGLE:[]{-T--}:
           RETURN
 
 procedure FIND-NEW-PILE:[]{-T--}:
-[0]_asm_procedurefindnewpile_if_0 "if pcolor != yellow" boolean => void
+[0]_asm_procedurefindnewpile_if_0 "if pcolor != yellow wiggle [ find-new-pile ]" boolean => void
       _notequal "pcolor != yellow" Object,double => boolean
         _patchvariable:PCOLOR "pcolor" => Object
         _constdouble:45.0 "yellow" => double

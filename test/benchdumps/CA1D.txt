@@ -7,7 +7,7 @@ breeds
 link-breeds 
 
 procedure SETUP-CONTINUE:[ON?-LIST]{O---}:
-[0]_asm_proceduresetupcontinue_setprocedurevariable_0 Object => void
+[0]_asm_proceduresetupcontinue_setprocedurevariable_0 "let []" Object => void
       _constlist:[] "[]" => LogoList
          L0
           ALOAD 0
@@ -25,7 +25,7 @@ procedure SETUP-CONTINUE:[ON?-LIST]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[1]_asm_proceduresetupcontinue_if_1 "if not gone?" boolean => void
+[1]_asm_proceduresetupcontinue_if_1 "if not gone? [ stop ]" boolean => void
       _not "not gone?" boolean => boolean
         _observervariable:GONE? "gone?" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
@@ -130,10 +130,10 @@ procedure SETUP-CONTINUE:[ON?-LIST]{O---}:
          L2
          FRAME SAME
           RETURN
-[3]_asm_proceduresetupcontinue_setprocedurevariable_3 "set on?-list map [[on?] of ?] sort patches with [pycor = row" Object => void
-      _map "map [[on?] of ?] sort patches with [pycor = row"
-        _reportertask "[[on?] of ?"
-          _asm_proceduresetupcontinue_patchvariableof_4 "of ?" Object => Object
+[3]_asm_proceduresetupcontinue_setprocedurevariable_3 "set on?-list map task [[on?] of ?] sort patches with [ pycor = row ]" Object => void
+      _map "map task [[on?] of ?] sort patches with [ pycor = row ]"
+        _reportertask "task [[on?] of ?]"
+          _asm_proceduresetupcontinue_patchvariableof_4 "[ on? ] of ?" Object => Object
             _letvariable(null) "?" => Object
                 TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
                 TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
@@ -270,8 +270,8 @@ procedure SETUP-CONTINUE:[ON?-LIST]{O---}:
                L12
                FRAME FULL [org/nlogo/prim/_asm_proceduresetupcontinue_patchvariableof_4 org/nlogo/nvm/Context java/lang/Object java/lang/Object T java/lang/Object] [java/lang/Object]
                 ARETURN
-        _asm_proceduresetupcontinue_sort_5 "sort patches with [pycor = row" Object => Object
-          _patchrow "with [pycor = row"
+        _asm_proceduresetupcontinue_sort_5 "sort patches with [ pycor = row ]" Object => Object
+          _patchrow "patches with [ pycor = row ]"
             _asm_proceduresetupcontinue_observervariable_6 "row" => Object
                  L0
                   ALOAD 1
@@ -435,8 +435,8 @@ procedure SETUP-CONTINUE:[ON?-LIST]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[5]_asm_proceduresetupcontinue_ask_8 "ask patches with [ pycor = row" Object => void
-      _patchrow "with [ pycor = row"
+[5]_asm_proceduresetupcontinue_ask_8 "ask patches with [ pycor = row ] set on? item pxcor + max-pxcor on?-list [ color-patch ]" Object => void
+      _patchrow "patches with [ pycor = row ]"
         _asm_proceduresetupcontinue_observervariable_9 "row" => Object
              L0
               ALOAD 1
@@ -558,8 +558,8 @@ procedure SETUP-CONTINUE:[ON?-LIST]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[6]_asm_proceduresetupcontinue_setpatchvariable_10 "set on? item (pxcor + max-pxcor) on?-list" Object => void
-      _item "item (pxcor + max-pxcor) on?-list"
+[6]_asm_proceduresetupcontinue_setpatchvariable_10 "set on? item pxcor + max-pxcor on?-list" Object => void
+      _item "item pxcor + max-pxcor on?-list"
         _asm_proceduresetupcontinue_plus_11 "pxcor + max-pxcor" double,double => double
           _patchvariabledouble:PXCOR "pxcor" => double
           _maxpxcor "max-pxcor" => double
@@ -721,7 +721,7 @@ procedure SETUP-CONTINUE:[ON?-LIST]{O---}:
           RETURN
 
 procedure REFRESH-RULES:[]{OTPL}:
-[0]_asm_procedurerefreshrules_ifelse_0 "ifelse (rule = old-rule" boolean => void
+[0]_asm_procedurerefreshrules_ifelse_0 "ifelse rule = old-rule [ if rule != calculate-rule [ set rule calculate-rule ] ] [ extrapolate-switches ]" boolean => void
       _equal "rule = old-rule" Object,Object => boolean
         _observervariable:RULE "rule" => Object
         _observervariable:OLD-RULE "old-rule" => Object
@@ -756,7 +756,7 @@ procedure REFRESH-RULES:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[1]_asm_procedurerefreshrules_if_1 "if (rule != calculate-rule" boolean => void
+[1]_asm_procedurerefreshrules_if_1 "if rule != calculate-rule [ set rule calculate-rule ]" boolean => void
       _notequal "rule != calculate-rule" Object,Object => boolean
         _observervariable:RULE "rule" => Object
         _callreport:CALCULATE-RULE "calculate-rule"
@@ -940,7 +940,7 @@ procedure REFRESH-RULES:[]{OTPL}:
           RETURN
 
 procedure GO:[]{O---}:
-[0]_asm_procedurego_if_0 "if (rules-shown?" boolean => void
+[0]_asm_procedurego_if_0 "if rules-shown? [ stop ]" boolean => void
       _observervariable:RULES-SHOWN? "rules-shown?" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
@@ -1034,7 +1034,7 @@ procedure GO:[]{O---}:
          L2
          FRAME SAME
           RETURN
-[2]_asm_procedurego_if_2 "if (row = min-pycor" boolean => void
+[2]_asm_procedurego_if_2 "if row = min-pycor [ ifelse auto-continue? display [ setup-continue ] [ stop ] ]" boolean => void
       _equal "row = min-pycor" Object,double => boolean
         _observervariable:ROW "row" => Object
         _minpycor "min-pycor" => double
@@ -1081,7 +1081,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[3]_asm_procedurego_ifelse_3 "ifelse auto-continue?" boolean => void
+[3]_asm_procedurego_ifelse_3 "ifelse auto-continue? display [ setup-continue ] [ stop ]" boolean => void
       _observervariable:AUTO-CONTINUE? "auto-continue?" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
@@ -1201,8 +1201,8 @@ procedure GO:[]{O---}:
          L2
          FRAME SAME
           RETURN
-[8]_asm_procedurego_ask_7 "ask patches with [ pycor = row" Object => void
-      _patchrow "with [ pycor = row"
+[8]_asm_procedurego_ask_7 "ask patches with [ pycor = row ] [ do-rule ]" Object => void
+      _patchrow "patches with [ pycor = row ]"
         _asm_procedurego_observervariable_8 "row" => Object
              L0
               ALOAD 1
@@ -1349,7 +1349,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[11]_asm_procedurego_setobservervariable_11 "set row (row - 1" Object => void
+[11]_asm_procedurego_setobservervariable_11 "set row row - 1" Object => void
       _minus "row - 1" double,double => double
         _observervariable:ROW "row" => Object
         _constdouble:1.0 "1" => double
@@ -1423,8 +1423,8 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L11
           RETURN
-[12]_asm_procedurego_ask_12 "ask patches with [ pycor = row" Object => void
-      _patchrow "with [ pycor = row"
+[12]_asm_procedurego_ask_12 "ask patches with [ pycor = row ] [ color-patch ]" Object => void
+      _patchrow "patches with [ pycor = row ]"
         _asm_procedurego_observervariable_13 "row" => Object
              L0
               ALOAD 1
@@ -1685,7 +1685,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L1
           RETURN
 [2]_resettimer "reset-timer"
-[3]_asm_procedurebenchmark_repeatlocal_2 double => void
+[3]_asm_procedurebenchmark_repeatlocal_2 "repeat 10 * world-height [ go ]" double => void
       _mult "10 * world-height" double,double => double
         _constdouble:10.0 "10" => double
         _worldheight "world-height" => double
@@ -1842,8 +1842,8 @@ procedure SETUP-RANDOM:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[1]_asm_proceduresetuprandom_ask_1 "ask patches with [pycor = row" Object => void
-      _patchrow "with [pycor = row"
+[1]_asm_proceduresetuprandom_ask_1 "ask patches with [ pycor = row ] set on? random 100 < density [ color-patch ]" Object => void
+      _patchrow "patches with [ pycor = row ]"
         _asm_proceduresetuprandom_observervariable_2 "row" => Object
              L0
               ALOAD 1
@@ -1965,9 +1965,9 @@ procedure SETUP-RANDOM:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[2]_asm_proceduresetuprandom_setpatchvariable_3 "set on? ((random 100) < density" Object => void
-      _lessthan "random 100) < density" double,Object => boolean
-        _randomconst:100 "random" => double
+[2]_asm_proceduresetuprandom_setpatchvariable_3 "set on? random 100 < density" Object => void
+      _lessthan "random 100 < density" double,Object => boolean
+        _randomconst:100 "random 100" => double
         _observervariable:DENSITY "density" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -2100,7 +2100,7 @@ procedure SETUP-RANDOM:[]{O---}:
           RETURN
 
 procedure PRINT-BLOCK:[STATE _repeatlocal:1]{-T--}:
-[0]_asm_procedureprintblock_ifelse_0 "ifelse state" boolean => void
+[0]_asm_procedureprintblock_ifelse_0 "ifelse state [ set color foreground ] [ set color background ]" boolean => void
       _procedurevariable:STATE "state" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
@@ -2257,7 +2257,7 @@ procedure PRINT-BLOCK:[STATE _repeatlocal:1]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[5]_asm_procedureprintblock_repeatlocal_5 double => void
+[5]_asm_procedureprintblock_repeatlocal_5 "repeat 4 set pcolor color rt 90 [ fd 1 ]" double => void
       _constdouble:4.0 "4" => double
          L0
           LDC 4.0
@@ -2346,7 +2346,7 @@ procedure PRINT-BLOCK:[STATE _repeatlocal:1]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[8]_asm_procedureprintblock_fd1_8 "fd" => void
+[8]_asm_procedureprintblock_fd1_8 "fd 1" => void
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -2409,8 +2409,8 @@ procedure PRINT-BLOCK:[STATE _repeatlocal:1]{-T--}:
           RETURN
 
 procedure EXTRAPOLATE-SWITCHES:[]{OTPL}:
-[0]_asm_procedureextrapolateswitches_setobservervariable_0 "set ooo ((bindigit rule 0) = 1" Object => void
-      _equal "bindigit rule 0) = 1" Object,double => boolean
+[0]_asm_procedureextrapolateswitches_setobservervariable_0 "set ooo bindigit rule 0 = 1" Object => void
+      _equal "bindigit rule 0 = 1" Object,double => boolean
         _callreport:BINDIGIT "bindigit rule 0"
           _observervariable:RULE "rule" => Object
           _constdouble:0.0 "0" => Double
@@ -2512,8 +2512,8 @@ procedure EXTRAPOLATE-SWITCHES:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L15
           RETURN
-[1]_asm_procedureextrapolateswitches_setobservervariable_1 "set ooi ((bindigit rule 1) = 1" Object => void
-      _equal "bindigit rule 1) = 1" Object,double => boolean
+[1]_asm_procedureextrapolateswitches_setobservervariable_1 "set ooi bindigit rule 1 = 1" Object => void
+      _equal "bindigit rule 1 = 1" Object,double => boolean
         _callreport:BINDIGIT "bindigit rule 1"
           _observervariable:RULE "rule" => Object
           _constdouble:1.0 "1" => Double
@@ -2615,8 +2615,8 @@ procedure EXTRAPOLATE-SWITCHES:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L15
           RETURN
-[2]_asm_procedureextrapolateswitches_setobservervariable_2 "set oio ((bindigit rule 2) = 1" Object => void
-      _equal "bindigit rule 2) = 1" Object,double => boolean
+[2]_asm_procedureextrapolateswitches_setobservervariable_2 "set oio bindigit rule 2 = 1" Object => void
+      _equal "bindigit rule 2 = 1" Object,double => boolean
         _callreport:BINDIGIT "bindigit rule 2"
           _observervariable:RULE "rule" => Object
           _constdouble:2.0 "2" => Double
@@ -2718,8 +2718,8 @@ procedure EXTRAPOLATE-SWITCHES:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L15
           RETURN
-[3]_asm_procedureextrapolateswitches_setobservervariable_3 "set oii ((bindigit rule 3) = 1" Object => void
-      _equal "bindigit rule 3) = 1" Object,double => boolean
+[3]_asm_procedureextrapolateswitches_setobservervariable_3 "set oii bindigit rule 3 = 1" Object => void
+      _equal "bindigit rule 3 = 1" Object,double => boolean
         _callreport:BINDIGIT "bindigit rule 3"
           _observervariable:RULE "rule" => Object
           _constdouble:3.0 "3" => Double
@@ -2821,8 +2821,8 @@ procedure EXTRAPOLATE-SWITCHES:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L15
           RETURN
-[4]_asm_procedureextrapolateswitches_setobservervariable_4 "set ioo ((bindigit rule 4) = 1" Object => void
-      _equal "bindigit rule 4) = 1" Object,double => boolean
+[4]_asm_procedureextrapolateswitches_setobservervariable_4 "set ioo bindigit rule 4 = 1" Object => void
+      _equal "bindigit rule 4 = 1" Object,double => boolean
         _callreport:BINDIGIT "bindigit rule 4"
           _observervariable:RULE "rule" => Object
           _constdouble:4.0 "4" => Double
@@ -2924,8 +2924,8 @@ procedure EXTRAPOLATE-SWITCHES:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L15
           RETURN
-[5]_asm_procedureextrapolateswitches_setobservervariable_5 "set ioi ((bindigit rule 5) = 1" Object => void
-      _equal "bindigit rule 5) = 1" Object,double => boolean
+[5]_asm_procedureextrapolateswitches_setobservervariable_5 "set ioi bindigit rule 5 = 1" Object => void
+      _equal "bindigit rule 5 = 1" Object,double => boolean
         _callreport:BINDIGIT "bindigit rule 5"
           _observervariable:RULE "rule" => Object
           _constdouble:5.0 "5" => Double
@@ -3027,8 +3027,8 @@ procedure EXTRAPOLATE-SWITCHES:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L15
           RETURN
-[6]_asm_procedureextrapolateswitches_setobservervariable_6 "set iio ((bindigit rule 6) = 1" Object => void
-      _equal "bindigit rule 6) = 1" Object,double => boolean
+[6]_asm_procedureextrapolateswitches_setobservervariable_6 "set iio bindigit rule 6 = 1" Object => void
+      _equal "bindigit rule 6 = 1" Object,double => boolean
         _callreport:BINDIGIT "bindigit rule 6"
           _observervariable:RULE "rule" => Object
           _constdouble:6.0 "6" => Double
@@ -3130,8 +3130,8 @@ procedure EXTRAPOLATE-SWITCHES:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L15
           RETURN
-[7]_asm_procedureextrapolateswitches_setobservervariable_7 "set iii ((bindigit rule 7) = 1" Object => void
-      _equal "bindigit rule 7) = 1" Object,double => boolean
+[7]_asm_procedureextrapolateswitches_setobservervariable_7 "set iii bindigit rule 7 = 1" Object => void
+      _equal "bindigit rule 7 = 1" Object,double => boolean
         _callreport:BINDIGIT "bindigit rule 7"
           _observervariable:RULE "rule" => Object
           _constdouble:7.0 "7" => Double
@@ -3359,7 +3359,7 @@ procedure STARTUP:[]{OTPL}:
           RETURN
 
 reporter procedure LIST-RULES:[RULES]{OTPL}:
-[0]_asm_procedurelistrules_setprocedurevariable_0 Object => void
+[0]_asm_procedurelistrules_setprocedurevariable_0 "let []" Object => void
       _constlist:[] "[]" => LogoList
          L0
           ALOAD 0
@@ -3377,8 +3377,8 @@ reporter procedure LIST-RULES:[RULES]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[1]_asm_procedurelistrules_setprocedurevariable_1 "set rules (lput (lput ooo [false false false]) rules" Object => void
-      _lput "lput (lput ooo [false false false]) rules"
+[1]_asm_procedurelistrules_setprocedurevariable_1 "set rules lput lput ooo [false false false] rules" Object => void
+      _lput "lput lput ooo [false false false] rules"
         _lput "lput ooo [false false false]"
           _asm_procedurelistrules_observervariable_2 "ooo" => Object
                L0
@@ -3420,8 +3420,8 @@ reporter procedure LIST-RULES:[RULES]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[2]_asm_procedurelistrules_setprocedurevariable_5 "set rules (lput (lput ooi [false false true ]) rules" Object => void
-      _lput "lput (lput ooi [false false true ]) rules"
+[2]_asm_procedurelistrules_setprocedurevariable_5 "set rules lput lput ooi [false false true ] rules" Object => void
+      _lput "lput lput ooi [false false true ] rules"
         _lput "lput ooi [false false true ]"
           _asm_procedurelistrules_observervariable_6 "ooi" => Object
                L0
@@ -3463,8 +3463,8 @@ reporter procedure LIST-RULES:[RULES]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedurelistrules_setprocedurevariable_9 "set rules (lput (lput oio [false true  false]) rules" Object => void
-      _lput "lput (lput oio [false true  false]) rules"
+[3]_asm_procedurelistrules_setprocedurevariable_9 "set rules lput lput oio [false true  false] rules" Object => void
+      _lput "lput lput oio [false true  false] rules"
         _lput "lput oio [false true  false]"
           _asm_procedurelistrules_observervariable_10 "oio" => Object
                L0
@@ -3506,8 +3506,8 @@ reporter procedure LIST-RULES:[RULES]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[4]_asm_procedurelistrules_setprocedurevariable_13 "set rules (lput (lput oii [false true  true ]) rules" Object => void
-      _lput "lput (lput oii [false true  true ]) rules"
+[4]_asm_procedurelistrules_setprocedurevariable_13 "set rules lput lput oii [false true  true ] rules" Object => void
+      _lput "lput lput oii [false true  true ] rules"
         _lput "lput oii [false true  true ]"
           _asm_procedurelistrules_observervariable_14 "oii" => Object
                L0
@@ -3549,8 +3549,8 @@ reporter procedure LIST-RULES:[RULES]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[5]_asm_procedurelistrules_setprocedurevariable_17 "set rules (lput (lput ioo [true  false false]) rules" Object => void
-      _lput "lput (lput ioo [true  false false]) rules"
+[5]_asm_procedurelistrules_setprocedurevariable_17 "set rules lput lput ioo [true  false false] rules" Object => void
+      _lput "lput lput ioo [true  false false] rules"
         _lput "lput ioo [true  false false]"
           _asm_procedurelistrules_observervariable_18 "ioo" => Object
                L0
@@ -3592,8 +3592,8 @@ reporter procedure LIST-RULES:[RULES]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[6]_asm_procedurelistrules_setprocedurevariable_21 "set rules (lput (lput ioi [true  false true ]) rules" Object => void
-      _lput "lput (lput ioi [true  false true ]) rules"
+[6]_asm_procedurelistrules_setprocedurevariable_21 "set rules lput lput ioi [true  false true ] rules" Object => void
+      _lput "lput lput ioi [true  false true ] rules"
         _lput "lput ioi [true  false true ]"
           _asm_procedurelistrules_observervariable_22 "ioi" => Object
                L0
@@ -3635,8 +3635,8 @@ reporter procedure LIST-RULES:[RULES]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[7]_asm_procedurelistrules_setprocedurevariable_25 "set rules (lput (lput iio [true  true  false]) rules" Object => void
-      _lput "lput (lput iio [true  true  false]) rules"
+[7]_asm_procedurelistrules_setprocedurevariable_25 "set rules lput lput iio [true  true  false] rules" Object => void
+      _lput "lput lput iio [true  true  false] rules"
         _lput "lput iio [true  true  false]"
           _asm_procedurelistrules_observervariable_26 "iio" => Object
                L0
@@ -3678,8 +3678,8 @@ reporter procedure LIST-RULES:[RULES]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[8]_asm_procedurelistrules_setprocedurevariable_29 "set rules (lput (lput iii [true  true  true ]) rules" Object => void
-      _lput "lput (lput iii [true  true  true ]) rules"
+[8]_asm_procedurelistrules_setprocedurevariable_29 "set rules lput lput iii [true  true  true ] rules" Object => void
+      _lput "lput lput iii [true  true  true ] rules"
         _lput "lput iii [true  true  true ]"
           _asm_procedurelistrules_observervariable_30 "iii" => Object
                L0
@@ -3809,7 +3809,7 @@ reporter procedure LIST-RULES:[RULES]{OTPL}:
           ATHROW
 
 reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
-[0]_asm_procedurecalculaterule_setprocedurevariable_0 Object => void
+[0]_asm_procedurecalculaterule_setprocedurevariable_0 "let 0" Object => void
       _constdouble:0.0 "0" => Double
          L0
           ALOAD 0
@@ -3827,7 +3827,7 @@ reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[1]_asm_procedurecalculaterule_if_1 "if ooo" boolean => void
+[1]_asm_procedurecalculaterule_if_1 "if ooo [ set rresult rresult + 1 ]" boolean => void
       _observervariable:OOO "ooo" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
@@ -3870,8 +3870,8 @@ reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[2]_asm_procedurecalculaterule_setprocedurevariable_2 "set rresult rresult +   1" Object => void
-      _plus "rresult +   1" double,double => double
+[2]_asm_procedurecalculaterule_setprocedurevariable_2 "set rresult rresult + 1" Object => void
+      _plus "rresult + 1" double,double => double
         _procedurevariable:RRESULT "rresult" => Object
         _constdouble:1.0 "1" => double
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
@@ -3929,7 +3929,7 @@ reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[3]_asm_procedurecalculaterule_if_3 "if ooi" boolean => void
+[3]_asm_procedurecalculaterule_if_3 "if ooi [ set rresult rresult + 2 ]" boolean => void
       _observervariable:OOI "ooi" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
@@ -3972,8 +3972,8 @@ reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[4]_asm_procedurecalculaterule_setprocedurevariable_4 "set rresult rresult +   2" Object => void
-      _plus "rresult +   2" double,double => double
+[4]_asm_procedurecalculaterule_setprocedurevariable_4 "set rresult rresult + 2" Object => void
+      _plus "rresult + 2" double,double => double
         _procedurevariable:RRESULT "rresult" => Object
         _constdouble:2.0 "2" => double
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
@@ -4031,7 +4031,7 @@ reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[5]_asm_procedurecalculaterule_if_5 "if oio" boolean => void
+[5]_asm_procedurecalculaterule_if_5 "if oio [ set rresult rresult + 4 ]" boolean => void
       _observervariable:OIO "oio" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
@@ -4074,8 +4074,8 @@ reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[6]_asm_procedurecalculaterule_setprocedurevariable_6 "set rresult rresult +   4" Object => void
-      _plus "rresult +   4" double,double => double
+[6]_asm_procedurecalculaterule_setprocedurevariable_6 "set rresult rresult + 4" Object => void
+      _plus "rresult + 4" double,double => double
         _procedurevariable:RRESULT "rresult" => Object
         _constdouble:4.0 "4" => double
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
@@ -4133,7 +4133,7 @@ reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[7]_asm_procedurecalculaterule_if_7 "if oii" boolean => void
+[7]_asm_procedurecalculaterule_if_7 "if oii [ set rresult rresult + 8 ]" boolean => void
       _observervariable:OII "oii" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
@@ -4176,8 +4176,8 @@ reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[8]_asm_procedurecalculaterule_setprocedurevariable_8 "set rresult rresult +   8" Object => void
-      _plus "rresult +   8" double,double => double
+[8]_asm_procedurecalculaterule_setprocedurevariable_8 "set rresult rresult + 8" Object => void
+      _plus "rresult + 8" double,double => double
         _procedurevariable:RRESULT "rresult" => Object
         _constdouble:8.0 "8" => double
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
@@ -4235,7 +4235,7 @@ reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[9]_asm_procedurecalculaterule_if_9 "if ioo" boolean => void
+[9]_asm_procedurecalculaterule_if_9 "if ioo [ set rresult rresult + 16 ]" boolean => void
       _observervariable:IOO "ioo" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
@@ -4278,8 +4278,8 @@ reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[10]_asm_procedurecalculaterule_setprocedurevariable_10 "set rresult rresult +  16" Object => void
-      _plus "rresult +  16" double,double => double
+[10]_asm_procedurecalculaterule_setprocedurevariable_10 "set rresult rresult + 16" Object => void
+      _plus "rresult + 16" double,double => double
         _procedurevariable:RRESULT "rresult" => Object
         _constdouble:16.0 "16" => double
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
@@ -4337,7 +4337,7 @@ reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[11]_asm_procedurecalculaterule_if_11 "if ioi" boolean => void
+[11]_asm_procedurecalculaterule_if_11 "if ioi [ set rresult rresult + 32 ]" boolean => void
       _observervariable:IOI "ioi" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
@@ -4380,8 +4380,8 @@ reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[12]_asm_procedurecalculaterule_setprocedurevariable_12 "set rresult rresult +  32" Object => void
-      _plus "rresult +  32" double,double => double
+[12]_asm_procedurecalculaterule_setprocedurevariable_12 "set rresult rresult + 32" Object => void
+      _plus "rresult + 32" double,double => double
         _procedurevariable:RRESULT "rresult" => Object
         _constdouble:32.0 "32" => double
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
@@ -4439,7 +4439,7 @@ reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[13]_asm_procedurecalculaterule_if_13 "if iio" boolean => void
+[13]_asm_procedurecalculaterule_if_13 "if iio [ set rresult rresult + 64 ]" boolean => void
       _observervariable:IIO "iio" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
@@ -4482,8 +4482,8 @@ reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[14]_asm_procedurecalculaterule_setprocedurevariable_14 "set rresult rresult +  64" Object => void
-      _plus "rresult +  64" double,double => double
+[14]_asm_procedurecalculaterule_setprocedurevariable_14 "set rresult rresult + 64" Object => void
+      _plus "rresult + 64" double,double => double
         _procedurevariable:RRESULT "rresult" => Object
         _constdouble:64.0 "64" => double
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
@@ -4541,7 +4541,7 @@ reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[15]_asm_procedurecalculaterule_if_15 "if iii" boolean => void
+[15]_asm_procedurecalculaterule_if_15 "if iii [ set rresult rresult + 128 ]" boolean => void
       _observervariable:III "iii" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
@@ -4865,7 +4865,7 @@ procedure SETUP-GENERAL:[]{O---}:
           RETURN
 
 procedure COLOR-PATCH:[]{-TP-}:
-[0]_asm_procedurecolorpatch_ifelse_0 "ifelse on?" boolean => void
+[0]_asm_procedurecolorpatch_ifelse_0 "ifelse on? [ set pcolor foreground ] [ set pcolor background ]" boolean => void
       _patchvariable:ON? "on?" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
@@ -5031,7 +5031,7 @@ procedure SHOW-RULES:[RULES]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[1]_asm_procedureshowrules_setprocedurevariable_1 Object => void
+[1]_asm_procedureshowrules_setprocedurevariable_1 "let list-rules" Object => void
       _callreport:LIST-RULES "list-rules"
          L0
           NEW org/nlogo/nvm/Activation
@@ -5068,8 +5068,8 @@ procedure SHOW-RULES:[RULES]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[2]_asm_procedureshowrules_ask_2 "ask patches with [pycor > max-pycor - 5" AgentSet => void
-      _with "patches with [pycor > max-pycor - 5" AgentSet,Reporter => AgentSet
+[2]_asm_procedureshowrules_ask_2 "ask patches with [ pycor > max-pycor - 5 ] [ set pcolor gray ]" AgentSet => void
+      _with "patches with [ pycor > max-pycor - 5 ]" AgentSet,Reporter => AgentSet
         _patches "patches" => AgentSet
         _asm_procedureshowrules_greaterthan_3 "pycor > max-pycor - 5" double,double => boolean
           _patchvariabledouble:PYCOR "pycor" => double
@@ -5321,22 +5321,19 @@ procedure SHOW-RULES:[RULES]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[5]_asm_procedureshowrules_ask_6 "ask patches with [ pycor = max-pycor and
-                    ((pxcor + 1) mod (floor (world-width / 8))) = 0" AgentSet => void
-      _with "patches with [ pycor = max-pycor and
-                    ((pxcor + 1) mod (floor (world-width / 8))) = 0" AgentSet,Reporter => AgentSet
+[5]_asm_procedureshowrules_ask_6 "ask patches with [ pycor = max-pycor and pxcor + 1 mod floor world-width / 8 = 0 ] [ sprout 1 set heading 270 fd 18 print-block item 0 item who rules fd 2 print-block item 1 item who rules fd 2 print-block item 2 item who rules bk 2 set heading 180 fd 2 set heading 90 print-block item 3 item who rules [ die ] ]" AgentSet => void
+      _with "patches with [ pycor = max-pycor and pxcor + 1 mod floor world-width / 8 = 0 ]" AgentSet,Reporter => AgentSet
         _patches "patches" => AgentSet
-        _asm_procedureshowrules_and_7 "pycor = max-pycor and
-                    ((pxcor + 1) mod (floor (world-width / 8))) = 0"
+        _asm_procedureshowrules_and_7 "pycor = max-pycor and pxcor + 1 mod floor world-width / 8 = 0"
           _equal "pycor = max-pycor" double,double => boolean
             _patchvariabledouble:PYCOR "pycor" => double
             _maxpycor "max-pycor" => double
-          _equal "pxcor + 1) mod (floor (world-width / 8))) = 0" double,double => boolean
-            _mod "pxcor + 1) mod (floor (world-width / 8" double,double => double
+          _equal "pxcor + 1 mod floor world-width / 8 = 0" double,double => boolean
+            _mod "pxcor + 1 mod floor world-width / 8" double,double => double
               _plus "pxcor + 1" double,double => double
                 _patchvariabledouble:PXCOR "pxcor" => double
                 _constdouble:1.0 "1" => double
-              _floor "floor (world-width / 8" double => double
+              _floor "floor world-width / 8" double => double
                 _div "world-width / 8" double,double => double
                   _worldwidth "world-width" => double
                   _constdouble:8.0 "8" => double
@@ -5656,7 +5653,7 @@ procedure SHOW-RULES:[RULES]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L9
           RETURN
-[6]_sprout:,+26 "sprout 1"
+[6]_sprout:,+26 "sprout 1 set heading 270 fd 18 print-block item 0 item who rules fd 2 print-block item 1 item who rules fd 2 print-block item 2 item who rules bk 2 set heading 180 fd 2 set heading 90 print-block item 3 item who rules [ die ]"
       _asm_procedureshowrules_constdouble_8 "1" => Double
            L0
             ALOAD 0
@@ -5802,8 +5799,8 @@ procedure SHOW-RULES:[RULES]{O---}:
          L8
          FRAME CHOP 1
           RETURN
-[10]_asm_procedureshowrules_call_12 "print-block (item 0 (item who rules"
-      _item "item 0 (item who rules"
+[10]_asm_procedureshowrules_call_12 "print-block item 0 item who rules"
+      _item "item 0 item who rules"
         _asm_procedureshowrules_constdouble_13 "0" => Double
              L0
               ALOAD 0
@@ -5974,8 +5971,8 @@ procedure SHOW-RULES:[RULES]{O---}:
          L8
          FRAME CHOP 1
           RETURN
-[13]_asm_procedureshowrules_call_18 "print-block (item 1 (item who rules"
-      _item "item 1 (item who rules"
+[13]_asm_procedureshowrules_call_18 "print-block item 1 item who rules"
+      _item "item 1 item who rules"
         _asm_procedureshowrules_constdouble_19 "1" => Double
              L0
               ALOAD 0
@@ -6146,8 +6143,8 @@ procedure SHOW-RULES:[RULES]{O---}:
          L8
          FRAME CHOP 1
           RETURN
-[16]_asm_procedureshowrules_call_24 "print-block (item 2 (item who rules"
-      _item "item 2 (item who rules"
+[16]_asm_procedureshowrules_call_24 "print-block item 2 item who rules"
+      _item "item 2 item who rules"
         _asm_procedureshowrules_constdouble_25 "2" => Double
              L0
               ALOAD 0
@@ -6492,8 +6489,8 @@ procedure SHOW-RULES:[RULES]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[23]_asm_procedureshowrules_call_34 "print-block (item 3 (item who rules"
-      _item "item 3 (item who rules"
+[23]_asm_procedureshowrules_call_34 "print-block item 3 item who rules"
+      _item "item 3 item who rules"
         _asm_procedureshowrules_constdouble_35 "3" => Double
              L0
               ALOAD 0
@@ -6642,9 +6639,9 @@ procedure SHOW-RULES:[RULES]{O---}:
           RETURN
 
 procedure DO-RULE:[LEFT-ON? RIGHT-ON? NEW-VALUE]{-TP-}:
-[0]_asm_proceduredorule_setprocedurevariable_0 Object => void
-      _patchvariableof:ON? "of patch-at" Object => Object
-        _patchwest "patch-at" => Object
+[0]_asm_proceduredorule_setprocedurevariable_0 "let [ on? ] of patch-at -1 0" Object => void
+      _patchvariableof:ON? "[ on? ] of patch-at -1 0" Object => Object
+        _patchwest "patch-at -1 0" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
          L6
@@ -6833,9 +6830,9 @@ procedure DO-RULE:[LEFT-ON? RIGHT-ON? NEW-VALUE]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L17
           RETURN
-[1]_asm_proceduredorule_setprocedurevariable_1 Object => void
-      _patchvariableof:ON? "of patch-at" Object => Object
-        _patcheast "patch-at" => Object
+[1]_asm_proceduredorule_setprocedurevariable_1 "let [ on? ] of patch-at 1 0" Object => void
+      _patchvariableof:ON? "[ on? ] of patch-at 1 0" Object => Object
+        _patcheast "patch-at 1 0" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
          L6
@@ -7024,67 +7021,39 @@ procedure DO-RULE:[LEFT-ON? RIGHT-ON? NEW-VALUE]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L17
           RETURN
-[2]_asm_proceduredorule_setprocedurevariable_2 Object => void
-      _or "iii and left-on?       and on?       and right-on?)          or
-    (iio and left-on?       and on?       and (not right-on?))    or
-    (ioi and left-on?       and (not on?) and right-on?)          or
-    (ioo and left-on?       and (not on?) and (not right-on?))    or
-    (oii and (not left-on?) and on?       and right-on?)          or
-    (oio and (not left-on?) and on?       and (not right-on?))    or
-    (ooi and (not left-on?) and (not on?) and right-on?)          or
-    (ooo and (not left-on?) and (not on?) and (not right-on?"
-        _or "iii and left-on?       and on?       and right-on?)          or
-    (iio and left-on?       and on?       and (not right-on?))    or
-    (ioi and left-on?       and (not on?) and right-on?)          or
-    (ioo and left-on?       and (not on?) and (not right-on?))    or
-    (oii and (not left-on?) and on?       and right-on?)          or
-    (oio and (not left-on?) and on?       and (not right-on?))    or
-    (ooi and (not left-on?) and (not on?) and right-on?"
-          _or "iii and left-on?       and on?       and right-on?)          or
-    (iio and left-on?       and on?       and (not right-on?))    or
-    (ioi and left-on?       and (not on?) and right-on?)          or
-    (ioo and left-on?       and (not on?) and (not right-on?))    or
-    (oii and (not left-on?) and on?       and right-on?)          or
-    (oio and (not left-on?) and on?       and (not right-on?"
-            _or "iii and left-on?       and on?       and right-on?)          or
-    (iio and left-on?       and on?       and (not right-on?))    or
-    (ioi and left-on?       and (not on?) and right-on?)          or
-    (ioo and left-on?       and (not on?) and (not right-on?))    or
-    (oii and (not left-on?) and on?       and right-on?"
-              _or "iii and left-on?       and on?       and right-on?)          or
-    (iio and left-on?       and on?       and (not right-on?))    or
-    (ioi and left-on?       and (not on?) and right-on?)          or
-    (ioo and left-on?       and (not on?) and (not right-on?"
-                _or "iii and left-on?       and on?       and right-on?)          or
-    (iio and left-on?       and on?       and (not right-on?))    or
-    (ioi and left-on?       and (not on?) and right-on?"
-                  _or "iii and left-on?       and on?       and right-on?)          or
-    (iio and left-on?       and on?       and (not right-on?"
-                    _and "iii and left-on?       and on?       and right-on?"
-                      _and "iii and left-on?       and on?"
+[2]_asm_proceduredorule_setprocedurevariable_2 "let iii and left-on? and on? and right-on? or iio and left-on? and on? and not right-on? or ioi and left-on? and not on? and right-on? or ioo and left-on? and not on? and not right-on? or oii and not left-on? and on? and right-on? or oio and not left-on? and on? and not right-on? or ooi and not left-on? and not on? and right-on? or ooo and not left-on? and not on? and not right-on?" Object => void
+      _or "iii and left-on? and on? and right-on? or iio and left-on? and on? and not right-on? or ioi and left-on? and not on? and right-on? or ioo and left-on? and not on? and not right-on? or oii and not left-on? and on? and right-on? or oio and not left-on? and on? and not right-on? or ooi and not left-on? and not on? and right-on? or ooo and not left-on? and not on? and not right-on?"
+        _or "iii and left-on? and on? and right-on? or iio and left-on? and on? and not right-on? or ioi and left-on? and not on? and right-on? or ioo and left-on? and not on? and not right-on? or oii and not left-on? and on? and right-on? or oio and not left-on? and on? and not right-on? or ooi and not left-on? and not on? and right-on?"
+          _or "iii and left-on? and on? and right-on? or iio and left-on? and on? and not right-on? or ioi and left-on? and not on? and right-on? or ioo and left-on? and not on? and not right-on? or oii and not left-on? and on? and right-on? or oio and not left-on? and on? and not right-on?"
+            _or "iii and left-on? and on? and right-on? or iio and left-on? and on? and not right-on? or ioi and left-on? and not on? and right-on? or ioo and left-on? and not on? and not right-on? or oii and not left-on? and on? and right-on?"
+              _or "iii and left-on? and on? and right-on? or iio and left-on? and on? and not right-on? or ioi and left-on? and not on? and right-on? or ioo and left-on? and not on? and not right-on?"
+                _or "iii and left-on? and on? and right-on? or iio and left-on? and on? and not right-on? or ioi and left-on? and not on? and right-on?"
+                  _or "iii and left-on? and on? and right-on? or iio and left-on? and on? and not right-on?"
+                    _and "iii and left-on? and on? and right-on?"
+                      _and "iii and left-on? and on?"
                         _and "iii and left-on?"
                           _observervariable:III "iii" => Object
                           _procedurevariable:LEFT-ON? "left-on?" => Object
                         _patchvariable:ON? "on?" => Object
                       _procedurevariable:RIGHT-ON? "right-on?" => Object
-                    _and "iio and left-on?       and on?       and (not right-on?"
-                      _and "iio and left-on?       and on?"
+                    _and "iio and left-on? and on? and not right-on?"
+                      _and "iio and left-on? and on?"
                         _and "iio and left-on?"
                           _observervariable:IIO "iio" => Object
                           _procedurevariable:LEFT-ON? "left-on?" => Object
                         _patchvariable:ON? "on?" => Object
                       _not "not right-on?" boolean => boolean
                         _procedurevariable:RIGHT-ON? "right-on?" => Object
-                  _and "ioi and left-on?       and (not on?) and right-on?"
-                    _and "ioi and left-on?       and (not on?"
+                  _and "ioi and left-on? and not on? and right-on?"
+                    _and "ioi and left-on? and not on?"
                       _and "ioi and left-on?"
                         _observervariable:IOI "ioi" => Object
                         _procedurevariable:LEFT-ON? "left-on?" => Object
                       _not "not on?" boolean => boolean
                         _patchvariable:ON? "on?" => Object
                     _procedurevariable:RIGHT-ON? "right-on?" => Object
-                _and "ioo and left-on?       and (not on?) and (not right-on?"
-                  _and "ioo and left-on?       and (not on?"
+                _and "ioo and left-on? and not on? and not right-on?"
+                  _and "ioo and left-on? and not on?"
                     _and "ioo and left-on?"
                       _observervariable:IOO "ioo" => Object
                       _procedurevariable:LEFT-ON? "left-on?" => Object
@@ -7092,35 +7061,35 @@ procedure DO-RULE:[LEFT-ON? RIGHT-ON? NEW-VALUE]{-TP-}:
                       _patchvariable:ON? "on?" => Object
                   _not "not right-on?" boolean => boolean
                     _procedurevariable:RIGHT-ON? "right-on?" => Object
-              _and "oii and (not left-on?) and on?       and right-on?"
-                _and "oii and (not left-on?) and on?"
-                  _and "oii and (not left-on?"
+              _and "oii and not left-on? and on? and right-on?"
+                _and "oii and not left-on? and on?"
+                  _and "oii and not left-on?"
                     _observervariable:OII "oii" => Object
                     _not "not left-on?" boolean => boolean
                       _procedurevariable:LEFT-ON? "left-on?" => Object
                   _patchvariable:ON? "on?" => Object
                 _procedurevariable:RIGHT-ON? "right-on?" => Object
-            _and "oio and (not left-on?) and on?       and (not right-on?"
-              _and "oio and (not left-on?) and on?"
-                _and "oio and (not left-on?"
+            _and "oio and not left-on? and on? and not right-on?"
+              _and "oio and not left-on? and on?"
+                _and "oio and not left-on?"
                   _observervariable:OIO "oio" => Object
                   _not "not left-on?" boolean => boolean
                     _procedurevariable:LEFT-ON? "left-on?" => Object
                 _patchvariable:ON? "on?" => Object
               _not "not right-on?" boolean => boolean
                 _procedurevariable:RIGHT-ON? "right-on?" => Object
-          _and "ooi and (not left-on?) and (not on?) and right-on?"
-            _and "ooi and (not left-on?) and (not on?"
-              _and "ooi and (not left-on?"
+          _and "ooi and not left-on? and not on? and right-on?"
+            _and "ooi and not left-on? and not on?"
+              _and "ooi and not left-on?"
                 _observervariable:OOI "ooi" => Object
                 _not "not left-on?" boolean => boolean
                   _procedurevariable:LEFT-ON? "left-on?" => Object
               _not "not on?" boolean => boolean
                 _patchvariable:ON? "on?" => Object
             _procedurevariable:RIGHT-ON? "right-on?" => Object
-        _and "ooo and (not left-on?) and (not on?) and (not right-on?"
-          _and "ooo and (not left-on?) and (not on?"
-            _and "ooo and (not left-on?"
+        _and "ooo and not left-on? and not on? and not right-on?"
+          _and "ooo and not left-on? and not on?"
+            _and "ooo and not left-on?"
               _observervariable:OOO "ooo" => Object
               _not "not left-on?" boolean => boolean
                 _procedurevariable:LEFT-ON? "left-on?" => Object
@@ -8485,8 +8454,8 @@ procedure DO-RULE:[LEFT-ON? RIGHT-ON? NEW-VALUE]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L264
           RETURN
-[3]_asm_proceduredorule_ask_3 "ask patch-at" Object => void
-      _patchsouth "patch-at" => Object
+[3]_asm_proceduredorule_ask_3 "ask patch-at 0 -1 [ set on? new-value ]" Object => void
+      _patchsouth "patch-at 0 -1" => Object
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -8716,8 +8685,8 @@ procedure SINGLE-CELL:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[1]_asm_proceduresinglecell_ask_1 "ask patches with [pycor = row" Object => void
-      _patchrow "with [pycor = row"
+[1]_asm_proceduresinglecell_ask_1 "ask patches with [ pycor = row ] set on? false [ set pcolor background ]" Object => void
+      _patchrow "patches with [ pycor = row ]"
         _asm_proceduresinglecell_observervariable_2 "row" => Object
              L0
               ALOAD 1
@@ -8916,7 +8885,7 @@ procedure SINGLE-CELL:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[5]_asm_proceduresinglecell_ask_6 "ask patch 0 row" Object => void
+[5]_asm_proceduresinglecell_ask_6 "ask patch 0 row set pcolor foreground [ set on? true ]" Object => void
       _patch "patch 0 row"
         _asm_proceduresinglecell_constdouble_7 "0" => Double
              L0
@@ -9134,7 +9103,7 @@ procedure SINGLE-CELL:[]{O---}:
           RETURN
 
 reporter procedure BINDIGIT:[NUMBER POWER-OF-TWO]{OTPL}:
-[0]_asm_procedurebindigit_ifelse_0 "ifelse (power-of-two = 0" boolean => void
+[0]_asm_procedurebindigit_ifelse_0 "ifelse power-of-two = 0 [ report floor number mod 2 ] [ report bindigit floor number / 2 power-of-two - 1 ]" boolean => void
       _equal "power-of-two = 0" Object,double => boolean
         _procedurevariable:POWER-OF-TWO "power-of-two" => Object
         _constdouble:0.0 "0" => double
@@ -9321,8 +9290,8 @@ reporter procedure BINDIGIT:[NUMBER POWER-OF-TWO]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedurebindigit_report_3 "report bindigit (floor number / 2) (power-of-two - 1" Object => void
-      _callreport:BINDIGIT "bindigit (floor number / 2) (power-of-two - 1"
+[3]_asm_procedurebindigit_report_3 "report bindigit floor number / 2 power-of-two - 1" Object => void
+      _callreport:BINDIGIT "bindigit floor number / 2 power-of-two - 1"
         _div "floor number / 2" double,double => double
           _floor "floor number" double => double
             _procedurevariable:NUMBER "number" => Object

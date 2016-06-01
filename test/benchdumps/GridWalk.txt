@@ -75,7 +75,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L1
           RETURN
 [2]_resettimer "reset-timer"
-[3]_asm_procedurebenchmark_repeatlocal_2 double => void
+[3]_asm_procedurebenchmark_repeatlocal_2 "repeat 20000 [ go ]" double => void
       _constdouble:20000.0 "20000" => double
          L0
           LDC 20000.0
@@ -201,7 +201,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
 procedure SETUP:[]{O---}:
 [0]_clearall "ca"
 [1]_resetticks "reset-ticks"
-[2]_createorderedturtles:,+6 "cro 1000"
+[2]_createorderedturtles:,+6 "cro 1000 move-to one-of patches [ face one-of neighbors4 ]"
       _asm_proceduresetup_constdouble_0 "1000" => Double
            L0
             ALOAD 0
@@ -380,7 +380,7 @@ procedure SETUP:[]{O---}:
           RETURN
 
 procedure GO:[]{O---}:
-[0]_asm_procedurego_ask_0 "ask turtles" AgentSet => void
+[0]_asm_procedurego_ask_0 "ask turtles face one-of neighbors4 [ fd 1 ]" AgentSet => void
       _turtles "turtles" => AgentSet
          L0
           ALOAD 0
@@ -558,7 +558,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[2]_asm_procedurego_fd1_2 "fd" => void
+[2]_asm_procedurego_fd1_2 "fd 1" => void
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
