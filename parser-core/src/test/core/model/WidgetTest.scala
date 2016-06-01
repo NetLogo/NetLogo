@@ -2,7 +2,8 @@
 
 package org.nlogo.core.model
 
-import org.nlogo.core.{ model, TextBox, Output, CompilerException, LiteralParser, LogoList, NumericInput,
+import org.nlogo.core.{ model, TextBox, Output, ChooseableList, CompilerException,
+  LiteralParser, LogoList, Nobody, NumericInput,
   NumberParser, InputBox, Chooser, ChooseableString, Pen, Plot, Switch,
   Monitor, UpdateMode, View, Horizontal, Button, Slider, StringInput,
   Widget, WorldDimensions },
@@ -12,16 +13,24 @@ import scala.reflect.ClassTag
 
 object SimpleLiteralParser extends LiteralParser {
   override def readFromString(s: String): AnyRef =
-    if (s.startsWith("[") && s.endsWith("]"))
-      LogoList.fromVector(s.drop(1).dropRight(1).split(' ').map(readFromString).toVector)
+    if (s == "nobody")
+      Nobody
+    else if (s.startsWith("[") && s.endsWith("]"))
+      if (s(1) == '[')
+        LogoList(readFromString(s.drop(1).dropRight(1)))
+      else {
+        val parts = s.drop(1).dropRight(1).split(' ').filterNot(_.trim.length == 0)
+        LogoList.fromVector(parts.map(readFromString).toVector)
+      }
     else if (s.startsWith("\"") && s.endsWith("\""))
       s.drop(1).dropRight(1)
     else
       readNumberFromString(s)
 
-  override def readNumberFromString(source: String): AnyRef =
+  override def readNumberFromString(source: String): AnyRef = {
     NumberParser.parse(source).right.getOrElse(
       throw new CompilerException(source, 0, 1, s"invalid number: $source"))
+  }
 }
 
 class WidgetTest extends FunSuite {
@@ -398,19 +407,20 @@ class WidgetTest extends FunSuite {
     runSerializationTests(chooser, chooserWidget, ChooserReader)
   }
 
-  test("chooser with nobody raises CompilerException") {
+  test("chooser with nobody converts nobody to string") {
     val chooser = chooserWithChoices(""""days" "years" nobody""")
     assert(ChooserReader.validate(chooser))
-    intercept[CompilerException] {
-      ChooserReader.parse(chooser, literalParser)
-    }
+    ChooserReader.parse(chooser, literalParser) == Chooser(Some("visualize-time-steps"), 164, 10, 315, 55, Some("visualize-time-steps"), List(ChooseableString("days"), ChooseableString("years"), ChooseableString("nobody")), 1)
   }
 
-  test("chooser with nested nobody") {
+  test("chooser with nested nobody converts nobody to string") {
     val chooser = chooserWithChoices("""["days" "years" [nobody]]""")
-    intercept[CompilerException] {
-      ChooserReader.parse(chooser, literalParser)
-    }
+    ChooserReader.parse(chooser, literalParser) == Chooser(Some("visualize-time-steps"), 164, 10, 315, 55, Some("visualize-time-steps"),
+      List(ChooseableList(LogoList(
+        ChooseableString("days"),
+        ChooseableString("years"),
+        ChooseableList(LogoList("nobody"))))),
+    1)
   }
 
   private def chooserWithChoices(choices: String): List[String] = {

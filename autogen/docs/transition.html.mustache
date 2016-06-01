@@ -39,6 +39,17 @@
       <a>Changes for NetLogo 6.0</a>
     </h2>
     <h3>
+      Nobody Not Permitted as a Chooser Value
+    </h3>
+    <p>
+    In NetLogo 6.0, <code>nobody</code> is no longer a valid chooser value.
+    Just as you can't put <code>turtle 0</code> or <code>turtles</code>,
+    <code>nobody</code> refers to a non-literal value which
+    isn't supported in choosers. As part of this transition, choosers
+    containing <code>nobody</code> (or <code>nobody</code> within a nested list)
+    will have all uses of <code>nobody</code> changed to <code>"nobody"</code> when
+    opened in NetLogo 6.0.
+    <h3>
       Improved Name Collision Detection
     </h3>
     <p>

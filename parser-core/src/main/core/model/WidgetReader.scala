@@ -409,19 +409,15 @@ object ChooserReader extends BaseWidgetReader {
     val List(_, left: Int, top: Int, right: Int, bottom: Int, display: Option[String] @unchecked, variable: Option[String] @unchecked,
     choicesStr: String, currentChoice: Int) = vals
 
-    val choices = parser.readFromString(s"[$choicesStr]").asInstanceOf[LogoList].toList
+    val choices = parser.readFromString(s"[$choicesStr]").asInstanceOf[LogoList]
 
-    def isOrContainsNobody(l: Any): Boolean = l match {
-      case Nobody       => true
-      case l: List[Any] => l.exists(isOrContainsNobody)
-      case ll: LogoList => isOrContainsNobody(ll.toList)
-      case _            => false
+    def convertAllNobodies(l: AnyRef): AnyRef = l match {
+      case Nobody       => "nobody"
+      case ll: LogoList => LogoList(ll.map(convertAllNobodies): _*)
+      case other        => other
     }
 
-    if (isOrContainsNobody(choices)) throw new CompilerException(
-      "nobody may not appear in a chooser value", Int.MaxValue, Int.MaxValue, "")
-
-    Chooser(variable, left, top, right, bottom, display, choices.map(Chooseable(_)), currentChoice)
+    Chooser(variable, left, top, right, bottom, display, choices.map(convertAllNobodies).map(Chooseable(_)).toList, currentChoice)
   }
 }
 
