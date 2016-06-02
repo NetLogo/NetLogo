@@ -763,3 +763,32 @@ MyLinksListsBreededLinks
 
 LinkShapes
   link-shapes => ["default"]
+
+LinkNeighborsBreeded
+  directed-link-breed [directed-edges directed-edge]
+  undirected-link-breed [undirected-edges undirected-edge]
+  O> crt 3
+  O> ask turtle 0 [ create-undirected-edge-with turtle 1 ]
+  O> ask turtle 2 [ create-directed-edge-to turtle 1]
+  [link-neighbor? turtle 1] of turtle 0 => true
+  [link-neighbor? turtle 2] of turtle 0 => false
+  [link-neighbor? turtle 0] of turtle 1 => true
+  [link-neighbor? turtle 2] of turtle 1 => false
+  [out-link-neighbor? turtle 1] of turtle 0 => false
+  [in-link-neighbor? turtle 1] of turtle 0 => false
+  [out-link-neighbor? turtle 0] of turtle 1 => false
+  [in-link-neighbor? turtle 0] of turtle 1 => false
+  [undirected-edge-neighbor? turtle 1] of turtle 0 => true
+  [undirected-edge-neighbor? turtle 2] of turtle 0 => false
+  [undirected-edge-neighbor? turtle 0] of turtle 1 => true
+  [undirected-edge-neighbor? turtle 2] of turtle 1 => false
+  [in-directed-edge-neighbor? turtle 1] of turtle 0 => false
+  [in-directed-edge-neighbor? turtle 2] of turtle 0 => false
+  [in-directed-edge-neighbor? turtle 0] of turtle 1 => false
+  [in-directed-edge-neighbor? turtle 2] of turtle 1 => true
+  [in-directed-edge-neighbor? turtle 1] of turtle 2 => false
+  [out-directed-edge-neighbor? turtle 1] of turtle 0 => false
+  [out-directed-edge-neighbor? turtle 2] of turtle 0 => false
+  [out-directed-edge-neighbor? turtle 0] of turtle 1 => false
+  [out-directed-edge-neighbor? turtle 2] of turtle 1 => false
+  [out-directed-edge-neighbor? turtle 1] of turtle 2 => true
