@@ -180,6 +180,12 @@ org.nlogo.prim.task.missingInput = task expected 1 input, but only got 0
 org.nlogo.prim.task.missingInputs = task expected {0} inputs, but only got {1}
 org.nlogo.prim._returnreport.reportNotCalledInReportProcedure = Reached end of reporter procedure without REPORT being called.
 org.nlogo.prim.etc.$common.expectedLastInputToBeLinkBreed = Expected the last input to be a link breed.
+org.nlogo.prim.$common.invalidAgentKind.simple = this code can''t be run by {0}
+org.nlogo.prim.$common.invalidAgentKind.alternative = this code can''t be run by {0}, only {1}
+org.nlogo.prim.$common.agentKind.observer = the observer
+org.nlogo.prim.$common.agentKind.turtle = a turtle
+org.nlogo.prim.$common.agentKind.patch = a patch
+org.nlogo.prim.$common.agentKind.link = a link
 
 org.nlogo.prim.etc._randomNormal.secondInputNotNegative = random-normal''s second input can''t be negative.
 
