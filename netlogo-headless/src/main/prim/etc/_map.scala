@@ -4,7 +4,7 @@ package org.nlogo.prim.etc
 
 import org.nlogo.api.LogoListBuilder
 import org.nlogo.core.LogoList
-import org.nlogo.nvm.{ Context, EngineException, Reporter }
+import org.nlogo.nvm.{ Context, EngineException, Reporter, Task }
 
 class _map extends Reporter {
 
@@ -17,9 +17,8 @@ class _map extends Reporter {
 
     val task = argEvalReporterTask(context, 0)
     val n = args.length - 1
-    if(n < task.formals.size)
-      throw new EngineException(
-        context, this, task.missingInputs(n))
+    if(n < task.syntax.minimum)
+      throw new EngineException(context, this, Task.missingInputs(task, n))
 
     // get all of the list args, if any.
     var size = 0

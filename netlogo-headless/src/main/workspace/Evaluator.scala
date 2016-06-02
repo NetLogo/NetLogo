@@ -18,7 +18,7 @@ class Evaluator(workspace: AbstractWorkspace) {
                        flags: CompilerFlags = workspace.flags) {
     val procedure = invokeCompiler(source, None, true, agentSet.kind, flags)
     workspace.jobManager.addJob(
-      workspace.jobManager.makeConcurrentJob(owner, agentSet, procedure),
+      workspace.jobManager.makeConcurrentJob(owner, agentSet, workspace, procedure),
       waitForCompletion)
   }
 
@@ -26,7 +26,7 @@ class Evaluator(workspace: AbstractWorkspace) {
       agents: AgentSet = workspace.world.observers,
       flags: CompilerFlags = workspace.flags): Object = {
     val procedure = invokeCompiler(source, None, false, agents.kind, flags)
-    workspace.jobManager.addReporterJobAndWait(owner, agents, procedure)
+    workspace.jobManager.addReporterJobAndWait(owner, agents, workspace, procedure)
   }
 
   def compileCommands(source: String, kind: AgentKind = AgentKind.Observer,
@@ -41,14 +41,14 @@ class Evaluator(workspace: AbstractWorkspace) {
    */
   def runCompiledCommands(owner: JobOwner, procedure: Procedure) = {
     val job = workspace.jobManager.makeConcurrentJob(
-      owner, workspace.world.kindToAgentSet(owner.kind), procedure)
+      owner, workspace.world.kindToAgentSet(owner.kind), workspace, procedure)
     workspace.jobManager.addJob(job, true)
     job.stopping
   }
 
   def runCompiledReporter(owner: JobOwner, procedure: Procedure) =
     workspace.jobManager.addReporterJobAndWait(owner,
-      workspace.world.kindToAgentSet(owner.kind), procedure)
+      workspace.world.kindToAgentSet(owner.kind), workspace, procedure)
 
   ///
 
@@ -117,7 +117,7 @@ class Evaluator(workspace: AbstractWorkspace) {
       val proc = invokeCompiler(source, Some(owner.displayName), false, agent.kind)
       new MyLogoThunk(source, agent, owner, false, proc) with ReporterLogoThunk {
         def call(): Object  = {
-          val job = new ExclusiveJob(owner, agentset, procedure, 0, null, owner.random)
+          val job = new ExclusiveJob(owner, agentset, procedure, 0, null, workspace, owner.random)
           val context = new Context(job, agent, 0, null)
           try context.callReporterProcedure(new Activation(procedure, null, 0))
           catch {

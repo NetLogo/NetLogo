@@ -4,7 +4,7 @@ package org.nlogo.prim.etc
 
 import org.nlogo.api.LogoListBuilder
 import org.nlogo.core.{ I18N, LogoList }
-import org.nlogo.nvm.{ Context, EngineException, Reporter }
+import org.nlogo.nvm.{ Context, EngineException, Reporter, Task }
 
 class _nvalues extends Reporter {
 
@@ -17,9 +17,8 @@ class _nvalues extends Reporter {
     // make the result list.
     val result = new LogoListBuilder
     val task = argEvalReporterTask(context, 1)
-    if(task.formals.size > 1)
-      throw new EngineException(
-        context, this, task.missingInputs(1))
+    if (task.syntax.minimum > 1)
+      throw new EngineException(context, this, Task.missingInputs(task, 1))
     for (i <- 0 until n)
       result.add(task.report(context, Array[AnyRef](Double.box(i))))
     result.toLogoList

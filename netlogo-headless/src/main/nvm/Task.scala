@@ -3,7 +3,8 @@
 package org.nlogo.nvm
 
 import org.nlogo.{ core, api },
-  core.Let
+  api.{ Task => ApiTask },
+  core.{ I18N, Let, Syntax }
 
 // tasks are created by the _task prim, which may appear in user code, or may be inserted by
 // ExpressionParser during parsing, when a task is known to be expected.
@@ -29,12 +30,14 @@ sealed trait Task {
       i += 1
     }
   }
-  def missingInputs(n: Int) = {
-    val plural =
-      if(formals.size == 1) ""
-      else "s"
-    "task expected " + formals.size + " input" + plural + ", but only got " + n
-  }
+}
+
+object Task {
+  def missingInputs(task: ApiTask, argCount: Int): String =
+    if (task.syntax.minimum == 1)
+      I18N.errors.get("org.nlogo.prim.task.missingInput")
+    else
+      I18N.errors.getN("org.nlogo.prim.task.missingInputs", task.syntax.minimum.toString, argCount.toString)
 }
 
 // Reporter tasks are pretty simple.  The body is simply a Reporter.  To run it, we swap closed-over
@@ -42,9 +45,16 @@ sealed trait Task {
 
 case class ReporterTask(body: Reporter, formals: Array[Let], lets: List[LetBinding], locals: Array[AnyRef])
 extends Task with org.nlogo.api.ReporterTask {
+  def syntax =
+    Syntax.reporterSyntax(
+      ret = Syntax.WildcardType,
+      right = formals.map(_ => Syntax.WildcardType | Syntax.RepeatableType).toList)
   override def toString = "(reporter task)"
   def report(context: api.Context, args: Array[AnyRef]): AnyRef =
-    report(context.asInstanceOf[ExtensionContext].nvmContext, args)
+    context match {
+      case e: ExtensionContext => report(e.nvmContext, args)
+      case c: Context          => report(c, args)
+    }
   def report(context: Context, args: Array[AnyRef]): AnyRef = {
     val oldLets = context.letBindings
     val oldLocals = context.activation.args
@@ -65,9 +75,14 @@ extends Task with org.nlogo.api.ReporterTask {
 
 case class CommandTask(procedure: Procedure, formals: Array[Let], lets: List[LetBinding], locals: Array[AnyRef])
 extends Task with org.nlogo.api.CommandTask {
+  def syntax =
+    Syntax.commandSyntax(right = formals.map(_ => Syntax.WildcardType | Syntax.RepeatableType).toList)
   override def toString = procedure.displayName
   def perform(context: api.Context, args: Array[AnyRef]) {
-    perform(context.asInstanceOf[ExtensionContext].nvmContext, args)
+    context match {
+      case e: ExtensionContext => perform(e.nvmContext, args)
+      case c: Context          => perform(c, args)
+    }
   }
   def perform(context: Context, args: Array[AnyRef]) {
     val oldLets = context.letBindings

@@ -2,10 +2,10 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.Syntax
-import org.nlogo.core.CompilerException
-import org.nlogo.nvm.{ Activation, ArgumentTypeException, Command, CommandTask, Context,
-                       EngineException, NonLocalExit, Procedure }
+import org.nlogo.core.{ CompilerException, I18N, Syntax }
+import org.nlogo.api.CommandTask
+import org.nlogo.nvm.{ Activation, ArgumentTypeException, Command, Context,
+                       EngineException, NonLocalExit, Procedure, Task }
 
 class _run extends Command {
 
@@ -33,9 +33,8 @@ class _run extends Command {
         }
       case task: CommandTask =>
         val n = args.size - 1
-        if(n < task.formals.size)
-          throw new EngineException(
-            context, this, task.missingInputs(n))
+        if (n < task.syntax.minimum)
+          throw new EngineException(context, this, Task.missingInputs(task, n))
         val actuals = new Array[AnyRef](n)
         var i = 0
         while(i < n) {

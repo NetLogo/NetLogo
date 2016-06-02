@@ -6,8 +6,9 @@ import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.core.Let;
 import org.nlogo.api.LogoException;
+import org.nlogo.api.MersenneTwisterFast;
 
-public final strictfp class Context {
+public final strictfp class Context implements org.nlogo.api.Context {
 
   // these are information about our execution environment
   public final Job job;
@@ -19,6 +20,7 @@ public final strictfp class Context {
   public int ip;
   public Activation activation;
   public boolean waiting = false; // are we waiting on a child job?
+  private Workspace workspace;
   private boolean inReporterProcedure = false;
 
   @SuppressWarnings("unchecked") // Java doesn't know about variance
@@ -39,8 +41,7 @@ public final strictfp class Context {
 
   // This constructor is used when a Context spawns a Job which
   // in turn spawns Contexts, such as with _ask. - ST 6/12/06
-  public Context(Job job, Agent agent, int ip,
-                 Activation activation) {
+  public Context(Job job, Agent agent, int ip, Activation activation, Workspace workspace) {
     this.job = job;
     this.agent = agent;
     if (agent != null) {
@@ -48,6 +49,7 @@ public final strictfp class Context {
     }
     this.ip = ip;
     this.activation = activation;
+    this.workspace = workspace;
   }
 
   // ...while these constructors are used when one Context spawns
@@ -59,6 +61,7 @@ public final strictfp class Context {
     letBindings = context.letBindings;
     myself = context.agent;
     agentBit = agents.getAgentBit();
+    this.workspace = context.workspace;
   }
 
   public Context(Context context, Agent agent) {
@@ -67,10 +70,7 @@ public final strictfp class Context {
     letBindings = context.letBindings;
     myself = context.agent;
     agentBit = agent.getAgentBit();
-  }
-
-  public boolean makeChildrenExclusive() {
-    return inReporterProcedure || job.exclusive();
+    this.workspace = context.workspace;
   }
 
   // this method runs only until a command switches
@@ -160,7 +160,7 @@ public final strictfp class Context {
   public void runExclusiveJob(AgentSet agentset, int address)
       throws LogoException {
     new ExclusiveJob
-        (job.owner, agentset, activation.procedure, address, this, job.random)
+        (job.owner, agentset, activation.procedure, address, this, workspace, job.random)
         .run();
     // this next check is here to handle an obscure special case:
     // check if the child has (gasp!) killed its parent
@@ -171,7 +171,7 @@ public final strictfp class Context {
   }
 
   public Job makeConcurrentJob(AgentSet agentset) {
-    return new ConcurrentJob(job.owner, agentset, null, ip + 1, this, job.random);
+    return new ConcurrentJob(job.owner, agentset, null, ip + 1, this, workspace, job.random);
   }
 
   public void returnFromProcedure() {
@@ -364,5 +364,43 @@ public final strictfp class Context {
       finished = true;
       throw new HaltException(true);
     }
+  }
+
+  // api.Context methods
+  public Workspace workspace() {
+    return workspace;
+  }
+
+  public Activation activation() {
+    return activation;
+  }
+
+  public MersenneTwisterFast getRNG() {
+    return job.random;
+  }
+
+  public String attachCurrentDirectory(String path)
+      throws java.net.MalformedURLException {
+    return workspace.fileManager().attachPrefix(path);
+  }
+
+  public void importPcolors(java.awt.image.BufferedImage image, boolean asNetLogoColors) {
+    org.nlogo.agent.ImportPatchColors.doImport(image, workspace.world(), asNetLogoColors);
+  }
+
+  public java.awt.image.BufferedImage getDrawing() {
+    return workspace.getAndCreateDrawing();
+  }
+
+  public boolean makeChildrenExclusive() {
+    return inReporterProcedure || job.exclusive();
+  }
+
+  public org.nlogo.api.World world() {
+    return workspace.world();
+  }
+
+  public org.nlogo.api.Agent getAgent() {
+    return agent;
   }
 }

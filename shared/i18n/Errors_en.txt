@@ -176,6 +176,8 @@ org.nlogo.workspace.DefaultFileManager.noOpenFile = No file has been opened.
 
 org.nlogo.prim.etc._foreach.listsMustBeSameLength = All the list arguments to FOREACH must be the same length.
 org.nlogo.prim.$common.noSumOfListWithNonNumbers =  Can''t find the sum of a list that contains non-numbers {0} is a {1}.
+org.nlogo.prim.task.missingInput = task expected 1 input, but only got 0
+org.nlogo.prim.task.missingInputs = task expected {0} inputs, but only got {1}
 org.nlogo.prim._returnreport.reportNotCalledInReportProcedure = Reached end of reporter procedure without REPORT being called.
 org.nlogo.prim.etc.$common.expectedLastInputToBeLinkBreed = Expected the last input to be a link breed.
 

@@ -5,9 +5,9 @@ package org.nlogo.prim.etc
 import scala.collection.mutable
 import scala.math.Ordering
 import org.nlogo.agent.AgentSet
-import org.nlogo.api.LogoException
+import org.nlogo.api.{ LogoException, ReporterTask }
 import org.nlogo.core.{ LogoList, Syntax }
-import org.nlogo.nvm.{ ArgumentTypeException, Context, EngineException, Reporter, ReporterTask }
+import org.nlogo.nvm.{ ArgumentTypeException, Context, EngineException, Reporter, Task }
 
 class _sortby extends Reporter {
 
@@ -17,9 +17,9 @@ class _sortby extends Reporter {
 
   override def report(context: Context): LogoList = {
     val task = argEvalReporterTask(context, 0)
-    if(task.formals.size > 2)
+    if (task.syntax.minimum > 2)
       throw new EngineException(
-        context, this, task.missingInputs(2))
+        context, this, Task.missingInputs(task, 2))
     val obj = args(1).report(context)
     val input = obj match {
       case list: LogoList => list

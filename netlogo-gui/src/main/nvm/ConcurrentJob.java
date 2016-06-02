@@ -15,8 +15,9 @@ public strictfp class ConcurrentJob
                        Procedure topLevelProcedure,
                        int address,
                        Context parentContext,
+                       Workspace workspace,
                        org.nlogo.api.MersenneTwisterFast random) {
-    super(owner, agentset, topLevelProcedure, address, parentContext, random);
+    super(owner, agentset, topLevelProcedure, address, parentContext, workspace, random);
   }
 
   private Context[] contexts;
@@ -42,7 +43,7 @@ public strictfp class ConcurrentJob
             address,
             parentContext == null
                 ? new Activation(topLevelProcedure, null, 0)
-                : parentContext.activation);
+                : parentContext.activation, workspace);
     if (count == -1) // this whole -1 as a special value business is a bit kludgey - ST
     {
       if (contexts == null) {

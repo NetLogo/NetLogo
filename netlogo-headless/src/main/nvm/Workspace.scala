@@ -8,6 +8,7 @@ import org.nlogo.agent.{ Agent, AgentSet }
 import collection.mutable.WeakHashMap
 
 trait Workspace extends api.Workspace with JobManagerOwner with api.ViewSettings {
+  def world: org.nlogo.agent.World
   def breathe(context: Context) // called when engine comes up for air
   def requestDisplayUpdate(context: Context, force: Boolean)
   def updateUI(context: Context) { }
