@@ -457,6 +457,9 @@ class App extends
     if(System.getProperty("os.name").startsWith("Mac")){
       appHandler.getClass.getDeclaredMethod("ready", classOf[AnyRef]).invoke(appHandler, this)
     }
+    
+    val autoSuggest = new AutoSuggest()
+    println(autoSuggest.getSuggestions("la"))
   }
 
   def startLogging(properties:String) {
