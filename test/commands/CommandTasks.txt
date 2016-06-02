@@ -132,7 +132,7 @@ command-and-reporter-tasks-close-over-same-procedure-input
   O> run task [run task [print __boom]] => STACKTRACE boom!\
   error while observer running __BOOM\
     called by (command task from: procedure __EVALUATOR: [print __boom])\
-    called by (command task from: procedure __EVALUATOR: [(run task [print __boom])])\
+    called by (command task from: procedure __EVALUATOR: [run task [print __boom]])\
     called by procedure __EVALUATOR
 
 turtle-executing-command-task

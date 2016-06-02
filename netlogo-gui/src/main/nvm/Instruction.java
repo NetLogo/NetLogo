@@ -451,19 +451,19 @@ public abstract strictfp class Instruction
     }
   }
 
-  public ReporterTask argEvalReporterTask(Context context, int argIndex) throws LogoException {
+  public org.nlogo.api.ReporterTask argEvalReporterTask(Context context, int argIndex) throws LogoException {
     Object obj = args[argIndex].report(context);
     try {
-      return (ReporterTask) obj;
+      return (org.nlogo.api.ReporterTask) obj;
     } catch (ClassCastException ex) {
       throw new ArgumentTypeException(context, this, argIndex, Syntax.ReporterTaskType(), obj);
     }
   }
 
-  public CommandTask argEvalCommandTask(Context context, int argIndex) throws LogoException {
+  public org.nlogo.api.CommandTask argEvalCommandTask(Context context, int argIndex) throws LogoException {
     Object obj = args[argIndex].report(context);
     try {
-      return (CommandTask) obj;
+      return (org.nlogo.api.CommandTask) obj;
     } catch (ClassCastException ex) {
       throw new ArgumentTypeException(context, this, argIndex, Syntax.CommandTaskType(), obj);
     }

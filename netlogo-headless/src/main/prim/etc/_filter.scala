@@ -4,16 +4,16 @@ package org.nlogo.prim.etc
 
 import org.nlogo.api.LogoListBuilder
 import org.nlogo.core.{ LogoList, Syntax }
-import org.nlogo.nvm.{ ArgumentTypeException, Context, EngineException, Reporter }
+import org.nlogo.nvm.{ ArgumentTypeException, Context, EngineException, Reporter, Task }
 
 class _filter extends Reporter {
 
   def report(context: Context): LogoList = {
     val task = argEvalReporterTask(context, 0)
     val list = argEvalList(context, 1)
-    if(task.formals.size > 1)
+    if (task.syntax.minimum > 1)
       throw new EngineException(
-        context, this, task.missingInputs(1))
+        context, this, Task.missingInputs(task, 1))
     val builder = new LogoListBuilder
     for (item <- list)
       task.report(context, Array(item)) match {

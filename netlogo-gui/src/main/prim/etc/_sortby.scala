@@ -3,24 +3,20 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.agent.AgentSet
-import org.nlogo.api.{ LogoException}
+import org.nlogo.api.{ LogoException, ReporterTask }
 import org.nlogo.core.Syntax
 import org.nlogo.core.LogoList
-import org.nlogo.nvm.{ ArgumentTypeException, Context, EngineException, Reporter, ReporterTask  }
+import org.nlogo.nvm.{ ArgumentTypeException, Context, EngineException, Reporter, Task }
 
 class _sortby extends Reporter {
-
   // see issue #172
   private val Java7SoPicky =
     "Comparison method violates its general contract!"
 
-
-
   override def report(context: Context) = {
     val task = argEvalReporterTask(context, 0)
-    if(task.formals.size > 2)
-      throw new EngineException(
-        context, this, task.missingInputs(2))
+    if (task.syntax.minimum > 2)
+      throw new EngineException(context, this, Task.missingInputs(task, 2))
     val obj = args(1).report(context)
     val input = obj match {
       case list: LogoList =>

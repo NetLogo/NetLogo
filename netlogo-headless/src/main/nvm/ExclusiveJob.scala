@@ -7,8 +7,8 @@ import org.nlogo.api.JobOwner
 import org.nlogo.api.MersenneTwisterFast
 
 class ExclusiveJob(owner: JobOwner, agentset: AgentSet, topLevelProcedure: Procedure,
-                   address: Int, parentContext: Context, random: MersenneTwisterFast)
-extends Job(owner, agentset, topLevelProcedure, address, parentContext, random) {
+                   address: Int, parentContext: Context, workspace: Workspace, random: MersenneTwisterFast)
+extends Job(owner, agentset, topLevelProcedure, address, parentContext, workspace, random) {
 
   override def exclusive = true
 

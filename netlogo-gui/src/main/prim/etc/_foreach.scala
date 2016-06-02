@@ -4,7 +4,7 @@ package org.nlogo.prim.etc
 
 import org.nlogo.core.Syntax
 import org.nlogo.core.I18N
-import org.nlogo.nvm.{ Command, Context, EngineException, NonLocalExit, Procedure }
+import org.nlogo.nvm.{ Command, Context, EngineException, NonLocalExit, Procedure, Task }
 
 class _foreach extends Command {
 
@@ -20,9 +20,8 @@ class _foreach extends Command {
       list.iterator
     }
     val task = argEvalCommandTask(context, n)
-    if(n < task.formals.size)
-      throw new EngineException(
-        context, this, task.missingInputs(n))
+    if (n < task.syntax.minimum)
+      throw new EngineException(context, this, Task.missingInputs(task, n))
     var i = 0
     val actuals = new Array[AnyRef](n)
     try {
