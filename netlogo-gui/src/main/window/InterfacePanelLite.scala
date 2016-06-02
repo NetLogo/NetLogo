@@ -39,7 +39,6 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
   addFocusListener(this)
   addMouseListener(iPMouseListener)
   addKeyListener(getKeyAdapter)
-  addWidget(viewWidget.asInstanceOf[Widget], 0, 0)
 
   // made protected so that hubnet could override it to implement message throttling. -JC 8/19/10
   protected def getKeyAdapter: KeyAdapter =
@@ -229,15 +228,14 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
         case v: CoreView =>
           // the graphics widget (and the command center) are special cases because
           // they are not recreated at load time, but reused
-          val widget = viewWidget.asWidget.asInstanceOf[ViewWidgetInterface]
           try {
-            widget.load(v)
+            viewWidget.load(v)
           } catch {
             case ex: RuntimeException => Exceptions.handle(ex)
           }
-          widget.setSize(widget.getSize)
-          widget.setLocation(x, y)
-          widget
+          viewWidget.setSize(viewWidget.getSize())
+          addWidget(viewWidget, x, y)
+          viewWidget
         case _ =>
           val name = coreWidget.getClass.getSimpleName
           val newGuy = widgetBuilderMap.get(name).flatMap(createWidget =>
