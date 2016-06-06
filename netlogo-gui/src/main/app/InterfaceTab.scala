@@ -3,9 +3,9 @@
 package org.nlogo.app
 
 import org.nlogo.core.I18N
-import org.nlogo.window.{WidgetInfo, EditDialogFactoryInterface, GUIWorkspace}
+import org.nlogo.window.{InterfaceColors, WidgetInfo, EditDialogFactoryInterface, GUIWorkspace}
 import org.nlogo.swing.Implicits.thunk2action
-import javax.swing.{JScrollPane, ScrollPaneConstants, Action, ImageIcon, AbstractAction, JSplitPane, JPanel}
+import javax.swing.{ BorderFactory, JScrollPane, ScrollPaneConstants, Action, ImageIcon, AbstractAction, JSplitPane, JPanel}
 import java.awt.{Graphics2D, Graphics, Component, Container, ContainerOrderFocusTraversalPolicy, Dimension, BorderLayout}
 
 class InterfaceTab(workspace: GUIWorkspace,
@@ -31,7 +31,8 @@ class InterfaceTab(workspace: GUIWorkspace,
     // way so that only a vertical scrollbar is really needed - ST 7/13/04
     ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
     ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
-  commandCenter.setBorder(new javax.swing.border.EmptyBorder(2, 2, 0, 0))
+  scrollPane.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, InterfaceColors.GRAPHICS_BACKGROUND))
+  commandCenter.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, InterfaceColors.GRAPHICS_BACKGROUND))
   commandCenter.setMinimumSize(new Dimension(0, 0))
 
   private var viewUpdatePanel: org.nlogo.window.ViewUpdatePanel = null
@@ -50,7 +51,7 @@ class InterfaceTab(workspace: GUIWorkspace,
       override def addControls() {
         super.addControls()
         add(new org.nlogo.swing.ToolBar.Separator)
-        viewUpdatePanel = new org.nlogo.window.ViewUpdatePanel(workspace, workspace.viewWidget.displaySwitch, true)
+        viewUpdatePanel = new org.nlogo.window.ViewUpdatePanel(workspace, workspace.viewWidget.displaySwitch, true, workspace.viewWidget.tickCounter)
         add(viewUpdatePanel)
       }
     }, BorderLayout.NORTH)

@@ -13,7 +13,7 @@ extends View("3D View", viewManager, renderer) {
   setBounds(bounds)
   val navBar = new ViewControlToolBar(this, inputHandler)
   add(navBar, java.awt.BorderLayout.SOUTH)
-  val controlStrip = new ViewControlStrip3D(viewManager.workspace)
+  val controlStrip = new ViewControlStrip3D(viewManager.workspace, viewManager.tickCounterLabel)
   add(controlStrip, java.awt.BorderLayout.NORTH)
 
   addWindowListener(new java.awt.event.WindowAdapter {

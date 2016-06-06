@@ -8,7 +8,7 @@ import org.nlogo.core.{ CompilerException, I18N, UpdateMode, View => CoreView, W
 import org.nlogo.api.{ Editable, Property, WorldPropertiesInterface }
 import org.nlogo.workspace.WorldLoaderInterface
 
-abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protected val gWidget: ViewWidget)
+abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protected val gWidget: ViewWidget, tickCounter: TickCounterLabel)
     extends Editable
     with WorldLoaderInterface
     with WorldPropertiesInterface {
@@ -308,18 +308,18 @@ abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protecte
   }
 
   def showTickCounter(visible: Boolean): Unit = {
-    workspace.viewWidget.showTickCounter(visible)
+    tickCounter.visibility = visible
   }
 
   def showTickCounter: Boolean =
-    workspace.viewWidget.showTickCounter
+    tickCounter.visibility
 
   def tickCounterLabel(label: String): Unit = {
-    workspace.viewWidget.tickCounterLabel(label)
+    tickCounter.label = label
   }
 
   def tickCounterLabel: String =
-    workspace.viewWidget.tickCounterLabel
+    tickCounter.label
 
   def changeTopology(wrapX: Boolean, wrapY: Boolean): Unit = {
     workspace.changeTopology(wrapX, wrapY)
@@ -350,7 +350,7 @@ abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protecte
     gWidget.setSize(x, y)
   }
 
-  def getMinimumWidth: Int = gWidget.getMinimumWidth
+  def getMinimumWidth: Int = gWidget.getMinimumSize.width
 
   def insetWidth: Int = gWidget.insetWidth
 
