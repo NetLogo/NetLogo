@@ -6,6 +6,8 @@ import org.nlogo.api.ComponentSerialization
 import org.nlogo.core.{ LiteralParser, Model, Widget => CoreWidget }
 import org.nlogo.core.model.WidgetReader
 
+import scala.util.Try
+
 class NLogoHubNetFormat(literalParser: LiteralParser, autoConvert: String => String => String)
   extends ComponentSerialization[Array[String], NLogoFormat] {
   def componentName: String = "org.nlogo.modelsection.hubnetclient"
@@ -22,9 +24,11 @@ class NLogoHubNetFormat(literalParser: LiteralParser, autoConvert: String => Str
   def validationErrors(m: Model): Option[String] = None
 
   override def deserialize(widgetLines: Array[String]) = { (m: Model) =>
-    val widgets =
-      WidgetReader.readInterface(widgetLines.toList, literalParser, hubNetReaders, identity)
-        .toSeq.map(_.convertSource(autoConvert(m.version)))
-    m.withOptionalSection(componentName, Some(widgets), Seq[CoreWidget]())
+    Try {
+      val widgets =
+        WidgetReader.readInterface(widgetLines.toList, literalParser, hubNetReaders, identity)
+          .toSeq.map(_.convertSource(autoConvert(m.version)))
+      m.withOptionalSection(componentName, Some(widgets), Seq[CoreWidget]())
+    }
   }
 }

@@ -411,7 +411,7 @@ class FileMenu(app: App,
   @throws(classOf[IOException])
   def newModel(): Unit = {
     try {
-      openFromURI(getClass.getResource(emptyModelPath).toURI, ModelType.New);
+      openFromModel(modelLoader.emptyModel(modelSuffix), getClass.getResource(emptyModelPath).toURI, ModelType.New)
     } catch  {
       case ex: URISyntaxException =>
         println("Unable to locate empty model: " + emptyModelPath)

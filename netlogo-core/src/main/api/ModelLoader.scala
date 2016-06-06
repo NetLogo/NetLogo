@@ -30,6 +30,9 @@ class FormatterPair[A, B <: ModelFormat[A, B]](
 
     def sourceString(model: Model): Try[String] =
       modelFormat.sourceString(model, serializers)
+
+    def emptyModel: Model =
+      modelFormat.emptyModel(serializers)
   }
 
 object ModelLoader {
@@ -72,6 +75,12 @@ trait ModelLoader {
       formats.find(_.name == extension)
         .getOrElse(throw new Exception("Unable to get source for NetLogo model in format: " + extension))
     format.sourceString(model)
+  }
+
+  def emptyModel(extension: String): Model = {
+    val format = formats.find(_.name == extension)
+      .getOrElse(throw new Exception("Unable to create empty NetLogo model for format: " + extension))
+    format.emptyModel
   }
 }
 

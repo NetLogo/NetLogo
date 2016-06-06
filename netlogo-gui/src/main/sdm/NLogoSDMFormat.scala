@@ -10,6 +10,8 @@ import org.nlogo.core.{ Model => CoreModel }
 import org.nlogo.fileformat.NLogoFormat
 import org.nlogo.api.ComponentSerialization
 
+import scala.util.Try
+
 // NOTE: If you're looking for the ComponentSerialization used
 // in NetLogo-GUI, you want org.nlogo.sdm.gui.NLogoGuiSDMFormat.
 // This is *only* used when loading the sdm section of the model
@@ -29,10 +31,12 @@ class NLogoSDMFormat extends ComponentSerialization[Array[String], NLogoFormat] 
   override def validationErrors(m: CoreModel): Option[String] =
     None
 
-  override def deserialize(s: Array[String]): CoreModel => CoreModel = { (m: CoreModel) =>
-    stringsToModel(s)
-      .map(sdm => m.withOptionalSection[Model](componentName, Some(sdm), sdm))
-      .getOrElse(m)
+  override def deserialize(s: Array[String]): CoreModel => Try[CoreModel] = { (m: CoreModel) =>
+    Try {
+      stringsToModel(s)
+        .map(sdm => m.withOptionalSection[Model](componentName, Some(sdm), sdm))
+        .getOrElse(m)
+    }
   }
 
   private def stringsToModel(s: Array[String]): Option[Model] = {

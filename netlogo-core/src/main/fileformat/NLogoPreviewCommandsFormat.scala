@@ -7,9 +7,8 @@ import org.nlogo.util.Implicits.RichStringLike
 import org.nlogo.core.Model
 import org.nlogo.api.{ ComponentSerialization, PreviewCommands, Version }
 
+import scala.util.Try
 
-// NOTE: Preview commands is both a field of the model as well as
-// an optional section.
 class NLogoPreviewCommandsFormat extends ComponentSerialization[Array[String], NLogoFormat] {
   def componentName: String = "org.nlogo.modelsection.previewcommands"
 
@@ -29,7 +28,9 @@ class NLogoPreviewCommandsFormat extends ComponentSerialization[Array[String], N
   def validationErrors(m: Model) = None
 
   override def deserialize(commands: Array[String]) = { (m: Model) =>
-    m.withOptionalSection[PreviewCommands](componentName, Some(PreviewCommands(commands.mkString("\n"))), PreviewCommands.Default)
+    Try {
+      m.withOptionalSection[PreviewCommands](componentName, Some(PreviewCommands(commands.mkString("\n"))), PreviewCommands.Default)
+    }
   }
 }
 
@@ -52,6 +53,8 @@ object NLogoThreeDPreviewCommandsFormat extends ComponentSerialization[Array[Str
   def validationErrors(m: Model) = None
 
   override def deserialize(commands: Array[String]) = { (m: Model) =>
-    m.withOptionalSection[PreviewCommands](componentName, Some(PreviewCommands(commands.mkString("\n"))), PreviewCommands.Manual)
+    Try {
+      m.withOptionalSection[PreviewCommands](componentName, Some(PreviewCommands(commands.mkString("\n"))), PreviewCommands.Manual)
+    }
   }
 }

@@ -5,7 +5,7 @@ package org.nlogo.fileformat
 import java.net.URI
 import java.nio.file.{ Files, Paths }
 
-import org.nlogo.core.{ Femto, LiteralParser, Model, Shape, ShapeParser, View, Widget }, Shape.{ LinkShape, VectorShape }
+import org.nlogo.core.{ Femto, I18N, LiteralParser, Model, Shape, ShapeParser, UpdateMode, View, Widget, WorldDimensions }, Shape.{ LinkShape, VectorShape }
 import org.nlogo.core.model.WidgetReader
 import org.nlogo.api.{ ComponentSerialization, FileIO, ModelFormat, Version, VersionHistory }
 import scala.util.{ Failure, Success, Try }
@@ -18,7 +18,10 @@ class NLogoFormat(val autoConvert: String => String => String)
     def widgetReaders: Map[String, WidgetReader] = Map()
   }
 
+class NLogoFormatException(m: String) extends RuntimeException(m)
+
 trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] {
+  def name: String
   def autoConvert: String => String => String
   val Separator = "@#$#@#$#@"
   val SeparatorRegex = "@#\\$#@#\\$#@"
@@ -100,7 +103,7 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] {
     def serialize(m: Model): Array[String] = m.code.lines.map(_.replaceAll("\\s*$", "")).toArray
     def validationErrors(m: Model): Option[String] = None
     override def deserialize(lines: Array[String]) = { (m: Model) =>
-      m.copy(code = autoConvert(m.version)(lines.mkString("\n")))
+      Success(m.copy(code = autoConvert(m.version)(lines.mkString("\n"))))
     }
   }
 
@@ -112,12 +115,11 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] {
     def serialize(m: Model): Array[String] = m.info.lines.toArray
     def validationErrors(m: Model): Option[String] = None
     override def deserialize(s: Array[String]) = {(m: Model) =>
-      val finalInfo =
-        if (VersionHistory.olderThan42pre2(m.version))
-          InfoConverter.convert(s.mkString("\n"))
-        else
-          s.mkString("\n")
-      m.copy(info = finalInfo)
+      (if (VersionHistory.olderThan42pre2(m.version))
+        Try(InfoConverter.convert(s.mkString("\n")))
+      else
+        Success(s.mkString("\n"))).map(finalInfo =>
+        m.copy(info = finalInfo))
     }
   }
 
@@ -126,8 +128,12 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] {
     override def addDefault = (_.copy(version = Version.version))
     def serialize(m: Model): Array[String] = Array(m.version)
     def validationErrors(m: Model): Option[String] = None
-    override def deserialize(s: Array[String]) = { (m: Model) =>
-      m.copy(version = s.mkString.trim)
+    override def deserialize(s: Array[String]) = {(m: Model) =>
+      val versionString = s.mkString.trim
+      if (versionString != Version.version)
+        Failure(new NLogoFormatException(I18N.errors.getN("fileformat.invalidversion", AbstractNLogoFormat.this.name, Version.version, versionString)))
+      else
+        Success(m.copy(version = s.mkString.trim))
     }
   }
 
@@ -136,7 +142,10 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] {
     val componentName = "org.nlogo.modelsection.interface"
     private val additionalReaders = AbstractNLogoFormat.this.widgetReaders
     private val literalParser = Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
-    override def addDefault = _.copy(widgets = Seq(View()))
+    override def addDefault = _.copy(
+      widgets = Seq(View(left = 210, top = 10, right = 649, bottom = 470,
+        dimensions = WorldDimensions(-16, 16, -16, 16, 13.0), fontSize = 10, updateMode = UpdateMode.Continuous,
+        showTickCounter = true, frameRate = 30)))
 
     def serialize(m: Model): Array[String] =
       m.widgets.flatMap((w: Widget) => (WidgetReader.format(w, additionalReaders).lines.toSeq :+ "")).toArray
@@ -160,11 +169,13 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] {
     }
 
     override def deserialize(s: Array[String]) = {(m: Model) =>
-      val widgets = parseWidgets(s)
-      m.copy(
-        widgets = widgets.map(w =>
-            WidgetReader.read(w.toList, literalParser, additionalReaders))
-              .map(_.convertSource(autoConvert(m.version))))
+      Try {
+        val widgets = parseWidgets(s)
+        m.copy(
+          widgets = widgets.map(w =>
+              WidgetReader.read(w.toList, literalParser, additionalReaders))
+                .map(_.convertSource(autoConvert(m.version))))
+      }
     }
   }
 
@@ -175,8 +186,10 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] {
       ShapeParser.formatVectorShapes(m.turtleShapes).lines.toArray
     def validationErrors(m: Model): Option[String] = None
     override def deserialize(s: Array[String]) = {(m: Model) =>
-      if (s.isEmpty) addDefault(m)
-      else m.copy(turtleShapes = ShapeParser.parseVectorShapes(s))
+      Try {
+        if (s.isEmpty) addDefault(m)
+        else m.copy(turtleShapes = ShapeParser.parseVectorShapes(s))
+      }
     }
   }
 
@@ -186,8 +199,10 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] {
     def serialize(m: Model): Array[String] = ShapeParser.formatLinkShapes(m.linkShapes).lines.toArray
     def validationErrors(m: Model): Option[String] = None
     override def deserialize(s: Array[String]) = { (m: Model) =>
-      if (s.isEmpty) addDefault(m)
-      else m.copy(linkShapes = ShapeParser.parseLinkShapes(s))
+      Try {
+        if (s.isEmpty) addDefault(m)
+        else m.copy(linkShapes = ShapeParser.parseLinkShapes(s))
+      }
     }
   }
 
