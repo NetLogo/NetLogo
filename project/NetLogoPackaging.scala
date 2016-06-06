@@ -148,7 +148,7 @@ object NetLogoPackaging {
     },
     aggregateOnlyFiles := {
       Mustache(baseDirectory.value / "readme.md", target.value / "readme.md", buildVariables.value)
-      Seq(target.value / "readme.md", netLogoRoot.value.getParentFile / "NetLogo User Manual.pdf", packagedMathematicaLink.value)
+      Seq(target.value / "readme.md", netLogoRoot.value / "NetLogo User Manual.pdf", packagedMathematicaLink.value)
     },
     aggregateOnlyFiles in packageLinuxAggregate += {
       val targetFile = target.value / "netlogo-headless.sh"
