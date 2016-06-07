@@ -31,7 +31,7 @@ case class CodeCompletionPopup(compiler: CompilerServices) {
     suggestionDisplaylist.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION)
     suggestionDisplaylist.setLayoutOrientation(JList.VERTICAL)
     suggestionDisplaylist.setVisibleRowCount(10)
-//    suggestionDisplaylist.setCellRenderer(new SuggestionListRenderer())
+    suggestionDisplaylist.setCellRenderer(new SuggestionListRenderer(editorArea))
 
     suggestionDisplaylist.addKeyListener(new KeyListener {
       override def keyTyped(e: KeyEvent): Unit = {
@@ -95,11 +95,16 @@ case class CodeCompletionPopup(compiler: CompilerServices) {
   }
 }
 
-//class SuggestionListRenderer extends DefaultListCellRenderer {
-//  override def getListCellRendererComponent(list: JList[_], value: Any, index: Int, isSelected: Boolean, cellHasFocus: Boolean): Component = {
-//    super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-//    this.setForeground(if (DefaultTokenMapper.getCommand(value.asInstanceOf[String]) == null) Color.BLUE
-//    else Color.PINK)
-//    this
-//  }
-//}
+class SuggestionListRenderer(editorArea: EditorArea) extends ListCellRenderer[String]{
+
+  override def getListCellRendererComponent(list: JList[_ <: String], value: String, index: Int, isSelected: Boolean, cellHasFocus: Boolean): Component = {
+    val label = new JLabel(value.asInstanceOf[String])
+    label.setForeground(if (DefaultTokenMapper.getCommand(value.asInstanceOf[String]) == None) Color.BLUE
+    else new Color(0x551A8B))
+    label.setBackground(if(isSelected || cellHasFocus) new Color(0xEEAEEE) else Color.white)
+    label.setOpaque(true)
+    label.setBorder(BorderFactory.createEmptyBorder())
+    label.setFont(editorArea.getFont)
+    label
+  }
+}
