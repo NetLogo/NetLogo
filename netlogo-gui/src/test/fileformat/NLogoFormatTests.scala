@@ -8,8 +8,7 @@ import java.util.Arrays
 
 import org.scalatest.FunSuite
 
-import org.nlogo.api.ComponentSerialization
-
+import org.nlogo.api.{ ComponentSerialization, Version }
 import org.nlogo.core.{ Model, Shape, Widget }, Shape.{ LinkShape, VectorShape }
 
 import scala.collection.JavaConversions._
@@ -83,8 +82,15 @@ class VersionComponentTest extends NLogoFormatTest[String] {
   def modelComponent(model: Model): String = model.version
   def attachComponent(b: String): Model = Model(version = b)
 
-  testDeserializes("empty version section to empty version", Array[String](), "")
-  testDeserializes("multiple version lines to correct version", Array[String]("", "NetLogo 6.0", ""), "NetLogo 6.0")
+  // this test assumes the 2D Format
+  val correctArityFormat = Version.version.replaceAll(" 3D", "")
+  val wrongArityVersion = Version.version.replaceAll("NetLogo", "NetLogo 3D")
+
+  testErrorsOnDeserialization("wrong arity", Array[String](wrongArityVersion), wrongArityVersion)
+  testErrorsOnDeserialization("empty version section to empty version", Array[String](), "")
+  // up to the other components to error if they detect a problem
+  testDeserializes("unknown version", Array[String]("NetLogo 4D 8.9"), "NetLogo 4D 8.9")
+  testDeserializes("multiple version lines to correct version", Array[String]("", correctArityFormat), correctArityFormat)
 }
 
 class InterfaceComponentTest extends NLogoFormatTest[Seq[Widget]] {
@@ -97,7 +103,7 @@ class InterfaceComponentTest extends NLogoFormatTest[Seq[Widget]] {
   def sampleWidgetSection(filename: String): Array[String] =
     scala.io.Source.fromFile(s"test/fileformat/$filename").mkString.lines.toArray
 
-  testDeserializationError[Model.InvalidModelError]("empty widgets section", Array[String]())
+  testErrorsOnDeserialization("empty widgets section", Array[String](), "Every model must have at least a view...")
   testDeserializes("button and auto converts source", sampleWidgetSection("WidgetSection.txt"), Seq(View(), Button(source = Some("setupzz"), 0, 0, 0, 0)))
   testRoundTripsObjectForm("default view", Seq(View()))
   testRoundTripsObjectForm("view and button", Seq(View(), Button(source = Some("abc"), 0, 0, 0, 0)))

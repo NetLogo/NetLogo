@@ -14,6 +14,7 @@ import scala.io.Source
 class NLogoFormat(val autoConvert: String => String => String)
   extends ModelFormat[Array[String], NLogoFormat]
   with AbstractNLogoFormat[NLogoFormat] {
+    val is3DFormat = false
     def name: String = "nlogo"
     def widgetReaders: Map[String, WidgetReader] = Map()
   }
@@ -21,6 +22,7 @@ class NLogoFormat(val autoConvert: String => String => String)
 class NLogoFormatException(m: String) extends RuntimeException(m)
 
 trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] {
+  def is3DFormat: Boolean
   def name: String
   def autoConvert: String => String => String
   val Separator = "@#$#@#$#@"
@@ -130,10 +132,14 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] {
     def validationErrors(m: Model): Option[String] = None
     override def deserialize(s: Array[String]) = {(m: Model) =>
       val versionString = s.mkString.trim
-      if (versionString != Version.version)
-        Failure(new NLogoFormatException(I18N.errors.getN("fileformat.invalidversion", AbstractNLogoFormat.this.name, Version.version, versionString)))
-      else
-        Success(m.copy(version = s.mkString.trim))
+      if (versionString.startsWith("NetLogo") &&
+        Version.is3D(versionString) == is3DFormat)
+        Success(m.copy(version = versionString))
+      else {
+        val errorString =
+          I18N.errors.getN("fileformat.invalidversion", AbstractNLogoFormat.this.name, Version.version, versionString)
+        Failure(new NLogoFormatException(errorString))
+      }
     }
   }
 

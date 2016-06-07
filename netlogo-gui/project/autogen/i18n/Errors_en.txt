@@ -197,4 +197,4 @@ compiler.LetVariable.notDefined = Nothing named {0} has been defined.
 compiler.StructureParser.includeNotFound = Could not find {0}
 compiler.StructureConverter.noBreed = There is no breed "{0}"
 
-fileformat.invalidversion = Expected {0} model to be version {1}, but this model was saved by version {2}
+fileformat.invalidversion = Invalid NetLogo file. Expected "{0}" formatted model to have version compatible with {1}, but this model had version {2}

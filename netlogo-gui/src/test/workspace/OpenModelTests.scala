@@ -108,14 +108,6 @@ class OpenModelTests extends FunSuite {
   }
 }
 
-class FooSerializer extends ComponentSerialization[String, MockFormat] {
-  def componentName = "org.nlogo.foo"
-  override def addDefault = ((m: Model) => m.withOptionalSection[String]("org.nlogo.foo", Some("bar"), "baz"))
-  def serialize(m: Model) = ""
-  def validationErrors(m: Model) = None
-  override def deserialize(s: String) = ((m: Model) => m.withOptionalSection[String]("org.nlogo.foo", Some("bar"), "baz"))
-}
-
 class MockController extends OpenModel.Controller {
   var invalidURI: URI = _
   var invalidVersion: String = _
