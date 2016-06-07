@@ -8,8 +8,6 @@
 
 package org.nlogo.editor;
 
-import scala.Option;
-
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.Component;
@@ -27,7 +25,7 @@ public strictfp class EditorArea
   private final scala.Function1<String, String> i18n;
   private javax.swing.JPopupMenu contextMenu;
   private final DoubleClickCaret caret;
-  private CodeCompletionPopup codeCompletionPopup;
+  protected CodeCompletionPopup codeCompletionPopup;
 
   public EditorArea(int rows, int columns,
                     java.awt.Font font,
@@ -117,6 +115,11 @@ public strictfp class EditorArea
         (javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, 0),
             Actions.quickHelpAction(colorizer, i18n));
 
+    getInputMap().put
+            (javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_SPACE,
+                    java.awt.event.InputEvent.CTRL_DOWN_MASK),
+                    Actions.codeCompletionAction(codeCompletionPopup));
+
     if(codeCompletionPopup != null){
       codeCompletionPopup.init(this);
     }
@@ -124,12 +127,12 @@ public strictfp class EditorArea
     getDocument().addDocumentListener(new DocumentListener() {
       @Override
       public void insertUpdate(DocumentEvent e) {
-        codeCompletionPopup.showPopUp();
+        codeCompletionPopup.showPopup();
       }
 
       @Override
       public void removeUpdate(DocumentEvent e) {
-        codeCompletionPopup.showPopUp();
+        codeCompletionPopup.showPopup();
       }
 
       @Override

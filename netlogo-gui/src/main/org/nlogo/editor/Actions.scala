@@ -38,6 +38,8 @@ object Actions {
   def quickHelpAction(colorizer: Colorizer, i18n: String => String) =
     new MyTextAction(i18n("tabs.code.rightclick.quickhelp"),
       e => e.getHelpTarget(e.getSelectionStart).foreach(t => colorizer.doHelp(e, t)))
+  def codeCompletionAction(codeCompletionPopup: CodeCompletionPopup) = new MyTextAction("code-completion",
+    _.codeCompletionPopup.enablePopup())
   def mouseQuickHelpAction(colorizer: Colorizer, i18n: String => String) =
     new MyTextAction(i18n("tabs.code.rightclick.quickhelp"),
       e => e.getHelpTarget(e.getMousePos).foreach(t => colorizer.doHelp(e, t)))
