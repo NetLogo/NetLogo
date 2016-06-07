@@ -8,6 +8,10 @@
 
 package org.nlogo.editor;
 
+import scala.Option;
+
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.Component;
 
 public strictfp class EditorArea
@@ -23,18 +27,29 @@ public strictfp class EditorArea
   private final scala.Function1<String, String> i18n;
   private javax.swing.JPopupMenu contextMenu;
   private final DoubleClickCaret caret;
+  private CodeCompletionPopup codeCompletionPopup;
 
   public EditorArea(int rows, int columns,
                     java.awt.Font font,
                     boolean disableFocusTraversalKeys,
                     java.awt.event.TextListener listener,
                     Colorizer colorizer,
-                    scala.Function1<String, String> i18n) {
+                    scala.Function1<String, String> i18n){
+    this(rows, columns, font, disableFocusTraversalKeys, listener, colorizer, i18n, null);
+  }
+
+  public EditorArea(int rows, int columns,
+                    java.awt.Font font,
+                    boolean disableFocusTraversalKeys,
+                    java.awt.event.TextListener listener,
+                    Colorizer colorizer,
+                    scala.Function1<String, String> i18n, CodeCompletionPopup codeCompletionPopup) {
     this.rows = rows;
     this.columns = columns;
     this.disableFocusTraversalKeys = disableFocusTraversalKeys;
     this.colorizer = colorizer;
     this.i18n = i18n;
+    this.codeCompletionPopup = codeCompletionPopup;
     indenter = new DumbIndenter(this);
     enableEvents(java.awt.AWTEvent.MOUSE_EVENT_MASK);
     addFocusListener(this);
@@ -101,6 +116,25 @@ public strictfp class EditorArea
     getInputMap().put
         (javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, 0),
             Actions.quickHelpAction(colorizer, i18n));
+
+    if(codeCompletionPopup != null){
+      codeCompletionPopup.init(this);
+    }
+
+    getDocument().addDocumentListener(new DocumentListener() {
+      @Override
+      public void insertUpdate(DocumentEvent e) {
+        codeCompletionPopup.showPopUp();
+      }
+
+      @Override
+      public void removeUpdate(DocumentEvent e) {
+        codeCompletionPopup.showPopUp();
+      }
+
+      @Override
+      public void changedUpdate(DocumentEvent e) {}
+    });
   }
 
   @Override

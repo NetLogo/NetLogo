@@ -5,9 +5,9 @@ package org.nlogo.window
 import org.scalatest.FunSuite
 
 class AutoSuggestTests extends FunSuite {
+  val autoSuggest = new AutoSuggest()
   test("empty"){
-    import AutoSuggest.getSuggestion
-    val testList = List("zzz")
-    assertResult(testList)(getSuggestions("zzz"))
+    val testList = Seq()
+    assertResult(testList)(autoSuggest.getSuggestions("zzzzz"))
   }
 }

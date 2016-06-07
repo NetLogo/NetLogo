@@ -4,6 +4,7 @@ package org.nlogo.app
 
 import org.nlogo.api.CompilerServices
 import org.nlogo.core.I18N
+import org.nlogo.editor.CodeCompletionPopup
 
 class EditorFactory(compiler: CompilerServices) extends org.nlogo.window.EditorFactory {
   def newEditor(cols: Int, rows: Int, disableFocusTraversal: Boolean) =
@@ -17,9 +18,10 @@ class EditorFactory(compiler: CompilerServices) extends org.nlogo.window.EditorF
     val font = new java.awt.Font(org.nlogo.awt.Fonts.platformMonospacedFont,
                                  java.awt.Font.PLAIN, 12)
     val colorizer = new org.nlogo.window.EditorColorizer(compiler)
+    val codeCompletionPopup = new CodeCompletionPopup(compiler)
     class MyCodeEditor
     extends org.nlogo.window.CodeEditor(rows, cols, font, disableFocusTraversal,
-                                        listener, colorizer, I18N.gui.get _)
+                                        listener, colorizer, I18N.gui.get _, codeCompletionPopup)
     {
       override def focusGained(fe: java.awt.event.FocusEvent) {
         super.focusGained(fe)

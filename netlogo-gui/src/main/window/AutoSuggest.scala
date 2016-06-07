@@ -6,20 +6,55 @@ import org.nlogo.core.DefaultTokenMapper
 
 import scala.annotation.tailrec
 import scala.collection.JavaConverters._
-import scala.collection.mutable
+import scala.collection.immutable.{ListSet, TreeSet}
+import scala.collection.{SortedSet, mutable}
 import scala.collection.mutable.ListBuffer
 
 class AutoSuggest {
-  val commandNames: Set[String] = DefaultTokenMapper.allCommandNames
-  val reporterNames: Set[String] = DefaultTokenMapper.allCommandNames
+  val commandNames = DefaultTokenMapper.allCommandNames
+  val reporterNames = DefaultTokenMapper.allReporterNames
 
   val trie = new TrieNode()
-  commandNames.foreach(trie.append(_))
-  reporterNames.foreach(trie.append(_))
+  for(commandName <- commandNames) {
+    trie.append(commandName.toLowerCase)
+  }
+  for(reporterName <- reporterNames) {
+    trie.append(reporterName.toLowerCase)
+  }
+
+  def editDistance(s1: String, s2: String): Int = {
+    val memo = scala.collection.mutable.Map[(List[Char],List[Char]),Int]()
+    def min(a:Int, b:Int, c:Int) = Math.min( Math.min( a, b ), c)
+    def sd(s1: List[Char], s2: List[Char]): Int = {
+      if (memo.contains((s1,s2)) == false)
+        memo((s1,s2)) = (s1, s2) match {
+          case (_, Nil) => s1.length
+          case (Nil, _) => s2.length
+          case (c1::t1, c2::t2)  => min( sd(t1,s2) + 1, sd(s1,t2) + 1,
+            sd(t1,t2) + (if (c1==c2) 0 else 1) )
+        }
+      memo((s1,s2))
+    }
+
+    sd( s1.toLowerCase.toList, s2.toLowerCase.toList )
+  }
 
   def getSuggestions(word: String): Seq[String] = {
+    val eD = if(word.length >= 2) 1 else 0
 
-    trie.findByPrefix(word)
+    var toHitList = Seq[String]()
+    for(i <- 0 to eD) {
+      toHitList ++= trie.findByLength(word, word.length + i)
+    }
+    toHitList = for(token <- toHitList if editDistance(token, word) <= eD) yield token
+    toHitList.sortBy(editDistance(_, word))
+    var suggestionList = TreeSet[String]()
+    for(token <- toHitList) {
+      suggestionList ++= trie.findByPrefix(token)
+    }
+    suggestionList.toSeq
+      .sortBy(editDistance(_, word))
+
   }
 
   object Trie {
@@ -45,7 +80,7 @@ class AutoSuggest {
         if (currentIndex == key.length) {
           node.word = Some(key)
         } else {
-          val char = key.charAt(currentIndex).toUpper
+          val char = key.charAt(currentIndex).toLower
           val result = node.children.getOrElseUpdate(char, {
             new TrieNode(Some(char))
           })
@@ -75,7 +110,7 @@ class AutoSuggest {
         if (currentIndex == prefix.length) {
           items ++ node
         } else {
-          node.children.get(prefix.charAt(currentIndex).toUpper) match {
+          node.children.get(prefix.charAt(currentIndex).toLower) match {
             case Some(child) => helper(currentIndex + 1, child, items)
             case None => items
           }
@@ -85,13 +120,29 @@ class AutoSuggest {
       helper(0, this, new ListBuffer[String]())
     }
 
+    def findByLength(prefix: String, length: Int): scala.collection.Seq[String] = {
+
+      def helper(currentIndex: Int, node: TrieNode, items: ListBuffer[String], word: String): ListBuffer[String] = {
+        if(currentIndex == length){
+         items += word
+        } else {
+          for(child <- node.children){
+            helper(currentIndex + 1, child._2, items, word + child._1)
+          }
+          items
+        }
+      }
+
+      helper(0, this, new ListBuffer[String](), "")
+    }
+
     override def contains(word: String): Boolean = {
 
       @tailrec def helper(currentIndex: Int, node: TrieNode): Boolean = {
         if (currentIndex == word.length) {
           node.word.isDefined
         } else {
-          node.children.get(word.charAt(currentIndex).toUpper) match {
+          node.children.get(word.charAt(currentIndex).toLower) match {
             case Some(child) => helper(currentIndex + 1, child)
             case None => false
           }
@@ -119,7 +170,7 @@ class AutoSuggest {
               val parent = path(index - 1)
 
               if (current.children.isEmpty) {
-                parent.children.remove(word.charAt(index - 1).toUpper)
+                parent.children.remove(word.charAt(index - 1).toLower)
               }
 
               index -= 1
@@ -139,7 +190,7 @@ class AutoSuggest {
         if ( currentIndex == word.length) {
           node.word.map( word => buffer += node )
         } else {
-          node.children.get(word.charAt(currentIndex).toUpper) match {
+          node.children.get(word.charAt(currentIndex).toLower) match {
             case Some(found) => {
               buffer += node
               helper(buffer, currentIndex + 1, found)
