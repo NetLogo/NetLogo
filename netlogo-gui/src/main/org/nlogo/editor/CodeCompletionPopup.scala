@@ -50,10 +50,11 @@ case class CodeCompletionPopup(compiler: CompilerServices) {
                       val token = compiler.getTokenAtPosition(editorArea.getText(), editorArea.getCaretPosition)
                       val position = editorArea.getCaretPosition
                       val doc = editorArea.getDocument.asInstanceOf[javax.swing.text.PlainDocument]
-                      doc.replace(position - token.text.length, token.text.length, suggestion, null)
-                      editorArea.setCaretPosition(position - token.text.length + suggestion.length)
+            doc.replace(token.start, position - token.start, suggestion, null)
+                      editorArea.setCaretPosition(token.start + suggestion.length)
             isPopupEnabled = false
-          case _ => e.setSource(editorArea)
+          case _ =>
+            e.setSource(editorArea)
             editorArea.dispatchEvent(e)
         }
       }
@@ -75,8 +76,9 @@ case class CodeCompletionPopup(compiler: CompilerServices) {
     if(isPopupEnabled) {
       val token = compiler.getTokenAtPosition(editorArea.getText(), editorArea.getCaretPosition)
       var list = Seq[String]()
-      if (token != null && !token.text.equals(lastSuggested)) {
-        list = autoSuggest.getSuggestions(token.text)
+      val word = if(token != null) token.text.substring(0, editorArea.getCaretPosition - token.start) else null
+      if (word != null && !token.text.equals(lastSuggested)) {
+        list = autoSuggest.getSuggestions(word)
         dlm.removeAllElements()
         var i = 0
         list.foreach(dlm.addElement(_))
@@ -84,6 +86,7 @@ case class CodeCompletionPopup(compiler: CompilerServices) {
           lastSuggested = ""
           window.validate()
           window.setVisible(true)
+          editorArea.getCaret.setVisible(true)
         } else {
           isPopupEnabled = false
         }
