@@ -6,10 +6,14 @@ import org.nlogo.core.DefaultTokenMapper
 
 import scala.annotation.tailrec
 import scala.collection.JavaConverters._
-import scala.collection.immutable.{ListSet, TreeSet}
-import scala.collection.{SortedSet, mutable}
+import scala.collection.immutable.TreeSet
+import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
+/**
+  * Builds the trie from commands and reporters and provides fuctions to get suggestions.
+  * Special care should be taken as everything is inserted and retrieved in lower case.
+  */
 class AutoSuggest {
   val commandNames = DefaultTokenMapper.allCommandNames
   val reporterNames = DefaultTokenMapper.allReporterNames
@@ -57,6 +61,9 @@ class AutoSuggest {
 
   }
 
+  /**
+    * Code below contains the Trie implementation for suggestion retrieval
+    */
   object Trie {
     def apply() : Trie = new TrieNode()
   }
@@ -120,6 +127,7 @@ class AutoSuggest {
       helper(0, this, new ListBuffer[String]())
     }
 
+    // Optimize this for @tailrec
     def findByLength(prefix: String, length: Int): scala.collection.Seq[String] = {
 
       def helper(currentIndex: Int, node: TrieNode, items: ListBuffer[String], word: String): ListBuffer[String] = {

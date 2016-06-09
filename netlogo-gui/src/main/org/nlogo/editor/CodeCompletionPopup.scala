@@ -1,6 +1,8 @@
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.editor
 
-import java.awt.{Color, Component, Dimension, Window}
+import java.awt.{Color, Component, Dimension}
 import java.awt.event._
 import javax.swing._
 
@@ -9,7 +11,9 @@ import org.nlogo.core.DefaultTokenMapper
 import org.nlogo.window.AutoSuggest
 
 case class CodeCompletionPopup(compiler: CompilerServices) {
+  // To control when the popup has to automatically show
   var isPopupEnabled = false
+  // To store the last value user selected
   var lastSuggested = ""
   var editorArea: EditorArea = null
   val autoSuggest = new AutoSuggest()
@@ -20,9 +24,7 @@ case class CodeCompletionPopup(compiler: CompilerServices) {
   window.setUndecorated(true)
   window.add(scrollPane)
   window.setSize(new Dimension(150, 200))
-//  window.setAlwaysOnTop(true)
 
-//  window.setType(javax.swing.JFrame.Type.POPUP)
   scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
   scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS)
 
@@ -36,22 +38,25 @@ case class CodeCompletionPopup(compiler: CompilerServices) {
     suggestionDisplaylist.addKeyListener(new KeyListener {
       override def keyTyped(e: KeyEvent): Unit = {
         e.getKeyChar match {
-          case java.awt.event.KeyEvent.VK_ESCAPE => isPopupEnabled = false
+          case java.awt.event.KeyEvent.VK_ESCAPE =>
+            isPopupEnabled = false
             window.setVisible(false)
-          case java.awt.event.KeyEvent.VK_BACK_SPACE => val position = editorArea.getCaretPosition
+          case java.awt.event.KeyEvent.VK_BACK_SPACE =>
+            // Trying to fix the weird behaviour of backspace
+            val position = editorArea.getCaretPosition
             if (position != 0) {
               editorArea.setCaretPosition(position - 1)
               val doc = editorArea.getDocument.asInstanceOf[javax.swing.text.PlainDocument]
               doc.remove(position - 1, 1)
             }
           case java.awt.event.KeyEvent.VK_ENTER =>
-                      val suggestion = suggestionDisplaylist.getSelectedValue
-                      lastSuggested = suggestion
-                      val token = compiler.getTokenAtPosition(editorArea.getText(), editorArea.getCaretPosition)
-                      val position = editorArea.getCaretPosition
-                      val doc = editorArea.getDocument.asInstanceOf[javax.swing.text.PlainDocument]
+            val suggestion = suggestionDisplaylist.getSelectedValue
+            lastSuggested = suggestion
+            val token = compiler.getTokenAtPosition(editorArea.getText(), editorArea.getCaretPosition)
+            val position = editorArea.getCaretPosition
+            val doc = editorArea.getDocument.asInstanceOf[javax.swing.text.PlainDocument]
             doc.replace(token.start, position - token.start, suggestion, null)
-                      editorArea.setCaretPosition(token.start + suggestion.length)
+            editorArea.setCaretPosition(token.start + suggestion.length)
             isPopupEnabled = false
           case _ =>
             e.setSource(editorArea)
@@ -64,6 +69,12 @@ case class CodeCompletionPopup(compiler: CompilerServices) {
       override def keyReleased(e: KeyEvent): Unit = {}
     })
   }
+
+  /**
+    * Makes the suggestion box initially and displays it.
+    * Should only be called when the user presses the shortcut to
+    * enable the suggestion. To update the suggestions list call showPopUp()
+    */
   def enablePopup(): Unit = {
     isPopupEnabled = true
     showPopup()
@@ -72,11 +83,16 @@ case class CodeCompletionPopup(compiler: CompilerServices) {
       editorArea.getLocationOnScreen.y + editorArea.modelToView(position).y + editorArea.getFont.getSize)
   }
 
+  /**
+    * Updates the list of the suggestion box and makes it visible.
+    */
   def showPopup(): Unit = {
     if(isPopupEnabled) {
       val token = compiler.getTokenAtPosition(editorArea.getText(), editorArea.getCaretPosition)
       var list = Seq[String]()
+      // word only containd the current token till the cursor position
       val word = if(token != null) token.text.substring(0, editorArea.getCaretPosition - token.start) else null
+      // popup not to be diplayed after user hits the enter key
       if (word != null && !token.text.equals(lastSuggested)) {
         list = autoSuggest.getSuggestions(word)
         dlm.removeAllElements()
@@ -86,6 +102,7 @@ case class CodeCompletionPopup(compiler: CompilerServices) {
           lastSuggested = ""
           window.validate()
           window.setVisible(true)
+          // Required to keep the caret in the editorArea visible
           editorArea.getCaret.setVisible(true)
         } else {
           isPopupEnabled = false
@@ -98,11 +115,16 @@ case class CodeCompletionPopup(compiler: CompilerServices) {
   }
 }
 
+/**
+  * This is the renderer to render elements of the list displayed
+  * in the suggestion box.
+  * @param editorArea
+  */
 class SuggestionListRenderer(editorArea: EditorArea) extends ListCellRenderer[String]{
 
   override def getListCellRendererComponent(list: JList[_ <: String], value: String, index: Int, isSelected: Boolean, cellHasFocus: Boolean): Component = {
     val label = new JLabel(value.asInstanceOf[String])
-    label.setForeground(if (DefaultTokenMapper.getCommand(value.asInstanceOf[String]) == None) Color.BLUE
+    label.setForeground(if (DefaultTokenMapper.getCommand(value.asInstanceOf[String]).isEmpty) Color.BLUE
     else new Color(0x551A8B))
     label.setBackground(if(isSelected || cellHasFocus) new Color(0xEEAEEE) else Color.white)
     label.setOpaque(true)
