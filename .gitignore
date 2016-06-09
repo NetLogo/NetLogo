@@ -45,6 +45,7 @@ tmp/
 /lib/
 /netlogo-gui/lib/
 /natives/
+/mac-app/natives/
 /netlogo-gui/natives/
 /out/
 /resources/Errors_??.properties

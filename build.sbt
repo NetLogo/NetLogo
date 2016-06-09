@@ -194,13 +194,22 @@ lazy val macApp = project.in(file("mac-app")).
   settings(jvmSettings: _*).
   settings(scalaSettings: _*).
   settings(JavaPackager.mainArtifactSettings: _*).
+  settings(NativeLibs.cocoaLibsTask).
+  settings(Running.settings).
   settings(
     fork in run                           := true,
     name                                  := "NetLogo-Mac-App",
     compile in Compile                    <<= (compile in Compile) dependsOn (packageBin in Compile in netlogo),
     unmanagedJars in Compile              += (packageBin in Compile in netlogo).value,
+    libraryDependencies                   ++= Seq(
+      "net.java.dev.jna" % "jna" % "4.2.2",
+      "ca.weblite" % "java-objc-bridge" % "1.0.0"),
     libraryDependencies                   ++= (libraryDependencies in netlogo).value,
     libraryDependencies                   ++= (libraryDependencies in parserJVM).value,
+    run in Compile                        <<= (run in Compile) dependsOn NativeLibs.cocoaLibs,
+    javaOptions in run                    += "-Djava.library.path=" + (Seq(
+      baseDirectory.value / "natives" / "macosx-universal" / "libjcocoa.dylib") ++
+      ((baseDirectory in netlogo).value / "natives" / "macosx-universal" * "*.jnilib").get).mkString(":"),
     artifactPath in Compile in packageBin := target.value / "netlogo-mac-app.jar",
     javacOptions                          ++= Seq("-bootclasspath", System.getProperty("java.home") + "/lib/rt.jar"))
 

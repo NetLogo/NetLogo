@@ -44,7 +44,7 @@ object NetLogoPackaging {
     case (_,                   "HubNet Client")                              => "org.nlogo.hubnet.client.App"
   }
 
-  def bundledDirs(netlogo: Project): Def.Initialize[PlatformBuild => Seq[BundledDirectory]] =
+  def bundledDirs(netlogo: Project, macApp: Project): Def.Initialize[PlatformBuild => Seq[BundledDirectory]] =
     Def.setting {
       { (platform: PlatformBuild) =>
         val nlDir = (baseDirectory in netlogo).value
@@ -55,7 +55,10 @@ object NetLogoPackaging {
         ) ++ (platform.shortName match {
           case "windows" => Seq(new NativesDir(nlDir / "natives", "windows-amd64", "windows-i586"))
           case "linux"   => Seq(new NativesDir(nlDir / "natives", "linux-amd64", "linux-i586"))
-          case "macosx"  => Seq(new NativesDir(nlDir / "natives", "macosx-universal"))
+          case "macosx"  => Seq(
+            new NativesDir(nlDir / "natives", "macosx-universal"),
+            new NativesDir((baseDirectory in macApp).value / "natives", "macosx-universal")
+          )
         })
       }
     }
@@ -185,7 +188,7 @@ object NetLogoPackaging {
     },
     packageApp            <<=
       InputTask.createDyn(packageAppParser)(PackageAction.subApplication(appMainClass,
-        mainJarAndDependencies(netlogo, macApp), bundledDirs(netlogo), jvmOptions)),
+        mainJarAndDependencies(netlogo, macApp), bundledDirs(netlogo, macApp), jvmOptions)),
     packageLinuxAggregate <<=
       InputTask.createDyn(aggregateJDKParser)(Def.task(
         PackageAction.aggregate("linux", AggregateLinuxBuild, packageApp, packageLinuxAggregate))),
