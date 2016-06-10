@@ -1301,7 +1301,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       };
 
   public final javax.swing.Action switchTo3DViewAction =
-      new javax.swing.AbstractAction("3D View") {
+      new javax.swing.AbstractAction(I18N.guiJ().get("menu.tools.3DView.switch")) {
         public void actionPerformed(java.awt.event.ActionEvent e) {
           open3DView();
         }

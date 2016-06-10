@@ -6,7 +6,7 @@ package org.nlogo.gl.view
 import org.nlogo.core.{ I18N, Shape }
 import org.nlogo.shape.{ VectorShape, LinkShape }
 import org.nlogo.gl.render.{ GLViewSettings, JOGLException, JOGLLoader }
-import org.nlogo.window.{ GUIWorkspace, JOGLLoadingException, JOGLVersionMismatchException }
+import org.nlogo.window.{ GUIWorkspace, JOGLLoadingException, JOGLVersionMismatchException, TickCounterLabel }
 import javax.swing.JFrame
 import java.awt.event.KeyListener
 
@@ -23,6 +23,8 @@ class ViewManager(val workspace: GUIWorkspace,
   val world = workspace.world
   var currentView: View = null
   var observerView: ObserverView = null
+  val tickCounterLabel = new TickCounterLabel(workspace.world)
+  addLinkComponent(tickCounterLabel)
   private var fullscreenView: FullscreenView = null
   var turtleView: View = null
   private var fullscreen = false

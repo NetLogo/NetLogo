@@ -12,8 +12,8 @@ object WorldViewSettings2D {
   private val HubNetIgnore = 1
 }
 
-class WorldViewSettings2D(workspace: GUIWorkspace, gw: ViewWidget)
-    extends WorldViewSettings(workspace, gw) {
+class WorldViewSettings2D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: TickCounterLabel)
+    extends WorldViewSettings(workspace, gw, tickCounter) {
 
   import WorldViewSettings2D._
 

@@ -19,11 +19,11 @@ public strictfp class SpeedSliderPanel
 
   final javax.swing.JLabel normal = new SpeedLabel(I18N.guiJ().get("tabs.run.speedslider.normalspeed"));
 
-  private final boolean labelsBelow;
+  private final TickCounterLabel tickCounter;
 
-  public SpeedSliderPanel(GUIWorkspace workspace, boolean labelsBelow) {
+  public SpeedSliderPanel(GUIWorkspace workspace, TickCounterLabel tickCounter) {
     this.workspace = workspace;
-    this.labelsBelow = labelsBelow;
+    this.tickCounter = tickCounter;
     speedSlider = new SpeedSlider((int) workspace.speedSliderPosition());
     speedSlider.setFocusable(false);
     speedSlider.addChangeListener(this);
@@ -31,22 +31,28 @@ public strictfp class SpeedSliderPanel
     speedSlider.setOpaque(false);
     org.nlogo.awt.Fonts.adjustDefaultFont(normal);
     setOpaque(false);
-    if (labelsBelow) {
-      GridBagLayout gridbag = new GridBagLayout();
-      GridBagConstraints c = new GridBagConstraints();
-      setLayout(gridbag);
-      c.gridwidth = GridBagConstraints.REMAINDER;
-      add(speedSlider, c);
-      c.gridwidth = 1;
-      c.anchor = GridBagConstraints.CENTER;
-      add(normal, c);
-    } else {
-      java.awt.BorderLayout layout = new java.awt.BorderLayout();
-      layout.setVgap(0);
-      setLayout(layout);
-      add(speedSlider, java.awt.BorderLayout.CENTER);
-      add(normal, java.awt.BorderLayout.EAST);
-    }
+    GridBagLayout gridbag = new GridBagLayout();
+    GridBagConstraints c = new GridBagConstraints();
+    setLayout(gridbag);
+    c.fill = GridBagConstraints.VERTICAL;
+    c.gridwidth = 1;
+    c.gridheight = 1;
+    c.gridy = 0;
+    c.anchor = GridBagConstraints.PAGE_START;
+    add(normal, c);
+    c.fill = GridBagConstraints.VERTICAL;
+    c.anchor = GridBagConstraints.CENTER;
+    c.gridwidth = 1;
+    c.gridheight = 1;
+    c.weighty = 0.25;
+    c.gridy = 1;
+    add(speedSlider, c);
+    c.fill = GridBagConstraints.VERTICAL;
+    c.anchor = GridBagConstraints.PAGE_END;
+    c.gridwidth = 1;
+    c.gridheight = 1;
+    c.gridy = 2;
+    add(tickCounter, c);
     enableLabels(0);
   }
 
@@ -84,23 +90,11 @@ public strictfp class SpeedSliderPanel
 
   void enableLabels(int value) {
     if (value == 0) {
-      if (labelsBelow) {
-        normal.setText("      " + I18N.guiJ().get("tabs.run.speedslider.normalspeed"));
-      } else {
-        normal.setText(I18N.guiJ().get("tabs.run.speedslider.normalspeed"));
-      }
+      normal.setText("      " + I18N.guiJ().get("tabs.run.speedslider.normalspeed"));
     } else if (value < 0) {
-      if (labelsBelow) {
-        normal.setText(I18N.guiJ().get("tabs.run.speedslider.slower") + "                         ");
-      } else {
-        normal.setText(I18N.guiJ().get("tabs.run.speedslider.slower"));
-      }
+      normal.setText(I18N.guiJ().get("tabs.run.speedslider.slower") + "                         ");
     } else {
-      if (labelsBelow) {
-        normal.setText("                         " + I18N.guiJ().get("tabs.run.speedslider.faster"));
-      } else {
-        normal.setText(I18N.guiJ().get("tabs.run.speedslider.faster"));
-      }
+      normal.setText("                         " + I18N.guiJ().get("tabs.run.speedslider.faster"));
     }
   }
 
@@ -186,7 +180,7 @@ public strictfp class SpeedSliderPanel
       java.awt.Rectangle bounds = getBounds();
       int x = bounds.x + (bounds.width / 2) - 1;
       g.setColor(java.awt.Color.gray);
-      g.drawLine(x, bounds.y + (bounds.height * 3 / 4), x, bounds.y + bounds.height);
+      g.drawLine(x, bounds.y - (bounds.height * 1/2), x, bounds.y - (bounds.height * 1 / 4));
       super.paint(g);
     }
   }
@@ -206,15 +200,10 @@ public strictfp class SpeedSliderPanel
     public java.awt.Dimension getMinimumSize() {
       java.awt.Dimension d = super.getMinimumSize();
       java.awt.FontMetrics fontMetrics = getFontMetrics(getFont());
-      if (!labelsBelow) {
-        d.width = StrictMath.max(d.width,
-            fontMetrics.stringWidth(I18N.guiJ().get("tabs.run.speedslider.normalspeed")));
-      } else {
-        d.width = StrictMath.max(d.width,
-            fontMetrics.stringWidth
-                ("                         " + I18N.guiJ().get("tabs.run.speedslider.faster")) + 10);
+      d.width = StrictMath.max(d.width,
+          fontMetrics.stringWidth
+          ("                         " + I18N.guiJ().get("tabs.run.speedslider.faster")) + 10);
 
-      }
       return d;
     }
   }

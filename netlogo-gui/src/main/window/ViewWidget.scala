@@ -8,13 +8,12 @@ import javax.swing.{ JPopupMenu, BorderFactory, JLabel }
 import org.nlogo.api.{ Approximate, Dump, Version }
 import org.nlogo.awt.{ Fonts => NlogoFonts }
 import org.nlogo.core.{ View => CoreView }
-import org.nlogo.window.Events.{ PeriodicUpdateEvent, LoadBeginEvent, LoadEndEvent, ResizeViewEvent }
+import org.nlogo.window.Events.ResizeViewEvent
 import org.nlogo.window.MouseMode._
 
 
 object ViewWidget {
   private val InsideBorderHeight = 1
-  private val TickCounterLabelDefault = "ticks"
 
   // The 245 here was determined empirically by measuring the width
   // on Mac OS X and then adding some slop.  Yes, this an incredible
@@ -26,35 +25,29 @@ object ViewWidget {
 
 class ViewWidget(workspace: GUIWorkspace)
     extends Widget
-    with ViewWidgetInterface
-    with PeriodicUpdateEvent.Handler
-    with LoadBeginEvent.Handler
-    with LoadEndEvent.Handler {
+    with ViewWidgetInterface {
 
   import ViewWidget._
 
   type WidgetModel = CoreView
 
-  private var _tickCounterLabel: String = TickCounterLabelDefault
   val view = new View(workspace)
-  val tickCounter: JLabel = new TickCounterLabel()
+  val tickCounter = new TickCounterLabel(workspace.world)
   val displaySwitch = new DisplaySwitch(workspace)
-  val controlStrip = new ViewControlStrip(workspace, this)
 
   NlogoFonts.adjustDefaultFont(tickCounter)
 
   setBackground(InterfaceColors.GRAPHICS_BACKGROUND)
   setBorder(BorderFactory.createCompoundBorder(
         widgetBorder,
-        BorderFactory.createMatteBorder(1, 3, 4, 2, InterfaceColors.GRAPHICS_BACKGROUND)))
+        BorderFactory.createMatteBorder(1, 1, 2, 2, InterfaceColors.GRAPHICS_BACKGROUND)))
   setLayout(null)
   add(view)
-  add(controlStrip)
   val settings: WorldViewSettings =
     if (Version.is3D)
-      new WorldViewSettings3D(workspace, this)
+      new WorldViewSettings3D(workspace, this, tickCounter)
     else
-      new WorldViewSettings2D(workspace, this);
+      new WorldViewSettings2D(workspace, this, tickCounter);
 
   override def classDisplayName: String = "World & View"
 
@@ -62,24 +55,21 @@ class ViewWidget(workspace: GUIWorkspace)
     getInsets.top + getInsets.bottom + InsideBorderHeight
 
   def getAdditionalHeight: Int =
-    getExtraHeight + controlStrip.getHeight
+    getExtraHeight
 
   override def doLayout(): Unit = {
     val availableWidth = getWidth - getInsets.left - getInsets.right
     val patchSize = computePatchSize(availableWidth, workspace.world.worldWidth)
     val graphicsHeight =
       StrictMath.round(patchSize * workspace.world.worldHeight).toInt
-    val stripHeight = getHeight - graphicsHeight - getInsets.top - getInsets.bottom
 
     // Note that we set the patch size first and then set the bounds of the view.
     // view.setBounds will force the Renderer to a particular size, overriding the
     // calculation the Render makes internally if need be -- CLB
     view.visualPatchSize(patchSize)
     view.setBounds(getInsets.left,
-      getInsets.top + InsideBorderHeight + stripHeight,
+      getInsets.top + InsideBorderHeight,
       availableWidth, graphicsHeight)
-    controlStrip.setBounds(getInsets.left, getInsets.top,
-      availableWidth, stripHeight)
   }
 
   override def getEditable: AnyRef =
@@ -109,19 +99,7 @@ class ViewWidget(workspace: GUIWorkspace)
 
   override def getMinimumSize: Dimension = {
     val gSize = view.getMinimumSize
-    val stripSize = controlStrip.getMinimumSize
-    val baseHeight = stripSize.height + getExtraHeight
-    if (gSize.width > stripSize.width) {
-      new Dimension(getMinimumWidth, baseHeight + gSize.height)
-    } else {
-      // this gets tricky because if it's the control strip that's
-      // determining the minimum width, then we need to calculate
-      // what the graphics window's height will be at that width
-      val ssx = workspace.world.worldWidth
-      val ssy = workspace.world.worldHeight
-      val minPatchSize = computePatchSize(stripSize.width, ssx)
-      new Dimension(getMinimumWidth, baseHeight + (minPatchSize * ssy).toInt)
-    }
+    new Dimension(gSize.getWidth.toInt, getExtraHeight + gSize.height)
   }
 
   def insetWidth: Int =
@@ -132,12 +110,8 @@ class ViewWidget(workspace: GUIWorkspace)
   }
 
   def calculateHeight(worldHeight: Int, patchSize: Double): Int = {
-    val stripSize = controlStrip.getMinimumSize
-    stripSize.height + getExtraHeight + (patchSize * worldHeight).toInt
+    getExtraHeight + (patchSize * worldHeight).toInt
   }
-
-  def getMinimumWidth: Int =
-    controlStrip.getMinimumSize.width + insetWidth
 
   def resetSize(): Unit = {
     import workspace.world.{ worldWidth, worldHeight, patchSize => worldPatchSize }
@@ -145,7 +119,7 @@ class ViewWidget(workspace: GUIWorkspace)
     view.setSize(worldWidth, worldHeight, worldPatchSize)
     val dim = view.getPreferredSize
     setSize(dim.width + insetWidth,
-        dim.height + getExtraHeight + controlStrip.getPreferredSize.height)
+        dim.height + getExtraHeight)
     doLayout()
     resetZoomInfo()
   }
@@ -187,11 +161,10 @@ class ViewWidget(workspace: GUIWorkspace)
     originalBounds: Rectangle,
     mouseMode: MouseMode): Rectangle = {
       import workspace.world.{ worldWidth, worldHeight }
-    val stripHeight = controlStrip.getMinimumSize.height
     val patchSizeBasedOnNewWidth =
       computePatchSize(newBounds.width - getInsets.left + getInsets.right, worldWidth)
     val patchSizeBasedOnNewHeight =
-        computePatchSize(newBounds.height - stripHeight - getExtraHeight, worldHeight);
+        computePatchSize(newBounds.height - getExtraHeight, worldHeight);
     val newPatchSize =
       if (newBounds.height == originalBounds.height)    // case 1: only width changed; adjust height to match
         patchSizeBasedOnNewWidth
@@ -208,7 +181,7 @@ class ViewWidget(workspace: GUIWorkspace)
     view.renderer.trailDrawer.rescaleDrawing
 
     val newWidth = ((newPatchSize * worldWidth) + insetWidth).toInt
-    val newHeight = ((newPatchSize * worldHeight) + getExtraHeight + stripHeight).toInt
+    val newHeight = ((newPatchSize * worldHeight) + getExtraHeight).toInt
     val widthAdjust = newBounds.width - newWidth
     val heightAdjust = newBounds.height - newHeight
     var newX = newBounds.x
@@ -256,53 +229,6 @@ class ViewWidget(workspace: GUIWorkspace)
   override def asWidget: Widget = this
 
   /// events
-
-  def handle(e: LoadBeginEvent): Unit = {
-    tickCounter.setText("")
-    _tickCounterLabel = "ticks"
-    tickCounter.setVisible(true)
-  }
-
-  def handle(e: LoadEndEvent): Unit = {
-    controlStrip.reset()
-  }
-
-  def handle(e: PeriodicUpdateEvent): Unit = {
-    redrawTickCounter()
-  }
-
-  protected def redrawTickCounter(): Unit = {
-    val ticks = workspace.world.tickCounter.ticks
-    val tickText =
-        if (ticks == -1) "" else Dump.number(StrictMath.floor(ticks))
-    tickCounter.setText("     " + tickCounterLabel + ": " + tickText)
-  }
-
-  /// tick counter
-
-  def showTickCounter(visible: Boolean): Unit =
-    tickCounter.setVisible(visible)
-
-  def showTickCounter: Boolean =
-    tickCounter.isVisible
-
-  def tickCounterLabel(label: String): Unit = {
-    _tickCounterLabel = label
-    redrawTickCounter()
-  }
-
-  def tickCounterLabel: String = _tickCounterLabel
-
-  private class TickCounterLabel extends JLabel {
-    override def getPreferredSize: Dimension = getMinimumSize
-
-    override def getMinimumSize: Dimension = {
-      val d = super.getMinimumSize
-      val fontMetrics = getFontMetrics(getFont)
-      d.width = StrictMath.max(d.width, fontMetrics.stringWidth(tickCounterLabel + ": 00000000"))
-      d
-    }
-  }
 
   override def hasContextMenu: Boolean =
     true;

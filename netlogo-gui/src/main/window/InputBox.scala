@@ -368,7 +368,6 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
     }
   }
 
-  // based on MoreButton in ViewControlStrip.java
   protected class NLButton(title:String) extends JButton(title) {
     setFont(new Font(platformFont,Font.PLAIN, 10))
     setBackground(InterfaceColors.GRAPHICS_BACKGROUND)

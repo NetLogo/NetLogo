@@ -62,17 +62,18 @@ class DummyChooserWidget(compiler: CompilerServices)
   override def load(model: WidgetModel): AnyRef = {
     setSize(model.right - model.left, model.bottom - model.top)
     name(model.varName)
-    choicesWrapper(model.choices.map(c => Dump.logoObject(c.value)).mkString("\n"))
+    choicesWrapper(model.choices.map(c => Dump.logoObject(c.value, true, false)).mkString("\n"))
     index(model.currentChoice)
     this
   }
 
   override def model: WidgetModel = {
+    val b = getBoundsTuple
     val bounds = getBounds()
     CoreChooser(
       display  = name().potentiallyEmptyStringToOption,
-      left     = bounds.x,                top    = bounds.y,
-      right    = bounds.x + bounds.width, bottom = bounds.y + bounds.height,
+      left     = b._1, top    = b._2,
+      right    = b._3, bottom = b._4,
       variable = name().potentiallyEmptyStringToOption,
       choices  = constraint.acceptedValues.map(Chooseable.apply).toList,
       currentChoice = index)
