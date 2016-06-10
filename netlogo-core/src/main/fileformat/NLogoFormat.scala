@@ -92,6 +92,13 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] {
         .map(_.lines.toSeq)
         .map(s => if (s.headOption.contains("")) s.tail else s)
         .map(_.toArray)
+
+      if (sectionLines.length < sectionNames.length)
+        if (sectionLines(0).contains("xml") || sectionLines(0).contains("XML"))
+          Failure(new NLogoFormatException(s"This is not a valid $name file, but you may be able to open it by changing the file extension to match the file type"))
+        else
+          Failure(new NLogoFormatException(s"Expected $name file to have 12 sections, this had " + sectionLines.length))
+      else
         Success((sectionNames zip sectionLines).toMap)
     }
     catch {

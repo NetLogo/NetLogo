@@ -49,6 +49,18 @@ class NLogoFormatIOTest extends FunSuite {
     assert(Paths.get(result.get).toAbsolutePath == pathToWrite.toAbsolutePath)
     assert(Files.readAllLines(Paths.get(result.get)).mkString("\n") == Files.readAllLines(antsBenchmarkPath).mkString("\n"))
   }
+
+  test("Invalid NetLogo file gives an error about section count") {
+    val xmlResult = format.sectionsFromSource("to foo end")
+    assert(xmlResult.isFailure)
+    assert(xmlResult.failed.get.getMessage.contains("sections"))
+  }
+
+  test("XML file gives an error suggesting invalid format") {
+    val xmlResult = format.sectionsFromSource("""<?xml version="1.0">""")
+    assert(xmlResult.isFailure)
+    assert(xmlResult.failed.get.getMessage.contains("nlogo"))
+  }
 }
 
 class CodeComponentTest extends NLogoFormatTest[String] {
