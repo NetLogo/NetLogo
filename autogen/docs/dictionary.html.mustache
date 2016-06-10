@@ -56,7 +56,7 @@
           <br>
           <a href="#iogroup">Input/Output</a> - <a href="#fileiogroup">File</a> - <a href="#listsgroup">List</a> -
           <a href="#stringgroup">String</a> - <a href="#mathematicalgroup">Math</a> - <a href="#plottinggroup">Plotting</a> - <a href="#linkgroup">Links</a>
-          - <a href="#moviegroup">Movie</a> - <a href="#systemgroup">System</a> - <a href="#hubnetgroup">HubNet</a>
+          - <a href="#systemgroup">System</a> - <a href="#hubnetgroup">HubNet</a>
         </div>
       </div>
       <div class="block">
@@ -663,18 +663,6 @@ Go figure! - ST 12/2/04
       <a href="#show-link">show-link</a>
       <a href="#tie">tie</a>
       <a href="#untie">untie</a>
-      <!-- ======================================== -->
-    <h3>
-      Movie
-    </h3>
-    <p id="moviegroup">
-      <a href="#movie-cancel">movie-cancel</a>
-      <a href="#movie-close">movie-close</a>
-      <a href="#movie-grab-view">movie-grab-view</a>
-      <a href="#movie-grab-view">movie-grab-interface</a>
-      <a href="#movie-set-frame-rate">movie-set-frame-rate</a>
-      <a href="#movie-start">movie-start</a>
-      <a href="#movie-status">movie-status</a>
       <!-- ======================================== -->
     <h3>
       BehaviorSpace
@@ -4952,100 +4940,6 @@ move-to max-one-of turtles [size]
         <p>
           See also <a href="#setxy">setxy</a>.
         </div>
-      <div class="dict_entry" id="movie-cancel">
-        <h3>
-          <a>movie-cancel<span class="since">2.1</span></a>
-        </h3>
-        <h4>
-          <span class="prim_example">movie-cancel</span>
-        </h4>
-        <p>
-          Cancels the current movie.
-        </div>
-      <div class="dict_entry" id="movie-close">
-        <h3>
-          <a>movie-close<span class="since">2.1</span></a>
-        </h3>
-        <h4>
-          <span class="prim_example">movie-close</span>
-        </h4>
-        <p>
-          Stops the recording of the current movie.
-        </div>
-      <div class="dict_entry" id="movie-grab-view">
-        <h3>
-          <a>movie-grab-view<span class="since">3.0</span></a>
-          <a>movie-grab-interface<span class="since">2.1</span></a>
-        </h3>
-        <h4>
-          <span class="prim_example">movie-grab-view</span>
-          <span class="prim_example">movie-grab-interface</span>
-        </h4>
-        <p>
-          Adds an image of the current view (2D or 3D) or the interface
-          panel to the current movie.
-        <pre>
-;; make a 20-step movie of the current view
-setup
-movie-start &quot;out.mov&quot;
-repeat 20 [
-  movie-grab-view
-  go
-]
-movie-close
-</pre>
-      </div>
-      <div class="dict_entry" id="movie-set-frame-rate">
-        <h3>
-          <a>movie-set-frame-rate<span class="since">2.1</span></a>
-        </h3>
-        <h4>
-          <span class="prim_example">movie-set-frame-rate <i>frame-rate</i></span>
-        </h4>
-        <p>
-          Sets the frame rate of the current movie. The frame rate is
-          measured in frames per second. (If you do not explicitly set the
-          frame rate, it defaults to 15 frames per second.)
-        <p>
-          Must be called after <a href="#movie-start">movie-start</a>, but
-          before <a href="#movie-grab-view">movie-grab-view</a> or <a href="#movie-grab-view">movie-grab-interface</a>.
-        <p>
-          See also <a href="#movie-status">movie-status</a>.
-        </div>
-      <div class="dict_entry" id="movie-start">
-        <h3>
-          <a>movie-start<span class="since">2.1</span></a>
-        </h3>
-        <h4>
-          <span class="prim_example">movie-start <i>filename</i></span>
-        </h4>
-        <p>
-          Creates a new movie. <i>filename</i> specifies a new QuickTime
-          file where the movie will be saved, so it should end with
-          &quot;<code>.mov</code>&quot;.
-        <p>
-          See also <a href="#movie-grab-view">movie-grab-view</a>, <a href="#movie-grab-view">movie-grab-interface</a>, <a href="#movie-cancel">movie-cancel</a>, <a href="#movie-status">movie-status</a>, <a href="#movie-set-frame-rate">movie-set-frame-rate</a>, <a href="#movie-close">movie-close</a>.
-        </div>
-      <div class="dict_entry" id="movie-status">
-        <h3>
-          <a>movie-status<span class="since">2.1</span></a>
-        </h3>
-        <h4>
-          <span class="prim_example">movie-status</span>
-        </h4>
-        <p>
-          Reports a string describing the current movie.
-        <pre>
-print movie-status
-=&gt; No movie.
-movie-start
-print movie-status
-=&gt; 0 frames; frame rate = 15.
-movie-grab-view
-print movie-status
-1 frames; frame rate = 15; size = 315x315.
-</pre>
-      </div>
       <div class="dict_entry" id="my-links">
         <h3>
           <a>my-&lt;breeds&gt;</a>

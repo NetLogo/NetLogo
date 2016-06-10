@@ -50,6 +50,62 @@
     will have all uses of <code>nobody</code> changed to <code>"nobody"</code> when
     opened in NetLogo 6.0.
     <h3>
+      Removal of "Movie" Prims
+    </h3>
+    <p>
+      The NetLogo movie prims hadn't been updated in quite some time and
+      generated invalid quicktime movie files. They have been replaced by
+      prims in the new <code>vid</code> extension. The full documentation
+      for the <code>vid</code> extension is available in the <a href="vid.html">
+        Vid Extension</a> section of the manual. As with all extensions,
+      users will need to include <code>vid</code> in the <code>extensions</code>
+      section of their NetLogo model.
+    <p>
+      Many of the movie primitives have direct parallels in the <code>vid</code>
+      extension which can be found in the following table:
+      <table>
+        <tr>
+          <td>movie prim</td>
+          <td>vid prim</td>
+        </tr>
+        <tr>
+          <td><code>movie-cancel</code></td>
+          <td><code>vid:reset-recorder</code></td>
+        </tr>
+        <tr>
+          <td><code>movie-close</code></td>
+          <td><code>vid:save-recording <em>file-name</em></code></td>
+        </tr>
+        <tr>
+          <td><code>movie-grab-view</code></td>
+          <td><code>vid:record-view</code></td>
+        </tr>
+        <tr>
+          <td><code>movie-grab-interface</code></td>
+          <td><code>vid:record-interface</code></td>
+        </tr>
+        <tr>
+          <td><code>movie-start <em>file-name</em></code></td>
+          <td><code>vid:start-recorder <em>optional-width</em> <em>optional-height</em></code></td>
+        </tr>
+        <tr>
+          <td><code>movie-status</code></td>
+          <td><code>vid:recorder-status</code></td>
+        </tr>
+      </table>
+      When you first open a file in NetLogo 6.0, your file will be
+      automatically converted to use the new primitives. This will include adding
+      a new global variable - <code>recording-name</code> to track the name of the active
+      recording, as well as adding the <code>vid</code> extension
+      to the model. You should verify that the conversion took place correctly.
+      There is no
+      replacement for <code>movie-set-frame-rate</code>. The vid extension records
+      frames at 25 per second, slightly more than the default 15
+      frames-per-second of the movie prims. If your recording is sensitive
+      to framerate, consider recording each existing frame twice (2/25 is
+      fairly close to 1/15) or consider using a postprocessing tool (like
+      gstreamer or ffmpeg) to adjust the playback speed of the video.
+    <h3>
       Improved Name Collision Detection
     </h3>
     <p>
