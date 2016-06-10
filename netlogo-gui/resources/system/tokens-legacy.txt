@@ -55,12 +55,12 @@ C hubnet-send-override hubnet._hubnetsendoverride
 C hubnet-send-watch hubnet._hubnetsendwatch
 C hubnet-set-client-interface hubnet._hubnetsetclientinterface
 C move-to etc._moveto
-C movie-cancel gui._moviecancel
-C movie-close gui._movieclose
-C movie-grab-interface gui._moviegrabinterface
-C movie-grab-view gui._moviegrabview
-C movie-set-frame-rate gui._moviesetframerate
-C movie-start gui._moviestart
+C movie-cancel dead._moviecancel
+C movie-close dead._movieclose
+C movie-grab-interface dead._moviegrabinterface
+C movie-grab-view dead._moviegrabview
+C movie-set-frame-rate dead._moviesetframerate
+C movie-start dead._moviestart
 R __approximate-hsb-old etc._approximatehsbold
 R __block etc._block
 R __extract-hsb-old etc._extracthsbold
@@ -82,7 +82,7 @@ R hubnet-message hubnet._hubnetmessage
 R hubnet-message-source hubnet._hubnetmessagesource
 R hubnet-message-tag hubnet._hubnetmessagetag
 R hubnet-message-waiting? hubnet._hubnetmessagewaiting
-R movie-status gui._moviestatus
+R movie-status dead._moviestatus
 R in-cone-nowrap etc._inconenowrap
 R in-radius-nowrap etc._inradiusnowrap
 R random-or-random-float dead._randomorrandomfloat

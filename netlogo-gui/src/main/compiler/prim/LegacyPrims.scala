@@ -155,6 +155,28 @@ package gui {
     def syntax = Syntax.commandSyntax(right = List(AgentType, NumberType))
   }
 
+  case class _reload() extends Command {
+    def syntax = Syntax.commandSyntax(agentClassString = "O---")
+  }
+
+  case class _updatemonitor() extends Command {
+    def syntax = Syntax.commandSyntax(agentClassString = "O---", right = List(WildcardType))
+  }
+
+  case class _ziplogfiles() extends Command {
+    def syntax = Syntax.commandSyntax(agentClassString = "O---", right = List(StringType))
+  }
+}
+
+package dead {
+  case class _histogramfrom() extends Command {
+    def syntax = Syntax.commandSyntax(right = List(AgentsetType, NumberBlockType))
+  }
+
+  case class _randomorrandomfloat() extends Reporter {
+    def syntax = Syntax.reporterSyntax(ret = NumberType, right = List(NumberType))
+  }
+
   case class _moviecancel() extends Command {
     def syntax = Syntax.commandSyntax()
   }
@@ -181,28 +203,6 @@ package gui {
 
   case class _moviestatus() extends Reporter {
     def syntax = Syntax.reporterSyntax(ret = StringType)
-  }
-
-  case class _reload() extends Command {
-    def syntax = Syntax.commandSyntax(agentClassString = "O---")
-  }
-
-  case class _updatemonitor() extends Command {
-    def syntax = Syntax.commandSyntax(agentClassString = "O---", right = List(WildcardType))
-  }
-
-  case class _ziplogfiles() extends Command {
-    def syntax = Syntax.commandSyntax(agentClassString = "O---", right = List(StringType))
-  }
-}
-
-package dead {
-  case class _histogramfrom() extends Command {
-    def syntax = Syntax.commandSyntax(right = List(AgentsetType, NumberBlockType))
-  }
-
-  case class _randomorrandomfloat() extends Reporter {
-    def syntax = Syntax.reporterSyntax(ret = NumberType, right = List(NumberType))
   }
 }
 

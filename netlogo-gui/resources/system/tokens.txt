@@ -162,12 +162,12 @@ C load-shapes-3D gui._load3Dshapes
 C loop etc._loop
 C lt etc._left
 C move-to etc._moveto
-C movie-cancel gui._moviecancel
-C movie-close gui._movieclose
-C movie-grab-interface gui._moviegrabinterface
-C movie-grab-view gui._moviegrabview
-C movie-set-frame-rate gui._moviesetframerate
-C movie-start gui._moviestart
+C movie-cancel dead._moviecancel
+C movie-close dead._movieclose
+C movie-grab-interface dead._moviegrabinterface
+C movie-grab-view dead._moviegrabview
+C movie-set-frame-rate dead._moviesetframerate
+C movie-start dead._moviestart
 C no-display etc._nodisplay
 C orbit-down threed._orbitdown
 C orbit-left threed._orbitleft
@@ -412,7 +412,7 @@ R mouse-down? gui._mousedown
 R mouse-inside? gui._mouseinside
 R mouse-xcor gui._mousexcor
 R mouse-ycor gui._mouseycor
-R movie-status gui._moviestatus
+R movie-status dead._moviestatus
 R my-in-links _myinlinks
 R my-links _mylinks
 R my-out-links _myoutlinks
