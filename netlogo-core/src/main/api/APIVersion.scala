@@ -6,5 +6,5 @@ package org.nlogo.api
 // extensions API.
 
 object APIVersion {
-  val version = "5.0"
+  val version = "6.0"
 }

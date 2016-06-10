@@ -14,7 +14,7 @@ class InMemoryExtensionLoaderTests extends FunSuite {
   val loader = new InMemoryExtensionLoader("foo", dummyClassManager)
   val extURL = new URL("file:/tmp/extension/foo")
   val extensionData =
-    new ExtensionData("foo", extURL, "foo", classOf[DummyClassManager].getCanonicalName, Some("5.0"), 0)
+    new ExtensionData("foo", extURL, "foo", classOf[DummyClassManager].getCanonicalName, Some("6.0"), 0)
 
   test("InMemoryExtensionLoader returns None when asked to load an extension not matching its specified prefix") {
     assert(loader.locateExtension("bar").isEmpty)
