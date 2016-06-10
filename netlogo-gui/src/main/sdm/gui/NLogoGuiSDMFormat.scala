@@ -10,6 +10,8 @@ import org.nlogo.core.{ Model => CoreModel }
 import org.nlogo.fileformat.NLogoFormat
 import org.nlogo.api.ComponentSerialization
 
+import scala.util.Try
+
 class NLogoGuiSDMFormat extends ComponentSerialization[Array[String], NLogoFormat] {
   override def componentName = "org.nlogo.modelsection.systemdynamics"
   override def addDefault = identity
@@ -22,10 +24,12 @@ class NLogoGuiSDMFormat extends ComponentSerialization[Array[String], NLogoForma
   override def validationErrors(m: CoreModel): Option[String] =
     None
 
-  override def deserialize(s: Array[String]): CoreModel => CoreModel = { (m: CoreModel) =>
-    stringsToDrawing(s)
-      .map(sdm => m.withOptionalSection(componentName, Some(sdm), sdm))
-      .getOrElse(m)
+  override def deserialize(s: Array[String]): CoreModel => Try[CoreModel] = { (m: CoreModel) =>
+    Try {
+      stringsToDrawing(s)
+        .map(sdm => m.withOptionalSection(componentName, Some(sdm), sdm))
+        .getOrElse(m)
+    }
   }
 
   private def drawingStrings(drawing: AggregateDrawing): Array[String] = {

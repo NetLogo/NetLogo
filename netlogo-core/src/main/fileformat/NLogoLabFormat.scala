@@ -5,6 +5,8 @@ package org.nlogo.fileformat
 import org.nlogo.core.{ LiteralParser, Model }
 import org.nlogo.api.{ LabProtocol, ModelFormat, ComponentSerialization }
 
+import scala.util.Try
+
 trait LabFormat[A <: ModelFormat[Array[String], A]]
   extends ComponentSerialization[Array[String], A] {
   def autoConvert: String => String => String
@@ -41,7 +43,9 @@ trait LabFormat[A <: ModelFormat[Array[String], A]]
   }
 
   override def deserialize(s: Array[String]) = {(m: Model) =>
-    m.withOptionalSection(componentName, load(s, Some(m.version)), Seq[LabProtocol]())
+    Try {
+      m.withOptionalSection(componentName, load(s, Some(m.version)), Seq[LabProtocol]())
+    }
   }
 
   def load(s: Array[String], version: Option[String]): Option[Seq[LabProtocol]] =

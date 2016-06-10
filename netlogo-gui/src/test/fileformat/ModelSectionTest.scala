@@ -31,16 +31,25 @@ trait ModelSectionTest[A, B <: ModelFormat[A, _], C] extends FunSuite {
   def testDeserializes(description: String, serializedVersion: A, deserializedVersion: C, display: C => String = (_.toString)): Unit = {
     test(s"deserializes $description") {
       val s = subject
-      val m = s.deserialize(serializedVersion)(new Model())
+      val m = s.deserialize(serializedVersion)(new Model()).get
       val component = modelComponent(m)
       assert(deserializedVersion == component, display(deserializedVersion) + " did not equal " + display(component))
+    }
+  }
+
+  def testErrorsOnDeserialization(description: String, serializedVersion: A, error: String): Unit = {
+    test(s"errors when deserializing $description") {
+      val s = subject
+      val m = s.deserialize(serializedVersion)(new Model())
+      assert(m.isFailure)
+      assert(m.failed.get.getMessage.contains(error))
     }
   }
 
   def testRoundTripsSerialForm(description: String, serializedVersion: A): Unit = {
     test(s"round-trips $description from serial form to object and back") {
       val s = subject
-      val m = s.deserialize(serializedVersion)(new Model())
+      val m = s.deserialize(serializedVersion)(new Model()).get
       val deserialized = modelComponent(m)
       val reserialized = s.serialize(m)
       assert(compareSerialized(serializedVersion, reserialized), s"${displaySerialized(reserialized)} was expected to equal ${displaySerialized(serializedVersion)}")
@@ -52,7 +61,7 @@ trait ModelSectionTest[A, B <: ModelFormat[A, _], C] extends FunSuite {
       val s = subject
       val m = attachComponent(deserializedVersion)
       val serialized = s.serialize(m)
-      val redeserialized = modelComponent(s.deserialize(serialized)(new Model()))
+      val redeserialized = modelComponent(s.deserialize(serialized)(new Model()).get)
       assert(deserializedVersion == redeserialized)
     }
   }
@@ -62,7 +71,7 @@ trait ModelSectionTest[A, B <: ModelFormat[A, _], C] extends FunSuite {
       val s = subject
       val m = attachComponent(deserializedVersion)
       val serialized = s.serialize(m)
-      val redeserialized = modelComponent(s.deserialize(serialized)(new Model()))
+      val redeserialized = modelComponent(s.deserialize(serialized)(new Model()).get)
       assert(redeserialized == alteredVersion)
     }
   }
