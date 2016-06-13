@@ -107,9 +107,7 @@ class FrontEndTests extends FunSuite {
   }
   test("missing name after let") {
     // here the error is at TokenType.Eof - ST 9/29/14
-    runFailure("let", "Expected variable name here",
-      core.Token.Eof.start - PREAMBLE.size,
-      core.Token.Eof.end - PREAMBLE.size)
+    runFailure("let", "Expected variable name here", 4, 7)
   }
   test("parseSymbolUnknownName") {
     runTest("report __symbol foo", "_report()[_symbolstring()[_symbol()[]]]", preamble = "to-report sym ")

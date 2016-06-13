@@ -152,9 +152,6 @@ object Syntax {
       introducesContext = introducesContext || blockAgentClassString.nonEmpty
   )
 
-  def commandSyntax(right: Array[Int]): Syntax =
-      commandSyntax(right.toList)
-
   def reporterSyntax(
     precedence: Int = NormalPrecedence,
     left: Int = Syntax.VoidType,

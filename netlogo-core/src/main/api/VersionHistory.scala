@@ -205,6 +205,10 @@ object VersionHistory {
     remove3d(version) == "NetLogo 5.0.5" ||
     remove3d(version) == "NetLogo 5.1.0"
 
+  def olderThan60(version: String) =
+    olderThan42pre5(version) ||
+    remove3d(version).startsWith("NetLogo 5")
+
   def remove3d(version: String) =
     version.replace("NetLogo 3D", "NetLogo")
 

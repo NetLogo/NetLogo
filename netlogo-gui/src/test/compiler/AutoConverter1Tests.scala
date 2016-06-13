@@ -74,4 +74,12 @@ class AutoConverter1Tests extends FunSuite {
     test2DAnd3d("4.2pre4", "to setup clear-all end", "to setup " + AutoConverter1.clearAllAndResetTicks + " end")
     test2DAnd3d("4.2pre4", "to setup ca end", "to setup " + AutoConverter1.clearAllAndResetTicks + " end")
   }
+
+  test("movie prims") {
+    test2DAnd3d("5.0", "to record if movie-status != \"\" [ movie-grab-view ] end", "to record if vid:recorder-status != \"\" [ vid:record-view ] end")
+    test2DAnd3d("5.0", "to record movie-grab-interface end",
+      "to record vid:record-interface end")
+    test2DAnd3d("5.0", "to start-recording movie-start \"foo.mov\" movie-set-frame-rate end",
+      "to start-recording vid:start-recorder end")
+  }
 }

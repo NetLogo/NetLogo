@@ -96,6 +96,8 @@ class AutoConverter1(implicit tokenizer:TokenizerInterface) {
       source = convert(source, CONVERSIONS22)
     if(olderThan52(version))
       source = convert(source, CONVERSIONS23)
+    if(olderThan60(version))
+      source = convert(source, CONVERSIONS24)
 
     source
   }
@@ -477,4 +479,11 @@ class AutoConverter1(implicit tokenizer:TokenizerInterface) {
   private val CONVERSIONS23 = Map("hsb" -> "__hsb-old",
                                   "extract-hsb" -> "__extract-hsb-old",
                                   "approximate-hsb" -> "__approximate-hsb-old")
+  private val CONVERSIONS24 = Map(
+    "movie-cancel" -> "vid:reset-recorder",
+    "movie-status" -> "vid:recorder-status",
+    "movie-grab-view" -> "vid:record-view",
+    "movie-grab-interface" -> "vid:record-interface",
+    "movie-start" -> "vid:start-recorder",
+    "movie-set-frame-rate" -> "")
 }

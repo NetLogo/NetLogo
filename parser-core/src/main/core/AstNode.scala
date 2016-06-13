@@ -67,9 +67,9 @@ trait Application extends AstNode {
  * for the procedure body, which is a Statements object.
  */
 class ProcedureDefinition(val procedure: FrontEndProcedure, val statements: Statements) extends AstNode {
-  def start = throw new UnsupportedOperationException
-  def end = throw new UnsupportedOperationException
-  def file = throw new UnsupportedOperationException
+  var start = procedure.nameToken.start
+  var end   = statements.end
+  var file  = procedure.filename
 
   def nonLocalExit = statements.nonLocalExit
 

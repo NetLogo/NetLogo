@@ -26,9 +26,14 @@ object ExpressionParser {
   def apply(procedureDeclaration: FrontEndProcedure, tokens: Iterator[Token]): core.ProcedureDefinition = {
     val buffered = tokens.buffered
     val stmts = new core.Statements(buffered.head.filename)
-    while (buffered.head.tpe != TokenType.Eof)
+    while (buffered.head.tpe != TokenType.Eof) {
       stmts.addStatement(parseStatement(buffered, false))
-    new core.ProcedureDefinition(procedureDeclaration, stmts)
+    }
+    val pd = new core.ProcedureDefinition(procedureDeclaration, stmts)
+    if (buffered.head.end < Int.MaxValue) {
+      pd.end = buffered.head.start
+    }
+    pd
   }
 
   /**

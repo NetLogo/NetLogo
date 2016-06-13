@@ -11,6 +11,15 @@ object FrontEndInterface {
   type ProceduresMap = ListMap[String, FrontEndProcedure]
   val NoProcedures: ProceduresMap = ListMap()
   type FrontEndResults = (Seq[ProcedureDefinition], StructureResults)
+
+  trait SourceRewriter {
+    def addGlobal(global: String): String
+    def addExtension(extension: String): String
+    def remove(commandName: String): String
+    def addCommand(sourceAndNewCommand: (String, String)): String
+    def replaceCommand(sourceAndDestCommand: (String, String)): String
+    def replaceReporter(sourceAndDestReporter: (String, String)): String
+  }
 }
 
 case class ProcedureSyntax(declarationKeyword: Token, identifier: Token, endKeyword: Token)
