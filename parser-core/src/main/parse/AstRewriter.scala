@@ -68,9 +68,14 @@ class AstRewriter(tokenizer: TokenizerInterface, op: CompilationOperand) extends
     val structureResults = StructureParser.parseSources(tokenizer, op)
     val globallyUsedNames =
       StructureParser.usedNames(structureResults.program, op.oldProcedures ++ structureResults.procedures)
-    val procs = structureResults.procedures.values.map(parseProcedure(structureResults, globallyUsedNames))
+    val procs =
+      (structureResults.procedures -- op.oldProcedures.keys).values.map(parseProcedure(structureResults, globallyUsedNames))
 
-    val (wsMap, fileHeaders) = trackWhitespace(op.sources, procs)
+    def getSource(filename: String): String =
+      op.sources.get(filename).orElse(IncludeFile(op.compilationEnvironment, filename).map(_._2))
+        .getOrElse(throw new Exception("Unable to find file: " + filename))
+
+    val (wsMap, fileHeaders) = trackWhitespace(getSource _, procs)
 
     val operations = procs.foldLeft(Map[Seq[AstPath], Formatter.Operation]()) {
       case (dels, proc) => visitor.visitProcedureDefinition(proc)(dels)
@@ -84,9 +89,9 @@ class AstRewriter(tokenizer: TokenizerInterface, op: CompilationOperand) extends
     wsStripped
   }
 
-  def trackWhitespace(sources: Map[String, String], procs: Iterable[ProcedureDefinition]): (Map[String, (String, WhiteSpaceMap, String)], Map[String, String]) = {
+  def trackWhitespace(getSource: String => String, procs: Iterable[ProcedureDefinition]): (Map[String, (String, WhiteSpaceMap, String)], Map[String, String]) = {
     val toRegex = new Regex("(?i)(?:\\bto\\b|\\bto-report\\b)")
-    val ws = new WhiteSpaceTracker(sources)
+    val ws = new WhiteSpaceTracker(getSource)
     var fileHeaders: Map[String, String] = Map()
     val whiteSpaces =
       procs.foldLeft(
@@ -95,8 +100,8 @@ class AstRewriter(tokenizer: TokenizerInterface, op: CompilationOperand) extends
       case ((procWhitespaceMap, ctx), proc) =>
         val newContext =
           if (ctx.lastFile != Some(proc.file)) {
-            val procStart = toRegex.findFirstMatchIn(sources(proc.file)).map(_.start).getOrElse(0)
-            fileHeaders = (fileHeaders + (proc.file -> sources(proc.file).slice(0, procStart)))
+            val procStart = toRegex.findFirstMatchIn(getSource(proc.file)).map(_.start).getOrElse(0)
+            fileHeaders = (fileHeaders + (proc.file -> getSource(proc.file).slice(0, procStart)))
             WhiteSpaceTracker.Context(lastEnd = Some(procStart), Map(), lastFile = Some(proc.file))
           } else
             WhiteSpaceTracker.Context(ctx.lastEnd, Map(), ctx.lastFile)
@@ -111,7 +116,7 @@ class AstRewriter(tokenizer: TokenizerInterface, op: CompilationOperand) extends
     wsMap: Map[String, (String, WhiteSpaceMap, String)],
     procs: Iterable[ProcedureDefinition]): String = {
     val formatter = new Formatter
-    val res = procs.foldLeft(Formatter.Context("", operations)) {
+    val res = procs.filter(p => op.sources.contains(p.procedure.filename)).foldLeft(Formatter.Context("", operations)) {
       case (acc, proc) =>
         val (leadingWs, procWsMap, trailingWs) = wsMap(proc.procedure.name)
         val r = formatter.visitProcedureDefinition(proc)(
@@ -287,12 +292,12 @@ object WhiteSpaceTracker {
     finalWs: String = "")
 }
 
-class WhiteSpaceTracker(sources: Map[String, String]) extends PositionalAstFolder[WhiteSpaceTracker.Context] {
+class WhiteSpaceTracker(getSource: String => String) extends PositionalAstFolder[WhiteSpaceTracker.Context] {
   import AstPath._
   import WhiteSpaceTracker._
 
   def sourceFromLast(c: Context, astNode: AstNode, getTargetPoint: AstNode => Int): String =
-    c.lastEnd.map(e => sources(astNode.file).slice(e, getTargetPoint(astNode)))
+    c.lastEnd.map(e => getSource(astNode.file).slice(e, getTargetPoint(astNode)))
       .getOrElse("")
       .replaceAllLiterally("[", "")
       .replaceAllLiterally("]", "")
@@ -300,7 +305,7 @@ class WhiteSpaceTracker(sources: Map[String, String]) extends PositionalAstFolde
   override def visitProcedureDefinition(proc: ProcedureDefinition)(c: Context): Context = {
     val initialWs = sourceFromLast(c, proc, _.start)
     val functionHeaderEnd = proc.procedure.argTokens.lastOption.getOrElse(proc.procedure.nameToken).end
-    val functionHeader = sources(proc.file).slice(proc.start, functionHeaderEnd)
+    val functionHeader = getSource(proc.file).slice(proc.start, functionHeaderEnd)
     val c1 = c.copy(initialWs = initialWs + functionHeader, lastEnd = Some(functionHeaderEnd))
     val c2 = super.visitProcedureDefinition(proc)(c1)
     // +3 to capture END token

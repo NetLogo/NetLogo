@@ -13,9 +13,12 @@ class AstRewriterTests extends FunSuite {
 
   def rewriter(source: String): AstRewriter = {
     val op = new CompilationOperand(Map("" -> source),
-      new DummyExtensionManager(),
+      new DummyExtensionManager() {
+        override def importExtension(path: String, errors: org.nlogo.core.ErrorSource): Unit = { }
+      },
       new DummyCompilationEnvironment(),
-      Program.fromDialect(NetLogoCore))
+      Program.fromDialect(NetLogoCore),
+      subprogram = false)
     new AstRewriter(tokenizer, op)
   }
 
