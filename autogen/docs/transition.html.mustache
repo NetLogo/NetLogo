@@ -78,6 +78,36 @@
       If you used it to check link directedness leaving it as-is should keep the current behavior of the model.
       Otherwise, it can simply be replaced by <code>is-&lt;breed&gt;?</code>.
     </div>
+    <h3>
+      Improved &amp; Updated Extensions API
+    </h3>
+    <p id="extensions60">
+      One of our goals in NetLogo 6.0 has been to make it easier to develop
+      extensions and easy to develop more <em>powerful</em> extensions.
+      To that end, we've bumped the extension API from 5.0 to 6.0.
+      Existing extensions will need to recompile changing the "NetLogo-Extension-API-Version"
+      in their jar's MANIFEST.MF from 5.0 to 6.0.
+    <p>
+      Some of the changes we've made to the extensions API include:
+      <ul>
+        <li><code>org.nlogo.api.Context</code> now allows access to the current world and workspace objects
+        without requiring a cast to an <code>org.nlogo.nvm.ExtensionContext</code>.</li>
+        <li><code>org.nlogo.api.Workspace</code> has been introduced as a stable API for extensions to depend on.</li>
+        <li>A NetLogo jar is now available from BinTray.</li>
+      </ul>
+      For a full list of changes between 5.0 and 6.0, please visit our
+      <a href="https://github.com/NetLogo/NetLogo/wiki/Hexy-Extension-Transition-Guide">Extension Transition Guide</a>
+      on GitHub.
+    <p>
+      In service of making it easier to build extensions, we've expanded and improved
+      the <a href="https://github.com/NetLogo/NetLogo-Extension-Plugin">NetLogo Extension Plugin</a>
+      for <a href="http://www.scala-sbt.org/"><code>sbt</code></a>, the Scala Build Tool.
+      Sbt is a powerful tool for building JVM projects and can be used in projects that
+      use Scala, Java, or a combination of the two. We're now using the Extension Plugin to build
+      all of the bundled extensions and we strongly recommend extension authors take advantage
+      of the plugin as it makes configuring a NetLogo extension build extremely straightforward.
+      The plugin handles fetching the NetLogo jar which extensions compile against as
+      well as generation of a jar for the extension containing the appropriate metadata.
     <div id="v52">
     <h2>
       <a>Changes for NetLogo 5.2</a>
