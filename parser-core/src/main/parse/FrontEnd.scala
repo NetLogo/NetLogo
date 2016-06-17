@@ -57,12 +57,6 @@ trait FrontEndMain extends NetLogoParser {
     tokenizer.tokenizeString(source).map(Namer.basicNamer(dialect, extensionManager)).toSeq
   }
 
-  def findProcedurePositions(source: String, dialectOption: Option[Dialect]): Map[String, ProcedureSyntax] = {
-    val dialect = dialectOption.getOrElse(NetLogoCore)
-    val tokens = tokenizer.tokenizeString(source).map(Namer.basicNamer(dialect, new DummyExtensionManager))
-    StructureParser.findProcedurePositions(tokens.toSeq)
-  }
-
   def findIncludes(source: String): Seq[String] = {
     val tokens = tokenizer.tokenizeString(source)
     StructureParser.findIncludes(tokens)

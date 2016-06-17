@@ -2,8 +2,9 @@
 
 package org.nlogo.parse
 
-import org.nlogo.core.{ CompilationOperand, ExtensionManager, FrontEndInterface,
-  FrontEndProcedure, ProcedureDefinition, StructureResults, TokenizerInterface },
+import org.nlogo.core.{ CompilationOperand, Dialect, DummyExtensionManager, ExtensionManager,
+  FrontEndInterface, FrontEndProcedure, NetLogoCore, ProcedureDefinition,
+  ProcedureSyntax, StructureResults, TokenizerInterface },
   FrontEndInterface.ProceduresMap
 
 
@@ -44,5 +45,11 @@ trait NetLogoParser {
       letScoper(namedTokens.buffered)
     }
     ExpressionParser(procedure, namedTokens)
+  }
+
+  def findProcedurePositions(source: String, dialectOption: Option[Dialect]): Map[String, ProcedureSyntax] = {
+    val dialect = dialectOption.getOrElse(NetLogoCore)
+    val tokens = tokenizer.tokenizeString(source).map(Namer.basicNamer(dialect, new DummyExtensionManager))
+    StructureParser.findProcedurePositions(tokens.toSeq)
   }
 }

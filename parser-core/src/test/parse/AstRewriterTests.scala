@@ -43,6 +43,10 @@ class AstRewriterTests extends FunSuite {
     trimmedRewriteCommand(source, _.addCommand(target))
   }
 
+  def replaceReporterToken(source: String, target: (String, String)): String = {
+    trimmedRewriteCommand(source, _.replaceToken(target._1, target._2), "TO-REPORT FOO REPORT ")
+  }
+
   def replaceCommand(source: String, target: (String, String)): String = {
     trimmedRewriteCommand(source, _.replaceCommand(target))
   }
@@ -59,6 +63,14 @@ class AstRewriterTests extends FunSuite {
     trimmedRewriteCommand(source, _.replaceReporter(target), "TO-REPORT FOO REPORT ")
   }
 
+  test("replace token") {
+    assertResult("__hsb-old 1 2 3")(replaceReporterToken("hsb 1 2 3", "hsb" -> "__hsb-old"))
+    assertResult("ifelse true = false [ __hsb-old 1 2 3 ] [ __hsb-old 4 5 6 ]")(
+      replaceReporterToken("ifelse true = false [ __hsb-old 1 2 3 ] [ __hsb-old 4 5 6 ]",
+        "hsb" -> "__hsb-old"))
+    assertResult("is-an-agent? one-of turtles")(replaceReporterToken("is-agent? one-of turtles", "is-agent?" -> "is-an-agent?"))
+  }
+
   test("remove argument") {
     assertResult("fd")(removeFirstArg("fd 1", "fd"))
     assertResult("forward")(removeFirstArg("forward 1", "forward"))
@@ -68,27 +80,28 @@ class AstRewriterTests extends FunSuite {
     assertResult("clear-all")(removeFirstArg("clear-all", "clear-all"))
     assertResult("clear-all\nreset-ticks")(removeFirstArg("clear-all\nreset-ticks", "show"))
     assertResult("show   \"abc\"")(removeFirstArg("show   \"abc\"", "fd"))
-    assertResult("ask turtles [   fd show \"abc\" ]")(removeFirstArg("ask turtles [ fd 1 show \"abc\" ]", "fd"))
-    assertResult("ask turtles [   setxy 1 ]")(removeFirstArg("ask turtles [ setxy 0 1 ]", "setxy"))
-    assertResult("show map [  exp ]   [1 2 3]")(removeFirstArg("show map [ exp ?1 ] [1 2 3]", "exp"))
-    assertResult("show map  [1 2 3]")(removeFirstArg("show map [ exp ?1 ] [ 1 2 3 ]", "map"))
-    assertResult("show turtles with [   exp > 100 ]")(removeFirstArg("show turtles with [ exp 5 > 100 ]", "exp"))
+    assertResult("ask turtles [ fd show \"abc\" ]")(removeFirstArg("ask turtles [ fd 1 show \"abc\" ]", "fd"))
+    assertResult("ask turtles [ setxy 1 ]")(removeFirstArg("ask turtles [ setxy 0 1 ]", "setxy"))
+    assertResult("show map [ exp ] [1 2 3]")(removeFirstArg("show map [ exp ?1 ] [1 2 3]", "exp"))
+    assertResult("show map [1 2 3]")(removeFirstArg("show map [ exp ?1 ] [ 1 2 3 ]", "map"))
+    assertResult("show turtles with [ exp > 100 ]")(removeFirstArg("show turtles with [ exp 5 > 100 ]", "exp"))
     assertResult("fd 1 end to bar bk")(removeFirstArg("fd 1 end to bar bk 1", "bk"))
-    assertResult("ask turtles [   ask one-of other turtles [   set blue ]  ]")(
+    assertResult("ask turtles [ ask one-of other turtles [ set blue ] ]")(
       removeFirstArg("ask turtles [ ask one-of other turtles [ set color blue ] ]", "set"))
     assertResult("run")(removeFirstArg("run [ fd 1 ]", "run"))
     assertResult("run")(removeFirstArg("run task [ fd 1 ]", "run"))
-    assertResult("foreach  [  show ?1 ]")(removeFirstArg("foreach [1 2 3] [ show ?1 ]", "foreach"))
+    assertResult("foreach [ show ?1 ]")(removeFirstArg("foreach [1 2 3] [ show ?1 ]", "foreach"))
   }
 
   test("remove command") {
     assertResult("")(remove("fd 1", "fd"))
     assertResult("bk 1")(remove("fd 1 bk 1", "fd"))
-    assertResult("create-turtles 10 [   fd 1 ]")(remove("create-turtles 10 [ fd 1 ]", "bk"))
-    assertResult("create-turtles 10 [  ]")(remove("create-turtles 10 [ fd 1 ]", "fd"))
-    assertResult("ask turtles [   ask one-of other turtles [  ]  ]")(remove("ask turtles [ ask one-of other turtles [ set color blue ] ]", "set"))
+    assertResult("create-turtles 10 [ fd 1 ]")(remove("create-turtles 10 [ fd 1 ]", "bk"))
+    assertResult("create-turtles 10 [ ]")(remove("create-turtles 10 [ fd 1 ]", "fd"))
+    assertResult("ask turtles [ ask one-of other turtles [ ] ]")(remove("ask turtles [ ask one-of other turtles [ set color blue ] ]", "set"))
     assertResult("fd 1 end to bar")(remove("fd 1 end to bar bk 2", "bk"))
-    assertResult("fd 1 end to bar")(remove("fd 1 end to bar bk 1", "bk"))
+    assertResult("fd 1 end to bar")(remove("fd 1 bk 1 end to bar", "bk"))
+    assertResult("run [ user-message (word \"abc\" \"123\") ]")(remove("run [ user-message (word \"abc\" \"123\") ]", "fd"))
   }
 
   test("adds new command based on existing command") {
@@ -98,6 +111,8 @@ class AstRewriterTests extends FunSuite {
     assertResult("set foo exp 10  bk exp 10")(addCommand("bk exp 10", "bk" -> "set foo {0}"))
     assertResult("set foo 2  setxy 1 2")(addCommand("setxy 1 2", "setxy" -> "set foo {1}"))
     assertResult("fd exp 3  setxy 2 exp 3")(addCommand("setxy 2 exp 3", "setxy" -> "fd {1}"))
+    assertResult("ask turtles [  fd 1  bk 1 ]")(addCommand("ask turtles [ bk 1 ]", "bk" -> "fd 1"))
+    assertResult("if (1 = 2) [  fd 1  bk 1 ]")(addCommand("if (1 = 2) [ bk 1 ]", "bk" -> "fd 1"))
   }
 
   test("rename command and manipulate arguments") {
