@@ -11,7 +11,9 @@ import org.nlogo.core.prim.{ _commandtask, _const, _reportertask, _unknowncomman
 
 import scala.util.matching.Regex
 
-class AstRewriter(tokenizer: TokenizerInterface, op: CompilationOperand) extends FrontEndInterface.SourceRewriter {
+class AstRewriter(val tokenizer: TokenizerInterface, op: CompilationOperand)
+  extends FrontEndInterface.SourceRewriter
+  with NetLogoParser {
   type WhiteSpaceMap = Map[Seq[AstPath], String]
 
   private def preserveBody(structureResults: StructureResults, header: String, procedures: String): String = header + procedures
@@ -65,11 +67,7 @@ class AstRewriter(tokenizer: TokenizerInterface, op: CompilationOperand) extends
   def rewrite(
     visitor: PositionalAstFolder[Map[Seq[AstPath], Formatter.Operation]],
     wholeFile: (StructureResults, String, String) => String): String = {
-    val structureResults = StructureParser.parseSources(tokenizer, op)
-    val globallyUsedNames =
-      StructureParser.usedNames(structureResults.program, op.oldProcedures ++ structureResults.procedures)
-    val procs =
-      (structureResults.procedures -- op.oldProcedures.keys).values.map(parseProcedure(structureResults, globallyUsedNames))
+    val (procs, structureResults) = basicParse(op)
 
     def getSource(filename: String): String =
       op.sources.get(filename).orElse(IncludeFile(op.compilationEnvironment, filename).map(_._2))
@@ -81,7 +79,7 @@ class AstRewriter(tokenizer: TokenizerInterface, op: CompilationOperand) extends
       case (dels, proc) => visitor.visitProcedureDefinition(proc)(dels)
     }
 
-    val wsRegex = new Regex("(?m)\\s+$").unanchored
+    val wsRegex = new Regex("(?m)\\s+$")
 
     val rewritten =
       wholeFile(structureResults, fileHeaders.getOrElse("", ""), format(operations, wsMap, procs))
@@ -127,25 +125,6 @@ class AstRewriter(tokenizer: TokenizerInterface, op: CompilationOperand) extends
         r.copy(text = r.text + trailingWs)
     }
     res.text
-  }
-
-  def parseProcedure(structureResults: StructureResults, globallyUsedNames: Map[String, SymbolType])(procedure: FrontEndProcedure): ProcedureDefinition = {
-    import op.extensionManager
-    val rawTokens = structureResults.procedureTokens(procedure.name)
-    val usedNames = globallyUsedNames ++ procedure.args.map(_ -> SymbolType.LocalVariable)
-    // on LetNamer vs. Namer vs. LetScoper, see comments in LetScoper
-    val namedTokens = {
-      val letNamedTokens = LetNamer(rawTokens.iterator)
-      val namer =
-        new Namer(structureResults.program,
-          op.oldProcedures ++ structureResults.procedures,
-          extensionManager)
-      val namedTokens = namer.process(letNamedTokens, procedure)
-      val letScoper = new LetScoper(usedNames)
-      letScoper(namedTokens.buffered)
-    }
-    val toks = namedTokens.toSeq
-    ExpressionParser(procedure, toks.iterator)
   }
 }
 
