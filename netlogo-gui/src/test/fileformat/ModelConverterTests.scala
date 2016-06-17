@@ -4,7 +4,7 @@ package org.nlogo.fileformat
 
 import org.nlogo.api.NetLogoLegacyDialect
 
-import org.nlogo.core.{ CompilationOperand, FrontEndInterface, Model, Program }, FrontEndInterface.{ ProceduresMap, SourceRewriter }
+import org.nlogo.core.{ CompilationOperand, FrontEndInterface, Model, Program, SourceRewriter }, FrontEndInterface.ProceduresMap
 import org.nlogo.core.{ Button, Monitor, Pen, Plot, Slider, Switch, View }
 import org.nlogo.core.{ DummyCompilationEnvironment, DummyExtensionManager }
 
@@ -12,43 +12,12 @@ import org.scalatest.FunSuite
 
 class ModelConverterTests extends FunSuite {
   def convert(model: Model, codeTabConversions: Seq[SourceRewriter => String] = Seq(), sourceConversions: Seq[SourceRewriter => String] = Seq(), targets: Seq[String] = Seq()): Model =
-    ModelConverter(model, createCompilationOp _, codeTabConversions, sourceConversions, targets).get
+    ModelConverter(model, codeTabConversions, sourceConversions, targets,
+      VidExtensionManager, FooCompilationEnvironment, Seq(new WidgetConverter() {}), NetLogoLegacyDialect).get
 
   def convertError(model: Model, codeTabConversions: Seq[SourceRewriter => String] = Seq(), sourceConversions: Seq[SourceRewriter => String] = Seq(), targets: Seq[String] = Seq()): Throwable =
-    ModelConverter(model, createCompilationOp _, codeTabConversions, sourceConversions, targets).failed.get
-
-  def createCompilationOp(src: String, prog: Program, procs: ProceduresMap): CompilationOperand = {
-    new CompilationOperand(
-      Map("" -> src),
-      containingProgram = prog.copy(dialect = NetLogoLegacyDialect),
-      oldProcedures = procs,
-      subprogram = false,
-      extensionManager = new DummyExtensionManager() {
-        import org.nlogo.core.{ Syntax, Primitive, PrimitiveCommand, PrimitiveReporter}
-
-        override def anyExtensionsLoaded = true
-        override def importExtension(path: String, errors: org.nlogo.core.ErrorSource): Unit = { }
-        override def replaceIdentifier(name: String): Primitive = {
-          name match {
-            case "VID:SAVE-RECORDING" =>
-              new PrimitiveCommand { override def getSyntax = Syntax.commandSyntax(right = List(Syntax.StringType)) }
-            case "VID:RECORDER-STATUS" =>
-              new PrimitiveReporter { override def getSyntax = Syntax.reporterSyntax(ret = Syntax.StringType) }
-            case vid if vid.startsWith("VID") =>
-              new PrimitiveCommand { override def getSyntax = Syntax.commandSyntax() }
-            case _ => null
-          }
-        }
-      },
-      compilationEnvironment = new DummyCompilationEnvironment() {
-        import java.nio.file.Files
-        override def resolvePath(filename: String): String = {
-          val file = Files.createTempFile("foo", ".nls")
-          Files.write(file, "to bar bk 1 end".getBytes)
-          file.toString
-        }
-      })
-  }
+    ModelConverter(model, codeTabConversions, sourceConversions, targets,
+      VidExtensionManager, FooCompilationEnvironment, Seq(new WidgetConverter() {}), NetLogoLegacyDialect).failed.get
 
   test("if the model is empty, returns the model") {
     val model = Model()
@@ -114,7 +83,7 @@ class ModelConverterTests extends FunSuite {
 
   test("converts code tab when referencing interface values") {
     val model = Model(code = "to foo if on? [ fd 1 ] end", widgets = Seq(View(), Switch(Some("on?"))))
-    assertResult("to foo if on? [   bk 1 ]   end")(convert(model, codeTabConversions = Seq(_.replaceCommand("fd" -> "bk 1")), targets = Seq("fd")).code)
+    assertResult("to foo if on? [ bk 1 ] end")(convert(model, codeTabConversions = Seq(_.replaceCommand("fd" -> "bk 1")), targets = Seq("fd")).code)
   }
 
   test("if the model has a widgets which don't compile, continues to convert the code tab") {
@@ -147,7 +116,8 @@ class ModelConverterTests extends FunSuite {
          |end
          |to go
          |  if vid:recorder-status != "" [
-         |    vid:record-view ]
+         |    vid:record-view
+         |  ]
          |end
          |to finish
          |  vid:save-recording _recording-save-file-name
@@ -191,5 +161,32 @@ class ModelConverterTests extends FunSuite {
     val model = Model(code = originalSource)
     val converted = convert(model, codeTabConversions = Seq(_.replaceCommand("fd" -> "rt 90")), targets = Seq("fd"))
     assertResult(expectedSource)(converted.code)
+  }
+}
+
+object VidExtensionManager extends DummyExtensionManager {
+  import org.nlogo.core.{ Syntax, Primitive, PrimitiveCommand, PrimitiveReporter}
+
+  override def anyExtensionsLoaded = true
+  override def importExtension(path: String, errors: org.nlogo.core.ErrorSource): Unit = { }
+  override def replaceIdentifier(name: String): Primitive = {
+    name match {
+      case "VID:SAVE-RECORDING" =>
+        new PrimitiveCommand { override def getSyntax = Syntax.commandSyntax(right = List(Syntax.StringType)) }
+      case "VID:RECORDER-STATUS" =>
+        new PrimitiveReporter { override def getSyntax = Syntax.reporterSyntax(ret = Syntax.StringType) }
+      case vid if vid.startsWith("VID") =>
+        new PrimitiveCommand { override def getSyntax = Syntax.commandSyntax() }
+      case _ => null
+    }
+  }
+}
+
+object FooCompilationEnvironment extends DummyCompilationEnvironment {
+  import java.nio.file.Files
+  override def resolvePath(filename: String): String = {
+    val file = Files.createTempFile("foo", ".nls")
+    Files.write(file, "to bar bk 1 end".getBytes)
+    file.toString
   }
 }

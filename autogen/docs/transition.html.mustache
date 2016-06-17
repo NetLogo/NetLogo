@@ -95,16 +95,16 @@
       </table>
       When you first open a file in NetLogo 6.0, your file will be
       automatically converted to use the new primitives. This will include adding
-      a new global variable - <code>recording-name</code> to track the name of the active
+      a new global variable - <code>_recording-save-file-name</code> to track the name of the active
       recording, as well as adding the <code>vid</code> extension
       to the model. You should verify that the conversion took place correctly.
-      There is no
-      replacement for <code>movie-set-frame-rate</code>. The vid extension records
-      frames at 25 per second, slightly more than the default 15
-      frames-per-second of the movie prims. If your recording is sensitive
-      to framerate, consider recording each existing frame twice (2/25 is
-      fairly close to 1/15) or consider using a postprocessing tool (like
-      gstreamer or ffmpeg) to adjust the playback speed of the video.
+      There is no replacement for <code>movie-set-frame-rate</code>.
+      The vid extension records frames at 25 per second, slightly more
+      than the default 15 frames-per-second of the movie prims.
+      If your recording is sensitive to framerate, consider recording
+      each existing frame twice (2/25 is fairly close to 1/15)
+      or consider using a postprocessing tool (like gstreamer or ffmpeg)
+      to adjust the video playback speed.
     <h3>
       Improved Name Collision Detection
     </h3>

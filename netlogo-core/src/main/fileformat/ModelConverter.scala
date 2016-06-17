@@ -2,21 +2,33 @@
 
 package org.nlogo.fileformat
 
-import org.nlogo.core.{ CompilationOperand, Femto, FrontEndInterface, Model, Program },
-  FrontEndInterface.{ ProceduresMap, SourceRewriter }
+import org.nlogo.core.{ CompilationEnvironment, CompilationOperand, Dialect, ExtensionManager, Femto,
+  FrontEndInterface, Model, Program, SourceRewriter, StructureResults, Widget },
+  FrontEndInterface.ProceduresMap
 
-import org.nlogo.core.{ Button, Monitor, Plot, Slider, Widget }
-import org.nlogo.core.{ DummyCompilationEnvironment, DummyExtensionManager }
+import org.nlogo.api.{ AutoConverter, AutoConvertable }
 
 import scala.util.Try
 import scala.util.matching.Regex
 
 object ModelConverter {
-  def apply(model:      Model,
-    compilationOperand: (String, Program, ProceduresMap) => CompilationOperand,
-    codeTabConversions: Seq[SourceRewriter => String],
-    widgetConversions:  Seq[SourceRewriter => String],
-    targets:            Seq[String]): Try[Model] = {
+  def apply(model:       Model,
+    codeTabConversions:  Seq[SourceRewriter => String],
+    allCodeConversions:  Seq[SourceRewriter => String],
+    targets:             Seq[String],
+    extensionManager:    ExtensionManager,
+    compilationEnv:      CompilationEnvironment,
+    components:          Seq[AutoConvertable],
+    dialect:             Dialect): Try[Model] = {
+
+    def compilationOperand(source: String, program: Program, procedures: ProceduresMap): CompilationOperand =
+      CompilationOperand(
+        sources                = Map("" -> source),
+        extensionManager       = extensionManager,
+        compilationEnvironment = compilationEnv,
+        oldProcedures          = procedures,
+        containingProgram      = program.copy(dialect = dialect),
+        subprogram             = false)
 
     val tokenizer = Femto.scalaSingleton[org.nlogo.core.TokenizerInterface]("org.nlogo.lex.Tokenizer")
 
@@ -25,8 +37,7 @@ object ModelConverter {
     }
 
     def rewriter(source: String, program: Program): SourceRewriter = {
-      val operand =
-        compilationOperand(source, program, FrontEndInterface.NoProcedures)
+      val operand = compilationOperand(source, program, FrontEndInterface.NoProcedures)
       rewriterOp(operand)
     }
 
@@ -36,70 +47,87 @@ object ModelConverter {
       anyTarget.findFirstIn(source).isDefined
     }
 
-    def rep(s: String): String = "to-report +++++ " + s + " end"
-    def cmd(s: String): String = "to ------ " + s + " end"
-
-    def uncmd(s: String): String = s.stripPrefix("to ------").stripSuffix("end").trim
-    def unrep(s: String): String = s.stripPrefix("to-report +++++").stripSuffix("end").trim
-
-    def widgetContainsTarget(w: Widget): Boolean =
-      w match {
-        case b: Button =>
-          b.source.map(s => containsAnyTargets(cmd(s))) getOrElse false
-        case s: Slider =>
-          containsAnyTargets(rep(s.min)) || containsAnyTargets(rep(s.max)) || containsAnyTargets(rep(s.step))
-        case m: Monitor =>
-          m.source.map(s => containsAnyTargets(rep(s))) getOrElse false
-        case p: Plot =>
-          containsAnyTargets(cmd(p.setupCode)) || containsAnyTargets(cmd(p.updateCode)) ||
-            p.pens.exists(pen => containsAnyTargets(cmd(pen.setupCode)) || containsAnyTargets(cmd(pen.updateCode)))
-        case _ => false
-      }
-
-    def convertWidget(w: Widget, compilationOp: String => CompilationOperand): Widget = {
-      def convertWidgetSource(wrap: String => String, unwrap: String => String)(source: String): String = {
-        val converted = widgetConversions.foldLeft(wrap(source)) {
-          case (src, conversion) => conversion(rewriterOp(compilationOp(src)))
-        }
-        unwrap(converted)
-      }
-
-      Try {
-        w match {
-          case cWidget@(_: Button | _: Plot) =>
-            cWidget.convertSource(convertWidgetSource(cmd _, uncmd _))
-          case mWidget@(_: Monitor | _: Slider) =>
-            mWidget.convertSource(convertWidgetSource(rep _, unrep _))
-          case _ => w
-        }
-      } getOrElse w
+    def requiresConversion(model: Model, convertable: AutoConvertable): Boolean = {
+      convertable.requiresAutoConversion(model, containsAnyTargets _)
     }
 
     Try {
       if (targets.nonEmpty &&
-        (containsAnyTargets(model.code) || model.widgets.exists(widgetContainsTarget))) {
+        (containsAnyTargets(model.code) || components.exists(requiresConversion(model, _)))) {
 
-        val code = codeTabConversions.foldLeft(model.code) {
-          case (src, conversion) => conversion(rewriter(src, Program(interfaceGlobals = model.interfaceGlobals)))
+          val code = codeTabConversions.foldLeft(model.code) {
+            case (src, conversion) =>
+              conversion(rewriter(src, Program.fromDialect(dialect).copy(interfaceGlobals = model.interfaceGlobals)))
+          }
+
+          val newCompilation = compilationOperand(code,
+            Program.fromDialect(dialect).copy(interfaceGlobals = model.interfaceGlobals),
+            FrontEndInterface.NoProcedures)
+
+          val fe = Femto.scalaSingleton[FrontEndInterface]("org.nlogo.parse.FrontEnd")
+          val (_, results) = fe.frontEnd(newCompilation)
+
+
+          val converter = new ModelConverter(allCodeConversions, containsAnyTargets _, rewriterOp _, results, extensionManager, compilationEnv)
+
+          // need to run optionalConversions even when no other code is changed...
+          val convertedModel = model.copy(code = code)
+          components.foldLeft(convertedModel) {
+            case (m, component) => component.autoConvert(m, converter)
+          }
         }
+        else
+          model
+    }
+  }
 
-        val newCompilation = compilationOperand(
-          code,
-          Program(interfaceGlobals = model.interfaceGlobals),
-          FrontEndInterface.NoProcedures)
+  class ModelConverter(allCodeConversions: Seq[SourceRewriter => String],
+    containsAnyTargets: String => Boolean,
+    rewriter: CompilationOperand => SourceRewriter,
+    results: StructureResults,
+    extensionManager: ExtensionManager,
+    compilationEnv: CompilationEnvironment)
+    extends AutoConverter {
 
-        val fe = Femto.scalaSingleton[FrontEndInterface]("org.nlogo.parse.FrontEnd")
-        val (_, results) = fe.frontEnd(newCompilation)
+    def convertProcedure(procedure: String): String =
+      convertWrappedSource(compilationOp)(procedure)
 
-        def compilationOp(source: String): CompilationOperand =
-          compilationOperand(source,
-            results.program.copy(interfaceGlobals = model.interfaceGlobals),
-            results.procedures)
+    def convertStatement(statement: String): String =
+      convertUnwrappedSource(compilationOp, cmd _, uncmd _)(statement)
 
-        val widgets = model.widgets.map(w => convertWidget(w, compilationOp))
-        model.copy(code = code, widgets = widgets)
-      } else
-        model
+    def convertReporterProcedure(reporterProc: String): String =
+      convertWrappedSource(compilationOp)(reporterProc)
+
+    def convertReporterExpression(expression: String): String =
+      convertUnwrappedSource(compilationOp, rep _, unrep _)(expression)
+
+    def appliesToSource(source: String): Boolean =
+      containsAnyTargets(source)
+
+    private def rep(s: String): String = "to-report +++++ report " + s + " end"
+    private def cmd(s: String): String = "to ------ " + s + " end"
+
+    private def uncmd(s: String): String = s.stripPrefix("to ------").stripSuffix("end").trim
+    private def unrep(s: String): String = s.stripPrefix("to-report +++++ report").stripSuffix("end").trim
+
+    private def compilationOp(source: String): CompilationOperand =
+      CompilationOperand(
+        sources                = Map("" -> source),
+        extensionManager       = extensionManager,
+        compilationEnvironment = compilationEnv,
+        oldProcedures          = results.procedures,
+        containingProgram      = results.program,
+        subprogram             = true)
+
+    private def convertWrappedSource(compilationOp: String => CompilationOperand)(source: String) = {
+      allCodeConversions.foldLeft(source) {
+        case (src, conversion) => conversion(rewriter(compilationOp(src)))
+      }
+    }
+
+    private def convertUnwrappedSource(compilationOp: String => CompilationOperand, wrap: String => String, unwrap: String => String)(
+      source: String): String = {
+        unwrap(convertWrappedSource(compilationOp)(wrap(source)))
     }
   }
 }

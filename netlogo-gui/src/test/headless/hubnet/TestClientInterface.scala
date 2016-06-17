@@ -2,7 +2,7 @@
 
 package org.nlogo.headless.hubnet
 
-import org.nlogo.core.{ LiteralParser, Widget => CoreWidget }
+import org.nlogo.core.{ DummyCompilationEnvironment, DummyExtensionManager, LiteralParser, Widget => CoreWidget }
 import org.nlogo.core.model.WidgetReader
 import org.nlogo.api.{ FileIO, ModelSection }
 import org.nlogo.fileformat
@@ -54,7 +54,7 @@ class TestClientInterface extends TestUsingWorkspace {
   }
 
   private def getClientWidgets(modelFilePath: String, workspace: LiteralParser): Seq[CoreWidget] = {
-    fileformat.standardLoader(workspace, _ => identity)
+    fileformat.standardLoader(workspace, new DummyExtensionManager(), new DummyCompilationEnvironment())
       .readModel(Paths.get(modelFilePath).toUri)
       .get
       .optionalSectionValue[Seq[CoreWidget]]("org.nlogo.modelsection.hubnetclient")

@@ -46,12 +46,11 @@ object ModelResaver {
   }
 
   def main(args: Array[String]): Unit = {
-    val modelSaver = new org.nlogo.app.ModelSaver(App.app)
     var systemDynamicsModels: Seq[String] = Seq()
     for (path <- getModelPaths) {
       val ws = HeadlessWorkspace.newInstance
       val modelLoader =
-        org.nlogo.fileformat.standardLoader(ws.compiler.compilerUtilities, ws.compiler.autoConvert _)
+        org.nlogo.fileformat.standardLoader(ws.compiler.compilerUtilities, ws.getExtensionManager, ws.getCompilationEnvironment)
           .addSerializer[Array[String], NLogoFormat](new NLogoSDMFormat())
       val uri = Paths.get(path).toUri
       val controller = new ResaveController(uri)

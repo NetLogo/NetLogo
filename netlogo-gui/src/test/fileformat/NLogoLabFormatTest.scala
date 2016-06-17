@@ -8,7 +8,7 @@ import org.nlogo.api.{ EnumeratedValueSet, FileIO, LabProtocol }
 class NLogoLabFormatTest extends NLogoFormatTest[Seq[LabProtocol]] {
   private val litParser =
   Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
-  def subject = new NLogoLabFormat({ _ => identity }, litParser)
+  def subject = new NLogoLabFormat(litParser)
   def modelComponent(model: Model): Seq[LabProtocol] =
     model.optionalSectionValue[Seq[LabProtocol]]("org.nlogo.modelsection.behaviorspace").getOrElse(Seq())
   def attachComponent(protocols: Seq[LabProtocol]): Model =

@@ -20,13 +20,15 @@ object Main {
       w.open(settings.modelPath)
       w
     }
-    BehaviorSpaceCoordinator.selectProtocol(settings) match {
+    val openWs = newWorkspace
+    BehaviorSpaceCoordinator.selectProtocol(settings, newWorkspace) match {
       case Some(protocol) =>
         val lab = HeadlessWorkspace.newLab
         lab.run(settings, protocol, newWorkspace _)
       case None =>
         throw new IllegalArgumentException("Invalid run, specify experiment name or setup file")
     }
+    openWs.dispose()
   }
   def setHeadlessProperty() {
     // force headless mode if it is not set.  This is necessary for the headless workspace to run

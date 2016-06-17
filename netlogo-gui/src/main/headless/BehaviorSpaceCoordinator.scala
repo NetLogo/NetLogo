@@ -5,7 +5,7 @@ package org.nlogo.headless
 import java.nio.file.Paths
 
 import org.nlogo.core.{ Femto, LiteralParser, Model }
-import org.nlogo.api.{ LabProtocol, ModelLoader, NetLogoLegacyDialect }
+import org.nlogo.api.{ LabProtocol, ModelLoader, NetLogoLegacyDialect, Workspace }
 import org.nlogo.nvm.CompilerInterface
 import org.nlogo.nvm.LabInterface.Settings
 import org.nlogo.fileformat
@@ -16,22 +16,17 @@ import scala.io.Source
 object BehaviorSpaceCoordinator {
   private val literalParser =
     Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
-  private val autoConvert =
-    Femto.get[CompilerInterface]("org.nlogo.compiler.Compiler", NetLogoLegacyDialect).autoConvert _
-
-  private lazy val loader =
-    fileformat.standardLoader(literalParser, autoConvert)
 
   private lazy val labFormat: fileformat.NLogoLabFormat =
-    new fileformat.NLogoLabFormat(autoConvert, literalParser)
+    new fileformat.NLogoLabFormat(literalParser)
 
   private def bsSection = labFormat.componentName
 
   private def modelProtocols(m: Model): Option[Seq[LabProtocol]] =
     m.optionalSectionValue[Seq[LabProtocol]](bsSection)
 
-  def selectProtocol(settings: Settings): Option[LabProtocol] = {
-    val model = modelAtPath(settings.modelPath)
+  def selectProtocol(settings: Settings, workspace: Workspace): Option[LabProtocol] = {
+    val model = modelAtPath(settings.modelPath, workspace)
 
     val modelWithExtraProtocols =
       settings.externalXMLFile.map { file =>
@@ -56,19 +51,22 @@ object BehaviorSpaceCoordinator {
     namedProtocol orElse firstSetupFileProtocol
   }
 
-  private def modelAtPath(path: String): Model = {
+  private def modelAtPath(path: String, workspace: Workspace): Model = {
+    val loader =
+      fileformat.standardLoader(literalParser, workspace.getExtensionManager, workspace.getCompilationEnvironment)
+
     loader.readModel(Paths.get(path).toUri) match {
       case Success(m) => m
       case Failure(e) => throw new Exception("Unable to open model at: " + path + ". " + e.getMessage)
     }
   }
 
+  def protocolsFromModel(modelPath: String, workspace: Workspace): Seq[LabProtocol] = {
+    modelProtocols(modelAtPath(modelPath, workspace)).getOrElse(Seq[LabProtocol]())
+  }
+
   def externalProtocols(path: String): Option[Seq[LabProtocol]] = {
     val fileSource = Source.fromFile(path).mkString
     labFormat.load(fileSource.lines.toArray, None)
-  }
-
-  def protocolsFromModel(modelPath: String): Seq[LabProtocol] = {
-    modelProtocols(modelAtPath(modelPath)).getOrElse(Seq[LabProtocol]())
   }
 }

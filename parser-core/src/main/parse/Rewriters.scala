@@ -9,28 +9,6 @@ import scala.util.matching.Regex
 
 object NoopFolder extends PositionalAstFolder[Map[AstPath, Formatter.Operation]] {}
 
-class FirstArgumentRemover(dropArgFrom: String) extends PositionalAstFolder[Map[AstPath, Formatter.Operation]] {
-  import AstPath._
-
-  def delete(formatter: Formatter, astNode: AstNode, path: AstPath, ctx: Formatter.Context): Formatter.Context = ctx
-
-  override def visitReporterApp(app: ReporterApp, position: AstPath)(implicit ops: Map[AstPath, Formatter.Operation]): Map[AstPath, Formatter.Operation] = {
-    if (app.reporter.token.text.equalsIgnoreCase(dropArgFrom) && app.args.length >= 1)
-      super.visitReporterApp(app, position)(
-        ops + ((position / AstPath.Expression(app.args.head, 0)) -> delete _))
-    else
-      super.visitReporterApp(app, position)
-  }
-
-  override def visitStatement(stmt: Statement, position: AstPath)(implicit ops: Map[AstPath, Formatter.Operation]): Map[AstPath, Formatter.Operation] = {
-    if (stmt.command.token.text.equalsIgnoreCase(dropArgFrom) && stmt.args.length >= 1)
-      super.visitStatement(stmt, position)(
-        ops + ((position / AstPath.Expression(stmt.args.head, 0)) -> delete _))
-    else
-      super.visitStatement(stmt, position)
-  }
-}
-
 class RemovalVisitor(droppedCommand: String) extends PositionalAstFolder[Map[AstPath, Formatter.Operation]] {
 
   def delete(formatter: Formatter, astNode: AstNode, path: AstPath, ctx: Formatter.Context): Formatter.Context = ctx
@@ -66,9 +44,8 @@ class AddVisitor(val addition: (String, String)) extends StatementManipulationVi
   override def manipulate(formatter: Formatter, astNode: AstNode, position: AstPath, ctx: Formatter.Context): Formatter.Context = {
     astNode match {
       case stmt: Statement =>
-        val AstPath.Stmt(id) = position.last
         val newCmd = new _unknowncommand(stmt.command.syntax)
-        val newToken = stmt.command.token.refine(newPrim = newCmd, text = addedCommand)
+        stmt.command.token.refine(newPrim = newCmd, text = addedCommand)
         val newArgs = addedArgument.map(id => Seq(stmt.args(id))).getOrElse(Seq())
         val newStmt = stmt.copy(command = newCmd, args = newArgs)
         val c1 =
@@ -76,9 +53,10 @@ class AddVisitor(val addition: (String, String)) extends StatementManipulationVi
             text = ctx.text + " ",
             operations = ctx.operations - position,
             wsMap = newWsMap(ctx, position, stmt)))
-        val c2 =
-          formatter.visitStatement(stmt, position)(c1.copy(text = c1.text + " ", operations = ctx.operations - position, wsMap = ctx.wsMap))
-        c2
+        formatter.visitStatement(stmt, position)(c1.copy(
+          text = c1.text + ctx.wsMap(position).trailing,
+          operations = ctx.operations - position,
+          wsMap = ctx.wsMap))
       case _               => ctx
     }
   }
@@ -89,7 +67,7 @@ class ReplaceVisitor(val addition: (String, String)) extends StatementManipulati
   override def manipulate(formatter: Formatter, astNode: AstNode, position: AstPath, ctx: Formatter.Context): Formatter.Context = {
     astNode match {
       case stmt: Statement =>
-        val newToken = stmt.command.token.refine(newPrim = stmt.command, text = addedCommand)
+        stmt.command.token.refine(newPrim = stmt.command, text = addedCommand)
         val newStmt =
           if (addedArgument.isEmpty) stmt.copy(args = Seq())
           else stmt.copy(args = Seq(stmt.args(addedArgument.get)))

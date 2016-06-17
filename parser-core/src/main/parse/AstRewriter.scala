@@ -17,10 +17,6 @@ class AstRewriter(val tokenizer: TokenizerInterface, op: CompilationOperand)
 
   private def preserveBody(structureResults: StructureResults, header: String, procedures: String): String = header + procedures
 
-  def removeFirstArg(dropArgFrom: String): String = {
-    rewrite(new FirstArgumentRemover(dropArgFrom), preserveBody _)
-  }
-
   def remove(dropCommand: String): String = {
     rewrite(new RemovalVisitor(dropCommand), preserveBody _)
   }

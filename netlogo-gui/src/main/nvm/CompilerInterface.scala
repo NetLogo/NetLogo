@@ -33,8 +33,6 @@ trait CompilerInterface {
   def checkReporterSyntax(source: String, program: Program, procedures: java.util.Map[String, Procedure],
                           extensionManager: ApiExtensionManager, parse: Boolean, compilationEnv: CompilationEnvironment)
 
-  def autoConvert(version: String)(source: String): String
-
   @throws(classOf[CompilerException])
   def readFromString(source: String): AnyRef
 

@@ -486,7 +486,7 @@ with org.nlogo.api.ViewSettings {
   }
 
   private lazy val loader =
-    fileformat.standardLoader(compiler.compilerUtilities, compiler.autoConvert _)
+    fileformat.standardLoader(compiler.compilerUtilities, getExtensionManager, getCompilationEnvironment)
       .addSerializer[Array[String], NLogoFormat](
         Femto.get[ComponentSerialization[Array[String], NLogoFormat]]("org.nlogo.sdm.NLogoSDMFormat"))
   /// Controlling API methods

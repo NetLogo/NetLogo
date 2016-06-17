@@ -8,6 +8,9 @@ import org.nlogo.core.Model
 
 import org.nlogo.api.{ ComponentSerialization, ModelFormat, ModelSection, Version, VersionHistory }
 
+import scala.util.{ Failure, Success, Try }
+import scala.reflect.ClassTag
+
 trait ModelSectionTest[A, B <: ModelFormat[A, _], C] extends FunSuite {
   def subject: ComponentSerialization[A, B]
 
@@ -19,11 +22,13 @@ trait ModelSectionTest[A, B <: ModelFormat[A, _], C] extends FunSuite {
 
   def attachComponent(b: C): Model
 
-  def testDeserializationError[D <: Exception](description: String, serializedVersion: A)(implicit exceptionManifest: Manifest[D]): Unit = {
+  def testDeserializationError[D <: Exception](description: String, serializedVersion: A)(implicit ct: ClassTag[D]): Unit = {
     test(s"errors when deserializing $description") {
-      intercept[D] {
-        val s = subject
-        s.deserialize(serializedVersion)(new Model())
+      val s = subject
+      s.deserialize(serializedVersion)(new Model()) match {
+        case Failure(ct(ex)) =>
+        case Success(_) => fail("expected exception, but deserialization succeeded")
+        case Failure(wrong) => fail(s"expected exception of type ${ct.runtimeClass.getName}, but got one of type ${wrong.getClass.getName}")
       }
     }
   }

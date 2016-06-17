@@ -7,7 +7,7 @@ import java.net.URI
 import org.nlogo.api.ModelFormat
 import org.nlogo.core.model.WidgetReader
 
-class NLogoThreeDFormat(val autoConvert: String => String => String)
+class NLogoThreeDFormat
   extends ModelFormat[Array[String], NLogoThreeDFormat]
   with AbstractNLogoFormat[NLogoThreeDFormat] {
     val is3DFormat = true
