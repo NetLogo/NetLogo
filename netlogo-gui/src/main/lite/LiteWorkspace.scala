@@ -2,11 +2,11 @@
 
 package org.nlogo.lite
 
-import org.nlogo.core.{ AgentKind, Model, Femto }
-import org.nlogo.agent.{ Agent, World }
-import org.nlogo.api.{ AggregateManagerInterface, FileIO, NetLogoThreeDDialect, NetLogoLegacyDialect, RendererInterface, Version }
+import org.nlogo.core.{AgentKind, Femto, Model, Token}
+import org.nlogo.agent.{Agent, World}
+import org.nlogo.api.{AggregateManagerInterface, FileIO, NetLogoLegacyDialect, NetLogoThreeDDialect, RendererInterface, Version}
 import org.nlogo.nvm.CompilerInterface
-import org.nlogo.window.{ GUIWorkspace, NetLogoListenerManager, UpdateManager }
+import org.nlogo.window.{GUIWorkspace, NetLogoListenerManager, UpdateManager}
 import org.nlogo.workspace.BufferedReaderImporter
 
 class LiteWorkspace(appletPanel: AppletPanel, isApplet: Boolean, world: World, frame: java.awt.Frame, listenerManager: NetLogoListenerManager)
@@ -39,4 +39,5 @@ extends GUIWorkspace(world, GUIWorkspace.KioskLevel.MODERATE, frame, frame, null
   override def closeAgentMonitors() { }
   override def newRenderer = Femto.get[RendererInterface]("org.nlogo.render.Renderer", world)
   override def updateModel(m: Model): Model = m
+  override def getUsage(source: String, token: Token): Seq[Token] = null
 }

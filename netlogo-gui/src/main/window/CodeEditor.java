@@ -23,6 +23,6 @@ public strictfp class CodeEditor
                     org.nlogo.editor.Colorizer colorizer,
                     scala.Function1<String, String> i18n, Map<KeyStroke, TextAction> actionMap) {
     super(rows, columns, font, disableFocusTraversalKeys,
-        listener, colorizer, i18n, actionMap);
+            listener, colorizer, i18n, actionMap);
   }
 }

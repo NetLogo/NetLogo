@@ -28,6 +28,7 @@ case class CompilationOperand(
   displayName: Option[String] = None)
 
 trait FrontEndInterface {
+
   def frontEnd(
         source: String,
         displayName: Option[String] = None,

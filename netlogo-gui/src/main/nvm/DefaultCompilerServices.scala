@@ -2,9 +2,8 @@
 
 package org.nlogo.nvm
 
-import org.nlogo.core.{ CompilationEnvironment, DummyCompilationEnvironment }
-import org.nlogo.api.{ CompilerServices, NetLogoLegacyDialect, NetLogoThreeDDialect , Version }
-import org.nlogo.core.Program
+import org.nlogo.core.{CompilationEnvironment, DummyCompilationEnvironment, Program, Token}
+import org.nlogo.api.{CompilerServices, NetLogoLegacyDialect, NetLogoThreeDDialect, Version}
 
 // We use this in contexts where we want to do compiler stuff (not full compilation) like
 // colorization but it's OK to assume that we are 2D not 3D and no extensions are loaded.  The
@@ -40,4 +39,6 @@ class DefaultCompilerServices(compiler: CompilerInterface) extends CompilerServi
     compiler.getTokenAtPosition(source, pos)
   def findProcedurePositions(source: String) =
     compiler.findProcedurePositions(source)
+  def getUsage(source: String, token: Token): Seq[Token] =
+    compiler.getUsage(source, token)
 }
