@@ -258,6 +258,8 @@ edit.plot.pen.interval = Interval
 edit.plot.pen.showInLegend = Show in legend
 edit.plot.pen.setupCommands = Pen setup commands
 edit.plot.pen.updateCommands = Pen update commands
+edit.plot.error.dismiss = Dismiss
+edit.plot.error.runtimeError = Runtime Error:
 
 edit.chooser.globalVar = Global variable
 edit.chooser.choices = Choices

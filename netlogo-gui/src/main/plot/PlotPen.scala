@@ -44,6 +44,8 @@ class PlotPen (
         private var _hidden: Boolean = false)
 extends org.nlogo.core.PlotPenInterface with JSerializable {
 
+  private var _runtimeError: Option[Exception] = None
+
   hardReset()
 
   plot.addPen(this)
@@ -132,6 +134,7 @@ extends org.nlogo.core.PlotPenInterface with JSerializable {
     x = 0.0
     isDown = true
     points = Buffer()
+    runtimeError = None
   }
 
   def plot(y: Double) {
@@ -184,4 +187,8 @@ extends org.nlogo.core.PlotPenInterface with JSerializable {
   def readPointList(in:java.io.ObjectInputStream) =
     in.readObject().asInstanceOf[Buffer[PlotPoint]]
 
+  def runtimeError: Option[Exception] = _runtimeError
+  def runtimeError_=(e: Option[Exception]): Unit = {
+    _runtimeError = e
+  }
 }

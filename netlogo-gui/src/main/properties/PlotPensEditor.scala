@@ -2,34 +2,97 @@
 
 package org.nlogo.properties
 
-import org.nlogo.core.{ I18N, TokenType }
 import javax.swing.border.{EtchedBorder, TitledBorder}
 import javax.swing._
 import javax.swing.BorderFactory._
 import java.awt.{List => AWTList, _}
+
+import javax.swing.event.{ListSelectionEvent, ListSelectionListener}
+
+import org.nlogo.core.{ CompilerException, I18N, TokenType }
 import org.nlogo.awt.Fonts.platformMonospacedFont
 import org.nlogo.swing.{OptionDialog, RichJButton}
 import org.nlogo.editor.{Colorizer, EditorField}
 import table.{DefaultTableCellRenderer, AbstractTableModel, TableCellEditor, TableCellRenderer}
 import org.nlogo.window.{ColorDialog, PlotWidget}
-import org.nlogo.plot.{Plot, PlotPen}
-import javax.swing.event.{ListSelectionEvent, ListSelectionListener}
+import org.nlogo.plot.{Plot, PlotManagerInterface, PlotPen}
 
+object PlotPensEditor {
+  sealed trait CodeType
+  case object Setup extends CodeType
+  case object Update extends CodeType
+
+  object Pen {
+    def apply(pp: PlotPen, plotManager: PlotManagerInterface): Pen = {
+      new Pen(
+        pp,
+        pp.name,
+        color = ColorInfo(pp.defaultColor),
+        interval=pp.defaultInterval,
+        mode=pp.defaultMode,
+        inLegend=pp.inLegend,
+        setupCode = pp.setupCode, updateCode = pp.updateCode,
+        setupError = plotManager.getPenSetupError(pp),
+        updateError = plotManager.getPenUpdateError(pp),
+        runtimeError = pp.runtimeError)
+    }
+  }
+
+  case class Pen(originalPen: PlotPen,
+                 name: String = "",
+                 color: ColorInfo = ColorInfo(Color.BLACK),
+                 interval: Double = 1.0,
+                 mode: Int = PlotPen.LINE_MODE,
+                 inLegend: Boolean = true,
+                 setupCode: String = "",
+                 updateCode: String = "",
+                 setupError: Option[CompilerException] = None,
+                 updateError: Option[CompilerException] = None,
+                 runtimeError: Option[Exception] = None) {
+    override def toString = "Pen(" + name + ", " + updateCode + "," + color + ")"
+
+    def hasErrors = setupError.isDefined || updateError.isDefined || runtimeError.isDefined
+
+    def convertToPlotPen(plot: Plot): PlotPen = {
+      val pp = new PlotPen(
+        plot = plot,
+        name=if(name==null) "" else name,
+        temporary=false,
+        setupCode=setupCode,
+        updateCode=updateCode,
+        x=originalPen.x,
+        defaultColor=color.rgb,
+        _color = color.rgb,
+        inLegend = inLegend,
+        defaultInterval = interval,
+        _interval = interval,
+        defaultMode = mode,
+        _mode = originalPen.mode,
+        penModeChanged = originalPen.penModeChanged,
+        _isDown = originalPen.isDown)
+      pp.x = originalPen.x
+      pp.points = originalPen.points
+      pp
+    }
+  }
+}
 
 class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Colorizer)
         extends PropertyEditor(accessor, handlesOwnErrors = true) {
 
+  import PlotPensEditor._
   private implicit val i18nPrefix = I18N.Prefix("edit.plot.pen")
 
-  val PlotPenModes =
-    scala.List(I18N.gui("mode.line"),
-               I18N.gui("mode.bar"),
-               I18N.gui("mode.point"))
-  def getPlotPenModeNames = PlotPenModes.toArray
 
   val plot = accessor.target.asInstanceOf[PlotWidget].plot
   val plotManager = accessor.target.asInstanceOf[PlotWidget].plotManager
   val table = new PlotPensTable()
+
+  override def apply() {
+    super.apply()
+    plotManager.compilePlot(plot)
+    table.initializePens()
+  }
 
   setLayout(new BorderLayout)
   setMinimumSize(new Dimension(600, 200))
@@ -71,58 +134,6 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
     c
   }
 
-  object Pen {
-    def apply(pp: PlotPen): Pen = {
-      new Pen(
-        pp,
-        pp.name,
-        color = ColorInfo(pp.defaultColor),
-        interval=pp.defaultInterval,
-        mode=pp.defaultMode,
-        inLegend=pp.inLegend,
-        setupCode = pp.setupCode, updateCode = pp.updateCode,
-        setupError = plotManager.getPenSetupError(pp),
-        updateError = plotManager.getPenUpdateError(pp))
-    }
-  }
-
-  case class Pen(originalPen: PlotPen,
-                 name: String = "",
-                 color: ColorInfo = ColorInfo(Color.BLACK),
-                 interval: Double = 1.0,
-                 mode: Int = PlotPen.LINE_MODE,
-                 inLegend: Boolean = true,
-                 setupCode: String = "",
-                 updateCode: String = "",
-                 setupError: Option[Exception] = None,
-                 updateError: Option[Exception] = None) {
-    override def toString = "Pen(" + name + ", " + updateCode + "," + color + ")"
-
-    def hasErrors = setupError.isDefined || updateError.isDefined
-
-    def convertToPlotPen(plot: Plot): PlotPen = {
-      val pp = new PlotPen(
-        plot = plot,
-        name=if(name==null) "" else name,
-        temporary=false,
-        setupCode=setupCode,
-        updateCode=updateCode,
-        x=originalPen.x,
-        defaultColor=color.rgb,
-        _color = color.rgb,
-        inLegend = inLegend,
-        defaultInterval = interval,
-        _interval = interval,
-        defaultMode = mode,
-        _mode = originalPen.mode,
-        penModeChanged = originalPen.penModeChanged,
-        _isDown = originalPen.isDown)
-      pp.x = originalPen.x
-      pp.points = originalPen.points
-      pp
-    }
-  }
-
   class PlotPensTable extends JTable { table =>
 
     val UpdateCommandsColumnName = I18N.gui("updateCommands")
@@ -135,7 +146,8 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
     def buttonsColumn = getColumn(ButtonsColumnName)
 
     val model = new PenTableModel()
-    locally{
+
+    locally {
       setModel(model)
       setRowHeight(getRowHeight + 14)
       setRowMargin(1)
@@ -143,6 +155,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
       setShowGrid(true)
       setRowSelectionAllowed(false)
       getTableHeader.setReorderingAllowed(false)
+      getTableHeader.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.gray, 1))
       getColumnModel().setColumnMargin(1)
 
       getSelectionModel.addListSelectionListener(new RowListener())
@@ -168,7 +181,12 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
       buttonsColumn.setHeaderValue("")
 
       // finally add all the actual plot pens to the table
-      for(p <- plot.pens; if(!p.temporary)){ model.addPen(Pen(p)) }
+      initializePens()
+    }
+
+    def initializePens(): Unit = {
+      model.clear()
+      for (p <- plot.pens; if(!p.temporary)) { model.addPen(Pen(p, plotManager)) }
     }
 
     // final method call to get al the pens in the table.
@@ -226,31 +244,39 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
       override def getTableCellRendererComponent(table: JTable, value: Object,
                                         isSelected: Boolean, hasFocus: Boolean, row: Int, col: Int) = {
         val c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col)
-        if(model.pens(row).hasErrors) c.setForeground(Color.RED) else c.setForeground(Color.BLACK)
+        if (model.pens(row).hasErrors) c.setForeground(Color.RED) else c.setForeground(Color.BLACK)
         c
       }
     }
 
-    def openAdvancedPenEditor(editingPen: Pen) {
-      val p = new PlotPenEditorAdvanced(editingPen)
+    def showEditorPopup(editingPen: Pen, p: PlotPenEditorAdvanced): Unit = {
       new org.nlogo.swing.Popup(frame, I18N.gui("editing") + " " + editingPen.name, p, (), {
         p.getResult match {
           case Some(p) =>
             model.pens(getSelectedRow) = p
-            table.removeEditor()
-            table.repaint()
+            apply()
             true
           case _ => false
         }
       }, I18N.gui.get _).show()
     }
 
+    def openAdvancedPenEditor(editingPen: Pen) {
+      showEditorPopup(editingPen, new PlotPenEditorAdvanced(editingPen, colorizer, plotManager))
+    }
+
     // renders the delete and edit buttons for each column
     class ButtonCellEditor extends AbstractCellEditor with TableCellRenderer with TableCellEditor {
-      val editButton = RichJButton(new javax.swing.ImageIcon(getClass.getResource("/images/edit.gif"))) {
+      import javax.swing.ImageIcon
+
+      val EditIcon   = new ImageIcon(getClass.getResource("/images/edit.gif"))
+      val AlertIcon  = new ImageIcon(getClass.getResource("/images/alert.gif"))
+      val DeleteIcon = new ImageIcon(getClass.getResource("/images/delete.gif"))
+
+      val editButton = RichJButton(EditIcon) {
         openAdvancedPenEditor(model.pens(getSelectedRow))
       }
-      val deleteButton = RichJButton(new javax.swing.ImageIcon(getClass.getResource("/images/delete.gif"))) {
+      val deleteButton = RichJButton(DeleteIcon) {
         val index = getSelectedRow
         removeEditor()
         clearSelection()
@@ -267,11 +293,23 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
         .addComponent(editButton).addComponent(deleteButton)
         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MaxValue))
       buttonPanel.setLayout(layout)
+
+      def showRow(row: Int): JPanel = {
+        if (model.pens.length > row) {
+          model.pens(row) match {
+            case pen: Pen if pen.hasErrors => editButton.setIcon(AlertIcon)
+            case pen: Pen => editButton.setIcon(EditIcon)
+          }
+        }
+        buttonPanel
+      }
+
       def getTableCellRendererComponent(table: JTable, value: Object,
                                         isSelected: Boolean, hasFocus: Boolean,
-                                        row: Int, col: Int) = buttonPanel
+                                        row: Int, col: Int) = showRow(row)
+
       def getTableCellEditorComponent(table: JTable, value: Object,
-                                      isSelected: Boolean, row: Int, col: Int) = buttonPanel
+                                      isSelected: Boolean, row: Int, col: Int) = showRow(row)
       def getCellEditorValue = ""
     }
 
@@ -302,6 +340,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
 
     class PenTableModel extends AbstractTableModel {
       val columnNames = scala.List(ColorColumnName, NameColumnName, UpdateCommandsColumnName, ButtonsColumnName)
+      def clear() = pens.clear()
       val pens = scala.collection.mutable.ListBuffer[Pen]()
 
       override def getColumnCount = columnNames.length
@@ -318,12 +357,14 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
           case _ => None
         }
       }
+
       override def getColumnClass(c: Int) = {
         columnNames(c) match {
           case UpdateCommandsColumnName => classOf[CodeCellRenderer]
           case _ => classOf[String]
         }
       }
+
       override def setValueAt(value: Object, row: Int, col: Int) {
         if (row < pens.size) {
           val p = pens(row)
@@ -371,78 +412,6 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
           lastColumn = table.getSelectedColumn
         }
       }
-    }
-  }
-
-  class PlotPenEditorAdvanced(inputPen: Pen) extends JPanel {
-    // pieces of the UI
-    private val intervalField = new org.nlogo.swing.TextField("", 8)
-    private val penModes = new JComboBox(getPlotPenModeNames.asInstanceOf[Array[Object]])
-    private val showPenInLegend = new JCheckBox(I18N.gui("showInLegend"), true)
-    val setupCode = CodeEditor(I18N.gui("setupCommands"), colorizer, columns = 65, err=inputPen.setupError)
-    val updateCode = CodeEditor(I18N.gui("updateCommands"), colorizer, columns = 65, err=inputPen.updateError)
-
-    // layout all the pieces of the ui
-    addWidgets()
-
-    /**
-     * set the values of all the inputs to the values of the input pen
-     */
-    intervalField.setText(inputPen.interval.toString)
-    penModes.setSelectedIndex(inputPen.mode)
-    showPenInLegend.setSelected(inputPen.inLegend)
-    setupCode.set(inputPen.setupCode)
-    updateCode.set(inputPen.updateCode)
-
-    /**
-     * creates the result by getting values out of each of the inputs
-     */
-    def getResult: Option[Pen] = {
-      val validInterval = {
-        try {intervalField.getText.toDouble; true}
-        catch {
-          case ex: NumberFormatException =>
-            OptionDialog.show(org.nlogo.awt.Hierarchy.getWindow(this),
-              "Invalid Entry", "Invalid value for the pen interval", Array(I18N.gui.get("common.buttons.ok")))
-            false
-        }
-      }
-
-      if (validInterval)
-        Some(inputPen.copy(
-          interval = intervalField.getText.toDouble,
-          mode = penModes.getSelectedIndex,
-          inLegend = showPenInLegend.isSelected,
-          setupCode = setupCode.get.getOrElse(""),
-          updateCode = updateCode.get.getOrElse("")))
-      else None
-    }
-
-    private def addWidgets() {
-      setLayout(new BorderLayout())
-      val title = createTitledBorder(createEtchedBorder(EtchedBorder.LOWERED), I18N.gui("advanced"))
-      title.setTitleJustification(TitledBorder.LEFT)
-      setBorder(title)
-      val topPanel = new JPanel(){
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-        add(new JPanel(new BorderLayout){
-          add(new JLabel(I18N.gui("mode")), BorderLayout.WEST)
-          add(penModes, BorderLayout.CENTER)
-        })
-        add(new JPanel(new BorderLayout){
-          add(new JLabel(I18N.gui("interval")), BorderLayout.WEST)
-          add(intervalField, BorderLayout.CENTER)
-        })
-        add(new JPanel(new BorderLayout){ add(showPenInLegend, BorderLayout.WEST) })
-      }
-      val codePanel = new JPanel(){
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-        add(new JPanel) // for a little space
-        add(setupCode)
-        add(updateCode)
-      }
-      add(topPanel, BorderLayout.NORTH)
-      add(codePanel, BorderLayout.CENTER)
     }
   }
 }
