@@ -2,7 +2,11 @@
 
 package org.nlogo.window;
 
-import org.nlogo.editor.CodeCompletionPopup;
+import org.nlogo.ide.CodeCompletionPopup;
+
+import javax.swing.*;
+import javax.swing.text.TextAction;
+import java.util.Map;
 
 public strictfp class CodeEditor
     extends org.nlogo.editor.EditorArea {
@@ -12,15 +16,15 @@ public strictfp class CodeEditor
                     java.awt.event.TextListener listener,
                     org.nlogo.editor.Colorizer colorizer,
                     scala.Function1<String, String> i18n){
-    this(rows, columns, font, disableFocusTraversalKeys, listener, colorizer, i18n, null);
+    this(rows, columns, font, disableFocusTraversalKeys, listener, colorizer, i18n, null, null);
   }
   public CodeEditor(int rows, int columns,
                     java.awt.Font font,
                     boolean disableFocusTraversalKeys,
                     java.awt.event.TextListener listener,
                     org.nlogo.editor.Colorizer colorizer,
-                    scala.Function1<String, String> i18n, CodeCompletionPopup codeCompletionPopup) {
+                    scala.Function1<String, String> i18n, CodeCompletionPopup codeCompletionPopup, Map<KeyStroke, TextAction> actionMap) {
     super(rows, columns, font, disableFocusTraversalKeys,
-        listener, colorizer, i18n, codeCompletionPopup);
+        listener, colorizer, i18n, codeCompletionPopup, actionMap);
   }
 }

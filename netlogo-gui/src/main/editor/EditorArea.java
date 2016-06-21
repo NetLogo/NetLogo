@@ -8,9 +8,14 @@
 
 package org.nlogo.editor;
 
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.TextAction;
 import java.awt.Component;
+import java.util.Map;
+
+import org.nlogo.ide.*;
 
 public strictfp class EditorArea
     extends AbstractEditorArea
@@ -33,7 +38,7 @@ public strictfp class EditorArea
                     java.awt.event.TextListener listener,
                     Colorizer colorizer,
                     scala.Function1<String, String> i18n){
-    this(rows, columns, font, disableFocusTraversalKeys, listener, colorizer, i18n, null);
+    this(rows, columns, font, disableFocusTraversalKeys, listener, colorizer, i18n, null, null);
   }
 
   public EditorArea(int rows, int columns,
@@ -41,7 +46,8 @@ public strictfp class EditorArea
                     boolean disableFocusTraversalKeys,
                     java.awt.event.TextListener listener,
                     Colorizer colorizer,
-                    scala.Function1<String, String> i18n, CodeCompletionPopup codeCompletionPopup) {
+                    scala.Function1<String, String> i18n, CodeCompletionPopup codeCompletionPopup,
+                    Map<KeyStroke, TextAction> actionMap) {
     this.rows = rows;
     this.columns = columns;
     this.disableFocusTraversalKeys = disableFocusTraversalKeys;
@@ -114,30 +120,12 @@ public strictfp class EditorArea
     getInputMap().put
         (javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, 0),
             Actions.quickHelpAction(colorizer, i18n));
-
-    getInputMap().put
-            (javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_SPACE,
-                    java.awt.event.InputEvent.CTRL_DOWN_MASK),
-                    Actions.codeCompletionAction(codeCompletionPopup));
-
-    if(codeCompletionPopup != null){
-      codeCompletionPopup.init(this);
+    if (actionMap != null) {
+      for (Map.Entry<KeyStroke, TextAction> entry : actionMap.entrySet()) {
+        getInputMap().put
+            (entry.getKey(), entry.getValue());
+      }
     }
-
-    getDocument().addDocumentListener(new DocumentListener() {
-      @Override
-      public void insertUpdate(DocumentEvent e) {
-        codeCompletionPopup.showPopup();
-      }
-
-      @Override
-      public void removeUpdate(DocumentEvent e) {
-        codeCompletionPopup.showPopup();
-      }
-
-      @Override
-      public void changedUpdate(DocumentEvent e) {}
-    });
   }
 
   @Override

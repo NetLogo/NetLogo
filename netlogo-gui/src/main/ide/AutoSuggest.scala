@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.window
+package org.nlogo.ide
 
 import org.nlogo.core.DefaultTokenMapper
 
@@ -9,6 +9,7 @@ import scala.collection.JavaConverters._
 import scala.collection.immutable.TreeSet
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
+import scala.collection.mutable.WeakHashMap
 
 /**
   * Builds the trie from commands and reporters and provides fuctions to get suggestions.
@@ -17,6 +18,7 @@ import scala.collection.mutable.ListBuffer
 class AutoSuggest {
   val commandNames = DefaultTokenMapper.allCommandNames
   val reporterNames = DefaultTokenMapper.allReporterNames
+  val EDIT_WEIGHT = 1
 
   val trie = new TrieNode()
   for(commandName <- commandNames) {
@@ -27,20 +29,19 @@ class AutoSuggest {
   }
 
   def editDistance(s1: String, s2: String): Int = {
-    val memo = scala.collection.mutable.Map[(List[Char],List[Char]),Int]()
-    def min(a:Int, b:Int, c:Int) = Math.min( Math.min( a, b ), c)
-    def sd(s1: List[Char], s2: List[Char]): Int = {
+    val memo = WeakHashMap[(List[Char],List[Char]),Int]()
+    def min(a:Int, b:Int, c:Int) = a min b min c
+    def stringDistance(s1: List[Char], s2: List[Char]): Int = {
       if (memo.contains((s1,s2)) == false)
         memo((s1,s2)) = (s1, s2) match {
           case (_, Nil) => s1.length
           case (Nil, _) => s2.length
-          case (c1::t1, c2::t2)  => min( sd(t1,s2) + 1, sd(s1,t2) + 1,
-            sd(t1,t2) + (if (c1==c2) 0 else 1) )
+          case (c1::t1, c2::t2)  => min(stringDistance(t1,s2) + EDIT_WEIGHT, stringDistance(s1,t2) + EDIT_WEIGHT,
+            stringDistance(t1,t2) + (if (c1==c2) 0 else EDIT_WEIGHT))
         }
       memo((s1,s2))
     }
-
-    sd( s1.toLowerCase.toList, s2.toLowerCase.toList )
+    stringDistance(s1.toLowerCase.toList, s2.toLowerCase.toList)
   }
 
   def getSuggestions(word: String): Seq[String] = {
@@ -54,7 +55,9 @@ class AutoSuggest {
     toHitList.sortBy(editDistance(_, word))
     var suggestionList = TreeSet[String]()
     for(token <- toHitList) {
-      suggestionList ++= trie.findByPrefix(token)
+      if (!token.equals("")) {
+        suggestionList ++= trie.findByPrefix(token)
+      }
     }
     suggestionList.toSeq
       .sortBy(editDistance(_, word))
@@ -83,7 +86,8 @@ class AutoSuggest {
 
     override def append(key: String) = {
 
-      @tailrec def appendHelper(node: TrieNode, currentIndex: Int): Unit = {
+      @tailrec
+      def appendHelper(node: TrieNode, currentIndex: Int): Unit = {
         if (currentIndex == key.length) {
           node.word = Some(key)
         } else {
@@ -101,7 +105,8 @@ class AutoSuggest {
 
     override def foreach[U](f: String => U): Unit = {
 
-      @tailrec def foreachHelper(nodes: TrieNode*): Unit = {
+      @tailrec
+      def foreachHelper(nodes: TrieNode*): Unit = {
         if (nodes.size != 0) {
           nodes.foreach(node => node.word.foreach(f))
           foreachHelper(nodes.flatMap(node => node.children.values): _*)
@@ -113,7 +118,8 @@ class AutoSuggest {
 
     override def findByPrefix(prefix: String): scala.collection.Seq[String] = {
 
-      @tailrec def helper(currentIndex: Int, node: TrieNode, items: ListBuffer[String]): ListBuffer[String] = {
+      @tailrec
+      def helper(currentIndex: Int, node: TrieNode, items: ListBuffer[String]): ListBuffer[String] = {
         if (currentIndex == prefix.length) {
           items ++ node
         } else {
@@ -127,10 +133,10 @@ class AutoSuggest {
       helper(0, this, new ListBuffer[String]())
     }
 
-    // Optimize this for @tailrec
     def findByLength(prefix: String, length: Int): scala.collection.Seq[String] = {
 
       def helper(currentIndex: Int, node: TrieNode, items: ListBuffer[String], word: String): ListBuffer[String] = {
+        println(length + " " + currentIndex)
         if(currentIndex == length){
          items += word
         } else {
@@ -146,7 +152,8 @@ class AutoSuggest {
 
     override def contains(word: String): Boolean = {
 
-      @tailrec def helper(currentIndex: Int, node: TrieNode): Boolean = {
+      @tailrec
+      def helper(currentIndex: Int, node: TrieNode): Boolean = {
         if (currentIndex == word.length) {
           node.word.isDefined
         } else {
