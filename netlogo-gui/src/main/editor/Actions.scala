@@ -4,8 +4,8 @@ package org.nlogo.editor
 
 import java.awt.event._
 import javax.swing.Action
-import javax.swing.text.DefaultEditorKit.{CopyAction, CutAction, InsertContentAction, PasteAction}
 import javax.swing.text._
+import javax.swing.text.DefaultEditorKit.{CutAction, CopyAction, PasteAction, InsertContentAction}
 
 object Actions {
 

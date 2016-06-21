@@ -2,8 +2,8 @@
 
 package org.nlogo.editor
 
-import java.awt.{Color, Component}
-import java.util.{List => JList}
+import java.awt.{ Color, Component }
+import java.util.{ List => JList }
 
 import org.nlogo.core.TokenType
 

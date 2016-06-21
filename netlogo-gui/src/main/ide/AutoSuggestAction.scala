@@ -1,7 +1,9 @@
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.ide
 
-import java.awt.event.{ActionEvent, KeyEvent, KeyListener}
-import javax.swing.event.{DocumentEvent, DocumentListener}
+import java.awt.event.ActionEvent
+import javax.swing.event.{ DocumentEvent, DocumentListener }
 import javax.swing.text.TextAction
 
 import org.nlogo.editor.EditorArea

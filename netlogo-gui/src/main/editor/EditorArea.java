@@ -9,13 +9,9 @@
 package org.nlogo.editor;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.text.TextAction;
 import java.awt.Component;
 import java.util.Map;
-
-import org.nlogo.ide.*;
 
 public strictfp class EditorArea
     extends AbstractEditorArea
@@ -30,7 +26,6 @@ public strictfp class EditorArea
   private final scala.Function1<String, String> i18n;
   private javax.swing.JPopupMenu contextMenu;
   private final DoubleClickCaret caret;
-  protected CodeCompletionPopup codeCompletionPopup;
 
   public EditorArea(int rows, int columns,
                     java.awt.Font font,
@@ -38,7 +33,7 @@ public strictfp class EditorArea
                     java.awt.event.TextListener listener,
                     Colorizer colorizer,
                     scala.Function1<String, String> i18n){
-    this(rows, columns, font, disableFocusTraversalKeys, listener, colorizer, i18n, null, null);
+    this(rows, columns, font, disableFocusTraversalKeys, listener, colorizer, i18n, null);
   }
 
   public EditorArea(int rows, int columns,
@@ -46,14 +41,13 @@ public strictfp class EditorArea
                     boolean disableFocusTraversalKeys,
                     java.awt.event.TextListener listener,
                     Colorizer colorizer,
-                    scala.Function1<String, String> i18n, CodeCompletionPopup codeCompletionPopup,
+                    scala.Function1<String, String> i18n,
                     Map<KeyStroke, TextAction> actionMap) {
     this.rows = rows;
     this.columns = columns;
     this.disableFocusTraversalKeys = disableFocusTraversalKeys;
     this.colorizer = colorizer;
     this.i18n = i18n;
-    this.codeCompletionPopup = codeCompletionPopup;
     indenter = new DumbIndenter(this);
     enableEvents(java.awt.AWTEvent.MOUSE_EVENT_MASK);
     addFocusListener(this);

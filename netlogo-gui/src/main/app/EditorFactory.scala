@@ -27,7 +27,7 @@ class EditorFactory(compiler: CompilerServices) extends org.nlogo.window.EditorF
       -> new AutoSuggestAction("auto-suggest", codeCompletionPopup))).asInstanceOf[java.util.Map[KeyStroke, TextAction]]
     class MyCodeEditor
     extends org.nlogo.window.CodeEditor(rows, cols, font, disableFocusTraversal,
-                                        listener, colorizer, I18N.gui.get _, codeCompletionPopup, actionMap)
+                                        listener, colorizer, I18N.gui.get _, actionMap)
     {
       override def focusGained(fe: java.awt.event.FocusEvent) {
         super.focusGained(fe)
