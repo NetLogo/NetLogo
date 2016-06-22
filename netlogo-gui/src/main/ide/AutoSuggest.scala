@@ -136,7 +136,6 @@ class AutoSuggest {
     def findByLength(prefix: String, length: Int): scala.collection.Seq[String] = {
 
       def helper(currentIndex: Int, node: TrieNode, items: ListBuffer[String], word: String): ListBuffer[String] = {
-        println(length + " " + currentIndex)
         if(currentIndex == length){
          items += word
         } else {

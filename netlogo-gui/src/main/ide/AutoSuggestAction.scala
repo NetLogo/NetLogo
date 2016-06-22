@@ -17,6 +17,7 @@ class AutoSuggestAction(name: String, codeCompletionPopup: CodeCompletionPopup) 
 
     codeCompletionPopup.displayPopup()
 
+    editorArea.getDocument().removeDocumentListener(autoSuggestDocumentListener)
     editorArea.getDocument().addDocumentListener(autoSuggestDocumentListener)
   }
 }
@@ -24,9 +25,9 @@ class AutoSuggestDocumentListener(codeCompletionPopup: CodeCompletionPopup) exte
   override def changedUpdate(e: DocumentEvent): Unit = {
 }
   override def insertUpdate(e: DocumentEvent): Unit = {
-  codeCompletionPopup.updatePopup()
+  codeCompletionPopup.updatePopup(Some(e))
 }
   override def removeUpdate(e: DocumentEvent): Unit = {
-  codeCompletionPopup.updatePopup()
+  codeCompletionPopup.updatePopup(Some(e))
 }
 }
