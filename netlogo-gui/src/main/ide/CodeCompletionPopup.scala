@@ -7,11 +7,9 @@ import java.awt.event._
 import javax.swing._
 import javax.swing.event.DocumentEvent
 
-import org.nlogo.api.CompilerServices
-import org.nlogo.core.{DefaultTokenMapper, Token}
+import org.nlogo.core.{DefaultTokenMapper, Femto, Token, TokenizerInterface}
 import org.nlogo.window.SyntaxColors
 import org.nlogo.editor.EditorArea
-import org.nlogo.lex.Tokenizer
 
 case class CodeCompletionPopup() {
   // To control when the popup has to automatically show
@@ -92,31 +90,38 @@ case class CodeCompletionPopup() {
     for{eA <- editorArea} {
       isPopupEnabled = true
       val tokenOption = getTokenTillPosition(eA.getText(), eA.getCaretPosition)
-      var position = 0
-      tokenOption match {
-        case Some(token) => position = token.start
-        case None => position = eA.getCaretPosition
-      }
+      val position = tokenOption.map(_.start).getOrElse(eA.getCaretPosition)
       window.setLocation(eA.getLocationOnScreen.x + eA.modelToView(position).x,
         eA.getLocationOnScreen.y + eA.modelToView(position).y + eA.getFont.getSize)
-      updatePopup(None)
+      fireUpdatePopup(None)
+    }
+  }
+
+  /**
+    * Should be called to update the suggestion box
+    *
+    * @param docEventOption
+    */
+  def fireUpdatePopup(docEventOption: Option[DocumentEvent]): Unit = {
+    for{eA <- editorArea} {
+      var position = eA.getCaretPosition
+      for {docEvent <- docEventOption} {
+        docEvent.getType match {
+          // Trying to fix the behavior of getCaretPosition which is not returning the correct position
+          case DocumentEvent.EventType.INSERT => position += 1
+          case _ =>
+        }
+      }
+      updatePopup(position)
     }
   }
 
   /**
     * Updates the list of the suggestion box and makes it visible.
     */
-  def updatePopup(docEventOption: Option[DocumentEvent]): Unit = {
+  def updatePopup(position: Int): Unit = {
     for{eA <- editorArea} {
       if (isPopupEnabled ) {
-        var position = eA.getCaretPosition
-        for{docEvent <- docEventOption} {
-          docEvent.getType match {
-            // Trying to fix the behavior of getCaretPosition which is not returning the correct position
-            case DocumentEvent.EventType.INSERT => position += 1
-            case _ =>
-          }
-        }
         val tokenOption = getTokenTillPosition(eA.getText(), position)
         var list = Seq[String]()
         tokenOption match {
@@ -147,8 +152,9 @@ case class CodeCompletionPopup() {
       }
     }
   }
+
   def getTokenTillPosition(source: String, position: Int): Option[Token] = {
-    val iterator = Tokenizer.tokenizeString(source)
+    val iterator = Femto.scalaSingleton[TokenizerInterface]("org.nlogo.lex.Tokenizer").tokenizeString(source)
     iterator.find(p => p.start < position && p.end >= position)
   }
 }

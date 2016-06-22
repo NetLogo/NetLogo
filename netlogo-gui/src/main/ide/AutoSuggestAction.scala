@@ -25,9 +25,9 @@ class AutoSuggestDocumentListener(codeCompletionPopup: CodeCompletionPopup) exte
   override def changedUpdate(e: DocumentEvent): Unit = {
 }
   override def insertUpdate(e: DocumentEvent): Unit = {
-  codeCompletionPopup.updatePopup(Some(e))
+  codeCompletionPopup.fireUpdatePopup(Some(e))
 }
   override def removeUpdate(e: DocumentEvent): Unit = {
-  codeCompletionPopup.updatePopup(Some(e))
+  codeCompletionPopup.fireUpdatePopup(Some(e))
 }
 }
