@@ -8,16 +8,17 @@ import java.util.Arrays
 
 import org.scalatest.FunSuite
 
-import org.nlogo.api.{ ComponentSerialization, Version }
-import org.nlogo.core.{ Model, Shape, Widget }, Shape.{ LinkShape, VectorShape }
+import org.nlogo.api.{ ComponentSerialization, ConfigurableModelLoader, ModelLoader, Version }
+import org.nlogo.core.{ DummyCompilationEnvironment, DummyExtensionManager, Femto, LiteralParser, Model, Shape, Widget },
+  Shape.{ LinkShape, VectorShape }
 
 import scala.collection.JavaConversions._
 
 abstract class NLogoFormatTest[A] extends ModelSectionTest[Array[String], NLogoFormat, A] {
-  def autoConvert(v: String)(c: String): String =
-    c.replaceAllLiterally("z", "zz")
+  val extensionManager = new DummyExtensionManager()
+  val compilationEnvironment = new DummyCompilationEnvironment()
 
-  def nlogoFormat = new NLogoFormat(autoConvert _)
+  def nlogoFormat = new NLogoFormat(Seq(), extensionManager, compilationEnvironment)
 
   override def compareSerialized(a: Array[String], otherA: Array[String]): Boolean = {
     Arrays.deepEquals(a.asInstanceOf[Array[Object]], otherA.asInstanceOf[Array[Object]])
@@ -30,7 +31,10 @@ abstract class NLogoFormatTest[A] extends ModelSectionTest[Array[String], NLogoF
 class NLogoFormatIOTest extends FunSuite {
   lazy val modelsLibrary = System.getProperty("netlogo.models.dir", "models")
 
-  val format = new NLogoFormat(_ => identity)
+  val extensionManager = new DummyExtensionManager()
+  val compilationEnvironment = new DummyCompilationEnvironment()
+
+  val format = new NLogoFormat(Seq(), extensionManager, compilationEnvironment)
 
   lazy val antsBenchmarkPath = Paths.get(modelsLibrary, "test", "benchmarks", "Ants Benchmark.nlogo")
   // sanity checking, if these fail NetLogo will be pretty unusable
@@ -63,6 +67,73 @@ class NLogoFormatIOTest extends FunSuite {
   }
 }
 
+class NLogoFormatConversionTest extends FunSuite {
+  val extensionManager = VidExtensionManager
+  val compilationEnvironment = FooCompilationEnvironment
+
+  import AutoConversionList.ConversionList
+
+  def nlogoFormat(conversions: ConversionList): NLogoFormat = {
+    new NLogoFormat(conversions, extensionManager, compilationEnvironment)
+  }
+
+  def testLoader(conversions: ConversionList): ModelLoader = {
+    val literalParser =
+      Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
+    val format = nlogoFormat(conversions)
+    new ConfigurableModelLoader().addFormat[Array[String], NLogoFormat](format)
+      .addSerializer[Array[String], NLogoFormat](new NLogoLabFormat(literalParser))
+  }
+
+  test("performs no autoconversion when opening a file of the current version") {
+    val m = Model(code = "to foo fd 1 end", version = "NetLogo 6.0")
+    val conversions: ConversionList = Seq("NetLogo 6.0" -> ((Seq(_.replaceCommand("fd" -> "forward {0}")), Seq(), Seq("fd"))))
+    val loader = testLoader(conversions)
+    val rereadModel = loader.readModel(loader.sourceString(m, "nlogo").get, "nlogo").get
+    assertResult(m.code)(rereadModel.code)
+  }
+  test("performs autoconversions when opening a file of an older version") {
+    val m = Model(code = "to foo fd 1 end", version = "NetLogo 5.3")
+    val conversions: ConversionList = Seq("NetLogo 6.0" -> ((Seq(_.replaceCommand("fd" -> "forward {0}")), Seq(), Seq("fd"))))
+    val loader = testLoader(conversions)
+    val rereadModel = loader.readModel(loader.sourceString(m, "nlogo").get, "nlogo").get
+    assertResult("to foo forward 1 end")(rereadModel.code)
+  }
+  test("when opening a file from before NetLogo 6.0, converts movie prims") {
+    val m = Model(code = "to foo movie-grab-view end", version = "NetLogo 5.2.1")
+    val loader = testLoader(AutoConversionList.conversions)
+    val rereadModel = loader.readModel(loader.sourceString(m, "nlogo").get, "nlogo").get
+    assertResult("extensions [vid]\nglobals [_recording-save-file-name]\nto foo vid:record-view end")(rereadModel.code)
+  }
+
+  test("carries out hsb transformations on files older than NetLogo 5.2") {
+    val m = Model(code = "to-report foo report hsb 1 2 3 end", version = "NetLogo 5.1.5")
+    val loader = testLoader(AutoConversionList.conversions)
+    val rereadModel = loader.readModel(loader.sourceString(m, "nlogo").get, "nlogo").get
+    assertResult("to-report foo report __hsb-old 1 2 3 end")(rereadModel.code)
+  }
+
+  test("carries out conversions on behaviorspace operations") {
+    import org.nlogo.api.LabProtocol
+    val protocol = new LabProtocol("foo", "", "movie-grab-view", "", 0, false, 0, "", List(), List())
+    val m = Model(code = "to foo end", version = "NetLogo 5.2.1")
+      .withOptionalSection("org.nlogo.modelsection.behaviorspace", Some(Seq(protocol)), Seq())
+
+    val loader = testLoader(AutoConversionList.conversions)
+    val rereadModel = loader.readModel(loader.sourceString(m, "nlogo").get, "nlogo").get
+    assertResult("vid:record-view")(
+      rereadModel.optionalSectionValue[Seq[LabProtocol]]("org.nlogo.modelsection.behaviorspace").get.head.goCommands)
+    assert(rereadModel.code.contains("extensions [vid]"))
+  }
+
+  test("returns the unconverted version of a model needing conversion which doesn't compile") {
+    val m = Model(code = "to foo hsb", version = "NetLogo 5.1.5")
+    val loader = testLoader(AutoConversionList.conversions)
+    val rereadModel = loader.readModel(loader.sourceString(m, "nlogo").get, "nlogo").get
+    assertResult(m.code)(rereadModel.code)
+  }
+}
+
 class CodeComponentTest extends NLogoFormatTest[String] {
   def subject: ComponentSerialization[Array[String], NLogoFormat] =
     nlogoFormat.CodeComponent
@@ -72,8 +143,6 @@ class CodeComponentTest extends NLogoFormatTest[String] {
   def attachComponent(b: String): Model = Model(code = b)
 
   testDeserializes("empty code section to empty string", Array[String](), "")
-  testDeserializes("code section and performs auto conversion", Array[String]("to foo ask zs [fd 1] end"), "to foo ask zzs [fd 1] end")
-  testAltersObjectRepresentation("stripping trailing whitespace from code", "to foo end        ", "to foo end")
   testRoundTripsSerialForm("single line of code", Array[String]("breed [foos foo]"))
   testRoundTripsObjectForm("empty line code", "")
   testRoundTripsObjectForm("single line of code", "breed [ foos foo ]")
@@ -116,7 +185,6 @@ class InterfaceComponentTest extends NLogoFormatTest[Seq[Widget]] {
     scala.io.Source.fromFile(s"test/fileformat/$filename").mkString.lines.toArray
 
   testErrorsOnDeserialization("empty widgets section", Array[String](), "Every model must have at least a view...")
-  testDeserializes("button and auto converts source", sampleWidgetSection("WidgetSection.txt"), Seq(View(), Button(source = Some("setupzz"), 0, 0, 0, 0)))
   testRoundTripsObjectForm("default view", Seq(View()))
   testRoundTripsObjectForm("view and button", Seq(View(), Button(source = Some("abc"), 0, 0, 0, 0)))
 }

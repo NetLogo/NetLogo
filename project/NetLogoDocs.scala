@@ -44,7 +44,8 @@ class NetLogoDocs(docsSource: File, docsTarget: File, netLogoRoot: File, modelsD
       "nw"      -> "Networks Extension",
       "cf"      -> "Control Flow Extension",
       "csv"     -> "CSV Extension",
-      "palette" -> "Palette Extension").foreach {
+      "palette" -> "Palette Extension",
+      "vid"     -> "Vid Extension").foreach {
         case (ext, title) =>
           pandoc(extensionsDirectory / ext / "README.md",
             htmlFileRoot / (ext + ".html"),

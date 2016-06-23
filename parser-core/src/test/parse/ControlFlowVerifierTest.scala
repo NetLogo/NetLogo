@@ -4,8 +4,8 @@ package org.nlogo.parse
 
 import
   org.nlogo.core.{ Command, CommandBlock, CompilerException, Expression,
-    Femto, FrontEndProcedure, prim,
-    ProcedureDefinition, Statement, Statements, StructureDeclarations, Token },
+    Femto, FrontEndProcedure, prim, ProcedureDefinition,
+    Statement, Statements, StructureDeclarations, Token, TokenType },
     prim.{ _ask, _carefully, _createturtles => _crt, etc, _fd, _report, _run, _stop }
 
 import
@@ -105,7 +105,7 @@ class ControlFlowVerifierTest extends FunSuite with GeneratorDrivenPropertyCheck
     def isReporter: Boolean = reporterProcedure
     def displayName: String = "foobar"
     def filename: String = "foo.nlogo"
-    def nameToken: Token = ???
+    def nameToken: Token = new Token("foobar", TokenType.Ident, null)(0, 0, "")
     def argTokens: Seq[Token] = Seq()
     def dump: String = "TEST FRONTENDPROCEDURE"
   }

@@ -81,9 +81,6 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
     loader.load(view, worldInterface)
   }
 
-  def autoConvert(modelVersion: String)(source: String): String =
-    compiler.autoConvert(modelVersion)(source)
-
   override def getCompilationEnvironment = {
     import java.io.{ File => JFile }
     import java.net.MalformedURLException

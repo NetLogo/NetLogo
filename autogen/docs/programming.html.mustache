@@ -2375,57 +2375,77 @@ file-close
       <a>Movies</a>
     </h2>
     <p id="movies">
-      This section describes how to capture a QuickTime movie of a NetLogo
+      This section describes how to capture an ".mp4" movie of a NetLogo
       model.
     <p>
-      First, use the <a href="dictionary.html#movie-start"><code>movie-start</code></a> command to
-      start a new movie. The filename you provide should end with
-      <code>.mov</code>, the extension for QuickTime movies.
+      First, use the <a href="vid.html#vidstart-recorder">
+        <code>vid:start-recorder</code></a> command to start the video
+      recorder.
     <p>
-      To add a frame to your movie, use either <a href="dictionary.html#movie-grab-view"><code>movie-grab-view</code></a> or
-      <a href="dictionary.html#movie-grab-view"><code>movie-grab-interface</code></a>,
+      To add a frame to your movie, use either
+      <a href="vid.html#vidrecord-view"><code>vid:record-view</code></a> or
+      <a href="vid.html#vidrecord-interface"><code>vid:record-interface</code></a>,
       depending on whether you want the movie to show just the current
-      view, or the entire Interface tab. In a single movie, you must use
-      only one <b>movie-grab-</b> primitive or the other; you can't mix
-      them.
+      view, or the entire Interface tab. In a single movie, the resolution will
+      be one of the following:
+      <ul>
+        <li>the resolution specified in the call to <code>vid:start-recorder <em>width</em> <em>height</em></code>
+        if you specified the resolution. These are optional parameters.</li>
+        <li>The resolution of the view if you did not specify a resolution in the call to
+        <code>vid:start-recorder</code> and call <code>vid:record-view</code>
+        before calling <code>vid:record-interface</code></li>
+        <li>The resolution of the interface if you did not specify a resolution
+        in the call to <code>vid:start-recorder</code> and call <code>vid:record-interface</code>
+        before calling <code>vid:record-view</code></li>
+      </ul>
+      Note that if the resolution of a recorded image doesn't match the
+      resolution of the recording it will be scaled to fit which can result in
+      images which look blurry or out-of-focus.
     <p>
-      When you're done adding frames, use <a href="dictionary.html#movie-close"><code>movie-close</code></a>.
+      When you're done adding frames, use <a href="vid.html#vidsave-recording"><code>vid:save-recording</code></a>.
+      The filename you provide should end with
+      <code>.mp4</code>, the extension for MP4-encoded movies
+      (playable in QuickTime and other programs).
     <pre>
 ;; export a 30 frame movie of the view
+extensions [vid]
+
+;...
+
 setup
-movie-start &quot;out.mov&quot;
-movie-grab-view ;; show the initial state
+vid:start-recorder
+vid:record-view ;; show the initial state
 repeat 30
 [ go
-  movie-grab-view ]
-movie-close
+  vid:record-view ]
+vid:save-recording &quot;out.mp4&quot;
 </pre>
     <p>
-      By default, a movie will play back at 15 frames per second. To make a
-      movie with a different frame rate, call <a href="dictionary.html#movie-set-frame-rate"><code>movie-set-frame-rate</code></a>
-      with a different number of frames per second. You must set the frame
-      rate after <a href="dictionary.html#movie-start"><code>movie-start</code></a> but before
-      grabbing any frames.
+      A movie will play back at 25 frames per second. To make the movie
+      playback faster or slower, consider using a video postprocessing tool.
     <p>
-      To check the frame rate of your movie, or to see how many frames
-      you've grabbed, call <a href="dictionary.html#movie-status"><code>movie-status</code></a>, which
-      reports a string that describes the state of the current movie.
+      To check whether or not you are recording,
+      call <a href="vid.html#vidrecorder-status"><code>vid:recorder-status</code></a>, which
+      reports a string that describes the state of the current recorder.
     <p>
-      To throw away a movie and delete the movie file, call <a href="dictionary.html#movie-cancel"><code>movie-cancel</code></a>.
+      To throw away the movie currently being recorded, call <a href="vid.html#vidreset-recorder"><code>vid:reset-recorder</code></a>.
     <div class="blockquote">
         <b>Code Example:</b> Movie Example
       </div>
     <p>
-      Movies can only be generated from the NetLogo GUI, not when running
-      headless, or by background runs in a parallel BehaviorSpace
-      experiment.
+      Movies generated when running headless,
+      or by background runs in a parallel BehaviorSpace
+      experiment may use only <code>vid:record-view</code> primitive.
+      Movies generated in NetLogo GUI may also use <code>vid:record-interface</code>
+      and <a href="vid.html#vidrecord-source"><code>vid:record-source</code></a>.
     <p>
-      NetLogo movies are exported as uncompressed QuickTime files. To play
-      a QuickTime movie, you can use <a href="http://www.apple.com/quicktime/download/" target="_blank">QuickTime Player</a>, a
-      free download from Apple.
+      NetLogo movies are exported as H.264-encoded MP4 files. To play
+      an MP4 movie, you can use
+      <a href="http://www.videolan.org/vlc/index.html" target="_blank">the VLC Player</a>,
+      a free download from the VideoLAN organization.
     <p>
-      Since the movies are not compressed, they can take up a lot of disk
-      space. You will probably want to compress your movies with
+      Movies can take up a lot of disk space.
+      You will probably want to compress your movies with
       third-party software. The software may give you a choice of different
       kinds of compression. Some kinds of compression are lossless, while
       others are lossy. &quot;Lossy&quot; means that in order to make the
@@ -2433,10 +2453,6 @@ movie-close
       the nature of your model, you may want to avoid using lossy
       compression, for example if the view contains fine pixel-level
       detail.
-    <p>
-      One software package that can compress QuickTime movies on both the
-      Mac and Windows platforms is QuickTime Pro. On Macs, iMovie works as
-      well. PNG compression is a good choice for lossless compression.
     <h2>
       <a>Perspective</a>
     </h2>

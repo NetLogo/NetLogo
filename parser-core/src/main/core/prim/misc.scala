@@ -453,6 +453,7 @@ case class _unknownidentifier() extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(ret = Syntax.WildcardType)
 }
+case class _unknowncommand(val syntax: Syntax) extends Command
 case class _with() extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(

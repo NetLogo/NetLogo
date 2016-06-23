@@ -2,7 +2,6 @@
 
 package org.nlogo.core
 
-
 /**
  * The default AST tree-walker. This simply visits each node of the
  * tree, and visits any children of each node in turn. Subclasses can

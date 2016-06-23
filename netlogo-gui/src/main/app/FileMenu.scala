@@ -507,20 +507,6 @@ class FileMenu(app: App,
   // this is called whenever a workspace is about to be destroyed
   @throws(classOf[UserCancelException])
   def offerSave(): Unit = {
-    // check if we have an open movie
-    if (workspace.movieEncoder != null) {
-      val options = Array[Object](
-        I18N.gui.get("common.buttons.ok"),
-        I18N.gui.get("common.buttons.cancel"))
-      val message =
-        I18N.gui.get("file.close.warn.movieInProgress")
-      if (OptionDialog.show(this, "NetLogo", message, options) == 1) {
-        throw new UserCancelException()
-      }
-      workspace.movieEncoder.cancel();
-      workspace.movieEncoder = null;
-    }
-
     if (dirtyMonitor.dirty && userWantsToSaveFirst()) {
       save(false)
     }

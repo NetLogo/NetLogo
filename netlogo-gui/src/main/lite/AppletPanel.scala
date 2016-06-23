@@ -207,7 +207,7 @@ with LinkRoot {
     // TYPE_LIBRARY is probably OK. - ST 10/11/05
     RuntimeErrorDialog.setModelName(uri.getPath.split("/").last)
     val controller = new FileController(this, workspace)
-    val loader = fileformat.standardLoader(workspace.compiler.compilerUtilities, workspace.autoConvert _)
+    val loader = fileformat.standardLoader(workspace.compiler.compilerUtilities, workspace.getExtensionManager, workspace.getCompilationEnvironment)
     val modelOpt = OpenModel(uri, controller, loader, Version)
     modelOpt.foreach(model => ReconfigureWorkspaceUI(this, uri, ModelType.Library, model, workspace))
   }

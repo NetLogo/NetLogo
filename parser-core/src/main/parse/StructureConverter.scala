@@ -3,7 +3,7 @@
 package org.nlogo.parse
 
 import org.nlogo.core,
-  core.{ CompilerException, FrontEndProcedure, I18N, StructureResults, Program, Syntax, Token}
+  core.{ CompilerException, FrontEndProcedure, I18N, StructureResults, Program, Syntax, Token, TokenType }
 
 /// Stage #3 of StructureParser
 
@@ -43,7 +43,8 @@ object StructureConverter {
 
   def buildProcedure(p: Procedure, displayName: Option[String]): (FrontEndProcedure, Iterable[Token]) = {
     val proc = new RawProcedure(p, displayName)
-    (proc, p.tokens.drop(2).init :+ Token.Eof)
+    (proc, p.tokens.drop(2).init :+
+      new Token("", TokenType.Eof, "")(p.tokens.last.start, p.tokens.last.end, p.tokens.last.filename))
   }
 
   def updateProgram(program: Program, declarations: Seq[Declaration]): Program = {

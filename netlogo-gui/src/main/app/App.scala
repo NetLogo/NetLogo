@@ -99,9 +99,10 @@ object App{
       def getComponentInstance(container: org.picocontainer.PicoContainer, into: java.lang.reflect.Type) = {
         val compiler =
           container.getComponent(classOf[CompilerInterface])
-        val autoConvert = compiler.autoConvert _
         val compilerServices = new DefaultCompilerServices(compiler)
-        val loader = fileformat.standardLoader(compilerServices, autoConvert)
+        val workspace = container.getComponent(classOf[org.nlogo.api.Workspace])
+        val loader =
+          fileformat.standardLoader(compilerServices, workspace.getExtensionManager, workspace.getCompilationEnvironment)
         val additionalComponents =
           pico.getComponents(classOf[ComponentSerialization[Array[String], NLogoFormat]])
         if (additionalComponents.nonEmpty)
@@ -318,7 +319,7 @@ class App extends
           Array[Parameter] (
             new ComponentParameter(classOf[AppFrame]),
             new ComponentParameter(), new ComponentParameter(),
-            new ComponentParameter(), new ComponentParameter()))
+            new ComponentParameter()))
     pico.addComponent(interfaceFactory)
     pico.addComponent(new EditorFactory(pico.getComponent(classOf[CompilerServices])))
     pico.addComponent(new MenuBarFactory())
