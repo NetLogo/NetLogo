@@ -2,6 +2,8 @@
 
 package org.nlogo.api
 
+import scala.util.Try
+
 /**
  * This is used by SliderConstraint.  Sliders have snippets of Logo code associated with them, which
  * need be to be evaluated to produce numbers for the min, max, and increment.  But here in the
@@ -12,5 +14,5 @@ package org.nlogo.api
 
 trait ReporterLogoThunk {
   @throws(classOf[LogoException])
-  def call(): AnyRef
+  def call(): Try[AnyRef]
 }

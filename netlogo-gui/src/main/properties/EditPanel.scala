@@ -170,6 +170,8 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
         new CodeEditor(accessor, colorizer, collapsible, collapseByDefault) with Changed
       case Property.Double =>
         new DoubleEditor(accessor) with Changed
+      case Property.Error =>
+        new RuntimeErrorDisplay(accessor) with Changed
       case Property.StrictlyPositiveDouble =>
         new DoubleEditor(accessor) with Changed
         { override def get = super.get.filter(_ > 0) }

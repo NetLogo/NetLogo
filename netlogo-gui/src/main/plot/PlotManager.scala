@@ -6,6 +6,8 @@ import scala.collection.mutable
 import org.nlogo.api.{ LogoThunkFactory, CommandLogoThunk}
 import org.nlogo.core.CompilerException
 
+import scala.util.{ Failure, Success, Try }
+
 // handles compilation and execution of plot code
 // among a couple of other little tasks.
 class PlotManager(factory: LogoThunkFactory) extends PlotManagerInterface {
@@ -126,8 +128,15 @@ class PlotManager(factory: LogoThunkFactory) extends PlotManagerInterface {
       // run the plot code (and pens), only if it was compiled successfully.
       // this line below runs the code if there is any to run, and it tells
       // us if stop was called from the code. if so, we dont run the pens code.
-      val stopped = codeType.call(plotThunks(plot))
-      if(! stopped){
+      val stopped =
+        codeType.call(plotThunks(plot)) match {
+          case Success(stop) => stop
+          case Failure(e: Exception) =>
+            plot.runtimeError = Some(e)
+            false
+          case Failure(t: Throwable) => throw t
+        }
+      if (! stopped) {
         // save the currently selected pen
         val oldCurrentPen = plot.currentPen
         // run all the pen code for this plot
@@ -149,7 +158,12 @@ class PlotManager(factory: LogoThunkFactory) extends PlotManagerInterface {
         // JC - 3/22/11
         for(pp <- plot.pens; if(!pp.temporary); results <- penThunks.get(pp)) {
           plot.currentPen=pp
-          codeType.call(results)
+          val callResult = codeType.call(results)
+          callResult.failed.foreach {
+            case e: Exception =>
+              pp.runtimeError = Some(e)
+            case t: Throwable => throw t
+          }
         }
         // restore the currently selected pen
         plot.currentPen=oldCurrentPen
@@ -161,7 +175,14 @@ class PlotManager(factory: LogoThunkFactory) extends PlotManagerInterface {
 
   abstract case class CodeType(name:String){
     def selector(r:Results): CompilationResult
-    def call(r:Results): Boolean = selector(r).right.toOption.map(_.call).getOrElse(false)
+
+    def call(r:Results): Try[Boolean] =
+      // if compilation failed, we return Success(false)
+      // if compilation succeeded, but the call raises an exception, we should Failure(runtimeException)
+      // if compilation succeeded and the call returns, we should return Success(<result>)
+      selector(r).fold(
+        _     => Success(false),
+        thunk => thunk.call())
   }
   object Update extends CodeType("update"){
     def selector(r:Results) = r.update
@@ -171,13 +192,17 @@ class PlotManager(factory: LogoThunkFactory) extends PlotManagerInterface {
   }
 
   def hasErrors(plot:Plot): Boolean = {
-    getPlotSetupError(plot).isDefined || getPlotUpdateError(plot).isDefined ||
+    getPlotSetupError(plot).isDefined ||
+    getPlotUpdateError(plot).isDefined ||
+    plot.runtimeError.isDefined ||
     plot.pens.filterNot(_.temporary).exists(hasErrors)
   }
   def getPlotSetupError(plot:Plot) = plotThunks(plot).setup.left.toOption
   def getPlotUpdateError(plot:Plot) = plotThunks(plot).update.left.toOption
   def hasErrors(pen:PlotPen): Boolean = {
-    getPenSetupError(pen).isDefined || getPenUpdateError(pen).isDefined
+    pen.runtimeError.isDefined ||
+    getPenSetupError(pen).isDefined ||
+    getPenUpdateError(pen).isDefined
   }
   def getPenSetupError(pen: PlotPen) = penThunks(pen).setup.left.toOption
   def getPenUpdateError(pen: PlotPen) = penThunks(pen).update.left.toOption

@@ -172,6 +172,11 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   def showLegend = legend.open
   def showLegend(open: Boolean){ legend.open=open }
 
+  def runtimeError: Option[Exception] = plot.runtimeError
+  def runtimeError(e: Option[Exception]): Unit = {
+    plot.runtimeError = e
+  }
+
   /// some stuff relating to plot pen editing
   def editPlotPens: List[PlotPen] = plot.pens
   def editPlotPens(pens: List[PlotPen]){
@@ -280,7 +285,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     image
   }
 
-  private def recolor() {
+  protected def recolor() {
     nameLabel.setForeground(if(anyErrors) java.awt.Color.RED else java.awt.Color.BLACK)
   }
 

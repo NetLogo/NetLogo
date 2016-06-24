@@ -60,5 +60,6 @@ class PlotWidget(plot:Plot, plotManager: PlotManagerInterface) extends AbstractP
   def repaintIfNeeded(){
     canvas.repaintIfNeeded()
     refreshGUI()
+    recolor()
   }
 }
