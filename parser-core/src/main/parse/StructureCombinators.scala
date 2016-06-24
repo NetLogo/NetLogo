@@ -98,20 +98,25 @@ extends scala.util.parsing.combinator.Parsers {
         case token ~ names =>
           Variables(Identifier(token.value.asInstanceOf[String], token), names) }
 
-  def breed: Parser[Breed] =
-    breedKeyword ~! openBracket ~> identifier ~ opt(identifier) <~ closeBracket ^^ {
-      case plural ~ singularOption =>
-        Breed(plural, singularOption) }
+  def breed: Parser[Breed] = {
+    breedKeyword ~! breedBlock("BREED") ^^ (_._2) // (_._2) drops BREED token
+  }
+
+  def breedBlock(breedWord: String): Parser[Breed] = {
+    val breedNames: Parser[Breed] = identifier ~ identifier ^^ {
+      case plural ~ singular => Breed(plural, singular)
+    }
+    val singleBreedName: Parser[Nothing] =
+      identifier >> (i =>
+          failure(s"Breed declarations must have plural and singular. $breedWord [${i.name}] has only one name."))
+    (openBracket ~> (breedNames | singleBreedName) <~ closeBracket)
+  }
 
   def directedLinkBreed: Parser[Breed] =
-    keyword("DIRECTED-LINK-BREED") ~! openBracket ~> identifier ~ identifier <~ closeBracket ^^ {
-      case plural ~ singular =>
-        Breed(plural, Some(singular), isLinkBreed = true, isDirected = true) }
+    keyword("DIRECTED-LINK-BREED") ~! breedBlock("DIRECTED-LINK-BREED") ^^ (_._2.copy(isLinkBreed = true, isDirected = true))
 
   def undirectedLinkBreed: Parser[Breed] =
-    keyword("UNDIRECTED-LINK-BREED") ~! openBracket ~> identifier ~ identifier <~ closeBracket ^^ {
-      case plural ~ singular =>
-        Breed(plural, Some(singular), isLinkBreed = true, isDirected = false) }
+    keyword("UNDIRECTED-LINK-BREED") ~! breedBlock("UNDIRECTED-LINK-BREED") ^^ (_._2.copy(isLinkBreed = true, isDirected = false))
 
   def procedures: Parser[Seq[Procedure]] =
     rep1(procedure) <~ (eof | failure("TO or TO-REPORT expected"))

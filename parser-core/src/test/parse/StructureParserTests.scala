@@ -49,9 +49,9 @@ class StructureParserTests extends FunSuite {
   }
 
   test("breeds") {
-    val results = compile("breed [mice mouse] breed [frogs]")
+    val results = compile("breed [mice mouse] breed [frogs frog]")
     assertResult("breeds MICE = Breed(MICE, MOUSE, , false)" +
-           "FROGS = Breed(FROGS, TURTLE, , false)")(
+           "FROGS = Breed(FROGS, FROG, , false)")(
       results.program.dump.split("\n").drop(5).take(2).mkString)
   }
 
@@ -163,6 +163,9 @@ class StructureParserTests extends FunSuite {
   test("missing close bracket in globals") {
     expectError("globals [g turtles-own [t]",
       "closing bracket expected") }
+  test("missing breed singular") {
+    expectError("breed [xs]",
+      "Breed declarations must have plural and singular. BREED [XS] has only one name.") }
   test("attempt primitive as variable") {
     expectError("globals [turtle]",
       "There is already a primitive reporter called TURTLE") }

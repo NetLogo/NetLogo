@@ -130,15 +130,12 @@ object StructureChecker {
         occs ++ vars
       case (occs , decl@Procedure(name, _, inputs, _)) =>
         (Occurrence(decl, name, ProcedureSymbol) +: inputs.map(Occurrence(decl, _, LocalVariable, isGlobal = false))) ++ occs
-      case (occs, decl@Breed(plural, Some(singular), _, _)) =>
+      case (occs, decl@Breed(plural, singular, _, _)) =>
         val (symType, singularSymType) =
           if (decl.isLinkBreed) (LinkBreed, LinkBreedSingular)
           else (TurtleBreed, TurtleBreedSingular)
         occs ++
           Seq(Occurrence(decl, plural, symType), Occurrence(decl, singular, singularSymType))
-      case (occs, decl@Breed(plural, None, _, _)) =>
-        val symType = if (decl.isLinkBreed) LinkBreed else TurtleBreed
-        occs :+ Occurrence(decl, plural, symType)
       case (occs, _) => occs
     }
     os.sortBy(_.typeOfDeclaration)
@@ -173,7 +170,7 @@ object StructureChecker {
 
   private def breedOverridesBuiltIn(breed: Breed, duplicatedType: SymbolType, duplicatedName: String): String = {
     val typeName = SymbolType.typeName(duplicatedType)
-    s"Defining a breed [${breed.plural.name}${breed.singular.map(" " + _.name).getOrElse("")}] redefines $duplicatedName, a $typeName"
+    s"Defining a breed [${breed.plural.name} ${breed.singular.name}] redefines $duplicatedName, a $typeName"
   }
 
   private def checkNotTaskVariable(ident: Identifier) {

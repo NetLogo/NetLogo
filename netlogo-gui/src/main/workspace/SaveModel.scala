@@ -15,10 +15,10 @@ import SaveModel.Controller
 
 // this returns a thunk so that it can be run on a background thread, if desired
 trait SaveModel {
-  def apply(model: Model,
-    loader: ModelLoader,
-    controller: Controller,
-    modelTracker: ModelTracker,
+  def apply(model:  Model,
+    loader:         ModelLoader,
+    controller:     Controller,
+    modelTracker:   ModelTracker,
     currentVersion: Version): Option[() => Try[URI]] = {
       val savePath =
         fileFromTracker(modelTracker) orElse validFilePath(controller, loader, modelTracker.getModelType)
