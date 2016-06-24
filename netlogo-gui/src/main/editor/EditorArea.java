@@ -8,7 +8,10 @@
 
 package org.nlogo.editor;
 
+import javax.swing.*;
+import javax.swing.text.TextAction;
 import java.awt.Component;
+import java.util.Map;
 
 public strictfp class EditorArea
     extends AbstractEditorArea
@@ -29,7 +32,17 @@ public strictfp class EditorArea
                     boolean disableFocusTraversalKeys,
                     java.awt.event.TextListener listener,
                     Colorizer colorizer,
-                    scala.Function1<String, String> i18n) {
+                    scala.Function1<String, String> i18n){
+    this(rows, columns, font, disableFocusTraversalKeys, listener, colorizer, i18n, null);
+  }
+
+  public EditorArea(int rows, int columns,
+                    java.awt.Font font,
+                    boolean disableFocusTraversalKeys,
+                    java.awt.event.TextListener listener,
+                    Colorizer colorizer,
+                    scala.Function1<String, String> i18n,
+                    Map<KeyStroke, TextAction> actionMap) {
     this.rows = rows;
     this.columns = columns;
     this.disableFocusTraversalKeys = disableFocusTraversalKeys;
@@ -101,6 +114,12 @@ public strictfp class EditorArea
     getInputMap().put
         (javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, 0),
             Actions.quickHelpAction(colorizer, i18n));
+    if (actionMap != null) {
+      for (Map.Entry<KeyStroke, TextAction> entry : actionMap.entrySet()) {
+        getInputMap().put
+            (entry.getKey(), entry.getValue());
+      }
+    }
   }
 
   @Override
