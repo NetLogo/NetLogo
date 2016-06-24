@@ -194,6 +194,7 @@ compiler.SetVisitor.notSettable = This isn''t something you can use "set" on.
 compiler.TaskVisitor.notDefined = This special variable isn''t defined here.
 compiler.LocalsVisitor.notDefined = Nothing named {0} has been defined.
 compiler.LetVariable.notDefined = Nothing named {0} has been defined.
+compiler.Backifier.replaced = {0} is no longer a primitive, use {1} instead.
 compiler.StructureParser.includeNotFound = Could not find {0}
 compiler.StructureConverter.noBreed = There is no breed "{0}"
 
