@@ -2,11 +2,11 @@
 
 package org.nlogo.compiler.prim
 
+import org.nlogo.compiler.ReplacedPrim
 import org.nlogo.core.{ Command, Reporter, Syntax },
   Syntax.{ AgentType, AgentsetType, BooleanType, CodeBlockType, ListType, NumberType,
   NumberBlockType, PatchType, PatchsetType, StringType, SymbolType,
   TurtleType, ReporterBlockType, ReporterTaskType, WildcardType }
-
 
 case class _patchcol() extends Reporter {
   def syntax = Syntax.reporterSyntax(ret = PatchsetType, right = List(NumberType))
@@ -173,36 +173,46 @@ package dead {
     def syntax = Syntax.commandSyntax(right = List(AgentsetType, NumberBlockType))
   }
 
+  case class _hubnetsetclientinterface() extends Command {
+    def syntax = Syntax.commandSyntax(agentClassString = "O---", right = List(StringType, ListType))
+  }
+
   case class _randomorrandomfloat() extends Reporter {
     def syntax = Syntax.reporterSyntax(ret = NumberType, right = List(NumberType))
   }
 
-  case class _moviecancel() extends Command {
+  case class _moviecancel() extends Command with ReplacedPrim {
     def syntax = Syntax.commandSyntax()
+    def recommendedReplacement = "vid:reset-recording"
   }
 
-  case class _movieclose() extends Command {
+  case class _movieclose() extends Command with ReplacedPrim {
     def syntax = Syntax.commandSyntax()
+    def recommendedReplacement = "vid:save-recording"
   }
 
-  case class _moviegrabinterface() extends Command {
+  case class _moviegrabinterface() extends Command with ReplacedPrim {
     def syntax = Syntax.commandSyntax()
+    def recommendedReplacement = "vid:record-interface"
   }
 
-  case class _moviegrabview() extends Command {
+  case class _moviegrabview() extends Command with ReplacedPrim {
     def syntax = Syntax.commandSyntax()
+    def recommendedReplacement = "vid:record-view"
   }
 
   case class _moviesetframerate() extends Command {
     def syntax = Syntax.commandSyntax(right = List(NumberType))
   }
 
-  case class _moviestart() extends Command {
+  case class _moviestart() extends Command with ReplacedPrim {
     def syntax = Syntax.commandSyntax(right = List(StringType))
+    def recommendedReplacement = "vid:start-recorder"
   }
 
-  case class _moviestatus() extends Reporter {
+  case class _moviestatus() extends Reporter with ReplacedPrim {
     def syntax = Syntax.reporterSyntax(ret = StringType)
+    def recommendedReplacement = "vid:recorder-status"
   }
 }
 
@@ -349,10 +359,6 @@ package hubnet {
 
   case class _hubnetsendwatch() extends Command {
     def syntax = Syntax.commandSyntax(right = List(StringType, AgentType))
-  }
-
-  case class _hubnetsetclientinterface() extends Command {
-    def syntax = Syntax.commandSyntax(agentClassString = "O---", right = List(StringType, ListType))
   }
 
   case class _hubnetsethistogramnumbars() extends Command {
