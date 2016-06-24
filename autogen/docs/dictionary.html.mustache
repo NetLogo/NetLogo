@@ -393,7 +393,6 @@ Go figure! - ST 12/2/04
       <a href="#hubnet-send-message">hubnet-send-message</a>
       <a href="#hubnet-send-override">hubnet-send-override</a>
       <a href="#hubnet-send-watch">hubnet-send-watch</a>
-      <a href="#hubnet-set-client-interface">hubnet-set-client-interface</a>
       <!-- ======================================== -->
     <h3>
       Input/output
@@ -3411,7 +3410,7 @@ histogram [color] of turtles
       </h4>
       <p>
         Starts up the HubNet system. HubNet must be started to use any of
-        the other hubnet primitives with the exception of <a href="#hubnet-set-client-interface"><code>hubnet-set-client-interface</code></a>.
+        the other hubnet primitives.
       <p>
         See the <a href="hubnet-authoring.html">HubNet Authoring Guide</a>
         for details.
@@ -3543,28 +3542,7 @@ ask turtles [ hubnet-send-override client-name self &quot;color&quot; [ red ] ]
         See also: <a href="#hubnet-send-follow">hubnet-send-follow</a>,
         <a href="#hubnet-reset-perspective">hubnet-reset-perspective</a>
       </div>
-    <div class="dict_entry" id="hubnet-set-client-interface">
-      <h3>
-        <a>hubnet-set-client-interface<span class="since">1.1</span></a>
-      </h3>
-      <h4>
-        <span class="prim_example">hubnet-set-client-interface <i>client-type</i> <i>client-info</i></span>
-      </h4>
-      <p>
-        If <i>client-type</i> is &quot;COMPUTER&quot;, <i>client-info</i>
-        is ignored.
-      <pre>
-hubnet-set-client-interface &quot;COMPUTER&quot; []
-</pre>
-      <p>
-        Future versions of HubNet will support other client types. Even for
-        computer clients, the meaning of the second input to this command
-        may change.
-      <p>
-        See the <a href="hubnet-authoring.html">HubNet Authoring Guide</a>
-        for details.
-      </div><!-- ======================================== -->
-    </div>
+    </div> <!-- ======================================== -->
     <h2>
       <a>I</a>
     </h2><!-- ======================================== -->

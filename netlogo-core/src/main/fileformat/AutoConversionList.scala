@@ -35,6 +35,7 @@ object AutoConversionList {
         CommandReplacements
           .map(replacement => ((rewriter: SourceRewriter) => rewriter.replaceCommand(replacement))) ++
           Seq[SourceRewriter => String](
+            _.remove("movie-set-frame-rate"),
             _.addCommand("movie-start"       -> "set _recording-save-file-name {0}"),
             _.replaceCommand("movie-start"   -> "(vid:start-recorder)"),
             _.replaceReporter("movie-status" -> "vid:recorder-status"))
@@ -44,6 +45,9 @@ object AutoConversionList {
         _.addExtension("vid"))
 
       (codeTabOnlyReplacements ++ sharedTransformations, sharedTransformations, targets)
+    },
+    "NetLogo 6.0-M9" -> {
+      changeAllCode(Seq(_.remove("hubnet-set-client-interface")), Seq("hubnet-set-client-interface"))
     }
     )
 }

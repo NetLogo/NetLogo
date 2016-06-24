@@ -52,7 +52,7 @@
     <h3>
       Removal of "Movie" Prims
     </h3>
-    <p>
+    <p id="movie-to-vid">
       The NetLogo movie prims hadn't been updated in quite some time and
       generated invalid quicktime movie files. They have been replaced by
       prims in the new <code>vid</code> extension. The full documentation
@@ -134,6 +134,16 @@
       If you used it to check link directedness leaving it as-is should keep the current behavior of the model.
       Otherwise, it can simply be replaced by <code>is-&lt;breed&gt;?</code>.
     </div>
+    <h3>
+      Removal of <code>hubnet-set-client-interface</code>
+    </h3>
+    <p id="remove-hubnet-set-client-interface">
+      The <code>hubnet-set-client-interface</code> primitive was rendered obsolete
+      by the introduction of the HubNet client editor and end of support for calculator HubNet.
+      We have found it used in very few models and
+      have decided to remove it from the language.
+      On opening an existing model in 6.0, the autoconverter should remove all uses of
+      <code>hubnet-set-client-interface</code> from your code.
     <h3>
       Improved &amp; Updated Extensions API
     </h3>

@@ -154,36 +154,6 @@ class _hubnetsetplotmirroring extends Command {
   }
 }
 
-class _hubnetsetclientinterface extends Command {
-
-  def perform(context: Context) {
-    val interfaceType = argEvalString(context, 0)
-    val interfaceInfo = argEvalList(context, 1)
-    val clientInterface: HubNetInterface.ClientInterface = interfaceType match {
-      case "COMPUTER" =>
-        workspace.getHubNetManager.flatMap(_.fileInterface(interfaceInfo(0).asInstanceOf[String]))
-          .getOrElse(
-            throw new EngineException(context, this, "unable to load interface from " + interfaceInfo(0)))
-      case "TI-83+"   =>
-        val activity = interfaceInfo(0).asInstanceOf[String]
-        val tags =
-          if (interfaceInfo.length > 1 && interfaceInfo(1).isInstanceOf[LogoList])
-            interfaceInfo(1).asInstanceOf[LogoList].toVector.collect {
-              case s: String => s
-            }.toSeq
-          else
-            Seq()
-        workspace.getHubNetManager.map(_.calculatorInterface(activity, tags)).get
-    }
-    workspace.waitFor(new CommandRunnable {
-      override def run() {
-        workspace.getHubNetManager.foreach(_.setClientInterface(interfaceType, Seq(clientInterface)))
-      }
-    })
-    context.ip = next
-  }
-}
-
 class _hubnetfetchmessage extends Command {
 
   override def perform(context: Context) {

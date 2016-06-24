@@ -142,7 +142,7 @@ C hubnet-send-follow hubnet._hubnetsendfollow
 C hubnet-send-message hubnet._hubnetsendmessage
 C hubnet-send-override hubnet._hubnetsendoverride
 C hubnet-send-watch hubnet._hubnetsendwatch
-C hubnet-set-client-interface hubnet._hubnetsetclientinterface
+C hubnet-set-client-interface dead._hubnetsetclientinterface
 C if etc._if
 C if-else etc._ifelse
 C ifelse etc._ifelse
