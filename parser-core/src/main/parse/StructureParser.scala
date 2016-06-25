@@ -18,13 +18,12 @@ package org.nlogo.parse
 // will be discovered as we parse, through __include declarations.  (Included files might themselves
 // include further files.)
 
-import org.nlogo.core
-import org.nlogo.core._
-import FrontEndInterface.ProceduresMap
-import core.Fail._
-
-import scala.collection.immutable.HashMap
-import scala.util.parsing.combinator.token.Tokens
+import
+  org.nlogo.core,
+    core.{ CompilationOperand, ErrorSource, ExtensionManager, BreedIdentifierHandler, CompilationEnvironment,
+    I18N, FrontEndInterface, ProcedureSyntax, Program, Token, TokenMapperInterface, StructureDeclarations, StructureResults},
+      FrontEndInterface.ProceduresMap,
+    core.Fail._
 
 object StructureParser {
   val IncludeFilesEndInNLS = "Included files must end with .nls"
@@ -118,6 +117,7 @@ object StructureParser {
         None
     }
 
+    @tailrec
     def splitOnProcedureStarts(tokens:       Seq[Token],
                               existingProcs: Seq[Seq[Token]]): Seq[Seq[Token]] = {
       if (tokens.isEmpty || tokens.head.tpe == core.TokenType.Eof)
@@ -137,17 +137,6 @@ object StructureParser {
     }
 
     splitOnProcedureStarts(tokens, Seq()).flatMap(procedureSyntax).toMap
-  }
-
-  def getUsage(tokens: Iterator[Token], token: Token): Seq[Token] = {
-    var list = Seq[Token]()
-    println(token)
-    for(t <- tokens) {
-      if(t == token) {
-        list :+= t
-      }
-    }
-    list
   }
 
   def findIncludes(tokens: Iterator[Token]): Seq[String] = {
