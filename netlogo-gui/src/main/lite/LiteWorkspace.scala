@@ -2,7 +2,7 @@
 
 package org.nlogo.lite
 
-import org.nlogo.core.{AgentKind, Femto, Model, Token}
+import org.nlogo.core.{AgentKind, Femto, Model}
 import org.nlogo.agent.{Agent, World}
 import org.nlogo.api.{AggregateManagerInterface, FileIO, NetLogoLegacyDialect, NetLogoThreeDDialect, RendererInterface, Version}
 import org.nlogo.nvm.CompilerInterface
@@ -39,5 +39,4 @@ extends GUIWorkspace(world, GUIWorkspace.KioskLevel.MODERATE, frame, frame, null
   override def closeAgentMonitors() { }
   override def newRenderer = Femto.get[RendererInterface]("org.nlogo.render.Renderer", world)
   override def updateModel(m: Model): Model = m
-  override def getUsage(source: String, token: Token): Seq[Token] = null
 }

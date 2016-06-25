@@ -165,6 +165,4 @@ class Compiler(dialect: Dialect) extends CompilerInterface {
   def tokenizeForColorization(source: String, extensionManager: ExtensionManager): Array[Token] =
     frontEnd.tokenizeForColorization(source, defaultDialect, extensionManager).toArray
 
-  def getUsage(source: String, token: Token): Seq[Token] =
-    frontEnd.getUsage(source, Some(dialect), token)
 }

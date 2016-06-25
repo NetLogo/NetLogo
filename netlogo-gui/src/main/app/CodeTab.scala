@@ -2,17 +2,19 @@
 
 package org.nlogo.app
 
-import org.nlogo.core.{ AgentKind, I18N }
+import org.nlogo.core.{AgentKind, I18N}
 import org.nlogo.agent.Observer
 import org.nlogo.editor.LineNumbersBar
 import org.nlogo.window.EditorAreaErrorLabel
 import org.nlogo.workspace.AbstractWorkspace
-import org.nlogo.swing.{ ToolBarActionButton }
-
+import org.nlogo.swing.ToolBarActionButton
 import java.awt.{BorderLayout, Dimension, Graphics}
-import java.awt.event.{ActionEvent, TextEvent, TextListener}
+import java.awt.event._
 import java.awt.print.PageFormat
-import javax.swing.{JButton, ImageIcon, AbstractAction, Action, ScrollPaneConstants, JScrollPane, BorderFactory, JPanel}
+import javax.swing.{AbstractAction, Action, BorderFactory, ImageIcon, JButton, JPanel, JScrollPane, ScrollPaneConstants}
+
+import or.nlogo.ide.ShowUsageBoxAction
+import org.nlogo.ide.ShowUsageBox
 
 class CodeTab(val workspace: AbstractWorkspace) extends JPanel
   with org.nlogo.window.ProceduresInterface
@@ -28,7 +30,25 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
       dirty()
     }
   }
+  val showUsageBox = new ShowUsageBox()
+  val showUsageBoxAction = new ShowUsageBoxAction(showUsageBox)
+  val mL = new MouseListener {
+    override def mouseExited(e: MouseEvent): Unit = {}
+    override def mouseClicked(e: MouseEvent): Unit = {
+      if(e.isControlDown){
+        showUsageBoxAction.actionPerformed(e)
+      }
+    }
+
+    override def mouseEntered(e: MouseEvent): Unit = ()
+
+    override def mousePressed(e: MouseEvent): Unit = {}
+
+    override def mouseReleased(e: MouseEvent): Unit = {}
+  }
+
   val text = new EditorFactory(workspace).newEditor(100, 100, true, listener, true)
+  text.addListener(mL)
   text.setBorder(BorderFactory.createEmptyBorder(4, 7, 4, 7))
   override def zoomTarget = text
 

@@ -27,7 +27,6 @@ import org.nlogo.nvm.JobManagerInterface;
 import org.nlogo.nvm.MutableLong;
 import org.nlogo.nvm.Procedure;
 import org.nlogo.nvm.Workspace;
-import scala.collection.Seq;
 
 public abstract strictfp class AbstractWorkspace
     implements Workspace,
@@ -462,9 +461,4 @@ public abstract strictfp class AbstractWorkspace
     return compiler().findProcedurePositions(source);
   }
 
-  public scala.collection.Seq<org.nlogo.core.Token> getUsage(String source, org.nlogo.core.Token token){
-//    System.out.println("wrong");
-    return compiler().getUsage(source, token);
-
-  }
 }

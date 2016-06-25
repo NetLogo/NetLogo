@@ -4,8 +4,6 @@ package org.nlogo.headless
 
 import java.nio.file.Paths
 
-import org.nlogo.core.Token
-
 // Note that in the Scaladoc we distribute, this class is included, but Workspace and
 // AbstractWorkspace are not, so if you want to document a method for everyone, override that method
 // here and document it here.  The overriding method can simply call super(). - ST 6/1/05, 7/28/11
@@ -549,6 +547,4 @@ with org.nlogo.api.ViewSettings {
   }
 
   def unsupported = throw new UnsupportedOperationException
-
-  override def getUsage(source: String, token: Token): Seq[Token] = unsupported
 }

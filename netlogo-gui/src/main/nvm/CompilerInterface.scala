@@ -52,5 +52,4 @@ trait CompilerInterface {
   def isReporter(s: String, program: Program, procedures: java.util.Map[String, Procedure], extensionManager: ApiExtensionManager, compilationEnv: CompilationEnvironment): Boolean
   def getTokenAtPosition(source: String, position: Int): Token
   def tokenizeForColorization(source: String, extensionManager: ApiExtensionManager): Array[Token]
-  def getUsage(source: String, token: Token): Seq[Token]
 }

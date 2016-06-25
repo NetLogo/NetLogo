@@ -19,5 +19,4 @@ trait CompilerServices extends LiteralParser {
   def tokenizeForColorization(source: String): Array[Token]
   def getTokenAtPosition(source: String, position: Int): Token
   def findProcedurePositions(source: String): Map[String, ProcedureSyntax]
-  def getUsage(source: String, token: Token): Seq[Token]
 }
