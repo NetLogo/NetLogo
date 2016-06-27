@@ -5,6 +5,8 @@ package org.nlogo.agent
 import org.nlogo.api.{ CompilerServices, LogoException, LogoThunkFactory, ReporterLogoThunk, ValueConstraint }
 import org.nlogo.core.CompilerException
 
+import scala.util.{ Try, Failure }
+
 object SliderConstraint {
 
   case class Spec(fieldName: String, displayName:String)
@@ -87,10 +89,11 @@ class DynamicSliderConstraint(min: ReporterLogoThunk,
   override def maximum = get(Max, max)
   override def increment = get(Inc, inc)
   private def get(spec:Spec, thunk:ReporterLogoThunk): Double = {
-    try thunk.call.asInstanceOf[Double]
-    catch {
-      case ex: ClassCastException => throw new ConstraintRuntimeException(spec, "Must be a number.")
-      case ex: LogoException => throw new ConstraintRuntimeException(spec, ex.getMessage)
-    }
+    thunk.call
+      .flatMap(res => Try(res.asInstanceOf[Double]))
+      .recoverWith {
+        case ex: ClassCastException => Failure(new ConstraintRuntimeException(spec, s"Must be a number"))
+        case ex: LogoException      => Failure(new ConstraintRuntimeException(spec, ex.getMessage))
+      }.get
   }
 }
