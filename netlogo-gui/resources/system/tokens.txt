@@ -1,5 +1,4 @@
 C __bench gui._bench
-C __change-language etc._changelanguage
 C __change-topology etc._changetopology
 C __clear-all-and-reset-ticks etc._clearallandresetticks
 C __delete-log-files gui._deletelogfiles

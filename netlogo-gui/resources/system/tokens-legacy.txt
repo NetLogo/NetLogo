@@ -1,4 +1,3 @@
-C __change-language etc._changelanguage
 C __clear-all-and-reset-ticks etc._clearallandresetticks
 C __delete-log-files gui._deletelogfiles
 C __edit etc._edit
