@@ -14,6 +14,8 @@ class ToolsMenu(app: App, modelSaver: ModelSaver) extends org.nlogo.swing.Menu(I
   implicit val i18nName = I18N.Prefix("menu.tools")
 
   setMnemonic('T')
+  addMenuItem(I18N.gui("preferences"), app.showPreferencesDialog _)
+  addSeparator()
   addMenuItem(new SimpleGUIWorkspaceAction(I18N.gui("halt"), app.workspace, _.halt))
   addSeparator()
   addMenuItem(new SimpleGUIWorkspaceAction(I18N.gui("globalsMonitor"), app.workspace, _.inspectAgent(AgentKind.Observer)))
@@ -40,7 +42,7 @@ class ToolsMenu(app: App, modelSaver: ModelSaver) extends org.nlogo.swing.Menu(I
   addMenuItem(I18N.gui("hubNetClientEditor"), openHubNetClientEditor _)
   addMenuItem('H', true, app.workspace.hubNetControlCenterAction)
 
-  def openColorDialog() {
+  def openColorDialog(): Unit = {
     if(app.colorDialog == null) {
       app.colorDialog =
         new org.nlogo.window.ColorDialog(app.frame, false)
@@ -53,7 +55,7 @@ class ToolsMenu(app: App, modelSaver: ModelSaver) extends org.nlogo.swing.Menu(I
     }
   }
 
-  def openHubNetClientEditor() {
+  def openHubNetClientEditor(): Unit = {
     app.workspace.getHubNetManager.foreach { mgr =>
       mgr.openClientEditor()
       app.frame.addLinkComponent(mgr.clientEditor)

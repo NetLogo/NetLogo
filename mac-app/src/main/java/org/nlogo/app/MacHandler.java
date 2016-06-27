@@ -14,6 +14,7 @@ import com.apple.eawt.Application;
 import com.apple.eawt.AppEvent;
 import com.apple.eawt.OpenFilesHandler;
 import com.apple.eawt.OpenURIHandler;
+import com.apple.eawt.PreferencesHandler;
 import com.apple.eawt.QuitHandler;
 import com.apple.eawt.QuitResponse;
 
@@ -28,6 +29,7 @@ public class MacHandler {
     this.application = application;
     this.application.setOpenFileHandler(new MyOpenFilesHandler());
     this.application.setOpenURIHandler(new MyOpenURIHandler());
+    this.application.setPreferencesHandler(new MyPreferencesHandler());
     this.application.setAboutHandler(new MyAboutHandler());
     this.application.setQuitHandler(new MyQuitHandler());
     log("in directory:");
@@ -64,6 +66,20 @@ public class MacHandler {
     }
   }
 
+  class MyPreferencesHandler implements PreferencesHandler {
+    @Override
+    public void handlePreferences(AppEvent.PreferencesEvent event) {
+      try {
+        Class<?> appClass = app.getClass();
+        appClass.getDeclaredMethod("handleShowPreferences").invoke(app);
+      } catch (NoSuchMethodException e) {
+      } catch (IllegalAccessException e) {
+      } catch (InvocationTargetException e) {
+        log("failed to invoke handleShowPreferences");
+      }
+    }
+  }
+
   class MyAboutHandler implements AboutHandler {
     @Override
     public void handleAbout(AppEvent.AboutEvent event) {
@@ -73,7 +89,7 @@ public class MacHandler {
       } catch (NoSuchMethodException e) {
       } catch (IllegalAccessException e) {
       } catch (InvocationTargetException e) {
-        log("failed to invoke handleOpenPath");
+        log("failed to invoke handleShowAbout");
       }
     }
   }

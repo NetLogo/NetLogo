@@ -290,7 +290,6 @@ class TestAllSyntaxes extends FunSuite {
                     |_bench number/number,O---,None,0,2,2
                     |_bk number,-T--,None,0,1,1
                     |_carefully command block/command block,OTPL,None,0,2,2
-                    |_changelanguage ,O---,None,0,0,0
                     |_changetopology TRUE/FALSE/TRUE/FALSE,OTPL,None,0,2,2
                     |_clearall ,O---,None,0,0,0
                     |_clearallandresetticks ,O---,None,0,0,0
