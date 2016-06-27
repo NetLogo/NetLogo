@@ -11,7 +11,7 @@ import org.nlogo.awt.Fonts
 import org.nlogo.core.{ AgentKind, CompilerException, I18N, TokenType, Widget => CoreWidget }
 import org.nlogo.editor.EditorField
 import org.nlogo.nvm.Workspace
-import org.nlogo.window.Events.{AddJobEvent, CompiledEvent, OutputEvent}
+import org.nlogo.window.Events.{ AddJobEvent, CompiledEvent, OutputEvent }
 
 import scala.collection.immutable.List
 import java.awt.Dimension

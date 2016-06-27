@@ -110,9 +110,6 @@ case class CodeCompletionPopup() {
       val position = tokenOption.map(_.start).getOrElse(eA.getCaretPosition)
       fireUpdatePopup(None)
       placeWindowOnScreen(eA, position)
-      if(dlm.getSize > 0){
-        window.setVisible(true)
-      }
     }
   }
 
@@ -126,8 +123,7 @@ case class CodeCompletionPopup() {
     if (window.getSize.height + eA.getLocationOnScreen.y + eA.modelToView(position).y +
       eA.getFont.getSize > screenHeight) {
       window.setLocation(eA.getLocationOnScreen.x + eA.modelToView(position).x,
-        (eA.getLocationOnScreen.y + eA.modelToView(position).y - window.getSize.getHeight
-          - scrollPane.getHorizontalScrollBar.getHeight).toInt)
+        (eA.getLocationOnScreen.y + eA.modelToView(position).y - window.getSize.getHeight).toInt)
     } else {
       window.setLocation(eA.getLocationOnScreen.x + eA.modelToView(position).x,
         eA.getLocationOnScreen.y + eA.modelToView(position).y + eA.getFont.getSize)
@@ -158,6 +154,7 @@ case class CodeCompletionPopup() {
     */
   def updatePopup(position: Int): Unit = {
     for{eA <- editorArea} {
+      dlm.removeAllElements()
       if (isPopupEnabled ) {
         val tokenOption = getTokenTillPosition(eA.getText(), position)
         var list = Seq[String]()
@@ -168,7 +165,6 @@ case class CodeCompletionPopup() {
             // popup not to be diplayed after user hits the enter key
             if (!token.text.equals(lastSuggested)) {
               list = autoSuggest.getSuggestions(word)
-              dlm.removeAllElements()
               list.foreach(dlm.addElement(_))
               if (!list.isEmpty) {
                 lastSuggested = ""
@@ -180,9 +176,10 @@ case class CodeCompletionPopup() {
                 isPopupEnabled = false
               }
             }
-          case None =>
+          case None => isPopupEnabled = false
         }
       }
+      window.setVisible(!dlm.isEmpty)
     }
   }
 

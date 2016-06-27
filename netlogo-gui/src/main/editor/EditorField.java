@@ -26,8 +26,8 @@ public strictfp class EditorField
     // shut off the default actions for some keystrokes... let
     // someone add a KeyListener if they want - ST 7/30/03
     getInputMap().remove
-            (javax.swing.KeyStroke.getKeyStroke
-                    (java.awt.event.KeyEvent.VK_ENTER, 0));
+        (javax.swing.KeyStroke.getKeyStroke
+            (java.awt.event.KeyEvent.VK_ENTER, 0));
   }
 
   @Override
