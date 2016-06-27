@@ -4,6 +4,10 @@ package org.nlogo.editor;
 
 import org.nlogo.core.TokenType;
 
+import javax.swing.*;
+import javax.swing.text.TextAction;
+import java.util.Map;
+
 public strictfp class EditorField
     extends EditorArea {
 
@@ -12,11 +16,18 @@ public strictfp class EditorField
                      Colorizer colorizer,
                      scala.Function1<String, String> i18n) {
     super(1, columns, font, enableFocusTraversalKeys, null, colorizer, i18n, EditorArea.emptyMap(), EditorArea.emptySeq());
+  }
+
+  public EditorField(int columns, java.awt.Font font,
+                     boolean disableFocusTraversalKeys,
+                     Colorizer colorizer,
+                     scala.Function1<String, String> i18n, Map<KeyStroke, TextAction> actionMap) {
+    super(1, columns, font, disableFocusTraversalKeys, null, colorizer, i18n, actionMap);
     // shut off the default actions for some keystrokes... let
     // someone add a KeyListener if they want - ST 7/30/03
     getInputMap().remove
-        (javax.swing.KeyStroke.getKeyStroke
-            (java.awt.event.KeyEvent.VK_ENTER, 0));
+            (javax.swing.KeyStroke.getKeyStroke
+                    (java.awt.event.KeyEvent.VK_ENTER, 0));
   }
 
   @Override
