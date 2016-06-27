@@ -49,28 +49,19 @@ class ShowUsageBox (){
     usageTable.setTableHeader(null)
     usageTable.setRowMargin(3)
     usageTable.setRowHeight(20)
-//    usageTable.setBackground(Color.WHITE)
     usageTable.getColumnModel.getColumn(1).setMinWidth(200)
     usageTable.getColumnModel.getColumn(0).setMinWidth(40)
     usageTable.setFont(editorArea.getFont)
 
-    usageTable.addMouseListener(new MouseListener(){
-      override def mouseClicked(e: MouseEvent): Unit = {}
-
-      override def mouseExited(e: MouseEvent): Unit = {}
-
-      override def mouseEntered(e: MouseEvent): Unit = {}
-
-      override def mousePressed(e: MouseEvent): Unit = {}
-
-      override def mouseReleased(e: MouseEvent): Unit = {
+    usageTable.addMouseListener(new MouseAdapter() {
+      override def mouseClicked(e: MouseEvent): Unit = {
         usageBox.setVisible(false)
         val token = usageTable.getValueAt(usageTable.getSelectedRow, 0).asInstanceOf[Token]
         dataModel.synchronized(dataModel.setRowCount(0))
-        println(token.start + " " + token)
         editorArea.setCaretPosition(token.start)
       }
     })
+
     usageTable.addKeyListener(new KeyListener(){
       override def keyPressed(e: KeyEvent): Unit = {
         e.getKeyCode match {
@@ -87,14 +78,13 @@ class ShowUsageBox (){
   }
 
   def showBox(me: MouseEvent, position: Int): Unit = {
-    val tokenOption = getTokenTillPosition(editorArea.getText(), position)
+    val tokenOption = findTokenContainingPosition(editorArea.getText(), position)
     for {token <- tokenOption} {
       val tokens = getUsage(editorArea.getText(), token)
-      dataModel.synchronized(dataModel.setRowCount(0))
-      dataModel.synchronized(
+      dataModel.setRowCount(0)
       for (t <- tokens) {
         dataModel.addRow(Array[AnyRef](t, editorArea.getLineText(t.start).trim))
-      })
+      }
       if(dataModel.getRowCount != 0) {
         usageTable.setPreferredScrollableViewportSize(usageTable.getPreferredSize())
         usageTable.setFillsViewportHeight(true)
@@ -106,24 +96,18 @@ class ShowUsageBox (){
     }
   }
 
-  def getUsage(source: String, token: Token): Seq[Token] = {
-    var list = Seq[Token]()
+  def getUsage(source: String, token: Token): Iterator[Token] = {
     val iterator = Femto.scalaSingleton[TokenizerInterface]("org.nlogo.lex.Tokenizer").tokenizeString(source)
-    for(t <- iterator) {
-      if(t == token) {
-        list :+= t
-      }
-    }
-    list
+    iterator.filter(_.text.equalsIgnoreCase(token.text))
   }
 
-  def getTokenTillPosition(source: String, position: Int): Option[Token] = {
+  def findTokenContainingPosition(source: String, position: Int): Option[Token] = {
     val iterator = Femto.scalaSingleton[TokenizerInterface]("org.nlogo.lex.Tokenizer").tokenizeString(source)
     iterator.find(p => p.start < position && p.end >= position)
   }
   class LineNumberRenderer extends DefaultTableCellRenderer {
     override def setValue(value: AnyRef) = {
-      setText(int2Integer(editorArea.offsetToLine(value.asInstanceOf[Token].start)).toString)
+      setText(editorArea.offsetToLine(value.asInstanceOf[Token].start).toString)
     }
   }
 }
