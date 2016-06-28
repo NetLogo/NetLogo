@@ -7,8 +7,7 @@ import java.awt.event._
 import javax.swing.table.{DefaultTableCellRenderer, DefaultTableModel, TableCellRenderer}
 import javax.swing._
 
-import org.nlogo.api.CompilerServices
-import org.nlogo.core.{Femto, Token, TokenizerInterface}
+import org.nlogo.core.{Femto, Token, TokenType, TokenizerInterface}
 import org.nlogo.editor.{EditorArea, HighlightEditorKit}
 
 class ShowUsageBox(editorArea: EditorArea) {
@@ -69,18 +68,20 @@ class ShowUsageBox(editorArea: EditorArea) {
   def showBox(me: MouseEvent, position: Int): Unit = {
     val tokenOption = findTokenContainingPosition(editorArea.getText(), position)
     for {token <- tokenOption} {
-      val tokens = getUsage(editorArea.getText(), token)
-      dataModel.setRowCount(0)
-      for (t <- tokens) {
-        dataModel.addRow(Array[AnyRef](t, editorArea.getLineText(t.start).trim))
-      }
-      if(dataModel.getRowCount != 0) {
-        usageTable.setPreferredScrollableViewportSize(usageTable.getPreferredSize())
-        usageTable.setFillsViewportHeight(true)
-        usageBox.setSize(usageTable.getPreferredSize)
-        usageTable.validate()
-        usageBox.setLocation(me.getLocationOnScreen)
-        usageBox.setVisible(true)
+      if(token.tpe == TokenType.Ident || token.tpe == TokenType.Command || token.tpe == TokenType.Reporter) {
+        val tokens = getUsage(editorArea.getText(), token)
+        dataModel.setRowCount(0)
+        for (t <- tokens) {
+          dataModel.addRow(Array[AnyRef](t, editorArea.getLineText(t.start).trim))
+        }
+        if (dataModel.getRowCount != 0) {
+          usageTable.setPreferredScrollableViewportSize(usageTable.getPreferredSize())
+          usageTable.setFillsViewportHeight(true)
+          usageBox.setSize(usageTable.getPreferredSize)
+          usageTable.validate()
+          usageBox.setLocation(me.getLocationOnScreen)
+          usageBox.setVisible(true)
+        }
       }
     }
   }
