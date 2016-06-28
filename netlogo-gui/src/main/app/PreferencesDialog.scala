@@ -13,11 +13,6 @@ import org.nlogo.core.I18N
 import org.nlogo.swing.{ OptionDialog, RichAction, TextFieldBox, Utils => SwingUtils }
 import org.nlogo.swing.Implicits._
 
-object PreferencesDialog {
-  private val restartIcon =
-    new ImageIcon(classOf[PreferencesDialog].getResource("/images/forever2.gif"))
-}
-
 class PreferencesDialog(parent: Frame, preferences: Preference*)
 extends JDialog(parent, I18N.gui.get("tools.preferences"), false) {
   private implicit val prefix = I18N.Prefix("tools.preferences")
@@ -40,14 +35,9 @@ extends JDialog(parent, I18N.gui.get("tools.preferences"), false) {
   private val preferencesPanel = new TextFieldBox(SwingConstants.TRAILING)
   preferencesPanel.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10))
   preferences foreach { pref =>
-    val label =
-      new JLabel(
-        I18N.gui(pref.i18nKey),
-        if (pref.restartRequired) PreferencesDialog.restartIcon else null,
-        SwingConstants.TRAILING)
-    if (pref.restartRequired)
-      label.setToolTipText(I18N.gui("restartRequired"))
-    preferencesPanel.addField(label, pref.component)
+    val text = (if (pref.restartRequired) I18N.gui("restartRequired") + "  " else "") +
+      I18N.gui(pref.i18nKey)
+    preferencesPanel.addField(text, pref.component)
   }
 
   private val buttonsPanel = new Box(BoxLayout.LINE_AXIS)
@@ -73,4 +63,5 @@ extends JDialog(parent, I18N.gui.get("tools.preferences"), false) {
   addWindowListener(reset)
   Positioning.center(this, parent)
   setResizable(false)
+  parent.toFront()
 }

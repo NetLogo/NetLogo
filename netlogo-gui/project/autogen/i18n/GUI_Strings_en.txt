@@ -370,7 +370,7 @@ edit.hubnet.view.height = Height (pixels)
 # tools
 
 tools.preferences = NetLogo Preferences
-tools.preferences.restartRequired = You must restart NetLogo for the change to take effect
+tools.preferences.restartRequired = (restart required)
 tools.preferences.uiLanguage = User Interface Language:
 
 tools.colorswatch = Color Swatches
