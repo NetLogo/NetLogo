@@ -67,6 +67,7 @@ class AstRewriterTests extends FunSuite {
     assertResult("bk 1")(remove("fd 1 bk 1", "fd"))
     assertResult("create-turtles 10 [ fd 1 ]")(remove("create-turtles 10 [ fd 1 ]", "bk"))
     assertResult("create-turtles 10 [ ]")(remove("create-turtles 10 [ fd 1 ]", "fd"))
+    assertResult("create-turtles 10 fd 1")(remove("create-turtles 10", "fd"))
     assertResult("ask turtles [ ask one-of other turtles [ ] ]")(remove("ask turtles [ ask one-of other turtles [ set color blue ] ]", "set"))
     assertResult("fd 1 end to bar")(remove("fd 1 end to bar bk 2", "bk"))
     assertResult("fd 1 end to bar")(remove("fd 1 bk 1 end to bar", "bk"))
@@ -114,6 +115,7 @@ class AstRewriterTests extends FunSuite {
     assertResult("extensions [foo]\nto bar end")(addExtension("to bar end", "foo"))
     assertResult("extensions [foo baz] to bar end")(addExtension("extensions [foo] to bar end", "baz"))
     assertResult("extensions []\nglobals [x] to bar end")(addExtension("globals [x] to bar end", ""))
+    assertResult("extensions [foo baz] to bar end\n\nto baz end")(addExtension("extensions [foo] to bar end\n\nto baz end", "baz"))
   }
 
   test("add global") {

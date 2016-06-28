@@ -66,7 +66,7 @@ class HubNetManagerTests extends FunSuite {
     test(name){
       val workspace = new DummyAbstractWorkspace
       val loader = new ConfigurableModelLoader()
-        .addFormat[Array[String], NLogoFormat](new NLogoFormat(Seq(), new DummyExtensionManager(), new DummyCompilationEnvironment()))
+        .addFormat[Array[String], NLogoFormat](new NLogoFormat((m, _) => m))
         .addSerializer[Array[String], NLogoFormat](new NLogoHubNetFormat(workspace))
       val manager = new HeadlessHubNetManager(workspace, loader) {
         override val connectionManager = new MockConnectionManager(this, workspace)
