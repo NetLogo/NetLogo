@@ -30,24 +30,17 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
       dirty()
     }
   }
-  val showUsageBox = new ShowUsageBox()
+
+  val text = new EditorFactory(workspace).newEditor(100, 100, true, listener, true)
+  val showUsageBox = new ShowUsageBox(text)
   val showUsageBoxAction = new ShowUsageBoxAction(showUsageBox)
-  val mL = new MouseListener {
-    override def mouseExited(e: MouseEvent): Unit = {}
+  val mL = new MouseAdapter {
     override def mouseClicked(e: MouseEvent): Unit = {
       if(e.isControlDown){
         showUsageBoxAction.actionPerformed(e)
       }
     }
-
-    override def mouseEntered(e: MouseEvent): Unit = ()
-
-    override def mousePressed(e: MouseEvent): Unit = {}
-
-    override def mouseReleased(e: MouseEvent): Unit = {}
   }
-
-  val text = new EditorFactory(workspace).newEditor(100, 100, true, listener, true)
   text.addListener(mL)
   text.setBorder(BorderFactory.createEmptyBorder(4, 7, 4, 7))
   override def zoomTarget = text
