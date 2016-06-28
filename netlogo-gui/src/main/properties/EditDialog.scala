@@ -106,9 +106,8 @@ trait EditDialog extends javax.swing.JDialog {
       EditDialog.lastLocation = Some(getLocation)
   }
   editPanel.requestFocus()
-  setVisible(true)
-
   setResizable(editPanel.isResizable)
+  setVisible(true)
 
   private def cancel(target: org.nlogo.api.Editable) {
     editPanel.revert()
