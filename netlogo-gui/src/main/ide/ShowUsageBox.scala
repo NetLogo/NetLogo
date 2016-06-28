@@ -88,7 +88,7 @@ class ShowUsageBox(editorArea: EditorArea) {
 
   def getUsage(source: String, token: Token): Iterator[Token] = {
     val iterator = Femto.scalaSingleton[TokenizerInterface]("org.nlogo.lex.Tokenizer").tokenizeString(source)
-    iterator.filter(_.text.equalsIgnoreCase(token.text))
+    iterator.filter(t => t.text.equalsIgnoreCase(token.text) && t.start != token.start)
   }
 
   def findTokenContainingPosition(source: String, position: Int): Option[Token] = {
@@ -99,7 +99,10 @@ class ShowUsageBox(editorArea: EditorArea) {
   class LineRenderer extends TableCellRenderer {
     override def getTableCellRendererComponent(table: JTable, value: scala.Any, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component = {
       val pane  = new JEditorPane()
+      pane.setOpaque(true)
+      pane.setBorder(BorderFactory.createEmptyBorder(1,0,0,0))
       pane.setEditorKit(new HighlightEditorKit(null, editorArea.colorizer))
+      pane.setText(value.asInstanceOf[String])
       val alternate = UIManager.getColor("Table.alternateRowColor")
       val defaults = new UIDefaults()
       if (row%2 == 0){
@@ -116,9 +119,6 @@ class ShowUsageBox(editorArea: EditorArea) {
       }
       pane.putClientProperty("Nimbus.Overrides", defaults)
       pane.putClientProperty("Nimbus.Overrides.InheritDefaults", true)
-      pane.setBorder(BorderFactory.createEmptyBorder(1,0,0,0))
-      pane.setOpaque(true)
-      pane.setText(value.asInstanceOf[String])
       pane
     }
   }
