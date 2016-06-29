@@ -41,10 +41,6 @@ package etc {
     def syntax = Syntax.reporterSyntax(ret = ListType | StringType, right = List(ListType | StringType))
   }
 
-  case class _changelanguage() extends Command {
-    def syntax = Syntax.commandSyntax(agentClassString = "O---")
-  }
-
   case class _clearallandresetticks() extends Command {
     def syntax = Syntax.commandSyntax(agentClassString = "O---")
   }

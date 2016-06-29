@@ -95,6 +95,7 @@ menu.edit.uncomment = Uncomment
 menu.edit.snapToGrid = Snap to Grid
 
 menu.tools = Tools
+menu.tools.preferences = Preferences…
 menu.tools.halt = Halt
 menu.tools.globalsMonitor = Globals Monitor
 menu.tools.turtleMonitor = Turtle Monitor
@@ -367,6 +368,10 @@ edit.hubnet.view.width = Width (pixels)
 edit.hubnet.view.height = Height (pixels)
 
 # tools
+
+tools.preferences = NetLogo Preferences
+tools.preferences.restartRequired = (restart required)
+tools.preferences.uiLanguage = User Interface Language:
 
 tools.colorswatch = Color Swatches
 tools.colorswatch.preview = Preview

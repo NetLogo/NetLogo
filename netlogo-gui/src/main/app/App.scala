@@ -277,6 +277,7 @@ class App extends
   lazy val owner = new SimpleJobOwner("App", workspace.world.mainRNG, AgentKind.Observer)
   private var _tabs: Tabs = null
   def tabs = _tabs
+  lazy val preferencesDialog = new PreferencesDialog(frame, Preference.Language)
   var helpMenu:HelpMenu = null
   var fileMenu: FileMenu = null
   var monitorManager:AgentMonitorManager = null
@@ -598,7 +599,6 @@ class App extends
           org.nlogo.log.Files.deleteSessionFiles(System.getProperty("java.io.tmpdir"))
         else
           logger.deleteSessionFiles()
-      case CHANGE_LANGUAGE => changeLanguage()
       case _ =>
     }
   }
@@ -627,21 +627,6 @@ class App extends
         org.nlogo.awt.EventQueue.invokeLater(() => openFromSource(source, path, ModelType.Library))
       }
     }
-  }
-
-  def changeLanguage() {
-    val locales = I18N.availableLocales
-    val languages = locales.map{l => l.getDisplayName(l) }
-    val index = org.nlogo.swing.OptionDialog.showAsList(frame,
-      "Change Language", "Choose a new language.", languages.asInstanceOf[Array[Object]])
-    if(index > -1) {
-      val chosenLocale = locales(index)
-      val netLogoPrefs = java.util.prefs.Preferences.userRoot.node("/org/nlogo/NetLogo")
-      netLogoPrefs.put("user.language", chosenLocale.getLanguage)
-      netLogoPrefs.put("user.country", chosenLocale.getCountry)
-    }
-    val restart = "Langauge changed.\nYou must restart NetLogo for the changes to take effect."
-    org.nlogo.swing.OptionDialog.show(frame, "Change Language", restart, Array(I18N.gui.get("common.buttons.ok")))
   }
 
   ///
@@ -847,6 +832,13 @@ class App extends
     showAboutWindow()
   }
 
+  /**
+   * This is called reflectively by the mac app wrapper.
+   */
+  def handleShowPreferences(): Unit = {
+    showPreferencesDialog()
+  }
+
   @throws(classOf[java.io.IOException])
   def libraryOpen(path: String) {
     dispatchThreadOrBust(fileMenu.openFromPath(path, ModelType.Library))
@@ -1045,7 +1037,16 @@ class App extends
    * Internal use only.
    */
   // used both from HelpMenu and MacHandlers - ST 2/2/09
-  def showAboutWindow() { new AboutWindow(frame).setVisible(true) }
+  def showAboutWindow(): Unit = {
+    new AboutWindow(frame).setVisible(true)
+  }
+
+  /**
+   * Internal use only.
+   */
+  def showPreferencesDialog(): Unit = {
+    preferencesDialog.setVisible(true)
+  }
 
   /**
    * Internal use only.

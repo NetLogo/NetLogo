@@ -29,12 +29,3 @@ class _english extends org.nlogo.nvm.Command {
     context.ip = next
   }
 }
-
-class _changelanguage extends org.nlogo.nvm.Command {
-
-  override def perform(context: Context) {
-    workspace.changeLanguage()
-    context.ip = next
-  }
-}
-

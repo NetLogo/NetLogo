@@ -442,13 +442,6 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   }
 
   // called from the job thread
-  @Override
-  public void changeLanguage() {
-    new org.nlogo.window.Events.AppEvent(AppEventType.CHANGE_LANGUAGE, new Object[]{}).raiseLater(this);
-  }
-
-
-  // called from the job thread
   public void startLogging(String properties) {
     try {
       new org.nlogo.window.Events.AppEvent

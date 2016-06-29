@@ -62,8 +62,6 @@ trait Workspace extends org.nlogo.api.Workspace
   def updatePlots(c: Context): Unit
   def setupPlots(c: Context): Unit
 
-  def changeLanguage(): Unit
-
   def joinForeverButtons(agent: Agent): Unit
 
   def requestDisplayUpdate(force: Boolean): Unit
