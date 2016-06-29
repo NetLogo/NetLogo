@@ -9,8 +9,8 @@ public class HighlightEditorKit
     javax.swing.event.DocumentListener {
 
   private final java.awt.event.TextListener listener; // allowed to be null
-  private javax.swing.JEditorPane pane;
-  private final Colorizer colorizer;
+  protected javax.swing.JEditorPane pane;
+  protected final Colorizer colorizer;
 
   public HighlightEditorKit(java.awt.event.TextListener listener,
                      Colorizer colorizer) {

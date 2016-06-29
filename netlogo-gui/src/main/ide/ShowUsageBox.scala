@@ -23,8 +23,7 @@ class ShowUsageBox(editorArea: EditorArea) {
   usageBox.add(scrollPane)
   usageBox.setUndecorated(true)
   usageTable.setDefaultRenderer(classOf[Token], new LineNumberRenderer())
-  usageTable.setDefaultRenderer(classOf[String], new LineRenderer())
-
+  usageTable.setDefaultRenderer(classOf[String], new LineRenderer(None))
 
   usageBox.addWindowFocusListener(new WindowFocusListener {
     override def windowLostFocus(e: WindowEvent): Unit = {
@@ -77,6 +76,7 @@ class ShowUsageBox(editorArea: EditorArea) {
           dataModel.addRow(Array[AnyRef](t, editorArea.getLineText(t.start).trim))
         }
         if (dataModel.getRowCount != 0) {
+          usageTable.setDefaultRenderer(classOf[String], new LineRenderer(Some(token.text)))
           usageTable.setPreferredScrollableViewportSize(usageTable.getPreferredSize())
           usageTable.setFillsViewportHeight(true)
           usageBox.setSize(usageTable.getPreferredSize)
@@ -98,12 +98,16 @@ class ShowUsageBox(editorArea: EditorArea) {
     iterator.find(p => p.start < position && p.end >= position)
   }
 
-  class LineRenderer extends TableCellRenderer {
+  class LineRenderer(boldedString: Option[String]) extends TableCellRenderer {
     override def getTableCellRendererComponent(table: JTable, value: scala.Any, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component = {
       val pane  = new JEditorPane()
       pane.setOpaque(true)
       pane.setBorder(BorderFactory.createEmptyBorder(1,0,0,0))
-      pane.setEditorKit(new HighlightEditorKit(null, editorArea.colorizer))
+      val editorKit = boldedString match {
+        case None => new HighlightEditorKit(null, editorArea.colorizer)
+        case Some(selectedString) => new BoldEditorKit(selectedString)
+      }
+      pane.setEditorKit(editorKit)
       pane.setText(value.asInstanceOf[String])
       val alternate = UIManager.getColor("Table.alternateRowColor")
       val defaults = new UIDefaults()
@@ -128,5 +132,36 @@ class ShowUsageBox(editorArea: EditorArea) {
     override def setValue(value: AnyRef) = {
       setText(editorArea.offsetToLine(value.asInstanceOf[Token].start).toString)
     }
+  }
+  import org.nlogo.editor.{ HighlightEditorKit, HighlightView }
+  class BoldEditorKit(selectedString: String) extends HighlightEditorKit(null, editorArea.colorizer) {
+    import scala.collection.immutable.Range
+    class BoldView(elem: javax.swing.text.Element) extends HighlightView(this.pane, elem, this.colorizer) {
+      var boldingRange = Option.empty[Range]
+      override def studyLine(lineIndex: Int): Unit = {
+        super.studyLine(lineIndex)
+        val elem = getElement.getElement(lineIndex)
+        val lineText = getDocument.getText(elem.getStartOffset, elem.getEndOffset - elem.getStartOffset max 0)
+        val beginningIndex = lineText.toUpperCase.indexOf(selectedString.toUpperCase)
+        if (beginningIndex != -1)
+          boldingRange = Some(beginningIndex to (beginningIndex + selectedString.length))
+      }
+
+      override def drawText(g: java.awt.Graphics, x: Int, y: Int, p0: Int, p1: Int, isSelected: Boolean): Int = {
+        boldingRange match {
+          case Some(range) =>
+            val midX = super.drawText(g, x, y, p0, range.start, isSelected)
+            val originalFont = g.getFont
+            val boldFont = originalFont.deriveFont(java.awt.Font.BOLD)
+            g.setFont(boldFont)
+            val endX = super.drawText(g, midX, y, range.start, range.end, isSelected)
+            g.setFont(originalFont)
+            super.drawText(g, endX, y, range.end, p1, isSelected)
+          case None => super.drawText(g, x, y, p0, p1, isSelected)
+        }
+      }
+    }
+
+    override def create(elem: javax.swing.text.Element): javax.swing.text.View = new BoldView(elem)
   }
 }
