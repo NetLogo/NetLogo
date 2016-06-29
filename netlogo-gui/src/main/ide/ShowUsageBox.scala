@@ -2,7 +2,7 @@
 
 package org.nlogo.ide
 
-import java.awt.{Color, Component}
+import java.awt.{Color, Component, Cursor}
 import java.awt.event._
 import javax.swing.table.{DefaultTableCellRenderer, DefaultTableModel, TableCellRenderer}
 import javax.swing._
@@ -64,6 +64,8 @@ class ShowUsageBox(editorArea: EditorArea) {
       }
     }
   })
+
+  usageTable.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR))
 
   def showBox(me: MouseEvent, position: Int): Unit = {
     val tokenOption = findTokenContainingPosition(editorArea.getText(), position)
