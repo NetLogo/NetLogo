@@ -8,16 +8,18 @@ import javax.swing.text.TextAction
 import org.nlogo.api.CompilerServices
 import org.nlogo.core.I18N
 import org.nlogo.ide.{AutoSuggestAction, CodeCompletionPopup}
+import org.nlogo.window.CodeEditor
 import collection.JavaConversions._
 
 class EditorFactory(compiler: CompilerServices) extends org.nlogo.window.EditorFactory {
-  def newEditor(cols: Int, rows: Int, disableFocusTraversal: Boolean) =
-    newEditor(cols, rows, disableFocusTraversal, null, false)
+  def newEditor(cols: Int, rows: Int, enableFocusTraversal: Boolean): CodeEditor =
+    newEditor(cols, rows, enableFocusTraversal, null, false)
+
   def newEditor(cols: Int,
                 rows: Int,
-                disableFocusTraversal: Boolean,
+                enableFocusTraversal: Boolean,
                 listener: java.awt.event.TextListener,
-                isApp: Boolean) =
+                isApp: Boolean): CodeEditor =
   {
     val font = new java.awt.Font(org.nlogo.awt.Fonts.platformMonospacedFont,
                                  java.awt.Font.PLAIN, 12)
@@ -26,8 +28,9 @@ class EditorFactory(compiler: CompilerServices) extends org.nlogo.window.EditorF
     val actionMap = Map(
       KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_SPACE, java.awt.event.InputEvent.CTRL_DOWN_MASK)
       -> new AutoSuggestAction("auto-suggest", codeCompletionPopup))
+
     class MyCodeEditor
-    extends org.nlogo.window.CodeEditor(rows, cols, font, disableFocusTraversal,
+    extends org.nlogo.window.CodeEditor(rows, cols, font, enableFocusTraversal,
                                         listener, colorizer, I18N.gui.get _, actionMap)
     {
       override def focusGained(fe: java.awt.event.FocusEvent) {

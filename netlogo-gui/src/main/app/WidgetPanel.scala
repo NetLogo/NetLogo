@@ -355,8 +355,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
         case i: CoreInputBox =>
           val font = NlogoFonts.monospacedFont
           new DummyInputBoxWidget(
-            new CodeEditor(1, 20, font, false, null, new EditorColorizer(workspace), I18N.gui.fn),
-            new CodeEditor(5, 20, font, true, null, new EditorColorizer(workspace), I18N.gui.fn),
+            new CodeEditor(1, 20, font, true,  null, new EditorColorizer(workspace), I18N.gui.fn),
+            new CodeEditor(5, 20, font, false, null, new EditorColorizer(workspace), I18N.gui.fn),
             this,
             new DefaultCompilerServices(workspace.compiler))
         case _ =>

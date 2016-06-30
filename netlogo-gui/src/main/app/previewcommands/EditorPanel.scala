@@ -46,7 +46,7 @@ class EditorPanel(colorizer: EditorColorizer) extends JPanel {
     }
   }
   val editorFont = new Font(platformMonospacedFont, Font.PLAIN, 12)
-  val editor = new CodeEditor(0, 0, editorFont, false, textListener, colorizer, I18N.gui.get _) {
+  val editor = new CodeEditor(0, 0, editorFont, true, textListener, colorizer, I18N.gui.get _) {
     override def getPreferredSize = new Dimension(350, 100)
     override def setText(text: String) = super.setText(text.stripTrailingWhiteSpace + "\n")
     override def getText = super.getText().stripTrailingWhiteSpace + "\n"

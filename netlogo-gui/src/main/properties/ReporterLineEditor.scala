@@ -13,7 +13,7 @@ abstract class ReporterLineEditor(accessor: PropertyAccessor[String],
          extends CodeEditor(accessor, colorizer, false, false){
 
   override lazy val editor = new EditorField(
-    30, new Font(platformMonospacedFont, Font.PLAIN, 12), false, colorizer,
+    30, new Font(platformMonospacedFont, Font.PLAIN, 12), true, colorizer,
     org.nlogo.core.I18N.gui.get _)
   override lazy val scrollPane = new JScrollPane(
     editor,

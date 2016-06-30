@@ -42,21 +42,13 @@ class EditorArea(
   rows: Int,
   columns: Int,
   font: java.awt.Font,
-  disableFocusTraversalKeys: Boolean,
+  enableFocusTraversalKeys: Boolean,
   listener: java.awt.event.TextListener,
   colorizer: Colorizer,
   i18n: String => String,
   actionMap: Map[KeyStroke, TextAction] = EditorArea.emptyMap)
   extends AbstractEditorArea
    with java.awt.event.FocusListener {
-
-  def this(rows: Int, columns: Int,
-    font: java.awt.Font,
-    disableFocusTraversalKeys: Boolean,
-    listener: java.awt.event.TextListener,
-    colorizer: Colorizer,
-    i18n: String => String) =
-      this(rows, columns, font, disableFocusTraversalKeys, listener, colorizer, i18n, EditorArea.emptyMap)
 
   private var indenter: IndenterInterface = new DumbIndenter(this)
   private var contextMenu: JPopupMenu = editorContextMenu(colorizer, i18n)
@@ -76,9 +68,8 @@ class EditorArea(
     caret.setBlinkRate(blinkRate)
     setCaret(caret)
     setDragEnabled(false)
-    setFocusTraversalKeysEnabled(!disableFocusTraversalKeys)
-    // TODO: Change to enable FocusTraversalKeys
-    if (!disableFocusTraversalKeys) {
+    setFocusTraversalKeysEnabled(enableFocusTraversalKeys)
+    if (enableFocusTraversalKeys) {
       getInputMap.put(keystroke(Key.VK_TAB),           new TransferFocusAction())
       getInputMap.put(keystroke(Key.VK_TAB, ShiftKey), new TransferFocusBackwardAction())
     } else {
@@ -290,7 +281,7 @@ class EditorArea(
   }
 
   def focusGained(fe: java.awt.event.FocusEvent): Unit = {
-    if (!mouseEvent && !disableFocusTraversalKeys && selectionActive) {
+    if (!mouseEvent && enableFocusTraversalKeys && selectionActive) {
       // this is like selectAll(), but it leaves the
       // caret at the beginning rather than the start;
       // this prevents the enclosing scrollpane from
@@ -312,7 +303,7 @@ class EditorArea(
     // visible.  I suppose we could make HighlightView smarter
     // about that, but instead let's just force the Mac-like
     // behavior and be done with it for now - ST 11/3/03
-    if (!disableFocusTraversalKeys)
+    if (enableFocusTraversalKeys)
       select(0, 0)
     mouseEvent = fe.isTemporary
     bracketMatcher.focusLost(this)

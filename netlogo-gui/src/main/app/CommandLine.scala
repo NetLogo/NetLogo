@@ -55,7 +55,7 @@ class CommandLine(commandCenter: CommandCenterInterface,
     new org.nlogo.editor.EditorField(30,
       new java.awt.Font(org.nlogo.awt.Fonts.platformMonospacedFont,
         java.awt.Font.PLAIN, 12),
-      true, new EditorColorizer(workspace),
+      false, new EditorColorizer(workspace),
       I18N.gui.fn)
 
   agentKind(AgentKind.Observer)
