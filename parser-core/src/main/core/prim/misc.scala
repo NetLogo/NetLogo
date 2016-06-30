@@ -351,7 +351,7 @@ case class _report() extends Command {
     Syntax.commandSyntax(
       right = List(Syntax.WildcardType))
 }
-case class _reportertask(minArgCount: Int = 0) extends Reporter {
+case class _reportertask(minArgCount: Int = 0, val synthetic: Boolean = false) extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(
       ret = Syntax.ReporterTaskType)
@@ -360,6 +360,9 @@ case class _reportertask(minArgCount: Int = 0) extends Reporter {
     val rt = new _reportertask(minArgCount)
     copyInstruction(rt)
   }
+
+  override def toString =
+    s"_reportertask($minArgCount)"
 }
 case class _return() extends Command {
   override def syntax =
@@ -419,10 +422,13 @@ case class _task() extends Reporter {
       ret = anyTask)
   }
 }
-case class _taskvariable(vn: Int) extends Reporter {
+// synthetic means that it was created by the compiler while expanding a concise task
+case class _taskvariable(vn: Int, synthetic: Boolean = false) extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(
       ret = Syntax.WildcardType)
+  override def toString =
+    s"_taskvariable($vn)"
 }
 case class _turtle() extends Reporter {
   override def syntax =
