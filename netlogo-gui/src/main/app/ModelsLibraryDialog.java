@@ -7,19 +7,28 @@ package org.nlogo.app;
 // instead of sifting through all the files at that time cause that's
 // super slow. ev 3/26/09
 
-import org.nlogo.core.I18N;
-import org.nlogo.swing.BrowserLauncher;
-import org.nlogo.workspace.ModelsLibrary;
-
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.net.URI;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
-import java.net.URI;
-
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JComponent;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
 import javax.swing.event.HyperlinkEvent;
+
+import org.nlogo.core.I18N;
+import org.nlogo.swing.BrowserLauncher;
+import org.nlogo.workspace.ModelsLibrary;
 
 strictfp class ModelsLibraryDialog
     extends javax.swing.JDialog
@@ -34,11 +43,6 @@ strictfp class ModelsLibraryDialog
       me = new ModelsLibraryDialog(parent);
       me.tree.setSelectionRow(0);
     }
-    // not sure I really understand why this should be necessary
-    // (it isn't on Windows), but at least on Macs, this ensures
-    // that the tree gets the keyboard focus when the dialog opens
-    // - ST 12/17/04
-    me.setFocusable(false);
     me.setVisible(true);
     if (me.sourceURI == null) {
       throw new org.nlogo.awt.UserCancelException();
@@ -54,6 +58,7 @@ strictfp class ModelsLibraryDialog
 
   private final javax.swing.JTree tree;
   private final ModelPreviewPanel modelPreviewPanel;
+  private final JTextField searchField;
 
   private Node selected = null;
   private URI sourceURI = null;
@@ -63,17 +68,17 @@ strictfp class ModelsLibraryDialog
   private final List<javax.swing.tree.TreePath> savedExpandedPaths =
       new LinkedList<javax.swing.tree.TreePath>();
 
-  javax.swing.Action openAction =
-      new javax.swing.AbstractAction(I18N.guiJ().get("modelsLibrary.open")) {
-        public void actionPerformed(java.awt.event.ActionEvent e) {
+  Action openAction =
+      new AbstractAction(I18N.guiJ().get("modelsLibrary.open")) {
+        public void actionPerformed(ActionEvent e) {
           sourceURI = selected.getFileURI();
           setVisible(false);
         }
       };
 
-  javax.swing.Action toggleOrOpenAction =
-      new javax.swing.AbstractAction("toggle-or-open") {
-        public void actionPerformed(java.awt.event.ActionEvent e) {
+  Action toggleOrOpenAction =
+      new AbstractAction("toggle-or-open") {
+        public void actionPerformed(ActionEvent e) {
           if (selected.isFolder()) {
             int row = tree.getSelectionRows()[0];
             if (tree.isExpanded(row)) {
@@ -87,20 +92,28 @@ strictfp class ModelsLibraryDialog
         }
       };
 
-  javax.swing.Action cancelAction =
-      new javax.swing.AbstractAction(I18N.guiJ().get("common.buttons.cancel")) {
-        public void actionPerformed(java.awt.event.ActionEvent e) {
+  Action cancelAction =
+      new AbstractAction(I18N.guiJ().get("common.buttons.cancel")) {
+        public void actionPerformed(ActionEvent e) {
           sourceURI = null;
           path = null;
           setVisible(false);
         }
       };
 
-  javax.swing.Action communityAction =
-      new javax.swing.AbstractAction(I18N.guiJ().get("modelsLibrary.community")) {
-        public void actionPerformed(java.awt.event.ActionEvent e) {
+  Action communityAction =
+      new AbstractAction(I18N.guiJ().get("modelsLibrary.community")) {
+        public void actionPerformed(ActionEvent e) {
           org.nlogo.swing.BrowserLauncher.openURL
               (me, "http://ccl.northwestern.edu/netlogo/models/community/", false);
+        }
+      };
+
+  Action focusSearchBoxAction =
+      new AbstractAction() {
+        public void actionPerformed(ActionEvent e) {
+          searchField.requestFocusInWindow();
+          searchField.selectAll();
         }
       };
 
@@ -109,6 +122,10 @@ strictfp class ModelsLibraryDialog
   private ModelsLibraryDialog(java.awt.Frame parent) {
     super(parent, I18N.guiJ().get("menu.file.modelsLibrary"), true);
     setResizable(true);
+    KeyStroke findKeyStroke =
+       KeyStroke.getKeyStroke(KeyEvent.VK_F, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
+    getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(findKeyStroke, "focus-search-box");
+    getRootPane().getActionMap().put("focus-search-box", focusSearchBoxAction);
     openAction.setEnabled(false);
     toggleOrOpenAction.setEnabled(false);
 
@@ -154,10 +171,10 @@ strictfp class ModelsLibraryDialog
     javax.swing.InputMap inputMap = new javax.swing.InputMap();
     inputMap.setParent(tree.getInputMap());
     inputMap.put
-        (javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_SPACE, 0),
+        (KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0),
             "none"); // don't let space bar toggle selection
     inputMap.put
-        (javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ENTER, 0),
+        (KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),
             "toggle-or-open");
     tree.setInputMap(javax.swing.JComponent.WHEN_FOCUSED, inputMap);
     tree.getActionMap().put("toggle-or-open", toggleOrOpenAction);
@@ -181,7 +198,7 @@ strictfp class ModelsLibraryDialog
 
     javax.swing.Box searchPanel =
         new javax.swing.Box(javax.swing.BoxLayout.X_AXIS);
-    final javax.swing.JTextField searchField = new javax.swing.JTextField("");
+    searchField = new JTextField("");
     searchField.getDocument().addDocumentListener(
         new javax.swing.event.DocumentListener() {
           public void changedUpdate(javax.swing.event.DocumentEvent e) {
@@ -196,6 +213,22 @@ strictfp class ModelsLibraryDialog
             setSearchText(searchField.getText());
           }
         });
+    searchField.addAncestorListener(new AncestorListener() {
+        public void ancestorAdded(AncestorEvent e) { searchField.requestFocusInWindow(); }
+        public void ancestorRemoved(AncestorEvent e) {}
+        public void ancestorMoved(AncestorEvent e) {}
+      });
+    searchField.addKeyListener(new KeyAdapter() {
+        public void keyPressed(KeyEvent e) {
+          switch (e.getKeyCode()) {
+            case KeyEvent.VK_UP:
+            case KeyEvent.VK_DOWN:
+            case KeyEvent.VK_KP_UP:
+            case KeyEvent.VK_KP_DOWN:
+              tree.requestFocusInWindow();
+          }
+        }
+      });
     searchField.setMaximumSize(new java.awt.Dimension(
         Short.MAX_VALUE,
         searchField.getMinimumSize().height));
