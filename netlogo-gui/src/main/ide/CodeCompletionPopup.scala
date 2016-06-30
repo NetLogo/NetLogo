@@ -38,6 +38,12 @@ case class CodeCompletionPopup() {
       suggestionDisplaylist.setLayoutOrientation(JList.VERTICAL)
       suggestionDisplaylist.setVisibleRowCount(10)
       suggestionDisplaylist.setCellRenderer(new SuggestionListRenderer(eA))
+      
+      suggestionDisplaylist.addMouseListener(new MouseAdapter {
+        override def mouseClicked(e: MouseEvent): Unit = {
+          autoCompleteSuggestion(eA, autoSuggestDocumentListener)
+        }
+      })
 
       suggestionDisplaylist.addKeyListener(new KeyListener {
         override def keyTyped(e: KeyEvent): Unit = {
@@ -55,18 +61,7 @@ case class CodeCompletionPopup() {
                 doc.remove(position - 1, 1)
               }
             case java.awt.event.KeyEvent.VK_ENTER =>
-              isPopupEnabled = false
-              var suggestion = suggestionDisplaylist.getSelectedValue
-              lastSuggested = suggestion
-              val tokenOption = getTokenTillPosition(eA.getText(), eA.getCaretPosition)
-              for(token <- tokenOption) {
-                val position = eA.getCaretPosition
-                val doc = eA.getDocument.asInstanceOf[javax.swing.text.PlainDocument]
-                doc.removeDocumentListener(autoSuggestDocumentListener)
-                doc.replace(token.start, position - token.start, suggestion, null)
-                eA.setCaretPosition(token.start + suggestion.length)
-                window.setVisible(false)
-              }
+              autoCompleteSuggestion(eA, autoSuggestDocumentListener)
             case _ =>
               e.setSource(eA)
               eA.dispatchEvent(e)
@@ -78,6 +73,28 @@ case class CodeCompletionPopup() {
         override def keyReleased(e: KeyEvent): Unit = {
         }
       })
+    }
+  }
+
+  /**
+    * Removes the currently typed token and replaces it with the selected element from
+    * the list of suggestions
+    *
+    * @param eA
+    * @param autoSuggestDocumentListener
+    */
+  def autoCompleteSuggestion(eA: EditorArea, autoSuggestDocumentListener: AutoSuggestDocumentListener) {
+    isPopupEnabled = false
+    var suggestion = suggestionDisplaylist.getSelectedValue
+    lastSuggested = suggestion
+    val tokenOption = getTokenTillPosition(eA.getText(), eA.getCaretPosition)
+    for(token <- tokenOption) {
+      val position = eA.getCaretPosition
+      val doc = eA.getDocument.asInstanceOf[javax.swing.text.PlainDocument]
+      doc.removeDocumentListener(autoSuggestDocumentListener)
+      doc.replace(token.start, position - token.start, suggestion, null)
+      eA.setCaretPosition(token.start + suggestion.length)
+      window.setVisible(false)
     }
   }
 
