@@ -42,7 +42,7 @@ object AutoConversionList {
           Seq[SourceRewriter => String](
             _.remove("movie-set-frame-rate"),
             _.addCommand("movie-start"       -> "set _recording-save-file-name {0}"),
-            _.replaceCommand("movie-start"   -> "(vid:start-recorder)"),
+            _.replaceCommand("movie-start"   -> "vid:start-recorder"),
             _.replaceReporter("movie-status" -> "vid:recorder-status"))
 
       val codeTabOnlyReplacements = Seq[SourceRewriter => String](
