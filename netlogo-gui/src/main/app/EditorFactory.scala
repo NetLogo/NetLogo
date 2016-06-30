@@ -23,8 +23,9 @@ class EditorFactory(compiler: CompilerServices) extends org.nlogo.window.EditorF
                                  java.awt.Font.PLAIN, 12)
     val colorizer = new org.nlogo.window.EditorColorizer(compiler)
     val codeCompletionPopup = new CodeCompletionPopup()
-    val actionMap = mapAsJavaMap(Map(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_SPACE, java.awt.event.InputEvent.CTRL_DOWN_MASK)
-      -> new AutoSuggestAction("auto-suggest", codeCompletionPopup))).asInstanceOf[java.util.Map[KeyStroke, TextAction]]
+    val actionMap = Map(
+      KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_SPACE, java.awt.event.InputEvent.CTRL_DOWN_MASK)
+      -> new AutoSuggestAction("auto-suggest", codeCompletionPopup))
     class MyCodeEditor
     extends org.nlogo.window.CodeEditor(rows, cols, font, disableFocusTraversal,
                                         listener, colorizer, I18N.gui.get _, actionMap)
