@@ -2,31 +2,22 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{ Cursor, FileDialog => AwtFileDialog }
-import java.awt.event.{ ActionListener, ActionEvent, KeyEvent, KeyListener, FocusEvent, MouseEvent }
+import java.awt.{Cursor, FileDialog => AwtFileDialog}
+import java.awt.event.{ActionEvent, ActionListener, FocusEvent, KeyEvent, MouseEvent}
 import java.io.IOException
-import java.util.{ ArrayList, List => JList }
-
+import java.util.{ArrayList, List => JList}
 import javax.imageio.ImageIO
-import javax.swing.{ JMenuItem, JPopupMenu, JOptionPane }
+import javax.swing.{JMenuItem, JOptionPane, JPopupMenu}
 
-import org.nlogo.window.{ ButtonWidget, ChooserWidget, CodeEditor,
-  EditorColorizer, GUIWorkspace, InputBoxWidget, InterfaceGlobalWidget,
-  JobWidget, MonitorWidget, OutputWidget, PlotWidget, SliderWidget,
-  ViewWidget, ViewWidgetInterface, Widget, WidgetInfo, WidgetRegistry }
-import org.nlogo.api.{ Editable, Exceptions, ModelSection, Version, VersionHistory }
-import org.nlogo.awt.{ Fonts, Hierarchy, Images, UserCancelException }
-import org.nlogo.core.{ AgentKind, I18N, View => CoreView, Widget => CoreWidget,
-  Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox,
-  Monitor => CoreMonitor, Output => CoreOutput, Plot => CorePlot, Slider => CoreSlider,
-  Switch => CoreSwitch, TextBox => CoreTextBox }
+import org.nlogo.window.{ButtonWidget, ChooserWidget, CodeEditor, EditorColorizer, GUIWorkspace, InputBoxWidget, InterfaceGlobalWidget, JobWidget, MonitorWidget, OutputWidget, PlotWidget, SliderWidget, ViewWidget, ViewWidgetInterface, Widget, WidgetInfo, WidgetRegistry}
+import org.nlogo.api.{Editable, Exceptions, ModelSection, Version, VersionHistory}
+import org.nlogo.app.WidgetActions.AddWidget
+import org.nlogo.awt.{Fonts, Hierarchy, Images, UserCancelException}
+import org.nlogo.core.{AgentKind, I18N, Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox, Monitor => CoreMonitor, Output => CoreOutput, Plot => CorePlot, Slider => CoreSlider, Switch => CoreSwitch, TextBox => CoreTextBox, View => CoreView, Widget => CoreWidget}
 import org.nlogo.log.Logger
-import org.nlogo.swing.{ FileDialog => SwingFileDialog }
+import org.nlogo.swing.{FileDialog => SwingFileDialog}
 import org.nlogo.swing.ModalProgressTask
-import org.nlogo.window.ChooserWidget
-import org.nlogo.window.Events.{ CompileAllEvent, CompileMoreSourceEvent,
-  EditWidgetEvent, ExportInterfaceEvent, LoadWidgetsEvent, RemoveConstraintEvent,
-  WidgetRemovedEvent }
+import org.nlogo.window.Events.{CompileAllEvent, CompileMoreSourceEvent, EditWidgetEvent, LoadWidgetsEvent, RemoveConstraintEvent}
 import org.nlogo.workspace.Evaluator
 
 import scala.collection.JavaConverters._
@@ -117,17 +108,22 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     addActionListener(this)
 
     override def actionPerformed(e: ActionEvent): Unit = {
-      val widget = makeWidget(coreWidget)
-      val wrapper = addWidget(widget, x, y, true, false)
-      revalidate()
-      wrapper.selected(true)
-      wrapper.foreground()
-      wrapper.isNew(true)
-      new EditWidgetEvent(null).raise(InterfacePanel.this)
-      newWidget.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))
-      wrapper.isNew(false)
-      newWidget = null
+      WidgetActions.addWidget(InterfacePanel.this, coreWidget, x, y)
     }
+  }
+
+  override def createWidget(coreWidget: CoreWidget, x: Int, y: Int): WidgetWrapper = {
+    val widget = makeWidget(coreWidget)
+    val wrapper = addWidget(widget, x, y, true, false)
+    revalidate()
+    wrapper.selected(true)
+    wrapper.foreground()
+    wrapper.isNew(true)
+    new EditWidgetEvent(null).raise(InterfacePanel.this)
+    newWidget.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))
+    wrapper.isNew(false)
+    newWidget = null
+    wrapper
   }
 
   // This is used both when loading a model and when the user is making
@@ -157,7 +153,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     }
   }
 
-  override private[app] def deleteWidgets(hitList: Seq[WidgetWrapper]): Unit = {
+  override def deleteWidgets(hitList: Seq[WidgetWrapper]): Unit = {
     var needsRecompile: Boolean = false
     for (wrapper <- hitList) {
       removeWidget(wrapper)

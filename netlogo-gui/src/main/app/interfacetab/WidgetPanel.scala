@@ -9,22 +9,24 @@ import javax.swing.{ JComponent, JLayeredPane, JMenuItem, JPopupMenu }
 
 import scala.collection.JavaConverters._
 
-import org.nlogo.api.{ Editable, Version }
-import org.nlogo.awt.{ Mouse => NlogoMouse, Fonts => NlogoFonts }
-import org.nlogo.core.{ I18N, Widget => CoreWidget,
-  Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox,
-  Monitor => CoreMonitor, Plot => CorePlot, Slider => CoreSlider,
-  Switch => CoreSwitch, TextBox => CoreTextBox, View => CoreView }
+import org.nlogo.api.{Editable, Version}
+import org.nlogo.window.{AbstractWidgetPanel, ButtonWidget, CodeEditor, DummyButtonWidget, DummyChooserWidget, DummyInputBoxWidget, DummyMonitorWidget, DummyPlotWidget, DummySliderWidget, DummyViewWidget, EditorColorizer, GUIWorkspace, OutputWidget, PlotWidget, Widget, WidgetContainer, WidgetRegistry}
+import org.nlogo.window.Events.{DirtyEvent, EditWidgetEvent, LoadBeginEvent, WidgetEditedEvent, WidgetRemovedEvent, ZoomedEvent}
+import org.nlogo.core.{I18N, Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox, Monitor => CoreMonitor, Plot => CorePlot, Slider => CoreSlider, Switch => CoreSwitch, TextBox => CoreTextBox, View => CoreView, Widget => CoreWidget}
 import org.nlogo.core.model.WidgetReader
 import org.nlogo.fileformat
-import org.nlogo.log.Logger
+import org.nlogo.awt.{Fonts => NlogoFonts, Mouse => NlogoMouse}
 import org.nlogo.nvm.DefaultCompilerServices
-import org.nlogo.window.{ AbstractWidgetPanel, ButtonWidget, CodeEditor,
-  DummyButtonWidget, DummyChooserWidget, DummyInputBoxWidget, DummyMonitorWidget,
-  DummyPlotWidget, DummySliderWidget, DummyViewWidget, EditorColorizer,
-  GUIWorkspace, OutputWidget, PlotWidget, Widget, WidgetContainer, WidgetRegistry }
-import org.nlogo.window.Events.{ DirtyEvent,
-  EditWidgetEvent, WidgetEditedEvent, WidgetRemovedEvent, LoadBeginEvent, ZoomedEvent }
+import org.nlogo.log.Logger
+import java.awt.event.{ActionEvent, ActionListener, FocusEvent, FocusListener, MouseListener, MouseMotionListener}
+import javax.swing.{JComponent, JMenuItem, JPopupMenu}
+import javax.swing.JLayeredPane.DRAG_LAYER
+import java.awt.event.MouseEvent
+import java.awt.{Component, Cursor, Dimension, Graphics, Point, Rectangle, Color => AwtColor}
+
+import org.nlogo.app.WidgetActions.RemoveMultipleWidgets
+
+import scala.collection.JavaConverters._
 
 // note that an instance of this class is used for the hubnet client editor
 // and its subclass InterfacePanel is used for the interface tab.
@@ -51,7 +53,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
   private[app] var _hasFocus: Boolean = false
   protected var selectionRect: Rectangle = null // convert to Option?
   protected var widgetCreator: WidgetCreator = null
-  protected var widgetsBeingDragged: Seq[WidgetWrapper] = Seq()
+  var widgetsBeingDragged: Seq[WidgetWrapper] = Seq()
   private var view: Widget = null // convert to Option?
 
   // if sliderEventOnReleaseOnly is true, a SliderWidget will only raise an InterfaceGlobalEvent
@@ -202,8 +204,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
     new Point(x, y)
   }
 
-  protected def dropSelectedWidgets(): Unit = {
-    widgetsBeingDragged.foreach(_.doDrop())
+  def dropSelectedWidgets(): Unit = {
+    widgetsBeingDragged.foreach(_.())
     widgetsBeingDragged = Seq()
     setForegroundWrapper()
   }
@@ -317,7 +319,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     }
   }
 
-  def createWidget(coreWidget: CoreWidget, x: Int, y: Int): Unit = {
+  def createWidget(coreWidget: CoreWidget, x: Int, y: Int): WidgetWrapper = {
     val widget = makeWidget(coreWidget)
     val wrapper = addWidget(widget, x, y, true, false)
     revalidate()
@@ -328,6 +330,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     newWidget.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))
     wrapper.isNew(false)
     newWidget = null // TODO: new widget set somewhere else and nulled here, gross
+    wrapper
   }
 
   // This is used both when loading a model and when the user is making
@@ -411,7 +414,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     selectedWrappers.foreach(_.selected(false))
   }
 
-  protected def addWidget(widget: Widget, x: Int, y: Int,
+  def addWidget(widget: Widget, x: Int, y: Int,
     select: Boolean, loadingWidget: Boolean): WidgetWrapper = {
     val size = widget.getSize()
     val wrapper = new WidgetWrapper(widget, this)
@@ -449,6 +452,22 @@ class WidgetPanel(val workspace: GUIWorkspace)
     wrapper
   }
 
+  def reAddWidget(widgetWrapper: WidgetWrapper): WidgetWrapper ={
+    widgetWrapper.setVisible(false)
+    // we need to add the wrapper before we can call wrapper.getPreferredSize(), because
+    // that method looks at its parent and sees if it's an InterfacePanel
+    // and zooms accordingly - ST 6/16/02
+    add(widgetWrapper, javax.swing.JLayeredPane.DEFAULT_LAYER)
+    moveToFront(widgetWrapper)
+    widgetWrapper.validate()
+    widgetWrapper.setVisible(true)
+
+    zoomer.zoomWidget(widgetWrapper, true, false, 1.0, zoomFactor)
+
+//    Logger.logAddWidget(widget.classDisplayName, widget.displayName)
+    widgetWrapper
+  }
+
   def editWidgetFinished(target: Editable, canceled: Boolean): Unit = {
     target match {
       case comp: Component if comp.getParent.isInstanceOf[WidgetWrapper] =>
@@ -471,13 +490,13 @@ class WidgetPanel(val workspace: GUIWorkspace)
       case w: WidgetWrapper => w.selected && w.widget.deleteable
       case _ => false
     }
-    deleteWidgets(hitList)
+    WidgetActions.removeWidgets(this, hitList)
   }
 
-  protected def deleteWidget(target: WidgetWrapper): Unit =
+  def deleteWidget(target: WidgetWrapper): Unit =
     deleteWidgets(Seq(target))
 
-  private[app] def deleteWidgets(hitList: Seq[WidgetWrapper]): Unit = {
+  def deleteWidgets(hitList: Seq[WidgetWrapper]): Unit = {
     hitList.foreach(removeWidget)
     setForegroundWrapper()
     revalidate()

@@ -10,12 +10,16 @@ import javax.swing.{ JMenuItem, JPopupMenu, JButton, ButtonGroup, JToggleButton,
 
 import scala.collection.mutable
 
+import java.util.HashSet
+import javax.swing.{AbstractAction, Action, ButtonGroup, ImageIcon, JButton, JMenuItem, JPopupMenu, JToggleButton}
+
 import org.nlogo.api.Editable
 import org.nlogo.app.common.{ Events => AppEvents }
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ ToolBar, ToolBarActionButton, ToolBarToggleButton }
-import org.nlogo.window.{ EditDialogFactoryInterface, Events => WindowEvents,
-  GUIWorkspace, JobWidget, Widget, WidgetInfo }
+import java.awt.event.{ActionEvent, ActionListener, MouseAdapter, MouseEvent}
+
+import org.nlogo.window.{EditDialogFactoryInterface, Widget, WidgetInfo}
+import org.nlogo.swing.{ToolBarActionButton, ToolBarButton, ToolBarToggleButton}
 
 class InterfaceToolBar(wPanel: WidgetPanel,
                        workspace: GUIWorkspace,
@@ -41,6 +45,8 @@ class InterfaceToolBar(wPanel: WidgetPanel,
   private val deleteAction = new DeleteAction
   private val deleteButton = new ToolBarActionButton(deleteAction)
   private val widgetMenu = new WidgetMenu
+  private val undoButton = new ToolBarButton("Undo", WidgetActions.undo())
+  private val redoButton = new ToolBarButton("Redo", WidgetActions.redo())
 
   wPanel.setWidgetCreator(this)
   // on Macs we want the window background but not on other systems
@@ -48,6 +54,13 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     setOpaque(true)
     setBackground(SystemColor.window)
   }
+
+  WidgetActions.setButtons(undoButton, redoButton)
+  undoButton.setEnabled(false)
+  undoButton.setIcon(new ImageIcon(classOf[InterfaceToolBar].getResource("/images/undo.png")))
+  redoButton.setEnabled(false)
+  redoButton.setIcon(new ImageIcon(classOf[InterfaceToolBar].getResource("/images/redo.png")))
+
   editButton.setToolTipText(I18N.gui.get("tabs.run.editButton.tooltip"))
   addButton.setToolTipText(I18N.gui.get("tabs.run.addButton.tooltip"))
   deleteButton.setToolTipText(I18N.gui.get("tabs.run.deleteButton.tooltip"))
@@ -115,7 +128,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
   }
 
   override def addControls() {
-    Seq(editButton, deleteButton, addButton, widgetMenu).foreach(add)
+    Seq(editButton, deleteButton, addButton, undoButton, redoButton, widgetMenu).foreach(add)
     group.add(noneButton)
     group.add(addButton)
     noneButton.setSelected(true)

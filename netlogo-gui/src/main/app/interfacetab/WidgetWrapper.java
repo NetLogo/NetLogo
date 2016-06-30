@@ -5,7 +5,7 @@ package org.nlogo.app.interfacetab;
 import org.nlogo.window.MouseMode;
 import org.nlogo.window.Widget;
 
-import java.awt.Dimension;
+import java.awt.*;
 
 // public for widget extension - ST 6/12/08
 public strictfp class WidgetWrapper
@@ -173,6 +173,7 @@ public strictfp class WidgetWrapper
       }
 
       setBounds(bounds);
+//      WidgetActions.moveWidget(this, bounds, temporary);
       if (!temporary) {
         new org.nlogo.app.common.Events.WidgetSelectedEvent(widget, selected)
             .raise(this);
@@ -357,7 +358,7 @@ public strictfp class WidgetWrapper
   private static final int MIN_WIDGET_WIDTH = 12;
   private static final int MIN_WIDGET_HEIGHT = 12;
 
-  private MouseMode mouseMode = MouseMode.IDLE;
+  MouseMode mouseMode = MouseMode.IDLE;
 
   private MouseMode mouseMode() {
     return mouseMode;
@@ -452,6 +453,8 @@ public strictfp class WidgetWrapper
     enforceMinimumSize(bounds);
     enforceMaximumSize(bounds);
     setBounds(widget.constrainDrag(bounds, originalBounds, mouseMode()));
+//    System.out.println("resizing widget");
+//    WidgetActions.moveWidget(this, widget.constrainDrag(bounds, originalBounds, mouseMode()), false);
   }
 
   public int gridSnap() {
@@ -571,10 +574,12 @@ public strictfp class WidgetWrapper
         || mouseMode() == MouseMode.S || mouseMode() == MouseMode.W
         || mouseMode() == MouseMode.E || mouseMode() == MouseMode.N) {
       doResize(x - startPressX, y - startPressY);
+//      new WidgetActions.ResizeWidget(this, x - startPressX, y - startPressY);
     }
   }
 
   void doDrag(int x, int y) {
+//    new WidgetActions.MoveWidget(this, new Rectangle(x + originalBounds.x, y + originalBounds.y, this.getWidth(), this.getHeight()));
     setLocation(x + originalBounds.x, y + originalBounds.y);
   }
 
@@ -584,12 +589,15 @@ public strictfp class WidgetWrapper
       return;
     } else if (org.nlogo.awt.Mouse.hasButton1(e)) {
       if (mouseMode() == MouseMode.DRAG) {
-        interfacePanel().dropSelectedWidgets();
+        WidgetActions.moveWidgets(interfacePanel);
+//        interfacePanel().dropSelectedWidgets();
       } else if (mouseMode() == MouseMode.NE || mouseMode() == MouseMode.NW
           || mouseMode() == MouseMode.SE || mouseMode() == MouseMode.SW
           || mouseMode() == MouseMode.S || mouseMode() == MouseMode.W
           || mouseMode() == MouseMode.E || mouseMode() == MouseMode.N) {
-        doDrop();
+        System.out.println("Something interesting");
+        WidgetActions.resizeWidget(this);
+//        doDrop();
       }
       mouseMode(MouseMode.IDLE);
     }
@@ -821,6 +829,8 @@ public strictfp class WidgetWrapper
       rect.height += BORDER_N + BORDER_S;
     }
     super.setBounds(rect);
+    // Is this rezise or move?
+//    WidgetActions.moveWidget(this, rect, false);
     revalidateInterfacePanel();
   }
 
@@ -917,7 +927,7 @@ public strictfp class WidgetWrapper
       deleteItem.addActionListener
           (new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
-              interfacePanel().deleteWidget(WidgetWrapper.this);
+              WidgetActions.removeWidget(interfacePanel(), WidgetWrapper.this);
             }
           });
       menu.add(new javax.swing.JPopupMenu.Separator());
