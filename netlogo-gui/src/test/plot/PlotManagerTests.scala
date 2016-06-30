@@ -4,13 +4,22 @@ package org.nlogo.plot
 
 import org.nlogo.api.{ CommandLogoThunk, DummyLogoThunkFactory, LogoException }
 
-import scala.util.{ Failure, Try }
+import scala.util.{ Failure, Success, Try }
 
 class PlotManagerTests extends SimplePlotTest {
 
   def newPlotManager() =
-    new PlotManager(new DummyLogoThunkFactory())
+    new PlotManager(normalThunkFactory)
 
+  def normalThunkFactory = new DummyLogoThunkFactory() {
+    override def makeCommandThunk(code: String, jobOwnerName: String): CommandLogoThunk = {
+      return new CommandLogoThunk {
+        def call: Try[Boolean] = {
+          Success(false)
+        }
+      }
+    }
+  }
   def errorThunkFactory = new DummyLogoThunkFactory() {
     override def makeCommandThunk(code: String, jobOwnerName: String): CommandLogoThunk = {
       return new CommandLogoThunk {
@@ -74,5 +83,16 @@ class PlotManagerTests extends SimplePlotTest {
     assert(plot.runtimeError.isDefined)
     assert(manager.hasErrors(plot))
     assert(manager.hasErrors(penErroringAtRuntime))
+  }
+
+  test("returns no setup error or update error for pens which haven't been compiled") {
+    val manager = newPlotManager()
+    val plot = manager.newPlot("text")
+    manager.compileAllPlots()
+    manager.updatePlots()
+    val pen = new PlotPen(plot, "error", false, "", "plot runresult [ false ]")
+    plot.addPen(pen)
+    assert(! manager.hasErrors(plot))
+    assert(! manager.hasErrors(pen))
   }
 }

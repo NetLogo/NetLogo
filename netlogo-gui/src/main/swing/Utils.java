@@ -42,6 +42,10 @@ public final strictfp class Utils {
         UIManager.getDefaults().put("TabbedPane.foreground", new Color(0, 0, 0));
         UIManager.getDefaults().put("TabbedPane.selectedTabPadInsets", new java.awt.Insets(0,0,-2,0));
         UIManager.getDefaults().put("TabbedPane.contentBorderInsets", new java.awt.Insets(0,-10,-13,-9));
+        // The java defaults specify this as black on my system,
+        // which was distractingly bad for the name field of the "PlotPen" JTable when
+        // that field was clicked, moved off and then released - RG 7/1/16
+        UIManager.getDefaults().put("Table.focusCellBackground", new java.awt.Color(202, 202, 202));
         UIManager.setLookAndFeel(lookAndFeel);
       } else if (System.getProperty("os.name").startsWith("Windows")) {
         javax.swing.UIManager.setLookAndFeel
