@@ -95,7 +95,7 @@ object ExpressionParser {
         // synthesize an empty block so that later phases of compilation will be dealing with a
         // consistent number of arguments - ST 3/4/08
         val file = tokens.head.filename
-        app.addArgument(new core.CommandBlock(new core.Statements(file), app.end, app.end, file))
+        app.addArgument(new core.CommandBlock(new core.Statements(file), app.end, app.end, file, true))
       }
     // check all types
     resolveTypes(syntax, app)
@@ -420,14 +420,14 @@ object ExpressionParser {
     *  take at least one input (since otherwise a simple "map f xs" wouldn't evaluate f).
     */
   private def expandConciseReporterTask(rApp: core.ReporterApp, reporter: core.Reporter): core.ReporterApp = {
-    val task = new core.prim._reportertask
+    val task = new core.prim._reportertask(synthetic = true)
     task.token = reporter.token
     val taskApp =
       new core.ReporterApp(task,
         reporter.token.start, reporter.token.end, reporter.token.filename)
     taskApp.addArgument(rApp)
     for(argNumber <- 1 to reporter.syntax.totalDefault) {
-      val lv = new core.prim._taskvariable(argNumber)
+      val lv = new core.prim._taskvariable(argNumber, synthetic = true)
       lv.token = reporter.token
       rApp.addArgument(
         new core.ReporterApp(lv,
@@ -444,7 +444,7 @@ object ExpressionParser {
     val task = new core.prim._commandtask
     task.token = token
     for(argNumber <- 1 to coreCommand.syntax.totalDefault) {
-      val lv = new core.prim._taskvariable(argNumber)
+      val lv = new core.prim._taskvariable(argNumber, synthetic = true)
       lv.token = token
       stmt.addArgument(new core.ReporterApp(lv,
         token.start, token.end, token.filename))
@@ -455,7 +455,7 @@ object ExpressionParser {
       stmt.addArgument(
         new core.CommandBlock(
           new core.Statements(token.filename),
-          token.start, token.end, token.filename))
+          token.start, token.end, token.filename, synthetic = true))
     val stmts = new core.Statements(token.filename)
     stmts.addStatement(stmt)
     val rapp =
@@ -463,7 +463,7 @@ object ExpressionParser {
         token.start, token.end, token.filename)
     rapp.addArgument(
       new core.CommandBlock(stmts,
-        token.start, token.end, token.filename))
+        token.start, token.end, token.filename, synthetic = true))
     rapp
   }
 

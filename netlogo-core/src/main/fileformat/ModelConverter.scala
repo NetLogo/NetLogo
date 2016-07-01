@@ -8,18 +8,12 @@ import org.nlogo.core.{ CompilationEnvironment, CompilationOperand, Dialect, Ext
 
 import org.nlogo.api.{ AutoConverter, AutoConvertable }
 
-import scala.util.Try
+import scala.util.{ Failure, Success, Try }
 import scala.util.matching.Regex
 
-object ModelConverter {
-  def apply(model:       Model,
-    codeTabConversions:  Seq[SourceRewriter => String],
-    allCodeConversions:  Seq[SourceRewriter => String],
-    targets:             Seq[String],
-    extensionManager:    ExtensionManager,
-    compilationEnv:      CompilationEnvironment,
-    components:          Seq[AutoConvertable],
-    dialect:             Dialect): Try[Model] = {
+class ModelConverter(extensionManager: ExtensionManager, compilationEnv: CompilationEnvironment, dialect: Dialect, applicableConversions: Model => Seq[ConversionSet] = { _ => Seq() })
+  extends ((Model, Seq[AutoConvertable]) => Model) {
+  def apply(model: Model, components: Seq[AutoConvertable]): Model = {
 
     def compilationOperand(source: String, program: Program, procedures: ProceduresMap): CompilationOperand =
       CompilationOperand(
@@ -41,47 +35,54 @@ object ModelConverter {
       rewriterOp(operand)
     }
 
-    def containsAnyTargets(source: String): Boolean = {
+    def containsAnyTargets(targets: Seq[String])(source: String): Boolean = {
       val anyTarget =
         new Regex("(?i)" + targets.map(Regex.quote).map("\\b" + _ + "\\b").mkString("|"))
       anyTarget.findFirstIn(source).isDefined
     }
 
-    def requiresConversion(model: Model, convertable: AutoConvertable): Boolean = {
-      convertable.requiresAutoConversion(model, containsAnyTargets _)
+    def requiresConversion(model: Model, targets: Seq[String], convertable: AutoConvertable): Boolean = {
+      convertable.requiresAutoConversion(model, containsAnyTargets(targets))
     }
 
-    Try {
-      if (targets.nonEmpty &&
-        (containsAnyTargets(model.code) || components.exists(requiresConversion(model, _)))) {
+    def runConversion(conversionSet: ConversionSet, model: Model): Try[Model] = {
+      import conversionSet._
+      Try {
+        if (targets.nonEmpty &&
+          (containsAnyTargets(targets)(model.code) || components.exists(requiresConversion(model, targets, _)))) {
 
-          val code = codeTabConversions.foldLeft(model.code) {
-            case (src, conversion) =>
-              conversion(rewriter(src, Program.fromDialect(dialect).copy(interfaceGlobals = model.interfaceGlobals)))
+            val code = codeTabConversions.foldLeft(model.code) {
+              case (src, conversion) =>
+                conversion(rewriter(src, Program.fromDialect(dialect).copy(interfaceGlobals = model.interfaceGlobals)))
+            }
+
+            val newCompilation = compilationOperand(code,
+              Program.fromDialect(dialect).copy(interfaceGlobals = model.interfaceGlobals),
+              FrontEndInterface.NoProcedures)
+
+            val fe = Femto.scalaSingleton[FrontEndInterface]("org.nlogo.parse.FrontEnd")
+            val (_, results) = fe.frontEnd(newCompilation)
+
+
+            val converter = new ModelConverter(otherCodeConversions, containsAnyTargets(targets), rewriterOp _, results, extensionManager, compilationEnv)
+
+            // need to run optionalConversions even when no other code is changed...
+            val convertedModel = model.copy(code = code)
+            components.foldLeft(convertedModel) {
+              case (m, component) => component.autoConvert(m, converter)
+            }
           }
+          else
+            model
+      }
+    }
 
-          val newCompilation = compilationOperand(code,
-            Program.fromDialect(dialect).copy(interfaceGlobals = model.interfaceGlobals),
-            FrontEndInterface.NoProcedures)
-
-          val fe = Femto.scalaSingleton[FrontEndInterface]("org.nlogo.parse.FrontEnd")
-          val (_, results) = fe.frontEnd(newCompilation)
-
-
-          val converter = new ModelConverter(allCodeConversions, containsAnyTargets _, rewriterOp _, results, extensionManager, compilationEnv)
-
-          // need to run optionalConversions even when no other code is changed...
-          val convertedModel = model.copy(code = code)
-          components.foldLeft(convertedModel) {
-            case (m, component) => component.autoConvert(m, converter)
-          }
-        }
-        else
-          model
+    applicableConversions(model).foldLeft(model) {
+      case (m, conversion) => runConversion(conversion, m).getOrElse(m)
     }
   }
 
-  class ModelConverter(allCodeConversions: Seq[SourceRewriter => String],
+  class ModelConverter(otherCodeConversions: Seq[SourceRewriter => String],
     containsAnyTargets: String => Boolean,
     rewriter: CompilationOperand => SourceRewriter,
     results: StructureResults,
@@ -120,7 +121,7 @@ object ModelConverter {
         subprogram             = true)
 
     private def convertWrappedSource(compilationOp: String => CompilationOperand)(source: String) = {
-      allCodeConversions.foldLeft(source) {
+      otherCodeConversions.foldLeft(source) {
         case (src, conversion) => conversion(rewriter(compilationOp(src)))
       }
     }

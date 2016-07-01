@@ -152,7 +152,7 @@ class Statement(var command: Command, var start: Int, var end: Int, val file: St
  * jargon. Note that this is an Expression, and as such can be an argument
  * to commands and reporters, etc.
  */
-class CommandBlock(val statements: Statements, var start: Int, var end: Int, val file: String) extends Expression {
+class CommandBlock(val statements: Statements, var start: Int, var end: Int, val file: String, val synthetic: Boolean = false) extends Expression {
   def reportedType() = Syntax.CommandBlockType
   override def toString = "[" + statements.toString + "]"
 
@@ -160,7 +160,7 @@ class CommandBlock(val statements: Statements, var start: Int, var end: Int, val
            start: Int = start,
            end: Int = end,
            file: String = file): CommandBlock = {
-    new CommandBlock(statements, start, end, file)
+    new CommandBlock(statements, start, end, file, synthetic)
   }
 }
 

@@ -32,11 +32,10 @@ class AstRewriterTests extends FunSuite {
     added.trim
   }
 
-  def trimmedRewriteCommand(source: String, f: AstRewriter => String, preamble: String = "TO FOO "): String = {
-    val POSTAMBLE = " END"
-    val src = preamble + source + POSTAMBLE
+  def trimmedRewriteCommand(source: String, f: AstRewriter => String, preamble: String = "TO FOO ", postamble: String = " END"): String = {
+    val src = preamble + source + postamble
     val rewritten = f(rewriter(src))
-    rewritten.stripPrefix(preamble.stripSuffix(" ")).stripSuffix(POSTAMBLE).trim
+    rewritten.stripPrefix(preamble.trim).stripSuffix(postamble.trim).trim
   }
 
   def addCommand(source: String, target: (String, String)): String =
@@ -53,6 +52,32 @@ class AstRewriterTests extends FunSuite {
 
   def replaceReporter(source: String, target: (String, String)): String =
     trimmedRewriteCommand(source, _.replaceReporter(target), "TO-REPORT FOO REPORT ")
+
+  def assertPreservesSource(source: String, header: String = "TO FOO ", footer: String = " END"): Unit = {
+    val rewrittenSource =
+      trimmedRewriteCommand(source,
+        r => r.rewrite(NoopFolder, r.preserveBody _), header, footer)
+    assert(source == rewrittenSource)
+  }
+
+  def assertModifiesSource(source: String, expectedSource: String): Unit = {
+    val rewrittenSource =
+      trimmedRewriteCommand(source, r => r.rewrite(NoopFolder, r.preserveBody _), "", "")
+    assert(expectedSource == rewrittenSource)
+  }
+
+  // these are basic checks that various AST structures can be rewritten when unaltered
+  test("preserves source") {
+    assertPreservesSource("fd 1")
+    assertPreservesSource("create-turtles 10 [ fd 1 ]")
+    assertPreservesSource("create-turtles 10 [ ]")
+    assertPreservesSource("create-turtles 10")
+    assertPreservesSource("foreach [1 2 3] print")
+    assertPreservesSource("to foo end\n\nto baz end", "", "")
+    assertPreservesSource("show reduce + [1 2 3]")
+    assertPreservesSource("show reduce [?1 + ?2] [1 2 3]")
+    assertModifiesSource("to foo  \nend", "to foo\nend")
+  }
 
   test("replace token") {
     assertResult("__hsb-old 1 2 3")(replaceReporterToken("hsb 1 2 3", "hsb" -> "__hsb-old"))

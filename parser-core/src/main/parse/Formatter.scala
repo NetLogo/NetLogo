@@ -4,7 +4,7 @@ package org.nlogo.parse
 
 import org.nlogo.core.{ AstNode, CommandBlock, Dump, Instruction, LogoList, ProcedureDefinition,
   ReporterApp, ReporterBlock, Statement, prim },
-  prim.{ _commandtask, _const, _reportertask }
+  prim.{ _commandtask, _const, _reportertask, _taskvariable }
 
 object Formatter {
 
@@ -23,6 +23,7 @@ object Formatter {
       case r: _const        => r.token.text
       case r: _reportertask => ""
       case r: _commandtask  => ""
+      case v: _taskvariable if v.synthetic => ""
       case r                => r.token.text
     }
 
@@ -42,21 +43,34 @@ class Formatter
   }
 
   override def visitCommandBlock(block: CommandBlock, position: AstPath)(implicit c: Context): Context = {
-    visitBlock(block, position, c1 => super.visitCommandBlock(block, position)(c1))
+    if (block.synthetic && block.statements.stmts.isEmpty)
+      c
+    else if (block.synthetic)
+      visitBlock(block, position, c1 => super.visitCommandBlock(block, position)(c1), _.leading, _.backMargin)
+    else
+      visitBlock(block, position, c1 => super.visitCommandBlock(block, position)(c1))
   }
 
   override def visitReporterBlock(block: ReporterBlock, position: AstPath)(implicit c: Context): Context = {
     visitBlock(block, position, c1 => super.visitReporterBlock(block, position)(c1))
   }
 
-  private def visitBlock(block: AstNode, position: AstPath, visit: Context => Context)(implicit c: Context): Context = {
+  private def normalBeginBlock(ws: WhiteSpace): String =
+    ws.leading + "["
+
+  private def normalEndBlock(ws: WhiteSpace): String =
+    ws.backMargin + "]"
+
+  private def visitBlock(block: AstNode, position: AstPath, visit: Context => Context,
+    beginBlock: WhiteSpace => String = normalBeginBlock _,
+    endBlock:   WhiteSpace => String = normalEndBlock _)
+    (implicit c: Context): Context = {
     c.operations.get(position)
       .map(op => op(this, block, position, c.appendText(leadingWhitespace(position))))
       .getOrElse {
         val ws = c.wsMap(position)
-        visit(c.appendText(leadingWhitespace(position) + "["))
-          .appendText(ws.backMargin)
-          .appendText("]")
+        visit(c.appendText(beginBlock(ws)))
+          .appendText(endBlock(ws))
       }
   }
 
@@ -66,8 +80,7 @@ class Formatter
       .getOrElse {
         val ws = leadingWhitespace(position)
         val newContext = c.appendText(ws + c.instructionToString(stmt.command))
-        super.visitStatement(stmt, position)(newContext)
-          .copy(instructionToString = c.instructionToString)
+        super.visitStatement(stmt, position)(newContext).copy(instructionToString = c.instructionToString)
       }
   }
 
@@ -84,12 +97,14 @@ class Formatter
             app.args.zipWithIndex.tail.foldLeft(c2.appendText(ws + c.instructionToString(i))) {
               case (ctx, (arg, i)) => visitExpression(arg, position, i)(ctx)
             }
+          case (false, r: _reportertask) if r.synthetic =>
+            super.visitReporterApp(app, position)(c.appendText(leadingWhitespace(position)))
           case (false, _: _reportertask) =>
             val c2 = super.visitReporterApp(app, position)(Context("", c.operations, wsMap = c.wsMap))
             if (c.text.last == ' ')
-              c.appendText("[" + c2.text + " ]")
+              c.appendText("[" + c2.text + "]")
             else
-              c.appendText(" [" + c2.text + " ]")
+              c.appendText(" [" + c2.text + "]")
           case (false, reporter) =>
             super.visitReporterApp(app, position)(c.appendText(ws + c.instructionToString(reporter)))
               .copy(instructionToString = c.instructionToString)

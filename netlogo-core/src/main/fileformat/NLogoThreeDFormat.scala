@@ -4,10 +4,11 @@ package org.nlogo.fileformat
 
 import java.net.URI
 
-import org.nlogo.api.ModelFormat
+import org.nlogo.api.{ AutoConvertable, ModelFormat }
+import org.nlogo.core.Model
 import org.nlogo.core.model.WidgetReader
 
-class NLogoThreeDFormat
+class NLogoThreeDFormat(modelConverter: (Model, Seq[AutoConvertable]) => Model)
   extends ModelFormat[Array[String], NLogoThreeDFormat]
   with AbstractNLogoFormat[NLogoThreeDFormat] {
     val is3DFormat = true

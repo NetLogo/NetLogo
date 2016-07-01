@@ -8,15 +8,12 @@ import java.nio.file.{ Files, Paths }
 import org.nlogo.core.{ CompilationEnvironment, ExtensionManager, Femto, I18N,
   LiteralParser, Model, Shape, ShapeParser, UpdateMode, View, Widget, WorldDimensions }, Shape.{ LinkShape, VectorShape }
 import org.nlogo.core.model.WidgetReader
-import org.nlogo.api.{ AutoConverter, ComponentSerialization, FileIO, ModelFormat, NetLogoLegacyDialect, Version, VersionHistory }
+import org.nlogo.api.{ AutoConvertable, AutoConverter, ComponentSerialization, FileIO, ModelFormat, NetLogoLegacyDialect, Version, VersionHistory }
 import AutoConversionList.ConversionList
 import scala.util.{ Failure, Success, Try }
 import scala.io.Source
 
-class NLogoFormat(val conversions: ConversionList = Seq(),
-  extensionManager: ExtensionManager,
-  compilationEnvironment: CompilationEnvironment)
-
+class NLogoFormat(modelConverter: (Model, Seq[AutoConvertable]) => Model)
   extends ModelFormat[Array[String], NLogoFormat]
   with AbstractNLogoFormat[NLogoFormat] {
     val is3DFormat = false
@@ -25,15 +22,7 @@ class NLogoFormat(val conversions: ConversionList = Seq(),
 
     override def constructModel(components: Seq[ComponentSerialization[Array[String], NLogoFormat]],
       sections: Map[String, Array[String]]) = {
-      val m = super.constructModel(components, sections)
-      conversions.foldLeft(m) {
-        case (priorModel@Success(model), (version, (mainConversions, widgetConversions, targets))) =>
-          if (Version.numericValue(model.version) < Version.numericValue(version))
-            ModelConverter(model, mainConversions, widgetConversions, targets,
-              extensionManager, compilationEnvironment, components, NetLogoLegacyDialect)
-          else priorModel
-        case (f@Failure(_), _) => m
-      }
+      super.constructModel(components, sections).map(modelConverter(_, components))
     }
   }
 

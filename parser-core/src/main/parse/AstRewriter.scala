@@ -15,7 +15,7 @@ class AstRewriter(val tokenizer: TokenizerInterface, op: CompilationOperand)
   with NetLogoParser {
   type WhiteSpaceMap = Map[AstPath, String]
 
-  private def preserveBody(structureResults: StructureResults, header: String, procedures: String): String = header + procedures
+  def preserveBody(structureResults: StructureResults, header: String, procedures: String): String = header + procedures
 
   def remove(dropCommand: String): String = {
     rewrite(new RemovalVisitor(dropCommand), preserveBody _)
@@ -88,14 +88,12 @@ class AstRewriter(val tokenizer: TokenizerInterface, op: CompilationOperand)
       case (dels, proc) => visitor.visitProcedureDefinition(proc)(dels)
     }
 
-    val wsRegex = new Regex("(?m)\\s+$")
-
     val headers = fileHeaders.getOrElse("", "")
 
+    val eolWhitespace = new Regex("\\s+$")
     val rewritten =
       wholeFile(structureResults, headers, format(operations, wsMap, procs))
-    val wsStripped = wsRegex.replaceAllIn(rewritten, "")
-    wsStripped
+    rewritten.lines.map(eolWhitespace.replaceAllIn(_, "")).mkString("\n")
   }
 
   def trackWhitespace(getSource: String => String, procs: Iterable[ProcedureDefinition]): (Map[AstPath, WhiteSpace], Map[String, String]) = {
@@ -122,12 +120,13 @@ class AstRewriter(val tokenizer: TokenizerInterface, op: CompilationOperand)
       case ((wsMap, ctx), proc) =>
         val procSyntax = procedurePosition(proc.file, proc.procedure.name)
         val newContext =
-          if (! ctx.lastFile.contains(proc.file)) {
+          if (ctx.lastFile.contains(proc.file))
+            WhiteSpace.Context(Map(), ctx.lastPosition)
+          else {
             val procStart = procSyntax.declarationKeyword.start
             fileHeaders = (fileHeaders + (proc.file -> getSource(proc.file).slice(0, procStart)))
             WhiteSpace.Context(Map(), lastPosition = Some((proc.file, AstPath(), procStart)))
-          } else
-            WhiteSpace.Context(Map(), ctx.lastPosition)
+          }
         val r = ws.visitProcedureDefinition(proc)(newContext)
         (wsMap ++ r.astWsMap, r)
     }

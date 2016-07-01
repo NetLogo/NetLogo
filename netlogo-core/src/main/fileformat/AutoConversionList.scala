@@ -4,12 +4,17 @@ package org.nlogo.fileformat
 
 import org.nlogo.core.SourceRewriter
 
-object AutoConversionList {
-  type Conversion = (Seq[SourceRewriter => String], Seq[SourceRewriter => String], Seq[String])
-  type ConversionList = Seq[(String, Conversion)]
+case class ConversionSet(
+  codeTabConversions:   Seq[SourceRewriter => String] = Seq(),
+  otherCodeConversions: Seq[SourceRewriter => String] = Seq(),
+  targets:              Seq[String] = Seq())
 
-  def changeAllCode(changes: Seq[SourceRewriter => String], targets: Seq[String]): Conversion = {
-    (changes, changes, targets)
+
+object AutoConversionList {
+  type ConversionList = Seq[(String, ConversionSet)]
+
+  def changeAllCode(changes: Seq[SourceRewriter => String], targets: Seq[String]): ConversionSet = {
+    ConversionSet(changes, changes, targets)
   }
 
   lazy val conversions: ConversionList = Seq(
@@ -37,14 +42,14 @@ object AutoConversionList {
           Seq[SourceRewriter => String](
             _.remove("movie-set-frame-rate"),
             _.addCommand("movie-start"       -> "set _recording-save-file-name {0}"),
-            _.replaceCommand("movie-start"   -> "(vid:start-recorder)"),
+            _.replaceCommand("movie-start"   -> "vid:start-recorder"),
             _.replaceReporter("movie-status" -> "vid:recorder-status"))
 
       val codeTabOnlyReplacements = Seq[SourceRewriter => String](
         _.addGlobal("_recording-save-file-name"),
         _.addExtension("vid"))
 
-      (codeTabOnlyReplacements ++ sharedTransformations, sharedTransformations, targets)
+      ConversionSet(codeTabOnlyReplacements ++ sharedTransformations, sharedTransformations, targets)
     },
     "NetLogo 6.0-M9" -> {
       changeAllCode(Seq(_.remove("hubnet-set-client-interface")), Seq("hubnet-set-client-interface"))
