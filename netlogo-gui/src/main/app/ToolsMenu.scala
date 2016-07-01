@@ -74,7 +74,7 @@ class GUIWorkspaceAction(name: String, workspace: GUIWorkspace) extends Abstract
   }
 }
 
-class Open3DViewAction(workspace: GUIWorkspace) extends GUIWorkspaceAction("3DView", workspace) {
+class Open3DViewAction(workspace: GUIWorkspace) extends GUIWorkspaceAction(I18N.gui.get("menu.tools.3DView.switch"), workspace) {
   override def performAction(workspace: GUIWorkspace): Unit = {
     try {
       workspace.glView.open()
