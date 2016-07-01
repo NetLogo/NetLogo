@@ -46,44 +46,43 @@ class FileMenu(app: App,
   val controller = new FileController(this, workspace)
 
   setMnemonic('F')
-  addMenuItem('N', new NewAction())
-  addMenuItem('O', new OpenAction())
-  addMenuItem('M', new ModelsLibraryAction())
+  addMenuItem('N', new NewAction)
+  addMenuItem('O', new OpenAction)
+  addMenuItem('M', new ModelsLibraryAction)
   add(new RecentFilesMenu(frame, this))
   addSeparator()
-  addMenuItem('S', new SaveAction())
-  addMenuItem('S', true, new SaveAsAction())
-  addMenuItem(new SaveModelingCommonsAction())
+  addMenuItem('S', new SaveAction)
+  addMenuItem('S', true, new SaveAsAction)
+  addMenuItem(new SaveModelingCommonsAction)
   addSeparator()
-  addMenuItem(new SaveAsNetLogoWebAction())
+  addMenuItem(new SaveAsNetLogoWebAction)
   addSeparator()
   addMenuItem(I18N.gui.get("menu.file.print"), 'P', tabs.printAction)
   addSeparator()
-  val exportMenu =
-    new SwingMenu(I18N.gui.get("menu.file.export"))
-  exportMenu.addMenuItem(new ExportWorldAction())
-  exportMenu.addMenuItem(new ExportPlotAction())
-  exportMenu.addMenuItem(new ExportAllPlotsAction())
-  exportMenu.addMenuItem(new ExportGraphicsAction())
-  exportMenu.addMenuItem(new ExportInterfaceAction())
-  exportMenu.addMenuItem(new ExportOutputAction())
+  val exportMenu = new SwingMenu(I18N.gui.get("menu.file.export"))
+  exportMenu.addMenuItem(new ExportWorldAction)
+  exportMenu.addMenuItem(new ExportPlotAction)
+  exportMenu.addMenuItem(new ExportAllPlotsAction)
+  exportMenu.addMenuItem(new ExportGraphicsAction)
+  exportMenu.addMenuItem(new ExportInterfaceAction)
+  exportMenu.addMenuItem(new ExportOutputAction)
+  exportMenu.addMenuItem(new ExportCodeAction)
   add(exportMenu)
   addSeparator()
-  val importMenu =
-    new org.nlogo.swing.Menu(I18N.gui.get("menu.file.import"))
-  importMenu.addMenuItem(new ImportWorldAction())
-  importMenu.addMenuItem(new ImportPatchColorsAction())
-  importMenu.addMenuItem(new ImportPatchColorsRGBAction())
-  if (! Version.is3D) {
-    importMenu.addMenuItem(new ImportDrawingAction())
+  val importMenu = new SwingMenu(I18N.gui.get("menu.file.import"))
+  importMenu.addMenuItem(new ImportWorldAction)
+  importMenu.addMenuItem(new ImportPatchColorsAction)
+  importMenu.addMenuItem(new ImportPatchColorsRGBAction)
+  if (!Version.is3D) {
+    importMenu.addMenuItem(new ImportDrawingAction)
   }
-  importMenu.addMenuItem(new ImportClientAction())
+  importMenu.addMenuItem(new ImportClientAction)
 
   add(importMenu)
 
-  if (! System.getProperty("os.name").startsWith("Mac")) {
+  if (!System.getProperty("os.name").startsWith("Mac")) {
     addSeparator()
-    addMenuItem('Q', new QuitAction())
+    addMenuItem('Q', new QuitAction)
   }
 
   ///
@@ -268,6 +267,11 @@ class FileMenu(app: App,
   private class ExportAllPlotsAction extends ExportAction("allPlots", "plots.csv", { exportPath =>
     new ExportPlotEvent(PlotWidgetExportType.ALL, null, exportPath)
       .raise(FileMenu.this)
+  })
+
+  private class ExportCodeAction extends ExportAction("code", "code.html", { exportPath =>
+    FileIO.writeFile(exportPath,
+      new CodeToHtml(workspace.compiler).convert(app.tabs.codeTab.getText))
   })
 
   abstract class ImportAction(taskName: String, performImport: String => Unit = { s => })

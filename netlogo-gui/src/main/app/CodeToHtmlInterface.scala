@@ -2,6 +2,6 @@
 
 package org.nlogo.app
 
-trait ProceduresToHtmlInterface {
-  def convert(code:String):String
+trait CodeToHtmlInterface {
+  def convert(code: String): String
 }
