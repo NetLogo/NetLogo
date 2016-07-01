@@ -31,6 +31,8 @@ class FileMenu(app: App,
   modelLoader: ModelLoader)
   extends SwingMenu(I18N.gui.get("menu.file")) with OpenModelEvent.Handler {
 
+  val ellipsis = '\u2026'
+  implicit val i18nPrefix = I18N.Prefix("menu.file")
   def workspace: GUIWorkspace = app.workspace
   def tabs: Tabs = app.tabs
   def modelingCommons: ModelingCommonsInterface = app.modelingCommons
@@ -57,9 +59,9 @@ class FileMenu(app: App,
   addSeparator()
   addMenuItem(new SaveAsNetLogoWebAction)
   addSeparator()
-  addMenuItem(I18N.gui.get("menu.file.print"), 'P', tabs.printAction)
+  addMenuItem(I18N.gui("print"), 'P', tabs.printAction)
   addSeparator()
-  val exportMenu = new SwingMenu(I18N.gui.get("menu.file.export"))
+  val exportMenu = new SwingMenu(I18N.gui("export"))
   exportMenu.addMenuItem(new ExportWorldAction)
   exportMenu.addMenuItem(new ExportPlotAction)
   exportMenu.addMenuItem(new ExportAllPlotsAction)
@@ -69,7 +71,7 @@ class FileMenu(app: App,
   exportMenu.addMenuItem(new ExportCodeAction)
   add(exportMenu)
   addSeparator()
-  val importMenu = new SwingMenu(I18N.gui.get("menu.file.import"))
+  val importMenu = new SwingMenu(I18N.gui("import"))
   importMenu.addMenuItem(new ImportWorldAction)
   importMenu.addMenuItem(new ImportPatchColorsAction)
   importMenu.addMenuItem(new ImportPatchColorsRGBAction)
@@ -104,7 +106,7 @@ class FileMenu(app: App,
     }
   }
 
-  private class NewAction extends FileMenuAction(I18N.gui.get("menu.file.new")) {
+  private class NewAction extends FileMenuAction(I18N.gui("new")) {
     @throws(classOf[UserCancelException])
     @throws(classOf[IOException])
     override def action(): Unit = {
@@ -113,7 +115,7 @@ class FileMenu(app: App,
     }
   }
 
-  private class OpenAction extends FileMenuAction(I18N.gui.get("menu.file.open")) {
+  private class OpenAction extends FileMenuAction(I18N.gui("open") + ellipsis) {
     @throws(classOf[UserCancelException])
     @throws(classOf[IOException])
     override def action(): Unit = {
@@ -122,7 +124,7 @@ class FileMenu(app: App,
     }
   }
 
-  private class ModelsLibraryAction extends FileMenuAction(I18N.gui.get("menu.file.modelsLibrary")) {
+  private class ModelsLibraryAction extends FileMenuAction(I18N.gui("modelsLibrary")) {
     @throws(classOf[UserCancelException])
     override def action(): Unit = {
       offerSave()
@@ -132,28 +134,28 @@ class FileMenu(app: App,
     }
   }
 
-  private class SaveModelingCommonsAction extends FileMenuAction(I18N.gui.get("menu.file.uploadMc")) {
+  private class SaveModelingCommonsAction extends FileMenuAction(I18N.gui("uploadMc")) {
     @throws(classOf[UserCancelException])
     override def action(): Unit = {
       modelingCommons.saveToModelingCommons()
     }
   }
 
-  private class SaveAction extends FileMenuAction(I18N.gui.get("menu.file.save")) {
+  private class SaveAction extends FileMenuAction(I18N.gui("save")) {
     @throws(classOf[UserCancelException])
     override def action(): Unit = {
       save(false)
     }
   }
 
-  private class SaveAsAction extends FileMenuAction(I18N.gui.get("menu.file.saveAs")) {
+  private class SaveAsAction extends FileMenuAction(I18N.gui("saveAs") + ellipsis) {
     @throws(classOf[UserCancelException])
     override def action(): Unit = {
       save(true)
     }
   }
 
-  private class SaveAsNetLogoWebAction extends FileMenuAction(I18N.gui.get("menu.file.saveAsNetLogoWeb")) {
+  private class SaveAsNetLogoWebAction extends FileMenuAction(I18N.gui("saveAsNetLogoWeb")) {
     // disabled for 3-D since you can't do that in NetLogo Web - RG 9/10/15
     setEnabled(! Version.is3D)
 
@@ -162,7 +164,7 @@ class FileMenu(app: App,
     override def action(): Unit = {
       val exportPath = FileDialog.show(
         FileMenu.this,
-        I18N.gui.get("menu.file.saveAsNetLogoWeb.dialog"),
+        I18N.gui("saveAsNetLogoWeb.dialog"),
         AWTFileDialog.SAVE, suggestedFileName)
 
       val exportFile = new File(exportPath)
@@ -194,11 +196,11 @@ class FileMenu(app: App,
       val typeKey =
         if (modelType == ModelType.Normal) "fromSave" else "fromLibrary"
       val options = Array[Object](
-        I18N.gui.get("menu.file.nlw.prompt." + typeKey),
-        I18N.gui.get("menu.file.nlw.prompt.fromCurrentCopy"),
+        I18N.gui("nlw.prompt." + typeKey),
+        I18N.gui("nlw.prompt.fromCurrentCopy"),
         I18N.gui.get("common.buttons.cancel"))
-      val title   = I18N.gui.get("menu.file.nlw.prompt.title")
-      val message = I18N.gui.get("menu.file.nlw.prompt.message." + typeKey)
+      val title   = I18N.gui("nlw.prompt.title")
+      val message = I18N.gui("nlw.prompt.message." + typeKey)
       val choice = OptionDialog.show(FileMenu.this, title, message, options)
       if (choice == 0)
         true
@@ -216,7 +218,7 @@ class FileMenu(app: App,
   }
 
   abstract class ExportAction(taskName: String, suggestedFileName: String, performExport: String => Unit = {(s) => })
-    extends FileMenuAction(I18N.gui.get("menu.file.export." + taskName)) {
+    extends FileMenuAction(I18N.gui("export." + taskName) + ellipsis) {
 
     def exportTask(path: String): Runnable = new Runnable() {
       override def run(): Unit = {
@@ -236,7 +238,7 @@ class FileMenu(app: App,
     override def action(): Unit = {
       val exportPath = FileDialog.show(
         FileMenu.this,
-        I18N.gui.get(s"menu.file.export.$taskName.dialog"),
+        I18N.gui(s"export.$taskName"),
         AWTFileDialog.SAVE, workspace.guessExportName(suggestedFileName))
       exception = None
 
@@ -275,7 +277,7 @@ class FileMenu(app: App,
   })
 
   abstract class ImportAction(taskName: String, performImport: String => Unit = { s => })
-    extends FileMenuAction(I18N.gui.get(s"menu.file.import.$taskName")) {
+    extends FileMenuAction(I18N.gui(s"import.$taskName") + ellipsis) {
     var exception = Option.empty[IOException]
 
     def importTask(path: String): Runnable = new Runnable() {
@@ -294,7 +296,7 @@ class FileMenu(app: App,
     override def action(): Unit = {
       exception = None
       val importPath = FileDialog.show(
-          FileMenu.this, I18N.gui.get(s"menu.file.import.$taskName.dialog"), AWTFileDialog.LOAD, null)
+          FileMenu.this, I18N.gui(s"import.$taskName"), AWTFileDialog.LOAD, null)
 
       ModalProgressTask(NLogoHierarchy.getFrame(FileMenu.this),
         I18N.gui.get("dialog.interface.import.task"),
@@ -336,7 +338,7 @@ class FileMenu(app: App,
     workspace.view.repaint();
   })
 
-  private class ImportClientAction extends FileMenuAction(I18N.gui.get("menu.file.import.hubNetClientInterface")) {
+  private class ImportClientAction extends FileMenuAction(I18N.gui("import.hubNetClientInterface") + ellipsis) {
     var exception = Option.empty[IOException]
 
     def importTask(importPath: String, sectionChoice: Int): Runnable =
@@ -355,14 +357,14 @@ class FileMenu(app: App,
     @throws(classOf[IOException])
     override def action(): Unit = {
       val importPath = org.nlogo.swing.FileDialog.show(
-          FileMenu.this, I18N.gui.get("menu.file.import.hubNetClientInterface.dialog"), java.awt.FileDialog.LOAD, null);
+          FileMenu.this, I18N.gui("import.hubNetClientInterface"), java.awt.FileDialog.LOAD, null);
       val choice =
           OptionDialog.show(workspace.getFrame,
-                  I18N.gui.get("menu.file.import.hubNetClientInterface.message"),
-                  I18N.gui.get("menu.file.import.hubNetClientInterface.prompt"),
+                  I18N.gui("import.hubNetClientInterface.message"),
+                  I18N.gui("import.hubNetClientInterface.prompt"),
                   Array[Object](
-    I18N.gui.get("menu.file.import.hubNetClientInterface.fromInterface"),
-    I18N.gui.get("menu.file.import.hubNetClientInterface.fromClient"),
+    I18N.gui("import.hubNetClientInterface.fromInterface"),
+    I18N.gui("import.hubNetClientInterface.fromClient"),
     I18N.gui.get("common.buttons.cancel")))
 
       if (choice != 2) {
@@ -375,7 +377,7 @@ class FileMenu(app: App,
     }
   }
 
-  private class QuitAction extends FileMenuAction(I18N.gui.get("menu.file.quit")) {
+  private class QuitAction extends FileMenuAction(I18N.gui("quit")) {
     override def action(): Unit = {
       try {
         quit()
@@ -518,7 +520,7 @@ class FileMenu(app: App,
 
   @throws(classOf[UserCancelException])
   private def userChooseLoadPath(): String = {
-    FileDialog.show(this, I18N.gui.get("menu.file.open.dialog"), AWTFileDialog.LOAD, null)
+    FileDialog.show(this, I18N.gui("open"), AWTFileDialog.LOAD, null)
   }
 
   @throws(classOf[UserCancelException])
@@ -528,7 +530,7 @@ class FileMenu(app: App,
       I18N.gui.get("common.buttons.discard"),
       I18N.gui.get("common.buttons.cancel"))
 
-    val message = I18N.gui.get("menu.file.save.confirm")
+    val message = I18N.gui("save.confirm")
 
     OptionDialog.show(this, "NetLogo", message, options) match {
       case 0 => true
