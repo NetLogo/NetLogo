@@ -50,7 +50,7 @@ class ShowUsageBox(editorArea: EditorArea) {
       usageBox.setVisible(false)
       val token = usageTable.getValueAt(usageTable.getSelectedRow, 0).asInstanceOf[Token]
       dataModel.synchronized(dataModel.setRowCount(0))
-      editorArea.setCaretPosition(token.start)
+      editorArea.select(token.start, token.end)
     }
   })
 
