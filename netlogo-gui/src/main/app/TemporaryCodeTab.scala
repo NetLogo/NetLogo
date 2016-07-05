@@ -46,7 +46,9 @@ with org.nlogo.window.Events.AboutToQuitEvent.Handler
   def isDirty = _dirty
 
   private def load(fileMustExist: Boolean) {
-    if(filename != TemporaryCodeTab.NewFile) {
+    if (filename == "Aggregate")
+      throw new Exception("Incorrect error direction!")
+    if (filename != TemporaryCodeTab.NewFile) {
       try {
         val sourceFile = new LocalFile(filename)
         if (sourceFile.reader == null)
