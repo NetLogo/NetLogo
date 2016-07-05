@@ -99,7 +99,7 @@ class ShowUsageBox(editorArea: EditorArea) {
   }
 
   class LineRenderer(boldedString: Option[String]) extends TableCellRenderer {
-    override def getTableCellRendererComponent(table: JTable, value: scala.Any, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component = {
+    override def getTableCellRendererComponent(table: JTable, value: AnyRef, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component = {
       val pane  = new JEditorPane()
       pane.setOpaque(true)
       pane.setBorder(BorderFactory.createEmptyBorder(1,0,0,0))
