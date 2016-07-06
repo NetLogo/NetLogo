@@ -18,11 +18,22 @@
     <h2>
       Version 6.0 (Mid-2016)
     </h2>
+    <h3>Feature Changes</h3>
+      <ul>
+        <li>NetLogo and its extensions are now compiled against Java 8 and Scala 2.11.</li>
+        <li>NetLogo has upgraded the ASM bytecode library to enable generation of Java 8 bytecode</li>
+        <li>The look and feel of NetLogo on Mac OS X has changed significantly. NetLogo is now using the Oracle-supplied Java look and feel as opposed to a third-party look and feel used in prior versions.</li>
+        <li>Plot pen colors can be set to an RGB list, just a other color-related variables in NetLogo</li>
+        <li>Line numbering can be toggled in the NetLogo Editor by choosing "Edit" &gt; "Show Line Numbers".</li>
+        <li>Model Preview Commands can be edited through the GUI by choosing "Preview Commands Editor" in the "Tools" menu.</li>
+      </ul>
     <h3>Language Changes</h3>
       <ul>
+        <li>The compiler detects a greater number of type errors, for instance <code>not pxcor</code> now raises a compiler error instead of erroring at runtime.</li>
         <li>The <code>hubnet-set-client-interface</code> primitive has been removed.</li>
         <li>The various prims starting with <code>movie-</code> have been removed, as has the movie encoder. <a href="transition.html#movie-to-vie">The transition guide</a> provides more details and information.</li>
-        <li>The <code>__change-language</code> primitive has been removed. You can now change the User Interface Language through the preferences dialog.
+        <li>The <code>__change-language</code> primitive has been removed. You can now change the User Interface Language through the preferences dialog, which can be found by choosing "Preferences..." in the "NetLogo" menu (Mac OS X) or in the "Tools" menu (all other platforms).</li>
+        <li>The string representation of a task displays the body of the task</li>
       </ul>
     <h3>Extension Changes</h3>
       <ul>
