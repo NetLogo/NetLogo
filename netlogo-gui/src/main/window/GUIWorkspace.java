@@ -1215,7 +1215,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       org.nlogo.awt.EventQueue.invokeLater
           (new Runnable() {
             public void run() {
-              RuntimeErrorDialog.show("Runtime Error", context, instruction, thread, ex);
+              RuntimeErrorDialog$.MODULE$.show(context, instruction, thread, ex);
             }
           });
     }

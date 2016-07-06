@@ -741,37 +741,29 @@ class App extends
   /**
    * Internal use only.
    */
-  def handle(t:Throwable){
+  def handle(t:Throwable): Unit = {
     try {
       val logo = t.isInstanceOf[LogoException]
-      if (logo) {
-        // The PeriodicUpdate thread may throw errors over and
-        // over if a dynamic slider or other code snippet
-        // generates errors.  For this reason we don't want to
-        // pop up the error dialog if it is already up.
-        //  -- CLB 8/15/2006
-        // else we ignore it, craig originally wanted to print to stdout
-        // though, the code he wrote really printed to stderr.
-        // Because we redirect stderr to a file in releases this was a
-        // problem.  We could write our own stack trace printer (easily)
-        // that actually prints to stdout but I'm not really sure that's
-        // important. ev 2/25/08
-        if (!org.nlogo.window.RuntimeErrorDialog.alreadyVisible)
-          org.nlogo.awt.EventQueue.invokeLater(() =>
-            RuntimeErrorDialog.show("Runtime Error", null, null, Thread.currentThread, t))
-      }
-      else {
+      if (! logo) {
         t.printStackTrace(System.err)
-        if(! org.nlogo.window.RuntimeErrorDialog.suppressJavaExceptionDialogs &&
-          // Not entirely clear what to do if a second exception
-          // comes in while the window is still up and showing a
-          // previous one... for now, let's spit it to stdout but
-          // otherwise ignore it - ST 6/10/02
-          ! org.nlogo.window.RuntimeErrorDialog.alreadyVisible) {
-          org.nlogo.awt.EventQueue.invokeLater(() =>
-            RuntimeErrorDialog.show("Internal Error", null, null, Thread.currentThread, t))
+        if (org.nlogo.window.RuntimeErrorDialog.suppressJavaExceptionDialogs) {
+          return
         }
       }
+      // The PeriodicUpdate thread may throw errors over and
+      // over if a dynamic slider or other code snippet
+      // generates errors.  For this reason we don't want to
+      // pop up the error dialog if it is already up.
+      //  -- CLB 8/15/2006
+      // else we ignore it, craig originally wanted to print to stdout
+      // though, the code he wrote really printed to stderr.
+      // Because we redirect stderr to a file in releases this was a
+      // problem.  We could write our own stack trace printer (easily)
+      // that actually prints to stdout but I'm not really sure that's
+      // important. ev 2/25/08
+      if (!org.nlogo.window.RuntimeErrorDialog.alreadyVisible)
+        org.nlogo.awt.EventQueue.invokeLater(() =>
+            RuntimeErrorDialog.show(null, null, Thread.currentThread, t))
     }
     catch {
       case e2: RuntimeException => e2.printStackTrace(System.err)
