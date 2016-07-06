@@ -204,6 +204,6 @@ class PlotManager(factory: LogoThunkFactory) extends PlotManagerInterface {
     getPenSetupError(pen).isDefined ||
     getPenUpdateError(pen).isDefined
   }
-  def getPenSetupError(pen: PlotPen) = penThunks(pen).setup.left.toOption
-  def getPenUpdateError(pen: PlotPen) = penThunks(pen).update.left.toOption
+  def getPenSetupError(pen: PlotPen) = penThunks.get(pen).flatMap(_.setup.left.toOption)
+  def getPenUpdateError(pen: PlotPen) = penThunks.get(pen).flatMap(_.update.left.toOption)
 }

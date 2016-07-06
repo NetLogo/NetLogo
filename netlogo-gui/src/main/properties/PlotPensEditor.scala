@@ -232,6 +232,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
       button.setBorderPainted(false)
 
       def getCellEditorValue = currentColor
+
       def getTableCellEditorComponent(table: JTable, value: Object, isSelected: Boolean, row: Int, col: Int) = {
         currentColor = value.asInstanceOf[ColorInfo]
         button.setBackground(currentColor.color)

@@ -54,11 +54,11 @@ with org.nlogo.window.Events.LoadModelEvent.Handler {
   }
 
   override def updateModel(m: CoreModel): CoreModel = {
-    if (editor == null || !editor.getDrawing.figures.hasNextFigure)
+    if (editor == null || !editor.drawing.figures.hasNextFigure)
       m
     else
       m.withOptionalSection[AggregateDrawing]("org.nlogo.modelsection.systemdynamics",
-        Some(editor.getDrawing), editor.getDrawing)
+        Some(editor.drawing), editor.drawing)
   }
 
   override def isLoaded: Boolean = editor != null
@@ -72,7 +72,7 @@ with org.nlogo.window.Events.LoadModelEvent.Handler {
 
   /// from org.nlogo.nvm.SourceOwner
 
-  override def classDisplayName = "Aggregate"
+  override def classDisplayName = "aggregate"
   override def kind = AgentKind.Observer
   override def source = innerSource
   override def innerSource =

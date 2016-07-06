@@ -159,16 +159,17 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] {
     }
   }
 
+  lazy val defaultView: View = View(left = 210, top = 10, right = 649, bottom = 470,
+    dimensions = WorldDimensions(-16, 16, -16, 16, 13.0), fontSize = 10, updateMode = UpdateMode.Continuous,
+    showTickCounter = true, frameRate = 30)
+
   object InterfaceComponent extends ComponentSerialization[Array[String], A] with WidgetConverter {
     import org.nlogo.fileformat
 
     val componentName = "org.nlogo.modelsection.interface"
     private val additionalReaders = AbstractNLogoFormat.this.widgetReaders
     private val literalParser = Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
-    override def addDefault = _.copy(
-      widgets = Seq(View(left = 210, top = 10, right = 649, bottom = 470,
-        dimensions = WorldDimensions(-16, 16, -16, 16, 13.0), fontSize = 10, updateMode = UpdateMode.Continuous,
-        showTickCounter = true, frameRate = 30)))
+    override def addDefault = _.copy(widgets = Seq(defaultView))
 
     def serialize(m: Model): Array[String] =
       m.widgets.flatMap((w: Widget) => (WidgetReader.format(w, additionalReaders).lines.toSeq :+ "")).toArray
