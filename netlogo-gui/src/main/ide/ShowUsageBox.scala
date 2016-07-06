@@ -88,9 +88,21 @@ class ShowUsageBox(editorArea: EditorArea) {
     }
   }
 
-  def getUsage(source: String, token: Token): Iterator[Token] = {
+  def getUsage(source: String, token: Token): Seq[Token] = {
     val iterator = Femto.scalaSingleton[TokenizerInterface]("org.nlogo.lex.Tokenizer").tokenizeString(source)
-    iterator.filter(t => t.text.equalsIgnoreCase(token.text) && t.start != token.start)
+    var iter = scala.collection.mutable.Seq[Token]()
+    var prevLineNo = -1
+    val tokenLineNo = editorArea.offsetToLine(editorArea.getDocument.asInstanceOf[PlainDocument], token.start)
+    for(t <- iterator){
+      if( t.text.equalsIgnoreCase(token.text) &&
+        (editorArea.offsetToLine(editorArea.getDocument.asInstanceOf[PlainDocument], t.start)) != tokenLineNo &&
+        editorArea.offsetToLine(editorArea.getDocument.asInstanceOf[PlainDocument], t.start) != prevLineNo) {
+
+        iter :+= t
+        prevLineNo = editorArea.offsetToLine(editorArea.getDocument.asInstanceOf[PlainDocument], t.start)
+      }
+    }
+    iter
   }
 
   def findTokenContainingPosition(source: String, position: Int): Option[Token] = {
@@ -135,33 +147,40 @@ class ShowUsageBox(editorArea: EditorArea) {
   }
   import org.nlogo.editor.{ HighlightEditorKit, HighlightView }
   class BoldEditorKit(selectedString: String) extends HighlightEditorKit(null, editorArea.colorizer) {
+
     import scala.collection.immutable.Range
+
     class BoldView(elem: javax.swing.text.Element) extends HighlightView(this.pane, elem, this.colorizer) {
-      var boldingRange = Option.empty[Range]
+      var boldingRanges = Seq[Range]()
+
       override def studyLine(lineIndex: Int): Unit = {
         super.studyLine(lineIndex)
         val elem = getElement.getElement(lineIndex)
         val lineText = getDocument.getText(elem.getStartOffset, elem.getEndOffset - elem.getStartOffset max 0)
-        val beginningIndex = lineText.toUpperCase.indexOf(selectedString.toUpperCase)
-        if (beginningIndex != -1)
-          boldingRange = Some(beginningIndex to (beginningIndex + selectedString.length))
+        val iterator = Femto.scalaSingleton[TokenizerInterface]("org.nlogo.lex.Tokenizer").tokenizeString(lineText)
+        for(token <- iterator) {
+          if(token.text.equals(selectedString)){
+            boldingRanges :+= (token.start to token.end)
+          }
+        }
       }
 
       override def drawText(g: java.awt.Graphics, x: Int, y: Int, p0: Int, p1: Int, isSelected: Boolean): Int = {
-        boldingRange match {
-          case Some(range) =>
-            val midX = super.drawText(g, x, y, p0, range.start, isSelected)
-            val originalFont = g.getFont
-            val boldFont = originalFont.deriveFont(java.awt.Font.BOLD)
-            g.setFont(boldFont)
-            val endX = super.drawText(g, midX, y, range.start, range.end, isSelected)
-            g.setFont(originalFont)
-            super.drawText(g, endX, y, range.end, p1, isSelected)
-          case None => super.drawText(g, x, y, p0, p1, isSelected)
+        var endX = super.drawText(g, x, y, p0, boldingRanges.head.start, isSelected)
+        val originalFont = g.getFont
+        val boldFont = originalFont.deriveFont(java.awt.Font.BOLD)
+        for (i <- boldingRanges.indices) {
+          g.setFont(boldFont)
+          endX = super.drawText(g, endX, y, boldingRanges(i).start, boldingRanges(i).end, isSelected)
+          g.setFont(originalFont)
+          if(i < boldingRanges.length - 1) {
+            endX = super.drawText(g, endX, y, boldingRanges(i).end, boldingRanges(i + 1).start, isSelected)
+          }
         }
+        g.setFont(originalFont)
+        super.drawText(g, endX, y, boldingRanges.last.end, p1, isSelected)
       }
     }
-
     override def create(elem: javax.swing.text.Element): javax.swing.text.View = new BoldView(elem)
   }
 }
