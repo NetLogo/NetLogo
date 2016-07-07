@@ -13,6 +13,6 @@ class CodeEditor(rows: Int, columns: Int,
                  listener: java.awt.event.TextListener,
                  colorizer: org.nlogo.editor.Colorizer,
                  i18n: String => String,
-                 actionMap: Map[KeyStroke, TextAction] = EditorArea.emptyMap) extends
+                 actionMap: Map[KeyStroke, TextAction] = EditorArea.emptyMap, actions: Seq[Action] = EditorArea.emptySeq) extends
   EditorArea(rows, columns,
-    font, enableFocusTraversalKeys, listener, colorizer, i18n, actionMap)
+    font, enableFocusTraversalKeys, listener, colorizer, i18n, actionMap, actions)

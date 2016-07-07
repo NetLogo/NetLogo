@@ -2,13 +2,14 @@
 
 package org.nlogo.app
 
-import javax.swing.KeyStroke
+import javax.swing.{Action, KeyStroke}
 import javax.swing.text.TextAction
 
 import org.nlogo.api.CompilerServices
 import org.nlogo.core.I18N
-import org.nlogo.ide.{AutoSuggestAction, CodeCompletionPopup}
+import org.nlogo.ide.{AutoSuggestAction, CodeCompletionPopup, ShowUsageBox, ShowUsageBoxAction}
 import org.nlogo.window.CodeEditor
+
 import collection.JavaConversions._
 
 class EditorFactory(compiler: CompilerServices) extends org.nlogo.window.EditorFactory {
@@ -25,13 +26,15 @@ class EditorFactory(compiler: CompilerServices) extends org.nlogo.window.EditorF
                                  java.awt.Font.PLAIN, 12)
     val colorizer = new org.nlogo.window.EditorColorizer(compiler)
     val codeCompletionPopup = new CodeCompletionPopup()
+    val showUsageBox = new ShowUsageBox()
+    val actions = Seq[Action](new ShowUsageBoxAction(showUsageBox))
     val actionMap = Map(
       KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_SPACE, java.awt.event.InputEvent.CTRL_DOWN_MASK)
       -> new AutoSuggestAction("auto-suggest", codeCompletionPopup))
 
     class MyCodeEditor
     extends org.nlogo.window.CodeEditor(rows, cols, font, enableFocusTraversal,
-                                        listener, colorizer, I18N.gui.get _, actionMap)
+                                        listener, colorizer, I18N.gui.get _, actionMap, actions)
     {
       override def focusGained(fe: java.awt.event.FocusEvent) {
         super.focusGained(fe)

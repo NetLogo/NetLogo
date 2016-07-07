@@ -17,11 +17,6 @@ import javax.swing.text.DefaultEditorKit
 import javax.swing.text.TextAction
 import javax.swing.text.PlainDocument
 import javax.swing.text.BadLocationException
-import java.awt.Dimension
-import java.awt.Toolkit
-import java.awt.Graphics
-import java.awt.Graphics2D
-import java.awt.RenderingHints
 import java.awt.datatransfer.DataFlavor
 import java.awt.event.ActionEvent
 import java.awt.event.FocusListener
@@ -34,6 +29,7 @@ import java.awt.Component
 object EditorArea {
   def emptyMap = Map[KeyStroke, TextAction]()
   def defaultSize = new java.awt.Dimension(400, 400)
+  def emptySeq = Seq[Action]()
 }
 
 import EditorArea._
@@ -46,7 +42,8 @@ class EditorArea(
   listener: java.awt.event.TextListener,
   colorizer: Colorizer,
   i18n: String => String,
-  actionMap: Map[KeyStroke, TextAction] = EditorArea.emptyMap)
+  actionMap: Map[KeyStroke, TextAction] = EditorArea.emptyMap,
+  menuItems: Seq[Action] = Seq[Action]())
   extends AbstractEditorArea
    with java.awt.event.FocusListener {
 
@@ -347,6 +344,10 @@ class EditorArea(
       Actions.PASTE_ACTION.putValue(Action.NAME, i18n.apply("menu.edit.paste"))
       addSeparator()
       add(new JMenuItem(Actions.mouseQuickHelpAction(colorizer, i18n)))
+      for(item <- menuItems) {
+        item.putValue("editor", EditorArea.this)
+        add(new JMenuItem(item))
+      }
     }
 
     override def show(invoker: Component, x: Int, y: Int): Unit = {
@@ -356,6 +357,12 @@ class EditorArea(
       cutItem.setEnabled(isTextSelected)
       pasteItem.setEnabled(
         Toolkit.getDefaultToolkit.getSystemClipboard.isDataFlavorAvailable(DataFlavor.stringFlavor))
+      val point = new Point(invoker.getLocationOnScreen)
+      point.translate(x, y)
+      for(item <- menuItems){
+        item.putValue("cursorLocation", mousePos)
+        item.putValue("popupLocation", point)
+      }
       super.show(invoker, x, y)
     }
   }

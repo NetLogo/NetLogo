@@ -2,7 +2,7 @@
 
 package org.nlogo.ide
 
-import java.awt.{Color, Component, Cursor}
+import java.awt._
 import java.awt.event._
 import javax.swing.table.{DefaultTableCellRenderer, DefaultTableModel, TableCellRenderer}
 import javax.swing._
@@ -10,8 +10,10 @@ import javax.swing._
 import org.nlogo.core.{Femto, Token, TokenType, TokenizerInterface}
 import org.nlogo.editor.{EditorArea, HighlightEditorKit}
 
-class ShowUsageBox(editorArea: EditorArea) {
+class ShowUsageBox() {
+
   val usageBox = new JDialog()
+  var editorArea: EditorArea = null
   val dataModel = new DefaultTableModel(){
     override def isCellEditable(row: Int, column: Int): Boolean = false
     override def getColumnClass(columnIndex: Int): Class[_] = {
@@ -43,32 +45,35 @@ class ShowUsageBox(editorArea: EditorArea) {
   usageTable.setRowHeight(20)
   usageTable.getColumnModel.getColumn(1).setMinWidth(200)
   usageTable.getColumnModel.getColumn(0).setMinWidth(40)
-  usageTable.setFont(editorArea.getFont)
-  usageTable.setShowGrid(false);
+  usageTable.setShowGrid(false)
 
-  usageTable.addMouseListener(new MouseAdapter() {
-    override def mouseClicked(e: MouseEvent): Unit = {
-      usageBox.setVisible(false)
-      val token = usageTable.getValueAt(usageTable.getSelectedRow, 0).asInstanceOf[Token]
-      dataModel.synchronized(dataModel.setRowCount(0))
-      editorArea.select(token.start, token.end)
-    }
-  })
+  def init(editorArea: EditorArea) {
+    if(this.editorArea == null) {
+      this.editorArea = editorArea
+      usageTable.addMouseListener(new MouseAdapter() {
+        override def mouseClicked(e: MouseEvent): Unit = {
+          usageBox.setVisible(false)
+          val token = usageTable.getValueAt(usageTable.getSelectedRow, 0).asInstanceOf[Token]
+          editorArea.select(token.start, token.end)
+        }
+      })
 
-  usageTable.addKeyListener(new KeyAdapter(){
-    override def keyPressed(e: KeyEvent): Unit = {
-      e.getKeyCode match {
-        case KeyEvent.VK_ESCAPE => usageBox.setVisible(false)
-        case _ => e.setSource(editorArea)
-          editorArea.dispatchEvent(e)
-      }
+      usageTable.addKeyListener(new KeyAdapter() {
+        override def keyPressed(e: KeyEvent): Unit = {
+          e.getKeyCode match {
+            case KeyEvent.VK_ESCAPE => usageBox.setVisible(false)
+            case _ => e.setSource(editorArea)
+              editorArea.dispatchEvent(e)
+          }
+        }
+      })
     }
-  })
+  }
 
   usageTable.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR))
 
-  def showBox(me: MouseEvent, position: Int): Unit = {
-    val tokenOption = findTokenContainingPosition(editorArea.getText(), position)
+  def showBox(popupLocation: Point, cursorPosition: Int): Unit = {
+    val tokenOption = findTokenContainingPosition(editorArea.getText(), cursorPosition)
     for {token <- tokenOption} {
       if(token.tpe == TokenType.Ident || token.tpe == TokenType.Command || token.tpe == TokenType.Reporter) {
         val tokens = getUsage(editorArea.getText(), token)
@@ -82,7 +87,7 @@ class ShowUsageBox(editorArea: EditorArea) {
           usageTable.setFillsViewportHeight(true)
           usageBox.setSize(usageTable.getPreferredSize)
           usageTable.validate()
-          usageBox.setLocation(me.getLocationOnScreen)
+          usageBox.setLocation(popupLocation)
           usageBox.setVisible(true)
         }
       }
@@ -138,12 +143,15 @@ class ShowUsageBox(editorArea: EditorArea) {
       }
       pane.putClientProperty("Nimbus.Overrides", defaults)
       pane.putClientProperty("Nimbus.Overrides.InheritDefaults", true)
+      pane.setFont(org.nlogo.awt.Fonts.monospacedFont)
       pane
     }
   }
   class LineNumberRenderer extends DefaultTableCellRenderer {
     override def setValue(value: AnyRef) = {
-      setText(editorArea.offsetToLine(value.asInstanceOf[Token].start).toString)
+      setText(editorArea.offsetToLine(editorArea.getDocument.asInstanceOf[PlainDocument], value.asInstanceOf[Token].start).toString)
+      setHorizontalAlignment(SwingConstants.RIGHT)
+      setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 8))
     }
   }
   import org.nlogo.editor.{ HighlightEditorKit, HighlightView }
@@ -167,6 +175,13 @@ class ShowUsageBox(editorArea: EditorArea) {
       }
 
       override def drawText(g: java.awt.Graphics, x: Int, y: Int, p0: Int, p1: Int, isSelected: Boolean): Int = {
+        g match {
+          case g2d: java.awt.Graphics2D =>
+            g2d.setRenderingHint(
+                      java.awt.RenderingHints.KEY_TEXT_ANTIALIASING,
+                      java.awt.RenderingHints.VALUE_TEXT_ANTIALIAS_GASP)
+          case _ =>
+        }
         var endX = super.drawText(g, x, y, p0, boldingRanges.head.start, isSelected)
         val originalFont = g.getFont
         val boldFont = originalFont.deriveFont(java.awt.Font.BOLD)

@@ -11,7 +11,7 @@ public strictfp class EditorField
                      boolean enableFocusTraversalKeys,
                      Colorizer colorizer,
                      scala.Function1<String, String> i18n) {
-    super(1, columns, font, enableFocusTraversalKeys, null, colorizer, i18n, EditorArea.emptyMap());
+    super(1, columns, font, enableFocusTraversalKeys, null, colorizer, i18n, EditorArea.emptyMap(), EditorArea.emptySeq());
     // shut off the default actions for some keystrokes... let
     // someone add a KeyListener if they want - ST 7/30/03
     getInputMap().remove

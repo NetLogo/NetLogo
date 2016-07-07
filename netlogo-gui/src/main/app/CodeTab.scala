@@ -7,14 +7,12 @@ import org.nlogo.agent.Observer
 import org.nlogo.editor.LineNumbersBar
 import org.nlogo.window.EditorAreaErrorLabel
 import org.nlogo.workspace.AbstractWorkspace
-import org.nlogo.swing.ToolBarActionButton
-import java.awt.{BorderLayout, Dimension, Graphics}
-import java.awt.event._
-import java.awt.print.PageFormat
-import javax.swing.{AbstractAction, Action, BorderFactory, ImageIcon, JButton, JPanel, JScrollPane, ScrollPaneConstants}
+import org.nlogo.swing.{ ToolBarActionButton }
 
-import org.nlogo.ide.ShowUsageBoxAction
-import org.nlogo.ide.ShowUsageBox
+import java.awt.{BorderLayout, Dimension, Graphics}
+import java.awt.event.{ActionEvent, TextEvent, TextListener}
+import java.awt.print.PageFormat
+import javax.swing.{JButton, ImageIcon, AbstractAction, Action, ScrollPaneConstants, JScrollPane, BorderFactory, JPanel}
 
 class CodeTab(val workspace: AbstractWorkspace) extends JPanel
   with org.nlogo.window.ProceduresInterface
@@ -30,18 +28,7 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
       dirty()
     }
   }
-
-  val text = new EditorFactory(workspace).newEditor(100, 100, true, listener, true)
-  val showUsageBox = new ShowUsageBox(text)
-  val showUsageBoxAction = new ShowUsageBoxAction(showUsageBox)
-  val mL = new MouseAdapter {
-    override def mouseClicked(e: MouseEvent): Unit = {
-      if(e.isControlDown){
-        showUsageBoxAction.actionPerformed(e)
-      }
-    }
-  }
-  text.addListener(mL)
+  val text = new EditorFactory(workspace).newEditor(100, 100, false, listener, true)
   text.setBorder(BorderFactory.createEmptyBorder(4, 7, 4, 7))
   override def zoomTarget = text
 
