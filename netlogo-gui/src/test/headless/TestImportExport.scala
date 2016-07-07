@@ -565,8 +565,8 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
       "          empty-patch-agentset empty-turtle-agentset cats-breed all-turtles all-patches ]" +
       "turtles-own [ t-foo t-bar ]" +
       "patches-own [ p-foo p-fish-breed ]" +
-      "breed [ fish ] " +
-      "breed [ cats ]" +
+      "breed [ fish a-fish ] " +
+      "breed [ cats cat ]" +
       "fish-own [ scales? fins ]" +
       "cats-own [ fur tabby? ]" +
       "to setup [ add-breed-to-list? ]" +

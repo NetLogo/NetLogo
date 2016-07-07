@@ -146,7 +146,7 @@ class TestGenerator extends FunSuite {
         }
         compiler.compileProgram(
           """
-          |breed [agents]
+          |breed [agents an-agent]
           |
           |to-report move
           |  report all? agents-here [true] or all? agents-here [false]

@@ -335,6 +335,18 @@ class FrontEndTests extends FunSuite {
     duplicateName("breed [mice mouse] mice-own [fur] to foo let fur 5 end",
       "There is already a MICE-OWN variable called FUR")
   }
+  test("BreedDuplicateName") {
+    duplicateName("breed [xs xs]",
+      "There is already a breed called XS")
+  }
+  test("BreedOnlyOneName") {
+    duplicateName("breed [xs]",
+      "Breed declarations must have plural and singular. BREED [XS] has only one name.")
+  }
+  test("LinkBreedOnlyOneName") {
+    duplicateName("directed-link-breed [xs]",
+      "Breed declarations must have plural and singular. DIRECTED-LINK-BREED [XS] has only one name.")
+  }
   test("BreedPrimSameNameAsBuiltInPrim") {
     duplicateName("breed [strings string]",
       "Defining a breed [STRINGS STRING] redefines IS-STRING?, a primitive reporter")

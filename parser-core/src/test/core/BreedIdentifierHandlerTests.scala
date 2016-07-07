@@ -96,6 +96,6 @@ class BreedIdentifierHandlerTests extends FunSuite {
     def dummyToken(s: String): Token = Token(s, TokenType.Ident, "")(1, 2, "")
     def dummyIdent(s: String): Identifier = Identifier(s, dummyToken(s))
 
-    StructureDeclarations.Breed(dummyIdent(plural), Some(dummyIdent(singular)), isLink, isDirected)
+    StructureDeclarations.Breed(dummyIdent(plural), dummyIdent(singular), isLink, isDirected)
   }
 }
