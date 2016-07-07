@@ -117,7 +117,7 @@ object App{
 
     pico.addAdapter(new ModelLoaderComponent())
 
-    pico.addComponent(classOf[ProceduresToHtml])
+    pico.addComponent(classOf[CodeToHtml])
     pico.addComponent(classOf[App])
     pico.as(NO_CACHE).addComponent(classOf[FileMenu])
     pico.addComponent(classOf[ModelSaver])

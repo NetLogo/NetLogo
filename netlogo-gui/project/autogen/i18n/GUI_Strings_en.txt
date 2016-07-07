@@ -28,16 +28,14 @@ common.messages.warning = Warning
 
 menu.file = File
 menu.file.new = New
-menu.file.open = Open...
-menu.file.open.dialog = Open
+menu.file.open = Open
 menu.file.modelsLibrary = Models Library
 menu.file.uploadMc = Upload To Modeling Commons
 menu.file.save = Save
 menu.file.save.error = Save failed.  Error: {0}
 menu.file.save.confirm = Do you want to save the changes you made to this model?
-menu.file.saveAs = Save As...
-menu.file.saveAs.dialog = Save As
-menu.file.saveAsNetLogoWeb = Save As NetLogo Web...
+menu.file.saveAs = Save As
+menu.file.saveAsNetLogoWeb = Save As NetLogo Web…
 menu.file.saveAsNetLogoWeb.dialog = Saving as NetLogo Web HTML Page
 menu.file.nlw.prompt.fromSave = From last save
 menu.file.nlw.prompt.fromLibrary = From Models Library
@@ -45,31 +43,21 @@ menu.file.nlw.prompt.fromCurrentCopy = From open copy
 menu.file.nlw.prompt.title = Choose Export Source
 menu.file.nlw.prompt.message.fromSave = Export model from last save or from open copy?
 menu.file.nlw.prompt.message.fromLibrary = Export model from Models Library or open copy?
-menu.file.print = Print...
+menu.file.print = Print…
 menu.file.export = Export
-menu.file.export.world = Export World...
-menu.file.export.world.dialog = Export World
-menu.file.export.plot = Export Plot...
-menu.file.export.plot.dialog = Export Plot...
-menu.file.export.allPlots = Export All Plots...
-menu.file.export.allPlots.dialog = Export All Plots
-menu.file.export.view = Export View...
-menu.file.export.view.dialog = Export World
-menu.file.export.interface = Export Interface...
-menu.file.export.interface.dialog = Export Interface
-menu.file.export.output = Export Output...
-menu.file.export.output.dialog = Export Output
+menu.file.export.world = Export World
+menu.file.export.plot = Export Plot
+menu.file.export.allPlots = Export All Plots
+menu.file.export.view = Export View
+menu.file.export.interface = Export Interface
+menu.file.export.output = Export Output
+menu.file.export.code = Export Code
 menu.file.import = Import
-menu.file.import.world = Import World...
-menu.file.import.world.dialog = Import World
-menu.file.import.patchColors = Import Patch Colors...
-menu.file.import.patchColors.dialog = Import Patch Colors
-menu.file.import.patchColorsRGB = Import Patch Colors RGB...
-menu.file.import.patchColorsRGB.dialog = Import Patch Colors RGB
-menu.file.import.drawing = Import Drawing...
-menu.file.import.drawing.dialog = Import Drawing
-menu.file.import.hubNetClientInterface = Import HubNet Client Interface...
-menu.file.import.hubNetClientInterface.dialog = Import HubNet Client Interface
+menu.file.import.world = Import World
+menu.file.import.patchColors = Import Patch Colors
+menu.file.import.patchColorsRGB = Import Patch Colors RGB
+menu.file.import.drawing = Import Drawing
+menu.file.import.hubNetClientInterface = Import HubNet Client Interface
 menu.file.import.hubNetClientInterface.message = Import HubNet Client
 menu.file.import.hubNetClientInterface.prompt = Which section would you like to import from?
 menu.file.import.hubNetClientInterface.fromInterface = Interface Tab
@@ -84,7 +72,7 @@ menu.edit.delete = Delete
 menu.edit.undo = Undo
 menu.edit.redo = Redo
 menu.edit.selectAll = Select All
-menu.edit.find = Find...
+menu.edit.find = Find…
 menu.edit.findNext = Find Next
 menu.edit.showLineNumbers = Show Line Numbers
 menu.edit.shiftLeft = Shift Left
@@ -138,7 +126,7 @@ tabs.run.deleteButton = Delete
 tabs.run.deleteButton.tooltip = delete selected interface items
 tabs.run.addButton = Add
 tabs.run.addButton.tooltip = add new interface item
-tabs.run.settingsButton = Settings...
+tabs.run.settingsButton = Settings…
 tabs.run.settingsButton.tooltip = Edit model settings
 tabs.run.viewUpdates.checkbox = view updates
 tabs.run.viewUpdates.checkbox.tooltip = Freeze or unfreeze view
@@ -220,10 +208,10 @@ dialog.find.replaceAll = Replace All
 
 # interface dialogs and modals
 dialog.interface.export.file = Export Interface
-dialog.interface.export.task = Exporting...
-dialog.interface.import.task = Importing...
-dialog.interface.loading.task = Loading...
-dialog.interface.saving.task = Saving...
+dialog.interface.export.task = Exporting…
+dialog.interface.import.task = Importing…
+dialog.interface.loading.task = Loading…
+dialog.interface.saving.task = Saving…
 
 # widget editors
 
@@ -379,8 +367,8 @@ tools.colorswatch.copy = Copy selected color
 tools.colorswatch.numbers = Numbers
 tools.colorswatch.increment = Increment
 
-tools.shapesEditor.importFromModel = Import from Model...
-tools.shapesEditor.importFromLibrary = Import from Library...
+tools.shapesEditor.importFromModel = Import from Model…
+tools.shapesEditor.importFromLibrary = Import from Library…
 tools.shapesEditor.edit = Edit
 tools.shapesEditor.new = New
 tools.shapesEditor.delete = Delete
@@ -445,7 +433,7 @@ tools.behaviorSpace.timeLimit.info = stop after this many steps (0 = no limit)
 modelsLibrary.clear = Clear
 modelsLibrary.community = Go to User Community Models web page
 modelsLibrary.open = Open
-modelsLibrary.loading = Loading Models Library...
+modelsLibrary.loading = Loading Models Library…
 
 
 # CONTROL CENTER
@@ -479,7 +467,7 @@ view.3d.fullScreen = Full Screen
 view.3d.resetPerspective = Reset Perspective
 view.3d.fullScreenWarning = On some systems, fullscreen mode may cause Windows to lock up.
 
-view.resize.progress = Resizing...
+view.resize.progress = Resizing…
 view.resize.hubnet.warning = Resizing the world kills all turtles. This may cause HubNet clients to be unresponsive. Consider kicking out all clients before proceeding.
 view.resize.hubnet.prompt = Kick clients?
 view.resize.hubnet.kick = Kick clients

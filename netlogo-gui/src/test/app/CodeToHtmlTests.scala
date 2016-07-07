@@ -6,8 +6,8 @@ import org.scalatest.FunSuite
 import org.nlogo.api.{ FileIO, Version }
 import org.nlogo.util.SlowTest
 
-class ProceduresToHtmlTests extends FunSuite with SlowTest {
-  val converter = ProceduresToHtml.newInstance
+class CodeToHtmlTests extends FunSuite with SlowTest {
+  val converter = CodeToHtml.newInstance
   import converter.convert
   test("basic", SlowTest.Tag) {
     assertResult("""|<pre><font color="#007f69">to</font><font color="#000000"> foo
