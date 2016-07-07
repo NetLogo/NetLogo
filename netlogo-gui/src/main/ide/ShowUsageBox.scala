@@ -44,6 +44,7 @@ class ShowUsageBox(editorArea: EditorArea) {
   usageTable.getColumnModel.getColumn(1).setMinWidth(200)
   usageTable.getColumnModel.getColumn(0).setMinWidth(40)
   usageTable.setFont(editorArea.getFont)
+  usageTable.setShowGrid(false);
 
   usageTable.addMouseListener(new MouseAdapter() {
     override def mouseClicked(e: MouseEvent): Unit = {
