@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import javax.swing._
+import javax.swing.{Action, KeyStroke}
 import javax.swing.text.TextAction
 
 import org.nlogo.editor.EditorArea
@@ -13,6 +13,7 @@ class CodeEditor(rows: Int, columns: Int,
                  listener: java.awt.event.TextListener,
                  colorizer: org.nlogo.editor.Colorizer,
                  i18n: String => String,
-                 actionMap: Map[KeyStroke, TextAction] = EditorArea.emptyMap, actions: Seq[Action] = EditorArea.emptySeq) extends
+                 actionMap: Map[KeyStroke, TextAction] = EditorArea.emptyMap,
+                 actions: Seq[Action] = EditorArea.emptySeq) extends
   EditorArea(rows, columns,
     font, enableFocusTraversalKeys, listener, colorizer, i18n, actionMap, actions)

@@ -43,7 +43,7 @@ class ShowUsageBox() {
   usageTable.setTableHeader(null)
   usageTable.setRowMargin(3)
   usageTable.setRowHeight(20)
-  usageTable.getColumnModel.getColumn(1).setMinWidth(200)
+  usageTable.getColumnModel.getColumn(1).setMinWidth(300)
   usageTable.getColumnModel.getColumn(0).setMinWidth(40)
   usageTable.setShowGrid(false)
 
@@ -168,7 +168,7 @@ class ShowUsageBox() {
         val lineText = getDocument.getText(elem.getStartOffset, elem.getEndOffset - elem.getStartOffset max 0)
         val iterator = Femto.scalaSingleton[TokenizerInterface]("org.nlogo.lex.Tokenizer").tokenizeString(lineText)
         for(token <- iterator) {
-          if(token.text.equals(selectedString)){
+          if(token.text.equalsIgnoreCase(selectedString)){
             boldingRanges :+= (token.start to token.end)
           }
         }
