@@ -8,6 +8,9 @@ import
   java.io.{ IOException, PrintWriter }
 
 import
+  java.nio.file.{ Paths => NioPaths }
+
+import
   scala.collection.mutable.WeakHashMap
 
 import
@@ -110,6 +113,29 @@ with ExtendableWorkspace with ExtensionCompilationEnvironment {
     clearDrawing()
     plotManager.clearAll()
     getExtensionManager.clearAll()
+  }
+
+  override def getCompilationEnvironment = {
+    import java.io.{ File => JFile }
+    import java.net.MalformedURLException
+
+    new org.nlogo.core.CompilationEnvironment {
+      def getSource(filename: String): String = AbstractWorkspace.this.getSource(filename)
+      def profilingEnabled: Boolean = AbstractWorkspace.this.profilingEnabled
+      def resolvePath(path: String): String = {
+        try {
+          val r = NioPaths.get(attachModelDir(path)).toFile
+          try {
+            r.getCanonicalPath
+          } catch {
+            case ex: IOException => r.getPath
+          }
+        } catch {
+          case ex: MalformedURLException =>
+            throw new IllegalStateException(s"$path is not a valid pathname: $ex")
+        }
+      }
+    }
   }
 
   /**

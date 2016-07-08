@@ -4,8 +4,10 @@ package org.nlogo.plot
 
 import org.nlogo.core.CompilerException
 
-import scala.collection.mutable
 import org.nlogo.api.{ PlotAction, LogoThunkFactory, CommandLogoThunk, ActionBroker }
+
+import scala.collection.mutable
+import scala.util.{ Failure, Success, Try }
 
 // handles compilation and execution of plot code
 // among a couple of other little tasks.
@@ -134,7 +136,14 @@ class PlotManager(factory: LogoThunkFactory)
       // run the plot code (and pens), only if it was compiled successfully.
       // this line below runs the code if there is any to run, and it tells
       // us if stop was called from the code. if so, we dont run the pens code.
-      val stopped = codeType.call(plotThunks(plot))
+      val stopped =
+        codeType.call(plotThunks(plot)) match {
+          case Success(stop) => stop
+          case Failure(e: Exception) =>
+            plot.runtimeError = Some(e)
+            false
+          case Failure(t: Throwable) => throw t
+        }
       if(! stopped){
         // save the currently selected pen
         val oldCurrentPen = plot.currentPen
@@ -157,7 +166,12 @@ class PlotManager(factory: LogoThunkFactory)
         // JC - 3/22/11
         for(pp <- plot.pens; if(!pp.temporary); results <- penThunks.get(pp)) {
           plot.currentPen=pp
-          codeType.call(results)
+          val callResult = codeType.call(results)
+          callResult.failed.foreach {
+            case e: Exception =>
+              pp.runtimeError = Some(e)
+            case t: Throwable => throw t
+          }
         }
         // restore the currently selected pen
         plot.currentPen=oldCurrentPen
@@ -169,7 +183,13 @@ class PlotManager(factory: LogoThunkFactory)
 
   sealed abstract trait CodeType {
     def selector(r:Results): CompilationResult
-    def call(r:Results): Boolean = selector(r).right.toOption.map(_.call).getOrElse(false)
+    def call(r:Results): Try[Boolean] =
+      // if compilation failed, we return Success(false)
+      // if compilation succeeded, but the call raises an exception, we should Failure(runtimeException)
+      // if compilation succeeded and the call returns, we should return Success(<result>)
+      selector(r).fold(
+        _     => Success(false),
+        thunk => thunk.call())
   }
   object Update extends CodeType {
     def selector(r:Results) = r.update

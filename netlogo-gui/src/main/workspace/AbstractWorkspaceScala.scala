@@ -61,7 +61,7 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
     requestDisplayUpdate(true)
   }
 
-  def clearTicks{
+  def clearTicks {
     world.tickCounter.clear()
   }
 

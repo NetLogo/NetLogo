@@ -61,6 +61,8 @@ extends PlotInterface {
   var setupCode: String = ""
   var updateCode:String = ""
 
+  var runtimeError: Option[Exception] = None
+
   def saveString = {
     import org.nlogo.core.StringEscaper.escapeString
     "\"" + escapeString(setupCode.trim) + "\"" + " " + "\"" + escapeString(updateCode.trim) + "\""

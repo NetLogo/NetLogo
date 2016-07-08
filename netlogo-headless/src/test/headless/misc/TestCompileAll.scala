@@ -3,6 +3,7 @@
 package org.nlogo.headless
 package misc
 
+import org.nlogo.core.{ Femto, LiteralParser }
 import org.nlogo.core.model.ModelReader
 import org.nlogo.api.{ FileIO, Version }
 import org.nlogo.fileformat
@@ -76,11 +77,14 @@ class TestCompileAll extends FunSuite  {
       assert(Version.compatibleVersion(version))
     }
 
+  private val literalParser =
+    Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
+
   def readWriteRead(path: String, text: String) {
     val workspace = HeadlessWorkspace.newInstance
     try {
       val modelContents = text
-      val loader = fileformat.standardLoader(workspace, _ => identity)
+      val loader = fileformat.standardLoader(literalParser)
       val model = loader.readModel(text, "nlogo").get
       val newModel = loader.readModel(loader.sourceString(model, "nlogo").get, "nlogo").get
       assertResult(model.code)(newModel.code)

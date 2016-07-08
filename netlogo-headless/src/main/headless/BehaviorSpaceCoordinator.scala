@@ -4,8 +4,8 @@ package org.nlogo.headless
 
 import java.nio.file.Paths
 
-import org.nlogo.core.{ Femto, LiteralParser, Model, NetLogoCore }
-import org.nlogo.api.{ LabProtocol, ModelLoader }
+import org.nlogo.core.{ Femto, LiteralParser, Model }
+import org.nlogo.api.{ LabProtocol, ModelLoader, Workspace }
 import org.nlogo.nvm.CompilerInterface
 import org.nlogo.nvm.LabInterface.Settings
 import org.nlogo.fileformat
@@ -16,20 +16,16 @@ import scala.io.Source
 object BehaviorSpaceCoordinator {
   private val literalParser =
     Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
-    private val autoConvert: String => String => String = _ => identity // netlogo-headless doesn't perform autoConversions
-
-  private lazy val loader =
-    fileformat.standardLoader(literalParser, autoConvert)
 
   private lazy val labFormat: fileformat.NLogoLabFormat =
-    new fileformat.NLogoLabFormat(autoConvert, literalParser)
+    new fileformat.NLogoLabFormat(literalParser)
 
   private def bsSection = labFormat.componentName
 
   private def modelProtocols(m: Model): Option[Seq[LabProtocol]] =
     m.optionalSectionValue[Seq[LabProtocol]](bsSection)
 
-  def selectProtocol(settings: Settings): Option[LabProtocol] = {
+  def selectProtocol(settings: Settings, workspace: Workspace): Option[LabProtocol] = {
     val model = modelAtPath(settings.modelPath)
 
     val modelWithExtraProtocols =
@@ -56,18 +52,21 @@ object BehaviorSpaceCoordinator {
   }
 
   private def modelAtPath(path: String): Model = {
+    val loader =
+      fileformat.standardLoader(literalParser)
+
     loader.readModel(Paths.get(path).toUri) match {
       case Success(m) => m
       case Failure(e) => throw new Exception("Unable to open model at: " + path + ". " + e.getMessage)
     }
   }
 
+  def protocolsFromModel(modelPath: String): Seq[LabProtocol] = {
+    modelProtocols(modelAtPath(modelPath)).getOrElse(Seq[LabProtocol]())
+  }
+
   def externalProtocols(path: String): Option[Seq[LabProtocol]] = {
     val fileSource = Source.fromFile(path).mkString
     labFormat.load(fileSource.lines.toArray, None)
-  }
-
-  def protocolsFromModel(modelPath: String): Seq[LabProtocol] = {
-    modelProtocols(modelAtPath(modelPath)).getOrElse(Seq[LabProtocol]())
   }
 }

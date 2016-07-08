@@ -8,7 +8,7 @@ import java.nio.file.{ Files, Paths }
 import org.nlogo.core.{ CompilationEnvironment, ExtensionManager, Femto, I18N,
   LiteralParser, Model, Shape, ShapeParser, UpdateMode, View, Widget, WorldDimensions }, Shape.{ LinkShape, VectorShape }
 import org.nlogo.core.model.WidgetReader
-import org.nlogo.api.{ AutoConvertable, AutoConverter, ComponentSerialization, FileIO, ModelFormat, NetLogoLegacyDialect, Version, VersionHistory }
+import org.nlogo.api.{ AutoConvertable, AutoConverter, ComponentSerialization, FileIO, ModelFormat, Version, VersionHistory }
 import AutoConversionList.ConversionList
 import scala.util.{ Failure, Success, Try }
 import scala.io.Source

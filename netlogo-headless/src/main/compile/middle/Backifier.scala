@@ -60,7 +60,7 @@ class Backifier(
       case core.prim._commandtask(argcount) =>
         new prim._commandtask(argcount, null)  // LambdaLifter will fill in
 
-      case core.prim._reportertask(argcount) =>
+      case core.prim._reportertask(argcount, _) =>
         new prim._reportertask(argcount)
 
       case core.prim._externreport(_) =>
@@ -75,7 +75,7 @@ class Backifier(
 
       case core.prim._procedurevariable(vn, name) =>
         new prim._procedurevariable(vn, name)
-      case core.prim._taskvariable(vn) =>
+      case core.prim._taskvariable(vn, _) =>
         new prim._taskvariable(vn)
 
       case core.prim._observervariable(vn, _) =>

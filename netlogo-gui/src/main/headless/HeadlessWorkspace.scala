@@ -10,8 +10,8 @@ import java.nio.file.Paths
 
 import org.nlogo.agent.{ Agent, Observer }
 import org.nlogo.api.{ ComponentSerialization, Version, ModelLoader, RendererInterface,
-  WorldDimensions3D, AggregateManagerInterface, FileIO, LogoException, ModelReader, ModelType, SimpleJobOwner,
-  HubNetInterface, CommandRunnable, ReporterRunnable }, ModelReader.modelSuffix
+  WorldDimensions3D, AggregateManagerInterface, FileIO, LogoException, ModelReader, ModelType, NetLogoLegacyDialect,
+  NetLogoThreeDDialect, SimpleJobOwner, HubNetInterface, CommandRunnable, ReporterRunnable }, ModelReader.modelSuffix
 import org.nlogo.core.{ AgentKind, CompilerException, Femto, Model, UpdateMode, WorldDimensions }
 import org.nlogo.agent.{ World, World3D }
 import org.nlogo.nvm.{ LabInterface,
@@ -480,10 +480,13 @@ with org.nlogo.api.ViewSettings {
     }
   }
 
-  private lazy val loader =
-    fileformat.standardLoader(compiler.compilerUtilities, getExtensionManager, getCompilationEnvironment)
+  private lazy val loader = {
+    val twodConverter = fileformat.ModelConverter(getExtensionManager, getCompilationEnvironment, NetLogoLegacyDialect)
+    val threedConverter = fileformat.ModelConverter(getExtensionManager, getCompilationEnvironment, NetLogoThreeDDialect)
+    fileformat.standardLoader(compiler.compilerUtilities, twodConverter, threedConverter)
       .addSerializer[Array[String], NLogoFormat](
         Femto.get[ComponentSerialization[Array[String], NLogoFormat]]("org.nlogo.sdm.NLogoSDMFormat"))
+  }
   /// Controlling API methods
 
   /**

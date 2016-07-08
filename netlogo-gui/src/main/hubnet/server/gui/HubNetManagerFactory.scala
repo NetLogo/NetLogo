@@ -2,7 +2,7 @@
 
 package org.nlogo.hubnet.server.gui
 
-import org.nlogo.api.{ HubNetInterface, ModelLoader }
+import org.nlogo.api.{ HubNetInterface, ModelLoader, NetLogoLegacyDialect }
 import org.nlogo.fileformat
 import org.nlogo.workspace.{ AbstractWorkspaceScala, HubNetManagerFactory => WSHubNetManagerFactory }
 import org.nlogo.window.{ EditorFactory, GUIWorkspace, InterfaceFactory, MenuBarFactory }
@@ -16,7 +16,10 @@ class HubNetManagerFactory(linkParent: Component,
   def newInstance(workspace: AbstractWorkspaceScala): HubNetInterface = {
     workspace match {
       case g: GUIWorkspace =>
-        new GUIHubNetManager(g, linkParent, editorFactory, ifactory, menuFactory, fileformat.standardLoader(workspace, workspace.getExtensionManager, workspace.getCompilationEnvironment))
+        val loader =
+          fileformat.standardLoader(workspace,
+            fileformat.ModelConverter(workspace.getExtensionManager, workspace.getCompilationEnvironment, NetLogoLegacyDialect))
+        new GUIHubNetManager(g, linkParent, editorFactory, ifactory, menuFactory, loader)
       case _ => throw new Exception("Expected GUIWorkspace, got: " + workspace)
     }
   }
