@@ -6,7 +6,8 @@ import workspace.WorldLoader
 import org.nlogo.plot.PlotLoader
 import org.nlogo.agent.{BooleanConstraint, ChooserConstraint, InputBoxConstraint, NumericConstraint}
 import org.nlogo.api.{PreviewCommands, ValueConstraint, Version}
-import org.nlogo.core.{model, Shape, ShapeParser, CompilerException, Program, ConstraintSpecification, LogoList, Model},
+import org.nlogo.core.{ model, Button, CompilerException, ConstraintSpecification, LogoList, Model,
+  Monitor, Program, Shape, ShapeParser },
   model.ModelReader,
   ConstraintSpecification._,
   Shape.{ LinkShape => CoreLinkShape, VectorShape => CoreVectorShape }
@@ -35,9 +36,6 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     if (!Version.knownVersion(netLogoVersion))
       throw new IllegalStateException("unknown NetLogo version: " + netLogoVersion)
 
-    val buttonCode = new collection.mutable.ArrayBuffer[String] // for TestCompileAll
-    val monitorCode = new collection.mutable.ArrayBuffer[String] // for TestCompileAll
-
     WorldLoader.load(model.view, ws)
 
     for(plot <- model.plots)
@@ -47,8 +45,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     val results = {
       val code = model.code
       ws.compiler.compileProgram(
-        code, Program.empty.copy(
-          interfaceGlobals = model.interfaceGlobals),
+        code, Program.empty.copy(interfaceGlobals = model.interfaceGlobals),
         ws.getExtensionManager, ws.compilationEnvironment, ws.flags)
     }
     ws.procedures = results.proceduresMap
@@ -58,22 +55,22 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     model.optionalSectionValue[PreviewCommands]("org.nlogo.modelsection.previewcommands").foreach(ws.previewCommands = _)
 
     // parse turtle and link shapes, updating the workspace.
-    parseShapes(model.turtleShapes,
-                model.linkShapes,
-                netLogoVersion)
+    parseShapes(model.turtleShapes, model.linkShapes)
 
     ws.init()
     ws.world.program(results.program)
 
     // test code is mixed with actual code here, which is a bit funny.
     if (ws.compilerTestingMode)
-      testCompileWidgets(results.program, netLogoVersion, buttonCode.toList, monitorCode.toList)
+      testCompileWidgets(results.program,
+        model.widgets.collect { case b: Button => b },
+        model.widgets.collect { case m: Monitor => m })
     else
       finish(model.constraints, results.program, model.interfaceGlobalCommands.mkString("\n"))
   }
 
 
-  private def parseShapes(turtleShapes: Seq[CoreVectorShape], linkShapes: Seq[CoreLinkShape], netLogoVersion: String) {
+  private def parseShapes(turtleShapes: Seq[CoreVectorShape], linkShapes: Seq[CoreLinkShape]) {
     ws.world.turtleShapes.replaceShapes(
       turtleShapes.map(ShapeConverter.baseVectorShapeToVectorShape))
     if (turtleShapes.isEmpty)
@@ -109,16 +106,31 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     ws.command(interfaceGlobalCommands)
   }
 
-  private def testCompileWidgets(program: Program, netLogoVersion: String, buttons: List[String], monitors:List[String]) {
+  private def testCompileWidgets(program: Program, buttons: Seq[Button], monitors: Seq[Monitor]) {
     val errors = ws.plotManager.compileAllPlots()
     if(errors.nonEmpty) throw errors(0)
-    for (widgetSource <- buttons ::: monitors)
-      try ws.compileCommands(widgetSource)
-      catch {
-        case ex: CompilerException =>
-          println("compiling: \"" + stripLines(widgetSource) + "\"")
-          throw ex
-      }
+
+    for {
+      button <- buttons
+      source <- button.source
+    }
+    try ws.compileCommands(source, button.buttonKind)
+    catch {
+      case ex: CompilerException =>
+        println("compiling: \"" + button + "\"")
+        throw ex
+    }
+
+    for {
+      monitor <- monitors
+      source <- monitor.source
+    }
+    try ws.compileReporter(source)
+    catch {
+      case ex: CompilerException =>
+        println("compiling: \"" + monitor + "\"")
+        throw ex
+    }
   }
 
 }
