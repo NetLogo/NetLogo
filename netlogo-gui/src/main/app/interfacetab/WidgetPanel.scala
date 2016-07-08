@@ -9,12 +9,10 @@ import javax.swing.{ JComponent, JLayeredPane, JMenuItem, JPopupMenu }
 
 import scala.collection.JavaConverters._
 
-import org.nlogo.api.{Editable, Version}
-import org.nlogo.window.{AbstractWidgetPanel, ButtonWidget, CodeEditor, DummyButtonWidget, DummyChooserWidget, DummyInputBoxWidget, DummyMonitorWidget, DummyPlotWidget, DummySliderWidget, DummyViewWidget, EditorColorizer, GUIWorkspace, OutputWidget, PlotWidget, Widget, WidgetContainer, WidgetRegistry}
+import org.nlogo.api.Editable
+import org.nlogo.window.{AbstractWidgetPanel, ButtonWidget, CodeEditor, DummyChooserWidget, DummyInputBoxWidget, DummyPlotWidget, DummyViewWidget, EditorColorizer, GUIWorkspace, OutputWidget, PlotWidget, Widget, WidgetContainer, WidgetRegistry}
 import org.nlogo.window.Events.{DirtyEvent, EditWidgetEvent, LoadBeginEvent, WidgetEditedEvent, WidgetRemovedEvent, ZoomedEvent}
 import org.nlogo.core.{I18N, Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox, Monitor => CoreMonitor, Plot => CorePlot, Slider => CoreSlider, Switch => CoreSwitch, TextBox => CoreTextBox, View => CoreView, Widget => CoreWidget}
-import org.nlogo.core.model.WidgetReader
-import org.nlogo.fileformat
 import org.nlogo.awt.{Fonts => NlogoFonts, Mouse => NlogoMouse}
 import org.nlogo.nvm.DefaultCompilerServices
 import org.nlogo.log.Logger
@@ -23,10 +21,6 @@ import javax.swing.{JComponent, JMenuItem, JPopupMenu}
 import javax.swing.JLayeredPane.DRAG_LAYER
 import java.awt.event.MouseEvent
 import java.awt.{Component, Cursor, Dimension, Graphics, Point, Rectangle, Color => AwtColor}
-
-import org.nlogo.app.WidgetActions.RemoveMultipleWidgets
-
-import scala.collection.JavaConverters._
 
 // note that an instance of this class is used for the hubnet client editor
 // and its subclass InterfacePanel is used for the interface tab.
@@ -155,7 +149,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
   def getWrapper(widget: Widget): WidgetWrapper =
     widget.getParent.asInstanceOf[WidgetWrapper]
 
-  protected def selectedWrappers: Seq[WidgetWrapper] =
+  def selectedWrappers: Seq[WidgetWrapper] =
     getComponents.collect {
       case w: WidgetWrapper if w.selected => w
     }
@@ -205,7 +199,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
   }
 
   def dropSelectedWidgets(): Unit = {
-    widgetsBeingDragged.foreach(_.())
+    widgetsBeingDragged.foreach(_.doDrop())
     widgetsBeingDragged = Seq()
     setForegroundWrapper()
   }
@@ -275,7 +269,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
         if (widgetCreator != null) {
           val widget = widgetCreator.getWidget
           if (widget != null) {
-            addWidget(widget, e.getX, e.getY, true, false)
+            WidgetActions.addWidget(this, widget, e.getX, e.getY)
             revalidate()
           }
         }
@@ -496,7 +490,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
   def deleteWidget(target: WidgetWrapper): Unit =
     deleteWidgets(Seq(target))
 
-  def deleteWidgets(hitList: Seq[WidgetWrapper]): Unit = {
+  private[app] def deleteWidgets(hitList: Seq[WidgetWrapper]): Unit = {
     hitList.foreach(removeWidget)
     setForegroundWrapper()
     revalidate()
@@ -639,17 +633,10 @@ class WidgetPanel(val workspace: GUIWorkspace)
   /// buttons
 
   protected def loseFocusIfAppropriate(): Unit = {
-    if (_hasFocus && !isFocusable)
-      transferFocus()
+//    if (_hasFocus && !isFocusable)
+//      transferFocus()
   }
 
-  override def isFocusable: Boolean =
-    getComponents.exists {
-      case w: WidgetWrapper if w.widget.isInstanceOf[ButtonWidget] =>
-        val key = w.widget.asInstanceOf[ButtonWidget].actionKey
-        key != '\u0000' && key != ' '
-      case _ => false
-    }
 
   /// dispatch WidgetContainer methods
 

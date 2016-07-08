@@ -2,20 +2,13 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{ Graphics2D, Graphics, Component, Container,
-  ContainerOrderFocusTraversalPolicy, Dimension, BorderLayout }
-import java.awt.event.ActionEvent
-import java.awt.print.{ PageFormat, Printable }
-import javax.swing.{ BorderFactory, JScrollPane, ScrollPaneConstants, Action,
-  ImageIcon, AbstractAction, JSplitPane, JPanel}
+import java.awt.event.{InputEvent, KeyEvent}
 
-import org.nlogo.app.common.{ Events => AppEvents }
-import org.nlogo.app.tools.AgentMonitorManager
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ Printable => NlogoPrintable, PrinterManager, ToolBar }
+import org.nlogo.window.{EditDialogFactoryInterface, GUIWorkspace, WidgetInfo}
 import org.nlogo.swing.Implicits.thunk2action
-import org.nlogo.window.{ EditDialogFactoryInterface, Events => WindowEvents,
- GUIWorkspace, InterfaceColors, ViewUpdatePanel, WidgetInfo }
+import javax.swing._
+import java.awt.{BorderLayout, Component, Container, ContainerOrderFocusTraversalPolicy, Dimension, Graphics, Graphics2D}
 
 class InterfaceTab(workspace: GUIWorkspace,
                    monitorManager: AgentMonitorManager,
@@ -65,6 +58,7 @@ class InterfaceTab(workspace: GUIWorkspace,
       }
     }, BorderLayout.NORTH)
   }
+
   org.nlogo.swing.Utils.addEscKeyAction(this, () => InterfaceTab.this.monitorManager.closeTopMonitor())
 
   private class InterfaceTabFocusTraversalPolicy extends ContainerOrderFocusTraversalPolicy {
@@ -80,7 +74,13 @@ class InterfaceTab(workspace: GUIWorkspace,
 
   override def requestFocus() {
     if(iP.isFocusable && splitPane.getDividerLocation >= maxDividerLocation) iP.requestFocus()
-    else if(commandCenter != null) commandCenter.requestFocus()
+    else {
+      if(iP.selectedWrappers.isEmpty){
+        if(commandCenter != null) commandCenter.requestFocus()
+      } else {
+        iP.requestFocus()
+      }
+    }
   }
 
   final def handle(e: AppEvents.SwitchedTabsEvent) {

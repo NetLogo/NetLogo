@@ -45,8 +45,6 @@ class InterfaceToolBar(wPanel: WidgetPanel,
   private val deleteAction = new DeleteAction
   private val deleteButton = new ToolBarActionButton(deleteAction)
   private val widgetMenu = new WidgetMenu
-  private val undoButton = new ToolBarButton("Undo", WidgetActions.undo())
-  private val redoButton = new ToolBarButton("Redo", WidgetActions.redo())
 
   wPanel.setWidgetCreator(this)
   // on Macs we want the window background but not on other systems
@@ -54,12 +52,6 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     setOpaque(true)
     setBackground(SystemColor.window)
   }
-
-  WidgetActions.setButtons(undoButton, redoButton)
-  undoButton.setEnabled(false)
-  undoButton.setIcon(new ImageIcon(classOf[InterfaceToolBar].getResource("/images/undo.png")))
-  redoButton.setEnabled(false)
-  redoButton.setIcon(new ImageIcon(classOf[InterfaceToolBar].getResource("/images/redo.png")))
 
   editButton.setToolTipText(I18N.gui.get("tabs.run.editButton.tooltip"))
   addButton.setToolTipText(I18N.gui.get("tabs.run.addButton.tooltip"))
@@ -128,7 +120,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
   }
 
   override def addControls() {
-    Seq(editButton, deleteButton, addButton, undoButton, redoButton, widgetMenu).foreach(add)
+    Seq(editButton, deleteButton, addButton, widgetMenu).foreach(add)
     group.add(noneButton)
     group.add(addButton)
     noneButton.setSelected(true)
