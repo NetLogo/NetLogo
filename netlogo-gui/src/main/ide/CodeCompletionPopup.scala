@@ -165,6 +165,7 @@ case class CodeCompletionPopup() {
               window.setVisible(false)
             }
           case None => window.setVisible(false)
+            isPopupEnabled = false
         }
       }
     }
