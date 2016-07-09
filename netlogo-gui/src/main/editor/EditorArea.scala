@@ -13,6 +13,8 @@ import javax.swing.Action
 import javax.swing.JMenuItem
 import javax.swing.JPopupMenu
 import javax.swing.KeyStroke
+import javax.swing.JViewport
+import javax.swing.SwingUtilities
 import javax.swing.text.DefaultEditorKit
 import javax.swing.text.TextAction
 import javax.swing.text.PlainDocument
@@ -263,6 +265,25 @@ class EditorArea(
       }
     } catch {
       case ex: BadLocationException => throw new IllegalStateException(ex)
+    }
+  }
+
+  /**
+    * Centers the line containing the position in editorArea.
+    * By default center the line containing the cursor
+    */
+  def centerCursorInScrollPane(position: Int = getCaretPosition): Unit = {
+    val container = SwingUtilities.getAncestorOfClass(classOf[JViewport], this)
+    if (container == null) return
+    try {
+      val r = modelToView(position)
+      val viewport = container.asInstanceOf[JViewport]
+      val extentHeight = viewport.getExtentSize.height
+      val viewHeight = viewport.getViewSize.height
+      val y = (0 max r.y - ((extentHeight - r.height) / 2)) min (viewHeight - extentHeight)
+      viewport.setViewPosition(new Point(0, y))
+    } catch {
+      case ex: BadLocationException => 
     }
   }
 

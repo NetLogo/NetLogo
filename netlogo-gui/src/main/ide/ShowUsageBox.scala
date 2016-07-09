@@ -54,6 +54,7 @@ class ShowUsageBox() {
         override def mouseClicked(e: MouseEvent): Unit = {
           usageBox.setVisible(false)
           val token = usageTable.getValueAt(usageTable.getSelectedRow, 0).asInstanceOf[Token]
+          editorArea.centerCursorInScrollPane(token.start)
           editorArea.select(token.start, token.end)
         }
       })
