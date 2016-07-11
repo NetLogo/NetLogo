@@ -323,3 +323,10 @@ BreedAt_3D
   patches-own [pvar]
   P> set pvar 1 + count frogs-at 0 0 0
   all? patches [pvar = 1] => true
+
+SingleQuotesInIdents
+  breed [ sheep sheep' ]
+  globals [ g' ]
+  g' => 0
+  O> create-sheep 10
+  [size] of sheep' 0 => 1

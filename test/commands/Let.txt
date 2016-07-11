@@ -3,6 +3,11 @@ LetSimple
   O> let x 5 set glob1 x
   glob1 => 5
 
+LetNameStartingWithDash
+  globals [glob1]
+  O> let -WOLF-SHAPE-00013 5 set glob1 -WOLF-SHAPE-00013
+  glob1 => 5
+
 LetWithAsk
   turtles-own [tvar]
   O> crt 5
@@ -123,3 +128,43 @@ LetOfVarToItselfInsideAsk
 
 LetTwice
   O> let x 5 let x 6 => COMPILER ERROR There is already a local variable here called X
+
+LetTwice2
+  O> let a 5 ask patches [ let a 6 ] => COMPILER ERROR There is already a local variable here called A
+
+LetSameNameAsCommandProcedure1
+  to a end
+  O> let a 5 => COMPILER ERROR There is already a procedure called A
+
+LetSameNameAsReporterProcedure1
+  to-report a end
+  O> let a 5 => COMPILER ERROR There is already a procedure called A
+
+LetSameNameAsPrimitiveCommand
+  O> let fd 5 => COMPILER ERROR There is already a primitive command called FD
+
+LetSameNameAsPrimitiveReporter1
+  O> let timer 5 => COMPILER ERROR There is already a primitive reporter called TIMER
+
+LetSameNameAsPrimitiveReporter2
+  O> let sin 5 => COMPILER ERROR There is already a primitive reporter called SIN
+
+LetShadowsLet
+  O> let x 4 ask patches [ let x 0 ] => COMPILER ERROR There is already a local variable here called X
+
+LetSameNameAsGlobal
+  globals [glob1]
+  O> let glob1 5 => COMPILER ERROR There is already a global variable called GLOB1
+
+LetSameNameAsBreed
+  breed [mice mouse]
+  O> let mice 5 => COMPILER ERROR There is already a breed called MICE
+
+LetSameNameAsTurtleVariable
+  turtles-own [tvar]
+  O> let tvar 5 => COMPILER ERROR There is already a turtle variable called TVAR
+
+LetSameNameAsBreedVariable
+  breed [mice mouse]
+  mice-own [fur]
+  O> let fur 5 => COMPILER ERROR There is already a MICE-OWN variable called FUR

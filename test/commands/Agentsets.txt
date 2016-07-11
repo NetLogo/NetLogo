@@ -314,3 +314,23 @@ RemoveDuplicates
   length remove-duplicates glob1 => 2
   O> ask turtle 1 [ die ]
   length remove-duplicates glob1 => 1
+
+OneOfTypes
+  globals [x y z]
+  O> crt 1 set x 0 set y true set z "apples"
+  nobody = min-one-of turtles [x] => false
+  nobody = min-one-of turtles [y] => true
+  nobody = min-one-of turtles [z] => true
+  nobody = max-one-of turtles [x] => false
+  nobody = max-one-of turtles [y] => true
+  nobody = max-one-of turtles [z] => true
+
+NOfTypes
+  globals [x y z]
+  O> crt 1 set x 0 set y true set z "apples"
+  no-turtles = min-n-of 1 turtles [x] => false
+  no-turtles = min-n-of 1 turtles [y] => true
+  no-turtles = min-n-of 1 turtles [z] => true
+  no-turtles = max-n-of 1 turtles [x] => false
+  no-turtles = max-n-of 1 turtles [y] => true
+  no-turtles = max-n-of 1 turtles [z] => true

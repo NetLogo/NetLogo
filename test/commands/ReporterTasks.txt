@@ -342,3 +342,7 @@ reporter-task-closes-over-let-inside-task-of-different-agent
 type-check-runresult
   O> show runresult task [self] => ERROR this code can't be run by the observer
   O> ask one-of patches [ show runresult task [patch-ahead 1]] => ERROR this code can't be run by a patch, only a turtle
+
+allow-reporter-task-variable-access-inside-reporter-block
+  O> crt 10
+  map [[who] of turtles with [who = ?]] [7] => [[7]]

@@ -82,3 +82,11 @@ SetVariableRuntime_2D
 
 SetVariableRuntime_3D
   O> ask patch 0 0 0 [ set pcolor self ] => ERROR can't set patch variable PCOLOR to non-number (patch 0 0 0)
+
+PatchBoundariesAndFloatingPointMagic_2D
+  globals [ magic ]
+  O> set magic 0.4999999999999999167333
+  (word patch 0 0) => "(patch 0 0)"
+  (word patch magic 0) => "(patch 1 0)"
+  (word patch 0 magic) => "(patch 0 1)"
+  (word patch magic magic) => "(patch 1 1)"

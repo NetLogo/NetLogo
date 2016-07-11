@@ -1,3 +1,22 @@
+SortNonDestructive
+  globals [g]
+  O> set g [5 4 3 2 1]
+  sort g => [1 2 3 4 5]
+  g => [5 4 3 2 1]
+
+SortNonDestructiveOnAgentsets
+  globals [g]
+  O> crt 100
+  O> foreach reverse sort turtles [ ask ? [ move-to patch 1 0 ] ]
+  O> random-seed 3
+  [who] of one-of turtles => 93
+  O> set g [turtles-here] of patch 1 0
+  O> random-seed 3
+  [who] of one-of g => 6
+  length sort g => 100
+  O> random-seed 3
+  [who] of one-of g => 6
+
 SortByNonDestructive
   globals [ glob1 glob2 ]
   O> set glob1 [5 4 3 2 1]
@@ -90,3 +109,5 @@ sort-by-catches-java-7-general-contract-violation-error
   to test __ignore sort-by [?1 <= ?2] n-values 1000 [random 5] end
   O> carefully [ test set glob1 "success" ] [ set glob1 error-message ]
   glob1 = "success" or glob1 = "predicate is not a strictly-less-than or strictly-greater than relation" => true
+  # should the above line be more strict?
+  # err => "predicate is not a strictly-less-than or strictly-greater than relation"

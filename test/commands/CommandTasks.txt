@@ -230,6 +230,17 @@ the-killing-task
   O> crt 1
   T> run glob1  __stdout who  error "oops"
 
+foreach-multiple-lists
+  globals [glob1]
+  O> set glob1 []
+  O> (foreach [1 2] [10 20] [100 200] [ set glob1 lput (list ?1 ?2 ?3) glob1 ])
+  glob1 => [[1 10 100] [2 20 200]]
+
+foreach-multiple-lists-length-mismatch
+  globals [glob1]
+  O> (foreach [1 2] [10 20] [100 200 300] [ ]) => ERROR All the list arguments to FOREACH must be the same length.
+  O> (foreach [1 2 3] [10 20] [100 200] [ ]) => ERROR All the list arguments to FOREACH must be the same length.
+
 empty-command-task-1
   globals [ glob1 ]
   O> set glob1 task [ ]
@@ -257,3 +268,9 @@ foreach-plus-recursion
   O> ask patches [ sprout 1 ]
   O> ask one-of turtles [ explore ]
   any? turtles with [tvar = 0] => false
+
+allow-task-variable-access-inside-reporter-block
+  globals [glob1]
+  O> crt 10
+  O> foreach [7] [ set glob1 first [who] of turtles with [who = ?] ]
+  glob1 => 7

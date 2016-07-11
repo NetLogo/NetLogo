@@ -1,0 +1,20 @@
+EveryLosesScope
+  to-report will-it-run? every 20 [ report true ] report false end
+  will-it-run? => true
+  will-it-run? => true
+
+EveryMaintainsAgentScope
+  globals [glob1]
+  to go set glob1 (fput who glob1) end
+  O> set glob1 (list)
+  O> crt 5
+  O> ask turtles [repeat 10 [ every 10 [ go ]]]
+  sum glob1 => 10
+
+EveryAlwaysFiresFirstTime
+  to-report every-run? loop [ every 10 [ report true ] report false ] end
+  every-run? => true
+
+EveryDoesntRunAgainUntilTimeGone
+  to-report every-run? let i 0 loop [ every 20 [ if i > 0 [ report true ] ] if i > 0 [ report false ] set i i + 1 ] end
+  every-run? => false

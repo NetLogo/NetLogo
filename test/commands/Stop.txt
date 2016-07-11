@@ -44,6 +44,14 @@ StopFromNestedForeachInsideReporterProcedure
   to-report foo foreach [1 2] [ foreach [3 4] [ stop ] ] end
   COMPILE> COMPILER ERROR STOP is not allowed inside TO-REPORT.
 
+ReportFromNestedAsk
+  to-report foo ask turtles [ report who ] end
+  COMPILE> COMPILER ERROR REPORT must be immediately inside a TO-REPORT.
+
+ReportFromForeachInsideProcedure
+  to foo foreach [1 2 3] [ report ? ] end
+  COMPILE> COMPILER ERROR REPORT can only be used inside TO-REPORT.
+
 StopTask1
   globals [ glob1 glob2 ]
   O> set glob1 task [ stop ]

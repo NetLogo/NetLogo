@@ -198,3 +198,9 @@ ForwardToBoundary2_2D
   O> __change-topology true false
   O> cro 1 [ fd (max-pycor * 10) + 0.1 bk max-pycor ]
   [list precision xcor 10 precision ycor 10] of turtles => [[0 0]]
+
+HatchInheritShape
+  O> crt 1
+  T> set shape "circle"
+  T> hatch 1
+  [shape] of turtles => ["circle" "circle"]
