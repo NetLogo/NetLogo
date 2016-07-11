@@ -472,3 +472,16 @@ view.resize.hubnet.warning = Resizing the world kills all turtles. This may caus
 view.resize.hubnet.prompt = Kick clients?
 view.resize.hubnet.kick = Kick clients
 view.resize.hubnet.dontkick = Don't kick
+
+error.dialog.pleaseReport = \
+NetLogo is unable to supply you with more details about this error.  Please report the problem \n \
+at https://github.com/NetLogo/NetLogo/issues, or to bugs@ccl.northwestern.edu, and paste the \n\
+contents of this window into your report. \n
+error.dialog.suppress = Don''t show again
+error.dialog.showInternals = Show internal details
+error.dialog.outOfMemory = \
+Your model is too large to run in the amount of memory available to NetLogo!\n\
+For more information consult the "How big can my model be?" section of the FAQ in the user manual.\n\
+Warning: you may see strange results if you continue running the current model without restarting NetLogo.\n
+error.dialog.openFAQ = Open FAQ
+

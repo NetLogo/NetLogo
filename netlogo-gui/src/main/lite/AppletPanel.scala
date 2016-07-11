@@ -107,7 +107,7 @@ with LinkRoot {
       org.nlogo.awt.EventQueue.invokeLater(
         new Runnable {
           override def run() {
-            RuntimeErrorDialog.show("Runtime Error", null, null, thread, throwable)
+            RuntimeErrorDialog.show(null, null, thread, throwable)
           }})
     }
     catch {
