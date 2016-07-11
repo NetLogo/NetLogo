@@ -97,6 +97,12 @@ class Backifier(
       case core.prim._errormessage(None) =>
         throw new Exception("Parse error - errormessage not matched with carefully")
 
+      case core.prim._constcodeblock(toks) =>
+        new prim._constcodeblock(toks)
+
+      case s: core.prim._symbol =>
+        new prim._constsymbol(s.token)
+
       // diabolical special case: if we have e.g. `breed [fish]` with no singular,
       // then the singular defaults to `turtle`, which will cause BreedIdentifierHandler
       // to interpret "turtle" as _breedsingular - ST 4/12/14

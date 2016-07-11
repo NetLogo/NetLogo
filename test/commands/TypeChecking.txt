@@ -32,4 +32,5 @@ CompileTypeChecking3
   P> __ignore word "moo" not pxcor => COMPILER ERROR NOT expected this input to be a TRUE/FALSE, but got a number instead
 
 CompileTypeChecking4
+  O> crt 1
   T> __ignore not heading => COMPILER ERROR NOT expected this input to be a TRUE/FALSE, but got a number instead

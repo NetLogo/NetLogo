@@ -53,7 +53,7 @@ object ModelResaver {
       val twoDConverter = fileformat.ModelConverter(ws.getExtensionManager, ws.getCompilationEnvironment, NetLogoLegacyDialect)
       val threeDConverter = fileformat.ModelConverter(ws.getExtensionManager, ws.getCompilationEnvironment, NetLogoThreeDDialect)
       val modelLoader =
-        fileformat.standardLoader(ws.compiler.compilerUtilities, twoDConverter, threeDConverter)
+        fileformat.standardLoader(ws.compiler.utilities, twoDConverter, threeDConverter)
           .addSerializer[Array[String], NLogoFormat](new NLogoSDMFormat())
       val uri = Paths.get(path).toUri
       val controller = new ResaveController(uri)

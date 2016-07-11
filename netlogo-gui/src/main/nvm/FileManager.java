@@ -8,7 +8,7 @@ import org.nlogo.core.File;
 import org.nlogo.core.FileMode;
 
 public interface FileManager {
-  String getPrefix();
+  String prefix();
 
   // Prefix is
   String attachPrefix(String filename)
@@ -21,9 +21,9 @@ public interface FileManager {
   boolean eof()
       throws java.io.IOException;
 
-  File currentFile();
+  scala.Option<File> currentFile();
 
-  File findOpenFile(String fileName);
+  scala.Option<File> findOpenFile(String fileName);
 
   boolean hasCurrentFile();
 

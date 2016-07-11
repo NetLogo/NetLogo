@@ -1,0 +1,28 @@
+BreedsAt_2D
+  breed [apples    apple]
+  breed [grapes    grape]
+  breed [bananas   banana]
+  breed [failtowns failtown]
+  O> create-failtowns 20 [ setxy 3 3 ]
+  O> ask n-of 7 failtowns [ set breed apples ]
+  O> ask n-of 9 failtowns [ set breed grapes ]
+  O> ask n-of 4 failtowns [ set breed bananas ]
+  O> ask (turtle-set (n-of 4 apples) (n-of 2 grapes) (n-of 3 bananas)) [ home ]
+  O> crt 1
+  [count apples-at    0 0] of turtle 20 => 4
+  [count grapes-at    0 0] of turtle 20 => 2
+  [count bananas-at   0 0] of turtle 20 => 3
+  [count failtowns-at 0 0] of turtle 20 => 0
+  [count turtles-at   0 0] of turtle 20 => 10
+  [count apples-at    3 3] of turtle 20 => 3
+  [count grapes-at    3 3] of turtle 20 => 7
+  [count bananas-at   3 3] of turtle 20 => 1
+  [count failtowns-at 3 3] of turtle 20 => 0
+  [count turtles-at   3 3] of turtle 20 => 11
+
+PatchAt_2D
+  [patch-at  0  0] of (patch 2 3) = (patch 2 3) => true
+  [patch-at  1  0] of (patch 2 3) = (patch 3 3) => true
+  [patch-at -1  0] of (patch 2 3) = (patch 1 3) => true
+  [patch-at  0  1] of (patch 2 3) = (patch 2 4) => true
+  [patch-at  0 -1] of (patch 2 3) = (patch 2 2) => true

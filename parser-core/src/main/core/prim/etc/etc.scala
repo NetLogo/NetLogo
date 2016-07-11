@@ -51,6 +51,12 @@ case class _bench() extends Command {
       right = List(Syntax.NumberType, Syntax.NumberType),
       agentClassString = "O---")
 }
+case class _block() extends Reporter {
+  override def syntax =
+    Syntax.reporterSyntax(
+      right = List(Syntax.CodeBlockType),
+      ret = Syntax.StringType)
+}
 case class _boom() extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(

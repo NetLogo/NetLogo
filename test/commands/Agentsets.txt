@@ -334,3 +334,9 @@ NOfTypes
   no-turtles = max-n-of 1 turtles [x] => false
   no-turtles = max-n-of 1 turtles [y] => true
   no-turtles = max-n-of 1 turtles [z] => true
+
+TurtleDiesWhileIteratingOverFilteredAgentset
+  O> random-seed 0
+  O> create-turtles 10 [ __ignore 3 ]
+  O> ask turtles with [true] [ let t (turtle random 10) if (t != nobody) [ ask t [die] ] ]
+  [who] of turtles => [1 5 9 2 0]

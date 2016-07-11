@@ -7,3 +7,10 @@ Nobody2
 Nobody3
   nobody = nobody => true
 
+Equality
+  O> crt 2
+  O> ask turtle 0 [ create-link-with turtle 1 ]
+  nobody = turtle 0 => false
+  turtle 0 = nobody => false
+  nobody = link 0 1 => false
+  link 0 1 = nobody => false

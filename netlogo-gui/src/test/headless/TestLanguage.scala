@@ -32,7 +32,7 @@ object TestLanguage {
       val envCorrect =
         if (testName.endsWith("_2D")) !Version.is3D
         else if (testName.endsWith("_3D")) Version.is3D
-        else true
+        else ! testName.endsWith("_Headless")
       val useGenerator = org.nlogo.api.Version.useGenerator
       val generatorCorrect =
         if (testName.startsWith("Generator")) useGenerator

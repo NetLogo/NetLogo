@@ -178,7 +178,7 @@ lazy val headless = (project in file ("netlogo-headless")).
     libraryDependencies          += "org.parboiled" %% "parboiled-scala" % "1.1.7",
     (fullClasspath in Runtime)   ++= (fullClasspath in Runtime in parserJVM).value,
     resourceDirectory in Compile := baseDirectory.value / "resources" / "main",
-    resourceDirectory in Test    := baseDirectory.value / "resources" / "test",
+    resourceDirectory in Test    := baseDirectory.value.getParentFile / "test",
     excludedExtensions           := Seq("arduino", "bitmap", "csv", "gis", "gogo", "nw", "palette", "sound"),
     all := { val _ = (
       (packageBin in Compile).value,

@@ -4,7 +4,7 @@ package org.nlogo.nvm
 
 import org.nlogo.{ core, api },
   api.{ Task => ApiTask },
-  core.{ I18N, Let, Syntax }
+  core.{ AgentKind, I18N, Let, Syntax }
 
 // tasks are created by the _task prim, which may appear in user code, or may be inserted by
 // ExpressionParser during parsing, when a task is known to be expected.
@@ -22,6 +22,25 @@ sealed trait Task {
   val formals: Array[Let]  // don't mutate please! Array for efficiency
   val lets: List[LetBinding]
   val locals: Array[AnyRef]
+  def checkAgentClass(context: Context, agentClassString: String): Unit = {
+    val pairs =
+      Seq(
+        (AgentKind.Observer, 'O'), (AgentKind.Turtle, 'T'),
+        (AgentKind.Patch, 'P'), (AgentKind.Link, 'L'))
+    val allowedKinds =
+      for {
+        (thisKind, c) <- pairs
+        if agentClassString.contains(c)
+      }
+      yield thisKind
+
+    if (! allowedKinds.contains(context.agent.kind)) {
+      val instruction = context.activation.procedure.code(context.ip)
+      throw new EngineException(context, instruction,
+        Instruction.agentKindError(context.agent.kind, allowedKinds))
+    }
+  }
+
   def bindArgs(c: Context, args: Array[AnyRef]) {
     val n = formals.size
     var i = 0
@@ -48,14 +67,16 @@ extends Task with org.nlogo.api.ReporterTask {
   def syntax =
     Syntax.reporterSyntax(
       ret = Syntax.WildcardType,
-      right = formals.map(_ => Syntax.WildcardType | Syntax.RepeatableType).toList)
-  override def toString = "(reporter task)"
+      right = formals.map(_ => Syntax.WildcardType | Syntax.RepeatableType).toList,
+      agentClassString = body.agentClassString)
+  override def toString = "(reporter task: [ " + body.fullSource + " ])"
   def report(context: api.Context, args: Array[AnyRef]): AnyRef =
     context match {
       case e: ExtensionContext => report(e.nvmContext, args)
       case c: Context          => report(c, args)
     }
   def report(context: Context, args: Array[AnyRef]): AnyRef = {
+    checkAgentClass(context, syntax.agentClassString)
     val oldLets = context.letBindings
     val oldLocals = context.activation.args
     context.activation.args = locals
@@ -76,7 +97,9 @@ extends Task with org.nlogo.api.ReporterTask {
 case class CommandTask(procedure: Procedure, formals: Array[Let], lets: List[LetBinding], locals: Array[AnyRef])
 extends Task with org.nlogo.api.CommandTask {
   def syntax =
-    Syntax.commandSyntax(right = formals.map(_ => Syntax.WildcardType | Syntax.RepeatableType).toList)
+    Syntax.commandSyntax(
+      right = formals.map(_ => Syntax.WildcardType | Syntax.RepeatableType).toList,
+      agentClassString = procedure.agentClassString)
   override def toString = procedure.displayName
   def perform(context: api.Context, args: Array[AnyRef]) {
     context match {
@@ -85,6 +108,7 @@ extends Task with org.nlogo.api.CommandTask {
     }
   }
   def perform(context: Context, args: Array[AnyRef]) {
+    checkAgentClass(context, syntax.agentClassString)
     val oldLets = context.letBindings
     context.letBindings = lets
     bindArgs(context, args)

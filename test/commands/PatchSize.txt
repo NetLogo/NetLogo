@@ -2,5 +2,11 @@ ReadPatchSize
   patch-size => 12
 
 SetPatchSize
+  globals [x]
+  O> set x patch-size
+  O> set-patch-size patch-size * patch-size
+  patch-size = (x * x) => true
   O> set-patch-size 5.2
   patch-size => 5.2
+  O> set-patch-size -1
+  patch-size => -1

@@ -208,7 +208,7 @@ with LinkRoot {
     RuntimeErrorDialog.setModelName(uri.getPath.split("/").last)
     val controller = new FileController(this, workspace)
     val loader =
-      fileformat.standardLoader(workspace.compiler.compilerUtilities,
+      fileformat.standardLoader(workspace.compiler.utilities,
         fileformat.ModelConverter(workspace.getExtensionManager, workspace.getCompilationEnvironment, NetLogoLegacyDialect))
     val modelOpt = OpenModel(uri, controller, loader, Version)
     modelOpt.foreach(model => ReconfigureWorkspaceUI(this, uri, ModelType.Library, model, workspace))

@@ -33,10 +33,6 @@ package etc {
     def syntax = Syntax.reporterSyntax(ret = NumberType)
   }
 
-  case class _block() extends Reporter {
-    def syntax = Syntax.reporterSyntax(right = List(CodeBlockType), ret = StringType)
-  }
-
   case class _butfirst() extends Reporter {
     def syntax = Syntax.reporterSyntax(ret = ListType | StringType, right = List(ListType | StringType))
   }
