@@ -6,16 +6,21 @@ import java.awt.Graphics
 import javax.swing.{ JTabbedPane, UIManager }
 import javax.swing.plaf.ComponentUI
 
+import org.nlogo.app.codetab.{ CodeTab, MainCodeTab, TemporaryCodeTab }
+import org.nlogo.app.common.{ Events => AppEvents, TabsInterface }
+import org.nlogo.app.infotab.InfoTab
+import org.nlogo.app.interfacetab.InterfaceTab
+import org.nlogo.app.tools.AgentMonitorManager
+import org.nlogo.core.I18N
+import org.nlogo.swing.RichAction
 import org.nlogo.swing.Implicits._
 import org.nlogo.window.{EditDialogFactoryInterface, GUIWorkspace}
 import org.nlogo.window.Events._
-import org.nlogo.swing.RichAction
-import org.nlogo.core.I18N
 
 class Tabs(val workspace: GUIWorkspace,
            monitorManager: AgentMonitorManager,
            dialogFactory: EditDialogFactoryInterface) extends JTabbedPane(javax.swing.SwingConstants.TOP)
-  with javax.swing.event.ChangeListener with org.nlogo.window.Event.LinkParent
+  with TabsInterface with javax.swing.event.ChangeListener with org.nlogo.window.Event.LinkParent
   with org.nlogo.window.LinkRoot
   with LoadBeginEvent.Handler with RuntimeErrorEvent.Handler with CompiledEvent.Handler {
 
@@ -38,7 +43,7 @@ class Tabs(val workspace: GUIWorkspace,
 
   val interfaceTab = new InterfaceTab(workspace, monitorManager, dialogFactory)
   val infoTab = new InfoTab(workspace.attachModelDir(_))
-  val codeTab = new MainCodeTab(workspace)
+  val codeTab = new MainCodeTab(workspace, this)
 
   var previousTab: java.awt.Component = interfaceTab
   var currentTab: java.awt.Component = interfaceTab
@@ -56,7 +61,7 @@ class Tabs(val workspace: GUIWorkspace,
     previousTab = currentTab
     currentTab = getSelectedComponent
     currentTab.requestFocus()
-    new Events.SwitchedTabsEvent(previousTab, currentTab).raise(this)
+    new AppEvents.SwitchedTabsEvent(previousTab, currentTab).raise(this)
   }
 
   override def requestFocus() { currentTab.requestFocus() }
@@ -164,23 +169,30 @@ class Tabs(val workspace: GUIWorkspace,
       .foreach(_.doSave())
   }
 
-  def saveTemporaryFile(tab: TemporaryCodeTab, filename: String) {
-    val index = getIndexOfComponent(tab)
-    setTitleAt(index, stripPath(filename))
-    tabsMenu.getItem(index).setText(filename)
+  def saveTemporaryFile(filename: String) {
+    getTabWithFilename(filename) foreach { tab =>
+      val index = getIndexOfComponent(tab)
+      setTitleAt(index, stripPath(filename))
+      tabsMenu.getItem(index).setText(filename)
+    }
   }
 
   def getIndexOfComponent(tab: CodeTab): Int =
     (0 until getTabCount).find(n => getComponentAt(n) == tab).get
 
-  def closeTemporaryFile(tab: TemporaryCodeTab) {
-    val index = getIndexOfComponent(tab)
-    remove(tab)
-    removeMenuItem(index)
+  def closeTemporaryFile(filename: String) {
+    getTabWithFilename(filename) foreach { tab =>
+      val index = getIndexOfComponent(tab)
+      remove(tab)
+      removeMenuItem(index)
+    }
   }
 
   def forAllCodeTabs(fn: CodeTab => Unit) =
     getComponents collect { case tab: CodeTab => tab } foreach (fn)
+  
+  def lineNumbersVisible = codeTab.lineNumbersVisible
+  def lineNumbersVisible_=(visible: Boolean) = forAllCodeTabs(_.lineNumbersVisible = visible)
 
   def removeMenuItem(index: Int) {
     // first remove all the menu items after this one...

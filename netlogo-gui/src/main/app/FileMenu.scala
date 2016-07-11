@@ -9,6 +9,7 @@ import org.nlogo.swing.{ FileDialog, ModalProgressTask, OptionDialog }
 import org.nlogo.api.{ Exceptions, FileIO, LocalFile, ModelingCommonsInterface, ModelLoader, ModelReader,
   ModelSection, ModelSectionJ, ModelType, ModelTypeJ, Version },
     ModelReader.{ modelSuffix, emptyModelPath }
+import org.nlogo.app.tools.{ ModelsLibraryDialog, NetLogoWebSaver }
 import org.nlogo.core.{ I18N, Model }
 import org.nlogo.awt.{ Hierarchy => NLogoHierarchy, UserCancelException }
 import org.nlogo.window.{ LinkRoot, FileController, GUIWorkspace, PlotWidgetExportType, Events => WindowEvents, ReconfigureWorkspaceUI },
