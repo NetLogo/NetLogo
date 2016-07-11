@@ -2,11 +2,11 @@
 
 package org.nlogo.headless
 
-import org.nlogo.core.{ AgentKind, Model }
+import org.nlogo.core.{ AgentKind, Model, WorldDimensions }
 import org.nlogo.headless.test.{ Parser, LanguageTest, Open, Declaration, Command,
   Reporter, Compile, Success, CompileError, RuntimeError, StackTrace }
 import org.scalatest.{FunSuite, Tag}
-import org.nlogo.api.{SimpleJobOwner, Version}
+import org.nlogo.api.{SimpleJobOwner, Version, WorldDimensions3D}
 import org.nlogo.api.FileIO.file2String
 import java.io.File
 import org.nlogo.util.{Utils, SlowTest}
@@ -16,8 +16,13 @@ object LanguageTestTag extends Tag("org.nlogo.headless.LanguageTestTag")
 object TestLanguage {
   val StandardWidgets = {
     import org.nlogo.core.{ Plot, Pen, View }
+    val view = View(dimensions =
+      if(Version.is3D)
+        new WorldDimensions3D(-5, 5, -5, 5, -5, 5)
+      else
+        new WorldDimensions(-5, 5, -5, 5))
     List(
-      View.square(5),
+      view,
       Plot(display = Some("plot1"), pens = List(Pen(display = "pen1"), Pen(display = "pen2"))),
       Plot(display = Some("plot2"), pens = List(Pen(display = "pen1"), Pen(display = "pen2"))))
   }
@@ -45,7 +50,6 @@ object TestLanguage {
         override def owner =
           new SimpleJobOwner(fullName, workspace.world.mainRNG, AgentKind.Observer)
         try {
-          init()
           val nonDecls = entries.filterNot(_.isInstanceOf[Declaration])
           val decls =
             entries.collect{case d: Declaration => d.source}
@@ -53,6 +57,8 @@ object TestLanguage {
 
           if (! nonDecls.exists(e => e.isInstanceOf[Compile] || e.isInstanceOf[Open])) {
             openModel(new Model(code = decls, widgets = StandardWidgets))
+          } else {
+            init()
           }
           nonDecls.foreach {
             case Open(path) =>

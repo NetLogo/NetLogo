@@ -4,8 +4,8 @@ package org.nlogo.headless
 
 import org.scalatest.Assertions
 import org.nlogo.agent.Agent
-import org.nlogo.api.{Equality, JobOwner, LogoException, NetLogoLegacyDialect, NetLogoThreeDDialect, Version, WorldDimensions3D}
-import org.nlogo.core.{ AgentKind, CompilerException, Model, WorldDimensions }
+import org.nlogo.api.{Equality, JobOwner, LogoException, NetLogoLegacyDialect, NetLogoThreeDDialect, Version, WorldDimensions3D }
+import org.nlogo.core.{ AgentKind, CompilerException, Model, Program, WorldDimensions }
 import org.nlogo.nvm.CompilerInterface
 import org.nlogo.core.Femto
 
@@ -20,13 +20,16 @@ trait AbstractTestLanguage extends Assertions {
   import AbstractTestLanguage._
 
   val compiler = Femto.get[CompilerInterface]("org.nlogo.compiler.Compiler", if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect)
-  var workspace: HeadlessWorkspace = _
+
+  lazy val workspace: HeadlessWorkspace = {
+    val ws = HeadlessWorkspace.newInstance
+    ws.silent = true
+    ws
+  }
 
   def owner: JobOwner = workspace.defaultOwner
 
   def init() {
-    workspace = HeadlessWorkspace.newInstance
-    workspace.silent = true
     workspace.initForTesting(
       if(Version.is3D)
         new WorldDimensions3D(-5, 5, -5, 5, -5, 5)
@@ -49,17 +52,7 @@ trait AbstractTestLanguage extends Assertions {
   }
 
   def openModel(model: Model): Unit = {
-    val results = {
-      import collection.JavaConverters._
-      compiler.compileProgram(
-        model.code,
-        workspace.world.newProgram(Seq[String]()),
-        workspace.getExtensionManager(), workspace.getCompilationEnvironment)
-    }
-    workspace.setProcedures(results.proceduresMap)
-    workspace.world.program(results.program)
-    workspace.init()
-    workspace.world.realloc()
+    workspace.openModel(model)
   }
 
   def testReporter(reporter: String, expectedResult: String, mode: TestMode = NormalMode) {
