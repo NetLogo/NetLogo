@@ -7,7 +7,7 @@ breeds
 link-breeds 
 
 procedure BENCHMARK:[_repeatlocal:0]{O---}:
-[0]_asm_procedurebenchmark_randomseed_0 "random-seed 362" double => void
+[0]_asm_procedurebenchmark_randomseed_0 "random-seed" double => void
       _constdouble:362.0 "362" => double
          L0
           LDC 362.0
@@ -75,7 +75,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedurebenchmark_repeatlocal_2 "" double => void
+[3]_asm_procedurebenchmark_repeatlocal_2 "repeat" double => void
       _constdouble:100.0 "100" => double
          L0
           LDC 100.0
@@ -147,7 +147,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L2
          FRAME SAME
           RETURN
-[6]_asm_procedurebenchmark_setobservervariable_5 "set result timer" Object => void
+[6]_asm_procedurebenchmark_setobservervariable_5 "set" Object => void
       _timer "timer" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -201,7 +201,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
 procedure SETUP:[]{O---}:
 [0]_clearall "ca"
 [1]_resetticks "reset-ticks"
-[2]_asm_proceduresetup_ask_0 "ask patches" AgentSet => void
+[2]_asm_proceduresetup_ask_0 "ask" AgentSet => void
       _patches "patches" => AgentSet
          L0
           ALOAD 0
@@ -256,7 +256,7 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[3]_asm_proceduresetup_setpatchvariable_1 "set fire 0" Object => void
+[3]_asm_proceduresetup_setpatchvariable_1 "set" Object => void
       _constdouble:0.0 "0" => Double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -289,10 +289,10 @@ procedure SETUP:[]{O---}:
          L5
          FRAME SAME
           RETURN
-[4]_asm_proceduresetup_if_2 "if pxcor > 1 + min-pxcor" boolean => void
-      _greaterthan "pxcor > 1 + min-pxcor" double,double => boolean
+[4]_asm_proceduresetup_if_2 "if" boolean => void
+      _greaterthan ">" double,double => boolean
         _patchvariabledouble:PXCOR "pxcor" => double
-        _plus "1 + min-pxcor" double,double => double
+        _plus "+" double,double => double
           _constdouble:1.0 "1" => double
           _minpxcor "min-pxcor" => double
          L0
@@ -376,8 +376,8 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[5]_asm_proceduresetup_if_3 "if (random 100) < density" boolean => void
-      _lessthan "random 100) < density" double,Object => boolean
+[5]_asm_proceduresetup_if_3 "if" boolean => void
+      _lessthan "<" double,Object => boolean
         _randomconst:100 "random" => double
         _observervariable:DENSITY "density" => Object
          L0
@@ -464,7 +464,7 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L9
           RETURN
-[6]_asm_proceduresetup_setpatchvariable_4 "set pcolor green" Object => void
+[6]_asm_proceduresetup_setpatchvariable_4 "set" Object => void
       _constdouble:55.0 "green" => Double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -497,10 +497,10 @@ procedure SETUP:[]{O---}:
          L5
          FRAME SAME
           RETURN
-[7]_asm_proceduresetup_if_5 "if pxcor = 1 + min-pycor" boolean => void
-      _equal "pxcor = 1 + min-pycor" double,double => boolean
+[7]_asm_proceduresetup_if_5 "if" boolean => void
+      _equal "=" double,double => boolean
         _patchvariabledouble:PXCOR "pxcor" => double
-        _plus "1 + min-pycor" double,double => double
+        _plus "+" double,double => double
           _constdouble:1.0 "1" => double
           _minpycor "min-pycor" => double
          L0
@@ -584,7 +584,7 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[8]_asm_proceduresetup_setpatchvariable_6 "set pcolor red" Object => void
+[8]_asm_proceduresetup_setpatchvariable_6 "set" Object => void
       _constdouble:15.0 "red" => Double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -617,7 +617,7 @@ procedure SETUP:[]{O---}:
          L5
          FRAME SAME
           RETURN
-[9]_asm_proceduresetup_setpatchvariable_7 "set fire 1" Object => void
+[9]_asm_proceduresetup_setpatchvariable_7 "set" Object => void
       _constdouble:1.0 "1" => Double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -657,10 +657,10 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[11]_asm_proceduresetup_setobservervariable_9 "set initial-trees count patches with [pcolor = green" Object => void
-      _countwith "count patches with [pcolor = green" AgentSet,Reporter => double
+[11]_asm_proceduresetup_setobservervariable_9 "set" Object => void
+      _countwith "count" AgentSet,Reporter => double
         _patches "patches" => AgentSet
-        _asm_proceduresetup_equal_10 "pcolor = green" Object,double => boolean
+        _asm_proceduresetup_equal_10 "=" Object,double => boolean
           _patchvariable:PCOLOR "pcolor" => Object
           _constdouble:55.0 "green" => double
               TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -856,7 +856,7 @@ procedure SETUP:[]{O---}:
          L11
          FRAME SAME
           RETURN
-[12]_asm_proceduresetup_setobservervariable_11 "set burned-trees 0" Object => void
+[12]_asm_proceduresetup_setobservervariable_11 "set" Object => void
       _constdouble:0.0 "0" => Double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -901,9 +901,9 @@ procedure SETUP:[]{O---}:
           RETURN
 
 procedure GO:[]{O---}:
-[0]_asm_procedurego_if_0 "if (count patches with [burning?]) =" boolean => void
-      _not "patches with [burning?]) =" boolean => boolean
-        _anywith "patches with [burning?]) =" AgentSet,Reporter => boolean
+[0]_asm_procedurego_if_0 "if" boolean => void
+      _not "=" boolean => boolean
+        _anywith "=" AgentSet,Reporter => boolean
           _patches "patches" => AgentSet
           _asm_procedurego_callreport_1 "burning?"
                L0
@@ -1090,7 +1090,7 @@ procedure GO:[]{O---}:
          L2
          FRAME SAME
           RETURN
-[2]_asm_procedurego_ask_3 "ask patches" AgentSet => void
+[2]_asm_procedurego_ask_3 "ask" AgentSet => void
       _patches "patches" => AgentSet
          L0
           ALOAD 0
@@ -1145,8 +1145,8 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[3]_asm_procedurego_if_4 "if pcolor = green" boolean => void
-      _equal "pcolor = green" Object,double => boolean
+[3]_asm_procedurego_if_4 "if" boolean => void
+      _equal "=" Object,double => boolean
         _patchvariable:PCOLOR "pcolor" => Object
         _constdouble:55.0 "green" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -1218,7 +1218,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[4]_asm_procedurego_setpatchvariable_5 "set counts (sum" Object => void
+[4]_asm_procedurego_setpatchvariable_5 "set" Object => void
       _nsum4:FIRE "sum" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -1362,7 +1362,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[6]_asm_procedurego_ask_7 "ask patches" AgentSet => void
+[6]_asm_procedurego_ask_7 "ask" AgentSet => void
       _patches "patches" => AgentSet
          L0
           ALOAD 0
@@ -1417,8 +1417,8 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[7]_asm_procedurego_ifelse_8 "ifelse pcolor = green" boolean => void
-      _equal "pcolor = green" Object,double => boolean
+[7]_asm_procedurego_ifelse_8 "ifelse" boolean => void
+      _equal "=" Object,double => boolean
         _patchvariable:PCOLOR "pcolor" => Object
         _constdouble:55.0 "green" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -1490,8 +1490,8 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[8]_asm_procedurego_if_9 "if counts > 0" boolean => void
-      _greaterthan "counts > 0" Object,double => boolean
+[8]_asm_procedurego_if_9 "if" boolean => void
+      _greaterthan ">" Object,double => boolean
         _patchvariable:COUNTS "counts" => Object
         _constdouble:0.0 "0" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -1587,7 +1587,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L11
           RETURN
-[9]_asm_procedurego_setpatchvariable_10 "set fire 1" Object => void
+[9]_asm_procedurego_setpatchvariable_10 "set" Object => void
       _constdouble:1.0 "1" => Double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -1620,7 +1620,7 @@ procedure GO:[]{O---}:
          L5
          FRAME SAME
           RETURN
-[10]_asm_procedurego_setpatchvariable_11 "set pcolor red" Object => void
+[10]_asm_procedurego_setpatchvariable_11 "set" Object => void
       _constdouble:15.0 "red" => Double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -1653,8 +1653,8 @@ procedure GO:[]{O---}:
          L5
          FRAME SAME
           RETURN
-[11]_asm_procedurego_setobservervariable_12 "set burned-trees burned-trees + 1" Object => void
-      _plus "burned-trees + 1" double,double => double
+[11]_asm_procedurego_setobservervariable_12 "set" Object => void
+      _plus "+" double,double => double
         _observervariable:BURNED-TREES "burned-trees" => Object
         _constdouble:1.0 "1" => double
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
@@ -1733,7 +1733,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[13]_asm_procedurego_if_14 "if burning?" boolean => void
+[13]_asm_procedurego_if_14 "if" boolean => void
       _callreport:BURNING? "burning?"
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
@@ -1793,8 +1793,8 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[14]_asm_procedurego_setpatchvariable_15 "set pcolor pcolor - 0.3" Object => void
-      _minus "pcolor - 0.3" double,double => double
+[14]_asm_procedurego_setpatchvariable_15 "set" Object => void
+      _minus "-" double,double => double
         _patchvariable:PCOLOR "pcolor" => Object
         _constdouble:0.3 "0.3" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -1898,14 +1898,14 @@ procedure GO:[]{O---}:
           RETURN
 
 reporter procedure BURNING?:[]{-TP-}:
-[0]_asm_procedureburning_report_0 "report (pcolor > (red - 4)) and (pcolor <" Object => void
-      _and "pcolor > (red - 4)) and (pcolor <"
-        _greaterthan "pcolor >" Object,double => boolean
+[0]_asm_procedureburning_report_0 "report" Object => void
+      _and "and"
+        _greaterthan ">" Object,double => boolean
           _patchvariable:PCOLOR "pcolor" => Object
-          _constdouble:11.0 "red - 4" => double
-        _lessthan "pcolor <" Object,double => boolean
+          _constdouble:11.0 "-" => double
+        _lessthan "<" Object,double => boolean
           _patchvariable:PCOLOR "pcolor" => Object
-          _constdouble:16.0 "red + 1" => double
+          _constdouble:16.0 "+" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
          L0
@@ -2159,8 +2159,8 @@ reporter procedure BURNING?:[]{-TP-}:
           ATHROW
 
 reporter procedure PERCENT-BURNED:[]{OTPL}:
-[0]_asm_procedurepercentburned_ifelse_0 "ifelse initial-trees > 0" boolean => void
-      _greaterthan "initial-trees > 0" Object,double => boolean
+[0]_asm_procedurepercentburned_ifelse_0 "ifelse" boolean => void
+      _greaterthan ">" Object,double => boolean
         _observervariable:INITIAL-TREES "initial-trees" => Object
         _constdouble:0.0 "0" => double
          L0
@@ -2242,9 +2242,9 @@ reporter procedure PERCENT-BURNED:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L9
           RETURN
-[1]_asm_procedurepercentburned_report_1 "report (burned-trees / initial-trees) * 100" Object => void
-      _mult "burned-trees / initial-trees) * 100" double,double => double
-        _div "burned-trees / initial-trees" double,double => double
+[1]_asm_procedurepercentburned_report_1 "report" Object => void
+      _mult "*" double,double => double
+        _div "/" double,double => double
           _observervariable:BURNED-TREES "burned-trees" => Object
           _observervariable:INITIAL-TREES "initial-trees" => Object
         _constdouble:100.0 "100" => double
@@ -2407,7 +2407,7 @@ reporter procedure PERCENT-BURNED:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedurepercentburned_report_3 "report 0" Object => void
+[3]_asm_procedurepercentburned_report_3 "report" Object => void
       _constdouble:0.0 "0" => Double
          L0
           ALOAD 0

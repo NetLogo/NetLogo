@@ -32,6 +32,7 @@ object TestCompileAll {
       pathMatches("HUBNET ACTIVITIES") ||
       pathMatches("CURRICULAR MODELS") ||
       pathMatches("SOUND") ||
+      path.containsSlice("HubNet") ||
       path.containsSlice("Frogger") || // uses sound extension
       path.containsSlice("Sound Machines") || // uses sound extension
       path.containsSlice("GoGoMonitor") ||

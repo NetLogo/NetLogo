@@ -7,7 +7,7 @@ breeds
 link-breeds 
 
 procedure BENCHMARK:[_repeatlocal:0]{O---}:
-[0]_asm_procedurebenchmark_randomseed_0 "random-seed 362" double => void
+[0]_asm_procedurebenchmark_randomseed_0 "random-seed" double => void
       _constdouble:362.0 "362" => double
          L0
           LDC 362.0
@@ -75,7 +75,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L1
           RETURN
 [2]_resettimer "reset-timer"
-[3]_asm_procedurebenchmark_repeatlocal_2 "" double => void
+[3]_asm_procedurebenchmark_repeatlocal_2 "repeat" double => void
       _constdouble:20000.0 "20000" => double
          L0
           LDC 20000.0
@@ -147,7 +147,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L2
          FRAME SAME
           RETURN
-[6]_asm_procedurebenchmark_setobservervariable_5 "set result timer" Object => void
+[6]_asm_procedurebenchmark_setobservervariable_5 "set" Object => void
       _timer "timer" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -201,15 +201,15 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
 procedure SETUP:[]{O---}:
 [0]_clearall "ca"
 [1]_resetticks "reset-ticks"
-[2]_createorderedturtles:,+6 "cro 1000"
+[2]_createorderedturtles:,+6 "cro"
       _asm_proceduresetup_constdouble_0 "1000" => Double
            L0
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_proceduresetup_constdouble_0.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-[3]_moveto "move-to one-of patches"
-      _asm_proceduresetup_oneof_1 "one-of patches" AgentSet => Object
+[3]_moveto "move-to"
+      _asm_proceduresetup_oneof_1 "one-of" AgentSet => Object
         _patches "patches" => AgentSet
            L0
             ALOAD 0
@@ -238,8 +238,8 @@ procedure SETUP:[]{O---}:
            L3
            FRAME SAME1 java/lang/Object
             ARETURN
-[4]_asm_proceduresetup_face_2 "face one-of neighbors4" Agent => void
-      _oneof "one-of neighbors4" AgentSet => Object
+[4]_asm_proceduresetup_face_2 "face" Agent => void
+      _oneof "one-of" AgentSet => Object
         _neighbors4 "neighbors4" => AgentSet
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
@@ -391,7 +391,7 @@ procedure SETUP:[]{O---}:
           RETURN
 
 procedure GO:[]{O---}:
-[0]_asm_procedurego_ask_0 "ask turtles" AgentSet => void
+[0]_asm_procedurego_ask_0 "ask" AgentSet => void
       _turtles "turtles" => AgentSet
          L0
           ALOAD 0
@@ -446,8 +446,8 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[1]_asm_procedurego_face_1 "face one-of neighbors4" Agent => void
-      _oneof "one-of neighbors4" AgentSet => Object
+[1]_asm_procedurego_face_1 "face" Agent => void
+      _oneof "one-of" AgentSet => Object
         _neighbors4 "neighbors4" => AgentSet
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2

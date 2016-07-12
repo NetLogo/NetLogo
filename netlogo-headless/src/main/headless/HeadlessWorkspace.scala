@@ -7,14 +7,17 @@ package org.nlogo.headless
 // here and document it here.  The overriding method can simply call super(). - ST 6/1/05, 7/28/11
 
 import
-  org.nlogo.{ agent, api, core, drawing, nvm, workspace },
+  org.nlogo.{ agent, api, core, drawing, fileformat, nvm, workspace },
     agent.{ Agent, World },
     api.{ CommandRunnable, FileIO, LogoException, RendererInterface, ReporterRunnable, SimpleJobOwner },
     core.{ model, AgentKind, CompilerException, CompilerUtilitiesInterface, Femto, File, FileMode, Model, UpdateMode, WorldDimensions },
       model.ModelReader,
     drawing.DrawingActionBroker,
+    fileformat.{ NLogoFormat, NLogoPreviewCommandsFormat },
     nvm.{ CompilerInterface, Context, LabInterface },
     workspace.AbstractWorkspace
+
+import java.nio.file.Paths
 
 /**
  * Companion object, and factory object, for the HeadlessWorkspace class.
@@ -359,6 +362,10 @@ with org.nlogo.workspace.WorldLoaderInterface {
     }
   }
 
+  private lazy val loader = {
+    fileformat.basicLoader.addSerializer[Array[String], NLogoFormat](new NLogoPreviewCommandsFormat())
+  }
+
   /// Controlling API methods
 
   /**
@@ -370,7 +377,7 @@ with org.nlogo.workspace.WorldLoaderInterface {
   override def open(path: String) {
     setModelPath(path)
     val modelContents = FileIO.file2String(path)
-    try openModel(ModelReader.parseModel(modelContents, compiler.utilities, Map()))
+    try loader.readModel(Paths.get(path).toUri).foreach(openModel)
     catch {
       case ex: CompilerException =>
         // models with special comment are allowed not to compile

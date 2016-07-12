@@ -19,7 +19,8 @@ trait AbstractTestLanguage extends Assertions {
 
   import AbstractTestLanguage._
 
-  val compiler = Femto.get[CompilerInterface]("org.nlogo.compiler.Compiler", if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect)
+  val compiler = Femto.get[CompilerInterface]("org.nlogo.compiler.Compiler",
+    if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect)
 
   lazy val workspace: HeadlessWorkspace = {
     val ws = HeadlessWorkspace.newInstance

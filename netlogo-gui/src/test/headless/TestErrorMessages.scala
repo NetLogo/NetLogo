@@ -7,13 +7,17 @@ package org.nlogo.headless
 // that framework should be extended so these tests could be done in it.)  - ST 3/18/08, 8/21/13
 
 import org.scalatest.{ FunSuite, BeforeAndAfter, BeforeAndAfterAll, OneInstancePerTest }
-import org.nlogo.core.{ CompilerException, Model }
+import org.nlogo.core.{ CompilerException, Model, View }
+import org.nlogo.api.{ Version, WorldDimensions3D }
 import org.nlogo.nvm.{ ArgumentTypeException, EngineException }
 
 class TestErrorMessages extends FunSuite with AbstractTestLanguage with BeforeAndAfterAll with BeforeAndAfter {
 
   override def beforeAll(): Unit = {
-    openModel(Model("globals [glob1] breed [ frogs frog ] frogs-own [ age spots ]"))
+    openModel(Model(
+      code = "globals [glob1] breed [ frogs frog ] frogs-own [ age spots ]",
+      widgets = Seq(View(dimensions = WorldDimensions3D.box(5))),
+      version = Version.version))
   }
 
   override def afterAll(): Unit = { workspace.dispose() }

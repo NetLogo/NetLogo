@@ -7,7 +7,7 @@ breeds
 link-breeds 
 
 procedure BENCHMARK:[_repeatlocal:0]{O---}:
-[0]_asm_procedurebenchmark_randomseed_0 "random-seed 5454" double => void
+[0]_asm_procedurebenchmark_randomseed_0 "random-seed" double => void
       _constdouble:5454.0 "5454" => double
          L0
           LDC 5454.0
@@ -75,7 +75,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedurebenchmark_repeatlocal_2 "" double => void
+[3]_asm_procedurebenchmark_repeatlocal_2 "repeat" double => void
       _constdouble:700.0 "700" => double
          L0
           LDC 700.0
@@ -147,7 +147,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L2
          FRAME SAME
           RETURN
-[6]_asm_procedurebenchmark_setobservervariable_5 "set result timer" Object => void
+[6]_asm_procedurebenchmark_setobservervariable_5 "set" Object => void
       _timer "timer" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -201,7 +201,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
 procedure SETUP:[]{O---}:
 [0]_clearall "ca"
 [1]_resetticks "reset-ticks"
-[2]_createorderedturtles:,+7 "cro population"
+[2]_createorderedturtles:,+7 "cro"
       _asm_proceduresetup_observervariable_0 "population" => Object
            L0
             ALOAD 0
@@ -211,9 +211,9 @@ procedure SETUP:[]{O---}:
             INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
            L1
             ARETURN
-[3]_asm_proceduresetup_setturtleorlinkvariable_1 "set color yellow - 2 + random" Object => void
-      _plus "+ random" double,double => double
-        _constdouble:43.0 "yellow - 2" => double
+[3]_asm_proceduresetup_setturtleorlinkvariable_1 "set" Object => void
+      _plus "+" double,double => double
+        _constdouble:43.0 "-" => double
         _randomconst:7 "random" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -263,11 +263,10 @@ procedure SETUP:[]{O---}:
          L7
          FRAME SAME
           RETURN
-[4]_asm_proceduresetup_setxy_2 "setxy (random-float world-width)
-            (random-float world-height" double,double => void
-      _randomfloat "random-float world-width" double => double
+[4]_asm_proceduresetup_setxy_2 "setxy" double,double => void
+      _randomfloat "random-float" double => double
         _worldwidth "world-width" => double
-      _randomfloat "random-float world-height" double => double
+      _randomfloat "random-float" double => double
         _worldheight "world-height" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -345,8 +344,8 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L9
           RETURN
-[5]_asm_proceduresetup_right_3 "rt random-float 360" double => void
-      _randomfloat "random-float 360" double => double
+[5]_asm_proceduresetup_right_3 "rt" double => void
+      _randomfloat "random-float" double => double
         _constdouble:360.0 "360" => double
          L0
           LDC 360.0
@@ -388,7 +387,7 @@ procedure SETUP:[]{O---}:
           RETURN
 
 procedure GO:[]{O---}:
-[0]_asm_procedurego_ask_0 "ask turtles" AgentSet => void
+[0]_asm_procedurego_ask_0 "ask" AgentSet => void
       _turtles "turtles" => AgentSet
          L0
           ALOAD 0
@@ -498,8 +497,8 @@ procedure FLOCK:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[1]_asm_procedureflock_if_1 "if any? flockmates" boolean => void
-      _any "any? flockmates" AgentSet => boolean
+[1]_asm_procedureflock_if_1 "if" boolean => void
+      _any "any?" AgentSet => boolean
         _turtlevariable:FLOCKMATES "flockmates" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
@@ -585,9 +584,9 @@ procedure FLOCK:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedureflock_ifelse_3 "ifelse distance nearest-neighbor < minimum-separation" boolean => void
-      _lessthan "distance nearest-neighbor < minimum-separation" double,Object => boolean
-        _distance "distance nearest-neighbor" Agent => double
+[3]_asm_procedureflock_ifelse_3 "ifelse" boolean => void
+      _lessthan "<" double,Object => boolean
+        _distance "distance" Agent => double
           _turtlevariable:NEAREST-NEIGHBOR "nearest-neighbor" => Object
         _observervariable:MINIMUM-SEPARATION "minimum-separation" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -845,9 +844,9 @@ procedure FLOCK:[]{-T--}:
           RETURN
 
 procedure FIND-FLOCKMATES:[]{-T--}:
-[0]_asm_procedurefindflockmates_setturtlevariable_0 "set flockmates other turtles in-radius vision" Object => void
-      _other "other turtles in-radius vision" AgentSet => AgentSet
-        _inradiusboundingbox "turtles in-radius vision"
+[0]_asm_procedurefindflockmates_setturtlevariable_0 "set" Object => void
+      _other "other" AgentSet => AgentSet
+        _inradiusboundingbox "in-radius"
           _asm_procedurefindflockmates_turtles_1 "turtles" => AgentSet
                L0
                 ALOAD 0
@@ -960,8 +959,8 @@ procedure FIND-FLOCKMATES:[]{-T--}:
           RETURN
 
 procedure FIND-NEAREST-NEIGHBOR:[]{-T--}:
-[0]_asm_procedurefindnearestneighbor_setturtlevariable_0 "set nearest-neighbor min-one-of flockmates [distance myself" Object => void
-      _minoneof "min-one-of flockmates [distance myself"
+[0]_asm_procedurefindnearestneighbor_setturtlevariable_0 "set" Object => void
+      _minoneof "min-one-of"
         _asm_procedurefindnearestneighbor_turtlevariable_1 "flockmates" => Object
               TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
              L0
@@ -985,7 +984,7 @@ procedure FIND-NEAREST-NEIGHBOR:[]{-T--}:
              L3
              FRAME SAME1 java/lang/Object
               ARETURN
-        _asm_procedurefindnearestneighbor_distance_2 "distance myself" Agent => double
+        _asm_procedurefindnearestneighbor_distance_2 "distance" Agent => double
           _myself "myself" => Agent
              L0
               ALOAD 1
@@ -1107,8 +1106,8 @@ procedure FIND-NEAREST-NEIGHBOR:[]{-T--}:
           RETURN
 
 procedure SEPARATE:[]{-T--}:
-[0]_asm_procedureseparate_call_0 "turn-away ([heading] of nearest-neighbor) max-separate-turn"
-      _turtlevariableof:HEADING "of nearest-neighbor" Object => Object
+[0]_asm_procedureseparate_call_0 "turn-away"
+      _turtlevariableof:HEADING "of" Object => Object
         _turtlevariable:NEAREST-NEIGHBOR "nearest-neighbor" => Object
       _observervariable:MAX-SEPARATE-TURN "max-separate-turn" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -1286,7 +1285,7 @@ procedure SEPARATE:[]{-T--}:
           RETURN
 
 procedure ALIGN:[]{-T--}:
-[0]_asm_procedurealign_call_0 "turn-towards average-flockmate-heading max-align-turn"
+[0]_asm_procedurealign_call_0 "turn-towards"
       _callreport:AVERAGE-FLOCKMATE-HEADING "average-flockmate-heading"
       _observervariable:MAX-ALIGN-TURN "max-align-turn" => Object
          L0
@@ -1355,13 +1354,11 @@ procedure ALIGN:[]{-T--}:
           RETURN
 
 reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
-[0]_asm_procedureaverageflockmateheading_report_0 "report atan mean [sin heading] of flockmates
-              mean [cos heading] of flockmates" Object => void
-      _atan "atan mean [sin heading] of flockmates
-              mean [cos heading] of flockmates" double,double => double
-        _mean "mean [sin heading] of flockmates" LogoList => double
-          _of "sin heading] of flockmates"
-            _asm_procedureaverageflockmateheading_sin_1 "sin heading" double => double
+[0]_asm_procedureaverageflockmateheading_report_0 "report" Object => void
+      _atan "atan" double,double => double
+        _mean "mean" LogoList => double
+          _of "of"
+            _asm_procedureaverageflockmateheading_sin_1 "sin" double => double
               _turtlevariabledouble:HEADING "heading" => double
                  L0
                   ALOAD 1
@@ -1404,9 +1401,9 @@ reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
                  L3
                  FRAME SAME1 java/lang/Object
                   ARETURN
-        _mean "mean [cos heading] of flockmates" LogoList => double
-          _of "cos heading] of flockmates"
-            _asm_procedureaverageflockmateheading_cos_3 "cos heading" double => double
+        _mean "mean" LogoList => double
+          _of "of"
+            _asm_procedureaverageflockmateheading_cos_3 "cos" double => double
               _turtlevariabledouble:HEADING "heading" => double
                  L0
                   ALOAD 1
@@ -1800,7 +1797,7 @@ reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           ATHROW
 
 procedure COHERE:[]{-T--}:
-[0]_asm_procedurecohere_call_0 "turn-towards average-heading-towards-flockmates max-cohere-turn"
+[0]_asm_procedurecohere_call_0 "turn-towards"
       _callreport:AVERAGE-HEADING-TOWARDS-FLOCKMATES "average-heading-towards-flockmates"
       _observervariable:MAX-COHERE-TURN "max-cohere-turn" => Object
          L0
@@ -1869,15 +1866,13 @@ procedure COHERE:[]{-T--}:
           RETURN
 
 reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
-[0]_asm_procedureaverageheadingtowardsflockmates_report_0 "report atan mean [sin (towards myself + 180)] of flockmates
-              mean [cos (towards myself + 180)] of flockmates" Object => void
-      _atan "atan mean [sin (towards myself + 180)] of flockmates
-              mean [cos (towards myself + 180)] of flockmates" double,double => double
-        _mean "mean [sin (towards myself + 180)] of flockmates" LogoList => double
-          _of "sin (towards myself + 180)] of flockmates"
-            _asm_procedureaverageheadingtowardsflockmates_sin_1 "sin (towards myself + 180" double => double
-              _plus "towards myself + 180" double,double => double
-                _towards "towards myself"
+[0]_asm_procedureaverageheadingtowardsflockmates_report_0 "report" Object => void
+      _atan "atan" double,double => double
+        _mean "mean" LogoList => double
+          _of "of"
+            _asm_procedureaverageheadingtowardsflockmates_sin_1 "sin" double => double
+              _plus "+" double,double => double
+                _towards "towards"
                   _asm_procedureaverageheadingtowardsflockmates_myself_2 "myself" => Agent
                        L0
                         ALOAD 1
@@ -1973,11 +1968,11 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
                  L3
                  FRAME SAME1 java/lang/Object
                   ARETURN
-        _mean "mean [cos (towards myself + 180)] of flockmates" LogoList => double
-          _of "cos (towards myself + 180)] of flockmates"
-            _asm_procedureaverageheadingtowardsflockmates_cos_4 "cos (towards myself + 180" double => double
-              _plus "towards myself + 180" double,double => double
-                _towards "towards myself"
+        _mean "mean" LogoList => double
+          _of "of"
+            _asm_procedureaverageheadingtowardsflockmates_cos_4 "cos" double => double
+              _plus "+" double,double => double
+                _towards "towards"
                   _asm_procedureaverageheadingtowardsflockmates_myself_5 "myself" => Agent
                        L0
                         ALOAD 1
@@ -2424,8 +2419,8 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           ATHROW
 
 procedure TURN-TOWARDS:[NEW-HEADING MAX-TURN]{-T--}:
-[0]_asm_procedureturntowards_call_0 "turn-at-most (my-subtract-headings new-heading heading) max-turn"
-      _callreport:MY-SUBTRACT-HEADINGS "my-subtract-headings new-heading heading"
+[0]_asm_procedureturntowards_call_0 "turn-at-most"
+      _callreport:MY-SUBTRACT-HEADINGS "my-subtract-headings"
         _procedurevariable:NEW-HEADING "new-heading" => Object
         _turtlevariabledouble:HEADING "heading" => Double
       _procedurevariable:MAX-TURN "max-turn" => Object
@@ -2532,8 +2527,8 @@ procedure TURN-TOWARDS:[NEW-HEADING MAX-TURN]{-T--}:
           RETURN
 
 procedure TURN-AWAY:[NEW-HEADING MAX-TURN]{-T--}:
-[0]_asm_procedureturnaway_call_0 "turn-at-most (my-subtract-headings heading new-heading) max-turn"
-      _callreport:MY-SUBTRACT-HEADINGS "my-subtract-headings heading new-heading"
+[0]_asm_procedureturnaway_call_0 "turn-at-most"
+      _callreport:MY-SUBTRACT-HEADINGS "my-subtract-headings"
         _turtlevariabledouble:HEADING "heading" => Double
         _procedurevariable:NEW-HEADING "new-heading" => Object
       _procedurevariable:MAX-TURN "max-turn" => Object
@@ -2640,9 +2635,9 @@ procedure TURN-AWAY:[NEW-HEADING MAX-TURN]{-T--}:
           RETURN
 
 procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
-[0]_asm_procedureturnatmost_ifelse_0 "ifelse abs turn > max-turn" boolean => void
-      _greaterthan "abs turn > max-turn" double,Object => boolean
-        _abs "abs turn" double => double
+[0]_asm_procedureturnatmost_ifelse_0 "ifelse" boolean => void
+      _greaterthan ">" double,Object => boolean
+        _abs "abs" double => double
           _procedurevariable:TURN "turn" => Object
         _procedurevariable:MAX-TURN "max-turn" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
@@ -2763,8 +2758,8 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L14
           RETURN
-[1]_asm_procedureturnatmost_ifelse_1 "ifelse turn > 0" boolean => void
-      _greaterthan "turn > 0" Object,double => boolean
+[1]_asm_procedureturnatmost_ifelse_1 "ifelse" boolean => void
+      _greaterthan ">" Object,double => boolean
         _procedurevariable:TURN "turn" => Object
         _constdouble:0.0 "0" => double
          L0
@@ -2846,7 +2841,7 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L9
           RETURN
-[2]_asm_procedureturnatmost_right_2 "rt max-turn" double => void
+[2]_asm_procedureturnatmost_right_2 "rt" double => void
       _procedurevariable:MAX-TURN "max-turn" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
@@ -2894,7 +2889,7 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[4]_asm_procedureturnatmost_left_4 "lt max-turn" double => void
+[4]_asm_procedureturnatmost_left_4 "lt" double => void
       _procedurevariable:MAX-TURN "max-turn" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
@@ -2943,7 +2938,7 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[6]_asm_procedureturnatmost_right_6 "rt turn" double => void
+[6]_asm_procedureturnatmost_right_6 "rt" double => void
       _procedurevariable:TURN "turn" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
@@ -2995,10 +2990,10 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
           RETURN
 
 reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
-[0]_asm_proceduremysubtractheadings_ifelse_0 "ifelse abs (h1 - h2) <= 180" boolean => void
-      _lessorequal "abs (h1 - h2) <= 180" double,double => boolean
-        _abs "abs (h1 - h2" double => double
-          _minus "h1 - h2" double,double => double
+[0]_asm_proceduremysubtractheadings_ifelse_0 "ifelse" boolean => void
+      _lessorequal "<=" double,double => boolean
+        _abs "abs" double => double
+          _minus "-" double,double => double
             _procedurevariable:H1 "h1" => Object
             _procedurevariable:H2 "h2" => Object
         _constdouble:180.0 "180" => double
@@ -3106,8 +3101,8 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L17
           RETURN
-[1]_asm_proceduremysubtractheadings_report_1 "report h1 - h2" Object => void
-      _minus "h1 - h2" double,double => double
+[1]_asm_proceduremysubtractheadings_report_1 "report" Object => void
+      _minus "-" double,double => double
         _procedurevariable:H1 "h1" => Object
         _procedurevariable:H2 "h2" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
@@ -3246,8 +3241,8 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_proceduremysubtractheadings_ifelse_3 "ifelse h1 > h2" boolean => void
-      _greaterthan "h1 > h2" Object,Object => boolean
+[3]_asm_proceduremysubtractheadings_ifelse_3 "ifelse" boolean => void
+      _greaterthan ">" Object,Object => boolean
         _procedurevariable:H1 "h1" => Object
         _procedurevariable:H2 "h2" => Object
          L0
@@ -3386,9 +3381,9 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L15
           RETURN
-[4]_asm_proceduremysubtractheadings_report_4 "report h1 - h2 - 360" Object => void
-      _minus "h1 - h2 - 360" double,double => double
-        _minus "h1 - h2" double,double => double
+[4]_asm_proceduremysubtractheadings_report_4 "report" Object => void
+      _minus "-" double,double => double
+        _minus "-" double,double => double
           _procedurevariable:H1 "h1" => Object
           _procedurevariable:H2 "h2" => Object
         _constdouble:360.0 "360" => double
@@ -3536,9 +3531,9 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[6]_asm_proceduremysubtractheadings_report_6 "report h1 - h2 + 360" Object => void
-      _plus "h1 - h2 + 360" double,double => double
-        _minus "h1 - h2" double,double => double
+[6]_asm_proceduremysubtractheadings_report_6 "report" Object => void
+      _plus "+" double,double => double
+        _minus "-" double,double => double
           _procedurevariable:H1 "h1" => Object
           _procedurevariable:H2 "h2" => Object
         _constdouble:360.0 "360" => double
