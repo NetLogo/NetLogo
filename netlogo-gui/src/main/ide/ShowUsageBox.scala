@@ -6,6 +6,7 @@ import java.awt._
 import java.awt.event._
 import javax.swing.table.{DefaultTableCellRenderer, DefaultTableModel, TableCellRenderer}
 import javax.swing._
+import javax.swing.text.PlainDocument
 
 import org.nlogo.core.{Femto, Token, TokenType, TokenizerInterface}
 import org.nlogo.editor.{EditorArea, HighlightEditorKit}

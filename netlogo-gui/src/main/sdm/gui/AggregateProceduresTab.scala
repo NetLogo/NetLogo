@@ -2,8 +2,16 @@
 
 package org.nlogo.sdm.gui
 
-import org.nlogo.core.{ CompilerException, TokenType }
+import org.nlogo.core.{ CompilerException, TokenType, I18N }
 import org.nlogo.editor.Colorizer
+import org.nlogo.window.EditorAreaErrorLabel
+import java.awt.event.TextListener
+import java.awt.event.TextEvent
+import java.awt.BorderLayout
+import javax.swing.BorderFactory
+import javax.swing.JScrollPane
+import javax.swing.ScrollPaneConstants
+import javax.swing.JPanel
 
 class AggregateProceduresTab(colorizer: Colorizer) extends javax.swing.JPanel {
   val text = new org.nlogo.editor.EditorArea(

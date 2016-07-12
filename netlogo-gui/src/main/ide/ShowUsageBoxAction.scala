@@ -5,10 +5,8 @@ package org.nlogo.ide
 import java.awt.event.{ActionEvent, MouseEvent}
 import java.awt.Point
 import javax.swing.{AbstractAction, Action}
-import javax.swing.text.TextAction
 
 import org.nlogo.editor.EditorArea
-import org.nlogo.ide.ShowUsageBox
 
 class ShowUsageBoxAction(showUsageBox: ShowUsageBox) extends AbstractAction {
   putValue(Action.NAME, "Show Usage")

@@ -25,7 +25,7 @@ import java.awt.event.FocusListener
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
 import java.awt.event.MouseEvent
-import java.awt.Component
+import java.awt._
 
 
 object EditorArea {
@@ -42,7 +42,7 @@ class EditorArea(
   font: java.awt.Font,
   enableFocusTraversalKeys: Boolean,
   listener: java.awt.event.TextListener,
-  colorizer: Colorizer,
+  val colorizer: Colorizer,
   i18n: String => String,
   actionMap: Map[KeyStroke, TextAction] = EditorArea.emptyMap,
   menuItems: Seq[Action] = Seq[Action]())
@@ -143,7 +143,7 @@ class EditorArea(
   override def getActions: Array[Action] =
     TextAction.augmentList(super.getActions,
       Array[Action](
-        Actions.commentAction, Actions.uncommentAction,
+        Actions.commentToggleAction,
         Actions.shiftLeftAction, Actions.shiftRightAction,
         Actions.quickHelpAction(colorizer, i18n)))
 
@@ -231,11 +231,24 @@ class EditorArea(
     }
   }
 
-  def uncomment(): Unit = {
+  def toggleComment(): Unit = {
     try {
-      val (doc, currentLine, endLine) = currentSelectionProperties
+      val (doc, startLine, endLine) = currentSelectionProperties
 
-      for (line <- currentLine to endLine) {
+      for(currentLine <- startLine to endLine) {
+        val lineStart = lineToStartOffset(doc, currentLine)
+        val lineEnd = lineToEndOffset(doc, currentLine)
+        val text = doc.getText(lineStart, lineEnd - lineStart)
+        val semicolonPos = text.indexOf(';')
+        val allSpaces = (0 until semicolonPos)
+          .forall(i => Character.isWhitespace(text.charAt(i)))
+        if ((allSpaces && semicolonPos != 0) || semicolonPos == -1) {
+          insertBeforeEachSelectedLine(";")
+          return
+        }
+      }
+      // Logic to uncomment the selected section
+      for (line <- startLine to endLine) {
         val lineStart = lineToStartOffset(doc, line)
         val lineEnd   = lineToEndOffset(doc, line)
         val text      = doc.getText(lineStart, lineEnd - lineStart)
